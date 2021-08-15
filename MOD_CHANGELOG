@@ -1,4 +1,4 @@
-ChangeLog v0.1.1:
+ChangeLog v1.1.1:
 
 	Changes:
 		-- Added more routine FirstCheck Cycle 
@@ -11,7 +11,7 @@ ChangeLog v0.1.1:
 		-- Added Click on ArmyTrainButton if isTrainPage return false
 		-- Donate Siege on FirstCheck
 
-ChangeLog v0.1.0:
+ChangeLog v1.1.0:
 
 	Changes:
 		-- Log Tab: Enable Control for logsize, clear attacklog, copy clipboard 
