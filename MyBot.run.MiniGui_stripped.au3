@@ -3009,7 +3009,7 @@ Global $g_aiChampionAltarPos[2] = [-1, -1]
 Global $g_aiLaboratoryPos[2] = [-1, -1]
 Global $g_aiClanCastlePos[2] = [-1, -1]
 Global $g_aiStarLaboratoryPos[2] = [-1, -1]
-Global $g_bisBHMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = False, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0, $g_ForceBBAttackOnClanGames = 0
+Global $g_bisBHMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0, $g_ForceBBAttackOnClanGames = 0
 Global $g_CurrentCampUtilization = 0, $g_iTotalCampSpace = 0
 Global $g_iLaboratoryElixirCost = 0, $g_iLaboratoryDElixirCost = 0
 Global $g_iWallCost = 0

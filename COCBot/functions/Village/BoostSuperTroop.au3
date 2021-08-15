@@ -66,7 +66,7 @@ Func BoostSuperTroop($bTest = False)
 					SetLog($sTroopName & ", Troops Already boosted", $COLOR_INFO)
 					ClickAway()
 				Else
-					If _Sleep(500) Then Return
+					If _Sleep(1500) Then Return
 					SetLog($sTroopName & ", Currently is not boosted", $COLOR_INFO)
 					;SetLog("QuickMIS(" & "BC1" & ", " & $g_sImgBoostTroopsIcons & "," & $iColumnX & "," & $iColumnY1 & "," & $iColumnX + $picswidth & "," & $iColumnY2 & ")", $COLOR_DEBUG );
 					If QuickMIS("BC1", $g_sImgBoostTroopsIcons, $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2, True, False) Then ;find pics of Stroop on spesific row / column

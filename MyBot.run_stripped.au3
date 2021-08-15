@@ -6896,7 +6896,7 @@ Global $g_iDetectedImageType = 0
 Global $g_abNotNeedAllTime[2] = [True, True]
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0]
 Global $g_aiStarLaboratoryPos[2] = [-1, -1]
-Global $g_bisBHMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = False, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0, $g_ForceBBAttackOnClanGames = 0
+Global $g_bisBHMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0, $g_ForceBBAttackOnClanGames = 0
 Global $g_iArmyCapacity = 0
 Global $g_iTotalTrainSpaceSpell = 0
 Global $g_iTotalTrainSpaceSiege = 0
