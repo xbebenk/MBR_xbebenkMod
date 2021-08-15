@@ -1,0 +1,69 @@
+# MyBot.run AUTOIT .gitignore file
+
+# Global Files
+/.project
+*.ini
+*.log
+*.orig
+# *.png
+*.jpg
+#*.exe
+*.bmp
+*.zip
+
+# don't exclude exe in lib folder
+!lib/*.exe
+!lib/*/*.exe
+
+#don't exclude builder exe
+![Bb]uildMBR.exe
+
+
+# Global Folders
+[Pp]rofiles/
+[Tt]emplates/
+[Tt]emp/
+[Bb]ackup/
+
+# Obsolete Files and Folders
+[Ll]oots/
+[Aa]llTowns/
+
+# Exclusion Curl (used for PushBullet)
+![Cc]url.exe
+
+# Exclusion build
+![Bb]uild/**
+
+build/MBR_Compiler/MBR_Compiler/bin/*
+build/MBR_Compiler/MBR_Compiler/obj/*
+build/MBR_Compiler/.vs/*
+
+# Exclusion language ini files
+#![Ll]anguages/*.ini
+
+# ignore test strategies
+[Ss]trategies/[Tt]est*.ini
+[Ss]trategies/[Ss]trategy 2016*.ini
+# ignore csv test scripts
+CSV/Attack/[Tt]est*.csv
+CSV/THsnipe/[Tt]est*.csv
+
+# Debug
+[Ll]ib/[Dd]ebug/
+[Ll]ib/[Tt]est.txt
+EnableMBRDebug.txt
+ImgLocDebug.txt
+
+# SQL (not in use)
+*.sqlite3
+*.db
+
+# Release files
+LastVersion*.txt
+TestVersion*.txt
+*_stripped.au3
+lib/*.html
+SQLite_exportedData.csv
+build/au3Stripper/Au3Stripper.Log
+*.lnk
