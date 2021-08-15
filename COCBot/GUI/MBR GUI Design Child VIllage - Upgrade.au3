@@ -25,7 +25,6 @@ Global $g_hChkAutoStarLabUpgrades = 0, $g_hCmbStarLaboratory = 0, $g_hLblNextSLU
 Global $g_hChkUpgradeKing = 0, $g_hChkUpgradeQueen = 0, $g_hChkUpgradeWarden = 0, $g_hPicChkKingSleepWait = 0, $g_hPicChkQueenSleepWait = 0, $g_hPicChkWardenSleepWait = 0
 Global $g_hCmbHeroReservedBuilder = 0, $g_hLblHeroReservedBuilderTop = 0, $g_hLblHeroReservedBuilderBottom = 0
 Global $g_hChkUpgradeChampion = 0, $g_hPicChkChampionSleepWait = 0
-
 Global $g_hChkUpgradePets[$ePetCount]
 
 ; Buildings
@@ -48,10 +47,11 @@ Global $g_ahWallsCurrentCount[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 Global $g_ahPicWallsLevel[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 to 3 are not referenced
 
 ; Auto Upgrade
-Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0
+Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0, $g_hChkScrollFirst = 0
 Global $g_hTxtSmartMinGold = 0, $g_hTxtSmartMinElixir = 0, $g_hTxtSmartMinDark = 0
 Global $g_hChkResourcesToIgnore[3] = [0, 0, 0]
-Global $g_hChkUpgradesToIgnore[15] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_hChkUpgradesToIgnore[24] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0]
+
 
 Func CreateVillageUpgrade()
 
@@ -135,14 +135,14 @@ Func CreateLaboratorySubTab()
 					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider")
 
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_01", "Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 100)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_01", "Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 205)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnLaboratory, $x, $y, 64, 64)
-		$g_hChkAutoLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades", "Auto Laboratory Upgrades"), $x + 80, $y + 5, -1, -1)
+		$g_hChkAutoLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades", "Auto Laboratory Upgrades"), $x + 80, $y , -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_01", "Check box to enable automatically starting Upgrades in laboratory"))
 			GUICtrlSetOnEvent(-1, "chkLab")
-		$g_hLblNextUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "LblNextUpgrade", "Next one") & ":", $x + 80, $y + 38, 50, -1)
+		$g_hLblNextUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "LblNextUpgrade", "Next one") & ":", $x + 80, $y + 25, 50, -1)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hCmbLaboratory = GUICtrlCreateCombo("", $x + 135, $y + 35, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+		$g_hCmbLaboratory = GUICtrlCreateCombo("", $x + 135, $y + 23, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 			GUICtrlSetData(-1, $sTxtNames, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_01", "Select the troop type to upgrade with this pull down menu") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_02", "The troop icon will appear on the right.") & @CRLF & _
@@ -163,17 +163,64 @@ Func CreateLaboratorySubTab()
 			GUICtrlSetOnEvent(-1, "ResetLabUpgradeTime")
 		$g_hPicLabUpgrade = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, $x + 330, $y, 64, 64)
 			GUICtrlSetState(-1, $GUI_HIDE)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$y += 110
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_02", "Star Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 100)
+		;Enable Lab Upgrade Order
+		$g_hChkLabUpgradeOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkLabUpgradeOrder", "Enable Upgrades Order"), $x + 80, $y + 45, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_04", "Check box to enable Upgrades Order in laboratory"))
+			GUICtrlSetOnEvent(-1, "chkLabUpgradeOrder")
+
+		; Create translated list of Troops for combo box
+		Local $sComboData = ""
+		$sComboData = StringTrimLeft($sTxtNames, 4); trim "Any," from list
+
+		; Create ComboBox(es) for selection of troop training order
+		$y += 70
+		$x += 20
+		For $z = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
+			If $z < 5 Then
+				GUICtrlCreateLabel($z + 1 & ":", $x - 16, $y + 2, -1, 18)
+				$g_ahCmbLabUpgradeOrder[$z] = GUICtrlCreateCombo("", $x, $y, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+				GUICtrlSetOnEvent(-1, "cmbLabUpgradeOrder")
+				GUICtrlSetData(-1, $sComboData, "")
+				GUICtrlSetState(-1, $GUI_DISABLE)
+				$y += 22 ; move down to next combobox location
+			ElseIf $z > 4 And $z < 10 Then
+				If $z = 5 Then
+					$x += 141
+					$y -= 110
+				EndIf
+				GUICtrlCreateLabel($z + 1 & ":", $x - 13, $y + 2, -1, 18)
+				$g_ahCmbLabUpgradeOrder[$z] = GUICtrlCreateCombo("", $x + 4, $y, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+				GUICtrlSetOnEvent(-1, "cmbLabUpgradeOrder")
+				GUICtrlSetData(-1, $sComboData, "")
+				GUICtrlSetState(-1, $GUI_DISABLE)
+				$y += 22 ; move down to next combobox location
+			EndIf
+		Next
+
+		$x += 140
+		$y -= 90
+		$g_hBtnRemoveLabUpgradeOrder = GUICtrlCreateButton("Clear List", $x - 6, $y, 96, 20)
+		GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+		GUICtrlSetOnEvent(-1, "btnRemoveLabUpgradeOrder")
+
+		$y += 25
+		$g_hBtnSetLabUpgradeOrder = GUICtrlCreateButton("Apply Order", $x - 6, $y, 96, 20)
+		GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+		GUICtrlSetOnEvent(-1, "btnSetLabUpgradeOrder")
+
+
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	$x = 25
+	$y = 250
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_02", "Star Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 173)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnStarLaboratory, $x, $y, 64, 64)
-		$g_hChkAutoStarLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades", "Auto Star Laboratory Upgrades"), $x + 80, $y + 5, -1, -1)
+		$g_hChkAutoStarLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades", "Auto Star Laboratory Upgrades"), $x + 80, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades_Info_01", "Check box to enable automatically starting Upgrades in star laboratory"))
 			GUICtrlSetOnEvent(-1, "chkStarLab")
-		$g_hLblNextSLUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "LblNextUpgrade", "Next one") & ":", $x + 80, $y + 38, 50, -1)
+		$g_hLblNextSLUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "LblNextUpgrade", "Next one") & ":", $x + 80, $y + 25, 50, -1)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$g_hCmbStarLaboratory = GUICtrlCreateCombo("", $x + 135, $y + 35, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+		$g_hCmbStarLaboratory = GUICtrlCreateCombo("", $x + 135, $y + 23, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 			GUICtrlSetData(-1, $sTxtSLNames, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_01", "Select the troop type to upgrade with this pull down menu") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_02", "The troop icon will appear on the right."))
@@ -193,6 +240,51 @@ Func CreateLaboratorySubTab()
 			GUICtrlSetOnEvent(-1, "ResetStarLabUpgradeTime")
 		$g_hPicStarLabUpgrade = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, $x + 330, $y, 64, 64)
 			GUICtrlSetState(-1, $GUI_HIDE)
+		
+		;Enable StarLab Upgrade Order
+		$g_hChkSLabUpgradeOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkSLabUpgradeOrder", "Enable StarLab Upgrades Order"), $x + 80, $y + 50, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_04", "Check box to enable Upgrades Order in Star laboratory"))
+			GUICtrlSetOnEvent(-1, "chkSLabUpgradeOrder")
+
+		; Create translated list of Troops for combo box
+		Local $sSComboData = ""
+		$sSComboData = StringTrimLeft($sTxtSLNames, 4); trim "Any," from list
+
+		; Create ComboBox(es) for selection of troop training order
+		$y += 75
+		$x += 20
+		For $z = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
+			If $z < 3 Then
+				GUICtrlCreateLabel($z + 1 & ":", $x - 16, $y + 2, -1, 18)
+				$g_ahCmbSLabUpgradeOrder[$z] = GUICtrlCreateCombo("", $x, $y, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+				GUICtrlSetOnEvent(-1, "cmbSLabUpgradeOrder")
+				GUICtrlSetData(-1, $sSComboData, "")
+				GUICtrlSetState(-1, $GUI_DISABLE)
+				$y += 22 ; move down to next combobox location
+			ElseIf $z > 2 And $z < 7 Then
+				If $z = 3 Then
+					$x += 141
+					$y -= 66
+				EndIf
+				GUICtrlCreateLabel($z + 1 & ":", $x - 13, $y + 2, -1, 18)
+				$g_ahCmbSLabUpgradeOrder[$z] = GUICtrlCreateCombo("", $x + 4, $y, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+				GUICtrlSetOnEvent(-1, "cmbSLabUpgradeOrder")
+				GUICtrlSetData(-1, $sSComboData, "")
+				GUICtrlSetState(-1, $GUI_DISABLE)
+				$y += 22 ; move down to next combobox location
+			EndIf
+		Next
+		
+		$x += 140
+		$y -= 60
+		$g_hBtnRemoveSLabUpgradeOrder = GUICtrlCreateButton("Clear List", $x - 6, $y, 96, 20)
+		GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+		GUICtrlSetOnEvent(-1, "btnRemoveSLabUpgradeOrder")
+
+		$y += 25
+		$g_hBtnSetSLabUpgradeOrder = GUICtrlCreateButton("Apply Order", $x - 6, $y, 96, 20)
+		GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+		GUICtrlSetOnEvent(-1, "btnSetSLabUpgradeOrder")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateLaboratorySubTab
@@ -270,7 +362,7 @@ Func CreateHeroesSubTab()
 			GUICtrlSetOnEvent(-1, "cmbHeroReservedBuilder")
 		$g_hLblHeroReservedBuilderBottom = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "LblHeroReservedBuilderBottom", "builder/s for hero upgrade"), $x, $y + 35, -1, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
+	
 ; Pets
 	Local $x = 25, $y = 300
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "LblAutoUpgrading_02", "Auto upgrading of your Pets"), $x - 10, $y, -1, -1)
@@ -542,37 +634,42 @@ EndFunc   ;==>CreateWallsSubTab
 Func CreateAutoUpgradeSubTab()
 
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_01", "Auto Upgrade"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 100)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_01", "Auto Upgrade"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 95)
 
 		$g_hChkAutoUpgrade = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade", "Enable Auto Upgrade"), $x - 5, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade_Info_01", "Check box to enable automatically starting Upgrades from builders menu"))
 			GUICtrlSetOnEvent(-1, "chkAutoUpgrade")
+		$g_hChkScrollFirst = GUICtrlCreateCheckbox("Scroll Up First", $x + 160, $y, -1, -1)
+			_GUICtrlSetTip(-1, "Check to Skip First page on builder menu")
+			GUICtrlSetOnEvent(-1, "chkScrollFirst")
+		$g_hLblAutoUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_01", "Save"), $x, $y + 27, -1, -1)
+		$g_hTxtSmartMinGold = GUICtrlCreateInput("150000", $x + 33, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
+			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 98, $y + 27, 16, 16)
+		$g_hTxtSmartMinElixir = GUICtrlCreateInput("150000", $x + 118, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
+			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 183, $y + 27, 16, 16)
+		$g_hTxtSmartMinDark = GUICtrlCreateInput("1500", $x + 203, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
+			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 268, $y + 27, 16, 16)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_02", "after launching upgrade"), $x + 290, $y + 27, -1, -1)
 
-		$g_hLblAutoUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_01", "Save"), $x, $y + 32, -1, -1)
-		$g_hTxtSmartMinGold = GUICtrlCreateInput("150000", $x + 33, $y + 29, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
-			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 98, $y + 32, 16, 16)
-		$g_hTxtSmartMinElixir = GUICtrlCreateInput("150000", $x + 118, $y + 29, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
-			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 183, $y + 32, 16, 16)
-		$g_hTxtSmartMinDark = GUICtrlCreateInput("1500", $x + 203, $y + 29, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
-			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 268, $y + 32, 16, 16)
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_02", "after launching upgrade"), $x + 290, $y + 32, -1, -1)
-
-		$g_hChkResourcesToIgnore[0] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_01", "Ignore Gold Upgrades"), $x, $y + 55, -1, -1)
+		$g_hChkResourcesToIgnore[0] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_01", "Ignore Gold Upgrades"), $x, $y + 50, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkResourcesToIgnore")
-		$g_hChkResourcesToIgnore[1] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_02", "Ignore Elixir Upgrades"), $x + 130, $y + 55, -1, -1)
+		$g_hChkResourcesToIgnore[1] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_02", "Ignore Elixir Upgrades"), $x + 130, $y + 50, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkResourcesToIgnore")
-		$g_hChkResourcesToIgnore[2] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_03", "Ignore Dark Elixir Upgrades"), $x + 258, $y + 55, -1, -1)
+		$g_hChkResourcesToIgnore[2] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_03", "Ignore Dark Elixir Upgrades"), $x + 258, $y + 50, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkResourcesToIgnore")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_02", "Upgrades to ignore"), $x - 20, $y + 85, $g_iSizeWGrpTab3, 137)
-	Local $x = 21, $y = 100
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_02", "Upgrades to Ignore"), $x - 20, $y + 75, $g_iSizeWGrpTab3, 170)
+	Local $x = 21, $y = 95
 	Local $iIconSize = 32
 	Local $xOff = (40 - $iIconSize) / 2
-	Local $yRow1 = 50
-	Local $yRow2 = 110
+	Local $yRow1 = 40
+	Local $yRow2 = 90
+	Local $yRow3 = 145
+	Local $yRow4 = 170
 	Local $yChkOff = 32
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTH14, $x + 5, $y + $yRow1, $iIconSize, $iIconSize)
+	
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTH11, $x + 5, $y + $yRow1, $iIconSize, $iIconSize)
 		$g_hChkUpgradesToIgnore[0] = GUICtrlCreateCheckbox("", $x + 20 - $xOff, $y + $yRow1 + $yChkOff, 17, 17)
 			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
 
@@ -631,9 +728,40 @@ Func CreateAutoUpgradeSubTab()
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDrill, $x + 365, $y + $yRow2, $iIconSize, $iIconSize)
 		$g_hChkUpgradesToIgnore[13] = GUICtrlCreateCheckbox("", $x + 380 - $xOff, $y + $yRow2 + $yChkOff, 17, 17)
 			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+
+		$g_hChkUpgradesToIgnore[14] = GUICtrlCreateCheckbox("Cannon", $x, $y + $yRow3, 60, 17)
+			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+
+		$g_hChkUpgradesToIgnore[15] = GUICtrlCreateCheckbox("Archer Tower", $x + 60, $y + $yRow3, 80, 17)
+			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+
+		$g_hChkUpgradesToIgnore[16] = GUICtrlCreateCheckbox("Mortar", $x + 145, $y + $yRow3, 55, 17)
+			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		
+		$g_hChkUpgradesToIgnore[17] = GUICtrlCreateCheckbox("Tesla", $x + 200, $y + $yRow3, 55, 17)
+			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		
+		$g_hChkUpgradesToIgnore[18] = GUICtrlCreateCheckbox("GroundTraps", $x + 255, $y + $yRow3, 80, 17)
+			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		
+		$g_hChkUpgradesToIgnore[19] = GUICtrlCreateCheckbox("AirTraps", $x + 345, $y + $yRow3, 60, 17)
+			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		
+		$g_hChkUpgradesToIgnore[20] = GUICtrlCreateCheckbox("Wizard Tower", $x, $y + $yRow4, 85, 17)
+			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore") 
+		
+		$g_hChkUpgradesToIgnore[21] = GUICtrlCreateCheckbox("Bomb Tower", $x + 90, $y + $yRow4, 80, 17)
+			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore") 
+		
+		$g_hChkUpgradesToIgnore[22] = GUICtrlCreateCheckbox("Air Defense", $x + 175, $y + $yRow4, 80, 17)
+			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore") 
+		
+		$g_hChkUpgradesToIgnore[23] = GUICtrlCreateCheckbox("TH Weapon", $x + 255, $y + $yRow4, 80, 17)
+			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore") 
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$g_hTxtAutoUpgradeLog = GUICtrlCreateEdit("", $x - 16, 275, $g_iSizeWGrpTab3, 127, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
+	$g_hTxtAutoUpgradeLog = GUICtrlCreateEdit("", $x - 16, 295, $g_iSizeWGrpTab3, 105, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "TxtAutoUpgradeLog", "------------------------------------------------ AUTO UPGRADE LOG ------------------------------------------------"))
 
 EndFunc   ;==>CreateAutoUpgradeGUI

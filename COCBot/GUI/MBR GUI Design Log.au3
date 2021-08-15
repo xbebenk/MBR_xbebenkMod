@@ -15,8 +15,8 @@
 #include-once
 
 Global $g_hGUI_LOG = 0
-Global $g_hTxtLog = 0, $g_hDivider = 0, $g_hTxtAtkLog = 0
-Global $g_hCmbLogDividerOption, $g_hBtnAtkLogClear, $g_hBtnAtkLogCopyClipboard
+Global $g_hTxtLog = 0, $g_hDivider = 0, $g_hTxtAtkLog = 0, $lbl_LogStyle = 0
+Global $g_hCmbLogDividerOption, $g_hBtnAtkLogClear, $g_hBtnAtkLogCopyClipboard, $g_hBtnControl
 
 Func CreateLogTab($hWHndLogsOnly = False)
 	Local $i
@@ -64,7 +64,7 @@ Func CreateLogTab($hWHndLogsOnly = False)
 	WinActivate($activeHWnD) ; restore current active window
 
 	$y = 410
-	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Log", "LblLog_Style", "Log Style") & ":", $x, $y + 5, -1, -1)
+	$lbl_LogStyle = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Log", "LblLog_Style", "Log Style") & ":", $x, $y + 5, -1, -1)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
 	$g_hCmbLogDividerOption = GUICtrlCreateCombo("", $x + 50, $y, 180, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
@@ -77,7 +77,8 @@ Func CreateLogTab($hWHndLogsOnly = False)
 			GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_05", "Full Bot Log, Hide Attack Log") & "|" & _
 			GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_06", "Hide Bot Log, Full Attack Log"), GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_01", -1))
 	GUICtrlSetOnEvent(-1, "cmbLog")
-
+	
+	
 	$g_hBtnAtkLogClear = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogClear", "Clear Atk. Log"), $x + 270, $y - 1, 80, 23)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogClear_Info_01", "Use this to clear the Attack Log."))

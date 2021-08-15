@@ -42,7 +42,7 @@ Func IsSettingPage($bSetLog = True, $iLoop = 30)
 	Return False
 EndFunc   ;==>IsSettingPage
 
-Func IsTrainPage($bSetLog = True, $iLoop = 30)
+Func IsTrainPage($bSetLog = True, $iLoop = 10)
 
 	If IsPageLoop($aIsTrainPgChk1, $iLoop) Then
 		If ($g_bDebugSetlog Or $g_bDebugClick) And $bSetLog Then SetLog("**Army Window OK**", $COLOR_ACTION)

@@ -52,7 +52,7 @@ Func BotStart($bAutostartDelay = 0)
 	SaveConfig()
 	readConfig()
 	applyConfig(False) ; bot window redraw stays disabled!
-	CreaTableDB()
+	;CreaTableDB()
 
 	; Initial ObjEvents for the Autoit objects errors
 	__ObjEventIni()

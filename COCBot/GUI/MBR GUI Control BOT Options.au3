@@ -814,7 +814,15 @@ Func btnTestGetLocationBuildingImage()
 	Local $hPenPaleBlue = _GDIPlus_PenCreate(0xFF66B2FF, 2)
 	Local $hPenCyan = _GDIPlus_PenCreate(0xFF00FFFF, 2)
 
-
+	;									----------x,y--- kiri 							------x,y---- atas
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[0][0]+70, $InternalArea[0][1], $InternalArea[2][0], $InternalArea[2][1]+60, $hPenMagenta)
+	;									----------x,y--- kiri 							------x,y---- bawah
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[0][0]+70, $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1]-60, $hPenMagenta)
+	;									----------x,y--- kanan 							------x,y---- atas
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0]-70, $InternalArea[1][1], $InternalArea[2][0], $InternalArea[2][1]+60, $hPenMagenta)
+	;									----------x,y--- kanan 							------x,y---- bawah
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0]-70, $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1]-60, $hPenMagenta)
+	
 	; - GOLD STORAGE
 	If $g_oBldgAttackInfo.exists($eBldgGoldS & "_LOCATION") Then
 		$g_aiCSVGoldStoragePos = $g_oBldgAttackInfo.item($eBldgGoldS & "_LOCATION")
@@ -1130,7 +1138,8 @@ Func SQLiteExport()
 		Return
 	EndIf
 	Setlog("Exporting data from SQlite, please wait!", $COLOR_ACTION)
-	ExportDataBase(False)
-	Setlog("Export successfully completed.", $COLOR_SUCCESS)
+	;ExportDataBase(False)
+	Setlog("Sorry this feature is disabled, export failed.", $COLOR_ERROR)
+	;Setlog("Export successfully completed.", $COLOR_SUCCESS)
 
 EndFunc   ;==>SQLiteExport

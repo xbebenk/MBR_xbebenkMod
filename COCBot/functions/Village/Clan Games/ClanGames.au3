@@ -58,13 +58,15 @@ Func _ClanGames($test = False)
 		SetLog("Your score limit is reached! Congrats")
 		ClickAway()
 		Return
-	ElseIf $aiScoreLimit[0] + 200 > $aiScoreLimit[1] Then
+	ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
 		SetLog("Your Score limit is almost reached")
 		If $g_bChkClanGamesStopBeforeReachAndPurge Then
 			If CooldownTime() Or IsEventRunning() Then Return
 			SetLog("Stop before completing your limit and only Purge")
-			$sEventName = "Builder Base Challenges to Purge"
-			If PurgeEvent($g_sImgPurge, $sEventName, True) Then $g_iPurgeJobCount[$g_iCurAccount] += 1
+			SetLog("Lets only purge 1 most top event", $COLOR_WARNING)
+			ForcePurgeEvent()
+			;$sEventName = "Builder Base Challenges to Purge"
+			;If PurgeEvent($g_sImgPurge, $sEventName, True) Then $g_iPurgeJobCount[$g_iCurAccount] += 1
 			ClickAway()
 			Return
 		EndIf
@@ -416,6 +418,19 @@ Func _ClanGames($test = False)
 		For $i = 0 To UBound($aSelectChallenges) - 1
 			If $aSelectChallenges[$i][4] = 60 And $g_bChkClanGames60 Then
 				Setlog($aSelectChallenges[$i][0] & " unselected, is a 60min event!", $COLOR_INFO)
+				$sEventName = $aSelectChallenges[$i][0]
+				Click($aSelectChallenges[$i][1], $aSelectChallenges[$i][2])
+				If _Sleep(1750) Then Return
+				If $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
+				
+					; Start and Purge at same time
+					SetLog("Starting 60min Job to purge", $COLOR_INFO)
+					If _Sleep(1500) Then Return
+					If StartsEvent($sEventName, True, $getCapture, $g_bChkClanGamesDebug) Then
+						ClickAway()
+						Return True
+					EndIf
+				EndIf
 				ContinueLoop
 			EndIf
 			ReDim $aTempSelectChallenges[UBound($aTempSelectChallenges) + 1][5]
@@ -451,7 +466,9 @@ Func _ClanGames($test = False)
 			ClickP($TabChallengesPosition, 2, 0, "#Tab")
 		EndIf
 	EndIf
-
+	
+	
+	
 	; Lets test the Builder Base Challenges
 	If $g_bChkClanGamesPurge Then
 		If $g_iPurgeJobCount[$g_iCurAccount] + 1 < $g_iPurgeMax Or $g_iPurgeMax = 0 Then
@@ -467,7 +484,8 @@ Func _ClanGames($test = False)
 		EndIf
 		Return
 	EndIf
-
+	SetLog("No Event found, lets purge 1 most top event", $COLOR_WARNING)
+	ForcePurgeEvent()
 	SetLog("No Event found, Check your settings", $COLOR_WARNING)
 	ClickAway()
 	If _Sleep(2000) Then Return
@@ -662,6 +680,50 @@ Func PurgeEvent($directoryImage, $sEventName, $getCapture = True)
 	EndIf
 	Return False
 EndFunc   ;==>PurgeEvent
+
+Func ForcePurgeEvent()
+	Click(347,216)	
+	SetLog("ForcePurgeEvent: Starting Impossible Job to purge", $COLOR_INFO)
+	If _Sleep(1500) Then Return
+	If StartAndPurgeEvent() Then
+		ClickAway()
+		Return True
+	EndIf
+	Return False
+EndFunc   ;==>PurgeEvent
+
+Func StartAndPurgeEvent()
+	
+	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, True, $g_bChkClanGamesDebug) Then
+		Local $Timer = GetEventTimeInMinutes($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+		SetLog("Starting  Event" & " [" & $Timer & " min]", $COLOR_SUCCESS)
+		Click($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting Purge for " & $Timer & " min", 1)
+		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting Purge for " & $Timer & " min")
+		
+			If _Sleep(2000) Then Return
+			If QuickMIS("BC1", $g_sImgTrashPurge, 220, 150, 830, 580, True, $g_bChkClanGamesDebug) Then
+				Click($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+				If _Sleep(1200) Then Return
+				SetLog("Click Trash", $COLOR_INFO)
+				If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400, 580, 450, True, $g_bChkClanGamesDebug) Then
+					SetLog("Click OK", $COLOR_INFO)
+					Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
+					SetLog("Purging a job on progress !", $COLOR_SUCCESS)
+					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ", 1)
+					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ")
+					ClickAway()
+				Else
+					SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
+					Return False
+				EndIf
+			Else
+				SetLog("$g_sImgTrashPurge Issue", $COLOR_ERROR)
+				Return False
+			EndIf
+	EndIf
+	Return True
+EndFunc
 
 Func TrashFailedEvent()
 	;Look for the red cross on failed event
@@ -872,6 +934,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
             ["StarM",                     "Builder Base Star Master",                  2,  1, 1], _ ; Earn 6 - 24 stars on the BB
             ["Victories",                 "Builder Base Victories",                  2,  10, 1], _ ; Earn 3 - 6 victories on the BB
             ["Destruction",             "Builder Base Destruction",                  2,  1, 1]] ; Earn 225% - 900% on BB attacks
+
 
 	; Just in Case
 	Local $LocalINI = $sINIPath

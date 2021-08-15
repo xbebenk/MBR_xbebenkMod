@@ -1568,6 +1568,8 @@ EndFunc   ;==>TotalSpellCount_QTEdit
 Func chkSuperTroops()
 	If GUICtrlRead($g_hChkSuperTroops) = $GUI_CHECKED Then
 		$g_bSuperTroopsEnable = True
+		$g_bSkipBoostSuperTroopOnHalt = True
+		GUICtrlSetState($g_hChkSkipBoostSuperTroopOnHalt, $GUI_ENABLE)
 		For $i = 0 To $iMaxSupersTroop - 1
 			GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_ENABLE)
 			GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_ENABLE)
@@ -1576,6 +1578,8 @@ Func chkSuperTroops()
 		Next
 	Else
 		$g_bSuperTroopsEnable = False
+		$g_bSkipBoostSuperTroopOnHalt = False
+		GUICtrlSetState($g_hChkSkipBoostSuperTroopOnHalt, $GUI_DISABLE)
 		For $i = 0 To $iMaxSupersTroop - 1
 			GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_DISABLE)
 			GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_DISABLE)

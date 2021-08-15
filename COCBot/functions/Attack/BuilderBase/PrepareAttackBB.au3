@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func PrepareAttackBB()
+Func PrepareAttackBB($bCheck = False)
 	If $g_bChkBBTrophyRange Then
 		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
 			SetLog("Trophies out of range.")
@@ -24,7 +24,7 @@ Func PrepareAttackBB()
 	EndIf
 
 	If Not ClickAttack() Then Return False
-
+	_Sleep(1500)
 	If Not CheckArmyReady() Then
 		_Sleep(1500)
 		ClickAway()

@@ -2930,7 +2930,7 @@ Func AndroidAdbScript($scriptTag, $variablesArray = Default, $timeout = Default,
 	Return SetError(@error, @extended, (@error = 0 ? 1 : 0))
 EndFunc   ;==>AndroidAdbScript
 
-Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch = False)
+Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
 	$x1 = Int($x1) + $g_aiMouseOffset[0]
 	$y1 = Int($y1) + $g_aiMouseOffset[1]
 	$x2 = Int($x2) + $g_aiMouseOffset[0]
@@ -2939,10 +2939,10 @@ Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch =
 	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x2,$y2)")
 	Local $swipe_coord[4][2] = [["{$x1}", $x1], ["{$y1}", $y1], ["{$x2}", $x2], ["{$y2}", $y2]]
 	;Return AndroidAdbScript("clickdrag", $swipe_coord, Default, Default, $wasRunState)
-	Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState, $bSCIDSwitch)
+	Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState)
 EndFunc   ;==>AndroidClickDrag
 
-Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch = False)
+Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
 	AndroidAdbLaunchShellInstance($wasRunState)
 	If $g_iAndroidAdbMinitouchMode = 0 Then
 		If $g_bAndroidAdbMinitouchSocket < 1 Then
@@ -2987,11 +2987,7 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCI
 	Else
 		AndroidAdbSendMinitouchShellCommand($send)
 	EndIf
-	If $bSCIDSwitch Then
-		$sleep = 50
-	Else
-		$sleep = $sleepMove
-	EndIf
+	$sleep = $sleepMove
 	For $i = 1 To $loops
 		$x += $x_steps
 		$y += $y_steps
@@ -4865,3 +4861,5 @@ Func CheckEmuNewVersions()
 		SetLog($HelpLink, $COLOR_INFO)
 	EndIf
 EndFunc   ;==>CheckEmuNewVersions
+
+

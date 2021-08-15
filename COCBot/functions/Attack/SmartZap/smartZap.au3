@@ -187,6 +187,10 @@ Func smartZap($minDE = -1)
 	If $iTroops > 0 Then
 		For $i = 0 To UBound($g_avAttackTroops) - 1
 			If $g_avAttackTroops[$i][0] = $eLSpell Then
+				If Number($g_iLSpellLevel) > 9 Then 
+					$g_iLSpellLevel = 9
+					SetLog("Set Detected LSpell to Max Level, because detected lvl higher than max lvl", $COLOR_DEBUG)
+				EndIf ;Max lightningSpell was 9, sometime bot detected lvl 11 LSpell and broke
 				If $aSpells[0][4] = 0 Then
 					If $g_bDebugSmartZap Then SetLog(GetTroopName($g_avAttackTroops[$i][0]) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
 					$aSpells[0][2] = $i

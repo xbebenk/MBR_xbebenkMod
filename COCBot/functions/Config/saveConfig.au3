@@ -85,9 +85,6 @@ Func SaveBuildingConfig()
 	_Ini_Add("upgrade", "LabPosX", $g_aiLaboratoryPos[0])
 	_Ini_Add("upgrade", "LabPosY", $g_aiLaboratoryPos[1])
 
-	_Ini_Add("upgrade", "PetHousePosX", $g_aiPetHousePos[0])
-	_Ini_Add("upgrade", "PetHousePosY", $g_aiPetHousePos[1])
-
 	_Ini_Add("upgrade", "StarLabPosX", $g_aiStarLaboratoryPos[0])
 	_Ini_Add("upgrade", "StarLabPosY", $g_aiStarLaboratoryPos[1])
 
@@ -129,7 +126,23 @@ Func SaveBuildingConfig()
 	_Ini_Add("upgrade", "upgradelabdelexircost", $g_iLaboratoryDElixirCost)
 	_Ini_Add("upgrade", "upgradestartroops", $g_bAutoStarLabUpgradeEnable ? 1 : 0)
 	_Ini_Add("upgrade", "upgradestartroopname", $g_iCmbStarLaboratory)
-
+	
+	;xbenk
+	_Ini_Add("upgrade", "upgradeorder", $g_bLabUpgradeOrderEnable ? 1 : 0)
+	Local $string = ""
+	For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
+		$string &= $g_aCmbLabUpgradeOrder[$i] & "|"
+	Next
+	_Ini_Add("upgrade", "upgradeorderlist", $string)
+	
+	_Ini_Add("upgrade", "Supgradeorder", $g_bSLabUpgradeOrderEnable ? 1 : 0)
+	Local $string = ""
+	For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
+		$string &= $g_aCmbSLabUpgradeOrder[$i] & "|"
+	Next
+	_Ini_Add("upgrade", "Supgradeorderlist", $string)
+	
+	
 	; <><><><> Village / Upgrade - Buildings <><><><>
 	ApplyConfig_600_16(GetApplyConfigSaveAction())
 	For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1
@@ -373,6 +386,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall)
 
 	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
+	_Ini_Add("other", "ChkOptimizeOTTO", $g_iChkBBSuggestedUpgradesOTTO)
 
 	_Ini_Add("other", "ChkClanGamesAir", $g_bChkClanGamesAir ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesGround", $g_bChkClanGamesGround ? 1 : 0)
@@ -482,11 +496,13 @@ Func SaveConfig_600_12()
 	Next
 
 	For $i = 0 To $eSpellCount - 1
-		Local $sIniName = $g_asSpellNames[$i] & "Spells"
-		_Ini_Add("donate", "chkDonate" & $sIniName, $g_abChkDonateSpell[$i] ? 1 : 0)
-		_Ini_Add("donate", "chkDonateAll" & $sIniName, $g_abChkDonateAllSpell[$i] ? 1 : 0)
-		_Ini_Add("donate", "txtDonate" & $sIniName, StringReplace($g_asTxtDonateSpell[$i], @CRLF, "|"))
-		_Ini_Add("donate", "txtBlacklist" & $sIniName, StringReplace($g_asTxtBlacklistSpell[$i], @CRLF, "|"))
+		If $i <> $eSpellClone Then
+			Local $sIniName = $g_asSpellNames[$i] & "Spells"
+			_Ini_Add("donate", "chkDonate" & $sIniName, $g_abChkDonateSpell[$i] ? 1 : 0)
+			_Ini_Add("donate", "chkDonateAll" & $sIniName, $g_abChkDonateAllSpell[$i] ? 1 : 0)
+			_Ini_Add("donate", "txtDonate" & $sIniName, StringReplace($g_asTxtDonateSpell[$i], @CRLF, "|"))
+			_Ini_Add("donate", "txtBlacklist" & $sIniName, StringReplace($g_asTxtBlacklistSpell[$i], @CRLF, "|"))
+		EndIf
 	Next
 
 	For $i = $eSiegeWallWrecker to $eSiegeMachineCount - 1
@@ -543,7 +559,7 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradeWarden", $g_bUpgradeWardenEnable ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradeChampion", $g_bUpgradeChampionEnable ? 1 : 0)
 	_Ini_Add("upgrade", "HeroReservedBuilder", $g_iHeroReservedBuilder)
-
+	
 	_Ini_Add("upgrade", "UpgradePetLassi", $g_bUpgradePetsEnable[$ePetLassi] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetEletroOwl", $g_bUpgradePetsEnable[$ePetEletroOwl] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetMightyYak", $g_bUpgradePetsEnable[$ePetMightyYak] ? 1 : 0)
@@ -561,7 +577,8 @@ Func SaveConfig_auto()
 	ApplyConfig_auto(GetApplyConfigSaveAction())
 	; Auto Upgrade
 	_Ini_Add("Auto Upgrade", "AutoUpgradeEnabled", $g_bAutoUpgradeEnabled)
-	For $i = 0 To 13
+	_Ini_Add("Auto Upgrade", "ScrollFirst", $g_bScrollFirst)
+	For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1 
 		_Ini_Add("Auto Upgrade", "ChkUpgradesToIgnore[" & $i & "]", $g_iChkUpgradesToIgnore[$i])
 	Next
 	For $i = 0 To 2
@@ -643,6 +660,7 @@ Func SaveConfig_600_22()
 	Next
 	_Ini_Add("planned", "BoostBarracksHours", $string)
 	_Ini_Add("SuperTroopsBoost", "SuperTroopsEnable", $g_bSuperTroopsEnable ? 1 : 0)
+	_Ini_Add("SuperTroopsBoost", "SkipSuperTroopsBoostOnHalt", $g_bSkipBoostSuperTroopOnHalt ? 1 : 0)
 	For $i = 0 To $iMaxSupersTroop - 1
 		_Ini_Add("SuperTroopsBoost", "SuperTroopsIndex" & $i, $g_iCmbSuperTroops[$i])
 	Next

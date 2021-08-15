@@ -107,31 +107,31 @@ Func btnResetUpgrade()
 		    $g_avBuildingUpgrades[$iEmptyRow][5] = $g_avBuildingUpgrades[$i][5] ;Upgrade Level
 		    $g_avBuildingUpgrades[$iEmptyRow][6] = $g_avBuildingUpgrades[$i][6] ;Upgrade Duration
 		    $g_avBuildingUpgrades[$iEmptyRow][7] = $g_avBuildingUpgrades[$i][7] ;Upgrade Finish Time
-
+			
 			;Set the GUI data for new row and clear the GUI data for the cleared row.
 			;GUI Unit Name
 			;SetDebugLog("Setting name " & $g_avBuildingUpgrades[$iEmptyRow][4])
 			GUICtrlSetData($g_hTxtUpgradeName[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][4])
-			GUICtrlSetData($g_hTxtUpgradeName[$i], "")
+			GUICtrlSetData($g_hTxtUpgradeName[$i], "") 
 			;GUI Unit Level
 			;SetDebugLog("Setting level " & $g_avBuildingUpgrades[$iEmptyRow][5])
 			GUICtrlSetData($g_hTxtUpgradeLevel[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][5])
-		    GUICtrlSetData($g_hTxtUpgradeLevel[$i], "")
+		    GUICtrlSetData($g_hTxtUpgradeLevel[$i], "") 
 			;Upgrade value in GUI
 			GUICtrlSetData($g_hTxtUpgradeValue[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][2])
-		    GUICtrlSetData($g_hTxtUpgradeValue[$i], "")
+		    GUICtrlSetData($g_hTxtUpgradeValue[$i], "") 
 		    ;Upgrade duration in GUI
 			GUICtrlSetData($g_hTxtUpgradeTime[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][6])
-			GUICtrlSetData($g_hTxtUpgradeTime[$i], "")
-
+			GUICtrlSetData($g_hTxtUpgradeTime[$i], "") 
+			
 			;GUI upgrade type image
 			$j = $eIcnElixir
 			If $g_avBuildingUpgrades[$iEmptyRow][3] = "GOLD" Then $j = $eIcnGold
 			;SetDebugLog("Setting GUI type to " & $j)
 			_GUICtrlSetImage($g_hPicUpgradeType[$iEmptyRow], $g_sLibIconPath, $j)
-		    _GUICtrlSetImage($g_hPicUpgradeType[$i], $g_sLibIconPath, $eIcnBlank)
-
-			;GUI Status icon : Still not working right!
+		    _GUICtrlSetImage($g_hPicUpgradeType[$i], $g_sLibIconPath, $eIcnBlank) 
+			
+			;GUI Status icon : Still not working right!  
 			;$eIcnTroops=43, $eIcnGreenLight=69, $eIcnRedLight=71 or $eIcnYellowLight=73
 			;SetDebugLog("Setting status to " & $g_aiPicUpgradeStatus[$i])
 			;$j=$g_aiPicUpgradeStatus[$i]
@@ -142,17 +142,17 @@ Func btnResetUpgrade()
 			_GUICtrlSetImage($g_hPicUpgradeStatus[$iEmptyRow], $g_sLibIconPath, $j)
 		    ;SetDebugLog("Clearing old status to red light " & $eIcnRedLight)
 			$g_aiPicUpgradeStatus[$i] = $eIcnRedLight ;blank row goes red
-			_GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, $eIcnRedLight)
-
+			_GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, $eIcnRedLight) 
+			
 			;Upgrade selection box
 			GUICtrlSetState($g_hChkUpgrade[$iEmptyRow], $GUI_CHECKED)
-			GUICtrlSetState($g_hChkUpgrade[$i], $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkUpgrade[$i], $GUI_UNCHECKED) 
 			;Upgrade finish time in GUI
 			GUICtrlSetData($g_hTxtUpgradeEndTime[$iEmptyRow], $g_avBuildingUpgrades[$iEmptyRow][7])
-		    GUICtrlSetData($g_hTxtUpgradeEndTime[$i], "")
+		    GUICtrlSetData($g_hTxtUpgradeEndTime[$i], "") 
 			;Repeat box
 			GUICtrlSetState($g_hChkUpgradeRepeat[$iEmptyRow], $GUI_CHECKED)
-		    GUICtrlSetState($g_hChkUpgradeRepeat[$i], $GUI_UNCHECKED)
+		    GUICtrlSetState($g_hChkUpgradeRepeat[$i], $GUI_UNCHECKED) 
 
 			;Now clear the row we just moved from.
 			$g_avBuildingUpgrades[$i][0] = -1 ;Upgrade Location X
@@ -163,19 +163,19 @@ Func btnResetUpgrade()
 		    $g_avBuildingUpgrades[$i][5] = "" ;Upgrade Level
 		    $g_avBuildingUpgrades[$i][6] = "" ;Upgrade Duration
 		    $g_avBuildingUpgrades[$i][7] = "" ;Upgrade Finish Time
-
-
+			
+			
 			$i = $iEmptyRow ;Reset counter to this row so we continue forward from here.
 			$iEmptyRow = -1 ;This should be the first empty row now.
-
+			
 		  Else
 			;set these to clear up old status icon issues on rows not moved
 		    ;SetDebugLog("Not moving row " & $i)
 			$j=$g_aiPicUpgradeStatus[$i]
 			;SetDebugLog("Setting GUI status to " & $j) ;
 			;Following works if a constant is used, but not an variable?
-			if $j=69 then _GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, 69)
-			if $j=73 then _GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, 73)
+			if $j=69 then _GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, 69) 
+			if $j=73 then _GUICtrlSetImage($g_hPicUpgradeStatus[$i], $g_sLibIconPath, 73) 
 			ContinueLoop
 		  Endif
 		Else ;Row not checked.  Clear it.
@@ -198,7 +198,7 @@ Func btnResetUpgrade()
 		  GUICtrlSetState($g_hChkUpgrade[$i], $GUI_UNCHECKED) ;Change upgrade selection box to unchecked
 		  GUICtrlSetData($g_hTxtUpgradeEndTime[$i], "") ;Clear Upgrade time in GUI
 		  GUICtrlSetState($g_hChkUpgradeRepeat[$i], $GUI_UNCHECKED) ;Change repeat box to unchecked
-		  If $iEmptyRow = -1 Then $iEmptyRow=$i ;This row is now empty.
+		  If $iEmptyRow = -1 Then $iEmptyRow=$i ;This row is now empty.  
 		Endif
 	Next
 EndFunc   ;==>btnResetUpgrade
@@ -217,8 +217,107 @@ Func chkLab()
 		GUICtrlSetState($g_hCmbLaboratory, $GUI_DISABLE)
 		_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[0][1])
 	EndIf
+	If $g_iCmbLaboratory = 0 Then 
+		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
+	EndIf
 	LabStatusGUIUpdate()
 EndFunc   ;==>chkLab
+	
+Func chkLabUpgradeOrder()
+	If GUICtrlRead($g_hChkLabUpgradeOrder) = $GUI_CHECKED Then
+		$g_bLabUpgradeOrderEnable = True
+		GUICtrlSetState($g_hCmbLaboratory, $GUI_DISABLE)
+		GUICtrlSetState($g_hBtnRemoveLabUpgradeOrder, $GUI_ENABLE)
+		GUICtrlSetState($g_hBtnSetLabUpgradeOrder, $GUI_ENABLE)
+		For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
+			GUICtrlSetState($g_ahCmbLabUpgradeOrder[$i], $GUI_ENABLE)
+		Next
+	Else
+		$g_bLabUpgradeOrderEnable = False
+		GUICtrlSetState($g_hCmbLaboratory, $GUI_ENABLE)
+		GUICtrlSetState($g_hBtnRemoveLabUpgradeOrder, $GUI_DISABLE)
+		GUICtrlSetState($g_hBtnSetLabUpgradeOrder, $GUI_DISABLE)
+		For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
+			GUICtrlSetState($g_ahCmbLabUpgradeOrder[$i], $GUI_DISABLE)
+		Next
+	EndIf
+EndFunc ;==>chkLabUpgradeOrder
+
+Func chkSLabUpgradeOrder()
+	If GUICtrlRead($g_hChkSLabUpgradeOrder) = $GUI_CHECKED Then
+		$g_bSLabUpgradeOrderEnable = True
+		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_DISABLE)
+		GUICtrlSetState($g_hBtnRemoveSLabUpgradeOrder, $GUI_ENABLE)
+		GUICtrlSetState($g_hBtnSetSLabUpgradeOrder, $GUI_ENABLE)
+		For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
+			GUICtrlSetState($g_ahCmbSLabUpgradeOrder[$i], $GUI_ENABLE)
+		Next
+	Else
+		$g_bSLabUpgradeOrderEnable = False
+		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_ENABLE)
+		GUICtrlSetState($g_hBtnRemoveSLabUpgradeOrder, $GUI_DISABLE)
+		GUICtrlSetState($g_hBtnSetSLabUpgradeOrder, $GUI_DISABLE)
+		For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
+			GUICtrlSetState($g_ahCmbSLabUpgradeOrder[$i], $GUI_DISABLE)
+		Next
+	EndIf
+EndFunc ;==>chkSLabUpgradeOrder
+
+Func cmbLabUpgradeOrder()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1 ; check for duplicate combobox index and flag problem
+		If $iGUI_CtrlId = $g_ahCmbLabUpgradeOrder[$i] Then ContinueLoop
+		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i]) Then
+			_GUICtrlComboBox_SetCurSel($g_ahCmbLabUpgradeOrder[$i], -1)
+			GUISetState()
+		EndIf
+	Next
+EndFunc   ;==>cmbLabUpgradeOrder
+
+Func cmbSLabUpgradeOrder()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1 ; check for duplicate combobox index and flag problem
+		If $iGUI_CtrlId = $g_ahCmbSLabUpgradeOrder[$i] Then ContinueLoop
+		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbSLabUpgradeOrder[$i]) Then
+			_GUICtrlComboBox_SetCurSel($g_ahCmbSLabUpgradeOrder[$i], -1)
+			GUISetState()
+		EndIf
+	Next
+EndFunc   ;==>cmbSLabUpgradeOrder
+
+Func btnRemoveLabUpgradeOrder()
+	For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
+		_GUICtrlComboBox_SetCurSel($g_ahCmbLabUpgradeOrder[$i], -1)
+	Next
+EndFunc
+
+Func btnRemoveSLabUpgradeOrder()
+	For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
+		_GUICtrlComboBox_SetCurSel($g_ahCmbSLabUpgradeOrder[$i], -1)
+	Next
+EndFunc
+
+Func btnSetLabUpgradeOrder()
+	Local $d
+	SetLog("Set Laboratory ugrade Order",$COLOR_SUCCESS)
+	For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
+		$g_aCmbLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i])
+		$d = $g_aCmbLabUpgradeOrder[$i]
+		SetLog($i+1 & " : " & $g_avLabTroops[$d+1][0], $COLOR_SUCCESS)
+	Next
+EndFunc
+
+Func btnSetSLabUpgradeOrder()
+	Local $d
+	SetLog("Set Star Laboratory ugrade Order",$COLOR_SUCCESS)
+	For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
+		$g_aCmbSLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSLabUpgradeOrder[$i])
+		$d = $g_aCmbSLabUpgradeOrder[$i]
+		SetLog($i+1 & " : " & $g_avStarLabTroops[$d+1][3], $COLOR_SUCCESS)
+	Next
+EndFunc
 
 Func chkStarLab()
 	If GUICtrlRead($g_hChkAutoStarLabUpgrades) = $GUI_CHECKED Then
@@ -233,6 +332,11 @@ Func chkStarLab()
 		GUICtrlSetState($g_hLblNextSLUpgrade, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_DISABLE)
 		_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[0][4])
+	EndIf
+	If $g_iCmbStarLaboratory = 0 Then 
+		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
 	EndIf
 	StarLabStatusGUIUpdate()
 EndFunc   ;==>chkStarLab
@@ -274,11 +378,25 @@ EndFunc   ;==>StarLabStatusGUIUpdate
 Func cmbLab()
 	$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
 	_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
+	If $g_iCmbLaboratory = 0 Then
+		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
+		SetLog($g_iCmbLaboratory)
+	Else
+		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
+		SetLog($g_iCmbLaboratory)
+	EndIf
+	chkLabUpgradeOrder()
 EndFunc   ;==>cmbLab
 
 Func cmbStarLab()
 	$g_iCmbStarLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbStarLaboratory)
 	_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4])
+	If $g_iCmbStarLaboratory = 0 Then
+		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
+	Endif
+	chkSLabUpgradeOrder()
 EndFunc   ;==>cmbStarLab
 
 Func ResetLabUpgradeTime()
@@ -560,6 +678,15 @@ Func chkAutoUpgrade()
 	EndIf
 EndFunc   ;==>chkAutoUpgrade
 
+Func chkScrollFirst()
+	If GUICtrlRead($g_hChkScrollFirst) = $GUI_CHECKED Then
+		$g_bScrollFirst = True
+	Else
+		$g_bScrollFirst = False
+	EndIf
+EndFunc   ;==>chkScrollFirst
+
+
 Func chkResourcesToIgnore()
 	For $i = 0 To 2
 		$g_iChkResourcesToIgnore[$i] = GUICtrlRead($g_hChkResourcesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
@@ -580,7 +707,7 @@ Func chkResourcesToIgnore()
 EndFunc   ;==>chkResourcesToIgnore
 
 Func chkUpgradesToIgnore()
-	For $i = 0 To 13
+	For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 		$g_iChkUpgradesToIgnore[$i] = GUICtrlRead($g_hChkUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 	Next
 EndFunc   ;==>chkUpgradesToIgnore

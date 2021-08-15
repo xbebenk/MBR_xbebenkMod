@@ -114,9 +114,6 @@ Func ReadBuildingConfig()
 
 		IniReadS($g_aiLaboratoryPos[0], $g_sProfileBuildingPath, "upgrade", "LabPosX", -1, "int")
 		IniReadS($g_aiLaboratoryPos[1], $g_sProfileBuildingPath, "upgrade", "LabPosY", -1, "int")
-
-		IniReadS($g_aiPetHousePos[0], $g_sProfileBuildingPath, "upgrade", "PetHousePosX", -1, "int")
-		IniReadS($g_aiPetHousePos[1], $g_sProfileBuildingPath, "upgrade", "PetHousePosY", -1, "int")
 	EndIf
 
 	IniReadS($g_aiStarLaboratoryPos[0], $g_sProfileBuildingPath, "upgrade", "StarLabPosX", -1, "int")
@@ -425,6 +422,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_iChkBBSuggestedUpgradesIgnoreWall, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall, "Int")
 
 	IniReadS($g_iChkPlacingNewBuildings, $g_sProfileConfigPath, "other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings, "Int")
+	IniReadS($g_iChkBBSuggestedUpgradesOTTO, $g_sProfileConfigPath, "other", "ChkOptimizeOTTO", $g_iChkBBSuggestedUpgradesOTTO, "Int")
 
 	IniReadS($g_bChkClanGamesAir, $g_sProfileConfigPath, "other", "ChkClanGamesAir", False, "Bool")
 	IniReadS($g_bChkClanGamesGround, $g_sProfileConfigPath, "other", "ChkClanGamesGround", False, "Bool")
@@ -659,9 +657,11 @@ Func ReadConfig_600_12()
 	$g_asTxtBlacklistTroop[$eCustomD] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistCustomD", "no air|air no|only|just"), "|", @CRLF)
 
 	For $i = 0 To $eSpellCount - 1
-		Local $sIniName = $g_asSpellNames[$i] & "Spells"
-		$g_abChkDonateSpell[$i] = (IniRead($g_sProfileConfigPath, "donate", "chkDonate" & $sIniName, "0") = "1")
-		$g_abChkDonateAllSpell[$i] = (IniRead($g_sProfileConfigPath, "donate", "chkDonateAll" & $sIniName, "0") = "1")
+		If $i <> $eSpellClone Then
+			Local $sIniName = $g_asSpellNames[$i] & "Spells"
+			$g_abChkDonateSpell[$i] = (IniRead($g_sProfileConfigPath, "donate", "chkDonate" & $sIniName, "0") = "1")
+			$g_abChkDonateAllSpell[$i] = (IniRead($g_sProfileConfigPath, "donate", "chkDonateAll" & $sIniName, "0") = "1")
+		EndIf
 	Next
 
 	$g_asTxtDonateSpell[$eSpellLightning] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateLightningSpells", "lightning"), "|", @CRLF)
@@ -681,9 +681,6 @@ Func ReadConfig_600_12()
 
 	$g_asTxtDonateSpell[$eSpellInvisibility] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateInvisibilitySpells", "Invisibility"), "|", @CRLF)
 	$g_asTxtBlacklistSpell[$eSpellInvisibility] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistInvisibilitySpells", "No Invisibility|Invisibility No"), "|", @CRLF)
-
-	$g_asTxtDonateSpell[$eSpellClone] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateCloneSpells", "Clone"), "|", @CRLF)
-	$g_asTxtBlacklistSpell[$eSpellClone] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistCloneSpells", "No Clone|Clone No"), "|", @CRLF)
 
 	$g_asTxtDonateSpell[$eSpellPoison] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonatePoisonSpells", "poison"), "|", @CRLF)
 	$g_asTxtBlacklistSpell[$eSpellPoison] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistPoisonSpells", "no poison|poison no"), "|", @CRLF)
@@ -781,6 +778,18 @@ Func ReadConfig_600_14()
 	IniReadS($g_iLaboratoryDElixirCost, $g_sProfileBuildingPath, "upgrade", "upgradelabdelexircost", 0, "int")
 	IniReadS($g_bAutoStarLabUpgradeEnable, $g_sProfileBuildingPath, "upgrade", "upgradestartroops", False, "Bool")
 	IniReadS($g_iCmbStarLaboratory, $g_sProfileBuildingPath, "upgrade", "upgradestartroopname", 0, "int")
+	
+	;xbenk
+	IniReadS($g_bLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "upgradeorder", False, "Bool")
+	Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "upgradeorderlist", "-1| -1| -1| -1| -1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
+	For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
+		$g_aCmbLabUpgradeOrder[$i] = $str[$i]
+	Next
+	IniReadS($g_bSLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "Supgradeorder", False, "Bool")
+	Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "Supgradeorderlist", "-1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
+	For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
+		$g_aCmbSLabUpgradeOrder[$i] = $str[$i]
+	Next
 EndFunc   ;==>ReadConfig_600_14
 
 Func ReadConfig_600_15()
@@ -790,7 +799,7 @@ Func ReadConfig_600_15()
 	IniReadS($g_bUpgradeWardenEnable, $g_sProfileConfigPath, "upgrade", "UpgradeWarden", False, "Bool")
 	IniReadS($g_bUpgradeChampionEnable, $g_sProfileConfigPath, "upgrade", "UpgradeChampion", False, "Bool")
 	IniReadS($g_iHeroReservedBuilder, $g_sProfileConfigPath, "upgrade", "HeroReservedBuilder", 0, "int")
-
+	
 	IniReadS($g_bUpgradePetsEnable[$ePetLassi], $g_sProfileConfigPath, "upgrade", "UpgradePetLassi", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetEletroOwl], $g_sProfileConfigPath, "upgrade", "UpgradePetEletroOwl", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetMightyYak], $g_sProfileConfigPath, "upgrade", "UpgradePetMightyYak", False, "Bool")
@@ -808,7 +817,8 @@ EndFunc   ;==>ReadConfig_600_16
 Func ReadConfig_auto()
 	; Auto Upgrade
 	IniReadS($g_bAutoUpgradeEnabled, $g_sProfileConfigPath, "Auto Upgrade", "AutoUpgradeEnabled", False, "Bool")
-	For $i = 0 To 13
+	IniReadS($g_bScrollFirst, $g_sProfileConfigPath, "Auto Upgrade", "ScrollFirst", False, "Bool")
+	For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 		IniReadS($g_iChkUpgradesToIgnore[$i], $g_sProfileConfigPath, "Auto Upgrade", "ChkUpgradesToIgnore[" & $i & "]", $g_iChkUpgradesToIgnore[$i], "int")
 	Next
 	For $i = 0 To 2
@@ -885,6 +895,7 @@ Func ReadConfig_600_22()
 		$g_abBoostBarracksHours[$i] = ($g_abBoostBarracksHours[$i] = "1")
 	Next
 	IniReadS($g_bSuperTroopsEnable, $g_sProfileConfigPath, "SuperTroopsBoost", "SuperTroopsEnable", False, "Bool")
+	IniReadS($g_bSkipBoostSuperTroopOnHalt, $g_sProfileConfigPath, "SuperTroopsBoost", "SkipSuperTroopsBoostOnHalt", False, "Bool")
 	For $i = 0 To $iMaxSupersTroop - 1
 		$g_iCmbSuperTroops[$i] = Int(IniRead($g_sProfileConfigPath, "SuperTroopsBoost", "SuperTroopsIndex" & $i, 0))
 	Next

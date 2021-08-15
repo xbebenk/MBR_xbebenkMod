@@ -59,6 +59,8 @@ Func chkActivateBBSuggestedUpgrades()
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkPlacingNewBuildings, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesOTTO, $GUI_ENABLE)
+		
 	Else
 		$g_iChkBBSuggestedUpgrades = 0
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
@@ -66,8 +68,28 @@ Func chkActivateBBSuggestedUpgrades()
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 		GUICtrlSetState($g_hChkPlacingNewBuildings, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesOTTO, $GUI_DISABLE)
 	EndIf
+	
 EndFunc   ;==>chkActivateBBSuggestedUpgrades
+
+Func chkActivateOptimizeOTTO()
+	If GUICtrlRead($g_hChkBBSuggestedUpgradesOTTO) = $GUI_CHECKED Then 
+		$g_iChkBBSuggestedUpgradesOTTO = 1
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkPlacingNewBuildings, $GUI_DISABLE)
+	Else
+		$g_iChkBBSuggestedUpgradesOTTO = 0
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkPlacingNewBuildings, $GUI_ENABLE)
+	Endif
+EndFunc   ;==>chkActivateOptimizeOTTO
 
 Func chkActivateBBSuggestedUpgradesGold()
 	; if disabled, why continue?
@@ -78,12 +100,11 @@ Func chkActivateBBSuggestedUpgradesGold()
 	If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 Then
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
-		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 	EndIf
+	chkActivateOptimizeOTTO()
 	; Ignore Upgrade Builder Hall [Update values]
 	$g_iChkBBSuggestedUpgradesIgnoreHall = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreHall) = $GUI_CHECKED) ? 1 : 0
 	; Update Elixir value
@@ -102,6 +123,7 @@ Func chkActivateBBSuggestedUpgradesElixir()
 	Else
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 	EndIf
+	chkActivateOptimizeOTTO()
 	; Update Gold value
 	$g_iChkBBSuggestedUpgradesIgnoreGold = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreGold) = $GUI_CHECKED) ? 1 : 0
 EndFunc   ;==>chkActivateBBSuggestedUpgradesElixir
@@ -110,90 +132,102 @@ Func chkPlacingNewBuildings()
 	$g_iChkPlacingNewBuildings = (GUICtrlRead($g_hChkPlacingNewBuildings) = $GUI_CHECKED) ? 1 : 0
 EndFunc   ;==>chkPlacingNewBuildings
 
+Local Const $OptimizeOTTO[13] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "D uble Cannon", "Post", "Barracks", "Wall"] 
+Local $BuildingUpgraded = False
 ; MAIN CODE
-Func MainSuggestedUpgradeCode()
+Func MainSuggestedUpgradeCode($bTest = False)
 
 	; If is not selected return
 	If $g_iChkBBSuggestedUpgrades = 0 Then Return
 	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
-
+	
+	BuilderBaseReport()
 	; Check if you are on Builder island
 	If isOnBuilderBase(True) Then
 		; Will Open the Suggested Window and check if is OK
-		If ClickOnBuilder() Then
+		If ClickOnBuilder($bTest) Then
 			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
-			Local $y = 102, $y1 = 132, $step = 28, $x = 400, $x1 = 540
-			; Check for 6  Icons on Window
-			For $i = 0 To 5
-				Local $bSkipGoldCheck = False
-				If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
-					; Proceeds with Elixir icon detection
-					Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeElixir, "Elixir", $bScreencap, $bDebug)
-					Switch $aResult[2]
-						Case "Elixir"
-							Click($aResult[0], $aResult[1], 1)
-							If _Sleep(2000) Then Return
-							If GetUpgradeButton($aResult[2], $bDebug) Then
-								ExitLoop
-							EndIf
-							$bSkipGoldCheck = True
-						Case "New"
-							If $g_iChkPlacingNewBuildings = 1 Then
-								SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
-								If NewBuildings($aResult) Then
+			For $z = 0 To 2 ;for do scroll 3 times
+			If $g_bRestart Then Exitloop
+			Local $x = 400, $y = 100, $x1 = 540, $y1 = 130, $step = 28 
+				; Check for 8  Icons on Window
+				For $i = 0 To 7
+					Local $bSkipGoldCheck = False					
+					If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
+						; Proceeds with Elixir icon detection
+						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeElixir, "Elixir", $bScreencap, $bDebug)
+						Switch $aResult[2]
+							Case "Elixir"
+								Click($aResult[0], $aResult[1], 1)
+								If _Sleep(2000) Then Return
+								If GetUpgradeButton($aResult[2], $bDebug) Then
 									ExitLoop
 								EndIf
 								$bSkipGoldCheck = True
-							Else
-								SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
-							EndIf
-						Case "NoResources"
-							SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
-							;ExitLoop ; continue as suggested upgrades are not ordered by amount
-							$bSkipGoldCheck = True
-						Case Else
-							SetDebugLog("[" & $i + 1 & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-					EndSwitch
-				EndIf
-
-				If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 And $g_aiCurrentLootBB[$eLootGoldBB] > 250 And Not $bSkipGoldCheck Then
-					; Proceeds with Gold coin detection
-					Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
-					Switch $aResult[2]
-						Case "Gold"
-							Click($aResult[0], $aResult[1], 1)
-							If _Sleep(2000) Then Return
-							If GetUpgradeButton($aResult[2], $bDebug) Then
-								ExitLoop
-							EndIf
-						Case "New"
-							If $g_iChkPlacingNewBuildings = 1 Then
-								SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
-								If NewBuildings($aResult) Then
+							Case "New"
+								If $g_iChkPlacingNewBuildings = 1 Then
+									SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
+									If NewBuildings($aResult) Then
+										ExitLoop
+									EndIf
+									$bSkipGoldCheck = True
+								Else
+									SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
+								EndIf
+							Case "NoResources"
+								SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
+								;ExitLoop ; continue as suggested upgrades are not ordered by amount
+								$bSkipGoldCheck = True
+							Case Else
+								SetDebugLog("[" & $i + 1 & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
+						EndSwitch
+					EndIf
+					If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 And $g_aiCurrentLootBB[$eLootGoldBB] > 250 And Not $bSkipGoldCheck Then
+						; Proceeds with Gold coin detection
+						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
+						Switch $aResult[2]
+							Case "Gold"
+								Click($aResult[0], $aResult[1], 1)
+								If _Sleep(2000) Then Return
+								If GetUpgradeButton($aResult[2], $bDebug) Then
 									ExitLoop
 								EndIf
-							Else
-								SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
-							EndIf
-						Case "NoResources"
-							SetLog("[" & $i + 1 & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
-							;ExitLoop ; continue as suggested upgrades are not ordered by amount
-						Case Else
-							SetDebugLog("[" & $i + 1 & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-					EndSwitch
+							Case "New"
+								If $g_iChkPlacingNewBuildings = 1 Then
+									SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
+									If NewBuildings($aResult) Then
+										ExitLoop
+									EndIf
+								Else
+									SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
+								EndIf
+							Case "NoResources"
+								SetLog("[" & $i + 1 & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
+								;ExitLoop ; continue as suggested upgrades are not ordered by amount
+							Case Else
+								SetDebugLog("[" & $i + 1 & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
+						EndSwitch
+					EndIf
+					$y += $step
+					$y1 += $step
+				Next
+				If $BuildingUpgraded Then 
+					Setlog("Found Building to Upgrade..", $COLOR_DEBUG)
+					Exitloop
+				Else
+					ClickDrag(333, $y, 333, 100, 1000);do scroll down
+					If _Sleep(1000) Then Return
 				EndIf
-
-				$y += $step
-				$y1 += $step
-			Next
+			Next			 
 		EndIf
 	EndIf
+	$BuildingUpgraded = False
 	ClickAway()
 EndFunc   ;==>MainSuggestedUpgradeCode
 
 ; This fucntion will Open the Suggested Window and check if is OK
-Func ClickOnBuilder()
+Func ClickOnBuilder($bTest)
 
 	; Master Builder Check pixel [i] icon
 	Local Const $aMasterBuilder[4] = [360, 11, 0x7cbdde, 10]
@@ -201,10 +235,14 @@ Func ClickOnBuilder()
 	Local $sDebugText = ""
 	Local Const $Debug = False
 	Local Const $Screencap = True
-
+	
+	getBuilderCount(True,True)
 	; Master Builder is not available return
 	If $g_iFreeBuilderCountBB = 0 Then SetLog("No Master Builder available! [" & $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB & "]", $COLOR_INFO)
-
+	
+	If $bTest Then $g_iFreeBuilderCountBB = 1
+	
+	
 	; Master Builder available
 	If $g_iFreeBuilderCountBB > 0 Then
 		; Check the Color and click
@@ -266,7 +304,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 	If $sUpgButtom = "Elixir" Then $sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 	If $sUpgButtom = "Gold" Then $sUpgButtom = $g_sImgAutoUpgradeBtnGold
 
-	If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 300, 650, 600, 720, True, $Debug) Then
+	If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 218, 544, 662, 683, True, $Debug) Then
 		Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 		If $aBuildingName[0] = 2 Then
 			SetLog("Building: " & $aBuildingName[1], $COLOR_INFO)
@@ -281,14 +319,46 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 					$aBtnPos[1] = 530
 				#ce
 			EndIf
+			
+			Local $FoundOTTOBuilding = False
+			If $g_iChkBBSuggestedUpgradesOTTO Then 
+				For $i = 0 To UBound($OptimizeOTTO) - 1
+					If StringInStr($aBuildingName[1], $OptimizeOTTO[$i]) Then
+						SetLog("Trying to upgrade : " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
+						If $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6 Then 
+							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+						ElseIf $aBuildingName[1] = "D uble Cannon" And $aBuildingName[2] >= 5 Then
+							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+						ElseIf $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8 Then
+							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+						ElseIf $aBuildingName[1] = "Builder Barracks" And $aBuildingName[2] >= 5 Then
+							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+						ElseIf $aBuildingName[1] = "Wall" And $aBuildingName[2] >= 4 Then
+							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+						Else
+							$FoundOTTOBuilding = True
+							ExitLoop
+						EndIf
+					EndIf
+				Next
+				If Not $FoundOTTOBuilding Then 
+					;SetLog("Building skipped due to OptimizeOTTO", $COLOR_DEBUG)
+					Return False
+				EndIf
+			EndIf
 			If StringInStr($aBuildingName[1], "Wall") And $g_iChkBBSuggestedUpgradesIgnoreWall Then
 				SetLog("Ups! Wall is not to Upgrade!", $COLOR_ERROR)
 				Return False
 			EndIf
-			Click($g_iQuickMISX + 300, $g_iQuickMISY + 650, 1)
+			;setlog("click " & $g_iQuickMISX & " + 218, " & $g_iQuickMISY & " + 544")
+			Click($g_iQuickMISX + 218, $g_iQuickMISY + 544, 1)
+			;Click($g_iQuickMISX + 218, $g_iQuickMISY + 544, 1); what is this line????
 			If _Sleep(1500) Then Return
-			If QuickMIS("BC1", $sUpgButtom, $aBtnPos[0], $aBtnPos[1], $aBtnPos[0] + $aBtnPos[2], $aBtnPos[1] + $aBtnPos[3], True, $Debug) Then
-				Click($g_iQuickMISX + $aBtnPos[0], $g_iQuickMISY + $aBtnPos[1], 1)
+			
+			If QuickMIS("BC1", $sUpgButtom, 300, 480, 550, 560, True, $Debug) Then
+				Click($g_iQuickMISX + 300, $g_iQuickMISY + 480, 1)
+				If _Sleep(1500) Then Return
+				;ClickAway()
 				If isGemOpen(True) Then
 					SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
 					ClickAway()
@@ -297,14 +367,15 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 					Return False
 				Else
 					SetLog($aBuildingName[1] & " Upgrading!", $COLOR_INFO)
+					$BuildingUpgraded = True
 					ClickAway()
 					Return True
 				EndIf
 			Else
 				ClickAway()
+				$BuildingUpgraded = True
 				SetLog("Not enough Resources to Upgrade " & $aBuildingName[1] & " !", $COLOR_ERROR)
 			EndIf
-
 		EndIf
 	EndIf
 

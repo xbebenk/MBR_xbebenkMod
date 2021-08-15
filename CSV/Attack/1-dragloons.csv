@@ -1,0 +1,56 @@
+NOTE  |author: xbebenk
+NOTE  |TH 7 dragloon
+NOTE  |12 loon, 7 dragon
+NOTE  |CC : loons
+NOTE  |
+NOTE  |Use Original Redline
+NOTE  |Use Drop Line First Redline point
+NOTE  |
+
+      |_TROOPNAME_|__FLEXIBLE_|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|
+TRAIN |Drag       |0          |0          |7          |0          |0          |0          |0          |0          |0          |
+TRAIN |Ball       |0          |0          |12         |0          |0          |0          |0          |0          |0          |
+TRAIN |RSpell     |0          |0          |3          |0          |0          |0          |0          |0          |0          |
+TRAIN |LSpell     |0          |0          |1          |0          |0          |0          |0          |0          |0          |
+
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|
+REDLN |0          |0          |0          |1          |0          |0          |0          |4          |4          |4          |
+DRPLN |0          |0          |0          |4          |0          |0          |0          |0          |0          |0          |
+
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|
+CCREQ |           |           |           |loons      |           |           |           |           |           |           |
+
+      |-----------------------------------------------------------------------------------------------|
+	  |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
+SIDE  |0          |0          |0          |0          |0          |20         |0          |           |
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |
+SIDEB |0          |0          |0          |           |0          |5          |           |           |      
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|___________|
+MAKE  |A          |FRONT-LEFT |10         |2          |EXT-INT    |0          |0          |           | dragloon
+MAKE  |B          |FRONT-RIGHT|10         |2          |INT-EXT    |0          |0          |           | dragloon
+MAKE  |C          |FRONT-LEFT |8          |0          |INT-EXT    |0          |0          |           | 
+MAKE  |D          |FRONT-LEFT |8          |-14        |INT-EXT    |0          |0          |           |
+MAKE  |E          |FRONT-LEFT |8          |-7         |INT-EXT    |0          |0          |           |
+MAKE  |F          |FRONT-RIGHT|8          |-7         |INT-EXT    |0          |0          |           |
+MAKE  |G          |LEFT-FRONT |10         |2          |EXT-INT    |0          |0          |           | 
+MAKE  |H          |RIGHT-FRONT|10         |2          |EXT-INT    |0          |0          |           | 
+MAKE  |I          |FRONT-RIGHT|1          |0          |IGNORE     |0          |0          |AIRDEFENSE |           |           |
+MAKE  |J          |BACK-LEFT  |1          |0          |IGNORE     |0          |0          |AIRDEFENSE |           |           |
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________| Troops
+DROP  |I          |1          |4          |LSpell     |0 	      |500         |500	      |AIRDEFENSE |
+DROP  |J          |1          |4          |LSpell     |0 	      |500         |500	      |AIRDEFENSE |
+DROP  |A          |1-6        |4          |Drag       |0 	      |50         |500        |           | dragloon
+DROP  |B          |1-6        |4          |Drag       |0 	      |50         |500	      |           | dragloon
+DROP  |B          |1-6        |4          |Drag       |0 	      |50         |500	      |           | dragloon
+WAIT  |8000       |           |           |           |           |           |           |           |
+DROP  |C          |1          |1          |castle     |0          |0          |0          |           |
+DROP  |A-B        |1-10       |7          |Ball       |0 	      |50         |0	      |           |
+WAIT  |5000       |           |           |           |           |           |           |           |
+DROP  |E          |4          |1          |RSpell     |0 	      |50         |0	      |           |
+DROP  |F          |4          |1          |RSpell     |0 	      |50         |0	      |           |
+DROP  |G          |10         |1          |King       |0          |0          |0          |           |
+DROP  |G          |10         |1          |Queen      |0          |0          |0          |           |
+WAIT  |6000       |           |           |           |           |           |           |           |
+DROP  |D          |1          |1          |RSpell     |0 	      |50         |0	      |           |

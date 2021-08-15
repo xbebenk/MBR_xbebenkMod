@@ -161,6 +161,8 @@ Func BotCommand()
 							Return True
 						EndIf
 					EndIf
+				Case Else
+					SetLog("Cannot determine $g_iCommandStop!, g_bMeetCondStop = " & $g_bMeetCondStop, $COLOR_INFO)
 			EndSwitch
 		EndIf
 	EndIf

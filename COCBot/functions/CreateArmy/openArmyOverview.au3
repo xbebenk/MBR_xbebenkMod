@@ -21,12 +21,19 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 			Return False
 		EndIf
 	EndIf
-
+	
 	If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 10) Then
 		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
 		ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
 	EndIf
 
+	If _Sleep($DELAYRUNBOT6) Then Return ; wait for window to open
+	If Not IsTrainPage() Then
+		If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 10) Then
+			If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
+			ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
+		EndIf
+	EndIf
 	If _Sleep($DELAYRUNBOT6) Then Return ; wait for window to open
 	If Not IsTrainPage() Then
 		SetError(1)

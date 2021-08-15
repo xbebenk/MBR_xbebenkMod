@@ -276,7 +276,13 @@ Func InitializeControlVariables()
 	$oAlwaysEnabledControls($g_hTabAttack) = 1
 	$oAlwaysEnabledControls($g_hTabBot) = 1
 	$oAlwaysEnabledControls($g_hTabAbout) = 1
-
+	
+	$oAlwaysEnabledControls($lbl_LogStyle) = 1
+	$oAlwaysEnabledControls($g_hCmbLogDividerOption) = 1
+	$oAlwaysEnabledControls($g_hBtnAtkLogClear) = 1
+	$oAlwaysEnabledControls($g_hBtnAtkLogCopyClipboard) = 1
+	$oAlwaysEnabledControls($g_hTxtAutoUpgradeLog) = 1
+	
 	For $i in $aTabControlsVillage
 		$oAlwaysEnabledControls($i) = 1
 	Next

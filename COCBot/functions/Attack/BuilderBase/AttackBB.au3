@@ -18,12 +18,12 @@ Func AttackBB()
 
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $aBMPos = 0
-	ClickAway()
+	;ClickAway()
 	SetLog("Going to attack.", $COLOR_BLUE)
 
 	; check for troops, loot and Batlle Machine
-	If Not PrepareAttackBB() Then Return
-	SetDebugLog("PrepareAttackBB(): Success.")
+	;;;If Not PrepareAttackBB() Then Return
+	;;;SetDebugLog("PrepareAttackBB(): Success.")
 
 	; search for a match
 	If _Sleep(2000) Then Return

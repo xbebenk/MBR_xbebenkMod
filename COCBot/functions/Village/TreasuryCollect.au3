@@ -42,6 +42,11 @@ Func TreasuryCollect()
 		If _Sleep($DELAYTREASURY1) Then Return
 	Else
 		SetLog("Cannot find the Treasury Button", $COLOR_ERROR)
+		If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, True, False) Then
+			SetLog("We found Treasury Button from QuickMIS", $COLOR_DEBUG)
+			Click($g_iQuickMISX,$g_iQuickMISY,1)
+			If _Sleep($DELAYTREASURY1) Then Return
+		EndIf
 	EndIf
 
 	If Not _WaitForCheckPixel($aTreasuryWindow, $g_bCapturePixel, Default, "Wait treasury window:") Then

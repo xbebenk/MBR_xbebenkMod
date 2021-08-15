@@ -88,6 +88,12 @@ Func WaitForClouds()
 		If $iSearchTime >= $iLastTime + 1 Then
 			SetLog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
 			$iLastTime += 1
+			If $iSearchTime > 5 Then
+				$g_bIsClientSyncError = True
+				$g_bRestart = True
+				CloseCoC(True)
+				ExitLoop
+			EndIf
 			; once a minute safety checks for search fail/retry msg and Personal Break events and early detection if CoC app has crashed inside emulator (Bluestacks issue mainly)
 			If chkAttackSearchFail() = 2 Or chkAttackSearchPersonalBreak() = True Or GetAndroidProcessPID() = 0 Then
 				resetAttackSearch()
@@ -107,6 +113,12 @@ Func WaitForClouds()
 				SetLog("Enabled bot controls due to long wait time", $COLOR_SUCCESS)
 				$bEnabledGUI = True
 			EndIf
+		EndIf
+		If Int($g_aiCurrentLoot[$eLootTrophy]) < 4000 And $iSearchTime > 5 Then 
+			SetLog("Restart Search cause long wait search on low league", $COLOR_SUCCESS)
+			$g_bRestart = True
+			resetAttackSearch()
+			ExitLoop
 		EndIf
 		If Not $g_bRunState Then ExitLoop
 		ForceCaptureRegion() ; ensure screenshots are not cached

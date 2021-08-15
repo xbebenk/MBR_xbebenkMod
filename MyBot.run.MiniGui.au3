@@ -959,6 +959,9 @@ EndFunc   ;==>btnEmbed
 Func chkBackground()
 EndFunc   ;==>chkBackground
 
+Func ToggleControl()
+EndFunc
+
 Func ButtonBoost()
 EndFunc   ;==>ButtonBoost
 

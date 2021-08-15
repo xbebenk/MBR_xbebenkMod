@@ -53,7 +53,16 @@ Func AttackCSVDEBUGIMAGE()
 	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[0][0], $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1], $hPenDkGreen)
 	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0], $InternalArea[1][1], $InternalArea[2][0], $InternalArea[2][1], $hPenDkGreen)
 	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0], $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1], $hPenDkGreen)
-
+	
+	;									----------x,y--- kiri 							------x,y---- atas
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[0][0]+70, $InternalArea[0][1], $InternalArea[2][0], $InternalArea[2][1]+60, $hPenMagenta)
+	;									----------x,y--- kiri 							------x,y---- bawah
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[0][0]+70, $InternalArea[0][1], $InternalArea[3][0], $InternalArea[3][1]-60, $hPenMagenta)
+	;									----------x,y--- kanan 							------x,y---- atas
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0]-70, $InternalArea[1][1], $InternalArea[2][0], $InternalArea[2][1]+60, $hPenMagenta)
+	;									----------x,y--- kanan 							------x,y---- bawah
+	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[1][0]-70, $InternalArea[1][1], $InternalArea[3][0], $InternalArea[3][1]-60, $hPenMagenta)
+	
 	;-- DRAW VERTICAL AND ORIZONTAL LINES
 	_GDIPlus_GraphicsDrawLine($hGraphic, $InternalArea[2][0], 0, $InternalArea[2][0], $g_iDEFAULT_HEIGHT, $hPenDkGreen)
 	_GDIPlus_GraphicsDrawLine($hGraphic, 0, $InternalArea[0][1], $g_iDEFAULT_WIDTH, $InternalArea[0][1], $hPenDkGreen)
@@ -346,7 +355,7 @@ Func AttackCSVDEBUGIMAGE()
 	_GDIPlus_GraphicsDrawString($hGraphic, "ZF: " & $g_aVillageSize[1], 5, 530, "Arial", 12)
 	_GDIPlus_GraphicsDrawString($hGraphic, "Offset: " & $g_aVillageSize[2] & ", " & $g_aVillageSize[3], 5, 550, "Arial", 12)
 	
-	_GDIPlus_GraphicsDrawLine($hGraphic, int($g_aVillageSize[4]), int($g_aVillageSize[5]), int($g_aVillageSize[7]), int($g_aVillageSize[8]), $hPenMagenta)
+	;_GDIPlus_GraphicsDrawLine($hGraphic, int($g_aVillageSize[4]), int($g_aVillageSize[5]), int($g_aVillageSize[7]), int($g_aVillageSize[8]), $hPenMagenta)
 
 	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
 	Local $Time = @HOUR & "." & @MIN & "." & @SEC
