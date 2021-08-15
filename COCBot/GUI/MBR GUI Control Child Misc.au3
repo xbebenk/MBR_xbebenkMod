@@ -729,6 +729,7 @@ Func chkEnableBBAttack()
 		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbBBAttackCount, $GUI_ENABLE)
 		chkBBTrophyRange()
 	Else
 		GUICtrlSetState($g_hChkBBTrophyRange, $GUI_DISABLE)
@@ -740,7 +741,13 @@ Func chkEnableBBAttack()
 		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbBBAttackCount, $GUI_DISABLE)
 	EndIf
+EndFunc
+
+Func cmbBBAttackCount()
+	$g_iBBAttackCount = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackCount)
+	SetDebugLog("BB Attack Count: " & $g_iBBAttackCount)
 EndFunc
 
 Func cmbBBNextTroopDelay()

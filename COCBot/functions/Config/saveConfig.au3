@@ -421,6 +421,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkBBDropBMFirst", $g_bChkBBDropBMFirst)
 	_Ini_Add("other", "iBBNextTroopDelay", $g_iBBNextTroopDelay)
 	_Ini_Add("other", "iBBSameTroopDelay", $g_iBBSameTroopDelay)
+	_Ini_Add("other", "iBBAttackCount", $g_iBBAttackCount)
 
 	; Builder Base Drop Order
 	_Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)

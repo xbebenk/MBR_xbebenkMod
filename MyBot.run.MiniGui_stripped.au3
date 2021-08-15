@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.9.5"
-Global $g_sXModversion = "v1.1.1"
+Global $g_sXModversion = "v1.1.2"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -2868,7 +2868,7 @@ Global $g_aiLastGoodWallPos[2] = [-1, -1]
 Global $g_bAutoUpgradeEnabled = False
 Global $g_bScrollFirst = False
 Global $g_iTxtSmartMinGold = 150000, $g_iTxtSmartMinElixir = 150000, $g_iTxtSmartMinDark = 1500
-Global $g_iChkUpgradesToIgnore[24] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_iChkUpgradesToIgnore[25] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iChkResourcesToIgnore[3] = [0, 0, 0]
 Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0, $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_iChkBBSuggestedUpgradesOTTO = 0
 Global $g_iChkPlacingNewBuildings = 0
@@ -3009,6 +3009,7 @@ Global $g_aiChampionAltarPos[2] = [-1, -1]
 Global $g_aiLaboratoryPos[2] = [-1, -1]
 Global $g_aiClanCastlePos[2] = [-1, -1]
 Global $g_aiStarLaboratoryPos[2] = [-1, -1]
+Global $g_bisBHMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = False, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0, $g_ForceBBAttackOnClanGames = 0
 Global $g_CurrentCampUtilization = 0, $g_iTotalCampSpace = 0
 Global $g_iLaboratoryElixirCost = 0, $g_iLaboratoryDElixirCost = 0
 Global $g_iWallCost = 0
@@ -4653,7 +4654,7 @@ EndIf
 $g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 67)
 GUICtrlSetOnEvent(-1, "BotMoveRequest")
 GUICtrlSetState(-1, $GUI_DISABLE)
-$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel($g_sXModversion, $_GUI_MAIN_WIDTH - 130, 15, 130 , 20 ,$SS_RIGHT)
+$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion, $_GUI_MAIN_WIDTH - 130, 15, 130 , 20 ,$SS_RIGHT)
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 GUICtrlSetColor(-1, $COLOR_INFO)
 GUICtrlSetFont(-1,9, 800)
@@ -5024,6 +5025,7 @@ IniReadS($g_bChkBBWaitForMachine, $g_sProfileConfigPath, "other", "ChkBBWaitForM
 IniReadS($g_bChkBBDropBMFirst, $g_sProfileConfigPath, "other", "ChkBBDropBMFirst", False, "Bool")
 IniReadS($g_iBBNextTroopDelay, $g_sProfileConfigPath, "other", "iBBNextTroopDelay", $g_iBBNextTroopDelayDefault, "int")
 IniReadS($g_iBBSameTroopDelay, $g_sProfileConfigPath, "other", "iBBSameTroopDelay", $g_iBBSameTroopDelayDefault, "int")
+IniReadS($g_iBBAttackCount, $g_sProfileConfigPath, "other", "iBBAttackCount", 6, "int")
 IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool")
 $g_sBBDropOrder = IniRead($g_sProfileConfigPath, "other", "sBBDropOrder", $g_sBBDropOrderDefault)
 EndFunc

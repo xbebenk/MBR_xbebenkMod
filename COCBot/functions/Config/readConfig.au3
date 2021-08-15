@@ -457,6 +457,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkBBDropBMFirst, $g_sProfileConfigPath, "other", "ChkBBDropBMFirst", False, "Bool")
 	IniReadS($g_iBBNextTroopDelay, $g_sProfileConfigPath, "other", "iBBNextTroopDelay", $g_iBBNextTroopDelayDefault, "int")
 	IniReadS($g_iBBSameTroopDelay, $g_sProfileConfigPath, "other", "iBBSameTroopDelay", $g_iBBSameTroopDelayDefault, "int")
+	IniReadS($g_iBBAttackCount, $g_sProfileConfigPath, "other", "iBBAttackCount", 6, "int")
 
 	; Builder Base Drop Order
 	IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool")

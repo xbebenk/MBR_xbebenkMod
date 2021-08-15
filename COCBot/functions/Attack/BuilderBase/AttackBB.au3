@@ -13,6 +13,27 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+
+Func DoAttackBB()
+	If $g_iBBAttackCount = 0 Then $g_iBBAttackCount = 3
+	For $i = 1 To $g_iBBAttackCount
+		If PrepareAttackBB() Then
+			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
+			SetLog("Attack #" & $i, $COLOR_INFO)
+			AttackBB()
+			If $g_bRestart = True Then Return
+			If _Sleep($DELAYRUNBOT3) Then Return
+			If checkObstacles(True) Then Return
+		Else
+			SetLog("Cannot Attack this time..", $COLOR_DEBUG)
+			ClickAway()
+			ExitLoop
+		Endif
+	Next
+	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
+EndFunc
+
+
 Func AttackBB()
 	If Not $g_bChkEnableBBAttack Then Return
 

@@ -132,10 +132,11 @@ Func DoUpgrade($bTest = False)
 
 	Local $bMustIgnoreUpgrade = False
 	; matchmaking between building name and the ignore list
+	If $g_aUpgradeNameLevel[1] = "po al Champion" Then $g_aUpgradeNameLevel[1] = "Royal Champion"
 	Switch $g_aUpgradeNameLevel[1]
 		Case "Town Hall"
 			If $g_aUpgradeNameLevel[2] > 11 Then 
-				If $g_iChkUpgradesToIgnore[23] = 1 Then 
+				If $g_iChkUpgradesToIgnore[24] = 1 Then 
 					$bMustIgnoreUpgrade = True
 				Else
 					$aUpgradeButton = findButton("UpgradeWeapon", Default, 1, True)
@@ -178,29 +179,29 @@ Func DoUpgrade($bTest = False)
 		Case "Dark Elixir Drill"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[13] = 1) ? True : False
 		Case "Cannon"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[14] = 1) ? True : False
-		Case "Archer Tower"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[15] = 1) ? True : False
-		Case "Mortar"
+		Case "Archer Tower"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[16] = 1) ? True : False
-		Case "Hidden Tesla"
+		Case "Mortar"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[17] = 1) ? True : False
+		Case "Hidden Tesla"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[18] = 1) ? True : False
 		Case "Spring Trap"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[18] = 1) ? True : False
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
 		Case "Giant Bomb"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[18] = 1) ? True : False
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
 		Case "Bomb"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[18] = 1) ? True : False
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
 		Case "Seeking Air Mine"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
-		Case "Air Bomb"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
-		Case "Wizard Tower"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1) ? True : False
-		Case "Bomb Tower"
+		Case "Air Bomb"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1) ? True : False
+		Case "Wizard Tower"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[21] = 1) ? True : False
-		Case "Air Defense"
+		Case "Bomb Tower"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1) ? True : False
+		Case "Air Defense"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[23] = 1) ? True : False
 		Case Else
 			$bMustIgnoreUpgrade = False
 	EndSwitch
@@ -310,7 +311,20 @@ Func DoUpgrade($bTest = False)
 	$g_iCurrentLineOffset -= $g_iQuickMISY
 	
 	; update Logs and History file
-	SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_iChkUpgradesToIgnore[23] = 0 Then
+		Switch $g_aUpgradeNameLevel[2]
+			Case 12
+				SetLog("Launched upgrade of Giga Tesla to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+			Case 13
+				SetLog("Launched upgrade of Giga Inferno to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+			Case 14
+				SetLog("Launched upgrade of Giga Inferno to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+		EndSwitch
+	Else
+		SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+	Endif
+	
+	
 	SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
 	SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
 	

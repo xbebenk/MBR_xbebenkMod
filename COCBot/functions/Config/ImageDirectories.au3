@@ -74,6 +74,7 @@ Global $g_sImgZoomOutDirBB = @ScriptDir & "\imgxml\village\BuilderBase\"
 Global $g_sImgStartCTBoost = @ScriptDir & "\imgxml\Resources\BuildersBase\ClockTower\ClockTowerAvailable*.xml"
 Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"
 Global $g_sImgIsOnBB = @ScriptDir & "\imgxml\village\Page\BuilderBase\"
+Global $g_sImgBuilderHall = @ScriptDir & "\imgxml\Resources\BuildersBase\BuilderHall\BuilderHall*.xml"
 Global $g_sImgStarLaboratory = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory"
 Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
 
@@ -83,6 +84,8 @@ Global $g_sImgBBTroopsTraining = @ScriptDir & "\imgxml\Attack\BuilderBase\TroopS
 Global $g_sImgBBBattleStarted = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleStarted\BBBattleStarted_0_90.xml"
 Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBBattleMachine_0_90.xml"
 Global $g_sImgOkButton = @ScriptDir & "\imgxml\Attack\BuilderBase\OkayButton\OkayButton_0_90.xml"
+Global $g_sImgCannonCartTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\TrainTroop\CannonCart\"
+
 Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\BBTroops"
 Global $g_sImgBBLootAvail = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\LootAvail_0_90.xml"
 #EndRegion

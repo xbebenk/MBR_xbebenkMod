@@ -16,7 +16,7 @@
 #AutoIt3Wrapper_UseX64=7n
 ;#AutoIt3Wrapper_Res_HiDpi=Y ; HiDpi will be set during run-time!
 ;#AutoIt3Wrapper_Run_AU3Check=n ; enable when running in folder with umlauts!
-#AutoIt3Wrapper_Run_Au3Stripper=y
+#AutoIt3Wrapper_Run_Au3Stripper=n
 #Au3Stripper_Parameters=/rsln /MI=3
 
 #include "MyBot.run.version.au3"
@@ -1340,20 +1340,9 @@ Func BuilderBase()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return
 
-		For $i = 1 To 6
-			If PrepareAttackBB() Then
-				SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
-				SetLog("Attack #" & $i, $COLOR_INFO)
-				AttackBB()
-				If $g_bRestart = True Then Return
-				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles() Then Return
-			Else
-				SetLog("Cannot Attack this time..", $COLOR_DEBUG)
-				ClickAway()
-				ExitLoop
-			Endif
-		Next
+		DoAttackBB()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		If checkObstacles() Then Return
 
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
@@ -1363,7 +1352,7 @@ Func BuilderBase()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return
 
-		MainSuggestedUpgradeCode()
+		AutoUpgradeBB()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return
 

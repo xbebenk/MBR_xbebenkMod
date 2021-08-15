@@ -10,7 +10,7 @@
 #Au3Stripper_Off
 #Au3Stripper_On
 Global $g_sBotVersion = "v7.9.5"
-Global $g_sXModversion = "v1.1.1"
+Global $g_sXModversion = "v1.1.2"
 Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = ""
 Global $g_hFrmBot = 0
@@ -6682,7 +6682,7 @@ Global $g_aiLastGoodWallPos[2] = [-1, -1]
 Global $g_bAutoUpgradeEnabled = False
 Global $g_bScrollFirst = False
 Global $g_iTxtSmartMinGold = 150000, $g_iTxtSmartMinElixir = 150000, $g_iTxtSmartMinDark = 1500
-Global $g_iChkUpgradesToIgnore[24] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_iChkUpgradesToIgnore[25] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iChkResourcesToIgnore[3] = [0, 0, 0]
 Global $g_iCurrentLineOffset = 0, $g_iNextLineOffset = 0
 Global $g_aUpgradeNameLevel
@@ -6896,6 +6896,7 @@ Global $g_iDetectedImageType = 0
 Global $g_abNotNeedAllTime[2] = [True, True]
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0]
 Global $g_aiStarLaboratoryPos[2] = [-1, -1]
+Global $g_bisBHMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = False, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0, $g_ForceBBAttackOnClanGames = 0
 Global $g_iArmyCapacity = 0
 Global $g_iTotalTrainSpaceSpell = 0
 Global $g_iTotalTrainSpaceSiege = 0
@@ -7641,6 +7642,7 @@ Global $g_sImgZoomOutDirBB = @ScriptDir & "\imgxml\village\BuilderBase\"
 Global $g_sImgStartCTBoost = @ScriptDir & "\imgxml\Resources\BuildersBase\ClockTower\ClockTowerAvailable*.xml"
 Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"
 Global $g_sImgIsOnBB = @ScriptDir & "\imgxml\village\Page\BuilderBase\"
+Global $g_sImgBuilderHall = @ScriptDir & "\imgxml\Resources\BuildersBase\BuilderHall\BuilderHall*.xml"
 Global $g_sImgStarLaboratory = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory"
 Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
 Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBMachReady_0_90.xml"
@@ -7649,6 +7651,7 @@ Global $g_sImgBBTroopsTraining = @ScriptDir & "\imgxml\Attack\BuilderBase\TroopS
 Global $g_sImgBBBattleStarted = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleStarted\BBBattleStarted_0_90.xml"
 Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBBattleMachine_0_90.xml"
 Global $g_sImgOkButton = @ScriptDir & "\imgxml\Attack\BuilderBase\OkayButton\OkayButton_0_90.xml"
+Global $g_sImgCannonCartTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\TrainTroop\CannonCart\"
 Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\BBTroops"
 Global $g_sImgBBLootAvail = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\LootAvail_0_90.xml"
 Global $g_sImgDonateTroops = @ScriptDir & "\imgxml\DonateCC\Troops\"
@@ -13102,15 +13105,22 @@ GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "
 $g_hChkEnableBBAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack", "Attack"), $x + 20, $y + 30, -1, -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack_Info_01", "Uses the currently queued army to attack."))
 GUICtrlSetOnEvent(-1, "chkEnableBBAttack")
-GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBNextTroopDelay", "Next Troop Delay"), $x + 113, $y + 17)
-$g_hCmbBBNextTroopDelay = GUICtrlCreateCombo( "", $x+138, $y + 34, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBAttackTimes", "Attack Count"), $x + 85, $y + 24)
+$g_hCmbBBAttackCount = GUICtrlCreateCombo( "", $x+150, $y + 20, 60, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBAttackTimes_Info_01", "Set how many time Bot will Attack On Builder Base"))
+GUICtrlSetOnEvent(-1, "cmbBBAttackCount")
+GUICtrlSetData(-1, "NotSet|1|2|3|4|5|6|7|8|9|10")
+GUICtrlSetState(-1, $GUI_DISABLE)
+_GUICtrlComboBox_SetCurSel($g_iBBAttackCount, 5)
+GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBNextTroopDelay", "Next Troop Delay"), $x + 85, $y + 48)
+$g_hCmbBBNextTroopDelay = GUICtrlCreateCombo( "", $x+180, $y + 45, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CmbBBNextTroopDelay_Info_01", "Set the delay between different troops. 1 fastest to 9 slowest."))
 GUICtrlSetOnEvent(-1, "cmbBBNextTroopDelay")
 GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9")
 GUICtrlSetState(-1, $GUI_DISABLE)
 _GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay, 4)
-GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBSameTroopDelay", "Same Troop Delay"), $x + 113, $y + 63)
-$g_hCmbBBSameTroopDelay = GUICtrlCreateCombo( "", $x+138, $y + 80, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBSameTroopDelay", "Same Troop Delay"), $x + 85, $y + 73)
+$g_hCmbBBSameTroopDelay = GUICtrlCreateCombo( "", $x+180, $y + 70, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CmbBBSameTroopDelay_Info_01", "Set the delay between same troops. 1 fastest to 9 slowest."))
 GUICtrlSetOnEvent(-1, "cmbBBSameTroopDelay")
 GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9")
@@ -16111,7 +16121,7 @@ Global $g_ahPicWallsLevel[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0, $g_hChkScrollFirst = 0
 Global $g_hTxtSmartMinGold = 0, $g_hTxtSmartMinElixir = 0, $g_hTxtSmartMinDark = 0
 Global $g_hChkResourcesToIgnore[3] = [0, 0, 0]
-Global $g_hChkUpgradesToIgnore[24] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0]
+Global $g_hChkUpgradesToIgnore[25] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0]
 Func CreateVillageUpgrade()
 InitTranslatedTextUpgradeTab()
 $g_hGUI_UPGRADE = _GUICreate("", $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_VILLAGE)
@@ -16604,25 +16614,25 @@ GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
 _GUICtrlCreateIcon($g_sLibIconPath, $eIcnDrill, $x + 365, $y + $yRow2, $iIconSize, $iIconSize)
 $g_hChkUpgradesToIgnore[13] = GUICtrlCreateCheckbox("", $x + 380 - $xOff, $y + $yRow2 + $yChkOff, 17, 17)
 GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-$g_hChkUpgradesToIgnore[14] = GUICtrlCreateCheckbox("Cannon", $x, $y + $yRow3, 60, 17)
+$g_hChkUpgradesToIgnore[15] = GUICtrlCreateCheckbox("Cannon", $x, $y + $yRow3, 60, 17)
 GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-$g_hChkUpgradesToIgnore[15] = GUICtrlCreateCheckbox("Archer Tower", $x + 60, $y + $yRow3, 80, 17)
+$g_hChkUpgradesToIgnore[16] = GUICtrlCreateCheckbox("Archer Tower", $x + 60, $y + $yRow3, 80, 17)
 GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-$g_hChkUpgradesToIgnore[16] = GUICtrlCreateCheckbox("Mortar", $x + 145, $y + $yRow3, 55, 17)
+$g_hChkUpgradesToIgnore[17] = GUICtrlCreateCheckbox("Mortar", $x + 145, $y + $yRow3, 55, 17)
 GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-$g_hChkUpgradesToIgnore[17] = GUICtrlCreateCheckbox("Tesla", $x + 200, $y + $yRow3, 55, 17)
+$g_hChkUpgradesToIgnore[18] = GUICtrlCreateCheckbox("Tesla", $x + 200, $y + $yRow3, 55, 17)
 GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-$g_hChkUpgradesToIgnore[18] = GUICtrlCreateCheckbox("GroundTraps", $x + 255, $y + $yRow3, 80, 17)
+$g_hChkUpgradesToIgnore[19] = GUICtrlCreateCheckbox("GroundTraps", $x + 255, $y + $yRow3, 80, 17)
 GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-$g_hChkUpgradesToIgnore[19] = GUICtrlCreateCheckbox("AirTraps", $x + 345, $y + $yRow3, 60, 17)
+$g_hChkUpgradesToIgnore[20] = GUICtrlCreateCheckbox("AirTraps", $x + 345, $y + $yRow3, 60, 17)
 GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-$g_hChkUpgradesToIgnore[20] = GUICtrlCreateCheckbox("Wizard Tower", $x, $y + $yRow4, 85, 17)
+$g_hChkUpgradesToIgnore[21] = GUICtrlCreateCheckbox("Wizard Tower", $x, $y + $yRow4, 85, 17)
 GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-$g_hChkUpgradesToIgnore[21] = GUICtrlCreateCheckbox("Bomb Tower", $x + 90, $y + $yRow4, 80, 17)
+$g_hChkUpgradesToIgnore[22] = GUICtrlCreateCheckbox("Bomb Tower", $x + 90, $y + $yRow4, 80, 17)
 GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-$g_hChkUpgradesToIgnore[22] = GUICtrlCreateCheckbox("Air Defense", $x + 175, $y + $yRow4, 80, 17)
+$g_hChkUpgradesToIgnore[23] = GUICtrlCreateCheckbox("Air Defense", $x + 175, $y + $yRow4, 80, 17)
 GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-$g_hChkUpgradesToIgnore[23] = GUICtrlCreateCheckbox("TH Weapon", $x + 255, $y + $yRow4, 80, 17)
+$g_hChkUpgradesToIgnore[24] = GUICtrlCreateCheckbox("TH Weapon", $x + 255, $y + $yRow4, 80, 17)
 GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 $g_hTxtAutoUpgradeLog = GUICtrlCreateEdit("", $x - 16, 295, $g_iSizeWGrpTab3, 105, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
@@ -23175,7 +23185,7 @@ EndIf
 $g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 67)
 GUICtrlSetOnEvent(-1, "BotMoveRequest")
 GUICtrlSetState(-1, $GUI_DISABLE)
-$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel($g_sXModversion, $_GUI_MAIN_WIDTH - 130, 15, 130 , 20 ,$SS_RIGHT)
+$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion, $_GUI_MAIN_WIDTH - 130, 15, 130 , 20 ,$SS_RIGHT)
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 GUICtrlSetColor(-1, $COLOR_INFO)
 GUICtrlSetFont(-1,9, 800)
@@ -29897,6 +29907,7 @@ GUICtrlSetState($g_hChkBBDropBMFirst, $GUI_ENABLE)
 GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
 GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
 GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
+GUICtrlSetState($g_hCmbBBAttackCount, $GUI_ENABLE)
 chkBBTrophyRange()
 Else
 GUICtrlSetState($g_hChkBBTrophyRange, $GUI_DISABLE)
@@ -29908,7 +29919,12 @@ GUICtrlSetState($g_hChkBBDropBMFirst, $GUI_DISABLE)
 GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
 GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_DISABLE)
 GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
+GUICtrlSetState($g_hCmbBBAttackCount, $GUI_DISABLE)
 EndIf
+EndFunc
+Func cmbBBAttackCount()
+$g_iBBAttackCount = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackCount)
+SetDebugLog("BB Attack Count: " & $g_iBBAttackCount)
 EndFunc
 Func cmbBBNextTroopDelay()
 $g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault +((_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1) - 5)*$g_iBBNextTroopDelayIncrement
@@ -40592,7 +40608,7 @@ Func CheckArmyReady()
 local $i = 0
 local $bReady = True, $bNeedTrain = False, $bTraining = False
 local $sSearchDiamond = GetDiamondFromRect("114,384,190,450")
-If _Sleep($DELAYCHECKFULLARMY2) Then Return False
+If _Sleep($DELAYCHECKFULLARMY2) Then Return
 While $i < 6 And $bReady
 local $aNeedTrainCoords = decodeSingleCoord(findImage("NeedTrainBB", $g_sImgBBNeedTrainTroops, $sSearchDiamond, 1, True))
 local $aTroopsTrainingCoords = decodeSingleCoord(findImage("TroopsTrainingBB", $g_sImgBBTroopsTraining, $sSearchDiamond, 1, False))
@@ -40606,6 +40622,20 @@ $bTraining = True
 EndIf
 $i += 1
 WEnd
+If $bNeedTrain And $g_bTrainTroopBBCannonnCart Then
+ClickP($aArmyTrainButton, 1, 0, "#0293")
+If _Sleep(1000) Then Return
+If QuickMIS("BC1", $g_sImgCannonCartTrain, 40, 470, 820, 580, True, False) Then
+Setlog("Army is not ready, Try to Train CannonCart to fill BB ArmyCamp", $COLOR_DEBUG)
+Click($g_iQuickMISX + 40, $g_iQuickMISY + 470, 1)
+If _Sleep(500) Then Return
+ClickAway()
+$bReady = True
+Else
+Setlog("Army is not ready, and Cannot Find CannonCart Icon to Train", $COLOR_DEBUG)
+ClickAway()
+EndIf
+EndIf
 If Not $bReady Then
 SetLog("Army is not ready.")
 If $bTraining Then SetLog("Troops are training.")
@@ -40615,6 +40645,24 @@ Else
 SetLog("Army is ready.")
 EndIf
 Return $bReady
+EndFunc
+Func DoAttackBB()
+If $g_iBBAttackCount = 0 Then $g_iBBAttackCount = 3
+For $i = 1 To $g_iBBAttackCount
+If PrepareAttackBB() Then
+SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
+SetLog("Attack #" & $i, $COLOR_INFO)
+AttackBB()
+If $g_bRestart = True Then Return
+If _Sleep($DELAYRUNBOT3) Then Return
+If checkObstacles(True) Then Return
+Else
+SetLog("Cannot Attack this time..", $COLOR_DEBUG)
+ClickAway()
+ExitLoop
+Endif
+Next
+SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 Func AttackBB()
 If Not $g_bChkEnableBBAttack Then Return
@@ -62562,10 +62610,11 @@ $g_iNextLineOffset = $g_iCurrentLineOffset
 Return False
 EndIf
 Local $bMustIgnoreUpgrade = False
+If $g_aUpgradeNameLevel[1] = "po al Champion" Then $g_aUpgradeNameLevel[1] = "Royal Champion"
 Switch $g_aUpgradeNameLevel[1]
 Case "Town Hall"
 If $g_aUpgradeNameLevel[2] > 11 Then
-If $g_iChkUpgradesToIgnore[23] = 1 Then
+If $g_iChkUpgradesToIgnore[24] = 1 Then
 $bMustIgnoreUpgrade = True
 Else
 $aUpgradeButton = findButton("UpgradeWeapon", Default, 1, True)
@@ -62607,29 +62656,29 @@ $bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[12] = 1) ? True : False
 Case "Dark Elixir Drill"
 $bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[13] = 1) ? True : False
 Case "Cannon"
-$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[14] = 1) ? True : False
-Case "Archer Tower"
 $bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[15] = 1) ? True : False
-Case "Mortar"
+Case "Archer Tower"
 $bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[16] = 1) ? True : False
-Case "Hidden Tesla"
+Case "Mortar"
 $bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[17] = 1) ? True : False
+Case "Hidden Tesla"
+$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[18] = 1) ? True : False
 Case "Spring Trap"
-$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[18] = 1) ? True : False
+$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[19] = 1) ? True : False
 Case "Giant Bomb"
-$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[18] = 1) ? True : False
+$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[19] = 1) ? True : False
 Case "Bomb"
-$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[18] = 1) ? True : False
+$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[19] = 1) ? True : False
 Case "Seeking Air Mine"
-$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[19] = 1) ? True : False
-Case "Air Bomb"
-$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[19] = 1) ? True : False
-Case "Wizard Tower"
 $bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[20] = 1) ? True : False
-Case "Bomb Tower"
+Case "Air Bomb"
+$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[20] = 1) ? True : False
+Case "Wizard Tower"
 $bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[21] = 1) ? True : False
-Case "Air Defense"
+Case "Bomb Tower"
 $bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[22] = 1) ? True : False
+Case "Air Defense"
+$bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[23] = 1) ? True : False
 Case Else
 $bMustIgnoreUpgrade = False
 EndSwitch
@@ -62712,7 +62761,18 @@ Return
 EndIf
 EndIf
 $g_iCurrentLineOffset -= $g_iQuickMISY
+If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_iChkUpgradesToIgnore[23] = 0 Then
+Switch $g_aUpgradeNameLevel[2]
+Case 12
+SetLog("Launched upgrade of Giga Tesla to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+Case 13
+SetLog("Launched upgrade of Giga Inferno to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+Case 14
+SetLog("Launched upgrade of Giga Inferno to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+EndSwitch
+Else
 SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+Endif
 SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
 SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
 Local $txtAcc = $g_iCurAccount
@@ -67504,6 +67564,42 @@ If $bSetLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB
 If Not $bBypass Then
 UpdateStats()
 EndIf
+$g_bisBHMaxed = False
+isBHMaxed()
+isGoldFullBB()
+EndFunc
+Func isBHMaxed()
+ClickAway()
+Local $sBHCoords
+$sBHCoords = findImage("BuilderHall", $g_sImgBuilderHall, "FV", 1, True)
+If $sBHCoords <> "" Then
+$sBHCoords = StringSplit($sBHCoords, ",", $STR_NOCOUNT)
+ClickP($sBHCoords)
+Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
+If $aBuildingName[0] = 2 Then
+If $aBuildingName[1] = "Builder Hall" Then
+If $aBuildingName[2] = 9 Then
+SetLog("Your Builder Hall is Maxed!", $COLOR_SUCCESS)
+$g_bisBHMaxed = True
+Return True
+Else
+SetLog("Your Builder Hall Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
+EndIf
+Endif
+EndIf
+Else
+Setlog("isBHMaxed(): Cannot Find Builder Hall", $COLOR_DEBUG)
+EndIf
+Return False
+EndFunc
+Func isGoldFullBB()
+$g_bGoldStorageFullBB = False
+Local $aIsGoldFullBB[4] = [695, 25 , 0xf4dc72, 10]
+If _CheckPixel($aIsGoldFullBB, True) Then
+SetLog("Builder Base Gold Storages are relatively full : " & $g_aiCurrentLootBB[$eLootGoldBB] , $COLOR_SUCCESS)
+$g_bGoldStorageFullBB = True
+EndIf
+Return $g_bGoldStorageFullBB
 EndFunc
 Func chkActivateBBSuggestedUpgrades()
 If GUICtrlRead($g_hChkBBSuggestedUpgrades) = $GUI_CHECKED Then
@@ -67572,7 +67668,7 @@ $g_iChkPlacingNewBuildings =(GUICtrlRead($g_hChkPlacingNewBuildings) = $GUI_CHEC
 EndFunc
 Local Const $OptimizeOTTO[13] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "D uble Cannon", "Post", "Barracks", "Wall"]
 Local $BuildingUpgraded = False
-Func MainSuggestedUpgradeCode($bTest = False)
+Func AutoUpgradeBB($bTest = False)
 If $g_iChkBBSuggestedUpgrades = 0 Then Return
 Local $bDebug = $g_bDebugSetlog
 Local $bScreencap = True
@@ -67580,10 +67676,16 @@ BuilderBaseReport()
 If isOnBuilderBase(True) Then
 If ClickOnBuilder($bTest) Then
 SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
+If $g_bisBHMaxed And $g_bGoldStorageFullBB Then
+If QuickMIS("BC1", $g_sImgAutoUpgradeWindow, 330, 85, 550, 145, True, False) Then
+ClickDrag(333, 320, 333, 0, 1000)
+If _Sleep(2000) Then Return
+EndIf
+EndIf
 For $z = 0 To 2
 If $g_bRestart Then Exitloop
 Local $x = 400, $y = 100, $x1 = 540, $y1 = 130, $step = 28
-For $i = 0 To 7
+For $i = 0 To 9
 Local $bSkipGoldCheck = False
 If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
 Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeElixir, "Elixir", $bScreencap, $bDebug)
@@ -67643,8 +67745,8 @@ If $BuildingUpgraded Then
 Setlog("Found Building to Upgrade..", $COLOR_DEBUG)
 Exitloop
 Else
-ClickDrag(333, $y, 333, 100, 1000)
-If _Sleep(1000) Then Return
+ClickDrag(333, $y, 333, 100, 800)
+If _Sleep(500) Then Return
 EndIf
 Next
 EndIf
@@ -67715,14 +67817,15 @@ If StringInStr($aBuildingName[1], $OptimizeOTTO[$i]) Then
 SetLog("Trying to upgrade : " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
 If $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6 Then
 SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-ElseIf $aBuildingName[1] = "D uble Cannon" And $aBuildingName[2] >= 5 Then
+ElseIf $aBuildingName[1] = "D uble Cannon" And $aBuildingName[2] >= 4 Then
 SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 ElseIf $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8 Then
 SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-ElseIf $aBuildingName[1] = "Builder Barracks" And $aBuildingName[2] >= 5 Then
+ElseIf $aBuildingName[1] = "Builder Barracks" And $aBuildingName[2] >= 7 Then
 SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-ElseIf $aBuildingName[1] = "Wall" And $aBuildingName[2] >= 4 Then
+ElseIf $aBuildingName[1] = "Wall" And Not $g_bisBHMaxed And Not isGoldFullBB() Then
 SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+$sUpgButtom = $g_sImgAutoUpgradeBtnGold
 Else
 $FoundOTTOBuilding = True
 ExitLoop
@@ -67739,7 +67842,7 @@ Return False
 EndIf
 Click($g_iQuickMISX + 218, $g_iQuickMISY + 544, 1)
 If _Sleep(1500) Then Return
-If QuickMIS("BC1", $sUpgButtom, 300, 480, 550, 560, True, $Debug) Then
+If QuickMIS("BC1", $sUpgButtom, 300, 480, 750, 600, True, $Debug) Then
 Click($g_iQuickMISX + 300, $g_iQuickMISY + 480, 1)
 If _Sleep(1500) Then Return
 If isGemOpen(True) Then
@@ -69224,6 +69327,7 @@ GUICtrlSetState($g_hChkBBWaitForMachine, $g_bChkBBWaitForMachine ? $GUI_CHECKED 
 GUICtrlSetState($g_hChkBBDropBMFirst, $g_bChkBBDropBMFirst ? $GUI_CHECKED : $GUI_UNCHECKED)
 _GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay,(($g_iBBNextTroopDelay - $g_iBBNextTroopDelayDefault) / $g_iBBNextTroopDelayIncrement) + 4)
 _GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay,(($g_iBBSameTroopDelay - $g_iBBSameTroopDelayDefault) / $g_iBBSameTroopDelayIncrement) + 4)
+_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackCount, $g_iBBAttackCount)
 chkBBTrophyRange()
 chkEnableBBAttack()
 If $g_bBBDropOrderSet Then
@@ -71195,6 +71299,7 @@ IniReadS($g_bChkBBWaitForMachine, $g_sProfileConfigPath, "other", "ChkBBWaitForM
 IniReadS($g_bChkBBDropBMFirst, $g_sProfileConfigPath, "other", "ChkBBDropBMFirst", False, "Bool")
 IniReadS($g_iBBNextTroopDelay, $g_sProfileConfigPath, "other", "iBBNextTroopDelay", $g_iBBNextTroopDelayDefault, "int")
 IniReadS($g_iBBSameTroopDelay, $g_sProfileConfigPath, "other", "iBBSameTroopDelay", $g_iBBSameTroopDelayDefault, "int")
+IniReadS($g_iBBAttackCount, $g_sProfileConfigPath, "other", "iBBAttackCount", 6, "int")
 IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool")
 $g_sBBDropOrder = IniRead($g_sProfileConfigPath, "other", "sBBDropOrder", $g_sBBDropOrderDefault)
 EndFunc
@@ -72314,6 +72419,7 @@ _Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
 _Ini_Add("other", "ChkBBDropBMFirst", $g_bChkBBDropBMFirst)
 _Ini_Add("other", "iBBNextTroopDelay", $g_iBBNextTroopDelay)
 _Ini_Add("other", "iBBSameTroopDelay", $g_iBBSameTroopDelay)
+_Ini_Add("other", "iBBAttackCount", $g_iBBAttackCount)
 _Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
 _Ini_Add("other", "sBBDropOrder", $g_sBBDropOrder)
 EndFunc
@@ -75578,27 +75684,16 @@ If checkObstacles() Then Return
 CleanBBYard()
 If _Sleep($DELAYRUNBOT3) Then Return
 If checkObstacles() Then Return
-For $i = 1 To 6
-If PrepareAttackBB() Then
-SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
-SetLog("Attack #" & $i, $COLOR_INFO)
-AttackBB()
-If $g_bRestart = True Then Return
+DoAttackBB()
 If _Sleep($DELAYRUNBOT3) Then Return
 If checkObstacles() Then Return
-Else
-SetLog("Cannot Attack this time..", $COLOR_DEBUG)
-ClickAway()
-ExitLoop
-Endif
-Next
 StartClockTowerBoost()
 If _Sleep($DELAYRUNBOT3) Then Return
 If checkObstacles() Then Return
 StarLaboratory()
 If _Sleep($DELAYRUNBOT3) Then Return
 If checkObstacles() Then Return
-MainSuggestedUpgradeCode()
+AutoUpgradeBB()
 If _Sleep($DELAYRUNBOT3) Then Return
 If checkObstacles() Then Return
 CleanBBYard()

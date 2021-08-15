@@ -39,8 +39,48 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 	If Not $bBypass Then ; update stats
 		UpdateStats()
 	EndIf
+
+	$g_bisBHMaxed = False
+	isBHMaxed() ;check if Builder Hut have Maxed (lvl 9)
+	isGoldFullBB() ;check if Builder base Gold is Full
+
 EndFunc   ;==>BuilderBaseReport
 
+Func isBHMaxed()
+	ClickAway()
+	Local $sBHCoords
+	$sBHCoords = findImage("BuilderHall", $g_sImgBuilderHall, "FV", 1, True) ; Search for Clock Tower
+	If $sBHCoords <> "" Then
+		$sBHCoords = StringSplit($sBHCoords, ",", $STR_NOCOUNT)
+		ClickP($sBHCoords)
+		Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
+		If $aBuildingName[0] = 2 Then
+			; Verify if is Builder Hall and max level
+			If $aBuildingName[1] = "Builder Hall" Then
+				If $aBuildingName[2] = 9 Then
+					SetLog("Your Builder Hall is Maxed!", $COLOR_SUCCESS)
+					$g_bisBHMaxed = True
+					Return True
+				Else
+					SetLog("Your Builder Hall Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
+				EndIf
+			Endif
+		EndIf
+	Else
+		Setlog("isBHMaxed(): Cannot Find Builder Hall", $COLOR_DEBUG)
+	EndIf
+	Return False
+EndFunc
+
+Func isGoldFullBB()
+	$g_bGoldStorageFullBB = False
+	Local $aIsGoldFullBB[4] = [695, 25 , 0xf4dc72, 10] ; Main Screen Gold Resource bar is Full
+	If _CheckPixel($aIsGoldFullBB, True) Then ;Hex if color of gold (orange)
+		SetLog("Builder Base Gold Storages are relatively full : " & $g_aiCurrentLootBB[$eLootGoldBB] , $COLOR_SUCCESS)
+		$g_bGoldStorageFullBB = True
+	EndIf
+	Return $g_bGoldStorageFullBB
+EndFunc   ;==>isGoldFull
 
 
 
