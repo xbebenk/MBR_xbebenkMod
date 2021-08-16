@@ -228,7 +228,7 @@ Func AutoUpgradeBB($bTest = False)
 					Setlog("Found Building to Upgrade..", $COLOR_DEBUG)
 					Exitloop
 				Else
-					ClickDrag(333, $y, 333, 100, 800);do scroll down
+					ClickDrag(333, $y - 30, 333, 75, 800);do scroll down
 					If _Sleep(500) Then Return
 				EndIf
 			Next
@@ -394,7 +394,7 @@ EndFunc   ;==>GetUpgradeButton
 Func NewBuildings($aResult)
 
 	Local $Screencap = True, $Debug = False
-
+	SetLog($aResult)
 	If UBound($aResult) = 3 And $aResult[2] = "New" Then
 
 		; The $g_iQuickMISX and $g_iQuickMISY haves the coordinates compansation from 'New' | GetIconPosition()
@@ -404,7 +404,7 @@ Func NewBuildings($aResult)
 		; If exist Clocks
 		Local $ClocksCoordinates = QuickMIS("CX", $g_sImgAutoUpgradeClock, 20, 250, 775, 530, $Screencap, $Debug)
 		If UBound($ClocksCoordinates) > 0 Then
-			SetLog("[Clocks]: " & UBound($ClocksCoordinates), $COLOR_DEBUG)
+			SetLog("Number of [Clocks] Found: " & UBound($ClocksCoordinates), $COLOR_DEBUG)
 			For $i = 0 To UBound($ClocksCoordinates) - 1
 				; Prepare the coordinates
 				Local $Coordinates = StringSplit($ClocksCoordinates[$i], ",", 2)
