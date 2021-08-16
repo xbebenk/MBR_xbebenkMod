@@ -235,7 +235,7 @@ Func AutoUpgradeBB($bTest = False)
 		EndIf
 	EndIf
 	$BuildingUpgraded = False
-	ClickAway()
+	ClickAway("Left")
 EndFunc   ;==>MainSuggestedUpgradeCode
 
 ; This fucntion will Open the Suggested Window and check if is OK
@@ -367,21 +367,21 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 			If QuickMIS("BC1", $sUpgButtom, 300, 480, 750, 600, True, $Debug) Then
 				Click($g_iQuickMISX + 300, $g_iQuickMISY + 480, 1)
 				If _Sleep(1500) Then Return
-				;ClickAway()
+				;ClickAway("Left")
 				If isGemOpen(True) Then
 					SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
-					ClickAway()
+					ClickAway("Left")
 					If _Sleep(500) Then Return
-					ClickAway()
+					ClickAway("Left")
 					Return False
 				Else
 					SetLog($aBuildingName[1] & " Upgrading!", $COLOR_INFO)
 					$BuildingUpgraded = True
-					ClickAway()
+					ClickAway("Left")
 					Return True
 				EndIf
 			Else
-				ClickAway()
+				ClickAway("Left")
 				$BuildingUpgraded = True
 				SetLog("Not enough Resources to Upgrade " & $aBuildingName[1] & " !", $COLOR_ERROR)
 			EndIf

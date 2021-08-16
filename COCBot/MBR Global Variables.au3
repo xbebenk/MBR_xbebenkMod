@@ -89,7 +89,7 @@ Global $g_bDebugBuildingPos = False ; extra information about buildings detected
 Global $g_bDebugSetlogTrain = False ; verbose log information during troop training
 Global $g_iDebugWindowMessages = 0 ; 0=off, 1=most Window Messages, 2=all Window Messages
 Global $g_bDebugAndroidEmbedded = False ; Extra Android messages when using dock mode
-Global $g_bDebugGetLocation = True ;make a image of each structure detected with getlocation
+Global $g_bDebugGetLocation = False ;make a image of each structure detected with getlocation
 Global $g_bDebugRedArea = False ; display red line data captured
 Global $g_hDebugAlwaysSaveFullScreenTimer = 0 ; __TimerInit() to save every screen capture at full size for 5 Minutes
 Global $g_bDebugSmartZap = False ; verbose logs for SmartZap users
@@ -1889,22 +1889,18 @@ Global $g_aVillageSize[10] = ["", "", "", "", "", "", "", "", "", ""]
 
 ; Pet House Alpha
 Global $g_aiPetHousePos[2] = [-1, -1] ; Position of Pet House
-
 Global $g_sPetUpgradeTime = ""
-
 Global $g_bUpgradePetsEnable[4] = [False, False, False, False]
-
 Global $g_iMinDark4PetUpgrade = 0
-
 Local $g_aiPetLevel[4] = [0, 0, 0, 0]
 
-
 Global Enum $ePetLassi, $ePetEletroOwl, $ePetMightyYak, $ePetUnicorn, $ePetCount
-Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Eletro Owl", "Mighty Yak", "Unicorn"]
-Global Const $g_asPetShortNames[$ePetCount] = ["Lassi", "Owl", "Yak", "Unicorn"]
-
-Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][10] = [ _
+Global $g_asPetNames[$ePetCount] = ["Lassi", "Eletro Owl", "Mighty Yak", "Unicorn"]
+Global $g_asPetShortNames[$ePetCount] = ["Lassi", "Owl", "Yak", "Unicorn"]
+Global $g_aiPetUpgradeCostPerLevel[$ePetCount][10] = [ _
 		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _  ; LASSI
 		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
 		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
 		[0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
+
+

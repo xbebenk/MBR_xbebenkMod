@@ -88,7 +88,7 @@ Func WaitForClouds()
 		If $iSearchTime >= $iLastTime + 1 Then
 			SetLog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
 			$iLastTime += 1
-			If $iSearchTime > 5 Then
+			If $iSearchTime > 2 Then
 				$g_bIsClientSyncError = True
 				$g_bRestart = True
 				CloseCoC(True)

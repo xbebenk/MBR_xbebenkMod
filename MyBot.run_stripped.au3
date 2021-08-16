@@ -6157,7 +6157,7 @@ Global $g_bDebugBuildingPos = False
 Global $g_bDebugSetlogTrain = False
 Global $g_iDebugWindowMessages = 0
 Global $g_bDebugAndroidEmbedded = False
-Global $g_bDebugGetLocation = True
+Global $g_bDebugGetLocation = False
 Global $g_bDebugRedArea = False
 Global $g_hDebugAlwaysSaveFullScreenTimer = 0
 Global $g_bDebugSmartZap = False
@@ -7211,7 +7211,7 @@ Global $g_sPetUpgradeTime = ""
 Global $g_bUpgradePetsEnable[4] = [False, False, False, False]
 Global $g_iMinDark4PetUpgrade = 0
 Global Enum $ePetLassi, $ePetEletroOwl, $ePetMightyYak, $ePetUnicorn, $ePetCount
-Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Eletro Owl", "Mighty Yak", "Unicorn"]
+Global $g_asPetNames[$ePetCount] = ["Lassi", "Eletro Owl", "Mighty Yak", "Unicorn"]
 Global Const $DELAYSLEEP = 100
 Global Const $DELAYCLOUDSCLEARED = 1000
 Global Const $DELAYRESPOND = 5
@@ -40694,6 +40694,7 @@ While Not CheckBattleStarted()
 local $iTime = Int(__TimerDiff($timer)/ 60000)
 If $iTime > $iPrevTime Then
 SetLog("Clouds: " & $iTime & "-Minute(s)")
+If $iTime > 2 Then Return
 $iPrevTime = $iTime
 EndIf
 If _Sleep($DELAYRESPOND) Then
@@ -52243,8 +52244,13 @@ Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
 If IsKeepClicksActive() = False And $delay > 0 Then _Sleep($delay, False)
 Return $result
 EndFunc
-Func ClickAway()
+Func ClickAway($Region = Default)
 Local $aiRegionToUse = Random(0, 1, 1) > 0 ? $aiClickAwayRegionLeft : $aiClickAwayRegionRight
+If $Region = "Left" Then
+$aiRegionToUse = $aiClickAwayRegionLeft
+ElseIf $Region = "Right" Then
+$aiRegionToUse = $aiClickAwayRegionRight
+EndIf
 Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
 If $g_bDebugClick Then SetDebugLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_DEBUG)
 If $aiSpot[0] > 700 Then
@@ -57981,7 +57987,7 @@ $iSearchTime = __TimerDiff($hMinuteTimer) / 60000
 If $iSearchTime >= $iLastTime + 1 Then
 SetLog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
 $iLastTime += 1
-If $iSearchTime > 5 Then
+If $iSearchTime > 2 Then
 $g_bIsClientSyncError = True
 $g_bRestart = True
 CloseCoC(True)
@@ -59069,6 +59075,7 @@ $g_aiAvailQueuedTroop[$i] = 0
 If $i < $eSpellCount Then $g_aiAvailQueuedSpell[$i] = 0
 Next
 If Not OpenArmyOverview(True, "IsDonateQueueOnly()") Then Return
+checkArmyCamp(False,False)
 For $i = 0 To 1
 If Not $g_aiPrepDon[$i * 2] And Not $g_aiPrepDon[$i * 2 + 1] Then $abDonateQueueOnly[$i] = False
 If $abDonateQueueOnly[$i] Then
@@ -59131,7 +59138,7 @@ Next
 If _Sleep(250) Then ContinueLoop
 EndIf
 Next
-ClickAway()
+ClickAway("Left")
 If _Sleep($DELAYDONATECC2) Then Return
 EndFunc
 Func getArmyRequest($aiDonateCoords, $bNeedCapture = True)
@@ -59195,10 +59202,10 @@ $bDonateAllSpell = False
 EndIf
 $bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege)
 If Not $bDonate Then Return
-ClickAway()
+ClickAway("Left")
 If _Sleep($DELAYDONATECC2) Then Return
 If Not ClickB("ClanChat") Then
-SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
+SetLog("Try Open ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR)
 Return
 EndIf
 If _Sleep($DELAYDONATECC4) Then Return
@@ -59541,7 +59548,7 @@ EndIf
 $bDonate = True
 $aiSearchArray[1] = $aiDonateButton[1] + 20
 If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
-ClickAway()
+ClickAway("Left")
 If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
 EndIf
 $sSearchArea = GetDiamondFromArray($aiSearchArray)
@@ -59564,10 +59571,10 @@ ContinueLoop
 EndIf
 $bDonate = False
 WEnd
-ClickAway()
+ClickAway("Left")
 If _Sleep($DELAYDONATECC2) Then Return
 If Not ClickB("ClanChat") Then
-SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
+SetLog("Try Close ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR)
 AndroidPageError("DonateCC")
 EndIf
 UpdateStats()
@@ -59840,7 +59847,7 @@ Func DonateWindow($aiDonateButton, $bOpen = True)
 If $g_bDebugSetlog And $bOpen Then SetLog("DonateWindow Open Start", $COLOR_DEBUG)
 If $g_bDebugSetlog And Not $bOpen Then SetLog("DonateWindow Close Start", $COLOR_DEBUG)
 If Not $bOpen Then
-ClickAway()
+ClickAway("Left")
 If _Sleep($DELAYDONATEWINDOW1) Then Return
 If $g_bDebugSetlog Then SetDebugLog("DonateWindow Close Exit", $COLOR_DEBUG)
 Return
@@ -59938,7 +59945,7 @@ $g_iTotalDonateSiegeMachineCapacity = -1
 Local $bDonateSpell =($g_aiPrepDon[2] = 1 Or $g_aiPrepDon[3] = 1) And($g_iCurrentSpells > 0 Or $g_iCurrentSpells = "")
 Local $bDonateSiege =($g_aiPrepDon[4] = 1 Or $g_aiPrepDon[5] = 1) And($g_aiCurrentSiegeMachines[$eSiegeWallWrecker] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBarracks] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] > 0)
 SetDebugLog("$g_aiPrepDon[2]: " & $g_aiPrepDon[2] & ", $g_aiPrepDon[3]: " & $g_aiPrepDon[3] & ", $g_iCurrentSpells: " & $g_iCurrentSpells & ", $bDonateSpell: " & $bDonateSpell)
-SetDebugLog("$g_aiPrepDon[4]: " & $g_aiPrepDon[4] & "$g_aiPrepDon[5]: " & $g_aiPrepDon[5] & ", $bDonateSiege: " & $bDonateSiege)
+SetDebugLog("$g_aiPrepDon[4]: " & $g_aiPrepDon[4] & ", $g_aiPrepDon[5]: " & $g_aiPrepDon[5] & ", $bDonateSiege: " & $bDonateSiege)
 If $g_bDebugSetLog Then SetDebugLog("Start dual getOcrSpaceCastleDonate", $COLOR_DEBUG)
 $aiDonateButton[1] -= 10
 $sCapTroops = getOcrSpaceCastleDonate(27, $aiDonateButton[1])
@@ -62527,7 +62534,7 @@ EndFunc
 Func SearchUpgrade($bTest = False)
 Local $b_isupgradefound
 Local $i_scrolltime = 0
-Click(243, 33)
+ClickAway("Left")
 VillageReport(True, True)
 If Not $g_bAutoUpgradeEnabled Then Return
 If Not(_ColorCheck(_GetPixelColor(275, 15, True), "F5F5ED", 20) = True) Then
@@ -62578,7 +62585,7 @@ EndIf
 Wend
 If Not DoUpgrade($bTest) Then
 $b_isupgradefound = False
-Click(243, 33)
+ClickAway("Left")
 If _Sleep(1000) Then Return
 Click(295, 30)
 If _Sleep(1000) Then Return
@@ -62592,7 +62599,7 @@ Endif
 Wend
 $g_iNextLineOffset = 0
 $g_iCurrentLineOffset = 0
-Click(243, 33)
+ClickAway("Left")
 EndFunc
 Func DoUpgrade($bTest = False)
 Click(180 + $g_iQuickMISX, 80 + $g_iCurrentLineOffset)
@@ -62742,7 +62749,7 @@ Case Else
 Click(440, 530)
 EndSwitch
 Else
-Click(243, 33)
+ClickAway("Left")
 Endif
 If _Sleep(1000) Then Return
 Local $aImgAUpgradeEndBoost = decodeSingleCoord(findImage("EndBoost", $g_sImgAUpgradeEndBoost, GetDiamondFromRect("350, 310, 570, 230"), 1, True))
@@ -62756,7 +62763,7 @@ If _Sleep(1000) Then Return
 Else
 SetLog("Unable to locate OK Button", $COLOR_ERROR)
 If _Sleep(1000) Then Return
-Click(243, 33)
+ClickAway("Left")
 Return
 EndIf
 EndIf
@@ -67053,7 +67060,7 @@ If QuickMIS("BC1", $g_sImgBoostTroopsClock, $iColumnX, $iColumnY1, $iColumnX + $
 SetLog($sTroopName & ", Troops Already boosted", $COLOR_INFO)
 ClickAway()
 Else
-If _Sleep(500) Then Return
+If _Sleep(1500) Then Return
 SetLog($sTroopName & ", Currently is not boosted", $COLOR_INFO)
 If QuickMIS("BC1", $g_sImgBoostTroopsIcons, $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2, True, False) Then
 Click($g_iQuickMISX + $iColumnX,$g_iQuickMISY + $iColumnY1,1)
@@ -67565,8 +67572,9 @@ If Not $bBypass Then
 UpdateStats()
 EndIf
 $g_bisBHMaxed = False
+If isGoldFullBB() Then
 isBHMaxed()
-isGoldFullBB()
+EndIf
 EndFunc
 Func isBHMaxed()
 ClickAway()
@@ -67745,14 +67753,14 @@ If $BuildingUpgraded Then
 Setlog("Found Building to Upgrade..", $COLOR_DEBUG)
 Exitloop
 Else
-ClickDrag(333, $y, 333, 100, 800)
+ClickDrag(333, $y - 30, 333, 75, 800)
 If _Sleep(500) Then Return
 EndIf
 Next
 EndIf
 EndIf
 $BuildingUpgraded = False
-ClickAway()
+ClickAway("Left")
 EndFunc
 Func ClickOnBuilder($bTest)
 Local Const $aMasterBuilder[4] = [360, 11, 0x7cbdde, 10]
@@ -67847,18 +67855,18 @@ Click($g_iQuickMISX + 300, $g_iQuickMISY + 480, 1)
 If _Sleep(1500) Then Return
 If isGemOpen(True) Then
 SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
-ClickAway()
+ClickAway("Left")
 If _Sleep(500) Then Return
-ClickAway()
+ClickAway("Left")
 Return False
 Else
 SetLog($aBuildingName[1] & " Upgrading!", $COLOR_INFO)
 $BuildingUpgraded = True
-ClickAway()
+ClickAway("Left")
 Return True
 EndIf
 Else
-ClickAway()
+ClickAway("Left")
 $BuildingUpgraded = True
 SetLog("Not enough Resources to Upgrade " & $aBuildingName[1] & " !", $COLOR_ERROR)
 EndIf
@@ -67868,12 +67876,13 @@ Return False
 EndFunc
 Func NewBuildings($aResult)
 Local $Screencap = True, $Debug = False
+SetLog($aResult)
 If UBound($aResult) = 3 And $aResult[2] = "New" Then
 Click($aResult[0], $aResult[1], 1)
 If _Sleep(3000) Then Return
 Local $ClocksCoordinates = QuickMIS("CX", $g_sImgAutoUpgradeClock, 20, 250, 775, 530, $Screencap, $Debug)
 If UBound($ClocksCoordinates) > 0 Then
-SetLog("[Clocks]: " & UBound($ClocksCoordinates), $COLOR_DEBUG)
+SetLog("Number of [Clocks] Found: " & UBound($ClocksCoordinates), $COLOR_DEBUG)
 For $i = 0 To UBound($ClocksCoordinates) - 1
 Local $Coordinates = StringSplit($ClocksCoordinates[$i], ",", 2)
 If UBound($Coordinates) <> 2 Then
@@ -75642,7 +75651,6 @@ If CheckAndroidReboot() Then ContinueLoop
 If checkObstacles() Then ContinueLoop
 Next
 PrepareDonateCC()
-getArmySiegeMachines(True, True)
 DonateCC()
 If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
 _RunFunction('BuilderBase')

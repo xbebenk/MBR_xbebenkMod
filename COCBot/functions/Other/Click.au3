@@ -248,9 +248,17 @@ Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = ""
 	Return $result
 EndFunc   ;==>AttackClick
 
-Func ClickAway()
+Func ClickAway($Region = Default)
 	Local $aiRegionToUse = Random(0, 1, 1) > 0 ? $aiClickAwayRegionLeft : $aiClickAwayRegionRight
+	
+	If $Region = "Left" Then
+		$aiRegionToUse = $aiClickAwayRegionLeft
+	ElseIf $Region = "Right" Then
+		$aiRegionToUse = $aiClickAwayRegionRight
+	EndIf
+	
 	Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
+	
 	If $g_bDebugClick Then SetDebugLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_DEBUG)
 	If $aiSpot[0] > 700 Then 
 		SetLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_DEBUG)

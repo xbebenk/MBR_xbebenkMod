@@ -25,7 +25,7 @@ Func SearchUpgrade($bTest = False)
 	
 	Local $b_isupgradefound
 	Local $i_scrolltime = 0
-	Click(243, 33) ;clickaway
+	ClickAway("Left")
 	VillageReport(True, True) ;check if we have available builder
 	
 	If Not $g_bAutoUpgradeEnabled Then Return
@@ -88,7 +88,7 @@ Func SearchUpgrade($bTest = False)
 		
 		If Not DoUpgrade($bTest) Then 
 			$b_isupgradefound = False
-			Click(243, 33)
+			ClickAway("Left")
 			If _Sleep(1000) Then Return
 			; open the builders menu
 			Click(295, 30)
@@ -103,7 +103,7 @@ Func SearchUpgrade($bTest = False)
 	Wend
 	$g_iNextLineOffset = 0
 	$g_iCurrentLineOffset = 0 
-	Click(243, 33) ;clickaway close builder menu
+	ClickAway("Left") ;close builder menu
 	
 EndFunc
 
@@ -285,7 +285,7 @@ Func DoUpgrade($bTest = False)
 				Click(440, 530)
 		EndSwitch
 	Else	
-		Click(243, 33) ;clickaway
+		ClickAway("Left")
 	Endif
 
 	;Check for 'End Boost?' pop-up
@@ -301,7 +301,7 @@ Func DoUpgrade($bTest = False)
 		Else
 			SetLog("Unable to locate OK Button", $COLOR_ERROR)
 			If _Sleep(1000) Then Return
-			Click(243, 33)
+			ClickAway("Left")
 			Return
 		EndIf
 	EndIf

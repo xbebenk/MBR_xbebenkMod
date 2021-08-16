@@ -44,6 +44,8 @@ Func PrepareDonateCC()
 	$g_aiPrepDon[5] = 0
 	For $i = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 		$g_aiPrepDon[4] = BitOR($g_aiPrepDon[4], ($g_abChkDonateTroop[$eTroopCount + $g_iCustomDonateConfigs + $i] ? 1 : 0))
+		;SetLog("g_abChkDonateTroop : " & $g_abChkDonateTroop[$eTroopCount + $g_iCustomDonateConfigs + $i])
+		;SetLog("g_aiPrepDon : " & $g_aiPrepDon[4])
 		$g_aiPrepDon[5] = BitOR($g_aiPrepDon[5], ($g_abChkDonateAllTroop[$eTroopCount + $g_iCustomDonateConfigs + $i] ? 1 : 0))
 	Next
 
@@ -58,6 +60,7 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 		If $i < $eSpellCount Then $g_aiAvailQueuedSpell[$i] = 0
 	Next
 	If Not OpenArmyOverview(True, "IsDonateQueueOnly()") Then Return
+	checkArmyCamp(False,False) ; xbebenk add check armycamp before donate
 	For $i = 0 To 1
 		If Not $g_aiPrepDon[$i * 2] And Not $g_aiPrepDon[$i * 2 + 1] Then $abDonateQueueOnly[$i] = False
 		If $abDonateQueueOnly[$i] Then
@@ -124,7 +127,7 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 			If _Sleep(250) Then ContinueLoop
 		EndIf
 	Next
-			ClickAway()
+			ClickAway("Left")
 	If _Sleep($DELAYDONATECC2) Then Return
 
 EndFunc   ;==>IsDonateQueueOnly
@@ -216,12 +219,12 @@ Func DonateCC($bCheckForNewMsg = False)
 	If Not $bDonate Then Return
 
 	;Opens clan tab and verbose in log
-			ClickAway()
+			ClickAway("Left")
 
 	If _Sleep($DELAYDONATECC2) Then Return
 
 	If Not ClickB("ClanChat") Then
-		SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
+		SetLog("Try Open ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR)
 		Return
 	EndIf
 
@@ -636,7 +639,7 @@ Func DonateCC($bCheckForNewMsg = False)
 			$aiSearchArray[1] = $aiDonateButton[1] + 20
 
 			If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
-			ClickAway()
+			ClickAway("Left")
 
 			If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
 		EndIf
@@ -666,11 +669,11 @@ Func DonateCC($bCheckForNewMsg = False)
 		$bDonate = False
 	WEnd
 
-	ClickAway()
+	ClickAway("Left")
 	If _Sleep($DELAYDONATECC2) Then Return
 
 	If Not ClickB("ClanChat") Then
-		SetLog("Error finding the Clan Tab Button", $COLOR_ERROR)
+		SetLog("Try Close ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR)
 		AndroidPageError("DonateCC")
 	EndIf
 
@@ -1025,7 +1028,7 @@ Func DonateWindow($aiDonateButton, $bOpen = True)
 	If $g_bDebugSetlog And Not $bOpen Then SetLog("DonateWindow Close Start", $COLOR_DEBUG)
 
 	If Not $bOpen Then ; close window and exit
-		ClickAway()
+		ClickAway("Left")
 		If _Sleep($DELAYDONATEWINDOW1) Then Return
 		If $g_bDebugSetlog Then SetDebugLog("DonateWindow Close Exit", $COLOR_DEBUG)
 		Return
@@ -1149,9 +1152,10 @@ Func RemainingCCcapacity($aiDonateButton)
 
 	; Skip reading unnecessary items
 	Local $bDonateSpell = ($g_aiPrepDon[2] = 1 Or $g_aiPrepDon[3] = 1) And ($g_iCurrentSpells > 0 Or $g_iCurrentSpells = "")
+	;Local $bDonateSiege = ($g_aiPrepDon[4] = 1 Or $g_aiPrepDon[5] = 1) And ($g_aiCurrentSiegeMachines[$eSiegeWallWrecker] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBarracks] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] > 0)
 	Local $bDonateSiege = ($g_aiPrepDon[4] = 1 Or $g_aiPrepDon[5] = 1) And ($g_aiCurrentSiegeMachines[$eSiegeWallWrecker] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBarracks] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] > 0)
 	SetDebugLog("$g_aiPrepDon[2]: " & $g_aiPrepDon[2] & ", $g_aiPrepDon[3]: " & $g_aiPrepDon[3] & ", $g_iCurrentSpells: " & $g_iCurrentSpells & ", $bDonateSpell: " & $bDonateSpell)
-	SetDebugLog("$g_aiPrepDon[4]: " & $g_aiPrepDon[4] & "$g_aiPrepDon[5]: " & $g_aiPrepDon[5] & ", $bDonateSiege: " & $bDonateSiege)
+	SetDebugLog("$g_aiPrepDon[4]: " & $g_aiPrepDon[4] & ", $g_aiPrepDon[5]: " & $g_aiPrepDon[5] & ", $bDonateSiege: " & $bDonateSiege)
 
 	; Verify with OCR the Donation Clan Castle capacity
 	If $g_bDebugSetLog Then SetDebugLog("Start dual getOcrSpaceCastleDonate", $COLOR_DEBUG)

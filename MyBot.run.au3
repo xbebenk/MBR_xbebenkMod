@@ -1284,7 +1284,6 @@ Func FirstCheck()
 	Next
 
 	PrepareDonateCC()
-	getArmySiegeMachines(True, True)
 	DonateCC()
 
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
