@@ -41,8 +41,10 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 	EndIf
 
 	$g_bisBHMaxed = False
-	isBHMaxed() ;check if Builder Hut have Maxed (lvl 9)
-	isGoldFullBB() ;check if Builder base Gold is Full
+	If isGoldFullBB() Then ;check if Builder base Gold is Full
+		isBHMaxed() ;check if Builder Hut have Maxed (lvl 9)
+	EndIf
+	
 
 EndFunc   ;==>BuilderBaseReport
 
