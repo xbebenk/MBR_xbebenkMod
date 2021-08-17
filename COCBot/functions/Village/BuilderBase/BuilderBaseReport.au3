@@ -43,6 +43,7 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 	$g_bisBHMaxed = False
 	If isGoldFullBB() Then ;check if Builder base Gold is Full
 		isBHMaxed() ;check if Builder Hut have Maxed (lvl 9)
+		isMegaTeslaMaxed() ;check if Mega Tesla Already Maxed (Lvl 9)
 	EndIf
 	
 
@@ -70,6 +71,32 @@ Func isBHMaxed()
 		EndIf
 	Else
 		Setlog("isBHMaxed(): Cannot Find Builder Hall", $COLOR_DEBUG)
+	EndIf
+	Return False
+EndFunc
+
+Func isMegaTeslaMaxed()
+	ClickAway()
+	Local $sMTCoords
+	$sMTCoords = findImage("MegaTesla", $g_sImgMegaTesla, "FV", 1, True) ; Search for Clock Tower
+	If $sMTCoords <> "" Then
+		$sMTCoords = StringSplit($sMTCoords, ",", $STR_NOCOUNT)
+		ClickP($sMTCoords)
+		Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
+		If $aBuildingName[0] = 2 Then
+			; Verify if is Builder Hall and max level
+			If $aBuildingName[1] = "Mega Tesla" Then
+				If $aBuildingName[2] = 9 Then
+					SetLog("Your Mega Tesla is Maxed!", $COLOR_SUCCESS)
+					$g_bisMegaTeslaMaxed = True
+					Return True
+				Else
+					SetLog("Your Mega Tesla Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
+				EndIf
+			Endif
+		EndIf
+	Else
+		Setlog("isMegaTeslaMaxed(): Cannot Find Mega Tesla", $COLOR_DEBUG)
 	EndIf
 	Return False
 EndFunc
