@@ -78,7 +78,7 @@ Global $g_iVILLAGE_OFFSET[3] = [0, 0, 1]
 ; <><><><><><><><><><><><><><><><><><>
 ; <><><><> debug flags <><><><>
 ; <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-Global $g_bDebugSetlog = False ; Verbose log messages, or extra log messages most everywhere
+Global $g_bDebugSetlog = True ; Verbose log messages, or extra log messages most everywhere
 Global $g_bDebugAndroid = False ; Debug Android
 Global $g_bDebugClick = False ; Debug Bot Clicks and when docked, display current mouse position and RGB color
 Global $g_bDebugFuncTime = False ; Log Function execution time (where implemented)
@@ -697,7 +697,7 @@ Global Const $g_asSuperTroopIndex[$iSuperTroopsCount] = [ _
 Global $g_aSuperTroopsIcons[$iSuperTroopsCount + 1] = [$eIcnOptions, $eIcnSuperBarbarian, $eIcnSuperArcher, $eIcnSuperGiant, $eIcnSneakyGoblin, $eIcnSuperWallBreaker, $eIcnRocketBalloon, $eIcnSuperWizard, $eIcnInfernoDragon, _
 		$eIcnSuperMinion, $eIcnSuperValkyrie, $eIcnSuperWitch, $eIcnIceHound]
 
-Global $g_bSuperTroopsEnable = False, $g_bSkipBoostSuperTroopOnHalt = False
+Global $g_bSuperTroopsEnable = False, $g_bSkipBoostSuperTroopOnHalt = False, $g_bSuperTroopsBoostUsePotionFirst = False
 Global $g_iCmbSuperTroops[$iMaxSupersTroop] = [0, 0]
 
 ; Spells

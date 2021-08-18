@@ -1569,7 +1569,9 @@ Func chkSuperTroops()
 	If GUICtrlRead($g_hChkSuperTroops) = $GUI_CHECKED Then
 		$g_bSuperTroopsEnable = True
 		$g_bSkipBoostSuperTroopOnHalt = True
+		$g_bSuperTroopsBoostUsePotionFirst = True
 		GUICtrlSetState($g_hChkSkipBoostSuperTroopOnHalt, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkUsePotionFirst, $GUI_ENABLE)
 		For $i = 0 To $iMaxSupersTroop - 1
 			GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_ENABLE)
 			GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_ENABLE)
@@ -1579,7 +1581,9 @@ Func chkSuperTroops()
 	Else
 		$g_bSuperTroopsEnable = False
 		$g_bSkipBoostSuperTroopOnHalt = False
+		$g_bSuperTroopsBoostUsePotionFirst = False
 		GUICtrlSetState($g_hChkSkipBoostSuperTroopOnHalt, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkUsePotionFirst, $GUI_DISABLE)
 		For $i = 0 To $iMaxSupersTroop - 1
 			GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_DISABLE)
 			GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_DISABLE)

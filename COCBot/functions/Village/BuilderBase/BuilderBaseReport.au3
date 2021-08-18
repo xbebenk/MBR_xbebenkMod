@@ -41,9 +41,8 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 	EndIf
 
 	$g_bisBHMaxed = False
-	If isGoldFullBB() Then ;check if Builder base Gold is Full
-		isBHMaxed() ;check if Builder Hut have Maxed (lvl 9)
-		isMegaTeslaMaxed() ;check if Mega Tesla Already Maxed (Lvl 9)
+	If isGoldFullBB() And $bBypass Then ;check if Builder base Gold is Full
+		If isBHMaxed() Then isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
 	EndIf
 	
 

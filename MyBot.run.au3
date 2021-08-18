@@ -714,19 +714,17 @@ Func runBot() ;Bot that runs everything in order
 		$g_bIsFullArmywithHeroesAndSpells = False
 		$g_iCommandStop = -1
 		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen()
+		;checkMainScreen()
 		If $g_bRestart Then ContinueLoop
 		chkShieldStatus()
 		If Not $g_bRunState Then Return
 		If $g_bRestart Then ContinueLoop
-		checkObstacles() ; trap common error messages also check for reconnecting animation
-		If $g_bRestart Then ContinueLoop
-
+		
 		If CheckAndroidReboot() Then ContinueLoop
 		If Not $g_bIsClientSyncError Then ;ARCH:  was " And Not $g_bIsSearchLimit"
 			SetLog("ARCH: Top of loop", $COLOR_DEBUG)
 			If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
-			checkMainScreen(False)
+			;checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
 			If _Sleep($DELAYRUNBOT3) Then Return
 			VillageReport()
@@ -746,7 +744,7 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
-			Local $aRndFuncList = ['RequestCC','LabCheck', 'Laboratory', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge','UpgradeBuilding','UpgradeWall']
+			Local $aRndFuncList = ['BoostSuperTroop','RequestCC','LabCheck', 'Laboratory', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge','UpgradeBuilding','UpgradeWall']
 			;Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge']
 			If $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['LabCheck', 'Collect', 'PetCheck']

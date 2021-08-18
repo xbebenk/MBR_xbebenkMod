@@ -202,6 +202,9 @@ Func DoUpgrade($bTest = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1) ? True : False
 		Case "Air Defense"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[23] = 1) ? True : False
+		;24 is TH weapon
+		Case "WorkShop"
+			$bMustIgnoreUpgrade = True ;hardcoded temporary
 		Case Else
 			$bMustIgnoreUpgrade = False
 	EndSwitch

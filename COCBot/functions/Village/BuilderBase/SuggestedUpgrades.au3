@@ -143,7 +143,7 @@ Func AutoUpgradeBB($bTest = False)
 	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
 
-	BuilderBaseReport()
+	BuilderBaseReport(True)
 	; Check if you are on Builder island
 	If isOnBuilderBase(True) Then
 		; Will Open the Suggested Window and check if is OK

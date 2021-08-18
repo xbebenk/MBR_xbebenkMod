@@ -30,6 +30,7 @@ Func DoAttackBB()
 			ExitLoop
 		Endif
 	Next
+	ZoomOut()
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 
@@ -76,7 +77,7 @@ Func AttackBB()
 		local $iTime = Int(__TimerDiff($timer)/ 60000)
 		If $iTime > $iPrevTime Then ; if we have increased by a minute
 			SetLog("Clouds: " & $iTime & "-Minute(s)")
-			If $iTime > 2 Then Return 
+			If $iTime > 2 Then Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search, if more there must be something no right
 			$iPrevTime = $iTime
 		EndIf
 		If _Sleep($DELAYRESPOND) Then
@@ -205,8 +206,7 @@ Func AttackBB()
 	Okay()
 	ClickAway()
 	SetLog("Done", $COLOR_SUCCESS)
-	ZoomOut()
-
+	
 	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast ; reset android suspend and resume stuff
 	If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
 EndFunc

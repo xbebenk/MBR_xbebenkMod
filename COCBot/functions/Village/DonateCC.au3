@@ -219,7 +219,7 @@ Func DonateCC($bCheckForNewMsg = False)
 	If Not $bDonate Then Return
 
 	;Opens clan tab and verbose in log
-			ClickAway("Left")
+	ClickAway("Left")
 
 	If _Sleep($DELAYDONATECC2) Then Return
 
@@ -238,6 +238,12 @@ Func DonateCC($bCheckForNewMsg = False)
 		If _Sleep($DELAYDONATECC2) Then Return
 	EndIf
 
+	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
+
+	Local $iTimer
+	Local $sSearchArea, $aiSearchArray[4] = [200, 90, 300, 700], $aiSearchArrayBackUp = $aiSearchArray
+	Local $aiDonateButton
+	
 	Local $Scroll
 	; add scroll here
 	While 1
@@ -253,12 +259,6 @@ Func DonateCC($bCheckForNewMsg = False)
 		EndIf
 		ExitLoop
 	WEnd
-
-	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
-
-	Local $iTimer
-	Local $sSearchArea, $aiSearchArray[4] = [200, 90, 300, 700], $aiSearchArrayBackUp = $aiSearchArray
-	Local $aiDonateButton
 
 	While $bDonate
 		checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
@@ -655,7 +655,7 @@ Func DonateCC($bCheckForNewMsg = False)
 		Else
 			If $g_bDebugSetlog Then SetDebugLog("No more Donate buttons found, closing chat", $COLOR_DEBUG)
 		EndIf
-
+	
 		;;; Scroll Down
 		ForceCaptureRegion()
 		$Scroll = _PixelSearch(293, 687 - 30, 295, 693 - 30, Hex(0xFFFFFF, 6), 20)
