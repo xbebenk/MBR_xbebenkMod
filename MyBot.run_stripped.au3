@@ -6146,7 +6146,7 @@ Global Const $g_iBottomOffsetY = $g_iDEFAULT_HEIGHT - 720
 Global $g_hBotLaunchTime = __TimerInit()
 Global $g_iBotLaunchTime = 0
 Global $g_iVILLAGE_OFFSET[3] = [0, 0, 1]
-Global $g_bDebugSetlog = False
+Global $g_bDebugSetlog = True
 Global $g_bDebugAndroid = False
 Global $g_bDebugClick = False
 Global $g_bDebugFuncTime = False
@@ -6509,7 +6509,7 @@ Global Const $g_aiTroopDonateXP[$eTroopCount] = [1, 5, 1, 12, 5, 10, 1, 3, 2, 8,
 Global Const $iSuperTroopsCount = 12, $iMaxSupersTroop = 2
 Global Const $g_asSuperTroopNames[$iSuperTroopsCount] = [ "Super Barbarian", "Super Archer", "Super Giant", "Sneaky Goblin", "Super WallBreaker", "Rocket Balloon", "Super Wizard", "Inferno Dragon", "Super Minion", "Super Valkyrie", "Super Witch", "Ice Hound"]
 Global $g_aSuperTroopsIcons[$iSuperTroopsCount + 1] = [$eIcnOptions, $eIcnSuperBarbarian, $eIcnSuperArcher, $eIcnSuperGiant, $eIcnSneakyGoblin, $eIcnSuperWallBreaker, $eIcnRocketBalloon, $eIcnSuperWizard, $eIcnInfernoDragon, $eIcnSuperMinion, $eIcnSuperValkyrie, $eIcnSuperWitch, $eIcnIceHound]
-Global $g_bSuperTroopsEnable = False, $g_bSkipBoostSuperTroopOnHalt = False
+Global $g_bSuperTroopsEnable = False, $g_bSkipBoostSuperTroopOnHalt = False, $g_bSuperTroopsBoostUsePotionFirst = False
 Global $g_iCmbSuperTroops[$iMaxSupersTroop] = [0, 0]
 Global Enum $eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFreeze, $eSpellClone, $eSpellInvisibility, $eSpellPoison, $eSpellEarthquake, $eSpellHaste, $eSpellSkeleton, $eSpellBat, $eSpellCount
 Global Const $g_asSpellNames[$eSpellCount] = ["Lightning", "Heal", "Rage", "Jump", "Freeze", "Clone", "Invisibility", "Poison", "Earthquake", "Haste", "Skeleton", "Bat"]
@@ -6896,7 +6896,7 @@ Global $g_iDetectedImageType = 0
 Global $g_abNotNeedAllTime[2] = [True, True]
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0]
 Global $g_aiStarLaboratoryPos[2] = [-1, -1]
-Global $g_bisBHMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0, $g_ForceBBAttackOnClanGames = 0
+Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0, $g_ForceBBAttackOnClanGames = 0
 Global $g_iArmyCapacity = 0
 Global $g_iTotalTrainSpaceSpell = 0
 Global $g_iTotalTrainSpaceSiege = 0
@@ -7635,6 +7635,7 @@ Global Const $g_sImgLabResearch = @ScriptDir & "\imgxml\Research\Laboratory\"
 Global $g_sImgBoostTroopsBarrel = @ScriptDir & "\imgxml\SuperTroops\Barrel\"
 Global $g_sImgBoostTroopsIcons = @ScriptDir & "\imgxml\SuperTroops\Troops\"
 Global $g_sImgBoostTroopsButtons = @ScriptDir & "\imgxml\SuperTroops\Buttons\"
+Global $g_sImgBoostTroopsPotion = @ScriptDir & "\imgxml\SuperTroops\Potions\"
 Global $g_sImgBoostTroopsClock = @ScriptDir & "\imgxml\SuperTroops\Clock\"
 Global $g_sImgCollectRessourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect"
 Global $g_sImgBoatBB = @ScriptDir & "\imgxml\Boat\BoatBuilderBase_0_89.xml"
@@ -7643,6 +7644,7 @@ Global $g_sImgStartCTBoost = @ScriptDir & "\imgxml\Resources\BuildersBase\ClockT
 Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"
 Global $g_sImgIsOnBB = @ScriptDir & "\imgxml\village\Page\BuilderBase\"
 Global $g_sImgBuilderHall = @ScriptDir & "\imgxml\Resources\BuildersBase\BuilderHall\BuilderHall*.xml"
+Global $g_sImgMegaTesla = @ScriptDir & "\imgxml\Resources\BuildersBase\MegaTesla\MegaTesla*.xml"
 Global $g_sImgStarLaboratory = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory"
 Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
 Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBMachReady_0_90.xml"
@@ -16934,7 +16936,7 @@ Global $g_hCmbBoostBarracks = 0, $g_hCmbBoostSpellFactory = 0, $g_hCmbBoostWorks
 Global $g_hLblBoosthour = 0, $g_ahLblBoosthoursE = 0
 Global $g_hLblBoosthours[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hChkBoostBarracksHours[24] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], $g_hChkBoostBarracksHoursE1 = 0, $g_hChkBoostBarracksHoursE2 = 0
-Global $g_hChkSuperTroops = 0, $g_hChkSkipBoostSuperTroopOnHalt = 0, $g_ahLblSuperTroops[$iMaxSupersTroop] = [0, 0], $g_ahCmbSuperTroops[$iMaxSupersTroop] = [0, 0], $g_ahPicSuperTroops[$iMaxSupersTroop] = [0, 0]
+Global $g_hChkSuperTroops = 0, $g_hChkSkipBoostSuperTroopOnHalt = 0, $g_hChkUsePotionFirst = 0, $g_ahLblSuperTroops[$iMaxSupersTroop] = [0, 0], $g_ahCmbSuperTroops[$iMaxSupersTroop] = [0, 0], $g_ahPicSuperTroops[$iMaxSupersTroop] = [0, 0]
 Func LoadTranslatedTrainTroopsOrderList()
 Global $g_asTroopOrderList = ["", GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBarbarians", "Barbarians"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperBarbarians", "Super Barbarians"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtArchers", "Archers"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperArchers", "Super Archers"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGiants", "Giants"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperGiants", "Super Giants"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGoblins", "Goblins"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSneakyGoblins", "Sneaky Goblin"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWallBreakers", "Wall Breakers"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperWallBreakers", "Super Wall Breakers"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBalloons", "Balloons"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtRocketBalloons", "Rocket Balloons"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWizards", "Wizards"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperWizards", "Super Wizards"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHealers", "Healers"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtDragons", "Dragons"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtPekkas", "Pekkas"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBabyDragons", "Baby Dragons"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtInfernoDragons", "Inferno Dragons"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtMiners", "Miners"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtElectroDragons", "Electro Dragons"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtYetis", "Yetis"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtDragonRiders", "Dragon Riders"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtMinions", "Minions"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperMinions", "Super Minions"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHogRiders", "Hog Riders"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtValkyries", "Valkyries"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperValkyries", "Super Valkyries"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGolems", "Golems"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWitches", "Witches"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperWitches", "Super Witches"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtLavaHounds", "Lava Hounds"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtIceHounds", "Ice Hounds"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBowlers", "Bowlers"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtIceGolems", "Ice Golems"), GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHeadhunters", "Headhunters")]
 EndFunc
@@ -17909,7 +17911,7 @@ $g_hCmbBoostEverything = GUICtrlCreateCombo("", $x + 135, $y, 60, 25, BitOR($CBS
 GUICtrlSetData(-1, "0|1|2|3|4|5", "0")
 _GUICtrlSetTip(-1, $sTxtTip)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
-$y += 55
+$y += 50
 GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_04", "Boost Schedule"), $x - 20, $y - 20, $g_iSizeWGrpTab3 - 12, 75)
 $g_hLblBoosthour = GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "Hour", -1) & ":", $x, $y, -1, 15)
 $sTxtTip = GetTranslatedFileIni("MBR Global GUI Design", "Only_during_hours", -1)
@@ -17990,24 +17992,27 @@ _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Clear_set_row_
 GUICtrlSetOnEvent(-1, "chkBoostBarracksHoursE2")
 GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "PM", "PM"), $x + 5, $y)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
-$y += 55
-GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_05", "Boost Super Troops"), $x - 20, $y - 20, $g_iSizeWGrpTab3 - 12, 75)
+$y += 45
+GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_05", "Boost Super Troops"), $x - 20, $y - 20, $g_iSizeWGrpTab3 - 12, 90)
 $x += 200
-$g_hChkSkipBoostSuperTroopOnHalt = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkSkipBoostSuperTroopOnHalt", "Skip Boost on Halt"), $x - 14, $y - 5, -1, -1)
+$g_hChkSkipBoostSuperTroopOnHalt = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkSkipBoostSuperTroopOnHalt", "Skip Boost on Halt"), $x - 14, $y - 10, -1, -1)
+GUICtrlSetOnEvent(-1, "chkSuperTroops")
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_05", "Will Skip boost If Enabled Halt Attack and Account got on HaltAttack Mode"))
+$g_hChkUsePotionFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkusePotionFirst", "Use Potion First"), $x - 14, $y + 10, -1, -1)
 GUICtrlSetOnEvent(-1, "chkSuperTroops")
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "Group_05", "Will Skip boost If Enabled Halt Attack and Account got on HaltAttack Mode"))
 $x -= 200
 Local $sCmbTroopList = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtListOfSuperTroops", "Disabled|" & _ArrayToString($g_asSuperTroopNames))
-$g_hChkSuperTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkSuperTroops", "Enable Super Troops"), $x - 14, $y - 5, -1, -1)
+$g_hChkSuperTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops_Boost", "ChkSuperTroops", "Enable Super Troops"), $x - 14, $y + 5, -1, -1)
 GUICtrlSetOnEvent(-1, "chkSuperTroops")
 For $i = 0 To $iMaxSupersTroop - 1
-$g_ahLblSuperTroops[$i] = GUICtrlCreateLabel($i + 1 & ":", $x - 14, $y + 28, 50, -1)
+$g_ahLblSuperTroops[$i] = GUICtrlCreateLabel($i + 1 & ":", $x - 14, $y + 38, 50, -1)
 GUICtrlSetState(-1, $GUI_DISABLE)
-$g_ahCmbSuperTroops[$i] = GUICtrlCreateCombo("", $x + 1, $y + 25, 115, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+$g_ahCmbSuperTroops[$i] = GUICtrlCreateCombo("", $x + 1, $y + 35, 115, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 GUICtrlSetData(-1, $sCmbTroopList, "Disabled")
 GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlSetOnEvent(-1, "cmbSuperTroops")
-$g_ahPicSuperTroops[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnOptions, $x + 120, $y, 48, 48)
+$g_ahPicSuperTroops[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnOptions, $x + 120, $y + 10, 48, 48)
 GUICtrlSetState(-1, $GUI_HIDE)
 $x += 200
 Next
@@ -25390,8 +25395,8 @@ EndFunc
 Func chkSuperTroops()
 If GUICtrlRead($g_hChkSuperTroops) = $GUI_CHECKED Then
 $g_bSuperTroopsEnable = True
-$g_bSkipBoostSuperTroopOnHalt = True
 GUICtrlSetState($g_hChkSkipBoostSuperTroopOnHalt, $GUI_ENABLE)
+GUICtrlSetState($g_hChkUsePotionFirst, $GUI_ENABLE)
 For $i = 0 To $iMaxSupersTroop - 1
 GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_ENABLE)
 GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_ENABLE)
@@ -25400,14 +25405,24 @@ _GUICtrlSetImage($g_ahPicSuperTroops[$i], $g_sLibIconPath, $g_aSuperTroopsIcons[
 Next
 Else
 $g_bSuperTroopsEnable = False
-$g_bSkipBoostSuperTroopOnHalt = False
 GUICtrlSetState($g_hChkSkipBoostSuperTroopOnHalt, $GUI_DISABLE)
+GUICtrlSetState($g_hChkUsePotionFirst, $GUI_DISABLE)
 For $i = 0 To $iMaxSupersTroop - 1
 GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_DISABLE)
 GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_DISABLE)
 GUICtrlSetState($g_ahPicSuperTroops[$i], $GUI_HIDE)
 _GUICtrlSetImage($g_ahPicSuperTroops[$i], $g_sLibIconPath, $g_aSuperTroopsIcons[$g_iCmbSuperTroops[$i]])
 Next
+EndIf
+If GUICtrlRead($g_hChkSkipBoostSuperTroopOnHalt) = $GUI_CHECKED Then
+$g_bSkipBoostSuperTroopOnHalt = True
+Else
+$g_bSkipBoostSuperTroopOnHalt = False
+EndIf
+If GUICtrlRead($g_hChkUsePotionFirst) = $GUI_CHECKED Then
+$g_bSuperTroopsBoostUsePotionFirst = True
+Else
+$g_bSuperTroopsBoostUsePotionFirst = False
 EndIf
 EndFunc
 Func cmbSuperTroops()
@@ -40662,6 +40677,7 @@ ClickAway()
 ExitLoop
 Endif
 Next
+ZoomOut()
 SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 Func AttackBB()
@@ -40805,7 +40821,6 @@ SetLog("Waiting for opponent", $COLOR_BLUE)
 Okay()
 ClickAway()
 SetLog("Done", $COLOR_SUCCESS)
-ZoomOut()
 $g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
 EndFunc
@@ -57269,7 +57284,7 @@ EndIf
 Next
 If $g_bRestart Then Return
 Local $THString = ""
-If $g_hCmbDBTH Or $g_hCmbABTH Then
+If $match[$DB] Or $match[$LB] Then
 $THString = FindTownhall(False, False)
 ElseIf($g_abFilterMeetOneConditionEnable[$DB] Or $g_abFilterMeetOneConditionEnable[$LB]) Then
 $THString = FindTownhall(True, False)
@@ -59215,6 +59230,10 @@ SetLog('Clicking "I Understand" button', $COLOR_ACTION)
 ClickP($aCoord)
 If _Sleep($DELAYDONATECC2) Then Return
 EndIf
+If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
+Local $iTimer
+Local $sSearchArea, $aiSearchArray[4] = [200, 90, 300, 700], $aiSearchArrayBackUp = $aiSearchArray
+Local $aiDonateButton
 Local $Scroll
 While 1
 ForceCaptureRegion()
@@ -59229,10 +59248,6 @@ ContinueLoop
 EndIf
 ExitLoop
 WEnd
-If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
-Local $iTimer
-Local $sSearchArea, $aiSearchArray[4] = [200, 90, 300, 700], $aiSearchArrayBackUp = $aiSearchArray
-Local $aiDonateButton
 While $bDonate
 checkAttackDisable($g_iTaBChkIdle)
 $ClanString = ""
@@ -62686,6 +62701,8 @@ Case "Bomb Tower"
 $bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[22] = 1) ? True : False
 Case "Air Defense"
 $bMustIgnoreUpgrade =($g_iChkUpgradesToIgnore[23] = 1) ? True : False
+Case "WorkShop"
+$bMustIgnoreUpgrade = True
 Case Else
 $bMustIgnoreUpgrade = False
 EndSwitch
@@ -67058,25 +67075,46 @@ If _Sleep(1000) Then Return
 WEnd
 If QuickMIS("BC1", $g_sImgBoostTroopsClock, $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2, True, False) Then
 SetLog($sTroopName & ", Troops Already boosted", $COLOR_INFO)
+If $g_bDebugSetlog Then SetDebugLog("Found Clock Image", $COLOR_DEBUG)
 ClickAway()
 Else
 If _Sleep(1500) Then Return
+If $g_bDebugSetlog Then SetDebugLog("Clock Image Not Found", $COLOR_DEBUG)
 SetLog($sTroopName & ", Currently is not boosted", $COLOR_INFO)
+If FindStroopIcons($g_iCmbSuperTroops[$i], $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2) Then
 If QuickMIS("BC1", $g_sImgBoostTroopsIcons, $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2, True, False) Then
 Click($g_iQuickMISX + $iColumnX,$g_iQuickMISY + $iColumnY1,1)
-If _Sleep(500) Then Return
-If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, True, False) Then
-Click($g_iQuickMISX,$g_iQuickMISY,1)
-If _Sleep(500) Then Return
-If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, True, False) Then
+If _Sleep(600) Then Return
+If $g_bSuperTroopsBoostUsePotionFirst Then
+Setlog("Using Super Potion...", $COLOR_INFO)
+If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 400, 530, 580, 600, True, False) Then
+Click($g_iQuickMISX+400,$g_iQuickMISY+530,1)
+If _Sleep(600) Then Return
+If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 330, 430, 520, 510, True, False) Then
 If $bTest Then
-SetLog("Test = True, Click(" & $g_iQuickMISX & "," & $g_iQuickMISY & ",1)",$COLOR_DEBUG)
-ClickAway()
-ClickAway()
-ExitLoop
+CancelBoost("Using Potion")
+ContinueLoop
 EndIf
-Click($g_iQuickMISX,$g_iQuickMISY,1)
-Setlog("Successfully Boost " & $sTroopName, $COLOR_INFO)
+Click($g_iQuickMISX+330,$g_iQuickMISY+430,1)
+Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
+ClickAway()
+Else
+Setlog("Could not find Potion button for final upgrade " & $sTroopName, $COLOR_ERROR)
+ClickAway()
+ClickAway()
+Endif
+Else
+Setlog("Cannot Find Potion, Using Dark Elixir...", $COLOR_INFO)
+If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 530, 750, 600, True, False) Then
+Click($g_iQuickMISX+600,$g_iQuickMISY+530,1)
+If _Sleep(600) Then Return
+If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 430, 550, 520, True, False) Then
+If $bTest Then
+CancelBoost("Using Dark Elixir")
+ContinueLoop
+EndIf
+Click($g_iQuickMISX+320,$g_iQuickMISY+430,1)
+Setlog("Using Dark Elixir, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
 ClickAway()
 Else
 Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
@@ -67087,10 +67125,37 @@ Else
 Setlog("Could not find dark elixir button for upgrade " & $sTroopName, $COLOR_ERROR)
 ClickAway()
 EndIf
+Endif
+Else
+Setlog("Using Dark Elixir...", $COLOR_INFO)
+If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 530, 750, 600, True, False) Then
+Click($g_iQuickMISX+600,$g_iQuickMISY+530,1)
+If _Sleep(600) Then Return
+If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 430, 550, 520, True, False) Then
+If $bTest Then
+CancelBoost("Using Dark Elixir")
+ContinueLoop
+EndIf
+Click($g_iQuickMISX+320,$g_iQuickMISY+430,1)
+Setlog("Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
+ClickAway()
+Else
+Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
+ClickAway()
+ClickAway()
+Endif
+Else
+Setlog("Could not find dark elixir button for upgrade " & $sTroopName, $COLOR_ERROR)
+ClickAway()
+EndIf
+Endif
 Else
 Setlog("Cannot find " & $sTroopName & ", Troop Not Unlocked yet?", $COLOR_ERROR)
 ClickAway()
 EndIf
+Else
+SetLog("Double Check Image for Icon " & $sTroopName & " Not Found, Troop Not Unlocked yet?", $COLOR_ERROR)
+Endif
 EndIf
 EndIf
 EndIf
@@ -67118,6 +67183,35 @@ ClickDrag($iXMidPoint, 280, $iXMidPoint, 95,1000)
 EndFunc
 Func GetSTroopName(Const $iIndex)
 Return $g_asSuperTroopNames[$iIndex]
+EndFunc
+Func FindStroopIcons($iIndex, $iColumnX, $iColumnY1, $iColumnX1, $iColumnY2)
+Local $FullTemp
+$FullTemp = SearchImgloc($g_sImgBoostTroopsIcons, $iColumnX, $iColumnY1, $iColumnX1, $iColumnY2)
+If $g_bDebugSetlog Then SetDebugLog("Troop SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
+SetLog("Trying to find" & "[" & $iIndex & "] " & GetSTroopName($iIndex - 1), $COLOR_DEBUG)
+If StringInStr($FullTemp[0] & " ", "empty") > 0 Then Return
+If $FullTemp[0] <> "" Then
+Local $iFoundTroopIndex = TroopIndexLookup($FullTemp[0])
+For $i = $eTroopBarbarian To $eTroopCount - 1
+If $iFoundTroopIndex = $i Then
+If $g_bDebugSetlog Then SetDebugLog("Detected " & "[" & $iFoundTroopIndex & "] " & $g_asTroopNames[$i], $COLOR_DEBUG)
+If $g_asTroopNames[$i] = GetSTroopName($iIndex - 1) Then Return True
+ExitLoop
+EndIf
+If $i = $eTroopCount - 1 Then
+If $g_bDebugSetlog Then SetDebugLog("Troop Troop Detection Failed", $COLOR_DEBUG)
+EndIf
+Next
+EndIf
+Return False
+EndFunc
+Func CancelBoost($aMessage = "")
+SetLog($aMessage & ", Test = True", $COLOR_DEBUG)
+SetLog("Emulate Click(" & $g_iQuickMISX & "," & $g_iQuickMISY & ") -- Cancelling", $COLOR_DEBUG)
+ClickAway()
+ClickAway()
+ClickAway()
+If _Sleep(1000) Then Return
 EndFunc
 Func LocatePetHouse($bCollect = True)
 $g_aiPetHousePos[0] = -1
@@ -67572,8 +67666,8 @@ If Not $bBypass Then
 UpdateStats()
 EndIf
 $g_bisBHMaxed = False
-If isGoldFullBB() Then
-isBHMaxed()
+If isGoldFullBB() And $bBypass Then
+If isBHMaxed() Then isMegaTeslaMaxed()
 EndIf
 EndFunc
 Func isBHMaxed()
@@ -67597,6 +67691,30 @@ Endif
 EndIf
 Else
 Setlog("isBHMaxed(): Cannot Find Builder Hall", $COLOR_DEBUG)
+EndIf
+Return False
+EndFunc
+Func isMegaTeslaMaxed()
+ClickAway()
+Local $sMTCoords
+$sMTCoords = findImage("MegaTesla", $g_sImgMegaTesla, "FV", 1, True)
+If $sMTCoords <> "" Then
+$sMTCoords = StringSplit($sMTCoords, ",", $STR_NOCOUNT)
+ClickP($sMTCoords)
+Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
+If $aBuildingName[0] = 2 Then
+If $aBuildingName[1] = "Mega Tesla" Then
+If $aBuildingName[2] = 9 Then
+SetLog("Your Mega Tesla is Maxed!", $COLOR_SUCCESS)
+$g_bisMegaTeslaMaxed = True
+Return True
+Else
+SetLog("Your Mega Tesla Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
+EndIf
+Endif
+EndIf
+Else
+Setlog("isMegaTeslaMaxed(): Cannot Find Mega Tesla", $COLOR_DEBUG)
 EndIf
 Return False
 EndFunc
@@ -67680,11 +67798,11 @@ Func AutoUpgradeBB($bTest = False)
 If $g_iChkBBSuggestedUpgrades = 0 Then Return
 Local $bDebug = $g_bDebugSetlog
 Local $bScreencap = True
-BuilderBaseReport()
+BuilderBaseReport(True)
 If isOnBuilderBase(True) Then
 If ClickOnBuilder($bTest) Then
 SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
-If $g_bisBHMaxed And $g_bGoldStorageFullBB Then
+If $g_bisBHMaxed And $g_bGoldStorageFullBB And $g_bisMegaTeslaMaxed Then
 If QuickMIS("BC1", $g_sImgAutoUpgradeWindow, 330, 85, 550, 145, True, False) Then
 ClickDrag(333, 320, 333, 0, 1000)
 If _Sleep(2000) Then Return
@@ -67831,7 +67949,7 @@ ElseIf $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8 Then
 SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 ElseIf $aBuildingName[1] = "Builder Barracks" And $aBuildingName[2] >= 7 Then
 SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-ElseIf $aBuildingName[1] = "Wall" And Not $g_bisBHMaxed And Not isGoldFullBB() Then
+ElseIf $aBuildingName[1] = "Wall" And Not $g_bisBHMaxed And Not $g_bGoldStorageFullBB And Not $g_bisMegaTeslaMaxed Then
 SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 $sUpgButtom = $g_sImgAutoUpgradeBtnGold
 Else
@@ -69910,6 +70028,7 @@ GUICtrlSetState($g_hChkBoostBarracksHours[$i], $g_abBoostBarracksHours[$i] ? $GU
 Next
 GUICtrlSetState($g_hChkSuperTroops, $g_bSuperTroopsEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkSkipBoostSuperTroopOnHalt, $g_bSkipBoostSuperTroopOnHalt ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkUsePotionFirst, $g_bSuperTroopsBoostUsePotionFirst ? $GUI_CHECKED : $GUI_UNCHECKED)
 chkSuperTroops()
 For $i = 0 To $iMaxSupersTroop - 1
 _GUICtrlComboBox_SetCurSel($g_ahCmbSuperTroops[$i], $g_iCmbSuperTroops[$i])
@@ -69929,6 +70048,7 @@ $g_abBoostBarracksHours[$i] =(GUICtrlRead($g_hChkBoostBarracksHours[$i]) = $GUI_
 Next
 $g_bSuperTroopsEnable =(GUICtrlRead($g_hChkSuperTroops) = $GUI_CHECKED)
 $g_bSkipBoostSuperTroopOnHalt =(GUICtrlRead($g_hChkSkipBoostSuperTroopOnHalt) = $GUI_CHECKED)
+$g_bSuperTroopsBoostUsePotionFirst =(GUICtrlRead($g_hChkUsePotionFirst) = $GUI_CHECKED)
 For $i = 0 To $iMaxSupersTroop - 1
 $g_iCmbSuperTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSuperTroops[$i])
 Next
@@ -71645,6 +71765,7 @@ $g_abBoostBarracksHours[$i] =($g_abBoostBarracksHours[$i] = "1")
 Next
 IniReadS($g_bSuperTroopsEnable, $g_sProfileConfigPath, "SuperTroopsBoost", "SuperTroopsEnable", False, "Bool")
 IniReadS($g_bSkipBoostSuperTroopOnHalt, $g_sProfileConfigPath, "SuperTroopsBoost", "SkipSuperTroopsBoostOnHalt", False, "Bool")
+IniReadS($g_bSuperTroopsBoostUsePotionFirst, $g_sProfileConfigPath, "SuperTroopsBoost", "SuperTroopsBoostUsePotionFirst", False, "Bool")
 For $i = 0 To $iMaxSupersTroop - 1
 $g_iCmbSuperTroops[$i] = Int(IniRead($g_sProfileConfigPath, "SuperTroopsBoost", "SuperTroopsIndex" & $i, 0))
 Next
@@ -72630,6 +72751,7 @@ Next
 _Ini_Add("planned", "BoostBarracksHours", $string)
 _Ini_Add("SuperTroopsBoost", "SuperTroopsEnable", $g_bSuperTroopsEnable ? 1 : 0)
 _Ini_Add("SuperTroopsBoost", "SkipSuperTroopsBoostOnHalt", $g_bSkipBoostSuperTroopOnHalt ? 1 : 0)
+_Ini_Add("SuperTroopsBoost", "SuperTroopsBoostUsePotionFirst", $g_bSuperTroopsBoostUsePotionFirst ? 1 : 0)
 For $i = 0 To $iMaxSupersTroop - 1
 _Ini_Add("SuperTroopsBoost", "SuperTroopsIndex" & $i, $g_iCmbSuperTroops[$i])
 Next
@@ -75150,18 +75272,14 @@ $g_bFullArmy = False
 $g_bIsFullArmywithHeroesAndSpells = False
 $g_iCommandStop = -1
 If _Sleep($DELAYRUNBOT1) Then Return
-checkMainScreen()
 If $g_bRestart Then ContinueLoop
 chkShieldStatus()
 If Not $g_bRunState Then Return
-If $g_bRestart Then ContinueLoop
-checkObstacles()
 If $g_bRestart Then ContinueLoop
 If CheckAndroidReboot() Then ContinueLoop
 If Not $g_bIsClientSyncError Then
 SetLog("ARCH: Top of loop", $COLOR_DEBUG)
 If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
-checkMainScreen(False)
 If $g_bRestart Then ContinueLoop
 If _Sleep($DELAYRUNBOT3) Then Return
 VillageReport()
@@ -75181,7 +75299,7 @@ EndIf
 If _Sleep($DELAYRUNBOT5) Then Return
 checkMainScreen(False)
 If $g_bRestart Then ContinueLoop
-Local $aRndFuncList = ['RequestCC','LabCheck', 'Laboratory', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge','UpgradeBuilding','UpgradeWall']
+Local $aRndFuncList = ['BoostSuperTroop','RequestCC','LabCheck', 'Laboratory', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge','UpgradeBuilding','UpgradeWall']
 If $g_bIsSearchLimit Then
 Local $aRndFuncList = ['LabCheck', 'Collect', 'PetCheck']
 Else
