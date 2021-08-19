@@ -64,9 +64,11 @@ Func BoostSuperTroop($bTest = False)
 				;SetLog("QuickMIS(" & "BC1" & ", " & $g_sImgBoostTroopsClock & "," & $iColumnX & "," & $iColumnY1 & "," & $iColumnX + $picswidth & "," & $iColumnY2 & ")", $COLOR_DEBUG );
 				If QuickMIS("BC1", $g_sImgBoostTroopsClock, $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2, True, False) Then ;find pics Clock on spesific row / column (if clock found = troops already boosted)
 					SetLog($sTroopName & ", Troops Already boosted", $COLOR_INFO)
+					If $g_bDebugSetlog Then SetDebugLog("Found Clock Image", $COLOR_DEBUG)
 					ClickAway()
 				Else
 					If _Sleep(1500) Then Return
+					If $g_bDebugSetlog Then SetDebugLog("Clock Image Not Found", $COLOR_DEBUG)
 					SetLog($sTroopName & ", Currently is not boosted", $COLOR_INFO)
 					If FindStroopIcons($g_iCmbSuperTroops[$i], $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2) Then 
 					;SetLog("QuickMIS(" & "BC1" & ", " & $g_sImgBoostTroopsIcons & "," & $iColumnX & "," & $iColumnY1 & "," & $iColumnX + $picswidth & "," & $iColumnY2 & ")", $COLOR_DEBUG );
@@ -74,21 +76,18 @@ Func BoostSuperTroop($bTest = False)
 							Click($g_iQuickMISX + $iColumnX,$g_iQuickMISY + $iColumnY1,1) 
 							If _Sleep(600) Then Return
 							If $g_bSuperTroopsBoostUsePotionFirst Then 
+								Setlog("Using Super Potion...", $COLOR_INFO)
 								If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 400, 530, 580, 600, True, False) Then ;find image of Super Potion
 									Click($g_iQuickMISX+400,$g_iQuickMISY+530,1) 
 									If _Sleep(600) Then Return
-									If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, True, False) Then ;find image of Super Potion again (confirm upgrade)
+									If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 330, 430, 520, 510, True, False) Then ;find image of Super Potion again (confirm upgrade)
 										;do click boost
 										If $bTest Then
-											SetLog("Using Potion Test = True, Emulate Click(" & $g_iQuickMISX & "," & $g_iQuickMISY & ") -- Cancelling", $COLOR_DEBUG) 
-											ClickAway()
-											ClickAway()
-											ClickAway()
-											If _Sleep(1000) Then Return
-											ContinueLoop
-										EndIf
-										Click($g_iQuickMISX,$g_iQuickMISY,1) 
-										Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_INFO)
+												CancelBoost("Using Potion")
+												ContinueLoop
+											EndIf
+										Click($g_iQuickMISX+330,$g_iQuickMISY+430,1) 
+										Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
 										ClickAway()
 									Else
 										Setlog("Could not find Potion button for final upgrade " & $sTroopName, $COLOR_ERROR)
@@ -96,22 +95,18 @@ Func BoostSuperTroop($bTest = False)
 										ClickAway()
 									Endif
 								Else ;try to use dark elixir because potion not found
-									Setlog("Could Not Find Potion, Using Dark Elixir...", $COLOR_ERROR)
+									Setlog("Cannot Find Potion, Using Dark Elixir...", $COLOR_INFO)
 									If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 530, 750, 600, True, False) Then ;find image of dark elixir button
 										Click($g_iQuickMISX+600,$g_iQuickMISY+530,1) 
 										If _Sleep(600) Then Return
-										If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, True, False) Then ;find image of dark elixir button again (confirm upgrade)
+										If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 430, 550, 520, True, False) Then ;find image of dark elixir button again (confirm upgrade)
 											;do click boost
 											If $bTest Then
-												SetLog("Using Dark Elixir Test = True, Emulate Click(" & $g_iQuickMISX & "," & $g_iQuickMISY & ") -- Cancelling", $COLOR_DEBUG) 
-												ClickAway()
-												ClickAway()
-												ClickAway()
-												If _Sleep(1000) Then Return
+												CancelBoost("Using Dark Elixir")
 												ContinueLoop
 											EndIf
-											Click($g_iQuickMISX,$g_iQuickMISY,1) 
-											Setlog("Using Dark Elixir, Successfully Boost " & $sTroopName, $COLOR_INFO)
+											Click($g_iQuickMISX+320,$g_iQuickMISY+430,1) 
+											Setlog("Using Dark Elixir, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
 											ClickAway()
 										Else
 											Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
@@ -124,21 +119,18 @@ Func BoostSuperTroop($bTest = False)
 									EndIf
 								Endif
 							Else
+								Setlog("Using Dark Elixir...", $COLOR_INFO)
 								If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 530, 750, 600, True, False) Then ;find image of dark elixir button
 									Click($g_iQuickMISX+600,$g_iQuickMISY+530,1) 
 									If _Sleep(600) Then Return
-									If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, True, False) Then ;find image of dark elixir button again (confirm upgrade)
+									If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 430, 550, 520, True, False) Then ;find image of dark elixir button again (confirm upgrade)
 										;do click boost
 										If $bTest Then
-											SetLog("Using Dark Elixir Test = True, Emulate Click(" & $g_iQuickMISX & "," & $g_iQuickMISY & ") -- Cancelling", $COLOR_DEBUG) 
-											ClickAway()
-											ClickAway()
-											ClickAway()
-											If _Sleep(1000) Then Return
+											CancelBoost("Using Dark Elixir")
 											ContinueLoop
 										EndIf
-										Click($g_iQuickMISX,$g_iQuickMISY,1) 
-										Setlog("Successfully Boost " & $sTroopName, $COLOR_INFO)
+										Click($g_iQuickMISX+320,$g_iQuickMISY+430,1) 
+										Setlog("Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
 										ClickAway()
 									Else
 										Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
@@ -154,6 +146,8 @@ Func BoostSuperTroop($bTest = False)
 							Setlog("Cannot find " & $sTroopName & ", Troop Not Unlocked yet?", $COLOR_ERROR)
 							ClickAway()
 						EndIf
+					Else
+						SetLog("Double Check Image for Icon " & $sTroopName & " Not Found, Troop Not Unlocked yet?", $COLOR_ERROR)
 					Endif
 				EndIf
 			EndIf ;open barrel
@@ -212,6 +206,14 @@ Func FindStroopIcons($iIndex, $iColumnX, $iColumnY1, $iColumnX1, $iColumnY2)
 	Return False
 EndFunc
 
+Func CancelBoost($aMessage = "")
+	SetLog($aMessage & ", Test = True", $COLOR_DEBUG) 
+	SetLog("Emulate Click(" & $g_iQuickMISX & "," & $g_iQuickMISY & ") -- Cancelling", $COLOR_DEBUG) 
+	ClickAway() 
+	ClickAway()
+	ClickAway()
+	If _Sleep(1000) Then Return
+EndFunc
 
 
 
