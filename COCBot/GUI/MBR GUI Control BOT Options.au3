@@ -969,7 +969,8 @@ EndFunc   ;==>btnTestGetLocationBuildingImage
 Func btnRunFunction()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
-
+	_GUICtrlTab_ClickTab($g_hTabMain, 0)
+	
 	Local $sFunc = GUICtrlRead($g_hTxtRunFunction)
 	SetLog("Run Function : " & $sFunc, $COLOR_INFO)
 

@@ -576,7 +576,9 @@ EndFunc   ;==>CooldownTime
 
 Func IsEventRunning()
 	Local $aEventFailed[4] = [304, 255, 0xEA2B24, 20]
-
+	Local $aCurEvent = False
+	Local $sRunningeventRec = GetDiamondFromRect("280,145,400,250")
+	
 	; Check if any event is running or not
 	If Not _ColorCheck(_GetPixelColor(304, 260, True), Hex(0x53E050, 6), 5) Then ; Green Bar from First Position
 		;Check if Event failed
@@ -592,6 +594,17 @@ Func IsEventRunning()
 		Else
 			SetLog("An event is already in progress!", $COLOR_SUCCESS)
 			If $g_bChkClanGamesDebug Then SetLog("[0]: " & _GetPixelColor(304, 257, True))
+			;check again if Challenge is BB Challenge, enabling force BB attack
+			If $g_bChkForceBBAttackOnClanGames Then
+				$aCurEvent = decodeSingleCoord(findImage("BBChallenge", @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges\BBB-*.xml", $sRunningeventRec, 1, True, Default))
+				If IsArray($aCurEvent) And UBound($aCurEvent) = 2 Then
+					Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+					$g_bIsBBevent = True
+				Else
+					Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
+					$g_bIsBBevent = False
+				EndIf
+			EndIf
 			ClickAway()
 			Return True
 		EndIf

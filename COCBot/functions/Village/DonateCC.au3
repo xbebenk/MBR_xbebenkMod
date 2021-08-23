@@ -1278,6 +1278,20 @@ Func RemainingCCcapacity($aiDonateButton)
 
 		SetLog("Chat Troops: " & $iDonatedTroops & "/" & $iCapTroopsTotal & $sSpellText & $sSiegeMachineText)
 	EndIf
+	
+	;xbebenk, check chat button on left covering donatedTroops/Total 
+	Local $leftButton
+	If $iDonatedTroops = 0 or $iCapTroopsTotal = 0 Then
+	ForceCaptureRegion()
+	$leftButton = _PixelSearch(21, 643, 23, 649, Hex(0xFFFFFF, 6), 20)
+		If IsArray($leftButton) Then
+			Setlog("Left chat button covering donation capacity", $COLOR_DEBUG)
+			;SetLog("Assume donated/total = 0/50", $COLOR_DEBUG)
+			$iDonatedTroops = 0
+			$iCapTroopsTotal = 50
+			$g_iTotalDonateTroopCapacity = 50
+		EndIf
+	EndIf
 
 EndFunc   ;==>RemainingCCcapacity
 

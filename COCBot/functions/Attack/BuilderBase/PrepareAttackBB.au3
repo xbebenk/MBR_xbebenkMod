@@ -14,6 +14,19 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($bCheck = False)
+
+	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+		Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
+		SetLog("We are going to attack no matter what!!", $COLOR_DEBUG)
+		If Not ClickAttack() Then Return False
+		_Sleep(1500)
+		CheckArmyReady()
+		CheckLootAvail()
+		$g_bBBMachineReady = CheckMachReady()
+		Return True
+	EndIf
+
 	If $g_bChkBBTrophyRange Then
 		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
 			SetLog("Trophies out of range.")
@@ -38,7 +51,7 @@ Func PrepareAttackBB($bCheck = False)
 			Return False
 		EndIf
 	EndIf
-
+	
 	$g_bBBMachineReady = CheckMachReady()
 	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
@@ -84,14 +97,13 @@ EndFunc
 Func CheckMachReady()
 	local $aCoords = decodeSingleCoord(findImage("BBMachReady_bmp", $g_sImgBBMachReady, GetDiamondFromRect("113,388,170,448"), 1, True))
 	local $bRet = False
-
+	
 	If IsArray($aCoords) And UBound($aCoords) = 2 Then
 		$bRet = True
 		SetLog("Battle Machine ready.")
 	Else
 		If $g_bDebugImageSave Then SaveDebugImage("CheckMachReady")
 	EndIf
-
 	Return $bRet
 EndFunc
 
@@ -116,7 +128,7 @@ Func CheckArmyReady()
 
 		$i += 1
 	WEnd
-	
+
 	If $bNeedTrain And $g_bTrainTroopBBCannonnCart Then
 		ClickP($aArmyTrainButton, 1, 0, "#0293")
 		If _Sleep(1000) Then Return ; wait for window
@@ -132,7 +144,7 @@ Func CheckArmyReady()
 			ClickAway()
 		EndIf
 	EndIf
-	
+
 	If Not $bReady Then
 		SetLog("Army is not ready.")
 		If $bTraining Then SetLog("Troops are training.")

@@ -64,7 +64,8 @@ Func Collect($bCheckTreasury = True)
 	EndIf
 
 	If _Sleep($DELAYCOLLECT3) Then Return
-	checkMainScreen(False) ; check if errors during function
+	;xbenk
+	;checkMainScreen(False) ; check if errors during function
 
 	If Not $g_bChkCollectCartFirst And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
 

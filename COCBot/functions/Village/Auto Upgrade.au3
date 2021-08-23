@@ -29,7 +29,7 @@ Func SearchUpgrade($bTest = False)
 	VillageReport(True, True) ;check if we have available builder
 	
 	If Not $g_bAutoUpgradeEnabled Then Return
-	
+	If Not $g_bRunState Then Return
 	; check if builder head is clickable
 	If Not (_ColorCheck(_GetPixelColor(275, 15, True), "F5F5ED", 20) = True) Then
 		SetLog("Unable to find the Builder menu button... Exiting Auto Upgrade...", $COLOR_ERROR)
@@ -56,6 +56,7 @@ Func SearchUpgrade($bTest = False)
 	
 	While 1
 		While $b_isupgradefound = False
+			If Not $g_bRunState Then Return
 			; search for 000 in builders menu, if 000 found, a possible upgrade is available
 			If QuickMIS("BC1", $g_sImgAUpgradeZero, 180, 80 + $g_iNextLineOffset, 480, 380) Then
 				$g_iCurrentLineOffset = $g_iNextLineOffset + $g_iQuickMISY
@@ -112,6 +113,7 @@ Func DoUpgrade($bTest = False)
 	; if it's an upgrade, will click on the upgrade, in builders menu
 	Click(180 + $g_iQuickMISX, 80 + $g_iCurrentLineOffset)
 	If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
+	If Not $g_bRunState Then Return
 
 	; check if any wrong click by verifying the presence of the Upgrade button (the hammer)
 	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)

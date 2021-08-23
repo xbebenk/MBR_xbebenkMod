@@ -120,7 +120,8 @@ Func UpgradeWall()
 		EndIf
 	EndIf
 	If _Sleep($DELAYUPGRADEWALL1) Then Return
-	checkMainScreen(False) ; Check for errors during function
+	;xbenk
+	;checkMainScreen(False) ; Check for errors during function
 
 EndFunc   ;==>UpgradeWall
 

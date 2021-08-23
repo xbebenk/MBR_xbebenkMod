@@ -3009,7 +3009,8 @@ Global $g_aiChampionAltarPos[2] = [-1, -1]
 Global $g_aiLaboratoryPos[2] = [-1, -1]
 Global $g_aiClanCastlePos[2] = [-1, -1]
 Global $g_aiStarLaboratoryPos[2] = [-1, -1]
-Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0, $g_ForceBBAttackOnClanGames = 0
+Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
+Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False
 Global $g_CurrentCampUtilization = 0, $g_iTotalCampSpace = 0
 Global $g_iLaboratoryElixirCost = 0, $g_iLaboratoryDElixirCost = 0
 Global $g_iWallCost = 0
@@ -4654,7 +4655,7 @@ EndIf
 $g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 67)
 GUICtrlSetOnEvent(-1, "BotMoveRequest")
 GUICtrlSetState(-1, $GUI_DISABLE)
-$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion, $_GUI_MAIN_WIDTH - 130, 15, 130 , 20 ,$SS_RIGHT)
+$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion & " ", $_GUI_MAIN_WIDTH - 135, 15, 135 , 20 ,$SS_RIGHT)
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 GUICtrlSetColor(-1, $COLOR_INFO)
 GUICtrlSetFont(-1,9, 800)
@@ -4995,7 +4996,6 @@ IniReadS($g_iChkBBSuggestedUpgrades, $g_sProfileConfigPath, "other", "ChkBBSugge
 IniReadS($g_iChkBBSuggestedUpgradesIgnoreGold, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreGold", $g_iChkBBSuggestedUpgradesIgnoreGold, "Int")
 IniReadS($g_iChkBBSuggestedUpgradesIgnoreElixir, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreElixir", $g_iChkBBSuggestedUpgradesIgnoreElixir, "Int")
 IniReadS($g_iChkBBSuggestedUpgradesIgnoreHall, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreHall", $g_iChkBBSuggestedUpgradesIgnoreHall, "Int")
-IniReadS($g_iChkBBSuggestedUpgradesIgnoreWall, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall, "Int")
 IniReadS($g_iChkPlacingNewBuildings, $g_sProfileConfigPath, "other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings, "Int")
 IniReadS($g_iChkBBSuggestedUpgradesOTTO, $g_sProfileConfigPath, "other", "ChkOptimizeOTTO", $g_iChkBBSuggestedUpgradesOTTO, "Int")
 IniReadS($g_bChkClanGamesAir, $g_sProfileConfigPath, "other", "ChkClanGamesAir", False, "Bool")
@@ -5010,6 +5010,7 @@ IniReadS($g_bChkClanGamesLoot, $g_sProfileConfigPath, "other", "ChkClanGamesLoot
 IniReadS($g_bChkClanGamesBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBattle", False, "Bool")
 IniReadS($g_bChkClanGamesBBBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBBBattle", False, "Bool")
 IniReadS($g_bChkClanGamesBBDestruction, $g_sProfileConfigPath, "other", "ChkClanGamesBBDestruction", False, "Bool")
+IniReadS($g_bChkForceBBAttackOnClanGames, $g_sProfileConfigPath, "other", "ChkForceBBAttackOnClanGames", False, "Bool")
 IniReadS($g_bChkClanGamesSpell, $g_sProfileConfigPath, "other", "ChkClanGamesSpell", False, "Bool")
 IniReadS($g_bChkClanGamesDestruction, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
 IniReadS($g_bChkClanGamesAirTroop, $g_sProfileConfigPath, "other", "ChkClanGamesAirTroop", False, "Bool")

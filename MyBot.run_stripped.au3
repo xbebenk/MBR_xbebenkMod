@@ -6896,7 +6896,8 @@ Global $g_iDetectedImageType = 0
 Global $g_abNotNeedAllTime[2] = [True, True]
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0]
 Global $g_aiStarLaboratoryPos[2] = [-1, -1]
-Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0, $g_ForceBBAttackOnClanGames = 0
+Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
+Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False
 Global $g_iArmyCapacity = 0
 Global $g_iTotalTrainSpaceSpell = 0
 Global $g_iTotalTrainSpaceSiege = 0
@@ -11927,7 +11928,7 @@ Local $bWasRunState = $g_bRunState
 Local $process_killed
 Local $cmdOutput
 If Not $g_sAndroidPicturesPathAvailable Then
-SetLog("Shard folder in Android not availble, cannot push shared_prefs", $COLOR_RED)
+SetLog("Shared folder in Android not availble, cannot push shared_prefs", $COLOR_RED)
 Return SetError(0, 0, $Result)
 EndIf
 Local $aNewFiles = HaveSharedPrefs($sProfile, True, True)
@@ -12844,7 +12845,7 @@ Global $g_hChkBBSuggestedUpgrades = 0, $g_hChkBBSuggestedUpgradesIgnoreGold = 0 
 Global $g_hChkPlacingNewBuildings = 0, $g_hChkBBSuggestedUpgradesIgnoreWall = 0, $g_hChkBBSuggestedUpgradesOTTO = 0
 Global $g_hChkClanGamesAir = 0, $g_hChkClanGamesGround = 0, $g_hChkClanGamesMisc = 0
 Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames60 = 0
-Global $g_hChkClanGamesLoot = 0 , $g_hChkClanGamesBattle =0 , $g_hChkClanGamesDestruction = 0 , $g_hChkClanGamesAirTroop = 0 , $g_hChkClanGamesGroundTroop = 0 , $g_hChkClanGamesMiscellaneous = 0
+Global $g_hChkClanGamesLoot = 0 , $g_hChkClanGamesBattle =0 , $g_hChkClanGamesDestruction = 0 , $g_hChkClanGamesAirTroop = 0 , $g_hChkClanGamesGroundTroop = 0 , $g_hChkClanGamesMiscellaneous = 0, $g_hChkForceBBAttackOnClanGames = 0
 global $g_hChkClanGamesSpell = 0
 Global $g_hChkClanGamesBBBattle = 0, $g_hChkClanGamesBBDestruction = 0
 Global $g_hChkClanGamesPurge = 0 , $g_hcmbPurgeLimit = 0 , $g_hChkClanGamesStopBeforeReachAndPurge = 0
@@ -13222,11 +13223,16 @@ $g_hChkClanGamesSpell = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Desi
 $y += 25
 $g_hChkClanGamesDestruction = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesDestruction", "Destruction Challenges"), $x, $y, -1, -1)
 $g_hChkClanGamesBBBattle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesBBBattle", "BB Battle Challenges"), $x + 155, $y, -1, -1)
+GUICtrlSetOnEvent(-1, "chkClanGamesBB")
 $y += 25
 $g_hChkClanGamesAirTroop = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesAirTroop", "Air Troops Challenges"), $x, $y, -1, -1)
 $g_hChkClanGamesBBDestruction = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesBBDestruction", "BB Destruction Challenges"), $x + 155, $y, -1, -1)
+GUICtrlSetOnEvent(-1, "chkClanGamesBB")
 $y += 25
 $g_hChkClanGamesGroundTroop = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesGroundTroop", "Ground Troops Challenges"), $x, $y, -1, -1)
+$g_hChkForceBBAttackOnClanGames = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkForceBBAttackOnClanGames", "Force BB Attack"), $x + 155, $y, -1, -1)
+GUICtrlSetOnEvent(-1, "chkClanGamesBB")
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGames60_Info_02", "If ClanGames Enabled : Ignore BB Trophy, BB Loot, BB Wait BM"))
 $y += 25
 $g_hChkClanGamesMiscellaneous = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesMiscellaneous", "Miscellaneous Challenges"), $x, $y, -1, -1)
 $y += 25
@@ -23190,7 +23196,7 @@ EndIf
 $g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 67)
 GUICtrlSetOnEvent(-1, "BotMoveRequest")
 GUICtrlSetState(-1, $GUI_DISABLE)
-$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion, $_GUI_MAIN_WIDTH - 130, 15, 130 , 20 ,$SS_RIGHT)
+$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion & " ", $_GUI_MAIN_WIDTH - 135, 15, 135 , 20 ,$SS_RIGHT)
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 GUICtrlSetColor(-1, $COLOR_INFO)
 GUICtrlSetFont(-1,9, 800)
@@ -29024,6 +29030,7 @@ EndFunc
 Func btnRunFunction()
 Local $currentRunState = $g_bRunState
 $g_bRunState = True
+_GUICtrlTab_ClickTab($g_hTabMain, 0)
 Local $sFunc = GUICtrlRead($g_hTxtRunFunction)
 SetLog("Run Function : " & $sFunc, $COLOR_INFO)
 Local $saExecResult = Execute($sFunc)
@@ -29900,6 +29907,18 @@ GUICtrlSetState($g_hcmbPurgeLimit, $GUI_DISABLE)
 GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $GUI_DISABLE)
 GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
 GUICtrlSetState($g_hChkClanGamesDebug, $GUI_DISABLE)
+EndIf
+EndFunc
+Func chkClanGamesBB()
+If GUICtrlRead($g_hChkClanGamesBBBattle) = $GUI_CHECKED or GUICtrlRead($g_hChkClanGamesBBDestruction) = $GUI_CHECKED Then
+GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
+Else
+GUICtrlSetState($g_hChkClanGamesPurge, $GUI_ENABLE)
+EndIf
+If GUICtrlRead($g_hChkForceBBAttackOnClanGames) = $GUI_CHECKED Then
+$g_bChkForceBBAttackOnClanGames = True
+Else
+$g_bChkForceBBAttackOnClanGames = False
 EndIf
 EndFunc
 Func chkPurgeLimits()
@@ -40551,6 +40570,17 @@ EndIf
 Return False
 EndFunc
 Func PrepareAttackBB($bCheck = False)
+If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
+SetLog("We are going to attack no matter what!!", $COLOR_DEBUG)
+If Not ClickAttack() Then Return False
+_Sleep(1500)
+CheckArmyReady()
+CheckLootAvail()
+$g_bBBMachineReady = CheckMachReady()
+Return True
+EndIf
 If $g_bChkBBTrophyRange Then
 If($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
 SetLog("Trophies out of range.")
@@ -42321,9 +42351,9 @@ Local $x = 0
 While Not _ColorCheck(_GetPixelColor(820, 200, True), Hex(0xcfcfc8, 6), 20)
 If $x = 0 Then SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
 If Not $g_bRunState Then Return
-Click($iOffsetQueued + 24, 202, 10, 50)
+Click($iOffsetQueued + 24, 202, 20, 50)
 $x += 1
-If $x = 10 Then ExitLoop
+If $x = 20 Then ExitLoop
 WEnd
 EndFunc
 Func MakingDonatedTroops($sType = "All")
@@ -44085,7 +44115,7 @@ SetDebugLog("Lab LastCheck: " & $iLastTimeChecked[$g_iCurAccount] & ", Check Dat
 If $iLabTime > 0 And $iLastCheck <= 360 Then Return
 EndIf
 ClickAway()
-If _Sleep(1500) Then Return
+If _Sleep(1000) Then Return
 If $g_iTownHallLevel < 3 Then
 SetDebugLog("TH reads as Lvl " & $g_iTownHallLevel & ", has no Lab.")
 GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
@@ -45141,7 +45171,6 @@ Else
 SetLog("No Tombs Found!", $COLOR_SUCCESS)
 $g_abNotNeedAllTime[1] = False
 EndIf
-checkMainScreen(False)
 EndFunc
 Func CleanYard()
 If Not $g_bChkCleanYard And Not $g_bChkGemsBox And Not TestCapture() Then Return
@@ -58884,7 +58913,6 @@ EndIf
 Next
 EndIf
 If _Sleep($DELAYCOLLECT3) Then Return
-checkMainScreen(False)
 If Not $g_bChkCollectCartFirst And($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
 If $g_bChkTreasuryCollect And $bCheckTreasury Then TreasuryCollect()
 EndGainCost("Collect")
@@ -60057,6 +60085,17 @@ Local $sSpellText = $sCapSpells <> -1 ? ", Spells: " & $iDonatedSpells & "/" & $
 Local $sSiegeMachineText = $sCapSiegeMachine <> -1 ? ", Siege Machine: " & $iDonatedSiegeMachine & "/" & $iCapSiegeMachineTotal : ""
 SetLog("Chat Troops: " & $iDonatedTroops & "/" & $iCapTroopsTotal & $sSpellText & $sSiegeMachineText)
 EndIf
+Local $leftButton
+If $iDonatedTroops = 0 or $iCapTroopsTotal = 0 Then
+ForceCaptureRegion()
+$leftButton = _PixelSearch(21, 643, 23, 649, Hex(0xFFFFFF, 6), 20)
+If IsArray($leftButton) Then
+Setlog("Left chat button covering donation capacity", $COLOR_DEBUG)
+$iDonatedTroops = 0
+$iCapTroopsTotal = 50
+$g_iTotalDonateTroopCapacity = 50
+EndIf
+EndIf
 EndFunc
 Func DetectSlotTroop(Const $iTroopIndex)
 Local $FullTemp
@@ -60371,6 +60410,10 @@ Return False
 EndIf
 EndFunc
 Func DropTrophy()
+If $g_bFirstStart Then
+SetDebugLog("Drop Trophy(), skipped on FirstStart", $COLOR_DEBUG)
+Return
+EndIf
 If $g_bDropTrophyEnable Then
 SetDebugLog("Drop Trophy()", $COLOR_DEBUG)
 If $g_bDebugDeadBaseImage Then
@@ -62552,6 +62595,7 @@ Local $i_scrolltime = 0
 ClickAway("Left")
 VillageReport(True, True)
 If Not $g_bAutoUpgradeEnabled Then Return
+If Not $g_bRunState Then Return
 If Not(_ColorCheck(_GetPixelColor(275, 15, True), "F5F5ED", 20) = True) Then
 SetLog("Unable to find the Builder menu button... Exiting Auto Upgrade...", $COLOR_ERROR)
 Return
@@ -62572,6 +62616,7 @@ If _Sleep(1000) Then Return
 EndIf
 While 1
 While $b_isupgradefound = False
+If Not $g_bRunState Then Return
 If QuickMIS("BC1", $g_sImgAUpgradeZero, 180, 80 + $g_iNextLineOffset, 480, 380) Then
 $g_iCurrentLineOffset = $g_iNextLineOffset + $g_iQuickMISY
 If QuickMIS("NX",$g_sImgAUpgradeObst, 180, 80 + $g_iCurrentLineOffset - 15, 480, 80 + $g_iCurrentLineOffset + 15) <> "none" Then
@@ -62619,6 +62664,7 @@ EndFunc
 Func DoUpgrade($bTest = False)
 Click(180 + $g_iQuickMISX, 80 + $g_iCurrentLineOffset)
 If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
+If Not $g_bRunState Then Return
 Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
 If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
 SetLog("No upgrade here... Wrong click, looking next...", $COLOR_WARNING)
@@ -62902,7 +62948,6 @@ SetLog("No free builder, Upgrade Walls skipped..", $COLOR_ERROR)
 EndIf
 EndIf
 If _Sleep($DELAYUPGRADEWALL1) Then Return
-checkMainScreen(False)
 EndFunc
 Func UpgradeWallGold($iWallCost = $g_iWallCost)
 If _Sleep($DELAYRESPOND) Then Return
@@ -66610,6 +66655,8 @@ Return False
 EndFunc
 Func IsEventRunning()
 Local $aEventFailed[4] = [304, 255, 0xEA2B24, 20]
+Local $aCurEvent = False
+Local $sRunningeventRec = GetDiamondFromRect("280,145,400,250")
 If Not _ColorCheck(_GetPixelColor(304, 260, True), Hex(0x53E050, 6), 5) Then
 If _CheckPixel($aEventFailed, True) Then
 SetLog("Couldn't finish last event! Lets trash it and look for a new one", $COLOR_INFO)
@@ -66623,6 +66670,16 @@ EndIf
 Else
 SetLog("An event is already in progress!", $COLOR_SUCCESS)
 If $g_bChkClanGamesDebug Then SetLog("[0]: " & _GetPixelColor(304, 257, True))
+If $g_bChkForceBBAttackOnClanGames Then
+$aCurEvent = decodeSingleCoord(findImage("BBChallenge", @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges\BBB-*.xml", $sRunningeventRec, 1, True, Default))
+If IsArray($aCurEvent) And UBound($aCurEvent) = 2 Then
+Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+$g_bIsBBevent = True
+Else
+Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
+$g_bIsBBevent = False
+EndIf
+EndIf
 ClickAway()
 Return True
 EndIf
@@ -67949,9 +68006,13 @@ ElseIf $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8 Then
 SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 ElseIf $aBuildingName[1] = "Builder Barracks" And $aBuildingName[2] >= 7 Then
 SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-ElseIf $aBuildingName[1] = "Wall" And Not $g_bisBHMaxed And Not $g_bGoldStorageFullBB And Not $g_bisMegaTeslaMaxed Then
-SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+ElseIf $aBuildingName[1] = "Wall" And $g_bisBHMaxed And $g_bGoldStorageFullBB And $g_bisMegaTeslaMaxed Then
+SetLog("BuilderHall is Maxed, Mega Tesla is Maxed, Gold Storage Near Full", $COLOR_INFO)
+SetLog("Will Upgrade " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
 $sUpgButtom = $g_sImgAutoUpgradeBtnGold
+$g_iChkBBSuggestedUpgradesIgnoreWall = 0
+$FoundOTTOBuilding = True
+ExitLoop
 Else
 $FoundOTTOBuilding = True
 ExitLoop
@@ -69437,6 +69498,7 @@ GUICtrlSetState($g_hChkClanGamesLoot, $g_bChkClanGamesLoot ? $GUI_CHECKED : $GUI
 GUICtrlSetState($g_hChkClanGamesBattle, $g_bChkClanGamesBattle ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkClanGamesBBBattle, $g_bChkClanGamesBBBattle ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkClanGamesBBDestruction, $g_bChkClanGamesBBDestruction ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $g_bChkForceBBAttackOnClanGames ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkClanGamesSpell, $g_bChkClanGamesSpell ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkClanGamesDestruction, $g_bChkClanGamesDestruction ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkClanGamesAirTroop, $g_bChkClanGamesAirTroop ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -71398,7 +71460,6 @@ IniReadS($g_iChkBBSuggestedUpgrades, $g_sProfileConfigPath, "other", "ChkBBSugge
 IniReadS($g_iChkBBSuggestedUpgradesIgnoreGold, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreGold", $g_iChkBBSuggestedUpgradesIgnoreGold, "Int")
 IniReadS($g_iChkBBSuggestedUpgradesIgnoreElixir, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreElixir", $g_iChkBBSuggestedUpgradesIgnoreElixir, "Int")
 IniReadS($g_iChkBBSuggestedUpgradesIgnoreHall, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreHall", $g_iChkBBSuggestedUpgradesIgnoreHall, "Int")
-IniReadS($g_iChkBBSuggestedUpgradesIgnoreWall, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall, "Int")
 IniReadS($g_iChkPlacingNewBuildings, $g_sProfileConfigPath, "other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings, "Int")
 IniReadS($g_iChkBBSuggestedUpgradesOTTO, $g_sProfileConfigPath, "other", "ChkOptimizeOTTO", $g_iChkBBSuggestedUpgradesOTTO, "Int")
 IniReadS($g_bChkClanGamesAir, $g_sProfileConfigPath, "other", "ChkClanGamesAir", False, "Bool")
@@ -71413,6 +71474,7 @@ IniReadS($g_bChkClanGamesLoot, $g_sProfileConfigPath, "other", "ChkClanGamesLoot
 IniReadS($g_bChkClanGamesBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBattle", False, "Bool")
 IniReadS($g_bChkClanGamesBBBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBBBattle", False, "Bool")
 IniReadS($g_bChkClanGamesBBDestruction, $g_sProfileConfigPath, "other", "ChkClanGamesBBDestruction", False, "Bool")
+IniReadS($g_bChkForceBBAttackOnClanGames, $g_sProfileConfigPath, "other", "ChkForceBBAttackOnClanGames", False, "Bool")
 IniReadS($g_bChkClanGamesSpell, $g_sProfileConfigPath, "other", "ChkClanGamesSpell", False, "Bool")
 IniReadS($g_bChkClanGamesDestruction, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
 IniReadS($g_bChkClanGamesAirTroop, $g_sProfileConfigPath, "other", "ChkClanGamesAirTroop", False, "Bool")
@@ -72519,7 +72581,6 @@ _Ini_Add("other", "ChkBBSuggestedUpgrades", $g_iChkBBSuggestedUpgrades)
 _Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreGold", $g_iChkBBSuggestedUpgradesIgnoreGold)
 _Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreElixir", $g_iChkBBSuggestedUpgradesIgnoreElixir)
 _Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreHall", $g_iChkBBSuggestedUpgradesIgnoreHall)
-_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall)
 _Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
 _Ini_Add("other", "ChkOptimizeOTTO", $g_iChkBBSuggestedUpgradesOTTO)
 _Ini_Add("other", "ChkClanGamesAir", $g_bChkClanGamesAir ? 1 : 0)
@@ -72534,6 +72595,7 @@ _Ini_Add("other", "ChkClanGamesLoot", $g_bChkClanGamesLoot ? 1 : 0)
 _Ini_Add("other", "ChkClanGamesBattle", $g_bChkClanGamesBattle ? 1 : 0)
 _Ini_Add("other", "ChkClanGamesBBBattle", $g_bChkClanGamesBBBattle ? 1 : 0)
 _Ini_Add("other", "ChkClanGamesBBDestruction", $g_bChkClanGamesBBDestruction ? 1 : 0)
+_Ini_Add("other", "ChkForceBBAttackOnClanGames", $g_bChkForceBBAttackOnClanGames ? 1 : 0)
 _Ini_Add("other", "ChkClanGamesSpell", $g_bChkClanGamesSpell ? 1 : 0)
 _Ini_Add("other", "ChkClanGamesDestruction", $g_bChkClanGamesDestruction ? 1 : 0)
 _Ini_Add("other", "ChkClanGamesAirTroop", $g_bChkClanGamesAirTroop ? 1 : 0)
@@ -75297,13 +75359,12 @@ SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_S
 ContinueLoop
 EndIf
 If _Sleep($DELAYRUNBOT5) Then Return
-checkMainScreen(False)
 If $g_bRestart Then ContinueLoop
-Local $aRndFuncList = ['BoostSuperTroop','RequestCC','LabCheck', 'Laboratory', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge','UpgradeBuilding','UpgradeWall']
+checkMainScreen(False)
 If $g_bIsSearchLimit Then
 Local $aRndFuncList = ['LabCheck', 'Collect', 'PetCheck']
 Else
-Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck']
+Local $aRndFuncList = ['BoostSuperTroop','RequestCC','LabCheck', 'Laboratory', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge','UpgradeBuilding','UpgradeWall']
 EndIf
 _ArrayShuffle($aRndFuncList)
 For $Index In $aRndFuncList
@@ -75344,6 +75405,7 @@ If $g_bRestart Then ContinueLoop
 EndIf
 If($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 If $g_bRestart Then ContinueLoop
+checkMainScreen(False)
 Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'PetHouse']
 _ArrayShuffle($aRndFuncList)
 For $Index In $aRndFuncList
@@ -75431,7 +75493,6 @@ If $g_iCommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLO
 Local $hTimer = __TimerInit()
 If _Sleep($DELAYIDLE1) Then ExitLoop
 checkObstacles()
-checkMainScreen(False)
 If($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = True Then
 CheckArmyCamp(True, True)
 If _Sleep($DELAYIDLE1) Then Return
@@ -75460,13 +75521,11 @@ If $g_bRestart Then ExitLoop
 If _Sleep($DELAYIDLE1) Or Not $g_bRunState Then ExitLoop
 EndIf
 AddIdleTime()
-checkMainScreen(False)
 If $g_iCommandStop = -1 Then
 If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 If CheckNeedOpenTrain($g_sTimeBeforeTrain) Then TrainSystem()
 If $g_bRestart = True Then ExitLoop
 If _Sleep($DELAYIDLE1) Then ExitLoop
-checkMainScreen(False)
 $g_iActualTrainSkip = $g_iActualTrainSkip + 1
 Else
 SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $color_blue)
@@ -75483,7 +75542,6 @@ If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 If CheckNeedOpenTrain($g_sTimeBeforeTrain) Or(ProfileSwitchAccountEnabled() And $g_iActiveDonate And $g_bChkDonate) Then TrainSystem()
 If $g_bRestart Then ExitLoop
 If _Sleep($DELAYIDLE1) Then ExitLoop
-checkMainScreen(False)
 If Not $g_bRunState Then Return
 $g_iActualTrainSkip = $g_iActualTrainSkip + 1
 Else
@@ -75505,7 +75563,6 @@ DropTrophy()
 If Not $g_bRunState Then Return
 If $g_bRestart Then ExitLoop
 If _Sleep($DELAYIDLE1) Then ExitLoop
-checkMainScreen(False)
 EndIf
 If _Sleep($DELAYIDLE1) Then Return
 If $g_bRestart Then ExitLoop
@@ -75545,6 +75602,7 @@ If $g_bDebugSetlog Then
 SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$DB], $g_aiSearchHeroWaitEnable[$DB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$DB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
 SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$LB], $g_aiSearchHeroWaitEnable[$LB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$LB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
 EndIf
+_ClanGames()
 If $g_bUpdateSharedPrefs Then PullSharedPrefs()
 PrepareSearch()
 If Not $g_bRunState Then Return
@@ -75620,7 +75678,6 @@ _Sleep($DELAYRUNBOT3)
 Case "DonateCC"
 If $g_iActiveDonate And $g_bChkDonate Then
 If(Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
-If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 EndIf
 Case "DonateCC,Train"
 If $g_iActiveDonate And $g_bChkDonate Then
@@ -75632,7 +75689,6 @@ If _Sleep($DELAYRESPOND) Then Return
 EndIf
 If(Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
 EndIf
-If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
 If $g_bTrainEnabled Then
 If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 TrainSystem()
@@ -75687,13 +75743,10 @@ PetGuiDisplay()
 _Sleep($DELAYRUNBOT3)
 Case "RequestCC"
 RequestCC()
-If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
 Case "Laboratory"
 Laboratory()
-If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
 Case "PetHouse"
 PetHouse()
-If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
 Case "BoostSuperTroop"
 BoostSuperTroop()
 _Sleep($DELAYRUNBOT3)
@@ -75711,6 +75764,9 @@ UpgradeWall()
 _Sleep($DELAYRUNBOT3)
 Case "BuilderBase"
 If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
+If $g_bChkForceBBAttackOnClanGames And $g_bChkClanGamesEnabled And Not $g_bIsBBevent Then
+_ClanGames()
+EndIf
 BuilderBase()
 EndIf
 _Sleep($DELAYRUNBOT3)
@@ -75750,8 +75806,7 @@ $g_bOutOfElixir = False
 SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_SUCCESS)
 Return
 EndIf
-checkMainScreen(False)
-Local $aRndFuncList = ['CleanYard','BoostSuperTroop','LabCheck', 'Laboratory', 'UpgradeWall','CleanYard']
+Local $aRndFuncList = ['BoostSuperTroop','LabCheck', 'Laboratory','CleanYard']
 For $Index In $aRndFuncList
 If Not $g_bRunState Then Return
 _RunFunction($Index)
@@ -75759,8 +75814,7 @@ If $g_bRestart Then ContinueLoop
 If CheckAndroidReboot() Then ContinueLoop
 If checkObstacles() Then ContinueLoop
 Next
-checkMainScreen(False)
-Local $aRndFuncList = ['RequestCC', 'UpgradeBuilding','CleanYard']
+Local $aRndFuncList = ['RequestCC', 'UpgradeBuilding','UpgradeWall']
 For $Index In $aRndFuncList
 If Not $g_bRunState Then Return
 _RunFunction($Index)
@@ -75783,6 +75837,7 @@ If $g_bIsFullArmywithHeroesAndSpells Then
 If Not isInsideDiamond($g_aiTownHallPos) Then BotDetectFirstTime()
 If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 Setlog("Before any other routine let's attack!", $COLOR_INFO)
+_ClanGames()
 If Not $g_bRunState Then Return
 AttackMain()
 $g_bSkipFirstZoomout = False

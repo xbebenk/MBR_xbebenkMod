@@ -714,6 +714,7 @@ Func runBot() ;Bot that runs everything in order
 		$g_bIsFullArmywithHeroesAndSpells = False
 		$g_iCommandStop = -1
 		If _Sleep($DELAYRUNBOT1) Then Return
+		;xbenk
 		;checkMainScreen()
 		If $g_bRestart Then ContinueLoop
 		chkShieldStatus()
@@ -724,6 +725,7 @@ Func runBot() ;Bot that runs everything in order
 		If Not $g_bIsClientSyncError Then ;ARCH:  was " And Not $g_bIsSearchLimit"
 			SetLog("ARCH: Top of loop", $COLOR_DEBUG)
 			If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
+			;xbenk
 			;checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
 			If _Sleep($DELAYRUNBOT3) Then Return
@@ -742,14 +744,13 @@ Func runBot() ;Bot that runs everything in order
 				ContinueLoop ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 			EndIf
 			If _Sleep($DELAYRUNBOT5) Then Return
-			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
-			Local $aRndFuncList = ['BoostSuperTroop','RequestCC','LabCheck', 'Laboratory', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge','UpgradeBuilding','UpgradeWall']
-			;Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge']
+			
+			checkMainScreen(False)
 			If $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['LabCheck', 'Collect', 'PetCheck']
 			Else
-				Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge', 'PetCheck']
+				Local $aRndFuncList = ['BoostSuperTroop','RequestCC','LabCheck', 'Laboratory', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge','UpgradeBuilding','UpgradeWall']
 			EndIf
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
@@ -794,7 +795,8 @@ Func runBot() ;Bot that runs everything in order
 			; Train Donate only - force a donate cc every time
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
-
+			
+			checkMainScreen(False)
 			Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'PetHouse']
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
@@ -899,7 +901,8 @@ Func _Idle() ;Sequence that runs until Full Army
 		Local $hTimer = __TimerInit()
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
-		checkMainScreen(False) ; required here due to many possible exits
+		;xbenk
+		;checkMainScreen(False) ; required here due to many possible exits
 		If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = True Then
 			CheckArmyCamp(True, True)
 			If _Sleep($DELAYIDLE1) Then Return
@@ -928,13 +931,15 @@ Func _Idle() ;Sequence that runs until Full Army
 			If _Sleep($DELAYIDLE1) Or Not $g_bRunState Then ExitLoop
 		EndIf
 		AddIdleTime()
-		checkMainScreen(False) ; required here due to many possible exits
+		;xbenk
+		;checkMainScreen(False) ; required here due to many possible exits
 		If $g_iCommandStop = -1 Then
 			If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 				If CheckNeedOpenTrain($g_sTimeBeforeTrain) Then TrainSystem()
 				If $g_bRestart = True Then ExitLoop
 				If _Sleep($DELAYIDLE1) Then ExitLoop
-				checkMainScreen(False)
+				;xbenk
+				;checkMainScreen(False)
 				$g_iActualTrainSkip = $g_iActualTrainSkip + 1
 			Else
 				SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $color_blue)
@@ -951,7 +956,8 @@ Func _Idle() ;Sequence that runs until Full Army
 					If CheckNeedOpenTrain($g_sTimeBeforeTrain) Or (ProfileSwitchAccountEnabled() And $g_iActiveDonate And $g_bChkDonate) Then TrainSystem() ; force check trainsystem after donate and before switch account
 					If $g_bRestart Then ExitLoop
 					If _Sleep($DELAYIDLE1) Then ExitLoop
-					checkMainScreen(False)
+					;xbenk
+					;checkMainScreen(False)
 					If Not $g_bRunState Then Return
 					$g_iActualTrainSkip = $g_iActualTrainSkip + 1
 				Else
@@ -974,7 +980,8 @@ Func _Idle() ;Sequence that runs until Full Army
 			If $g_bRestart Then ExitLoop
 			;If $g_bFullArmy Then ExitLoop		; Never will reach to SmartWait4Train() to close coc while Heroes/Spells not ready 'if' Army is full, so better to be commented
 			If _Sleep($DELAYIDLE1) Then ExitLoop
-			checkMainScreen(False)
+			;xbenk
+			;checkMainScreen(False)
 		EndIf
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_bRestart Then ExitLoop
@@ -1022,7 +1029,7 @@ Func AttackMain() ;Main control for attack functions
 				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$LB], $g_aiSearchHeroWaitEnable[$LB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$LB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
-			;_ClanGames() ;Trying to do this above in the main loop
+			_ClanGames() ;Trying to do this above in the main loop
 			;ClickAway()
 			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
@@ -1106,7 +1113,8 @@ Func __RunFunction($action)
 			If $g_iActiveDonate And $g_bChkDonate Then
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
-				If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
+				;xbenk
+				;If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 			EndIf
 		Case "DonateCC,Train"
 			If $g_iActiveDonate And $g_bChkDonate Then
@@ -1119,7 +1127,8 @@ Func __RunFunction($action)
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
 			EndIf
-			If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
+			;xbenk
+			;If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
 			If $g_bTrainEnabled Then ; check for training enabled in halt mode
 				If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 					TrainSystem()
@@ -1174,13 +1183,16 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		 Case "RequestCC"
 			RequestCC()
-			If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
+			;xbenk
+			;If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
 		Case "Laboratory"
 			Laboratory()
-			If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
+			;xbenk
+			;If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
 		Case "PetHouse"
 			PetHouse()
-			If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
+			;benk
+			;If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
 		Case "BoostSuperTroop"
 			BoostSuperTroop()
 			_Sleep($DELAYRUNBOT3)
@@ -1198,6 +1210,10 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
+				If $g_bChkForceBBAttackOnClanGames And $g_bChkClanGamesEnabled And Not $g_bIsBBevent Then
+					;we need to check again if the running challenge on clangames is BB event
+					_ClanGames()
+				EndIf
 				BuilderBase()
 			EndIf
 			_Sleep($DELAYRUNBOT3)
@@ -1262,8 +1278,8 @@ Func FirstCheck()
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
 
-	checkMainScreen(False)
-	Local $aRndFuncList = ['CleanYard','BoostSuperTroop','LabCheck', 'Laboratory', 'UpgradeWall','CleanYard']
+	;checkMainScreen(False)
+	Local $aRndFuncList = ['BoostSuperTroop','LabCheck', 'Laboratory','CleanYard']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
@@ -1271,8 +1287,8 @@ Func FirstCheck()
 		If CheckAndroidReboot() Then ContinueLoop
 		If checkObstacles() Then ContinueLoop
 	Next
-	checkMainScreen(False)
-	Local $aRndFuncList = ['RequestCC', 'UpgradeBuilding','CleanYard']
+	;checkMainScreen(False)
+	Local $aRndFuncList = ['RequestCC', 'UpgradeBuilding','UpgradeWall']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
@@ -1301,6 +1317,7 @@ Func FirstCheck()
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
+				_ClanGames()
 				If Not $g_bRunState Then Return
 				AttackMain()
 				$g_bSkipFirstZoomout = False
@@ -1317,7 +1334,7 @@ EndFunc   ;==>FirstCheck
 
 
 Func BuilderBase()
-
+	
 	; switch to builderbase and check it is builderbase
 	If SwitchBetweenBases() And isOnBuilderBase()  Then
 

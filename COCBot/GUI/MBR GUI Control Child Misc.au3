@@ -698,12 +698,18 @@ Func chkActivateClangames()
 EndFunc   ;==>chkActivateClangames
 
 ; Purging doesnt exist if we want BB challneges, because they are all attack basically... This avoids potential conflicts in code and logic if both are selected
-func chkClanGamesBB()
+Func chkClanGamesBB()
     If GUICtrlRead($g_hChkClanGamesBBBattle) = $GUI_CHECKED or GUICtrlRead($g_hChkClanGamesBBDestruction) = $GUI_CHECKED Then
         GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
-    else
+    Else
         GUICtrlSetState($g_hChkClanGamesPurge, $GUI_ENABLE)
     EndIf
+	
+	If GUICtrlRead($g_hChkForceBBAttackOnClanGames) = $GUI_CHECKED Then
+		$g_bChkForceBBAttackOnClanGames = True
+	Else
+		$g_bChkForceBBAttackOnClanGames = False
+	EndIf
 EndFunc
 
 Func chkPurgeLimits()
