@@ -1212,7 +1212,7 @@ Func __RunFunction($action)
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
 				If $g_bChkForceBBAttackOnClanGames And $g_bChkClanGamesEnabled And Not $g_bIsBBevent Then
 					;we need to check again if the running challenge on clangames is BB event
-					_ClanGames()
+					If Not $g_bIsBBevent Then IsEventRunning(True)
 				EndIf
 				BuilderBase()
 			EndIf
@@ -1317,7 +1317,6 @@ Func FirstCheck()
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
-				_ClanGames()
 				If Not $g_bRunState Then Return
 				AttackMain()
 				$g_bSkipFirstZoomout = False

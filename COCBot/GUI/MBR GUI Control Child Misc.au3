@@ -654,47 +654,67 @@ EndFunc   ;==>chkStartClockTowerBoost
 Func chkActivateClangames()
 	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hChkClanGames60, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkClanGamesAir, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkClanGamesGround, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkClanGamesMisc, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkClanGamesDebug, $GUI_ENABLE)
 
-		;V3
 		GUICtrlSetState($g_hChkClanGamesLoot, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesBattle, $GUI_ENABLE)
-
-		 GUICtrlSetState($g_hChkClanGamesSpell, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesDestruction, $GUI_ENABLE)
-
+		
 		GUICtrlSetState($g_hChkClanGamesAirTroop, $GUI_ENABLE)
+		If GUICtrlRead($g_hChkClanGamesAirTroop) = $GUI_CHECKED Then 
+			GUICtrlSetState($g_hBtnCGAirTroop, $GUI_ENABLE)
+		Else
+			GUICtrlSetState($g_hBtnCGAirTroop, $GUI_DISABLE)
+		EndIf
+		
 		GUICtrlSetState($g_hChkClanGamesGroundTroop, $GUI_ENABLE)
+		If GUICtrlRead($g_hChkClanGamesGroundTroop) = $GUI_CHECKED Then 
+			GUICtrlSetState($g_hBtnCGGroundTroop, $GUI_ENABLE)
+		Else
+			GUICtrlSetState($g_hBtnCGGroundTroop, $GUI_DISABLE)
+		EndIf
+		
+		GUICtrlSetState($g_hChkClanGamesBBTroops, $GUI_ENABLE)
+		If GUICtrlRead($g_hChkClanGamesBBTroops) = $GUI_CHECKED Then 
+			GUICtrlSetState($g_hBtnCGBBTroop, $GUI_ENABLE)
+		Else
+			GUICtrlSetState($g_hBtnCGBBTroop, $GUI_DISABLE)
+		EndIf
+		
 		GUICtrlSetState($g_hChkClanGamesMiscellaneous, $GUI_ENABLE)
-
+		GUICtrlSetState($g_hChkClanGamesSpell, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkClanGamesPurgeAny, $GUI_ENABLE)
+		
 		GUICtrlSetState($g_hChkClanGamesPurge, $GUI_ENABLE)
-		If GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED then GUICtrlSetState($g_hcmbPurgeLimit, $GUI_ENABLE)
+		If GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED Then GUICtrlSetState($g_hcmbPurgeLimit, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkClanGamesDebug, $GUI_ENABLE)
+
 	Else
 		GUICtrlSetState($g_hChkClanGames60, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkClanGamesAir, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkClanGamesGround, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkClanGamesMisc, $GUI_DISABLE)
-
-		;V3
+		GUICtrlSetState($g_hChkClanGamesDebug, $GUI_DISABLE)
+		
 		GUICtrlSetState($g_hChkClanGamesLoot, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesBattle, $GUI_DISABLE)
-
-		GUICtrlSetState($g_hChkClanGamesSpell, $GUI_DISABLE)
-
 		GUICtrlSetState($g_hChkClanGamesDestruction, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesAirTroop, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesGroundTroop, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesMiscellaneous, $GUI_DISABLE)
-		GUICtrlSetState($g_hcmbPurgeLimit, $GUI_DISABLE)
+		
+		GUICtrlSetState($g_hChkClanGamesSpell, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkClanGamesPurgeAny, $GUI_DISABLE)
+		
 		GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $GUI_DISABLE)
-
+		GUICtrlSetState($g_hcmbPurgeLimit, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkClanGamesDebug, $GUI_DISABLE)
+		
 	EndIf
+	chkClanGamesBB()
 EndFunc   ;==>chkActivateClangames
 
 ; Purging doesnt exist if we want BB challneges, because they are all attack basically... This avoids potential conflicts in code and logic if both are selected
@@ -704,7 +724,7 @@ Func chkClanGamesBB()
     Else
         GUICtrlSetState($g_hChkClanGamesPurge, $GUI_ENABLE)
     EndIf
-	
+
 	If GUICtrlRead($g_hChkForceBBAttackOnClanGames) = $GUI_CHECKED Then
 		$g_bChkForceBBAttackOnClanGames = True
 	Else
@@ -725,6 +745,114 @@ Func chkPurgeLimits()
 	EndIf
 EndFunc
 
+Func btnCGAirTroops()
+	GUISetState(@SW_SHOW, $g_hGUI_CGAirTroops)
+EndFunc
+
+Func CloseCGAirTroops()
+	GUISetState(@SW_HIDE, $g_hGUI_CGAirTroops)
+EndFunc
+
+Func GUI_CGAirTroops()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	For $i = 0 To UBound($g_ahCmbCGAirTroops) - 1 ; check for duplicate combobox index and flag problem
+		If $iGUI_CtrlId = $g_ahCmbCGAirTroops[$i] Then ContinueLoop
+		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGAirTroops[$i]) Then
+			_GUICtrlComboBox_SetCurSel($g_ahCmbCGAirTroops[$i], -1)
+			GUISetState()
+		EndIf
+	Next
+EndFunc
+
+Func btnSetCGAirTroops()
+	Local $d
+	SetLog("Set Enabled ClanGames Air Troops",$COLOR_SUCCESS)
+	For $i = 0 To UBound($g_ahCmbCGAirTroops) - 1
+		$g_aCmbCGAirTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGAirTroops[$i])
+		$d = $g_aCmbCGAirTroops[$i]
+		If $d = -1 Then ContinueLoop
+		SetLog($i+1 & " : " & $g_sAirTroopShortName[$d], $COLOR_SUCCESS)
+	Next
+EndFunc
+
+Func BtnCGAirTroopsRemove()
+	For $i = 0 To UBound($g_ahCmbCGAirTroops) - 1
+		_GUICtrlComboBox_SetCurSel($g_ahCmbCGAirTroops[$i], -1)
+	Next
+EndFunc
+
+Func btnCGGroundTroops()
+	GUISetState(@SW_SHOW, $g_hGUI_CGGroundTroops)
+EndFunc
+
+Func CloseCGGroundTroops()
+	GUISetState(@SW_HIDE, $g_hGUI_CGGroundTroops)
+EndFunc
+
+Func GUI_CGGroundTroops()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	For $i = 0 To UBound($g_ahCmbCGGroundTroops) - 1 ; check for duplicate combobox index and flag problem
+		If $iGUI_CtrlId = $g_ahCmbCGGroundTroops[$i] Then ContinueLoop
+		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGGroundTroops[$i]) Then
+			_GUICtrlComboBox_SetCurSel($g_ahCmbCGGroundTroops[$i], -1)
+			GUISetState()
+		EndIf
+	Next
+EndFunc
+
+Func btnSetCGGroundTroops()
+	Local $d
+	SetLog("Set Enabled ClanGames Ground Troops",$COLOR_SUCCESS)
+	For $i = 0 To UBound($g_ahCmbCGGroundTroops) - 1
+		$g_aCmbCGGroundTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGGroundTroops[$i])
+		$d = $g_aCmbCGGroundTroops[$i]
+		If $d = -1 Then ContinueLoop
+		SetLog($i+1 & " : " & $g_sGroundTroopShortName[$d], $COLOR_SUCCESS)
+	Next
+EndFunc
+
+Func BtnCGGroundTroopsRemove()
+	For $i = 0 To UBound($g_ahCmbCGGroundTroops) - 1
+		_GUICtrlComboBox_SetCurSel($g_ahCmbCGGroundTroops[$i], -1)
+	Next
+EndFunc
+
+
+Func btnCGBBTroops()
+	GUISetState(@SW_SHOW, $g_hGUI_CGBBTroops)
+EndFunc
+
+Func CloseCGBBTroops()
+	GUISetState(@SW_HIDE, $g_hGUI_CGBBTroops)
+EndFunc
+
+Func GUI_CGBBTroops()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	For $i = 0 To UBound($g_ahCmbCGBBTroops) - 1 ; check for duplicate combobox index and flag problem
+		If $iGUI_CtrlId = $g_ahCmbCGBBTroops[$i] Then ContinueLoop
+		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBTroops[$i]) Then
+			_GUICtrlComboBox_SetCurSel($g_ahCmbCGBBTroops[$i], -1)
+			GUISetState()
+		EndIf
+	Next
+EndFunc
+
+Func btnSetCGBBTroops()
+	Local $d
+	SetLog("Set Enabled ClanGames BB Troops",$COLOR_SUCCESS)
+	For $i = 0 To UBound($g_ahCmbCGBBTroops) - 1
+		$g_aCmbCGBBTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBTroops[$i])
+		$d = $g_aCmbCGBBTroops[$i]
+		If $d = -1 Then ContinueLoop
+		SetLog($i+1 & " : " & ClanGamesChallenges("$BBTroopChallenges")[$d][0], $COLOR_SUCCESS)
+	Next
+EndFunc
+
+Func BtnCGBBTroopsRemove()
+	For $i = 0 To UBound($g_ahCmbCGBBTroops) - 1
+		_GUICtrlComboBox_SetCurSel($g_ahCmbCGBBTroops[$i], -1)
+	Next
+EndFunc
 
 Func chkEnableBBAttack()
 	If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then

@@ -455,6 +455,7 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 
 	; WM_SYSCOMAND msdn: https://msdn.microsoft.com/en-us/library/windows/desktop/ms646360(v=vs.85).aspx
 	CheckRedrawBotWindow(Default, Default, "GUIControl_WM_COMMAND")
+	
 	Switch $nID
 		Case $g_hDivider
 			;MoveDivider()

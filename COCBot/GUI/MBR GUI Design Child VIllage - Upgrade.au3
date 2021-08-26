@@ -250,7 +250,7 @@ Func CreateLaboratorySubTab()
 		Local $sSComboData = ""
 		$sSComboData = StringTrimLeft($sTxtSLNames, 4); trim "Any," from list
 
-		; Create ComboBox(es) for selection of troop training order
+		; Create ComboBox(es) for selection StarLab upgrade order
 		$y += 75
 		$x += 20
 		For $z = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1

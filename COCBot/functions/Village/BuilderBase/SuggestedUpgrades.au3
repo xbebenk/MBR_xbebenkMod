@@ -78,8 +78,8 @@ Func chkActivateOptimizeOTTO()
 		$g_iChkBBSuggestedUpgradesOTTO = 1
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, BitOR($GUI_CHECKED, $GUI_DISABLE))
 		GUICtrlSetState($g_hChkPlacingNewBuildings, $GUI_DISABLE)
 	Else
 		$g_iChkBBSuggestedUpgradesOTTO = 0
@@ -332,7 +332,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 				;check the upgrade until reach spesific level
 				For $i = 0 To UBound($OptimizeOTTO) - 1
 					If StringInStr($aBuildingName[1], $OptimizeOTTO[$i]) Then
-						SetLog("Trying to upgrade : " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
+						;SetLog("Trying to upgrade : " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
 						If $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						ElseIf $aBuildingName[1] = "D uble Cannon" And $aBuildingName[2] >= 4 Then

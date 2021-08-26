@@ -113,23 +113,18 @@ Func CheckArmyReady()
 	local $sSearchDiamond = GetDiamondFromRect("114,384,190,450") ; start of trained troops bar untill a bit after the 'r' "in Your Troops"
 
 	If _Sleep($DELAYCHECKFULLARMY2) Then Return ; wait for window
-	While $i < 6 And $bReady ; wait for fight preview window
-		local $aNeedTrainCoords = decodeSingleCoord(findImage("NeedTrainBB", $g_sImgBBNeedTrainTroops, $sSearchDiamond, 1, True))
-		local $aTroopsTrainingCoords = decodeSingleCoord(findImage("TroopsTrainingBB", $g_sImgBBTroopsTraining, $sSearchDiamond, 1, False)) ; shouldnt need to capture again as it is the same diamond
-
-		If IsArray($aNeedTrainCoords) And UBound($aNeedTrainCoords) = 2 Then
-			$bReady = False
-			$bNeedTrain = True
+	If QuickMIS("BC1", $g_sImgArmyReady, 110, 360, 135, 385, True, False) Then
+		$bReady = True
+	Else 
+		$bReady = False
+		If QuickMIS("BC1", $g_sImgArmyNeedTrain, 130, 390, 190, 420, True, False) Then
+			$bNeedTrain = True ;need train, so will train cannon cart
+		Else
+			$bReady = True ;green check mark, not found but no need to train, so Army is Ready
 		EndIf
-		If IsArray($aTroopsTrainingCoords) And UBound($aTroopsTrainingCoords) = 2 Then
-			$bReady = False
-			$bTraining = True
-		EndIf
-
-		$i += 1
-	WEnd
-
-	If $bNeedTrain And $g_bTrainTroopBBCannonnCart Then
+	EndIf
+	
+	If Not $bReady And $bNeedTrain And $g_bTrainTroopBBCannonnCart Then
 		ClickP($aArmyTrainButton, 1, 0, "#0293")
 		If _Sleep(1000) Then Return ; wait for window
 		Local $sCannonCart

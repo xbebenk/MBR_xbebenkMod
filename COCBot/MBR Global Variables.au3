@@ -78,7 +78,7 @@ Global $g_iVILLAGE_OFFSET[3] = [0, 0, 1]
 ; <><><><><><><><><><><><><><><><><><>
 ; <><><><> debug flags <><><><>
 ; <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-Global $g_bDebugSetlog = False ; Verbose log messages, or extra log messages most everywhere
+Global $g_bDebugSetlog = True ; Verbose log messages, or extra log messages most everywhere
 Global $g_bDebugAndroid = False ; Debug Android
 Global $g_bDebugClick = False ; Debug Bot Clicks and when docked, display current mouse position and RGB color
 Global $g_bDebugFuncTime = False ; Log Function execution time (where implemented)
@@ -1011,7 +1011,7 @@ Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0,
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
-Global $g_iQuickMISX = 0, $g_iQuickMISY = 0
+Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_aQuickMISFoundFileName = ""
 
 ; <><><><> Village / Achievements <><><><>
 Global $g_iUnbrkMode = 0, $g_iUnbrkWait = 5
@@ -1820,6 +1820,7 @@ Global $g_bChkClanGamesBattle = 0
 global $g_bChkClanGamesSpell = 0
 Global $g_bChkClanGamesBBBattle = 0
 Global $g_bChkClanGamesBBDestruction = 0
+Global $g_bChkClanGamesBBTroops = 0
 
 Global $g_bChkClanGamesDestruction = 0
 Global $g_bChkClanGamesAirTroop = 0
@@ -1830,9 +1831,24 @@ Global $g_bChkClanGamesStopBeforeReachAndPurge = 0
 Global $g_bChkClanGamesDebug = 0
 Global $g_iPurgeJobCount[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iPurgeMax = 5 ; [0] is unlimited , 1-10
+Global $g_bChkClanGamesPurgeAny = 0
 
 Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
+;ClanGames Challenges
+Global $g_hBtnCGAirTroop = 0, $g_hGUI_CGAirTroops = 0, $g_hBtnCGAirTroopsSet = 0, $g_hBtnCGAirTroopsRemove = 0, $g_hBtnCGAirTroopsClose = 0
+Global $g_aCmbCGAirTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbCGAirTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_sTxtCGAirTroop = "Balloons|Healers|Dragons|Baby Dragons|Electro Dragon|Dragon Rider|Minions|Lava Hounds|Rocket Balloon|Inferno Dragon|Super Minion|Ice Hound|Battle Blimps|Stone Slammers"
+Global $g_sAirTroopShortName[14] = ["Ball", "Heal", "Drag", "BabyD", "EDrag", "RDrag", "Mini", "Lava", "RBall", "InfernoD", "SMini", "IceH", "BattleB", "StoneS"]
+
+Global $g_hBtnCGGroundTroop = 0, $g_hGUI_CGGroundTroops = 0, $g_hBtnCGGroundTroopsSet = 0, $g_hBtnCGGroundTroopsRemove = 0, $g_hBtnCGGroundTroopsClose = 0
+Global $g_aCmbCGGroundTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbCGGroundTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_sTxtCGGroundTroop = "Barbarians|Super Barbarian|Archers|Super Archer|Giants|Super Giants|Goblins|Sneaky Goblin|Wall Breakers|Super WallBreaker|Wizards|Super Wizards|" & _ 
+					"Pekkas|Miners|Yeti|Hog Riders|Valkyrie|Super Valkyrie|Golems|Witches|Super Witch|Bowlers|Ice Golems|Headhunters|Wall Wreckers|Siege Barracks|Log Launcher"
+Global $g_sGroundTroopShortName[27] = ["Barb", "SBarb", "Arch", "SArch", "Giant", "SGiant", "Gobl", "SGobl", "Wall", "SWall", "Wiza", "SWiza", _ 
+					"Pekk", "Mine", "Yeti", "Hogs", "Valk", "SValk", "Gole", "Witc", "SWitc", "Bowl", "IceG", "Hunt", "WallW", "SiegeB", "LogL"]
 
 ; Collect Achievement Rewards
 Global $g_bChkCollectAchievements = True
