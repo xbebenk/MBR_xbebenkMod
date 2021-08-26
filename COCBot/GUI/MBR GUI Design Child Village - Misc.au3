@@ -33,7 +33,7 @@ Global $g_hChkPlacingNewBuildings = 0, $g_hChkBBSuggestedUpgradesIgnoreWall = 0,
 
 Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames60 = 0
 Global $g_hChkClanGamesLoot = 0 , $g_hChkClanGamesBattle =0 , $g_hChkClanGamesDestruction = 0 , $g_hChkClanGamesAirTroop = 0 , $g_hChkClanGamesGroundTroop = 0 , $g_hChkClanGamesMiscellaneous = 0, $g_hChkForceBBAttackOnClanGames = 0
-global $g_hChkClanGamesSpell = 0, $g_hChkClanGamesBBTroops = 0
+Global $g_hChkClanGamesSpell = 0, $g_hChkClanGamesBBTroops = 0
 Global $g_hChkClanGamesBBBattle = 0, $g_hChkClanGamesBBDestruction = 0, $g_hChkClanGamesPurgeAny = 0
 Global $g_hChkClanGamesPurge = 0 , $g_hcmbPurgeLimit = 0 , $g_hChkClanGamesStopBeforeReachAndPurge = 0
 Global $g_hTxtClanGamesLog = 0
@@ -54,6 +54,21 @@ Global $g_ahCmbCGGroundTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hBtnCGBBTroop = 0, $g_hGUI_CGBBTroops = 0, $g_hBtnCGBBTroopsSet = 0, $g_hBtnCGBBTroopsRemove = 0, $g_hBtnCGBBTroopsClose = 0, $g_sTxtCGBBTroop
 Global $g_aCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+
+Global $g_hChkClanGamesLoot = 0 , $g_hChkClanGamesBattle =0 , $g_hChkClanGamesDestruction = 0 , $g_hChkClanGamesAirTroop = 0 , $g_hChkClanGamesGroundTroop = 0 , $g_hChkClanGamesMiscellaneous = 0, $g_hChkForceBBAttackOnClanGames = 0
+Global $g_hChkClanGamesSpell = 0, $g_hChkClanGamesBBTroops = 0
+Global $g_hChkClanGamesBBBattle = 0, $g_hChkClanGamesBBDestruction = 0, $g_hChkClanGamesPurgeAny = 0
+Global $g_hChkClanGamesPurge = 0 , $g_hcmbPurgeLimit = 0 , $g_hChkClanGamesStopBeforeReachAndPurge = 0
+Global $g_hTxtClanGamesLog = 0
+Global $g_hChkClanGamesDebug = 0
+;define controls
+Dim $aControlTabClaGames = [$g_hChkClanGamesLoot, $g_hChkClanGamesBattle, $g_hChkClanGamesDestruction, $g_hChkClanGamesAirTroop, $g_hChkClanGamesGroundTroop, $g_hChkClanGamesMiscellaneous, _
+					$g_hChkForceBBAttackOnClanGames, $g_hChkClanGamesSpell, $g_hChkClanGamesBBTroops, $g_hChkClanGamesBBBattle, $g_hChkClanGamesBBDestruction, _ 
+					$g_hChkClanGamesPurgeAny, $g_hChkClanGamesPurge, $g_hChkClanGamesStopBeforeReachAndPurge]
+For $i in $aControlTabClaGames 
+GUICtrlSetState($i, $GUI_DISABLE)
+Next
 
 Func CreateVillageMisc()
 	$g_hGUI_MISC = _GUICreate("", $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_VILLAGE)
