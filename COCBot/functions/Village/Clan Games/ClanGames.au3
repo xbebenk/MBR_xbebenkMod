@@ -13,7 +13,6 @@
 ; Example .......: ---
 ;================================================================================================================================
 Func _ClanGames($test = False)
-
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
 
@@ -53,22 +52,24 @@ Func _ClanGames($test = False)
 	;If _Sleep(1500) Then Return
 
 	SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
-
+	Local $sTimeCG
 	If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 		SetLog("Your score limit is reached! Congrats")
 		ClickAway()
+		$g_bIsBBevent = False
 		Return
 	ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
 		SetLog("Your Score limit is almost reached")
 		If $g_bChkClanGamesStopBeforeReachAndPurge Then
 			If IsEventRunning() Then Return
-			Local $sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
+			$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
 			Setlog("Clan Games Minute Remain: " & $sTimeCG)
 			If $g_bChkClanGamesPurgeAny And $sTimeCG > 2400 Then ; purge, but not purge on last 2 day of clangames
 				SetLog("Stop before completing your limit and only Purge")
 				SetLog("Lets only purge 1 most top event", $COLOR_WARNING)
 				ForcePurgeEvent()
 				ClickAway()
+				$g_bIsBBevent = False
 				Return
 			EndIf
 		EndIf
@@ -83,7 +84,7 @@ Func _ClanGames($test = False)
 
 	If Not $g_bRunState Then Return
 
-	;If IsEventRunning() Then Return
+	If IsEventRunning() Then Return
 
 	If $g_bChkClanGamesDebug Then Setlog("_ClanGames IsEventRunning (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 	$hTimer = TimerInit()
@@ -124,7 +125,7 @@ Func _ClanGames($test = False)
 		Return
 	EndIf
 
-	If IsEventRunning() Then Return
+	;If IsEventRunning() Then Return
 	; To store the detections
 	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis
 	Local $aAllDetectionsOnScreen[0][4]
@@ -469,9 +470,6 @@ Func _ClanGames($test = False)
 			; Sort by difficulties
 			_ArraySort($aTempSelectChallenges, 0, 0, 0, 3)
 			
-			Local $sBBName = StringSplit($aTempSelectChallenges[0][0], " ")
-			If $sBBName[0] = "BB" Then $g_bIsBBevent = True
-			
 			Setlog("Next Event will be " & $aTempSelectChallenges[0][0] & " to make in " & $aTempSelectChallenges[0][4] & " min.")
 			; Select and Start EVENT
 			$sEventName = $aTempSelectChallenges[0][0]
@@ -482,8 +480,6 @@ Func _ClanGames($test = False)
 			ClickP($TabChallengesPosition, 2, 0, "#Tab")
 		EndIf
 	EndIf
-
-
 
 	; Lets test the Builder Base Challenges
 	If $g_bChkClanGamesPurge Then
@@ -501,16 +497,18 @@ Func _ClanGames($test = False)
 		Return
 	EndIf
 	
-	If $g_bChkClanGamesPurgeAny And $sTimeCG > 2400 Then ; purge, but not purge on last 2 day of clangames
-		SetLog("Stop before completing your limit and only Purge")
+	$g_bIsBBevent = False
+	If $g_bChkClanGamesPurgeAny Then ; still have to purge, because no enabled event on setting found
+		SetLog("Still have to purge, because no enabled event on setting found", $COLOR_WARNING)
 		SetLog("No Event found, lets purge 1 most top event", $COLOR_WARNING)
 		ForcePurgeEvent()
+		ClickAway()
+		If _Sleep(1000) Then Return
+	Else
+		SetLog("No Event found, Check your settings", $COLOR_WARNING)
+		ClickAway()
+		If _Sleep(2000) Then Return
 	EndIf
-			
-	SetLog("No Event found, Check your settings", $COLOR_WARNING)
-	ClickAway()
-	If _Sleep(2000) Then Return
-
 EndFunc ;==>_ClanGames
 
 Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
