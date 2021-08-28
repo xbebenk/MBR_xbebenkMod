@@ -22,7 +22,7 @@ Global Const $DELAYRUNBOT2 = 800
 Global Const $DELAYRUNBOT3 = 200
 
 Global Const $DELAYRUNBOT5 = 500
-Global Const $DELAYRUNBOT6 = 500
+Global Const $DELAYRUNBOT6 = 100
 Global Const $DELAYIDLE1 = 200
 Global Const $DELAYIDLE2 = 1500
 Global Const $DELAYSMARTWAIT = 500
@@ -212,11 +212,11 @@ Global Const $DELAYCHECKFULLARMY3 = 500
 ;Collect
 Global Const $DELAYCOLLECT1 = 100
 Global Const $DELAYCOLLECT2 = 250
-Global Const $DELAYCOLLECT3 = 800
+Global Const $DELAYCOLLECT3 = 500
 
 ;DonateCC
 Global Const $DELAYDONATECC1 = 200
-Global Const $DELAYDONATECC2 = 500
+Global Const $DELAYDONATECC2 = 250
 Global Const $DELAYDONATECC3 = 50 ; click
 Global Const $DELAYDONATECC4 = 1250
 

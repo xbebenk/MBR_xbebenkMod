@@ -510,7 +510,6 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 					SetLog("> " & $g_sBldgNames[$eBldgGoldS] & " location not in dictionary", $COLOR_WARNING)
 				Else
 					If IsArray($aResult) Then $g_aiCSVGoldStoragePos = $aResult
-					;PR --> coba list array nya tentuin lokasinya
 				EndIf
 			EndIf
 		Else

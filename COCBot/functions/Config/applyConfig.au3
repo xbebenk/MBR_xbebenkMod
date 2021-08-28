@@ -590,26 +590,22 @@ Func ApplyConfig_600_12($TypeReadSave)
 			Next
 
 			For $i = 0 To $eSpellCount - 1
-				If $i <> $eSpellClone Then
-					GUICtrlSetState($g_ahChkDonateSpell[$i], $g_abChkDonateSpell[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
-					If $g_abChkDonateSpell[$i] Then
-						_DonateControlsSpell($i)
-					Else
-						GUICtrlSetBkColor($g_ahLblDonateSpell[$i], $GUI_BKCOLOR_TRANSPARENT)
-					EndIf
-
-					If $g_abChkDonateAllSpell[$i] Then
-						GUICtrlSetState($g_ahChkDonateAllSpell[$i], $GUI_CHECKED)
-						_DonateAllControlsSpell($i, True)
-					Else
-						GUICtrlSetState($g_ahChkDonateAllSpell[$i], $GUI_UNCHECKED)
-					EndIf
+				GUICtrlSetState($g_ahChkDonateSpell[$i], $g_abChkDonateSpell[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				If $g_abChkDonateSpell[$i] Then
+					_DonateControlsSpell($i)
+				Else
+					GUICtrlSetBkColor($g_ahLblDonateSpell[$i], $GUI_BKCOLOR_TRANSPARENT)
 				EndIf
 
-				If $i <> $eSpellClone Then
-					GUICtrlSetData($g_ahTxtDonateSpell[$i], $g_asTxtDonateSpell[$i])
-					GUICtrlSetData($g_ahTxtBlacklistSpell[$i], $g_asTxtBlacklistSpell[$i])
+				If $g_abChkDonateAllSpell[$i] Then
+					GUICtrlSetState($g_ahChkDonateAllSpell[$i], $GUI_CHECKED)
+					_DonateAllControlsSpell($i, True)
+				Else
+					GUICtrlSetState($g_ahChkDonateAllSpell[$i], $GUI_UNCHECKED)
 				EndIf
+
+				GUICtrlSetData($g_ahTxtDonateSpell[$i], $g_asTxtDonateSpell[$i])
+				GUICtrlSetData($g_ahTxtBlacklistSpell[$i], $g_asTxtBlacklistSpell[$i])
 			Next
 
 			For $i = $eSiegeWallWrecker to $eSiegeMachineCount - 1
@@ -675,12 +671,10 @@ Func ApplyConfig_600_12($TypeReadSave)
 			Next
 
 			For $i = 0 To $eSpellCount - 1
-				If $i <> $eSpellClone Then
-					$g_abChkDonateSpell[$i] = (GUICtrlRead($g_ahChkDonateSpell[$i]) = $GUI_CHECKED)
-					$g_abChkDonateAllSpell[$i] = (GUICtrlRead($g_ahChkDonateAllSpell[$i]) = $GUI_CHECKED)
-					$g_asTxtDonateSpell[$i] = GUICtrlRead($g_ahTxtDonateSpell[$i])
-					$g_asTxtBlacklistSpell[$i] = GUICtrlRead($g_ahTxtBlacklistSpell[$i])
-				EndIf
+				$g_abChkDonateSpell[$i] = (GUICtrlRead($g_ahChkDonateSpell[$i]) = $GUI_CHECKED)
+				$g_abChkDonateAllSpell[$i] = (GUICtrlRead($g_ahChkDonateAllSpell[$i]) = $GUI_CHECKED)
+				$g_asTxtDonateSpell[$i] = GUICtrlRead($g_ahTxtDonateSpell[$i])
+				$g_asTxtBlacklistSpell[$i] = GUICtrlRead($g_ahTxtBlacklistSpell[$i])
 			Next
 
 			For $i = $eSiegeWallWrecker to $eSiegeMachineCount - 1
@@ -809,6 +803,7 @@ Func ApplyConfig_600_15($TypeReadSave)
 			chkABChampionWait()
 			_GUICtrlComboBox_SetCurSel($g_hCmbHeroReservedBuilder, $g_iHeroReservedBuilder)
 			cmbHeroReservedBuilder()
+
 			For $i = 0 to $ePetCount - 1
 				GUICtrlSetState($g_hChkUpgradePets[$i], $g_bUpgradePetsEnable[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
@@ -818,6 +813,7 @@ Func ApplyConfig_600_15($TypeReadSave)
 			$g_bUpgradeWardenEnable = (GUICtrlRead($g_hChkUpgradeWarden) = $GUI_CHECKED)
 			$g_bUpgradeChampionEnable = (GUICtrlRead($g_hChkUpgradeChampion) = $GUI_CHECKED)
 			$g_iHeroReservedBuilder = _GUICtrlComboBox_GetCurSel($g_hCmbHeroReservedBuilder)
+
 			For $i = 0 to $ePetCount - 1
 				$g_bUpgradePetsEnable[$i] = (GUICtrlRead($g_hChkUpgradePets[$i]) = $GUI_CHECKED)
 			Next

@@ -85,6 +85,9 @@ Func SaveBuildingConfig()
 	_Ini_Add("upgrade", "LabPosX", $g_aiLaboratoryPos[0])
 	_Ini_Add("upgrade", "LabPosY", $g_aiLaboratoryPos[1])
 
+	_Ini_Add("upgrade", "PetHousePosX", $g_aiPetHousePos[0])
+	_Ini_Add("upgrade", "PetHousePosY", $g_aiPetHousePos[1])
+
 	_Ini_Add("upgrade", "StarLabPosX", $g_aiStarLaboratoryPos[0])
 	_Ini_Add("upgrade", "StarLabPosY", $g_aiStarLaboratoryPos[1])
 
@@ -342,7 +345,6 @@ Func SaveConfig_600_1()
 EndFunc   ;==>SaveConfig_600_1
 
 Func SaveConfig_600_6()
-	
 	; <><><><> Village / Misc <><><><>
 	ApplyConfig_600_6(GetApplyConfigSaveAction())
 	_Ini_Add("general", "BotStop", $g_bChkBotStop ? 1 : 0)
@@ -384,9 +386,14 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreGold", $g_iChkBBSuggestedUpgradesIgnoreGold)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreElixir", $g_iChkBBSuggestedUpgradesIgnoreElixir)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreHall", $g_iChkBBSuggestedUpgradesIgnoreHall)
+	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall)
 
 	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
 	_Ini_Add("other", "ChkOptimizeOTTO", $g_iChkBBSuggestedUpgradesOTTO)
+
+	_Ini_Add("other", "ChkClanGamesAir", $g_bChkClanGamesAir ? 1 : 0)
+	_Ini_Add("other", "ChkClanGamesGround", $g_bChkClanGamesGround ? 1 : 0)
+	_Ini_Add("other", "ChkClanGamesMisc", $g_bChkClanGamesMisc ? 1 : 0)
 
 	_Ini_Add("other", "ChkClanGamesEnabled", $g_bChkClanGamesEnabled ? 1 : 0)
 	_Ini_Add("other", "ChkClanGames60", $g_bChkClanGames60 ? 1 : 0)
@@ -519,13 +526,11 @@ Func SaveConfig_600_12()
 	Next
 
 	For $i = 0 To $eSpellCount - 1
-		If $i <> $eSpellClone Then
-			Local $sIniName = $g_asSpellNames[$i] & "Spells"
-			_Ini_Add("donate", "chkDonate" & $sIniName, $g_abChkDonateSpell[$i] ? 1 : 0)
-			_Ini_Add("donate", "chkDonateAll" & $sIniName, $g_abChkDonateAllSpell[$i] ? 1 : 0)
-			_Ini_Add("donate", "txtDonate" & $sIniName, StringReplace($g_asTxtDonateSpell[$i], @CRLF, "|"))
-			_Ini_Add("donate", "txtBlacklist" & $sIniName, StringReplace($g_asTxtBlacklistSpell[$i], @CRLF, "|"))
-		EndIf
+		Local $sIniName = $g_asSpellNames[$i] & "Spells"
+		_Ini_Add("donate", "chkDonate" & $sIniName, $g_abChkDonateSpell[$i] ? 1 : 0)
+		_Ini_Add("donate", "chkDonateAll" & $sIniName, $g_abChkDonateAllSpell[$i] ? 1 : 0)
+		_Ini_Add("donate", "txtDonate" & $sIniName, StringReplace($g_asTxtDonateSpell[$i], @CRLF, "|"))
+		_Ini_Add("donate", "txtBlacklist" & $sIniName, StringReplace($g_asTxtBlacklistSpell[$i], @CRLF, "|"))
 	Next
 
 	For $i = $eSiegeWallWrecker to $eSiegeMachineCount - 1
@@ -582,7 +587,7 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradeWarden", $g_bUpgradeWardenEnable ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradeChampion", $g_bUpgradeChampionEnable ? 1 : 0)
 	_Ini_Add("upgrade", "HeroReservedBuilder", $g_iHeroReservedBuilder)
-	
+
 	_Ini_Add("upgrade", "UpgradePetLassi", $g_bUpgradePetsEnable[$ePetLassi] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetEletroOwl", $g_bUpgradePetsEnable[$ePetEletroOwl] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetMightyYak", $g_bUpgradePetsEnable[$ePetMightyYak] ? 1 : 0)

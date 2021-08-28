@@ -44,8 +44,6 @@ Func PrepareDonateCC()
 	$g_aiPrepDon[5] = 0
 	For $i = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 		$g_aiPrepDon[4] = BitOR($g_aiPrepDon[4], ($g_abChkDonateTroop[$eTroopCount + $g_iCustomDonateConfigs + $i] ? 1 : 0))
-		;SetLog("g_abChkDonateTroop : " & $g_abChkDonateTroop[$eTroopCount + $g_iCustomDonateConfigs + $i])
-		;SetLog("g_aiPrepDon : " & $g_aiPrepDon[4])
 		$g_aiPrepDon[5] = BitOR($g_aiPrepDon[5], ($g_abChkDonateAllTroop[$eTroopCount + $g_iCustomDonateConfigs + $i] ? 1 : 0))
 	Next
 
@@ -60,7 +58,6 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 		If $i < $eSpellCount Then $g_aiAvailQueuedSpell[$i] = 0
 	Next
 	If Not OpenArmyOverview(True, "IsDonateQueueOnly()") Then Return
-	checkArmyCamp(False,False) ; xbebenk add check armycamp before donate
 	For $i = 0 To 1
 		If Not $g_aiPrepDon[$i * 2] And Not $g_aiPrepDon[$i * 2 + 1] Then $abDonateQueueOnly[$i] = False
 		If $abDonateQueueOnly[$i] Then
@@ -238,12 +235,6 @@ Func DonateCC($bCheckForNewMsg = False)
 		If _Sleep($DELAYDONATECC2) Then Return
 	EndIf
 
-	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
-
-	Local $iTimer
-	Local $sSearchArea, $aiSearchArray[4] = [200, 90, 300, 700], $aiSearchArrayBackUp = $aiSearchArray
-	Local $aiDonateButton
-	
 	Local $Scroll
 	; add scroll here
 	While 1
@@ -259,6 +250,12 @@ Func DonateCC($bCheckForNewMsg = False)
 		EndIf
 		ExitLoop
 	WEnd
+
+	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
+
+	Local $iTimer
+	Local $sSearchArea, $aiSearchArray[4] = [200, 90, 300, 700], $aiSearchArrayBackUp = $aiSearchArray
+	Local $aiDonateButton
 
 	While $bDonate
 		checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
@@ -655,7 +652,7 @@ Func DonateCC($bCheckForNewMsg = False)
 		Else
 			If $g_bDebugSetlog Then SetDebugLog("No more Donate buttons found, closing chat", $COLOR_DEBUG)
 		EndIf
-	
+
 		;;; Scroll Down
 		ForceCaptureRegion()
 		$Scroll = _PixelSearch(293, 687 - 30, 295, 693 - 30, Hex(0xFFFFFF, 6), 20)

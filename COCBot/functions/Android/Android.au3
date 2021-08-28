@@ -90,7 +90,7 @@ Func InitAndroidConfig($bRestart = False)
 	$g_bAndroidEmbed = $g_bAndroidEmbedEnabled = True And $g_iAndroidEmbedMode > -1 ; Enable Android Docking
 	$g_bAndroidBackgroundLaunch = $g_bAndroidBackgroundLaunchEnabled = True ; Enabled Android Background launch using Windows Scheduled Task
 	$g_bAndroidBackgroundLaunched = False ; True when Android was launched in headless mode without a window
-	$g_bUpdateAndroidWindowTitle = False ; If Android has always same title (like LeapDroid) instance name will be added
+	$g_bUpdateAndroidWindowTitle = False ; If Android has always same title instance name will be added (iTools)
 	$g_bAndroidControlUseParentPos = False ; If true, control pos is used from parent control (only used to fix docking for Nox in DirectX mode)
 	$g_sAndroidAdbInstanceShellOptions = $g_sAndroidAdbInstanceShellOptionsDefault ; Additional shell options, only used by BlueStacks2 " -t -t"
 	$g_sAndroidAdbShellOptions = "" ; Additional shell options when launch shell with command, only used by BlueStacks2 " /data/anr/../../system/xbin/bstk/su root"
@@ -288,12 +288,6 @@ Func UpdateHWnD($hWin, $bRestart = True)
 	; reset time lag
 	InitAndroidTimeLag()
 	ResetAndroidProcess()
-	#cs Was coded for LeapDroid when manually launch DPI unaware and bot was DPI aware, then bot resize LeapDroid but too pixy... unfortunately making bot DPI aware did not fix it, so better just restart bot?
-		If CheckDpiAwareness(True) Then
-		; check if Android must become DPI Aware
-		If GetProcessDpiAwareness(GetAndroidPid()) = 0 Then	AndroidDpiAwareness()
-		EndIf
-	#ce
 	GetAndroidControlClass(True, True)
 	If @error Then Return FuncReturn(SetError(1, 0, False))
 	Return FuncReturn(SetError(0, 0, True))
@@ -2172,13 +2166,6 @@ Func _AndroidAdbSendShellCommand($cmd = Default, $timeout = Default, $wasRunStat
 		If StringRight($s, 1) = @CR Then $s = StringLeft($s, StringLen($s) - 1)
 	EndIf
 
-	; remove LeapDroid WARNING: linker: libdvm.so has text relocations. This is wasting memory and is a security risk. Please fix.
-	Local $sRemove = "WARNING: linker: libdvm.so has text relocations. This is wasting memory and is a security risk. Please fix."
-	If StringLen($s) >= StringLen($sRemove) And StringLeft($s, StringLen($sRemove)) = $sRemove Then
-		$s = StringMid($s, StringLen($sRemove) + 1)
-		If StringLeft($s, 1) = @LF Then $s = StringMid($s, 2) ; remove starting @LF
-	EndIf
-
 	If $g_bAndroidAdbInstance = True And $g_bDebugAndroid And StringLen($s) > 0 Then SetDebugLog("ADB shell command output: " & $s)
 	SuspendAndroid($SuspendMode)
 	Local $error = (($g_bRunState = False Or __TimerDiff($hTimer) < $timeout Or $timeout < 1) ? 0 : 1)
@@ -2672,26 +2659,14 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 		Local $iHeaderSize = DllStructGetSize($tHeader)
 		Local $iDataSize = DllStructGetSize($g_aiAndroidAdbScreencapBuffer)
 
-		; wait for file (required for Droid4X)
 		$ExpectedFileSize = $g_iAndroidClientWidth * $g_iAndroidClientHeight * 4 + $iHeaderSize
-		#cs
-			While __TimerDiff($hTimer) < $g_iAndroidAdbScreencapWaitFileTimeout And FileGetSize($hostPath & $filename) < $ExpectedFileSize ; wait max. 5 seconds
-			Sleep(10)
-			If $wasRunState = True And $g_bRunState = False Then Return SetError(1, 0)
-			$iLoopCountFile += 1
-			WEnd
-		#ce
-		While $iSize < $ExpectedFileSize And __TimerDiff($hTimer) < $g_iAndroidAdbScreencapWaitFileTimeout
-			If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
-			If $hFile <> 0 Then $iSize = _WinAPI_GetFileSizeEx($hFile)
-			If $iSize >= $ExpectedFileSize Then ExitLoop
-			Sleep(10)
-			If $wasRunState = True And $g_bRunState = False Then
-				If $hFile <> 0 Then _WinAPI_CloseHandle($hFile)
-				Return SetError(1, 0)
-			EndIf
-			$iLoopCountFile += 1
-		WEnd
+		If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
+		If $hFile <> 0 Then $iSize = _WinAPI_GetFileSizeEx($hFile)
+		Sleep(10)
+		If $wasRunState And Not $g_bRunState Then
+			If $hFile <> 0 Then _WinAPI_CloseHandle($hFile)
+			Return SetError(1, 0)
+		EndIf
 
 		Local $iReadHeader = 0
 		$g_iAndroidAdbScreencapWidth = 0
@@ -2775,23 +2750,14 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			$g_hAndroidAdbScreencapBufferPngHandle = 0
 		EndIf
 		Local $hBitmap = 0
-		#cs causes open file handles
-			While $hBitmap = 0 And __TimerDiff($hTimer) < $g_iAndroidAdbScreencapWaitFileTimeout
-			;$hBitmap = _GDIPlus_ImageLoadFromFile($hostPath & $filename)
-			$hBitmap = _GDIPlus_BitmapCreateFromFile($hostPath & $filename)
-			If $hBitmap = 0 Then Sleep(10)
-			WEnd
-		#ce
 
-		While $iSize < $ExpectedFileSize And __TimerDiff($hTimer) < $g_iAndroidAdbScreencapWaitFileTimeout
-			If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
-			If $hFile <> 0 Then $iSize = _WinAPI_GetFileSizeEx($hFile)
-			If $iSize >= $ExpectedFileSize Then ExitLoop
-			Sleep(10)
-			If $wasRunState = True And $g_bRunState = False Then Return SetError(1, 0)
-			$iLoopCountFile += 1
-		WEnd
-
+		If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $Filename, 2, 2, 7)
+		If $hFile <> 0 Then $iSize = _WinAPI_GetFileSizeEx($hFile)
+		Sleep(10)
+		If $wasRunState And Not $g_bRunState Then
+			If $hFile <> 0 Then _WinAPI_CloseHandle($hFile)
+			Return SetError(1, 0)
+		EndIf
 
 		Local $hData = _MemGlobalAlloc($iSize, $GMEM_MOVEABLE)
 		Local $pData = _MemGlobalLock($hData)
@@ -2930,7 +2896,7 @@ Func AndroidAdbScript($scriptTag, $variablesArray = Default, $timeout = Default,
 	Return SetError(@error, @extended, (@error = 0 ? 1 : 0))
 EndFunc   ;==>AndroidAdbScript
 
-Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
+Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch = False)
 	$x1 = Int($x1) + $g_aiMouseOffset[0]
 	$y1 = Int($y1) + $g_aiMouseOffset[1]
 	$x2 = Int($x2) + $g_aiMouseOffset[0]
@@ -2939,10 +2905,10 @@ Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
 	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x2,$y2)")
 	Local $swipe_coord[4][2] = [["{$x1}", $x1], ["{$y1}", $y1], ["{$x2}", $x2], ["{$y2}", $y2]]
 	;Return AndroidAdbScript("clickdrag", $swipe_coord, Default, Default, $wasRunState)
-	Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState)
+	Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState, $bSCIDSwitch)
 EndFunc   ;==>AndroidClickDrag
 
-Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
+Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch = False)
 	AndroidAdbLaunchShellInstance($wasRunState)
 	If $g_iAndroidAdbMinitouchMode = 0 Then
 		If $g_bAndroidAdbMinitouchSocket < 1 Then
@@ -2987,7 +2953,11 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default)
 	Else
 		AndroidAdbSendMinitouchShellCommand($send)
 	EndIf
-	$sleep = $sleepMove
+	If $bSCIDSwitch Then
+		$sleep = 50
+	Else
+		$sleep = $sleepMove
+	EndIf
 	For $i = 1 To $loops
 		$x += $x_steps
 		$y += $y_steps
@@ -4604,7 +4574,7 @@ Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = 
 	Local $cmdOutput
 
 	If Not $g_sAndroidPicturesPathAvailable Then
-		SetLog("Shared folder in Android not availble, cannot push shared_prefs", $COLOR_RED)
+		SetLog("Shard folder in Android not availble, cannot push shared_prefs", $COLOR_RED)
 		Return SetError(0, 0, $Result)
 	EndIf
 
@@ -4861,5 +4831,3 @@ Func CheckEmuNewVersions()
 		SetLog($HelpLink, $COLOR_INFO)
 	EndIf
 EndFunc   ;==>CheckEmuNewVersions
-
-

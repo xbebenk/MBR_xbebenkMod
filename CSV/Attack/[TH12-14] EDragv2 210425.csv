@@ -1,15 +1,6 @@
-NOTE  | Edragloon
-NOTE  |210425: Faster dropping
-NOTE  |201222a: LogL, Hogs supported
-NOTE  |200713a: More super troop testing
-NOTE  |200708b: Not dropping healers when AQ upgrading.
-NOTE  |191215a: Added SiegeB drop command
-NOTE  |191210d: No hero auto-activation
-NOTE  |190904a: Up to 5 healers
-NOTE  |190621a: Add manual activation of AQ and BK (removed)
-NOTE  |190619a: Drop heroes sooner, healers sooner.
-NOTE  |190201a: Delay Hero drop so they go in.
-NOTE  |190515a: Added 3 healers
+NOTE  |Edragloon
+NOTE  |TH13, TH14: 6 ElectroDragons (6*30=180), 15 Balloons (14*5=75), 3 Healers (14*3=42), 1 wall break, 1 archer, wall wrecker
+Note  |Fill the CC with Loons, 1 rage, 1 freeze.  Spells: 3 Freeze, 4 Rage
 NOTE  |TH12: 5 ElectroDragon(30), 12 Balloon(5), 5 headers(14), wall wreckers
 NOTE  |TH11: 7 ElectroDragon, 10 Balloon, wall wreckers in CC
 NOTE  |Spells: 5 Rage, 1 Freeze

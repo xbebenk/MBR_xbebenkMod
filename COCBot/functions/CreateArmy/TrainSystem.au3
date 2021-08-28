@@ -25,6 +25,8 @@ Func TrainSystem()
 	$g_sTimeBeforeTrain = _NowCalc()
 	StartGainCost()
 
+	BoostSuperTroop()
+
 	If $g_bQuickTrainEnable Then CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
 
 	CheckIfArmyIsReady()
@@ -1107,12 +1109,12 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 	If _Sleep(500) Then Return
 	Local $x = 0
 
-	While Not _ColorCheck(_GetPixelColor(820, 200, True), Hex(0xcfcfc8, 6), 20) ;xbebenk change to 0xcfcfc8  for check gray background at 1st training slot
+	While Not _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20) ; check gray background at 1st training slot
 		If $x = 0 Then SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
 		If Not $g_bRunState Then Return
-		Click($iOffsetQueued + 24, 202, 20, 50)
+		Click($iOffsetQueued + 24, 202, 10, 50)
 		$x += 1
-		If $x = 20 Then ExitLoop
+		If $x = 270 Then ExitLoop
 	WEnd
 EndFunc   ;==>DeleteQueued
 

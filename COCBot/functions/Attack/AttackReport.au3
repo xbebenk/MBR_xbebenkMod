@@ -6,7 +6,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Hervidero (02-2015), Sardo (05-2015), Hervidero (12-2015)
-; Modified ......: Sardo (05-2015), Hervidero (05-2015), Knowjack (07-2015)
+; Modified ......: Sardo (05-2015), Hervidero (05-2015), Knowjack (07-2015), MikeD (04-2021)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -37,12 +37,16 @@ Func AttackReport()
 	WEnd
 	If $iCount > 20 Then SetLog("End of Attack scene read gold error, attack values my not be correct", $COLOR_INFO)
 
+	;HArchH: Subtracted 5 pixels from each getResourcesLoot call "x" value, 12 for DE.
+	;G was 290, is 285
+	;E was 290, is 285
+	;DE was 365, is 353
 	If _ColorCheck(_GetPixelColor($aAtkRprtDECheck[0], $aAtkRprtDECheck[1], True), Hex($aAtkRprtDECheck[2], 6), $aAtkRprtDECheck[3]) Then ; if the color of the DE drop detected
-		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(290, 289 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(285, 289 + $g_iMidOffsetY)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(290, 328 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(285, 328 + $g_iMidOffsetY)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootDarkElixir] = getResourcesLootDE(365, 365 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootDarkElixir] = getResourcesLootDE(353, 365 + $g_iMidOffsetY)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
 		$g_iStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 402 + $g_iMidOffsetY)
 		If _ColorCheck(_GetPixelColor($aAtkRprtTrophyCheck[0], $aAtkRprtTrophyCheck[1], True), Hex($aAtkRprtTrophyCheck[2], 6), $aAtkRprtTrophyCheck[3]) Then
@@ -50,9 +54,9 @@ Func AttackReport()
 		EndIf
 		SetLog("Loot: [G]: " & _NumberFormat($g_iStatsLastAttack[$eLootGold]) & " [E]: " & _NumberFormat($g_iStatsLastAttack[$eLootElixir]) & " [DE]: " & _NumberFormat($g_iStatsLastAttack[$eLootDarkElixir]) & " [T]: " & $g_iStatsLastAttack[$eLootTrophy], $COLOR_SUCCESS)
 	Else
-		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(290, 289 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(285, 289 + $g_iMidOffsetY)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(290, 328 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(285, 328 + $g_iMidOffsetY)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
 		$g_iStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 365 + $g_iMidOffsetY)
 		If _ColorCheck(_GetPixelColor($aAtkRprtTrophyCheck[0], $aAtkRprtTrophyCheck[1], True), Hex($aAtkRprtTrophyCheck[2], 6), $aAtkRprtTrophyCheck[3]) Then
@@ -245,8 +249,8 @@ Func AttackReport()
 	$g_iStatsTotalGain[$eLootTrophy] += $g_iStatsLastAttack[$eLootTrophy]
 	$g_aiTotalTrophyGain[$g_iMatchMode] += $g_iStatsLastAttack[$eLootTrophy]
 	$g_aiAttackedVillageCount[$g_iMatchMode] += 1
-	;UpdateStats()
-	;UpdateSDataBase()
+	UpdateStats()
+	UpdateSDataBase()
 	If ProfileSwitchAccountEnabled() Then
 		SetSwitchAccLog(" - Acc. " & $g_iCurAccount + 1 & ", Attack: " & $g_aiAttackedCount)
 	EndIf

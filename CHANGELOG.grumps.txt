@@ -1,0 +1,38 @@
+2021/04/13
+Unbundle Townhall images
+Added TH14 images
+Fixed auto Townhall locate - removed opencv Townhall detection
+Update TH14 building arrays
+increased StoneCC image tolerance due to interferrence with Jungle Scenery
+Update League Day End image
+Added Jungle Scenery
+Fixed Lab array error - updated UI arrays for new Townhall
+
+2021/04/18
+Added Auto Pet Upgrade - warning Alpha Code, no UI
+Added basic UI for upgrading pets
+Added Pets, TH14, Wall15 icons
+Added '1' to spellslevel OCR, missing 9 and 0
+Remove double loop in PetHouse
+Added PetHouse Icon, locate PetHouse manually
+
+2021/05/02
+Added Eagle lvl5 image
+Added Inferno lvl8 image
+Added 1 Scattershot lvl3 image - see readme
+Added lvl15 wall image
+Added PetGuiDisplay - research timer
+Added PetHouse image search
+Added Laboratory image search
+
+2021/05/19
+Update SCid UI to 8 accounts
+Added experimental minitouch single swipe to SCid change account
+
+
+
+TODO:
+Add Elixir/Gold/Dark Elixir storage images
+Update Buildings array
+Add Epic Jungle Scenery
+Update spellslevel OCR

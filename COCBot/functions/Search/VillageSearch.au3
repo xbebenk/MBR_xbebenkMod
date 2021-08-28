@@ -186,7 +186,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		; $g_iSearchTH name of level of townhall (return "-" if no th found)
 		; $g_iTHx and $g_iTHy coordinates of townhall
 		Local $THString = ""
-		;If $g_hCmbDBTH Or $g_hCmbABTH Then ; always search for TH if enabled TH Level on search setting
 		If $match[$DB] Or $match[$LB] Then ; make sure resource conditions are met
 			$THString = FindTownhall(False, False) ;find TH, but only if TH condition is checked
 		ElseIf ($g_abFilterMeetOneConditionEnable[$DB] Or $g_abFilterMeetOneConditionEnable[$LB]) Then ; meet one then attack, do not need correct resources
@@ -195,7 +194,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			; Check the TH for BullyMode
 			$THString = FindTownhall(True, False)
 		EndIf
-		
+
 		For $i = 0 To $g_iModeCount - 2
 			If $isModeActive[$i] Then
 				If $g_abFilterMeetOneConditionEnable[$i] Then

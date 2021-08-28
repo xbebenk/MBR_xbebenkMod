@@ -27,7 +27,7 @@ Func CollectFreeMagicItems($bTest = False)
 	If _Sleep($DELAYCOLLECT2) Then Return
 
 	; Check Trader Icon on Main Village
-	
+
 	Local $sSearchArea = GetDiamondFromRect("120,160,210,215")
 	Local $avTraderIcon = findMultiple($g_sImgTrader, $sSearchArea, $sSearchArea, 0, 1000, 1, "objectpoints", True)
 
@@ -79,13 +79,9 @@ Func CollectFreeMagicItems($bTest = False)
 
 		If Not $g_bRunState Then Return
 	Next
-	
+
 	SetLog("Daily Discounts: " & $aResults[0] & " | " & $aResults[1] & " | " & $aResults[2])
 	SetLog("Nothing free to collect!", $COLOR_INFO)
-	If QuickMIS("BC1", $g_sImgTraderFreeItem, 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, True, False) Then
-		Click($g_iQuickMISX,$g_iQuickMISY,1) 
-		SetLog("We got free item collect!", $COLOR_DEBUG)
-	Endif
 	ClickAway()
 	If _Sleep(1000) Then Return
 EndFunc   ;==>CollectFreeMagicItems

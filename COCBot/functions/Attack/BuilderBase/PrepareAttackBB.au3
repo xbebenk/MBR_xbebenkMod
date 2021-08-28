@@ -35,9 +35,13 @@ Func PrepareAttackBB($bCheck = False)
 			Return False
 		EndIf
 	EndIf
+	
+	If Not $g_bRunState Then Return ; Stop Button
+
 
 	If Not ClickAttack() Then Return False
-	_Sleep(1500)
+	_Sleep(1000)
+
 	If Not CheckArmyReady() Then
 		_Sleep(1500)
 		ClickAway()
@@ -51,7 +55,7 @@ Func PrepareAttackBB($bCheck = False)
 			Return False
 		EndIf
 	EndIf
-	
+
 	$g_bBBMachineReady = CheckMachReady()
 	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
@@ -68,6 +72,8 @@ Func ClickAttack()
 	Local $ButtonPixel = _MultiPixelSearch(8, 640, 120, 755, 1, 1, Hex(0xeac68c, 6), $aColors, 20)
 	local $bRet = False
 
+	If Not $g_bRunState Then Return ; Stop Button
+	
 	If IsArray($ButtonPixel) Then
 		SetDebugLog(String($ButtonPixel[0]) & " " & String($ButtonPixel[1]))
 		PureClick($ButtonPixel[0] + 25, $ButtonPixel[1] + 25) ; Click fight Button
