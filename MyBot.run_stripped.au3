@@ -12857,7 +12857,7 @@ Global $g_hChkBBSuggestedUpgrades = 0, $g_hChkBBSuggestedUpgradesIgnoreGold = 0 
 Global $g_hChkPlacingNewBuildings = 0, $g_hChkBBSuggestedUpgradesIgnoreWall = 0, $g_hChkBBSuggestedUpgradesOTTO = 0
 Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames60 = 0
 Global $g_hChkClanGamesLoot = 0 , $g_hChkClanGamesBattle =0 , $g_hChkClanGamesDestruction = 0 , $g_hChkClanGamesAirTroop = 0 , $g_hChkClanGamesGroundTroop = 0 , $g_hChkClanGamesMiscellaneous = 0, $g_hChkForceBBAttackOnClanGames = 0
-global $g_hChkClanGamesSpell = 0, $g_hChkClanGamesBBTroops = 0
+Global $g_hChkClanGamesSpell = 0, $g_hChkClanGamesBBTroops = 0
 Global $g_hChkClanGamesBBBattle = 0, $g_hChkClanGamesBBDestruction = 0, $g_hChkClanGamesPurgeAny = 0
 Global $g_hChkClanGamesPurge = 0 , $g_hcmbPurgeLimit = 0 , $g_hChkClanGamesStopBeforeReachAndPurge = 0
 Global $g_hTxtClanGamesLog = 0
@@ -12874,6 +12874,16 @@ Global $g_ahCmbCGGroundTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hBtnCGBBTroop = 0, $g_hGUI_CGBBTroops = 0, $g_hBtnCGBBTroopsSet = 0, $g_hBtnCGBBTroopsRemove = 0, $g_hBtnCGBBTroopsClose = 0, $g_sTxtCGBBTroop
 Global $g_aCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_hChkClanGamesLoot = 0 , $g_hChkClanGamesBattle =0 , $g_hChkClanGamesDestruction = 0 , $g_hChkClanGamesAirTroop = 0 , $g_hChkClanGamesGroundTroop = 0 , $g_hChkClanGamesMiscellaneous = 0, $g_hChkForceBBAttackOnClanGames = 0
+Global $g_hChkClanGamesSpell = 0, $g_hChkClanGamesBBTroops = 0
+Global $g_hChkClanGamesBBBattle = 0, $g_hChkClanGamesBBDestruction = 0, $g_hChkClanGamesPurgeAny = 0
+Global $g_hChkClanGamesPurge = 0 , $g_hcmbPurgeLimit = 0 , $g_hChkClanGamesStopBeforeReachAndPurge = 0
+Global $g_hTxtClanGamesLog = 0
+Global $g_hChkClanGamesDebug = 0
+Dim $aControlTabClaGames = [$g_hChkClanGamesLoot, $g_hChkClanGamesBattle, $g_hChkClanGamesDestruction, $g_hChkClanGamesAirTroop, $g_hChkClanGamesGroundTroop, $g_hChkClanGamesMiscellaneous, $g_hChkForceBBAttackOnClanGames, $g_hChkClanGamesSpell, $g_hChkClanGamesBBTroops, $g_hChkClanGamesBBBattle, $g_hChkClanGamesBBDestruction, $g_hChkClanGamesPurgeAny, $g_hChkClanGamesPurge, $g_hChkClanGamesStopBeforeReachAndPurge]
+For $i in $aControlTabClaGames
+GUICtrlSetState($i, $GUI_DISABLE)
+Next
 Func CreateVillageMisc()
 $g_hGUI_MISC = _GUICreate("", $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_VILLAGE)
 GUISwitch($g_hGUI_MISC)
@@ -30068,15 +30078,20 @@ GUICtrlSetState($g_hChkClanGamesMiscellaneous, $GUI_DISABLE)
 GUICtrlSetState($g_hChkClanGamesSpell, $GUI_DISABLE)
 GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE)
 GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_DISABLE)
+GUICtrlSetState($g_hChkClanGamesBBTroops, $GUI_DISABLE)
 GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_DISABLE)
 GUICtrlSetState($g_hChkClanGamesPurgeAny, $GUI_DISABLE)
 GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $GUI_DISABLE)
 GUICtrlSetState($g_hcmbPurgeLimit, $GUI_DISABLE)
 GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
+GUICtrlSetState($g_hBtnCGBBTroop, $GUI_DISABLE)
+GUICtrlSetState($g_hBtnCGGroundTroop, $GUI_DISABLE)
+GUICtrlSetState($g_hBtnCGAirTroop, $GUI_DISABLE)
 EndIf
 chkClanGamesBB()
 EndFunc
 Func chkClanGamesBB()
+If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
 If GUICtrlRead($g_hChkClanGamesBBBattle) = $GUI_CHECKED or GUICtrlRead($g_hChkClanGamesBBDestruction) = $GUI_CHECKED Then
 GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
 Else
@@ -30087,9 +30102,14 @@ $g_bChkForceBBAttackOnClanGames = True
 Else
 $g_bChkForceBBAttackOnClanGames = False
 EndIf
+ElseIf GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_UNCHECKED Then
+GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE)
+GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_DISABLE)
+EndIf
 EndFunc
 Func chkPurgeLimits()
-If GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED AND GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
+If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
+If GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED Then
 GUICtrlSetState($g_hcmbPurgeLimit, $GUI_ENABLE)
 GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE)
 GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_DISABLE)
@@ -30097,6 +30117,7 @@ Else
 GUICtrlSetState($g_hcmbPurgeLimit, $GUI_DISABLE)
 GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_ENABLE)
 GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_ENABLE)
+EndIf
 EndIf
 EndFunc
 Func btnCGAirTroops()
@@ -66551,6 +66572,7 @@ If $aiScoreLimit = -1 Or UBound($aiScoreLimit) <> 2 Then Return
 If $g_bChkClanGamesDebug Then Setlog("_ClanGames GetTimesAndScores (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 $hTimer = TimerInit()
 SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
+Local $sTimeCG
 If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 SetLog("Your score limit is reached! Congrats")
 ClickAway()
@@ -66559,7 +66581,7 @@ ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
 SetLog("Your Score limit is almost reached")
 If $g_bChkClanGamesStopBeforeReachAndPurge Then
 If IsEventRunning() Then Return
-Local $sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
+$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
 Setlog("Clan Games Minute Remain: " & $sTimeCG)
 If $g_bChkClanGamesPurgeAny And $sTimeCG > 2400 Then
 SetLog("Stop before completing your limit and only Purge")
@@ -66575,6 +66597,7 @@ If CooldownTime() Then Return
 If $g_bChkClanGamesDebug Then Setlog("_ClanGames CooldownTime (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 $hTimer = TimerInit()
 If Not $g_bRunState Then Return
+If IsEventRunning() Then Return
 If $g_bChkClanGamesDebug Then Setlog("_ClanGames IsEventRunning (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 $hTimer = TimerInit()
 If Not $g_bRunState Then Return
@@ -66600,7 +66623,6 @@ Else
 Setlog("ClanGames-Error on $HowManyImages: " & @error)
 Return
 EndIf
-If IsEventRunning() Then Return
 Local $aAllDetectionsOnScreen[0][4]
 Local $sClanGamesWindow = GetDiamondFromRect("300,155,765,550")
 Local $aCurrentDetection = findMultiple($sTempPath, $sClanGamesWindow, $sClanGamesWindow, 0, 1000, 0, "objectname,objectpoints", True)
@@ -66824,8 +66846,6 @@ If IsDeclared("aTempSelectChallenges") Then
 If UBound($aTempSelectChallenges) > 0 Then
 SetDebugLog("$aTempSelectChallenges: " & _ArrayToString($aTempSelectChallenges))
 _ArraySort($aTempSelectChallenges, 0, 0, 0, 3)
-Local $sBBName = StringSplit($aTempSelectChallenges[0][0], " ")
-If $sBBName[0] = "BB" Then $g_bIsBBevent = True
 Setlog("Next Event will be " & $aTempSelectChallenges[0][0] & " to make in " & $aTempSelectChallenges[0][4] & " min.")
 $sEventName = $aTempSelectChallenges[0][0]
 Click($aTempSelectChallenges[0][1], $aTempSelectChallenges[0][2])
@@ -66848,14 +66868,17 @@ EndIf
 EndIf
 Return
 EndIf
-If $g_bChkClanGamesPurgeAny And $sTimeCG > 2400 Then
-SetLog("Stop before completing your limit and only Purge")
+If $g_bChkClanGamesPurgeAny Then
+SetLog("Still have to purge, because no enabled event on setting found", $COLOR_WARNING)
 SetLog("No Event found, lets purge 1 most top event", $COLOR_WARNING)
 ForcePurgeEvent()
-EndIf
+ClickAway()
+If _Sleep(1000) Then Return
+Else
 SetLog("No Event found, Check your settings", $COLOR_WARNING)
 ClickAway()
 If _Sleep(2000) Then Return
+EndIf
 EndFunc
 Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 If $sImageType = Default Then Return
