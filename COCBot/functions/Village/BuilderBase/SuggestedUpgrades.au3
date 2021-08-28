@@ -153,7 +153,7 @@ Func AutoUpgradeBB($bTest = False)
 			;upgrade wall first if to prevent Gold Storage become Full when BH is already Maxed
 			If $g_bisBHMaxed And $g_bGoldStorageFullBB And $g_bisMegaTeslaMaxed Then
 				; scroll down to bottom as wall will be on below
-				If QuickMIS("BC1", $g_sImgAutoUpgradeWindow, 330, 85, 550, 145, True, False) Then
+				If QuickMIS("BC1", $g_sImgAutoUpgradeWindow, 330, 85, 550, 145, True, $bDebug) Then
 					ClickDrag(333, 320, 333, 0, 1000);do scroll down
 					If _Sleep(2000) Then Return
 				EndIf

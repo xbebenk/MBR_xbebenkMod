@@ -355,7 +355,9 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $g_bChkForceBBAttackOnClanGames ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesPurgeAny, $g_bChkClanGamesPurgeAny ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesSpell, $g_bChkClanGamesSpell ? $GUI_CHECKED : $GUI_UNCHECKED)
-
+			For $i = 0 To UBound($g_aCmbCGSpells) - 1
+				_GUICtrlComboBox_SetCurSel($g_ahCmbCGSpells[$i], $g_aCmbCGSpells[$i])
+			Next
 			GUICtrlSetState($g_hChkClanGamesDestruction, $g_bChkClanGamesDestruction ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesAirTroop, $g_bChkClanGamesAirTroop ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $i = 0 To UBound($g_aCmbCGAirTroops) - 1
@@ -459,7 +461,9 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkForceBBAttackOnClanGames = (GUICtrlRead($g_hChkForceBBAttackOnClanGames) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesPurgeAny = (GUICtrlRead($g_hChkClanGamesPurgeAny) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesSpell = (GUICtrlRead($g_hChkClanGamesSpell) = $GUI_CHECKED) ? 1 : 0
-
+			For $i = 0 To UBound($g_ahCmbCGSpells) - 1
+				$g_aCmbCGSpells[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGSpells[$i])
+			Next
 			$g_bChkClanGamesDestruction = (GUICtrlRead($g_hChkClanGamesDestruction) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesAirTroop = (GUICtrlRead($g_hChkClanGamesAirTroop) = $GUI_CHECKED) ? 1 : 0
 			For $i = 0 To UBound($g_ahCmbCGAirTroops) - 1

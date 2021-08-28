@@ -457,6 +457,17 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 	CheckRedrawBotWindow(Default, Default, "GUIControl_WM_COMMAND")
 	
 	Switch $nID
+		Case $g_hTxtRunFunction
+			Local $Focused
+			$Focused = ControlGetFocus($hWind)
+			If $Focused = "Edit15" Then
+				HotKeySet("{enter}", "btnRunFunction")
+				;SetDebugLog("inputRunFunction Focused", Default, True)
+			Else
+				HotKeySet("{enter}")
+				;SetDebugLog("inputRunFunction not Focused: " & $Focused, Default, True)
+			EndIf
+			
 		Case $g_hDivider
 			;MoveDivider()
 			$g_bMoveDivider = True

@@ -78,7 +78,7 @@ Global $g_iVILLAGE_OFFSET[3] = [0, 0, 1]
 ; <><><><><><><><><><><><><><><><><><>
 ; <><><><> debug flags <><><><>
 ; <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-Global $g_bDebugSetlog = True ; Verbose log messages, or extra log messages most everywhere
+Global $g_bDebugSetlog = False ; Verbose log messages, or extra log messages most everywhere
 Global $g_bDebugAndroid = False ; Debug Android
 Global $g_bDebugClick = False ; Debug Bot Clicks and when docked, display current mouse position and RGB color
 Global $g_bDebugFuncTime = False ; Log Function execution time (where implemented)

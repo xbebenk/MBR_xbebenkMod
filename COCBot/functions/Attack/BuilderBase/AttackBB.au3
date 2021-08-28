@@ -19,13 +19,20 @@ Func DoAttackBB()
 	For $i = 1 To $g_iBBAttackCount
 		If PrepareAttackBB() Then
 			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
-			SetLog("Attack #" & $i, $COLOR_INFO)
+			SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
 			AttackBB()
+			For $i = 0 To 4
+				_Sleep(1000)
+				If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
+					SetLog("Nice, Game Completed", $COLOR_INFO)
+					ExitLoop 2
+				Endif
+			Next
 			If $g_bRestart = True Then Return
 			If _Sleep($DELAYRUNBOT3) Then Return
 			If checkObstacles(True) Then Return
 		Else
-			SetLog("Cannot Attack this time..", $COLOR_DEBUG)
+			SetLog("Not Attack this time..", $COLOR_DEBUG)
 			ClickAway()
 			ExitLoop
 		Endif
@@ -215,7 +222,6 @@ Func DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
 	; place hero first and activate ability
 	If $g_bBBMachineReady And Not $bBMDeployed Then SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 	While Not $bBMDeployed And $g_bBBMachineReady
-		$aBMPos = GetMachinePos()
 		If IsArray($aBMPos) Then
 			PureClickP($aBMPos)
 			local $iPoint = Random(0, 9, 1)
@@ -223,6 +229,10 @@ Func DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
 				PureClick($g_apTR[$iPoint][0], $g_apTR[$iPoint][1])
 			Else
 				PureClick($g_apTL[$iPoint][0], $g_apTL[$iPoint][1])
+			EndIf
+			If $g_bChkBBDropBMFirst = True Then 
+				$bBMDeployed = True
+				ExitLoop ;no need to activate BM ability if deployed first
 			EndIf
 			If _Sleep(1000) Then ; wait before clicking ability
 				$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast

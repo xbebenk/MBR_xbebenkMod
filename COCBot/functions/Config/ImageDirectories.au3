@@ -89,6 +89,7 @@ Global $g_sImgArmyReady = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyReady"
 Global $g_sImgArmyNeedTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyNeedTrain"
 Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\BBTroops"
 Global $g_sImgBBLootAvail = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\LootAvail_0_90.xml"
+Global $g_sImgBBLoot = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\"
 #EndRegion
 
 #Region DonateCC
@@ -184,6 +185,7 @@ Global Const $g_sImgTrashPurge = 	@ScriptDir & "\imgxml\Resources\ClanGamesImage
 Global Const $g_sImgOkayPurge = 	@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Okay"
 Global Const $g_sImgReward = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward"
 Global Const $g_sImgWindow = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Window"
-Global Const $g_sImageCGC  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges\"
-
+Global Const $g_sImgBorder = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Border"
+Global Const $g_sImgGameComplete = 	@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\GameComplete"
+Global Const $g_sImageCGC  = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges\"
 #EndRegion

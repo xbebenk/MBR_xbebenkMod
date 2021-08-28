@@ -683,6 +683,12 @@ Func chkActivateClangames()
 		
 		GUICtrlSetState($g_hChkClanGamesMiscellaneous, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesSpell, $GUI_ENABLE)
+		If GUICtrlRead($g_hChkClanGamesSpell) = $GUI_CHECKED Then 
+			GUICtrlSetState($g_hBtnCGSpell, $GUI_ENABLE)
+		Else
+			GUICtrlSetState($g_hBtnCGSpell, $GUI_DISABLE)
+		EndIf
+		
 		GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_ENABLE)
@@ -716,6 +722,7 @@ Func chkActivateClangames()
 		GUICtrlSetState($g_hBtnCGBBTroop, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnCGGroundTroop, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnCGAirTroop, $GUI_DISABLE)
+		GUICtrlSetState($g_hBtnCGSpell, $GUI_DISABLE)
 		
 	EndIf
 	chkClanGamesBB()
@@ -826,6 +833,44 @@ Func BtnCGGroundTroopsRemove()
 		_GUICtrlComboBox_SetCurSel($g_ahCmbCGGroundTroops[$i], -1)
 	Next
 EndFunc
+
+
+Func btnCGSpells()
+	GUISetState(@SW_SHOW, $g_hGUI_CGSpells)
+EndFunc
+
+Func CloseCGSpells()
+	GUISetState(@SW_HIDE, $g_hGUI_CGSpells)
+EndFunc
+
+Func GUI_CGSpells()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	For $i = 0 To UBound($g_ahCmbCGSpells) - 1 ; check for duplicate combobox index and flag problem
+		If $iGUI_CtrlId = $g_ahCmbCGSpells[$i] Then ContinueLoop
+		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGSpells[$i]) Then
+			_GUICtrlComboBox_SetCurSel($g_ahCmbCGSpells[$i], -1)
+			GUISetState()
+		EndIf
+	Next
+EndFunc
+
+Func btnSetCGSpells()
+	Local $d
+	SetLog("Set Enabled ClanGames Ground Troops",$COLOR_SUCCESS)
+	For $i = 0 To UBound($g_ahCmbCGSpells) - 1
+		$g_aCmbCGSpells[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGSpells[$i])
+		$d = $g_aCmbCGSpells[$i]
+		If $d = -1 Then ContinueLoop
+		SetLog($i+1 & " : " & $g_sGroundTroopShortName[$d], $COLOR_SUCCESS)
+	Next
+EndFunc
+
+Func BtnCGSpellsRemove()
+	For $i = 0 To UBound($g_ahCmbCGSpells) - 1
+		_GUICtrlComboBox_SetCurSel($g_ahCmbCGSpells[$i], -1)
+	Next
+EndFunc
+
 
 
 Func btnCGBBTroops()

@@ -80,17 +80,14 @@ Func ClickAttack()
 EndFunc
 
 Func CheckLootAvail()
-	local $aCoords = decodeSingleCoord(findImage("BBLootAvail_bmp", $g_sImgBBLootAvail, GetDiamondFromRect("210,622,658,721"), 1, True))
 	local $bRet = False
-
-	If IsArray($aCoords) And UBound($aCoords) = 2 Then
-		$bRet = True
+	If QuickMIS("BC1", $g_sImgBBLoot, 430, 580, 650, 690, True, False) Then
 		SetLog("Loot is Available.")
+		$bRet = True
 	Else
 		SetLog("No loot available.")
 		If $g_bDebugImageSave Then SaveDebugImage("CheckLootAvail")
 	EndIf
-
 	Return $bRet
 EndFunc
 

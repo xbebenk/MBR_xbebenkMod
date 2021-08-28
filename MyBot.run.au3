@@ -1210,10 +1210,6 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
-				If $g_bChkForceBBAttackOnClanGames And $g_bChkClanGamesEnabled And Not $g_bIsBBevent Then
-					;we need to check again if the running challenge on clangames is BB event
-					If Not $g_bIsBBevent Then IsEventRunning(True)
-				EndIf
 				BuilderBase()
 			EndIf
 			_Sleep($DELAYRUNBOT3)
