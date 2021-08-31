@@ -1230,6 +1230,7 @@ EndFunc   ;==>__RunFunction
 Func FirstCheck()
 
 	SetLog("-- FirstCheck Loop --")
+	checkMainScreen(False)
 	If Not $g_bRunState Then
 		GUICtrlSetState($g_hBtnControl, $GUI_HIDE)
 		Return
@@ -1264,10 +1265,8 @@ Func FirstCheck()
 	EndIf
 	;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-	VillageReport()
-
 	If Not $g_bRunState Then Return
-	_RunFunction('Collect')
+	VillageReport()
 	If BotCommand() Then btnStop()
 
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
@@ -1282,30 +1281,12 @@ Func FirstCheck()
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
 
-	;checkMainScreen(False)
-	Local $aRndFuncList = ['BoostSuperTroop','LabCheck', 'Laboratory','CleanYard']
-	For $Index In $aRndFuncList
-		If Not $g_bRunState Then Return
-		_RunFunction($Index)
-		If $g_bRestart Then ContinueLoop
-		If CheckAndroidReboot() Then ContinueLoop
-		If checkObstacles() Then ContinueLoop
-	Next
-	;checkMainScreen(False)
-	Local $aRndFuncList = ['RequestCC', 'UpgradeBuilding','UpgradeWall']
-	For $Index In $aRndFuncList
-		If Not $g_bRunState Then Return
-		_RunFunction($Index)
-		If $g_bRestart Then ContinueLoop
-		If CheckAndroidReboot() Then ContinueLoop
-		If checkObstacles() Then ContinueLoop
-	Next
-
-	PrepareDonateCC()
-	DonateCC()
+	
+	FirstCheckRoutine()
 
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
 		_RunFunction('BuilderBase')
+		TrainSystem()
 		checkSwitchAcc()
 	Endif
 
@@ -1335,6 +1316,22 @@ Func FirstCheck()
 	EndIf
 EndFunc   ;==>FirstCheck
 
+Func FirstCheckRoutine()
+	RequestCC(False)
+	checkArmyCamp(False)
+	PrepareDonateCC()
+	DonateCC()
+	
+	Local $aRndFuncList = ['CleanYard','LabCheck', 'Laboratory']
+	For $Index In $aRndFuncList
+		If Not $g_bRunState Then Return
+		_RunFunction($Index)
+		If _Sleep(50) Then Return
+		If $g_bRestart Then ExitLoop
+		If CheckAndroidReboot() Then ContinueLoop
+		If checkObstacles() Then ContinueLoop
+	Next
+EndFunc
 
 Func BuilderBase()
 	
@@ -1422,3 +1419,10 @@ Func TestBuilderBase()
 	EndIf
 
 EndFunc
+
+Func abc()
+	PrepareAttack($g_iMatchMode)
+	Attack()
+EndFunc
+
+
