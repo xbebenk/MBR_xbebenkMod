@@ -76,12 +76,17 @@ Func CollectFreeMagicItems($bTest = False)
 		ElseIf $aResults[$i] = "" Then
 			$aResults[$i] = "N/A"
 		EndIf
-
 		If Not $g_bRunState Then Return
 	Next
-
+	
 	SetLog("Daily Discounts: " & $aResults[0] & " | " & $aResults[1] & " | " & $aResults[2])
 	SetLog("Nothing free to collect!", $COLOR_INFO)
+	
+	If QuickMIS("BC1", $g_sImgFree, 160, 430, 320, 485, True, False) Then
+		Click($g_iQuickMISX + 160, $g_iQuickMISY + 430, 1)
+		SetLog("Try Collect By Image, Success", $COLOR_SUCCESS)
+	EndIf
+	
 	ClickAway()
 	If _Sleep(1000) Then Return
 EndFunc   ;==>CollectFreeMagicItems
