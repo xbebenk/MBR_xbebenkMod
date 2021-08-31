@@ -42,20 +42,9 @@ Global $g_hLblRemainTime = 0 , $g_hLblYourScore = 0
 
 ;ClanGames Challenges
 Global $g_hBtnCGAirTroop = 0, $g_hGUI_CGAirTroops = 0, $g_hBtnCGAirTroopsSet = 0, $g_hBtnCGAirTroopsRemove = 0, $g_hBtnCGAirTroopsClose = 0, $g_sTxtCGAirTroop
-Global $g_aCmbCGAirTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbCGAirTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
 Global $g_hBtnCGGroundTroop = 0, $g_hGUI_CGGroundTroops = 0, $g_hBtnCGGroundTroopSet = 0, $g_hBtnCGGroundTroopRemove = 0, $g_hBtnCGGroundTroopClose = 0, $g_sTxtCGGroundTroop
-Global $g_aCmbCGGroundTroop[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbCGGroundTroop[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
 Global $g_hBtnCGSpell = 0, $g_hGUI_CGSpells = 0, $g_hBtnCGSpellsSet = 0, $g_hBtnCGSpellsRemove = 0, $g_hBtnCGSpellsClose = 0, $g_sTxtCGSpell
-Global $g_aCmbCGSpells[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbCGSpells[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
 Global $g_hBtnCGBBTroop = 0, $g_hGUI_CGBBTroops = 0, $g_hBtnCGBBTroopsSet = 0, $g_hBtnCGBBTroopsRemove = 0, $g_hBtnCGBBTroopsClose = 0, $g_sTxtCGBBTroop
-Global $g_aCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 
 Global $g_hChkClanGamesLoot = 0 , $g_hChkClanGamesBattle =0 , $g_hChkClanGamesDestruction = 0 , $g_hChkClanGamesAirTroop = 0 , $g_hChkClanGamesGroundTroop = 0 , $g_hChkClanGamesMiscellaneous = 0, $g_hChkForceBBAttackOnClanGames = 0

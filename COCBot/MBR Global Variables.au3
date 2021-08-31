@@ -1817,23 +1817,17 @@ Global $g_bChkClanGamesDebug = 0
 Global $g_iPurgeJobCount[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iPurgeMax = 5 ; [0] is unlimited , 1-10
 Global $g_bChkClanGamesPurgeAny = 0
-
 Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
-Global $g_hBtnCGAirTroop = 0, $g_hGUI_CGAirTroops = 0, $g_hBtnCGAirTroopsSet = 0, $g_hBtnCGAirTroopsRemove = 0, $g_hBtnCGAirTroopsClose = 0
 Global $g_aCmbCGAirTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahCmbCGAirTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_sTxtCGAirTroop = "Balloons|Healers|Dragons|Baby Dragons|Electro Dragon|Dragon Rider|Minions|Lava Hounds|Rocket Balloon|Inferno Dragon|Super Minion|Ice Hound|Battle Blimps|Stone Slammers"
-Global $g_sAirTroopShortName[14] = ["Ball", "Heal", "Drag", "BabyD", "EDrag", "RDrag", "Mini", "Lava", "RBall", "InfernoD", "SMini", "IceH", "BattleB", "StoneS"]
-
-Global $g_hBtnCGGroundTroop = 0, $g_hGUI_CGGroundTroops = 0, $g_hBtnCGGroundTroopsSet = 0, $g_hBtnCGGroundTroopsRemove = 0, $g_hBtnCGGroundTroopsClose = 0
 Global $g_aCmbCGGroundTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahCmbCGGroundTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_sTxtCGGroundTroop = "Barbarians|Super Barbarian|Archers|Super Archer|Giants|Super Giants|Goblins|Sneaky Goblin|Wall Breakers|Super WallBreaker|Wizards|Super Wizards|" & _ 
-					"Pekkas|Miners|Yeti|Hog Riders|Valkyrie|Super Valkyrie|Golems|Witches|Super Witch|Bowlers|Ice Golems|Headhunters|Wall Wreckers|Siege Barracks|Log Launcher"
-Global $g_sGroundTroopShortName[27] = ["Barb", "SBarb", "Arch", "SArch", "Giant", "SGiant", "Gobl", "SGobl", "Wall", "SWall", "Wiza", "SWiza", _ 
-					"Pekk", "Mine", "Yeti", "Hogs", "Valk", "SValk", "Gole", "Witc", "SWitc", "Bowl", "IceG", "Hunt", "WallW", "SiegeB", "LogL"]
+Global $g_aCmbCGSpells[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbCGSpells[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_aCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Collect Achievement Rewards
 Global $g_bChkCollectAchievements = True
