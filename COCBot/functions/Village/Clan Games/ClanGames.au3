@@ -22,82 +22,57 @@ Func _ClanGames($test = False)
 	; A user Log and a Click away just in case
 	ClickAway()
 	SetLog("Entering Clan Games", $COLOR_INFO)
-	If _Sleep(500) Then Return
 
 	; Local and Static Variables
 	Local $TabChallengesPosition[2] = [820, 130]
 	Local $sTimeRemain = "", $sEventName = "", $getCapture = True
 	Local Static $YourAccScore[8][2] = [[-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True]]
 
-	; Check for BS/CoC errors just in case
-	;If isProblemAffect(True) Then checkMainScreen(False)
-
 	; Initial Timer
 	Local $hTimer = TimerInit()
 
 	; Enter on Clan Games window
-	If Not IsClanGamesWindow() Then Return
-
-	If $g_bChkClanGamesDebug Then SetLog("_ClanGames IsClanGamesWindow (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
-	$hTimer = TimerInit()
-
-	; Let's get some information , like Remain Timer, Score and limit
-	Local $aiScoreLimit = GetTimesAndScores()
-	If $aiScoreLimit = -1 Or UBound($aiScoreLimit) <> 2 Then 
-		If IsEventRunning() Then ClickAway() ;need clickaway, as we are leaving function
-		Return
-	EndIf
-	
-	If $g_bChkClanGamesDebug Then Setlog("_ClanGames GetTimesAndScores (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
-	$hTimer = TimerInit()
-
-	; Small delay
-	;If _Sleep(1500) Then Return
-
-	SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
-	Local $sTimeCG
-	If $aiScoreLimit[0] = $aiScoreLimit[1] Then
-		SetLog("Your score limit is reached! Congrats")
-		ClickAway()
-		$g_bIsBBevent = False
-		Return
-	ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
-		SetLog("Your Score limit is almost reached")
-		If $g_bChkClanGamesStopBeforeReachAndPurge Then
-			If IsEventRunning() Then Return
-			$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
-			Setlog("Clan Games Minute Remain: " & $sTimeCG)
-			If $g_bChkClanGamesPurgeAny And $sTimeCG > 2400 Then ; purge, but not purge on last 2 day of clangames
-				SetLog("Stop before completing your limit and only Purge")
-				SetLog("Lets only purge 1 most top event", $COLOR_WARNING)
-				ForcePurgeEvent()
+	If IsClanGamesWindow() Then
+		; Let's get some information , like Remain Timer, Score and limit
+		Local $aiScoreLimit = GetTimesAndScores()
+		If $aiScoreLimit = -1 Or UBound($aiScoreLimit) <> 2 Then
+			ClickAway() ;need clickaway, as we are leaving function
+			Return
+		Else
+			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
+			Local $sTimeCG
+			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
+				SetLog("Your score limit is reached! Congrats")
 				ClickAway()
 				$g_bIsBBevent = False
 				Return
+			ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
+				SetLog("Your Score limit is almost reached")
+				If $g_bChkClanGamesStopBeforeReachAndPurge Then
+					If IsEventRunning() Then Return
+					$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
+					Setlog("Clan Games Minute Remain: " & $sTimeCG)
+					If $g_bChkClanGamesPurgeAny And $sTimeCG > 2400 Then ; purge, but not purge on last 2 day of clangames
+						SetLog("Stop before completing your limit and only Purge")
+						SetLog("Lets only purge 1 most top event", $COLOR_WARNING)
+						ForcePurgeEvent()
+						ClickAway()
+						$g_bIsBBevent = False
+						Return
+					EndIf
+				EndIf
 			EndIf
+			If $YourAccScore[$g_iCurAccount][0] = -1 Then $YourAccScore[$g_iCurAccount][0] = $aiScoreLimit[0]
 		EndIf
+	Else
+		Return
 	EndIf
-	If $YourAccScore[$g_iCurAccount][0] = -1 Then $YourAccScore[$g_iCurAccount][0] = $aiScoreLimit[0]
-	
-	If IsEventRunning() Then Return
-	
+
 	;check cooldown purge
 	If CooldownTime() Then Return
-
-	If $g_bChkClanGamesDebug Then Setlog("_ClanGames CooldownTime (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
-	$hTimer = TimerInit()
-
-	If Not $g_bRunState Then Return
-
-	If $g_bChkClanGamesDebug Then Setlog("_ClanGames IsEventRunning (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
-	$hTimer = TimerInit()
-
-	If Not $g_bRunState Then Return
-
-	If $g_bChkClanGamesDebug Then SetLog("Your TownHall Level is " & $g_iTownHallLevel)
-
-	; Check for BS/CoC errors just in case
-	;If isProblemAffect(True) Then checkMainScreen(False)
+	If Not $g_bRunState Then Return ;trap pause or stop bot
+	If IsEventRunning() Then Return
+	If Not $g_bRunState Then Return ;trap pause or stop bot
 
 	UpdateStats()
 
@@ -112,10 +87,10 @@ Func _ClanGames($test = False)
 	If $g_bChkClanGamesBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "B") ;B for Battle
 	If $g_bChkClanGamesDestruction Then ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
 	If $g_bChkClanGamesAirTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "A") ;A for AirTroops
-	If $g_bChkClanGamesGroundTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "G") ;G for AirTroops
+	If $g_bChkClanGamesGroundTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "G") ;G for GroundTroops
 
-	If $g_bChkClanGamesMiscellaneous Then FileCopy($sImagePath & "\M-*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
-    If $g_bChkClanGamesSpell Then FileCopy($sImagePath & "\S-*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+	If $g_bChkClanGamesMiscellaneous Then ClanGameImageCopy($sImagePath, $sTempPath, "M") ;M for Misc
+    If $g_bChkClanGamesSpell Then ClanGameImageCopy($sImagePath, $sTempPath, "S") ;S for GroundTroops
     If $g_bChkClanGamesBBBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "BBB") ;BBB for BB Battle
     If $g_bChkClanGamesBBDestruction Then ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
 	If $g_bChkClanGamesBBTroops Then ClanGameImageCopy($sImagePath, $sTempPath, "BBT") ;BBT for BB Troops
@@ -128,7 +103,7 @@ Func _ClanGames($test = False)
 		Return
 	EndIf
 
-	
+
 	; To store the detections
 	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis
 	Local $aAllDetectionsOnScreen[0][4]
@@ -472,7 +447,7 @@ Func _ClanGames($test = False)
 			SetDebugLog("$aTempSelectChallenges: " & _ArrayToString($aTempSelectChallenges))
 			; Sort by difficulties
 			_ArraySort($aTempSelectChallenges, 0, 0, 0, 3)
-			
+
 			Setlog("Next Event will be " & $aTempSelectChallenges[0][0] & " to make in " & $aTempSelectChallenges[0][4] & " min.")
 			; Select and Start EVENT
 			$sEventName = $aTempSelectChallenges[0][0]
@@ -499,7 +474,7 @@ Func _ClanGames($test = False)
 		EndIf
 		Return
 	EndIf
-	
+
 	$g_bIsBBevent = False
 	If $g_bChkClanGamesPurgeAny Then ; still have to purge, because no enabled event on setting found
 		SetLog("Still have to purge, because no enabled event on setting found", $COLOR_WARNING)
@@ -518,10 +493,11 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 	If $sImageType = Default Then Return
 	Switch $sImageType
 		Case "A"
+			Local $AirTroopChallenges = ClanGamesChallenges("$AirTroopChallenges")
 			For $i = 0 To UBound($g_aCmbCGAirTroops) - 1
 				If $g_aCmbCGAirTroops[$i] >= 0 Then
-					SetDebugLog("[" & $i & "]" & "Copy File: " & $g_sAirTroopShortName[$g_aCmbCGAirTroops[$i]])
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $g_sAirTroopShortName[$g_aCmbCGAirTroops[$i]] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+					SetDebugLog("[" & $i & "]" & "Copy File: " & $AirTroopChallenges[$g_aCmbCGAirTroops[$i]][0])
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $AirTroopChallenges[$g_aCmbCGAirTroops[$i]][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "G"
@@ -547,47 +523,60 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 EndFunc ;==>ClanGameImageCopy
 
 Func IsClanGamesWindow($getCapture = True)
-	Local $aGameTime[4] = [384, 388, 0xFFFFFF, 10]
-	;checkMainScreen(False)
+	Local $sState, $bRet
+
 	If QuickMIS("BC1", $g_sImgCaravan, 230, 55, 330, 155, $getCapture, False) Then
 		SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
 		Click($g_iQuickMISX + 230, $g_iQuickMISY + 55)
 		; Just wait for window open
 		If _Sleep(2000) Then Return
-		
-		If QuickMIS("BC1", $g_sImgReward, 580, 480, 830, 570, $getCapture, False) Then
-			SetLog("Your Reward is Ready", $COLOR_INFO)
-			ClickAway()
-			If _Sleep(100) Then Return
-			Return False
-		EndIf
-		
-		If _CheckPixel($aGameTime, True) Then
-			Local $sTimeRemain = getOcrTimeGameTime(380, 461) ; read Clan Games waiting time
-			SetLog("Clan Games will start in " & $sTimeRemain, $COLOR_INFO)
-			$g_sClanGamesTimeRemaining = $sTimeRemain
-			ClickAway()
-			If _Sleep(100) Then Return
-			Return False
-		EndIf
-		
-		If QuickMIS("BC1", $g_sImgWindow, 70, 100, 150, 150, $getCapture, False) Then
-			SetDebugLog("Window Opened", $COLOR_DEBUG)
-			Return True
-		EndIf
-		
+		$sState = IsClanGamesRunning()
+		Switch $sState
+			Case "prepare"
+				$bRet = False
+			Case "running"
+				$bRet = True
+			Case "end"
+				$bRet = False
+		EndSwitch
 	Else
 		SetLog("Caravan not available", $COLOR_WARNING)
-		ClickAway()
-		Return False
+		$bRet = False
 	EndIf
 
-	If _Sleep(300) Then Return
-	Return True
+	If $bRet = False Then
+		$g_bIsBBevent = False ;set isBBevent to false, since clangames is not running (prevent force attack on BB)
+		ClickAway()
+	EndIf
+	Return $bRet
 EndFunc   ;==>IsClanGamesWindow
 
+Func IsClanGamesRunning($getCapture = True) ;to check whether clangames current state, return string of the state "prepare" "running" "end"
+	Local $aGameTime[4] = [384, 388, 0xFFFFFF, 10]
+	Local $sState = "running"
+	If QuickMIS("BC1", $g_sImgWindow, 70, 100, 150, 150, $getCapture, False) Then
+			SetLog("Window Opened", $COLOR_DEBUG)
+
+			If QuickMIS("BC1", $g_sImgReward, 580, 480, 830, 570, $getCapture, False) Then
+				SetLog("Your Reward is Ready", $COLOR_INFO)
+				$sState = "end"
+			EndIf
+
+			If _CheckPixel($aGameTime, True) Then
+				Local $sTimeRemain = getOcrTimeGameTime(380, 461) ; read Clan Games waiting time
+				SetLog("Clan Games will start in " & $sTimeRemain, $COLOR_INFO)
+				$g_sClanGamesTimeRemaining = $sTimeRemain
+				$sState = "prepare"
+			EndIf
+		Else
+			SetLog("Clan Games Window Not Opened", $COLOR_DEBUG)
+			Return False
+		EndIf
+	Return $sState
+EndFunc ;==>IsClanGamesRunning
+
 Func GetTimesAndScores()
-	Local $iRestScore = -1, $sYourGameScore = "", $aiScoreLimit, $sTimeRemain
+	Local $iRestScore = -1, $sYourGameScore = "", $aiScoreLimit, $sTimeRemain = 0
 
 	;Ocr for game time remaining
 	$sTimeRemain = StringReplace(getOcrTimeGameTime(55, 470), " ", "") ; read Clan Games waiting time
@@ -595,11 +584,10 @@ Func GetTimesAndScores()
 	;Check if OCR returned a valid timer format
 	If Not StringRegExp($sTimeRemain, "([0-2]?[0-9]?[DdHhSs]+)", $STR_REGEXPMATCH, 1) Then
 		SetLog("getOcrTimeGameTime(): no valid return value (" & $sTimeRemain & ")", $COLOR_ERROR)
-		Return -1
 	EndIf
 
 	SetLog("Clan Games time remaining: " & $sTimeRemain, $COLOR_INFO)
-	
+
 	; This Loop is just to check if the Score is changing , when you complete a previous events is necessary to take some time
 	For $i = 0 To 10
 		$sYourGameScore = getOcrYourScore(45, 530) ;  Read your Score
@@ -677,7 +665,7 @@ Func IsEventRunning($bOpenWindow = False)
 
 			;check again if Challenge is BB Challenge, enabling force BB attack
 			If $g_bChkForceBBAttackOnClanGames Then
-				
+
 				;$aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*", $sRunningeventRect, 1, True, Default))
 				;If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
 				If IsBBChallenge(340, 200) Then
@@ -894,11 +882,11 @@ EndFunc   ;==>GetEventInformation
 
 
 Func IsBBChallenge($x = Default, $y = Default)
-	
+
 	Local $BorderX[4] = [292, 418, 546, 669]
-	Local $BorderY[3] = [205, 363, 520]	
+	Local $BorderY[3] = [205, 363, 520]
 	Local $iColumn, $iRow, $bReturn
-	
+
 	Switch $x
 		Case $BorderX[0] To $BorderX[1]
 			$iColumn = 1
@@ -909,7 +897,7 @@ Func IsBBChallenge($x = Default, $y = Default)
 		Case Else
 			$iColumn = 4
 	EndSwitch
-	
+
 	Switch $y
 		Case $BorderY[0]-50 To $BorderY[1]-50
 			$iRow = 1
@@ -918,7 +906,7 @@ Func IsBBChallenge($x = Default, $y = Default)
 		Case Else
 			$iRow = 3
 	EndSwitch
-	
+
 	SetLog("Row:" & $iRow & " Column:" & $iColumn, $COLOR_DEBUG)
 	For $y = 0 To 2
 		If $g_bChkClanGamesDebug Then SetLog(" ")
@@ -1090,11 +1078,11 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
     Local $BBBattleChallenges[4][5] = [ _
             ["StarM",					"BB Star Master",				2,  1, 1], _ ; Earn 6 - 24 stars on the BB
             ["Victories",				"BB Victories",					2,  5, 1], _ ; Earn 3 - 6 victories on the BB
-			["StarTimed",				"BB Star Timed",				2,  2, 1], _ 
+			["StarTimed",				"BB Star Timed",				2,  2, 1], _
             ["Destruction",				"BB Destruction",				2,  1, 1]] ; Earn 225% - 900% on BB attacks
 
 	Local $BBDestructionChallenges[10][5] = [ _
-            ["Airbomb",					"BB Air Bomb",                  2,  1, 1], _ 
+            ["Airbomb",					"BB Air Bomb",                  2,  1, 1], _
             ["Cannon",                 	"BB Cannon",                  	2,  1, 1], _
             ["DoubleCannon",         	"BB Double Cannon",             2,  1, 1], _
 			["FireCrackers",         	"BB FireCrackers",              2,  1, 1], _
@@ -1103,7 +1091,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["MultiMortar",             "BB MultiMortar",               2,  1, 1], _
 			["StarLab",                 "BB StarLab",                  	2,  1, 1], _
 			["BuildingDes",             "BB Building Destruction",		2,  1, 1], _
-			["WallDes",             	"BB Wall Whacker",              2,  1, 1]] 
+			["WallDes",             	"BB Wall Whacker",              2,  1, 1]]
 
 	Local $BBTroopsChallenges[11][5] = [ _
             ["RBarb",					"Raged Barbarian",              2,  1, 1], _ ;BB Troops
