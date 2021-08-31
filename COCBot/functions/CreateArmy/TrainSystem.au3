@@ -561,24 +561,17 @@ EndFunc   ;==>DeleteInvalidTroopInArray
 Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's a Low Opacity red color on them
 	;Local Const $DecreaseBy = 70
 	;Local $x = 834
-
-	Local Const $y = 186, $yRemoveBtn = 200, $xDecreaseRemoveBtn = 10
-	Local $bColorCheck = False, $bGotRemoved = False
-	For $x = 834 To 58 Step -70
-		If Not $g_bRunState Then Return
-		$bColorCheck = _ColorCheck(_GetPixelColor($x, $y, True), Hex(0xD7AFA9, 6), 20)
-		If $bColorCheck Then
-			$bGotRemoved = True
-			Do
-				Click($x - $xDecreaseRemoveBtn, $yRemoveBtn, 2, $g_iTrainClickDelay)
-				If _Sleep(20) Then Return
-				$bColorCheck = _ColorCheck(_GetPixelColor($x, $y, True), Hex(0xD7AFA9, 6), 20)
-			Until $bColorCheck = False
-
-		ElseIf Not $bColorCheck And $bGotRemoved Then
-			ExitLoop
-		EndIf
-	Next
+	
+	Local $IsButtonExist = False
+	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215, True, False)
+	While $IsButtonExist
+		For $i = 1 To 3
+			Click($g_iQuickMISX + 805, $g_iQuickMISX + 180, 20)
+			If Not $g_bRunState Then Return
+			If _Sleep(500) Then Return
+		Next
+		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215, True, False)
+	Wend
 
 	Return True
 EndFunc   ;==>RemoveExtraTroopsQueue
@@ -1107,15 +1100,26 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 		Return
 	EndIf
 	If _Sleep(500) Then Return
-	Local $x = 0
-
-	While Not _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20) ; check gray background at 1st training slot
-		If $x = 0 Then SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
-		If Not $g_bRunState Then Return
-		Click($iOffsetQueued + 24, 202, 10, 50)
-		$x += 1
-		If $x = 270 Then ExitLoop
-	WEnd
+	
+	Local $IsButtonExist = False
+	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215, True, False)
+	While $IsButtonExist
+		For $i = 1 To 3
+			Click($g_iQuickMISX + 805, $g_iQuickMISX + 180, 20)
+			If Not $g_bRunState Then Return
+			If _Sleep(500) Then Return
+		Next
+		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215, True, False)
+	Wend
+	
+	;Local $x = 0
+	;While Not _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20) ; check gray background at 1st training slot
+	;	If $x = 0 Then SetLog(" - Delete " & $sArmyTypeQueued & " Queued!", $COLOR_INFO)
+	;	If Not $g_bRunState Then Return
+	;	Click($iOffsetQueued + 24, 202, 10, 50)
+	;	$x += 1
+	;	If $x = 270 Then ExitLoop
+	;WEnd
 EndFunc   ;==>DeleteQueued
 
 Func MakingDonatedTroops($sType = "All")
