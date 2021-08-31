@@ -1590,10 +1590,12 @@ Func ApplyConfig_600_29_DB_SmartFarm($TypeReadSave)
 			GUICtrlSetData($g_hTxtInsidePercentage, $g_iTxtInsidePercentage)
 			GUICtrlSetData($g_hTxtOutsidePercentage, $g_iTxtOutsidePercentage)
 			GUICtrlSetState($g_hChkDebugSmartFarm, $g_bDebugSmartFarm ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hCmbMaxAttackSide, $g_iCmbMaxAttackSide)
 		Case "Save"
 			$g_iTxtInsidePercentage = GUICtrlRead($g_hTxtInsidePercentage)
 			$g_iTxtOutsidePercentage = GUICtrlRead($g_hTxtOutsidePercentage)
 			$g_bDebugSmartFarm = (GUICtrlRead($g_hChkDebugSmartFarm) = $GUI_CHECKED)
+			$g_iCmbMaxAttackSide = GUICtrlRead($g_hCmbMaxAttackSide)
 	EndSwitch
 EndFunc
 

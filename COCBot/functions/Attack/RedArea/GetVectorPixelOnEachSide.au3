@@ -39,7 +39,10 @@
 ;~ EndFunc   ;==>GetVectorPixelOnEachSide
 
 Func GetVectorPixelOnEachSide2($arrPixel, $vectorDirection, $slotsPerEdge)
-	; $vectorDirection = 0 than is Xaxis , $vectorDirection = 1 than is Yaxis
+	; $vectorDirection = 0 than is Xaxis , $vectorDirection = 1 than is Yaxis	
+	Local $minAdd = Random(0, Ceiling(($slotsPerEdge / 100) * 20), 1)
+	$slotsPerEdge += $minAdd
+	
 	Local $vectorPixelEachSide[$slotsPerEdge]
 	If (UBound($arrPixel) > 1) Then
 		Local $pixelSearch[2] = [-1, -1]
@@ -58,7 +61,10 @@ Func GetVectorPixelOnEachSide2($arrPixel, $vectorDirection, $slotsPerEdge)
 			If $g_bDebugSmartFarm Then Setlog("Deploy point Closer[" & $i + 1 & "] at: " & _ArrayToString($arrPixelCloser[0]))
 			$vectorPixelEachSide[$i] = $arrPixelCloser[0]
 		Next
-
+	EndIf
+	
+	If IsArray($vectorPixelEachSide) Then
+		_ArrayShuffle($vectorPixelEachSide)
 	EndIf
 	Return $vectorPixelEachSide
 EndFunc   ;==>GetVectorPixelOnEachSide2

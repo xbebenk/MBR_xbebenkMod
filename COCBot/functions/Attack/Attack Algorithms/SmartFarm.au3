@@ -43,6 +43,7 @@ Func TestSmartFarm()
 	$g_bAttackActive = True
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
 	Local $Nside = ChkSmartFarm()
+	
 	AttackSmartFarm($Nside[1], $Nside[2])
 	$g_bAttackActive = False
 
@@ -99,7 +100,9 @@ Func ChkSmartFarm($TypeResources = "All")
 				For $t = 0 To 5 ; Fill the variables
 					$aResourcesOUT[UBound($aResourcesOUT) - 1][$t] = $aAll[$x][$t]
 				Next
+				
 			EndIf
+			
 			Switch $aAll[$x][4]
 				Case "TL"
 					$aMainSide[0] += 1
@@ -110,11 +113,12 @@ Func ChkSmartFarm($TypeResources = "All")
 				Case "BR"
 					$aMainSide[3] += 1
 			EndSwitch
+			
 		EndIf
 		If _Sleep(50) Then Return ; just in case on PAUSE
 		If Not $g_bRunState Then Return ; Stop Button
 	Next
-
+	
 	If $g_bDebugSmartFarm Then
 		For $i = 0 To UBound($aResourcesIN) - 1
 			For $x = 0 To 4
@@ -158,14 +162,26 @@ Func ChkSmartFarm($TypeResources = "All")
 	Local $Sides[4] = ["TL", "TR", "BL", "BR"]
 	Local $SidesExt[4] = ["Top-Left", "Top-Right", "Bottom-Left", "Bottom-Right"]
 	Local $aHowManySides[0]
-
-	For $i = 0 To 3
-		If $aMainSide[$i] >= $OneSide Or ($Percentage_Out > $PercentageOutSide And $aMainSide[$i] <> 0) Then
+	
+	SetLog("aMainSideTL: " & $aMainSide[0], $COLOR_SUCCESS)
+	SetLog("aMainSideTR: " & $aMainSide[1], $COLOR_SUCCESS)
+	SetLog("aMainSideBL: " & $aMainSide[2], $COLOR_SUCCESS)
+	SetLog("aMainSideBR: " & $aMainSide[3], $COLOR_SUCCESS)
+	Local $iTL = $aMainSide[0], $iTR = $aMainSide[1], $iBL = $aMainSide[2], $iBR = $aMainSide[3]
+	Local $sSideiSide[4][2] = [ _
+			["TL", $aMainSide[0]], _
+			["TR", $aMainSide[1]], _
+			["BL", $aMainSide[2]], _
+			["BR", $aMainSide[3]]]
+	_ArraySort($sSideiSide, 1, 0, 0, 1)
+		
+	For $i = 0 To $g_iCmbMaxAttackSide - 1
+		If $sSideiSide[$i][1] >= $OneSide Or ($Percentage_Out > $PercentageOutSide And $sSideiSide[$i][1] <> 0) Then
 			ReDim $aHowManySides[UBound($aHowManySides) + 1]
-			$aHowManySides[UBound($aHowManySides) - 1] = $Sides[$i]
+			$aHowManySides[UBound($aHowManySides) - 1] = $sSideiSide[$i][0]
 		EndIf
 	Next
-
+	
 	; Determinate the higher value if $AttackInside is True
 	Local $BestSideToAttack[1] = ["TR"]
 	Local $number = 0
@@ -583,6 +599,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				[MatchTroopDropName(36), $nbSides, MatchTroopWaveNb(36), 1, MatchSlotsPerEdge(36)], _
 				[MatchTroopDropName(37), $nbSides, MatchTroopWaveNb(37), 1, MatchSlotsPerEdge(37)]]
 	Else
+		; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
 		Local $listInfoDeploy[38][5] = [[$eGole, $nbSides, 1, 1, 2] _
 				, [$eLava, $nbSides, 1, 1, 2] _
 				, [$eIceH, $nbSides, 1, 1, 2] _
@@ -631,7 +648,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[1] = -1
 
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $SIDESNAMES)
-
+	
 	If Not $g_bRunState Then Return
 
 	CheckHeroesHealth()
@@ -685,7 +702,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 			For $j = 0 To UBound($g_avAttackTroops) - 1 ; identify the position of this kind of troop
 				If $g_avAttackTroops[$j][0] = $troopKind Then
 					$troop = $j
-					$troopNb = Ceiling($g_avAttackTroops[$j][1] / $maxWaveNb)
+					$troopNb = Ceiling($g_avAttackTroops[$j][1] / $maxWaveNb + 5) ;make random 
 					$name = GetTroopName($troopKind, $troopNb)
 				EndIf
 			Next

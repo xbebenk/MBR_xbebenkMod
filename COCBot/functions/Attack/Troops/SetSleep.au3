@@ -13,21 +13,13 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func SetSleep($iType)
-	If IsKeepClicksActive() Then Return 0 ; fast bulk deploy
-	Local $iFactorZero = 10
-	Local $iFactorOne = 100
-
-	If $g_bAndroidAdbClick Then
-		; adjust for slow ADB clicks the delay factor
-		$iFactorZero = 10
-		$iFactorOne = 100
-	EndIf
-
+	If IsKeepClicksActive() = True Then Return 0
+	Local $iOffset0 = 10, $iOffset1 = 100
 	Switch $iType
 		Case 0
-			Return Round(Random(1, 10)) * $iFactorZero
+			Return Round(Random(0.95, 1.15) * (10 * $iOffset0)) ;troops
 		Case 1
-			Return Round(Random(1, 10)) * $iFactorOne
+			Return Round(Random(0.95, 1.15) * (10 * $iOffset1)) ;wave
 	EndSwitch
 EndFunc   ;==>SetSleep
 

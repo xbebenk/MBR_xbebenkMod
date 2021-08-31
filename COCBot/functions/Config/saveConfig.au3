@@ -924,6 +924,7 @@ Func SaveConfig_600_29_DB_SmartFarm()
 	_Ini_Add("SmartFarm", "InsidePercentage", $g_iTxtInsidePercentage)
 	_Ini_Add("SmartFarm", "OutsidePercentage", $g_iTxtOutsidePercentage)
 	_Ini_Add("SmartFarm", "DebugSmartFarm", $g_bDebugSmartFarm)
+	_Ini_Add("SmartFarm", "MaxAttackSide", $g_iCmbMaxAttackSide)
 EndFunc
 
 Func SaveConfig_600_29_LB()
