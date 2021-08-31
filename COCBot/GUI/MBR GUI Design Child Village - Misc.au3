@@ -442,12 +442,13 @@ Func CreateMiscBuilderBaseSubTab()
 			GUICtrlSetOnEvent(-1, "chkEnableBBAttack")
 
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBAttackTimes", "Attack Count"), $x + 85, $y + 24)
-		$g_hCmbBBAttackCount = GUICtrlCreateCombo( "", $x+150, $y + 20, 60, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBAttackTimes_Info_01", "Set how many time Bot will Attack On Builder Base"))
+		$g_hCmbBBAttackCount = GUICtrlCreateCombo( "", $x+175, $y + 20, 35, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBAttackTimes_Info_01", "Set how many time Bot will Attack On Builder Base") & @CRLF & _
+							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBAttackTimes_Info_02", "PRO Tips: set 0 will always attack while loot available"))
 			GUICtrlSetOnEvent(-1, "cmbBBAttackCount")
-			GUICtrlSetData(-1, "NotSet|1|2|3|4|5|6|7|8|9|10")
+			GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10")
 			GUICtrlSetState(-1, $GUI_DISABLE)
-			_GUICtrlComboBox_SetCurSel($g_iBBAttackCount, 5) ; start with 5 attacks for average
+			_GUICtrlComboBox_SetCurSel($g_iBBAttackCount, 0) ;0 for attack until no loot
 
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBNextTroopDelay", "Next Troop Delay"), $x + 85, $y + 48)
 		$g_hCmbBBNextTroopDelay = GUICtrlCreateCombo( "", $x+180, $y + 45, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))

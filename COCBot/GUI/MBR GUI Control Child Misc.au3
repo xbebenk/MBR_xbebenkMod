@@ -936,7 +936,11 @@ EndFunc
 
 Func cmbBBAttackCount()
 	$g_iBBAttackCount = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackCount)
-	SetDebugLog("BB Attack Count: " & $g_iBBAttackCount)
+	SetDebugLog("BB Attack Count: " & $g_iBBAttackCount, $COLOR_DEBUG)
+	If _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackCount) = 0 Then
+		SetDebugLog("Enabling Check Loot Available", $COLOR_DEBUG)
+		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_CHECKED)
+	EndIf
 EndFunc
 
 Func cmbBBNextTroopDelay()

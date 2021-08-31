@@ -15,28 +15,43 @@
 
 
 Func DoAttackBB()
-	If $g_iBBAttackCount = 0 Then $g_iBBAttackCount = 3
-	For $i = 1 To $g_iBBAttackCount
-		If PrepareAttackBB() Then
+	If $g_iBBAttackCount = 0 Then 
+		Local $count = 1
+		While PrepareAttackBB()
 			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
-			SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
+			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			AttackBB()
-			For $i = 0 To 4
-				_Sleep(1000)
-				If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
-					SetLog("Nice, Game Completed", $COLOR_INFO)
-					ExitLoop 2
-				Endif
-			Next
 			If $g_bRestart = True Then Return
 			If _Sleep($DELAYRUNBOT3) Then Return
 			If checkObstacles(True) Then Return
-		Else
-			SetLog("Not Attack this time..", $COLOR_DEBUG)
-			ClickAway()
-			ExitLoop
-		Endif
-	Next
+			$count += 1
+		Wend
+		
+		SetLog("Skip Attack this time..", $COLOR_DEBUG)
+		ClickAway()
+	Else
+		For $i = 1 To $g_iBBAttackCount
+			If PrepareAttackBB() Then
+				SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
+				SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
+				AttackBB()
+				For $i = 0 To 4
+					_Sleep(1000)
+					If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
+						SetLog("Nice, Game Completed", $COLOR_INFO)
+						ExitLoop 2
+					Endif
+				Next
+				If $g_bRestart = True Then Return
+				If _Sleep($DELAYRUNBOT3) Then Return
+				If checkObstacles(True) Then Return
+			Else
+				SetLog("Not Attack this time..", $COLOR_DEBUG)
+				ClickAway()
+				ExitLoop
+			Endif
+		Next
+	EndIf
 	ZoomOut()
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
