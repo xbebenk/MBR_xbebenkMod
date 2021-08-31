@@ -57,7 +57,13 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 		$g_aiAvailQueuedTroop[$i] = 0
 		If $i < $eSpellCount Then $g_aiAvailQueuedSpell[$i] = 0
 	Next
-	If Not OpenArmyOverview(True, "IsDonateQueueOnly()") Then Return
+	
+	OpenArmyOverview(False, "IsDonateQueueOnly()")
+	If _Sleep(500) Then Return
+	If Not IsTrainPage() Then
+		OpenArmyOverview(False, "IsDonateQueueOnly()")
+	EndIf
+	
 	For $i = 0 To 1
 		If Not $g_aiPrepDon[$i * 2] And Not $g_aiPrepDon[$i * 2 + 1] Then $abDonateQueueOnly[$i] = False
 		If $abDonateQueueOnly[$i] Then
@@ -124,7 +130,8 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 			If _Sleep(250) Then ContinueLoop
 		EndIf
 	Next
-			ClickAway("Left")
+	
+	ClickAway("Left")
 	If _Sleep($DELAYDONATECC2) Then Return
 
 EndFunc   ;==>IsDonateQueueOnly
@@ -431,10 +438,11 @@ Func DonateCC($bCheckForNewMsg = False)
 			;;; Open Donate Window
 			If _Sleep($DELAYDONATECC3) Then Return
 			If Not DonateWindow($aiDonateButton, $bOpen) Then
-				$bDonate = True
-				$aiSearchArray[1] = $aiDonateButton[1] + 20
-				SetLog("Donate Window did not open - Exiting Donate", $COLOR_ERROR)
-				ExitLoop ; Leave donate to prevent a bot hang condition
+				;$bDonate = True
+				;$aiSearchArray[1] = $aiDonateButton[1] + 20
+				SetLog("Donate Window did not open - Try to look again", $COLOR_ERROR)
+				ClickAway("Left")
+				ContinueLoop ; Leave donate to prevent a bot hang condition
 			EndIf
 
 			;;; Variables to use in Loops for Custom.A to Custom.D
@@ -657,12 +665,22 @@ Func DonateCC($bCheckForNewMsg = False)
 		ForceCaptureRegion()
 		$Scroll = _PixelSearch(293, 687 - 30, 295, 693 - 30, Hex(0xFFFFFF, 6), 20)
 		If IsArray($Scroll) Then
+			;xbebenk, check chat button on left covering donatedTroops/Total 
+			Local $leftButton
+			$leftButton = _PixelSearch(21, 643, 23, 649, Hex(0xFFFFFF, 6), 20)
+			If IsArray($leftButton) Then
+				Setlog("Left chat button covering donation capacity", $COLOR_WARNING)
+				Click($leftButton[0], $leftButton[1], 1, 0, "#0177")
+			Else
+				Click($Scroll[0], $Scroll[1], 1, 0, "#0172")
+			EndIf			
+			
+			If _Sleep($DELAYDONATECC2) Then Return
 			$bDonate = True
-			Click($Scroll[0], $Scroll[1], 1, 0, "#0172")
 			$aiSearchArray = $aiSearchArrayBackUp
-			If _Sleep($DELAYDONATECC2) Then ExitLoop
 			ContinueLoop
 		EndIf
+		
 		$bDonate = False
 	WEnd
 
@@ -1276,20 +1294,6 @@ Func RemainingCCcapacity($aiDonateButton)
 		SetLog("Chat Troops: " & $iDonatedTroops & "/" & $iCapTroopsTotal & $sSpellText & $sSiegeMachineText)
 	EndIf
 	
-	;xbebenk, check chat button on left covering donatedTroops/Total 
-	Local $leftButton
-	If $iDonatedTroops = 0 or $iCapTroopsTotal = 0 Then
-	ForceCaptureRegion()
-	$leftButton = _PixelSearch(21, 643, 23, 649, Hex(0xFFFFFF, 6), 20)
-		If IsArray($leftButton) Then
-			Setlog("Left chat button covering donation capacity", $COLOR_DEBUG)
-			;SetLog("Assume donated/total = 0/50", $COLOR_DEBUG)
-			$iDonatedTroops = 0
-			$iCapTroopsTotal = 50
-			$g_iTotalDonateTroopCapacity = 50
-		EndIf
-	EndIf
-
 EndFunc   ;==>RemainingCCcapacity
 
 Func DetectSlotTroop(Const $iTroopIndex)

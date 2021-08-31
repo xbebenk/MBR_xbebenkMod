@@ -34,7 +34,7 @@
 
 # Exclusion build
 ![Bb]uild/**
-
+build/**
 build/MBR_Compiler/MBR_Compiler/bin/*
 build/MBR_Compiler/MBR_Compiler/obj/*
 build/MBR_Compiler/.vs/*

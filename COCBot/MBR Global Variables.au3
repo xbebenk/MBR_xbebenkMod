@@ -78,7 +78,7 @@ Global $g_iVILLAGE_OFFSET[3] = [0, 0, 1]
 ; <><><><><><><><><><><><><><><><><><>
 ; <><><><> debug flags <><><><>
 ; <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-Global $g_bDebugSetlog = False ; Verbose log messages, or extra log messages most everywhere
+Global $g_bDebugSetlog = True ; Verbose log messages, or extra log messages most everywhere
 Global $g_bDebugAndroid = False ; Debug Android
 Global $g_bDebugClick = False ; Debug Bot Clicks and when docked, display current mouse position and RGB color
 Global $g_bDebugFuncTime = False ; Log Function execution time (where implemented)
@@ -1199,6 +1199,7 @@ Global $g_abStopAtkPctNoChangeEnable[$g_iModeCount] = [False, False, False], $g_
 Global $g_iTxtInsidePercentage = 0 , $g_iTxtOutsidePercentage = 0 , $g_bDebugSmartFarm = False
 Global $g_iSidesAttack = 0
 Global $g_iPercentageDamage = 0
+Global $g_iCmbMaxAttackSide = 0
 
 ; <><><><> Attack Plan / Search & Attack / Deadbase / End Battle <><><><>
 ; <<< nothing here - all in common Search & Attack grouping >>>

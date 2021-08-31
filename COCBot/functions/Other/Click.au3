@@ -395,6 +395,8 @@ Func _DecodeDebug($message)
 			Return $separator & "Donate - Click Donate Button"
 		Case "#0175"
 			Return $separator & "Donate - Donate Selected Troop first row"
+		Case "#0177"
+			Return $separator & "Donate - Scroll Left Chat Button"
 		Case "#0600"
 			Return $separator & "Donate - Donate Selected Troop second row"
 		Case "#0601"
