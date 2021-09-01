@@ -246,7 +246,8 @@ EndFunc
 Func DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
 	; place hero first and activate ability
 	If $g_bBBMachineReady And Not $bBMDeployed Then SetLog("Deploying Battle Machine.", $COLOR_BLUE)
-	While Not $bBMDeployed And $g_bBBMachineReady
+	While Not $bBMDeployed And $g_bBBMachineReady	
+		$aBMPos = GetMachinePos()
 		If IsArray($aBMPos) Then
 			PureClickP($aBMPos)
 			local $iPoint = Random(0, 9, 1)

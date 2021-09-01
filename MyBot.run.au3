@@ -752,12 +752,13 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['LabCheck', 'Collect', 'PetCheck']
 			Else
-				Local $aRndFuncList = ['BoostSuperTroop','RequestCC','LabCheck', 'Laboratory', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge','UpgradeBuilding','UpgradeWall']
+				Local $aRndFuncList = ['RequestCC','LabCheck', 'Laboratory', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge','UpgradeBuilding','UpgradeWall']
 			EndIf
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
+				If _Sleep($DELAYRUNBOT5) Then Return
 				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			Next
 
@@ -774,6 +775,7 @@ Func runBot() ;Bot that runs everything in order
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
 					_RunFunction($Index)
+					If _Sleep($DELAYRUNBOT5) Then Return
 					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				Next
@@ -803,6 +805,7 @@ Func runBot() ;Bot that runs everything in order
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
+				If _Sleep($DELAYRUNBOT5) Then Return
 				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			Next
@@ -1185,6 +1188,7 @@ Func __RunFunction($action)
 		 Case "RequestCC"
 			RequestCC()
 			;xbenk
+			ClickAway()
 			;If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
 		Case "Laboratory"
 			Laboratory()
@@ -1192,7 +1196,7 @@ Func __RunFunction($action)
 			;If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
 		Case "PetHouse"
 			PetHouse()
-			;benk
+			;xbenk
 			;If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
 		Case "BoostSuperTroop"
 			BoostSuperTroop()
@@ -1207,6 +1211,7 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeWall"
 			$g_iNbrOfWallsUpped = 0
+			ClickAway()
 			UpgradeWall()
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
