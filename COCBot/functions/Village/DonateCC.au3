@@ -436,7 +436,7 @@ Func DonateCC($bCheckForNewMsg = False)
 			EndIf
 
 			;;; Open Donate Window
-			If _Sleep($DELAYDONATECC3) Then Return
+			If _Sleep($DELAYDONATECC2) Then Return
 			If Not DonateWindow($aiDonateButton, $bOpen) Then
 				;$bDonate = True
 				;$aiSearchArray[1] = $aiDonateButton[1] + 20
