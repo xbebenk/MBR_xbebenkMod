@@ -21,6 +21,15 @@ Func DoAttackBB()
 			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			AttackBB()
+			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+				For $x = 0 To 4
+					_Sleep(1000)
+					If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
+						SetLog("Nice, Game Completed", $COLOR_INFO)
+						ExitLoop 2
+					Endif
+				Next
+			EndIf
 			If $g_bRestart = True Then Return
 			If _Sleep($DELAYRUNBOT3) Then Return
 			If checkObstacles(True) Then Return
