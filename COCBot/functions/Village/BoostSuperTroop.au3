@@ -74,12 +74,12 @@ Func BoostSuperTroop($bTest = False)
 						;SetLog("QuickMIS(" & "BC1" & ", " & $g_sImgBoostTroopsIcons & "," & $iColumnX & "," & $iColumnY1 & "," & $iColumnX + $picswidth & "," & $iColumnY2 & ")", $COLOR_DEBUG );
 						If QuickMIS("BC1", $g_sImgBoostTroopsIcons, $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2, True, False) Then ;find pics of Stroop on spesific row / column
 							Click($g_iQuickMISX + $iColumnX, $g_iQuickMISY + $iColumnY1, 1)
-							If _Sleep(600) Then Return
+							If _Sleep(1000) Then Return
 							If $g_bSuperTroopsBoostUsePotionFirst Then
 								Setlog("Using Super Potion...", $COLOR_INFO)
 								If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 400, 530, 580, 600, True, False) Then ;find image of Super Potion
 									Click($g_iQuickMISX + 400, $g_iQuickMISY + 530, 1)
-									If _Sleep(600) Then Return
+									If _Sleep(1000) Then Return
 									If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 330, 430, 520, 510, True, False) Then ;find image of Super Potion again (confirm upgrade)
 										;do click boost
 										If $bTest Then
@@ -98,7 +98,7 @@ Func BoostSuperTroop($bTest = False)
 									Setlog("Cannot Find Potion, Using Dark Elixir...", $COLOR_INFO)
 									If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 530, 750, 600, True, False) Then ;find image of dark elixir button
 										Click($g_iQuickMISX + 600, $g_iQuickMISY + 530, 1)
-										If _Sleep(600) Then Return
+										If _Sleep(1000) Then Return
 										If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 430, 550, 520, True, False) Then ;find image of dark elixir button again (confirm upgrade)
 											;do click boost
 											If $bTest Then
@@ -122,7 +122,7 @@ Func BoostSuperTroop($bTest = False)
 								Setlog("Using Dark Elixir...", $COLOR_INFO)
 								If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 530, 750, 600, True, False) Then ;find image of dark elixir button
 									Click($g_iQuickMISX + 600, $g_iQuickMISY + 530, 1)
-									If _Sleep(600) Then Return
+									If _Sleep(1000) Then Return
 									If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 430, 550, 520, True, False) Then ;find image of dark elixir button again (confirm upgrade)
 										;do click boost
 										If $bTest Then

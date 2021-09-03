@@ -1021,12 +1021,14 @@ Func AttackMain() ;Main control for attack functions
 				checkMainScreen(False)
 				If $g_bRestart Then Return
 			EndIf
-			If $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
+			If $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) And Not $g_bFirstStart Then ;If current trophy above max trophy, try drop first
 				DropTrophy()
 				If Not $g_bRunState Then Return
 				$g_bIsClientSyncError = False ; reset OOS flag to prevent looping.
 				If _Sleep($DELAYATTACKMAIN1) Then Return
 				Return ; return to runbot, refill armycamps
+			Else
+				SetLog("Drop Trophy(), skipped on FirstStart", $COLOR_DEBUG)
 			EndIf
 			If $g_bDebugSetlog Then
 				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$DB], $g_aiSearchHeroWaitEnable[$DB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$DB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
@@ -1272,7 +1274,6 @@ Func FirstCheck()
 
 	If Not $g_bRunState Then Return
 	VillageReport()
-	If BotCommand() Then btnStop()
 
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
 		$g_bOutOfGold = False ; reset out of gold flag
@@ -1286,9 +1287,10 @@ Func FirstCheck()
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
 
-	
 	FirstCheckRoutine()
-
+	VillageReport()
+	If BotCommand() Then btnStop()
+	
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
 		_RunFunction('BuilderBase')
 		TrainSystem()
@@ -1327,7 +1329,7 @@ Func FirstCheckRoutine()
 	PrepareDonateCC()
 	DonateCC()
 	
-	Local $aRndFuncList = ['CleanYard','LabCheck', 'Laboratory']
+	Local $aRndFuncList = ['CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)

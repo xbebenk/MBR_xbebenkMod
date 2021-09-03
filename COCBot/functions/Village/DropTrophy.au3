@@ -15,11 +15,6 @@
 
 Func DropTrophy()
 	
-	If $g_bFirstStart Then 
-		SetDebugLog("Drop Trophy(), skipped on FirstStart", $COLOR_DEBUG)
-		Return ;skip drop trophy on firstcheck
-	EndIf
-	
 	If $g_bDropTrophyEnable Then
 		SetDebugLog("Drop Trophy()", $COLOR_DEBUG)
 
