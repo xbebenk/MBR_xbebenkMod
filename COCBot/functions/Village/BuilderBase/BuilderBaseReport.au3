@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: ProMac (05-2017)
-; Modified ......:
+; Modified ......: xbebenk (08-2021)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -102,10 +102,15 @@ EndFunc
 
 Func isGoldFullBB()
 	$g_bGoldStorageFullBB = False
-	Local $aIsGoldFullBB[4] = [695, 25 , 0xf4dc72, 10] ; Main Screen Gold Resource bar is Full
+	Local $aIsGoldFullBB[4] = [750, 40 , 0xE7C00D, 10] ; Main Screen Gold Resource bar is Full
 	If _CheckPixel($aIsGoldFullBB, True) Then ;Hex if color of gold (orange)
 		SetLog("Builder Base Gold Storages are relatively full : " & $g_aiCurrentLootBB[$eLootGoldBB] , $COLOR_SUCCESS)
 		$g_bGoldStorageFullBB = True
+	EndIf
+	If $g_bDebugClick And Not $g_bGoldStorageFullBB Then
+		Local $colorRead = _GetPixelColor($aIsGoldFullBB[0], $aIsGoldFullBB[1], True)
+		SetLog("Builder Base Gold Storages are not Full", $COLOR_ACTION)
+		SetLog("expected in (" & $aIsGoldFullBB[0] & "," & $aIsGoldFullBB[1] & ")  = " & Hex($aIsGoldFullBB[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
 	EndIf
 	Return $g_bGoldStorageFullBB
 EndFunc   ;==>isGoldFull
