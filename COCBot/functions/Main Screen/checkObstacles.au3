@@ -402,7 +402,7 @@ Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 		ElseIf __TimerDiff($hCocReconnectingTimer) > $g_iCoCReconnectingTimeout Then
 			SetLog("Network Connection really lost, Reloading CoC...", $COLOR_ERROR)
 			$hCocReconnectingTimer = 0
-			If $bReloadCoC = True Then Return checkObstacles_ReloadCoC()
+			If $bReloadCoC Then CloseCoC(True)
 			Return True
 		Else
 			SetLog("Network Connection lost, waiting...", $COLOR_ERROR)
