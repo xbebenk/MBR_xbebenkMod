@@ -752,7 +752,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['LabCheck', 'Collect', 'PetCheck']
 			Else
-				Local $aRndFuncList = ['RequestCC','LabCheck', 'Laboratory', 'Collect', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge','UpgradeBuilding','UpgradeWall']
+				Local $aRndFuncList = ['RequestCC', 'Collect', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge']
 			EndIf
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
@@ -801,7 +801,6 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bRestart Then ContinueLoop
 
 			Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'PetHouse']
-			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -879,6 +878,8 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			If $g_bRestart = True Then ContinueLoop
 		EndIf
+		If _Sleep($DELAYRUNBOT1) Then Return
+		If $g_bRestart = True Then ContinueLoop
 	WEnd
 EndFunc   ;==>runBot
 
@@ -1028,7 +1029,7 @@ Func AttackMain() ;Main control for attack functions
 				If _Sleep($DELAYATTACKMAIN1) Then Return
 				Return ; return to runbot, refill armycamps
 			Else
-				SetLog("Drop Trophy(), skipped on FirstStart", $COLOR_DEBUG)
+				SetLog("Drop Trophy Enabled, but skipped on FirstStart", $COLOR_DEBUG)
 			EndIf
 			If $g_bDebugSetlog Then
 				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$DB], $g_aiSearchHeroWaitEnable[$DB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$DB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
@@ -1329,7 +1330,7 @@ Func FirstCheckRoutine()
 	PrepareDonateCC()
 	DonateCC()
 	
-	Local $aRndFuncList = ['CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
+	Local $aRndFuncList = ['CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
