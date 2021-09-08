@@ -141,7 +141,7 @@ Func DoUpgrade($bTest = False)
 				If $g_iChkUpgradesToIgnore[24] = 1 Then 
 					$bMustIgnoreUpgrade = True
 				Else
-					$aUpgradeButton = findButton("UpgradeWeapon", Default, 1, True)
+					$aUpgradeButton = findButton("THWeapon", Default, 1, True)
 					If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
 						SetLog("No Upgrade Weapon Button here... Wrong click, looking next...", $COLOR_WARNING)
 						;$g_iNextLineOffset = $g_iCurrentLineOffset -> not necessary finally, but in case, I keep lne commented
