@@ -44,7 +44,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 
 	Local $aRequestButton = findMultiple($g_sImgRequestCCButton, $sSearchDiamond, $sSearchDiamond, 0, 1000, 1, "objectname,objectpoints", True)
 	If Not IsArray($aRequestButton) Then
-		SetLog("Error in RequestCC(): $aRequestButton is no Array")
+		SetDebugLog("Error in RequestCC(): $aRequestButton is no Array")
 		If $g_bDebugImageSave Then SaveDebugImage("RequestButtonStateError")
 		Return
 	EndIf
