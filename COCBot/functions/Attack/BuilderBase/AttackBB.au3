@@ -35,7 +35,8 @@ Func DoAttackBB()
 			If $g_bRestart = True Then Return
 			If _Sleep($DELAYRUNBOT3) Then Return
 			If checkObstacles(True) Then Return
-			$count += 1
+			If $g_bRestart = True Then ExitLoop
+			$count += 1			
 		Wend
 		
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
