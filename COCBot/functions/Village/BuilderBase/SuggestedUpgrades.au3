@@ -80,7 +80,9 @@ Func chkActivateOptimizeOTTO()
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, BitOR($GUI_CHECKED, $GUI_DISABLE))
-		GUICtrlSetState($g_hChkPlacingNewBuildings, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkPlacingNewBuildings, BitOR($GUI_CHECKED, $GUI_DISABLE))
+		$g_iChkPlacingNewBuildings = True
+		$g_iChkBBSuggestedUpgradesIgnoreWall = True
 	Else
 		$g_iChkBBSuggestedUpgradesOTTO = 0
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, $GUI_ENABLE)
@@ -173,15 +175,15 @@ Func AutoUpgradeBB($bTest = False)
 							Case "Elixir"
 								Click($aResult[0], $aResult[1], 1)
 								If _Sleep(2000) Then Return
-								If GetUpgradeButton($aResult[2], $bDebug) Then
-									ExitLoop
+								If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
+									Return True
 								EndIf
 								$bSkipGoldCheck = True
 							Case "New"
 								If $g_iChkPlacingNewBuildings = 1 Then
 									SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
-									If NewBuildings($aResult) Then
-										ExitLoop
+									If NewBuildings($aResult, $bTest) Then
+										Return True
 									EndIf
 									$bSkipGoldCheck = True
 								Else
@@ -202,14 +204,14 @@ Func AutoUpgradeBB($bTest = False)
 							Case "Gold"
 								Click($aResult[0], $aResult[1], 1)
 								If _Sleep(2000) Then Return
-								If GetUpgradeButton($aResult[2], $bDebug) Then
-									ExitLoop
+								If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
+									Return True
 								EndIf
 							Case "New"
 								If $g_iChkPlacingNewBuildings = 1 Then
 									SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
-									If NewBuildings($aResult) Then
-										ExitLoop
+									If NewBuildings($aResult, $bTest) Then
+										Return True
 									EndIf
 								Else
 									SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
@@ -224,13 +226,13 @@ Func AutoUpgradeBB($bTest = False)
 					$y += $step
 					$y1 += $step
 				Next
-				If $BuildingUpgraded Then
-					Setlog("Found Building to Upgrade..", $COLOR_DEBUG)
-					Exitloop
-				Else
-					ClickDrag(333, $y - 30, 333, 75, 800);do scroll down
-					If _Sleep(500) Then Return
-				EndIf
+			If $BuildingUpgraded Then
+				Setlog("Found Building to Upgrade..", $COLOR_DEBUG)
+				Exitloop
+			Else
+				ClickDrag(333, $y - 30, 333, 75, 800);do scroll down
+				If _Sleep(500) Then Return
+			EndIf
 			Next
 		EndIf
 	EndIf
@@ -306,7 +308,7 @@ Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap 
 	Return $aResult
 EndFunc   ;==>GetIconPosition
 
-Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
+Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 
 	;Local $aBtnPos = [360, 500, 180, 50] ; x, y, w, h
 	Local $aBtnPos = [360, 460, 380, 120] ; x, y, w, h ; support Battke Machine, broken and upgrade
@@ -370,7 +372,9 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 			If _Sleep(1500) Then Return
 
 			If QuickMIS("BC1", $sUpgButtom, 300, 480, 750, 600, True, $Debug) Then
-				Click($g_iQuickMISX + 300, $g_iQuickMISY + 480, 1)
+				If Not $bTest Then 
+					Click($g_iQuickMISX + 300, $g_iQuickMISY + 480, 1)
+				EndIf
 				If _Sleep(1500) Then Return
 				;ClickAway("Left")
 				If isGemOpen(True) Then
@@ -396,7 +400,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False)
 	Return False
 EndFunc   ;==>GetUpgradeButton
 
-Func NewBuildings($aResult)
+Func NewBuildings($aResult, $bTest = False)
 
 	Local $Screencap = True, $Debug = False
 	SetLog($aResult)
@@ -407,61 +411,88 @@ Func NewBuildings($aResult)
 		If _Sleep(3000) Then Return
 
 		; If exist Clocks
-		Local $ClocksCoordinates = QuickMIS("CX", $g_sImgAutoUpgradeClock, 20, 250, 775, 530, $Screencap, $Debug)
-		If UBound($ClocksCoordinates) > 0 Then
-			SetLog("Number of [Clocks] Found: " & UBound($ClocksCoordinates), $COLOR_DEBUG)
-			For $i = 0 To UBound($ClocksCoordinates) - 1
-				; Prepare the coordinates
-				Local $Coordinates = StringSplit($ClocksCoordinates[$i], ",", 2)
-				; Just in Cause
-				If UBound($Coordinates) <> 2 Then
-					Click(820, 38, 1) ; exit from Shop
-					ExitLoop
+		Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("220,200,700,600"), 1, True, Default))
+		;Local $ClocksCoordinates = QuickMIS("CX", $g_sImgAutoUpgradeClock, 20, 250, 775, 530, $Screencap, $Debug)
+		If UBound($ArrowCoordinates) > 1 Then
+			Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50)
+			If _Sleep(2000) Then Return 
+			; Lets search for the Correct Symbol on field
+			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150, 650, 550, $Screencap, $Debug) Then
+				If Not $bTest Then
+					Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
+					Return True
 				EndIf
-				; Coordinates for Slot Zone from Clock position
-				Local $x = ($Coordinates[0] + 20), $y = ($Coordinates[1] + 250), $x1 = ($Coordinates[0] + 20) + 160, $y1 = ($Coordinates[1] + 250) + 75
-				; Lets see if exist resources
-				If $g_bDebugSetlog Then SetDebugLog("[x]: " & $x & " [y]: " & $y & " [x1]: " & $x1 & " [y1]: " & $y1, $COLOR_DEBUG)
-				If QuickMIS("BC1", $g_sImgAutoUpgradeZero, $x, $y, $x1, $y1, $Screencap, $Debug) Then
-					; Lets se if exist or NOT the Yellow Arrow, If Doesnt exist the [i] icon than exist the Yellow arrow , DONE
-					If Not QuickMIS("BC1", $g_sImgAutoUpgradeInfo, $x, $y, $x1, $y1, $Screencap, $Debug) Then
-						Click($x + 100, $y + 50, 1)
-						If _Sleep(3000) Then Return
-						; Lets search for the Correct Symbol on field
-						If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150, 650, 550, $Screencap, $Debug) Then
-							Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
-							SetLog("Placed a new Building on Builder Island! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_INFO)
-							If _Sleep(1000) Then Return
-							; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
-							If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
-								Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
-							EndIf
-							Return True
-						Else
-							If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
-								SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_ERROR)
-								Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
-							Else
-								SetLog("Error on Undo symbol!", $COLOR_ERROR)
-							EndIf
-						EndIf
-					Else
-						If $i = UBound($ClocksCoordinates) - 1 Then
-							If $g_bDebugSetlog Then SetDebugLog("Slot without enough resources![1]", $COLOR_DEBUG)
-							Click(820, 38, 1) ; exit from Shop
-							ExitLoop
-						EndIf
-						ContinueLoop
-					EndIf
+				SetLog("Placed a new Building on Builder Island! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_SUCCESS)
+				If _Sleep(1000) Then Return
+				; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
+				If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
+					Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
+				EndIf
+				Return True
+			Else
+				If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
+					SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_ERROR)
+					Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
 				Else
-					If $g_bDebugSetlog Then SetDebugLog("Slot without enough resources![2]", $COLOR_DEBUG)
-					If $i = UBound($ClocksCoordinates) - 1 Then Click(820, 38, 1)
+					SetLog("Error on Undo symbol!", $COLOR_ERROR)
 				EndIf
-			Next
-		Else
-			SetLog("Slot without enough resources![3]", $COLOR_INFO)
-			Click(820, 38, 1) ; exit from Shop
+			EndIf
 		EndIf
+		
+		;If UBound($ClocksCoordinates) > 0 Then
+		;	SetLog("Number of [Clocks] Found: " & UBound($ClocksCoordinates), $COLOR_DEBUG)
+		;	For $i = 0 To UBound($ClocksCoordinates) - 1
+		;		; Prepare the coordinates
+		;		Local $Coordinates = StringSplit($ClocksCoordinates[$i], ",", 2)
+		;		; Just in Cause
+		;		If UBound($Coordinates) <> 2 Then
+		;			Click(820, 38, 1) ; exit from Shop
+		;			ExitLoop
+		;		EndIf
+		;		; Coordinates for Slot Zone from Clock position
+		;		Local $x = ($Coordinates[0] + 20), $y = ($Coordinates[1] + 250), $x1 = ($Coordinates[0] + 20) + 160, $y1 = ($Coordinates[1] + 250) + 75
+		;		; Lets see if exist resources
+		;		If $g_bDebugSetlog Then SetDebugLog("[x]: " & $x & " [y]: " & $y & " [x1]: " & $x1 & " [y1]: " & $y1, $COLOR_DEBUG)
+		;		If QuickMIS("BC1", $g_sImgAutoUpgradeZero, $x, $y, $x1, $y1, $Screencap, $Debug) Then
+		;			; Lets se if exist or NOT the Yellow Arrow, If Doesnt exist the [i] icon than exist the Yellow arrow , DONE
+		;			If Not QuickMIS("BC1", $g_sImgAutoUpgradeInfo, $x, $y, $x1, $y1, $Screencap, $Debug) Then
+		;				Click($x + 100, $y + 50, 1)
+		;				If _Sleep(3000) Then Return
+		;				; Lets search for the Correct Symbol on field
+		;				If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150, 650, 550, $Screencap, $Debug) Then
+		;					Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
+		;					SetLog("Placed a new Building on Builder Island! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_INFO)
+		;					If _Sleep(1000) Then Return
+		;					; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
+		;					If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
+		;						Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
+		;					EndIf
+		;					Return True
+		;				Else
+		;					If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
+		;						SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_ERROR)
+		;						Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
+		;					Else
+		;						SetLog("Error on Undo symbol!", $COLOR_ERROR)
+		;					EndIf
+		;				EndIf
+		;			Else
+		;				If $i = UBound($ClocksCoordinates) - 1 Then
+		;					If $g_bDebugSetlog Then SetDebugLog("Slot without enough resources![1]", $COLOR_DEBUG)
+		;					Click(820, 38, 1) ; exit from Shop
+		;					ExitLoop
+		;				EndIf
+		;				ContinueLoop
+		;			EndIf
+		;		Else
+		;			If $g_bDebugSetlog Then SetDebugLog("Slot without enough resources![2]", $COLOR_DEBUG)
+		;			If $i = UBound($ClocksCoordinates) - 1 Then Click(820, 38, 1)
+		;		EndIf
+		;	Next
+		;Else
+		;	SetLog("Slot without enough resources![3]", $COLOR_INFO)
+		;	Click(820, 38, 1) ; exit from Shop
+		;EndIf
 	EndIf
 
 	Return False
