@@ -403,16 +403,14 @@ EndFunc   ;==>GetUpgradeButton
 Func NewBuildings($aResult, $bTest = False)
 
 	Local $Screencap = True, $Debug = False
-	SetLog($aResult)
 	If UBound($aResult) = 3 And $aResult[2] = "New" Then
 
 		; The $g_iQuickMISX and $g_iQuickMISY haves the coordinates compansation from 'New' | GetIconPosition()
 		Click($aResult[0], $aResult[1], 1)
 		If _Sleep(3000) Then Return
 
-		; If exist Clocks
-		Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("220,200,700,600"), 1, True, Default))
-		;Local $ClocksCoordinates = QuickMIS("CX", $g_sImgAutoUpgradeClock, 20, 250, 775, 530, $Screencap, $Debug)
+		;Search the arrow
+		Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,800,600"), 1, True, Default))
 		If UBound($ArrowCoordinates) > 1 Then
 			Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50)
 			If _Sleep(2000) Then Return 
@@ -420,7 +418,6 @@ Func NewBuildings($aResult, $bTest = False)
 			If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150, 650, 550, $Screencap, $Debug) Then
 				If Not $bTest Then
 					Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
-					Return True
 				EndIf
 				SetLog("Placed a new Building on Builder Island! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_SUCCESS)
 				If _Sleep(1000) Then Return
@@ -436,9 +433,14 @@ Func NewBuildings($aResult, $bTest = False)
 				Else
 					SetLog("Error on Undo symbol!", $COLOR_ERROR)
 				EndIf
+				Return True
 			EndIf
+		Else
+			SetLog("Cannot find Orange Arrow", $COLOR_ERROR)
+			Click(820, 38, 1) ; exit from Shop
 		EndIf
-		
+		; If exist Clocks
+		;Local $ClocksCoordinates = QuickMIS("CX", $g_sImgAutoUpgradeClock, 20, 250, 775, 530, $Screencap, $Debug)
 		;If UBound($ClocksCoordinates) > 0 Then
 		;	SetLog("Number of [Clocks] Found: " & UBound($ClocksCoordinates), $COLOR_DEBUG)
 		;	For $i = 0 To UBound($ClocksCoordinates) - 1
