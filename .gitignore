@@ -7,9 +7,11 @@
 *.orig
 *.png
 *.jpg
-*.exe
+#*.exe
 *.bmp
 *.zip
+build.bat
+buildMBR.exe
 
 # don't exclude exe in lib folder
 !lib/*.exe
@@ -40,7 +42,7 @@ build/MBR_Compiler/MBR_Compiler/obj/*
 build/MBR_Compiler/.vs/*
 
 # Exclusion language ini files
-![Ll]anguages/*.ini
+[Ll]anguages/*.ini
 
 # Exclusion Images/Icon
 ![Ii]mages/logo.jpg
