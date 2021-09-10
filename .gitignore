@@ -17,10 +17,6 @@ BuildMBR.exe
 !lib/*.exe
 !lib/*/*.exe
 
-#don't exclude builder exe
-![Bb]uildMBR.exe
-
-
 # Global Folders
 [Pp]rofiles/
 [Tt]emplates/
