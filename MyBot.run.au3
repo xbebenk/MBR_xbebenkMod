@@ -1019,14 +1019,16 @@ Func AttackMain() ;Main control for attack functions
 				checkMainScreen(False)
 				If $g_bRestart Then Return
 			EndIf
-			If $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) And Not $g_bFirstStart Then ;If current trophy above max trophy, try drop first
-				DropTrophy()
-				If Not $g_bRunState Then Return
-				$g_bIsClientSyncError = False ; reset OOS flag to prevent looping.
-				If _Sleep($DELAYATTACKMAIN1) Then Return
-				Return ; return to runbot, refill armycamps
-			Else
-				SetLog("Drop Trophy Enabled, but skipped on FirstStart", $COLOR_DEBUG)
+			If $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
+				If Not $g_bFirstStart Then
+					DropTrophy()
+					If Not $g_bRunState Then Return
+					$g_bIsClientSyncError = False ; reset OOS flag to prevent looping.
+					If _Sleep($DELAYATTACKMAIN1) Then Return
+					Return ; return to runbot, refill armycamps
+				Else
+					SetLog("Drop Trophy Enabled, but skipped on FirstStart", $COLOR_DEBUG)
+				EndIf
 			EndIf
 			If $g_bDebugSetlog Then
 				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$DB], $g_aiSearchHeroWaitEnable[$DB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$DB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
