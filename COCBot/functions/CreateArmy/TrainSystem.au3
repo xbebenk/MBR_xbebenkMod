@@ -34,6 +34,7 @@ Func TrainSystem()
 	If $g_bQuickTrainEnable Then
 		QuickTrain()
 	Else
+		If $g_bTrainPreviousArmy Then TrainPreviousArmy()
 		TrainCustomArmy()
 	EndIf
 
@@ -48,6 +49,16 @@ Func TrainSystem()
 
 	checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 EndFunc   ;==>TrainSystem
+
+Func TrainPreviousArmy()
+	If Not OpenQuickTrainTab(False, "TrainPreviousArmy()") Then Return
+	If _Sleep(750) Then Return
+	If _ColorCheck(_GetPixelColor(777, 205, True), Hex(0xBDE98D, 6), 1) Then
+		PureClick(777,227)
+	Else
+		SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
+	EndIf
+EndFunc ;==>TrainPreviousArmy
 
 Func TrainCustomArmy()
 	If Not $g_bRunState Then Return
