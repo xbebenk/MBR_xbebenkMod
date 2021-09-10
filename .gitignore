@@ -11,7 +11,7 @@
 *.bmp
 *.zip
 build.bat
-buildMBR.exe
+BuildMBR.exe
 
 # don't exclude exe in lib folder
 !lib/*.exe
