@@ -410,7 +410,7 @@ Func NewBuildings($aResult, $bTest = False)
 		If _Sleep(3000) Then Return
 
 		;Search the arrow
-		Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,800,600"), 1, True, Default))
+		Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
 		If UBound($ArrowCoordinates) > 1 Then
 			Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50)
 			If _Sleep(2000) Then Return 
