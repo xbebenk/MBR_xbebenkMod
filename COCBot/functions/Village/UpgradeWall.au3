@@ -129,14 +129,13 @@ Func UpgradeWallGold($iWallCost = $g_iWallCost)
 
 	If _Sleep($DELAYRESPOND) Then Return
 
-	Local $aUpgradeButton = findButton("Upgrade", Default, 2, True)
+	Local $aUpgradeButton = findButton("UpgradeWall", Default, 2, True)
 	If IsArray($aUpgradeButton) And UBound($aUpgradeButton) > 0 Then
-		For $i = 0 To UBound($aUpgradeButton) - 1  ; Check for elixircolor in right top button corner and click, if present
-			If _ColorCheck(_GetPixelColor($aUpgradeButton[$i][0] + 52, $aUpgradeButton[$i][1] - 13, True), Hex(0xFFE41D, 6), 20) Then
-				Click($aUpgradeButton[$i][0], $aUpgradeButton[$i][1])
-				ExitLoop
-			EndIf
-		Next
+		;Check for Gold in right top button corner and click, if present
+		Local $FoundGold = decodeSingleCoord(findImage("UpgradeWallGold", $g_sImgUpgradeWallGold, GetDiamondFromRect("200, 570, 670, 630"), 1, True))
+		If UBound($FoundGold) > 1 Then 
+			Click($FoundGold[0], $FoundGold[1])
+		EndIf
 	EndIf
 
 	If _Sleep($DELAYUPGRADEWALLGOLD2) Then Return
@@ -176,18 +175,17 @@ Func UpgradeWallGold($iWallCost = $g_iWallCost)
 
 EndFunc   ;==>UpgradeWallGold
 
-Func UpgradeWallElixir($iWallCost)
+Func UpgradeWallElixir($iWallCost = $g_iWallCost)
 
 	If _Sleep($DELAYRESPOND) Then Return
 
-	Local $aUpgradeButton = findButton("Upgrade", Default, 2, True)
+	Local $aUpgradeButton = findButton("UpgradeWall", Default, 2, True)
 	If IsArray($aUpgradeButton) And UBound($aUpgradeButton) > 0 Then
-		For $i = 0 To UBound($aUpgradeButton) - 1  ; Check for elixircolor in right top button corner and click, if present
-			If _ColorCheck(_GetPixelColor($aUpgradeButton[$i][0] + 52, $aUpgradeButton[$i][1] - 13, True), Hex(0xF032FF, 6), 20) Then
-				Click($aUpgradeButton[$i][0], $aUpgradeButton[$i][1])
-				ExitLoop
-			EndIf
-		Next
+		;Check for elixircolor in right top button corner and click, if present
+		Local $FoundElixir = decodeSingleCoord(findImage("UpgradeWallElixir", $g_sImgUpgradeWallElix, GetDiamondFromRect("200, 570, 670, 630"), 1, True, Default))
+		If UBound($FoundElixir) > 1 Then 
+			Click($FoundElixir[0], $FoundElixir[1])		
+		EndIf	
 	EndIf
 
 	If _Sleep($DELAYUPGRADEWALLELIXIR2) Then Return
