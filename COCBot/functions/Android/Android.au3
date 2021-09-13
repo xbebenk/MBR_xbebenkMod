@@ -1245,7 +1245,7 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	InitAndroidTimeLag()
 
 	; wait 3 sec. CoC might have just crashed
-	If _SleepStatus(3000) Then Return False
+	If _SleepStatus(20000) Then Return False ;AndroidAdbSendShellCommand $timeout seem not working, make more time here 
 
 	If GetAndroidProcessPID(Default, False) = 0 And @error = 0 Then
 		If $iRetry > 2 And $iRecursive > 2 Then
