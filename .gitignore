@@ -14,8 +14,10 @@ build.bat
 BuildMBR.exe
 
 # don't exclude exe in lib folder
-#!lib/*.exe
-#!lib/*/*.exe
+!lib/*.exe
+!lib/*/*.exe
+!lib/*.dll
+!lib/*/*.dll
 
 # Global Folders
 [Pp]rofiles/
