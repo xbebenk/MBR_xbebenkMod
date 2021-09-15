@@ -18,7 +18,6 @@ BuildMBR.exe
 !lib/*/*.exe
 !lib/*.dll
 !lib/*/*.dll
-lib/MBRBot.dll
 
 # Global Folders
 [Pp]rofiles/
