@@ -131,8 +131,8 @@ Func CheckArmyReady()
 		ClickP($aArmyTrainButton, 1, 0, "#0293")
 		If _Sleep(1000) Then Return ; wait for window
 		Local $sCannonCart
-		If QuickMIS("BC1", $g_sImgCannonCartTrain, 40, 470, 820, 580, True, False) Then
-			Setlog("Army is not ready, Try to Train CannonCart to fill BB ArmyCamp", $COLOR_DEBUG)
+		If QuickMIS("BC1", $g_sImgFillTrain, 40, 470, 820, 580, True, False) Then
+			Setlog("Army is not ready, Try to Train to fill BB ArmyCamp", $COLOR_DEBUG)
 			Click($g_iQuickMISX + 40, $g_iQuickMISY + 470, 1)
 			If _Sleep(500) Then Return
 			ClickAway()
