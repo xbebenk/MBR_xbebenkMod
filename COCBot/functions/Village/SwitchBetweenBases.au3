@@ -42,7 +42,12 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 
 		ZoomOut() ; ensure boat is visible
 		If Not $g_bRunState Then Return
-
+		
+		;check for building incoorect placing
+		If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, True, False) Then
+			Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
+		EndIf
+		
 		$aButtonCoords = decodeSingleCoord(findImageInPlace($sTile, $sTileDir, $sRegionToSearch))
 		If UBound($aButtonCoords) > 1 Then
 			SetLog("[" & $i & "] Going to " & $sSwitchTo, $COLOR_INFO)
