@@ -1006,7 +1006,7 @@ Func _Idle() ;Sequence that runs until Full Army
 	WEnd
 EndFunc   ;==>_Idle
 
-Func AttackMain() ;Main control for attack functions
+Func AttackMain($bFirstStart = False) ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	ClickAway()
 	If IsSearchAttackEnabled() Then
@@ -1020,7 +1020,7 @@ Func AttackMain() ;Main control for attack functions
 				If $g_bRestart Then Return
 			EndIf
 			If $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
-				If Not $g_bFirstStart Then
+				If Not $bFirstStart Then
 					DropTrophy()
 					If Not $g_bRunState Then Return
 					$g_bIsClientSyncError = False ; reset OOS flag to prevent looping.
@@ -1310,7 +1310,7 @@ Func FirstCheck()
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
 				If Not $g_bRunState Then Return
-				AttackMain()
+				AttackMain(True)
 				$g_bSkipFirstZoomout = False
 				If $g_bOutOfGold Then
 					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
