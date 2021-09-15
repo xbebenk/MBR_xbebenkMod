@@ -694,7 +694,7 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
-
+	checkMainScreen(False)
 	InitiateSwitchAcc()
 	If ProfileSwitchAccountEnabled() And $g_bReMatchAcc Then
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
@@ -1301,7 +1301,6 @@ Func FirstCheck()
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
 		TrainSystem()
-		If Not $g_bRunState Then Return
 		SetDebugLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells))
 		If $g_bIsFullArmywithHeroesAndSpells Then
 			; Just in case of new profile! or BotDetectFirstTime() failed on Initiate()
