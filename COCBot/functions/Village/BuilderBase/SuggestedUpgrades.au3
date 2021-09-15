@@ -241,7 +241,7 @@ Func AutoUpgradeBB($bTest = False)
 EndFunc   ;==>MainSuggestedUpgradeCode
 
 ; This fucntion will Open the Suggested Window and check if is OK
-Func ClickOnBuilder($bTest)
+Func ClickOnBuilder($bTest = False)
 
 	; Master Builder Check pixel [i] icon
 	Local Const $aMasterBuilder[4] = [360, 11, 0x7cbdde, 10]
@@ -412,6 +412,15 @@ Func NewBuildings($aResult, $bTest = False)
 		;Search the arrow
 		Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
 		If UBound($ArrowCoordinates) > 1 Then
+			;Check if its wall or not (wall should skip)
+			If $g_bSkipWallPlacingOnBB Then
+				Local $IsWall = decodeSingleCoord(findImage("BBNewBuildingIsWall", $g_sImgisWall, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
+				If UBound($IsWall) > 1 Then
+					Click(820, 38, 1) ; exit from Shop
+					If _Sleep(1000) Then Return
+					Return False
+				EndIf
+			EndIf
 			Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50)
 			If _Sleep(2000) Then Return 
 			; Lets search for the Correct Symbol on field
@@ -432,6 +441,7 @@ Func NewBuildings($aResult, $bTest = False)
 					Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
 				Else
 					SetLog("Error on Undo symbol!", $COLOR_ERROR)
+					Click(820, 38, 1) ; exit from Shop
 				EndIf
 				Return True
 			EndIf
@@ -439,62 +449,6 @@ Func NewBuildings($aResult, $bTest = False)
 			SetLog("Cannot find Orange Arrow", $COLOR_ERROR)
 			Click(820, 38, 1) ; exit from Shop
 		EndIf
-		; If exist Clocks
-		;Local $ClocksCoordinates = QuickMIS("CX", $g_sImgAutoUpgradeClock, 20, 250, 775, 530, $Screencap, $Debug)
-		;If UBound($ClocksCoordinates) > 0 Then
-		;	SetLog("Number of [Clocks] Found: " & UBound($ClocksCoordinates), $COLOR_DEBUG)
-		;	For $i = 0 To UBound($ClocksCoordinates) - 1
-		;		; Prepare the coordinates
-		;		Local $Coordinates = StringSplit($ClocksCoordinates[$i], ",", 2)
-		;		; Just in Cause
-		;		If UBound($Coordinates) <> 2 Then
-		;			Click(820, 38, 1) ; exit from Shop
-		;			ExitLoop
-		;		EndIf
-		;		; Coordinates for Slot Zone from Clock position
-		;		Local $x = ($Coordinates[0] + 20), $y = ($Coordinates[1] + 250), $x1 = ($Coordinates[0] + 20) + 160, $y1 = ($Coordinates[1] + 250) + 75
-		;		; Lets see if exist resources
-		;		If $g_bDebugSetlog Then SetDebugLog("[x]: " & $x & " [y]: " & $y & " [x1]: " & $x1 & " [y1]: " & $y1, $COLOR_DEBUG)
-		;		If QuickMIS("BC1", $g_sImgAutoUpgradeZero, $x, $y, $x1, $y1, $Screencap, $Debug) Then
-		;			; Lets se if exist or NOT the Yellow Arrow, If Doesnt exist the [i] icon than exist the Yellow arrow , DONE
-		;			If Not QuickMIS("BC1", $g_sImgAutoUpgradeInfo, $x, $y, $x1, $y1, $Screencap, $Debug) Then
-		;				Click($x + 100, $y + 50, 1)
-		;				If _Sleep(3000) Then Return
-		;				; Lets search for the Correct Symbol on field
-		;				If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgYes, 150, 150, 650, 550, $Screencap, $Debug) Then
-		;					Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
-		;					SetLog("Placed a new Building on Builder Island! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_INFO)
-		;					If _Sleep(1000) Then Return
-		;					; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
-		;					If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
-		;						Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
-		;					EndIf
-		;					Return True
-		;				Else
-		;					If QuickMIS("BC1", $g_sImgAutoUpgradeNewBldgNo, 150, 150, 650, 550, $Screencap, $Debug) Then
-		;						SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $g_iQuickMISX + 150 & "," & $g_iQuickMISY + 150 & "]", $COLOR_ERROR)
-		;						Click($g_iQuickMISX + 150, $g_iQuickMISY + 150, 1)
-		;					Else
-		;						SetLog("Error on Undo symbol!", $COLOR_ERROR)
-		;					EndIf
-		;				EndIf
-		;			Else
-		;				If $i = UBound($ClocksCoordinates) - 1 Then
-		;					If $g_bDebugSetlog Then SetDebugLog("Slot without enough resources![1]", $COLOR_DEBUG)
-		;					Click(820, 38, 1) ; exit from Shop
-		;					ExitLoop
-		;				EndIf
-		;				ContinueLoop
-		;			EndIf
-		;		Else
-		;			If $g_bDebugSetlog Then SetDebugLog("Slot without enough resources![2]", $COLOR_DEBUG)
-		;			If $i = UBound($ClocksCoordinates) - 1 Then Click(820, 38, 1)
-		;		EndIf
-		;	Next
-		;Else
-		;	SetLog("Slot without enough resources![3]", $COLOR_INFO)
-		;	Click(820, 38, 1) ; exit from Shop
-		;EndIf
 	EndIf
 
 	Return False

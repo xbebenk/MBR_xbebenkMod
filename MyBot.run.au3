@@ -1287,13 +1287,13 @@ Func FirstCheck()
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
 
-	FirstCheckRoutine()
+	If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 	VillageReport()
 	If BotCommand() Then btnStop()
 	
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
-		_RunFunction('BuilderBase')
-		TrainSystem()
+		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
+		If Not $g_bSkipTrain Then TrainSystem()
 		checkSwitchAcc()
 	Endif
 

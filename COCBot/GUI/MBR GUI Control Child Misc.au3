@@ -1054,3 +1054,59 @@ Func CloseCustomBBDropOrder()
 	GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
 	GUICtrlSetState($g_hChkEnableBBAttack, $GUI_ENABLE)
 EndFunc   ;==>CloseCustomBBDropOrder
+
+Func chkOnHaltAttack()
+	If GUICtrlRead($g_hChkMMSkipFirstCheckRoutine) = $GUI_CHECKED Then
+		$g_bSkipFirstCheckRoutine = True
+	Else
+		$g_bSkipFirstCheckRoutine = False
+	EndIf
+	If GUICtrlRead($g_hChkMMSkipBB) = $GUI_CHECKED Then
+		$g_bSkipBB = True
+	Else
+		$g_bSkipBB = False
+	EndIf
+	If GUICtrlRead($g_hChkMMSkipTrain) = $GUI_CHECKED Then
+		$g_bSkipTrain = True
+	Else
+		$g_bSkipTrain = False
+	EndIf
+EndFunc ;==> chkOnHaltAttack
+
+Func chkOnDoubleTrain()
+	If GUICtrlRead($g_hChkMMIgnoreIncorrectTroopCombo) = $GUI_CHECKED Then
+		$g_bIgnoreIncorrectTroopCombo = True
+	Else
+		$g_bIgnoreIncorrectTroopCombo = False
+	EndIf
+	If GUICtrlRead($g_hChkMMIgnoreIncorrectSpellCombo) = $GUI_CHECKED Then
+		$g_bIgnoreIncorrectSpellCombo = True
+	Else
+		$g_bIgnoreIncorrectSpellCombo = False
+	EndIf
+	
+	If GUICtrlRead($g_hChkMMIgnoreIncorrectTroopCombo) = $GUI_CHECKED Or GUICtrlRead($g_hChkMMIgnoreIncorrectSpellCombo) = $GUI_CHECKED Then
+		$g_bPreciseArmy = False
+		GUICtrlSetState($g_hChkPreciseArmy, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+	Else
+		GUICtrlSetState($g_hChkPreciseArmy, BitOR($GUI_UNCHECKED, $GUI_ENABLE))
+	EndIf
+EndFunc ;==> chkOnDoubleTrain
+
+Func chkTrainPrev()
+	If GUICtrlRead($g_hChkMMTrainPreviousArmy) = $GUI_CHECKED Then
+		$g_bTrainPreviousArmy = True
+	Else
+		$g_bTrainPreviousArmy = False
+	EndIf
+EndFunc ;==> chkTrainPrev
+
+Func chkSkipWallPlacingOnBB()
+	If GUICtrlRead($g_hChkMMSkipWallPlacingOnBB) = $GUI_CHECKED Then
+		$g_bSkipWallPlacingOnBB = True
+	Else
+		$g_bSkipWallPlacingOnBB = False
+	EndIf
+EndFunc ;==> chkSkipWallPlacingOnBB
+
+

@@ -446,13 +446,13 @@ Func RemoveExtraTroops($toRemove)
 		; Check if Troops to remove are already in Train Tab Queue!! If was, Will Delete All Troops Queued Then Check Everything Again...
 		If DoWhatToTrainContainTroop($toRemove) And Not IsQueueEmpty("Troops", True, False) Then
 			SetLog("Clear troop queue before removing unexpected troops in army", $COLOR_INFO)
-			DeleteQueued("Troops")
+			If Not $g_bIgnoreIncorrectTroopCombo Then DeleteQueued("Troops")
 			$iResult = 2
 		EndIf
 
 		If DoWhatToTrainContainSpell($toRemove) And Not IsQueueEmpty("Spells", True, False) Then
 			SetLog("Clear spell queue before removing unexpected spells in army", $COLOR_INFO)
-			DeleteQueued("Spells")
+			If Not $g_bIgnoreIncorrectSpellCombo Then DeleteQueued("Spells")
 			$iResult = 2
 		EndIf
 

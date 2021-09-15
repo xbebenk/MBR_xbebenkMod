@@ -43,7 +43,9 @@ Func DoubleTrain()
 				If $Step = 6 Then ExitLoop
 				ContinueLoop
 			EndIf
-			If Not IsQueueEmpty("Troops", False, False) Then DeleteQueued("Troops")
+			If Not $g_bIgnoreIncorrectTroopCombo Then
+				If Not IsQueueEmpty("Troops", False, False) Then DeleteQueued("Troops")
+			EndIf
 			$bNeedReCheckTroopTab = True
 			If $bDebug Then SetLog($Step & ". DeleteQueued('Troops'). $bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab, $COLOR_DEBUG)
 
@@ -92,7 +94,9 @@ Func DoubleTrain()
 					If $Step = 6 Then ExitLoop
 					ContinueLoop
 				EndIf
-				If Not IsQueueEmpty("Spells", False, False) Then DeleteQueued("Spells")
+				If Not $g_bIgnoreIncorrectSpellCombo Then
+					If Not IsQueueEmpty("Spells", False, False) Then DeleteQueued("Spells")
+				EndIf
 				$bNeedReCheckSpellTab = True
 				If $bDebug Then SetLog($Step & ". DeleteQueued('Spells'). $bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
 
@@ -283,7 +287,9 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 		If _Sleep(1000) Then Return
 		$ArmyCamp = GetCurrentArmy(48, 160)
 		SetLog("Checking troop tab: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2 & ($ArmyCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
-		If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then Return False
+		If Not $g_bIgnoreIncorrectTroopCombo Then
+			If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then Return False
+		EndIf
 	EndIf
 	Return True
 EndFunc   ;==>CheckQueueTroopAndTrainRemain
@@ -343,7 +349,9 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
 		If _Sleep(1000) Then Return
 		Local $NewSpellCamp = GetCurrentArmy(43, 160)
 		SetLog("Checking spell tab: " & $NewSpellCamp[0] & "/" & $NewSpellCamp[1] * 2 & ($NewSpellCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
-		If $NewSpellCamp[0] < $ArmyCamp[1] * 2 Then Return False
+		If Not $g_bIgnoreIncorrectSpellCombo Then
+			If $NewSpellCamp[0] < $ArmyCamp[1] * 2 Then Return False
+		EndIf
 	EndIf
 	Return True
 EndFunc   ;==>CheckQueueSpellAndTrainRemain
