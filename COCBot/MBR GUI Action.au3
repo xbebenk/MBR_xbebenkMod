@@ -132,6 +132,7 @@ Func BotStart($bAutostartDelay = 0)
 		EndIf
 		If Not $g_bRunState Then Return FuncReturn()
 		If $hWndActive = $g_hAndroidWindow And ($g_bAndroidBackgroundLaunched = True Or AndroidControlAvailable())  Then ; Really?
+			EnableFirewall()
 			Initiate() ; Initiate and run bot
 		Else
 			SetLog("Cannot use " & $g_sAndroidEmulator & ", please check log", $COLOR_ERROR)
@@ -257,3 +258,31 @@ Func BotSearchMode()
 	btnStop()
 	FuncReturn()
 EndFunc   ;==>BotSearchMode
+
+Func EnableFirewall()
+	Local $RuleName[8] = ["config.inmobi.com", "engine.mobileapptracking.com", "in.appcenter.ms", "Unbotifyadjust", "w.alikunlun.com", "telemetry.sdk.eastus", "gdpr.adjust.com", "polyfill.io"]
+	Local $Ips[8] = ["23.97.150.128", "13.225.13.0/24,13.32.83.78", "20.185.75.141", "185.151.204.0/24", "80.231.126.100-80.231.126.254", "52.150.55.162", "178.162.219.36", "151.101.130.109"]
+	Local $RuleString = 'NETSH advfirewall firewall add rule name="'
+	Local $RuleString1 = '" dir=out program=any protocol=any localip=any remoteip='
+	Local $RuleString2 = ' action=block profile=any'
+	For $Rule = 0 To UBound($RuleName) - 1
+		RunWait(@ComSpec & " /C " & 'NETSH advfirewall firewall delete rule name=' & $RuleName[$Rule], "", @SW_HIDE)
+		RunWait(@ComSpec & " /C " & $RuleString & $RuleName[$Rule] & $RuleString1 & $Ips[$Rule] & $RuleString2, "", @SW_HIDE)
+	Next
+	If ConnectAndroidAdb(True, True) Then
+		Local $process_killed
+		Local $s = LaunchConsole($g_sAndroidAdbPath, "-s " & $g_sAndroidAdbDevice & " remount", $process_killed)
+		If StringInStr($s, "succeeded") > 0 Then SetLog("Remount succeeded", $COLOR_SUCCESS)
+		If _Sleep(2000) Then Return
+		Local $hostFile = @ScriptDir & "\lib\adb\hosts"
+		$s = LaunchConsole($g_sAndroidAdbPath, "-s " & $g_sAndroidAdbDevice & " push " & DoubleQuote($hostFile) & " /system/etc/", $process_killed)
+		If StringInStr($s, "pushed") > 0 Then SetLog("Patch for hosts file pushed", $COLOR_SUCCESS)
+		If _Sleep(2000) Then Return
+	Else
+		SetLog("Adb not connected!!")
+	EndIf
+EndFunc   ;==>EnabledFirewall
+
+Func DoubleQuote($sString)
+	Return Chr(34) & $sString & Chr(34)
+EndFunc   ;==>DoubleQuote

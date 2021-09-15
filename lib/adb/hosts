@@ -1,0 +1,15 @@
+127.0.0.1	localhost
+0.0.0.0		config.inmobi.com   	#23.97.150.128
+0.0.0.0		www.config.inmobi.com   #23.97.150.128
+0.0.0.0		in.appcenter.ms			#20.185.75.141
+0.0.0.0		wwww.in.appcenter.ms	#20.185.75.141
+0.0.0.0		config.inmobi.com       #104.45.180.93
+0.0.0.0		www.config.inmobi.com   #104.45.180.93
+0.0.0.0		app.adjust.com   		#185.151.204.11
+0.0.0.0		www.app.adjust.com  	#185.151.204.11
+0.0.0.0		unbotify.adjust.com		#185.151.204.151
+0.0.0.0		www.unbotify.adjust.com	#185.151.204.151
+0.0.0.0		gdpr.adjust.com			#178.162.219.36
+0.0.0.0		www.gdpr.adjust.com		#178.162.219.36
+0.0.0.0		www.polyfill.io			#151.101.130.109
+0.0.0.0		polyfill.io				#151.101.130.109

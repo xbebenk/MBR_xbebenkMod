@@ -1426,9 +1426,3 @@ Func TestBuilderBase()
 
 EndFunc
 
-Func abc()
-	PrepareAttack($g_iMatchMode)
-	Attack()
-EndFunc
-
-
