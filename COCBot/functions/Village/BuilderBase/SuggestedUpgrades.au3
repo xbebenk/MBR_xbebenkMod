@@ -181,13 +181,13 @@ Func AutoUpgradeBB($bTest = False)
 								$bSkipGoldCheck = True
 							Case "New"
 								If $g_iChkPlacingNewBuildings = 1 Then
-									SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
+									SetLog("[" & $i + 1 & "]" & " New Elixir Building detected, Placing it...", $COLOR_INFO)
 									If NewBuildings($aResult, $bTest) Then
 										Return True
 									EndIf
 									$bSkipGoldCheck = True
 								Else
-									SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
+									SetLog("[" & $i + 1 & "]" & " New Elixir Building detected, but not enabled...", $COLOR_INFO)
 								EndIf
 							Case "NoResources"
 								SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
@@ -209,12 +209,12 @@ Func AutoUpgradeBB($bTest = False)
 								EndIf
 							Case "New"
 								If $g_iChkPlacingNewBuildings = 1 Then
-									SetLog("[" & $i + 1 & "]" & " New Building detected, Placing it...", $COLOR_INFO)
+									SetLog("[" & $i + 1 & "]" & " New Gold Building detected, Placing it...", $COLOR_INFO)
 									If NewBuildings($aResult, $bTest) Then
 										Return True
 									EndIf
 								Else
-									SetLog("[" & $i + 1 & "]" & " New Building detected, but not enabled...", $COLOR_INFO)
+									SetLog("[" & $i + 1 & "]" & " New Gold Building detected, but not enabled...", $COLOR_INFO)
 								EndIf
 							Case "NoResources"
 								SetLog("[" & $i + 1 & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
@@ -414,10 +414,11 @@ Func NewBuildings($aResult, $bTest = False)
 		If UBound($ArrowCoordinates) > 1 Then
 			;Check if its wall or not (wall should skip)
 			If $g_bSkipWallPlacingOnBB Then
-				Local $IsWall = decodeSingleCoord(findImage("BBNewBuildingIsWall", $g_sImgisWall, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
-				If UBound($IsWall) > 1 Then
+				If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 150, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
+					SetLog("New Building is Wall!, Cancelling...", $COLOR_INFO)
 					Click(820, 38, 1) ; exit from Shop
-					If _Sleep(1000) Then Return
+					If _Sleep(2000) Then Return
+					ClickOnBuilder($bTest)
 					Return False
 				EndIf
 			EndIf
