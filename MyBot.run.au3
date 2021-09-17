@@ -751,6 +751,8 @@ Func runBot() ;Bot that runs everything in order
 			checkMainScreen(False)
 			If Not $g_bIsSearchLimit Then
 				Local $aRndFuncList = ['LabCheck', 'RequestCC', 'Collect', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge']
+			Else
+				Local $aRndFuncList = ['RequestCC', 'Collect', 'CleanYard']
 			EndIf
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
