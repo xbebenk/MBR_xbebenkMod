@@ -420,7 +420,7 @@ Func SaveConfig_600_6()
 	For $i = 0 To UBound($g_aCmbCGSpells) - 1
 		$str &= $g_aCmbCGSpells[$i] & "|"
 	Next
-	_Ini_Add("other", "EnabledBBTroop", $str)
+	_Ini_Add("other", "EnabledCGSpell", $str)
 
 	_Ini_Add("other", "ChkClanGamesDestruction", $g_bChkClanGamesDestruction ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesAirTroop", $g_bChkClanGamesAirTroop ? 1 : 0)

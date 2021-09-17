@@ -460,7 +460,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkClanGamesDestruction, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
 	IniReadS($g_bChkClanGamesAirTroop, $g_sProfileConfigPath, "other", "ChkClanGamesAirTroop", False, "Bool")
 	;xbenk
-	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledAirTroop", "-1|-1|-1|-1|-1|-1|-1|-1|-1|-1"), "|", $STR_NOCOUNT)
+	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledAirTroop", "0|-1|-1|-1|-1|-1|-1|-1|-1|-1|"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aCmbCGAirTroops) - 1
 		$g_aCmbCGAirTroops[$i] = $str[$i]
 	Next

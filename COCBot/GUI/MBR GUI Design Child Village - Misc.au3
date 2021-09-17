@@ -810,9 +810,9 @@ Func CreateClanGamesSpell()
 		$g_sTxtCGSpell &= $SpellChallenges[$j][1] & "|"
 	Next
 
-	$g_hGUI_CGSpells = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGSpells", "Ground Troops Challenges"), 322, 265, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	$g_hGUI_CGSpells = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGSpells", "Spell Challenges"), 322, 265, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
 	Local $x = 25, $y = 25
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGSpells", "Select Ground Troops Challenges"), $x - 20, $y - 20, 308, 200)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGSpells", "Select Spell Challenges"), $x - 20, $y - 20, 308, 200)
 	$x += 10
 	$y += 5
 	For $i = 0 To 9
@@ -829,7 +829,7 @@ Func CreateClanGamesSpell()
 		EndIf
 	Next
 	$y = 165
-	$g_hBtnCGSpellsSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGSpellsSet", "Apply Ground Troops"), $x - 20, $y, 118, 25)
+	$g_hBtnCGSpellsSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGSpellsSet", "Apply Spell Challenge"), $x - 20, $y, 118, 25)
 		GUICtrlSetOnEvent(-1, "btnSetCGSpells")
 	$g_hBtnCGSpellsRemove = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGSpellsRemove", "Empty Challenge List"), $x + 150, $y, 118, 25)
 		GUICtrlSetOnEvent(-1, "BtnCGSpellsRemove")
