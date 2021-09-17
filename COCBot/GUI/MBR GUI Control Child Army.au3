@@ -1612,3 +1612,9 @@ Func cmbSuperTroops()
 		Next
 	Next
  EndFunc
+ 
+ Func ChkPreciseArmy()
+	If $g_bIgnoreIncorrectTroopCombo Or $g_bIgnoreIncorrectSpellCombo Then
+		GUICtrlSetState($g_hChkPreciseArmy, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+	EndIf
+ EndFunc ;==>ChkPreciseArmy
