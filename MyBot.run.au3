@@ -749,18 +749,6 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bRestart Then ContinueLoop
 			
 			checkMainScreen(False)
-			If Not $g_bIsSearchLimit Then
-				Local $aRndFuncList = ['LabCheck', 'RequestCC', 'Collect', 'CleanYard', 'CollectAchievements', 'CollectFreeMagicItems', 'DailyChallenge']
-			Else
-				Local $aRndFuncList = ['RequestCC', 'Collect', 'CleanYard']
-			EndIf
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep($DELAYRUNBOT5) Then Return
-				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-			Next
-
 			;AddIdleTime()
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ContinueLoop
@@ -1330,7 +1318,7 @@ Func FirstCheckRoutine()
 	PrepareDonateCC()
 	DonateCC()
 	
-	Local $aRndFuncList = ['CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
+	Local $aRndFuncList = ['Collect','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
