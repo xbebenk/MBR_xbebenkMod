@@ -892,3 +892,8 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 
 EndFunc   ;==>DropTroopSmartFarm
 
+Func TestSF()
+	PrepareAttack($g_iMatchMode)
+	Local $Nside = ChkSmartFarm()
+	AttackSmartFarm($Nside[1], $Nside[2])
+EndFunc
