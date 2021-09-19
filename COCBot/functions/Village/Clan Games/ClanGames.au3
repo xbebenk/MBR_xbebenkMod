@@ -516,6 +516,14 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $BBTroopsChallenges[$g_aCmbCGBBTroops[$i]][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
+		Case "S"
+			Local $SChallenges = ClanGamesChallenges("$SpellChallenges")
+			For $i = 0 To UBound($g_aCmbCGSpells) - 1
+				If $g_aCmbCGSpells[$i] >= 0 Then
+					SetDebugLog("[" & $i & "]" & "Copy File: " & $SChallenges[$g_aCmbCGSpells[$i]][0])
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $SChallenges[$g_aCmbCGSpells[$i]][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				EndIf
+			Next
 		Case Else
 			FileCopy($sImagePath & "\" & $sImageType & "-" & "*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 
