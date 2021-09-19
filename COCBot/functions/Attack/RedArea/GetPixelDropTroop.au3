@@ -21,33 +21,33 @@ Func GetPixelDropTroop($troop, $number, $slotsPerEdge)
 	Local $newPixelTopRight
 	Local $newPixelBottomRight
 
-	If ($troop = $eArch Or $troop = $eSArch Or $troop = $eWiza Or $troop = $eSWiza Or $troop = $eMini Or $troop = $eSMini Or $troop = $eBarb Or $troop = $eSBarb) Then
-		If UBound($g_aiPixelTopLeftFurther) > 0 Then
-			$newPixelTopLeft = $g_aiPixelTopLeftFurther
-		Else
-			$newPixelTopLeft = $g_aiPixelTopLeft
-		EndIf
-		If UBound($g_aiPixelBottomLeftFurther) > 0 Then
-			$newPixelBottomLeft = $g_aiPixelBottomLeftFurther
-		Else
-			$newPixelBottomLeft = $g_aiPixelBottomLeft
-		EndIf
-		If UBound($g_aiPixelTopRightFurther) > 0 Then
-			$newPixelTopRight = $g_aiPixelTopRightFurther
-		Else
-			$newPixelTopRight = $g_aiPixelTopRight
-		EndIf
-		If UBound($g_aiPixelBottomRightFurther) Then
-			$newPixelBottomRight = $g_aiPixelBottomRightFurther
-		Else
-			$newPixelBottomRight = $g_aiPixelBottomRight
-		EndIf
-	Else
+	;If ($troop = $eArch Or $troop = $eSArch Or $troop = $eWiza Or $troop = $eSWiza Or $troop = $eMini Or $troop = $eSMini Or $troop = $eBarb Or $troop = $eSBarb) Then
+	;	If UBound($g_aiPixelTopLeftFurther) > 0 Then
+	;		$newPixelTopLeft = $g_aiPixelTopLeftFurther
+	;	Else
+	;		$newPixelTopLeft = $g_aiPixelTopLeft
+	;	EndIf
+	;	If UBound($g_aiPixelBottomLeftFurther) > 0 Then
+	;		$newPixelBottomLeft = $g_aiPixelBottomLeftFurther
+	;	Else
+	;		$newPixelBottomLeft = $g_aiPixelBottomLeft
+	;	EndIf
+	;	If UBound($g_aiPixelTopRightFurther) > 0 Then
+	;		$newPixelTopRight = $g_aiPixelTopRightFurther
+	;	Else
+	;		$newPixelTopRight = $g_aiPixelTopRight
+	;	EndIf
+	;	If UBound($g_aiPixelBottomRightFurther) Then
+	;		$newPixelBottomRight = $g_aiPixelBottomRightFurther
+	;	Else
+	;		$newPixelBottomRight = $g_aiPixelBottomRight
+	;	EndIf
+	;Else
 		$newPixelTopLeft = $g_aiPixelTopLeft
 		$newPixelBottomLeft = $g_aiPixelBottomLeft
 		$newPixelTopRight = $g_aiPixelTopRight
 		$newPixelBottomRight = $g_aiPixelBottomRight
-	EndIf
+	;EndIf
 
 	$newPixelTopLeft = GetVectorPixelOnEachSide2($newPixelTopLeft, 0, $slotsPerEdge)
 	$newPixelBottomLeft = GetVectorPixelOnEachSide2($newPixelBottomLeft, 1, $slotsPerEdge)
