@@ -731,8 +731,9 @@ EndFunc   ;==>chkActivateClangames
 ; Purging doesnt exist if we want BB challneges, because they are all attack basically... This avoids potential conflicts in code and logic if both are selected
 Func chkClanGamesBB()
 	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
-		If GUICtrlRead($g_hChkClanGamesBBBattle) = $GUI_CHECKED or GUICtrlRead($g_hChkClanGamesBBDestruction) = $GUI_CHECKED Then
+		If GUICtrlRead($g_hChkClanGamesBBBattle) = $GUI_CHECKED or GUICtrlRead($g_hChkClanGamesBBDestruction) = $GUI_CHECKED or GUICtrlRead($g_hChkClanGamesBBTroops) = $GUI_CHECKED Then
 			GUICtrlSetState($g_hChkClanGamesPurge, $GUI_DISABLE)
+			GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_ENABLE)
 		Else
 			GUICtrlSetState($g_hChkClanGamesPurge, $GUI_ENABLE)
 		EndIf
@@ -754,10 +755,12 @@ Func chkPurgeLimits()
 			GUICtrlSetState($g_hcmbPurgeLimit, $GUI_ENABLE)
 			GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE) ; same as above, by purging, it is the same as doing BB challenges really. (unless gemming to completion) So this avoids potential code and logic conflicts again
 			GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_DISABLE)
+			GUICtrlSetState($g_hChkClanGamesBBTroops, $GUI_DISABLE)
 		Else
 			GUICtrlSetState($g_hcmbPurgeLimit, $GUI_DISABLE)
 			GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_ENABLE) ; same as above, by purging, it is the same as doing BB challenges really. (unless gemming to completion) So this avoids potential code and logic conflicts again
 			GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_ENABLE)
+			GUICtrlSetState($g_hChkClanGamesBBTroops, $GUI_ENABLE)
 		EndIf
 	EndIf
 EndFunc

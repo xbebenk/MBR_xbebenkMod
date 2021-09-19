@@ -272,11 +272,11 @@ Func EnableFirewall()
 	If ConnectAndroidAdb(True, True) Then
 		Local $process_killed
 		Local $s = LaunchConsole($g_sAndroidAdbPath, "-s " & $g_sAndroidAdbDevice & " remount", $process_killed)
-		If StringInStr($s, "succeeded") > 0 Then SetLog("Remount succeeded", $COLOR_SUCCESS)
+		If StringInStr($s, "succeeded") > 0 Then SetDebugLog("Remount succeeded", $COLOR_SUCCESS)
 		If _Sleep(2000) Then Return
 		Local $hostFile = @ScriptDir & "\lib\adb\hosts"
 		$s = LaunchConsole($g_sAndroidAdbPath, "-s " & $g_sAndroidAdbDevice & " push " & DoubleQuote($hostFile) & " /system/etc/", $process_killed)
-		If StringInStr($s, "pushed") > 0 Then SetLog("Patch for hosts file pushed", $COLOR_SUCCESS)
+		If StringInStr($s, "pushed") > 0 Then SetDebugLog("Patch for hosts file pushed", $COLOR_SUCCESS)
 		If _Sleep(2000) Then Return
 	Else
 		SetLog("Adb not connected!!")

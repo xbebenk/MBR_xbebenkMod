@@ -1375,7 +1375,6 @@ Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
 Global $g_aiStarLaboratoryPos[2] = [-1, -1] ; Position of Starlaboratory
 Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
-Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False
 
 ; Army camps
 Global $g_iArmyCapacity = 0 ; Calculated percentage of troops currently in camp / total camp space, expressed as an integer from 0 to 100
@@ -1805,7 +1804,6 @@ Global $g_bChkClanGamesBattle = 0
 global $g_bChkClanGamesSpell = 0
 Global $g_bChkClanGamesBBBattle = 0
 Global $g_bChkClanGamesBBDestruction = 0
-Global $g_bChkClanGamesBBTroops = 0
 
 Global $g_bChkClanGamesDestruction = 0
 Global $g_bChkClanGamesAirTroop = 0
@@ -1816,7 +1814,6 @@ Global $g_bChkClanGamesStopBeforeReachAndPurge = 0
 Global $g_bChkClanGamesDebug = 0
 Global $g_iPurgeJobCount[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iPurgeMax = 5 ; [0] is unlimited , 1-10
-Global $g_bChkClanGamesPurgeAny = 0
 Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
@@ -1828,6 +1825,8 @@ Global $g_aCmbCGSpells[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahCmbCGSpells[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = 0
+Global $g_bChkClanGamesPurgeAny = 0
 
 ; Collect Achievement Rewards
 Global $g_bChkCollectAchievements = True

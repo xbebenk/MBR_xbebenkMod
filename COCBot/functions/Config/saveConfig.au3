@@ -406,6 +406,7 @@ Func SaveConfig_600_6()
 
     _Ini_Add("other", "ChkClanGamesBBBattle", $g_bChkClanGamesBBBattle ? 1 : 0)
     _Ini_Add("other", "ChkClanGamesBBDestruction", $g_bChkClanGamesBBDestruction ? 1 : 0)
+	;xbenk
 	_Ini_Add("other", "ChkClanGamesBBTroops", $g_bChkClanGamesBBTroops ? 1 : 0)
 	Local $str = ""
 	For $i = 0 To UBound($g_aCmbCGBBTroops) - 1
