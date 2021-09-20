@@ -304,7 +304,6 @@ Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap 
 			$aResult[2] = "New"
 		EndIf
 	EndIf
-
 	Return $aResult
 EndFunc   ;==>GetIconPosition
 
