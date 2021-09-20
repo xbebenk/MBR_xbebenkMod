@@ -1227,6 +1227,7 @@ EndFunc   ;==>__RunFunction
 Func FirstCheck()
 
 	SetLog("-- FirstCheck Loop --")
+	If _Sleep(50) Then Return
 	checkMainScreen(False)
 	If Not $g_bRunState Then
 		GUICtrlSetState($g_hBtnControl, $GUI_HIDE)
@@ -1263,6 +1264,8 @@ Func FirstCheck()
 	;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	If Not $g_bRunState Then Return
+	Collect()
+	If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 	VillageReport()
 
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
@@ -1276,9 +1279,7 @@ Func FirstCheck()
 		SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_SUCCESS)
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
-
-	If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
-	VillageReport()
+	
 	If BotCommand() Then btnStop()
 	
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
