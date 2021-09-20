@@ -555,3 +555,30 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 
 	Return FuncReturn($aResult)
 EndFunc   ;==>SearchZoomOut
+
+Func ZoomIn($Region = "Top")
+	Local $Result = Execute("ZoomIn" & $g_sAndroidEmulator & "(" & DoubleQuote($Region) & ")")
+	If $Result = "" And @error <> 0 Then
+		; Not implemented or other error
+		;$Result = AndroidOnlyZoomOut()
+	EndIf
+EndFunc
+
+Func ZoomInMEmu($Region = "Top", $ZoomInKey = "{F2}")
+	SetDebugLog("ZoomInMEmu()")
+	Local $Result = ControlSend($g_hAndroidWindow, "", "", $ZoomInKey)
+	If _Sleep(200) Then Return
+	ClickAway("Right")
+	If _Sleep(100) Then Return
+	Switch $Region
+		Case "Top"
+			ClickDrag(400, 70, 400, 400)
+		Case "Left"
+			ClickDrag(90, 450, 400, 450)
+		Case "Bottom"
+			ClickDrag(400, 630, 400, 270)
+		Case "Right"
+			ClickDrag(800, 300, 400, 300)
+	EndSwitch
+	Return $Result
+EndFunc

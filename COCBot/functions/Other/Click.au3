@@ -255,14 +255,14 @@ Func ClickAway($Region = Default)
 		$aiRegionToUse = $aiClickAwayRegionLeft
 	ElseIf $Region = "Right" Then
 		$aiRegionToUse = $aiClickAwayRegionRight
+	ElseIf $Region = "RCorner" Then
+		Click(820, 38, 1) ; exit from Shop
+		Return
 	EndIf
 	
 	Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
 	
 	If $g_bDebugClick Then SetDebugLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_DEBUG)
-	If $aiSpot[0] > 700 Then 
-		SetLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_DEBUG)
-	EndIf
 	ClickP($aiSpot, 1, 0, "#0000")
 EndFunc
 

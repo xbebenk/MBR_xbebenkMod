@@ -723,3 +723,15 @@ Func chkUpgradePets()
 		EndIf
 	Next
 EndFunc
+
+Func ChkPlaceNew()
+	If GUICtrlRead($g_ChkPlaceNewBuilding) = $GUI_CHECKED Then
+		$g_bPlaceNewBuilding = True
+		SetLog("Enabling Auto Upgrade Place New Building", $COLOR_DEBUG)
+		SetLog("This is experimental, use at your own risk", $COLOR_ORANGE)
+	Else
+		$g_bPlaceNewBuilding = False
+	EndIf
+EndFunc ;==>ChkPlaceNew
+
+

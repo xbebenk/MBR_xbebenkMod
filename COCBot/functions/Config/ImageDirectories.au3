@@ -110,6 +110,12 @@ Global $g_sImgChatIUnterstand = @ScriptDir & "\imgxml\DonateCC\donateccwbl\iunde
  Global $g_sImgAUpgradeRes = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Resources"
  Global $g_sImgAUpgradeEndBoost = @ScriptDir & "\imgxml\Resources\Auto Upgrade\EndBoost\EndBoost*"
  Global $g_sImgAUpgradeEndBoostOKBtn = @ScriptDir & "\imgxml\Resources\Auto Upgrade\EndBoost\EndBoostOKBtn*"
+ Global $g_sImgAUpgradeGreenZone = @ScriptDir & "\imgxml\Resources\Auto Upgrade\GreenZone\"
+ Global $g_sImgAUpgradeIconElixir = @ScriptDir & "\imgxml\Resources\Auto Upgrade\AUpgradeIcon\Elixir\"
+ Global $g_sImgAUpgradeIconGold = @ScriptDir & "\imgxml\Resources\Auto Upgrade\AUpgradeIcon\Gold\"
+ Global $g_sImgAUpgradeIconDE = @ScriptDir & "\imgxml\Resources\Auto Upgrade\AUpgradeIcon\DE\"
+ Global $g_sImgAUpgradeIconYes = @ScriptDir & "\imgxml\Resources\Auto Upgrade\New\GreenCheck\"
+ Global $g_sImgAUpgradeIconNo = @ScriptDir & "\imgxml\Resources\Auto Upgrade\New\RedX\"
 #EndRegion
 
 #Region Auto Upgrade Builder Base

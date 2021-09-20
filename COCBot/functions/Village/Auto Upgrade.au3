@@ -23,97 +23,95 @@ EndFunc
 
 Func SearchUpgrade($bTest = False)
 	
-	Local $b_isupgradefound
+	Local $b_IsUpgradeFound = False
 	Local $i_scrolltime = 0
-	ClickAway("Left")
-	VillageReport(True, True) ;check if we have available builder
+	
+	Local $bDebug = $bTest
+	Local $bScreencap = True
 	
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
-	; check if builder head is clickable
-	If Not (_ColorCheck(_GetPixelColor(275, 15, True), "F5F5ED", 20) = True) Then
-		SetLog("Unable to find the Builder menu button... Exiting Auto Upgrade...", $COLOR_ERROR)
-		Return
-	EndIf
-	If $bTest Then $g_iFreeBuilderCount = 5
-	;Check if there is a free builder for Auto Upgrade
-	If ($g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0)) <= 0 Then
-		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
-		Return
-	EndIf
 	
-	; open the builders menu
-	Click(295, 30)
-	If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
-	ClickDrag(333, 100, 333, 400, 500) ;drag to bottom
-	If _Sleep(1000) Then Return
-	
-	If $g_bScrollFirst Then ;skip first page on builder menu
-		Local $Yscroll =  ($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28
-		ClickDrag(333, 120 + $Yscroll, 333, 90, 500)
-		If _Sleep(1000) Then Return
-	EndIf
-	
-	While 1
-		While $b_isupgradefound = False
-			If Not $g_bRunState Then Return
-			; search for 000 in builders menu, if 000 found, a possible upgrade is available
-			If QuickMIS("BC1", $g_sImgAUpgradeZero, 180, 80 + $g_iNextLineOffset, 480, 380) Then
-				$g_iCurrentLineOffset = $g_iNextLineOffset + $g_iQuickMISY
-				; check in the line of the 000 if we can see "New" or the Gear of the equipment, in this case, will not do the upgrade
-				If QuickMIS("NX",$g_sImgAUpgradeObst, 180, 80 + $g_iCurrentLineOffset - 15, 480, 80 + $g_iCurrentLineOffset + 15) <> "none" Then
-					SetLog("This is a New Building or an Equipment, looking next...", $COLOR_WARNING)
-					$g_iNextLineOffset = $g_iCurrentLineOffset
-				Else
-					SetLog("Possible upgrade found!", $COLOR_SUCCESS)
-					$b_isupgradefound = True
-				EndIf
-			Else
-				If $i_scrolltime > 1 Then
-					SetLog("Max Scrool reach!", $COLOR_SUCCESS)
-					ExitLoop 2
-				EndIf
-				SetLog("No upgrade available... Try Scrolling Up!", $COLOR_INFO)
-				If $g_iCurrentLineOffset + 80 < 150 Then 
-					ClickDrag(333, 80 + $g_iCurrentLineOffset, 333, 80, 500)
-				Else
-					ClickDrag(333, 350, 333, 80, 500)
-				EndIf
-				$i_scrolltime += 1
-				$g_iNextLineOffset = 0
-				$g_iCurrentLineOffset = 0 
-				;SetLog("Scroll time: " & $i_scrolltime & ", $g_iNextLineOffset: " & $g_iNextLineOffset & ",$g_iCurrentLineOffset: " & $g_iCurrentLineOffset, $COLOR_SUCCESS)
-				ContinueLoop
-			EndIf
-		Wend
-		
-		If Not DoUpgrade($bTest) Then 
-			$b_isupgradefound = False
-			ClickAway("Left")
-			If _Sleep(1000) Then Return
-			; open the builders menu
-			Click(295, 30)
-			If _Sleep(1000) Then Return
-			ContinueLoop
-		Else 
-			SetLog("Upgrade Success!", $COLOR_SUCCESS)
-			$g_iNextLineOffset = 0
-			$g_iCurrentLineOffset = 0 
-			ExitLoop
+	If $g_bPlaceNewBuilding Then
+		If QuickMIS("BC1", $g_sImgAUpgradeGreenZone, 320, 70, 520, 220) Then ;Top
+			SetLog("Found GreenZone, On Top Region", $COLOR_SUCCESS)
+			ZoomIn("Top")
+		ElseIf QuickMIS("BC1", $g_sImgAUpgradeGreenZone, 130, 270, 280, 390) Then ;Left
+			SetLog("Found GreenZone, On Left Region", $COLOR_SUCCESS)
+			ZoomIn("Left")
+		ElseIf QuickMIS("BC1", $g_sImgAUpgradeGreenZone, 340, 460, 520, 560) Then ;Bottom
+			SetLog("Found GreenZone, On Bottom Region", $COLOR_SUCCESS)
+			ZoomIn("Bottom")
+		ElseIf QuickMIS("BC1", $g_sImgAUpgradeGreenZone, 560, 270, 710, 400) Then ;Right
+			SetLog("Found GreenZone, On Right Region", $COLOR_SUCCESS)
+			ZoomIn("Bottom")
+		Else
+			SetLog("GreenZone for Placing new Building Not Found", $COLOR_DEBUG)
 		Endif
-	Wend
-	$g_iNextLineOffset = 0
-	$g_iCurrentLineOffset = 0 
-	ClickAway("Left") ;close builder menu
+	EndIf
 	
+	If Not ClickMainBuilder($bTest, True) Then Return
+	If Not $g_bRunState Then Return
+	
+	Local $UpgradeType[3] = ["Elixir", "Gold", "DE"]
+	While 1
+		While $b_IsUpgradeFound = False
+			For $z = 0 To 2 ;for do scroll 3 times
+				If $g_bRestart Then Exitloop
+				Local $x = 330, $y = 80, $x1 = 450, $y1 = 108, $step = 28
+				; Check for 8 Icons on Window
+				For $i = 0 To 7
+					For $UType In $UpgradeType 
+						Local $aResult = GetUpgradeIcon($x, $y, $x1, $y1, $g_sImgAUpgradeIconElixir, $UType, $bScreencap, $bDebug)
+						Select
+							Case $aResult[2] = "Elixir" Or $aResult[2] = "Gold" Or $aResult[2] = "DE"
+								Click($aResult[0], $aResult[1], 1)
+								If _Sleep(1000) Then Return
+								If DoUpgrade($bTest) Then
+									$b_IsUpgradeFound = True
+									Return True
+								Else
+									ClickMainBuilder($bTest)
+									If _Sleep(1000) Then Return
+								EndIf
+							Case $aResult[2] = "New"
+								If $g_bPlaceNewBuilding Then
+									SetLog("[" & $i + 1 & "]" & " New " & $UType & " Building detected, Placing it...", $COLOR_INFO)
+									If AUNewBuildings($aResult, $bTest) Then
+										$b_IsUpgradeFound = True
+										ClickAway("RCorner")
+										ZoomOut()
+										Return True
+									EndIf
+								Else
+									SetLog("[" & $i + 1 & "]" & " New " & $UType & " Building detected, but not enabled...", $COLOR_INFO)
+								EndIf
+							Case $aResult[2] = "NoResources"
+								SetLog("[" & $i + 1 & "]" & " Not enough " & $UType & ", continuing...", $COLOR_INFO)
+								;ExitLoop ; continue as suggested upgrades are not ordered by amount
+							Case Else
+								SetDebugLog("[" & $i + 1 & "]" & " Unsupport " & $UType & " icon, continuing...", $COLOR_INFO)
+						EndSelect
+					Next
+					$y += $step
+					$y1 += $step
+				Next
+			If Not $b_IsUpgradeFound Then
+				ClickDrag(333, $y, 333, 75, 800);do scroll down
+				If _Sleep(500) Then Return
+			EndIf
+			Next
+		Wend
+	Wend
+	ClickAway("RCorner")
 EndFunc
 
 Func DoUpgrade($bTest = False)
 
 	; if it's an upgrade, will click on the upgrade, in builders menu
-	Click(180 + $g_iQuickMISX, 80 + $g_iCurrentLineOffset)
-	If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
-	If Not $g_bRunState Then Return
+	;Click(180 + $g_iQuickMISX, 80 + $g_iCurrentLineOffset)
+	;If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
+	;If Not $g_bRunState Then Return
 
 	; check if any wrong click by verifying the presence of the Upgrade button (the hammer)
 	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
@@ -121,6 +119,7 @@ Func DoUpgrade($bTest = False)
 		SetLog("No upgrade here... Wrong click, looking next...", $COLOR_WARNING)
 		;$g_iNextLineOffset = $g_iCurrentLineOffset -> not necessary finally, but in case, I keep lne commented
 		$g_iNextLineOffset = $g_iCurrentLineOffset
+		Click(820, 38, 1) ; exit from Shop
 		Return False
 	EndIf
 
@@ -218,7 +217,7 @@ Func DoUpgrade($bTest = False)
 		Return False
 	EndIf
 
-	; if upgrade don't have to be ignored, click on the Upgrade button to open Upgrade window
+	; if upgrade not to be ignored, click on the Upgrade button to open Upgrade window
 	ClickP($aUpgradeButton)
 	If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
 
@@ -278,6 +277,7 @@ Func DoUpgrade($bTest = False)
 	If Not $bSufficentResourceToUpgrade Then
 		SetLog($g_aUpgradeNameLevel[1] & ": Insufficent " & $g_aUpgradeResourceCostDuration[0] & " to launch this upgrade, looking Next...", $COLOR_WARNING)
 		$g_iNextLineOffset = $g_iCurrentLineOffset
+		ClickAway("RCorner")
 		Return False
 	EndIf
 
@@ -290,7 +290,7 @@ Func DoUpgrade($bTest = False)
 				Click(440, 530)
 		EndSwitch
 	Else	
-		ClickAway("Left")
+		ClickAway("RCorner")
 	Endif
 
 	;Check for 'End Boost?' pop-up
@@ -306,7 +306,7 @@ Func DoUpgrade($bTest = False)
 		Else
 			SetLog("Unable to locate OK Button", $COLOR_ERROR)
 			If _Sleep(1000) Then Return
-			ClickAway("Left")
+			ClickAway("RCorner")
 			Return
 		EndIf
 	EndIf
@@ -325,10 +325,11 @@ Func DoUpgrade($bTest = False)
 			Case 14
 				SetLog("Launched upgrade of Giga Inferno to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
 		EndSwitch
+		
 	Else
 		SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
 	Endif
-	
+	ClickAway("RCorner")
 	
 	SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
 	SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
@@ -354,3 +355,144 @@ Func DoUpgrade($bTest = False)
 			
 	Return True
 EndFunc
+
+;Open the Upgrade Window and check if is OK
+Func ClickMainBuilder($bTest = False, $bFirstOpen = False)
+
+	; Debug Stuff
+	Local $sDebugText = ""
+	Local Const $Debug = False
+	Local Const $Screencap = True
+	
+	ClickAway("RCorner")
+	VillageReport(True, True) ;check if we have available builder
+	
+	; check if builder head is clickable
+	If Not (_ColorCheck(_GetPixelColor(275, 15, True), "F5F5ED", 20) = True) Then
+		SetLog("Unable to find the Builder menu button... Exiting Auto Upgrade...", $COLOR_ERROR)
+		Return
+	EndIf
+	
+	If $bTest Then $g_iFreeBuilderCount = 5
+	;Check if there is a free builder for Auto Upgrade
+	If ($g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0)) <= 0 Then
+		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
+		If $g_bPlaceNewBuilding Then ZoomOut()
+		Return False
+	EndIf
+	
+	; open the builders menu
+	Click(295, 30)
+	If _Sleep(1000) Then Return
+	; Let's verify if the Builder Window opened
+	If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
+		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
+		If $g_bScrollFirst And $bFirstOpen Then ;skip first page on builder menu
+			Local $Yscroll =  ($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28
+			ClickDrag(333, 120 + $Yscroll, 333, 90)
+			If _Sleep(500) Then Return
+		EndIf
+		Return True
+	Else
+		SetLog("Upgrade Window didn't opened", $COLOR_DEBUG)
+	EndIf
+	Return False
+EndFunc   ;==>ClickOnBuilder
+
+Func GetUpgradeIcon($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap = True, $Debug = False)
+	SetDebugLog("GetUpgradeIcon(" & $x &"," & $y & "," & $x1 & "," & $y1 & "," & $directory & "," & $Name, $COLOR_ORANGE)
+	; [0] = x position , [1] y postion , [2] Gold, Elixir or New
+	Local $aResult[3] = [-1, -1, ""]
+	Switch $Name
+		Case "Elixir"
+			$directory = $g_sImgAUpgradeIconElixir
+		Case "Gold"
+			$directory = $g_sImgAUpgradeIconGold
+		Case "DE"
+			$directory = $g_sImgAUpgradeIconDE
+	EndSwitch
+	If QuickMIS("BC1", $directory, $x, $y, $x1, $y1, $Screencap, $Debug) Then
+		; Correct positions to Check Green 'New' Building word
+		Local $iYoffset = $y + $g_iQuickMISY - 15, $iY1offset = $y + $g_iQuickMISY + 7
+		Local $iX = 200, $iX1 = $g_iQuickMISX + $x
+		; Store the values
+		$aResult[0] = $g_iQuickMISX + $x
+		$aResult[1] = $g_iQuickMISY + $y
+		$aResult[2] = $Name
+		; The pink/salmon color on zeros
+		If QuickMIS("BC1", $g_sImgAutoUpgradeNoRes, $aResult[0], $iYoffset, $aResult[0] + 100, $iY1offset, True, $Debug) Then
+			; Store new values
+			$aResult[2] = "NoResources"
+			SetLog("Not Enough Resource for " & $Name & " Building", $COLOR_INFO)
+			Return $aResult
+		EndIf
+		; Proceeds with 'New' detection
+		If QuickMIS("BC1", $g_sImgAutoUpgradeNew, $iX, $iYoffset, $iX1, $iY1offset, True, $Debug) Then
+			; Store new values
+			$aResult[0] = $g_iQuickMISX + $iX + 35
+			$aResult[1] = $g_iQuickMISY + $iYoffset
+			$aResult[2] = "New"
+			SetLog("Found New " & $Name & " Building", $COLOR_INFO)
+		EndIf
+	EndIf
+	SetDebugLog("Result: " & $aResult[0] & "|" & $aResult[1] & "|" & $aResult[2], $COLOR_ORANGE)
+	Return $aResult
+EndFunc   ;==>GetUpgradeIcon
+
+Func AUNewBuildings($aResult, $bTest = False)
+
+	Local $Screencap = True, $Debug = $bTest
+	If UBound($aResult) = 3 And $aResult[2] = "New" Then
+
+		; The $g_iQuickMISX and $g_iQuickMISY haves the coordinates compansation from 'New' | GetIconPosition()
+		Click($aResult[0], $aResult[1], 1)
+		If _Sleep(3000) Then Return
+
+		;Search the arrow
+		Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
+		If UBound($ArrowCoordinates) > 1 Then
+			;Check if its wall or not (wall should skip)
+			If $g_bSkipWallPlacingOnBB Then
+				If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 150, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
+					SetLog("New Building is Wall!, Cancelling...", $COLOR_INFO)
+					Click(820, 38, 1) ; exit from Shop
+					If _Sleep(2000) Then Return
+					ClickMainBuilder($bTest)
+					Return False
+				EndIf
+			EndIf
+			Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50)
+			If _Sleep(2000) Then Return 
+			; Lets search for the Correct Symbol on field
+			If QuickMIS("BC1", $g_sImgAUpgradeIconYes, 100, 100, 740, 620, $Screencap, $Debug) Then
+				If Not $bTest Then
+					Click($g_iQuickMISX + 100, $g_iQuickMISY + 100, 1)
+				EndIf
+				SetLog("Placed a new Building on Main Village! [" & $g_iQuickMISX + 100 & "," & $g_iQuickMISY + 100 & "]", $COLOR_SUCCESS)
+				If _Sleep(1000) Then Return
+				If QuickMIS("BC1", $g_sImgAUpgradeIconYes, 100, 100, 740, 620, $Screencap, $Debug) Then
+					Click($g_iQuickMISX + 100, $g_iQuickMISY + 100, 1)
+				EndIf
+				; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
+				If QuickMIS("BC1", $g_sImgAUpgradeIconNo, 100, 100, 740, 620, $Screencap, $Debug) Then
+					Click($g_iQuickMISX + 100, $g_iQuickMISY + 100, 1)
+				EndIf
+				Return True
+			Else
+				If QuickMIS("BC1", $g_sImgAUpgradeIconNo, 100, 100, 740, 620, $Screencap, $Debug) Then
+					SetLog("Sorry! Wrong place to deploy a new building on Main Village! [" & $g_iQuickMISX + 100 & "," & $g_iQuickMISY + 100 & "]", $COLOR_ERROR)
+					Click($g_iQuickMISX + 100, $g_iQuickMISY + 100, 1)
+				Else
+					SetLog("Error on Undo symbol!", $COLOR_ERROR)
+				EndIf
+				Return True
+			EndIf
+		Else
+			SetLog("Cannot find Orange Arrow", $COLOR_ERROR)
+			Click(820, 38, 1) ; exit from Shop
+		EndIf
+	EndIf
+
+	Return False
+EndFunc   ;==>AUNewBuildings
+
