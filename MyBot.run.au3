@@ -1229,6 +1229,7 @@ Func FirstCheck()
 	SetLog("-- FirstCheck Loop --")
 	If _Sleep(50) Then Return
 	checkMainScreen(False)
+	VillageReport()
 	If Not $g_bRunState Then
 		GUICtrlSetState($g_hBtnControl, $GUI_HIDE)
 		Return
