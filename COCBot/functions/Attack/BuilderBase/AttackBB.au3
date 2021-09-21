@@ -90,15 +90,15 @@ Func AttackBB()
 		PureClick($aBBFindNow[0], $aBBFindNow[1])
 	Else
 		SetLog("Could not locate search button to go find an attack.", $COLOR_ERROR)
-		Return
+		Return False
 	EndIf
 
 	If _Sleep(1500) Then Return ; give time for find now button to go away
 	If _CheckPixel($aBBFindNow, True) Then ; click failed so something went wrong
 		SetLog("Click BB Find Now failed. We will come back and try again.", $COLOR_ERROR)
-		ClickAway()
+		ClickAway("Left")
 		ZoomOut()
-		Return
+		Return False
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
@@ -250,7 +250,7 @@ Func AttackBB()
 	If Not $g_bRunState Then Return ; Stop Button
 	SetLog("Waiting for opponent", $COLOR_BLUE)
 	Okay()
-	ClickAway()
+	ClickAway("Left")
 	SetLog("Done", $COLOR_SUCCESS)
 	
 	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast ; reset android suspend and resume stuff
