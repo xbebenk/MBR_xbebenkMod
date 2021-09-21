@@ -47,12 +47,6 @@ Func SearchUpgrade($bTest = False)
 		Return False
 	EndIf
 	
-	If $g_bPlaceNewBuilding Then
-		If UpgradeNewBuilding($bTest) Then
-			Return True
-		EndIf
-	EndIf
-	
 	If Not ClickMainBuilder($bTest, True) Then Return
 	If Not $g_bRunState Then Return
 	
@@ -79,6 +73,13 @@ Func SearchUpgrade($bTest = False)
 		ClickDrag(333, $y, 333, 75, 800);do scroll down
 		If _Sleep(500) Then Return
 	Next
+	
+	If $g_bPlaceNewBuilding Then
+		If UpgradeNewBuilding($bTest) Then
+			Return True
+		EndIf
+	EndIf
+	
 	ZoomOut()
 	ClickAway()
 	Return False
@@ -367,7 +368,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 	If UBound($ArrowCoordinates) > 1 Then
 		;Check if its wall or not (wall should skip)
 		If $g_bSkipWallPlacingOnBB Then
-			If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 150, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
+			If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 160, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
 				SetLog("New Building is Wall!, Cancelling...", $COLOR_INFO)
 				Click(820, 38, 1) ; exit from Shop
 				If _Sleep(2000) Then Return
@@ -445,7 +446,7 @@ Func UpgradeNewBuilding($bTest = False)
 						Return True
 					EndIf
 				Else
-					SetLog("[" & $i & "] Not New Building!", $COLOR_SUCCESS)
+					SetLog("[" & $i & "] Not New Building!", $COLOR_INFO)
 				EndIf
 			Else
 				SetLog("[" & $i & "] Not Enough Resource", $COLOR_INFO)
