@@ -51,7 +51,7 @@ Func _ClanGames($test = False)
 				If $g_bChkClanGamesStopBeforeReachAndPurge Then
 					$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
 					Setlog("Clan Games Minute Remain: " & $sTimeCG)
-					If $g_bChkClanGamesPurgeAny And $sTimeCG > 2400 Then ; purge, but not purge on last 2 day of clangames
+					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1200 Then ; purge, but not purge on last 2 day of clangames
 						SetLog("Stop before completing your limit and only Purge")
 						SetLog("Lets only purge 1 most top event", $COLOR_WARNING)
 						ForcePurgeEvent(False, True)
@@ -632,7 +632,6 @@ EndFunc   ;==>CooldownTime
 Func IsEventRunning($bOpenWindow = False)
 	Local $aEventFailed[4] = [300, 255, 0xEA2B24, 20]
 	Local $aEventPurged[4] = [300, 266, 0x57c68f, 20]
-	Local $aCurEvent = False
 	Local $sRunningeventRect = GetDiamondFromRect("300,160,380,240")
 
 	If $bOpenWindow Then
@@ -665,7 +664,7 @@ Func IsEventRunning($bOpenWindow = False)
 				SetDebugLog("Active Challenge is Enabled on Setting, OK!!", $COLOR_DEBUG)
 				;check if Challenge is BB Challenge, enabling force BB attack
 				If $g_bChkForceBBAttackOnClanGames Then
-					$aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
+					Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
 					If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
 						Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 						$g_bIsBBevent = True
@@ -714,10 +713,24 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, $getCapture, False) Then
 		Local $Timer = GetEventTimeInMinutes($g_iQuickMISX + 220, $g_iQuickMISY + 150)
-		SetLog("Starting  Event" & " [" & $Timer & " min]", $COLOR_SUCCESS)
+		SetLog("Starting Event" & " [" & $Timer & " min]", $COLOR_SUCCESS)
 		Click($g_iQuickMISX + 220, $g_iQuickMISY + 150)
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min")
+		
+		;check if Challenge is BB Challenge, enabling force BB attack
+		If $g_bChkForceBBAttackOnClanGames Then
+			If _Sleep(2500) Then Return
+			Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
+			If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
+				Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+				$g_bIsBBevent = True
+			Else
+				Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
+				$g_bIsBBevent = False
+			EndIf
+		EndIf
+		
 		If $g_bPurgeJob Then
 			If _Sleep(2500) Then Return
 			If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
@@ -740,7 +753,6 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 				Return False
 			EndIf
 		EndIf
-
 		Return True
 	Else
 		SetLog("Didn't Get the Green Start Button Event", $COLOR_WARNING)
@@ -817,7 +829,7 @@ Func StartAndPurgeEvent($bTest = False)
 		If _Sleep(2500) Then Return
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
 			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
-			If _Sleep(1200) Then Return
+			If _Sleep(2000) Then Return
 			SetLog("Click Trash", $COLOR_INFO)
 			If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400, 580, 450, True, False) Then
 				SetLog("Click OK", $COLOR_INFO)
