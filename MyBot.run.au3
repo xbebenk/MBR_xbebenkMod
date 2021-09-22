@@ -796,9 +796,6 @@ Func runBot() ;Bot that runs everything in order
 				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			Next
 
-			;ARCH Trying it out here.
-			If Not $g_bIsSearchLimit Then _ClanGames() ; move to here to pick event before going to BB.
-
 			; Ensure, that wall upgrade is last of the upgrades
 			Local $aRndFuncList = ['UpgradeWall', 'BuilderBase'] ;Copied BuilderBase to AttackMain
 			_ArrayShuffle($aRndFuncList)
@@ -1208,6 +1205,7 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
+				_ClanGames()
 				BuilderBase()
 			EndIf
 			_Sleep($DELAYRUNBOT3)
