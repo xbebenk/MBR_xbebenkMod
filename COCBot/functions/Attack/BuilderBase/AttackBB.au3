@@ -20,6 +20,12 @@ Func DoAttackBB()
 	If $g_iBBAttackCount = 0 Then 
 		Local $count = 1
 		While PrepareAttackBB()
+			If $count = 20 Then 
+				SetLog("SomeThing May Wrong", $COLOR_INFO) 
+				SetLog("20 Attack Count on BB is wasting 60 Minute", $COLOR_INFO)
+				SetLog("Surrender..!", $COLOR_ACTION)
+				ExitLoop
+			Endif
 			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			AttackBB()
@@ -69,7 +75,6 @@ Func DoAttackBB()
 	ZoomOut()
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
-
 
 Func AttackBB()
 	If Not $g_bChkEnableBBAttack Then Return
