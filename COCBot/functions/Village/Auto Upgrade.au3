@@ -22,47 +22,49 @@ Func AutoUpgrade($bTest = False)
 EndFunc
 
 Func SearchUpgrade($bTest = False)
-	
-	Local $b_IsUpgradeFound = False
-	Local $i_scrolltime = 0
-	
-	Local $bDebug = $bTest
-	Local $bScreencap = True
-	
+
+	Local $bDebug = $g_bDebugSetlog
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
-	
+
 	VillageReport(True, True) ;check if we have available builder
-	
+
 	; check if builder head is clickable
 	If Not (_ColorCheck(_GetPixelColor(275, 15, True), "F5F5ED", 20) = True) Then
 		SetLog("Unable to find the Builder menu button... Exiting Auto Upgrade...", $COLOR_ERROR)
 		Return
 	EndIf
-	
+
 	If $bTest Then $g_iFreeBuilderCount = 1
 	;Check if there is a free builder for Auto Upgrade
 	If ($g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0)) <= 0 Then
 		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
 		Return False
 	EndIf
-	
-	If Not ClickMainBuilder($bTest, True) Then Return
+
+	If Not ClickMainBuilder($bTest) Then Return
 	If Not $g_bRunState Then Return
-	
+	Local $b_BuildingFound = False
 	For $z = 0 To 1 ;for do scroll 2 times
 		If $g_bRestart Then Return False
 		Local $x = 180, $y = 80, $x1 = 450, $y1 = 108, $step = 28
 		For $i = 0 To 8
 			If $g_bRestart Then Return False
 			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y, $x1, $y1) Then
+				$b_BuildingFound = True
 				SetLog("[" & $i & "] Upgrade found!", $COLOR_SUCCESS)
-				Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
-				If _Sleep(1000) Then Return
-				If DoUpgrade($bTest) Then 
-					$g_iFreeBuilderCount -= 1
-				Endif
-				If $g_iFreeBuilderCount < 1 Then Return 
+				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y, $x1, $y1) <> "none" Then
+					SetLog("[" & $i & "] New Building, Skip!", $COLOR_SUCCESS)
+					$b_BuildingFound = False
+				EndIf
+				If $b_BuildingFound Then
+					Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
+					If _Sleep(1000) Then Return
+					If DoUpgrade($bTest) Then
+						$g_iFreeBuilderCount -= 1
+					Endif
+				EndIf
+				If $g_iFreeBuilderCount < 1 Then Return
 				If _Sleep(1000) Then Return
 			Else
 				SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
@@ -70,16 +72,16 @@ Func SearchUpgrade($bTest = False)
 			$y += $step
 			$y1 += $step
 		Next
-		ClickDrag(333, $y, 333, 75, 800);do scroll down
-		If _Sleep(500) Then Return
+		ClickDragAUpgrade("up", $y);do scroll down
+		If _Sleep(1500) Then Return
 	Next
-	
+
 	If $g_bPlaceNewBuilding Then
 		If UpgradeNewBuilding($bTest) Then
 			Return True
 		EndIf
 	EndIf
-	
+
 	ZoomOut()
 	ClickAway()
 	Return False
@@ -109,8 +111,8 @@ Func DoUpgrade($bTest = False)
 	If $g_aUpgradeNameLevel[1] = "po al Champion" Then $g_aUpgradeNameLevel[1] = "Royal Champion"
 	Switch $g_aUpgradeNameLevel[1]
 		Case "Town Hall"
-			If $g_aUpgradeNameLevel[2] > 11 Then 
-				If $g_iChkUpgradesToIgnore[24] = 1 Then 
+			If $g_aUpgradeNameLevel[2] > 11 Then
+				If $g_iChkUpgradesToIgnore[24] = 1 Then
 					$bMustIgnoreUpgrade = True
 				Else
 					$aUpgradeButton = findButton("THWeapon", Default, 1, True)
@@ -255,14 +257,14 @@ Func DoUpgrade($bTest = False)
 	EndIf
 
 	; final click on upgrade button, click coord is get looking at upgrade type (heroes have a diferent place for Upgrade button)
-	If Not $bTest Then 
+	If Not $bTest Then
 		Switch $g_aUpgradeNameLevel[1]
 			Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion"
 				Click(660, 560)
 			Case Else
 				Click(440, 530)
 		EndSwitch
-	Else	
+	Else
 		ClickAway("Right")
 	Endif
 
@@ -287,7 +289,7 @@ Func DoUpgrade($bTest = False)
 
 	; Upgrade completed, but at the same line there might be more...
 	$g_iCurrentLineOffset -= $g_iQuickMISY
-	
+
 	; update Logs and History file
 	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_iChkUpgradesToIgnore[23] = 0 Then
 		Switch $g_aUpgradeNameLevel[2]
@@ -298,19 +300,19 @@ Func DoUpgrade($bTest = False)
 			Case 14
 				SetLog("Launched upgrade of Giga Inferno to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
 		EndSwitch
-		
+
 	Else
 		SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
 	Endif
 	ClickAway("Right")
-	
+
 	SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
 	SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
-	
-	 
+
+
 	Local $txtAcc = $g_iCurAccount
 	Local $txtAccName = $g_asProfileName[$g_iCurAccount]
-	
+
 	_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
 			@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc & "] " & $txtAccName & _
 			" - Upgrading " & $g_aUpgradeNameLevel[1] & _
@@ -325,41 +327,13 @@ Func DoUpgrade($bTest = False)
 			" for " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & _
 			" " & $g_aUpgradeResourceCostDuration[0] & _
 			" - Duration : " & $g_aUpgradeResourceCostDuration[2])
-			
+
 	Return True
 EndFunc
 
-;Open the Upgrade Window and check if is OK
-Func ClickMainBuilder($bTest = False, $bFirstOpen = False)
-
-	; Debug Stuff
-	Local $sDebugText = ""
-	Local Const $Debug = False
-	Local Const $Screencap = True
-	
-	; open the builders menu
-	Click(295, 30)
-	If _Sleep(2000) Then Return
-	; Let's verify if the Builder Window opened
-	If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
-		If $g_bScrollFirst And $bFirstOpen Then ;skip first page on builder menu
-			Local $Yscroll =  ($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28
-			ClickDrag(333, 100, 333, 400, 500) ;drag to bottom
-			If _Sleep(1500) Then Return
-			ClickDrag(300, 146 + $Yscroll, 300, 70,500)
-			If _Sleep(1500) Then Return
-		EndIf
-		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
-		Return True
-	Else
-		SetLog("Upgrade Window didn't opened", $COLOR_DEBUG)
-	EndIf
-	Return False
-EndFunc ;==>ClickMainBuilder
-
 Func AUNewBuildings($x, $y, $bTest = False)
 
-	Local $Screencap = True, $Debug = $bTest
+	Local $Screencap = True, $Debug = $g_bDebugSetlog
 	Click($x, $y, 1)
 	If _Sleep(3000) Then Return
 
@@ -377,7 +351,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			EndIf
 		EndIf
 		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50)
-		If _Sleep(2000) Then Return 
+		If _Sleep(2000) Then Return
 		; Lets search for the Correct Symbol on field
 		If QuickMIS("BC1", $g_sImgAUpgradeIconYes, 100, 100, 740, 620, $Screencap, $Debug) Then
 			If Not $bTest Then
@@ -411,7 +385,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 EndFunc ;==>AUNewBuildings
 
 Func UpgradeNewBuilding($bTest = False)
-	Local $bDebug = $bTest
+	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
 	SetLog("Search for Placing new Building First", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgAUpgradeGreenZone, 320, 70, 520, 220) Then ;Top
@@ -429,20 +403,20 @@ Func UpgradeNewBuilding($bTest = False)
 	Else
 		SetLog("GreenZone for Placing new Building Not Found", $COLOR_DEBUG)
 	Endif
-		
-	If Not ClickMainBuilder($bTest, True) Then Return False
+
+	If Not ClickMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
 	For $z = 0 To 1 ;for do scroll 2 times
 		If $g_bRestart Then Return False
 		Local $x = 180, $y = 80, $x1 = 450, $y1 = 108, $step = 28
 		For $i = 0 To 9
 			If $g_bRestart Then Return False
-			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y, $x1, $y1) Then
-				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y, $x1, $y1) <> "none" Then
+			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y, $x1, $y1, $bScreencap, $bDebug) Then
+				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y, $x1, $y1, $bScreencap, $bDebug) <> "none" Then
 					SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
-					If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then 
-						ZoomOut()
+					If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then
 						ClickAway()
+						ZoomOut()
 						Return True
 					EndIf
 				Else
@@ -454,11 +428,65 @@ Func UpgradeNewBuilding($bTest = False)
 			$y += $step
 			$y1 += $step
 		Next
-		ClickDrag(333, $y, 333, 75, 800);do scroll down
+		ClickDragAUpgrade("up", $y);do scroll down
 		If _Sleep(1500) Then Return
 	Next
-	ZoomOut()
 	ClickAway()
+	ZoomOut()	
 	Return False
 EndFunc ;==>FindNewBuilding
+
+Func ClickDragAUpgrade($Direction = "up", $y = Default)
+	Local $x = 330, $yUp = 90, $yDown = 600, $Delay = 500
+	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
+	For $checkCount = 0 To 2
+		Switch $Direction
+			Case "Up"
+				ClickDrag($x, $Yscroll, $x, $yUp, $Delay) ;drag up
+				If _Sleep(1000) Then Return
+			Case "Down"
+				ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
+				If _Sleep(1000) Then Return
+		EndSwitch
+		If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
+			SetLog("Upgrade Window Exist", $COLOR_INFO)
+			Return True
+		Else
+			SetLog("Upgrade Window Gone!", $COLOR_DEBUG)
+			Click(295, 30)
+			If _Sleep(2000) Then Return
+		EndIf
+	Next
+	Return False
+EndFunc ;==>IsUpgradeWindow
+
+Func ClickMainBuilder($bTest = False)
+
+	Local $b_WindowOpened = False
+	; open the builders menu
+	Click(295, 30)
+	If _Sleep(2000) Then Return
+
+	If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
+		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
+		$b_WindowOpened = True
+	Else
+		SetLog("Upgrade Window didn't opened", $COLOR_DEBUG)
+		$b_WindowOpened = False
+	EndIf
+
+	If $b_WindowOpened Then
+		If Not ClickDragAUpgrade("down") Then Return False
+		If Not ClickDragAUpgrade("Up") Then Return False
+	EndIf
+
+	Return $b_WindowOpened
+
+EndFunc ;==>ClickMainBuilder
+
+
+
+
+
+
 

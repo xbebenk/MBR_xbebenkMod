@@ -431,7 +431,8 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 		$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase)
 	Else
 		; try secondary images
-		ClickDrag(540, 480, 600, 450, 1000) ;xbebenk - click drag to left sometime make it found the village
+		ClickAway()
+		ClickDrag(540, 480, 600, 450, 200) ;xbebenk - click drag to left sometime make it found the village
 		$village = GetVillageSize($DebugLog, "2stone", "2tree", Default, $bOnBuilderBase)
 	EndIf
 
@@ -567,6 +568,26 @@ EndFunc
 Func ZoomInMEmu($Region = "Top", $ZoomInKey = "{F2}")
 	SetDebugLog("ZoomInMEmu()")
 	Local $Result = ControlSend($g_hAndroidWindow, "", "", $ZoomInKey)
+	If _Sleep(1000) Then Return
+	Switch $Region
+		Case "Top"
+			ClickDrag(400, 70, 400, 400)
+		Case "Left"
+			ClickDrag(90, 450, 400, 450)
+		Case "Bottom"
+			ClickDrag(400, 630, 400, 270)
+		Case "Right"
+			ClickDrag(800, 300, 400, 300)
+	EndSwitch
+	Return $Result
+EndFunc
+
+Func ZoomInNox($Region = "Top")
+	SetDebugLog("ZoomInNox()")
+	ControlFocus($g_hAndroidWindow, "", "")
+	ControlSend($g_hAndroidWindow, "", "", "{CTRLDOWN}")
+	;MouseMove($g_aiBSpos[0] + Int($g_iDEFAULT_WIDTH / 2), $g_aiBSpos[1] + Int($g_iDEFAULT_HEIGHT / 2), 0)
+	MouseWheel("up")
 	If _Sleep(200) Then Return
 	ClickAway("Right")
 	If _Sleep(100) Then Return
@@ -580,5 +601,4 @@ Func ZoomInMEmu($Region = "Top", $ZoomInKey = "{F2}")
 		Case "Right"
 			ClickDrag(800, 300, 400, 300)
 	EndSwitch
-	Return $Result
 EndFunc
