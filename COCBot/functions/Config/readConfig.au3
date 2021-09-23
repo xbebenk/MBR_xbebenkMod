@@ -453,7 +453,7 @@ Func ReadConfig_600_6()
 		$g_aCmbCGBBTroops[$i] = $str[$i]
 	Next
 	IniReadS($g_bChkForceBBAttackOnClanGames, $g_sProfileConfigPath, "other", "ChkForceBBAttackOnClanGames", False, "Bool")
-	IniReadS($g_bChkClanGamesPurgeAny, $g_sProfileConfigPath, "other", "ChkClanGamesPurgeAny", False, "Bool")
+	IniReadS($g_bChkClanGamesPurgeAny, $g_sProfileConfigPath, "other", "ChkClanGamesPurgeAny", True, "Bool")
 	IniReadS($g_bChkClanGamesSpell, $g_sProfileConfigPath, "other", "ChkClanGamesSpell", False, "Bool")
 	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledCGSpell", "-1|-1|-1|-1|-1|-1|-1|-1|-1|-1"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aCmbCGSpells) - 1

@@ -421,7 +421,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "EnabledBBTroop", $str)
 	
 	_Ini_Add("other", "ChkForceBBAttackOnClanGames", $g_bChkForceBBAttackOnClanGames ? 1 : 0)
-	_Ini_Add("other", "ChkClanGamesPurgeAny", $g_bChkClanGamesPurgeAny ? 1 : 1)
+	_Ini_Add("other", "ChkClanGamesPurgeAny", $g_bChkClanGamesPurgeAny ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesSpell", $g_bChkClanGamesSpell ? 1 : 0)
 	$str = ""
 	For $i = 0 To UBound($g_aCmbCGSpells) - 1
