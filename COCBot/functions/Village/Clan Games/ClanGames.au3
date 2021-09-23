@@ -31,6 +31,25 @@ Func _ClanGames($test = False)
 	; Initial Timer
 	Local $hTimer = TimerInit()
 	
+	; Let's selected only the necessary images [Total=71]
+	Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
+	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
+
+	;Remove All previous file (in case setting changed)
+	DirRemove($sTempPath, $DIR_REMOVE)
+
+	If $g_bChkClanGamesLoot Then ClanGameImageCopy($sImagePath, $sTempPath, "L") ;L for Loot
+	If $g_bChkClanGamesBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "B") ;B for Battle
+	If $g_bChkClanGamesDestruction Then ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
+	If $g_bChkClanGamesAirTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "A") ;A for AirTroops
+	If $g_bChkClanGamesGroundTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "G") ;G for GroundTroops
+
+	If $g_bChkClanGamesMiscellaneous Then ClanGameImageCopy($sImagePath, $sTempPath, "M") ;M for Misc
+    If $g_bChkClanGamesSpell Then ClanGameImageCopy($sImagePath, $sTempPath, "S") ;S for GroundTroops
+    If $g_bChkClanGamesBBBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "BBB") ;BBB for BB Battle
+    If $g_bChkClanGamesBBDestruction Then ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
+	If $g_bChkClanGamesBBTroops Then ClanGameImageCopy($sImagePath, $sTempPath, "BBT") ;BBT for BB Troops
+	
 	; Enter on Clan Games window
 	If IsClanGamesWindow() Then
 		; Let's get some information , like Remain Timer, Score and limit
@@ -75,25 +94,6 @@ Func _ClanGames($test = False)
 
 	UpdateStats()
 	
-	; Let's selected only the necessary images [Total=71]
-	Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
-	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
-
-	;Remove All previous file (in case setting changed)
-	DirRemove($sTempPath, $DIR_REMOVE)
-
-	If $g_bChkClanGamesLoot Then ClanGameImageCopy($sImagePath, $sTempPath, "L") ;L for Loot
-	If $g_bChkClanGamesBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "B") ;B for Battle
-	If $g_bChkClanGamesDestruction Then ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
-	If $g_bChkClanGamesAirTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "A") ;A for AirTroops
-	If $g_bChkClanGamesGroundTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "G") ;G for GroundTroops
-
-	If $g_bChkClanGamesMiscellaneous Then ClanGameImageCopy($sImagePath, $sTempPath, "M") ;M for Misc
-    If $g_bChkClanGamesSpell Then ClanGameImageCopy($sImagePath, $sTempPath, "S") ;S for GroundTroops
-    If $g_bChkClanGamesBBBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "BBB") ;BBB for BB Battle
-    If $g_bChkClanGamesBBDestruction Then ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
-	If $g_bChkClanGamesBBTroops Then ClanGameImageCopy($sImagePath, $sTempPath, "BBT") ;BBT for BB Troops
-
 	Local $HowManyImages = _FileListToArray($sTempPath, "*", $FLTA_FILES)
 	If IsArray($HowManyImages) Then
 		Setlog($HowManyImages[0] & " Events to search")
@@ -661,7 +661,7 @@ Func IsEventRunning($bOpenWindow = False)
 			
 			;check if its Enabled Challenge, if not = purge
 			If QuickMIS("BC1", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 300, 160, 380, 240, True, False) Then
-				SetDebugLog("Active Challenge is Enabled on Setting, OK!!", $COLOR_DEBUG)
+				SetLog("Active Challenge is Enabled on Setting, OK!!", $COLOR_DEBUG)
 				;check if Challenge is BB Challenge, enabling force BB attack
 				If $g_bChkForceBBAttackOnClanGames Then
 					Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
@@ -674,7 +674,7 @@ Func IsEventRunning($bOpenWindow = False)
 					EndIf
 				EndIf
 			Else
-				Setlog("Active Challenge Not Enabled on Setting! started by mistake?", $COLOR_DEBUG)
+				Setlog("Active Challenge Not Enabled on Setting! started by mistake?", $COLOR_ERROR)
 				ForcePurgeEvent(False, False)
 			EndIf
 			ClickAway()
@@ -718,19 +718,6 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min")
 		
-		;check if Challenge is BB Challenge, enabling force BB attack
-		If $g_bChkForceBBAttackOnClanGames Then
-			If _Sleep(2500) Then Return
-			Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
-			If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
-				Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
-				$g_bIsBBevent = True
-			Else
-				Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
-				$g_bIsBBevent = False
-			EndIf
-		EndIf
-		
 		If $g_bPurgeJob Then
 			If _Sleep(2500) Then Return
 			If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
@@ -753,6 +740,23 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 				Return False
 			EndIf
 		EndIf
+		
+		;check if Challenge is BB Challenge, enabling force BB attack
+		If $g_bChkForceBBAttackOnClanGames Then
+			Click(450,75) ;Click Clan Tab
+			If _Sleep(500) Then Return
+			Click(300,75) ;Click Challenge Tab
+			If _Sleep(1500) Then Return
+			Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
+			If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
+				Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+				$g_bIsBBevent = True
+			Else
+				Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
+				$g_bIsBBevent = False
+			EndIf
+		EndIf
+		
 		Return True
 	Else
 		SetLog("Didn't Get the Green Start Button Event", $COLOR_WARNING)
@@ -858,7 +862,7 @@ Func TrashFailedEvent()
 		Return False
 	EndIf
 
-	If _Sleep(300) Then Return
+	If _Sleep(1000) Then Return
 
 	;Look for the red trash event Button and press it
 	If Not ClickB("TrashEvent") Then
@@ -882,6 +886,8 @@ Func GetEventTimeInMinutes($iXStartBtn, $iYStartBtn, $bIsStartBtn = True)
 	EndIf
 
 	Local $Ocr = getOcrEventTime($XAxis, $YAxis)
+	If $Ocr = "1" Then $Ocr = "1d"
+	If $Ocr = "2" Then $Ocr = "2d"
     Return ConvertOCRTime("ClanGames()", $Ocr, True)
 EndFunc   ;==>GetEventTimeInMinutes
 
