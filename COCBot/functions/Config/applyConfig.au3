@@ -407,6 +407,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkMMIgnoreIncorrectSpellCombo, $g_bIgnoreIncorrectSpellCombo ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMTrainPreviousArmy, $g_bTrainPreviousArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMSkipWallPlacingOnBB, $g_bSkipWallPlacingOnBB ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkMMCheckCGEarly, $g_bCheckCGEarly ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 		Case "Save"
 			$g_bChkBotStop = (GUICtrlRead($g_hChkBotStop) = $GUI_CHECKED)
@@ -502,6 +503,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bIgnoreIncorrectSpellCombo = (GUICtrlRead($g_hChkMMIgnoreIncorrectSpellCombo) = $GUI_CHECKED)
 			$g_bTrainPreviousArmy = (GUICtrlRead($g_hChkMMTrainPreviousArmy) = $GUI_CHECKED)
 			$g_bSkipWallPlacingOnBB = (GUICtrlRead($g_hChkMMSkipWallPlacingOnBB) = $GUI_CHECKED)
+			$g_bCheckCGEarly = (GUICtrlRead($g_hChkMMCheckCGEarly) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_6
 

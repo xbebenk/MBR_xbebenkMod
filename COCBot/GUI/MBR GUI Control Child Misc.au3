@@ -874,8 +874,6 @@ Func BtnCGSpellsRemove()
 	Next
 EndFunc
 
-
-
 Func btnCGBBTroops()
 	GUISetState(@SW_SHOW, $g_hGUI_CGBBTroops)
 EndFunc
@@ -1111,5 +1109,13 @@ Func chkSkipWallPlacingOnBB()
 		$g_bSkipWallPlacingOnBB = False
 	EndIf
 EndFunc ;==> chkSkipWallPlacingOnBB
+
+Func chkCheckCGEarly()
+	If GUICtrlRead($g_hChkMMCheckCGEarly) = $GUI_CHECKED Then
+		$g_bCheckCGEarly = True
+	Else
+		$g_bCheckCGEarly = False
+	EndIf
+EndFunc ;==> chkCheckCGEarly
 
 

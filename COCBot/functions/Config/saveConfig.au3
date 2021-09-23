@@ -465,6 +465,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "IgnoreIncorrectSpellCombo", $g_bIgnoreIncorrectSpellCombo)
 	_Ini_Add("other", "TrainPreviousArmy", $g_bTrainPreviousArmy)
 	_Ini_Add("other", "SkipWallPlacingOnBB", $g_bSkipWallPlacingOnBB)
+	_Ini_Add("other", "CheckCGEarly", $g_bCheckCGEarly)
 
 EndFunc   ;==>SaveConfig_600_6
 

@@ -1317,7 +1317,7 @@ Func FirstCheckRoutine()
 	checkArmyCamp(False)
 	PrepareDonateCC()
 	DonateCC()
-	
+	If $g_bCheckCGEarly Then ClanGames()
 	Local $aRndFuncList = ['Collect','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return

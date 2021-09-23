@@ -674,7 +674,8 @@ Func CreateMiscClanGamesV3SubTab()
 
 EndFunc   ;==>CreateMiscClanGamesV3SubTab
 
-Global $g_hChkMMSkipFirstCheckRoutine, $g_hChkMMSkipBB, $g_hChkMMSkipTrain, $g_hChkMMIgnoreIncorrectTroopCombo, $g_hChkMMIgnoreIncorrectSpellCombo, $g_hChkMMTrainPreviousArmy, $g_hChkMMSkipWallPlacingOnBB
+Global $g_hChkMMSkipFirstCheckRoutine, $g_hChkMMSkipBB, $g_hChkMMSkipTrain, $g_hChkMMIgnoreIncorrectTroopCombo
+Global $g_hChkMMIgnoreIncorrectSpellCombo, $g_hChkMMTrainPreviousArmy, $g_hChkMMSkipWallPlacingOnBB, $g_hChkMMCheckCGEarly
 
 Func CreateMiscModSubTab()
 	Local $x = 15, $y = 45
@@ -715,6 +716,13 @@ Func CreateMiscModSubTab()
 		$g_hChkMMSkipWallPlacingOnBB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SkipWallPlacingOnBB", "Skip New Wall Placing On BB"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnBBAutoUpgrade", "Skip New Wall Placing if Enabled BB New Tagged Auto Upgrade"))
 		GUICtrlSetOnEvent(-1, "chkSkipWallPlacingOnBB")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
+	$y += 55
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On FirstCheck"), $x - 10, $y - 20, 180, 50)
+		$g_hChkMMCheckCGEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckCGEarly", "Check ClanGames Early"), $x, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnBBAutoUpgrade", "Enable Check ClanGames on First Start"))
+		GUICtrlSetOnEvent(-1, "chkCheckCGEarly")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc ;==>CreateMiscModSubTab
 
@@ -850,8 +858,6 @@ Func CreateClanGamesBBTroops()
 				GUICtrlSetData(-1,  $g_sTxtCGBBTroop)
 		EndIf
 	Next
-
-
 
 	$y = 165
 	$g_hBtnCGBBTroopsSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGBBTroopsSet", "Apply BB Troops"), $x - 20, $y, 118, 25)
