@@ -641,7 +641,7 @@ Func CreateMiscClanGamesV3SubTab()
 				GUICtrlSetOnEvent(-1, "chkClanGamesBB")
 			$y += 23
 			$g_hChkClanGamesBBDestruction = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesBBDestruction", "BB Destruction"), $x, $y, -1, -1)
-				GUICtrlSetOnEvent(-1, "chkClanGamesBB")
+				GUICtrlSetOnEvent(-1, "chkActivateClangames")
 			$g_hBtnCGBBDes = GUICtrlCreateButton("...", $x + 90, $y, 20, 20)
 				GUICtrlSetOnEvent(-1, "btnCGBBDes")
 				GUICtrlSetState(-1, $GUI_DISABLE)

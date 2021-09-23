@@ -119,7 +119,8 @@ Func _ClanGames($test = False)
 
 		; Temp Variables
 		Local $FullImageName, $StringCoordinates, $sString, $tempObbj, $tempObbjs, $aNames
-
+		Local $BBCheck[2] = ["BBD-WallDes", "BBD-BuildingDes"]
+		
 		For $i = 0 To UBound($aCurrentDetection) - 1
 			If _Sleep(50) Then Return ; just in case of PAUSE
 			If Not $g_bRunState Then Return ; Stop Button
@@ -132,7 +133,7 @@ Func _ClanGames($test = False)
 			$StringCoordinates = $aEachDetection[1]
 
 			If $FullImageName = "" Or $StringCoordinates = "" Then ContinueLoop
-
+			
 			; Exist more than One coordinate!?
 			If StringInStr($StringCoordinates, "|") Then
 				; Code to test the string if exist anomalies on string
@@ -148,7 +149,16 @@ Func _ClanGames($test = False)
 				$tempObbj = StringSplit($StringCoordinates, ",", $STR_NOCOUNT) ;  will be a string : 708,360
 				If UBound($tempObbj) <> 2 Then ContinueLoop
 			EndIf
-
+			
+			For $x = 0 To UBound($BBCheck) - 1
+				If $FullImageName = $BBCheck[$x] Then 
+					If Not IsBBChallenge($tempObbj[0],$tempObbj[1]) Then 
+						SetLog("False Detection, Skip this Challenge", $COLOR_INFO)
+						ContinueLoop 2
+					Endif
+				EndIf
+			Next
+			
 			$aNames = StringSplit($FullImageName, "-", $STR_NOCOUNT)
 			SetDebugLog("filename: " & $FullImageName & " $aNames[0] = " & $aNames[0] & " $aNames[1]= " & $aNames[1], $COLOR_ORANGE)
 			ReDim $aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) + 1][4]
@@ -370,7 +380,7 @@ Func _ClanGames($test = False)
                     ;[0] = Path Directory , [1] = Event Name , [2] = TH level , [3] = Difficulty Level , [4] = Time to do it
                     Local $BBDestructionChallenges = ClanGamesChallenges("$BBDestructionChallenges", False, $sINIPath, $g_bChkClanGamesDebug)
                     For $j = 0 To UBound($BBDestructionChallenges) - 1
-                        ; Match the names
+						; Match the names
                         If $aAllDetectionsOnScreen[$i][1] = $BBDestructionChallenges[$j][0] Then
 							Local $aArray[4] = [$BBDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBDestructionChallenges[$j][3]]
                         EndIf
@@ -409,6 +419,7 @@ Func _ClanGames($test = False)
 		; let's get the Event timing
 		For $i = 0 To UBound($aSelectChallenges) - 1
 			Setlog("Detected " & $aSelectChallenges[$i][0] & " difficulty of " & $aSelectChallenges[$i][3])
+			IsBBChallenge($aSelectChallenges[$i][1], $aSelectChallenges[$i][2])
 			Click($aSelectChallenges[$i][1], $aSelectChallenges[$i][2])
 			If _Sleep(1500) Then Return
 			Local $EventHours = GetEventInformation()
@@ -930,13 +941,13 @@ Func GetEventInformation()
 EndFunc   ;==>GetEventInformation
 
 
-Func IsBBChallenge($x = Default, $y = Default)
+Func IsBBChallenge($i = Default, $j = Default)
 
 	Local $BorderX[4] = [292, 418, 546, 669]
 	Local $BorderY[3] = [205, 363, 520]
 	Local $iColumn, $iRow, $bReturn
 
-	Switch $x
+	Switch $i
 		Case $BorderX[0] To $BorderX[1]
 			$iColumn = 1
 		Case $BorderX[1] To $BorderX[2]
@@ -947,7 +958,7 @@ Func IsBBChallenge($x = Default, $y = Default)
 			$iColumn = 4
 	EndSwitch
 
-	Switch $y
+	Switch $j
 		Case $BorderY[0]-50 To $BorderY[1]-50
 			$iRow = 1
 		Case $BorderY[1]-50 To $BorderY[2]-50
@@ -955,20 +966,21 @@ Func IsBBChallenge($x = Default, $y = Default)
 		Case Else
 			$iRow = 3
 	EndSwitch
-
-	SetDebugLog("Row:" & $iRow & " Column:" & $iColumn, $COLOR_DEBUG)
+	
 	For $y = 0 To 2
-		If $g_bChkClanGamesDebug Then SetLog(" ")
 		For $x = 0 To 3
 			If Not QuickMIS("BC1", $g_sImgBorder, $BorderX[$x] - 50, $BorderY[$y] - 50, $BorderX[$x] + 50, $BorderY[$y] + 50, True, False) Then
-				If $g_bChkClanGamesDebug Then SetDebugLog("Row:" & $y+1 & " Column:" & $x+1 & " [" & $BorderX[$x] - 50 & "," & $BorderY[$y] - 50 & "," & $BorderX[$x] + 50 & "," & $BorderY[$y] + 50 & "] IsBBChallenge = True", $COLOR_INFO)
+				If $iRow = ($y+1) And $iColumn = ($x+1) Then SetLog("IsBBChallenge = True", $COLOR_INFO)
+				;If $g_bChkClanGamesDebug Then SetLog("Row:" & $y+1 & " Column:" & $x+1 & " [" & $BorderX[$x] - 50 & "," & $BorderY[$y] - 50 & "," & $BorderX[$x] + 50 & "," & $BorderY[$y] + 50 & "] IsBBChallenge = True", $COLOR_INFO)
 				$bReturn = True
 			Else
-				If $g_bChkClanGamesDebug Then SetDebugLog("Row:" & $y+1 & " Column:" & $x+1 & " [" & $BorderX[$x] - 50 & "," & $BorderY[$y] - 50 & "," & $BorderX[$x] + 50 & "," & $BorderY[$y] + 50 & "] IsBBChallenge = False", $COLOR_ERROR)
+				If $iRow = ($y+1) And $iColumn = ($x+1) Then SetLog("IsBBChallenge = False", $COLOR_ERROR)
+				;If $g_bChkClanGamesDebug Then SetLog("Row:" & $y+1 & " Column:" & $x+1 & " [" & $BorderX[$x] - 50 & "," & $BorderY[$y] - 50 & "," & $BorderX[$x] + 50 & "," & $BorderY[$y] + 50 & "] IsBBChallenge = False", $COLOR_ERROR)
 				$bReturn = False
 			EndIf
 		Next
 	Next
+	
 	Return $bReturn
 EndFunc ;==>IsBBChallenge
 
@@ -1130,7 +1142,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["StarTimed",				"BB Star Timed",				2,  2, 1], _
             ["Destruction",				"BB Destruction",				2,  1, 1]] ; Earn 225% - 900% on BB attacks
 
-	Local $BBDestructionChallenges[11][5] = [ _
+	Local $BBDestructionChallenges[12][5] = [ _
             ["Airbomb",					"BB Air Bomb",                  2,  1, 1], _
 			["BuildingDes",             "BB Building Destruction",		2,  1, 1], _
             ["Cannon",                 	"BB Cannon",                  	2,  1, 1], _ ; no image
@@ -1139,6 +1151,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["GemMine",                 "BB GemMine",                  	2,  1, 1], _
 			["GiantCannon",             "BB GiantCannon",               2,  1, 1], _
 			["GuardPost",               "BB GuardPost",                 2,  1, 1], _
+			["MegaTesla",               "BB Mega Tesla",                2,  1, 1], _
 			["MultiMortar",             "BB MultiMortar",               2,  1, 1], _
 			["StarLab",                 "BB StarLab",                  	2,  1, 1], _
 			["WallDes",             	"BB Wall Whacker",              2,  1, 1]]
