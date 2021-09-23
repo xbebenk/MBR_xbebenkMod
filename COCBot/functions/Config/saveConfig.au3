@@ -400,15 +400,21 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkClanGamesPurge", $g_bChkClanGamesPurge ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesStopBeforeReachAndPurge", $g_bChkClanGamesStopBeforeReachAndPurge ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesDebug", $g_bChkClanGamesDebug ? 1 : 0)
-
+	;xbenk
+	Local $str = ""
 	_Ini_Add("other", "ChkClanGamesLoot", $g_bChkClanGamesLoot ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesBattle", $g_bChkClanGamesBattle ? 1 : 0)
 
     _Ini_Add("other", "ChkClanGamesBBBattle", $g_bChkClanGamesBBBattle ? 1 : 0)
     _Ini_Add("other", "ChkClanGamesBBDestruction", $g_bChkClanGamesBBDestruction ? 1 : 0)
-	;xbenk
+	$str = ""
+	For $i = 0 To UBound($g_aCmbCGBBDes) - 1
+		$str &= $g_aCmbCGBBDes[$i] & "|"
+	Next
+	_Ini_Add("other", "EnabledBBDestruction", $str)
+	
 	_Ini_Add("other", "ChkClanGamesBBTroops", $g_bChkClanGamesBBTroops ? 1 : 0)
-	Local $str = ""
+	$str = ""
 	For $i = 0 To UBound($g_aCmbCGBBTroops) - 1
 		$str &= $g_aCmbCGBBTroops[$i] & "|"
 	Next

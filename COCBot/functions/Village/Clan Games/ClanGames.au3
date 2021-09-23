@@ -495,7 +495,7 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			Local $AirTroopChallenges = ClanGamesChallenges("$AirTroopChallenges")
 			For $i = 0 To UBound($g_aCmbCGAirTroops) - 1
 				If $g_aCmbCGAirTroops[$i] >= 0 Then
-					SetDebugLog("[" & $i & "]" & "AirTroopChallenges: " & $AirTroopChallenges[$g_aCmbCGAirTroops[$i]][0])
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "AirTroopChallenges: " & $AirTroopChallenges[$g_aCmbCGAirTroops[$i]][0], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $AirTroopChallenges[$g_aCmbCGAirTroops[$i]][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
@@ -503,15 +503,23 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			Local $GroundTroopChallenges = ClanGamesChallenges("$GroundTroopChallenges")
 			For $i = 0 To UBound($g_aCmbCGGroundTroops) - 1
 				If $g_aCmbCGGroundTroops[$i] >= 0 Then
-					SetDebugLog("[" & $i & "]" & "GroundTroopChallenges: " & $GroundTroopChallenges[$g_aCmbCGGroundTroops[$i]][0])
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "GroundTroopChallenges: " & $GroundTroopChallenges[$g_aCmbCGGroundTroops[$i]][0], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $GroundTroopChallenges[$g_aCmbCGGroundTroops[$i]][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				EndIf
+			Next
+		Case "BBD"
+			Local $BBDesChallenges = ClanGamesChallenges("$BBDestructionChallenges")
+			For $i = 0 To UBound($g_aCmbCGBBDes) - 1
+				If $g_aCmbCGBBDes[$i] >= 0 Then
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBDestructionChallenges: " & $BBDesChallenges[$g_aCmbCGBBDes[$i]][0], $COLOR_DEBUG)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $BBDesChallenges[$g_aCmbCGBBDes[$i]][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "BBT"
 			Local $BBTroopsChallenges = ClanGamesChallenges("$BBTroopChallenges")
 			For $i = 0 To UBound($g_aCmbCGBBTroops) - 1
 				If $g_aCmbCGBBTroops[$i] >= 0 Then
-					SetDebugLog("[" & $i & "]" & "BBTroopChallenges: " & $BBTroopsChallenges[$g_aCmbCGBBTroops[$i]][0])
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBTroopChallenges: " & $BBTroopsChallenges[$g_aCmbCGBBTroops[$i]][0], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $BBTroopsChallenges[$g_aCmbCGBBTroops[$i]][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
@@ -519,12 +527,12 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			Local $SChallenges = ClanGamesChallenges("$SpellChallenges")
 			For $i = 0 To UBound($g_aCmbCGSpells) - 1
 				If $g_aCmbCGSpells[$i] >= 0 Then
-					SetDebugLog("[" & $i & "]" & "SpellChallenges: " & $SChallenges[$g_aCmbCGSpells[$i]][0])
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "SpellChallenges: " & $SChallenges[$g_aCmbCGSpells[$i]][0], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $SChallenges[$g_aCmbCGSpells[$i]][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case Else
-			SetDebugLog("Rest Challenges: " & $sImageType & "-" & "*.xml")
+			If $g_bChkClanGamesDebug Then SetLog("Rest Challenges: " & $sImageType & "-" & "*.xml", $COLOR_DEBUG)
 			FileCopy($sImagePath & "\" & $sImageType & "-" & "*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 	EndSwitch
 EndFunc ;==>ClanGameImageCopy
@@ -632,8 +640,7 @@ EndFunc   ;==>CooldownTime
 Func IsEventRunning($bOpenWindow = False)
 	Local $aEventFailed[4] = [300, 255, 0xEA2B24, 20]
 	Local $aEventPurged[4] = [300, 266, 0x57c68f, 20]
-	Local $sRunningeventRect = GetDiamondFromRect("300,160,380,240")
-
+	
 	If $bOpenWindow Then
 		ClickAway()
 		SetLog("Entering Clan Games", $COLOR_INFO)
@@ -664,12 +671,25 @@ Func IsEventRunning($bOpenWindow = False)
 				SetLog("Active Challenge is Enabled on Setting, OK!!", $COLOR_DEBUG)
 				;check if Challenge is BB Challenge, enabling force BB attack
 				If $g_bChkForceBBAttackOnClanGames Then
-					Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
-					If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
-						Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+					
+					;Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
+					;If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
+					;	Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+					;	$g_bIsBBevent = True
+					;Else
+					;	Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
+					;	$g_bIsBBevent = False
+					;EndIf
+					
+					
+					Click(340,210)
+					If _Sleep(1000) Then Return
+					SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
+					If QuickMIS("BC1", $g_sImgVersus, 425, 180, 700, 235, True, False) Then
+						Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
 						$g_bIsBBevent = True
 					Else
-						Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
+						Setlog("Running Challenge is Not BB Challenge", $COLOR_INFO)
 						$g_bIsBBevent = False
 					EndIf
 				EndIf
@@ -744,15 +764,25 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 		;check if Challenge is BB Challenge, enabling force BB attack
 		If $g_bChkForceBBAttackOnClanGames Then
 			Click(450,75) ;Click Clan Tab
-			If _Sleep(500) Then Return
+			If _Sleep(3000) Then Return
 			Click(300,75) ;Click Challenge Tab
-			If _Sleep(1500) Then Return
-			Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
-			If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
-				Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+			If _Sleep(500) Then Return
+			Click(340,210) ;Click Active Challenge
+			If _Sleep(1000) Then Return
+			;Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
+			;If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
+			;	Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+			;	$g_bIsBBevent = True
+			;Else
+			;	Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
+			;	$g_bIsBBevent = False
+			;EndIf
+			SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
+			If QuickMIS("BC1", $g_sImgVersus, 425, 180, 700, 235, True, False) Then
+				Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
 				$g_bIsBBevent = True
 			Else
-				Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
+				Setlog("Running Challenge is Not BB Challenge", $COLOR_INFO)
 				$g_bIsBBevent = False
 			EndIf
 		EndIf
@@ -1100,16 +1130,17 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["StarTimed",				"BB Star Timed",				2,  2, 1], _
             ["Destruction",				"BB Destruction",				2,  1, 1]] ; Earn 225% - 900% on BB attacks
 
-	Local $BBDestructionChallenges[10][5] = [ _
+	Local $BBDestructionChallenges[11][5] = [ _
             ["Airbomb",					"BB Air Bomb",                  2,  1, 1], _
-            ["Cannon",                 	"BB Cannon",                  	2,  1, 1], _
+			["BuildingDes",             "BB Building Destruction",		2,  1, 1], _
+            ["Cannon",                 	"BB Cannon",                  	2,  1, 1], _ ; no image
             ["DoubleCannon",         	"BB Double Cannon",             2,  1, 1], _
 			["FireCrackers",         	"BB FireCrackers",              2,  1, 1], _
 			["GemMine",                 "BB GemMine",                  	2,  1, 1], _
+			["GiantCannon",             "BB GiantCannon",               2,  1, 1], _
 			["GuardPost",               "BB GuardPost",                 2,  1, 1], _
 			["MultiMortar",             "BB MultiMortar",               2,  1, 1], _
 			["StarLab",                 "BB StarLab",                  	2,  1, 1], _
-			["BuildingDes",             "BB Building Destruction",		2,  1, 1], _
 			["WallDes",             	"BB Wall Whacker",              2,  1, 1]]
 
 	Local $BBTroopsChallenges[11][5] = [ _

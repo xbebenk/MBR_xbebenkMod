@@ -197,5 +197,5 @@ Global Const $g_sImgReward = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\M
 Global Const $g_sImgWindow = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Window"
 Global Const $g_sImgBorder = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Border"
 Global Const $g_sImgGameComplete = 	@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\GameComplete"
-Global Const $g_sImageCGC  = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges\"
+Global Const $g_sImgVersus  = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Versus"
 #EndRegion

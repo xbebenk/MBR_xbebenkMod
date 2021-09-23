@@ -691,6 +691,11 @@ Func chkActivateClangames()
 		
 		GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesBBDestruction, $GUI_ENABLE)
+		If GUICtrlRead($g_hChkClanGamesBBDestruction) = $GUI_CHECKED Then 
+			GUICtrlSetState($g_hBtnCGBBDes, $GUI_ENABLE)
+		Else
+			GUICtrlSetState($g_hBtnCGBBDes, $GUI_DISABLE)
+		EndIf
 		GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesPurgeAny, $GUI_ENABLE)
 		
@@ -871,6 +876,42 @@ EndFunc
 Func BtnCGSpellsRemove()
 	For $i = 0 To UBound($g_ahCmbCGSpells) - 1
 		_GUICtrlComboBox_SetCurSel($g_ahCmbCGSpells[$i], -1)
+	Next
+EndFunc
+
+Func btnCGBBDes()
+	GUISetState(@SW_SHOW, $g_hGUI_CGBBDes)
+EndFunc
+
+Func CloseCGBBDes()
+	GUISetState(@SW_HIDE, $g_hGUI_CGBBDes)
+EndFunc
+
+Func GUI_CGBBDes()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	For $i = 0 To UBound($g_ahCmbCGBBDes) - 1 ; check for duplicate combobox index and flag problem
+		If $iGUI_CtrlId = $g_ahCmbCGBBDes[$i] Then ContinueLoop
+		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBDes[$i]) Then
+			_GUICtrlComboBox_SetCurSel($g_ahCmbCGBBDes[$i], -1)
+			GUISetState()
+		EndIf
+	Next
+EndFunc
+
+Func btnSetCGBBDes()
+	Local $d
+	SetLog("Set Enabled ClanGames BB Destruction",$COLOR_SUCCESS)
+	For $i = 0 To UBound($g_ahCmbCGBBDes) - 1
+		$g_aCmbCGBBDes[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBBDes[$i])
+		$d = $g_aCmbCGBBDes[$i]
+		If $d = -1 Then ContinueLoop
+		SetLog($i+1 & " : " & ClanGamesChallenges("$BBDestructionChallenges")[$d][0], $COLOR_SUCCESS)
+	Next
+EndFunc
+
+Func BtnCGBBDesRemove()
+	For $i = 0 To UBound($g_ahCmbCGBBDes) - 1
+		_GUICtrlComboBox_SetCurSel($g_ahCmbCGBBDes[$i], -1)
 	Next
 EndFunc
 
