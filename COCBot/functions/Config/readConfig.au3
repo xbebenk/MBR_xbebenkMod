@@ -442,7 +442,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkClanGamesBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBattle", False, "Bool")
 
     IniReadS($g_bChkClanGamesBBBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBBBattle", False, "Bool")
-    IniReadS($g_bChkClanGamesBBDestruction, $g_sProfileConfigPath, "other", "ChkClanGamesBBDestruction", False, "Bool")
+    IniReadS($g_bChkClanGamesBBDes, $g_sProfileConfigPath, "other", "ChkClanGamesBBDestruction", False, "Bool")
 	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledBBDestruction", "-1|-1|-1|-1|-1|-1|-1|-1|-1|-1"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aCmbCGBBDes) - 1
 		$g_aCmbCGBBDes[$i] = $str[$i]
@@ -459,7 +459,11 @@ Func ReadConfig_600_6()
 	For $i = 0 To UBound($g_aCmbCGSpells) - 1
 		$g_aCmbCGSpells[$i] = $str[$i]
 	Next
-	IniReadS($g_bChkClanGamesDestruction, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
+	IniReadS($g_bChkClanGamesDes, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
+	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledCGDes", "0|1|2|3|16|17|18|19|20|21|-1|-1|-1|-1"), "|", $STR_NOCOUNT)
+	For $i = 0 To UBound($g_aCmbCGDes) - 1
+		$g_aCmbCGDes[$i] = $str[$i]
+	Next
 	IniReadS($g_bChkClanGamesAirTroop, $g_sProfileConfigPath, "other", "ChkClanGamesAirTroop", False, "Bool")
 	;xbenk
 	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledAirTroop", "0|-1|-1|-1|-1|-1|-1|-1|-1|-1|"), "|", $STR_NOCOUNT)
@@ -490,7 +494,7 @@ Func ReadConfig_600_6()
 	; Builder Base Drop Order
 	IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool")
 	$g_sBBDropOrder = IniRead($g_sProfileConfigPath, "other", "sBBDropOrder", $g_sBBDropOrderDefault)
-	
+
 	;Misc Mod
 	IniReadS($g_bSkipFirstCheckRoutine, $g_sProfileConfigPath, "other", "SkipFirstCheckRoutine", False, "Bool")
 	IniReadS($g_bSkipBB, $g_sProfileConfigPath, "other", "SkipBB", False, "Bool")
@@ -818,7 +822,7 @@ Func ReadConfig_600_14()
 	IniReadS($g_iLaboratoryDElixirCost, $g_sProfileBuildingPath, "upgrade", "upgradelabdelexircost", 0, "int")
 	IniReadS($g_bAutoStarLabUpgradeEnable, $g_sProfileBuildingPath, "upgrade", "upgradestartroops", False, "Bool")
 	IniReadS($g_iCmbStarLaboratory, $g_sProfileBuildingPath, "upgrade", "upgradestartroopname", 0, "int")
-	
+
 	;xbenk
 	IniReadS($g_bLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "upgradeorder", False, "Bool")
 	Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "upgradeorderlist", "-1| -1| -1| -1| -1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
@@ -938,7 +942,7 @@ Func ReadConfig_600_22()
 	IniReadS($g_bSuperTroopsEnable, $g_sProfileConfigPath, "SuperTroopsBoost", "SuperTroopsEnable", False, "Bool")
 	IniReadS($g_bSkipBoostSuperTroopOnHalt, $g_sProfileConfigPath, "SuperTroopsBoost", "SkipSuperTroopsBoostOnHalt", False, "Bool")
 	IniReadS($g_bSuperTroopsBoostUsePotionFirst, $g_sProfileConfigPath, "SuperTroopsBoost", "SuperTroopsBoostUsePotionFirst", False, "Bool")
-	
+
 	For $i = 0 To $iMaxSupersTroop - 1
 		$g_iCmbSuperTroops[$i] = Int(IniRead($g_sProfileConfigPath, "SuperTroopsBoost", "SuperTroopsIndex" & $i, 0))
 	Next

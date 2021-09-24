@@ -32,20 +32,20 @@ Global $g_hChkBBSuggestedUpgrades = 0, $g_hChkBBSuggestedUpgradesIgnoreGold = 0 
 Global $g_hChkPlacingNewBuildings = 0, $g_hChkBBSuggestedUpgradesIgnoreWall = 0, $g_hChkBBSuggestedUpgradesOTTO = 0
 
 Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames60 = 0
-Global $g_hChkClanGamesLoot = 0 , $g_hChkClanGamesBattle =0 , $g_hChkClanGamesDestruction = 0 , $g_hChkClanGamesAirTroop = 0 , $g_hChkClanGamesGroundTroop = 0 , $g_hChkClanGamesMiscellaneous = 0, $g_hChkForceBBAttackOnClanGames = 0
-Global $g_hChkClanGamesSpell = 0
-Global $g_hChkClanGamesBBBattle = 0, $g_hChkClanGamesBBDestruction = 0, $g_hChkClanGamesPurgeAny = 0
+Global $g_hChkClanGamesLoot = 0 , $g_hChkClanGamesBattle =0 ,  $g_hChkClanGamesMiscellaneous = 0
 Global $g_hChkClanGamesPurge = 0 , $g_hcmbPurgeLimit = 0 , $g_hChkClanGamesStopBeforeReachAndPurge = 0
 Global $g_hTxtClanGamesLog = 0
 Global $g_hChkClanGamesDebug = 0
 Global $g_hLblRemainTime = 0 , $g_hLblYourScore = 0
 
 ;ClanGames Challenges
-Global $g_hBtnCGAirTroop = 0, $g_hGUI_CGAirTroops = 0, $g_hBtnCGAirTroopsSet = 0, $g_hBtnCGAirTroopsRemove = 0, $g_hBtnCGAirTroopsClose = 0, $g_sTxtCGAirTroop
-Global $g_hBtnCGGroundTroop = 0, $g_hGUI_CGGroundTroops = 0, $g_hBtnCGGroundTroopSet = 0, $g_hBtnCGGroundTroopRemove = 0, $g_hBtnCGGroundTroopClose = 0, $g_sTxtCGGroundTroop
-Global $g_hBtnCGSpell = 0, $g_hGUI_CGSpells = 0, $g_hBtnCGSpellsSet = 0, $g_hBtnCGSpellsRemove = 0, $g_hBtnCGSpellsClose = 0, $g_sTxtCGSpell
-Global $g_hChkClanGamesBBTroops = 0, $g_hBtnCGBBTroop = 0, $g_hGUI_CGBBTroops = 0, $g_hBtnCGBBTroopsSet = 0, $g_hBtnCGBBTroopsRemove = 0, $g_hBtnCGBBTroopsClose = 0, $g_sTxtCGBBTroop
+Global $g_hChkClanGamesDes = 0, $g_hBtnCGDes = 0, $g_hGUI_CGDes = 0, $g_hBtnCGDesSet = 0, $g_hBtnCGDesRemove = 0, $g_hBtnCGDesClose = 0, $g_sTxtCGDes
+Global $g_hChkClanGamesAirTroop = 0, $g_hBtnCGAirTroop = 0, $g_hGUI_CGAirTroops = 0, $g_hBtnCGAirTroopsSet = 0, $g_hBtnCGAirTroopsRemove = 0, $g_hBtnCGAirTroopsClose = 0, $g_sTxtCGAirTroop
+Global $g_hChkClanGamesGroundTroop = 0, $g_hBtnCGGroundTroop = 0, $g_hGUI_CGGroundTroops = 0, $g_hBtnCGGroundTroopSet = 0, $g_hBtnCGGroundTroopRemove = 0, $g_hBtnCGGroundTroopClose = 0, $g_sTxtCGGroundTroop
+Global $g_hChkClanGamesSpell = 0, $g_hBtnCGSpell = 0, $g_hGUI_CGSpells = 0, $g_hBtnCGSpellsSet = 0, $g_hBtnCGSpellsRemove = 0, $g_hBtnCGSpellsClose = 0, $g_sTxtCGSpell
+Global $g_hChkClanGamesBBBattle = 0
 Global $g_hChkClanGamesBBDes = 0, $g_hBtnCGBBDes = 0, $g_hGUI_CGBBDes = 0, $g_hBtnCGBBDesSet = 0, $g_hBtnCGBBDesRemove = 0, $g_hBtnCGBBDesClose = 0, $g_sTxtCGBBDes
+Global $g_hChkClanGamesBBTroops = 0, $g_hBtnCGBBTroop = 0, $g_hGUI_CGBBTroops = 0, $g_hBtnCGBBTroopsSet = 0, $g_hBtnCGBBTroopsRemove = 0, $g_hBtnCGBBTroopsClose = 0, $g_sTxtCGBBTroop
 Global $g_hChkForceBBAttackOnClanGames = 0, $g_hChkClanGamesPurgeAny = 0
 
 Func CreateVillageMisc()
@@ -62,6 +62,7 @@ Func CreateVillageMisc()
 	$g_hGUI_MISC_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM4", "Misc Mod"))
 		CreateMiscModSubTab()
 	CreateBBDropOrderGUI()
+	CreateCGDes()
 	CreateClanGamesAirTroops()
 	CreateClanGamesGroundTroops()
 	CreateClanGamesBBDes()
@@ -613,7 +614,11 @@ Func CreateMiscClanGamesV3SubTab()
 			$y += 23
 			$g_hChkClanGamesBattle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesBattle", "Battle"), $x, $y, -1, -1)
 			$y += 23
-			$g_hChkClanGamesDestruction = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesDestruction", "Destruction"), $x, $y, -1, -1)
+			$g_hChkClanGamesDes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesDestruction", "Destruction"), $x, $y, -1, -1)
+			GUICtrlSetOnEvent(-1, "chkActivateClangames")
+			$g_hBtnCGDes = GUICtrlCreateButton("...", $x + 80, $y, 20, 20)
+				GUICtrlSetOnEvent(-1, "btnCGDes")
+				GUICtrlSetState(-1, $GUI_DISABLE)
 			$y += 23
 			$g_hChkClanGamesAirTroop = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesAirTroop", "Air Troops"), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkActivateClangames")
@@ -640,7 +645,7 @@ Func CreateMiscClanGamesV3SubTab()
 			$g_hChkClanGamesBBBattle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesBBBattle", "BB Battle"), $x, $y, -1, -1)
 				GUICtrlSetOnEvent(-1, "chkClanGamesBB")
 			$y += 23
-			$g_hChkClanGamesBBDestruction = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesBBDestruction", "BB Destruction"), $x, $y, -1, -1)
+			$g_hChkClanGamesBBDes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesBBDestruction", "BB Destruction"), $x, $y, -1, -1)
 				GUICtrlSetOnEvent(-1, "chkActivateClangames")
 			$g_hBtnCGBBDes = GUICtrlCreateButton("...", $x + 90, $y, 20, 20)
 				GUICtrlSetOnEvent(-1, "btnCGBBDes")
@@ -730,6 +735,46 @@ Func CreateMiscModSubTab()
 		GUICtrlSetOnEvent(-1, "chkCheckCGEarly")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc ;==>CreateMiscModSubTab
+
+Func CreateCGDes()
+	Local $CGDesChallenges = ClanGamesChallenges("$DestructionChallenges")
+	For $j = 0 To UBound($CGDesChallenges) - 1
+		$g_sTxtCGDes &= $CGDesChallenges[$j][1] & "|"
+	Next
+
+	$g_hGUI_CGDes = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGDes", "Main Village Destruction Challenge"), 322, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	Local $x = 25, $y = 25
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGDes", "Select Destruction Challenges"), $x - 20, $y - 20, 308, 220)
+	$x += 10
+	$y += 5
+	For $i = 0 To 13
+		If $i < 7 Then
+			GUICtrlCreateLabel($i + 1 & ":", $x - 19, $y + 3 + 25*$i, -1, 18)
+			$g_ahCmbCGDes[$i] = GUICtrlCreateCombo("", $x, $y + 25*$i, 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+				GUICtrlSetOnEvent(-1, "GUI_CGDes")
+				GUICtrlSetData(-1,  $g_sTxtCGDes)
+		Else
+			GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-7), -1, 18)
+			$g_ahCmbCGDes[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-7), 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+				GUICtrlSetOnEvent(-1, "GUI_CGDes")
+				GUICtrlSetData(-1,  $g_sTxtCGDes)
+		EndIf
+	Next
+	$y = 215
+	$g_hBtnCGDesSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGDesSet", "Apply Challenge"), $x - 20, $y, 118, 25)
+		GUICtrlSetOnEvent(-1, "btnSetCGDes")
+	$g_hBtnCGDesRemove = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGDesRemove", "Empty Challenge List"), $x + 150, $y, 118, 25)
+		GUICtrlSetOnEvent(-1, "BtnCGDesRemove")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$g_hBtnCGDesClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGDesClose", "Close"), 230, $y - 5 + 50, 85, 25)
+		GUICtrlSetOnEvent(-1, "CloseCGDes")
+
+EndFunc ;==>CreateCGDes
+
+
+
+
 
 Func CreateClanGamesAirTroops()
 	Local $AirTroopsChallenges = ClanGamesChallenges("$AirTroopChallenges")

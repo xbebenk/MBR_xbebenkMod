@@ -1805,9 +1805,9 @@ Global $g_bChkClanGamesBattle = 0
 
 global $g_bChkClanGamesSpell = 0
 Global $g_bChkClanGamesBBBattle = 0
-Global $g_bChkClanGamesBBDestruction = 0
+Global $g_bChkClanGamesBBDes = 0
 
-Global $g_bChkClanGamesDestruction = 0
+Global $g_bChkClanGamesDes = 0
 Global $g_bChkClanGamesAirTroop = 0
 Global $g_bChkClanGamesGroundTroop = 0
 Global $g_bChkClanGamesMiscellaneous = 0
@@ -1819,6 +1819,8 @@ Global $g_iPurgeMax = 5 ; [0] is unlimited , 1-10
 Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
+Global $g_aCmbCGDes[14] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbCGDes[14] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aCmbCGAirTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahCmbCGAirTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aCmbCGGroundTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
