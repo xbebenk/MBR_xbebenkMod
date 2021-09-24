@@ -763,6 +763,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ", 1)
 					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ")
 					ClickAway()
+					$g_bIsBBEvent = False
 				Else
 					SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 					Return False
@@ -781,14 +782,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 			If _Sleep(500) Then Return
 			Click(340,210) ;Click Active Challenge
 			If _Sleep(1000) Then Return
-			;Local $aCurEvent = decodeSingleCoord(findImage("BBChallenge", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\BB*.xml", GetDiamondFromRect("300, 160, 380, 240"), 1, True, Default))
-			;If IsArray($aCurEvent) And UBound($aCurEvent, 1) >= 2 Then
-			;	Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
-			;	$g_bIsBBevent = True
-			;Else
-			;	Setlog("Running Challenge is Not BB Challenge", $COLOR_DEBUG)
-			;	$g_bIsBBevent = False
-			;EndIf
+			
 			SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
 			If QuickMIS("BC1", $g_sImgVersus, 425, 180, 700, 235, True, False) Then
 				Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
@@ -820,6 +814,7 @@ Func PurgeEvent($directoryImage, $sEventName, $getCapture = True)
 		If _Sleep(1500) Then Return
 		If StartsEvent($sEventName, True, $getCapture, $g_bChkClanGamesDebug) Then
 			ClickAway()
+			$g_bIsBBEvent = False
 			Return True
 		EndIf
 	EndIf
@@ -851,6 +846,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 				If _Sleep(1500) Then Return
 				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - ForcePurgeEvent: Purge a Wrong Challenge ", 1)
 				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - ForcePurgeEvent: Purge a Wrong Challenge ")
+				$g_bIsBBEvent = False
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
@@ -885,6 +881,7 @@ Func StartAndPurgeEvent($bTest = False)
 				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ", 1)
 				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ")
 				ClickAway()
+				$g_bIsBBEvent = False
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
@@ -913,7 +910,7 @@ Func TrashFailedEvent()
 	EndIf
 
 	If _Sleep(500) Then Return
-
+	$g_bIsBBEvent = False
 	Return True
 EndFunc   ;==>TrashFailedEvent
 
