@@ -20,9 +20,9 @@ Func DoAttackBB()
 	If $g_iBBAttackCount = 0 Then 
 		Local $count = 1
 		While PrepareAttackBB()
-			If $count = 20 Then 
+			If $count = 15 Then 
 				SetLog("SomeThing May Wrong", $COLOR_INFO) 
-				SetLog("20 Attack Count on BB is wasting 60 Minute", $COLOR_INFO)
+				SetLog("15 Attack Count on BB is wasting 45 Minute", $COLOR_INFO)
 				SetLog("Surrender..!", $COLOR_ACTION)
 				ExitLoop
 			Endif
@@ -46,7 +46,7 @@ Func DoAttackBB()
 		Wend
 		
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
-		ClickAway()
+		ClickAway("Left")
 	Else
 		For $i = 1 To $g_iBBAttackCount
 			If PrepareAttackBB() Then
