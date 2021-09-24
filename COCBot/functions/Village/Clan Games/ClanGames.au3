@@ -834,7 +834,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 
 	If _Sleep(1000) Then Return
 	If $startFirst Then
-		SetLog("ForcePurgeEvent: Start and Purge a Challenge", $COLOR_INFO)
+		SetLog("ForcePurgeEvent: No event Found, Start and Purge a Challenge", $COLOR_INFO)
 		If StartAndPurgeEvent($bTest) Then
 			ClickAway()
 			Return True
@@ -850,8 +850,8 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 				If $bTest Then Return
 				Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
 				If _Sleep(1500) Then Return
-				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ", 1)
-				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ")
+				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - ForcePurgeEvent: Purge a Wrong Challenge ", 1)
+				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - ForcePurgeEvent: Purge a Wrong Challenge ")
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
@@ -883,8 +883,8 @@ Func StartAndPurgeEvent($bTest = False)
 				If $bTest Then Return
 				Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
 				SetLog("StartAndPurgeEvent event!", $COLOR_SUCCESS)
-				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ", 1)
-				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ")
+				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ", 1)
+				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ")
 				ClickAway()
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
