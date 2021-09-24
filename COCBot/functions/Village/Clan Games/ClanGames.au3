@@ -1085,9 +1085,10 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["SpeedyStars", 			"3 Stars in 60 seconds",		 6,  2, 5], _ ;
 			["Tremendous13s", 			"Tremendous 13s", 				13,  1, 8]]   ;
 
-	Local $DestructionChallenges[31][5] = [ _
+	Local $DestructionChallenges[32][5] = [ _
 			["Cannon", 					"Cannon Carnage", 				 3,  1, 1], _ ; Destroy 5-25 Cannons in Multiplayer Battles					|1h-8h	|75-350
 			["ArcherT", 				"Archer Tower Assault", 		 3,  1, 1], _ ; Destroy 5-20 Archer Towers in Multiplayer Battles			|1h-8h	|75-350
+			["BuilderHut", 				"Builder Basher", 				 3,  1, 1], _ ; Destroy 4-12 BuilderHut in Multiplayer Battles				|1h-8h	|40-350
 			["Mortar", 					"Mortar Mauling", 				 3,  1, 1], _ ; Destroy 4-12 Mortars in Multiplayer Battles					|1h-8h	|40-350
 			["AirD", 					"Destroy Air Defenses", 		 7,  2, 1], _ ; Destroy 3-12 Air Defenses in Multiplayer Battles			|1h-8h	|40-350
 			["WizardT", 				"Wizard Tower Warfare", 		 3,  1, 1], _ ; Destroy 4-12 Wizard Towers in Multiplayer Battles			|1h-8h	|40-350
