@@ -152,9 +152,12 @@ Func _ClanGames($test = False)
 			
 			For $x = 0 To UBound($BBCheck) - 1
 				If $FullImageName = $BBCheck[$x] Then 
+					If $g_bChkClanGamesDebug Then SetLog("Detection for " & $FullImageName & " :", $COLOR_INFO)
 					If Not IsBBChallenge($tempObbj[0],$tempObbj[1]) Then 
-						SetLog("False Detection, Skip this Challenge", $COLOR_INFO)
+						If $g_bChkClanGamesDebug Then SetLog("False Detection, Skip this Challenge", $COLOR_ERROR)
 						ContinueLoop 2
+					Else
+						If $g_bChkClanGamesDebug Then SetLog("OK, Continue", $COLOR_SUCCESS)
 					Endif
 				EndIf
 			Next
@@ -419,7 +422,6 @@ Func _ClanGames($test = False)
 		; let's get the Event timing
 		For $i = 0 To UBound($aSelectChallenges) - 1
 			Setlog("Detected " & $aSelectChallenges[$i][0] & " difficulty of " & $aSelectChallenges[$i][3])
-			IsBBChallenge($aSelectChallenges[$i][1], $aSelectChallenges[$i][2])
 			Click($aSelectChallenges[$i][1], $aSelectChallenges[$i][2])
 			If _Sleep(1500) Then Return
 			Local $EventHours = GetEventInformation()
@@ -966,22 +968,22 @@ Func IsBBChallenge($i = Default, $j = Default)
 		Case Else
 			$iRow = 3
 	EndSwitch
-	
+	If $g_bChkClanGamesDebug Then SetLog("Row: " & $iRow & ", Column : " & $iColumn, $COLOR_DEBUG)
 	For $y = 0 To 2
 		For $x = 0 To 3
-			If Not QuickMIS("BC1", $g_sImgBorder, $BorderX[$x] - 50, $BorderY[$y] - 50, $BorderX[$x] + 50, $BorderY[$y] + 50, True, False) Then
-				If $iRow = ($y+1) And $iColumn = ($x+1) Then SetLog("IsBBChallenge = True", $COLOR_INFO)
-				;If $g_bChkClanGamesDebug Then SetLog("Row:" & $y+1 & " Column:" & $x+1 & " [" & $BorderX[$x] - 50 & "," & $BorderY[$y] - 50 & "," & $BorderX[$x] + 50 & "," & $BorderY[$y] + 50 & "] IsBBChallenge = True", $COLOR_INFO)
-				$bReturn = True
-			Else
-				If $iRow = ($y+1) And $iColumn = ($x+1) Then SetLog("IsBBChallenge = False", $COLOR_ERROR)
-				;If $g_bChkClanGamesDebug Then SetLog("Row:" & $y+1 & " Column:" & $x+1 & " [" & $BorderX[$x] - 50 & "," & $BorderY[$y] - 50 & "," & $BorderX[$x] + 50 & "," & $BorderY[$y] + 50 & "] IsBBChallenge = False", $COLOR_ERROR)
-				$bReturn = False
+			If $iRow = ($y+1) And $iColumn = ($x+1) Then 
+				;Search image border, our image is MainVillage event border, so If found return False
+				If QuickMIS("BC1", $g_sImgBorder, $BorderX[$x] - 50, $BorderY[$y] - 50, $BorderX[$x] + 50, $BorderY[$y] + 50, True, False) Then
+					If $g_bChkClanGamesDebug Then SetLog("IsBBChallenge = False", $COLOR_ERROR)
+					Return False
+				Else
+					If $g_bChkClanGamesDebug Then SetLog("IsBBChallenge = True", $COLOR_INFO)
+					Return True
+				EndIf
 			EndIf
 		Next
 	Next
 	
-	Return $bReturn
 EndFunc ;==>IsBBChallenge
 
 ; Just for any button test
