@@ -41,6 +41,12 @@ Func SearchUpgrade($bTest = False)
 		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
 		Return False
 	EndIf
+	
+	If $g_bPlaceNewBuilding Then
+		If UpgradeNewBuilding($bTest) Then
+			Return True
+		EndIf
+	EndIf
 
 	If Not ClickMainBuilder($bTest) Then Return
 	If Not $g_bRunState Then Return
@@ -75,12 +81,6 @@ Func SearchUpgrade($bTest = False)
 		ClickDragAUpgrade("up", $y);do scroll down
 		If _Sleep(1500) Then Return
 	Next
-
-	If $g_bPlaceNewBuilding Then
-		If UpgradeNewBuilding($bTest) Then
-			Return True
-		EndIf
-	EndIf
 
 	ZoomOut()
 	ClickAway()
