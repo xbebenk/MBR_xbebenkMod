@@ -133,8 +133,6 @@ EndFunc   ;==>chkActivateBBSuggestedUpgradesElixir
 Func chkPlacingNewBuildings()
 	$g_iChkPlacingNewBuildings = (GUICtrlRead($g_hChkPlacingNewBuildings) = $GUI_CHECKED) ? 1 : 0
 EndFunc   ;==>chkPlacingNewBuildings
-
-Local Const $OptimizeOTTO[13] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "D uble Cannon", "Post", "Barracks", "Wall"]
 Local $BuildingUpgraded = False
 
 ; MAIN CODE
@@ -308,7 +306,7 @@ Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap 
 EndFunc   ;==>GetIconPosition
 
 Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
-
+	Local $OptimizeOTTO[13] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "D uble Cannon", "Post", "Barracks", "Wall"]
 	;Local $aBtnPos = [360, 500, 180, 50] ; x, y, w, h
 	Local $aBtnPos = [360, 460, 380, 120] ; x, y, w, h ; support Battke Machine, broken and upgrade
 	Local $buttonUpgradeType = $sUpgButtom
@@ -337,7 +335,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 						If $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						ElseIf $aBuildingName[1] = "D uble Cannon" And $aBuildingName[2] >= 4 Then
-							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+							SetLog("Upgrade for Double Cannon Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						ElseIf $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						ElseIf $aBuildingName[1] = "Builder Barracks" And $aBuildingName[2] >= 7 Then
