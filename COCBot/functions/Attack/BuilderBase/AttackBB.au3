@@ -20,16 +20,16 @@ Func DoAttackBB()
 	If $g_iBBAttackCount = 0 Then 
 		Local $count = 1
 		While PrepareAttackBB()
-			If $count = 15 Then 
-				SetLog("SomeThing May Wrong", $COLOR_INFO) 
-				SetLog("15 Attack Count on BB is wasting 45 Minute", $COLOR_INFO)
-				SetLog("Surrender..!", $COLOR_ACTION)
-				ExitLoop
-			Endif
 			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			AttackBB()
 			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+				If $count > 10 Then 
+					SetLog("SomeThing May Wrong", $COLOR_INFO) 
+					SetLog("Already 10 Attack on ForceBBAttackOnClanGames", $COLOR_INFO)
+					SetLog("Surrender..!", $COLOR_ACTION)
+					ExitLoop
+				Endif
 				For $x = 0 To 4
 					_Sleep(1000)
 					If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
