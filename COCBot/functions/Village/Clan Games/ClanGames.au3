@@ -68,8 +68,9 @@ Func _ClanGames($test = False)
 				ClickAway()
 				Return
 			ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
-				SetLog("Your Score limit is almost reached")
+				SetLog("Your almost reached max point")
 				If $g_bChkClanGamesStopBeforeReachAndPurge Then
+					If IsEventRunning() Then Return
 					$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
 					Setlog("Clan Games Minute Remain: " & $sTimeCG)
 					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1200 Then ; purge, but not purge on last day of clangames
@@ -604,7 +605,7 @@ Func IsClanGamesRunning($getCapture = True) ;to check whether clangames current 
 			$sState = "prepare"
 		EndIf
 		SetLog("Clan Games Window Not Opened", $COLOR_DEBUG)
-		Return $sState
+		$sState = "Cannot open ClanGames"
 	EndIf
 	Return $sState
 EndFunc ;==>IsClanGamesRunning
@@ -701,7 +702,7 @@ Func IsEventRunning($bOpenWindow = False)
 						Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
 						$g_bIsBBevent = True
 					Else
-						Setlog("Running Challenge is Not BB Challenge", $COLOR_INFO)
+						Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
 						$g_bIsBBevent = False
 					EndIf
 				EndIf
@@ -787,7 +788,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 				Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
 				$g_bIsBBevent = True
 			Else
-				Setlog("Running Challenge is Not BB Challenge", $COLOR_INFO)
+				Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
 				$g_bIsBBevent = False
 			EndIf
 		EndIf
