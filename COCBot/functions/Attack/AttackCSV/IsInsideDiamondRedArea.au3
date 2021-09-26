@@ -85,7 +85,7 @@ Func isInsideDiamondInternalArea($x, $y) ;we make smaller diamond which exclude 
 
 	Local $Left = 150, $Right = 720, $Top = 130, $Bottom = 540
 	Local $Offset = 0
-	Local $coordLRTB = "", $coordInner = "UNKNOWN"
+	Local $coordLRTB = "", $position = "", $isInside = False, $ret[3] = [0, 0, 0]
 
 	Setlog("x = " & $x, $COLOR_DEBUG)
 	Setlog("y = " & $y , $COLOR_DEBUG)
@@ -119,63 +119,66 @@ Func isInsideDiamondInternalArea($x, $y) ;we make smaller diamond which exclude 
 				$Offset = ($x - $Left) * 0.7
 				If $y > $Top And $y < $yMidPoint Then
 					If $y < $yMidPoint - $Offset Then
-						$coordInner = "OUTSIDE"
+						$position = "OUTSIDE"
 					Else
-						$coordInner = "INSIDE"
+						$position = "INSIDE"
 					EndIf
 				Else
-					$coordInner = "OUTSIDE"
+					$position = "OUTSIDE"
 				EndIf
 			Else
-				$coordInner = "OUTSIDE"
+				$position = "OUTSIDE"
 			EndIf
 		Case "BOTTOM-LEFT"
 			If $x > $Left And $x < $xMidPoint Then
 				$Offset = ($x - $Left) * 0.7
 				If $y > $yMidPoint And $y < $Bottom Then
 					If $y > $yMidPoint + $Offset Then
-						$coordInner = "OUTSIDE"
+						$position = "OUTSIDE"
 					Else
-						$coordInner = "INSIDE"
+						$position = "INSIDE"
 					EndIf
 				Else
-					$coordInner = "OUTSIDE"
+					$position = "OUTSIDE"
 				EndIf
 			Else
-				$coordInner = "OUTSIDE"
+				$position = "OUTSIDE"
 			EndIf
 		Case "TOP-RIGHT"
 			If $x > $xMidPoint And $x < $Right Then
 				$Offset = ($Right - $x) * 0.7
 				If $y > $Top And $y < $yMidPoint Then
 					If $y < $yMidPoint - $Offset Then
-						$coordInner = "OUTSIDE"
+						$position = "OUTSIDE"
 					Else
-						$coordInner = "INSIDE"
+						$position = "INSIDE"
 					EndIf
 				Else
-					$coordInner = "OUTSIDE"
+					$position = "OUTSIDE"
 				EndIf
 			Else
-				$coordInner = "OUTSIDE"
+				$position = "OUTSIDE"
 			EndIf
 		Case "BOTTOM-RIGHT"
 			If $x > $xMidPoint And $x < $Right Then
 				$Offset = ($Right - $x) * 0.7
 				If $y > $yMidPoint And $y < $Bottom Then
 					If $y > $yMidPoint + $Offset Then
-						$coordInner = "OUTSIDE"
+						$position = "OUTSIDE"
 					Else
-						$coordInner = "INSIDE"
+						$position = "INSIDE"
 					EndIf
 				Else
-					$coordInner = "OUTSIDE"
+					$position = "OUTSIDE"
 				EndIf
 			Else
-				$coordInner = "OUTSIDE"
+				$position = "OUTSIDE"
 			EndIf
 	EndSwitch
-	Return $coordInner
+	$ret[0] = $isInside
+	$ret[1] = $coordLRTB
+	$ret[2] = $position
+	Return $ret
 EndFunc   ;==>isInsideDiamondInternalArea
 
 
