@@ -559,46 +559,58 @@ EndFunc   ;==>SearchZoomOut
 
 Func ZoomIn($Region = "Top")
 	Local $Result = Execute("ZoomIn" & $g_sAndroidEmulator & "(" & DoubleQuote($Region) & ")")
+	
+	
 	If $Result = "" And @error <> 0 Then
 		; Not implemented or other error
 		;$Result = AndroidOnlyZoomOut()
 	EndIf
 EndFunc
 
-Func ZoomInMEmu($Region = "Top", $ZoomInKey = "{F2}")
+Func ZoomInMEmu($Region = "Top")
 	SetDebugLog("ZoomInMEmu()")
-	Local $Result = ControlSend($g_hAndroidWindow, "", "", $ZoomInKey)
-	If _Sleep(1000) Then Return
+	AndroidAdbScript("ZoomIn")
+	If _Sleep(1500) Then Return
 	Switch $Region
 		Case "Top"
-			ClickDrag(400, 70, 400, 400)
+			ClickDrag(400, 100, 400, 600, 200)
+			If _Sleep(500) Then Return
+			ClickDrag(400, 100, 400, 600, 200)
 		Case "Left"
-			ClickDrag(90, 450, 400, 450)
+			ClickDrag(100, 400, 800, 400, 200)
+			If _Sleep(500) Then Return
+			ClickDrag(100, 400, 800, 400, 200)
 		Case "Bottom"
-			ClickDrag(400, 630, 400, 270)
+			ClickDrag(400, 600, 400, 100, 200)
+			If _Sleep(500) Then Return
+			ClickDrag(400, 600, 400, 100, 200)
 		Case "Right"
-			ClickDrag(800, 300, 400, 300)
+			ClickDrag(800, 400, 100, 400, 200)
+			If _Sleep(500) Then Return
+			ClickDrag(800, 400, 100, 400, 200)
 	EndSwitch
-	Return $Result
 EndFunc
 
 Func ZoomInNox($Region = "Top")
 	SetDebugLog("ZoomInNox()")
-	ControlFocus($g_hAndroidWindow, "", "")
-	ControlSend($g_hAndroidWindow, "", "", "{CTRLDOWN}")
-	;MouseMove($g_aiBSpos[0] + Int($g_iDEFAULT_WIDTH / 2), $g_aiBSpos[1] + Int($g_iDEFAULT_HEIGHT / 2), 0)
-	MouseWheel("up")
-	If _Sleep(200) Then Return
-	ClickAway("Right")
-	If _Sleep(100) Then Return
+	AndroidAdbScript("ZoomIn")
+	If _Sleep(1500) Then Return
 	Switch $Region
 		Case "Top"
-			ClickDrag(400, 70, 400, 400)
+			ClickDrag(400, 100, 400, 600, 200)
+			If _Sleep(500) Then Return
+			ClickDrag(400, 100, 400, 600, 200)
 		Case "Left"
-			ClickDrag(90, 450, 400, 450)
+			ClickDrag(100, 400, 800, 400, 200)
+			If _Sleep(500) Then Return
+			ClickDrag(100, 400, 800, 400, 200)
 		Case "Bottom"
-			ClickDrag(400, 630, 400, 270)
+			ClickDrag(400, 600, 400, 100, 200)
+			If _Sleep(500) Then Return
+			ClickDrag(400, 600, 400, 100, 200)
 		Case "Right"
-			ClickDrag(800, 300, 400, 300)
+			ClickDrag(800, 400, 100, 400, 200)
+			If _Sleep(500) Then Return
+			ClickDrag(800, 400, 100, 400, 200)
 	EndSwitch
 EndFunc

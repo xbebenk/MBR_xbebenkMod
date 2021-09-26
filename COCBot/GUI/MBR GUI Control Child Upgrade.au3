@@ -678,6 +678,18 @@ Func chkAutoUpgrade()
 	EndIf
 EndFunc   ;==>chkAutoUpgrade
 
+Func chkAllDefUpgradesToIgnore()
+	If GUICtrlRead($g_hChkAllDefenseUpgradesToIgnore) = $GUI_CHECKED Then
+		For $i = $g_hChkUpgradesToIgnore[15] To $g_hChkUpgradesToIgnore[27]
+			GUICtrlSetState($i, $GUI_CHECKED)
+		Next
+	Else
+		For $i = $g_hChkUpgradesToIgnore[15] To $g_hChkUpgradesToIgnore[27]
+			GUICtrlSetState($i, $GUI_UNCHECKED)
+		Next
+	EndIf
+EndFunc   ;==>chkAllDefUpgradesToIgnore
+
 Func chkScrollFirst()
 	If GUICtrlRead($g_hChkScrollFirst) = $GUI_CHECKED Then
 		$g_bScrollFirst = True

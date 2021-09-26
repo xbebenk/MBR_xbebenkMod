@@ -50,8 +50,8 @@ Global $g_ahPicWallsLevel[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0, $g_hChkScrollFirst = 0, $g_ChkPlaceNewBuilding = 0
 Global $g_hTxtSmartMinGold = 0, $g_hTxtSmartMinElixir = 0, $g_hTxtSmartMinDark = 0
 Global $g_hChkResourcesToIgnore[3] = [0, 0, 0]
-Global $g_hChkUpgradesToIgnore[25] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0]
-
+Global $g_hChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_hChkAllDefenseUpgradesToIgnore = 0
 
 Func CreateVillageUpgrade()
 
@@ -631,21 +631,22 @@ Func CreateWallsSubTab()
 
 EndFunc   ;==>CreateWallsSubTab
 
+
 Func CreateAutoUpgradeSubTab()
 
-	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_01", "Auto Upgrade"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 95)
+	Local $x = 25, $y = 40
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_01", "Auto Upgrade"), $x - 20, $y - 15, $g_iSizeWGrpTab3, 90)
 
-		$g_hChkAutoUpgrade = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade", "Enable Auto Upgrade"), $x - 5, $y, -1, -1)
+		$g_hChkAutoUpgrade = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade", "Enabled"), $x - 5, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade_Info_01", "Check box to enable automatically starting Upgrades from builders menu"))
 			GUICtrlSetOnEvent(-1, "chkAutoUpgrade")
-		$g_hChkScrollFirst = GUICtrlCreateCheckbox("Scroll Up First", $x + 140, $y, -1, -1)
+		$g_hLblAutoUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_01", "Save"), $x, $y + 27, -1, -1)
+		$g_hChkScrollFirst = GUICtrlCreateCheckbox("Scroll Up First", $x + 95, $y, -1, -1)
 			_GUICtrlSetTip(-1, "Check to Skip First page on builder menu")
 			GUICtrlSetOnEvent(-1, "chkScrollFirst")
-		$g_ChkPlaceNewBuilding = GUICtrlCreateCheckbox("Place New Building (Memu Only)", $x + 250, $y, -1, -1)
-			_GUICtrlSetTip(-1, "Check to Placing New Building (experimental) Currently only work On Memu")
+		$g_ChkPlaceNewBuilding = GUICtrlCreateCheckbox("Place New Building (Memu Only)", $x + 195, $y, -1, -1)
+			_GUICtrlSetTip(-1, "Placing New Building (experimental) Currently only Tested On Memu")
 			GUICtrlSetOnEvent(-1, "ChkPlaceNew")
-		$g_hLblAutoUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_01", "Save"), $x, $y + 27, -1, -1)
 		$g_hTxtSmartMinGold = GUICtrlCreateInput("150000", $x + 33, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
 			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 98, $y + 27, 16, 16)
 		$g_hTxtSmartMinElixir = GUICtrlCreateInput("150000", $x + 118, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
@@ -661,110 +662,131 @@ Func CreateAutoUpgradeSubTab()
 		$g_hChkResourcesToIgnore[2] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_03", "Ignore Dark Elixir Upgrades"), $x + 258, $y + 50, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkResourcesToIgnore")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_02", "Upgrades to Ignore"), $x - 20, $y + 75, $g_iSizeWGrpTab3, 170)
-	Local $x = 21, $y = 95
-	Local $iIconSize = 32
-	Local $xOff = (40 - $iIconSize) / 2
-	Local $yRow1 = 40
-	Local $yRow2 = 90
-	Local $yRow3 = 145
-	Local $yRow4 = 170
-	Local $yChkOff = 32
 	
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTH11, $x + 5, $y + $yRow1, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[0] = GUICtrlCreateCheckbox("", $x + 20 - $xOff, $y + $yRow1 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnKing, $x + 50, $y + $yRow1, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[1] = GUICtrlCreateCheckbox("", $x + 65 - $xOff, $y + $yRow1 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnQueen, $x + 95, $y + $yRow1, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[2] = GUICtrlCreateCheckbox("", $x + 110 - $xOff, $y + $yRow1 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnWarden, $x + 140, $y + $yRow1, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[3] = GUICtrlCreateCheckbox("", $x + 155 - $xOff, $y + $yRow1 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnChampion, $x + 185, $y + $yRow1, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[14] = GUICtrlCreateCheckbox("", $x + 200 - $xOff, $y + $yRow1 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCC, $x + 245, $y + $yRow1, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[4] = GUICtrlCreateCheckbox("", $x + 260 - $xOff, $y + $yRow1 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnLaboratory, $x + 305, $y + $yRow1, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[5] = GUICtrlCreateCheckbox("", $x + 320 - $xOff, $y + $yRow1 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnWall, $x + 365, $y + $yRow1, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[6] = GUICtrlCreateCheckbox("", $x + 380 - $xOff, $y + $yRow1 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnBarrack, $x + 5, $y + $yRow2, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[7] = GUICtrlCreateCheckbox("", $x + 20 - $xOff, $y + $yRow2 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDarkBarrack, $x + 50, $y + $yRow2, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[8] = GUICtrlCreateCheckbox("", $x + 65 - $xOff, $y + $yRow2 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSpellFactory, $x + 140, $y + $yRow2, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[9] = GUICtrlCreateCheckbox("", $x + 155 - $xOff, $y + $yRow2 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDarkSpellFactory, $x + 185, $y + $yRow2, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[10] = GUICtrlCreateCheckbox("", $x + 200 - $xOff, $y + $yRow2 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnMine, $x + 275, $y + $yRow2, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[11] = GUICtrlCreateCheckbox("", $x + 290 - $xOff, $y + $yRow2 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCollector, $x + 320, $y + $yRow2, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[12] = GUICtrlCreateCheckbox("", $x + 335 - $xOff, $y + $yRow2 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDrill, $x + 365, $y + $yRow2, $iIconSize, $iIconSize)
-		$g_hChkUpgradesToIgnore[13] = GUICtrlCreateCheckbox("", $x + 380 - $xOff, $y + $yRow2 + $yChkOff, 17, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		$g_hChkUpgradesToIgnore[15] = GUICtrlCreateCheckbox("Cannon", $x, $y + $yRow3, 60, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		$g_hChkUpgradesToIgnore[16] = GUICtrlCreateCheckbox("Archer Tower", $x + 60, $y + $yRow3, 80, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-
-		$g_hChkUpgradesToIgnore[17] = GUICtrlCreateCheckbox("Mortar", $x + 145, $y + $yRow3, 55, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-		
-		$g_hChkUpgradesToIgnore[18] = GUICtrlCreateCheckbox("Tesla", $x + 200, $y + $yRow3, 55, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-		
-		$g_hChkUpgradesToIgnore[19] = GUICtrlCreateCheckbox("GroundTraps", $x + 255, $y + $yRow3, 80, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-		
-		$g_hChkUpgradesToIgnore[20] = GUICtrlCreateCheckbox("AirTraps", $x + 345, $y + $yRow3, 60, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
-		
-		$g_hChkUpgradesToIgnore[21] = GUICtrlCreateCheckbox("Wizard Tower", $x, $y + $yRow4, 85, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore") 
-		
-		$g_hChkUpgradesToIgnore[22] = GUICtrlCreateCheckbox("Bomb Tower", $x + 90, $y + $yRow4, 80, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore") 
-		
-		$g_hChkUpgradesToIgnore[23] = GUICtrlCreateCheckbox("Air Defense", $x + 175, $y + $yRow4, 80, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore") 
-		
-		$g_hChkUpgradesToIgnore[24] = GUICtrlCreateCheckbox("TH Weapon", $x + 255, $y + $yRow4, 80, 17)
-			GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore") 
-
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_02", "Upgrades to ignore"), $x - 20, $y + 75, $g_iSizeWGrpTab3, 200)
+		Local $x = 20, $y = 130
+		$g_hChkUpgradesToIgnore[0] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Town Hall", "Town Hall"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[1] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Barbarian King", "Barbarian King"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[2] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Archer Queen", "Archer Queen"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[3] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Grand Warden", "Grand Warden"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x = 20
+		$y += 20
+		$g_hChkUpgradesToIgnore[4] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Royal Champion", "Royal Champion"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[5] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Clan Castle", "Clan Castle"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[6] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Laboratory", "Laboratory"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[7] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Wall", "Wall"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x = 20
+		$y += 20
+		$g_hChkUpgradesToIgnore[8] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Barracks", "Barracks"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[9] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Dark Barracks", "Dark Barracks"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[10] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Spell Factory", "Spell Factory"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[11] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Dark Spell Factory", "Dark Spell Factory"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x = 20
+		$y += 20
+		$g_hChkUpgradesToIgnore[12] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Gold Mine", "Gold Mine"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[13] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Elixir Collector", "Elixir Collector"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[14] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "DE Drill", "DE Drill"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[15] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Cannon", "Cannon"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x = 20
+		$y += 20
+		$g_hChkUpgradesToIgnore[16] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Archer Tower", "Archer Tower"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[17] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Mortar", "Mortar"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[18] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Hidden Tesla", "Hidden Tesla"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[19] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "Traps", "Traps"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x = 20
+		$y += 20
+		$g_hChkUpgradesToIgnore[20] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Wizard Tower", "Wizard Tower"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[21] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Bomb Tower", "Bomb Tower"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[22] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Air Defense", "Air Defense"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[23] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Air Sweeper", "Air Sweeper"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x = 20
+		$y += 20
+		$g_hChkUpgradesToIgnore[24] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "X-Bow", "X-Bow"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[25] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Inferno Tower", "Inferno Tower"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[26] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Eagle Artillery", "Eagle Artillery"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[27] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Scattershot", "Scattershot"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x = 20
+		$y += 20
+		$g_hChkUpgradesToIgnore[28] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Army Camp", "Army Camp"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[29] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Gold Storage", "Gold Storage"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[30] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Elixir Storage", "Elixir Storage"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[31] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "DE Storage", "DE Storage"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x = 20
+		$y += 20
+		$g_hChkUpgradesToIgnore[32] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Workshop", "Workshop"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[33] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Pet House", "Pet House"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[34] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Builder's Hut", "Builder's Hut"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x += 100
+		$g_hChkUpgradesToIgnore[35] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "TH Weapon", "TH Weapon"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore") 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-	$g_hTxtAutoUpgradeLog = GUICtrlCreateEdit("", $x - 16, 295, $g_iSizeWGrpTab3, 105, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
+	$x = 50
+	$y += 24
+	$g_hChkAllDefenseUpgradesToIgnore = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "All Defense", "All Defense"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkAllDefUpgradesToIgnore")
+	$x = 5
+		$g_hTxtAutoUpgradeLog = GUICtrlCreateEdit("", $x, 340, $g_iSizeWGrpTab3, 62, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "TxtAutoUpgradeLog", "------------------------------------------------ AUTO UPGRADE LOG ------------------------------------------------"))
-
+	
 EndFunc   ;==>CreateAutoUpgradeGUI

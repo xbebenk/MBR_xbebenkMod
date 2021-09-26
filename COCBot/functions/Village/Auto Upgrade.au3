@@ -21,45 +21,49 @@ Func AutoUpgrade($bTest = False)
 	Return $Result
 EndFunc
 
+Func AutoUpgradeCheckBuilder($bTest = False)
+	VillageReport(True, True) ;check if we have available builder
+	If $bTest Then 
+		$g_iFreeBuilderCount = 1
+		Return True
+	EndIf
+	;Check if there is a free builder for Auto Upgrade
+	If ($g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0)) <= 0 Then
+		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
+		Return False
+	EndIf
+	Return True
+EndFunc
+
 Func SearchUpgrade($bTest = False)
 
 	Local $bDebug = $g_bDebugSetlog
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
 
-	VillageReport(True, True) ;check if we have available builder
-
 	; check if builder head is clickable
 	If Not (_ColorCheck(_GetPixelColor(275, 15, True), "F5F5ED", 20) = True) Then
 		SetLog("Unable to find the Builder menu button... Exiting Auto Upgrade...", $COLOR_ERROR)
 		Return
 	EndIf
-
-	If $bTest Then $g_iFreeBuilderCount = 1
-	;Check if there is a free builder for Auto Upgrade
-	If ($g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0)) <= 0 Then
-		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
-		Return False
-	EndIf
 	
-	If $g_bPlaceNewBuilding Then
-		If UpgradeNewBuilding($bTest) Then
-			Return True
-		EndIf
-	EndIf
-
+	If $bTest Then $g_iFreeBuilderCount = 1
+	If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
+	
+	If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we still have builder
+	
 	If Not ClickMainBuilder($bTest) Then Return
 	If Not $g_bRunState Then Return
 	Local $b_BuildingFound = False
-	For $z = 0 To 1 ;for do scroll 2 times
+	For $z = 0 To 2 ;for do scroll 3 times
 		If $g_bRestart Then Return False
-		Local $x = 180, $y = 80, $x1 = 450, $y1 = 108, $step = 28
-		For $i = 0 To 8
+		Local $x = 180, $y = 80, $x1 = 450, $y1 = 103, $step = 30
+		For $i = 0 To 9
 			If $g_bRestart Then Return False
-			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y, $x1, $y1) Then
+			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-5, $x1, $y1+5) Then
 				$b_BuildingFound = True
 				SetLog("[" & $i & "] Upgrade found!", $COLOR_SUCCESS)
-				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y, $x1, $y1) <> "none" Then
+				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y-5, $x1, $y1+5) <> "none" Then
 					SetLog("[" & $i & "] New Building, Skip!", $COLOR_SUCCESS)
 					$b_BuildingFound = False
 				EndIf
@@ -71,19 +75,18 @@ Func SearchUpgrade($bTest = False)
 					Endif
 				EndIf
 				If $g_iFreeBuilderCount < 1 Then Return
-				If _Sleep(1000) Then Return
+				If _Sleep(500) Then Return
 			Else
 				SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
 			EndIf
 			$y += $step
 			$y1 += $step
 		Next
-		ClickDragAUpgrade("up", $y);do scroll down
+		ClickDragAUpgrade("up", $y - ($step * 2));do scroll down
 		If _Sleep(1500) Then Return
 	Next
-
-	ZoomOut()
 	ClickAway()
+	ZoomOut()
 	Return False
 EndFunc
 
@@ -112,14 +115,12 @@ Func DoUpgrade($bTest = False)
 	Switch $g_aUpgradeNameLevel[1]
 		Case "Town Hall"
 			If $g_aUpgradeNameLevel[2] > 11 Then
-				If $g_iChkUpgradesToIgnore[24] = 1 Then
+				If $g_iChkUpgradesToIgnore[35] = 1 Then
 					$bMustIgnoreUpgrade = True
 				Else
 					$aUpgradeButton = findButton("THWeapon", Default, 1, True)
 					If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
 						SetLog("No Upgrade Weapon Button here... Wrong click, looking next...", $COLOR_WARNING)
-						;$g_iNextLineOffset = $g_iCurrentLineOffset -> not necessary finally, but in case, I keep lne commented
-						$g_iNextLineOffset = $g_iCurrentLineOffset
 						Return False
 					EndIf
 				Endif
@@ -127,60 +128,85 @@ Func DoUpgrade($bTest = False)
 				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1) ? True : False
 			EndIf
 		Case "Barbarian King"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1 Or $g_bUpgradeKingEnable = True) ? True : False ; if upgrade king is selected, will ignore it
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1 Or $g_bUpgradeKingEnable = True) ? True : False
 		Case "Archer Queen"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1 Or $g_bUpgradeQueenEnable = True) ? True : False ; if upgrade queen is selected, will ignore it
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1 Or $g_bUpgradeQueenEnable = True) ? True : False
 		Case "Grand Warden"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[3] = 1 Or $g_bUpgradeWardenEnable = True) ? True : False ; if upgrade warden is selected, will ignore it
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[3] = 1 Or $g_bUpgradeWardenEnable = True) ? True : False
 		Case "Royal Champion"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[14] = 1 Or $g_bUpgradeChampionEnable = True) ? True : False ; if upgrade champion is selected, will ignore it
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[4] = 1 Or $g_bUpgradeChampionEnable = True) ? True : False
 		Case "Clan Castle"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[4] = 1) ? True : False
-		Case "Laboratory"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[5] = 1) ? True : False
+		Case "Laboratory"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[6] = 1) ? True : False
 		Case "Wall"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[6] = 1 Or $g_bAutoUpgradeWallsEnable = True) ? True : False ; if wall upgrade enabled, will ignore it
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[7] = 1 Or $g_bAutoUpgradeWallsEnable = True) ? True : False
 		Case "Barracks"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[7] = 1) ? True : False
-		Case "Dark Barracks"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[8] = 1) ? True : False
-		Case "Spell Factory"
+		Case "Dark Barracks"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[9] = 1) ? True : False
-		Case "Dark Spell Factory"
+		Case "Spell Factory"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[10] = 1) ? True : False
-		Case "Gold Mine"
+		Case "Dark Spell Factory"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[11] = 1) ? True : False
-		Case "Elixir Collector"
+		Case "Gold Mine"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[12] = 1) ? True : False
-		Case "Dark Elixir Drill"
+		Case "Elixir Collector"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[13] = 1) ? True : False
+		Case "Dark Elixir Drill"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[14] = 1) ? True : False
 		Case "Cannon"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[15] = 1) ? True : False
 		Case "Archer Tower"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[16] = 1) ? True : False
 		Case "Mortar"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[17] = 1) ? True : False
-		Case "Hidden Tesla"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[17] = 1) ? True : False	
+		Case "Hidden Tesla "
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[18] = 1) ? True : False
+		Case "Bomb"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
 		Case "Spring Trap"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
 		Case "Giant Bomb"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
-		Case "Bomb"
+		Case "Air Bomb"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
 		Case "Seeking Air Mine"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1) ? True : False
-		Case "Air Bomb"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1) ? True : False
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
+		Case "Skeleton Trap"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
+		Case "Tornado Trap"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False			
 		Case "Wizard Tower"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[21] = 1) ? True : False
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1) ? True : False
 		Case "Bomb Tower"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1) ? True : False
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[21] = 1) ? True : False
 		Case "Air Defense"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1) ? True : False
+		Case "Air Sweeper"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[23] = 1) ? True : False
-		;24 is TH weapon
-		Case "WorkShop"
-			$bMustIgnoreUpgrade = True ;hardcoded temporary
+		Case "X-Bow"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[24] = 1) ? True : False
+		Case "Inferno Tower"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[25] = 1) ? True : False
+		Case "Eagle Artillery"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[26] = 1) ? True : False
+		Case "Scattershot"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[27] = 1) ? True : False
+		Case "Army Camp"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[28] = 1) ? True : False	
+		Case "Gold Storage"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[29] = 1) ? True : False
+		Case "Elixir Storage"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[30] = 1) ? True : False
+		Case "Dark Elixir Storage"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[31] = 1) ? True : False
+		Case "Workshop"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[32] = 1) ? True : False
+		Case "Pet House"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1) ? True : False
+		Case "Builder's Hut"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1) ? True : False
 		Case Else
 			$bMustIgnoreUpgrade = False
 	EndSwitch
@@ -334,9 +360,10 @@ EndFunc
 Func AUNewBuildings($x, $y, $bTest = False)
 
 	Local $Screencap = True, $Debug = $g_bDebugSetlog
-	Click($x, $y, 1)
+	Local $xstart = 200, $ystart = 150, $xend = 700, $yend = 500
+	Click($x, $y); click on upgrade window
 	If _Sleep(3000) Then Return
-
+	
 	;Search the arrow
 	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
 	If UBound($ArrowCoordinates) > 1 Then
@@ -350,35 +377,41 @@ Func AUNewBuildings($x, $y, $bTest = False)
 				Return False
 			EndIf
 		EndIf
-		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50)
-		If _Sleep(2000) Then Return
-		; Lets search for the Correct Symbol on field
-		If QuickMIS("BC1", $g_sImgAUpgradeIconYes, 100, 100, 740, 620, $Screencap, $Debug) Then
-			If Not $bTest Then
-				Click($g_iQuickMISX + 100, $g_iQuickMISY + 100, 1)
-			EndIf
-			SetLog("Placed a new Building on Main Village! [" & $g_iQuickMISX + 100 & "," & $g_iQuickMISY + 100 & "]", $COLOR_SUCCESS)
-			If _Sleep(1000) Then Return
-			If QuickMIS("BC1", $g_sImgAUpgradeIconYes, 100, 100, 740, 620, $Screencap, $Debug) Then
-				Click($g_iQuickMISX + 100, $g_iQuickMISY + 100, 1)
-			EndIf
-			; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
-			If QuickMIS("BC1", $g_sImgAUpgradeIconNo, 100, 100, 740, 620, $Screencap, $Debug) Then
-				Click($g_iQuickMISX + 100, $g_iQuickMISY + 100, 1)
-			EndIf
-			Return True
-		Else
-			If QuickMIS("BC1", $g_sImgAUpgradeIconNo, 100, 100, 740, 620, $Screencap, $Debug) Then
-				SetLog("Sorry! Wrong place to deploy a new building on Main Village! [" & $g_iQuickMISX + 100 & "," & $g_iQuickMISY + 100 & "]", $COLOR_ERROR)
-				Click($g_iQuickMISX + 100, $g_iQuickMISY + 100, 1)
-			Else
-				SetLog("Error on Undo symbol!", $COLOR_ERROR)
-			EndIf
-			Return True
-		EndIf
+		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50) ;click new building on shop
 	Else
 		SetLog("Cannot find Orange Arrow", $COLOR_ERROR)
 		Click(820, 38, 1) ; exit from Shop
+		Return False
+	EndIf
+	
+	If _Sleep(2000) Then Return
+	
+	; Lets search for the Correct Symbol on field
+	If QuickMIS("BC1", $g_sImgGreenCheck, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
+		If Not $bTest Then
+			Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
+		EndIf
+		SetLog("Placed a new Building on Main Village! [" & $g_iQuickMISX + $xstart & "," & $g_iQuickMISY + $ystart & "]", $COLOR_SUCCESS)
+		If _Sleep(1000) Then Return
+		;check again if there is more GreenCheck Button
+		If QuickMIS("BC1", $g_sImgGreenCheck, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
+			Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
+			SetLog("Wow... Placed more new Building on Main Village! [" & $g_iQuickMISX + $xstart & "," & $g_iQuickMISY + $ystart & "]", $COLOR_SUCCESS)
+		EndIf
+		If _Sleep(1000) Then Return
+		;Lets check if exist the [x], it should not exist, but to be safe 
+		If QuickMIS("BC1", $g_sImgRedX, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
+			Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
+		EndIf
+		Return True
+	Else
+		If QuickMIS("BC1", $g_sImgRedX, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
+			SetLog("Sorry! Wrong place to deploy a new building on Main Village!", $COLOR_ERROR)
+			Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
+		Else
+			SetLog("Error on Undo symbol!", $COLOR_ERROR)
+		EndIf
+		Return True
 	EndIf
 
 	Return False
@@ -402,23 +435,25 @@ Func UpgradeNewBuilding($bTest = False)
 		ZoomIn("Bottom")
 	Else
 		SetLog("GreenZone for Placing new Building Not Found", $COLOR_DEBUG)
+		Return 
 	Endif
 
 	If Not ClickMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
-	For $z = 0 To 1 ;for do scroll 2 times
+	
+	Local $b_BuildingFound = False
+	For $z = 0 To 2 ;for do scroll 2 times
 		If $g_bRestart Then Return False
-		Local $x = 180, $y = 80, $x1 = 450, $y1 = 108, $step = 28
+		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 30
 		For $i = 0 To 9
-			If $g_bRestart Then Return False
-			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y, $x1, $y1, $bScreencap, $bDebug) Then
-				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y, $x1, $y1, $bScreencap, $bDebug) <> "none" Then
+			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-5, $x1, $y1+5, $bScreencap, $bDebug) Then
+				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y-5, $x1, $y1+5, $bScreencap, $bDebug) <> "none" Then
 					SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
+					$b_BuildingFound = True
 					If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then
-						ClickAway()
-						ZoomOut()
-						Return True
+						$g_iFreeBuilderCount -= 1
 					EndIf
+					If $g_iFreeBuilderCount < 1 Then Return
 				Else
 					SetLog("[" & $i & "] Not New Building!", $COLOR_INFO)
 				EndIf
@@ -428,21 +463,21 @@ Func UpgradeNewBuilding($bTest = False)
 			$y += $step
 			$y1 += $step
 		Next
-		ClickDragAUpgrade("up", $y);do scroll down
+		ClickDragAUpgrade("up", $y - ($step * 2));do scroll down
 		If _Sleep(1500) Then Return
 	Next
+	ZoomOut()
 	ClickAway()
-	ZoomOut()	
-	Return False
 EndFunc ;==>FindNewBuilding
 
-Func ClickDragAUpgrade($Direction = "up", $y = Default)
+Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 	Local $x = 330, $yUp = 90, $yDown = 600, $Delay = 500
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
+	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
 		Switch $Direction
 			Case "Up"
-				ClickDrag($x, $Yscroll, $x, $yUp, $Delay) ;drag up
+				ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
 				If _Sleep(1000) Then Return
 			Case "Down"
 				ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
@@ -476,8 +511,7 @@ Func ClickMainBuilder($bTest = False)
 	EndIf
 
 	If $b_WindowOpened Then
-		If Not ClickDragAUpgrade("down") Then Return False
-		If Not ClickDragAUpgrade("Up") Then Return False
+		If Not ClickDragAUpgrade("Down") Then Return False
 	EndIf
 
 	Return $b_WindowOpened
