@@ -475,14 +475,16 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
-		Switch $Direction
-			Case "Up"
-				ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
-				If _Sleep(1000) Then Return
-			Case "Down"
-				ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
-				If _Sleep(1000) Then Return
-		EndSwitch
+		If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
+			Switch $Direction
+				Case "Up"
+					ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
+					If _Sleep(1000) Then Return
+				Case "Down"
+					ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
+					If _Sleep(1000) Then Return
+			EndSwitch
+		EndIf
 		If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
 			SetLog("Upgrade Window Exist", $COLOR_INFO)
 			Return True
@@ -491,6 +493,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 			Click(295, 30)
 			If _Sleep(2000) Then Return
 		EndIf
+		
 	Next
 	Return False
 EndFunc ;==>IsUpgradeWindow
