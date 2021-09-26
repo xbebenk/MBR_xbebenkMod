@@ -1313,11 +1313,21 @@ Func FirstCheck()
 EndFunc   ;==>FirstCheck
 
 Func FirstCheckRoutine()
+	
+	If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then 
+		SetLog("Check ClanGames Early", $COLOR_INFO)
+		_ClanGames()
+		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+			BuilderBase()
+		EndIf
+	EndIf
+	
 	RequestCC(False)
 	checkArmyCamp(False)
 	PrepareDonateCC()
 	DonateCC()
-	If $g_bCheckCGEarly Then _ClanGames()
+	
 	Local $aRndFuncList = ['Collect','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
