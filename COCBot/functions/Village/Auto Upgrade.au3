@@ -40,14 +40,14 @@ Func SearchUpgrade($bTest = False)
 	Local $bDebug = $g_bDebugSetlog
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
-
+	
 	; check if builder head is clickable
 	If Not (_ColorCheck(_GetPixelColor(275, 15, True), "F5F5ED", 20) = True) Then
 		SetLog("Unable to find the Builder menu button... Exiting Auto Upgrade...", $COLOR_ERROR)
 		Return
 	EndIf
 	
-	If $bTest Then $g_iFreeBuilderCount = 1
+	If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we still have builder
 	If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
 	
 	If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we still have builder
@@ -360,7 +360,7 @@ EndFunc
 Func AUNewBuildings($x, $y, $bTest = False)
 
 	Local $Screencap = True, $Debug = $g_bDebugSetlog
-	Local $xstart = 200, $ystart = 150, $xend = 700, $yend = 500
+	Local $xstart = 50, $ystart = 50, $xend = 750, $yend = 650
 	Click($x, $y); click on upgrade window
 	If _Sleep(3000) Then Return
 	
