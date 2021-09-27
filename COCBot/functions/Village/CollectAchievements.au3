@@ -19,10 +19,10 @@ Global $g_iFoundScrollEnd = 0
 
 Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing to run regardless of checkbox setting, randomization skips and runstate check
 
-	If Not $bTestMode Then
-		If Not $g_bChkCollectAchievements Or Not $g_bRunState Then Return
-		If Not CollectAchievementsRandomization() Then Return
-	EndIf
+	;If Not $bTestMode Then
+	;	If Not $g_bChkCollectAchievements Or Not $g_bRunState Then Return
+	;	If Not CollectAchievementsRandomization() Then Return
+	;EndIf
 
 	ClickAway()
 	If Not IsMainPage() Then Return
@@ -57,8 +57,8 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 
 		If Not CollectAchievementsClaimReward() Then
 			SetDebugLog("There are no achievement rewards to collect", $COLOR_INFO)
-			If _Sleep(1000) Then Return
 			ClickAway()
+			Return
 		EndIf
 		ClickAway()
 		If _Sleep(1500) Then Return
