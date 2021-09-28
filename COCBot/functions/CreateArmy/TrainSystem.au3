@@ -27,11 +27,10 @@ Func TrainSystem()
 
 	BoostSuperTroop()
 
-	If $g_bQuickTrainEnable Then CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
-
 	CheckIfArmyIsReady()
 
 	If $g_bQuickTrainEnable Then
+		CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
 		QuickTrain()
 	Else
 		If $g_bTrainPreviousArmy Then TrainPreviousArmy()
