@@ -1328,7 +1328,7 @@ Func FirstCheckRoutine()
 	PrepareDonateCC()
 	DonateCC()
 	
-	Local $aRndFuncList = ['Collect','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
+	Local $aRndFuncList = ['Collect','CollectAchievements','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
