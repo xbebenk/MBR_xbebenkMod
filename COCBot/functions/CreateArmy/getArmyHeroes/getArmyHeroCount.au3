@@ -351,7 +351,7 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 		;============================================
 		Return
 	EndIf
-	BuildingClickP($g_aiLaboratoryPos, "#0197") ;Click Laboratory
+	Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
 	If _Sleep(1500) Then Return ; Wait for window to open
 	; Find Research Button
 
