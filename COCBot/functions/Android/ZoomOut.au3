@@ -558,13 +558,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 EndFunc   ;==>SearchZoomOut
 
 Func ZoomIn($Region = "Top")
-	Local $Result = Execute("ZoomIn" & $g_sAndroidEmulator & "(" & DoubleQuote($Region) & ")")
-	
-	
-	If $Result = "" And @error <> 0 Then
-		; Not implemented or other error
-		;$Result = AndroidOnlyZoomOut()
-	EndIf
+	Execute("ZoomIn" & $g_sAndroidEmulator & "(" & DoubleQuote($Region) & ")")
 EndFunc
 
 Func ZoomInMEmu($Region = "Top")
