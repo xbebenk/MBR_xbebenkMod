@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: Nytol (2020)
-; Modified ......:
+; Modified ......: xbebenk (09-2021)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -18,18 +18,14 @@ Global $g_iCollectAchievementsRunOn = 0
 Global $g_iFoundScrollEnd = 0
 
 Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing to run regardless of checkbox setting, randomization skips and runstate check
-
-	;If Not $bTestMode Then
-	;	If Not $g_bChkCollectAchievements Or Not $g_bRunState Then Return
-	;	If Not CollectAchievementsRandomization() Then Return
-	;EndIf
-
+	If Not $g_bChkCollectAchievements Then Return
+	
 	ClickAway()
 	If Not IsMainPage() Then Return
 
 	SetLog("Begin collecting achievement rewards", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
-	Local $Collecting = True
+	Local $Collecting = True, $RewardCollected = False
 	While $Collecting
 		If Not $g_bRunState Then Return
 		;Check if possible rewards available from main screen
@@ -39,8 +35,12 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 			Click($aImgAchievementsMainScreen[0] - 10, $aImgAchievementsMainScreen[1] + 20)
 			If _Sleep(1500) Then Return
 		Else
-			SetLog("No achievement rewards to collect", $COLOR_INFO)
-			SetDebugLog("Achievement counter not found on main screen", $COLOR_ERROR)
+			If $RewardCollected Then
+				SetLog("All achievement rewards collected", $COLOR_INFO)
+			Else
+				SetLog("No achievement rewards to collect", $COLOR_INFO)
+				SetDebugLog("Achievement counter not found on main screen", $COLOR_ERROR)
+			EndIf
 			ExitLoop
 		EndIf
 		
@@ -57,57 +57,18 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 
 		If Not CollectAchievementsClaimReward() Then
 			SetDebugLog("There are no achievement rewards to collect", $COLOR_INFO)
-			ClickAway()
-			Return
+			ExitLoop
+		Else
+			$RewardCollected = True
 		EndIf
 		ClickAway()
 		If _Sleep(1500) Then Return
 		If Not IsMainPage() Then ExitLoop
 	WEnd
-
-	If _Sleep(1000) Then Return
-	SetDebugLog("All achievment rewards collected successfully", $COLOR_SUCCESS)
+	
 	ClickAway()
 	Return
 EndFunc   ;==>CollectAchievements
-
-
-Func CollectAchievementsRandomization() ; Add some randomization to avoid running the check every loop if a friend request exists
-
-	If $g_iCollectAchievementsRunOn = 0 Then ; Run on first loop
-		SetDebugLog("First Run so set randomization parameters and collect", $COLOR_INFO)
-		$g_iCollectAchievementsRunOn = Random(2, 5, 1)
-		$g_iCollectAchievementsLoopCount = $g_iCollectAchievementsLoopCount + 1
-		Return True
-	ElseIf $g_iCollectAchievementsLoopCount = $g_iCollectAchievementsRunOn Then ; Run if loop count matches random value
-		SetDebugLog("Loop count matches, lets collect!", $COLOR_SUCCESS)
-		Return True
-	Else ; Return false in none of the above conditions match
-		SetDebugLog("Skipping collection for randomization.", $COLOR_INFO)
-		SetDebugLog("Collection will happen in '" & $g_iCollectAchievementsRunOn - $g_iCollectAchievementsLoopCount & "' more loops", $COLOR_INFO)
-		$g_iCollectAchievementsLoopCount = $g_iCollectAchievementsLoopCount + 1
-		Return False
-	EndIf
-EndFunc   ;==>CollectAchievementsRandomization
-
-
-Func CollectAchievementsScroll()
-
-	ClickDrag(70, 630, 70, 220)
-	If _Sleep(1000) Then Return
-
-	Local $aImgAchievementsScrollEnd = decodeSingleCoord(findImage("ScrollEnd", $g_sImgAchievementsScrollEnd, GetDiamondFromRect("50, 700, 250, 550"), 1, True))
-	If UBound($aImgAchievementsScrollEnd) > 1 Then
-		SetDebugLog("End of achievements list located", $COLOR_INFO)
-		$g_iFoundScrollEnd = $g_iFoundScrollEnd + 1
-		If _Sleep(1500) Then Return
-	Else
-		SetDebugLog("End of achievements list not found", $COLOR_INFO)
-		SetDebugLog("Continue searching", $COLOR_INFO)
-		If _Sleep(1500) Then Return
-	EndIf
-EndFunc   ;==>CollectAchievementsScroll
-
 
 Func CollectAchievementsClaimReward()
 	;Check Profile for Achievements and collect
