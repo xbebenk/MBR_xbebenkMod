@@ -48,7 +48,7 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 		Local $aImgAchievementsMyProfile = decodeSingleCoord(findImage("MyProfile", $g_sImgAchievementsMyProfile, GetDiamondFromRect("100, 110, 275, 55"), 1, True))
 		If UBound($aImgAchievementsMainScreen) > 1 Then
 			SetDebugLog("My Profile window opened successfully", $COLOR_SUCCESS)
-			If _Sleep(1500) Then Return
+			If _Sleep(2500) Then Return
 		Else
 			SetDebugLog("My Profile window failed to open", $COLOR_ERROR)
 			ClickAway()
