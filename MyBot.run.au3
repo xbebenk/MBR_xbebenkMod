@@ -1263,8 +1263,7 @@ Func FirstCheck()
 	;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	If Not $g_bRunState Then Return
-	Collect()
-	If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
+	Collect(False)
 	VillageReport()
 
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
@@ -1284,7 +1283,10 @@ Func FirstCheck()
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
 		If Not $g_bSkipTrain Then TrainSystem()
+		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		checkSwitchAcc()
+	Else
+		FirstCheckRoutine()
 	Endif
 
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
@@ -1313,7 +1315,8 @@ Func FirstCheck()
 EndFunc   ;==>FirstCheck
 
 Func FirstCheckRoutine()
-	
+	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
+	checkMainScreen()
 	If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then 
 		SetLog("Check ClanGames Early", $COLOR_INFO)
 		_ClanGames()
@@ -1328,7 +1331,7 @@ Func FirstCheckRoutine()
 	PrepareDonateCC()
 	DonateCC()
 	
-	Local $aRndFuncList = ['Collect','CollectAchievements','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
+	Local $aRndFuncList = ['CollectAchievements','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
