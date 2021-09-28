@@ -578,6 +578,7 @@ Func IsClanGamesWindow($getCapture = True)
 				$bRet = True
 			Case "end"
 				$bRet = False
+				ClickAway()
 		EndSwitch
 	Else
 		SetLog("Caravan not available", $COLOR_WARNING)
