@@ -32,8 +32,10 @@ Func TrainSystem()
 	
 	CheckIfArmyIsReady()
 	
-	If $g_bQuickTrainEnable Then		
-		If Not RandomArmyComp() Then
+	If $g_bQuickTrainEnable Then	
+		If $g_bRandomArmyComp Then
+			RandomArmyComp()
+		Else
 			QuickTrain()
 		EndIf
 	Else
