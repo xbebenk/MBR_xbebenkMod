@@ -26,16 +26,18 @@ Func TrainSystem()
 	StartGainCost()
 
 	BoostSuperTroop()
-	If $g_bQuickTrainEnable Then
-		CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
-	EndIf
+	;If $g_bQuickTrainEnable Then
+	;	CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
+	;EndIf
 	
 	CheckIfArmyIsReady()
 	
 	If $g_bQuickTrainEnable Then	
+		SetLog("g_bQuickTrainEnable = " & $g_bQuickTrainEnable & " g_bRandomArmyComp = " & $g_bRandomArmyComp)
 		If $g_bRandomArmyComp Then
 			RandomArmyComp()
 		Else
+			CheckQuickTrainTroop()
 			QuickTrain()
 		EndIf
 	Else

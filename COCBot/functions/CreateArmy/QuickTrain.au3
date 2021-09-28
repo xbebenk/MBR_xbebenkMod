@@ -249,11 +249,6 @@ Func CheckQuickTrainTroop()
 		If $iLastCheck <= 360 And _ArrayMax($g_aiArmyQuickTroops) > 0 Then Return ; A check each 6 hours [6*60 = 360]
 	EndIf
 
-	If Not OpenArmyOverview(False, "CheckQuickTrainTroop()") Then Return
-	If _Sleep(250) Then Return
-
-
-
 	If Not OpenQuickTrainTab(False, "CheckQuickTrainTroop()") Then Return
 	If _Sleep(500) Then Return
 
@@ -278,7 +273,7 @@ Func CheckQuickTrainTroop()
 	Local $aRemoveButton[4] = [535, 300, 0xff8f94, 20] ; red
 
 	local $iDistanceBetweenArmies = 108 ; pixels
-	local $aArmy1Location = [758, 272] ; first area of quick train army buttons
+	local $aArmy1Location = [730, 282] ; first area of quick train army buttons
 
 	; findImage needs filename and path
 	Local $avEditQuickTrainIcon = _FileListToArrayRec($g_sImgEditQuickTrain, "*", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_NOSORT, $FLTAR_FULLPATH)
@@ -466,7 +461,7 @@ Func CheckQuickTrainTroop()
 	If $g_iTotalQuickSpells > $iSpellCamp Then SetLog("Total spells in combo army " & $sLog & "exceeds your camp capacity (" & $g_iTotalQuickSpells & " vs " & $iSpellCamp & ")", $COLOR_ERROR)
 	If $g_iTotalQuickSiegeMachines > $iSiegeMachineCamp Then SetLog("Total siege machines in combo army " & $sLog & "exceeds your camp capacity (" & $g_iTotalQuickSiegeMachines & " vs " & $iSiegeMachineCamp & ")", $COLOR_ERROR)
 
-	ClickP($aAway, 2, 0, "#0000") ;Click Away
+	;ClickP($aAway, 2, 0, "#0000") ;Click Away
 	$asLastTimeChecked[$g_iCurAccount] = $bResult ? _NowCalc() : ""
 
 EndFunc   ;==>CheckQuickTrainTroop
