@@ -861,7 +861,8 @@ EndFunc   ;==>ReadConfig_600_16
 Func ReadConfig_auto()
 	; Auto Upgrade
 	IniReadS($g_bAutoUpgradeEnabled, $g_sProfileConfigPath, "Auto Upgrade", "AutoUpgradeEnabled", False, "Bool")
-	IniReadS($g_bScrollFirst, $g_sProfileConfigPath, "Auto Upgrade", "ScrollFirst", False, "Bool")
+	IniReadS($g_bNewBuildingFirst, $g_sProfileConfigPath, "Auto Upgrade", "ChkNewBuildingFirst", True, "Bool")
+	IniReadS($g_bChkRushTH, $g_sProfileConfigPath, "Auto Upgrade", "ChkRushTH", True, "Bool")
 	IniReadS($g_bPlaceNewBuilding, $g_sProfileConfigPath, "Auto Upgrade", "AUpgradePlaceNew", True, "Bool")
 	For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 		IniReadS($g_iChkUpgradesToIgnore[$i], $g_sProfileConfigPath, "Auto Upgrade", "ChkUpgradesToIgnore[" & $i & "]", $g_iChkUpgradesToIgnore[$i], "int")

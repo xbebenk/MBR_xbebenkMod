@@ -47,10 +47,11 @@ Func SearchUpgrade($bTest = False)
 		Return
 	EndIf
 	
-	If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we still have builder
-	If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
-	
-	If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we still have builder
+	If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we have builder
+	If $g_bNewBuildingFirst Then
+		If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
+		If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we still have builder
+	EndIf
 	
 	If Not ClickMainBuilder($bTest) Then Return
 	If Not $g_bRunState Then Return
@@ -59,7 +60,7 @@ Func SearchUpgrade($bTest = False)
 		If $g_bRestart Then Return False
 		Local $x = 180, $y = 80, $x1 = 450, $y1 = 103, $step = 30
 		For $i = 0 To 9
-			If $g_bRestart Then Return False
+			If Not $g_bRunState Then Return
 			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-5, $x1, $y1+5) Then
 				$b_BuildingFound = True
 				SetLog("[" & $i & "] Upgrade found!", $COLOR_SUCCESS)
@@ -85,6 +86,11 @@ Func SearchUpgrade($bTest = False)
 		ClickDragAUpgrade("up", $y - ($step * 2));do scroll down
 		If _Sleep(1500) Then Return
 	Next
+	
+	If Not $g_bNewBuildingFirst Then
+		If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
+	EndIf
+	
 	ClickAway()
 	ZoomOut()
 	Return False
@@ -418,6 +424,8 @@ Func AUNewBuildings($x, $y, $bTest = False)
 EndFunc ;==>AUNewBuildings
 
 Func UpgradeNewBuilding($bTest = False)
+	If Not $g_bPlaceNewBuilding Then Return
+	
 	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
 	SetLog("Search for Placing new Building First", $COLOR_INFO)

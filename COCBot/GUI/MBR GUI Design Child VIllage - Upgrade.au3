@@ -47,11 +47,11 @@ Global $g_ahWallsCurrentCount[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 Global $g_ahPicWallsLevel[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 to 3 are not referenced
 
 ; Auto Upgrade
-Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0, $g_hChkScrollFirst = 0, $g_ChkPlaceNewBuilding = 0
+Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0, $g_hChkChkNewBuildingFirst = 0, $g_ChkPlaceNewBuilding = 0
 Global $g_hTxtSmartMinGold = 0, $g_hTxtSmartMinElixir = 0, $g_hTxtSmartMinDark = 0
 Global $g_hChkResourcesToIgnore[3] = [0, 0, 0]
 Global $g_hChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_hChkAllDefenseUpgradesToIgnore = 0
+Global $g_hChkRushTH = 0
 
 Func CreateVillageUpgrade()
 
@@ -641,11 +641,11 @@ Func CreateAutoUpgradeSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade_Info_01", "Check box to enable automatically starting Upgrades from builders menu"))
 			GUICtrlSetOnEvent(-1, "chkAutoUpgrade")
 		$g_hLblAutoUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_01", "Save"), $x, $y + 27, -1, -1)
-		$g_hChkScrollFirst = GUICtrlCreateCheckbox("Scroll Up First", $x + 95, $y, -1, -1)
-			_GUICtrlSetTip(-1, "Check to Skip First page on builder menu")
-			GUICtrlSetOnEvent(-1, "chkScrollFirst")
-		$g_ChkPlaceNewBuilding = GUICtrlCreateCheckbox("Place New Building (Memu Only)", $x + 195, $y, -1, -1)
-			_GUICtrlSetTip(-1, "Placing New Building (experimental) Currently only Tested On Memu")
+		$g_hChkChkNewBuildingFirst = GUICtrlCreateCheckbox("NewBuildingFirst", $x + 85, $y, -1, -1)
+			_GUICtrlSetTip(-1, "Priority for New Building")
+			GUICtrlSetOnEvent(-1, "chkChkNewBuildingFirst")
+		$g_ChkPlaceNewBuilding = GUICtrlCreateCheckbox("Place New Building (experimental)", $x + 200, $y, -1, -1)
+			_GUICtrlSetTip(-1, "Placing New Building Currently only Tested On Memu")
 			GUICtrlSetOnEvent(-1, "ChkPlaceNew")
 		$g_hTxtSmartMinGold = GUICtrlCreateInput("150000", $x + 33, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
 			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 98, $y + 27, 16, 16)
@@ -783,8 +783,9 @@ Func CreateAutoUpgradeSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	$x = 50
 	$y += 24
-	$g_hChkAllDefenseUpgradesToIgnore = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "All Defense", "All Defense"), $x, $y, -1, -1)
-		GUICtrlSetOnEvent(-1, "chkAllDefUpgradesToIgnore")
+	$g_hChkRushTH = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "Rush TH", "Rush TH"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkRushTH")
+		_GUICtrlSetTip(-1, "Toggle to Make RushTH, Wont Ugrade Defense Or colletor")
 	$x = 5
 		$g_hTxtAutoUpgradeLog = GUICtrlCreateEdit("", $x, 340, $g_iSizeWGrpTab3, 62, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "TxtAutoUpgradeLog", "------------------------------------------------ AUTO UPGRADE LOG ------------------------------------------------"))

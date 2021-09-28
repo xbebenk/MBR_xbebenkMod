@@ -217,14 +217,14 @@ Func chkLab()
 		GUICtrlSetState($g_hCmbLaboratory, $GUI_DISABLE)
 		_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[0][1])
 	EndIf
-	If $g_iCmbLaboratory = 0 Then 
+	If $g_iCmbLaboratory = 0 Then
 		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
 	EndIf
 	LabStatusGUIUpdate()
 EndFunc   ;==>chkLab
-	
+
 Func chkLabUpgradeOrder()
 	If GUICtrlRead($g_hChkLabUpgradeOrder) = $GUI_CHECKED Then
 		$g_bLabUpgradeOrderEnable = True
@@ -333,7 +333,7 @@ Func chkStarLab()
 		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_DISABLE)
 		_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[0][4])
 	EndIf
-	If $g_iCmbStarLaboratory = 0 Then 
+	If $g_iCmbStarLaboratory = 0 Then
 		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
@@ -676,27 +676,16 @@ Func chkAutoUpgrade()
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
+	chkRushTH()
 EndFunc   ;==>chkAutoUpgrade
 
-Func chkAllDefUpgradesToIgnore()
-	If GUICtrlRead($g_hChkAllDefenseUpgradesToIgnore) = $GUI_CHECKED Then
-		For $i = $g_hChkUpgradesToIgnore[15] To $g_hChkUpgradesToIgnore[27]
-			GUICtrlSetState($i, $GUI_CHECKED)
-		Next
+Func chkChkNewBuildingFirst()
+	If GUICtrlRead($g_hChkChkNewBuildingFirst) = $GUI_CHECKED Then
+		$g_bNewBuildingFirst = True
 	Else
-		For $i = $g_hChkUpgradesToIgnore[15] To $g_hChkUpgradesToIgnore[27]
-			GUICtrlSetState($i, $GUI_UNCHECKED)
-		Next
+		$g_bNewBuildingFirst = False
 	EndIf
-EndFunc   ;==>chkAllDefUpgradesToIgnore
-
-Func chkScrollFirst()
-	If GUICtrlRead($g_hChkScrollFirst) = $GUI_CHECKED Then
-		$g_bScrollFirst = True
-	Else
-		$g_bScrollFirst = False
-	EndIf
-EndFunc   ;==>chkScrollFirst
+EndFunc   ;==>chkChkNewBuildingFirst
 
 
 Func chkResourcesToIgnore()
@@ -724,6 +713,36 @@ Func chkUpgradesToIgnore()
 	Next
 EndFunc   ;==>chkUpgradesToIgnore
 
+Func chkRushTH()
+	;Ignore All Defense, Only Upgrade for Rush
+	If GUICtrlRead($g_hChkRushTH) = $GUI_CHECKED Then
+		$g_bChkRushTH = True
+		For $i = $g_hChkUpgradesToIgnore[0] To $g_hChkUpgradesToIgnore[11]
+			GUICtrlSetState($i, $GUI_UNCHECKED)
+		Next
+		For $i = $g_hChkUpgradesToIgnore[12] To $g_hChkUpgradesToIgnore[14]
+			GUICtrlSetState($i, $GUI_CHECKED)
+		Next
+		For $i = $g_hChkUpgradesToIgnore[15] To $g_hChkUpgradesToIgnore[27]
+			GUICtrlSetState($i, $GUI_CHECKED)
+		Next
+		For $i = $g_hChkUpgradesToIgnore[28] To $g_hChkUpgradesToIgnore[35]
+			GUICtrlSetState($i, $GUI_UNCHECKED)
+		Next
+	Else
+		$g_bChkRushTH = False
+	EndIf
+	If GUICtrlRead($g_hChkRushTH) = $GUI_CHECKED Then
+		For $i = $g_hChkUpgradesToIgnore[0] To $g_hChkUpgradesToIgnore[35]
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	Else
+		For $i = $g_hChkUpgradesToIgnore[0] To $g_hChkUpgradesToIgnore[35]
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	EndIf
+EndFunc   ;==>chkRushTH
+
 Func chkUpgradePets()
 	For $i = 0 to $ePetCount - 1
 		If GUICtrlRead($g_hChkUpgradePets[$i]) = $GUI_CHECKED Then
@@ -740,7 +759,7 @@ Func ChkPlaceNew()
 	If GUICtrlRead($g_ChkPlaceNewBuilding) = $GUI_CHECKED Then
 		$g_bPlaceNewBuilding = True
 		SetLog("Enabling Auto Upgrade Place New Building", $COLOR_DEBUG)
-		SetLog("This is experimental, use at your own risk", $COLOR_ORANGE)
+		SetLog("This is experimental", $COLOR_ORANGE)
 	Else
 		$g_bPlaceNewBuilding = False
 	EndIf
