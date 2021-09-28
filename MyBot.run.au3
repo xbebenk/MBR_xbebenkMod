@@ -749,7 +749,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bRestart Then ContinueLoop
 			
 			checkMainScreen(False)
-			;AddIdleTime()
+			AddIdleTime()
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ContinueLoop
 			If IsSearchAttackEnabled() Then ; if attack is disabled skip reporting, requesting, donating, training, and boosting
