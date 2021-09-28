@@ -504,6 +504,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bTrainPreviousArmy, $g_sProfileConfigPath, "other", "TrainPreviousArmy", True, "Bool")
 	IniReadS($g_bSkipWallPlacingOnBB, $g_sProfileConfigPath, "other", "SkipWallPlacingOnBB", True, "Bool")
 	IniReadS($g_bCheckCGEarly, $g_sProfileConfigPath, "other", "CheckCGEarly", True, "Bool")
+	IniReadS($g_bRandomArmyComp, $g_sProfileConfigPath, "other", "RandomArmyComp", True, "Bool")
 EndFunc   ;==>ReadConfig_600_6
 
 Func ReadConfig_600_9()

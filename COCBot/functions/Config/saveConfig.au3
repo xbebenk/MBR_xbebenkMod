@@ -477,6 +477,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "TrainPreviousArmy", $g_bTrainPreviousArmy)
 	_Ini_Add("other", "SkipWallPlacingOnBB", $g_bSkipWallPlacingOnBB)
 	_Ini_Add("other", "CheckCGEarly", $g_bCheckCGEarly)
+	_Ini_Add("other", "RandomArmyComp", $g_bRandomArmyComp)
 
 EndFunc   ;==>SaveConfig_600_6
 
@@ -1196,7 +1197,6 @@ Func SaveConfig_600_52_1()
 		_Ini_Add("QuickTroop", "TotalQuickTroop" & $i + 1, $g_aiTotalQuickTroop[$i])
 		_Ini_Add("QuickTroop", "TotalQuickSpell" & $i + 1, $g_aiTotalQuickSpell[$i])
 	Next
-
 EndFunc   ;==>SaveConfig_600_52_1
 
 Func SaveConfig_600_52_2()

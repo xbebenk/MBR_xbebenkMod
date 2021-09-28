@@ -685,7 +685,7 @@ Func CreateMiscClanGamesV3SubTab()
 EndFunc   ;==>CreateMiscClanGamesV3SubTab
 
 Global $g_hChkMMSkipFirstCheckRoutine, $g_hChkMMSkipBB, $g_hChkMMSkipTrain, $g_hChkMMIgnoreIncorrectTroopCombo
-Global $g_hChkMMIgnoreIncorrectSpellCombo, $g_hChkMMTrainPreviousArmy, $g_hChkMMSkipWallPlacingOnBB, $g_hChkMMCheckCGEarly
+Global $g_hChkMMIgnoreIncorrectSpellCombo, $g_hChkMMTrainPreviousArmy, $g_hRandomArmyComp, $g_hChkMMSkipWallPlacingOnBB, $g_hChkMMCheckCGEarly
 
 Func CreateMiscModSubTab()
 	Local $x = 15, $y = 40
@@ -721,6 +721,14 @@ Func CreateMiscModSubTab()
 		$g_hChkMMTrainPreviousArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTrainPreviousArmy", "Train Previous Army"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "Will Use Train Previous Army"))
 		GUICtrlSetOnEvent(-1, "chkTrainPrev")
+		GUICtrlSetState(-1, $GUI_CHECKED)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
+	$y += 45
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On QuickTrain"), $x - 10, $y - 15, 180, 40)
+		$g_hRandomArmyComp = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTrainRandomArmyComp", "Random Army Comp"), $x, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "Will Use Quick Train Army Button (Randomed)"))
+		GUICtrlSetOnEvent(-1, "chkRandomQuickTrain")
 		GUICtrlSetState(-1, $GUI_CHECKED)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	

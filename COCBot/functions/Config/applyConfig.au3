@@ -414,6 +414,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkMMTrainPreviousArmy, $g_bTrainPreviousArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMSkipWallPlacingOnBB, $g_bSkipWallPlacingOnBB ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMCheckCGEarly, $g_bCheckCGEarly ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hRandomArmyComp, $g_bRandomArmyComp ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 		Case "Save"
 			$g_bChkBotStop = (GUICtrlRead($g_hChkBotStop) = $GUI_CHECKED)
@@ -516,6 +517,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bTrainPreviousArmy = (GUICtrlRead($g_hChkMMTrainPreviousArmy) = $GUI_CHECKED)
 			$g_bSkipWallPlacingOnBB = (GUICtrlRead($g_hChkMMSkipWallPlacingOnBB) = $GUI_CHECKED)
 			$g_bCheckCGEarly = (GUICtrlRead($g_hChkMMCheckCGEarly) = $GUI_CHECKED)
+			$g_bRandomArmyComp = (GUICtrlRead($g_hRandomArmyComp) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_6
 
@@ -2078,21 +2080,18 @@ Func ApplyConfig_600_52_1($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			GUICtrlSetState($g_bQuickTrainEnable ? $g_hRadQuickTrain : $g_hRadCustomTrain, $GUI_CHECKED)
-
 			For $i = 0 To 2
 				GUICtrlSetState($g_ahChkArmy[$i], $g_bQuickTrainArmy[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 				GUICtrlSetState($g_ahChkUseInGameArmy[$i], $g_abUseInGameArmy[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 				ApplyQuickTrainArmy($i)
 				_chkUseInGameArmy($i)
 			Next
-
 		Case "Save"
-			$g_bQuickTrainEnable = (GUICtrlRead($g_hRadQuickTrain) = $GUI_CHECKED)
+			$g_bQuickTrainEnable = (GUICtrlRead($g_hRadQuickTrain) = $GUI_CHECKED)			
 			For $i = 0 To 2
 				$g_bQuickTrainArmy[$i] = (GUICtrlRead($g_ahChkArmy[$i]) = $GUI_CHECKED)
 				$g_abUseInGameArmy[$i] = (GUICtrlRead($g_ahChkUseInGameArmy[$i]) = $GUI_CHECKED)
 			Next
-
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_52_1
 

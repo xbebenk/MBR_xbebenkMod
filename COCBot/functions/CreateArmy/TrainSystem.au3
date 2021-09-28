@@ -26,12 +26,16 @@ Func TrainSystem()
 	StartGainCost()
 
 	BoostSuperTroop()
-
-	CheckIfArmyIsReady()
-
 	If $g_bQuickTrainEnable Then
 		CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
-		QuickTrain()
+	EndIf
+	
+	CheckIfArmyIsReady()
+	
+	If $g_bQuickTrainEnable Then		
+		If Not RandomArmyComp() Then
+			QuickTrain()
+		EndIf
 	Else
 		If $g_bTrainPreviousArmy Then TrainPreviousArmy()
 		TrainCustomArmy()
@@ -58,6 +62,76 @@ Func TrainPreviousArmy()
 		SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
 	EndIf
 EndFunc ;==>TrainPreviousArmy
+
+; #FUNCTION# ====================================================================================================================
+; Name ..........: RandomArmyComp
+; Description ...: New and complete RandomArmyComp using quick train. Will ONLY work if Quick Train is ENABLED.
+; Syntax ........:
+; Parameters ....: None
+; Return values .: None
+; Author ........: Lilmeeee (09-2021), xbebenk (09-2021)
+; Modified ......:
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
+
+Func RandomArmyComp()
+	If Not $g_bRandomArmyComp Then Return False
+    If Not OpenQuickTrainTab(False, "RandomArmyComp()") Then Return
+    If _Sleep(750) Then Return
+	Local $Result
+	Local $aRndFuncList = ['One', 'Two', 'Three']
+	_ArrayShuffle($aRndFuncList)
+	For $Index In $aRndFuncList
+		$Result = Execute("ArmyComp" & $Index & "()")
+		If Not $g_bRunState Then Return
+		If $Result Then 
+			SetLog("RandomArmyComp(): Trained Army Comp " & $Index, $COLOR_INFO)
+			ExitLoop
+		EndIf
+	Next
+	If Not $Result Then SetLog("No Button Train Found, Skip Train Random Army Comp", $COLOR_DEBUG)
+	Return $Result
+EndFunc ;==>RandomArmyComp
+
+Func ArmyCompOne()
+    If Not OpenQuickTrainTab(False, "ArmyCompOne()") Then Return
+    If _Sleep(750) Then Return
+    If _ColorCheck(_GetPixelColor(777, 338, True), Hex(0xBDE98D, 6), 1) Then
+        PureClick(800,350)
+		Return True
+    Else
+        SetDebugLog("Our Color was: " & _GetPixelColor(777, 338, True))
+    EndIf
+	Return False
+EndFunc ;==>ArmyCompOne
+
+Func ArmyCompTwo()
+    If Not OpenQuickTrainTab(False, "ArmyCompTwo()") Then Return
+    If _Sleep(750) Then Return
+    If _ColorCheck(_GetPixelColor(788, 448, True), Hex(0xBDE98D, 6), 1) Then
+        PureClick(794,458)
+		Return True
+    Else
+        SetDebugLog("Our Color was: " & _GetPixelColor(788, 448, True))
+    EndIf
+	Return False
+EndFunc ;==>ArmyCompTwo
+
+Func ArmyCompThree()
+    If Not OpenQuickTrainTab(False, "ArmyCompThree()") Then Return
+    If _Sleep(750) Then Return
+    If _ColorCheck(_GetPixelColor(795, 555, True), Hex(0xBDE98D, 6), 1) Then
+        PureClick(783,565)
+		Return True
+    Else
+        SetDebugLog("Our Color was: " & _GetPixelColor(795, 555, True))
+    EndIf
+	Return False
+EndFunc ;==>ArmyCompThree
 
 Func TrainCustomArmy()
 	If Not $g_bRunState Then Return
