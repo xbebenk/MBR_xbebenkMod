@@ -404,7 +404,7 @@ Func NewBuildings($aResult, $bTest = False)
 
 		; The $g_iQuickMISX and $g_iQuickMISY haves the coordinates compansation from 'New' | GetIconPosition()
 		Click($aResult[0], $aResult[1], 1)
-		If _Sleep(3000) Then Return
+		If _Sleep(3500) Then Return
 
 		;Search the arrow
 		Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
