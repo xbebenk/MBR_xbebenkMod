@@ -93,8 +93,14 @@ Func Laboratory($debug=False)
 				Return False
 			EndIf
 
+			If QuickMIS("BC1", $g_sImgLabZero, $aCoords[0] - 40, $aCoords[1], $aCoords[0] + 40, $aCoords[1] + 80, True, False) Then
+				Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
+			Else
+				SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
+			EndIf
+			
 			$sCostResult = GetLabCostResult($aCoords) ; get cost of the upgrade
-
+	
 			If $sCostResult = "" Then ; not enough resources
 				SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
 				If $g_bDebugSetlog Then SetDebugLog("Coords: (" & $aCoords[0] & "," & $aCoords[1] & ")")
@@ -152,8 +158,14 @@ Func Laboratory($debug=False)
 						EndIf
 			
 						If $bUpgradeFound Then
+							If QuickMIS("BC1", $g_sImgLabZero, $aCoords[0] - 40, $aCoords[1], $aCoords[0] + 40, $aCoords[1] + 80, True, False) Then
+								Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
+							Else
+								SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
+							EndIf
+							
 							$sCostResult = GetLabCostResult($aCoords) ; get cost of the upgrade
-
+							
 							If $sCostResult = "" Then ; not enough resources
 								SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
 								If $g_bDebugSetlog Then SetDebugLog("Coords: (" & $aCoords[0] & "," & $aCoords[1] & ")")
