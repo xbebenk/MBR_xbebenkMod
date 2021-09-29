@@ -22,7 +22,6 @@ Func _ClanGames($test = False)
 	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)
 
-	; A user Log and a Click away just in case
 	ClickAway()
 	SetLog("Entering Clan Games", $COLOR_INFO)
 	
@@ -34,24 +33,6 @@ Func _ClanGames($test = False)
 	; Initial Timer
 	Local $hTimer = TimerInit()
 	
-	; Let's selected only the necessary images [Total=71]
-	Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
-	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
-
-	;Remove All previous file (in case setting changed)
-	DirRemove($sTempPath, $DIR_REMOVE)
-
-	If $g_bChkClanGamesLoot Then ClanGameImageCopy($sImagePath, $sTempPath, "L") ;L for Loot
-	If $g_bChkClanGamesBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "B") ;B for Battle
-	If $g_bChkClanGamesDes Then ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
-	If $g_bChkClanGamesAirTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "A") ;A for AirTroops
-	If $g_bChkClanGamesGroundTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "G") ;G for GroundTroops
-
-	If $g_bChkClanGamesMiscellaneous Then ClanGameImageCopy($sImagePath, $sTempPath, "M") ;M for Misc
-    If $g_bChkClanGamesSpell Then ClanGameImageCopy($sImagePath, $sTempPath, "S") ;S for GroundTroops
-    If $g_bChkClanGamesBBBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "BBB") ;BBB for BB Battle
-    If $g_bChkClanGamesBBDes Then ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
-	If $g_bChkClanGamesBBTroops Then ClanGameImageCopy($sImagePath, $sTempPath, "BBT") ;BBT for BB Troops
 	
 	; Enter on Clan Games window
 	If IsClanGamesWindow() Then
@@ -85,6 +66,7 @@ Func _ClanGames($test = False)
 			If $YourAccScore[$g_iCurAccount][0] = -1 Then $YourAccScore[$g_iCurAccount][0] = $aiScoreLimit[0]
 		EndIf
 	Else
+		ClickAway()
 		Return
 	EndIf
 
@@ -96,6 +78,25 @@ Func _ClanGames($test = False)
 
 	UpdateStats()
 	
+	; Let's selected only the necessary images 
+	Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
+	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
+
+	;Remove All previous file (in case setting changed)
+	DirRemove($sTempPath, $DIR_REMOVE)
+
+	If $g_bChkClanGamesLoot Then ClanGameImageCopy($sImagePath, $sTempPath, "L") ;L for Loot
+	If $g_bChkClanGamesBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "B") ;B for Battle
+	If $g_bChkClanGamesDes Then ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
+	If $g_bChkClanGamesAirTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "A") ;A for AirTroops
+	If $g_bChkClanGamesGroundTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "G") ;G for GroundTroops
+
+	If $g_bChkClanGamesMiscellaneous Then ClanGameImageCopy($sImagePath, $sTempPath, "M") ;M for Misc
+    If $g_bChkClanGamesSpell Then ClanGameImageCopy($sImagePath, $sTempPath, "S") ;S for GroundTroops
+    If $g_bChkClanGamesBBBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "BBB") ;BBB for BB Battle
+    If $g_bChkClanGamesBBDes Then ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
+	If $g_bChkClanGamesBBTroops Then ClanGameImageCopy($sImagePath, $sTempPath, "BBT") ;BBT for BB Troops
+	
 	Local $HowManyImages = _FileListToArray($sTempPath, "*", $FLTA_FILES)
 	If IsArray($HowManyImages) Then
 		Setlog($HowManyImages[0] & " Events to search")
@@ -103,7 +104,6 @@ Func _ClanGames($test = False)
 		Setlog("ClanGames-Error on $HowManyImages: " & @error)
 		Return
 	EndIf
-
 
 	; To store the detections
 	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis
@@ -578,14 +578,14 @@ Func IsClanGamesWindow($getCapture = True)
 				$bRet = True
 			Case "end"
 				$bRet = False
-				ClickAway()
 		EndSwitch
 	Else
 		SetLog("Caravan not available", $COLOR_WARNING)
+		$sState = "Not Running"
 		$bRet = False
 	EndIf
 
-	SetLog("Clan Games Event is : " & $sState, $COLOR_INFO)
+	SetLog("Clan Games State is : " & $sState, $COLOR_INFO)
 	Return $bRet
 EndFunc   ;==>IsClanGamesWindow
 
