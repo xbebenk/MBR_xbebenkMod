@@ -58,6 +58,7 @@ Func SearchUpgrade($bTest = False)
 	Local $b_BuildingFound = False
 	For $z = 0 To 2 ;for do scroll 3 times
 		If $g_bRestart Then Return False
+		Local $NeedDrag = True
 		Local $x = 180, $y = 80, $x1 = 450, $y1 = 103, $step = 30
 		For $i = 0 To 9
 			If Not $g_bRunState Then Return
@@ -73,16 +74,19 @@ Func SearchUpgrade($bTest = False)
 					If _Sleep(1000) Then Return
 					If DoUpgrade($bTest) Then
 						$g_iFreeBuilderCount -= 1
+						ClickMainBuilder($bTest)
 					Endif
 				EndIf
-				If $g_iFreeBuilderCount < 1 Then Return
+				If $g_iFreeBuilderCount < 1 Then ExitLoop 2
 				If _Sleep(500) Then Return
 			Else
 				SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
+				If $i = 9 Then $NeedDrag = False
 			EndIf
 			$y += $step
 			$y1 += $step
 		Next
+		If Not $NeedDrag Then ExitLoop
 		ClickDragAUpgrade("up", $y - ($step * 2));do scroll down
 		If _Sleep(1500) Then Return
 	Next
@@ -366,22 +370,18 @@ EndFunc
 Func AUNewBuildings($x, $y, $bTest = False)
 
 	Local $Screencap = True, $Debug = $g_bDebugSetlog
+	Local $IsWall = False
 	Local $xstart = 50, $ystart = 50, $xend = 750, $yend = 650
 	Click($x, $y); click on upgrade window
-	If _Sleep(3000) Then Return
+	If _Sleep(4000) Then Return
 	
 	;Search the arrow
 	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
 	If UBound($ArrowCoordinates) > 1 Then
-		;Check if its wall or not (wall should skip)
-		If $g_bSkipWallPlacingOnBB Then
-			If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 160, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
-				SetLog("New Building is Wall!, Cancelling...", $COLOR_INFO)
-				Click(820, 38, 1) ; exit from Shop
-				If _Sleep(2000) Then Return
-				ClickMainBuilder($bTest)
-				Return False
-			EndIf
+		;Check if its wall ?
+		If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 160, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
+			SetLog("New Building is Wall!, lets try to place 10 Wall", $COLOR_INFO)
+			$IsWall = True
 		EndIf
 		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50) ;click new building on shop
 	Else
@@ -391,6 +391,17 @@ Func AUNewBuildings($x, $y, $bTest = False)
 	EndIf
 	
 	If _Sleep(2000) Then Return
+	
+	If $IsWall Then 
+		If QuickMIS("BC1", $g_sImgGreenCheck, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
+			For $ProMac = 0 To 9 
+				Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
+				If _Sleep(500) Then Return
+			Next
+			Click($g_iQuickMISX + $xstart - 80, $g_iQuickMISY + $ystart)
+			Return True
+		EndIf
+	EndIf
 	
 	; Lets search for the Correct Symbol on field
 	If QuickMIS("BC1", $g_sImgGreenCheck, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
@@ -507,7 +518,6 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 EndFunc ;==>IsUpgradeWindow
 
 Func ClickMainBuilder($bTest = False)
-
 	Local $b_WindowOpened = False
 	; open the builders menu
 	Click(295, 30)
@@ -520,17 +530,8 @@ Func ClickMainBuilder($bTest = False)
 		SetLog("Upgrade Window didn't opened", $COLOR_DEBUG)
 		$b_WindowOpened = False
 	EndIf
-
-	If $b_WindowOpened Then
-		If Not ClickDragAUpgrade("Down") Then Return False
-	EndIf
-
 	Return $b_WindowOpened
-
 EndFunc ;==>ClickMainBuilder
-
-
-
 
 
 
