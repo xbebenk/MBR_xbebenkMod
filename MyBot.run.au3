@@ -1227,7 +1227,7 @@ Func FirstCheck()
 	SetLog("-- FirstCheck Loop --")
 	If _Sleep(50) Then Return
 	checkMainScreen(False)
-	VillageReport()
+	VillageReport(True, True)
 	If Not $g_bRunState Then
 		GUICtrlSetState($g_hBtnControl, $GUI_HIDE)
 		Return
@@ -1263,7 +1263,7 @@ Func FirstCheck()
 	;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	If Not $g_bRunState Then Return
-	Collect(False)
+	Collect(False) ;collect but skip treasury
 	VillageReport()
 
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
