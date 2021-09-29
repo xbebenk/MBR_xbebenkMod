@@ -26,14 +26,11 @@ Func TrainSystem()
 	StartGainCost()
 
 	BoostSuperTroop()
-	;If $g_bQuickTrainEnable Then
-	;	CheckQuickTrainTroop() ; update values of $g_aiArmyComTroops, $g_aiArmyComSpells
-	;EndIf
 	
 	CheckIfArmyIsReady()
+	;CheckSTroopsIcon()
 	
 	If $g_bQuickTrainEnable Then	
-		SetLog("g_bQuickTrainEnable = " & $g_bQuickTrainEnable & " g_bRandomArmyComp = " & $g_bRandomArmyComp)
 		If $g_bRandomArmyComp Then
 			RandomArmyComp()
 		Else
@@ -66,6 +63,14 @@ Func TrainPreviousArmy()
 		SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
 	EndIf
 EndFunc ;==>TrainPreviousArmy
+
+Func CheckSTroopsIcon()
+	If $g_bSuperTroopsEnable And ($g_iCmbSuperTroops[0] > 0 Or $g_iCmbSuperTroops[1] > 0) Then
+		For $z = 0 To 1
+			
+		Next
+	EndIf
+EndFunc
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: RandomArmyComp
@@ -513,7 +518,10 @@ Func RemoveExtraTroops($toRemove)
 	; 1 Means Removed Troops without Deleting Troops Queued
 	; 2 Means Removed Troops And Also Deleted Troops Queued
 	; 3 Means Didn't removed troop... Everything was well
-
+	If $g_bIgnoreIncorrectTroopCombo Then 
+		$iResult = 3
+		Return $iResult
+	EndIf
 	If UBound($toRemove) = 1 And $toRemove[0][0] = "Arch" And $toRemove[0][1] = 0 Then Return 3
 
 	If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And Not $g_iActiveDonate Then Return 3

@@ -45,8 +45,8 @@ Func DoubleTrain()
 			EndIf
 			If Not $g_bIgnoreIncorrectTroopCombo Then
 				If Not IsQueueEmpty("Troops", False, False) Then DeleteQueued("Troops")
+				$bNeedReCheckTroopTab = True
 			EndIf
-			$bNeedReCheckTroopTab = True
 			If $bDebug Then SetLog($Step & ". DeleteQueued('Troops'). $bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab, $COLOR_DEBUG)
 
 		ElseIf $TroopCamp[0] = $TroopCamp[1] Then ; 280/280
@@ -57,12 +57,14 @@ Func DoubleTrain()
 			If CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) Then
 				If $bDebug Then SetLog($Step & ". CheckQueueAndTrainRemain() done!", $COLOR_DEBUG)
 			Else
-				RemoveExtraTroopsQueue()
-				If _Sleep(500) Then Return
-				If $bDebug Then SetLog($Step & ". RemoveExtraTroopsQueue()", $COLOR_DEBUG)
-				$Step += 1
-				If $Step = 6 Then ExitLoop
-				ContinueLoop
+				If Not $g_bIgnoreIncorrectTroopCombo Then
+					RemoveExtraTroopsQueue()
+					If _Sleep(500) Then Return
+					If $bDebug Then SetLog($Step & ". RemoveExtraTroopsQueue()", $COLOR_DEBUG)
+					$Step += 1
+					If $Step = 6 Then ExitLoop
+					ContinueLoop
+				EndIf
 			EndIf
 		EndIf
 		ExitLoop
@@ -96,8 +98,8 @@ Func DoubleTrain()
 				EndIf
 				If Not $g_bIgnoreIncorrectSpellCombo Then
 					If Not IsQueueEmpty("Spells", False, False) Then DeleteQueued("Spells")
+					$bNeedReCheckSpellTab = True
 				EndIf
-				$bNeedReCheckSpellTab = True
 				If $bDebug Then SetLog($Step & ". DeleteQueued('Spells'). $bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
 
 			ElseIf $SpellCamp[0] = $SpellCamp[1] Or $SpellCamp[0] <= $SpellCamp[1] + $iUnbalancedSpell Then ; 11/22
@@ -110,12 +112,14 @@ Func DoubleTrain()
 					If $SpellCamp[0] < ($SpellCamp[1] + $iUnbalancedSpell) * 2 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 					If $bDebug Then SetLog($Step & ". CheckQueueSpellAndTrainRemain() done!", $COLOR_DEBUG)
 				Else
-					RemoveExtraTroopsQueue()
-					If _Sleep(500) Then Return
-					If $bDebug Then SetLog($Step & ". RemoveExtraTroopsQueue()", $COLOR_DEBUG)
-					$Step += 1
-					If $Step = 6 Then ExitLoop
-					ContinueLoop
+					If Not $g_bIgnoreIncorrectSpellCombo Then
+						RemoveExtraTroopsQueue()
+						If _Sleep(500) Then Return
+						If $bDebug Then SetLog($Step & ". RemoveExtraTroopsQueue()", $COLOR_DEBUG)
+						$Step += 1
+						If $Step = 6 Then ExitLoop
+						ContinueLoop
+					EndIf
 				EndIf
 			EndIf
 			ExitLoop
@@ -140,7 +144,34 @@ Func DoubleTrain()
 			If $bDebug Then SetLog("BrewFullSpell(True) done.", $COLOR_DEBUG)
 		EndIf
 	EndIf
+	
+	
+	If $g_bIgnoreIncorrectTroopCombo Then
+		If Not OpenTroopsTab(True, "TrainUsingWhatToTrain()") Then Return
+		Local $TroopCamp = GetCurrentArmy(48, 160)
+		SetLog("ArmyCamp = " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2, $COLOR_DEBUG)
+		Local $TrainThis[1][2] = [["Barb", ($TroopCamp[1] * 2) - $TroopCamp[0] ]]
+		
+		SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
+		Local $iTroopIndex = TroopIndexLookup($TrainThis[0][0], "TrainUsingWhatToTrain()")
+		If $TrainThis[0][1] > 0 Then
+			If Not DragIfNeeded($TrainThis[0][0]) Then Return False
 
+			If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
+				Local $sTroopName = ($TrainThis[0][1] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
+			EndIf
+			SetLog("Fill " & $sTroopName & " x" & $TrainThis[0][1], $COLOR_ACTION)
+			If CheckValuesCost($TrainThis[0][0], $TrainThis[0][1]) Then
+				SetLog("Training " & $TrainThis[0][1] & "x " & $sTroopName, $COLOR_SUCCESS)
+				TrainIt($iTroopIndex, $TrainThis[0][1], $g_iTrainClickDelay)
+			Else
+				SetLog("No resources to Train " & $TrainThis[0][1] & "x " & $sTroopName, $COLOR_ACTION)
+				$g_bOutOfElixir = True
+			EndIf
+
+		EndIf
+	EndIf
+	
 	If _Sleep(250) Then Return
 
 EndFunc   ;==>DoubleTrain
@@ -157,9 +188,9 @@ Func TrainFullTroop($bQueue = False)
 			ReDim $ToReturn[UBound($ToReturn) + 1][2]
 		EndIf
 	Next
-
+	
 	If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 Then Return
-
+	
 	TrainUsingWhatToTrain($ToReturn, $bQueue)
 	If _Sleep(500) Then Return
 
