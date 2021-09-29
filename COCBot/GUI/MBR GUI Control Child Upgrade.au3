@@ -720,6 +720,7 @@ Func chkRushTH()
 		For $i = $g_hChkUpgradesToIgnore[0] To $g_hChkUpgradesToIgnore[11]
 			GUICtrlSetState($i, $GUI_UNCHECKED)
 		Next
+		GUICtrlSetState($g_hChkUpgradesToIgnore[7], $GUI_CHECKED) ;ignore wall 
 		For $i = $g_hChkUpgradesToIgnore[12] To $g_hChkUpgradesToIgnore[14]
 			GUICtrlSetState($i, $GUI_CHECKED)
 		Next
