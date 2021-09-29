@@ -32,8 +32,8 @@ Func TreasuryCollect()
 	EndIf
 	ClickAway()
 	If _Sleep($DELAYCOLLECT3) Then Return
-	BuildingClick($g_aiClanCastlePos[0], $g_aiClanCastlePos[1], "#0250") ; select CC
-	; Click($g_aiClanCastlePos[0], $g_aiClanCastlePos[1], 1, 0, "#0433")   ; select CC
+	;BuildingClick($g_aiClanCastlePos[0], $g_aiClanCastlePos[1], "#0250") ; select CC
+	Click($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])   ; select CC
 	If _Sleep($DELAYTREASURY2) Then Return
 
 	Local $aTreasuryButton = findButton("Treasury", Default, 1, True)
