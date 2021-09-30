@@ -684,8 +684,14 @@ Func CreateMiscClanGamesV3SubTab()
 
 EndFunc   ;==>CreateMiscClanGamesV3SubTab
 
-Global $g_hChkMMSkipFirstCheckRoutine, $g_hChkMMSkipBB, $g_hChkMMSkipTrain, $g_hChkMMIgnoreIncorrectTroopCombo
+Global $g_hChkMMSkipFirstCheckRoutine, $g_hChkMMSkipBB, $g_hChkMMSkipTrain, $g_hChkMMIgnoreIncorrectTroopCombo, $g_hLblFillIncorrectCombo, $g_hCmbFillIncorrectCombo
 Global $g_hChkMMIgnoreIncorrectSpellCombo, $g_hChkMMTrainPreviousArmy, $g_hRandomArmyComp, $g_hChkMMSkipWallPlacingOnBB, $g_hChkMMCheckCGEarly
+Global $g_sCmbFICTroops[5][3] = [ _ 
+								["Barb",	"Barbarians",		1], _
+								["Arch",	"Archers",			1], _
+								["Giant",	"Giants",			5], _
+								["Ball",	"Balloons",			5], _
+								["SBarb",	"Super Barbarians",	5]]
 
 Func CreateMiscModSubTab()
 	Local $x = 15, $y = 40
@@ -704,19 +710,27 @@ Func CreateMiscModSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	$y += 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 10, $y - 15, 180, 60)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 10, $y - 15, 180, 83)
 		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo", "Ignore Bad Troop Combo"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "If Enabled DoubleTrain, Wont Empty Queued Troop, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 		GUICtrlSetState(-1, $GUI_CHECKED)
-	$y += 20	
+	$y += 22
+		$g_hLblFillIncorrectCombo = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - FillIncorrectCombo", "Label_01", "Fill With :"), $x, $y+3, -1, -1)
+		$g_hCmbFillIncorrectCombo = GUICtrlCreateCombo("", $x + 50, $y, 110, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		Local $sCmbTxt 
+		For $z = 0 To UBound($g_sCmbFICTroops) - 1
+			$sCmbTxt &= $g_sCmbFICTroops[$z][1] & "|"
+		Next
+		GUICtrlSetData(-1, $sCmbTxt, "Barbarians")
+	$y += 23	
 		$g_hChkMMIgnoreIncorrectSpellCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadSpellCombo", "Ignore Bad Spell Combo"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_02", "If Enabled DoubleTrain, Wont Empty Queued Spell, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 		GUICtrlSetState(-1, $GUI_CHECKED)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	
-	$y += 45
+		
+	$y += 48
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Train"), $x - 10, $y - 15, 180, 40)
 		$g_hChkMMTrainPreviousArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTrainPreviousArmy", "Train Previous Army"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "Will Use Train Previous Army"))

@@ -145,30 +145,28 @@ Func DoubleTrain()
 		EndIf
 	EndIf
 	
-	
 	If $g_bIgnoreIncorrectTroopCombo Then
-		If Not OpenTroopsTab(True, "TrainUsingWhatToTrain()") Then Return
+		If Not OpenTroopsTab(True, "FillIncorrectCombo()") Then Return
 		Local $TroopCamp = GetCurrentArmy(48, 160)
-		SetLog("ArmyCamp = " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2, $COLOR_DEBUG)
-		Local $TrainThis[1][2] = [["Barb", ($TroopCamp[1] * 2) - $TroopCamp[0] ]]
 		
-		SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
-		Local $iTroopIndex = TroopIndexLookup($TrainThis[0][0], "TrainUsingWhatToTrain()")
-		If $TrainThis[0][1] > 0 Then
-			If Not DragIfNeeded($TrainThis[0][0]) Then Return False
-
-			If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
-				Local $sTroopName = ($TrainThis[0][1] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
-			EndIf
-			SetLog("Fill " & $sTroopName & " x" & $TrainThis[0][1], $COLOR_ACTION)
-			If CheckValuesCost($TrainThis[0][0], $TrainThis[0][1]) Then
-				SetLog("Training " & $TrainThis[0][1] & "x " & $sTroopName, $COLOR_SUCCESS)
-				TrainIt($iTroopIndex, $TrainThis[0][1], $g_iTrainClickDelay)
+		SetLog("QueueTrain = " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2, $COLOR_DEBUG)
+		Local $MaxTroop = ($TroopCamp[1] * 2)
+		Local $TroopSpace = $MaxTroop - $TroopCamp[0]
+		Local $FillTroopIndex = $g_iCmbFillIncorrectCombo
+		Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
+		Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
+		Local $TroopQuantToFill = Floor($TroopSpace/$g_sCmbFICTroops[$FillTroopIndex][2])
+		
+		If $TroopQuantToFill > 0 Then
+			SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
+			If Not DragIfNeeded($g_sCmbFICTroops[$FillTroopIndex][0]) Then Return False
+			If CheckValuesCost($g_sCmbFICTroops[$FillTroopIndex][0], $TroopQuantToFill) Then
+				SetLog("Training " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_SUCCESS)
+				TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
 			Else
-				SetLog("No resources to Train " & $TrainThis[0][1] & "x " & $sTroopName, $COLOR_ACTION)
+				SetLog("No resources to Train " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_ACTION)
 				$g_bOutOfElixir = True
 			EndIf
-
 		EndIf
 	EndIf
 	
