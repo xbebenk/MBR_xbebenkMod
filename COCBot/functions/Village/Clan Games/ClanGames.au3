@@ -572,11 +572,11 @@ Func IsClanGamesWindow($getCapture = True)
 		If _Sleep(2500) Then Return
 		$sState = IsClanGamesRunning()
 		Switch $sState
-			Case "prepare"
+			Case "Prepare"
 				$bRet = False
-			Case "running"
+			Case "Running"
 				$bRet = True
-			Case "end"
+			Case "Ended"
 				$bRet = False
 		EndSwitch
 	Else
@@ -591,19 +591,19 @@ EndFunc   ;==>IsClanGamesWindow
 
 Func IsClanGamesRunning($getCapture = True) ;to check whether clangames current state, return string of the state "prepare" "running" "end"
 	Local $aGameTime[4] = [384, 388, 0xFFFFFF, 10]
-	Local $sState = "running"
+	Local $sState = "Running"
 	If QuickMIS("BC1", $g_sImgWindow, 70, 100, 150, 150, $getCapture, False) Then
 		SetLog("Window Opened", $COLOR_DEBUG)
 		If QuickMIS("BC1", $g_sImgReward, 580, 480, 830, 570, $getCapture, False) Then
 			SetLog("Your Reward is Ready", $COLOR_INFO)
-			$sState = "end"
+			$sState = "Ended"
 		EndIf
 	Else
 		If _CheckPixel($aGameTime, True) Then
 			Local $sTimeRemain = getOcrTimeGameTime(380, 461) ; read Clan Games waiting time
 			SetLog("Clan Games will start in " & $sTimeRemain, $COLOR_INFO)
 			$g_sClanGamesTimeRemaining = $sTimeRemain
-			$sState = "prepare"
+			$sState = "Prepare"
 		EndIf
 		SetLog("Clan Games Window Not Opened", $COLOR_DEBUG)
 		$sState = "Cannot open ClanGames"
