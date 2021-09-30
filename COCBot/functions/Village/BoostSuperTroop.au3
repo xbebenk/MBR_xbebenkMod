@@ -35,8 +35,6 @@ Func BoostSuperTroop($bTest = False)
 				If _Sleep(1000) Then Return
 				Local $sTroopName = GetSTroopName($g_iCmbSuperTroops[$i] - 1)
 				SetLog("Trying to boost " & "[" & $g_iCmbSuperTroops[$i] & "] " & $sTroopName, $COLOR_INFO)
-				;ClickDrag($iXMidPoint, 280, $iXMidPoint, 600, 1000) ; return to top row
-				;If _Sleep(1000) Then Return
 
 				Local $iColumnX = $columnStart
 				Select
@@ -52,7 +50,7 @@ Func BoostSuperTroop($bTest = False)
 				While ($curRow < $iRow) ; go directly to the needed Row
 					StroopNextPage($curRow, $iRow, $iXMidPoint) ; go to next row
 					$curRow += 1 ; Next Row
-					If $curRow = 3 Then
+					If $curRow = 4 Then
 						$iColumnY1 = 385
 						$iColumnY2 = 545
 					EndIf
