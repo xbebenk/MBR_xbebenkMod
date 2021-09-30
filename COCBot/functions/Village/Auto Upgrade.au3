@@ -32,6 +32,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
 		Return False
 	EndIf
+	If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return True
 EndFunc
 
@@ -54,10 +55,10 @@ Func SearchUpgrade($bTest = False)
 	EndIf
 	
 	If Not ClickMainBuilder($bTest) Then Return
+	If $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ClickDragAUpgrade("down")
 	If Not $g_bRunState Then Return
 	Local $b_BuildingFound = False
 	For $z = 0 To 2 ;for do scroll 3 times
-		If $g_bRestart Then Return False
 		Local $NeedDrag = True
 		Local $x = 180, $y = 80, $x1 = 450, $y1 = 103, $step = 30
 		For $i = 0 To 9
@@ -66,7 +67,7 @@ Func SearchUpgrade($bTest = False)
 				$b_BuildingFound = True
 				SetLog("[" & $i & "] Upgrade found!", $COLOR_SUCCESS)
 				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y-5, $x1, $y1+5) <> "none" Then
-					SetLog("[" & $i & "] New Building, Skip!", $COLOR_SUCCESS)
+					If $g_bDebugClick Then SetLog("[" & $i & "] New Building, Skip!", $COLOR_SUCCESS)
 					$b_BuildingFound = False
 				EndIf
 				If $b_BuildingFound Then
@@ -80,14 +81,15 @@ Func SearchUpgrade($bTest = False)
 				If $g_iFreeBuilderCount < 1 Then ExitLoop 2
 				If _Sleep(500) Then Return
 			Else
-				SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
+				If $g_bDebugClick Then SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
 				If $i = 9 Then $NeedDrag = False
 			EndIf
 			$y += $step
 			$y1 += $step
 		Next
+		If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 		If Not $NeedDrag Then ExitLoop
-		ClickDragAUpgrade("up", $y - ($step * 2));do scroll down
+		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
 		If _Sleep(1500) Then Return
 	Next
 	
@@ -461,28 +463,32 @@ Func UpgradeNewBuilding($bTest = False)
 	If _Sleep(500) Then Return
 	
 	Local $b_BuildingFound = False
-	For $z = 0 To 2 ;for do scroll 2 times
-		If $g_bRestart Then Return False
-		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 30
+	For $z = 0 To 5 ;for do scroll 2 times
+		Local $NeedDrag = True
+		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
 		For $i = 0 To 9
 			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-5, $x1, $y1+5, $bScreencap, $bDebug) Then
-				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y-5, $x1, $y1+5, $bScreencap, $bDebug) <> "none" Then
-					SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
+				If QuickMIS("BC1",$g_sImgAUpgradeObst, $x, $y-5, $x1, $y1+5, $bScreencap, $bDebug) Then
+					If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
 					$b_BuildingFound = True
 					If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then
 						$g_iFreeBuilderCount -= 1
+						ClickMainBuilder($bTest)
 					EndIf
 					If $g_iFreeBuilderCount < 1 Then Return
 				Else
-					SetLog("[" & $i & "] Not New Building!", $COLOR_INFO)
+					If $g_bDebugClick Then SetLog("[" & $i & "] Not New Building!", $COLOR_INFO)
 				EndIf
 			Else
-				SetLog("[" & $i & "] Not Enough Resource", $COLOR_INFO)
+				If $g_bDebugClick Then SetLog("[" & $i & "] Not Enough Resource", $COLOR_INFO)
+				If $i = 9 Then $NeedDrag = False
 			EndIf
 			$y += $step
 			$y1 += $step
 		Next
-		ClickDragAUpgrade("up", $y - ($step * 2));do scroll down
+		If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
+		If Not $NeedDrag Then ExitLoop
+		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
 		If _Sleep(1500) Then Return
 	Next
 	ZoomOut()
@@ -490,7 +496,7 @@ Func UpgradeNewBuilding($bTest = False)
 EndFunc ;==>FindNewBuilding
 
 Func ClickDragAUpgrade($Direction = "up", $YY = Default)
-	Local $x = 330, $yUp = 90, $yDown = 600, $Delay = 500
+	Local $x = 330, $yUp = 93, $yDown = 600, $Delay = 500
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
