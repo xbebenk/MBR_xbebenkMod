@@ -93,9 +93,12 @@ Func SearchUpgrade($bTest = False)
 		If _Sleep(1500) Then Return
 	Next
 	
-	If Not $g_bNewBuildingFirst Then
-		If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
+	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
+		If Not $g_bNewBuildingFirst Then
+			If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
+		EndIf
 	EndIf
+	If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	
 	ClickAway()
 	ZoomOut()
@@ -441,7 +444,7 @@ Func UpgradeNewBuilding($bTest = False)
 	
 	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
-	SetLog("Search for Placing new Building First", $COLOR_INFO)
+	SetLog("Search for Placing new Building", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgAUpgradeGreenZone, 320, 70, 520, 220) Then ;Top
 		SetLog("Found GreenZone, On Top Region", $COLOR_SUCCESS)
 		ZoomIn("Top")
