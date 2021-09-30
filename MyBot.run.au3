@@ -722,7 +722,7 @@ Func runBot() ;Bot that runs everything in order
 		chkShieldStatus()
 		If Not $g_bRunState Then Return
 		If $g_bRestart Then ContinueLoop
-		
+
 		If CheckAndroidReboot() Then ContinueLoop
 		If Not $g_bIsClientSyncError Then ;ARCH:  was " And Not $g_bIsSearchLimit"
 			SetLog("ARCH: Top of loop", $COLOR_DEBUG)
@@ -747,7 +747,7 @@ Func runBot() ;Bot that runs everything in order
 			EndIf
 			If _Sleep($DELAYRUNBOT5) Then Return
 			If $g_bRestart Then ContinueLoop
-			
+
 			checkMainScreen(False)
 			AddIdleTime()
 			If Not $g_bRunState Then Return
@@ -1223,7 +1223,7 @@ Func __RunFunction($action)
 EndFunc   ;==>__RunFunction
 
 Func FirstCheck()
-
+	If Not $g_bRunState Then Return
 	SetLog("-- FirstCheck Loop --")
 	If _Sleep(50) Then Return
 	checkMainScreen(False)
@@ -1277,9 +1277,9 @@ Func FirstCheck()
 		SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_SUCCESS)
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
-	
+
 	If BotCommand() Then btnStop()
-	
+
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
 		If Not $g_bSkipTrain Then TrainSystem()
@@ -1288,7 +1288,7 @@ Func FirstCheck()
 	Else
 		FirstCheckRoutine()
 	Endif
-
+	If Not $g_bRunState Then Return
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
@@ -1300,7 +1300,6 @@ Func FirstCheck()
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
-				If Not $g_bRunState Then Return
 				AttackMain(True)
 				$g_bSkipFirstZoomout = False
 				If $g_bOutOfGold Then
@@ -1317,7 +1316,7 @@ EndFunc   ;==>FirstCheck
 Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	checkMainScreen()
-	If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then 
+	If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 		SetLog("Check ClanGames Early", $COLOR_INFO)
 		_ClanGames()
 		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
@@ -1325,12 +1324,12 @@ Func FirstCheckRoutine()
 			BuilderBase()
 		EndIf
 	EndIf
-	
+
 	RequestCC(False)
 	checkArmyCamp(False)
 	PrepareDonateCC()
 	DonateCC()
-	
+
 	Local $aRndFuncList = ['CollectAchievements','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
@@ -1343,7 +1342,7 @@ Func FirstCheckRoutine()
 EndFunc
 
 Func BuilderBase()
-	
+
 	; switch to builderbase and check it is builderbase
 	If SwitchBetweenBases() And isOnBuilderBase()  Then
 
