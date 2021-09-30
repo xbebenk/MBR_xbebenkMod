@@ -1912,5 +1912,6 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 		[0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
 		
 
+;Misc Mod
 Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = False, $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False, $g_bTrainPreviousArmy = False
-Global $g_bSkipWallPlacingOnBB = False
+Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectCombo = 0
