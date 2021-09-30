@@ -146,13 +146,13 @@ Func DoubleTrain()
 	EndIf
 	
 	If $g_bIgnoreIncorrectTroopCombo Then
-		If Not OpenTroopsTab(True, "FillIncorrectCombo()") Then Return
+		If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
 		Local $TroopCamp = GetCurrentArmy(48, 160)
 		
-		SetLog("QueueTrain = " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2, $COLOR_DEBUG)
+		SetLog("QueueTroop = " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2, $COLOR_DEBUG)
 		Local $MaxTroop = ($TroopCamp[1] * 2)
 		Local $TroopSpace = $MaxTroop - $TroopCamp[0]
-		Local $FillTroopIndex = $g_iCmbFillIncorrectCombo
+		Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
 		Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
 		Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
 		Local $TroopQuantToFill = Floor($TroopSpace/$g_sCmbFICTroops[$FillTroopIndex][2])
@@ -170,6 +170,30 @@ Func DoubleTrain()
 		EndIf
 	EndIf
 	
+	If $g_bIgnoreIncorrectSpellCombo Then
+		If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
+		Local $SpellCamp = GetCurrentArmy(48, 160)
+		
+		SetLog("QueueSpell = " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2, $COLOR_DEBUG)
+		Local $MaxSpell = ($SpellCamp[1] * 2)
+		Local $SpellSpace = $MaxSpell - $SpellCamp[0]
+		Local $FillSpellIndex = $g_iCmbFillIncorrectSpellCombo
+		Local $sSpellName = $g_sCmbFICSpells[$FillSpellIndex][1]
+		Local $iSpellIndex = TroopIndexLookup($g_sCmbFICSpells[$FillSpellIndex][0])
+		Local $SpellQuantToFill = Floor($SpellSpace/$g_sCmbFICSpells[$FillSpellIndex][2])
+		
+		If $SpellQuantToFill > 0 Then
+			SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
+			If Not DragIfNeeded($g_sCmbFICSpells[$FillSpellIndex][0]) Then Return False
+			If CheckValuesCost($g_sCmbFICSpells[$FillSpellIndex][0], $SpellQuantToFill) Then
+				SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
+				TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
+			Else
+				SetLog("No resources to Train " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_ACTION)
+				$g_bOutOfElixir = True
+			EndIf
+		EndIf
+	EndIf
 	If _Sleep(250) Then Return
 
 EndFunc   ;==>DoubleTrain

@@ -684,14 +684,20 @@ Func CreateMiscClanGamesV3SubTab()
 
 EndFunc   ;==>CreateMiscClanGamesV3SubTab
 
-Global $g_hChkMMSkipFirstCheckRoutine, $g_hChkMMSkipBB, $g_hChkMMSkipTrain, $g_hChkMMIgnoreIncorrectTroopCombo, $g_hLblFillIncorrectCombo, $g_hCmbFillIncorrectCombo
-Global $g_hChkMMIgnoreIncorrectSpellCombo, $g_hChkMMTrainPreviousArmy, $g_hRandomArmyComp, $g_hChkMMSkipWallPlacingOnBB, $g_hChkMMCheckCGEarly
+Global $g_hChkMMSkipFirstCheckRoutine, $g_hChkMMSkipBB, $g_hChkMMSkipTrain, $g_hChkMMIgnoreIncorrectTroopCombo, $g_hLblFillIncorrectTroopCombo, $g_hCmbFillIncorrectTroopCombo
+Global $g_hChkMMIgnoreIncorrectSpellCombo, $g_hLblFillIncorrectSpellCombo, $g_hCmbFillIncorrectSpellCombo, $g_hChkMMTrainPreviousArmy, $g_hRandomArmyComp, $g_hChkMMSkipWallPlacingOnBB, $g_hChkMMCheckCGEarly
 Global $g_sCmbFICTroops[5][3] = [ _ 
 								["Barb",	"Barbarians",		1], _
 								["Arch",	"Archers",			1], _
 								["Giant",	"Giants",			5], _
 								["Ball",	"Balloons",			5], _
 								["SBarb",	"Super Barbarians",	5]]
+Global $g_sCmbFICSpells[5][3] = [ _ 
+								["LSpell",	"Lightning Spell",	1], _
+								["BtSpell",	"Bat Spell",		1], _
+								["HaSpell",	"Haste Spell",		1], _
+								["FSpell",	"Freeze Spell",		1], _
+								["RSpell",	"Rage Spell",		2]]
 
 Func CreateMiscModSubTab()
 	Local $x = 15, $y = 40
@@ -710,14 +716,15 @@ Func CreateMiscModSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	$y += 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 10, $y - 15, 180, 83)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 10, $y - 15, 180, 110)
 		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo", "Ignore Bad Troop Combo"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "If Enabled DoubleTrain, Wont Empty Queued Troop, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 		GUICtrlSetState(-1, $GUI_CHECKED)
 	$y += 22
-		$g_hLblFillIncorrectCombo = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - FillIncorrectCombo", "Label_01", "Fill With :"), $x, $y+3, -1, -1)
-		$g_hCmbFillIncorrectCombo = GUICtrlCreateCombo("", $x + 50, $y, 110, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$g_hLblFillIncorrectTroopCombo = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - FillIncorrectTroopCombo", "Label_01", "Fill With :"), $x, $y+3, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
+		$g_hCmbFillIncorrectTroopCombo = GUICtrlCreateCombo("", $x + 50, $y, 110, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		Local $sCmbTxt 
 		For $z = 0 To UBound($g_sCmbFICTroops) - 1
 			$sCmbTxt &= $g_sCmbFICTroops[$z][1] & "|"
@@ -728,6 +735,15 @@ Func CreateMiscModSubTab()
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_02", "If Enabled DoubleTrain, Wont Empty Queued Spell, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 		GUICtrlSetState(-1, $GUI_CHECKED)
+	$y += 22
+		$g_hLblFillIncorrectSpellCombo = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - FillIncorrectSpellCombo", "Label_01", "Fill With :"), $x, $y+3, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
+		$g_hCmbFillIncorrectSpellCombo = GUICtrlCreateCombo("", $x + 50, $y, 110, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$sCmbTxt = ""
+		For $z = 0 To UBound($g_sCmbFICSpells) - 1
+			$sCmbTxt &= $g_sCmbFICSpells[$z][1] & "|"
+		Next
+		GUICtrlSetData(-1, $sCmbTxt, "Lightning Spell")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 		
 	$y += 48
