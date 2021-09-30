@@ -25,7 +25,7 @@ Func UpgradeWall()
 		If SkipWallUpgrade($iWallCost) Then Return
 		VillageReport(True, True)
 		SetDebugLog("$g_iFreeBuilderCount:" & $g_iFreeBuilderCount)
-		If $g_iFreeBuilderCount < 2 Then
+		If $g_iFreeBuilderCount = 1 Then
 			ClickAway()
 			Local $MinWallGold = Number($g_aiCurrentLoot[$eLootGold] - $iWallCost) > Number($g_iUpgradeWallMinGold) ; Check if enough Gold
 			Local $MinWallElixir = Number($g_aiCurrentLoot[$eLootElixir] - $iWallCost) > Number($g_iUpgradeWallMinElixir) ; Check if enough Elixir
