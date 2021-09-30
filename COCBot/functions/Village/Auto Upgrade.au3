@@ -58,7 +58,7 @@ Func SearchUpgrade($bTest = False)
 	If $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ClickDragAUpgrade("down")
 	If Not $g_bRunState Then Return
 	Local $b_BuildingFound = False
-	For $z = 0 To 2 ;for do scroll 3 times
+	For $z = 0 To 4 ;for do scroll 5 times
 		Local $NeedDrag = True
 		Local $x = 180, $y = 80, $x1 = 450, $y1 = 103, $step = 30
 		For $i = 0 To 9
@@ -82,7 +82,7 @@ Func SearchUpgrade($bTest = False)
 				If _Sleep(500) Then Return
 			Else
 				If $g_bDebugClick Then SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
-				If $i = 9 Then $NeedDrag = False
+				If $z > 1 And $i = 9 Then $NeedDrag = False ; sudah 2 kali scroll tapi yang paling bawah masih merah angka nya
 			EndIf
 			$y += $step
 			$y1 += $step
@@ -130,7 +130,7 @@ Func DoUpgrade($bTest = False)
 	Switch $g_aUpgradeNameLevel[1]
 		Case "Town Hall"
 			If $g_aUpgradeNameLevel[2] > 11 Then
-				If $g_iChkUpgradesToIgnore[35] = 1 Then
+				If $g_iChkUpgradesToIgnore[35] = 1 Then ;TH Weapon
 					$bMustIgnoreUpgrade = True
 				Else
 					$aUpgradeButton = findButton("THWeapon", Default, 1, True)
@@ -176,7 +176,7 @@ Func DoUpgrade($bTest = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[16] = 1) ? True : False
 		Case "Mortar"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[17] = 1) ? True : False	
-		Case "Hidden Tesla "
+		Case "Hidden Tesla"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[18] = 1) ? True : False
 		Case "Bomb"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
@@ -227,10 +227,12 @@ Func DoUpgrade($bTest = False)
 	EndSwitch
 
 	; check if the upgrade name is on the list of upgrades that must be ignored
-	If $bMustIgnoreUpgrade = True Then
+	If $bMustIgnoreUpgrade Then
 		SetLog($g_aUpgradeNameLevel[1] & " : This upgrade must be ignored, looking next...", $COLOR_WARNING)
 		$g_iNextLineOffset = $g_iCurrentLineOffset
 		Return False
+	Else
+		SetLog("Building Name: " & $g_aUpgradeNameLevel[1], $COLOR_DEBUG)
 	EndIf
 
 	; if upgrade not to be ignored, click on the Upgrade button to open Upgrade window
@@ -332,7 +334,7 @@ Func DoUpgrade($bTest = False)
 	$g_iCurrentLineOffset -= $g_iQuickMISY
 
 	; update Logs and History file
-	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_iChkUpgradesToIgnore[23] = 0 Then
+	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_iChkUpgradesToIgnore[35] = 0 Then
 		Switch $g_aUpgradeNameLevel[2]
 			Case 12
 				SetLog("Launched upgrade of Giga Tesla to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
@@ -466,7 +468,7 @@ Func UpgradeNewBuilding($bTest = False)
 	If _Sleep(500) Then Return
 	
 	Local $b_BuildingFound = False
-	For $z = 0 To 5 ;for do scroll 2 times
+	For $z = 0 To 5 ;for do scroll 6 times
 		Local $NeedDrag = True
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
 		For $i = 0 To 9
@@ -484,7 +486,7 @@ Func UpgradeNewBuilding($bTest = False)
 				EndIf
 			Else
 				If $g_bDebugClick Then SetLog("[" & $i & "] Not Enough Resource", $COLOR_INFO)
-				If $i = 9 Then $NeedDrag = False
+				If $z > 2 And $i = 9 Then $NeedDrag = False ; sudah 3 kali scroll tapi yang paling bawah masih merah angka nya
 			EndIf
 			$y += $step
 			$y1 += $step
