@@ -229,11 +229,11 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
 
-	If Not(SetLabUpgradeTime($name)) Then
-		Click(243, 33)
-		Return False ; couldnt set time to upgrade started
-	EndIf
-	If _Sleep($DELAYLABUPGRADE1) Then Return
+	;If Not(SetLabUpgradeTime($name)) Then
+	;	Click(243, 33)
+	;	Return False ; couldnt set time to upgrade started
+	;EndIf
+	;If _Sleep($DELAYLABUPGRADE1) Then Return
 
 	LabStatusGUIUpdate()
 	If $debug = True Then ; if debugging, do not actually click it
