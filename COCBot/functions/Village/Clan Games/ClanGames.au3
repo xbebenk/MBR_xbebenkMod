@@ -18,13 +18,13 @@ Func _ClanGames($test = False)
 	
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
-
+	
 	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)
 
 	ClickAway()
 	SetLog("Entering Clan Games", $COLOR_INFO)
-	
+	If Not $g_bRunState Then Return
 	; Local and Static Variables
 	Local $TabChallengesPosition[2] = [820, 130]
 	Local $sTimeRemain = "", $sEventName = "", $getCapture = True
