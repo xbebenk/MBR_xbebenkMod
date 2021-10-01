@@ -116,8 +116,10 @@ Func UpgradeWall()
 				$MinWallElixir = Number($g_aiCurrentLoot[$eLootElixir] - $iWallCost) > Number($g_iUpgradeWallMinElixir) ; Check if enough Elixir
 
 			WEnd
+		ElseIf $g_iFreeBuilderCount > 1 Then
+			SetLog("Have more than 1 builder, Upgrade Walls skipped", $COLOR_DEBUG)
 		Else
-			SetLog("Have more than 1 builder, Upgrade Walls skipped", $COLOR_ERROR)
+			SetLog("No builder available, Upgrade Walls skipped", $COLOR_DEBUG)
 		EndIf
 	EndIf
 	If _Sleep($DELAYUPGRADEWALL1) Then Return
