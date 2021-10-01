@@ -2046,7 +2046,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			Local $aIconIndex = [$eIcnTrain, $eIcnGem, $eIcnReOrder, $eIcnOptions]
 
 		Case $g_hGUI_MISC_TAB
-			Local $aIconIndex = [$eIcnTH1, $eIcnBuilderHall, $eIcnStrongMan]
+			Local $aIconIndex = [$eIcnTH10, $eIcnBuilderHall, $eIcnStrongMan, $eIcnOptions]
 
 		Case $g_hGUI_DONATE_TAB
 			; the icons for donate tab
