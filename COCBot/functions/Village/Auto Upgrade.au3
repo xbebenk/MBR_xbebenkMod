@@ -378,7 +378,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 
 	Local $Screencap = True, $Debug = $g_bDebugSetlog
 	Local $IsWall = False
-	Local $xstart = 50, $ystart = 50, $xend = 750, $yend = 650
+	Local $xstart = 50, $ystart = 50, $xend = 800, $yend = 600
 	Click($x, $y); click on upgrade window
 	If _Sleep(4000) Then Return
 	
@@ -406,6 +406,9 @@ Func AUNewBuildings($x, $y, $bTest = False)
 				If _Sleep(500) Then Return
 			Next
 			Click($g_iQuickMISX + $xstart - 80, $g_iQuickMISY + $ystart)
+			If QuickMIS("BC1", $g_sImgRedX, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
+				Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
+			EndIf
 			Return True
 		EndIf
 	EndIf
