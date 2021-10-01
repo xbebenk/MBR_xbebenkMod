@@ -16,16 +16,22 @@
 Func UpgradeWall()
 
 	Local $iWallCost = Int($g_iWallCost - ($g_iWallCost * Number($g_iBuilderBoostDiscount) / 100))
-	
+	Local $YesBro = False
 	If Not $g_bRunState Then Return
-
+	
 	If $g_bAutoUpgradeWallsEnable = True Then
 		SetLog("Checking Upgrade Walls", $COLOR_INFO)
 		SetDebugLog("$iWallCost:" & $iWallCost)
 		If SkipWallUpgrade($iWallCost) Then Return
 		VillageReport(True, True)
 		SetDebugLog("$g_iFreeBuilderCount:" & $g_iFreeBuilderCount)
-		If $g_iFreeBuilderCount = 1 Then
+		If $g_bChkOnly1Builder Then
+			If $g_iFreeBuilderCount = 1 Then $YesBro = True
+		Else 
+			If $g_iFreeBuilderCount > 0 Then $YesBro = True
+		EndIf
+		
+		If $YesBro Then
 			ClickAway()
 			Local $MinWallGold = Number($g_aiCurrentLoot[$eLootGold] - $iWallCost) > Number($g_iUpgradeWallMinGold) ; Check if enough Gold
 			Local $MinWallElixir = Number($g_aiCurrentLoot[$eLootElixir] - $iWallCost) > Number($g_iUpgradeWallMinElixir) ; Check if enough Elixir

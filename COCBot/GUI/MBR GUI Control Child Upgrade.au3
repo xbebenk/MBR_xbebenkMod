@@ -633,6 +633,10 @@ Func chkSaveWallBldr()
 	$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
 EndFunc   ;==>chkSaveWallBldr
 
+Func chkWallOnly1Builder()
+	$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
+EndFunc   ;==>chkWallOnly1Builder
+
 Func cmbWalls()
 	$g_iCmbUpgradeWallsLevel = _GUICtrlComboBox_GetCurSel($g_hCmbWalls)
 	$g_iWallCost = $g_aiWallCost[$g_iCmbUpgradeWallsLevel]
