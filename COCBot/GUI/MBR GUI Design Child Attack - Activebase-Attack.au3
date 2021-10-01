@@ -123,21 +123,21 @@ Func CreateAttackSearchActiveBaseAttack()
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABLightSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-
+				GUICtrlSetState(-1, $GUI_CHECKED)
 		$x += 46
 			$g_hPicABHealSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnHealSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Healing_Info_01", -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABHealSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-
+				GUICtrlSetState(-1, $GUI_CHECKED)
 		$x += 46
 			$g_hPicABRageSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnRageSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Rage_Info_01", -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABRageSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-
+				GUICtrlSetState(-1, $GUI_CHECKED)
 		$y += 27
 		$x -= 92
 			$g_hPicABJumpSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnJumpSpell, $x, $y, 24, 24)
@@ -145,21 +145,21 @@ Func CreateAttackSearchActiveBaseAttack()
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABJumpSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-
+				GUICtrlSetState(-1, $GUI_CHECKED)
 		$x += 46
 			$g_hPicABFreezeSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnFreezeSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Freeze_Info_01", -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABFreezeSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-
+				GUICtrlSetState(-1, $GUI_CHECKED)
 		$x += 46
 			$g_hPicABCloneSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnCloneSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Clone_Info_01", -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABCloneSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-
+				GUICtrlSetState(-1, $GUI_CHECKED)
 		$y += 27
 		$x -= 92
 			$g_hPicABInvisibilitySpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnInvisibilitySpell, $x, $y, 24, 24)
@@ -167,21 +167,21 @@ Func CreateAttackSearchActiveBaseAttack()
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABInvisibilitySpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-
+				GUICtrlSetState(-1, $GUI_CHECKED)
         $x += 46
 			$g_hPicABPoisonSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnPoisonSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Poison_Info_01", -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABPoisonSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-
+				GUICtrlSetState(-1, $GUI_CHECKED)
 		$x += 46
 			$g_hPicABEarthquakeSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnEarthquakeSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Earthquake_Info_01", -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABEarthquakeSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-
+				GUICtrlSetState(-1, $GUI_CHECKED)
 		$y += 27
 		$x -= 92
 			$g_hPicABHasteSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnHasteSpell, $x, $y, 24, 24)
@@ -189,19 +189,20 @@ Func CreateAttackSearchActiveBaseAttack()
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABHasteSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-
+				GUICtrlSetState(-1, $GUI_CHECKED)
         $x += 46
 			$g_hPicABSkeletonSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnSkeletonSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Skeleton_Info_01", -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABSkeletonSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-
+				GUICtrlSetState(-1, $GUI_CHECKED)
         $x += 46
 			$g_hPicABBatSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBatSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Bat_Info_01", -1)
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkABBatSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
+				GUICtrlSetState(-1, $GUI_CHECKED)
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc   ;==>CreateAttackSearchActiveBaseAttack
