@@ -1351,7 +1351,7 @@ Func ReadConfig_600_35_2()
 	Local $sSwitchAccFile
 	$g_iCmbSwitchAcc = 0
 	$g_bChkSwitchAcc = False
-	For $g = 1 To 8
+	For $g = 1 To 8 ;group number
 		; find group this profile belongs to: no switch profile config is saved in config.ini on purpose!
 		$sSwitchAccFile = $g_sProfilePath & "\SwitchAccount.0" & $g & ".ini"
 		If FileExists($sSwitchAccFile) = 0 Then ContinueLoop
@@ -1390,7 +1390,7 @@ Func ReadConfig_SwitchAccounts()
 		$g_bDonateLikeCrazy = IniRead($sSwitchAccFile, "SwitchAccount", "DonateLikeCrazy", "0") = "1"
 		$g_iTotalAcc = Int(IniRead($sSwitchAccFile, "SwitchAccount", "TotalCocAccount", "-1"))
 		$g_iTrainTimeToSkip = Int(IniRead($sSwitchAccFile, "SwitchAccount", "TrainTimeToSkip", "1"))
-		For $i = 1 To 8
+		For $i = 1 To UBound($g_abAccountNo)
 			$g_abAccountNo[$i - 1] = IniRead($sSwitchAccFile, "SwitchAccount", "AccountNo." & $i, "") = "1"
 			$g_asProfileName[$i - 1] = IniRead($sSwitchAccFile, "SwitchAccount", "ProfileName." & $i, "")
 			$g_abDonateOnly[$i - 1] = IniRead($sSwitchAccFile, "SwitchAccount", "DonateOnly." & $i, "0") = "1"
