@@ -2091,7 +2091,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 
 		Case $g_hGUI_STATS_TAB
 			; the icons for stats tab
-			Local $aIconIndex = [$eIcnGoldElixir, $eIcnOptions, $eIcnCamp, $eIcnCCRequest, $eIcnGoldElixir]
+			Local $aIconIndex = [$eIcnGoldElixir, $eIcnOptions, $eIcnCamp, $eIcnCCRequest, $eIcnGoldElixir, $eIcnGoldElixir]
 
 		Case Else
 			;do nothing

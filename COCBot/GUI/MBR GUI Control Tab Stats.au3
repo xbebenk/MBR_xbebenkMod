@@ -21,7 +21,7 @@ EndFunc   ;==>btnResetStats
 Func UpdateMultiStats()
 	Local $bEnableSwitchAcc = $g_iCmbSwitchAcc > 0
 	Local $iCmbTotalAcc = _GUICtrlComboBox_GetCurSel($g_hCmbTotalAccount) + 1 ; combobox data starts with 2
-	For $i = 0 To 7
+	For $i = 0 To UBound($g_abAccountNo) - 1
 		If $bEnableSwitchAcc And $i <= $iCmbTotalAcc Then
 			_GUI_Value_STATE("SHOW", $g_ahGrpDefaultAcc[$i])
 			If GUICtrlGetState($g_ahLblHourlyStatsGoldAcc[$i]) = $GUI_ENABLE + $GUI_HIDE Then _GUI_Value_STATE("SHOW", $g_ahGrpReportAcc[$i])
@@ -42,7 +42,7 @@ Func UpdateMultiStats()
 EndFunc   ;==>UpdateMultiStats
 
 Func SwitchVillageInfo()
-	For $i = 0 To 7
+	For $i = 0 To UBound($g_abAccountNo) - 1
 		If @GUI_CtrlId = $g_ahPicArrowLeft[$i] Or @GUI_CtrlId = $g_ahPicArrowRight[$i] Then
 			Return _SwitchVillageInfo($i)
 		EndIf
