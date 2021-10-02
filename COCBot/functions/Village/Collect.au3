@@ -80,17 +80,17 @@ Func CollectLootCart()
 	EndIf
 
 	SetLog("Searching for a Loot Cart", $COLOR_INFO)
-
+	If Not IsMainPage() Then Return
 	Local $aLootCart = decodeSingleCoord(findImage("LootCart", $g_sImgCollectLootCart, GetDiamondFromRect("20,220,120,290"), 1, True))
 	If UBound($aLootCart) > 1 Then
 		$aLootCart[1] += 15
-		If IsMainPage() Then ClickP($aLootCart, 1, 0, "#0330")
-		If _Sleep(400) Then Return
+		ClickP($aLootCart, 1, 0, "#0330")
+		If _Sleep(1000) Then Return
 
 		Local $aiCollectButton = findButton("CollectLootCart", Default, 1, True)
-		If IsArray($aiCollectButton) And UBound($aiCollectButton) = 2 Then
+		If UBound($aiCollectButton) > 1 Then
 			SetLog("Clicking to collect loot cart.", $COLOR_SUCCESS)
-			ClickP($aiCollectButton)
+			Click($aiCollectButton[0], $aiCollectButton[1])
 		Else
 			SetLog("Cannot find Collect Button", $COLOR_ERROR)
 			Return False
