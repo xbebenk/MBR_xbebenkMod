@@ -22,7 +22,7 @@ Global $g_hChkAutostart = 0, $g_hTxtAutostartDelay = 0, $g_hChkCheckGameLanguage
 Global $g_hTxtGlobalActiveBotsAllowed = 0, $g_hTxtGlobalThreads = 0, $g_hTxtThreads = 0
 ;Global $g_hChkUpdatingWhenMinimized = 0
 Global $g_hChkBotCustomTitleBarClick = 0, $g_hChkBotAutoSlideClick = 0, $g_hChkHideWhenMinimized = 0, $g_hChkUseRandomClick = 0, $g_hChkScreenshotType = 0, _
-	   $g_hChkScreenshotHideName = 0, $g_hTxtTimeAnotherDevice = 0
+	   $g_hChkScreenshotHideName = 0, $g_hTxtTimeAnotherDevice = 0, $g_hChkSwitchOnAnotherDevice = 0
 Global $g_hChkSinglePBTForced = 0, $g_hTxtSinglePBTimeForced = 0, $g_hTxtPBTimeForcedExit = 0, $g_hChkFixClanCastle = 0, $g_hChkAutoResume = 0, $g_hTxtAutoResumeTime = 0, $g_hChkDisableNotifications = 0
 Global $g_hChkSqlite = 0
 Global $g_hBtnExportData = 0
@@ -209,15 +209,19 @@ Func CreateBotOptions()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 48
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "Group_06", "Remote Device"), $x - 20, $y - 20 , 225, 42)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "Group_06", "Remote Device"), $x - 20, $y - 20 , 225, 60)
 	$y -= 5
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "LblTimeAnotherDevice", "When 'Another Device' wait") & ":", $x - 10, $y + 2, -1, -1)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "LblTimeAnotherDevice", "When 'Another Device' wait") & ":", $x, $y + 2, -1, -1)
 		$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "LblTimeAnotherDevice_Info_01", "Enter the time to wait (in Minutes) before the Bot reconnects when another device took control.")
 			_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hTxtTimeAnotherDevice = GUICtrlCreateInput("2", $x + 132, $y, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hTxtTimeAnotherDevice = GUICtrlCreateInput("2", $x + 136, $y, 30, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetLimit(-1, 3)
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "min.", -1), $x + 167, $y + 2, -1, -1)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "min.", -1), $x + 170, $y + 2, -1, -1)
+	$y += 20
+		$g_hChkSwitchOnAnotherDevice = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkSwitchOnAnotherDevice", "Switch On Another Device"), $x, $y, -1, -1)
+			GUICtrlSetOnEvent(-1, "ChkSwitchOnAnotherDevice")
+			GUICtrlSetState(-1, $GUI_CHECKED)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 51

@@ -135,6 +135,14 @@ Func chkDisposeWindows()
 	EndIf
 EndFunc   ;==>chkDisposeWindows
 
+Func ChkSwitchOnAnotherDevice()
+	If GUICtrlRead($g_hChkSwitchOnAnotherDevice) = $GUI_CHECKED Then
+		$g_bChkSwitchOnAnotherDevice = True
+	Else
+		$g_bChkSwitchOnAnotherDevice = False
+	EndIf
+EndFunc   ;==>ChkSwitchOnAnotherDevice
+
 Func chkSinglePBTForced()
 	If GUICtrlRead($g_hChkSinglePBTForced) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hTxtSinglePBTimeForced, $GUI_ENABLE)

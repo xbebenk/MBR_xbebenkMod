@@ -1278,6 +1278,7 @@ Global $g_bHideWhenMinimized = False ; Hide bot window in taskbar when minimized
 Global $g_bUseRandomClick = False
 Global $g_bScreenshotPNGFormat = False, $g_bScreenshotHideName = True
 Global $g_iAnotherDeviceWaitTime = 120
+Global $g_bChkSwitchOnAnotherDevice = False
 Global $g_bForceSinglePBLogoff = 0, $g_iSinglePBForcedLogoffTime = 18, $g_iSinglePBForcedEarlyExitTime = 15
 Global $g_bAutoResumeEnable = 0, $g_iAutoResumeTime = 5
 Global $g_bDisableNotifications = False

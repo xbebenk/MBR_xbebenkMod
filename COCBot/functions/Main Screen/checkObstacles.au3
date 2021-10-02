@@ -95,6 +95,13 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				SetLog("Another Device has connected, waiting " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " seconds", $COLOR_ERROR)
 				PushMsg("AnotherDevice")
 			EndIf
+			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And Not $g_bChkSmartSwitch And $g_bChkSharedPrefs Then
+				SetLog("---- Forced Switch, Another device connected ----")
+				$g_iNextAccount = $g_iCurAccount + 1
+				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+				SwitchCOCAcc($g_iNextAccount)
+				Return True
+			EndIf
 			If _SleepStatus($g_iAnotherDeviceWaitTime * 1000) Then Return ; Wait as long as user setting in GUI, default 120 seconds
 			checkObstacles_ReloadCoC($aReloadButton, "#0127", $bRecursive)
 			If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
