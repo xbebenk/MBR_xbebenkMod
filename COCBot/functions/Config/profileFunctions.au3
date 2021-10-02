@@ -33,7 +33,7 @@ Func setupProfileComboBox()
 	GUICtrlSetData($g_hCmbProfile, "", "")
 	; Set the new data of available profiles
 	GUICtrlSetData($g_hCmbProfile, $profileString, "<No Profiles>")
-	For $i = 0 To 7
+	For $i = 0 To Ubound($g_abAccountNo) - 1
 		GUICtrlSetData($g_ahCmbProfile[$i], "")
 		GUICtrlSetData($g_ahCmbProfile[$i], "|" & $profileString)
 		_GUICtrlComboBox_SetCurSel($g_ahCmbProfile[$i], 0)
