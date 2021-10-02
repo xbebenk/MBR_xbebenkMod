@@ -99,7 +99,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				SetLog("---- Forced Switch, Another device connected ----")
 				$g_iNextAccount = $g_iCurAccount + 1
 				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
-				SwitchCOCAcc($g_iNextAccount)
+				SwitchForceAnotherDevice($g_iNextAccount)
 				Return True
 			EndIf
 			If _SleepStatus($g_iAnotherDeviceWaitTime * 1000) Then Return ; Wait as long as user setting in GUI, default 120 seconds
@@ -340,6 +340,74 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 
 	Return False
 EndFunc   ;==>_checkObstacles
+
+Func SwitchForceAnotherDevice($NextAccount)
+
+	SetLog("Switching to Account [" & $NextAccount + 1 & "]")
+	$g_bReMatchAcc = False
+	Local $bSharedPrefs = $g_bChkSharedPrefs And HaveSharedPrefs($g_asProfileName[$g_iNextAccount])
+	Local $bResult = True
+	If Not $g_bRunState Then Return
+	If Not $g_bInitiateSwitchAcc Then SwitchAccountVariablesReload("Save")
+	If $g_ahTimerSinceSwitched[$g_iCurAccount] <> 0 Then
+		If Not $g_bReMatchAcc Then SetSwitchAccLog(" - Acc " & $g_iCurAccount + 1 & ", online: " & Int(__TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount]) / 1000 / 60) & "m")
+		SetTime(True)
+		$g_aiRunTime[$g_iCurAccount] += __TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount])
+		$g_ahTimerSinceSwitched[$g_iCurAccount] = 0
+	EndIf
+
+	$g_iCurAccount = $NextAccount
+	SwitchAccountVariablesReload()
+
+	$g_ahTimerSinceSwitched[$g_iCurAccount] = __TimerInit()
+	$g_bInitiateSwitchAcc = False
+	If $g_sProfileCurrentName <> $g_asProfileName[$g_iNextAccount] Then
+		If $g_iGuiMode = 1 Then
+			; normal GUI Mode
+			_GUICtrlComboBox_SetCurSel($g_hCmbProfile, _GUICtrlComboBox_FindStringExact($g_hCmbProfile, $g_asProfileName[$g_iNextAccount]))
+			cmbProfile()
+			DisableGUI_AfterLoadNewProfile()
+		Else
+			; mini or headless GUI Mode
+			saveConfig()
+			$g_sProfileCurrentName = $g_asProfileName[$g_iNextAccount]
+			LoadProfile(False)
+		EndIf
+	EndIf
+	If $bSharedPrefs Then
+		SetLog("Please wait for loading CoC")
+		PushSharedPrefs()
+		OpenCoC()
+		waitMainScreen()
+	EndIf
+
+	SetSwitchAccLog("Switched to Acc [" & $NextAccount + 1 & "]", $COLOR_SUCCESS)
+	CreateLogFile() ; Cause use of the right log file after switch
+	If Not $g_bRunState Then Return
+
+
+	If $g_bChkSharedPrefs Then
+		; disconnect account again for saving shared_prefs
+		waitMainScreen()
+		If IsMainPage() Then
+			Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
+			If _Sleep(500) Then Return
+			If SwitchCOCAcc_DisconnectConnect($bResult, $g_bChkSharedPrefs) = -1 Then Return ;Return if Error happend
+
+			Switch SwitchCOCAcc_ClickAccount($bResult, $NextAccount, $g_bChkSharedPrefs, False)
+				Case "OK"
+					; all good
+					PullSharedPrefs()
+			EndSwitch
+		EndIf
+	EndIf
+	If Not $g_bRunState Then Return
+	waitMainScreen()
+	If Not $g_bRunState Then Return
+	CheckObstacles()
+	If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
+	runBot()
+EndFunc
 
 ; It's more stable to restart CoC app than click the message restarting the game
 Func checkObstacles_ReloadCoC($point = Default, $debugtxt = "", $bRecursive = False)
