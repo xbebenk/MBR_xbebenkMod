@@ -82,7 +82,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiFirstRun = $aiTrue
 
 			$g_asTrainTimeFinish = $asEmpty
-			For $i = 0 To 7
+			For $i = 0 To UBound($g_abAccountNo) - 1
 				GUICtrlSetData($g_ahLblTroopTime[$i], "")
 			Next
 			$g_ahTimerSinceSwitched = $aiZero
@@ -147,7 +147,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiHeroUpgrading = $aiZero83
 
 			; QuickTrain comp
-			For $i = 0 To 7
+			For $i = 0 To UBound($g_abAccountNo) - 1
 				$aaArmyQuickTroops[$i] = $aiZeroTroop
 				$aaArmyQuickSpells[$i] = $aiZeroSpell
 			Next
@@ -357,7 +357,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 				GUICtrlSetData($g_ahLblStatsStartedWith[$i], _NumberFormat($g_iStatsStartedWith[$i], True))
 				$aiStatsTotalGain[$iAccount][$i] = $g_iStatsTotalGain[$i]
 			Next
-			For $i = 0 To 7
+			For $i = 0 To UBound($g_abAccountNo) - 1
 				GUICtrlSetData($g_ahLblHourlyStatsGoldAcc[$i], _NumberFormat(Round($aiStatsTotalGain[$i][$eLootGold] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600)) & "k / h")
 				GUICtrlSetData($g_ahLblHourlyStatsElixirAcc[$i], _NumberFormat(Round($aiStatsTotalGain[$i][$eLootElixir] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600)) & "k / h")
 				GUICtrlSetData($g_ahLblHourlyStatsDarkAcc[$i], _NumberFormat(Round($aiStatsTotalGain[$i][$eLootDarkElixir] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600 * 1000)) & " / h")
