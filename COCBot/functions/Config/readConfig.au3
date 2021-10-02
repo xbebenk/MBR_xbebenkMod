@@ -1330,10 +1330,10 @@ Func ReadConfig_600_35_1()
 	;IniReadS($g_bUpdatingWhenMinimized, $g_sProfileConfigPath, "general", "UpdatingWhenMinimized", True, "Bool")
 	IniReadS($g_bHideWhenMinimized, $g_sProfileConfigPath, "general", "HideWhenMinimized", False, "Bool")
 	$g_bUseRandomClick = (IniRead($g_sProfileConfigPath, "other", "UseRandomClick", "0") = "1")
-	$g_bScreenshotPNGFormat = (IniRead($g_sProfileConfigPath, "other", "ScreenshotType", "0") = "1") ;screenshot type: 0 JPG   1 PNG
-	$g_bScreenshotHideName = (IniRead($g_sProfileConfigPath, "other", "ScreenshotHideName", "1") = "1")
+	$g_bScreenshotPNGFormat = (IniRead($g_sProfileConfigPath, "other", "ScreenshotType", "1") = "1") ;screenshot type: 0 JPG   1 PNG
+	$g_bScreenshotHideName = (IniRead($g_sProfileConfigPath, "other", "ScreenshotHideName", "0") = "1")
 	IniReadS($g_iAnotherDeviceWaitTime, $g_sProfileConfigPath, "other", "txtTimeWakeUp", 0, "int")
-	$g_bChkSwitchOnAnotherDevice = (IniRead($g_sProfileConfigPath, "other", "ChkSwitchOnAnotherDevice", "0") = "1")
+	$g_bChkSwitchOnAnotherDevice = (IniRead($g_sProfileConfigPath, "other", "ChkSwitchOnAnotherDevice", "1") = "1")
 	$g_bForceSinglePBLogoff = (IniRead($g_sProfileConfigPath, "other", "chkSinglePBTForced", "0") = "1")
 	$g_iSinglePBForcedLogoffTime = Int(IniRead($g_sProfileConfigPath, "other", "ValueSinglePBTimeForced", 18))
 	$g_iSinglePBForcedEarlyExitTime = Int(IniRead($g_sProfileConfigPath, "other", "ValuePBTimeForcedExit", 15))
@@ -1454,13 +1454,13 @@ Func ReadConfig_600_52_2()
 		IniReadS($g_aiArmyCompSiegeMachines[$S], $g_sProfileConfigPath, "Siege", $g_asSiegeMachineShortNames[$S], 0, "int")
 		IniReadS($g_aiTrainArmySiegeMachineLevel[$S], $g_sProfileConfigPath, "LevelSiege", $g_asSiegeMachineShortNames[$S], 0, "int")
 	Next
-	IniReadS($g_iTrainArmyFullTroopPct, $g_sProfileConfigPath, "troop", "fullTroop", 90, "int")
+	IniReadS($g_iTrainArmyFullTroopPct, $g_sProfileConfigPath, "troop", "fullTroop", 100, "int")
 	$g_bTotalCampForced = (IniRead($g_sProfileConfigPath, "other", "ChkTotalCampForced", "1") = "1")
 	$g_iTotalCampForcedValue = Int(IniRead($g_sProfileConfigPath, "other", "ValueTotalCampForced", 220))
 	IniReadS($g_iTotalSpellValue, $g_sProfileConfigPath, "Spells", "SpellFactory", 0, "int")
 	$g_iTotalSpellValue = Int($g_iTotalSpellValue)
 	; DoubleTrain - Demen
-	$g_bDoubleTrain = (IniRead($g_sProfileConfigPath, "troop", "DoubleTrain", "0") = "1")
+	$g_bDoubleTrain = (IniRead($g_sProfileConfigPath, "troop", "DoubleTrain", "1") = "1")
 	$g_bPreciseArmy = (IniRead($g_sProfileConfigPath, "troop", "PreciseArmy", "0") = "1")
 EndFunc   ;==>ReadConfig_600_52_2
 
