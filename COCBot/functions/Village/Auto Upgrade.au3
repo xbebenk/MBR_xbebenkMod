@@ -51,8 +51,10 @@ Func SearchUpgrade($bTest = False)
 	If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we have builder
 	If $g_bNewBuildingFirst Then
 		If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
-		If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we still have builder
-		ZoomOut()
+		If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
+			ZoomOut()
+			Return
+		EndIf
 	EndIf
 	
 	If Not ClickMainBuilder($bTest) Then Return
