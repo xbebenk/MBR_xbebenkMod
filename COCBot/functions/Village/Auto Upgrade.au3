@@ -52,6 +52,7 @@ Func SearchUpgrade($bTest = False)
 	If $g_bNewBuildingFirst Then
 		If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
 		If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we still have builder
+		ZoomOut()
 	EndIf
 	
 	If Not ClickMainBuilder($bTest) Then Return
@@ -500,8 +501,8 @@ Func SearchGreenZone()
 	If $g_bDebugClick Then SetLog($aAll[0][0] & ":" & $aAll[0][1] & "|" & $aAll[1][0] & ":" & $aAll[1][1] & "|" & $aAll[2][0] & ":" & $aAll[2][1] & "|" & $aAll[3][0] & ":" & $aAll[3][1] & "|", $COLOR_DEBUG)
 	
 	If $aAll[0][1] > 0 Then
-		ZoomIn($aAll[0][0])
 		SetLog("Found GreenZone, On " & $aAll[0][0] & " Region", $COLOR_SUCCESS)
+		ZoomIn($aAll[0][0])
 		Return True
 	Else
 		SetLog("GreenZone for Placing new Building Not Found", $COLOR_DEBUG)
