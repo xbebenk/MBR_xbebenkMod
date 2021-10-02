@@ -200,7 +200,7 @@ Func DoUpgrade($bTest = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1) ? True : False
 		Case "Air Sweeper"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[23] = 1) ? True : False
-		Case "X-Bow"
+		Case "X Bow"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[24] = 1) ? True : False
 		Case "Inferno Tower"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[25] = 1) ? True : False
@@ -449,24 +449,8 @@ Func UpgradeNewBuilding($bTest = False)
 	
 	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
-	SetLog("Search for Placing new Building", $COLOR_INFO)
-	If QuickMIS("BC1", $g_sImgAUpgradeGreenZone, 320, 70, 520, 220) Then ;Top
-		SetLog("Found GreenZone, On Top Region", $COLOR_SUCCESS)
-		ZoomIn("Top")
-	ElseIf QuickMIS("BC1", $g_sImgAUpgradeGreenZone, 130, 270, 280, 390) Then ;Left
-		SetLog("Found GreenZone, On Left Region", $COLOR_SUCCESS)
-		ZoomIn("Left")
-	ElseIf QuickMIS("BC1", $g_sImgAUpgradeGreenZone, 340, 460, 520, 560) Then ;Bottom
-		SetLog("Found GreenZone, On Bottom Region", $COLOR_SUCCESS)
-		ZoomIn("Bottom")
-	ElseIf QuickMIS("BC1", $g_sImgAUpgradeGreenZone, 560, 270, 710, 400) Then ;Right
-		SetLog("Found GreenZone, On Right Region", $COLOR_SUCCESS)
-		ZoomIn("Bottom")
-	Else
-		SetLog("GreenZone for Placing new Building Not Found", $COLOR_DEBUG)
-		Return 
-	Endif
-
+	If Not SearchGreenZone() Then Return
+	
 	If Not ClickMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
 	
@@ -480,8 +464,8 @@ Func UpgradeNewBuilding($bTest = False)
 					If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
 					$b_BuildingFound = True
 					If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then
-						$g_iFreeBuilderCount -= 1
 						ClickMainBuilder($bTest)
+						VillageReport(True, True) ;check if we have available builder
 					EndIf
 					If $g_iFreeBuilderCount < 1 Then Return
 				Else
@@ -502,6 +486,28 @@ Func UpgradeNewBuilding($bTest = False)
 	ZoomOut()
 	ClickAway()
 EndFunc ;==>FindNewBuilding
+
+Func SearchGreenZone()
+	SetLog("Search GreenZone for Placing new Building", $COLOR_INFO)
+	Local $aTop = QuickMIS("CX", $g_sImgAUpgradeGreenZone, 320, 70, 500, 220) ;top
+	Local $aLeft = QuickMIS("CX", $g_sImgAUpgradeGreenZone, 90, 260, 220, 400) ;left
+	Local $aBottom = QuickMIS("CX", $g_sImgAUpgradeGreenZone, 300, 450, 500, 600) ;bottom
+	Local $aRight = QuickMIS("CX", $g_sImgAUpgradeGreenZone, 600, 250, 740, 400) ;right
+	
+	Local $aAll[4][2] = [["Top", UBound($aTop)], ["Left", UBound($aLeft)], ["Bottom", UBound($aBottom)], ["Right", UBound($aRight)]]
+	If $g_bDebugClick Then SetLog("Top:" & UBound($aTop) & " Left:" & UBound($aLeft) & " Bottom:" & UBound($aBottom) & " Right:" & UBound($aRight))
+	_ArraySort($aAll,1,0,0,1)
+	If $g_bDebugClick Then SetLog($aAll[0][0] & ":" & $aAll[0][1] & "|" & $aAll[1][0] & ":" & $aAll[1][1] & "|" & $aAll[2][0] & ":" & $aAll[2][1] & "|" & $aAll[3][0] & ":" & $aAll[3][1] & "|", $COLOR_DEBUG)
+	
+	If $aAll[0][1] > 0 Then
+		ZoomIn($aAll[0][0])
+		SetLog("Found GreenZone, On " & $aAll[0][0] & " Region", $COLOR_SUCCESS)
+		Return True
+	Else
+		SetLog("GreenZone for Placing new Building Not Found", $COLOR_DEBUG)
+	EndIf
+	Return False
+EndFunc
 
 Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 	Local $x = 330, $yUp = 93, $yDown = 600, $Delay = 500
