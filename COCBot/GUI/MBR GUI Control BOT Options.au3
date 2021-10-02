@@ -206,7 +206,7 @@ EndFunc   ;==>txtThreads
 ; #SWITCHACC FUNCTION# ==============================================================================================================
 Func chkSwitchAcc()
 	If GUICtrlRead($g_hChkSwitchAcc) = $GUI_CHECKED And aquireSwitchAccountMutex($g_iCmbSwitchAcc, False, True) Then
-		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[7]
+		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[9]
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_UNCHECKED)
@@ -214,7 +214,7 @@ Func chkSwitchAcc()
 		OnlySCIDAccounts()
 	Else
 		releaseSwitchAccountMutex()
-		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[7]
+		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[9]
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_ENABLE)
