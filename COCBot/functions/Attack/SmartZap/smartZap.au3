@@ -296,7 +296,7 @@ Func smartZap($minDE = -1)
 				EndIf
 			Next
 			If $tLastZap > 0 Then
-				If _Sleep(_Max($DELAYSMARTZAP10 - $tLastZap, 0)) Then Return ; 10 seconds since zap to disappear dust and bars
+				;If _Sleep(_Max($DELAYSMARTZAP10 - $tLastZap, 0)) Then Return ; 10 seconds since zap to disappear dust and bars
 				Local $sToDelete = ""
 				Local $iToDelete = 0
 				For $i = 0 To UBound($aCluster[3]) - 1
@@ -327,7 +327,7 @@ Func smartZap($minDE = -1)
 			If $aCluster[2] < $aDarkDrills[0][3] Then $aCluster = -1
 		EndIf
 		If $aCluster = -1 And $aDarkDrills[0][4] <> 0 Then
-			If _Sleep(_Max($DELAYSMARTZAP10 - __TimerDiff($aDarkDrills[0][4]), 0)) Then Return ; 10 seconds since zap to disappear dust and bars
+			;If _Sleep(_Max($DELAYSMARTZAP10 - __TimerDiff($aDarkDrills[0][4]), 0)) Then Return ; 10 seconds since zap to disappear dust and bars
 			If ReCheckDrillExist($aDarkDrills[0][0], $aDarkDrills[0][1]) Then
 				$aDarkDrills[0][4] = 0
 			Else
@@ -356,7 +356,7 @@ Func smartZap($minDE = -1)
 
 			$performedZap = True
 			$skippedZap = False
-			If _Sleep($DELAYSMARTZAP4) Then Return
+			If _Sleep($DELAYSMARTZAP2) Then Return
 		Else
 			; If you have max lightning spells, drop lightning on any level DE drill
 			If $aSpells[0][4] + $aSpells[1][4] + $aSpells[2][4] > (4 - $spellAdjust) Then
@@ -373,7 +373,7 @@ Func smartZap($minDE = -1)
 
 				$performedZap = True
 				$skippedZap = False
-				If _Sleep($DELAYSMARTZAP4) Then Return
+				If _Sleep($DELAYSMARTZAP2) Then Return
 
 				; If you have one less then max, drop it on drills with level (4 - drill offset) and higher
 			ElseIf $aSpells[0][4] + $aSpells[1][4] + $aSpells[2][4] > (3 - $spellAdjust) And $aDarkDrills[0][2] > (3 - $drillLvlOffset) Then
@@ -390,7 +390,7 @@ Func smartZap($minDE = -1)
 
 				$performedZap = True
 				$skippedZap = False
-				If _Sleep($DELAYSMARTZAP4) Then Return
+				If _Sleep($DELAYSMARTZAP2) Then Return
 
 				; If the collector or cluster has more content left than a lvl (5 - drill offset) drill would give to a single zap
 			ElseIf $aDarkDrills[0][2] > (4 - $drillLvlOffset) And ($aDarkDrills[0][3] / ($g_aDrillLevelTotal[$aDarkDrills[0][2] - 1] * $g_fDarkStealFactor)) > 0.3 Then
@@ -407,7 +407,7 @@ Func smartZap($minDE = -1)
 
 				$performedZap = True
 				$skippedZap = False
-				If _Sleep($DELAYSMARTZAP4) Then Return
+				If _Sleep($DELAYSMARTZAP2) Then Return
 
 			ElseIf $aCluster <> -1 Then
 				If $aCluster[2] >= ($g_aDrillLevelTotal[5 - $drillLvlOffset] / $g_aDrillLevelHP[5 - $drillLvlOffset] * $g_fDarkStealFactor * $g_aLSpellDmg[$aSpells[0][3] - 1] * $g_fDarkFillLevel) Then
@@ -420,7 +420,7 @@ Func smartZap($minDE = -1)
 
 				$performedZap = True
 				$skippedZap = False
-				If _Sleep($DELAYSMARTZAP4) Then Return
+				If _Sleep($DELAYSMARTZAP2) Then Return
 
 			Else
 				$skippedZap = True
