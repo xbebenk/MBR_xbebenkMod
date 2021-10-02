@@ -1281,9 +1281,9 @@ Func FirstCheck()
 	If BotCommand() Then btnStop()
 
 	If ProfileSwitchAccountEnabled() And $g_iCommandStop = 0 Then
+		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
 		If Not $g_bSkipTrain Then TrainSystem()
-		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		checkSwitchAcc()
 	Else
 		FirstCheckRoutine()
