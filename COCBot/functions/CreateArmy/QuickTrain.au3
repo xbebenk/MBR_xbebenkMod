@@ -239,7 +239,7 @@ Func CheckQuickTrainTroop()
 	Local $bResult = True
 
 
-	Local Static $asLastTimeChecked[8]
+	Local Static $asLastTimeChecked[UBound($g_abAccountNo)]
 	If $g_bFirstStart Then $asLastTimeChecked[$g_iCurAccount] = ""
 
 	If _DateIsValid($asLastTimeChecked[$g_iCurAccount]) Then

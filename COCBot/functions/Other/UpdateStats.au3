@@ -734,7 +734,7 @@ Func ResetStats()
 	$g_iTotalDonateStatsSiegeMachinesXP = 0
 	If ProfileSwitchAccountEnabled() Then
 		SwitchAccountVariablesReload("Reset")
-		For $i = 0 To 7
+		For $i = 0 To UBound($g_abAccountNo) - 1
 			GUICtrlSetData($g_ahLblResultRuntimeNowAcc[$i], "00:00:00")
 			$g_aiRunTime[$i] = 0
 			GUICtrlSetData($g_hLbLLabTime, "")

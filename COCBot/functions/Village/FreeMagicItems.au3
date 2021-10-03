@@ -16,7 +16,7 @@
 Func CollectFreeMagicItems($bTest = False)
 	If Not $g_bChkCollectFreeMagicItems Or Not $g_bRunState Then Return
 
-	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+	Local Static $iLastTimeChecked[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
 	If $iLastTimeChecked[$g_iCurAccount] = @MDAY And Not $bTest Then Return
 
 	ClickAway()
