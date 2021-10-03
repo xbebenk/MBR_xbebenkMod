@@ -467,7 +467,7 @@ Func UpgradeNewBuilding($bTest = False)
 					If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
 					$b_BuildingFound = True
 					If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then
-						ClickMainBuilder($bTest)
+						;ClickMainBuilder($bTest)
 						VillageReport(True, True) ;check if we have available builder
 					EndIf
 					If $g_iFreeBuilderCount < 1 Then Return
