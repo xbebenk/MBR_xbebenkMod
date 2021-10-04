@@ -427,6 +427,10 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			For $ProMac = 0 To 9 
 				Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
 				If _Sleep(500) Then Return
+				If IsGemOpen(True) Then 
+					SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
+					ExitLoop
+				Endif
 				AutoUpgradeLog($aWall, $aCostWall)
 			Next
 			Click($g_iQuickMISX + $xstart - 80, $g_iQuickMISY + $ystart)
