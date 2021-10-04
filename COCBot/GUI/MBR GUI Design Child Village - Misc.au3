@@ -328,7 +328,7 @@ Func CreateMiscNormalVillageSubTab()
 			
 	$y += 21
 		$g_hChkCollectRewards = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectRewards", "Collect Challenge Rewards"), $x + 100, $y + 4, -1, -1)
-
+		GUICtrlSetState(-1, $GUI_CHECKED)
 		$g_hChkSellRewards = GUICtrlCreateCheckBox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSellRewards", "Sell Extras"), $x + 265, $y + 4, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSellExtra_Info_01", "Check to automatically sell all extra magic item rewards for gems."))
 
@@ -701,7 +701,7 @@ Global $g_sCmbFICSpells[5][3] = [ _
 
 Func CreateMiscModSubTab()
 	Local $x = 15, $y = 40
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Halt Attack Mode"), $x - 10, $y - 15, 180, 80)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Halt Attack Mode"), $x - 10, $y - 15, 210, 80)
 		$g_hChkMMSkipFirstCheckRoutine = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSkipFirstCheckRoutine", "Skip First Check Routine"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnHalt_Info_01", "If on Halt-Attack Mode, will skip routine on FirstCheck to save time"))
 		GUICtrlSetOnEvent(-1, "chkOnHaltAttack")
@@ -716,7 +716,7 @@ Func CreateMiscModSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	$y += 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 10, $y - 15, 180, 110)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 10, $y - 15, 210, 110)
 		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo", "Ignore Bad Troop Combo"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "If Enabled DoubleTrain, Wont Empty Queued Troop, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
@@ -747,7 +747,7 @@ Func CreateMiscModSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 		
 	$y += 48
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Train"), $x - 10, $y - 15, 180, 40)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Train"), $x - 10, $y - 15, 210, 40)
 		$g_hChkMMTrainPreviousArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTrainPreviousArmy", "Train Previous Army"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "Will Use Train Previous Army"))
 		GUICtrlSetOnEvent(-1, "chkTrainPrev")
@@ -755,7 +755,7 @@ Func CreateMiscModSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	$y += 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On QuickTrain"), $x - 10, $y - 15, 180, 40)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On QuickTrain"), $x - 10, $y - 15, 210, 40)
 		$g_hRandomArmyComp = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTrainRandomArmyComp", "Random Army Comp"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "Will Use Quick Train Army Button (Randomed)"))
 		GUICtrlSetOnEvent(-1, "chkRandomQuickTrain")
@@ -763,15 +763,16 @@ Func CreateMiscModSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	$y += 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On BB AutoUpgrade"), $x - 10, $y - 15, 180, 40)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On BB AutoUpgrade"), $x - 10, $y - 15, 210, 40)
 		$g_hChkMMSkipWallPlacingOnBB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SkipWallPlacingOnBB", "Skip New Wall Placing On BB"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnBBAutoUpgrade", "Skip New Wall Placing if Enabled BB New Tagged Auto Upgrade"))
 		GUICtrlSetOnEvent(-1, "chkSkipWallPlacingOnBB")
 		GUICtrlSetState(-1, $GUI_CHECKED)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
-	$y += 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On FirstCheck"), $x - 10, $y - 15, 180, 40)
+	$x = 180 + 55
+	$y = 40
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On FirstCheck"), $x - 10, $y - 15, 210, 40)
 		$g_hChkMMCheckCGEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckCGEarly", "Check ClanGames Early"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnBBAutoUpgrade", "Enable Check ClanGames on First Start"))
 		GUICtrlSetOnEvent(-1, "chkCheckCGEarly")
