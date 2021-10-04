@@ -1288,6 +1288,20 @@ Func FirstCheck()
 	Else
 		FirstCheckRoutine()
 	Endif
+EndFunc   ;==>FirstCheck
+
+Func FirstCheckRoutine()
+	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
+	checkMainScreen()
+	If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
+		SetLog("Check ClanGames Early", $COLOR_INFO)
+		_ClanGames()
+		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+			BuilderBase()
+		EndIf
+	EndIf
+
 	If Not $g_bRunState Then Return
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
@@ -1311,26 +1325,13 @@ Func FirstCheck()
 			EndIf
 		EndIf
 	EndIf
-EndFunc   ;==>FirstCheck
-
-Func FirstCheckRoutine()
-	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
-	checkMainScreen()
-	If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
-		SetLog("Check ClanGames Early", $COLOR_INFO)
-		_ClanGames()
-		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-			BuilderBase()
-		EndIf
-	EndIf
-
+	
 	RequestCC(False)
 	checkArmyCamp(False)
 	PrepareDonateCC()
 	DonateCC()
 
-	Local $aRndFuncList = ['CollectAchievements','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
+	Local $aRndFuncList = ['DailyChallenge','CollectAchievements','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
