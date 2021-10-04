@@ -476,22 +476,6 @@ Func _ClanGames($test = False)
 		EndIf
 	EndIf
 
-	; Lets test the Builder Base Challenges
-	If $g_bChkClanGamesPurge Then
-		If $g_iPurgeJobCount[$g_iCurAccount] + 1 < $g_iPurgeMax Or $g_iPurgeMax = 0 Then
-			Local $Txt = $g_iPurgeMax
-			If $g_iPurgeMax = 0 Then $Txt = "Unlimited"
-			SetLog("Current Purge Jobs " & $g_iPurgeJobCount[$g_iCurAccount] + 1 & " at max of " & $Txt, $COLOR_INFO)
-			$sEventName = "Builder Base Challenges to Purge"
-			If PurgeEvent($g_sImgPurge, $sEventName, True) Then
-				$g_iPurgeJobCount[$g_iCurAccount] += 1
-			Else
-				SetLog("No Builder Base Event found to Purge", $COLOR_WARNING)
-			EndIf
-		EndIf
-		Return
-	EndIf
-
 	If $g_bChkClanGamesPurgeAny Then ; still have to purge, because no enabled event on setting found
 		SetLog("Still have to purge, because no enabled event on setting found", $COLOR_WARNING)
 		SetLog("No Event found, lets purge 1 most top event", $COLOR_WARNING)
@@ -762,8 +746,8 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 					SetLog("Click OK", $COLOR_INFO)
 					Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
 					SetLog("StartsEvent and Purge job!", $COLOR_SUCCESS)
-					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ", 1)
-					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - Purging Event ")
+					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging Event ", 1)
+					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging Event ")
 					ClickAway()
 				Else
 					SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
@@ -843,8 +827,8 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 				If $bTest Then Return
 				Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
 				If _Sleep(1500) Then Return
-				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - ForcePurgeEvent: Purge a Wrong Challenge ", 1)
-				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - ForcePurgeEvent: Purge a Wrong Challenge ")
+				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - ForcePurgeEvent: Purge a Wrong Challenge ", 1)
+				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - ForcePurgeEvent: Purge a Wrong Challenge ")
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
@@ -876,8 +860,8 @@ Func StartAndPurgeEvent($bTest = False)
 				If $bTest Then Return
 				Click($g_iQuickMISX + 440, $g_iQuickMISY + 400)
 				SetLog("StartAndPurgeEvent event!", $COLOR_SUCCESS)
-				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ", 1)
-				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - [" & $g_iPurgeJobCount[$g_iCurAccount] + 1 & "] - StartAndPurgeEvent: No event Found ")
+				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - StartAndPurgeEvent: No event Found ", 1)
+				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - StartAndPurgeEvent: No event Found ")
 				ClickAway()
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)

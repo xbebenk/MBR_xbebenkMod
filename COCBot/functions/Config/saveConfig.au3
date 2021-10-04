@@ -397,7 +397,6 @@ Func SaveConfig_600_6()
 
 	_Ini_Add("other", "ChkClanGamesEnabled", $g_bChkClanGamesEnabled ? 1 : 0)
 	_Ini_Add("other", "ChkClanGames60", $g_bChkClanGames60 ? 1 : 0)
-	_Ini_Add("other", "ChkClanGamesPurge", $g_bChkClanGamesPurge ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesStopBeforeReachAndPurge", $g_bChkClanGamesStopBeforeReachAndPurge ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesDebug", $g_bChkClanGamesDebug ? 1 : 0)
 	;xbenk
@@ -450,7 +449,6 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "EnabledGroundTroop", $str)
 
 	_Ini_Add("other", "ChkClanGamesMiscellaneous", $g_bChkClanGamesMiscellaneous ? 1 : 0)
-	_Ini_Add("other", "PurgeMax", $g_iPurgeMax)
 
 	; Builder Base Attack
 	_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)

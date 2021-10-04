@@ -1814,8 +1814,6 @@ Global $g_bChkClanGamesMiscellaneous = 0
 Global $g_bChkClanGamesPurge = 0
 Global $g_bChkClanGamesStopBeforeReachAndPurge = 0
 Global $g_bChkClanGamesDebug = 0
-Global $g_iPurgeJobCount[8] = [0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_iPurgeMax = 5 ; [0] is unlimited , 1-10
 Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges

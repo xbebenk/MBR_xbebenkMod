@@ -340,7 +340,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 
 			GUICtrlSetState($g_hChkClanGamesEnabled, $g_bChkClanGamesEnabled ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGames60, $g_bChkClanGames60 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkClanGamesPurge, $g_bChkClanGamesPurge ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $g_bChkClanGamesStopBeforeReachAndPurge ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesDebug, $g_bChkClanGamesDebug ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesLoot, $g_bChkClanGamesLoot ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -374,10 +373,8 @@ Func ApplyConfig_600_6($TypeReadSave)
 				_GUICtrlComboBox_SetCurSel($g_ahCmbCGGroundTroops[$i], $g_aCmbCGGroundTroops[$i])
 			Next
 			GUICtrlSetState($g_hChkClanGamesMiscellaneous, $g_bChkClanGamesMiscellaneous ? $GUI_CHECKED : $GUI_UNCHECKED)
-			_GUICtrlComboBox_SetCurSel($g_hcmbPurgeLimit, $g_iPurgeMax)
 
 			chkActivateClangames()
-			chkPurgeLimits()
 
 			; Builder Base Attack
 			GUICtrlSetState($g_hChkEnableBBAttack, $g_bChkEnableBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -465,7 +462,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 
 			$g_bChkClanGamesEnabled = (GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGames60 = (GUICtrlRead($g_hChkClanGames60) = $GUI_CHECKED) ? 1 : 0
-			$g_bChkClanGamesPurge = (GUICtrlRead($g_hChkClanGamesPurge) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesStopBeforeReachAndPurge = (GUICtrlRead($g_hChkClanGamesStopBeforeReachAndPurge) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesDebug = (GUICtrlRead($g_hChkClanGamesDebug) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesLoot = (GUICtrlRead($g_hChkClanGamesLoot) = $GUI_CHECKED) ? 1 : 0
@@ -499,7 +495,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 				$g_aCmbCGGroundTroops[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGGroundTroops[$i])
 			Next
 			$g_bChkClanGamesMiscellaneous = (GUICtrlRead($g_hChkClanGamesMiscellaneous) = $GUI_CHECKED) ? 1 : 0
-			$g_iPurgeMax = _GUICtrlComboBox_GetCurSel($g_hcmbPurgeLimit)
 
 			; Builder Base Attack
 			$g_bChkEnableBBAttack = (GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)

@@ -33,7 +33,7 @@ Global $g_hChkPlacingNewBuildings = 0, $g_hChkBBSuggestedUpgradesIgnoreWall = 0,
 
 Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames60 = 0
 Global $g_hChkClanGamesLoot = 0 , $g_hChkClanGamesBattle =0 ,  $g_hChkClanGamesMiscellaneous = 0
-Global $g_hChkClanGamesPurge = 0 , $g_hcmbPurgeLimit = 0 , $g_hChkClanGamesStopBeforeReachAndPurge = 0
+Global $g_hChkClanGamesStopBeforeReachAndPurge = 0
 Global $g_hTxtClanGamesLog = 0
 Global $g_hChkClanGamesDebug = 0
 Global $g_hLblRemainTime = 0 , $g_hLblYourScore = 0
@@ -665,11 +665,6 @@ Func CreateMiscClanGamesV3SubTab()
 				GUICtrlSetOnEvent(-1, "chkActivateClangames")
 				_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGames60_Info_03", "If No Event Found, Purge Any Event"))
 			$x = 135
-			$y += 23
-				$g_hChkClanGamesPurge = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesPurge", "Purge Versus Battles Events"), $x, $y, -1, -1)
-					GUICtrlSetOnEvent(-1, "chkPurgeLimits")
-				$g_hcmbPurgeLimit = GUICtrlCreateCombo("" , $x + 155, $y, 70, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-					GUICtrlSetData(-1, "Unlimited| 1x| 2x| 3x| 4x| 5x| 6x| 7x| 8x| 9x|10x", " 5x")
 			$y += 23
 				$g_hChkClanGamesStopBeforeReachAndPurge = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesStopBeforeReachAndPurge", "Stop before completing your limit and only Purge"), $x, $y, -1, -1)
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
