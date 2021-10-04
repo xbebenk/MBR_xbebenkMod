@@ -298,6 +298,19 @@ EndFunc   ;==>_cmbSwitchAcc
 
 Func cmbTotalAcc()
 	Local $iCmbTotalAcc = _GUICtrlComboBox_GetCurSel($g_hCmbTotalAccount) + 1 ; combobox data starts with 2
+	
+	Local $iCmbTotalAcc = _GUICtrlComboBox_GetCurSel($g_hCmbTotalAccount) + 1 ; combobox data starts with 2
+	
+	If $iCmbTotalAcc > 7 Then
+		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE + $GUI_CHECKED)
+		GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_DISABLE + $GUI_UNCHECKED)
+		GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_DISABLE + $GUI_UNCHECKED)
+	Else
+		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE)
+		GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_ENABLE)
+		GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_ENABLE)
+	EndIf
+	
 	For $i = 0 To UBound($g_abAccountNo) - 1
 		If $iCmbTotalAcc >= 0 And $i <= $iCmbTotalAcc Then
 			_GUI_Value_STATE("SHOW", $g_ahChkAccount[$i] & "#" & $g_ahCmbProfile[$i] & "#" & $g_ahChkDonate[$i])
