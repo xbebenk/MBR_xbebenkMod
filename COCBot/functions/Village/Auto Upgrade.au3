@@ -354,27 +354,45 @@ Func DoUpgrade($bTest = False)
 
 	SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
 	SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
+	
+	AutoUpgradeLog($g_aUpgradeNameLevel, $g_aUpgradeResourceCostDuration)
+	
+	Return True
+EndFunc
 
-
+Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration = Default)
 	Local $txtAcc = $g_iCurAccount
 	Local $txtAccName = $g_asProfileName[$g_iCurAccount]
+	
+	If $aUpgradeNameLevel = Default Then 
+		$aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+		If $aUpgradeNameLevel[0] = "" Then
+			SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
+			Return
+		EndIf
+		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
+				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
+				" - Placing New Building: " & $aUpgradeNameLevel[1])
 
-	_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
-			@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc & "] " & $txtAccName & _
-			" - Upgrading " & $g_aUpgradeNameLevel[1] & _
-			" to level " & $g_aUpgradeNameLevel[2] + 1 & _
-			" for " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & _
-			" " & $g_aUpgradeResourceCostDuration[0] & _
-			" - Duration : " & $g_aUpgradeResourceCostDuration[2])
+		_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc + 1 & "] " & $txtAccName & _
+				" - Placing New Building: " & $aUpgradeNameLevel[1])
+	Else
+		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
+				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
+				" - Upgrading " & $aUpgradeNameLevel[1] & _
+				" to level " & $aUpgradeNameLevel[2] + 1 & _
+				" for " & _NumberFormat($aUpgradeResourceCostDuration[1]) & _
+				" " & $aUpgradeResourceCostDuration[0] & _
+				" - Duration : " & $aUpgradeResourceCostDuration[2])
 
-	_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc & "] " & $txtAccName & _
-			"Upgrading " & $g_aUpgradeNameLevel[1] & _
-			" to level " & $g_aUpgradeNameLevel[2] + 1 & _
-			" for " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & _
-			" " & $g_aUpgradeResourceCostDuration[0] & _
-			" - Duration : " & $g_aUpgradeResourceCostDuration[2])
-
-	Return True
+		_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc + 1 & "] " & $txtAccName & _
+				"Upgrading " & $aUpgradeNameLevel[1] & _
+				" to level " & $aUpgradeNameLevel[2] + 1 & _
+				" for " & _NumberFormat($aUpgradeResourceCostDuration[1]) & _
+				" " & $aUpgradeResourceCostDuration[0] & _
+				" - Duration : " & $aUpgradeResourceCostDuration[2])
+	EndIf
+	
 EndFunc
 
 Func AUNewBuildings($x, $y, $bTest = False)
@@ -383,13 +401,13 @@ Func AUNewBuildings($x, $y, $bTest = False)
 	Local $IsWall = False
 	Local $xstart = 50, $ystart = 50, $xend = 800, $yend = 600
 	Click($x, $y); click on upgrade window
-	If _Sleep(4000) Then Return
+	If _Sleep(3000) Then Return
 	
 	;Search the arrow
 	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
 	If UBound($ArrowCoordinates) > 1 Then
 		;Check if its wall ?
-		If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 160, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
+		If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 180, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
 			SetLog("New Building is Wall!, lets try to place 10 Wall", $COLOR_INFO)
 			$IsWall = True
 		EndIf
@@ -404,9 +422,12 @@ Func AUNewBuildings($x, $y, $bTest = False)
 	
 	If $IsWall Then 
 		If QuickMIS("BC1", $g_sImgGreenCheck, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
+			Local $aWall[3] = ["2","Wall",1]
+			Local $aCostWall[3] = ["Gold", 50, 0]
 			For $ProMac = 0 To 9 
 				Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
 				If _Sleep(500) Then Return
+				AutoUpgradeLog($aWall, $aCostWall)
 			Next
 			Click($g_iQuickMISX + $xstart - 80, $g_iQuickMISY + $ystart)
 			If QuickMIS("BC1", $g_sImgRedX, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
@@ -422,13 +443,15 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
 		EndIf
 		SetLog("Placed a new Building on Main Village! [" & $g_iQuickMISX + $xstart & "," & $g_iQuickMISY + $ystart & "]", $COLOR_SUCCESS)
-		If _Sleep(1000) Then Return
+		If _Sleep(500) Then Return
+		AutoUpgradeLog()
 		;check again if there is more GreenCheck Button
 		If QuickMIS("BC1", $g_sImgGreenCheck, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
 			Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
 			SetLog("Wow... Placed more new Building on Main Village! [" & $g_iQuickMISX + $xstart & "," & $g_iQuickMISY + $ystart & "]", $COLOR_SUCCESS)
+			AutoUpgradeLog()
 		EndIf
-		If _Sleep(1000) Then Return
+		If _Sleep(500) Then Return
 		;Lets check if exist the [x], it should not exist, but to be safe 
 		If QuickMIS("BC1", $g_sImgRedX, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
 			Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
