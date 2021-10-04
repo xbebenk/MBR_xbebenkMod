@@ -201,7 +201,7 @@ EndFunc   ;==>isTrophyMax
 
 Func StopAndResumeTimer($bResume = False)
 
-	Static $abStop[8] = [False, False, False, False, False, False, False, False]
+	Static $abStop[UBound($g_abAccountNo)]
 
 	Local $iTimerStop, $iTimerResume = 25
 	$iTimerStop = Number($g_iCmbTimeStop)
