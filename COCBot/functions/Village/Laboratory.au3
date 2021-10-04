@@ -51,7 +51,7 @@ Func Laboratory($debug=False)
  	If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab
 
 	; Get updated village elixir and dark elixir values
-	VillageReport()
+	VillageReport(True, True)
 
 	;Click Laboratory
 	Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
