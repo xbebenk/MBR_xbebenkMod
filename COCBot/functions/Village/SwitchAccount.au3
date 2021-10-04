@@ -207,10 +207,14 @@ Func CheckSwitchAcc()
 		EndIf
 
 		If $g_iNextAccount <> $g_iCurAccount Then
-			If $g_bRequestTroopsEnable And $g_bCanRequestCC Then
+			If $g_bRequestTroopsEnable Then
 				If _Sleep(1000) Then Return
-				SetLog("Try Request troops before switching account", $COLOR_INFO)
-				RequestCC(True)
+				SetLog("Try Request, Donate and Train before switching account", $COLOR_DEBUG)
+				RequestCC(False)
+				checkArmyCamp(False)
+				PrepareDonateCC()
+				DonateCC()
+				TrainSystem()
 			EndIf
 			If Not IsMainPage() Then checkMainScreen()
 			SwitchCOCAcc($g_iNextAccount)
