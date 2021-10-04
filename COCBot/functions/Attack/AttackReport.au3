@@ -184,7 +184,7 @@ Func AttackReport()
 	EndSwitch
 	;---
 	Local $AtkLogTxt
-	$AtkLogTxt = " " & String($g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
+	$AtkLogTxt =  StringFormat("%2s", $g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
 	$AtkLogTxt &= StringFormat("%4d", $g_aiCurrentLoot[$eLootTrophy]) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iSearchCount) & "|"
 	$AtkLogTxt &= StringFormat("%2s", $g_iSearchTH) & "|"
