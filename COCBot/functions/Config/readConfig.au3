@@ -1171,7 +1171,7 @@ Func ReadConfig_600_29_DB()
 	IniReadS($g_aiAttackUseSiege[$DB], $g_sProfileConfigPath, "attack", "DBAtkUseSiege", 5, "int")
 
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / SmartFarm <><><><>
-	IniReadS($g_iTxtInsidePercentage, $g_sProfileConfigPath, "SmartFarm", "InsidePercentage", 65, "int")
+	IniReadS($g_iTxtInsidePercentage, $g_sProfileConfigPath, "SmartFarm", "InsidePercentage", 40, "int")
 	IniReadS($g_iTxtOutsidePercentage, $g_sProfileConfigPath, "SmartFarm", "OutsidePercentage", 80, "int")
 	IniReadS($g_bDebugSmartFarm, $g_sProfileConfigPath, "SmartFarm", "DebugSmartFarm", False, "Bool")
 	IniReadS($g_iCmbMaxAttackSide, $g_sProfileConfigPath, "SmartFarm", "MaxAttackSide", 3, "int")
