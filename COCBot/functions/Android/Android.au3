@@ -4454,6 +4454,16 @@ EndFunc   ;==>GetAndroidCodeName
 
 Func HaveSharedPrefs($sProfile = $g_sProfileCurrentName, $BothNewOrOld = Default, $bReturnArray = False)
 	If $sProfile = Default Then $sProfile = $g_sProfileCurrentName
+	If FileExists($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs_tmp") Then
+		If Not FileExists($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs") Then
+			If DirMove($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs_tmp", $g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs") Then
+				SetLog("Existed shared_prefs_tmp, but no shared_prefs folder!", $COLOR_DEBUG)
+				SetLog("Using tmp as shared_prefs", $COLOR_DEBUG)
+			Else
+				SetLog("failed using tmp as backup", $COLOR_ERROR)
+			EndIf
+		EndIf
+	EndIf
 	If Not $bReturnArray Then
 		Return (($BothNewOrOld = Default Or $BothNewOrOld = True) And UBound(_FileListToArray($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", "*", $FLTA_FILES)) > 1) _
 				Or (($BothNewOrOld = Default Or $BothNewOrOld = False) And UBound(_FileListToArray($g_sProfilePath & "\" & $sProfile & "\shared_prefs", "*", $FLTA_FILES)) > 1)
