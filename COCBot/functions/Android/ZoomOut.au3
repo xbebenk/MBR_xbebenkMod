@@ -558,12 +558,18 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 EndFunc   ;==>SearchZoomOut
 
 Func ZoomIn($Region = "Top")
-	Execute("ZoomIn" & $g_sAndroidEmulator & "(" & DoubleQuote($Region) & ")")
+	Switch $g_sAndroidEmulator
+		Case "Memu"
+			If ZoomInMEmu($Region) Then Return True
+		Case "Nox"
+			If ZoomInNox($Region) Then Return True
+	EndSwitch
+	Return False
 EndFunc
 
 Func ZoomInMEmu($Region = "Top")
 	SetDebugLog("ZoomInMEmu()")
-	AndroidAdbScript("ZoomIn")
+	If Not AndroidAdbScript("ZoomIn") Then Return False
 	If _Sleep(1500) Then Return
 	Switch $Region
 		Case "Top"
@@ -580,11 +586,12 @@ Func ZoomInMEmu($Region = "Top")
 			ClickDrag(800, 400, 100, 400, 200)
 			If _Sleep(500) Then Return
 	EndSwitch
+	Return True
 EndFunc
 
 Func ZoomInNox($Region = "Top")
 	SetDebugLog("ZoomInNox()")
-	AndroidAdbScript("ZoomIn")
+	If Not AndroidAdbScript("ZoomIn") Then Return False
 	If _Sleep(1500) Then Return
 	Switch $Region
 		Case "Top"
@@ -601,4 +608,5 @@ Func ZoomInNox($Region = "Top")
 			ClickDrag(800, 400, 100, 400, 200)
 			If _Sleep(500) Then Return
 	EndSwitch
+	Return True
 EndFunc

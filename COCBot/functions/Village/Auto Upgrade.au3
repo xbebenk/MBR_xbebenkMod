@@ -531,8 +531,12 @@ Func SearchGreenZone()
 	
 	If $aAll[0][1] > 0 Then
 		SetLog("Found GreenZone, On " & $aAll[0][0] & " Region", $COLOR_SUCCESS)
-		ZoomIn($aAll[0][0])
-		Return True
+		If ZoomIn($aAll[0][0]) Then 
+			SetLog("Succeed ZoomIn", $COLOR_DEBUG)
+			Return True
+		Else
+			SetLog("Failed ZoomIn", $COLOR_ERROR)
+		EndIf
 	Else
 		SetLog("GreenZone for Placing new Building Not Found", $COLOR_DEBUG)
 	EndIf
