@@ -15,7 +15,7 @@
 Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will break shield
 
 	SetLog("Going to Attack", $COLOR_INFO)
-
+	If Not $g_bRunState Then Return
 	; RestartSearchPickupHero - Check Remaining Heal Time
 	If $g_bSearchRestartPickupHero And $Mode <> $DT Then
 		For $pTroopType = $eKing To $eChampion ; check all 4 hero
