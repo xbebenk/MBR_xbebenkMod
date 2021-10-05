@@ -392,7 +392,7 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 				" " & $aUpgradeResourceCostDuration[0] & _
 				" - Duration : " & $aUpgradeResourceCostDuration[2])
 	EndIf
-	
+	Return True
 EndFunc
 
 Func AUNewBuildings($x, $y, $bTest = False)
@@ -434,7 +434,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 				Endif
 				AutoUpgradeLog($aWall, $aCostWall)
 			Next
-			Click($aCoords[0] - 80, $aCoords[1])
+			Click($aCoords[0] - 75, $aCoords[1])
 			Return True
 		EndIf
 	EndIf
