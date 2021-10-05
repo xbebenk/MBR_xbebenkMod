@@ -1330,6 +1330,7 @@ Func FirstCheckRoutine()
 	checkArmyCamp(False)
 	PrepareDonateCC()
 	DonateCC()
+	TrainSystem()
 
 	Local $aRndFuncList = ['DailyChallenge','CollectAchievements','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
 	For $Index In $aRndFuncList
