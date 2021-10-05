@@ -367,8 +367,8 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 	If $aUpgradeNameLevel = Default Then 
 		$aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
 		If $aUpgradeNameLevel[0] = "" Then
-			SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
-			Return
+			SetLog("Error when trying to get upgrade name and level", $COLOR_ERROR)
+			$aUpgradeNameLevel[1] = "Traps"
 		EndIf
 		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
 				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
@@ -421,11 +421,12 @@ Func AUNewBuildings($x, $y, $bTest = False)
 	If _Sleep(2000) Then Return
 	
 	If $IsWall Then 
-		If QuickMIS("BC1", $g_sImgGreenCheck, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
-			Local $aWall[3] = ["2","Wall",1]
-			Local $aCostWall[3] = ["Gold", 50, 0]
+		Local $aWall[3] = ["2","Wall",1]
+		Local $aCostWall[3] = ["Gold", 50, 0]
+		Local $aCoords = FindGreenCheck()
+		If IsArray($aCoords) And UBound($aCoords) = 2 Then
 			For $ProMac = 0 To 9 
-				Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
+				Click($aCoords[0], $aCoords[1])
 				If _Sleep(500) Then Return
 				If IsGemOpen(True) Then 
 					SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
@@ -433,44 +434,34 @@ Func AUNewBuildings($x, $y, $bTest = False)
 				Endif
 				AutoUpgradeLog($aWall, $aCostWall)
 			Next
-			Click($g_iQuickMISX + $xstart - 80, $g_iQuickMISY + $ystart)
-			If QuickMIS("BC1", $g_sImgRedX, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
-				Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
-			EndIf
+			Click($aCoords[0] - 80, $aCoords[1])
 			Return True
 		EndIf
 	EndIf
 	
 	; Lets search for the Correct Symbol on field
-	If QuickMIS("BC1", $g_sImgGreenCheck, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
+	Local $GreenCheckCoords = FindGreenCheck()
+	If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
 		If Not $bTest Then
-			Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
+			Click($GreenCheckCoords[0], $GreenCheckCoords[1])
 		EndIf
-		SetLog("Placed a new Building on Main Village! [" & $g_iQuickMISX + $xstart & "," & $g_iQuickMISY + $ystart & "]", $COLOR_SUCCESS)
+		SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
 		If _Sleep(500) Then Return
 		AutoUpgradeLog()
-		;check again if there is more GreenCheck Button
-		If QuickMIS("BC1", $g_sImgGreenCheck, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
-			Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
-			SetLog("Wow... Placed more new Building on Main Village! [" & $g_iQuickMISX + $xstart & "," & $g_iQuickMISY + $ystart & "]", $COLOR_SUCCESS)
-			AutoUpgradeLog()
-		EndIf
-		If _Sleep(500) Then Return
-		;Lets check if exist the [x], it should not exist, but to be safe 
-		If QuickMIS("BC1", $g_sImgRedX, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
-			Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
-		EndIf
-		Return True
-	Else
-		If QuickMIS("BC1", $g_sImgRedX, $xstart, $ystart, $xend, $yend, $Screencap, $Debug) Then
-			SetLog("Sorry! Wrong place to deploy a new building on Main Village!", $COLOR_ERROR)
-			Click($g_iQuickMISX + $xstart, $g_iQuickMISY + $ystart)
-		Else
-			SetLog("Error on Undo symbol!", $COLOR_ERROR)
-		EndIf
+		Click($GreenCheckCoords[0], $GreenCheckCoords[1]) ; Just click again greencheck position, in case its still there
 		Return True
 	EndIf
-
+	
+	;Lets check if exist the [x], it should not exist, but to be safe 
+	Local $RedXCoords = FindRedX()
+	If IsArray($RedXCoords) And UBound($RedXCoords) = 2 Then
+		If Not $bTest Then
+			Click($RedXCoords[0], $RedXCoords[1])
+		EndIf
+		SetLog("Sorry! Wrong place to deploy a new building on Main Village!", $COLOR_ERROR)
+		If _Sleep(500) Then Return
+		Return True
+	EndIf
 	Return False
 EndFunc ;==>AUNewBuildings
 
@@ -485,7 +476,7 @@ Func UpgradeNewBuilding($bTest = False)
 	If _Sleep(500) Then Return
 	
 	Local $b_BuildingFound = False
-	For $z = 0 To 5 ;for do scroll 6 times
+	For $z = 0 To 7 ;for do scroll 8 times
 		Local $NeedDrag = True
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
 		For $i = 0 To 9
@@ -587,6 +578,76 @@ Func ClickMainBuilder($bTest = False)
 	Return $b_WindowOpened
 EndFunc ;==>ClickMainBuilder
 
+Func FindGreenCheck()
+	local $timer = __TimerInit()
+	While 1
+		If Not $g_bRunState Then Return
+		local $aCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
+		If IsArray($aCoords) And UBound($aCoords) = 2 Then
+			Return $aCoords
+		EndIf
 
+		If __TimerDiff($timer) >= 10000 Then
+			SetLog("Could not find button 'GreenCheck'", $COLOR_ERROR)
+			If $g_bDebugImageSave Then SaveDebugImage("FindGreenCheck")
+			GoGoblinMap()
+			Return
+		EndIf
+	WEnd
+EndFunc ;FindGreenCheck
+
+Func FindRedX()
+	local $timer = __TimerInit()
+	While 1
+		If Not $g_bRunState Then Return
+		local $aCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgRedX & "\RedX*", "FV", 1, True))
+		If IsArray($aCoords) And UBound($aCoords) = 2 Then
+			Return $aCoords
+		EndIf
+
+		If __TimerDiff($timer) >= 10000 Then
+			SetLog("Could not find button 'RedX'", $COLOR_ERROR)
+			If $g_bDebugImageSave Then SaveDebugImage("RedX")
+			GoGoblinMap()
+			Return
+		EndIf
+	WEnd
+EndFunc ;FindRedX
+
+Func GoGoblinMap()
+	Local $GoblinFaceCoord, $CircleCoord
+	ClickP($aAttackButton)
+	SetLog("Going to Goblin Map to reset Field", $COLOR_INFO)
+	If Not $g_bRunState Then Return
+	If _Sleep(500) Then Return
+	If _ColorCheck(_GetPixelColor(250, 360, True), Hex(0xB07453, 6), 1) Then ;goblin not selected
+		Click(140, 360)
+	EndIf
+	If _Sleep(500) Then Return
+	If Not _ColorCheck(_GetPixelColor(250, 360, True), Hex(0xB07453, 6), 1) Then ;goblin selected
+		;Click(425, 240)
+		If _Sleep(500) Then Return
+		$GoblinFaceCoord = decodeSingleCoord(findImage("GoblinFace", $g_sImgGoblin & "\GoblinFace*", "FV", 1, True))
+		If IsArray($GoblinFaceCoord) And UBound($GoblinFaceCoord) = 2 Then
+			Click($GoblinFaceCoord[0], $GoblinFaceCoord[1] + 50)
+		Else ; we not find goblin face, try find circle map button
+			$CircleCoord = decodeSingleCoord(findImage("GoblinFace", $g_sImgGoblin & "\OrangeCircle*", "FV", 1, True))
+			If IsArray($CircleCoord) And UBound($CircleCoord) = 2 Then
+				Click($CircleCoord[0], $CircleCoord[1])
+				If _Sleep(500) Then Return
+				Click($CircleCoord[0], $CircleCoord[1] + 50)
+			Else
+				Click(818, 81)
+			EndIf
+		EndIf
+	EndIf
+	If Not $g_bRunState Then Return
+	_Sleep(6000)
+	If IsAttackPage() Then
+		Click(66, 590)
+	EndIf
+	
+	If _Sleep(3500) Then Return
+EndFunc
 
 

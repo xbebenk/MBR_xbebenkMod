@@ -113,6 +113,7 @@ Global $g_sImgAUpgradeEndBoost = @ScriptDir & "\imgxml\Resources\Auto Upgrade\En
 Global $g_sImgAUpgradeEndBoostOKBtn = @ScriptDir & "\imgxml\Resources\Auto Upgrade\EndBoost\EndBoostOKBtn*"
 Global $g_sImgAUpgradeGreenZone = @ScriptDir & "\imgxml\Resources\Auto Upgrade\GreenZone\"
 Global $g_sImgGreenCheck = @ScriptDir & "\imgxml\Resources\Auto Upgrade\GreenCheck\"
+Global $g_sImgGoblin = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Goblin\"
 Global $g_sImgRedX = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RedX\"
 #EndRegion
 
