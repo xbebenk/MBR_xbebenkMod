@@ -227,7 +227,7 @@ Global $g_bAndroidAdbClicksEnabled = False ; (Experimental & Dangerous!) Enable 
 Global $g_iAndroidAdbClicksTroopDeploySize = 0 ; (Experimental & Dangerous!) Deploy more troops at once, 0 = deploy group, only available when also $g_bAndroidAdbClicksEnabled = True (currently only just in CSV Deploy)
 Global $g_bAndroidAdbInstanceEnabled = True ; Enable Android steady ADB shell instance when available
 Global $g_bAndroidSuspendedEnabled = True ; Enable Android Suspend & Resume during Search and Attack
-Global $g_iAndroidSuspendModeFlags = 1 ; Android Suspend & Resume mode bit flags: 0=Disabled, 1=Only during Search/Attack, 2=For every ImgLoc call, 4=Suspend entire Android (not advised!)
+Global $g_iAndroidSuspendModeFlags = 0 ; Android Suspend & Resume mode bit flags: 0=Disabled, 1=Only during Search/Attack, 2=For every ImgLoc call, 4=Suspend entire Android (not advised!)
 Global $g_bNoFocusTampering = False ; If enabled, no ControlFocus or WinActivate is called, except when really required
 Global $g_iAndroidRecoverStrategyDefault = 1 ; 0 = Stop ADB Daemon first then restart Android; 1 = Restart Android first then restart ADB Daemon
 Global $g_iAndroidRecoverStrategy = $g_iAndroidRecoverStrategyDefault ; 0 = Stop ADB Daemon first then restart Android; 1 = Restart Android first then restart ADB Daemon
