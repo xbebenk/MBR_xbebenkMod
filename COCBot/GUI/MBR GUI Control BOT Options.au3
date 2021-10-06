@@ -983,18 +983,22 @@ Func btnRunFunction()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
 	_GUICtrlTab_ClickTab($g_hTabMain, 0)
+	GUICtrlSetState($g_hBtnRunDebug, $GUI_SHOW)
 	Local $sFunc = GUICtrlRead($g_hTxtRunFunction)
 	SetLog("Run Function : " & $sFunc, $COLOR_INFO)
 	Local $hTimer = __TimerInit()	
 	Local $saExecResult = Execute($sFunc)
 	Local $ms = __TimerDiff($hTimer)
 	If $saExecResult = "" And @error <> 0 Then
-		Setlog("Result : Error [" & Round($ms, 0) & "ms]", $COLOR_ERROR)
+		Setlog("Result : Error", $COLOR_ERROR)
+		SetLog("[" & Round($ms, 0) & "ms]", $COLOR_INFO)
 	ElseIf IsArray($saExecResult) Then
-		Setlog("Result (IsArray) : " & _ArrayToString($saExecResult, ",") & " [" & Round($ms, 0) & "ms]", $COLOR_INFO)
+		Setlog("Result (IsArray) : " & _ArrayToString($saExecResult, ","), $COLOR_INFO)
+		SetLog("[" & Round($ms, 0) & "ms]", $COLOR_INFO)
 		_ArrayDisplay($saExecResult, "Debug Func. Result")
 	Else
-		Setlog("Result : " & $saExecResult & " [" & Round($ms, 0) & "ms]", $COLOR_INFO)
+		Setlog("Result : " & $saExecResult, $COLOR_INFO)
+		SetLog("[" & Round($ms, 0) & "ms]", $COLOR_INFO)
 	EndIf
 
 	$g_bRunState = $currentRunState

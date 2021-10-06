@@ -16,7 +16,7 @@
 
 Global $g_hGUI_LOG = 0
 Global $g_hTxtLog = 0, $g_hDivider = 0, $g_hTxtAtkLog = 0, $lbl_LogStyle = 0
-Global $g_hCmbLogDividerOption, $g_hBtnAtkLogClear, $g_hBtnAtkLogCopyClipboard, $g_hBtnControl
+Global $g_hCmbLogDividerOption, $g_hBtnAtkLogClear, $g_hBtnAtkLogCopyClipboard, $g_hBtnControl, $g_hBtnRunDebug
 
 Func CreateLogTab($hWHndLogsOnly = False)
 	Local $i
@@ -78,12 +78,18 @@ Func CreateLogTab($hWHndLogsOnly = False)
 			GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_06", "Hide Bot Log, Full Attack Log"), GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_02", -1))
 	GUICtrlSetOnEvent(-1, "cmbLog")
 
+	$g_hBtnRunDebug = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Log", "Run", "Run"), $x + 235, $y - 1, 33, 23)
+	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
+	GUICtrlSetOnEvent(-1, "btnRunFunction")
+	_GUICtrlSetTip(-1, "Run Function")
+	GUICtrlSetState(-1, $GUI_HIDE)
+	
 	$g_hBtnAtkLogClear = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogClear", "Clear Atk. Log"), $x + 270, $y - 1, 80, 23)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogClear_Info_01", "Use this to clear the Attack Log."))
 	GUICtrlSetOnEvent(-1, "btnAtkLogClear")
 	If $g_bBtnColor Then GUICtrlSetBkColor(-1, 0x22C4F5)
-
+	
 	$g_hBtnAtkLogCopyClipboard = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogCopyClipboard", "Copy to Clipboard"), $x + 350, $y - 1, 100, 23)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogCopyClipboard_Info_01", "Use this to copy the Attack Log to the Clipboard (CTRL+C)"))
