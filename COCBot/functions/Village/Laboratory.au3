@@ -164,6 +164,7 @@ Func Laboratory($debug=False)
 
 						If Not $bUpgradeFound Then
 							SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
+							LabFirstPage($iCurPage, $iYMidPoint)
 							Research()
 							$iCurPage = 1 ;reset current page
 						EndIf
@@ -225,13 +226,6 @@ Func Laboratory($debug=False)
 			Click(243, 33)
 		EndIf
 	Return False ; No upgrade started
-EndFunc
-
-Func Research()
-	Click(243, 33)
-	If _Sleep(2000) Then Return 
-	FindResearchButton()
-	If _Sleep(2000) Then Return 
 EndFunc
 
 ; start a given upgrade
@@ -316,6 +310,15 @@ Func LabNextPage($iCurPage, $iPages, $iYMidPoint)
 	EndIf
 EndFunc
 
+; if we are on last page, smaller clickdrag... for future dev: this is whatever is enough distance to move 6 off to the left and have the next page similarily aligned
+Func LabFirstPage($iCurPage, $iYMidPoint)
+	For $u = 1 To $iCurPage
+		If $iCurPage <= 1 Then Return ; nothing left to scroll
+		ClickDrag(130, $iYMidPoint, 780, $iYMidPoint, 500) ;600
+		$iCurPage -= 1
+	Next
+EndFunc
+
 ; check the lab to see if something is upgrading in the lab already
 Func ChkLabUpgradeInProgress()
 	; check for upgrade in process - look for green in finish upgrade with gems button
@@ -356,6 +359,10 @@ Func ChkUpgradeInProgress()
 		Return True
 	EndIf
 	Return False ; we currently do not know of any upgrades in progress
+EndFunc
+
+Func Research()
+	If _Sleep(2000) Then Return 
 EndFunc
 
 ; Find Research Button
