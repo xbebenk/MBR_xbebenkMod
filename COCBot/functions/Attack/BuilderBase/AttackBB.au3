@@ -20,6 +20,7 @@ Func DoAttackBB()
 	If $g_iBBAttackCount = 0 Then 
 		Local $count = 1
 		While PrepareAttackBB()
+			If Not $g_bRunState Then Return
 			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			AttackBB()
@@ -38,10 +39,8 @@ Func DoAttackBB()
 					Endif
 				Next
 			EndIf
-			If $g_bRestart = True Then Return
 			If _Sleep($DELAYRUNBOT3) Then Return
 			If checkObstacles(True) Then Return
-			If $g_bRestart = True Then ExitLoop
 			$count += 1			
 		Wend
 		
@@ -49,6 +48,7 @@ Func DoAttackBB()
 		ClickAway("Left")
 	Else
 		For $i = 1 To $g_iBBAttackCount
+			If Not $g_bRunState Then Return
 			If PrepareAttackBB() Then
 				SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 				SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
@@ -62,7 +62,6 @@ Func DoAttackBB()
 						Endif
 					Next
 				EndIf
-				If $g_bRestart = True Then Return
 				If _Sleep($DELAYRUNBOT3) Then Return
 				If checkObstacles(True) Then Return
 			Else
@@ -78,10 +77,11 @@ EndFunc
 
 Func AttackBB()
 	If Not $g_bChkEnableBBAttack Then Return
-
+	If Not $g_bRunState Then Return
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $aBMPos = 0
 	;ClickAway()
+	
 	SetLog("Going to attack.", $COLOR_BLUE)
 
 	; check for troops, loot and Batlle Machine

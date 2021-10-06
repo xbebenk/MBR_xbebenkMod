@@ -451,7 +451,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 		AutoUpgradeLog()
 		Return True
 	EndIf
-	
+	If Not $g_bRunState Then Return
 	;Lets check if exist the [x], it should not exist, but to be safe 
 	Local $RedXCoords = FindRedX()
 	If IsArray($RedXCoords) And UBound($RedXCoords) = 2 Then
@@ -477,6 +477,7 @@ Func UpgradeNewBuilding($bTest = False)
 	
 	Local $b_BuildingFound = False
 	For $z = 0 To 7 ;for do scroll 8 times
+		If Not $g_bRunState Then Return
 		Local $NeedDrag = True
 		Local $GearCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
