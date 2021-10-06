@@ -48,10 +48,6 @@ Func Laboratory($debug=False)
 	; Get updated village elixir and dark elixir values
 	VillageReport(True, True)
 
-	;Click Laboratory
-	Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
-	If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
-	
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 
 	; Lab upgrade is not in progress and not upgreading, so we need to start an upgrade.
@@ -344,7 +340,10 @@ EndFunc
 
 ; Find Research Button
 Func FindResearchButton()
-
+	;Click Laboratory
+	Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
+	If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
+	
 	If QuickMIS("BC1", $g_sImgLabResearch, 200, 550, 670, 670, True, True) Then
 		SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
 		ClickAway()
@@ -362,7 +361,9 @@ Func FindResearchButton()
 		ClickAway()
 		If ImgLocateLab() Then ;try locate lab again
 			Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
-			FindResearchButton()
+			If _Sleep(500) Then Return
+			ClickB("Research")
+			Return True
 		Else
 			Return False
 		EndIf
