@@ -135,8 +135,8 @@ Func ImgLocateLab()
 	; loop thro the detected images
 	For $i = 0 To UBound($avLab, $UBOUND_ROWS) - 1
 		$avLabRes = $avLab[$i]
-		SetLog("Laboratory Search find : " & $avLabRes[0])
 		$aiLabCoords = decodeSingleCoord($avLabRes[1])
+		SetLog("ImgLocateLab Found:" & $avLabRes[0] & " [" & $aiLabCoords[0] & "," & $aiLabCoords[1] & "]")
 	Next
 
 	If IsArray($aiLabCoords) And UBound($aiLabCoords, $UBOUND_ROWS) > 1 Then

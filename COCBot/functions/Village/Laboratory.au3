@@ -49,28 +49,9 @@ Func Laboratory($debug=False)
 	VillageReport(True, True)
 
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
-
-	If _ColorCheck(_GetPixelColor(730, 200, True), Hex(0xA2CB6C, 6), 20) Then ; Look for light green in upper right corner of lab window.
-		SetLog("Laboratory is Running", $COLOR_INFO)
-		;==========Hide Red  Show Green Hide Gray===
-		GUICtrlSetState($g_hPicLabGray, $GUI_HIDE)
-		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
-		GUICtrlSetState($g_hPicLabGreen, $GUI_SHOW)
-		;===========================================
-		If _Sleep($DELAYLABORATORY2) Then Return
-		Local $sLabTimeOCR = getRemainTLaboratory(270, 257)
-		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)
-		SetDebugLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
-		If $iLabFinishTime > 0 Then
-			$g_sLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), _NowCalc())
-			SetLog("Research will finish in " & $sLabTimeOCR & " (" & $g_sLabUpgradeTime & ")")
-		EndIf
-		ClickAway()
-		If ProfileSwitchAccountEnabled() Then SwitchAccountVariablesReload("Save") ; saving $asLabUpgradeTime[$g_iCurAccount] = $g_sLabUpgradeTime for instantly displaying in multi-stats
-		Return True
-	EndIf
+	If ChkLabUpgradeInProgress() Then Return False ; Lab currently running skip going further
 	
-	; Lab upgrade is not in progress and not upgreading, so we need to start an upgrade.
+	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
 	Local $iCurPage = 1
 	Local $sCostResult
 	
@@ -322,26 +303,26 @@ EndFunc
 ; check the lab to see if something is upgrading in the lab already
 Func ChkLabUpgradeInProgress()
 	; check for upgrade in process - look for green in finish upgrade with gems button
-	If $g_bDebugSetlog Then SetLog("_GetPixelColor(730, 200): " & _GetPixelColor(730, 200, True) & ":A2CB6C", $COLOR_DEBUG)
-	If _ColorCheck(_GetPixelColor(730, 200, True), Hex(0xA2CB6C, 6), 20) Then
-		SetLog("Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
+	If _ColorCheck(_GetPixelColor(730, 200, True), Hex(0xA2CB6C, 6), 20) Then ; Look for light green in upper right corner of lab window.
+		SetLog("Laboratory is Running", $COLOR_INFO)
+		;==========Hide Red  Show Green Hide Gray===
+		GUICtrlSetState($g_hPicLabGray, $GUI_HIDE)
+		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
+		GUICtrlSetState($g_hPicLabGreen, $GUI_SHOW)
+		;===========================================
 		If _Sleep($DELAYLABORATORY2) Then Return
-		; upgrade in process and time not recorded so update completion time!
 		Local $sLabTimeOCR = getRemainTLaboratory(270, 257)
 		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)
 		SetDebugLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
 		If $iLabFinishTime > 0 Then
 			$g_sLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), _NowCalc())
-			If @error Then _logErrorDateAdd(@error)
 			SetLog("Research will finish in " & $sLabTimeOCR & " (" & $g_sLabUpgradeTime & ")")
-			LabStatusGUIUpdate() ; Update GUI flag
-		ElseIf $g_bDebugSetlog Then
-			SetLog("Invalid getRemainTLaboratory OCR", $COLOR_DEBUG)
 		EndIf
-		Click(243, 33)
+		ClickAway()
+		If ProfileSwitchAccountEnabled() Then SwitchAccountVariablesReload("Save") ; saving $asLabUpgradeTime[$g_iCurAccount] = $g_sLabUpgradeTime for instantly displaying in multi-stats
 		Return True
 	EndIf
-	Return False ; returns False if no upgrade in progress
+	Return False
 EndFunc
 
 ; checks our global variable to see if we know of something already upgrading
@@ -367,11 +348,14 @@ EndFunc
 
 ; Find Research Button
 Func FindResearchButton()
+	Local $ResearchButtonFound = False
+	CheckMainScreen(False)
 	;Click Laboratory
 	Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
-	If _Sleep($DELAYLABORATORY3) Then Return ; Wait for window to open
+	If _Sleep(1000) Then Return ; Wait for window to open
 	
-	If QuickMIS("BC1", $g_sImgLabResearch, 200, 550, 670, 670, True, True) Then
+	Local $aCancelButton = findButton("Cancel")
+	If IsArray($aCancelButton) And UBound($aCancelButton, 1) = 2 Then
 		SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
 		ClickAway()
 		Return False
@@ -381,17 +365,25 @@ Func FindResearchButton()
 	If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
 		If $g_bDebugImageSave Then SaveDebugImage("LabUpgrade") ; Debug Only
 		ClickP($aResearchButton)
+		$ResearchButtonFound =  True
 		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for window to open
 		Return True
-	Else
-		SetLog("Cannot find the Laboratory Research Button!", $COLOR_ERROR)
+	Else 
+		SetLog("Cannot find the Laboratory Research Button!", $COLOR_INFO)
+		ClickAway()
+	EndIf
+	
+	If Not $ResearchButtonFound Then
+		SetLog("Try to Locate Laboratory!", $COLOR_INFO)
 		ClickAway()
 		If ImgLocateLab() Then ;try locate lab again
+			SetLog("Laboratory located on coords: " & "[" & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1] &"], Saving Lab Loc for future", $COLOR_INFO)
 			Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
-			If _Sleep(500) Then Return
+			If _Sleep(1000) Then Return
 			ClickB("Research")
 			Return True
 		Else
+			SetLog("Laboratory location not found, please locate manually", $COLOR_DEBUG)
 			Return False
 		EndIf
 	EndIf
