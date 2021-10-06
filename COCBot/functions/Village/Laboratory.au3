@@ -34,11 +34,6 @@ EndFunc
 Func Laboratory($debug=False)
 	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 
-	If $g_iTownHallLevel < 3 Then
-		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Lab.", $COLOR_ERROR)
-		Return
-	EndIf
-
 	If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
 		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
 		LocateLab() ; Lab location unknown, so find it.
@@ -352,7 +347,7 @@ Func FindResearchButton()
 
 	If QuickMIS("BC1", $g_sImgLabResearch, 200, 550, 670, 670, True, True) Then
 		SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
-		Click(243, 33)
+		ClickAway()
 		Return False
 	EndIf
 	
@@ -364,7 +359,12 @@ Func FindResearchButton()
 		Return True
 	Else
 		SetLog("Cannot find the Laboratory Research Button!", $COLOR_ERROR)
-		Click(243, 33)
-		Return False
+		ClickAway()
+		If ImgLocateLab() Then ;try locate lab again
+			Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
+			FindResearchButton()
+		Else
+			Return False
+		EndIf
 	EndIf
 EndFunc

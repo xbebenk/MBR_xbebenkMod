@@ -324,55 +324,13 @@ Func LabGuiDisplay() ; called from main loop to get an early status for indictor
 	ClickAway()
 	If _Sleep(1000) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
 
-	If $g_iTownHallLevel < 3 Then
-		SetDebugLog("TH reads as Lvl " & $g_iTownHallLevel & ", has no Lab.")
-		;============Hide Red  Hide Green  Show Gray==
-		GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
-		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
-		GUICtrlSetState($g_hPicLabGray, $GUI_SHOW)
-		GUICtrlSetData($g_hLbLLabTime, "")
-		;============================================
-		Return
-	EndIf
-
 	Setlog("Checking Lab Status", $COLOR_INFO)
-
-	;=================Section 2 Lab Gui
-
-	; If $g_bAutoLabUpgradeEnable = True Then  ====>>>> TODO : or use this or make a checkbox on GUI
-	; make sure lab is located, if not locate lab
-	If $g_aiLaboratoryPos[0] <= 0 Or $g_aiLaboratoryPos[1] <= 0 Then
-		SetLog("Laboratory Location is unknown!", $COLOR_ERROR)
-		;============Hide Red  Hide Green  Show Gray==
-		GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
-		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
-		GUICtrlSetState($g_hPicLabGray, $GUI_SHOW)
-		GUICtrlSetData($g_hLbLLabTime, "")
-		;============================================
-		Return
-	EndIf
-	Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
+	FindResearchButton()
+	
 	If _Sleep(1500) Then Return ; Wait for window to open
 	; Find Research Button
 
 	$iLastTimeChecked[$g_iCurAccount] = _NowCalc()
-
-	Local $aResearchButton = findButton("Research", Default, 1, True)
-	If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
-		If $g_bDebugImageSave Then SaveDebugImage("LabUpgrade") ; Debug Only
-		ClickP($aResearchButton)
-		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for window to open
-	Else
-		SetLog("Cannot find the Laboratory Research Button!", $COLOR_ERROR)
-		ClickAway()
-		;===========Hide Red  Hide Green  Show Gray==
-		GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
-		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
-		GUICtrlSetState($g_hPicLabGray, $GUI_SHOW)
-		GUICtrlSetData($g_hLbLLabTime, "")
-		;===========================================
-		Return
-	EndIf
 
 	; check for upgrade in process - look for green in finish upgrade with gems button
 	If _ColorCheck(_GetPixelColor(730, 200, True), Hex(0xA2CB6C, 6), 20) Then ; Look for light green in upper right corner of lab window.

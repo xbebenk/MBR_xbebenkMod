@@ -17,11 +17,6 @@ Func LocateLab($bCollect = True)
 	$g_aiLaboratoryPos[0] = -1
 	$g_aiLaboratoryPos[1] = -1
 
-	If $g_iTownHallLevel < 3 Then
-		SetLog("Townhall Lvl " & $g_iTownHallLevel & " has no Lab, so skip locating.", $COLOR_DEBUG)
-		Return
-	EndIf
-
 	; auto locate 
 	ImgLocateLab()
 	
