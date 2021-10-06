@@ -381,6 +381,7 @@ Func FindResearchButton()
 			Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
 			If _Sleep(1000) Then Return
 			ClickB("Research")
+			If _Sleep(1500) Then Return
 			Return True
 		Else
 			SetLog("Laboratory location not found, please locate manually", $COLOR_DEBUG)
