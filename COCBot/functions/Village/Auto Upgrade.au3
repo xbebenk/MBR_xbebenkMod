@@ -447,8 +447,8 @@ Func AUNewBuildings($x, $y, $bTest = False)
 		EndIf
 		SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
 		If _Sleep(500) Then Return
-		AutoUpgradeLog()
 		Click($GreenCheckCoords[0], $GreenCheckCoords[1]) ; Just click again greencheck position, in case its still there
+		AutoUpgradeLog()
 		Return True
 	EndIf
 	
@@ -478,15 +478,26 @@ Func UpgradeNewBuilding($bTest = False)
 	Local $b_BuildingFound = False
 	For $z = 0 To 7 ;for do scroll 8 times
 		Local $NeedDrag = True
+		Local $GearCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
 		For $i = 0 To 9
 			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-5, $x1, $y1+5, $bScreencap, $bDebug) Then
 				If QuickMIS("BC1",$g_sImgAUpgradeObst, $x, $y-5, $x1, $y1+5, $bScreencap, $bDebug) Then
-					If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
-					$b_BuildingFound = True
-					If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then
-						;ClickMainBuilder($bTest)
-						VillageReport(True, True) ;check if we have available builder
+					
+					$b_BuildingFound = True ;we find new/gear
+					$GearCoord = decodeSingleCoord(findImage("Gear", $g_sImgAUpgradeObst & "\Gear*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
+					If IsArray($GearCoord) And UBound($GearCoord) = 2 Then 
+						$b_BuildingFound = False ;we find gear
+						If $g_bDebugClick Then SetLog("[" & $i & "] Gear found!", $COLOR_SUCCESS)
+					Else
+						If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
+					EndIf
+					
+					If $b_BuildingFound Then 
+						If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then
+							;ClickMainBuilder($bTest)
+							VillageReport(True, True) ;check if we have available builder
+						EndIf
 					EndIf
 					If $g_iFreeBuilderCount < 1 Then Return
 				Else
