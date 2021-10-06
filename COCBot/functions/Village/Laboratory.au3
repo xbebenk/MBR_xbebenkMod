@@ -50,6 +50,26 @@ Func Laboratory($debug=False)
 
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 
+	If _ColorCheck(_GetPixelColor(730, 200, True), Hex(0xA2CB6C, 6), 20) Then ; Look for light green in upper right corner of lab window.
+		SetLog("Laboratory is Running", $COLOR_INFO)
+		;==========Hide Red  Show Green Hide Gray===
+		GUICtrlSetState($g_hPicLabGray, $GUI_HIDE)
+		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
+		GUICtrlSetState($g_hPicLabGreen, $GUI_SHOW)
+		;===========================================
+		If _Sleep($DELAYLABORATORY2) Then Return
+		Local $sLabTimeOCR = getRemainTLaboratory(270, 257)
+		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)
+		SetDebugLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
+		If $iLabFinishTime > 0 Then
+			$g_sLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), _NowCalc())
+			SetLog("Research will finish in " & $sLabTimeOCR & " (" & $g_sLabUpgradeTime & ")")
+		EndIf
+		ClickAway()
+		If ProfileSwitchAccountEnabled() Then SwitchAccountVariablesReload("Save") ; saving $asLabUpgradeTime[$g_iCurAccount] = $g_sLabUpgradeTime for instantly displaying in multi-stats
+		Return True
+	EndIf
+	
 	; Lab upgrade is not in progress and not upgreading, so we need to start an upgrade.
 	Local $iCurPage = 1
 	Local $sCostResult
