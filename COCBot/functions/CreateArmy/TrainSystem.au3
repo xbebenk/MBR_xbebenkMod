@@ -489,7 +489,7 @@ EndFunc   ;==>IsElixirTroop
 
 Func IsDarkTroop($Troop)
 	Local $iIndex = TroopIndexLookup($Troop, "IsDarkTroop")
-	If $iIndex >= $eMini And $iIndex <= $eHunt Then Return True
+	If $iIndex >= $eRDrag And $iIndex <= $eHunt Then Return True
 	Return False
 EndFunc   ;==>IsDarkTroop
 
