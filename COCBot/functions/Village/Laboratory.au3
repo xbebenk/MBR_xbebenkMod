@@ -84,27 +84,21 @@ Func Laboratory($debug=False)
 				$g_iCmbLaboratory = 0 ;set lab upgrade to any
 				Return False
 			EndIf
-
-			If QuickMIS("BC1", $g_sImgLabZero, $aCoords[0] - 40, $aCoords[1], $aCoords[0] + 40, $aCoords[1] + 80, True, False) Then
-				Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
-			Else
-				SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
-			EndIf
 			
-			$sCostResult = GetLabCostResult($aCoords) ; get cost of the upgrade
-	
-			If $sCostResult = "" Then ; not enough resources
-				SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
-				If $g_bDebugSetlog Then SetDebugLog("Coords: (" & $aCoords[0] & "," & $aCoords[1] & ")")
-			ElseIf StringSplit($sCostResult, "1")[0] = StringLen($sCostResult)+1 or StringSplit($sCostResult, "1")[1] = "0" Then ; max level if all ones returned from ocr or if the first letter is a 0.
-				SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Max Level. Choose another upgrade.", $COLOR_INFO)
-				If $g_bDebugSetlog Then SetDebugLog("Coords: (" & $aCoords[0] & "," & $aCoords[1] & ")")
-			Else
-				Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
+			If $bUpgradeFound Then
+				Local $LabZero= decodeSingleCoord(findImage("Zero", $g_sImgLabZero & "LabZero*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
+				If UBound($LabZero) > 1 Then
+					Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
+				Else
+					Local $LabUpgradeRequired = decodeSingleCoord(findImage("LabUpgradeRequired", $g_sImgLabZero & "Required*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
+					If UBound($LabUpgradeRequired) > 1 Then
+						SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Max Level. Choose another upgrade.", $COLOR_INFO)
+					Else
+						SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
+						Return False
+					EndIf
+				EndIf
 			EndIf
-			If _Sleep($DELAYLABORATORY2) Then Return
-			Click(243, 33)
-
 		Else ; users choice is any upgrade
 			If $g_bLabUpgradeOrderEnable Then 
 				Local $iPriority = 0
@@ -146,30 +140,23 @@ Func Laboratory($debug=False)
 						If Not $bUpgradeFound Then
 							SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
 							LabFirstPage($iCurPage, $iYMidPoint)
-							Research()
 							$iCurPage = 1 ;reset current page
 						EndIf
 			
 						If $bUpgradeFound Then
-							If QuickMIS("BC1", $g_sImgLabZero, $aCoords[0] - 40, $aCoords[1], $aCoords[0] + 40, $aCoords[1] + 80, True, False) Then
+							Local $LabZero= decodeSingleCoord(findImage("Zero", $g_sImgLabZero & "LabZero*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
+							If UBound($LabZero) > 1 Then
 								Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
 							Else
-								SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
-							EndIf
-							
-							$sCostResult = GetLabCostResult($aCoords) ; get cost of the upgrade
-							
-							If $sCostResult = "" Then ; not enough resources
-								SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
-								If $g_bDebugSetlog Then SetDebugLog("Coords: (" & $aCoords[0] & "," & $aCoords[1] & ")")
-								ExitLoop
-							ElseIf StringSplit($sCostResult, "1")[0] = StringLen($sCostResult)+1 or StringSplit($sCostResult, "1")[1] = "0" Then ; max level if all ones returned from ocr or if the first letter is a 0.
-								SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Max Level. Choose another upgrade.", $COLOR_INFO)
-								If $g_bDebugSetlog Then SetDebugLog("Coords: (" & $aCoords[0] & "," & $aCoords[1] & ")")
-								Research()
-								$iCurPage = 1 ;reset current page
-							Else
-								Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
+								Local $LabUpgradeRequired = decodeSingleCoord(findImage("LabUpgradeRequired", $g_sImgLabZero & "Required*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
+								If UBound($LabUpgradeRequired) > 1 Then
+									SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Max Level. Choose another upgrade.", $COLOR_INFO)
+									LabFirstPage($iCurPage, $iYMidPoint)
+									$iCurPage = 1 ;reset current page
+								Else
+									SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
+									ExitLoop
+								EndIf
 							EndIf
 						EndIf		
 					EndIf
@@ -184,16 +171,18 @@ Func Laboratory($debug=False)
 
 							; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
 							Local $aCoords = decodeSingleCoord($aTempTroopArray[1])
-							$sCostResult = GetLabCostResult($aCoords) ; get cost of the current upgrade option
-
-							If $sCostResult = "" Then ; not enough resources
-								If $g_bDebugSetlog Then SetDebugLog("Lab Upgrade " & $aTempTroopArray[0] & " - Not enough Resources")
-							ElseIf StringSplit($sCostResult, "1")[0] = StringLen($sCostResult)+1 or StringSplit($sCostResult, "1")[1] = "0" Then ; max level if all ones returned from ocr or if the first letter is a 0.
-									If $g_bDebugSetlog Then SetDebugLog("Lab Upgrade " & $aTempTroopArray[0] & " - Max Level")
+							Local $LabZero= decodeSingleCoord(findImage("Zero", $g_sImgLabZero & "LabZero*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
+							If UBound($LabZero) > 1 Then
+								Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
 							Else
-								Return LaboratoryUpgrade($aTempTroopArray[0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
+								Local $LabUpgradeRequired = decodeSingleCoord(findImage("LabUpgradeRequired", $g_sImgLabZero & "Required*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
+								If UBound($LabUpgradeRequired) > 1 Then
+									SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Max Level. Choose another upgrade.", $COLOR_INFO)
+								Else
+									SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
+									ExitLoop
+								EndIf
 							EndIf
-							If _Sleep($DELAYLABORATORY2) Then Return
 						Next
 					EndIf
 
@@ -340,10 +329,6 @@ Func ChkUpgradeInProgress()
 		Return True
 	EndIf
 	Return False ; we currently do not know of any upgrades in progress
-EndFunc
-
-Func Research()
-	If _Sleep(2000) Then Return 
 EndFunc
 
 ; Find Research Button
