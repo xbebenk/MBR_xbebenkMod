@@ -1183,8 +1183,7 @@ Func __RunFunction($action)
 			;If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
 		Case "Laboratory"
 			Laboratory()
-			;xbenk
-			;If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
+			checkMainScreen(False)
 		Case "PetHouse"
 			PetHouse()
 			;xbenk
