@@ -1457,7 +1457,14 @@ EndFunc   ;==>GetAndroidVMinfo
 Func WaitForAndroidBootCompleted($WaitInSec = 120, $hTimer = 0)
 	ResumeAndroid()
 	If Not $g_bRunState Then Return True
-	Local $cmdOutput, $connected_to, $booted, $process_killed, $hMyTimer
+	Local $cmdOutput, $connected_to, $booted, $process_killed, $hMyTimer, $AndroidVersion, $MemuVersion, $Memu, $Version
+	
+	;adding support for Memu 7.2.9 android 4.4.4 as it have different getprop to determine emulator has completed boot
+	$MemuVersion = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " getprop ro.version", $process_killed)
+	$AndroidVersion = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " getprop ro.build.version.release", $process_killed)
+	$Memu = StringLeft($MemuVersion, 5) = "7.2.9"
+	$Version = StringLeft($AndroidVersion, 5) = "4.4.4"
+	
 	; Wait for boot completed
 	$hMyTimer = ($hTimer = 0 ? __TimerInit() : $hTimer)
 	While True
@@ -1466,6 +1473,12 @@ Func WaitForAndroidBootCompleted($WaitInSec = 120, $hTimer = 0)
 		If InvalidAdbShellOptions($cmdOutput, "WaitForAndroidBootCompleted") Then
 			$cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " getprop sys.boot_completed", $process_killed)
 		EndIf
+		
+		;adding support for Memu 7.2.9 android 4.4.4 as it have different getprop to determine emulator has completed boot
+		If $Memu And $Version Then 
+			$cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " getprop service.bootanim.exit", $process_killed)
+		EndIf
+	
 		If Not $g_bRunState Then Return True
 		; Test ADB is connected
 		$connected_to = IsAdbConnected($cmdOutput)
@@ -4828,7 +4841,7 @@ Func CheckEmuNewVersions()
 		Case "BlueStacks2"
 			$NewVersion = GetVersionNormalized("4.111.0.0")
 		Case "MEmu"
-			$NewVersion = GetVersionNormalized("6.3.0.0")
+			$NewVersion = GetVersionNormalized("7.2.9.0")
 		Case "Nox"
 			$NewVersion = GetVersionNormalized("7.0.1.2")
 		Case Else
