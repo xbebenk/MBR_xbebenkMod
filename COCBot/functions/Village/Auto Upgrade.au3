@@ -77,11 +77,9 @@ Func SearchUpgrade($bTest = False)
 					Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
 					If _Sleep(1000) Then Return
 					If DoUpgrade($bTest) Then
-						$g_iFreeBuilderCount -= 1
 						ClickMainBuilder($bTest)
 					Endif
 				EndIf
-				If $g_iFreeBuilderCount < 1 Then ExitLoop 2
 				If _Sleep(500) Then Return
 			Else
 				If $g_bDebugClick Then SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
@@ -92,7 +90,7 @@ Func SearchUpgrade($bTest = False)
 		Next
 		If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 		If Not $NeedDrag Then ExitLoop
-		If Not AutoUpgradeCheckBuilder($bTest) Then Return
+		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
 		If _Sleep(1500) Then Return
 	Next
@@ -501,7 +499,6 @@ Func UpgradeNewBuilding($bTest = False)
 							VillageReport(True, True) ;check if we have available builder
 						EndIf
 					EndIf
-					If $g_iFreeBuilderCount < 1 Then Return
 				Else
 					If $g_bDebugClick Then SetLog("[" & $i & "] Not New Building!", $COLOR_INFO)
 				EndIf
@@ -514,7 +511,7 @@ Func UpgradeNewBuilding($bTest = False)
 		Next
 		If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 		If Not $NeedDrag Then ExitLoop
-		If Not AutoUpgradeCheckBuilder($bTest) Then Return
+		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
 		If _Sleep(1500) Then Return
 	Next
