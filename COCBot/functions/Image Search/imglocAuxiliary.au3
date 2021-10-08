@@ -269,8 +269,10 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = GetDiamondFromRect("359,392(148,66)")
 		Case "EndBattleSurrender" ;surrender - attackwindow
 			$btnDiamond = "12,577|125,577|125,615|12,615"
-		Case "ClanChat"
-			$btnDiamond = GetDiamondFromRect("0,300,400,450")
+		Case "ClanChatOpen"
+			$btnDiamond = GetDiamondFromRect("0,350,40,400")
+		Case "ClanChatClose"
+			$btnDiamond = GetDiamondFromRect("310,350,360,400")
 		Case "ChatOpenRequestPage" ;mainwindow - chat open
 			$btnDiamond = "5,688|65,688|65,615|5,725"
 		Case "Profile" ;mainwindow - only visible if chat closed
