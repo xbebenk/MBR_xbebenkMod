@@ -22,7 +22,7 @@ Func AutoUpgrade($bTest = False)
 EndFunc
 
 Func AutoUpgradeCheckBuilder($bTest = False)
-	VillageReport(True, True) ;check if we have available builder
+	getBuilderCount(True) ;check if we have available builder
 	If $bTest Then 
 		$g_iFreeBuilderCount = 1
 		Return True
