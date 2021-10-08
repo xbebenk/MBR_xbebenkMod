@@ -432,7 +432,6 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 	Else
 		; try secondary images
 		ClickAway()
-		ClickDrag(540, 480, 600, 450, 200) ;xbebenk - click drag to left sometime make it found the village
 		$village = GetVillageSize($DebugLog, "2stone", "2tree", Default, $bOnBuilderBase)
 	EndIf
 
