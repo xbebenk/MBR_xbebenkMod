@@ -1328,7 +1328,7 @@ Func FirstCheckRoutine()
 	EndIf
 	
 	RequestCC(False)
-	checkArmyCamp(False)
+	checkArmyCamp(False, True)
 	PrepareDonateCC()
 	DonateCC()
 	TrainSystem()

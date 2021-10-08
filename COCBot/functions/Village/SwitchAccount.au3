@@ -211,7 +211,7 @@ Func CheckSwitchAcc()
 				If _Sleep(1000) Then Return
 				SetLog("Try Request, Donate and Train before switching account", $COLOR_DEBUG)
 				RequestCC(False)
-				checkArmyCamp(False)
+				checkArmyCamp(False, True)
 				PrepareDonateCC()
 				DonateCC()
 				TrainSystem()
