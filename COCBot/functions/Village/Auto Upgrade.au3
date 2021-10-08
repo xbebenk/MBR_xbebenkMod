@@ -92,6 +92,7 @@ Func SearchUpgrade($bTest = False)
 		Next
 		If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 		If Not $NeedDrag Then ExitLoop
+		If Not AutoUpgradeCheckBuilder($bTest) Then Return
 		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
 		If _Sleep(1500) Then Return
 	Next
@@ -513,6 +514,7 @@ Func UpgradeNewBuilding($bTest = False)
 		Next
 		If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 		If Not $NeedDrag Then ExitLoop
+		If Not AutoUpgradeCheckBuilder($bTest) Then Return
 		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
 		If _Sleep(1500) Then Return
 	Next
