@@ -61,6 +61,12 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 				If $g_bDebugSetlogTrain Then SetLog("$tmpCurCamp = " & $tmpCurCamp, $COLOR_DEBUG)
 				$tmpTotalCamp = Number($aGetArmyCap[2])
 				If $g_bDebugSetlogTrain Then SetLog("$g_iTotalCampSpace = " & $g_iTotalCampSpace & ", Camp OCR = " & $tmpTotalCamp, $COLOR_DEBUG)
+				If $g_bIgnoreIncorrectTroopCombo Then 
+					If $tmpTotalCamp > $g_iTotalCampSpace Then 
+						$g_iTotalCampSpace = $tmpTotalCamp
+						$g_iTotalCampForcedValue = $tmpTotalCamp
+					EndIf
+				EndIf
 				If $iHoldCamp = $tmpTotalCamp Then ExitLoop ; check to make sure the OCR read value is same in 2 reads before exit
 				$iHoldCamp = $tmpTotalCamp ; Store last OCR read value
 			EndIf
