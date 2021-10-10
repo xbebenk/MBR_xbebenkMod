@@ -135,7 +135,7 @@ Func DebugQuickMIS($x, $y, $DebugText)
 	Local $subDirectory = $g_sProfileTempDebugPath & "QuickMIS"
 	DirCreate($subDirectory)
 	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
-	Local $Time = @HOUR & "." & @MIN & "." & @SEC
+	Local $Time = @HOUR & "." & @MIN & "." & @SEC & @MSec
 	Local $filename = String($Date & "_" & $Time & "_" & $DebugText & "_.png")
 	Local $editedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
 	Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($editedImage)
