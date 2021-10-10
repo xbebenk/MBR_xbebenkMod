@@ -80,19 +80,14 @@ Func CleanYard()
 
 	; Timer
 	Local $hObstaclesTimer = __TimerInit()
-
-	; Get Builders available
-	If Not getBuilderCount() Then Return ; update builder data, return if problem
-	If _Sleep($DELAYRESPOND) Then Return
-
-	; Obstacles function to Parallel Search , will run all pictures inside the directory
-
+	VillageReport(True, True)
+	
 	; Setup arrays, including default return values for $return
 	Local $Filename = ""
 	Local $Locate = 0
 	Local $CleanYardXY
-	Local $sCocDiamond = $CocDiamondECD
-	Local $redLines = $sCocDiamond
+	Local $sCocDiamond = "ECD"
+	Local $redLines = "ECD"
 	Local $bNoBuilders = $g_iFreeBuilderCount < 1
 
 	If $g_iFreeBuilderCount > 0 And $g_bChkCleanYard And Number($g_aiCurrentLoot[$eLootElixir]) > 50000 Then
@@ -123,12 +118,43 @@ Func CleanYard()
 				Next
 			Next
 		EndIf
+	Else
+		SetLog("Cannot find any obstacles on Yard", $COLOR_DEBUG)
+		Return
 	EndIf
 
+	RemoveGembox()
+	If $bNoBuilders Then
+		SetLog("No Builders available to remove Obstacles!")
+	Else
+		If $Locate = 0 And $g_bChkCleanYard And Number($g_aiCurrentLoot[$eLootElixir]) > 50000 Then SetLog("No Obstacles found, Yard is clean!", $COLOR_SUCCESS)
+		If $g_bDebugSetlog Then SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
+	EndIf
+	UpdateStats()
+	ClickAway()
+
+EndFunc   ;==>CleanYard
+
+Func ClickRemoveObstacle()
+	Local $aiButton = findButton("RemoveObstacle", Default, 1, True)
+	If IsArray($aiButton) And UBound($aiButton) >= 2 Then
+		SetDebugLog("Remove Button found! Clicking it at X: " & $aiButton[0] & ", Y: " & $aiButton[1], $COLOR_DEBUG1)
+		ClickP($aiButton)
+		Return True
+	Else
+		SetLog("Cannot find Remove Button", $COLOR_ERROR)
+		ClickAway()
+		Return False
+	EndIf
+EndFunc
+
+Func RemoveGembox()
 	; Setup arrays, including default return values for $return
 	Local $return[7] = ["None", "None", 0, 0, 0, "", ""]
 	Local $GemBoxXY[2] = [0, 0]
-
+	Local $sCocDiamond = "ECD"
+	Local $Locate = 0
+	
 	; Perform a parallel search with all images inside the directory
 	If ($g_iFreeBuilderCount > 0 And $g_bChkGemsBox And Number($g_aiCurrentLoot[$eLootElixir]) > 50000) Or TestCapture() Then
 		Local $aResult = multiMatches($g_sImgGemBox, 1, $sCocDiamond, $sCocDiamond)
@@ -177,27 +203,5 @@ Func CleanYard()
 		Else
 			SetLog("No GemBox Found!", $COLOR_SUCCESS)
 		EndIf
-	EndIf
-
-	If $bNoBuilders Then
-		SetLog("No Builders available to remove Obstacles!")
-	Else
-		If $Locate = 0 And $g_bChkCleanYard And Number($g_aiCurrentLoot[$eLootElixir]) > 50000 Then SetLog("No Obstacles found, Yard is clean!", $COLOR_SUCCESS)
-		If $g_bDebugSetlog Then SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
-	EndIf
-	UpdateStats()
-	ClickAway()
-
-EndFunc   ;==>CleanYard
-
-Func ClickRemoveObstacle()
-	Local $aiButton = findButton("RemoveObstacle", Default, 1, True)
-	If IsArray($aiButton) And UBound($aiButton) >= 2 Then
-		SetDebugLog("Remove Button found! Clicking it at X: " & $aiButton[0] & ", Y: " & $aiButton[1], $COLOR_DEBUG1)
-		ClickP($aiButton)
-		Return True
-	Else
-		SetLog("Cannot find Remove Button", $COLOR_ERROR)
-		Return False
 	EndIf
 EndFunc
