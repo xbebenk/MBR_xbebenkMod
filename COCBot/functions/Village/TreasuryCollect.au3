@@ -20,7 +20,15 @@ Func TreasuryCollect()
 
 	ClickAway()
 	If _Sleep($DELAYRESPOND) Then Return
-
+	
+	Local $TreasuryCoord = decodeSingleCoord(findImage("TreasuryFull", $g_sImgTreasuryFull & "\TreasuryFull*", "FV", 1, True))
+	If IsArray($TreasuryCoord) And UBound($TreasuryCoord) = 2 Then
+		Click($TreasuryCoord[0], $TreasuryCoord[1] + 50)
+		$g_aiClanCastlePos[0] = $TreasuryCoord[0]
+		$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 50
+		SetLog("Found Treasury Full, save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
+	EndIf
+	
 	If ($g_aiClanCastlePos[0] = "-1" Or $g_aiClanCastlePos[1] = "-1") Then ;check for valid CC location
 		SetLog("Need Clan Castle location for the Treasury, Please locate your Clan Castle.", $COLOR_WARNING)
 		LocateClanCastle()
