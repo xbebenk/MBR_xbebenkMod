@@ -41,6 +41,7 @@ Func SearchUpgrade($bTest = False)
 	Local $bDebug = $g_bDebugSetlog
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
+	VillageReport(True,True)
 	
 	; check if builder head is clickable
 	If Not (_ColorCheck(_GetPixelColor(275, 15, True), "F5F5ED", 20) = True) Then
@@ -61,7 +62,7 @@ Func SearchUpgrade($bTest = False)
 	If $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ClickDragAUpgrade("down")
 	If Not $g_bRunState Then Return
 	Local $b_BuildingFound = False
-	For $z = 0 To 4 ;for do scroll 5 times
+	For $z = 0 To 9 ;for do scroll 5 times
 		Local $NeedDrag = True
 		Local $x = 180, $y = 80, $x1 = 450, $y1 = 103, $step = 30
 		For $i = 0 To 9
@@ -78,6 +79,7 @@ Func SearchUpgrade($bTest = False)
 					If _Sleep(1000) Then Return
 					If DoUpgrade($bTest) Then
 						ClickMainBuilder($bTest)
+						If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
 					Endif
 				EndIf
 				If _Sleep(500) Then Return
@@ -88,10 +90,14 @@ Func SearchUpgrade($bTest = False)
 			$y += $step
 			$y1 += $step
 		Next
-		If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
-		If Not $NeedDrag Then ExitLoop
+		
+		If Not $NeedDrag Then
+			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Need More resource", $COLOR_DEBUG)
+			ExitLoop
+		EndIf
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
+		If $g_bDebugClick Then SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
 	Next
 	
@@ -475,7 +481,7 @@ Func UpgradeNewBuilding($bTest = False)
 	If _Sleep(500) Then Return
 	
 	Local $b_BuildingFound = False
-	For $z = 0 To 7 ;for do scroll 8 times
+	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
 		Local $NeedDrag = True
 		Local $GearCoord
@@ -495,8 +501,8 @@ Func UpgradeNewBuilding($bTest = False)
 					
 					If $b_BuildingFound Then 
 						If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then
-							;ClickMainBuilder($bTest)
-							VillageReport(True, True) ;check if we have available builder
+							ClickMainBuilder($bTest)
+							ExitLoop
 						EndIf
 					EndIf
 				Else
@@ -504,17 +510,21 @@ Func UpgradeNewBuilding($bTest = False)
 				EndIf
 			Else
 				If $g_bDebugClick Then SetLog("[" & $i & "] Not Enough Resource", $COLOR_INFO)
-				If $z > 2 And $i = 9 Then $NeedDrag = False ; sudah 3 kali scroll tapi yang paling bawah masih merah angka nya
+				If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih merah angka nya
 			EndIf
 			$y += $step
 			$y1 += $step
 		Next
-		If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
-		If Not $NeedDrag Then ExitLoop
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
+		If Not $NeedDrag Then
+			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Need More resource", $COLOR_DEBUG)
+			ExitLoop
+		EndIf
 		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
+		If $g_bDebugClick Then SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
 	Next
+	SetLog("Max Scroll Reached!, exit FindNewBuilding", $COLOR_DEBUG)
 	ZoomOut()
 	ClickAway()
 EndFunc ;==>FindNewBuilding
@@ -546,7 +556,7 @@ Func SearchGreenZone()
 EndFunc
 
 Func ClickDragAUpgrade($Direction = "up", $YY = Default)
-	Local $x = 330, $yUp = 93, $yDown = 600, $Delay = 500
+	Local $x = 330, $yUp = 93, $yDown = 700, $Delay = 500
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2

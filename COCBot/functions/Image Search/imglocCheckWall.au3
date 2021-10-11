@@ -13,18 +13,19 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func imglocCheckWall()
+Func imglocCheckWall($LastWallLevel = 0)
 	Local $iXClickOffset = 0
 	Local $iYClickOffset = 0
 	Local $iXRange = 16
 	Local $iYRange = 14
 	Local $iLastGoodWallx = $g_aiLastGoodWallPos[0]
 	Local $iLastGoodWally = $g_aiLastGoodWallPos[1]
+	
 	ConvertToVillagePos($iLastGoodWallx, $iLastGoodWally)
 
 	If _Sleep(500) Then Return
 
-	Local $levelWall = $g_iCmbUpgradeWallsLevel + 4
+	Local $levelWall = $LastWallLevel + 4
 
 	Switch $levelWall
 	Case 10
@@ -59,9 +60,6 @@ Func imglocCheckWall()
 
 	If ($FoundWalls[0] = "") Then ; nothing found
 		SetLog("No wall(s) level: " & $levelWall & " found.", $COLOR_ERROR)
-		If SwitchToNextWallLevel() Then
-			SetLog("No more walls of current level, switching to next", $COLOR_ACTION)
-		EndIf
 	Else
 		For $i = 0 To UBound($FoundWalls) - 1
 			Local $WallCoordsArray = decodeMultipleCoords($FoundWalls[$i])
@@ -87,7 +85,7 @@ Func imglocCheckWall()
 						SetLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is a Wall Level: " & $levelWall & ".")
 						$g_aiLastGoodWallPos[0] = $aCoord[0]
 						$g_aiLastGoodWallPos[1] = $aCoord[1]
-						ConvertFromVillagePos($g_aiLastGoodWallPos[0],$g_aiLastGoodWallPos[1])
+						$g_iUpgradedWallLevel = $levelWall - 4
 						Return True
 					Else
 						ClickAway()
@@ -107,7 +105,6 @@ Func imglocCheckWall()
 		$g_aiLastGoodWallPos[1] = -1
 	EndIf
 	Return False
-
 EndFunc   ;==>imglocCheckWall
 
 Func imglocFindWalls($walllevel, $searcharea = "DCD", $redline = "", $maxreturn = 0)

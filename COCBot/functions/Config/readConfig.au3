@@ -122,9 +122,9 @@ Func ReadBuildingConfig()
 	IniReadS($g_aiStarLaboratoryPos[0], $g_sProfileBuildingPath, "upgrade", "StarLabPosX", -1, "int")
 	IniReadS($g_aiStarLaboratoryPos[1], $g_sProfileBuildingPath, "upgrade", "StarLabPosY", -1, "int")
 
-	IniReadS($g_aiLastGoodWallPos[0], $g_sProfileBuildingPath, "upgrade", "xLastGoodWallPos", -1, "int")
-	IniReadS($g_aiLastGoodWallPos[1], $g_sProfileBuildingPath, "upgrade", "yLastGoodWallPos", -1, "int")
-
+	IniReadS($g_aiLastGoodWallPos[0], $g_sProfileBuildingPath, "upgrade", "xLastGoodWallPos", 0, "int")
+	IniReadS($g_aiLastGoodWallPos[1], $g_sProfileBuildingPath, "upgrade", "yLastGoodWallPos", 0, "int")
+	
 	IniReadS($g_iTotalCampSpace, $g_sProfileBuildingPath, "other", "totalcamp", 0, "int")
 
 	For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1 ; Reads Upgrade building data
@@ -884,7 +884,12 @@ Func ReadConfig_600_17()
 	IniReadS($g_iUpgradeWallLootType, $g_sProfileConfigPath, "upgrade", "use-storage", 0, "int")
 	IniReadS($g_bUpgradeWallSaveBuilder, $g_sProfileConfigPath, "upgrade", "savebldr", False, "Bool")
 	IniReadS($g_bChkOnly1Builder, $g_sProfileConfigPath, "upgrade", "Only1Builder", False, "Bool")
-	IniReadS($g_iCmbUpgradeWallsLevel, $g_sProfileConfigPath, "upgrade", "walllvl", 6, "int")
+	
+	Local $str = StringSplit(IniRead($g_sProfileConfigPath, "upgrade", "UpgradeWall", "0|1|2"), "|", $STR_NOCOUNT)
+	For $i = 0 To UBound($g_aUpgradeWall) - 1
+		$g_aUpgradeWall[$i] = $str[$i]
+	Next
+	
 	For $i = 4 To 15
 		IniReadS($g_aiWallsCurrentCount[$i], $g_sProfileConfigPath, "Walls", "Wall" & StringFormat("%02d", $i), 0, "int")
 	Next

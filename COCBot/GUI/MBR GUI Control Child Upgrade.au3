@@ -638,31 +638,33 @@ Func chkWallOnly1Builder()
 EndFunc   ;==>chkWallOnly1Builder
 
 Func cmbWalls()
-	$g_iCmbUpgradeWallsLevel = _GUICtrlComboBox_GetCurSel($g_hCmbWalls)
-	$g_iWallCost = $g_aiWallCost[$g_iCmbUpgradeWallsLevel]
-	GUICtrlSetData($g_hLblWallCost, _NumberFormat($g_iWallCost))
+	Local $DisableOpt = False
+	For $z = 0 To 2
+		$g_aUpgradeWall[$z] = _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$z])
+		GUICtrlSetData($g_hLblWallCost[$z], _NumberFormat($g_aiWallCost[_GUICtrlComboBox_GetCurSel($g_hCmbWalls[$z])]))
+	Next
 
-   For $i = 4 To 14; $g_iCmbUpgradeWallsLevel+  ;Will now always show all.
+	For $i = 4 To 14; $g_iUpgradedWallLevel+  ;Will now always show all.
 	  GUICtrlSetState($g_ahWallsCurrentCount[$i], $GUI_SHOW)
 	  GUICtrlSetState($g_ahPicWallsLevel[$i], $GUI_SHOW)
-   Next
-   ;For $i = $g_iCmbUpgradeWallsLevel+6 To 14
-   ;  GUICtrlSetState($g_ahWallsCurrentCount[$i], $GUI_HIDE)
-   ;  GUICtrlSetState($g_ahPicWallsLevel[$i], $GUI_HIDE)
-   ;Next
+	Next
 
-   If $g_iCmbUpgradeWallsLevel <= 3 Then GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
-
-   GUICtrlSetState($g_hRdoUseElixir, $g_iCmbUpgradeWallsLevel <= 3 ? $GUI_DISABLE : $GUI_ENABLE)
-   GUICtrlSetState($g_hRdoUseElixirGold, $g_iCmbUpgradeWallsLevel <= 3 ? $GUI_DISABLE : $GUI_ENABLE)
-   GUICtrlSetState($g_hTxtWallMinElixir, $g_iCmbUpgradeWallsLevel <= 3 ? $GUI_DISABLE : $GUI_ENABLE)
+	For $y = 0 To 2
+		If _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$y]) <= 3 Then $DisableOpt = True
+	Next
+	If $DisableOpt Then
+		GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
+	EndIf
+	GUICtrlSetState($g_hRdoUseElixir, $DisableOpt ? BitOR($GUI_DISABLE, $GUI_UNCHECKED) : $GUI_ENABLE)
+	GUICtrlSetState($g_hRdoUseElixirGold, $DisableOpt ? BitOR($GUI_DISABLE, $GUI_UNCHECKED) : $GUI_ENABLE)
+	GUICtrlSetState($g_hTxtWallMinElixir, $DisableOpt ? $GUI_DISABLE : $GUI_ENABLE)
 EndFunc   ;==>cmbWalls
 
 Func btnWalls()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	Zoomout()
-	$g_iCmbUpgradeWallsLevel = _GUICtrlComboBox_GetCurSel($g_hCmbWalls)
+	$g_iUpgradedWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbWalls[0])
 	If imglocCheckWall() Then SetLog("Hey Chef! We found the Wall!")
 	$g_bRunState = $wasRunState
 	AndroidShield("btnWalls") ; Update shield status due to manual $g_bRunState
@@ -724,7 +726,7 @@ Func chkRushTH()
 		For $i = $g_hChkUpgradesToIgnore[0] To $g_hChkUpgradesToIgnore[11]
 			GUICtrlSetState($i, $GUI_UNCHECKED)
 		Next
-		GUICtrlSetState($g_hChkUpgradesToIgnore[7], $GUI_CHECKED) ;ignore wall 
+		GUICtrlSetState($g_hChkUpgradesToIgnore[7], $GUI_CHECKED) ;ignore wall
 		For $i = $g_hChkUpgradesToIgnore[12] To $g_hChkUpgradesToIgnore[14]
 			GUICtrlSetState($i, $GUI_CHECKED)
 		Next

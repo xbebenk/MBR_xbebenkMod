@@ -1240,28 +1240,26 @@ Func FirstCheck()
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
 
-	;;;;;Check Town Hall level
+	;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
-	SetDebugLog("Detecting Town Hall level", $COLOR_INFO)
-	SetDebugLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
+	SetLog("Detecting Town Hall level", $COLOR_INFO)
+	SetLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
 	imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
-	SetDebugLog("Detected Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
+	SetLog("Detected Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
 	If $g_iTownHallLevel = $iTownHallLevel Then
-		SetDebugLog("Town Hall level has not changed", $COLOR_INFO)
+		SetLog("Town Hall level has not changed", $COLOR_INFO)
 	Else
-		If $g_iTownHallLevel < $iTownHallLevel Then
-			SetDebugLog("Bad town hall level read...saving bigger old value", $COLOR_ERROR)
-			$g_iTownHallLevel = $iTownHallLevel
-			saveConfig()
-			applyConfig()
-		Else
-			SetDebugLog("Town Hall level has changed!", $COLOR_INFO)
-			SetDebugLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
-			saveConfig()
-			applyConfig()
+		SetLog("Town Hall level has changed!", $COLOR_INFO)
+		SetLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
+		If $g_iTownHallLevel > 6 Then
+			For $z = 0 To 2				
+				$g_aUpgradeWall[$z] = $g_iTownHallLevel - 2 + $z - 4
+				SetLog("Set WallUpgrade [" & $z & "] -> Level = " & $g_aUpgradeWall[$z]+4, $COLOR_INFO)
+			Next
 		EndIf
+		applyConfig()
+		saveConfig()
 	EndIf
-	;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	If Not $g_bRunState Then Return
 	Collect(False) ;collect but skip treasury
@@ -1288,7 +1286,7 @@ Func FirstCheck()
 		checkSwitchAcc()
 	Else
 		FirstCheckRoutine()
-	Endif
+	EndIf
 EndFunc   ;==>FirstCheck
 
 Func FirstCheckRoutine()

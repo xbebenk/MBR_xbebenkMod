@@ -401,7 +401,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 				Next
 				GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
 			EndIf
-			
+
 			;Misc Mod
 			GUICtrlSetState($g_hChkMMSkipFirstCheckRoutine, $g_bSkipFirstCheckRoutine ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMSkipBB, $g_bSkipBB ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -504,7 +504,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkBBAttIfLootAvail = (GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
 			$g_bChkBBWaitForMachine = (GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
 			$g_bChkBBDropBMFirst = (GUICtrlRead($g_hChkBBDropBMFirst) = $GUI_CHECKED)
-			
+
 			;Misc Mod
 			$g_bSkipFirstCheckRoutine = (GUICtrlRead($g_hChkMMSkipFirstCheckRoutine) = $GUI_CHECKED)
 			$g_bSkipBB = (GUICtrlRead($g_hChkMMSkipBB) = $GUI_CHECKED)
@@ -779,9 +779,9 @@ Func ApplyConfig_600_14($TypeReadSave)
 		Case "Read"
 			GUICtrlSetState($g_hChkAutoLabUpgrades, $g_bAutoLabUpgradeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbLaboratory, $g_iCmbLaboratory)
-			_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])		
+			_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
 			chkLab()
-			
+
 			GUICtrlSetState($g_hChkLabUpgradeOrder, $g_bLabUpgradeOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbLabUpgradeOrder[$i], $g_aCmbLabUpgradeOrder[$i])
@@ -791,7 +791,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbStarLaboratory, $g_iCmbStarLaboratory)
 			_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4])
 			chkStarLab()
-			
+
 			GUICtrlSetState($g_hChkSLabUpgradeOrder, $g_bSLabUpgradeOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbSLabUpgradeOrder[$i], $g_aCmbSLabUpgradeOrder[$i])
@@ -802,7 +802,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
 			$g_bAutoStarLabUpgradeEnable = (GUICtrlRead($g_hChkAutoStarLabUpgrades) = $GUI_CHECKED)
 			$g_iCmbStarLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbStarLaboratory)
-			
+
 			$g_bLabUpgradeOrderEnable = (GUICtrlRead($g_hChkLabUpgradeOrder) = $GUI_CHECKED)
 			For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
 				$g_aCmbLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i])
@@ -957,7 +957,10 @@ Func ApplyConfig_600_17($TypeReadSave)
 			EndSwitch
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOnly1Builder, $g_bChkOnly1Builder ? $GUI_CHECKED : $GUI_UNCHECKED)
-			_GUICtrlComboBox_SetCurSel($g_hCmbWalls, $g_iCmbUpgradeWallsLevel)
+			For $y = 0 To 2
+				_GUICtrlComboBox_SetCurSel($g_hCmbWalls[$y], $g_aUpgradeWall[$y])
+			Next
+
 			For $i = 4 To 15
 				GUICtrlSetData($g_ahWallsCurrentCount[$i], $g_aiWallsCurrentCount[$i])
 			Next
@@ -967,6 +970,9 @@ Func ApplyConfig_600_17($TypeReadSave)
 			$g_bAutoUpgradeWallsEnable = (GUICtrlRead($g_hChkWalls) = $GUI_CHECKED)
 			$g_iUpgradeWallMinGold = Number(GUICtrlRead($g_hTxtWallMinGold))
 			$g_iUpgradeWallMinElixir = Number(GUICtrlRead($g_hTxtWallMinElixir))
+			For $y = 0 To 2
+				$g_aUpgradeWall[$y] = _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$y])
+			Next
 			If GUICtrlRead($g_hRdoUseGold) = $GUI_CHECKED Then
 				$g_iUpgradeWallLootType = 0
 			ElseIf GUICtrlRead($g_hRdoUseElixir) = $GUI_CHECKED Then
@@ -976,7 +982,6 @@ Func ApplyConfig_600_17($TypeReadSave)
 			EndIf
 			$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
 			$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
-			$g_iCmbUpgradeWallsLevel = _GUICtrlComboBox_GetCurSel($g_hCmbWalls)
 			For $i = 4 To 15 ; added wall-lvl15
 				$g_aiWallsCurrentCount[$i] = Number(GUICtrlRead($g_ahWallsCurrentCount[$i]))
 			Next
@@ -2090,7 +2095,7 @@ Func ApplyConfig_600_52_1($TypeReadSave)
 				_chkUseInGameArmy($i)
 			Next
 		Case "Save"
-			$g_bQuickTrainEnable = (GUICtrlRead($g_hRadQuickTrain) = $GUI_CHECKED)			
+			$g_bQuickTrainEnable = (GUICtrlRead($g_hRadQuickTrain) = $GUI_CHECKED)
 			For $i = 0 To 2
 				$g_bQuickTrainArmy[$i] = (GUICtrlRead($g_ahChkArmy[$i]) = $GUI_CHECKED)
 				$g_abUseInGameArmy[$i] = (GUICtrlRead($g_ahChkUseInGameArmy[$i]) = $GUI_CHECKED)
