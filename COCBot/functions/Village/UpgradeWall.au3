@@ -33,7 +33,7 @@ Func UpgradeWall()
 	SetLog("Checking Upgrade Walls", $COLOR_INFO)
 	VillageReport(True, True) ;update village resource capacity
 	SetLog("FreeBuilderCount: " & $g_iFreeBuilderCount, $COLOR_DEBUG)
-	
+	If $g_iFreeBuilderCount < 1 Then Return
 	If Not IsResourceEnough($iWallCost) Then Return
 	
 	If $g_iFreeBuilderCount = 0 Then
@@ -243,11 +243,11 @@ Func IsResourceEnough($iWallCost = $g_aUpgradeWall[0])
 		Case 0 ; Using gold
 			If $g_bDebugClick Then SetLog("[Using Gold] Current:" & $g_aiCurrentLoot[$eLootGold] & " - " & $iWallCost & " = " & ($g_aiCurrentLoot[$eLootGold] - $iWallCost), $COLOR_SUCCESS)
 			If ($g_aiCurrentLoot[$eLootGold] - $iWallCost) < $g_iUpgradeWallMinGold Then
-				SetLog("Skip Wall upgrade -insufficient gold", $COLOR_WARNING)
+				SetLog("Skip Wall upgrade - insufficient gold", $COLOR_WARNING)
 				Return False
 			EndIf
 		Case 1 ; Using elixir
-			If $g_bDebugClick Then SetLog("[Using Elixir] Current:" & $g_aiCurrentLoot[$eLootGold] & " - " & $iWallCost & " = " & ($g_aiCurrentLoot[$eLootGold] - $iWallCost), $COLOR_SUCCESS)
+			If $g_bDebugClick Then SetLog("[Using Elixir] Current:" & $g_aiCurrentLoot[$eLootElixir] & " - " & $iWallCost & " = " & ($g_aiCurrentLoot[$eLootElixir] - $iWallCost), $COLOR_SUCCESS)
 			If ($g_aiCurrentLoot[$eLootElixir] - $iWallCost) < $g_iUpgradeWallMinElixir Then
 				SetLog("Skip Wall upgrade - insufficient Elixir", $COLOR_WARNING)
 				Return False
@@ -257,7 +257,7 @@ Func IsResourceEnough($iWallCost = $g_aUpgradeWall[0])
 			If ($g_aiCurrentLoot[$eLootGold] - $iWallCost) < $g_iUpgradeWallMinGold Then
 				$EnoughGold = False
 			EndIf
-			If $g_bDebugClick Then SetLog("[Using Elixir] Current:" & $g_aiCurrentLoot[$eLootGold] & " - " & $iWallCost & " = " & ($g_aiCurrentLoot[$eLootGold] - $iWallCost), $COLOR_SUCCESS)
+			If $g_bDebugClick Then SetLog("[Using Elixir] Current:" & $g_aiCurrentLoot[$eLootElixir] & " - " & $iWallCost & " = " & ($g_aiCurrentLoot[$eLootElixir] - $iWallCost), $COLOR_SUCCESS)
 			If ($g_aiCurrentLoot[$eLootElixir] - $iWallCost) < $g_iUpgradeWallMinElixir Then
 				$EnoughElix = False
 			EndIf
