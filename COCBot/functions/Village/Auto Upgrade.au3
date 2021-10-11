@@ -640,11 +640,11 @@ Func GoGoblinMap()
 	ClickP($aAttackButton)
 	SetLog("Going to Goblin Map to reset Field", $COLOR_INFO)
 	If Not $g_bRunState Then Return
-	If _Sleep(500) Then Return
+	If _Sleep(2000) Then Return
 	If _ColorCheck(_GetPixelColor(250, 360, True), Hex(0xB07453, 6), 1) Then ;goblin not selected
 		Click(140, 360)
 	EndIf
-	If _Sleep(500) Then Return
+	If _Sleep(1000) Then Return
 	If Not _ColorCheck(_GetPixelColor(250, 360, True), Hex(0xB07453, 6), 1) Then ;goblin selected
 		;Click(425, 240)
 		If _Sleep(500) Then Return
