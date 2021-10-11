@@ -129,9 +129,10 @@ Global $g_sImgAutoUpgradeBtnDir = @ScriptDir & "\imgxml\Resources\BuildersBase\A
 Global $g_sImgAutoUpgradeZero = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\Shop"
 Global $g_sImgAutoUpgradeClock = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\Clock"
 Global $g_sImgAutoUpgradeInfo = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\Slot"
-Global $g_sImgAutoUpgradeNewBldgYes = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\Yes"
-Global $g_sImgAutoUpgradeNewBldgNo = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\No"
+Global $g_sImgAutoUpgradeGreenCheck = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\GreenCheck\"
+Global $g_sImgAutoUpgradeRedX = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\RedX\"
 Global $g_sImgArrowNewBuilding = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Arrow\Arrow*.xml"
+Global $g_sImgAUpgradeGreenZoneBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\GreenZoneBB\"
 #EndRegion
 
 #Region Train

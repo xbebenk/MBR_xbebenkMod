@@ -610,3 +610,55 @@ Func ZoomInNox($Region = "Top")
 	EndSwitch
 	Return True
 EndFunc
+
+Func ZoomInBB($Region = "Top")
+	Switch $g_sAndroidEmulator
+		Case "Memu"
+			If ZoomInBBMEmu($Region) Then Return True
+		Case "Nox"
+			If ZoomInBBNox($Region) Then Return True
+	EndSwitch
+	Return False
+EndFunc
+
+Func ZoomInBBMEmu($Region = "Top")
+	SetDebugLog("ZoomInMEmu()")
+	If Not AndroidAdbScript("ZoomIn") Then Return False
+	If _Sleep(1500) Then Return
+	Switch $Region
+		Case "Top"
+			ClickDrag(400, 100, 400, 600, 200)
+			If _Sleep(500) Then Return
+		Case "Left"
+			ClickDrag(100, 400, 700, 400, 200)
+			If _Sleep(500) Then Return
+		Case "Bottom"
+			ClickDrag(400, 650, 400, 100, 200)
+			If _Sleep(500) Then Return
+		Case "Right"
+			ClickDrag(800, 400, 100, 400, 200)
+			If _Sleep(500) Then Return
+	EndSwitch
+	Return True
+EndFunc
+
+Func ZoomInBBNox($Region = "Top")
+	SetDebugLog("ZoomInNox()")
+	If Not AndroidAdbScript("ZoomIn") Then Return False
+	If _Sleep(1500) Then Return
+	Switch $Region
+		Case "Top"
+			ClickDrag(400, 100, 400, 600, 200)
+			If _Sleep(500) Then Return
+		Case "Left"
+			ClickDrag(100, 400, 700, 400, 200)
+			If _Sleep(500) Then Return
+		Case "Bottom"
+			ClickDrag(400, 650, 400, 100, 200)
+			If _Sleep(500) Then Return
+		Case "Right"
+			ClickDrag(800, 400, 100, 400, 200)
+			If _Sleep(500) Then Return
+	EndSwitch
+	Return True
+EndFunc
