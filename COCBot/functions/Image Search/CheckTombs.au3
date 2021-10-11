@@ -92,7 +92,7 @@ Func CleanYard()
 	Local $hObstaclesTimer = __TimerInit()
 	VillageReport(True, True)
 	
-	If RemoveGembox() Then _Sleep(30000) ;Remove gembox first, and wait till gembox removed
+	If RemoveGembox() Then _SleepStatus(30000) ;Remove gembox first, and wait till gembox removed
 	
 	; Setup arrays, including default return values for $return
 	Local $Filename = ""
