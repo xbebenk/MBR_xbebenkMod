@@ -139,16 +139,14 @@ Func CleanYard()
 EndFunc   ;==>CleanYard
 
 Func ClickRemoveObstacle()
-	Local $aiButton = findButton("RemoveObstacle", Default, 1, True)
-	If IsArray($aiButton) And UBound($aiButton) >= 2 Then
-		SetDebugLog("Remove Button found! Clicking it at X: " & $aiButton[0] & ", Y: " & $aiButton[1], $COLOR_DEBUG1)
-		ClickP($aiButton)
+	If _Sleep(500) Then Return
+	If ClickB("RemoveObstacle") Then 
 		Return True
 	Else
 		SetLog("Cannot find Remove Button", $COLOR_ERROR)
 		ClickAway()
-		Return False
 	EndIf
+	Return False
 EndFunc
 
 Func RemoveGembox()
