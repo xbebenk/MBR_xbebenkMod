@@ -1331,7 +1331,7 @@ Func FirstCheckRoutine()
 	DonateCC()
 	TrainSystem()
 
-	Local $aRndFuncList = ['DailyChallenge','CollectAchievements','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
+	Local $aRndFuncList = ['Collect','DailyChallenge','CollectAchievements','CheckTombs', 'CleanYard','UpgradeWall','LabCheck', 'Laboratory','UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
