@@ -135,6 +135,7 @@ Global $g_sImgAutoUpgradeGreenCheck = @ScriptDir & "\imgxml\Resources\BuildersBa
 Global $g_sImgAutoUpgradeRedX = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\RedX\"
 Global $g_sImgArrowNewBuilding = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Arrow\Arrow*.xml"
 Global $g_sImgAUpgradeGreenZoneBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\GreenZoneBB\"
+Global $g_sImgAUpgradeObstacleBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\ObstacleBB"
 #EndRegion
 
 #Region Train

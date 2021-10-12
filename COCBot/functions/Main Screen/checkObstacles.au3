@@ -35,6 +35,15 @@ Func checkObstacles($bBuilderBase = Default) ;Checks if something is in the way 
 	Return FuncReturn($Result)
 EndFunc   ;==>checkObstacles
 
+Func CheckObstaclesAutoUpgradeBB()
+	Local $ObstacleCoord = decodeSingleCoord(findImage("ObstacleBB", $g_sImgAUpgradeObstacleBB & "\*", "FV", 1, True))
+	If IsArray($ObstacleCoord) And UBound($ObstacleCoord) = 2 Then
+		Click($ObstacleCoord[0], $ObstacleCoord[1])
+		If _Sleep(500) Then Return
+		ClickAway()
+	EndIf 
+EndFunc
+
 Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if something is in the way for mainscreen
 	Local $msg, $x, $y, $Result
 	$g_bMinorObstacle = False
@@ -51,6 +60,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If $bIsOnBuilderIsland Then
 			SetLog("Detected Builder Base, trying to switch back to Main Village")
 			ZoomOut()
+			CheckObstaclesAutoUpgradeBB()
 		Else
 			SetLog("Detected Main Village, trying to switch back to Builder Base")
 			ZoomOut()
