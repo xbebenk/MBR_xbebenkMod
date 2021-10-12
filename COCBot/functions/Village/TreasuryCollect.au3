@@ -20,13 +20,48 @@ Func TreasuryCollect()
 
 	ClickAway()
 	If _Sleep($DELAYRESPOND) Then Return
+	Local $TryCCAutoLocate = False
 	
-	Local $TreasuryCoord = decodeSingleCoord(findImage("TreasuryFull", $g_sImgTreasuryFull & "\TreasuryFull*", "FV", 1, True))
-	If IsArray($TreasuryCoord) And UBound($TreasuryCoord) = 2 Then
-		Click($TreasuryCoord[0], $TreasuryCoord[1] + 50)
-		$g_aiClanCastlePos[0] = $TreasuryCoord[0]
-		$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 50
-		SetLog("Found Treasury Full, save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
+	If $g_aiClanCastlePos[0] < 1 Or $g_aiClanCastlePos[1] < 1 Then
+		$TryCCAutoLocate = True
+	Else
+		Click($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
+		Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+		If $BuildingInfo[1] = "Clan Castle" Then 
+			$TryCCAutoLocate = False
+		Else
+			$TryCCAutoLocate = True
+		EndIf
+		ClickAway()
+		If _Sleep(500) Then Return
+	EndIf
+	
+	If $TryCCAutoLocate Then 
+		Local $TreasuryCoord = decodeSingleCoord(findImage("TreasuryFull", $g_sImgTreasuryFull & "\Treasury*", "FV", 1, True))
+		If IsArray($TreasuryCoord) And UBound($TreasuryCoord) = 2 Then
+			Click($TreasuryCoord[0], $TreasuryCoord[1] + 50)
+			If _Sleep(500) Then Return
+			Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+			If $BuildingInfo[1] = "Clan Castle" Then 
+				$g_aiClanCastlePos[0] = $TreasuryCoord[0]
+				$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 50
+				SetLog("Found Treasury Full, save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
+			EndIf
+			ClickAway()
+		EndIf
+		
+		Local $ClanCastleCoord = decodeSingleCoord(findImage("ClanCastle", $g_sImgClanCastle & "\ClanCastle*", "FV", 1, True))
+		If IsArray($ClanCastleCoord) And UBound($ClanCastleCoord) = 2 Then
+			Click($ClanCastleCoord[0] + 10, $ClanCastleCoord[1] + 10)
+			If _Sleep(500) Then Return
+			Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+			If $BuildingInfo[1] = "Clan Castle" Then 
+				$g_aiClanCastlePos[0] = $ClanCastleCoord[0] + 10
+				$g_aiClanCastlePos[1] = $ClanCastleCoord[1] + 10
+				SetLog("Found Clan Castle, save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
+			EndIf
+			ClickAway()
+		EndIf
 	EndIf
 	
 	If ($g_aiClanCastlePos[0] = "-1" Or $g_aiClanCastlePos[1] = "-1") Then ;check for valid CC location
@@ -38,9 +73,9 @@ Func TreasuryCollect()
 			Return
 		EndIf
 	EndIf
+	
 	ClickAway()
 	If _Sleep($DELAYCOLLECT3) Then Return
-	;BuildingClick($g_aiClanCastlePos[0], $g_aiClanCastlePos[1], "#0250") ; select CC
 	Click($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])   ; select CC
 	If _Sleep($DELAYTREASURY2) Then Return
 
@@ -48,13 +83,6 @@ Func TreasuryCollect()
 	If IsArray($aTreasuryButton) And UBound($aTreasuryButton, 1) = 2 Then
 		If IsMainPage() Then ClickP($aTreasuryButton, 1, 0, "#0330")
 		If _Sleep($DELAYTREASURY1) Then Return
-	Else
-		SetLog("Cannot find the Treasury Button", $COLOR_ERROR)
-		If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 0, 0, $g_iGAME_WIDTH, $g_iGAME_HEIGHT, True, False) Then
-			SetLog("We found Treasury Button from QuickMIS", $COLOR_DEBUG)
-			Click($g_iQuickMISX,$g_iQuickMISY,1)
-			If _Sleep($DELAYTREASURY1) Then Return
-		EndIf
 	EndIf
 
 	If Not _WaitForCheckPixel($aTreasuryWindow, $g_bCapturePixel, Default, "Wait treasury window:") Then
