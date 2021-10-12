@@ -556,7 +556,7 @@ Func SearchGreenZone()
 EndFunc
 
 Func ClickDragAUpgrade($Direction = "up", $YY = Default)
-	Local $x = 330, $yUp = 93, $yDown = 700, $Delay = 500
+	Local $x = 330, $yUp = 93, $yDown = 800, $Delay = 500
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
