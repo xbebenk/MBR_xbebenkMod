@@ -150,7 +150,17 @@ Func AutoUpgradeBB($bTest = False)
 		; Will Open the Suggested Window and check if is OK
 		If ClickOnBuilder($bTest) Then
 			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
-
+			If SearchNewBuilding($bTest) Then 
+				ZoomOut()
+				getBuilderCount(False, True)
+			Else
+				ZoomOut()
+				ClickOnBuilder($bTest)
+				ClickDrag(333, 90, 333, 700, 1000);do scroll down
+				If _Sleep(2000) Then Return
+			EndIf
+			
+			If $g_iFreeBuilderCountBB = 0 Then Return True
 			;upgrade wall first if to prevent Gold Storage become Full when BH is already Maxed
 			If $g_bisBHMaxed And $g_bGoldStorageFullBB And $g_bisMegaTeslaMaxed Then
 				; scroll down to bottom as wall will be on below
@@ -159,50 +169,10 @@ Func AutoUpgradeBB($bTest = False)
 					If _Sleep(2000) Then Return
 				EndIf
 			EndIf
-
+			
 			For $z = 0 To 2 ;for do scroll 3 times
 				If $g_bRestart Then Exitloop
-				Local $x = 400, $y = 100, $x1 = 540, $y1 = 130, $step = 28
-				
-				For $i = 0 To 9
-					Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeElixir, "Elixir", $bScreencap, $bDebug)
-					Switch $aResult[2]
-						Case "New"
-							If $g_iChkPlacingNewBuildings = 1 Then
-								SetLog("[" & $i + 1 & "]" & " New Elixir Building detected, Placing it...", $COLOR_INFO)
-								If NewBuildings($aResult, $bTest) Then
-									Zoomout()
-									Return True
-								EndIf
-							Else
-								SetLog("[" & $i + 1 & "]" & " New Elixir Building detected, but not enabled...", $COLOR_INFO)
-							EndIf
-						Case "NoResources"
-							SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
-						Case Else
-							SetDebugLog("[" & $i + 1 & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-					EndSwitch
-					Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
-					Switch $aResult[2]
-						Case "New"
-							If $g_iChkPlacingNewBuildings = 1 Then
-								SetLog("[" & $i + 1 & "]" & " New Gold Building detected, Placing it...", $COLOR_INFO)
-								If NewBuildings($aResult, $bTest) Then
-									Zoomout()
-									Return True
-								EndIf
-							Else
-								SetLog("[" & $i + 1 & "]" & " New Gold Building detected, but not enabled...", $COLOR_INFO)
-							EndIf
-						Case "NoResources"
-							SetLog("[" & $i + 1 & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
-						Case Else
-							SetDebugLog("[" & $i + 1 & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-					EndSwitch
-					$y += $step
-					$y1 += $step
-				Next
-				
+				SetLog("[" & $z + 1 & "] Search Upgrade for Existing Building", $COLOR_INFO)
 				Local $x = 400, $y = 100, $x1 = 540, $y1 = 130, $step = 28
 				For $i = 0 To 9
 					Local $bSkipGoldCheck = False
@@ -214,7 +184,6 @@ Func AutoUpgradeBB($bTest = False)
 								Click($aResult[0], $aResult[1], 1)
 								If _Sleep(2000) Then Return
 								If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
-									Zoomout()
 									Return True
 								EndIf
 								$bSkipGoldCheck = True
@@ -234,7 +203,6 @@ Func AutoUpgradeBB($bTest = False)
 								Click($aResult[0], $aResult[1], 1)
 								If _Sleep(2000) Then Return
 								If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
-									Zoomout()
 									Return True
 								EndIf
 							Case "NoResources"
@@ -251,52 +219,30 @@ Func AutoUpgradeBB($bTest = False)
 				Setlog("Found Building to Upgrade..", $COLOR_DEBUG)
 				Exitloop
 			Else
-				ClickDrag(333, $y - 30, 333, 75, 800);do scroll down
-				If _Sleep(500) Then Return
+				ClickDragAutoUpgradeBB($y)
 			EndIf
 			Next
 		EndIf
 	EndIf
 	$BuildingUpgraded = False
+	Zoomout()
 	ClickAway("Left")
 EndFunc   ;==>MainSuggestedUpgradeCode
 
-; This fucntion will Open the Suggested Window and check if is OK
 Func ClickOnBuilder($bTest = False)
+	Local $b_WindowOpened = False
+	; open the builders menu
+	Click(360, 11)
+	If _Sleep(1000) Then Return
 
-	; Master Builder Check pixel [i] icon
-	Local Const $aMasterBuilder[4] = [360, 11, 0x7cbdde, 10]
-	; Debug Stuff
-	Local $sDebugText = ""
-	Local Const $Debug = False
-	Local Const $Screencap = True
-
-	getBuilderCount(True,True)
-	; Master Builder is not available return
-	If $g_iFreeBuilderCountBB = 0 Then SetLog("No Master Builder available! [" & $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB & "]", $COLOR_INFO)
-
-	If $bTest Then $g_iFreeBuilderCountBB = 1
-
-
-	; Master Builder available
-	If $g_iFreeBuilderCountBB > 0 Then
-		; Check the Color and click
-		If _CheckPixel($aMasterBuilder, True) Then
-			; Click on Builder
-			Click($aMasterBuilder[0], $aMasterBuilder[1], 1)
-			If _Sleep(2000) Then Return
-			; Let's verify if the Suggested Window open
-			If QuickMIS("BC1", $g_sImgAutoUpgradeWindow, 330, 85, 550, 145, $Screencap, $Debug) Then
-				Return True
-			Else
-				$sDebugText = "Window didn't opened"
-			EndIf
-		Else
-			$sDebugText = "BB Pixel problem"
-		EndIf
+	If (_ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) = True) Then
+		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
+		$b_WindowOpened = True
+	Else
+		SetLog("Upgrade Window didn't opened", $COLOR_DEBUG)
+		$b_WindowOpened = False
 	EndIf
-	If $sDebugText <> "" Then SetLog("Problem on Suggested Upg Window: [" & $sDebugText & "]", $COLOR_ERROR)
-	Return False
+	Return $b_WindowOpened
 EndFunc   ;==>ClickOnBuilder
 
 Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap = True, $Debug = False)
@@ -420,11 +366,70 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 	Return False
 EndFunc   ;==>GetUpgradeButton
 
+Func SearchNewBuilding($bTest = False)
+	Local $bDebug = $g_bDebugSetlog
+	Local $bScreencap = True
+	For $z = 0 To 2 ;for do scroll 3 times
+		If $g_bRestart Then Exitloop
+		Local $x = 400, $y = 73, $x1 = 540, $y1 = 103, $step = 28
+		SetLog("[" & $z + 1 & "] Search for Placing New Building", $COLOR_INFO)
+		For $i = 0 To 9
+			Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeElixir, "Elixir", $bScreencap, $bDebug)
+			Switch $aResult[2]
+				Case "New"
+					If $g_iChkPlacingNewBuildings = 1 Then
+						SetLog("[" & $i + 1 & "]" & " New Elixir Building detected, Placing it...", $COLOR_INFO)
+						If NewBuildings($aResult, $bTest) Then
+							Return True
+						EndIf
+					Else
+						SetLog("[" & $i + 1 & "]" & " New Elixir Building detected, but not enabled...", $COLOR_INFO)
+					EndIf
+				Case "NoResources"
+					SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
+				Case Else
+					SetDebugLog("[" & $i + 1 & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
+			EndSwitch
+			Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
+			Switch $aResult[2]
+				Case "New"
+					If $g_iChkPlacingNewBuildings = 1 Then
+						SetLog("[" & $i + 1 & "]" & " New Gold Building detected, Placing it...", $COLOR_INFO)
+						If NewBuildings($aResult, $bTest) Then
+							Return True
+						EndIf
+					Else
+						SetLog("[" & $i + 1 & "]" & " New Gold Building detected, but not enabled...", $COLOR_INFO)
+					EndIf
+				Case "NoResources"
+					SetLog("[" & $i + 1 & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
+				Case Else
+					SetDebugLog("[" & $i + 1 & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
+			EndSwitch
+			$y += $step
+			$y1 += $step
+		Next
+		ClickDragAutoUpgradeBB($y)
+	Next
+EndFunc
+
+Func ClickDragAutoUpgradeBB($y = 400)
+	
+	If (_ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) = True) Then
+		ClickDrag(333, $y - 30, 333, 93, 800);do scroll down
+		If _Sleep(2000) Then Return
+	Else
+		SetLog("Upgrade Window didn't open, try to open it", $COLOR_DEBUG)
+		If ClickOnBuilder() Then 
+			ClickDrag(333, $y - 30, 333, 93, 800);do scroll down
+			If _Sleep(2000) Then Return
+		EndIf
+	EndIf
+EndFunc
+
 Func NewBuildings($aResult, $bTest = False)
 	Local $Screencap = True, $Debug = False
 	If UBound($aResult) = 3 And $aResult[2] = "New" Then
-		Local $x = 70, $y = 100, $x1 = 800, $y1 = 550
-		; The $g_iQuickMISX and $g_iQuickMISY haves the coordinates compansation from 'New' | GetIconPosition()
 		Click($aResult[0], $aResult[1], 1)
 		If _Sleep(3500) Then Return
 
@@ -441,28 +446,28 @@ Func NewBuildings($aResult, $bTest = False)
 					Return False
 				EndIf
 			EndIf
+		
 			Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50)
-			If _Sleep(2000) Then Return 
+			If _Sleep(2500) Then Return 
 			; Lets search for the Correct Symbol on field
-			If QuickMIS("BC1", $g_sImgAutoUpgradeGreenCheck, $x, $y, $x1, $y1, $Screencap, $Debug) Then
+			Local $GreenCheckCoord = decodeSingleCoord(findImage("GreenCheck", $g_sImgAutoUpgradeGreenCheck & "\GreenCheck*", "FV", 1, True))
+			If IsArray($GreenCheckCoord) And UBound($GreenCheckCoord) = 2 Then 
+				SetLog("Placed a new Building on Builder Island! [" & $GreenCheckCoord[0] & "," & $GreenCheckCoord[1] & "]", $COLOR_SUCCESS)
 				If Not $bTest Then
-					Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
+					Click($GreenCheckCoord[0], $GreenCheckCoord[1])
 				EndIf
-				SetLog("Placed a new Building on Builder Island! [" & $g_iQuickMISX + $x & "," & $g_iQuickMISY + $y & "]", $COLOR_SUCCESS)
 				If _Sleep(1000) Then Return
-				; Lets check if exist the [x] , Some Buildings like Traps when you place one will give other to place automaticly!
-				If QuickMIS("BC1", $g_sImgAutoUpgradeRedX, $x, $y, $x1, $y1, $Screencap, $Debug) Then
-					Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
-				EndIf
+				Click($GreenCheckCoord[0] - 75, $GreenCheckCoord[1]) ;click redX in case it exist
 				Return True
 			Else
-				If QuickMIS("BC1", $g_sImgAutoUpgradeRedX, $x, $y, $x1, $y1, $Screencap, $Debug) Then
-					SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $g_iQuickMISX + $x & "," & $g_iQuickMISY + $y & "]", $COLOR_ERROR)
-					Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
+				Local $RedXCoord = decodeSingleCoord(findImage("RedX", $g_sImgAutoUpgradeRedX & "\RedX*", "FV", 1, True))
+				If IsArray($RedXCoord) And UBound($RedXCoord) = 2 Then 
+					SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $RedXCoord[0] & "," & $RedXCoord[1] & "]", $COLOR_ERROR)
+					Click($RedXCoord[0], $RedXCoord[1])
 				Else
 					SetLog("Error on Undo symbol!", $COLOR_ERROR)
-					Click(820, 38, 1) ; exit from Shop
-					Click($g_iQuickMISX + $x - 75, $g_iQuickMISY + $y)
+					;todo do attack bb
+					Return False
 				EndIf
 				Return True
 			EndIf
