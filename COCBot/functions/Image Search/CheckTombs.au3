@@ -112,12 +112,13 @@ Func CleanYard()
 					$CleanYardXY = $aPoints[$i] ; Coords
 					If UBound($CleanYardXY) > 1 And isInsideDiamondXY($CleanYardXY[0], $CleanYardXY[1]) Then ; secure x because of clan chat tab
 						If $g_bDebugSetlog Then SetDebugLog($Filename & " found (" & $CleanYardXY[0] & "," & $CleanYardXY[1] & ")", $COLOR_SUCCESS)
+						If Not CleanYardCheckBuilder() Then ExitLoop 2
 						If IsMainPage() Then Click($CleanYardXY[0], $CleanYardXY[1], 1, 0, "#0430")
 						$Locate = 1
 						_Sleep(1000)
 						If Not ClickRemoveObstacle() Then ContinueLoop
+						_SleepStatus(11000)
 						ClickAway()
-						If Not CleanYardCheckBuilder() Then ExitLoop 2
 					EndIf
 				Next
 			Next
