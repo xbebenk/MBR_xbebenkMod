@@ -144,29 +144,38 @@ Func AutoUpgradeBB($bTest = False)
 	Local $bScreencap = True
 
 	BuilderBaseReport(True)
+	If $g_iFreeBuilderCountBB = 0 Then 
+		SetLog("Master Builder Not Available", $COLOR_DEBUG)
+		Return
+	EndIf
 	
 	If isOnBuilderBase(True) Then
 		If Not SearchGreenZoneBB() Then Return
 		If ClickOnBuilder($bTest) Then
 			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
 			If SearchNewBuilding($bTest) Then 
-				ZoomOut()
 				getBuilderCount(False, True)
-			;Else
-			;	ZoomOut()
-			;	ClickOnBuilder($bTest)
-			;	ClickDrag(333, 90, 333, 700, 1000);do scroll down
-			;	If _Sleep(2000) Then Return
+				ClickOnBuilder($bTest)
+				ClickDrag(400, 100, 400, 800, 1000);do scroll down
+				If _Sleep(2000) Then Return
+			Else
+				ZoomOut()
+				ClickAway()
+				getBuilderCount(False, True)
+				ClickOnBuilder($bTest)
+				ClickDrag(400, 100, 400, 800, 1000);do scroll down
+				If _Sleep(2000) Then Return
 			EndIf
 			
-			If $g_iFreeBuilderCountBB = 0 Then Return True
+			If $g_iFreeBuilderCountBB = 0 Then 
+				SetLog("Master Builder Not Available", $COLOR_DEBUG)
+				Return True
+			EndIf
 			;upgrade wall first if to prevent Gold Storage become Full when BH is already Maxed
 			If $g_bisBHMaxed And $g_bGoldStorageFullBB And $g_bisMegaTeslaMaxed Then
 				; scroll down to bottom as wall will be on below
-				If QuickMIS("BC1", $g_sImgAutoUpgradeWindow, 330, 85, 550, 145, True, $bDebug) Then
-					ClickDrag(333, 320, 333, 0, 1000);do scroll down
-					If _Sleep(2000) Then Return
-				EndIf
+				ClickDrag(333, 320, 333, 0, 1000);do scroll down
+				If _Sleep(2000) Then Return
 			EndIf
 			
 			For $z = 0 To 5 ;for do scroll 3 times
@@ -368,113 +377,118 @@ EndFunc   ;==>GetUpgradeButton
 Func SearchNewBuilding($bTest = False)
 	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
+	Local $NeedDrag = True
 	For $z = 0 To 5 ;for do scroll 3 times
-		If $g_bRestart Then Exitloop
-		Local $x = 400, $y = 73, $x1 = 540, $y1 = 103, $step = 28
+		If $g_bRestart Then Return
+		Local $b_BuildingFound = False
+		Local $NewCoord, $ZeroCoord
+		
+		Local $x = 270, $y = 73, $x1 = 540, $y1 = 103, $step = 28
 		SetLog("[" & $z + 1 & "] Search for Placing New Building", $COLOR_INFO)
 		For $i = 0 To 9
-			Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeElixir, "Elixir", $bScreencap, $bDebug)
-			Switch $aResult[2]
-				Case "New"
-					If $g_iChkPlacingNewBuildings = 1 Then
-						SetLog("[" & $i + 1 & "]" & " New Elixir Building detected, Placing it...", $COLOR_INFO)
-						If NewBuildings($aResult, $bTest) Then
-							Return True
-						EndIf
-					Else
-						SetLog("[" & $i + 1 & "]" & " New Elixir Building detected, but not enabled...", $COLOR_INFO)
-					EndIf
-				Case "NoResources"
-					SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
-				Case Else
-					SetDebugLog("[" & $i + 1 & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-			EndSwitch
-			Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
-			Switch $aResult[2]
-				Case "New"
-					If $g_iChkPlacingNewBuildings = 1 Then
-						SetLog("[" & $i + 1 & "]" & " New Gold Building detected, Placing it...", $COLOR_INFO)
-						If NewBuildings($aResult, $bTest) Then
-							Return True
-						EndIf
-					Else
-						SetLog("[" & $i + 1 & "]" & " New Gold Building detected, but not enabled...", $COLOR_INFO)
-					EndIf
-				Case "NoResources"
-					SetLog("[" & $i + 1 & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
-				Case Else
-					SetDebugLog("[" & $i + 1 & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-			EndSwitch
+			$NewCoord = decodeSingleCoord(findImage("New", $g_sImgAUpgradeObst & "\New*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
+			If IsArray($NewCoord) And UBound($NewCoord) = 2 Then 
+				$b_BuildingFound = True ;we find New Building
+				$ZeroCoord = decodeSingleCoord(findImage("Zero", $g_sImgAUpgradeZero & "\Zero*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
+				If IsArray($ZeroCoord) And UBound($ZeroCoord) = 2 Then 
+					If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
+				Else
+					$b_BuildingFound = False
+					If $g_bDebugClick Then SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
+				EndIf
+			Else
+				If $g_bDebugClick Then SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
+				If $z > 2 And $i = 9 Then $NeedDrag = False ; sudah 3 kali scroll tapi yang paling bawah bukan new building
+			EndIf
+			
+			If $b_BuildingFound Then 
+				If NewBuildings($ZeroCoord[0], $ZeroCoord[1], $bTest) Then
+					ClickMainBuilder($bTest)
+					$b_BuildingFound = False ;reset
+					ContinueLoop
+				Else
+					Return False
+				EndIf
+			EndIf
 			$y += $step
 			$y1 += $step
 		Next
+		If Not $NeedDrag Then
+			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Need More resource", $COLOR_DEBUG)
+			ExitLoop
+		EndIf
 		ClickDragAutoUpgradeBB($y)
+		If $g_bDebugClick Then SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 	Next
+	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
+	ZoomOut()
+	ClickAway()
+	Return True
 EndFunc
 
 Func ClickDragAutoUpgradeBB($y = 400)
 	
 	If (_ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) = True) Then
 		ClickDrag(333, $y - 30, 333, 93, 800);do scroll down
-		If _Sleep(2000) Then Return
+		If _Sleep(2500) Then Return
 	Else
 		SetLog("Upgrade Window didn't open, try to open it", $COLOR_DEBUG)
 		If ClickOnBuilder() Then 
 			ClickDrag(333, $y - 30, 333, 93, 800);do scroll down
-			If _Sleep(2000) Then Return
+			If _Sleep(2500) Then Return
 		EndIf
 	EndIf
 EndFunc
 
-Func NewBuildings($aResult, $bTest = False)
+Func NewBuildings($x, $y, $bTest = False)
 	Local $Screencap = True, $Debug = False
-	If UBound($aResult) = 3 And $aResult[2] = "New" Then
-		Click($aResult[0], $aResult[1], 1)
-		If _Sleep(3500) Then Return
+	
+	Click($x, $y)
+	If _Sleep(3500) Then Return
 
-		;Search the arrow
-		Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
-		If UBound($ArrowCoordinates) > 1 Then
-			;Check if its wall or not (wall should skip)
-			If $g_bSkipWallPlacingOnBB Then
-				If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 150, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
-					SetLog("New Building is Wall!, Cancelling...", $COLOR_INFO)
-					Click(820, 38, 1) ; exit from Shop
-					If _Sleep(2000) Then Return
-					ClickOnBuilder($bTest)
-					Return False
-				EndIf
+	;Search the arrow
+	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
+	If UBound($ArrowCoordinates) > 1 Then
+		;Check if its wall or not (wall should skip)
+		If $g_bSkipWallPlacingOnBB Then
+			If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 150, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
+				SetLog("New Building is Wall!, Cancelling...", $COLOR_INFO)
+				Click(820, 38, 1) ; exit from Shop
+				If _Sleep(2000) Then Return
+				ClickOnBuilder($bTest)
+				Return False
 			EndIf
-		
-			Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50)
-			If _Sleep(2500) Then Return 
-			; Lets search for the Correct Symbol on field
-			Local $GreenCheckCoord = decodeSingleCoord(findImage("GreenCheck", $g_sImgAutoUpgradeGreenCheck & "\GreenCheck*", "FV", 1, True))
-			If IsArray($GreenCheckCoord) And UBound($GreenCheckCoord) = 2 Then 
-				SetLog("Placed a new Building on Builder Island! [" & $GreenCheckCoord[0] & "," & $GreenCheckCoord[1] & "]", $COLOR_SUCCESS)
-				If Not $bTest Then
-					Click($GreenCheckCoord[0], $GreenCheckCoord[1])
-				EndIf
-				If _Sleep(1000) Then Return
-				Click($GreenCheckCoord[0] - 75, $GreenCheckCoord[1]) ;click redX in case it exist
-				Return True
-			Else
-				Local $RedXCoord = decodeSingleCoord(findImage("RedX", $g_sImgAutoUpgradeRedX & "\RedX*", "FV", 1, True))
-				If IsArray($RedXCoord) And UBound($RedXCoord) = 2 Then 
-					SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $RedXCoord[0] & "," & $RedXCoord[1] & "]", $COLOR_ERROR)
-					Click($RedXCoord[0], $RedXCoord[1])
-				Else
-					SetLog("Error on Undo symbol!", $COLOR_ERROR)
-					;todo do attack bb
-					Return False
-				EndIf
-				Return True
-			EndIf
-		Else
-			SetLog("Cannot find Orange Arrow", $COLOR_ERROR)
-			Click(820, 38, 1) ; exit from Shop
 		EndIf
+	
+		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50)
+		If _Sleep(2500) Then Return 
+		; Lets search for the Correct Symbol on field
+		Local $GreenCheckCoord = decodeSingleCoord(findImage("GreenCheck", $g_sImgAutoUpgradeGreenCheck & "\GreenCheck*", "FV", 1, True))
+		If IsArray($GreenCheckCoord) And UBound($GreenCheckCoord) = 2 Then 
+			SetLog("Placed a new Building on Builder Island! [" & $GreenCheckCoord[0] & "," & $GreenCheckCoord[1] & "]", $COLOR_SUCCESS)
+			If Not $bTest Then
+				Click($GreenCheckCoord[0], $GreenCheckCoord[1])
+			EndIf
+			If _Sleep(1000) Then Return
+			Click($GreenCheckCoord[0] - 75, $GreenCheckCoord[1]) ;click redX in case it exist
+			Return True
+		Else
+			Local $RedXCoord = decodeSingleCoord(findImage("RedX", $g_sImgAutoUpgradeRedX & "\RedX*", "FV", 1, True))
+			If IsArray($RedXCoord) And UBound($RedXCoord) = 2 Then 
+				SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $RedXCoord[0] & "," & $RedXCoord[1] & "]", $COLOR_ERROR)
+				Click($RedXCoord[0], $RedXCoord[1])
+			Else
+				SetLog("Error on Undo symbol!", $COLOR_ERROR)
+				;todo do attack bb
+				Return False
+			EndIf
+			Return True
+		EndIf
+	Else
+		SetLog("Cannot find Orange Arrow", $COLOR_ERROR)
+		Click(820, 38, 1) ; exit from Shop
 	EndIf
+	
 
 	Return False
 
