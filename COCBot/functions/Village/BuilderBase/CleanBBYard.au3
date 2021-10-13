@@ -4,8 +4,8 @@ Func CleanBBYard()
 
 	; Timer
 	Local $hObstaclesTimer = __TimerInit()
-	BuilderBaseReport(True, False)
-	
+	getBuilderCount(False, True)
+	SetLog("CleanBBYard: Try removing obstacles", $COLOR_DEBUG)
 	; Obstacles function to Parallel Search , will run all pictures inside the directory
 
 	; Setup arrays, including default return values for $return
@@ -17,7 +17,7 @@ Func CleanBBYard()
 	Local $bBuilderBase = True
 	Local $bNoBuilders = $g_iFreeBuilderCountBB < 1
 
-	If $g_iFreeBuilderCountBB > 0 And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 50000 Then
+	If $g_iFreeBuilderCountBB > 0 And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 10000 Then
 		Local $aResult = findMultiple($g_sImgCleanBBYard, $sCocDiamond, $redLines, 0, 1000, 10, "objectname,objectlevel,objectpoints", True)
 		If IsArray($aResult) Then
 			For $matchedValues In $aResult

@@ -91,7 +91,7 @@ Func CleanYard()
 	; Timer
 	Local $hObstaclesTimer = __TimerInit()
 	VillageReport(True, True)
-	
+	SetLog("CleanYard: Try removing obstacles", $COLOR_DEBUG)
 	If RemoveGembox() Then _SleepStatus(30000) ;Remove gembox first, and wait till gembox removed
 	
 	; Setup arrays, including default return values for $return
@@ -114,26 +114,24 @@ Func CleanYard()
 						If $g_bDebugSetlog Then SetDebugLog($Filename & " found (" & $CleanYardXY[0] & "," & $CleanYardXY[1] & ")", $COLOR_SUCCESS)
 						If Not CleanYardCheckBuilder() Then ExitLoop 2
 						If IsMainPage() Then Click($CleanYardXY[0], $CleanYardXY[1], 1, 0, "#0430")
-						$Locate = 1
 						_Sleep(1000)
 						If Not ClickRemoveObstacle() Then ContinueLoop
 						_SleepStatus(11000)
 						ClickAway()
+						$Locate += 1
 					EndIf
 				Next
 			Next
 		EndIf
-	Else
-		SetLog("Cannot find any obstacles on Yard", $COLOR_DEBUG)
-		Return
 	EndIf
 
-	If $bNoBuilders Then
-		SetLog("No Builders available to remove Obstacles!")
+	If $Locate = 0 Then 
+		SetLog("No Obstacles found, Yard is clean!", $COLOR_SUCCESS)
 	Else
-		If $Locate = 0 And $g_bChkCleanYard And Number($g_aiCurrentLoot[$eLootElixir]) > 20000 Then SetLog("No Obstacles found, Yard is clean!", $COLOR_SUCCESS)
-		If $g_bDebugSetlog Then SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
+		SetLog("CleanYard Found and Clearing " & $Locate & " Obstacles!", $COLOR_SUCCESS)
 	EndIf
+	
+	If $g_bDebugSetlog Then SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
 	UpdateStats()
 	ClickAway()
 
@@ -144,7 +142,6 @@ Func ClickRemoveObstacle()
 	If ClickB("RemoveObstacle") Then 
 		Return True
 	Else
-		SetLog("Cannot find Remove Button", $COLOR_ERROR)
 		ClickAway()
 	EndIf
 	Return False
