@@ -33,7 +33,7 @@ EndFunc
 
 Func Laboratory($debug=False)
 	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
-
+	If ChkUpgradeInProgress() Then Return
 	If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
 		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
 		LocateLab() ; Lab location unknown, so find it.
@@ -42,13 +42,12 @@ Func Laboratory($debug=False)
 			Return False
 		EndIf
 	EndIf
-
- 	If ChkUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the lab
-
-	; Get updated village elixir and dark elixir values
+	
+ 	; Get updated village elixir and dark elixir values
 	VillageReport(True, True)
 
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
+	If _Sleep(1500) Then Return
 	If ChkLabUpgradeInProgress() Then Return False ; Lab currently running skip going further
 	
 	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
@@ -60,7 +59,7 @@ Func Laboratory($debug=False)
 			While($iCurPage < $iPage) ; go directly to the needed page
 				LabNextPage($iCurPage, $iPages, $iYMidPoint) ; go to next page of upgrades
 				$iCurPage += 1 ; Next page
-				If _Sleep(2000) Then Return
+				If _Sleep(1000) Then Return
 			WEnd
 
 			; Get coords of upgrade the user wants
@@ -204,13 +203,6 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
 
-	;If Not(SetLabUpgradeTime($name)) Then
-	;	Click(243, 33)
-	;	Return False ; couldnt set time to upgrade started
-	;EndIf
-	;If _Sleep($DELAYLABUPGRADE1) Then Return
-
-	LabStatusGUIUpdate()
 	If $debug = True Then ; if debugging, do not actually click it
 		SetLog("[debug mode] - Start Upgrade, Click (" & 660 & "," & 520 + $g_iMidOffsetY & ")", $COLOR_ACTION)
 		Click(243, 33)
@@ -218,13 +210,7 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 	Else
 		Click(660, 520 + $g_iMidOffsetY, 1, 0, "#0202") ; Everything is good - Click the upgrade button
 		If isGemOpen(True) = False Then ; check for gem window
-			; check for green button to use gems to finish upgrade, checking if upgrade actually started
-			If Not (_ColorCheck(_GetPixelColor(625, 218 + $g_iMidOffsetY, True), Hex(0x6fbd1f, 6), 15) Or _ColorCheck(_GetPixelColor(660, 218 + $g_iMidOffsetY, True), Hex(0x6fbd1f, 6), 15)) Then
-				SetLog("Something went wrong with " & $name & " Upgrade, try again.", $COLOR_ERROR)
-				Click(243, 33)
-				Return False
-			EndIf
-
+			ChkLabUpgradeInProgress()
 			; success
 			SetLog("Upgrade " & $name & " in your laboratory started with success...", $COLOR_SUCCESS)
 			PushMsg("LabSuccess")
@@ -236,6 +222,7 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 			Return False
 		EndIf
 	EndIf
+	
 EndFunc
 
 ; get the time for the selected upgrade
@@ -333,32 +320,20 @@ EndFunc
 
 ; Find Research Button
 Func FindResearchButton()
-	Local $ResearchButtonFound = False
+	Local $TryLabAutoLocate = False
+	
 	CheckMainScreen(False)
 	;Click Laboratory
 	Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
 	If _Sleep(1000) Then Return ; Wait for window to open
-	
-	Local $aCancelButton = findButton("Cancel")
-	If IsArray($aCancelButton) And UBound($aCancelButton, 1) = 2 Then
-		SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
-		ClickAway()
-		Return False
+	Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+	If $BuildingInfo[1] = "Laboratory" Then 
+		$TryLabAutoLocate = False
+	Else
+		$TryLabAutoLocate = True
 	EndIf
 	
-	Local $aResearchButton = findButton("Research", Default, 1, True)
-	If IsArray($aResearchButton) And UBound($aResearchButton, 1) = 2 Then
-		If $g_bDebugImageSave Then SaveDebugImage("LabUpgrade") ; Debug Only
-		ClickP($aResearchButton)
-		$ResearchButtonFound =  True
-		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for window to open
-		Return True
-	Else 
-		SetLog("Cannot find the Laboratory Research Button!", $COLOR_INFO)
-		ClickAway()
-	EndIf
-	
-	If Not $ResearchButtonFound Then
+	If $TryLabAutoLocate Then 
 		SetLog("Try to Locate Laboratory!", $COLOR_INFO)
 		ClickAway()
 		If ImgLocateLab() Then ;try locate lab again
@@ -366,11 +341,25 @@ Func FindResearchButton()
 			Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
 			If _Sleep(1000) Then Return
 			ClickB("Research")
-			If _Sleep(1500) Then Return
+			If _Sleep(1000) Then Return
 			Return True
 		Else
 			SetLog("Laboratory location not found, please locate manually", $COLOR_DEBUG)
 			Return False
 		EndIf
+	Else
+		Local $aCancelButton = findButton("Cancel")
+		If IsArray($aCancelButton) And UBound($aCancelButton, 1) = 2 Then
+			SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
+			ClickAway()
+			Return False
+		EndIf
+		If ClickB("Research") Then 
+			Return True
+		Else
+			SetLog("Cannot find the Laboratory Research Button!", $COLOR_INFO)
+			ClickAway()
+		EndIf
 	EndIf
+	
 EndFunc
