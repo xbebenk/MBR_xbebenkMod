@@ -484,33 +484,22 @@ Func UpgradeNewBuilding($bTest = False)
 	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
 		Local $NeedDrag = True
-		Local $GearCoord
+		Local $NewCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
 		For $i = 0 To 9
-			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-5, $x1, $y1+5, $bScreencap, $bDebug) Then
-				If QuickMIS("BC1",$g_sImgAUpgradeObst, $x, $y-5, $x1, $y1+5, $bScreencap, $bDebug) Then
-					
-					$b_BuildingFound = True ;we find new/gear
-					$GearCoord = decodeSingleCoord(findImage("Gear", $g_sImgAUpgradeObst & "\Gear*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
-					If IsArray($GearCoord) And UBound($GearCoord) = 2 Then 
-						$b_BuildingFound = False ;we find gear
-						If $g_bDebugClick Then SetLog("[" & $i & "] Gear found!", $COLOR_SUCCESS)
-					Else
-						If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
-					EndIf
-					
-					If $b_BuildingFound Then 
-						If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then
-							ClickMainBuilder($bTest)
-							ExitLoop
-						EndIf
-					EndIf
-				Else
-					If $g_bDebugClick Then SetLog("[" & $i & "] Not New Building!", $COLOR_INFO)
-				EndIf
+			$NewCoord = decodeSingleCoord(findImage("New", $g_sImgAUpgradeObst & "\New*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
+			If IsArray($NewCoord) And UBound($NewCoord) = 2 Then 
+				$b_BuildingFound = True ;we find New Building
+				If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
 			Else
-				If $g_bDebugClick Then SetLog("[" & $i & "] Not Enough Resource", $COLOR_INFO)
+				If $g_bDebugClick Then SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
 				If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih merah angka nya
+			EndIf
+			
+			If $b_BuildingFound Then 
+				If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then
+					ClickMainBuilder($bTest)
+				EndIf
 			EndIf
 			$y += $step
 			$y1 += $step
@@ -524,7 +513,7 @@ Func UpgradeNewBuilding($bTest = False)
 		If $g_bDebugClick Then SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
 	Next
-	SetLog("Max Scroll Reached!, exit FindNewBuilding", $COLOR_DEBUG)
+	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
 	ZoomOut()
 	ClickAway()
 EndFunc ;==>FindNewBuilding
@@ -568,7 +557,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 					If _Sleep(1000) Then Return
 				Case "Down"
 					ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
-					If _Sleep(1000) Then Return
+					If _Sleep(5000) Then Return
 			EndSwitch
 		EndIf
 		If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
