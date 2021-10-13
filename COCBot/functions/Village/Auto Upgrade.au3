@@ -417,56 +417,58 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			$IsWall = True
 		EndIf
 		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50) ;click new building on shop
+		If _Sleep(2000) Then Return
+	
+		If $IsWall Then 
+			Local $aWall[3] = ["2","Wall",1]
+			Local $aCostWall[3] = ["Gold", 50, 0]
+			local $aCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
+			If IsArray($aCoords) And UBound($aCoords) = 2 Then
+				For $ProMac = 0 To 9 
+					Click($aCoords[0], $aCoords[1])
+					If _Sleep(500) Then Return
+					If IsGemOpen(True) Then 
+						SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
+						ExitLoop
+					Endif
+					AutoUpgradeLog($aWall, $aCostWall)
+				Next
+				Click($aCoords[0] - 75, $aCoords[1])
+				Return True
+			EndIf
+		EndIf
+		
+		; Lets search for the Correct Symbol on field
+		Local $GreenCheckCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
+		If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
+			If Not $bTest Then
+				Click($GreenCheckCoords[0], $GreenCheckCoords[1])
+			EndIf
+			SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
+			If _Sleep(500) Then Return
+			AutoUpgradeLog()
+			Click($GreenCheckCoords[0], $GreenCheckCoords[1]) ; Just click again greencheck position, in case its still there
+			Return True
+		Else 
+			;Lets check if exist the [x], it should not exist, but to be safe 
+			Local $RedXCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgRedX & "\RedX*", "FV", 1, True))
+			If IsArray($RedXCoords) And UBound($RedXCoords) = 2 Then
+				Click($RedXCoords[0], $RedXCoords[1])
+				SetLog("Sorry! Wrong place to deploy a new building on Main Village!", $COLOR_ERROR)
+				If _Sleep(500) Then Return
+				Return False
+			Else
+				GoGoblinMap()
+				Return False
+			EndIf
+		EndIf
 	Else
 		SetLog("Cannot find Orange Arrow", $COLOR_ERROR)
 		Click(820, 38, 1) ; exit from Shop
-		Return False
+		Return
 	EndIf
 	
-	If _Sleep(2000) Then Return
 	
-	If $IsWall Then 
-		Local $aWall[3] = ["2","Wall",1]
-		Local $aCostWall[3] = ["Gold", 50, 0]
-		Local $aCoords = FindGreenCheck()
-		If IsArray($aCoords) And UBound($aCoords) = 2 Then
-			For $ProMac = 0 To 9 
-				Click($aCoords[0], $aCoords[1])
-				If _Sleep(500) Then Return
-				If IsGemOpen(True) Then 
-					SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
-					ExitLoop
-				Endif
-				AutoUpgradeLog($aWall, $aCostWall)
-			Next
-			Click($aCoords[0] - 75, $aCoords[1])
-			Return True
-		EndIf
-	EndIf
-	
-	; Lets search for the Correct Symbol on field
-	Local $GreenCheckCoords = FindGreenCheck()
-	If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
-		If Not $bTest Then
-			Click($GreenCheckCoords[0], $GreenCheckCoords[1])
-		EndIf
-		SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
-		If _Sleep(500) Then Return
-		Click($GreenCheckCoords[0], $GreenCheckCoords[1]) ; Just click again greencheck position, in case its still there
-		AutoUpgradeLog()
-		Return True
-	EndIf
-	If Not $g_bRunState Then Return
-	;Lets check if exist the [x], it should not exist, but to be safe 
-	Local $RedXCoords = FindRedX()
-	If IsArray($RedXCoords) And UBound($RedXCoords) = 2 Then
-		If Not $bTest Then
-			Click($RedXCoords[0], $RedXCoords[1])
-		EndIf
-		SetLog("Sorry! Wrong place to deploy a new building on Main Village!", $COLOR_ERROR)
-		If _Sleep(500) Then Return
-		Return True
-	EndIf
 	Return False
 EndFunc ;==>AUNewBuildings
 
@@ -484,21 +486,32 @@ Func UpgradeNewBuilding($bTest = False)
 	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
 		Local $NeedDrag = True
-		Local $NewCoord
+		Local $NewCoord, $ZeroCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
 		For $i = 0 To 9
 			$NewCoord = decodeSingleCoord(findImage("New", $g_sImgAUpgradeObst & "\New*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
 			If IsArray($NewCoord) And UBound($NewCoord) = 2 Then 
 				$b_BuildingFound = True ;we find New Building
-				If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
+				$ZeroCoord = decodeSingleCoord(findImage("Zero", $g_sImgAUpgradeZero & "\Zero*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
+				If IsArray($ZeroCoord) And UBound($ZeroCoord) = 2 Then 
+					If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
+				Else
+					$b_BuildingFound = False
+					If $g_bDebugClick Then SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
+					If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih merah angka nya
+				EndIf
+				
 			Else
 				If $g_bDebugClick Then SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
-				If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih merah angka nya
 			EndIf
 			
 			If $b_BuildingFound Then 
-				If AUNewBuildings($g_iQuickMISX + $x, $g_iQuickMISY + $y, $bTest) Then
+				If AUNewBuildings($ZeroCoord[0], $ZeroCoord[1], $bTest) Then
 					ClickMainBuilder($bTest)
+					$b_BuildingFound = False ;reset
+					ContinueLoop
+				Else
+					ExitLoop 2
 				EndIf
 			EndIf
 			$y += $step
@@ -588,42 +601,6 @@ Func ClickMainBuilder($bTest = False)
 	EndIf
 	Return $b_WindowOpened
 EndFunc ;==>ClickMainBuilder
-
-Func FindGreenCheck()
-	local $timer = __TimerInit()
-	While 1
-		If Not $g_bRunState Then Return
-		local $aCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
-		If IsArray($aCoords) And UBound($aCoords) = 2 Then
-			Return $aCoords
-		EndIf
-
-		If __TimerDiff($timer) >= 10000 Then
-			SetLog("Could not find button 'GreenCheck'", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("FindGreenCheck")
-			GoGoblinMap()
-			Return
-		EndIf
-	WEnd
-EndFunc ;FindGreenCheck
-
-Func FindRedX()
-	local $timer = __TimerInit()
-	While 1
-		If Not $g_bRunState Then Return
-		local $aCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgRedX & "\RedX*", "FV", 1, True))
-		If IsArray($aCoords) And UBound($aCoords) = 2 Then
-			Return $aCoords
-		EndIf
-
-		If __TimerDiff($timer) >= 10000 Then
-			SetLog("Could not find button 'RedX'", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("RedX")
-			GoGoblinMap()
-			Return
-		EndIf
-	WEnd
-EndFunc ;FindRedX
 
 Func GoGoblinMap()
 	Local $GoblinFaceCoord, $CircleCoord

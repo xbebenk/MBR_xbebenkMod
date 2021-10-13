@@ -144,20 +144,19 @@ Func AutoUpgradeBB($bTest = False)
 	Local $bScreencap = True
 
 	BuilderBaseReport(True)
-	; Check if you are on Builder island
+	
 	If isOnBuilderBase(True) Then
 		If Not SearchGreenZoneBB() Then Return
-		; Will Open the Suggested Window and check if is OK
 		If ClickOnBuilder($bTest) Then
 			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
 			If SearchNewBuilding($bTest) Then 
 				ZoomOut()
 				getBuilderCount(False, True)
-			Else
-				ZoomOut()
-				ClickOnBuilder($bTest)
-				ClickDrag(333, 90, 333, 700, 1000);do scroll down
-				If _Sleep(2000) Then Return
+			;Else
+			;	ZoomOut()
+			;	ClickOnBuilder($bTest)
+			;	ClickDrag(333, 90, 333, 700, 1000);do scroll down
+			;	If _Sleep(2000) Then Return
 			EndIf
 			
 			If $g_iFreeBuilderCountBB = 0 Then Return True
@@ -170,7 +169,7 @@ Func AutoUpgradeBB($bTest = False)
 				EndIf
 			EndIf
 			
-			For $z = 0 To 2 ;for do scroll 3 times
+			For $z = 0 To 5 ;for do scroll 3 times
 				If $g_bRestart Then Exitloop
 				SetLog("[" & $z + 1 & "] Search Upgrade for Existing Building", $COLOR_INFO)
 				Local $x = 400, $y = 100, $x1 = 540, $y1 = 130, $step = 28
@@ -369,7 +368,7 @@ EndFunc   ;==>GetUpgradeButton
 Func SearchNewBuilding($bTest = False)
 	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
-	For $z = 0 To 2 ;for do scroll 3 times
+	For $z = 0 To 5 ;for do scroll 3 times
 		If $g_bRestart Then Exitloop
 		Local $x = 400, $y = 73, $x1 = 540, $y1 = 103, $step = 28
 		SetLog("[" & $z + 1 & "] Search for Placing New Building", $COLOR_INFO)
