@@ -15,28 +15,28 @@
 #include-once
 
 Func TreasuryCollect()
-	If $g_bDebugSetlog Then SetDebugLog("Begin CollectTreasury:", $COLOR_DEBUG1) ; function trace
+	SetLog("Begin CollectTreasury:", $COLOR_DEBUG) ; function trace
 	If Not $g_bRunState Then Return ; ensure bot is running
-
+	
 	ClickAway()
-	If _Sleep($DELAYRESPOND) Then Return
 	Local $TryCCAutoLocate = False
 	
-	If $g_aiClanCastlePos[0] < 1 Or $g_aiClanCastlePos[1] < 1 Then
+	If Int($g_aiClanCastlePos[0]) < 1 Or Int($g_aiClanCastlePos[1]) < 1 Then
 		$TryCCAutoLocate = True
 	Else
 		Click($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
+		If _Sleep(1000) Then Return
 		Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
 		If $BuildingInfo[1] = "Clan Castle" Then 
 			$TryCCAutoLocate = False
 		Else
 			$TryCCAutoLocate = True
 		EndIf
-		ClickAway()
-		If _Sleep(500) Then Return
 	EndIf
 	
 	If $TryCCAutoLocate Then 
+		SetLog("Try to Auto Locate Clan Castle", $COLOR_INFO)
+		ClickAway()
 		Local $TreasuryCoord = decodeSingleCoord(findImage("TreasuryFull", $g_sImgTreasuryFull & "\Treasury*", "FV", 1, True))
 		If IsArray($TreasuryCoord) And UBound($TreasuryCoord) = 2 Then
 			Click($TreasuryCoord[0], $TreasuryCoord[1] + 50)
@@ -47,7 +47,6 @@ Func TreasuryCollect()
 				$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 50
 				SetLog("Found Treasury Full, save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
 			EndIf
-			ClickAway()
 		EndIf
 		
 		Local $ClanCastleCoord = decodeSingleCoord(findImage("ClanCastle", $g_sImgClanCastle & "\ClanCastle*", "FV", 1, True))
@@ -60,31 +59,12 @@ Func TreasuryCollect()
 				$g_aiClanCastlePos[1] = $ClanCastleCoord[1] + 10
 				SetLog("Found Clan Castle, save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
 			EndIf
-			ClickAway()
 		EndIf
 	EndIf
 	
-	If ($g_aiClanCastlePos[0] = "-1" Or $g_aiClanCastlePos[1] = "-1") Then ;check for valid CC location
-		SetLog("Need Clan Castle location for the Treasury, Please locate your Clan Castle.", $COLOR_WARNING)
-		LocateClanCastle()
-		If ($g_aiClanCastlePos[0] = "-1" Or $g_aiClanCastlePos[1] = "-1") Then ; can not assume CC was located due msgbox timeout and unattended bo, must verify
-			SetLog("Treasury skipped, bad Clan Castle location", $COLOR_ERROR)
-			If _Sleep($DELAYRESPOND) Then Return
-			Return
-		EndIf
-	EndIf
+	If Not ClickB("Treasury") Then SetLog("Treasury Button not found!", $COLOR_ERROR)
+	If _Sleep(500) Then Return
 	
-	ClickAway()
-	If _Sleep($DELAYCOLLECT3) Then Return
-	Click($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])   ; select CC
-	If _Sleep($DELAYTREASURY2) Then Return
-
-	Local $aTreasuryButton = findButton("Treasury", Default, 1, True)
-	If IsArray($aTreasuryButton) And UBound($aTreasuryButton, 1) = 2 Then
-		If IsMainPage() Then ClickP($aTreasuryButton, 1, 0, "#0330")
-		If _Sleep($DELAYTREASURY1) Then Return
-	EndIf
-
 	If Not _WaitForCheckPixel($aTreasuryWindow, $g_bCapturePixel, Default, "Wait treasury window:") Then
 		SetLog("Treasury window not found!", $COLOR_ERROR)
 		Return
