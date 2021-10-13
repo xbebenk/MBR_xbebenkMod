@@ -64,7 +64,7 @@ Func SearchUpgrade($bTest = False)
 	Local $b_BuildingFound = False
 	For $z = 0 To 9 ;for do scroll 5 times
 		Local $NeedDrag = True
-		Local $x = 180, $y = 80, $x1 = 450, $y1 = 103, $step = 30
+		Local $x = 180, $y = 80, $x1 = 490, $y1 = 103, $step = 28
 		For $i = 0 To 9
 			If Not $g_bRunState Then Return
 			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-5, $x1, $y1+5) Then
@@ -563,6 +563,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 		If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
 			Switch $Direction
 				Case "Up"
+					If $YY < 100 Then $YY = 150
 					ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
 					If _Sleep(1000) Then Return
 				Case "Down"
