@@ -31,7 +31,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
 		Return False
 	EndIf
-	If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
+	SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return True
 EndFunc
 
@@ -71,7 +71,7 @@ Func SearchUpgrade($bTest = False)
 				$b_BuildingFound = True
 				SetLog("[" & $i & "] Upgrade found!", $COLOR_SUCCESS)
 				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y-5, $x1, $y1+5) <> "none" Then
-					If $g_bDebugClick Then SetLog("[" & $i & "] New Building, Skip!", $COLOR_SUCCESS)
+					SetLog("[" & $i & "] New Building, Skip!", $COLOR_SUCCESS)
 					$b_BuildingFound = False
 				EndIf
 				If $b_BuildingFound Then
@@ -84,7 +84,7 @@ Func SearchUpgrade($bTest = False)
 				EndIf
 				If _Sleep(500) Then Return
 			Else
-				If $g_bDebugClick Then SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
+				SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
 				If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih merah angka nya
 			EndIf
 			$y += $step
@@ -97,7 +97,7 @@ Func SearchUpgrade($bTest = False)
 		EndIf
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
-		If $g_bDebugClick Then SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
+		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
 	Next
 	
@@ -106,7 +106,7 @@ Func SearchUpgrade($bTest = False)
 			If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
 		EndIf
 	EndIf
-	If $g_bDebugClick Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
+	SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	
 	ClickAway()
 	ZoomOut()
@@ -494,15 +494,15 @@ Func UpgradeNewBuilding($bTest = False)
 				$b_BuildingFound = True ;we find New Building
 				$ZeroCoord = decodeSingleCoord(findImage("Zero", $g_sImgAUpgradeZero & "\Zero*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
 				If IsArray($ZeroCoord) And UBound($ZeroCoord) = 2 Then 
-					If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
+					SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
 				Else
 					$b_BuildingFound = False
-					If $g_bDebugClick Then SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
+					SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
 					If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih bukan new building
 				EndIf
 				
 			Else
-				If $g_bDebugClick Then SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
+				SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
 				If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih bukan new building
 			EndIf
 			
@@ -524,7 +524,7 @@ Func UpgradeNewBuilding($bTest = False)
 			ExitLoop
 		EndIf
 		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
-		If $g_bDebugClick Then SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
+		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
 	Next
 	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)

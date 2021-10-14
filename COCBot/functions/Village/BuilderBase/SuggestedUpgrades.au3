@@ -227,7 +227,7 @@ Func AutoUpgradeBB($bTest = False)
 					SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Need More resource", $COLOR_DEBUG)
 					ExitLoop
 				EndIf
-				If $g_bDebugClick Then SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
+				SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 				ClickDragAutoUpgradeBB($y)
 			Next
 		EndIf
@@ -391,14 +391,14 @@ Func SearchNewBuilding($bTest = False)
 				$b_BuildingFound = True ;we find New Building
 				$ZeroCoord = decodeSingleCoord(findImage("Zero", $g_sImgAUpgradeZero & "\Zero*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
 				If IsArray($ZeroCoord) And UBound($ZeroCoord) = 2 Then 
-					If $g_bDebugClick Then SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
+					SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
 				Else
 					$b_BuildingFound = False
-					If $g_bDebugClick Then SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
+					SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
 					If $z > 3 And $i = 9 Then $NeedDrag = False ; sudah 4 kali scroll tapi yang paling bawah bukan new building
 				EndIf
 			Else
-				If $g_bDebugClick Then SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
+				SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
 				If $z > 3 And $i = 9 Then $NeedDrag = False ; sudah 4 kali scroll tapi yang paling bawah bukan new building
 			EndIf
 			
@@ -419,7 +419,7 @@ Func SearchNewBuilding($bTest = False)
 			ExitLoop
 		EndIf
 		ClickDragAutoUpgradeBB($y)
-		If $g_bDebugClick Then SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
+		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 	Next
 	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
 	ZoomOut()
