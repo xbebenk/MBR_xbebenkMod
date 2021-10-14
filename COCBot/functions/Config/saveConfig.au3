@@ -651,6 +651,7 @@ Func SaveConfig_600_17()
 	_Ini_Add("upgrade", "use-storage", $g_iUpgradeWallLootType)
 	_Ini_Add("upgrade", "savebldr", $g_bUpgradeWallSaveBuilder ? 1 : 0)
 	_Ini_Add("upgrade", "Only1Builder", $g_bChkOnly1Builder ? 1 : 0)
+	_Ini_Add("upgrade", "SyncTHWall", $g_bchkSyncTHWall ? 1 : 0)
 	
 	Local $string = ""
 	For $i = 0 To UBound($g_aUpgradeWall) - 1

@@ -40,7 +40,7 @@ Global $g_hChkUpgradeRepeat[$g_iUpgradeSlots] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 Global $g_hTxtUpgrMinGold = 0, $g_hTxtUpgrMinElixir = 0, $g_hTxtUpgrMinDark = 0
 
 ; Walls
-Global $g_hChkWalls = 0, $g_hTxtWallMinGold = 0, $g_hTxtWallMinElixir = 0, $g_hRdoUseGold = 0, $g_hRdoUseElixir = 0, $g_hRdoUseElixirGold = 0, $g_hChkSaveWallBldr = 0
+Global $g_hChkWalls = 0, $g_hTxtWallMinGold = 0, $g_hTxtWallMinElixir = 0, $g_hRdoUseGold = 0, $g_hRdoUseElixir = 0, $g_hRdoUseElixirGold = 0, $g_hChkSaveWallBldr = 0, $g_hChkSyncTHLvlWalls = 0
 Global $g_hBtnFindWalls = 0, $g_hChkOnly1Builder = 0
 Global $g_hCmbWalls[3] = [0, 0, 0]
 Global $g_hLblWallCost[3] = [0, 0, 0]
@@ -578,7 +578,7 @@ Func CreateWallsSubTab()
 	$x = 25
 	$y = 160
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "Group_03", "Wall Level And Cost"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 120)
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblSearchforWalls", "Walls Level:                Wall Cost:"), $x + 10, $y + 2, -1, -1)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblSearchforWalls", "Walls Level:           Wall Cost:"), $x + 10, $y + 2, -1, -1)
 		$y += 20
 		Local $TxtComboWall = "4|5|6|7|8|9|10|11|12|13|14"
 		For $z = 0 To 2
@@ -595,6 +595,13 @@ Func CreateWallsSubTab()
 			$y += 22 ; move down to next combobox location
 		Next
 		
+		$x = 190
+		$y = 160
+		$g_hChkSyncTHLvlWalls = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - ChkSyncTHLvlWalls", "ChkSyncTHLvlWalls", "Sync Wall Level to Upgrade with TH Level"), $x, $y - 2, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - ChkSyncTHLvlWalls", "ChkSyncTHLvlWalls_Info_01", "Enable Auto change Wall Level to Upgrade if detected TH is Upgraded"))
+			GUICtrlSetState(-1, $GUI_ENABLE)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetOnEvent(-1, "chkSyncTHWall")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$x = 25

@@ -604,28 +604,15 @@ EndFunc   ;==>cmbHeroReservedBuilder
 Func chkWalls()
 	If GUICtrlRead($g_hChkWalls) = $GUI_CHECKED Then
 		$g_bAutoUpgradeWallsEnable = True
-		GUICtrlSetState($g_hRdoUseGold, $GUI_ENABLE)
-		; GUICtrlSetState($sldMaxNbWall, $GUI_ENABLE)
-		;GUICtrlSetState($sldToleranceWall, $GUI_ENABLE)
-		;GUICtrlSetState($g_hBtnFindWalls, $GUI_ENABLE)
-		;		GUICtrlSetState($g_hRdoUseElixir, $GUI_ENABLE)
-		;		GUICtrlSetState($g_hRdoUseElixirGold, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbWalls, $GUI_ENABLE)
-		GUICtrlSetState($g_hTxtWallMinGold, $GUI_ENABLE)
-		;		GUICtrlSetState($g_hTxtWallMinElixir, $GUI_ENABLE)
+		For $i = $g_hRdoUseGold To $g_hChkSyncTHLvlWalls
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
 		cmbWalls()
 	Else
 		$g_bAutoUpgradeWallsEnable = False
-		GUICtrlSetState($g_hRdoUseGold, $GUI_DISABLE)
-		GUICtrlSetState($g_hRdoUseElixir, $GUI_DISABLE)
-		GUICtrlSetState($g_hRdoUseElixirGold, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbWalls, $GUI_DISABLE)
-		GUICtrlSetState($g_hTxtWallMinGold, $GUI_DISABLE)
-		GUICtrlSetState($g_hTxtWallMinElixir, $GUI_DISABLE)
-		; GUICtrlSetState($sldMaxNbWall, $GUI_DISABLE)
-		;GUICtrlSetState($sldToleranceWall, $GUI_DISABLE)
-		;GUICtrlSetState($g_hBtnFindWalls, $GUI_DISABLE)
-
+		For $i = $g_hRdoUseGold To $g_hChkSyncTHLvlWalls
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
 	EndIf
 EndFunc   ;==>chkWalls
 
@@ -635,6 +622,10 @@ EndFunc   ;==>chkSaveWallBldr
 
 Func chkWallOnly1Builder()
 	$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
+EndFunc   ;==>chkWallOnly1Builder
+
+Func chkSyncTHWall()
+	$g_bchkSyncTHWall = (GUICtrlRead($g_hChkSyncTHLvlWalls) = $GUI_CHECKED)
 EndFunc   ;==>chkWallOnly1Builder
 
 Func cmbWalls()
@@ -652,12 +643,21 @@ Func cmbWalls()
 	For $y = 0 To 2
 		If _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$y]) <= 3 Then $DisableOpt = True
 	Next
-	If $DisableOpt Then
-		GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
-	EndIf
+	
 	GUICtrlSetState($g_hRdoUseElixir, $DisableOpt ? BitOR($GUI_DISABLE, $GUI_UNCHECKED) : $GUI_ENABLE)
 	GUICtrlSetState($g_hRdoUseElixirGold, $DisableOpt ? BitOR($GUI_DISABLE, $GUI_UNCHECKED) : $GUI_ENABLE)
 	GUICtrlSetState($g_hTxtWallMinElixir, $DisableOpt ? $GUI_DISABLE : $GUI_ENABLE)
+	
+	If $DisableOpt Then
+		GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
+		GUICtrlSetState($g_hRdoUseElixir, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hRdoUseElixirGold, $GUI_UNCHECKED)
+	Else
+		GUICtrlSetState($g_hRdoUseGold, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hRdoUseElixir, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hRdoUseElixirGold, $GUI_CHECKED)
+	EndIf
+	
 EndFunc   ;==>cmbWalls
 
 Func btnWalls()
