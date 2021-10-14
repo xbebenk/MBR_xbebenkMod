@@ -498,6 +498,7 @@ Func UpgradeNewBuilding($bTest = False)
 				Else
 					$b_BuildingFound = False
 					If $g_bDebugClick Then SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
+					If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih bukan new building
 				EndIf
 				
 			Else
