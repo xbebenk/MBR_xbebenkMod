@@ -178,7 +178,7 @@ Func StarLaboratory($bTestRun = False)
 					$iSelectedUpgrade = $iTmpTroop
 					ExitLoop
 				Else
-					SetLog("Cannot upgrade " & $g_avStarLabTroops[$iTmpTroop][3] & " at this momment!", $COLOR_DEBUG)
+					SetDebugLog("Cannot upgrade " & $g_avStarLabTroops[$iTmpTroop][3] & " at this momment!", $COLOR_DEBUG)
 				EndIf
 			Next
 				
