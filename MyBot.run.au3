@@ -787,7 +787,8 @@ Func runBot() ;Bot that runs everything in order
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
 
-			Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'PetHouse']
+			;Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeWall', 'UpgradeBuilding', 'PetHouse', 'BuilderBase']
+			Local $aRndFuncList = ['Collect','UpgradeHeroes', 'PetHouse', 'BuilderBase']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -796,17 +797,7 @@ Func runBot() ;Bot that runs everything in order
 				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			Next
 
-			; Ensure, that wall upgrade is last of the upgrades
-			Local $aRndFuncList = ['UpgradeWall', 'BuilderBase'] ;Copied BuilderBase to AttackMain
-			_ArrayShuffle($aRndFuncList)
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-			Next
 			If Not $g_bRunState Then Return
-
 			If $g_bFirstStart Then SetDebugLog("First loop completed!")
 			$g_bFirstStart = False ; already finished first loop since bot started.
 
