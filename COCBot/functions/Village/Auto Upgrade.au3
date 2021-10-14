@@ -15,7 +15,6 @@
 Func AutoUpgrade($bTest = False)
 	Local $bWasRunState = $g_bRunState
 	$g_bRunState = True
-	;Local $Result = _AutoUpgrade()
 	Local $Result = SearchUpgrade($bTest)
 	$g_bRunState = $bWasRunState
 	Return $Result
@@ -41,6 +40,7 @@ Func SearchUpgrade($bTest = False)
 	Local $bDebug = $g_bDebugSetlog
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
+	
 	VillageReport(True,True)
 	
 	; check if builder head is clickable
@@ -85,7 +85,7 @@ Func SearchUpgrade($bTest = False)
 				If _Sleep(500) Then Return
 			Else
 				If $g_bDebugClick Then SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
-				If $z > 1 And $i = 9 Then $NeedDrag = False ; sudah 2 kali scroll tapi yang paling bawah masih merah angka nya
+				If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih merah angka nya
 			EndIf
 			$y += $step
 			$y1 += $step

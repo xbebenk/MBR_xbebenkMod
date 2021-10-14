@@ -177,7 +177,7 @@ Func AutoUpgradeBB($bTest = False)
 				ClickDrag(333, 320, 333, 0, 1000);do scroll down
 				If _Sleep(2000) Then Return
 			EndIf
-			
+			Local $NeedDrag = True
 			For $z = 0 To 5 ;for do scroll 3 times
 				If $g_bRestart Then Exitloop
 				SetLog("[" & $z + 1 & "] Search Upgrade for Existing Building", $COLOR_INFO)
@@ -197,7 +197,7 @@ Func AutoUpgradeBB($bTest = False)
 								$bSkipGoldCheck = True
 							Case "NoResources"
 								SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
-								;ExitLoop ; continue as suggested upgrades are not ordered by amount
+								If $z > 2 And $i = 9 Then $NeedDrag = False ; sudah 3 kali scroll tapi yang paling bawah nol nya nggak putih
 								$bSkipGoldCheck = True
 							Case Else
 								SetDebugLog("[" & $i + 1 & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
@@ -215,7 +215,7 @@ Func AutoUpgradeBB($bTest = False)
 								EndIf
 							Case "NoResources"
 								SetLog("[" & $i + 1 & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
-								;ExitLoop ; continue as suggested upgrades are not ordered by amount
+								If $z > 2 And $i = 9 Then $NeedDrag = False ; sudah 3 kali scroll tapi yang paling bawah nol nya nggak putih
 							Case Else
 								SetDebugLog("[" & $i + 1 & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
 						EndSwitch
@@ -223,12 +223,12 @@ Func AutoUpgradeBB($bTest = False)
 					$y += $step
 					$y1 += $step
 				Next
-			If $BuildingUpgraded Then
-				Setlog("Found Building to Upgrade..", $COLOR_DEBUG)
-				Exitloop
-			Else
+				If Not $NeedDrag Then
+					SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Need More resource", $COLOR_DEBUG)
+					ExitLoop
+				EndIf
+				If $g_bDebugClick Then SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 				ClickDragAutoUpgradeBB($y)
-			EndIf
 			Next
 		EndIf
 	EndIf
@@ -395,10 +395,11 @@ Func SearchNewBuilding($bTest = False)
 				Else
 					$b_BuildingFound = False
 					If $g_bDebugClick Then SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
+					If $z > 3 And $i = 9 Then $NeedDrag = False ; sudah 4 kali scroll tapi yang paling bawah bukan new building
 				EndIf
 			Else
 				If $g_bDebugClick Then SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
-				If $z > 2 And $i = 9 Then $NeedDrag = False ; sudah 3 kali scroll tapi yang paling bawah bukan new building
+				If $z > 3 And $i = 9 Then $NeedDrag = False ; sudah 4 kali scroll tapi yang paling bawah bukan new building
 			EndIf
 			
 			If $b_BuildingFound Then 
