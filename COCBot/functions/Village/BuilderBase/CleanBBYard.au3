@@ -7,7 +7,10 @@ Func CleanBBYard()
 	getBuilderCount(False, True)
 	SetLog("CleanBBYard: Try removing obstacles", $COLOR_DEBUG)
 	; Obstacles function to Parallel Search , will run all pictures inside the directory
-
+	If $g_iFreeBuilderCountBB = 0 Then 
+		SetLog("Master Builder Not Available", $COLOR_DEBUG)
+		Return
+	EndIf
 	; Setup arrays, including default return values for $return
 	Local $Filename = ""
 	Local $Locate = 0
