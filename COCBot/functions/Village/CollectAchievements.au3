@@ -61,6 +61,8 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 		Else
 			$RewardCollected = True
 		EndIf
+		Click(700,80) ;Friend Request Tab
+		If _Sleep(500) Then Return
 		ClickAway()
 		If _Sleep(1500) Then Return
 		If Not IsMainPage() Then ExitLoop
