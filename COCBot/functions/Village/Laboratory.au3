@@ -117,7 +117,7 @@ Func Laboratory($debug=False)
 						While($iCurPage < $iPage) ; go directly to the needed page
 							LabNextPage($iCurPage, $iPages, $iYMidPoint) ; go to next page of upgrades
 							$iCurPage += 1 ; Next page
-							If _Sleep(2000) Then Return
+							If _Sleep(1000) Then Return
 						WEnd
 
 						; Get coords of upgrade the user wants
@@ -267,13 +267,13 @@ Func LabNextPage($iCurPage, $iPages, $iYMidPoint)
 	EndIf
 EndFunc
 
-; if we are on last page, smaller clickdrag... for future dev: this is whatever is enough distance to move 6 off to the left and have the next page similarily aligned
 Func LabFirstPage($iCurPage, $iYMidPoint)
 	For $u = 1 To $iCurPage
 		If $iCurPage <= 1 Then Return ; nothing left to scroll
 		ClickDrag(130, $iYMidPoint, 780, $iYMidPoint, 500) ;600
 		$iCurPage -= 1
 	Next
+	If _Sleep(5000) Then Return
 EndFunc
 
 ; check the lab to see if something is upgrading in the lab already
