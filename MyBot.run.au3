@@ -703,32 +703,6 @@ Func runBot() ;Bot that runs everything in order
 	GUICtrlSetState($g_hBtnControl, $GUI_SHOW)
 	FirstCheck()
 	
-	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
-		VillageReport()
-		If _Sleep($DELAYRUNBOT2) Then Return
-		If BotCommand() Then btnStop()
-		If Not $g_bRunState Then Return
-		If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
-			; VERIFY THE TROOPS AND ATTACK IF IS FULL
-			SetLog("Fast Switch Account Enabled, Lets Check if we can Attack again", $COLOR_DEBUG)
-			TrainSystem()
-			SetDebugLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells))
-			If $g_bIsFullArmywithHeroesAndSpells Then
-				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
-					Setlog("Before any other routine let's attack!", $COLOR_INFO)
-					AttackMain(True)
-					$g_bSkipFirstZoomout = False
-					If $g_bOutOfGold Then
-						SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
-						$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
-						Return
-					EndIf
-					If _Sleep($DELAYRUNBOT1) Then Return
-				EndIf
-			EndIf
-		EndIf
-	EndIf
-
 	While 1
 		;Restart bot after these seconds
 		If $b_iAutoRestartDelay > 0 And __TimerDiff($g_hBotLaunchTime) > $b_iAutoRestartDelay * 1000 Then
@@ -1341,7 +1315,6 @@ Func FirstCheckRoutine()
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
 				AttackMain(True)
-				$g_bSkipFirstZoomout = False
 				If $g_bOutOfGold Then
 					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
 					$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
@@ -1367,6 +1340,34 @@ Func FirstCheckRoutine()
 		If CheckAndroidReboot() Then ContinueLoop
 		If checkObstacles() Then ContinueLoop
 	Next
+	
+	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
+		VillageReport()
+		If _Sleep($DELAYRUNBOT2) Then Return
+		If BotCommand() Then btnStop()
+		If Not $g_bRunState Then Return
+		If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
+			; VERIFY THE TROOPS AND ATTACK IF IS FULL
+			SetLog("Fast Switch Account Enabled", $COLOR_DEBUG)
+			SetLog("Lets Check if we can Attack again", $COLOR_DEBUG)
+			TrainSystem()
+			SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells))
+			If $g_bIsFullArmywithHeroesAndSpells Then
+				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
+					Setlog("Before any other routine let's attack!", $COLOR_INFO)
+					AttackMain(True)
+					$g_bSkipFirstZoomout = False
+					If $g_bOutOfGold Then
+						SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
+						$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
+						Return
+					EndIf
+					If _Sleep($DELAYRUNBOT1) Then Return
+				EndIf
+			EndIf
+		EndIf
+	EndIf
+	
 EndFunc
 
 Func BuilderBase()
