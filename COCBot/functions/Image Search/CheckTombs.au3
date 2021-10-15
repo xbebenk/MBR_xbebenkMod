@@ -93,7 +93,7 @@ Func CleanYard()
 	VillageReport(True, True)
 	SetLog("CleanYard: Try removing obstacles", $COLOR_DEBUG)
 	If $g_iFreeBuilderCount = 0 Then 
-		SetLog("Master Builder Not Available", $COLOR_DEBUG)
+		SetLog("Builder Not Available", $COLOR_DEBUG)
 		Return
 	EndIf
 	If RemoveGembox() Then _SleepStatus(30000) ;Remove gembox first, and wait till gembox removed
