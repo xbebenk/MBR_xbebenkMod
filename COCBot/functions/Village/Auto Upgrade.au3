@@ -447,7 +447,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
 			If _Sleep(500) Then Return
 			AutoUpgradeLog()
-			Click($GreenCheckCoords[0], $GreenCheckCoords[1]) ; Just click again greencheck position, in case its still there
+			Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1]) ; Just click RedX position, in case its still there
 			Return True
 		Else 
 			;Lets check if exist the [x], it should not exist, but to be safe 
@@ -510,7 +510,6 @@ Func UpgradeNewBuilding($bTest = False)
 				If AUNewBuildings($ZeroCoord[0], $ZeroCoord[1], $bTest) Then
 					ClickMainBuilder($bTest)
 					$b_BuildingFound = False ;reset
-					ContinueLoop
 				Else
 					ExitLoop 2
 				EndIf
