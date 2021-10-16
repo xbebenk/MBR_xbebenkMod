@@ -509,6 +509,7 @@ Func NewBuildings($x, $y, $bTest = False)
 			Else
 				SetLog("Error on Undo symbol!", $COLOR_ERROR)
 				;todo do attack bb
+				GoAttackBBAndReturn()
 				Return False
 			EndIf
 			Return True
@@ -517,10 +518,7 @@ Func NewBuildings($x, $y, $bTest = False)
 		SetLog("Cannot find Orange Arrow", $COLOR_ERROR)
 		Click(820, 38, 1) ; exit from Shop
 	EndIf
-	
-
 	Return False
-
 EndFunc   ;==>NewBuildings
 
 Func SearchGreenZoneBB()
@@ -549,3 +547,10 @@ Func SearchGreenZoneBB()
 	Return False
 EndFunc
 
+Func GoAttackBBAndReturn()
+	SetLog("Going attack, to clear field", $COLOR_DEBUG)
+	ClickAttack()
+	AttackBB()
+	ZoomOut()
+	SetLog("Field should be clear now", $COLOR_DEBUG)
+EndFunc

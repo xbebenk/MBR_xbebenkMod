@@ -337,10 +337,7 @@ Func Okay()
 			Return False
 		EndIf
 
-		If Mod(__TimerDiff($timer), 3000) Then
-			If _Sleep($DELAYRESPOND) Then Return
-		EndIf
-
+		If _Sleep(3000) Then Return
 	WEnd
 
 	Return True
