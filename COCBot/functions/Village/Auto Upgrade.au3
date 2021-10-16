@@ -61,9 +61,9 @@ Func SearchUpgrade($bTest = False)
 	If Not ClickMainBuilder($bTest) Then Return
 	If $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ClickDragAUpgrade("down")
 	If Not $g_bRunState Then Return
-	Local $b_BuildingFound = False
+	
+	Local $b_BuildingFound = False, $NeedDrag = True
 	For $z = 0 To 9 ;for do scroll 5 times
-		Local $NeedDrag = True
 		Local $x = 180, $y = 80, $x1 = 490, $y1 = 103, $step = 28
 		For $i = 0 To 9
 			If Not $g_bRunState Then Return
