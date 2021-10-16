@@ -262,10 +262,12 @@ Func LabNextPage($iCurPage, $iPages, $iYMidPoint)
 	If $iCurPage >= $iPages Then Return ; nothing left to scroll
 	If $iCurPage = $iPages-1 Then ; last page
 		ClickDrag(720, $iYMidPoint, 480, $iYMidPoint) ;600
+		If _Sleep(3000) Then Return
 	Else
 		ClickDrag(720, $iYMidPoint, 85, $iYMidPoint)
+		If _Sleep(3000) Then Return
 	EndIf
-	If _Sleep(5000) Then Return
+	
 EndFunc
 
 Func LabFirstPage($iCurPage, $iYMidPoint)
@@ -273,8 +275,8 @@ Func LabFirstPage($iCurPage, $iYMidPoint)
 		If $iCurPage <= 1 Then Return ; nothing left to scroll
 		ClickDrag(130, $iYMidPoint, 780, $iYMidPoint, 500) ;600
 		$iCurPage -= 1
+		If _Sleep(3000) Then Return
 	Next
-	If _Sleep(5000) Then Return
 EndFunc
 
 ; check the lab to see if something is upgrading in the lab already
