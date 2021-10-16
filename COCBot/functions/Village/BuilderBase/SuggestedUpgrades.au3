@@ -175,20 +175,7 @@ Func AutoUpgradeBB($bTest = False)
 				SetLog("Master Builder Not Available", $COLOR_DEBUG)
 				Return
 			EndIf
-			Local $bGoUpgrade = True
-			If $g_iChkBBSuggestedUpgradesOTTO Then
-				If $g_bGoldStorageFullBB Then
-					$bGoUpgrade = True
-				ElseIf $g_bElixirStorageFullBB Then
-					$bGoUpgrade = True
-				Else 
-					$bGoUpgrade = False
-				EndIf
-			EndIf
-			If Not $bGoUpgrade Then 
-				SetLog("Gold Or Elixir below 50%, skip AutoUpgrade BB", $COLOR_DEBUG)
-				Return
-			EndIf
+			
 			;upgrade wall first if to prevent Gold Storage become Full when BH is already Maxed
 			If $g_bisBHMaxed And $g_bGoldStorageFullBB And $g_bisMegaTeslaMaxed Then
 				; scroll down to bottom as wall will be on below
@@ -203,17 +190,32 @@ Func AutoUpgradeBB($bTest = False)
 				Local $x = 400, $y = 100, $x1 = 540, $y1 = 130, $step = 28
 				For $i = 0 To 9
 					Local $bSkipGoldCheck = False
+					Local $BuildingFound = False
 					If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
 						; Proceeds with Elixir icon detection
 						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeElixir, "Elixir", $bScreencap, $bDebug)
 						Switch $aResult[2]
 							Case "Elixir"
-								Click($aResult[0], $aResult[1], 1)
-								If _Sleep(2000) Then Return
-								If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
-									Return True
-								EndIf
 								$bSkipGoldCheck = True
+								If $g_iChkBBSuggestedUpgradesOTTO Then
+									If QuickMIS("BC1", $g_sImgAUpgradeOttoBB, 260, $y, 450, $y1, $bScreencap, $bDebug) Then
+										SetLog("[" & $i + 1 & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
+										Click($g_iQuickMISX + 260, $g_iQuickMISY + $y)
+										$BuildingFound = True
+									Else
+										SetLog("[" & $i + 1 & "] Not Optimize OTTO Building", $COLOR_INFO)
+									EndIf
+								Else
+									SetLog("[" & $i + 1 & "] Upgrade Found!", $COLOR_SUCCESS)
+									Click($aResult[0], $aResult[1])
+									$BuildingFound = True
+								EndIf
+								If $BuildingFound Then
+									If _Sleep(2000) Then Return
+									If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
+										Return True
+									EndIf
+								EndIf
 							Case "NoResources"
 								SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
 								If $z > 1 And $i = 9 Then $NeedDrag = False ; sudah 2 kali scroll tapi yang paling bawah nol nya nggak putih
@@ -227,7 +229,17 @@ Func AutoUpgradeBB($bTest = False)
 						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
 						Switch $aResult[2]
 							Case "Gold"
-								Click($aResult[0], $aResult[1], 1)
+								If $g_iChkBBSuggestedUpgradesOTTO Then
+									If QuickMIS("BC1", $g_sImgAUpgradeOttoBB, 260, $y, 450, $y1, $bScreencap, $bDebug) Then
+										SetLog("[" & $i + 1 & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
+										Click($g_iQuickMISX + 260, $g_iQuickMISY + $y)
+									Else
+										SetLog("[" & $i + 1 & "] Not Optimize OTTO Building", $COLOR_INFO)
+									EndIf
+								Else
+									SetLog("[" & $i + 1 & "] Upgrade Found!", $COLOR_SUCCESS)
+									Click($aResult[0], $aResult[1])
+								EndIf
 								If _Sleep(2000) Then Return
 								If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
 									Return True
@@ -372,6 +384,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 			If QuickMIS("BC1", $sUpgButtom, 300, 480, 750, 600, True, $Debug) Then
 				If Not $bTest Then 
 					Click($g_iQuickMISX + 300, $g_iQuickMISY + 480, 1)
+					BBAutoUpgradeLog($aBuildingName)
 				EndIf
 				If _Sleep(1500) Then Return
 				;ClickAway("Left")
@@ -499,7 +512,9 @@ Func NewBuildings($x, $y, $bTest = False)
 				Click($GreenCheckCoord[0], $GreenCheckCoord[1])
 			EndIf
 			If _Sleep(1000) Then Return
+			Click($GreenCheckCoord[0], $GreenCheckCoord[1]) ;click GreenCheck in case it exist
 			Click($GreenCheckCoord[0] - 75, $GreenCheckCoord[1]) ;click redX in case it exist
+			BBAutoUpgradeLog()
 			Return True
 		Else
 			Local $RedXCoord = decodeSingleCoord(findImage("RedX", $g_sImgAutoUpgradeRedX & "\RedX*", "FV", 1, True))
@@ -553,4 +568,33 @@ Func GoAttackBBAndReturn()
 	AttackBB()
 	ZoomOut()
 	SetLog("Field should be clear now", $COLOR_DEBUG)
+EndFunc
+
+Func BBAutoUpgradeLog($aUpgradeNameLevel = Default)
+	Local $txtAcc = $g_iCurAccount
+	Local $txtAccName = $g_asProfileName[$g_iCurAccount]
+	
+	If $aUpgradeNameLevel = Default Then 
+		$aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+		If $aUpgradeNameLevel[0] = "" Then
+			SetLog("Error when trying to get upgrade name and level", $COLOR_ERROR)
+			$aUpgradeNameLevel[1] = "Traps"
+		EndIf
+		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
+				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
+				" - BB Placing New Building: " & $aUpgradeNameLevel[1])
+
+		_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc + 1 & "] " & $txtAccName & _
+				" - BB Placing New Building: " & $aUpgradeNameLevel[1])
+	Else
+		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
+				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
+				" - BB Upgrading " & $aUpgradeNameLevel[1] & _
+				" to level " & $aUpgradeNameLevel[2] + 1)
+
+		_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc + 1 & "] " & $txtAccName & _
+				"Upgrading " & $aUpgradeNameLevel[1] & _
+				" to level " & $aUpgradeNameLevel[2] + 1)
+	EndIf
+	Return True
 EndFunc

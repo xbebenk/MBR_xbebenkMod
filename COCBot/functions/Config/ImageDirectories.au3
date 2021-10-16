@@ -136,6 +136,7 @@ Global $g_sImgAutoUpgradeRedX = @ScriptDir & "\imgxml\Resources\BuildersBase\Aut
 Global $g_sImgArrowNewBuilding = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Arrow\Arrow*.xml"
 Global $g_sImgAUpgradeGreenZoneBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\GreenZoneBB\"
 Global $g_sImgAUpgradeObstacleBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\ObstacleBB"
+Global $g_sImgAUpgradeOttoBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\OptimizeOTTO\"
 #EndRegion
 
 #Region Train
