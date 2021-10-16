@@ -417,7 +417,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			$IsWall = True
 		EndIf
 		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50) ;click new building on shop
-		If _Sleep(2000) Then Return
+		If _Sleep(5000) Then Return
 	
 		If $IsWall Then 
 			Local $aWall[3] = ["2","Wall",1]
