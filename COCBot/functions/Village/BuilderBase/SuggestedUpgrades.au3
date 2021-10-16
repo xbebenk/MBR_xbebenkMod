@@ -473,7 +473,7 @@ Func NewBuildings($x, $y, $bTest = False)
 	Local $Screencap = True, $Debug = False
 	
 	Click($x, $y)
-	If _Sleep(3500) Then Return
+	If _Sleep(5000) Then Return
 
 	;Search the arrow
 	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))

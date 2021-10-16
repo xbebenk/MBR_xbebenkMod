@@ -406,7 +406,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 	Local $IsWall = False
 	Local $xstart = 50, $ystart = 50, $xend = 800, $yend = 600
 	Click($x, $y); click on upgrade window
-	If _Sleep(3000) Then Return
+	If _Sleep(5000) Then Return
 	
 	;Search the arrow
 	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
@@ -417,7 +417,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			$IsWall = True
 		EndIf
 		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50) ;click new building on shop
-		If _Sleep(5000) Then Return
+		If _Sleep(2000) Then Return
 	
 		If $IsWall Then 
 			Local $aWall[3] = ["2","Wall",1]
