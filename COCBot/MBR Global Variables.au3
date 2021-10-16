@@ -1380,7 +1380,7 @@ Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 ;Builder Base
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
 Global $g_aiStarLaboratoryPos[2] = [-1, -1] ; Position of Starlaboratory
-Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_bGoldStorageFullBB = False, $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
+Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_bGoldStorageFullBB = False, $g_bElixirStorageFullBB = False, $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
 
 ; Army camps
 Global $g_iArmyCapacity = 0 ; Calculated percentage of troops currently in camp / total camp space, expressed as an integer from 0 to 100

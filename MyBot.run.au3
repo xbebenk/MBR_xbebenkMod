@@ -1236,7 +1236,18 @@ Func FirstCheck()
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetLog("Detecting Town Hall level", $COLOR_INFO)
 	SetLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
-	imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
+
+	If $g_aiTownHallPos[0] > -1 Then
+		Click($g_aiTownHallPos[0], $g_aiTownHallPos[1])
+		If _Sleep(800) Then Return
+		Local $BuildingInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY)
+		If $BuildingInfo[1] = "Town Hall" Then
+			$g_iTownHallLevel =  $BuildingInfo[2]
+		EndIf
+	Else
+		imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
+	EndIf
+	
 	SetLog("Detected Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
 	If $g_iTownHallLevel = $iTownHallLevel Then
 		SetLog("Town Hall level has not changed", $COLOR_INFO)
