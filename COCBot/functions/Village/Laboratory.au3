@@ -265,6 +265,7 @@ Func LabNextPage($iCurPage, $iPages, $iYMidPoint)
 	Else
 		ClickDrag(720, $iYMidPoint, 85, $iYMidPoint)
 	EndIf
+	If _Sleep(5000) Then Return
 EndFunc
 
 Func LabFirstPage($iCurPage, $iYMidPoint)
