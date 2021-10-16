@@ -348,6 +348,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 						If $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						ElseIf $aBuildingName[1] = "D uble Cannon" And $aBuildingName[2] >= 4 Then
+							$aBuildingName[1] = "Double Cannon"
 							SetLog("Upgrade for Double Cannon Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						ElseIf $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
