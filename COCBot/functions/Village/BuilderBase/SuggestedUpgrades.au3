@@ -594,7 +594,7 @@ Func BBAutoUpgradeLog($aUpgradeNameLevel = Default)
 				" to level " & $aUpgradeNameLevel[2] + 1)
 
 		_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc + 1 & "] " & $txtAccName & _
-				"Upgrading " & $aUpgradeNameLevel[1] & _
+				" - Upgrading " & $aUpgradeNameLevel[1] & _
 				" to level " & $aUpgradeNameLevel[2] + 1)
 	EndIf
 	Return True

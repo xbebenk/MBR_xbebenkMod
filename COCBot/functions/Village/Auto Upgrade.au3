@@ -403,7 +403,7 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 				" - Duration : " & $aUpgradeResourceCostDuration[2])
 
 		_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc + 1 & "] " & $txtAccName & _
-				"Upgrading " & $aUpgradeNameLevel[1] & _
+				" - Upgrading " & $aUpgradeNameLevel[1] & _
 				" to level " & $aUpgradeNameLevel[2] + 1 & _
 				" for " & _NumberFormat($aUpgradeResourceCostDuration[1]) & _
 				" " & $aUpgradeResourceCostDuration[0] & _
