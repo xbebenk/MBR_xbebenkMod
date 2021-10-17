@@ -1334,31 +1334,16 @@ Func FirstCheckRoutine()
 		EndIf
 	EndIf
 	
-	RequestCC(False)
-	checkArmyCamp(False, True)
-	PrepareDonateCC()
-	DonateCC()
-	TrainSystem()
-
-	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
-	For $Index In $aRndFuncList
-		If Not $g_bRunState Then Return
-		_RunFunction($Index)
-		If _Sleep(50) Then Return
-		If $g_bRestart Then ExitLoop
-		If CheckAndroidReboot() Then ContinueLoop
-		If checkObstacles() Then ContinueLoop
-	Next
-	
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
+		RequestCC() ;only do requestCC here
 		VillageReport()
 		If _Sleep($DELAYRUNBOT2) Then Return
 		If BotCommand() Then btnStop()
 		If Not $g_bRunState Then Return
 		If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 			; VERIFY THE TROOPS AND ATTACK IF IS FULL
+			SetLog("-- SecondCheck on Train --", $COLOR_DEBUG)
 			SetLog("Fast Switch Account Enabled", $COLOR_DEBUG)
-			SetLog("Lets Check if we can Attack again", $COLOR_DEBUG)
 			TrainSystem()
 			SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 			If $g_bIsFullArmywithHeroesAndSpells Then
@@ -1376,6 +1361,22 @@ Func FirstCheckRoutine()
 			EndIf
 		EndIf
 	EndIf
+	
+	RequestCC(False)
+	checkArmyCamp(False, True)
+	PrepareDonateCC()
+	DonateCC()
+	TrainSystem()
+
+	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
+	For $Index In $aRndFuncList
+		If Not $g_bRunState Then Return
+		_RunFunction($Index)
+		If _Sleep(50) Then Return
+		If $g_bRestart Then ExitLoop
+		If CheckAndroidReboot() Then ContinueLoop
+		If checkObstacles() Then ContinueLoop
+	Next
 	
 EndFunc
 
