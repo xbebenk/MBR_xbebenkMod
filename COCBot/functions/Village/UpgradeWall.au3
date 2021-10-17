@@ -44,6 +44,10 @@ Func UpgradeWall()
 		SetLog("Have more than 1 builder, Upgrade Walls skipped", $COLOR_DEBUG)
 		$GoUpgrade = False
 	EndIf
+	If $g_iFreeBuilderCount > 1 And $g_bUpgradeWallSaveBuilder Then 
+		SetLog("Ooops, Chief you are reserve one for wall, sure we will Upgrade Walls", $COLOR_DEBUG)
+		$GoUpgrade = True
+	EndIf
 	
 	If $GoUpgrade Then
 		ClickAway()
