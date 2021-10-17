@@ -652,10 +652,6 @@ Func cmbWalls()
 		GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
 		GUICtrlSetState($g_hRdoUseElixir, $GUI_UNCHECKED)
 		GUICtrlSetState($g_hRdoUseElixirGold, $GUI_UNCHECKED)
-	Else
-		GUICtrlSetState($g_hRdoUseGold, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hRdoUseElixir, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hRdoUseElixirGold, $GUI_CHECKED)
 	EndIf
 	
 EndFunc   ;==>cmbWalls
