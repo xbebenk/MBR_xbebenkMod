@@ -117,6 +117,7 @@ Global $g_sImgAUpgradeGreenZone = @ScriptDir & "\imgxml\Resources\Auto Upgrade\G
 Global $g_sImgGreenCheck = @ScriptDir & "\imgxml\Resources\Auto Upgrade\GreenCheck\"
 Global $g_sImgGoblin = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Goblin\"
 Global $g_sImgRedX = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RedX\"
+Global $g_sImgAUpgradeRushTH = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RushTH\"
 #EndRegion
 
 #Region Auto Upgrade Builder Base

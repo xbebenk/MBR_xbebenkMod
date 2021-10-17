@@ -68,12 +68,24 @@ Func SearchUpgrade($bTest = False)
 		For $i = 0 To 9
 			If Not $g_bRunState Then Return
 			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-5, $x1, $y1+5) Then
-				$b_BuildingFound = True
-				SetLog("[" & $i & "] Upgrade found!", $COLOR_SUCCESS)
 				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y-5, $x1, $y1+5) <> "none" Then
-					SetLog("[" & $i & "] New Building, Skip!", $COLOR_SUCCESS)
+					SetLog("[" & $i & "] New Building Or GearUp, Skip!", $COLOR_SUCCESS)
 					$b_BuildingFound = False
+				Else
+					If $g_bChkRushTH Then
+						If QuickMIS("BC1", $g_sImgAUpgradeRushTH, $x, $y-5, $x1, $y1+5) Then
+							$b_BuildingFound = True
+							SetLog("[" & $i & "] RushTH Building Found!", $COLOR_SUCCESS)
+						Else
+							SetLog("[" & $i & "] Not RushTH Building!", $COLOR_SUCCESS)
+							$b_BuildingFound = False
+						EndIf
+					Else
+						SetLog("[" & $i & "] Upgrade found!", $COLOR_SUCCESS)
+						$b_BuildingFound = True
+					EndIf
 				EndIf
+				
 				If $b_BuildingFound Then
 					Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
 					If _Sleep(1000) Then Return
