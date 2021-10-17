@@ -17,10 +17,10 @@
 Func TreasuryCollect()
 	SetLog("Begin CollectTreasury:", $COLOR_DEBUG) ; function trace
 	If Not $g_bRunState Then Return ; ensure bot is running
-	
 	ClickAway()
-	Local $TryCCAutoLocate = False
+	checkMainScreen(False)
 	
+	Local $TryCCAutoLocate = False
 	If Int($g_aiClanCastlePos[0]) < 1 Or Int($g_aiClanCastlePos[1]) < 1 Then
 		$TryCCAutoLocate = True
 	Else
