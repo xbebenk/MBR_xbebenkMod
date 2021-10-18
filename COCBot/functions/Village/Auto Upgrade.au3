@@ -389,7 +389,7 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 	
 	If $aUpgradeNameLevel = Default Or $aUpgradeNameLevel[1] = "Wall" Then 
 		$aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
-		If $aUpgradeNameLevel[0] = "" Then
+		If $aUpgradeNameLevel[0] = "" And $aUpgradeNameLevel[1] = "" Then
 			SetLog("Error when trying to get upgrade name and level", $COLOR_ERROR)
 			$aUpgradeNameLevel[1] = "Traps"
 		EndIf
