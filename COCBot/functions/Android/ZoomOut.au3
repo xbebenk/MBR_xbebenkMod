@@ -564,7 +564,7 @@ Func ZoomIn($Region = "Top")
 			If ZoomInMEmu($Region) Then Return True
 		Case "Nox"
 			SetDebugLog("ZoomInNox()")
-			If ZoomInNox($Region) Then Return True
+			If ZoomInMEmu($Region) Then Return True
 	EndSwitch
 	Return False
 EndFunc
