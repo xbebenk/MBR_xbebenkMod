@@ -339,7 +339,6 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 	Local $OptimizeOTTO[13] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "D uble Cannon", "Post", "Barracks", "Wall"]
 	;Local $aBtnPos = [360, 500, 180, 50] ; x, y, w, h
 	Local $aBtnPos = [360, 460, 380, 120] ; x, y, w, h ; support Battke Machine, broken and upgrade
-	Local $buttonUpgradeType = $sUpgButtom
 	
 	If $sUpgButtom = "" Then Return
 
@@ -399,7 +398,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 			Click($g_iQuickMISX + 218, $g_iQuickMISY + 544, 1)
 			If _Sleep(1500) Then Return
 
-			If QuickMIS("BC1", $sUpgButtom, 300, 480, 750, 600, True, $Debug) Then
+			If QuickMIS("BC1", $sUpgButtom, 300, 440, 600, 600, True, $Debug) Then
 				If Not $bTest Then 
 					Click($g_iQuickMISX + 300, $g_iQuickMISY + 480, 1)
 					BBAutoUpgradeLog($aBuildingName)
