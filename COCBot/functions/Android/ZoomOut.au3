@@ -560,15 +560,16 @@ EndFunc   ;==>SearchZoomOut
 Func ZoomIn($Region = "Top")
 	Switch $g_sAndroidEmulator
 		Case "Memu"
+			SetDebugLog("ZoomInMEmu()")
 			If ZoomInMEmu($Region) Then Return True
 		Case "Nox"
+			SetDebugLog("ZoomInNox()")
 			If ZoomInNox($Region) Then Return True
 	EndSwitch
 	Return False
 EndFunc
 
 Func ZoomInMEmu($Region = "Top")
-	SetDebugLog("ZoomInMEmu()")
 	Local $bSuccessZoomIn = False
 	For $i = 0 To 2
 		SetLog("[" & $i & "] Try ZoomIn", $COLOR_DEBUG)
@@ -604,40 +605,19 @@ Func ZoomInMEmu($Region = "Top")
 	Return True
 EndFunc
 
-Func ZoomInNox($Region = "Top")
-	SetDebugLog("ZoomInNox()")
-	If Not AndroidAdbScript("ZoomIn") Then Return False
-	If _Sleep(1500) Then Return
-	Switch $Region
-		Case "Top"
-			ClickDrag(400, 100, 400, 600, 200)
-			If _Sleep(500) Then Return
-			ClickDrag(400, 100, 400, 600, 200)
-		Case "Left"
-			ClickDrag(100, 400, 800, 400, 200)
-			If _Sleep(500) Then Return
-		Case "Bottom"
-			ClickDrag(400, 600, 400, 100, 200)
-			If _Sleep(500) Then Return
-		Case "Right"
-			ClickDrag(800, 400, 100, 400, 200)
-			If _Sleep(500) Then Return
-	EndSwitch
-	Return True
-EndFunc
-
 Func ZoomInBB($Region = "Top")
 	Switch $g_sAndroidEmulator
 		Case "Memu"
+			SetDebugLog("ZoomInBBMEmu()")
 			If ZoomInBBMEmu($Region) Then Return True
 		Case "Nox"
-			If ZoomInBBNox($Region) Then Return True
+			SetDebugLog("ZoomInNox()")
+			If ZoomInBBMEmu($Region) Then Return True
 	EndSwitch
 	Return False
 EndFunc
 
 Func ZoomInBBMEmu($Region = "Top")
-	SetDebugLog("ZoomInMEmu()")
 	If Not AndroidAdbScript("ZoomInBB") Then Return False
 	If _Sleep(1500) Then Return
 	Switch $Region
@@ -657,23 +637,3 @@ Func ZoomInBBMEmu($Region = "Top")
 	Return True
 EndFunc
 
-Func ZoomInBBNox($Region = "Top")
-	SetDebugLog("ZoomInNox()")
-	If Not AndroidAdbScript("ZoomInBB") Then Return False
-	If _Sleep(1500) Then Return
-	Switch $Region
-		Case "Top"
-			ClickDrag(400, 100, 400, 600, 200)
-			If _Sleep(500) Then Return
-		Case "Left"
-			ClickDrag(100, 400, 700, 400, 200)
-			If _Sleep(500) Then Return
-		Case "Bottom"
-			ClickDrag(400, 650, 400, 100, 200)
-			If _Sleep(500) Then Return
-		Case "Right"
-			ClickDrag(800, 400, 100, 400, 200)
-			If _Sleep(500) Then Return
-	EndSwitch
-	Return True
-EndFunc
