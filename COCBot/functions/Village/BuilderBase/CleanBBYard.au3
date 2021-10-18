@@ -20,7 +20,7 @@ Func CleanBBYard()
 	Local $bBuilderBase = True
 	Local $bNoBuilders = $g_iFreeBuilderCountBB < 1
 
-	If $g_iFreeBuilderCountBB > 0 And Number($g_aiCurrentLootBB[$eLootElixirBB]) > 10000 Then
+	If $g_iFreeBuilderCountBB > 0 Then
 		Local $aResult = findMultiple($g_sImgCleanBBYard, $sCocDiamond, $redLines, 0, 1000, 10, "objectname,objectlevel,objectpoints", True)
 		If IsArray($aResult) Then
 			For $matchedValues In $aResult

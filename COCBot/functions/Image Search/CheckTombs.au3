@@ -106,7 +106,7 @@ Func CleanYard()
 	Local $redLines = "ECD"
 	Local $bNoBuilders = $g_iFreeBuilderCount < 1
 
-	If $g_iFreeBuilderCount > 0 And $g_bChkCleanYard And Number($g_aiCurrentLoot[$eLootElixir]) > 20000 Then
+	If $g_iFreeBuilderCount > 0 And $g_bChkCleanYard Then
 		Local $aResult = findMultiple($g_iDetectedImageType = 1 ? $g_sImgCleanYardSnow  : $g_sImgCleanYard, $sCocDiamond, $redLines, 0, 1000, 10, "objectname,objectlevel,objectpoints", True)
 		If IsArray($aResult) Then
 			For $matchedValues In $aResult
@@ -144,7 +144,12 @@ EndFunc   ;==>CleanYard
 Func ClickRemoveObstacle()
 	If _Sleep(500) Then Return
 	If ClickB("RemoveObstacle") Then 
-		Return True
+		If _Sleep(1000) Then Return
+		If IsGemOpen(True) Then
+			Return False
+		Else
+			Return True
+		EndIf
 	Else
 		ClickAway()
 	EndIf
