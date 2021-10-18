@@ -516,12 +516,12 @@ Func UpgradeNewBuilding($bTest = False)
 				Else
 					$b_BuildingFound = False
 					SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
-					If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih bukan new building
+					If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah not enough resource
 				EndIf
 				
 			Else
 				SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
-				If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih bukan new building
+				If $z > 6 And $i = 9 Then $NeedDrag = False ; sudah 7 kali scroll tapi yang paling bawah masih bukan new building
 			EndIf
 			
 			If $b_BuildingFound Then 
