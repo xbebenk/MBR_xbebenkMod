@@ -144,9 +144,11 @@ Func AutoUpgradeBB($bTest = False)
 	Local $bScreencap = True
 
 	BuilderBaseReport(True)
-	If $g_iFreeBuilderCountBB = 0 Then 
-		SetLog("Master Builder Not Available", $COLOR_DEBUG)
-		Return
+	If $g_iFreeBuilderCountBB = 0 Then
+		If Not $bTest Then
+			SetLog("Master Builder Not Available", $COLOR_DEBUG)
+			Return
+		EndIf
 	EndIf
 		
 	If isOnBuilderBase(True) Then
