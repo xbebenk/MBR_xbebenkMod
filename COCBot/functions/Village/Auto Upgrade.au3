@@ -67,13 +67,13 @@ Func SearchUpgrade($bTest = False)
 		Local $x = 180, $y = 80, $x1 = 490, $y1 = 103, $step = 28
 		For $i = 0 To 9
 			If Not $g_bRunState Then Return
-			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-5, $x1, $y1+5) Then
-				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y-5, $x1, $y1+5) <> "none" Then
+			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-8, $x1, $y1+8) Then
+				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y-8, $x1, $y1+8) <> "none" Then
 					SetLog("[" & $i & "] New Building Or GearUp, Skip!", $COLOR_SUCCESS)
 					$b_BuildingFound = False
 				Else
 					If $g_bChkRushTH Then
-						If QuickMIS("BC1", $g_sImgAUpgradeRushTH, $x, $y-5, $x1, $y1+5) Then
+						If QuickMIS("BC1", $g_sImgAUpgradeRushTH, $x, $y-8, $x1, $y1+8) Then
 							SetLog("[" & $i & "] RushTH Building Found!", $COLOR_SUCCESS)
 							$b_BuildingFound = True
 						Else
