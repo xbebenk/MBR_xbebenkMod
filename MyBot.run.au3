@@ -1260,7 +1260,7 @@ Func FirstCheck()
 				SetLog("Set WallUpgrade [" & $z & "] -> Level = " & $g_aUpgradeWall[$z]+4, $COLOR_INFO)
 			Next
 			;SaveResource 			 	 0 = TH6	TH7		TH8			TH9		TH10	TH11	TH12		TH13
-			Local $WallSaveResource[8] = [800000, 1500000, 4000000, 5000000, 6000000, 7000000, 9500000, 11500000]
+			Local $WallSaveResource[8] = [1000000, 2000000, 4000000, 5000000, 6000000, 7000000, 9500000, 11500000]
 			For $j = 0 To UBound($WallSaveResource) - 1
 				If Int($g_iTownHallLevel) - 6 = $j Then 
 					$g_iUpgradeWallMinGold = $WallSaveResource[$j]
