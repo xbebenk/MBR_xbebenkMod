@@ -387,7 +387,7 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 	Local $txtAcc = $g_iCurAccount
 	Local $txtAccName = $g_asProfileName[$g_iCurAccount]
 	
-	If $aUpgradeNameLevel = Default Then 
+	If $aUpgradeNameLevel = Default Or $aUpgradeNameLevel[1] = "Wall" Then 
 		$aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
 		If $aUpgradeNameLevel[0] = "" Then
 			SetLog("Error when trying to get upgrade name and level", $COLOR_ERROR)
