@@ -46,6 +46,7 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 		isElixirFullBB()
 		If isBHMaxed() Then isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
 	EndIf
+	ClickAway()
 EndFunc   ;==>BuilderBaseReport
 
 Func isBHMaxed()

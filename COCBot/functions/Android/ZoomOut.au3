@@ -623,7 +623,7 @@ EndFunc
 
 Func ZoomInBBMEmu($Region = "Top")
 	SetDebugLog("ZoomInMEmu()")
-	If Not AndroidAdbScript("ZoomIn") Then Return False
+	If Not AndroidAdbScript("ZoomInBB") Then Return False
 	If _Sleep(1500) Then Return
 	Switch $Region
 		Case "Top"
@@ -644,7 +644,7 @@ EndFunc
 
 Func ZoomInBBNox($Region = "Top")
 	SetDebugLog("ZoomInNox()")
-	If Not AndroidAdbScript("ZoomIn") Then Return False
+	If Not AndroidAdbScript("ZoomInBB") Then Return False
 	If _Sleep(1500) Then Return
 	Switch $Region
 		Case "Top"

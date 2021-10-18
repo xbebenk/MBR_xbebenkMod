@@ -140,7 +140,7 @@ Func AutoUpgradeBB($bTest = False)
 
 	; If is not selected return
 	If $g_iChkBBSuggestedUpgrades = 0 Then Return
-	Local $bDebug = $g_bDebugSetlog
+	Local $bDebug = $g_bDebugImageSave
 	Local $bScreencap = True
 
 	BuilderBaseReport(True)
@@ -185,10 +185,17 @@ Func AutoUpgradeBB($bTest = False)
 			
 			Local $NeedDrag = True
 			For $z = 0 To 4 ;for do scroll 5 times
-				If $g_bRestart Then Exitloop
-				SetLog("[" & $z + 1 & "] Search Upgrade for Existing Building", $COLOR_INFO)
-				Local $x = 400, $y = 100, $x1 = 540, $y1 = 130, $step = 28
+				If _Sleep(50) Then Return
+				If $g_bRestart Then Return
+				SetLog("[" & $z & "] Search Upgrade for Existing Building", $COLOR_DEBUG)
+				Local $x = 270, $y = 73, $x1 = 540, $y1 = 103, $step = 28
+				If QuickMIS("BC1", $g_sImgAUpgradeZero, 400, $y, 550, 175, $bScreencap, $bDebug) Then
+					$y = $g_iQuickMISY
+					$y1 = $y + 28 + 5
+				EndIf
 				For $i = 0 To 9
+					If _Sleep(20) Then Return
+					If $g_bRestart Then Return
 					Local $bSkipGoldCheck = False
 					Local $BuildingFound = False
 					If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
@@ -199,14 +206,15 @@ Func AutoUpgradeBB($bTest = False)
 								$bSkipGoldCheck = True
 								If $g_iChkBBSuggestedUpgradesOTTO Then
 									If QuickMIS("BC1", $g_sImgAUpgradeOttoBB, 260, $y, 450, $y1, $bScreencap, $bDebug) Then
-										SetLog("[" & $i + 1 & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
+										SetLog("[" & $i & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
 										Click($g_iQuickMISX + 260, $g_iQuickMISY + $y)
 										$BuildingFound = True
 									Else
-										SetLog("[" & $i + 1 & "] Not Optimize OTTO Building", $COLOR_INFO)
+										SetLog("[" & $i & "] Not Optimize OTTO Building", $COLOR_INFO)
+										$BuildingFound = False
 									EndIf
 								Else
-									SetLog("[" & $i + 1 & "] Upgrade Found!", $COLOR_SUCCESS)
+									SetLog("[" & $i & "] Upgrade Found!", $COLOR_SUCCESS)
 									Click($aResult[0], $aResult[1])
 									$BuildingFound = True
 								EndIf
@@ -220,10 +228,10 @@ Func AutoUpgradeBB($bTest = False)
 								EndIf
 							Case "NoResources"
 								SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
-								If $z > 1 And $i = 9 Then $NeedDrag = False ; sudah 2 kali scroll tapi yang paling bawah nol nya nggak putih
+								If $z > 2 And $i = 9 Then $NeedDrag = False ; sudah 3 kali scroll tapi yang paling bawah nol nya nggak putih
 								$bSkipGoldCheck = True
 							Case Else
-								SetDebugLog("[" & $i + 1 & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
+								SetDebugLog("[" & $i & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
 						EndSwitch
 					EndIf
 					If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 And $g_aiCurrentLootBB[$eLootGoldBB] > 250 And Not $bSkipGoldCheck Then
@@ -233,24 +241,31 @@ Func AutoUpgradeBB($bTest = False)
 							Case "Gold"
 								If $g_iChkBBSuggestedUpgradesOTTO Then
 									If QuickMIS("BC1", $g_sImgAUpgradeOttoBB, 260, $y, 450, $y1, $bScreencap, $bDebug) Then
-										SetLog("[" & $i + 1 & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
+										SetLog("[" & $i & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
 										Click($g_iQuickMISX + 260, $g_iQuickMISY + $y)
+										$BuildingFound = True
 									Else
-										SetLog("[" & $i + 1 & "] Not Optimize OTTO Building", $COLOR_INFO)
+										SetLog("[" & $i & "] Not Optimize OTTO Building", $COLOR_INFO)
+										$BuildingFound = False
 									EndIf
 								Else
-									SetLog("[" & $i + 1 & "] Upgrade Found!", $COLOR_SUCCESS)
+									SetLog("[" & $i & "] Upgrade Found!", $COLOR_SUCCESS)
 									Click($aResult[0], $aResult[1])
+									$BuildingFound = True
 								EndIf
-								If _Sleep(2000) Then Return
-								If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
-									Return True
+								If $BuildingFound Then
+									If _Sleep(2000) Then Return
+									If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
+										$BuildingFound = False ;reset
+										$z = 0 ;reset
+										Return True
+									EndIf
 								EndIf
 							Case "NoResources"
-								SetLog("[" & $i + 1 & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
-								If $z > 1 And $i = 9 Then $NeedDrag = False ; sudah 2 kali scroll tapi yang paling bawah nol nya nggak putih
+								SetLog("[" & $i & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
+								If $z > 2 And $i = 9 Then $NeedDrag = False ; sudah 3 kali scroll tapi yang paling bawah nol nya nggak putih
 							Case Else
-								SetDebugLog("[" & $i + 1 & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
+								SetDebugLog("[" & $i & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
 						EndSwitch
 					EndIf
 					$y += $step
@@ -297,23 +312,21 @@ Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap 
 
 	If QuickMIS("BC1", $directory, $x, $y, $x1, $y1, $Screencap, $Debug) Then
 		; Correct positions to Check Green 'New' Building word
-		Local $iYoffset = $y + $g_iQuickMISY - 15, $iY1offset = $y + $g_iQuickMISY + 7
-		Local $iX = 300, $iX1 = $g_iQuickMISX + $x
 		; Store the values
 		$aResult[0] = $g_iQuickMISX + $x
 		$aResult[1] = $g_iQuickMISY + $y
 		$aResult[2] = $Name
 		; The pink/salmon color on zeros
-		If QuickMIS("BC1", $g_sImgAutoUpgradeNoRes, $aResult[0], $iYoffset, $aResult[0] + 100, $iY1offset, True, $Debug) Then
+		If QuickMIS("BC1", $g_sImgAutoUpgradeNoRes, $x, $y, $x1, $y1, True, $Debug) Then
 			; Store new values
 			$aResult[2] = "NoResources"
 			Return $aResult
 		EndIf
 		; Proceeds with 'New' detection
-		If QuickMIS("BC1", $g_sImgAutoUpgradeNew, $iX, $iYoffset, $iX1, $iY1offset, True, $Debug) Then
+		If QuickMIS("BC1", $g_sImgAutoUpgradeNew, $x, $y, $x1, $y1, True, $Debug) Then
 			; Store new values
-			$aResult[0] = $g_iQuickMISX + $iX + 35
-			$aResult[1] = $g_iQuickMISY + $iYoffset
+			$aResult[0] = $g_iQuickMISX + $x + 35
+			$aResult[1] = $g_iQuickMISY + $y
 			$aResult[2] = "New"
 		EndIf
 	EndIf
@@ -334,6 +347,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 	If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 218, 544, 662, 683, True, $Debug) Then
 		Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 		If $aBuildingName[0] = 2 Then
+			If $aBuildingName[1] = "D uble Cannon" Then $aBuildingName[1] = "Double Cannon"
 			SetLog("Building: " & $aBuildingName[1], $COLOR_INFO)
 			; Verify if is Builder Hall and If is to Upgrade
 			If StringInStr($aBuildingName[1], "Hall") And $g_iChkBBSuggestedUpgradesIgnoreHall Then
@@ -350,7 +364,6 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 						If $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						ElseIf $aBuildingName[1] = "D uble Cannon" And $aBuildingName[2] >= 4 Then
-							$aBuildingName[1] = "Double Cannon"
 							SetLog("Upgrade for Double Cannon Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						ElseIf $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
@@ -415,16 +428,17 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 EndFunc   ;==>GetUpgradeButton
 
 Func SearchNewBuilding($bTest = False)
-	Local $bDebug = $g_bDebugSetlog
+	Local $bDebug = $g_bDebugImageSave
 	Local $bScreencap = True
 	Local $NeedDrag = True
-	For $z = 0 To 2 ;for do scroll 3 times
+	For $z = 0 To 6 ;for do scroll 3 times
+		If _Sleep(50) Then Return
 		If $g_bRestart Then Return
 		Local $b_BuildingFound = False
 		Local $NewCoord, $ZeroCoord
 		
 		Local $x = 270, $y = 73, $x1 = 540, $y1 = 103, $step = 28
-		SetLog("[" & $z + 1 & "] Search for Placing New Building", $COLOR_INFO)
+		SetLog("[" & $z & "] Search for Placing New Building", $COLOR_DEBUG)
 		For $i = 0 To 9
 			$NewCoord = decodeSingleCoord(findImage("New", $g_sImgAUpgradeObst & "\New*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
 			If IsArray($NewCoord) And UBound($NewCoord) = 2 Then 
@@ -438,8 +452,18 @@ Func SearchNewBuilding($bTest = False)
 					If $z > 1 And $i = 9 Then $NeedDrag = False ; sudah 2 kali scroll tapi yang paling bawah bukan new building
 				EndIf
 			Else
-				SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
-				If $z > 1 And $i = 9 Then $NeedDrag = False ; sudah 2 kali scroll tapi yang paling bawah bukan new building
+				If $z > 2 And $i = 9 Then 
+					Local $NoRes = decodeSingleCoord(findImage("Zero", $g_sImgAutoUpgradeNoRes & "\No*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
+					If IsArray($NoRes) And UBound($NoRes) = 2 Then
+						SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
+						$NeedDrag = False ; sudah 2 kali scroll tapi yang paling bawah bukan new building
+					Else
+						SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
+					EndIf 
+				Else
+					SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
+				EndIf
+				$b_BuildingFound = False
 			EndIf
 			
 			If $b_BuildingFound Then 
@@ -460,10 +484,10 @@ Func SearchNewBuilding($bTest = False)
 			ExitLoop
 		EndIf
 		If Not $NeedDrag Then
-			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Need More resource", $COLOR_DEBUG)
+			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Not New Building", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
-		ClickDragAutoUpgradeBB($y)
+		ClickDragAutoUpgradeBB($y - $step)
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 	Next
 	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
@@ -475,13 +499,13 @@ EndFunc
 Func ClickDragAutoUpgradeBB($y = 400)
 	
 	If (_ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) = True) Then
-		ClickDrag(333, $y - 30, 333, 93, 800);do scroll down
-		If _Sleep(2500) Then Return
+		ClickDrag(333, $y - 30, 333, 91, 800);do scroll down
+		If _Sleep(3000) Then Return
 	Else
 		SetLog("Upgrade Window didn't open, try to open it", $COLOR_DEBUG)
 		If ClickOnBuilder() Then 
-			ClickDrag(333, $y - 30, 333, 93, 800);do scroll down
-			If _Sleep(2500) Then Return
+			ClickDrag(333, $y - 30, 333, 91, 800);do scroll down
+			If _Sleep(3000) Then Return
 		EndIf
 	EndIf
 EndFunc

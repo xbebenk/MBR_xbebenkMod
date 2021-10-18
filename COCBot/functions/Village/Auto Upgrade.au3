@@ -96,7 +96,6 @@ Func SearchUpgrade($bTest = False)
 						If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
 					Endif
 				EndIf
-				If _Sleep(500) Then Return
 			Else
 				SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
 				If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih merah angka nya
@@ -534,7 +533,7 @@ Func UpgradeNewBuilding($bTest = False)
 		Next
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		If Not $NeedDrag Then
-			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Need More resource", $COLOR_DEBUG)
+			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Not New Building", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
 		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
@@ -582,7 +581,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 				Case "Up"
 					If $YY < 100 Then $YY = 150
 					ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
-					If _Sleep(1000) Then Return
+					If _Sleep(2000) Then Return
 				Case "Down"
 					ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
 					If _Sleep(5000) Then Return
