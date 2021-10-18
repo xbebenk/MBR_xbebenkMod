@@ -63,7 +63,7 @@ Func SearchUpgrade($bTest = False)
 	If Not $g_bRunState Then Return
 	
 	Local $b_BuildingFound = False, $NeedDrag = True
-	For $z = 0 To 9 ;for do scroll 5 times
+	For $z = 0 To 9 ;for do scroll 10 times
 		Local $x = 180, $y = 80, $x1 = 490, $y1 = 103, $step = 28
 		For $i = 0 To 9
 			If Not $g_bRunState Then Return
@@ -74,11 +74,12 @@ Func SearchUpgrade($bTest = False)
 				Else
 					If $g_bChkRushTH Then
 						If QuickMIS("BC1", $g_sImgAUpgradeRushTH, $x, $y-5, $x1, $y1+5) Then
-							$b_BuildingFound = True
 							SetLog("[" & $i & "] RushTH Building Found!", $COLOR_SUCCESS)
+							$b_BuildingFound = True
 						Else
 							SetLog("[" & $i & "] Not RushTH Building!", $COLOR_SUCCESS)
 							$b_BuildingFound = False
+							If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah bukan RushTH 
 						EndIf
 					Else
 						SetLog("[" & $i & "] Upgrade found!", $COLOR_SUCCESS)
@@ -94,6 +95,8 @@ Func SearchUpgrade($bTest = False)
 						$z = 0 ;reset
 						ClickMainBuilder($bTest)
 						If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
+					Else
+						ClickMainBuilder($bTest)
 					Endif
 				EndIf
 			Else
@@ -105,11 +108,11 @@ Func SearchUpgrade($bTest = False)
 		Next
 		
 		If Not $NeedDrag Then
-			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Need More resource", $COLOR_DEBUG)
+			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
-		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
+		ClickDragAUpgrade("up", $y - $step) ;do scroll up
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
 	Next
@@ -129,40 +132,41 @@ EndFunc
 Func DoUpgrade($bTest = False)
 
 	If Not $g_bRunState Then Return
-
-	; check if any wrong click by verifying the presence of the Upgrade button (the hammer)
-	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
-	If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
-		SetLog("No upgrade here... Wrong click, looking next...", $COLOR_WARNING)
-		;$g_iNextLineOffset = $g_iCurrentLineOffset -> not necessary finally, but in case, I keep lne commented
-		Return False
-	EndIf
-
+	
 	; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
 	$g_aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
 	If $g_aUpgradeNameLevel[0] = "" Then
 		SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
 		Return False
 	EndIf
-
+	
+	Local $aUpgradeButton
 	Local $bMustIgnoreUpgrade = False
+	; check if any wrong click by verifying the presence of the Upgrade button (the hammer)
+	
+	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_aUpgradeNameLevel[2] > 11 Then
+		If $g_iChkUpgradesToIgnore[35] = 1 Then ;TH Weapon
+			$bMustIgnoreUpgrade = True
+		Else
+			$aUpgradeButton = findButton("THWeapon", Default, 1, True)
+			If Not IsArray($aUpgradeButton) And Not UBound($aUpgradeButton, 1) = 2 Then
+				SetLog("No Upgrade Weapon Button here... Wrong click, looking next...", $COLOR_WARNING)
+				Return False
+			EndIf
+		Endif
+	Else
+		$aUpgradeButton = findButton("Upgrade", Default, 1, True)
+		If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
+			SetLog("No upgrade here... Wrong click, looking next...", $COLOR_WARNING)
+			Return False
+		EndIf
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1) ? True : False
+	EndIf
+
+	
 	; matchmaking between building name and the ignore list
 	If $g_aUpgradeNameLevel[1] = "po al Champion" Then $g_aUpgradeNameLevel[1] = "Royal Champion"
 	Switch $g_aUpgradeNameLevel[1]
-		Case "Town Hall"
-			If $g_aUpgradeNameLevel[2] > 11 Then
-				If $g_iChkUpgradesToIgnore[35] = 1 Then ;TH Weapon
-					$bMustIgnoreUpgrade = True
-				Else
-					$aUpgradeButton = findButton("THWeapon", Default, 1, True)
-					If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
-						SetLog("No Upgrade Weapon Button here... Wrong click, looking next...", $COLOR_WARNING)
-						Return False
-					EndIf
-				Endif
-			Else
-				$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1) ? True : False
-			EndIf
 		Case "Barbarian King"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1 Or $g_bUpgradeKingEnable = True) ? True : False
 		Case "Archer Queen"
@@ -246,7 +250,7 @@ Func DoUpgrade($bTest = False)
 		Case Else
 			$bMustIgnoreUpgrade = False
 	EndSwitch
-
+	
 	; check if the upgrade name is on the list of upgrades that must be ignored
 	If $bMustIgnoreUpgrade Then
 		SetLog($g_aUpgradeNameLevel[1] & " : This upgrade must be ignored, looking next...", $COLOR_WARNING)
@@ -317,6 +321,7 @@ Func DoUpgrade($bTest = False)
 		SetLog($g_aUpgradeNameLevel[1] & ": Insufficent " & $g_aUpgradeResourceCostDuration[0] & " to launch this upgrade, looking Next...", $COLOR_WARNING)
 		$g_iNextLineOffset = $g_iCurrentLineOffset
 		ClickAway("Right")
+		If _Sleep(500) Then Return
 		Return False
 	EndIf
 
