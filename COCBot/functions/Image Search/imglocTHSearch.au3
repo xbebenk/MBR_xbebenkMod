@@ -166,8 +166,19 @@ Func imglocTHSearch($bReTest = False, $myVillage = False, $bForceCapture = True)
 									_GDIPlus_GraphicsDispose($hGraphic)
 								EndIf
 							Else
-								$g_aiTownHallPos = decodeSingleCoord($propsValues[$pv])
-								ConvertFromVillagePos($g_aiTownHallPos[0], $g_aiTownHallPos[1])
+								Local $aiTownHallPos = decodeSingleCoord($propsValues[$pv])
+								SetLog("Found MyVillage Coords from ImgLocTHSearch", $COLOR_DEBUG)
+								Select
+									Case $iLvlFound < 11 
+										$g_aiTownHallPos[0] = $aiTownHallPos[0] + 10
+										$g_aiTownHallPos[1] = $aiTownHallPos[1] + 10
+									Case Else
+										$g_aiTownHallPos[0] = $aiTownHallPos[0]
+										$g_aiTownHallPos[1] = $aiTownHallPos[1] + 5
+								EndSelect
+								
+								SetLog("Saving Coords for future, [" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & "]", $COLOR_INFO)
+								;ConvertFromVillagePos($g_aiTownHallPos[0], $g_aiTownHallPos[1])
 							EndIf
 						Case "nearpoints"
 							If $myVillage = False Then
