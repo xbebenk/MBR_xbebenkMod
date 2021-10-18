@@ -894,7 +894,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $g_bRestart Then ExitLoop
 		If Random(0, $g_iCollectAtCount - 1, 1) = 0 Then ; This is prevent from collecting all the time which isn't needed anyway, chance to run is 1/$g_iCollectAtCount
 			If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then
-				Local $aRndFuncList = ['Collect', 'CheckTombs', 'CleanYard']
+				Local $aRndFuncList = ['Collect', 'CheckTombs', 'CleanYard', 'UpgradeBuilding']
 			Else
 				Local $aRndFuncList = ['Collect', 'CheckTombs', 'RequestCC', 'DonateCC', 'CleanYard']
 			EndIf
