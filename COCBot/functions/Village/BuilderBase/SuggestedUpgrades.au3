@@ -213,6 +213,8 @@ Func AutoUpgradeBB($bTest = False)
 								If $BuildingFound Then
 									If _Sleep(2000) Then Return
 									If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
+										$BuildingFound = False ;reset
+										$z = 0 ;reset
 										Return True
 									EndIf
 								EndIf
@@ -444,6 +446,7 @@ Func SearchNewBuilding($bTest = False)
 				If NewBuildings($ZeroCoord[0], $ZeroCoord[1], $bTest) Then
 					ClickMainBuilder($bTest)
 					$b_BuildingFound = False ;reset
+					$z = 0 ;reset
 				Else
 					Return False
 				EndIf

@@ -90,6 +90,8 @@ Func SearchUpgrade($bTest = False)
 					Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
 					If _Sleep(1000) Then Return
 					If DoUpgrade($bTest) Then
+						$b_BuildingFound = False ;reset
+						$z = 0 ;reset
 						ClickMainBuilder($bTest)
 						If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
 					Endif
@@ -522,6 +524,7 @@ Func UpgradeNewBuilding($bTest = False)
 				If AUNewBuildings($ZeroCoord[0], $ZeroCoord[1], $bTest) Then
 					ClickMainBuilder($bTest)
 					$b_BuildingFound = False ;reset
+					$z = 0 ;reset
 				Else
 					ExitLoop 2
 				EndIf
