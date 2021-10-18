@@ -25,12 +25,6 @@ Func DoAttackBB()
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			AttackBB()
 			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-				If $count > 10 Then 
-					SetLog("SomeThing May Wrong", $COLOR_INFO) 
-					SetLog("Already 10 Attack on ForceBBAttackOnClanGames", $COLOR_INFO)
-					SetLog("Surrender..!", $COLOR_ACTION)
-					ExitLoop
-				Endif
 				For $x = 0 To 4
 					_Sleep(1000)
 					If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
@@ -41,7 +35,12 @@ Func DoAttackBB()
 			EndIf
 			If _Sleep($DELAYRUNBOT3) Then Return
 			If checkObstacles(True) Then Return
-			$count += 1			
+			$count += 1	
+			If $count > 10 Then 
+				SetLog("SomeThing May Wrong", $COLOR_INFO) 
+				SetLog("Already Attack 10 times", $COLOR_INFO)
+				ExitLoop
+			Endif			
 		Wend
 		
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
