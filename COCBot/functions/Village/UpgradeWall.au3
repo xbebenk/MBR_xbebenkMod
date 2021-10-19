@@ -156,32 +156,35 @@ Func UpgradeLowLevelWall()
 		$aWallCoord = ClickDragFindWallUpgrade()
 		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
 		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
-		
-		For $i = 0 To UBound($aWallCoord) - 1
-			$Wall = StringSplit($aWallCoord[$i], ",", $STR_NOCOUNT)
-			SetLog("Wall " & "[" & $i & "] : [" & $Wall[0] + 180 & "," & $Wall[1] + 80 & "]", $COLOR_DEBUG)
-			Click($Wall[0] + 180, $Wall[1] + 80)
-			If _Sleep(800) Then Return
-			$WallLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
-			If $WallLevel[0] = "" Then
-				SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
-				ContinueLoop
-			EndIf
-			If $WallLevel[1] = "Wall" And $WallLevel[2] > 4 Then
-				SetLog("Wall Level : " & $WallLevel[2], $COLOR_ERROR)
-				SetLog("We Only want to upgrade for Low Level Wall, looking next...", $COLOR_ERROR)
-				ContinueLoop
-			Else
-				If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold Then 
-					SetLog("Current Gold: " & $g_aiCurrentLoot[$eLootGold] & ", already below " & $g_iUpgradeWallMinGold, $COLOR_INFO)
-					ExitLoop 2
-				Else
-					SetLog("Wall Level : " & $WallLevel[2], $COLOR_SUCCESS)
-					If Not DoLowLevelWallUpgrade($WallLevel[2]) Then ExitLoop
+		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then 
+			For $i = 0 To UBound($aWallCoord) - 1
+				$Wall = StringSplit($aWallCoord[$i], ",", $STR_NOCOUNT)
+				SetLog("Wall " & "[" & $i & "] : [" & $Wall[0] + 180 & "," & $Wall[1] + 80 & "]", $COLOR_DEBUG)
+				Click($Wall[0] + 180, $Wall[1] + 80)
+				If _Sleep(800) Then Return
+				$WallLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+				If $WallLevel[0] = "" Then
+					SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
+					ContinueLoop
 				EndIf
-			EndIf
-			If Not QuickMIS("BC1", $g_sImgAUpgradeWall, 180, 80, 330, 369) Then ExitLoop
-		Next
+				If $WallLevel[1] = "Wall" And $WallLevel[2] > 4 Then
+					SetLog("Wall Level : " & $WallLevel[2], $COLOR_ERROR)
+					SetLog("We Only want to upgrade for Low Level Wall, looking next...", $COLOR_ERROR)
+					ContinueLoop
+				Else
+					If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold Then 
+						SetLog("Current Gold: " & $g_aiCurrentLoot[$eLootGold] & ", already below " & $g_iUpgradeWallMinGold, $COLOR_INFO)
+						ExitLoop 2
+					Else
+						SetLog("Wall Level : " & $WallLevel[2], $COLOR_SUCCESS)
+						If Not DoLowLevelWallUpgrade($WallLevel[2]) Then ExitLoop
+					EndIf
+				EndIf
+				If Not QuickMIS("BC1", $g_sImgAUpgradeWall, 180, 80, 330, 369) Then ExitLoop
+			Next
+		Else
+			ExitLoop
+		EndIf
 	Wend
 	ClickAway()
 	CheckMainScreen(False)
@@ -234,7 +237,7 @@ Func ClickDragFindWallUpgrade()
 	Local $x = 330, $yUp = 40, $Delay = 500
 	Local $YY = 350
 	Local $aWallCoord, $aResult[0]
-	For $checkCount = 0 To 7
+	For $checkCount = 0 To 4
 		If Not $g_bRunState Then Return
 		If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
 			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
