@@ -177,7 +177,7 @@ Func UpgradeLowLevelWall()
 						ExitLoop 2
 					Else
 						SetLog("Wall Level : " & $WallLevel[2], $COLOR_SUCCESS)
-						If Not DoLowLevelWallUpgrade($WallLevel[2]) Then ExitLoop
+						If Not DoLowLevelWallUpgrade($WallLevel[2]) Then ExitLoop 2
 					EndIf
 				EndIf
 				If Not QuickMIS("BC1", $g_sImgAUpgradeWall, 180, 80, 330, 369) Then ExitLoop
@@ -196,6 +196,12 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 		If ClickB("SelectRow") Then
 			If _Sleep(1000) Then Return 
 			For $x = $WallLevel To 3 ;try to upgrade till lvl 4
+				$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
+				$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
+				If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold Then 
+					SetLog("Current Gold: " & $g_aiCurrentLoot[$eLootGold] & ", already below " & $g_iUpgradeWallMinGold, $COLOR_INFO)
+					Return False
+				EndIf
 				If Not $g_bRunState Then Return
 				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 550, 530, 640) Then
 					Click($g_iQuickMISX + 400, $g_iQuickMISY + 550)
@@ -213,17 +219,22 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 		Else
 			SetLog("Cannot Select Row", $COLOR_INFO)
 			For $x = $WallLevel To 3 ;try to upgrade till lvl 4
+				$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
+				$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
+				If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold Then 
+					SetLog("Current Gold: " & $g_aiCurrentLoot[$eLootGold] & ", already below " & $g_iUpgradeWallMinGold, $COLOR_INFO)
+					Return False
+				EndIf
 				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 550, 530, 640) Then
 					Click($g_iQuickMISX + 400, $g_iQuickMISY + 550)
 					If _Sleep(1500) Then Return
-					If QuickMIS("BC1", $g_sImgAUpgradeWallOK, 400, 400, 600, 470) Then
-						Click($g_iQuickMISX + 400, $g_iQuickMISY + 400)
-						SetLog("Successfully Upgrade Level " & $x, $COLOR_SUCCESS)
-					EndIf
+					Click(440, 530)
+					SetLog("Successfully Upgrade Level " & $x, $COLOR_SUCCESS)
 				Else
 					SetLog("Not Enough Resource...", $COLOR_ERROR)
 					Return False
 				EndIf
+				If _Sleep(1000) Then Return
 			Next
 		EndIf
 	Else
