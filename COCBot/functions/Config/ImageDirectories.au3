@@ -114,10 +114,14 @@ Global $g_sImgAUpgradeRes = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Resourc
 Global $g_sImgAUpgradeEndBoost = @ScriptDir & "\imgxml\Resources\Auto Upgrade\EndBoost\EndBoost*"
 Global $g_sImgAUpgradeEndBoostOKBtn = @ScriptDir & "\imgxml\Resources\Auto Upgrade\EndBoost\EndBoostOKBtn*"
 Global $g_sImgAUpgradeGreenZone = @ScriptDir & "\imgxml\Resources\Auto Upgrade\GreenZone\"
+Global $g_sImgAUpgradeWall = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Wall\"
+Global $g_sImgAUpgradeWhiteZeroWallUpgrade = @ScriptDir & "\imgxml\Resources\Auto Upgrade\WhiteZeroWallUpgrade\"
+Global $g_sImgAUpgradeWallOK = @ScriptDir & "\imgxml\Resources\Auto Upgrade\WallOK\"
 Global $g_sImgGreenCheck = @ScriptDir & "\imgxml\Resources\Auto Upgrade\GreenCheck\"
 Global $g_sImgGoblin = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Goblin\"
 Global $g_sImgRedX = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RedX\"
 Global $g_sImgAUpgradeRushTH = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RushTH\"
+
 #EndRegion
 
 #Region Auto Upgrade Builder Base

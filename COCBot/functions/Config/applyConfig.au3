@@ -958,6 +958,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOnly1Builder, $g_bChkOnly1Builder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSyncTHLvlWalls, $g_bchkSyncTHWall ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkLowLevelAutoUpgradeWall, $g_bUpgradeLowWall ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $y = 0 To 2
 				_GUICtrlComboBox_SetCurSel($g_hCmbWalls[$y], $g_aUpgradeWall[$y])
 			Next
@@ -984,6 +985,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 			$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
 			$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
 			$g_bchkSyncTHWall = (GUICtrlRead($g_hChkSyncTHLvlWalls) = $GUI_CHECKED)
+			$g_bUpgradeLowWall = (GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED)
 			For $i = 4 To 15 ; added wall-lvl15
 				$g_aiWallsCurrentCount[$i] = Number(GUICtrlRead($g_ahWallsCurrentCount[$i]))
 			Next

@@ -967,7 +967,7 @@ Global $g_abUpgradeRepeatEnable[$g_iUpgradeSlots] = [False, False, False, False,
 Global $g_bAutoUpgradeWallsEnable = 0
 Global $g_iUpgradeWallMinGold = 0, $g_iUpgradeWallMinElixir = 0
 Global $g_iUpgradeWallLootType = 0, $g_bUpgradeWallSaveBuilder = False, $g_bChkOnly1Builder = False, $g_bchkSyncTHWall = False
-Global $g_iUpgradedWallLevel = 0
+Global $g_iUpgradedWallLevel = 0, $g_bUpgradeLowWall = False
 Global $g_aiWallsCurrentCount[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 to 3 are not referenced
 Global $g_aiLastGoodWallPos[2] = [0, 0] ;0 = x, 1 = y, 2 = wall level
 Global $g_aUpgradeWall[3] = [0, 0, 0] ;wall level

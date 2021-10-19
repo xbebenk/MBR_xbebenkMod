@@ -604,13 +604,13 @@ EndFunc   ;==>cmbHeroReservedBuilder
 Func chkWalls()
 	If GUICtrlRead($g_hChkWalls) = $GUI_CHECKED Then
 		$g_bAutoUpgradeWallsEnable = True
-		For $i = $g_hRdoUseGold To $g_hChkSyncTHLvlWalls
+		For $i = $g_hRdoUseGold To $g_hChkLowLevelAutoUpgradeWall
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 		cmbWalls()
 	Else
 		$g_bAutoUpgradeWallsEnable = False
-		For $i = $g_hRdoUseGold To $g_hChkSyncTHLvlWalls
+		For $i = $g_hRdoUseGold To $g_hChkLowLevelAutoUpgradeWall
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
@@ -626,6 +626,10 @@ EndFunc   ;==>chkWallOnly1Builder
 
 Func chkSyncTHWall()
 	$g_bchkSyncTHWall = (GUICtrlRead($g_hChkSyncTHLvlWalls) = $GUI_CHECKED)
+EndFunc   ;==>chkWallOnly1Builder
+
+Func ChkLowLevelAutoUpgradeWall()
+	$g_bUpgradeLowWall = (GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED)
 EndFunc   ;==>chkWallOnly1Builder
 
 Func cmbWalls()
