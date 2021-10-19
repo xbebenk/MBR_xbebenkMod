@@ -196,7 +196,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 				If Not $g_bRunState Then Return
 				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 550, 530, 640) Then
 					Click($g_iQuickMISX + 400, $g_iQuickMISY + 550)
-					If _Sleep(800) Then Return
+					If _Sleep(1500) Then Return
 					If QuickMIS("BC1", $g_sImgAUpgradeWallOK, 400, 400, 600, 470) Then
 						Click($g_iQuickMISX + 400, $g_iQuickMISY + 400)
 						SetLog("Successfully Upgrade a Row of Wall Level " & $x, $COLOR_SUCCESS)
