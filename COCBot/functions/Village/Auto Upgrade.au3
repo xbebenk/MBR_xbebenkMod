@@ -387,9 +387,9 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 	Local $txtAcc = $g_iCurAccount
 	Local $txtAccName = $g_asProfileName[$g_iCurAccount]
 	
-	If $aUpgradeNameLevel = Default Or $aUpgradeNameLevel[1] = "Wall" Then 
+	If $aUpgradeNameLevel = Default Then 
 		$aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
-		If $aUpgradeNameLevel[0] = "" And $aUpgradeNameLevel[1] = "" Then
+		If $aUpgradeNameLevel[0] = "" Then
 			SetLog("Error when trying to get upgrade name and level", $COLOR_ERROR)
 			$aUpgradeNameLevel[1] = "Traps"
 		EndIf
@@ -418,6 +418,25 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 	Return True
 EndFunc
 
+Func AutoUpgradeLogPlacingWall($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration = Default)
+	Local $txtAcc = $g_iCurAccount
+	Local $txtAccName = $g_asProfileName[$g_iCurAccount]
+	
+	If $aUpgradeNameLevel = Default Then Return
+	If $aUpgradeResourceCostDuration = Default Then Return
+	
+	_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
+			@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
+			" - Placing New Building: " & $aUpgradeNameLevel[1] & _
+			" - Duration : " & $aUpgradeResourceCostDuration[2])
+
+	_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc + 1 & "] " & $txtAccName & _
+			" - Placing New Building: " & $aUpgradeNameLevel[1] & _
+			" - Duration : " & $aUpgradeResourceCostDuration[2])
+			
+	Return True
+EndFunc
+
 Func AUNewBuildings($x, $y, $bTest = False)
 
 	Local $Screencap = True, $Debug = $g_bDebugSetlog
@@ -443,13 +462,13 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			local $aCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
 			If IsArray($aCoords) And UBound($aCoords) = 2 Then
 				For $ProMac = 0 To 9 
-					Click($aCoords[0], $aCoords[1])
+					Click($aCoords[0], $aCoords[1]+5)
 					If _Sleep(500) Then Return
 					If IsGemOpen(True) Then 
 						SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
 						ExitLoop
 					Endif
-					AutoUpgradeLog($aWall, $aCostWall)
+					AutoUpgradeLogPlacingWall($aWall, $aCostWall)
 				Next
 				Click($aCoords[0] - 75, $aCoords[1])
 				Return True
