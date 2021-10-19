@@ -563,12 +563,20 @@ Func UpgradeNewBuilding($bTest = False)
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
 			If QuickMIS("BC1", $g_sImgAUpgradeRushTHPriority, 180, 80, 330, 369) Then
 				SetLog("Found RushTH Priority Building", $COLOR_DEBUG)
-				Click($g_iQuickMISX + 180, $g_iQuickMISY + 80)
-				If _Sleep(500) Then Return
-				If DoUpgrade($bTest) Then
-					$b_BuildingFound = False ;reset
-					$z = 0 ;reset
-				Endif
+				;$ZeroCoord = decodeSingleCoord(findImage("Zero", $g_sImgAUpgradeZero & "\Zero*", GetDiamondFromRect($g_iQuickMISX + 180 & "," & $g_iQuickMISY + 75 & "," & $g_iQuickMISX + 280 & "," & $g_iQuickMISY + 80), 1, True))
+				;If IsArray($ZeroCoord) And UBound($ZeroCoord) = 2 Then 
+				Local $tmpX = $g_iQuickMISX + 180, $tmpY = $g_iQuickMISY + 80
+				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $tmpX, $tmpY - 10, $tmpX + 200, $tmpY + 10) Then
+					Click($g_iQuickMISX + $tmpX, $g_iQuickMISY + $tmpY)
+					If _Sleep(1000) Then Return
+					If DoUpgrade($bTest) Then
+						$b_BuildingFound = False ;reset
+						$z = 0 ;reset
+					Endif
+				Else
+					SetLog("RushTH Priority Building, Not Enough Resource", $COLOR_ERROR)
+					ExitLoop
+				EndIf 
 			EndIf
 		EndIf
 		
