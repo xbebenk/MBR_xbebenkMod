@@ -363,11 +363,14 @@ Func DoUpgrade($bTest = False)
 	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_iChkUpgradesToIgnore[35] = 0 Then
 		Switch $g_aUpgradeNameLevel[2]
 			Case 12
-				SetLog("Launched upgrade of Giga Tesla to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+				$g_aUpgradeNameLevel[1] = "Giga Tesla"
+				SetLog("Launched upgrade of Giga Tesla successfully !", $COLOR_SUCCESS)
 			Case 13
-				SetLog("Launched upgrade of Giga Inferno to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+				$g_aUpgradeNameLevel[1] = "Giga Inferno"
+				SetLog("Launched upgrade of Giga Inferno successfully !", $COLOR_SUCCESS)
 			Case 14
-				SetLog("Launched upgrade of Giga Inferno to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+				$g_aUpgradeNameLevel[1] = "Giga Inferno"
+				SetLog("Launched upgrade of Giga Inferno successfully !", $COLOR_SUCCESS)
 		EndSwitch
 
 	Else
@@ -525,6 +528,7 @@ Func UpgradeNewBuilding($bTest = False)
 		Local $NeedDrag = True
 		Local $NewCoord, $ZeroCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
+
 		For $i = 0 To 9
 			$NewCoord = decodeSingleCoord(findImage("New", $g_sImgAUpgradeObst & "\New*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
 			If IsArray($NewCoord) And UBound($NewCoord) = 2 Then 
@@ -555,6 +559,19 @@ Func UpgradeNewBuilding($bTest = False)
 			$y += $step
 			$y1 += $step
 		Next
+		
+		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
+			If QuickMIS("BC1", $g_sImgAUpgradeRushTHPriority, 180, 80, 330, 369) Then
+				SetLog("Found RushTH Priority Building", $COLOR_DEBUG)
+				Click($g_iQuickMISX + 180, $g_iQuickMISY + 80)
+				If _Sleep(500) Then Return
+				If DoUpgrade($bTest) Then
+					$b_BuildingFound = False ;reset
+					$z = 0 ;reset
+				Endif
+			EndIf
+		EndIf
+		
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		If Not $NeedDrag Then
 			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Not New Building", $COLOR_DEBUG)
