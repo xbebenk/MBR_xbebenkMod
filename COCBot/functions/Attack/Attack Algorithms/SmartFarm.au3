@@ -599,45 +599,87 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				[MatchTroopDropName(36), $nbSides, MatchTroopWaveNb(36), 1, MatchSlotsPerEdge(36)], _
 				[MatchTroopDropName(37), $nbSides, MatchTroopWaveNb(37), 1, MatchSlotsPerEdge(37)]]
 	Else
-		; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
-		Local $listInfoDeploy[38][5] = [[$eGole, $nbSides, 1, 1, 2] _
-				, [$eLava, $nbSides, 1, 1, 2] _
-				, [$eIceH, $nbSides, 1, 1, 2] _
-				, [$eIceG, $nbSides, 1, 1, 2] _
-				, [$eYeti, $nbSides, 1, 1, 2] _
-				, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
-				, [$eSGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
-				, [$eDrag, $nbSides, 1, 1, 0] _
-				, [$eBall, $nbSides, 1, 1, 0] _
-				, [$eRBall, $nbSides, 1, 1, 0] _
-				, [$eBabyD, $nbSides, 1, 1, 0] _
-				, [$eInfernoD, $nbSides, 1, 1, 0] _
-				, [$eHogs, $nbSides, 1, 1, 1] _
-				, [$eValk, $nbSides, 1, 1, 0] _
-				, [$eSValk, $nbSides, 1, 1, 0] _
-				, [$eBowl, $nbSides, 1, 1, 0] _
-				, [$eMine, $nbSides, 1, 1, 0] _
-				, [$eEDrag, $nbSides, 1, 1, 0] _
-				, [$eRDrag, $nbSides, 1, 1, 0] _
-				, [$eWall, $nbSides, 1, 1, 1] _
-				, [$eSWall, $nbSides, 1, 1, 1] _
-				, [$eBarb, $nbSides, 1, 1, 0] _
-				, [$eSBarb, $nbSides, 1, 1, 0] _
-				, [$eArch, $nbSides, 1, 1, 0] _
-				, [$eSArch, $nbSides, 1, 1, 0] _
-				, [$eWiza, $nbSides, 1, 1, 0] _
-				, [$eSWiza, $nbSides, 1, 1, 0] _
-				, [$eMini, $nbSides, 1, 1, 0] _
-				, [$eSMini, $nbSides, 1, 1, 0] _
-				, [$eWitc, $nbSides, 1, 1, 1] _
-				, [$eSWitc, $nbSides, 1, 1, 1] _
-				, [$eGobl, $nbSides, 1, 1, 0] _
-				, [$eSGobl, $nbSides, 1, 1, 0] _
-				, [$eHeal, $nbSides, 1, 1, 1] _
-				, [$ePekk, $nbSides, 1, 1, 1] _
-				, [$eHunt, $nbSides, 1, 1, 0] _
-				, ["CC", 1, 1, 1, 1] _
-				, ["HEROES", 1, 2, 1, 1]]
+		If Not $g_bSmartFarmDropCCFirst Then 
+			; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
+			Local $listInfoDeploy[38][5] = [[$eGole, $nbSides, 1, 1, 2] _
+					, [$eLava, $nbSides, 1, 1, 2] _
+					, [$eIceH, $nbSides, 1, 1, 2] _
+					, [$eIceG, $nbSides, 1, 1, 2] _
+					, [$eYeti, $nbSides, 1, 1, 2] _
+					, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
+					, [$eSGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
+					, [$eDrag, $nbSides, 1, 1, 0] _
+					, [$eBall, $nbSides, 1, 1, 0] _
+					, [$eRBall, $nbSides, 1, 1, 0] _
+					, [$eBabyD, $nbSides, 1, 1, 0] _
+					, [$eInfernoD, $nbSides, 1, 1, 0] _
+					, [$eHogs, $nbSides, 1, 1, 1] _
+					, [$eValk, $nbSides, 1, 1, 0] _
+					, [$eSValk, $nbSides, 1, 1, 0] _
+					, [$eBowl, $nbSides, 1, 1, 0] _
+					, [$eMine, $nbSides, 1, 1, 0] _
+					, [$eEDrag, $nbSides, 1, 1, 0] _
+					, [$eRDrag, $nbSides, 1, 1, 0] _
+					, [$eWall, $nbSides, 1, 1, 1] _
+					, [$eSWall, $nbSides, 1, 1, 1] _
+					, [$eBarb, $nbSides, 1, 1, 0] _
+					, [$eSBarb, $nbSides, 1, 1, 0] _
+					, [$eArch, $nbSides, 1, 1, 0] _
+					, [$eSArch, $nbSides, 1, 1, 0] _
+					, [$eWiza, $nbSides, 1, 1, 0] _
+					, [$eSWiza, $nbSides, 1, 1, 0] _
+					, [$eMini, $nbSides, 1, 1, 0] _
+					, [$eSMini, $nbSides, 1, 1, 0] _
+					, [$eWitc, $nbSides, 1, 1, 1] _
+					, [$eSWitc, $nbSides, 1, 1, 1] _
+					, [$eGobl, $nbSides, 1, 1, 0] _
+					, [$eSGobl, $nbSides, 1, 1, 0] _
+					, [$eHeal, $nbSides, 1, 1, 1] _
+					, [$ePekk, $nbSides, 1, 1, 1] _
+					, [$eHunt, $nbSides, 1, 1, 0] _
+					, ["CC", 1, 1, 1, 1] _
+					, ["HEROES", 1, 2, 1, 1]]
+		Else
+			; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
+			Local $listInfoDeploy[38][5] = [[$eGole, $nbSides, 1, 1, 2] _
+					, ["CC", 1, 1, 1, 1] _
+					, ["HEROES", 1, 2, 1, 1] _
+					, [$eLava, $nbSides, 1, 1, 2] _
+					, [$eIceH, $nbSides, 1, 1, 2] _
+					, [$eIceG, $nbSides, 1, 1, 2] _
+					, [$eYeti, $nbSides, 1, 1, 2] _
+					, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
+					, [$eSGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
+					, [$eDrag, $nbSides, 1, 1, 0] _
+					, [$eBall, $nbSides, 1, 1, 0] _
+					, [$eRBall, $nbSides, 1, 1, 0] _
+					, [$eBabyD, $nbSides, 1, 1, 0] _
+					, [$eInfernoD, $nbSides, 1, 1, 0] _
+					, [$eHogs, $nbSides, 1, 1, 1] _
+					, [$eValk, $nbSides, 1, 1, 0] _
+					, [$eSValk, $nbSides, 1, 1, 0] _
+					, [$eBowl, $nbSides, 1, 1, 0] _
+					, [$eMine, $nbSides, 1, 1, 0] _
+					, [$eEDrag, $nbSides, 1, 1, 0] _
+					, [$eRDrag, $nbSides, 1, 1, 0] _
+					, [$eWall, $nbSides, 1, 1, 1] _
+					, [$eSWall, $nbSides, 1, 1, 1] _
+					, [$eBarb, $nbSides, 1, 1, 0] _
+					, [$eSBarb, $nbSides, 1, 1, 0] _
+					, [$eArch, $nbSides, 1, 1, 0] _
+					, [$eSArch, $nbSides, 1, 1, 0] _
+					, [$eWiza, $nbSides, 1, 1, 0] _
+					, [$eSWiza, $nbSides, 1, 1, 0] _
+					, [$eMini, $nbSides, 1, 1, 0] _
+					, [$eSMini, $nbSides, 1, 1, 0] _
+					, [$eWitc, $nbSides, 1, 1, 1] _
+					, [$eSWitc, $nbSides, 1, 1, 1] _
+					, [$eGobl, $nbSides, 1, 1, 0] _
+					, [$eSGobl, $nbSides, 1, 1, 0] _
+					, [$eHeal, $nbSides, 1, 1, 1] _
+					, [$ePekk, $nbSides, 1, 1, 1] _
+					, [$eHunt, $nbSides, 1, 1, 0]]
+		EndIf
 	EndIf
 
 	$g_bIsCCDropped = False
