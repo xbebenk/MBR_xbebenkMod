@@ -52,8 +52,8 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			; switch can take up to 2 Seconds, check for 3 additional Seconds...
 			Local $hTimerHandle = __TimerInit()
 			$bSwitched = False
-			While __TimerDiff($hTimerHandle) < 3000 And Not $bSwitched
-				If _Sleep(250) Then Return
+			While __TimerDiff($hTimerHandle) < 5000 And Not $bSwitched
+				If _Sleep(500) Then Return
 				If Not $g_bRunState Then Return
 				ForceCaptureRegion()
 				$bSwitched = isOnBuilderBase(True) <> $bIsOnBuilderBase
