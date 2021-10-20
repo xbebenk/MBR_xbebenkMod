@@ -152,7 +152,6 @@ Func UpgradeLowLevelWall()
 	Local $aWallCoord, $WallLevel, $Wall, $count =  0
 	
 	While 1
-		If $count = 2 Then ExitLoop
 		If Not $g_bRunState Then Return
 		$aWallCoord = ClickDragFindWallUpgrade()
 		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
@@ -171,7 +170,7 @@ Func UpgradeLowLevelWall()
 				If $WallLevel[1] = "Wall" And $WallLevel[2] > 4 Then
 					SetLog("Wall Level : " & $WallLevel[2], $COLOR_ERROR)
 					SetLog("We Only want to upgrade for Low Level Wall, looking next...", $COLOR_ERROR)
-					ContinueLoop
+					If $count = 2 Then ExitLoop ;check here, if 2 time search for low level wall not found then exit
 				Else
 					If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold Then 
 						SetLog("Current Gold: " & $g_aiCurrentLoot[$eLootGold] & ", already below " & $g_iUpgradeWallMinGold, $COLOR_INFO)
