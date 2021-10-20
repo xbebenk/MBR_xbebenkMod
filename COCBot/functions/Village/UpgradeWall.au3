@@ -152,7 +152,7 @@ Func UpgradeLowLevelWall()
 	Local $aWallCoord, $WallLevel, $Wall, $count =  0
 	
 	While 1
-		If $count = 3 Then ExitLoop
+		If $count = 2 Then ExitLoop
 		If Not $g_bRunState Then Return
 		$aWallCoord = ClickDragFindWallUpgrade()
 		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
