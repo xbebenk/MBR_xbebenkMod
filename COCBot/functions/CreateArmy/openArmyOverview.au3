@@ -17,30 +17,21 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 	If $bCheckMain Then
 		If Not IsMainPage() Then ; check for main page, avoid random troop drop
 			SetLog("Cannot open Army Overview window", $COLOR_ERROR)
-			SetError(1)
 			Return False
 		EndIf
 	EndIf
 	
-	If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 10) Then
-		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
-		ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
-	EndIf
-
-	If _Sleep($DELAYRUNBOT6) Then Return ; wait for window to open
-	If Not IsTrainPage() Then
-		If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 10) Then
+	For $i = 0 To 2 ;try 3 time to OpenArmyOverview 
+		If WaitforPixel(23, 505 + $g_iBottomOffsetY, 53, 507 + $g_iBottomOffsetY, Hex(0xEEB344, 6), 5, 5) Then
 			If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
 			ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
 		EndIf
-	EndIf
-	If _Sleep($DELAYRUNBOT6) Then Return ; wait for window to open
-	If Not IsTrainPage() Then
-		SetError(1)
-		Return False ; exit if I'm not in train page
-	EndIf
-	Return True
-
+		For $z = 0 To 3
+			If _Sleep(500) Then Return
+			If _ColorCheck(_GetPixelColor(32, 612, True), Hex(0xE8E8E0, 6), 1) Then Return True
+		Next
+	Next
+	Return False
 EndFunc   ;==>OpenArmyOverview
 
 Func OpenArmyTab($bSetLog = True, $sWhereFrom = "Undefined")
