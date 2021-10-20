@@ -149,9 +149,10 @@ EndFunc   ;==>UpgradeWall
 Func UpgradeLowLevelWall()
 	VillageReport(True, True) ;update village resource capacity
 	ClickMainBuilder()
-	Local $aWallCoord, $WallLevel, $Wall
+	Local $aWallCoord, $WallLevel, $Wall, $count =  0
 	
 	While 1
+		If $count = 3 Then ExitLoop
 		If Not $g_bRunState Then Return
 		$aWallCoord = ClickDragFindWallUpgrade()
 		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
@@ -182,6 +183,7 @@ Func UpgradeLowLevelWall()
 				EndIf
 				If Not QuickMIS("BC1", $g_sImgAUpgradeWall, 180, 80, 330, 369) Then ExitLoop
 			Next
+		$count += 1
 		Else
 			ExitLoop
 		EndIf
