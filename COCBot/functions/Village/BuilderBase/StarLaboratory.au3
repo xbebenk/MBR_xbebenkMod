@@ -282,9 +282,9 @@ Func StarLabUpgrade($iSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, $bTestRun = F
 				If $iLabFinishTime > 0 Then
 					$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), $StartTime)
 					SetLog($g_avStarLabTroops[$iSelectedUpgrade][3] & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
-				Else
-					SetLog("Error processing upgrade time required, try again!", $COLOR_WARNING)
-					Return False
+				;Else
+				;	SetLog("Error processing upgrade time required, try again!", $COLOR_WARNING)
+				;	Return False
 				EndIf
 
 				If Not $bTestRun Then Click(645 + $iXMoved, 530 + $g_iMidOffsetY + $iYMoved, 1, 0, "#0202") ; Everything is good - Click the upgrade button
