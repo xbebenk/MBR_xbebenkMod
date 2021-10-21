@@ -165,7 +165,7 @@ Func UpgradeLowLevelWall()
 				$WallLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
 				If $WallLevel[0] = "" Then
 					SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
-					ContinueLoop
+					If $count = 2 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
 				EndIf
 				If $WallLevel[1] = "Wall" And $WallLevel[2] > 4 Then
 					SetLog("Wall Level : " & $WallLevel[2], $COLOR_ERROR)
