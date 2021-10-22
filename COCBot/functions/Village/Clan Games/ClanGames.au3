@@ -872,6 +872,7 @@ Func StartAndPurgeEvent($bTest = False)
 			Return False
 		EndIf
 	EndIf
+	ClickAway()
 	Return True
 EndFunc
 
