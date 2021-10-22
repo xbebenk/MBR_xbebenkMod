@@ -28,7 +28,7 @@ Func _ClanGames($test = False)
 	; Local and Static Variables
 	Local $TabChallengesPosition[2] = [820, 130]
 	Local $sTimeRemain = "", $sEventName = "", $getCapture = True
-	Local Static $YourAccScore[8][2] = [[-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True]]
+	Local Static $YourAccScore[10][2] = [[-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True]]
 
 	; Initial Timer
 	Local $hTimer = TimerInit()
