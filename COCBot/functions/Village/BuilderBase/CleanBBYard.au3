@@ -11,6 +11,10 @@ Func CleanBBYard()
 		SetLog("Master Builder Not Available", $COLOR_DEBUG)
 		Return
 	EndIf
+	If $g_aiCurrentLootBB[$eLootElixirBB] < 30000 Then 
+		SetLog("Current BB Elixir Below 30000, skip CleanBBYard", $COLOR_DEBUG)
+		Return
+	EndIf
 	; Setup arrays, including default return values for $return
 	Local $Filename = ""
 	Local $Locate = 0
