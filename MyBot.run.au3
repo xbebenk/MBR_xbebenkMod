@@ -784,11 +784,7 @@ Func runBot() ;Bot that runs everything in order
 			; Train Donate only - force a donate cc every time
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
-			If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then
-				Local $aRndFuncList = ['Collect','UpgradeHeroes', 'PetHouse', 'BuilderBase']
-			Else
-				Local $aRndFuncList = ['Laboratory', 'UpgradeHeroes', 'UpgradeWall', 'UpgradeBuilding', 'PetHouse', 'BuilderBase']
-			EndIf
+			Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeHeroes', 'UpgradeWall', 'UpgradeBuilding', 'PetHouse', 'BuilderBase']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
