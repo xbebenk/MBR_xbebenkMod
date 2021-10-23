@@ -43,6 +43,7 @@ Func _ClanGames($test = False)
 			Return
 		Else
 			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
+			If $g_bDebugClick Then SaveDebugImage("ClanGames_Challenges", True)
 			Local $sTimeCG
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 				SetLog("Your score limit is reached! Congrats")
