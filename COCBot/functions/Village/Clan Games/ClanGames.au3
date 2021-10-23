@@ -44,6 +44,7 @@ Func _ClanGames($test = False)
 			Return
 		Else
 			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
+			If _Sleep(500) Then Return
 			If $g_bDebugClick Then SaveDebugImage("ClanGames_Challenges", True)
 			Local $sTimeCG
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
@@ -1124,7 +1125,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["StarTimed",				"BB Star Timed",				2,  2, 1], _
             ["Destruction",				"BB Destruction",				2,  1, 1]] ; Earn 225% - 900% on BB attacks
 
-	Local $BBDestructionChallenges[15][5] = [ _
+	Local $BBDestructionChallenges[16][5] = [ _
             ["Airbomb",					"Air Bomb",                 	2,  1, 1], _
 			["BuildingDes",             "BB Building",					2,  1, 1], _
 			["BuilderHall",             "BuilderHall",					2,  1, 1], _
@@ -1138,6 +1139,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["GuardPost",               "Guard Post",                 	2,  1, 1], _
 			["MegaTesla",               "Mega Tesla",               	2,  1, 1], _
 			["MultiMortar",             "Multi Mortar",               	2,  1, 1], _
+			["Roaster",                 "Roaster",			            2,  1, 1], _
 			["StarLab",                 "Star Laboratory",              2,  1, 1], _
 			["WallDes",             	"Wall Whacker",              	2,  1, 1]]
 
