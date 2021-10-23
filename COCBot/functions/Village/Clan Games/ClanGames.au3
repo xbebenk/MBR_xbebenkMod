@@ -23,6 +23,7 @@ Func _ClanGames($test = False)
 	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)
 
 	ClickAway()
+	CheckMainScreen(False)
 	SetLog("Entering Clan Games", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	; Local and Static Variables
