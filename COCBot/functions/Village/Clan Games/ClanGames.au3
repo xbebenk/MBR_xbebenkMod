@@ -1043,7 +1043,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["SiegeB", 					"Siege Barrack", 				10,  5, 1], _ ; moved to ground troops
 			["LogL", 					"Log Launcher", 				10,  5, 1]]   ; moved to ground troops
 
-	Local $BattleChallenges[20][5] = [ _
+	Local $BattleChallenges[21][5] = [ _
 			["Start", 					"Star Collector", 				 3,  1, 8], _ ; Collect a total of 6-18 stars from Multiplayer Battles			|8h-2d	|100-600
 			["Destruction", 			"Lord of Destruction", 			 3,  1, 8], _ ; Gather a total of 100%-500% destruction from Multi Battles		|8h-2d	|100-600
 			["PileOfVictores", 			"Pile Of Victories", 			 3,  1, 8], _ ; Win 2-8 Multiplayer Battles										|8h-2d	|100-600
@@ -1063,6 +1063,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["ClashOfLegends", 			"Clash of Legends", 			11,  2, 5], _ ;
 			["GainStarsFromClanWars",	"3 Stars From Clan War",		 6,  0, 5], _ ;
 			["SpeedyStars", 			"3 Stars in 60 seconds",		 6,  2, 5], _ ;
+			["SuperCharge", 			"Deploy SuperTroops",			 6,  2, 5], _ ;
 			["Tremendous13s", 			"Tremendous 13s", 				13,  1, 8]]   ;
 
 	Local $DestructionChallenges[32][5] = [ _
