@@ -1066,7 +1066,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["SuperCharge", 			"Deploy SuperTroops",			 6,  2, 5], _ ;
 			["Tremendous13s", 			"Tremendous 13s", 				13,  1, 8]]   ;
 
-	Local $DestructionChallenges[32][5] = [ _
+	Local $DestructionChallenges[33][5] = [ _
 			["Cannon", 					"Cannon", 				 3,  1, 1], _ ; Destroy 5-25 Cannons in Multiplayer Battles					|1h-8h	|75-350
 			["ArcherT", 				"Archer Tower", 		 3,  1, 1], _ ; Destroy 5-20 Archer Towers in Multiplayer Battles			|1h-8h	|75-350
 			["BuilderHut", 				"Builder Hut", 		     3,  1, 1], _ ; Destroy 4-12 BuilderHut in Multiplayer Battles				|1h-8h	|40-350
@@ -1098,6 +1098,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["KingLevelHunter", 		"King Level Hunter", 	 9,  5, 8], _ ; Knockout 50 Level King on Multiplayer Battles				|8h		|100
 			["QueenLevelHunt", 			"Queen Level Hunter", 	10,  5, 8], _ ; Knockout 50 Level Queen on Multiplayer Battles				|8h		|100
 			["WardenLevelHunter", 		"Warden Level Hunter", 	11,  5, 8], _ ; Knockout 20 Level Warden on Multiplayer Battles				|8h		|100
+			["ArmyCamp", 				"Destroy ArmyCamp", 	11,  5, 1], _ ; Knockout 20 Level Warden on Multiplayer Battles				|8h		|100
 			["ScatterShotSabotage",		"ScatterShot",			13,  5, 1]]   ;
 
 
