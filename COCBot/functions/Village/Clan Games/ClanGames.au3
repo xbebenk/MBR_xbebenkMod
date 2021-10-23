@@ -850,10 +850,10 @@ Func StartAndPurgeEvent($bTest = False)
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting Purge for " & $Timer & " min", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting Purge for " & $Timer & " min")
 
-		If _Sleep(2500) Then Return
+		If _Sleep(3000) Then Return
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
 			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
-			If _Sleep(2000) Then Return
+			If _Sleep(3000) Then Return
 			SetLog("Click Trash", $COLOR_INFO)
 			If QuickMIS("BC1", $g_sImgOkayPurge, 440, 400, 580, 450, True, False) Then
 				SetLog("Click OK", $COLOR_INFO)
