@@ -25,6 +25,7 @@ Func DoAttackBB()
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			AttackBB()
 			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+				SetLog("Check if ClanGames Challenge is Completed", $COLOR_DEBUG)
 				For $x = 0 To 4
 					_Sleep(1000)
 					If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
@@ -37,7 +38,7 @@ Func DoAttackBB()
 			If checkObstacles(True) Then Return
 			$count += 1	
 			If $count > 10 Then 
-				SetLog("SomeThing May Wrong", $COLOR_INFO) 
+				SetLog("Something May Wrong", $COLOR_INFO) 
 				SetLog("Already Attack 10 times", $COLOR_INFO)
 				ExitLoop
 			Endif			
@@ -53,6 +54,7 @@ Func DoAttackBB()
 				SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
 				AttackBB()
 				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+					SetLog("Check if ClanGames Challenge is Completed", $COLOR_DEBUG)
 					For $x = 0 To 4
 						_Sleep(1000)
 						If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
