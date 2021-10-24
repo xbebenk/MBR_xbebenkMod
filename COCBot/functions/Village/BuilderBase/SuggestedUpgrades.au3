@@ -179,7 +179,7 @@ Func AutoUpgradeBB($bTest = False)
 			EndIf
 			
 			;upgrade wall first if to prevent Gold Storage become Full when BH is already Maxed
-			If $g_bisBHMaxed And $g_bGoldStorageFullBB And $g_bisMegaTeslaMaxed Then
+			If $g_bisBHMaxed And $g_bGoldStorage50BB And $g_bisMegaTeslaMaxed Then
 				; scroll down to bottom as wall will be on below
 				ClickDrag(333, 320, 333, 0, 1000);do scroll down
 				If _Sleep(2000) Then Return
@@ -371,7 +371,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 						ElseIf $aBuildingName[1] = "Builder Barracks" And $aBuildingName[2] >= 7 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						;only upgrade wall if BuilderHall is Max level And If Gold Storage is Nearly Full and Mega Tesla Already Maxed
-						ElseIf $aBuildingName[1] = "Wall" And $g_bisBHMaxed And $g_bGoldStorageFullBB And $g_bisMegaTeslaMaxed Then 
+						ElseIf $aBuildingName[1] = "Wall" And $g_bisBHMaxed And $g_bGoldStorage50BB And $g_bisMegaTeslaMaxed Then 
 							SetLog("BuilderHall is Maxed, Mega Tesla is Maxed, Gold Storage Near Full", $COLOR_INFO)
 							SetLog("Will Upgrade " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
 							$sUpgButtom = $g_sImgAutoUpgradeBtnGold ;force to use Gold for upgrading wall on BB

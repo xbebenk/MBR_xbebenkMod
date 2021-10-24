@@ -21,6 +21,10 @@ Func DoAttackBB()
 		Local $count = 1
 		While PrepareAttackBB()
 			If Not $g_bRunState Then Return
+			If (isGoldFullBB() Or isElixirFullBB()) And $g_iChkBBSuggestedUpgradesOTTO Then
+				SetLog("BuilderBase Gold Or Elixir is nearly full", $COLOR_INFO) 
+				ExitLoop
+			EndIf
 			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			AttackBB()
@@ -31,7 +35,7 @@ Func DoAttackBB()
 					If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
 						SetLog("Nice, Game Completed", $COLOR_INFO)
 						ExitLoop 2
-					Endif
+					EndIf
 				Next
 			EndIf
 			If _Sleep($DELAYRUNBOT3) Then Return
@@ -41,7 +45,7 @@ Func DoAttackBB()
 				SetLog("Something May Wrong", $COLOR_INFO) 
 				SetLog("Already Attack 10 times", $COLOR_INFO)
 				ExitLoop
-			Endif			
+			EndIf			
 		Wend
 		
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
@@ -49,6 +53,10 @@ Func DoAttackBB()
 	Else
 		For $i = 1 To $g_iBBAttackCount
 			If Not $g_bRunState Then Return
+			If (isGoldFullBB() Or isElixirFullBB()) And $g_iChkBBSuggestedUpgradesOTTO Then
+				SetLog("BuilderBase Gold Or Elixir is nearly full", $COLOR_INFO) 
+				ExitLoop
+			EndIf
 			If PrepareAttackBB() Then
 				SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 				SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
@@ -60,17 +68,17 @@ Func DoAttackBB()
 						If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
 							SetLog("Nice, Game Completed", $COLOR_INFO)
 							ExitLoop 2
-						Endif
+						EndIf
 					Next
 				EndIf
 				If _Sleep($DELAYRUNBOT3) Then Return
 				If checkObstacles(True) Then Return
 			Else
-				SetLog("Not Attack this time..", $COLOR_DEBUG)
-				ClickAway()
 				ExitLoop
-			Endif
+			EndIf
 		Next
+		SetLog("Skip Attack this time..", $COLOR_DEBUG)
+		ClickAway()
 	EndIf
 	ZoomOut()
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
@@ -147,7 +155,7 @@ Func AttackBB()
 	If $g_bChkBBDropBMFirst = True Then 
 		SetDebugLog("Dropping BM First")
 		$bBMDeployed = DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
-	EndIF
+	EndIf
 	
 	If Not $g_bRunState Then Return ; Stop Button
 	
@@ -233,7 +241,7 @@ Func AttackBB()
 				$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 				If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
 				Return
-			Endif
+			EndIf
 		EndIf
 	WEnd
 	If $bBMDeployed And Not $bMachineAlive Then SetLog("Battle Machine Dead")
