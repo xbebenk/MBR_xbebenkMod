@@ -162,14 +162,14 @@ Func AutoUpgradeBB($bTest = False)
 					getBuilderCount(False, True)
 					ClickOnBuilder($bTest)
 					ClickDrag(400, 100, 400, 800, 1000);do scroll down
-					If _Sleep(2000) Then Return
+					If _Sleep(5000) Then Return
 				Else
 					ZoomOut()
 					ClickAway()
 					getBuilderCount(False, True)
 					ClickOnBuilder($bTest)
 					ClickDrag(400, 100, 400, 800, 1000);do scroll down
-					If _Sleep(2000) Then Return
+					If _Sleep(5000) Then Return
 				EndIf
 			EndIf
 			
