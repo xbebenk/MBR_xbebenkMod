@@ -1134,7 +1134,6 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["BuilderHall",             "BuilderHall",					2,  1, 1], _
             ["Cannon",                 	"BB Cannon",                  	2,  1, 1], _ 
 			["ClockTower",             	"Clock Tower",                 	2,  1, 1], _ 
-			["Crusher",             	"Crusher",                 		2,  1, 1], _ 
             ["DoubleCannon",         	"Double Cannon",             	2,  1, 1], _
 			["FireCrackers",         	"Fire Crackers",              	2,  1, 1], _
 			["GemMine",                 "Gem Mine",                  	2,  1, 1], _
@@ -1144,7 +1143,8 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["MultiMortar",             "Multi Mortar",               	2,  1, 1], _
 			["Roaster",                 "Roaster",			            2,  1, 1], _
 			["StarLab",                 "Star Laboratory",              2,  1, 1], _
-			["WallDes",             	"Wall Whacker",              	2,  1, 1]]
+			["WallDes",             	"Wall Whacker",              	2,  1, 1], _
+			["Crusher",             	"Crusher",                 		2,  1, 1]]
 
 	Local $BBTroopsChallenges[11][5] = [ _
             ["RBarb",					"Raged Barbarian",              2,  1, 1], _ ;BB Troops
