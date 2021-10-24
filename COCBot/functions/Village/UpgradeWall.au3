@@ -165,8 +165,8 @@ Func UpgradeLowLevelWall()
 	Local $UpgradeToLvl = 5
 	While 1
 		If Not $g_bRunState Then Return
-		$aWallCoord = ClickDragFindWallUpgrade()
 		If Not UpgradeLowLevelWallCheckResource() Then Return
+		$aWallCoord = ClickDragFindWallUpgrade()
 		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then 
 			For $i = 0 To UBound($aWallCoord) - 1
 				$Wall = StringSplit($aWallCoord[$i], ",", $STR_NOCOUNT)
