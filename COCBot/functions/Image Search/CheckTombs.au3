@@ -120,7 +120,7 @@ Func CleanYard()
 						If IsMainPage() Then Click($CleanYardXY[0], $CleanYardXY[1], 1, 0, "#0430")
 						_Sleep(1000)
 						If Not ClickRemoveObstacle() Then ContinueLoop
-						If Not CleanYardCheckBuilder() Then ExitLoop 2
+						CleanYardCheckBuilder()
 						If $g_iFreeBuilderCount = 0 Then _SleepStatus(11000)
 						ClickAway()
 						$Locate += 1
