@@ -127,6 +127,7 @@ Func AttackBB()
 			If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
 			Return
 		EndIf
+		If _Sleep(2000) Then Return
 		If Not $g_bRunState Then Return ; Stop Button
 	WEnd
 
