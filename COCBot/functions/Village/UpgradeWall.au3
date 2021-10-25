@@ -165,7 +165,7 @@ Func UpgradeLowLevelWall()
 	Local $UpgradeToLvl = 5
 	While 1
 		If Not $g_bRunState Then Return
-		If Not UpgradeLowLevelWallCheckResource() Then Return
+		If Not UpgradeLowLevelWallCheckResource() Then ExitLoop
 		$aWallCoord = ClickDragFindWallUpgrade()
 		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then 
 			For $i = 0 To UBound($aWallCoord) - 1
@@ -200,6 +200,8 @@ Func UpgradeLowLevelWall()
 		EndIf
 	Wend
 	ClickAway()
+	ClickMainBuilder()
+	ClickDragAUpgrade("down")
 	CheckMainScreen(False)
 EndFunc
 
