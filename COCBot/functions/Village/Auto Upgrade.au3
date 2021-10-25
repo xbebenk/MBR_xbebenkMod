@@ -65,6 +65,7 @@ Func SearchUpgrade($bTest = False)
 	Local $b_BuildingFound = False, $NeedDrag = True
 	For $z = 0 To 9 ;for do scroll 10 times
 		Local $x = 180, $y = 80, $x1 = 490, $y1 = 103, $step = 28
+		Local $tmpName
 		For $i = 0 To 9
 			If Not $g_bRunState Then Return
 			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-8, $x1, $y1+8) Then
@@ -79,12 +80,19 @@ Func SearchUpgrade($bTest = False)
 						Else
 							SetLog("[" & $i & "] Not RushTH Building!", $COLOR_SUCCESS)
 							$b_BuildingFound = False
-							If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah bukan RushTH 
 						EndIf
 					Else
 						SetLog("[" & $i & "] Upgrade found!", $COLOR_SUCCESS)
 						$b_BuildingFound = True
 					EndIf
+				EndIf
+				
+				If $z > 0 And $i = 9 Then 
+					Click(400, 350) ;click most bottom
+					If _Sleep(500) Then Return
+					Local $name = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+					If $name[1] = $tmpName Then $NeedDrag = False
+					$tmpName = $name[1] 
 				EndIf
 				
 				If $b_BuildingFound Then
@@ -127,6 +135,25 @@ Func SearchUpgrade($bTest = False)
 	ClickAway()
 	ZoomOut()
 	Return False
+EndFunc
+
+Func AutoUpgradeSearchExisting()
+	If Not $g_bRunState Then Return
+	Local $x = 180, $y = 75, $x1 = 480, $y1 = 366, $step = 28
+	Local $Upgrade, $aResult
+	$aResult = QuickMIS("CX", $g_sImgAUpgradeZero, $x, $y, $x1, $y1)
+	If IsArray($aResult) And UBound($aResult) > 0 Then
+		SetLog("Found " & UBound($aResult) & " Possible Upgrade", $COLOR_DEBUG)
+		For $i = 0 To UBound($aResult) - 1
+			$Upgrade = StringSplit($aResult[$i], ",", $STR_NOCOUNT)
+			SetLog("Upgrade " & "[" & $i & "] : [" & $Upgrade[0] + 180 & "," & $Upgrade[1] + 80 & "]", $COLOR_DEBUG)
+			If QuickMIS("NX",$g_sImgAUpgradeObst, $Upgrade[0] + 180 - 200, $Upgrade[1] + 75 - 10, $Upgrade[0] + 180, $Upgrade[1] + 75 + 10) <> "none" Then
+				SetLog("[" & $i & "] New Building Or GearUp, Skip!", $COLOR_SUCCESS)
+				_ArrayDelete($aResult,$i)
+			EndIf
+		Next
+		Return $aResult
+	EndIf
 EndFunc
 
 Func DoUpgrade($bTest = False)
@@ -517,15 +544,15 @@ Func UpgradeNewBuilding($bTest = False)
 	
 	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
-	If Not SearchGreenZone() Then Return
 	
 	If Not ClickMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
 	
 	Local $b_BuildingFound = False
+	Local $tmpName
 	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
-		Local $NeedDrag = True
+		Local $NeedDrag = True, $ZoomedIn = False
 		Local $NewCoord, $ZeroCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
 
@@ -548,6 +575,15 @@ Func UpgradeNewBuilding($bTest = False)
 			EndIf
 			
 			If $b_BuildingFound Then 
+				ClickAway()
+				If Not $ZoomedIn Then
+					If SearchGreenZone() Then 
+						$ZoomedIn = True
+					Else
+						Return
+					EndIf
+				EndIf
+				ClickMainBuilder($bTest)
 				If AUNewBuildings($ZeroCoord[0], $ZeroCoord[1], $bTest) Then
 					ClickMainBuilder($bTest)
 					$b_BuildingFound = False ;reset
@@ -561,10 +597,9 @@ Func UpgradeNewBuilding($bTest = False)
 		Next
 		
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
+			Local $left = 180, $top = 80, $right = 330, $bottom = 370
 			If QuickMIS("BC1", $g_sImgAUpgradeRushTHPriority, 180, 80, 330, 369) Then
 				SetLog("Found RushTH Priority Building", $COLOR_DEBUG)
-				;$ZeroCoord = decodeSingleCoord(findImage("Zero", $g_sImgAUpgradeZero & "\Zero*", GetDiamondFromRect($g_iQuickMISX + 180 & "," & $g_iQuickMISY + 75 & "," & $g_iQuickMISX + 280 & "," & $g_iQuickMISY + 80), 1, True))
-				;If IsArray($ZeroCoord) And UBound($ZeroCoord) = 2 Then 
 				Local $tmpX = $g_iQuickMISX + 180, $tmpY = $g_iQuickMISY + 80
 				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $tmpX, $tmpY - 10, $tmpX + 200, $tmpY + 10) Then
 					Click($g_iQuickMISX + $tmpX, $g_iQuickMISY + $tmpY)
@@ -574,10 +609,17 @@ Func UpgradeNewBuilding($bTest = False)
 						$z = 0 ;reset
 					Endif
 				Else
-					SetLog("RushTH Priority Building, Not Enough Resource", $COLOR_ERROR)
-					ExitLoop
+					SetLog("But, No Resource", $COLOR_DEBUG)
 				EndIf 
 			EndIf
+		EndIf
+		
+		If $z > 0 And $i = 9 Then 
+			Click(400, 350) ;click most bottom
+			If _Sleep(500) Then Return
+			Local $name = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+			If $name[1] = $tmpName Then $NeedDrag = False
+			$tmpName = $name[1] 
 		EndIf
 		
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop

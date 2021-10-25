@@ -152,9 +152,6 @@ Func AutoUpgradeBB($bTest = False)
 	EndIf
 		
 	If isOnBuilderBase(True) Then
-		If $g_iChkPlacingNewBuildings Then 
-			If Not SearchGreenZoneBB() Then Return
-		EndIf
 		If ClickOnBuilder($bTest) Then
 			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
 			If $g_iChkPlacingNewBuildings Then
@@ -191,10 +188,6 @@ Func AutoUpgradeBB($bTest = False)
 				If $g_bRestart Then Return
 				SetLog("[" & $z & "] Search Upgrade for Existing Building", $COLOR_DEBUG)
 				Local $x = 270, $y = 73, $x1 = 540, $y1 = 103, $step = 28
-				If QuickMIS("BC1", $g_sImgAUpgradeZero, 400, $y, 550, 175, $bScreencap, $bDebug) Then
-					$y = $g_iQuickMISY
-					$y1 = $y + 28 + 5
-				EndIf
 				For $i = 0 To 9
 					If _Sleep(20) Then Return
 					If $g_bRestart Then Return
@@ -364,7 +357,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 						;SetLog("Trying to upgrade : " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
 						If $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-						ElseIf $aBuildingName[1] = "D uble Cannon" And $aBuildingName[2] >= 4 Then
+						ElseIf $aBuildingName[1] = "Double Cannon" And $aBuildingName[2] >= 4 Then
 							SetLog("Upgrade for Double Cannon Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						ElseIf $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
@@ -468,8 +461,12 @@ Func SearchNewBuilding($bTest = False)
 			EndIf
 			
 			If $b_BuildingFound Then 
+				ClickAway()
+				If _Sleep(500) Then Return
+				If Not SearchGreenZoneBB() Then Return
+				ClickOnBuilder($bTest)
 				If NewBuildings($ZeroCoord[0], $ZeroCoord[1], $bTest) Then
-					ClickMainBuilder($bTest)
+					ClickOnBuilder($bTest)
 					$b_BuildingFound = False ;reset
 					$z = 0 ;reset
 				Else
