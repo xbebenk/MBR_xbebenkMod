@@ -144,6 +144,7 @@ Func AutoUpgradeBB($bTest = False)
 	Local $bScreencap = True
 
 	BuilderBaseReport(True)
+	getBuilderCount(False, True)
 	If $g_iFreeBuilderCountBB = 0 Then
 		If Not $bTest Then
 			SetLog("Master Builder Not Available", $COLOR_DEBUG)
@@ -589,6 +590,7 @@ Func SearchGreenZoneBB()
 EndFunc
 
 Func GoAttackBBAndReturn()
+	ZoomOut()
 	SetLog("Going attack, to clear field", $COLOR_DEBUG)
 	ClickAttack()
 	AttackBB()
