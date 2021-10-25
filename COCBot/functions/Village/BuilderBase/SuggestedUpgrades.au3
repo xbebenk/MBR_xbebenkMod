@@ -394,7 +394,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 
 			If QuickMIS("BC1", $sUpgButtom, 300, 440, 600, 600, True, $Debug) Then
 				If Not $bTest Then 
-					Click($g_iQuickMISX + 300, $g_iQuickMISY + 480, 1)
+					Click($g_iQuickMISX + 300, $g_iQuickMISY + 440, 1)
 					BBAutoUpgradeLog($aBuildingName)
 				EndIf
 				If _Sleep(1500) Then Return
