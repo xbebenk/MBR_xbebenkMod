@@ -618,8 +618,23 @@ Func ZoomInBB($Region = "Top")
 EndFunc
 
 Func ZoomInBBMEmu($Region = "Top")
-	If Not AndroidAdbScript("ZoomInBB") Then Return False
-	If _Sleep(1500) Then Return
+	Local $bSuccessZoomIn = False
+	For $i = 0 To 2
+		SetLog("[" & $i & "] Try ZoomInBB", $COLOR_DEBUG)
+		If Not AndroidAdbScript("ZoomInBB") Then Return False
+		If _Sleep(1500) Then Return
+		Local $ZoomInResult = SearchZoomOut(False, True, "", True)
+		If IsArray($ZoomInResult) Then
+			If $ZoomInResult[0] = "" Then
+				SetLog("[" & $i & "] ZoomInBB Succeed", $COLOR_SUCCESS)
+				$bSuccessZoomIn = True
+				ExitLoop
+			Else
+				SetLog("[" & $i & "] ZoomInBB Not Succeed", $COLOR_DEBUG)
+			EndIf
+		EndIf
+	Next
+	If Not $bSuccessZoomIn Then Return False
 	Switch $Region
 		Case "Top"
 			ClickDrag(400, 100, 400, 600, 200)
