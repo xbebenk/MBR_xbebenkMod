@@ -40,6 +40,8 @@ Func CleanBBYard()
 						If _Sleep($DELAYCOLLECT3) Then Return
 						_Sleep(1000)
 						If Not ClickRemoveObstacle() Then ContinueLoop
+						$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
+						If $g_aiCurrentLootBB[$eLootElixirBB] < 20000 Then ExitLoop 2
 						_SleepStatus(11000)
 						ClickAway()
 						$Locate += 1
