@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........: Boludoz (redo) (2019), ProMac (03-2018), Fahid.Mahmood
 ; Modified ......: 
-; Remarks .......: This file is part of MyBot, previously known as Multibot and ClashGameBot. Copyright 2015-2020
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot and ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -104,7 +104,7 @@ Func DetectCamps()
 		;If _ColorCheck(_GetPixelColor($iX + 60, $iY - 75, True), Hex(0xCDCDC6, 6), 15) Then ContinueLoop
 		For $i2 = 0 To UBound($aTroops) - 1
 		;	If ((Int($iX - 20) < $aTroops[$i2][1]) And (Int($iX + 100) > $aTroops[$i2][1])) Then
-				Local $iA = __ArraySearch($asAttackBarBB, $aTroops[$i2][0])
+				Local $iA = _ArraySearch($asAttackBarBB, $aTroops[$i2][0])
 				If ($iA > -1) Then 
 					If (Int($aTrainLikeBoss[$iA]) < Int($aTrainedLikeBoss[$iA])) Then 
  						DeleteTroop($aTroops[$i2][1], $aTroops[$i2][2])
@@ -166,20 +166,20 @@ Func LocateTroopButton($iTroopButton, $sImgTrain = $g_sImgPathTroopsTrain, $sReg
 		If ($iTroopButton > (UBound($asAttackBarBB) -1)) Then SetLog("Train army on BB: Troop not rocognized, it return first.", $COLOR_ERROR)
 	
 		For $i = 0 To 3
-			Local $iButtonIsIn = __ArraySearch(_ImageSearchXML($g_sImgPathTroopsTrain, 0, $sRegionForScan, True, False, True, 25), $g_asAttackBarBB2[$iTroopButton])
+			Local $iButtonIsIn = _ArraySearch(_ImageSearchXML($g_sImgPathTroopsTrain, 0, $sRegionForScan, True, False, True, 25), $g_asAttackBarBB2[$iTroopButton])
 
 			$aTroopPosition = $g_aImageSearchXML
-			SetDebugLog("LocateTroopButton: " & "__ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton]) " & $aTroopPosition)
+			SetDebugLog("LocateTroopButton: " & "_ArraySearch($aTroopPosition, $asAttackBarBB[$iTroopButton]) " & $aTroopPosition)
 			
 			If ($iButtonIsIn > -1) Then
 				$g_aTroopButton[0] = $aTroopPosition[$iButtonIsIn][1]
 				$g_aTroopButton[1] = $aTroopPosition[$iButtonIsIn][2]
 				Return $g_aTroopButton
-			ElseIf __ArraySearch($asAttackBarBB , $aTroopPosition[0][0]) < $iTroopButton Then
+			ElseIf _ArraySearch($asAttackBarBB , $aTroopPosition[0][0]) < $iTroopButton Then
 				SetDebugLog("LocateTroopButton: " & "ClickDrag(575, 522, 280, 522, 50)")
 				ClickDrag(575, 522, 280, 522, 50)
 				If _Sleep(Random((400*90)/100, (400*110)/100, 1)) Then Return
-			ElseIf __ArraySearch($asAttackBarBB, $aTroopPosition[UBound($aTroopPosition)-1][0]) > $iTroopButton Then
+			ElseIf _ArraySearch($asAttackBarBB, $aTroopPosition[UBound($aTroopPosition)-1][0]) > $iTroopButton Then
 				SetDebugLog("LocateTroopButton: " & "ClickDrag(280, 522, 575, 522, 50)")
 				ClickDrag(280, 522, 575, 522, 50)
 				If _Sleep(Random((400*90)/100, (400*110)/100, 1)) Then Return

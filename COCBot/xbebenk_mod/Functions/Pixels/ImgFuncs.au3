@@ -42,7 +42,8 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
 	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	Local $returnLine[UBound($returnData)]
-"SearchMultipleTilesBetweenLevels", "handle", ($bIsPtr = True) ? ($_hHBitmap) : ($g_hHBitmap2), "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantityMatch, "str", $vArea2SearchOri, "Int", $minLevel, "Int", $maxLevel	$error = @error ; Store error values as they reset at next function call
+"SearchMultipleTilesBetweenLevels", "handle", ($bIsPtr = True) ? ($_hHBitmap) : ($g_hHBitmap2), "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantityMatch, "str", $vArea2SearchOri, "Int", $minLevel, "Int", $maxLevel
+	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)

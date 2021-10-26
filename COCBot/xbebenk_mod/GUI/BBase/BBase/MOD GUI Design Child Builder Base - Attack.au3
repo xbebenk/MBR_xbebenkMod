@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........: Chilly-Chill (5/2019) (redo), ProMac (03-2018)
 ; Modifier ......: Boldina (01/2020)
-; Remarks .......: This file is part of MyBot, previously known as Mybot and ClashGameBot. Copyright 2015-2018
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot and ClashGameBot. Copyright 2015-2018
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........:

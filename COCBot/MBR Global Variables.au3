@@ -560,7 +560,7 @@ Global Enum $eIcnArcher = 1, $eIcnDonArcher, $eIcnBalloon, $eIcnDonBalloon, $eIc
 		$eIcnHeadhunter, $eIcnCollectAchievements, $eIcnInvisibilitySpell, $eIcnLogL, _
 		$eIcnSuperBarbarian, $eIcnSuperArcher, $eIcnSuperGiant, $eIcnSneakyGoblin, $eIcnSuperWallBreaker, $eIcnSuperWizard, $eIcnInfernoDragon, $eIcnSuperMinion, $eIcnSuperValkyrie, $eIcnSuperWitch, $eIcnIceHound, _
 		$eIcnPetLassi, $eIcnPetElectroOwl, $eIcnPetMightyYak, $eIcnPetUnicorn, $eIcnTH14, $eWall15, $eIcnPetHouse, $eIcnRocketBalloon, $eIcnDragonRider, $eHdV14, _
-		$eIcnMachineA, _ ; Team__AiO__MOD
+		$eIcnMachineA ; Team__AiO__MOD
 
 Global $eIcnDonBlank = $eIcnDonBlacklist
 Global $eIcnOptions = $eIcnDonBlacklist
@@ -1015,7 +1015,7 @@ Global $g_sUpgradeResource = 0
 Global $g_sUpgradeDuration
 
 ; Builder Base
-Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0, $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_iChkBBSuggestedUpgradesOTTO = 0 
+Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0, $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_iChkBBSuggestedUpgradesOTTO = 0
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
@@ -1940,6 +1940,6 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
 		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
 		[0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
-		
+
 
 #include "xbebenk_mod\Globals_xbebenk.au3" ; xbebenk

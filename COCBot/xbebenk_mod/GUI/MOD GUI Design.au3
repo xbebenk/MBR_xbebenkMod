@@ -14,6 +14,4 @@
 ; ===============================================================================================================================
 #include-once
 
-#include "BBase\MOD GUI Design Child Builder Base - Attack.au3"
-#include "BBase\MOD GUI Design Child Builder Base - Misc.au3"
-#include "BBase\MOD GUI Design Child Builder Base - Upgrade.au3"
+#include "BBase\MOD GUI Design - Builder Base.au3"

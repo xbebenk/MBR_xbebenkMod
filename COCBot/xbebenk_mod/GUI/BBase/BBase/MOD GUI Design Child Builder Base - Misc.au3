@@ -5,8 +5,8 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: ProMac (03-2018)
-; Remarks .......: This file is part of MultiBot, previously known as Mybot and ClashGameBot. Copyright 2015-2018
-;                  MultiBot is distributed under the terms of the GNU GPL
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot and ClashGameBot. Copyright 2015-2018
+;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........:
 ; Example .......: No
@@ -30,15 +30,15 @@ Func TowerBoostTranslate()
 	GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbStartClockTowerBoostLabANDBuilderbs", "Lab AND builder busy.") & "|" & _
 	GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbStartClockTowerBoostBuilder", "Builder active") & "|" & _
 	GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "CmbStartClockTowerBoostLab", "Lab active")
-	
+
 	$g_sTranslateBBTower = $sTranslateBBTower
 EndFunc
 
 Func CreateMiscBuilderBaseSubTab()
 	Local $x = 15, $y = 45
-	
+
 	TowerBoostTranslate()
-	
+
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "Group_01", "Collect && Activate"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 125)
 		GUICtrlCreateIcon($g_sLibIconPath, $eIcnGoldMineL5, $x + 7, $y - 5, 24, 24)
 		GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixirCollectorL5, $x + 32, $y - 5, 24, 24)
@@ -56,7 +56,7 @@ Func CreateMiscBuilderBaseSubTab()
 			_GUICtrlComboBox_SetCurSel(-1, 1)
 			GUICtrlSetOnEvent(-1, "chkStartClockTowerBoost")
 	$y += 25
-		GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModClockTowerP, $x + 32, $y, 24, 24)
+		; GUICtrlCreateIcon($g_sLibModIconPath, $eIcnModClockTowerP, $x + 32, $y, 24, 24)
 		$g_hChkClockTowerPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkActivateClockTowerPotionWhen", "Activate clock tower with potion when: "), $x + 100, $y + 4, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Builder Base - Misc", "ChkActivateClockTowerBoost_Info_01", "Check this to activate the Clock Tower Boost when it is available.\r\nThis option doesn't use your Gems"))
 			GUICtrlSetOnEvent(-1, "chkStartClockTowerBoostPotion")

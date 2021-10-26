@@ -18,6 +18,12 @@
 Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = False, $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False, $g_bTrainPreviousArmy = False
 Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
 
+#Region - Icn - Team AiO MOD++
+Global Const $g_sLibBBIconPath = $g_sLibPath & "\ModLibs\BuilderBase.dll" ; icon library
+Global Enum $eIcnBB = 1 , $eIcnLabBB, $eIcnBBElixir, $eIcnBBGold, $eIcnBBTrophies, $eIcnMachine, $eIcnBBWallInfo, $eIcnBBWallL1, $eIcnBBWallL2, $eIcnBBWallL3, $eIcnBBWallL4, $eIcnBBWallL5, _
+		$eIcnBBWallL6, $eIcnBBWallL7, $eIcnBBWallL8, $eIcnBBWallL9
+#EndRegion - Icn - Team AIO Mod++
+
 #Region - Builder Base !!!
 Global $g_oTxtBBAtkLogInitText = ObjCreate("Scripting.Dictionary")
 

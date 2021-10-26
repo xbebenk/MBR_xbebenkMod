@@ -13,6 +13,10 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
+; Pixel
+#include "functions\Pixels\_Wait4Pixel.au3"
+#include "functions\Pixels\DMatching.au3"
+#include "functions\Pixels\ImgFuncs.au3"
 
 ; Custom Builder Base - Team AiO MOD++
 #include "functions\Mod's\BuilderBase\BuilderBaseMain.au3"

@@ -36,8 +36,6 @@ Func _SetLog($sLogMessage, $Color = Default, $Font = Default, $FontSize = Defaul
 		$LogPrefix = Default, $bPostponed = Default, $bSilentSetLog = Default, $bWriteToLogFile = Default)
 
 	Local Static $bActive = False
-	Local Static $hLogCheckFreeSpaceTimer = 0
-
 	If $Color = Default Then $Color = $COLOR_BLACK
 	If $Font = Default Then $Font = "Verdana"
 	If $FontSize = Default Then $FontSize = 7.5
@@ -92,21 +90,10 @@ Func _SetLog($sLogMessage, $Color = Default, $Font = Default, $FontSize = Defaul
 	If (($g_hTxtLog <> 0 Or $g_iGuiMode <> 1) And $g_bRunState = False) Or ($bPostponed = False And __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout) Then
 		; log now to GUI
 		CheckPostponedLog()
-
-		If $g_iLogCheckFreeSpaceMB And $g_bRunState Then
-			If $hLogCheckFreeSpaceTimer = 0 Or __TimerDiff($hLogCheckFreeSpaceTimer) > 600000 Then
-				; check free space of profile folder
-				Local $fFree = DriveSpaceFree($g_sProfilePath & "\" & $g_sProfileCurrentName)
-				If $hLogCheckFreeSpaceTimer = 0 Then SetDebugLog("Free disk space is " & $fFree & " MB")
-				$hLogCheckFreeSpaceTimer = __TimerInit()
-				If @error = 0 And $fFree < $g_iLogCheckFreeSpaceMB Then
-					$hLogCheckFreeSpaceTimer = 0 ; force check on next start
-					SetLog("Less than " & $g_iLogCheckFreeSpaceMB & " MB free disk space, bot is stopping!", $COLOR_ERROR)
-					If $g_bRunState Then btnStop()
-				EndIf
-			EndIf
-		EndIf
-
+		
+		#Region - AIO ++ - Random / Custom delay
+		; ...
+		#EndRegion - AIO ++ - Random / Custom delay
 	EndIf
 	$bActive = False
 EndFunc   ;==>_SetLog
@@ -242,7 +229,6 @@ Func FlushGuiLog(ByRef $hTxtLog, ByRef $oTxtLog, $bUpdateStatus = False, $sLogMu
 		If $activeBot And $hCtrl <> $hTxtLog Then _WinAPI_SetFocus($hCtrl) ; Restore Focus
 	EndIf
 
-	;ReleaseMutex($txtLogMutex) ; end of synchronized block
 	AndroidShieldLock($wasLock) ; unlock Android Shield
 	$g_bFlushGuiLogActive = False
 	Return $iLogs
@@ -258,8 +244,9 @@ Func UpdateStatusBar($sText)
 	_GUICtrlStatusBar_SetTextEx($g_hStatusBar, "Status : " & $sText)
 EndFunc   ;==>UpdateStatusBar
 
+#Region - Custom BB - Team AIO Mod++
 Func CheckPostponedLog($bNow = False)
-	;SetDebugLog("CheckPostponedLog: Entered, $bNow=" & $bNow & ", count=" & $g_oTxtLogInitText.Count & ", $g_hTxtLog=" & $g_hTxtLog & ", $g_iGuiMode=" & $g_iGuiMode)
+	;If $g_bDebugSetlog Then SetDebugLog("CheckPostponedLog: Entered, $bNow=" & $bNow & ", count=" & $g_oTxtLogInitText.Count & ", $g_hTxtLog=" & $g_hTxtLog & ", $g_iGuiMode=" & $g_iGuiMode)
 	Local $iLogs = 0
 	If $g_bCriticalMessageProcessing Or ($bNow = False And __TimerDiff($g_hTxtLogTimer) < $g_iTxtLogTimerTimeout) Then Return 0
 
@@ -277,6 +264,10 @@ Func CheckPostponedLog($bNow = False)
 		$iLogs += FlushGuiLog($g_hTxtAtkLog, $g_oTxtAtkLogInitText, False, "txtAtkLog")
 	EndIf
 
+	If $g_oTxtBBAtkLogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtBBAtkLog And BitAND(WinGetState($g_hGUI_LOG_BB), 2))) Then
+		$iLogs += FlushGuiLog($g_hTxtBBAtkLog, $g_oTxtBBAtkLogInitText, False, "txtBBAtkLog")
+	EndIf
+
 	If $g_oTxtSALogInitText.Count > 0 And ($g_iGuiMode <> 1 Or ($g_hTxtSALog And BitAND(WinGetState($g_hGUI_LOG_SA), 2))) Then
 		$iLogs += FlushGuiLog($g_hTxtSALog, $g_oTxtSALogInitText, False, "txtSALog")
 	EndIf
@@ -284,6 +275,32 @@ Func CheckPostponedLog($bNow = False)
 	$g_hTxtLogTimer = __TimerInit()
 	Return $iLogs
 EndFunc   ;==>CheckPostponedLog
+
+Func BBAtkLogHead()
+	SetBBAtkLog(_PadStringCenter(" " & GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_01", "ATTACK LOG") & " ", 43, "="), "", $COLOR_BLACK, "MS Shell Dlg", 8.5)
+	SetBBAtkLog(GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_02", '|     --------- VICTORY BONUS ----------   |'), "")
+	SetBBAtkLog(GetTranslatedFileIni("MBR Func_BBAtkLogHead", "BBAtkLogHead_Text_03", '|AC|TIME.|TROP.|   GOLD| ELIXIR|GTR|S|  %|S|'), "")
+EndFunc   ;==>BBAtkLogHead
+
+Func SetBBAtkLog($String1, $String2 = "", $Color = $COLOR_BLACK, $Font = "Lucida Console", $FontSize = 7.5) ;Sets the text for the log
+	If $g_hBBAttackLogFile = 0 Then CreateBBAttackLogFile()
+	_FileWriteLog($g_hBBAttackLogFile, $String1 & $String2)
+	Local $a[6] = [$String1 & @CRLF, $Color, $Font, $FontSize, 0, 0]
+	$g_oTxtBBAtkLogInitText($g_oTxtBBAtkLogInitText.Count + 1) = $a
+EndFunc   ;==>SetBBAtkLog
+
+Func CreateBBAttackLogFile()
+	If $g_hBBAttackLogFile <> 0 Then
+		FileClose($g_hBBAttackLogFile)
+		$g_hBBAttackLogFile = 0
+	EndIf
+
+	Local $sBBAttackLogFName = "BBAttackLog" & "-" & @YEAR & "-" & @MON & ".log"
+	Local $sBBAttackLogPath = $g_sProfileLogsPath & $sBBAttackLogFName
+	$g_hBBAttackLogFile = FileOpen($sBBAttackLogPath, $FO_APPEND)
+	If $g_bDebugSetlog Then SetDebugLog("Created BB attack log file: " & $sBBAttackLogPath)
+EndFunc   ;==>CreateBBAttackLogFile
+#EndRegion - Custom BB - Team AIO Mod++
 
 Func _GUICtrlRichEdit_AppendTextColor($hWnd, $sText, $iColor, $bGotoEnd = True)
 	If $bGotoEnd Then _GUICtrlRichEdit_SetSel($hWnd, -1, -1)
@@ -304,13 +321,7 @@ Func SetAtkLog($String1, $String2 = "", $Color = $COLOR_BLACK, $Font = "Lucida C
 	_FileWriteLog($g_hAttackLogFile, $String1 & $String2)
 
 	;Local $txtLogMutex = AcquireMutex("txtAtkLog")
-	Dim $a[6]
-	$a[0] = $String1 & @CRLF
-	$a[1] = $Color
-	$a[2] = $Font
-	$a[3] = $FontSize
-	$a[4] = 0 ; no status bar update
-	$a[5] = 0 ; no time
+	Local $a[6] = [$String1 & @CRLF, $Color, $Font, $FontSize, 0, 0]
 	$g_oTxtAtkLogInitText($g_oTxtAtkLogInitText.Count + 1) = $a
 	;ReleaseMutex($txtLogMutex)
 
@@ -326,22 +337,16 @@ Func SetSwitchAccLog($String, $Color = $COLOR_BLACK, $Font = "Verdana", $FontSiz
 	If $g_hSwitchLogFile = 0 Then CreateSwitchLogFile()
 	_FileWriteLog($g_hSwitchLogFile, $String)
 
-	Dim $a[6]
-	$a[0] = $String & @CRLF
-	$a[1] = $Color
-	$a[2] = $Font
-	$a[3] = $FontSize
-	$a[4] = 0 ; no status bar update
-	$a[5] = $time
+	Local $a[6] = [$String & @CRLF, $Color, $Font, $FontSize, 0, $time]
 	$g_oTxtSALogInitText($g_oTxtSALogInitText.Count + 1) = $a
 
 EndFunc   ;==>SetSwitchAccLog
 
 Func AtkLogHead()
 	SetAtkLog(_PadStringCenter(" " & GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_01", "ATTACK LOG") & " ", 71, "="), "", $COLOR_BLACK, "MS Shell Dlg", 8.5)
-	SetAtkLog(GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_02", '                        ------ LOOT -----          ---- BONUS ----'), "");---
-	SetAtkLog(GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_03", 'AC|TIME.|TROP|SRC|TH|DA| GOLD| ELIX|   DE|TR.|S|  %|GOLD|ELIX|  DE|L.'), "");---
-EndFunc   ;==>AtkLogHead
+	SetAtkLog(GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_02", '|                       ------- LOOT --------            -- BONUS --   |'), "")
+	SetAtkLog(GetTranslatedFileIni("MBR Func_AtkLogHead", "AtkLogHead_Text_03", '|AC| TIME|TROPHY|SRC|DS|   GOLD| ELIXER|   DE| TR| *|  %| G & E|  DE|L.|'), "")
+EndFunc   ;==>AtkLogHead                                                                          
 
 Func __FileWriteLog($handle, $text)
 	Return FileWriteLine($handle, BitAND(WinGetState($g_hFrmBot), 2) & ": " & $text)
@@ -349,7 +354,7 @@ EndFunc   ;==>__FileWriteLog
 
 Func ClearLog($hRichEditCtrl = $g_hTxtLog)
 	Switch $hRichEditCtrl
-		Case $g_hTxtLog
+        Case $g_hTxtLog
 			$g_oTxtLogInitText($g_oTxtLogInitText.Count + 1) = 0
 		Case $g_hTxtAtkLog
 			$g_oTxtAtkLogInitText($g_oTxtAtkLogInitText.Count + 1) = 0

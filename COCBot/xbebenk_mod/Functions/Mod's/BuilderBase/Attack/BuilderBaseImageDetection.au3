@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........: ProMac (03-2018), Fahid.Mahmood
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as Multibot and ClashGameBot. Copyright 2015-2020
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot and ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki

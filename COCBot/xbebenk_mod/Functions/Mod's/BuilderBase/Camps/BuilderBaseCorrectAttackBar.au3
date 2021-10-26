@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........: ProMac (03-2018)
 ; Modified ......: Boludoz (12/2018 - 31/12/2019, 25/08/2020), Dissociable (07-2020)
-; Remarks .......: This file is part of MyBot, previously known as Multibot and ClashGameBot. Copyright 2015-2020
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot and ClashGameBot. Copyright 2015-2020
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -250,7 +250,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	;First Find The Correct Index Of Camps In Attack Bar
 	For $i = 0 To UBound($aCamps) - 1
 		;Just In Case Someone Mentioned Wrong Troop Name Select Default Barbarian Troop
-		$aCamps[$i] = __ArraySearch($g_asAttackBarBB2, $aCamps[$i]) < 0 ? ("Barb") : __ArraySearch($g_asAttackBarBB2, $aCamps[$i])
+		$aCamps[$i] = _ArraySearch($g_asAttackBarBB2, $aCamps[$i]) < 0 ? ("Barb") : _ArraySearch($g_asAttackBarBB2, $aCamps[$i])
 	Next
 	;After populate with the new priority position let's sort ascending column 1
 	_ArraySort($aCamps, 0, 0, 0, 1)
