@@ -12,55 +12,48 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+#cs - Team AIO Mod++
+Func PrepareAttackBB($bTest = False)
+	If $bTest Then $g_aiCurrentLootBB[$eLootTrophyBB] = 1004
+	If $bTest Then Setlog($g_aiCurrentLootBB[$eLootTrophyBB], $COLOR_INFO)
 
-Func PrepareAttackBB($bCheck = False)
-
-	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-		Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
-		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
-		SetLog("We are going to attack no matter what!!", $COLOR_DEBUG)
-		If Not ClickAttack() Then Return False
-		_Sleep(1500)
-		CheckArmyReady()
-		CheckLootAvail()
-		$g_bBBMachineReady = CheckMachReady()
-		Return True
-	EndIf
+	Local $bIsToDropTrophies = False
 
 	If $g_bChkBBTrophyRange Then
-		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
+		SetDebugLog("Current Trophies: " & $g_aiCurrentLootBB[$eLootTrophyBB] & " Lower Limit: " & $g_iTxtBBTrophyLowerLimit & " Upper Limit: " & $g_iTxtBBTrophyUpperLimit)
+
+		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit) Then
 			SetLog("Trophies out of range.")
-			SetDebugLog("Current Trophies: " & $g_aiCurrentLootBB[$eLootTrophyBB] & " Lower Limit: " & $g_iTxtBBTrophyLowerLimit & " Upper Limit: " & $g_iTxtBBTrophyUpperLimit)
-			_Sleep(1500)
+			$bIsToDropTrophies = True
+		ElseIf  ($g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
+			SetLog("Trophies out of range.")
 			Return False
 		EndIf
 	EndIf
-	
-	If Not $g_bRunState Then Return ; Stop Button
 
+	If _Sleep(1500) Then Return ; Team AIO Mod++
 
 	If Not ClickAttack() Then Return False
-	_Sleep(1000)
 
 	If Not CheckArmyReady() Then
-		_Sleep(1500)
-		ClickAway()
+		If _Sleep(1500) Then Return ; Team AIO Mod++
+		ClickAway() ; ClickP($aAway)
 		Return False
 	EndIf
 
 	If $g_bChkBBAttIfLootAvail Then
 		If Not CheckLootAvail() Then
-			_Sleep(1500)
-			ClickAway()
+			If _Sleep(1500) Then Return ; Team AIO Mod++
+			ClickAway() ; ClickP($aAway)
 			Return False
 		EndIf
 	EndIf
 
 	$g_bBBMachineReady = CheckMachReady()
-	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
+	If Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
-		_Sleep(1500)
-		ClickAway()
+		If _Sleep(1500) Then Return ; Team AIO Mod++
+		ClickAway() ; ClickP($aAway)
 		Return False
 	EndIf
 
@@ -72,8 +65,6 @@ Func ClickAttack()
 	Local $ButtonPixel = _MultiPixelSearch(8, 640, 120, 755, 1, 1, Hex(0xeac68c, 6), $aColors, 20)
 	local $bRet = False
 
-	If Not $g_bRunState Then Return ; Stop Button
-	
 	If IsArray($ButtonPixel) Then
 		SetDebugLog(String($ButtonPixel[0]) & " " & String($ButtonPixel[1]))
 		PureClick($ButtonPixel[0] + 25, $ButtonPixel[1] + 25) ; Click fight Button
@@ -86,27 +77,31 @@ Func ClickAttack()
 EndFunc
 
 Func CheckLootAvail()
+	local $aCoords = decodeSingleCoord(findImage("BBLootAvail_bmp", $g_sImgBBLootAvail, GetDiamondFromRect("210,622,658,721"), 1, True))
 	local $bRet = False
-	If QuickMIS("BC1", $g_sImgBBLoot, 430, 580, 650, 690, True, False) Then
-		SetLog("Loot is Available.")
+
+	If IsArray($aCoords) And UBound($aCoords) = 2 Then
 		$bRet = True
+		SetLog("Loot is Available.")
 	Else
 		SetLog("No loot available.")
 		If $g_bDebugImageSave Then SaveDebugImage("CheckLootAvail")
 	EndIf
+
 	Return $bRet
 EndFunc
 
 Func CheckMachReady()
 	local $aCoords = decodeSingleCoord(findImage("BBMachReady_bmp", $g_sImgBBMachReady, GetDiamondFromRect("113,388,170,448"), 1, True))
 	local $bRet = False
-	
+
 	If IsArray($aCoords) And UBound($aCoords) = 2 Then
 		$bRet = True
 		SetLog("Battle Machine ready.")
 	Else
 		If $g_bDebugImageSave Then SaveDebugImage("CheckMachReady")
 	EndIf
+
 	Return $bRet
 EndFunc
 
@@ -115,38 +110,36 @@ Func CheckArmyReady()
 	local $bReady = True, $bNeedTrain = False, $bTraining = False
 	local $sSearchDiamond = GetDiamondFromRect("114,384,190,450") ; start of trained troops bar untill a bit after the 'r' "in Your Troops"
 
-	If _Sleep($DELAYCHECKFULLARMY2) Then Return ; wait for window
-	If QuickMIS("BC1", $g_sImgArmyReady, 110, 360, 135, 385, True, False) Then
-		$bReady = True
-	Else 
-		$bReady = False
-		If QuickMIS("BC1", $g_sImgArmyNeedTrain, 130, 390, 190, 420, True, False) Then
-			$bNeedTrain = True ;need train, so will train cannon cart
-		Else
-			$bReady = True ;green check mark, not found but no need to train, so Army is Ready
-		EndIf
-	EndIf
-	
-	If Not $bReady And $bNeedTrain And $g_bTrainTroopBBCannonnCart Then
-		ClickP($aArmyTrainButton, 1, 0, "#0293")
-		If _Sleep(1000) Then Return ; wait for window
-		Local $sCannonCart
-		If QuickMIS("BC1", $g_sImgFillTrain, 40, 470, 820, 580, True, False) Then
-			Setlog("Army is not ready, Try to Train to fill BB ArmyCamp", $COLOR_DEBUG)
-			Click($g_iQuickMISX + 40, $g_iQuickMISY + 470, 1)
-			If _Sleep(500) Then Return
-			ClickAway()
-			$bReady = True
-		Else
-			Setlog("Army is not ready, and Cannot Find CannonCart Icon to Train", $COLOR_DEBUG)
-			ClickAway()
-		EndIf
-	EndIf
+	If _Sleep($DELAYCHECKFULLARMY2) Then Return False ; wait for window
+	While $i < 6 And $bReady ; wait for fight preview window
+		local $aTroopsTrainingCoords = decodeSingleCoord(findImage("TroopsTrainingBB", $g_sImgBBTroopsTraining, $sSearchDiamond, 1, False)) ; shouldnt need to capture again as it is the same diamond
+		local $aNeedTrainCoords = decodeSingleCoord(findImage("NeedTrainBB", $g_sImgBBNeedTrainTroops, $sSearchDiamond, 1, True))
 
+		If IsArray($aNeedTrainCoords) And UBound($aNeedTrainCoords) = 2 Then
+			$bReady = False
+			$bNeedTrain = True
+		EndIf
+		If IsArray($aTroopsTrainingCoords) And UBound($aTroopsTrainingCoords) = 2 Then
+			$bReady = False
+			$bTraining = True
+		EndIf
+
+		$i += 1
+	WEnd
 	If Not $bReady Then
 		SetLog("Army is not ready.")
 		If $bTraining Then SetLog("Troops are training.")
-		If $bNeedTrain Then SetLog("Troops need to be trained in the training tab.")
+
+		#Region - Custom army BB - Team AIO Mod++
+			If $bNeedTrain Then
+				ClickAway() ; ClickP($aAway, 1, 0, "#0000") ; ensure field is clean
+				If _Sleep(1500) Then Return ; Team AIO Mod++ Then Return
+				SetLog("Troops need to be trained in the training tab.")
+				CheckArmyBuilderBase()
+				Return False
+			EndIf
+		#EndRegion
+
 		If $g_bDebugImageSave Then SaveDebugImage("FindIfArmyReadyBB")
 	Else
 		SetLog("Army is ready.")
@@ -154,3 +147,4 @@ Func CheckArmyReady()
 
 	Return $bReady
 EndFunc
+#CE
