@@ -325,7 +325,7 @@ EndFunc   ;==>BuilderBaseReportAttack
 Func IsBuilderBaseOCR($bSetLog = True)
 	Local $iSeconds = 0, $iTimer = 0
 	Local $aTmp
-	Local $sString = QuickMIS("OCR", @ScriptDir & "\COCBot\Team__AiO__MOD++\Bundles\OCR\AvariableBB\", 404, 674, 477, 695, True, False, 3, 12, True)
+	Local $sString = QuickMIS("OCR", @ScriptDir & "\COCBot\xbebenk_mod\Bundles\OCR\AvariableBB\", 404, 674, 477, 695, True, False, 3, 12, True)
 	SetDebugLog("BuilderBaseTime : " & $sString)
 	
 	Local $iAvailableAttacksBB = 0

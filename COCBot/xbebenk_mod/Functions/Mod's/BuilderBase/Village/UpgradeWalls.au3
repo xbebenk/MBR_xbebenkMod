@@ -161,7 +161,7 @@ Func HammerSearch($sResource = "Gold", $bDebug = False)
 	Local $bReturn = False
 	Local $bResourcesToImprove = False
 
-	Local $aButtons = findMultipleQuick(@ScriptDir & "\COCBot\Team__AiO__MOD++\Images\Upgrade\Hammer", Default, "179, 579, 675, 694", True, "", False, 0)
+	Local $aButtons = findMultipleQuick(@ScriptDir & "\COCBot\xbebenk_mod\Images\Upgrade\Hammer", Default, "179, 579, 675, 694", True, "", False, 0)
 	If $aButtons <> -1 Then
 		For $i = 0 To UBound($aButtons) -1
 			If StringInStr($aButtons[$i][0], "Hammer") > 0 Then

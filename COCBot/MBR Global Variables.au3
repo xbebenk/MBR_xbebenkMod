@@ -436,7 +436,7 @@ Global $g_sProfileCurrentName = "" ; Name of profile currently being used
 Global $g_sProfileConfigPath = "" ; Path to the current config.ini being used in this profile
 Global $g_sProfileBuildingStatsPath = "" ; Path to stats_chkweakbase.ini file for this profile
 Global $g_sProfileBuildingPath = "" ; Paths to building.ini file for this profile
-Global $g_sProfileLogsPath = "", $g_sProfileLootsPath = "", $g_sProfileTempPath = "", $g_sProfileTempDebugPath = "" ; Paths to log/image/temp folders for this profile
+Global $g_sProfileLogsPath = "", $g_sProfileLootsPath = "", $g_sProfileTempPath = "", $g_sProfileTempDebugPath = "", $g_sProfileTempDebugDOCRPath = "" ; Paths to log/image/temp folders for this profile, AIO
 Global $g_sProfileDonateCapturePath = "", $g_sProfileDonateCaptureWhitelistPath = "", $g_sProfileDonateCaptureBlacklistPath = "" ; Paths to donate related folders for this profile
 Global $g_sProfileSecondaryInputFileName = ""
 Global $g_sProfileSecondaryOutputFileName = ""
@@ -504,6 +504,22 @@ Global Const $g_sLibSQLitePath = $g_sLibPath & "\" & $g_sSQLiteLib
 Global $g_hLibMyBot = -1 ; handle to MyBot.run.dll library
 Global $g_hLibNTDLL = DllOpen("ntdll.dll") ; handle to ntdll.dll, DllClose($g_hLibNTDLL) not required
 Global $g_hLibUser32DLL = DllOpen("user32.dll") ; handle to user32.dll, DllClose($g_hLibUser32DLL) not required
+
+#Region - Dissociable.OCR - Team AIO Mod++
+Global Const $g_sDissociableOcrLib = "\ModLibs\Dissociable.OCR.dll"
+Global Const $g_sLibDissociableOcrPath = $g_sLibPath & "\" & $g_sDissociableOcrLib
+Global $g_hLibDissociableOcr = -1 ; Handle to Dissociable.OCR.dll
+Global $g_bDOCRDebugImages = False
+#EndRegion - Dissociable.OCR - Team AIO Mod++
+
+#Region - Dissociable.Matching - Team AIO Mod++
+Global Const $g_sDissociableMatchLib = "\ModLibs\Dissociable.Matching.dll"
+Global Const $g_sLibDissociableMatchPath = $g_sLibPath & "\" & $g_sDissociableMatchLib
+Global $g_hLibDissociableMatch = -1 ; Handle to Dissociable.Matching.dll
+Global $g_bDMatchingDebugImages = False
+Global $g_iDMatchingDefa = 1; 32
+Global $g_iDMatchingThreads = $g_iDMatchingDefa
+#EndRegion - Dissociable.Matching - Team AIO Mod++
 
 Global Const $g_sLibIconPath = $g_sLibPath & "\MBRBOT.dll" ; icon library
 Global Const $g_sCSVAttacksPath = @ScriptDir & "\CSV\Attack"
@@ -872,6 +888,7 @@ Global $g_hCmbBBNextTroopDelay = 0, $g_hCmbBBSameTroopDelay = 0
 Global $g_apTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139] ]
 Global $g_apTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123] ]
 
+#cs
 ; BB Drop Order
 Global $g_hBtnBBDropOrder = 0
 Global $g_hGUI_BBDropOrder = 0
@@ -882,6 +899,7 @@ Global Const $g_iBBTroopCount = 11
 Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
 Global $g_sBBDropOrder = $g_sBBDropOrderDefault
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#Ce
 
 ; <><><><> Village / Donate - Request <><><><>
 Global $g_bRequestTroopsEnable = False

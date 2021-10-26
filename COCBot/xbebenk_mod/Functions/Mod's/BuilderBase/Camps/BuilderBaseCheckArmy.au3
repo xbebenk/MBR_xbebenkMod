@@ -146,7 +146,7 @@ EndFunc   ;==>DetectCamps
 Func DeleteTroop($X, $Y, $bOnlyCheck = False)
 	SetDebugLog("Red Coordinates: " & $X & "," & $Y)
 	Local $saiArea2SearchOri[4] = [$X, 244, $X + 95, 271]
-	Local $aAllResults = findMultipleQuick(@scriptdir & "\COCBot\Team__AiO__MOD++\Images\BuilderBase\FillArmyCamps\Bundles\", 0, $saiArea2SearchOri, True, "Del", False, 25)
+	Local $aAllResults = findMultipleQuick(@scriptdir & "\COCBot\xbebenk_mod\Images\BuilderBase\FillArmyCamps\Bundles\", 0, $saiArea2SearchOri, True, "Del", False, 25)
 	If IsArray($aAllResults) Then
 		_ArraySort($aAllResults, 0, 0, 0, 1)
 		If $bOnlyCheck = False Then Click($aAllResults[0][1] + Random(0, 10, 1), Random(244, 271, 1), 1)
