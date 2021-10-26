@@ -1,6 +1,6 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: ImgFuncs.au3
-; Description ...: Avoid loss of functions during updates.
+; Description ...: Versatile and easy to understand function for capturing images.
 ; Author ........: Boldina ! (2020)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2020
@@ -9,19 +9,32 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Global $g_aImageSearchXML = - 1
 
-Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bForceCapture = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $minLevel = 0, $maxLevel = 1000)
-	; FuncEnter(_ImageSearchXML)
+Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $vForceCaptureOrPtr = True, $bDebugLog = False, $bCheckDuplicatedpoints = False, $iDistance2check = 25, $minLevel = 0, $maxLevel = 1000)
+
 	$g_aImageSearchXML = -1
 	Local $iCount = 0, $returnProps = "objectname,objectlevel,objectpoints"
 	Local $error, $extError
 	
-	If $bForceCapture = Default Then $bForceCapture = True
+	Static $_hHBitmap = 0
+	Local $bIsPtr = False
+	If $vForceCaptureOrPtr = Default Or $vForceCaptureOrPtr = True Then
+		; Capture the screen for comparison
+		If $vForceCaptureOrPtr Then 
+			_CaptureRegion2() ;to have FULL screen image to work with
+		EndIf
+	ElseIf IsPtr($vForceCaptureOrPtr) Then
+		$_hHBitmap = GetHHBitmapArea($vForceCaptureOrPtr)
+		$bIsPtr = True
+	EndIf
+
 	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
 	
 	If (IsArray($vArea2SearchOri)) Then
 		$vArea2SearchOri = GetDiamondFromArray($vArea2SearchOri)
 	EndIf
+	
 	If 3 = ((StringReplace($vArea2SearchOri, ",", ",") <> "") ? (@extended) : (0)) Then
 		$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
 	EndIf
@@ -29,12 +42,7 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
 	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	Local $returnLine[UBound($returnData)]
-
-	; Capture the screen for comparison
-	If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
-
-	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantityMatch, "str", $vArea2SearchOri, "Int", $minLevel, "Int", $maxLevel)
-	$error = @error ; Store error values as they reset at next function call
+"SearchMultipleTilesBetweenLevels", "handle", ($bIsPtr = True) ? ($_hHBitmap) : ($g_hHBitmap2), "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantityMatch, "str", $vArea2SearchOri, "Int", $minLevel, "Int", $maxLevel	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
@@ -90,45 +98,22 @@ Func _ImageSearchXML($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", 
 	Return $aAR
 EndFunc   ;==>_ImageSearchXML
 
-Func CompKick(ByRef $vFiles, $aof, $bType = False)
-	If (UBound($aof) = 1) And StringIsSpace($aof[0]) Then Return False
-	If $g_bDebugSetlog Then
-		SetDebugLog("CompKick : " & _ArrayToString($vFiles))
-		SetDebugLog("CompKick : " & _ArrayToString($aof))
-		SetDebugLog("CompKick : " & "Exact mode : " & $bType)
-	EndIf
-	If ($bType = Default) Then $bType = False
+Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $vForceCaptureOrPtr = True, $sOnlyFind = "", $bExactFind = False, $iDistance2check = 25, $bDebugLog = $g_bDebugImageSave, $minLevel = 0, $maxLevel = 1000, $vArea2SearchOri2 = Default)
 
-	Local $aRS[0]
-
-	If IsArray($vFiles) And IsArray($aof) Then
-		If $g_bDebugSetlog Then SetDebugLog("CompKick compare : " & _ArrayToString($vFiles))
-		If $bType Then
-			For $s In $aof
-				For $s2 In $vFiles
-					Local $i2s = StringInStr($s2, "_") - 1
-					If StringInStr(StringMid($s2, 1, $i2s), $s, 0) = 1 And $i2s = StringLen($s) Then _ArrayAdd($aRS, $s2)
-				Next
-			Next
-		Else
-			For $s In $aof
-				For $s2 In $vFiles
-					Local $i2s = StringInStr($s2, "_") - 1
-					If StringInStr(StringMid($s2, 1, $i2s), $s) > 0 Then _ArrayAdd($aRS, $s2)
-				Next
-			Next
-		EndIf
-	EndIf
-	$vFiles = $aRS
-	Return (UBound($vFiles) = 0)
-EndFunc   ;==>CompKick
-;
-Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $bForceCapture = True, $sOnlyFind = "", $bExactFind = False, $iDistance2check = 25, $bDebugLog = $g_bDebugImageSave, $minLevel = 0, $maxLevel = 1000, $vArea2SearchOri2 = Default)
-	; FuncEnter(findMultipleQuick)
 	$g_aImageSearchXML = -1
 	Local $iCount = 0, $returnProps = "objectname,objectlevel,objectpoints"
 	
-	If $bForceCapture = Default Then $bForceCapture = True
+	Static $_hHBitmap = 0
+	Local $bIsPtr = False
+	If $vForceCaptureOrPtr = Default Or $vForceCaptureOrPtr = True Then
+		; Capture the screen for comparison
+		If $vForceCaptureOrPtr Then 
+			_CaptureRegion2() ;to have FULL screen image to work with
+		EndIf
+	ElseIf IsPtr($vForceCaptureOrPtr) Then
+		$_hHBitmap = GetHHBitmapArea($vForceCaptureOrPtr)
+		$bIsPtr = True
+	EndIf
 	
 	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
 
@@ -173,11 +158,8 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	Local $returnLine[UBound($returnData)]
 
-	; Capture the screen for comparison
-	If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
-
 	Local $error, $extError
-	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantToMach, "str", $vArea2SearchOri2, "Int", $minLevel, "Int", $maxLevel)
+	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", ($bIsPtr = True) ? ($_hHBitmap) : ($g_hHBitmap2), "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantToMach, "str", $vArea2SearchOri2, "Int", $minLevel, "Int", $maxLevel)
 	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
 	If $error Then
@@ -237,3 +219,36 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	
 	Return $aAR
 EndFunc   ;==>findMultipleQuick
+
+Func CompKick(ByRef $vFiles, $aof, $bType = False)
+	If (UBound($aof) = 1) And StringIsSpace($aof[0]) Then Return False
+	If $g_bDebugSetlog Then
+		SetDebugLog("CompKick : " & _ArrayToString($vFiles))
+		SetDebugLog("CompKick : " & _ArrayToString($aof))
+		SetDebugLog("CompKick : " & "Exact mode : " & $bType)
+	EndIf
+	If ($bType = Default) Then $bType = False
+
+	Local $aRS[0]
+
+	If IsArray($vFiles) And IsArray($aof) Then
+		If $g_bDebugSetlog Then SetDebugLog("CompKick compare : " & _ArrayToString($vFiles))
+		If $bType Then
+			For $s In $aof
+				For $s2 In $vFiles
+					Local $i2s = StringInStr($s2, "_") - 1
+					If StringInStr(StringMid($s2, 1, $i2s), $s, 0) = 1 And $i2s = StringLen($s) Then _ArrayAdd($aRS, $s2)
+				Next
+			Next
+		Else
+			For $s In $aof
+				For $s2 In $vFiles
+					Local $i2s = StringInStr($s2, "_") - 1
+					If StringInStr(StringMid($s2, 1, $i2s), $s) > 0 Then _ArrayAdd($aRS, $s2)
+				Next
+			Next
+		EndIf
+	EndIf
+	$vFiles = $aRS
+	Return (UBound($vFiles) = 0)
+EndFunc   ;==>CompKick
