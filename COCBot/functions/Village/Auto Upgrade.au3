@@ -548,11 +548,11 @@ Func UpgradeNewBuilding($bTest = False)
 	If Not ClickMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
 	
-	Local $b_BuildingFound = False
+	Local $b_BuildingFound = False, $ZoomedIn = False
 	Local $tmpName
 	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
-		Local $NeedDrag = True, $ZoomedIn = False
+		Local $NeedDrag = True
 		Local $NewCoord, $ZeroCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
 
