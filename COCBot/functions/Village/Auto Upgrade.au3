@@ -610,6 +610,8 @@ Func UpgradeNewBuilding($bTest = False)
 					Endif
 				Else
 					SetLog("But, No Resource", $COLOR_DEBUG)
+					SetLog("Skip Search NewBuilding, TH Found = No NewBuilding", $COLOR_DEBUG)
+					ExitLoop
 				EndIf 
 			EndIf
 		EndIf
@@ -691,18 +693,23 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 	Return False
 EndFunc ;==>IsUpgradeWindow
 
-Func ClickMainBuilder($bTest = False)
+Func ClickMainBuilder($bTest = False, $Counter = 1)
 	Local $b_WindowOpened = False
 	; open the builders menu
 	Click(295, 30)
-	If _Sleep(2000) Then Return
-
+	If _Sleep(1000) Then Return
 	If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
 		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
-		SetLog("Upgrade Window didn't opened", $COLOR_DEBUG)
-		$b_WindowOpened = False
+		If ($Counter < 4) Then
+			SetLog("Upgrade Window didn't opened, trying again!", $COLOR_DEBUG)
+			$Counter += 1
+			ClickMainBuilder(False, $Counter)
+		Else
+			SetLog("Something is wrong with upgrade window, already tried 3 times!", $COLOR_DEBUG)
+			$b_WindowOpened = False
+		EndIf
 	EndIf
 	Return $b_WindowOpened
 EndFunc ;==>ClickMainBuilder
