@@ -610,6 +610,8 @@ Func UpgradeNewBuilding($bTest = False)
 					Endif
 				Else
 					SetLog("But, No Resource", $COLOR_DEBUG)
+					SetLog("Skip Search NewBuilding, TH Found = No NewBuilding", $COLOR_DEBUG)
+					ExitLoop
 				EndIf 
 			EndIf
 		EndIf
@@ -701,9 +703,9 @@ Func ClickMainBuilder($bTest = False, $Counter = 1)
 		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
-		If($Counter<4) Then
+		If ($Counter < 4) Then
 			SetLog("Upgrade Window didn't opened, trying again!", $COLOR_DEBUG)
-			$Counter = $Counter + 1
+			$Counter += 1
 			ClickMainBuilder($bTest=False, $Counter)
 		Else
 			SetLog("Something is wrong with upgrade window, already tried 3 times!", $COLOR_DEBUG)
