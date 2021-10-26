@@ -286,18 +286,23 @@ Func AutoUpgradeBB($bTest = False)
 	ClickAway("Left")
 EndFunc   ;==>MainSuggestedUpgradeCode
 
-Func ClickOnBuilder($bTest = False)
+Func ClickOnBuilder($bTest = False, $Counter = 1)
 	Local $b_WindowOpened = False
 	; open the builders menu
 	Click(360, 11)
 	If _Sleep(1000) Then Return
-
 	If (_ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) = True) Then
 		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
-		SetLog("Upgrade Window didn't opened", $COLOR_DEBUG)
-		$b_WindowOpened = False
+		If ($Counter < 4) Then
+			SetLog("Upgrade Window didn't opened, trying again!", $COLOR_DEBUG)
+			$Counter += 1
+			ClickOnBuilder(False, $Counter)
+		Else
+			SetLog("Something is wrong with upgrade window, already tried 3 times!", $COLOR_DEBUG)
+			$b_WindowOpened = False
+		EndIf
 	EndIf
 	Return $b_WindowOpened
 EndFunc   ;==>ClickOnBuilder
