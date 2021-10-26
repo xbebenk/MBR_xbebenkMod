@@ -691,7 +691,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 	Return False
 EndFunc ;==>IsUpgradeWindow
 
-Func ClickMainBuilder($bTest = False)
+Func ClickMainBuilder($bTest = False, $Counter = 1)
 	Local $b_WindowOpened = False
 	; open the builders menu
 	Click(295, 30)
@@ -701,8 +701,14 @@ Func ClickMainBuilder($bTest = False)
 		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
-		SetLog("Upgrade Window didn't opened", $COLOR_DEBUG)
-		$b_WindowOpened = False
+		If($Counter<4) Then
+			SetLog("Upgrade Window didn't opened, trying again!", $COLOR_DEBUG)
+			$Counter = $Counter + 1
+			ClickMainBuilder($bTest=False, $Counter)
+		Else
+			SetLog("Something is wrong with upgrade window, already tried 3 times!", $COLOR_DEBUG)
+			$b_WindowOpened = False
+		EndIf
 	EndIf
 	Return $b_WindowOpened
 EndFunc ;==>ClickMainBuilder
