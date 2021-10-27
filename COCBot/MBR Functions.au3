@@ -288,8 +288,6 @@
 #include "functions\Other\ApiClient.au3"
 #include "functions\Other\ForumAuthentication.au3"
 
-#include "xbebenk_mod\Includes_xbebenk.au3" ; xbebenk
-
 ; moved to the end to avoid any global declare issues
 #include "functions\Config\profileFunctions.au3"
 #include "functions\Config\_Ini_Table.au3"

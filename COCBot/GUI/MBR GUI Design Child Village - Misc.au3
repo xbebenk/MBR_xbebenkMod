@@ -395,7 +395,7 @@ Func CreateMiscNormalVillageSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateMiscNormalVillageSubTab
-#cs
+
 Func CreateMiscBuilderBaseSubTab()
 	Local $x = 15, $y = 45
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_05", "Builders Base Stats"), $x - 10, $y - 20, $g_iSizeWGrpTab3, 50)
@@ -580,7 +580,6 @@ Func CreateBBDropOrderGUI()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc ;==>CreateBBDropOrderGUI
-#ce
 
 ; Clan Games v3
 Func CreateMiscClanGamesV3SubTab()

@@ -69,9 +69,6 @@ Global $g_oGuiNotInMini = ObjCreate("Scripting.Dictionary")
 #include "GUI\MBR GUI Design Bot.au3"
 #include "GUI\MBR GUI Design About.au3"
 
-; Custom BB - xbebenkMod_
-#include "xbebenk_mod\GUI\MOD GUI Design.au3"
-
 Func CreateMainGUI()
 
 ;~ ------------------------------------------------------

@@ -35,11 +35,8 @@ Global $g_hFrmBot = 0 ; The main GUI window
 #include "COCBot\GUI\MBR GUI Design Splash.au3"
 #include "COCBot\functions\Config\ScreenCoordinates.au3"
 #include "COCBot\functions\Config\ImageDirectories.au3"
-#include "COCBot\xbebenk_mod\functions\Config\ScreenCoordinates.au3" ; AIO Mod
-#include "COCBot\xbebenk_mod\functions\Config\ImageDirectories.au3" ; AIO Mod
 #include "COCBot\functions\Other\ExtMsgBox.au3"
 #include "COCBot\functions\Other\MBRFunc.au3"
-#include "COCBot\functions\Other\DissociableFunc.au3" ; AIO Mod
 #include "COCBot\functions\Android\Android.au3"
 #include "COCBot\functions\Android\Distributors.au3"
 #include "COCBot\MBR GUI Design.au3"
@@ -352,7 +349,6 @@ Func SetupProfileFolder()
 	$g_sProfileDonateCapturePath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\'
 	$g_sProfileDonateCaptureWhitelistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\White List\'
 	$g_sProfileDonateCaptureBlacklistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\Black List\'
-	$g_sProfileTempDebugDOCRPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\Temp\Debug\DOCR\"
 EndFunc   ;==>SetupProfileFolder
 
 ; #FUNCTION# ====================================================================================================================
@@ -505,7 +501,6 @@ Func SetupFilesAndFolders()
 	DirCreate($g_sProfileLootsPath)
 	DirCreate($g_sProfileTempPath)
 	DirCreate($g_sProfileTempDebugPath)
-	DirCreate($g_sProfileTempDebugDOCRPath) ; Dissociable - Team AIO Mod++
 
 	$g_sProfileDonateCapturePath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\'
 	$g_sProfileDonateCaptureWhitelistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\White List\'
@@ -561,7 +556,6 @@ Func FinalInitialization(Const $sAI)
 	Local $bCheckPrerequisitesOK = CheckPrerequisites(True)
 	If $bCheckPrerequisitesOK Then
 		MBRFunc(True) ; start MyBot.run.dll, after this point .net is initialized and threads popup all the time
-		DissociableFunc(True)
 		setAndroidPID() ; set Android PID
 		SetBotGuiPID() ; set GUI PID
 	EndIf
@@ -1382,7 +1376,7 @@ Func FirstCheckRoutine()
 	Next
 	
 EndFunc
-#cs
+
 Func BuilderBase()
 
 	; switch to builderbase and check it is builderbase
@@ -1456,7 +1450,7 @@ Func TestBuilderBase()
 	$g_bChkCleanBBYard = $bChkCleanBBYard
 	$g_bChkEnableBBAttack = $bChkEnableBBAttack
  EndFunc
-#ce
+
  Func SetSAtk($attack = False)
 
 	If $attack = True Then

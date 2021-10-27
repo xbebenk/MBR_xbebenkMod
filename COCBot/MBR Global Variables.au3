@@ -436,7 +436,7 @@ Global $g_sProfileCurrentName = "" ; Name of profile currently being used
 Global $g_sProfileConfigPath = "" ; Path to the current config.ini being used in this profile
 Global $g_sProfileBuildingStatsPath = "" ; Path to stats_chkweakbase.ini file for this profile
 Global $g_sProfileBuildingPath = "" ; Paths to building.ini file for this profile
-Global $g_sProfileLogsPath = "", $g_sProfileLootsPath = "", $g_sProfileTempPath = "", $g_sProfileTempDebugPath = "", $g_sProfileTempDebugDOCRPath = "" ; Paths to log/image/temp folders for this profile, AIO
+Global $g_sProfileLogsPath = "", $g_sProfileLootsPath = "", $g_sProfileTempPath = "", $g_sProfileTempDebugPath = "" ; Paths to log/image/temp folders for this profile
 Global $g_sProfileDonateCapturePath = "", $g_sProfileDonateCaptureWhitelistPath = "", $g_sProfileDonateCaptureBlacklistPath = "" ; Paths to donate related folders for this profile
 Global $g_sProfileSecondaryInputFileName = ""
 Global $g_sProfileSecondaryOutputFileName = ""
@@ -505,22 +505,6 @@ Global $g_hLibMyBot = -1 ; handle to MyBot.run.dll library
 Global $g_hLibNTDLL = DllOpen("ntdll.dll") ; handle to ntdll.dll, DllClose($g_hLibNTDLL) not required
 Global $g_hLibUser32DLL = DllOpen("user32.dll") ; handle to user32.dll, DllClose($g_hLibUser32DLL) not required
 
-#Region - Dissociable.OCR - Team AIO Mod++
-Global Const $g_sDissociableOcrLib = "\ModLibs\Dissociable.OCR.dll"
-Global Const $g_sLibDissociableOcrPath = $g_sLibPath & "\" & $g_sDissociableOcrLib
-Global $g_hLibDissociableOcr = -1 ; Handle to Dissociable.OCR.dll
-Global $g_bDOCRDebugImages = False
-#EndRegion - Dissociable.OCR - Team AIO Mod++
-
-#Region - Dissociable.Matching - Team AIO Mod++
-Global Const $g_sDissociableMatchLib = "\ModLibs\Dissociable.Matching.dll"
-Global Const $g_sLibDissociableMatchPath = $g_sLibPath & "\" & $g_sDissociableMatchLib
-Global $g_hLibDissociableMatch = -1 ; Handle to Dissociable.Matching.dll
-Global $g_bDMatchingDebugImages = False
-Global $g_iDMatchingDefa = 1; 32
-Global $g_iDMatchingThreads = $g_iDMatchingDefa
-#EndRegion - Dissociable.Matching - Team AIO Mod++
-
 Global Const $g_sLibIconPath = $g_sLibPath & "\MBRBOT.dll" ; icon library
 Global Const $g_sCSVAttacksPath = @ScriptDir & "\CSV\Attack"
 Global Const $g_sIcnMBisland = @ScriptDir & "\Images\bbico.png"
@@ -559,8 +543,7 @@ Global Enum $eIcnArcher = 1, $eIcnDonArcher, $eIcnBalloon, $eIcnDonBalloon, $eIc
 		$eIcnWorkshopBoost, $eIcnStrongMan, $eIcnPowerPotion, $eIcnHogGlider, $eIcnYeti, $eIcnSiegeB, $eIcnChampion, $eIcnChampionUpgr, $eIcnChampionBoost, $eHdV13, $eIcnScattershot, $eIcnChampionBoostLocate, $eIcnTH13, $eWall14, _
 		$eIcnHeadhunter, $eIcnCollectAchievements, $eIcnInvisibilitySpell, $eIcnLogL, _
 		$eIcnSuperBarbarian, $eIcnSuperArcher, $eIcnSuperGiant, $eIcnSneakyGoblin, $eIcnSuperWallBreaker, $eIcnSuperWizard, $eIcnInfernoDragon, $eIcnSuperMinion, $eIcnSuperValkyrie, $eIcnSuperWitch, $eIcnIceHound, _
-		$eIcnPetLassi, $eIcnPetElectroOwl, $eIcnPetMightyYak, $eIcnPetUnicorn, $eIcnTH14, $eWall15, $eIcnPetHouse, $eIcnRocketBalloon, $eIcnDragonRider, $eHdV14, _
-		$eIcnMachineA ; Team__AiO__MOD
+		$eIcnPetLassi, $eIcnPetElectroOwl, $eIcnPetMightyYak, $eIcnPetUnicorn, $eIcnTH14, $eWall15, $eIcnPetHouse, $eIcnRocketBalloon, $eIcnDragonRider, $eHdV14
 
 Global $eIcnDonBlank = $eIcnDonBlacklist
 Global $eIcnOptions = $eIcnDonBlacklist
@@ -889,7 +872,6 @@ Global $g_hCmbBBNextTroopDelay = 0, $g_hCmbBBSameTroopDelay = 0
 Global $g_apTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139] ]
 Global $g_apTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123] ]
 
-#cs
 ; BB Drop Order
 Global $g_hBtnBBDropOrder = 0
 Global $g_hGUI_BBDropOrder = 0
@@ -900,7 +882,6 @@ Global Const $g_iBBTroopCount = 11
 Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
 Global $g_sBBDropOrder = $g_sBBDropOrderDefault
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-#Ce
 
 ; <><><><> Village / Donate - Request <><><><>
 Global $g_bRequestTroopsEnable = False
@@ -1015,7 +996,7 @@ Global $g_sUpgradeResource = 0
 Global $g_sUpgradeDuration
 
 ; Builder Base
-Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0, $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_iChkBBSuggestedUpgradesOTTO = 0
+Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0, $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_iChkBBSuggestedUpgradesOTTO = 0 
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
@@ -1419,12 +1400,11 @@ Global $g_sStarLabUpgradeTime = ""
 
 ; Array to hold Laboratory Troop information [LocX of upper left corner of image, LocY of upper left corner of image, PageLocation, Troop "name", Icon # in DLL file, ShortName on image file]
 Global $g_avLabTroops[42][3]
-Global $g_avStarLabTroops[13][5] ; Custom BB - Team AIO Mod++
+Global $g_avStarLabTroops[12][5]
 
 ; [0] Name, [1] Icon [2] ShortName
-Global $g_sBBTroopsOrderDefault, $g_sBBDropOrderDefault ; Team AIO Mod++
 Func TranslateTroopNames()
-	Static $s_avLabTroops[42][3] = [ _
+	Dim $g_avLabTroops[42][3] = [ _
 			[GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"), $eIcnBlank], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBarbarians", "Barbarians"), $eIcnBarbarian, "Barb"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtArchers", "Archers"), $eIcnArcher, "Arch"], _
@@ -1468,9 +1448,7 @@ Func TranslateTroopNames()
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSiegeBarracks", "Siege Barracks"), $eIcnSiegeB, "SiegeB"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtLogLauncher", "Log Launcher"), $eIcnLogL, "LogL"]]
 
-			$g_avLabTroops = $s_avLabTroops
-
-	Static $s_avStarLabTroops[13][5] = [ _
+	Dim $g_avStarLabTroops[12][5] = [ _
 			[-1, -1, -1, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"), $eIcnBlank], _
 			[114, 341 + $g_iMidOffsetY, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtRagedBarbarian", "Raged Barbarian"), $eIcnRagedBarbarian], _
 			[114, 449 + $g_iMidOffsetY, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSneakyArcher", "SneakyArcher"), $eIcnSneakyArcher], _
@@ -1482,15 +1460,9 @@ Func TranslateTroopNames()
 			[416, 449 + $g_iMidOffsetY, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtNightWitch", "Night Witch"), $eIcnNightWitch], _
 			[516, 341 + $g_iMidOffsetY, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtDropShip", "Drop Ship"), $eIcnDropShip], _
 			[516, 449 + $g_iMidOffsetY, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSuperPekka", "Super Pekka"), $eIcnSuperPekka], _
-			[622, 341 + $g_iMidOffsetY, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider"), $eIcnHogGlider], _
-			[-1, -1, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtMachine", "Machine"), $eIcnMachineA]] ; Team AIO Mod++
-
-			$g_avStarLabTroops = $s_avStarLabTroops
-
-			$g_sBBTroopsOrderDefault = _ArrayToString($g_avStarLabTroops, "", 1, UBound($g_avStarLabTroops)-2, "|", 3, 3) ; Team AIO Mod++
-			$g_sBBDropOrderDefault = _ArrayToString($g_avStarLabTroops, "", 1, UBound($g_avStarLabTroops)-1, "|", 3, 3) ; Team AIO Mod++
-
+			[622, 341 + $g_iMidOffsetY, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider"), $eIcnHogGlider]]
 EndFunc   ;==>TranslateTroopNames
+
 
 ; Upgrading - Heroes
 ; Barbarian King/Queen Upgrade Costs = Dark Elixir in xxxK
@@ -1940,6 +1912,8 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
 		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
 		[0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
+		
 
-
-#include "xbebenk_mod\Globals_xbebenk.au3" ; xbebenk
+;Misc Mod
+Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = False, $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False, $g_bTrainPreviousArmy = False
+Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0

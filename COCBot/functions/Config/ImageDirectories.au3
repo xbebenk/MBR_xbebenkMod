@@ -71,7 +71,7 @@ Global $g_sImgBoostTroopsClock = @ScriptDir & "\imgxml\SuperTroops\Clock\"
 Global $g_sImgSTProgress = @ScriptDir & "\imgxml\SuperTroops\Progress\Progress*.xml"
 #EndRegion
 
-#cs Region Builder Base
+#Region Builder Base
 Global $g_sImgCollectRessourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect"
 Global $g_sImgBoatBB = @ScriptDir & "\imgxml\Boat\BoatBuilderBase*"
 Global $g_sImgZoomOutDirBB = @ScriptDir & "\imgxml\village\BuilderBase\"
@@ -95,33 +95,6 @@ Global $g_sImgArmyNeedTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyNeedT
 Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\BBTroops"
 Global $g_sImgBBLootAvail = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\LootAvail_0_90.xml"
 Global $g_sImgBBLoot = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\"
-#ce EndRegion
-
-#Region Builder Base
-Global $g_sImgCollectRessourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect"
-Global $g_sImgBoatBB = @ScriptDir & "\imgxml\Boat\BoatBuilderBase_0_89.xml"
-Global $g_sImgZoomOutDirBB = @ScriptDir & "\imgxml\village\BuilderBase\"
-Global $g_sImgStartCTBoost = @ScriptDir & "\imgxml\Resources\BuildersBase\ClockTower\ClockTowerAvailable*.xml"
-Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"
-Global $g_sImgIsOnBB = @ScriptDir & "\imgxml\village\Page\BuilderBase\"
-Global $g_sImgStarLaboratory = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory"
-Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
-
-#Region AIO MOD
-Global Const $g_sImgFullArmyBB = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyStatus\Full\"
-Global Const $g_sImgHeroStatusRec = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyStatus\Hero\Recovering\"
-Global Const $g_sImgHeroStatusUpg = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyStatus\Hero\Upgrading\"
-Global Const $g_sImgHeroStatusMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyStatus\Hero\Battle Machine\"
-#EndRegion AIO MOD
-
-;Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBMachReady_0_90.xml" ; Custom BB - Team AIO Mod++
-Global $g_sImgBBNeedTrainTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\TroopStatus\BBNeedTrainTroops_0_90.xml"
-Global $g_sImgBBTroopsTraining = @ScriptDir & "\imgxml\Attack\BuilderBase\TroopStatus\BBTroopsTraining_0_90.xml"
-Global $g_sImgBBBattleStarted = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleStarted\BBBattleStarted_0_90.xml"
-Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBBattleMachine_0_90.xml"
-Global $g_sImgOkButton = @ScriptDir & "\imgxml\Attack\BuilderBase\OkayButton\OkayButton_0_90.xml"
-Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\BBTroops"
-; Global $g_sImgBBLootAvail = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\LootAvail_0_90.xml" ; Custom BB - Team AIO Mod++
 #EndRegion
 
 #Region DonateCC
