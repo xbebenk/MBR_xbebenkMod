@@ -78,7 +78,7 @@ Func _ClanGames($test = False)
 					If IsEventRunning() Then Return
 					$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
 					Setlog("Clan Games Minute Remain: " & $sTimeCG)
-					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1200 Then ; purge, but not purge on last day of clangames
+					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1440 Then ; purge, but not purge on last day of clangames
 						SetLog("Stop before completing your limit and only Purge")
 						SetLog("Lets only purge 1 most top event", $COLOR_WARNING)
 						ForcePurgeEvent(False, True)
