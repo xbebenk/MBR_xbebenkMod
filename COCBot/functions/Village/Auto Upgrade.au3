@@ -549,7 +549,6 @@ Func UpgradeNewBuilding($bTest = False)
 	If _Sleep(500) Then Return
 	
 	Local $b_BuildingFound = False, $ZoomedIn = False
-	Local $tmpName
 	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
 		Local $NeedDrag = True
@@ -572,14 +571,6 @@ Func UpgradeNewBuilding($bTest = False)
 			Else
 				SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
 				If $z > 6 And $i = 9 Then $NeedDrag = False ; sudah 7 kali scroll tapi yang paling bawah masih bukan new building
-			EndIf
-			
-			If $z > 0 And $i = 9 Then 
-				Click(400, 350) ;click most bottom
-				If _Sleep(500) Then Return
-				Local $name = BuildingInfo(242, 490 + $g_iBottomOffsetY)
-				If $name[1] = $tmpName Then $NeedDrag = False
-				$tmpName = $name[1] 
 			EndIf
 			
 			If $b_BuildingFound Then 
