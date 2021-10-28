@@ -16,15 +16,10 @@
 
 Func DoAttackBB()
 	If Not $g_bChkEnableBBAttack Then Return
-	
 	If $g_iBBAttackCount = 0 Then 
 		Local $count = 1
 		While PrepareAttackBB()
 			If Not $g_bRunState Then Return
-			If (isGoldFullBB() Or isElixirFullBB()) And $g_iChkBBSuggestedUpgradesOTTO Then
-				SetLog("BuilderBase Gold Or Elixir is nearly full", $COLOR_INFO) 
-				ExitLoop
-			EndIf
 			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			AttackBB()
@@ -53,10 +48,6 @@ Func DoAttackBB()
 	Else
 		For $i = 1 To $g_iBBAttackCount
 			If Not $g_bRunState Then Return
-			If (isGoldFullBB() Or isElixirFullBB()) And $g_iChkBBSuggestedUpgradesOTTO Then
-				SetLog("BuilderBase Gold Or Elixir is nearly full", $COLOR_INFO) 
-				ExitLoop
-			EndIf
 			If PrepareAttackBB() Then
 				SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 				SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
@@ -108,12 +99,6 @@ Func AttackBB()
 	EndIf
 
 	If _Sleep(1500) Then Return ; give time for find now button to go away
-	If _CheckPixel($aBBFindNow, True) Then ; click failed so something went wrong
-		SetLog("Click BB Find Now failed. We will come back and try again.", $COLOR_ERROR)
-		ClickAway("Left")
-		ZoomOut()
-		Return False
-	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
 	

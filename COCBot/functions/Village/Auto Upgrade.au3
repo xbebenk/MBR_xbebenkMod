@@ -574,13 +574,21 @@ Func UpgradeNewBuilding($bTest = False)
 				If $z > 6 And $i = 9 Then $NeedDrag = False ; sudah 7 kali scroll tapi yang paling bawah masih bukan new building
 			EndIf
 			
+			If $z > 0 And $i = 9 Then 
+				Click(400, 350) ;click most bottom
+				If _Sleep(500) Then Return
+				Local $name = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+				If $name[1] = $tmpName Then $NeedDrag = False
+				$tmpName = $name[1] 
+			EndIf
+			
 			If $b_BuildingFound Then 
 				ClickAway()
 				If Not $ZoomedIn Then
 					If SearchGreenZone() Then 
 						$ZoomedIn = True
 					Else
-						Return
+						ExitLoop 2 ;zoomin failed, cancel placing newbuilding
 					EndIf
 				EndIf
 				ClickMainBuilder($bTest)
@@ -614,14 +622,6 @@ Func UpgradeNewBuilding($bTest = False)
 					ExitLoop
 				EndIf 
 			EndIf
-		EndIf
-		
-		If $z > 0 And $i = 9 Then 
-			Click(400, 350) ;click most bottom
-			If _Sleep(500) Then Return
-			Local $name = BuildingInfo(242, 490 + $g_iBottomOffsetY)
-			If $name[1] = $tmpName Then $NeedDrag = False
-			$tmpName = $name[1] 
 		EndIf
 		
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop

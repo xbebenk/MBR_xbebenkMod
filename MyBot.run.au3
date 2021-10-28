@@ -1384,9 +1384,9 @@ Func BuilderBase()
 
 		$g_bStayOnBuilderBase = True
 		If _Sleep($DELAYRUNBOT3) Then Return
+		AndroidAdbScript("ZoomOut")
 		If checkObstacles() Then Return
-		ZoomOut()
-
+		
 		BuilderBaseReport()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return

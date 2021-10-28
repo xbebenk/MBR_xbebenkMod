@@ -137,7 +137,7 @@ Local $BuildingUpgraded = False
 
 ; MAIN CODE
 Func AutoUpgradeBB($bTest = False)
-
+	If $g_bRestart Then Return
 	; If is not selected return
 	If $g_iChkBBSuggestedUpgrades = 0 Then Return
 	Local $bDebug = $g_bDebugImageSave
@@ -161,6 +161,7 @@ Func AutoUpgradeBB($bTest = False)
 					ClickOnBuilder($bTest)
 					ClickDrag(400, 100, 400, 800, 1000);do scroll down
 					If _Sleep(5000) Then Return
+					If $g_bRestart Then Return
 				Else
 					ZoomOut()
 					ClickAway()
@@ -168,6 +169,7 @@ Func AutoUpgradeBB($bTest = False)
 					ClickOnBuilder($bTest)
 					ClickDrag(400, 100, 400, 800, 1000);do scroll down
 					If _Sleep(5000) Then Return
+					If $g_bRestart Then Return
 				EndIf
 			EndIf
 			
@@ -291,7 +293,7 @@ Func ClickOnBuilder($bTest = False, $Counter = 1)
 	; open the builders menu
 	Click(360, 11)
 	If _Sleep(1000) Then Return
-	If (_ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) = True) Then
+	If _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) Then
 		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
@@ -337,7 +339,7 @@ EndFunc   ;==>GetIconPosition
 Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 	Local $OptimizeOTTO[13] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "D uble Cannon", "Post", "Barracks", "Wall"]
 	;Local $aBtnPos = [360, 500, 180, 50] ; x, y, w, h
-	Local $aBtnPos = [360, 460, 380, 120] ; x, y, w, h ; support Battke Machine, broken and upgrade
+	Local $aBtnPos = [360, 460, 380, 120] ; x, y, w, h ; support Battle Machine, broken and upgrade
 	
 	If $sUpgButtom = "" Then Return
 
@@ -397,7 +399,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 			Click($g_iQuickMISX + 218, $g_iQuickMISY + 544, 1)
 			If _Sleep(1500) Then Return
 
-			If QuickMIS("BC1", $sUpgButtom, 300, 440, 600, 600, True, $Debug) Then
+			If QuickMIS("BC1", $sUpgButtom, 300, 440, 760, 620, True, $Debug) Then
 				If Not $bTest Then 
 					Click($g_iQuickMISX + 300, $g_iQuickMISY + 440, 1)
 					BBAutoUpgradeLog($aBuildingName)
@@ -430,7 +432,7 @@ EndFunc   ;==>GetUpgradeButton
 Func SearchNewBuilding($bTest = False)
 	Local $bDebug = $g_bDebugImageSave
 	Local $bScreencap = True
-	Local $NeedDrag = True
+	Local $NeedDrag = True, $ZoomedIn = False
 	For $z = 0 To 6 ;for do scroll 3 times
 		If _Sleep(50) Then Return
 		If $g_bRestart Then Return
@@ -452,7 +454,7 @@ Func SearchNewBuilding($bTest = False)
 					If $z > 1 And $i = 9 Then $NeedDrag = False ; sudah 2 kali scroll tapi yang paling bawah bukan new building
 				EndIf
 			Else
-				If $z > 2 And $i = 9 Then 
+				If $z > 1 And $i = 9 Then 
 					Local $NoRes = decodeSingleCoord(findImage("Zero", $g_sImgAutoUpgradeNoRes & "\No*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
 					If IsArray($NoRes) And UBound($NoRes) = 2 Then
 						SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
@@ -465,11 +467,17 @@ Func SearchNewBuilding($bTest = False)
 				EndIf
 				$b_BuildingFound = False
 			EndIf
-			
+				
 			If $b_BuildingFound Then 
 				ClickAway()
 				If _Sleep(500) Then Return
-				If Not SearchGreenZoneBB() Then Return
+				If Not $ZoomedIn Then
+					If SearchGreenZoneBB() Then 
+						$ZoomedIn = True
+					Else
+						ExitLoop 2 ;zoomin failed, cancel placing newbuilding
+					EndIf
+				EndIf
 				ClickOnBuilder($bTest)
 				If NewBuildings($ZeroCoord[0], $ZeroCoord[1], $bTest) Then
 					ClickOnBuilder($bTest)

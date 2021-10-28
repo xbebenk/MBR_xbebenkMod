@@ -14,11 +14,10 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($bCheck = False)
-
+	
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 		Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
-		SetLog("We are going to attack no matter what!!", $COLOR_DEBUG)
 		If Not ClickAttack() Then Return False
 		_Sleep(1500)
 		CheckArmyReady()
@@ -26,7 +25,12 @@ Func PrepareAttackBB($bCheck = False)
 		$g_bBBMachineReady = CheckMachReady()
 		Return True
 	EndIf
-
+	
+	If ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB) And $g_iChkBBSuggestedUpgradesOTTO Then 
+		Setlog("Gold or Elixir is nearly full", $COLOR_DEBUG)
+		Return False
+	EndIf
+	
 	If $g_bChkBBTrophyRange Then
 		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
 			SetLog("Trophies out of range.")
@@ -38,19 +42,18 @@ Func PrepareAttackBB($bCheck = False)
 	
 	If Not $g_bRunState Then Return ; Stop Button
 
-
 	If Not ClickAttack() Then Return False
-	_Sleep(1000)
+	_Sleep(500)
 
 	If Not CheckArmyReady() Then
-		_Sleep(1500)
+		_Sleep(500)
 		ClickAway()
 		Return False
 	EndIf
 
 	If $g_bChkBBAttIfLootAvail Then
 		If Not CheckLootAvail() Then
-			_Sleep(1500)
+			_Sleep(500)
 			ClickAway()
 			Return False
 		EndIf
@@ -59,7 +62,7 @@ Func PrepareAttackBB($bCheck = False)
 	$g_bBBMachineReady = CheckMachReady()
 	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
-		_Sleep(1500)
+		_Sleep(500)
 		ClickAway()
 		Return False
 	EndIf
@@ -80,19 +83,18 @@ Func ClickAttack()
 		$bRet = True
 	Else
 		SetLog("Can not find button for Builders Base Attack button", $COLOR_ERROR)
-		If $g_bDebugImageSave Then SaveDebugImage("BBAttack_ButtonCheck_")
 	EndIf
+	_Sleep(500)
 	Return $bRet
 EndFunc
 
 Func CheckLootAvail()
 	local $bRet = False
-	If QuickMIS("BC1", $g_sImgBBLoot, 430, 580, 650, 690, True, False) Then
+	If Not _ColorCheck(_GetPixelColor(621, 666, True), Hex(0xFFFFFF, 6), 1) Then
 		SetLog("Loot is Available.")
 		$bRet = True
 	Else
 		SetLog("No loot available.")
-		If $g_bDebugImageSave Then SaveDebugImage("CheckLootAvail")
 	EndIf
 	Return $bRet
 EndFunc
@@ -104,8 +106,6 @@ Func CheckMachReady()
 	If IsArray($aCoords) And UBound($aCoords) = 2 Then
 		$bRet = True
 		SetLog("Battle Machine ready.")
-	Else
-		If $g_bDebugImageSave Then SaveDebugImage("CheckMachReady")
 	EndIf
 	Return $bRet
 EndFunc

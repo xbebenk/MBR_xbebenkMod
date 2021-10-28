@@ -297,6 +297,7 @@ Func smartZap($minDE = -1)
 			Next
 			If $tLastZap > 0 Then
 				;If _Sleep(_Max($DELAYSMARTZAP10 - $tLastZap, 0)) Then Return ; 10 seconds since zap to disappear dust and bars
+				If _Sleep(1000) Then Return
 				Local $sToDelete = ""
 				Local $iToDelete = 0
 				For $i = 0 To UBound($aCluster[3]) - 1
@@ -328,6 +329,7 @@ Func smartZap($minDE = -1)
 		EndIf
 		If $aCluster = -1 And $aDarkDrills[0][4] <> 0 Then
 			;If _Sleep(_Max($DELAYSMARTZAP10 - __TimerDiff($aDarkDrills[0][4]), 0)) Then Return ; 10 seconds since zap to disappear dust and bars
+			If _Sleep(1000) Then Return
 			If ReCheckDrillExist($aDarkDrills[0][0], $aDarkDrills[0][1]) Then
 				$aDarkDrills[0][4] = 0
 			Else
@@ -373,7 +375,7 @@ Func smartZap($minDE = -1)
 
 				$performedZap = True
 				$skippedZap = False
-				If _Sleep($DELAYSMARTZAP2) Then Return
+				If _Sleep(1000) Then Return
 
 				; If you have one less then max, drop it on drills with level (4 - drill offset) and higher
 			ElseIf $aSpells[0][4] + $aSpells[1][4] + $aSpells[2][4] > (3 - $spellAdjust) And $aDarkDrills[0][2] > (3 - $drillLvlOffset) Then
@@ -612,7 +614,7 @@ Func smartZap($minDE = -1)
 	While IsAttackPage() And $aSpells[0][4] + $aSpells[1][4] > 0 And UBound($aEasyPrey) > 0 And Not _CheckPixel($aWonOneStar, True)
 		$Spellused = zapBuilding($aSpells, $aEasyPrey[0][0] + 5, $aEasyPrey[0][1] + 5)
 		_ArrayDelete($aEasyPrey, 0)
-		If _Sleep(6000) Then Return
+		If _Sleep(1000) Then Return
 	Wend
 
 	If _CheckPixel($aWonOneStar, True) Then

@@ -24,6 +24,7 @@ Func _ClanGames($test = False)
 
 	ClickAway()
 	CheckMainScreen(False)
+	If _Sleep(500) Then Return
 	SetLog("Entering Clan Games", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	; Local and Static Variables
