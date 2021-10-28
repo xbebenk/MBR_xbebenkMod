@@ -148,22 +148,6 @@ Func smartZap($minDE = -1)
 	EndIf
 
 	If $bZapDrills Then
-		; Check to make sure the account is high enough level to store DE.
-		If $g_iTownHallLevel < 2 Then
-			SetLog("Your Townhalllevel has yet to be determined.", $COLOR_ERROR)
-			SetLog("It reads as TH" & $g_iTownHallLevel & ".", $COLOR_ERROR)
-			SetLog("Locate your Townhall manually at Village->Misc.", $COLOR_ERROR)
-			$bZapDrills = False
-		ElseIf $g_iTownHallLevel < 7 Then
-			SetLog("You do not have the ability to store Dark Elixir!", $COLOR_ERROR)
-			If $g_bDebugSmartZap Then SetLog("Your Town Hall Lvl: " & Number($g_iTownHallLevel), $COLOR_DEBUG)
-			$bZapDrills = False
-		Else
-			If $g_bDebugSmartZap Then SetLog("Your Town Hall Lvl: " & Number($g_iTownHallLevel), $COLOR_DEBUG)
-		EndIf
-	EndIf
-
-	If $bZapDrills Then
 		; Check match mode
 		If $g_bDebugSmartZap Then SetLog("$g_bSmartZapDB = " & $g_bSmartZapDB, $COLOR_DEBUG)
 		If $g_bSmartZapDB And $g_iMatchMode <> $DB Then
