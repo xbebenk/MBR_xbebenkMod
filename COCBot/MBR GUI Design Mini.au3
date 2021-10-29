@@ -120,6 +120,7 @@ Global $g_oCtrlIconData = ObjCreate("Scripting.Dictionary")
 	#include "GUI\MBR GUI Design Bot.au3"
 #ce
 #include "GUI\MBR GUI Design About.au3"
+#include "GUI\MBR GUI Design BuilderBase.au3"
 
 Func CreateMainGUI()
 
