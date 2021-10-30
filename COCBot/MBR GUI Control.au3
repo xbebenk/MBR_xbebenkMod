@@ -455,7 +455,7 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 
 	; WM_SYSCOMAND msdn: https://msdn.microsoft.com/en-us/library/windows/desktop/ms646360(v=vs.85).aspx
 	CheckRedrawBotWindow(Default, Default, "GUIControl_WM_COMMAND")
-	
+
 	Switch $nID
 		Case $g_hTxtRunFunction
 			Local $Focused
@@ -467,7 +467,7 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 				HotKeySet("{enter}")
 				;SetDebugLog("inputRunFunction not Focused: " & $Focused, Default, True)
 			EndIf
-			
+
 		Case $g_hDivider
 			;MoveDivider()
 			$g_bMoveDivider = True
@@ -1148,7 +1148,7 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hTabLog)
 			GUICtrlDelete($g_hTabVillage)
 			GUICtrlDelete($g_hTabAttack)
-			GUICtrlDelete($g_hGUI_BuilderBase)
+			GUICtrlDelete($g_hGUI_BB)
 			GUICtrlDelete($g_hTabBot)
 			GUICtrlDelete($g_hTabAbout)
 
@@ -1709,7 +1709,7 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
-			GUISetState(@SW_HIDE, $g_hGUI_BuilderBase)
+			GUISetState(@SW_HIDE, $g_hGUI_BB)
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_LOG)
 
@@ -1717,7 +1717,7 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
-			GUISetState(@SW_HIDE, $g_hGUI_BuilderBase)
+			GUISetState(@SW_HIDE, $g_hGUI_BB)
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_VILLAGE)
 			tabVillage()
@@ -1726,25 +1726,25 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
-			GUISetState(@SW_HIDE, $g_hGUI_BuilderBase)
+			GUISetState(@SW_HIDE, $g_hGUI_BB)
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK)
 			tabAttack()
-		
+
 		Case $tabidx = 3 ; BuilderBase
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
-			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BuilderBase)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BB)
 			tabBuilderBase()
-		
+
 		Case $tabidx = 4 ; Bot
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-			GUISetState(@SW_HIDE, $g_hGUI_BuilderBase)
+			GUISetState(@SW_HIDE, $g_hGUI_BB)
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BOT)
 			tabBot()
@@ -1753,7 +1753,7 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
-			GUISetState(@SW_HIDE, $g_hGUI_BuilderBase)
+			GUISetState(@SW_HIDE, $g_hGUI_BB)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
 
@@ -1762,7 +1762,7 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
-			GUISetState(@SW_HIDE, $g_hGUI_BuilderBase)
+			GUISetState(@SW_HIDE, $g_hGUI_BB)
 	EndSelect
 
 EndFunc   ;==>tabMain
@@ -1971,8 +1971,8 @@ EndFunc   ;==>tabDONATE
 
 Func tabBuilderBase()
 	If $g_iGuiMode <> 1 Then Return
-	Local $tabidx = GUICtrlRead($g_hGUI_BuilderBase)
-	Select 
+	Local $tabidx = GUICtrlRead($g_hGUI_BB)
+	Select
 		Case $tabidx = 0 ;BB Play
 		Case $tabidx = 1 ;BB Attack
 	EndSelect
