@@ -1974,7 +1974,11 @@ Func tabBuilderBase()
 	Local $tabidx = GUICtrlRead($g_hGUI_BB)
 	Select
 		Case $tabidx = 0 ;BB Play
+			GUISetState(@SW_HIDE, $g_hGUI_BB_TAB_ITEM2)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BB_TAB_ITEM1)
 		Case $tabidx = 1 ;BB Attack
+			GUISetState(@SW_HIDE, $g_hGUI_BB_TAB_ITEM1)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BB_TAB_ITEM2)
 	EndSelect
 EndFunc
 
