@@ -151,7 +151,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 					Return checkObstacles_StopBot($msg) ; stop bot
 				EndIf
 				SetLog("Connection lost, Reloading CoC", $COLOR_ERROR)
-				If ($g_bChkSharedPrefs Or $g_bUpdateSharedPrefs) And HaveSharedPrefs() Then
+				If $g_bChkSharedPrefs And HaveSharedPrefs() Then
 					SetLog("Please wait for loading CoC!")
 					PushSharedPrefs()
 					If Not $bRecursive Then OpenCoC()

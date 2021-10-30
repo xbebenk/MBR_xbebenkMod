@@ -90,11 +90,11 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 		EndIf
 	WEnd
 	
-	If $bLocated Then
-		; check that shared_prefs are pulled
-		If $g_bUpdateSharedPrefs And Not HaveSharedPrefs() Then PullSharedPrefs()
-		ZoomOut()
-	EndIf
+	;If $bLocated Then
+	;	; check that shared_prefs are pulled
+	;	If $g_bUpdateSharedPrefs And Not HaveSharedPrefs() Then PullSharedPrefs()
+	;	ZoomOut()
+	;EndIf
 	If Not $g_bRunState Then Return False
 
 	If $bSetLog Then

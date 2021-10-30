@@ -1017,7 +1017,7 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 			_ClanGames() ;Trying to do this above in the main loop
 			;ClickAway()
 			If Not $g_bRunState Then Return
-			If $g_bUpdateSharedPrefs Then PullSharedPrefs()
+			If $g_bUpdateSharedPrefs And $g_bChkSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
 			If Not $g_bRunState Then Return
 			If $g_bOutOfGold Then Return ; Check flag for enough gold to search
