@@ -275,6 +275,7 @@ Func InitializeControlVariables()
 	$oAlwaysEnabledControls($g_hTabLog) = 1
 	$oAlwaysEnabledControls($g_hTabVillage) = 1
 	$oAlwaysEnabledControls($g_hTabAttack) = 1
+	$oAlwaysEnabledControls($g_hTabBuilderBase) = 1
 	$oAlwaysEnabledControls($g_hTabBot) = 1
 	$oAlwaysEnabledControls($g_hTabAbout) = 1
 	
@@ -319,6 +320,9 @@ Func InitializeControlVariables()
 		$oAlwaysEnabledControls($i) = 1
 	Next
 	For $i in $aTabControlsStrategies
+		$oAlwaysEnabledControls($i) = 1
+	Next
+	For $i in $aTabControlsBuilderBase
 		$oAlwaysEnabledControls($i) = 1
 	Next
 	For $i in $aTabControlsBot
