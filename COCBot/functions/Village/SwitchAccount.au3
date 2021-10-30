@@ -668,7 +668,7 @@ Func SwitchCOCAcc_ConnectedSCID(ByRef $bResult)
 EndFunc   ;==>SwitchCOCAcc_ConnectedSCID
 
 Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
-	Local $sAccountDiamond = GetDiamondFromRect("440,353,859,732") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
+	Local $sAccountDiamond = GetDiamondFromRect("750,330,840,710") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
     Local $aSuperCellIDWindowsUI
 	Local $iIndexSCID = $NextAccount
 	Local $aSearchForAccount, $aCoordinates[0][2], $aTempArray
@@ -678,6 +678,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("440,1,859,243"), 1, True, Default))
 		If _Sleep(500) Then Return "Exit"
 		If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
+			ClickDrag(650, 375, 650, 800, 500)
 			SCIDragIfNeeded($NextAccount) ; Make Drag only when SCID window is visible.
 			$aSearchForAccount = decodeMultipleCoords(findImage("Account Locations", $g_sImgSupercellIDSlots, $sAccountDiamond, 0, True, Default))
 			If _Sleep(500) Then Return "Exit"
@@ -1050,7 +1051,9 @@ EndFunc   ;==>SwitchAccountCheckProfileInUse
 Func SCIDragIfNeeded($iSCIDAccount)
 	If Not $g_bRunState Then Return
 	If $iSCIDAccount < 4 Then Return
-	If _Sleep(1000) Then Return
-	ClickDrag(450, 600, 450, 600 - (95 * ($iSCIDAccount - 3)), 2000, True) ; drag a multiple of 95 pixels up for how many accounts down it is
+	For $i = 0 To $iSCIDAccount - 4
+		AndroidAdbScript("ClickDragSCID")
+		If _Sleep(1000) Then Return
+	Next
 EndFunc   ;==>SCIDragIfNeeded
 
