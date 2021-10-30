@@ -28,9 +28,9 @@ Func CreateBuilderBaseTab()
 	$g_hGUI_BB_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
 	$g_hGUI_BB_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Builderbase_TAB_ITEM1", "BB Play"))
 		CreateBBPlaySubTab()
-		;CreateBBDropOrderGUI()
 	$g_hGUI_BB_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Builderbase_TAB_ITEM2", "BB Attack"))
 		CreateBBAttackSubTab()
+		CreateBBDropOrderGUI()
 	GUICtrlCreateTabItem("")
 EndFunc 
 
@@ -187,8 +187,13 @@ Func CreateBBPlaySubTab()
 
 EndFunc   ;==>CreateBBPlaySubTab
 
+
+Global $g_hIcnTroopBB[6]
+Global $g_hComboTroopBB[6]
+Global $g_hChkBBCustomArmyEnable = 0
+
 Func CreateBBAttackSubTab()
-	Local $x = 15, $y = 45
+	Local $x = 15, $y = 25
 	Local $iBBAttackGroupSize = 110
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_13", "Builders Base Attacking"), $x - 10,  $y, $g_iSizeWGrpTab2, $iBBAttackGroupSize)
 		$g_hChkEnableBBAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack", "Attack"), $x + 20, $y + 30, -1, -1)
@@ -249,4 +254,73 @@ Func CreateBBAttackSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBBMDropFirst_01", "Check to drop BM first in battles."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
+	$y += $iBBAttackGroupSize + 5
+	$iBBAttackGroupSize = 85
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_01", "Train Army"), $x - 10,  $y, $g_iSizeWGrpTab2, $iBBAttackGroupSize)
+	
+	Static $sTroops = ""
+	If $sTroops = "" Then
+		For $i = 1 To UBound($g_avStarLabTroops) - 1
+			$sTroops &= $g_avStarLabTroops[$i][3] & "|"
+		Next
+	EndIf
+	
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp1", "Army Camp 1"), $x + 5, $y + 15)
+	$g_hComboTroopBB[0] = GUICtrlCreateCombo("", $x + 5, $y + 30, 62, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
+	GUICtrlSetData(-1, $sTroops, "0")
+	_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[0], 0)
+	GUICtrlSetOnEvent(-1, "GUIBBCustomArmy")
+	$g_hIcnTroopBB[0] = _GUICtrlCreateIcon($g_sLibIconPath, $g_avStarLabTroops[1][4], $x + 5 + 19, $y + 54, 24, 24)
+
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp2", "Army Camp 2"), $x + 75, $y + 15)
+	$g_hComboTroopBB[1] = GUICtrlCreateCombo("", $x + 75, $y + 30, 62, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
+	GUICtrlSetData(-1, $sTroops, "0")
+	_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[1], 0)
+	GUICtrlSetOnEvent(-1, "GUIBBCustomArmy")
+	$g_hIcnTroopBB[1] = _GUICtrlCreateIcon($g_sLibIconPath, $g_avStarLabTroops[1][4], $x + 75 + 19, $y + 54, 24, 24)
+
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp3", "Army Camp 3"), $x + 145, $y + 15)
+	$g_hComboTroopBB[2] = GUICtrlCreateCombo("", $x + 145, $y + 30, 62, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
+	GUICtrlSetData(-1, $sTroops, "0")
+	_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[2], 0)
+	GUICtrlSetOnEvent(-1, "GUIBBCustomArmy")
+	$g_hIcnTroopBB[2] = _GUICtrlCreateIcon($g_sLibIconPath, $g_avStarLabTroops[1][4], $x + 145 + 19, $y + 54, 24, 24)
+
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp4", "Army Camp 4"), $x + 215, $y + 15)
+	$g_hComboTroopBB[3] = GUICtrlCreateCombo("", $x + 215, $y + 30, 62, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
+	GUICtrlSetData(-1, $sTroops, "0")
+	_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[3], 0)
+	GUICtrlSetOnEvent(-1, "GUIBBCustomArmy")
+	$g_hIcnTroopBB[3] = _GUICtrlCreateIcon($g_sLibIconPath, $g_avStarLabTroops[1][4], $x + 215 + 19, $y + 54, 24, 24)
+
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp5", "Army Camp 5"), $x + 285, $y + 15)
+	$g_hComboTroopBB[4] = GUICtrlCreateCombo("", $x + 285, $y + 30, 62, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
+	GUICtrlSetData(-1, $sTroops, "0")
+	_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[4], 0)
+	GUICtrlSetOnEvent(-1, "GUIBBCustomArmy")
+	$g_hIcnTroopBB[4] = _GUICtrlCreateIcon($g_sLibIconPath, $g_avStarLabTroops[1][4], $x + 285 + 19, $y + 54, 24, 24)
+
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp6", "Army Camp 6"), $x + 355, $y + 15)
+	$g_hComboTroopBB[5] = GUICtrlCreateCombo("", $x + 355, $y + 30, 62, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
+	GUICtrlSetData(-1, $sTroops, "0")
+	_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[5], 0)
+	GUICtrlSetOnEvent(-1, "GUIBBCustomArmy")
+	$g_hIcnTroopBB[5] = _GUICtrlCreateIcon($g_sLibIconPath, $g_avStarLabTroops[1][4], $x + 355 + 19, $y + 54, 24, 24)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
 EndFunc
+
+Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
+
+Func GUIBBCustomArmy()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	Local $iDropIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
+
+	For $i = 0 To UBound($g_hComboTroopBB) - 1
+		If $iGUI_CtrlId = $g_hComboTroopBB[$i] Then
+			_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$iDropIndex + 1][4])
+			$g_iCmbCampsBB[$i] = $iDropIndex
+		EndIf
+	Next
+EndFunc   ;==>GUIBBCustomArmy
