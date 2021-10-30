@@ -1232,7 +1232,7 @@ Func FirstCheck()
 	Local $iTownHallLevel = $g_iTownHallLevel
 	SetLog("Detecting Town Hall level", $COLOR_INFO)
 	SetLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
-
+	Collect(False) ;collect but skip treasury
 	If $g_aiTownHallPos[0] > -1 Then
 		Click($g_aiTownHallPos[0], $g_aiTownHallPos[1])
 		If _Sleep(800) Then Return
@@ -1270,7 +1270,6 @@ Func FirstCheck()
 	EndIf
 
 	If Not $g_bRunState Then Return
-	Collect(False) ;collect but skip treasury
 	VillageReport()
 
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
@@ -1346,7 +1345,7 @@ Func FirstCheckRoutine()
 			If $g_bIsFullArmywithHeroesAndSpells Then
 				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 					Setlog("Before any other routine let's attack!", $COLOR_INFO)
-					$g_bRestart = False ;idk this flage make sometimes bot cannot attack on second time
+					$g_bRestart = False ;idk this flag make sometimes bot cannot attack on second time
 					AttackMain(True)
 					If $g_bOutOfGold Then
 						SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
