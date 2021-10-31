@@ -52,7 +52,8 @@ EndFunc   ;==>BuilderBaseReport
 Func isBHMaxed()
 	ClickAway()
 	Local $sBHCoords
-	$sBHCoords = findImage("BuilderHall", $g_sImgBuilderHall, "FV", 1, True) ; Search for Clock Tower
+	Local $sSLcoords
+	$sBHCoords = findImage("BuilderHall", $g_sImgBuilderHall, "FV", 1, True) ; Search for Builder Hall
 	If $sBHCoords <> "" Then
 		$sBHCoords = StringSplit($sBHCoords, ",", $STR_NOCOUNT)
 		ClickP($sBHCoords)
@@ -67,10 +68,30 @@ Func isBHMaxed()
 				Else
 					SetLog("Your Builder Hall Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
 				EndIf
+				$g_iBHLevel = $aBuildingName[2]
 			Endif
 		EndIf
 	Else
-		Setlog("isBHMaxed(): Cannot Find Builder Hall", $COLOR_DEBUG)
+		Setlog("isBHMaxed(): Cannot Find Builder Hall, Trying to find Star Lab to guess your Builder Hall level!", $COLOR_DEBUG)
+		; If Builder Hall cannot be found, try search for lab
+		If LocateStarLab() Then 
+			Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
+			If $aBuildingName[0] = 2 Then
+				; Verify if is Star Laboratory and max level
+				If $aBuildingName[1] = "Star Laboratory" Then
+					If $aBuildingName[2] = 9 Then
+						SetLog("Your Builder Hall is Maxed!", $COLOR_SUCCESS)
+						$g_bisBHMaxed = True
+						Return True
+					Else
+						SetLog("Your Builder Hall Level must be : " & $aBuildingName[2], $COLOR_SUCCESS)
+					EndIf
+					$g_iBHLevel = $aBuildingName[2]
+				Endif
+			EndIf
+		Else
+			Setlog("isBHMaxed(): Cannot Find Builder Hall and Star Lab", $COLOR_DEBUG)
+		EndIf
 	EndIf
 	Return False
 EndFunc
