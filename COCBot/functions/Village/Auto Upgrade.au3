@@ -609,9 +609,9 @@ Func UpgradeNewBuilding($bTest = False)
 					Endif
 				Else
 					SetLog("But, No Resource", $COLOR_DEBUG)
-					SetLog("Skip Search NewBuilding, TH Found = No NewBuilding", $COLOR_DEBUG)
-					ExitLoop
 				EndIf 
+				SetLog("Skip Search NewBuilding, TH Found = No NewBuilding", $COLOR_DEBUG)
+				ExitLoop
 			EndIf
 		EndIf
 		
