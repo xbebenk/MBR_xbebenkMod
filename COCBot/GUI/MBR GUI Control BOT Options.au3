@@ -310,7 +310,7 @@ Func cmbTotalAcc()
 	Local $iCmbTotalAcc = _GUICtrlComboBox_GetCurSel($g_hCmbTotalAccount) + 1 ; combobox data starts with 2
 	
 	If $iCmbTotalAcc > 7 Then
-		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE + $GUI_CHECKED)
+		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE)
 		GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_DISABLE)
 		GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_ENABLE)
 	Else
