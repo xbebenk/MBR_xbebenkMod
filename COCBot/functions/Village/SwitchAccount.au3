@@ -678,13 +678,13 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("440,1,859,243"), 1, True, Default))
 		If _Sleep(500) Then Return "Exit"
 		If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
-			ClickDrag(650, 375, 650, 800, 500)
+			;ClickDrag(650, 375, 650, 800, 500)
 			SCIDragIfNeeded($NextAccount) ; Make Drag only when SCID window is visible.
 			$aSearchForAccount = decodeMultipleCoords(findImage("Account Locations", $g_sImgSupercellIDSlots, $sAccountDiamond, 0, True, Default))
 			If _Sleep(500) Then Return "Exit"
 			If Not $g_bRunState Then Return "Exit"
 			If IsArray($aSearchForAccount) And UBound($aSearchForAccount) > 0 Then
-				SetDebugLog("SCID Accounts: " & UBound($aSearchForAccount), $COLOR_DEBUG)
+				SetLog("SCID Accounts: " & UBound($aSearchForAccount), $COLOR_DEBUG)
 
 				; Correct Index for Profile if needs to drag
 				If $NextAccount >= 3 and UBound($aSearchForAccount) == 4 Then $iIndexSCID = 3 ; based on drag logic, the account will always be the bottom one
@@ -700,7 +700,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 				; list all account see-able after drag on debug chat
 				Local $iProfiles = UBound($g_asProfileName)
 				For $j = 0 To UBound($aCoordinates) - 1
-					SetDebugLog("[" & $j & "] Account coordinates: " & $aCoordinates[$j][0] & "," & $aCoordinates[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
+					SetLog("[" & $j & "] Account coordinates: " & $aCoordinates[$j][0] & "," & $aCoordinates[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
 				Next
 
 				SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
