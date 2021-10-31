@@ -1230,6 +1230,7 @@ Func FirstCheck()
 
 	;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
+	Local $bLocateTH = False
 	SetLog("Detecting Town Hall level", $COLOR_INFO)
 	SetLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
 	Collect(False) ;collect but skip treasury
@@ -1240,8 +1241,12 @@ Func FirstCheck()
 		If $BuildingInfo[1] = "Town Hall" Then
 			$g_iTownHallLevel =  $BuildingInfo[2]
 		Else
-			imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
+			$bLocateTH = True
 		EndIf
+	EndIf
+	
+	If $g_iTownHallLevel = 0 Or $bLocateTH Then
+		imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
 	EndIf
 	
 	SetLog("Detected Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
