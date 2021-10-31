@@ -1628,7 +1628,7 @@ EndFunc   ;==>CreateMultiStatsSubTab1
 
 Func CreateMultiStatsSubTab2()
 
-	For $i = 0 To 1
+	For $i = 0 To 7
 		Local $x = 25
 		Local $y = 27
 		Local $real_i = $i + 8
