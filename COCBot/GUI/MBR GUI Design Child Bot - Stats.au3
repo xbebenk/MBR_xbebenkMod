@@ -44,17 +44,17 @@ Global $g_hLblDonSiegel[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
 Global $g_hLblTotalTroopsQ = 0, $g_hLblTotalTroopsXP = 0, $g_hLblTotalSpellsQ = 0, $g_hLblTotalSpellsXP = 0
 
 ; Multi Stats
-Global $g_ahGrpVillageAcc[10], $g_ahGrpDefaultAcc[10], $g_ahGrpReportAcc[10], $g_ahGrpStatsAcc[10]
-Global $g_ahLblResultGoldNowAcc[10], $g_ahPicResultGoldNowAcc[10], $g_ahLblResultTrophyNowAcc[10], $g_ahPicResultTrophyNowAcc[10]
-Global $g_ahLblResultElixirNowAcc[10], $g_ahPicResultElixirNowAcc[10], $g_ahLblResultBuilderNowAcc[10], $g_ahPicResultBuilderNowAcc[10]
-Global $g_ahLblResultDENowAcc[10], $g_ahPicResultDENowAcc[10], $g_ahLblResultGemNowAcc[10], $g_ahPicResultGemNowAcc[10]
-Global $g_ahLblHourlyStatsGoldAcc[10], $g_ahLblResultRuntimeNowAcc[10], $g_ahPicResultRuntimeNowAcc[10]
-Global $g_ahLblHourlyStatsElixirAcc[10], $g_ahLblResultAttacked[10], $g_ahPicResultAttacked[10]
-Global $g_ahLblHourlyStatsDarkAcc[10], $g_ahLblResultSkipped[10], $g_ahPicResultSkipped[10]
-Global $g_ahPicArrowLeft[10], $g_ahPicArrowRight[10]
-Global $g_ahPicResultGoldTemp[10], $g_ahPicResultElixirTemp[10], $g_ahPicResultDETemp[10], $g_ahLblVillageReportTemp[10], $g_ahGrpTempAcc[10]
-Global $g_ahLblTroopTime[10], $g_ahPicTroopTime[10]
-Global $g_ahLblLabTime[10], $g_ahPicLabTime[10]
+Global $g_ahGrpVillageAcc[16], $g_ahGrpDefaultAcc[16], $g_ahGrpReportAcc[16], $g_ahGrpStatsAcc[16]
+Global $g_ahLblResultGoldNowAcc[16], $g_ahPicResultGoldNowAcc[16], $g_ahLblResultTrophyNowAcc[16], $g_ahPicResultTrophyNowAcc[16]
+Global $g_ahLblResultElixirNowAcc[16], $g_ahPicResultElixirNowAcc[16], $g_ahLblResultBuilderNowAcc[16], $g_ahPicResultBuilderNowAcc[16]
+Global $g_ahLblResultDENowAcc[16], $g_ahPicResultDENowAcc[16], $g_ahLblResultGemNowAcc[16], $g_ahPicResultGemNowAcc[16]
+Global $g_ahLblHourlyStatsGoldAcc[16], $g_ahLblResultRuntimeNowAcc[16], $g_ahPicResultRuntimeNowAcc[16]
+Global $g_ahLblHourlyStatsElixirAcc[16], $g_ahLblResultAttacked[16], $g_ahPicResultAttacked[16]
+Global $g_ahLblHourlyStatsDarkAcc[16], $g_ahLblResultSkipped[16], $g_ahPicResultSkipped[16]
+Global $g_ahPicArrowLeft[16], $g_ahPicArrowRight[16]
+Global $g_ahPicResultGoldTemp[16], $g_ahPicResultElixirTemp[16], $g_ahPicResultDETemp[16], $g_ahLblVillageReportTemp[16], $g_ahGrpTempAcc[16]
+Global $g_ahLblTroopTime[16], $g_ahPicTroopTime[16]
+Global $g_ahLblLabTime[16], $g_ahPicLabTime[16]
 
 Func CreateBotStats()
 

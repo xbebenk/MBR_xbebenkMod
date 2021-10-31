@@ -18,7 +18,7 @@ Global $g_hCmbProfile = 0, $g_hTxtVillageName = 0, $g_hBtnAddProfile = 0, $g_hBt
 	   $g_hBtnDeleteProfile = 0, $g_hBtnCancelProfileChange = 0, $g_hBtnRenameProfile = 0, $g_hBtnPullSharedPrefs = 0, $g_hBtnPushSharedPrefs = 0 , $g_hBtnSaveprofile = 0
 
 Global $g_hChkSwitchAcc = 0, $g_hChkFastSwitchAcc = 0, $g_hCmbSwitchAcc = 0, $g_hChkSharedPrefs = 0, $g_hCmbTotalAccount = 0, $g_hChkSmartSwitch = 0, $g_hCmbTrainTimeToSkip = 0, $g_hChkDonateLikeCrazy = 0, _
-	   $g_ahChkAccount[10], $g_ahCmbProfile[10], $g_ahChkDonate[10], _
+	   $g_ahChkAccount[16], $g_ahCmbProfile[16], $g_ahChkDonate[16], _
 	   $g_hRadSwitchGooglePlay = 0, $g_hRadSwitchSuperCellID = 0, $g_hRadSwitchSharedPrefs = 0
 
 Func CreateBotProfiles()
@@ -154,7 +154,7 @@ Func CreateBotProfiles()
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "ChkSwitchAcc_Info_01", "Enable Fast Switch Account"))
 
 		$g_hCmbTotalAccount = GUICtrlCreateCombo("", $x + 345, $y - 1, 77, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-		GUICtrlSetData(-1, "2 accounts|3 accounts|4 accounts|5 accounts|6 accounts|7 accounts|8 accounts|9 accounts|10 accounts", "2 accounts")
+		GUICtrlSetData(-1, "2 accounts|3 accounts|4 accounts|5 accounts|6 accounts|7 accounts|8 accounts|9 accounts|10 accounts|11 accounts|12 accounts|13 accounts|14 accounts|15 accounts|16 accounts", "2 accounts")
 		GUICtrlSetOnEvent(-1, "cmbTotalAcc")
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "CmbTotalAccount", "Total CoC Accounts") & ": ", $x + 220, $y + 4, -1, -1)
 
@@ -187,21 +187,37 @@ Func CreateBotProfiles()
 
 	$y += 20
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_01", "Accounts"), $x - 5, $y, 60, -1, $SS_CENTER)
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_02", "Profile name"), $x + 82, $y, 70, -1, $SS_CENTER)
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_03", "Donate only"), $x + 170, $y, 60, -1, $SS_CENTER)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_02", "Profile name"), $x + 62, $y, 70, -1, $SS_CENTER)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_03", "Donate only"), $x + 145, $y, 60, -1, $SS_CENTER)
+		$x = 230
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_01", "Accounts"), $x - 5, $y, 60, -1, $SS_CENTER)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_02", "Profile name"), $x + 72, $y, 70, -1, $SS_CENTER)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_03", "Donate only"), $x + 150, $y, 60, -1, $SS_CENTER)
 		;GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_04", "SwitchAcc log"), $x + 285, $y, -1, -1, $SS_CENTER)
-
+	
+	$x = 15
 	$y += 14
 		GUICtrlCreateGraphic($x, $y, 422, 1, $SS_GRAYRECT)
 
 	$y += 7
 		For $i = 0 To UBound($g_ahChkAccount) - 1
-			$g_ahChkAccount[$i] = GUICtrlCreateCheckbox("Acc " & $i + 1 & ".", $x, $y + ($i) * 25, -1, -1)
-			GUICtrlSetOnEvent(-1, "chkAccountX")
-			$g_ahCmbProfile[$i] = GUICtrlCreateCombo("", $x + 65, $y + ($i) * 25, 110, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
-			GUICtrlSetOnEvent(-1, "cmbSwitchAccProfileX")
-			GUICtrlSetData(-1, _GUICtrlComboBox_GetList($g_hCmbProfile))
-			$g_ahChkDonate[$i] = GUICtrlCreateCheckbox("", $x + 190, $y + ($i) * 25 - 3, -1, 25)
+			If $i < 10 Then 
+				$g_ahChkAccount[$i] = GUICtrlCreateCheckbox($i + 1 & ".", $x, $y + ($i) * 25, -1, -1)
+				GUICtrlSetOnEvent(-1, "chkAccountX")
+				$g_ahCmbProfile[$i] = GUICtrlCreateCombo("", $x + 40, $y + ($i) * 25, 130, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+				GUICtrlSetOnEvent(-1, "cmbSwitchAccProfileX")
+				GUICtrlSetData(-1, _GUICtrlComboBox_GetList($g_hCmbProfile))
+				$g_ahChkDonate[$i] = GUICtrlCreateCheckbox("", $x + 180, $y + ($i) * 25 - 3, -1, 25)
+			Else
+				$x = 230 
+				$y = 180
+				$g_ahChkAccount[$i] = GUICtrlCreateCheckbox($i + 1 & ".", $x, $y + ($i - 10) * 25, -1, -1)
+				GUICtrlSetOnEvent(-1, "chkAccountX")
+				$g_ahCmbProfile[$i] = GUICtrlCreateCombo("", $x + 40, $y + ($i - 10) * 25, 130, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+				GUICtrlSetOnEvent(-1, "cmbSwitchAccProfileX")
+				GUICtrlSetData(-1, _GUICtrlComboBox_GetList($g_hCmbProfile))
+				$g_ahChkDonate[$i] = GUICtrlCreateCheckbox("", $x + 180, $y + ($i - 10) * 25 - 3, -1, 25)
+			EndIf
 		Next
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

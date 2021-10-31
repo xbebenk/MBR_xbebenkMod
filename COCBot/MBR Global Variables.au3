@@ -1301,10 +1301,10 @@ Global $g_bForceSwitch = false ; use as a flag for when we want to force an acco
 Global $g_bChkSharedPrefs = True, $g_bChkGooglePlay = False, $g_bChkSuperCellID = False ; Accounts switch mode
 Global $g_bChkSwitchAcc = False, $g_bChkFastSwitchAcc = False, $g_bChkSmartSwitch = False, $g_bDonateLikeCrazy = False, $g_iTotalAcc = -1, $g_iTrainTimeToSkip = 0
 Global $g_bInitiateSwitchAcc = True, $g_bReMatchAcc = False, $g_bWaitForCCTroopSpell = False, $g_iNextAccount, $g_iCurAccount
-Global $g_abAccountNo[10], $g_asProfileName[10], $g_abDonateOnly[10]
-Global $g_aiAttackedCountSwitch[10], $g_iActiveSwitchCounter = 0, $g_iDonateSwitchCounter = 0
-Global $g_asTrainTimeFinish[10], $g_abPBActive[10]
-Global $g_aiRunTime[10], $g_ahTimerSinceSwitched[10]
+Global $g_abAccountNo[16], $g_asProfileName[16], $g_abDonateOnly[16]
+Global $g_aiAttackedCountSwitch[16], $g_iActiveSwitchCounter = 0, $g_iDonateSwitchCounter = 0
+Global $g_asTrainTimeFinish[16], $g_abPBActive[16]
+Global $g_aiRunTime[16], $g_ahTimerSinceSwitched[16]
 ; <><><><> Bot / Stats <><><><>
 ; <<< nothing here >>>
 
