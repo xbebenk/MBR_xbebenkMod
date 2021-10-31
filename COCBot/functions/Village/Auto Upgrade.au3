@@ -212,11 +212,15 @@ Func DoUpgrade($bTest = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[8] = 1) ? True : False
 			If $g_bChkRushTH And $g_aUpgradeNameLevel[2] > 8 And $g_iTownHallLevel < 12 Then ;only upgrade to unlock dragon
 				$bMustIgnoreUpgrade =  True
+				SetLog("RushTH Building: Barracks Lvl " & $g_aUpgradeNameLevel[2], $COLOR_WARNING)
+				SetLog("Skip Upgrade to make elixir available for armycamp or gold storage", $COLOR_WARNING)
 			EndIf			
 		Case "Dark Barracks"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[9] = 1) ? True : False
 			If $g_bChkRushTH And $g_aUpgradeNameLevel[2] > 3 And $g_iTownHallLevel < 12 Then ;only upgrade to unlock Golem
 				$bMustIgnoreUpgrade =  True
+				SetLog("RushTH Building: Dark Barracks Lvl " & $g_aUpgradeNameLevel[2], $COLOR_WARNING)
+				SetLog("Skip Upgrade to make elixir available for armycamp or gold storage", $COLOR_WARNING)
 			EndIf
 		Case "Spell Factory"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[10] = 1) ? True : False
