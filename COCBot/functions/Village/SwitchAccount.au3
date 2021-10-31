@@ -703,7 +703,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 				Next
 
 				SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
-				Click($aCoordinates[$iIndexSCID][0]-75, $aCoordinates[$iIndexSCID][1], 1)
+				Click($aCoordinates[$iIndexSCID][0]-75, $aCoordinates[$iIndexSCID][1] + 30, 1)
 				If _Sleep(750) Then Return "Exit"
 				SetLog("   " & $iStep + 1 & ". Please wait for loading CoC!")
 				$bResult = True
