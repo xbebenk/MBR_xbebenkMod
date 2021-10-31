@@ -698,7 +698,6 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 				_ArraySort($aCoordinates, 0, 0, 0, 1) ; sort by column 1 [Y]... this is to keep them in order of actual list
 
 				; list all account see-able after drag on debug chat
-				Local $iProfiles = UBound($g_asProfileName)
 				For $j = 0 To UBound($aCoordinates) - 1
 					SetLog("[" & $j & "] Account coordinates: " & $aCoordinates[$j][0] & "," & $aCoordinates[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
 				Next
