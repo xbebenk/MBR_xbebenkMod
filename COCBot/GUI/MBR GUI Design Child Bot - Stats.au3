@@ -74,7 +74,7 @@ Func CreateBotStats()
 		CreateDonationsSubTab()
 	$g_hGUI_STATS_TAB_ITEM5 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_05_STab_05", "1 - 8"))
 		CreateMultiStatsSubTab1()
-	$g_hGUI_STATS_TAB_ITEM6 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_05_STab_06", "9 - 10"))
+	$g_hGUI_STATS_TAB_ITEM6 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_05_STab_06", "9 - 16"))
 		CreateMultiStatsSubTab2()
 	GUICtrlCreateTabItem("")
 

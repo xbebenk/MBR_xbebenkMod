@@ -210,8 +210,14 @@ Func DoUpgrade($bTest = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[7] = 1 Or $g_bAutoUpgradeWallsEnable = True) ? True : False
 		Case "Barracks"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[8] = 1) ? True : False
+			If $g_bChkRushTH And $g_aUpgradeNameLevel[2] > 8 And $g_iTownHallLevel < 12 Then ;only upgrade to unlock dragon
+				$bMustIgnoreUpgrade =  True
+			EndIf			
 		Case "Dark Barracks"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[9] = 1) ? True : False
+			If $g_bChkRushTH And $g_aUpgradeNameLevel[2] > 3 And $g_iTownHallLevel < 12 Then ;only upgrade to unlock Golem
+				$bMustIgnoreUpgrade =  True
+			EndIf
 		Case "Spell Factory"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[10] = 1) ? True : False
 		Case "Dark Spell Factory"
