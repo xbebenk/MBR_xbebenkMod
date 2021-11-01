@@ -676,13 +676,13 @@ Func chkAutoUpgrade()
 		For $i = $g_hLblAutoUpgrade To $g_hTxtAutoUpgradeLog
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
+		chkRushTH()
 	Else
 		$g_bAutoUpgradeEnabled = False
 		For $i = $g_hLblAutoUpgrade To $g_hTxtAutoUpgradeLog
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
-	chkRushTH()
 EndFunc   ;==>chkAutoUpgrade
 
 Func chkChkNewBuildingFirst()
