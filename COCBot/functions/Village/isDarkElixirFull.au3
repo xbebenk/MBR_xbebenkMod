@@ -20,14 +20,8 @@ Func isDarkElixirFull()
 	If _CheckPixel($aIsDarkElixirFull, $g_bCapturePixel) Then ;Check for black/purple pixel in full bar
  		SetLog("Dark Elixir Storages is full!", $COLOR_SUCCESS)
 		$g_abFullStorage[$eLootDarkElixir] = True
-	ElseIf $g_abFullStorage[$eLootDarkElixir] Then
-		If Number($g_aiCurrentLoot[$eLootDarkElixir]) >= Number($g_aiResumeAttackLoot[$eLootDarkElixir]) Then
-			SetLog("Dark Elixir Storages is relatively full: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_SUCCESS)
-			$g_abFullStorage[$eLootDarkElixir] = True
-		Else
-			SetLog("Switching back to normal when Dark Elixir drops below " & $g_aiResumeAttackLoot[$eLootDarkElixir], $COLOR_SUCCESS)
-			$g_abFullStorage[$eLootDarkElixir] = False
-		EndIf
+	Else
+		$g_abFullStorage[$eLootDarkElixir] = False
 	EndIf
 	Return $g_abFullStorage[$eLootDarkElixir]
 EndFunc   ;==>isDarkElixirFull
