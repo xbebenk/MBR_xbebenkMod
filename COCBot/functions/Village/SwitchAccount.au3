@@ -669,57 +669,63 @@ EndFunc   ;==>SwitchCOCAcc_ConnectedSCID
 
 Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 	Local $sAccountDiamond = GetDiamondFromRect("750,330,840,710") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
-    Local $aSuperCellIDWindowsUI
+    Local $aSuperCellIDWindowsUI, $bSCIDWindowOpened = False
 	Local $iIndexSCID = $NextAccount
 	Local $aSearchForAccount, $aCoordinates[0][2], $aTempArray
-	If Not $g_bRunState Then Return "Exit"
+	If Not $g_bRunState Then Return
 
 	For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
 		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("440,1,859,243"), 1, True, Default))
-		If _Sleep(500) Then Return "Exit"
+		If _Sleep(500) Then Return
 		If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
-			;ClickDrag(650, 375, 650, 800, 500)
-			SCIDragIfNeeded($NextAccount) ; Make Drag only when SCID window is visible.
-			$aSearchForAccount = decodeMultipleCoords(findImage("Account Locations", $g_sImgSupercellIDSlots, $sAccountDiamond, 0, True, Default))
-			If _Sleep(500) Then Return "Exit"
-			If Not $g_bRunState Then Return "Exit"
-			If IsArray($aSearchForAccount) And UBound($aSearchForAccount) > 0 Then
-				SetLog("SCID Accounts: " & UBound($aSearchForAccount), $COLOR_DEBUG)
-
-				; Correct Index for Profile if needs to drag
-				If $NextAccount >= 3 and UBound($aSearchForAccount) == 4 Then $iIndexSCID = 3 ; based on drag logic, the account will always be the bottom one
-
-				; fixes weird issue with arrays after getting image info
-				For $j = 0 To UBound($aSearchForAccount) - 1
-					$aTempArray = $aSearchForAccount[$j]
-					_ArrayAdd($aCoordinates, $aTempArray[0] & "|" & $aTempArray[1], 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
-				Next
-
-				_ArraySort($aCoordinates, 0, 0, 0, 1) ; sort by column 1 [Y]... this is to keep them in order of actual list
-
-				; list all account see-able after drag on debug chat
-				For $j = 0 To UBound($aCoordinates) - 1
-					SetLog("[" & $j & "] Account coordinates: " & $aCoordinates[$j][0] & "," & $aCoordinates[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
-				Next
-
-				SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
-				Click($aCoordinates[$iIndexSCID][0]-75, $aCoordinates[$iIndexSCID][1] + 30, 1)
-				If _Sleep(750) Then Return "Exit"
-				SetLog("   " & $iStep + 1 & ". Please wait for loading CoC!")
-				$bResult = True
-				Return "OK"
-			EndIf
-		EndIf
-
+			SetLog("SupercellID Window Opened", $COLOR_DEBUG)
+			$bSCIDWindowOpened = True
+			ExitLoop
+		EndIf 
 		If $i = 30 Then
 			$bResult = False
-			;ExitLoop 2
 			Return "Error"
 		EndIf
-		If _Sleep(900) Then Return "Exit"
-		If Not $g_bRunState Then Return "Exit"
+		If _Sleep(900) Then Return
+		If Not $g_bRunState Then Return
 	Next
-	Return "" ; should never get here
+	
+	If $bSCIDWindowOpened Then
+		If _Sleep(500) Then Return
+		SCIDScrollUp()
+		
+		SCIDScrollDown($NextAccount) ; Make Drag only when SCID window is visible.
+		$aSearchForAccount = decodeMultipleCoords(findImage("Account Locations", $g_sImgSupercellIDSlots, $sAccountDiamond, 0, True, Default))
+		If _Sleep(500) Then Return
+		If Not $g_bRunState Then Return
+		If IsArray($aSearchForAccount) And UBound($aSearchForAccount) > 0 Then
+			SetLog("SCID Accounts: " & UBound($aSearchForAccount), $COLOR_DEBUG)
+			
+			; Correct Index for Profile if needs to drag
+			If $NextAccount >= 3 and UBound($aSearchForAccount) == 4 Then $iIndexSCID = 3 ; based on drag logic, the account will always be the bottom one
+
+			; fixes weird issue with arrays after getting image info
+			For $j = 0 To UBound($aSearchForAccount) - 1
+				$aTempArray = $aSearchForAccount[$j]
+				_ArrayAdd($aCoordinates, $aTempArray[0] & "|" & $aTempArray[1], 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
+			Next
+
+			_ArraySort($aCoordinates, 0, 0, 0, 1) ; sort by column 1 [Y]... this is to keep them in order of actual list
+
+			; list all account see-able after drag on debug chat
+			For $j = 0 To UBound($aCoordinates) - 1
+				SetLog("[" & $j & "] Account coordinates: " & $aCoordinates[$j][0] & "," & $aCoordinates[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
+			Next
+
+			SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
+			Click($aCoordinates[$iIndexSCID][0]-75, $aCoordinates[$iIndexSCID][1] + 30, 1)
+			If _Sleep(750) Then Return
+			SetLog("   " & $iStep + 1 & ". Please wait for loading CoC!")
+			$bResult = True
+			Return "OK"
+		EndIf
+	EndIf
+	
 EndFunc   ;==>SwitchCOCAcc_ClickAccountSCID
 
 Func CheckWaitHero() ; get hero regen time remaining if enabled
@@ -1047,12 +1053,21 @@ Func SwitchAccountCheckProfileInUse($sNewProfile)
 	EndIf
 EndFunc   ;==>SwitchAccountCheckProfileInUse
 
-Func SCIDragIfNeeded($iSCIDAccount)
+Func SCIDScrollDown($iSCIDAccount)
 	If Not $g_bRunState Then Return
 	If $iSCIDAccount < 4 Then Return
 	For $i = 0 To $iSCIDAccount - 4
-		AndroidAdbScript("ClickDragSCID")
-		If _Sleep(1000) Then Return
+		AndroidAdbScript("ScrollDownSCID")
+		If _Sleep(500) Then Return
 	Next
-EndFunc   ;==>SCIDragIfNeeded
+EndFunc   ;==>SCIDScrollDown
+
+Func SCIDScrollUp()
+	If Not $g_bRunState Then Return
+	SetLog("Try to scroll up", $COLOR_DEBUG)
+	For $i = 0 To Floor($g_iTotalAcc/4) - 1
+		AndroidAdbScript("ScrollUpSCID")
+		If _Sleep(500) Then Return
+	Next
+EndFunc   ;==>SCIDScrollUp
 
