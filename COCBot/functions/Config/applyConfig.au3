@@ -518,7 +518,21 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bCheckCGEarly = (GUICtrlRead($g_hChkMMCheckCGEarly) = $GUI_CHECKED)
 			$g_bRandomArmyComp = (GUICtrlRead($g_hRandomArmyComp) = $GUI_CHECKED)
 	EndSwitch
+	ApplyBuilderBaseMod($TypeReadSave)
 EndFunc   ;==>ApplyConfig_600_6
+
+Func ApplyBuilderBaseMod($TypeReadSave)
+	If $TypeReadSave = "Read" Then
+		For $i = 0 To UBound($g_hComboTroopBB) - 1
+			_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[$i], $g_iCmbCampsBB[$i])
+			_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbCampsBB[$i] + 1][4])
+		Next
+	Else
+		For $i = 0 To UBound($g_hComboTroopBB) - 1
+			$g_iCmbCampsBB[$i] = _GUICtrlComboBox_GetCurSel($g_hComboTroopBB[$i])
+		Next
+	EndIf
+EndFunc   ;==>ApplyBuilderBaseMod
 
 Func ApplyConfig_600_9($TypeReadSave)
 	; <><><><> Village / Achievements <><><><>

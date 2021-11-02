@@ -505,7 +505,15 @@ Func ReadConfig_600_6()
 	IniReadS($g_bSkipWallPlacingOnBB, $g_sProfileConfigPath, "other", "SkipWallPlacingOnBB", True, "Bool")
 	IniReadS($g_bCheckCGEarly, $g_sProfileConfigPath, "other", "CheckCGEarly", True, "Bool")
 	IniReadS($g_bRandomArmyComp, $g_sProfileConfigPath, "other", "RandomArmyComp", True, "Bool")
+
+	ReadBuilderBaseMod()
 EndFunc   ;==>ReadConfig_600_6
+
+Func ReadBuilderBaseMod()
+	For $i = 0 To UBound($g_hComboTroopBB) - 1
+		IniReadS($g_iCmbCampsBB[$i], $g_sProfileConfigPath, "BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbCampsBB[$i], "Int")
+	Next
+EndFunc   ;==>ReadBuilderBaseMod
 
 Func ReadConfig_600_9()
 	; <><><><> Village / Achievements <><><><>

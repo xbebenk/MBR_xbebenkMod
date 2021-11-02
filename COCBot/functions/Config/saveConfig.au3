@@ -478,8 +478,15 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "SkipWallPlacingOnBB", $g_bSkipWallPlacingOnBB)
 	_Ini_Add("other", "CheckCGEarly", $g_bCheckCGEarly)
 	_Ini_Add("other", "RandomArmyComp", $g_bRandomArmyComp)
-
+	
+	SaveBuilderBaseMod()
 EndFunc   ;==>SaveConfig_600_6
+
+Func SaveBuilderBaseMod()
+	For $i = 0 To UBound($g_hComboTroopBB) - 1
+		_Ini_Add("BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbCampsBB[$i])
+	Next
+EndFunc   ;==>SaveBuilderBaseMod
 
 Func SaveConfig_600_9()
 	; <><><><> Village / Achievements <><><><>
