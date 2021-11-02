@@ -379,6 +379,7 @@ Func ReadConfig_600_1()
 	IniReadS($g_iLogDividerY, $g_sProfileConfigPath, "general", "LogDividerY", 243, "int")
 	; <><><><> Bottom panel <><><><>
 	IniReadS($g_bChkBackgroundMode, $g_sProfileConfigPath, "general", "Background", True, "Bool")
+	IniReadS($g_bChkOnlyAttack, $g_sProfileConfigPath, "general", "OnlyAttack", False, "Bool")
 EndFunc   ;==>ReadConfig_600_1
 
 Func ReadConfig_600_6()

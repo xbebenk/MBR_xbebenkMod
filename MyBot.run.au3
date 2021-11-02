@@ -1080,6 +1080,15 @@ EndFunc   ;==>_RunFunction
 
 Func __RunFunction($action)
 	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
+	; Only Attack - lilmeeee - credits: Team AiO MOD++
+	If $g_bChkOnlyAttack Then
+		Switch $Action
+			Case 'UpgradeHeroes', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'BuilderBase', 'UpgradeWall', 'LabCheck', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'ReplayShare', 'PetCheck', 'PetHouse'
+				SetLog($Action & " - Skipped by only attack mode", $COLOR_INFO)
+				Return
+		EndSwitch
+	EndIf
+	
 	Switch $action
 		Case "Collect"
 			Collect()
@@ -1363,13 +1372,7 @@ Func FirstCheckRoutine()
 		EndIf
 	EndIf
 	
-	RequestCC(False)
-	checkArmyCamp(False, True)
-	PrepareDonateCC()
-	DonateCC()
-	TrainSystem()
-
-	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
+	Local $aRndFuncList = ['RequestCC', 'DonateCC,Train', 'Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
