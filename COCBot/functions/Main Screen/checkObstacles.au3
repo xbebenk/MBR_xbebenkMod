@@ -109,6 +109,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				SetLog("---- Forced Switch, Another device connected ----")
 				$g_iNextAccount = $g_iCurAccount + 1
 				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+				$g_bRestart = True
 				SwitchForceAnotherDevice($g_iNextAccount)
 				Return True
 			EndIf
