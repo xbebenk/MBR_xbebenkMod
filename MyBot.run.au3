@@ -702,7 +702,7 @@ Func runBot() ;Bot that runs everything in order
 	EndIf
 	GUICtrlSetState($g_hBtnControl, $GUI_SHOW)
 	FirstCheck()
-	
+
 	While 1
 		;Restart bot after these seconds
 		If $b_iAutoRestartDelay > 0 And __TimerDiff($g_hBotLaunchTime) > $b_iAutoRestartDelay * 1000 Then
@@ -1080,15 +1080,11 @@ EndFunc   ;==>_RunFunction
 
 Func __RunFunction($action)
 	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
-	; Only Attack - lilmeeee - credits: Team AiO MOD++
-	If $g_bChkOnlyAttack Then
-		Switch $Action
-			Case 'UpgradeHeroes', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'BuilderBase', 'UpgradeWall', 'LabCheck', 'CheckTombs', 'CleanYard', 'CollectAchievements', 'ReplayShare', 'PetCheck', 'PetHouse'
-				SetLog($Action & " - Skipped by only attack mode", $COLOR_INFO)
-				Return
-		EndSwitch
+	If $g_bChkOnlyAttack And Not $action = 'BuilderBase' Then
+		SetLog($Action & " - Only attack enabled, Skip", $COLOR_ACTION)
+		Return
 	EndIf
-	
+
 	Switch $action
 		Case "Collect"
 			Collect()
@@ -1253,11 +1249,11 @@ Func FirstCheck()
 			$bLocateTH = True
 		EndIf
 	EndIf
-	
+
 	If $g_iTownHallLevel = 0 Or $bLocateTH Then
 		imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
 	EndIf
-	
+
 	SetLog("Detected Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
 	If $g_iTownHallLevel = $iTownHallLevel Then
 		SetLog("Town Hall level has not changed", $COLOR_INFO)
@@ -1265,14 +1261,14 @@ Func FirstCheck()
 		SetLog("Town Hall level has changed!", $COLOR_INFO)
 		SetLog("New Town hall level detected as " &  $g_iTownHallLevel, $COLOR_INFO)
 		If $g_bchkSyncTHWall And $g_iTownHallLevel > 5 Then
-			For $z = 0 To 2				
+			For $z = 0 To 2
 				$g_aUpgradeWall[$z] = $g_iTownHallLevel - 2 + $z - 4
 				SetLog("Set WallUpgrade [" & $z & "] -> Level = " & $g_aUpgradeWall[$z]+4, $COLOR_INFO)
 			Next
 			;SaveResource 			 	 0 = TH6	TH7		TH8			TH9		TH10	TH11	TH12		TH13
 			Local $WallSaveResource[8] = [1000000, 2000000, 4000000, 5000000, 6000000, 7000000, 9500000, 11500000]
 			For $j = 0 To UBound($WallSaveResource) - 1
-				If Int($g_iTownHallLevel) - 6 = $j Then 
+				If Int($g_iTownHallLevel) - 6 = $j Then
 					$g_iUpgradeWallMinGold = $WallSaveResource[$j]
 					$g_iUpgradeWallMinElixir = $WallSaveResource[$j]
 					SetLog("Set WallSaveResource = " & $g_iUpgradeWallMinElixir, $COLOR_INFO)
@@ -1342,7 +1338,7 @@ Func FirstCheckRoutine()
 			EndIf
 		EndIf
 	EndIf
-	
+
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
 		RequestCC() ;only do requestCC here
 		If _Sleep($DELAYRUNBOT2) Then Return
@@ -1371,7 +1367,7 @@ Func FirstCheckRoutine()
 			EndIf
 		EndIf
 	EndIf
-	
+
 	Local $aRndFuncList = ['RequestCC', 'DonateCC,Train', 'Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
@@ -1381,7 +1377,7 @@ Func FirstCheckRoutine()
 		If CheckAndroidReboot() Then ContinueLoop
 		If checkObstacles() Then ContinueLoop
 	Next
-	
+
 EndFunc
 
 Func BuilderBase()
@@ -1393,7 +1389,7 @@ Func BuilderBase()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		AndroidAdbScript("ZoomOut")
 		If checkObstacles() Then Return
-		
+
 		BuilderBaseReport()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return
@@ -1421,7 +1417,7 @@ Func BuilderBase()
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return
-		
+
 		BuilderBaseReport()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return
