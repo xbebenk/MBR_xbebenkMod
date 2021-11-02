@@ -25,7 +25,6 @@ Func VillageSearch()
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowTS, $GUI_HIDE)
 		HideShields(False)
-		;GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
 		$g_bBtnAttackNowPressed = False
 	EndIf
 
@@ -87,7 +86,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_SHOW)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_SHOW)
 		GUICtrlSetState($g_hBtnAttackNowTS, $GUI_SHOW)
-		;GUICtrlSetState($g_hLblVersion, $GUI_HIDE)
 	EndIf
 
 	If $g_bIsClientSyncError = False And $g_bIsSearchLimit = False Then
