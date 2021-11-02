@@ -840,6 +840,7 @@ Global $g_iCmbLogDividerOption = 0
 
 ; <><><><> Bottom panel <><><><>
 Global $g_bChkBackgroundMode ; Background mode enabled/disabled
+Global $g_bChkOnlyAttack ; Only Attack Mode
 Global $g_bMakeScreenshotNow = False ; Used to create Screenshot in _Sleep if Screenshot Button got pressed
 
 ; <><><><> Village / Misc <><><><>
