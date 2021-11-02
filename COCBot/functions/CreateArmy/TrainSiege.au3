@@ -79,7 +79,7 @@ Func TrainSiege($bTrainFullSiege = False)
 	Next
 
 	; build 2nd army
-	If ($g_bDoubleTrain Or $bTrainFullSiege) And $g_iTotalTrainSpaceSiege <= 3 Then
+	If ($g_bDoubleTrain Or $bTrainFullSiege) Then
 		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 			Local $HowMany = $g_aiArmyCompSiegeMachines[$iSiegeIndex] * 2 - $aiTotalSiegeMachine[$iSiegeIndex]
 			Local $checkPixel
