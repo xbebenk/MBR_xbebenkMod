@@ -72,7 +72,7 @@ Func isBHMaxed()
 			Endif
 		EndIf
 	Else
-		Setlog("isBHMaxed(): Cannot Find Builder Hall, Trying to find Star Lab to guess your Builder Hall level!", $COLOR_DEBUG)
+		Setlog("Trying to find Star Lab to guess your Builder Hall level!", $COLOR_DEBUG)
 		; If Builder Hall cannot be found, try search for lab
 		If LocateStarLab() Then 
 			Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
