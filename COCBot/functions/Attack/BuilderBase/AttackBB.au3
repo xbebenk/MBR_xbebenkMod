@@ -127,7 +127,7 @@ Func AttackBB()
 
 	; Get troops on attack bar and their quantities
 	local $aBBAttackBar = GetAttackBarBB()
-	BuilderBaseSelectCorrectScript($aBBAttackBar) ; xbebenk
+	If $g_bChkBBCustomArmyEnable Then BuilderBaseSelectCorrectScript($aBBAttackBar) ; xbebenk
 	If _Sleep($DELAYRESPOND) Then
 		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 		If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")

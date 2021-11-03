@@ -484,6 +484,7 @@ Func SaveConfig_600_6()
 EndFunc   ;==>SaveConfig_600_6
 
 Func SaveBuilderBaseMod()
+	_Ini_Add("BBCustomArmy", "ChkBBCustomArmyEnable", $g_bChkBBCustomArmyEnable)
 	For $i = 0 To UBound($g_hComboTroopBB) - 1
 		_Ini_Add("BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbCampsBB[$i])
 	Next
