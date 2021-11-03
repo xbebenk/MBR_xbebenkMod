@@ -353,25 +353,26 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 EndFunc   ;==>_checkObstacles
 
 Func SwitchForceAnotherDevice($NextAccount)
-
-	SetLog("Switching to Account [" & $NextAccount + 1 & "]")
-	$g_bReMatchAcc = False
-	Local $bSharedPrefs = $g_bChkSharedPrefs And HaveSharedPrefs($g_asProfileName[$g_iNextAccount])
 	Local $bResult = True
+	$g_bReMatchAcc = False
+	Local $abAccountNo = AccountNoActive()
+	If Not $abAccountNo[$NextAccount] Then $NextAccount = 0
+	$g_iNextAccount = $NextAccount
 	If Not $g_bRunState Then Return
-	If Not $g_bInitiateSwitchAcc Then SwitchAccountVariablesReload("Save")
+	
+	SetLog("Switching to Account [" & $g_iNextAccount + 1 & "]")
+	Local $bSharedPrefs = $g_bChkSharedPrefs And HaveSharedPrefs($g_asProfileName[$g_iNextAccount])
+	SwitchAccountVariablesReload("Save")
 	If $g_ahTimerSinceSwitched[$g_iCurAccount] <> 0 Then
 		If Not $g_bReMatchAcc Then SetSwitchAccLog(" - Acc " & $g_iCurAccount + 1 & ", online: " & Int(__TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount]) / 1000 / 60) & "m")
 		SetTime(True)
-		$g_aiRunTime[$g_iCurAccount] += __TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount])
+		$g_aiRunTime[$g_iCurAccount] += __TimerDiff($g_ahTimerSinceSwitched[$g_iNextAccount])
 		$g_ahTimerSinceSwitched[$g_iCurAccount] = 0
 	EndIf
-
-	$g_iCurAccount = $NextAccount
+	
 	SwitchAccountVariablesReload()
 
 	$g_ahTimerSinceSwitched[$g_iCurAccount] = __TimerInit()
-	$g_bInitiateSwitchAcc = False
 	If $g_sProfileCurrentName <> $g_asProfileName[$g_iNextAccount] Then
 		If $g_iGuiMode = 1 Then
 			; normal GUI Mode

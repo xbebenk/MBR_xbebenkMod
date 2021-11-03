@@ -689,7 +689,6 @@ Func DonateCC($bCheckForNewMsg = False)
 
 	If Not ClickB("ClanChatClose") Then
 		SetLog("Try Close ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR)
-		AndroidPageError("DonateCC")
 	EndIf
 
 	UpdateStats()

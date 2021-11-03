@@ -1220,7 +1220,7 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	SetLog("-- FirstCheck Loop --")
 	If _Sleep(50) Then Return
-	checkMainScreen(False)
+	checkMainScreen()
 	VillageReport(True, True)
 	If Not $g_bRunState Then
 		GUICtrlSetState($g_hBtnControl, $GUI_HIDE)
@@ -1367,7 +1367,9 @@ Func FirstCheckRoutine()
 			EndIf
 		EndIf
 	EndIf
-
+	
+	If BotCommand() Then btnStop()
+	
 	Local $aRndFuncList = ['RequestCC', 'DonateCC,Train', 'Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
