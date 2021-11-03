@@ -550,7 +550,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		_ArrayAdd($aLines, $aFakeCsv)
 	Next
 
-	; _ArrayDisplay($aLines)
+	;_ArrayDisplay($aLines)
 
 	If UBound($aLines) = 0 Then
 		SetLog("BuilderBaseSelectCorrectScript 0x12 error.", $COLOR_ERROR)
@@ -558,7 +558,8 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	EndIf
 
 	_ArraySort($aAvailableTroops, 0, 0, 0, 1)
-
+	;_ArrayDisplay($aAvailableTroops)
+	
 	Local $iSlotWidth = 72
 	Local $iDefaultY = 708
 	Local $iCampsQuantities = 0
@@ -570,7 +571,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		$iCampsQuantities += 1
 	WEnd
 
-	; _ArrayDisplay($aSwicthBtn)
+	;_ArrayDisplay($aSwicthBtn)
 
 	Setlog("Available " & $iCampsQuantities & " Camps.", $COLOR_INFO)
 

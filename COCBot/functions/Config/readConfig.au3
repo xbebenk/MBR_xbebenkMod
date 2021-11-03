@@ -511,7 +511,7 @@ Func ReadConfig_600_6()
 EndFunc   ;==>ReadConfig_600_6
 
 Func ReadConfig_BuilderBaseMod()
-	IniReadS($g_bChkBBCustomArmyEnable, $g_sProfileConfigPath, "BBCustomArmy", "ChkBBCustomArmyEnable", 0, "int")
+	IniReadS($g_bChkBBCustomArmyEnable, $g_sProfileConfigPath, "BBCustomArmy", "ChkBBCustomArmyEnable", False, "Bool")
 	For $i = 0 To UBound($g_hComboTroopBB) - 1
 		IniReadS($g_iCmbCampsBB[$i], $g_sProfileConfigPath, "BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbCampsBB[$i], "Int")
 	Next

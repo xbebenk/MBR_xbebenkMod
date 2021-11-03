@@ -2111,6 +2111,10 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 			; the icons for Attack Options tab
 			Local $aIconIndex = [$eIcnMagnifier, $eIcnCamp, $eIcnLightSpell, $eIcnSilverStar, $eIcnTrophy]
 
+		Case $g_hGUI_BB_TAB
+			; the icons for BuilderBase tab
+			Local $aIconIndex = [$eIcnClockTower, $eIcnTroops]
+			
 		Case $g_hGUI_BOT_TAB
 			; the icons for Bot tab
 			Local $aIconIndex = [$eIcnOptions, $eIcnAndroid, $eIcnProfile, $eIcnProfile, $eIcnGold]
