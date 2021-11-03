@@ -78,7 +78,7 @@ Func isBHMaxed()
 			Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 			If $aBuildingName[0] = 2 Then
 				; Verify if is Star Laboratory and max level
-				If $aBuildingName[1] = "Star Laboratory" Then
+				If $aBuildingName[1] = "S ar Laboratory" Then
 					If $aBuildingName[2] = 9 Then
 						SetLog("Your Builder Hall is Maxed!", $COLOR_SUCCESS)
 						$g_bisBHMaxed = True
