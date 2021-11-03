@@ -396,29 +396,6 @@ Func SwitchForceAnotherDevice($NextAccount)
 	SetSwitchAccLog("Switched to Acc [" & $NextAccount + 1 & "]", $COLOR_SUCCESS)
 	CreateLogFile() ; Cause use of the right log file after switch
 	If Not $g_bRunState Then Return
-
-
-	If $g_bChkSharedPrefs Then
-		; disconnect account again for saving shared_prefs
-		waitMainScreen()
-		If IsMainPage() Then
-			Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
-			If _Sleep(500) Then Return
-			If SwitchCOCAcc_DisconnectConnect($bResult, $g_bChkSharedPrefs) = -1 Then Return ;Return if Error happend
-
-			Switch SwitchCOCAcc_ClickAccount($bResult, $NextAccount, $g_bChkSharedPrefs, False)
-				Case "OK"
-					; all good
-					PullSharedPrefs()
-			EndSwitch
-		EndIf
-	EndIf
-	If Not $g_bRunState Then Return
-	waitMainScreen()
-	If Not $g_bRunState Then Return
-	CheckObstacles()
-	If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
-	runBot()
 EndFunc
 
 ; It's more stable to restart CoC app than click the message restarting the game
