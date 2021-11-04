@@ -686,7 +686,7 @@ Func chkAutoUpgrade()
 EndFunc   ;==>chkAutoUpgrade
 
 Func chkChkNewBuildingFirst()
-	If GUICtrlRead($g_hChkChkNewBuildingFirst) = $GUI_CHECKED Then
+	If GUICtrlRead($g_hChkNewBuildingFirst) = $GUI_CHECKED Then
 		$g_bNewBuildingFirst = True
 	Else
 		$g_bNewBuildingFirst = False
@@ -743,14 +743,14 @@ Func chkRushTH()
 		For $i = $g_hChkUpgradesToIgnore[0] To $g_hChkUpgradesToIgnore[35]
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
-		GUICtrlSetState($g_hChkChkNewBuildingFirst, BitOR($GUI_DISABLE, $GUI_CHECKED))
+		GUICtrlSetState($g_hChkNewBuildingFirst, BitOR($GUI_DISABLE, $GUI_CHECKED))
 		GUICtrlSetState($g_ChkPlaceNewBuilding, BitOR($GUI_DISABLE, $GUI_CHECKED))
 	Else
 		For $i = $g_hChkUpgradesToIgnore[0] To $g_hChkUpgradesToIgnore[35]
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
-		GUICtrlSetState($g_hChkChkNewBuildingFirst, BitOR($GUI_ENABLE, $GUI_CHECKED))
-		GUICtrlSetState($g_ChkPlaceNewBuilding, BitOR($GUI_ENABLE, $GUI_CHECKED))
+		GUICtrlSetState($g_hChkNewBuildingFirst, $GUI_ENABLE)
+		GUICtrlSetState($g_ChkPlaceNewBuilding, $GUI_ENABLE)
 	EndIf
 EndFunc   ;==>chkRushTH
 
