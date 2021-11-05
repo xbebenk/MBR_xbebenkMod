@@ -114,8 +114,8 @@ Func Unbreakable()
 
 	$iCount = 0
 	While 1 ; Under attack when return from sleep?  wait some more ...
-		If $g_bDebugSetlog Then SetDebugLog("Under Attack Pixels = " & _GetPixelColor(841, 342 + $g_iMidOffsetY, True) & "/" & _GetPixelColor(842, 348 + $g_iMidOffsetY, True), $COLOR_DEBUG)
-		If _ColorCheck(_GetPixelColor(841, 342 + $g_iMidOffsetY, True), Hex(0x711C0A, 6), 20) And _ColorCheck(_GetPixelColor(842, 348 + $g_iMidOffsetY, True), Hex(0x721C0E, 6), 20) Then
+		If $g_bDebugSetlog Then SetDebugLog("Under Attack Pixels = " & _GetPixelColor(841, 342, True) & "/" & _GetPixelColor(842, 348, True), $COLOR_DEBUG)
+		If _ColorCheck(_GetPixelColor(841, 342, True), Hex(0x711C0A, 6), 20) And _ColorCheck(_GetPixelColor(842, 348, True), Hex(0x721C0E, 6), 20) Then
 			SetLog("Base is under attack, waiting 30 seocnds for end", $COLOR_INFO)
 		Else
 			ExitLoop
@@ -129,13 +129,13 @@ Func Unbreakable()
 	Local $Message = _PixelSearch(20, 624, 105, 627, Hex(0xE1E3CB, 6), 15) ;Check if Return Home button available and close the screen
 	If IsArray($Message) Then
 		If $g_bDebugSetlog Then SetDebugLog("Return Home Pixel = " & _GetPixelColor($Message[0], $Message[1], True) & ", Pos: " & $Message[0] & "/" & $Message[1], $COLOR_DEBUG)
-		PureClick(67, 602 + $g_iBottomOffsetY, 1, 0, "#0138")
+		PureClick(67, 602, 1, 0, "#0138")
 		If _Sleep($DELAYUNBREAKABLE3) Then Return True
 	EndIf
 
-	If _ColorCheck(_GetPixelColor(235, 209 + $g_iMidOffsetY, True), Hex(0x9E3826, 6), 20) And _ColorCheck(_GetPixelColor(242, 140 + $g_iMidOffsetY, True), Hex(0xFFFFFF, 6), 20) Then ;See if village was attacked, then click Okay
-		If $g_bDebugSetlog Then SetDebugLog("Village Attacked Pixels = " & _GetPixelColor(235, 209 + $g_iMidOffsetY, True) & "/" & _GetPixelColor(242, 140 + $g_iMidOffsetY, True), $COLOR_DEBUG)
-		PureClick(429, 493 + $g_iMidOffsetY, 1, 0, "#0132")
+	If _ColorCheck(_GetPixelColor(235, 209, True), Hex(0x9E3826, 6), 20) And _ColorCheck(_GetPixelColor(242, 140, True), Hex(0xFFFFFF, 6), 20) Then ;See if village was attacked, then click Okay
+		If $g_bDebugSetlog Then SetDebugLog("Village Attacked Pixels = " & _GetPixelColor(235, 209, True) & "/" & _GetPixelColor(242, 140, True), $COLOR_DEBUG)
+		PureClick(429, 493, 1, 0, "#0132")
 		If _Sleep($DELAYUNBREAKABLE3) Then Return True
 	EndIf
 

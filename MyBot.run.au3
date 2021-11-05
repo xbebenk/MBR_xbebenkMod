@@ -1242,7 +1242,7 @@ Func FirstCheck()
 	If $g_aiTownHallPos[0] > -1 Then
 		Click($g_aiTownHallPos[0], $g_aiTownHallPos[1])
 		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo(245, 490 + $g_iBottomOffsetY)
+		Local $BuildingInfo = BuildingInfo(245, 494)
 		If $BuildingInfo[1] = "Town Hall" Then
 			$g_iTownHallLevel =  $BuildingInfo[2]
 		Else

@@ -26,7 +26,7 @@ Func TreasuryCollect()
 	Else
 		Click($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
 		If _Sleep(1000) Then Return
-		Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+		Local $BuildingInfo = BuildingInfo(290, 493)
 		If $BuildingInfo[1] = "Clan Castle" Then 
 			$TryCCAutoLocate = False
 		Else
@@ -41,7 +41,7 @@ Func TreasuryCollect()
 		If IsArray($TreasuryCoord) And UBound($TreasuryCoord) = 2 Then
 			Click($TreasuryCoord[0], $TreasuryCoord[1] + 50)
 			If _Sleep(500) Then Return
-			Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+			Local $BuildingInfo = BuildingInfo(290, 493)
 			If $BuildingInfo[1] = "Clan Castle" Then 
 				$g_aiClanCastlePos[0] = $TreasuryCoord[0]
 				$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 50
@@ -53,7 +53,7 @@ Func TreasuryCollect()
 		If IsArray($ClanCastleCoord) And UBound($ClanCastleCoord) = 2 Then
 			Click($ClanCastleCoord[0] + 10, $ClanCastleCoord[1] + 10)
 			If _Sleep(500) Then Return
-			Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+			Local $BuildingInfo = BuildingInfo(290, 493)
 			If $BuildingInfo[1] = "Clan Castle" Then 
 				$g_aiClanCastlePos[0] = $ClanCastleCoord[0] + 10
 				$g_aiClanCastlePos[1] = $ClanCastleCoord[1] + 10
@@ -71,7 +71,7 @@ Func TreasuryCollect()
 	EndIf
 
 	Local $bForceCollect = False
-	Local $aResult = _PixelSearch(689, 237 + $g_iMidOffsetY, 691, 325 + $g_iMidOffsetY, Hex(0x50BD10, 6), 20) ; search for green pixels showing treasury bars are full
+	Local $aResult = _PixelSearch(689, 220, 691, 300, Hex(0x50BD10, 6), 20) ; search for green pixels showing treasury bars are full
 	If IsArray($aResult) Then
 		SetLog("Found full Treasury, collecting loot...", $COLOR_SUCCESS)
 		$bForceCollect = True

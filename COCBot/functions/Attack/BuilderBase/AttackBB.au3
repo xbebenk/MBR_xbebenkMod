@@ -26,7 +26,7 @@ Func DoAttackBB()
 				SetLog("Check if ClanGames Challenge is Completed", $COLOR_DEBUG)
 				For $x = 0 To 4
 					_Sleep(1000)
-					If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
+					If QuickMIS("BC1", $g_sImgGameComplete, 760, 480, 820, 520, True, $g_bDebugImageSave) Then
 						SetLog("Nice, Game Completed", $COLOR_INFO)
 						ExitLoop 2
 					EndIf
@@ -55,7 +55,7 @@ Func DoAttackBB()
 					SetLog("Check if ClanGames Challenge is Completed", $COLOR_DEBUG)
 					For $x = 0 To 4
 						_Sleep(1000)
-						If QuickMIS("BC1", $g_sImgGameComplete, 760, 510, 820, 550, True, $g_bDebugImageSave) Then
+						If QuickMIS("BC1", $g_sImgGameComplete, 760, 480, 820, 520, True, $g_bDebugImageSave) Then
 							SetLog("Nice, Game Completed", $COLOR_INFO)
 							ExitLoop 2
 						EndIf
@@ -79,17 +79,12 @@ Func AttackBB()
 	If Not $g_bRunState Then Return
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $aBMPos = 0
-	;ClickAway()
 
 	SetLog("Going to attack.", $COLOR_BLUE)
 
-	; check for troops, loot and Batlle Machine
-	;;;If Not PrepareAttackBB() Then Return
-	;;;SetDebugLog("PrepareAttackBB(): Success.")
-
 	; search for a match
 	If _Sleep(2000) Then Return
-	local $aBBFindNow = [521, 308, 0xffc246, 30] ; search button
+	local $aBBFindNow = [521, 278, 0xffc246, 30] ; search button
 	If _CheckPixel($aBBFindNow, True) Then
 		PureClick($aBBFindNow[0], $aBBFindNow[1])
 	Else
@@ -304,7 +299,7 @@ EndFunc
 Func GetMachinePos()
 	If Not $g_bBBMachineReady Then Return
 
-	local $sSearchDiamond = GetDiamondFromRect("0,630,860,732")
+	local $sSearchDiamond = GetDiamondFromRect("0,580,860,670")
 	local $aCoords = decodeSingleCoord(findImage("BBBattleMachinePos", $g_sImgBBBattleMachine, $sSearchDiamond, 1, True))
 
 	If IsArray($aCoords) And UBound($aCoords) = 2 Then

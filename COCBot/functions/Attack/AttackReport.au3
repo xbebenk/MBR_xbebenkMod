@@ -29,7 +29,7 @@ Func AttackReport()
 	If $iCount > 30 Then SetLog("End of Attack scene slow to appear, attack values my not be correct", $COLOR_INFO)
 
 	$iCount = 0 ; reset loop counter
-	While getResourcesLoot(290, 289 + $g_iMidOffsetY) = "" ; check for gold value to be non-zero before reading other values as a secondary timer to make sure all values are available
+	While getResourcesLoot(290, 289) = "" ; check for gold value to be non-zero before reading other values as a secondary timer to make sure all values are available
 		$iCount += 1
 		If _Sleep($DELAYATTACKREPORT1) Then Return
 		If $g_bDebugSetlog Then SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
@@ -42,23 +42,23 @@ Func AttackReport()
 	;E was 290, is 285
 	;DE was 365, is 353
 	If _ColorCheck(_GetPixelColor($aAtkRprtDECheck[0], $aAtkRprtDECheck[1], True), Hex($aAtkRprtDECheck[2], 6), $aAtkRprtDECheck[3]) Then ; if the color of the DE drop detected
-		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(285, 289 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(285, 289)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(285, 328 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(285, 328)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootDarkElixir] = getResourcesLootDE(353, 365 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootDarkElixir] = getResourcesLootDE(353, 365)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 402 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 402)
 		If _ColorCheck(_GetPixelColor($aAtkRprtTrophyCheck[0], $aAtkRprtTrophyCheck[1], True), Hex($aAtkRprtTrophyCheck[2], 6), $aAtkRprtTrophyCheck[3]) Then
 			$g_iStatsLastAttack[$eLootTrophy] = -$g_iStatsLastAttack[$eLootTrophy]
 		EndIf
 		SetLog("Loot: [G]: " & _NumberFormat($g_iStatsLastAttack[$eLootGold]) & " [E]: " & _NumberFormat($g_iStatsLastAttack[$eLootElixir]) & " [DE]: " & _NumberFormat($g_iStatsLastAttack[$eLootDarkElixir]) & " [T]: " & $g_iStatsLastAttack[$eLootTrophy], $COLOR_SUCCESS)
 	Else
-		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(285, 289 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(285, 289)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(285, 328 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(285, 328)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 365 + $g_iMidOffsetY)
+		$g_iStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 365)
 		If _ColorCheck(_GetPixelColor($aAtkRprtTrophyCheck[0], $aAtkRprtTrophyCheck[1], True), Hex($aAtkRprtTrophyCheck[2], 6), $aAtkRprtTrophyCheck[3]) Then
 			$g_iStatsLastAttack[$eLootTrophy] = -$g_iStatsLastAttack[$eLootTrophy]
 		EndIf
@@ -67,20 +67,20 @@ Func AttackReport()
 	EndIf
 
 	If $g_iStatsLastAttack[$eLootTrophy] >= 0 Then
-		$iBonusLast = Number(getResourcesBonusPerc(570, 309 + $g_iMidOffsetY))
+		$iBonusLast = Number(getResourcesBonusPerc(570, 309))
 		If $iBonusLast > 0 Then
 			SetLog("Bonus Percentage: " & $iBonusLast & "%")
 			Local $iCalcMaxBonus = 0, $iCalcMaxBonusDark = 0
 
 			If _ColorCheck(_GetPixelColor($aAtkRprtDECheck2[0], $aAtkRprtDECheck2[1], True), Hex($aAtkRprtDECheck2[2], 6), $aAtkRprtDECheck2[3]) Then
 				If _Sleep($DELAYATTACKREPORT2) Then Return
-				$g_iStatsBonusLast[$eLootGold] = getResourcesBonus(590, 340 + $g_iMidOffsetY)
+				$g_iStatsBonusLast[$eLootGold] = getResourcesBonus(590, 340)
 				$g_iStatsBonusLast[$eLootGold] = StringReplace($g_iStatsBonusLast[$eLootGold], "+", "")
 				If _Sleep($DELAYATTACKREPORT2) Then Return
-				$g_iStatsBonusLast[$eLootElixir] = getResourcesBonus(590, 371 + $g_iMidOffsetY)
+				$g_iStatsBonusLast[$eLootElixir] = getResourcesBonus(590, 371)
 				$g_iStatsBonusLast[$eLootElixir] = StringReplace($g_iStatsBonusLast[$eLootElixir], "+", "")
 				If _Sleep($DELAYATTACKREPORT2) Then Return
-				$g_iStatsBonusLast[$eLootDarkElixir] = getResourcesBonus(621, 402 + $g_iMidOffsetY)
+				$g_iStatsBonusLast[$eLootDarkElixir] = getResourcesBonus(621, 402)
 				$g_iStatsBonusLast[$eLootDarkElixir] = StringReplace($g_iStatsBonusLast[$eLootDarkElixir], "+", "")
 
 				If $iBonusLast = 100 Then
@@ -94,10 +94,10 @@ Func AttackReport()
 				EndIf
 			Else
 				If _Sleep($DELAYATTACKREPORT2) Then Return
-				$g_iStatsBonusLast[$eLootGold] = getResourcesBonus(590, 340 + $g_iMidOffsetY)
+				$g_iStatsBonusLast[$eLootGold] = getResourcesBonus(590, 340)
 				$g_iStatsBonusLast[$eLootGold] = StringReplace($g_iStatsBonusLast[$eLootGold], "+", "")
 				If _Sleep($DELAYATTACKREPORT2) Then Return
-				$g_iStatsBonusLast[$eLootElixir] = getResourcesBonus(590, 371 + $g_iMidOffsetY)
+				$g_iStatsBonusLast[$eLootElixir] = getResourcesBonus(590, 371)
 				$g_iStatsBonusLast[$eLootElixir] = StringReplace($g_iStatsBonusLast[$eLootElixir], "+", "")
 				$g_iStatsBonusLast[$eLootDarkElixir] = 0
 

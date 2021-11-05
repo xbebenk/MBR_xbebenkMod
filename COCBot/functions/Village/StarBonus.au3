@@ -18,8 +18,8 @@ Func StarBonus()
 	; Verify is Star bonus window open?
 	If Not _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "IsMainGrayed") Then Return ; Star bonus window opens on main base view, and grays page.
 
-	Local $aWindowChk1[4] = [640, 184 + $g_iMidOffsetY, 0xCD1A1F, 15] ; Red X to close Window
-	Local $aWindowChk2[4] = [650, 462 + $g_iBottomOffsetY, 0xE8E8E0, 10] ; White pixel on top trees where it does not belong
+	Local $aWindowChk1[4] = [640, 184, 0xCD1A1F, 15] ; Red X to close Window
+	Local $aWindowChk2[4] = [650, 462, 0xE8E8E0, 10] ; White pixel on top trees where it does not belong
 
 	If _Sleep($DELAYSTARBONUS100) Then Return
 
@@ -27,8 +27,8 @@ Func StarBonus()
 	If _CheckPixel($aWindowChk1, $g_bCapturePixel, Default, "Starbonus1") And _CheckPixel($aWindowChk2, $g_bCapturePixel, Default, "Starbonus2") Then
 		; Find and Click Okay button
 		Local $offColors[3][3] = [[0x131313, 144, 0], [0xFFFFFF, 54, 17], [0xD7F478, 54, 10]] ; 2nd Black opposite button, 3rd pixel white "O" center top, 4th pixel White "0" bottom center
-		Local $ButtonPixel = _MultiPixelSearch(353, 442 + $g_iMidOffsetY, 502, 474 + $g_iMidOffsetY, 1, 1, Hex(0x131313, 6), $offColors, 20) ; first vertical black pixel of Okay
-		If $g_bDebugSetlog Then SetDebugLog("Okay btn chk-#1: " & _GetPixelColor(354, 442 + $g_iMidOffsetY, $g_bCapturePixel) & ", #2: " & _GetPixelColor(354 + 145, 442 + $g_iMidOffsetY, $g_bCapturePixel) & ", #3: " & _GetPixelColor(354 + 55, 442 + 16 + $g_iMidOffsetY, $g_bCapturePixel) & ", #4: " & _GetPixelColor(355 + 51, 442 + 23 + $g_iMidOffsetY, $g_bCapturePixel), $COLOR_DEBUG)
+		Local $ButtonPixel = _MultiPixelSearch(353, 442, 502, 474, 1, 1, Hex(0x131313, 6), $offColors, 20) ; first vertical black pixel of Okay
+		If $g_bDebugSetlog Then SetDebugLog("Okay btn chk-#1: " & _GetPixelColor(354, 442, $g_bCapturePixel) & ", #2: " & _GetPixelColor(354 + 145, 442, $g_bCapturePixel) & ", #3: " & _GetPixelColor(354 + 55, 442 + 16, $g_bCapturePixel) & ", #4: " & _GetPixelColor(355 + 51, 442 + 23, $g_bCapturePixel), $COLOR_DEBUG)
 		If IsArray($ButtonPixel) Then
 			If $g_bDebugSetlog Then
 				SetDebugLog("ButtonPixelLocation = " & $ButtonPixel[0] & ", " & $ButtonPixel[1], $COLOR_DEBUG) ;Debug

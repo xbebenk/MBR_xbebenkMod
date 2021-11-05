@@ -203,7 +203,7 @@ Func DonateCC($bCheckForNewMsg = False)
 
 	;check for new chats first, Every fith time skip this to just check a little bit more frequent
 	If ($bCheckForNewMsg And Random(0, 3, 1) < 3) Then
-		If Not _ColorCheck(_GetPixelColor(26, 312 + $g_iMidOffsetY, True), Hex(0xf00810, 6), 20) Then Return ;exit if no new chats
+		If Not _ColorCheck(_GetPixelColor(26, 312, True), Hex(0xf00810, 6), 20) Then Return ;exit if no new chats
 	EndIf
 
 	; check if donate queued troops & spells only

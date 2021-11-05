@@ -118,11 +118,11 @@ Func QueenUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Queen info and Level
-	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
+	Local $sInfo = BuildingInfo(242, 494) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
+		$sInfo = BuildingInfo(242, 494) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		Sleep(100)
 		$CountGetInfo += 1
@@ -176,7 +176,7 @@ Func QueenUpgrade()
 		ClickP($aUpgradeButton)
 		If _Sleep($DELAYUPGRADEHERO3) Then Return ; Wait for window to open
 		If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn1")
-		If _ColorCheck(_GetPixelColor(721, 118 + $g_iMidOffsetY, True), Hex(0xE00408, 6), 20) Then ; Check if the Hero Upgrade window is open
+		If _ColorCheck(_GetPixelColor(721, 118, True), Hex(0xE00408, 6), 20) Then ; Check if the Hero Upgrade window is open
 
 			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
 			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
@@ -185,7 +185,7 @@ Func QueenUpgrade()
 
 				If _Sleep($DELAYUPGRADEHERO1) Then Return
 				If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn2")
-				If _ColorCheck(_GetPixelColor(573, 256 + $g_iMidOffsetY, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
+				If _ColorCheck(_GetPixelColor(573, 256, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
 					SetLog("Queen Upgrade Fail! Gem Window popped up!", $COLOR_ERROR)
 					ClickAway()
 					Return
@@ -222,11 +222,11 @@ Func KingUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get King info
-	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
+	Local $sInfo = BuildingInfo(242, 494) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
+		$sInfo = BuildingInfo(242, 494) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		If _Sleep(100) Then Return
 		$CountGetInfo += 1
@@ -281,7 +281,7 @@ Func KingUpgrade()
 		If _Sleep($DELAYUPGRADEHERO3) Then Return ; Wait for window to open
 		If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn1")
 
-		If _ColorCheck(_GetPixelColor(715, 120 + $g_iMidOffsetY, True), Hex(0xE01C20, 6), 20) Then ; Check if the Hero Upgrade window is open
+		If _ColorCheck(_GetPixelColor(715, 120, True), Hex(0xE01C20, 6), 20) Then ; Check if the Hero Upgrade window is open
 			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
 			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
 				ClickP($aWhiteZeros, 1, 0) ; Click upgrade buttton
@@ -289,7 +289,7 @@ Func KingUpgrade()
 
 				If _Sleep($DELAYUPGRADEHERO1) Then Return
 				If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn2")
-				If _ColorCheck(_GetPixelColor(573, 256 + $g_iMidOffsetY, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
+				If _ColorCheck(_GetPixelColor(573, 256, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
 					SetLog("King Upgrade Fail! Gem Window popped up!", $COLOR_ERROR)
 					ClickAway()
 					Return
@@ -333,11 +333,11 @@ Func WardenUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Warden info
-	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
+	Local $sInfo = BuildingInfo(242, 494) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
+		$sInfo = BuildingInfo(242, 494) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		If _Sleep(100) Then Return
 		$CountGetInfo += 1
@@ -396,8 +396,8 @@ Func WardenUpgrade()
 
 		If $g_bDebugSetlog Then SaveDebugImage("UpgradeElixirBtn1")
 
-		If $g_bDebugSetlog Then SetDebugLog("pixel: " & _GetPixelColor(718, 120 + $g_iMidOffsetY, True) & " expected " & Hex(0xDD0408, 6) & " result: " & _ColorCheck(_GetPixelColor(718, 120 + $g_iMidOffsetY, True), Hex(0xDD0408, 6), 20), $COLOR_DEBUG)
-		If _ColorCheck(_GetPixelColor(718, 120 + $g_iMidOffsetY, True), Hex(0xDD0408, 6), 20) Then ; Check if the Hero Upgrade window is open
+		If $g_bDebugSetlog Then SetDebugLog("pixel: " & _GetPixelColor(718, 120, True) & " expected " & Hex(0xDD0408, 6) & " result: " & _ColorCheck(_GetPixelColor(718, 120, True), Hex(0xDD0408, 6), 20), $COLOR_DEBUG)
+		If _ColorCheck(_GetPixelColor(718, 120, True), Hex(0xDD0408, 6), 20) Then ; Check if the Hero Upgrade window is open
 
 			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
 			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
@@ -407,7 +407,7 @@ Func WardenUpgrade()
 				If _Sleep($DELAYUPGRADEHERO1) Then Return
 
 				If $g_bDebugSetlog Then SaveDebugImage("UpgradeElixirBtn2")
-				If _ColorCheck(_GetPixelColor(573, 256 + $g_iMidOffsetY, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
+				If _ColorCheck(_GetPixelColor(573, 256, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
 					SetLog("Warden Upgrade Fail! Gem Window popped up!", $COLOR_ERROR)
 					ClickAway()
 					Return
@@ -446,11 +446,11 @@ Func ChampionUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Champion info and Level
-	Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
+	Local $sInfo = BuildingInfo(242, 494) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
+		$sInfo = BuildingInfo(242, 494) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		Sleep(100)
 		$CountGetInfo += 1
@@ -504,7 +504,7 @@ Func ChampionUpgrade()
 		ClickP($aUpgradeButton)
 		If _Sleep($DELAYUPGRADEHERO3) Then Return ; Wait for window to open
 		If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn1")
-		If _ColorCheck(_GetPixelColor(721, 118 + $g_iMidOffsetY, True), Hex(0xE00408, 6), 20) Then ; Check if the Hero Upgrade window is open
+		If _ColorCheck(_GetPixelColor(721, 118, True), Hex(0xE00408, 6), 20) Then ; Check if the Hero Upgrade window is open
 
 			Local $aWhiteZeros = decodeSingleCoord(findImage("UpgradeWhiteZero" ,$g_sImgUpgradeWhiteZero, GetDiamondFromRect("408,519,747,606"), 1, True, Default))
 			If IsArray($aWhiteZeros) And UBound($aWhiteZeros, 1) = 2 Then
@@ -513,7 +513,7 @@ Func ChampionUpgrade()
 
 				If _Sleep($DELAYUPGRADEHERO1) Then Return
 				If $g_bDebugImageSave Then SaveDebugImage("UpgradeDarkBtn2")
-				If _ColorCheck(_GetPixelColor(573, 256 + $g_iMidOffsetY, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
+				If _ColorCheck(_GetPixelColor(573, 256, True), Hex(0xDB0408, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
 					SetLog("Champion Upgrade Fail! Gem Window popped up!", $COLOR_ERROR)
 					ClickAway()
 					Return

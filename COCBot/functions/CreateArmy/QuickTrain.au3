@@ -29,7 +29,7 @@ Func QuickTrain()
 
 	Local $iStep = 1
 	While 1
-		Local $avTroopCamp = GetCurrentArmy(48, 160)
+		Local $avTroopCamp = GetCurrentArmy(110, 134)
 		SetLog("Checking Troop tab: " & $avTroopCamp[0] & "/" & $avTroopCamp[1] * 2)
 		If $avTroopCamp[1] = 0 Then ExitLoop
 
@@ -408,7 +408,7 @@ Func CheckQuickTrainTroop()
 
 			; cross check with army camp
 			If _ArrayMax($g_aiArmyQuickTroops) > 0 Then
-				Local $TroopCamp = GetCurrentArmy(48, 160)
+				Local $TroopCamp = GetCurrentArmy(110, 134)
 				$iTroopCamp = $TroopCamp[1] * 2
 				If $TempTroopTotal <> $TroopCamp[0] Then
 					SetLog("Error reading troops in army setting (" & $TempTroopTotal & " vs " & $TroopCamp[0] & ")", $COLOR_ERROR)

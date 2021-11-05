@@ -79,7 +79,7 @@ Func CollectDailyRewards($bGoldPass = False)
 	Local $iClaim = 0
 	For $i = 0 To 10
 		If Not $g_bRunState Then Return
-		Local $SearchArea = $bGoldPass ? GetDiamondFromRect("25,336(810,240)") : GetDiamondFromRect("25,535(810,35)")
+		Local $SearchArea = $bGoldPass ? GetDiamondFromRect("25,300(810,240)") : GetDiamondFromRect("25,500(810,35)")
 		Local $aResult = findMultiple(@ScriptDir & "\imgxml\DailyChallenge\", $SearchArea, $SearchArea, 0, 1000, $bGoldPass ? 5 : 2, "objectname,objectpoints", True)
 		If $aResult <> "" And IsArray($aResult) Then
 			For $i = 0 To UBound($aResult) - 1
@@ -92,7 +92,7 @@ Func CollectDailyRewards($bGoldPass = False)
 
 					For $j = 0 To UBound($aAllCoords) - 1
 						ClickP($aAllCoords[$j], 1, 0, "Claim " & $j + 1) ; Click Claim button
-						If WaitforPixel(350, 410, 351, 411, Hex(0xFDC875, 6), 20, 3) Then; wait for Cancel Button popped up in 1.5 second
+						If WaitforPixel(350, 380, 351, 381, Hex(0xFDC875, 6), 20, 3) Then; wait for Cancel Button popped up in 1.5 second
 						    If $g_bChkSellRewards Then
 							    Setlog("Selling extra reward for gems", $COLOR_SUCCESS)
 								ClickP($aPersonalChallengeOkBtn, 1, 0, "Okay Btn") ; Click the Okay
@@ -116,7 +116,7 @@ Func CollectDailyRewards($bGoldPass = False)
 			Else
 				SetLog($i & ".. ", Default, Default, Default, Default, Default, 0, $i < 10 ? False : Default) ; no time
 			EndIf
-			ClickDrag(100, 385 + $g_iMidOffsetY, 750, 385 + $g_iMidOffsetY, 1000) ;x1 was 50. x2 was 810  Change for Dec '20 update
+			ClickDrag(100, 385, 750, 385, 1000) ;x1 was 50. x2 was 810  Change for Dec '20 update
 			If _Sleep(500) Then ExitLoop
 		Else
 			If $i > 0 Then SetLog($i & ".", Default, Default, Default, Default, Default, False) ; no time + end line
@@ -158,6 +158,7 @@ Func ClosePersonalChallenges()
 		ClickP($aPersonalChallengeCloseButton, 1, 0, "#0667")
 	Else
 		SetLog("Can't find close button", $COLOR_ERROR)
+		Click(825, 42)
 		ClickAway()
 	EndIf
 

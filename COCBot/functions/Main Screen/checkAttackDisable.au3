@@ -70,9 +70,9 @@ Func checkAttackDisable($iSource, $Result = "")
 				Return ; exit function, take a break text not found
 			EndIf
 		Case $g_iTaBChkIdle ; look at location 180, 167 for the have "been" online too long message, and the "after" Personal Break message
-			If $Result = "" Then $Result = getAttackDisable(180, 156 + $g_iMidOffsetY) ; change to 180, 186 for 860x780
+			If $Result = "" Then $Result = getAttackDisable(180, 156) ; change to 180, 186 for 860x780
 			If _Sleep($DELAYATTACKDISABLE500) Then Return ; short wait to not delay to much
-			If $Result = "" Or (StringLen($Result) < 3) Then $Result = getAttackDisable(180, 156 + $g_iMidOffsetY) ; Grab Ocr for "Have Been" 2nd time if not found due slow PC
+			If $Result = "" Or (StringLen($Result) < 3) Then $Result = getAttackDisable(180, 156) ; Grab Ocr for "Have Been" 2nd time if not found due slow PC
 			If $g_bDebugSetlog Then SetDebugLog("Personal Break OCR result = " & $Result, $COLOR_DEBUG)
 			If $Result <> "" Then ; fast test to see if have Take-A-Break
 				If StringInStr($Result, "been") <> 0 Or StringInStr($Result, "after") <> 0 Or StringInStr($Result, "have") <> 0 Then ; verify we have right text string, 'after' added for Personal Break

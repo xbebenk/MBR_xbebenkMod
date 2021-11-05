@@ -63,12 +63,12 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 		Else
 			$RewardCollected = True
 		EndIf
-		ClickAway()
+		Click(822,46)
 		If _Sleep(1500) Then Return
 		If Not IsMainPage() Then ExitLoop
 	WEnd
 	
-	ClickAway()
+	Click(822,46)
 	Return
 EndFunc   ;==>CollectAchievements
 

@@ -43,8 +43,8 @@ Func GetOffestPixelRedArea2($pixel, $eVectorType, $offset = 3)
 		$pixelOffest[1] = $pixel[1] - $offset
 	EndIf
 	; Not select pixel in menu of troop
-	If $pixelOffest[1] > 555 + $g_iBottomOffsetY Then
-		$pixelOffest[1] = 555 + $g_iBottomOffsetY
+	If $pixelOffest[1] > 555 Then
+		$pixelOffest[1] = 555
 	EndIf
 	; debugRedArea($nameFunc&" OUT")
 	Return $pixelOffest
