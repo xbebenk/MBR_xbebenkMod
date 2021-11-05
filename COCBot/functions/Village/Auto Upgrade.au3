@@ -65,6 +65,7 @@ Func SearchUpgrade($bTest = False)
 	Local $b_BuildingFound = False, $NeedDrag = True
 	For $z = 0 To 9 ;for do scroll 10 times
 		Local $x = 180, $y = 80, $x1 = 490, $y1 = 103, $step = 28
+		Local $tmpName
 		For $i = 0 To 9
 			If Not $g_bRunState Then Return
 			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-8, $x1, $y1+8) Then
@@ -86,13 +87,23 @@ Func SearchUpgrade($bTest = False)
 					EndIf
 				EndIf
 				
+				If $z > 0 And $i = 9 Then 
+					Click(400, 350) ;click most bottom
+					If _Sleep(500) Then Return
+					Local $name = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+					If $name[1] = $tmpName Then $NeedDrag = False
+					$tmpName = $name[1] 
+				EndIf
+				
 				If $b_BuildingFound Then
 					Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
 					If _Sleep(1000) Then Return
 					If DoUpgrade($bTest) Then
 						$b_BuildingFound = False ;reset
 						$z = 0 ;reset
+						ClickMainBuilder($bTest)
 						If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
+					Else
 						ClickMainBuilder($bTest)
 					Endif
 				EndIf
@@ -150,7 +161,7 @@ Func DoUpgrade($bTest = False)
 	If Not $g_bRunState Then Return
 	
 	; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
-	$g_aUpgradeNameLevel = BuildingInfo(242, 494)
+	$g_aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
 	If $g_aUpgradeNameLevel[0] = "" Then
 		SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
 		Return False
@@ -292,13 +303,13 @@ Func DoUpgrade($bTest = False)
 
 	Switch $g_aUpgradeNameLevel[1]
 		Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion"
-			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 500, 730, 580) ; get resource
-			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522) ; get cost
-			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 465) ; get duration
+			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 540, 730, 580) ; get resource
+			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522 + $g_iMidOffsetY) ; get cost
+			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 465 + $g_iMidOffsetY) ; get duration
 		Case Else
-			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 480, 500, 550) ; get resource
-			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487) ; get cost
-			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(195, 307) ; get duration
+			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 510, 500, 550) ; get resource
+			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487 + $g_iMidOffsetY) ; get cost
+			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(195, 307 + $g_iMidOffsetY) ; get duration
 	EndSwitch
 
 	; if one of the value is empty, there is an error, we must exit Auto Upgrade
@@ -417,7 +428,7 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 	Local $txtAccName = $g_asProfileName[$g_iCurAccount]
 	
 	If $aUpgradeNameLevel = Default Then 
-		$aUpgradeNameLevel = BuildingInfo(242, 494)
+		$aUpgradeNameLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
 		If $aUpgradeNameLevel[0] = "" Then
 			SetLog("Error when trying to get upgrade name and level", $COLOR_ERROR)
 			$aUpgradeNameLevel[1] = "Traps"
@@ -710,7 +721,9 @@ Func GoGoblinMap()
 	SetLog("Going to Goblin Map to reset Field", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	If _Sleep(2000) Then Return
-	Click(140, 360) ;Select Goblin Map
+	If _ColorCheck(_GetPixelColor(250, 360, True), Hex(0xB07453, 6), 1) Then ;goblin not selected
+		Click(140, 360)
+	EndIf
 	If _Sleep(1000) Then Return
 	If Not _ColorCheck(_GetPixelColor(250, 360, True), Hex(0xB07453, 6), 1) Then ;goblin selected
 		;Click(425, 240)
@@ -725,14 +738,14 @@ Func GoGoblinMap()
 				If _Sleep(500) Then Return
 				Click($CircleCoord[0], $CircleCoord[1] + 50)
 			Else
-				Click(818, 55)
+				Click(818, 81)
 			EndIf
 		EndIf
 	EndIf
 	If Not $g_bRunState Then Return
 	_Sleep(6000)
 	If IsAttackPage() Then
-		Click(66, 540)
+		Click(66, 590)
 	EndIf
 	
 	If _Sleep(3500) Then Return

@@ -14,8 +14,8 @@
 ; ===============================================================================================================================
 
 Func GetAttackBarBB($bRemaining = False)
-	local $iTroopBanners = 582 ; y location of where to find troop quantities
-	local $aSlot1 = [85, 582] ; location of first slot
+	local $iTroopBanners = 640 ; y location of where to find troop quantities
+	local $aSlot1 = [85, 640] ; location of first slot
 	local $iSlotOffset = 73 ; slots are 73 pixels apart
 	local $iBarOffset = 66 ; 66 pixels from side to attack bar
 
@@ -39,7 +39,7 @@ Func GetAttackBarBB($bRemaining = False)
 
 	If Not $g_bRunState Then Return ; Stop Button
 	
-	local $sSearchDiamond = GetDiamondFromRect("0,580,860,670")
+	local $sSearchDiamond = GetDiamondFromRect("0,630,860,732")
 	local $aBBAttackBarResult = findMultiple($g_sImgDirBBTroops, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
 
 	If UBound($aBBAttackBarResult) = 0 Then

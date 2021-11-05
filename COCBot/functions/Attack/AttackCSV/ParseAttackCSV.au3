@@ -475,7 +475,7 @@ Func ParseAttackCSV($debug = False)
 							; When Break on TH Kill And Siege is active, if both TH is destroyed and Siege troops are dropped, return ASAP
 							If $bBreakOnTHAndSiege And CheckIfSiegeDroppedTheTroops($hSleepTimer, $aSiegeSlotPos) And CheckIfTownHallGotDestroyed($hSleepTimer) Then ContinueLoop 2
 							; Read Resources and Damage
-							$Damage = getOcrOverAllDamage(780, 529)
+							$Damage = getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY)
 							$Gold = getGoldVillageSearch(48, 69)
 							$Elixir = getElixirVillageSearch(48, 69 + 29)
 							If _Sleep($DELAYRESPOND) Then Return ; check for pause/stop
@@ -595,7 +595,7 @@ Func CheckIfTownHallGotDestroyed($hSleepTimer)
 							   _ColorCheck(_GetPixelColor(Int($g_iGAME_WIDTH / 2) + 2, Int($g_iGAME_HEIGHT / 2) + 2, True), Hex(0xC0C4C0, 6), 20) And _
 							   _ColorCheck(_GetPixelColor(Int($g_iGAME_WIDTH / 2) + 2, Int($g_iGAME_HEIGHT / 2) - 2, True), Hex(0xC0C4C0, 6), 20)
 	;Get Current Damge %
-	Local $iDamage = Number(getOcrOverAllDamage(780, 529))
+	Local $iDamage = Number(getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY))
 
 	; Optimistic Trigger on Star Popup
 	If $bCentralStarPopup Then

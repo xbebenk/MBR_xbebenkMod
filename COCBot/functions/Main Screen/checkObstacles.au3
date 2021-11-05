@@ -24,7 +24,7 @@ Func checkObstacles($bBuilderBase = Default) ;Checks if something is in the way 
 	EndIf
 	If _ColorCheck(_GetPixelColor(383, 405), Hex(0xF0BE70, 6), 20) Then
 		SetLog("Found Switch Account dialog!", $COLOR_INFO)
-		PureClick(383, 375, 1, 0, "Click Cancel")
+		PureClick(383, 375 + $g_iMidOffsetY, 1, 0, "Click Cancel")
 	EndIf
 
 	Local $wasForce = OcrForceCaptureRegion(False)
@@ -91,7 +91,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If $g_bDebugSetlog Then SetDebugLog("33B5E5=>true, 282828=>false", $COLOR_DEBUG)
 
 		;;;;;;;##### 1- Another device #####;;;;;;;
-		$Result = getOcrReloadMessage(184, 325, "Another Device OCR:") ; OCR text to find Another device message
+		$Result = getOcrReloadMessage(184, 325 + $g_iMidOffsetY, "Another Device OCR:") ; OCR text to find Another device message
 		If StringInStr($Result, "device", $STR_NOCASESENSEBASIC) Or _
 				UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,330(130,60)", False))) > 1 Then
 			If TestCapture() Then Return "Another Device has connected"
@@ -139,13 +139,13 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			Case _CheckPixel($aIsConnectLost, $g_bNoCapturePixel) Or UBound(decodeSingleCoord(FindImageInPlace("ConnectionLost", $g_sImgConnectionLost, "160,300,700,450", False))) > 1 ; Connection Lost
 				;  Add check for banned account :(
-				$Result = getOcrReloadMessage(171, 358, "Check Obstacles OCR 'policy at super'=") ; OCR text for "policy at super"
+				$Result = getOcrReloadMessage(171, 358 + $g_iMidOffsetY, "Check Obstacles OCR 'policy at super'=") ; OCR text for "policy at super"
 				If StringInStr($Result, "policy", $STR_NOCASESENSEBASIC) Then
 					$msg = "Sorry but account has been banned, Bot must stop!"
 					BanMsgBox()
 					Return checkObstacles_StopBot($msg)
 				EndIf
-				$Result = getOcrReloadMessage(171, 337, "Check Obstacles OCR 'prohibited 3rd'= ") ; OCR text for "prohibited 3rd party"
+				$Result = getOcrReloadMessage(171, 337 + $g_iMidOffsetY, "Check Obstacles OCR 'prohibited 3rd'= ") ; OCR text for "prohibited 3rd party"
 				If StringInStr($Result, "3rd", $STR_NOCASESENSEBASIC) Then
 					$msg = "Sorry but account has been banned, Bot must stop!"
 					BanMsgBox()
@@ -165,7 +165,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Case Else
 				;  Add check for game update and Rate CoC error messages
 				If $g_bDebugImageSave Then SaveDebugImage("ChkObstaclesReloadMsg_", False) ; debug only
-				;$Result = getOcrRateCoc(228, 390, "Check Obstacles getOCRRateCoC= ")
+				;$Result = getOcrRateCoc(228, 390 + $g_iMidOffsetY, "Check Obstacles getOCRRateCoC= ")
 				Local $sRegion = "220,420(60,25)"
 				If $g_iAndroidVersionAPI >= $g_iAndroidLollipop Then
 					$sRegion = "555,400(60,25)"
@@ -177,7 +177,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 					$g_bMinorObstacle = True
 					Return True
 				EndIf
-				$Result = getOcrReloadMessage(171, 325, "Check Obstacles OCR 'Good News!'=") ; OCR text for "Good News!"
+				$Result = getOcrReloadMessage(171, 325 + $g_iMidOffsetY, "Check Obstacles OCR 'Good News!'=") ; OCR text for "Good News!"
 				If StringInStr($Result, "new", $STR_NOCASESENSEBASIC) Then
 					If Not $g_bAutoUpdateGame Then
 						$msg = "Game Update is required, Bot must stop!"
@@ -196,18 +196,18 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 					EndIf
 				ElseIf StringInStr($Result, "rate", $STR_NOCASESENSEBASIC) Then ; back up check for rate CoC reload window
 					SetLog("Clash feedback window found, permanently closed!", $COLOR_ERROR)
-					PureClick(248, 408, 1, 0, "#9999") ; Click on never to close window and stop reappear. Never=248,408 & Later=429,408
+					PureClick(248, 408 + $g_iMidOffsetY, 1, 0, "#9999") ; Click on never to close window and stop reappear. Never=248,408 & Later=429,408
 					$g_bMinorObstacle = True
 					Return True
 				EndIf
 				;  Add check for banned account :(
-				$Result = getOcrReloadMessage(171, 358, "Check Obstacles OCR 'policy at super'=") ; OCR text for "policy at super"
+				$Result = getOcrReloadMessage(171, 358 + $g_iMidOffsetY, "Check Obstacles OCR 'policy at super'=") ; OCR text for "policy at super"
 				If StringInStr($Result, "policy", $STR_NOCASESENSEBASIC) Then
 					$msg = "Sorry but account has been banned, Bot must stop!"
 					BanMsgBox()
 					Return checkObstacles_StopBot($msg) ; stop bot
 				EndIf
-				$Result = getOcrReloadMessage(171, 337, "Check Obstacles OCR 'prohibited 3rd'= ") ; OCR text for "prohibited 3rd party"
+				$Result = getOcrReloadMessage(171, 337 + $g_iMidOffsetY, "Check Obstacles OCR 'prohibited 3rd'= ") ; OCR text for "prohibited 3rd party"
 				If StringInStr($Result, "3rd", $STR_NOCASESENSEBASIC) Then
 					$msg = "Sorry but account has been banned, Bot must stop!"
 					BanMsgBox()
@@ -251,9 +251,9 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Return checkObstacles_ReloadCoC(Default, "", $bRecursive) ; just start CoC (but first close it!)
 	EndIf
 	Local $bHasTopBlackBar = _ColorCheck(_GetPixelColor(10, 3), Hex(0x000000, 6), 1) And _ColorCheck(_GetPixelColor(300, 6), Hex(0x000000, 6), 1) And _ColorCheck(_GetPixelColor(600, 9), Hex(0x000000, 6), 1)
-	If _ColorCheck(_GetPixelColor(235, 209), Hex(0x9E3826, 6), 20) Then
+	If _ColorCheck(_GetPixelColor(235, 209 + $g_iMidOffsetY), Hex(0x9E3826, 6), 20) Then
 		SetDebugLog("checkObstacles: Found Window to close")
-		PureClick(429, 493, 1, 0, "#0132") ;See if village was attacked, clicks Okay
+		PureClick(429, 493 + $g_iMidOffsetY, 1, 0, "#0132") ;See if village was attacked, clicks Okay
 		$g_abNotNeedAllTime[0] = True
 		$g_abNotNeedAllTime[1] = True
 		$g_bMinorObstacle = True
@@ -300,20 +300,20 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Return True
 	EndIf
 	If _CheckPixel($aNoCloudsAttack, $g_bNoCapturePixel) Then ; Prevent drop of troops while searching
-		$aMessage = _PixelSearch(23, 566, 36, 580, Hex(0xF4F7E3, 6), 10, False)
+		$aMessage = _PixelSearch(23, 566 + $g_iBottomOffsetY, 36, 580 + $g_iBottomOffsetY, Hex(0xF4F7E3, 6), 10, False)
 		If IsArray($aMessage) Then
 			SetDebugLog("checkObstacles: Found Return Home button")
-			; If _ColorCheck(_GetPixelColor(67,  602), Hex(0xDCCCA9, 6), 10) = False Then  ; add double check?
-			PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
+			; If _ColorCheck(_GetPixelColor(67,  602 + $g_iBottomOffsetY), Hex(0xDCCCA9, 6), 10) = False Then  ; add double check?
+			PureClick(67, 602 + $g_iBottomOffsetY, 1, 0, "#0138") ;Check if Return Home button available
 			If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 			Return True
 		EndIf
 	EndIf
 	If IsPostDefenseSummaryPage(False) Then
-		$aMessage = _PixelSearch(23, 566, 36, 580, Hex(0xE0E1CE, 6), 10, False)
+		$aMessage = _PixelSearch(23, 566 + $g_iBottomOffsetY, 36, 580 + $g_iBottomOffsetY, Hex(0xE0E1CE, 6), 10, False)
 		If IsArray($aMessage) Then
 			SetDebugLog("checkObstacles: Found Post Defense Summary to close")
-			PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
+			PureClick(67, 602 + $g_iBottomOffsetY, 1, 0, "#0138") ;Check if Return Home button available
 			If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 			Return True
 		EndIf
@@ -325,7 +325,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If TestCapture() Then Return "CoC Has Stopped Error ....."
 		PushMsg("CoCError")
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		;PureClick(250 + $x, 328 + $y, 1, 0, "#0129");Check for "CoC has stopped error, looking for OK message" on screen
+		;PureClick(250 + $x, 328 + $g_iMidOffsetY + $y, 1, 0, "#0129");Check for "CoC has stopped error, looking for OK message" on screen
 		PureClick($CSFoundCoords[0], $CSFoundCoords[1], 1, 0, "#0129") ;Check for "CoC has stopped error, looking for OK message" on screen
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return checkObstacles_ReloadCoC(Default, "", $bRecursive)

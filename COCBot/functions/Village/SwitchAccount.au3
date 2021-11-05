@@ -445,7 +445,7 @@ Func SwitchCOCAcc_DisconnectConnect(ByRef $bResult, $bDisconnectOnly = $g_bChkSh
 				Return -1
 			EndIf
 		Else ; SupercellID
-			Local $aSuperCellIDConnected = decodeSingleCoord(findImage("SupercellID Connected", $g_sImgSupercellIDConnected, GetDiamondFromRect("550,120,785,190"), 1, True, Default))
+			Local $aSuperCellIDConnected = decodeSingleCoord(findImage("SupercellID Connected", $g_sImgSupercellIDConnected, GetDiamondFromRect("612,161,691,216"), 1, True, Default))
 			If IsArray($aSuperCellIDConnected) And UBound($aSuperCellIDConnected, 1) >= 2 Then
 				SetLog("Account connected to SuperCell ID")
 				;ExitLoop
@@ -529,7 +529,7 @@ Func SwitchCOCAcc_ClickAccount(ByRef $bResult, $iNextAccount, $bStayDisconnected
 			If IsArray($aiButtonDisconnect) And UBound($aiButtonDisconnect, 1) >= 2 Then ClickP($aiButtonDisconnect)
 			If _Sleep(600) Then Return FuncReturn("Exit")
 		Else ; SupercellID
-			Local $aSuperCellIDConnected = decodeSingleCoord(findImage("SupercellID Connected", $g_sImgSupercellIDConnected, GetDiamondFromRect("155,100,705,710"), 1, True, Default))
+			Local $aSuperCellIDConnected = decodeSingleCoord(findImage("SupercellID Connected", $g_sImgSupercellIDConnected, GetDiamondFromRect("612,161,691,216"), 1, True, Default))
 			If IsArray($aSuperCellIDConnected) And UBound($aSuperCellIDConnected, 1) >= 2 Then
 				;SetLog("Account connected to SuperCell ID, cannot disconnect")
 				If $bStayDisconnected Then
@@ -646,7 +646,7 @@ EndFunc   ;==>SwitchCOCAcc_ConfirmAccount
 
 Func SwitchCOCAcc_ConnectedSCID(ByRef $bResult)
 	For $i = 0 To 20 ; Checking Blue Reload button continuously in 20sec
-		Local $aSuperCellIDReload = decodeSingleCoord(findImage("SupercellID Reload", $g_sImgSupercellIDReload, GetDiamondFromRect("550,130,620,200"), 1, True, Default))
+		Local $aSuperCellIDReload = decodeSingleCoord(findImage("SupercellID Reload", $g_sImgSupercellIDReload, GetDiamondFromRect("563,163,612,217"), 1, True, Default))
 		If IsArray($aSuperCellIDReload) And UBound($aSuperCellIDReload, 1) >= 2 Then
 			Click($aSuperCellIDReload[0], $aSuperCellIDReload[1], 1, 0, "Click Reload SC_ID")
 			Setlog("   1. Click Reload Supercell ID")
@@ -674,7 +674,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 	If Not $g_bRunState Then Return
 
 	For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
-		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,80,760,160"), 1, True, Default))
+		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("440,1,859,243"), 1, True, Default))
 		If _Sleep(500) Then Return
 		If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
 			SetLog("SupercellID Window Opened", $COLOR_DEBUG)
@@ -695,11 +695,12 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 		
 		SCIDScrollDown($NextAccount) ; Make Drag only when SCID window is visible.
 		If _Sleep(500) Then Return
-		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 840, 660)
+		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 325, 840, 680)
 		If IsArray($aAccount) And UBound($aAccount) > 0 Then
+			SetLog("SCID Accounts: " & UBound($aCoord), $COLOR_DEBUG)
 			For $j = 0 To UBound($aAccount) - 1
 				$aFound = StringSplit($aAccount[$j], ",", $STR_NOCOUNT)
-				_ArrayAdd($aCoord, $aFound[0]+750 & "|" & $aFound[1]+320)
+				_ArrayAdd($aCoord, $aFound[0]+750 & "|" & $aFound[1]+325)
 			Next
 			_ArraySort($aCoord, 0, 0, 0, 1)
 			
@@ -712,7 +713,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 			Next
 			
 			SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
-			Click($aCoord[$iIndexSCID][0]-75, $aCoord[$iIndexSCID][1] + 10, 1)
+			Click($aCoord[$iIndexSCID][0]-75, $aCoord[$iIndexSCID][1] + 30, 1)
 			If _Sleep(750) Then Return
 			SetLog("   " & $iStep + 1 & ". Please wait for loading CoC!")
 			$bResult = True
@@ -723,7 +724,7 @@ EndFunc   ;==>SwitchCOCAcc_ClickAccountSCID
 
 Func TestFindSCID()
 	Local $aAccount, $aFound, $aCoord[0][2]
-	$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 840, 660)
+	$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 325, 840, 680)
 	If IsArray($aAccount) And UBound($aAccount) > 0 Then
 		_ArraySort($aAccount)
 		For $j = 0 To UBound($aAccount) - 1

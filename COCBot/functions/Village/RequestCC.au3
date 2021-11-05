@@ -39,7 +39,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 
 	If Not $g_bRunState Then Return
 
-	Local $sSearchDiamond = GetDiamondFromRect("718,548,780,585")
+	Local $sSearchDiamond = GetDiamondFromRect("718,580,780,614")
 	Local Static $aRequestButtonPos[2] = [-1, -1]
 
 	Local $aRequestButton = findMultiple($g_sImgRequestCCButton, $sSearchDiamond, $sSearchDiamond, 0, 1000, 1, "objectname,objectpoints", True)
@@ -97,7 +97,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 EndFunc   ;==>RequestCC
 
 Func _makerequest($aRequestButtonPos)
-	Local $sSendButtonArea = GetDiamondFromRect("220,370,630,540")
+	Local $sSendButtonArea = GetDiamondFromRect("220,150,650,650")
 
 	ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
 
@@ -139,7 +139,7 @@ Func IsFullClanCastleType($CCType = 0) ; Troops = 0, Spells = 1, Siege Machine =
 		If $g_bDebugSetlog Then SetLog($sLog[$CCType] & " not cared about, only checking troops.")
 		Return True
 	Else
-		If _ColorCheck(_GetPixelColor($aCheckCCNotFull[$CCType], 445, True), Hex(0xDC363A, 6), 30) Then ; red symbol
+		If _ColorCheck(_GetPixelColor($aCheckCCNotFull[$CCType], 470, True), Hex(0xDC363A, 6), 30) Then ; red symbol
 			If Not $g_abRequestType[$CCType] And Not $bIsCCRequestTypeNotUsed And $CCType <> 0 Then
 				; Don't care about the CC limit configured in setting
 				SetDebugLog("Found CC " & $sLog[$CCType] & " not full, but check is disabled")

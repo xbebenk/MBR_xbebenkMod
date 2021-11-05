@@ -240,7 +240,7 @@ EndFunc   ;==>GemClickP
 Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = "")
 	Local $timer = __TimerInit()
 	; Protect the Attack Bar
-	If $y > 555 Then $y = 555
+	If $y > 555 + $g_iBottomOffsetY Then $y = 555 + $g_iBottomOffsetY
 	AttackRemainingTime(False) ; flag attack started
 	Local $result = PureClick($x, $y, $times, $speed, $debugtxt)
 	Local $delay = $times * $speed + $afterDelay - __TimerDiff($timer)
