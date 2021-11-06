@@ -142,22 +142,15 @@ Func AutoUpgradeBB($bTest = False)
 	If $g_iChkBBSuggestedUpgrades = 0 Then Return
 	Local $bDebug = $g_bDebugImageSave
 	Local $bScreencap = True
-
+	
+	If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
 	BuilderBaseReport(True)
-	getBuilderCount(False, True)
-	If $g_iFreeBuilderCountBB = 0 Then
-		If Not $bTest Then
-			SetLog("Master Builder Not Available", $COLOR_DEBUG)
-			Return
-		EndIf
-	EndIf
-
+	
 	If isOnBuilderBase(True) Then
 		If ClickOnBuilder($bTest) Then
 			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
 			If $g_iChkPlacingNewBuildings Then
 				If SearchNewBuilding($bTest) Then
-					getBuilderCount(False, True)
 					ClickOnBuilder($bTest)
 					ClickDrag(400, 100, 400, 800, 1000);do scroll down
 					If _Sleep(5000) Then Return
@@ -165,7 +158,6 @@ Func AutoUpgradeBB($bTest = False)
 				Else
 					ZoomOut()
 					ClickAway()
-					getBuilderCount(False, True)
 					ClickOnBuilder($bTest)
 					ClickDrag(400, 100, 400, 800, 1000);do scroll down
 					If _Sleep(5000) Then Return
@@ -173,10 +165,7 @@ Func AutoUpgradeBB($bTest = False)
 				EndIf
 			EndIf
 
-			If $g_iFreeBuilderCountBB = 0 Then
-				SetLog("Master Builder Not Available", $COLOR_DEBUG)
-				Return
-			EndIf
+			If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
 
 			;upgrade wall first if to prevent Gold Storage become Full when BH is already Maxed
 			If $g_bisBHMaxed And $g_bGoldStorage50BB And $g_bisMegaTeslaMaxed Then
@@ -257,6 +246,8 @@ Func AutoUpgradeBB($bTest = False)
 										$BuildingFound = False ;reset
 										$z = 0 ;reset
 										Return True
+									Else
+										ClickOnBuilder($bTest)
 									EndIf
 								EndIf
 							Case "NoResources"
@@ -269,11 +260,8 @@ Func AutoUpgradeBB($bTest = False)
 					$y += $step
 					$y1 += $step
 				Next
-				getBuilderCount(False, True)
-				If $g_iFreeBuilderCountBB = 0 Then
-					SetLog("Master Builder Not Available", $COLOR_DEBUG)
-					ExitLoop
-				EndIf
+				
+				If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
 				If Not $NeedDrag Then
 					SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Need More resource", $COLOR_DEBUG)
 					ExitLoop
@@ -291,16 +279,18 @@ EndFunc   ;==>MainSuggestedUpgradeCode
 Func ClickOnBuilder($bTest = False, $Counter = 1)
 	Local $b_WindowOpened = False
 	; open the builders menu
-	Click(360, 11)
-	If _Sleep(1000) Then Return
+	If Not _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) Then
+		Click(360, 11)
+		If _Sleep(1000) Then Return
+	EndIf
 	If _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) Then
 		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
 		If ($Counter < 4) Then
 			SetLog("Upgrade Window didn't opened, trying again!", $COLOR_DEBUG)
-			$Counter += 1
 			ClickOnBuilder(False, $Counter)
+			$Counter += 1
 		Else
 			SetLog("Something is wrong with upgrade window, already tried 3 times!", $COLOR_DEBUG)
 			$b_WindowOpened = False
@@ -337,7 +327,7 @@ Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap 
 EndFunc   ;==>GetIconPosition
 
 Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
-	Local $OptimizeOTTO[13] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "D uble Cannon", "Post", "Barracks", "Wall"]
+	Local $OptimizeOTTO[13] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "Double", "Post", "Barracks", "Wall"]
 	If $sUpgButtom = "" Then Return
 	If $sUpgButtom = "Elixir" Then $sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 	If $sUpgButtom = "Gold" Then $sUpgButtom = $g_sImgAutoUpgradeBtnGold
@@ -399,6 +389,9 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 				If Not $bTest Then
 					Click($g_iQuickMISX + 300, $g_iQuickMISY + 410, 1)
 					BBAutoUpgradeLog($aBuildingName)
+				Else
+					ClickAway("Left")
+					Return False
 				EndIf
 				If _Sleep(1500) Then Return
 				;ClickAway("Left")
@@ -438,7 +431,7 @@ Func SearchNewBuilding($bTest = False)
 		Local $x = 270, $y = 73, $x1 = 540, $y1 = 103, $step = 28
 		SetLog("[" & $z & "] Search for Placing New Building", $COLOR_DEBUG)
 		For $i = 0 To 9
-			$NewCoord = decodeSingleCoord(findImage("New", $g_sImgAUpgradeObst & "\New*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
+			$NewCoord = decodeSingleCoord(findImage("New", $g_sImgAUpgradeObstNew & "\New*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
 			If IsArray($NewCoord) And UBound($NewCoord) = 2 Then
 				$b_BuildingFound = True ;we find New Building
 				$ZeroCoord = decodeSingleCoord(findImage("Zero", $g_sImgAUpgradeZero & "\Zero*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
@@ -486,11 +479,7 @@ Func SearchNewBuilding($bTest = False)
 			$y += $step
 			$y1 += $step
 		Next
-		getBuilderCount(False, True)
-		If $g_iFreeBuilderCountBB = 0 Then
-			SetLog("Master Builder Not Available", $COLOR_DEBUG)
-			ExitLoop
-		EndIf
+		If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
 		If Not $NeedDrag Then
 			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Not New Building", $COLOR_DEBUG)
 			ExitLoop
@@ -634,4 +623,22 @@ Func BBAutoUpgradeLog($aUpgradeNameLevel = Default)
 				" to level " & $aUpgradeNameLevel[2] + 1)
 	EndIf
 	Return True
+EndFunc
+
+Func AutoUpgradeBBCheckBuilder($bTest = False)
+	getBuilderCount(False, True) ;check masterBuilder
+	If $bTest Then 
+		$g_iFreeBuilderCountBB = 1
+		SetLog("Free Master Builder : " & $g_iFreeBuilderCountBB, $COLOR_DEBUG)
+		Return True
+	EndIf
+	;Check if there is a free builder for Auto Upgrade
+	If $g_iFreeBuilderCountBB > 0 Then 
+		SetLog("Free Master Builder : " & $g_iFreeBuilderCountBB, $COLOR_DEBUG)
+		Return True
+	Else
+		SetLog("Master Builder Not Available", $COLOR_DEBUG)
+		Return False
+	EndIf
+	Return False
 EndFunc
