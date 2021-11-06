@@ -24,6 +24,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	getBuilderCount(True) ;check if we have available builder
 	If $bTest Then 
 		$g_iFreeBuilderCount = 1
+		SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 		Return True
 	EndIf
 	;Check if there is a free builder for Auto Upgrade
@@ -51,24 +52,40 @@ Func SearchUpgrade($bTest = False)
 	
 	If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we have builder
 	If $g_bNewBuildingFirst Then
-		If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
+		If $g_bPlaceNewBuilding Then SearchNewBuildingMain($bTest)
 		If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
 			ZoomOut()
 			Return
 		EndIf
 	EndIf
 	
+	AutoUpgradeSearchExisting($bTest)
+	
 	If Not ClickMainBuilder($bTest) Then Return
 	If $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ClickDragAUpgrade("down")
 	If Not $g_bRunState Then Return
 	
+	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
+		If Not $g_bNewBuildingFirst Then
+			If $g_bPlaceNewBuilding Then SearchNewBuildingMain($bTest)
+		EndIf
+	EndIf
+	SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
+	
+	ClickAway()
+	ZoomOut()
+	Return False
+EndFunc
+
+Func AutoUpgradeSearchExisting($bTest = False)
+	Local $bDebug = $g_bDebugSetlog
 	Local $b_BuildingFound = False, $NeedDrag = True
 	For $z = 0 To 9 ;for do scroll 10 times
 		Local $x = 180, $y = 80, $x1 = 490, $y1 = 103, $step = 28
 		For $i = 0 To 9
 			If Not $g_bRunState Then Return
 			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-8, $x1, $y1+8) Then
-				If QuickMIS("NX",$g_sImgAUpgradeObst, $x, $y-8, $x1, $y1+8) <> "none" Then
+				If QuickMIS("NX",$g_sImgAUpgradeObstGear, $x, $y-8, $x1, $y1+8) <> "none" Then
 					SetLog("[" & $i & "] New Building Or GearUp, Skip!", $COLOR_SUCCESS)
 					$b_BuildingFound = False
 				Else
@@ -113,36 +130,6 @@ Func SearchUpgrade($bTest = False)
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
 	Next
-	
-	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
-		If Not $g_bNewBuildingFirst Then
-			If $g_bPlaceNewBuilding Then UpgradeNewBuilding($bTest)
-		EndIf
-	EndIf
-	SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
-	
-	ClickAway()
-	ZoomOut()
-	Return False
-EndFunc
-
-Func AutoUpgradeSearchExisting()
-	If Not $g_bRunState Then Return
-	Local $x = 180, $y = 75, $x1 = 480, $y1 = 366, $step = 28
-	Local $Upgrade, $aResult
-	$aResult = QuickMIS("CX", $g_sImgAUpgradeZero, $x, $y, $x1, $y1)
-	If IsArray($aResult) And UBound($aResult) > 0 Then
-		SetLog("Found " & UBound($aResult) & " Possible Upgrade", $COLOR_DEBUG)
-		For $i = 0 To UBound($aResult) - 1
-			$Upgrade = StringSplit($aResult[$i], ",", $STR_NOCOUNT)
-			SetLog("Upgrade " & "[" & $i & "] : [" & $Upgrade[0] + 180 & "," & $Upgrade[1] + 80 & "]", $COLOR_DEBUG)
-			If QuickMIS("NX",$g_sImgAUpgradeObst, $Upgrade[0] + 180 - 200, $Upgrade[1] + 75 - 10, $Upgrade[0] + 180, $Upgrade[1] + 75 + 10) <> "none" Then
-				SetLog("[" & $i & "] New Building Or GearUp, Skip!", $COLOR_SUCCESS)
-				_ArrayDelete($aResult,$i)
-			EndIf
-		Next
-		Return $aResult
-	EndIf
 EndFunc
 
 Func DoUpgrade($bTest = False)
@@ -509,6 +496,9 @@ Func AUNewBuildings($x, $y, $bTest = False)
 		If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
 			If Not $bTest Then
 				Click($GreenCheckCoords[0], $GreenCheckCoords[1])
+			Else
+				Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1])
+				Return True
 			EndIf
 			SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
 			If _Sleep(500) Then Return
@@ -538,7 +528,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 	Return False
 EndFunc ;==>AUNewBuildings
 
-Func UpgradeNewBuilding($bTest = False)
+Func SearchNewBuildingMain($bTest = False)
 	If Not $g_bPlaceNewBuilding Then Return
 	
 	Local $bDebug = $g_bDebugSetlog
@@ -548,51 +538,93 @@ Func UpgradeNewBuilding($bTest = False)
 	If _Sleep(500) Then Return
 	
 	Local $b_BuildingFound = False, $ZoomedIn = False
+	Local $NeedDrag = True
+	If Not $g_bRunState Then Return
 	For $z = 0 To 10 ;for do scroll 8 times
-		If Not $g_bRunState Then Return
-		Local $NeedDrag = True
-		Local $NewCoord, $ZeroCoord
+		
+		If $z > 1 Then ; check most bottom upgrade is no resource
+			If Not QuickMIS("BC1", $g_sImgAUpgradeZero & "\", 410, 335, 470, 360) Then
+				SetLog("Not Found Zero Most Bottom upgrade", $COLOR_INFO)
+				$NeedDrag = False
+			EndIf
+		EndIf
+		
+		Local $New, $NewCoord, $aCoord[0][2], $ZeroCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
-
-		For $i = 0 To 9
-			$NewCoord = decodeSingleCoord(findImage("New", $g_sImgAUpgradeObst & "\New*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
-			If IsArray($NewCoord) And UBound($NewCoord) = 2 Then 
-				$b_BuildingFound = True ;we find New Building
-				$ZeroCoord = decodeSingleCoord(findImage("Zero", $g_sImgAUpgradeZero & "\Zero*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
-				If IsArray($ZeroCoord) And UBound($ZeroCoord) = 2 Then 
-					SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
-				Else
-					$b_BuildingFound = False
-					SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
-					If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah not enough resource
-				EndIf
-				
-			Else
-				SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
-				If $z > 6 And $i = 9 Then $NeedDrag = False ; sudah 7 kali scroll tapi yang paling bawah masih bukan new building
-			EndIf
-			
-			If $b_BuildingFound Then 
-				ClickAway()
-				If Not $ZoomedIn Then
-					If SearchGreenZone() Then 
-						$ZoomedIn = True
-					Else
-						ExitLoop 2 ;zoomin failed, cancel placing newbuilding
+		$NewCoord = QuickMIS("CX", $g_sImgAUpgradeObstNew, 180,73,280,370) ;find New Building
+		If IsArray($NewCoord) And UBound($NewCoord) > 0 Then 
+			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
+			For $j = 0 To UBound($NewCoord)-1
+				$New = StringSplit($NewCoord[$j], ",", $STR_NOCOUNT)
+				_ArrayAdd($aCoord, $New[0]+180 & "|" & $New[1]+73)
+			Next
+			_ArraySort($aCoord, 0, 0, 0, 1)
+			For $j = 0 To UBound($aCoord) - 1
+				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $aCoord[$j][0] + 150, $aCoord[$j][1] - 8, $aCoord[$j][0] + 300, $aCoord[$j][1] + 8) Then
+					SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1], $COLOR_INFO)
+					ClickAway()
+					If _Sleep(1000) Then Return
+					If Not $ZoomedIn Then
+						If SearchGreenZone() Then 
+							$ZoomedIn = True
+						Else
+							ExitLoop 2 ;zoomin failed, cancel placing newbuilding
+						EndIf
 					EndIf
-				EndIf
-				ClickMainBuilder($bTest)
-				If AUNewBuildings($ZeroCoord[0], $ZeroCoord[1], $bTest) Then
 					ClickMainBuilder($bTest)
-					$b_BuildingFound = False ;reset
-					$z = 0 ;reset
+					If AUNewBuildings($aCoord[$j][0], $aCoord[$j][1], $bTest) Then
+						ClickMainBuilder($bTest)
+						ClickDragAUpgrade("up", 328, $z)
+						ExitLoop
+					Else
+						ExitLoop 2 ;Place NewBuilding failed, cancel placing newbuilding
+					EndIf
 				Else
-					ExitLoop 2
+					SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " Not Enough Resource", $COLOR_ERROR)
 				EndIf
-			EndIf
-			$y += $step
-			$y1 += $step
-		Next
+			Next
+			
+		EndIf
+		
+		;For $i = 0 To 9
+		;	$NewCoord = decodeSingleCoord(findImage("New", $g_sImgAUpgradeObstNew & "\New*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
+		;	If IsArray($NewCoord) And UBound($NewCoord) = 2 Then 
+		;		$b_BuildingFound = True ;we find New Building
+		;		$ZeroCoord = decodeSingleCoord(findImage("Zero", $g_sImgAUpgradeZero & "\Zero*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
+		;		If IsArray($ZeroCoord) And UBound($ZeroCoord) = 2 Then 
+		;			SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
+		;		Else
+		;			$b_BuildingFound = False
+		;			SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
+		;			If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah not enough resource
+		;		EndIf
+		;		
+		;	Else
+		;		SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
+		;		If $z > 6 And $i = 9 Then $NeedDrag = False ; sudah 7 kali scroll tapi yang paling bawah masih bukan new building
+		;	EndIf
+		;	
+		;	If $b_BuildingFound Then 
+		;		ClickAway()
+		;		If Not $ZoomedIn Then
+		;			If SearchGreenZone() Then 
+		;				$ZoomedIn = True
+		;			Else
+		;				ExitLoop 2 ;zoomin failed, cancel placing newbuilding
+		;			EndIf
+		;		EndIf
+		;		ClickMainBuilder($bTest)
+		;		If AUNewBuildings($ZeroCoord[0], $ZeroCoord[1], $bTest) Then
+		;			ClickMainBuilder($bTest)
+		;			$b_BuildingFound = False ;reset
+		;			$z = 0 ;reset
+		;		Else
+		;			ExitLoop 2
+		;		EndIf
+		;	EndIf
+		;	$y += $step
+		;	$y1 += $step
+		;Next
 		
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
 			Local $left = 180, $top = 80, $right = 330, $bottom = 370
@@ -619,9 +651,9 @@ Func UpgradeNewBuilding($bTest = False)
 			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Not New Building", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
-		ClickDragAUpgrade("up", $y - ($step * 2));do scroll up
+		ClickDragAUpgrade("up", 328);do scroll up
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
-		If _Sleep(1500) Then Return
+		If _Sleep(1000) Then Return
 	Next
 	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
 	ZoomOut()
@@ -654,8 +686,8 @@ Func SearchGreenZone()
 	Return False
 EndFunc
 
-Func ClickDragAUpgrade($Direction = "up", $YY = Default)
-	Local $x = 330, $yUp = 93, $yDown = 800, $Delay = 500
+Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
+	Local $x = 420, $yUp = 103, $yDown = 800, $Delay = 500
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
@@ -663,8 +695,14 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 			Switch $Direction
 				Case "Up"
 					If $YY < 100 Then $YY = 150
-					ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
-					If _Sleep(2000) Then Return
+					If $DragCount > 1 Then
+						For $i = 1 To $DragCount
+							ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
+						Next
+					Else
+						ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
+					EndIf
+					If _Sleep(1000) Then Return
 				Case "Down"
 					ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
 					If _Sleep(5000) Then Return
@@ -675,10 +713,9 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default)
 			Return True
 		Else
 			SetLog("Upgrade Window Gone!", $COLOR_DEBUG)
-			Click(295, 30)
-			If _Sleep(2000) Then Return
+			ClickMainBuilder()
+			If _Sleep(1000) Then Return
 		EndIf
-		
 	Next
 	Return False
 EndFunc ;==>IsUpgradeWindow
@@ -686,16 +723,19 @@ EndFunc ;==>IsUpgradeWindow
 Func ClickMainBuilder($bTest = False, $Counter = 1)
 	Local $b_WindowOpened = False
 	; open the builders menu
-	Click(295, 30)
-	If _Sleep(1000) Then Return
-	If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
+	If Not _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
+		Click(295, 30)
+		If _Sleep(1000) Then Return
+	EndIf
+	
+	If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
 		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
 		If ($Counter < 4) Then
 			SetLog("Upgrade Window didn't opened, trying again!", $COLOR_DEBUG)
-			$Counter += 1
 			ClickMainBuilder(False, $Counter)
+			$Counter += 1
 		Else
 			SetLog("Something is wrong with upgrade window, already tried 3 times!", $COLOR_DEBUG)
 			$b_WindowOpened = False

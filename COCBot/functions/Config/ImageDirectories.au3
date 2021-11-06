@@ -107,7 +107,8 @@ Global $g_sImgChatIUnterstand = @ScriptDir & "\imgxml\DonateCC\donateccwbl\iunde
 #EndRegion
 
 #Region Auto Upgrade Normal Village
-Global $g_sImgAUpgradeObst = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Obstacles"
+Global $g_sImgAUpgradeObstNew = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Obstacles\New"
+Global $g_sImgAUpgradeObstGear = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Obstacles\Gear"
 Global $g_sImgAUpgradeZero = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Zero"
 Global $g_sImgAUpgradeUpgradeBtn = @ScriptDir & "\imgxml\Resources\Auto Upgrade\UpgradeButton"
 Global $g_sImgAUpgradeRes = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Resources"
