@@ -586,46 +586,6 @@ Func SearchNewBuildingMain($bTest = False)
 			
 		EndIf
 		
-		;For $i = 0 To 9
-		;	$NewCoord = decodeSingleCoord(findImage("New", $g_sImgAUpgradeObstNew & "\New*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
-		;	If IsArray($NewCoord) And UBound($NewCoord) = 2 Then 
-		;		$b_BuildingFound = True ;we find New Building
-		;		$ZeroCoord = decodeSingleCoord(findImage("Zero", $g_sImgAUpgradeZero & "\Zero*", GetDiamondFromRect($x & "," & $y-5 & "," & $x1 & "," & $y1+5), 1, True))
-		;		If IsArray($ZeroCoord) And UBound($ZeroCoord) = 2 Then 
-		;			SetLog("[" & $i & "] New Building found!", $COLOR_SUCCESS)
-		;		Else
-		;			$b_BuildingFound = False
-		;			SetLog("[" & $i & "] Not Enough Resource!", $COLOR_SUCCESS)
-		;			If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah not enough resource
-		;		EndIf
-		;		
-		;	Else
-		;		SetLog("[" & $i & "] Not New Building", $COLOR_INFO)
-		;		If $z > 6 And $i = 9 Then $NeedDrag = False ; sudah 7 kali scroll tapi yang paling bawah masih bukan new building
-		;	EndIf
-		;	
-		;	If $b_BuildingFound Then 
-		;		ClickAway()
-		;		If Not $ZoomedIn Then
-		;			If SearchGreenZone() Then 
-		;				$ZoomedIn = True
-		;			Else
-		;				ExitLoop 2 ;zoomin failed, cancel placing newbuilding
-		;			EndIf
-		;		EndIf
-		;		ClickMainBuilder($bTest)
-		;		If AUNewBuildings($ZeroCoord[0], $ZeroCoord[1], $bTest) Then
-		;			ClickMainBuilder($bTest)
-		;			$b_BuildingFound = False ;reset
-		;			$z = 0 ;reset
-		;		Else
-		;			ExitLoop 2
-		;		EndIf
-		;	EndIf
-		;	$y += $step
-		;	$y1 += $step
-		;Next
-		
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
 			Local $left = 180, $top = 80, $right = 330, $bottom = 370
 			If QuickMIS("BC1", $g_sImgAUpgradeRushTHPriority, 180, 80, 330, 369) Then

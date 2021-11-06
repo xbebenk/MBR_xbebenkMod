@@ -563,10 +563,10 @@ EndFunc   ;==>NewBuildings
 
 Func SearchGreenZoneBB()
 	SetLog("Search GreenZone on BB for Placing new Building", $COLOR_INFO)
-	Local $aTop = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 365, 200, 530, 270) ;top
-	Local $aLeft = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 175, 360, 300, 450) ;left
-	Local $aBottom = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 350, 530, 550, 600) ;bottom
-	Local $aRight = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 600, 355, 760, 470) ;right
+	Local $aTop = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 360, 160, 500, 230) ;top
+	Local $aLeft = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 200, 280, 290, 410) ;left
+	Local $aBottom = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 375, 440, 520, 525) ;bottom
+	Local $aRight = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 550, 300, 650, 400) ;right
 
 	Local $aAll[4][2] = [["Top", UBound($aTop)], ["Left", UBound($aLeft)], ["Bottom", UBound($aBottom)], ["Right", UBound($aRight)]]
 	If $g_bDebugClick Then SetLog("Top:" & UBound($aTop) & " Left:" & UBound($aLeft) & " Bottom:" & UBound($aBottom) & " Right:" & UBound($aRight))
