@@ -710,7 +710,10 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 			For $j = 0 To UBound($aCoord) - 1
 				SetLog("[" & $j & "] Account coordinates: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
 			Next
-			
+			If UBound($aCoord) < 4 Then 
+				SetLog("Only Found " & UBound($aCoord) & " SCID Account, Select Last Account", $COLOR_INFO)
+				$iIndexSCID = UBound($aCoord)
+			EndIf
 			SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
 			Click($aCoord[$iIndexSCID][0]-75, $aCoord[$iIndexSCID][1] + 10, 1)
 			If _Sleep(750) Then Return
