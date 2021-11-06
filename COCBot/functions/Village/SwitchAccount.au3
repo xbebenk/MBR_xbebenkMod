@@ -695,7 +695,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 		
 		SCIDScrollDown($NextAccount) ; Make Drag only when SCID window is visible.
 		If _Sleep(500) Then Return
-		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 840, 660)
+		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 840, 676)
 		If IsArray($aAccount) And UBound($aAccount) > 0 Then
 			For $j = 0 To UBound($aAccount) - 1
 				$aFound = StringSplit($aAccount[$j], ",", $STR_NOCOUNT)
@@ -723,7 +723,7 @@ EndFunc   ;==>SwitchCOCAcc_ClickAccountSCID
 
 Func TestFindSCID()
 	Local $aAccount, $aFound, $aCoord[0][2]
-	$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 840, 660)
+	$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 840, 676)
 	If IsArray($aAccount) And UBound($aAccount) > 0 Then
 		_ArraySort($aAccount)
 		For $j = 0 To UBound($aAccount) - 1

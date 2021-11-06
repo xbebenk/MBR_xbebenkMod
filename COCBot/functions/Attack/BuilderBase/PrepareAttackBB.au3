@@ -43,7 +43,7 @@ Func PrepareAttackBB($bCheck = False)
 	If Not $g_bRunState Then Return ; Stop Button
 
 	Click(60,600) ;click attack button
-	_Sleep(500)
+	_Sleep(1500)
 
 	If Not CheckArmyReady() Then
 		_Sleep(500)
@@ -72,7 +72,7 @@ EndFunc
 
 Func CheckLootAvail()
 	local $bRet = False
-	If Not _ColorCheck(_GetPixelColor(621, 612, True), Hex(0xFFFFFF, 6), 1) Then
+	If Not _ColorCheck(_GetPixelColor(622, 611, True), Hex(0xFFFFFF, 6), 1) Then
 		SetLog("Loot is Available.")
 		$bRet = True
 	Else
