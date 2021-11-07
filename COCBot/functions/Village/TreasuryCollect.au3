@@ -26,7 +26,7 @@ Func TreasuryCollect()
 	Else
 		Click($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
 		If _Sleep(1000) Then Return
-		Local $BuildingInfo = BuildingInfo(290, 493)
+		Local $BuildingInfo = BuildingInfo(290, 494)
 		If $BuildingInfo[1] = "Clan Castle" Then 
 			$TryCCAutoLocate = False
 		Else
@@ -41,7 +41,7 @@ Func TreasuryCollect()
 		If IsArray($TreasuryCoord) And UBound($TreasuryCoord) = 2 Then
 			Click($TreasuryCoord[0], $TreasuryCoord[1] + 50)
 			If _Sleep(500) Then Return
-			Local $BuildingInfo = BuildingInfo(290, 493)
+			Local $BuildingInfo = BuildingInfo(290, 494)
 			If $BuildingInfo[1] = "Clan Castle" Then 
 				$g_aiClanCastlePos[0] = $TreasuryCoord[0]
 				$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 50
@@ -53,7 +53,7 @@ Func TreasuryCollect()
 		If IsArray($ClanCastleCoord) And UBound($ClanCastleCoord) = 2 Then
 			Click($ClanCastleCoord[0] + 10, $ClanCastleCoord[1] + 10)
 			If _Sleep(500) Then Return
-			Local $BuildingInfo = BuildingInfo(290, 493)
+			Local $BuildingInfo = BuildingInfo(290, 494)
 			If $BuildingInfo[1] = "Clan Castle" Then 
 				$g_aiClanCastlePos[0] = $ClanCastleCoord[0] + 10
 				$g_aiClanCastlePos[1] = $ClanCastleCoord[1] + 10

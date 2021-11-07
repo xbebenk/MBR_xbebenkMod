@@ -102,7 +102,7 @@ Func CreateBottomPanel()
 		$g_hBtnAttackNowLB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowLB", "LB Attack!"), $x + 190, $y + 23, 60, -1)
 			GUICtrlSetState(-1, $GUI_HIDE)
 		
-		$g_hBtnControl = GUICtrlCreateButton("Edit", $x + 220, $y + 65, 35, 18)
+		$g_hBtnControl = GUICtrlCreateButton("Edit", $x + 245, $y + 70, 35, 20)
 			;GUICtrlSetState(-1, $GUI_HIDE)
 			GUICtrlSetOnEvent(-1, "ToggleControl")
 			
