@@ -31,8 +31,8 @@ Global Const $_MINIGUI_MAIN_HEIGHT = 220 ; changed from 690 to 692 for DPI scali
 Global $_GUI_MAIN_TOP = 23 ; Adjusted in CreateMainGUI()
 Global $_GUI_MAIN_BUTTON_SIZE = [25, 17] ; minimize/close button size
 Global $_GUI_MAIN_BUTTON_COUNT = 4
-Global $_GUI_CHILD_TOP = 110 + $_GUI_MAIN_TOP ; Adjusted in CreateMainGUI()
-Global Const $_GUI_BOTTOM_HEIGHT = 135
+Global $_GUI_CHILD_TOP = 85 + $_GUI_MAIN_TOP ; Adjusted in CreateMainGUI()
+Global Const $_GUI_BOTTOM_HEIGHT = 125
 Global Const $_GUI_CHILD_LEFT = 10
 Global Const $g_bBtnColor = False ; True
 
@@ -96,7 +96,7 @@ Func CreateMainGUI()
 			$_GUI_MAIN_HEIGHT = $_MINIGUI_MAIN_HEIGHT
 	EndSwitch
 
-	$g_hFrmBot = GUICreate($g_sBotTitle, $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT + $_GUI_MAIN_TOP, ($g_iFrmBotPosX = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosX), ($g_iFrmBotPosY = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosY), _
+	$g_hFrmBot = GUICreate($g_sBotTitle, $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT + $_GUI_MAIN_TOP - 25 - 10 - 5, ($g_iFrmBotPosX = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosX), ($g_iFrmBotPosY = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosY), _
 			BitOR($WS_MINIMIZEBOX, $WS_POPUP, $WS_SYSMENU, $WS_CLIPCHILDREN, $WS_CLIPSIBLINGS, $iStyle))
 
 	; see https://github.com/Microsoft/Windows-classic-samples/blob/master/Samples/Win7Samples/winui/shell/appshellintegration/TaskbarThumbnailToolbar/ThumbnailToolbar.cpp
@@ -183,7 +183,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 			WinSetTrans($g_hFrmBotButtons, "", 254) ; trick to hide buttons from Android Screen that is not always refreshing
 		EndIf
 		; Need $g_hFrmBotEx for embedding Android
-		$g_hFrmBotEx = GUICreate("My Bot Controls", $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP, 0, 0, _
+		$g_hFrmBotEx = GUICreate("My Bot Controls", $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 10 - 5, 0, 0, _
 				BitOR($WS_CHILD, $WS_TABSTOP), 0, $g_hFrmBot)
 
 		$g_hToolTip = _GUIToolTip_Create($g_hFrmBot) ; tool tips for URL links etc
@@ -259,7 +259,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 			GUICtrlSetBkColor(-1, $COLOR_WHITE)
 		EndIf
 
-		$g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 67)
+		$g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 45)
 		GUICtrlSetOnEvent(-1, "BotMoveRequest")
 		GUICtrlSetState(-1, $GUI_DISABLE)
 	
@@ -269,7 +269,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 		GUICtrlSetFont (-1,9, 800)
 		GUICtrlSetState($g_hFrmBot_MAIN_PIC, $GUI_ENABLE)
 		
-		$g_hFrmBot_URL_PIC = _GUICtrlCreatePic($g_sLogoUrlPath, 0, $_GUI_MAIN_TOP + 67, $_GUI_MAIN_WIDTH, 13)
+		$g_hFrmBot_URL_PIC = _GUICtrlCreatePic($g_sLogoUrlPath, 0, $_GUI_MAIN_TOP + 45, $_GUI_MAIN_WIDTH, 13)
 		GUICtrlSetCursor(-1, 0)
 
 		GUISwitch($g_hFrmBot)
@@ -278,7 +278,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 		;$g_hFrmBotEmbeddedShieldInput = GUICtrlCreateDummy()
 		GUICtrlSetState($g_hFrmBotEmbeddedShieldInput, $GUI_HIDE)
 
-		$g_hFrmBotBottom = GUICreate("My Bot Buttons", $_GUI_MAIN_WIDTH, $_GUI_BOTTOM_HEIGHT, 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP, _
+		$g_hFrmBotBottom = GUICreate("My Bot Buttons", $_GUI_MAIN_WIDTH, $_GUI_BOTTOM_HEIGHT, 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 15, _
 				BitOR($WS_CHILD, $WS_TABSTOP), 0, $g_hFrmBot)
 
 	;~ ------------------------------------------------------
@@ -354,7 +354,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 ;~ GUI Main Tab Control
 ;~ ------------------------------------------------------
 	GUISwitch($g_hFrmBotEx)
-	$g_hTabMain = GUICtrlCreateTab(5, 85 + $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH - 9, $_GUI_MAIN_HEIGHT - 225) ; , $TCS_MULTILINE)
+	$g_hTabMain = GUICtrlCreateTab(5, 60 + $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH - 9, $_GUI_MAIN_HEIGHT - 225) ; , $TCS_MULTILINE)
 	$g_hTabLog = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_01", "Log"))
 	$g_hTabVillage = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02", "Village"))
 	$g_hTabAttack = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03", "Attack Plan"))
