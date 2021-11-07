@@ -52,7 +52,7 @@ Func SearchUpgrade($bTest = False)
 	
 	If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we have builder
 	If $g_bNewBuildingFirst Then
-		If $g_bPlaceNewBuilding Then SearchNewBuildingMain($bTest)
+		If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest)
 		If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
 			ZoomOut()
 			Return
@@ -60,14 +60,11 @@ Func SearchUpgrade($bTest = False)
 	EndIf
 	
 	AutoUpgradeSearchExisting($bTest)
-	
-	If Not ClickMainBuilder($bTest) Then Return
-	If $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ClickDragAUpgrade("down")
 	If Not $g_bRunState Then Return
 	
 	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
 		If Not $g_bNewBuildingFirst Then
-			If $g_bPlaceNewBuilding Then SearchNewBuildingMain($bTest)
+			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest)
 		EndIf
 	EndIf
 	SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
@@ -78,8 +75,10 @@ Func SearchUpgrade($bTest = False)
 EndFunc
 
 Func AutoUpgradeSearchExisting($bTest = False)
+	If Not ClickMainBuilder($bTest) Then Return
+	If $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ClickDragAUpgrade("down")
 	Local $bDebug = $g_bDebugSetlog
-	Local $b_BuildingFound = False, $NeedDrag = True
+	Local $b_BuildingFound = False, $NeedDrag = True, $FoundMostBottomRed = 0
 	For $z = 0 To 9 ;for do scroll 10 times
 		Local $x = 180, $y = 80, $x1 = 490, $y1 = 103, $step = 28
 		For $i = 0 To 9
@@ -120,6 +119,16 @@ Func AutoUpgradeSearchExisting($bTest = False)
 			$y += $step
 			$y1 += $step
 		Next
+		
+		Local $aZeroWhiteMostBottom = _PixelSearch(430, 345, 450, 360, Hex(0xFFFFFF, 6), 10)
+		If $aZeroWhiteMostBottom = 0 Then
+			$FoundMostBottomRed += 1
+			SetLog("No WhiteZero at most bottom list", $COLOR_DEBUG)
+		ElseIf $FoundMostBottomRed > 0 Then
+			$FoundMostBottomRed -= 1
+			SetLog("Found WhiteZero at most bottom list", $COLOR_DEBUG)
+		EndIf
+		If $z > 1 And $FoundMostBottomRed > 1 Then $NeedDrag = False
 		
 		If Not $NeedDrag Then
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
@@ -528,7 +537,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 	Return False
 EndFunc ;==>AUNewBuildings
 
-Func SearchNewBuildingMain($bTest = False)
+Func AutoUpgradeSearchNewBuilding($bTest = False)
 	If Not $g_bPlaceNewBuilding Then Return
 	
 	Local $bDebug = $g_bDebugSetlog
@@ -599,9 +608,13 @@ Func SearchNewBuildingMain($bTest = False)
 			EndIf
 		EndIf
 		
-		Local $aZeroWhiteMostBottom = _PixelSearch(430, 340, 450, 360, Hex(0xFFFFFF, 6), 10)
-		If Not $aZeroWhiteMostBottom = 0 Then
+		Local $aZeroWhiteMostBottom = _PixelSearch(430, 345, 450, 360, Hex(0xFFFFFF, 6), 10)
+		If $aZeroWhiteMostBottom = 0 Then
 			$FoundMostBottomRed += 1
+			SetLog("No WhiteZero at most bottom list", $COLOR_DEBUG)
+		ElseIf $FoundMostBottomRed > 0 Then
+			$FoundMostBottomRed -= 1
+			SetLog("Found WhiteZero at most bottom list", $COLOR_DEBUG)
 		EndIf
 		
 		If $z > 1 And $FoundMostBottomRed > 1 Then $NeedDrag = False
@@ -737,5 +750,3 @@ Func GoGoblinMap()
 	
 	If _Sleep(3500) Then Return
 EndFunc
-
-
