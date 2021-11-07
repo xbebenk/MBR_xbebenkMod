@@ -197,7 +197,7 @@ Func CreateBottomPanel()
 			GUICtrlSetState(-1, $GUI_HIDE)
 		$g_hlblLab = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "Lab_L", "L"), $x + 4, $y + 21, 10, 16, $SS_LEFT)
 	  		_GUICtrlSetTip(-1, $sTxtTip)
-		$g_hLbLLabTime = GUICtrlCreateLabel("", $x - 72, $y + 41, 50, 16, $SS_LEFT)
+		$g_hLbLLabTime = GUICtrlCreateLabel("", $x - 72, $y + 37, 50, 16, $SS_LEFT)
 
 	; Pet House display
 	Local $x = 199, $y = $y_bottom + 52
