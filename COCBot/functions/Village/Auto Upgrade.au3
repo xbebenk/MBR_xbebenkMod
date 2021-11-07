@@ -576,7 +576,6 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 					ClickMainBuilder($bTest)
 					If AUNewBuildings($aCoord[$j][0], $aCoord[$j][1], $bTest) Then
 						ClickMainBuilder($bTest)
-						ClickDragAUpgrade("up", 328, $z)
 						ExitLoop
 					Else
 						ExitLoop 2 ;Place NewBuilding failed, cancel placing newbuilding
