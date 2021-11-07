@@ -694,7 +694,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 		SCIDScrollUp()
 		
 		SCIDScrollDown($NextAccount) ; Make Drag only when SCID window is visible.
-		If _Sleep(500) Then Return
+		If _Sleep(1000) Then Return
 		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 840, 676, True, False)
 		SetLog("Found: " & UBound($aAccount) & " SCID", $COLOR_SUCCESS)
 		If IsArray($aAccount) And UBound($aAccount) > 0 Then
@@ -714,8 +714,9 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 			
 			If UBound($aCoord) < 4 Then 
 				SetLog("Only Found " & UBound($aCoord) & " SCID Account, Select Last Account", $COLOR_INFO)
-				$iIndexSCID = UBound($aCoord)
+				$iIndexSCID = UBound($aCoord) - 1
 			EndIf
+			
 			SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
 			Click($aCoord[$iIndexSCID][0]-75, $aCoord[$iIndexSCID][1] + 10, 1)
 			If _Sleep(750) Then Return
