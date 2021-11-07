@@ -538,16 +538,9 @@ Func SearchNewBuildingMain($bTest = False)
 	If _Sleep(500) Then Return
 	
 	Local $b_BuildingFound = False, $ZoomedIn = False
-	Local $NeedDrag = True
+	Local $NeedDrag = True, $FoundMostBottomRed = 0
 	If Not $g_bRunState Then Return
 	For $z = 0 To 10 ;for do scroll 8 times
-		
-		If $z > 1 Then ; check most bottom upgrade is no resource
-			If Not QuickMIS("BC1", $g_sImgAUpgradeZero & "\", 410, 335, 470, 360) Then
-				SetLog("Not Found Zero Most Bottom upgrade", $COLOR_INFO)
-				$NeedDrag = False
-			EndIf
-		EndIf
 		
 		Local $New, $NewCoord, $aCoord[0][2], $ZeroCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
@@ -605,6 +598,13 @@ Func SearchNewBuildingMain($bTest = False)
 				ExitLoop
 			EndIf
 		EndIf
+		
+		Local $aZeroWhiteMostBottom = _PixelSearch(430, 340, 450, 360, Hex(0xFFFFFF, 6), 10)
+		If Not $aZeroWhiteMostBottom = 0 Then
+			$FoundMostBottomRed += 1
+		EndIf
+		
+		If $z > 1 And $FoundMostBottomRed > 1 Then $NeedDrag = False
 		
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		If Not $NeedDrag Then
