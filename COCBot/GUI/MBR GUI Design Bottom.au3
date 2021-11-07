@@ -91,7 +91,7 @@ Func CreateBottomPanel()
 			GUICtrlSetState(-1, (($g_bAndroidAdbScreencap = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED)))
 		
 		;Only Attack - lilmeeee - credits: Team AiO MOD++
-		$g_hChkOnlyAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyAttack", "Only Attack"), $x + 108, $y + 65, -1, -1)
+		$g_hChkOnlyAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyAttack", "Only Attack"), $x + 109, $y + 65, -1, -1)
 			GUICtrlSetFont(-1, 7)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyAttack_01", "Only do Attack on MainVillage and BuilderBase"))
 			GUICtrlSetOnEvent(-1, "chkOnlyAttack")

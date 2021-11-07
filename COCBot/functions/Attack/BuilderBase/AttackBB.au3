@@ -392,8 +392,8 @@ EndFunc   ;==>ArmyCampSelectedNames
 Func BuilderBaseSelectCorrectCampDebug()
 	Local $aLines[0]
 	Local $sName = "CAMP" & "|"
-	For $iName = 0 To UBound($g_iCmbCampsBB) - 1
-		$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barb")
+	For $iName = 0 To UBound($g_iCmbTroopBB) - 1
+		$sName &= ArmyCampSelectedNames($g_iCmbTroopBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbTroopBB[$iName]) : ("Barb")
 		$sName &= "|"
 		If $iName = 0 Then ContinueLoop
 		Local $aFakeCsv[1] = [$sName]
@@ -521,11 +521,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				; Smart
 			Case Else
 				Local $sName = "CAMP" & "|"
-				For $i = 0 To UBound($g_iCmbCampsBB) - 1
-					$sTmp = $g_asAttackBarBB2[$g_iCmbCampsBB[$i]]
+				For $i = 0 To UBound($g_iCmbTroopBB) - 1
+					$sTmp = $g_asAttackBarBB2[$g_iCmbTroopBB[$i]]
 					If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
 					$sName &= $sLastObj
-					If $i <> UBound($g_iCmbCampsBB) - 1 Then $sName &= "|"
+					If $i <> UBound($g_iCmbTroopBB) - 1 Then $sName &= "|"
 					$aFakeCsv[0] = $sName
 					_ArrayAdd($aLines, $aFakeCsv)
 				Next
@@ -536,11 +536,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	#CE
 
 	Local $sName = "CAMP" & "|"
-	For $i = 0 To UBound($g_iCmbCampsBB) - 1
-		$sTmp = $g_asAttackBarBB2[$g_iCmbCampsBB[$i]]
+	For $i = 0 To UBound($g_iCmbTroopBB) - 1
+		$sTmp = $g_asAttackBarBB2[$g_iCmbTroopBB[$i]]
 		If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
 		$sName &= $sLastObj
-		If $i <> UBound($g_iCmbCampsBB) - 1 Then $sName &= "|"
+		If $i <> UBound($g_iCmbTroopBB) - 1 Then $sName &= "|"
 		$aFakeCsv[0] = $sName
 		_ArrayAdd($aLines, $aFakeCsv)
 	Next

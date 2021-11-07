@@ -27,7 +27,7 @@ Global $_GUI_MAIN_HEIGHT = 692 ; changed from 690 to 692 for DPI scaling cutting
 Global Const $_NORMALGUI_MAIN_WIDTH = $_GUI_MAIN_WIDTH ; changed from 470 to 472 for DPI scaling cutting off right by 2 pixel
 Global Const $_NORMALGUI_MAIN_HEIGHT = $_GUI_MAIN_HEIGHT ; changed from 690 to 692 for DPI scaling cutting off bottom by 2 pixel
 Global Const $_MINIGUI_MAIN_WIDTH = $_GUI_MAIN_WIDTH ; changed from 470 to 472 for DPI scaling cutting off right by 2 pixel
-Global Const $_MINIGUI_MAIN_HEIGHT = 220 ; changed from 690 to 692 for DPI scaling cutting off bottom by 2 pixel
+Global Const $_MINIGUI_MAIN_HEIGHT = 220; changed from 690 to 692 for DPI scaling cutting off bottom by 2 pixel
 Global $_GUI_MAIN_TOP = 23 ; Adjusted in CreateMainGUI()
 Global $_GUI_MAIN_BUTTON_SIZE = [25, 17] ; minimize/close button size
 Global $_GUI_MAIN_BUTTON_COUNT = 4
@@ -183,7 +183,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 			WinSetTrans($g_hFrmBotButtons, "", 254) ; trick to hide buttons from Android Screen that is not always refreshing
 		EndIf
 		; Need $g_hFrmBotEx for embedding Android
-		$g_hFrmBotEx = GUICreate("My Bot Controls", $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 10 - 5, 0, 0, _
+		$g_hFrmBotEx = GUICreate("My Bot Controls", $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 15, 0, 0, _
 				BitOR($WS_CHILD, $WS_TABSTOP), 0, $g_hFrmBot)
 
 		$g_hToolTip = _GUIToolTip_Create($g_hFrmBot) ; tool tips for URL links etc
