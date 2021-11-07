@@ -1134,7 +1134,7 @@ Func BotGuiModeToggle()
 
 			; mini GUI mode
 			$_GUI_MAIN_WIDTH = $_MINIGUI_MAIN_WIDTH
-			$_GUI_MAIN_HEIGHT = $_MINIGUI_MAIN_HEIGHT
+			$_GUI_MAIN_HEIGHT = $_MINIGUI_MAIN_HEIGHT + 5
 
 			; destroy GUI Controls
 			; but keep Bot and Attack Log though (park them in main form, restore again in CreateLogTab())
@@ -1240,14 +1240,12 @@ Func BotGuiModeToggle()
 	EndSwitch
 
 	; move bottom controls
-	WinMove2($g_hFrmBotBottom, "", 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP, -1, -1, 0, 0, False)
-	;ControlMove($g_hFrmBot, "", $g_hFrmBotBottom, 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP)
-	;WinSetTrans($g_hFrmBotBottom, "", 255)
-
+	WinMove2($g_hFrmBotBottom, "", 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 15, -1, -1, 0, 0, False)
+	
 	; resize windows
 	Local $xComp = $g_aFrmBotPosInit[2] - $_GUI_MAIN_WIDTH_OLD
 	Local $yComp = $g_aFrmBotPosInit[3] + $g_aFrmBotPosInit[7] - $_GUI_MAIN_HEIGHT_OLD
-	WinMove2($g_hFrmBotEx, "", -1, -1, $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP, 0, 0, False)
+	WinMove2($g_hFrmBotEx, "", -1, -1, $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 15, 0, 0, False)
 	WinMove2($g_hFrmBot, "", -1, -1, $_GUI_MAIN_WIDTH + $xComp, $_GUI_MAIN_HEIGHT + $yComp, 0, 0, False)
 
 	; update buttons
