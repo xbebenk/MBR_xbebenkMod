@@ -14,15 +14,15 @@
 ; ===============================================================================================================================
 
 Func isNoUpgradeLoot($bNeedCaptureRegion = False)
-	If _ColorCheck(_GetPixelColor(460, 492, $bNeedCaptureRegion), Hex(0xFF887F, 6), 20) And _ ; Check regular upgrades window
-			_ColorCheck(_GetPixelColor(460, 494, $bNeedCaptureRegion), Hex(0xFF887F, 6), 20) And _
+	If _ColorCheck(_GetPixelColor(460, 494, $bNeedCaptureRegion), Hex(0xFF887F, 6), 20) And _ ; Check regular upgrades window
+			_ColorCheck(_GetPixelColor(460, 496, $bNeedCaptureRegion), Hex(0xFF887F, 6), 20) And _
 			_ColorCheck(_GetPixelColor(460, 498, $bNeedCaptureRegion), Hex(0xFF887F, 6), 20) Then ; Check for Red Zero on norma Upgrades = means not enough loot!
 		If $g_bDebugSetlog Then SetDebugLog("isNoUpgradeLoot Red Zero found", $COLOR_DEBUG)
 		PureClickP($aAway, 1, 0, "#0142") ; click away to close upgrade window
 		Return True
-	ElseIf _ColorCheck(_GetPixelColor(691, 523, $bNeedCaptureRegion), Hex(0xFF887F, 6), 20) And _ ; Check Hero upgrades window
-			_ColorCheck(_GetPixelColor(691, 527, $bNeedCaptureRegion), Hex(0xFF887F, 6), 20) And _
-			_ColorCheck(_GetPixelColor(691, 531, $bNeedCaptureRegion), Hex(0xFF887F, 6), 20) Then ; Check for Red Zero = means not enough loot!
+	ElseIf _ColorCheck(_GetPixelColor(691, 528, $bNeedCaptureRegion), Hex(0xFF887F, 6), 20) And _ ; Check Hero upgrades window
+			_ColorCheck(_GetPixelColor(691, 530, $bNeedCaptureRegion), Hex(0xFF887F, 6), 20) And _
+			_ColorCheck(_GetPixelColor(691, 532, $bNeedCaptureRegion), Hex(0xFF887F, 6), 20) Then ; Check for Red Zero = means not enough loot!
 		If $g_bDebugSetlog Then SetDebugLog("IsNoUpgradeLoot Hero Red Zero Found", $COLOR_DEBUG)
 		PureClickP($aAway, 1, 0, "#0143") ; click away to close gem window
 		Return True
