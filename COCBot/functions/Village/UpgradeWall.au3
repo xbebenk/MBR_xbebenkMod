@@ -212,15 +212,15 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 		If ClickB("SelectRow") Then
 			If _Sleep(1000) Then Return 
 			For $x = $WallLevel To $UpgradeToLvl - 1 ;try to upgrade till lvl 4
-				If Not UpgradeLowLevelWallCheckResource() Then Return
 				If Not $g_bRunState Then Return
 				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 520, 530, 610) Then
 					Click($g_iQuickMISX + 400, $g_iQuickMISY + 520)
 					If _Sleep(1500) Then Return
-					If QuickMIS("BC1", $g_sImgAUpgradeWallOK, 400, 400, 600, 470) Then
-						Click($g_iQuickMISX + 400, $g_iQuickMISY + 400)
+					If QuickMIS("BC1", $g_sImgAUpgradeWallOK, 400, 350, 600, 450) Then
+						Click($g_iQuickMISX + 400, $g_iQuickMISY + 350)
 						SetLog("Successfully Upgrade a Row of Wall Level " & $x & " To lvl " & $x+1, $COLOR_SUCCESS)
 					EndIf
+					If Not UpgradeLowLevelWallCheckResource() Then Return
 				Else
 					SetLog("Not Enough Resource...", $COLOR_ERROR)
 					Return False
@@ -230,13 +230,13 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 		Else
 			SetLog("Cannot Select Row", $COLOR_INFO)
 			For $x = $WallLevel To $UpgradeToLvl - 1 ;try to upgrade till lvl 4
-				If Not UpgradeLowLevelWallCheckResource() Then Return
 				If Not $g_bRunState Then Return
 				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 520, 530, 610) Then
 					Click($g_iQuickMISX + 400, $g_iQuickMISY + 520)
 					If _Sleep(1500) Then Return
 					Click(440, 530)
 					SetLog("Successfully Upgrade Level " & $x & " To lvl " & $x+1, $COLOR_SUCCESS)
+					If Not UpgradeLowLevelWallCheckResource() Then Return
 				Else
 					SetLog("Not Enough Resource...", $COLOR_ERROR)
 					Return False
