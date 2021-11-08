@@ -37,7 +37,7 @@ Func TreasuryCollect()
 	If $TryCCAutoLocate Then 
 		SetLog("Try to Auto Locate Clan Castle", $COLOR_INFO)
 		ClickAway()
-		Local $TreasuryCoord = decodeSingleCoord(findImage("TreasuryFull", $g_sImgTreasuryFull & "\Treasury*", "FV", 1, True))
+		Local $TreasuryCoord = decodeSingleCoord(findImage("TreasuryFull", $g_sImgTreasuryFull & "\Treasury*", GetDiamondFromRect("77,70(700,510)"), 1, True))
 		If IsArray($TreasuryCoord) And UBound($TreasuryCoord) = 2 Then
 			Click($TreasuryCoord[0], $TreasuryCoord[1] + 50)
 			If _Sleep(500) Then Return
@@ -49,7 +49,7 @@ Func TreasuryCollect()
 			EndIf
 		EndIf
 		
-		Local $ClanCastleCoord = decodeSingleCoord(findImage("ClanCastle", $g_sImgClanCastle & "\ClanCastle*", "FV", 1, True))
+		Local $ClanCastleCoord = decodeSingleCoord(findImage("ClanCastle", $g_sImgClanCastle & "\ClanCastle*", GetDiamondFromRect("77,70(700,510)"), 1, True))
 		If IsArray($ClanCastleCoord) And UBound($ClanCastleCoord) = 2 Then
 			Click($ClanCastleCoord[0] + 10, $ClanCastleCoord[1] + 10)
 			If _Sleep(500) Then Return
