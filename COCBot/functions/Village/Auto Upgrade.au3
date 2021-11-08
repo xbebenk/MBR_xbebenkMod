@@ -35,7 +35,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	If $g_iFreeBuilderCount > 0 Then ;builder available
 		$bRet = True
 	ElseIf $g_iFreeBuilderCount - $iWallReserve - $g_iHeroReservedBuilder < 1 Then ;check builder reserve on wall and hero upgrade
-		SetLog("FreeBuilder=" & $g_iFreeBuilderCount & ", Reserve ForHero=" & $g_iHeroReservedBuilder & " ForWall=" & $iWallReserve, $COLOR_DEBUG)
+		If $g_bDebugClick Then SetLog("FreeBuilder=" & $g_iFreeBuilderCount & ", Reserve ForHero=" & $g_iHeroReservedBuilder & " ForWall=" & $iWallReserve, $COLOR_INFO)
 		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
 		$bRet = False
 	EndIf
@@ -48,7 +48,7 @@ Func SearchUpgrade($bTest = False)
 	Local $bDebug = $g_bDebugSetlog
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
-	
+	If Not AutoUpgradeCheckBuilder($bTest) Then Return
 	VillageReport(True,True)
 	
 	; check if builder head is clickable
@@ -558,11 +558,12 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	Local $NeedDrag = True, $FoundMostBottomRed = 0
 	If Not $g_bRunState Then Return
 	For $z = 0 To 10 ;for do scroll 8 times
-		
+		If Not $g_bRunState Then Return
 		Local $New, $NewCoord, $aCoord[0][2], $ZeroCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
 		$NewCoord = QuickMIS("CX", $g_sImgAUpgradeObstNew, 180, 73, 280, 370, True) ;find New Building
 		If IsArray($NewCoord) And UBound($NewCoord) > 0 Then 
+			If Not $g_bRunState Then Return
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
 			For $j = 0 To UBound($NewCoord)-1
 				$New = StringSplit($NewCoord[$j], ",", $STR_NOCOUNT)
@@ -570,6 +571,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			Next
 			_ArraySort($aCoord, 0, 0, 0, 1)
 			For $j = 0 To UBound($aCoord) - 1
+				If Not $g_bRunState Then Return
 				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $aCoord[$j][0] + 150, $aCoord[$j][1] - 8, $aCoord[$j][0] + 300, $aCoord[$j][1] + 8) Then
 					SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1], $COLOR_INFO)
 					ClickAway()
@@ -596,7 +598,6 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		EndIf
 		
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
-			Local $left = 180, $top = 80, $right = 330, $bottom = 370
 			If QuickMIS("BC1", $g_sImgAUpgradeRushTHPriority, 180, 80, 330, 369, True) Then
 				SetLog("Found RushTH Priority Building", $COLOR_DEBUG)
 				Local $tmpX = $g_iQuickMISX + 180, $tmpY = $g_iQuickMISY + 80
