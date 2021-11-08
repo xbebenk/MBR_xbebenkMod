@@ -22,13 +22,20 @@ EndFunc
 
 Func AutoUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
+	Local $iWallReserve
+	
 	getBuilderCount(True) ;check if we have available builder
 	If $bTest Then 
 		$g_iFreeBuilderCount = 1
 		$bRet = True
 	EndIf
+	
 	;Check if there is a free builder for Auto Upgrade
-	If ($g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0)) <= 0 Then
+	$iWallReserve = ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0)
+	If $g_iFreeBuilderCount > 0 Then ;builder available
+		$bRet = True
+	ElseIf $g_iFreeBuilderCount - $iWallReserve - $g_iHeroReservedBuilder < 1 Then ;check builder reserve on wall and hero upgrade
+		SetLog("FreeBuilder=" & $g_iFreeBuilderCount & ", Reserve ForHero=" & $g_iHeroReservedBuilder & " ForWall=" & $g_bUpgradeWallSaveBuilder, $COLOR_DEBUG)
 		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
 		$bRet = False
 	EndIf
