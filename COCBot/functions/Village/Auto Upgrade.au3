@@ -35,7 +35,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	If $g_iFreeBuilderCount > 0 Then ;builder available
 		$bRet = True
 	ElseIf $g_iFreeBuilderCount - $iWallReserve - $g_iHeroReservedBuilder < 1 Then ;check builder reserve on wall and hero upgrade
-		SetLog("FreeBuilder=" & $g_iFreeBuilderCount & ", Reserve ForHero=" & $g_iHeroReservedBuilder & " ForWall=" & $g_bUpgradeWallSaveBuilder, $COLOR_DEBUG)
+		SetLog("FreeBuilder=" & $g_iFreeBuilderCount & ", Reserve ForHero=" & $g_iHeroReservedBuilder & " ForWall=" & $iWallReserve, $COLOR_DEBUG)
 		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
 		$bRet = False
 	EndIf
