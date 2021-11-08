@@ -48,14 +48,15 @@ Func UpgradeWall()
 		SetLog("Ooops, Chief you are reserve one for wall, sure we will Upgrade Walls", $COLOR_DEBUG)
 		$GoUpgrade = True
 	EndIf
-	
+	If Not $g_bRunState Then Return
 	If $GoUpgrade And $g_bUpgradeLowWall Then 
 		UpgradeLowLevelWall()
 	EndIf
-	
+	If Not $g_bRunState Then Return
 	If $GoUpgrade Then
 		ClickAway()
 		VillageReport(True, True) ;update village resource capacity
+		If $g_iFreeBuilderCount < 1 Then Return
 		For $z = 0 To 2
 			$iWallCost = $aSelectedWall[$z][1]
 			$iWallLevel = $aSelectedWall[$z][0]
@@ -65,6 +66,7 @@ Func UpgradeWall()
 			If Not $MinWallGold And Not $MinWallElixir Then ExitLoop
 			
 			While $MinWallGold Or $MinWallElixir
+				If Not $g_bRunState Then Return
 				;check for gold wall upgrade
 				If $g_iUpgradeWallLootType = 0 Then
 					SetLog("Upgrading Wall using Gold", $COLOR_SUCCESS)
@@ -161,7 +163,7 @@ Func UpgradeLowLevelWall()
 	SetLog("Upgrade LowLevel Wall using autoupgrade enabled", $COLOR_DEBUG)
 	VillageReport(True, True) ;update village resource capacity
 	ClickMainBuilder()
-	Local $aWallCoord, $WallLevel, $Wall, $count =  0
+	Local $aWallCoord, $WallLevel, $Wall, $loopCount2 = 0, $loopCount1 = 0
 	Local $UpgradeToLvl = 5
 	While 1
 		If Not $g_bRunState Then Return
@@ -176,12 +178,12 @@ Func UpgradeLowLevelWall()
 				$WallLevel = BuildingInfo(242, 494)
 				If $WallLevel[0] = "" Then
 					SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
-					If $count = 2 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
+					If $loopCount2 = 2 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
 				EndIf
 				If $WallLevel[1] = "Wall" And $WallLevel[2] >= $UpgradeToLvl Then
 					SetLog("Wall Level : " & $WallLevel[2], $COLOR_ERROR)
 					SetLog("We Only want to upgrade from lvl 1 to lvl " & $UpgradeToLvl - 1 & ", looking next...", $COLOR_ERROR)
-					If $count = 4 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
+					If $loopCount2 = 4 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
 				Else
 					If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold Then 
 						SetLog("Current Gold: " & $g_aiCurrentLoot[$eLootGold] & ", already below " & $g_iUpgradeWallMinGold, $COLOR_INFO)
@@ -189,16 +191,18 @@ Func UpgradeLowLevelWall()
 					Else
 						SetLog("Wall Level : " & $WallLevel[2], $COLOR_SUCCESS)
 						If Not DoLowLevelWallUpgrade($WallLevel[2]) Then ExitLoop
-						If $count = 4 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
+						If $loopCount2 = 4 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
 					EndIf
 				EndIf
 				If Not QuickMIS("BC1", $g_sImgAUpgradeWall, 180, 80, 330, 369) Then ExitLoop
 			Next
-			$count += 1
+			$loopCount2 += 1
+		Else
+			$loopCount1 += 1
 		EndIf
+		SetLog("No LowLevel Wall Found", $COLOR_INFO)
+		If $loopCount1 > 1 Then ExitLoop
 	Wend
-	ClickAway()
-	ClickMainBuilder()
 	ClickDragAUpgrade("down")
 	CheckMainScreen(False)
 EndFunc
@@ -255,13 +259,20 @@ Func ClickDragFindWallUpgrade()
 	Local $aWallCoord, $aResult[0]
 	For $checkCount = 0 To 4
 		If Not $g_bRunState Then Return
-		If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
+		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
 			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
 			If _Sleep(2000) Then Return
 			$aWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 180, 80, 330, 369)
 			If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then
 				SetLog("Found " & UBound($aWallCoord) & " Wall", $COLOR_DEBUG)
 				Return $aWallCoord
+			EndIf
+			Local $aZeroWhiteMostBottom = _PixelSearch(430, 345, 450, 360, Hex(0xFFFFFF, 6), 10)
+			If $aZeroWhiteMostBottom = 0 Then
+				SetLog("No WhiteZero at most bottom list", $COLOR_DEBUG)
+				If $checkCount > 1 Then ExitLoop
+			Else
+				SetLog("Found WhiteZero at most bottom list", $COLOR_DEBUG)
 			EndIf
 		EndIf
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border

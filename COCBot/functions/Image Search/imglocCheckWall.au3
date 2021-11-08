@@ -77,27 +77,29 @@ Func imglocCheckWall($LastWallLevel = 0)
 				$aCoord[1] = $aCoord[1] + $iYClickOffset
 				SetLog("Checking if found position is a Wall and of desired level.", $COLOR_SUCCESS)
 				;try click
-				GemClick($aCoord[0], $aCoord[1])
-				If _Sleep(500) Then Return
-				Local $aResult = BuildingInfo(245, 494) ; Get building name and level with OCR
-				If $aResult[0] = 2 Then ; We found a valid building name
-					If StringInStr($aResult[1], "wall") = True And Number($aResult[2]) = $levelWall Then ; we found a wall
-						SetLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is a Wall Level: " & $levelWall & ".")
-						$g_aiLastGoodWallPos[0] = $aCoord[0]
-						$g_aiLastGoodWallPos[1] = $aCoord[1]
-						$g_iUpgradedWallLevel = $levelWall - 4
-						Return True
+				If isInsideDiamondXY($aCoord[0], $aCoord[1]) Then ;prevent click outside village
+					GemClick($aCoord[0], $aCoord[1])
+					If _Sleep(500) Then Return
+					Local $aResult = BuildingInfo(245, 494) ; Get building name and level with OCR
+					If $aResult[0] = 2 Then ; We found a valid building name
+						If StringInStr($aResult[1], "wall") = True And Number($aResult[2]) = $levelWall Then ; we found a wall
+							SetLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is a Wall Level: " & $levelWall & ".")
+							$g_aiLastGoodWallPos[0] = $aCoord[0]
+							$g_aiLastGoodWallPos[1] = $aCoord[1]
+							$g_iUpgradedWallLevel = $levelWall - 4
+							Return True
+						Else
+							ClickAway()
+							If $g_bDebugSetlog Then
+								SetDebugLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is not a Wall Level: " & $levelWall & ". It was: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG) ;debug
+							Else
+								SetLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is not a Wall Level: " & $levelWall & ".", $COLOR_ERROR)
+								SetDebugLog("It was: " & $aResult[1] & ", " & $aResult[2], $COLOR_DEBUG, True) ; log actual wall values to file log only
+							EndIf
+						EndIf
 					Else
 						ClickAway()
-						If $g_bDebugSetlog Then
-							SetDebugLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is not a Wall Level: " & $levelWall & ". It was: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG) ;debug
-						Else
-							SetLog("Position : " & $aCoord[0] & ", " & $aCoord[1] & " is not a Wall Level: " & $levelWall & ".", $COLOR_ERROR)
-							SetDebugLog("It was: " & $aResult[1] & ", " & $aResult[2], $COLOR_DEBUG, True) ; log actual wall values to file log only
-						EndIf
 					EndIf
-				Else
-					ClickAway()
 				EndIf
 			Next
 		Next
