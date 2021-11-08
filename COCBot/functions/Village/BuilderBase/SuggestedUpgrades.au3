@@ -494,7 +494,6 @@ Func SearchNewBuilding($bTest = False)
 EndFunc
 
 Func ClickDragAutoUpgradeBB($y = 400)
-
 	If (_ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) = True) Then
 		ClickDrag(333, $y - 30, 333, 91, 800);do scroll down
 		If _Sleep(3000) Then Return
@@ -626,19 +625,19 @@ Func BBAutoUpgradeLog($aUpgradeNameLevel = Default)
 EndFunc
 
 Func AutoUpgradeBBCheckBuilder($bTest = False)
+	Local $bRet = False
 	getBuilderCount(False, True) ;check masterBuilder
 	If $bTest Then 
 		$g_iFreeBuilderCountBB = 1
-		SetLog("Free Master Builder : " & $g_iFreeBuilderCountBB, $COLOR_DEBUG)
-		Return True
+		$bRet = True
 	EndIf
 	;Check if there is a free builder for Auto Upgrade
 	If $g_iFreeBuilderCountBB > 0 Then 
-		SetLog("Free Master Builder : " & $g_iFreeBuilderCountBB, $COLOR_DEBUG)
-		Return True
+		$bRet = True
 	Else
 		SetLog("Master Builder Not Available", $COLOR_DEBUG)
-		Return False
+		$bRet = False
 	EndIf
-	Return False
+	SetLog("Free Master Builder : " & $g_iFreeBuilderCountBB, $COLOR_DEBUG)
+	Return $bRet
 EndFunc

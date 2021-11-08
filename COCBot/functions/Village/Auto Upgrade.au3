@@ -21,19 +21,19 @@ Func AutoUpgrade($bTest = False)
 EndFunc
 
 Func AutoUpgradeCheckBuilder($bTest = False)
+	Local $bRet = False
 	getBuilderCount(True) ;check if we have available builder
 	If $bTest Then 
 		$g_iFreeBuilderCount = 1
-		SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
-		Return True
+		$bRet = True
 	EndIf
 	;Check if there is a free builder for Auto Upgrade
 	If ($g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0)) <= 0 Then
 		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
-		Return False
+		$bRet = False
 	EndIf
 	SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
-	Return True
+	Return $bRet
 EndFunc
 
 Func SearchUpgrade($bTest = False)
@@ -50,24 +50,25 @@ Func SearchUpgrade($bTest = False)
 		Return
 	EndIf
 	
-	If Not AutoUpgradeCheckBuilder($bTest) Then Return ;Check if we have builder
-	If $g_bNewBuildingFirst Then
-		If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest)
-		If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
-			ZoomOut()
-			Return
+	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
+		If $g_bNewBuildingFirst Then
+			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
+			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
+				ZoomOut() ;no builder, exit
+				Return
+			EndIf
+			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
 		EndIf
 	EndIf
 	
-	AutoUpgradeSearchExisting($bTest)
 	If Not $g_bRunState Then Return
+	AutoUpgradeSearchExisting($bTest) ;search upgrade for existing building
 	
 	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
-		If Not $g_bNewBuildingFirst Then
-			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest)
+		If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing 
+			AutoUpgradeSearchNewBuilding($bTest)
 		EndIf
 	EndIf
-	SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	
 	ClickAway()
 	ZoomOut()
@@ -76,7 +77,6 @@ EndFunc
 
 Func AutoUpgradeSearchExisting($bTest = False)
 	If Not ClickMainBuilder($bTest) Then Return
-	If $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ClickDragAUpgrade("down")
 	Local $bDebug = $g_bDebugSetlog
 	Local $b_BuildingFound = False, $NeedDrag = True, $FoundMostBottomRed = 0
 	For $z = 0 To 9 ;for do scroll 10 times
@@ -553,7 +553,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		
 		Local $New, $NewCoord, $aCoord[0][2], $ZeroCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
-		$NewCoord = QuickMIS("CX", $g_sImgAUpgradeObstNew, 180,73,280,370) ;find New Building
+		$NewCoord = QuickMIS("CX", $g_sImgAUpgradeObstNew, 180, 73, 280, 370, True) ;find New Building
 		If IsArray($NewCoord) And UBound($NewCoord) > 0 Then 
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
 			For $j = 0 To UBound($NewCoord)-1
@@ -589,11 +589,11 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
 			Local $left = 180, $top = 80, $right = 330, $bottom = 370
-			If QuickMIS("BC1", $g_sImgAUpgradeRushTHPriority, 180, 80, 330, 369) Then
+			If QuickMIS("BC1", $g_sImgAUpgradeRushTHPriority, 180, 80, 330, 369, True) Then
 				SetLog("Found RushTH Priority Building", $COLOR_DEBUG)
 				Local $tmpX = $g_iQuickMISX + 180, $tmpY = $g_iQuickMISY + 80
 				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $tmpX, $tmpY - 10, $tmpX + 200, $tmpY + 10) Then
-					Click($g_iQuickMISX + $tmpX, $g_iQuickMISY + $tmpY)
+					Click($g_iQuickMISX + $tmpX, $g_iQuickMISY + $tmpY - 10)
 					If _Sleep(1000) Then Return
 					If DoUpgrade($bTest) Then
 						$b_BuildingFound = False ;reset
@@ -663,7 +663,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
-		If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
+		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border
 			Switch $Direction
 				Case "Up"
 					If $YY < 100 Then $YY = 150
@@ -680,7 +680,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 					If _Sleep(5000) Then Return
 			EndSwitch
 		EndIf
-		If (_ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) = True) Then
+		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border
 			SetLog("Upgrade Window Exist", $COLOR_INFO)
 			Return True
 		Else
