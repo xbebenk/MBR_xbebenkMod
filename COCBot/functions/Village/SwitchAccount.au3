@@ -1081,7 +1081,7 @@ EndFunc   ;==>SCIDScrollDown
 Func SCIDScrollUp()
 	If Not $g_bRunState Then Return
 	SetLog("Try to scroll up", $COLOR_DEBUG)
-	For $i = 0 To Floor($g_iTotalAcc/4) - 1
+	For $i = 0 To Floor($g_iTotalAcc/4)
 		AndroidAdbScript("ScrollUpSCID")
 		If _Sleep(500) Then Return
 	Next
