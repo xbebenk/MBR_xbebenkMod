@@ -37,7 +37,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 EndFunc
 
 Func SearchUpgrade($bTest = False)
-
+	SetLog("Check for Auto Upgrade", $COLOR_DEBUG)
 	Local $bDebug = $g_bDebugSetlog
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
@@ -76,6 +76,7 @@ Func SearchUpgrade($bTest = False)
 EndFunc
 
 Func AutoUpgradeSearchExisting($bTest = False)
+	SetLog("Search For Existing Upgrade", $COLOR_DEBUG)
 	If Not ClickMainBuilder($bTest) Then Return
 	Local $bDebug = $g_bDebugSetlog
 	Local $b_BuildingFound = False, $NeedDrag = True, $FoundMostBottomRed = 0
@@ -539,7 +540,7 @@ EndFunc ;==>AUNewBuildings
 
 Func AutoUpgradeSearchNewBuilding($bTest = False)
 	If Not $g_bPlaceNewBuilding Then Return
-	
+	SetLog("Search For Place New Building", $COLOR_DEBUG)
 	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
 	
@@ -634,6 +635,7 @@ EndFunc ;==>FindNewBuilding
 
 Func SearchGreenZone()
 	SetLog("Search GreenZone for Placing new Building", $COLOR_INFO)
+	If Not $g_bRunState Then Return
 	Local $aTop = QuickMIS("CX", $g_sImgAUpgradeGreenZone, 320, 70, 500, 220) ;top
 	Local $aLeft = QuickMIS("CX", $g_sImgAUpgradeGreenZone, 90, 260, 220, 400) ;left
 	Local $aBottom = QuickMIS("CX", $g_sImgAUpgradeGreenZone, 300, 450, 500, 600) ;bottom
@@ -663,6 +665,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
+		If Not $g_bRunState Then Return
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border
 			Switch $Direction
 				Case "Up"
@@ -694,6 +697,7 @@ EndFunc ;==>IsUpgradeWindow
 
 Func ClickMainBuilder($bTest = False, $Counter = 1)
 	Local $b_WindowOpened = False
+	If Not $g_bRunState Then Return
 	; open the builders menu
 	If Not _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
 		Click(295, 30)
@@ -746,6 +750,5 @@ Func GoGoblinMap()
 	If IsAttackPage() Then
 		Click(66, 540)
 	EndIf
-	
 	If _Sleep(3500) Then Return
 EndFunc
