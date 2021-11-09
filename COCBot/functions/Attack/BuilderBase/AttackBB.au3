@@ -133,8 +133,13 @@ Func AttackBB()
 	;Function uses this list of local variables...
 	$aBMPos = GetMachinePos() ;Need this initialized before it starts flashing
 	If $g_bChkBBDropBMFirst = True Then
-		SetDebugLog("Dropping BM First")
+		SetLog("Dropping BM First")
 		$bBMDeployed = DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
+		If IsArray($aBMPos) Then
+			_Sleep(500) ;brief pause for sanity
+			SetLog("Clicking BM Early") ;Help carry BM through troop drop period
+			PureClickP($aBMPos)
+		Endif
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
@@ -189,10 +194,10 @@ Func AttackBB()
 
 	;If not dropping Builder Machine first, drop it now
 	If $g_bChkBBDropBMFirst = False Then
-		SetDebugLog("Dropping BM Last")
+		SetLog("Dropping BM Last")
 		$bBMDeployed = DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
 		;Have to sleep here to while TimerDiff loop works first time, below.
-		If $bBMDeployed = True Then Sleep($g_iBBMachAbilityTime)
+		;If $bBMDeployed = True Then Sleep($g_iBBMachAbilityTime)
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
@@ -203,7 +208,7 @@ Func AttackBB()
 		SetDebugLog("Top of Battle Machine Loop")
 		local $timer = __TimerInit() ; give a bit of time to check if hero is dead because of the random lightning strikes through graphic
 		$aBMPos = GetMachinePos()
-		While __TimerDiff($timer) < 3000 And Not IsArray($aBMPos) ; give time to find
+		While __TimerDiff($timer) < ($g_iBBMachAbilityTime + 1000) And Not IsArray($aBMPos) ; give time to find, longer than ability time.
 			SetDebugLog("Checking BM Pos again")
 			$aBMPos = GetMachinePos()
 		WEnd
@@ -215,6 +220,7 @@ Func AttackBB()
 			SetDebugLog("Clicking BM")
 			PureClickP($aBMPos)
 		EndIf
+		
 		;Sleep at the end with BM
 		If $bMachineAlive Then ;Only wait if still alive
 			If _Sleep($g_iBBMachAbilityTime) Then ; wait for machine to be available
