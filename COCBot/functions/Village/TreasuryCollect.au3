@@ -26,7 +26,11 @@ Func TreasuryCollect()
 	Else
 		Click($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
 		If _Sleep(1000) Then Return
+<<<<<<< HEAD
 		Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+=======
+		Local $BuildingInfo = BuildingInfo(290, 494)
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 		If $BuildingInfo[1] = "Clan Castle" Then 
 			$TryCCAutoLocate = False
 		Else
@@ -37,11 +41,15 @@ Func TreasuryCollect()
 	If $TryCCAutoLocate Then 
 		SetLog("Try to Auto Locate Clan Castle", $COLOR_INFO)
 		ClickAway()
-		Local $TreasuryCoord = decodeSingleCoord(findImage("TreasuryFull", $g_sImgTreasuryFull & "\Treasury*", "FV", 1, True))
+		Local $TreasuryCoord = decodeSingleCoord(findImage("TreasuryFull", $g_sImgTreasuryFull & "\Treasury*", GetDiamondFromRect("77,70(700,510)"), 1, True))
 		If IsArray($TreasuryCoord) And UBound($TreasuryCoord) = 2 Then
 			Click($TreasuryCoord[0], $TreasuryCoord[1] + 50)
 			If _Sleep(500) Then Return
+<<<<<<< HEAD
 			Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+=======
+			Local $BuildingInfo = BuildingInfo(290, 494)
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 			If $BuildingInfo[1] = "Clan Castle" Then 
 				$g_aiClanCastlePos[0] = $TreasuryCoord[0]
 				$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 50
@@ -49,11 +57,15 @@ Func TreasuryCollect()
 			EndIf
 		EndIf
 		
-		Local $ClanCastleCoord = decodeSingleCoord(findImage("ClanCastle", $g_sImgClanCastle & "\ClanCastle*", "FV", 1, True))
+		Local $ClanCastleCoord = decodeSingleCoord(findImage("ClanCastle", $g_sImgClanCastle & "\ClanCastle*", GetDiamondFromRect("77,70(700,510)"), 1, True))
 		If IsArray($ClanCastleCoord) And UBound($ClanCastleCoord) = 2 Then
 			Click($ClanCastleCoord[0] + 10, $ClanCastleCoord[1] + 10)
 			If _Sleep(500) Then Return
+<<<<<<< HEAD
 			Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+=======
+			Local $BuildingInfo = BuildingInfo(290, 494)
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 			If $BuildingInfo[1] = "Clan Castle" Then 
 				$g_aiClanCastlePos[0] = $ClanCastleCoord[0] + 10
 				$g_aiClanCastlePos[1] = $ClanCastleCoord[1] + 10

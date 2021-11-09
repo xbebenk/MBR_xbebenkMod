@@ -1385,7 +1385,7 @@ Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_iBHLevel = 0
 Global $g_bGoldStorageFullBB = False, $g_bElixirStorageFullBB = False, $g_bGoldStorage50BB = False
 Global $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
 Global $g_bChkBBCustomArmyEnable = False
-Global $g_iCmbCampsBB[6] = [0, 0, 0, 0, 0, 0]
+Global $g_iCmbTroopBB[6] = [0, 0, 0, 0, 0, 0]
 
 ; Army camps
 Global $g_iArmyCapacity = 0 ; Calculated percentage of troops currently in camp / total camp space, expressed as an integer from 0 to 100

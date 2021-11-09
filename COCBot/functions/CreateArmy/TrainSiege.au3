@@ -26,12 +26,12 @@ Func TrainSiege($bTrainFullSiege = False)
 	If _Sleep(500) Then Return
 
 	Local $aCheckIsOccupied[4] = [822, 206, 0xE00D0D, 10]
-	Local $aCheckIsFilled[4] = [802, 186, 0xD7AFA9, 10]
-	Local $aCheckIsAvailableSiege[4] = [58, 556, 0x47717E, 10]
-	Local $aCheckIsAvailableSiege1[4] = [229, 556, 0x47717E, 10]
-	Local $aCheckIsAvailableSiege2[4] = [400, 556, 0x47717E, 10]
-	Local $aCheckIsAvailableSiege3[4] = [576, 556, 0x47717E, 10]
-	Local $aCheckIsAvailableSiege4[4] = [750, 556, 0x47717E, 10]
+	Local $aCheckIsFilled[4] = [802, 157, 0xD7AFA9, 10]
+	Local $aCheckIsAvailableSiege[4] = [58, 523, 0x48717F, 10]
+	Local $aCheckIsAvailableSiege1[4] = [229, 523, 0x48717F, 10]
+	Local $aCheckIsAvailableSiege2[4] = [400, 523, 0x48717F, 10]
+	Local $aCheckIsAvailableSiege3[4] = [576, 523, 0x48717F, 10]
+	Local $aCheckIsAvailableSiege4[4] = [750, 523, 0x48717F, 10]
 
 	Local $aiQueueSiegeMachine[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
 	Local $aiTotalSiegeMachine = $g_aiCurrentSiegeMachines
@@ -39,7 +39,7 @@ Func TrainSiege($bTrainFullSiege = False)
 	; check queueing siege
 	If _CheckPixel($aCheckIsFilled, True, Default, "Siege is Filled") Or _CheckPixel($aCheckIsOccupied, True, Default, "Siege is Queued") Then
 		Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\SiegeMachinesQueued"
-		Local $aSearchResult = SearchArmy($Dir, 18, 182, 840, 261, "Queue")
+		Local $aSearchResult = SearchArmy($Dir, 18, 152, 840, 235, "Queue")
 		If $aSearchResult[0][0] <> "" Then
 			For $i = 0 To UBound($aSearchResult) - 1
 				Local $iSiegeIndex = TroopIndexLookup($aSearchResult[$i][0]) - $eWallW
@@ -100,7 +100,7 @@ Func TrainSiege($bTrainFullSiege = False)
 	If _Sleep(500) Then Return
 
 	; OCR to get remain time - coc-siegeremain
-	Local $sSiegeTime = getRemainBuildTimer(780, 244) ; Get time via OCR.
+	Local $sSiegeTime = getRemainBuildTimer(780, 214) ; Get time via OCR.
 	If $sSiegeTime <> "" Then
 		$g_aiTimeTrain[3] = ConvertOCRTime("Siege", $sSiegeTime, False) ; Update global array
 		SetLog("Remaining Siege build time: " & StringFormat("%.2f", $g_aiTimeTrain[3]), $COLOR_INFO)
@@ -113,7 +113,7 @@ Func CheckQueueSieges($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlo
 
 	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\SiegeMachinesQueued"
 
-	Local $aSearchResult = SearchArmy($Dir, 18, 182, $x, 261, $bGetQuantity ? "queue" : "")
+	Local $aSearchResult = SearchArmy($Dir, 18, 152, $x, 235, $bGetQuantity ? "queue" : "")
 	ReDim $aResult[UBound($aSearchResult)]
 
 	If $aSearchResult[0][0] = "" Then

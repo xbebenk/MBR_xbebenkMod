@@ -1368,9 +1368,13 @@ Func FirstCheckRoutine()
 		EndIf
 	EndIf
 	
-	If BotCommand() Then btnStop()
+	RequestCC(False)
+	checkArmyCamp(False, True)
+	PrepareDonateCC()
+	DonateCC()
+	TrainSystem()
 	
-	Local $aRndFuncList = ['RequestCC', 'DonateCC,Train', 'Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
+	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)

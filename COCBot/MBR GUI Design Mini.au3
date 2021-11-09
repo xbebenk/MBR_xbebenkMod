@@ -76,12 +76,12 @@ Global Const $TCM_SETITEM = 0x1306
 Global $_GUI_MAIN_WIDTH = 472 ; changed from 470 to 472 for DPI scaling cutting off right by 2 pixel
 Global $_GUI_MAIN_HEIGHT = 692 ; changed from 690 to 692 for DPI scaling cutting off bottom by 2 pixel
 Global Const $_MINIGUI_MAIN_WIDTH = 472 ; changed from 470 to 472 for DPI scaling cutting off right by 2 pixel
-Global Const $_MINIGUI_MAIN_HEIGHT = 220 ; changed from 690 to 692 for DPI scaling cutting off bottom by 2 pixel
+Global Const $_MINIGUI_MAIN_HEIGHT = 220; changed from 690 to 692 for DPI scaling cutting off bottom by 2 pixel
 Global $_GUI_MAIN_TOP = 23 ; Adjusted in CreateMainGUI()
 Global $_GUI_MAIN_BUTTON_SIZE = [25, 17] ; minimize/close button size
 Global $_GUI_MAIN_BUTTON_COUNT = 3
-Global $_GUI_CHILD_TOP = 110 + $_GUI_MAIN_TOP ; Adjusted in CreateMainGUI()
-Global Const $_GUI_BOTTOM_HEIGHT = 135
+Global $_GUI_CHILD_TOP = 85 + $_GUI_MAIN_TOP ; Adjusted in CreateMainGUI()
+Global Const $_GUI_BOTTOM_HEIGHT = 125
 Global Const $_GUI_CHILD_LEFT = 10
 Global Const $g_bBtnColor = False ; True
 
@@ -120,7 +120,6 @@ Global $g_oCtrlIconData = ObjCreate("Scripting.Dictionary")
 	#include "GUI\MBR GUI Design Bot.au3"
 #ce
 #include "GUI\MBR GUI Design About.au3"
-#include "GUI\MBR GUI Design BuilderBase.au3"
 
 Func CreateMainGUI()
 
@@ -143,7 +142,7 @@ Func CreateMainGUI()
 		$_GUI_MAIN_WIDTH = $_MINIGUI_MAIN_WIDTH
 		$_GUI_MAIN_HEIGHT = $_MINIGUI_MAIN_HEIGHT
 	EndIf
-	$g_hFrmBot = GUICreate($g_sBotTitle, $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT + $_GUI_MAIN_TOP, ($g_iFrmBotPosX = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosX), ($g_iFrmBotPosY = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosY), _
+	$g_hFrmBot = GUICreate($g_sBotTitle, $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT + $_GUI_MAIN_TOP - 25 - 5, ($g_iFrmBotPosX = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosX), ($g_iFrmBotPosY = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosY), _
 			BitOR($WS_MINIMIZEBOX, $WS_POPUP, $WS_SYSMENU, $WS_CLIPCHILDREN, $WS_CLIPSIBLINGS, $iStyle))
 
 	; see https://github.com/Microsoft/Windows-classic-samples/blob/master/Samples/Win7Samples/winui/shell/appshellintegration/TaskbarThumbnailToolbar/ThumbnailToolbar.cpp
@@ -220,7 +219,7 @@ Func CreateMainGUIControls()
 		WinSetTrans($g_hFrmBotButtons, "", 254) ; trick to hide buttons from Android Screen that is not always refreshing
 	EndIf
 	; Need $g_hFrmBotEx for embedding Android
-	$g_hFrmBotEx = GUICreate("My Bot Controls", $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP, 0, 0, _
+	$g_hFrmBotEx = GUICreate("My Bot Controls", $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 10, 0, 0, _
 			BitOR($WS_CHILD, $WS_TABSTOP), 0, $g_hFrmBot)
 
 	$g_hToolTip = _GUIToolTip_Create($g_hFrmBot) ; tool tips for URL links etc
@@ -285,7 +284,7 @@ Func CreateMainGUIControls()
 		GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	EndIf
 
-	$g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 67)
+	$g_hFrmBot_MAIN_PIC = _GUICtrlCreatePic($g_sLogoPath, 0, $_GUI_MAIN_TOP, $_GUI_MAIN_WIDTH, 45)
 	GUICtrlSetOnEvent(-1, "BotMoveRequest")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	
@@ -295,14 +294,14 @@ Func CreateMainGUIControls()
 	GUICtrlSetFont (-1,9, 800)
 	GUICtrlSetState($g_hFrmBot_MAIN_PIC, $GUI_ENABLE)
 
-	$g_hFrmBot_URL_PIC = _GUICtrlCreatePic($g_sLogoUrlPath, 0, $_GUI_MAIN_TOP + 67, $_GUI_MAIN_WIDTH, 13)
+	$g_hFrmBot_URL_PIC = _GUICtrlCreatePic($g_sLogoUrlPath, 0, $_GUI_MAIN_TOP + 45, $_GUI_MAIN_WIDTH, 13)
 	GUICtrlSetCursor(-1, 0)
 	
 	GUISwitch($g_hFrmBot)
 	$g_hFrmBotEmbeddedShieldInput = GUICtrlCreateInput("", 0, 0, -1, -1, $WS_TABSTOP)
 	GUICtrlSetState($g_hFrmBotEmbeddedShieldInput, $GUI_HIDE)
 
-	$g_hFrmBotBottom = GUICreate("My Bot Buttons", $_GUI_MAIN_WIDTH, $_GUI_BOTTOM_HEIGHT, 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP, _
+	$g_hFrmBotBottom = GUICreate("My Bot Buttons", $_GUI_MAIN_WIDTH, $_GUI_BOTTOM_HEIGHT, 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 5, _
 			BitOR($WS_CHILD, $WS_TABSTOP), 0, $g_hFrmBot)
 
 ;~ ------------------------------------------------------

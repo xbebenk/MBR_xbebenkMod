@@ -1237,7 +1237,10 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	If Not IsAdbConnected($cmdOutput) Then
 		If Not ConnectAndroidAdb() Then Return False
 	EndIf
-
+	If $g_bChkSuperCellID Then 
+		$cmdOutput = AndroidAdbSendShellCommand("settings put global policy_control immersive.status=*", 1000) ;disable statusbar 
+		SetDebugLog("Disable statusbar command Output: " & $cmdOutput, $COLOR_SUCCESS)
+	EndIf
 	If Not $g_bRunState Then Return False
 	AndroidAdbLaunchShellInstance()
 

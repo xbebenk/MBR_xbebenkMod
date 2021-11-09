@@ -674,7 +674,11 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 	If Not $g_bRunState Then Return
 
 	For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
+<<<<<<< HEAD
 		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("440,1,859,243"), 1, True, Default))
+=======
+		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default))
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 		If _Sleep(500) Then Return
 		If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
 			SetLog("SupercellID Window Opened", $COLOR_DEBUG)
@@ -694,8 +698,14 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 		SCIDScrollUp()
 		
 		SCIDScrollDown($NextAccount) ; Make Drag only when SCID window is visible.
+<<<<<<< HEAD
 		If _Sleep(500) Then Return
 		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 325, 840, 680)
+=======
+		If _Sleep(1000) Then Return
+		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 840, 676, True, False)
+		SetLog("Found: " & UBound($aAccount) & " SCID", $COLOR_SUCCESS)
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 		If IsArray($aAccount) And UBound($aAccount) > 0 Then
 			SetLog("SCID Accounts: " & UBound($aCoord), $COLOR_DEBUG)
 			For $j = 0 To UBound($aAccount) - 1
@@ -712,19 +722,31 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 				SetLog("[" & $j & "] Account coordinates: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
 			Next
 			
+			If UBound($aCoord) < 4 Then 
+				SetLog("Only Found " & UBound($aCoord) & " SCID Account, Select Last Account", $COLOR_INFO)
+				$iIndexSCID = UBound($aCoord) - 1
+			EndIf
+			
 			SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
 			Click($aCoord[$iIndexSCID][0]-75, $aCoord[$iIndexSCID][1] + 30, 1)
 			If _Sleep(750) Then Return
 			SetLog("   " & $iStep + 1 & ". Please wait for loading CoC!")
 			$bResult = True
 			Return "OK"
+		Else
+			$bResult = False
+			Return "Error"
 		EndIf
 	EndIf
 EndFunc   ;==>SwitchCOCAcc_ClickAccountSCID
 
 Func TestFindSCID()
 	Local $aAccount, $aFound, $aCoord[0][2]
+<<<<<<< HEAD
 	$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 325, 840, 680)
+=======
+	$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 840, 676, True, False)
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 	If IsArray($aAccount) And UBound($aAccount) > 0 Then
 		_ArraySort($aAccount)
 		For $j = 0 To UBound($aAccount) - 1
@@ -1073,7 +1095,7 @@ EndFunc   ;==>SCIDScrollDown
 Func SCIDScrollUp()
 	If Not $g_bRunState Then Return
 	SetLog("Try to scroll up", $COLOR_DEBUG)
-	For $i = 0 To Floor($g_iTotalAcc/4) - 1
+	For $i = 0 To Ceiling($g_iTotalAcc/4) - 1
 		AndroidAdbScript("ScrollUpSCID")
 		If _Sleep(500) Then Return
 	Next
