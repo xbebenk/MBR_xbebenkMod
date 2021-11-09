@@ -81,12 +81,14 @@ Func MatchTroopDropName($Num)
 		Case 33
 			Return $eBowl
 		Case 34
-			Return $eIceG
+			Return $eSBowl
 		Case 35
-			Return $eHunt
+			Return $eIceG
 		Case 36
-			Return "CC"
+			Return $eHunt
 		Case 37
+			Return "CC"
+		Case 38
 			Return "HEROES"
 	EndSwitch
 EndFunc   ;==>MatchTroopDropName

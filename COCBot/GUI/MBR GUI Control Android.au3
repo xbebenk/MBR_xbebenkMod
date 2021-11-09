@@ -183,7 +183,12 @@ Func getAllEmulators()
 
 	Local $sResult = StringRight($sEmulatorString, 1)
 	If $sResult == "|" Then $sEmulatorString = StringTrimRight($sEmulatorString, 1)
-	Setlog("All Emulator found in your machine: " & $sEmulatorString)
+	If $sEmulatorString <> "" Then
+		Setlog("All Emulator found in your machine: " & $sEmulatorString)
+	Else
+		Setlog("No Emulator found in your machine")
+		Return
+	EndIf
 	GUICtrlSetData($g_hCmbAndroidEmulator, $sEmulatorString)
 
 	; $g_sAndroidEmulator Cosote Var to store the Emulator
@@ -200,7 +205,7 @@ Func getAllEmulatorsInstances()
 
 	; Get all Instances from SELECTED EMULATOR - $g_hCmbAndroidEmulator is the Emulator ComboBox
 	Local $Emulator = GUICtrlRead($g_hCmbAndroidEmulator)
-	Local $sEmulatorPath = ""
+	Local $sEmulatorPath = 0
 
 	Switch $Emulator
 		Case "BlueStacks"
