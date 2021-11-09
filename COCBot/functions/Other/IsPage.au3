@@ -226,7 +226,7 @@ Func IsPostDefenseSummaryPage($bCapture = True)
 	Local $GoldSpot = _GetPixelColor(330, 201, $bCapture) ; Gold Emblem
 	Local $ElixirSpot = _GetPixelColor(334, 233, $bCapture) ; Elixir Emblem
 
-	$result = _ColorCheck($GoldSpot, Hex(0xF6E851, 6), 20) And _ColorCheck($ElixirSpot, Hex(0xE835E8, 6), 20)
+	$result = _ColorCheck($GoldSpot, Hex(0xF0E852, 6), 20) And _ColorCheck($ElixirSpot, Hex(0xE833EE, 6), 20)
 
 	If $result Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Post Defense Page visible**", $COLOR_ACTION)
