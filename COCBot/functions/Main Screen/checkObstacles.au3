@@ -239,6 +239,17 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 
 	;;;;;;;##### 7- SCID Login Screen #####;;;;;;;
 	CheckLoginWithSupercellID()
+	; optional game update
+	If UBound(decodeSingleCoord(FindImageInPlace("OptUpdateCoC", $g_sImgOptUpdateCoC, "155, 190, 705, 480", False))) > 1 Then ; Found Optional Game Update Message
+		SetLog("Found Optional Game Update - Clicking No Thanks", $COLOR_INFO)
+
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		PureClick(520, 475, 1, 0) ; Click No Thanks
+		$g_bMinorObstacle = True
+		
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	If TestCapture() = 0 And GetAndroidProcessPID() = 0 Then
