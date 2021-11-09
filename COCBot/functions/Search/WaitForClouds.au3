@@ -51,7 +51,7 @@ Func WaitForClouds()
 	ForceCaptureRegion() ; ensure screenshots are not cached
 	Local $hMinuteTimer = __TimerInit() ; initialize timer for tracking search time
 
-	While $g_bRestart = False And _CaptureRegions() And _CheckPixel($aIsAttackPage) = False ; loop to wait for clouds to disappear
+	While $g_bRestart = False And _CaptureRegions() And _CheckPixel($aNoCloudsAttack) = False ; loop to wait for clouds to disappear
 		; notice: don't exit function with return in this loop, use ExitLoop ! ! !
 		If _Sleep($DELAYGETRESOURCES1 * 10) Then ExitLoop ;250ms * 10 = 2.5 sec
 		$iCount += 1
@@ -161,7 +161,7 @@ Func EnableLongSearch()
 			If $g_bDebugSetlog Then SetDebugLog("Cloud Search Text not found...", $COLOR_DEBUG)
 			Return False
 		Else
-			Local $KeepAlive[2] = [271, 351]
+			Local $KeepAlive[2] = [271, 351 + $g_iMidOffsetY]
 			ClickP($KeepAlive, 1, 0, "#0514") ; click on text just to keep game alive
 		EndIf
 
@@ -177,7 +177,7 @@ EndFunc   ;==>EnableLongSearch
 Func chkSearchText()
 	; boolean 50-60ms OCR check for yellow text "Searching for oponents..." message that appears during attack search with long cloud times
 	Local $result
-	$result = getCloudTextShort(388, 348, "Cloud Search Text: for=", $COLOR_DEBUG, Default) ; OCR "Searching for oponents..." text
+	$result = getCloudTextShort(388, 348 + $g_iMidOffsetY, "Cloud Search Text: for=", $COLOR_DEBUG, Default) ; OCR "Searching for oponents..." text
 	If $result <> "" And StringInStr($result, "for", $STR_NOCASESENSEBASIC) <> 0 Then ; found "for" characters in text?
 		Return True
 	EndIf
@@ -188,7 +188,7 @@ Func chkAttackSearchFail()
 	; boolean 50-60ms OCR check for pink text "unable to find villages to attack!" error message during search for base to attack
 	If _Sleep($DELAYCLOUDSCLEARED) Then Return ; add delay as buying time for OCR text to disappear when retry btn pressed
 	Local $result
-	$result = getCloudFailShort(271, 351, "Cloud Search Fail Text: unable=", $COLOR_DEBUG, Default)
+	$result = getCloudFailShort(271, 351 + $g_iMidOffsetY, "Cloud Search Fail Text: unable=", $COLOR_DEBUG, Default)
 	If $result <> "" And StringInStr($result, "unable", $STR_NOCASESENSEBASIC) > 0 Then ; found "unable" characters in text
 		If btnSearchFailRetry() = True Then ; if press retry button is success, then keep searching
 			SetLog("Search Fail? Retry search button pushed, continue...", $COLOR_SUCCESS)
@@ -203,7 +203,7 @@ EndFunc   ;==>chkAttackSearchFail
 Func chkAttackSearchPersonalBreak()
 	; Boolean 100ms OCR check for pink text "You must wait until after your Personal Break to start an attack." error message during search for base to attack
 	Local $result
-	$result = getCloudFailShort(499, 350, "Cloud Search PB Text: Break=", $COLOR_DEBUG, Default)
+	$result = getCloudFailShort(499, 350 + $g_iMidOffsetY, "Cloud Search PB Text: Break=", $COLOR_DEBUG, Default)
 	If $result <> "" And StringInStr($result, "break", $STR_NOCASESENSEBASIC) > 0 Then ; found "break" characters in text
 		SetLog("Prepare base before Personal Break in clouds..", $COLOR_INFO)
 		CheckBaseQuick(True, "cloud") ; check and restock base before exit.

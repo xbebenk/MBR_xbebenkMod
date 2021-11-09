@@ -175,7 +175,7 @@ Func UpgradeLowLevelWall()
 				SetLog("Wall " & "[" & $i & "] : [" & $Wall[0] + 180 & "," & $Wall[1] + 80 & "]", $COLOR_DEBUG)
 				Click($Wall[0] + 180, $Wall[1] + 80)
 				If _Sleep(800) Then Return
-				$WallLevel = BuildingInfo(242, 494)
+				$WallLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
 				If $WallLevel[0] = "" Then
 					SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
 					If $loopCount2 = 2 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
@@ -215,8 +215,8 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 			If _Sleep(1000) Then Return 
 			For $x = $WallLevel To $UpgradeToLvl - 1 ;try to upgrade till lvl 4
 				If Not $g_bRunState Then Return
-				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 520, 530, 610) Then
-					Click($g_iQuickMISX + 400, $g_iQuickMISY + 520)
+				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 550, 530, 640) Then
+					Click($g_iQuickMISX + 400, $g_iQuickMISY + 550)
 					If _Sleep(1500) Then Return
 					If QuickMIS("BC1", $g_sImgAUpgradeWallOK, 400, 350, 600, 450) Then
 						Click($g_iQuickMISX + 400, $g_iQuickMISY + 350)
@@ -233,8 +233,8 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 			SetLog("Cannot Select Row", $COLOR_INFO)
 			For $x = $WallLevel To $UpgradeToLvl - 1 ;try to upgrade till lvl 4
 				If Not $g_bRunState Then Return
-				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 520, 530, 610) Then
-					Click($g_iQuickMISX + 400, $g_iQuickMISY + 520)
+				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 550, 530, 640) Then
+					Click($g_iQuickMISX + 400, $g_iQuickMISY + 550)
 					If _Sleep(1500) Then Return
 					Click(440, 530)
 					SetLog("Successfully Upgrade Level " & $x & " To lvl " & $x+1, $COLOR_SUCCESS)
@@ -301,17 +301,32 @@ Func UpgradeWallGold($iWallCost = $g_iWallCost)
 
 	If _Sleep($DELAYUPGRADEWALLGOLD2) Then Return
 
+<<<<<<< HEAD
+	If _ColorCheck(_GetPixelColor(677, 150 + $g_iMidOffsetY, True), Hex(0xE1090E, 6), 20) Then ; wall upgrade window red x
+=======
 	If WaitforPixel(670, 140, 690, 150, Hex(0xFFFFFF, 6), 6, 2) Then ; wall upgrade window red x
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 		If isNoUpgradeLoot(False) = True Then
 			SetLog("Upgrade stopped due no loot", $COLOR_ERROR)
 			Return False
 		EndIf
+<<<<<<< HEAD
+		Click(440, 480 + $g_iMidOffsetY, 1, 0, "#0317")
+=======
 		Click(440, 500, 1, 0, "#0317")
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 		If _Sleep(1000) Then Return
 		If isGemOpen(True) Then
 			ClickAway()
 			SetLog("Upgrade stopped due no loot", $COLOR_ERROR)
 			Return False
+<<<<<<< HEAD
+		ElseIf _ColorCheck(_GetPixelColor(677, 150 + $g_iMidOffsetY, True), Hex(0xE1090E, 6), 20) Then ; wall upgrade window red x, didnt closed on upgradeclick, so not able to upgrade
+			ClickAway()
+			SetLog("unable to upgrade", $COLOR_ERROR)
+			Return False
+=======
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 		Else
 			If _Sleep($DELAYUPGRADEWALLGOLD3) Then Return
 			ClickAway()
@@ -347,17 +362,32 @@ Func UpgradeWallElixir($iWallCost = $g_iWallCost)
 
 	If _Sleep($DELAYUPGRADEWALLELIXIR2) Then Return
 
+<<<<<<< HEAD
+	If _ColorCheck(_GetPixelColor(677, 150 + $g_iMidOffsetY, True), Hex(0xE1090E, 6), 20) Then
+=======
 	If WaitforPixel(670, 140, 690, 150, Hex(0xFFFFFF, 6), 6, 2) Then
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 		If isNoUpgradeLoot(False) = True Then
 			SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
 			Return False
 		EndIf
+<<<<<<< HEAD
+		Click(440, 480 + $g_iMidOffsetY, 1, 0, "#0318")
+=======
 		Click(440, 500, 1, 0, "#0318")
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 		If _Sleep(1000) Then Return
 		If isGemOpen(True) Then
 			ClickAway()
 			SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
 			Return False
+<<<<<<< HEAD
+		ElseIf _ColorCheck(_GetPixelColor(677, 150 + $g_iMidOffsetY, True), Hex(0xE1090E, 6), 20) Then ; wall upgrade window red x, didnt closed on upgradeclick, so not able to upgrade
+			ClickAway()
+			SetLog("unable to upgrade", $COLOR_ERROR)
+			Return False
+=======
+>>>>>>> 07e7786fd0dc8035006cd36150c5ca3cc00e78f7
 		Else
 			If _Sleep($DELAYUPGRADEWALLELIXIR3) Then Return
 			ClickAway()

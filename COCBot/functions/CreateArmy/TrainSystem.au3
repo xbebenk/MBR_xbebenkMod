@@ -57,8 +57,8 @@ EndFunc   ;==>TrainSystem
 Func TrainPreviousArmy()
 	If Not OpenQuickTrainTab(False, "TrainPreviousArmy()") Then Return
 	If _Sleep(750) Then Return
-	If _ColorCheck(_GetPixelColor(777, 177, True), Hex(0xBDE98D, 6), 1) Then
-		PureClick(777,177)
+	If _ColorCheck(_GetPixelColor(777, 205, True), Hex(0xBDE98D, 6), 1) Then
+		PureClick(777,227)
 	Else
 		SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
 	EndIf
@@ -352,7 +352,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 				Local $NeededSpace = $g_aiTroopSpace[$iTroopIndex] * $rWTT[$i][1]
 			EndIf
 
-			Local $aLeftSpace = GetOCRCurrent(42, 133)
+			Local $aLeftSpace = GetOCRCurrent(48, 160)
 			Local $LeftSpace = $bQueue ? ($aLeftSpace[1] * 2) - $aLeftSpace[0] : $aLeftSpace[2]
 
 
@@ -400,7 +400,7 @@ Func BrewUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 			Local $iSpellIndex = TroopIndexLookup($rWTT[$i][0], "BrewUsingWhatToTrain")
 			Local $NeededSpace = $g_aiSpellSpace[$iSpellIndex - $eLSpell] * $rWTT[$i][1]
 
-			Local $aLeftSpace = GetOCRCurrent(42, 133)
+			Local $aLeftSpace = GetOCRCurrent(43, 160)
 			Local $LeftSpace = $bQueue ? ($aLeftSpace[1] * 2) - $aLeftSpace[0] : $aLeftSpace[2]
 
 			If $NeededSpace > $LeftSpace Then $rWTT[$i][1] = Int($LeftSpace / $g_aiSpellSpace[$iSpellIndex - $eLSpell])
@@ -439,7 +439,7 @@ Func DragIfNeeded($Troop)
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Dark Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
-				ClickDrag(715, 445, 220, 445, 2000)
+				ClickDrag(715, 445 + $g_iMidOffsetY, 220, 445 + $g_iMidOffsetY, 2000)
 				If _Sleep(1500) Then Return
 				If _ColorCheck(_GetPixelColor(834, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
@@ -451,7 +451,7 @@ Func DragIfNeeded($Troop)
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Normal Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
-				ClickDrag(220, 445, 725, 445, 2000)
+				ClickDrag(220, 445 + $g_iMidOffsetY, 725, 445 + $g_iMidOffsetY, 2000)
 				If _Sleep(1500) Then Return
 				If _ColorCheck(_GetPixelColor(22, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
@@ -910,7 +910,7 @@ Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlo
 
 	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\TroopsQueued"
 
-	Local $aSearchResult = SearchArmy($Dir, 18, 153, $x, 232, $bGetQuantity ? "Queue" : "")
+	Local $aSearchResult = SearchArmy($Dir, 18, 182, $x, 261, $bGetQuantity ? "Queue" : "")
 
 	ReDim $aResult[UBound($aSearchResult)]
 
@@ -1068,28 +1068,28 @@ Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = 
 
 	If $sArmyType = "Troops" Then
 		For $i = 0 To UBound($aResult) - 1
-			$aResult[$i][3] = Number(getBarracksNewTroopQuantity(Slot($aResult[$i][1], "troop"), 165)) ; coc-newarmy
+			$aResult[$i][3] = Number(getBarracksNewTroopQuantity(Slot($aResult[$i][1], "troop"), 196)) ; coc-newarmy
 		Next
 	EndIf
 	If $sArmyType = "Spells" Then
 		For $i = 0 To UBound($aResult) - 1
-			$aResult[$i][3] = Number(getBarracksNewTroopQuantity(Slot($aResult[$i][1], "spells"), 312)) ; coc-newarmy
+			$aResult[$i][3] = Number(getBarracksNewTroopQuantity(Slot($aResult[$i][1], "spells"), 341)) ; coc-newarmy
 			;SetLog("$aResult: " & $aResult[$i][0] & "|" & $aResult[$i][1] & "|" & $aResult[$i][2] & "|" & $aResult[$i][3])
 		Next
 	EndIf
 	If $sArmyType = "CCSpells" Then
 		For $i = 0 To UBound($aResult) - 1
-			$aResult[$i][3] = Number(getBarracksNewTroopQuantity(Slot($aResult[$i][1], "troop"), 469)) ; coc-newarmy
+			$aResult[$i][3] = Number(getBarracksNewTroopQuantity(Slot($aResult[$i][1], "troop"), 498)) ; coc-newarmy
 		Next
 	EndIf
 	If $sArmyType = "Heroes" Then ; CheckThis
 		For $i = 0 To UBound($aResult) - 1
 			If StringInStr($aResult[$i][0], "Kingqueued") Then
-				$aResult[$i][3] = getRemainTHero(545, 414)
+				$aResult[$i][3] = getRemainTHero(620, 414)
 			ElseIf StringInStr($aResult[$i][0], "Queenqueued") Then
-				$aResult[$i][3] = getRemainTHero(618, 414)
+				$aResult[$i][3] = getRemainTHero(695, 414)
 			ElseIf StringInStr($aResult[$i][0], "Wardenqueued") Then
-				$aResult[$i][3] = getRemainTHero(698, 414)
+				$aResult[$i][3] = getRemainTHero(775, 414)
 			ElseIf StringInStr($aResult[$i][0], "Championqueued") Then
 				$aResult[$i][3] = getRemainTHero(0, 0)
 			Else
@@ -1103,7 +1103,7 @@ Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = 
 		Local $xSlot
 		For $i = 0 To UBound($aResult) - 1
 			$xSlot = Int(Number($aResult[$i][1]) / 71) * 71 - 6
-			$aResult[$i][3] = Number(getQueueTroopsQuantity($xSlot, 158))
+			$aResult[$i][3] = Number(getQueueTroopsQuantity($xSlot, 192))
 			SetDebugLog($aResult[$i][0] & " (" & $xSlot & ") x" & $aResult[$i][3])
 		Next
 	EndIf
@@ -1223,8 +1223,8 @@ Func MakingDonatedTroops($sType = "All")
 
 	; notes $avDefaultTroopGroup[19][5]
 	; notes $avDefaultTroopGroup[19][0] = TroopName | [1] = TroopNamePosition | [2] = TroopHeight | [3] = Times | [4] = qty | [5] = marker for DarkTroop or ElixerTroop]
-	; notes ClickDrag(616, 445, 400, 445, 2000) ; Click drag for dark Troops
-	; notes	ClickDrag(400, 445, 616, 445, 2000) ; Click drag for Elixer Troops
+	; notes ClickDrag(616, 445 + $g_iMidOffsetY, 400, 445 + $g_iMidOffsetY, 2000) ; Click drag for dark Troops
+	; notes	ClickDrag(400, 445 + $g_iMidOffsetY, 616, 445 + $g_iMidOffsetY, 2000) ; Click drag for Elixer Troops
 	; notes $RemainTrainSpace[0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
 
 	Local $RemainTrainSpace
@@ -1270,7 +1270,7 @@ Func MakingDonatedTroops($sType = "All")
 			If Not $g_bRunState Then Return
 			$Plural = 0
 			If $avDefaultTroopGroup[$i][4] > 0 Then
-				$RemainTrainSpace = GetOCRCurrent(42, 133)
+				$RemainTrainSpace = GetOCRCurrent(48, 160)
 				If $RemainTrainSpace[2] < 0 Then $RemainTrainSpace[2] = $RemainTrainSpace[1] * 2 - $RemainTrainSpace[0] ; remain train space to full double army
 				If $RemainTrainSpace[2] = 0 Then ExitLoop ; army camps full
 
@@ -1283,10 +1283,10 @@ Func MakingDonatedTroops($sType = "All")
 						TrainIt($iTroopIndex, $howMuch, $g_iTrainClickDelay)
 						;PureClick($pos[0], $pos[1], $howMuch, 500)
 					Else
-						ClickDrag(715, 445, 220, 445, 2000) ; Click drag for dark Troops
+						ClickDrag(715, 445 + $g_iMidOffsetY, 220, 445 + $g_iMidOffsetY, 2000) ; Click drag for dark Troops
 						TrainIt($iTroopIndex, $howMuch, $g_iTrainClickDelay)
 						;PureClick($pos[0], $pos[1], $howMuch, 500)
-						ClickDrag(220, 445, 725, 445, 2000) ; Click drag for Elixer Troops
+						ClickDrag(220, 445 + $g_iMidOffsetY, 725, 445 + $g_iMidOffsetY, 2000) ; Click drag for Elixer Troops
 					EndIf
 					If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
 					Local $sTroopName = ($avDefaultTroopGroup[$i][4] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
@@ -1295,7 +1295,7 @@ Func MakingDonatedTroops($sType = "All")
 					If _Sleep(1000) Then Return ; Needed Delay, OCR was not picking up Troop Changes
 				Else
 					For $z = 0 To $RemainTrainSpace[2] - 1
-						$RemainTrainSpace = GetOCRCurrent(42, 133)
+						$RemainTrainSpace = GetOCRCurrent(48, 160)
 						If $RemainTrainSpace[0] = $RemainTrainSpace[1] Then ; army camps full
 							;Camps Full All Donate Counters should be zero!!!!
 							For $j = 0 To UBound($avDefaultTroopGroup, 1) - 1
@@ -1311,10 +1311,10 @@ Func MakingDonatedTroops($sType = "All")
 								TrainIt($iTroopIndex, $howMuch, $g_iTrainClickDelay)
 								;PureClick($pos[0], $pos[1], $howMuch, 500)
 							Else ; dark elixir troop
-								ClickDrag(715, 445, 220, 445, 2000) ; Click drag for dark Troops
+								ClickDrag(715, 445 + $g_iMidOffsetY, 220, 445 + $g_iMidOffsetY, 2000) ; Click drag for dark Troops
 								TrainIt($iTroopIndex, $howMuch, $g_iTrainClickDelay)
 								;PureClick($pos[0], $pos[1], $howMuch, 500)
-								ClickDrag(220, 445, 725, 445, 2000) ; Click drag for Elixer Troops
+								ClickDrag(220, 445 + $g_iMidOffsetY, 725, 445 + $g_iMidOffsetY, 2000) ; Click drag for Elixer Troops
 							EndIf
 							If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
 							Local $sTroopName = ($avDefaultTroopGroup[$i][4] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
@@ -1330,7 +1330,7 @@ Func MakingDonatedTroops($sType = "All")
 		Next
 		;Top Off any remianing space with archers
 		If $sType = "All" Then
-			$RemainTrainSpace = GetOCRCurrent(42, 133)
+			$RemainTrainSpace = GetOCRCurrent(48, 160)
 			If $RemainTrainSpace[0] < $RemainTrainSpace[1] Then ; army camps full
 				Local $howMuch = $RemainTrainSpace[2]
 				TrainIt($eTroopArcher, $howMuch, $g_iTrainClickDelay)
@@ -1358,7 +1358,7 @@ Func MakingDonatedTroops($sType = "All")
 				$g_aiDonateSpells[$i] -= $howMuch
 
 				If _Sleep(1000) Then Return
-				$RemainTrainSpace = GetOCRCurrent(42, 133)
+				$RemainTrainSpace = GetOCRCurrent(48, 160)
 				SetLog(" - Current Capacity: " & $RemainTrainSpace[0] & "/" & ($RemainTrainSpace[1]))
 			EndIf
 		Next
@@ -1555,7 +1555,7 @@ EndFunc   ;==>CheckValuesCost
 Func getArmyResources($bSetLog = True, $bNeedCapture = True)
 
 	If $bSetLog Then SetDebugLog("getArmyResources():", $COLOR_DEBUG)
-	Local $sResourceDiamond = GetDiamondFromRect("11,553,848,590")
+	Local $sResourceDiamond = GetDiamondFromRect("11,583,848,623")
 	Local $aCurrentResources = findMultiple(@ScriptDir & "\imgxml\ArmyOverview\Resources", $sResourceDiamond, $sResourceDiamond, 0, 1000, 0, "objectname,objectpoints", $bNeedCapture)
 	Local $aTempResourceArray, $aResourceCoords, $iResourceIndex = -1
 	Local $aResources[4] = [0, 0, 0, 0] ; Gold, Elixir, Dark Elixir, Gems
