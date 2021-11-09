@@ -28,7 +28,7 @@ Func BoostSuperTroop($bTest = False)
 
 	For $i = 0 To 1
 		Local $iPicsPerRow = 4, $picswidth = 125, $picspad = 18
-		Local $curRow = 1, $iXMidPoint = 430, $columnStart = 150, $iColumnY1 = 280, $iColumnY2 = 440
+		Local $curRow = 1, $columnStart = 150, $iColumnY1 = 280, $iColumnY2 = 440
 
 		If $g_iCmbSuperTroops[$i] > 0 Then
 			If OpenBarrel() Then
@@ -38,26 +38,22 @@ Func BoostSuperTroop($bTest = False)
 
 				Local $iColumnX = $columnStart
 				Select
-					Case $g_iCmbSuperTroops[$i] = 2 Or $g_iCmbSuperTroops[$i] = 6 Or $g_iCmbSuperTroops[$i] = 10
+					Case $g_iCmbSuperTroops[$i] = 2 Or $g_iCmbSuperTroops[$i] = 6 Or $g_iCmbSuperTroops[$i] = 10 ;second column
 						$iColumnX = $columnStart + (1 * ($picswidth + $picspad))
-					Case $g_iCmbSuperTroops[$i] = 3 Or $g_iCmbSuperTroops[$i] = 7 Or $g_iCmbSuperTroops[$i] = 11
+					Case $g_iCmbSuperTroops[$i] = 3 Or $g_iCmbSuperTroops[$i] = 7 Or $g_iCmbSuperTroops[$i] = 11 ;third column
 						$iColumnX = $columnStart + (2 * ($picswidth + $picspad))
-					Case $g_iCmbSuperTroops[$i] = 4 Or $g_iCmbSuperTroops[$i] = 8 Or $g_iCmbSuperTroops[$i] = 12
+					Case $g_iCmbSuperTroops[$i] = 4 Or $g_iCmbSuperTroops[$i] = 8 Or $g_iCmbSuperTroops[$i] = 12 ;fourth column
 						$iColumnX = $columnStart + (3 * ($picswidth + $picspad))
 				EndSelect
-
-				Local $iRow = Ceiling($g_iCmbSuperTroops[$i] / $iPicsPerRow) ; get row Stroop
-				While ($curRow < $iRow) ; go directly to the needed Row
-					StroopNextPage($curRow, $iRow, $iXMidPoint) ; go to next row
-					$curRow += 1 ; Next Row
-					If $curRow = 4 Then
-						$iColumnY1 = 355
-						$iColumnY2 = 515
-					EndIf
-					If _Sleep(1000) Then Return
-				WEnd
+				
+				Local $iRow = Floor($g_iCmbSuperTroops[$i] / $iPicsPerRow) ; get row Stroop
+				StroopNextPage($iRow) ; go directly to the needed Row
+				
+				If $iRow = 3 Then ; for last row, we cannot scroll it to middle page
+					$iColumnY1 = 355
+					$iColumnY2 = 515
+				EndIf
 				;Setlog("columnRect = " & $iColumnX & "," & $iColumnY1 &"," & $iColumnX + $picswidth & "," & $iColumnY2, $COLOR_DEBUG)
-
 
 				;SetLog("QuickMIS(" & "BC1" & ", " & $g_sImgBoostTroopsClock & "," & $iColumnX & "," & $iColumnY1 & "," & $iColumnX + $picswidth & "," & $iColumnY2 & ")", $COLOR_DEBUG );
 				If QuickMIS("BC1", $g_sImgBoostTroopsClock, $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2, True, False) Then ;find pics Clock on spesific row / column (if clock found = troops already boosted)
@@ -145,7 +141,8 @@ Func BoostSuperTroop($bTest = False)
 							ClickAway()
 						EndIf
 					Else
-						SetLog("Double Check Image for Icon " & $sTroopName & " Not Found, Troop Not Unlocked yet?", $COLOR_ERROR)
+						SetLog("Double Check Image for Icon " & $sTroopName & " Not Found", $COLOR_ERROR)
+						SetLog("Troop Not Unlocked yet?", $COLOR_ERROR)
 					EndIf
 				EndIf
 			EndIf ;open barrel
@@ -191,9 +188,13 @@ Func OpenBarrel()
 
 EndFunc   ;==>OpenBarrel
 
-Func StroopNextPage($curRow, $iRow, $iXMidPoint)
-	If $curRow >= $iRow Then Return ; nothing left to scroll
-	ClickDrag($iXMidPoint, 280, $iXMidPoint, 95, 1000)
+Func StroopNextPage($iRow)
+	Local $iXMidPoint = 425
+	For $i = 0 To $iRow
+		If $i >= $iRow Then Return ; nothing left to scroll
+		ClickDrag($iXMidPoint, 250, $iXMidPoint, 65, 500)
+		If _Sleep(1000) Then Return
+	Next
 EndFunc   ;==>StroopNextPage
 
 Func GetSTroopName(Const $iIndex)
@@ -226,7 +227,7 @@ EndFunc   ;==>FindStroopIcons
 
 Func CancelBoost($aMessage = "")
 	SetLog($aMessage & ", Test = True", $COLOR_DEBUG)
-	SetLog("Emulate Click(" & $g_iQuickMISX & "," & $g_iQuickMISY & ") -- Cancelling", $COLOR_DEBUG)
+	SetLog("Emulate Click(" & $g_iQuickMISX + 320 & "," & $g_iQuickMISY + 430 & ") -- Cancelling", $COLOR_DEBUG)
 	ClickAway()
 	ClickAway()
 	ClickAway()
