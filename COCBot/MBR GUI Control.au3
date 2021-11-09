@@ -1308,6 +1308,12 @@ EndFunc   ;==>BotCloseRequestProcessed
 
 Func BotClose($SaveConfig = Default, $bExit = True)
 	If $SaveConfig = Default Then $SaveConfig = IsBotLaunched()
+	
+	If $g_bChkSuperCellID Then 
+		Local $cmdOutput = AndroidAdbSendShellCommand("settings put global policy_control null*", 1000) ;enable statusbar 
+		SetDebugLog("Enable statusbar command Output: " & $cmdOutput, $COLOR_SUCCESS)
+	EndIf
+	
 	$g_bRunState = False
 	$g_bBotPaused = False
 	ResumeAndroid()

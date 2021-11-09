@@ -674,7 +674,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 	If Not $g_bRunState Then Return
 
 	For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
-		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,80,760,160"), 1, True, Default))
+		$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default))
 		If _Sleep(500) Then Return
 		If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
 			SetLog("SupercellID Window Opened", $COLOR_DEBUG)
@@ -1081,7 +1081,7 @@ EndFunc   ;==>SCIDScrollDown
 Func SCIDScrollUp()
 	If Not $g_bRunState Then Return
 	SetLog("Try to scroll up", $COLOR_DEBUG)
-	For $i = 0 To Floor($g_iTotalAcc/4)
+	For $i = 0 To Ceiling($g_iTotalAcc/4) - 1
 		AndroidAdbScript("ScrollUpSCID")
 		If _Sleep(500) Then Return
 	Next
