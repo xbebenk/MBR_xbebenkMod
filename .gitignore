@@ -19,7 +19,8 @@ BuildMBR.exe
 !lib/*.dll
 !lib/*/*.dll
 
-# Global Folders
+# Exclude Global Folders
+[Ll]anguages/
 [Pp]rofiles/
 [Tt]emplates/
 [Tt]emp/
@@ -38,9 +39,6 @@ build/**
 build/MBR_Compiler/MBR_Compiler/bin/*
 build/MBR_Compiler/MBR_Compiler/obj/*
 build/MBR_Compiler/.vs/*
-
-# Exclusion language ini files
-[Ll]anguages/*.ini
 
 # Exclusion Images/Icon
 ![Ii]mages/logo.jpg
