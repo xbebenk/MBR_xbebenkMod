@@ -239,6 +239,17 @@ Func IsPostDefenseSummaryPage($bCapture = True)
 
 EndFunc   ;==>IsPostDefenseSummaryPage
 
+Func IsFullScreenWindow()
+	Local $result
+	$result = WaitforPixel(823,44,825,46, "FFFFFF", 10, 2)
+	
+	If $result Then
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found FullScreen Window to Close", $COLOR_ACTION)
+		Return True
+	EndIf
+	Return False
+EndFunc
+
 Func IsPetHousePage($bSetLog = True, $iLoop = 30)
 	Local $aIsPetHousePage[4] = [425, 170, 0x006F5D, 10] ; green pixel under title 'Pet House'
 

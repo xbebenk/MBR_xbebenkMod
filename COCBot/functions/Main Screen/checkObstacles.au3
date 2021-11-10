@@ -266,6 +266,10 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Click(440, 526)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 	EndIf
+	If IsFullScreenWindow() Then 
+		Click(825,45)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+	EndIf
 	If Not $bHasTopBlackBar And _CheckPixel($aIsMainGrayed, $g_bNoCapturePixel) Then
 		SetDebugLog("checkObstacles: Found gray Window to close")
 		PureClickP($aAway, 1, 0, "#0133") ;Click away If things are open
@@ -467,7 +471,7 @@ EndFunc   ;==>BanMsgBox
 Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 	Static $hCocReconnectingTimer = 0 ; TimerHandle of first CoC reconnecting animation
 
-	If UBound(decodeSingleCoord(FindImageInPlace("CocReconnecting", $g_sImgCocReconnecting, "420,355,440,375", $bForceCapture))) > 1 Then
+	If UBound(decodeSingleCoord(FindImageInPlace("CocReconnecting", $g_sImgCocReconnecting, "420,325,440,345", $bForceCapture))) > 1 Then
 		If $hCocReconnectingTimer = 0 Then
 			SetLog("Network Connection lost...", $COLOR_ERROR)
 			$hCocReconnectingTimer = __TimerInit()
@@ -527,3 +531,5 @@ Func UpdateGame()
 		Return False
 	#ce Finish that when time permits ;)
 EndFunc   ;==>UpdateGame
+
+

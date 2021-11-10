@@ -70,7 +70,7 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 			SetLog("Checking queued " & ($i = 0 ? "troops" : "spells") & " for donation", $COLOR_ACTION)
 
 			If IsQueueEmpty($i = 0 ? "Troops" : "Spells", False, False) Then
-				SetLog("2nd army is not prepared. Donate whatever exists in 1st army.")
+				SetLog("Queue " & ($i = 0 ? "Troops" : "Spells") & " is not prepared, proceed donate")
 				$abDonateQueueOnly[$i] = False
 				ContinueLoop
 			EndIf
@@ -83,7 +83,7 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 				If _ColorCheck(_GetPixelColor($xQueue, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found at $xQueue
 					ExitLoop
 				ElseIf _ColorCheck(_GetPixelColor($xQueue, 196, True), Hex(0xD0D0C8, 6), 20) Then ; Gray background
-					SetLog("2nd army is not prepared. Donate whatever exists in 1st army!!")
+					SetLog("Queue " & ($i = 0 ? "Troops" : "Spells") & " is not prepared, proceed donate!!")
 					$abDonateQueueOnly[$i] = False
 					ContinueLoop 2
 				EndIf

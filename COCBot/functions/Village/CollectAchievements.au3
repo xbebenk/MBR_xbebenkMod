@@ -67,7 +67,9 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 		If Not IsMainPage() Then ExitLoop
 	WEnd
 	
-	Click(822,46)
+	If IsFullScreenWindow() Then
+		Click(825,45)
+	EndIf
 	Return
 EndFunc   ;==>CollectAchievements
 
@@ -93,4 +95,5 @@ Func CollectAchievementsClaimReward()
 		Return False
 	EndIf
 EndFunc   ;==>CollectAchievementsClaimReward
+
 
