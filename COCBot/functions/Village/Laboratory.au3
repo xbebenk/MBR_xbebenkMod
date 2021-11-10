@@ -204,11 +204,11 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 	If _Sleep(2000) Then Return
 
 	If $debug = True Then ; if debugging, do not actually click it
-		SetLog("[debug mode] - Start Upgrade, Click (" & 660 & "," & 520 & ")", $COLOR_ACTION)
+		SetLog("[debug mode] - Start Upgrade, Click (" & 660 & "," & 520 + $g_iMidOffsetY & ")", $COLOR_ACTION)
 		Click(243, 33)
 		Return True ; return true as if we really started an upgrade
 	Else
-		Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
+		Click(660, 520 + $g_iMidOffsetY, 1, 0, "#0202") ; Everything is good - Click the upgrade button
 		If isGemOpen(True) = False Then ; check for gem window
 			ChkLabUpgradeInProgress()
 			; success
@@ -290,7 +290,7 @@ Func ChkLabUpgradeInProgress()
 		GUICtrlSetState($g_hPicLabGreen, $GUI_SHOW)
 		;===========================================
 		If _Sleep($DELAYLABORATORY2) Then Return
-		Local $sLabTimeOCR = getRemainTLaboratory(270, 227)
+		Local $sLabTimeOCR = getRemainTLaboratory(270, 257)
 		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)
 		SetDebugLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
 		If $iLabFinishTime > 0 Then
@@ -329,8 +329,8 @@ Func FindResearchButton()
 	;Click Laboratory
 	Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
 	If _Sleep(1000) Then Return ; Wait for window to open
-	Local $BuildingInfo = BuildingInfo(260, 494)
-	If StringInStr($BuildingInfo[1], "Lab") Then 
+	Local $BuildingInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY)
+	If $BuildingInfo[1] = "Laboratory" Then 
 		$TryLabAutoLocate = False
 	Else
 		$TryLabAutoLocate = True

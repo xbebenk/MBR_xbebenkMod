@@ -175,7 +175,7 @@ Func UpgradeLowLevelWall()
 				SetLog("Wall " & "[" & $i & "] : [" & $Wall[0] + 180 & "," & $Wall[1] + 80 & "]", $COLOR_DEBUG)
 				Click($Wall[0] + 180, $Wall[1] + 80)
 				If _Sleep(800) Then Return
-				$WallLevel = BuildingInfo(242, 494)
+				$WallLevel = BuildingInfo(242, 490 + $g_iBottomOffsetY)
 				If $WallLevel[0] = "" Then
 					SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
 					If $loopCount2 = 2 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
@@ -215,8 +215,8 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 			If _Sleep(1000) Then Return 
 			For $x = $WallLevel To $UpgradeToLvl - 1 ;try to upgrade till lvl 4
 				If Not $g_bRunState Then Return
-				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 520, 530, 610) Then
-					Click($g_iQuickMISX + 400, $g_iQuickMISY + 520)
+				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 550, 530, 640) Then
+					Click($g_iQuickMISX + 400, $g_iQuickMISY + 550)
 					If _Sleep(1500) Then Return
 					If QuickMIS("BC1", $g_sImgAUpgradeWallOK, 400, 350, 600, 450) Then
 						Click($g_iQuickMISX + 400, $g_iQuickMISY + 350)
@@ -233,8 +233,8 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 			SetLog("Cannot Select Row", $COLOR_INFO)
 			For $x = $WallLevel To $UpgradeToLvl - 1 ;try to upgrade till lvl 4
 				If Not $g_bRunState Then Return
-				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 520, 530, 610) Then
-					Click($g_iQuickMISX + 400, $g_iQuickMISY + 520)
+				If QuickMIS("BC1", $g_sImgAUpgradeWhiteZeroWallUpgrade, 400, 550, 530, 640) Then
+					Click($g_iQuickMISX + 400, $g_iQuickMISY + 550)
 					If _Sleep(1500) Then Return
 					Click(440, 530)
 					SetLog("Successfully Upgrade Level " & $x & " To lvl " & $x+1, $COLOR_SUCCESS)

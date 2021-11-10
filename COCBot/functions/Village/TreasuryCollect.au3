@@ -71,7 +71,7 @@ Func TreasuryCollect()
 	EndIf
 
 	Local $bForceCollect = False
-	Local $aResult = _PixelSearch(689, 220, 691, 300, Hex(0x50BD10, 6), 20) ; search for green pixels showing treasury bars are full
+	Local $aResult = _PixelSearch(689, 237 + $g_iMidOffsetY, 691, 325 + $g_iMidOffsetY, Hex(0x50BD10, 6), 20) ; search for green pixels showing treasury bars are full
 	If IsArray($aResult) Then
 		SetLog("Found full Treasury, collecting loot...", $COLOR_SUCCESS)
 		$bForceCollect = True

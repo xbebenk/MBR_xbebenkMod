@@ -248,7 +248,7 @@ Func GetButtonDiamond($sButtonName)
 		Case "CloseFindMatch" ;Find Match Screen
 			$btnDiamond = "780,15|830,15|830,60|780,60"
 		Case "AttackButton" ;Main Window Screen
-			$btnDiamond = GetDiamondFromRect("0,560,110,660")
+			$btnDiamond = GetDiamondFromRect("0,600,160,720")
 		Case "OpenTrainWindow" ;Main Window Screen
 			$btnDiamond = "15,560|65,560|65,610|15,610"
 		Case "TrashEvent"
@@ -262,7 +262,7 @@ Func GetButtonDiamond($sButtonName)
 		Case "Next" ; attackpage attackwindow
 			$btnDiamond = "697,542|850,542|850,610|697,610"
 		Case "ObjectButtons", "BoostOne", "BoostCT", "Upgrade", "Research", "Treasury", "RemoveObstacle", "CollectLootCart", "Pets", "Cancel" ; Full size of object buttons at the bottom
-			$btnDiamond = GetDiamondFromRect("120,520,750,620")
+			$btnDiamond = GetDiamondFromRect("140,591,720,671")
 		Case "GEM", "BOOSTBtn" ; Boost window button (full button size)
 			$btnDiamond = GetDiamondFromRect("359,412(148,66)")
 		Case "EnterShop"
@@ -270,9 +270,9 @@ Func GetButtonDiamond($sButtonName)
 		Case "EndBattleSurrender" ;surrender - attackwindow
 			$btnDiamond = "12,577|125,577|125,615|12,615"
 		Case "ClanChatOpen"
-			$btnDiamond = GetDiamondFromRect("0,290,40,400")
+			$btnDiamond = GetDiamondFromRect("0,350,40,400")
 		Case "ClanChatClose"
-			$btnDiamond = GetDiamondFromRect("310,300,350,400")
+			$btnDiamond = GetDiamondFromRect("310,350,360,400")
 		Case "ChatOpenRequestPage" ;mainwindow - chat open
 			$btnDiamond = "5,688|65,688|65,615|5,725"
 		Case "Profile" ;mainwindow - only visible if chat closed
@@ -286,17 +286,17 @@ Func GetButtonDiamond($sButtonName)
 		Case "DownDonation" ;mainwindow - only when chat window is visible
 			$btnDiamond = "282,635|306,635|306,680|282,680"
 		Case "Collect"
-			$btnDiamond = GetDiamondFromRect("350,420,520,500")
+			$btnDiamond = "350,450|505,450|505,521|350,521"
 		Case "BoostBarrack", "BarrackBoosted"
 			$btnDiamond = GetDiamondFromRect("630,280,850,360")
 		Case "ArmyTab", "TrainTroopsTab", "BrewSpellsTab", "BuildSiegeMachinesTab", "QuickTrainTab"
-			$btnDiamond = GetDiamondFromRect("18,75,800,115")
+			$btnDiamond = GetDiamondFromRect("18,100,800,150")
 		Case "MessagesButton"
 			$btnDiamond = GetDiamondFromRect("0,0,250,250")
 		Case "AttackLogTab", "ShareReplayButton"
 			$btnDiamond = GetDiamondFromRect("280,85,600,300")
 		Case "EndBattle", "Surrender"
-			$btnDiamond = GetDiamondFromRect("5,515,121,560")
+			$btnDiamond = GetDiamondFromRect("1,570,140,628")
 		Case "Okay"
 			$btnDiamond = GetDiamondFromRect("241,249,616,478")
 		Case Else

@@ -31,7 +31,7 @@ Func getArmySpellTime($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChe
 			If _Sleep($DELAYCHECKARMYCAMP5) Then Return
 		EndIf
 	EndIf
-
+  
 	Local $sResultSpells = getRemainTrainTimer(450, 315, $bNeedCapture) ;Get time via OCR.
 	$g_aiTimeTrain[1] = ConvertOCRTime("Spells", $sResultSpells, $bSetLog) ; update global array
 

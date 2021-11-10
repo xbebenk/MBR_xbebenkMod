@@ -15,7 +15,7 @@
 
 Global $g_aiTempBot[4] = [1, 10, 20, 0]
 
-Func ClickZone ($x, $y, $Offset = 7, $debugtxt = "", $times = 1, $speed = 0, $OutScreen = (680), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
+Func ClickZone ($x, $y, $Offset = 7, $debugtxt = "", $times = 1, $speed = 0, $OutScreen = (680 + $g_iBottomOffsetY), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
 	Local $BasY
 	If $y-$Offset > $OutScreen Then
 		$BasY = $y
@@ -30,7 +30,7 @@ Func ClickZone ($x, $y, $Offset = 7, $debugtxt = "", $times = 1, $speed = 0, $Ou
 	ClickR($g_aiTempBot,$x, $y, $times, $speed, $OutScreen, $scale, $density, $centerX, $centerY)
 EndFunc
 
-Func ClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = (680), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
+Func ClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = (680 + $g_iBottomOffsetY), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
 	Local $AncVal = " ValIn: X=" & $x & " Y=" & $y
 	Local Const $PI = 3.141592653589793
 	Local $boxWidth = $boundingBox[2] - $boundingBox[0]
@@ -73,7 +73,7 @@ Func ClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = (680), $s
 	EndIf
 EndFunc   ;==>ClickR
 
-Func PureClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = (680), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
+Func PureClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = (680 + $g_iBottomOffsetY), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
 	Local $AncVal = " ValIn: X=" & $x & " Y=" & $y
 	Local Const $PI = 3.141592653589793
 	Local $boxWidth = $boundingBox[2] - $boundingBox[0]
@@ -116,7 +116,7 @@ Func PureClickR($boundingBox, $x, $y, $times = 1, $speed = 0, $OutScreen = (680)
 	EndIf
 EndFunc   ;==>ClickR
 
-Func GemClickR($boundingBox,$x, $y, $times = 1, $speed = 0, $debugtxt = "", $OutScreen = (680), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
+Func GemClickR($boundingBox,$x, $y, $times = 1, $speed = 0, $debugtxt = "", $OutScreen = (680 + $g_iBottomOffsetY), $scale = 3, $density = 1, $centerX = 0, $centerY = 0)
 	Local $AncVal = " ValIn: X=" & $x & " Y=" & $y
 	Local Const $PI = 3.141592653589793
 	Local $boxWidth = $boundingBox[2] - $boundingBox[0]

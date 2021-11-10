@@ -563,7 +563,7 @@ Func smartZap($minDE = -1)
 		EndIf
 	EndIf
 
-	Local $iPercentageNeeded = 50 - getOcrOverAllDamage(780, 529)
+	Local $iPercentageNeeded = 50 - getOcrOverAllDamage(780, 527 + $g_iBottomOffsetY)
 	SetLog("Percentage needed: " & $iPercentageNeeded, $COLOR_INFO)
 
 	_ArrayDelete($aSpells, 2)

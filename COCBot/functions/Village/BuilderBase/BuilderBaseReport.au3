@@ -57,7 +57,7 @@ Func isBHMaxed()
 	If $sBHCoords <> "" Then
 		$sBHCoords = StringSplit($sBHCoords, ",", $STR_NOCOUNT)
 		ClickP($sBHCoords)
-		Local $aBuildingName = BuildingInfo(245, 490)
+		Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Builder Hall and max level
 			If $aBuildingName[1] = "Builder Hall" Then
@@ -75,7 +75,7 @@ Func isBHMaxed()
 		Setlog("Trying to find Star Lab to guess your Builder Hall level!", $COLOR_DEBUG)
 		; If Builder Hall cannot be found, try search for lab
 		If LocateStarLab() Then 
-			Local $aBuildingName = BuildingInfo(245, 490)
+			Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 			If $aBuildingName[0] = 2 Then
 				; Verify if is Star Laboratory and max level
 				If $aBuildingName[1] = "S ar Laboratory" Then
@@ -103,7 +103,7 @@ Func isMegaTeslaMaxed()
 	If $sMTCoords <> "" Then
 		$sMTCoords = StringSplit($sMTCoords, ",", $STR_NOCOUNT)
 		ClickP($sMTCoords)
-		Local $aBuildingName = BuildingInfo(245, 490)
+		Local $aBuildingName = BuildingInfo(245, 490 + $g_iBottomOffsetY)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Builder Hall and max level
 			If $aBuildingName[1] = "Mega Tesla" Then

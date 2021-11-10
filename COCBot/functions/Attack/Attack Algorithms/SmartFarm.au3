@@ -898,5 +898,4 @@ Func TestSF()
 	PrepareAttack($g_iMatchMode)
 	Local $Nside = ChkSmartFarm()
 	AttackSmartFarm($Nside[1], $Nside[2])
-	ReturnHome()
 EndFunc

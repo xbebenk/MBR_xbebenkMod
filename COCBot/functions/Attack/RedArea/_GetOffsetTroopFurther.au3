@@ -95,8 +95,8 @@ Func _GetOffsetTroopFurther($pixel, $eVectorType, $offset)
 		If ($found) Then ExitLoop
 	Next
 	; Not select pixel in menu of troop
-	If $pixelOffset[1] > 555 Then
-		$pixelOffset[1] = 555
+	If $pixelOffset[1] > 555 + $g_iBottomOffsetY Then
+		$pixelOffset[1] = 555 + $g_iBottomOffsetY
 	EndIf
 	debugRedArea("$pixelOffset x : [" & $pixelOffset[0] & "] / y : [" & $pixelOffset[1] & "]")
 
