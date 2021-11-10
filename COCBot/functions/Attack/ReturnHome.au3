@@ -101,7 +101,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 						Else
 							$j += 1
 						EndIf
-						If ReturnHomeMainPage() Then Return
+						If IsReturnHomeBattlePage(True) Then ExitLoop
 						If $j > 10 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
 						If _Sleep($DELAYRETURNHOME5) Then Return
 					WEnd
