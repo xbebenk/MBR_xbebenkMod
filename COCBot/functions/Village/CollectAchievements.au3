@@ -57,11 +57,14 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 
 		If Not CollectAchievementsClaimReward() Then
 			SetLog("There are no achievement rewards to collect", $COLOR_INFO)
-			Click(700,80) ;Friend Request Tab
+			Click(700,50) ;Friend Request Tab
 			If _Sleep(1000) Then Return
 			ExitLoop
 		Else
 			$RewardCollected = True
+			If IsFullScreenWindow() Then
+				Click(825,45)
+			EndIf
 		EndIf
 		If _Sleep(1500) Then Return
 		If Not IsMainPage() Then ExitLoop
