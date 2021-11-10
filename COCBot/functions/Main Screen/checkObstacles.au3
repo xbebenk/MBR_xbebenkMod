@@ -50,6 +50,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
 		If $bIsOnBuilderIsland Then
 			SetLog("Detected Builder Base, trying to switch back to Main Village")
+			AndroidAdbScript("ZoomOut")
 			ZoomOut()
 		Else
 			SetLog("Detected Main Village, trying to switch back to Builder Base")
