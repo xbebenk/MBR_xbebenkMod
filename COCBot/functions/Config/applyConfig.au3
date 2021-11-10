@@ -526,14 +526,14 @@ EndFunc   ;==>ApplyConfig_600_6
 Func ApplyBuilderBaseMod($TypeReadSave)
 	If $TypeReadSave = "Read" Then
 		GUICtrlSetState($g_hChkBBCustomArmyEnable, $g_bChkBBCustomArmyEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-		For $i = 0 To UBound($g_hComboTroopBB) - 1
-			_GUICtrlComboBox_SetCurSel($g_hComboTroopBB[$i], $g_iCmbCampsBB[$i])
-			_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbCampsBB[$i] + 1][4])
+		For $i = 0 To UBound($g_hCmbTroopBB) - 1
+			_GUICtrlComboBox_SetCurSel($g_hCmbTroopBB[$i], $g_iCmbTroopBB[$i])
+			_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbTroopBB[$i] + 1][4])
 		Next
 	Else
 		$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED)
-		For $i = 0 To UBound($g_hComboTroopBB) - 1
-			$g_iCmbCampsBB[$i] = _GUICtrlComboBox_GetCurSel($g_hComboTroopBB[$i])
+		For $i = 0 To UBound($g_hCmbTroopBB) - 1
+			$g_iCmbTroopBB[$i] = _GUICtrlComboBox_GetCurSel($g_hCmbTroopBB[$i])
 		Next
 	EndIf
 	ChkBBCustomArmyEnable()

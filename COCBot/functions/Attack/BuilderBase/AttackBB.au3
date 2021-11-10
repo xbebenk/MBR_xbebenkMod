@@ -138,8 +138,13 @@ Func AttackBB()
 	;Function uses this list of local variables...
 	$aBMPos = GetMachinePos() ;Need this initialized before it starts flashing
 	If $g_bChkBBDropBMFirst = True Then
-		SetDebugLog("Dropping BM First")
+		SetLog("Dropping BM First")
 		$bBMDeployed = DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
+		If IsArray($aBMPos) Then
+			_Sleep(500) ;brief pause for sanity
+			SetLog("Clicking BM Early") ;Help carry BM through troop drop period
+			PureClickP($aBMPos)
+		Endif
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
@@ -194,10 +199,10 @@ Func AttackBB()
 
 	;If not dropping Builder Machine first, drop it now
 	If $g_bChkBBDropBMFirst = False Then
-		SetDebugLog("Dropping BM Last")
+		SetLog("Dropping BM Last")
 		$bBMDeployed = DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
 		;Have to sleep here to while TimerDiff loop works first time, below.
-		If $bBMDeployed = True Then Sleep($g_iBBMachAbilityTime)
+		;If $bBMDeployed = True Then Sleep($g_iBBMachAbilityTime)
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
@@ -208,7 +213,7 @@ Func AttackBB()
 		SetDebugLog("Top of Battle Machine Loop")
 		local $timer = __TimerInit() ; give a bit of time to check if hero is dead because of the random lightning strikes through graphic
 		$aBMPos = GetMachinePos()
-		While __TimerDiff($timer) < 3000 And Not IsArray($aBMPos) ; give time to find
+		While __TimerDiff($timer) < ($g_iBBMachAbilityTime + 1000) And Not IsArray($aBMPos) ; give time to find, longer than ability time.
 			SetDebugLog("Checking BM Pos again")
 			$aBMPos = GetMachinePos()
 		WEnd
@@ -220,6 +225,7 @@ Func AttackBB()
 			SetDebugLog("Clicking BM")
 			PureClickP($aBMPos)
 		EndIf
+		
 		;Sleep at the end with BM
 		If $bMachineAlive Then ;Only wait if still alive
 			If _Sleep($g_iBBMachAbilityTime) Then ; wait for machine to be available
@@ -397,8 +403,8 @@ EndFunc   ;==>ArmyCampSelectedNames
 Func BuilderBaseSelectCorrectCampDebug()
 	Local $aLines[0]
 	Local $sName = "CAMP" & "|"
-	For $iName = 0 To UBound($g_iCmbCampsBB) - 1
-		$sName &= ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbCampsBB[$iName]) : ("Barb")
+	For $iName = 0 To UBound($g_iCmbTroopBB) - 1
+		$sName &= ArmyCampSelectedNames($g_iCmbTroopBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbTroopBB[$iName]) : ("Barb")
 		$sName &= "|"
 		If $iName = 0 Then ContinueLoop
 		Local $aFakeCsv[1] = [$sName]
@@ -526,11 +532,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				; Smart
 			Case Else
 				Local $sName = "CAMP" & "|"
-				For $i = 0 To UBound($g_iCmbCampsBB) - 1
-					$sTmp = $g_asAttackBarBB2[$g_iCmbCampsBB[$i]]
+				For $i = 0 To UBound($g_iCmbTroopBB) - 1
+					$sTmp = $g_asAttackBarBB2[$g_iCmbTroopBB[$i]]
 					If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
 					$sName &= $sLastObj
-					If $i <> UBound($g_iCmbCampsBB) - 1 Then $sName &= "|"
+					If $i <> UBound($g_iCmbTroopBB) - 1 Then $sName &= "|"
 					$aFakeCsv[0] = $sName
 					_ArrayAdd($aLines, $aFakeCsv)
 				Next
@@ -541,11 +547,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	#CE
 
 	Local $sName = "CAMP" & "|"
-	For $i = 0 To UBound($g_iCmbCampsBB) - 1
-		$sTmp = $g_asAttackBarBB2[$g_iCmbCampsBB[$i]]
+	For $i = 0 To UBound($g_iCmbTroopBB) - 1
+		$sTmp = $g_asAttackBarBB2[$g_iCmbTroopBB[$i]]
 		If Not StringIsSpace($sTmp) Then $sLastObj = $sTmp
 		$sName &= $sLastObj
-		If $i <> UBound($g_iCmbCampsBB) - 1 Then $sName &= "|"
+		If $i <> UBound($g_iCmbTroopBB) - 1 Then $sName &= "|"
 		$aFakeCsv[0] = $sName
 		_ArrayAdd($aLines, $aFakeCsv)
 	Next

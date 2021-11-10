@@ -39,7 +39,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 
 	If Not $g_bRunState Then Return
 
-	Local $sSearchDiamond = GetDiamondFromRect("718,580,780,614")
+	Local $sSearchDiamond = GetDiamondFromRect("710,548,840,588")
 	Local Static $aRequestButtonPos[2] = [-1, -1]
 
 	Local $aRequestButton = findMultiple($g_sImgRequestCCButton, $sSearchDiamond, $sSearchDiamond, 0, 1000, 1, "objectname,objectpoints", True)

@@ -159,7 +159,7 @@ Func StarLaboratory($bTestRun = False)
 	If $aUpgradeValue[$g_iCmbStarLaboratory] = -1 Then
 		Local $iCheapestCost = 0
 		If $g_iCmbStarLaboratory = 0 Then
-			SetLog("No dedicated troop for upgrade selected.", $COLOR_INFO)
+			SetLog("Any Upgrade selected", $COLOR_INFO)
 		Else
 			SetLog("No upgrade for " & $g_avStarLabTroops[$g_iCmbStarLaboratory][3] & " available.", $COLOR_INFO)
 		EndIf
@@ -173,16 +173,15 @@ Func StarLaboratory($bTestRun = False)
 				$iTmpTroop = $g_aCmbSLabUpgradeOrder[$z] + 1
 				If $aUpgradeValue[$iTmpTroop] > 0 And $iTmpTroop <> 0 Then
 					$iPriority = $z + 1
-					SetLog($iPriority & " : " & $g_avStarLabTroops[$iTmpTroop][3], $COLOR_SUCCESS)
+					SetLog("[" & $z + 1 & "]" & $g_avStarLabTroops[$iTmpTroop][3], $COLOR_SUCCESS)
 					SetLog($g_avStarLabTroops[$iTmpTroop][3] & " is upgradeable, Value = " & $aUpgradeValue[$iTmpTroop], $COLOR_DEBUG)
 					$iSelectedUpgrade = $iTmpTroop
 					ExitLoop
 				Else
-					SetDebugLog("Cannot upgrade " & $g_avStarLabTroops[$iTmpTroop][3] & " at this momment!", $COLOR_DEBUG)
+					If $g_aCmbSLabUpgradeOrder[$z] > -1 Then SetLog("[" & $z + 1 & "] Cannot upgrade " & $g_avStarLabTroops[$iTmpTroop][3] & " at this momment!", $COLOR_DEBUG)
 				EndIf
 			Next
 				
-
 		Else ;no upgrade order 
 			For $i = 1 To UBound($aUpgradeValue) - 1
 				If $aUpgradeValue[$i] > 0 Then ; is upgradeable

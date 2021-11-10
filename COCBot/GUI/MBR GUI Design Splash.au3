@@ -16,7 +16,7 @@
 #include <Sound.au3>
 
 ; Splash Variables
-Global $g_hSplash = 0, $g_hSplashProgress, $g_lSplashStatus, $g_lSplashPic, $g_lSplashTitle
+Global $g_hSplash = 0, $g_hSplashProgress, $g_lSplashStatus, $g_lSplashPic, $g_lSplashTitle, $g_hSplashlbl_Mod
 Global $g_iSplashTotalSteps = Default
 Global $g_iSplashCurrentStep = 0
 Global $g_hSplashTimer = 0
@@ -45,7 +45,7 @@ Func CreateSplashScreen($iSteps = Default)
 
 	Local $sSplashImg = $g_sLogoPath
 	Local $hImage, $iX, $iY
-	Local $iT = 20 ; Top of logo (additional space)
+	Local $iT = 10 ; Top of logo (additional space)
 	Local $iB = 10 ; Bottom of logo (additional space)
 
 	If Not $bCustomWindow Then
@@ -80,8 +80,17 @@ Func CreateSplashScreen($iSteps = Default)
 		; Create Splash container
 		$g_hSplash = GUICreate("", $iX, $iHeight, $iLeft, $iTop, BitOR($WS_POPUP, $WS_BORDER, $DS_MODALFRAME), BitOR($WS_EX_TOPMOST, $WS_EX_WINDOWEDGE, $WS_EX_TOOLWINDOW))
 		GUISetBkColor($COLOR_WHITE, $g_hSplash)
+		
 		$g_lSplashPic = _GUICtrlCreatePic($hSplashImg, 0, $iT) ; Splash Image
 		GUICtrlSetOnEvent(-1, "MoveSplashScreen")
+		GUICtrlSetState(-1, $GUI_DISABLE)
+	
+		$g_hSplashlbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion & " ", $iX - 135, 0, 135 , 20 ,$SS_RIGHT)
+		GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+		GUICtrlSetColor(-1, $COLOR_INFO)
+		GUICtrlSetFont (-1,9, 800)
+		GUICtrlSetState($g_lSplashPic, $GUI_ENABLE)
+		
 		If Not $bCustomWindow Then
 			$g_lSplashTitle = GUICtrlCreateLabel($g_sBotTitle, 15, $iY + $iT + $iB + 3, $iX - 30, 15, $SS_CENTER) ; Splash Title
 			GUICtrlSetOnEvent(-1, "MoveSplashScreen")

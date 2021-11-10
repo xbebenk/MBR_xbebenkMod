@@ -162,12 +162,12 @@ EndFunc   ;==>CloseCustomBBDropOrder
 Func ChkBBCustomArmyEnable()
 	If GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED Then
 		$g_bChkBBCustomArmyEnable = True
-		For $i = $g_hLblGUIBBCustomArmy To $g_hComboTroopBB[UBound($g_hComboTroopBB)-1]
+		For $i = $g_hLblGUIBBCustomArmy To $g_hCmbTroopBB[UBound($g_hCmbTroopBB)-1]
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
 		$g_bChkBBCustomArmyEnable = False
-		For $i = $g_hLblGUIBBCustomArmy To $g_hComboTroopBB[UBound($g_hComboTroopBB)-1]
+		For $i = $g_hLblGUIBBCustomArmy To $g_hCmbTroopBB[UBound($g_hCmbTroopBB)-1]
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
@@ -177,10 +177,10 @@ Func GUIBBCustomArmy()
 	Local $iGUI_CtrlId = @GUI_CtrlId
 	Local $iDropIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
 
-	For $i = 0 To UBound($g_hComboTroopBB) - 1
-		If $iGUI_CtrlId = $g_hComboTroopBB[$i] Then
+	For $i = 0 To UBound($g_hCmbTroopBB) - 1
+		If $iGUI_CtrlId = $g_hCmbTroopBB[$i] Then
 			_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$iDropIndex + 1][4])
-			$g_iCmbCampsBB[$i] = $iDropIndex
+			$g_iCmbTroopBB[$i] = $iDropIndex
 		EndIf
 	Next
 EndFunc   ;==>GUIBBCustomArmy

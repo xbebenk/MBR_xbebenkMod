@@ -41,7 +41,6 @@ Func PrepareAttackBB($bCheck = False)
 	EndIf
 	
 	If Not $g_bRunState Then Return ; Stop Button
-
 	If Not ClickAttack() Then Return False
 	_Sleep(500)
 

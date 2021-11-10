@@ -124,7 +124,7 @@ Func ReadBuildingConfig()
 
 	IniReadS($g_aiLastGoodWallPos[0], $g_sProfileBuildingPath, "upgrade", "xLastGoodWallPos", 0, "int")
 	IniReadS($g_aiLastGoodWallPos[1], $g_sProfileBuildingPath, "upgrade", "yLastGoodWallPos", 0, "int")
-	
+
 	IniReadS($g_iTotalCampSpace, $g_sProfileBuildingPath, "other", "totalcamp", 0, "int")
 
 	For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1 ; Reads Upgrade building data
@@ -512,8 +512,8 @@ EndFunc   ;==>ReadConfig_600_6
 
 Func ReadConfig_BuilderBaseMod()
 	IniReadS($g_bChkBBCustomArmyEnable, $g_sProfileConfigPath, "BBCustomArmy", "ChkBBCustomArmyEnable", False, "Bool")
-	For $i = 0 To UBound($g_hComboTroopBB) - 1
-		IniReadS($g_iCmbCampsBB[$i], $g_sProfileConfigPath, "BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbCampsBB[$i], "Int")
+	For $i = 0 To UBound($g_iCmbTroopBB) - 1
+		IniReadS($g_iCmbTroopBB[$i], $g_sProfileConfigPath, "BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbTroopBB[$i], "Int")
 	Next
 EndFunc   ;==>ReadBuilderBaseMod
 
@@ -691,6 +691,9 @@ Func ReadConfig_600_12()
 
 	$g_asTxtDonateTroop[$eTroopBowler] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateBowlers", "bowler|bowl"), "|", @CRLF)
 	$g_asTxtBlacklistTroop[$eTroopBowler] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistBowlers", "no bowler|bowl no"), "|", @CRLF)
+
+	$g_asTxtDonateTroop[$eTroopSuperBowler] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateSuperBowlers", "Super Bowler|SBowl"), "|", @CRLF)
+	$g_asTxtBlacklistTroop[$eTroopSuperBowler] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistSuperBowlers", "No Super Bowler|SBowl No"), "|", @CRLF)
 
 	$g_asTxtDonateTroop[$eTroopIceGolem] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateIceGolems", "ice golem|ice golems"), "|", @CRLF)
 	$g_asTxtBlacklistTroop[$eTroopIceGolem] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistIceGolems", "no ice golem|ice golem no"), "|", @CRLF)
@@ -896,12 +899,12 @@ Func ReadConfig_600_17()
 	IniReadS($g_bChkOnly1Builder, $g_sProfileConfigPath, "upgrade", "Only1Builder", True, "Bool")
 	IniReadS($g_bchkSyncTHWall, $g_sProfileConfigPath, "upgrade", "SyncTHWall", True, "Bool")
 	IniReadS($g_bUpgradeLowWall, $g_sProfileConfigPath, "upgrade", "UpgradeLowWall", True, "Bool")
-	
+
 	Local $str = StringSplit(IniRead($g_sProfileConfigPath, "upgrade", "UpgradeWall", "0|1|2"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aUpgradeWall) - 1
 		$g_aUpgradeWall[$i] = $str[$i]
 	Next
-	
+
 	For $i = 4 To 15
 		IniReadS($g_aiWallsCurrentCount[$i], $g_sProfileConfigPath, "Walls", "Wall" & StringFormat("%02d", $i), 0, "int")
 	Next

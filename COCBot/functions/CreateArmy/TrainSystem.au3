@@ -690,10 +690,10 @@ Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQ
 		Return
 	EndIf
 
-	If Not _ColorCheck(_GetPixelColor($iArrowX, $iArrowY, True), Hex(0xa0d077, 6), 30) And Not _ColorCheck(_GetPixelColor($iArrowX, $iArrowY + 4, True), Hex(0x6ab320, 6), 30) Then
+	If Not _ColorCheck(_GetPixelColor($iArrowX, $iArrowY, True), Hex(0x9FCF76, 6), 30) And Not _ColorCheck(_GetPixelColor($iArrowX, $iArrowY + 4, True), Hex(0x605C50, 6), 30) Then
 		Return True ; Check Green Arrows at top first, if not there -> Return
-	ElseIf _ColorCheck(_GetPixelColor($iArrowX, $iArrowY, True), Hex(0xa0d077, 6), 30) And _ColorCheck(_GetPixelColor($iArrowX, $iArrowY + 4, True), Hex(0x6ab320, 6), 30) And Not $removeExtraTroopsQueue Then
-		If Not WaitforPixel($iArrowX - 11, $iArrowY - 1, $iArrowX - 9, $iArrowY + 1, Hex(0xa0d077, 6), 30, 2) Then Return False  ; check if boost arrow
+	ElseIf _ColorCheck(_GetPixelColor($iArrowX, $iArrowY, True), Hex(0x9FCF76, 6), 30) And _ColorCheck(_GetPixelColor($iArrowX, $iArrowY + 4, True), Hex(0x605C50, 6), 30) And Not $removeExtraTroopsQueue Then
+		If Not WaitforPixel($iArrowX - 11, $iArrowY - 1, $iArrowX - 9, $iArrowY + 1, Hex(0x9FCF76, 6), 30, 2) Then Return False  ; check if boost arrow
 	EndIf
 
 	If Not $bSkipTabCheck Or $removeExtraTroopsQueue Then
@@ -755,7 +755,7 @@ Func GetSlotNumber($bSpells = False)
 	Select
 		Case $bSpells = False
 			Local Const $Orders = [$eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eYeti, $eRDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, _
-					$eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eIceG, $eHunt] ; Set Order of troop display in Army Tab
+					$eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt] ; Set Order of troop display in Army Tab
 
 			Local $allCurTroops[UBound($Orders)]
 

@@ -37,12 +37,12 @@ Global $aHaveShield[4] = [455, 19, 0xF0F8FB, 15] ; Main Screen, Silver pixel top
 Global $aHavePerGuard[4] = [455, 19, 0x10100D, 15] ; Main Screen, black pixel in sword outline top center of shield
 Global $aShieldInfoButton[4] = [431, 10, 0x75BDE4, 15] ; Main Screen, Blue pixel upper part of "i"
 Global $aIsShieldInfo[4] = [645, 195, 0xED1115, 20] ; Main Screen, Shield Info window, red pixel right of X
-Global $aSurrenderButton[4] = [70, 545 + $g_iBottomOffsetY, 0xC00000, 40] ; Surrender Button, Attack Screen
-Global $aConfirmSurrender[4] = [515, 415 + $g_iMidOffsetY, 0x6DBC1F, 30] ; Confirm Surrender Button, Attack Screen, green color on button?
+Global $aSurrenderButton[4] = [18, 548, 0xC00000, 40] ; Surrender Button, Attack Screen
+Global $aConfirmSurrender[4] = [515, 415, 0x6DBC1F, 30] ; Confirm Surrender Button, Attack Screen, green color on button?
 Global $aCancelFight[4] = [822, 48, 0xD80408, 20] ; Cancel Fight Scene
 Global $aCancelFight2[4] = [830, 59, 0xD80408, 20] ; Cancel Fight Scene 2nd pixel
-Global $aEndFightSceneBtn[4] = [429, 519 + $g_iMidOffsetY, 0xB8E35F, 20] ; Victory or defeat scene buton = green edge
-Global $aEndFightSceneAvl[4] = [241, 196 + $g_iMidOffsetY, 0xFFF090, 20] ; Victory or defeat scene left side ribbon = light gold
+Global $aEndFightSceneBtn[4] = [429, 519, 0xCDF271, 20] ; Victory or defeat scene buton = green edge
+Global $aEndFightSceneAvl[4] = [241, 196, 0xFFF090, 20] ; Victory or defeat scene left side ribbon = light gold
 Global $aEndFightSceneReportGold = $aEndFightSceneAvl ; Missing... TripleM ???
 Global $aReturnHomeButton[4] = [376, 567 + $g_iMidOffsetY, 0x60AC10, 20] ; Return Home Button, End Battle Screen
 Global $aChatTab[4] = [331, 325 + $g_iMidOffsetY, 0xF0951D, 20] ; Chat Window Open, Main Screen
@@ -69,22 +69,23 @@ Global $aIsAtkDarkElixirFull[4] = [743, 62 + $g_iMidOffsetY, 0x270D33, 10] ; Att
 Global $aIsDarkElixirFull[4] = [709, 102 + $g_iMidOffsetY, 0x270D33, 10] ; Main Screen DE Resource bar is full
 Global $aIsGoldFull[4] = [662, 37, 0xE7C00D, 10] ; Main Screen Gold Resource bar is Full
 Global $aIsElixirFull[4] = [662, 86, 0xC027C0, 10] ; Main Screen Elixir Resource bar is Full
-Global $aPerkBtn[4] = [95, 243 + $g_iMidOffsetY, 0x7cd8e8, 10] ; Clan Info Page, Perk Button (blue); 800x780
-Global $aIsGemWindow1[4] = [573, 256 + $g_iMidOffsetY, 0xEB1316, 20] ; Main Screen, pixel left of Red X to close gem window
-Global $aIsGemWindow2[4] = [577, 266 + $g_iMidOffsetY, 0xCC2025, 20] ; Main Screen, pixel below Red X to close gem window
-Global $aIsGemWindow3[4] = [586, 266 + $g_iMidOffsetY, 0xCC2025, 20] ; Main Screen, pixel below Red X to close gem window
-Global $aIsGemWindow4[4] = [595, 266 + $g_iMidOffsetY, 0xCC2025, 20] ; Main Screen, pixel below Red X to close gem window
-Global $aIsTrainPgChk1[4] = [813, 80 + $g_iMidOffsetY, 0xFF8D95, 10] ; Main Screen, Train page open - left upper corner of x button
-Global $aIsTrainPgChk2[4] = [762, 328 + $g_iMidOffsetY, 0xF18439, 10] ; Main Screen, Train page open - Dark Orange in left arrow
-Global $aRtnHomeCloud1[4] = [56, 592 + $g_iBottomOffsetY, 0x0A223F, 15] ; Cloud Screen, during search, blue pixel in left eye
-Global $aRtnHomeCloud2[4] = [72, 592 + $g_iBottomOffsetY, 0x103F7E, 15] ; Cloud Screen, during search, blue pixel in right eye
-Global $aDetectLang[2] = [16, 634 + $g_iBottomOffsetY] ; Detect Language, bottom left Attack button must read "Attack"
-Global $aGreenArrowTrainTroops[2] = [310, 127]
-Global $aGreenArrowBrewSpells[2] = [467, 127]
-Global $aGreenArrowTrainSiegeMachines[2] = [623, 127]
+Global $aPerkBtn[4] = [95, 243, 0x7cd8e8, 10] ; Clan Info Page, Perk Button (blue); 800x780
+Global $aIsGemWindow1[4] = [573, 239, 0xFF8D95, 20] ; Main Screen, pixel left of Red X to close gem window
+Global $aIsGemWindow2[4] = [577, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
+Global $aIsGemWindow3[4] = [586, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
+Global $aIsGemWindow4[4] = [595, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
+Global $aIsTrainPgChk1[4] = [822, 93, 0xFFFFFF, 10] ; Main Screen, Train page open - left upper corner of x button
+Global $aIsTrainPgChk2[4] = [762, 328, 0xF18439, 10] ; Main Screen, Train page open - Dark Orange in left arrow
+Global $aRtnHomeCloud1[4] = [56, 592, 0x0A223F, 15] ; Cloud Screen, during search, blue pixel in left eye
+Global $aRtnHomeCloud2[4] = [72, 592, 0x103F7E, 15] ; Cloud Screen, during search, blue pixel in right eye
+Global $aDetectLang[2] = [20, 636] ; Detect Language, bottom left Attack button must read "Attack"
+Global $aGreenArrowTrainTroops[2] = [308, 98]
+Global $aGreenArrowBrewSpells[2] = [467, 98]
+Global $aGreenArrowTrainSiegeMachines[2] = [622, 98]
 Global $g_aShopWindowOpen[4] = [804, 54, 0xC00508, 15] ; Red pixel in lower right corner of RED X to close shop window
-Global $aTreasuryWindow[4] = [689, 138 + $g_iMidOffsetY, 0xFF8D95, 20] ; Redish pixel above X to close treasury window
-Global $aAttackForTreasury[4] = [88, 619 + $g_iMidOffsetY, 0xF0EBE8, 5] ; Red pixel below X to close treasury window
+Global $aTreasuryWindow[4] = [688, 165, 0xD51115, 20] ; Redish pixel above X to close treasury window
+Global $aAttackForTreasury[4] = [88, 619, 0xF0EBE8, 5] ; Red pixel below X to close treasury window
+
 Global $aAtkHasDarkElixir[4]  = [ 31, 144, 0x282020, 10] ; Attack Page, Check for DE icon
 Global $aVillageHasDarkElixir[4] = [837, 134, 0x3D2D3D, 10] ; Main Page, Base has dark elixir storage
 

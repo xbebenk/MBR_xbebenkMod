@@ -591,16 +591,17 @@ Func ZoomInMEmu($Region = "Top")
 		Case "Top"
 			ClickDrag(400, 100, 400, 600, 200)
 			If _Sleep(500) Then Return
-			ClickDrag(400, 100, 400, 400, 200)
+			ClickDrag(400, 100, 400, 300, 200)
 		Case "Left"
 			ClickDrag(100, 400, 800, 400, 200)
 			If _Sleep(500) Then Return
 		Case "Bottom"
-			ClickDrag(400, 600, 400, 100, 200)
+			ClickDrag(400, 500, 400, 100, 200)
 			If _Sleep(500) Then Return
 		Case "Right"
 			ClickDrag(800, 400, 100, 400, 200)
 			If _Sleep(500) Then Return
+			ClickDrag(400, 100, 400, 300, 200)
 	EndSwitch
 	Return True
 EndFunc
@@ -637,17 +638,20 @@ Func ZoomInBBMEmu($Region = "Top")
 	If Not $bSuccessZoomIn Then Return False
 	Switch $Region
 		Case "Top"
-			ClickDrag(400, 100, 400, 600, 200)
+			ClickDrag(400, 150, 400, 400, 200)
 			If _Sleep(500) Then Return
+			ClickDrag(400, 150, 400, 400, 200)
 		Case "Left"
-			ClickDrag(100, 400, 700, 400, 200)
+			ClickDrag(200, 400, 700, 400, 200)
 			If _Sleep(500) Then Return
+			ClickDrag(400, 150, 400, 300, 200)
 		Case "Bottom"
-			ClickDrag(400, 650, 400, 100, 200)
+			ClickDrag(400, 450, 400, 200, 200)
 			If _Sleep(500) Then Return
 		Case "Right"
-			ClickDrag(800, 400, 100, 400, 200)
+			ClickDrag(700, 400, 200, 400, 200)
 			If _Sleep(500) Then Return
+			ClickDrag(400, 150, 400, 400, 200)
 	EndSwitch
 	Return True
 EndFunc
