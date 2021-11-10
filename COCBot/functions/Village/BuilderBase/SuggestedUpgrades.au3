@@ -498,18 +498,18 @@ Func SearchNewBuilding($bTest = False)
 		
 		Local $New, $NewCoord, $aCoord[0][2], $ZeroCoord
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
-		$NewCoord = QuickMIS("CX", $g_sImgAUpgradeObstNew, 180, 73, 280, 370, True) ;find New Building
+		$NewCoord = QuickMIS("CX", $g_sImgAUpgradeObstNew, 280, 73, 430, 370, True) ;find New Building
 		If IsArray($NewCoord) And UBound($NewCoord) > 0 Then 
 			If Not $g_bRunState Then Return
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
 			For $j = 0 To UBound($NewCoord)-1
 				$New = StringSplit($NewCoord[$j], ",", $STR_NOCOUNT)
-				_ArrayAdd($aCoord, $New[0]+180 & "|" & $New[1]+73)
+				_ArrayAdd($aCoord, $New[0]+280 & "|" & $New[1]+73)
 			Next
 			_ArraySort($aCoord, 0, 0, 0, 1)
 			For $j = 0 To UBound($aCoord) - 1
 				If Not $g_bRunState Then Return
-				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $aCoord[$j][0] + 150, $aCoord[$j][1] - 8, $aCoord[$j][0] + 300, $aCoord[$j][1] + 8) Then
+				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $aCoord[$j][0] + 100, $aCoord[$j][1] - 8, $aCoord[$j][0] + 250, $aCoord[$j][1] + 8) Then
 					SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1], $COLOR_INFO)
 					ClickAway()
 					If _Sleep(1000) Then Return
