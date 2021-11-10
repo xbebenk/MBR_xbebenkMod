@@ -77,6 +77,7 @@ Func imglocCheckWall($LastWallLevel = 0)
 				$aCoord[1] = $aCoord[1] + $iYClickOffset
 				SetLog("Checking if found position is a Wall and of desired level.", $COLOR_SUCCESS)
 				;try click
+
 				If isInsideDiamondXY($aCoord[0], $aCoord[1]) Then ;prevent click outside village
 					GemClick($aCoord[0], $aCoord[1])
 					If _Sleep(500) Then Return

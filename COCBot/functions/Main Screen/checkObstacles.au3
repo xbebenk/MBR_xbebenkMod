@@ -315,7 +315,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Return True
 		EndIf
 	EndIf
-
 	If IsPostDefenseSummaryPage() Then
 		$aMessage = _PixelSearch(23, 566, 36, 580, Hex(0xE0E1CE, 6), 10, True)
 		If IsArray($aMessage) Then
