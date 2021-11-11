@@ -320,15 +320,20 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Return True
 		EndIf
 	EndIf
-	If IsPostDefenseSummaryPage() Then
-		$aMessage = _PixelSearch(23, 566, 36, 580, Hex(0xE0E1CE, 6), 10, True)
-		If IsArray($aMessage) Then
-			SetDebugLog("checkObstacles: Found Post Defense Summary to close")
-			PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
-			If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-			Return True
+	
+	For $j = 0 To 4 ;chek post defense page 5 times
+		If IsMainPage() Then Return True
+		If IsPostDefenseSummaryPage() Then
+			;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
+			If $j > 1 And $g_bChkSuperCellID Then AndroidBackButton() ;Send back button to android
+			$aMessage = _PixelSearch(23, 566, 36, 580, Hex(0xE0E1CE, 6), 10, True)
+			If IsArray($aMessage) Then
+				SetDebugLog("checkObstacles: Found Post Defense Summary to close")
+				PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
+			EndIf			
 		EndIf
-	EndIf
+		If _Sleep(1000) Then Return
+	Next
 	
 	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
 	If UBound($CSFoundCoords) > 1 Then
