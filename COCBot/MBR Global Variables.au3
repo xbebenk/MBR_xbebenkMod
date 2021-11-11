@@ -71,8 +71,9 @@ Global Const $g_iGAME_WIDTH = 860
 Global Const $g_iGAME_HEIGHT = 676
 Global Const $g_iDEFAULT_HEIGHT = 676 + 48
 Global Const $g_iDEFAULT_WIDTH = 860
-;Global Const $g_iMidOffsetY = Int(($g_iDEFAULT_HEIGHT - 720) / 2)
-;Global Const $g_iBottomOffsetY = $g_iDEFAULT_HEIGHT - 720
+Global Const $g_iMidOffsetYNew = Floor(Int(($g_iDEFAULT_HEIGHT - 732) / 2))
+Global Const $g_iBottomOffsetYNew = Floor($g_iDEFAULT_HEIGHT - 732)
+
 
 Global $g_hBotLaunchTime = __TimerInit() ; Keeps track of time bot launched
 Global $g_iBotLaunchTime = 0 ; Keeps track of time (in millseconds) from bot launch to ready for use
@@ -1898,7 +1899,9 @@ Global $CocDiamondDCD = "DCD"
 Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 
-Global $g_aVillageSize[10] = ["", "", "", "", "", "", "", "", "", ""]
+; Team AiO MOD++ (2021)
+Global $g_aVillageSize[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Pet House Alpha
 Global $g_aiPetHousePos[2] = [-1, -1] ; Position of Pet House
@@ -1928,3 +1931,32 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 ;Misc Mod
 Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = False, $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False, $g_bTrainPreviousArmy = False
 Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
+
+;builder baae
+
+; Attack CSV
+Global $g_bChkBBRandomAttack = False
+Global Const $g_sCSVBBAttacksPath = @ScriptDir & "\CSV\BuilderBase"
+Global $g_sAttackScrScriptNameBB[3] = ["", "", ""]
+Global $g_iBuilderBaseScript = 0
+
+Global $g_bDebugBBattack = False
+
+Global $g_bIsMachinePresent = False
+Global $g_iBBMachAbilityLastActivatedTime = -1 ; time between abilities
+; Globals for BB Machine
+; X, Y, g_bIsBBMachineD, g_bBBIsFirst
+Global Const $g_aMachineBBReset[4] = [-1, -1, False, True]
+Global $g_aMachineBB[4] = [-1, -1, False, True]
+Global $g_iFurtherFromBBDefault = 3
+
+; Report
+Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
+Global $g_sTxtRegistrationToken = ""
+
+Global $g_aBuilderHallPos = -1, $g_aAirdefensesPos = -1, $g_aCrusherPos = -1, $g_aCannonPos = -1, $g_aGuardPostPos = -1, _
+$g_aAirBombs = -1, $g_aLavaLauncherPos = -1, $g_aRoasterPos = -1, $g_aDeployPoints, $g_aDeployBestPoints
+
+Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aBuilderBaseAttackPolygon, $g_aFinalOuter[4]
+
+Global $g_bBBForceCustomArmy = False, $g_bBBGetArmyFromCSV = False, $g_bBBCSVAttack = False, $g_iBBCSVSettings = False ; Custom

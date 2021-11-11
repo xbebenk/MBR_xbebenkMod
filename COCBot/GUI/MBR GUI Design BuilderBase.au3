@@ -324,7 +324,7 @@ Func CreateBBAttackSubTab()
 	$x = 15
 
 	$g_hChkBBCSVAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCSVAttack", "CSV Attack"), $x + 5,  $y - 5, -1, -1)
-	GUICtrlSetState(-1, $GUI_DISABLE)
+	; GUICtrlSetState(-1, $GUI_DISABLE)
 	
 	Static $sBBCSVSettingsString = GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCSVSettingsOne", "Only one CSV") & "|" & _
 								   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCSVSettingsCustom", "CSV by weaknesses") & "|" & _
@@ -410,12 +410,6 @@ Func chkBBStyle()
 	Next
 	cmbScriptNameBB()
 EndFunc   ;==>chkBBStyle
-
-; Attack CSV
-Global $g_bChkBBRandomAttack = False
-Global Const $g_sCSVBBAttacksPath = @ScriptDir & "\CSV\BuilderBase"
-Global $g_sAttackScrScriptNameBB[3] = ["", "", ""]
-Global $g_iBuilderBaseScript = 0
 
 Func PopulateComboScriptsFilesBB($spacficIndex = "-999") ;Define Impoisble Default Index
 	Local $FileSearch, $NewFile

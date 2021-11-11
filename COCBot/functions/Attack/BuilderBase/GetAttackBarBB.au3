@@ -152,8 +152,6 @@ Func TestBuilderBaseSelectCorrectScript()
 	Return $aAvailableTroops
 EndFunc   ;==>TestBuilderBaseSelectCorrectScript
 
-Global $g_bBBForceCustomArmy = False, $g_bBBGetArmyFromCSV = False, $g_bBBCSVAttack = False, $g_iBBCSVSettings = False ; Custom
-
 Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 	If Not $g_bRunState Then Return
@@ -174,7 +172,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		EndIf
 	Else
 		$sModeAttack = "SMART"
-		If $g_bChkBBGetFromCSV = True Then
+		If $g_bBBGetArmyFromCSV = True Then
 			$sModeAttack = "CSV"
 		EndIf
 	EndIf

@@ -73,7 +73,7 @@ Func DoAttackBB()
 	ZoomOut()
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
-
+;~ #Cs
 Func AttackBB()
 	If Not $g_bChkEnableBBAttack Then Return
 	If Not $g_bRunState Then Return
@@ -220,7 +220,7 @@ Func AttackBB()
 			SetDebugLog("Clicking BM")
 			PureClickP($aBMPos)
 		EndIf
-		
+
 		;Sleep at the end with BM
 		If $bMachineAlive Then ;Only wait if still alive
 			If _Sleep($g_iBBMachAbilityTime) Then ; wait for machine to be available
@@ -257,7 +257,7 @@ Func AttackBB()
 	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast ; reset android suspend and resume stuff
 	If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
 EndFunc
-
+;~ #ce
 Func DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
 	; place hero first and activate ability
 	If $g_bBBMachineReady And Not $bBMDeployed Then SetLog("Deploying Battle Machine.", $COLOR_BLUE)
