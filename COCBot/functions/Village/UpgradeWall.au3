@@ -262,7 +262,7 @@ Func ClickDragFindWallUpgrade()
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
 			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
 			If _Sleep(2000) Then Return
-			$aWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 180, 80, 330, 369)
+			$aWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 180, 80, 330, 369, True)
 			If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then
 				SetLog("Found " & UBound($aWallCoord) & " Wall", $COLOR_DEBUG)
 				Return $aWallCoord
