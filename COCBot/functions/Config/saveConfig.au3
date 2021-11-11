@@ -484,10 +484,23 @@ Func SaveConfig_600_6()
 EndFunc   ;==>SaveConfig_600_6
 
 Func SaveBuilderBaseMod()
+	; Custom Army
 	_Ini_Add("BBCustomArmy", "ChkBBCustomArmyEnable", $g_bChkBBCustomArmyEnable)
 	For $i = 0 To UBound($g_hCmbTroopBB) - 1
 		_Ini_Add("BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbTroopBB[$i])
 	Next
+
+	; Misc Settings
+	_Ini_Add("BBCustomArmy", "BBForceCustomArmy", $g_bBBForceCustomArmy)
+	_Ini_Add("BBCustomArmy", "BBGetArmyFromCSV", $g_bBBGetArmyFromCSV)
+	_Ini_Add("BBCustomArmy", "BBCSVAttack", $g_bBBCSVAttack)
+	_Ini_Add("BBCustomArmy", "BBCSVSettings", $g_iBBCSVSettings)
+
+	; CSV's settings
+	For $i = 0 To 2
+		_Ini_Add("BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
+	Next
+
 EndFunc   ;==>SaveBuilderBaseMod
 
 Func SaveConfig_600_9()
