@@ -190,7 +190,7 @@ Func UpgradeLowLevelWall()
 						ExitLoop 2
 					Else
 						SetLog("Wall Level : " & $WallLevel[2], $COLOR_SUCCESS)
-						If Not DoLowLevelWallUpgrade($WallLevel[2]) Then ExitLoop
+						If Not DoLowLevelWallUpgrade($WallLevel[2]) Then ExitLoop 2
 						If $loopCount2 = 4 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
 					EndIf
 				EndIf
