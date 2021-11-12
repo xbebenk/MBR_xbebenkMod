@@ -331,7 +331,6 @@ Func DoUpgrade($bTest = False)
 	; check if the resource of the upgrade must be ignored
 	If $bMustIgnoreResource = True Then
 		SetLog($g_aUpgradeNameLevel[1] & ": This resource must be ignored, looking next...", $COLOR_WARNING)
-		$g_iNextLineOffset = $g_iCurrentLineOffset
 		Return False
 	EndIf
 
@@ -349,7 +348,6 @@ Func DoUpgrade($bTest = False)
 	; if boolean still False, we can't launch upgrade, exiting...
 	If Not $bSufficentResourceToUpgrade Then
 		SetLog($g_aUpgradeNameLevel[1] & ": Insufficent " & $g_aUpgradeResourceCostDuration[0] & " to launch this upgrade, looking Next...", $COLOR_WARNING)
-		$g_iNextLineOffset = $g_iCurrentLineOffset
 		ClickAway("Right")
 		If _Sleep(500) Then Return
 		Return False

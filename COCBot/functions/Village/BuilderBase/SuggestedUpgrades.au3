@@ -436,7 +436,7 @@ EndFunc   ;==>GetUpgradeButton
 Func SearchNewBuilding($bTest = False)
 	Local $bDebug = $g_bDebugImageSave
 	Local $bScreencap = True
-	Local $NeedDrag = True, $ZoomedIn = False
+	Local $NeedDrag = True, $ZoomedIn = False, $FoundMostBottomRed = 0
 	
 	For $z = 0 To 6 ;for do scroll 3 times
 		If _Sleep(50) Then Return
@@ -509,7 +509,13 @@ Func SearchNewBuilding($bTest = False)
 			_ArraySort($aCoord, 0, 0, 0, 1)
 			For $j = 0 To UBound($aCoord) - 1
 				If Not $g_bRunState Then Return
-				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $aCoord[$j][0] + 100, $aCoord[$j][1] - 8, $aCoord[$j][0] + 250, $aCoord[$j][1] + 8) Then
+				If $g_bSkipWallPlacingOnBB Then
+					If QuickMIS("N1", $g_sImgAUpgradeWall, $aCoord[$j][0] - 50, $aCoord[$j][1] - 10, $aCoord[$j][0] + 100, $aCoord[$j][1] + 10, True) = "Wall" Then
+						SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & ", Is Wall, skip!", $COLOR_INFO)
+						ContinueLoop
+					EndIf
+				EndIf
+				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $aCoord[$j][0] + 100, $aCoord[$j][1] - 8, $aCoord[$j][0] + 250, $aCoord[$j][1] + 8, True) Then
 					SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1], $COLOR_INFO)
 					ClickAway()
 					If _Sleep(1000) Then Return
@@ -533,25 +539,41 @@ Func SearchNewBuilding($bTest = False)
 			Next
 			
 		EndIf
-		
+		If Not $g_bRunState Then Return
 		If $g_iChkBBSuggestedUpgradesOTTO Then ;add add BuiderHall and Storage for priority upgrade on optimize OTTO
 			If QuickMIS("BC1", $g_sImgAUpgradeOttoBBPriority, 270, 80, 540, 370, True) Then
-				SetLog("Found OptimizeOTTO Priority Building", $COLOR_DEBUG)
+				SetLog("Found OptimizeOTTO Priority Building", $COLOR_INFO)
 				Local $tmpX = $g_iQuickMISX + 270, $tmpY = $g_iQuickMISY + 80
 				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $tmpX, $tmpY - 10, $tmpX + 200, $tmpY + 10) Then
 					Click($g_iQuickMISX + $tmpX, $g_iQuickMISY + $tmpY - 10)
 					GetUpgradeButton("OptimizeOTTO", False, $bTest)
+				Else
+					SetLog("But No resource", $COLOR_SUCCESS)
+					If QuickMIS("N1", $g_sImgAUpgradeOttoBBPriority & "\", $tmpX - 100, $tmpY - 10, $tmpX + 50, $tmpY + 10, True) = "BuilderHall" Then
+						SetLog("Found BuiderHall for Upgrade = No NewBuilding", $COLOR_INFO)
+						ExitLoop
+					EndIf
 				EndIf 
 			EndIf
 		EndIf
+		If Not $g_bRunState Then Return
+		Local $aZeroWhiteMostBottom = _PixelSearch(523, 348, 527, 363, Hex(0xFFFFFF, 6), 10)
+		If $aZeroWhiteMostBottom = 0 Then
+			$FoundMostBottomRed += 1
+			SetLog("No WhiteZero at most bottom list", $COLOR_DEBUG)
+		ElseIf $FoundMostBottomRed > 0 Then
+			$FoundMostBottomRed -= 1
+			SetLog("Found WhiteZero at most bottom list", $COLOR_DEBUG)
+		EndIf
+		If $z > 1 And $FoundMostBottomRed > 1 Then $NeedDrag = False
 		
-		If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
 		If Not $NeedDrag Then
-			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Not New Building", $COLOR_DEBUG)
+			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
 		ClickDragAutoUpgradeBB("up")
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
+		If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
 	Next
 	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
 	ZoomOut()
@@ -560,9 +582,7 @@ Func SearchNewBuilding($bTest = False)
 EndFunc
 
 Func ClickDragAutoUpgradeBB($Direction = "up", $YY = Default, $DragCount = 1)
-
 	Local $x = 450, $yUp = 125, $yDown = 800, $Delay = 500
-	
 	If $YY = Default Then $YY = 330
 	For $checkCount = 0 To 2
 		If Not $g_bRunState Then Return
@@ -593,18 +613,6 @@ Func ClickDragAutoUpgradeBB($Direction = "up", $YY = Default, $DragCount = 1)
 		EndIf
 	Next
 	Return False
-	
-	;
-	;If (_ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) = True) Then
-	;	ClickDrag(333, $y - 30, 333, 91, 800);do scroll down
-	;	If _Sleep(3000) Then Return
-	;Else
-	;	SetLog("Upgrade Window didn't open, try to open it", $COLOR_DEBUG)
-	;	If ClickOnBuilder() Then
-	;		ClickDrag(333, $y - 30, 333, 91, 800);do scroll down
-	;		If _Sleep(3000) Then Return
-	;	EndIf
-	;EndIf
 EndFunc
 
 Func NewBuildings($x, $y, $bTest = False)
