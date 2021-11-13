@@ -703,7 +703,7 @@ Func GoAttackBBAndReturn()
 	ZoomOut()
 	SetLog("Going attack, to clear field", $COLOR_DEBUG)
 	Click(60,600) ;click attack button
-	AttackBB()
+	_AttackBB()
 	ZoomOut()
 	SetLog("Field should be clear now", $COLOR_DEBUG)
 EndFunc
