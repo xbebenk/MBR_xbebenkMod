@@ -71,9 +71,8 @@ Global Const $g_iGAME_WIDTH = 860
 Global Const $g_iGAME_HEIGHT = 676
 Global Const $g_iDEFAULT_HEIGHT = 676 + 48
 Global Const $g_iDEFAULT_WIDTH = 860
-Global Const $g_iMidOffsetYNew = Floor(Int(($g_iDEFAULT_HEIGHT - 732) / 2))
-Global Const $g_iBottomOffsetYNew = Floor($g_iDEFAULT_HEIGHT - 732)
-
+Global Const $g_iMidOffsetYNew = Round(Int(($g_iGAME_HEIGHT - 732) / 2))
+Global Const $g_iBottomOffsetYNew = Round($g_iGAME_HEIGHT - 732)
 
 Global $g_hBotLaunchTime = __TimerInit() ; Keeps track of time bot launched
 Global $g_iBotLaunchTime = 0 ; Keeps track of time (in millseconds) from bot launch to ready for use
@@ -1010,7 +1009,7 @@ Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0,
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
-Global $g_iQuickMISX = 0, $g_iQuickMISY = 0
+Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSety = 0, $g_aImageSearchXML = -1 ; Team AIO Mod++
 
 ; <><><><> Village / Achievements <><><><>
 Global $g_iUnbrkMode = 0, $g_iUnbrkWait = 5

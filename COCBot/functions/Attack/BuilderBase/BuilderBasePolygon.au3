@@ -53,11 +53,11 @@ Func PrintBBPoly($bOuterPolygon = True) ; Or Internal, but it always update glob
 	$iBottom[1] = $y + (515 + $iCorrectSizeB) - $iFixA
 
 	If $bOuterPolygon = False Then
-		$iBottomL[0] = $x - (225 + $iCorrectSizeB) - $iFixA
-		$iBottomL[1] = 628
+		$iBottomL[0] = $x - (225 + 90 + $iCorrectSizeB) - $iFixA
+		$iBottomL[1] = 628 + $g_iBottomOffsetYNew
 		
-		$iBottomR[0] = $x - (110 - $iCorrectSizeB)
-		$iBottomR[1] = 628
+		$iBottomR[0] = $x - (110 - 90 - $iCorrectSizeB)
+		$iBottomR[1] = 628 + $g_iBottomOffsetYNew
 
 		$aReturn[0] = $iSize
 		$aReturn[1] = $iTop
@@ -87,11 +87,11 @@ Func PrintBBPoly($bOuterPolygon = True) ; Or Internal, but it always update glob
 
 	
 	If $bOuterPolygon = True Then
-		$iBottomL[0] = $x - (275 + $iCorrectSizeB) - $iFixA
-		$iBottomL[1] = 628
+		$iBottomL[0] = $x - (275 + 90 + $iCorrectSizeB) - $iFixA
+		$iBottomL[1] = 628 + $g_iBottomOffsetYNew
 
-		$iBottomR[0] = $x - (70 - $iCorrectSizeB)
-		$iBottomR[1] = 628
+		$iBottomR[0] = $x - (70 - 90 - $iCorrectSizeB)
+		$iBottomR[1] = 628 + $g_iBottomOffsetYNew
 	
 		$aReturn[0] = $iSize
 		$aReturn[1] = $iTop
