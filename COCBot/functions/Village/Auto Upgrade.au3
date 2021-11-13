@@ -156,7 +156,8 @@ Func DoUpgrade($bTest = False)
 	; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
 	$g_aUpgradeNameLevel = BuildingInfo(242, 494)
 	If $g_aUpgradeNameLevel[0] = "" Then
-		SetLog("Error when trying to get upgrade name and level, looking next...", $COLOR_ERROR)
+		SetLog("Error when trying to get upgrade name and level...", $COLOR_ERROR)
+		GoGoblinMap()
 		Return False
 	EndIf
 	
@@ -732,20 +733,21 @@ EndFunc ;==>ClickMainBuilder
 
 Func GoGoblinMap()
 	Local $GoblinFaceCoord, $CircleCoord
+	Local $g_sImgGoblin = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Goblin"
 	ClickP($aAttackButton)
 	SetLog("Going to Goblin Map to reset Field", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	If _Sleep(2000) Then Return
 	Click(140, 360) ;Select Goblin Map
 	If _Sleep(1000) Then Return
-	If Not _ColorCheck(_GetPixelColor(250, 360, True), Hex(0xB07453, 6), 1) Then ;goblin selected
+	If _ColorCheck(_GetPixelColor(470, 60, True), Hex(0xB07453, 6), 1) Then ;goblin selected
 		;Click(425, 240)
 		If _Sleep(500) Then Return
 		$GoblinFaceCoord = decodeSingleCoord(findImage("GoblinFace", $g_sImgGoblin & "\GoblinFace*", "FV", 1, True))
 		If IsArray($GoblinFaceCoord) And UBound($GoblinFaceCoord) = 2 Then
 			Click($GoblinFaceCoord[0], $GoblinFaceCoord[1] + 50)
 		Else ; we not find goblin face, try find circle map button
-			$CircleCoord = decodeSingleCoord(findImage("GoblinFace", $g_sImgGoblin & "\OrangeCircle*", "FV", 1, True))
+			$CircleCoord = decodeSingleCoord(findImage("OrangeCircle", $g_sImgGoblin & "\OrangeCircle*", "FV", 1, True))
 			If IsArray($CircleCoord) And UBound($CircleCoord) = 2 Then
 				Click($CircleCoord[0], $CircleCoord[1])
 				If _Sleep(500) Then Return
