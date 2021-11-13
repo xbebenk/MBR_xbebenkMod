@@ -733,34 +733,38 @@ EndFunc ;==>ClickMainBuilder
 
 Func GoGoblinMap()
 	Local $GoblinFaceCoord, $CircleCoord
-	Local $g_sImgGoblin = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Goblin"
 	ClickP($aAttackButton)
 	SetLog("Going to Goblin Map to reset Field", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	If _Sleep(2000) Then Return
 	Click(140, 360) ;Select Goblin Map
 	If _Sleep(1000) Then Return
-	If _ColorCheck(_GetPixelColor(470, 60, True), Hex(0xB07453, 6), 1) Then ;goblin selected
-		;Click(425, 240)
-		If _Sleep(500) Then Return
-		$GoblinFaceCoord = decodeSingleCoord(findImage("GoblinFace", $g_sImgGoblin & "\GoblinFace*", "FV", 1, True))
-		If IsArray($GoblinFaceCoord) And UBound($GoblinFaceCoord) = 2 Then
-			Click($GoblinFaceCoord[0], $GoblinFaceCoord[1] + 50)
-		Else ; we not find goblin face, try find circle map button
-			$CircleCoord = decodeSingleCoord(findImage("OrangeCircle", $g_sImgGoblin & "\OrangeCircle*", "FV", 1, True))
-			If IsArray($CircleCoord) And UBound($CircleCoord) = 2 Then
-				Click($CircleCoord[0], $CircleCoord[1])
-				If _Sleep(500) Then Return
-				Click($CircleCoord[0], $CircleCoord[1] + 50)
-			Else
-				Click(818, 55)
-			EndIf
+	$GoblinFaceCoord = decodeSingleCoord(findImage("GoblinFace", $g_sImgGoblin & "\GoblinFace*", "FV", 1, True))
+	If IsArray($GoblinFaceCoord) And UBound($GoblinFaceCoord) = 2 Then
+		Click($GoblinFaceCoord[0], $GoblinFaceCoord[1] + 50)
+	Else ; we not find goblin face, try find circle map button
+		$CircleCoord = decodeSingleCoord(findImage("GoblinFace", $g_sImgGoblin & "\OrangeCircle*", "FV", 1, True))
+		If IsArray($CircleCoord) And UBound($CircleCoord) = 2 Then
+			Click($CircleCoord[0], $CircleCoord[1])
+			If _Sleep(500) Then Return
+			Click($CircleCoord[0], $CircleCoord[1] + 50)
+		Else
+			Click(818, 55)
 		EndIf
 	EndIf
+	
+	While Not IsAttackPage()
+		If _Sleep(250) Then Return
+	Wend
+	
 	If Not $g_bRunState Then Return
-	_Sleep(6000)
+	
 	If IsAttackPage() Then
 		Click(66, 540)
 	EndIf
-	If _Sleep(3500) Then Return
+	
+	While Not IsMainPage()
+		If _Sleep(250) Then Return
+	Wend
+	SetLog("Field should be clear now", $COLOR_INFO)
 EndFunc

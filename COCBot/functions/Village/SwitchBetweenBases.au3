@@ -58,12 +58,19 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 				ForceCaptureRegion()
 				$bSwitched = isOnBuilderBase(True) <> $bIsOnBuilderBase
 			WEnd
-
+			
 			If $bSwitched Then
 				If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase)
 				Return True
 			Else
 				SetLog("Failed to go to the " & $sSwitchTo, $COLOR_ERROR)
+				If $i = 1 And ($g_bPlaceNewBuilding Or $g_iChkPlacingNewBuildings) Then
+					If $bIsOnBuilderBase Then 
+						GoAttackBBAndReturn()
+					Else
+						GoGoblinMap()
+					EndIf
+				EndIf
 			EndIf
 		Else
 			Setlog("[" & $i & "] SwitchBetweenBases Tile: " & $sTile, $COLOR_ERROR)
