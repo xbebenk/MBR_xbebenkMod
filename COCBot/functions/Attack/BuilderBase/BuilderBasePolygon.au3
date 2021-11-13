@@ -297,7 +297,7 @@ EndFunc   ;==>PercentToVillage
 ; ===============================================================================================================================
 Global Const $PI = 4 * ATan(1)
 
-Func Linecutter($cx = 0, $cy = 0, $ex = 1, $ey = 1, $iMult = 20, $iRmin = -1, $iRmax = 1)
+Func Linecutter($cx = 0, $cy = 0, $ex = 1, $ey = 1, $iMult = 20, $iRmin = 0, $iRmax = 0)
 	Local $iAngle = angle($cx, $cy, $ex, $ey)
 	Local $iRandom = Random($iRmin, $iRmax)
 	Local $aReturn[2] = [$cx + Cos(_Radian($iAngle)) * $iMult + $iRandom, $cy + Sin(_Radian($iAngle)) * $iMult + $iRandom]

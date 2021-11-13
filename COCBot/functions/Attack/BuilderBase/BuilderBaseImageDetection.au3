@@ -163,7 +163,8 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $bDebug
 	If @error Then
 		SaveDebugImage("DeployPoints")
 		Setlog("Deploy $g_aBuilderBaseDiamond - Points detection Error!", $Color_Error)
-		$g_aExternalEdges = BuilderBaseGetFakeEdges()
+		; $g_aExternalEdges = BuilderBaseGetFakeEdges()
+		Return False
 	Else
 		$g_aExternalEdges = BuilderBaseGetEdges($g_aBuilderBaseDiamond, "External Edges")
 	EndIf
@@ -177,7 +178,8 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $bDebug
 	If $g_aBuilderBaseOuterDiamond = -1 Then
 		SaveDebugImage("DeployPoints")
 		Setlog("Deploy $g_aBuilderBaseOuterDiamond - Points detection Error!", $Color_Error)
-		$g_aOuterEdges = BuilderBaseGetFakeEdges()
+		; $g_aOuterEdges = BuilderBaseGetFakeEdges()
+		Return False
 	Else
 		$g_aOuterEdges = BuilderBaseGetEdges($g_aBuilderBaseOuterDiamond, "Outer Edges")
 	EndIf
@@ -521,10 +523,11 @@ Func BuilderBaseGetEdges($iBuilderBaseDiamond, $Text)
 
 	; BOTTOM RIGHT
 	$iCount = 0
-	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 20)
+	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 10)
 	For $i = 0 To 20
 		$aLinecutter = Linecutter($X[0], $Y[0], $X[1], $Y[1], $i * $iMult)
 
+		If Floor($aLinecutter[1]) > 570 Then ContinueLoop
 		ReDim $iBottomRight[$iCount + 1][2]
 		$iBottomRight[$iCount][0] = Floor($aLinecutter[0])
 		$iBottomRight[$iCount][1] = Floor($aLinecutter[1])
@@ -536,10 +539,11 @@ Func BuilderBaseGetEdges($iBuilderBaseDiamond, $Text)
 
 	; BOTTOM LEFT
 	$iCount = 0
-	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 20)
+	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 10)
 	For $i = 0 To 20
 		$aLinecutter = Linecutter($X[0], $Y[0], $X[1], $Y[1], $i * $iMult)
 
+		If Floor($aLinecutter[1]) > 570 Then ContinueLoop
 		ReDim $iBottomLeft[$iCount + 1][2]
 		$iBottomLeft[$iCount][0] = Floor($aLinecutter[0])
 		$iBottomLeft[$iCount][1] = Floor($aLinecutter[1])
@@ -554,7 +558,6 @@ Func BuilderBaseGetEdges($iBuilderBaseDiamond, $Text)
 	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 20)
 	For $i = 0 To 20
 		$aLinecutter = Linecutter($X[0], $Y[0], $X[1], $Y[1], $i * $iMult)
-
 		ReDim $iTopLeft[$iCount + 1][2]
 		$iTopLeft[$iCount][0] = Floor($aLinecutter[0])
 		$iTopLeft[$iCount][1] = Floor($aLinecutter[1])
@@ -572,6 +575,7 @@ Func BuilderBaseGetEdges($iBuilderBaseDiamond, $Text)
 
 EndFunc   ;==>BuilderBaseGetEdges
 
+#Cs
 Func BuilderBaseGetFakeEdges()
 	Local $aTopLeft[18][2], $aTopRight[18][2], $aBottomRight[18][2], $aBottomLeft[18][2]
 	; several points when the Village was not zoomed
@@ -596,7 +600,7 @@ Func BuilderBaseGetFakeEdges()
 	Local $aExternalEdges[4] = [$aTopLeft, $aTopRight, $aBottomRight, $aBottomLeft]
 	Return $aExternalEdges
 EndFunc   ;==>BuilderBaseGetFakeEdges
-
+#ce
 Func BuilderBaseResetAttackVariables()
 	$g_aAirdefensesPos = -1
 	$g_aGuardPostPos = -1
