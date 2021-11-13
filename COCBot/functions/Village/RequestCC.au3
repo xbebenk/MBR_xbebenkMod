@@ -311,7 +311,7 @@ Func RemoveCastleArmy($aToRemove)
 	If _Sleep(500) Then Return
 
 	; Click remove Troops & Spells
-	Local $aPos[2] = [35, 575]
+	Local $aPos[2] = [35, 520]
 	For $i = 0 To UBound($aToRemove) - 1
 		If $aToRemove[$i][1] > 0 Then
 			$aPos[0] = $aToRemove[$i][0] + 35
