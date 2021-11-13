@@ -552,7 +552,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	If Not ClickMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
 	
-	Local $b_BuildingFound = False, $ZoomedIn = False
+	Local $ZoomedIn = False
 	Local $NeedDrag = True, $FoundMostBottomRed = 0
 	If Not $g_bRunState Then Return
 	For $z = 0 To 10 ;for do scroll 8 times
@@ -603,7 +603,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 					Click($g_iQuickMISX + $tmpX, $g_iQuickMISY + $tmpY - 10)
 					If _Sleep(1000) Then Return
 					If DoUpgrade($bTest) Then
-						$b_BuildingFound = False ;reset
+						$FoundMostBottomRed = 0 ;reset
 						$z = 0 ;reset
 					Endif
 				Else
@@ -623,7 +623,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("Found WhiteZero at most bottom list", $COLOR_DEBUG)
 		EndIf
 		
-		If $z > 1 And $FoundMostBottomRed > 1 Then $NeedDrag = False
+		If $z > 1 And $FoundMostBottomRed > 3 Then $NeedDrag = False
 		
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		If Not $NeedDrag Then
