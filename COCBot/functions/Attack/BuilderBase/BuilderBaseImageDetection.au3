@@ -58,6 +58,156 @@ Func TestBuilderBaseGetHall()
 	Setlog("** TestBuilderBaseGetHall END**", $COLOR_DEBUG)
 EndFunc   ;==>TestBuilderBaseGetHall
 
+
+Func __GreenTiles($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bForceCapture = True, $bDebugLog = False, $iDistance2check = 15, $minLevel = 0, $maxLevel = 1000)
+
+	Local $iCount = 0, $returnProps = "objectname,objectlevel,objectpoints"
+	Local $error, $extError
+
+	If $bForceCapture = Default Then $bForceCapture = True
+	If $vArea2SearchOri = Default Then $vArea2SearchOri = "FV"
+
+	If (IsArray($vArea2SearchOri)) Then
+		$vArea2SearchOri = GetDiamondFromArray($vArea2SearchOri)
+	EndIf
+	If 3 = ((StringReplace($vArea2SearchOri, ",", ",") <> "") ? (@extended) : (0)) Then
+		$vArea2SearchOri = GetDiamondFromRect($vArea2SearchOri)
+	EndIf
+
+	Local $aCoords = "" ; use AutoIt mixed variable type and initialize array of coordinates to null
+	Local $returnData = StringSplit($returnProps, ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
+	Local $returnLine[UBound($returnData)]
+
+	; Capture the screen for comparison
+	If $bForceCapture Then _CaptureRegion2() ;to have FULL screen image to work with
+
+	Local $result = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sDirectory, "str", $vArea2SearchOri, "Int", $iQuantityMatch, "str", $vArea2SearchOri, "Int", $minLevel, "Int", $maxLevel)
+	$error = @error ; Store error values as they reset at next function call
+	$extError = @extended
+	If $error Then
+		_logErrorDLLCall($g_sLibMyBotPath, $error)
+		If $g_bDebugSetlog Then SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
+		SetError(2, $extError, $aCoords) ; Set external error code = 2 for DLL error
+		Return -1
+	EndIf
+
+	If checkImglocError($result, "_GreenTiles", $sDirectory) = True Then
+		If $g_bDebugSetlog Then SetDebugLog("_GreenTiles Returned Error or No values : ", $COLOR_DEBUG)
+		Return -1
+	EndIf
+
+	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
+	If $g_bDebugSetlog Then SetDebugLog(" ***  _GreenTiles multiples **** ", $COLOR_ORANGE)
+
+	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
+	Local $iD2C = $iDistance2check
+	Local $aAR[0][4], $aXY
+	For $rs = 0 To UBound($resultArr) - 1
+		For $rD = 0 To UBound($returnData) - 1 ; cycle props
+			$returnLine[$rD] = RetrieveImglocProperty($resultArr[$rs], $returnData[$rD])
+			If $returnData[$rD] = "objectpoints" Then
+				; Inspired in Chilly-chill
+				Local $aC = StringSplit($returnLine[2], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
+				For $i = 0 To UBound($aC) - 1
+					$aXY = StringSplit($aC[$i], ",", $STR_NOCOUNT + $STR_ENTIRESPLIT)
+					If UBound($aXY) <> 2 Then ContinueLoop 3
+						; If $returnLine[0] = "External" Then
+							; If isInsideDiamondInt(Int($aXY[0]), Int($aXY[1])) Then
+								; ContinueLoop
+							; EndIf
+						; EndIf
+						If $iD2C > 0 Then
+							If DuplicatedGreen($aAR, Int($aXY[0]), Int($aXY[1]), UBound($aAR)-1, $iD2C) Then
+								ContinueLoop
+							EndIf
+						EndIf
+					ReDim $aAR[$iCount + 1][4]
+					$aAR[$iCount][0] = Int($aXY[0])
+					$aAR[$iCount][1] = Int($aXY[1])
+					$iCount += 1
+					If $iCount >= $iQuantityMatch And $iQuantityMatch > 0 Then ExitLoop 3
+				Next
+			EndIf
+		Next
+	Next
+
+	If UBound($aAR) < 1 Then Return -1
+
+	Return $aAR
+EndFunc   ;==>_GreenTiles
+
+Func DuplicatedGreen($aXYs, $x1, $y1, $i3, $iD = 15)
+	If $i3 > 0 Then
+		For $i = 0 To $i3
+			If Not $g_bRunState Then Return
+			If Pixel_Distance($aXYs[$i][0], $aXYs[$i][1], $x1, $y1) < $iD Then Return True
+		Next
+	EndIf
+	Return False
+EndFunc   ;==>DuplicatedGreen
+
+Func _GetDiamondGreenTiles($iHnowManyPoints = 10, $iCentreX = 400, $iCentreY = 400, $sDirectory = @ScriptDir & "\imgxml\Attack\BuilderBase\DPTit\")
+	Local $g_aGreenTiles = -1
+	Local $aTmp = __GreenTiles($sDirectory, 0, "FV", True, False, 15, 0, 1000)
+	$g_aGreenTiles = IsArray($aTmp) ? ($aTmp) : (-1)
+	If Not IsArray($g_aGreenTiles) Or UBound($g_aGreenTiles) < 0 Then Return -1
+	Local $TL[0][3], $BL[0][3], $TR[0][3], $BR[0][3]
+	Local $aCentre = [$iCentreX, $iCentreY] ; [$DiamondMiddleX, $DiamondMiddleY]
+	_ArraySort($g_aGreenTiles, 0, 0, 0, 1)
+	For $i = 0 To UBound($g_aGreenTiles) - 1
+		Local $iCoordinate = [$g_aGreenTiles[$i][0], $g_aGreenTiles[$i][1]]
+		; If not IsInsideDiamond($iCoordinate) Then ContinueLoop
+		If DeployPointsPosition($iCoordinate) = "TopLeft" Then
+			ReDim $TL[UBound($TL) + 1][3]
+			$TL[UBound($TL) - 1][0] = $iCoordinate[0]
+			$TL[UBound($TL) - 1][1] = $iCoordinate[1]
+			$TL[UBound($TL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $iCoordinate[0], $iCoordinate[1]))
+		EndIf
+		If DeployPointsPosition($iCoordinate) = "BottomLeft" Then
+			ReDim $BL[UBound($BL) + 1][3]
+			$BL[UBound($BL) - 1][0] = $iCoordinate[0]
+			$BL[UBound($BL) - 1][1] = $iCoordinate[1]
+			$BL[UBound($BL) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $iCoordinate[0], $iCoordinate[1]))
+		EndIf
+		If DeployPointsPosition($iCoordinate) = "TopRight" Then
+			ReDim $TR[UBound($TR) + 1][3]
+			$TR[UBound($TR) - 1][0] = $iCoordinate[0]
+			$TR[UBound($TR) - 1][1] = $iCoordinate[1]
+			$TR[UBound($TR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $iCoordinate[0], $iCoordinate[1]))
+		EndIf
+		If DeployPointsPosition($iCoordinate) = "BottomRight" Then
+			ReDim $BR[UBound($BR) + 1][3]
+			$BR[UBound($BR) - 1][0] = $iCoordinate[0]
+			$BR[UBound($BR) - 1][1] = $iCoordinate[1]
+			$BR[UBound($BR) - 1][2] = Int(Pixel_Distance($aCentre[0], $aCentre[1], $iCoordinate[0], $iCoordinate[1]))
+		EndIf
+	Next
+	SetDebugLog("GreenTiles at TL are " & UBound($TL))
+	SetDebugLog("GreenTiles at BL are " & UBound($BL))
+	SetDebugLog("GreenTiles at TR are " & UBound($TR))
+	SetDebugLog("GreenTiles at BR are " & UBound($BR))
+	Local $AllSides[4] = [$TL, $TR, $BR, $BL]
+	Local $aiGreenTilesBySide[4]
+	Local $SIDESNAMES[4] = ["TL", "BL", "TR", "BR"]
+	Local $oNumberOfDeployPoints = $iHnowManyPoints
+	For $iAllSides = 0 To 3
+		Local $OneSide = $AllSides[$iAllSides]
+		_ArraySort($OneSide, 0, 0, 0, 2)
+		Local $OneFinalSide[0][2]
+		SetDebugLog(" --- Side " & $SIDESNAMES[$iAllSides] & " --- ")
+		For $i = 0 To $oNumberOfDeployPoints - 1
+			If $i < UBound($OneSide) Then
+				ReDim $OneFinalSide[UBound($OneFinalSide) + 1][2]
+				$OneFinalSide[UBound($OneFinalSide) - 1][0] = $OneSide[$i][0]
+				$OneFinalSide[UBound($OneFinalSide) - 1][1] = $OneSide[$i][1]
+			EndIf
+		Next
+		$aiGreenTilesBySide[$iAllSides] = $OneFinalSide
+		SetDebugLog("Final GreenTiles at " & $SIDESNAMES[$iAllSides] & ": " & _ArrayToString($OneFinalSide, ",", -1, -1, "|"))
+	Next
+	Return $aiGreenTilesBySide
+EndFunc   ;==>GetDiamondGreenTiles
+
 Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $bDebugImage = False)
 	If _Sleep(3000) Then Return
 
@@ -96,9 +246,10 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $bDebug
 
 	Setlog("Builder Base Hall detection: " & Round(__timerdiff($hStarttime) / 1000, 2) & " seconds", $COLOR_DEBUG)
 	$hStarttime = __TimerInit()
-
+	
+	#CS
 	; Dissociable drop points.
-	Local $aDeployPointsResult = "" ;DMClassicArray(DFind($g_sBundleDeployPointsBBD, 0, 0, 0, 0, 0, 0, 1000, True), 10, ($g_bDebugImageSave Or $bDebugImage))
+	Local $aDeployPointsResult = DMClassicArray(DFind($g_sBundleDeployPointsBBD, 0, 0, 0, 0, 0, 0, 1000, True), 10, ($g_bDebugImageSave Or $bDebugImage))
 	If Not $g_bRunState Then Return
 	SetDebugLog(_ArrayToString($aDeployPointsResult))
 
@@ -144,7 +295,12 @@ Func BuilderBaseGetDeployPoints($FurtherFrom = $g_iFurtherFromBBDefault, $bDebug
 		Else
 		$bBadPoints = True
 	EndIf
-
+	#CE
+	
+	#Region
+	$Sides = _GetDiamondGreenTiles(15, $aBuilderHallPos[0][1], $aBuilderHallPos[0][2])
+	#EndRegion
+	
 	If Not $g_bRunState Then Return
 
 	If $bBadPoints = False Then
@@ -509,7 +665,7 @@ Func BuilderBaseGetEdges($iBuilderBaseDiamond, $Text)
 	; TOP RIGHT
 	$iCount = 0
 	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 20)
-	For $i = 0 To 20
+	For $i = 1 To 20
 		$aLinecutter = Linecutter($X[0], $Y[0], $X[1], $Y[1], $i * $iMult)
 
 		ReDim $iTopRight[$iCount + 1][2]
@@ -524,7 +680,7 @@ Func BuilderBaseGetEdges($iBuilderBaseDiamond, $Text)
 	; BOTTOM RIGHT
 	$iCount = 0
 	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 10)
-	For $i = 0 To 20
+	For $i = 1 To 20
 		$aLinecutter = Linecutter($X[0], $Y[0], $X[1], $Y[1], $i * $iMult)
 
 		If Floor($aLinecutter[1]) > 570 Then ContinueLoop
@@ -540,7 +696,7 @@ Func BuilderBaseGetEdges($iBuilderBaseDiamond, $Text)
 	; BOTTOM LEFT
 	$iCount = 0
 	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 10)
-	For $i = 0 To 20
+	For $i = 1 To 20
 		$aLinecutter = Linecutter($X[0], $Y[0], $X[1], $Y[1], $i * $iMult)
 
 		If Floor($aLinecutter[1]) > 570 Then ContinueLoop
@@ -556,7 +712,7 @@ Func BuilderBaseGetEdges($iBuilderBaseDiamond, $Text)
 	; TOP LEFT
 	$iCount = 0
 	Local $iMult = Abs(Pixel_Distance($X[0], $Y[0], $X[1], $Y[1]) / 20)
-	For $i = 0 To 20
+	For $i = 1 To 20
 		$aLinecutter = Linecutter($X[0], $Y[0], $X[1], $Y[1], $i * $iMult)
 		ReDim $iTopLeft[$iCount + 1][2]
 		$iTopLeft[$iCount][0] = Floor($aLinecutter[0])

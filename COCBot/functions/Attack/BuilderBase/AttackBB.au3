@@ -132,21 +132,17 @@ Func _AttackBB()
 	EndIf
 	
 	If $g_BBBCSVAttack = True Then
-		If IsArray($aBBAttackBar) Then
+		; Zoomout the Opponent Village.
+		BuilderBaseZoomOut(False, True)
 	
-			; Zoomout the Opponent Village.
-			BuilderBaseZoomOut(False, True)
+		; Correct script.
+		BuilderBaseSelectCorrectScript($aBBAttackBar)
 	
-			; Correct script.
-			BuilderBaseSelectCorrectScript($aBBAttackBar)
+		Local $FurtherFrom = 5 ; 5 pixels before the deploy point.
+		BuilderBaseGetDeployPoints($FurtherFrom, True)
 	
-			Local $FurtherFrom = 5 ; 5 pixels before the deploy point.
-			BuilderBaseGetDeployPoints($FurtherFrom, True)
-	
-			; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window.
-			BuilderBaseParseAttackCSV($aBBAttackBar, $g_aDeployPoints, $g_aDeployBestPoints, True)
-	
-		EndIf
+		; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window.
+		BuilderBaseParseAttackCSV($aBBAttackBar, $g_aDeployPoints, $g_aDeployBestPoints, True)
 	Else
 		AttackBB($aBBAttackBar)
 	Endif

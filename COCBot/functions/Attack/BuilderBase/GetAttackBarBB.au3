@@ -286,11 +286,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	_ArraySort($aAvailableTroops, 0, 0, 0, 1)
 	
 	Local $iSlotWidth = 72
-	Local $iDefaultY = 708
+	Local $iDefaultY = 708 + $g_iBottomOffsetYNew
 	Local $iCampsQuantities = 0
 	Local $aSwicthBtn[0]
-	Local $aSlotSwitch[4] = [103, 706, 0xB5DF85, 25]
-	While _ColorCheck(_GetPixelColor($aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth), $aSlotSwitch[1], False), Hex($aSlotSwitch[2], 6), $aSlotSwitch[3])
+	Local $aSlotSwitch[4] = [103, 706 + $g_iBottomOffsetYNew, 0xB5DF85, 25]
+	While _ColorCheck(_GetPixelColor(103 + Int(0 * 1), 706 + $g_iBottomOffsetYNew), Hex(0xB5DF85, 6), 25)
 		ReDim $aSwicthBtn[$iCampsQuantities + 1]
 		$aSwicthBtn[$iCampsQuantities] = $aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth)
 		$iCampsQuantities += 1
@@ -416,16 +416,17 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		For $iSleepWait = 0 To 4
 			If Not $g_bRunState Then Return
 			If _Sleep(1000) Then Return
-			If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681, 860, 728) = "ChangeTDis" Then ExitLoop
+			If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681 + $g_iBottomOffsetYNew, 860, 728 + $g_iBottomOffsetYNew) = "ChangeTDis" Then ExitLoop
 			If $iSleepWait <> 4 Then ContinueLoop
 			Setlog("Error at Camps!", $COLOR_ERROR)
 			$iAvoidInfLoop += 1
 			If Not $g_bRunState Then Return
 			ContinueLoop 2
 		Next
-		
+
 		; Open eyes and learn.
-		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", "0,523(861,615)", True))
+		Local $aSearchZone[4] =  [0, 523 + $g_iBottomOffsetYNew, 861, 615 + $g_iBottomOffsetYNew]
+		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", GetDiamondFromArray($aSearchZone), True))
 		If UBound($aAttackBar) >= 2 Then
 			; If The item is The Troop that We Missing
 			If _Sleep(250) Then Return
@@ -443,15 +444,15 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			_ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
 			If $g_bDebugSetlog Then SetDebugLog("New Army is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
 		Else
-			Click(8, 720, 1)
+			Click(8, 720 + $g_iBottomOffsetYNew, 1)
 			Return False
 		EndIf
 	WEnd
 	If _Sleep(500) Then Return
 
 	If $bWaschanged Then
-		If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681, 860, 728) = "ChangeTDis" Then
-			Click(8, 720, 1)
+		If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681 + $g_iBottomOffsetYNew, 860, 728 + $g_iBottomOffsetYNew) = "ChangeTDis" Then
+			Click(8, 720 + $g_iBottomOffsetYNew, 1)
 		EndIf
 	Else
 		Return

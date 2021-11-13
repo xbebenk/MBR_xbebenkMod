@@ -92,7 +92,6 @@ Func _SetLog($sLogMessage, $Color = Default, $Font = Default, $FontSize = Defaul
 	If (($g_hTxtLog <> 0 Or $g_iGuiMode <> 1) And $g_bRunState = False) Or ($bPostponed = False And __TimerDiff($g_hTxtLogTimer) >= $g_iTxtLogTimerTimeout) Then
 		; log now to GUI
 		CheckPostponedLog()
-
 		If $g_iLogCheckFreeSpaceMB And $g_bRunState Then
 			If $hLogCheckFreeSpaceTimer = 0 Or __TimerDiff($hLogCheckFreeSpaceTimer) > 600000 Then
 				; check free space of profile folder
@@ -106,7 +105,6 @@ Func _SetLog($sLogMessage, $Color = Default, $Font = Default, $FontSize = Defaul
 				EndIf
 			EndIf
 		EndIf
-
 	EndIf
 	$bActive = False
 EndFunc   ;==>_SetLog
