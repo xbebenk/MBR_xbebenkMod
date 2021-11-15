@@ -311,8 +311,8 @@ Func DoUpgrade($bTest = False)
 		;SetLog($g_aUpgradeResourceCostDuration[$i])
 		If $g_aUpgradeResourceCostDuration[$i] = "" Then
 			SetLog("Error when trying to get upgrade details, looking next...", $COLOR_ERROR)
-			;$g_iNextLineOffset = $g_iCurrentLineOffset
-			;Return False
+			ClickAway()
+			Return False
 		EndIf
 	Next
 
@@ -733,6 +733,7 @@ EndFunc ;==>ClickMainBuilder
 
 Func GoGoblinMap()
 	Local $GoblinFaceCoord, $CircleCoord
+	ClickAway()
 	ClickP($aAttackButton)
 	SetLog("Going to Goblin Map to reset Field", $COLOR_INFO)
 	If Not $g_bRunState Then Return
