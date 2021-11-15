@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 Local $iSlotWidth = 94, $iDistBetweenSlots = 12, $iYMidPoint = 530; use for logic to upgrade troops.. good for generic-ness
 Local $iPicsPerPage = 12, $iPages = 4 ; use to know exactly which page the users choice is on
-Local $sLabWindow = "99,122,760,616", $sLabTroopsSection = "115,363,750,577"
+Local $sLabWindow = "99,122,760,616", $sLabTroopsSection = "110,340,740,540"
 Local $sLabWindowDiam = GetDiamondFromRect($sLabWindow), $sLabTroopsSectionDiam = GetDiamondFromRect($sLabTroopsSection) ; easy to change search areas
 
 Func TestLaboratory()
@@ -112,14 +112,14 @@ Func Laboratory($debug=False)
 				For $z = 0 To UBound($g_aCmbLabUpgradeOrder) - 1 ;try labupgrade based on order
 					$g_iCmbLaboratory = $g_aCmbLabUpgradeOrder[$z] + 1
 					If $g_iCmbLaboratory <> 0 Then 
-						SetLog("Try Lab Upgrade :" & $g_avLabTroops[$g_iCmbLaboratory][0], $COLOR_DEBUG)
+						SetLog("Try Lab Upgrade :" & $g_avLabTroops[$g_iCmbLaboratory][2], $COLOR_DEBUG)
 						Local $iPage = Ceiling($g_iCmbLaboratory / $iPicsPerPage) ; page # of user choice
 						While($iCurPage < $iPage) ; go directly to the needed page
 							LabNextPage($iCurPage, $iPages, $iYMidPoint) ; go to next page of upgrades
 							$iCurPage += 1 ; Next page
 							If _Sleep(1000) Then Return
 						WEnd
-
+						
 						; Get coords of upgrade the user wants
 						local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
 						Local $aCoords, $bUpgradeFound = False
@@ -160,7 +160,7 @@ Func Laboratory($debug=False)
 						EndIf		
 					EndIf
 				Next ;search next
-				
+				findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True)
 			Else ; no LabUpgradeOrder
 				While($iCurPage <= $iPages)
 					local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
@@ -199,10 +199,13 @@ EndFunc
 
 ; start a given upgrade
 Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
-	SetLog("Selected upgrade: " & $name & " Cost: " & $sCostResult, $COLOR_INFO)
+	
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
-
+	$sCostResult = getResourcesBonus(594, 522) ; get cost
+	
+	SetLog("Selected upgrade: " & $name & " Cost: " & $sCostResult, $COLOR_INFO)
+	
 	If $debug = True Then ; if debugging, do not actually click it
 		SetLog("[debug mode] - Start Upgrade, Click (" & 660 & "," & 520 & ")", $COLOR_ACTION)
 		Click(243, 33)
