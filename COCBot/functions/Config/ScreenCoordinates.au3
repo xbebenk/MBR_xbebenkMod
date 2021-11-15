@@ -157,9 +157,9 @@ Global $aButtonConnectedSCID[4] = [640, 160, 0x2D89FD, 20] ; Setting screen, Sup
 Global $aCloseTabSCID[4] = [831, 57] ; Button Close Supercell ID tab
 
 ;Train
-Global $aButtonEditArmy[4] = [750, 530, 0x82CC2C, 25] ; 860x767
-Global $aButtonRemoveTroopsOK1[4] = [745, 551, 0x83CC2C, 20] ; 860x767
-Global $aButtonRemoveTroopsOK2[4] = [515, 415, 0x6DBC1F, 20] ; 860x767
+Global $aButtonEditArmy[4] = [750, 530, 0x82CC2C, 25] ; 860x676
+Global $aButtonRemoveTroopsOK1[4] = [745, 551, 0x83CC2C, 20] ; 860x676
+Global $aButtonRemoveTroopsOK2[4] = [515, 415, 0x6DBC1F, 20] ; 860x676
 
 ;Change Language To English
 Global $aButtonLanguage[4] = [620, 275, 0xDDF685, 20]
