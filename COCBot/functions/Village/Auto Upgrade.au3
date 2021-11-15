@@ -285,7 +285,6 @@ Func DoUpgrade($bTest = False)
 	; check if the upgrade name is on the list of upgrades that must be ignored
 	If $bMustIgnoreUpgrade Then
 		SetLog($g_aUpgradeNameLevel[1] & " : This upgrade must be ignored, looking next...", $COLOR_WARNING)
-		$g_iNextLineOffset = $g_iCurrentLineOffset
 		Return False
 	Else
 		SetLog("Building Name: " & $g_aUpgradeNameLevel[1], $COLOR_DEBUG)
@@ -383,10 +382,6 @@ Func DoUpgrade($bTest = False)
 			Return
 		EndIf
 	EndIf
-
-
-	; Upgrade completed, but at the same line there might be more...
-	$g_iCurrentLineOffset -= $g_iQuickMISY
 
 	; update Logs and History file
 	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_iChkUpgradesToIgnore[35] = 0 Then
