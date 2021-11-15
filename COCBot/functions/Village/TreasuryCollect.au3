@@ -19,6 +19,7 @@ Func TreasuryCollect()
 	If Not $g_bRunState Then Return ; ensure bot is running
 	ClickAway()
 	checkMainScreen(False)
+	Local $CCFound = False
 	
 	Local $TryCCAutoLocate = False
 	If Int($g_aiClanCastlePos[0]) < 1 Or Int($g_aiClanCastlePos[1]) < 1 Then
@@ -46,6 +47,7 @@ Func TreasuryCollect()
 				$g_aiClanCastlePos[0] = $TreasuryCoord[0]
 				$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 50
 				SetLog("Found Treasury Full, save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
+				$CCFound = True
 			EndIf
 		EndIf
 		
@@ -58,7 +60,15 @@ Func TreasuryCollect()
 				$g_aiClanCastlePos[0] = $ClanCastleCoord[0] + 10
 				$g_aiClanCastlePos[1] = $ClanCastleCoord[1] + 10
 				SetLog("Found Clan Castle, save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
+				$CCFound = True
 			EndIf
+		EndIf
+		If $CCFound Then
+			applyConfig()
+			saveConfig()
+		Else
+			SetLog("TryCCAutoLocate Failed, please locate manually", $COLOR_DEBUG)
+			Return
 		EndIf
 	EndIf
 	
