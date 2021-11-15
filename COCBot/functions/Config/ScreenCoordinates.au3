@@ -179,3 +179,8 @@ Global Const $aPersonalChallengePerksTab[4] = [660, 44, 0xEFE079, 20] ; Personal
 Global Const $aPersonalChallengeLeftEdge[4] = [30, 385, 0x28221E, 20] ; Personal Challenge Window - Rewards tab - Black left edge
 Global Const $aPersonalChallengeCancelBtn[4] = [345, 400, 0xFDC875, 20] ; Personal Challenge Window - Cancel button at Storage Full msg
 Global Const $aPersonalChallengeOkBtn[4] = [510, 400, 0xDFF887, 20] ; Personal Challenge Window - Okay button at Storage Full msg
+
+;xbebenkmod
+Global $aBlackHead[4] = [804, 316, 0x000000, 0] ; Black Barbarian Head
+Global $aOkayButton[2] = [430, 560]	; Okay button after BB attack, Screen 860x676
+Global $aOkayButtonRND[4] = [372, 530, 484, 565]	; Okay button after BB attack, RND Screen 860x676

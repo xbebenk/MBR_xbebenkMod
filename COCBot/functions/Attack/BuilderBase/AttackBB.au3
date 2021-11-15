@@ -287,16 +287,15 @@ EndFunc   ;==>AttackBB
 
 Func Okay()
 	local $timer = __TimerInit()
-
+	
 	While 1
-		local $aCoords = decodeSingleCoord(findImage("OkayButton", $g_sImgOkButton, "FV", 1, True))
-		If IsArray($aCoords) And UBound($aCoords) = 2 Then
-			PureClickP($aCoords)
+		If _CheckPixel($aBlackHead, True) Then
+			ClickP($aOkayButton)
 			Return True
 		EndIf
 
 		If __TimerDiff($timer) >= 180000 Then
-			SetLog("Could not find button 'Okay'", $COLOR_ERROR)
+			SetLog("Could not find finish battle screen", $COLOR_ERROR)
 			If $g_bDebugImageSave Then SaveDebugImage("BBFindOkay")
 			Return False
 		EndIf
