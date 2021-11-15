@@ -150,7 +150,7 @@ Func _AttackBB()
 	; wait for end of battle
 	SetLog("Waiting for end of battle.", $COLOR_BLUE)
 	If Not $g_bRunState Then Return ; Stop Button
-	If Not Okay() Then
+	If Not OkayBBEnd() Then
 		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 		If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
 		Return
@@ -285,7 +285,7 @@ Func AttackBB()
 	Return
 EndFunc   ;==>AttackBB
 
-Func Okay()
+Func OkayBBEnd() ; Find if battle has ended and click okay
 	local $timer = __TimerInit()
 	
 	While 1
@@ -298,6 +298,28 @@ Func Okay()
 			SetLog("Could not find finish battle screen", $COLOR_ERROR)
 			If $g_bDebugImageSave Then SaveDebugImage("BBFindOkay")
 			Return False
+		EndIf
+
+		If _Sleep(3000) Then Return
+	WEnd
+
+	Return True
+EndFunc
+
+Func Okay()
+	local $timer = __TimerInit()
+
+	While 1
+		local $aCoords = decodeSingleCoord(findImage("OkayButton", $g_sImgOkButton, "FV", 1, True))
+		If IsArray($aCoords) And UBound($aCoords) = 2 Then
+			PureClickP($aCoords)
+			Return True
+		EndIf
+
+		If __TimerDiff($timer) >= 180000 Then ;	 Force quit if more than 3 minutes
+			SetLog("Could not find button 'Okay', forcing to quit", $COLOR_ERROR)
+			ClickAway()
+			Return True
 		EndIf
 
 		If _Sleep(3000) Then Return
