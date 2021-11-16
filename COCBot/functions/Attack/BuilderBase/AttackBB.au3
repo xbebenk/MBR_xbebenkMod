@@ -75,7 +75,6 @@ Func DoAttackBB()
 EndFunc
 
 Func _AttackBB()
-	If Not $g_bChkEnableBBAttack Then Return
 	If Not $g_bRunState Then Return
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $aBMPos = 0
@@ -131,7 +130,7 @@ Func _AttackBB()
 		Return
 	EndIf
 	
-	If $g_BBBCSVAttack = True Then
+	If $g_BBBCSVAttack Then
 		; Zoomout the Opponent Village.
 		BuilderBaseZoomOut(False, True)
 	
@@ -144,7 +143,7 @@ Func _AttackBB()
 		; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window.
 		BuilderBaseParseAttackCSV($aBBAttackBar, $g_aDeployPoints, $g_aDeployBestPoints, True)
 	Else
-		AttackBB()
+		AttackBB($aBBAttackBar)
 	Endif
 	
 	; wait for end of battle
@@ -173,24 +172,18 @@ Func _AttackBB()
 	If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
 EndFunc
 
-Func AttackBB()
+Func AttackBB($aBBAttackBar = Default)
 	; Get troops on attack bar and their quantities
-	local $aBBAttackBar = GetAttackBarBB()
+	If $aBBAttackBar = Default Then $aBBAttackBar = GetAttackBarBB()
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $aBMPos = 0
 	local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 	local $bTroopsDropped = False, $bBMDeployed = False
 	
 	;Function uses this list of local variables...
-	$aBMPos = GetMachinePos() ;Need this initialized before it starts flashing
-	If $g_bChkBBDropBMFirst = True Then
+	If $g_bChkBBDropBMFirst Then
 		SetLog("Dropping BM First")
-		$bBMDeployed = DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
-		If IsArray($aBMPos) Then
-			_Sleep(500) ;brief pause for sanity
-			SetLog("Clicking BM Early") ;Help carry BM through troop drop period
-			PureClickP($aBMPos)
-		Endif
+		$bBMDeployed = DeployBM($iSide)
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
@@ -242,52 +235,26 @@ Func AttackBB()
 	WEnd
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 	If Not $g_bRunState Then Return ; Stop Button
-
+	If IsProblemAffect(True) Then Return
 	;If not dropping Builder Machine first, drop it now
-	If $g_bChkBBDropBMFirst = False Then
+	If Not $g_bChkBBDropBMFirst Then
 		SetLog("Dropping BM Last")
-		$bBMDeployed = DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
-		;Have to sleep here to while TimerDiff loop works first time, below.
-		;If $bBMDeployed = True Then Sleep($g_iBBMachAbilityTime)
+		$bBMDeployed = DeployBM($iSide)
+		If _Sleep($g_iBBMachAbilityTime) Then Return
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
-
-	; Continue with abilities until death
-	local $bMachineAlive = True
-	while $bMachineAlive And $bBMDeployed
-		SetDebugLog("Top of Battle Machine Loop")
-		local $timer = __TimerInit() ; give a bit of time to check if hero is dead because of the random lightning strikes through graphic
-		$aBMPos = GetMachinePos()
-		While __TimerDiff($timer) < ($g_iBBMachAbilityTime + 1000) And Not IsArray($aBMPos) ; give time to find, longer than ability time.
-			SetDebugLog("Checking BM Pos again")
-			$aBMPos = GetMachinePos()
-		WEnd
-
-		If Not IsArray($aBMPos) Then ; if machine wasn't found then it is dead, if not we hit ability
-			$bMachineAlive = False
-			SetDebugLog("BM not found...is dead")
-		Else
-			SetDebugLog("Clicking BM")
-			PureClickP($aBMPos)
-		EndIf
-
-		;Sleep at the end with BM
-		If $bMachineAlive Then ;Only wait if still alive
-			If _Sleep($g_iBBMachAbilityTime) Then ; wait for machine to be available
-				$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-				If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
-				Return
-			EndIf
-		EndIf
-	WEnd
-	If $bBMDeployed And Not $bMachineAlive Then SetLog("Battle Machine Dead")
+	
+	If $bBMDeployed Then CheckBMLoop() ;check if BM is Still alive and activate ability
+	
+	While IsAttackPage()
+		_Sleep(2000)
+	Wend
 	Return
 EndFunc   ;==>AttackBB
 
 Func OkayBBEnd() ; Find if battle has ended and click okay
 	local $timer = __TimerInit()
-	
 	While 1
 		If _CheckPixel($aBlackHead, True) Then
 			ClickP($aOkayButton)
@@ -299,10 +266,9 @@ Func OkayBBEnd() ; Find if battle has ended and click okay
 			If $g_bDebugImageSave Then SaveDebugImage("BBFindOkay")
 			Return False
 		EndIf
-
+		If IsProblemAffect(True) Then Return
 		If _Sleep(3000) Then Return
 	WEnd
-
 	Return True
 EndFunc
 
@@ -310,7 +276,7 @@ Func Okay()
 	local $timer = __TimerInit()
 
 	While 1
-		local $aCoords = decodeSingleCoord(findImage("OkayButton", $g_sImgOkButton, "FV", 1, True))
+		local $aCoords = decodeSingleCoord(findImage("OkayButton", $g_sImgOkButton, GetDiamondFromRect("590,420,740,480"), 1, True))
 		If IsArray($aCoords) And UBound($aCoords) = 2 Then
 			PureClickP($aCoords)
 			Return True
@@ -321,44 +287,12 @@ Func Okay()
 			ClickAway()
 			Return True
 		EndIf
-
-		If _Sleep(3000) Then Return
+		If IsProblemAffect(True) Then Return
+		If _Sleep(2000) Then Return
 	WEnd
 
 	Return True
 EndFunc
-
-Func DeployBM($bBMDeployed, $aBMPos, $iSide, $iAndroidSuspendModeFlagsLast)
-	; place hero first and activate ability
-	If $g_bBBMachineReady And Not $bBMDeployed Then SetLog("Deploying Battle Machine.", $COLOR_BLUE)
-	While Not $bBMDeployed And $g_bBBMachineReady
-		$aBMPos = GetMachinePos()
-		If IsArray($aBMPos) Then
-			PureClickP($aBMPos)
-			local $iPoint = Random(0, 9, 1)
-			If $iSide Then
-				PureClick($g_apTR[$iPoint][0], $g_apTR[$iPoint][1])
-			Else
-				PureClick($g_apTL[$iPoint][0], $g_apTL[$iPoint][1])
-			EndIf
-			If $g_bChkBBDropBMFirst = True Then
-				$bBMDeployed = True
-				ExitLoop ;no need to activate BM ability if deployed first
-			EndIf
-			If _Sleep(1000) Then ; wait before clicking ability
-				$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-				If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
-				Return
-			EndIf
-			PureClickP($aBMPos) ; potentially add sleep here later, but not needed at the moment
-			Sleep(2000) ;Delay after starting BM
-		Else
-			$bBMDeployed = True ; true if we dont find the image... this logic is because sometimes clicks can be funky so id rather keep looping till image is gone rather than until we think we have deployed
-		EndIf
-	WEnd
-	If $bBMDeployed Then SetLog("Battle Machine Deployed", $COLOR_SUCCESS)
-	Return($bBMDeployed)
-EndFunc ; DeployBM
 
 Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide)
     SetLog("Deploying " & $sName & "x" & String($iAmount), $COLOR_ACTION)
@@ -376,13 +310,69 @@ Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide)
 EndFunc
 
 Func GetMachinePos()
-    If Not $g_bBBMachineReady Then Return
     local $sSearchDiamond = GetDiamondFromRect("0,580,860,670")
     local $aCoords = decodeSingleCoord(findImage("BBBattleMachinePos", $g_sImgBBBattleMachine, $sSearchDiamond, 1, True))
     If IsArray($aCoords) And UBound($aCoords) = 2 Then
-        Return $aCoords
+        $g_bBBMachineReady = True
+		Return $aCoords
     Else
         If $g_bDebugImageSave Then SaveDebugImage("BBBattleMachinePos")
     EndIf
     Return
 EndFunc
+
+Func DeployBM($iSide = False)
+	Local $aBMPos = GetMachinePos()
+	Local $bBMDeployed = False
+	
+	If $g_bBBMachineReady And IsArray($aBMPos) Then 
+		SetLog("Deploying Battle Machine.", $COLOR_BLUE)
+		While True
+			;SetLog("$aBMPos = " & $aBMPos[0] & "," & $aBMPos[1], $COLOR_INFO)
+			PureClickP($aBMPos)
+			local $iPoint = Random(0, 9, 1)
+			If $iSide Then
+				PureClick($g_apTR[$iPoint][0], $g_apTR[$iPoint][1])
+			Else
+				PureClick($g_apTL[$iPoint][0], $g_apTL[$iPoint][1])
+			EndIf
+			If _Sleep(250) Then Return
+			If WaitforPixel($aBMPos[0] - 10, 572, $aBMPos[0] - 9, 573, "4BD505", 10, 2) Then
+				$bBMDeployed = True
+				PureClickP($aBMPos)
+				ExitLoop
+			EndIf
+		WEnd
+	EndIf
+	
+	If $bBMDeployed Then SetLog("Battle Machine Deployed", $COLOR_SUCCESS)
+	Return $bBMDeployed
+EndFunc ; DeployBM
+
+Func CheckBMLoop()
+	Local $aBMPos = GetMachinePos(), $count = 0
+	Local $TmpBMPosX = 522
+	
+	While IsAttackPage()
+		$aBMPos = GetMachinePos()
+		If IsArray($aBMPos) Then
+			$TmpBMPosX = $aBMPos[0]
+			PureClickP($aBMPos)
+			SetLog("Activate Battle Machine Ability", $COLOR_SUCCESS)
+			If _Sleep(5000) Then Return
+		Else
+			If WaitforPixel($TmpBMPosX - 10, 572, $TmpBMPosX - 9, 573, "121212", 10, 1) Then 
+				$count += 1
+				If $count > 6 Then 
+					SetLog("Battle Machine Dead", $COLOR_INFO)
+					ExitLoop
+				EndIf
+			EndIf
+			If _Sleep(1000) Then Return
+		EndIf
+		SetDebugLog("Battle Machine LoopCheck", $COLOR_ACTION)
+	Wend
+EndFunc
+
+
+

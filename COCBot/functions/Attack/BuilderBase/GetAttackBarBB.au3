@@ -38,7 +38,7 @@ Func GetAttackBarBB($bRemaining = False)
 	#comments-end
 
 	If Not $g_bRunState Then Return ; Stop Button
-	
+
 	local $sSearchDiamond = GetDiamondFromRect("0,580,860,670")
 	local $aBBAttackBarResult = findMultiple($g_sImgDirBBTroops, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
 
@@ -51,7 +51,7 @@ Func GetAttackBarBB($bRemaining = False)
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
-	
+
 	; parse data into attackbar array... not done
 	For $i = 0 To UBound($aBBAttackBarResult, 1) - 1
 		local $aTroop = $aBBAttackBarResult[$i]
@@ -178,13 +178,13 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	EndIf
 
 	Local $bCanGetFromCSV = False
-	
+
 	; CSV
 	If $sModeAttack = "CSV" Then
-		
-		; 0 - Only one CSV (Redundant) 
+
+		; 0 - Only one CSV (Redundant)
 		$g_iBuilderBaseScript = 0
-		
+
 		; 1 - Custom CSV by base
 		If $g_iBBCSVSettings = 1 Then
 			Local $aMode[2] = [0, 0]    ; Ground - Air
@@ -211,7 +211,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 
 			SetDebugLog("Script mode : " & $g_iBuilderBaseScript & " / " & " Ground calc : " & $aMode[0] & " Air calc : " & $aMode[1], $COLOR_INFO)
 			Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
-		
+
 		; 2 - Random CSV
 		ElseIf $g_iBBCSVSettings = 2 Then
 
@@ -231,7 +231,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		Local $aLArray[0]
 		Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
 		If FileExists($FileNamePath) Then $aLArray = FileReadToArray($FileNamePath)
-	
+
 		Local $iLast = 0, $aSplitLine, $sName
 		For $iLine = 0 To UBound($aLArray) - 1
 			If Not $g_bRunState Then Return
@@ -262,7 +262,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			SetLog("Badly CSV troops army.", $COLOR_WARNING)
 		EndIf
 	EndIf
-	
+
 	; Smart attack or badly CSV or Force Army
 	If $bCanGetFromCSV = False And $g_bChkBBCustomArmyEnable = True Then
 		Local $sName = "CAMP|"
@@ -284,13 +284,13 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	EndIf
 
 	_ArraySort($aAvailableTroops, 0, 0, 0, 1)
-	
+
 	Local $iSlotWidth = 72
-	Local $iDefaultY = 708 + $g_iBottomOffsetYNew
+	Local $iDefaultY = 655
 	Local $iCampsQuantities = 0
 	Local $aSwicthBtn[0]
-	Local $aSlotSwitch[4] = [103, 706 + $g_iBottomOffsetYNew, 0xB5DF85, 25]
-	While _ColorCheck(_GetPixelColor(103 + Int(0 * 1), 706 + $g_iBottomOffsetYNew), Hex(0xB5DF85, 6), 25)
+	Local $aSlotSwitch[4] = [106, 650, 0xEEF1EE, 25]
+	While _ColorCheck(_GetPixelColor($aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth), $aSlotSwitch[1], False), Hex($aSlotSwitch[2], 6), $aSlotSwitch[3])
 		ReDim $aSwicthBtn[$iCampsQuantities + 1]
 		$aSwicthBtn[$iCampsQuantities] = $aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth)
 		$iCampsQuantities += 1
@@ -412,11 +412,11 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		SetLog("Incorrect troop On Camp " & $aWrongCamps[0] + 1 & " - " & $aNewAvailableTroops[$aWrongCamps[0]][0] & " -> " & $sMissingCamp)
 		SetDebugLog("Click Switch Button " & $aWrongCamps[0], $COLOR_INFO)
 		Click($aSwicthBtn[$aWrongCamps[0]] + Random(2, 10, 1), $iDefaultY + Random(2, 10, 1))
-		
+
 		For $iSleepWait = 0 To 4
 			If Not $g_bRunState Then Return
 			If _Sleep(1000) Then Return
-			If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681 + $g_iBottomOffsetYNew, 860, 728 + $g_iBottomOffsetYNew) = "ChangeTDis" Then ExitLoop
+			If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 638, 860, 665) = "ChangeTDis" Then ExitLoop
 			If $iSleepWait <> 4 Then ContinueLoop
 			Setlog("Error at Camps!", $COLOR_ERROR)
 			$iAvoidInfLoop += 1
@@ -425,8 +425,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		Next
 
 		; Open eyes and learn.
-		Local $aSearchZone[4] =  [0, 523 + $g_iBottomOffsetYNew, 861, 615 + $g_iBottomOffsetYNew]
-		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", GetDiamondFromArray($aSearchZone), True))
+		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", "0,462(861,550)", True))
 		If UBound($aAttackBar) >= 2 Then
 			; If The item is The Troop that We Missing
 			If _Sleep(250) Then Return
@@ -444,15 +443,15 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 			_ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
 			If $g_bDebugSetlog Then SetDebugLog("New Army is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
 		Else
-			Click(8, 720 + $g_iBottomOffsetYNew, 1)
+			Click(8, 720, 1)
 			Return False
 		EndIf
 	WEnd
 	If _Sleep(500) Then Return
 
 	If $bWaschanged Then
-		If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 681 + $g_iBottomOffsetYNew, 860, 728 + $g_iBottomOffsetYNew) = "ChangeTDis" Then
-			Click(8, 720 + $g_iBottomOffsetYNew, 1)
+		If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 638, 860, 665) = "ChangeTDis" Then
+			Click(8, 720, 1)
 		EndIf
 	Else
 		Return
