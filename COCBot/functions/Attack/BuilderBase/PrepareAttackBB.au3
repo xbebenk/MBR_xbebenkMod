@@ -26,9 +26,15 @@ Func PrepareAttackBB($bCheck = False)
 		Return True
 	EndIf
 	
-	If ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB) And $g_iChkBBSuggestedUpgradesOTTO Then 
-		Setlog("Gold or Elixir is nearly full", $COLOR_DEBUG)
-		Return False
+	If $g_iChkBBSuggestedUpgradesOTTO Then 
+		If $g_bGoldStorageFullBB Then
+			Setlog("Gold Storage is nearly full, skip attack", $COLOR_INFO)
+			Return False
+		EndIf
+		If $g_bElixirStorageFullBB Then
+			Setlog("Elixir Storage is nearly full, skip attack", $COLOR_INFO)
+			Return False
+		EndIf
 	EndIf
 	
 	If $g_bChkBBTrophyRange Then
