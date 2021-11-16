@@ -64,7 +64,7 @@ Func SearchUpgrade($bTest = False)
 				ZoomOut() ;no builder, exit
 				Return
 			EndIf
-			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
+			ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
 		EndIf
 	EndIf
 	
@@ -682,6 +682,9 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 					If _Sleep(1000) Then Return
 				Case "Down"
 					ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
+					If WaitforPixel(430, 86, 450, 100, "FFFFFF", 10, 1) Then
+						ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
+					EndIf
 					If _Sleep(5000) Then Return
 			EndSwitch
 		EndIf
