@@ -92,7 +92,7 @@ Func BoostSuperTroop($bTest = False)
 									Else ;try to use dark elixir because potion not found
 										Setlog("Cannot Find Potion, Using Dark Elixir...", $COLOR_INFO)
 										If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 500, 750, 570, True, False) Then ;find image of dark elixir button
-											$BoostCost = getResourcesBonus(628, 542) ; get cost
+											$BoostCost = getResourcesBonus(628, 524) ; get cost
 											$BoostDuration = getHeroUpgradeTime(575, 484) ; get duration
 											If Not $BoostCost = "" Then
 												Click($g_iQuickMISX + 600, $g_iQuickMISY + 500, 1)
@@ -127,7 +127,7 @@ Func BoostSuperTroop($bTest = False)
 								Else
 									Setlog("Using Dark Elixir...", $COLOR_INFO)
 									If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 500, 750, 570, True, False) Then ;find image of dark elixir button
-										$BoostCost = getResourcesBonus(628, 542) ; get cost
+										$BoostCost = getResourcesBonus(628, 524) ; get cost
 										$BoostDuration = getHeroUpgradeTime(575, 484) ; get duration
 										If Not $BoostCost = "" Then
 											Click($g_iQuickMISX + 600, $g_iQuickMISY + 500, 1)
