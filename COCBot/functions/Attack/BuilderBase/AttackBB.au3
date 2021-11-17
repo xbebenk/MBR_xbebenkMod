@@ -327,7 +327,7 @@ Func DeployBM($iSide = False)
 	
 	If $g_bBBMachineReady And IsArray($aBMPos) Then 
 		SetLog("Deploying Battle Machine.", $COLOR_BLUE)
-		While True
+		For $i = 1 To 3
 			;SetLog("$aBMPos = " & $aBMPos[0] & "," & $aBMPos[1], $COLOR_INFO)
 			PureClickP($aBMPos)
 			local $iPoint = Random(0, 9, 1)
@@ -337,12 +337,13 @@ Func DeployBM($iSide = False)
 				PureClick($g_apTL[$iPoint][0], $g_apTL[$iPoint][1])
 			EndIf
 			If _Sleep(250) Then Return
-			If WaitforPixel($aBMPos[0] - 10, 572, $aBMPos[0] - 9, 573, "4BD505", 10, 2) Then
-				$bBMDeployed = True
-				PureClickP($aBMPos)
+			If WaitforPixel($aBMPos[0] - 10, 572, $aBMPos[0] - 9, 573, "4BD505", 10, 1) Then
+				$bBMDeployed = True ;we know BM is deployed, because we see green BM health bar
+				PureClickP($aBMPos) ;activate BM Ability
 				ExitLoop
 			EndIf
-		WEnd
+		Next
+		$bBMDeployed = True ;we dont know BM is deployed or no, just set it true as already try 3 time to deployBM
 	EndIf
 	
 	If $bBMDeployed Then SetLog("Battle Machine Deployed", $COLOR_SUCCESS)
