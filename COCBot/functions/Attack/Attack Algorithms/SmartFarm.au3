@@ -704,7 +704,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 			For $j = 0 To UBound($g_avAttackTroops) - 1 ; identify the position of this kind of troop
 				If $g_avAttackTroops[$j][0] = $troopKind Then
 					$troop = $j
-					$troopNb = Ceiling($g_avAttackTroops[$j][1] / $maxWaveNb + 5) ;make random 
+					$troopNb = Ceiling($g_avAttackTroops[$j][1] / $maxWaveNb)
 					$name = GetTroopName($troopKind, $troopNb)
 				EndIf
 			Next
