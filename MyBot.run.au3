@@ -1047,6 +1047,7 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 	Else
 		SetLog("Attacking Not Planned, Skipped..", $COLOR_WARNING)
 	EndIf
+	Return True
 EndFunc   ;==>AttackMain
 
 Func Attack() ;Selects which algorithm
@@ -1322,13 +1323,25 @@ Func FirstCheckRoutine()
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
+		
 		TrainSystem()
 		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 		If $g_bIsFullArmywithHeroesAndSpells Then
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
-				AttackMain(True)
+				Local $loopcount = 1
+				While True
+					If Not $g_bRunState Then Return
+					If AttackMain(True) Then 
+						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
+						ExitLoop
+					Else
+						$loopcount += 1
+						Setlog("[" & $loopcount & "] 1st Attack Loop", $COLOR_INFO)
+						$g_bRestart = False
+					EndIf
+				Wend
 				If $g_bOutOfGold Then
 					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
 					$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
@@ -1337,6 +1350,7 @@ Func FirstCheckRoutine()
 				If _Sleep($DELAYRUNBOT1) Then Return
 			EndIf
 		EndIf
+		
 	EndIf
 
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
@@ -1356,7 +1370,18 @@ Func FirstCheckRoutine()
 				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 					Setlog("Before any other routine let's attack!", $COLOR_INFO)
 					$g_bRestart = False ;idk this flag make sometimes bot cannot attack on second time
-					AttackMain(True)
+					Local $loopcount = 1
+					While True
+						If Not $g_bRunState Then Return
+						If AttackMain(True) Then 
+							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
+							ExitLoop
+						Else
+							$loopcount += 1
+							Setlog("[" & $loopcount & "] 2nd Attack Loop", $COLOR_INFO)
+							$g_bRestart = False
+						EndIf
+					Wend
 					If $g_bOutOfGold Then
 						SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
 						$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
