@@ -949,9 +949,9 @@ EndFunc   ;==>CheckQueueTroops
 Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlot = False)
 	Local $avResult[$eSpellCount]
 	Local $sImageDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued"
-
+	
 	If $bSetLog Then SetLog("Checking Spells Queue", $COLOR_INFO)
-	Local $avSearchResult = SearchArmy($sImageDir, 18, 213, $x, 230, $bGetQuantity ? "Queue" : "")
+	Local $avSearchResult = SearchArmy($sImageDir, 18, 153, $x, 230, $bGetQuantity ? "Queue" : "")
 
 	If $avSearchResult[0][0] = "" Then
 		Setlog("No Spells detected!", $COLOR_ERROR)
