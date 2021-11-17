@@ -62,7 +62,7 @@ Func DoubleTrain()
 					If _Sleep(500) Then Return
 					If $bDebug Then SetLog($Step & ". RemoveExtraTroopsQueue()", $COLOR_DEBUG)
 					$Step += 1
-					If $Step = 6 Then ExitLoop
+					If $Step > 7 Then ExitLoop
 					ContinueLoop
 				EndIf
 			EndIf
