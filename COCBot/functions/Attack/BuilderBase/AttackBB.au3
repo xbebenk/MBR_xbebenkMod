@@ -329,6 +329,7 @@ Func DeployBM($iSide = False)
 		SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 		For $i = 1 To 3
 			;SetLog("$aBMPos = " & $aBMPos[0] & "," & $aBMPos[1], $COLOR_INFO)
+			If $g_bDebugClick Then SetLog("[" & $i & "] Try DeployBM", $COLOR_ACTION)
 			PureClickP($aBMPos)
 			local $iPoint = Random(0, 9, 1)
 			If $iSide Then
