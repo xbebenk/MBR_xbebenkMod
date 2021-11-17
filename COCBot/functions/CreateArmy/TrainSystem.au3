@@ -655,18 +655,16 @@ Func DeleteInvalidTroopInArray(ByRef $aTroopArray)
 EndFunc   ;==>DeleteInvalidTroopInArray
 
 Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's a Low Opacity red color on them
-	;Local Const $DecreaseBy = 70
-	;Local $x = 834
 	
 	Local $IsButtonExist = False
-	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215, True, False)
+	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200, True, False)
 	While $IsButtonExist
 		For $i = 1 To 3
-			Click($g_iQuickMISX + 805, $g_iQuickMISX + 180, 20)
+			Click($g_iQuickMISX + 805, $g_iQuickMISX + 150, 20)
 			If Not $g_bRunState Then Return
 			If _Sleep(500) Then Return
 		Next
-		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215, True, False)
+		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200, True, False)
 	Wend
 
 	Return True
