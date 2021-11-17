@@ -178,7 +178,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 	EndSwitch
 
 	If $bNeedSwitch Then
-		Local $sSearchArea = GetDiamondFromRect($iX - 30 & ",700," & $iX + 35 & ",720")
+		Local $sSearchArea = GetDiamondFromRect($iX - 30 & ",630," & $iX + 35 & ",660")
 		Local $aiSwitchBtn = decodeSingleCoord(findImage("SwitchSiegeButton", $g_sImgSwitchSiegeMachine & "SiegeAtt*", $sSearchArea, 1, True, Default))
 		If IsArray($aiSwitchBtn) And UBound($aiSwitchBtn, 1) = 2 Then
 			ClickP($aiSwitchBtn)
@@ -188,7 +188,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			If _Sleep(1250) Then Return
 
 			; Lets detect the CC & Sieges and click - search window is - X, 530, X + 390, 530 + 30
-			Local $sSearchArea = GetDiamondFromRect(_Min($iX - 50, 470) & ",530(390,30)") ; x = 470 when Castle is at slot 6+ and there are 5 slots in siege switching window
+			Local $sSearchArea = GetDiamondFromRect(_Min($iX - 50, 470) & ",480(390,60)") ; x = 470 when Castle is at slot 6+ and there are 5 slots in siege switching window
 
 			Local $aSearchResult = findMultiple($g_sImgSwitchSiegeMachine, $sSearchArea, $sSearchArea, 0, 1000, 5, "objectname,objectpoints", True)
 			If $g_bDebugSetlog Then SetDebugLog("Benchmark Switch Siege imgloc: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
@@ -214,7 +214,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 					If $iSiegeIndex >= $eWallW And $iSiegeIndex <= $eLogL And ($bAnySiege Or $iSiegeIndex = $ToUse) Then
 						For $j = 0 To UBound($aAllCoords) - 1
 							Local $aCoords = $aAllCoords[$j]
-							Local $SiegeLevel = getTroopsSpellsLevel(Number($aCoords[0]) - 30, 587)
+							Local $SiegeLevel = getTroopsSpellsLevel(Number($aCoords[0]) - 30, 557)
 							; Just in case of Level 1
 							If $SiegeLevel = "" Then $SiegeLevel = 1
 							If $iFinalLevel < Number($SiegeLevel) Then
@@ -262,7 +262,7 @@ Func SelectWardenMode($iMode, $XCoord)
 	Local $aSelectMode[2] = ["Ground", "Air"], $aSelectSymbol[2] = ["Foot", "Wing"]
 	Local $sLogText = ""
 
-	Local $sArrow = GetDiamondFromRect($XCoord - 20 & ",700(68,20)")
+	Local $sArrow = GetDiamondFromRect($XCoord - 20 & ",630(68,30)")
 	Local $aCurrentMode = findMultiple($g_sImgSwitchWardenMode, $sArrow, $sArrow, 0, 1000, 1, "objectname,objectpoints", True)
 
 	If $aCurrentMode <> "" And IsArray($aCurrentMode) Then
@@ -279,7 +279,7 @@ Func SelectWardenMode($iMode, $XCoord)
 			ClickP($aArrowCoords, 1, 0)
 			If _Sleep(1200) Then Return
 
-			Local $sSymbol = GetDiamondFromRect(_Min($XCoord - 30, 696) & ",576(162,18)") ; x = 696 when Grand Warden is at slot 10
+			Local $sSymbol = GetDiamondFromRect(_Min($XCoord - 30, 696) & ",480(162,30)") ; x = 696 when Grand Warden is at slot 10
 			Local $aAvailableMode = findMultiple($g_sImgSwitchWardenMode, $sSymbol, $sSymbol, 0, 1000, 2, "objectname,objectpoints", True)
 			If $aAvailableMode <> "" And IsArray($aAvailableMode) Then
 				For $i = 0 To UBound($aAvailableMode, $UBOUND_ROWS) - 1
