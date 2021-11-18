@@ -659,8 +659,8 @@ Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's
 	Local $IsButtonExist = False
 	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200, True, False)
 	While $IsButtonExist
-		For $i = 1 To 3
-			Click($g_iQuickMISX + 805, $g_iQuickMISX + 150, 20)
+		For $i = 1 To 5
+			Click($g_iQuickMISX + 805, $g_iQuickMISX + 150, 50)
 			If Not $g_bRunState Then Return
 			If _Sleep(500) Then Return
 		Next
