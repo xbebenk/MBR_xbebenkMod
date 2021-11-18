@@ -279,7 +279,7 @@ Func SelectWardenMode($iMode, $XCoord)
 			ClickP($aArrowCoords, 1, 0)
 			If _Sleep(1200) Then Return
 
-			Local $sSymbol = GetDiamondFromRect(_Min($XCoord - 30, 696) & ",480(162,30)") ; x = 696 when Grand Warden is at slot 10
+			Local $sSymbol = GetDiamondFromRect(_Min($XCoord - 30, 696) & ",520(162,30)") ; x = 696 when Grand Warden is at slot 10
 			Local $aAvailableMode = findMultiple($g_sImgSwitchWardenMode, $sSymbol, $sSymbol, 0, 1000, 2, "objectname,objectpoints", True)
 			If $aAvailableMode <> "" And IsArray($aAvailableMode) Then
 				For $i = 0 To UBound($aAvailableMode, $UBOUND_ROWS) - 1
