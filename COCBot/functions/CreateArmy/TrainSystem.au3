@@ -144,7 +144,7 @@ EndFunc ;==>ArmyCompThree
 
 Func TrainCustomArmy()
 	If Not $g_bRunState Then Return
-
+	If isProblemAffect(True) Then Return
 	If $g_bDebugSetlogTrain Then SetLog(" == Initial Custom Train == ", $COLOR_ACTION)
 
 	;If $bDonateTrain = -1 Then SetbDonateTrain()
@@ -742,7 +742,7 @@ Func ClickRemoveTroop($pos, $iTimes, $iSpeed)
 EndFunc   ;==>ClickRemoveTroop
 
 Func GetSlotRemoveBtnPosition($iSlot, $bSpells = False)
-	Local $iRemoveY = Not $bSpells ? 270 : 417
+	Local $iRemoveY = Not $bSpells ? 245 : 390
 	Local $iRemoveX = Number((74 * $iSlot) - 4)
 
 	Local Const $aResult[2] = [$iRemoveX, $iRemoveY]

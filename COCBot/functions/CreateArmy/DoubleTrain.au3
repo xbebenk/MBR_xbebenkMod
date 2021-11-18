@@ -16,8 +16,8 @@
 #include-once
 
 Func DoubleTrain()
-
 	If Not $g_bDoubleTrain Then Return
+	If isProblemAffect(True) Then Return
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
 
 	If $bDebug then SetLog(" == Double Train Army == ", $COLOR_ACTION)
