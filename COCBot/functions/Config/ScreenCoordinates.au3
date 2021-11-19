@@ -18,7 +18,7 @@ Global $aiClickAwayRegionLeft = [235, 10, 245, 30]
 Global $aiClickAwayRegionRight = [625, 10, 635, 30]
 
 Global $aCenterEnemyVillageClickDrag = [65, 545] ; Scroll village using this location in the water
-Global $aCenterHomeVillageClickDrag = [430, 600] ; Scroll village using this location in the water
+Global $aCenterHomeVillageClickDrag = [430, 550] ; Scroll village using this location in the water
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
 Global $aIsMain[4] = [280, 9, 0x77BDE0, 20] ; Main Screen, Builder Info Icon
 Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
@@ -45,12 +45,10 @@ Global $aEndFightSceneBtn[4] = [429, 519, 0xCDF271, 20] ; Victory or defeat scen
 Global $aEndFightSceneAvl[4] = [241, 196, 0xFFF090, 20] ; Victory or defeat scene left side ribbon = light gold
 Global $aEndFightSceneReportGold = $aEndFightSceneAvl ; Missing... TripleM ???
 Global $aReturnHomeButton[4] = [376, 567, 0x60AC10, 20] ; Return Home Button, End Battle Screen
-Global $aChatTab[4] = [331, 325, 0xF0951D, 20] ; Chat Window Open, Main Screen
-Global $aChatTab2[4] = [331, 330, 0xF0951D, 20] ; Chat Window Open, Main Screen
-Global $aChatTab3[4] = [331, 335, 0xF0951D, 20] ; Chat Window Open, Main Screen
-Global $aOpenChat[2] = [19, 349] ; Open Chat Windows, Main Screen
-Global $aClanTab[2] = [189, 24] ; Clan Tab, Chat Window, Main Screen
-Global $aClanInfo[2] = [282, 55] ; Clan Info Icon
+Global $aChatTab[4] = [331, 380, 0xC55115, 20] ; Chat Window Open, Main Screen
+;Global $aOpenChat[2] = [19, 349] ; Open Chat Windows, Main Screen
+;Global $aClanTab[2] = [189, 24] ; Clan Tab, Chat Window, Main Screen
+;Global $aClanInfo[2] = [282, 55] ; Clan Info Icon
 Global $aArmyCampSize[2] = [111, 137] ; Training Window, Overview screen, Current Size/Total Size
 Global $aSiegeMachineSize[2] = [755, 136] ; Training Window, Overview screen, Current Number/Total Number
 Global $aArmySpellSize[2] = [99, 284] ; Training Window Overviewscreen, current number/total capacity
@@ -110,7 +108,7 @@ Global $aWonTwoStarAtkRprt[4] = [398, 180, 0xD0D6D0, 30] ; Center of 2nd Star re
 Global $aWonThreeStarAtkRprt[4] = [534, 180, 0xC8CAC7, 30] ; Center of 3rd Star reached attacked village
 ; pixel color: location information								BS 850MB (Reg GFX), BS 500MB (Med GFX) : location
 
-Global $NextBtn[4] = [770, 500, 0xFFFFFF, 20] ;  Next Button
+Global $NextBtn[4] = [770, 520, 0xFFFFFF, 20] ;  Next Button
 Global $a12OrMoreSlots[4] = [16, 648, 0x4583B9, 25] ; Attackbar Check if 12+ Slots exist
 Global $aDoubRowAttackBar[4] = [68, 486, 0xFC5D64, 20]
 Global $aTroopIsDeployed[4] = [0, 0, 0x404040, 20] ; Attackbar Remain Check X and Y are Dummies
@@ -118,10 +116,6 @@ Global Const $aIsAttackPage[4] = [18, 548, 0xCD0D0D, 20] ; red button "end battl
 
 ; 1 - Dark Gray : Castle filled/No Castle | 2 - Light Green : Available or Already made | 3 - White : Available or Castle filled/No Castle
 Global $aRequestTroopsAO[6] = [761, 592, 0x565656, 0x71BA2F, 0xFFFFFE, 25] ; Button Request Troops in Army Overview  (x,y, Gray - Full/No Castle, Green - Available or Already, White - Available or Full)
-
-Global Const $aOpenChatTab[4] = [19, 335, 0xE88D27, 20]
-Global Const $aCloseChat[4] = [331, 330, 0xF0951D, 20] ; duplicate with $aChatTab above, need to rename and fix all code to use one?
-Global Const $aChatDonateBtnColors[4][4] = [[0x0d0d0d, 0, -4, 20], [0xdaf582, 10, 0, 20], [0xcdef75, 10, 5, 20], [0xFFFFFF, 24, 9, 10]]
 
 ;attackreport
 Global Const $aAtkRprtDECheck[4] = [459, 372, 0x2F2038, 20]

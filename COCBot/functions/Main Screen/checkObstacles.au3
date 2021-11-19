@@ -292,10 +292,9 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
-	If _CheckPixel($aChatTab, $g_bNoCapturePixel) Then
+	If _CheckPixel($aChatTab, True) Then
 		SetDebugLog("checkObstacles: Found Chat Tab to close")
 		PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
-		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
