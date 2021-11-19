@@ -328,16 +328,19 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
 			If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 			Return True
-		Else
-			;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
-			If $g_bChkSuperCellID Then 
-				AndroidBackButton() ;Send back button to android
-				If _Sleep(1000) Then Return
-				If WaitforPixel(515, 415, 516, 416, Hex(0x6DBC1F, 6), 6, 1) Then
-					AndroidBackButton()
-				EndIf
+		EndIf
+	Else
+		;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
+		$g_iCheckObstacleLoop += 1
+		SetLog("[" & $g_iCheckObstacleLoop & "] checkObstacles: will send AndroidBackButton on 3", $COLOR_DEBUG)
+		If $g_bChkSuperCellID And $g_iCheckObstacleLoop > 2 Then 
+			AndroidBackButton() ;Send back button to android
+			If _Sleep(1000) Then Return
+			If WaitforPixel(515, 415, 516, 416, Hex(0x6DBC1F, 6), 6, 1) Or IsEndBattlePage() Then
+				AndroidBackButton()
 			EndIf
-		EndIf			
+			$g_iCheckObstacleLoop = 0 ;reset
+		EndIf
 	EndIf
 	
 	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
