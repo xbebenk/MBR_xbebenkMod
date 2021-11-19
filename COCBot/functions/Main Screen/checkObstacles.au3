@@ -324,17 +324,19 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	If IsPostDefenseSummaryPage() Then
 		$aMessage = _PixelSearch(23, 566, 36, 580, Hex(0xE0E1CE, 6), 10, True)
 		If IsArray($aMessage) Then
-			;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
-			If $g_bChkSuperCellID Then 
-				AndroidBackButton() ;Send back button to android
-				If WaitforPixel(515, 415, 516, 416, Hex(0x6DBC1F, 6), 6, 1) Then
-					AndroidBackButton()
-				EndIf
-			EndIf
 			SetDebugLog("checkObstacles: Found Post Defense Summary to close")
 			PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
 			If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 			Return True
+		Else
+			;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
+			If $g_bChkSuperCellID Then 
+				AndroidBackButton() ;Send back button to android
+				If _Sleep(1000) Then Return
+				If WaitforPixel(515, 415, 516, 416, Hex(0x6DBC1F, 6), 6, 1) Then
+					AndroidBackButton()
+				EndIf
+			EndIf
 		EndIf			
 	EndIf
 	
