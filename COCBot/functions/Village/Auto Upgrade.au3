@@ -682,7 +682,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 					If _Sleep(1000) Then Return
 				Case "Down"
 					ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
-					If WaitforPixel(430, 86, 450, 100, "FFFFFF", 10, 1) Then
+					If WaitforPixel(430, 80, 450, 100, "FFFFFF", 10, 1) Then
 						ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
 					EndIf
 					If _Sleep(5000) Then Return
