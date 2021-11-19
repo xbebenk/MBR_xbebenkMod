@@ -1323,7 +1323,6 @@ Func FirstCheckRoutine()
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
-		
 		TrainSystem()
 		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 		If $g_bIsFullArmywithHeroesAndSpells Then
@@ -1332,14 +1331,19 @@ Func FirstCheckRoutine()
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
 				Local $loopcount = 1
 				While True
+					$g_bRestart = False
 					If Not $g_bRunState Then Return
 					If AttackMain(True) Then 
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
 						ExitLoop
 					Else
 						$loopcount += 1
-						Setlog("[" & $loopcount & "] 1st Attack Loop", $COLOR_INFO)
-						$g_bRestart = False
+						If $loopcount > 3 Then 
+							Setlog("1st Attack Loop, Already Try 3 times... Exit", $COLOR_ERROR)
+							ExitLoop
+						Else
+							Setlog("[" & $loopcount & "] 1st Attack Loop, Failed", $COLOR_INFO)
+						EndIf
 					EndIf
 				Wend
 				If $g_bOutOfGold Then
@@ -1372,14 +1376,19 @@ Func FirstCheckRoutine()
 					$g_bRestart = False ;idk this flag make sometimes bot cannot attack on second time
 					Local $loopcount = 1
 					While True
+						$g_bRestart = False
 						If Not $g_bRunState Then Return
 						If AttackMain(True) Then 
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 							ExitLoop
 						Else
 							$loopcount += 1
-							Setlog("[" & $loopcount & "] 2nd Attack Loop", $COLOR_INFO)
-							$g_bRestart = False
+							If $loopcount > 3 Then 
+								Setlog("2nd Attack Loop, Already Try 3 times... Exit", $COLOR_ERROR)
+								ExitLoop
+							Else
+								Setlog("[" & $loopcount & "] 2nd Attack Loop, Failed", $COLOR_INFO)
+							EndIf
 						EndIf
 					Wend
 					If $g_bOutOfGold Then
