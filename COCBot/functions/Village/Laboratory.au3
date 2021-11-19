@@ -328,44 +328,72 @@ EndFunc
 ; Find Research Button
 Func FindResearchButton()
 	Local $TryLabAutoLocate = False
+	Local $LabFound = False
+	ClickAway()
+	checkMainScreen(False)
 	
-	CheckMainScreen(False)
 	;Click Laboratory
-	Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
-	If _Sleep(1000) Then Return ; Wait for window to open
-	Local $BuildingInfo = BuildingInfo(260, 494)
-	If StringInStr($BuildingInfo[1], "Lab") Then 
-		$TryLabAutoLocate = False
-	Else
+	If Int($g_aiLaboratoryPos[0]) < 1 Or Int($g_aiLaboratoryPos[1]) < 1 Then
 		$TryLabAutoLocate = True
+	Else
+		Click($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1])
+		If _Sleep(1000) Then Return
+		Local $BuildingInfo = BuildingInfo(260, 494)
+		If StringInStr($BuildingInfo[1], "Lab") Then 
+			$TryLabAutoLocate = False
+			$LabFound = True
+		Else
+			$TryLabAutoLocate = True
+		EndIf
 	EndIf
 	
 	If $TryLabAutoLocate Then 
-		SetLog("Try to Locate Laboratory!", $COLOR_INFO)
+		SetLog("Try to Auto Locate Laboratory!", $COLOR_INFO)
 		ClickAway()
-		If ImgLocateLab() Then ;try locate lab again
-			SetLog("Laboratory located on coords: " & "[" & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1] &"], Saving Lab Loc for future", $COLOR_INFO)
-			Click($g_aiLaboratoryPos[0] , $g_aiLaboratoryPos[1])
+		checkMainScreen(False)
+		Local $LabResearch = decodeSingleCoord(findImage("Research", $g_sImgLaboratory & "\Research*", GetDiamondFromRect("77,70(700,510)"), 1, True))
+		If IsArray($LabResearch) And UBound($LabResearch) = 2 Then
+			Click($LabResearch[0], $LabResearch[1] + 50)
 			If _Sleep(1000) Then Return
-			ClickB("Research")
-			If _Sleep(1000) Then Return
-			Return True
-		Else
-			SetLog("Laboratory location not found, please locate manually", $COLOR_DEBUG)
-			Return False
+			Local $BuildingInfo = BuildingInfo(290, 494)
+			If StringInStr($BuildingInfo[1], "Lab") Then 
+				$g_aiLaboratoryPos[0] = $LabResearch[0]
+				$g_aiLaboratoryPos[1] = $LabResearch[1] + 50
+				SetLog("Found Laboratory Lvl " & $BuildingInfo[2] & ", save as Lab Coords : " & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1], $COLOR_INFO)
+				$LabFound = True
+			EndIf
 		EndIf
-	Else
-		Local $aCancelButton = findButton("Cancel")
-		If IsArray($aCancelButton) And UBound($aCancelButton, 1) = 2 Then
+		
+		Local $Lab = decodeSingleCoord(findImage("Laboratory", $g_sImgLaboratory & "\Lab*", GetDiamondFromRect("77,70(700,510)"), 1, True))
+		If IsArray($Lab) And UBound($Lab) = 2 Then
+			Click($Lab[0], $Lab[1])
+			If _Sleep(1000) Then Return
+			Local $BuildingInfo = BuildingInfo(290, 494)
+			If StringInStr($BuildingInfo[1], "Lab") Then 
+				$g_aiLaboratoryPos[0] = $Lab[0]
+				$g_aiLaboratoryPos[1] = $Lab[1]
+				SetLog("Found Laboratory Lvl " & $BuildingInfo[2] & ", save as Lab Coords : " & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1], $COLOR_INFO)
+				$LabFound = True
+			EndIf
+		EndIf
+		If $LabFound Then
+			applyConfig()
+			saveConfig()
+		Else
+			SetLog("TryLabAutoLocate Failed, please locate manually", $COLOR_DEBUG)
+			Return
+		EndIf
+	EndIf
+	
+	If $LabFound Then
+		If ClickB("cancel") Then
 			SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
 			ClickAway()
 			Return False
-		EndIf
-		If ClickB("Research") Then 
-			Return True
 		Else
-			SetLog("Cannot find the Laboratory Research Button!", $COLOR_INFO)
-			ClickAway()
+			ClickB("Research")
+			If _Sleep(1000) Then Return
+			Return True
 		EndIf
 	EndIf
 	

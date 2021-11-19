@@ -15,8 +15,8 @@
 #include-once
 
 Func TreasuryCollect()
-	SetLog("Begin CollectTreasury:", $COLOR_DEBUG) ; function trace
-	If Not $g_bRunState Then Return ; ensure bot is running
+	SetLog("Begin CollectTreasury:", $COLOR_DEBUG)
+	If Not $g_bRunState Then Return 
 	ClickAway()
 	checkMainScreen(False)
 	Local $CCFound = False
@@ -38,6 +38,7 @@ Func TreasuryCollect()
 	If $TryCCAutoLocate Then 
 		SetLog("Try to Auto Locate Clan Castle", $COLOR_INFO)
 		ClickAway()
+		checkMainScreen(False)
 		Local $TreasuryCoord = decodeSingleCoord(findImage("TreasuryFull", $g_sImgTreasuryFull & "\Treasury*", GetDiamondFromRect("77,70(700,510)"), 1, True))
 		If IsArray($TreasuryCoord) And UBound($TreasuryCoord) = 2 Then
 			Click($TreasuryCoord[0], $TreasuryCoord[1] + 50)
@@ -46,7 +47,7 @@ Func TreasuryCollect()
 			If $BuildingInfo[1] = "Clan Castle" Then 
 				$g_aiClanCastlePos[0] = $TreasuryCoord[0]
 				$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 50
-				SetLog("Found Treasury Full, save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
+				SetLog("Found Clan Castle Lvl " & $BuildingInfo[2] & ", save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
 				$CCFound = True
 			EndIf
 		EndIf
@@ -59,7 +60,7 @@ Func TreasuryCollect()
 			If $BuildingInfo[1] = "Clan Castle" Then 
 				$g_aiClanCastlePos[0] = $ClanCastleCoord[0] + 10
 				$g_aiClanCastlePos[1] = $ClanCastleCoord[1] + 10
-				SetLog("Found Clan Castle, save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
+				SetLog("Found Clan Castle Lvl " & $BuildingInfo[2] & ", save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
 				$CCFound = True
 			EndIf
 		EndIf
