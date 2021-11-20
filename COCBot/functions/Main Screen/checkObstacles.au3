@@ -22,11 +22,7 @@ Func checkObstacles($bBuilderBase = Default) ;Checks if something is in the way 
 		; Android not available
 		Return FuncReturn(True)
 	EndIf
-	If _ColorCheck(_GetPixelColor(383, 405), Hex(0xF0BE70, 6), 20) Then
-		SetLog("Found Switch Account dialog!", $COLOR_INFO)
-		PureClick(383, 375, 1, 0, "Click Cancel")
-	EndIf
-
+	
 	Local $wasForce = OcrForceCaptureRegion(False)
 	$iRecursive += 1
 	Local $Result = _checkObstacles($bBuilderBase, $iRecursive > 5)
