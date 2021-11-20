@@ -1650,7 +1650,6 @@ Global $g_avDTtroopsToBeUsed[8][2] = [["Barb", 0], ["Arch", 0], ["Giant", 0], ["
 ; Obstacles
 Global $g_bMinorObstacle = False
 Global $g_bGfxError = False ; True when Android Gfx Errors detected that will initiate Android reboot
-Global $g_iCheckObstacleLoop = 0
 
 ; TakeABreak - Personal Break Timer
 Global Const $g_iTaBChkAttack = 0x01 ; code for PB warning when searching attack

@@ -399,6 +399,17 @@ Func SwitchCOCAcc($NextAccount)
 	EndIf
 	waitMainScreen()
 	If Not $g_bRunState Then Return
+	
+	;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
+	If $g_bChkSuperCellID Then
+		SetDebugLog("Checkscidswitch: Send AndroidBackButton", $COLOR_DEBUG)
+		AndroidBackButton() ;Send back button to android
+		If _Sleep(1000) Then Return
+		If IsEndBattlePage() Then
+			AndroidBackButton()
+		EndIf
+	EndIf
+	
 	CheckObstacles()
 	If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 	runBot()
