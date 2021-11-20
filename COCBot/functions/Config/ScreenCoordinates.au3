@@ -14,11 +14,11 @@
 ;Global $aiClickAwayRegionLeft = [225, 10, 255, 30]
 ;Global $aiClickAwayRegionRight = [605, 10, 645, 30]
 ;Let's tighten these up to avoid clicking on shields.
-Global $aiClickAwayRegionLeft = [235, 10, 245, 30]
-Global $aiClickAwayRegionRight = [625, 10, 635, 30]
+Global $aiClickAwayRegionLeft = [235, 10, 245, 20]
+Global $aiClickAwayRegionRight = [625, 10, 635, 20]
 
 Global $aCenterEnemyVillageClickDrag = [65, 545] ; Scroll village using this location in the water
-Global $aCenterHomeVillageClickDrag = [430, 550] ; Scroll village using this location in the water
+Global $aCenterHomeVillageClickDrag = [640, 540] ; Scroll village using this location in the water
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
 Global $aIsMain[4] = [280, 9, 0x77BDE0, 20] ; Main Screen, Builder Info Icon
 Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
