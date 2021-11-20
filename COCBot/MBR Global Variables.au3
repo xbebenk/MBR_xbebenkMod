@@ -362,7 +362,7 @@ Global $g_avAndroidProgramFileVersionInfo = 0 ; Array of _WinAPI_VerQueryValue F
 Global $g_bAndroidHasSystemBar = False ; BS2 System Bar can be entirely disabled in Windows Registry
 Global $g_iAndroidClientWidth_Configured = 0 ; Android configured Screen Width
 Global $g_iAndroidClientHeight_Configured = 0 ; Android configured Screen Height
-Global $g_iAndroidLaunchWaitSec = 600 ; Seconds to wait for launching Android Simulator
+Global $g_iAndroidLaunchWaitSec = 240 ; Seconds to wait for launching Android Simulator
 
 Global $g_sAndroidPicturesPathAvailable = False
 Global $g_sAndroidPicturesPath = "" ; Android mounted path to pictures on host
