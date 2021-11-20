@@ -331,7 +331,7 @@ Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap 
 EndFunc   ;==>GetIconPosition
 
 Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
-	Local $OptimizeOTTO[13] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "Double", "Post", "Barracks", "Wall"]
+	Local $OptimizeOTTO[12] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "Double", "Barracks", "Wall"]
 	Local $bCheck = False
 	Local $aBuildingName = BuildingInfo(245, 494)
 	
