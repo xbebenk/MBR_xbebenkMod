@@ -14,6 +14,7 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($bCheck = False)
+	AutoUpgradeBBCheckBuilder()
 	
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 		Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
@@ -26,7 +27,7 @@ Func PrepareAttackBB($bCheck = False)
 		Return True
 	EndIf
 	
-	If $g_iChkBBSuggestedUpgradesOTTO Then 
+	If $g_iChkBBSuggestedUpgradesOTTO and $g_iFreeBuilderCountBB = 0 Then 
 		isElixirFullBB()
 		isGoldFullBB()
 		If $g_bGoldStorageFullBB Then
