@@ -651,8 +651,8 @@ Func CooldownTime($getCapture = True)
 EndFunc   ;==>CooldownTime
 
 Func IsEventRunning($bOpenWindow = False)
-	Local $aEventFailed[4] = [300, 255, 0xEA2B24, 20]
-	Local $aEventPurged[4] = [300, 266, 0x57c68f, 20]
+	Local $aEventFailed[4] = [300, 222, 0xEA2B24, 20]
+	Local $aEventPurged[4] = [300, 235, 0x57C78F, 20]
 	
 	If $bOpenWindow Then
 		CloseClangamesWindow()
