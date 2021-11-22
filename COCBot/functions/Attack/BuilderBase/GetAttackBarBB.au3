@@ -14,9 +14,9 @@
 ; ===============================================================================================================================
 
 Func GetAttackBarBB($bRemaining = False)
-	local $iTroopBanners = 582 ; y location of where to find troop quantities
-	local $aSlot1 = [85, 582] ; location of first slot
-	local $iSlotOffset = 73 ; slots are 73 pixels apart
+	local $iTroopBanners = 584 ; y location of where to find troop quantities
+	local $aSlot1 = [85, 584] ; location of first slot
+	local $iSlotOffset = 72 ; slots are 73 pixels apart
 	local $iBarOffset = 66 ; 66 pixels from side to attack bar
 
 	; testing troop count logic
@@ -290,7 +290,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Local $iCampsQuantities = 0
 	Local $aSwicthBtn[0]
 	Local $aSlotSwitch[4] = [111, 650, 0xEEF1EE, 25]
-	While _ColorCheck(_GetPixelColor($aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth), $aSlotSwitch[1], False), Hex($aSlotSwitch[2], 6), $aSlotSwitch[3])
+	While _ColorCheck(_GetPixelColor($aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth), $aSlotSwitch[1], True), Hex($aSlotSwitch[2], 6), $aSlotSwitch[3])
 		ReDim $aSwicthBtn[$iCampsQuantities + 1]
 		$aSwicthBtn[$iCampsQuantities] = $aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth)
 		$iCampsQuantities += 1
