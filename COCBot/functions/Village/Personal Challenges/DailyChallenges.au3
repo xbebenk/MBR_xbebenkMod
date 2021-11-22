@@ -57,11 +57,11 @@ Func OpenPersonalChallenges()
 	EndIf
 
 	Local $counter = 0
-	While Not _CheckPixel($aPersonalChallengeCloseButton, $g_bCapturePixel) ; test for Personal Challenge Close Button
+	While Not IsFullScreenWindow() ; test for Personal Challenge Close Button
 		If $g_bDebugSetlog Then SetDebugLog("Wait for Personal Challenge Close Button to appear #" & $counter)
-		If _Sleep($DELAYRUNBOT6) Then Return
+		If _Sleep(250) Then Return
 		$counter += 1
-		If $counter > 40 Then Return False
+		If $counter > 8 Then Return False
 	WEnd
 	Return True
 
