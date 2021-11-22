@@ -810,7 +810,7 @@ EndFunc   ;==>StartsEvent
 ;EndFunc   ;==>PurgeEvent
 
 Func ForcePurgeEvent($bTest = False, $startFirst = True)
-	Local $SearchArea
+	Local $count1 = 0, $count2 = 0
 
 	Click(340,180) ;Most Top Challenge
 
@@ -823,10 +823,19 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		EndIf
 	Else
 		SetLog("ForcePurgeEvent: Purge a Wrong Challenge", $COLOR_INFO)
+		While Not WaitforPixel(570, 285, 571, 286, "F51D20", 10, 1) 
+			SetDebugLog("Waiting for trash Button", $COLOR_DEBUG)
+			$count1 += 1
+			If $count1 > 10 Then ExitLoop
+		Wend
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
 			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
-			If _Sleep(1200) Then Return
 			SetLog("Click Trash", $COLOR_INFO)
+			While Not IsEndBattlePage()
+				SetDebugLog("Waiting for trash Confirm OK", $COLOR_DEBUG)
+				$count2 += 1
+				If $count2 > 10 Then ExitLoop
+			Wend
 			If IsEndBattlePage() Then
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
@@ -847,19 +856,29 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 EndFunc   ;==>ForcePurgeEvent
 
 Func StartAndPurgeEvent($bTest = False)
-
+	Local $count1 = 0, $count2 = 0
+	
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, True, False) Then
 		Local $Timer = GetEventTimeInMinutes($g_iQuickMISX + 220, $g_iQuickMISY + 150)
-		SetLog("Starting  Event" & " [" & $Timer & " min]", $COLOR_SUCCESS)
+		SetLog("Starting Event" & " [" & $Timer & " min]", $COLOR_SUCCESS)
 		Click($g_iQuickMISX + 220, $g_iQuickMISY + 150)
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting Purge for " & $Timer & " min", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting Purge for " & $Timer & " min")
 
-		If _Sleep(3000) Then Return
+		While Not WaitforPixel(570, 285, 571, 286, "F51D20", 10, 1) 
+			SetDebugLog("Waiting for trash Button", $COLOR_DEBUG)
+			$count1 += 1
+			If $count1 > 10 Then ExitLoop
+		Wend
+		
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
 			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
-			If _Sleep(3000) Then Return
 			SetLog("Click Trash", $COLOR_INFO)
+			While Not IsEndBattlePage()
+				SetDebugLog("Waiting for trash Confirm OK", $COLOR_DEBUG)
+				$count2 += 1
+				If $count2 > 10 Then ExitLoop
+			Wend
 			If IsEndBattlePage() Then
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
