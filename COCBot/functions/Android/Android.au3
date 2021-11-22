@@ -3097,7 +3097,7 @@ Func AndroidMoveMouseAnywhere()
 	If FileExists($hostPath & $Filename) = 0 Then
 		Local $times = 1
 		Local $x = 1 ; $aAway[0]
-		Local $y = 40 ; $aAway[1]
+		Local $y = 20 ; $aAway[1]
 		Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
 		Local $i = 0
 		Local $record = "byte[16];"
