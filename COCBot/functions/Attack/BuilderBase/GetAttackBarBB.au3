@@ -289,7 +289,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	Local $iDefaultY = 655
 	Local $iCampsQuantities = 0
 	Local $aSwicthBtn[0]
-	Local $aSlotSwitch[4] = [106, 650, 0xEEF1EE, 25]
+	Local $aSlotSwitch[4] = [111, 650, 0xEEF1EE, 25]
 	While _ColorCheck(_GetPixelColor($aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth), $aSlotSwitch[1], False), Hex($aSlotSwitch[2], 6), $aSlotSwitch[3])
 		ReDim $aSwicthBtn[$iCampsQuantities + 1]
 		$aSwicthBtn[$iCampsQuantities] = $aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth)
