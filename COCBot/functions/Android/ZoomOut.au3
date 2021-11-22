@@ -565,6 +565,9 @@ Func ZoomIn($Region = "Top")
 		Case "Nox"
 			SetDebugLog("ZoomInNox()")
 			If ZoomInMEmu($Region) Then Return True
+		Case "BlueStacks2"
+			SetDebugLog("ZoomInBlueStacks2()")
+			If ZoomInMEmu($Region) Then Return True
 	EndSwitch
 	Return False
 EndFunc
@@ -573,7 +576,12 @@ Func ZoomInMEmu($Region = "Top")
 	Local $bSuccessZoomIn = False
 	For $i = 0 To 2
 		SetLog("[" & $i & "] Try ZoomIn", $COLOR_DEBUG)
-		If Not AndroidAdbScript("ZoomIn") Then Return False
+		Switch $g_sAndroidEmulator
+			Case "Memu", "Nox"
+				If Not AndroidAdbScript("ZoomIn") Then Return False
+			Case "BlueStacks2"
+				If Not AndroidAdbScript("ZoomIn.BlueStacks") Then Return False
+		EndSwitch
 		If _Sleep(1500) Then Return
 		Local $ZoomInResult = SearchZoomOut(False, True, "", True)
 		If IsArray($ZoomInResult) Then
@@ -612,7 +620,10 @@ Func ZoomInBB($Region = "Top")
 			SetDebugLog("ZoomInBBMEmu()")
 			If ZoomInBBMEmu($Region) Then Return True
 		Case "Nox"
-			SetDebugLog("ZoomInNox()")
+			SetDebugLog("ZoomInBBNox()")
+			If ZoomInBBMEmu($Region) Then Return True
+		Case "BlueStacks"
+			SetDebugLog("ZoomInBBBluestacks()")
 			If ZoomInBBMEmu($Region) Then Return True
 	EndSwitch
 	Return False
@@ -622,7 +633,12 @@ Func ZoomInBBMEmu($Region = "Top")
 	Local $bSuccessZoomIn = False
 	For $i = 0 To 2
 		SetLog("[" & $i & "] Try ZoomInBB", $COLOR_DEBUG)
-		If Not AndroidAdbScript("ZoomInBB") Then Return False
+		Switch $g_sAndroidEmulator
+			Case "Memu", "Nox"
+				If Not AndroidAdbScript("ZoomInBB") Then Return False
+			Case "BlueStacks2"
+				If Not AndroidAdbScript("ZoomInBB.BlueStacks") Then Return False
+		EndSwitch
 		If _Sleep(1500) Then Return
 		Local $ZoomInResult = SearchZoomOut(False, True, "", True)
 		If IsArray($ZoomInResult) Then
