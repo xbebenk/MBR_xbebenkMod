@@ -1084,7 +1084,12 @@ Func SCIDScrollDown($iSCIDAccount)
 	If Not $g_bRunState Then Return
 	If $iSCIDAccount < 4 Then Return
 	For $i = 0 To $iSCIDAccount - 4
-		AndroidAdbScript("ScrollDownSCID")
+		Switch $g_sAndroidEmulator
+			Case "Memu", "nox"
+				AndroidAdbScript("ScrollDownSCID")
+			Case "BlueStacks2"
+				AndroidAdbScript("ScrollDownSCID.Bluestacks")
+		EndSwitch
 		If _Sleep(500) Then Return
 	Next
 EndFunc   ;==>SCIDScrollDown
@@ -1093,8 +1098,14 @@ Func SCIDScrollUp()
 	If Not $g_bRunState Then Return
 	SetLog("Try to scroll up", $COLOR_DEBUG)
 	For $i = 0 To Ceiling($g_iTotalAcc/4) - 1
-		AndroidAdbScript("ScrollUpSCID")
+		Switch $g_sAndroidEmulator
+			Case "Memu", "nox"
+				AndroidAdbScript("ScrollUpSCID")
+			Case "BlueStacks2"
+				AndroidAdbScript("ScrollUpSCID.Bluestacks")
+		EndSwitch
 		If _Sleep(500) Then Return
 	Next
 EndFunc   ;==>SCIDScrollUp
+
 
