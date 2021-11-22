@@ -921,11 +921,11 @@ Func CheckGoogleSelectAccount($bSelectFirst = True)
 			EndIf
 		Else
 			SetDebugLog("Open Google Accounts list not verified")
-			ClickAway()
+			ClickAway("Left")
 		EndIf
 	Else
 		If $g_bDebugSetlog Then SetDebugLog("CheckGoogleSelectAccount pixel color: " & _GetPixelColor($aListAccount[0], $aListAccount[1], False))
-		ClickAway()
+		ClickAway("Left")
 	EndIf
 
 	Return $bResult
