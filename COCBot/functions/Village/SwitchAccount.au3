@@ -156,13 +156,13 @@ Func CheckSwitchAcc()
 			$nMinRemainTrain = CheckTroopTimeAllAccount($bForceSwitch)
 
 			If $nMinRemainTrain <= 1 And Not $bForceSwitch And Not $g_bDonateLikeCrazy Then ; Active (force switch shall give priority to Donate Account)
-				If $g_bDebugSetlog Then SetDebugLog("Switch to or Stay at Active Account: " & $g_iNextAccount + 1, $COLOR_DEBUG)
+				SetDebugLog("Switch to or Stay at Active Account: " & $g_iNextAccount + 1, $COLOR_DEBUG)
 				$g_iDonateSwitchCounter = 0
 			Else
 				If $g_iDonateSwitchCounter < UBound($aDonateAccount) Then ; Donate
 					$g_iNextAccount = $aDonateAccount[$g_iDonateSwitchCounter]
 					$g_iDonateSwitchCounter += 1
-					If $g_bDebugSetlog Then SetDebugLog("Switch to Donate Account " & $g_iNextAccount + 1 & ". $g_iDonateSwitchCounter = " & $g_iDonateSwitchCounter, $COLOR_DEBUG)
+					SetDebugLog("Switch to Donate Account " & $g_iNextAccount + 1 & ". $g_iDonateSwitchCounter = " & $g_iDonateSwitchCounter, $COLOR_DEBUG)
 					SetSwitchAccLog(" - Donate Acc [" & $g_iNextAccount + 1 & "]")
 				Else ; Active
 					$g_iDonateSwitchCounter = 0
@@ -924,7 +924,7 @@ Func CheckGoogleSelectAccount($bSelectFirst = True)
 			ClickAway("Left")
 		EndIf
 	Else
-		If $g_bDebugSetlog Then SetDebugLog("CheckGoogleSelectAccount pixel color: " & _GetPixelColor($aListAccount[0], $aListAccount[1], False))
+		SetDebugLog("CheckGoogleSelectAccount pixel color: " & _GetPixelColor($aListAccount[0], $aListAccount[1], False))
 		ClickAway("Left")
 	EndIf
 

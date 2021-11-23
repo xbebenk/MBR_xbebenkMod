@@ -86,18 +86,18 @@ Func __GreenTiles($sDirectory, $iQuantityMatch = 0, $vArea2SearchOri = "FV", $bF
 	$extError = @extended
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
-		If $g_bDebugSetlog Then SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
+		SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
 		SetError(2, $extError, $aCoords) ; Set external error code = 2 for DLL error
 		Return -1
 	EndIf
 
 	If checkImglocError($result, "_GreenTiles", $sDirectory) = True Then
-		If $g_bDebugSetlog Then SetDebugLog("_GreenTiles Returned Error or No values : ", $COLOR_DEBUG)
+		SetDebugLog("_GreenTiles Returned Error or No values : ", $COLOR_DEBUG)
 		Return -1
 	EndIf
 
 	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
-	If $g_bDebugSetlog Then SetDebugLog(" ***  _GreenTiles multiples **** ", $COLOR_ORANGE)
+	SetDebugLog(" ***  _GreenTiles multiples **** ", $COLOR_ORANGE)
 
 	; Distance in pixels to check if is a duplicated detection , for deploy point will be 5
 	Local $iD2C = $iDistance2check
@@ -1029,21 +1029,21 @@ Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri 
 	$_hHBitmap = 0
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
-		If $g_bDebugSetlog Then SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
+		SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
 		SetError(2, $extError, $aCoords) ; Set external error code = 2 for DLL error
 		Return -1
 	EndIf
 
 	If checkImglocError($result, "findMultipleQuick", $sDirectory) = True Then
-		If $g_bDebugSetlog Then SetDebugLog("findMultipleQuick Returned Error or No values : ", $COLOR_DEBUG)
+		SetDebugLog("findMultipleQuick Returned Error or No values : ", $COLOR_DEBUG)
 		Return -1
 	EndIf
 
 	Local $resultArr = StringSplit($result[0], "|", $STR_NOCOUNT + $STR_ENTIRESPLIT), $sSlipt = StringSplit($sOnlyFind, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 	;_arraydisplay($resultArr)
-	If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick multiples **** ", $COLOR_ORANGE)
+	SetDebugLog(" ***  findMultipleQuick multiples **** ", $COLOR_ORANGE)
 	If CompKick($resultArr, $sSlipt, $bExactFind) Then
-		If $g_bDebugSetlog Then SetDebugLog(" ***  findMultipleQuick has no result **** ", $COLOR_ORANGE)
+		SetDebugLog(" ***  findMultipleQuick has no result **** ", $COLOR_ORANGE)
 		Return -1
 	EndIf
 
@@ -1097,7 +1097,7 @@ Func CompKick(ByRef $vFiles, $aof, $bType = False)
 	Local $aRS[0]
 
 	If IsArray($vFiles) And IsArray($aof) Then
-		If $g_bDebugSetlog Then SetDebugLog("CompKick compare : " & _ArrayToString($vFiles))
+		SetDebugLog("CompKick compare : " & _ArrayToString($vFiles))
 		If $bType Then
 			For $s In $aof
 				For $s2 In $vFiles

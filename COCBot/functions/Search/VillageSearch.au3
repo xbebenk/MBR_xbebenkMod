@@ -418,7 +418,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				ClickP($NextBtn, 1, 0, "#0155") ;Click Next
 				ExitLoop
 			Else
-				If $g_bDebugSetlog Then SetDebugLog("Wait to see Next Button... " & $i, $COLOR_DEBUG)
+				SetDebugLog("Wait to see Next Button... " & $i, $COLOR_DEBUG)
 			EndIf
 			If $i >= 99 Or isProblemAffect() Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
 				$g_bIsClientSyncError = True
@@ -494,7 +494,7 @@ Func SearchLimit($iSkipped, $bReturnToPickupHero = False)
 		While _CheckPixel($aSurrenderButton, $g_bCapturePixel) = False
 			If _Sleep($DELAYSEARCHLIMIT) Then Return
 			$Wcount += 1
-			If $g_bDebugSetlog Then SetDebugLog("wait surrender button " & $Wcount, $COLOR_DEBUG)
+			SetDebugLog("wait surrender button " & $Wcount, $COLOR_DEBUG)
 			If $Wcount >= 50 Or isProblemAffect(True) Then
 				checkMainScreen()
 				$g_bIsClientSyncError = False ; reset OOS flag for long restart

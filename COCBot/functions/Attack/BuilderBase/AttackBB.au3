@@ -123,7 +123,7 @@ Func _AttackBB()
 
 	; Get troops on attack bar and their quantities
 	local $aBBAttackBar = GetAttackBarBB()
-	If $g_bChkBBCustomArmyEnable Then BuilderBaseSelectCorrectScript($aBBAttackBar) ; xbebenk
+	If $g_bChkBBCustomArmyEnable Then CorrectAttackBarBB($aBBAttackBar) ; xbebenk
 	If _Sleep($DELAYRESPOND) Then
 		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
 		If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
@@ -135,7 +135,7 @@ Func _AttackBB()
 		BuilderBaseZoomOut(False, True)
 	
 		; Correct script.
-		BuilderBaseSelectCorrectScript($aBBAttackBar)
+		CorrectAttackBarBB($aBBAttackBar)
 	
 		Local $FurtherFrom = 5 ; 5 pixels before the deploy point.
 		BuilderBaseGetDeployPoints($FurtherFrom, True)
@@ -151,13 +151,13 @@ Func _AttackBB()
 	If Not $g_bRunState Then Return ; Stop Button
 	If Not OkayBBEnd() Then
 		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-		If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
+		SetDebugLog("Android Suspend Mode Enabled")
 		Return
 	EndIf
 	SetLog("Battle ended")
 	If _Sleep(3000) Then
 		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-		If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
+		SetDebugLog("Android Suspend Mode Enabled")
 		Return
 	EndIf
 
@@ -169,7 +169,7 @@ Func _AttackBB()
 	SetLog("Done", $COLOR_SUCCESS)
 
 	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast ; reset android suspend and resume stuff
-	If $g_bDebugSetlog Then SetDebugLog("Android Suspend Mode Enabled")
+	SetDebugLog("Android Suspend Mode Enabled")
 EndFunc
 
 Func AttackBB($aBBAttackBar = Default)
@@ -361,7 +361,7 @@ Func CheckBMLoop()
 			$TmpBMPosX = $aBMPos[0]
 			PureClickP($aBMPos)
 			SetLog("Activate Battle Machine Ability", $COLOR_SUCCESS)
-			If _Sleep(5000) Then Return
+			If _Sleep($g_iBBMachAbilityTime + 250) Then Return
 		Else
 			If WaitforPixel($TmpBMPosX - 10, 572, $TmpBMPosX - 9, 573, "121212", 10, 1) Then 
 				$count += 1
@@ -370,11 +370,44 @@ Func CheckBMLoop()
 					ExitLoop
 				EndIf
 			EndIf
-			If _Sleep(1000) Then Return
+			If _Sleep(250) Then Return
 		EndIf
 		SetDebugLog("Battle Machine LoopCheck", $COLOR_ACTION)
 	Wend
 EndFunc
+
+Func TestGetBBDropPoint()
+	Local $aResult = findImage("RedLineBB", $g_sBundleDeployPointsBB & "\*.xml", "FV", 1000, True)
+	Local $aCoords = StringSplit($aResult, "|", $STR_NOCOUNT)
+	_ArrayDisplay($aCoords)
+	DebugAttackBBImage($aCoords)
+EndFunc
+
+Func DebugAttackBBImage($aCoords)
+	_CaptureRegion2()
+	Local $aCoord
+	Local $EditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+	Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($EditedImage)
+	Local $hPenYellow = _GDIPlus_PenCreate(0xFFFFD800, 2)
+	
+	For $i = 1 To UBound($aCoords) - 1
+		$aCoord = StringSplit($aCoords[$i], ",", $STR_NOCOUNT) 
+		_GDIPlus_GraphicsDrawRect($hGraphic, $aCoord[0] - 3, $aCoord[1] - 3, 6, 6, $hPenYellow)
+	Next
+	
+	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
+	Local $Time = @HOUR & "." & @MIN & "." & @SEC
+	Local $filename = $g_sProfileTempDebugPath & String("AttackBBDebug_" & $Date & "_" & $Time) & ".jpg"
+	_GDIPlus_ImageSaveToFile($EditedImage, $filename)
+	If @error Then SetLog("Debug Image save error: " & @extended, $COLOR_ERROR)
+	SetDebugLog("DebugAttackBBImage: " & $filename)
+	
+	_GDIPlus_PenDispose($hPenYellow)
+	_GDIPlus_GraphicsDispose($hGraphic)
+	_GDIPlus_BitmapDispose($EditedImage)
+	
+EndFunc   ;==>DebugAttackBBImage
+
 
 
 

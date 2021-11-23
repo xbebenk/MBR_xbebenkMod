@@ -234,7 +234,7 @@ Func SetLabUpgradeTime($sTrooopName)
 	Local $iLabFinishTime = ConvertOCRTime("Lab Time", $Result, False)
 	SetLog($sTrooopName & " Upgrade OCR Time = " & $Result & ", $iLabFinishTime = " & $iLabFinishTime & " m", $COLOR_INFO)
 	Local $StartTime = _NowCalc() ; what is date:time now
-	If $g_bDebugSetlog Then SetDebugLog($sTrooopName & " Upgrade Started @ " & $StartTime, $COLOR_SUCCESS)
+	SetDebugLog($sTrooopName & " Upgrade Started @ " & $StartTime, $COLOR_SUCCESS)
 	If $iLabFinishTime > 0 Then
 		$g_sLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), $StartTime)
 		SetLog($sTrooopName & " Upgrade Finishes @ " & $Result & " (" & $g_sLabUpgradeTime & ")", $COLOR_SUCCESS)
@@ -313,7 +313,7 @@ Func ChkUpgradeInProgress()
 	Local $TimeDiff ; time remaining on lab upgrade
 	If $g_sLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sLabUpgradeTime) ; what is difference between end time and now in minutes?
 	If @error Then _logErrorDateDiff(@error)
-	If $g_bDebugSetlog Then SetDebugLog($g_avLabTroops[$g_iCmbLaboratory][0] & " Lab end time: " & $g_sLabUpgradeTime & ", DIFF= " & $TimeDiff, $COLOR_DEBUG)
+	SetDebugLog($g_avLabTroops[$g_iCmbLaboratory][0] & " Lab end time: " & $g_sLabUpgradeTime & ", DIFF= " & $TimeDiff, $COLOR_DEBUG)
 
 	If Not $g_bRunState Then Return
 	If $TimeDiff <= 0 Then

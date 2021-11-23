@@ -74,8 +74,8 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	; Detect All Reload Button errors => 1- Another device, 2- Take a break, 3- Connection lost or error, 4- Out of sync, 5- Inactive, 6- Maintenance, 7- SCID Login Screen
 	Local $aMessage = _PixelSearch($aIsReloadError[0], $aIsReloadError[1], $aIsReloadError[0] + 3, $aIsReloadError[1] + 11, Hex($aIsReloadError[2], 6), $aIsReloadError[3], $g_bNoCapturePixel)
 	If IsArray($aMessage) Or (UBound(decodeSingleCoord(FindImageInPlace("Error", $g_sImgError, "630,300(2,20)", False, $g_iAndroidLollipop))) > 1) Then
-		If $g_bDebugSetlog Then SetDebugLog("(DC=" & _GetPixelColor($aIsConnectLost[0], $aIsConnectLost[1]) & ")(OoS=" & _GetPixelColor($aIsCheckOOS[0], $aIsCheckOOS[1]) & ")", $COLOR_DEBUG)
-		If $g_bDebugSetlog Then SetDebugLog("33B5E5=>true, 282828=>false", $COLOR_DEBUG)
+		SetDebugLog("(DC=" & _GetPixelColor($aIsConnectLost[0], $aIsConnectLost[1]) & ")(OoS=" & _GetPixelColor($aIsCheckOOS[0], $aIsCheckOOS[1]) & ")", $COLOR_DEBUG)
+		SetDebugLog("33B5E5=>true, 282828=>false", $COLOR_DEBUG)
 
 		;;;;;;;##### 1- Another device #####;;;;;;;
 		$Result = getOcrReloadMessage(184, 325, "Another Device OCR:") ; OCR text to find Another device message

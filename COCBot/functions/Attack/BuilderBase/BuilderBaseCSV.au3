@@ -35,7 +35,7 @@ Func TestBuilderBaseParseAttackCSV()
 		BuilderBaseZoomOut(False, True)
 
 		; Correct script.
-		BuilderBaseSelectCorrectScript($aAvailableTroops)
+		CorrectAttackBarBB($aAvailableTroops)
 
 		Local $FurtherFrom = 5 ; 5 pixels before the deploy point.
 		BuilderBaseGetDeployPoints($FurtherFrom, True)

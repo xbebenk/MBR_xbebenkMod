@@ -106,7 +106,7 @@ Func CreateSplashScreen($iSteps = Default)
 		; Cleanup GDI resources
 		_GDIPlus_BitmapDispose($hSplashImg)
 
-		If $g_bDebugSetlog Then SetDebugLog("Splash created: $g_hSplash=" & $g_hSplash & ", $g_lSplashPic=" & $g_lSplashPic & ", $g_lSplashTitle=" & $g_lSplashTitle & ", $g_hSplashProgress=" & $g_hSplashProgress & ", $g_lSplashStatus=" & $g_lSplashStatus)
+		SetDebugLog("Splash created: $g_hSplash=" & $g_hSplash & ", $g_lSplashPic=" & $g_lSplashPic & ", $g_lSplashTitle=" & $g_lSplashTitle & ", $g_hSplashProgress=" & $g_hSplashProgress & ", $g_lSplashStatus=" & $g_lSplashStatus)
 
 		If Not $bCustomWindow Then
 			; Show Splash

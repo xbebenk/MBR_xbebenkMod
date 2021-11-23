@@ -82,8 +82,6 @@ EndFunc
 
 
 #region - xbebenk
-Global $g_sImgCustomArmyBB = @ScriptDir & "\imgxml\Resources\BuildersBase\ChangeTroops\"
-
 ; Global $g_sIcnBBOrder[$g_iBBTroopCount]
 Global Const $g_asAttackBarBB2[$g_iBBTroopCount + 1] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
 Global Const $g_asBBTroopShortNames[$g_iBBTroopCount + 1] = ["Barb", "Arch", "Giant", "Minion", "Breaker", "BabyD", "Cannon", "Witch", "Drop", "Pekka", "HogG", "Machine"]
@@ -122,19 +120,19 @@ Func ArmyCampSelectedNames($g_iCmbBBArmy)
 	Return $aNames[$g_iCmbBBArmy]
 EndFunc   ;==>ArmyCampSelectedNames
 
-Func BuilderBaseSelectCorrectCampDebug()
-	Local $aLines[0]
-	Local $sName = "CAMP" & "|"
-	For $iName = 0 To UBound($g_iCmbTroopBB) - 1
-		$sName &= ArmyCampSelectedNames($g_iCmbTroopBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbTroopBB[$iName]) : ("Barb")
-		$sName &= "|"
-		If $iName = 0 Then ContinueLoop
-		Local $aFakeCsv[1] = [$sName]
-		_ArrayAdd($aLines, $aFakeCsv)
-	Next
-
-	_ArrayDisplay($aLines)
-EndFunc   ;==>BuilderBaseSelectCorrectCampDebug
+;Func BuilderBaseSelectCorrectCampDebug()
+;	Local $aLines[0]
+;	Local $sName = "CAMP" & "|"
+;	For $iName = 0 To UBound($g_iCmbTroopBB) - 1
+;		$sName &= ArmyCampSelectedNames($g_iCmbTroopBB[$iName]) <> "" ? ArmyCampSelectedNames($g_iCmbTroopBB[$iName]) : ("Barb")
+;		$sName &= "|"
+;		If $iName = 0 Then ContinueLoop
+;		Local $aFakeCsv[1] = [$sName]
+;		_ArrayAdd($aLines, $aFakeCsv)
+;	Next
+;
+;	_ArrayDisplay($aLines)
+;EndFunc   ;==>BuilderBaseSelectCorrectCampDebug
 
 Func FullNametroops($aResults)
 	For $i = 0 To UBound($g_asAttackBarBB2) - 1
@@ -146,13 +144,12 @@ Func FullNametroops($aResults)
 	Return $aResults
 EndFunc   ;==>FullNametroops
 
-Func TestBuilderBaseSelectCorrectScript()
+Func TestCorrectAttackBarBB()
 	Local $aAvailableTroops = GetAttackBarBB()
-	BuilderBaseSelectCorrectScript($aAvailableTroops)
-	Return $aAvailableTroops
-EndFunc   ;==>TestBuilderBaseSelectCorrectScript
+	CorrectAttackBarBB($aAvailableTroops)
+EndFunc   ;==>TestCorrectAttackBarBB
 
-Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
+Func CorrectAttackBarBB(ByRef $aAvailableTroops)
 
 	If Not $g_bRunState Then Return
 	Local $bIsCampCSV = False
@@ -279,7 +276,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	EndIf
 
 	If UBound($aLines) = 0 Then
-		SetLog("BuilderBaseSelectCorrectScript 0x12 error.", $COLOR_ERROR)
+		SetLog("CorrectAttackBarBB 0x12 error.", $COLOR_ERROR)
 		Return
 	EndIf
 
@@ -340,7 +337,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 	EndIf
 
 	If UBound($aCamps) = 0 Then
-		SetLog("BuilderBaseSelectCorrectScript 0x09 error.", $COLOR_ERROR)
+		SetLog("CorrectAttackBarBB 0x09 error.", $COLOR_ERROR)
 		Return
 	EndIf
 
@@ -441,7 +438,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 				EndIf
 			Next
 			_ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
-			If $g_bDebugSetlog Then SetDebugLog("New Army is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
+			SetDebugLog("New Army is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
 		Else
 			Click(8, 720, 1)
 			Return False
@@ -466,7 +463,7 @@ Func BuilderBaseSelectCorrectScript(ByRef $aAvailableTroops)
 		If Not $g_bRunState Then Return
 		If $aAvailableTroops[$i][0] <> "" Then SetLog("[" & $i + 1 & "] - " & $aAvailableTroops[$i][4] & "x " & FullNametroops($aAvailableTroops[$i][0]), $COLOR_SUCCESS)
 	Next
-EndFunc   ;==>BuilderBaseSelectCorrectScript
+EndFunc   ;==>CorrectAttackBarBB
 
 Func GetAMissingCamp($aCurCamps, $aCorrectCamps)
 	; Loop Through Correct Camps

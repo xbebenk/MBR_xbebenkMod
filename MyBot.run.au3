@@ -836,7 +836,7 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT3) Then Return
 			;  OCR read current Village Trophies when OOS restart maybe due PB or else DropTrophy skips one attack cycle after OOS
 			$g_aiCurrentLoot[$eLootTrophy] = Number(getTrophyMainScreen($aTrophies[0], $aTrophies[1]))
-			If $g_bDebugSetlog Then SetDebugLog("Runbot Trophy Count: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_DEBUG)
+			SetDebugLog("Runbot Trophy Count: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_DEBUG)
 			If Not $g_bIsSearchLimit or Not $g_bCheckDonateOften Then AttackMain() ;If Search Limit hit, do main loop.
 			SetDebugLog("ARCH: Not case on SearchLimit or CheckDonateOften",$COLOR_DEBUG)
 			If Not $g_bRunState Then Return
@@ -864,7 +864,7 @@ EndFunc   ;==>Idle
 Func _Idle() ;Sequence that runs until Full Army
 
 	Local $TimeIdle = 0 ;In Seconds
-	If $g_bDebugSetlog Then SetDebugLog("Func Idle ", $COLOR_DEBUG)
+	SetDebugLog("Func Idle ", $COLOR_DEBUG)
 
 	While $g_bIsFullArmywithHeroesAndSpells = False
 
@@ -1054,16 +1054,16 @@ Func Attack() ;Selects which algorithm
 	$g_bAttackActive = True
 	SetLog(" ====== Start Attack ====== ", $COLOR_SUCCESS)
 	If ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
-		If $g_bDebugSetlog Then SetDebugLog("start scripted attack", $COLOR_ERROR)
+		SetDebugLog("start scripted attack", $COLOR_ERROR)
 		Algorithm_AttackCSV()
 	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 2 Then
-		If $g_bDebugSetlog Then SetDebugLog("start smart farm attack", $COLOR_ERROR)
+		SetDebugLog("start smart farm attack", $COLOR_ERROR)
 		; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
 		Local $Nside = ChkSmartFarm()
 		If Not $g_bRunState Then Return
 		AttackSmartFarm($Nside[1], $Nside[2])
 	Else
-		If $g_bDebugSetlog Then SetDebugLog("start standard attack", $COLOR_ERROR)
+		SetDebugLog("start standard attack", $COLOR_ERROR)
 		algorithm_AllTroops()
 	EndIf
 	$g_bAttackActive = False

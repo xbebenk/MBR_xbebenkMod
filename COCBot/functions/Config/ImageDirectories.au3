@@ -105,6 +105,7 @@ Global Const $g_sImgOpponentBuildingsBB = @ScriptDir & "\imgxml\Attack\BuilderBa
 ; Global Const $g_sImgAttackBtnBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Attack\AttackBtn\"
 ; Global Const $g_sImgVersusWindow = @ScriptDir & "\imgxml\Attack\BuilderBase\Attack\VersusBattle\Window\"
 ; Global Const $g_sImgCloudSearch = @ScriptDir & "\imgxml\Attack\BuilderBase\Attack\VersusBattle\Clouds\"
+Global $g_sImgCustomArmyBB = @ScriptDir & "\imgxml\Resources\BuildersBase\ChangeTroops\"
 
 #EndRegion
 

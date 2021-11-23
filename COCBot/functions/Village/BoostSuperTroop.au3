@@ -58,11 +58,11 @@ Func BoostSuperTroop($bTest = False)
 					;SetLog("QuickMIS(" & "BC1" & ", " & $g_sImgBoostTroopsClock & "," & $iColumnX & "," & $iColumnY1 & "," & $iColumnX + $picswidth & "," & $iColumnY2 & ")", $COLOR_DEBUG );
 					If QuickMIS("BC1", $g_sImgBoostTroopsClock, $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2, True, False) Then ;find pics Clock on spesific row / column (if clock found = troops already boosted)
 						SetLog($sTroopName & ", Troops Already boosted", $COLOR_INFO)
-						If $g_bDebugSetlog Then SetDebugLog("Found Clock Image", $COLOR_DEBUG)
+						SetDebugLog("Found Clock Image", $COLOR_DEBUG)
 						ContinueLoop
 					Else
 						If _Sleep(1500) Then Return
-						If $g_bDebugSetlog Then SetDebugLog("Clock Image Not Found", $COLOR_DEBUG)
+						SetDebugLog("Clock Image Not Found", $COLOR_DEBUG)
 						SetLog($sTroopName & ", Currently is not boosted", $COLOR_INFO)
 						If FindStroopIcons($g_iCmbSuperTroops[$i], $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2) Then
 							;SetLog("QuickMIS(" & "BC1" & ", " & $g_sImgBoostTroopsIcons & "," & $iColumnX & "," & $iColumnY1 & "," & $iColumnX + $picswidth & "," & $iColumnY2 & ")", $COLOR_DEBUG );
@@ -247,7 +247,7 @@ Func FindStroopIcons($iIndex, $iColumnX, $iColumnY1, $iColumnX1, $iColumnY2)
 
 	Local $FullTemp
 	$FullTemp = SearchImgloc($g_sImgBoostTroopsIcons, $iColumnX, $iColumnY1, $iColumnX1, $iColumnY2)
-	If $g_bDebugSetlog Then SetDebugLog("Troop SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
+	SetDebugLog("Troop SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
 	SetLog("Trying to find" & "[" & $iIndex & "] " & GetSTroopName($iIndex - 1), $COLOR_DEBUG)
 	If StringInStr($FullTemp[0] & " ", "empty") > 0 Then Return
 
@@ -255,12 +255,12 @@ Func FindStroopIcons($iIndex, $iColumnX, $iColumnY1, $iColumnX1, $iColumnY2)
 		Local $iFoundTroopIndex = TroopIndexLookup($FullTemp[0])
 		For $i = $eTroopBarbarian To $eTroopCount - 1
 			If $iFoundTroopIndex = $i Then
-				If $g_bDebugSetlog Then SetDebugLog("Detected " & "[" & $iFoundTroopIndex & "] " & $g_asTroopNames[$i], $COLOR_DEBUG)
+				SetDebugLog("Detected " & "[" & $iFoundTroopIndex & "] " & $g_asTroopNames[$i], $COLOR_DEBUG)
 				If $g_asTroopNames[$i] = GetSTroopName($iIndex - 1) Then Return True
 				ExitLoop
 			EndIf
 			If $i = $eTroopCount - 1 Then ; detection failed
-				If $g_bDebugSetlog Then SetDebugLog("Troop Troop Detection Failed", $COLOR_DEBUG)
+				SetDebugLog("Troop Troop Detection Failed", $COLOR_DEBUG)
 			EndIf
 		Next
 	EndIf

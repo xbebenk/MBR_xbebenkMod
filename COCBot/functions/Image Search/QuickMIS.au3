@@ -30,10 +30,10 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
 	If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
 	If IsArray($res) Then
-		If $g_bDebugSetlog Then SetDebugLog("DLL Call succeeded " & $res[0], $COLOR_PURPLE)
+		SetDebugLog("DLL Call succeeded " & $res[0], $COLOR_PURPLE)
 		If $res[0] = "" Or $res[0] = "0" Then
-			If $g_bDebugSetlog Then SetDebugLog("No QuickMIS [" & $ValueReturned & "] detection found!")
-			If $g_bDebugSetlog Then SetDebugLog("Dir: " & $directory)
+			SetDebugLog("No QuickMIS [" & $ValueReturned & "] detection found!")
+			SetDebugLog("Dir: " & $directory)
 			Switch $ValueReturned
 				Case "BC1"
 					Return False
@@ -89,7 +89,7 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 						If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $result &= $DLLRes[0] & "|"
 					Next
 					If StringRight($result, 1) = "|" Then $result = StringLeft($result, (StringLen($result) - 1))
-					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $result, $COLOR_PURPLE)
+					SetDebugLog($ValueReturned & " Found: " & $result, $COLOR_PURPLE)
 					Local $CoordsInArray = StringSplit($result, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					Return $CoordsInArray
 				Case "N1" ; name of first file found
@@ -113,7 +113,7 @@ Func QuickMIS($ValueReturned, $directory, $left = 0, $top = 0, $right = $g_iGAME
 						$result &= $DLLRes[0] & "|"
 					Next
 					If StringRight($result, 1) = "|" Then $result = StringLeft($result, (StringLen($result) - 1))
-					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $result, $COLOR_PURPLE)
+					SetDebugLog($ValueReturned & " Found: " & $result, $COLOR_PURPLE)
 					Local $QuantityInArray = StringSplit($result, "|", $STR_NOCOUNT + $STR_ENTIRESPLIT)
 					Return $QuantityInArray[0]
 				Case "QX" ; quantity of files found

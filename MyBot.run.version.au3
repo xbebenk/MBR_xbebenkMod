@@ -19,6 +19,6 @@
 #pragma compile(LegalCopyright, © https://mybot.run)
 #Au3Stripper_On
 
-Global $g_sBotVersion = "v7.9.6" ;~ Don't add more here, but below. Version can't be longer than vX.y.z because it is also used in Checkversion()
+Global $g_sBotVersion = "v7.9.7" ;~ Don't add more here, but below. Version can't be longer than vX.y.z because it is also used in Checkversion()
 Global $g_sXModversion = "v1.2.1" ; change it for github releases, cant support words
 Global $g_sXModSupportUrl = "https://github.com/xbebenk/MBR_xbebenkMod/releases" ;<== Our Website Link Download

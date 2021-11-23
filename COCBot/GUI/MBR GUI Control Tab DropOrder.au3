@@ -194,7 +194,7 @@ Func IsUseCustomDropOrder()
 EndFunc   ;==>IsUseCustomDropOrder
 
 Func ChangeDropOrder()
-	If $g_bDebugSetlog Then SetDebugLog("Begin Func ChangeDropOrder()", $COLOR_DEBUG) ;Debug
+	SetDebugLog("Begin Func ChangeDropOrder()", $COLOR_DEBUG) ;Debug
 
 	Local $NewDropOrder[$eDropOrderCount]
 	Local $iUpdateCount = 0
