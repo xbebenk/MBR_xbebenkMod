@@ -320,7 +320,7 @@ Func getChatStringPersian($x_start, $y_start, $bConvert = True) ; -> Get string 
 EndFunc   ;==>getChatStringPersian
 
 Func getArmyResourcesFromButtons($x_start, $y_start) ;  -> Gets cost of Troops/Spells from buttons
-	Return Number(getOcrAndCapture("coc-TrainResources", $x_start - 45, $y_start + 25, 89, 20, True))
+	Return Number(getOcrAndCapture("coc-TrainResources", $x_start - 70, $y_start + 25, 89, 20, True))
 EndFunc   ;==>getArmyCapacityOnTrainTroops
 
 Func OcrForceCaptureRegion($bForce = Default)

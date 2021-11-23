@@ -276,9 +276,9 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 
 		Switch $iTrainPos[1]
 			Case 0 To 445
-				$iSlotV = 387 ; First ROW
+				$iSlotV = 395 ; First ROW
 			Case 446 To 550 ; Second ROW
-				$iSlotV = 488
+				$iSlotV = 497
 		EndSwitch
 
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0x9d9d9d, 20] ; Gray [i] icon
@@ -302,6 +302,8 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 				$iSlotH = 592
 			Case 593 To 690 ; 7 Column
 				$iSlotH = 690
+			Case 710 To 805 ; 8 Column
+				$iSlotH = 793
 			Case Else
 				If _ColorCheck(_GetPixelColor($iTrainPos[0], $iTrainPos[1], True), Hex(0xd3d3cb, 6), 5) Then
 					SetLog("GetFullNameSlot(): It seems that there is no Slot for an Elixir Troop on: " & $iTrainPos[0] & "," & $iTrainPos[1] & "!", $COLOR_ERROR)
@@ -310,9 +312,9 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 
 		Switch $iTrainPos[1]
 			Case 0 To 445
-				$iSlotV = 387 ; First ROW
+				$iSlotV = 397 ; First ROW
 			Case 446 To 550 ; Second ROW
-				$iSlotV = 488
+				$iSlotV = 497
 		EndSwitch
 
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0x9F9F9F, 20] ; Gray [i] icon
@@ -323,6 +325,10 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 
 	If $sTroopType = "Dark" Then
 		Switch $iTrainPos[0]
+			Case 238 To 331
+				$iSlotH = 314
+			Case 340 To 439
+				$iSlotH = 421
 			Case 440 To 517
 				$iSlotH = 517
 			Case 518 To 615
@@ -341,7 +347,7 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 			Case 0 To 445
 				$iSlotV = 397 ; First ROW
 			Case 446 To 550 ; Second ROW
-				$iSlotV = 498
+				$iSlotV = 497
 		EndSwitch
 
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0x9f9f9f, 20] ; Gray [i] icon

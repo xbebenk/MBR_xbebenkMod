@@ -165,7 +165,6 @@ Func DoubleTrain()
 				TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
 			Else
 				SetLog("No resources to Train " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_ACTION)
-				$g_bOutOfElixir = True
 			EndIf
 		EndIf
 	EndIf
@@ -190,7 +189,6 @@ Func DoubleTrain()
 				TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
 			Else
 				SetLog("No resources to Brew " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_ACTION)
-				$g_bOutOfElixir = True
 			EndIf
 		EndIf
 	EndIf

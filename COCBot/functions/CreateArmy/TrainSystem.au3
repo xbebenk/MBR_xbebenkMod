@@ -1491,17 +1491,20 @@ Func CheckValuesCost($Troop = "Arch", $troopQuantity = 1)
 	Local $iTroopIndex = TroopIndexLookup($Troop, "CheckValuesCost")
 
 	Local $aTrainPos = GetTrainPos($iTroopIndex)
-	Local $iTempTroopCost, $iTempSpellCost
+	Local $iTempTroopCost, $iTempSpellCost, $aTempTrainPos
 	If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
 		If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
-			$iTempTroopCost = getArmyResourcesFromButtons($aTrainPos[0], $aTrainPos[1])
+			Local $sTroopType = ($iTroopIndex >= $eMini ? "Dark" : "Normal")
+			$aTempTrainPos = GetFullNameSlot($aTrainPos, $sTroopType)
+			$iTempTroopCost = getArmyResourcesFromButtons($aTempTrainPos[0], $aTempTrainPos[1])
 			If $iTempTroopCost <> "" Then
 				$troopCost = Number($iTempTroopCost)
 			Else
 				$troopCost = $g_aiTroopCostPerLevel[$iTroopIndex][$g_aiTrainArmyTroopLevel[$iTroopIndex]]
 			EndIf
 		ElseIf $iTroopIndex >= $eLSpell And $iTroopIndex <= $eBtSpell Then
-			$iTempSpellCost = getArmyResourcesFromButtons($aTrainPos[0], $aTrainPos[1])
+			$aTempTrainPos = GetFullNameSlot($aTrainPos, "Spell")
+			$iTempSpellCost = getArmyResourcesFromButtons($aTempTrainPos[0], $aTempTrainPos[1])
 			If $iTempSpellCost <> "" Then
 				$troopCost = Number($iTempSpellCost)
 			Else
