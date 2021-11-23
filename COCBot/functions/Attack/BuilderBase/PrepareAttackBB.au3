@@ -19,7 +19,7 @@ Func PrepareAttackBB($bCheck = False)
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 		Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
-		Click(60,600) ;click attack button
+		If Not ClickBBAttackButton() Then Return False
 		_Sleep(1500)
 		CheckArmyReady()
 		CheckLootAvail()
@@ -51,19 +51,22 @@ Func PrepareAttackBB($bCheck = False)
 	
 	If Not $g_bRunState Then Return ; Stop Button
 
-	Click(60,600) ;click attack button
+	If Not ClickBBAttackButton() Then 
+		ClickAway("Left")
+		Return False
+	EndIf
 	_Sleep(1500)
 
 	If Not CheckArmyReady() Then
 		_Sleep(500)
-		ClickAway()
+		ClickAway("Left")
 		Return False
 	EndIf
 
 	If $g_bChkBBAttIfLootAvail Then
 		If Not CheckLootAvail() Then
 			_Sleep(500)
-			ClickAway()
+			ClickAway("Left")
 			Return False
 		EndIf
 	EndIf
@@ -72,11 +75,20 @@ Func PrepareAttackBB($bCheck = False)
 	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
 		_Sleep(500)
-		ClickAway()
+		ClickAway("Left")
 		Return False
 	EndIf
 
 	Return True ; returns true if all checks succeed
+EndFunc
+
+Func ClickBBAttackButton()
+	If QuickMIS("BC1", $g_sImgBBAttackButton, 10, 560, 100, 650, True, False) Then
+		Click(60,600) ;click attack button
+		Return True
+	Else
+		Return False
+	EndIf	
 EndFunc
 
 Func CheckLootAvail()
@@ -110,11 +122,10 @@ Func CheckArmyReady()
 		$bReady = True
 	Else 
 		$bReady = False
-		If QuickMIS("BC1", $g_sImgArmyNeedTrain, 130, 360, 190, 390, True, False) Then
-			$bNeedTrain = True ;need train, so will train cannon cart
-		Else
-			$bReady = True ;green check mark, not found but no need to train, so Army is Ready
-		EndIf
+	EndIf
+
+	If QuickMIS("BC1", $g_sImgArmyNeedTrain, 130, 360, 190, 390, True, False) Then
+		$bNeedTrain = True ;need train, so will train cannon cart
 	EndIf
 	
 	If Not $bReady And $bNeedTrain And $g_bTrainTroopBBCannonnCart Then
@@ -125,11 +136,11 @@ Func CheckArmyReady()
 			Setlog("Army is not ready, Try to Train to fill BB ArmyCamp", $COLOR_DEBUG)
 			Click($g_iQuickMISX + 40, $g_iQuickMISY + 440, 1)
 			If _Sleep(500) Then Return
-			ClickAway()
+			ClickAway("Left")
 			$bReady = True
 		Else
 			Setlog("Army is not ready, and Cannot Find CannonCart Icon to Train", $COLOR_DEBUG)
-			ClickAway()
+			ClickAway("Left")
 		EndIf
 	EndIf
 
