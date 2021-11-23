@@ -33,6 +33,7 @@ Global $g_hChkClanGamesDebug = 0
 Global $g_hLblRemainTime = 0 , $g_hLblYourScore = 0
 
 ;ClanGames Challenges
+Global $g_hChkClanGamesDes = 0, $g_hBtnCGBattle = 0, $g_hGUI_CGBattle = 0, $g_hBtnCGBattleSet = 0, $g_hBtnCGBattleRemove = 0, $g_hBtnCGBattleClose = 0, $g_sTxtCGBattle
 Global $g_hChkClanGamesDes = 0, $g_hBtnCGDes = 0, $g_hGUI_CGDes = 0, $g_hBtnCGDesSet = 0, $g_hBtnCGDesRemove = 0, $g_hBtnCGDesClose = 0, $g_sTxtCGDes
 Global $g_hChkClanGamesAirTroop = 0, $g_hBtnCGAirTroop = 0, $g_hGUI_CGAirTroops = 0, $g_hBtnCGAirTroopsSet = 0, $g_hBtnCGAirTroopsRemove = 0, $g_hBtnCGAirTroopsClose = 0, $g_sTxtCGAirTroop
 Global $g_hChkClanGamesGroundTroop = 0, $g_hBtnCGGroundTroop = 0, $g_hGUI_CGGroundTroops = 0, $g_hBtnCGGroundTroopSet = 0, $g_hBtnCGGroundTroopRemove = 0, $g_hBtnCGGroundTroopClose = 0, $g_sTxtCGGroundTroop
@@ -53,6 +54,7 @@ Func CreateVillageMisc()
 		CreateMiscClanGamesV3SubTab()
 		$g_hGUI_MISC_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM3", "Misc Mod"))
 		CreateMiscModSubTab()
+		CreateCGBattle()
 		CreateCGDes()
 		CreateClanGamesAirTroops()
 		CreateClanGamesGroundTroops()
@@ -419,6 +421,10 @@ Func CreateMiscClanGamesV3SubTab()
 			$g_hChkClanGamesLoot = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesLoot", "Loot"), $x, $y, -1, -1)
 			$y += 23
 			$g_hChkClanGamesBattle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesBattle", "Battle"), $x, $y, -1, -1)
+			GUICtrlSetOnEvent(-1, "chkActivateClangames")
+			$g_hBtnCGBattle = GUICtrlCreateButton("...", $x + 70, $y, 20, 20)
+				GUICtrlSetOnEvent(-1, "btnCGBattle")
+				GUICtrlSetState(-1, $GUI_DISABLE)
 			$y += 23
 			$g_hChkClanGamesDes = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesDestruction", "Destruction"), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkActivateClangames")
@@ -580,6 +586,42 @@ Func CreateMiscModSubTab()
 		GUICtrlSetState(-1, $GUI_CHECKED)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc ;==>CreateMiscModSubTab
+
+Func CreateCGBattle()
+	Local $CGBattleChallenges = ClanGamesChallenges("$BattleChallenges")
+	For $j = 0 To UBound($CGBattleChallenges) - 1
+		$g_sTxtCGBattle &= $CGBattleChallenges[$j][1] & "|"
+	Next
+
+	$g_hGUI_CGBattle = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGBattle", "Main Village Battle Challenge"), 322, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	Local $x = 25, $y = 25
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGBattle", "Select Battle Challenges"), $x - 20, $y - 20, 308, 220)
+	$x += 10
+	$y += 5
+	For $i = 0 To 13
+		If $i < 7 Then
+			GUICtrlCreateLabel($i + 1 & ":", $x - 19, $y + 3 + 25*$i, -1, 18)
+			$g_ahCmbCGBattle[$i] = GUICtrlCreateCombo("", $x, $y + 25*$i, 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+				GUICtrlSetOnEvent(-1, "GUI_CGBattle")
+				GUICtrlSetData(-1,  $g_sTxtCGBattle)
+		Else
+			GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-7), -1, 18)
+			$g_ahCmbCGBattle[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-7), 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+				GUICtrlSetOnEvent(-1, "GUI_CGBattle")
+				GUICtrlSetData(-1,  $g_sTxtCGBattle)
+		EndIf
+	Next
+	$y = 215
+	$g_hBtnCGBattleSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGBattleSet", "Apply Challenge"), $x - 20, $y, 118, 25)
+		GUICtrlSetOnEvent(-1, "btnSetCGBattle")
+	$g_hBtnCGBattleRemove = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGBattleRemove", "Empty Challenge List"), $x + 150, $y, 118, 25)
+		GUICtrlSetOnEvent(-1, "BtnCGBattleRemove")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$g_hBtnCGBattleClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGBattleClose", "Close"), 230, $y - 5 + 50, 85, 25)
+		GUICtrlSetOnEvent(-1, "CloseCGBattle")
+
+EndFunc ;==>CreateCGBattle
 
 Func CreateCGDes()
 	Local $CGDesChallenges = ClanGamesChallenges("$DestructionChallenges")

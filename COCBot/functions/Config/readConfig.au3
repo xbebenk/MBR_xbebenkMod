@@ -440,7 +440,10 @@ Func ReadConfig_600_6()
 	Local $str
 	IniReadS($g_bChkClanGamesLoot, $g_sProfileConfigPath, "other", "ChkClanGamesLoot", False, "Bool")
 	IniReadS($g_bChkClanGamesBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBattle", False, "Bool")
-
+	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledCGBattle", "0|1|2|4|18|-1|-1|-1|-1|-1|-1|-1|-1|-1"), "|", $STR_NOCOUNT)
+	For $i = 0 To UBound($g_aCmbCGBattle) - 1
+		$g_aCmbCGBattle[$i] = $str[$i]
+	Next
     IniReadS($g_bChkClanGamesBBBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBBBattle", True, "Bool")
     IniReadS($g_bChkClanGamesBBDes, $g_sProfileConfigPath, "other", "ChkClanGamesBBDestruction", True, "Bool")
 	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledBBDestruction", "2|1|0|4|14|6|7|8|10|13|"), "|", $STR_NOCOUNT)

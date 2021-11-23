@@ -658,6 +658,11 @@ Func chkActivateClangames()
 
 		GUICtrlSetState($g_hChkClanGamesLoot, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesBattle, $GUI_ENABLE)
+		If GUICtrlRead($g_hChkClanGamesBattle) = $GUI_CHECKED Then 
+			GUICtrlSetState($g_hBtnCGBattle, $GUI_ENABLE)
+		Else
+			GUICtrlSetState($g_hBtnCGBattle, $GUI_DISABLE)
+		EndIf
 		GUICtrlSetState($g_hChkClanGamesDes, $GUI_ENABLE)
 		If GUICtrlRead($g_hChkClanGamesDes) = $GUI_CHECKED Then 
 			GUICtrlSetState($g_hBtnCGDes, $GUI_ENABLE)
@@ -747,6 +752,42 @@ Func chkClanGamesBB()
 		GUICtrlSetState($g_hChkClanGamesBBBattle, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesBBDes, $GUI_DISABLE)
 	EndIf
+EndFunc
+
+Func btnCGBattle()
+	GUISetState(@SW_SHOW, $g_hGUI_CGBattle)
+EndFunc
+
+Func CloseCGBattle()
+	GUISetState(@SW_HIDE, $g_hGUI_CGBattle)
+EndFunc
+
+Func GUI_CGBattle()
+	Local $iGUI_CtrlId = @GUI_CtrlId
+	For $i = 0 To UBound($g_ahCmbCGBattle) - 1 ; check for duplicate combobox index and flag problem
+		If $iGUI_CtrlId = $g_ahCmbCGBattle[$i] Then ContinueLoop
+		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBattle[$i]) Then
+			_GUICtrlComboBox_SetCurSel($g_ahCmbCGBattle[$i], -1)
+			GUISetState()
+		EndIf
+	Next
+EndFunc
+
+Func btnSetCGBattle()
+	Local $d
+	SetLog("Set Enabled ClanGames Main Village BattleChallenges",$COLOR_SUCCESS)
+	For $i = 0 To UBound($g_ahCmbCGBattle) - 1
+		$g_aCmbCGBattle[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbCGBattle[$i])
+		$d = $g_aCmbCGBattle[$i]
+		If $d = -1 Then ContinueLoop
+		SetLog($i+1 & " : " & ClanGamesChallenges("$BattleChallenges")[$d][0], $COLOR_SUCCESS)
+	Next
+EndFunc
+
+Func BtnCGBattleRemove()
+	For $i = 0 To UBound($g_ahCmbCGBattle) - 1
+		_GUICtrlComboBox_SetCurSel($g_ahCmbCGBattle[$i], -1)
+	Next
 EndFunc
 
 Func btnCGDes()

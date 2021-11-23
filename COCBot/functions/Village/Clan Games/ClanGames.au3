@@ -498,6 +498,14 @@ EndFunc ;==>_ClanGames
 Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 	If $sImageType = Default Then Return
 	Switch $sImageType
+		Case "B"
+			Local $CGBattle = ClanGamesChallenges("$BattleChallenges")
+			For $i = 0 To UBound($g_aCmbCGBattle) - 1
+				If $g_aCmbCGBattle[$i] >= 0 Then
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "DestructionChallenges: " & $CGBattle[$g_aCmbCGBattle[$i]][0], $COLOR_DEBUG)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBattle[$g_aCmbCGBattle[$i]][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				EndIf
+			Next
 		Case "D"
 			Local $CGDes = ClanGamesChallenges("$DestructionChallenges")
 			For $i = 0 To UBound($g_aCmbCGDes) - 1

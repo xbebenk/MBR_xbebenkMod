@@ -404,7 +404,11 @@ Func SaveConfig_600_6()
 	Local $str = ""
 	_Ini_Add("other", "ChkClanGamesLoot", $g_bChkClanGamesLoot ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesBattle", $g_bChkClanGamesBattle ? 1 : 0)
-
+	$str = ""
+	For $i = 0 To UBound($g_aCmbCGBattle) - 1
+		$str &= $g_aCmbCGBattle[$i] & "|"
+	Next
+	_Ini_Add("other", "EnabledCGBattle", $str)
     _Ini_Add("other", "ChkClanGamesBBBattle", $g_bChkClanGamesBBBattle ? 1 : 0)
     _Ini_Add("other", "ChkClanGamesBBDestruction", $g_bChkClanGamesBBDes ? 1 : 0)
 	$str = ""
@@ -434,7 +438,7 @@ Func SaveConfig_600_6()
 	For $i = 0 To UBound($g_aCmbCGDes) - 1
 		$str &= $g_aCmbCGDes[$i] & "|"
 	Next
-	_Ini_Add("other", "EnabledDestruction", $str)
+	_Ini_Add("other", "EnabledCGDes", $str)
 	_Ini_Add("other", "ChkClanGamesAirTroop", $g_bChkClanGamesAirTroop ? 1 : 0)
 	$str = ""
 	For $i = 0 To UBound($g_aCmbCGAirTroops) - 1
