@@ -260,7 +260,7 @@ Func DropTrophy()
 					Next
 					SetTrophyLoss()
 					If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
-					ReturnHome(False, False) ;Return home no screenshot
+					ReturnfromDropTrophies()
 					If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 				EndIf
 				$iDateCalc = _DateDiff('s', _NowCalc(), $sWaitToDate)
