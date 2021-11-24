@@ -83,7 +83,7 @@ Func PrepareAttackBB($bCheck = False)
 EndFunc
 
 Func ClickBBAttackButton()
-	If WaitforPixel(45, 590, 46, 591, "7D899D", 10, 1) Then
+	If WaitforPixel(20, 590, 22, 595, "DD9835", 15, 1) Then
 		Click(60,600) ;click attack button
 		Return True
 	Else
