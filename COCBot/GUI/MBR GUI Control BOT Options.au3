@@ -297,6 +297,7 @@ Func _cmbSwitchAcc($bReadSaveConfig = True)
 	EndIf
 
 	GUICtrlSetState($g_hChkSwitchAcc, (($bEnable Or ($iCmbSwitchAcc And $bAcquired)) ? $GUI_ENABLE : $GUI_DISABLE))
+	GUICtrlSetState($g_hChkFastSwitchAcc, (($bEnable Or ($iCmbSwitchAcc And $bAcquired)) ? $GUI_ENABLE : $GUI_DISABLE))
 	For $i = $g_hCmbTotalAccount To UBound($g_ahChkDonate) - 1
 		GUICtrlSetState($i, (($bEnable) ? $GUI_ENABLE : $GUI_DISABLE))
 	Next
