@@ -24,15 +24,15 @@ Func waitMainScreen() ;Waits for main screen to popup
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
 		
-		;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
-		If $g_bChkSuperCellID And $iCount > 2 Then
-			SetDebugLog("Checkscidswitch: Send AndroidBackButton", $COLOR_DEBUG)
-			AndroidBackButton() ;Send back button to android
-			If _Sleep(1000) Then Return
-			If IsEndBattlePage() Then
-				AndroidBackButton()
-			EndIf
-		EndIf
+		;;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
+		;If $g_bChkSuperCellID And $iCount > 2 Then
+		;	SetDebugLog("Checkscidswitch: Send AndroidBackButton", $COLOR_DEBUG)
+		;	AndroidBackButton() ;Send back button to android
+		;	If _Sleep(1000) Then Return
+		;	If IsEndBattlePage() Then
+		;		AndroidBackButton()
+		;	EndIf
+		;EndIf
 		
 		Local $hWin = $g_hAndroidWindow
 		If TestCapture() = False Then
