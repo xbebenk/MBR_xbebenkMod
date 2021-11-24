@@ -83,10 +83,11 @@ Func PrepareAttackBB($bCheck = False)
 EndFunc
 
 Func ClickBBAttackButton()
-	If QuickMIS("BC1", $g_sImgBBAttackButton, 10, 560, 100, 650, True, False) Then
+	If WaitforPixel(45, 590, 46, 591, "7D899D", 10, 1) Then
 		Click(60,600) ;click attack button
 		Return True
 	Else
+		SetLog("Could not locate Attack button", $COLOR_ERROR)
 		Return False
 	EndIf	
 EndFunc

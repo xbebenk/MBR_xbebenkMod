@@ -62,11 +62,10 @@ Func GetAttackBarBB($bRemaining = False)
 			If UBound($aTempCoords) < 2 Then ContinueLoop
 			local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
 			local $iCount = Number(getTroopCountSmall($aTempCoords[0], $iTroopBanners))
-			If $iCount == 0 Then $iCount = Number(getTroopCountBig($aTempCoords[0], $iTroopBanners-2))
-			If $iCount == 0 Then
-				SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
-				ContinueLoop
-			EndIf
+			If $iCount < 1 Then $iCount = Number(getTroopCountBig($aTempCoords[0], $iTroopBanners-2))
+			;If $iCount == 0 Then
+			;	SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR) ; xbebenk comment this because it bot actually get right count
+			;EndIf
 			local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
 			_ArrayAdd($aBBAttackBar, $aTempElement)
 		Next
