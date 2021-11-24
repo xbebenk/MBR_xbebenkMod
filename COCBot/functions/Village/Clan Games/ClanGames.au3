@@ -15,6 +15,7 @@
 Func _ClanGames($test = False)
 	
 	$g_bIsBBevent = False ;just to be sure, reset to false
+	$g_bIsCGEventRunning = False ;just to be sure, reset to false
 	
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
@@ -199,7 +200,7 @@ Func _ClanGames($test = False)
 							; Disable this event from INI File
 							If $LootChallenges[$j][3] = 0 Then ExitLoop
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray = [$LootChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $LootChallenges[$j][3]]
+							Local $aArray[5] = [$LootChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $LootChallenges[$j][3], "CGMain"]
 						EndIf
 					Next
 				Case "A"
@@ -221,7 +222,7 @@ Func _ClanGames($test = False)
 								ExitLoop
 							EndIf
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$AirTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1]
+							Local $aArray[5] = [$AirTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1, "CGMain"]
 						EndIf
 					Next
 
@@ -244,7 +245,7 @@ Func _ClanGames($test = False)
 								ExitLoop
 							EndIf
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$SpellChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1]
+							Local $aArray[5] = [$SpellChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1, "CGMain"]
 						EndIf
 					Next
 
@@ -267,7 +268,7 @@ Func _ClanGames($test = False)
 								ExitLoop
 							EndIf
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$GroundTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1]
+							Local $aArray[5] = [$GroundTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1, "CGMain"]
 						EndIf
 					 Next
 
@@ -306,7 +307,7 @@ Func _ClanGames($test = False)
 							; Check if you are using Heroes
 							If $BattleChallenges[$j][1] = "No Heroics Allowed" And ((Int($g_aiAttackUseHeroes[$DB]) > $eHeroNone And $g_iMatchMode = $DB) Or (Int($g_aiAttackUseHeroes[$LB]) > $eHeroNone And $g_iMatchMode = $LB)) Then ExitLoop
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$BattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BattleChallenges[$j][3]]
+							Local $aArray[5] = [$BattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BattleChallenges[$j][3], "CGMain"]
 						EndIf
 					Next
 				Case "D"
@@ -328,7 +329,7 @@ Func _ClanGames($test = False)
 									$DestructionChallenges[$j][1] = "Queen Level Hunter" Or _
 									$DestructionChallenges[$j][1] = "Warden Level Hunter" And ((Int($g_aiAttackUseHeroes[$DB]) = $eHeroNone And $g_iMatchMode = $DB) Or (Int($g_aiAttackUseHeroes[$LB]) = $eHeroNone And $g_iMatchMode = $LB)) Then ExitLoop
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$DestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $DestructionChallenges[$j][3]]
+							Local $aArray[5] = [$DestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $DestructionChallenges[$j][3], "CGMain"]
 						EndIf
 					Next
 				Case "M"
@@ -367,7 +368,7 @@ Func _ClanGames($test = False)
 							If $MiscChallenges[$j][1] = "Log Launcher" And ($g_aiAttackUseSiege[$DB] = 5 Or $g_aiAttackUseSiege[$LB] = 5) And $g_aiArmyCompSiegeMachines[$eSiegeLogLauncher] = 0 Then ExitLoop
 
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[4] = [$MiscChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $MiscChallenges[$j][3]]
+							Local $aArray[5] = [$MiscChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $MiscChallenges[$j][3], "CGMain"]
 						EndIf
 					Next
                 Case "BBB" ; BB Battle challenges
@@ -382,7 +383,7 @@ Func _ClanGames($test = False)
                             ; Verify your TH level and Challenge kind
                             ; If $g_iBBTownHallLevel < $DestructionChallenges[$j][2] Then ExitLoop ; adding soon
 
-                            Local $aArray[4] = [$BBBattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBBattleChallenges[$j][3]]
+                            Local $aArray[5] = [$BBBattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBBattleChallenges[$j][3], $aAllDetectionsOnScreen[$i][0]]
                         EndIf
                     Next
                 Case "BBD" ; BB Destruction challenges
@@ -393,7 +394,7 @@ Func _ClanGames($test = False)
                     For $j = 0 To UBound($BBDestructionChallenges) - 1
 						; Match the names
                         If $aAllDetectionsOnScreen[$i][1] = $BBDestructionChallenges[$j][0] Then
-							Local $aArray[4] = [$BBDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBDestructionChallenges[$j][3]]
+							Local $aArray[5] = [$BBDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBDestructionChallenges[$j][3], $aAllDetectionsOnScreen[$i][0]]
                         EndIf
                     Next
 				Case "BBT" ; BB Troop challenges
@@ -404,17 +405,18 @@ Func _ClanGames($test = False)
                     For $j = 0 To UBound($BBTroopsChallenges) - 1
                         ; Match the names
                         If $aAllDetectionsOnScreen[$i][1] = $BBTroopsChallenges[$j][0] Then
-							Local $aArray[4] = [$BBTroopsChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBTroopsChallenges[$j][3]]
+							Local $aArray[5] = [$BBTroopsChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBTroopsChallenges[$j][3], $aAllDetectionsOnScreen[$i][0]]
                         EndIf
                     Next
 			EndSwitch
 			If IsDeclared("aArray") And $aArray[0] <> "" Then
-				ReDim $aSelectChallenges[UBound($aSelectChallenges) + 1][5]
+				ReDim $aSelectChallenges[UBound($aSelectChallenges) + 1][6]
 				$aSelectChallenges[UBound($aSelectChallenges) - 1][0] = $aArray[0] ; Event Name Full Name
 				$aSelectChallenges[UBound($aSelectChallenges) - 1][1] = $aArray[1] ; Xaxis
 				$aSelectChallenges[UBound($aSelectChallenges) - 1][2] = $aArray[2] ; Yaxis
 				$aSelectChallenges[UBound($aSelectChallenges) - 1][3] = $aArray[3] ; difficulty
 				$aSelectChallenges[UBound($aSelectChallenges) - 1][4] = 0 ; timer minutes
+				$aSelectChallenges[UBound($aSelectChallenges) - 1][5] = $aArray[4] ; EventType: Battle Loot BB and so on
 				$aArray[0] = ""
 			EndIf
 		Next
@@ -440,18 +442,19 @@ Func _ClanGames($test = False)
 		Next
 
 		; let's get the 60 minutes events and remove from array
-		Local $aTempSelectChallenges[0][5]
+		Local $aTempSelectChallenges[0][6]
 		For $i = 0 To UBound($aSelectChallenges) - 1
 			If $aSelectChallenges[$i][4] = 60 And $g_bChkClanGames60 Then
 				Setlog($aSelectChallenges[$i][0] & " unselected, is a 60min event!", $COLOR_INFO)
 				ContinueLoop
 			EndIf
-			ReDim $aTempSelectChallenges[UBound($aTempSelectChallenges) + 1][5]
+			ReDim $aTempSelectChallenges[UBound($aTempSelectChallenges) + 1][6]
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][0] = $aSelectChallenges[$i][0]
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][1] = $aSelectChallenges[$i][1]
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][2] = $aSelectChallenges[$i][2]
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][3] = $aSelectChallenges[$i][3]
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][4] = $aSelectChallenges[$i][4]
+			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][5] = $aSelectChallenges[$i][5]
 		Next
 
 		; Drop to top again , because coordinates Xaxis and Yaxis
@@ -464,11 +467,16 @@ Func _ClanGames($test = False)
 	; After removing is necessary check Ubound
 	If IsDeclared("aTempSelectChallenges") Then
 		If UBound($aTempSelectChallenges) > 0 Then
-			SetDebugLog("$aTempSelectChallenges: " & _ArrayToString($aTempSelectChallenges))
-			; Sort by time
-			_ArraySort($aTempSelectChallenges, 1, 0, 0, 4)
 			
-			Setlog("Next Event will be " & $aTempSelectChallenges[0][0] & " to make in " & $aTempSelectChallenges[0][4] & " min.")
+			If $g_bChkForceBBAttackOnClanGames Then 
+				; Sort BB event on top
+				_ArraySort($aTempSelectChallenges, 0, 0, 0, 5)
+			Else
+				; Sort by time
+				_ArraySort($aTempSelectChallenges, 1, 0, 0, 4)
+			EndIf
+			SetDebugLog("$aTempSelectChallenges: " & _ArrayToString($aTempSelectChallenges))
+			Setlog("Next Event will be " & $aTempSelectChallenges[0][5] & "-" & $aTempSelectChallenges[0][0] & " to make in " & $aTempSelectChallenges[0][4] & " min.")
 			; Select and Start EVENT
 			$sEventName = $aTempSelectChallenges[0][0]
 			Click($aTempSelectChallenges[0][1], $aTempSelectChallenges[0][2])
@@ -696,6 +704,7 @@ Func IsEventRunning($bOpenWindow = False)
 					If QuickMIS("BC1", $g_sImgVersus, 425, 150, 700, 215, True, False) Then
 						Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
 						$g_bIsBBevent = True
+						$g_bIsCGEventRunning = True
 					Else
 						Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
 						$g_bIsBBevent = False
@@ -1098,7 +1107,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["SuperCharge", 			"Deploy SuperTroops",			 6,  2, 5], _ ;
 			["Tremendous13s", 			"Tremendous 13s", 				13,  1, 8]]   ;
 
-	Local $DestructionChallenges[33][5] = [ _
+	Local $DestructionChallenges[34][5] = [ _
 			["Cannon", 					"Cannon", 				 3,  1, 1], _ ; Destroy 5-25 Cannons in Multiplayer Battles					|1h-8h	|75-350
 			["ArcherT", 				"Archer Tower", 		 3,  1, 1], _ ; Destroy 5-20 Archer Towers in Multiplayer Battles			|1h-8h	|75-350
 			["BuilderHut", 				"Builder Hut", 		     3,  1, 1], _ ; Destroy 4-12 BuilderHut in Multiplayer Battles				|1h-8h	|40-350
@@ -1121,7 +1130,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["Laboratory", 				"Laboratory", 			 3,  1, 1], _ ; Destroy 2-6 Laboratories in Multiplayer Battles				|1h-8h	|40-200
 			["SFacto", 					"Spell Factory", 		 3,  1, 1], _ ; Destroy 2-6 Spell Factories in Multiplayer Battles			|1h-8h	|40-200
 			["DESpell", 				"Dark Spell Factory", 	 8,  1, 1], _ ; Destroy 2-6 Dark Spell Factories in Multiplayer Battles		|1h-8h	|40-200
-			["WallWhacker", 			"Wall Whacker", 		 3,  1, 1], _ ; Destroy 50-250 Walls in Multiplayer Battles					|
+			["WallWhacker", 			"Wall Whacker", 		 10,  1, 1], _ ; Destroy 50-250 Walls in Multiplayer Battles					|
 			["BBreakdown",	 			"Building Breakdown", 	 3,  1, 1], _ ; Destroy 50-250 Buildings in Multiplayer Battles					|
 			["BKaltar", 				"Barbarian King Altars", 9,  4, 1], _ ; Destroy 2-5 Barbarian King Altars in Multiplayer Battles	|1h-8h	|50-150
 			["AQaltar", 				"Archer Queen Altars", 	10,  5, 1], _ ; Destroy 2-5 Archer Queen Altars in Multiplayer Battles		|1h-8h	|50-150
@@ -1130,8 +1139,9 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["KingLevelHunter", 		"King Level Hunter", 	 9,  5, 8], _ ; Knockout 50 Level King on Multiplayer Battles				|8h		|100
 			["QueenLevelHunt", 			"Queen Level Hunter", 	10,  5, 8], _ ; Knockout 50 Level Queen on Multiplayer Battles				|8h		|100
 			["WardenLevelHunter", 		"Warden Level Hunter", 	11,  5, 8], _ ; Knockout 20 Level Warden on Multiplayer Battles				|8h		|100
-			["ArmyCamp", 				"Destroy ArmyCamp", 	11,  5, 1], _ ; Knockout 20 Level Warden on Multiplayer Battles				|8h		|100
-			["ScatterShotSabotage",		"ScatterShot",			13,  5, 1]]   ;
+			["ArmyCamp", 				"Destroy ArmyCamp", 	6,  5, 1], _ ; Knockout 20 Level Warden on Multiplayer Battles				|8h		|100
+			["ScatterShotSabotage",		"ScatterShot",			13,  5, 1], _ ;
+			["ChampionLevelHunt",		"Champion Level Hunter",13,  5, 1]]   ;
 
 
 	Local $MiscChallenges[3][5] = [ _

@@ -1315,7 +1315,7 @@ Func FirstCheckRoutine()
 		_ClanGames()
 		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-			BuilderBase()
+			GotoBBTodoCG()
 		EndIf
 	EndIf
 
@@ -1346,6 +1346,11 @@ Func FirstCheckRoutine()
 						EndIf
 					EndIf
 				Wend
+				If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then 
+					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+					SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
+					GotoBBTodoCG() ;force go to bb todo event 
+				EndIf 
 				If $g_bOutOfGold Then
 					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
 					$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
@@ -1391,6 +1396,11 @@ Func FirstCheckRoutine()
 							EndIf
 						EndIf
 					Wend
+					If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then 
+						SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+						SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
+						GotoBBTodoCG() ;force go to bb todo event 
+					EndIf 
 					If $g_bOutOfGold Then
 						SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
 						$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
@@ -1504,3 +1514,11 @@ Func TestBuilderBase()
 
 EndFunc
 
+Func GotoBBTodoCG()
+	If SwitchBetweenBases() And isOnBuilderBase() Then
+		DoAttackBB()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		; switch back to normal village
+		SwitchBetweenBases()
+	EndIf
+EndFunc

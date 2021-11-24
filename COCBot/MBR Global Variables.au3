@@ -1845,7 +1845,7 @@ Global $g_aCmbCGBBDes[14] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahCmbCGBBDes[14] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = 0
+Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = 0, $g_bIsCGEventRunning = False
 Global $g_bChkClanGamesPurgeAny = 0
 
 ; Collect Achievement Rewards
