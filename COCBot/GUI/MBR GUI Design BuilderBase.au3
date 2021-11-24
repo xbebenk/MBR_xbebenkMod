@@ -259,15 +259,15 @@ Func CreateBBAttackSubTab()
 	
 	$y = 135
 
-	$g_hGrpAttackStyleBB = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_03", "Attack Style"), $x - 10,  $y, $g_iSizeWGrpTab2, 297 + 5)
+	$g_hGrpAttackStyleBB = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_03", "Attack Style"), $x - 10,  $y, $g_iSizeWGrpTab2, 100)
 	
 	$g_hChkBBCustomArmyEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCustomArmyEnable", "Enable Custom Army"), $x + 5, $y + 13, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCustomArmyEnable", "Enable Use Custom Army"))
 		GUICtrlSetOnEvent(-1, "ChkBBCustomArmyEnable")
 
-	$g_hChkBBForceCustomArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBForceCustomArmy", "Force"), $x + 5 + 127, $y + 13, -1, -1)
-
-	$g_hChkBBGetArmyFromCSV = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBGetArmyFromCSV", "Force from CSV"), $x + 5 + 270, $y + 13, -1, -1)
+	;$g_hChkBBForceCustomArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBForceCustomArmy", "Force"), $x + 5 + 127, $y + 13, -1, -1)
+	;
+	;$g_hChkBBGetArmyFromCSV = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBGetArmyFromCSV", "Force from CSV"), $x + 5 + 270, $y + 13, -1, -1)
 
 	Static $sTroops = ""
 	If $sTroops = "" Then
@@ -320,82 +320,82 @@ Func CreateBBAttackSubTab()
 	GUICtrlSetOnEvent(-1, "GUIBBCustomArmy")
 	$g_hIcnTroopBB[5] = _GUICtrlCreateIcon($g_sLibIconPath, $g_avStarLabTroops[1][4], $x + 365 - 18, $y + 54 - 26, 24, 24)
 	
-	$y += 58
-	$x = 15
-
-	$g_hChkBBCSVAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCSVAttack", "CSV Attack"), $x + 5,  $y - 5, -1, -1)
-	; GUICtrlSetState(-1, $GUI_DISABLE)
-	
-	Static $sBBCSVSettingsString = GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCSVSettingsOne", "Only one CSV") & "|" & _
-								   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCSVSettingsCustom", "CSV by weaknesses") & "|" & _
-							       GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCSVSettingsRandom", "Random CSV")
-	
-	$g_hCmbBBCSVSettings = GUICtrlCreateCombo("", $x + 142,  $y - 5, 130, -1, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL)
-	GUICtrlSetData(-1, $sBBCSVSettingsString, "0")
-	_GUICtrlComboBox_SetCurSel($g_hCmbBBCSVSettings, 0)
-	GUICtrlSetOnEvent(-1, 'CmbBBCSVSettings')
-	
-	$y += 17
-	$g_hGrpGuideScriptBB[0] = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "GrpGuideScriptBB_Info_01", "CSV For Standard Base"), $x + 5, $y, 134, $g_iSizeHGrpTab4 - 145)
-	GUICtrlSetFont(-1, 7)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	$g_hGrpGuideScriptBB[1] = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "GrpGuideScriptBB_Info_02", "CSV For Weak Ground Base"), $x + 130 + 10, $y, 134, $g_iSizeHGrpTab4 - 145)
-	GUICtrlSetFont(-1, 7)
-	GUICtrlSetState(-1, $GUI_HIDE)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	$g_hGrpGuideScriptBB[2] = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "GrpGuideScriptBB_Info_03", "CSV For Weak Air Base"), $x + 130 + 130 + 15, $y, 134, $g_iSizeHGrpTab4 - 145)
-	GUICtrlSetFont(-1, 7)
-	GUICtrlSetState(-1, $GUI_HIDE)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	$y += 15
-	$x = 7 + 10
-	$g_hCmbBBAttackStyle[0] = GUICtrlCreateCombo("", $x + 5, $y, 130, -1, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbScriptName", "Choose the script; You can edit/add new scripts located in folder: 'CSV/BuilderBase'"))
-	GUICtrlSetState(-1, $GUI_UNCHECKED)
-	GUICtrlSetOnEvent(-1, "chkBBStyle")
-
-	$g_hCmbBBAttackStyle[1] = GUICtrlCreateCombo("", $x + 130 + 10, $y, 130, -1, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL)
-	GUICtrlSetOnEvent(-1, "chkBBStyle")
-	GUICtrlSetState(-1, $GUI_HIDE)
-	$g_hCmbBBAttackStyle[2] = GUICtrlCreateCombo("", $x + 130 + 130 + 15, $y, 130, -1, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL)
-	GUICtrlSetOnEvent(-1, "chkBBStyle")
-	GUICtrlSetState(-1, $GUI_HIDE)
-
-	$g_hIcnBBCSV[0] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnReload, $x + 409, $y + 2, 16, 16)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "IconReload_Info_01", "Reload Script Files"))
-	GUICtrlSetOnEvent(-1, 'UpdateComboScriptNameBB')         ; Run this function when the secondary GUI [X] is clicked
-
-	$y += 20
-	$g_hLblNotesScriptBB[0] = GUICtrlCreateLabel("", $x + 5, $y + 5, 130, 155)
-	$g_hLblNotesScriptBB[1] = GUICtrlCreateLabel("", $x + 130 + 10, $y + 5, 130, 155)
-	GUICtrlSetState(-1, $GUI_HIDE)
-	$g_hLblNotesScriptBB[2] = GUICtrlCreateLabel("", $x + 130 + 130 + 15, $y + 5, 130, 155)
-	GUICtrlSetState(-1, $GUI_HIDE)
-
-	$g_hIcnBBCSV[1] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnEdit, $x + 409, $y + 2, 16, 16)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "IconShow-Edit_Info_01", "Show/Edit current Attack Script"))
-	GUICtrlSetOnEvent(-1, "EditScriptBB")
-
-	$y += 20
-	$g_hIcnBBCSV[2] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnAddcvs, $x + 409, $y + 2, 16, 16)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "IconCreate_Info_01", "Create a new Attack Script"))
-	GUICtrlSetOnEvent(-1, "NewScriptBB")
-
-	$y += 20
-	$g_hIcnBBCSV[3] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnCopy, $x + 409, $y + 2, 16, 16)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "IconCopy_Info_01", "Copy current Attack Script to a new name"))
-	GUICtrlSetOnEvent(-1, "DuplicateScriptBB")
-
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-	;------------------------------------------------------------------------------------------
-	;----- populate list of script and assign the default value if no exist profile -----------
-	PopulateComboScriptsFilesBB()
-	For $i = 0 To 2
-		Local $tempindex = _GUICtrlComboBox_FindStringExact($g_hCmbBBAttackStyle[$i], $g_sAttackScrScriptNameBB[$i])
-		If $tempindex = -1 Then $tempindex = 0
-		_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$i], $tempindex)
-	Next
+	;$y += 58
+	;$x = 15
+	;
+	;$g_hChkBBCSVAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCSVAttack", "CSV Attack"), $x + 5,  $y - 5, -1, -1)
+	;; GUICtrlSetState(-1, $GUI_DISABLE)
+	;
+	;Static $sBBCSVSettingsString = GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCSVSettingsOne", "Only one CSV") & "|" & _
+	;							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCSVSettingsCustom", "CSV by weaknesses") & "|" & _
+	;						       GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCSVSettingsRandom", "Random CSV")
+	;
+	;$g_hCmbBBCSVSettings = GUICtrlCreateCombo("", $x + 142,  $y - 5, 130, -1, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL)
+	;GUICtrlSetData(-1, $sBBCSVSettingsString, "0")
+	;_GUICtrlComboBox_SetCurSel($g_hCmbBBCSVSettings, 0)
+	;GUICtrlSetOnEvent(-1, 'CmbBBCSVSettings')
+	;
+	;$y += 17
+	;$g_hGrpGuideScriptBB[0] = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "GrpGuideScriptBB_Info_01", "CSV For Standard Base"), $x + 5, $y, 134, $g_iSizeHGrpTab4 - 145)
+	;GUICtrlSetFont(-1, 7)
+	;GUICtrlCreateGroup("", -99, -99, 1, 1)
+	;$g_hGrpGuideScriptBB[1] = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "GrpGuideScriptBB_Info_02", "CSV For Weak Ground Base"), $x + 130 + 10, $y, 134, $g_iSizeHGrpTab4 - 145)
+	;GUICtrlSetFont(-1, 7)
+	;GUICtrlSetState(-1, $GUI_HIDE)
+	;GUICtrlCreateGroup("", -99, -99, 1, 1)
+	;$g_hGrpGuideScriptBB[2] = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "GrpGuideScriptBB_Info_03", "CSV For Weak Air Base"), $x + 130 + 130 + 15, $y, 134, $g_iSizeHGrpTab4 - 145)
+	;GUICtrlSetFont(-1, 7)
+	;GUICtrlSetState(-1, $GUI_HIDE)
+	;GUICtrlCreateGroup("", -99, -99, 1, 1)
+	;$y += 15
+	;$x = 7 + 10
+	;$g_hCmbBBAttackStyle[0] = GUICtrlCreateCombo("", $x + 5, $y, 130, -1, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL)
+	;_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "CmbScriptName", "Choose the script; You can edit/add new scripts located in folder: 'CSV/BuilderBase'"))
+	;GUICtrlSetState(-1, $GUI_UNCHECKED)
+	;GUICtrlSetOnEvent(-1, "chkBBStyle")
+	;
+	;$g_hCmbBBAttackStyle[1] = GUICtrlCreateCombo("", $x + 130 + 10, $y, 130, -1, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL)
+	;GUICtrlSetOnEvent(-1, "chkBBStyle")
+	;GUICtrlSetState(-1, $GUI_HIDE)
+	;$g_hCmbBBAttackStyle[2] = GUICtrlCreateCombo("", $x + 130 + 130 + 15, $y, 130, -1, $CBS_DROPDOWNLIST + $CBS_AUTOHSCROLL + $WS_VSCROLL)
+	;GUICtrlSetOnEvent(-1, "chkBBStyle")
+	;GUICtrlSetState(-1, $GUI_HIDE)
+	;
+	;$g_hIcnBBCSV[0] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnReload, $x + 409, $y + 2, 16, 16)
+	;_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "IconReload_Info_01", "Reload Script Files"))
+	;GUICtrlSetOnEvent(-1, 'UpdateComboScriptNameBB')         ; Run this function when the secondary GUI [X] is clicked
+	;
+	;$y += 20
+	;$g_hLblNotesScriptBB[0] = GUICtrlCreateLabel("", $x + 5, $y + 5, 130, 155)
+	;$g_hLblNotesScriptBB[1] = GUICtrlCreateLabel("", $x + 130 + 10, $y + 5, 130, 155)
+	;GUICtrlSetState(-1, $GUI_HIDE)
+	;$g_hLblNotesScriptBB[2] = GUICtrlCreateLabel("", $x + 130 + 130 + 15, $y + 5, 130, 155)
+	;GUICtrlSetState(-1, $GUI_HIDE)
+	;
+	;$g_hIcnBBCSV[1] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnEdit, $x + 409, $y + 2, 16, 16)
+	;_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "IconShow-Edit_Info_01", "Show/Edit current Attack Script"))
+	;GUICtrlSetOnEvent(-1, "EditScriptBB")
+	;
+	;$y += 20
+	;$g_hIcnBBCSV[2] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnAddcvs, $x + 409, $y + 2, 16, 16)
+	;_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "IconCreate_Info_01", "Create a new Attack Script"))
+	;GUICtrlSetOnEvent(-1, "NewScriptBB")
+	;
+	;$y += 20
+	;$g_hIcnBBCSV[3] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnCopy, $x + 409, $y + 2, 16, 16)
+	;_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "IconCopy_Info_01", "Copy current Attack Script to a new name"))
+	;GUICtrlSetOnEvent(-1, "DuplicateScriptBB")
+	;
+	;GUICtrlCreateGroup("", -99, -99, 1, 1)
+	;
+	;;------------------------------------------------------------------------------------------
+	;;----- populate list of script and assign the default value if no exist profile -----------
+	;PopulateComboScriptsFilesBB()
+	;For $i = 0 To 2
+	;	Local $tempindex = _GUICtrlComboBox_FindStringExact($g_hCmbBBAttackStyle[$i], $g_sAttackScrScriptNameBB[$i])
+	;	If $tempindex = -1 Then $tempindex = 0
+	;	_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$i], $tempindex)
+	;Next
 
 EndFunc
 

@@ -629,20 +629,20 @@ Func CreateCGDes()
 		$g_sTxtCGDes &= $CGDesChallenges[$j][1] & "|"
 	Next
 
-	$g_hGUI_CGDes = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGDes", "Main Village Destruction Challenge"), 322, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	$g_hGUI_CGDes = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGDes", "Main Village Destruction Challenge"), 352, 325, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
 	Local $x = 25, $y = 25
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGDes", "Select Destruction Challenges"), $x - 20, $y - 20, 308, 220)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGDes", "Select Destruction Challenges"), $x - 20, $y - 20, 338, 240)
 	$x += 10
 	$y += 5
 	For $i = 0 To 13
 		If $i < 7 Then
 			GUICtrlCreateLabel($i + 1 & ":", $x - 19, $y + 3 + 25*$i, -1, 18)
-			$g_ahCmbCGDes[$i] = GUICtrlCreateCombo("", $x, $y + 25*$i, 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			$g_ahCmbCGDes[$i] = GUICtrlCreateCombo("", $x, $y + 25*$i, 130, 18)
 				GUICtrlSetOnEvent(-1, "GUI_CGDes")
 				GUICtrlSetData(-1,  $g_sTxtCGDes)
 		Else
-			GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-7), -1, 18)
-			$g_ahCmbCGDes[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-7), 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			GUICtrlCreateLabel($i + 1 & ":", $x + 160 - 19, $y + 3 + 25*($i-7), -1, 18)
+			$g_ahCmbCGDes[$i] = GUICtrlCreateCombo("", $x+160, $y + 25*($i-7), 130, 18)
 				GUICtrlSetOnEvent(-1, "GUI_CGDes")
 				GUICtrlSetData(-1,  $g_sTxtCGDes)
 		EndIf
@@ -650,7 +650,7 @@ Func CreateCGDes()
 	$y = 215
 	$g_hBtnCGDesSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGDesSet", "Apply Challenge"), $x - 20, $y, 118, 25)
 		GUICtrlSetOnEvent(-1, "btnSetCGDes")
-	$g_hBtnCGDesRemove = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGDesRemove", "Empty Challenge List"), $x + 150, $y, 118, 25)
+	$g_hBtnCGDesRemove = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGDesRemove", "Empty Challenge List"), $x + 170, $y, 118, 25)
 		GUICtrlSetOnEvent(-1, "BtnCGDesRemove")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
