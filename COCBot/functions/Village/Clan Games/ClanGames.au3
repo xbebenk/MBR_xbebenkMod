@@ -287,7 +287,7 @@ Func _ClanGames($test = False)
 							If $BattleChallenges[$j][1] = "Exotic 11s" And ($g_iTownHallLevel < 10 Or $g_iTownHallLevel > 12) Then ExitLoop     ; TH level 10-11-12
 							If $BattleChallenges[$j][1] = "Triumphant 12s" And $g_iTownHallLevel < 11 Then ExitLoop  ; TH level 11-12-13
 						    If $BattleChallenges[$j][1] = "Tremendous 13s" And $g_iTownHallLevel < 12 Then ExitLoop  ; TH level 12-13
-
+							
 							; Verify your TH level and Challenge
 							If $g_iTownHallLevel < $BattleChallenges[$j][2] Then ExitLoop
 							; Disable this event from INI File
@@ -296,9 +296,9 @@ Func _ClanGames($test = False)
 							If $BattleChallenges[$j][1] = "Attack Up" And $g_iTownHallLevel >= 13 Then ExitLoop
 							; Check your Trophy Range
 							If $BattleChallenges[$j][1] = "Slaying The Titans" And (Int($g_aiCurrentLoot[$eLootTrophy]) < 4100 or Int($g_aiCurrentLoot[$eLootTrophy]) > 5000) Then ExitLoop
-
+							
 						    If $BattleChallenges[$j][1] = "Clash of Legends" And Int($g_aiCurrentLoot[$eLootTrophy]) < 5000 Then ExitLoop
-
+							
 							; Check if exist a probability to use any Spell
 							; If $BattleChallenges[$j][1] = "No-Magic Zone" And ($g_bSmartZapEnable = True Or ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1)) Then ExitLoop
 							; same as above, but SmartZap as condition removed, cause SZ does not necessary triggers every attack
@@ -465,12 +465,9 @@ Func _ClanGames($test = False)
 	If IsDeclared("aTempSelectChallenges") Then
 		If UBound($aTempSelectChallenges) > 0 Then
 			SetDebugLog("$aTempSelectChallenges: " & _ArrayToString($aTempSelectChallenges))
-			; Sort by difficulties
-			;_ArraySort($aTempSelectChallenges, 0, 0, 0, 3)
-			
 			; Sort by time
-			_ArraySort($aTempSelectChallenges, 1, 4, 0, 3)
-
+			_ArraySort($aTempSelectChallenges, 1, 0, 0, 4)
+			
 			Setlog("Next Event will be " & $aTempSelectChallenges[0][0] & " to make in " & $aTempSelectChallenges[0][4] & " min.")
 			; Select and Start EVENT
 			$sEventName = $aTempSelectChallenges[0][0]
@@ -502,7 +499,7 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			Local $CGBattle = ClanGamesChallenges("$BattleChallenges")
 			For $i = 0 To UBound($g_aCmbCGBattle) - 1
 				If $g_aCmbCGBattle[$i] >= 0 Then
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "DestructionChallenges: " & $CGBattle[$g_aCmbCGBattle[$i]][0], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BattleChallenges: " & $CGBattle[$g_aCmbCGBattle[$i]][0], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBattle[$g_aCmbCGBattle[$i]][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
