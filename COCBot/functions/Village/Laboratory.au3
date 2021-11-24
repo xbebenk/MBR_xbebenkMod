@@ -348,35 +348,8 @@ Func FindResearchButton()
 	EndIf
 	
 	If $TryLabAutoLocate Then 
-		SetLog("Try to Auto Locate Laboratory!", $COLOR_INFO)
-		ClickAway()
-		Local $LabResearch = decodeSingleCoord(findImage("Research", $g_sImgLaboratory & "\Research*", GetDiamondFromRect("77,70(700,510)"), 1, True))
-		If IsArray($LabResearch) And UBound($LabResearch) = 2 Then
-			Click($LabResearch[0], $LabResearch[1] + 30)
-			If _Sleep(1000) Then Return
-			Local $BuildingInfo = BuildingInfo(290, 494)
-			If StringInStr($BuildingInfo[1], "Lab") Then 
-				$g_aiLaboratoryPos[0] = $LabResearch[0] + 5
-				$g_aiLaboratoryPos[1] = $LabResearch[1] + 30
-				SetLog("Found Laboratory Lvl " & $BuildingInfo[2] & ", save as Lab Coords : " & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1], $COLOR_INFO)
-				$LabFound = True
-			EndIf
-		EndIf
-		If Not $LabFound Then 
-			Local $Lab = decodeSingleCoord(findImage("Laboratory", $g_sImgLaboratory & "\Laboratory*", GetDiamondFromRect("50,60,800,600"), 1, True))
-			If IsArray($Lab) And UBound($Lab) = 2 Then
-				Click($Lab[0], $Lab[1])
-				If _Sleep(1000) Then Return
-				Local $BuildingInfo = BuildingInfo(290, 494)
-				If StringInStr($BuildingInfo[1], "Lab") Then 
-					$g_aiLaboratoryPos[0] = $Lab[0]
-					$g_aiLaboratoryPos[1] = $Lab[1]
-					SetLog("Found Laboratory Lvl " & $BuildingInfo[2] & ", save as Lab Coords : " & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1], $COLOR_INFO)
-					$LabFound = True
-				EndIf
-			EndIf
-		EndIf
 		
+		$LabFound = AutoLocateLab()
 		If $LabFound Then
 			applyConfig()
 			saveConfig()
@@ -398,5 +371,38 @@ Func FindResearchButton()
 			Return True
 		EndIf
 	EndIf
+EndFunc
+
+Func AutoLocateLab()
+	Local $LabFound = False
+	SetLog("Try to Auto Locate Laboratory!", $COLOR_INFO)
+	ClickAway()
+	Local $LabResearch = decodeSingleCoord(findImage("Research", $g_sImgLaboratory & "\Research*", GetDiamondFromRect("77,70(700,510)"), 1, True))
+	If IsArray($LabResearch) And UBound($LabResearch) = 2 Then
+		Click($LabResearch[0], $LabResearch[1] + 30)
+		If _Sleep(1000) Then Return
+		Local $BuildingInfo = BuildingInfo(290, 494)
+		If StringInStr($BuildingInfo[1], "Lab") Then 
+			$g_aiLaboratoryPos[0] = $LabResearch[0] + 5
+			$g_aiLaboratoryPos[1] = $LabResearch[1] + 30
+			SetLog("Found Laboratory Lvl " & $BuildingInfo[2] & ", save as Lab Coords : " & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1], $COLOR_INFO)
+			$LabFound = True
+		EndIf
+	EndIf
 	
+	If Not $LabFound Then 
+		Local $Lab = decodeSingleCoord(findImage("Laboratory", $g_sImgLaboratory & "\Laboratory*", GetDiamondFromRect("50,60,800,600"), 1, True))
+		If IsArray($Lab) And UBound($Lab) = 2 Then
+			Click($Lab[0], $Lab[1])
+			If _Sleep(1000) Then Return
+			Local $BuildingInfo = BuildingInfo(290, 494)
+			If StringInStr($BuildingInfo[1], "Lab") Then 
+				$g_aiLaboratoryPos[0] = $Lab[0]
+				$g_aiLaboratoryPos[1] = $Lab[1]
+				SetLog("Found Laboratory Lvl " & $BuildingInfo[2] & ", save as Lab Coords : " & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1], $COLOR_INFO)
+				$LabFound = True
+			EndIf
+		EndIf
+	EndIf
+	Return $LabFound
 EndFunc

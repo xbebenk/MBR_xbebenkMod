@@ -773,26 +773,26 @@ Func CreateClanGamesBBDes()
 		$g_sTxtCGBBDes &= $BBDesChallenges[$j][1] & "|"
 	Next
 
-	$g_hGUI_CGBBDes = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGBBDes", "BB Destruction Challenges"), 322, 265, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	$g_hGUI_CGBBDes = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGBBDes", "BB Destruction Challenges"), 322, 315, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
 	Local $x = 25, $y = 25
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGBBDes", "Select BB Destruction Challenges"), $x - 20, $y - 20, 308, 200)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SelectCGBBDes", "Select BB Destruction Challenges"), $x - 20, $y - 20, 308, 250)
 	$x += 10
 	$y += 5
-	For $i = 0 To 9
-		If $i < 5 Then
+	For $i = 0 To 13
+		If $i < 7 Then
 			GUICtrlCreateLabel($i + 1 & ":", $x - 19, $y + 3 + 25*$i, -1, 18)
 			$g_ahCmbCGBBDes[$i] = GUICtrlCreateCombo("", $x, $y + 25*$i, 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 				GUICtrlSetOnEvent(-1, "GUI_CGBBDes")
 				GUICtrlSetData(-1,  $g_sTxtCGBBDes)
 		Else
-			GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-5), -1, 18)
-			$g_ahCmbCGBBDes[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-5), 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-7), -1, 18)
+			$g_ahCmbCGBBDes[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-7), 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 				GUICtrlSetOnEvent(-1, "GUI_CGBBDes")
 				GUICtrlSetData(-1,  $g_sTxtCGBBDes)
 		EndIf
 	Next
 
-	$y = 165
+	$y = 215
 	$g_hBtnCGBBDesSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGBBDesSet", "Apply BB Destruction"), $x - 20, $y, 118, 25)
 		GUICtrlSetOnEvent(-1, "btnSetCGBBDes")
 	$g_hBtnCGBBDesRemove = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGBBDesRemove", "Empty Challenge List"), $x + 150, $y, 118, 25)
