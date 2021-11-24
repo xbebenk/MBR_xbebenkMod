@@ -94,6 +94,7 @@ Func Laboratory($debug=False)
 						SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Max Level. Choose another upgrade.", $COLOR_INFO)
 					Else
 						SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
+						ClickAway()
 						Return False
 					EndIf
 				EndIf
@@ -192,8 +193,9 @@ Func Laboratory($debug=False)
 			EndIf
 			; If We got to here without returning, then nothing available for upgrade
 			SetLog("Nothing available for upgrade at the moment, try again later.")
-			Click(243, 33)
+			ClickAway()
 		EndIf
+	ClickAway()
 	Return False ; No upgrade started
 EndFunc
 
