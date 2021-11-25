@@ -1338,8 +1338,8 @@ Func FirstCheckRoutine()
 						ExitLoop
 					Else
 						$loopcount += 1
-						If $loopcount > 3 Then 
-							Setlog("1st Attack Loop, Already Try 3 times... Exit", $COLOR_ERROR)
+						If $loopcount > 5 Then 
+							Setlog("1st Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
 							ExitLoop
 						Else
 							Setlog("[" & $loopcount & "] 1st Attack Loop, Failed", $COLOR_INFO)
@@ -1388,8 +1388,8 @@ Func FirstCheckRoutine()
 							ExitLoop
 						Else
 							$loopcount += 1
-							If $loopcount > 3 Then 
-								Setlog("2nd Attack Loop, Already Try 3 times... Exit", $COLOR_ERROR)
+							If $loopcount > 5 Then 
+								Setlog("2nd Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
 								ExitLoop
 							Else
 								Setlog("[" & $loopcount & "] 2nd Attack Loop, Failed", $COLOR_INFO)
