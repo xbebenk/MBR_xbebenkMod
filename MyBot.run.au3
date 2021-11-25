@@ -1516,9 +1516,10 @@ EndFunc
 
 Func GotoBBTodoCG()
 	If SwitchBetweenBases() And isOnBuilderBase() Then
+		$g_bStayOnBuilderBase = True
 		DoAttackBB()
-		If _Sleep($DELAYRUNBOT3) Then Return
 		; switch back to normal village
+		$g_bStayOnBuilderBase = False
 		SwitchBetweenBases()
 	EndIf
 EndFunc
