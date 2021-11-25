@@ -99,13 +99,13 @@ Global $g_sImgBBLoot = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\"
 
 ; Builder Base Attack
 Global $g_aOpponentVillageVisible[1][3] = [[0xFED5D4, 0, 1]] ; more ez ; samm0d
+Global $g_sImgCustomArmyBB = @ScriptDir & "\imgxml\Attack\BuilderBase\ChangeTroops"
 Global Const $g_sBundleBuilderHall = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\BuilderHall"
 Global Const $g_sBundleDeployPointsBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\DeployPoints"
 Global Const $g_sImgOpponentBuildingsBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\"
 ; Global Const $g_sImgAttackBtnBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Attack\AttackBtn\"
 ; Global Const $g_sImgVersusWindow = @ScriptDir & "\imgxml\Attack\BuilderBase\Attack\VersusBattle\Window\"
 ; Global Const $g_sImgCloudSearch = @ScriptDir & "\imgxml\Attack\BuilderBase\Attack\VersusBattle\Clouds\"
-Global $g_sImgCustomArmyBB = @ScriptDir & "\imgxml\Resources\BuildersBase\ChangeTroops\"
 
 #EndRegion
 

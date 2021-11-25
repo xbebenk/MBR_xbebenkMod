@@ -280,18 +280,14 @@ Func CorrectAttackBarBB(ByRef $aAvailableTroops)
 	EndIf
 
 	_ArraySort($aAvailableTroops, 0, 0, 0, 1)
-
 	Local $iSlotWidth = 72
 	Local $iDefaultY = 655
-	Local $iCampsQuantities = 0
+	Local $iCampsQuantities = Ubound($aAvailableTroops)
 	Local $aSwicthBtn[0]
-	Local $aSlotSwitch[4] = [111, 650, 0xEEF1EE, 25]
-	While _ColorCheck(_GetPixelColor($aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth), $aSlotSwitch[1], True), Hex($aSlotSwitch[2], 6), $aSlotSwitch[3])
-		ReDim $aSwicthBtn[$iCampsQuantities + 1]
-		$aSwicthBtn[$iCampsQuantities] = $aSlotSwitch[0] + Int($iCampsQuantities * $iSlotWidth)
-		$iCampsQuantities += 1
-	WEnd
-
+	For $z = 0 To Ubound($aAvailableTroops) - 1
+		ReDim $aSwicthBtn[$z+1]
+		$aSwicthBtn[$z] = $aAvailableTroops[$z][1] + 5
+	Next
 	Setlog("Available " & $iCampsQuantities & " Camps.", $COLOR_INFO)
 
 	Local $aCamps[0], $aCampsFake[0], $iLast = -1, $bOkCamps = False
@@ -412,7 +408,7 @@ Func CorrectAttackBarBB(ByRef $aAvailableTroops)
 		For $iSleepWait = 0 To 4
 			If Not $g_bRunState Then Return
 			If _Sleep(1000) Then Return
-			If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 638, 860, 665) = "ChangeTDis" Then ExitLoop
+			If QuickMIS("N1", $g_sImgCustomArmyBB, 60, 632, 800, 666) = "ChangeTDis" Then ExitLoop
 			If $iSleepWait <> 4 Then ContinueLoop
 			Setlog("Error at Camps!", $COLOR_ERROR)
 			$iAvoidInfLoop += 1
@@ -421,7 +417,7 @@ Func CorrectAttackBarBB(ByRef $aAvailableTroops)
 		Next
 
 		; Open eyes and learn.
-		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", "0,462(861,550)", True))
+		$aAttackBar = decodeSingleCoord(findImageInPlace($sMissingCamp, $g_sImgDirBBTroops & "\" & $sMissingCamp & "*", "40,462(861,550)", True))
 		If UBound($aAttackBar) >= 2 Then
 			; If The item is The Troop that We Missing
 			If _Sleep(250) Then Return
@@ -446,7 +442,7 @@ Func CorrectAttackBarBB(ByRef $aAvailableTroops)
 	If _Sleep(500) Then Return
 
 	If $bWaschanged Then
-		If QuickMIS("N1", $g_sImgCustomArmyBB, 2, 638, 860, 665) = "ChangeTDis" Then
+		If QuickMIS("N1", $g_sImgCustomArmyBB, 60, 632, 800, 666) = "ChangeTDis" Then
 			Click(8, 720, 1)
 		EndIf
 	Else

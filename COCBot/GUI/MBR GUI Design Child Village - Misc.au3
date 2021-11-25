@@ -356,13 +356,13 @@ Func CreateMiscNormalVillageSubTab()
 			GUICtrlSetOnEvent(-1, "btnLocateQueenAltar")
 
 	$x += 38
-		$g_hBtnLocateWardenAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Grand Warden", "Grand Warden"), $x, $y, 36, 36, $BS_ICON)
+		$g_hBtnLocateWardenAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Warden", "Warden"), $x, $y, 36, 36, $BS_ICON)
 			_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnWardenBoostLocate)
 			_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnAltarWarden_Info_01", "Grand Warden Altar"))
 			GUICtrlSetOnEvent(-1, "btnLocateWardenAltar")
 
 	$x += 38
-		$g_hBtnLocateChampionAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Royal Champion", "Royal Champion"), $x, $y, 36, 36, $BS_ICON)
+		$g_hBtnLocateChampionAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Champion", "Champion"), $x, $y, 36, 36, $BS_ICON)
 			_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnChampionBoostLocate)
 			_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnAltarChampion_Info_01", "Royal Champion Altar"))
 			GUICtrlSetOnEvent(-1, "btnLocateChampionAltar")
