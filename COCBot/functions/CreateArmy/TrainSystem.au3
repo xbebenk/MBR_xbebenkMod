@@ -1110,7 +1110,7 @@ Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = 
 		Local $xSlot
 		For $i = 0 To UBound($aResult) - 1
 			$xSlot = Int((Number($aResult[$i][1]) - 25) / 71)
-			$aResult[$i][3] = Number(getQueueTroopsQuantity(25 + $xSlot * 71, 190))
+			$aResult[$i][3] = Number(getQueueTroopsQuantity(25 + $xSlot * 71, 162))
 			SetDebugLog($aResult[$i][0] & " (" & $xSlot & ") x" & $aResult[$i][3])
 		Next
 	EndIf
