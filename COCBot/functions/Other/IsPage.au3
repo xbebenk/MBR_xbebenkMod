@@ -244,7 +244,7 @@ Func IsFullScreenWindow()
 	$result = WaitforPixel(823,44,825,46, "FFFFFF", 10, 2)
 	
 	If $result Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found FullScreen Window to Close", $COLOR_ACTION)
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found FullScreen Window", $COLOR_ACTION)
 		Return True
 	EndIf
 	Return False
