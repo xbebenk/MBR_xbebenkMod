@@ -161,33 +161,12 @@ Func DoUpgrade($bTest = False)
 		Return False
 	EndIf
 	
-	Local $aUpgradeButton
-	Local $bMustIgnoreUpgrade = False
-	; check if any wrong click by verifying the presence of the Upgrade button (the hammer)
-	
-	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_aUpgradeNameLevel[2] > 11 Then
-		If $g_iChkUpgradesToIgnore[35] = 1 Then ;TH Weapon
-			$bMustIgnoreUpgrade = True
-		Else
-			$aUpgradeButton = findButton("THWeapon", Default, 1, True)
-			If Not IsArray($aUpgradeButton) And Not UBound($aUpgradeButton, 1) = 2 Then
-				SetLog("No Upgrade Weapon Button here... Wrong click, looking next...", $COLOR_WARNING)
-				Return False
-			EndIf
-		Endif
-	Else
-		$aUpgradeButton = findButton("Upgrade", Default, 1, True)
-		If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
-			SetLog("No upgrade here... Wrong click, looking next...", $COLOR_WARNING)
-			Return False
-		EndIf
-		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1) ? True : False
-	EndIf
-
-	
+	Local $bMustIgnoreUpgrade = False, $bUpgradeTHWeapon = False
 	; matchmaking between building name and the ignore list
 	If $g_aUpgradeNameLevel[1] = "po al Champion" Then $g_aUpgradeNameLevel[1] = "Royal Champion"
 	Switch $g_aUpgradeNameLevel[1]
+		Case "Town Hall"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1) ? True : False
 		Case "Barbarian King"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1 Or $g_bUpgradeKingEnable = True) ? True : False
 		Case "Archer Queen"
@@ -282,6 +261,22 @@ Func DoUpgrade($bTest = False)
 			$bMustIgnoreUpgrade = False
 	EndSwitch
 	
+	Local $aUpgradeButton, $aTmpUpgradeButton
+	$aUpgradeButton = findButton("Upgrade", Default, 1, True) ;try to find Upgrade Button (hammer)
+	
+	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_aUpgradeNameLevel[2] > 11 And $g_iChkUpgradesToIgnore[35] = 0 Then ;Upgrade THWeapon not Ignored
+		$aTmpUpgradeButton = findButton("THWeapon", Default, 1, True) ;try to find UpgradeTHWeapon button (swords)
+		If IsArray($aTmpUpgradeButton) And UBound($aTmpUpgradeButton) = 2 Then 
+			$bMustIgnoreUpgrade = False
+			$aUpgradeButton = $aTmpUpgradeButton
+		EndIf
+	Endif
+	
+	If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
+		SetLog("No upgrade here... Wrong click, looking next...", $COLOR_WARNING)
+		Return False
+	EndIf
+	
 	; check if the upgrade name is on the list of upgrades that must be ignored
 	If $bMustIgnoreUpgrade Then
 		SetLog($g_aUpgradeNameLevel[1] & " : This upgrade must be ignored, looking next...", $COLOR_WARNING)
@@ -289,7 +284,7 @@ Func DoUpgrade($bTest = False)
 	Else
 		SetLog("Building Name: " & $g_aUpgradeNameLevel[1], $COLOR_DEBUG)
 	EndIf
-
+	
 	; if upgrade not to be ignored, click on the Upgrade button to open Upgrade window
 	ClickP($aUpgradeButton)
 	If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
