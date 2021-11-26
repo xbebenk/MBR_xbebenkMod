@@ -22,7 +22,7 @@ Func checkObstacles($bBuilderBase = Default) ;Checks if something is in the way 
 		; Android not available
 		Return FuncReturn(True)
 	EndIf
-	
+
 	Local $wasForce = OcrForceCaptureRegion(False)
 	$iRecursive += 1
 	Local $Result = _checkObstacles($bBuilderBase, $iRecursive > 5)
@@ -238,7 +238,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		PureClick(520, 475, 1, 0) ; Click No Thanks
 		$g_bMinorObstacle = True
-		
+
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
@@ -258,15 +258,43 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
+
 	If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 3) Then
-		SetDebugLog("checkObstacles: Found WelcomeBack Chief Window to close")
+		SetDebugLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
 		Click(440, 526)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 	EndIf
-	If IsFullScreenWindow() Then 
+
+	If WaitforPixel(685, 30, 686, 31, Hex(0xE6E6E6, 6), 6, 3) Then
+		SetDebugLog("checkObstacles: Found SCID popup connect suggestion", $COLOR_ACTION)
+		Click(650, 60)
+		If _Sleep(1000) Then Return
+		Local $aSuperCellIDWindowsUI, $bSCIDWindowOpened = False
+		For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
+			$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default))
+			If _Sleep(500) Then Return
+			If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
+				SetLog("SupercellID Window Opened", $COLOR_DEBUG)
+				$bSCIDWindowOpened = True
+				ExitLoop
+			EndIf
+			If Not $g_bRunState Then Return
+			If _Sleep(900) Then Return
+		Next
+		If $bSCIDWindowOpened Then
+			AndroidBackButton() ;Send back button to android
+			If _Sleep(1000) Then Return
+			If IsEndBattlePage() Then
+				AndroidBackButton()
+			EndIf
+		EndIf
+	EndIf
+
+	If IsFullScreenWindow() Then
 		Click(825,45)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 	EndIf
+
 	If Not $bHasTopBlackBar And _CheckPixel($aIsMainGrayed, $g_bNoCapturePixel) Then
 		SetDebugLog("checkObstacles: Found gray Window to close")
 		PureClickP($aAway, 1, 0, "#0133") ;Click away If things are open
@@ -315,7 +343,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Return True
 		EndIf
 	EndIf
-	
+
 	If IsPostDefenseSummaryPage() Then
 		$aMessage = _PixelSearch(23, 566, 36, 580, Hex(0xE0E1CE, 6), 10, True)
 		If IsArray($aMessage) Then
@@ -325,7 +353,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Return True
 		EndIf
 	EndIf
-	
+
 	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
 	If UBound($CSFoundCoords) > 1 Then
 		SetLog("CoC Has Stopped Error .....", $COLOR_ERROR)
@@ -366,7 +394,7 @@ Func SwitchForceAnotherDevice($NextAccount)
 	If Not $abAccountNo[$NextAccount] Then $NextAccount = 0
 	$g_iNextAccount = $NextAccount
 	If Not $g_bRunState Then Return
-	
+
 	SetLog("Switching to Account [" & $g_iNextAccount + 1 & "]")
 	Local $bSharedPrefs = $g_bChkSharedPrefs And HaveSharedPrefs($g_asProfileName[$g_iNextAccount])
 	SwitchAccountVariablesReload("Save")
@@ -376,7 +404,7 @@ Func SwitchForceAnotherDevice($NextAccount)
 		$g_aiRunTime[$g_iCurAccount] += __TimerDiff($g_ahTimerSinceSwitched[$g_iNextAccount])
 		$g_ahTimerSinceSwitched[$g_iCurAccount] = 0
 	EndIf
-	
+
 	SwitchAccountVariablesReload()
 
 	$g_ahTimerSinceSwitched[$g_iCurAccount] = __TimerInit()
