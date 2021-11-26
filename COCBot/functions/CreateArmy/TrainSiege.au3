@@ -27,11 +27,11 @@ Func TrainSiege($bTrainFullSiege = False)
 
 	Local $aCheckIsOccupied[4] = [822, 206, 0xE00D0D, 10]
 	Local $aCheckIsFilled[4] = [802, 157, 0xD7AFA9, 10]
-	Local $aCheckIsAvailableSiege[4] = [58, 523, 0x64BA29, 10]
-	Local $aCheckIsAvailableSiege1[4] = [229, 523, 0x64BA29, 10]
-	Local $aCheckIsAvailableSiege2[4] = [400, 523, 0x64BA29, 10]
-	Local $aCheckIsAvailableSiege3[4] = [576, 523, 0x64BA29, 10]
-	Local $aCheckIsAvailableSiege4[4] = [750, 523, 0x64BA29, 10]
+	Local $aCheckIsAvailableSiege[4] = [58, 355, 0x8AB7DE, 10]
+	Local $aCheckIsAvailableSiege1[4] = [229, 355, 0x8AB7DE, 10]
+	Local $aCheckIsAvailableSiege2[4] = [400, 355, 0x8AB7DE, 10]
+	Local $aCheckIsAvailableSiege3[4] = [576, 355, 0x8AB7DE, 10]
+	Local $aCheckIsAvailableSiege4[4] = [750, 355, 0x8AB7DE, 10]
 
 	Local $aiQueueSiegeMachine[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
 	Local $aiTotalSiegeMachine = $g_aiCurrentSiegeMachines
