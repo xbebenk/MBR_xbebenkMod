@@ -678,7 +678,7 @@ Func btnWalls()
 	$g_bRunState = True
 	Zoomout()
 	$g_iUpgradedWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbWalls[0])
-	If imglocCheckWall() Then SetLog("Hey Chef! We found the Wall!")
+	If imglocCheckWall($g_iUpgradedWallLevel) Then SetLog("Hey Chef! We found the Wall!")
 	$g_bRunState = $wasRunState
 	AndroidShield("btnWalls") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnWalls
