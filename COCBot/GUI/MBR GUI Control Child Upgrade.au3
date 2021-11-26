@@ -645,18 +645,31 @@ Func cmbWalls()
 	Next
 
 	For $y = 0 To 2
-		If _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$y]) <= 3 Then $DisableOpt = True
+		If _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$y]) <= 3 Then 
+			$DisableOpt = True
+			$g_iUpgradeWallLootType = 0
+			ExitLoop
+		EndIf
 	Next
 	
 	GUICtrlSetState($g_hRdoUseElixir, $DisableOpt ? BitOR($GUI_DISABLE, $GUI_UNCHECKED) : $GUI_ENABLE)
 	GUICtrlSetState($g_hRdoUseElixirGold, $DisableOpt ? BitOR($GUI_DISABLE, $GUI_UNCHECKED) : $GUI_ENABLE)
 	GUICtrlSetState($g_hTxtWallMinElixir, $DisableOpt ? $GUI_DISABLE : $GUI_ENABLE)
 	
-	If $DisableOpt Then
-		GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
-		GUICtrlSetState($g_hRdoUseElixir, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hRdoUseElixirGold, $GUI_UNCHECKED)
-	EndIf
+	Switch $g_iUpgradeWallLootType
+		Case 0
+			GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
+			GUICtrlSetState($g_hRdoUseElixir, $GUI_UNCHECKED)
+			GUICtrlSetState($g_hRdoUseElixirGold, $GUI_UNCHECKED)
+		Case 1
+			GUICtrlSetState($g_hRdoUseGold, $GUI_UNCHECKED)
+			GUICtrlSetState($g_hRdoUseElixir, $GUI_CHECKED)
+			GUICtrlSetState($g_hRdoUseElixirGold, $GUI_UNCHECKED)
+		Case 2
+			GUICtrlSetState($g_hRdoUseGold, $GUI_UNCHECKED)
+			GUICtrlSetState($g_hRdoUseElixir, $GUI_UNCHECKED)
+			GUICtrlSetState($g_hRdoUseElixirGold, $GUI_CHECKED)
+	EndSwitch
 	
 EndFunc   ;==>cmbWalls
 
