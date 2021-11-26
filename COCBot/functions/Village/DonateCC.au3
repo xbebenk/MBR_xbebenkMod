@@ -261,7 +261,7 @@ Func DonateCC($bCheckForNewMsg = False)
 	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
 
 	Local $iTimer
-	Local $sSearchArea, $aiSearchArray[4] = [200, 90, 300, 700], $aiSearchArrayBackUp = $aiSearchArray
+	Local $sSearchArea, $aiSearchArray[4] = [200, 40, 300, 700], $aiSearchArrayBackUp = $aiSearchArray
 	Local $aiDonateButton
 
 	While $bDonate
@@ -643,10 +643,8 @@ Func DonateCC($bCheckForNewMsg = False)
 			$bDonate = True
 			$aiSearchArray[1] = $aiDonateButton[1] + 20
 
-			If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
 			ClickAway("Left")
-
-			If _Sleep($DELAYDONATEWINDOW1) Then ExitLoop
+			If _Sleep(2500) Then Return
 		EndIf
 
 		$sSearchArea = GetDiamondFromArray($aiSearchArray)
@@ -659,24 +657,21 @@ Func DonateCC($bCheckForNewMsg = False)
 			ContinueLoop
 		Else
 			SetDebugLog("No more Donate buttons found, closing chat", $COLOR_DEBUG)
+			$bDonate = False
 		EndIf
 
 		;;; Scroll Down
-		ForceCaptureRegion()
-		$Scroll = _PixelSearch(293, 687 - 30, 295, 693 - 30, Hex(0xFFFFFF, 6), 20)
-		If IsArray($Scroll) Then
-			;xbebenk, check chat button on left covering donatedTroops/Total 
-			Local $leftButton
-			$leftButton = _PixelSearch(21, 643, 23, 649, Hex(0xFFFFFF, 6), 20)
-			If IsArray($leftButton) Then
-				Setlog("Left chat button covering donation capacity", $COLOR_WARNING)
-				Click($leftButton[0], $leftButton[1], 1, 0, "#0177")
-			Else
-				Click($Scroll[0], $Scroll[1], 1, 0, "#0172")
-			EndIf			
-			
+		;ForceCaptureRegion()
+		Local $iCount = 0
+		While WaitforPixel(293, 592, 294, 593, "A2D50D", 6, 1)
+			$iCount += 1
+			Click(295, 600, 1, 0, "#0172")
 			If _Sleep($DELAYDONATECC2) Then Return
 			$bDonate = True
+			If $iCount > 4 Then ExitLoop
+		Wend
+		
+		If $bDonate Then 
 			$aiSearchArray = $aiSearchArrayBackUp
 			ContinueLoop
 		EndIf
