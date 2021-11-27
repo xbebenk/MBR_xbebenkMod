@@ -1317,10 +1317,6 @@ EndFunc   ;==>TogglePauseImpl
 
 Func BotClose($SaveConfig = Default, $bExit = True)
 	_WinAPI_PostMessage($g_hFrmBotBackend, $WM_MYBOTRUN_API, 0x1040, $g_hFrmBot)
-	If $g_bChkSuperCellID Then 
-		Local $cmdOutput = AndroidAdbSendShellCommand("settings put global policy_control null*", 1000) ;enable statusbar 
-		SetDebugLog("Enable statusbar command Output: " & $cmdOutput, $COLOR_SUCCESS)
-	EndIf
 	$g_bRunState = False
 	$g_bBotPaused = False
 	SetLog("Closing " & $g_sBotTitle & " now ...")
