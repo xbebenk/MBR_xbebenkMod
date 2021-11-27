@@ -68,7 +68,6 @@ Func _ClanGames($test = False)
 		Else
 			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
 			If _Sleep(500) Then Return
-			If $g_bDebugClick Then SaveDebugImage("ClanGames_Challenges", True)
 			Local $sTimeCG
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 				SetLog("Your score limit is reached! Congrats")
@@ -101,7 +100,6 @@ Func _ClanGames($test = False)
 	If Not $g_bRunState Then Return ;trap pause or stop bot
 	If IsEventRunning() Then Return
 	If Not $g_bRunState Then Return ;trap pause or stop bot
-
 	UpdateStats()
 	
 	Local $HowManyImages = _FileListToArray($sTempPath, "*", $FLTA_FILES)
@@ -490,6 +488,7 @@ Func _ClanGames($test = False)
 	If $g_bChkClanGamesPurgeAny Then ; still have to purge, because no enabled event on setting found
 		SetLog("Still have to purge, because no enabled event on setting found", $COLOR_WARNING)
 		SetLog("No Event found, lets purge 1 most top event", $COLOR_WARNING)
+		If $g_bDebugClick Then SaveDebugImage("ClanGames_Challenges", True)
 		ForcePurgeEvent(False, True)
 		CloseClangamesWindow()
 		If _Sleep(1000) Then Return
