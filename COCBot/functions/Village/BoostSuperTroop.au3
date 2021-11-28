@@ -46,7 +46,8 @@ Func BoostSuperTroop($bTest = False)
 							$iColumnX = $columnStart + (3 * ($picswidth + $picspad))
 					EndSelect
 					
-					Local $iRow = Floor($g_iCmbSuperTroops[$i] / $iPicsPerRow) ; get row Stroop
+					Local $iRow = Ceiling($g_iCmbSuperTroops[$i] / $iPicsPerRow) ; get row Stroop
+					SetDebugLog("$iRow = " & $iRow, $COLOR_DEBUG)
 					StroopNextPage($iRow) ; go directly to the needed Row
 					
 					If $iRow = 3 Then ; for last row, we cannot scroll it to middle page
@@ -79,10 +80,11 @@ Func BoostSuperTroop($bTest = False)
 											If $bTest Then
 												CancelBoost("Using Potion")
 												$TroopBoosted = True
+											Else
+												Click($g_iQuickMISX + 330, $g_iQuickMISY + 400, 1)
+												Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
+												ClickAway()
 											EndIf
-											Click($g_iQuickMISX + 330, $g_iQuickMISY + 400, 1)
-											Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
-											ClickAway()
 										Else
 											Setlog("Could not find Potion button for final upgrade " & $sTroopName, $COLOR_ERROR)
 											ClickAway()
@@ -104,9 +106,10 @@ Func BoostSuperTroop($bTest = False)
 													If $bTest Then
 														CancelBoost("Using Dark Elixir")
 														$TroopBoosted = True
+													Else
+														Click($g_iQuickMISX + 320, $g_iQuickMISY + 400, 1)
+														ClickAway()
 													EndIf
-													Click($g_iQuickMISX + 320, $g_iQuickMISY + 400, 1)
-													ClickAway()
 												Else
 													Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
 													ClickAway()
@@ -139,9 +142,10 @@ Func BoostSuperTroop($bTest = False)
 												If $bTest Then
 													CancelBoost("Using Dark Elixir")
 													$TroopBoosted = True
+												Else
+													Click($g_iQuickMISX + 320, $g_iQuickMISY + 400, 1)
+													ClickAway()
 												EndIf
-												Click($g_iQuickMISX + 320, $g_iQuickMISY + 400, 1)
-												ClickAway()
 											Else
 												Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
 												ClickAway()
@@ -173,7 +177,7 @@ Func BoostSuperTroop($bTest = False)
 			EndIf
 			If _Sleep(1000) Then Return
 			$curRow = 1
-			If $TroopBoosted = True And $g_iCmbSuperTroops[UBound($g_iCmbSuperTroops) - 1] > 0 Then OpenBarrel()
+			If $TroopBoosted = True And $g_iCmbSuperTroops[UBound($g_iCmbSuperTroops) - 1] > 0 And $i = 0 Then OpenBarrel()
 		Next
 	EndIf ;open barrel
 	ClickAway()
@@ -233,7 +237,8 @@ EndFunc
 
 Func StroopNextPage($iRow)
 	Local $iXMidPoint = 425
-	For $i = 1 To $iRow
+	SetDebugLog("Goto Row: " & $iRow, $COLOR_DEBUG)
+	For $i = 1 To $iRow - 1
 		ClickDrag($iXMidPoint, 250, $iXMidPoint, 65, 500)
 		If _Sleep(1000) Then Return
 	Next
@@ -271,7 +276,9 @@ Func CancelBoost($aMessage = "")
 	SetLog($aMessage & ", Test = True", $COLOR_DEBUG)
 	SetLog("Emulate Click(" & $g_iQuickMISX + 320 & "," & $g_iQuickMISY + 430 & ") -- Cancelling", $COLOR_DEBUG)
 	ClickAway()
+	If _Sleep(500) Then Return
 	ClickAway()
+	If _Sleep(500) Then Return
 	ClickAway()
 	If _Sleep(1000) Then Return
 EndFunc   ;==>CancelBoost
