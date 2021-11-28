@@ -64,7 +64,7 @@ Global $aWonOneStar[4] = [714, 538, 0xC0C8C0, 20] ; Center of 1st Star for winni
 Global $aWonTwoStar[4] = [739, 538, 0xC0C8C0, 20] ; Center of 2nd Star for winning attack on enemy
 Global $aWonThreeStar[4] = [763, 538, 0xC0C8C0, 20] ; Center of 3rd Star for winning attack on enemy
 Global $aIsAtkDarkElixirFull[4] = [743, 62, 0x270D33, 10] ; Attack Screen DE Resource bar is full
-Global $aIsDarkElixirFull[4] = [709, 102, 0x270D33, 10] ; Main Screen DE Resource bar is full
+Global $aIsDarkElixirFull[4] = [709, 136, 0x270D33, 10] ; Main Screen DE Resource bar is full
 Global $aIsGoldFull[4] = [662, 37, 0xE7C00D, 10] ; Main Screen Gold Resource bar is Full
 Global $aIsElixirFull[4] = [662, 86, 0xC027C0, 10] ; Main Screen Elixir Resource bar is Full
 Global $aPerkBtn[4] = [95, 243, 0x7cd8e8, 10] ; Clan Info Page, Perk Button (blue); 800x780
@@ -84,7 +84,7 @@ Global $g_aShopWindowOpen[4] = [804, 54, 0xC00508, 15] ; Red pixel in lower righ
 Global $aTreasuryWindow[4] = [688, 165, 0xD51115, 20] ; Redish pixel above X to close treasury window
 Global $aAttackForTreasury[4] = [88, 619, 0xF0EBE8, 5] ; Red pixel below X to close treasury window
 Global $aAtkHasDarkElixir[4]  = [ 31, 144, 0x282020, 10] ; Attack Page, Check for DE icon
-Global $aVillageHasDarkElixir[4] = [837, 134, 0x3D2D3D, 10] ; Main Page, Base has dark elixir storage
+Global $aVillageHasDarkElixir[4] = [843, 143, 0x0D0D0D, 10] ; Main Page, Base has dark elixir storage
 
 Global $aCheckTopProfile[4] = [200, 166, 0x868CAC, 5]
 Global $aCheckTopProfile2[4] = [220, 355, 0x4E4D79, 5]
