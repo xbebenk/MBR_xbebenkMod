@@ -17,7 +17,7 @@ Func DropTrophy()
 	
 	If $g_bDropTrophyEnable Then
 		SetDebugLog("Drop Trophy()", $COLOR_DEBUG)
-
+		If Not $g_bRunState Then Return
 		If $g_bDebugDeadBaseImage Then
 			DirCreate($g_sProfileTempDebugPath & "\SkippedZombies\")
 			DirCreate($g_sProfileTempDebugPath & "\Zombies\")
