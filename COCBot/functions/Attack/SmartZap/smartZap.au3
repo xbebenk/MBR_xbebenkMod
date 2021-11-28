@@ -359,7 +359,7 @@ Func smartZap($minDE = -1)
 
 				$performedZap = True
 				$skippedZap = False
-				If _Sleep(1000) Then Return
+				If _Sleep(2000) Then Return
 
 				; If you have one less then max, drop it on drills with level (4 - drill offset) and higher
 			ElseIf $aSpells[0][4] + $aSpells[1][4] + $aSpells[2][4] > (3 - $spellAdjust) And $aDarkDrills[0][2] > (3 - $drillLvlOffset) Then
