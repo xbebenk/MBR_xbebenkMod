@@ -747,9 +747,11 @@ Func GoGoblinMap()
 			Click(818, 55)
 		EndIf
 	EndIf
-	
+	Local $count = 0
 	While Not IsAttackPage()
+		$count += 1
 		If _Sleep(250) Then Return
+		If $count > 50 Then Return
 	Wend
 	
 	If Not $g_bRunState Then Return
@@ -757,9 +759,11 @@ Func GoGoblinMap()
 	If IsAttackPage() Then
 		Click(66, 540)
 	EndIf
-	
+	$count = 0
 	While Not IsMainPage()
+		$count += 1
 		If _Sleep(250) Then Return
+		If $count > 50 Then Return
 	Wend
 	SetLog("Field should be clear now", $COLOR_INFO)
 EndFunc
