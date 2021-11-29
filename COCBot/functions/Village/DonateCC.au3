@@ -683,7 +683,11 @@ Func DonateCC($bCheckForNewMsg = False)
 	If _Sleep($DELAYDONATECC2) Then Return
 
 	If Not ClickB("ClanChatClose") Then
-		SetLog("Try Close ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR)
+		If WaitforPixel(294, 660, 295, 661, "E5E5B2", 10, 1) Then
+			Click(333,352) ;Click ClanChatClose
+		Else
+			SetLog("Try Close ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR) ;we still failed to close clanchat tab
+		EndIf
 	EndIf
 
 	UpdateStats()
