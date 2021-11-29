@@ -461,7 +461,6 @@ Func CheckQuickTrainTroop()
 	If $g_iTotalQuickSpells > $iSpellCamp Then SetLog("Total spells in combo army " & $sLog & "exceeds your camp capacity (" & $g_iTotalQuickSpells & " vs " & $iSpellCamp & ")", $COLOR_ERROR)
 	If $g_iTotalQuickSiegeMachines > $iSiegeMachineCamp Then SetLog("Total siege machines in combo army " & $sLog & "exceeds your camp capacity (" & $g_iTotalQuickSiegeMachines & " vs " & $iSiegeMachineCamp & ")", $COLOR_ERROR)
 
-	;ClickP($aAway, 2, 0, "#0000") ;Click Away
 	$asLastTimeChecked[$g_iCurAccount] = $bResult ? _NowCalc() : ""
 
 EndFunc   ;==>CheckQuickTrainTroop

@@ -46,7 +46,7 @@ Func TrainSystem()
 
 	If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
 
-	ClickP($aAway, 2, 0, "#0346") ;Click Away
+	ClickAway()
 	If _Sleep(500) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
 
 	EndGainCost("Train")
@@ -597,7 +597,7 @@ Func RemoveExtraTroops($toRemove)
 		If _Sleep(500) Then Return
 		If Not _CheckPixel($aButtonRemoveTroopsOK1, True) Then ; If no 'Okay' button found in army tab to save changes
 			SetLog("Cannot find/verify 'Okay' Button in Army tab", $COLOR_WARNING)
-			ClickP($aAway, 2, 0, "#0346") ; Click Away, Necessary! due to possible errors/changes
+			ClickAway() ; Click Away, Necessary! due to possible errors/changes
 			If _Sleep(400) Then OpenArmyOverview(True, "RemoveExtraTroops()") ; Open Army Window AGAIN
 			Return False ; Exit Function
 		EndIf
@@ -607,7 +607,7 @@ Func RemoveExtraTroops($toRemove)
 		If _Sleep(1200) Then Return
 		If Not _CheckPixel($aButtonRemoveTroopsOK2, True) Then ; If no 'Okay' button found to verify that we accept the changes
 			SetLog("Cannot find/verify 'Okay #2' Button in Army tab", $COLOR_WARNING)
-			ClickP($aAway, 2, 0, "#0346") ;Click Away
+			ClickAway()
 			Return False ; Exit function
 		EndIf
 
