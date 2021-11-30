@@ -1296,7 +1296,7 @@ Func FirstCheck()
 	EndIf
 
 	If BotCommand() Then btnStop()
-
+	
 	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 1) Then
 		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
@@ -1359,9 +1359,8 @@ Func FirstCheckRoutine()
 				If _Sleep($DELAYRUNBOT1) Then Return
 			EndIf
 		EndIf
-		
 	EndIf
-
+	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
 		RequestCC() ;only do requestCC here
 		If _Sleep($DELAYRUNBOT2) Then Return
@@ -1411,7 +1410,7 @@ Func FirstCheckRoutine()
 			EndIf
 		EndIf
 	EndIf
-	
+	If Not $g_bRunState Then Return
 	RequestCC(False)
 	checkArmyCamp(False, True)
 	PrepareDonateCC()
