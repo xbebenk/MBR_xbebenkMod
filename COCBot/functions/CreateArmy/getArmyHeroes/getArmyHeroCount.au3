@@ -162,6 +162,24 @@ Func getArmyHeroCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $Chec
 					If $g_bDebugSetlogTrain Or $iDebugArmyHeroCount = 1 Then SetLog("Hero slot#" & $i + 1 & $sMessage & " Upgrade in Process", $COLOR_DEBUG)
 				Case StringInStr($sResult, "none", $STR_NOCASESENSEBASIC)
 					If $g_bDebugSetlogTrain Or $iDebugArmyHeroCount = 1 Then SetLog("Hero slot#" & $i + 1 & " Empty, stop count", $COLOR_DEBUG)
+						SetLog("$g_iHeroAvailable = " & $g_iHeroAvailable, $COLOR_DEBUG)
+						Switch $i
+							Case 0
+								$sMessage = "-Barbarian King"
+								$g_iHeroAvailable += $eHeroKing
+							Case 1
+								$sMessage = "-Archer Queen"
+								$g_iHeroAvailable += $eHeroQueen
+							Case 2
+								$sMessage = "-Grand Warden"
+								$g_iHeroAvailable += $eHeroWarden
+							Case 3
+								$sMessage = "-Royal Champion"
+								$g_iHeroAvailable += $eHeroChampion
+							Case Else
+								$sMessage = "-Very Bad Monkey Needs"
+						EndSwitch
+						SetLog("Adding value to $g_iHeroAvailable, Now = " & $g_iHeroAvailable, $COLOR_DEBUG) ;we add available hero because its not unlocked yet
 					ExitLoop ; when we find empty slots, done looking for heroes
 				Case Else
 					If $bSetLog Then SetLog("Hero slot#" & $i + 1 & " bad OCR string returned!", $COLOR_ERROR)
