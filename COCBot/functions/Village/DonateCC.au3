@@ -80,9 +80,9 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 			Local $xQueue = 829
 			For $j = 0 To 10
 				$xQueue -= 70.5 * $j
-				If _ColorCheck(_GetPixelColor($xQueue, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found at $xQueue
+				If _ColorCheck(_GetPixelColor($xQueue, 156, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found at $xQueue
 					ExitLoop
-				ElseIf _ColorCheck(_GetPixelColor($xQueue, 196, True), Hex(0xD0D0C8, 6), 20) Then ; Gray background
+				ElseIf _ColorCheck(_GetPixelColor($xQueue, 162, True), Hex(0xCFCFC8, 6), 20) Then ; Gray background
 					SetLog("Queue " & ($i = 0 ? "Troops" : "Spells") & " is not prepared, proceed donate!!")
 					$abDonateQueueOnly[$i] = False
 					ContinueLoop 2
@@ -98,7 +98,7 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 			For $j = 0 To (UBound($aSearchResult) - 1)
 				Local $TroopIndex = TroopIndexLookup($aSearchResult[$j][0], "IsDonateQueueOnly()")
 				If $TroopIndex < 0 Then ContinueLoop
-				If _ColorCheck(_GetPixelColor($xQueue - $j * 70.5, 237, True), Hex(0xB9B747, 6), 20) Then ; the green check symbol [185, 183, 71]
+				If _ColorCheck(_GetPixelColor($xQueue - $j * 70.5, 209, True), Hex(0xB6B643, 6), 20) Then ; the green check symbol [185, 183, 71]
 					If $i = 0 Then
 						If _ArrayIndexValid($g_aiAvailQueuedTroop, $TroopIndex) Then
 							$g_aiAvailQueuedTroop[$TroopIndex] += $aSearchResult[$j][1]
