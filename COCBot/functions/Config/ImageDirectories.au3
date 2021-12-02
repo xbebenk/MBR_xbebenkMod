@@ -91,7 +91,6 @@ Global $g_sImgBBBattleStarted = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleS
 Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBBattleMachine_0_90.xml"
 Global $g_sImgOkButton = @ScriptDir & "\imgxml\Attack\BuilderBase\OkayButton\OkayButton_0_90.xml"
 Global $g_sImgFillTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\TrainTroop\"
-Global $g_sImgArmyReady = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyReady"
 Global $g_sImgArmyNeedTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyNeedTrain"
 Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\BBTroops"
 Global $g_sImgBBLootAvail = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\LootAvail_0_90.xml"

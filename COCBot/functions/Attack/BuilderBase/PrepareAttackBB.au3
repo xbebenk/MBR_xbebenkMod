@@ -119,14 +119,10 @@ Func CheckArmyReady()
 	local $bReady = True, $bNeedTrain = False, $bTraining = False
 	
 	If _Sleep($DELAYCHECKFULLARMY2) Then Return ; wait for window
-	If QuickMIS("BC1", $g_sImgArmyReady, 110, 330, 135, 355, True, False) Then
-		$bReady = True
-	Else 
-		$bReady = False
-	EndIf
-
+	
 	If QuickMIS("BC1", $g_sImgArmyNeedTrain, 130, 360, 190, 390, True, False) Then
 		$bNeedTrain = True ;need train, so will train cannon cart
+		$bReady = False
 	EndIf
 	
 	If Not $bReady And $bNeedTrain And $g_bTrainTroopBBCannonnCart Then
