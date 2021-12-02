@@ -77,13 +77,14 @@ Func SearchUpgrade($bTest = False)
 			AutoUpgradeSearchNewBuilding($bTest)
 		EndIf
 	EndIf
-	
+	If Not $g_bRunState Then Return
 	ClickAway()
 	ZoomOut()
 	Return False
 EndFunc
 
 Func AutoUpgradeSearchExisting($bTest = False)
+	If Not $g_bRunState Then Return
 	SetLog("Search For Existing Upgrade", $COLOR_DEBUG)
 	If Not ClickMainBuilder($bTest) Then Return
 	Local $bDebug = $g_bDebugSetlog
@@ -467,7 +468,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 	Local $xstart = 50, $ystart = 50, $xend = 800, $yend = 600
 	Click($x, $y); click on upgrade window
 	If _Sleep(5000) Then Return
-	
+	If Not $g_bRunState Then Return
 	;Search the arrow
 	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,180,860,600"), 1, True, Default))
 	If UBound($ArrowCoordinates) > 1 Then
@@ -476,15 +477,17 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			SetLog("New Building is Wall!, lets try to place 10 Wall", $COLOR_INFO)
 			$IsWall = True
 		EndIf
+		If Not $g_bRunState Then Return
 		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50) ;click new building on shop
 		If _Sleep(2000) Then Return
-	
+		
 		If $IsWall Then 
 			Local $aWall[3] = ["2","Wall",1]
 			Local $aCostWall[3] = ["Gold", 50, 0]
 			local $aCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
 			If IsArray($aCoords) And UBound($aCoords) = 2 Then
 				For $ProMac = 0 To 9 
+					If Not $g_bRunState Then Return
 					Click($aCoords[0], $aCoords[1]+5)
 					If _Sleep(500) Then Return
 					If IsGemOpen(True) Then 
@@ -501,6 +504,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 		; Lets search for the Correct Symbol on field
 		Local $GreenCheckCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
 		If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
+			If Not $g_bRunState Then Return
 			If Not $bTest Then
 				Click($GreenCheckCoords[0], $GreenCheckCoords[1])
 			Else
@@ -513,6 +517,7 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1]) ; Just click RedX position, in case its still there
 			Return True
 		Else 
+			If Not $g_bRunState Then Return
 			;Lets check if exist the [x], it should not exist, but to be safe 
 			Local $RedXCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgRedX & "\RedX*", "FV", 1, True))
 			If IsArray($RedXCoords) And UBound($RedXCoords) = 2 Then
@@ -530,12 +535,11 @@ Func AUNewBuildings($x, $y, $bTest = False)
 		Click(820, 38, 1) ; exit from Shop
 		Return
 	EndIf
-	
-	
 	Return False
 EndFunc ;==>AUNewBuildings
 
 Func AutoUpgradeSearchNewBuilding($bTest = False)
+	If Not $g_bRunState Then Return
 	If Not $g_bPlaceNewBuilding Then Return
 	SetLog("Search For Place New Building", $COLOR_DEBUG)
 	Local $bDebug = $g_bDebugSetlog
