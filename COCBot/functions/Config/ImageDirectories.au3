@@ -206,6 +206,8 @@ Global Const $g_sImgSupercellIDConnected = @ScriptDir & "\imgxml\SwitchAccounts\
 Global Const $g_sImgSupercellIDReload = @ScriptDir & "\imgxml\SwitchAccounts\SupercellID\Reload\SCIDReload*"
 Global Const $g_sImgSupercellIDWindows = @ScriptDir & "\imgxml\SwitchAccounts\SupercellID\SCIDWindows*"
 Global Const $g_sImgSupercellIDSlots = @ScriptDir & "\imgxml\SwitchAccounts\SupercellID\Slots\"
+Global Const $g_sImgSupercellIDConnect = @ScriptDir & "\imgxml\SwitchAccounts\SupercellID\scidconnect*"
+Global Const $g_sImgSupercellIDBlack = @ScriptDir & "\imgxml\SwitchAccounts\SupercellID\scidblack*"
 #EndRegion
 
 #Region ClanGames

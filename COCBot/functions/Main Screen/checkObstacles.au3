@@ -69,6 +69,36 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Return False
 		EndIf
 	EndIf
+	
+	Local $ascidConnectButton = decodeSingleCoord(findImage("SCID", $g_sImgSupercellIDConnect, GetDiamondFromRect("100,20,700,100"), 1, True))
+	If IsArray($ascidConnectButton) And UBound($ascidConnectButton, 1) >= 2 Then
+	;If WaitforPixel(685, 30, 686, 31, Hex(0xE6E6E6, 6), 6, 3) Then
+		SetDebugLog("checkObstacles: Found SCID popup connect suggestion", $COLOR_ACTION)
+		Click($ascidConnectButton[0], $ascidConnectButton[1])
+		If _Sleep(1000) Then Return
+		Local $aSuperCellIDWindowsUI, $bSCIDWindowOpened = False
+		For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
+			If Mod($i, 2) = 0 Then
+				$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default))
+			Else
+				$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDBlack, GetDiamondFromRect("550,450,760,550"), 1, True, Default))
+			EndIf
+			If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
+				SetLog("SupercellID Window Opened", $COLOR_DEBUG)
+				$bSCIDWindowOpened = True
+				ExitLoop
+			EndIf
+			If Not $g_bRunState Then Return
+			If _Sleep(900) Then Return
+		Next
+		If $bSCIDWindowOpened Then
+			AndroidBackButton() ;Send back button to android
+			If _Sleep(1000) Then Return
+			If IsEndBattlePage() Then
+				AndroidBackButton()
+			EndIf
+		EndIf
+	EndIf
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; Detect All Reload Button errors => 1- Another device, 2- Take a break, 3- Connection lost or error, 4- Out of sync, 5- Inactive, 6- Maintenance, 7- SCID Login Screen
@@ -264,32 +294,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Click(440, 526)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 	EndIf
-
-	If WaitforPixel(685, 30, 686, 31, Hex(0xE6E6E6, 6), 6, 3) Then
-		SetDebugLog("checkObstacles: Found SCID popup connect suggestion", $COLOR_ACTION)
-		Click(650, 60)
-		If _Sleep(1000) Then Return
-		Local $aSuperCellIDWindowsUI, $bSCIDWindowOpened = False
-		For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
-			$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default))
-			If _Sleep(500) Then Return
-			If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
-				SetLog("SupercellID Window Opened", $COLOR_DEBUG)
-				$bSCIDWindowOpened = True
-				ExitLoop
-			EndIf
-			If Not $g_bRunState Then Return
-			If _Sleep(900) Then Return
-		Next
-		If $bSCIDWindowOpened Then
-			AndroidBackButton() ;Send back button to android
-			If _Sleep(1000) Then Return
-			If IsEndBattlePage() Then
-				AndroidBackButton()
-			EndIf
-		EndIf
-	EndIf
-
+	
 	If IsFullScreenWindow() Then
 		Click(825,45)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
