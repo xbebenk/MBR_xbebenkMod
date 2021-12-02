@@ -16,7 +16,7 @@
 Func BoostSuperTroop($bTest = False)
 
 	If Not $g_bSuperTroopsEnable Then Return False
-
+	If Not $g_bRunState Then Return
 	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
 		If $g_bSkipBoostSuperTroopOnHalt Then
 			SetLog("BoostSuperTroop() skipped, account on halt attack mode", $COLOR_DEBUG)
@@ -27,6 +27,7 @@ Func BoostSuperTroop($bTest = False)
 	VillageReport(True, True) ;update village resource
 	If OpenBarrel() Then
 		For $i = 0 To 1
+			If Not $g_bRunState Then Return
 			Local $iPicsPerRow = 4, $picswidth = 125, $picspad = 18
 			Local $curRow = 1, $columnStart = 150, $iColumnY1 = 280, $iColumnY2 = 440
 			Local $BoostCost = 0, $BoostDuration = 0, $TroopBoosted = False
