@@ -28,9 +28,13 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 			Return ; exit func if no planned donate checkmarks
 		EndIf
 	EndIf
-
+	
 	;open army overview
-	If $sText <> "IsFullClanCastle" And Not OpenArmyOverview(True, "RequestCC()") Then Return
+	If $sText = "IsFullClanCastle" Then 
+		If Not isTrainPage() Then Return
+	Else
+		If Not OpenArmyOverview(True, "RequestCC()") Then Return
+	EndIf
 
 	If _Sleep($DELAYREQUESTCC1) Then Return
 	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
