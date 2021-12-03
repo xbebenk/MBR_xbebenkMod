@@ -630,6 +630,22 @@ EndFunc   ;==>chkWallOnly1Builder
 
 Func ChkLowLevelAutoUpgradeWall()
 	$g_bUpgradeLowWall = (GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED)
+	If GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED Then
+		$g_bUpgradeLowWall = True
+		GUICtrlSetState($g_hChkUpgradeAnyWallLevel, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbLowLevelWall, $GUI_ENABLE)
+	Else
+		$g_bUpgradeLowWall = False
+		GUICtrlSetState($g_hChkUpgradeAnyWallLevel, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbLowLevelWall, $GUI_DISABLE)
+	EndIf
+	
+	If GUICtrlRead($g_hChkUpgradeAnyWallLevel) = $GUI_CHECKED Then
+		$g_bUpgradeAnyWallLevel = True
+	Else
+		$g_bUpgradeAnyWallLevel = False
+	EndIf
+	$g_iLowLevelWall = _GUICtrlComboBox_GetCurSel($g_hCmbLowLevelWall) + 1
 EndFunc   ;==>chkWallOnly1Builder
 
 Func cmbWalls()

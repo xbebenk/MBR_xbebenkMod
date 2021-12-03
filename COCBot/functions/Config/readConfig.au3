@@ -919,6 +919,8 @@ Func ReadConfig_600_17()
 	IniReadS($g_bChkOnly1Builder, $g_sProfileConfigPath, "upgrade", "Only1Builder", True, "Bool")
 	IniReadS($g_bchkSyncTHWall, $g_sProfileConfigPath, "upgrade", "SyncTHWall", True, "Bool")
 	IniReadS($g_bUpgradeLowWall, $g_sProfileConfigPath, "upgrade", "UpgradeLowWall", True, "Bool")
+	IniReadS($g_iLowLevelWall, $g_sProfileConfigPath, "upgrade", "LowLevelWall", 4, "int")
+	IniReadS($g_bUpgradeAnyWallLevel, $g_sProfileConfigPath, "upgrade", "UpgradeAnyWall", False, "Bool")
 
 	Local $str = StringSplit(IniRead($g_sProfileConfigPath, "upgrade", "UpgradeWall", "0|1|2"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aUpgradeWall) - 1

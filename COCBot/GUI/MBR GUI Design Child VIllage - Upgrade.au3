@@ -39,7 +39,7 @@ Global $g_hTxtUpgrMinGold = 0, $g_hTxtUpgrMinElixir = 0, $g_hTxtUpgrMinDark = 0
 
 ; Walls
 Global $g_hChkWalls = 0, $g_hTxtWallMinGold = 0, $g_hTxtWallMinElixir = 0, $g_hRdoUseGold = 0, $g_hRdoUseElixir = 0, $g_hRdoUseElixirGold = 0
-Global $g_hChkSaveWallBldr = 0, $g_hChkSyncTHLvlWalls = 0, $g_hChkLowLevelAutoUpgradeWall = 0
+Global $g_hChkSaveWallBldr = 0, $g_hChkSyncTHLvlWalls = 0, $g_hChkLowLevelAutoUpgradeWall = 0, $g_hChkUpgradeAnyWallLevel = 0, $g_hCmbLowLevelWall = 0
 Global $g_hBtnFindWalls = 0, $g_hChkOnly1Builder = 0
 Global $g_hCmbWalls[3] = [0, 0, 0]
 Global $g_hLblWallCost[3] = [0, 0, 0]
@@ -513,13 +513,22 @@ Func CreateWallsSubTab()
 		$g_hChkSyncTHLvlWalls = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - ChkSyncTHLvlWalls", "ChkSyncTHLvlWalls", "Sync Wall Level to Upgrade with TH Level"), $x, $y - 2, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - ChkSyncTHLvlWalls", "ChkSyncTHLvlWalls_Info_01", "Enable Auto change Wall Level to Upgrade if detected TH is Upgraded"))
 			GUICtrlSetState(-1, $GUI_ENABLE)
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkSyncTHWall")
 		$y += 20
 		$g_hChkLowLevelAutoUpgradeWall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - ChkLowLevelAutoUpgradeWall", "g_hChkLowLevelAutoUpgradeWall", "Upgrade Low Level Wall using AutoUpgrade"), $x, $y - 2, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - ChkSyncTHLvlWalls", "ChkLowLevelAutoUpgradeWall_Info_01", "Enable Low Wall Level to Upgrade using Auto Upgrade"))
 			GUICtrlSetState(-1, $GUI_ENABLE)
-			GUICtrlSetState(-1, $GUI_CHECKED)
+			GUICtrlSetOnEvent(-1, "ChkLowLevelAutoUpgradeWall")
+		$y += 20
+		GUICtrlCreateLabel("Wall Level Considered as Low:", $x + 30, $y +2)
+		$TxtComboWall = "1|2|3|4|5|6|7"
+		$g_hCmbLowLevelWall = GUICtrlCreateCombo("", $x + 180, $y, 40, 18, BitOR($CBS_DROPDOWNLIST, $SS_RIGHT, $CBS_AUTOHSCROLL))
+			GUICtrlSetOnEvent(-1, "ChkLowLevelAutoUpgradeWall")
+			GUICtrlSetData(-1, $TxtComboWall, "4")
+		$y += 23
+		$g_hChkUpgradeAnyWallLevel = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - ChkLowLevelAutoUpgradeWall", "g_hChkUpgradeAnyWallLevel", "Try Upgrade Any Wall Level"), $x + 30, $y - 2, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - ChkSyncTHLvlWalls", "ChkLowLevelAutoUpgradeWall_Info_01", "Enable Upgrade Any Wall Level if found while search low level wall"))
+			GUICtrlSetState(-1, $GUI_ENABLE)
 			GUICtrlSetOnEvent(-1, "ChkLowLevelAutoUpgradeWall")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
