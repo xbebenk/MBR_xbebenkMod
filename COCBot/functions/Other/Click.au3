@@ -472,6 +472,8 @@ Func _DecodeDebug($message)
 			Return $separator & "Personal Challenges - Open button"
 		Case "#0667"
 			Return $separator & "Personal Challenges - Close button"
+		Case "#0668"
+			Return $separator & "Attack - Deploy Troop"
 
 		Case "#0000"
 			Return $separator & " "
