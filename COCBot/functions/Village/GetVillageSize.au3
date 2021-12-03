@@ -24,17 +24,8 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default, $bCaptureRegion = Default) ; Capture region spam disabled - Team AIO Mod++
+Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default)
 	FuncEnter(GetVillageSize)
-	
-    ; Capture region spam disabled - Team AIO Mod++
-	If $bCaptureRegion = Default Then $bCaptureRegion = True 
-	
-	; Capture region spam disabled - Team AIO Mod++	
-	If $bCaptureRegion = True Then
-		_CaptureRegion2()
-	EndIf
-	
 	If $DebugLog = Default Then $DebugLog = False
 	If $sStonePrefix = Default Then $sStonePrefix = "stone"
 	If $sTreePrefix = Default Then $sTreePrefix = "tree"
@@ -42,8 +33,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$sFixedPrefix = ""
 		If $g_bUpdateSharedPrefs Then $sFixedPrefix = "fixed"
 	EndIf
-    
-	
+
 	Local $aResult = 0
 	Local $sDirectory
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""], $fixed = [0, 0, 0, 0, 0, ""]
@@ -53,7 +43,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $iAdditionalX = 100
 
 	If $bOnBuilderBase = Default Then
-		$bOnBuilderBase = isOnBuilderBase($bCaptureRegion)
+		$bOnBuilderBase = isOnBuilderBase(True)
 	EndIf
 	If $bOnBuilderBase Then
 		$sDirectory = $g_sImgZoomOutDirBB
@@ -63,7 +53,6 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $aStoneFiles = _FileListToArray($sDirectory, $sStonePrefix & "*.*", $FLTA_FILES)
 	If @error Then
 		SetLog("Error: Missing stone files (" & @error & ")", $COLOR_ERROR)
-		$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 		Return FuncReturn($aResult)
 	EndIf
 	; use stoneBlueStacks2A stones first
@@ -79,7 +68,6 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $aTreeFiles = _FileListToArray($sDirectory, $sTreePrefix & "*.*", $FLTA_FILES)
 	If @error Then
 		SetLog("Error: Missing tree (" & @error & ")", $COLOR_ERROR)
-		$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 		Return FuncReturn($aResult)
 	EndIf
 	Local $i, $findImage, $sArea, $a
@@ -102,11 +90,11 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 				$bottom = $y0 + $iAdditionalY
 				$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
 				SetDebugLog("GetVillageSize check for image " & $findImage)
-				$a = decodeSingleCoord(findImage($findImage, $sDirectory & $findImage, $sArea, 1, False))  ; Capture region spam disabled - Team AIO Mod++
+				$a = decodeSingleCoord(findImage($findImage, $sDirectory & $findImage, $sArea, 1, True))
 				If UBound($a) = 2 Then
 					$x = Int($a[0])
 					$y = Int($a[1])
-					SetDebugLog("Found fixed image at " & $x & ", " & $y & ": " & $findImage)
+					SetDebugLog("Found fixed image at " & $x & ", " & $y & ": " & $findImage, $COLOR_INFO)
 					$fixed[0] = $x ; x center of fixed found
 					$fixed[1] = $y ; y center of fixed found
 					$fixed[2] = $x0 ; x ref. center of fixed
@@ -137,11 +125,11 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			$bottom = $y0 + $iAdditionalY
 			$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
 			SetDebugLog("GetVillageSize check for image " & $findImage)
-			$a = decodeSingleCoord(findImage($findImage, $sDirectory & $findImage, $sArea, 1, False))  ; Capture region spam disabled - Team AIO Mod++
+			$a = decodeSingleCoord(findImage($findImage, $sDirectory & $findImage, $sArea, 1, True))
 			If UBound($a) = 2 Then
 				$x = Int($a[0])
 				$y = Int($a[1])
-				SetDebugLog("Found stone image at " & $x & ", " & $y & ": " & $findImage)
+				SetDebugLog("Found stone image at " & $x & ", " & $y & ": " & $findImage, $COLOR_INFO)
 				$stone[0] = $x ; x center of stone found
 				$stone[1] = $y ; y center of stone found
 				$stone[2] = $x0 ; x ref. center of stone
@@ -158,7 +146,6 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 	If $stone[0] = 0 And $fixed[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
-			$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 		Return FuncReturn($aResult)
 	EndIf
 
@@ -179,12 +166,12 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 				$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
 				SetDebugLog("GetVillageSize check for image " & $findImage)
 				; sort by x because there can be a 2nd at the right that should not be used
-				$a = decodeMultipleCoords(findImage($findImage, $sDirectory & $findImage, $sArea, 2, False), Default, Default, 0) ; Capture region spam disabled - Team AIO Mod++
+				$a = decodeMultipleCoords(findImage($findImage, $sDirectory & $findImage, $sArea, 2, True), Default, Default, 0)
 				If UBound($a) > 0 Then
 					$a = $a[0]
 					$x = Int($a[0])
 					$y = Int($a[1])
-					SetDebugLog("Found tree image at " & $x & ", " & $y & ": " & $findImage)
+					SetDebugLog("Found tree image at " & $x & ", " & $y & ": " & $findImage, $COLOR_INFO)
 					$tree[0] = $x ; x center of tree found
 					$tree[1] = $y ; y center of tree found
 					$tree[2] = $x0 ; x ref. center of tree
@@ -206,7 +193,6 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 		If $tree[0] = 0 And $fixed[0] = 0 And Not $g_bRestart Then
 			SetDebugLog("GetVillageSize cannot find tree", $COLOR_WARNING)
-			$g_aVillageSize = $g_aVillageSizeReset ; Deprecated dim - Team AIO Mod++
 			Return FuncReturn($aResult)
 		EndIf
 	EndIf
@@ -237,10 +223,21 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 		If $DebugLog Then SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
 
-        Local $aTmp[10] = [$c, $z, $x, $y, $stone[0], $stone[1], $stone[5], $tree[0], $tree[1], $tree[5]] ; Deprecated dim - Team AIO Mod++
-		$g_aVillageSize = $aTmp ; Deprecated dim - Team AIO Mod++
-		
-		Return FuncReturn($g_aVillageSize) ; Deprecated dim - Team AIO Mod++
+		Dim $aResult[10]
+		$aResult[0] = $c
+		$aResult[1] = $z
+		$aResult[2] = $x
+		$aResult[3] = $y
+		$aResult[4] = $stone[0]
+		$aResult[5] = $stone[1]
+		$aResult[6] = $stone[5]
+		$aResult[7] = $tree[0]
+		$aResult[8] = $tree[1]
+		$aResult[9] = $tree[5]
+
+		$g_aVillageSize = $aResult
+
+		Return FuncReturn($aResult)
 
 	Else
 
@@ -258,10 +255,21 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 		If $DebugLog Then SetDebugLog("GetVillageSize measured (fixed): " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
 
-        Local $aTmp[10] = [$c, $z, $x, $y, $stone[0], $stone[1], $stone[5], $tree[0], $tree[1], $tree[5]] ; Deprecated dim - Team AIO Mod++
-		$g_aVillageSize = $aTmp ; Deprecated dim - Team AIO Mod++
+		Dim $aResult[10]
+		$aResult[0] = $c
+		$aResult[1] = $z
+		$aResult[2] = $x
+		$aResult[3] = $y
+		$aResult[4] = $stone[0]
+		$aResult[5] = $stone[1]
+		$aResult[6] = $stone[5]
+		$aResult[7] = $tree[0]
+		$aResult[8] = $tree[1]
+		$aResult[9] = $tree[5]
 
-		Return FuncReturn($g_aVillageSize) ; Deprecated dim - Team AIO Mod++
+		$g_aVillageSize = $aResult
+
+		Return FuncReturn($aResult)
 
 	EndIf
 
@@ -312,20 +320,20 @@ Func UpdateGlobalVillageOffset($x, $y)
 
 EndFunc   ;==>UpdateGlobalVillageOffset
 
-Func DetectScenery($sStone = "None")
+Func DetectScenery($stone = "None")
 	Local $sScenery = ""
 
-	If StringInStr($sStone, "DS", $STR_CASESENSE) Then
+	If StringInStr($stone, "DS", $STR_CASESENSE) Then
 		$sScenery = "Classic Scenery"
-	ElseIf StringInStr($sStone, "JS", $STR_CASESENSE) Then
+	ElseIf StringInStr($stone, "JS", $STR_CASESENSE) Then
 		$sScenery = "Jungle Scenery"
-	ElseIf StringInStr($sStone, "CC", $STR_CASESENSE) Then
+	ElseIf StringInStr($stone, "CC", $STR_CASESENSE) Then
 		$sScenery = "Clashy Construction"
-	ElseIf StringInStr($sStone, "PC", $STR_CASESENSE) Then
+	ElseIf StringInStr($stone, "PC", $STR_CASESENSE) Then
 		$sScenery = "Pirate Scenery"
-	ElseIf StringInStr($sStone, "WS", $STR_CASESENSE) Then
+	ElseIf StringInStr($stone, "WS", $STR_CASESENSE) Then
 		$sScenery = "Winter Scenery"
-	ElseIf StringInStr($sStone, "HM", $STR_CASESENSE) Then
+	ElseIf StringInStr($stone, "HM", $STR_CASESENSE) Then
 		$sScenery = "Hog Mountain"
 	Else
 		$sScenery = "Failed scenery detection"
