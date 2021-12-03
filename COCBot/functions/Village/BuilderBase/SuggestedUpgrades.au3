@@ -581,7 +581,6 @@ Func SearchNewBuilding($bTest = False)
 	Next
 	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
 	ZoomOut()
-	ClickAway()
 	Return True
 EndFunc
 
