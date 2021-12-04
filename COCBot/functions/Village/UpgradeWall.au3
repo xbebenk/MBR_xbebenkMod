@@ -172,8 +172,8 @@ Func UpgradeLowLevelWall()
 		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then 
 			For $i = 0 To UBound($aWallCoord) - 1
 				$Wall = StringSplit($aWallCoord[$i], ",", $STR_NOCOUNT)
-				SetLog("Wall " & "[" & $i & "] : [" & $Wall[0] + 180 & "," & $Wall[1] + 80 & "]", $COLOR_DEBUG)
-				Click($Wall[0] + 180, $Wall[1] + 80)
+				SetLog("Wall " & "[" & $i & "] : [" & $Wall[0] + 210 & "," & $Wall[1] + 80 & "]", $COLOR_DEBUG)
+				Click($Wall[0] + 210, $Wall[1] + 80)
 				If _Sleep(800) Then Return
 				$WallLevel = BuildingInfo(242, 494)
 				
@@ -300,9 +300,7 @@ Func ClickDragFindWallUpgrade()
 	For $checkCount = 0 To 4
 		If Not $g_bRunState Then Return
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
-			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
-			If _Sleep(2000) Then Return
-			$aWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 180, 80, 330, 369, True)
+			$aWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 210, 80, 260, 369, True)
 			If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then
 				SetLog("Found " & UBound($aWallCoord) & " Wall", $COLOR_DEBUG)
 				Return $aWallCoord
@@ -314,6 +312,8 @@ Func ClickDragFindWallUpgrade()
 			Else
 				SetDebugLog("Found WhiteZero at most bottom list", $COLOR_DEBUG)
 			EndIf
+			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
+			If _Sleep(2000) Then Return
 		EndIf
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border
 			SetDebugLog("Upgrade Window Exist", $COLOR_INFO)
