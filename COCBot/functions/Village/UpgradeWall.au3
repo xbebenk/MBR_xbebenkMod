@@ -164,16 +164,16 @@ Func UpgradeLowLevelWall()
 	VillageReport(True, True) ;update village resource capacity
 	ClickMainBuilder()
 	Local $aWallCoord, $WallLevel, $Wall, $loopCount2 = 0, $loopCount1 = 0
-	Local $UpgradeToLvl = $g_iLowLevelWall
+	Local $UpgradeToLvl = $g_iLowLevelWall, $UpgradeCost = 0
 	While 1
 		If Not $g_bRunState Then Return
 		If Not UpgradeLowLevelWallCheckResource() Then ExitLoop
 		$aWallCoord = ClickDragFindWallUpgrade()
 		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then 
 			For $i = 0 To UBound($aWallCoord) - 1
-				$Wall = StringSplit($aWallCoord[$i], ",", $STR_NOCOUNT)
-				SetLog("Wall " & "[" & $i & "] : [" & $Wall[0] + 210 & "," & $Wall[1] + 80 & "]", $COLOR_DEBUG)
-				Click($Wall[0] + 210, $Wall[1] + 80)
+				;$Wall = StringSplit($aWallCoord[$i], ",", $STR_NOCOUNT)
+				SetLog("Wall " & "[" & $i & "] : [" & $aWallCoord[$i][0] & "," & $aWallCoord[$i][1] & " Cost = " & $aWallCoord[$i][2] & "]", $COLOR_DEBUG)
+				Click($aWallCoord[$i][0], $aWallCoord[$i][1])
 				If _Sleep(800) Then Return
 				$WallLevel = BuildingInfo(242, 494)
 				
@@ -184,7 +184,17 @@ Func UpgradeLowLevelWall()
 				
 				If $g_bUpgradeAnyWallLevel Then
 					SetLog("Wall Level : " & $WallLevel[2], $COLOR_SUCCESS)
-					If Not DoLowLevelWallUpgrade($WallLevel[2]) Then ExitLoop 2
+					If Not DoLowLevelWallUpgrade($WallLevel[2]) Then
+						SetLog("Fail to Upgrade, looking next", $COLOR_INFO)
+						ClickAway()
+						If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border
+							SetDebugLog("Upgrade Window Exist", $COLOR_INFO)
+						Else
+							SetDebugLog("Upgrade Window Gone!", $COLOR_DEBUG)
+							ClickMainBuilder()
+						EndIf
+						ContinueLoop
+					EndIf
 					If $loopCount2 = 4 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
 				EndIf
 				
@@ -198,12 +208,11 @@ Func UpgradeLowLevelWall()
 						ExitLoop 2
 					Else
 						SetLog("Wall Level : " & $WallLevel[2], $COLOR_SUCCESS)
-						If Not DoLowLevelWallUpgrade($WallLevel[2]) Then ExitLoop 2
+						If Not DoLowLevelWallUpgrade($WallLevel[2]) Then ContinueLoop
 						If $loopCount2 = 4 Then ExitLoop 2 ;check here, if 2 time search for low level wall not found then exit
 					EndIf
 				EndIf
-				
-				If Not QuickMIS("BC1", $g_sImgAUpgradeWall, 180, 80, 330, 369) Then ExitLoop
+				If Not UpgradeLowLevelWallCheckResource() Then ExitLoop 2
 			Next
 			$loopCount2 += 1
 		Else
@@ -224,6 +233,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 			Click($g_iQuickMISX + 400, $g_iQuickMISY + 520)
 			If _Sleep(1000) Then Return
 			Click(440, 530)
+			If _Sleep(1000) Then Return
 			If IsGemOpen(True) Then 
 				SetLog("Not Enough resource!", $COLOR_ERROR)
 				Return False
@@ -250,6 +260,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 					If _Sleep(1500) Then Return
 					If QuickMIS("BC1", $g_sImgAUpgradeWallOK, 400, 350, 600, 450) Then
 						Click($g_iQuickMISX + 400, $g_iQuickMISY + 350)
+						If _Sleep(1000) Then Return
 						If IsGemOpen(True) Then
 							SetLog("Not Enough Resource...", $COLOR_ERROR)
 							Return False
@@ -272,6 +283,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 					Click($g_iQuickMISX + 400, $g_iQuickMISY + 520)
 					If _Sleep(1500) Then Return
 					Click(440, 530)
+					If _Sleep(1000) Then Return
 					If IsGemOpen(True) Then
 						SetLog("Not Enough Resource...", $COLOR_ERROR)
 						Return False
@@ -294,36 +306,43 @@ Func DoLowLevelWallUpgrade($WallLevel = 1)
 EndFunc
 
 Func ClickDragFindWallUpgrade()
-	Local $x = 420, $yUp = 40, $Delay = 500
-	Local $YY = 350
-	Local $aWallCoord, $aResult[0]
-	For $checkCount = 0 To 4
+	Local $x = 420, $yUp = 120, $Delay = 500
+	Local $YY = 345
+	Local $aTmpWallCoord, $aWallCoord[0][3], $aWall, $TmpUpgradeCost = 0, $UpgradeCost = 0
+	For $checkCount = 0 To 9
 		If Not $g_bRunState Then Return
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
-			$aWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 210, 80, 260, 369, True)
-			If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then
-				SetLog("Found " & UBound($aWallCoord) & " Wall", $COLOR_DEBUG)
-				Return $aWallCoord
-			EndIf
-			Local $aZeroWhiteMostBottom = _PixelSearch(430, 345, 450, 360, Hex(0xFFFFFF, 6), 10)
-			If $aZeroWhiteMostBottom = 0 Then
-				SetDebugLog("No WhiteZero at most bottom list", $COLOR_DEBUG)
-				If $checkCount > 1 Then ExitLoop
-			Else
-				SetDebugLog("Found WhiteZero at most bottom list", $COLOR_DEBUG)
-			EndIf
 			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
-			If _Sleep(2000) Then Return
+			If _Sleep(1000) Then Return
+			$aTmpWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 210, 80, 260, 369, True)
+			SetLog("Found " & UBound($aTmpWallCoord) & " Wall", $COLOR_DEBUG)
+			If IsArray($aTmpWallCoord) And UBound($aTmpWallCoord) > 0 Then
+				For $j = 0 To UBound($aTmpWallCoord) - 1
+					$aWall = StringSplit($aTmpWallCoord[$j], ",", $STR_NOCOUNT)
+					$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aWall[0] + 210 + 120, $aWall[1] + 80 - 8, 100, 20, True)
+					_ArrayAdd($aWallCoord, $aWall[0]+210 & "|" & $aWall[1]+80 & "|" & $UpgradeCost)
+				Next
+				_ArraySort($aWallCoord, 1, 0, 0, 1)
+				Return $aWallCoord
+			Else
+				SetLog("Not Array Wall", $COLOR_DEBUG)
+			EndIf
+			
+			$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True)
+			SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
+			If $UpgradeCost = $TmpUpgradeCost And $checkCount > 6 Then ExitLoop
+			If Not $TmpUpgradeCost = "" Then
+				$UpgradeCost = $TmpUpgradeCost
+			EndIf
 		EndIf
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border
 			SetDebugLog("Upgrade Window Exist", $COLOR_INFO)
 		Else
 			SetDebugLog("Upgrade Window Gone!", $COLOR_DEBUG)
 			ClickMainBuilder()
-			If _Sleep(1000) Then Return
 		EndIf
 	Next
-	Return $aResult
+	Return $aWallCoord
 EndFunc ;==>IsUpgradeWindow
 
 Func UpgradeWallGold($iWallCost = $g_iWallCost)
