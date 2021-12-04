@@ -236,7 +236,7 @@ Func GetBuilderBaseSize($bWithClick = False, $bVersusMode = Default, $bDebugLog 
 	
 		If Not $g_bRunState Then Return
 	
-		$aVillage = GetVillageSize($bDebugLog, $sMode & "stone", $sMode & "tree", Default, True, False)
+		$aVillage = GetVillageSize($bDebugLog, $sMode & "stone", $sMode & "tree", Default, True)
 		
 		If UBound($aVillage) > 8 And not @error Then
 			If StringLen($aVillage[9]) > 5 And StringIsSpace($aVillage[9]) = 0 Then
