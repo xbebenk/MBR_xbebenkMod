@@ -73,7 +73,7 @@ Func DropOnPixel($troop, $listArrPixel, $number, $slotsPerEdge = 0)
 					debugRedArea("$offset: " & $offset)
 				EndIf
 				If Number($currentPixel[1]) > 555 Then $currentPixel[1] = 555
-				AttackClick($currentPixel[0], $currentPixel[1], $nbTroopByPixel, SetSleep(0), 0, "#0098")
+				AttackClick($currentPixel[0], $currentPixel[1], $nbTroopByPixel, SetSleep(0), 0, "#0668")
 				$nbTroopsLeft -= $nbTroopByPixel
 			Next
 		WEnd
