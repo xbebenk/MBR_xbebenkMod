@@ -105,7 +105,7 @@ Func isMegaTeslaMaxed()
 	If $sMTCoords <> "" Then
 		$sMTCoords = StringSplit($sMTCoords, ",", $STR_NOCOUNT)
 		ClickP($sMTCoords)
-		Local $aBuildingName = BuildingInfo(245, 490)
+		Local $aBuildingName = BuildingInfo(260, 494)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Builder Hall and max level
 			If $aBuildingName[1] = "Mega Tesla" Then
