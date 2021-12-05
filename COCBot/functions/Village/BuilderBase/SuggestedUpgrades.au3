@@ -149,7 +149,7 @@ Func AutoUpgradeBB($bTest = False)
 	If isOnBuilderBase(True) Then
 		If ClickOnBuilder($bTest) Then
 			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
-			If $g_iChkPlacingNewBuildings Then
+			If $g_iChkPlacingNewBuildings And Not $g_bisMegaTeslaMaxed Then
 				If SearchNewBuilding($bTest) Then
 					ClickOnBuilder($bTest)
 					ClickDrag(400, 100, 400, 800, 1000);do scroll down
@@ -348,7 +348,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 	If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 218, 514, 662, 653, True, $Debug) Then
 		If $aBuildingName[0] = 2 Then
 			If $aBuildingName[1] = "D uble Cannon" Then $aBuildingName[1] = "Double Cannon"
-			SetLog("Building: " & $aBuildingName[1], $COLOR_INFO)
+			SetLog("Building: " & $aBuildingName[1] & "Level: " & $aBuildingName[2] & " MegaTesla Max: " & String($g_bisMegaTeslaMaxed), $COLOR_INFO)
 			; Verify if is Builder Hall and If is to Upgrade
 			If StringInStr($aBuildingName[1], "Hall") And $g_iChkBBSuggestedUpgradesIgnoreHall Then
 				SetLog("Ups! Builder Hall is not to Upgrade!", $COLOR_ERROR)
