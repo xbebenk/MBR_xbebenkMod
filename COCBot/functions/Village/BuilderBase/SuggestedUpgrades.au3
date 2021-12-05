@@ -337,7 +337,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 				$sUpgButtom = $g_sImgAutoUpgradeBtnGold
 			Case "Gold Storage"
 				$sUpgButtom = $g_sImgAutoUpgradeBtnElixir
-			Case "Star Laboratory"
+			Case "S ar Laboratory"
 				$sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 		EndSwitch
 	EndIf
