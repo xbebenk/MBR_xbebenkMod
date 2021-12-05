@@ -271,11 +271,11 @@ EndFunc   ;==>MainSuggestedUpgradeCode
 Func ClickOnBuilder($bTest = False, $Counter = 1)
 	Local $b_WindowOpened = False
 	; open the builders menu
-	If Not _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) Then
+	If Not _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 30) Then
 		Click(360, 11)
 		If _Sleep(1000) Then Return
 	EndIf
-	If _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) Then
+	If _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 30) Then
 		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
