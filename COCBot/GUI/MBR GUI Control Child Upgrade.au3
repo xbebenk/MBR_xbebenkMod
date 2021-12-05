@@ -783,6 +783,14 @@ Func chkRushTH()
 	EndIf
 EndFunc   ;==>chkRushTH
 
+Func BtnRushTHOption()
+	GUISetState(@SW_SHOW, $g_hGUI_RushTHOption)
+EndFunc
+
+Func CloseRushTHOption()
+	GUISetState(@SW_HIDE, $g_hGUI_RushTHOption)
+EndFunc
+
 Func chkUpgradePets()
 	For $i = 0 to $ePetCount - 1
 		If GUICtrlRead($g_hChkUpgradePets[$i]) = $GUI_CHECKED Then

@@ -169,6 +169,11 @@ Func DoUpgrade($bTest = False)
 	Switch $g_aUpgradeNameLevel[1]
 		Case "Town Hall"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1) ? True : False
+			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[0] + 9 Then ;only upgrade to max level on Setting
+				$bMustIgnoreUpgrade = True
+				SetLog("RushTH Building: TownHall Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+				SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[0] + 9 & ", Skip!", $COLOR_INFO)
+			EndIf
 		Case "Barbarian King"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1 Or $g_bUpgradeKingEnable = True) ? True : False
 		Case "Archer Queen"
@@ -185,22 +190,32 @@ Func DoUpgrade($bTest = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[7] = 1 Or $g_bAutoUpgradeWallsEnable = True) ? True : False
 		Case "Barracks"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[8] = 1) ? True : False
-			If $g_bChkRushTH And $g_aUpgradeNameLevel[2] > 8 And $g_iTownHallLevel < 12 Then ;only upgrade to unlock dragon
+			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[1] + 2 Then ;only upgrade to max level on Setting
 				$bMustIgnoreUpgrade =  True
 				SetLog("RushTH Building: Barracks Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-				SetLog("Skip Upgrade for saving elixir", $COLOR_INFO)
+				SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[1] + 2 & ", Skip!", $COLOR_INFO)
 			EndIf			
 		Case "Dark Barracks"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[9] = 1) ? True : False
-			If $g_bChkRushTH And $g_aUpgradeNameLevel[2] > 3 And $g_iTownHallLevel < 12 Then ;only upgrade to unlock Golem
+			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[2] + 2 Then ;only upgrade to unlock Golem
 				$bMustIgnoreUpgrade =  True
 				SetLog("RushTH Building: Dark Barracks Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-				SetLog("Skip Upgrade for saving elixir", $COLOR_INFO)
+				SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[2] + 2 & ", Skip!", $COLOR_INFO)
 			EndIf
 		Case "Spell Factory"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[10] = 1) ? True : False
+			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[3] + 2 Then ;only upgrade to unlock Golem
+				$bMustIgnoreUpgrade =  True
+				SetLog("RushTH Building: Spell Factory Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+				SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[3] + 2 & ", Skip!", $COLOR_INFO)
+			EndIf
 		Case "Dark Spell Factory"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[11] = 1) ? True : False
+			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[4] + 2 Then ;only upgrade to unlock Golem
+				$bMustIgnoreUpgrade =  True
+				SetLog("RushTH Building: Dark Spell Factory Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+				SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[4] + 2 & ", Skip!", $COLOR_INFO)
+			EndIf
 		Case "Gold Mine"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[12] = 1) ? True : False
 		Case "Elixir Collector"
@@ -284,7 +299,7 @@ Func DoUpgrade($bTest = False)
 		SetLog($g_aUpgradeNameLevel[1] & " : This upgrade must be ignored, looking next...", $COLOR_WARNING)
 		Return False
 	Else
-		SetLog("Building Name: " & $g_aUpgradeNameLevel[1], $COLOR_DEBUG)
+		SetLog("Building Name: " & $g_aUpgradeNameLevel[1] & "Level: " & $g_aUpgradeNameLevel[2], $COLOR_DEBUG)
 	EndIf
 	
 	; if upgrade not to be ignored, click on the Upgrade button to open Upgrade window

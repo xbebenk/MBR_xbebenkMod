@@ -655,8 +655,15 @@ Func SaveConfig_auto()
 	; Auto Upgrade
 	_Ini_Add("Auto Upgrade", "AutoUpgradeEnabled", $g_bAutoUpgradeEnabled)
 	_Ini_Add("Auto Upgrade", "ChkNewBuildingFirst", $g_bNewBuildingFirst)
-	_Ini_Add("Auto Upgrade", "ChkRushTH", $g_bChkRushTH)
 	_Ini_Add("Auto Upgrade", "AUpgradePlaceNew", $g_bPlaceNewBuilding)
+	_Ini_Add("Auto Upgrade", "ChkRushTH", $g_bChkRushTH)
+	
+	Local $string = ""
+	For $i = 0 To UBound($g_aiCmbRushTHOption) - 1
+		$string &= $g_aiCmbRushTHOption[$i] & "|"
+	Next
+	_Ini_Add("Auto Upgrade", "RushTHOption", $string)
+	
 	For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 		_Ini_Add("Auto Upgrade", "ChkUpgradesToIgnore[" & $i & "]", $g_iChkUpgradesToIgnore[$i])
 	Next

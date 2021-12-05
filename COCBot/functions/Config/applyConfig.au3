@@ -973,12 +973,15 @@ Func ApplyConfig_auto($TypeReadSave)
 		Case "Read"
 			GUICtrlSetState($g_hChkAutoUpgrade, $g_bAutoUpgradeEnabled ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkNewBuildingFirst, $g_bNewBuildingFirst ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkRushTH, $g_bChkRushTH ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_ChkPlaceNewBuilding, $g_bPlaceNewBuilding ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkRushTH, $g_bChkRushTH ? $GUI_CHECKED : $GUI_UNCHECKED)
+			For $y = 0 To UBound($g_aiCmbRushTHOption) - 1
+				_GUICtrlComboBox_SetCurSel($g_ahCmbRushTHOption[$y], $g_aiCmbRushTHOption[$y])
+			Next
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				GUICtrlSetState($g_hChkUpgradesToIgnore[$i], $g_iChkUpgradesToIgnore[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
-			For $i = 0 To 2
+			For $i = 0 To UBound($g_hChkResourcesToIgnore) - 1
 				GUICtrlSetState($g_hChkResourcesToIgnore[$i], $g_iChkResourcesToIgnore[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
 			GUICtrlSetData($g_hTxtSmartMinGold, $g_iTxtSmartMinGold)
@@ -988,12 +991,15 @@ Func ApplyConfig_auto($TypeReadSave)
 		Case "Save"
 			$g_bAutoUpgradeEnabled = (GUICtrlRead($g_hChkAutoUpgrade) = $GUI_CHECKED)
 			$g_bNewBuildingFirst = (GUICtrlRead($g_hChkNewBuildingFirst) = $GUI_CHECKED)
-			$g_bChkRushTH = (GUICtrlRead($g_hChkRushTH) = $GUI_CHECKED)
 			$g_bPlaceNewBuilding = (GUICtrlRead($g_ChkPlaceNewBuilding) = $GUI_CHECKED)
+			$g_bChkRushTH = (GUICtrlRead($g_hChkRushTH) = $GUI_CHECKED)
+			For $y = 0 To UBound($g_aiCmbRushTHOption) - 1
+				$g_aiCmbRushTHOption[$y] = _GUICtrlComboBox_GetCurSel($g_ahCmbRushTHOption[$y])
+			Next
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				$g_iChkUpgradesToIgnore[$i] = GUICtrlRead($g_hChkUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next
-			For $i = 0 To 2
+			For $i = 0 To UBound($g_hChkResourcesToIgnore) - 1
 				$g_iChkResourcesToIgnore[$i] = GUICtrlRead($g_hChkResourcesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next
 			$g_iTxtSmartMinGold = GUICtrlRead($g_hTxtSmartMinGold)
