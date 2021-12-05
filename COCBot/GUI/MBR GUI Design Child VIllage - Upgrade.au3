@@ -602,10 +602,10 @@ Func CreateAutoUpgradeSubTab()
 			GUICtrlSetOnEvent(-1, "chkAutoUpgrade")
 		$g_hLblAutoUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_01", "Save"), $x, $y + 27, -1, -1)
 		$g_hChkNewBuildingFirst = GUICtrlCreateCheckbox("NewBuildingFirst", $x + 85, $y, -1, -1)
-			_GUICtrlSetTip(-1, "Priority for New Building")
+			_GUICtrlSetTip(-1, "Enable Priority for New Building")
 			GUICtrlSetOnEvent(-1, "chkChkNewBuildingFirst")
-		$g_ChkPlaceNewBuilding = GUICtrlCreateCheckbox("Place New Building (experimental)", $x + 200, $y, -1, -1)
-			_GUICtrlSetTip(-1, "Placing New Building Currently only Tested On Memu")
+		$g_ChkPlaceNewBuilding = GUICtrlCreateCheckbox("Place New Building", $x + 200, $y, -1, -1)
+			_GUICtrlSetTip(-1, "Enable Placing New Building")
 			GUICtrlSetOnEvent(-1, "ChkPlaceNew")
 		$g_hTxtSmartMinGold = GUICtrlCreateInput("150000", $x + 33, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
 			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 98, $y + 27, 16, 16)
@@ -769,7 +769,7 @@ Func CreateRushTHOption()
 	
 	$g_hGUI_RushTHOption = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - AutoUpgrade", "GUI_RushTHOption", "Optional Settings: Set Max Level to Upgrade"), 330, 250, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
 	Local $x = 25, $y = 25
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - AutoUpgrade", "SelectRushTHOption", "Upgrade To Level "), $x - 20, $y - 20, 320, 170)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - AutoUpgrade", "SelectRushTHOption", "Upgrade To Level :"), $x - 20, $y - 20, 320, 170)
 	$x += 10
 	$y += 5
 	For $i = 0 To Ubound($RushTHOption) - 1 		
