@@ -65,7 +65,7 @@ Func SearchUpgrade($bTest = False)
 				ZoomOut() ;no builder, exit
 				Return
 			EndIf
-			ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
+			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
 		EndIf
 	EndIf
 	
@@ -726,7 +726,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 1)
 	EndIf
 	
 	If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
-		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
+		SetDebugLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
 		If ($Counter < 4) Then
