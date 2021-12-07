@@ -681,7 +681,6 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 	Local $x = 420, $yUp = 103, $yDown = 800, $Delay = 500
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
 	If $YY = Default Then $YY = $Yscroll
-	If _Sleep(500) Then Return
 	For $checkCount = 0 To 2
 		If Not $g_bRunState Then Return
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border

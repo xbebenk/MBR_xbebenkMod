@@ -291,7 +291,7 @@ Func SmartFarmDetection($txtBuildings = "Mines")
 			$sNear = $aTEMP[2] ;
 			SetDebugLog("Near points: " & String($aTEMP[2]), $COLOR_INFO)
 			$sRedLineDistance = $aTEMP[3] ;
-			SetDebugLog("Near points: " & String($aTEMP[3]), $COLOR_INFO)
+			SetDebugLog("Distance points: " & String($aTEMP[3]), $COLOR_INFO)
 
 			Switch String($aTEMP[0])
 				Case "Mines"

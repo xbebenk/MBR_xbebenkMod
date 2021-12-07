@@ -24,9 +24,10 @@ Func waitMainScreen() ;Waits for main screen to popup
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
 		
-		If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 3) Then
+		If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
 			SetDebugLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
-			Return
+			Click(440,526) ;Click OK button
+			If _Sleep(500) Then Return
 		EndIf
 		
 		Local $hWin = $g_hAndroidWindow
