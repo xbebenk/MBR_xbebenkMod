@@ -115,6 +115,8 @@ Func CleanYard()
 				For $i = 0 To UBound($aPoints) - 1
 					$CleanYardXY = $aPoints[$i] ; Coords
 					If UBound($CleanYardXY) > 1 And isInsideDiamondXY($CleanYardXY[0], $CleanYardXY[1]) Then ; secure x because of clan chat tab
+						$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74)
+						If $g_aiCurrentLoot[$eLootElixir] < 10000 Then ExitLoop 2
 						SetDebugLog($Filename & " found (" & $CleanYardXY[0] & "," & $CleanYardXY[1] & ")", $COLOR_SUCCESS)
 						If Not CleanYardCheckBuilder() Then ExitLoop 2
 						If IsMainPage() Then Click($CleanYardXY[0], $CleanYardXY[1], 1, 0, "#0430")
