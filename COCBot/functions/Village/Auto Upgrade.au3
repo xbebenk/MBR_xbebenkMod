@@ -425,12 +425,14 @@ EndFunc
 Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration = Default)
 	Local $txtAcc = $g_iCurAccount
 	Local $txtAccName = $g_asProfileName[$g_iCurAccount]
+	Local $bRet = True
 	
 	If $aUpgradeNameLevel = Default Then 
 		$aUpgradeNameLevel = BuildingInfo(242, 494)
 		If $aUpgradeNameLevel[0] = "" Then
 			SetLog("Error when trying to get upgrade name and level", $COLOR_ERROR)
 			$aUpgradeNameLevel[1] = "Traps"
+			$bRet = False
 		EndIf
 		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
 				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
@@ -454,7 +456,7 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 				" " & $aUpgradeResourceCostDuration[0] & _
 				" - Duration : " & $aUpgradeResourceCostDuration[2])
 	EndIf
-	Return True
+	Return $bRet
 EndFunc
 
 Func AutoUpgradeLogPlacingWall($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration = Default)
@@ -528,8 +530,11 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			EndIf
 			SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
 			If _Sleep(500) Then Return
-			AutoUpgradeLog()
-			Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1]) ; Just click RedX position, in case its still there
+			If AutoUpgradeLog() Then 
+				Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1]) ; Just click RedX position, in case its still there
+			Else
+				Click($GreenCheckCoords[0], $GreenCheckCoords[1]) ; Just click GreenCheck position, in case its still there
+			EndIf
 			Return True
 		Else 
 			If Not $g_bRunState Then Return
