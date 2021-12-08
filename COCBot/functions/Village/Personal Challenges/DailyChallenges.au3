@@ -74,7 +74,7 @@ Func CollectDailyRewards($bGoldPass = False)
 	SetLog("Collecting Daily Rewards...")
 
 	ClickP($aPersonalChallengeRewardsTab, 1, 0, "Rewards tab") ; Click Rewards tab
-	If _Sleep(1000) Then Return
+	If _Sleep(2000) Then Return
 
 	Local $iClaim = 0
 	For $i = 0 To 10
