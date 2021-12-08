@@ -184,18 +184,11 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Return
 	EndIf
 	If IsAttackWhileShieldPage(False) Then ; check for shield window and then button to lose time due attack and click okay
-		Local $offColors[3][3] = [[0x000000, 144, 1], [0xFFFFFF, 54, 17], [0xFFFFFF, 54, 28]] ; 2nd Black opposite button, 3rd pixel white "O" center top, 4th pixel White "0" bottom center
-		Local $ButtonPixel = _MultiPixelSearch(359, 404, 510, 445, 1, 1, Hex(0x000000, 6), $offColors, 20) ; first vertical black pixel of Okay
-		SetDebugLog("Shield btn clr chk-#1: " & _GetPixelColor(441, 344, True) & ", #2: " & _
-				_GetPixelColor(441 + 144, 344, True) & ", #3: " & _GetPixelColor(441 + 54, 344 + 17, True) & ", #4: " & _
-				_GetPixelColor(441 + 54, 344 + 10, True), $COLOR_DEBUG)
-		If IsArray($ButtonPixel) Then
-			If $g_bDebugSetlog Then
-				SetDebugLog("ButtonPixel = " & $ButtonPixel[0] & ", " & $ButtonPixel[1], $COLOR_DEBUG) ;Debug
-				SetDebugLog("Shld Btn Pixel color found #1: " & _GetPixelColor($ButtonPixel[0], $ButtonPixel[1], True) & ", #2: " & _GetPixelColor($ButtonPixel[0] + 144, $ButtonPixel[1], True) & ", #3: " & _GetPixelColor($ButtonPixel[0] + 54, $ButtonPixel[1] + 17, True) & ", #4: " & _GetPixelColor($ButtonPixel[0] + 54, $ButtonPixel[1] + 27, True), $COLOR_DEBUG)
+		If WaitforPixel(430, 455, 431, 456, Hex(0x6FBD1F, 6), 6, 1) Then
+			If $g_bDebugClick Or $g_bDebugSetlog Then
+				SetDebugLog("Shld Btn Pixel color found: " & _GetPixelColor(430, 455, True), $COLOR_DEBUG)
 			EndIf
-			Click($ButtonPixel[0] + 75, $ButtonPixel[1] + 25, 1, 0, "#0153") ; Click Okay Button
+			Click(430,455)
 		EndIf
 	EndIf
-
 EndFunc   ;==>PrepareSearch
