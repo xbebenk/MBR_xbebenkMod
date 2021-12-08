@@ -218,7 +218,7 @@ Func AutoUpgradeBB($bTest = False)
 						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
 						Switch $aResult[2]
 							Case "Gold"
-								If $g_iChkBBSuggestedUpgradesOTTO Then
+								If $g_iChkBBSuggestedUpgradesOTTO And Not $g_bisMegaTeslaMaxed Then
 									If QuickMIS("BC1", $g_sImgAUpgradeOttoBB, 260, $y, 450, $y1, $bScreencap, $bDebug) Then
 										SetLog("[" & $i & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
 										Click($g_iQuickMISX + 260, $g_iQuickMISY + $y)
@@ -341,7 +341,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 				$sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 		EndSwitch
 	EndIf
-	
+	If $aBuildingName[1] = "poaster" Then $aBuildingName[1] = "Roaster"
 	If $sUpgButtom = "Elixir" Then $sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 	If $sUpgButtom = "Gold" Then $sUpgButtom = $g_sImgAutoUpgradeBtnGold
 
@@ -356,21 +356,21 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 			EndIf
 
 			Local $FoundOTTOBuilding = False
-			If $g_iChkBBSuggestedUpgradesOTTO Then
+			If $g_iChkBBSuggestedUpgradesOTTO And Not $g_bisMegaTeslaMaxed Then
 				;check the upgrade until reach spesific level
 				For $i = 0 To UBound($OptimizeOTTO) - 1
 					If StringInStr($aBuildingName[1], $OptimizeOTTO[$i]) Then
 						;SetLog("Trying to upgrade : " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
-						If $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6 And Not $g_bisMegaTeslaMaxed Then
+						If $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-						ElseIf $aBuildingName[1] = "Double Cannon" And $aBuildingName[2] >= 4 And Not $g_bisMegaTeslaMaxed Then
+						ElseIf $aBuildingName[1] = "Double Cannon" And $aBuildingName[2] >= 4 Then
 							SetLog("Upgrade for Double Cannon Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-						ElseIf $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8 And Not $g_bisMegaTeslaMaxed Then
+						ElseIf $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						ElseIf $aBuildingName[1] = "Builder Barracks" And $aBuildingName[2] >= 7 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						;only upgrade wall if BuilderHall is Max level And If Gold Storage is Nearly Full and Mega Tesla Already Maxed
-						ElseIf $aBuildingName[1] = "Wall" And $g_bisBHMaxed And $g_bGoldStorage50BB And $g_bisMegaTeslaMaxed Then
+						ElseIf $aBuildingName[1] = "Wall" And $g_bisBHMaxed And $g_bisMegaTeslaMaxed Then
 							SetLog("BuilderHall is Maxed, Mega Tesla is Maxed, Gold Storage Near Full", $COLOR_INFO)
 							SetLog("Will Upgrade " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
 							$sUpgButtom = $g_sImgAutoUpgradeBtnGold ;force to use Gold for upgrading wall on BB
@@ -387,11 +387,11 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 					;SetLog("Building skipped due to OptimizeOTTO", $COLOR_DEBUG)
 					Return False
 				EndIf
-			EndIf
-
-			If StringInStr($aBuildingName[1], "Wall") And $g_iChkBBSuggestedUpgradesIgnoreWall Then
-				SetLog("Ups! Wall is not to Upgrade!", $COLOR_ERROR)
-				Return False
+			Else
+				If StringInStr($aBuildingName[1], "Wall") And $g_iChkBBSuggestedUpgradesIgnoreWall Then
+					SetLog("Ups! Wall is not to Upgrade!", $COLOR_ERROR)
+					Return False
+				EndIf
 			EndIf
 
 			Click($g_iQuickMISX + 218, $g_iQuickMISY + 514, 1)
