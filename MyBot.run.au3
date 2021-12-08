@@ -784,7 +784,7 @@ Func runBot() ;Bot that runs everything in order
 			; Train Donate only - force a donate cc every time
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
-			Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeHeroes', 'UpgradeWall', 'UpgradeBuilding', 'PetHouse', 'BuilderBase']
+			Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'BuilderBase']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1417,7 +1417,7 @@ Func FirstCheckRoutine()
 	DonateCC()
 	TrainSystem()
 	
-	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeWall', 'UpgradeBuilding']
+	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
