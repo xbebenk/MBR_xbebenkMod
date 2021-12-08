@@ -720,30 +720,34 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 	Return False
 EndFunc ;==>IsUpgradeWindow
 
-Func ClickMainBuilder($bTest = False, $Counter = 1)
+Func ClickMainBuilder($bTest = False, $Counter = 3)
 	Local $b_WindowOpened = False
 	If Not $g_bRunState Then Return
 	; open the builders menu
-	If Not _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
+	If Not _ColorCheck(_GetPixelColor(422, 73, True), "FDFEFD", 30) Then
 		Click(295, 30)
 		If _Sleep(1000) Then Return
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
+	If _ColorCheck(_GetPixelColor(422, 73, True), "FDFEFD", 30) Then
 		SetDebugLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
-		If ($Counter < 4) Then
+		For $i = 1 To $Counter
 			SetLog("Upgrade Window didn't opened, trying again!", $COLOR_DEBUG)
 			If IsFullScreenWindow() Then 
 				Click(825,45)
 				If _Sleep(1000) Then Return
 			EndIf
-			ClickMainBuilder(False, $Counter)
-			$Counter += 1
-		Else
+			Click(295, 30)
+			If _Sleep(1000) Then Return
+			If _ColorCheck(_GetPixelColor(422, 73, True), "FDFEFD", 20) Then 
+				$b_WindowOpened = True
+				ExitLoop
+			EndIf
+		Next
+		If Not $b_WindowOpened Then 
 			SetLog("Something is wrong with upgrade window, already tried 3 times!", $COLOR_DEBUG)
-			$b_WindowOpened = False
 		EndIf
 	EndIf
 	Return $b_WindowOpened
