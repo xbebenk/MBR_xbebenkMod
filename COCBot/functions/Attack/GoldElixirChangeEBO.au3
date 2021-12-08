@@ -104,7 +104,7 @@ Func GoldElixirChangeEBO()
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
 		EndIf
 
-		;--> Read Ressources #2
+		;--> Read Resources #2
 		$Gold2 = getGoldVillageSearch(48, 69)
 		If $Gold2 = "" Then
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return

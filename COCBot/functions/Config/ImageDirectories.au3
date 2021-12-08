@@ -35,7 +35,7 @@ Global Const $g_sImgOptUpdateCoC = @ScriptDir & "\imgxml\other\OptUpdateCoC*"
 #EndRegion
 
 #Region Main Village
-Global $g_sImgCollectRessources = @ScriptDir & "\imgxml\Resources\Collect"
+Global $g_sImgCollectResources = @ScriptDir & "\imgxml\Resources\Collect"
 Global $g_sImgCollectLootCart = @ScriptDir & "\imgxml\Resources\LootCart*"
 Global $g_sImgTreasuryFull = @ScriptDir & "\imgxml\Resources\Treasury"
 Global $g_sImgClanCastle = @ScriptDir & "\imgxml\Buildings\ClanCastle"
@@ -74,7 +74,7 @@ Global $g_sImgSTProgress = @ScriptDir & "\imgxml\SuperTroops\Progress\Progress*.
 #EndRegion
 
 #Region Builder Base
-Global $g_sImgCollectRessourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect"
+Global $g_sImgCollectResourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect"
 Global $g_sImgBoatBB = @ScriptDir & "\imgxml\Boat\BoatBuilderBase*"
 Global $g_sImgZoomOutDirBB = @ScriptDir & "\imgxml\village\BuilderBase\"
 Global $g_sImgStartCTBoost = @ScriptDir & "\imgxml\Resources\BuildersBase\ClockTower\ClockTowerAvailable*.xml"

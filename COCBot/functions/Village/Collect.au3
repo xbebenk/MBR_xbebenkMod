@@ -31,7 +31,7 @@ Func Collect($bCheckTreasury = True)
 	Local $sFileName = ""
 	Local $aCollectXY, $t
 
-	Local $aResult = returnMultipleMatchesOwnVillage($g_sImgCollectRessources)
+	Local $aResult = returnMultipleMatchesOwnVillage($g_sImgCollectResources)
 
 	If UBound($aResult) > 1 Then ; we have an array with data of images found
 		For $i = 1 To UBound($aResult) - 1 ; loop through array rows
