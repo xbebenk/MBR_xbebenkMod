@@ -67,7 +67,7 @@ EndFunc   ;==>CheckAndroidPageError
 Func AndroidPageError($sSource)
 
 	$g_aiAndroidPageError[0] += 1
-	SetDebugLog("Page error count increased to " & $g_aiAndroidPageError[0] & ", source: " & $sSource)
+	SetDebugLog("Page error count increased to " & $g_aiAndroidPageError[0] & ", source: " & $sSource, $COLOR_ERROR)
 	If $g_aiAndroidPageError[1] = 0 Then $g_aiAndroidPageError[1] = __TimerInit()
 	Return $g_aiAndroidPageError[0]
 
