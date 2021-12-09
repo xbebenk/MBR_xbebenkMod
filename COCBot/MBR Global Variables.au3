@@ -982,7 +982,7 @@ Global $g_aiLastGoodWallPos[2] = [0, 0] ;0 = x, 1 = y, 2 = wall level
 Global $g_aUpgradeWall[3] = [0, 0, 0] ;wall level
 ; Upgrading - Wall
 ;First cost is for walls level 5.  MBR doesn't support walls until level 4.
-Global Const $g_aiWallCost[11] = [20000, 40000, 80000, 150000, 250000, 500000, 1000000, 2000000, 4000000, 6000000, 7000000]
+Global Const $g_aiWallCost[11] = [20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 3000000, 5000000, 7000000]
 Global $g_iWallCost = 0
 
 ; Auto Upgrade
