@@ -15,7 +15,7 @@
 #RequireAdmin
 #AutoIt3Wrapper_UseX64=7n
 ;#AutoIt3Wrapper_Res_HiDpi=Y ; HiDpi will be set during run-time!
-#AutoIt3Wrapper_Run_Au3Stripper=y
+#AutoIt3Wrapper_Run_Au3Stripper=n
 #Au3Stripper_Parameters=/rsln /MI=3
 ;/SV=0
 ;#pragma compile(Console, true)

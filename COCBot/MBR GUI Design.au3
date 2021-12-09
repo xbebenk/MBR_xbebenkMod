@@ -96,7 +96,7 @@ Func CreateMainGUI()
 			$_GUI_MAIN_HEIGHT = $_MINIGUI_MAIN_HEIGHT
 	EndSwitch
 
-	$g_hFrmBot = GUICreate($g_sBotTitle, $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT + $_GUI_MAIN_TOP - 25 - 10 - 5, ($g_iFrmBotPosX = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosX), ($g_iFrmBotPosY = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosY), _
+	$g_hFrmBot = GUICreate($g_sBotTitle, $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT + $_GUI_MAIN_TOP - 25 - 12, ($g_iFrmBotPosX = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosX), ($g_iFrmBotPosY = $g_WIN_POS_DEFAULT ? -1 : $g_iFrmBotPosY), _
 			BitOR($WS_MINIMIZEBOX, $WS_POPUP, $WS_SYSMENU, $WS_CLIPCHILDREN, $WS_CLIPSIBLINGS, $iStyle))
 
 	; see https://github.com/Microsoft/Windows-classic-samples/blob/master/Samples/Win7Samples/winui/shell/appshellintegration/TaskbarThumbnailToolbar/ThumbnailToolbar.cpp
@@ -183,7 +183,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 			WinSetTrans($g_hFrmBotButtons, "", 254) ; trick to hide buttons from Android Screen that is not always refreshing
 		EndIf
 		; Need $g_hFrmBotEx for embedding Android
-		$g_hFrmBotEx = GUICreate("My Bot Controls", $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 15, 0, 0, _
+		$g_hFrmBotEx = GUICreate("My Bot Controls", $_GUI_MAIN_WIDTH, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 12, 0, 0, _
 				BitOR($WS_CHILD, $WS_TABSTOP), 0, $g_hFrmBot)
 
 		$g_hToolTip = _GUIToolTip_Create($g_hFrmBot) ; tool tips for URL links etc
@@ -278,7 +278,7 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 		;$g_hFrmBotEmbeddedShieldInput = GUICtrlCreateDummy()
 		GUICtrlSetState($g_hFrmBotEmbeddedShieldInput, $GUI_HIDE)
 
-		$g_hFrmBotBottom = GUICreate("My Bot Buttons", $_GUI_MAIN_WIDTH, $_GUI_BOTTOM_HEIGHT, 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 15, _
+		$g_hFrmBotBottom = GUICreate("My Bot Buttons", $_GUI_MAIN_WIDTH, $_GUI_BOTTOM_HEIGHT, 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 12, _
 				BitOR($WS_CHILD, $WS_TABSTOP), 0, $g_hFrmBot)
 
 	;~ ------------------------------------------------------
