@@ -391,13 +391,13 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 					;SetLog("Building skipped due to OptimizeOTTO", $COLOR_DEBUG)
 					Return False
 				EndIf
-			Else
-				If StringInStr($aBuildingName[1], "Wall") And $g_iChkBBSuggestedUpgradesIgnoreWall Then
-					SetLog("Ups! Wall is not to Upgrade!", $COLOR_ERROR)
-					Return False
-				EndIf
 			EndIf
-
+			
+			If StringInStr($aBuildingName[1], "Wall") And $g_iChkBBSuggestedUpgradesIgnoreWall And Not $g_iChkBBSuggestedUpgradesOTTO Then
+				SetLog("Ups! Wall is not to Upgrade!", $COLOR_ERROR)
+				Return False
+			EndIf
+		
 			Click($g_iQuickMISX + 218, $g_iQuickMISY + 514, 1)
 			If _Sleep(1500) Then Return
 
