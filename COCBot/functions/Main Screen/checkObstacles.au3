@@ -185,7 +185,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				;$Result = getOcrRateCoc(228, 390, "Check Obstacles getOCRRateCoC= ")
 				Local $sRegion = "220,380(60,25)"
 				If $g_iAndroidVersionAPI >= $g_iAndroidLollipop Then
-					$sRegion = "555,370(60,25)"
+					$sRegion = "550,370(70,35)"
 				EndIf
 				$Result = decodeSingleCoord(FindImageInPlace("RateNever", $g_sImgAppRateNever, $sRegion, False, True))
 				If UBound($Result) > 1 Then
