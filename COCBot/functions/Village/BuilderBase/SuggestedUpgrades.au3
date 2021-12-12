@@ -345,6 +345,12 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 				$sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 		EndSwitch
 	EndIf
+	
+	If $sUpgButtom = "Elixir" And $aBuildingName[1] = "Wall" And $g_iChkBBSuggestedUpgradesOTTO Then 
+		SetLog("Wall Upgrade using elixir, skipped due to OptimizeOTTO!", $COLOR_SUCCESS)
+		Return False
+	EndIf
+	
 	If $aBuildingName[1] = "poaster" Then $aBuildingName[1] = "Roaster"
 	If $sUpgButtom = "Elixir" Then $sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 	If $sUpgButtom = "Gold" Then $sUpgButtom = $g_sImgAutoUpgradeBtnGold
@@ -358,9 +364,17 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 				SetLog("Ups! Builder Hall is not to Upgrade!", $COLOR_ERROR)
 				Return False
 			EndIf
-
+			
 			Local $FoundOTTOBuilding = False
-			If $g_iChkBBSuggestedUpgradesOTTO And Not $g_bisMegaTeslaMaxed Then
+			;only upgrade wall if BuilderHall is Max level And If Gold Storage is Nearly Full and Mega Tesla Already Maxed
+			If $aBuildingName[1] = "Wall" And $g_bisMegaTeslaMaxed Then
+				SetLog("BuilderHall is Maxed, Mega Tesla is Maxed", $COLOR_INFO)
+				SetLog("Will Upgrade " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
+				$g_iChkBBSuggestedUpgradesIgnoreWall = False
+				$FoundOTTOBuilding = True
+			EndIf
+			
+			If $g_iChkBBSuggestedUpgradesOTTO And Not $g_bisMegaTeslaMaxed And Not $FoundOTTOBuilding Then
 				;check the upgrade until reach spesific level
 				For $i = 0 To UBound($OptimizeOTTO) - 1
 					If StringInStr($aBuildingName[1], $OptimizeOTTO[$i]) Then
@@ -373,27 +387,21 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
 						ElseIf $aBuildingName[1] = "Builder Barracks" And $aBuildingName[2] >= 7 Then
 							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-						;only upgrade wall if BuilderHall is Max level And If Gold Storage is Nearly Full and Mega Tesla Already Maxed
-						ElseIf $aBuildingName[1] = "Wall" And $g_bisBHMaxed And $g_bisMegaTeslaMaxed Then
-							SetLog("BuilderHall is Maxed, Mega Tesla is Maxed, Gold Storage Near Full", $COLOR_INFO)
-							SetLog("Will Upgrade " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
-							$sUpgButtom = $g_sImgAutoUpgradeBtnGold ;force to use Gold for upgrading wall on BB
-							$g_iChkBBSuggestedUpgradesIgnoreWall = 0
-							$FoundOTTOBuilding = True
-							ExitLoop
 						Else
 							$FoundOTTOBuilding = True
 							ExitLoop
 						EndIf
 					EndIf
 				Next
+				
 				If Not $FoundOTTOBuilding Then
-					;SetLog("Building skipped due to OptimizeOTTO", $COLOR_DEBUG)
+					SetLog("Building skipped due to OptimizeOTTO", $COLOR_DEBUG)
 					Return False
 				EndIf
 			EndIf
 			
-			If StringInStr($aBuildingName[1], "Wall") And $g_iChkBBSuggestedUpgradesIgnoreWall And Not $g_iChkBBSuggestedUpgradesOTTO Then
+			
+			If StringInStr($aBuildingName[1], "Wall") And $g_iChkBBSuggestedUpgradesIgnoreWall Then
 				SetLog("Ups! Wall is not to Upgrade!", $COLOR_ERROR)
 				Return False
 			EndIf
@@ -408,6 +416,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 				Else
 					SetLog("Only for Test!", $COLOR_ERROR)
 					ClickAway("Left")
+					ClickOnBuilder()
 					Return False
 				EndIf
 				If _Sleep(1500) Then Return
@@ -438,7 +447,7 @@ EndFunc   ;==>GetUpgradeButton
 Func SearchNewBuilding($bTest = False)
 	Local $bDebug = $g_bDebugImageSave
 	Local $bScreencap = True
-	Local $NeedDrag = True, $ZoomedIn = False, $FoundMostBottomRed = 0
+	Local $NeedDrag = True, $ZoomedIn = False, $TmpUpgradeCost, $UpgradeCost
 	
 	For $z = 0 To 6 ;for do scroll 3 times
 		If _Sleep(50) Then Return
@@ -504,16 +513,12 @@ Func SearchNewBuilding($bTest = False)
 			EndIf
 		EndIf
 		If Not $g_bRunState Then Return
-		Local $aZeroWhiteMostBottom = _PixelSearch(523, 348, 527, 363, Hex(0xFFFFFF, 6), 10)
-		If $aZeroWhiteMostBottom = 0 Then
-			$FoundMostBottomRed += 1
-			SetLog("No WhiteZero at most bottom list", $COLOR_DEBUG)
-		ElseIf $FoundMostBottomRed > 0 Then
-			$FoundMostBottomRed -= 1
-			SetLog("Found WhiteZero at most bottom list", $COLOR_DEBUG)
-		EndIf
-		If $z > 1 And $FoundMostBottomRed > 1 Then $NeedDrag = False
-		
+
+		$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",435, 335, 100, 30, True)
+		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
+		If $UpgradeCost = $TmpUpgradeCost And $z > 4 Then $NeedDrag = False
+		$UpgradeCost = $TmpUpgradeCost
+			
 		If Not $NeedDrag Then
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
