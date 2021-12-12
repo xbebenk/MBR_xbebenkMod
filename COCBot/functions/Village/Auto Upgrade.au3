@@ -569,7 +569,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	If _Sleep(500) Then Return
 	
 	Local $ZoomedIn = False
-	Local $NeedDrag = True, $FoundMostBottomRed = 0
+	Local $NeedDrag = True, $TmpUpgradeCost, $UpgradeCost, $sameCost = 0
 	If Not $g_bRunState Then Return
 	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
@@ -610,40 +610,42 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			Next
 			
 		EndIf
-		
+		Local $SkipSearch = False
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
 			If QuickMIS("BC1", $g_sImgAUpgradeRushTHPriority, 180, 80, 330, 369, True) Then
-				SetLog("Found RushTH Priority Building", $COLOR_DEBUG)
 				Local $tmpX = $g_iQuickMISX + 180, $tmpY = $g_iQuickMISY + 80
+				Local $RushTHBuildingName = QuickMIS("N1", $g_sImgAUpgradeRushTHPriority, 180, $tmpY - 10, 330, $tmpY + 10)
+				SetLog("Found RushTH Priority Building: " & $RushTHBuildingName, $COLOR_INFO)
 				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $tmpX, $tmpY - 10, $tmpX + 200, $tmpY + 10) Then
 					Click($g_iQuickMISX + $tmpX, $g_iQuickMISY + $tmpY - 10)
 					If _Sleep(1000) Then Return
 					If DoUpgrade($bTest) Then
-						$FoundMostBottomRed = 0 ;reset
 						$z = 0 ;reset
+						$sameCost = 0
 					Endif
 				Else
+					If $RushTHBuildingName = "TownHall" And $z > 0 Then ;skip find new building if founded townhall after scroll
+						$SkipSearch = True
+					EndIf
 					SetLog("But, No Resource", $COLOR_DEBUG)
-				EndIf 
-				SetLog("Skip Search NewBuilding, TH Found = No NewBuilding", $COLOR_DEBUG)
-				ExitLoop
+				EndIf
+				If $SkipSearch Then
+					SetLog("Skip Search NewBuilding, TH Found = No NewBuilding", $COLOR_SUCCESS)
+					ExitLoop
+				EndIf
 			EndIf
 		EndIf
 		
-		Local $aZeroWhiteMostBottom = _PixelSearch(430, 345, 450, 360, Hex(0xFFFFFF, 6), 10)
-		If $aZeroWhiteMostBottom = 0 Then
-			$FoundMostBottomRed += 1
-			SetLog("No WhiteZero at most bottom list", $COLOR_DEBUG)
-		ElseIf $FoundMostBottomRed > 0 Then
-			$FoundMostBottomRed -= 1
-			SetLog("Found WhiteZero at most bottom list", $COLOR_DEBUG)
-		EndIf
-		
-		If $z > 1 And $FoundMostBottomRed > 3 Then $NeedDrag = False
-		
+		$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True)
+		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
+		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
+		SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
+		If $sameCost > 2 Then $NeedDrag = False
+		$UpgradeCost = $TmpUpgradeCost
+
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		If Not $NeedDrag Then
-			SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Not New Building", $COLOR_DEBUG)
+			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
 		ClickDragAUpgrade("up", 328);do scroll up
@@ -651,8 +653,6 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		If _Sleep(1000) Then Return
 	Next
 	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
-	ZoomOut()
-	ClickAway()
 EndFunc ;==>FindNewBuilding
 
 Func SearchGreenZone()
