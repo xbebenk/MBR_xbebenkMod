@@ -19,6 +19,10 @@ Func _ClanGames($test = False)
 	
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
+	If $g_iTownHallLevel <= 5 Then 
+		SetLog("TownHall Level : " & $g_iTownHallLevel & ", Skip Clan Games", $COLOR_INFO)
+		Return
+	Endif
 	
 	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)
