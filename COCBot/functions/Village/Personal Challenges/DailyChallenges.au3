@@ -110,7 +110,7 @@ Func CollectDailyRewards($bGoldPass = False)
 				EndIf
 			Next
 		EndIf
-		If _CheckPixel($aPersonalChallengeRewardsAvail, $g_bCapturePixel) And Not _CheckPixel($aPersonalChallengeLeftEdge, $g_bCapturePixel) Then ; far left edge
+		If _CheckPixel($aPersonalChallengeRewardsCheckMark, $g_bCapturePixel) And Not _CheckPixel($aPersonalChallengeLeftEdge, $g_bCapturePixel) Then ; far left edge
 			If $i = 0 Then
 				SetLog("Dragging back for more... ", Default, Default, Default, Default, Default, Default, False) ; no end line
 			Else

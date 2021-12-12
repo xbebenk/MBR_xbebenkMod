@@ -168,6 +168,7 @@ Global Const $aPersonalChallengeOpenButton2[4] = [130, 618, 0xFDE575, 20] ; Pers
 Global Const $aPersonalChallengeOpenButton3[4] = [176, 615, 0xF5151D, 20] ; Personal Challenge Button with red symbol
 Global Const $aPersonalChallengeCloseButton[4] = [825, 42, 0xFFFFFF, 20] ; Personal Challenge Window Close Button
 Global Const $aPersonalChallengeRewardsAvail[4] = [542, 20, 0xFF6462, 20] ; Personal Challenge - Red symbol showing available rewards
+Global Const $aPersonalChallengeRewardsCheckMark[4] = [50, 365, 0xEDEDED, 20] ; Personal Challenge - CheckMark available reward to drag more
 Global Const $aPersonalChallengeRewardsTab[4] = [450, 44, 0x988510, 20] ; Personal Challenge - Rewards tab unchecked with Gold Pass
 Global Const $aPersonalChallengePerksTab[4] = [660, 44, 0xEFE079, 20] ; Personal Challenge - Perks tab Checked
 Global Const $aPersonalChallengeLeftEdge[4] = [30, 385, 0x28221E, 20] ; Personal Challenge Window - Rewards tab - Black left edge
