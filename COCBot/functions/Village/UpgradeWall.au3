@@ -319,20 +319,24 @@ EndFunc
 Func ClickDragFindWallUpgrade()
 	Local $x = 420, $yUp = 120, $Delay = 500
 	Local $YY = 345
-	Local $aTmpWallCoord, $aWallCoord[0][3], $aWall, $TmpUpgradeCost = 0, $UpgradeCost = 0
+	Local $aTmpWallCoord, $aWallCoord[0][3], $aWall, $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost = 0
 	For $checkCount = 0 To 9
 		If Not $g_bRunState Then Return
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
 			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
 			If _Sleep(1000) Then Return
-			$aTmpWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 210, 80, 260, 369, True)
+			$aTmpWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 180, 80, 260, 369, True)
 			If IsArray($aTmpWallCoord) And UBound($aTmpWallCoord) > 0 Then
 				SetLog("Found " & UBound($aTmpWallCoord) & " Image Wall", $COLOR_DEBUG)
 				For $j = 0 To UBound($aTmpWallCoord) - 1
 					$aWall = StringSplit($aTmpWallCoord[$j], ",", $STR_NOCOUNT)
-					$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aWall[0] + 210 + 120, $aWall[1] + 80 - 8, 100, 20, True)
+					If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 180, $aWall[1]-10, 260, $aWall[1]+10) Then 
+						SetDebugLog("Wall " & $j & " is new wall, skip!", $COLOR_DEBUG)
+						ContinueLoop ;skip New Wall
+					EndIf
+					$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aWall[0] + 180 + 120, $aWall[1] + 80 - 8, 150, 20, True)
 					If Not $UpgradeCost = "" Then
-						_ArrayAdd($aWallCoord, $aWall[0]+210 & "|" & $aWall[1]+80 & "|" & $UpgradeCost)
+						_ArrayAdd($aWallCoord, $aWall[0]+180 & "|" & $aWall[1]+80 & "|" & $UpgradeCost)
 					Else
 						SetDebugLog("Wall " & $j & " not enough resource, skip!", $COLOR_DEBUG)
 					EndIf
@@ -343,9 +347,11 @@ Func ClickDragFindWallUpgrade()
 				SetDebugLog("Not Array Wall", $COLOR_DEBUG)
 			EndIf
 
-			$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True)
+			$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 150, 30, True)
 			SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
-			If $UpgradeCost = $TmpUpgradeCost And $checkCount > 6 Then ExitLoop
+			If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
+			SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
+			If $sameCost > 2 Then ExitLoop
 			$UpgradeCost = $TmpUpgradeCost
 		EndIf
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border
