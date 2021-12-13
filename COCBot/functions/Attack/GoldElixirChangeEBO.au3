@@ -98,7 +98,7 @@ Func GoldElixirChangeEBO()
 		
 		;Early Zap - xbebenkmod
 		;SetLog("Current Timer:" & AttackRemainingTime(False))
-		If $g_Zapped >< True And AttackRemainingTime(False) < $ZapRemain Then
+		If $g_Zapped = False And AttackRemainingTime(False) < $ZapRemain Then
 			$g_Zapped = True
 			SetLog("Trying to Zap Early")
 			If IsAttackPage() Then smartZap() ; Check to see if we should zap the DE Drills
