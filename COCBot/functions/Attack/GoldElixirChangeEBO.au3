@@ -15,7 +15,7 @@
 
 Func GoldElixirChangeEBO()
 	;Region -  EarlyZap - xbebenkmod
-	Local $ZapRemain = 30000 ;Try zap after 30s after all troops are deployed
+	Local $ZapRemain = 90000 ;Try zap after 90s has passed
 	
 	Local $Gold1, $Gold2
 	Local $GoldChange, $ElixirChange
@@ -97,8 +97,9 @@ Func GoldElixirChangeEBO()
 		CheckHeroesHealth()
 		
 		;Early Zap - xbebenkmod
-		;SetLog("Current Timer:" & TimerDiff($g_ZapTimer))
-		If TimerDiff($g_ZapTimer) > $ZapRemain Then
+		;SetLog("Current Timer:" & AttackRemainingTime(False))
+		If $g_Zapped >< True And AttackRemainingTime(False) < $ZapRemain Then
+			$g_Zapped = True
 			If IsAttackPage() Then smartZap() ; Check to see if we should zap the DE Drills
 		EndIf
 

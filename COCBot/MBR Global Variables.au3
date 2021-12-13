@@ -1964,4 +1964,4 @@ Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBas
 Global $g_bBBForceCustomArmy = False, $g_bBBGetArmyFromCSV = False, $g_bBBCSVAttack = False, $g_iBBCSVSettings = False ; Custom
 
 ; EarlyZap - xbebenkmod
-Global $g_ZapTimer = 0
+Global $g_Zapped = False

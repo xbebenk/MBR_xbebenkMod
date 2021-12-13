@@ -14,8 +14,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func PrepareAttack($pMatchMode, $bRemaining = False) ;Assigns troops
-	;xbebenkmod - Early Zap
-	Global $g_ZapTimer = TimerInit()
 	; Attack CSV has debug option to save attack line image, save have png of current $g_hHBitmap2
 	If ($pMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($pMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
 		If $g_bDebugMakeIMGCSV And $bRemaining = False And TestCapture() = 0 Then
