@@ -15,7 +15,8 @@
 
 Func GoldElixirChangeEBO()
 	;Region -  EarlyZap - xbebenkmod
-	Local $ZapRemain = 90000 ;Try zap after 90s has passed
+	Local $TimerOffset = 60000 ;Try to adjust timer
+	Local $ZapRemain = 90000 - $TimerOffset ;Try zap after 90s has passed
 	
 	Local $Gold1, $Gold2
 	Local $GoldChange, $ElixirChange
