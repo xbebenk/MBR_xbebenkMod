@@ -59,7 +59,7 @@ Func UpgradeWall($bTest = False)
 	EndIf
 	
 	If Not $g_bRunState Then Return
-	If $GoUpgrade Then
+	If $GoUpgrade And Not $g_bUpgradeAnyWallLevel Then
 		ClickAway()
 		VillageReport(True, True) ;update village resource capacity
 		If $g_iFreeBuilderCount < 1 Then Return
@@ -152,15 +152,23 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 	For $i = 0 To UBound($aWallCoord) - 1
 		If Not $g_bRunState Then Return
 		If Not WallUpgradeCheckBuilder($bTest) Then Return
+		If Not UpgradeLowLevelWallCheckResource() Then Return
 		ClickMainBuilder()
 		SetLog("Wall " & "[" & $i & "] : [" & $aWallCoord[$i][0] & "," & $aWallCoord[$i][1] & " Cost = " & $aWallCoord[$i][2] & "]", $COLOR_DEBUG)
 		Click($aWallCoord[$i][0], $aWallCoord[$i][1])
 
 		If _Sleep(1000) Then Return
 		Local $aWallLevel = BuildingInfo(242, 494)
-		If $aWallLevel[0] = "" Or Not $aWallLevel[1] = "Wall" Then
-			SetLog("Not Wall, wrong click...", $COLOR_ERROR)
+		If $aWallLevel[0] = "" Then
+			SetLog("Cannot read building Info, wrong click...", $COLOR_ERROR)
 			ContinueLoop
+		EndIf
+		
+		If $aWallLevel[1] = "Wall" Then
+			SetDebugLog("is a Wall...", $COLOR_INFO)
+		Else
+			SetLog("Not Wall, wrong click...", $COLOR_ERROR)
+			ExitLoop
 		EndIf
 
 		If Not $g_bUpgradeAnyWallLevel And $aWallLevel[2] > $UpgradeToLvl Then
@@ -168,7 +176,7 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 			ContinueLoop
 		EndIf
 
-		SetLog("Wall Level : " & $aWallLevel[2], $COLOR_SUCCESS)
+		SetLog("BuildingInfo: " & $aWallLevel[1] & " Level: " & $aWallLevel[2], $COLOR_SUCCESS)
 		If DoLowLevelWallUpgrade($aWallLevel[2], $bTest, $aWallCoord[$i][2]) Then
 			If _Sleep(1000) Then Return
 			ContinueLoop
@@ -202,11 +210,12 @@ EndFunc
 
 Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)	
 	Local $UpgradeToLvl = $g_iLowLevelWall
+	If Not $g_bRunState Then Return
 	If $WallLevel >= $UpgradeToLvl And $g_bUpgradeAnyWallLevel Then
-		SetLog("Try to Upgrade Any Wall Level", $COLOR_INFO)
+		SetLog("Upgrade Any Wall Level", $COLOR_INFO)
 		Local $MinWallGold = IsGoldEnough($iWallCost)
 		Local $MinWallElixir = IsElixEnough($iWallCost)
-		If Not $g_bRunState Then Return
+		SetDebugLog("$MinWallGold=" & String($MinWallGold) & " $MinWallElixir=" & String($MinWallElixir), $COLOR_INFO)
 		Switch $g_iUpgradeWallLootType
 			Case 0 ;Gold
 				If $MinWallGold Then
@@ -244,9 +253,9 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 		ClickAway()
 		Return True
 	EndIf
-
+	If Not $g_bRunState Then Return
 	If $WallLevel <= $UpgradeToLvl Then
-		SetLog("Trying Upgrade Wall Level : " & $WallLevel & " Once in a Row", $COLOR_INFO)
+		SetLog("Upgrade Wall Level : " & $WallLevel & " Once in a Row", $COLOR_INFO)
 		If ClickB("SelectRow") Then
 			If _Sleep(1000) Then Return
 			For $x = $WallLevel To $UpgradeToLvl ;try to upgrade till LowLevel Wall Setting
