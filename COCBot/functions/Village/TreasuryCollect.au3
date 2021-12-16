@@ -93,12 +93,12 @@ Func AutoLocateCC()
 	ClickAway()
 	Local $TreasuryCoord = decodeSingleCoord(findImage("TreasuryFull", $g_sImgTreasuryFull & "\Treasury*", GetDiamondFromRect("77,70(700,510)"), 1, True))
 	If IsArray($TreasuryCoord) And UBound($TreasuryCoord) = 2 Then
-		Click($TreasuryCoord[0], $TreasuryCoord[1] + 50)
+		Click($TreasuryCoord[0], $TreasuryCoord[1] + 30)
 		If _Sleep(500) Then Return
 		Local $BuildingInfo = BuildingInfo(290, 494)
 		If $BuildingInfo[1] = "Clan Castle" Then 
 			$g_aiClanCastlePos[0] = $TreasuryCoord[0]
-			$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 50
+			$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 30
 			SetLog("Found Clan Castle Lvl " & $BuildingInfo[2] & ", save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
 			$CCFound = True
 		EndIf
