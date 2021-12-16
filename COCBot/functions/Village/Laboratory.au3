@@ -111,8 +111,8 @@ Func Laboratory($debug=False)
 					Endif
 				Next
 				For $z = 0 To UBound($g_aCmbLabUpgradeOrder) - 1 ;try labupgrade based on order
-					Local $Temp_iCmbLaboratory = $g_aCmbLabUpgradeOrder[$z] + 1
-					If $Temp_iCmbLaboratory <> 0 Then 
+					Local $TmpCmbLaboratory = $g_aCmbLabUpgradeOrder[$z] + 1
+					If $TmpCmbLaboratory <> 0 Then 
 						SetLog("Try Lab Upgrade :" & $g_avLabTroops[$iTmpCmbLaboratory][2], $COLOR_DEBUG)
 						Local $iPage = Ceiling($iTmpCmbLaboratory / $iPicsPerPage) ; page # of user choice
 						While($iCurPage < $iPage) ; go directly to the needed page
