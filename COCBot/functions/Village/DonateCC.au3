@@ -644,7 +644,7 @@ Func DonateCC($bCheckForNewMsg = False)
 			$aiSearchArray[1] = $aiDonateButton[1] + 20
 
 			ClickAway("Left")
-			If _Sleep(2500) Then Return
+			If _Sleep(3000) Then Return
 		EndIf
 
 		$sSearchArea = GetDiamondFromArray($aiSearchArray)
@@ -666,10 +666,16 @@ Func DonateCC($bCheckForNewMsg = False)
 		While WaitforPixel(293, 592, 294, 593, "A2D50D", 6, 1)
 			$iCount += 1
 			Click(295, 600, 1, 0, "#0172")
-			If _Sleep($DELAYDONATECC2) Then Return
+			SetDebugLog("Click Green Scroll Button", $COLOR_ACTION)
+			If _Sleep(800) Then Return
 			$bDonate = True
 			If $iCount > 4 Then ExitLoop
 		Wend
+		
+		If $iCount < 5 And WaitforPixel(22, 608, 23, 609, "FFFFFF", 6, 1) Then
+			Click(22, 610, 1, 0, "#0172")
+			SetDebugLog("Click Green Left Chat Button", $COLOR_ACTION)
+		EndIf
 		
 		If $bDonate Then 
 			$aiSearchArray = $aiSearchArrayBackUp
