@@ -156,6 +156,9 @@ Func DoUpgrade($bTest = False)
 	If Not $g_bRunState Then Return
 	$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
 	$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
+	If _CheckPixel($aVillageHasDarkElixir, True) Then ; check if the village have a Dark Elixir Storage
+		$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(728, 123)
+	EndIf
 	; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
 	$g_aUpgradeNameLevel = BuildingInfo(242, 494)
 	If $g_aUpgradeNameLevel[0] = "" Then
@@ -300,7 +303,7 @@ Func DoUpgrade($bTest = False)
 		SetLog($g_aUpgradeNameLevel[1] & " : This upgrade must be ignored, looking next...", $COLOR_WARNING)
 		Return False
 	Else
-		SetLog("Building Name: " & $g_aUpgradeNameLevel[1] & "Level: " & $g_aUpgradeNameLevel[2], $COLOR_DEBUG)
+		SetLog("Building Name: " & $g_aUpgradeNameLevel[1] & " Level: " & $g_aUpgradeNameLevel[2], $COLOR_DEBUG)
 	EndIf
 
 	; if upgrade not to be ignored, click on the Upgrade button to open Upgrade window
@@ -322,7 +325,7 @@ Func DoUpgrade($bTest = False)
 	For $i = 0 To 2
 		;SetLog($g_aUpgradeResourceCostDuration[$i])
 		If $g_aUpgradeResourceCostDuration[$i] = "" Then
-			SetLog("Error when trying to get upgrade details, looking next...", $COLOR_ERROR)
+			SetLog("Error at $g_aUpgradeResourceCostDuration, looking next...", $COLOR_ERROR)
 			ClickAway()
 			Return False
 		EndIf
@@ -417,8 +420,6 @@ Func DoUpgrade($bTest = False)
 
 	SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
 	SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
-	
-	VillageReport($bSuppressLog = True)
 
 	AutoUpgradeLog($g_aUpgradeNameLevel, $g_aUpgradeResourceCostDuration)
 
@@ -433,7 +434,7 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 	If $aUpgradeNameLevel = Default Then
 		$aUpgradeNameLevel = BuildingInfo(242, 494)
 		If $aUpgradeNameLevel[0] = "" Then
-			SetLog("Error when trying to get upgrade name and level", $COLOR_ERROR)
+			SetLog("Error at AutoUpgradeLog() to get upgrade name and level", $COLOR_ERROR)
 			$aUpgradeNameLevel[1] = "Traps"
 			$bRet = False
 		EndIf
@@ -523,11 +524,14 @@ Func AUNewBuildings($x, $y, $bTest = False)
 
 		; Lets search for the Correct Symbol on field
 		Local $GreenCheckCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
+		SetDebugLog("Looking for GreenCheck Button", $COLOR_INFO)
 		If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
+			SetDebugLog("GreenCheck Button Found in [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_INFO)
 			If Not $g_bRunState Then Return
 			If Not $bTest Then
 				Click($GreenCheckCoords[0], $GreenCheckCoords[1])
 			Else
+				SetDebugLog("ONLY for TESTING!!!", $COLOR_ERROR)
 				Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1])
 				Return True
 			EndIf
@@ -540,9 +544,10 @@ Func AUNewBuildings($x, $y, $bTest = False)
 			EndIf
 			Return True
 		Else
+			SetDebugLog("GreenCheck Button NOT Found", $COLOR_ERROR)
 			If Not $g_bRunState Then Return
 			;Lets check if exist the [x], it should not exist, but to be safe
-			Local $RedXCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgRedX & "\RedX*", "FV", 1, True))
+			Local $RedXCoords = decodeSingleCoord(findImage("FindRedX", $g_sImgRedX & "\RedX*", "FV", 1, True))
 			If IsArray($RedXCoords) And UBound($RedXCoords) = 2 Then
 				Click($RedXCoords[0], $RedXCoords[1])
 				SetLog("Sorry! Wrong place to deploy a new building on Main Village!", $COLOR_ERROR)
@@ -620,14 +625,17 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			Local $aResult = FindRushTHPriority()
 			If isArray($aResult) And UBound($aResult) > 0 Then
 				For $y = 0 To UBound($aResult) - 1
-					If $aResult[$y][3] > 0 Then 
+					SetDebugLog("RushTHPriority: " & $aResult[$y][2] & ", Cost: " & $aResult[$y][3] & "Coord [" & $aResult[$y][0] & "," & $aResult[$y][1] & "]", $COLOR_INFO)
+					If $aResult[$y][3] > 100 Then ;filter only upgrade with readable upgrade cost
 						Click($aResult[$y][0], $aResult[$y][1])
 						If _Sleep(1000) Then Return
 						If DoUpgrade($bTest) Then
 							$z = 0 ;reset
 							$sameCost = 0
-							ContinueLoop ;exit this loop and upper loop, because successfull upgrade will reset upgrade list on builder menu
 						Endif
+						ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
+					Else
+						SetDebugLog("Skip this building, Cost not readable", $COLOR_WARNING)
 					EndIf
 				Next
 			Else
