@@ -146,9 +146,12 @@ Func checkAttackDisable($iSource, $Result = "")
 		If _DateIsValid($g_asTrainTimeFinish[$g_iCurAccount]) Then
 			If _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$g_iCurAccount]) < $g_iSinglePBForcedLogoffTime Then
 				$g_asTrainTimeFinish[$g_iCurAccount] = _DateAdd("n", $g_iSinglePBForcedLogoffTime, _NowCalc())
-				$g_abPBActive[$g_iCurAccount] = True
+				
 			EndIf
 		EndIf
+		
+		$g_abPBActive[$g_iCurAccount] = True ;move here as we really need to switch to another account
+		
 		Local $iAllcounts = 0, $iAllAccountsPBactive = 0
 		For $i = 0 To $g_iTotalAcc
 			If $g_abAccountNo[$i] = True Then
