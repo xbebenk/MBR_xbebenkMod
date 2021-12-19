@@ -481,8 +481,10 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "FillIncorrectSpellCombo", $g_iCmbFillIncorrectSpellCombo)
 	_Ini_Add("other", "TrainPreviousArmy", $g_bTrainPreviousArmy)
 	_Ini_Add("other", "SkipWallPlacingOnBB", $g_bSkipWallPlacingOnBB)
-	_Ini_Add("other", "CheckCGEarly", $g_bCheckCGEarly)
 	_Ini_Add("other", "RandomArmyComp", $g_bRandomArmyComp)
+	_Ini_Add("other", "CheckCGEarly", $g_bCheckCGEarly)
+	_Ini_Add("other", "CheckUpgradeWallEarly", $g_bUpgradeWallEarly)
+	_Ini_Add("other", "CheckAutoUpgradeEarly", $g_bAutoUpgradeEarly)
 	
 	SaveBuilderBaseMod()
 EndFunc   ;==>SaveConfig_600_6
@@ -663,6 +665,12 @@ Func SaveConfig_auto()
 		$string &= $g_aiCmbRushTHOption[$i] & "|"
 	Next
 	_Ini_Add("Auto Upgrade", "RushTHOption", $string)
+	$string = ""
+	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
+		$string &= $g_aichkEssentialUpgrade[$i] & "|"
+	Next
+	_Ini_Add("Auto Upgrade", "EssentialBuildings", $string)
+	_Ini_Add("Auto Upgrade", "UpgradeOnlyTHLevelAchieve", $g_bUpgradeOnlyTHLevelAchieve)
 	
 	For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 		_Ini_Add("Auto Upgrade", "ChkUpgradesToIgnore[" & $i & "]", $g_iChkUpgradesToIgnore[$i])

@@ -1085,4 +1085,20 @@ Func chkCheckCGEarly()
 	EndIf
 EndFunc ;==> chkCheckCGEarly
 
+Func chkCheckUpgradeWallEarly()
+	If GUICtrlRead($g_hUpgradeWallEarly) = $GUI_CHECKED Then
+		$g_bUpgradeWallEarly = True
+	Else
+		$g_bUpgradeWallEarly = False
+	EndIf
+EndFunc ;==> chkCheckUpgradeWallEarly
+
+Func chkCheckAutoUpgradeEarly()
+	If GUICtrlRead($g_hAutoUpgradeEarly) = $GUI_CHECKED Then
+		$g_bAutoUpgradeEarly = True
+	Else
+		$g_bAutoUpgradeEarly = False
+	EndIf
+EndFunc ;==> chkCheckAutoUpgradeEarly
+
 

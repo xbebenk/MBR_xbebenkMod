@@ -995,6 +995,8 @@ Global $g_iTxtSmartMinGold = 150000, $g_iTxtSmartMinElixir = 150000, $g_iTxtSmar
 Global $g_iChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iChkResourcesToIgnore[3] = [0, 0, 0]
 Global $g_aiCmbRushTHOption[5] = [0, 0, 0, 0, 0]
+Global $g_aichkEssentialUpgrade[8] = [0,0,0,0,0,0,0,0]
+Global $g_bUpgradeOnlyTHLevelAchieve = False
 Global $g_iCurrentLineOffset = 0, $g_iNextLineOffset = 0
 Global $g_aUpgradeNameLevel ; [Nb of elements in Array, Name, Level]
 Global $g_aUpgradeResourceCostDuration[3] = ["", "", ""] ; Resource, Cost, Duration
@@ -1811,7 +1813,7 @@ $g_oBldgImages.add($eBldgScatter & "_" & "0", @ScriptDir & "\imgxml\Buildings\Sc
 ; EOF
 
 ; Clan Games v3
-Global $g_bCheckCGEarly = False
+Global $g_bCheckCGEarly = False, $g_bUpgradeWallEarly = False, $g_bAutoUpgradeEarly = False
 Global $g_bChkClanGamesAir = 0, $g_bChkClanGamesGround = 0, $g_bChkClanGamesMisc = 0
 Global $g_bChkClanGamesEnabled = 0
 Global $g_bChkClanGames60 = 0

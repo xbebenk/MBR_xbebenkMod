@@ -166,7 +166,18 @@ Func DoUpgrade($bTest = False)
 		GoGoblinMap()
 		Return False
 	EndIf
-
+	
+	Local $THLevelAchieved = False
+	If $g_bUpgradeOnlyTHLevelAchieve Then
+		If $g_iTownHallLevel >= $g_aiCmbRushTHOption[0] + 9 Then ;if option to only upgrade after TH level achieved enabled
+			$THLevelAchieved = True
+		Else
+			$THLevelAchieved = False
+		EndIf
+	Else ;if option to only upgrade after TH level achieved disabled
+		$THLevelAchieved = True ;set true to bypass
+	EndIf
+	
 	Local $bMustIgnoreUpgrade = False, $bUpgradeTHWeapon = False
 	; matchmaking between building name and the ignore list
 	If $g_aUpgradeNameLevel[1] = "po al Champion" Then $g_aUpgradeNameLevel[1] = "Royal Champion"
@@ -216,9 +227,11 @@ Func DoUpgrade($bTest = False)
 		Case "Dark Spell Factory"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[11] = 1) ? True : False
 			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[4] + 2 Then ;only upgrade to unlock Golem
-				$bMustIgnoreUpgrade =  True
+				$bMustIgnoreUpgrade = False
 				SetLog("RushTH Building: Dark Spell Factory Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
 				SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[4] + 2 & ", Skip!", $COLOR_INFO)
+			Else
+				$bMustIgnoreUpgrade = False
 			EndIf
 		Case "Gold Mine"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[12] = 1) ? True : False
@@ -250,20 +263,68 @@ Func DoUpgrade($bTest = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
 		Case "Wizard Tower"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1) ? True : False
+			If $THLevelAchieved Then
+				$bMustIgnoreUpgrade = False
+			Else
+				$bMustIgnoreUpgrade = True
+				SetLog("Essential Building: Wizard Tower Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			EndIf
 		Case "Bomb Tower"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[21] = 1) ? True : False
+			If $THLevelAchieved Then
+				$bMustIgnoreUpgrade = False
+			Else
+				$bMustIgnoreUpgrade = True
+				SetLog("Essential Building: Bomb Tower Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			EndIf
 		Case "Air Defense"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1) ? True : False
+			If $THLevelAchieved Then
+				$bMustIgnoreUpgrade = False
+			Else
+				$bMustIgnoreUpgrade = True
+				SetLog("Essential Building: Air Defense Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			EndIf
 		Case "Air Sweeper"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[23] = 1) ? True : False
+			If $THLevelAchieved Then
+				$bMustIgnoreUpgrade = False
+			Else
+				$bMustIgnoreUpgrade = True
+				SetLog("Essential Building: Air Sweeper Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			EndIf
 		Case "X Bow"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[24] = 1) ? True : False
+			If $THLevelAchieved Then
+				$bMustIgnoreUpgrade = False
+			Else
+				$bMustIgnoreUpgrade = True
+				SetLog("Essential Building: X-Bow Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			EndIf
 		Case "Inferno Tower"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[25] = 1) ? True : False
+			If $THLevelAchieved Then
+				$bMustIgnoreUpgrade = False
+			Else
+				$bMustIgnoreUpgrade = True
+				SetLog("Essential Building: Inferno Tower Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			EndIf
 		Case "Eagle Artillery"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[26] = 1) ? True : False
+			If $THLevelAchieved Then
+				$bMustIgnoreUpgrade = False
+			Else
+				$bMustIgnoreUpgrade = True
+				SetLog("Essential Building: Eagle Artillery Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			EndIf
 		Case "Scattershot"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[27] = 1) ? True : False
+			If $THLevelAchieved Then
+				$bMustIgnoreUpgrade = False
+			Else
+				$bMustIgnoreUpgrade = True
+				SetLog("Essential Building: Scattershot Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			EndIf
 		Case "Army Camp"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[28] = 1) ? True : False
 		Case "Gold Storage"
@@ -625,7 +686,9 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			Local $aResult = FindRushTHPriority()
 			If isArray($aResult) And UBound($aResult) > 0 Then
 				For $y = 0 To UBound($aResult) - 1
-					SetDebugLog("RushTHPriority: " & $aResult[$y][2] & ", Cost: " & $aResult[$y][3] & "Coord [" & $aResult[$y][0] & "," & $aResult[$y][1] & "]", $COLOR_INFO)
+					SetDebugLog("RushTHPriority: " & $aResult[$y][2] & ", Cost: " & $aResult[$y][3] & " Coord [" & $aResult[$y][0] & "," & $aResult[$y][1] & "]", $COLOR_INFO)
+				Next
+				For $y = 0 To UBound($aResult) - 1
 					If $aResult[$y][3] > 100 Then ;filter only upgrade with readable upgrade cost
 						Click($aResult[$y][0], $aResult[$y][1])
 						If _Sleep(1000) Then Return
@@ -642,6 +705,46 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 				SetLog("RushTHPriority Building Not Found", $COLOR_INFO)
 			EndIf
 		EndIf
+		
+		Local $THLevelAchieved = False
+		If $g_bUpgradeOnlyTHLevelAchieve Then
+			If $g_iTownHallLevel >= $g_aiCmbRushTHOption[0] + 9 Then ;if option to only upgrade after TH level achieved enabled
+				$THLevelAchieved = True
+			Else
+				$THLevelAchieved = False
+			EndIf
+		Else ;if option to only upgrade after TH level achieved disabled
+			$THLevelAchieved = True ;set true to bypass
+		EndIf
+		
+		If $g_bChkRushTH And $THLevelAchieved Then
+			SetLog("Search Essential Building on Builder Menu", $COLOR_INFO)
+			ClickMainBuilder()
+			Local $aResult = FindEssentialBuilding()
+			If isArray($aResult) And UBound($aResult) > 0 Then
+				For $y = 0 To UBound($aResult) - 1
+					SetDebugLog("Essential Building: " & $aResult[$y][2] & ", Cost: " & $aResult[$y][3] & " Coord [" & $aResult[$y][0] & "," & $aResult[$y][1] & "]", $COLOR_INFO)
+				Next
+				For $y = 0 To UBound($aResult) - 1
+					If $aResult[$y][3] > 100 Then ;filter only upgrade with readable upgrade cost
+						Click($aResult[$y][0], $aResult[$y][1])
+						If _Sleep(1000) Then Return
+						If DoUpgrade($bTest) Then
+							$z = 0 ;reset
+							$sameCost = 0
+						Endif
+						ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
+					Else
+						SetDebugLog("Skip this building, Cost not readable", $COLOR_WARNING)
+					EndIf
+				Next
+			Else
+				SetLog("Essential Building Not Found", $COLOR_INFO)
+			EndIf
+		Else 
+			SetLog("Skip Search Essential Building", $COLOR_INFO)
+		EndIf
+		
 		$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True)
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
@@ -674,7 +777,7 @@ Func FindRushTHPriority()
 				ContinueLoop ;skip New Building
 			EndIf
 			Local $RushTHBuildingName = QuickMIS("N1", $g_sImgAUpgradeRushTHPriority, 180, $aRushTH[1] + 80 - 10, 350, $aRushTH[1] + 80 + 10)
-			$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aRushTH[0] + 180 + 120, $aRushTH[1] + 80 - 8, 150, 20, True)
+			$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aRushTH[0] + 180 + 80, $aRushTH[1] + 80 - 8, 150, 20, True)
 			_ArrayAdd($aTHRushCoord, $aRushTH[0]+180 & "|" & $aRushTH[1]+80 & "|" & $RushTHBuildingName & "|" & $UpgradeCost)
 		Next
 		_ArraySort($aTHRushCoord, 1, 0, 0, 3)
@@ -686,6 +789,57 @@ Func FindRushTHPriority()
 		SetDebugLog("Not Array Building", $COLOR_DEBUG)
 	EndIf
 	Return $aTHRushCoord
+EndFunc
+
+Func FindEssentialBuilding()
+	Local $sImagePath = @ScriptDir & "\imgxml\Resources\Auto Upgrade\EssentialBuilding\"
+	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\EssentialBuilding\"
+	Local $aTmpEssentialBuildingCoord, $aEssentialBuildingCoord[0][4], $aEssentialBuilding, $UpgradeCost
+	;Remove All previous file (in case setting changed)
+	DirRemove($sTempPath, $DIR_REMOVE)
+	
+	EssentialBuildingImageCopy($sImagePath, $sTempPath)
+	$aTmpEssentialBuildingCoord = QuickMIS("CX", $sTempPath, 180, 80, 350, 369, True)
+	If IsArray($aTmpEssentialBuildingCoord) And UBound($aTmpEssentialBuildingCoord) > 0 Then
+		SetLog("Found " & UBound($aTmpEssentialBuildingCoord) & " Image EssentialBuilding", $COLOR_INFO)
+		For $j = 0 To UBound($aTmpEssentialBuildingCoord) - 1
+			$aEssentialBuilding = StringSplit($aTmpEssentialBuildingCoord[$j], ",", $STR_NOCOUNT)
+			If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 180, $aEssentialBuilding[1] + 80 -10, 260, $aEssentialBuilding[1] + 80 +10) Then
+				SetDebugLog("Building " & $j & " is new, skip!", $COLOR_ERROR)
+				ContinueLoop ;skip New Building
+			EndIf
+			Local $EssentialBuildingName = QuickMIS("N1", $sTempPath, 180, $aEssentialBuilding[1] + 80 - 10, 350, $aEssentialBuilding[1] + 80 + 10)
+			If $EssentialBuildingName = "BombT" Then
+				SetDebugLog("Building " & $j & " Detected as Bomb Tower, lets check if it Bomb or a Bomb Tower", $COLOR_INFO)
+				If Not QuickMIS("BC1", $sImagePath & "Tower\", $aEssentialBuilding[0] + 180 + 10, $aEssentialBuilding[1] + 80 -10, 300, $aEssentialBuilding[1] + 80 +10) Then
+					SetDebugLog("Building " & $j & " is Not Bomb Tower, skip!", $COLOR_ERROR)
+					ContinueLoop ;skip Not Bomb Tower
+				EndIf				
+			EndIf
+			$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aEssentialBuilding[0] + 180 + 80, $aEssentialBuilding[1] + 80 - 8, 150, 20, True)
+			_ArrayAdd($aEssentialBuildingCoord, $aEssentialBuilding[0]+180 & "|" & $aEssentialBuilding[1]+80 & "|" & $EssentialBuildingName & "|" & $UpgradeCost)
+		Next
+		_ArraySort($aEssentialBuildingCoord, 1, 0, 0, 1)
+		For $j = 0 To UBound($aEssentialBuildingCoord) - 1
+			SetDebugLog("[" & $j & "] Building: " & $aEssentialBuildingCoord[$j][2] & ", Cost=" & $aEssentialBuildingCoord[$j][3], $COLOR_DEBUG)
+		Next
+		Return $aEssentialBuildingCoord
+	Else
+		SetDebugLog("Not Array Essential Building", $COLOR_DEBUG)
+	EndIf
+	Return $aEssentialBuildingCoord
+EndFunc
+
+Func EssentialBuildingImageCopy($sImagePath = "", $sTempPath = "")
+	If $sImagePath = "" Then Return
+	If $sTempPath = "" Then Return
+	Local $asImageName[8] = ["Xbow", "Inferno", "Eagle", "Scatter", "WizardT", "BombT", "AirD", "AirS"]
+	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
+		If $g_aichkEssentialUpgrade[$i] > 0 Then
+			SetDebugLog("[" & $i & "]" & "Essential Building: " & $asImageName[$i], $COLOR_DEBUG)
+			FileCopy($sImagePath & "\" & $asImageName[$i] & "*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+		EndIf
+	Next
 EndFunc
 
 Func SearchGreenZone()

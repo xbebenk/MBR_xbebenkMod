@@ -511,8 +511,10 @@ Func ReadConfig_600_6()
 	IniReadS($g_iCmbFillIncorrectSpellCombo, $g_sProfileConfigPath, "other", "FillIncorrectSpellCombo", 0, "int")
 	IniReadS($g_bTrainPreviousArmy, $g_sProfileConfigPath, "other", "TrainPreviousArmy", False, "Bool")
 	IniReadS($g_bSkipWallPlacingOnBB, $g_sProfileConfigPath, "other", "SkipWallPlacingOnBB", True, "Bool")
-	IniReadS($g_bCheckCGEarly, $g_sProfileConfigPath, "other", "CheckCGEarly", True, "Bool")
 	IniReadS($g_bRandomArmyComp, $g_sProfileConfigPath, "other", "RandomArmyComp", False, "Bool")
+	IniReadS($g_bCheckCGEarly, $g_sProfileConfigPath, "other", "CheckCGEarly", True, "Bool")
+	IniReadS($g_bUpgradeWallEarly, $g_sProfileConfigPath, "other", "CheckUpgradeWallEarly", True, "Bool")
+	IniReadS($g_bAutoUpgradeEarly, $g_sProfileConfigPath, "other", "CheckAutoUpgradeEarly", True, "Bool")
 
 	ReadConfigBuilderBaseMod()
 EndFunc   ;==>ReadConfig_600_6
@@ -903,7 +905,11 @@ Func ReadConfig_auto()
 	For $i = 0 To UBound($g_aiCmbRushTHOption) - 1
 		$g_aiCmbRushTHOption[$i] = $str[$i]
 	Next
-	
+	IniReadS($g_bUpgradeOnlyTHLevelAchieve, $g_sProfileConfigPath, "Auto Upgrade", "UpgradeOnlyTHLevelAchieve", True, "Bool")
+	$str = StringSplit(IniRead($g_sProfileConfigPath, "Auto Upgrade", "EssentialBuildings", "1|1|1|1|0|0|0|0"), "|", $STR_NOCOUNT)
+	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
+		$g_aichkEssentialUpgrade[$i] = $str[$i]
+	Next
 	For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 		IniReadS($g_iChkUpgradesToIgnore[$i], $g_sProfileConfigPath, "Auto Upgrade", "ChkUpgradesToIgnore[" & $i & "]", $g_iChkUpgradesToIgnore[$i], "int")
 	Next

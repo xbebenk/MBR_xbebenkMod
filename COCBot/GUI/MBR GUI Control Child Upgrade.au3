@@ -788,6 +788,7 @@ Func BtnRushTHOption()
 EndFunc
 
 Func CloseRushTHOption()
+	chkEssentialUpgrade()
 	GUISetState(@SW_HIDE, $g_hGUI_RushTHOption)
 EndFunc
 
@@ -813,4 +814,8 @@ Func ChkPlaceNew()
 	EndIf
 EndFunc ;==>ChkPlaceNew
 
-
+Func chkEssentialUpgrade()
+	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
+		$g_aichkEssentialUpgrade[$i] = GUICtrlRead($g_hchkEssentialUpgrade[$i]) = $GUI_CHECKED ? 1 : 0
+	Next
+EndFunc   ;==>chkEssentialUpgrade

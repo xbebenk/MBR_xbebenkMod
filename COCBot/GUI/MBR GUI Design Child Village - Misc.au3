@@ -492,7 +492,7 @@ Func CreateMiscClanGamesV3SubTab()
 EndFunc   ;==>CreateMiscClanGamesV3SubTab
 
 Global $g_hChkMMSkipFirstCheckRoutine, $g_hChkMMSkipBB, $g_hChkMMSkipTrain, $g_hChkMMIgnoreIncorrectTroopCombo, $g_hLblFillIncorrectTroopCombo, $g_hCmbFillIncorrectTroopCombo
-Global $g_hChkMMIgnoreIncorrectSpellCombo, $g_hLblFillIncorrectSpellCombo, $g_hCmbFillIncorrectSpellCombo, $g_hChkMMTrainPreviousArmy, $g_hRandomArmyComp, $g_hChkMMSkipWallPlacingOnBB, $g_hChkMMCheckCGEarly
+Global $g_hChkMMIgnoreIncorrectSpellCombo, $g_hLblFillIncorrectSpellCombo, $g_hCmbFillIncorrectSpellCombo, $g_hChkMMTrainPreviousArmy, $g_hRandomArmyComp, $g_hChkMMSkipWallPlacingOnBB, $g_hChkMMCheckCGEarly, $g_hUpgradeWallEarly, $g_hAutoUpgradeEarly
 Global $g_sCmbFICTroops[5][3] = [ _ 
 								["Barb",	"Barbarians",		1], _
 								["Arch",	"Archers",			1], _
@@ -579,11 +579,21 @@ Func CreateMiscModSubTab()
 	
 	$x = 180 + 55
 	$y = 40
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On FirstCheck"), $x - 10, $y - 15, 210, 40)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On FirstCheck"), $x - 10, $y - 15, 210, 84)
 		$g_hChkMMCheckCGEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckCGEarly", "Check ClanGames Early"), $x, $y, -1, -1)
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnBBAutoUpgrade", "Enable Check ClanGames on First Start"))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnFirstCheckClanGames", "Enable Check ClanGames on First Start"))
 		GUICtrlSetOnEvent(-1, "chkCheckCGEarly")
 		GUICtrlSetState(-1, $GUI_CHECKED)
+	
+	$y += 22
+		$g_hUpgradeWallEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckUpgradeWallEarly", "Check UpgradeWall Early"), $x, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnFirstCheckUpgradeWall", "Enable Check UpgradeWall on First Start"))
+		GUICtrlSetOnEvent(-1, "chkCheckUpgradeWallEarly")
+	
+	$y += 22
+		$g_hAutoUpgradeEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckAutoUpgradeEarly", "Check AutoUpgrade Early"), $x, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnFirstCheckAutoUpgrade", "Enable Check AutoUpgrade on First Start"))
+		GUICtrlSetOnEvent(-1, "chkCheckAutoUpgradeEarly")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc ;==>CreateMiscModSubTab
 

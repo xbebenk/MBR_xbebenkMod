@@ -54,6 +54,8 @@ Global $g_hChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 Global $g_hChkRushTH = 0, $g_hBtnRushTHOption = 0
 Global $g_hGUI_RushTHOption = 0, $g_hBtnRushTHOptionClose = 0, $g_ahCmbRushTHOption[5] = [0, 0, 0, 0, 0]
 Global $RushTHOption[5] = ["TownHall", "Barracks", "Dark Barracks", "Spell Factory", "Dark Spell Factory"]
+Global $g_hchkEssentialUpgrade[8] = [0,0,0,0,0,0,0,0]
+Global $g_hUpgradeOnlyTHLevelAchieve = 0
 
 Func CreateVillageUpgrade()
 
@@ -746,7 +748,7 @@ Func CreateAutoUpgradeSubTab()
 	$g_hChkRushTH = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "Rush TH", "Rush TH"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkRushTH")
 		_GUICtrlSetTip(-1, "Toggle to Make RushTH, Wont Ugrade Defense Or colletor")
-	$g_hBtnRushTHOption = GUICtrlCreateButton("Upgrade to Level Setting", $x + 65, $y + 1, -1, 23)
+	$g_hBtnRushTHOption = GUICtrlCreateButton("Upgrade Setting", $x + 65, $y + 1, -1, 23)
 			GUICtrlSetOnEvent(-1, "BtnRushTHOption")
 	$x = 5
 		$g_hTxtAutoUpgradeLog = GUICtrlCreateEdit("", $x, 340, $g_iSizeWGrpTab3, 62, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
@@ -757,19 +759,19 @@ EndFunc   ;==>CreateAutoUpgradeGUI
 Func CreateRushTHOption()
 	
 	Local $TxtRushTHOptionTH = "Level 9|Level 10|Level 11|Level 12|Level 13|Rush to Max Level"
-	Local $TxtRushTHOptionBarracks = "Level 2 Unlock Archer|Level 3 Unlock Giant|Level 4 Unlock Goblin|Level 5 Unlock Wall Breaker|" & _
-									"Level 6 Unlock Balloon|Level 7 Unlock Wizard|Level 8 Unlock Healer|Level 9 Unlock Dragon|" & _
-									"Level 10 Unlock Pekka|Level 11 Unlock Baby Dragon|Level 12 Unlock Miner|Level 13 Unlock Electro Dragon|" & _
-									"Level 14 Unlock Yeti|Level 15 Unlock Dragon Rider"
-	Local $TxtRushTHOptionDarkBarracks = "Level 2 Unlock Hog Rider|Level 3 Unlock Valkyrie|Level 4 Unlock Golem|Level 5 Unlock Witch|" & _
-									"Level 6 Unlock Lava Hound|Level 7 Unlock Bowler|Level 8 Unlock Ice Golem|Level 9 Unlock Headhunter"
-	Local $TxtRushTHOptionSpellF = "Level 2 Unlock Healing Spell|Level 3 Unlock Rage Spell|Level 4 Unlock Jump & Freeze Spell|Level 5 Unlock Clone Spell|" & _
-									"Level 6 Unlock Invisibility Spell"
-	Local $TxtRushTHOptionDSpellF = "Level 2 Unlock EarthQuake Spell|Level 3 Unlock Haste Spell|Level 4 Unlock Skeleton Spell|Level 5 Unlock Bat Spell"
+	Local $TxtRushTHOptionBarracks = "2 Unlock Archer|3 Unlock Giant|4 Unlock Goblin|5 Unlock Wall Breaker|" & _
+									"6 Unlock Balloon|7 Unlock Wizard|8 Unlock Healer|9 Unlock Dragon|" & _
+									"10 Unlock Pekka|11 Unlock Baby Dragon|12 Unlock Miner|13 Unlock Electro Dragon|" & _
+									"14 Unlock Yeti|15 Unlock Dragon Rider"
+	Local $TxtRushTHOptionDarkBarracks = "2 Unlock Hog Rider|3 Unlock Valkyrie|4 Unlock Golem|5 Unlock Witch|" & _
+									"6 Unlock Lava Hound|7 Unlock Bowler|8 Unlock Ice Golem|9 Unlock Headhunter"
+	Local $TxtRushTHOptionSpellF = "2 Unlock Healing Spell|3 Unlock Rage Spell|4 Unlock Jump & Freeze Spell|5 Unlock Clone Spell|" & _
+									"6 Unlock Invisibility Spell"
+	Local $TxtRushTHOptionDSpellF = "2 Unlock EarthQuake Spell|3 Unlock Haste Spell|4 Unlock Skeleton Spell|5 Unlock Bat Spell"
 	
-	$g_hGUI_RushTHOption = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - AutoUpgrade", "GUI_RushTHOption", "Optional Settings: Set Max Level to Upgrade"), 330, 250, $g_iFrmBotPosX, -1, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	$g_hGUI_RushTHOption = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - AutoUpgrade", "GUI_RushTHOption", "Optional Settings: Set Max Level to Upgrade"), 330, 380, $g_iFrmBotPosX, $g_iFrmBotPosY + 200, $WS_DLGFRAME, $WS_EX_TOPMOST)
 	Local $x = 25, $y = 25
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - AutoUpgrade", "SelectRushTHOption", "Upgrade To Level :"), $x - 20, $y - 20, 320, 170)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - AutoUpgrade", "SelectRushTHOption", "Upgrade To Level :"), $x - 20, $y - 20, 320, 160)
 	$x += 10
 	$y += 5
 	For $i = 0 To Ubound($RushTHOption) - 1 		
@@ -779,18 +781,50 @@ Func CreateRushTHOption()
 				Case 0
 					GUICtrlSetData(-1,  $TxtRushTHOptionTH, "Rush to Max Level")
 				Case 1
-					GUICtrlSetData(-1,  $TxtRushTHOptionBarracks, "Level 15 Unlock Dragon Rider")
+					GUICtrlSetData(-1,  $TxtRushTHOptionBarracks, "15 Unlock Dragon Rider")
 				Case 2
-					GUICtrlSetData(-1,  $TxtRushTHOptionDarkBarracks, "Level 9 Unlock Headhunter")
+					GUICtrlSetData(-1,  $TxtRushTHOptionDarkBarracks, "9 Unlock Headhunter")
 				Case 3
-					GUICtrlSetData(-1,  $TxtRushTHOptionSpellF, "Level 6 Unlock Invisibility Spell")
+					GUICtrlSetData(-1,  $TxtRushTHOptionSpellF, "6 Unlock Invisibility Spell")
 				Case 4
-					GUICtrlSetData(-1,  $TxtRushTHOptionDSpellF, "Level 5 Unlock Bat Spell")
+					GUICtrlSetData(-1,  $TxtRushTHOptionDSpellF, "5 Unlock Bat Spell")
 			EndSwitch
 	Next
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	$y = 140
-	$g_hBtnRushTHOptionClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - AutoUpgrade", "BtnRushTHOptionClose", "Close"), 230, $y + 50, 85, 25)
+	
+	$x = 25 
+	$y = 190
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - AutoUpgrade", "SelectEssentialBuilding", "Select Essential Building to Upgrade :"), $x - 20, $y - 20, 320, 150)
+		$x += 10
+		$g_hchkEssentialUpgrade[0] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "X-Bow", "X-Bow"), $x, $y, -1, -1)
+		GUICtrlSetState(-1, $GUI_ENABLE)
+		$y += 22
+		$g_hchkEssentialUpgrade[1] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Inferno Tower", "Inferno Tower"), $x, $y, -1, -1)
+		GUICtrlSetState(-1, $GUI_ENABLE)
+		$y += 22
+		$g_hchkEssentialUpgrade[2] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Eagle Artillery", "Eagle Artillery"), $x, $y, -1, -1)
+		GUICtrlSetState(-1, $GUI_ENABLE)
+		$y += 22
+		$g_hchkEssentialUpgrade[3] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Scattershot", "Scattershot"), $x, $y, -1, -1)
+		GUICtrlSetState(-1, $GUI_ENABLE)
+		
+		$x += 130
+		$y = 190
+		$g_hchkEssentialUpgrade[4] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Wizard Tower", "Wizard Tower"), $x, $y, -1, -1)
+		$y += 22
+		$g_hchkEssentialUpgrade[5] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Bomb Tower", "Bomb Tower"), $x, $y, -1, -1)
+		$y += 22
+		$g_hchkEssentialUpgrade[6] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Air Defense", "Air Defense"), $x, $y, -1, -1)
+		$y += 22
+		$g_hchkEssentialUpgrade[7] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Air Sweeper", "Air Sweeper"), $x, $y, -1, -1)
+		
+		$x = 15 
+		$y += 35
+		$g_hUpgradeOnlyTHLevelAchieve = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "OnlyUpgradeIfTHLevelAchieve", "Only Upgrade Buildings If TH Level Already Achieved"), $x, $y, -1, -1)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
+	$y = 260
+	$g_hBtnRushTHOptionClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - AutoUpgrade", "BtnRushTHOptionClose", "Close"), 230, $y + 65, 85, 25)
 		GUICtrlSetOnEvent(-1, "CloseRushTHOption")
 
 EndFunc ;==>CreateRushTHOption

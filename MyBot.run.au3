@@ -1240,7 +1240,7 @@ Func FirstCheck()
 	Local $bLocateTH = False
 	SetLog("Detecting Town Hall level", $COLOR_INFO)
 	SetLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
-	Collect(False) ;collect but skip treasury
+	Collect(False) ;only collect from mine and collector
 	If $g_aiTownHallPos[0] > -1 Then
 		Click($g_aiTownHallPos[0], $g_aiTownHallPos[1])
 		If _Sleep(800) Then Return
@@ -1317,6 +1317,18 @@ Func FirstCheckRoutine()
 		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 			GotoBBTodoCG()
+		EndIf
+	EndIf
+	
+	If $g_iFreeBuilderCount > 0 Then 
+		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
+		If $g_bAutoUpgradeEarly Then
+			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
+			AutoUpgrade()
+		EndIf
+		If $g_bUpgradeWallEarly Then
+			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
+			UpgradeWall()
 		EndIf
 	EndIf
 
