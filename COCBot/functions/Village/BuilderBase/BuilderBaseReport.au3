@@ -55,7 +55,7 @@ EndFunc   ;==>BuilderBaseReport
 Func isBHMaxed()
 	ClickAway()
 	Local $sBHCoords
-	Local $sSLcoords
+	Local $sSLcoords, $bRet = False
 	$sBHCoords = findImage("BuilderHall", $g_sImgBuilderHall, "FV", 1, True) ; Search for Builder Hall
 	If $sBHCoords <> "" Then
 		$sBHCoords = StringSplit($sBHCoords, ",", $STR_NOCOUNT)
@@ -67,7 +67,7 @@ Func isBHMaxed()
 				If $aBuildingName[2] = 9 Then
 					SetLog("Your Builder Hall is Maxed!", $COLOR_SUCCESS)
 					$g_bisBHMaxed = True
-					Return True
+					$bRet = True
 				Else
 					SetLog("Your Builder Hall Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
 				EndIf
@@ -85,7 +85,7 @@ Func isBHMaxed()
 					If $aBuildingName[2] = 9 Then
 						SetLog("Your Builder Hall is Maxed!", $COLOR_SUCCESS)
 						$g_bisBHMaxed = True
-						Return True
+						$bRet = True
 					Else
 						SetLog("Your Builder Hall Level must be : " & $aBuildingName[2], $COLOR_SUCCESS)
 					EndIf
@@ -96,7 +96,7 @@ Func isBHMaxed()
 			Setlog("isBHMaxed(): Cannot Find Builder Hall and Star Lab", $COLOR_DEBUG)
 		EndIf
 	EndIf
-	Return False
+	Return $bRet
 EndFunc
 
 Func isMegaTeslaMaxed()
