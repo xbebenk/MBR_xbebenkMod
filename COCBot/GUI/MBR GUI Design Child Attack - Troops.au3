@@ -28,8 +28,8 @@ Global $g_hGUI_TRAINTYPE_TAB = 0, $g_hGUI_TRAINTYPE_TAB_ITEM1 = 0, $g_hGUI_TRAIN
 
 ; Troops/Spells sub-tab
 Global $g_hRadCustomTrain = 0, $g_hRadQuickTrain = 0, $g_ahChkArmy[3] = [0, 0, 0]
-Global $g_ahTxtTrainArmyTroopCount[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahLblTrainArmyTroopLevel[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahTxtTrainArmyTroopCount[$eTroopCount] = [0, 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahLblTrainArmyTroopLevel[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahTxtTrainArmySpellCount[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahLblTrainArmySpellLevel[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahTxtTrainArmySiegeCount[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
@@ -38,7 +38,7 @@ Global $g_hTxtFullTroop = 0, $g_hChkTotalCampForced = 0, $g_hTxtTotalCampForced 
 Global $g_hChkDoubleTrain = 0, $g_hChkPreciseArmy = 0
 
 Global $g_hGrpTrainTroops = 0
-Global $g_ahPicTrainArmyTroop[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahPicTrainArmyTroop[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahPicTrainArmySpell[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahPicTrainArmySiege[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
 Global $g_hLblTotalTimeCamp = 0, $g_hLblElixirCostCamp = 0, $g_hLblDarkCostCamp = 0, $g_hCalTotalTroops = 0, $g_hLblTotalProgress = 0, $g_hLblCountTotal = 0, _
@@ -58,7 +58,7 @@ Global $g_hGUI_QuickTrainEdit = 0, $g_hGrp_QTEdit = 0
 Global $g_hBtnRemove_QTEdit, $g_hBtnSave_QTEdit, $g_hBtnCancel_QTEdit
 Global $g_ahPicQTEdit_Troop[7], $g_ahTxtQTEdit_Troop[7], $g_ahPicQTEdit_Spell[7], $g_ahTxtQTEdit_Spell[7]
 Global $g_ahLblQTEdit_TotalTroop, $g_ahLblQTEdit_TotalSpell
-Global $g_ahPicTroop_QTEdit[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahPicTroop_QTEdit[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_ahPicSpell_QTEdit[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Boost sub-tab
@@ -89,6 +89,7 @@ Func LoadTranslatedTrainTroopsOrderList()
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperWizards", "Super Wizards"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHealers", "Healers"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtDragons", "Dragons"), _
+			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtDragons", "Super Dragons"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtPekkas", "Pekkas"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBabyDragons", "Baby Dragons"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtInfernoDragons", "Inferno Dragons"), _
@@ -113,8 +114,8 @@ Func LoadTranslatedTrainTroopsOrderList()
 EndFunc   ;==>LoadTranslatedTrainTroopsOrderList
 
 Global $g_hChkCustomTrainOrderEnable = 0
-Global $g_ahCmbTroopOrder[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahImgTroopOrder[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbTroopOrder[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahImgTroopOrder[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hBtnTroopOrderSet = 0, $g_ahImgTroopOrderSet = 0
 Global $g_hBtnRemoveTroops
 
@@ -381,7 +382,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmyTroop[$eTroopBarbarian] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBarbarian, $x, $y - 5, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", "Level") & " " & $sTroopName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", "Mouse Left Click to Up level" & @CRLF & "Shift + Mouse Left Click to Down level"))
 	GUICtrlSetOnEvent(-1, "TrainTroopLevelClick")
-	$g_ahLblTrainArmyTroopLevel[$eTroopBarbarian] = GUICtrlCreateLabel("1", $x + 2, $y + 14, 6, 11, $SS_CENTER)
+	$g_ahLblTrainArmyTroopLevel[$eTroopBarbarian] = GUICtrlCreateLabel("1", $x + 2, $y + 14, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmyTroopCount[$eTroopBarbarian] = GUICtrlCreateInput("58", $x + 1, $y + 29, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -562,6 +563,7 @@ Func CreateCustomTrainSubTab()
 
 	$x += 34
 	; Goblins
+	; $SS_CENTER
 	Local $sTroopName = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGoblins", "Goblins")
 	$g_ahPicTrainArmyTroop[$eTroopGoblin] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGoblin, $x, $y - 5, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sTroopName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
@@ -885,7 +887,6 @@ Func CreateCustomTrainSubTab()
 	GUICtrlSetLimit(-1, 2)
 	GUICtrlSetOnEvent(-1, "TrainTroopCountEdit")
 
-
 	; Next Row
 	$x = $iStartX
 	$y += 53
@@ -901,6 +902,20 @@ Func CreateCustomTrainSubTab()
 	$g_ahTxtTrainArmyTroopCount[$eTroopSuperBowler] = GUICtrlCreateInput("0", $x + 1, $y + 29, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 	_GUICtrlSetTip(-1, $sTxtSetPerc & " " & $sTroopName & " " & $sTxtSetPerc2)
 	GUICtrlSetLimit(-1, 3)
+	GUICtrlSetOnEvent(-1, "TrainTroopCountEdit")
+	
+	$x += 34
+	; Super Dragon
+	Local $sTroopName = GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSuperDragon", "Super Dragon")
+	$g_ahPicTrainArmyTroop[$eTroopSuperDragon] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnSuperDragon, $x, $y - 5, 32, 32)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sTroopName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
+	GUICtrlSetOnEvent(-1, "TrainTroopLevelClick")
+	$g_ahLblTrainArmyTroopLevel[$eTroopSuperDragon] = GUICtrlCreateLabel("0", $x + 2, $y + 14, 10, 11, $SS_CENTER)
+	GUICtrlSetBkColor(-1, $COLOR_WHITE)
+	GUICtrlSetFont(-1, 7, 400)
+	$g_ahTxtTrainArmyTroopCount[$eTroopSuperDragon] = GUICtrlCreateInput("0", $x + 1, $y + 29, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	_GUICtrlSetTip(-1, $sTxtSetPerc & " " & $sTroopName & " " & $sTxtSetPerc2)
+	GUICtrlSetLimit(-1, 2)
 	GUICtrlSetOnEvent(-1, "TrainTroopCountEdit")
 
 	$y -= 15
@@ -943,7 +958,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellLightning] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnLightSpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellLightning] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellLightning] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellLightning] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -957,7 +972,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellHeal] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnHealSpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellHeal] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellHeal] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellHeal] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -971,7 +986,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellRage] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnRageSpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellRage] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellRage] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellRage] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -985,7 +1000,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellJump] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnJumpSpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellJump] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellJump] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellJump] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -999,7 +1014,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellFreeze] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnFreezeSpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellFreeze] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellFreeze] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellFreeze] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -1013,7 +1028,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellClone] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnCloneSpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellClone] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellClone] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellClone] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -1027,7 +1042,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellInvisibility] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnInvisibilitySpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellInvisibility] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellInvisibility] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellInvisibility] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -1041,7 +1056,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellPoison] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnPoisonSpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellPoison] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellPoison] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellPoison] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -1055,7 +1070,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellEarthquake] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnEarthquakeSpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellEarthquake] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellEarthquake] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellEarthquake] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -1069,7 +1084,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellHaste] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnHasteSpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellHaste] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellHaste] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellHaste] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -1083,7 +1098,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellSkeleton] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnSkeletonSpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellSkeleton] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellSkeleton] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellSkeleton] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -1097,7 +1112,7 @@ Func CreateCustomTrainSubTab()
 	$g_ahPicTrainArmySpell[$eSpellBat] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBatSpell, $x, $y + 10, 32, 32)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSpellName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
 	GUICtrlSetOnEvent(-1, "TrainSpellLevelClick")
-	$g_ahLblTrainArmySpellLevel[$eSpellBat] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 6, 11)
+	$g_ahLblTrainArmySpellLevel[$eSpellBat] = GUICtrlCreateLabel("0", $x + 2, $y + 29, 10, 11, $SS_CENTER)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	GUICtrlSetFont(-1, 7, 400)
 	$g_ahTxtTrainArmySpellCount[$eSpellBat] = GUICtrlCreateInput("0", $x + 1, $y + 44, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -1107,22 +1122,21 @@ Func CreateCustomTrainSubTab()
 
 	$y += 52
 	$x = 180
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSpellsCost, $x + 4, $y + 10, 24, 24)
-	$g_hLblTotalTimeSpell = GUICtrlCreateLabel(" 0s", $x + 33, $y + 15, 55, 15, $SS_RIGHT)
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSpellsCost, $x + 35, $y + 15, 24, 24)
+	$g_hLblTotalTimeSpell = GUICtrlCreateLabel(" 0s", $x + 62, $y + 20, 55, 15, $SS_RIGHT)
 	GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_WHITE)
-	$g_hLblElixirCostSpell = GUICtrlCreateLabel(" 0", $x + 93, $y + 15, 77, 15, $SS_RIGHT)
+	$g_hLblElixirCostSpell = GUICtrlCreateLabel(" 0", $x + 120, $y + 20, 70, 15, $SS_RIGHT)
 	GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_WHITE)
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 91, $y + 14, 16, 16)
-	$g_hLblDarkCostSpell = GUICtrlCreateLabel(" 0", $x + 175, $y + 15, 62, 15, $SS_RIGHT)
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 122, $y + 20, 16, 16)
+	$g_hLblDarkCostSpell = GUICtrlCreateLabel(" 0", $x + 192, $y + 20, 55, 15, $SS_RIGHT)
 	GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_WHITE)
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 173, $y + 14, 16, 16)
-
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 194, $y + 20, 16, 16)
 
 	$x = $iStartX
 	$y += 17
@@ -1194,24 +1208,38 @@ Func CreateCustomTrainSubTab()
 	_GUICtrlSetTip(-1, $sTxtSetPerc & " " & $sSiegeName & " " & $sTxtSetPerc2)
 	GUICtrlSetLimit(-1, 2)
 	GUICtrlSetOnEvent(-1, "TrainSiegeCountEdit")
+	
+	$x += 34
+	; Flame Finger
+	Local $sSiegeName = GetTranslatedFileIni("MBR Global GUI Design Names Siege Machines", "TxtFlameFinger", "Flame Flinger")
+	$g_ahPicTrainArmySiege[$eSiegeFlameFlinger] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnFlameF, $x, $y - 5, 32, 32)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR Global GUI Design", "Level", -1) & " " & $sSiegeName & ":" & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Mouse_Left_Click", -1))
+	GUICtrlSetOnEvent(-1, "TrainSiegeLevelClick")
+	$g_ahLblTrainArmySiegeLevel[$eSiegeFlameFlinger] = GUICtrlCreateLabel("0", $x + 2, $y + 14, 10, 11, $SS_CENTER)
+	GUICtrlSetBkColor(-1, $COLOR_WHITE)
+	GUICtrlSetFont(-1, 7, 400)
+	$g_ahTxtTrainArmySiegeCount[$eSiegeFlameFlinger] = GUICtrlCreateInput("0", $x + 1, $y + 29, 30, 17, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	_GUICtrlSetTip(-1, $sTxtSetPerc & " " & $sSiegeName & " " & $sTxtSetPerc2)
+	GUICtrlSetLimit(-1, 2)
+	GUICtrlSetOnEvent(-1, "TrainSiegeCountEdit")
 
 	$x = 180
 	$y += 19
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSiegeCost, $x + 3, $y + 5, 24, 24)
-	$g_hLblTotalTimeSiege = GUICtrlCreateLabel(" 0s", $x + 33, $y + 10, 55, 15, $SS_RIGHT)
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSiegeCost, $x + 35, $y + 5, 24, 24)
+	$g_hLblTotalTimeSiege = GUICtrlCreateLabel(" 0s", $x + 62, $y + 10, 55, 15, $SS_RIGHT)
 	GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_WHITE)
-	$g_hLblGoldCostSiege = GUICtrlCreateLabel(" 0", $x + 93, $y + 10, 77, 15, $SS_RIGHT)
+	$g_hLblGoldCostSiege = GUICtrlCreateLabel(" 0", $x + 120, $y + 10, 70, 15, $SS_RIGHT)
 	GUICtrlSetBkColor(-1, $COLOR_GRAY)
 	GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 	GUICtrlSetColor(-1, $COLOR_WHITE)
-	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 91, $y + 9, 16, 16)
-	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblCountTotal", "Total"), $x + 173, $y + 10, -1, -1)
-	$g_hLblCountTotalSiege = GUICtrlCreateLabel(0, $x + 200, $y + 10, 30, 15, $SS_CENTER)
+	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 122, $y + 9, 16, 16)
+	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblCountTotal", "Total"), $x + 192, $y + 10, -1, -1)
+	$g_hLblCountTotalSiege = GUICtrlCreateLabel(0, $x + 220, $y + 10, 20, 15, $SS_CENTER)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblCountTotal_Info_02", "The total units of Siege Machines"))
 	GUICtrlSetBkColor(-1, $COLOR_MONEYGREEN) ;lime, moneygreen
-	GUICtrlCreateLabel("x", $x + 232, $y + 10, -1, -1)
+	GUICtrlCreateLabel("x", $x + 242, $y + 10, -1, -1)
 
 EndFunc   ;==>CreateCustomTrainSubTab
 

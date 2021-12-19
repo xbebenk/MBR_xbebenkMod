@@ -31,26 +31,26 @@ Func BoostSuperTroop($bTest = False)
 			Local $iPicsPerRow = 4, $picswidth = 125, $picspad = 18
 			Local $curRow = 1, $columnStart = 150, $iColumnY1 = 280, $iColumnY2 = 440
 			Local $BoostCost = 0, $BoostDuration = 0, $TroopBoosted = False
-			
+
 			If $g_iCmbSuperTroops[$i] > 0 Then
-				
+
 					Local $sTroopName = GetSTroopName($g_iCmbSuperTroops[$i] - 1)
 					SetLog("Trying to boost " & "[" & $g_iCmbSuperTroops[$i] & "] " & $sTroopName, $COLOR_INFO)
 
 					Local $iColumnX = $columnStart
 					Select
-						Case $g_iCmbSuperTroops[$i] = 2 Or $g_iCmbSuperTroops[$i] = 6 Or $g_iCmbSuperTroops[$i] = 10 ;second column
+						Case $g_iCmbSuperTroops[$i] = 2 Or $g_iCmbSuperTroops[$i] = 6 Or $g_iCmbSuperTroops[$i] = 10 Or $g_iCmbSuperTroops[$i] = 14 ;second column
 							$iColumnX = $columnStart + (1 * ($picswidth + $picspad))
 						Case $g_iCmbSuperTroops[$i] = 3 Or $g_iCmbSuperTroops[$i] = 7 Or $g_iCmbSuperTroops[$i] = 11 ;third column
 							$iColumnX = $columnStart + (2 * ($picswidth + $picspad))
 						Case $g_iCmbSuperTroops[$i] = 4 Or $g_iCmbSuperTroops[$i] = 8 Or $g_iCmbSuperTroops[$i] = 12 ;fourth column
 							$iColumnX = $columnStart + (3 * ($picswidth + $picspad))
 					EndSelect
-					
+
 					Local $iRow = Ceiling($g_iCmbSuperTroops[$i] / $iPicsPerRow) ; get row Stroop
 					SetDebugLog("$iRow = " & $iRow, $COLOR_DEBUG)
 					StroopNextPage($iRow) ; go directly to the needed Row
-					
+
 					If $iRow = 3 Then ; for last row, we cannot scroll it to middle page
 						$iColumnY1 = 355
 						$iColumnY2 = 515
@@ -209,7 +209,7 @@ Func OpenBarrel()
 		If $bOpenBarrel Then
 			SetLog("Found Barrel at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_DEBUG)
 			Click($g_iQuickMISX, $g_iQuickMISY, 1)
-			If IsBoostWindowOpened() Then 
+			If IsBoostWindowOpened() Then
 				Return True
 			Else
 				SetLog("Couldn't find super troop window", $COLOR_ERROR)
@@ -228,7 +228,7 @@ Func IsBoostWindowOpened()
 	Local $aResult
 	For $i = 0 To 12 ;wait for about 3 seconds
 		$aResult = _PixelSearch(699,160, 700, 161, Hex(0xFFFFFF, 6) , 6, True) ;check red button x
-		If IsArray($aResult) And UBound($aResult) > 1 Then 
+		If IsArray($aResult) And UBound($aResult) > 1 Then
 			Return True
 		EndIf
 		If _Sleep(250) Then Return
