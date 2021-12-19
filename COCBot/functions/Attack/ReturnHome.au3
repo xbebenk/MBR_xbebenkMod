@@ -28,15 +28,17 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	If $GoldChangeCheck Then
 		If Not (IsReturnHomeBattlePage(True, False)) Then ; if already in return home battle page do not wait and try to activate Hero Ability and close battle
 			SetLog("Checking if the battle has finished", $COLOR_INFO)
-			
+			$g_Zapped = False ;xbebenk mod - Reset var Early Zap
 			While GoldElixirChangeEBO()
 				If _Sleep($DELAYRETURNHOME1) Then Return
 			WEnd
-			If $g_Zapped = False Then ;xbebenkmod - Early Zap ;Skip Zap if EarlyZap is successful
-				If IsAttackPage() Then smartZap() ; Check to see if we should zap the DE Drills
-			Else
+			
+			If $g_Zapped Then ;Skip Zap if EarlyZap is successful
 				SetLog("Zapped Early, Skipping SmartZap")
+			Else
+				If IsAttackPage() Then smartZap() ; Check to see if we should zap the DE Drills
 			EndIf
+			
 			;If Heroes were not activated: Hero Ability activation before End of Battle to restore health
 			If ($g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower Or $g_bCheckChampionPower) Then
 				;_CaptureRegion()

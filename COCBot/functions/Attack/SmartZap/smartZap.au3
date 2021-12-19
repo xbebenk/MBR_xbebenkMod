@@ -102,6 +102,7 @@ Func getSpellOffset()
 EndFunc   ;==>getSpellOffset
 
 Func smartZap($minDE = -1)
+	$g_Zapped = True
 	Local $strikeOffsets = [0, 14] ; Adjust according to drill locate pictures in "imgxml\Storages\Drills"
 	Local $drillLvlOffset, $spellAdjust, $numDrills, $testX, $testY, $tempTestX, $tempTestY, $strikeGain, $expectedDE
 	Local $error = 5 ; 5 pixel error margin for DE drill search

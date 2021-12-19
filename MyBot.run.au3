@@ -985,7 +985,6 @@ Func _Idle() ;Sequence that runs until Full Army
 EndFunc   ;==>_Idle
 
 Func AttackMain($bFirstStart = False) ;Main control for attack functions
-	$g_Zapped = False ;xbebenk mod - Early Zap ;Reset Variable
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	ClickAway()
 	If IsSearchAttackEnabled() Then

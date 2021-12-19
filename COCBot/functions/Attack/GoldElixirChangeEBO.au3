@@ -14,10 +14,6 @@
 ; ===============================================================================================================================
 
 Func GoldElixirChangeEBO()
-	;Region -  EarlyZap - xbebenkmod
-	Local $TimerOffset = 60000 ;Try to adjust timer
-	Local $ZapRemain = 90000 - $TimerOffset ;Try zap after 90s has passed
-	
 	Local $Gold1, $Gold2
 	Local $GoldChange, $ElixirChange
 	Local $Elixir1, $Elixir2
@@ -86,7 +82,6 @@ Func GoldElixirChangeEBO()
 
 	;MAIN LOOP
 	Local $iBegin = __TimerInit()
-
 	Local $iSuspendAndroidTimeOffset = SuspendAndroidTime()
 	SetDebugLog("GoldElixirChangeEBO: Start waiting for battle end, Wait: " & $z & ", Offset: " & $iSuspendAndroidTimeOffset)
 
@@ -98,11 +93,9 @@ Func GoldElixirChangeEBO()
 		CheckHeroesHealth()
 		
 		;Early Zap - xbebenkmod
-		;SetLog("Current Timer:" & AttackRemainingTime(False))
-		If $g_Zapped = False And AttackRemainingTime(False) < $ZapRemain Then
-			$g_Zapped = True
+		If Not $g_Zapped And $CurDamage > 50 Then
 			SetLog("Trying to Zap Early")
-			If IsAttackPage() Then smartZap() ; Check to see if we should zap the DE Drills
+			If IsAttackPage() Then smartZap()
 		EndIf
 
 		;DE SPECIAL END EARLY
