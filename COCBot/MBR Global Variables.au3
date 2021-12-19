@@ -1377,13 +1377,13 @@ Global $g_bMainWindowOk = False ; Updated in IsMainPage() when main page found o
 ; My village
 Global $g_aiCurrentLoot[$eLootCount] = [0, 0, 0, 0] ; current stats
 Global $g_iTownHallLevel = 0 ; Level of user townhall (Level 1 = 1)
-Global $g_aiTownHallPos[2] = [-1, -1] ;Position of TownHall
+Global $g_aiTownHallPos[2] = [458, 330] ; Default Position of TownHall placed from training 
 Global $g_aiKingAltarPos[2] = [-1, -1] ; position Kings Altar
 Global $g_aiQueenAltarPos[2] = [-1, -1] ; position Queens Altar
 Global $g_aiWardenAltarPos[2] = [-1, -1] ; position Grand Warden Altar
 Global $g_aiChampionAltarPos[2] = [-1, -1] ; position Royal Champion Altar
 Global $g_aiLaboratoryPos[2] = [-1, -1] ; Position of laboratory
-Global $g_aiClanCastlePos[2] = [-1, -1] ; Position of clan castle
+Global $g_aiClanCastlePos[2] = [391, 411] ; Default Position of clan castle placed before Rebuild 
 Global $g_iDetectedImageType = 0 ; Image theme; 0 = normal, 1 = snow
 Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 
