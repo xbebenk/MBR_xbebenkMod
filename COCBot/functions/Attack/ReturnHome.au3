@@ -105,6 +105,10 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 			If WaitforPixel(18, 548, 19, 549, "CD0D0D", 10, 1) Then
 				Click(65, 540, 1, 0, "#0099")
 				If _Sleep(500) Then Return
+				If Not $GoldChangeCheck Then 
+					If _Sleep(3000) Then Return
+					Return
+				EndIf
 				Local $j = 0
 				While 1 ; dynamic wait for Okay button
 					SetDebugLog("Wait for OK button to appear #" & $j)
