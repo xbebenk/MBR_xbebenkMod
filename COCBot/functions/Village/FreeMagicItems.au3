@@ -49,9 +49,9 @@ Func CollectFreeMagicItems($bTest = False)
 	EndIf
 
 	If Not $g_bRunState Then Return
-	Local $aOcrPositions[3][2] = [[146, 415], [385, 415], [570, 415]]
+	Local $aOcrPositions[3][2] = [[200, 415], [390, 415], [580, 415]]
 	Local $aResults[3] = ["", "", ""]
-
+	Local $Collected = False
 	$iLastTimeChecked[$g_iCurAccount] = @MDAY
 
 	For $i = 0 To 2
@@ -60,11 +60,10 @@ Func CollectFreeMagicItems($bTest = False)
 		If $aResults[$i] <> "" Then
 			If Not $bTest Then
 				If $aResults[$i] = "FREE" Then
-					Click($aOcrPositions[$i][0], $aOcrPositions[$i][1], 2, 500)
+					Click($aOcrPositions[$i][0], $aOcrPositions[$i][1])
 					SetLog("Free Magic Item detected", $COLOR_INFO)
-					ClickAway()
 					If _Sleep(1000) Then Return
-					Return
+					$Collected = True
 				Else
 					If _ColorCheck(_GetPixelColor($aOcrPositions[$i][0], $aOcrPositions[$i][1] + 5, True), Hex(0x5D79C5, 6), 5) Then
 						$aResults[$i] = $aResults[$i] & " Gems"
@@ -74,25 +73,33 @@ Func CollectFreeMagicItems($bTest = False)
 				EndIf
 			Else
 				SetLog("Free Magic Item: Only TEST!", $COLOR_ERROR)
+				SetLog("Should click on [" & $aOcrPositions[$i][0] & "," & $aOcrPositions[$i][1] & "]", $COLOR_ERROR)
 			EndIf
 		ElseIf $aResults[$i] = "" Then
 			$aResults[$i] = "N/A"
 		EndIf
+		If $Collected Then ExitLoop
 		If Not $g_bRunState Then Return
 	Next
 	
-	SetLog("Daily Discounts: " & $aResults[0] & " | " & $aResults[1] & " | " & $aResults[2])
-	SetLog("Nothing free to collect!", $COLOR_INFO)
-	
-	If QuickMIS("BC1", $g_sImgFree, 160, 400, 320, 450, True, False) Then
-		If Not $bTest Then
-			Click($g_iQuickMISX + 160, $g_iQuickMISY + 400, 1)
-			SetLog("Try Collect Special Offer By Image, Success", $COLOR_SUCCESS)
-		Else
-			SetLog("Try Collect Special Offer By Image, ONLY TEST!", $COLOR_ERROR)
+	If Not $Collected Then 
+		If QuickMIS("BC1", $g_sImgFree, 160, 400, 320, 450, True, False) Then
+			If Not $bTest Then
+				Click($g_iQuickMISX + 160, $g_iQuickMISY + 400, 1)
+				SetLog("Try Collect Special Offer By Image, Success", $COLOR_SUCCESS)
+				If _Sleep(1000) Then Return
+				$Collected = True
+			Else
+				SetLog("Try Collect Special Offer By Image, ONLY TEST!", $COLOR_ERROR)
+			EndIf
 		EndIf
 	EndIf
 	
+	If Not $Collected Then 
+		SetLog("Nothing free to collect!", $COLOR_INFO)
+		SetLog("Daily Discounts: " & $aResults[0] & " | " & $aResults[1] & " | " & $aResults[2])
+	EndIf
+	
 	ClickAway()
-	If _Sleep(1000) Then Return
+	Return $Collected
 EndFunc   ;==>CollectFreeMagicItems
