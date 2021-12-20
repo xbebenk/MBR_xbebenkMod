@@ -126,23 +126,19 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		If _Sleep(1000) Then Return ;set sleep for wait page changes
 	Next
 	
-	If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for return to main
-
 	TrayTip($g_sBotTitle, "", BitOR($TIP_ICONASTERISK, $TIP_NOSOUND)) ; clear village search match found message
 
 	If CheckAndroidReboot() Then Return
 
 	If $GoldChangeCheck Then
-		If IsAttackPage() Then
-			$counter = 0
-			While _ColorCheck(_GetPixelColor($aRtnHomeCheck1[0], $aRtnHomeCheck1[1], True), Hex($aRtnHomeCheck1[2], 6), $aRtnHomeCheck1[3]) = False And _ColorCheck(_GetPixelColor($aRtnHomeCheck2[0], $aRtnHomeCheck2[1], True), Hex($aRtnHomeCheck2[2], 6), $aRtnHomeCheck2[3]) = False ; test for Return Home Button
-				SetDebugLog("Wait for Return Home Button to appear #" & $counter)
-				If _Sleep($DELAYRETURNHOME2) Then ExitLoop
-				$counter += 1
-				If $counter > 40 Then ExitLoop
-			WEnd
-		EndIf
-		If _Sleep($DELAYRETURNHOME3) Then Return ; wait for all report details
+		For $i = 1 To 5
+			If Not IsReturnHomeBattlePage(True) Then 
+				SetDebugLog("Waiting ReturnHomeBattlePage #" & $i, $COLOR_DEBUG)
+				If _Sleep(500) Then Return
+			Else
+				ExitLoop ;exit Battle already ended
+			EndIf
+		Next
 		_CaptureRegion()
 		AttackReport()
 	EndIf
@@ -179,7 +175,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	
 	If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for screen to close
 
-	For $counter = 0 To 5
+	For $counter = 1 To 5
 		SetDebugLog("Wait for Star Bonus window to appear #" & $counter)
 		If _Sleep($DELAYRETURNHOME4) Then Return
 		If StarBonus() Then SetLog("Star Bonus window closed chief!", $COLOR_INFO) ; Check for Star Bonus window to fill treasury (2016-01) update
