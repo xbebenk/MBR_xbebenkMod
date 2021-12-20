@@ -28,7 +28,7 @@ Func CollectFreeMagicItems($bTest = False)
 
 	; Check Trader Icon on Main Village
 
-	Local $sSearchArea = GetDiamondFromRect("120,160,210,215")
+	Local $sSearchArea = GetDiamondFromRect("120,130,230,220")
 	Local $avTraderIcon = findMultiple($g_sImgTrader, $sSearchArea, $sSearchArea, 0, 1000, 1, "objectpoints", True)
 
 	If IsArray($avTraderIcon) And UBound($avTraderIcon) > 0 Then
@@ -49,13 +49,13 @@ Func CollectFreeMagicItems($bTest = False)
 	EndIf
 
 	If Not $g_bRunState Then Return
-	Local $aOcrPositions[3][2] = [[200, 439], [390, 439], [580, 439]]
+	Local $aOcrPositions[3][2] = [[146, 415], [385, 415], [570, 415]]
 	Local $aResults[3] = ["", "", ""]
 
 	$iLastTimeChecked[$g_iCurAccount] = @MDAY
 
 	For $i = 0 To 2
-		$aResults[$i] = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 80, 25, True)
+		$aResults[$i] = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 200, 25, True)
 		; 5D79C5 ; >Blue Background price
 		If $aResults[$i] <> "" Then
 			If Not $bTest Then
@@ -72,6 +72,8 @@ Func CollectFreeMagicItems($bTest = False)
 						$aResults[$i] = Int($aResults[$i]) > 0 ? "No Space In Castle" : "Collected"
 					EndIf
 				EndIf
+			Else
+				SetLog("Free Magic Item: Only TEST!", $COLOR_ERROR)
 			EndIf
 		ElseIf $aResults[$i] = "" Then
 			$aResults[$i] = "N/A"
@@ -82,9 +84,13 @@ Func CollectFreeMagicItems($bTest = False)
 	SetLog("Daily Discounts: " & $aResults[0] & " | " & $aResults[1] & " | " & $aResults[2])
 	SetLog("Nothing free to collect!", $COLOR_INFO)
 	
-	If QuickMIS("BC1", $g_sImgFree, 160, 430, 320, 485, True, False) Then
-		Click($g_iQuickMISX + 160, $g_iQuickMISY + 430, 1)
-		SetLog("Try Collect By Image, Success", $COLOR_SUCCESS)
+	If QuickMIS("BC1", $g_sImgFree, 160, 400, 320, 450, True, False) Then
+		If Not $bTest Then
+			Click($g_iQuickMISX + 160, $g_iQuickMISY + 400, 1)
+			SetLog("Try Collect Special Offer By Image, Success", $COLOR_SUCCESS)
+		Else
+			SetLog("Try Collect Special Offer By Image, ONLY TEST!", $COLOR_ERROR)
+		EndIf
 	EndIf
 	
 	ClickAway()
