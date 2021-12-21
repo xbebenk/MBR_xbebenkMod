@@ -93,7 +93,7 @@ Func GoldElixirChangeEBO()
 		CheckHeroesHealth()
 		
 		;Early Zap - xbebenkmod
-		If Not $g_Zapped And $CurDamage > 50 Then
+		If $g_bEarlyZap And Not $g_Zapped And $CurDamage > 50 Then
 			SetLog("Trying to Zap Early")
 			If IsAttackPage() Then smartZap()
 		EndIf

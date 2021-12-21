@@ -1308,6 +1308,7 @@ Func SaveConfig_600_56()
 	_Ini_Add("SmartZap", "FTW", $g_bSmartZapFTW ? 1 : 0)
 	_Ini_Add("SmartZap", "MinDE", $g_iSmartZapMinDE)
 	_Ini_Add("SmartZap", "ExpectedDE", $g_iSmartZapExpectedDE)
+	_Ini_Add("SmartZap", "EarlyZap", $g_bEarlyZap ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_56
 
 Func SaveConfig_641_1()

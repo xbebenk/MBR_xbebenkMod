@@ -16,7 +16,7 @@
 
 ;Global $g_hGUI_NEWSMARTZAP = 0
 Global $g_hChkSmartLightSpell = 0, $g_hChkSmartEQSpell = 0, $g_hChkNoobZap = 0, $g_hChkSmartZapDB = 0, $g_hChkSmartZapSaveHeroes = 0, _
-	   $g_hTxtSmartZapMinDE = 0, $g_hTxtSmartExpectedDE = 0, $g_hChkDebugSmartZap = 0, $g_hChkSmartZapFTW = 0
+	   $g_hTxtSmartZapMinDE = 0, $g_hTxtSmartExpectedDE = 0, $g_hChkDebugSmartZap = 0, $g_hChkSmartZapFTW = 0, $g_hEarlyZap = 0
 
 Global $g_hLblSmartUseLSpell = 0, $g_hLblSmartUseEQSpell = 0,  $g_hLblSmartZap = 0, $g_hLblNoobZap = 0, $g_hLblSmartLightningUsed = 0, $g_hLblSmartEarthQuakeUsed = 0
 
@@ -65,6 +65,11 @@ Func CreateAttackNewSmartZap()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapFTW_Info_01", "SmartZap/NoobZap will try to reach 50% Destruction to get the win.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapFTW_Info_02", "It will not zap, if one Star is already reached, or if there is no chance to win."))
 			GUICtrlSetOnEvent(-1, "chkSmartZapFTW")
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetState(-1, $GUI_DISABLE)
+		$g_hEarlyZap = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapEarly", "EarlyZap after 50% Destruction"), $x + 20 + 2, $y + 115, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "ChkSmartZapEarly_Info_01", "Enable Early Zap while attacking, after readh 50% Destruction"))
+			GUICtrlSetOnEvent(-1, "chkSmartZapEarly")
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 

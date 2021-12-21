@@ -2325,6 +2325,7 @@ Func ApplyConfig_600_56($TypeReadSave)
 			GUICtrlSetState($g_hChkSmartZapFTW, $g_bSmartZapFTW = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtSmartZapMinDE, $g_iSmartZapMinDE)
 			GUICtrlSetData($g_hTxtSmartExpectedDE, $g_iSmartZapExpectedDE)
+			GUICtrlSetState($g_hEarlyZap, $g_bEarlyZap = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkSmartLightSpell()
 			#CS
 				GUICtrlSetState($g_hChkSmartZapDB, $g_bSmartZapEnable = True ? $GUI_ENABLE : $GUI_DISABLE)
@@ -2342,6 +2343,7 @@ Func ApplyConfig_600_56($TypeReadSave)
 			$g_bSmartZapFTW = (GUICtrlRead($g_hChkSmartZapFTW) = $GUI_CHECKED)
 			$g_iSmartZapMinDE = Int(GUICtrlRead($g_hTxtSmartZapMinDE))
 			$g_iSmartZapExpectedDE = Int(GUICtrlRead($g_hTxtSmartExpectedDE))
+			$g_bEarlyZap = (GUICtrlRead($g_hEarlyZap) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_56
 

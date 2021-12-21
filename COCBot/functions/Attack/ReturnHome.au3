@@ -143,6 +143,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 				ExitLoop ;exit Battle already ended
 			EndIf
 		Next
+		If _Sleep(2500) Then Return ;add more delay to wait all resource appear
 		_CaptureRegion()
 		AttackReport()
 	EndIf

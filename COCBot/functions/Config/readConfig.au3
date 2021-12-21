@@ -1542,6 +1542,7 @@ Func ReadConfig_600_56()
 	$g_bSmartZapFTW = (IniRead($g_sProfileConfigPath, "SmartZap", "FTW", "0") = "1")
 	$g_iSmartZapMinDE = Int(IniRead($g_sProfileConfigPath, "SmartZap", "MinDE", 350))
 	$g_iSmartZapExpectedDE = Int(IniRead($g_sProfileConfigPath, "SmartZap", "ExpectedDE", 320))
+	$g_bEarlyZap = (IniRead($g_sProfileConfigPath, "SmartZap", "EarlyZap", "0") = "1")
 EndFunc   ;==>ReadConfig_600_56
 
 Func ReadConfig_641_1()

@@ -1274,7 +1274,7 @@ Global $g_abPlannedDropCCHours[24] = [True, True, True, True, True, True, True, 
 
 ; <><><><> Attack Plan / Search & Attack / Options / SmartZap <><><><>
 Global $g_bSmartZapEnable = False, $g_bEarthQuakeZap = False, $g_bNoobZap = False, $g_bSmartZapDB = True, $g_bSmartZapSaveHeroes = True, _
-		$g_bSmartZapFTW = False, $g_iSmartZapMinDE = 350, $g_iSmartZapExpectedDE = 320, $g_bDebugSmartZap = False
+		$g_bSmartZapFTW = False, $g_iSmartZapMinDE = 350, $g_iSmartZapExpectedDE = 320, $g_bDebugSmartZap = False, $g_bEarlyZap = False
 ; EarlyZap - xbebenkmod
 Global $g_Zapped = False
 
