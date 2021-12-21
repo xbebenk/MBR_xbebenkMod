@@ -543,10 +543,9 @@ Func AutoUpgradeLogPlacingWall($aUpgradeNameLevel = Default, $aUpgradeResourceCo
 	Return True
 EndFunc
 
-Func AUNewBuildings($x, $y, $bTest = False)
+Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 
 	Local $Screencap = True, $Debug = $g_bDebugSetlog
-	Local $IsWall = False
 	Local $xstart = 50, $ystart = 50, $xend = 800, $yend = 600
 	Click($x, $y); click on upgrade window
 	If _Sleep(5000) Then Return
@@ -554,11 +553,6 @@ Func AUNewBuildings($x, $y, $bTest = False)
 	;Search the arrow
 	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,180,860,600"), 1, True, Default))
 	If UBound($ArrowCoordinates) > 1 Then
-		;Check if its wall ?
-		If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 180, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
-			SetLog("New Building is Wall!, lets try to place 10 Wall", $COLOR_INFO)
-			$IsWall = True
-		EndIf
 		If Not $g_bRunState Then Return
 		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50) ;click new building on shop
 		If _Sleep(2000) Then Return
@@ -637,12 +631,12 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	If Not ClickMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
 
-	Local $ZoomedIn = False
+	Local $ZoomedIn = False, $isWall = False
 	Local $NeedDrag = True, $TmpUpgradeCost, $UpgradeCost, $sameCost = 0
 	If Not $g_bRunState Then Return
 	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
-		Local $New, $NewCoord, $aCoord[0][2], $ZeroCoord
+		Local $New, $NewCoord, $aCoord[0][3]
 		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
 		$NewCoord = QuickMIS("CX", $g_sImgAUpgradeObstNew, 180, 73, 280, 370, True) ;find New Building
 		If IsArray($NewCoord) And UBound($NewCoord) > 0 Then
@@ -650,16 +644,23 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
 			For $j = 0 To UBound($NewCoord)-1
 				$New = StringSplit($NewCoord[$j], ",", $STR_NOCOUNT)
-				_ArrayAdd($aCoord, $New[0]+180 & "|" & $New[1]+73)
+				$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$New[0] + 180 + 110, $New[1] + 73 - 8, 180, 20, True)
+				SetDebugLog("[" & $j & "] New Building: " & $New[0] + 180 & "," & $New[1] + 73 & " UpgradeCost=" & $UpgradeCost, $COLOR_INFO)
+				_ArrayAdd($aCoord, $New[0] + 180 & "|" & $New[1] + 73 & "|" & $UpgradeCost)
 			Next
-			_ArraySort($aCoord, 0, 0, 0, 1)
+			_ArraySort($aCoord, 0, 0, 0, 2)
 			For $j = 0 To UBound($aCoord) - 1
 				If Not $g_bRunState Then Return
-				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $aCoord[$j][0] + 150, $aCoord[$j][1] - 8, $aCoord[$j][0] + 300, $aCoord[$j][1] + 8) Then
-					SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1], $COLOR_INFO)
-					ClickAway()
-					If _Sleep(1000) Then Return
+				
+				If $aCoord[$j][2] = "50" Then 
+					$IsWall = True
+					SetLog("New Building: Is Wall", $COLOR_INFO)
+				EndIf
+
+				If Not $aCoord[$j][2] = "" Then	
 					If Not $ZoomedIn Then
+						ClickAway()
+						If _Sleep(1000) Then Return
 						If SearchGreenZone() Then
 							$ZoomedIn = True
 						Else
@@ -667,7 +668,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 						EndIf
 					EndIf
 					ClickMainBuilder($bTest)
-					If AUNewBuildings($aCoord[$j][0], $aCoord[$j][1], $bTest) Then
+					If AUNewBuildings($aCoord[$j][0], $aCoord[$j][1], $bTest, $IsWall) Then
 						ClickMainBuilder($bTest)
 						$z = 0 ;reset
 						$sameCost = 0
@@ -676,7 +677,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 						ExitLoop 2 ;Place NewBuilding failed, cancel placing newbuilding
 					EndIf
 				Else
-					SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " Not Enough Resource", $COLOR_ERROR)
+					SetDebugLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " Not Enough Resource", $COLOR_ERROR)
 				EndIf
 			Next
 		Else

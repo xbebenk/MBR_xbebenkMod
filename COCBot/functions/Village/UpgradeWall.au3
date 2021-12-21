@@ -334,17 +334,18 @@ Func ClickDragFindWallUpgrade()
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
 			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
 			If _Sleep(1000) Then Return
-			$aTmpWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 180, 80, 260, 369, True)
+			$aTmpWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 180, 80, 300, 369, True)
 			If IsArray($aTmpWallCoord) And UBound($aTmpWallCoord) > 0 Then
 				SetLog("Found " & UBound($aTmpWallCoord) & " Image Wall", $COLOR_DEBUG)
 				For $j = 0 To UBound($aTmpWallCoord) - 1
 					$aWall = StringSplit($aTmpWallCoord[$j], ",", $STR_NOCOUNT)
-					If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 180, $aWall[1]-10, 260, $aWall[1]+10) Then 
-						SetDebugLog("Wall " & $j & " is new wall, skip!", $COLOR_DEBUG)
-						ContinueLoop ;skip New Wall
-					EndIf
-					$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aWall[0] + 180 + 120, $aWall[1] + 80 - 8, 150, 20, True)
+					$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aWall[0] + 180 + 110, $aWall[1] + 80 - 8, 150, 20, True)
 					If Not $UpgradeCost = "" Then
+						SetDebugLog("Wall " & $j & " UpgradeCost=" & $UpgradeCost, $COLOR_INFO)
+						If $UpgradeCost = "50" Then 
+							SetDebugLog("Wall " & $j & " is new wall, skip!", $COLOR_INFO)
+							ContinueLoop ;skip New Wall
+						EndIf
 						_ArrayAdd($aWallCoord, $aWall[0]+180 & "|" & $aWall[1]+80 & "|" & $UpgradeCost)
 					Else
 						SetDebugLog("Wall " & $j & " not enough resource, skip!", $COLOR_DEBUG)
