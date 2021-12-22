@@ -1172,7 +1172,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["StarTimed",				"BB Star Timed",				2,  2, 1], _
             ["Destruction",				"BB Destruction",				2,  1, 1]] ; Earn 225% - 900% on BB attacks
 
-	Local $BBDestructionChallenges[17][5] = [ _
+	Local $BBDestructionChallenges[18][5] = [ _
             ["Airbomb",					"Air Bomb",                 	2,  1, 1], _
 			["BuildingDes",             "BB Building",					2,  1, 1], _
 			["BuilderHall",             "BuilderHall",					2,  1, 1], _
@@ -1189,7 +1189,8 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["StarLab",                 "Star Laboratory",              2,  1, 1], _
 			["WallDes",             	"Wall Whacker",              	2,  1, 1], _
 			["Crusher",             	"Crusher",                 		2,  1, 1], _
-			["ArcherTower",             "Archer Tower",            		2,  1, 1]]
+			["ArcherTower",             "Archer Tower",            		2,  1, 1], _
+			["LavaLauncher",            "Lava Launcher",           		2,  1, 1]]
 
 	Local $BBTroopsChallenges[11][5] = [ _
             ["RBarb",					"Raged Barbarian",              2,  1, 1], _ ;BB Troops

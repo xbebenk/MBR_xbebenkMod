@@ -564,6 +564,7 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 			If IsArray($aCoords) And UBound($aCoords) = 2 Then
 				For $ProMac = 0 To 9
 					If Not $g_bRunState Then Return
+					If Not $g_bRunState Then Return
 					Click($aCoords[0], $aCoords[1]+5)
 					If _Sleep(500) Then Return
 					If IsGemOpen(True) Then
@@ -631,7 +632,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	If Not ClickMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
 
-	Local $ZoomedIn = False, $isWall = False
+	Local $ZoomedIn = False, $isWall = False 
 	Local $NeedDrag = True, $TmpUpgradeCost, $UpgradeCost, $sameCost = 0
 	If Not $g_bRunState Then Return
 	For $z = 0 To 10 ;for do scroll 8 times
@@ -649,12 +650,13 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 				_ArrayAdd($aCoord, $New[0] + 180 & "|" & $New[1] + 73 & "|" & $UpgradeCost)
 			Next
 			_ArraySort($aCoord, 0, 0, 0, 2)
+			$isWall = False ;reset var 
 			For $j = 0 To UBound($aCoord) - 1
 				If Not $g_bRunState Then Return
 				
 				If $aCoord[$j][2] = "50" Then 
 					$IsWall = True
-					SetLog("New Building: Is Wall", $COLOR_INFO)
+					SetLog("New Building: Is Wall, let's try place 10 Wall", $COLOR_INFO)
 				EndIf
 
 				If Not $aCoord[$j][2] = "" Then	
@@ -663,11 +665,12 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 						If _Sleep(1000) Then Return
 						If SearchGreenZone() Then
 							$ZoomedIn = True
+							ClickMainBuilder($bTest)
 						Else
 							ExitLoop 2 ;zoomin failed, cancel placing newbuilding
 						EndIf
 					EndIf
-					ClickMainBuilder($bTest)
+					
 					If AUNewBuildings($aCoord[$j][0], $aCoord[$j][1], $bTest, $IsWall) Then
 						ClickMainBuilder($bTest)
 						$z = 0 ;reset
@@ -752,7 +755,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
 		SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
-		If $sameCost > 2 Then $NeedDrag = False
+		If $sameCost >= 2 Then $NeedDrag = False
 		$UpgradeCost = $TmpUpgradeCost
 
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop

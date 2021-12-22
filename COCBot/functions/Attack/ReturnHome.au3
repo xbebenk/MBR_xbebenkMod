@@ -143,7 +143,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 				ExitLoop ;exit Battle already ended
 			EndIf
 		Next
-		If _Sleep(2500) Then Return ;add more delay to wait all resource appear
+		If _Sleep(1500) Then Return ;add more delay to wait all resource appear
 		_CaptureRegion()
 		AttackReport()
 	EndIf
@@ -173,9 +173,10 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		If IsReturnHomeBattlePage(True) Then
 			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			; sometimes 1st click is not closing, so try again
+		Else
+			ExitLoop
 		EndIf
 		If _Sleep(1000) Then Return
-		If ReturnHomeMainPage() Then ExitLoop
 	Next
 	
 	If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for screen to close
@@ -234,12 +235,14 @@ Func ReturnfromDropTrophies()
 		If IsReturnHomeBattlePage(True) Then
 			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			; sometimes 1st click is not closing, so try again
+		Else
+			ExitLoop
 		EndIf
 		If _Sleep(1000) Then Return
-		If ReturnHomeMainPage() Then ExitLoop
 	Next
 	
 	$g_bFullArmy = False ; forcing check the army
 	$g_bIsFullArmywithHeroesAndSpells = False ; forcing check the army
+	If ReturnHomeMainPage() Then Return
 EndFunc   ;==>ReturnfromDropTrophies
 

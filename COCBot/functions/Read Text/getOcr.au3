@@ -177,7 +177,7 @@ EndFunc   ;==>getOcrReloadMessage
 
 Func getOcrMaintenanceTime($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
 	;  -> Get the Text with time till maintenance is over from reload msg(171, 375)
-	Local $result = getOcrAndCapture("coc-maintenance", $x_start, $y_start, 430, 625, True)
+	Local $result = getOcrAndCapture("coc-maintenance", $x_start, $y_start, 100, 30, True)
 	Local $String = ""
 	If $sLogText = Default Then
 		$String = "getOcrMaintenanceTime: " & $result
