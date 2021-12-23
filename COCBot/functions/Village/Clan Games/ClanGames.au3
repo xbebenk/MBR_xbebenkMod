@@ -1049,7 +1049,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 
 	Local $AirTroopChallenges[14][5] = [ _
 			["Ball", 					"Balloon", 						 4, 12, 1], _ ; Earn 2-5 Stars from Multiplayer Battles using 12 Balloons		|3h-8h	|40-100
-			["Heal", 					"Healer", 						 4, 12, 1], _ ; Earn 2-5 Stars from Multiplayer Battles using 12 Balloons		|3h-8h	|40-100
+			["Heal", 					"Healer", 						 4,  1, 1], _ ; Earn 2-5 Stars from Multiplayer Battles using 12 Balloons		|3h-8h	|40-100
 			["Drag", 					"Dragon", 						 7,  6, 1], _ ; Earn 2-5 Stars from Multiplayer Battles using 6 Dragons			|3h-8h	|40-100
 			["BabyD", 					"Baby Dragon", 					 9,  2, 1], _ ; Earn 2-5 Stars from Multiplayer Battles using 4 Baby Dragons	|3h-8h	|40-100
 			["Edrag", 					"Electro Dragon", 				10,  2, 1], _ ; Earn 2-4 Stars from Multiplayer Battles using 2 Electro Dragon	|3h-8h	|40-300
@@ -1159,17 +1159,17 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 
 
 	Local $SpellChallenges[11][5] = [ _
-			["LSpell", 					"Lightning", 					 6,  5, 1], _ ;
-			["HSpell", 					"Heal",							 6,  5, 1], _ ; updated 25/01/2021
-			["RSpell", 					"Rage", 					 	 6,  5, 1], _ ;
-			["JSpell", 					"Jump", 					 	 6,  5, 1], _ ;
-			["FSpell", 					"Freeze", 					 	 9,  5, 1], _ ;
-			["CSpell", 					"Clone", 					 	11,  5, 1], _ ;
-			["PSpell", 					"Poison", 					 	 6,  5, 1], _ ;
-			["ESpell", 					"Earthquake", 					 6,  5, 1], _ ;
-			["HaSpell", 				"Haste",	 					 6,  5, 1], _ ; updated 25/01/2021
-			["SkSpell",					"Skeleton", 					11,  5, 1], _ ;
-			["BtSpell",					"Bat", 					 		10,  5, 1]]   ;
+			["LSpell", 					"Lightning", 					 6,  1, 1], _ ;
+			["HSpell", 					"Heal",							 6,  2, 1], _ ; updated 25/01/2021
+			["RSpell", 					"Rage", 					 	 6,  2, 1], _ ;
+			["JSpell", 					"Jump", 					 	 6,  2, 1], _ ;
+			["FSpell", 					"Freeze", 					 	 9,  1, 1], _ ;
+			["CSpell", 					"Clone", 					 	11,  3, 1], _ ;
+			["PSpell", 					"Poison", 					 	 6,  1, 1], _ ;
+			["ESpell", 					"Earthquake", 					 6,  1, 1], _ ;
+			["HaSpell", 				"Haste",	 					 6,  1, 1], _ ; updated 25/01/2021
+			["SkSpell",					"Skeleton", 					11,  1, 1], _ ;
+			["BtSpell",					"Bat", 					 		10,  1, 1]]   ;
 
     Local $BBBattleChallenges[4][5] = [ _
             ["StarM",					"BB Star Master",				2,  1, 1], _ ; Earn 6 - 24 stars on the BB
