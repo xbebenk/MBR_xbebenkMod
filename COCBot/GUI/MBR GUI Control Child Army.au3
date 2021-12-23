@@ -1569,7 +1569,7 @@ Func chkSuperTroops()
 	If GUICtrlRead($g_hChkSuperTroops) = $GUI_CHECKED Then
 		$g_bSuperTroopsEnable = True
 		GUICtrlSetState($g_hChkSkipBoostSuperTroopOnHalt, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkUsePotionFirst, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkUsePotion, $GUI_ENABLE)
 		For $i = 0 To $iMaxSupersTroop - 1
 			GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_ENABLE)
 			GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_ENABLE)
@@ -1579,7 +1579,7 @@ Func chkSuperTroops()
 	Else
 		$g_bSuperTroopsEnable = False
 		GUICtrlSetState($g_hChkSkipBoostSuperTroopOnHalt, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkUsePotionFirst, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkUsePotion, $GUI_DISABLE)
 		For $i = 0 To $iMaxSupersTroop - 1
 			GUICtrlSetState($g_ahLblSuperTroops[$i], $GUI_DISABLE)
 			GUICtrlSetState($g_ahCmbSuperTroops[$i], $GUI_DISABLE)
@@ -1592,10 +1592,10 @@ Func chkSuperTroops()
 	Else
 		$g_bSkipBoostSuperTroopOnHalt = False
 	EndIf
-	If GUICtrlRead($g_hChkUsePotionFirst) = $GUI_CHECKED Then
-		$g_bSuperTroopsBoostUsePotionFirst = True
+	If GUICtrlRead($g_hChkUsePotion) = $GUI_CHECKED Then
+		$g_bSuperTroopsBoostUsePotion = True
 	Else
-		$g_bSuperTroopsBoostUsePotionFirst = False
+		$g_bSuperTroopsBoostUsePotion = False
 	EndIf
 EndFunc
 
