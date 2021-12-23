@@ -155,6 +155,28 @@ Func BoostSuperTroop($bTest = False)
 											EndIf
 										Else
 											Setlog("Cannot get Boost Cost for " & $sTroopName, $COLOR_ERROR)
+												If $g_bSuperTroopsBoostUsePotion Then
+													Setlog("Trying to boost for " & $sTroopName & "using potion")
+													If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 400, 500, 580, 570, True, False) Then ;find image of Super Potion
+														Click($g_iQuickMISX + 400, $g_iQuickMISY + 500, 1)
+														If _Sleep(1000) Then Return
+														If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 330, 400, 520, 480, True, False) Then ;find image of Super Potion again (confirm upgrade)
+														;do click boost
+															If $bTest Then
+																CancelBoost("Using Potion")
+																$TroopBoosted = True
+														Else
+															Click($g_iQuickMISX + 330, $g_iQuickMISY + 400, 1)
+															Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
+															ClickAway()
+														EndIf
+													Else
+														Setlog("Could not find Potion button for final upgrade " & $sTroopName, $COLOR_ERROR)
+														ClickAway()
+														ClickAway()
+														ContinueLoop
+													EndIf
+												EndIf
 											ClickAway()
 											ContinueLoop
 										EndIf
