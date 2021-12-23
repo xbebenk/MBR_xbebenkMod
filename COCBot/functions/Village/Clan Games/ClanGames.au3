@@ -213,17 +213,6 @@ Func _ClanGames($test = False)
 					For $j = 0 To UBound($AirTroopChallenges) - 1
 						; Match the names
 						If $aAllDetectionsOnScreen[$i][1] = $AirTroopChallenges[$j][0] Then
-							; Verify if the Troops exist in your Army Composition
-							Local $TroopIndex = Int(Eval("eTroop" & $AirTroopChallenges[$j][1]))
-							; If doesn't Exist the Troop on your Army
-							If $g_aiCurrentTroops[$TroopIndex] < 1 Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $AirTroopChallenges[$j][1] & "] No " & $g_asTroopNames[$TroopIndex] & " on your army composition.")
-								ExitLoop
-								; If Exist BUT not is required quantities
-							ElseIf $g_aiCurrentTroops[$TroopIndex] > 0 And $g_aiCurrentTroops[$TroopIndex] < $AirTroopChallenges[$j][3] Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $AirTroopChallenges[$j][1] & "] You need more " & $g_asTroopNames[$TroopIndex] & " [" & $g_aiCurrentTroops[$TroopIndex] & "/" & $AirTroopChallenges[$j][3] & "]")
-								ExitLoop
-							EndIf
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
 							Local $aArray[5] = [$AirTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1, "CGMain"]
 						EndIf
@@ -236,17 +225,6 @@ Func _ClanGames($test = False)
 					For $j = 0 To UBound($SpellChallenges) - 1 ; loop through all challenges
 						; Match the names
 						If $aAllDetectionsOnScreen[$i][1] = $SpellChallenges[$j][0] Then
-							; Verify if the Spell exist in your Army Composition
-							Local $SpellIndex = Int(Eval("eSpell" & $SpellChallenges[$j][1])) ; assign $SpellIndex enum second column of array is spell name line 740 in GlobalVariables
-							; If doesn't Exist the Troop on your Army
-							If $g_aiCurrentSpells[$SpellIndex] < 1 Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $SpellChallenges[$j][1] & "] No " & $g_asSpellNames[$SpellIndex] & " on your army composition.")
-								ExitLoop
-								; If Exist BUT not is required quantities
-							ElseIf $g_aiCurrentSpells[$SpellIndex] > 0 And $g_aiCurrentSpells[$SpellIndex] < $SpellChallenges[$j][3] Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $SpellChallenges[$j][1] & "] You need more " & $g_asSpellNames[$SpellIndex] & " [" & $g_aiCurrentSpells[$SpellIndex] & "/" & $SpellChallenges[$j][3] & "]")
-								ExitLoop
-							EndIf
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
 							Local $aArray[5] = [$SpellChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1, "CGMain"]
 						EndIf
@@ -259,17 +237,6 @@ Func _ClanGames($test = False)
 					For $j = 0 To UBound($GroundTroopChallenges) - 1
 						; Match the names
 						If $aAllDetectionsOnScreen[$i][1] = $GroundTroopChallenges[$j][0] Then
-							; Verify if the Troops exist in your Army Composition
-							Local $TroopIndex = Int(Eval("eTroop" & $GroundTroopChallenges[$j][1]))
-							; If doesn't Exist the Troop on your Army
-							If $g_aiCurrentTroops[$TroopIndex] < 1 Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $GroundTroopChallenges[$j][1] & "] No " & $g_asTroopNames[$TroopIndex] & " on your army composition.")
-								ExitLoop
-								; If Exist BUT not is required quantities
-							ElseIf $g_aiCurrentTroops[$TroopIndex] > 0 And $g_aiCurrentTroops[$TroopIndex] < $GroundTroopChallenges[$j][3] Then
-								If $g_bChkClanGamesDebug Then SetLog("[" & $GroundTroopChallenges[$j][1] & "] You need more " & $g_asTroopNames[$TroopIndex] & " [" & $g_aiCurrentTroops[$TroopIndex] & "/" & $GroundTroopChallenges[$j][3] & "]")
-								ExitLoop
-							EndIf
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
 							Local $aArray[5] = [$GroundTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1, "CGMain"]
 						EndIf
@@ -358,18 +325,6 @@ Func _ClanGames($test = False)
 							; 4 - If you don't Donate Spells , $g_aiPrepDon[2] = Donate Spells , $g_aiPrepDon[3] = Donate All Spells [PrepareDonateCC()]
 							If $MiscChallenges[$j][1] = "Donate Spells" And ($g_aiPrepDon[2] = 0 And $g_aiPrepDon[3] = 0) Then ExitLoop
 
-							; 5 - If you don't use Blimp
-							If $MiscChallenges[$j][1] = "Battle Blimp" And ($g_aiAttackUseSiege[$DB] = 2 Or $g_aiAttackUseSiege[$LB] = 2) And $g_aiArmyCompSiegeMachines[$eSiegeBattleBlimp] = 0 Then ExitLoop
-
-							; 6 - If you don't use Wrecker
-							If $MiscChallenges[$j][1] = "Wall Wrecker" And ($g_aiAttackUseSiege[$DB] = 1 Or $g_aiAttackUseSiege[$LB] = 1) And $g_aiArmyCompSiegeMachines[$eSiegeWallWrecker] = 0 Then ExitLoop
-
-							If $MiscChallenges[$j][1] = "Stone Slammer" And ($g_aiAttackUseSiege[$DB] = 3 Or $g_aiAttackUseSiege[$LB] = 3) And $g_aiArmyCompSiegeMachines[$eSiegeStoneSlammer] = 0 Then ExitLoop
-
-							If $MiscChallenges[$j][1] = "Siege Barrack" And ($g_aiAttackUseSiege[$DB] = 4 Or $g_aiAttackUseSiege[$LB] = 4) And $g_aiArmyCompSiegeMachines[$eSiegeBarracks] = 0 Then ExitLoop
-
-							If $MiscChallenges[$j][1] = "Log Launcher" And ($g_aiAttackUseSiege[$DB] = 5 Or $g_aiAttackUseSiege[$LB] = 5) And $g_aiArmyCompSiegeMachines[$eSiegeLogLauncher] = 0 Then ExitLoop
-
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
 							Local $aArray[5] = [$MiscChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $MiscChallenges[$j][3], "CGMain"]
 						EndIf
@@ -382,10 +337,6 @@ Func _ClanGames($test = False)
                     For $j = 0 To UBound($BBBattleChallenges) - 1
                         ; Match the names
                         If $aAllDetectionsOnScreen[$i][1] = $BBBattleChallenges[$j][0] Then
-
-                            ; Verify your TH level and Challenge kind
-                            ; If $g_iBBTownHallLevel < $DestructionChallenges[$j][2] Then ExitLoop ; adding soon
-
                             Local $aArray[5] = [$BBBattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBBattleChallenges[$j][3], $aAllDetectionsOnScreen[$i][0]]
                         EndIf
                     Next
