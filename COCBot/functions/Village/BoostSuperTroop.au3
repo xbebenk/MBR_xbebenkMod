@@ -71,98 +71,63 @@ Func BoostSuperTroop($bTest = False)
 							If QuickMIS("BC1", $g_sImgBoostTroopsIcons, $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2, True, False) Then ;find pics of Stroop on spesific row / column
 								Click($g_iQuickMISX + $iColumnX, $g_iQuickMISY + $iColumnY1, 1)
 								If _Sleep(1000) Then Return
-								If $g_bSuperTroopsBoostUsePotionFirst Then
-									Setlog("Using Super Potion...", $COLOR_INFO)
-									If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 400, 500, 580, 570, True, False) Then ;find image of Super Potion
-										Click($g_iQuickMISX + 400, $g_iQuickMISY + 500, 1)
+								Setlog("Using Dark Elixir...", $COLOR_INFO)
+								If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 500, 750, 570, True, False) Then ;find image of dark elixir button
+									$BoostCost = getResourcesBonus(628, 524) ; get cost
+									$BoostDuration = getHeroUpgradeTime(575, 484) ; get duration
+									If Not $BoostCost = "" Then
+										Click($g_iQuickMISX + 600, $g_iQuickMISY + 500, 1)
 										If _Sleep(1000) Then Return
-										If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 330, 400, 520, 480, True, False) Then ;find image of Super Potion again (confirm upgrade)
+										If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 400, 550, 490, True, False) Then ;find image of dark elixir button again (confirm upgrade)
+											Setlog("Using Dark Elixir, Boosting " & $sTroopName, $COLOR_SUCCESS)
+											Setlog("BoostCost = " & $BoostCost & " Dark Elixir, Duration = " & $BoostDuration, $COLOR_SUCCESS)
 											;do click boost
 											If $bTest Then
-												CancelBoost("Using Potion")
+												CancelBoost("Using Dark Elixir")
 												$TroopBoosted = True
 											Else
-												Click($g_iQuickMISX + 330, $g_iQuickMISY + 400, 1)
-												Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
+												Click($g_iQuickMISX + 320, $g_iQuickMISY + 400, 1)
 												ClickAway()
 											EndIf
 										Else
-											Setlog("Could not find Potion button for final upgrade " & $sTroopName, $COLOR_ERROR)
+											Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
 											ClickAway()
-											ClickAway()
-											ContinueLoop
-										EndIf
-									Else ;try to use dark elixir because potion not found
-										Setlog("Cannot Find Potion, Using Dark Elixir...", $COLOR_INFO)
-										If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 500, 750, 570, True, False) Then ;find image of dark elixir button
-											$BoostCost = getResourcesBonus(628, 524) ; get cost
-											$BoostDuration = getHeroUpgradeTime(575, 484) ; get duration
-											If Not $BoostCost = "" Then
-												Click($g_iQuickMISX + 600, $g_iQuickMISY + 500, 1)
-												If _Sleep(1000) Then Return
-												If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 400, 550, 490, True, False) Then ;find image of dark elixir button again (confirm upgrade)
-													Setlog("Using Dark Elixir, Boosting " & $sTroopName, $COLOR_SUCCESS)
-													Setlog("BoostCost = " & $BoostCost & " Dark Elixir, Duration = " & $BoostDuration, $COLOR_SUCCESS)
-													;do click boost
-													If $bTest Then
-														CancelBoost("Using Dark Elixir")
-														$TroopBoosted = True
-													Else
-														Click($g_iQuickMISX + 320, $g_iQuickMISY + 400, 1)
-														ClickAway()
-													EndIf
-												Else
-													Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
-													ClickAway()
-													ClickAway()
-													ContinueLoop
-												EndIf
-											Else
-												Setlog("Cannot get Boost Cost for " & $sTroopName, $COLOR_ERROR)
-												ClickAway()
-												ContinueLoop
-											EndIf
-										Else
-											Setlog("Could not find dark elixir button for upgrade " & $sTroopName, $COLOR_ERROR)
-											ClickAway()
-											ContinueLoop
-										EndIf
-									EndIf
-								Else
-									Setlog("Using Dark Elixir...", $COLOR_INFO)
-									If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 500, 750, 570, True, False) Then ;find image of dark elixir button
-										$BoostCost = getResourcesBonus(628, 524) ; get cost
-										$BoostDuration = getHeroUpgradeTime(575, 484) ; get duration
-										If Not $BoostCost = "" Then
-											Click($g_iQuickMISX + 600, $g_iQuickMISY + 500, 1)
-											If _Sleep(1000) Then Return
-											If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 400, 550, 490, True, False) Then ;find image of dark elixir button again (confirm upgrade)
-												Setlog("Using Dark Elixir, Boosting " & $sTroopName, $COLOR_SUCCESS)
-												Setlog("BoostCost = " & $BoostCost & " Dark Elixir, Duration = " & $BoostDuration, $COLOR_SUCCESS)
-												;do click boost
-												If $bTest Then
-													CancelBoost("Using Dark Elixir")
-													$TroopBoosted = True
-												Else
-													Click($g_iQuickMISX + 320, $g_iQuickMISY + 400, 1)
-													ClickAway()
-												EndIf
-											Else
-												Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
-												ClickAway()
-												ClickAway()
-												ContinueLoop
-											EndIf
-										Else
-											Setlog("Cannot get Boost Cost for " & $sTroopName, $COLOR_ERROR)
 											ClickAway()
 											ContinueLoop
 										EndIf
 									Else
-										Setlog("Could not find dark elixir button for upgrade " & $sTroopName, $COLOR_ERROR)
+										Setlog("Cannot get Boost Cost for " & $sTroopName, $COLOR_ERROR)
+										;Let's try using potion
+										If $g_bSuperTroopsBoostUsePotion Then
+											Setlog("Let's try boosting " & $sTroopName & "with potion", $COLOR_INFO)
+											If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 400, 500, 580, 570, True, False) Then ;find image of Super Potion
+												Click($g_iQuickMISX + 400, $g_iQuickMISY + 500, 1)
+												If _Sleep(1000) Then Return
+												If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 330, 400, 520, 480, True, False) Then ;find image of Super Potion again (confirm upgrade)
+													;do click boost
+													If $bTest Then
+														CancelBoost("Using Potion")
+														$TroopBoosted = True
+													Else
+														Click($g_iQuickMISX + 330, $g_iQuickMISY + 400, 1)
+														Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
+														ClickAway()
+													EndIf
+												Else
+													Setlog("Could not find Potion button for final upgrade " & $sTroopName, $COLOR_ERROR)
+													ClickAway()
+													ClickAway()
+													ContinueLoop
+												EndIf
+											EndIf
+										EndIf
 										ClickAway()
 										ContinueLoop
 									EndIf
+								Else
+									Setlog("Could not find dark elixir button for upgrade " & $sTroopName, $COLOR_ERROR)
+									ClickAway()
+									ContinueLoop
 								EndIf
 							Else
 								Setlog("Cannot find " & $sTroopName & ", Troop Not Unlocked yet?", $COLOR_ERROR)
