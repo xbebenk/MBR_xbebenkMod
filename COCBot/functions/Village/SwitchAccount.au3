@@ -214,6 +214,12 @@ Func CheckSwitchAcc()
 					If _Sleep(1000) Then Return
 					SetLog("Try RequesCC before switching account", $COLOR_DEBUG)
 					RequestCC()
+					If $g_bForceSwitchifNoCGEvent Then 
+						checkArmyCamp(False, True)
+						PrepareDonateCC()
+						DonateCC()
+						TrainSystem()
+					EndIf
 				EndIf
 			Else
 				If $g_bRequestTroopsEnable Then
