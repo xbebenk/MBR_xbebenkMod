@@ -1824,7 +1824,7 @@ $g_oBldgImages.add($eBldgScatter & "_" & "0", @ScriptDir & "\imgxml\Buildings\Sc
 ; EOF
 
 ; Clan Games v3
-Global $g_bCheckCGEarly = False, $g_bUpgradeWallEarly = False, $g_bAutoUpgradeEarly = False
+Global $g_bCheckCGEarly = False, $g_bUpgradeWallEarly = False, $g_bAutoUpgradeEarly = False, $g_bForceSwitchifNoCGEvent = False, $g_bChkForceSwitchifNoCGEvent = False
 Global $g_bChkClanGamesAir = 0, $g_bChkClanGamesGround = 0, $g_bChkClanGamesMisc = 0
 Global $g_bChkClanGamesEnabled = 0
 Global $g_bChkClanGames60 = 0

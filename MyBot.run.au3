@@ -1016,6 +1016,10 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 			If Not $g_bRunState Then Return
 			_ClanGames() ;Trying to do this above in the main loop
 			;ClickAway()
+			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
+				SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
+				checkSwitchAcc()
+			EndIf
 			If Not $g_bRunState Then Return
 			If $g_bUpdateSharedPrefs And $g_bChkSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
@@ -1201,6 +1205,10 @@ Func __RunFunction($action)
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
 				_ClanGames()
+				If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
+					SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
+					checkSwitchAcc()
+				EndIf
 				BuilderBase()
 			EndIf
 			_Sleep($DELAYRUNBOT3)
@@ -1313,6 +1321,10 @@ Func FirstCheckRoutine()
 	If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 		SetLog("Check ClanGames Early", $COLOR_INFO)
 		_ClanGames()
+		If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
+			SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
+			checkSwitchAcc()
+		EndIf
 		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 			GotoBBTodoCG()

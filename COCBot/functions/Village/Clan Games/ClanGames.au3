@@ -16,6 +16,7 @@ Func _ClanGames($test = False)
 	
 	$g_bIsBBevent = False ;just to be sure, reset to false
 	$g_bIsCGEventRunning = False ;just to be sure, reset to false
+	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false
 	
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
@@ -660,6 +661,7 @@ Func CooldownTime($getCapture = True)
 	Local $aiCoolDown = decodeSingleCoord(findImage("Cooldown", $g_sImgCoolPurge & "\*.xml", GetDiamondFromRect("480,370,570,410"), 1, True, Default))
 	If IsArray($aiCoolDown) And UBound($aiCoolDown, 1) >= 2 Then
 		SetLog("Cooldown Purge Detected", $COLOR_INFO)
+		If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
 		CloseClangamesWindow()
 		Return True
 	EndIf
@@ -691,6 +693,7 @@ Func IsEventRunning($bOpenWindow = False)
 			EndIf
 		ElseIf _CheckPixel($aEventPurged, True) Then
 				SetLog("An event purge cooldown in progress!", $COLOR_WARNING)
+				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
 				CloseClangamesWindow()
 				Return True
 		Else
@@ -835,6 +838,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 	If $startFirst Then
 		SetLog("ForcePurgeEvent: No event Found, Start and Purge a Challenge", $COLOR_INFO)
 		If StartAndPurgeEvent($bTest) Then
+			If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
 			CloseClangamesWindow()
 			Return True
 		EndIf
@@ -860,6 +864,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 				If _Sleep(1500) Then Return
 				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - ForcePurgeEvent: Purge a Wrong Challenge ", 1)
 				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - ForcePurgeEvent: Purge a Wrong Challenge ")
+				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
@@ -869,7 +874,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 			Return False
 		EndIf
 	EndIf
-	Return False
+	Return True
 EndFunc   ;==>ForcePurgeEvent
 
 Func StartAndPurgeEvent($bTest = False)

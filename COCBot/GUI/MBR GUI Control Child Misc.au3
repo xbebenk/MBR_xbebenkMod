@@ -1101,4 +1101,11 @@ Func chkCheckAutoUpgradeEarly()
 	EndIf
 EndFunc ;==> chkCheckAutoUpgradeEarly
 
+Func chkForcedSwitchIfNoCG()
+	If GUICtrlRead($g_hChkForceSwitchifNoCGEvent) = $GUI_CHECKED Then
+		$g_bChkForceSwitchifNoCGEvent = True
+	Else
+		$g_bChkForceSwitchifNoCGEvent = False
+	EndIf
+EndFunc ;==> chkForcedSwitchIfNoCG
 
