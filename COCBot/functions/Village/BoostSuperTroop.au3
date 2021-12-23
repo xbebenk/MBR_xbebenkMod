@@ -99,7 +99,7 @@ Func BoostSuperTroop($bTest = False)
 										Setlog("Cannot get Boost Cost for " & $sTroopName, $COLOR_ERROR)
 										;Let's try using potion
 										If $g_bSuperTroopsBoostUsePotion Then
-											Setlog("Let's try boosting " & $sTroopName & "with potion", $COLOR_INFO)
+											Setlog("Let's try boosting " & $sTroopName & " with potion", $COLOR_INFO)
 											If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 400, 500, 580, 570, True, False) Then ;find image of Super Potion
 												Click($g_iQuickMISX + 400, $g_iQuickMISY + 500, 1)
 												If _Sleep(1000) Then Return
