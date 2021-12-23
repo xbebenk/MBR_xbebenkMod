@@ -51,10 +51,11 @@ Func BoostSuperTroop($bTest = False)
 					SetDebugLog("$iRow = " & $iRow, $COLOR_DEBUG)
 					StroopNextPage($iRow) ; go directly to the needed Row
 
-					If $iRow = 3 Then ; for last row, we cannot scroll it to middle page
-						$iColumnY1 = 355
-						$iColumnY2 = 515
+					If $iRow = 4 Then ; for last row, we cannot scroll it to middle page
+						$iColumnY1 = 360
+						$iColumnY2 = 520
 					EndIf
+					
 					;Setlog("columnRect = " & $iColumnX & "," & $iColumnY1 &"," & $iColumnX + $picswidth & "," & $iColumnY2, $COLOR_DEBUG)
 					If _Sleep(1500) Then Return
 					;SetLog("QuickMIS(" & "BC1" & ", " & $g_sImgBoostTroopsClock & "," & $iColumnX & "," & $iColumnY1 & "," & $iColumnX + $picswidth & "," & $iColumnY2 & ")", $COLOR_DEBUG );
