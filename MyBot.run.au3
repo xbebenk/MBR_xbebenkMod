@@ -1317,13 +1317,15 @@ EndFunc   ;==>FirstCheck
 
 Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
+	If Not $g_bRunState Then Return
 	checkMainScreen()
 	If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 		SetLog("Check ClanGames Early", $COLOR_INFO)
 		_ClanGames()
 		If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
 			SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-			checkArmyCamp(False, True)
+			If _Sleep(1000) Then Return
+			checkArmyCamp(True, True)
 			PrepareDonateCC()
 			DonateCC()
 			TrainSystem()
@@ -1363,6 +1365,7 @@ Func FirstCheckRoutine()
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
+		If Not $g_bRunState Then Return
 		TrainSystem()
 		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 		If $g_bIsFullArmywithHeroesAndSpells Then
