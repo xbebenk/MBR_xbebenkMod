@@ -200,7 +200,7 @@ Func Laboratory($debug=False)
 EndFunc
 
 ; start a given upgrade
-Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False) ;harus ditambah
+Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 	
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
