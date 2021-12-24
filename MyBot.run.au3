@@ -1323,8 +1323,23 @@ Func FirstCheckRoutine()
 		_ClanGames()
 		If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
 			SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-			checkSwitchAcc()
-		EndIf
+			checkArmyCamp(False, True)
+			PrepareDonateCC()
+			DonateCC()
+			TrainSystem()
+			
+			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'CollectFreeMagicItems']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(50) Then Return
+				If $g_bRestart Then ExitLoop
+				If CheckAndroidReboot() Then ContinueLoop
+				If checkObstacles() Then ContinueLoop
+			Next
+			
+			checkSwitchAcc() ;switch to next account
+			
 		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 			GotoBBTodoCG()
