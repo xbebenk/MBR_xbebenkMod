@@ -204,28 +204,46 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 	
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
+	Local $sCostType = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 500, 730, 580) ; get if elixir or dark elixir upgrade
 	$sCostResult = getResourcesBonus(600, 522) ; get cost
+	Local $sEnoughResource = False
 	
-	SetLog("Selected upgrade: " & $name & " Cost: " & $sCostResult, $COLOR_INFO)
+	Switch $sCostType ;Check if there is enough resource to save after upgrade
+		Case "Elixir"
+			If $g_aiCurrentLoot[$eLootElixir] - $sCostResult > $g_iTxtSmartMinElixir Then $sEnoughResource = True
+		Case "Dark Elixir"
+			If $g_aiCurrentLoot[$eLootDarkElixir] - $sCostResult > $g_iTxtSmartMinDark Then $sEnoughResource = True
+		Case Else
+			SetLog("Cannot find upgrade cost type!", $COLOR_ERROR)
+	EndSwitch
 	
-	If $debug = True Then ; if debugging, do not actually click it
-		SetLog("[debug mode] - Start Upgrade, Click (" & 660 & "," & 520 & ")", $COLOR_ACTION)
-		Click(243, 33)
-		Return True ; return true as if we really started an upgrade
-	Else
-		Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
-		If isGemOpen(True) = False Then ; check for gem window
-			ChkLabUpgradeInProgress()
-			; success
-			SetLog("Upgrade " & $name & " in your laboratory started with success...", $COLOR_SUCCESS)
-			PushMsg("LabSuccess")
-			If _Sleep($DELAYLABUPGRADE2) Then Return
+	If $sEnoughResource Then
+		SetLog("Selected upgrade: " & $name & " Cost: " & $sCostResult, $COLOR_INFO)
+		
+		If $debug = True Then ; if debugging, do not actually click it
+			SetLog("[debug mode] - Start Upgrade, Click (" & 660 & "," & 520 & ")", $COLOR_ACTION)
 			Click(243, 33)
-			Return True ; upgrade started
+			Return True ; return true as if we really started an upgrade
 		Else
-			SetLog("Oops, Gems required for " & $name & " Upgrade, try again.", $COLOR_ERROR)
-			Return False
+			Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
+			If isGemOpen(True) = False Then ; check for gem window
+				ChkLabUpgradeInProgress()
+				; success
+				SetLog("Upgrade " & $name & " in your laboratory started with success...", $COLOR_SUCCESS)
+				PushMsg("LabSuccess")
+				If _Sleep($DELAYLABUPGRADE2) Then Return
+				Click(243, 33)
+				Return True ; upgrade started
+			Else
+				SetLog("Oops, Gems required for " & $name & " Upgrade, try again.", $COLOR_ERROR)
+				Return False
+			EndIf
 		EndIf
+		
+	Else
+		SetLog("Failed to upgrade " & $name & ". Not enough " & $sCostType &" to save!", $COLOR_ERROR)
+		ClickAway()
+		ClickAway()
 	EndIf
 	
 EndFunc
