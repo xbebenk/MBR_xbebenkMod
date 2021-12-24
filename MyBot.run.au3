@@ -1337,9 +1337,8 @@ Func FirstCheckRoutine()
 				If CheckAndroidReboot() Then ContinueLoop
 				If checkObstacles() Then ContinueLoop
 			Next
-			
 			checkSwitchAcc() ;switch to next account
-			
+		EndIf
 		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 			GotoBBTodoCG()
