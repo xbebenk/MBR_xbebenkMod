@@ -188,6 +188,7 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 EndFunc
 
 Func UpgradeLowLevelWall($bTest = False)
+	If Not $g_bRunState Then Return
 	SetLog("Upgrade LowLevel Wall using autoupgrade enabled", $COLOR_DEBUG)
 	VillageReport(True, True) ;update village resource capacity
 	ClickMainBuilder()

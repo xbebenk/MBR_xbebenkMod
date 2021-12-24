@@ -1348,10 +1348,12 @@ Func FirstCheckRoutine()
 	
 	If $g_iFreeBuilderCount > 0 Then 
 		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
+		If Not $g_bRunState Then Return
 		If $g_bUpgradeWallEarly Then
 			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
 			UpgradeWall()
 		EndIf
+		If Not $g_bRunState Then Return
 		If $g_bAutoUpgradeEarly Then
 			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
 			AutoUpgrade()
