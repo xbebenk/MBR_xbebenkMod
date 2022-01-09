@@ -1,7 +1,6 @@
 Func CleanBBYard()
 	; Early exist if noting to do
 	If Not $g_bChkCleanBBYard Then Return	
-	If $g_iBHLevel < 3 Then Return
 	
 	; Timer
 	Local $hObstaclesTimer = __TimerInit()
