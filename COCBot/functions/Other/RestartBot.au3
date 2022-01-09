@@ -21,20 +21,36 @@ Func RestartBot($bCloseAndroid = True, $bAutostart = True)
 		Return SetError(1, 0, False)
 	EndIf
 
-	If $bAutostart = True Then
-		IniWrite($g_sProfileConfigPath, "general", "Restarted", 1)
-	EndIf
-
 	; add restart option (if not already there)
 	If StringInStr($sCmdLine, " /restart") = 0 Then
 		$sCmdLine &= " /restart"
 	EndIf
+	
+	If $bAutostart Then
+		$sCmdLine &= " /autostart"
+	EndIf
 
-	If $bCloseAndroid = True Then
+	If $bCloseAndroid Then
 		CloseAndroid("RestartBot")
 		_Sleep(1000)
 	EndIf
+	
+	Local $sCurrentAccountName = $g_sProfileCurrentName
+	Local $sStartAccountName
+	If ProfileSwitchAccountEnabled() Then
+		For $i = 0 To Ubound($g_abAccountNo) - 1
+			SetDebugLog("Search: " & $g_asProfileName[$i] & " on " & $sCmdLine)
+			If StringInStr($sCmdLine, $g_asProfileName[$i]) Then
+				$sStartAccountName = $g_asProfileName[$i]
+				ExitLoop
+			EndIf
+		Next
+		StringReplace($sCmdLine, $sStartAccountName, $sCurrentAccountName)
+		SetDebugLog("Result: " & $sCmdLine)
+	EndIf
+	
 	; Restart My Bot
+	SetDebugLog("sCmdLine= " & $sCmdLine)
 	Local $pid = Run("cmd.exe /c start """" " & $sCmdLine, $g_sWorkingDir, @SW_HIDE) ; cmd.exe only used to support launch like "..\AutoIt3\autoit3.exe" from console
 	If @error = 0 Then
 		SetLog("Restarting " & $g_sBotTitle)
