@@ -134,7 +134,7 @@ Func StarLaboratory($bTestRun = False)
 		Return False
 	EndIf
 
-	If $g_bDebugSetlog Then StarLabTroopImages(1, 10)
+	If $g_bDebugImageSave Then StarLabTroopImages(1, 10)
 	For $i = 1 To UBound($aUpgradeValue) - 1
 		If $g_avStarLabTroops[$i][0] = -1 Or $g_avStarLabTroops[$i][1] = -1 Then
 			$aUpgradeValue[$i] = -1
@@ -149,7 +149,7 @@ Func StarLaboratory($bTestRun = False)
 			If $aUpgradeValue[$i] = "" Or Int($aUpgradeValue[$i]) < 3000 Then ; check if blank or below min value for any upgrade
 				$aUpgradeValue[$i] = 0
 				SetDebugLog("Failed to read cost of " & $g_avStarLabTroops[$i][3], $COLOR_DEBUG)
-				StarLabTroopImages($i, $i) ; Make Troop capture, when elixir icon was found, but cost not
+				If $g_bDebugImageSave Then StarLabTroopImages($i, $i) ; Make Troop capture, when elixir icon was found, but cost not
 			EndIf
 		EndIf
 		If Not $g_bRunState Then Return
@@ -314,7 +314,7 @@ Func StarLabUpgrade($iSelectedUpgrade, $iXMoved = 0, $iYMoved = 0, $bTestRun = F
 
 EndFunc   ;==>StarLabUpgrade
 
-Func StarDebugIconSave($sTxtName = "Unknown", $iLeft = 0, $iTop = 0) ; Debug Code to save images before zapping for later review, time stamped to align with logfile!
+Func StarDebugIconSave($sTxtName = "Unknown", $iLeft = 0, $iTop = 0) ; Debug Code to save images for later review, time stamped to align with logfile!
 	SetLog("Taking debug icon snapshot for later review", $COLOR_SUCCESS)
 	Local $iIconLength = 94
 	Local $Date = @MDAY & "_" & @MON & "_" & @YEAR
