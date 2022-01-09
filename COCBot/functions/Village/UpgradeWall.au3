@@ -155,6 +155,10 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 		If Not UpgradeLowLevelWallCheckResource() Then Return
 		ClickMainBuilder()
 		SetLog("Wall " & "[" & $i & "] : [" & $aWallCoord[$i][0] & "," & $aWallCoord[$i][1] & " Cost = " & $aWallCoord[$i][2] & "]", $COLOR_DEBUG)
+		Local $MinWallGold = IsGoldEnough($aWallCoord[$i][2])
+		Local $MinWallElixir = IsElixEnough($aWallCoord[$i][2])
+		If Not $MinWallGold And Not $MinWallElixir Then ContinueLoop
+		
 		Click($aWallCoord[$i][0], $aWallCoord[$i][1])
 
 		If _Sleep(1000) Then Return
@@ -193,19 +197,20 @@ Func UpgradeLowLevelWall($bTest = False)
 	VillageReport(True, True) ;update village resource capacity
 	ClickMainBuilder()
 	Local $aWallCoord
-	For $try = 1 To 2
+	For $try = 1 To 4
 		If Not $g_bRunState Then Return
 		If Not WallUpgradeCheckBuilder($bTest) Then Return
 		If Not UpgradeLowLevelWallCheckResource() Then ExitLoop
+		SetLog("[" & $try & "] Search Wall on Builder Menu", $COLOR_INFO)
 		$aWallCoord = ClickDragFindWallUpgrade()
 		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then
-			SetLog("[" & $try & "] Search Wall on Builder Menu", $COLOR_INFO)
 			TryUpgradeWall($aWallCoord, $bTest)
 		Else
 			SetLog("[" & $try & "] Not Found Wall on Builder Menu", $COLOR_ERROR)
 		EndIf
 	Next
 	ClickDragAUpgrade("down")
+	ClickAway()
 	CheckMainScreen(False)
 EndFunc
 
@@ -329,35 +334,21 @@ EndFunc
 Func ClickDragFindWallUpgrade()
 	Local $x = 420, $yUp = 120, $Delay = 500
 	Local $YY = 345
-	Local $aTmpWallCoord, $aWallCoord[0][3], $aWall, $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost = 0
+	Local $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost = 0, $aWallCoord
 	For $checkCount = 0 To 9
 		If Not $g_bRunState Then Return
 		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
 			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
 			If _Sleep(1000) Then Return
-			$aTmpWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 180, 80, 300, 369, True)
-			If IsArray($aTmpWallCoord) And UBound($aTmpWallCoord) > 0 Then
-				SetLog("Found " & UBound($aTmpWallCoord) & " Image Wall", $COLOR_DEBUG)
-				For $j = 0 To UBound($aTmpWallCoord) - 1
-					$aWall = StringSplit($aTmpWallCoord[$j], ",", $STR_NOCOUNT)
-					$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aWall[0] + 180 + 110, $aWall[1] + 80 - 8, 150, 20, True)
-					If Not $UpgradeCost = "" Then
-						SetDebugLog("Wall " & $j & " UpgradeCost=" & $UpgradeCost, $COLOR_INFO)
-						If $UpgradeCost = "50" Then 
-							SetDebugLog("Wall " & $j & " is new wall, skip!", $COLOR_INFO)
-							ContinueLoop ;skip New Wall
-						EndIf
-						_ArrayAdd($aWallCoord, $aWall[0]+180 & "|" & $aWall[1]+80 & "|" & $UpgradeCost)
-					Else
-						SetDebugLog("Wall " & $j & " not enough resource, skip!", $COLOR_DEBUG)
-					EndIf
-				Next
-				_ArraySort($aWallCoord, 1, 0, 0, 1)
-				Return $aWallCoord
-			Else
-				SetDebugLog("Not Array Wall", $COLOR_DEBUG)
+			
+			If QuickMIS("BC1", $g_sImgAUpgradeWall, 180, 80, 300, 369, True) Then
+				If _Sleep(2000) Then Return
+				$aWallCoord = GetWallPos()
+				If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then
+					Return $aWallCoord
+				EndIf
 			EndIf
-
+			
 			$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 150, 30, True)
 			SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 			If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
@@ -374,6 +365,32 @@ Func ClickDragFindWallUpgrade()
 	Next
 	Return $aWallCoord
 EndFunc ;==>IsUpgradeWindow
+
+Func GetWallPos()
+	Local $aTmpWallCoord, $aWallCoord[0][3], $aWall, $TmpUpgradeCost = 0, $UpgradeCost = 0
+	$aTmpWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 180, 80, 300, 369, True)
+	If IsArray($aTmpWallCoord) And UBound($aTmpWallCoord) > 0 Then
+		SetLog("Found " & UBound($aTmpWallCoord) & " Image Wall", $COLOR_DEBUG)
+		For $j = 0 To UBound($aTmpWallCoord) - 1
+			$aWall = StringSplit($aTmpWallCoord[$j], ",", $STR_NOCOUNT)
+			$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aWall[0] + 180 + 110, $aWall[1] + 80 - 8, 150, 20, True)
+			If Not $UpgradeCost = "" Then
+				SetDebugLog("Wall " & $j & " UpgradeCost=" & $UpgradeCost, $COLOR_INFO)
+				If $UpgradeCost = "50" Then 
+					SetDebugLog("Wall " & $j & " is new wall, skip!", $COLOR_INFO)
+					ContinueLoop ;skip New Wall
+				EndIf
+				_ArrayAdd($aWallCoord, $aWall[0]+180 & "|" & $aWall[1]+80 & "|" & $UpgradeCost, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
+			Else
+				SetDebugLog("Wall " & $j & " not enough resource, skip!", $COLOR_DEBUG)
+			EndIf
+		Next
+		_ArraySort($aWallCoord, 0, 0, 0, 2)
+		Return $aWallCoord
+	Else
+		SetDebugLog("Not Array Wall", $COLOR_DEBUG)
+	EndIf
+EndFunc
 
 Func UpgradeWallGold($iWallCost = $g_iWallCost, $bTest = False)
 
