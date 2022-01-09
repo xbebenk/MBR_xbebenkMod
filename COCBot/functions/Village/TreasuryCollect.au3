@@ -13,14 +13,33 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
+Func ClickCC()
+	Local $bRet = False
+	;try again with village size check
+	CheckMainScreen(False)
+	SetDebugLog("Try click with village size offset..")
+	Local $Yoffset 
+	If $g_aVillageSize[3] < 0 Then
+		$Yoffset = $g_aiClanCastlePos[1] + Ceiling(Abs($g_aVillageSize[3]))
+	Else
+		$Yoffset = $g_aiClanCastlePos[1] - Ceiling(Abs($g_aVillageSize[3]))
+	EndIf
+	SetDebugLog("g_aVillageSize[3]=" & $g_aVillageSize[3])
+	Click($g_aiClanCastlePos[0], $Yoffset)
+	If _Sleep(1000) Then Return
+	Local $BuildingInfo = BuildingInfo(260, 494)
+	If $BuildingInfo[1] = "Clan Castle" Then 
+		$bRet = True
+	EndIf
+	
+	Return $bRet
+EndFunc
 
 Func TreasuryCollect()
 	SetLog("Begin CollectTreasury:", $COLOR_DEBUG)
 	If Not $g_bRunState Then Return 
-	ClickAway()
-	checkMainScreen(False)
+	AndroidAdbScript("ZoomOut")
 	Local $CCFound = False
-	
 	Local $TryCCAutoLocate = False
 	If Int($g_aiClanCastlePos[0]) < 1 Or Int($g_aiClanCastlePos[1]) < 1 Then
 		$TryCCAutoLocate = True
@@ -32,6 +51,7 @@ Func TreasuryCollect()
 			$TryCCAutoLocate = False
 		Else
 			$TryCCAutoLocate = True
+			If ClickCC() Then $TryCCAutoLocate = True
 		EndIf
 	EndIf
 	
