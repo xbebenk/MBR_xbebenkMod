@@ -22,31 +22,8 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 	;Static $hTimer_PBDeleteOldPushesInterval = 0
 	Static $hTimer_EmptyWorkingSetAndroid = 0
 	Static $hTimer_EmptyWorkingSetBot = 0
-	Static $b_Sleep_Active = False
-
+	
 	Local $iBegin = __TimerInit()
-
-	If $b_Sleep_Active = True Then
-		; ups, prevent bad recursion
-		#cs Disabled for now, maybe fix Pause button state and re-activate
-			Local $iRemaining = $iDelay - __TimerDiff($iBegin)
-			While $iRemaining > 0
-			DllCall($g_hLibNTDLL, "dword", "ZwYieldExecution")
-			If $CheckRunState = True And $g_bRunState = False Then
-			Return True
-			EndIf
-			$iRemaining = $iDelay - __TimerDiff($iBegin)
-			If $iRemaining >= $DELAYSLEEP Then
-			_SleepMilli($DELAYSLEEP)
-			Else
-			_SleepMilli($iRemaining)
-			EndIf
-			WEnd
-			Return False
-		#ce
-	EndIf
-
-	$b_Sleep_Active = True
 
 	debugGdiHandle("_Sleep")
 	CheckBotRequests() ; check if bot window should be moved, minized etc.
@@ -86,7 +63,6 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 
 			If BotCloseRequestProcessed() Then
 				BotClose() ; improve responsive bot close
-				$b_Sleep_Active = False
 				Return True
 			EndIf
 		EndIf
@@ -94,7 +70,6 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 
 	If $CheckRunState And Not $g_bRunState Then
 		ResumeAndroid()
-		$b_Sleep_Active = False
 		Return True
 	EndIf
 	Local $iRemaining = $iDelay - __TimerDiff($iBegin)
@@ -102,7 +77,6 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 		DllCall($g_hLibNTDLL, "dword", "ZwYieldExecution")
 		If $CheckRunState = True And $g_bRunState = False Then
 			ResumeAndroid()
-			$b_Sleep_Active = False
 			Return True
 		EndIf
 		If SetCriticalMessageProcessing() = False Then
@@ -133,7 +107,6 @@ Func _Sleep($iDelay, $iSleep = True, $CheckRunState = True, $SleepWhenPaused = T
 		EndIf
 		CheckBotRequests() ; check if bot window should be moved
 	WEnd
-	$b_Sleep_Active = False
 	Return False
 EndFunc   ;==>_Sleep
 
