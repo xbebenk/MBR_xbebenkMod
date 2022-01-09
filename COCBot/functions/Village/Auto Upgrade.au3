@@ -111,7 +111,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 						$b_BuildingFound = True
 					EndIf
 				EndIf
-
+		
 				If $b_BuildingFound Then
 					Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
 					If _Sleep(1000) Then Return
@@ -129,7 +129,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 			$y += $step
 			$y1 += $step
 		Next
-
+		
 		Local $aZeroWhiteMostBottom = _PixelSearch(430, 345, 450, 360, Hex(0xFFFFFF, 6), 10)
 		If $aZeroWhiteMostBottom = 0 Then
 			$FoundMostBottomRed += 1
@@ -212,26 +212,24 @@ Func DoUpgrade($bTest = False)
 			EndIf
 		Case "Dark Barracks"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[9] = 1) ? True : False
-			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[2] + 2 Then ;only upgrade to unlock Golem
+			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[2] + 2 Then 
 				$bMustIgnoreUpgrade =  True
 				SetLog("RushTH Building: Dark Barracks Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
 				SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[2] + 2 & ", Skip!", $COLOR_INFO)
 			EndIf
 		Case "Spell Factory"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[10] = 1) ? True : False
-			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[3] + 2 Then ;only upgrade to unlock Golem
+			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[3] + 2 Then 
 				$bMustIgnoreUpgrade =  True
 				SetLog("RushTH Building: Spell Factory Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
 				SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[3] + 2 & ", Skip!", $COLOR_INFO)
 			EndIf
 		Case "Dark Spell Factory"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[11] = 1) ? True : False
-			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[4] + 2 Then ;only upgrade to unlock Golem
-				$bMustIgnoreUpgrade = False
+			If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[4] + 2 Then 
+				$bMustIgnoreUpgrade = True
 				SetLog("RushTH Building: Dark Spell Factory Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
 				SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[4] + 2 & ", Skip!", $COLOR_INFO)
-			Else
-				$bMustIgnoreUpgrade = False
 			EndIf
 		Case "Gold Mine"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[12] = 1) ? True : False
@@ -547,8 +545,15 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 
 	Local $Screencap = True, $Debug = $g_bDebugSetlog
 	Local $xstart = 50, $ystart = 50, $xend = 800, $yend = 600
+	If $isWall Then 
+		Click($x, $y + 30)
+		_Sleep(1000)
+	EndIf
 	Click($x, $y); click on upgrade window
-	If _Sleep(5000) Then Return
+	For $i = 1 To 5
+		If IsFullScreenWindow() Then ExitLoop
+		_Sleep(1000)
+	Next
 	If Not $g_bRunState Then Return
 	;Search the arrow
 	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,180,860,600"), 1, True, Default))
@@ -647,13 +652,12 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 				$New = StringSplit($NewCoord[$j], ",", $STR_NOCOUNT)
 				$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$New[0] + 180 + 110, $New[1] + 73 - 8, 180, 20, True)
 				SetDebugLog("[" & $j & "] New Building: " & $New[0] + 180 & "," & $New[1] + 73 & " UpgradeCost=" & $UpgradeCost, $COLOR_INFO)
-				_ArrayAdd($aCoord, $New[0] + 180 & "|" & $New[1] + 73 & "|" & $UpgradeCost)
+				_ArrayAdd($aCoord, $New[0] + 180 & "|" & $New[1] + 73 & "|" & $UpgradeCost, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 			Next
 			_ArraySort($aCoord, 0, 0, 0, 2)
 			$isWall = False ;reset var 
 			For $j = 0 To UBound($aCoord) - 1
 				If Not $g_bRunState Then Return
-				
 				If $aCoord[$j][2] = "50" Then 
 					$IsWall = True
 					SetLog("New Building: Is Wall, let's try place 10 Wall", $COLOR_INFO)
@@ -755,7 +759,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
 		SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
-		If $sameCost >= 2 Then $NeedDrag = False
+		If $sameCost > 2 Then $NeedDrag = False
 		$UpgradeCost = $TmpUpgradeCost
 
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
@@ -784,7 +788,7 @@ Func FindRushTHPriority()
 			EndIf
 			Local $RushTHBuildingName = QuickMIS("N1", $g_sImgAUpgradeRushTHPriority, 180, $aRushTH[1] + 80 - 10, 350, $aRushTH[1] + 80 + 10)
 			$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aRushTH[0] + 180 + 80, $aRushTH[1] + 80 - 8, 150, 20, True)
-			_ArrayAdd($aTHRushCoord, $aRushTH[0]+180 & "|" & $aRushTH[1]+80 & "|" & $RushTHBuildingName & "|" & $UpgradeCost)
+			_ArrayAdd($aTHRushCoord, $aRushTH[0]+180 & "|" & $aRushTH[1]+80 & "|" & $RushTHBuildingName & "|" & $UpgradeCost, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 		Next
 		_ArraySort($aTHRushCoord, 1, 0, 0, 3)
 		For $j = 0 To UBound($aTHRushCoord) - 1
@@ -823,7 +827,7 @@ Func FindEssentialBuilding()
 				EndIf				
 			EndIf
 			$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aEssentialBuilding[0] + 180 + 80, $aEssentialBuilding[1] + 80 - 8, 150, 20, True)
-			_ArrayAdd($aEssentialBuildingCoord, $aEssentialBuilding[0]+180 & "|" & $aEssentialBuilding[1]+80 & "|" & $EssentialBuildingName & "|" & $UpgradeCost)
+			_ArrayAdd($aEssentialBuildingCoord, $aEssentialBuilding[0]+180 & "|" & $aEssentialBuilding[1]+80 & "|" & $EssentialBuildingName & "|" & $UpgradeCost, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 		Next
 		_ArraySort($aEssentialBuildingCoord, 1, 0, 0, 1)
 		For $j = 0 To UBound($aEssentialBuildingCoord) - 1
