@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func BuilderBaseReport($bBypass = False, $bSetLog = True)
+Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 	ClickAway()
 	If _Sleep($DELAYVILLAGEREPORT1) Then Return
 
@@ -39,7 +39,11 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True)
 	If Not $bBypass Then ; update stats
 		UpdateStats()
 	EndIf
-
+	
+	If Not $CheckBH Then 
+		Return
+	EndIf
+	
 	$g_bisBHMaxed = False
 	If $g_iChkBBSuggestedUpgradesOTTO Then
 		isGoldFullBB()

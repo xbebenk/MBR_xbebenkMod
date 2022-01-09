@@ -1509,8 +1509,8 @@ Func BuilderBase()
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return
-
-		BuilderBaseReport()
+		
+		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return
 
