@@ -392,68 +392,88 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
 	_Ini_Add("other", "ChkOptimizeOTTO", $g_iChkBBSuggestedUpgradesOTTO)
 
-	_Ini_Add("other", "ChkClanGamesAir", $g_bChkClanGamesAir ? 1 : 0)
-	_Ini_Add("other", "ChkClanGamesGround", $g_bChkClanGamesGround ? 1 : 0)
-	_Ini_Add("other", "ChkClanGamesMisc", $g_bChkClanGamesMisc ? 1 : 0)
-
+	# NEW CLANGAMES GUI
 	_Ini_Add("other", "ChkClanGamesEnabled", $g_bChkClanGamesEnabled ? 1 : 0)
 	_Ini_Add("other", "ChkClanGames60", $g_bChkClanGames60 ? 1 : 0)
-	_Ini_Add("other", "ChkClanGamesStopBeforeReachAndPurge", $g_bChkClanGamesStopBeforeReachAndPurge ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesDebug", $g_bChkClanGamesDebug ? 1 : 0)
-	;xbenk
-	Local $str = ""
+	
 	_Ini_Add("other", "ChkClanGamesLoot", $g_bChkClanGamesLoot ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesBattle", $g_bChkClanGamesBattle ? 1 : 0)
-	$str = ""
-	For $i = 0 To UBound($g_aCmbCGBattle) - 1
-		$str &= $g_aCmbCGBattle[$i] & "|"
-	Next
-	_Ini_Add("other", "EnabledCGBattle", $str)
-    _Ini_Add("other", "ChkClanGamesBBBattle", $g_bChkClanGamesBBBattle ? 1 : 0)
+	_Ini_Add("other", "ChkClanGamesDestruction", $g_bChkClanGamesDes ? 1 : 0)
+	_Ini_Add("other", "ChkClanGamesAirTroop", $g_bChkClanGamesAirTroop ? 1 : 0)
+	_Ini_Add("other", "ChkClanGamesGroundTroop", $g_bChkClanGamesGroundTroop ? 1 : 0)
+	_Ini_Add("other", "ChkClanGamesMiscellaneous", $g_bChkClanGamesMiscellaneous ? 1 : 0)
+	_Ini_Add("other", "ChkClanGamesSpell", $g_bChkClanGamesSpell ? 1 : 0)
+	_Ini_Add("other", "ChkClanGamesBBBattle", $g_bChkClanGamesBBBattle ? 1 : 0)
     _Ini_Add("other", "ChkClanGamesBBDestruction", $g_bChkClanGamesBBDes ? 1 : 0)
-	$str = ""
-	For $i = 0 To UBound($g_aCmbCGBBDes) - 1
-		$str &= $g_aCmbCGBBDes[$i] & "|"
-	Next
-	_Ini_Add("other", "EnabledBBDestruction", $str)
-
 	_Ini_Add("other", "ChkClanGamesBBTroops", $g_bChkClanGamesBBTroops ? 1 : 0)
-	$str = ""
-	For $i = 0 To UBound($g_aCmbCGBBTroops) - 1
-		$str &= $g_aCmbCGBBTroops[$i] & "|"
-	Next
-	_Ini_Add("other", "EnabledBBTroop", $str)
-
+	
 	_Ini_Add("other", "ChkForceBBAttackOnClanGames", $g_bChkForceBBAttackOnClanGames ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesPurgeAny", $g_bChkClanGamesPurgeAny ? 1 : 0)
-	_Ini_Add("other", "ChkClanGamesSpell", $g_bChkClanGamesSpell ? 1 : 0)
-	$str = ""
-	For $i = 0 To UBound($g_aCmbCGSpells) - 1
-		$str &= $g_aCmbCGSpells[$i] & "|"
+	_Ini_Add("other", "ChkClanGamesStopBeforeReachAndPurge", $g_bChkClanGamesStopBeforeReachAndPurge ? 1 : 0)
+	_Ini_Add("other", "ChkClanGamesSort", $g_bSortClanGames ? 1 : 0)
+	_Ini_Add("other", "ClanGamesSortBy", $g_iSortClanGames)
+	
+	Local $str = ""
+	For $i = 0 To UBound($g_abCGMainLootItem) - 1
+		$str &= $g_abCGMainLootItem[$i] & "|"
 	Next
-	_Ini_Add("other", "EnabledCGSpell", $str)
-
-	_Ini_Add("other", "ChkClanGamesDestruction", $g_bChkClanGamesDes ? 1 : 0)
+	_Ini_Add("other", "EnabledCGLoot", $str)
+	
 	$str = ""
-	For $i = 0 To UBound($g_aCmbCGDes) - 1
-		$str &= $g_aCmbCGDes[$i] & "|"
+	For $i = 0 To UBound($g_abCGMainBattleItem) - 1
+		$str &= $g_abCGMainBattleItem[$i] & "|"
+	Next
+	_Ini_Add("other", "EnabledCGBattle", $str)
+	
+	$str = ""
+	For $i = 0 To UBound($g_abCGMainDestructionItem) - 1
+		$str &= $g_abCGMainDestructionItem[$i] & "|"
 	Next
 	_Ini_Add("other", "EnabledCGDes", $str)
-	_Ini_Add("other", "ChkClanGamesAirTroop", $g_bChkClanGamesAirTroop ? 1 : 0)
+	
 	$str = ""
-	For $i = 0 To UBound($g_aCmbCGAirTroops) - 1
-		$str &= $g_aCmbCGAirTroops[$i] & "|"
+	For $i = 0 To UBound($g_abCGMainAirItem) - 1
+		$str &= $g_abCGMainAirItem[$i] & "|"
 	Next
-	_Ini_Add("other", "EnabledAirTroop", $str)
-
-	_Ini_Add("other", "ChkClanGamesGroundTroop ", $g_bChkClanGamesGroundTroop ? 1 : 0)
+	_Ini_Add("other", "EnabledCGAirTroop", $str)
+	
 	$str = ""
-	For $i = 0 To UBound($g_aCmbCGGroundTroops) - 1
-		$str &= $g_aCmbCGGroundTroops[$i] & "|"
+	For $i = 0 To UBound($g_abCGMainGroundItem) - 1
+		$str &= $g_abCGMainGroundItem[$i] & "|"
 	Next
-	_Ini_Add("other", "EnabledGroundTroop", $str)
-
-	_Ini_Add("other", "ChkClanGamesMiscellaneous", $g_bChkClanGamesMiscellaneous ? 1 : 0)
+	_Ini_Add("other", "EnabledCGGroundTroop", $str)
+	
+	$str = ""
+	For $i = 0 To UBound($g_abCGMainMiscItem) - 1
+		$str &= $g_abCGMainMiscItem[$i] & "|"
+	Next
+	_Ini_Add("other", "EnabledCGMisc", $str)
+	
+	$str = ""
+	For $i = 0 To UBound($g_abCGMainSpellItem) - 1
+		$str &= $g_abCGMainSpellItem[$i] & "|"
+	Next
+	_Ini_Add("other", "EnabledCGSpell", $str)
+	
+	$str = ""
+	For $i = 0 To UBound($g_abCGBBBattleItem) - 1
+		$str &= $g_abCGBBBattleItem[$i] & "|"
+	Next
+	_Ini_Add("other", "EnabledBBBattle", $str)
+	
+	$str = ""
+	For $i = 0 To UBound($g_abCGBBDestructionItem) - 1
+		$str &= $g_abCGBBDestructionItem[$i] & "|"
+	Next
+	_Ini_Add("other", "EnabledBBDestruction", $str)
+	
+	$str = ""
+	For $i = 0 To UBound($g_abCGBBTroopsItem) - 1
+		$str &= $g_abCGBBTroopsItem[$i] & "|"
+	Next
+	_Ini_Add("other", "EnabledBBTroops", $str)
+	
 
 	; Builder Base Attack
 	_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)
@@ -482,9 +502,10 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "TrainPreviousArmy", $g_bTrainPreviousArmy)
 	_Ini_Add("other", "SkipWallPlacingOnBB", $g_bSkipWallPlacingOnBB)
 	_Ini_Add("other", "RandomArmyComp", $g_bRandomArmyComp)
-	_Ini_Add("other", "CheckCGEarly", $g_bCheckCGEarly)
+	_Ini_Add("other", "CheckDonateEarly", $g_bDonateEarly)
 	_Ini_Add("other", "CheckUpgradeWallEarly", $g_bUpgradeWallEarly)
 	_Ini_Add("other", "CheckAutoUpgradeEarly", $g_bAutoUpgradeEarly)
+	_Ini_Add("other", "CheckCGEarly", $g_bCheckCGEarly)
 	_Ini_Add("other", "ForceSwitchifNoCGEvent", $g_bChkForceSwitchifNoCGEvent)
 	
 	SaveBuilderBaseMod()

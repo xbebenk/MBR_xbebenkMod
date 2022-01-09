@@ -1366,6 +1366,12 @@ Func FirstCheckRoutine()
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
 		If Not $g_bRunState Then Return
+		If $g_bDonateEarly Then
+			SetLog("Donate Early Enabled", $COLOR_INFO)
+			checkArmyCamp(True, True)
+			PrepareDonateCC()
+			DonateCC()
+		EndIf
 		TrainSystem()
 		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 		If $g_bIsFullArmywithHeroesAndSpells Then
@@ -1484,16 +1490,13 @@ Func BuilderBase()
 
 		BuilderBaseReport()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
+		
 		CollectBuilderBase()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
+		
 		CleanBBYard()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
+		
 		DoAttackBB()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return
@@ -1504,16 +1507,14 @@ Func BuilderBase()
 
 		StarLaboratory()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
+		
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return
 		
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
+		
 		; switch back to normal village
 		SwitchBetweenBases()
 		$g_bStayOnBuilderBase = False

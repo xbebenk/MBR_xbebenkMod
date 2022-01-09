@@ -1823,8 +1823,11 @@ $g_oBldgImages.add($eBldgAirDefense & "_" & "0", @ScriptDir & "\imgxml\Buildings
 $g_oBldgImages.add($eBldgScatter & "_" & "0", @ScriptDir & "\imgxml\Buildings\ScatterShot")
 ; EOF
 
+;FirstCheck
+Global $g_bUpgradeWallEarly = False, $g_bAutoUpgradeEarly = False, $g_bDonateEarly = False
+Global $g_bCheckCGEarly = False, $g_bChkForceSwitchifNoCGEvent = False, $g_bForceSwitchifNoCGEvent = False
+
 ; Clan Games v3
-Global $g_bCheckCGEarly = False, $g_bUpgradeWallEarly = False, $g_bAutoUpgradeEarly = False, $g_bForceSwitchifNoCGEvent = False, $g_bChkForceSwitchifNoCGEvent = False
 Global $g_bChkClanGamesAir = 0, $g_bChkClanGamesGround = 0, $g_bChkClanGamesMisc = 0
 Global $g_bChkClanGamesEnabled = 0
 Global $g_bChkClanGames60 = 0
@@ -1845,22 +1848,19 @@ Global $g_bChkClanGamesDebug = 0
 Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
-Global $g_aCmbCGBattle[14] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbCGBattle[14] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aCmbCGDes[14] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbCGDes[14] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aCmbCGAirTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbCGAirTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aCmbCGGroundTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbCGGroundTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aCmbCGSpells[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbCGSpells[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aCmbCGBBDes[14] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbCGBBDes[14] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbCGBBTroops[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = 0, $g_bIsCGEventRunning = False
+Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
 Global $g_bChkClanGamesPurgeAny = 0
+Global $g_bSortClanGames = False, $g_iSortClanGames = 0
+Global $g_abCGMainLootItem[UBound(ClanGamesChallenges("$LootChallenges"))]
+Global $g_abCGMainBattleItem[Ubound(ClanGamesChallenges("$BattleChallenges"))]
+Global $g_abCGMainDestructionItem[Ubound(ClanGamesChallenges("$DestructionChallenges"))]
+Global $g_abCGMainAirItem[Ubound(ClanGamesChallenges("$AirTroopChallenges"))]
+Global $g_abCGMainGroundItem[Ubound(ClanGamesChallenges("$GroundTroopChallenges"))]
+Global $g_abCGMainMiscItem[Ubound(ClanGamesChallenges("$MiscChallenges"))]
+Global $g_abCGMainSpellItem[Ubound(ClanGamesChallenges("$SpellChallenges"))]
+Global $g_abCGBBBattleItem[Ubound(ClanGamesChallenges("$BBBattleChallenges"))]
+Global $g_abCGBBDestructionItem[Ubound(ClanGamesChallenges("$BBDestructionChallenges"))]
+Global $g_abCGBBTroopsItem[Ubound(ClanGamesChallenges("$BBTroopsChallenges"))]
 
 ; Collect Achievement Rewards
 Global $g_bChkCollectAchievements = True
