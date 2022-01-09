@@ -278,18 +278,8 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		; CoC not running
 		Return checkObstacles_ReloadCoC(Default, "", $bRecursive) ; just start CoC (but first close it!)
 	EndIf
-	Local $bHasTopBlackBar = _ColorCheck(_GetPixelColor(10, 3), Hex(0x000000, 6), 1) And _ColorCheck(_GetPixelColor(300, 6), Hex(0x000000, 6), 1) And _ColorCheck(_GetPixelColor(600, 9), Hex(0x000000, 6), 1)
-	If _ColorCheck(_GetPixelColor(235, 209), Hex(0x9E3826, 6), 20) Then
-		SetDebugLog("checkObstacles: Found Window to close")
-		PureClick(429, 493, 1, 0, "#0132") ;See if village was attacked, clicks Okay
-		$g_abNotNeedAllTime[0] = True
-		$g_abNotNeedAllTime[1] = True
-		$g_bMinorObstacle = True
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
 
-	If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 3) Then
+	If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
 		SetDebugLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
 		Click(440, 526)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
@@ -300,13 +290,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 	EndIf
 
-	If Not $bHasTopBlackBar And _CheckPixel($aIsMainGrayed, $g_bNoCapturePixel) Then
-		SetDebugLog("checkObstacles: Found gray Window to close")
-		PureClickP($aAway, 1, 0, "#0133") ;Click away If things are open
-		$g_bMinorObstacle = True
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
 	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20) Then
 		SetDebugLog("checkObstacles: Found Window with Close Button to close")
 		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
@@ -350,13 +333,9 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	EndIf
 
 	If IsPostDefenseSummaryPage() Then
-		$aMessage = _PixelSearch(23, 566, 36, 580, Hex(0xE0E1CE, 6), 10, True)
-		If IsArray($aMessage) Then
-			SetDebugLog("checkObstacles: Found Post Defense Summary to close")
-			PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
-			If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-			Return True
-		EndIf
+		SetDebugLog("checkObstacles: Found Post Defense Summary to close")
+		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
+		Return True
 	EndIf
 
 	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
@@ -369,11 +348,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		PureClick($CSFoundCoords[0], $CSFoundCoords[1], 1, 0, "#0129") ;Check for "CoC has stopped error, looking for OK message" on screen
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return checkObstacles_ReloadCoC(Default, "", $bRecursive)
-	EndIf
-
-	If $bHasTopBlackBar Then
-		; if black bar at top, e.g. in Android home screen, restart CoC
-		SetDebugLog("checkObstacles: Found Black Android Screen")
 	EndIf
 
 	If $g_bOnlySCIDAccounts Then
