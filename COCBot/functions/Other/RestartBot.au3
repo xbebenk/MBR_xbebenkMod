@@ -26,8 +26,9 @@ Func RestartBot($bCloseAndroid = True, $bAutostart = True)
 		$sCmdLine &= " /restart"
 	EndIf
 	
+	; add autostart option (if not already there)
 	If $bAutostart Then
-		$sCmdLine &= " /autostart"
+		If StringInStr($sCmdLine, " /autostart") = 0 Then $sCmdLine &= " /autostart"
 	EndIf
 
 	If $bCloseAndroid Then
