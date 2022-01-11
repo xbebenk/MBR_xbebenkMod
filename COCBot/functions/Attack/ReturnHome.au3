@@ -223,7 +223,7 @@ Func ReturnfromDropTrophies()
 			Else
 				$j += 1
 			EndIf
-			If $j > 10 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
+			If $j > 4 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
 			If _Sleep(100) Then Return
 		WEnd
 	Else
