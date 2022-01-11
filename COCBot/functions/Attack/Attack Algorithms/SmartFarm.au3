@@ -326,11 +326,15 @@ Func SmartFarmDetection($txtBuildings = "Mines")
 					$aReturn[UBound($aReturn) - 1][4] = Side($tempObbjs)
 					$distance2RedLine = $aReturn[UBound($aReturn) - 1][4] = "BL" ? 50 : 45
 					If UBound($sNearTemp) - 1 >= $i Then 
-						$aReturn[UBound($aReturn) - 1][5] = $sNearTemp[$i] <> "" ? $sNearTemp[$i] : "0,0" ; will be a string inside : 708,360|705,358|720,370|705,353|722,371
+						$aReturn[UBound($aReturn) - 1][5] = $sNearTemp[$i] ; will be a string inside : 708,360|705,358|720,370|705,353|722,371
 					Else
 						$aReturn[UBound($aReturn) - 1][5] = "0,0"
 					EndIf
-					$aReturn[UBound($aReturn) - 1][2] = Number($Distance[$i]) > 0 ? Number($Distance[$i]) : 200
+					If UBound($Distance) - 1 >= $i Then 
+						$aReturn[UBound($aReturn) - 1][2] = Number($Distance[$i]) > 0 ? Number($Distance[$i]) : 200
+					Else
+						$aReturn[UBound($aReturn) - 1][2] = 200
+					EndIf
 					$aReturn[UBound($aReturn) - 1][3] = ($aReturn[UBound($aReturn) - 1][2] > $distance2RedLine) ? ("In") : ("Out") ; > 40 pixels the resource is far away from redline
 				Next
 			Else
