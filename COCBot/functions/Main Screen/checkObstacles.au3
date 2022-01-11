@@ -337,6 +337,15 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
 		Return True
 	EndIf
+	
+	If IsAttackPage() Then
+		SetDebugLog("checkObstacles: Found AttackPage, return to home")
+		If WaitforPixel(18, 548, 19, 549, "CD0D0D", 10, 1) Then
+			Click(65, 540, 1, 0, "#0099")
+			If _Sleep(500) Then Return
+		EndIf
+		Return True
+	EndIf
 
 	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
 	If UBound($CSFoundCoords) > 1 Then
