@@ -123,7 +123,7 @@ Func CleanYard()
 						_Sleep(1000)
 						If Not ClickRemoveObstacle() Then ContinueLoop
 						CleanYardCheckBuilder()
-						If $g_iFreeBuilderCount = 0 Then _SleepStatus(11000)
+						If $g_iFreeBuilderCount = 0 Then _SleepStatus(12000)
 						ClickAway()
 						$Locate += 1
 					EndIf
