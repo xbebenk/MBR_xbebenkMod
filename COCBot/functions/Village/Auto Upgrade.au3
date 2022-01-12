@@ -551,15 +551,17 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 	EndIf
 	Click($x, $y); click on upgrade window
 	For $i = 1 To 5
-		If IsFullScreenWindow() Then ExitLoop
-		_Sleep(1000)
+		If IsFullScreenWindow() Then 
+			_Sleep(1000)
+			ExitLoop
+		EndIf
 	Next
 	If Not $g_bRunState Then Return
 	;Search the arrow
 	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,180,860,600"), 1, True, Default))
 	If UBound($ArrowCoordinates) > 1 Then
 		If Not $g_bRunState Then Return
-		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50) ;click new building on shop
+		Click($ArrowCoordinates[0] - 100, $ArrowCoordinates[1] + 50) ;click new building on shop
 		If _Sleep(2000) Then Return
 
 		If $IsWall Then
