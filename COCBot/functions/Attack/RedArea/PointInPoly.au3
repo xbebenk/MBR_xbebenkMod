@@ -59,13 +59,13 @@ Func IsPointOnSide($aCoords, $sSide)
 	Switch $sSide
 		Case "TL", "TOP-LEFT-UP", "TOP-LEFT-DOWN"
 			; $aPoints [0][0] = number of vertex, each row holds x, y
-			Local $aPoints[5][2] = [[3, 0], [425, 345], [5, 345], [425, 30], [425, 345]]
+			Local $aPoints[5][2] = [[3, 0], [430, 300], [50, 300], [430, 40], [430, 300]]
 		Case "TR", "TOP-RIGHT-UP", "TOP-RIGHT-DOWN"
-			Local $aPoints[5][2] = [[3, 0], [425, 345], [425, 30], [845, 345], [425, 345]]
+			Local $aPoints[5][2] = [[3, 0], [430, 300], [430, 40], [820, 300], [430, 300]]
 		Case "BL", "BOTTOM-LEFT-UP", "BOTTOM-LEFT-DOWN"
-			Local $aPoints[5][2] = [[3, 0], [425, 345], [5, 345], [425, 660], [425, 345]]
+			Local $aPoints[5][2] = [[3, 0], [430, 300], [50, 300], [430, 660], [430, 300]]
 		Case "BR", "BOTTOM-RIGHT-UP", "BOTTOM-RIGHT-DOWN"
-			Local $aPoints[5][2] = [[3, 0], [425, 345], [845, 345], [425, 660], [425, 345]]
+			Local $aPoints[5][2] = [[3, 0], [430, 300], [820, 300], [430, 660], [430, 300]]
 		Case Else
 			SetLog("IsPointOnSide() 'side' string not recognized", $COLOR_ERROR)
 			Return SetError(1, 0, "")
