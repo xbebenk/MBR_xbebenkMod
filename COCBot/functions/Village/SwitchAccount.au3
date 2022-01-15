@@ -212,7 +212,7 @@ Func CheckSwitchAcc()
 			If $g_bChkFastSwitchAcc Then
 				If $g_bRequestTroopsEnable Then
 					If _Sleep(1000) Then Return
-					SetLog("Try RequesCC before switching account", $COLOR_DEBUG)
+					SetLog("Try RequestCC before switching account", $COLOR_DEBUG)
 					RequestCC()
 				EndIf
 			Else

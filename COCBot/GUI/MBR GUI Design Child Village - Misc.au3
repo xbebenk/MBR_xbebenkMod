@@ -444,7 +444,9 @@ Global $g_sCmbFICTroops[5][3] = [ _
 								["Arch",	"Archers",			1], _
 								["Giant",	"Giants",			5], _
 								["Ball",	"Balloons",			5], _
-								["SBarb",	"Super Barbarians",	5]]
+								["Mini",	"Minions",			2], _
+								["SBarb",	"Super Barbarians",	5], _
+								["SMini",	"Super Minions",	12]] 
 Global $g_sCmbFICSpells[5][3] = [ _ 
 								["LSpell",	"Lightning Spell",	1], _
 								["BtSpell",	"Bat Spell",		1], _
