@@ -439,7 +439,7 @@ Global $g_hCmbFillIncorrectTroopCombo = 0, $g_hChkMMIgnoreIncorrectSpellCombo = 
 Global $g_hChkMMTrainPreviousArmy = 0, $g_hRandomArmyComp = 0, $g_hChkMMSkipWallPlacingOnBB = 0, $g_hChkMMCheckCGEarly = 0, $g_hUpgradeWallEarly = 0
 Global $g_hAutoUpgradeEarly = 0, $g_hChkForceSwitchifNoCGEvent = 0, $g_hDonateEarly = 0
 
-Global $g_sCmbFICTroops[5][3] = [ _ 
+Global $g_sCmbFICTroops[7][3] = [ _ 
 								["Barb",	"Barbarians",		1], _
 								["Arch",	"Archers",			1], _
 								["Giant",	"Giants",			5], _
