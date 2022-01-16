@@ -487,7 +487,7 @@ EndFunc
 
 Func SortBBDP($aDropPoints)
 	Local $aResult[0][3]
-	Local $TmpYL = 0, $TmpXR = 0, $DPChange = 5, $DpDistance = 10
+	Local $TmpYL = 0, $TmpXR = 0, $DPChange = 0, $DpDistance = 10
 	Local $TmpYMaxTLFound = False, $TmpYMinBLFound = False, $TmpYMinBRLFound = False, $TmpYMaxTRFound = False
 	Local $TmpXMinTL = 0, $TmpYMaxTL = 0
 	Local $TmpXMinBL = 0, $TmpYMinBL = 0
