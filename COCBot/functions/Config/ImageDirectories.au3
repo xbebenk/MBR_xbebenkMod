@@ -81,6 +81,7 @@ Global $g_sImgStartCTBoost = @ScriptDir & "\imgxml\Resources\BuildersBase\ClockT
 Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"
 Global $g_sImgIsOnBB = @ScriptDir & "\imgxml\village\Page\BuilderBase\"
 Global $g_sImgBuilderHall = @ScriptDir & "\imgxml\Resources\BuildersBase\BuilderHall\BuilderHall*"
+Global $g_sImgVersusBH = @ScriptDir & "\imgxml\Resources\BuildersBase\BuilderHall\Versus*"
 Global $g_sImgMegaTesla = @ScriptDir & "\imgxml\Resources\BuildersBase\MegaTesla\MegaTesla*"
 Global $g_sImgStarLaboratory = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory"
 Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
@@ -97,10 +98,9 @@ Global $g_sImgBBLootAvail = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\L
 Global $g_sImgBBLoot = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\"
 
 ; Builder Base Attack
-Global $g_aOpponentVillageVisible[1][3] = [[0xFED5D4, 0, 1]] ; more ez ; samm0d
 Global $g_sImgCustomArmyBB = @ScriptDir & "\imgxml\Attack\BuilderBase\ChangeTroops"
 Global Const $g_sBundleBuilderHall = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\BuilderHall"
-Global Const $g_sBundleDeployPointsBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\DeployPoints"
+Global Const $g_sBundleDeployPointsBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\DeployPoints\"
 Global Const $g_sImgOpponentBuildingsBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\"
 ; Global Const $g_sImgAttackBtnBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Attack\AttackBtn\"
 ; Global Const $g_sImgVersusWindow = @ScriptDir & "\imgxml\Attack\BuilderBase\Attack\VersusBattle\Window\"

@@ -217,7 +217,7 @@ Func CreateBBAttackSubTab()
 			GUICtrlSetOnEvent(-1, "cmbBBNextTroopDelay")
 			GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9")
 			GUICtrlSetState(-1, $GUI_DISABLE)
-			_GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay, 4) ; start in middle
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay, 5) ; start in middle
 
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBSameTroopDelay", "Same Troop Delay"), $x + 85, $y + 73)
 		$g_hCmbBBSameTroopDelay = GUICtrlCreateCombo( "", $x+180, $y + 70, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
@@ -225,7 +225,7 @@ Func CreateBBAttackSubTab()
 			GUICtrlSetOnEvent(-1, "cmbBBSameTroopDelay")
 			GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9")
 			GUICtrlSetState(-1, $GUI_DISABLE)
-			_GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay, 4) ; start in middle
+			_GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay, 5) ; start in middle
 
 		$g_hBtnBBDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder", "Drop Order"), $x + 10, $y + 62, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder_Info", "Set a custom dropping order for your troops."))
