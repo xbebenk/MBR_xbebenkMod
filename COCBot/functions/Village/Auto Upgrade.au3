@@ -119,8 +119,8 @@ Func AutoUpgradeSearchExisting($bTest = False)
 						$b_BuildingFound = False ;reset
 						$z = 0 ;reset
 						If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
-						ClickMainBuilder($bTest)
 					Endif
+					ClickMainBuilder($bTest)
 				EndIf
 			Else
 				SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
@@ -887,7 +887,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
 		If Not $g_bRunState Then Return
-		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border
+		If _ColorCheck(_GetPixelColor(350,73, True), "fdfefd", 20) Then ;check upgrade window border
 			Switch $Direction
 				Case "Up"
 					If $YY < 100 Then $YY = 150
@@ -907,7 +907,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 					If _Sleep(5000) Then Return
 			EndSwitch
 		EndIf
-		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border
+		If _ColorCheck(_GetPixelColor(350,73, True), "fdfefd", 20) Then ;check upgrade window border
 			SetLog("Upgrade Window Exist", $COLOR_INFO)
 			Return True
 		Else
@@ -923,12 +923,12 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 	Local $b_WindowOpened = False
 	If Not $g_bRunState Then Return
 	; open the builders menu
-	If Not _ColorCheck(_GetPixelColor(422, 73, True), "FDFEFD", 30) Then
+	If Not _ColorCheck(_GetPixelColor(350,73, True), "FDFEFD", 30) Then
 		Click(295, 30)
 		If _Sleep(1000) Then Return
 	EndIf
 
-	If _ColorCheck(_GetPixelColor(422, 73, True), "FDFEFD", 30) Then
+	If _ColorCheck(_GetPixelColor(350,73, True), "FDFEFD", 30) Then
 		SetDebugLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
@@ -940,7 +940,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 			EndIf
 			Click(295, 30)
 			If _Sleep(1000) Then Return
-			If _ColorCheck(_GetPixelColor(422, 73, True), "FDFEFD", 20) Then
+			If _ColorCheck(_GetPixelColor(350,73, True), "FDFEFD", 20) Then
 				$b_WindowOpened = True
 				ExitLoop
 			EndIf
