@@ -507,7 +507,7 @@ Func SortBBDP($aDropPoints)
 				$TmpYMaxTL = $aDropPoints[$i][2]
 				$TmpYMaxTLFound = True
 			EndIf
-			SetLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinTL:" & $TmpXMinTL & " TmpYMaxTL:" & $TmpYMaxTL)
+			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinTL:" & $TmpXMinTL & " TmpYMaxTL:" & $TmpYMaxTL)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] - $DPChange & "|" & $aDropPoints[$i][2] - $DPChange, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 		EndIf
 	Next
@@ -527,7 +527,7 @@ Func SortBBDP($aDropPoints)
 				$TmpYMinBLFound = True
 			EndIf
 			
-			SetLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBL:" & $TmpXMinBL & " TmpYMinBL:" & $TmpYMinBL)
+			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBL:" & $TmpXMinBL & " TmpYMinBL:" & $TmpYMinBL)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] - $DPChange & "|" & $aDropPoints[$i][2] + $DPChange, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 		EndIf
 	Next
@@ -545,7 +545,7 @@ Func SortBBDP($aDropPoints)
 				$TmpYMinBRLFound = True
 			EndIf
 			
-			SetLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBR:" & $TmpXMinBR & " TmpYMinBR:" & $TmpYMinBR)
+			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBR:" & $TmpXMinBR & " TmpYMinBR:" & $TmpYMinBR)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] + $DPChange & "|" & $aDropPoints[$i][2] + $DPChange, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 		EndIf
 	Next
@@ -563,7 +563,7 @@ Func SortBBDP($aDropPoints)
 				$TmpYMinTR = $aDropPoints[$i][2]
 				$TmpYMaxTRFound = True
 			EndIf
-			SetLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinTR:" & $TmpXMinTR & " TmpYMinTR:" & $TmpYMinTR)
+			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinTR:" & $TmpXMinTR & " TmpYMinTR:" & $TmpYMinTR)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] + $DPChange & "|" & $aDropPoints[$i][2] - $DPChange, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 		EndIf
 	Next
