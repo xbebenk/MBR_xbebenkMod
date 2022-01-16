@@ -103,18 +103,21 @@ Func _AttackBB()
 	SetLog("Searching for Opponent.", $COLOR_BLUE)
 	local $timer = __TimerInit()
 	local $iPrevTime = 0
-	
+
 	Static $aAttackerVersusBattle[2][3] = [[0xFFFF99, 0, 1], [0xFFFF99, 0, 2]]
 	While _MultiPixelSearch(711, 2, 856, 55 + $g_iMidOffsetYNew, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) = 0
 		local $iTime = Int(__TimerDiff($timer)/ 60000)
 		If $iTime > $iPrevTime Then ; if we have increased by a minute
 			SetLog("Clouds: " & $iTime & "-Minute(s)")
-			If $iTime > 2 Then Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search, if more there must be something no right
+			If $iTime > 2 Then 
+				CloseCoC(True)
+				Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search, if more there must be something no right
+			EndIf
 			$iPrevTime = $iTime
 		EndIf
 		If _Sleep($DELAYRESPOND) Then
 			$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-			If $g_bDebugSetlog = True Then SetDebugLog("Android Suspend Mode Enabled")
+			SetDebugLog("Android Suspend Mode Enabled")
 			Return
 		EndIf
 		If _Sleep(2000) Then Return
