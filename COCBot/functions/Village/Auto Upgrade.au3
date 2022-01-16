@@ -928,7 +928,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 		If _Sleep(1000) Then Return
 	EndIf
 
-	If _ColorCheck(_GetPixelColor(350,73, True), "FDFEFD", 30) Then
+	If _ColorCheck(_GetPixelColor(350, 73, True), "FDFEFD", 30) Then
 		SetDebugLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
@@ -940,7 +940,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 			EndIf
 			Click(295, 30)
 			If _Sleep(1000) Then Return
-			If _ColorCheck(_GetPixelColor(350,73, True), "FDFEFD", 20) Then
+			If _ColorCheck(_GetPixelColor(350, 73, True), "FDFEFD", 20) Then
 				$b_WindowOpened = True
 				ExitLoop
 			EndIf

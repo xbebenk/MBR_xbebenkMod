@@ -339,7 +339,7 @@ Func ClickDragFindWallUpgrade()
 	Local $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost = 0, $aWallCoord
 	For $checkCount = 0 To 9
 		If Not $g_bRunState Then Return
-		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then
+		If _ColorCheck(_GetPixelColor(350, 73, True), "fdfefd", 20) Then
 			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
 			If _Sleep(1000) Then Return
 			
@@ -358,7 +358,7 @@ Func ClickDragFindWallUpgrade()
 			If $sameCost > 2 Then ExitLoop
 			$UpgradeCost = $TmpUpgradeCost
 		EndIf
-		If _ColorCheck(_GetPixelColor(422, 73, True), "fdfefd", 20) Then ;check upgrade window border
+		If _ColorCheck(_GetPixelColor(350, 73, True), "fdfefd", 20) Then ;check upgrade window border
 			SetDebugLog("Upgrade Window Exist", $COLOR_INFO)
 		Else
 			SetDebugLog("Upgrade Window Gone!", $COLOR_DEBUG)
