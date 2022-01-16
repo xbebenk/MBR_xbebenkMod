@@ -240,9 +240,8 @@ Func MakeTargetDropPoints($side, $pointsQty, $addtiles, $building)
 				EndIf
 			Next
 			If $aLocation = "" Then
-				; error check?
-				SetLog("Building location not found on side, random pick", $COLOR_ERROR)
-				If IsArray($aBuildingLoc[0]) Then $aLocation = $aBuildingLoc[0]
+				SetLog($g_sBldgNames[$BuildingEnum] & " not in side:" & $side, $COLOR_ERROR)
+				Return SetError(3, 0, "")
 			EndIf
 		Else ; use only building found even if not on user chosen side?
 			$aLocation = $aBuildingLoc[0]
