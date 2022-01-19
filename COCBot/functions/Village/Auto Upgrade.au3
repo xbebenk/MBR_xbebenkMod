@@ -833,7 +833,7 @@ Func FindEssentialBuilding()
 		Next
 		_ArraySort($aEssentialBuildingCoord, 1, 0, 0, 1)
 		For $j = 0 To UBound($aEssentialBuildingCoord) - 1
-			SetDebugLog("[" & $j & "] Building: " & $aEssentialBuildingCoord[$j][2] & ", Cost=" & $aEssentialBuildingCoord[$j][3], $COLOR_DEBUG)
+			SetLog("[" & $j & "] Building: " & $aEssentialBuildingCoord[$j][2] & ", Cost=" & $aEssentialBuildingCoord[$j][3], $COLOR_INFO)
 		Next
 		Return $aEssentialBuildingCoord
 	Else
