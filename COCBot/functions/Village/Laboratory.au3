@@ -12,7 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Local $iSlotWidth = 94, $iDistBetweenSlots = 12, $iYMidPoint = 530; use for logic to upgrade troops.. good for generic-ness
+Local $iSlotWidth = 107, $iDistBetweenSlots = 12, $iYMidPoint = 460; use for logic to upgrade troops.. good for generic-ness
 Local $iPicsPerPage = 12, $iPages = 4 ; use to know exactly which page the users choice is on
 Local $sLabWindow = "99,122,760,616", $sLabTroopsSection = "110,340,740,540"
 Local $sLabWindowDiam = GetDiamondFromRect($sLabWindow), $sLabTroopsSectionDiam = GetDiamondFromRect($sLabTroopsSection) ; easy to change search areas
@@ -52,142 +52,109 @@ Func Laboratory($debug=False)
 	
 	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
 	Local $iCurPage = 1
-	Local $sCostResult
+	Local $sCostResult, $bUpgradeFound = False
 	
 		If $g_iCmbLaboratory <> 0 Then
 			Local $iPage = Ceiling($g_iCmbLaboratory / $iPicsPerPage) ; page # of user choice
 			While($iCurPage < $iPage) ; go directly to the needed page
-				LabNextPage($iCurPage, $iPages, $iYMidPoint) ; go to next page of upgrades
+				LabNextPage() ; go to next page of upgrades
 				$iCurPage += 1 ; Next page
 				If _Sleep(1000) Then Return
 			WEnd
 
 			; Get coords of upgrade the user wants
-			local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
-			Local $aCoords, $bUpgradeFound = False
-			If UBound($aPageUpgrades, 1) >= 1 Then ; if we found any troops
-				For $i = 0 To UBound($aPageUpgrades, 1) - 1 ; Loop through found upgrades
-					Local $aTempTroopArray = $aPageUpgrades[$i] ; Declare Array to Temp Array
-
-					If $aTempTroopArray[0] = $g_avLabTroops[$g_iCmbLaboratory][2] Then ; if this is the file we want
-						$aCoords = decodeSingleCoord($aTempTroopArray[1])
-						$bUpgradeFound = True
-						ExitLoop
-					EndIf
-					If _Sleep($DELAYLABORATORY2) Then Return
-				Next
+			Local $aCoords = decodeSingleCoord(findImage($g_avLabTroops[$g_iCmbLaboratory][2], $g_sImgLabResearch & $g_avLabTroops[$g_iCmbLaboratory][2] & "*", $sLabTroopsSectionDiam, 1, True))
+			If IsArray($aCoords) And UBound($aCoords) = 2 Then
+				Local $sCostResult = GetLabCostResult($aCoords[0], $aCoords[1])
+				If $sCostResult > 0 Then 
+					SetDebugLog("LabUpgrade:" & $g_avLabTroops[$g_iCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
+					$bUpgradeFound = True
+				Else
+					SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources, will try again later", $COLOR_INFO)
+					Return False
+				EndIf
 			EndIf
 
 			If Not $bUpgradeFound Then
 				SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
-				$g_iCmbLaboratory = 0 ;set lab upgrade to any
 				Return False
 			EndIf
 			
 			If $bUpgradeFound Then
-				Local $LabZero= decodeSingleCoord(findImage("Zero", $g_sImgLabZero & "LabZero*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
-				If UBound($LabZero) > 1 Then
-					Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
-				Else
-					Local $LabUpgradeRequired = decodeSingleCoord(findImage("LabUpgradeRequired", $g_sImgLabZero & "Required*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
-					If UBound($LabUpgradeRequired) > 1 Then
-						SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Max Level. Choose another upgrade.", $COLOR_INFO)
-					Else
-						SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
-						ClickAway()
-						Return False
-					EndIf
-				EndIf
+				Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
 			EndIf
 		Else ; users choice is any upgrade
 			If $g_bLabUpgradeOrderEnable Then 
-				Local $iPriority = 0
-				Local $iTmpTroop = 0 
 				For $z = 0 To UBound($g_aCmbLabUpgradeOrder) - 1 ; list of lab upgrade order
-					$iTmpTroop = $g_aCmbLabUpgradeOrder[$z] + 1
-					If $iTmpTroop <> 0 Then 
-						$iPriority = $z + 1
-						SetLog("Priority order " & $iPriority & " : " & $g_avLabTroops[$iTmpTroop][0], $COLOR_SUCCESS)
+					If $g_aCmbLabUpgradeOrder[$z] + 1 > 0 Then 
+						SetLog("Priority order " & $z + 1 & " : " & $g_avLabTroops[$g_aCmbLabUpgradeOrder[$z] + 1][0], $COLOR_SUCCESS)
 					Endif
 				Next
 				For $z = 0 To UBound($g_aCmbLabUpgradeOrder) - 1 ;try labupgrade based on order
 					Local $iTmpCmbLaboratory = $g_aCmbLabUpgradeOrder[$z] + 1
-					If $iTmpCmbLaboratory <> 0 Then 
-						SetLog("Try Lab Upgrade :" & $g_avLabTroops[$iTmpCmbLaboratory][2], $COLOR_DEBUG)
+					If $iTmpCmbLaboratory > 0 Then 
+						SetLog("Try Lab Upgrade: " & $g_avLabTroops[$iTmpCmbLaboratory][2], $COLOR_INFO)
 						Local $iPage = Ceiling($iTmpCmbLaboratory / $iPicsPerPage) ; page # of user choice
-						While($iCurPage < $iPage) ; go directly to the needed page
-							LabNextPage($iCurPage, $iPages, $iYMidPoint) ; go to next page of upgrades
+						SetDebugLog("Go to Page: " & $iPage, $COLOR_INFO)
+						While ($iCurPage > $iPage) 
+							LabPrevPage()
+							$iCurPage -= 1 ;Prev Page
+							If _Sleep(1000) Then Return
+							If $iCurPage = 1 Then _Sleep(2000)
+						Wend
+					
+						While ($iCurPage < $iPage)
+							LabNextPage() ; go to next page of upgrades
 							$iCurPage += 1 ; Next page
 							If _Sleep(1000) Then Return
+							If $iPage = 4 Then _Sleep(2000)
 						WEnd
 						
 						; Get coords of upgrade the user wants
-						local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
-						Local $aCoords, $bUpgradeFound = False
-						If UBound($aPageUpgrades, 1) >= 1 Then ; if we found any troops
-							For $i = 0 To UBound($aPageUpgrades, 1) - 1 ; Loop through found upgrades
-								Local $aTempTroopArray = $aPageUpgrades[$i] ; Declare Array to Temp Array
-
-								If $aTempTroopArray[0] = $g_avLabTroops[$iTmpCmbLaboratory][2] Then ; if this is the file we want
-									$aCoords = decodeSingleCoord($aTempTroopArray[1])
-									$bUpgradeFound = True
-									ExitLoop
-								EndIf
-								If _Sleep($DELAYLABORATORY2) Then Return
-							Next
+						Local $aCoords = decodeSingleCoord(findImage($g_avLabTroops[$iTmpCmbLaboratory][2], $g_sImgLabResearch & $g_avLabTroops[$iTmpCmbLaboratory][2] & "*", $sLabTroopsSectionDiam, 1, True))
+						If IsArray($aCoords) And UBound($aCoords) = 2 Then
+							Local $sCostResult = GetLabCostResult($aCoords[0], $aCoords[1])
+							If $sCostResult > 0 Then 
+								SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
+								$bUpgradeFound = True
+							Else
+								SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not enough Resources, will try again later", $COLOR_INFO)
+								ContinueLoop
+							EndIf
 						EndIf
-
-						If Not $bUpgradeFound Then
-							SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
-							LabFirstPage($iCurPage, $iYMidPoint)
-							$iCurPage = 1 ;reset current page
-						EndIf
-			
+						
 						If $bUpgradeFound Then
-							Local $LabZero= decodeSingleCoord(findImage("Zero", $g_sImgLabZero & "LabZero*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
-							If UBound($LabZero) > 1 Then
-								Return LaboratoryUpgrade($g_avLabTroops[$iTmpCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
-							Else
-								Local $LabUpgradeRequired = decodeSingleCoord(findImage("LabUpgradeRequired", $g_sImgLabZero & "Required*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
-								If UBound($LabUpgradeRequired) > 1 Then
-									SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Max Level. Choose another upgrade.", $COLOR_INFO)
-									LabFirstPage($iCurPage, $iYMidPoint)
-									$iCurPage = 1 ;reset current page
-								Else
-									SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
-									ExitLoop
-								EndIf
-							EndIf
-						EndIf		
+							If Not $debug Then Return LaboratoryUpgrade($g_avLabTroops[$iTmpCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
+						Else
+							SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
+						EndIf
 					EndIf
-				Next ;search next
-				findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True)
+				Next
 			Else ; no LabUpgradeOrder
+				
 				While($iCurPage <= $iPages)
-					local $aPageUpgrades = findMultiple($g_sImgLabResearch, $sLabTroopsSectionDiam, $sLabTroopsSectionDiam, 0, 1000, 0, "objectname,objectpoints", True) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
-					If UBound($aPageUpgrades, 1) >= 1 Then ; if we found any troops
-						For $i = 0 To UBound($aPageUpgrades, 1) - 1 ; Loop through found upgrades
-							Local $aTempTroopArray = $aPageUpgrades[$i] ; Declare Array to Temp Array
-
-							; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
-							Local $aCoords = decodeSingleCoord($aTempTroopArray[1])
-							Local $LabZero= decodeSingleCoord(findImage("Zero", $g_sImgLabZero & "LabZero*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
-							If UBound($LabZero) > 1 Then
-								Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
-							Else
-								Local $LabUpgradeRequired = decodeSingleCoord(findImage("LabUpgradeRequired", $g_sImgLabZero & "Required*", GetDiamondFromRect($aCoords[0] - 40 & "," & $aCoords[1] & "," & $aCoords[0] + 40 & "," & $aCoords[1] + 80), 1, True, Default))
-								If UBound($LabUpgradeRequired) > 1 Then
-									SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Max Level. Choose another upgrade.", $COLOR_INFO)
-								Else
-									SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources." & @CRLF & "We will try again later.", $COLOR_INFO)
-									ExitLoop
-								EndIf
-							EndIf
+					Local $Upgrades = FindLabUpgrade()
+					Local $aUpgradeCoord[2], $sUpgrade
+					If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
+						For $i = 0 To UBound($Upgrades) - 1
+							SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
 						Next
+						$bUpgradeFound = True
+						$sUpgrade = $Upgrades[0][0]
+						$aUpgradeCoord[0] = $Upgrades[0][1]
+						$aUpgradeCoord[1] = $Upgrades[0][2]
+						$sCostResult = $Upgrades[0][3]
+					Else
+						SetLog("Not found Any Upgrade here, looking next", $COLOR_INFO)
 					EndIf
 
-					LabNextPage($iCurPage, $iPages, $iYMidPoint) ; go to next page of upgrades
+					If $bUpgradeFound Then
+						Return LaboratoryUpgrade($sUpgrade, $aUpgradeCoord, $sCostResult, $debug) ; return whether or not we successfully upgraded
+					EndIf
+					
+					LabNextPage() ; go to next page of upgrades
 					$iCurPage += 1 ; Next page
+					If $iCurPage = 4 Then _Sleep(2000)
 					If _Sleep($DELAYLABORATORY2) Then Return
 				WEnd
 			EndIf
@@ -205,7 +172,7 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
 	Local $sCostType = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 500, 730, 580) ; get if elixir or dark elixir upgrade
-	$sCostResult = getResourcesBonus(600, 522) ; get cost
+	;$sCostResult = getResourcesBonus(600, 522) ; get cost
 	Local $sEnoughResource = False
 	
 	Switch $sCostType ;Check if there is enough resource to save after upgrade
@@ -267,39 +234,29 @@ EndFunc
 
 ; get the cost of an upgrade based on its coords
 ; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
-Func GetLabCostResult($aCoords)
-	Local $iCurSlotOnPage, $iCurSlotsToTheRight, $sCostResult
-	$iCurSlotsToTheRight = Ceiling( ( Int($aCoords[0]) - Int(StringSplit($sLabTroopsSection, ",")[1]) ) / ($iSlotWidth + $iDistBetweenSlots) )
-	If Int($aCoords[1]) < $iYMidPoint Then ; first row
-		$iCurSlotOnPage = 2*$iCurSlotsToTheRight - 1
-		$sCostResult = getLabUpgrdResourceWht( Int(StringSplit($sLabTroopsSection, ",")[1]) + 10 + ($iCurSlotsToTheRight-1)*($iSlotWidth + $iDistBetweenSlots),  Int(StringSplit($sLabTroopsSection, ",")[2]) + 76)
-	Else; second row
-		$iCurSlotOnPage = 2*$iCurSlotsToTheRight
-		$sCostResult = getLabUpgrdResourceWht( Int(StringSplit($sLabTroopsSection, ",")[1]) + 10 + ($iCurSlotsToTheRight-1)*($iSlotWidth + $iDistBetweenSlots),  $iYMidPoint + 76)
+Func GetLabCostResult($XCoords, $YCoords)
+	Local $xColumn =  $XCoords - 50, $yRow, $sCostResult = 0 
+	If $YCoords + 10 < $iYMidPoint Then
+		$yRow = 410
+	Else
+		$yRow = 520
+	EndIf
+	$sCostResult = getLabUpgrdResourceWht($xColumn, $yRow)
+	If $sCostResult = "" Then
+		SetDebugLog("Laboratory Upgrade Cost read failed", $COLOR_ERROR)
 	EndIf
 	Return $sCostResult
 EndFunc
 
 ; if we are on last page, smaller clickdrag... for future dev: this is whatever is enough distance to move 6 off to the left and have the next page similarily aligned
-Func LabNextPage($iCurPage, $iPages, $iYMidPoint)
-	If $iCurPage >= $iPages Then Return ; nothing left to scroll
-	If $iCurPage = $iPages-1 Then ; last page
-		ClickDrag(720, $iYMidPoint, 480, $iYMidPoint) ;600
-		If _Sleep(3000) Then Return
-	Else
-		ClickDrag(720, $iYMidPoint, 85, $iYMidPoint)
-		If _Sleep(3000) Then Return
-	EndIf
-	
+Func LabNextPage()
+	Local $MidPoint = 500
+	ClickDrag(720, $MidPoint, 85, $MidPoint, 500)
 EndFunc
 
-Func LabFirstPage($iCurPage, $iYMidPoint)
-	For $u = 1 To $iCurPage
-		If $iCurPage <= 1 Then Return ; nothing left to scroll
-		ClickDrag(130, $iYMidPoint, 780, $iYMidPoint, 500) ;600
-		$iCurPage -= 1
-		If _Sleep(3000) Then Return
-	Next
+Func LabPrevPage()
+	Local $MidPoint = 500
+	ClickDrag(130, $MidPoint, 760, $MidPoint, 500) ;600
 EndFunc
 
 ; check the lab to see if something is upgrading in the lab already
@@ -343,6 +300,35 @@ Func ChkUpgradeInProgress()
 		Return True
 	EndIf
 	Return False ; we currently do not know of any upgrades in progress
+EndFunc
+
+Func FindLabUpgrade() ;default = sort name of selected upgrade
+	Local $x1 = 110, $y1 = 330, $x2 = 740, $y2 = 540
+	Local $aResult[0][4], $Result[0][4]
+	
+	Local $TmpResult = QuickMIS("CNX", $g_sImgLabResearch, $x1, $y1, $x2, $y2, True)
+	If IsArray($TmpResult) And UBound($TmpResult) > 0 Then
+		For $i = 0 To UBound($TmpResult) - 1
+			Local $cost = GetLabCostResult($TmpResult[$i][1], $TmpResult[$i][2])
+			_ArrayAdd($aResult, 0 & "|" & $TmpResult[$i][1] & "|" & $TmpResult[$i][2] & "|" & Number($cost), Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
+			$aResult[$i][0] = GetUpgradeName($TmpResult[$i][0])
+		Next
+	Else
+		SetLog("Result Not Array", $COLOR_ERROR)
+	EndIf
+	_ArraySort($aResult, 0, 0, 0, 3)
+	For $i = 0 To Ubound($aResult) - 1
+		If $aResult[$i][3] > 0 Then 
+			_ArrayAdd($Result, $aResult[$i][0] & "|" & $aResult[$i][1] & "|" & $aResult[$i][2] & "|" & $aResult[$i][3]) 
+		EndIf
+	Next
+	Return $Result 
+EndFunc
+
+Func GetUpgradeName($shortName)
+	For $i = 0 To UBound($g_avLabTroops) -1
+		If $shortName = $g_avLabTroops[$i][2] Then Return $g_avLabTroops[$i][0]
+	Next
 EndFunc
 
 ; Find Research Button
