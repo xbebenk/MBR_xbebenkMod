@@ -425,6 +425,7 @@ EndFunc
 Func SetVersusBHToMid()
 	Local $xMiddle = 430, $yMiddle = 275, $Delay = 500 
 	Local $aRet[3] = [False, $xMiddle, $yMiddle]
+	ClickDrag(430, 500, 430, 200)
 	Local $aResult = decodeSingleCoord(findImage("VersusBuilderHall", $g_sImgVersusBH, GetDiamondFromRect("100,150,760,570"), 1, True))
 	If IsArray($aResult) And UBound($aResult) > 1 Then
 		ClickDrag($aResult[0], $aResult[1], $xMiddle, $yMiddle, $Delay) ;drag up
