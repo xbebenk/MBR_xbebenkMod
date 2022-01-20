@@ -263,6 +263,7 @@ Func DropTrophy()
 					ReturnfromDropTrophies()
 					If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 				EndIf
+				#comments-start
 				$iDateCalc = _DateDiff('s', _NowCalc(), $sWaitToDate)
 				SetDebugLog("ChkBaseQuick delay= " & $sWaitToDate & " Now= " & _NowCalc() & " Diff= " & $iDateCalc, $COLOR_DEBUG)
 				If $iDateCalc <= 0 Then ; check length of time in drop trophy
@@ -271,6 +272,7 @@ Func DropTrophy()
 					$sWaitToDate = _DateAdd('n', Int($iWaitTime), _NowCalc()) ; create new delay date/time
 					SetDebugLog("ChkBaseQuick new delay time= " & $sWaitToDate, $COLOR_DEBUG)
 				EndIf
+				#comments-end
 			Else
 				SetLog("Trophy Drop Complete", $COLOR_INFO)
 			EndIf
