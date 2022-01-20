@@ -452,23 +452,28 @@ Func GetBBDropPoint()
 		$YMiddle = $BHCoord[2]	
 	EndIf
 	
-	Local $THhOffset = 150
-	Local $xstart = 150, $ystart = 80, $xend = 760, $yend = 550
-	Local $aResult = QuickMIS("CX", $g_sBundleDeployPointsBB, $xstart, $ystart, $xend, $yend, True)
-	SetDebugLog("aResult : " & UBound($aResult) & " Coords", $COLOR_INFO)
-	
-	Local $aaCoords[0][3], $aTmp, $iSide
+	Local $THhOffset = 150, $aResult[0][2]
+	Local $xstart[2] = [70, 430], $ystart = 80, $xend[2] = [430, 800], $yend = 570
+	For $i = 0 To 1
+		Local $aTmp = QuickMIS("CXR", $g_sBundleDeployPointsBB, $xstart[$i], $ystart, $xend[$i], $yend, True)
+		SetDebugLog("aTmp : " & UBound($aTmp) & " Coords", $COLOR_INFO)
+		For $j = 0 To UBound($aTmp) - 1
+			_ArrayAdd($aResult, $aTmp[$j][0] & "|" & $aTmp[$j][1])
+		Next
+		;_ArrayDisplay($aTmp)
+	Next
+	SetDebugLog("aResult : " & UBound($aResult) & " Coords", $COLOR_ERROR)
+	;_ArrayDisplay($aResult)
+	Local $aaCoords[0][3], $iSide
 	For $i = 0 To UBound($aResult) - 1
-		$aTmp = StringSplit($aResult[$i], ",", $STR_NOCOUNT)
-		$iSide = GetBBDPPixelSection($XMiddle, $YMiddle, $aTmp[0] + $xstart, $aTmp[1] + $ystart)
-		If $aTmp[0] < $XMiddle And $aTmp[1] < $YMiddle And $aTmp[0] > ($XMiddle - $THhOffset) And $aTmp[1] > ($YMiddle - $THhOffset) Then ContinueLoop ;TL
-		If $aTmp[0] > $XMiddle And $aTmp[1] < $YMiddle And $aTmp[0] < ($XMiddle + $THhOffset) And $aTmp[1] > ($YMiddle - $THhOffset) Then ContinueLoop ;BL
-		If $aTmp[0] < $XMiddle And $aTmp[1] > $YMiddle And $aTmp[0] > ($XMiddle - $THhOffset) And $aTmp[1] < ($YMiddle + $THhOffset) Then ContinueLoop ;BR
-		If $aTmp[0] > $XMiddle And $aTmp[1] > $YMiddle And $aTmp[0] < ($XMiddle + $THhOffset) And $aTmp[1] < ($YMiddle + $THhOffset) Then ContinueLoop ;TR
-		_ArrayAdd($aaCoords, $iSide & "|" & $aTmp[0] + $xstart & "|" & $aTmp[1] + $ystart, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
+		$iSide = GetBBDPPixelSection($XMiddle, $YMiddle, $aResult[$i][0], $aResult[$i][1])
+		If $aResult[$i][0] < $XMiddle And $aResult[$i][1] < $YMiddle And $aResult[$i][0] > ($XMiddle - $THhOffset) And $aResult[$i][1] > ($YMiddle - $THhOffset) Then ContinueLoop ;TL
+		If $aResult[$i][0] > $XMiddle And $aResult[$i][1] < $YMiddle And $aResult[$i][0] < ($XMiddle + $THhOffset) And $aResult[$i][1] > ($YMiddle - $THhOffset) Then ContinueLoop ;BL
+		If $aResult[$i][0] < $XMiddle And $aResult[$i][1] > $YMiddle And $aResult[$i][0] > ($XMiddle - $THhOffset) And $aResult[$i][1] < ($YMiddle + $THhOffset) Then ContinueLoop ;BR
+		If $aResult[$i][0] > $XMiddle And $aResult[$i][1] > $YMiddle And $aResult[$i][0] < ($XMiddle + $THhOffset) And $aResult[$i][1] < ($YMiddle + $THhOffset) Then ContinueLoop ;TR
+		_ArrayAdd($aaCoords, $iSide & "|" & $aResult[$i][0] & "|" & $aResult[$i][1], Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 	Next	
 	SetDebugLog("aaCoords : " & UBound($aResult) & " Coords", $COLOR_INFO)
-	;_ArrayDisplay($aaCoords)
 	If $g_bDebugImageSave Then DebugAttackBBImage($aaCoords)
 	
 	Local $aDPResult = SortBBDP($aaCoords)
@@ -531,7 +536,7 @@ Func SortBBDP($aDropPoints)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] - $DPChange & "|" & $aDropPoints[$i][2] + $DPChange, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 		EndIf
 	Next
-	
+	_ArraySort($aDropPoints, 1, 0, 0, 2) ;sort y axis desc
 	For $i = 0 To UBound($aDropPoints) - 1
 		If $aDropPoints[$i][0] = 3 Then ;Bottom Right
 			If $aDropPoints[$i][1] < $TmpXMinBR + $DpDistance Then ContinueLoop
