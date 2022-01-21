@@ -425,7 +425,6 @@ EndFunc
 Func SetVersusBHToMid()
 	Local $xMiddle = 430, $yMiddle = 275, $Delay = 500 
 	Local $aRet[3] = [False, $xMiddle, $yMiddle]
-	ClickDrag(430, 500, 430, 200)
 	Local $aResult = decodeSingleCoord(findImage("VersusBuilderHall", $g_sImgVersusBH, GetDiamondFromRect("100,150,760,570"), 1, True))
 	If IsArray($aResult) And UBound($aResult) > 1 Then
 		ClickDrag($aResult[0], $aResult[1], $xMiddle, $yMiddle, $Delay) ;drag up
@@ -437,7 +436,20 @@ Func SetVersusBHToMid()
 			$aRet[2] = $Ret[1]
 		Endif
 	Else
-		SetDebugLog("SetVersusBHToMid(): Versus BH Not Found", $COLOR_INFO)
+		ClickDrag(430, 500, 430, 200)	;If we cannot find BH on first search, try to scroll down. Maybe BH is at the bottom of the base.
+		Local $aResult = decodeSingleCoord(findImage("VersusBuilderHall", $g_sImgVersusBH, GetDiamondFromRect("100,150,760,570"), 1, True))
+		If IsArray($aResult) And UBound($aResult) > 1 Then
+			ClickDrag($aResult[0], $aResult[1], $xMiddle, $yMiddle, $Delay) ;drag up
+			_Sleep(1500)
+			Local $Ret = decodeSingleCoord(findImage("VersusBuilderHall", $g_sImgVersusBH, GetDiamondFromRect("300,200,500,400"), 1, True))
+			If IsArray($Ret) And UBound($Ret) > 1 Then
+				$aRet[0] = True
+				$aRet[1] = $Ret[0]
+				$aRet[2] = $Ret[1]
+			Endif
+		Else
+			SetDebugLog("SetVersusBHToMid(): Versus BH Not Found", $COLOR_INFO)
+		Endif
 	EndIf
 	Return $aRet
 EndFunc
