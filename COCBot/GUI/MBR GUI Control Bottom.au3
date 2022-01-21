@@ -390,7 +390,7 @@ EndFunc   ;==>DisableGuiControls
 Func ToggleGuiControls($bEnabled, $bOptimizedRedraw = True)
 	$g_bGuiControlsEnabled = $bEnabled
 	If $g_iGuiMode <> 1 Then Return
-	;If $bOptimizedRedraw Then Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "ToggleGuiControls")
+	If $bOptimizedRedraw Then Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "ToggleGuiControls")
 	If Not $bEnabled Then
 		SetDebugLog("Disable GUI Controls")
 	Else
@@ -402,13 +402,11 @@ Func ToggleGuiControls($bEnabled, $bOptimizedRedraw = True)
 		If $i >= $g_hClanGamesTV And $i < $g_hChkForceBBAttackOnClanGames Then ContinueLoop
 		If Not $bEnabled Then
 			; Save state of all controls on tabs
-			;$g_aiControlPrevState[$i] = BitAND(GUICtrlGetState($i), $GUI_ENABLE)
-			;If $g_aiControlPrevState[$i] Then GUICtrlSetState($i, $GUI_DISABLE)
-			GUICtrlSetState($i, $GUI_DISABLE)
+			$g_aiControlPrevState[$i] = BitAND(GUICtrlGetState($i), $GUI_ENABLE)
+			If $g_aiControlPrevState[$i] Then GUICtrlSetState($i, $GUI_DISABLE)
 		Else
 			; Restore previous state of controls
-			;If $g_aiControlPrevState[$i] Then GUICtrlSetState($i, $g_aiControlPrevState[$i])
-			GUICtrlSetState($i, $GUI_ENABLE)
+			If $g_aiControlPrevState[$i] Then GUICtrlSetState($i, $g_aiControlPrevState[$i])
 		EndIf
 	Next
 	If Not $bEnabled Then
@@ -417,5 +415,5 @@ Func ToggleGuiControls($bEnabled, $bOptimizedRedraw = True)
 		ControlEnable("", "", $g_hCmbGUILanguage)
 	EndIf
 	$g_bGUIControlDisabled = False
-	;If $bOptimizedRedraw Then SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "ToggleGuiControls")
+	If $bOptimizedRedraw Then SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "ToggleGuiControls")
 EndFunc   ;==>ToggleGuiControls
