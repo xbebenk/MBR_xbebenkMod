@@ -12,7 +12,7 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
-Func _ClanGames($test = False)
+Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 	$g_bIsBBevent = False ;just to be sure, reset to false
 	$g_bIsCGEventRunning = False ;just to be sure, reset to false
 	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false
@@ -412,7 +412,7 @@ Func _ClanGames($test = False)
 		Next
 		
 		Local $aTmpBBChallenges[0][6]
-		If $g_bChkForceBBAttackOnClanGames Then 
+		If $g_bChkForceBBAttackOnClanGames And $bSearchBBEventFirst Then 
 			SetDebugLog("ForceBBAttack on ClanGames enabled", $COLOR_INFO)
 			SetDebugLog("Try Only do BB event First", $COLOR_INFO)
 			For $i = 0 To UBound($aTempSelectChallenges) - 1
@@ -430,9 +430,6 @@ Func _ClanGames($test = False)
 			
 			If Ubound($aTmpBBChallenges) > 0 Then 
 				SetDebugLog("Found " & Ubound($aTmpBBChallenges) & " BB Event", $COLOR_SUCCESS)
-				For $i = 0 To Ubound($aTmpBBChallenges) - 1
-					
-				Next
 				$aTempSelectChallenges = $aTmpBBChallenges ;replace All Challenge array with BB Only Event Array
 			Else
 				SetDebugLog("No BB Event Found, using current detected event", $COLOR_INFO)

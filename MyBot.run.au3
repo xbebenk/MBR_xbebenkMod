@@ -729,12 +729,12 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
 				$g_bOutOfGold = False ; reset out of gold flag
 				SetLog("Switching back to normal after no gold to search ...", $COLOR_SUCCESS)
-				ContinueLoop ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
+				;ContinueLoop ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 			EndIf
 			If $g_bOutOfElixir And (Number($g_aiCurrentLoot[$eLootElixir]) >= Number($g_iTxtRestartElixir)) And (Number($g_aiCurrentLoot[$eLootDarkElixir]) >= Number($g_iTxtRestartDark)) Then ; check if enough elixir to begin searching again
 				$g_bOutOfElixir = False ; reset out of elixir flag
 				SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_SUCCESS)
-				ContinueLoop ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
+				;ContinueLoop ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 			EndIf
 			If _Sleep($DELAYRUNBOT5) Then Return
 			If $g_bRestart Then ContinueLoop
@@ -1317,21 +1317,20 @@ Func FirstCheck()
 EndFunc   ;==>FirstCheck
 
 Func FirstCheckRoutine()
+	Local $b_SuccessAttack = False
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	checkMainScreen()
 	If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 		SetLog("Check ClanGames Early", $COLOR_INFO)
-		_ClanGames()
+		_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
 		If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
 			SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-			If _Sleep(1000) Then Return
-			checkArmyCamp(True, True)
 			PrepareDonateCC()
 			DonateCC()
 			TrainSystem()
 			
-			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'CollectFreeMagicItems']
+			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'CollectFreeMagicItems','UpgradeHeroes', 'PetHouse', 'BuilderBase']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1436,6 +1435,7 @@ Func FirstCheckRoutine()
 						If Not $g_bRunState Then Return
 						If AttackMain(True) Then 
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
+							$b_SuccessAttack = True
 							ExitLoop
 						Else
 							$loopcount += 1
