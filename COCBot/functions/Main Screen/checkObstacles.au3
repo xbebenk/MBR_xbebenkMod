@@ -142,7 +142,15 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			SetLog("Village must take a break, wait", $COLOR_ERROR)
 			If TestCapture() Then Return "Village must take a break"
 			PushMsg("TakeBreak")
-			If _SleepStatus($DELAYCHECKOBSTACLES4) Then Return ; 2 Minutes
+			If ProfileSwitchAccountEnabled() Then
+				$g_iNextAccount = $g_iCurAccount + 1
+				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+				$g_bRestart = True
+				SwitchForceAnotherDevice($g_iNextAccount)
+				Return True
+			Else
+				If _SleepStatus($DELAYCHECKOBSTACLES4) Then Return ; 2 Minutes
+			EndIf
 			checkObstacles_ReloadCoC($aReloadButton, "#0128", $bRecursive) ;Click on reload button
 			If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			checkObstacles_ResetSearch()
