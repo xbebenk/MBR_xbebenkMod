@@ -670,13 +670,6 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 				BotStart($iStartDelay)
 				$iStartDelay = 0 ; don't autostart delay in future
 				If $g_iBotAction = $eBotStart Then $g_iBotAction = $eBotNoAction
-
-				; test error handling when bot started and then stopped
-				; force app crash for debugging/testing purposes
-				;DllCallAddress("NONE", 0)
-				; force au3 script error for debugging/testing purposes
-				;Local $iTmp = $iStartDelay[0]
-
 			Case $eBotStop
 				BotStop()
 				If $g_iBotAction = $eBotStop Then $g_iBotAction = $eBotNoAction
@@ -784,7 +777,11 @@ Func runBot() ;Bot that runs everything in order
 			; Train Donate only - force a donate cc every time
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then _RunFunction('DonateCC,Train')
 			If $g_bRestart Then ContinueLoop
-			Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'BuilderBase']
+			If $g_bChkFastSwitchAcc Then
+				Local $aRndFuncList = ['UpgradeHeroes', 'PetHouse', 'BuilderBase']
+			Else
+				Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'BuilderBase']
+			EndIf
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -890,7 +887,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $g_bRestart Then ExitLoop
 		If Random(0, $g_iCollectAtCount - 1, 1) = 0 Then ; This is prevent from collecting all the time which isn't needed anyway, chance to run is 1/$g_iCollectAtCount
 			If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then
-				Local $aRndFuncList = ['Collect', 'CheckTombs', 'CleanYard', 'UpgradeBuilding']
+				Local $aRndFuncList = ['CheckTombs', 'CleanYard']
 			Else
 				Local $aRndFuncList = ['Collect', 'CheckTombs', 'RequestCC', 'DonateCC', 'CleanYard']
 			EndIf
@@ -1470,9 +1467,15 @@ Func FirstCheckRoutine()
 	checkArmyCamp(False, True)
 	PrepareDonateCC()
 	DonateCC()
-	TrainSystem()
-	
-	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'CollectFreeMagicItems']
+	If $b_SuccessAttack Then TrainSystem()
+	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems']
+	For $Index In $aRndFuncList
+		If Not $g_bRunState Then Return
+		_RunFunction($Index)
+		If _Sleep(50) Then Return
+		If $g_bRestart Then ExitLoop
+	Next
+	Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
