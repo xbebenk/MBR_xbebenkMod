@@ -407,6 +407,7 @@ Func ToggleGuiControls($bEnabled, $bOptimizedRedraw = True)
 		Else
 			; Restore previous state of controls
 			If $g_aiControlPrevState[$i] Then GUICtrlSetState($i, $g_aiControlPrevState[$i])
+			If $i >= $g_hChkForceBBAttackOnClanGames And $i <= $g_hBtnCGSettingsClose Then GUICtrlSetState($i, $GUI_ENABLE)
 		EndIf
 	Next
 	If Not $bEnabled Then
