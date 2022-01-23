@@ -853,6 +853,11 @@ Func EssentialBuildingImageCopy($sImagePath = "", $sTempPath = "")
 			FileCopy($sImagePath & "\" & $asImageName[$i] & "*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 		EndIf
 	Next
+	Local $asHeroName[4] = ["ArcherQueen", "BarbarianKing", "GrandWarden", "RoyalChampion"]
+	For $i = 0 To UBound($asHeroName) - 1
+		SetDebugLog("[" & $i & "]" & "Essential Building: " & $asHeroName[$i], $COLOR_DEBUG)
+		FileCopy($sImagePath & "\" & $asHeroName[$i] & "*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+	Next
 EndFunc
 
 Func SearchGreenZone()

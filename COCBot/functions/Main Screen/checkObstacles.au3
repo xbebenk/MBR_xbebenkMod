@@ -34,7 +34,6 @@ EndFunc   ;==>checkObstacles
 Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if something is in the way for mainscreen
 	Local $msg, $x, $y, $Result
 	$g_bMinorObstacle = False
-	SetLog("_checkObstacles()", $COLOR_DEBUG)
 	_CaptureRegions()
 
 	If Not $bRecursive Then

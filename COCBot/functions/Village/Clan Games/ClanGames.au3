@@ -16,6 +16,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 	$g_bIsBBevent = False ;just to be sure, reset to false
 	$g_bIsCGEventRunning = False ;just to be sure, reset to false
 	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false
+	$g_bIsCGPointAlmostMax = False ;just to be sure, reset to false
 	
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
@@ -86,6 +87,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1440 Then ; purge, but not purge on last day of clangames
 						SetLog("Stop before completing your limit and only Purge")
 						SetLog("Lets only purge 1 most top event", $COLOR_WARNING)
+						$g_bIsCGPointAlmostMax = True
 						ForcePurgeEvent(False, True)
 						CloseClangamesWindow()
 						Return
@@ -202,7 +204,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 							; Disable this event from INI File
 							If $LootChallenges[$j][3] = 0 Then ExitLoop
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$LootChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $LootChallenges[$j][3], "CGMain"]
+							Local $aArray[5] = [$LootChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $LootChallenges[$j][4], "CGMain"]
 						EndIf
 					Next
 				Case "A"
@@ -213,7 +215,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 						; Match the names
 						If $aAllDetectionsOnScreen[$i][1] = $AirTroopChallenges[$j][0] Then
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$AirTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1, "CGMain"]
+							Local $aArray[5] = [$AirTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $AirTroopChallenges[$j][4], "CGMain"]
 						EndIf
 					Next
 
@@ -225,7 +227,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 						; Match the names
 						If $aAllDetectionsOnScreen[$i][1] = $SpellChallenges[$j][0] Then
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$SpellChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1, "CGMain"]
+							Local $aArray[5] = [$SpellChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $SpellChallenges[$j][4], "CGMain"]
 						EndIf
 					Next
 
@@ -237,7 +239,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 						; Match the names
 						If $aAllDetectionsOnScreen[$i][1] = $GroundTroopChallenges[$j][0] Then
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$GroundTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], 1, "CGMain"]
+							Local $aArray[5] = [$GroundTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][4], $GroundTroopChallenges[$j][4], "CGMain"]
 						EndIf
 					 Next
 
@@ -276,7 +278,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 							; Check if you are using Heroes
 							If $BattleChallenges[$j][1] = "No Heroics Allowed" And ((Int($g_aiAttackUseHeroes[$DB]) > $eHeroNone And $g_iMatchMode = $DB) Or (Int($g_aiAttackUseHeroes[$LB]) > $eHeroNone And $g_iMatchMode = $LB)) Then ExitLoop
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$BattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BattleChallenges[$j][3], "CGMain"]
+							Local $aArray[5] = [$BattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BattleChallenges[$j][4], "CGMain"]
 						EndIf
 					Next
 				Case "D"
@@ -298,7 +300,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 									$DestructionChallenges[$j][1] = "Queen Level Hunter" Or _
 									$DestructionChallenges[$j][1] = "Warden Level Hunter" And ((Int($g_aiAttackUseHeroes[$DB]) = $eHeroNone And $g_iMatchMode = $DB) Or (Int($g_aiAttackUseHeroes[$LB]) = $eHeroNone And $g_iMatchMode = $LB)) Then ExitLoop
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$DestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $DestructionChallenges[$j][3], "CGMain"]
+							Local $aArray[5] = [$DestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $DestructionChallenges[$j][4], "CGMain"]
 						EndIf
 					Next
 				Case "M"
@@ -325,7 +327,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 							If $MiscChallenges[$j][1] = "Donate Spells" And ($g_aiPrepDon[2] = 0 And $g_aiPrepDon[3] = 0) Then ExitLoop
 
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$MiscChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $MiscChallenges[$j][3], "CGMain"]
+							Local $aArray[5] = [$MiscChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $MiscChallenges[$j][4], "CGMain"]
 						EndIf
 					Next
                 Case "BBB" ; BB Battle challenges
@@ -336,7 +338,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
                     For $j = 0 To UBound($BBBattleChallenges) - 1
                         ; Match the names
                         If $aAllDetectionsOnScreen[$i][1] = $BBBattleChallenges[$j][0] Then
-                            Local $aArray[5] = [$BBBattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBBattleChallenges[$j][3], $aAllDetectionsOnScreen[$i][0]]
+                            Local $aArray[5] = [$BBBattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBBattleChallenges[$j][4], $aAllDetectionsOnScreen[$i][0]]
                         EndIf
                     Next
                 Case "BBD" ; BB Destruction challenges
@@ -347,7 +349,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
                     For $j = 0 To UBound($BBDestructionChallenges) - 1
 						; Match the names
                         If $aAllDetectionsOnScreen[$i][1] = $BBDestructionChallenges[$j][0] Then
-							Local $aArray[5] = [$BBDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBDestructionChallenges[$j][3], $aAllDetectionsOnScreen[$i][0]]
+							Local $aArray[5] = [$BBDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBDestructionChallenges[$j][4], $aAllDetectionsOnScreen[$i][0]]
                         EndIf
                     Next
 				Case "BBT" ; BB Troop challenges
@@ -358,7 +360,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
                     For $j = 0 To UBound($BBTroopsChallenges) - 1
                         ; Match the names
                         If $aAllDetectionsOnScreen[$i][1] = $BBTroopsChallenges[$j][0] Then
-							Local $aArray[5] = [$BBTroopsChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBTroopsChallenges[$j][3], $aAllDetectionsOnScreen[$i][0]]
+							Local $aArray[5] = [$BBTroopsChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBTroopsChallenges[$j][4], $aAllDetectionsOnScreen[$i][0]]
                         EndIf
                     Next
 			EndSwitch
@@ -664,7 +666,7 @@ Func CooldownTime($getCapture = True)
 	Local $aiCoolDown = decodeSingleCoord(findImage("Cooldown", $g_sImgCoolPurge & "\*.xml", GetDiamondFromRect("480,370,570,410"), 1, True, Default))
 	If IsArray($aiCoolDown) And UBound($aiCoolDown, 1) >= 2 Then
 		SetLog("Cooldown Purge Detected", $COLOR_INFO)
-		If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
+		If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
 		CloseClangamesWindow()
 		Return True
 	EndIf
@@ -696,7 +698,7 @@ Func IsEventRunning($bOpenWindow = False)
 			EndIf
 		ElseIf _CheckPixel($aEventPurged, True) Then
 				SetLog("An event purge cooldown in progress!", $COLOR_WARNING)
-				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
+				If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
 				CloseClangamesWindow()
 				Return True
 		Else
@@ -824,7 +826,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 	If $startFirst Then
 		SetLog("ForcePurgeEvent: No event Found, Start and Purge a Challenge", $COLOR_INFO)
 		If StartAndPurgeEvent($bTest) Then
-			If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
+			If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
 			CloseClangamesWindow()
 			Return True
 		EndIf
@@ -850,7 +852,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 				If _Sleep(1500) Then Return
 				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - ForcePurgeEvent: Purge a Wrong Challenge ", 1)
 				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - ForcePurgeEvent: Purge a Wrong Challenge ")
-				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
+				If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
 			Else
 				SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
 				Return False
