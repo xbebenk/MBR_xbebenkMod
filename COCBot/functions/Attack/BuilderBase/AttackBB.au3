@@ -71,9 +71,6 @@ Func DoAttackBB()
 		ClickAway()
 	EndIf
 	ZoomOut()
-	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-		CollectBuilderBase()
-	EndIf
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 
