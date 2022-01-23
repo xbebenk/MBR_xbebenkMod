@@ -103,7 +103,7 @@ Func WaitforPixel($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariatio
 	For $i = 1 To $maxDelay * 2
 		Local $result = _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariation)
 		If IsArray($result) Then Return True
-		If _Sleep(500) Then Return
+		If _Sleep(250) Then Return
 	Next
 	Return False
 EndFunc   ;==>WaitforPixel

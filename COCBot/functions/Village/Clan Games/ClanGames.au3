@@ -76,7 +76,6 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 				SetLog("Your score limit is reached! Congrats")
 				CloseClangamesWindow()
-				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
 				Return
 			ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
 				SetLog("Your almost reached max point")
@@ -577,7 +576,10 @@ Func IsClanGamesWindow($getCapture = True)
 		SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
 		Click($g_iQuickMISX + 230, $g_iQuickMISY + 55)
 		; Just wait for window open
-		If _Sleep(2500) Then Return
+		For $i = 1 To 10
+			If IsFullScreenWindow() Then ExitLoop
+			_Sleep(250)
+		Next
 		$sState = IsClanGamesRunning()
 		Switch $sState
 			Case "Prepare"
@@ -812,23 +814,6 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 	EndIf
 
 EndFunc   ;==>StartsEvent
-
-;Func PurgeEvent($directoryImage, $sEventName, $getCapture = True)
-;	SetLog("Checking Builder Base Challenges to Purge", $COLOR_DEBUG)
-;	; Screen coordinates for ScreenCapture
-;	Local $x = 281, $y = 150, $x1 = 775, $y1 = 545
-;	If QuickMIS("BC1", $directoryImage, $x, $y, $x1, $y1, $getCapture, False) Then
-;		Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
-;		; Start and Purge at same time
-;		SetLog("Starting Impossible Job to purge", $COLOR_INFO)
-;		If _Sleep(1500) Then Return
-;		If StartsEvent($sEventName, True, $getCapture, $g_bChkClanGamesDebug) Then
-;			CloseClangamesWindow()
-;			Return True
-;		EndIf
-;	EndIf
-;	Return False
-;EndFunc   ;==>PurgeEvent
 
 Func ForcePurgeEvent($bTest = False, $startFirst = True)
 	Local $count1 = 0, $count2 = 0

@@ -1201,7 +1201,7 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
-				_ClanGames()
+				_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
 				If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
 					SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 					checkSwitchAcc()
@@ -1324,26 +1324,26 @@ Func FirstCheckRoutine()
 	If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 		SetLog("Check ClanGames Early", $COLOR_INFO)
 		_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
+		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+			GotoBBTodoCG()
+		EndIf
 		If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
 			SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 			PrepareDonateCC()
 			DonateCC()
 			TrainSystem()
 			
-			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'CollectFreeMagicItems','UpgradeHeroes', 'PetHouse', 'BuilderBase']
+			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'CollectFreeMagicItems']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
 				If _Sleep(50) Then Return
 				If $g_bRestart Then ExitLoop
-				If CheckAndroidReboot() Then ContinueLoop
-				If checkObstacles() Then ContinueLoop
+				;If CheckAndroidReboot() Then ContinueLoop
+				;If checkMainScreen(False) Then ContinueLoop
 			Next
 			checkSwitchAcc() ;switch to next account
-		EndIf
-		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-			GotoBBTodoCG()
 		EndIf
 	EndIf
 	
@@ -1481,8 +1481,8 @@ Func FirstCheckRoutine()
 		_RunFunction($Index)
 		If _Sleep(50) Then Return
 		If $g_bRestart Then ExitLoop
-		If CheckAndroidReboot() Then ContinueLoop
-		If checkObstacles() Then ContinueLoop
+		;If CheckAndroidReboot() Then ContinueLoop
+		;If checkMainScreen(False) Then ContinueLoop
 	Next
 
 EndFunc
