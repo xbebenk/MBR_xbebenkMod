@@ -645,8 +645,8 @@ Func SearchGreenZoneBB()
 		EndIf
 	Else
 		SetLog("GreenZone for Placing new Building Not Found", $COLOR_DEBUG)
-		NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in BB.")
 	EndIf
+	NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in BB.")
 	Return False
 EndFunc
 
