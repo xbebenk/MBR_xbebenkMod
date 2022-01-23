@@ -34,12 +34,12 @@ EndFunc   ;==>checkObstacles
 Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if something is in the way for mainscreen
 	Local $msg, $x, $y, $Result
 	$g_bMinorObstacle = False
-
+	SetLog("_checkObstacles()", $COLOR_DEBUG)
 	_CaptureRegions()
 
 	If Not $bRecursive Then
 		If checkObstacles_Network() Then Return True
-		If checkObstacles_GfxError() Then Return True
+		;If checkObstacles_GfxError() Then Return True
 	EndIf
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
 	Local $bIsOnMainVillage = isOnMainVillage()
@@ -204,21 +204,8 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				EndIf
 				$Result = getOcrReloadMessage(171, 325, "Check Obstacles OCR 'Good News!'=") ; OCR text for "Good News!"
 				If StringInStr($Result, "new", $STR_NOCASESENSEBASIC) Then
-					If Not $g_bAutoUpdateGame Then
-						$msg = "Game Update is required, Bot must stop!"
-						Return checkObstacles_StopBot($msg) ; stop bot
-					Else
-						; CoC update required
-						Switch UpdateGame()
-							Case True, Default
-								; Update completed or not required
-								If Not $bRecursive Then Return checkObstacles_ReloadCoC()
-							Case False
-								; Update failed
-								$msg = "Game Update failed, Bot must stop!"
-								Return checkObstacles_StopBot($msg) ; stop bot
-						EndSwitch
-					EndIf
+					$msg = "Game Update is required, Bot must stop!"
+					Return checkObstacles_StopBot($msg) ; stop bot
 				ElseIf StringInStr($Result, "rate", $STR_NOCASESENSEBASIC) Then ; back up check for rate CoC reload window
 					SetLog("Clash feedback window found, permanently closed!", $COLOR_ERROR)
 					PureClick(248, 408, 1, 0, "#9999") ; Click on never to close window and stop reappear. Never=248,408 & Later=429,408
@@ -348,10 +335,8 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	
 	If IsAttackPage() Then
 		SetDebugLog("checkObstacles: Found AttackPage, return to home")
-		If WaitforPixel(18, 548, 19, 549, "CD0D0D", 10, 1) Then
-			Click(65, 540, 1, 0, "#0099")
-			If _Sleep(500) Then Return
-		EndIf
+		Click(65, 540, 1, 0, "#0099")
+		If _Sleep(500) Then Return
 		Return True
 	EndIf
 
@@ -367,18 +352,18 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Return checkObstacles_ReloadCoC(Default, "", $bRecursive)
 	EndIf
 
-	If $g_bOnlySCIDAccounts Then
-		SetDebugLog("check Log in with Supercell ID login by Clicks")
-		; check Log in with Supercell ID login screen by Clicks
-		CheckLoginWithSupercellIDScreen()
-	EndIf
+	;If $g_bOnlySCIDAccounts Then
+	;	SetDebugLog("check Log in with Supercell ID login by Clicks")
+	;	; check Log in with Supercell ID login screen by Clicks
+	;	CheckLoginWithSupercellIDScreen()
+	;EndIf
 
 	; check if google account list shown and select first
-	If Not CheckGoogleSelectAccount() Then
-		SetDebugLog("check Log in with Supercell ID login by shared_prefs")
-		; check Log in with Supercell ID login screen by shared_prefs
-		If CheckLoginWithSupercellID() Then Return True
-	EndIf
+	;If Not CheckGoogleSelectAccount() Then
+	;	SetDebugLog("check Log in with Supercell ID login by shared_prefs")
+	;	; check Log in with Supercell ID login screen by shared_prefs
+	;	If CheckLoginWithSupercellID() Then Return True
+	;EndIf
 
 	Return False
 EndFunc   ;==>_checkObstacles
@@ -511,46 +496,17 @@ Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 	Return False
 EndFunc   ;==>checkObstacles_Network
 
-Func checkObstacles_GfxError($bForceCapture = False, $bRebootAndroid = True)
-	Local $aResult = decodeMultipleCoords(FindImage("GfxError", $g_sImgGfxError, "ECD", 100, $bForceCapture), 100, 100)
-	If UBound($aResult) >= 8 Then
-		SetLog(UBound($aResult) & " Gfx Errors detected, Reloading Android...", $COLOR_ERROR)
-		; Save debug image
-		SaveDebugImage("GfxError", False)
-		If $bRebootAndroid Then Return checkObstacles_RebootAndroid()
-		Return True
-	EndIf
-
-	Return False
-EndFunc   ;==>checkObstacles_GfxError
-
-Func UpdateGame()
-	; launch Play Store
-	SetLog("Open Play Store for Game Update...")
-	OpenPlayStoreGame()
-	#cs Finish that when time permits ;)
-		; wait 1 Minute to open
-
-		; Check for Update button
-		SetLog("Play Store Game update available"
-
-		; Check for Open button
-		SetLog("Play Store Game update not required"
-		Return Default
-
-		; press update button
-
-		; press accept button
-
-		; track progress, area 17,317 - 805,335
-
-		; Check for Open button
-		SetLog("Game updated"
-		Return True
-
-		SetLog("Game updated failed"
-		Return False
-	#ce Finish that when time permits ;)
-EndFunc   ;==>UpdateGame
+;Func checkObstacles_GfxError($bForceCapture = False, $bRebootAndroid = True)
+;	Local $aResult = decodeMultipleCoords(FindImage("GfxError", $g_sImgGfxError, "ECD", 100, $bForceCapture), 100, 100)
+;	If UBound($aResult) >= 8 Then
+;		SetLog(UBound($aResult) & " Gfx Errors detected, Reloading Android...", $COLOR_ERROR)
+;		; Save debug image
+;		SaveDebugImage("GfxError", False)
+;		If $bRebootAndroid Then Return checkObstacles_RebootAndroid()
+;		Return True
+;	EndIf
+;
+;	Return False
+;EndFunc   ;==>checkObstacles_GfxError
 
 
