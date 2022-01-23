@@ -603,6 +603,7 @@ Func NewBuildings($x, $y, $bTest = False)
 			BBAutoUpgradeLog()
 			Return True
 		Else
+			NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in BB.") 
 			Local $RedXCoord = decodeSingleCoord(findImage("RedX", $g_sImgAutoUpgradeRedX & "\RedX*", "FV", 1, True))
 			If IsArray($RedXCoord) And UBound($RedXCoord) = 2 Then
 				SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $RedXCoord[0] & "," & $RedXCoord[1] & "]", $COLOR_ERROR)
@@ -644,6 +645,7 @@ Func SearchGreenZoneBB()
 		EndIf
 	Else
 		SetLog("GreenZone for Placing new Building Not Found", $COLOR_DEBUG)
+		NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in BB.")
 	EndIf
 	Return False
 EndFunc
