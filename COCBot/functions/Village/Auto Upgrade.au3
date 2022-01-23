@@ -608,6 +608,7 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 			Return True
 		Else
 			SetDebugLog("GreenCheck Button NOT Found", $COLOR_ERROR)
+			NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in Main Village.")
 			If Not $g_bRunState Then Return
 			;Lets check if exist the [x], it should not exist, but to be safe
 			Local $RedXCoords = decodeSingleCoord(findImage("FindRedX", $g_sImgRedX & "\RedX*", "FV", 1, True))
@@ -878,6 +879,7 @@ Func SearchGreenZone()
 	Else
 		SetLog("GreenZone for Placing new Building Not Found", $COLOR_DEBUG)
 	EndIf
+	NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in Main Village.") 
 	Return False
 EndFunc
 

@@ -468,6 +468,7 @@ Func SearchNewBuilding($bTest = False)
 				If $g_bSkipWallPlacingOnBB Then
 					If QuickMIS("N1", $g_sImgAUpgradeWall, $aCoord[$j][0] - 50, $aCoord[$j][1] - 10, $aCoord[$j][0] + 100, $aCoord[$j][1] + 10, True) = "Wall" Then
 						SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & ", Is Wall, skip!", $COLOR_INFO)
+						NotifyPushToTelegram($g_sProfileCurrentName & ": There is a new wall in BB.")
 						ContinueLoop
 					EndIf
 				EndIf
@@ -579,6 +580,7 @@ Func NewBuildings($x, $y, $bTest = False)
 		If $g_bSkipWallPlacingOnBB Then
 			If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 150, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
 				SetLog("New Building is Wall!, Cancelling...", $COLOR_INFO)
+				NotifyPushToTelegram($g_sProfileCurrentName & ": There is a new wall in BB.")
 				Click(820, 38, 1) ; exit from Shop
 				If _Sleep(2000) Then Return
 				ClickOnBuilder($bTest)
@@ -601,6 +603,7 @@ Func NewBuildings($x, $y, $bTest = False)
 			BBAutoUpgradeLog()
 			Return True
 		Else
+			NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in BB.") 
 			Local $RedXCoord = decodeSingleCoord(findImage("RedX", $g_sImgAutoUpgradeRedX & "\RedX*", "FV", 1, True))
 			If IsArray($RedXCoord) And UBound($RedXCoord) = 2 Then
 				SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $RedXCoord[0] & "," & $RedXCoord[1] & "]", $COLOR_ERROR)
@@ -643,6 +646,7 @@ Func SearchGreenZoneBB()
 	Else
 		SetLog("GreenZone for Placing new Building Not Found", $COLOR_DEBUG)
 	EndIf
+	NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in BB.")
 	Return False
 EndFunc
 
