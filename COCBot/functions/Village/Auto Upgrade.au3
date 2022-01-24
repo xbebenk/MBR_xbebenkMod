@@ -734,6 +734,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("Search Essential Building on Builder Menu", $COLOR_INFO)
 			ClickMainBuilder()
 			Local $aResult = FindEssentialBuilding()
+			$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True)
 			If isArray($aResult) And UBound($aResult) > 0 Then
 				For $y = 0 To UBound($aResult) - 1
 					SetDebugLog("Essential Building: " & $aResult[$y][2] & ", Cost: " & $aResult[$y][3] & " Coord [" & $aResult[$y][0] & "," & $aResult[$y][1] & "]", $COLOR_INFO)
@@ -758,9 +759,9 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("Skip Search Essential Building", $COLOR_INFO)
 		EndIf
 		
-		$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True)
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
+		If Not ($UpgradeCost = $TmpUpgradeCost) Then $sameCost = 0
 		SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
 		If $sameCost > 2 Then $NeedDrag = False
 		$UpgradeCost = $TmpUpgradeCost
