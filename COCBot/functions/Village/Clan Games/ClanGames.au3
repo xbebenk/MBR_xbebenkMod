@@ -80,6 +80,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 				Return
 			ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
 				SetLog("Your almost reached max point")
+				$g_bIsCGPointAlmostMax = True
 				If $g_bChkClanGamesStopBeforeReachAndPurge Then
 					If IsEventRunning() Then Return
 					$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
@@ -87,7 +88,6 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1440 Then ; purge, but not purge on last day of clangames
 						SetLog("Stop before completing your limit and only Purge")
 						SetLog("Lets only purge 1 most top event", $COLOR_WARNING)
-						$g_bIsCGPointAlmostMax = True
 						ForcePurgeEvent(False, True)
 						CloseClangamesWindow()
 						Return
