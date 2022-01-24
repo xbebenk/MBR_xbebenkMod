@@ -386,11 +386,10 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 	If UBound($aSelectChallenges) > 0 Then
 		; let's get the Event timing
 		For $i = 0 To UBound($aSelectChallenges) - 1
-			Setlog("Detected " & $aSelectChallenges[$i][0] & " difficulty of " & $aSelectChallenges[$i][3])
 			Click($aSelectChallenges[$i][1], $aSelectChallenges[$i][2])
 			If _Sleep(1500) Then Return
 			Local $EventHours = GetEventInformation()
-			Setlog("Time: " & $EventHours & " min", $COLOR_INFO)
+			Setlog("Detected " & $aSelectChallenges[$i][0] & " difficulty of " & $aSelectChallenges[$i][3] & " Time: " & $EventHours & " min", $COLOR_INFO)
 			Click($aSelectChallenges[$i][1], $aSelectChallenges[$i][2])
 			If _Sleep(250) Then Return
 			$aSelectChallenges[$i][4] = Number($EventHours)
@@ -942,7 +941,7 @@ Func GetEventTimeInMinutes($iXStartBtn, $iYStartBtn, $bIsStartBtn = True)
 	Local $Ocr = getOcrEventTime($XAxis, $YAxis)
 	If $Ocr = "1" Then $Ocr = "1d"
 	If $Ocr = "2" Then $Ocr = "2d"
-    Return ConvertOCRTime("ClanGames()", $Ocr, True)
+    Return ConvertOCRTime("ClanGames()", $Ocr, False)
 EndFunc   ;==>GetEventTimeInMinutes
 
 Func GetEventInformation()
