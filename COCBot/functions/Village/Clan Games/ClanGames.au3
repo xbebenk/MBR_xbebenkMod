@@ -681,9 +681,9 @@ Func IsEventRunning($bOpenWindow = False)
 		SetLog("Entering Clan Games", $COLOR_INFO)
 		If Not IsClanGamesWindow() Then Return
 	EndIf
-
 	; Check if any event is running or not
 	If Not _ColorCheck(_GetPixelColor(300, 236, True), Hex(0x52DF50, 6), 5) Then ; Green Bar from First Position
+		_Sleep(3000) ; just wait few second, as completed event will also have green bar, need to wait tile ordered again
 		;Check if Event failed
 		If _CheckPixel($aEventFailed, True) Then
 			SetLog("Couldn't finish last event! Lets trash it and look for a new one", $COLOR_INFO)
@@ -702,7 +702,6 @@ Func IsEventRunning($bOpenWindow = False)
 				Return True
 		Else
 			SetLog("An event is already in progress!", $COLOR_SUCCESS)
-			
 			;check if its Enabled Challenge, if not = purge
 			If QuickMIS("BC1", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 300, 130, 380, 210, True, False) Then
 				SetLog("Active Challenge is Enabled on Setting, OK!!", $COLOR_DEBUG)
