@@ -66,6 +66,9 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 		;now we need to copy selected challenge before checking current running event is not wrong event selected
 		
 		; Let's get some information , like Remain Timer, Score and limit
+		If Not _ColorCheck(_GetPixelColor(300, 236, True), Hex(0x52DF50, 6), 5) Then ;no greenbar = there is active event or completed event
+			_Sleep(3000) ; just wait few second, as completed event will need sometime to animate on score
+		EndIf
 		Local $aiScoreLimit = GetTimesAndScores()
 		If $aiScoreLimit = -1 Or UBound($aiScoreLimit) <> 2 Then
 			CloseClangamesWindow() ;need clickaway, as we are leaving
@@ -683,7 +686,6 @@ Func IsEventRunning($bOpenWindow = False)
 	EndIf
 	; Check if any event is running or not
 	If Not _ColorCheck(_GetPixelColor(300, 236, True), Hex(0x52DF50, 6), 5) Then ; Green Bar from First Position
-		_Sleep(3000) ; just wait few second, as completed event will also have green bar, need to wait tile ordered again
 		;Check if Event failed
 		If _CheckPixel($aEventFailed, True) Then
 			SetLog("Couldn't finish last event! Lets trash it and look for a new one", $COLOR_INFO)
