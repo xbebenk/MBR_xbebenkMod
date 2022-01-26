@@ -258,6 +258,10 @@ Func AutoUpgradeBB($bTest = False)
 					SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Need More resource", $COLOR_DEBUG)
 					ExitLoop
 				EndIf
+				If Not QuickMIS("BC1", $g_sImgAutoUpgradeElixir, 400, 340, 500, 370) And Not QuickMIS("BC1", $g_sImgAutoUpgradeGold, 400, 340, 500, 370) Then
+					SetLog("Upgrade Window Exist, not need to scroll", $COLOR_INFO)
+					ExitLoop
+				EndIf
 				SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 				ClickDragAutoUpgradeBB("up", $y)
 			Next
@@ -524,6 +528,10 @@ Func SearchNewBuilding($bTest = False)
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
+		If Not QuickMIS("BC1", $g_sImgAutoUpgradeElixir, 400, 340, 500, 370) And Not QuickMIS("BC1", $g_sImgAutoUpgradeGold, 400, 340, 500, 370) Then
+			SetLog("Upgrade Window Exist, not need to scroll", $COLOR_INFO)
+			ExitLoop
+		EndIf
 		ClickDragAutoUpgradeBB("up")
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
@@ -536,6 +544,7 @@ EndFunc
 Func ClickDragAutoUpgradeBB($Direction = "up", $YY = Default, $DragCount = 1)
 	Local $x = 450, $yUp = 125, $yDown = 800, $Delay = 500
 	If $YY = Default Then $YY = 330
+	
 	For $checkCount = 0 To 2
 		If Not $g_bRunState Then Return
 		If _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) Then ;check upgrade window border
