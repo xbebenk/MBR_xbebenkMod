@@ -90,8 +90,18 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 					Setlog("Clan Games Minute Remain: " & $sTimeCG)
 					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1440 Then ; purge, but not purge on last day of clangames
 						SetLog("Stop before completing your limit and only Purge")
-						SetLog("Lets only purge 1 most top event", $COLOR_WARNING)
-						ForcePurgeEvent(False, True)
+						Local $aEvent = QuickMIS("CNX", $sTempPath & "Purge\", 300,155,765,550)
+						If IsArray($aEvent) And UBound($aEvent) > 0 Then
+							For $i = 0 To UBound($aEvent) - 1
+								Local $EventName = StringSplit($aEvent[$i][0], "-")
+								If $g_bChkClanGamesDebug Then SetLog("Detected Event to Purge: " & $EventName[2])
+							Next
+							Local $key = Random(0, UBound($aEvent) - 1, 1)
+							If $g_bChkClanGamesDebug Then SetLog("StartAndPurge: " & $EventName[2])
+							Click($aEvent[$key][1], $aEvent[$key][2])
+							If _Sleep(1500) Then Return
+							StartsEvent($EventName[2], True)
+						EndIf
 						CloseClangamesWindow()
 						Return
 					EndIf
@@ -493,6 +503,8 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 				If $g_abCGMainLootItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "LootChallenges: " & $CGMainLoot[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainLoot[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				Else
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainLoot[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "B"
@@ -501,6 +513,8 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 				If $g_abCGMainBattleItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BattleChallenges: " & $CGMainBattle[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainBattle[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				Else
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainBattle[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "D"
@@ -509,6 +523,8 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 				If $g_abCGMainDestructionItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "DestructionChallenges: " & $CGMainDestruction[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainDestruction[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				Else
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainDestruction[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "A"
@@ -517,6 +533,8 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 				If $g_abCGMainAirItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "AirTroopChallenges: " & $CGMainAir[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainAir[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				Else
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainAir[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "G"
@@ -525,6 +543,8 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 				If $g_abCGMainGroundItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "GroundTroopChallenges: " & $CGMainGround[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainGround[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				Else
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainGround[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "M"
@@ -533,6 +553,8 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 				If $g_abCGMainMiscItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "MiscChallenges: " & $CGMainMisc[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainMisc[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				Else
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainMisc[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "S"
@@ -541,6 +563,8 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 				If $g_abCGMainSpellItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "SpellChallenges: " & $CGMainSpell[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainSpell[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				Else
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainSpell[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)	
 				EndIf
 			Next
 		Case "BBB"
@@ -549,6 +573,8 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 				If $g_abCGBBBattleItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBBattleChallenges: " & $CGBBBattle[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBBattle[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				Else
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBBattle[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "BBD"
@@ -557,6 +583,8 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 				If $g_abCGBBDestructionItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBDestructionChallenges: " & $CGBBDestruction[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBDestruction[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				Else
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBDestruction[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "BBT"
@@ -565,6 +593,8 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 				If $g_abCGBBTroopsItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBTroopsChallenges: " & $CGBBTroops[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBTroops[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+				Else
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBTroops[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case Else
@@ -767,11 +797,18 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min")
 		
 		If $g_bPurgeJob Then
-			If _Sleep(2500) Then Return
-			If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
-				Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
-				If _Sleep(1500) Then Return
-				SetLog("Click Trash", $COLOR_INFO)
+			For $i = 1 To 5 
+				If QuickMIS("BC1", $g_sImgTrashPurge, 100, 100, 700, 550, True) Then
+					Click($g_iQuickMISX + 100, $g_iQuickMISY + 100)
+					SetLog("Click Trash", $COLOR_INFO)
+					ExitLoop
+				Else
+					SetDebugLog("waiting for trash #" & $i)
+				EndIf
+				_Sleep(500)
+			Next
+			
+			For $i = 1 To 5
 				If IsEndBattlePage() Then
 					SetLog("Click OK", $COLOR_INFO)
 					Click(500, 400)
@@ -779,14 +816,13 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging Event ", 1)
 					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging Event ")
 					CloseClangamesWindow()
+					Return True
 				Else
-					SetLog("$g_sImgOkayPurge Issue", $COLOR_ERROR)
-					Return False
+					SetDebugLog("waiting for OK #" & $i)
 				EndIf
-			Else
-				SetLog("$g_sImgTrashPurge Issue", $COLOR_ERROR)
-				Return False
-			EndIf
+				_Sleep(500)
+			Next
+			Return False
 		EndIf
 		
 		;check if Challenge is BB Challenge, enabling force BB attack
@@ -908,6 +944,10 @@ Func StartAndPurgeEvent($bTest = False)
 	EndIf
 	CloseClangamesWindow()
 	Return True
+EndFunc
+
+Func FindEventToPurge()
+	
 EndFunc
 
 Func TrashFailedEvent()

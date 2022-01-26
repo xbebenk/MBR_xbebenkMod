@@ -1340,8 +1340,6 @@ Func FirstCheckRoutine()
 				_RunFunction($Index)
 				If _Sleep(50) Then Return
 				If $g_bRestart Then ExitLoop
-				;If CheckAndroidReboot() Then ContinueLoop
-				;If checkMainScreen(False) Then ContinueLoop
 			Next
 			checkSwitchAcc() ;switch to next account
 		EndIf
@@ -1481,10 +1479,8 @@ Func FirstCheckRoutine()
 		_RunFunction($Index)
 		If _Sleep(50) Then Return
 		If $g_bRestart Then ExitLoop
-		;If CheckAndroidReboot() Then ContinueLoop
-		;If checkMainScreen(False) Then ContinueLoop
 	Next
-
+	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then checkSwitchAcc()
 EndFunc
 
 Func BuilderBase()
