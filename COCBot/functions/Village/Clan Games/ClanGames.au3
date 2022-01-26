@@ -1089,19 +1089,19 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["SlayingTitans", 			"Slaying The Titans", 			11,  2, 1, "Win a Multiplayer Battles In Titan League"																	], _ ;|5h		|300
 			["NoHero", 					"No Heroics Allowed", 			 3,  5, 5, "Win a stars without using Heroes"																			], _ ;	|8h		|100
 			["NoMagic", 				"No-Magic Zone", 				 6,  5, 5, "Win a stars without using Spells"																			], _ ;	|8h		|100
-			["Scrappy6s", 				"Scrappy 6s", 					 6,  1, 1, "Gain 3 Stars Against Town Hall level 6"																		], _ ;	|8h		|200
-			["Super7s", 				"Super 7s", 					 7,  1, 1, "Gain 3 Stars Against Town Hall level 7"																		], _ ;	|8h		|200
-			["Exciting8s", 				"Exciting 8s", 					 8,  1, 1, "Gain 3 Stars Against Town Hall level 8"																		], _ ;	|8h		|200
-			["Noble9s", 				"Noble 9s", 					 9,  1, 1, "Gain 3 Stars Against Town Hall level 9"																		], _ ;	|8h		|200
-			["Terrific10s", 			"Terrific 10s", 				10,  1, 1, "Gain 3 Stars Against Town Hall level 10"																	], _ ;	|8h		|200
-			["Exotic11s", 			    "Exotic 11s", 					11,  1, 1, "Gain 3 Stars Against Town Hall level 11"																	], _ ;	|8h		|200
-			["Triumphant12s", 			"Triumphant 12s", 				12,  1, 1, "Gain 3 Stars Against Town Hall level 12"																	], _ ;	|8h		|200
+			["Scrappy6s", 				"Scrappy 6s", 					 6,  1, 4, "Gain 3 Stars Against Town Hall level 6"																		], _ ;	|8h		|200
+			["Super7s", 				"Super 7s", 					 7,  1, 4, "Gain 3 Stars Against Town Hall level 7"																		], _ ;	|8h		|200
+			["Exciting8s", 				"Exciting 8s", 					 8,  1, 4, "Gain 3 Stars Against Town Hall level 8"																		], _ ;	|8h		|200
+			["Noble9s", 				"Noble 9s", 					 9,  1, 4, "Gain 3 Stars Against Town Hall level 9"																		], _ ;	|8h		|200
+			["Terrific10s", 			"Terrific 10s", 				10,  1, 4, "Gain 3 Stars Against Town Hall level 10"																	], _ ;	|8h		|200
+			["Exotic11s", 			    "Exotic 11s", 					11,  1, 4, "Gain 3 Stars Against Town Hall level 11"																	], _ ;	|8h		|200
+			["Triumphant12s", 			"Triumphant 12s", 				12,  1, 4, "Gain 3 Stars Against Town Hall level 12"																	], _ ;	|8h		|200
 			["AttackUp", 				"Attack Up", 					 6,  1, 8, "Gain 3 Stars Against Town Hall a level higher"																], _ ;|8h		|200
 			["ClashOfLegends", 			"Clash of Legends", 			11,  2, 1, "Win a Multiplayer Battles In Legend League"                                                             	], _ ;
-			["GainStarsFromClanWars",	"3 Stars From Clan War",		 6,  0, 5, "Gain 3 Stars on Clan War"                                                             						], _ ;
+			["GainStarsFromClanWars",	"3 Stars From Clan War",		 6,  0, 99, "Gain 3 Stars on Clan War"                                                             						], _ ;
 			["SpeedyStars", 			"3 Stars in 60 seconds",		 6,  2, 2, "Gain 3 Stars (accumulated from many attacks) from Multiplayer Battle but only stars gained below a minute counted"], _ ;
 			["SuperCharge", 			"Deploy SuperTroops",			 6,  2, 1, "Deploy certain housing space of Any Super Troops"                                                           ], _ ;
-			["Tremendous13s", 			"Tremendous 13s", 				13,  1, 1, "Gain 3 Stars Against Town Hall level 13"                                                             		]]   ;
+			["Tremendous13s", 			"Tremendous 13s", 				13,  1, 4, "Gain 3 Stars Against Town Hall level 13"                                                             		]]   ;
 
 	Local $DestructionChallenges[34][6] = [ _
 			["Cannon", 					"Cannon", 				 6,  1, 1,"Destroy 5-25 Cannons in Multiplayer Battles"					], _ ;	|1h-8h	|75-350
@@ -1161,9 +1161,9 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 
     Local $BBBattleChallenges[4][6] = [ _
             ["StarM",					"BB Star Master",				6,  1, 1, "Collect certain amount of stars in Versus Battles"						], _ ; Earn 6 - 24 stars on the BB
-            ["Victories",				"BB Victories",					6,  5, 2, "Get certain count of Victories in Versus Battles"						], _ ; Earn 3 - 6 victories on the BB
+            ["Victories",				"BB Victories",					6,  5, 3, "Get certain count of Victories in Versus Battles"						], _ ; Earn 3 - 6 victories on the BB
 			["StarTimed",				"BB Star Timed",				6,  2, 2, "Earn stars in Versus Battles, but only stars gained below a minute counted"	], _
-            ["Destruction",				"BB Destruction",				6,  1, 3, "Earn certain amount of destruction percentage (%) in Versus Battles"			]] ; Earn 225% - 900% on BB attacks
+            ["Destruction",				"BB Destruction",				6,  1, 1, "Earn certain amount of destruction percentage (%) in Versus Battles"			]] ; Earn 225% - 900% on BB attacks
 
 	Local $BBDestructionChallenges[18][6] = [ _
             ["Airbomb",					"Air Bomb",                 	6,  1, 4, "Destroy certain number of Air Bomb in Versus Battles"		], _
@@ -1188,15 +1188,15 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 	Local $BBTroopsChallenges[11][6] = [ _
             ["RBarb",					"Raged Barbarian",              6,  1, 1, "Win 1-5 Attacks using Raged Barbarians in Versus Battle"	], _ ;BB Troops
             ["SArch",                 	"Sneaky Archer",                6,  1, 1, "Win 1-5 Attacks using Sneaky Archer in Versus Battle"	], _
-            ["BGiant",         			"Boxer Giant",             		6,  1, 2, "Win 1-5 Attacks using Boxer Giant in Versus Battle"		], _
-			["BMini",         			"Beta Minion",              	6,  1, 2, "Win 1-5 Attacks using Beta Minion in Versus Battle"		], _
-			["Bomber",                 	"Bomber",                  		6,  1, 2, "Win 1-5 Attacks using Bomber in Versus Battle"			], _
-			["BabyD",               	"Baby Dragon",                 	6,  1, 2, "Win 1-5 Attacks using Baby Dragon in Versus Battle"		], _
-			["CannCart",             	"Cannon Cart",               	6,  1, 3, "Win 1-5 Attacks using Cannon Cart in Versus Battle"		], _
-			["NWitch",                 	"Night Witch",                 	6,  1, 3, "Win 1-5 Attacks using Night Witch in Versus Battle"		], _
-			["DShip",                 	"Drop Ship",                  	6,  1, 4, "Win 1-5 Attacks using Drop Ship in Versus Battle"		], _
-			["SPekka",                 	"Super Pekka",                  6,  1, 4, "Win 1-5 Attacks using Super Pekka in Versus Battle"		], _
-			["HGlider",                 "Hog Glider",                  	6,  1, 4, "Win 1-5 Attacks using Hog Glider in Versus Battle"		]]
+            ["BGiant",         			"Boxer Giant",             		6,  1, 1, "Win 1-5 Attacks using Boxer Giant in Versus Battle"		], _
+			["BMini",         			"Beta Minion",              	6,  1, 1, "Win 1-5 Attacks using Beta Minion in Versus Battle"		], _
+			["Bomber",                 	"Bomber",                  		6,  1, 1, "Win 1-5 Attacks using Bomber in Versus Battle"			], _
+			["BabyD",               	"Baby Dragon",                 	6,  1, 1, "Win 1-5 Attacks using Baby Dragon in Versus Battle"		], _
+			["CannCart",             	"Cannon Cart",               	6,  1, 1, "Win 1-5 Attacks using Cannon Cart in Versus Battle"		], _
+			["NWitch",                 	"Night Witch",                 	6,  1, 1, "Win 1-5 Attacks using Night Witch in Versus Battle"		], _
+			["DShip",                 	"Drop Ship",                  	6,  1, 1, "Win 1-5 Attacks using Drop Ship in Versus Battle"		], _
+			["SPekka",                 	"Super Pekka",                  6,  1, 1, "Win 1-5 Attacks using Super Pekka in Versus Battle"		], _
+			["HGlider",                 "Hog Glider",                  	6,  1, 1, "Win 1-5 Attacks using Hog Glider in Versus Battle"		]]
 
 
 	; Just in Case
