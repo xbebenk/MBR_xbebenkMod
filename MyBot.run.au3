@@ -1311,8 +1311,7 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	checkMainScreen()
 	If $g_BBAttackOnly Then
-		Local $count = 0
-		While 1
+		For $count = 0 to 11
 			If $count > 9 Then
 				SetLog("Something maybe wrong!", $COLOR_INFO)
 				If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
@@ -1325,15 +1324,15 @@ Func FirstCheckRoutine()
 			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 				GotoBBTodoCG()
-			EndIf
-			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
-				SetLog("No event on ClanGames, Forced switch account", $COLOR_SUCCESS)
-				CheckSwitchAcc()
-				ExitLoop
+			Else
+				If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
+					SetLog("No event on ClanGames, Forced switch account", $COLOR_SUCCESS)
+					CheckSwitchAcc()
+					ExitLoop
+				EndIf
 			EndIf
 			If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
-			$count += 1
-		WEnd
+		Next
 	Else
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 			SetLog("Check ClanGames Early", $COLOR_INFO)
