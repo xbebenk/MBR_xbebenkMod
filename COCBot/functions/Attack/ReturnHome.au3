@@ -38,7 +38,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 			Else
 				If IsAttackPage() Then smartZap() ; Check to see if we should zap the DE Drills
 			EndIf
-			
+			#comments-start
 			;If Heroes were not activated: Hero Ability activation before End of Battle to restore health
 			If ($g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower Or $g_bCheckChampionPower) Then
 				;_CaptureRegion()
@@ -61,6 +61,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					EndIf
 				EndIf
 			EndIf
+			#comments-end
 		Else
 			SetDebugLog("Battle already over", $COLOR_DEBUG)
 		EndIf
