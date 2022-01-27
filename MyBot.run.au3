@@ -1311,28 +1311,30 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	checkMainScreen()
 	If $g_BBAttackOnly Then
-		For $count = 0 to 11
-			If $count > 9 Then
-				SetLog("Something maybe wrong!", $COLOR_INFO)
-				If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
-				SetLog("Exiting to main loop!", $COLOR_INFO)
-				ExitLoop
-			EndIf
-			SetLog("Trying to complete BB Challenges", $COLOR_INFO)
-			_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
-			If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
-			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-				GotoBBTodoCG()
-			Else
-				If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
-					SetLog("No event on ClanGames, Forced switch account", $COLOR_SUCCESS)
-					CheckSwitchAcc()
+		If isClanGamesWindow() Then ; check if clangames is running or not
+			For $count = 0 to 11
+				If $count > 9 Then
+					SetLog("Something maybe wrong!", $COLOR_INFO)
+					If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
+					SetLog("Exiting to main loop!", $COLOR_INFO)
 					ExitLoop
 				EndIf
-			EndIf
-			If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
-		Next
+				SetLog("Trying to complete BB Challenges", $COLOR_INFO)
+				_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
+				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
+				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+					GotoBBTodoCG()
+				Else
+					If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
+						SetLog("No event on ClanGames, Forced switch account", $COLOR_SUCCESS)
+						CheckSwitchAcc()
+						ExitLoop
+					EndIf
+				EndIf
+				If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
+			Next
+		EndIf
 	Else
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 			SetLog("Check ClanGames Early", $COLOR_INFO)
