@@ -90,17 +90,24 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 					Setlog("Clan Games Minute Remain: " & $sTimeCG)
 					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1440 Then ; purge, but not purge on last day of clangames
 						SetLog("Stop before completing your limit and only Purge")
-						Local $aEvent = QuickMIS("CNX", $sTempPath & "Purge\", 300,155,765,550)
-						If IsArray($aEvent) And UBound($aEvent) > 0 Then
-							For $i = 0 To UBound($aEvent) - 1
-								Local $EventName = StringSplit($aEvent[$i][0], "-")
-								If $g_bChkClanGamesDebug Then SetLog("Detected Event to Purge: " & $EventName[2])
+						Local $aX[4] = [290, 410, 540, 660]
+						Local $aY[3] = [120, 280, 430]
+						Local $aEvent
+						For $y = 0 To Ubound($aY) - 1
+							For $x = 0 To Ubound($aX) - 1
+								$aEvent = QuickMIS("CNX", $sTempPath & "Purge\", $aX[$x], $aY[$y], $aX[$x] + 100, $aY[$y] + 110)
+								If IsArray($aEvent) And UBound($aEvent) > 0 Then ExitLoop 2
 							Next
-							Local $key = Random(0, UBound($aEvent) - 1, 1)
-							If $g_bChkClanGamesDebug Then SetLog("StartAndPurge: " & $EventName[2])
-							Click($aEvent[$key][1], $aEvent[$key][2])
+						Next
+						
+						If IsArray($aEvent) And UBound($aEvent) > 0 Then
+							Local $EventName = StringSplit($aEvent[0][0], "-")
+							If $g_bChkClanGamesDebug Then SetLog("Detected Event to Purge: " & $EventName[2])
+							Click($aEvent[0][1], $aEvent[0][2])
 							If _Sleep(1500) Then Return
 							StartsEvent($EventName[2], True)
+						Else
+							ForcePurgeEvent(False, True) ; maybe will never hit here, but..
 						EndIf
 						CloseClangamesWindow()
 						Return
@@ -813,8 +820,8 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 					SetLog("Click OK", $COLOR_INFO)
 					Click(500, 400)
 					SetLog("StartsEvent and Purge job!", $COLOR_SUCCESS)
-					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging Event ", 1)
-					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging Event ")
+					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging Event, NearMaxPoint", 1)
+					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging Event, NearMaxPoint")
 					CloseClangamesWindow()
 					Return True
 				Else
