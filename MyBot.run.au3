@@ -1326,11 +1326,10 @@ Func FirstCheckRoutine()
 					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 					GotoBBTodoCG()
 				Else
-					If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
-						SetLog("No event on ClanGames, Forced switch account", $COLOR_SUCCESS)
-						CheckSwitchAcc()
-						ExitLoop
-					ElseIf $g_bForceSwitchifNoCGEvent Then ; Exit pathway if account switch is off
+					If $g_bForceSwitchifNoCGEvent Then 
+						SetLog("No event on ClanGames, trying to switch account", $COLOR_SUCCESS)
+						If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
+						SetLog("Account switch is off, returning to main loop", $COLOR_INFO)
 						ExitLoop
 					EndIf
 				EndIf
