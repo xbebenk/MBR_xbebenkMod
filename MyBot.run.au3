@@ -1318,7 +1318,7 @@ Func FirstCheckRoutine()
 				SetLog("Exiting to main loop!", $COLOR_INFO)
 				ExitLoop
 			EndIf
-			SetLog("Completing BB Challenges", $COLOR_INFO)
+			SetLog("Trying to complete BB Challenges", $COLOR_INFO)
 			_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
 			If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
 			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
