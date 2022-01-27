@@ -1314,8 +1314,9 @@ Func FirstCheckRoutine()
 		Local $count = 0
 		While 1
 			If $count > 9 Then
-				SetLog("Completed 10 BB Challenges.", $COLOR_INFO)
+				SetLog("Something maybe wrong!", $COLOR_INFO)
 				If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
+				SetLog("Exiting to main loop!", $COLOR_INFO)
 				ExitLoop
 			EndIf
 			SetLog("Completing BB Challenges", $COLOR_INFO)
