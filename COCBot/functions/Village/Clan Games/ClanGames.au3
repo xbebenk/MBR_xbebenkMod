@@ -1147,7 +1147,7 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["ClashOfLegends", 			"Clash of Legends", 			11,  2, 1, "Win a Multiplayer Battles In Legend League"                                                             	], _ ;
 			["GainStarsFromClanWars",	"3 Stars From Clan War",		 6,  0, 99, "Gain 3 Stars on Clan War"                                                             						], _ ;
 			["SpeedyStars", 			"3 Stars in 60 seconds",		 6,  2, 2, "Gain 3 Stars (accumulated from many attacks) from Multiplayer Battle but only stars gained below a minute counted"], _ ;
-			["SuperCharge", 			"Deploy SuperTroops",			 6,  2, 1, "Deploy certain housing space of Any Super Troops"                                                           ], _ ;
+			["SuperCharge", 			"Deploy SuperTroops",			 6,  2, 0, "Deploy certain housing space of Any Super Troops"                                                           ], _ ;
 			["Tremendous13s", 			"Tremendous 13s", 				13,  1, 4, "Gain 3 Stars Against Town Hall level 13"                                                             		]]   ;
 
 	Local $DestructionChallenges[34][6] = [ _
