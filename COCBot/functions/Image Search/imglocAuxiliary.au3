@@ -240,7 +240,7 @@ Func GetButtonDiamond($sButtonName)
 
 	Switch $sButtonName
 		Case "UpgradePets"
-			$btnDiamond = GetDiamondFromRect("590,530,735,595")
+			$btnDiamond = GetDiamondFromRect("590,500,735,565")
 		Case "ReloadButton"
 			$btnDiamond = GetDiamondFromRect("550,450,850,700")
 		Case "CloseFindMatch" ;Find Match Screen
