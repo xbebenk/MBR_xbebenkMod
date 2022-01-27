@@ -251,16 +251,13 @@ Func IsFullScreenWindow()
 EndFunc
 
 Func IsPetHousePage($bSetLog = True, $iLoop = 30)
-	Local $aIsPetHousePage[4] = [425, 170, 0x006F5D, 10] ; green pixel under title 'Pet House'
-
-	If IsPageLoop($aIsPetHousePage, $iLoop) Then
-		If ($g_bDebugSetlog Or $g_bDebugClick) And $bSetLog Then SetLog("**Pet House Window OK**", $COLOR_ACTION)
-		SetLog("**Pet House Window OK**", $COLOR_ACTION)
+	Local $result
+	$result = WaitforPixel(530, 120, 531, 121, "006C5C", 10, 2) ;green pixel under title 'Pet House'
+	
+	If $result Then
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found PetHousePage Window", $COLOR_ACTION)
 		Return True
 	EndIf
-
-	If $bSetLog Then SetLog("Cannot find Pet House Window...", $COLOR_ERROR) ; in case of $i = 29 in while loop
-	If $g_bDebugImageSave Then SaveDebugImage("IsPetHousePage")
-	If $iLoop > 1 Then AndroidPageError("IsPetHousePage")
 	Return False
 EndFunc   ;==>IsPetHousePage
+

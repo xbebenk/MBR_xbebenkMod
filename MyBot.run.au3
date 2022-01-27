@@ -1013,7 +1013,7 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 			If Not $g_bRunState Then Return
 			_ClanGames() ;Trying to do this above in the main loop
 			;ClickAway()
-			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
+			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
 				SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 				checkSwitchAcc()
 			EndIf
@@ -1104,10 +1104,7 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "DonateCC"
 			If $g_iActiveDonate And $g_bChkDonate Then
-				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
-				;xbenk
-				;If _Sleep($DELAYRUNBOT1) = False Then checkMainScreen(False)
 			EndIf
 		Case "DonateCC,Train"
 			If $g_iActiveDonate And $g_bChkDonate Then
@@ -1120,8 +1117,7 @@ Func __RunFunction($action)
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
 			EndIf
-			;xbenk
-			;If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
+			
 			If $g_bTrainEnabled Then ; check for training enabled in halt mode
 				If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 					TrainSystem()
@@ -1168,21 +1164,14 @@ Func __RunFunction($action)
 		Case "DailyChallenge"
 			DailyChallenges()
 			_Sleep($DELAYRUNBOT3)
-		Case "PetCheck"
-			PetGuiDisplay()
-			_Sleep($DELAYRUNBOT3)
 		 Case "RequestCC"
 			RequestCC()
-			;xbenk
 			ClickAway()
-			;If Not _Sleep($DELAYRUNBOT1) Then checkMainScreen(False)
 		Case "Laboratory"
 			Laboratory()
 			checkMainScreen(False)
 		Case "PetHouse"
 			PetHouse()
-			;xbenk
-			;If Not _Sleep($DELAYRUNBOT3) Then checkMainScreen(False)
 		Case "BoostSuperTroop"
 			BoostSuperTroop()
 			_Sleep($DELAYRUNBOT3)
@@ -1202,7 +1191,7 @@ Func __RunFunction($action)
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
 				_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
-				If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
+				If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
 					SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 					checkSwitchAcc()
 				EndIf
@@ -1269,7 +1258,7 @@ Func FirstCheck()
 		applyConfig()
 		saveConfig()
 	EndIf
-	
+
 	If $g_bchkSyncTHWall And $g_iTownHallLevel > 5 Then
 		For $z = 0 To 2
 			$g_aUpgradeWall[$z] = $g_iTownHallLevel - 2 + $z - 4
