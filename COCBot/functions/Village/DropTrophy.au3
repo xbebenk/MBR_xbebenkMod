@@ -192,7 +192,7 @@ Func DropTrophy()
 										If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 										Click($aRandomEdge[$iRandomXY][0], $aRandomEdge[$iRandomXY][1], 1, 0, "#0180") ;Drop Queen
 										If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
-										SelectDropTroop($g_iQueenSlot) ;If Queen was not activated: Boost Queen before EndBattle to restore some health
+										;SelectDropTroop($g_iQueenSlot) ;If Queen was not activated: Boost Queen before EndBattle to restore some health
 										ReturnfromDropTrophies()
 										If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 										ExitLoop
@@ -205,7 +205,7 @@ Func DropTrophy()
 										If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 										Click($aRandomEdge[$iRandomXY][0], $aRandomEdge[$iRandomXY][1], 1, 0, "#0178") ;Drop King
 										If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
-										SelectDropTroop($g_iKingSlot) ;If King was not activated: Boost King before EndBattle to restore some health
+										;SelectDropTroop($g_iKingSlot) ;If King was not activated: Boost King before EndBattle to restore some health
 										ReturnfromDropTrophies()
 										If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 										ExitLoop
@@ -218,7 +218,7 @@ Func DropTrophy()
 										If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 										Click($aRandomEdge[$iRandomXY][0], $aRandomEdge[$iRandomXY][1], 1, 0, "#0000") ;Drop Warden
 										If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
-										SelectDropTroop($g_iWardenSlot) ;If Warden was not activated: Boost Warden before EndBattle to restore some health
+										;SelectDropTroop($g_iWardenSlot) ;If Warden was not activated: Boost Warden before EndBattle to restore some health
 										ReturnfromDropTrophies()
 										If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 										ExitLoop
@@ -231,7 +231,7 @@ Func DropTrophy()
 										If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 										Click($aRandomEdge[$iRandomXY][0], $aRandomEdge[$iRandomXY][1], 1, 0, "#0000") ;Drop Champion
 										If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
-										SelectDropTroop($g_iChampionSlot) ;If Champion was not activated: Boost Champion before EndBattle to restore some health
+										;SelectDropTroop($g_iChampionSlot) ;If Champion was not activated: Boost Champion before EndBattle to restore some health
 										ReturnfromDropTrophies()
 										If _Sleep($DELAYDROPTROPHY1) Then ExitLoop
 										ExitLoop
