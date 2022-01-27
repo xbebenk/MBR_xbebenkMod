@@ -1330,6 +1330,8 @@ Func FirstCheckRoutine()
 						SetLog("No event on ClanGames, Forced switch account", $COLOR_SUCCESS)
 						CheckSwitchAcc()
 						ExitLoop
+					ElseIf $g_bForceSwitchifNoCGEvent Then ; Exit pathway if account switch is off
+						ExitLoop
 					EndIf
 				EndIf
 				If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
