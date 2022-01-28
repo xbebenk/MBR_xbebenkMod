@@ -1313,7 +1313,7 @@ Func FirstCheckRoutine()
 	If $g_BBAttackOnly Then
 		If isClanGamesWindow() Then ; check if clangames is running or not
 			For $count = 1 to 11
-				If $count > 9 Then
+				If $count > 10 Then
 					SetLog("Something maybe wrong!", $COLOR_INFO)
 					If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
 					SetLog("Exiting to main loop!", $COLOR_INFO)
