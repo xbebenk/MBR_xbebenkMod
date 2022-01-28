@@ -17,6 +17,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 	$g_bIsCGEventRunning = False ;just to be sure, reset to false
 	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false
 	$g_bIsCGPointAlmostMax = False ;just to be sure, reset to false
+	$g_bisCGPointMaxed = False ;just to be sure, reset to false
 	
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
@@ -79,10 +80,11 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 			Local $sTimeCG
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 				SetLog("Your score limit is reached! Congrats")
+				$g_bIsCGPointMaxed = True
 				CloseClangamesWindow()
 				Return
 			ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
-				SetLog("Your almost reached max point")
+				SetLog("You are almost reached max point")
 				$g_bIsCGPointAlmostMax = True
 				If $g_bChkClanGamesStopBeforeReachAndPurge Then
 					If IsEventRunning() Then Return

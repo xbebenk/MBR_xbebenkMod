@@ -1310,27 +1310,57 @@ Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	checkMainScreen()
-	If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
-		SetLog("Check ClanGames Early", $COLOR_INFO)
-		_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
-		If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-			SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-			GotoBBTodoCG()
-		EndIf
-		If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
-			SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-			PrepareDonateCC()
-			DonateCC()
-			TrainSystem()
-			
-			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'CollectFreeMagicItems']
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep(50) Then Return
-				If $g_bRestart Then ExitLoop
+	If $g_bCGBBAttackOnly Then
+		If isClanGamesWindow() Then ; check if clangames is running or not
+			For $count = 1 to 11
+				If $count > 10 Then
+					SetLog("Something maybe wrong!", $COLOR_INFO)
+					If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
+					SetLog("Exiting to main loop!", $COLOR_INFO)
+					ExitLoop
+				EndIf
+				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
+				_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
+				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
+				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+					GotoBBTodoCG()
+				Else
+					; Exit loop if want to purge near max point
+					If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop
+					If $g_bForceSwitchifNoCGEvent Then 
+						SetLog("No event on ClanGames, trying to switch account", $COLOR_SUCCESS)
+						If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
+						SetLog("Account switch is off, returning to main loop", $COLOR_INFO)
+						ExitLoop
+					EndIf
+				EndIf
+				If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
 			Next
-			checkSwitchAcc() ;switch to next account
+		EndIf
+	Else
+		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
+			SetLog("Check ClanGames Early", $COLOR_INFO)
+			_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
+			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+				GotoBBTodoCG()
+			EndIf
+			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
+				SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
+				PrepareDonateCC()
+				DonateCC()
+				TrainSystem()
+				
+				Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'CollectFreeMagicItems']
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If _Sleep(50) Then Return
+					If $g_bRestart Then ExitLoop
+				Next
+				checkSwitchAcc() ;switch to next account
+			EndIf
 		EndIf
 	EndIf
 	
