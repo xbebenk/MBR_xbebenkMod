@@ -1326,6 +1326,8 @@ Func FirstCheckRoutine()
 					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 					GotoBBTodoCG()
 				Else
+					; Exit loop if want to purge near max point
+					If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop
 					If $g_bForceSwitchifNoCGEvent Then 
 						SetLog("No event on ClanGames, trying to switch account", $COLOR_SUCCESS)
 						If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
