@@ -89,7 +89,6 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 				If $g_bChkClanGamesStopBeforeReachAndPurge Then
 					If IsEventRunning() Then Return
 					$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
-					If $sTimeCG = "" Then $sTimeCG = 0 ; handle if OCR fails
 					Setlog("Clan Games Minute Remain: " & $sTimeCG)
 					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1440 Then ; purge, but not purge on last day of clangames
 						SetLog("Stop before completing your limit and only Purge")
@@ -674,6 +673,7 @@ Func GetTimesAndScores()
 	;Check if OCR returned a valid timer format
 	If Not StringRegExp($sTimeRemain, "([0-2]?[0-9]?[DdHhSs]+)", $STR_REGEXPMATCH, 1) Then
 		SetLog("getOcrTimeGameTime(): no valid return value (" & $sTimeRemain & ")", $COLOR_ERROR)
+		$sTimeRemain = "1m"
 	EndIf
 
 	SetLog("Clan Games time remaining: " & $sTimeRemain, $COLOR_INFO)
