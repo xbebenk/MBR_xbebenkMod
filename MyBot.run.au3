@@ -1312,14 +1312,14 @@ Func FirstCheckRoutine()
 	checkMainScreen()
 	If $g_BBAttackOnly Then
 		If isClanGamesWindow() Then ; check if clangames is running or not
-			For $count = 0 to 11
+			For $count = 1 to 11
 				If $count > 9 Then
 					SetLog("Something maybe wrong!", $COLOR_INFO)
 					If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
 					SetLog("Exiting to main loop!", $COLOR_INFO)
 					ExitLoop
 				EndIf
-				SetLog("[" & $count & "]Trying to complete BB Challenges", $COLOR_INFO)
+				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
 				_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
 				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
 				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
