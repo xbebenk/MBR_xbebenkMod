@@ -84,7 +84,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 				CloseClangamesWindow()
 				Return
 			ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
-				SetLog("Your almost reached max point")
+				SetLog("You are almost reached max point")
 				$g_bIsCGPointAlmostMax = True
 				If $g_bChkClanGamesStopBeforeReachAndPurge Then
 					If IsEventRunning() Then Return
