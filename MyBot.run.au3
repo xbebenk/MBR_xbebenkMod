@@ -1312,6 +1312,7 @@ Func FirstCheckRoutine()
 	checkMainScreen()
 	If $g_bCGBBAttackOnly Then
 		If isClanGamesWindow() Then ; check if clangames is running or not
+			CloseClangamesWindow()
 			For $count = 1 to 11
 				If $count > 10 Then
 					SetLog("Something maybe wrong!", $COLOR_INFO)
@@ -1338,6 +1339,7 @@ Func FirstCheckRoutine()
 				If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
 			Next
 		EndIf
+		CloseClangamesWindow()
 	Else
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 			SetLog("Check ClanGames Early", $COLOR_INFO)
