@@ -673,7 +673,6 @@ Func GetTimesAndScores()
 	;Check if OCR returned a valid timer format
 	If Not StringRegExp($sTimeRemain, "([0-2]?[0-9]?[DdHhSs]+)", $STR_REGEXPMATCH, 1) Then
 		SetLog("getOcrTimeGameTime(): no valid return value (" & $sTimeRemain & ")", $COLOR_ERROR)
-		$sTimeRemain = "1m"
 	EndIf
 
 	SetLog("Clan Games time remaining: " & $sTimeRemain, $COLOR_INFO)
