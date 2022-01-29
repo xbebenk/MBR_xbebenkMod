@@ -1277,21 +1277,23 @@ Func FirstCheck()
 			EndIf
 		Next
 	EndIf
-	
+
 	If $g_bAlwaysDropHero Then
-		If $g_iTownHallLevel > 12 Then 
-			$g_aiAttackUseHeroes[$DB] = 15
-			$g_aiAttackUseHeroes[$LB] = 15
-		ElseIf $g_iTownHallLevel > 10 Then 
-			$g_aiAttackUseHeroes[$DB] = 7
-			$g_aiAttackUseHeroes[$LB] = 7
-		ElseIf $g_iTownHallLevel > 8 Then 
-			$g_aiAttackUseHeroes[$DB] = 3
-			$g_aiAttackUseHeroes[$LB] = 3
-		ElseIf $g_iTownHallLevel > 6 Then 
-			$g_aiAttackUseHeroes[$DB] = 1
-			$g_aiAttackUseHeroes[$LB] = 1
+		If $g_iTownHallLevel > 12 Then
+			$g_hChkABChampionAttack = 1
+			$g_hChkDBChampionAttack = 1
+		ElseIf $g_iTownHallLevel > 10 Then
+			$g_hChkABWardenAttack = 1
+			$g_hChkDBWardenAttack = 1
+		ElseIf $g_iTownHallLevel > 8 Then
+			$g_hChkABQueenAttack = 1
+			$g_hChkDBQueenAttack = 1
+		ElseIf $g_iTownHallLevel > 6 Then
+			$g_hChkABKingAttack = 1
+			$g_hChkDBKingAttack = 1
 		EndIf
+		applyConfig()
+		saveConfig()
 	EndIf
 
 	If Not $g_bRunState Then Return
