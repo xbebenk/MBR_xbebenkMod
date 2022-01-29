@@ -1519,7 +1519,7 @@ Func FirstCheckRoutine()
 		If _Sleep(50) Then Return
 		If $g_bRestart Then ExitLoop
 	Next
-	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then checkSwitchAcc()
+	;If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then checkSwitchAcc()
 EndFunc
 
 Func BuilderBase()
