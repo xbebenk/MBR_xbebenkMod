@@ -2284,7 +2284,7 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			$g_iTotalSpellValue = GUICtrlRead($g_hTxtTotalCountSpell)
 			; DoubleTrain - Demen
 			$g_bDoubleTrain = (GUICtrlRead($g_hChkDoubleTrain) = $GUI_CHECKED)
-			$g_bPreciseArmy = (GUICtrlRead($g_hChkPreciseArmy) = $GUI_CHECKED)
+			If Not $g_bIgnoreIncorrectTroopCombo Then $g_bPreciseArmy = (GUICtrlRead($g_hChkPreciseArmy) = $GUI_CHECKED)
 			chkOnDoubleTrain()
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_52_2

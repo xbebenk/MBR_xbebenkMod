@@ -177,7 +177,6 @@ Func btnStop()
 	If $g_bRunState Then
 		; always invoked in MyBot.run.au3!
 		EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
-		GUICtrlSetState($g_hBtnControl, $GUI_HIDE)
 		$g_bRunState = False ; Exit BotStart()
 	EndIf
 	$g_iBotAction = $eBotStop
@@ -255,6 +254,7 @@ Func ToggleControl()
 		GuiCtrlSetData($g_hBtnControl, $sText)
 	Else
 		SaveConfig()
+		ApplyConfig()
 		If $g_bRunState Then DisableGuiControls()
 		$sText = "Edit"
 		GuiCtrlSetData($g_hBtnControl, $sText)

@@ -103,7 +103,7 @@ Func CreateBottomPanel()
 			GUICtrlSetState(-1, $GUI_HIDE)
 		
 		$g_hBtnControl = GUICtrlCreateButton("Edit", $x + 245, $y + 70, 35, 20)
-			;GUICtrlSetState(-1, $GUI_HIDE)
+			GUICtrlSetState(-1, $GUI_HIDE)
 			GUICtrlSetOnEvent(-1, "ToggleControl")
 			
 		$g_hLblDonate = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "LblDonate", "Support Development"), $g_iSizeWGrpTab1 - 135, $y + 75, -1, -1, $SS_RIGHT)

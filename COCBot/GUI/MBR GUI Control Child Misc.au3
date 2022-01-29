@@ -1006,7 +1006,7 @@ Func chkOnDoubleTrain()
 		$g_bPreciseArmy = False
 		GUICtrlSetState($g_hChkPreciseArmy, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 	Else
-		GUICtrlSetState($g_hChkPreciseArmy, BitOR($GUI_UNCHECKED, $GUI_ENABLE))
+		GUICtrlSetState($g_hChkPreciseArmy, $GUI_ENABLE)
 	EndIf
 EndFunc ;==> chkOnDoubleTrain
 
