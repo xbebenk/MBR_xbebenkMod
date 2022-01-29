@@ -361,6 +361,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $g_bChkClanGamesStopBeforeReachAndPurge ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesSort, $g_bSortClanGames ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbClanGamesSort, $g_iSortClanGames)
+			GUICtrlSetState($g_hChkCGBBAttackOnly, $g_bChkCGBBAttackOnly ? $GUI_CHECKED : $GUI_UNCHECKED)
 			
 			For $i = 0 To UBound($g_ahCGMainLootItem) - 1
 				GUICtrlSetState($g_ahCGMainLootItem[$i], $g_abCGMainLootItem[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -504,6 +505,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkClanGamesStopBeforeReachAndPurge = (GUICtrlRead($g_hChkClanGamesStopBeforeReachAndPurge) = $GUI_CHECKED) ? 1 : 0
 			$g_bSortClanGames = (GUICtrlRead($g_hChkClanGamesSort) = $GUI_CHECKED) ? 1 : 0
 			$g_iSortClanGames = _GUICtrlComboBox_GetCurSel($g_hCmbClanGamesSort)
+			$g_bChkCGBBAttackOnly = (GUICtrlRead($g_hChkCGBBAttackOnly) = $GUI_CHECKED) ? 1 : 0
 			
 			For $i = 0 To UBound($g_ahCGMainLootItem) - 1
 				$g_abCGMainLootItem[$i] = BitAND(GUICtrlRead($g_ahCGMainLootItem[$i]), $GUI_CHECKED) ? 1 : 0

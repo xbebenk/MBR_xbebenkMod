@@ -956,6 +956,14 @@ Func chkSortClanGames()
 	EndIf
 EndFunc
 
+Func chkForcedOnlyBBEvent()
+	If GUICtrlRead($g_hChkCGBBAttackOnly) = $GUI_CHECKED Then
+		$g_bChkCGBBAttackOnly = True
+	Else
+		$g_bChkCGBBAttackOnly = False
+	EndIf
+EndFunc
+
 Func chkOnHaltAttack()
 	If GUICtrlRead($g_hChkMMSkipFirstCheckRoutine) = $GUI_CHECKED Then
 		$g_bSkipFirstCheckRoutine = True

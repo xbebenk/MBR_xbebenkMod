@@ -1328,7 +1328,7 @@ Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	checkMainScreen()
-	If $g_bCGBBAttackOnly Then
+	If $g_bChkCGBBAttackOnly Then
 		If isClanGamesWindow() Then ; check if clangames is running or not
 			_Sleep(1500)
 			CloseClangamesWindow()
