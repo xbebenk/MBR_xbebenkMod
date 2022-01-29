@@ -1277,6 +1277,22 @@ Func FirstCheck()
 			EndIf
 		Next
 	EndIf
+	
+	If $g_bAlwaysDropHero Then
+		If $g_iTownHallLevel > 12 Then 
+			$g_aiAttackUseHeroes[$DB] = 15
+			$g_aiAttackUseHeroes[$LB] = 15
+		ElseIf $g_iTownHallLevel > 10 Then 
+			$g_aiAttackUseHeroes[$DB] = 7
+			$g_aiAttackUseHeroes[$LB] = 7
+		ElseIf $g_iTownHallLevel > 8 Then 
+			$g_aiAttackUseHeroes[$DB] = 3
+			$g_aiAttackUseHeroes[$LB] = 3
+		ElseIf $g_iTownHallLevel > 6 Then 
+			$g_aiAttackUseHeroes[$DB] = 1
+			$g_aiAttackUseHeroes[$LB] = 1
+		EndIf
+	EndIf
 
 	If Not $g_bRunState Then Return
 	VillageReport()
@@ -1312,6 +1328,7 @@ Func FirstCheckRoutine()
 	checkMainScreen()
 	If $g_bCGBBAttackOnly Then
 		If isClanGamesWindow() Then ; check if clangames is running or not
+			_Sleep(1500)
 			CloseClangamesWindow()
 			For $count = 1 to 11
 				If $count > 10 Then
@@ -1339,6 +1356,7 @@ Func FirstCheckRoutine()
 				If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
 			Next
 		EndIf
+		_Sleep(1500)
 		CloseClangamesWindow()
 	Else
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
