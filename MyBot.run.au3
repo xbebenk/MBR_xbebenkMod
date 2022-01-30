@@ -1254,44 +1254,44 @@ Func FirstCheck()
 		applyConfig()
 		saveConfig()
 	EndIf
-
-	If $g_bchkSyncTHWall And $g_iTownHallLevel > 5 Then
-		For $z = 0 To 2
-			$g_aUpgradeWall[$z] = $g_iTownHallLevel - 2 + $z - 4
-			SetDebugLog("Set WallUpgrade [" & $z & "] -> Level = " & $g_aUpgradeWall[$z] + 4, $COLOR_INFO)
-		Next
-		;SaveResource 			 	 0 = TH6	  TH7		TH8			TH9		TH10	TH11	TH12		TH13
-		Local $WallSaveResourceGold[8] = [750000, 1000000, 2000000, 4000000, 5500000, 8500000, 11500000, 16000000]
-		Local $WallSaveResourceElix[8] = [750000, 1500000, 1500000, 2000000, 3000000, 6000000, 90000000, 16000000]
-		For $j = 0 To UBound($WallSaveResourceGold) - 1
-			If Int($g_iTownHallLevel) - 6 = $j Then
-				$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j]
-				$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j]
-				SetDebugLog("Set WallSaveResource = " & $g_iUpgradeWallMinElixir, $COLOR_INFO)
-				applyConfig()
-				saveConfig()
-			EndIf
-		Next
-	EndIf
 	
-	If $g_bAlwaysDropHero Then
-		If $g_iTownHallLevel > 12 Then
-			$g_hChkABChampionAttack = 1
-			$g_hChkDBChampionAttack = 1
-		EndIf
-		If $g_iTownHallLevel > 10 Then
-			$g_hChkABWardenAttack = 1
-			$g_hChkDBWardenAttack = 1
-		EndIf
-		If $g_iTownHallLevel > 8 Then
-			$g_hChkABQueenAttack = 1
-			$g_hChkDBQueenAttack = 1
-		EndIf
-		If $g_iTownHallLevel > 6 Then
-			$g_hChkABKingAttack = 1
-			$g_hChkDBKingAttack = 1
+	If $g_iTownHallLevel > 5 Then
+		If $g_bchkSyncTHWall Then
+			For $z = 0 To 2
+				$g_aUpgradeWall[$z] = $g_iTownHallLevel - 2 + $z - 4
+				SetDebugLog("Set WallUpgrade [" & $z & "] -> Level = " & $g_aUpgradeWall[$z] + 4, $COLOR_INFO)
+			Next
+			;SaveResource 			 	 0 = TH6	  TH7		TH8			TH9		TH10	TH11	TH12		TH13
+			Local $WallSaveResourceGold[8] = [750000, 1000000, 2000000, 4000000, 5500000, 8500000, 11500000, 16000000]
+			Local $WallSaveResourceElix[8] = [750000, 1500000, 1500000, 2000000, 3000000, 6000000, 90000000, 16000000]
+			For $j = 0 To UBound($WallSaveResourceGold) - 1
+				If Int($g_iTownHallLevel) - 6 = $j Then
+					$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j]
+					$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j]
+					SetDebugLog("Set WallSaveResource = " & $g_iUpgradeWallMinElixir, $COLOR_INFO)
+				EndIf
+			Next
 		EndIf
 		applyConfig()
+		If $g_bAlwaysDropHero Then
+			If $g_iTownHallLevel > 12 Then
+				GUICtrlSetState($g_hChkABChampionAttack, $GUI_CHECKED)
+				GUICtrlSetState($g_hChkDBChampionAttack, $GUI_CHECKED)
+			EndIf
+			If $g_iTownHallLevel > 10 Then
+				GUICtrlSetState($g_hChkABWardenAttack, $GUI_CHECKED)
+				GUICtrlSetState($g_hChkDBWardenAttack, $GUI_CHECKED)
+			EndIf
+			If $g_iTownHallLevel > 8 Then
+				GUICtrlSetState($g_hChkABQueenAttack, $GUI_CHECKED)
+				GUICtrlSetState($g_hChkDBQueenAttack, $GUI_CHECKED)
+			EndIf
+			If $g_iTownHallLevel > 6 Then
+				GUICtrlSetState($g_hChkABKingAttack, $GUI_CHECKED)
+				GUICtrlSetState($g_hChkDBKingAttack, $GUI_CHECKED)
+			EndIf
+		EndIf
+		
 		saveConfig()
 	EndIf
 
