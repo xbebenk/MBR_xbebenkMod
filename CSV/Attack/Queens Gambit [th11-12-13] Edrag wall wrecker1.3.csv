@@ -37,13 +37,13 @@ SIDE  |0          |0          |0          |0          |0          |0          |1
 SIDEB |9          |5          |0          |0          |0          |0          |0          |           |           |           |
       |                                                                                                                       |
       |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|___________|___________|
-MAKE  |Q          |FRONT-LEFT |10         |0          |EXT-INT    |10         |0          |           |           |           |
-MAKE  |R          |FRONT-RIGHT|10         |0          |INT-EXT    |10         |0          |           |           |           |
-MAKE  |O          |FRONT-LEFT |10         |-10        |INT-EXT    |3          |4          |           |           |           |
-MAKE  |S          |FRONT-LEFT |10         |-11        |INT-EXT    |3          |4          |           |           |           |
-MAKE  |T          |FRONT-RIGHT|10         |-11        |INT-EXT    |2          |5          |           |           |           |
-MAKE  |U          |FRONT-LEFT |10         |-17        |INT-EXT    |2          |2          |           |           |           |
-MAKE  |V          |FRONT-RIGHT|10         |-19        |INT-EXT    |1          |3          |           |           |           |
+MAKE  |Q          |FRONT-LEFT |10         |0          |EXT-INT    |0          |0          |           |           |           |
+MAKE  |R          |FRONT-RIGHT|10         |0          |INT-EXT    |0          |0          |           |           |           |
+MAKE  |O          |FRONT-LEFT |10         |-10        |INT-EXT    |3          |2          |           |           |           |
+MAKE  |S          |FRONT-LEFT |10         |-9         |INT-EXT    |3          |2          |           |           |           |
+MAKE  |T          |FRONT-RIGHT|10         |-10        |INT-EXT    |2          |2          |           |           |           |
+MAKE  |U          |FRONT-LEFT |10         |-16        |INT-EXT    |2          |2          |           |           |           |
+MAKE  |V          |FRONT-RIGHT|10         |-17        |INT-EXT    |1          |2          |           |           |           |
 MAKE  |C          |LEFT-FRONT |10         |0          |EXT-INT    |0          |0          |           |           |           |
 MAKE  |D          |RIGHT-FRONT|10         |0          |EXT-INT    |0          |0          |           |           |           |
 MAKE  |W          |LEFT-FRONT |1          |0          |IGNORE     |0          |0          |INFERNO    |           |           |
@@ -80,7 +80,7 @@ DROP  |Q          |8,4,3      |3          |EDrag      |70-95      |60-90      |1
 DROP  |R          |1,3,8      |3          |EDrag      |60-82      |37-50      |40-60      |           |           | 		  |
 DROP  |Q          |10         |1          |SiegeB     |0          |50-70      |100        |           |           |           |
 DROP  |Q          |10         |1          |Warden     |50-70      |0          |0          |           |           |           |
-WAIT  |5500       |           |           |           |           |           |           |           |           |           |
+WAIT  |3500       |           |           |           |           |           |           |           |           |           |
 DROP  |Q          |10         |1          |BattleB    |0          |50-70      |100        |           |           |           |
 DROP  |O          |5          |1          |RSpell     |0          |0          |0          |           |           |           |
 DROP  |S          |1          |1          |RSpell     |0          |0          |0          |           |           |           |
@@ -88,13 +88,13 @@ DROP  |T          |4          |1          |RSpell     |0          |0          |0
 DROP  |Q          |10         |1          |Queen      |0          |0          |150-200    |           |           |           |
 DROP  |D          |9          |1          |Champion   |0          |0          |150-200    |           |           |      	  |
 DROP  |B          |1          |1          |FSpell     |0          |0          |100        |EAGLE      |           |           |
-WAIT  |4000       |           |           |           |           |           |           |           |           |           |
+DROP  |K          |1          |1          |FSpell     |0          |0          |100-150    |INFERNO    |           |           |
+WAIT  |1000       |           |           |           |           |           |           |           |           |           |
 DROP  |P          |1          |1          |FSpell     |0          |0          |100        |TOWNHALL   |           |           |
-WAIT  |4000       |           |           |           |           |           |           |           |           |           |
+WAIT  |2000       |           |           |           |           |           |           |           |           |           |
 DROP  |Q          |10         |1          |Warden     |50-70      |0          |0          |           |           |           |
-DROP  |B          |1          |1          |FSpell     |0          |0          |100        |EAGLE      |           |           |
 DROP  |U          |2          |1          |RSpell     |0          |0          |500        |           |           |           |
 DROP  |V          |4          |1          |RSpell     |0          |0          |2000       |           |           |           |
-DROP  |K          |1          |1          |FSpell     |0          |0          |100-150    |INFERNO    |           |           |
+DROP  |B          |1          |1          |FSpell     |0          |0          |100        |EAGLE      |           |           |
 DROP  |W          |1          |1          |FSpell     |0          |0          |100-150    |INFERNO    |           |           |
 DROP  |B          |1          |1          |FSpell     |0          |0          |100        |EAGLE      |           |           |

@@ -449,6 +449,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkClanGamesStopBeforeReachAndPurge, $g_sProfileConfigPath, "other", "ChkClanGamesStopBeforeReachAndPurge", True, "Bool")
 	IniReadS($g_bSortClanGames, $g_sProfileConfigPath, "other", "ChkClanGamesSort", True, "Bool")
 	IniReadS($g_iSortClanGames, $g_sProfileConfigPath, "other", "ClanGamesSortBy", 0, "int")
+	IniReadS($g_bChkCGBBAttackOnly, $g_sProfileConfigPath, "other", "ChkCGBBAttackOnly", False, "Bool")
 	
 	Local $str
 	;ClanGames MainVillage Loot Challenges

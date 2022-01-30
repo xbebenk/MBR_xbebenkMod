@@ -32,7 +32,7 @@ Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames60 = 0, $g_hChkClanGamesDeb
 Global $g_hTxtClanGamesLog = 0, $g_hLblRemainTime = 0 , $g_hLblYourScore = 0
 Global $g_hGUI_CGSettings = 0, $g_hBtnCGSettingsOpen = 0, $g_hBtnCGSettingsClose = 0
 Global $g_hChkForceBBAttackOnClanGames = 0, $g_hChkClanGamesPurgeAny = 0, $g_hChkClanGamesStopBeforeReachAndPurge = 0 
-Global $g_hChkClanGamesSort = 0, $g_hCmbClanGamesSort = 0
+Global $g_hChkClanGamesSort = 0, $g_hCmbClanGamesSort = 0, $g_hChkCGBBAttackOnly = 0
 Global $g_hLabelClangamesDesc = 0, $g_hChkCGRootEnabledAll = 0
 Global $g_hClanGamesTV = 0, $g_hChkCGMainLoot = 0, $g_hChkCGMainBattle = 0, $g_hChkCGMainDestruction = 0
 Global $g_hChkCGMainAir = 0, $g_hChkCGMainGround = 0, $g_hChkCGMainMisc = 0, $g_hChkCGMainSpell = 0
@@ -661,10 +661,15 @@ Func CreateClanGamesSettings()
 		$g_hCmbClanGamesSort = GUICtrlCreateCombo("", $x + 20, $y, 120, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		Local $sCmbTxt = "Easier Difficulties|Longest Time"
 		GUICtrlSetData(-1, $sCmbTxt, "Easier Difficulties")
+	$y += 23
+		$g_hChkCGBBAttackOnly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCGBBAttackOnly", "Forced Only Do BuilderBase Event"), $x, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCGBBAttackOnly", "Enable Forced Only Do BuilderBase Event"))
+		GUICtrlSetOnEvent(-1, "chkForcedOnlyBBEvent")
 	$y += 40
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ClangamesDesc", "Description"), $x - 10, $y - 15, 250, 120)
 		$g_hLabelClangamesDesc = GUICtrlCreateLabel("", $x, $y, 230, 100)
 			GUICtrlSetFont(-1, 9, $FW_BOLD, $GUI_FONTITALIC)
+	
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	$y += 140
 	$g_hChkCGRootEnabledAll = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCGRootEnableAllItem", "Challenges inherit Challenge Category"), $x, $y, -1, -1)

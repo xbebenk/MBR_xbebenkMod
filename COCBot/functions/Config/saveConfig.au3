@@ -413,6 +413,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkClanGamesStopBeforeReachAndPurge", $g_bChkClanGamesStopBeforeReachAndPurge ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesSort", $g_bSortClanGames ? 1 : 0)
 	_Ini_Add("other", "ClanGamesSortBy", $g_iSortClanGames)
+	_Ini_Add("other", "ChkCGBBAttackOnly", $g_bChkCGBBAttackOnly ? 1 : 0)
 	
 	Local $str = ""
 	For $i = 0 To UBound($g_abCGMainLootItem) - 1

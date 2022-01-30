@@ -41,6 +41,7 @@ Func BotStart($bAutostartDelay = 0)
 
 	EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
 	;$g_iFirstAttack = 0
+	GUICtrlSetState($g_hBtnControl, $GUI_SHOW)
 
 	$g_bTrainEnabled = True
 	$g_bDonationEnabled = True
@@ -164,6 +165,7 @@ Func BotStop()
 	Local $aCtrlState
 	EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
 	;$g_bFirstStart = true
+	GUICtrlSetState($g_hBtnControl, $GUI_HIDE)
 
 	EnableGuiControls()
 

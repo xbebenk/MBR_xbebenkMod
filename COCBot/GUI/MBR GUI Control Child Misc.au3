@@ -956,6 +956,14 @@ Func chkSortClanGames()
 	EndIf
 EndFunc
 
+Func chkForcedOnlyBBEvent()
+	If GUICtrlRead($g_hChkCGBBAttackOnly) = $GUI_CHECKED Then
+		$g_bChkCGBBAttackOnly = True
+	Else
+		$g_bChkCGBBAttackOnly = False
+	EndIf
+EndFunc
+
 Func chkOnHaltAttack()
 	If GUICtrlRead($g_hChkMMSkipFirstCheckRoutine) = $GUI_CHECKED Then
 		$g_bSkipFirstCheckRoutine = True
@@ -998,7 +1006,7 @@ Func chkOnDoubleTrain()
 		$g_bPreciseArmy = False
 		GUICtrlSetState($g_hChkPreciseArmy, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 	Else
-		GUICtrlSetState($g_hChkPreciseArmy, BitOR($GUI_UNCHECKED, $GUI_ENABLE))
+		GUICtrlSetState($g_hChkPreciseArmy, $GUI_ENABLE)
 	EndIf
 EndFunc ;==> chkOnDoubleTrain
 

@@ -693,7 +693,7 @@ Func runBot() ;Bot that runs everything in order
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
-	GUICtrlSetState($g_hBtnControl, $GUI_SHOW)
+
 	FirstCheck()
 
 	While 1
@@ -1217,11 +1217,7 @@ Func FirstCheck()
 	If _Sleep(50) Then Return
 	checkMainScreen()
 	VillageReport(True, True)
-	If Not $g_bRunState Then
-		GUICtrlSetState($g_hBtnControl, $GUI_HIDE)
-		Return
-	EndIf
-
+	
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
 	$g_bRestart = False
@@ -1277,7 +1273,7 @@ Func FirstCheck()
 			EndIf
 		Next
 	EndIf
-
+	
 	If $g_bAlwaysDropHero Then
 		If $g_iTownHallLevel > 12 Then
 			$g_hChkABChampionAttack = 1
@@ -1331,7 +1327,7 @@ Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	checkMainScreen()
-	If $g_bCGBBAttackOnly Then
+	If $g_bChkCGBBAttackOnly Then
 		If isClanGamesWindow() Then ; check if clangames is running or not
 			_Sleep(1500)
 			CloseClangamesWindow()
@@ -1524,7 +1520,6 @@ Func FirstCheckRoutine()
 		If _Sleep(50) Then Return
 		If $g_bRestart Then ExitLoop
 	Next
-	;If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then checkSwitchAcc()
 EndFunc
 
 Func BuilderBase()
