@@ -138,9 +138,6 @@ Func CheckSwitchAcc()
 		If $bReachAttackLimit And $iWaitTime <= 0 Then
 			SetLog("This account has attacked twice in a row, switching to another account", $COLOR_INFO)
 			SetSwitchAccLog(" - Reach attack limit: " & $g_aiAttackedCount - $g_aiAttackedCountSwitch[$g_iCurAccount])
-			RequestCC(False)
-			checkArmyCamp(False, True)
-			TrainSystem()
 			$bForceSwitch = True
 		EndIf
 	EndIf
