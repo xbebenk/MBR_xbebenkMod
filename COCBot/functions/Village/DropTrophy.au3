@@ -278,6 +278,7 @@ Func DropTrophy()
 			EndIf
 		WEnd
 		SetDebugLog("DropTrophy(): End", $COLOR_DEBUG)
+		TrainSystem()
 	Else
 		SetDebugLog("Drop Trophy SKIP", $COLOR_DEBUG)
 	EndIf

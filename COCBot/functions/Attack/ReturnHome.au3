@@ -225,7 +225,7 @@ Func ReturnfromDropTrophies()
 				$j += 1
 			EndIf
 			If $j > 4 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
-			If _Sleep(100) Then Return
+			If _Sleep(500) Then Return
 		WEnd
 	Else
 		SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
@@ -236,10 +236,10 @@ Func ReturnfromDropTrophies()
 		If IsReturnHomeBattlePage(True) Then
 			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			; sometimes 1st click is not closing, so try again
+			If _Sleep(1000) Then Return
 		Else
 			ExitLoop
 		EndIf
-		If _Sleep(1000) Then Return
 	Next
 	
 	$g_bFullArmy = False ; forcing check the army

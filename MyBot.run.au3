@@ -955,10 +955,7 @@ Func _Idle() ;Sequence that runs until Full Army
 			DropTrophy()
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ExitLoop
-			;If $g_bFullArmy Then ExitLoop		; Never will reach to SmartWait4Train() to close coc while Heroes/Spells not ready 'if' Army is full, so better to be commented
 			If _Sleep($DELAYIDLE1) Then ExitLoop
-			;xbenk
-			;checkMainScreen(False)
 		EndIf
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_bRestart Then ExitLoop
