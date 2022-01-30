@@ -1282,13 +1282,16 @@ Func FirstCheck()
 		If $g_iTownHallLevel > 12 Then
 			$g_hChkABChampionAttack = 1
 			$g_hChkDBChampionAttack = 1
-		ElseIf $g_iTownHallLevel > 10 Then
+		EndIf
+		If $g_iTownHallLevel > 10 Then
 			$g_hChkABWardenAttack = 1
 			$g_hChkDBWardenAttack = 1
-		ElseIf $g_iTownHallLevel > 8 Then
+		EndIf
+		If $g_iTownHallLevel > 8 Then
 			$g_hChkABQueenAttack = 1
 			$g_hChkDBQueenAttack = 1
-		ElseIf $g_iTownHallLevel > 6 Then
+		EndIf
+		If $g_iTownHallLevel > 6 Then
 			$g_hChkABKingAttack = 1
 			$g_hChkDBKingAttack = 1
 		EndIf
