@@ -698,12 +698,13 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
 			Local $aResult = FindRushTHPriority()
 			If isArray($aResult) And UBound($aResult) > 0 Then
+				_ArraySort($aResult, 0, 0, 0, 3)
 				For $y = 0 To UBound($aResult) - 1
-					SetDebugLog("RushTHPriority: " & $aResult[$y][2] & ", Cost: " & $aResult[$y][3] & " Coord [" & $aResult[$y][0] & "," & $aResult[$y][1] & "]", $COLOR_INFO)
+					SetDebugLog("RushTHPriority: " & $aResult[$y][0] & ", Cost: " & $aResult[$y][3] & " Coord [" & $aResult[$y][1] & "," & $aResult[$y][2] & "]", $COLOR_INFO)
 				Next
 				For $y = 0 To UBound($aResult) - 1
 					If $aResult[$y][3] > 100 Then ;filter only upgrade with readable upgrade cost
-						Click($aResult[$y][0], $aResult[$y][1])
+						Click($aResult[$y][1], $aResult[$y][2])
 						If _Sleep(1000) Then Return
 						If DoUpgrade($bTest) Then
 							$z = 0 ;reset
@@ -717,6 +718,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			Else
 				SetLog("RushTHPriority Building Not Found", $COLOR_INFO)
 			EndIf
+			If Not $g_bRunState Then Return
 		EndIf
 		
 		Local $THLevelAchieved = False
@@ -736,12 +738,13 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			Local $aResult = FindEssentialBuilding()
 			$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True)
 			If isArray($aResult) And UBound($aResult) > 0 Then
+				_ArraySort($aResult, 0, 0, 0, 3)
 				For $y = 0 To UBound($aResult) - 1
-					SetDebugLog("Essential Building: " & $aResult[$y][2] & ", Cost: " & $aResult[$y][3] & " Coord [" & $aResult[$y][0] & "," & $aResult[$y][1] & "]", $COLOR_INFO)
+					SetDebugLog("Essential Building: " & $aResult[$y][0] & ", Cost: " & $aResult[$y][3] & " Coord [" & $aResult[$y][1] & "," & $aResult[$y][2] & "]", $COLOR_INFO)
 				Next
 				For $y = 0 To UBound($aResult) - 1
 					If $aResult[$y][3] > 100 Then ;filter only upgrade with readable upgrade cost
-						Click($aResult[$y][0], $aResult[$y][1])
+						Click($aResult[$y][1], $aResult[$y][2])
 						If _Sleep(1000) Then Return
 						If DoUpgrade($bTest) Then
 							$z = 0 ;reset
@@ -755,6 +758,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			Else
 				SetLog("Essential Building Not Found", $COLOR_INFO)
 			EndIf
+			If Not $g_bRunState Then Return
 		Else 
 			SetLog("Skip Search Essential Building", $COLOR_INFO)
 		EndIf
@@ -771,6 +775,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
+		If Not $g_bRunState Then Return
 		ClickDragAUpgrade("up", 328);do scroll up
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If _Sleep(1000) Then Return
@@ -779,25 +784,23 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 EndFunc ;==>FindNewBuilding
 
 Func FindRushTHPriority()
-	Local $aTmpTHRushCoord, $aTHRushCoord[0][4], $aRushTH, $UpgradeCost
-
-	$aTmpTHRushCoord = QuickMIS("CX", $g_sImgAUpgradeRushTHPriority, 180, 80, 350, 369, True)
+	Local $aTmpTHRushCoord, $aTHRushCoord[0][4], $aRushTH[3], $UpgradeCost
+	$aTmpTHRushCoord = QuickMIS("CNX", $g_sImgAUpgradeRushTHPriority, 180, 80, 350, 369, True)
 	If IsArray($aTmpTHRushCoord) And UBound($aTmpTHRushCoord) > 0 Then
 		SetLog("Found " & UBound($aTmpTHRushCoord) & " Image RushTHPriority", $COLOR_INFO)
 		For $j = 0 To UBound($aTmpTHRushCoord) - 1
-			$aRushTH = StringSplit($aTmpTHRushCoord[$j], ",", $STR_NOCOUNT)
-			If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 180, $aRushTH[1] + 80 -10, 260, $aRushTH[1] + 80 +10) Then
+			If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 180, $aTmpTHRushCoord[$j][2] -10, 260, $aTmpTHRushCoord[$j][2] + 10) Then
 				SetDebugLog("Building " & $j & " is new, skip!", $COLOR_ERROR)
 				ContinueLoop ;skip New Building
 			EndIf
-			Local $RushTHBuildingName = QuickMIS("N1", $g_sImgAUpgradeRushTHPriority, 180, $aRushTH[1] + 80 - 10, 350, $aRushTH[1] + 80 + 10)
-			$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aRushTH[0] + 180 + 80, $aRushTH[1] + 80 - 8, 150, 20, True)
-			_ArrayAdd($aTHRushCoord, $aRushTH[0]+180 & "|" & $aRushTH[1]+80 & "|" & $RushTHBuildingName & "|" & $UpgradeCost, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
+			_ArrayAdd($aTHRushCoord, String($aTmpTHRushCoord[$j][0]) & "|" & $aTmpTHRushCoord[$j][1] & "|" & $aTmpTHRushCoord[$j][2])
 		Next
-		_ArraySort($aTHRushCoord, 1, 0, 0, 3)
 		For $j = 0 To UBound($aTHRushCoord) - 1
-			SetDebugLog("[" & $j & "] Building: " & $aTHRushCoord[$j][2] & ", Cost=" & $aTHRushCoord[$j][3], $COLOR_DEBUG)
+			$UpgradeCost = getOcrAndCapture("coc-NewCapacity", 350, $aTHRushCoord[$j][2] - 8, 150, 20, True)
+			$aTHRushCoord[$j][3] = Number($UpgradeCost)
+			SetDebugLog("[" & $j & "] Building: " & $aTHRushCoord[$j][0] & ", Cost=" & $aTHRushCoord[$j][3] & " Coord [" &  $aTHRushCoord[$j][1] & "," & $aTHRushCoord[$j][2] & "]", $COLOR_DEBUG)
 		Next
+		_ArraySort($aTHRushCoord, 0, 0, 0, 3)
 		Return $aTHRushCoord
 	Else
 		SetDebugLog("Not Array Building", $COLOR_DEBUG)
@@ -808,35 +811,33 @@ EndFunc
 Func FindEssentialBuilding()
 	Local $sImagePath = @ScriptDir & "\imgxml\Resources\Auto Upgrade\EssentialBuilding\"
 	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\EssentialBuilding\"
-	Local $aTmpEssentialBuildingCoord, $aEssentialBuildingCoord[0][4], $aEssentialBuilding, $UpgradeCost
-	;Remove All previous file (in case setting changed)
+	Local $BuildingCoord, $aEssentialBuildingCoord[0][4], $aEssentialBuilding, $UpgradeCost
 	DirRemove($sTempPath, $DIR_REMOVE)
-	
 	EssentialBuildingImageCopy($sImagePath, $sTempPath)
-	$aTmpEssentialBuildingCoord = QuickMIS("CX", $sTempPath, 180, 80, 350, 369, True)
-	If IsArray($aTmpEssentialBuildingCoord) And UBound($aTmpEssentialBuildingCoord) > 0 Then
-		SetLog("Found " & UBound($aTmpEssentialBuildingCoord) & " Image EssentialBuilding", $COLOR_INFO)
-		For $j = 0 To UBound($aTmpEssentialBuildingCoord) - 1
-			$aEssentialBuilding = StringSplit($aTmpEssentialBuildingCoord[$j], ",", $STR_NOCOUNT)
-			If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 180, $aEssentialBuilding[1] + 80 -10, 260, $aEssentialBuilding[1] + 80 +10) Then
+	
+	$BuildingCoord = QuickMIS("CNX", $sTempPath, 180, 80, 350, 400, True)
+	If IsArray($BuildingCoord) And UBound($BuildingCoord) > 0 Then
+		SetLog("Found " & UBound($BuildingCoord) & " Image EssentialBuilding", $COLOR_INFO)
+		For $j = 0 To UBound($BuildingCoord) - 1
+			If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 180, $BuildingCoord[$j][2] - 10, 260, $BuildingCoord[$j][2] + 10) Then
 				SetDebugLog("Building " & $j & " is new, skip!", $COLOR_ERROR)
 				ContinueLoop ;skip New Building
 			EndIf
-			Local $EssentialBuildingName = QuickMIS("N1", $sTempPath, 180, $aEssentialBuilding[1] + 80 - 10, 350, $aEssentialBuilding[1] + 80 + 10)
-			If $EssentialBuildingName = "BombT" Then
+			If $BuildingCoord[$j][0] = "BombT" Then
 				SetDebugLog("Building " & $j & " Detected as Bomb Tower, lets check if it Bomb or a Bomb Tower", $COLOR_INFO)
-				If Not QuickMIS("BC1", $sImagePath & "Tower\", $aEssentialBuilding[0] + 180 + 10, $aEssentialBuilding[1] + 80 -10, 300, $aEssentialBuilding[1] + 80 +10) Then
+				If Not QuickMIS("BC1", $sImagePath & "Tower\", $BuildingCoord[$j][1] + 10, $BuildingCoord[$j][2] - 10, 300, $BuildingCoord[$j][2] + 10) Then
 					SetDebugLog("Building " & $j & " is Not Bomb Tower, skip!", $COLOR_ERROR)
 					ContinueLoop ;skip Not Bomb Tower
 				EndIf				
 			EndIf
-			$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aEssentialBuilding[0] + 180 + 80, $aEssentialBuilding[1] + 80 - 8, 150, 20, True)
-			_ArrayAdd($aEssentialBuildingCoord, $aEssentialBuilding[0]+180 & "|" & $aEssentialBuilding[1]+80 & "|" & $EssentialBuildingName & "|" & $UpgradeCost, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
+			_ArrayAdd($aEssentialBuildingCoord, String($BuildingCoord[$j][0]) & "|" & $BuildingCoord[$j][1] & "|" & $BuildingCoord[$j][2])
 		Next
-		_ArraySort($aEssentialBuildingCoord, 1, 0, 0, 1)
-		For $j = 0 To UBound($aEssentialBuildingCoord) - 1
-			SetLog("[" & $j & "] Building: " & $aEssentialBuildingCoord[$j][2] & ", Cost=" & $aEssentialBuildingCoord[$j][3], $COLOR_INFO)
+		For $j = 0 To UBound($aEssentialBuildingCoord) - 1 
+			$UpgradeCost = getOcrAndCapture("coc-NewCapacity", 350, $BuildingCoord[$j][2] - 8, 150, 20, True)
+			$aEssentialBuildingCoord[$j][3] = Number($UpgradeCost)
+			SetLog("[" & $j & "] Building: " & $aEssentialBuildingCoord[$j][0] & ", Cost=" & $aEssentialBuildingCoord[$j][3], $COLOR_INFO)
 		Next
+		_ArraySort($aEssentialBuildingCoord, 0, 0, 0, 3)
 		Return $aEssentialBuildingCoord
 	Else
 		SetDebugLog("Not Array Essential Building", $COLOR_DEBUG)
@@ -856,7 +857,7 @@ Func EssentialBuildingImageCopy($sImagePath = "", $sTempPath = "")
 	Next
 	Local $asHeroName[4] = ["ArcherQueen", "BarbarianKing", "GrandWarden", "RoyalChampion"]
 	For $i = 0 To UBound($asHeroName) - 1
-		SetDebugLog("[" & $i & "]" & "Essential Building: " & $asHeroName[$i], $COLOR_DEBUG)
+		SetDebugLog("[" & $i & "]" & "Heroes: " & $asHeroName[$i], $COLOR_DEBUG)
 		FileCopy($sImagePath & "\" & $asHeroName[$i] & "*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 	Next
 EndFunc
