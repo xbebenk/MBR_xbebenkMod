@@ -14,7 +14,7 @@
 Global $g_sImgImgLocButtons = @ScriptDir & "\imgxml\imglocbuttons"
 
 #Region Windows
-Global Const $g_sImgGeneralCloseButton = @ScriptDir & "\imgxml\Windows\CloseButton*"
+Global Const $g_sImgGeneralCloseButton = @ScriptDir & "\imgxml\Windows\CloseButton\"
 #EndRegion
 
 #Region Obstacles
@@ -84,6 +84,7 @@ Global $g_sImgBuilderHall = @ScriptDir & "\imgxml\Resources\BuildersBase\Builder
 Global $g_sImgVersusBH = @ScriptDir & "\imgxml\Resources\BuildersBase\BuilderHall\Versus*"
 Global $g_sImgMegaTesla = @ScriptDir & "\imgxml\Resources\BuildersBase\MegaTesla\MegaTesla*"
 Global $g_sImgStarLaboratory = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory"
+Global $g_sImgStarLabTroops = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory\Troops\"
 Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
 Global $g_sImgisWall = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\isWall\"
 

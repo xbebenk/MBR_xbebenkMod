@@ -174,10 +174,10 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		If IsReturnHomeBattlePage(True) Then
 			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			; sometimes 1st click is not closing, so try again
+			If _Sleep(1000) Then Return
 		Else
 			ExitLoop
 		EndIf
-		If _Sleep(1000) Then Return
 	Next
 	
 	If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for screen to close
@@ -236,7 +236,7 @@ Func ReturnfromDropTrophies()
 		If IsReturnHomeBattlePage(True) Then
 			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			; sometimes 1st click is not closing, so try again
-			If _Sleep(1000) Then Return
+			_Sleep(2000)
 		Else
 			ExitLoop
 		EndIf

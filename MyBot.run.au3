@@ -1288,7 +1288,6 @@ Func FirstCheck()
 				GUICtrlSetState($g_hChkDBKingAttack, $GUI_CHECKED)
 			EndIf
 		EndIf
-		
 		saveConfig()
 	EndIf
 
