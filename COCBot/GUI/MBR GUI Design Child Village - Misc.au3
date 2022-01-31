@@ -447,11 +447,12 @@ Global $g_sCmbFICTroops[7][3] = [ _
 								["Mini",	"Minions",			2], _
 								["SBarb",	"Super Barbarians",	5], _
 								["SMini",	"Super Minions",	12]] 
-Global $g_sCmbFICSpells[5][3] = [ _ 
+Global $g_sCmbFICSpells[6][3] = [ _ 
 								["LSpell",	"Lightning Spell",	1], _
 								["BtSpell",	"Bat Spell",		1], _
 								["HaSpell",	"Haste Spell",		1], _
 								["FSpell",	"Freeze Spell",		1], _
+								["ESpell",	"Earthquake Spell",	1], _
 								["RSpell",	"Rage Spell",		2]]
 
 Func CreateMiscModSubTab()
