@@ -153,7 +153,7 @@ Func GoldElixirChangeEBO()
 		EndIf
 
 		If Number($CurDamage) > Number($g_iPercentageDamage) Then $g_iPercentageDamage = Number($CurDamage)
-
+		#comments-start
 		If Number($CurDamage) >= 92 Then
 			If ($g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower Or $g_bCheckChampionPower) Then
 				If $g_bCheckKingPower And $g_iActivateKing = 0 Then
@@ -178,6 +178,7 @@ Func GoldElixirChangeEBO()
 				EndIf
 			EndIf
 		EndIf
+		#comments-end
 
 
 		;CALCULATE RESOURCE CHANGES
