@@ -36,8 +36,8 @@ Func DoAttackBB()
 			If checkObstacles(True) Then Return
 			$count += 1
 			If $count > 10 Then
-				SetLog("Something May Wrong", $COLOR_INFO)
-				SetLog("Already Attack 10 times", $COLOR_INFO)
+				SetLog("Something maybe wrong", $COLOR_INFO)
+				SetLog("Force stop, attacked 10 times!", $COLOR_INFO)
 				ExitLoop
 			EndIf
 		Wend
@@ -398,7 +398,7 @@ Func CheckBMLoop($aBMPos)
 		If WaitforPixel($TmpBMPosX - 10, 572, $TmpBMPosX - 9, 573, "121212", 10, 1) Then
 			$count += 1
 			If $count > 6 Then
-				SetLog("Battle Machine Dead", $COLOR_INFO)
+				SetLog("Battle Machine is Dead", $COLOR_INFO)
 				ExitLoop
 			EndIf
 		Else

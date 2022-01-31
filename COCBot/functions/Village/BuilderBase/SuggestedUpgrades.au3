@@ -284,7 +284,7 @@ Func ClickOnBuilder($bTest = False, $Counter = 3)
 		$b_WindowOpened = True
 	Else
 		For $i = 1 To $Counter
-			SetLog("Upgrade Window didn't opened, trying again!", $COLOR_DEBUG)
+			SetLog("Upgrade Window didn't open, trying again!", $COLOR_DEBUG)
 			If IsFullScreenWindow() Then 
 				Click(825,45)
 				If _Sleep(1000) Then Return
