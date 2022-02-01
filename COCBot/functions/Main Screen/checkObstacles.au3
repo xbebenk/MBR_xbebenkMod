@@ -311,21 +311,28 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Return True
 	EndIf
 	If _CheckPixel($aSurrenderButton, $g_bNoCapturePixel) Then
-		SetDebugLog("checkObstacles: Found End Battle to close")
+		SetDebugLog("checkObstacles: Found End Battle to close", $COLOR_ACTION)
 		ReturnHome(False, False) ;If End battle is available
 		Return True
 	EndIf
-	If _CheckPixel($aNoCloudsAttack, $g_bNoCapturePixel) Then ; Prevent drop of troops while searching
-		$aMessage = _PixelSearch(23, 566, 36, 580, Hex(0xF4F7E3, 6), 10, False)
-		If IsArray($aMessage) Then
-			SetDebugLog("checkObstacles: Found Return Home button")
-			; If _ColorCheck(_GetPixelColor(67,  602), Hex(0xDCCCA9, 6), 10) = False Then  ; add double check?
-			PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
-			If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-			Return True
-		EndIf
+	If _ColorCheck(_GetPixelColor(422, 505, True), Hex(0x86D435, 6), 20) Then
+		SetDebugLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
+		Click(422, 500)
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return True
 	EndIf
-
+	If IsReturnHomeBattlePage(True) Then 
+		SetDebugLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
+		ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return True
+	EndIf
+	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
+		SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
+		Click($g_iQuickMISX + 660, $g_iQuickMISY + 80)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return True
+	EndIf
 	If IsPostDefenseSummaryPage() Then
 		SetDebugLog("checkObstacles: Found Post Defense Summary to close")
 		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available

@@ -201,10 +201,6 @@ Func IsEndBattlePage($bWriteLog = True)
 EndFunc   ;==>IsEndBattlePage
 
 Func IsReturnHomeBattlePage($useReturnValue = False, $makeDebugImageScreenshot = True)
-	; $makeDebugImageScreenshot = false
-	;    used to check, at end of algorithm_allTroops, if battle already end and then can bypass test
-	;    for goldelixirchange and activate heroes
-
 	If IsPageLoop($aReturnHomeButton, 1) Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Return Home Battle Window OK**", $COLOR_ACTION)
 		Return True
@@ -217,7 +213,6 @@ Func IsReturnHomeBattlePage($useReturnValue = False, $makeDebugImageScreenshot =
 	Else
 		Return True
 	EndIf
-
 EndFunc   ;==>IsReturnHomeBattlePage
 
 Func IsPostDefenseSummaryPage($bCapture = True)
