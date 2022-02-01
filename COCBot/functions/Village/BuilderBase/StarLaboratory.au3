@@ -130,14 +130,12 @@ Func StarLaboratory($bTestRun = False)
 		
 		If $g_iCmbStarLaboratory = 0 And Not $g_bSLabUpgradeOrderEnable Then ;any upgrade
 			_ArraySort($aTroopUpgrade, 0, 0, 0, 5)
-			;_ArrayDisplay($aTroopUpgrade)
 			For $i = 0 To UBound($aTroopUpgrade) - 1
 				If $aTroopUpgrade[$i][5] = "MaxLevel" Then ContinueLoop
 				If $iAvailElixir < $aTroopUpgrade[$i][5] Then 
-					SetLog("[" & $z + 1 & "]: " & $aTroopUpgrade[$i][2] & " Insufficient Elixir, skip!", $COLOR_INFO)
+					SetLog("[" & $i + 1 & "]: " & $aTroopUpgrade[$i][2] & " Insufficient Elixir, skip!", $COLOR_INFO)
 					SetLog("Upgrade Cost = " & $aTroopUpgrade[$i][5] & " Available = " & $iAvailElixir, $COLOR_INFO)
-					ClickAway()
-					Return False
+					ContinueLoop
 				EndIf
 				SetLog("Try Upgrade " & $aTroopUpgrade[$i][2] & " Cost=" & $aTroopUpgrade[$i][5], $COLOR_ACTION)
 				If SLabUpgrade($aTroopUpgrade[$i][2], $aTroopUpgrade[$i][3], $aTroopUpgrade[$i][4], $bTestRun) Then
@@ -177,7 +175,7 @@ Func StarLaboratory($bTestRun = False)
 		ClickAway()
 		Return False
 	EndIf
-	
+	SetLog("No Upgradable troop, exit!", $COLOR_ERROR)
 	ClickAway()
 	Return False
 EndFunc   ;==>Laboratory
