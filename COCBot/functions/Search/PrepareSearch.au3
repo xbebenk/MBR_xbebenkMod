@@ -31,7 +31,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	EndIf
 
 	ChkAttackCSVConfig()
-
+	If $Mode = $DT Then $g_bRestart = False
 	If IsMainPage() Then
 		If _Sleep($DELAYTREASURY4) Then Return
 		If _CheckPixel($aAttackForTreasury, $g_bCapturePixel, Default, "Is attack for treasury:") Then

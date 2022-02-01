@@ -338,7 +338,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
 		Return True
 	EndIf
-	
 	If IsAttackPage() Then
 		SetDebugLog("checkObstacles: Found AttackPage, return to home")
 		Click(65, 540, 1, 0, "#0099")
@@ -357,20 +356,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return checkObstacles_ReloadCoC(Default, "", $bRecursive)
 	EndIf
-
-	;If $g_bOnlySCIDAccounts Then
-	;	SetDebugLog("check Log in with Supercell ID login by Clicks")
-	;	; check Log in with Supercell ID login screen by Clicks
-	;	CheckLoginWithSupercellIDScreen()
-	;EndIf
-
-	; check if google account list shown and select first
-	;If Not CheckGoogleSelectAccount() Then
-	;	SetDebugLog("check Log in with Supercell ID login by shared_prefs")
-	;	; check Log in with Supercell ID login screen by shared_prefs
-	;	If CheckLoginWithSupercellID() Then Return True
-	;EndIf
-
 	Return False
 EndFunc   ;==>_checkObstacles
 
