@@ -167,7 +167,7 @@ Func StarLaboratory($bTestRun = False)
 					Return True
 				EndIf
 			Else
-				SetLog("[" & $z + 1 & "] Cannot upgrade " & $g_avStarLabTroops[$g_aCmbSLabUpgradeOrder[$z]+1][3] & " at this moment!", $COLOR_DEBUG)
+				SetLog("Selected Upgrade: " & $g_avStarLabTroops[$g_iCmbStarLaboratory][3] & " Is not Upgradable!", $COLOR_DEBUG)
 			EndIf
 		EndIf
 	Else
