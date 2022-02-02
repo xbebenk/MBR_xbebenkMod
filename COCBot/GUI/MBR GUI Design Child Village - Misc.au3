@@ -173,19 +173,19 @@ Func CreateMiscNormalVillageSubTab()
         GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBotWillHaltAutomatically", "The bot will Halt automatically when you run out of Resources. It will resume when reaching these minimal values:"), $x + 20, $y, 400, 25, $BS_MULTILINE)
 
 	$y += 30
-	$x += 90
-		GUICtrlCreateLabel(ChrW(8805), $x + 89, $y + 2, -1, -1)
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 149, $y, 16, 16)
-		$g_hTxtRestartGold = GUICtrlCreateInput("10000", $x + 99, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtRestartGold_Info_01", "Minimum Gold value for the bot to resume attacking after halting because of low gold."))
-			GUICtrlSetLimit(-1, 7)
-
 	$x += 80
 		GUICtrlCreateLabel(ChrW(8805), $x + 89, $y + 2, -1, -1)
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 149, $y, 16, 16)
-		$g_hTxtRestartElixir = GUICtrlCreateInput("25000", $x + 99, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 154, $y, 16, 16)
+		$g_hTxtRestartGold = GUICtrlCreateInput("10000", $x + 99, $y, 55, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtRestartGold_Info_01", "Minimum Gold value for the bot to resume attacking after halting because of low gold."))
+			GUICtrlSetLimit(-1, 8)
+
+	$x += 85
+		GUICtrlCreateLabel(ChrW(8805), $x + 89, $y + 2, -1, -1)
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 154, $y, 16, 16)
+		$g_hTxtRestartElixir = GUICtrlCreateInput("25000", $x + 99, $y, 55, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtRestartElixir_Info_01", "Minimum Elixir value for the bot to resume attacking after halting because of low elixir."))
-			GUICtrlSetLimit(-1, 7)
+			GUICtrlSetLimit(-1, 8)
 
 	$x += 80
 		GUICtrlCreateLabel(ChrW(8805), $x + 89, $y + 2, -1, -1)
