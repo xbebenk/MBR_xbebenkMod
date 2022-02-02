@@ -92,12 +92,12 @@ Func RandomArmyComp()
     If Not OpenQuickTrainTab(False, "RandomArmyComp()") Then Return
     If _Sleep(750) Then Return
 	Local $Result
-	Local $aRndFuncList = ['One', 'Two', 'Three']
+	Local $aRndFuncList = ['One', 'Two', 'Three', 'Four']
 	_ArrayShuffle($aRndFuncList)
 	For $Index In $aRndFuncList
 		$Result = Execute("ArmyComp" & $Index & "()")
 		If Not $g_bRunState Then Return
-		If $Result Then 
+		If $Result Then
 			SetLog("RandomArmyComp(): Trained Army Comp " & $Index, $COLOR_INFO)
 			ExitLoop
 		EndIf
@@ -109,8 +109,8 @@ EndFunc ;==>RandomArmyComp
 Func ArmyCompOne()
     If Not OpenQuickTrainTab(False, "ArmyCompOne()") Then Return
     If _Sleep(750) Then Return
-    If _ColorCheck(_GetPixelColor(777, 338, True), Hex(0xBDE98D, 6), 1) Then
-        PureClick(800,350)
+	If _ColorCheck(_GetPixelColor(752, 309, True), Hex(0xBDE98D, 6), 1) Then
+        PureClick(783,324)
 		Return True
     Else
         SetDebugLog("Our Color was: " & _GetPixelColor(777, 338, True))
@@ -121,8 +121,8 @@ EndFunc ;==>ArmyCompOne
 Func ArmyCompTwo()
     If Not OpenQuickTrainTab(False, "ArmyCompTwo()") Then Return
     If _Sleep(750) Then Return
-    If _ColorCheck(_GetPixelColor(788, 448, True), Hex(0xBDE98D, 6), 1) Then
-        PureClick(794,458)
+	If _ColorCheck(_GetPixelColor(752, 456, True), Hex(0xE8E8E0, 6), 1) Then
+        PureClick(798,434)
 		Return True
     Else
         SetDebugLog("Our Color was: " & _GetPixelColor(788, 448, True))
@@ -133,14 +133,24 @@ EndFunc ;==>ArmyCompTwo
 Func ArmyCompThree()
     If Not OpenQuickTrainTab(False, "ArmyCompThree()") Then Return
     If _Sleep(750) Then Return
-    If _ColorCheck(_GetPixelColor(795, 555, True), Hex(0xBDE98D, 6), 1) Then
-        PureClick(783,565)
+	If _ColorCheck(_GetPixelColor(751, 567, True), Hex(0xE8E8E0, 6), 1) Then
+        PureClick(801,540)
 		Return True
     Else
         SetDebugLog("Our Color was: " & _GetPixelColor(795, 555, True))
     EndIf
 	Return False
 EndFunc ;==>ArmyCompThree
+
+Func ArmyCompFour() ;Train previous army
+	If Not OpenQuickTrainTab(False, "ArmyCompFour()") Then Return
+	If _Sleep(750) Then Return
+	If _ColorCheck(_GetPixelColor(777, 177, True), Hex(0xBDE98D, 6), 1) Then
+		PureClick(777,177)
+	Else
+		SetLog("Button Train Not Found, Skip Train Previous", $COLOR_DEBUG)
+	EndIf
+EndFunc ;==>ArmyCompFour
 
 Func TrainCustomArmy()
 	If Not $g_bRunState Then Return

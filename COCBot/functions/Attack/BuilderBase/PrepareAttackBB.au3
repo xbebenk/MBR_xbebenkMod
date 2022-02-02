@@ -13,8 +13,9 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func PrepareAttackBB($bCheck = False)
+Func PrepareAttackBB($Mode = Default)
 	AutoUpgradeBBCheckBuilder()
+	
 	
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 		Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
@@ -55,20 +56,33 @@ Func PrepareAttackBB($bCheck = False)
 		ClickAway("Left")
 		Return False
 	EndIf
-	_Sleep(1500)
-	
-	If WaitforPixel(720, 465, 721, 466, "D4D4CC", 10, 1) Then
-		SetLog("Found Previous Attack Result", $COLOR_ACTION)
-		Click(640, 440)
-		_Sleep(500)
-	EndIf
+	;_Sleep(1000)
+	For $i = 1 To 5
+		If WaitforPixel(588, 321, 589, 322, "D7540E", 20, 2) Then
+			SetDebugLog("Found FindNow Button", $COLOR_ACTION)
+			_Sleep(500)
+			ExitLoop
+		EndIf
+		If WaitforPixel(665, 437, 666, 438, "D9F481", 20, 1) Then
+			SetDebugLog("Found Previous Attack Result", $COLOR_ACTION)
+			Click(640, 440)
+			_Sleep(500)
+		EndIf
+		_Sleep(1000)
+		SetDebugLog("Wait For Find Now Button #" & $i, $COLOR_ACTION)
+	Next
 	
 	If Not CheckArmyReady() Then
 		_Sleep(500)
 		ClickAway("Left")
 		Return False
 	EndIf
-
+	
+	If $Mode = "DropTrophy" Then 
+		SetLog("Preparing Attack for DropTrophy", $COLOR_ACTION)
+		Return True
+	EndIf
+	
 	If $g_bChkBBAttIfLootAvail Then
 		If Not CheckLootAvail() Then
 			_Sleep(500)
