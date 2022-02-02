@@ -31,6 +31,7 @@ Func DoubleTrain()
 	Local $Step = 1
 	While 1
 		Local $TroopCamp = GetCurrentArmy(46, 131)
+		If IsProblemAffect(True) Then Return
 		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2)
 		If $TroopCamp[1] = 0 Then ExitLoop
 		If $TroopCamp[1] <> $g_iTotalCampSpace Then _
@@ -81,6 +82,7 @@ Func DoubleTrain()
 		$Step = 1
 		While 1
 			Local $SpellCamp = GetCurrentArmy(46, 131)
+			If IsProblemAffect(True) Then Return
 			SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2)
 
 			If $SpellCamp[1] > $TotalSpell Then

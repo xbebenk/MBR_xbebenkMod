@@ -256,7 +256,7 @@ Func GetButtonDiamond($sButtonName)
 		Case "EventFailed"
 			$btnDiamond = GetDiamondFromRect("230,130,777,560")
 		Case "OK"
-			$btnDiamond = "440,395|587,395|587,460|440,460"
+			$btnDiamond = "440,365|587,365|587,430|440,430"
 		Case "ReturnHome"
 			$btnDiamond = "357,545|502,545|502,607|357,607"
 		Case "Next" ; attackpage attackwindow

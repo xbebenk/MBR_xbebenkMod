@@ -113,7 +113,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 				Local $j = 0
 				While 1 ; dynamic wait for Okay button
 					SetDebugLog("Wait for OK button to appear #" & $j)
-					If IsEndBattlePage(True) Then
+					If IsOKCancelPage(True) Then
 						ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
 						If _Sleep(1500) Then Return
 						ExitLoop
@@ -217,7 +217,7 @@ Func ReturnfromDropTrophies()
 		Local $j = 0
 		While 1 ; dynamic wait for Okay button
 			SetDebugLog("Wait for OK button to appear #" & $j)
-			If IsEndBattlePage(True) Then
+			If IsOKCancelPage(True) Then
 				ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
 				If _Sleep(500) Then Return
 				ExitLoop

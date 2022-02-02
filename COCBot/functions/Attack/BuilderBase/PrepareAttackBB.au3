@@ -56,7 +56,13 @@ Func PrepareAttackBB($bCheck = False)
 		Return False
 	EndIf
 	_Sleep(1500)
-
+	
+	If WaitforPixel(720, 465, 721, 466, "D4D4CC", 10, 1) Then
+		SetLog("Found Previous Attack Result", $COLOR_ACTION)
+		Click(640, 440)
+		_Sleep(500)
+	EndIf
+	
 	If Not CheckArmyReady() Then
 		_Sleep(500)
 		ClickAway("Left")

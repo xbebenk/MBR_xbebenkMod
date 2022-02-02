@@ -407,7 +407,7 @@ Func SwitchCOCAcc($NextAccount)
 		SetDebugLog("Checkscidswitch: Send AndroidBackButton", $COLOR_DEBUG)
 		AndroidBackButton() ;Send back button to android
 		If _Sleep(1000) Then Return
-		If IsEndBattlePage() Then
+		If IsOKCancelPage() Then
 			AndroidBackButton()
 		EndIf
 	EndIf

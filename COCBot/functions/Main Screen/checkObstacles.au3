@@ -93,7 +93,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If $bSCIDWindowOpened Then
 			AndroidBackButton() ;Send back button to android
 			If _Sleep(1000) Then Return
-			If IsEndBattlePage() Then
+			If IsOKCancelPage() Then
 				AndroidBackButton()
 			EndIf
 		EndIf

@@ -125,11 +125,19 @@ Func UpgradeLowLevelWallCheckResource()
 	$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
 	$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
 	SetLog("Current Resource, Gold: " & $g_aiCurrentLoot[$eLootGold] & " Elix: " & $g_aiCurrentLoot[$eLootElixir], $COLOR_INFO)
+	Local $HaveResource = True, $haveGold = True, $HaveElix = True
 	If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold Then
 		If $g_bDebugClick Or $g_bDebugSetlog Then SetLog("Current Gold: " & $g_aiCurrentLoot[$eLootGold] & ", already below " & $g_iUpgradeWallMinGold, $COLOR_INFO)
-		Return False
+		$HaveGold = False
 	EndIf
-	Return True
+	If $g_aiCurrentLoot[$eLootElixir] < $g_iUpgradeWallMinElixir Then
+		If $g_bDebugClick Or $g_bDebugSetlog Then SetLog("Current Elix: " & $g_aiCurrentLoot[$eLootElixir] & ", already below " & $g_iUpgradeWallMinElixir, $COLOR_INFO)
+		$HaveElix = False
+	EndIf
+	If $HaveGold And $HaveElix Then
+		$HaveResource = False
+	EndIf
+	Return $HaveResource
 EndFunc
 
 Func WallUpgradeCheckBuilder($bTest)
@@ -182,6 +190,8 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 		If Not $MinWallGold And Not $MinWallElixir Then ExitLoop
 		
 		For $j = 1 To 5
+			$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
+			$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
 			Local $MinWallGold = IsGoldEnough($aWallCoord[$i][2])
 			Local $MinWallElixir = IsElixEnough($aWallCoord[$i][2])
 			If Not $MinWallGold And Not $MinWallElixir Then ExitLoop 2

@@ -411,7 +411,7 @@ Func CloseBattle()
 
 	If IsAttackPage() Then ClickP($aSurrenderButton, 1, 0, "#0030") ;Click Surrender
 	If _Sleep($DELAYALGORITHM_ALLTROOPS3) Then Return
-	If IsEndBattlePage() Then
+	If IsOKCancelPage() Then
 		ClickP($aConfirmSurrender, 1, 0, "#0031") ;Click Confirm
 		If _Sleep($DELAYALGORITHM_ALLTROOPS1) Then Return
 	EndIf

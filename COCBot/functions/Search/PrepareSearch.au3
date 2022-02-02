@@ -66,7 +66,11 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		SetLog("Error while checking if Multiplayer Tab is opened", $COLOR_ERROR)
 		Return
 	EndIf
-
+	
+	;Local $aButton = QuickMIS("CNX", $g_sImgPrepareLegendLeagueSearch, 271,185,834,659, True)
+	;If IsArray($aButton) And UBound($aButton) > 0 Then
+	;	Local $ButtonName = $aButton[0][0]
+	;EndIf
 	$g_bLeagueAttack = False
 	Do
 		Local $bSignedUpLegendLeague = False
@@ -119,16 +123,19 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				SetLog("Sign-up to Legend League", $COLOR_INFO)
 				Local $aCoordinates = StringSplit($avAttackButtonSubResult[1], ",", $STR_NOCOUNT)
 				ClickP($aCoordinates, 1, 0, "#0000")
-				If _Sleep(1000) Then Return
-				$aCoordinates = findButton("OK")
-				If UBound($aCoordinates) > 1 Then
-					SetLog("Sign-up to Legend League done", $COLOR_INFO)
-					$bSignedUpLegendLeague = True
-					ClickP($aCoordinates, 1, 0, "#0000")
-					If _Sleep(1000) Then Return
-				Else
-					SetLog("Cannot find OK button to sign-up for Legend League", $COLOR_WARNING)
-				EndIf
+				For $i = 1 To 3
+					If IsOKCancelPage() Then
+						ClickP($aConfirmSurrender)
+						SetLog("Sign-up to Legend League done", $COLOR_INFO)
+						$bSignedUpLegendLeague = True
+						If _Sleep(1000) Then Return
+						ExitLoop
+					Else
+						SetLog("Wait for OK Button to SignUp Legend League #" & $i, $COLOR_WARNING)
+					EndIf
+					_Sleep(500)
+				Next
+				SetLog("Problem SignUp to Legend League", $COLOR_ERROR)
 			ElseIf StringInStr($sButtonState, "Oppo", 0) > 0 Then
 				SetLog("Finding opponents! Waiting 5 minutes and then try again to find a match", $COLOR_INFO)
 				If _Sleep(300000) Then Return     ; Wait 5mins before searching again

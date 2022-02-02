@@ -818,7 +818,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 			Next
 			
 			For $i = 1 To 5
-				If IsEndBattlePage() Then
+				If IsOKCancelPage() Then
 					SetLog("Click OK", $COLOR_INFO)
 					Click(500, 400)
 					SetLog("StartsEvent and Purge job!", $COLOR_SUCCESS)
@@ -885,12 +885,12 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
 			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
 			SetLog("Click Trash", $COLOR_INFO)
-			While Not IsEndBattlePage()
+			While Not IsOKCancelPage()
 				SetDebugLog("Waiting for trash Confirm OK", $COLOR_DEBUG)
 				$count2 += 1
 				If $count2 > 10 Then ExitLoop
 			Wend
-			If IsEndBattlePage() Then
+			If IsOKCancelPage() Then
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
 				Click(500, 400)
@@ -929,12 +929,12 @@ Func StartAndPurgeEvent($bTest = False)
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
 			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
 			SetLog("Click Trash", $COLOR_INFO)
-			While Not IsEndBattlePage()
+			While Not IsOKCancelPage()
 				SetDebugLog("Waiting for trash Confirm OK", $COLOR_DEBUG)
 				$count2 += 1
 				If $count2 > 10 Then ExitLoop
 			Wend
-			If IsEndBattlePage() Then
+			If IsOKCancelPage() Then
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
 				Click(500, 400)

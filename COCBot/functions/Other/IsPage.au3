@@ -1,6 +1,6 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: IsTrainPage & IsAttackPage & IsMainPage & IsMainChatOpenPage & IsClanInfoPage & IsLaunchAttackPage &
-;                  IsEndBattlePage & IsReturnHomeBattlePage
+;                  IsOKCancelPage & IsReturnHomeBattlePage
 ; Description ...: Verify if you are in the correct window...
 ; Author ........: Sardo (2015)
 ; Modified ......: ProMac (2015), MonkeyHunter (12-2015)
@@ -183,22 +183,22 @@ Func IsMultiplayerTabOpen()
 	Return False
 EndFunc
 
-Func IsEndBattlePage($bWriteLog = True)
+Func IsOKCancelPage($bWriteLog = True)
 
 	If IsPageLoop($aConfirmSurrender, 1) Then
-		If ($g_bDebugSetlog Or $g_bDebugClick) And $bWriteLog Then SetLog("**End Battle Window OK**", $COLOR_ACTION)
+		If ($g_bDebugSetlog Or $g_bDebugClick) And $bWriteLog Then SetLog("**OKCancel Window OK**", $COLOR_ACTION)
 		Return True
 	Else
 		If ($g_bDebugSetlog Or $g_bDebugClick) And $bWriteLog Then
 			Local $colorRead = _GetPixelColor($aConfirmSurrender[0], $aConfirmSurrender[1], True)
-			SetLog("**End Battle Window FAIL**", $COLOR_ACTION)
+			SetLog("**OKCancel Window FAIL**", $COLOR_ACTION)
 			SetLog("expected in (" & $aConfirmSurrender[0] & "," & $aConfirmSurrender[1] & ")  = " & Hex($aConfirmSurrender[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
 		EndIf
-		If $g_bDebugImageSave And $bWriteLog Then SaveDebugImage("IsEndBattlePage")
+		If $g_bDebugImageSave And $bWriteLog Then SaveDebugImage("OKCancel")
 		Return False
 	EndIf
 
-EndFunc   ;==>IsEndBattlePage
+EndFunc   ;==>IsOKCancelPage
 
 Func IsReturnHomeBattlePage($useReturnValue = False, $makeDebugImageScreenshot = True)
 	If IsPageLoop($aReturnHomeButton, 1) Then

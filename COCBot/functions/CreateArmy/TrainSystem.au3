@@ -159,7 +159,6 @@ Func TrainCustomArmy()
 
 	If Not $g_bFullArmy Then
 		Local $rWhatToTrain = WhatToTrain(True) ; r in First means Result! Result of What To Train Function
-
 		RemoveExtraTroops($rWhatToTrain)
 	EndIf
 
@@ -172,7 +171,7 @@ Func TrainCustomArmy()
 		If Not $g_bRunState Then Return
 		If Not OpenArmyTab(False, "TrainCustomArmy()") Then Return
 		Local $rWhatToTrain = WhatToTrain()
-
+		If IsProblemAffect(True) Then Return
 		If $bEmptyTroopQueue And DoWhatToTrainContainTroop($rWhatToTrain) Then TrainUsingWhatToTrain($rWhatToTrain)
 		If $bEmptySpellQueue And DoWhatToTrainContainSpell($rWhatToTrain) Then BrewUsingWhatToTrain($rWhatToTrain)
 	EndIf
@@ -340,11 +339,12 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 	If UBound($rWTT) = 1 And $rWTT[0][0] = "Arch" And $rWTT[0][1] = 0 Then Return True ; If was default Result of WhatToTrain
 
 	If Not OpenTroopsTab(True, "TrainUsingWhatToTrain()") Then Return
-
+	
 	; Loop through needed troops to Train
 	For $i = 0 To (UBound($rWTT) - 1)
 		If Not $g_bRunState Then Return
 		If $rWTT[$i][1] > 0 Then ; If Count to Train Was Higher Than ZERO
+			If IsProblemAffect(True) Then Return
 			If IsSpellToBrew($rWTT[$i][0]) Then ContinueLoop
 			Local $iTroopIndex = TroopIndexLookup($rWTT[$i][0], "TrainUsingWhatToTrain()")
 
@@ -396,6 +396,7 @@ Func BrewUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 	For $i = 0 To (UBound($rWTT) - 1)
 		If Not $g_bRunState Then Return
 		If $rWTT[$i][1] > 0 Then ; If Count to Train Was Higher Than ZERO
+			If IsProblemAffect(True) Then Return
 			If Not IsSpellToBrew($rWTT[$i][0]) Then ContinueLoop
 			Local $iSpellIndex = TroopIndexLookup($rWTT[$i][0], "BrewUsingWhatToTrain")
 			Local $NeededSpace = $g_aiSpellSpace[$iSpellIndex - $eLSpell] * $rWTT[$i][1]
