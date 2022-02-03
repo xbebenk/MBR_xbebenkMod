@@ -96,7 +96,7 @@ Func CleanYard()
 		SetLog("Builder Not Available", $COLOR_DEBUG)
 		Return
 	EndIf
-	If RemoveGembox() Then _SleepStatus(30000) ;Remove gembox first, and wait till gembox removed
+	If RemoveGembox() Then _SleepStatus(33000) ;Remove gembox first, and wait till gembox removed
 	
 	; Setup arrays, including default return values for $return
 	Local $Filename = ""
@@ -158,7 +158,7 @@ Func RemoveGembox()
 	
 	If QuickMIS("BC1", $g_sImgGemBox, 70,70,830,620) Then
 		Click($g_iQuickMISX + 70, $g_iQuickMISY + 70, 1, 0, "#0430")
-		If _Sleep(800) Then Return
+		_Sleep(1000)
 		ClickRemoveObstacle()
 		ClickAway()
 		SetLog("GemBox removed!", $COLOR_SUCCESS)
