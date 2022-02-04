@@ -32,7 +32,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 			While GoldElixirChangeEBO()
 				If _Sleep($DELAYRETURNHOME1) Then Return
 			WEnd
-			
+			If $g_bRestart Then Return
 			If $g_Zapped Then ;Skip Zap if EarlyZap is successful
 				SetLog("Zapped Early, Skipping SmartZap")
 			Else
@@ -100,7 +100,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 			If _Sleep(500) Then Return
 			ExitLoop ;exit Battle already ended
 		EndIf
-		
+		If $g_bRestart Then Return
 		If IsAttackPage() Then $BattleEnded = False
 		If Not $BattleEnded Then
 			If WaitforPixel(18, 548, 19, 549, "CD0D0D", 10, 1) Then
@@ -148,7 +148,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		_CaptureRegion()
 		AttackReport()
 	EndIf
-	
+	If $g_bRestart Then Return
 	If $TakeSS = 1 And $GoldChangeCheck Then
 		SetLog("Taking snapshot of your loot", $COLOR_SUCCESS)
 		Local $Date = @YEAR & "-" & @MON & "-" & @MDAY

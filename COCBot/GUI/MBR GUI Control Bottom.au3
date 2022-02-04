@@ -254,7 +254,6 @@ Func ToggleControl()
 		GuiCtrlSetData($g_hBtnControl, $sText)
 	Else
 		SaveConfig()
-		ApplyConfig()
 		If $g_bRunState Then DisableGuiControls()
 		$sText = "Edit"
 		GuiCtrlSetData($g_hBtnControl, $sText)

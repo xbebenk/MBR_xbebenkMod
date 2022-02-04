@@ -121,6 +121,7 @@ Func _AttackBB()
 			Return
 		EndIf
 		If _Sleep(2000) Then Return
+		If isProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return ; Stop Button
 	WEnd
 
@@ -132,7 +133,9 @@ Func _AttackBB()
 		SetDebugLog("Android Suspend Mode Enabled")
 		Return
 	EndIf
-
+	
+	$aBBAttackBar = GetAttackBarBB()
+	
 	If $g_BBBCSVAttack Then
 		; Zoomout the Opponent Village.
 		BuilderBaseZoomOut(False, True)
@@ -146,7 +149,6 @@ Func _AttackBB()
 		; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window.
 		BuilderBaseParseAttackCSV($aBBAttackBar, $g_aDeployPoints, $g_aDeployBestPoints, True)
 	Else
-		If _Sleep(2000) Then Return
 		AttackBB($aBBAttackBar)
 	EndIf
 

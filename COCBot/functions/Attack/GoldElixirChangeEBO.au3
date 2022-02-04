@@ -91,7 +91,7 @@ Func GoldElixirChangeEBO()
 		$bOneLoop = False
 		;HEALTH HEROES
 		CheckHeroesHealth()
-		
+		If $g_bRestart Then Return
 		;Early Zap - xbebenkmod
 		If $g_bEarlyZap And Not $g_Zapped And $CurDamage > 50 Then
 			SetLog("Trying to Zap Early")
