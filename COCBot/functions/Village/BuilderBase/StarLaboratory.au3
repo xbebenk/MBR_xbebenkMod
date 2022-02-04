@@ -112,6 +112,10 @@ Func StarLaboratory($bTestRun = False)
 						SetLog("[" & $z + 1 & "]: " & $aTroopUpgrade[$Index][2] & " at Max Level, skip!", $COLOR_INFO)
 						ContinueLoop
 					EndIf
+					If $aTroopUpgrade[$Index][5] = "NeedUpgradeLab" Then
+						SetLog("[" & $z + 1 & "]: " & $aTroopUpgrade[$Index][2] & " Higher StarLab Level Required, skip!", $COLOR_INFO)
+						ContinueLoop
+					EndIf
 					If $iAvailElixir < $aTroopUpgrade[$Index][5] Then 
 						SetLog("[" & $z + 1 & "]: " & $aTroopUpgrade[$Index][2] & " Insufficient Elixir, skip!", $COLOR_INFO)
 						SetLog("Upgrade Cost = " & $aTroopUpgrade[$Index][5] & " Available = " & $iAvailElixir, $COLOR_INFO)
@@ -132,6 +136,7 @@ Func StarLaboratory($bTestRun = False)
 			_ArraySort($aTroopUpgrade, 0, 0, 0, 5)
 			For $i = 0 To UBound($aTroopUpgrade) - 1
 				If $aTroopUpgrade[$i][5] = "MaxLevel" Then ContinueLoop
+				If $aTroopUpgrade[$i][5] = "NeedUpgradeLab" Then ContinueLoop
 				If $iAvailElixir < $aTroopUpgrade[$i][5] Then 
 					SetLog("[" & $i + 1 & "]: " & $aTroopUpgrade[$i][2] & " Insufficient Elixir, skip!", $COLOR_INFO)
 					SetLog("Upgrade Cost = " & $aTroopUpgrade[$i][5] & " Available = " & $iAvailElixir, $COLOR_INFO)
@@ -153,6 +158,10 @@ Func StarLaboratory($bTestRun = False)
 				SetLog("Try Upgrade: " & $aTroopUpgrade[$Index][2])
 				If $aTroopUpgrade[$Index][5] = "MaxLevel" Then
 					SetLog($aTroopUpgrade[$Index][2] & " at Max Level, skip!", $COLOR_INFO)
+					Return False
+				EndIf
+				If $aTroopUpgrade[$Index][5] = "NeedUpgradeLab" Then
+					SetLog($aTroopUpgrade[$Index][2] & " Higher StarLab Level Required, skip!", $COLOR_INFO)
 					Return False
 				EndIf
 				If $iAvailElixir < $aTroopUpgrade[$Index][5] Then 
@@ -222,6 +231,11 @@ Func FindSLabTroopsUpgrade()
 			$UpgradeCost = getLabUpgrdResourceWht($aTroop[1], $aTroop[2])
 			If $UpgradeCost = 111 Then $UpgradeCost = "MaxLevel"
 			If $UpgradeCost = "" Then $UpgradeCost = getStarLabUpgrdResourceRed($aTroop[1], $aTroop[2])
+			If $UpgradeCost = "" Then 
+				If QuickMIS("BC1", $g_sImgStarLabNeedUp, $aTroop[1], $aTroop[2], $aTroop[1] + 100, $aTroop[2] + 20) Then
+					$UpgradeCost = "NeedUpgradeLab"
+				EndIf
+			EndIf
 			_ArrayAdd($aResult, Number($aTroop[3]) & "|" & $aTmp[$i][0] & "|" & $aTroop[0] & "|" & $aTmp[$i][1] & "|" & $aTmp[$i][2] & "|" & $UpgradeCost)
 		Next
 		_ArraySort($aResult)
