@@ -688,6 +688,10 @@ EndFunc   ;==>MainLoop
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
 	checkMainScreen(False)
+	If $g_bIsHidden Then 
+		HideAndroidWindow(True, Default, Default, "btnHide")
+		updateBtnHideState()
+	EndIf
 	InitiateSwitchAcc()
 	If ProfileSwitchAccountEnabled() And $g_bReMatchAcc Then
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
@@ -1386,6 +1390,7 @@ Func FirstCheckRoutine()
 		If Not $g_bRunState Then Return
 		_RunFunction('CleanYard')
 		_Sleep(5000) ;add wait after clean yard
+		If Not $g_bRunState Then Return
 		If $g_bUpgradeWallEarly Then
 			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
 			UpgradeWall()

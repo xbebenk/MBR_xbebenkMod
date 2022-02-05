@@ -117,19 +117,19 @@ Func Laboratory($debug=False)
 							If $sCostResult > 0 Then 
 								SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
 								$bUpgradeFound = True
+								ExitLoop
 							Else
 								SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not enough Resources, will try again later", $COLOR_INFO)
 								ContinueLoop
 							EndIf
 						EndIf
-						
-						If $bUpgradeFound Then
-							If Not $debug Then Return LaboratoryUpgrade($g_avLabTroops[$iTmpCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
-						Else
-							SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
-						EndIf
 					EndIf
 				Next
+				If $bUpgradeFound Then
+					Return LaboratoryUpgrade($g_avLabTroops[$iTmpCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
+				Else
+					SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
+				EndIf
 			Else ; no LabUpgradeOrder
 				
 				While($iCurPage <= $iPages)
