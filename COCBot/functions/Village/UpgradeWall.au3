@@ -202,11 +202,6 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 	For $i = 0 To UBound($aWallCoord) - 1
 		If Not $g_bRunState Then Return
 		If Not WallUpgradeCheckBuilder($bTest) Then Return
-		If Not WallCheckResource() Then Return
-		Local $MinWallGold = IsGoldEnough($aWallCoord[$i][2])
-		Local $MinWallElixir = IsElixEnough($aWallCoord[$i][2])
-		If Not $MinWallGold And Not $MinWallElixir Then Return
-		
 		For $j = 1 To 5
 			ClickMainBuilder()
 			SetLog("Wall " & "[" & $i & "] : [" & $aWallCoord[$i][0] & "," & $aWallCoord[$i][1] & " Cost = " & $aWallCoord[$i][2] & "]", $COLOR_DEBUG)
@@ -295,7 +290,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 	If $WallLevel <= $UpgradeToLvl Then
 		For $x = $WallLevel To $UpgradeToLvl
 			If Not $g_bRunState Then Return
-			If Not WallCheckResource() Then Return
+			If Not WallCheckResource($iWallCost) Then Return
 			Local $UpgradeButtonFound = False
 			Switch $g_iUpgradeWallLootType
 				Case 0 ;Gold
@@ -303,8 +298,9 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				Case 1 ;Elixir
 					$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 600, 580)
 				Case 2 ;Elixir then Gold
-					$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 600, 580)
-					If Not $UpgradeButtonFound Then 
+					If IsElixEnough($iWallCost) Then 
+						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 600, 580)
+					ElseIf IsGoldEnough($iWallCost) Then 
 						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 600, 580)
 					EndIf
 			EndSwitch
@@ -313,7 +309,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				Click($g_iQuickMISX + 400, $g_iQuickMISY + 520)
 				If _Sleep(1000) Then Return
 				If Not $bTest Then
-					Click(440, 530)
+					Click(420, 500)
 					If _Sleep(1000) Then Return
 				Else
 					SetLog("Testing Only!", $COLOR_ERROR)
