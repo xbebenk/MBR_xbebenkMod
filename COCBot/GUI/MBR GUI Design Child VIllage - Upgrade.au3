@@ -527,7 +527,7 @@ Func CreateWallsSubTab()
 			GUICtrlSetOnEvent(-1, "ChkLowLevelAutoUpgradeWall")
 		$y += 20
 		GUICtrlCreateLabel("Wall Level Considered as Low:", $x + 30, $y +2)
-		$TxtComboWall = "1|2|3|4|5|6|7"
+		$TxtComboWall = "1|2|3|4|5|6|7|8|9|10"
 		$g_hCmbLowLevelWall = GUICtrlCreateCombo("", $x + 180, $y, 40, 18, BitOR($CBS_DROPDOWNLIST, $SS_RIGHT, $CBS_AUTOHSCROLL))
 			GUICtrlSetOnEvent(-1, "ChkLowLevelAutoUpgradeWall")
 			GUICtrlSetData(-1, $TxtComboWall, "4")

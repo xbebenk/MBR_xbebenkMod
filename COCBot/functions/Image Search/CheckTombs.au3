@@ -96,6 +96,12 @@ Func CleanYard()
 		SetLog("Builder Not Available", $COLOR_DEBUG)
 		Return
 	EndIf
+
+	If $g_aiCurrentLoot[$eLootElixir] < 30000 Then 
+		SetLog("Elixir < 30000, try again later", $COLOR_DEBUG)
+		Return
+	EndIf
+	
 	If RemoveGembox() Then _SleepStatus(33000) ;Remove gembox first, and wait till gembox removed
 	
 	; Setup arrays, including default return values for $return
@@ -110,11 +116,6 @@ Func CleanYard()
 				$x = $aResult[$i][1]
 				$y = $aResult[$i][2]
 				SetLog($Filename & " found [" & $x & "," & $y & "]", $COLOR_SUCCESS)
-				$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74)
-				If $g_aiCurrentLoot[$eLootElixir] < 10000 Then 
-					SetLog("Exixir < 10000, try again later", $COLOR_DEBUG)
-					ExitLoop
-				EndIf
 				Click($x, $y, 1, 0, "#0430") ;click CleanYard
 				_Sleep(1000)
 				If Not ClickRemoveObstacle() Then ContinueLoop
