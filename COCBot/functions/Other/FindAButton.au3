@@ -36,25 +36,25 @@ Func FindExitButton($sButtonName)
 	Return $aPosXY
 EndFunc   ;==>FindExitButton
 
-Func FindAdsXButton()
-	Local $sCoor
-	Local $sDirectory = "adsxbutton-bundle"
-	Local $sReturnProps = "objectpoints"
-	Local $result = ""
-	Local $aPosXY = ""
-
-	$sCoor = GetDiamondFromRect(GetButtonRectangle("AdsX"))
-	$result = findMultiple($sDirectory, $sCoor, $sCoor, 0, 0, 1, $sReturnProps, False)
-
-	If IsArray($result) then
-		$aPosXY = StringSplit(($result[0])[0], ",", $STR_NOCOUNT)
-		SetDebugLog("FindAdsXButton: " & $g_sAndroidGameDistributor & " AdsX Button X|Y = " & $aPosXY[0] & "|" & $aPosXY[1], $COLOR_DEBUG)
-		Return $aPosXY
-	EndIf
-
-	SetDebugLog("FindAdsXButton: " & $g_sAndroidGameDistributor & " NOT Found", $COLOR_DEBUG)
-	Return $aPosXY
-EndFunc   ;==>FindAdsXButton
+;Func FindAdsXButton()
+;	Local $sCoor
+;	Local $sDirectory = "adsxbutton-bundle"
+;	Local $sReturnProps = "objectpoints"
+;	Local $result = ""
+;	Local $aPosXY = ""
+;
+;	$sCoor = GetDiamondFromRect(GetButtonRectangle("AdsX"))
+;	$result = findMultiple($sDirectory, $sCoor, $sCoor, 0, 0, 1, $sReturnProps, False)
+;
+;	If IsArray($result) then
+;		$aPosXY = StringSplit(($result[0])[0], ",", $STR_NOCOUNT)
+;		SetDebugLog("FindAdsXButton: " & $g_sAndroidGameDistributor & " AdsX Button X|Y = " & $aPosXY[0] & "|" & $aPosXY[1], $COLOR_DEBUG)
+;		Return $aPosXY
+;	EndIf
+;
+;	SetDebugLog("FindAdsXButton: " & $g_sAndroidGameDistributor & " NOT Found", $COLOR_DEBUG)
+;	Return $aPosXY
+;EndFunc   ;==>FindAdsXButton
 
 Func GetButtonRectangle($sButtonName)
 	Local $btnRectangle = "0,0," & $g_iDEFAULT_WIDTH & "," & $g_iDEFAULT_HEIGHT

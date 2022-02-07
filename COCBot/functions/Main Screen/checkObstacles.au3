@@ -38,40 +38,38 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 
 	If Not $bRecursive Then
 		If checkObstacles_Network() Then Return True
-		;If checkObstacles_GfxError() Then Return True
 	EndIf
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
 	Local $bIsOnMainVillage = isOnMainVillage()
-	If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
-		If $bIsOnBuilderIsland Then
-			SetLog("Detected Builder Base, trying to switch back to Main Village")
-			AndroidAdbScript("ZoomOut")
-			ZoomOut()
-		Else
-			SetLog("Detected Main Village, trying to switch back to Builder Base")
-			ZoomOut()
-		EndIf
-		If SwitchBetweenBases() Then
-			$g_bMinorObstacle = True
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			Return False
-		EndIf
-	EndIf
+	;If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
+	;	If $bIsOnBuilderIsland Then
+	;		SetLog("Detected Builder Base, trying to switch back to Main Village")
+	;		AndroidAdbScript("ZoomOut")
+	;		ZoomOut()
+	;	Else
+	;		SetLog("Detected Main Village, trying to switch back to Builder Base")
+	;		ZoomOut()
+	;	EndIf
+	;	If SwitchBetweenBases() Then
+	;		$g_bMinorObstacle = True
+	;		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+	;		Return False
+	;	EndIf
+	;EndIf
 
-	If $g_sAndroidGameDistributor <> $g_sGoogle Then ; close an ads window for non google apks
-		Local $aXButton = FindAdsXButton()
-		If IsArray($aXButton) Then
-			SetDebugLog("checkObstacles: Found " & $g_sAndroidGameDistributor & " ADS X button to close")
-			PureClickP($aXButton)
-			$g_bMinorObstacle = True
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			Return False
-		EndIf
-	EndIf
+	;If $g_sAndroidGameDistributor <> $g_sGoogle Then ; close an ads window for non google apks
+	;	Local $aXButton = FindAdsXButton()
+	;	If IsArray($aXButton) Then
+	;		SetDebugLog("checkObstacles: Found " & $g_sAndroidGameDistributor & " ADS X button to close")
+	;		PureClickP($aXButton)
+	;		$g_bMinorObstacle = True
+	;		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+	;		Return False
+	;	EndIf
+	;EndIf
 	
 	Local $ascidConnectButton = decodeSingleCoord(findImage("SCID", $g_sImgSupercellIDConnect, GetDiamondFromRect("100,20,700,100"), 1, True))
 	If IsArray($ascidConnectButton) And UBound($ascidConnectButton, 1) >= 2 Then
-	;If WaitforPixel(685, 30, 686, 31, Hex(0xE6E6E6, 6), 6, 3) Then
 		SetDebugLog("checkObstacles: Found SCID popup connect suggestion", $COLOR_ACTION)
 		Click($ascidConnectButton[0], $ascidConnectButton[1])
 		If _Sleep(1000) Then Return
