@@ -46,10 +46,7 @@ Func UpgradeWall($bTest = False)
 		SetLog("Have more than 1 builder, Upgrade Walls skipped", $COLOR_DEBUG)
 		$GoUpgrade = False
 	EndIf
-	If $g_iFreeBuilderCount > 1 And $g_bUpgradeWallSaveBuilder Then
-		SetLog("Ooops, Chief you are reserve one for wall, sure we will Upgrade Walls", $COLOR_DEBUG)
-		$GoUpgrade = True
-	EndIf
+	
 	If Not $g_bRunState Then Return
 	If $GoUpgrade And $g_bUpgradeLowWall Then
 		UpgradeLowLevelWall($bTest)
@@ -306,7 +303,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 			EndSwitch
 			
 			If $UpgradeButtonFound Then
-				Click($g_iQuickMISX + 400, $g_iQuickMISY + 520)
+				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(1000) Then Return
 				If Not $bTest Then
 					Click(420, 500)

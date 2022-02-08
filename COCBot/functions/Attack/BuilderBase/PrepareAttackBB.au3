@@ -140,25 +140,30 @@ Func CheckArmyReady()
 	
 	If _Sleep($DELAYCHECKFULLARMY2) Then Return ; wait for window
 	
-	If QuickMIS("BC1", $g_sImgArmyNeedTrain, 130, 360, 190, 390, True, False) Then
+	If QuickMIS("BC1", $g_sImgArmyNeedTrain, 130, 360, 190, 390) Then
 		$bNeedTrain = True ;need train, so will train cannon cart
 		$bReady = False
 	EndIf
 	
-	If Not $bReady And $bNeedTrain And $g_bTrainTroopBBCannonnCart Then
+	If Not $bReady And $bNeedTrain Then
 		ClickP($aArmyTrainButton, 1, 0, "#0293")
 		If _Sleep(1000) Then Return ; wait for window
-		Local $sCannonCart
-		If QuickMIS("BC1", $g_sImgFillTrain, 40, 440, 820, 550, True, False) Then
-			Setlog("Army is not ready, Try to Train to fill BB ArmyCamp", $COLOR_DEBUG)
-			Click($g_iQuickMISX + 40, $g_iQuickMISY + 440, 1)
-			If _Sleep(500) Then Return
-			ClickAway("Left")
-			$bReady = True
+		Local $Camp = QuickMIS("CNX", $g_sImgFillCamp, 40, 320, 800, 350)
+		For $i = 1 To UBound($Camp)
+			If QuickMIS("BC1", $g_sImgFillTrain, 40, 440, 820, 550) Then
+				Setlog("Army is not ready, fill BB ArmyCamp", $COLOR_DEBUG)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(500) Then Return
+			EndIf
+		Next
+		$Camp = QuickMIS("CNX", $g_sImgFillCamp, 40, 320, 800, 350)
+		If UBound($Camp) > 0 Then 
+			$bReady = False
 		Else
-			Setlog("Army is not ready, and Cannot Find CannonCart Icon to Train", $COLOR_DEBUG)
-			ClickAway("Left")
+			$bReady = True
 		EndIf
+		ClickAway()
+		If _Sleep(1000) Then Return ; wait for window close
 	EndIf
 
 	If Not $bReady Then
@@ -169,6 +174,5 @@ Func CheckArmyReady()
 	Else
 		SetLog("Army is ready.")
 	EndIf
-
 	Return $bReady
 EndFunc

@@ -783,6 +783,14 @@ Func chkRushTH()
 	EndIf
 EndFunc   ;==>chkRushTH
 
+Func chkUseWallReserveBuilder()
+	If GUICtrlRead($g_hUseWallReserveBuilder) = $GUI_CHECKED Then
+		$g_bUseWallReserveBuilder = True
+	Else
+		$g_bUseWallReserveBuilder = False
+	EndIf
+EndFunc
+
 Func BtnRushTHOption()
 	GUISetState(@SW_SHOW, $g_hGUI_RushTHOption)
 EndFunc

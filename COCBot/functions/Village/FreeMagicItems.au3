@@ -85,7 +85,7 @@ Func CollectFreeMagicItems($bTest = False)
 	If Not $Collected Then 
 		If QuickMIS("BC1", $g_sImgFree, 160, 400, 320, 450, True, False) Then
 			If Not $bTest Then
-				Click($g_iQuickMISX + 160, $g_iQuickMISY + 400, 1)
+				Click($g_iQuickMISX, $g_iQuickMISY)
 				SetLog("Try Collect Special Offer By Image, Success", $COLOR_SUCCESS)
 				If _Sleep(1000) Then Return
 				$Collected = True

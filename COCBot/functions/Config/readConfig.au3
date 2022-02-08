@@ -960,6 +960,8 @@ Func ReadConfig_auto()
 	IniReadS($g_bNewBuildingFirst, $g_sProfileConfigPath, "Auto Upgrade", "ChkNewBuildingFirst", True, "Bool")
 	IniReadS($g_bPlaceNewBuilding, $g_sProfileConfigPath, "Auto Upgrade", "AUpgradePlaceNew", True, "Bool")
 	IniReadS($g_bChkRushTH, $g_sProfileConfigPath, "Auto Upgrade", "ChkRushTH", True, "Bool")
+	IniReadS($g_bUseWallReserveBuilder, $g_sProfileConfigPath, "Auto Upgrade", "UseWallReserveBuilder", True, "Bool")
+	
 	Local $str = ""
 	$str = StringSplit(IniRead($g_sProfileConfigPath, "Auto Upgrade", "RushTHOption", "5|13|7|4|3"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aiCmbRushTHOption) - 1

@@ -260,7 +260,6 @@ Func ToggleControl()
 	EndIf
 EndFunc
 
-
 Func btnHide()
 	$g_bIsHidden = Not $g_bIsHidden
 	HideAndroidWindow($g_bIsHidden, Default, Default, "btnHide")

@@ -51,11 +51,11 @@ Func getPBTime()
 	WEnd
 
 	If _CheckPixel($aIsShieldInfo, $g_bCapturePixel) Or $bPBTStart Then ; PB Info window open?
-		$sTimeResult = getOcrPBTtime(555, 499) ; read PBT time
+		$sTimeResult = getOcrPBTtime(540, 502) ; read PBT time
 		SetDebugLog("OCR PBT Time= " & $sTimeResult, $COLOR_DEBUG)
 		If $sTimeResult = "" Then ; try a 2nd time after a short delay if slow PC and null read
 			If _Sleep($DELAYPERSONALSHIELD2) Then Return ; pause for slow PC
-			$sTimeResult = getOcrPBTtime(555, 499) ; read PBT time
+			$sTimeResult = getOcrPBTtime(540, 502) ; read PBT time
 			SetDebugLog("OCR2 PBT Time= " & $sTimeResult, $COLOR_DEBUG)
 			If $sTimeResult = "" And Not $bPBTStart Then ; error if no read value
 				SetLog("strange error, no PBT value found?", $COLOR_ERROR)

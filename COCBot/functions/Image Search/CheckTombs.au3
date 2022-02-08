@@ -159,7 +159,7 @@ Func RemoveGembox()
 	If Not IsMainPage() Then Return
 	
 	If QuickMIS("BC1", $g_sImgGemBox, 70,70,830,620) Then
-		Click($g_iQuickMISX + 70, $g_iQuickMISY + 70, 1, 0, "#0430")
+		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "#0430")
 		_Sleep(1000)
 		ClickRemoveObstacle()
 		ClickAway()

@@ -156,7 +156,7 @@ Func getOcrGuardShield($x_start, $y_start) ;  -> Get the guard/shield time left,
 EndFunc   ;==>getOcrGuardShield
 
 Func getOcrPBTtime($x_start, $y_start) ;  -> Get the Time until PBT starts from PBT info window
-	Return getOcrAndCapture("coc-pbttime", $x_start, $y_start, 59, 15)
+	Return getOcrAndCapture("coc-pbttime", $x_start, $y_start, 80, 15)
 EndFunc   ;==>getOcrPBTtime
 
 Func getOcrReloadMessage($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)

@@ -186,7 +186,7 @@ Func AutoUpgradeBB($bTest = False)
 								If $g_iChkBBSuggestedUpgradesOTTO Then
 									If QuickMIS("BC1", $g_sImgAUpgradeOttoBB, 260, $y, 450, $y1, $bScreencap, $bDebug) Then
 										SetLog("[" & $i & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
-										Click($g_iQuickMISX + 260, $g_iQuickMISY + $y)
+										Click($g_iQuickMISX, $g_iQuickMISY)
 										$BuildingFound = True
 									Else
 										SetLog("[" & $i & "] Not Optimize OTTO Building", $COLOR_INFO)
@@ -221,7 +221,7 @@ Func AutoUpgradeBB($bTest = False)
 								If $g_iChkBBSuggestedUpgradesOTTO And Not $g_bisMegaTeslaMaxed Then
 									If QuickMIS("BC1", $g_sImgAUpgradeOttoBB, 260, $y, 450, $y1, $bScreencap, $bDebug) Then
 										SetLog("[" & $i & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
-										Click($g_iQuickMISX + 260, $g_iQuickMISY + $y)
+										Click($g_iQuickMISX, $g_iQuickMISY)
 										$BuildingFound = True
 									Else
 										SetLog("[" & $i & "] Not Optimize OTTO Building", $COLOR_INFO)
@@ -310,8 +310,8 @@ Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap 
 	If QuickMIS("BC1", $directory, $x, $y, $x1, $y1, $Screencap, $Debug) Then
 		; Correct positions to Check Green 'New' Building word
 		; Store the values
-		$aResult[0] = $g_iQuickMISX + $x
-		$aResult[1] = $g_iQuickMISY + $y
+		$aResult[0] = $g_iQuickMISX
+		$aResult[1] = $g_iQuickMISY
 		$aResult[2] = $Name
 		; The pink/salmon color on zeros
 		If QuickMIS("BC1", $g_sImgAutoUpgradeNoRes, $x, $y, $x1, $y1, True, $Debug) Then
@@ -322,8 +322,8 @@ Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap 
 		; Proceeds with 'New' detection
 		If QuickMIS("BC1", $g_sImgAutoUpgradeNew, $x, $y, $x1, $y1, True, $Debug) Then
 			; Store new values
-			$aResult[0] = $g_iQuickMISX + $x + 35
-			$aResult[1] = $g_iQuickMISY + $y
+			$aResult[0] = $g_iQuickMISX + 35
+			$aResult[1] = $g_iQuickMISY
 			$aResult[2] = "New"
 		EndIf
 	EndIf
@@ -410,12 +410,12 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 				Return False
 			EndIf
 		
-			Click($g_iQuickMISX + 218, $g_iQuickMISY + 514, 1)
+			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1500) Then Return
 
 			If QuickMIS("BC1", $sUpgButtom, 300, 410, 760, 620, True, $Debug) Then
 				If Not $bTest Then
-					Click($g_iQuickMISX + 300, $g_iQuickMISY + 410, 1)
+					Click($g_iQuickMISX, $g_iQuickMISY)
 					BBAutoUpgradeLog($aBuildingName)
 				Else
 					SetLog("Only for Test!", $COLOR_ERROR)
@@ -504,9 +504,9 @@ Func SearchNewBuilding($bTest = False)
 		If $g_iChkBBSuggestedUpgradesOTTO Then ;add add BuiderHall and Storage for priority upgrade on optimize OTTO
 			If QuickMIS("BC1", $g_sImgAUpgradeOttoBBPriority, 270, 80, 540, 370, True) Then
 				SetLog("Found OptimizeOTTO Priority Building", $COLOR_INFO)
-				Local $tmpX = $g_iQuickMISX + 270, $tmpY = $g_iQuickMISY + 80
+				Local $tmpX = $g_iQuickMISX, $tmpY = $g_iQuickMISY
 				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $tmpX, $tmpY - 10, $tmpX + 200, $tmpY + 10) Then
-					Click($g_iQuickMISX + $tmpX, $g_iQuickMISY + $tmpY - 10)
+					Click($g_iQuickMISX, $g_iQuickMISY)
 					GetUpgradeButton("OptimizeOTTO", False, $bTest)
 				Else
 					SetLog("But No resource", $COLOR_SUCCESS)

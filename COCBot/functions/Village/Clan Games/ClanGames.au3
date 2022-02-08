@@ -617,7 +617,7 @@ Func IsClanGamesWindow($getCapture = True)
 
 	If QuickMIS("BC1", $g_sImgCaravan, 230, 55, 330, 155, $getCapture, False) Then
 		SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
-		Click($g_iQuickMISX + 230, $g_iQuickMISY + 55)
+		Click($g_iQuickMISX, $g_iQuickMISY)
 		; Just wait for window open
 		For $i = 1 To 10
 			If IsFullScreenWindow() Then ExitLoop
@@ -799,16 +799,16 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 	If Not $g_bRunState Then Return
 
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, $getCapture, False) Then
-		Local $Timer = GetEventTimeInMinutes($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+		Local $Timer = GetEventTimeInMinutes($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Starting Event" & " [" & $Timer & " min]", $COLOR_SUCCESS)
-		Click($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+		Click($g_iQuickMISX, $g_iQuickMISY)
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min")
 		
 		If $g_bPurgeJob Then
 			For $i = 1 To 5 
 				If QuickMIS("BC1", $g_sImgTrashPurge, 100, 100, 700, 550, True) Then
-					Click($g_iQuickMISX + 100, $g_iQuickMISY + 100)
+					Click($g_iQuickMISX, $g_iQuickMISY)
 					SetLog("Click Trash", $COLOR_INFO)
 					ExitLoop
 				Else
@@ -883,7 +883,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 			If $count1 > 10 Then ExitLoop
 		Wend
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
-			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
+			Click($g_iQuickMISX, $g_iQuickMISY)
 			SetLog("Click Trash", $COLOR_INFO)
 			While Not IsOKCancelPage()
 				SetDebugLog("Waiting for trash Confirm OK", $COLOR_DEBUG)
@@ -914,9 +914,9 @@ Func StartAndPurgeEvent($bTest = False)
 	Local $count1 = 0, $count2 = 0
 	
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, True, False) Then
-		Local $Timer = GetEventTimeInMinutes($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+		Local $Timer = GetEventTimeInMinutes($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Starting Event" & " [" & $Timer & " min]", $COLOR_SUCCESS)
-		Click($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+		Click($g_iQuickMISX, $g_iQuickMISY)
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting Purge for " & $Timer & " min", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting Purge for " & $Timer & " min")
 
@@ -927,7 +927,7 @@ Func StartAndPurgeEvent($bTest = False)
 		Wend
 		
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
-			Click($g_iQuickMISX + 400, $g_iQuickMISY + 200)
+			Click($g_iQuickMISX, $g_iQuickMISY)
 			SetLog("Click Trash", $COLOR_INFO)
 			While Not IsOKCancelPage()
 				SetDebugLog("Waiting for trash Confirm OK", $COLOR_DEBUG)
@@ -996,7 +996,7 @@ EndFunc   ;==>GetEventTimeInMinutes
 
 Func GetEventInformation()
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, True, False) Then
-		Return GetEventTimeInMinutes($g_iQuickMISX + 220, $g_iQuickMISY + 150)
+		Return GetEventTimeInMinutes($g_iQuickMISX, $g_iQuickMISY)
 	Else
 		Return 0
 	EndIf

@@ -327,7 +327,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	EndIf
 	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
 		SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
-		Click($g_iQuickMISX + 660, $g_iQuickMISY + 80)
+		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return True
 	EndIf

@@ -20,7 +20,7 @@ Func AutoUpgrade($bTest = False)
 	Return $Result
 EndFunc
 
-Func AutoUpgradeCheckBuilder($bTest = False)
+Func AutoUpgradeCheckBuilder($bTest = False, $SkipWallReserve = False)
 	Local $bRet = False
 	Local $iWallReserve
 
@@ -36,9 +36,13 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		$bRet = True
 	EndIf
 	If $g_iFreeBuilderCount - $iWallReserve - $g_iHeroReservedBuilder < 1 Then ;check builder reserve on wall and hero upgrade
-		If $g_bDebugClick Then SetLog("FreeBuilder=" & $g_iFreeBuilderCount & ", Reserve ForHero=" & $g_iHeroReservedBuilder & " ForWall=" & $iWallReserve, $COLOR_INFO)
+		SetLog("FreeBuilder=" & $g_iFreeBuilderCount & ", Reserve ForHero=" & $g_iHeroReservedBuilder & " ForWall=" & $iWallReserve, $COLOR_INFO)
 		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
 		$bRet = False
+	EndIf
+	If $g_iFreeBuilderCount = 1 And $SkipWallReserve Then ;Skip Wall Reserve, detected upgrade remain time on most top list upgrade < 24h
+		SetLog("Detected remain time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
+		$bRet = True
 	EndIf
 	SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
@@ -49,7 +53,13 @@ Func SearchUpgrade($bTest = False)
 	Local $bDebug = $g_bDebugSetlog
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
-	If Not AutoUpgradeCheckBuilder($bTest) Then Return
+	Local $SkipWallReserve = False
+	If $g_bUseWallReserveBuilder Then
+		ClickMainBuilder()
+		$SkipWallReserve = QuickMIS("BC1", $g_sImgAUpgradeHour, 375, 105, 440, 135)
+	Else
+		If Not AutoUpgradeCheckBuilder($bTest) Then Return
+	EndIf
 	VillageReport(True,True)
 
 	; check if builder head is clickable
@@ -58,10 +68,10 @@ Func SearchUpgrade($bTest = False)
 		Return
 	EndIf
 
-	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
+	If AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ;Check if we have builder
 		If $g_bNewBuildingFirst Then
-			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
-			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
+			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest, $SkipWallReserve) ;search new building
+			If Not AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ;Check if we still have builder
 				ZoomOut() ;no builder, exit
 				Return
 			EndIf
@@ -70,11 +80,11 @@ Func SearchUpgrade($bTest = False)
 	EndIf
 
 	If Not $g_bRunState Then Return
-	If AutoUpgradeCheckBuilder($bTest) Then AutoUpgradeSearchExisting($bTest) ;search upgrade for existing building
+	If AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then AutoUpgradeSearchExisting($bTest, $SkipWallReserve) ;search upgrade for existing building
 
-	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
+	If AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ;Check if we have builder
 		If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing
-			AutoUpgradeSearchNewBuilding($bTest)
+			AutoUpgradeSearchNewBuilding($bTest, $SkipWallReserve)
 		EndIf
 	EndIf
 	If Not $g_bRunState Then Return
@@ -83,7 +93,7 @@ Func SearchUpgrade($bTest = False)
 	Return False
 EndFunc
 
-Func AutoUpgradeSearchExisting($bTest = False)
+Func AutoUpgradeSearchExisting($bTest = False, $SkipWallReserve = False)
 	If Not $g_bRunState Then Return
 	SetLog("Search For Existing Upgrade", $COLOR_DEBUG)
 	If Not ClickMainBuilder($bTest) Then Return
@@ -113,12 +123,13 @@ Func AutoUpgradeSearchExisting($bTest = False)
 				EndIf
 		
 				If $b_BuildingFound Then
-					Click($g_iQuickMISX + $x, $g_iQuickMISY + $y)
+					Click($g_iQuickMISX, $g_iQuickMISY)
 					If _Sleep(1000) Then Return
 					If DoUpgrade($bTest) Then
 						$b_BuildingFound = False ;reset
 						$z = 0 ;reset
-						If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
+						If Not $g_bRunState Then Return
+						If Not AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ExitLoop 2
 					Endif
 					ClickMainBuilder($bTest)
 				EndIf
@@ -144,7 +155,8 @@ Func AutoUpgradeSearchExisting($bTest = False)
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
-		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
+		If Not $g_bRunState Then Return
+		If Not AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ExitLoop
 		ClickDragAUpgrade("up", $y - $step) ;do scroll up
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
@@ -630,7 +642,7 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 	Return False
 EndFunc ;==>AUNewBuildings
 
-Func AutoUpgradeSearchNewBuilding($bTest = False)
+Func AutoUpgradeSearchNewBuilding($bTest = False, $SkipWallReserve = False)
 	If Not $g_bRunState Then Return
 	If Not $g_bPlaceNewBuilding Then Return
 	SetLog("Search For Place New Building", $COLOR_DEBUG)
@@ -639,7 +651,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 
 	If Not ClickMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
-
+	
 	Local $ZoomedIn = False, $isWall = False 
 	Local $NeedDrag = True, $TmpUpgradeCost, $UpgradeCost, $sameCost = 0
 	If Not $g_bRunState Then Return
@@ -769,8 +781,9 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
 		If $sameCost > 2 Then $NeedDrag = False
 		$UpgradeCost = $TmpUpgradeCost
-
-		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
+		
+		If Not $g_bRunState Then Return
+		If Not AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ExitLoop
 		If Not $NeedDrag Then
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop

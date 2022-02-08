@@ -40,7 +40,7 @@ Func checkAttackDisable($iSource, $Result = "")
 			While $Result = "" Or (StringLen($Result) < 3)
 				$i += 1
 				If _Sleep($DELAYATTACKDISABLE100) Then Return
-				$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak if not found due slow PC
+				$Result = getAttackDisable(412, 160) ; Grab Ocr for TakeABreak if not found due slow PC
 				If $i >= 3 Then ExitLoop
 			WEnd
 			SetDebugLog("Attack Personal Break OCR result = " & $Result, $COLOR_DEBUG)
@@ -70,7 +70,7 @@ Func checkAttackDisable($iSource, $Result = "")
 				Return ; exit function, take a break text not found
 			EndIf
 		Case $g_iTaBChkIdle ; look at location 180, 167 for the have "been" online too long message, and the "after" Personal Break message
-			If $Result = "" Then $Result = getAttackDisable(180, 156) ; change to 180, 186 for 860x780
+			If $Result = "" Then $Result = getAttackDisable(258, 142) ; change to 180, 186 for 860x780
 			If _Sleep($DELAYATTACKDISABLE500) Then Return ; short wait to not delay to much
 			If $Result = "" Or (StringLen($Result) < 3) Then $Result = getAttackDisable(180, 156) ; Grab Ocr for "Have Been" 2nd time if not found due slow PC
 			SetDebugLog("Personal Break OCR result = " & $Result, $COLOR_DEBUG)
@@ -146,7 +146,6 @@ Func checkAttackDisable($iSource, $Result = "")
 		If _DateIsValid($g_asTrainTimeFinish[$g_iCurAccount]) Then
 			If _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$g_iCurAccount]) < $g_iSinglePBForcedLogoffTime Then
 				$g_asTrainTimeFinish[$g_iCurAccount] = _DateAdd("n", $g_iSinglePBForcedLogoffTime, _NowCalc())
-				
 			EndIf
 		EndIf
 		

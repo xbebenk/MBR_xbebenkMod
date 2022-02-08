@@ -997,7 +997,7 @@ Global $g_iWallCost = 0
 
 ; Auto Upgrade
 Global $g_bPlaceNewBuilding = False, $g_bChkRushTH = False, $g_bNewBuildingFirst = False
-Global $g_bAutoUpgradeEnabled = False
+Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False
 Global $g_iChkIgnoreTH = 0, $g_iChkIgnoreKing = 0, $g_iChkIgnoreQueen = 0, $g_iChkIgnoreWarden = 0, $g_iChkIgnoreChampion = 0, $g_iChkIgnoreCC = 0, $g_iChkIgnoreLab = 0
 Global $g_iChkIgnoreBarrack = 0, $g_iChkIgnoreDBarrack = 0, $g_iChkIgnoreFactory = 0, $g_iChkIgnoreDFactory = 0
 Global $g_iChkIgnoreGColl = 0, $g_iChkIgnoreEColl = 0, $g_iChkIgnoreDColl = 0
@@ -1022,7 +1022,7 @@ Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0,
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
-Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSety = 0, $g_aImageSearchXML = -1 ; Team AIO Mod++
+Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_aImageSearchXML = -1 ; Team AIO Mod++
 
 ; <><><><> Village / Achievements <><><><>
 Global $g_iUnbrkMode = 0, $g_iUnbrkWait = 5
@@ -1406,7 +1406,7 @@ Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders
 Global $g_aiStarLaboratoryPos[2] = [-1, -1] ; Position of Starlaboratory
 Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_iBHLevel = 0
 Global $g_bGoldStorageFullBB = False, $g_bElixirStorageFullBB = False, $g_bGoldStorage50BB = False
-Global $g_bTrainTroopBBCannonnCart = True, $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
+Global $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
 Global $g_bChkBBCustomArmyEnable = False
 Global $g_iCmbTroopBB[6] = [0, 0, 0, 0, 0, 0]
 

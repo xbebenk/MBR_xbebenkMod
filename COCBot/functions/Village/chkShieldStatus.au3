@@ -121,8 +121,6 @@ Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
 		EndIf
 	EndIf
 
-	If checkObstacles() Then checkMainScreen(False) ; Check for screen errors
-
 EndFunc   ;==>chkShieldStatus
 
 ; Returns formatted difference between two dates

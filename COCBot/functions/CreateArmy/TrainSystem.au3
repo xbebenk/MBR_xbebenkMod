@@ -638,14 +638,14 @@ EndFunc   ;==>DeleteInvalidTroopInArray
 Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's a Low Opacity red color on them
 	
 	Local $IsButtonExist = False
-	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200, True, False)
+	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200)
 	While $IsButtonExist
 		For $i = 1 To 5
-			Click($g_iQuickMISX + 805, $g_iQuickMISX + 150, 50)
+			Click($g_iQuickMISX, $g_iQuickMISX, 20)
 			If Not $g_bRunState Then Return
 			If _Sleep(500) Then Return
 		Next
-		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200, True, False)
+		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200, True)
 	Wend
 
 	Return True
@@ -1177,14 +1177,14 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 	If _Sleep(500) Then Return
 	
 	Local $IsButtonExist = False
-	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215, True, False)
+	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215)
 	While $IsButtonExist
 		For $i = 1 To 3
-			Click($g_iQuickMISX + 805, $g_iQuickMISX + 180, 20)
+			Click($g_iQuickMISX, $g_iQuickMISX, 20)
 			If Not $g_bRunState Then Return
 			If _Sleep(500) Then Return
 		Next
-		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215, True, False)
+		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215, True)
 	Wend
 	
 EndFunc   ;==>DeleteQueued

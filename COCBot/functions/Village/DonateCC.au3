@@ -228,8 +228,12 @@ Func DonateCC($bCheckForNewMsg = False)
 	If _Sleep($DELAYDONATECC2) Then Return
 
 	If Not ClickB("ClanChatOpen") Then
-		SetLog("Try Open ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR)
-		Return
+		If WaitforPixel(18, 376, 19, 377, "C55115", 10, 1) Then
+			Click(18, 370) ;Click ClanChatOpen
+		Else
+			SetLog("Try Open ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR)
+			Return
+		EndIf
 	EndIf
 
 	If _Sleep($DELAYDONATECC4) Then Return

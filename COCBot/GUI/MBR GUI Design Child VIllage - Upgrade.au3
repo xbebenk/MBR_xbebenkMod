@@ -51,7 +51,7 @@ Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0
 Global $g_hTxtSmartMinGold = 0, $g_hTxtSmartMinElixir = 0, $g_hTxtSmartMinDark = 0
 Global $g_hChkResourcesToIgnore[3] = [0, 0, 0]
 Global $g_hChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_hChkRushTH = 0, $g_hBtnRushTHOption = 0
+Global $g_hChkRushTH = 0, $g_hBtnRushTHOption = 0, $g_hUseWallReserveBuilder = 0
 Global $g_hGUI_RushTHOption = 0, $g_hBtnRushTHOptionClose = 0, $g_ahCmbRushTHOption[5] = [0, 0, 0, 0, 0]
 Global $RushTHOption[5] = ["TownHall", "Barracks", "Dark Barracks", "Spell Factory", "Dark Spell Factory"]
 Global $g_hchkEssentialUpgrade[8] = [0,0,0,0,0,0,0,0]
@@ -751,6 +751,11 @@ Func CreateAutoUpgradeSubTab()
 		_GUICtrlSetTip(-1, "Toggle to Make RushTH, Wont Ugrade Defense Or colletor")
 	$g_hBtnRushTHOption = GUICtrlCreateButton("Upgrade Setting", $x + 65, $y + 1, -1, 23)
 			GUICtrlSetOnEvent(-1, "BtnRushTHOption")
+	$x = 210
+	$g_hUseWallReserveBuilder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "UseWallReserveBuilder", "Use Wall Reserve Builder"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUseWallReserveBuilder")
+		_GUICtrlSetTip(-1, "Enable Using Wall Reserve Building for Upgrade" & @CRLF & "Will Only If use if current upgrade time < 24H")
+		
 	$x = 5
 		$g_hTxtAutoUpgradeLog = GUICtrlCreateEdit("", $x, 340, $g_iSizeWGrpTab3, 62, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "TxtAutoUpgradeLog", "------------------------------------------------ AUTO UPGRADE LOG ------------------------------------------------"))

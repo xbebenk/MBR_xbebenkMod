@@ -70,7 +70,7 @@ Global $g_sImgBoostTroopsIcons = @ScriptDir & "\imgxml\SuperTroops\Troops\"
 Global $g_sImgBoostTroopsButtons = @ScriptDir & "\imgxml\SuperTroops\Buttons\"
 Global $g_sImgBoostTroopsPotion = @ScriptDir & "\imgxml\SuperTroops\Potions\"
 Global $g_sImgBoostTroopsClock = @ScriptDir & "\imgxml\SuperTroops\Clock\"
-Global $g_sImgSTProgress = @ScriptDir & "\imgxml\SuperTroops\Progress\Progress*.xml"
+Global $g_sImgSTProgress = @ScriptDir & "\imgxml\SuperTroops\Progress\"
 #EndRegion
 
 #Region Builder Base
@@ -94,6 +94,7 @@ Global $g_sImgBBBattleStarted = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleS
 Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBBattleMachine_0_90.xml"
 Global $g_sImgOkButton = @ScriptDir & "\imgxml\Attack\BuilderBase\OkayButton\OkayButton_0_90.xml"
 Global $g_sImgFillTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\TrainTroop\"
+Global $g_sImgFillCamp = @ScriptDir & "\imgxml\Attack\BuilderBase\TrainTroop\Camp\"
 Global $g_sImgArmyNeedTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyNeedTrain"
 Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\BBTroops"
 Global $g_sImgBBLootAvail = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\LootAvail_0_90.xml"
@@ -137,6 +138,7 @@ Global $g_sImgGoblin = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Goblin\"
 Global $g_sImgRedX = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RedX\"
 Global $g_sImgAUpgradeRushTH = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RushTH\"
 Global $g_sImgAUpgradeRushTHPriority = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RushTHPriority\"
+Global $g_sImgAUpgradeHour = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Hour\"
 #EndRegion
 
 #Region Auto Upgrade Builder Base

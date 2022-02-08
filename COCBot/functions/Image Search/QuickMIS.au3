@@ -68,13 +68,13 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					If UBound($aCords) = 0 Then Return False ; should never happen, but it did...
 					Local $aCord = $aCords[0] ; sorted by Y
 					If UBound($aCord) < 2 Then Return False ; should never happen, but anyway...
-					$g_iQuickMISX = $aCord[0]
-					$g_iQuickMISY = $aCord[1]
+					$g_iQuickMISX = $aCord[0] + $Left
+					$g_iQuickMISY = $aCord[1] + $Top
 
 					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
 
 					If $g_bDebugSetlog Or $Debug Then
-						SetDebugLog($ValueReturned & " Found: " & $Result & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
+						SetDebugLog($ValueReturned & " Found: " & $Result & ", using " & $g_iQuickMISX + $Left & "," & $g_iQuickMISY + $Top, $COLOR_PURPLE)
 						If $g_bDebugImageSave Then DebugQuickMIS($Left, $Top, "BC1_detected[" & $Name & "_" & $g_iQuickMISX + $Left & "x" & $g_iQuickMISY + $Top & "]")
 					EndIf
 

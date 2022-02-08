@@ -70,14 +70,14 @@ Func BoostSuperTroop($bTest = False)
 						If FindStroopIcons($g_iCmbSuperTroops[$i], $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2) Then
 							;SetLog("QuickMIS(" & "BC1" & ", " & $g_sImgBoostTroopsIcons & "," & $iColumnX & "," & $iColumnY1 & "," & $iColumnX + $picswidth & "," & $iColumnY2 & ")", $COLOR_DEBUG );
 							If QuickMIS("BC1", $g_sImgBoostTroopsIcons, $iColumnX, $iColumnY1, $iColumnX + $picswidth, $iColumnY2, True, False) Then ;find pics of Stroop on spesific row / column
-								Click($g_iQuickMISX + $iColumnX, $g_iQuickMISY + $iColumnY1, 1)
+								Click($g_iQuickMISX, $g_iQuickMISY)
 								If _Sleep(1000) Then Return
 								Setlog("Using Dark Elixir...", $COLOR_INFO)
 								If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 500, 750, 570, True, False) Then ;find image of dark elixir button
 									$BoostCost = getResourcesBonus(628, 524) ; get cost
 									$BoostDuration = getHeroUpgradeTime(575, 484) ; get duration
 									If Not $BoostCost = "" Then
-										Click($g_iQuickMISX + 600, $g_iQuickMISY + 500, 1)
+										Click($g_iQuickMISX, $g_iQuickMISY)
 										If _Sleep(1000) Then Return
 										If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 400, 550, 490, True, False) Then ;find image of dark elixir button again (confirm upgrade)
 											Setlog("Using Dark Elixir, Boosting " & $sTroopName, $COLOR_SUCCESS)
@@ -87,7 +87,7 @@ Func BoostSuperTroop($bTest = False)
 												CancelBoost("Using Dark Elixir")
 												$TroopBoosted = True
 											Else
-												Click($g_iQuickMISX + 320, $g_iQuickMISY + 400, 1)
+												Click($g_iQuickMISX, $g_iQuickMISY)
 												ClickAway()
 											EndIf
 										Else
@@ -102,7 +102,7 @@ Func BoostSuperTroop($bTest = False)
 										If $g_bSuperTroopsBoostUsePotion Then
 											Setlog("Let's try boosting " & $sTroopName & " with potion", $COLOR_INFO)
 											If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 400, 500, 580, 570, True, False) Then ;find image of Super Potion
-												Click($g_iQuickMISX + 400, $g_iQuickMISY + 500, 1)
+												Click($g_iQuickMISX, $g_iQuickMISY)
 												If _Sleep(1000) Then Return
 												If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 330, 400, 520, 480, True, False) Then ;find image of Super Potion again (confirm upgrade)
 													;do click boost
@@ -110,7 +110,7 @@ Func BoostSuperTroop($bTest = False)
 														CancelBoost("Using Potion")
 														$TroopBoosted = True
 													Else
-														Click($g_iQuickMISX + 330, $g_iQuickMISY + 400, 1)
+														Click($g_iQuickMISX, $g_iQuickMISY)
 														Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
 														ClickAway()
 													EndIf
@@ -153,28 +153,28 @@ EndFunc   ;==>BoostSuperTroop
 
 Func OpenBarrel()
 	ClickAway()
-	Local $iSTCount = 0, $bOpenBarrel = True
+	Local $bOpenBarrel = True
 	If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 0, 0, 220, 225, True, False) Then
 		; Check if is already boosted.
-		Local $aiSearchArray[4] = [$g_iQuickMISX - 11, $g_iQuickMISY - 31, $g_iQuickMISX - 7, $g_iQuickMISY - 10]
-		Local $aSearchForProgress = decodeMultipleCoords(findImage("SuperTroopProgress", $g_sImgSTProgress, GetDiamondFromRect($aiSearchArray), 0, True, Default))
-		If IsArray($aSearchForProgress) And UBound($aSearchForProgress, 1) > 0 Then
-			; Reset
-			$iSTCount = 0
-			For $i = 0 To 1
-				If $g_iCmbSuperTroops[$i] > 0 Then $iSTCount += 1
+		Local $Progress = QuickMIS("CNX", $g_sImgSTProgress, $g_iQuickMISX - 50, $g_iQuickMISY - 50, $g_iQuickMISX + 50, $g_iQuickMISY + 50)
+		If IsArray($Progress) And UBound($Progress) > 0 Then
+			Local $EnabledStroop = 0
+			For $i = 0 To Ubound($g_iCmbSuperTroops) - 1
+				If $g_iCmbSuperTroops[$i] > 0 Then
+					$EnabledStroop += 1
+				EndIf
 			Next
-			If $iSTCount = UBound($aSearchForProgress, 1) Then
-				SetLog("Troops Already boosted", $COLOR_INFO)
+			SetDebugLog("Enabled BoostSuperTroops: " & $EnabledStroop)
+			SetDebugLog("Detected Progress: " & Ubound($Progress))
+			If Ubound($Progress) >= $EnabledStroop Then
 				$bOpenBarrel = False
-			Else
-				$bOpenBarrel = True
+				SetLog("Troops Already boosted", $COLOR_INFO)
 			EndIf
 		EndIf
-
+		
 		If $bOpenBarrel Then
 			SetLog("Found Barrel at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_DEBUG)
-			Click($g_iQuickMISX, $g_iQuickMISY, 1)
+			Click($g_iQuickMISX, $g_iQuickMISY)
 			If IsBoostWindowOpened() Then
 				Return True
 			Else
@@ -187,7 +187,6 @@ Func OpenBarrel()
 		ClickAway()
 	EndIf
 	Return False
-
 EndFunc   ;==>OpenBarrel
 
 Func IsBoostWindowOpened()
@@ -241,7 +240,7 @@ EndFunc   ;==>FindStroopIcons
 
 Func CancelBoost($aMessage = "")
 	SetLog($aMessage & ", Test = True", $COLOR_DEBUG)
-	SetLog("Emulate Click(" & $g_iQuickMISX + 320 & "," & $g_iQuickMISY + 430 & ") -- Cancelling", $COLOR_DEBUG)
+	SetLog("Emulate Click(" & $g_iQuickMISX & "," & $g_iQuickMISY & ") -- Cancelling", $COLOR_DEBUG)
 	ClickAway()
 	If _Sleep(500) Then Return
 	ClickAway()

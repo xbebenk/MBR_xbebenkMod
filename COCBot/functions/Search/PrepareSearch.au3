@@ -67,10 +67,6 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Return
 	EndIf
 	
-	;Local $aButton = QuickMIS("CNX", $g_sImgPrepareLegendLeagueSearch, 271,185,834,659, True)
-	;If IsArray($aButton) And UBound($aButton) > 0 Then
-	;	Local $ButtonName = $aButton[0][0]
-	;EndIf
 	$g_bLeagueAttack = False
 	Do
 		Local $bSignedUpLegendLeague = False
