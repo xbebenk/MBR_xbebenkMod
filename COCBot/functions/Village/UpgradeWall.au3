@@ -297,8 +297,11 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				Case 2 ;Elixir then Gold
 					If IsElixEnough($iWallCost) Then 
 						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 600, 580)
-					ElseIf IsGoldEnough($iWallCost) Then 
-						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 600, 580)
+					EndIf
+					If Not $UpgradeButtonFound Then 
+						If IsGoldEnough($iWallCost) Then 
+							$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 600, 580)
+						EndIf
 					EndIf
 			EndSwitch
 			
@@ -327,6 +330,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 			EndIf
 			If _Sleep(500) Then Return
 		Next
+		ClickAway()
 		Return True
 	EndIf
 EndFunc
