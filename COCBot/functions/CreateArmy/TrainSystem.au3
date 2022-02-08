@@ -641,7 +641,7 @@ Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's
 	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200)
 	While $IsButtonExist
 		For $i = 1 To 5
-			Click($g_iQuickMISX, $g_iQuickMISX, 20)
+			Click($g_iQuickMISX, $g_iQuickMISY, 20)
 			If Not $g_bRunState Then Return
 			If _Sleep(500) Then Return
 		Next
@@ -1180,7 +1180,7 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215)
 	While $IsButtonExist
 		For $i = 1 To 3
-			Click($g_iQuickMISX, $g_iQuickMISX, 20)
+			Click($g_iQuickMISX, $g_iQuickMISY, 20)
 			If Not $g_bRunState Then Return
 			If _Sleep(500) Then Return
 		Next
