@@ -567,7 +567,7 @@ Func smartZap($minDE = -1)
 	Local $iPercentageNeeded = 50 - getOcrOverAllDamage(780, 529)
 	SetLog("Percentage needed: " & $iPercentageNeeded, $COLOR_INFO)
 	
-	If $iPercentageNeeded < 1 Then Return Return $performedZap
+	If $iPercentageNeeded < 1 Then Return $performedZap
 
 	_ArrayDelete($aSpells, 2)
 	Local $aEasyPrey = easyPreySearch()
