@@ -33,9 +33,6 @@ Func UpgradeWall($bTest = False)
 	SetLog("FreeBuilderCount: " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	If $g_iFreeBuilderCount < 1 Then Return
 	
-	Local $IsResourceAvail = WallCheckResource($iWallCost, $iWallLevel+4)
-	If Not $IsResourceAvail Then Return
-	
 	If $g_iFreeBuilderCount = 0 Then
 		SetLog("No builder available, Upgrade Walls skipped", $COLOR_DEBUG)
 		Return
@@ -44,8 +41,10 @@ Func UpgradeWall($bTest = False)
 	If $g_iFreeBuilderCount > 0 Then $GoUpgrade = True
 	If $g_bChkOnly1Builder And $g_iFreeBuilderCount > 1 Then
 		SetLog("Have more than 1 builder, Upgrade Walls skipped", $COLOR_DEBUG)
-		$GoUpgrade = False
+		Return
 	EndIf
+	Local $IsResourceAvail = WallCheckResource($iWallCost, $iWallLevel+4)
+	If Not $IsResourceAvail Then Return
 	
 	If Not $g_bRunState Then Return
 	If $GoUpgrade And $g_bUpgradeLowWall Then

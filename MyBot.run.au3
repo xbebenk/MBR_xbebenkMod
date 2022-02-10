@@ -1389,7 +1389,7 @@ Func FirstCheckRoutine()
 		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
 		If Not $g_bRunState Then Return
 		_RunFunction('CleanYard')
-		_Sleep(5000) ;add wait after clean yard
+		_Sleep(8000) ;add wait after clean yard
 		If Not $g_bRunState Then Return
 		If $g_bUpgradeWallEarly Then
 			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
@@ -1511,14 +1511,14 @@ Func FirstCheckRoutine()
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
-		If _Sleep(50) Then Return
+		If _Sleep(500) Then Return
 		If $g_bRestart Then ExitLoop
 	Next
 	Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
-		If _Sleep(50) Then Return
+		If _Sleep(500) Then Return
 		If $g_bRestart Then ExitLoop
 	Next
 EndFunc

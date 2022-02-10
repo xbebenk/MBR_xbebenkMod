@@ -178,6 +178,7 @@ Func imglocTHSearch($bReTest = False, $myVillage = False, $bForceCapture = True)
 								EndSelect
 								$g_iTownHallLevel = $iLvlFound
 								SetLog("Saving Coords for future, [" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & "]", $COLOR_INFO)
+								Return True
 							EndIf
 						Case "nearpoints"
 							If $myVillage = False Then

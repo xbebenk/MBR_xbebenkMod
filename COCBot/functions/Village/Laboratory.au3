@@ -93,7 +93,7 @@ Func Laboratory($debug=False)
 				For $z = 0 To UBound($g_aCmbLabUpgradeOrder) - 1 ;try labupgrade based on order
 					Local $iTmpCmbLaboratory = $g_aCmbLabUpgradeOrder[$z] + 1
 					If $iTmpCmbLaboratory > 0 Then 
-						SetLog("Try Lab Upgrade: " & $g_avLabTroops[$iTmpCmbLaboratory][2], $COLOR_INFO)
+						SetLog("Try Lab Upgrade: " & $g_avLabTroops[$iTmpCmbLaboratory][0], $COLOR_INFO)
 						Local $iPage = Ceiling($iTmpCmbLaboratory / $iPicsPerPage) ; page # of user choice
 						SetDebugLog("Go to Page: " & $iPage, $COLOR_INFO)
 						While ($iCurPage > $iPage) 
@@ -115,9 +115,13 @@ Func Laboratory($debug=False)
 						If IsArray($aCoords) And UBound($aCoords) = 2 Then
 							Local $sCostResult = GetLabCostResult($aCoords[0], $aCoords[1])
 							If $sCostResult > 0 Then 
-								SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
-								$bUpgradeFound = True
-								ExitLoop
+								If Not IsLabUpgradeResourceEnough($g_avLabTroops[$iTmpCmbLaboratory][2], $sCostResult) Then 
+									SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Skip, Not Enough Resource", $COLOR_INFO)
+								Else
+									SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
+									$bUpgradeFound = True
+									ExitLoop
+								EndIf
 							Else
 								SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not enough Resources, will try again later", $COLOR_INFO)
 								ContinueLoop
@@ -329,6 +333,40 @@ Func GetUpgradeName($shortName)
 	For $i = 0 To UBound($g_avLabTroops) -1
 		If $shortName = $g_avLabTroops[$i][2] Then Return $g_avLabTroops[$i][0]
 	Next
+EndFunc
+
+Func IsLabUpgradeResourceEnough($TroopOrSpell, $Cost)
+	Local $bRet = False
+	If StringInStr($TroopOrSpell, "Spell") Then 
+		If IsDarkSpell($TroopOrSpell) Then ;DE Spell
+			If $g_aiCurrentLoot[$eLootDarkElixir] > ($g_iTxtSmartMinDark + $Cost) Then
+				SetDebugLog($g_iTxtSmartMinDark & " + " & $Cost & " = " & $g_iTxtSmartMinDark + $Cost)
+				SetDebugLog("DE = " & $g_aiCurrentLoot[$eLootDarkElixir])
+				$bRet = True
+			EndIf
+		Else ;Elixir Spell
+			If $g_aiCurrentLoot[$eLootElixir] > ($g_iTxtSmartMinElixir + $Cost) Then
+				SetDebugLog($g_iTxtSmartMinElixir & " + " & $Cost & " = " & $g_iTxtSmartMinElixir + $Cost)
+				SetDebugLog("Elixir = " & $g_aiCurrentLoot[$eLootElixir])
+				$bRet = True
+			EndIf
+		EndIf
+	Else
+		If IsDarkTroop($TroopOrSpell) Then ;DE Troop
+			If $g_aiCurrentLoot[$eLootDarkElixir] > ($g_iTxtSmartMinDark + $Cost) Then
+				SetDebugLog($g_iTxtSmartMinDark & " + " & $Cost & " = " & $g_iTxtSmartMinDark + $Cost)
+				SetDebugLog("DE = " & $g_aiCurrentLoot[$eLootDarkElixir])
+				$bRet = True
+			EndIf
+		Else ;Elixir Troop
+			If $g_aiCurrentLoot[$eLootElixir] > ($g_iTxtSmartMinElixir + $Cost) Then
+				SetDebugLog($g_iTxtSmartMinElixir & " + " & $Cost & " = " & $g_iTxtSmartMinElixir + $Cost)
+				SetDebugLog("Elixir = " & $g_aiCurrentLoot[$eLootElixir])
+				$bRet = True
+			EndIf
+		EndIf
+	EndIf
+	Return $bRet
 EndFunc
 
 ; Find Research Button
