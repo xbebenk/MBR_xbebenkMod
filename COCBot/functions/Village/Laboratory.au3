@@ -143,10 +143,10 @@ Func Laboratory($debug=False)
 						For $i = 0 To UBound($Upgrades) - 1
 							SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
 							If $Upgrades[$i][3] > 0 Then 
-								If Not IsLabUpgradeResourceEnough(GetUpgradeName($Upgrades[$i][0]), $Upgrades[$i][3]) Then 
-									SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Skip, Not Enough Resource", $COLOR_INFO)
+								If Not IsLabUpgradeResourceEnough($Upgrades[$i][0], $Upgrades[$i][3]) Then 
+									SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Skip, Not Enough Resource", $COLOR_INFO)
 								Else
-									SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
+									SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
 									$bUpgradeFound = True
 									$sUpgrade = $Upgrades[0][0]
 									$aUpgradeCoord[0] = $Upgrades[0][1]
@@ -154,10 +154,8 @@ Func Laboratory($debug=False)
 									$sCostResult = $Upgrades[0][3]
 									ExitLoop
 								EndIf
-								
 							EndIf
 						Next
-						
 					Else
 						SetLog("Not found Any Upgrade here, looking next", $COLOR_INFO)
 					EndIf
