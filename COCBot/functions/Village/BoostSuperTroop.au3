@@ -98,6 +98,7 @@ Func BoostSuperTroop($bTest = False)
 										EndIf
 									Else
 										Setlog("Cannot get Boost Cost for " & $sTroopName, $COLOR_ERROR)
+										NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to boost SuperTroop using DE.")
 										;Let's try using potion
 										If $g_bSuperTroopsBoostUsePotion Then
 											Setlog("Let's try boosting " & $sTroopName & " with potion", $COLOR_INFO)
@@ -116,6 +117,7 @@ Func BoostSuperTroop($bTest = False)
 													EndIf
 												Else
 													Setlog("Could not find Potion button for final upgrade " & $sTroopName, $COLOR_ERROR)
+													NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to boost SuperTroop using potion.")
 													ClickAway()
 													ClickAway()
 													ContinueLoop
