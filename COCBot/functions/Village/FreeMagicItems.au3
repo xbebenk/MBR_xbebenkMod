@@ -206,36 +206,31 @@ Func SaleHeroTroopPot()
 	ClickAway()
 	If _Sleep(1000) Then Return
 	If Not OpenMagicItemWindow() Then Return
-	
-	Local $Pot = QuickMIS("CNX", $g_sImgPotion, 160, 200, 700, 300)
+	Local $Sell = False
+	Local $Pot = QuickMIS("CNX", $g_sImgHeroPotion, 160, 200, 700, 300)
 	If IsArray($Pot) And UBound($Pot) > 0 Then
 		For $i = 0 To UBound($Pot) - 1
 			Local $MagicItemCount = getBuilders($Pot[$i][1]-30, $aMagicPosY) 
 			Local $ItemCount = StringSplit($MagicItemCount, "#", $STR_NOCOUNT)
 			SetLog("MagicItem: " & $Pot[$i][0] & " Count: " & $ItemCount[0] & "/" & $ItemCount[1])
-			For $y = 1 To $ItemCount[0]
-				Click($aMagicPosX[$i], $aMagicPosY)
-				If _Sleep(1000) Then Return
-				Click(600, 500)
-				If _Sleep(1000) Then Return
-				Click(500, 400)
-			Next
+			Switch $Pot[$i][0]
+				Case "HeroPot", "PowerPot"
+					For $y = 1 To $ItemCount[0]
+						SetLog("Selling " & $Pot[$i][0])
+						Click($Pot[$i][1], $aMagicPosY)
+						If _Sleep(1000) Then Return
+						Click(600, 500)
+						If _Sleep(1000) Then Return
+						Click(500, 400)
+						If _Sleep(1000) Then Return
+						$Sell = True
+					Next
+			EndSwitch
 			If _Sleep(1000) Then Return
+			If $Sell Then ExitLoop
 		Next
 	Else
 		SetDebugLog("MagicItem No Array")
 	EndIf
-	;For $i = 0 To UBound($aMagicPosX) - 1
-	;	Local $MagicItemCount = getBuilders($aMagicPosX[$i], $aMagicPosY)
-	;	Local $ItemCount = StringSplit($MagicItemCount, "#", $STR_NOCOUNT)
-	;	If $ItemCount[0] > 2 Then 
-	;		Click($aMagicPosX[$i], $aMagicPosY)
-	;		If _Sleep(1000) Then Return
-	;		Click(600, 500)
-	;		If _Sleep(1000) Then Return
-	;		Click(500, 400)
-	;	EndIf
-	;	If _Sleep(1000) Then Return
-	;Next
 	ClickAway()
 EndFunc

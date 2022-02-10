@@ -1201,8 +1201,12 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "CollectAchievements"
 			CollectAchievements()
+			_Sleep($DELAYRUNBOT3)
 		Case "CollectFreeMagicItems"
 			CollectFreeMagicItems()
+			_Sleep($DELAYRUNBOT3)
+		Case "SalePot"
+			SaleHeroTroopPot()
 			_Sleep($DELAYRUNBOT3)
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
@@ -1508,7 +1512,7 @@ Func FirstCheckRoutine()
 	PrepareDonateCC()
 	DonateCC()
 	If $b_SuccessAttack Then TrainSystem()
-	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems']
+	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SalePot']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
