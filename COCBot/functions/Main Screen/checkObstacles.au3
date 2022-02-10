@@ -41,6 +41,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	EndIf
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
 	Local $bIsOnMainVillage = isOnMainVillage()
+	If isOnBuilderBase(True) And Not $g_bStayOnBuilderBase Then SwitchBetweenBases()
 	;If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
 	;	If $bIsOnBuilderIsland Then
 	;		SetLog("Detected Builder Base, trying to switch back to Main Village")
