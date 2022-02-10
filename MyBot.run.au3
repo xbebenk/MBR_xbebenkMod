@@ -1410,6 +1410,7 @@ Func FirstCheckRoutine()
 		If $g_bDonateEarly Then
 			SetLog("Donate Early Enabled", $COLOR_INFO)
 			checkArmyCamp(True, True)
+			_Sleep(1000)
 			PrepareDonateCC()
 			DonateCC()
 		EndIf

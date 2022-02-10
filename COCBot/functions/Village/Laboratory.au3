@@ -48,7 +48,7 @@ Func Laboratory($debug=False)
 
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 	If _Sleep(1500) Then Return
-	If ChkLabUpgradeInProgress() Then Return False ; Lab currently running skip going further
+	If ChkLabUpgradeInProgress($debug) Then Return False ; Lab currently running skip going further
 	
 	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
 	Local $iCurPage = 1
@@ -142,12 +142,22 @@ Func Laboratory($debug=False)
 					If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
 						For $i = 0 To UBound($Upgrades) - 1
 							SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
+							If $Upgrades[$i][3] > 0 Then 
+								If Not IsLabUpgradeResourceEnough(GetUpgradeName($Upgrades[$i][0]), $Upgrades[$i][3]) Then 
+									SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Skip, Not Enough Resource", $COLOR_INFO)
+								Else
+									SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
+									$bUpgradeFound = True
+									$sUpgrade = $Upgrades[0][0]
+									$aUpgradeCoord[0] = $Upgrades[0][1]
+									$aUpgradeCoord[1] = $Upgrades[0][2]
+									$sCostResult = $Upgrades[0][3]
+									ExitLoop
+								EndIf
+								
+							EndIf
 						Next
-						$bUpgradeFound = True
-						$sUpgrade = $Upgrades[0][0]
-						$aUpgradeCoord[0] = $Upgrades[0][1]
-						$aUpgradeCoord[1] = $Upgrades[0][2]
-						$sCostResult = $Upgrades[0][3]
+						
 					Else
 						SetLog("Not found Any Upgrade here, looking next", $COLOR_INFO)
 					EndIf
@@ -198,7 +208,7 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 		Else
 			Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
 			If isGemOpen(True) = False Then ; check for gem window
-				ChkLabUpgradeInProgress()
+				ChkLabUpgradeInProgress($debug)
 				; success
 				SetLog("Upgrade " & $name & " in your laboratory started with success...", $COLOR_SUCCESS)
 				PushMsg("LabSuccess")
@@ -264,7 +274,7 @@ Func LabPrevPage()
 EndFunc
 
 ; check the lab to see if something is upgrading in the lab already
-Func ChkLabUpgradeInProgress()
+Func ChkLabUpgradeInProgress($debug)
 	; check for upgrade in process - look for green in finish upgrade with gems button
 	If _Sleep(500) Then Return
 	If _ColorCheck(_GetPixelColor(125, 160, True), Hex(0xBDE36B, 6), 20) Or _ColorCheck(_GetPixelColor(722, 278, True), Hex(0xA2CB6C, 6), 20) Then ; Look for light green in upper right corner of lab window.
@@ -284,6 +294,7 @@ Func ChkLabUpgradeInProgress()
 		EndIf
 		ClickAway()
 		If ProfileSwitchAccountEnabled() Then SwitchAccountVariablesReload("Save") ; saving $asLabUpgradeTime[$g_iCurAccount] = $g_sLabUpgradeTime for instantly displaying in multi-stats
+		If $debug Then Return False
 		Return True
 	EndIf
 	Return False
@@ -314,6 +325,7 @@ Func FindLabUpgrade() ;default = sort name of selected upgrade
 	If IsArray($TmpResult) And UBound($TmpResult) > 0 Then
 		For $i = 0 To UBound($TmpResult) - 1
 			Local $cost = GetLabCostResult($TmpResult[$i][1], $TmpResult[$i][2])
+			If $cost = "111" Then $cost = 0
 			_ArrayAdd($aResult, 0 & "|" & $TmpResult[$i][1] & "|" & $TmpResult[$i][2] & "|" & Number($cost), Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 			$aResult[$i][0] = GetUpgradeName($TmpResult[$i][0])
 		Next
