@@ -487,13 +487,19 @@ Func DoUpgrade($bTest = False)
 	Else
 		SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
 	Endif
-	ClickAway("Right")
+	If IsGemOpen(True) Then
+		ClickAway("Right")
+		
+		SetLog("Something is wrong, no builder is available?", $COLOR_ERROR)
+	Else
+		ClickAway("Right")
 
-	SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
-	SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
+		SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
+		SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
 
-	AutoUpgradeLog($g_aUpgradeNameLevel, $g_aUpgradeResourceCostDuration)
-
+		AutoUpgradeLog($g_aUpgradeNameLevel, $g_aUpgradeResourceCostDuration)
+	EndIf
+	
 	Return True
 EndFunc
 
