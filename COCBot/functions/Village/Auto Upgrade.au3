@@ -58,11 +58,22 @@ Func SearchUpgrade($bTest = False)
 	
 	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder Then
 		getBuilderCount(True)
-		If $g_iFreeBuilderCount < 2 Then
+		If $g_iFreeBuilderCount = 1 Then
 			ClickMainBuilder()
-			If QuickMIS("BC1", $g_sImgAUpgradeHour, 375, 105, 440, 135) Then ;Skip Wall Reserve, detected upgrade remain time on most top list upgrade < 24h
-				SetLog("Detected remain time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
-				$g_bSkipWallReserve = True
+			Local $Hour = QuickMIS("CNX", $g_sImgAUpgradeHour, 375, 105, 440, 135) ;Skip Wall Reserve, detected upgrade remain time on most top list upgrade < 24h
+			If IsArray($Hour) And UBound($Hour) > 0 Then 
+				For $i = 0 To UBound($Hour) - 1
+					If $Hour[$i][0] = "Day" Then
+						$g_bSkipWallReserve = False
+						ExitLoop
+					EndIf
+					If $Hour[$i][0] = "Hour" Then
+						$g_bSkipWallReserve = True
+					EndIf
+				Next
+				If $g_bSkipWallReserve Then
+					SetLog("Detected remain time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
+				EndIf
 			EndIf
 		EndIf
 	EndIf
@@ -945,7 +956,7 @@ Func SearchGreenZone()
 EndFunc
 
 Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
-	Local $x = 420, $yUp = 103, $yDown = 800, $Delay = 500
+	Local $x = 420, $yUp = 103, $yDown = 800, $Delay = 1000
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2

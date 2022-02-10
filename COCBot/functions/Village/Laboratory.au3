@@ -325,7 +325,7 @@ Func FindLabUpgrade() ;default = sort name of selected upgrade
 			Local $cost = GetLabCostResult($TmpResult[$i][1], $TmpResult[$i][2])
 			If $cost = "111" Then $cost = 0
 			_ArrayAdd($aResult, 0 & "|" & $TmpResult[$i][1] & "|" & $TmpResult[$i][2] & "|" & Number($cost), Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
-			$aResult[$i][0] = GetUpgradeName($TmpResult[$i][0])
+			$aResult[$i][0] = $TmpResult[$i][0]
 		Next
 	Else
 		SetLog("Result Not Array", $COLOR_ERROR)
