@@ -23,7 +23,10 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 
 	If $bSetLog = Default Then $bSetLog = True
 	If $bBuilderBase = Default Then $bBuilderBase = $g_bStayOnBuilderBase
-	If isOnBuilderBase(True) And Not $bBuilderBase Then SwitchBetweenBases()
+	If isOnBuilderBase(True) And Not $bBuilderBase Then 
+		AndroidAdbScript("ZoomOut")
+		SwitchBetweenBases()
+	EndIf
 
 	Local $i, $iErrorCount, $iCheckBeforeRestartAndroidCount, $bObstacleResult, $bContinue
 	Local $aPixelToCheck = $aIsMain

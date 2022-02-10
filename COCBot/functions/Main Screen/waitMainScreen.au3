@@ -18,7 +18,10 @@ Func waitMainScreen() ;Waits for main screen to popup
 	Local $iCount
 	SetLog("Waiting for Main Screen")
 	$iCount = 0
-	If isOnBuilderBase(True) And Not $g_bStayOnBuilderBase Then SwitchBetweenBases()
+	If isOnBuilderBase(True) And Not $g_bStayOnBuilderBase Then 
+		AndroidAdbScript("ZoomOut")
+		SwitchBetweenBases()
+	EndIf
 	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
 	For $i = 0 To 105 ;105*2000 = 3.5 Minutes
 		If Not $g_bRunState Then Return
