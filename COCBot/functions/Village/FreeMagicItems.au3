@@ -26,6 +26,10 @@ Func CollectFreeMagicItems($bTest = False)
 	$iLastTimeChecked[$g_iCurAccount] = @MDAY
 	Local $Collected = False
 	Local $aResults = GetFreeMagic()
+	Local $aGem[3]
+	For $i = 0 To UBound($aResults) - 1
+		$aGem[$i] = $aResults[$i][0]
+	Next
 	For $i = 0 To UBound($aResults) - 1
 		If $aResults[$i][0] = "FREE" Then
 			If Not $bTest Then
@@ -55,7 +59,7 @@ Func CollectFreeMagicItems($bTest = False)
 	
 	If Not $Collected Then 
 		SetLog("Nothing free to collect!", $COLOR_INFO)
-		SetLog("Daily Discounts: " & $aResults[0] & " | " & $aResults[1] & " | " & $aResults[2])
+		SetLog("Daily Discounts: " & $aGem[0] & " | " & $aGem[1] & " | " & $aGem[2])
 	EndIf
 	
 	ClickAway()
