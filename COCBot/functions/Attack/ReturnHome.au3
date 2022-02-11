@@ -116,13 +116,13 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					Else
 						$j += 1
 					EndIf
-					If IsMainPage() Then 
-						SetLog("Success Return Home", $COLOR_INFO)
-						Return
-					EndIf
 					If $j > 5 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
 					If _Sleep(500) Then Return
 				WEnd
+				If IsMainPage() Then 
+					SetLog("Success Return Home", $COLOR_INFO)
+					Return
+				EndIf
 			Else
 				SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
 			EndIf
