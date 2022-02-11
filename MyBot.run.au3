@@ -1205,7 +1205,7 @@ Func __RunFunction($action)
 		Case "CollectFreeMagicItems"
 			CollectFreeMagicItems()
 			_Sleep($DELAYRUNBOT3)
-		Case "SalePot"
+		Case "SellHeroPot"
 			SaleHeroTroopPot()
 			_Sleep($DELAYRUNBOT3)
 		Case ""
@@ -1512,7 +1512,7 @@ Func FirstCheckRoutine()
 	PrepareDonateCC()
 	DonateCC()
 	If $b_SuccessAttack Then TrainSystem()
-	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SalePot']
+	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
