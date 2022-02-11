@@ -1613,7 +1613,7 @@ Func GotoBBTodoCG()
 		CollectBuilderBase()
 		DoAttackBB()
 		; switch back to normal village
-		$g_bStayOnBuilderBase = False
 		SwitchBetweenBases()
+		$g_bStayOnBuilderBase = False
 	EndIf
 EndFunc

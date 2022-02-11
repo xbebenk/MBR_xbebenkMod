@@ -23,11 +23,6 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 
 	If $bSetLog = Default Then $bSetLog = True
 	If $bBuilderBase = Default Then $bBuilderBase = $g_bStayOnBuilderBase
-	If isOnBuilderBase(True) And Not $bBuilderBase Then 
-		AndroidAdbScript("ZoomOut")
-		SwitchBetweenBases()
-	EndIf
-
 	Local $i, $iErrorCount, $iCheckBeforeRestartAndroidCount, $bObstacleResult, $bContinue
 	Local $aPixelToCheck = $aIsMain
 
@@ -59,7 +54,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 			ExitLoop
 		EndIf
 		WinGetAndroidHandle()
-
+		
 		$bObstacleResult = checkObstacles($bBuilderBase)
 		SetDebugLog("CheckObstacles[" & $i & "] Result = " & $bObstacleResult, $COLOR_DEBUG)
 
@@ -67,7 +62,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 		If Not $bObstacleResult Then
 			If $g_bMinorObstacle Then
 				$g_bMinorObstacle = False
-				$bContinue = True
+				$bContinue = False
 			Else
 				If $i > $iCheckBeforeRestartAndroidCount Then
 					SaveDebugImage("checkMainScreen_RestartCoC", False) ; why do we need to restart ?
@@ -94,12 +89,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 		EndIf
 	WEnd
 	
-	;If $bLocated Then
-	;	; check that shared_prefs are pulled
-	;	If $g_bUpdateSharedPrefs And Not HaveSharedPrefs() Then PullSharedPrefs()
-	;	ZoomOut()
-	;EndIf
-	If Not $g_bRunState Then Return False
+	If Not $g_bRunState Then Return
 
 	If $bSetLog Then
 		If $bLocated Then
@@ -118,17 +108,21 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 	Return $bLocated
 EndFunc   ;==>_checkMainScreen
 
-Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = $g_bNoCapturePixel)
+Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = True)
 	$bLocated = _CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False) And checkChatTabPixel()
 	Return $bLocated
 EndFunc
 
 Func checkChatTabPixel()
 	SetDebugLog("Checking chat tab pixel exists to ensure images have loaded correctly")
+	If _CheckPixel($aChatTab, True) Then
+		SetDebugLog("checkObstacles: Found Chat Tab to close")
+		PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+	EndIf
 	ZoomOut()
 	If _Sleep(500) Then Return
-	Local $aChatTabPixel = decodeSingleCoord(findImage("ChatTabPixel", $g_sImgChatTabPixel, GetDiamondFromRect("0,450,50,300"), 1, True))
-	If UBound($aChatTabPixel) > 0 Then 
+	If WaitforPixel(18, 376, 19, 377, "C55115", 10, 1) Then 
 		SetDebugLog("ChatTabPixel found", $COLOR_SUCCESS)
 		Return True
 	Else

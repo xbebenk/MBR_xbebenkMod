@@ -13,21 +13,16 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;
-Func checkObstacles($bBuilderBase = Default) ;Checks if something is in the way for mainscreen
-	FuncEnter(checkObstacles)
-	If $bBuilderBase = Default Then $bBuilderBase = $g_bStayOnBuilderBase
+Func checkObstacles($bBuilderBase = False) ;Checks if something is in the way for mainscreen
+	If Not $bBuilderBase Then $bBuilderBase = $g_bStayOnBuilderBase
 	Static $iRecursive = 0
-
-	If Not TestCapture() And WinGetAndroidHandle() = 0 Then
-		; Android not available
-		Return FuncReturn(True)
+	FuncEnter(checkObstacles)
+	If Not WinGetAndroidHandle() Then
+		SetLog("Android not available", $COLOR_ERROR)
+		Return
 	EndIf
-
-	Local $wasForce = OcrForceCaptureRegion(False)
-	$iRecursive += 1
-	Local $Result = _checkObstacles($bBuilderBase, $iRecursive > 5)
-	OcrForceCaptureRegion($wasForce)
-	$iRecursive -= 1
+	
+	Local $Result = _checkObstacles($bBuilderBase)
 	Return FuncReturn($Result)
 EndFunc   ;==>checkObstacles
 
@@ -35,87 +30,21 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	Local $msg, $x, $y, $Result
 	$g_bMinorObstacle = False
 	_CaptureRegions()
-
-	If Not $bRecursive Then
-		If checkObstacles_Network() Then Return True
-	EndIf
+	
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
-	Local $bIsOnMainVillage = isOnMainVillage()
-	If $bIsOnBuilderIsland And Not $g_bStayOnBuilderBase Then 
+	If Not $bBuilderBase And $bIsOnBuilderIsland And Not $g_bStayOnBuilderBase Then ;Not check for BB, Not in BB, and not stay on BB -> go to mainVillage
 		AndroidAdbScript("ZoomOut")
 		If SwitchBetweenBases() Then 
-			$g_bMinorObstacle = True
 			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			$g_bMinorObstacle = True
 			Return False
 		EndIf
 	EndIf
-	;If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
-	;	If $bIsOnBuilderIsland Then
-	;		SetLog("Detected Builder Base, trying to switch back to Main Village")
-	;		AndroidAdbScript("ZoomOut")
-	;		ZoomOut()
-	;	Else
-	;		SetLog("Detected Main Village, trying to switch back to Builder Base")
-	;		ZoomOut()
-	;	EndIf
-	;	If SwitchBetweenBases() Then
-	;		$g_bMinorObstacle = True
-	;		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-	;		Return False
-	;	EndIf
-	;EndIf
-
-	;If $g_sAndroidGameDistributor <> $g_sGoogle Then ; close an ads window for non google apks
-	;	Local $aXButton = FindAdsXButton()
-	;	If IsArray($aXButton) Then
-	;		SetDebugLog("checkObstacles: Found " & $g_sAndroidGameDistributor & " ADS X button to close")
-	;		PureClickP($aXButton)
-	;		$g_bMinorObstacle = True
-	;		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-	;		Return False
-	;	EndIf
-	;EndIf
+	Local $bIsOnMainVillage = isOnMainVillage()
 	
-	Local $ascidConnectButton = decodeSingleCoord(findImage("SCID", $g_sImgSupercellIDConnect, GetDiamondFromRect("100,20,700,100"), 1, True))
-	If IsArray($ascidConnectButton) And UBound($ascidConnectButton, 1) >= 2 Then
-		SetDebugLog("checkObstacles: Found SCID popup connect suggestion", $COLOR_ACTION)
-		Click($ascidConnectButton[0], $ascidConnectButton[1])
-		If _Sleep(1000) Then Return
-		Local $aSuperCellIDWindowsUI, $bSCIDWindowOpened = False
-		For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
-			If Mod($i, 2) = 0 Then
-				$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default))
-			Else
-				$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDBlack, GetDiamondFromRect("550,450,760,550"), 1, True, Default))
-			EndIf
-			If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
-				SetLog("SupercellID Window Opened", $COLOR_DEBUG)
-				$bSCIDWindowOpened = True
-				ExitLoop
-			EndIf
-			If Not $g_bRunState Then Return
-			If _Sleep(900) Then Return
-		Next
-		If $bSCIDWindowOpened Then
-			AndroidBackButton() ;Send back button to android
-			If _Sleep(1000) Then Return
-			If IsOKCancelPage() Then
-				AndroidBackButton()
-			EndIf
-		EndIf
-	EndIf
-
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	; Detect All Reload Button errors => 1- Another device, 2- Take a break, 3- Connection lost or error, 4- Out of sync, 5- Inactive, 6- Maintenance, 7- SCID Login Screen
-	Local $aMessage = _PixelSearch($aIsReloadError[0], $aIsReloadError[1], $aIsReloadError[0] + 3, $aIsReloadError[1] + 11, Hex($aIsReloadError[2], 6), $aIsReloadError[3], $g_bNoCapturePixel)
-	If IsArray($aMessage) Or (UBound(decodeSingleCoord(FindImageInPlace("Error", $g_sImgError, "630,300(2,20)", False, $g_iAndroidLollipop))) > 1) Then
-		SetDebugLog("(DC=" & _GetPixelColor($aIsConnectLost[0], $aIsConnectLost[1]) & ")(OoS=" & _GetPixelColor($aIsCheckOOS[0], $aIsCheckOOS[1]) & ")", $COLOR_DEBUG)
-		SetDebugLog("33B5E5=>true, 282828=>false", $COLOR_DEBUG)
-
+	If isProblemAffect() Then
 		;;;;;;;##### 1- Another device #####;;;;;;;
-		$Result = getOcrReloadMessage(184, 325, "Another Device OCR:") ; OCR text to find Another device message
-		If StringInStr($Result, "device", $STR_NOCASESENSEBASIC) Or _
-				UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,300(130,60)", False))) > 1 Then
+		If UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,300(130,60)", False))) > 1 Then
 			If TestCapture() Then Return "Another Device has connected"
 			If $g_iAnotherDeviceWaitTime > 3600 Then
 				SetLog("Another Device has connected, waiting " & Floor(Floor($g_iAnotherDeviceWaitTime / 60) / 60) & " hours " & Floor(Mod(Floor($g_iAnotherDeviceWaitTime / 60), 60)) & " minutes " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " seconds", $COLOR_ERROR)
@@ -141,7 +70,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			checkObstacles_ResetSearch()
 			Return True
 		EndIf
-
+		
 		;;;;;;;##### 2- Take a break #####;;;;;;;
 		If UBound(decodeSingleCoord(FindImageInPlace("Break", $g_sImgPersonalBreak, "165,257,335,315", False))) > 1 Then ; used for all 3 different break messages
 			SetLog("Village must take a break, wait", $COLOR_ERROR)
@@ -161,7 +90,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			checkObstacles_ResetSearch()
 			Return True
 		EndIf
-
+		
 		;;;;;;;##### Connection Lost & OoS & Inactive & Maintenance #####;;;;;;;
 		Select
 			Case UBound(decodeSingleCoord(FindImageInPlace("AnyoneThere", $g_sImgAnyoneThere, "440,310,580,360", False))) > 1 ; Inactive only
@@ -232,10 +161,106 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				EndIf
 				SetLog("Warning: Cannot find type of Reload error message", $COLOR_ERROR)
 		EndSelect
-		If TestCapture() Then Return "Village is out of sync or inactivity or connection lost or maintenance"
-		Return checkObstacles_ReloadCoC($aReloadButton, "#0131", $bRecursive) ; Click for out of sync or inactivity or connection lost or maintenance
+		Return checkObstacles_ReloadCoC($aReloadButton, "#0131", $bRecursive) ;Last chance -> Reload CoC
+	EndIf
+	
+	If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
+		SetDebugLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
+		Click(440, 526)
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf
+	
+	If IsFullScreenWindow() Then
+		Click(825,45)
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
 	EndIf
 
+	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20) Then
+		SetDebugLog("checkObstacles: Found Window with Close Button to close")
+		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
+		$g_bMinorObstacle = True
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf
+	If _CheckPixel($aChatTab, True) Then
+		SetDebugLog("checkObstacles: Found Chat Tab to close")
+		PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	If _CheckPixel($aEndFightSceneBtn, $g_bNoCapturePixel) Then
+		SetDebugLog("checkObstacles: Found End Fight Scene to close")
+		PureClickP($aEndFightSceneBtn, 1, 0, "#0137") ;If in that victory or defeat scene
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf
+	If _ColorCheck(_GetPixelColor(422, 505, True), Hex(0x86D435, 6), 20) Then
+		SetDebugLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
+		Click(422, 500)
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf
+	If IsReturnHomeBattlePage(True) Then 
+		SetDebugLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
+		ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
+		SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+	If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 66, 790, 120) Then 
+		SetDebugLog("checkObstacles: Found AttackLog Page", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+	If IsPostDefenseSummaryPage() Then
+		SetDebugLog("checkObstacles: Found Post Defense Summary to close")
+		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
+		Return False
+	EndIf
+	
+	If IsAttackPage() Then
+		SetDebugLog("checkObstacles: Found AttackPage, Return Home")
+		ReturnHome(False, False)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+
+	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
+	If UBound($CSFoundCoords) > 1 Then
+		SetLog("CoC Has Stopped Error .....", $COLOR_ERROR)
+		If TestCapture() Then Return "CoC Has Stopped Error ....."
+		PushMsg("CoCError")
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		;PureClick(250 + $x, 328 + $y, 1, 0, "#0129");Check for "CoC has stopped error, looking for OK message" on screen
+		PureClick($CSFoundCoords[0], $CSFoundCoords[1], 1, 0, "#0129") ;Check for "CoC has stopped error, looking for OK message" on screen
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return checkObstacles_ReloadCoC(Default, "", $bRecursive)
+	EndIf
+	
+	;;;;;;;##### 7- SCID Login Screen #####;;;;;;;
+	CheckLoginWithSupercellID()
+	If CheckObstacles_SCIDPopup() Then Return True
+	; optional game update
+	If UBound(decodeSingleCoord(FindImageInPlace("OptUpdateCoC", $g_sImgOptUpdateCoC, "155, 190, 705, 480", False))) > 1 Then ; Found Optional Game Update Message
+		SetLog("Found Optional Game Update - Clicking No Thanks", $COLOR_INFO)
+
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		PureClick(520, 475, 1, 0) ; Click No Thanks
+		$g_bMinorObstacle = True
+
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf
+	
 	If UBound(decodeSingleCoord(FindImageInPlace("Maintenance", $g_sImgMaintenance, "270,40,640, 140", False))) > 1 Then ; Maintenance Break
 		$Result = getOcrMaintenanceTime(300, 550, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
 		Local $iMaintenanceWaitTime = 0
@@ -259,109 +284,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		checkObstacles_ResetSearch()
 	EndIf
 
-	;;;;;;;##### 7- SCID Login Screen #####;;;;;;;
-	CheckLoginWithSupercellID()
-	; optional game update
-	If UBound(decodeSingleCoord(FindImageInPlace("OptUpdateCoC", $g_sImgOptUpdateCoC, "155, 190, 705, 480", False))) > 1 Then ; Found Optional Game Update Message
-		SetLog("Found Optional Game Update - Clicking No Thanks", $COLOR_INFO)
-
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		PureClick(520, 475, 1, 0) ; Click No Thanks
-		$g_bMinorObstacle = True
-
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
-
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	If TestCapture() = 0 And GetAndroidProcessPID() = 0 Then
-		; CoC not running
-		Return checkObstacles_ReloadCoC(Default, "", $bRecursive) ; just start CoC (but first close it!)
-	EndIf
-
-	If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
-		SetDebugLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
-		Click(440, 526)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-	EndIf
-	
-	If IsFullScreenWindow() Then
-		Click(825,45)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-	EndIf
-
-	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20) Then
-		SetDebugLog("checkObstacles: Found Window with Close Button to close")
-		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
-		$g_bMinorObstacle = True
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
-	If _CheckPixel($aCancelFight, $g_bNoCapturePixel) Or _CheckPixel($aCancelFight2, $g_bNoCapturePixel) Then
-		SetDebugLog("checkObstacles: Found Cancel Fight to close")
-		PureClickP($aCancelFight, 1, 0, "#0135") ;Clicks X
-		$g_bMinorObstacle = True
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
-	If _CheckPixel($aChatTab, True) Then
-		SetDebugLog("checkObstacles: Found Chat Tab to close")
-		PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	If _CheckPixel($aEndFightSceneBtn, $g_bNoCapturePixel) Then
-		SetDebugLog("checkObstacles: Found End Fight Scene to close")
-		PureClickP($aEndFightSceneBtn, 1, 0, "#0137") ;If in that victory or defeat scene
-		Return True
-	EndIf
-	If _CheckPixel($aSurrenderButton, $g_bNoCapturePixel) Then
-		SetDebugLog("checkObstacles: Found End Battle to close", $COLOR_ACTION)
-		ReturnHome(False, False) ;If End battle is available
-		Return True
-	EndIf
-	If _ColorCheck(_GetPixelColor(422, 505, True), Hex(0x86D435, 6), 20) Then
-		SetDebugLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
-		Click(422, 500)
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return True
-	EndIf
-	If IsReturnHomeBattlePage(True) Then 
-		SetDebugLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
-		ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return True
-	EndIf
-	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
-		SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return True
-	EndIf
-	If IsPostDefenseSummaryPage() Then
-		SetDebugLog("checkObstacles: Found Post Defense Summary to close")
-		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
-		Return True
-	EndIf
-	If IsAttackPage() Then
-		SetDebugLog("checkObstacles: Found AttackPage, return to home")
-		Click(65, 540, 1, 0, "#0099")
-		If _Sleep(500) Then Return
-		Return True
-	EndIf
-
-	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
-	If UBound($CSFoundCoords) > 1 Then
-		SetLog("CoC Has Stopped Error .....", $COLOR_ERROR)
-		If TestCapture() Then Return "CoC Has Stopped Error ....."
-		PushMsg("CoCError")
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		;PureClick(250 + $x, 328 + $y, 1, 0, "#0129");Check for "CoC has stopped error, looking for OK message" on screen
-		PureClick($CSFoundCoords[0], $CSFoundCoords[1], 1, 0, "#0129") ;Check for "CoC has stopped error, looking for OK message" on screen
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return checkObstacles_ReloadCoC(Default, "", $bRecursive)
-	EndIf
 	Return False
 EndFunc   ;==>_checkObstacles
 
@@ -493,17 +415,37 @@ Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 	Return False
 EndFunc   ;==>checkObstacles_Network
 
-;Func checkObstacles_GfxError($bForceCapture = False, $bRebootAndroid = True)
-;	Local $aResult = decodeMultipleCoords(FindImage("GfxError", $g_sImgGfxError, "ECD", 100, $bForceCapture), 100, 100)
-;	If UBound($aResult) >= 8 Then
-;		SetLog(UBound($aResult) & " Gfx Errors detected, Reloading Android...", $COLOR_ERROR)
-;		; Save debug image
-;		SaveDebugImage("GfxError", False)
-;		If $bRebootAndroid Then Return checkObstacles_RebootAndroid()
-;		Return True
-;	EndIf
-;
-;	Return False
-;EndFunc   ;==>checkObstacles_GfxError
-
+Func CheckObstacles_SCIDPopup()
+	Local $ascidConnectButton = decodeSingleCoord(findImage("SCID", $g_sImgSupercellIDConnect, GetDiamondFromRect("100,20,700,100"), 1, True))
+	If IsArray($ascidConnectButton) And UBound($ascidConnectButton, 1) >= 2 Then
+		SetDebugLog("checkObstacles: Found SCID popup connect suggestion", $COLOR_ACTION)
+		Click($ascidConnectButton[0], $ascidConnectButton[1])
+		If _Sleep(1000) Then Return
+		Local $aSuperCellIDWindowsUI, $bSCIDWindowOpened = False
+		For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
+			If Mod($i, 2) = 0 Then
+				$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default))
+			Else
+				$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDBlack, GetDiamondFromRect("550,450,760,550"), 1, True, Default))
+			EndIf
+			If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
+				SetLog("SupercellID Window Opened", $COLOR_DEBUG)
+				$bSCIDWindowOpened = True
+				ExitLoop
+			EndIf
+			If Not $g_bRunState Then Return
+			If _Sleep(900) Then Return
+		Next
+		If $bSCIDWindowOpened Then
+			AndroidBackButton() ;Send back button to android
+			If _Sleep(1000) Then Return
+			If IsOKCancelPage() Then
+				AndroidBackButton()
+			EndIf
+		EndIf
+	Else
+		Return False
+	EndIf
+	Return True
+EndFunc
 
