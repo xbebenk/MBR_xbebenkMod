@@ -43,7 +43,11 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	Local $bIsOnMainVillage = isOnMainVillage()
 	If $bIsOnBuilderIsland And Not $g_bStayOnBuilderBase Then 
 		AndroidAdbScript("ZoomOut")
-		If SwitchBetweenBases() Then Return False
+		If SwitchBetweenBases() Then 
+			$g_bMinorObstacle = True
+			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			Return False
+		EndIf
 	EndIf
 	;If $bBuilderBase <> $bIsOnBuilderIsland And ($bIsOnBuilderIsland Or $bIsOnBuilderIsland <> $bIsOnMainVillage) Then
 	;	If $bIsOnBuilderIsland Then
