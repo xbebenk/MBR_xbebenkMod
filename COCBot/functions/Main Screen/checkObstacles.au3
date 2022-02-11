@@ -283,6 +283,17 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If ClickB("ReloadButton") Then SetLog("Trying to reload game after maintenance break", $COLOR_INFO)
 		checkObstacles_ResetSearch()
 	EndIf
+	
+	If WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
+		For $i = 1 To 5
+			If WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
+				SetLog("Waiting COC Loading Page #" & $i, $COLOR_ACTION)
+				If _Sleep(2000) Then Return
+			Else
+				ExitLoop
+			EndIf
+		Next
+	EndIf
 
 	Return False
 EndFunc   ;==>_checkObstacles
