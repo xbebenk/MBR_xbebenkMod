@@ -1510,6 +1510,7 @@ Func FirstCheckRoutine()
 	RequestCC(False)
 	checkArmyCamp(False, True)
 	PrepareDonateCC()
+	_Sleep(1000)
 	DonateCC()
 	If $b_SuccessAttack Then TrainSystem()
 	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']

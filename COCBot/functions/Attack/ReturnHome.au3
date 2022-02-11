@@ -107,11 +107,13 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 				Click(65, 540, 1, 0, "#0099")
 				If _Sleep(500) Then Return
 				Local $j = 0
+				Local $OKCancel = False
 				While 1 ; dynamic wait for Okay button
 					SetDebugLog("Wait for OK button to appear #" & $j)
 					If IsOKCancelPage(True) Then
 						ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
 						If _Sleep(1500) Then Return
+						$OKCancel = True
 						ExitLoop
 					Else
 						$j += 1
@@ -119,9 +121,11 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					If $j > 5 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
 					If _Sleep(500) Then Return
 				WEnd
-				If IsMainPage() Then 
-					SetLog("Success Return Home", $COLOR_INFO)
-					Return
+				If Not $OKCancel Then 
+					If IsMainPage() Then 
+						SetLog("Success Return Home", $COLOR_INFO)
+						Return
+					EndIf
 				EndIf
 			Else
 				SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
