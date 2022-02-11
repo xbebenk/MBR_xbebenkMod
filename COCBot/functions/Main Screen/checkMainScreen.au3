@@ -121,7 +121,6 @@ Func checkChatTabPixel()
 		PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 	EndIf
-	ZoomOut()
 	If _Sleep(500) Then Return
 	If WaitforPixel(18, 376, 19, 377, "C55115", 10, 1) Then 
 		SetDebugLog("ChatTabPixel found", $COLOR_SUCCESS)

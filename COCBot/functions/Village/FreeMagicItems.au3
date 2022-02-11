@@ -203,7 +203,7 @@ Func IsMagicItemWindowOpen()
 	Return $bRet
 EndFunc
 
-Func SaleHeroTroopPot()
+Func SellHeroPot()
 	If Not $g_bChkSellHeroPot Then Return
 	Local $aMagicPosY = 280
 	ClickAway()

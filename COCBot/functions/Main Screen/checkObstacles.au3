@@ -42,7 +42,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	EndIf
 	Local $bIsOnMainVillage = isOnMainVillage()
 	
-	If isProblemAffect() Then
+	If isProblemAffect(True) Then
 		;;;;;;;##### 1- Another device #####;;;;;;;
 		If UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,300(130,60)", False))) > 1 Then
 			If TestCapture() Then Return "Another Device has connected"

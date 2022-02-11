@@ -38,7 +38,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		EndIf
 		_CaptureRegion()
 		If _CheckPixel($aPixelToCheck, $g_bCapturePixel, Default, "waitMainScreen") Then ;Checks for Main Screen
-			SetLog("Screen cleared, WaitMainScreen exit", $COLOR_SUCCESS)
+			SetDebugLog("Screen cleared, WaitMainScreen exit", $COLOR_SUCCESS)
 			Return
 		Else
 			If Not TestCapture() And _Sleep($DELAYWAITMAINSCREEN1) Then Return

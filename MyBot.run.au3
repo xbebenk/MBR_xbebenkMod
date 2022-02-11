@@ -1206,7 +1206,7 @@ Func __RunFunction($action)
 			CollectFreeMagicItems()
 			_Sleep($DELAYRUNBOT3)
 		Case "SellHeroPot"
-			SaleHeroTroopPot()
+			SellHeroPot()
 			_Sleep($DELAYRUNBOT3)
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)

@@ -168,14 +168,14 @@ Func imglocTHSearch($bReTest = False, $myVillage = False, $bForceCapture = True)
 							Else
 								Local $aiTownHallPos = decodeSingleCoord($propsValues[$pv])
 								SetLog("Found MyVillage Coords from ImgLocTHSearch", $COLOR_DEBUG)
-								Select
-									Case $iLvlFound < 11 
+								Switch $iLvlFound
+									Case 6, 7, 8, 9, 10, 11, 12
 										$g_aiTownHallPos[0] = $aiTownHallPos[0] + 10
 										$g_aiTownHallPos[1] = $aiTownHallPos[1] + 10
 									Case Else
 										$g_aiTownHallPos[0] = $aiTownHallPos[0]
 										$g_aiTownHallPos[1] = $aiTownHallPos[1] + 5
-								EndSelect
+								EndSwitch
 								$g_iTownHallLevel = $iLvlFound
 								SetLog("Saving Coords for future, [" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & "]", $COLOR_INFO)
 								Return True
