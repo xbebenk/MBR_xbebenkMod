@@ -142,6 +142,7 @@ EndFunc
 Func SaleFreeMagics()
 	Local $aMagicPosX[5] = [198, 302, 406, 510, 614]
 	Local $aMagicPosY = 280
+	If Not $g_bRunState Then Return
 	If Not OpenMagicItemWindow() Then Return
 	For $i = 0 To UBound($aMagicPosX) - 1
 		Local $MagicItemCount = getBuilders($aMagicPosX[$i], $aMagicPosY)
@@ -152,6 +153,7 @@ Func SaleFreeMagics()
 			Click(600, 500)
 			If _Sleep(1000) Then Return
 			Click(500, 400)
+			If Not $g_bRunState Then Return
 		Else
 			SetLog("MagicItem[" & $i & "] Count: " & $ItemCount[0] & "/" & $ItemCount[1]) 
 		EndIf
@@ -202,9 +204,11 @@ Func IsMagicItemWindowOpen()
 EndFunc
 
 Func SaleHeroTroopPot()
+	If Not $g_bChkSellHeroPot Then Return
 	Local $aMagicPosY = 280
 	ClickAway()
 	If _Sleep(1000) Then Return
+	If Not $g_bRunState Then Return
 	If Not OpenMagicItemWindow() Then Return
 	Local $Sell = False
 	Local $Pot = QuickMIS("CNX", $g_sImgHeroPotion, 160, 200, 700, 300)
@@ -224,6 +228,7 @@ Func SaleHeroTroopPot()
 						Click(500, 400)
 						If _Sleep(1000) Then Return
 						$Sell = True
+						If Not $g_bRunState Then Return
 					Next
 			EndSwitch
 			If _Sleep(1000) Then Return
