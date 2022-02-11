@@ -285,10 +285,10 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	EndIf
 	
 	If WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
-		For $i = 1 To 5
+		For $i = 1 To 20
 			If WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
 				SetLog("Waiting COC Loading Page #" & $i, $COLOR_ACTION)
-				If _Sleep(2000) Then Return
+				If _Sleep(1000) Then Return
 			Else
 				ExitLoop
 			EndIf
