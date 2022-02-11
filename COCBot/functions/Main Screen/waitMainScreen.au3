@@ -47,7 +47,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 			getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
 		EndIf
 		_CaptureRegion()
-		If _CheckPixel($aPixelToCheck, $g_bNoCapturePixel, Default, "waitMainScreen") Then ;Checks for Main Screen
+		If _CheckPixel($aPixelToCheck, $g_bCapturePixel, Default, "waitMainScreen") Then ;Checks for Main Screen
 			SetDebugLog("Screen cleared, WaitMainScreen exit", $COLOR_DEBUG)
 			Return
 		Else

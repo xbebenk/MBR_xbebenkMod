@@ -264,7 +264,7 @@ Func GetButtonDiamond($sButtonName)
 		Case "ObjectButtons", "BoostOne", "BoostCT", "Upgrade", "Research", "Treasury", "RemoveObstacle", "CollectLootCart", "Pets", "Cancel", "MagicItem" ; Full size of object buttons at the bottom
 			$btnDiamond = GetDiamondFromRect("120,520,750,620")
 		Case "GEM", "BOOSTBtn" ; Boost window button (full button size)
-			$btnDiamond = GetDiamondFromRect("359,412(148,66)")
+			$btnDiamond = GetDiamondFromRect("359,385(148,66)")
 		Case "EnterShop"
 			$btnDiamond = GetDiamondFromRect("359,392(148,66)")
 		Case "EndBattleSurrender" ;surrender - attackwindow

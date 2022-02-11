@@ -20,7 +20,7 @@ Global $aiClickAwayRegionRight = [625, 10, 635, 20]
 Global $aCenterEnemyVillageClickDrag = [65, 545] ; Scroll village using this location in the water
 Global $aCenterHomeVillageClickDrag = [640, 540] ; Scroll village using this location in the water
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
-Global $aIsMain[4] = [280, 9, 0x77BDE0, 20] ; Main Screen, Builder Info Icon
+Global $aIsMain[4] = [279, 9, 0x7ABDE0, 20] ; Main Screen, Builder Info Icon
 Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
 Global $aIsOnBuilderBase[4] = [838, 18, 0xffff46, 10] ; Check the Gold Coin from resources , is a square not round
 
