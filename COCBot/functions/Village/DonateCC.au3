@@ -1061,7 +1061,7 @@ Func DonateWindow($aiDonateButton, $bOpen = True)
 	If _Sleep($DELAYDONATEWINDOW1) Then Return
 
 	Local $icount = 0
-	While Not (_ColorCheck(_GetPixelColor(331, $aiDonateButton[1], True, "DonateWindow"), Hex(0xffffff, 6), 0))
+	While Not (_ColorCheck(_GetPixelColor(331, $aiDonateButton[1], True, "DonateWindow"), Hex(0xffffff, 6), 10))
 		If _Sleep($DELAYDONATEWINDOW2) Then Return
 		ForceCaptureRegion()
 		$icount += 1
