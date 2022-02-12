@@ -1201,8 +1201,12 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "CollectAchievements"
 			CollectAchievements()
+			_Sleep($DELAYRUNBOT3)
 		Case "CollectFreeMagicItems"
 			CollectFreeMagicItems()
+			_Sleep($DELAYRUNBOT3)
+		Case "SellHeroPot"
+			SellHeroPot()
 			_Sleep($DELAYRUNBOT3)
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
@@ -1389,7 +1393,7 @@ Func FirstCheckRoutine()
 		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
 		If Not $g_bRunState Then Return
 		_RunFunction('CleanYard')
-		_Sleep(5000) ;add wait after clean yard
+		_Sleep(8000) ;add wait after clean yard
 		If Not $g_bRunState Then Return
 		If $g_bUpgradeWallEarly Then
 			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
@@ -1410,6 +1414,7 @@ Func FirstCheckRoutine()
 		If $g_bDonateEarly Then
 			SetLog("Donate Early Enabled", $COLOR_INFO)
 			checkArmyCamp(True, True)
+			_Sleep(1000)
 			PrepareDonateCC()
 			DonateCC()
 		EndIf
@@ -1505,20 +1510,21 @@ Func FirstCheckRoutine()
 	RequestCC(False)
 	checkArmyCamp(False, True)
 	PrepareDonateCC()
+	_Sleep(1000)
 	DonateCC()
 	If $b_SuccessAttack Then TrainSystem()
-	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems']
+	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
-		If _Sleep(50) Then Return
+		If _Sleep(500) Then Return
 		If $g_bRestart Then ExitLoop
 	Next
 	Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
 		_RunFunction($Index)
-		If _Sleep(50) Then Return
+		If _Sleep(500) Then Return
 		If $g_bRestart Then ExitLoop
 	Next
 EndFunc
@@ -1608,7 +1614,7 @@ Func GotoBBTodoCG()
 		CollectBuilderBase()
 		DoAttackBB()
 		; switch back to normal village
-		$g_bStayOnBuilderBase = False
 		SwitchBetweenBases()
+		$g_bStayOnBuilderBase = False
 	EndIf
 EndFunc

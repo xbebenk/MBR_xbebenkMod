@@ -866,7 +866,7 @@ Global $g_bCollectStarBonus = False
 Global $g_iTxtRestartGold = 10000
 Global $g_iTxtRestartElixir = 25000
 Global $g_iTxtRestartDark = 500
-Global $g_bChkCollect = True, $g_bChkTombstones = True, $g_bChkCleanYard = False, $g_bChkGemsBox = False
+Global $g_bChkCollect = True, $g_bChkTombstones = True, $g_bChkCleanYard = False, $g_bChkGemsBox = False, $g_bChkSellHeroPot = False
 Global $g_bChkCollectCartFirst = False, $g_iTxtCollectGold = 0, $g_iTxtCollectElixir = 0, $g_iTxtCollectDark = 0
 Global $g_bChkTreasuryCollect = False
 Global $g_iTxtTreasuryGold = 0
@@ -997,7 +997,7 @@ Global $g_iWallCost = 0
 
 ; Auto Upgrade
 Global $g_bPlaceNewBuilding = False, $g_bChkRushTH = False, $g_bNewBuildingFirst = False
-Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False
+Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False, $g_bSkipWallReserve = False
 Global $g_iChkIgnoreTH = 0, $g_iChkIgnoreKing = 0, $g_iChkIgnoreQueen = 0, $g_iChkIgnoreWarden = 0, $g_iChkIgnoreChampion = 0, $g_iChkIgnoreCC = 0, $g_iChkIgnoreLab = 0
 Global $g_iChkIgnoreBarrack = 0, $g_iChkIgnoreDBarrack = 0, $g_iChkIgnoreFactory = 0, $g_iChkIgnoreDFactory = 0
 Global $g_iChkIgnoreGColl = 0, $g_iChkIgnoreEColl = 0, $g_iChkIgnoreDColl = 0
@@ -1869,7 +1869,7 @@ Global $g_abCGBBTroopsItem[Ubound(ClanGamesChallenges("$BBTroopsChallenges"))]
 Global $g_bChkCollectAchievements = True
 
 ; Collect Free Magic Items
-Global $g_bChkCollectFreeMagicItems = True
+Global $g_bChkCollectFreeMagicItems = True, $g_bRemoveFreeMagicItems = False
 
 ; Daily challenge
 Global $g_bChkCollectRewards = True

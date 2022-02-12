@@ -100,22 +100,20 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 			If _Sleep(500) Then Return
 			ExitLoop ;exit Battle already ended
 		EndIf
+		
 		If $g_bRestart Then Return
-		If IsAttackPage() Then $BattleEnded = False
 		If Not $BattleEnded Then
 			If WaitforPixel(18, 548, 19, 549, "CD0D0D", 10, 1) Then
 				Click(65, 540, 1, 0, "#0099")
 				If _Sleep(500) Then Return
-				If Not $GoldChangeCheck Then 
-					If _Sleep(3000) Then Return
-					Return
-				EndIf
 				Local $j = 0
+				Local $OKCancel = False
 				While 1 ; dynamic wait for Okay button
 					SetDebugLog("Wait for OK button to appear #" & $j)
 					If IsOKCancelPage(True) Then
 						ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
 						If _Sleep(1500) Then Return
+						$OKCancel = True
 						ExitLoop
 					Else
 						$j += 1
@@ -123,11 +121,16 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					If $j > 5 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
 					If _Sleep(500) Then Return
 				WEnd
+				If Not $OKCancel Then 
+					If IsMainPage() Then 
+						SetLog("Success Return Home", $COLOR_INFO)
+						Return
+					EndIf
+				EndIf
 			Else
 				SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
 			EndIf
 		EndIf
-		
 		If _Sleep(1000) Then Return ;set sleep for wait page changes
 	Next
 	
@@ -136,18 +139,11 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	If CheckAndroidReboot() Then Return
 
 	If $GoldChangeCheck Then
-		For $i = 1 To 5
-			If Not IsReturnHomeBattlePage(True) Then 
-				SetDebugLog("Waiting ReturnHomeBattlePage #" & $i, $COLOR_DEBUG)
-				If _Sleep(500) Then Return
-			Else
-				ExitLoop ;exit Battle already ended
-			EndIf
-		Next
 		If _Sleep(1500) Then Return ;add more delay to wait all resource appear
 		_CaptureRegion()
 		AttackReport()
 	EndIf
+	
 	If $g_bRestart Then Return
 	If $TakeSS = 1 And $GoldChangeCheck Then
 		SetLog("Taking snapshot of your loot", $COLOR_SUCCESS)
@@ -178,6 +174,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		Else
 			ExitLoop
 		EndIf
+		If _Sleep(250) Then Return
 	Next
 	
 	If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for screen to close

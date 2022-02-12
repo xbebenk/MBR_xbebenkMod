@@ -226,15 +226,17 @@ Func DonateCC($bCheckForNewMsg = False)
 	ClickAway("Left")
 
 	If _Sleep($DELAYDONATECC2) Then Return
-
-	If Not ClickB("ClanChatOpen") Then
-		If WaitforPixel(18, 376, 19, 377, "C55115", 10, 1) Then
-			Click(18, 370) ;Click ClanChatOpen
-		Else
-			SetLog("Try Open ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR)
-			Return
-		EndIf
+	If checkChatTabPixel() Then
+		Click(18, 370) ;Click ClanChatOpen
 	EndIf
+	;If Not ClickB("ClanChatOpen") Then
+	;	If WaitforPixel(18, 376, 20, 378, "C55115", 20, 1) Then
+	;		Click(18, 370) ;Click ClanChatOpen
+	;	Else
+	;		SetLog("Try Open ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR)
+	;		Return
+	;	EndIf
+	;EndIf
 
 	If _Sleep($DELAYDONATECC4) Then Return
 
@@ -682,14 +684,15 @@ Func DonateCC($bCheckForNewMsg = False)
 
 	ClickAway("Left")
 	If _Sleep($DELAYDONATECC2) Then Return
-
-	If Not ClickB("ClanChatClose") Then
-		If WaitforPixel(294, 660, 295, 661, "E5E5B2", 10, 1) Then
-			Click(333,352) ;Click ClanChatClose
-		Else
-			SetLog("Try Close ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR) ;we still failed to close clanchat tab
-		EndIf
-	EndIf
+	
+	checkChatTabPixel()
+	;If Not ClickB("ClanChatClose") Then
+	;	If WaitforPixel(294, 660, 295, 661, "E5E5B2", 10, 1) Then
+	;		Click(333,352) ;Click ClanChatClose
+	;	Else
+	;		SetLog("Try Close ClanChat, Error finding the Clan Tab Button", $COLOR_ERROR) ;we still failed to close clanchat tab
+	;	EndIf
+	;EndIf
 
 	UpdateStats()
 	If _Sleep($DELAYDONATECC2) Then Return
@@ -1061,7 +1064,7 @@ Func DonateWindow($aiDonateButton, $bOpen = True)
 	If _Sleep($DELAYDONATEWINDOW1) Then Return
 
 	Local $icount = 0
-	While Not (_ColorCheck(_GetPixelColor(331, $aiDonateButton[1], True, "DonateWindow"), Hex(0xffffff, 6), 0))
+	While Not (_ColorCheck(_GetPixelColor(331, $aiDonateButton[1], True, "DonateWindow"), Hex(0xffffff, 6), 10))
 		If _Sleep($DELAYDONATEWINDOW2) Then Return
 		ForceCaptureRegion()
 		$icount += 1

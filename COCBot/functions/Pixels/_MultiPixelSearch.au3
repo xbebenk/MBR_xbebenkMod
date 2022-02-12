@@ -102,7 +102,10 @@ EndFunc   ;==>_MultiPixelSearchDebug
 Func WaitforPixel($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariation, $maxDelay = 10) ; $maxDelay is in 1/2 second
 	For $i = 1 To $maxDelay * 2
 		Local $result = _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariation)
-		If IsArray($result) Then Return True
+		If IsArray($result) Then 
+			SetDebugLog("WaitforPixel Result: True ["  & _ArrayToString($result) & "]")
+			Return True
+		EndIf
 		If _Sleep(250) Then Return
 	Next
 	Return False

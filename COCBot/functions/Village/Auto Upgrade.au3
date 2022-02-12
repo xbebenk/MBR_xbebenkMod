@@ -20,7 +20,7 @@ Func AutoUpgrade($bTest = False)
 	Return $Result
 EndFunc
 
-Func AutoUpgradeCheckBuilder($bTest = False, $SkipWallReserve = False)
+Func AutoUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
 	Local $iWallReserve
 
@@ -29,7 +29,7 @@ Func AutoUpgradeCheckBuilder($bTest = False, $SkipWallReserve = False)
 		$g_iFreeBuilderCount = 1
 		$bRet = True
 	EndIf
-
+	
 	;Check if there is a free builder for Auto Upgrade
 	$iWallReserve = ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0)
 	If $g_iFreeBuilderCount > 0 Then ;builder available
@@ -40,26 +40,44 @@ Func AutoUpgradeCheckBuilder($bTest = False, $SkipWallReserve = False)
 		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
 		$bRet = False
 	EndIf
-	If $g_iFreeBuilderCount = 1 And $SkipWallReserve Then ;Skip Wall Reserve, detected upgrade remain time on most top list upgrade < 24h
-		SetLog("Detected remain time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
+	If $g_bSkipWallReserve And $g_iFreeBuilderCount > 0 Then 
 		$bRet = True
 	EndIf
+	
 	SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
 EndFunc
 
 Func SearchUpgrade($bTest = False)
 	SetLog("Check for Auto Upgrade", $COLOR_DEBUG)
+	ClickAway()
 	Local $bDebug = $g_bDebugSetlog
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
-	Local $SkipWallReserve = False
-	If $g_bUseWallReserveBuilder Then
-		ClickMainBuilder()
-		$SkipWallReserve = QuickMIS("BC1", $g_sImgAUpgradeHour, 375, 105, 440, 135)
-	Else
-		If Not AutoUpgradeCheckBuilder($bTest) Then Return
+	$g_bSkipWallReserve = False ;reset first
+	
+	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder Then
+		getBuilderCount(True)
+		If $g_iFreeBuilderCount = 1 Then
+			ClickMainBuilder()
+			Local $Hour = QuickMIS("CNX", $g_sImgAUpgradeHour, 375, 105, 440, 135) ;Skip Wall Reserve, detected upgrade remain time on most top list upgrade < 24h
+			If IsArray($Hour) And UBound($Hour) > 0 Then 
+				For $i = 0 To UBound($Hour) - 1
+					If $Hour[$i][0] = "Day" Then
+						$g_bSkipWallReserve = False
+						ExitLoop
+					EndIf
+					If $Hour[$i][0] = "Hour" Then
+						$g_bSkipWallReserve = True
+					EndIf
+				Next
+				If $g_bSkipWallReserve Then
+					SetLog("Detected remain time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
+				EndIf
+			EndIf
+		EndIf
 	EndIf
+	
 	VillageReport(True,True)
 
 	; check if builder head is clickable
@@ -68,24 +86,32 @@ Func SearchUpgrade($bTest = False)
 		Return
 	EndIf
 
-	If AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ;Check if we have builder
+	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
 		If $g_bNewBuildingFirst Then
-			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest, $SkipWallReserve) ;search new building
-			If Not AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ;Check if we still have builder
+			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
+			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
 				ZoomOut() ;no builder, exit
 				Return
 			EndIf
 			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
 		EndIf
+	Else
+		Return
 	EndIf
 
 	If Not $g_bRunState Then Return
-	If AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then AutoUpgradeSearchExisting($bTest, $SkipWallReserve) ;search upgrade for existing building
+	If AutoUpgradeCheckBuilder($bTest) Then 
+		AutoUpgradeSearchExisting($bTest) ;search upgrade for existing building
+	Else
+		Return
+	EndIf
 
-	If AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ;Check if we have builder
+	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
 		If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing
-			AutoUpgradeSearchNewBuilding($bTest, $SkipWallReserve)
+			AutoUpgradeSearchNewBuilding($bTest)
 		EndIf
+	Else
+		Return
 	EndIf
 	If Not $g_bRunState Then Return
 	ClickAway()
@@ -93,7 +119,7 @@ Func SearchUpgrade($bTest = False)
 	Return False
 EndFunc
 
-Func AutoUpgradeSearchExisting($bTest = False, $SkipWallReserve = False)
+Func AutoUpgradeSearchExisting($bTest = False)
 	If Not $g_bRunState Then Return
 	SetLog("Search For Existing Upgrade", $COLOR_DEBUG)
 	If Not ClickMainBuilder($bTest) Then Return
@@ -129,7 +155,7 @@ Func AutoUpgradeSearchExisting($bTest = False, $SkipWallReserve = False)
 						$b_BuildingFound = False ;reset
 						$z = 0 ;reset
 						If Not $g_bRunState Then Return
-						If Not AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ExitLoop 2
+						If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
 					Endif
 					ClickMainBuilder($bTest)
 				EndIf
@@ -156,7 +182,7 @@ Func AutoUpgradeSearchExisting($bTest = False, $SkipWallReserve = False)
 			ExitLoop
 		EndIf
 		If Not $g_bRunState Then Return
-		If Not AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ExitLoop
+		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		ClickDragAUpgrade("up", $y - $step) ;do scroll up
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
@@ -648,7 +674,7 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 	Return False
 EndFunc ;==>AUNewBuildings
 
-Func AutoUpgradeSearchNewBuilding($bTest = False, $SkipWallReserve = False)
+Func AutoUpgradeSearchNewBuilding($bTest = False)
 	If Not $g_bRunState Then Return
 	If Not $g_bPlaceNewBuilding Then Return
 	SetLog("Search For Place New Building", $COLOR_DEBUG)
@@ -723,10 +749,10 @@ Func AutoUpgradeSearchNewBuilding($bTest = False, $SkipWallReserve = False)
 				For $y = 0 To UBound($aResult) - 1
 					If $aResult[$y][3] > 100 Then ;filter only upgrade with readable upgrade cost
 						Click($aResult[$y][1], $aResult[$y][2])
+						$sameCost = 0 ;reset here as we found building with cost readable
 						If _Sleep(1000) Then Return
 						If DoUpgrade($bTest) Then
 							$z = 0 ;reset
-							$sameCost = 0
 						Endif
 						ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
 					Else
@@ -758,10 +784,31 @@ Func AutoUpgradeSearchNewBuilding($bTest = False, $SkipWallReserve = False)
 			If isArray($aResult) And UBound($aResult) > 0 Then
 				_ArraySort($aResult, 0, 0, 0, 3)
 				For $y = 0 To UBound($aResult) - 1
-					SetDebugLog("Essential Building: " & $aResult[$y][0] & ", Cost: " & $aResult[$y][3] & " Coord [" & $aResult[$y][1] & "," & $aResult[$y][2] & "]", $COLOR_INFO)
+					SetDebugLog("Essential Building: " & $aResult[$y][0] & ", Type: " & $aResult[$y][3] & ", Cost: " & $aResult[$y][4] & " Coord [" & $aResult[$y][1] & "," & $aResult[$y][2] & "]", $COLOR_INFO)
 				Next
 				For $y = 0 To UBound($aResult) - 1
-					If $aResult[$y][3] > 100 Then ;filter only upgrade with readable upgrade cost
+					If $aResult[$y][4] > 100 Then ;filter only upgrade with readable upgrade cost
+						$sameCost = 0 ;reset here as we found building with cost readable
+						If $aResult[$y][3] = "Hero" Then
+							Local $UpgradeUsing = "DE"
+							If $aResult[$y][0] = "GrandWarden" Then $UpgradeUsing = "Elixir"
+							If $UpgradeUsing = "DE" Then 
+								SetDebugLog($g_iTxtSmartMinDark & " + " & $aResult[$y][4] & " = " & $g_iTxtSmartMinDark + $aResult[$y][4])
+								SetDebugLog("DE = " & $g_aiCurrentLoot[$eLootDarkElixir])
+								If $g_aiCurrentLoot[$eLootDarkElixir] < ($aResult[$y][4] + $g_iTxtSmartMinDark) Then 
+									SetLog($aResult[$y][0] & " Skip Upgrade, Insufficent Resource", $COLOR_WARNING)
+									ContinueLoop
+								EndIf
+							EndIf
+							If $UpgradeUsing = "Elixir" Then 
+								SetDebugLog($g_iTxtSmartMinElixir & " + " & $aResult[$y][4] & " = " & $g_iTxtSmartMinElixir + $aResult[$y][4])
+								SetDebugLog("Elixir = " & $g_aiCurrentLoot[$eLootElixir])
+								If $g_aiCurrentLoot[$eLootElixir] < ($aResult[$y][4] + $g_iTxtSmartMinElixir) Then 
+									SetLog($aResult[$y][0] & " Skip Upgrade, Insufficent Resource", $COLOR_WARNING)
+									ContinueLoop
+								EndIf
+							EndIf
+						EndIf
 						Click($aResult[$y][1], $aResult[$y][2])
 						If _Sleep(1000) Then Return
 						If DoUpgrade($bTest) Then
@@ -789,7 +836,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False, $SkipWallReserve = False)
 		$UpgradeCost = $TmpUpgradeCost
 		
 		If Not $g_bRunState Then Return
-		If Not AutoUpgradeCheckBuilder($bTest, $SkipWallReserve) Then ExitLoop
+		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		If Not $NeedDrag Then
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
@@ -830,7 +877,7 @@ EndFunc
 Func FindEssentialBuilding()
 	Local $sImagePath = @ScriptDir & "\imgxml\Resources\Auto Upgrade\EssentialBuilding\"
 	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\EssentialBuilding\"
-	Local $BuildingCoord, $aEssentialBuildingCoord[0][4], $aEssentialBuilding, $UpgradeCost
+	Local $BuildingCoord, $aEssentialBuildingCoord[0][5], $aEssentialBuilding, $UpgradeCost
 	DirRemove($sTempPath, $DIR_REMOVE)
 	EssentialBuildingImageCopy($sImagePath, $sTempPath)
 	
@@ -849,14 +896,19 @@ Func FindEssentialBuilding()
 					ContinueLoop ;skip Not Bomb Tower
 				EndIf				
 			EndIf
-			_ArrayAdd($aEssentialBuildingCoord, String($BuildingCoord[$j][0]) & "|" & $BuildingCoord[$j][1] & "|" & $BuildingCoord[$j][2])
+			Local $Hero[4] = ["ArcherQueen", "BarbarianKing", "GrandWarden", "RoyalChampion"]
+			Local $BuildingType = "Building"
+			For $z = 0 To UBound($Hero) - 1
+				If $BuildingCoord[$j][0] = $Hero[$z] Then $BuildingType = "Hero"
+			Next
+			_ArrayAdd($aEssentialBuildingCoord, String($BuildingCoord[$j][0]) & "|" & $BuildingCoord[$j][1] & "|" & $BuildingCoord[$j][2] & "|" & $BuildingType)
 		Next
 		For $j = 0 To UBound($aEssentialBuildingCoord) - 1 
 			$UpgradeCost = getOcrAndCapture("coc-NewCapacity", 350, $BuildingCoord[$j][2] - 8, 150, 20, True)
-			$aEssentialBuildingCoord[$j][3] = Number($UpgradeCost)
-			SetLog("[" & $j & "] Building: " & $aEssentialBuildingCoord[$j][0] & ", Cost=" & $aEssentialBuildingCoord[$j][3], $COLOR_INFO)
+			$aEssentialBuildingCoord[$j][4] = Number($UpgradeCost)
+			SetLog("[" & $j & "] Building: " & $aEssentialBuildingCoord[$j][0] & ", Cost=" & $aEssentialBuildingCoord[$j][4], $COLOR_INFO)
 		Next
-		_ArraySort($aEssentialBuildingCoord, 0, 0, 0, 3)
+		_ArraySort($aEssentialBuildingCoord, 1, 0, 0, 4)
 		Return $aEssentialBuildingCoord
 	Else
 		SetDebugLog("Not Array Essential Building", $COLOR_DEBUG)
@@ -910,7 +962,7 @@ Func SearchGreenZone()
 EndFunc
 
 Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
-	Local $x = 420, $yUp = 103, $yDown = 800, $Delay = 500
+	Local $x = 420, $yUp = 103, $yDown = 800, $Delay = 1000
 	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2

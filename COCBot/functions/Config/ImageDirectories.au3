@@ -54,8 +54,7 @@ Global $g_sImgAchievementsScrollEnd = @ScriptDir & "\imgxml\AchievementRewards\S
 Global $g_sImgCollectReward = @ScriptDir & "\imgxml\Resources\ClaimReward"
 Global $g_sImgTrader = @ScriptDir & "\imgxml\FreeMagicItems\TraderIcon"
 Global $g_sImgFree = @ScriptDir & "\imgxml\FreeMagicItems\Free"
-Global $g_sImgDailyDiscountWindow = @ScriptDir & "\imgxml\FreeMagicItems\DailyDiscounts*"
-Global $g_sImgBuyDealWindow = @ScriptDir & "\imgxml\FreeMagicItems\BuyDeal"
+Global $g_sImgHeroPotion = @ScriptDir & "\imgxml\FreeMagicItems\HeroPotion"
 Global Const $g_sImgUpgradeWhiteZero = @ScriptDir & "\imgxml\Main Village\Upgrade\WhiteZero*"
 Global Const $g_sImgDonateCC = @ScriptDir & "\imgxml\DonateCC\"
 Global Const $g_sImgLabResearch = @ScriptDir & "\imgxml\Research\Laboratory\"
@@ -178,7 +177,7 @@ Global $g_sImgDelQueue = @ScriptDir & "\imgxml\Train\Delete\"
 Global $g_sImgAttackBarDir = @ScriptDir & "\imgxml\AttackBar"
 Global $g_sImgSwitchSiegeMachine = @ScriptDir & "\imgxml\SwitchSiegeMachines\"
 Global $g_sImgSwitchWardenMode = @ScriptDir & "\imgxml\SwitchWardenMode"
-Global $g_sImgIsMultiplayerTab = @ScriptDir & "\imgxml\Attack\Search\MultiplayerTab*"
+Global $g_sImgIsMultiplayerTab = @ScriptDir & "\imgxml\Attack\Search"
 #EndRegion
 
 #Region Search

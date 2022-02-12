@@ -24,12 +24,6 @@ Func waitMainScreen() ;Waits for main screen to popup
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
 		
-		If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
-			SetDebugLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
-			Click(440,526) ;Click OK button
-			If _Sleep(500) Then Return
-		EndIf
-		
 		Local $hWin = $g_hAndroidWindow
 		If TestCapture() = False Then
 			If WinGetAndroidHandle() = 0 Then
@@ -43,8 +37,8 @@ Func waitMainScreen() ;Waits for main screen to popup
 			getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
 		EndIf
 		_CaptureRegion()
-		If _CheckPixel($aPixelToCheck, $g_bNoCapturePixel, Default, "waitMainScreen") Then ;Checks for Main Screen
-			SetDebugLog("Screen cleared, WaitMainScreen exit", $COLOR_DEBUG)
+		If _CheckPixel($aPixelToCheck, $g_bCapturePixel, Default, "waitMainScreen") Then ;Checks for Main Screen
+			SetDebugLog("Screen cleared, WaitMainScreen exit", $COLOR_SUCCESS)
 			Return
 		Else
 			If Not TestCapture() And _Sleep($DELAYWAITMAINSCREEN1) Then Return
