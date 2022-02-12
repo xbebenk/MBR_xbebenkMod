@@ -117,13 +117,13 @@ EndFunc
 Func checkChatTabPixel()
 	SetDebugLog("Checking chat tab pixel exists to ensure images have loaded correctly")
 	If _CheckPixel($aChatTab, True) Then
-		SetDebugLog("checkObstacles: Found Chat Tab to close")
+		SetDebugLog("checkChatTabPixel: Found Chat Tab to close")
 		PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		If _Sleep(1500) Then Return
 	EndIf
-	If _Sleep(500) Then Return
-	If WaitforPixel(18, 376, 19, 377, "C55115", 10, 1) Then 
-		SetDebugLog("ChatTabPixel found", $COLOR_SUCCESS)
+	
+	If WaitforPixel(18, 376, 20, 378, "C55115", 10, 1) Then 
+		SetDebugLog("checkChatTabPixel: Found ChatTabPixel", $COLOR_SUCCESS)
 		Return True
 	Else
 		SetLog("ChatTabPixel not found", $COLOR_ERROR)

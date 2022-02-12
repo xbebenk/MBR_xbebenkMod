@@ -51,7 +51,17 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	EndIf
 
 	If _Sleep($DELAYPREPARESEARCH1) Then Return
-	If Not IsFullScreenWindow() Then 
+	Local $MultiplayerWindowOpened = False
+	For $i = 1 To 5
+		If IsFullScreenWindow() Then 
+			$MultiplayerWindowOpened = True
+			ExitLoop
+		Else
+			SetLog("Waiting For Multiplayer Window #" & $i, $COLOR_ACTION)
+		EndIf
+	Next
+	
+	If Not $MultiplayerWindowOpened Then
 		SetLog("Attack Window did not open!", $COLOR_ERROR)
 		AndroidPageError("PrepareSearch")
 		checkMainScreen()
@@ -60,13 +70,11 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Return
 	EndIf
 
-	$g_bCloudsActive = True ; early set of clouds to ensure no android suspend occurs that might cause infinite waits
-
 	If Not IsMultiplayerTabOpen() Then
 		SetLog("Error while checking if Multiplayer Tab is opened", $COLOR_ERROR)
 		Return
 	EndIf
-	
+	$g_bCloudsActive = True ; early set of clouds to ensure no android suspend occurs that might cause infinite waits
 	$g_bLeagueAttack = False
 	Do
 		Local $bSignedUpLegendLeague = False
