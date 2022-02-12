@@ -1313,6 +1313,11 @@ Func FirstCheck()
 		SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_SUCCESS)
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
+	
+	If isElixirFull() Then 
+		Laboratory()
+		VillageReport(True, True)
+	EndIf
 
 	If BotCommand() Then btnStop()
 	

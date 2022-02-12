@@ -95,7 +95,7 @@ Func PrepareAttack($pMatchMode, $bRemaining = False) ;Assigns troops
 							If $pMatchMode = $DB Or $pMatchMode = $LB Then
 								Switch $avAttackBar[$j][0]
 									Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF
-										If $g_aiAttackUseSiege[$pMatchMode] <= 6 Then
+										If $g_aiAttackUseSiege[$pMatchMode] <= $eSiegeMachineCount + 1 Then
 											SelectCastleOrSiege($avAttackBar[$j][0], Number($avAttackBar[$j][5]), $g_aiAttackUseSiege[$pMatchMode])
 
 											If $g_aiAttackUseSiege[$pMatchMode] = 0 And Not($avAttackBar[$j][0] = $eCastle) Then ; if the user wanted to drop castle and no troops were available, do not drop a siege
@@ -196,7 +196,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 
 			If $aSearchResult <> "" And IsArray($aSearchResult) Then
 				Local $aFinalCoords, $iFinalLevel = 0, $iFinalSiege
-
+				_CaptureRegion(0,410)
 				For $i = 0 To UBound($aSearchResult) - 1
 					Local $aAvailable = $aSearchResult[$i]
 					SetDebugLog("SelectCastleOrSiege() $aSearchResult[" & $i & "]: " & _ArrayToString($aAvailable))
@@ -211,19 +211,28 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 						ExitLoop
 					EndIf
 
-					If $iSiegeIndex >= $eWallW And $iSiegeIndex <= $eLogL And ($bAnySiege Or $iSiegeIndex = $ToUse) Then
+					If $iSiegeIndex >= $eWallW And $iSiegeIndex <= $eFlameF And ($bAnySiege Or $iSiegeIndex = $ToUse) Then
 						For $j = 0 To UBound($aAllCoords) - 1
 							Local $aCoords = $aAllCoords[$j]
-							Local $SiegeLevel = getTroopsSpellsLevel(Number($aCoords[0]) - 30, 524)
+							Local $OwnSiege = String(False)
+							If _ColorCheck(_GetPixelColor($aCoords[0] - 30, 466, True), Hex(0x559CDD, 6), 10) Then
+								$OwnSiege = String(True)
+							Else
+								SetDebugLog("_GetPixelColor(" & $aCoords[0] - 30 & ", 466, True)", $COLOR_ACTION)
+								SetDebugLog("Expected: " & "559CDD, got: " & _GetPixelColor($aCoords[0] - 30, 466, True), $COLOR_ACTION)
+							EndIf
+							SetDebugLog("getTroopsSpellsLevel(" & $aCoords[0] - 30 & ",524)") 
+							Local $SiegeLevel = getTroopsSpellsLevel($aCoords[0] - 30, 524)
 							; Just in case of Level 1
 							If $SiegeLevel = "" Then $SiegeLevel = 1
-							SetDebugLog($i & "." & $j & ". Name: " & $aAvailable[0] & ", Level: " & $SiegeLevel & ", Coords: " & _ArrayToString($aCoords))
+							SetDebugLog($i & "." & $j & ". Name: " & $aAvailable[0] & ", OwnSiege: " & $OwnSiege & ", Level: " & $SiegeLevel & ", Coords: " & _ArrayToString($aCoords))
+							If $OwnSiege And $SiegeLevel < 4 Then ContinueLoop
 							If $iFinalLevel < Number($SiegeLevel) Then
 								$iFinalLevel = Number($SiegeLevel)
 								$aFinalCoords = $aCoords
 								$iFinalSiege = $iSiegeIndex
 							EndIf
-							If $iFinalLevel = 3 Then ExitLoop 2
+							If $iFinalLevel = 4 Then ExitLoop 2
 						Next
 					EndIf
 				Next
