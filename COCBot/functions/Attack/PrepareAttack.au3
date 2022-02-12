@@ -196,7 +196,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 
 			If $aSearchResult <> "" And IsArray($aSearchResult) Then
 				Local $aFinalCoords, $iFinalLevel = 0, $iFinalSiege
-				_CaptureRegion(0,410)
+				_CaptureRegion2(100, 430, 800, 575)
 				For $i = 0 To UBound($aSearchResult) - 1
 					Local $aAvailable = $aSearchResult[$i]
 					SetDebugLog("SelectCastleOrSiege() $aSearchResult[" & $i & "]: " & _ArrayToString($aAvailable))
@@ -218,7 +218,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 							If _ColorCheck(_GetPixelColor($aCoords[0] - 30, 466, True), Hex(0x559CDD, 6), 10) Then
 								$OwnSiege = String(True)
 							Else
-								SetDebugLog("_GetPixelColor(" & $aCoords[0] - 30 & ", 466, True)", $COLOR_ACTION)
+								SetDebugLog($aAvailable[0] & ": _GetPixelColor(" & $aCoords[0] - 30 & ", 466, True)", $COLOR_ACTION)
 								SetDebugLog("Expected: " & "559CDD, got: " & _GetPixelColor($aCoords[0] - 30, 466, True), $COLOR_ACTION)
 							EndIf
 							SetDebugLog("getTroopsSpellsLevel(" & $aCoords[0] - 30 & ",524)") 

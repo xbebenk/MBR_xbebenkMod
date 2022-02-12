@@ -31,6 +31,7 @@ Func UpgradeWall($bTest = False)
 	SetLog("Checking Upgrade Walls", $COLOR_INFO)
 	VillageReport(True, True) ;update village resource capacity
 	SetLog("FreeBuilderCount: " & $g_iFreeBuilderCount, $COLOR_DEBUG)
+	If $bTest Then $g_iFreeBuilderCount = 1
 	If $g_iFreeBuilderCount < 1 Then Return
 	
 	If $g_iFreeBuilderCount = 0 Then
@@ -123,19 +124,31 @@ Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = 
 		Case 0 ;Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			$HaveResource = $HaveGold
+			If $g_bUpgradeWallIfStorageIsFull Then 
+				$HaveResource = isGoldFull()
+			EndIf
 			If Not $HaveGold Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
 		Case 1 ;Elixir
 			Local $HaveElix = IsElixEnough($Cost)
 			$HaveResource = $HaveElix
+			If $g_bUpgradeWallIfStorageIsFull Then 
+				$HaveResource = isElixirFull()
+			EndIf
 			If Not $HaveElix Then SetLog("- Insufficient Elixir", $COLOR_DEBUG)
 		Case 2 ;Elixir then Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			Local $HaveElix = IsElixEnough($Cost)
 			If Number($iWallLevel) > 7 Then 
 				$HaveResource = $HaveElix
-				If Not $HaveElix Then 
+				If $g_bUpgradeWallIfStorageIsFull Then 
+					$HaveResource = isElixirFull()
+				EndIf
+				If Not $HaveResource Then 
 					SetLog("- Insufficient Elixir, attempt to Upgrade with Gold", $COLOR_DEBUG)
 					$HaveResource = $HaveGold
+					If $g_bUpgradeWallIfStorageIsFull Then 
+						$HaveResource = isGoldFull()
+					EndIf
 					If Not $HaveGold Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
 				EndIf
 				If Not $HaveGold And Not $HaveElix Then
