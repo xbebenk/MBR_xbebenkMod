@@ -943,7 +943,7 @@ Func CheckLoginWithSupercellID()
 	If Not $g_bRunState Then Return
 
 	; Account List check be there, validate with imgloc
-	If UBound(decodeSingleCoord(FindImageInPlace("LoginWithSupercellID", $g_sImgLoginWithSupercellID, "355,705,125,30", False))) > 1 Then
+	If UBound(decodeSingleCoord(FindImage("LoginWithSupercellID", $g_sImgLoginWithSupercellID, GetDiamondFromRect("300,610(125,30)"), False))) > 1 Then
 		; Google Account selection found
 		SetLog("Verified Log in with Supercell ID boot screen")
 

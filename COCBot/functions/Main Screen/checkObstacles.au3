@@ -247,7 +247,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	
 	;;;;;;;##### 7- SCID Login Screen #####;;;;;;;
 	CheckLoginWithSupercellID()
-	If CheckObstacles_SCIDPopup() Then Return True
+	If CheckObstacles_SCIDPopup() Then Return False
 	; optional game update
 	If UBound(decodeSingleCoord(FindImageInPlace("OptUpdateCoC", $g_sImgOptUpdateCoC, "155, 190, 705, 480", False))) > 1 Then ; Found Optional Game Update Message
 		SetLog("Found Optional Game Update - Clicking No Thanks", $COLOR_INFO)

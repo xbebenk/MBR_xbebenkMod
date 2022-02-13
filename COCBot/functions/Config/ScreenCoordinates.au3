@@ -130,7 +130,7 @@ Global $aFindMatchButtonRND[4] = [200, 510, 300, 530] ; Find Multiplayer Match B
 Global $NextBtnRND[4] = [710, 530, 830, 570] ;  Next Button
 
 ;Switch Account
-Global $aLoginWithSupercellID[4] = [280, 640, 0xDCF684, 20] ; Upper green button section "Log in with Supercell ID" 0xB1E25A
+Global $aLoginWithSupercellID[4] = [280, 630, 0xDCF684, 20] ; Upper green button section "Log in with Supercell ID" 0xB1E25A
 Global $aLoginWithSupercellID2[4] = [266, 653, 0xFFFFFF , 10] ; White Font "Log in with Supercell ID"
 Global $aButtonSetting[4] = [820, 530, 0xFFFFFF, 10] ; Setting button, Main Screen
 Global $aIsSettingPage[4] = [764, 95, 0xFFFFFF, 10] ; Main Screen, Setting page open - left upper corner of x button
