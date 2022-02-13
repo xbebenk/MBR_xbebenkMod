@@ -966,7 +966,9 @@ Func _Idle() ;Sequence that runs until Full Army
 
 		$TimeIdle += Round(__TimerDiff($hTimer) / 1000, 2) ;In Seconds
 		SetLog("Time Idle: " & StringFormat("%02i", Floor(Floor($TimeIdle / 60) / 60)) & ":" & StringFormat("%02i", Floor(Mod(Floor($TimeIdle / 60), 60))) & ":" & StringFormat("%02i", Floor(Mod($TimeIdle, 60))))
-
+		If $g_iFreeBuilderCount > 0 And $g_abFullStorage[$eLootGold] Then
+			UpgradeWall()
+		EndIf
 		If $g_bOutOfGold Or $g_bOutOfElixir Then Return ; Halt mode due low resources, only 1 idle loop
 
 		If ProfileSwitchAccountEnabled() Then checkSwitchAcc() ; Forced to switch when in halt attack mode

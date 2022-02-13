@@ -124,40 +124,27 @@ Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = 
 		Case 0 ;Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			$HaveResource = $HaveGold
-			If $g_bUpgradeWallIfStorageIsFull Then 
-				$HaveResource = isGoldFull()
-			EndIf
-			If Not $HaveGold Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
+			If Not $HaveResource Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
 		Case 1 ;Elixir
 			Local $HaveElix = IsElixEnough($Cost)
 			$HaveResource = $HaveElix
-			If $g_bUpgradeWallIfStorageIsFull Then 
-				$HaveResource = isElixirFull()
-			EndIf
-			If Not $HaveElix Then SetLog("- Insufficient Elixir", $COLOR_DEBUG)
+			If Not $HaveResource Then SetLog("- Insufficient Elixir", $COLOR_DEBUG)
 		Case 2 ;Elixir then Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			Local $HaveElix = IsElixEnough($Cost)
 			If Number($iWallLevel) > 7 Then 
 				$HaveResource = $HaveElix
-				If $g_bUpgradeWallIfStorageIsFull Then 
-					$HaveResource = isElixirFull()
-				EndIf
 				If Not $HaveResource Then 
 					SetLog("- Insufficient Elixir, attempt to Upgrade with Gold", $COLOR_DEBUG)
 					$HaveResource = $HaveGold
-					If $g_bUpgradeWallIfStorageIsFull Then 
-						$HaveResource = isGoldFull()
-					EndIf
-					If Not $HaveGold Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
+					If Not $HaveResource Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
 				EndIf
-				If Not $HaveGold And Not $HaveElix Then
-					$HaveResource = False
+				If Not $HaveResource Then
 					SetLog("- Insufficient Elixir & Gold", $COLOR_DEBUG)
 				EndIf
 			Else
 				$HaveResource = $HaveGold
-				If Not $HaveGold Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
+				If Not $HaveResource Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
 			EndIf
 	EndSwitch
 	Return $HaveResource
@@ -303,15 +290,19 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 			Local $UpgradeButtonFound = False
 			Switch $g_iUpgradeWallLootType
 				Case 0 ;Gold
-					$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 600, 580)
+					If WallCheckResource($iWallCost) Then 
+						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 600, 580)
+					EndIf
 				Case 1 ;Elixir
-					$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 600, 580)
+					If WallCheckResource($iWallCost) Then
+						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 600, 580)
+					EndIf
 				Case 2 ;Elixir then Gold
-					If IsElixEnough($iWallCost) Then 
+					If WallCheckResource($iWallCost) Then
 						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 600, 580)
 					EndIf
 					If Not $UpgradeButtonFound Then 
-						If IsGoldEnough($iWallCost) Then 
+						If WallCheckResource($iWallCost) Then
 							$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 600, 580)
 						EndIf
 					EndIf
@@ -508,4 +499,3 @@ Func IsElixEnough($iWallCost = $g_aUpgradeWall[0])
 	EndIf
 	Return $EnoughElix
 EndFunc
-

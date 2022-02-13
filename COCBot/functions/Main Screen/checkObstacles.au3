@@ -40,7 +40,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Return False
 		EndIf
 	EndIf
-	Local $bIsOnMainVillage = isOnMainVillage()
 	
 	If isProblemAffect(True) Then
 		;;;;;;;##### 1- Another device #####;;;;;;;
@@ -284,7 +283,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		checkObstacles_ResetSearch()
 	EndIf
 	
-	If WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
+	If $g_bRestart And WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
 		For $i = 1 To 20
 			If WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
 				SetLog("Waiting COC Loading Page #" & $i, $COLOR_ACTION)
