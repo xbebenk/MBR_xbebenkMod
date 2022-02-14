@@ -1273,9 +1273,18 @@ Func FirstCheck()
 			Local $WallSaveResourceElix[8] = [750000, 1500000, 1500000, 2000000, 3000000, 8000000, 10500000, 16000000]
 			For $j = 0 To UBound($WallSaveResourceGold) - 1
 				If Int($g_iTownHallLevel) - 6 = $j Then
-					$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j]
-					$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j]
-					SetDebugLog("Set WallSaveResource = " & $g_iUpgradeWallMinElixir, $COLOR_INFO)
+					If IsGoldFull() And $g_aiCurrentLoot[$eLootGold] < $WallSaveResourceGold[$j] Then 
+						$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j] - ($WallSaveResourceGold[$j] - $g_aiCurrentLoot[$eLootGold])
+					Else
+						$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j]
+					EndIf
+					If IsElixirFull() And $g_aiCurrentLoot[$eLootElixir] Then 
+						$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j] - ($WallSaveResourceElix[$j] - $g_aiCurrentLoot[$eLootElixir])
+					Else
+						$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j]
+					EndIf
+					SetDebugLog("Set Gold WallSaveResource = " & $g_iUpgradeWallMinGold, $COLOR_INFO)
+					SetDebugLog("Set Elix WallSaveResource = " & $g_iUpgradeWallMinElixir, $COLOR_INFO)
 				EndIf
 			Next
 		EndIf

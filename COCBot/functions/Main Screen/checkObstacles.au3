@@ -96,26 +96,13 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				SetLog("Village was Inactive, Reloading CoC", $COLOR_ERROR)
 				If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			Case _CheckPixel($aIsConnectLost, $g_bNoCapturePixel) Or UBound(decodeSingleCoord(FindImageInPlace("ConnectionLost", $g_sImgConnectionLost, "160,270,700,420", False))) > 1 ; Connection Lost
-				;  Add check for banned account :(
-				$Result = getOcrReloadMessage(171, 358, "Check Obstacles OCR 'policy at super'=") ; OCR text for "policy at super"
-				If StringInStr($Result, "policy", $STR_NOCASESENSEBASIC) Then
-					$msg = "Sorry but account has been banned, Bot must stop!"
-					BanMsgBox()
-					Return checkObstacles_StopBot($msg)
-				EndIf
-				$Result = getOcrReloadMessage(171, 337, "Check Obstacles OCR 'prohibited 3rd'= ") ; OCR text for "prohibited 3rd party"
-				If StringInStr($Result, "3rd", $STR_NOCASESENSEBASIC) Then
-					$msg = "Sorry but account has been banned, Bot must stop!"
-					BanMsgBox()
-					Return checkObstacles_StopBot($msg) ; stop bot
-				EndIf
 				SetLog("Connection lost, Reloading CoC", $COLOR_ERROR)
-				If $g_bChkSharedPrefs And HaveSharedPrefs() Then
-					SetLog("Please wait for loading CoC!")
-					PushSharedPrefs()
-					If Not $bRecursive Then OpenCoC()
-					Return True
-				EndIf
+				;If $g_bChkSharedPrefs And HaveSharedPrefs() Then
+				;	SetLog("Please wait for loading CoC!")
+				;	PushSharedPrefs()
+				;	If Not $bRecursive Then OpenCoC()
+				;	Return True
+				;EndIf
 			Case _CheckPixel($aIsCheckOOS, $g_bNoCapturePixel) Or (UBound(decodeSingleCoord(FindImageInPlace("OOS", $g_sImgOutOfSync, "355,300,435,365", False, $g_iAndroidLollipop))) > 1) ; Check OoS
 				SetLog("Out of Sync Error, Reloading CoC", $COLOR_ERROR)
 			Case (UBound(decodeSingleCoord(FindImageInPlace("ImportantNotice", $G_sImgImportantNotice, "150,220,430,290", False))) > 1)

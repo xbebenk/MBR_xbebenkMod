@@ -30,7 +30,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 	If $bSetLog Then
 		SetLog("Trying to locate Main Screen")
 	EndIf
-	SetLog("_checkMainScreen CalledFrom: " & $CalledFrom, $COLOR_INFO)
+	SetDebugLog("_checkMainScreen CalledFrom: " & $CalledFrom, $COLOR_INFO)
 	
 	If Not TestCapture() Then
 		If CheckAndroidRunning(False) = False Then Return False
@@ -100,7 +100,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 			SetLog("Main Screen not located", $COLOR_ERROR)
 		EndIf
 	EndIf
-	SetLog("Located: " & String($bLocated) & ", CalledFrom: " & $CalledFrom, $COLOR_ERROR)
+	SetDebugLog("Located: " & String($bLocated) & ", CalledFrom: " & $CalledFrom, $COLOR_ERROR)
 
 	;After checkscreen dispose windows
 	DisposeWindows()

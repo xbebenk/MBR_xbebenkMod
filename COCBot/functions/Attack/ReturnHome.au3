@@ -128,6 +128,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					EndIf
 				EndIf
 			Else
+				If IsProblemAffect(True) Then Return
 				SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
 			EndIf
 		EndIf

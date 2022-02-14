@@ -115,6 +115,7 @@ Func OpenTraderWindow()
 		Click($g_iQuickMISX, $g_iQuickMISY)
 	Else
 		SetLog("Trader Icon Not Found", $COLOR_INFO)
+		Return False
 	EndIf
 	If Not IsFreeMagicWindowOpen() Then 
 		SetLog("Free Magic Items Windows not Opened", $COLOR_ERROR)
