@@ -243,7 +243,7 @@ Func IsFullScreenWindow()
 	Return False
 EndFunc
 
-Func IsPetHousePage($bSetLog = True, $iLoop = 30)
+Func IsPetHousePage()
 	Local $result
 	$result = WaitforPixel(530, 120, 531, 121, "006C5C", 10, 2) ;green pixel under title 'Pet House'
 	

@@ -184,19 +184,19 @@ Func UpgradeLowLevelWall($bTest = False)
 		If Not $g_bRunState Then Return
 		If Not WallUpgradeCheckBuilder($bTest) Then Return
 		If $Try > 3 Then ExitLoop
+		$Try += 1
 		SetLog("[" & $Try & "] Search Wall on Builder Menu", $COLOR_INFO)
 		$aWallCoord = ClickDragFindWallUpgrade()
 		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then
 			Local $aIsEnoughResource = WallCheckResource($aWallCoord[0][2])
 			If Not $aIsEnoughResource[0] Then
 				SetDebugLog("01-Not WallCheckResource, Exiting")
-				ExitLoop
+				ContinueLoop
 			EndIf
 			TryUpgradeWall($aWallCoord, $bTest)
 		Else
 			SetLog("[" & $Try & "] Not Found Wall on Builder Menu", $COLOR_ERROR)
 		EndIf
-		$Try += 1
 	Wend
 	ClickDragAUpgrade("down")
 	ClickAway()
@@ -310,14 +310,21 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 			
 			If $UpgradeButtonFound Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(1000) Then Return
+				For $i = 1 To 10
+					If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
+						ExitLoop
+					Else
+						SetDebugLog("Waiting for Wall Upgrade Page #" & $i)
+					EndIf
+					_Sleep(200)
+				Next
+				
 				If Not $bTest Then
 					Click(420, 500)
-					If _Sleep(1000) Then Return
 				Else
 					SetLog("Testing Only!", $COLOR_ERROR)
 					ClickAway()
-					If _Sleep(500) Then Return
+					If _Sleep(250) Then Return
 					ClickAway()
 					Return False
 				EndIf
@@ -329,7 +336,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				EndIf
 			Else
 				SetLog("Not Enough Resource...", $COLOR_ERROR)
-				Return False
+				ExitLoop
 			EndIf
 			If _Sleep(500) Then Return
 		Next
@@ -360,7 +367,7 @@ Func ClickDragFindWallUpgrade()
 			SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 			SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
 			If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
-			If $sameCost > 2 Then ExitLoop
+			If $sameCost > 3 Then ExitLoop
 			$UpgradeCost = $TmpUpgradeCost
 		EndIf
 		If _ColorCheck(_GetPixelColor(350, 73, True), "fdfefd", 20) Then ;check upgrade window border

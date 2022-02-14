@@ -112,7 +112,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					SetDebugLog("Wait for OK button to appear #" & $j)
 					If IsOKCancelPage(True) Then
 						ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
-						If _Sleep(1500) Then Return
+						If _Sleep(1000) Then Return
 						$OKCancel = True
 						ExitLoop
 					Else
@@ -122,7 +122,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					If _Sleep(500) Then Return
 				WEnd
 				If Not $OKCancel Then
-					If IsMainPage() Then
+					If CheckMainScreen(False, $g_bStayOnBuilderBase, "ReturnHome") Then
 						SetLog("Success Return Home", $COLOR_INFO)
 						Return
 					EndIf

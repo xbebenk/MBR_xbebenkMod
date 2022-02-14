@@ -29,7 +29,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 		If $g_bDebugSetlog Then SetDebugLog("DLL Call succeeded " & $Res[0], $COLOR_PURPLE)
 
 		If $Res[0] = "" Or $Res[0] = "0" Then
-			If $g_bDebugSetlog Then SetDebugLog("No Button found")
+			SetDebugLog($ValueReturned & ", Image not found in " & $directory)
 			Switch $ValueReturned
 				Case "BC1"
 					Return False

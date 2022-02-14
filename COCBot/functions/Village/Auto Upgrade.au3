@@ -60,6 +60,7 @@ Func SearchUpgrade($bTest = False)
 		getBuilderCount(True)
 		If $g_iFreeBuilderCount = 1 Then
 			ClickMainBuilder()
+			SetLog("Checking current upgrade", $COLOR_INFO)
 			Local $Hour = QuickMIS("CNX", $g_sImgAUpgradeHour, 375, 105, 440, 135) ;Skip Wall Reserve, detected upgrade remain time on most top list upgrade < 24h
 			If IsArray($Hour) And UBound($Hour) > 0 Then 
 				For $i = 0 To UBound($Hour) - 1
@@ -73,6 +74,8 @@ Func SearchUpgrade($bTest = False)
 				Next
 				If $g_bSkipWallReserve Then
 					SetLog("Detected remain time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
+				Else
+					SetLog("Current Upgrade remain time > 24h, Skip Upgrade", $COLOR_INFO)
 				EndIf
 			EndIf
 		EndIf
