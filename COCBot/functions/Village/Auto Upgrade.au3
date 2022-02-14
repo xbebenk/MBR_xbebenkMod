@@ -37,10 +37,11 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	EndIf
 	If $g_iFreeBuilderCount - $iWallReserve - $g_iHeroReservedBuilder < 1 Then ;check builder reserve on wall and hero upgrade
 		SetLog("FreeBuilder=" & $g_iFreeBuilderCount & ", Reserve ForHero=" & $g_iHeroReservedBuilder & " ForWall=" & $iWallReserve, $COLOR_INFO)
-		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
+		If Not $g_bSkipWallReserve Then SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
 		$bRet = False
 	EndIf
 	If $g_bSkipWallReserve And $g_iFreeBuilderCount > 0 Then 
+		SetLog("Current Upgrade remain time < 24h, Will use wall reserved builder!", $COLOR_WARNING)
 		$bRet = True
 	EndIf
 	
@@ -73,7 +74,7 @@ Func SearchUpgrade($bTest = False)
 					EndIf
 				Next
 				If $g_bSkipWallReserve Then
-					SetLog("Detected remain time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
+					SetLog("Current Upgrade remain time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
 				Else
 					SetLog("Current Upgrade remain time > 24h, Skip Upgrade", $COLOR_INFO)
 				EndIf
