@@ -44,7 +44,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 		For $i = 0 To ($times - 1)
 			If isProblemAffectBeforeClick($i) Then
 				If $g_bDebugClick Then SetLog("VOIDED Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ERROR, "Verdana", "7.5", 0)
-				checkMainScreen(False)
+				checkMainScreen(False, $g_bStayOnBuilderBase, "Click")
 				SuspendAndroid($SuspendMode)
 				Return ; if need to clear screen do not click
 			EndIf
@@ -55,7 +55,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	Else
 		If isProblemAffectBeforeClick() Then
 			If $g_bDebugClick Then SetLog("VOIDED Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ERROR, "Verdana", "7.5", 0)
-			checkMainScreen(False)
+			checkMainScreen(False, $g_bStayOnBuilderBase, "Click")
 			SuspendAndroid($SuspendMode)
 			Return ; if need to clear screen do not click
 		EndIf
@@ -199,7 +199,7 @@ Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 			EndIf
 			If isProblemAffectBeforeClick($i) Then
 				If $g_bDebugClick Then SetLog("VOIDED GemClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ERROR, "Verdana", "7.5", 0)
-				checkMainScreen(False)
+				checkMainScreen(False, $g_bStayOnBuilderBase, "Click")
 				SuspendAndroid($SuspendMode)
 				Return ; if need to clear screen do not click
 			EndIf
@@ -218,7 +218,7 @@ Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 		EndIf
 		If isProblemAffectBeforeClick() Then
 			If $g_bDebugClick Then SetLog("VOIDED GemClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ERROR, "Verdana", "7.5", 0)
-			checkMainScreen(False)
+			checkMainScreen(False, $g_bStayOnBuilderBase, "Click")
 			SuspendAndroid($SuspendMode)
 			Return ; if need to clear screen do not click
 		EndIf

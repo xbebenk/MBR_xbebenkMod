@@ -23,7 +23,7 @@ Func TestSmartFarm()
 
 	Setlog("Starting the SmartFarm Attack Test()", $COLOR_INFO)
 
-	checkMainScreen(False)
+	CheckMainScreen(False, $g_bStayOnBuilderBase, "TestSmartFarm")
 	CheckIfArmyIsReady()
 	ClickAway()
 	If _Sleep(100) Then Return FuncReturn()

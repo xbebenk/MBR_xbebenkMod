@@ -19,7 +19,7 @@ Func LocateClanCastle($bCollect = True)
 	SetLog("Locating Clan Castle", $COLOR_INFO)
 
 	WinGetAndroidHandle()
-	checkMainScreen()
+	checkMainScreen(False, $g_bStayOnBuilderBase, "LocateClanCastle")
 	If $bCollect Then Collect(False)
 
 	While 1

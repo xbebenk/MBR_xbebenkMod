@@ -141,7 +141,7 @@ Func Unbreakable()
 
 	If CheckObstacles() = True Then ; Check for unusual windows open, or slow windows
 		If _Sleep($DELAYUNBREAKABLE3) Then Return ; wait for window to close
-		If CheckObstacles() = True Then CheckMainScreen(False) ; Check again, if true then let Check main screen fix it and zoomout
+		If CheckObstacles() = True Then CheckMainScreen(False, $g_bStayOnBuilderBase, "Unbreakable") ; Check again, if true then let Check main screen fix it and zoomout
 		Return
 	EndIf
 

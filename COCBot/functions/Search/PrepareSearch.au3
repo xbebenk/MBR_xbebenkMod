@@ -64,7 +64,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	If Not $MultiplayerWindowOpened Then
 		SetLog("Attack Window did not open!", $COLOR_ERROR)
 		AndroidPageError("PrepareSearch")
-		checkMainScreen()
+		checkMainScreen(True, $g_bStayOnBuilderBase, "PrepareSearch")
 		$g_bRestart = True
 		$g_bIsClientSyncError = False
 		Return

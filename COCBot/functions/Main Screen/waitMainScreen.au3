@@ -23,7 +23,16 @@ Func waitMainScreen() ;Waits for main screen to popup
 		If Not $g_bRunState Then Return
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
-		
+		If $g_bRestart And WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
+			For $i = 1 To 10
+				If WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
+					SetLog("Waiting COC Loading Page #" & $i, $COLOR_ACTION)
+					If _Sleep(1000) Then Return
+				Else
+					ExitLoop
+				EndIf
+			Next
+		EndIf
 		Local $hWin = $g_hAndroidWindow
 		If TestCapture() = False Then
 			If WinGetAndroidHandle() = 0 Then

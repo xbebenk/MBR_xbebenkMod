@@ -3251,7 +3251,7 @@ Func _AndroidFastClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = Tru
 			If $checkProblemAffect = True Then
 				If isProblemAffect(True) Then
 					SetDebugLog("VOIDED Click " & $x & "," & $y & "," & $times & "," & $speed, $COLOR_ERROR, "Verdana", "7.5", 0)
-					checkMainScreen(False)
+					checkMainScreen(False, $g_bStayOnBuilderBase, "Android")
 					Return ; if need to clear screen do not click
 				EndIf
 			EndIf
@@ -3608,7 +3608,7 @@ Func AndroidMinitouchClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect =
 			If $checkProblemAffect = True Then
 				If isProblemAffect(True) Then
 					SetDebugLog("VOIDED Click " & $x & "," & $y & "," & $times & "," & $speed, $COLOR_ERROR, "Verdana", "7.5", 0)
-					checkMainScreen(False)
+					checkMainScreen(False, $g_bStayOnBuilderBase, "Android")
 					Return ; if need to clear screen do not click
 				EndIf
 			EndIf

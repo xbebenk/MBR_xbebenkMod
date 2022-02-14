@@ -28,7 +28,7 @@ Func BoostKing()
 	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
-	checkMainScreen(False) ; Check for errors during function
+	checkMainScreen(False, $g_bStayOnBuilderBase, "BoostKing") ; Check for errors during function
 EndFunc   ;==>BoostKing
 
 
@@ -47,7 +47,7 @@ Func BoostQueen()
 	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
-	checkMainScreen(False) ; Check for errors during function
+	checkMainScreen(False, $g_bStayOnBuilderBase, "BoostQueen") ; Check for errors during function
 EndFunc   ;==>BoostQueen
 
 Func BoostWarden()
@@ -65,7 +65,7 @@ Func BoostWarden()
 	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
-	checkMainScreen(False) ; Check for errors during function
+	checkMainScreen(False, $g_bStayOnBuilderBase, "BoostWarden") ; Check for errors during function
 EndFunc   ;==>BoostWarden
 
 Func BoostChampion()
@@ -83,5 +83,5 @@ Func BoostChampion()
 	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
-	checkMainScreen(False) ; Check for errors during function
+	checkMainScreen(False, $g_bStayOnBuilderBase, "BoostChampion")	; Check for errors during function
 EndFunc   ;==>BoostChampion

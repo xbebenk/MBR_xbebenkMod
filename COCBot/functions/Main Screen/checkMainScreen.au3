@@ -14,13 +14,13 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in main screen
+Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom = "Default") ;Checks if in main screen
 	FuncEnter(checkMainScreen)
 	If GetAndroidProcessPID() = 0 Then StartAndroidCoC()
-	Return FuncReturn(_checkMainScreen($bSetLog, $bBuilderBase))
+	Return FuncReturn(_checkMainScreen($bSetLog, $bBuilderBase, $CalledFrom))
 EndFunc   ;==>checkMainScreen
 
-Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in main screen
+Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom = "Default") ;Checks if in main screen
 
 	If $bSetLog = Default Then $bSetLog = True
 	If $bBuilderBase = Default Then $bBuilderBase = $g_bStayOnBuilderBase
@@ -30,7 +30,8 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 	If $bSetLog Then
 		SetLog("Trying to locate Main Screen")
 	EndIf
-
+	SetLog("_checkMainScreen CalledFrom: " & $CalledFrom, $COLOR_INFO)
+	
 	If Not TestCapture() Then
 		If CheckAndroidRunning(False) = False Then Return False
 		getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
@@ -99,6 +100,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default) ;Checks if in
 			SetLog("Main Screen not located", $COLOR_ERROR)
 		EndIf
 	EndIf
+	SetLog("Located: " & String($bLocated) & ", CalledFrom: " & $CalledFrom, $COLOR_ERROR)
 
 	;After checkscreen dispose windows
 	DisposeWindows()

@@ -365,7 +365,6 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	Next
 
 	CheckHeroesHealth()
-
 	SetLog("Finished Attacking, waiting for the battle to end")
 EndFunc   ;==>algorithm_AllTroops
 

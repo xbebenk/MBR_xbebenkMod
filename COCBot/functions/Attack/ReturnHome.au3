@@ -90,17 +90,17 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 
 	SetLog("Returning Home", $COLOR_INFO)
 	If Not $g_bRunState Then Return
-	
-	
+
+
 	Local $BattleEnded = False
 	For $i = 1 To 5
-		If IsReturnHomeBattlePage(True) Then 
+		If IsReturnHomeBattlePage(True) Then
 			$BattleEnded = True
 			SetLog("Battle already over", $COLOR_SUCCESS)
 			If _Sleep(500) Then Return
 			ExitLoop ;exit Battle already ended
 		EndIf
-		
+
 		If $g_bRestart Then Return
 		If Not $BattleEnded Then
 			If WaitforPixel(18, 548, 19, 549, "CD0D0D", 10, 1) Then
@@ -121,8 +121,8 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					If $j > 5 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
 					If _Sleep(500) Then Return
 				WEnd
-				If Not $OKCancel Then 
-					If IsMainPage() Then 
+				If Not $OKCancel Then
+					If IsMainPage() Then
 						SetLog("Success Return Home", $COLOR_INFO)
 						Return
 					EndIf
@@ -133,7 +133,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		EndIf
 		If _Sleep(1000) Then Return ;set sleep for wait page changes
 	Next
-	
+
 	TrayTip($g_sBotTitle, "", BitOR($TIP_ICONASTERISK, $TIP_NOSOUND)) ; clear village search match found message
 
 	If CheckAndroidReboot() Then Return
@@ -143,7 +143,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		_CaptureRegion()
 		AttackReport()
 	EndIf
-	
+
 	If $g_bRestart Then Return
 	If $TakeSS = 1 And $GoldChangeCheck Then
 		SetLog("Taking snapshot of your loot", $COLOR_SUCCESS)
@@ -164,9 +164,9 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 
 	;push images if requested..
 	If $GoldChangeCheck Then PushMsg("LastRaid")
-	
+
 	For $i = 1 To 5
-		SetDebugLog("Wait for End Fight Scene to appear #" & $i)		
+		SetDebugLog("Wait for End Fight Scene to appear #" & $i)
 		If IsReturnHomeBattlePage(True) Then
 			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			; sometimes 1st click is not closing, so try again
@@ -176,7 +176,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		EndIf
 		If _Sleep(250) Then Return
 	Next
-	
+
 	If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for screen to close
 
 	For $counter = 1 To 5
@@ -187,16 +187,16 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		$g_bIsFullArmywithHeroesAndSpells = False ; forcing check the army
 		If ReturnHomeMainPage() Then Return
 	Next
-	
+
 	If isProblemAffect(True) Then
 		SetLog("Cannot return home.", $COLOR_ERROR)
-		checkMainScreen()
+		CheckMainScreen(False, $g_bStayOnBuilderBase, "ReturnHome-2")
 		Return
 	EndIf
 EndFunc   ;==>ReturnHome
 
 Func ReturnHomeMainPage()
-	checkMainScreen()
+	CheckMainScreen(False, $g_bStayOnBuilderBase,"ReturnHome-1")
 	If IsMainPage(1) Then
 		SetLogCentered(" BOT LOG ", Default, Default, True)
 		Return True
@@ -207,7 +207,7 @@ EndFunc   ;==>ReturnHomeMainPage
 Func ReturnfromDropTrophies()
 	Local $aiSurrenderButton
 	SetDebugLog(" -- ReturnfromDropTrophies -- ")
-	
+
 	If WaitforPixel(18, 548, 19, 549, "CD0D0D", 10, 1) Then
 		Click(65, 540, 1, 0, "#0099")
 		If _Sleep(500) Then Return
@@ -226,10 +226,10 @@ Func ReturnfromDropTrophies()
 		WEnd
 	Else
 		SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
-	EndIf	
-	
+	EndIf
+
 	For $i = 1 To 5
-		SetDebugLog("Wait for End Fight Scene to appear #" & $i)		
+		SetDebugLog("Wait for End Fight Scene to appear #" & $i)
 		If IsReturnHomeBattlePage(True) Then
 			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			; sometimes 1st click is not closing, so try again
@@ -238,7 +238,7 @@ Func ReturnfromDropTrophies()
 			ExitLoop
 		EndIf
 	Next
-	
+
 	$g_bFullArmy = False ; forcing check the army
 	$g_bIsFullArmywithHeroesAndSpells = False ; forcing check the army
 	If ReturnHomeMainPage() Then Return

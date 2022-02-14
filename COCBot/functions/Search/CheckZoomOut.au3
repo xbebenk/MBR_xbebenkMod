@@ -22,7 +22,7 @@ Func CheckZoomOut($sSource = "CheckZoomOut", $bCheckOnly = False, $bForecCapture
 		; not zoomed out, Return
 		If $bCheckOnly = False Then
 			SetLog("Not Zoomed Out! Exiting to MainScreen...", $COLOR_ERROR)
-			checkMainScreen() ;exit battle screen
+			checkMainScreen(True, $g_bStayOnBuilderBase, "CheckZoomOut")  ;exit battle screen
 			$g_bRestart = True ; Restart Attack
 			$g_bIsClientSyncError = True ; quick restart
 		EndIf
