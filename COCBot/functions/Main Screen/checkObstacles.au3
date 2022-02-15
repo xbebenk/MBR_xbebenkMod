@@ -157,12 +157,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Return False
 	EndIf
 	
-	If IsFullScreenWindow() Then
-		Click(825,45)
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
-
 	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20) Then
 		SetDebugLog("checkObstacles: Found Window with Close Button to close")
 		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
@@ -187,36 +181,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		SetDebugLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
 		Click(422, 500)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
-	If IsReturnHomeBattlePage(True) Then 
-		SetDebugLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
-		ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return False
-	EndIf
-	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
-		SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return False
-	EndIf
-	If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 66, 790, 120) Then 
-		SetDebugLog("checkObstacles: Found AttackLog Page", $COLOR_ACTION)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return False
-	EndIf
-	If IsPostDefenseSummaryPage() Then
-		SetDebugLog("checkObstacles: Found Post Defense Summary to close")
-		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
-		Return False
-	EndIf
-	
-	If IsAttackPage() Then
-		SetDebugLog("checkObstacles: Found AttackPage, Return Home")
-		ReturnHome(False, False)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
 
@@ -270,6 +234,40 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		checkObstacles_ResetSearch()
 	EndIf
 	
+	If IsReturnHomeBattlePage(True) Then 
+		SetDebugLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
+		ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
+		SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+	If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 66, 790, 120) Then 
+		SetDebugLog("checkObstacles: Found AttackLog Page", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+	If IsPostDefenseSummaryPage() Then
+		SetDebugLog("checkObstacles: Found Post Defense Summary to close")
+		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
+		Return False
+	EndIf
+	If IsAttackPage() Then
+		SetDebugLog("checkObstacles: Found AttackPage, Return Home")
+		ReturnHome(False, False)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+	If IsFullScreenWindow() Then
+		Click(825,45)
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf	
 	Return False
 EndFunc   ;==>_checkObstacles
 
