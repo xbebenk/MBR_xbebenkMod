@@ -119,7 +119,6 @@ EndFunc   ;==>UpgradeWall
 Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = $g_aUpgradeWall[0]+4)
 	$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
 	$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
-	SetDebugLog("WallCheckResource(): Cost=" & $Cost & " WallLevel=" & $iWallLevel)
 	SetDebugLog("Current Resource, Gold: " & $g_aiCurrentLoot[$eLootGold] & " Elix: " & $g_aiCurrentLoot[$eLootElixir], $COLOR_INFO)
 	Local $HaveResource = True
 	Local $UpgradeType = "Gold"
@@ -155,8 +154,8 @@ Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = 
 				If Not $HaveResource Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
 			EndIf
 	EndSwitch
-	
 	Local $aRet[2] = [$HaveResource, $UpgradeType]
+	SetDebugLog("WallCheckResource(): Cost=" & $Cost & " WallLevel=" & $iWallLevel & " Ret=" & _ArrayToString($aRet), $COLOR_INFO)
 	Return $aRet
 EndFunc
 
@@ -347,7 +346,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 EndFunc
 
 Func ClickDragFindWallUpgrade()
-	Local $x = 420, $yUp = 120, $Delay = 800
+	Local $x = 420, $yUp = 60, $Delay = 800
 	Local $YY = 345
 	Local $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost = 0, $aWallCoord
 	For $checkCount = 0 To 9

@@ -201,17 +201,18 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 
 		If $debug = True Then ; if debugging, do not actually click it
 			SetLog("[debug mode] - Start Upgrade, Click (" & 660 & "," & 520 & ")", $COLOR_ACTION)
-			Click(243, 33)
+			ClickAway()
 			Return True ; return true as if we really started an upgrade
 		Else
 			Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
 			If isGemOpen(True) = False Then ; check for gem window
+				_Sleep(1000)
 				ChkLabUpgradeInProgress($debug)
 				; success
 				SetLog("Upgrade " & $name & " in your laboratory started with success...", $COLOR_SUCCESS)
 				PushMsg("LabSuccess")
 				If _Sleep($DELAYLABUPGRADE2) Then Return
-				Click(243, 33)
+				ClickAway()
 				Return True ; upgrade started
 			Else
 				SetLog("Oops, Gems required for " & $name & " Upgrade, try again.", $COLOR_ERROR)
