@@ -1222,6 +1222,7 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	SetLog("-- FirstCheck Loop --")
 	If _Sleep(50) Then Return
+	AndroidAdbScript("ZoomOut")
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
 	
@@ -1274,12 +1275,12 @@ Func FirstCheck()
 			For $j = 0 To UBound($WallSaveResourceGold) - 1
 				If Int($g_iTownHallLevel) - 6 = $j Then
 					If IsGoldFull() And $g_aiCurrentLoot[$eLootGold] < $WallSaveResourceGold[$j] Then 
-						$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j] - ($WallSaveResourceGold[$j] - $g_aiCurrentLoot[$eLootGold])
+						$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j] - Abs($WallSaveResourceGold[$j] - $g_aiCurrentLoot[$eLootGold])
 					Else
 						$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j]
 					EndIf
-					If IsElixirFull() And $g_aiCurrentLoot[$eLootElixir] Then 
-						$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j] - ($WallSaveResourceElix[$j] - $g_aiCurrentLoot[$eLootElixir])
+					If IsElixirFull() And $g_aiCurrentLoot[$eLootElixir] < $WallSaveResourceElix[$j] Then 
+						$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j] - Abs($WallSaveResourceElix[$j] - $g_aiCurrentLoot[$eLootElixir])
 					Else
 						$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j]
 					EndIf

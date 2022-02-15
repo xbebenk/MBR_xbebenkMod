@@ -96,14 +96,11 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 								Switch $avAttackBar[$j][0]
 									Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF
 										If $g_aiAttackUseSiege[$pMatchMode] <= $eSiegeMachineCount + 1 Then
-											SetLog("byRef: " & $avAttackBar[$j][0] & ", $bClearSlot = " & String($bClearSlot))
 											SelectCastleOrSiege($avAttackBar[$j][0], Number($avAttackBar[$j][5]), $g_aiAttackUseSiege[$pMatchMode])
-											
 											If $g_aiAttackUseSiege[$pMatchMode] = 0 And Not($avAttackBar[$j][0] = $eCastle) Then ; if the user wanted to drop castle and no troops were available, do not drop a siege
 												SetDebugLog("Discard use of " & GetTroopName($avAttackBar[$j][0]) & " (" & $avAttackBar[$j][0] & ")", $COLOR_ERROR)
 												ContinueLoop
 											EndIf
-
 											If $avAttackBar[$j][0] <> $eCastle Then $sLogExtension = " (level " & $g_iSiegeLevel & ")"
 										EndIf
 									Case $eWarden
@@ -151,7 +148,7 @@ EndFunc   ;==>PrepareAttack
 
 Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 
-	Local $hStarttime = _Timer_Init()
+	;Local $hStarttime = _Timer_Init()
 	Local $aSiegeTypes[8] = [$eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, "Any"]
 
 	Local $ToUse = $aSiegeTypes[$iCmbSiege]
@@ -190,8 +187,8 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 
 			; Lets detect the CC & Sieges and click - search window is - X, 530, X + 390, 530 + 30
 			Local $aSearchResult = GetListSiege($iX - 50, 480, $iX + 390, 540)
-			SetDebugLog("Benchmark Switch Siege imgloc: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
-			$hStarttime = _Timer_Init()
+			;SetDebugLog("Benchmark Switch Siege imgloc: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
+			;$hStarttime = _Timer_Init()
 			If IsArray($aSearchResult) And Ubound($aSearchResult) > 0 Then 
 				Local $FinalCoordX, $FinalCoordY, $iFinalLevel = 0, $HigherLevelFound = False
 				For $i = 0 To UBound($aSearchResult) - 1
@@ -217,8 +214,8 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 						If $iFinalLevel = 4 Then ExitLoop
 					EndIf
 				Next
-				SetDebugLog("Benchmark Switch Siege Levels: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
-				$hStarttime = _Timer_Init()
+				;SetDebugLog("Benchmark Switch Siege Levels: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
+				;$hStarttime = _Timer_Init()
 
 				If ($iTroopIndex = $ToUse Or $bAnySiege) And $g_iSiegeLevel >= $iFinalLevel Then
 					SetLog($bAnySiege ? "No higher level siege machine found" : "No higher level of " & GetTroopName($iTroopIndex) & " found")
@@ -241,12 +238,12 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			If _Sleep(750) Then Return
 		EndIf
 	EndIf
-	SetDebugLog("Benchmark Switch Siege Detection: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
+	;SetDebugLog("Benchmark Switch Siege Detection: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
 
 EndFunc   ;==>SelectCastleOrSiege
 
 Func GetListSiege($x = 135, $y = 480, $x1 = 500, $y1 = 540)
-	Local $aResult[0][5], $CheckLvlY = 524, $OwnSiege
+	Local $aResult[0][5], $CheckLvlY = 524, $OwnSiege = False
 	Local $aTmp = QuickMIS("CNX", $g_sImgSwitchSiegeMachine, $x, $y, $x1, $y1)
 	If IsArray($aTmp) And UBound($aTmp) > 0 Then
 		For $i = 0 To UBound($aTmp) - 1
@@ -255,11 +252,7 @@ Func GetListSiege($x = 135, $y = 480, $x1 = 500, $y1 = 540)
 			Local $SiegeLevel = getTroopsSpellsLevel($aTmp[$i][1] - 30, $CheckLvlY)
 			SetDebugLog("SiegeLevel=" & $SiegeLevel)
 			If $SiegeLevel = "" Then $SiegeLevel = 1
-			If _ColorCheck(_GetPixelColor($aTmp[$i][1] - 30, 466, True), Hex(0x559CDD, 6), 10) Then
-				$OwnSiege = String(True)
-			Else
-				$OwnSiege = String(False)
-			EndIf
+			If _ColorCheck(_GetPixelColor($aTmp[$i][1] - 30, 466, True), Hex(0x559CDD, 6), 10) Then $OwnSiege = String(True)
 			_ArrayAdd($aResult, $aTmp[$i][0] & "|" & $aTmp[$i][1] & "|" & $aTmp[$i][2] & "|" & $SiegeLevel & "|" & $OwnSiege)
 		Next
 	Else

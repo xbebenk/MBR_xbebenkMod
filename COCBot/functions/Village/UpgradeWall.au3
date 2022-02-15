@@ -44,7 +44,7 @@ Func UpgradeWall($bTest = False)
 		SetLog("Have more than 1 builder, Upgrade Walls skipped", $COLOR_DEBUG)
 		Return
 	EndIf
-	Local $aIsResourceAvail = WallCheckResource($iWallCost, $iWallLevel)
+	Local $aIsResourceAvail = WallCheckResource($iWallCost, $iWallLevel+4) ;WallLevel from combolist, pick array[0], need to add 4 as cmblist start with 4
 	SetDebugLog(_ArrayToString($aIsResourceAvail))
 	If Not $aIsResourceAvail[0] Then Return
 
@@ -119,6 +119,7 @@ EndFunc   ;==>UpgradeWall
 Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = $g_aUpgradeWall[0]+4)
 	$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
 	$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
+	SetDebugLog("WallCheckResource(): Cost=" & $Cost & " WallLevel=" & $iWallLevel)
 	SetDebugLog("Current Resource, Gold: " & $g_aiCurrentLoot[$eLootGold] & " Elix: " & $g_aiCurrentLoot[$eLootElixir], $COLOR_INFO)
 	Local $HaveResource = True
 	Local $UpgradeType = "Gold"

@@ -222,9 +222,9 @@ Func SellHeroPot()
 				ContinueLoop
 			EndIf
 			Local $ItemCount = StringSplit($MagicItemCount, "#", $STR_NOCOUNT)
-			SetLog("MagicItem: " & $Pot[$i][0] & " Count: " & $ItemCount[0] & "/" & $ItemCount[1])
 			Switch $Pot[$i][0]
 				Case "HeroPot", "PowerPot"
+					SetLog("MagicItem: " & $Pot[$i][0] & " Count: " & $ItemCount[0] & "/" & $ItemCount[1])
 					For $y = 1 To $ItemCount[0]
 						SetLog("Selling " & $Pot[$i][0])
 						Click($Pot[$i][1], $aMagicPosY)
