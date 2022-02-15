@@ -339,7 +339,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				SetLog("Not Enough Resource...", $COLOR_ERROR)
 				ExitLoop
 			EndIf
-			If _Sleep(500) Then Return
+			If _Sleep(800) Then Return
 		Next
 		ClickAway()
 		Return True
