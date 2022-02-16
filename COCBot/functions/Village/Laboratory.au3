@@ -42,18 +42,18 @@ Func Laboratory($debug=False)
 			Return False
 		EndIf
 	EndIf
-	
+
  	; Get updated village elixir and dark elixir values
 	VillageReport(True, True)
 
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 	If _Sleep(1500) Then Return
 	If ChkLabUpgradeInProgress($debug) Then Return False ; Lab currently running skip going further
-	
+
 	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
 	Local $iCurPage = 1
 	Local $sCostResult, $bUpgradeFound = False
-	
+
 		If $g_iCmbLaboratory <> 0 Then
 			Local $iPage = Ceiling($g_iCmbLaboratory / $iPicsPerPage) ; page # of user choice
 			While($iCurPage < $iPage) ; go directly to the needed page
@@ -66,7 +66,7 @@ Func Laboratory($debug=False)
 			Local $aCoords = decodeSingleCoord(findImage($g_avLabTroops[$g_iCmbLaboratory][2], $g_sImgLabResearch & $g_avLabTroops[$g_iCmbLaboratory][2] & "*", $sLabTroopsSectionDiam, 1, True))
 			If IsArray($aCoords) And UBound($aCoords) = 2 Then
 				Local $sCostResult = GetLabCostResult($aCoords[0], $aCoords[1])
-				If $sCostResult > 0 Then 
+				If $sCostResult > 0 Then
 					SetDebugLog("LabUpgrade:" & $g_avLabTroops[$g_iCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
 					$bUpgradeFound = True
 				Else
@@ -79,43 +79,43 @@ Func Laboratory($debug=False)
 				SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
 				Return False
 			EndIf
-			
+
 			If $bUpgradeFound Then
 				Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
 			EndIf
 		Else ; users choice is any upgrade
-			If $g_bLabUpgradeOrderEnable Then 
+			If $g_bLabUpgradeOrderEnable Then
 				For $z = 0 To UBound($g_aCmbLabUpgradeOrder) - 1 ; list of lab upgrade order
-					If $g_aCmbLabUpgradeOrder[$z] + 1 > 0 Then 
+					If $g_aCmbLabUpgradeOrder[$z] + 1 > 0 Then
 						SetLog("Priority order " & $z + 1 & " : " & $g_avLabTroops[$g_aCmbLabUpgradeOrder[$z] + 1][0], $COLOR_SUCCESS)
 					Endif
 				Next
 				For $z = 0 To UBound($g_aCmbLabUpgradeOrder) - 1 ;try labupgrade based on order
 					Local $iTmpCmbLaboratory = $g_aCmbLabUpgradeOrder[$z] + 1
-					If $iTmpCmbLaboratory > 0 Then 
+					If $iTmpCmbLaboratory > 0 Then
 						SetLog("Try Lab Upgrade: " & $g_avLabTroops[$iTmpCmbLaboratory][0], $COLOR_INFO)
 						Local $iPage = Ceiling($iTmpCmbLaboratory / $iPicsPerPage) ; page # of user choice
 						SetDebugLog("Go to Page: " & $iPage, $COLOR_INFO)
-						While ($iCurPage > $iPage) 
+						While ($iCurPage > $iPage)
 							LabPrevPage()
 							$iCurPage -= 1 ;Prev Page
 							If _Sleep(1000) Then Return
 							If $iCurPage = 1 Then _Sleep(2000)
 						Wend
-					
+
 						While ($iCurPage < $iPage)
 							LabNextPage() ; go to next page of upgrades
 							$iCurPage += 1 ; Next page
 							If _Sleep(1000) Then Return
 							If $iPage = 4 Then _Sleep(2000)
 						WEnd
-						
+
 						; Get coords of upgrade the user wants
 						Local $aCoords = decodeSingleCoord(findImage($g_avLabTroops[$iTmpCmbLaboratory][2], $g_sImgLabResearch & $g_avLabTroops[$iTmpCmbLaboratory][2] & "*", $sLabTroopsSectionDiam, 1, True))
 						If IsArray($aCoords) And UBound($aCoords) = 2 Then
 							Local $sCostResult = GetLabCostResult($aCoords[0], $aCoords[1])
-							If $sCostResult > 0 Then 
-								If Not IsLabUpgradeResourceEnough($g_avLabTroops[$iTmpCmbLaboratory][2], $sCostResult) Then 
+							If $sCostResult > 0 Then
+								If Not IsLabUpgradeResourceEnough($g_avLabTroops[$iTmpCmbLaboratory][2], $sCostResult) Then
 									SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Skip, Not Enough Resource", $COLOR_INFO)
 								Else
 									SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
@@ -135,15 +135,15 @@ Func Laboratory($debug=False)
 					SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
 				EndIf
 			Else ; no LabUpgradeOrder
-				
+
 				While($iCurPage <= $iPages)
 					Local $Upgrades = FindLabUpgrade()
 					Local $aUpgradeCoord[2], $sUpgrade
 					If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
 						For $i = 0 To UBound($Upgrades) - 1
 							SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
-							If $Upgrades[$i][3] > 0 Then 
-								If Not IsLabUpgradeResourceEnough($Upgrades[$i][0], $Upgrades[$i][3]) Then 
+							If $Upgrades[$i][3] > 0 Then
+								If Not IsLabUpgradeResourceEnough($Upgrades[$i][0], $Upgrades[$i][3]) Then
 									SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Skip, Not Enough Resource", $COLOR_INFO)
 								Else
 									SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
@@ -163,7 +163,7 @@ Func Laboratory($debug=False)
 					If $bUpgradeFound Then
 						Return LaboratoryUpgrade($sUpgrade, $aUpgradeCoord, $sCostResult, $debug) ; return whether or not we successfully upgraded
 					EndIf
-					
+
 					LabNextPage() ; go to next page of upgrades
 					$iCurPage += 1 ; Next page
 					If $iCurPage = 4 Then _Sleep(2000)
@@ -180,13 +180,13 @@ EndFunc
 
 ; start a given upgrade
 Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
-	
+
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
 	Local $sCostType = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 500, 730, 580) ; get if elixir or dark elixir upgrade
 	;$sCostResult = getResourcesBonus(600, 522) ; get cost
 	Local $sEnoughResource = False
-	
+
 	Switch $sCostType ;Check if there is enough resource to save after upgrade
 		Case "Elixir"
 			If $g_aiCurrentLoot[$eLootElixir] - $sCostResult > $g_iTxtSmartMinElixir Then $sEnoughResource = True
@@ -195,36 +195,37 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 		Case Else
 			SetLog("Cannot find upgrade cost type!", $COLOR_ERROR)
 	EndSwitch
-	
+
 	If $sEnoughResource Then
 		SetLog("Selected upgrade: " & $name & " Cost: " & $sCostResult, $COLOR_INFO)
-		
+
 		If $debug = True Then ; if debugging, do not actually click it
 			SetLog("[debug mode] - Start Upgrade, Click (" & 660 & "," & 520 & ")", $COLOR_ACTION)
-			Click(243, 33)
+			ClickAway()
 			Return True ; return true as if we really started an upgrade
 		Else
 			Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
 			If isGemOpen(True) = False Then ; check for gem window
+				_Sleep(1000)
 				ChkLabUpgradeInProgress($debug)
 				; success
 				SetLog("Upgrade " & $name & " in your laboratory started with success...", $COLOR_SUCCESS)
 				PushMsg("LabSuccess")
 				If _Sleep($DELAYLABUPGRADE2) Then Return
-				Click(243, 33)
+				ClickAway()
 				Return True ; upgrade started
 			Else
 				SetLog("Oops, Gems required for " & $name & " Upgrade, try again.", $COLOR_ERROR)
 				Return False
 			EndIf
 		EndIf
-		
+
 	Else
 		SetLog("Failed to upgrade " & $name & ". Not enough " & $sCostType &" to save!", $COLOR_ERROR)
 		ClickAway()
 		ClickAway()
 	EndIf
-	
+
 EndFunc
 
 ; get the time for the selected upgrade
@@ -247,7 +248,7 @@ EndFunc
 ; get the cost of an upgrade based on its coords
 ; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
 Func GetLabCostResult($XCoords, $YCoords)
-	Local $xColumn =  $XCoords - 50, $yRow, $sCostResult = 0 
+	Local $xColumn =  $XCoords - 50, $yRow, $sCostResult = 0
 	If $YCoords + 10 < $iYMidPoint Then
 		$yRow = 410
 	Else
@@ -318,7 +319,7 @@ EndFunc
 Func FindLabUpgrade() ;default = sort name of selected upgrade
 	Local $x1 = 110, $y1 = 330, $x2 = 740, $y2 = 540
 	Local $aResult[0][4], $Result[0][4]
-	
+
 	Local $TmpResult = QuickMIS("CNX", $g_sImgLabResearch, $x1, $y1, $x2, $y2, True)
 	If IsArray($TmpResult) And UBound($TmpResult) > 0 Then
 		For $i = 0 To UBound($TmpResult) - 1
@@ -332,11 +333,11 @@ Func FindLabUpgrade() ;default = sort name of selected upgrade
 	EndIf
 	_ArraySort($aResult, 0, 0, 0, 3)
 	For $i = 0 To Ubound($aResult) - 1
-		If $aResult[$i][3] > 0 Then 
-			_ArrayAdd($Result, $aResult[$i][0] & "|" & $aResult[$i][1] & "|" & $aResult[$i][2] & "|" & $aResult[$i][3]) 
+		If $aResult[$i][3] > 0 Then
+			_ArrayAdd($Result, $aResult[$i][0] & "|" & $aResult[$i][1] & "|" & $aResult[$i][2] & "|" & $aResult[$i][3])
 		EndIf
 	Next
-	Return $Result 
+	Return $Result
 EndFunc
 
 Func GetUpgradeName($shortName)
@@ -347,7 +348,7 @@ EndFunc
 
 Func IsLabUpgradeResourceEnough($TroopOrSpell, $Cost)
 	Local $bRet = False
-	If StringInStr($TroopOrSpell, "Spell") Then 
+	If StringInStr($TroopOrSpell, "Spell") Then
 		If IsDarkSpell($TroopOrSpell) Then ;DE Spell
 			If $g_aiCurrentLoot[$eLootDarkElixir] > ($g_iTxtSmartMinDark + $Cost) Then
 				SetDebugLog($g_iTxtSmartMinDark & " + " & $Cost & " = " & $g_iTxtSmartMinDark + $Cost)
@@ -384,8 +385,8 @@ Func FindResearchButton()
 	Local $TryLabAutoLocate = False
 	Local $LabFound = False
 	ClickAway()
-	checkMainScreen(False)
-	
+	CheckMainScreen(False, $g_bStayOnBuilderBase, "FindResearchButton")
+
 	;Click Laboratory
 	If Int($g_aiLaboratoryPos[0]) < 1 Or Int($g_aiLaboratoryPos[1]) < 1 Then
 		$TryLabAutoLocate = True
@@ -393,16 +394,16 @@ Func FindResearchButton()
 		Click($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1])
 		If _Sleep(1000) Then Return
 		Local $BuildingInfo = BuildingInfo(260, 494)
-		If StringInStr($BuildingInfo[1], "Lab") Then 
+		If StringInStr($BuildingInfo[1], "Lab") Then
 			$TryLabAutoLocate = False
 			$LabFound = True
 		Else
 			$TryLabAutoLocate = True
 		EndIf
 	EndIf
-	
-	If $TryLabAutoLocate Then 
-		
+
+	If $TryLabAutoLocate Then
+
 		$LabFound = AutoLocateLab()
 		If $LabFound Then
 			applyConfig()
@@ -412,7 +413,7 @@ Func FindResearchButton()
 			Return
 		EndIf
 	EndIf
-	
+
 	If $LabFound Then
 		Local $aBtnCancel = FindButton("cancel")
 		If IsArray($aBtnCancel) And UBound($aBtnCancel) > 0 Then
@@ -436,21 +437,21 @@ Func AutoLocateLab()
 		Click($LabResearch[0], $LabResearch[1] + 30)
 		If _Sleep(1000) Then Return
 		Local $BuildingInfo = BuildingInfo(290, 494)
-		If StringInStr($BuildingInfo[1], "Lab") Then 
+		If StringInStr($BuildingInfo[1], "Lab") Then
 			$g_aiLaboratoryPos[0] = $LabResearch[0] + 5
 			$g_aiLaboratoryPos[1] = $LabResearch[1] + 30
 			SetLog("Found Laboratory Lvl " & $BuildingInfo[2] & ", save as Lab Coords : " & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1], $COLOR_INFO)
 			$LabFound = True
 		EndIf
 	EndIf
-	
-	If Not $LabFound Then 
+
+	If Not $LabFound Then
 		Local $Lab = decodeSingleCoord(findImage("Laboratory", $g_sImgLaboratory & "\Laboratory*", GetDiamondFromRect("50,60,800,600"), 1, True))
 		If IsArray($Lab) And UBound($Lab) = 2 Then
 			Click($Lab[0], $Lab[1])
 			If _Sleep(1000) Then Return
 			Local $BuildingInfo = BuildingInfo(290, 494)
-			If StringInStr($BuildingInfo[1], "Lab") Then 
+			If StringInStr($BuildingInfo[1], "Lab") Then
 				$g_aiLaboratoryPos[0] = $Lab[0]
 				$g_aiLaboratoryPos[1] = $Lab[1]
 				SetLog("Found Laboratory Lvl " & $BuildingInfo[2] & ", save as Lab Coords : " & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1], $COLOR_INFO)

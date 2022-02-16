@@ -115,6 +115,7 @@ Func OpenTraderWindow()
 		Click($g_iQuickMISX, $g_iQuickMISY)
 	Else
 		SetLog("Trader Icon Not Found", $COLOR_INFO)
+		Return False
 	EndIf
 	If Not IsFreeMagicWindowOpen() Then 
 		SetLog("Free Magic Items Windows not Opened", $COLOR_ERROR)
@@ -200,6 +201,7 @@ Func IsMagicItemWindowOpen()
 		EndIf
 		_Sleep(500)
 	Next
+	_Sleep(1000)
 	Return $bRet
 EndFunc
 
@@ -214,11 +216,15 @@ Func SellHeroPot()
 	Local $Pot = QuickMIS("CNX", $g_sImgHeroPotion, 160, 200, 700, 300)
 	If IsArray($Pot) And UBound($Pot) > 0 Then
 		For $i = 0 To UBound($Pot) - 1
-			Local $MagicItemCount = getBuilders($Pot[$i][1]-30, $aMagicPosY) 
+			Local $MagicItemCount = getBuilders($Pot[$i][1]-30, $aMagicPosY)
+			If $MagicItemCount = "" Then 
+				SetDebugLog("Failed to read MagicItemCount", $COLOR_ERROR)
+				ContinueLoop
+			EndIf
 			Local $ItemCount = StringSplit($MagicItemCount, "#", $STR_NOCOUNT)
-			SetLog("MagicItem: " & $Pot[$i][0] & " Count: " & $ItemCount[0] & "/" & $ItemCount[1])
 			Switch $Pot[$i][0]
 				Case "HeroPot", "PowerPot"
+					SetLog("MagicItem: " & $Pot[$i][0] & " Count: " & $ItemCount[0] & "/" & $ItemCount[1])
 					For $y = 1 To $ItemCount[0]
 						SetLog("Selling " & $Pot[$i][0])
 						Click($Pot[$i][1], $aMagicPosY)

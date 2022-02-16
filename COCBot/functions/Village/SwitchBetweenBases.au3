@@ -60,7 +60,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			WEnd
 			
 			If $bSwitched Then
-				If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase)
+				If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase, "SwitchBetweenBases")
 				Return True
 			Else
 				SetLog("Failed to go to the " & $sSwitchTo, $COLOR_ERROR)

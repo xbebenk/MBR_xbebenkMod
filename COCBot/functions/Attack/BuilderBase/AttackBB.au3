@@ -192,7 +192,7 @@ Func AttackBB($aBBAttackBar = Default)
 		$iSide = Random(0, 1, 1)
 	EndIf
 	;Function uses this list of local variables...
-	If $g_bChkBBDropBMFirst Then
+	If $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
 		SetLog("Dropping BM First")
 		$bBMDeployed = DeployBM($aBMPos, $iSide)
 	EndIf
@@ -248,18 +248,22 @@ Func AttackBB($aBBAttackBar = Default)
 	If Not $g_bRunState Then Return ; Stop Button
 	If IsProblemAffect(True) Then Return
 	;If not dropping Builder Machine first, drop it now
-	If Not $g_bChkBBDropBMFirst Then
+	If Not $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
 		SetLog("Dropping BM Last")
 		$bBMDeployed = DeployBM($aBMPos, $iSide)
-		If _Sleep($g_iBBMachAbilityTime) Then Return
+		If _Sleep($g_iBBMachAbilityTime - 2000) Then Return
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
 
 	If $bBMDeployed Then CheckBMLoop($aBMPos) ;check if BM is Still alive and activate ability
-
+	Local $waitcount = 0
 	While IsAttackPage()
+		$waitcount += 1
+		SetDebugLog("Waiting Battle End #" & $waitcount, $COLOR_ACTION)
 		_Sleep(2000)
+		If IsProblemAffect(True) Then Return
+		If $waitcount > 30 Then ExitLoop
 	Wend
 	Return
 EndFunc   ;==>AttackBB
@@ -394,19 +398,33 @@ EndFunc ; DeployBM
 
 Func CheckBMLoop($aBMPos)
 	Local $count = 0
-	Local $TmpBMPosX = $aBMPos[0]
-
+	Local $TmpBMPosX = $aBMPos[0] - 17
+	Local $BMPosY = 578
+	
 	While IsAttackPage()
-		If WaitforPixel($TmpBMPosX - 10, 572, $TmpBMPosX - 9, 573, "121212", 10, 1) Then
+		If IsProblemAffect(True) Then Return
+		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "8C8C8C", 10, 1) Then
+			_Sleep(1000)
+			SetDebugLog("Waiting Battle Machine Ability", $COLOR_DEBUG2)
+			ContinueLoop
+		Else
+			SetDebugLog("Expected: 8C8C8C, Got: " & _getpixelcolor($TmpBMPosX, $BMPosY, True))
+		EndIf
+		
+		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "240571", 10, 1) Then
+			PureClickP($aBMPos)
+			SetLog("Activate Battle Machine Ability", $COLOR_SUCCESS)
+			_SleepStatus(5000)
+		Else
+			SetDebugLog("Expected: 240571, Got: " & _getpixelcolor($TmpBMPosX, $BMPosY, True))
+		EndIf
+		
+		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "0E0E0E", 6, 1) Then
 			$count += 1
-			If $count > 6 Then
+			If $count > 3 Then
 				SetLog("Battle Machine is Dead", $COLOR_INFO)
 				ExitLoop
 			EndIf
-		Else
-			PureClickP($aBMPos)
-			SetLog("Activate Battle Machine Ability", $COLOR_SUCCESS)
-			If _Sleep($g_iBBMachAbilityTime + 250) Then Return
 		EndIf
 		If _Sleep(250) Then Return
 		SetDebugLog("Battle Machine LoopCheck", $COLOR_ACTION)

@@ -419,7 +419,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			If _Sleep($DELAYVILLAGESEARCH2) Then Return
 			$i += 1
 			_CaptureRegions()
-			If _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1]), Hex($NextBtn[2], 6), $NextBtn[3]) And IsAttackPage(False) Then
+			If _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1]), Hex($NextBtn[2], 6), $NextBtn[3]) And IsAttackPage() Then
 				$g_bCloudsActive = True
 				ClickP($NextBtn, 1, 0, "#0155") ;Click Next
 				ExitLoop
@@ -428,7 +428,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			EndIf
 			If $i >= 99 Or isProblemAffect() Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
 				$g_bIsClientSyncError = True
-				checkMainScreen()
+				checkMainScreen(True, $g_bStayOnBuilderBase, "VillageSearch")
 				If $g_bRestart Then
 					$g_iNbrOfOoS += 1
 					UpdateStats()
@@ -502,7 +502,7 @@ Func SearchLimit($iSkipped, $bReturnToPickupHero = False)
 			$Wcount += 1
 			SetDebugLog("wait surrender button " & $Wcount, $COLOR_DEBUG)
 			If $Wcount >= 50 Or isProblemAffect(True) Then
-				checkMainScreen()
+				checkMainScreen(True, $g_bStayOnBuilderBase, "SearchLimit")
 				$g_bIsClientSyncError = False ; reset OOS flag for long restart
 				$g_bRestart = True ; set force runbot restart flag
 				Return True

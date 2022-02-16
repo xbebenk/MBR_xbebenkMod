@@ -96,26 +96,13 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				SetLog("Village was Inactive, Reloading CoC", $COLOR_ERROR)
 				If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			Case _CheckPixel($aIsConnectLost, $g_bNoCapturePixel) Or UBound(decodeSingleCoord(FindImageInPlace("ConnectionLost", $g_sImgConnectionLost, "160,270,700,420", False))) > 1 ; Connection Lost
-				;  Add check for banned account :(
-				$Result = getOcrReloadMessage(171, 358, "Check Obstacles OCR 'policy at super'=") ; OCR text for "policy at super"
-				If StringInStr($Result, "policy", $STR_NOCASESENSEBASIC) Then
-					$msg = "Sorry but account has been banned, Bot must stop!"
-					BanMsgBox()
-					Return checkObstacles_StopBot($msg)
-				EndIf
-				$Result = getOcrReloadMessage(171, 337, "Check Obstacles OCR 'prohibited 3rd'= ") ; OCR text for "prohibited 3rd party"
-				If StringInStr($Result, "3rd", $STR_NOCASESENSEBASIC) Then
-					$msg = "Sorry but account has been banned, Bot must stop!"
-					BanMsgBox()
-					Return checkObstacles_StopBot($msg) ; stop bot
-				EndIf
 				SetLog("Connection lost, Reloading CoC", $COLOR_ERROR)
-				If $g_bChkSharedPrefs And HaveSharedPrefs() Then
-					SetLog("Please wait for loading CoC!")
-					PushSharedPrefs()
-					If Not $bRecursive Then OpenCoC()
-					Return True
-				EndIf
+				;If $g_bChkSharedPrefs And HaveSharedPrefs() Then
+				;	SetLog("Please wait for loading CoC!")
+				;	PushSharedPrefs()
+				;	If Not $bRecursive Then OpenCoC()
+				;	Return True
+				;EndIf
 			Case _CheckPixel($aIsCheckOOS, $g_bNoCapturePixel) Or (UBound(decodeSingleCoord(FindImageInPlace("OOS", $g_sImgOutOfSync, "355,300,435,365", False, $g_iAndroidLollipop))) > 1) ; Check OoS
 				SetLog("Out of Sync Error, Reloading CoC", $COLOR_ERROR)
 			Case (UBound(decodeSingleCoord(FindImageInPlace("ImportantNotice", $G_sImgImportantNotice, "150,220,430,290", False))) > 1)
@@ -170,12 +157,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Return False
 	EndIf
 	
-	If IsFullScreenWindow() Then
-		Click(825,45)
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
-
 	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20) Then
 		SetDebugLog("checkObstacles: Found Window with Close Button to close")
 		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
@@ -200,36 +181,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		SetDebugLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
 		Click(422, 500)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
-	If IsReturnHomeBattlePage(True) Then 
-		SetDebugLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
-		ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return False
-	EndIf
-	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
-		SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return False
-	EndIf
-	If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 66, 790, 120) Then 
-		SetDebugLog("checkObstacles: Found AttackLog Page", $COLOR_ACTION)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return False
-	EndIf
-	If IsPostDefenseSummaryPage() Then
-		SetDebugLog("checkObstacles: Found Post Defense Summary to close")
-		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
-		Return False
-	EndIf
-	
-	If IsAttackPage() Then
-		SetDebugLog("checkObstacles: Found AttackPage, Return Home")
-		ReturnHome(False, False)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
 
@@ -282,18 +233,34 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If ClickB("ReloadButton") Then SetLog("Trying to reload game after maintenance break", $COLOR_INFO)
 		checkObstacles_ResetSearch()
 	EndIf
-	
-	If $g_bRestart And WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
-		For $i = 1 To 20
-			If WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
-				SetLog("Waiting COC Loading Page #" & $i, $COLOR_ACTION)
-				If _Sleep(1000) Then Return
-			Else
-				ExitLoop
-			EndIf
-		Next
+	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
+		SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
 	EndIf
-
+	If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 66, 790, 120) Then 
+		SetDebugLog("checkObstacles: Found AttackLog Page", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+	If IsPostDefenseSummaryPage() Then
+		SetDebugLog("checkObstacles: Found Post Defense Summary to close")
+		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
+		Return False
+	EndIf
+	If IsAttackPage() Then
+		SetDebugLog("checkObstacles: Found AttackPage, Return Home")
+		ReturnHome(False, False)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+	If IsFullScreenWindow() Then
+		Click(825,45)
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf	
 	Return False
 EndFunc   ;==>_checkObstacles
 

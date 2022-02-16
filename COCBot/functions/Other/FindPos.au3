@@ -23,7 +23,7 @@ Func FindPos()
 			$Pos[0] -= $g_aiBSpos[0]
 			$Pos[1] -= $g_aiBSpos[1]
 			; adjust village offset
-			ConvertFromVillagePos($Pos[0], $Pos[1])
+			;ConvertFromVillagePos($Pos[0], $Pos[1])
 			; wait till released
 			While _IsPressed("01") Or _IsPressed("02")
 				Sleep(10)

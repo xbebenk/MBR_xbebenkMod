@@ -125,7 +125,8 @@ Func _WaitnOpenCoC($iWaitTime, $bFullRestart = False, $bSuspendComputer = False,
 	SetDebugLog("CoC Restarted, Waiting for completion", $COLOR_DEBUG)
 
 	If $bFullRestart Then
-		checkMainScreen() ; Use checkMainScreen to restart CoC, and waitMainScreen to handle Take A Break wait, or other errors.
+		;Use checkMainScreen to restart CoC, and waitMainScreen to handle Take A Break wait, or other errors.
+		checkMainScreen(True, $g_bStayOnBuilderBase, "_WaitnOpenCoC") 
 		$g_bRestart = True
 	Else
 		waitMainScreen()

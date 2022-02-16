@@ -98,7 +98,7 @@ Func CheckSwitchAcc()
 	SetLog("Start Switch Account!", $COLOR_INFO)
 	; Force switch if no clangames event active
 	If $g_bForceSwitchifNoCGEvent Then $bForceSwitch = True
-	
+
 	; Force Switch when PBT detected
 	If $g_abPBActive[$g_iCurAccount] Then $bForceSwitch = True
 
@@ -225,7 +225,7 @@ Func CheckSwitchAcc()
 					TrainSystem()
 				EndIf
 			EndIf
-			If Not IsMainPage() Then checkMainScreen()
+			If Not IsMainPage() Then CheckMainScreen(True, False, "CheckSwitchAcc")
 			SwitchCOCAcc($g_iNextAccount)
 		Else
 			SetLog("Staying in this account")
@@ -392,7 +392,7 @@ Func SwitchCOCAcc($NextAccount)
 			Local $ClickPoint = $aAway
 			If $g_bChkSuperCellID Then $ClickPoint = $aCloseTabSCID
 			ClickP($ClickPoint, 2, 500)
-			checkMainScreen()
+			CheckMainScreen(True, $g_bStayOnBuilderBase, "SwitchCOCAcc")
 		Else
 			$iRetry = 0
 			UniversalCloseWaitOpenCoC()
@@ -401,7 +401,7 @@ Func SwitchCOCAcc($NextAccount)
 	EndIf
 	waitMainScreen()
 	If Not $g_bRunState Then Return
-	
+
 	;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
 	If $g_bChkSuperCellID Then
 		SetDebugLog("Checkscidswitch: Send AndroidBackButton", $COLOR_DEBUG)
@@ -411,7 +411,7 @@ Func SwitchCOCAcc($NextAccount)
 			AndroidBackButton()
 		EndIf
 	EndIf
-	
+
 	CheckObstacles()
 	If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 	runBot()
@@ -605,7 +605,7 @@ Func SwitchCOCAcc_ConfirmAccount(ByRef $bResult, $iStep = 3, $bDisconnectAfterSw
 					SetLog("Please wait for loading CoC")
 					$bResult = True
 					If $bDisconnectAfterSwitch Then
-						If Not checkMainScreen() Then
+						If Not checkMainScreen(True, $g_bStayOnBuilderBase , "SwitchCOCAcc_ConfirmAccount") Then
 							SetLog("Cannot Disconnect account", $COLOR_ERROR)
 							Return "Error"
 						EndIf
@@ -693,7 +693,7 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 			SetLog("SupercellID Window Opened", $COLOR_DEBUG)
 			$bSCIDWindowOpened = True
 			ExitLoop
-		EndIf 
+		EndIf
 		If $i = 30 Then
 			$bResult = False
 			Return "Error"
@@ -701,11 +701,11 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 		If _Sleep(900) Then Return
 		If Not $g_bRunState Then Return
 	Next
-	
+
 	If $bSCIDWindowOpened Then
 		If _Sleep(500) Then Return
 		SCIDScrollUp()
-		
+
 		SCIDScrollDown($NextAccount) ; Make Drag only when SCID window is visible.
 		If _Sleep(1000) Then Return
 		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 840, 676, True, False)
@@ -716,20 +716,20 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 				_ArrayAdd($aCoord, $aFound[0]+750 & "|" & $aFound[1]+320)
 			Next
 			_ArraySort($aCoord, 0, 0, 0, 1)
-			
+
 			; Correct Index for Profile if needs to drag
 			If $NextAccount >= 3 Then $iIndexSCID = 3 ; based on drag logic, the account will always be the bottom one
-			
+
 			; list all account see-able after drag on debug chat
 			For $j = 0 To UBound($aCoord) - 1
 				SetLog("[" & $j & "] Account coordinates: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " named: " & $g_asProfileName[$NextAccount-$iIndexSCID+$j])
 			Next
-			
-			If UBound($aCoord) < 4 And $NextAccount >= 3 Then 
+
+			If UBound($aCoord) < 4 And $NextAccount >= 3 Then
 				SetLog("Only Found " & UBound($aCoord) & " SCID Account, Select Last Account", $COLOR_INFO)
 				$iIndexSCID = UBound($aCoord) - 1
 			EndIf
-			
+
 			SetLog("   " & $iStep & ". Click Account [" & $NextAccount + 1 & "] Supercell ID with Profile: " & $g_asProfileName[$NextAccount])
 			Click($aCoord[$iIndexSCID][0]-75, $aCoord[$iIndexSCID][1] + 10, 1)
 			If _Sleep(750) Then Return

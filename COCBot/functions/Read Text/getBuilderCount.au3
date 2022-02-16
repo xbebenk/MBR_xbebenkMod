@@ -53,7 +53,7 @@ Func getBuilderCount($bSuppressLog = False, $bBuilderBase = False)
 		; drop down to error handling code
 	EndIf
 	If $g_bDebugSetlog Or $g_bDebugImageSave Then SaveDebugImage("getBuilderCount_")
-	If checkObstacles() Then checkMainScreen() ; trap common error messages
+	If checkObstacles() Then checkMainScreen(True, $g_bStayOnBuilderBase, "getBuilderCount") ; trap common error messages
 	Return False
 
 EndFunc   ;==>getBuilderCount

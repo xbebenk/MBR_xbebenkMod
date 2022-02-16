@@ -19,8 +19,8 @@
 Func DailyChallenges()
 	Local Static $asLastTimeChecked[UBound($g_abAccountNo)]
 	If $g_bFirstStart Then $asLastTimeChecked[$g_iCurAccount] = ""
-
-	checkMainScreen(False)
+	checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenges")
+	
 	Local $bGoldPass = _CheckPixel($aPersonalChallengeOpenButton2, $g_bCapturePixel) ; golden badge button at mainscreen
 	Local $bCheckDiscount = $bGoldPass And ($g_bUpgradeKingEnable Or $g_bUpgradeQueenEnable Or $g_bUpgradeWardenEnable Or $g_bUpgradeChampionEnable or $g_bAutoUpgradeWallsEnable)
 

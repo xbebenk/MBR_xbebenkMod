@@ -687,7 +687,7 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
-	checkMainScreen(False)
+	checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop")
 	If $g_bIsHidden Then 
 		HideAndroidWindow(True, Default, Default, "btnHide")
 		updateBtnHideState()
@@ -743,7 +743,7 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			If $g_bRestart Then ContinueLoop
 
-			checkMainScreen(False)
+			checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop")
 			AddIdleTime()
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ContinueLoop
@@ -994,7 +994,7 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 				ProfileReport()
 				If Not $g_bRunState Then Return
 				If _Sleep($DELAYATTACKMAIN1) Then Return
-				checkMainScreen(False)
+				checkMainScreen(False, $g_bStayOnBuilderBase, "AttackMain")
 				If $g_bRestart Then Return
 			EndIf
 			If $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
@@ -1172,7 +1172,7 @@ Func __RunFunction($action)
 			ClickAway()
 		Case "Laboratory"
 			Laboratory()
-			checkMainScreen(False)
+			checkMainScreen(False, $g_bStayOnBuilderBase, "Laboratory")
 		Case "PetHouse"
 			PetHouse()
 		Case "BoostSuperTroop"
@@ -1222,7 +1222,8 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	SetLog("-- FirstCheck Loop --")
 	If _Sleep(50) Then Return
-	checkMainScreen()
+	AndroidAdbScript("ZoomOut")
+	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
 	
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
@@ -1268,14 +1269,23 @@ Func FirstCheck()
 				$g_aUpgradeWall[$z] = $g_iTownHallLevel - 2 + $z - 4
 				SetDebugLog("Set WallUpgrade [" & $z & "] -> Level = " & $g_aUpgradeWall[$z] + 4, $COLOR_INFO)
 			Next
-			;SaveResource 			 	 0 = TH6	  TH7		TH8			TH9		TH10	TH11	TH12		TH13
-			Local $WallSaveResourceGold[8] = [750000, 1000000, 2000000, 4000000, 5500000, 8500000, 11500000, 16000000]
-			Local $WallSaveResourceElix[8] = [750000, 1500000, 1500000, 2000000, 3000000, 8000000, 10500000, 16000000]
+			;SaveResource 			 	 0 = TH6	  TH7		TH8			TH9		TH10	TH11	TH12
+			Local $WallSaveResourceGold[7] = [750000, 1000000, 2000000, 4000000, 5500000, 8500000, 11500000]
+			Local $WallSaveResourceElix[7] = [750000, 1500000, 1500000, 2000000, 3000000, 8000000, 10500000]
 			For $j = 0 To UBound($WallSaveResourceGold) - 1
 				If Int($g_iTownHallLevel) - 6 = $j Then
-					$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j]
-					$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j]
-					SetDebugLog("Set WallSaveResource = " & $g_iUpgradeWallMinElixir, $COLOR_INFO)
+					If IsGoldFull() And $g_aiCurrentLoot[$eLootGold] < $WallSaveResourceGold[$j] Then 
+						$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j] - Abs($WallSaveResourceGold[$j] - $g_aiCurrentLoot[$eLootGold])
+					Else
+						$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j]
+					EndIf
+					If IsElixirFull() And $g_aiCurrentLoot[$eLootElixir] < $WallSaveResourceElix[$j] Then 
+						$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j] - Abs($WallSaveResourceElix[$j] - $g_aiCurrentLoot[$eLootElixir])
+					Else
+						$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j]
+					EndIf
+					SetDebugLog("Set Gold WallSaveResource = " & $g_iUpgradeWallMinGold, $COLOR_INFO)
+					SetDebugLog("Set Elix WallSaveResource = " & $g_iUpgradeWallMinElixir, $COLOR_INFO)
 				EndIf
 			Next
 		EndIf
@@ -1337,7 +1347,7 @@ Func FirstCheckRoutine()
 	Local $b_SuccessAttack = False
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
-	checkMainScreen()
+	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
 	If $g_bChkCGBBAttackOnly Then
 		If isClanGamesWindow() Then ; check if clangames is running or not
 			_Sleep(1500)
@@ -1383,14 +1393,7 @@ Func FirstCheckRoutine()
 				PrepareDonateCC()
 				DonateCC()
 				TrainSystem()
-				
-				Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'CollectFreeMagicItems']
-				For $Index In $aRndFuncList
-					If Not $g_bRunState Then Return
-					_RunFunction($Index)
-					If _Sleep(50) Then Return
-					If $g_bRestart Then ExitLoop
-				Next
+				CommonRoutine("NoClanGamesEvent")
 				checkSwitchAcc() ;switch to next account
 			EndIf
 		EndIf
@@ -1520,20 +1523,7 @@ Func FirstCheckRoutine()
 	_Sleep(1000)
 	DonateCC()
 	If $b_SuccessAttack Then TrainSystem()
-	Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']
-	For $Index In $aRndFuncList
-		If Not $g_bRunState Then Return
-		_RunFunction($Index)
-		If _Sleep(500) Then Return
-		If $g_bRestart Then ExitLoop
-	Next
-	Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
-	For $Index In $aRndFuncList
-		If Not $g_bRunState Then Return
-		_RunFunction($Index)
-		If _Sleep(500) Then Return
-		If $g_bRestart Then ExitLoop
-	Next
+	CommonRoutine("FirstCheckRoutine")
 EndFunc
 
 Func BuilderBase()
@@ -1624,4 +1614,34 @@ Func GotoBBTodoCG()
 		SwitchBetweenBases()
 		$g_bStayOnBuilderBase = False
 	EndIf
+EndFunc
+
+Func CommonRoutine($RoutineType = Default)
+	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
+	Switch $RoutineType
+		Case "FirstCheckRoutine"
+			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(500) Then Return
+				If $g_bRestart Then Return
+			Next
+			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(500) Then Return
+				If $g_bRestart Then Return
+			Next
+			
+		Case "NoClanGamesEvent"
+			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'CollectFreeMagicItems']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(50) Then Return
+				If $g_bRestart Then Return
+			Next
+	EndSwitch
 EndFunc

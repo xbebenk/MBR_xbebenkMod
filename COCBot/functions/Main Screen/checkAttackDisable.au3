@@ -77,7 +77,7 @@ Func checkAttackDisable($iSource, $Result = "")
 			If $Result <> "" Then ; fast test to see if have Take-A-Break
 				If StringInStr($Result, "been") <> 0 Or StringInStr($Result, "after") <> 0 Or StringInStr($Result, "have") <> 0 Then ; verify we have right text string, 'after' added for Personal Break
 					SetLog("Online too long, Personal Break detected....", $COLOR_ERROR)
-					checkMainScreen()
+					checkMainScreen(True, $g_bStayOnBuilderBase, "checkAttackDisable")
 				Else
 					SetDebugLog("wrong text string", $COLOR_DEBUG)
 					If TestCapture() Then Return "wrong text string #2"

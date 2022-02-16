@@ -125,7 +125,7 @@ Func _makerequest($aRequestButtonPos)
 
 		If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
 			SetDebugLog("Send request button not found", $COLOR_DEBUG)
-			CheckMainScreen(False) ;emergency exit
+			CheckMainScreen(False, $g_bStayOnBuilderBase, "RequestCC") ;emergency exit
 		EndIf
 
 		If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus

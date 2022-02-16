@@ -125,17 +125,25 @@ Func AutoLocateCC()
 	EndIf
 	
 	If Not $CCFound Then 
-		Local $ClanCastleCoord = decodeSingleCoord(findImage("ClanCastle", $g_sImgClanCastle & "\ClanCastle*", GetDiamondFromRect("77,70(700,510)"), 1, True))
-		If IsArray($ClanCastleCoord) And UBound($ClanCastleCoord) = 2 Then
-			Click($ClanCastleCoord[0] + 10, $ClanCastleCoord[1] + 10)
-			If _Sleep(500) Then Return
-			Local $BuildingInfo = BuildingInfo(290, 494)
-			If $BuildingInfo[1] = "Clan Castle" Then 
-				$g_aiClanCastlePos[0] = $ClanCastleCoord[0] + 10
-				$g_aiClanCastlePos[1] = $ClanCastleCoord[1] + 10
-				SetLog("Found Clan Castle Lvl " & $BuildingInfo[2] & ", save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
-				$CCFound = True
-			EndIf
+		Local $ClanCastleCoord = QuickMIS("CNX", $g_sImgClanCastle, 77,70,800,580)
+		;Local $ClanCastleCoord = decodeSingleCoord(findImage("ClanCastle", $g_sImgClanCastle & "\ClanCastle*", GetDiamondFromRect("77,70(700,510)"), 1, True))
+		If IsArray($ClanCastleCoord) And UBound($ClanCastleCoord) > 0 Then
+			For $i = 0 To UBound($ClanCastleCoord) - 1
+				Click($ClanCastleCoord[$i][1] + 10, $ClanCastleCoord[$i][2] + 10)
+				If _Sleep(500) Then Return
+				Local $BuildingInfo = BuildingInfo(290, 494)
+				If $BuildingInfo[1] = "Clan Castle" Then 
+					$g_aiClanCastlePos[0] = $ClanCastleCoord[$i][1] + 10
+					$g_aiClanCastlePos[1] = $ClanCastleCoord[$i][2] + 10
+					SetLog("Found Clan Castle Lvl " & $BuildingInfo[2] & ", save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
+					$CCFound = True
+					ExitLoop
+				Else
+					SetLog("Not ClanCastle, its a " & $BuildingInfo[2])
+					ClickAway()
+				EndIf
+				If _Sleep(500) Then Return
+			Next
 		EndIf
 	EndIf
 	Return $CCFound

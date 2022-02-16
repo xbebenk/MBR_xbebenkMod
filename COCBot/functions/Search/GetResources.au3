@@ -63,7 +63,7 @@ EndFunc   ;==>GetResources
 Func resetAttackSearch($bStuck = False)
 	; function to check main screen and restart search and display why as needed
 	$g_bIsClientSyncError = True
-	checkMainScreen()
+	checkMainScreen(True, $g_bStayOnBuilderBase, "resetAttackSearch")
 	If $g_bRestart Then
 		$g_iNbrOfOoS += 1
 		UpdateStats()

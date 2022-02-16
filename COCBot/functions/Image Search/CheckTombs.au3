@@ -69,8 +69,6 @@ Func CheckTombs()
 		SetLog("No Tombs Found!", $COLOR_SUCCESS)
 		$g_abNotNeedAllTime[1] = False
 	EndIf
-	;xbenk
-	;checkMainScreen(False) ; check for screen errors while function was running
 EndFunc   ;==>CheckTombs
 
 Func CleanYardCheckBuilder()

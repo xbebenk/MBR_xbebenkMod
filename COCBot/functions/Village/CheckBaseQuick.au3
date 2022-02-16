@@ -42,7 +42,7 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 
 		RequestCC() ; fill CC
 		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen(False) ; required here due to many possible exits
+		checkMainScreen(False, $g_bStayOnBuilderBase, "CheckBaseQuick"); required here due to many possible exits
 		If $g_bRestart Then
 			If $bStopRecursion Then $g_bDisableBreakCheck = False
 			Return
@@ -50,7 +50,7 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 
 		DonateCC() ; donate troops
 		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen(False) ; required here due to many possible function exits
+		checkMainScreen(False, $g_bStayOnBuilderBase, "CheckBaseQuick") ; required here due to many possible function exits
 		If $g_bRestart Then
 			If $bStopRecursion Then $g_bDisableBreakCheck = False
 			Return

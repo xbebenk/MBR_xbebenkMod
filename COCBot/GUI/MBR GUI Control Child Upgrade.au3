@@ -637,6 +637,7 @@ Func ChkLowLevelAutoUpgradeWall()
 	Else
 		$g_bUpgradeLowWall = False
 		GUICtrlSetState($g_hChkUpgradeAnyWallLevel, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkUpgradeAnyWallLevel, $GUI_UNCHECKED)
 		GUICtrlSetState($g_hCmbLowLevelWall, $GUI_DISABLE)
 	EndIf
 	

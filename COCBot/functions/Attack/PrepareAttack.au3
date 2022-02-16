@@ -13,7 +13,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func PrepareAttack($pMatchMode, $bRemaining = False) ;Assigns troops
+Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 	; Attack CSV has debug option to save attack line image, save have png of current $g_hHBitmap2
 	If Not $bRemaining Then AndroidAdbScript("ZoomOut")
 	If ($pMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($pMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
@@ -97,12 +97,10 @@ Func PrepareAttack($pMatchMode, $bRemaining = False) ;Assigns troops
 									Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF
 										If $g_aiAttackUseSiege[$pMatchMode] <= $eSiegeMachineCount + 1 Then
 											SelectCastleOrSiege($avAttackBar[$j][0], Number($avAttackBar[$j][5]), $g_aiAttackUseSiege[$pMatchMode])
-
 											If $g_aiAttackUseSiege[$pMatchMode] = 0 And Not($avAttackBar[$j][0] = $eCastle) Then ; if the user wanted to drop castle and no troops were available, do not drop a siege
 												SetDebugLog("Discard use of " & GetTroopName($avAttackBar[$j][0]) & " (" & $avAttackBar[$j][0] & ")", $COLOR_ERROR)
 												ContinueLoop
 											EndIf
-
 											If $avAttackBar[$j][0] <> $eCastle Then $sLogExtension = " (level " & $g_iSiegeLevel & ")"
 										EndIf
 									Case $eWarden
@@ -150,7 +148,7 @@ EndFunc   ;==>PrepareAttack
 
 Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 
-	Local $hStarttime = _Timer_Init()
+	;Local $hStarttime = _Timer_Init()
 	Local $aSiegeTypes[8] = [$eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, "Any"]
 
 	Local $ToUse = $aSiegeTypes[$iCmbSiege]
@@ -188,64 +186,53 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			If _Sleep(1250) Then Return
 
 			; Lets detect the CC & Sieges and click - search window is - X, 530, X + 390, 530 + 30
-			Local $sSearchArea = GetDiamondFromRect(_Min($iX - 50, 470) & ",480(390,60)") ; x = 470 when Castle is at slot 6+ and there are 5 slots in siege switching window
-
-			Local $aSearchResult = findMultiple($g_sImgSwitchSiegeMachine, $sSearchArea, $sSearchArea, 0, 1000, 5, "objectname,objectpoints", True)
-			SetDebugLog("Benchmark Switch Siege imgloc: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
-			$hStarttime = _Timer_Init()
-
-			If $aSearchResult <> "" And IsArray($aSearchResult) Then
-				Local $aFinalCoords, $iFinalLevel = 0, $iFinalSiege
-				_CaptureRegion2(100, 430, 800, 575)
-				For $i = 0 To UBound($aSearchResult) - 1
-					Local $aAvailable = $aSearchResult[$i]
-					SetDebugLog("SelectCastleOrSiege() $aSearchResult[" & $i & "]: " & _ArrayToString($aAvailable))
-
-					Local $iSiegeIndex = TroopIndexLookup($aAvailable[0], "SelectCastleOrSiege()")
-					Local $sAllCoordsString = _ArrayToString($aAvailable, "|", 1)
-					Local $aAllCoords = decodeMultipleCoords($sAllCoordsString, 50)
-
-					If $iSiegeIndex = $ToUse And $iSiegeIndex = $eCastle Then
-						$aFinalCoords = $aAllCoords[0]
-						$iFinalSiege = $iSiegeIndex
-						ExitLoop
+			Local $aSearchResult = GetListSiege($iX - 50, 480, $iX + 390, 540)
+			If IsArray($aSearchResult) And Ubound($aSearchResult) > 0 Then 
+				Local $FinalCoordX, $FinalCoordY, $iFinalLevel = 0, $HigherLevelFound = False
+				
+				If $ToUse = $eCastle Then
+					Local $TmpIndex, $CastleFound = False
+					For $i = 0 To Ubound($aSearchResult) - 1
+						If $aSearchResult[$i][5] = $eCastle Then 
+							$CastleFound = True
+							$TmpIndex = $i
+							ExitLoop
+						EndIf
+					Next
+					If $CastleFound Then
+						$iTroopIndex = $eCastle
+						Click($aSearchResult[$i][1], $aSearchResult[$i][2])
+						If _Sleep(750) Then Return
+						Return
 					EndIf
-
+				EndIf 
+				
+				For $i = 0 To UBound($aSearchResult) - 1
+					Local $iSiegeIndex = TroopIndexLookup($aSearchResult[$i][0], "SelectCastleOrSiege()")
 					If $iSiegeIndex >= $eWallW And $iSiegeIndex <= $eFlameF And ($bAnySiege Or $iSiegeIndex = $ToUse) Then
-						For $j = 0 To UBound($aAllCoords) - 1
-							Local $aCoords = $aAllCoords[$j]
-							Local $OwnSiege = String(False)
-							If _ColorCheck(_GetPixelColor($aCoords[0] - 30, 466, True), Hex(0x559CDD, 6), 10) Then
-								$OwnSiege = String(True)
-							Else
-								SetDebugLog($aAvailable[0] & ": _GetPixelColor(" & $aCoords[0] - 30 & ", 466, True)", $COLOR_ACTION)
-								SetDebugLog("Expected: " & "559CDD, got: " & _GetPixelColor($aCoords[0] - 30, 466, True), $COLOR_ACTION)
-							EndIf
-							SetDebugLog("getTroopsSpellsLevel(" & $aCoords[0] - 30 & ",524)") 
-							Local $SiegeLevel = getTroopsSpellsLevel($aCoords[0] - 30, 524)
-							; Just in case of Level 1
-							If $SiegeLevel = "" Then $SiegeLevel = 1
-							SetDebugLog($i & "." & $j & ". Name: " & $aAvailable[0] & ", OwnSiege: " & $OwnSiege & ", Level: " & $SiegeLevel & ", Coords: " & _ArrayToString($aCoords))
-							If $OwnSiege And $SiegeLevel < 4 Then ContinueLoop
-							If $iFinalLevel < Number($SiegeLevel) Then
-								$iFinalLevel = Number($SiegeLevel)
-								$aFinalCoords = $aCoords
-								$iFinalSiege = $iSiegeIndex
-							EndIf
-							If $iFinalLevel = 4 Then ExitLoop 2
-						Next
+						Local $OwnSiege = $aSearchResult[$i][4]
+						Local $SiegeLevel = $aSearchResult[$i][3]
+						SetDebugLog($i & ". Name: " & $aSearchResult[$i][0] & ", OwnSiege: " & $OwnSiege & ", Level: " & $SiegeLevel & ", Coords: " & $aSearchResult[$i][1] & "," & $aSearchResult[$i][2])
+						If $OwnSiege And $SiegeLevel < 4 Then ContinueLoop
+						If $iFinalLevel < Number($SiegeLevel) Then
+							$iFinalLevel = Number($SiegeLevel)
+							$FinalCoordX = $aSearchResult[$i][1]
+							$FinalCoordY = $aSearchResult[$i][2]
+							$iTroopIndex = $iSiegeIndex
+							$HigherLevelFound = True
+							SetDebugLog("[" & GetTroopName($iSiegeIndex) & "] Coord:[" & $FinalCoordX & "," & $FinalCoordY & "]")
+						EndIf
+						If $iFinalLevel = 4 Then ExitLoop
 					EndIf
 				Next
-				SetDebugLog("Benchmark Switch Siege Levels: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
-				$hStarttime = _Timer_Init()
-
+				
 				If ($iTroopIndex = $ToUse Or $bAnySiege) And $g_iSiegeLevel >= $iFinalLevel Then
 					SetLog($bAnySiege ? "No higher level siege machine found" : "No higher level of " & GetTroopName($iTroopIndex) & " found")
 					Click($iLastX, $iLastY, 1)
-				ElseIf IsArray($aFinalCoords) Then
-					ClickP($aFinalCoords, 1, 0)
+				EndIf
+				If $HigherLevelFound Then 
+					Click($FinalCoordX, $FinalCoordY)
 					$g_iSiegeLevel = $iFinalLevel
-					$iTroopIndex = $iFinalSiege
 				Else
 					If Not $bAnySiege Then SetLog("No " & GetTroopName($ToUse) & " found")
 					Click($iLastX, $iLastY, 1)
@@ -260,9 +247,30 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			If _Sleep(750) Then Return
 		EndIf
 	EndIf
-	SetDebugLog("Benchmark Switch Siege Detection: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
+	;SetDebugLog("Benchmark Switch Siege Detection: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms")
 
 EndFunc   ;==>SelectCastleOrSiege
+
+Func GetListSiege($x = 135, $y = 480, $x1 = 500, $y1 = 540)
+	Local $aResult[0][6], $CheckLvlY = 524, $OwnSiege = False
+	Local $aTmp = QuickMIS("CNX", $g_sImgSwitchSiegeMachine, $x, $y, $x1, $y1)
+	If IsArray($aTmp) And UBound($aTmp) > 0 Then
+		For $i = 0 To UBound($aTmp) - 1
+			SetDebugLog("[" & $i & "] Siege: " & $aTmp[$i][0] & ", Coord[" & $aTmp[$i][1] & "," & $aTmp[$i][2] & "]")
+			SetDebugLog("getTroopsSpellsLevel(" & $aTmp[$i][1] - 30 & "," & $CheckLvlY & ")", $COLOR_ACTION)
+			Local $SiegeLevel = getTroopsSpellsLevel($aTmp[$i][1] - 30, $CheckLvlY)
+			SetDebugLog("SiegeLevel=" & $SiegeLevel)
+			If $SiegeLevel = "" Then $SiegeLevel = 1
+			Local $TroopIndex = TroopIndexLookup($aTmp[$i][0])
+			If _ColorCheck(_GetPixelColor($aTmp[$i][1] - 30, 466, True), Hex(0x559CDD, 6), 10) Then $OwnSiege = String(True)
+			_ArrayAdd($aResult, $aTmp[$i][0] & "|" & $aTmp[$i][1] & "|" & $aTmp[$i][2] & "|" & $SiegeLevel & "|" & $OwnSiege & "|" & $TroopIndex)
+		Next
+	Else
+		SetDebugLog("GetListSiege: ERR", $COLOR_ERROR)
+	EndIf
+	_ArraySort($aResult, 1, 0, 0, 3)
+	Return $aResult
+EndFunc
 
 Func SelectWardenMode($iMode, $XCoord)
 	; check current G.Warden's mode. Switch to preferred $iMode if needed. Return log text as "(Ground)"  or "(Air)"

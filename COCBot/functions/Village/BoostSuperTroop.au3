@@ -23,7 +23,7 @@ Func BoostSuperTroop($bTest = False)
 			Return False
 		EndIf
 	EndIf
-	CheckMainScreen(False)
+	CheckMainScreen(False, False, "BoostSuperTroop")
 	VillageReport(True, True) ;update village resource
 	If OpenBarrel() Then
 		For $i = 0 To 1
@@ -55,7 +55,7 @@ Func BoostSuperTroop($bTest = False)
 						$iColumnY1 = 360
 						$iColumnY2 = 520
 					EndIf
-					
+
 					;Setlog("columnRect = " & $iColumnX & "," & $iColumnY1 &"," & $iColumnX + $picswidth & "," & $iColumnY2, $COLOR_DEBUG)
 					If _Sleep(1500) Then Return
 					;SetLog("QuickMIS(" & "BC1" & ", " & $g_sImgBoostTroopsClock & "," & $iColumnX & "," & $iColumnY1 & "," & $iColumnX + $picswidth & "," & $iColumnY2 & ")", $COLOR_DEBUG );
@@ -173,7 +173,7 @@ Func OpenBarrel()
 				SetLog("Troops Already boosted", $COLOR_INFO)
 			EndIf
 		EndIf
-		
+
 		If $bOpenBarrel Then
 			SetLog("Found Barrel at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_DEBUG)
 			Click($g_iQuickMISX, $g_iQuickMISY)

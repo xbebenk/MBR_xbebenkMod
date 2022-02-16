@@ -18,6 +18,7 @@ Func IsPageLoop($aCheckPixel, $iLoop = 30, $bCapturePixel = $g_bCapturePixel)
 
 	While $i < $iLoop
 		ForceCaptureRegion()
+		If $g_bRestart Then Return True
 		If _CheckPixel($aCheckPixel, $bCapturePixel) Then
 			$IsPage = True
 			ExitLoop
@@ -243,7 +244,7 @@ Func IsFullScreenWindow()
 	Return False
 EndFunc
 
-Func IsPetHousePage($bSetLog = True, $iLoop = 30)
+Func IsPetHousePage()
 	Local $result
 	$result = WaitforPixel(530, 120, 531, 121, "006C5C", 10, 2) ;green pixel under title 'Pet House'
 	
