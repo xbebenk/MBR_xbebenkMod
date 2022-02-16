@@ -117,8 +117,8 @@ Func UpgradeWall($bTest = False)
 EndFunc   ;==>UpgradeWall
 
 Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = $g_aUpgradeWall[0]+4)
-	$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
-	$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
+	If $g_aiCurrentLoot[$eLootGold] < 0 Then $g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
+	If $g_aiCurrentLoot[$eLootElixir] < 0 Then $g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
 	SetDebugLog("Current Resource, Gold: " & $g_aiCurrentLoot[$eLootGold] & " Elix: " & $g_aiCurrentLoot[$eLootElixir], $COLOR_INFO)
 	Local $HaveResource = True
 	Local $UpgradeType = "Gold"
@@ -316,11 +316,17 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 					Else
 						SetDebugLog("Waiting for Wall Upgrade Page #" & $i)
 					EndIf
-					_Sleep(200)
+					_Sleep(250)
 				Next
 				
 				If Not $bTest Then
-					Click(420, 500)
+					Click(420, 500) ;Final Upgrade Button
+					Switch $aIsEnoughResource[1]
+						Case "Gold"
+							$g_aiCurrentLoot[$eLootGold] -= $iWallCost
+						Case "Elix"
+							$g_aiCurrentLoot[$eLootElixir] -= $iWallCost
+					EndSwitch 
 				Else
 					SetLog("Testing Only!", $COLOR_ERROR)
 					ClickAway()

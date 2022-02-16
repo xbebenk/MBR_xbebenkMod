@@ -1269,9 +1269,9 @@ Func FirstCheck()
 				$g_aUpgradeWall[$z] = $g_iTownHallLevel - 2 + $z - 4
 				SetDebugLog("Set WallUpgrade [" & $z & "] -> Level = " & $g_aUpgradeWall[$z] + 4, $COLOR_INFO)
 			Next
-			;SaveResource 			 	 0 = TH6	  TH7		TH8			TH9		TH10	TH11	TH12		TH13
-			Local $WallSaveResourceGold[8] = [750000, 1000000, 2000000, 4000000, 5500000, 8500000, 11500000, 16000000]
-			Local $WallSaveResourceElix[8] = [750000, 1500000, 1500000, 2000000, 3000000, 8000000, 10500000, 16000000]
+			;SaveResource 			 	 0 = TH6	  TH7		TH8			TH9		TH10	TH11	TH12
+			Local $WallSaveResourceGold[7] = [750000, 1000000, 2000000, 4000000, 5500000, 8500000, 11500000]
+			Local $WallSaveResourceElix[7] = [750000, 1500000, 1500000, 2000000, 3000000, 8000000, 10500000]
 			For $j = 0 To UBound($WallSaveResourceGold) - 1
 				If Int($g_iTownHallLevel) - 6 = $j Then
 					If IsGoldFull() And $g_aiCurrentLoot[$eLootGold] < $WallSaveResourceGold[$j] Then 
