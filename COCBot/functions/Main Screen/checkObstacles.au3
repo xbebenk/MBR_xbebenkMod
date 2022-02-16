@@ -233,13 +233,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If ClickB("ReloadButton") Then SetLog("Trying to reload game after maintenance break", $COLOR_INFO)
 		checkObstacles_ResetSearch()
 	EndIf
-	
-	If IsReturnHomeBattlePage(True) Then 
-		SetDebugLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
-		ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return False
-	EndIf
 	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
 		SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY)
