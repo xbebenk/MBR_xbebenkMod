@@ -44,7 +44,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		SetLog("Current Upgrade remain time < 24h, Will use wall reserved builder!", $COLOR_WARNING)
 		$bRet = True
 	EndIf
-	
+	If $bTest Then $bRet = True
 	SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
 EndFunc
