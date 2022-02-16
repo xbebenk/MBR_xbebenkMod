@@ -18,7 +18,7 @@ Func IsPageLoop($aCheckPixel, $iLoop = 30, $bCapturePixel = $g_bCapturePixel)
 
 	While $i < $iLoop
 		ForceCaptureRegion()
-		If IsProblemAffect(True) Then Return
+		;If IsProblemAffect(True) Then Return
 		If $g_bRestart Then Return True
 		If _CheckPixel($aCheckPixel, $bCapturePixel) Then
 			$IsPage = True
