@@ -250,12 +250,6 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
 		Return False
 	EndIf
-	If IsAttackPage() Then
-		SetDebugLog("checkObstacles: Found AttackPage, Return Home")
-		ReturnHome(False, False)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return False
-	EndIf
 	If IsFullScreenWindow() Then
 		Click(825,45)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
