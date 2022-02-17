@@ -19,20 +19,10 @@ Func waitMainScreen() ;Waits for main screen to popup
 	SetLog("Waiting for Main Screen")
 	$iCount = 0
 	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
-	For $i = 0 To 20 ;21*2000 = 42 seconds (this is only for blackscreen)
+	For $i = 0 To 10 ;11*2000 = 22 seconds (this is only for blackscreen)
 		If Not $g_bRunState Then Return
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
-		If $g_bRestart And WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
-			For $i = 1 To 10
-				If WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
-					SetLog("Waiting COC Loading Page #" & $i, $COLOR_ACTION)
-					If _Sleep(1000) Then Return
-				Else
-					ExitLoop
-				EndIf
-			Next
-		EndIf
 		Local $hWin = $g_hAndroidWindow
 		If TestCapture() = False Then
 			If WinGetAndroidHandle() = 0 Then
@@ -56,9 +46,11 @@ Func waitMainScreen() ;Waits for main screen to popup
 	Next
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	CloseCoC(False) ; Close then Open CoC
+	;CloseCoC(False) ; Close then Open CoC
 	;_RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True, $iRetry = 0, $iRecursive = 0, $SkipSharedPrefs = False)
-	_RestartAndroidCoC(False, False, $bStopCoC = True, 0, 0, True)
+	SetLog("=========RESTART COC==========", $COLOR_INFO)
+	CloseCoC()
+	_RestartAndroidCoC(False, False, True, 0, 0, True)
 	If _CheckPixel($aPixelToCheck, True) Then Return ; If its main screen return
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
