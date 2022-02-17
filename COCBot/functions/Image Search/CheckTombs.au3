@@ -113,6 +113,7 @@ Func CleanYard()
 				$Filename = $aResult[$i][0]
 				$x = $aResult[$i][1]
 				$y = $aResult[$i][2]
+				If Not isInsideDiamondXY($x, $y) Then ContinueLoop
 				SetLog($Filename & " found [" & $x & "," & $y & "]", $COLOR_SUCCESS)
 				Click($x, $y, 1, 0, "#0430") ;click CleanYard
 				_Sleep(1000)
@@ -157,6 +158,10 @@ Func RemoveGembox()
 	If Not IsMainPage() Then Return
 	
 	If QuickMIS("BC1", $g_sImgGemBox, 70,70,830,620) Then
+		If Not isInsideDiamondXY($x, $y) Then 
+			SetLog("Cannot Remove GemBox!", $COLOR_INFO)
+			Return False
+		EndIf
 		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "#0430")
 		_Sleep(1000)
 		ClickRemoveObstacle()
