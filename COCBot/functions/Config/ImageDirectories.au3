@@ -138,6 +138,7 @@ Global $g_sImgRedX = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RedX\"
 Global $g_sImgAUpgradeRushTH = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RushTH\"
 Global $g_sImgAUpgradeRushTHPriority = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RushTHPriority\"
 Global $g_sImgAUpgradeHour = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Hour\"
+Global $g_sImgResourceIcon = @ScriptDir & "\imgxml\Resources\Auto Upgrade\ResourceIcon\"
 #EndRegion
 
 #Region Auto Upgrade Builder Base
