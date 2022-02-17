@@ -194,8 +194,10 @@ Func UpgradeLowLevelWall($bTest = False)
 				ContinueLoop ; lets check another wall on list
 				If $try > 2 And $WallNotFound Then ExitLoop ; jump to exit 
 			EndIf
-			$Try = 1 ;reset as we found a wall
-			TryUpgradeWall($aWallCoord, $bTest) ;select wall on builder menu and do upgrade
+			
+			IF TryUpgradeWall($aWallCoord, $bTest) Then ;select wall on builder menu and do upgrade
+				$Try = 1 ;reset as we found a wall
+			EndIf
 		Else
 			SetLog("[" & $Try & "] Not Found Wall on Builder Menu", $COLOR_ERROR)
 			$WallNotFound = True
@@ -233,7 +235,10 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 			EndIf
 			SetLog("BuildingInfo: " & $aWallLevel[1] & " Level: " & $aWallLevel[2], $COLOR_SUCCESS)
 			Local $aIsEnoughResource = WallCheckResource($aWallCoord[$i][2], $aWallLevel[2])
-			If Not $aIsEnoughResource[0] Then ContinueLoop 2
+			If Not $aIsEnoughResource[0] Then 
+				SetDebugLog("Not Enough Resource, WallUpgrade cost: " & $aWallCoord[$i][2], $COLOR_ERROR)
+				Return False
+			EndIf
 			If DoLowLevelWallUpgrade($aWallLevel[2], $bTest, $aWallCoord[$i][2]) Then
 				If _Sleep(1000) Then Return
 				ContinueLoop
@@ -242,6 +247,7 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 			EndIf
 		Next
 	Next
+	Return True
 EndFunc
 
 Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)

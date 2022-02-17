@@ -25,9 +25,9 @@ Func CheckImageType()
 	If IsArray($aResult) And UBound($aResult) >= 5 Then
 		$g_iDetectedImageType = 1 ;Snow Theme
 		SetDebugLog("Found Snow Images " & UBound($aResult))
-		SetLog("Snow Theme detected")
+		SetLog("Snow Theme detected", $COLOR_INFO)
 	Else
 		$g_iDetectedImageType = 0 ; Normal Theme
-		SetLog("Normal Theme detected")
+		SetLog("Normal Theme detected", $COLOR_INFO)
 	EndIf
 EndFunc   ;==>CheckImageType

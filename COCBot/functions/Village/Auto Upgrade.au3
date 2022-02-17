@@ -127,70 +127,65 @@ Func AutoUpgradeSearchExisting($bTest = False)
 	If Not $g_bRunState Then Return
 	SetLog("Search For Existing Upgrade", $COLOR_DEBUG)
 	If Not ClickMainBuilder($bTest) Then Return
-	Local $bDebug = $g_bDebugSetlog
-	Local $b_BuildingFound = False, $NeedDrag = True, $FoundMostBottomRed = 0
+	Local $b_BuildingFound = False, $NeedDrag = True, $TmpUpgradeCost, $UpgradeCost, $sameCost = 0
 	For $z = 0 To 9 ;for do scroll 10 times
-		Local $x = 180, $y = 80, $x1 = 490, $y1 = 103, $step = 28
-		For $i = 0 To 9
-			If Not $g_bRunState Then Return
-			If QuickMIS("BC1", $g_sImgAUpgradeZero, $x, $y-8, $x1, $y1+8) Then
-				If QuickMIS("NX",$g_sImgAUpgradeObstGear, $x, $y-8, $x1, $y1+8) <> "none" Then
-					SetLog("[" & $i & "] New Building Or GearUp, Skip!", $COLOR_SUCCESS)
-					$b_BuildingFound = False
-				Else
-					If $g_bChkRushTH Then
-						If QuickMIS("BC1", $g_sImgAUpgradeRushTH, $x, $y-8, $x1, $y1+8) Then
-							SetLog("[" & $i & "] RushTH Building Found!", $COLOR_SUCCESS)
-							$b_BuildingFound = True
-						Else
-							SetLog("[" & $i & "] Not RushTH Building!", $COLOR_SUCCESS)
-							$b_BuildingFound = False
-						EndIf
-					Else
-						SetLog("[" & $i & "] Upgrade found!", $COLOR_SUCCESS)
-						$b_BuildingFound = True
-					EndIf
-				EndIf
-		
-				If $b_BuildingFound Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					If _Sleep(1000) Then Return
-					If DoUpgrade($bTest) Then
-						$b_BuildingFound = False ;reset
-						$z = 0 ;reset
-						If Not $g_bRunState Then Return
-						If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
-					Endif
-					ClickMainBuilder($bTest)
-				EndIf
-			Else
-				SetLog("[" & $i & "] No Upgrade found!", $COLOR_INFO)
-				If $z > 4 And $i = 9 Then $NeedDrag = False ; sudah 5 kali scroll tapi yang paling bawah masih merah angka nya
-			EndIf
-			$y += $step
-			$y1 += $step
-		Next
-		
-		Local $aZeroWhiteMostBottom = _PixelSearch(430, 345, 450, 360, Hex(0xFFFFFF, 6), 10)
-		If $aZeroWhiteMostBottom = 0 Then
-			$FoundMostBottomRed += 1
-			SetLog("No WhiteZero at most bottom list", $COLOR_DEBUG)
-		ElseIf $FoundMostBottomRed > 0 Then
-			$FoundMostBottomRed -= 1
-			SetLog("Found WhiteZero at most bottom list", $COLOR_DEBUG)
+		$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True) ;check most bottom upgrade cost
+		Local $ExistingBuilding = FindExistingBuilding()
+		If IsArray($ExistingBuilding) And UBound($ExistingBuilding) > 0 Then
+			If $g_bChkRushTH Then _ArraySort($ExistingBuilding, 1, 0, 0, 4)
+			For $i = 0 To UBound($ExistingBuilding) - 1
+				SetLog("Coord [" & $ExistingBuilding[$i][1] & "," & $ExistingBuilding[$i][2] & "], Cost: " & $ExistingBuilding[$i][3] & " UpgradeType: " & $ExistingBuilding[$i][0], $COLOR_INFO)
+			Next
+			For $i = 0 To UBound($ExistingBuilding) - 1
+				If $ExistingBuilding[$i][3] = 0 Then ContinueLoop
+				Click($ExistingBuilding[$i][1], $ExistingBuilding[$i][2])
+				If _Sleep(1000) Then Return
+				If DoUpgrade($bTest) Then
+					If Not AutoUpgradeCheckBuilder($bTest) Then Return
+				Endif
+				ClickMainBuilder($bTest)
+			Next
+		Else
+			SetLog("No Upgrade found!", $COLOR_INFO)
 		EndIf
-		If $z > 1 And $FoundMostBottomRed > 1 Then $NeedDrag = False
-
+		
+		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
+		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
+		If Not ($UpgradeCost = $TmpUpgradeCost) Then $sameCost = 0
+		SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
+		If $sameCost > 2 Then $NeedDrag = False
+		$UpgradeCost = $TmpUpgradeCost
+		
 		If Not $NeedDrag Then
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
 		If Not $g_bRunState Then Return
-		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
-		ClickDragAUpgrade("up", $y - $step) ;do scroll up
+		If Not AutoUpgradeCheckBuilder($bTest) Then Return
+		ClickDragAUpgrade("up", 328) ;do scroll up
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
 	Next
+EndFunc
+
+Func FindExistingBuilding($bTest = False)
+	Local $aTmpCoord, $aBuilding[0][5], $UpgradeCost
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390) 
+	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		For $i = 0 To UBound($aTmpCoord) - 1
+			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
+			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]))
+		Next
+		
+		For $j = 0 To UBound($aBuilding) -1
+			$UpgradeCost = getOcrAndCapture("coc-NewCapacity", $aBuilding[$j][1], $aBuilding[$j][2] - 10, 100, 30, True)
+			$aBuilding[$j][3] = Number($UpgradeCost)
+			If QuickMIS("BC1", $g_sImgAUpgradeRushTH, $aBuilding[$j][1] - 200, $aBuilding[$j][2] - 10, $aBuilding[$j][1], $aBuilding[$j][2] + 10) Then $aBuilding[$j][4] = "RushTH"
+			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][0] & ", Cost=" & $aBuilding[$j][3] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
+		Next
+	EndIf
+	_ArraySort($aBuilding, 0, 0, 0, 3)
+	Return $aBuilding
 EndFunc
 
 Func DoUpgrade($bTest = False)
@@ -590,8 +585,6 @@ Func AutoUpgradeLogPlacingWall($aUpgradeNameLevel = Default, $aUpgradeResourceCo
 EndFunc
 
 Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
-
-	Local $Screencap = True, $Debug = $g_bDebugSetlog
 	Local $xstart = 50, $ystart = 50, $xend = 800, $yend = 600
 	If $isWall Then 
 		Click($x, $y + 30)
@@ -683,7 +676,6 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	If Not $g_bPlaceNewBuilding Then Return
 	SetLog("Search For Place New Building", $COLOR_DEBUG)
 	Local $bDebug = $g_bDebugSetlog
-	Local $bScreencap = True
 
 	If Not ClickMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
@@ -741,7 +733,9 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		Else
 			SetLog("New Building Not Found", $COLOR_INFO)
 		EndIf
-
+		
+		$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True) ;check most bottom upgrade cost
+		
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
 			SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
 			Local $aResult = FindRushTHPriority()
@@ -784,7 +778,6 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("Search Essential Building on Builder Menu", $COLOR_INFO)
 			ClickMainBuilder()
 			Local $aResult = FindEssentialBuilding()
-			$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True)
 			If isArray($aResult) And UBound($aResult) > 0 Then
 				_ArraySort($aResult, 0, 0, 0, 3)
 				For $y = 0 To UBound($aResult) - 1

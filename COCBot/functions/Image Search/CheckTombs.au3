@@ -71,29 +71,26 @@ Func CheckTombs()
 	EndIf
 EndFunc   ;==>CheckTombs
 
-Func CleanYardCheckBuilder()
+Func CleanYardCheckBuilder($bTest = False)
+	Local $bRet = False
 	getBuilderCount(True) ;check if we have available builder
-	If $g_bDebugClick Or $g_bDebugSetLog Then SetLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
-	If $g_iFreeBuilderCount = 0 Then 
+	If $bTest Then $g_iFreeBuilderCount = 1
+	If $g_iFreeBuilderCount > 0 Then 
+		$bRet = True
+	Else
 		SetDebugLog("No More Builders available")
-		Return False
 	EndIf
-	Return True
+	SetDebugLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
+	Return $bRet
 EndFunc
 
-Func CleanYard()
-
-	; Early exist if noting to do
+Func CleanYard($bTest = False)
 	If Not $g_bChkCleanYard And Not $g_bChkGemsBox Then Return
 
-	; Timer
-	Local $hObstaclesTimer = __TimerInit()
 	VillageReport(True, True)
+	CheckImageType()
 	SetLog("CleanYard: Try removing obstacles", $COLOR_DEBUG)
-	If $g_iFreeBuilderCount = 0 Then 
-		SetLog("Builder Not Available", $COLOR_DEBUG)
-		Return
-	EndIf
+	If Not CleanYardCheckBuilder($bTest) Then Return
 
 	If $g_aiCurrentLoot[$eLootElixir] < 30000 Then 
 		SetLog("Elixir < 30000, try again later", $COLOR_DEBUG)
@@ -107,17 +104,18 @@ Func CleanYard()
 	Local $x, $y, $Locate = 0
 	
 	If $g_iFreeBuilderCount > 0 And $g_bChkCleanYard Then
-		Local $aResult = QuickMIS("CNX", $g_iDetectedImageType = 1 ? $g_sImgCleanYardSnow  : $g_sImgCleanYard, 70,70,830,620)
+		Local $aResult = QuickMIS("CNX", $g_iDetectedImageType = 1 ? $g_sImgCleanYardSnow  : $g_sImgCleanYard, 20,20,840,630)
 		If IsArray($aResult) And UBound($aResult) > 0 Then
 			For $i = 0 To UBound($aResult) - 1
 				$Filename = $aResult[$i][0]
 				$x = $aResult[$i][1]
 				$y = $aResult[$i][2]
+				If Not isInsideDiamondXY($x, $y) Then ContinueLoop
 				SetLog($Filename & " found [" & $x & "," & $y & "]", $COLOR_SUCCESS)
 				Click($x, $y, 1, 0, "#0430") ;click CleanYard
 				_Sleep(1000)
-				If Not ClickRemoveObstacle() Then ContinueLoop
-				CleanYardCheckBuilder()
+				If Not ClickRemoveObstacle($bTest) Then ContinueLoop
+				CleanYardCheckBuilder($bTest)
 				If $g_iFreeBuilderCount = 0 Then _SleepStatus(12000)
 				If Not $g_bRunState Then Return
 				ClickAway()
@@ -131,23 +129,24 @@ Func CleanYard()
 	Else
 		SetLog("CleanYard Found and Clearing " & $Locate & " Obstacles!", $COLOR_SUCCESS)
 	EndIf
-	
-	SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
 	UpdateStats()
 	ClickAway()
-
 EndFunc   ;==>CleanYard
 
-Func ClickRemoveObstacle()
-	If ClickB("RemoveObstacle") Then 
-		If _Sleep(1000) Then Return
-		If IsGemOpen(True) Then
-			Return False
+Func ClickRemoveObstacle($bTest = False)
+	If Not $bTest Then 
+		If ClickB("RemoveObstacle") Then 
+			If _Sleep(1000) Then Return
+			If IsGemOpen(True) Then
+				Return False
+			Else
+				Return True
+			EndIf
 		Else
-			Return True
+			ClickAway()
 		EndIf
 	Else
-		ClickAway()
+		SetLog("Only for Testing", $COLOR_ERROR)
 	EndIf
 	Return False
 EndFunc
@@ -157,6 +156,10 @@ Func RemoveGembox()
 	If Not IsMainPage() Then Return
 	
 	If QuickMIS("BC1", $g_sImgGemBox, 70,70,830,620) Then
+		If Not isInsideDiamondXY($g_iQuickMISX, $g_iQuickMISY) Then 
+			SetLog("Cannot Remove GemBox!", $COLOR_INFO)
+			Return False
+		EndIf
 		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "#0430")
 		_Sleep(1000)
 		ClickRemoveObstacle()

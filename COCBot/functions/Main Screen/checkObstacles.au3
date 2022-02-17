@@ -157,6 +157,18 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		Return False
 	EndIf
 	
+	If WaitforPixel(420, 600, 420,600, "000000", 0, 1) Then
+		If _ColorCheck(_GetPixelColor(420, 563, True), Hex(0x6CBB1F, 6), 20) Then
+			SetDebugLog("checkObstacles: Found Return Home Button")
+			Click(420, 560)
+			$g_bMinorObstacle = True
+			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			Return False
+		Else
+			SetDebugLog("Expected: 6CBB1F, Got:" & _GetPixelColor(420, 563, True))
+		EndIf
+	EndIf
+	
 	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20) Then
 		SetDebugLog("checkObstacles: Found Window with Close Button to close")
 		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
