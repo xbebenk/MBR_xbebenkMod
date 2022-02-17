@@ -19,7 +19,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	SetLog("Waiting for Main Screen")
 	$iCount = 0
 	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
-	For $i = 0 To 105 ;105*2000 = 3.5 Minutes
+	For $i = 0 To 20 ;105*2000 = 3.5 Minutes
 		If Not $g_bRunState Then Return
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
@@ -50,18 +50,9 @@ Func waitMainScreen() ;Waits for main screen to popup
 			SetDebugLog("Screen cleared, WaitMainScreen exit", $COLOR_SUCCESS)
 			Return
 		Else
-			If Not TestCapture() And _Sleep($DELAYWAITMAINSCREEN1) Then Return
+			If Not TestCapture() And _Sleep(2000) Then Return
 			If checkObstacles() Then $i = 0 ;See if there is anything in the way of mainscreen
 		EndIf
-		If Mod($i, 5) = 0 Then ;every 10 seconds
-			If $g_bDebugImageSave Then SaveDebugImage("WaitMainScreen_", False)
-		EndIf
-		If ($i > 105) Or ($iCount > 120) Then ExitLoop ; If CheckObstacles forces reset, limit total time to 4 minutes
-
-		If TestCapture() Then
-			Return "Main screen not available"
-		EndIf
-
 	Next
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
