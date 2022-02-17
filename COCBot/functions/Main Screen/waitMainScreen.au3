@@ -54,29 +54,29 @@ Func waitMainScreen() ;Waits for main screen to popup
 	If _CheckPixel($aPixelToCheck, True) Then Return ; If its main screen return
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-	; If mainscreen is not found, then fix it
-	$iCount = 0
-	While 1
-		If Not $g_bRunState Then Return
-		SetLog("Unable to load CoC, attempt to fix it", $COLOR_ERROR)
-		SetDebugLog("Restart Loop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop data
-		CloseAndroid("waitMainScreen") ; Android must die!
-		If _Sleep(1000) Then Return
-		OpenAndroid(True) ; Open BS and restart CoC
-		If @extended Then
-			SetError(1, 1, -1)
-			Return
-		EndIf
-		If _CheckPixel($aPixelToCheck, $g_bCapturePixel) = True Then ExitLoop
-		CheckObstacles() ; Check for random error windows and close them
-		$iCount += 1
-		If $iCount > 2 Then ; If we can't restart BS after 2 tries, exit the loop
-			SetLog("Stuck trying to Restart " & $g_sAndroidEmulator & "...", $COLOR_ERROR)
-			SetError(1, 0, 0)
-			Return
-		EndIf
-		If _CheckPixel($aPixelToCheck, $g_bCapturePixel) = True Then ExitLoop
-	WEnd
+	;; If mainscreen is not found, then fix it
+	;$iCount = 0
+	;While 1
+	;	If Not $g_bRunState Then Return
+	;	SetLog("Unable to load CoC, attempt to fix it", $COLOR_ERROR)
+	;	SetDebugLog("Restart Loop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop data
+	;	CloseAndroid("waitMainScreen") ; Android must die!
+	;	If _Sleep(1000) Then Return
+	;	OpenAndroid(True) ; Open BS and restart CoC
+	;	If @extended Then
+	;		SetError(1, 1, -1)
+	;		Return
+	;	EndIf
+	;	If _CheckPixel($aPixelToCheck, $g_bCapturePixel) = True Then ExitLoop
+	;	CheckObstacles() ; Check for random error windows and close them
+	;	$iCount += 1
+	;	If $iCount > 2 Then ; If we can't restart BS after 2 tries, exit the loop
+	;		SetLog("Stuck trying to Restart " & $g_sAndroidEmulator & "...", $COLOR_ERROR)
+	;		SetError(1, 0, 0)
+	;		Return
+	;	EndIf
+	;	If _CheckPixel($aPixelToCheck, $g_bCapturePixel) = True Then ExitLoop
+	;WEnd
 
 EndFunc   ;==>waitMainScreen
 
