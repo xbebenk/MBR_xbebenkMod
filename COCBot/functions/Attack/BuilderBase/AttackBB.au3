@@ -486,37 +486,39 @@ Func GetBBDropPoint()
 		$YMiddle = $BHCoord[2]	
 	EndIf
 	
-	Local $THhOffset = 150, $aResult[0][2]
-	Local $xstart[2] = [70, 430], $ystart = 80, $xend[2] = [430, 800], $yend = 570
+	Local $THhOffset = 150, $aResult[0][3]
+	Local $xstart[2] = [70, 430], $ystart = 30, $xend[2] = [430, 800], $yend = 600
 	For $i = 0 To 1
-		Local $aTmp = QuickMIS("CXR", $g_sBundleDeployPointsBB, $xstart[$i], $ystart, $xend[$i], $yend, True)
-		SetDebugLog("aTmp : " & UBound($aTmp) & " Coords", $COLOR_INFO)
+		Local $aTmp = QuickMIS("CNX", $g_sBundleDeployPointsBB, $xstart[$i], $ystart, $xend[$i], $yend, True)
+		SetDebugLog("aTmp" & $i & ": " & UBound($aTmp) & " Coords", $COLOR_INFO)
 		For $j = 0 To UBound($aTmp) - 1
-			_ArrayAdd($aResult, $aTmp[$j][0] & "|" & $aTmp[$j][1])
+			_ArrayAdd($aResult, $aTmp[$j][1] & "|" & $aTmp[$j][2] & "|" & $aTmp[$j][0])
 		Next
 		;_ArrayDisplay($aTmp)
 	Next
 	SetDebugLog("aResult : " & UBound($aResult) & " Coords", $COLOR_ERROR)
 	;_ArrayDisplay($aResult)
-	Local $aaCoords[0][3], $iSide
+	Local $aaCoords[0][4], $iSide
 	For $i = 0 To UBound($aResult) - 1
 		$iSide = GetBBDPPixelSection($XMiddle, $YMiddle, $aResult[$i][0], $aResult[$i][1])
 		If $aResult[$i][0] < $XMiddle And $aResult[$i][1] < $YMiddle And $aResult[$i][0] > ($XMiddle - $THhOffset) And $aResult[$i][1] > ($YMiddle - $THhOffset) Then ContinueLoop ;TL
 		If $aResult[$i][0] > $XMiddle And $aResult[$i][1] < $YMiddle And $aResult[$i][0] < ($XMiddle + $THhOffset) And $aResult[$i][1] > ($YMiddle - $THhOffset) Then ContinueLoop ;BL
 		If $aResult[$i][0] < $XMiddle And $aResult[$i][1] > $YMiddle And $aResult[$i][0] > ($XMiddle - $THhOffset) And $aResult[$i][1] < ($YMiddle + $THhOffset) Then ContinueLoop ;BR
 		If $aResult[$i][0] > $XMiddle And $aResult[$i][1] > $YMiddle And $aResult[$i][0] < ($XMiddle + $THhOffset) And $aResult[$i][1] < ($YMiddle + $THhOffset) Then ContinueLoop ;TR
-		_ArrayAdd($aaCoords, $iSide & "|" & $aResult[$i][0] & "|" & $aResult[$i][1], Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
+		_ArrayAdd($aaCoords, $iSide & "|" & $aResult[$i][0] & "|" & $aResult[$i][1] & "|" & $aResult[$i][2])
 	Next	
-	SetDebugLog("aaCoords : " & UBound($aResult) & " Coords", $COLOR_INFO)
+	SetDebugLog("aaCoords : " & UBound($aaCoords) & " Coords", $COLOR_INFO)
+	;_ArrayDisplay($aaCoords)
 	If $g_bDebugImageSave Then DebugAttackBBImage($aaCoords)
 	
 	Local $aDPResult = SortBBDP($aaCoords)
+	;_ArrayDisplay($aDPResult)
 	If $g_bDebugImageSave Then DebugAttackBBImage($aDPResult, $g_BBDPSide)
 	If $g_bDebugClick Then SetLog("g_BBDPSide = " & $g_BBDPSide)
 	
 	FindLavaLauncher($aDPResult)
 	
-	If Ubound($aDPResult) < 10 Or Not $BHFound Then 
+	If Ubound($aDPResult) < 10 Then 
 		$UseDefaultBBDP = True
 		If $g_bDebugClick Then SetLog("Insufficient count of DP, Fallback to Default DP", $COLOR_INFO)
 	EndIf
@@ -525,7 +527,7 @@ Func GetBBDropPoint()
 EndFunc
 
 Func SortBBDP($aDropPoints)
-	Local $aResult[0][3]
+	Local $aResult[0][4]
 	Local $TmpYL = 0, $TmpXR = 0, $DPChange = 0, $DpDistance = 10
 	Local $TmpYMaxTLFound = False, $TmpYMinBLFound = False, $TmpYMinBRLFound = False, $TmpYMaxTRFound = False
 	Local $TmpXMinTL = 0, $TmpYMaxTL = 0
@@ -547,7 +549,7 @@ Func SortBBDP($aDropPoints)
 				$TmpYMaxTLFound = True
 			EndIf
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinTL:" & $TmpXMinTL & " TmpYMaxTL:" & $TmpYMaxTL)
-			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] - $DPChange & "|" & $aDropPoints[$i][2] - $DPChange, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
+			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] - $DPChange & "|" & $aDropPoints[$i][2] - $DPChange & "|" & $aDropPoints[$i][3])
 		EndIf
 	Next
 
@@ -567,7 +569,7 @@ Func SortBBDP($aDropPoints)
 			EndIf
 			
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBL:" & $TmpXMinBL & " TmpYMinBL:" & $TmpYMinBL)
-			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] - $DPChange & "|" & $aDropPoints[$i][2] + $DPChange, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
+			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] - $DPChange & "|" & $aDropPoints[$i][2] + $DPChange & "|" & $aDropPoints[$i][3])
 		EndIf
 	Next
 	_ArraySort($aDropPoints, 1, 0, 0, 2) ;sort y axis desc
@@ -585,7 +587,7 @@ Func SortBBDP($aDropPoints)
 			EndIf
 			
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBR:" & $TmpXMinBR & " TmpYMinBR:" & $TmpYMinBR)
-			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] + $DPChange & "|" & $aDropPoints[$i][2] + $DPChange, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
+			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] + $DPChange & "|" & $aDropPoints[$i][2] + $DPChange & "|" & $aDropPoints[$i][3])
 		EndIf
 	Next
 	
@@ -603,7 +605,7 @@ Func SortBBDP($aDropPoints)
 				$TmpYMaxTRFound = True
 			EndIf
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinTR:" & $TmpXMinTR & " TmpYMinTR:" & $TmpYMinTR)
-			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] + $DPChange & "|" & $aDropPoints[$i][2] - $DPChange, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
+			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] + $DPChange & "|" & $aDropPoints[$i][2] - $DPChange & "|" & $aDropPoints[$i][3])
 		EndIf
 	Next
 	
@@ -694,6 +696,18 @@ Func DebugAttackBBImage($aCoords, $g_BBDPSide = 1)
 					$color = $hPenCyan
 			EndSwitch
 			_GDIPlus_GraphicsDrawRect($hGraphic, $aCoords[$i][1] - 3, $aCoords[$i][2] - 3, 6, 6, $color)
+			If UBound($aCoords) < 200 Then
+				Switch $aCoords[$i][0]
+					Case 1
+						_GDIPlus_GraphicsDrawString($hGraphic, $aCoords[$i][3], $aCoords[$i][1] - 20, $aCoords[$i][2] - 20, "ARIAL", 10)
+					Case 2
+						_GDIPlus_GraphicsDrawString($hGraphic, $aCoords[$i][3], $aCoords[$i][1] - 20, $aCoords[$i][2] + 20, "ARIAL", 10)
+					Case 3
+						_GDIPlus_GraphicsDrawString($hGraphic, $aCoords[$i][3], $aCoords[$i][1] + 20, $aCoords[$i][2] + 20, "ARIAL", 10)
+					Case 4
+						_GDIPlus_GraphicsDrawString($hGraphic, $aCoords[$i][3], $aCoords[$i][1] + 20, $aCoords[$i][2] - 20, "ARIAL", 10)
+				EndSwitch
+			EndIf
 		Next
 	Else
 		SetDebugLog("DebugAttackBBImage: No Array")
