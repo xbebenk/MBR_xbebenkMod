@@ -741,7 +741,9 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		Else
 			SetLog("New Building Not Found", $COLOR_INFO)
 		EndIf
-
+		
+		$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True) ;check most bottom upgrade cost
+		
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
 			SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
 			Local $aResult = FindRushTHPriority()
@@ -784,7 +786,6 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("Search Essential Building on Builder Menu", $COLOR_INFO)
 			ClickMainBuilder()
 			Local $aResult = FindEssentialBuilding()
-			$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True)
 			If isArray($aResult) And UBound($aResult) > 0 Then
 				_ArraySort($aResult, 0, 0, 0, 3)
 				For $y = 0 To UBound($aResult) - 1
