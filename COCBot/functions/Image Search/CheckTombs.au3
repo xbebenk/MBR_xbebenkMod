@@ -85,13 +85,10 @@ Func CleanYardCheckBuilder($bTest = False)
 EndFunc
 
 Func CleanYard($bTest = False)
-
-	; Early exist if noting to do
 	If Not $g_bChkCleanYard And Not $g_bChkGemsBox Then Return
 
-	; Timer
-	Local $hObstaclesTimer = __TimerInit()
 	VillageReport(True, True)
+	CheckImageType()
 	SetLog("CleanYard: Try removing obstacles", $COLOR_DEBUG)
 	If Not CleanYardCheckBuilder($bTest) Then Return
 
@@ -132,11 +129,8 @@ Func CleanYard($bTest = False)
 	Else
 		SetLog("CleanYard Found and Clearing " & $Locate & " Obstacles!", $COLOR_SUCCESS)
 	EndIf
-	
-	SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
 	UpdateStats()
 	ClickAway()
-
 EndFunc   ;==>CleanYard
 
 Func ClickRemoveObstacle($bTest = False)
