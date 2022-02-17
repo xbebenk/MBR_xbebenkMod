@@ -1185,7 +1185,7 @@ Func RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True,
 	Return FuncReturn()
 EndFunc   ;==>RestartAndroidCoC
 
-Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True, $iRetry = 0, $iRecursive = 0)
+Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True, $iRetry = 0, $iRecursive = 0, $SkipSharedPrefs = False)
 	ClearClicks() ; it can happen the clicks are hold back, ensure it's cleared
 	$g_bSkipFirstZoomout = False
 	ResumeAndroid()
@@ -1208,7 +1208,7 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 			SetLog("Please wait for CoC restart.....", $COLOR_INFO) ; Let user know we need time...
 			$sRestart = "-S "
 		Else
-			SetLog("Please wait for CoC restart....", $COLOR_INFO) ; Let user know we need time...
+			SetLog("Starting CoC, Please wait...", $COLOR_INFO) ; Let user know we need time...
 		EndIf
 	Else
 		SetLog("Launch Clash of Clans now...", $COLOR_SUCCESS)
@@ -1219,7 +1219,8 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	If Not $g_bRunState Then Return False
 	;$cmdOutput = LaunchConsole($g_sAndroidAdbPath, "-s " & $g_sAndroidAdbDevice & " shell am start " & $sRestart & "-n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass, $process_killed, 30 * 1000) ; removed "-W" option and added timeout (didn't exit sometimes)
 	If (ProfileSwitchAccountEnabled() And $g_bChkSharedPrefs) And HaveSharedPrefs() And _
-			($g_bUpdateSharedPrefs Or $g_PushedSharedPrefsProfile <> $g_sProfileCurrentName Or ($g_PushedSharedPrefsProfile_Timer = 0 Or __TimerDiff($g_PushedSharedPrefsProfile_Timer) > 120000)) Then PushSharedPrefs()
+			($g_bUpdateSharedPrefs Or $g_PushedSharedPrefsProfile <> $g_sProfileCurrentName Or ($g_PushedSharedPrefsProfile_Timer = 0 Or _ 
+			__TimerDiff($g_PushedSharedPrefsProfile_Timer) > 120000)) And Not $SkipSharedPrefs Then PushSharedPrefs()
 
 	$cmdOutput = AndroidAdbSendShellCommand("set export=$(am start " & $sRestart & "-n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass & " >&2)", 15000) ; timeout of 15 Seconds
 	If StringInStr($cmdOutput, "Error:") > 0 And StringInStr($cmdOutput, $g_sAndroidGamePackage) > 0 Then

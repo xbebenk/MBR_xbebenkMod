@@ -19,7 +19,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	SetLog("Waiting for Main Screen")
 	$iCount = 0
 	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
-	For $i = 0 To 20 ;105*2000 = 3.5 Minutes
+	For $i = 0 To 20 ;21*2000 = 42 seconds (this is only for blackscreen)
 		If Not $g_bRunState Then Return
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
@@ -56,7 +56,9 @@ Func waitMainScreen() ;Waits for main screen to popup
 	Next
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	CloseCoC(True) ; Close then Open CoC
+	CloseCoC(False) ; Close then Open CoC
+	;_RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True, $iRetry = 0, $iRecursive = 0, $SkipSharedPrefs = False)
+	_RestartAndroidCoC(False, False, $bStopCoC = True, 0, 0, True)
 	If _CheckPixel($aPixelToCheck, True) Then Return ; If its main screen return
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
