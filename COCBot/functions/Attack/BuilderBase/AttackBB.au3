@@ -397,7 +397,7 @@ Func DeployBM($aBMPos, $iSide = False)
 EndFunc ; DeployBM
 
 Func CheckBMLoop($aBMPos)
-	Local $count = 0
+	Local $count = 0, $loopcount = 0
 	Local $TmpBMPosX = $aBMPos[0] - 17
 	Local $BMPosY = 578
 	
@@ -428,6 +428,8 @@ Func CheckBMLoop($aBMPos)
 		EndIf
 		If _Sleep(250) Then Return
 		SetDebugLog("Battle Machine LoopCheck", $COLOR_ACTION)
+		If $loopcount > 240 Then Return ;1 minute
+		$loopcount += 1
 	Wend
 EndFunc
 
