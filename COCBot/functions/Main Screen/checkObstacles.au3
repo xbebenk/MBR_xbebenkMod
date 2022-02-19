@@ -154,6 +154,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		SetDebugLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
 		Click(440, 526)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		$g_bMinorObstacle = True
 		Return False
 	EndIf
 	
@@ -179,6 +180,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	If _CheckPixel($aChatTab, True) Then
 		SetDebugLog("checkObstacles: Found Chat Tab to close")
 		PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
+		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
@@ -186,12 +188,14 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	If _CheckPixel($aEndFightSceneBtn, $g_bNoCapturePixel) Then
 		SetDebugLog("checkObstacles: Found End Fight Scene to close")
 		PureClickP($aEndFightSceneBtn, 1, 0, "#0137") ;If in that victory or defeat scene
+		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
 	If _ColorCheck(_GetPixelColor(422, 505, True), Hex(0x86D435, 6), 20) Then
 		SetDebugLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
 		Click(422, 500)
+		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
@@ -214,11 +218,9 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	; optional game update
 	If UBound(decodeSingleCoord(FindImageInPlace("OptUpdateCoC", $g_sImgOptUpdateCoC, "155, 190, 705, 480", False))) > 1 Then ; Found Optional Game Update Message
 		SetLog("Found Optional Game Update - Clicking No Thanks", $COLOR_INFO)
-
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		PureClick(520, 475, 1, 0) ; Click No Thanks
 		$g_bMinorObstacle = True
-
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
@@ -245,26 +247,38 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If ClickB("ReloadButton") Then SetLog("Trying to reload game after maintenance break", $COLOR_INFO)
 		checkObstacles_ResetSearch()
 	EndIf
+	
 	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
 		SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		$g_bMinorObstacle = True
 		Return False
 	EndIf
 	If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 66, 790, 120) Then 
 		SetDebugLog("checkObstacles: Found AttackLog Page", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		$g_bMinorObstacle = True
+		Return False
+	EndIf
+	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 300, 720, 400) Then 
+		SetDebugLog("checkObstacles: Found TownHall Upgraded Page", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		$g_bMinorObstacle = True
 		Return False
 	EndIf
 	If IsPostDefenseSummaryPage() Then
 		SetDebugLog("checkObstacles: Found Post Defense Summary to close")
 		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
+		$g_bMinorObstacle = True
 		Return False
 	EndIf
 	If IsFullScreenWindow() Then
 		Click(825,45)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		$g_bMinorObstacle = True
 		Return False
 	EndIf	
 	Return False

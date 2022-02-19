@@ -19,12 +19,16 @@ Func CheckImageType()
 	If _Sleep($DELAYCHECKIMAGETYPE1) Then Return
 	If Not IsMainPage() Then ClickAway()
 
-	Local $sImgSnowTheme = @ScriptDir & "\imgxml\SnowTheme\Snow*.xml"
-	Local $aResult = decodeMultipleCoords(findImage("Snow", $sImgSnowTheme, "DCD", 0, True))
+	Local $aTmp = QuickMIS("CNX", $sImgSnowTheme, 20,20,840,630)
+	Local $count = 0
+	For $i = 0 To UBound($aTmp) - 1
+		If Not isInsideDiamondXY($aTmp[$i][1], $aTmp[$i][2]) Then $count += 1
+	Next
+;	Local $aResult = decodeMultipleCoords(findImage("Snow", $sImgSnowTheme, "DCD", 0, True))
 
-	If IsArray($aResult) And UBound($aResult) >= 5 Then
+	If $count >= 5 Then
 		$g_iDetectedImageType = 1 ;Snow Theme
-		SetDebugLog("Found Snow Images " & UBound($aResult))
+		SetDebugLog("Found Snow Images " & $count)
 		SetLog("Snow Theme detected", $COLOR_INFO)
 	Else
 		$g_iDetectedImageType = 0 ; Normal Theme
