@@ -628,9 +628,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, [$eSBowl, $nbSides, 1, 1, 0] _
 				, [$eMine, $nbSides, 1, 1, 0] _
 				, [$eEDrag, $nbSides, 1, 1, 0] _
-				, [$eRDrag, $nbSides, 1, 1, 0]  _
-				, ["CC", 1, 1, 1, 1] _
-				, ["HEROES", 1, 2, 1, 1] _
+				, [$eRDrag, $nbSides, 1, 1, 0] _
 				, [$eBarb, $nbSides, 1, 1, 0] _
 				, [$eSBarb, $nbSides, 1, 1, 0] _
 				, [$eWall, $nbSides, 1, 1, 1] _
@@ -647,7 +645,9 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, [$eSGobl, $nbSides, 1, 1, 0] _
 				, [$eHeal, $nbSides, 1, 1, 1] _
 				, [$ePekk, $nbSides, 1, 1, 1] _
-				, [$eHunt, $nbSides, 1, 1, 0]]
+				, [$eHunt, $nbSides, 1, 1, 0] _
+				, ["CC", 1, 1, 1, 1] _
+				, ["HEROES", 1, 2, 1, 1]]
 	EndIf
 
 	$g_bIsCCDropped = False
