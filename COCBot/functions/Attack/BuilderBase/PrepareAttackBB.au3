@@ -224,6 +224,7 @@ Func BBDropTrophy()
 			
 			Local $iSide = True
 			Local $aBMPos = GetMachinePos()
+			$g_BBDP = GetBBDropPoint()
 			Local $Return = False
 			If IsArray($aBMPos) Then
 				SetLog("Deploying BM")
@@ -235,7 +236,6 @@ Func BBDropTrophy()
 			If Not $Return Then
 				; Get troops on attack bar and their quantities
 				local $aBBAttackBar = GetAttackBarBB()
-				$g_BBDP = GetBBDropPoint()
 				If IsArray($aBBAttackBar) Then
 					DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], $aBBAttackBar[0][4], $iSide)
 				EndIf

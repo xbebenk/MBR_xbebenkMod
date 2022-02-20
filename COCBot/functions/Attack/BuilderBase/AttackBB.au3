@@ -355,8 +355,8 @@ Func DeployBM($aBMPos, $iSide = False)
 
 	If $g_bBBMachineReady And IsArray($aBMPos) Then
 		SetLog("Deploying Battle Machine.", $COLOR_BLUE)
+		Local $DP[0][3]
 		If Not $UseDefaultBBDP Then
-			Local $DP[0][3]
 			For $i = 0 To Ubound($g_BBDP) - 1
 				If $g_BBDP[$i][0] = $g_BBDPSide Then
 					_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2], Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
