@@ -153,7 +153,7 @@ Func CheckArmyReady()
 		Else
 			$bReady = True
 		EndIf
-		ClickAway()
+		ClickAway("Left")
 		If _Sleep(1000) Then Return ; wait for window close
 	EndIf
 
@@ -284,7 +284,7 @@ Func ReturnHomeDropTrophyBB()
 	For $i = 1 To 5	
 		SetDebugLog("Waiting Opponent Attack Window #" & $i, $COLOR_ACTION)
 		If WaitforPixel(420, 600, 420,600, "E8E8E0", 10, 1) Then	
-			ClickAway()
+			ClickAway("Left")
 			_Sleep(2000)
 			ExitLoop
 		EndIf
