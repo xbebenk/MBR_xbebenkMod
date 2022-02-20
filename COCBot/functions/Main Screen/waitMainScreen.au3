@@ -46,37 +46,15 @@ Func waitMainScreen() ;Waits for main screen to popup
 	Next
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	;CloseCoC(False) ; Close then Open CoC
-	;_RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True, $iRetry = 0, $iRecursive = 0, $SkipSharedPrefs = False)
 	SetLog("=========RESTART COC==========", $COLOR_INFO)
 	CloseCoC()
 	_RestartAndroidCoC(False, False, True, 0, 0, True)
-	If _CheckPixel($aPixelToCheck, True) Then Return ; If its main screen return
+	For $i = 1 To 20
+		SetDebugLog("Waiting for mainscreen #" & $i, $COLOR_ACTION)
+		If checkChatTabPixel() Then Return
+		_Sleep(2000)
+	Next
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-	;; If mainscreen is not found, then fix it
-	;$iCount = 0
-	;While 1
-	;	If Not $g_bRunState Then Return
-	;	SetLog("Unable to load CoC, attempt to fix it", $COLOR_ERROR)
-	;	SetDebugLog("Restart Loop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop data
-	;	CloseAndroid("waitMainScreen") ; Android must die!
-	;	If _Sleep(1000) Then Return
-	;	OpenAndroid(True) ; Open BS and restart CoC
-	;	If @extended Then
-	;		SetError(1, 1, -1)
-	;		Return
-	;	EndIf
-	;	If _CheckPixel($aPixelToCheck, $g_bCapturePixel) = True Then ExitLoop
-	;	CheckObstacles() ; Check for random error windows and close them
-	;	$iCount += 1
-	;	If $iCount > 2 Then ; If we can't restart BS after 2 tries, exit the loop
-	;		SetLog("Stuck trying to Restart " & $g_sAndroidEmulator & "...", $COLOR_ERROR)
-	;		SetError(1, 0, 0)
-	;		Return
-	;	EndIf
-	;	If _CheckPixel($aPixelToCheck, $g_bCapturePixel) = True Then ExitLoop
-	;WEnd
 
 EndFunc   ;==>waitMainScreen
 

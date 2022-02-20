@@ -80,6 +80,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 				CloseCoC()
 				_RestartAndroidCoC(False, False, True, 0, 0, True)
 				$bContinue = True
+				$i = 0
 			EndIf
 		Else
 			$g_bRestart = True
