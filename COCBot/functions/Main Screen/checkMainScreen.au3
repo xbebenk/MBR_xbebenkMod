@@ -72,17 +72,14 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 
 		$bContinue = False
 		If Not $bObstacleResult Then
-			If $g_bMinorObstacle Then
-				$g_bMinorObstacle = False
-				$bContinue = False
-			Else
-				If $i > $iCheckBeforeRestartAndroidCount Then
-					SaveDebugImage("checkMainScreen_RestartCoC", False) ; why do we need to restart ?
-					SetLog("=========checkMainScreen_RestartCoC==========", $COLOR_INFO)
-					CloseCoC()
-					_RestartAndroidCoC(False, False, True, 0, 0, True)
-					$bContinue = True
-				EndIf
+			If $g_bMinorObstacle Then $g_bMinorObstacle = False
+			$bContinue = False
+			If $i > $iCheckBeforeRestartAndroidCount Then
+				SaveDebugImage("checkMainScreen_RestartCoC", False) ; why do we need to restart ?
+				SetLog("=========checkMainScreen_RestartCoC==========", $COLOR_INFO)
+				CloseCoC()
+				_RestartAndroidCoC(False, False, True, 0, 0, True)
+				$bContinue = True
 			EndIf
 		Else
 			$g_bRestart = True
