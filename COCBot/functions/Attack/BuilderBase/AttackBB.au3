@@ -33,7 +33,6 @@ Func DoAttackBB()
 				Next
 			EndIf
 			If _Sleep($DELAYRUNBOT3) Then Return
-			If checkObstacles(True) Then Return
 			$count += 1
 			If $count > 10 Then
 				SetLog("Something maybe wrong", $COLOR_INFO)
@@ -62,7 +61,6 @@ Func DoAttackBB()
 					Next
 				EndIf
 				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles(True) Then Return
 			Else
 				ExitLoop
 			EndIf
@@ -104,14 +102,13 @@ Func _AttackBB()
 	local $timer = __TimerInit()
 	local $iPrevTime = 0
 
-	Static $aAttackerVersusBattle[2][3] = [[0xFFFF99, 0, 1], [0xFFFF99, 0, 2]]
-	While _MultiPixelSearch(711, 2, 856, 55 + $g_iMidOffsetYNew, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) = 0
+	While Not WaitforPixel(88, 586, 89, 588, "5095D8", 10, 1) 
 		local $iTime = Int(__TimerDiff($timer)/ 60000)
 		If $iTime > $iPrevTime Then ; if we have increased by a minute
 			SetLog("Clouds: " & $iTime & "-Minute(s)")
 			If $iTime > 2 Then 
 				CloseCoC(True)
-				Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search, if more there must be something no right
+				Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search
 			EndIf
 			$iPrevTime = $iTime
 		EndIf

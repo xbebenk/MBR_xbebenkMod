@@ -15,7 +15,7 @@
 
 Func chkEnableBBAttack()
 	If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkBBTrophyRange, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBDropTrophy, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBDropBMFirst, $GUI_ENABLE)
@@ -23,12 +23,9 @@ Func chkEnableBBAttack()
 		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbBBAttackCount, $GUI_ENABLE)
-		chkBBTrophyRange()
 	Else
-		GUICtrlSetState($g_hChkBBTrophyRange, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBBDropTrophy, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_DISABLE)
-		GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_DISABLE)
-		GUICtrlSetState($g_hTxtBBTrophyUpperLimit, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkBBDropBMFirst, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
@@ -62,15 +59,13 @@ Func cmbBBSameTroopDelay()
 	SetDebugLog((_GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1) - 5)
 EndFunc   ;==>cmbBBSameTroopDelay
 
-Func chkBBTrophyRange()
-	If GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_ENABLE)
-		GUICtrlSetState($g_hTxtBBTrophyUpperLimit, $GUI_ENABLE)
+Func chkBBDropTrophy()
+	If GUICtrlRead($g_hChkBBDropTrophy) = $GUI_CHECKED Then
+		$g_bChkBBDropTrophy = True
 	Else
-		GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_DISABLE)
-		GUICtrlSetState($g_hTxtBBTrophyUpperLimit, $GUI_DISABLE)
+		$g_bChkBBDropTrophy = False
 	EndIf
-EndFunc   ;==>chkBBTrophyRange
+EndFunc   ;==>chkBBDropTrophy
 
 Func btnBBDropOrder()
 	GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)

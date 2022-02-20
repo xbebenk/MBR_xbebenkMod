@@ -41,15 +41,6 @@ Func PrepareAttackBB($Mode = Default)
 		EndIf
 	EndIf
 	
-	If $g_bChkBBTrophyRange Then
-		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
-			SetLog("Trophies out of range.")
-			SetDebugLog("Current Trophies: " & $g_aiCurrentLootBB[$eLootTrophyBB] & " Lower Limit: " & $g_iTxtBBTrophyLowerLimit & " Upper Limit: " & $g_iTxtBBTrophyUpperLimit)
-			_Sleep(1500)
-			Return False
-		EndIf
-	EndIf
-	
 	If Not $g_bRunState Then Return ; Stop Button
 
 	If Not ClickBBAttackButton() Then 
@@ -175,4 +166,130 @@ Func CheckArmyReady()
 		SetLog("Army is ready.")
 	EndIf
 	Return $bReady
+EndFunc
+
+Func BBDropTrophy()
+	If Not $g_bChkBBDropTrophy Then Return
+	SetLog("Prepare BB Drop Trophy", $COLOR_INFO)
+	
+	If ClickBBAttackButton() Then 
+		For $i = 1 To 5
+			If WaitforPixel(588, 321, 589, 322, "D7540E", 20, 2) Then
+				SetDebugLog("Found FindNow Button", $COLOR_ACTION)
+				_Sleep(500)
+				ExitLoop
+			EndIf
+			If WaitforPixel(665, 437, 666, 438, "D9F481", 20, 1) Then
+				SetDebugLog("Found Previous Attack Result", $COLOR_ACTION)
+				Click(640, 440)
+				_Sleep(500)
+			EndIf
+			_Sleep(1000)
+			SetDebugLog("Wait For Find Now Button #" & $i, $COLOR_ACTION)
+		Next
+		
+		If CheckLootAvail() Then 
+			SetLog("BB Loot Available, Skip BB Drop Trophy")
+			ClickAway()
+			Return
+		Else
+			CheckArmyReady()
+			SetLog("Going to attack for BB Drop Trophy", $COLOR_INFO)
+			local $aBBFindNow = [521, 278, 0xffc246, 30] ; search button
+			If _CheckPixel($aBBFindNow, True) Then
+				PureClick($aBBFindNow[0], $aBBFindNow[1])
+			Else
+				SetLog("Could not locate search button to go find an attack.", $COLOR_ERROR)
+				ClickAway()
+				Return False
+			EndIf
+			
+			If _Sleep(1500) Then Return ; give time for find now button to go away
+			If Not $g_bRunState Then Return ; Stop Button
+			; wait for the clouds to clear
+			SetLog("Searching for Opponent.", $COLOR_BLUE)
+			
+			Local $count = 1
+			While Not WaitforPixel(88, 586, 89, 588, "5095D8", 10, 1) 
+				SetLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
+				If $count > 20 Then 
+					CloseCoC(True)
+					Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search
+				EndIf
+				If isProblemAffect(True) Then Return
+				If Not $g_bRunState Then Return ; Stop Button
+				$count += 1
+				_Sleep(2000)
+			WEnd
+			
+			Local $iSide = True
+			Local $aBMPos = GetMachinePos()
+			Local $Return = False
+			If IsArray($aBMPos) Then
+				SetLog("Deploying BM")
+				DeployBM($aBMPos, $iSide)
+				If ReturnHomeDropTrophyBB() Then Return 
+				$Return = True
+			EndIf
+			
+			If Not $Return Then
+				; Get troops on attack bar and their quantities
+				local $aBBAttackBar = GetAttackBarBB()
+				$g_BBDP = GetBBDropPoint()
+				If IsArray($aBBAttackBar) Then
+					DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], $aBBAttackBar[0][4], $iSide)
+				EndIf
+				If ReturnHomeDropTrophyBB() Then Return
+			EndIf
+		EndIf
+	EndIf
+EndFunc
+
+Func ReturnHomeDropTrophyBB()
+	For $i = 1 To 3 
+		SetDebugLog("Waiting Surrender button #" & $i, $COLOR_ACTION)
+		If IsAttackPage() Then
+			Click(65, 540) ;click surrender
+			_Sleep(1000)
+			ExitLoop
+		EndIf
+		_Sleep(1000)
+	Next
+	
+	For $i = 1 To 3
+		SetDebugLog("Waiting OK Cancel Window #" & $i, $COLOR_ACTION)
+		If IsOKCancelPage(True) Then
+			ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
+			_Sleep(2000)
+			ExitLoop
+		EndIf
+		_Sleep(1000)
+	Next
+	
+	For $i = 1 To 3
+		SetDebugLog("Waiting EndBattle Window #" & $i, $COLOR_ACTION)
+		If WaitforPixel(420, 600, 420,600, "000000", 0, 1) Then
+			If WaitforPixel(420, 563, 421,564, "6CBB1F", 20, 1) Then
+				SetDebugLog("ReturnHomeDropTrophyBB: Found Return Home Button")
+				Click(420, 560)
+				_Sleep(4000)
+				ExitLoop
+			Else
+				SetDebugLog("Expected: 6CBB1F, Got:" & _GetPixelColor(420, 563, True))
+			EndIf
+		EndIf
+		_Sleep(1000)
+	Next
+	
+	For $i = 1 To 3	
+		SetDebugLog("Waiting Opponent Attack Window #" & $i, $COLOR_ACTION)
+		If WaitforPixel(420, 600, 420,600, "E8E8E0", 10, 1) Then	
+			ClickAway()
+			_Sleep(2000)
+			ExitLoop
+		EndIf
+		_Sleep(1000)
+	Next
+	
+	If CheckMainScreen(True, $g_bStayOnBuilderBase, "ReturnHomeDropTrophyBB") Then Return True
 EndFunc

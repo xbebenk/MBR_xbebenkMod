@@ -399,16 +399,13 @@ Func ApplyConfig_600_6($TypeReadSave)
 
 			; Builder Base Attack
 			GUICtrlSetState($g_hChkEnableBBAttack, $g_bChkEnableBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBTrophyRange, $g_bChkBBTrophyRange ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetData($g_hTxtBBTrophyLowerLimit, $g_iTxtBBTrophyLowerLimit)
-			GUICtrlSetData($g_hTxtBBTrophyUpperLimit, $g_iTxtBBTrophyUpperLimit)
+			GUICtrlSetState($g_hChkBBDropTrophy, $g_bChkBBDropTrophy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBAttIfLootAvail, $g_bChkBBAttIfLootAvail ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBWaitForMachine, $g_bChkBBWaitForMachine ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBDropBMFirst, $g_bChkBBDropBMFirst ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay, (($g_iBBNextTroopDelay - $g_iBBNextTroopDelayDefault) / $g_iBBNextTroopDelayIncrement) + 4) ; set combos based on delays
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay, (($g_iBBSameTroopDelay - $g_iBBSameTroopDelayDefault) / $g_iBBSameTroopDelayIncrement) + 4)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackCount, $g_iBBAttackCount)
-			chkBBTrophyRange()
 			chkEnableBBAttack()
 
 			; Builder Base Drop Order
@@ -542,9 +539,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 
 			; Builder Base Attack
 			$g_bChkEnableBBAttack = (GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)
-			$g_bChkBBTrophyRange = (GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED)
-			$g_iTxtBBTrophyLowerLimit = GUICtrlRead($g_hTxtBBTrophyLowerLimit)
-			$g_iTxtBBTrophyUpperLimit = GUICtrlRead($g_hTxtBBTrophyUpperLimit)
+			$g_bChkBBDropTrophy = (GUICtrlRead($g_hChkBBDropTrophy) = $GUI_CHECKED)
 			$g_bChkBBAttIfLootAvail = (GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
 			$g_bChkBBWaitForMachine = (GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
 			$g_bChkBBDropBMFirst = (GUICtrlRead($g_hChkBBDropBMFirst) = $GUI_CHECKED)

@@ -1547,11 +1547,14 @@ Func BuilderBase()
 		
 		DoAttackBB()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
+		CheckMainScreen(True, $g_bStayOnBuilderBase, "DoAttackBB")
+		
+		BBDropTrophy()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		
 		AutoUpgradeBB()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
+		CheckMainScreen(True, $g_bStayOnBuilderBase, "AutoUpgradeBB")
 
 		StarLaboratory()
 		If _Sleep($DELAYRUNBOT3) Then Return
