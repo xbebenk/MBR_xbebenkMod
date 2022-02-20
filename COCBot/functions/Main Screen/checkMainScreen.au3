@@ -55,16 +55,6 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 			SetLog("Main Screen not Located", $COLOR_ERROR)
 			ExitLoop
 		EndIf
-		If $g_bRestart And WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
-			For $i = 1 To 10
-				If WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
-					SetLog("Waiting COC Loading Page #" & $i, $COLOR_ACTION)
-					If _Sleep(1000) Then Return
-				Else
-					ExitLoop
-				EndIf
-			Next
-		EndIf
 		
 		WinGetAndroidHandle()
 		$bObstacleResult = checkObstacles($bBuilderBase)
@@ -74,14 +64,14 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 		If Not $bObstacleResult Then
 			If $g_bMinorObstacle Then $g_bMinorObstacle = False
 			$bContinue = False
-			If $i > $iCheckBeforeRestartAndroidCount Then
-				SaveDebugImage("checkMainScreen_RestartCoC", False) ; why do we need to restart ?
-				SetLog("=========checkMainScreen_RestartCoC==========", $COLOR_INFO)
-				CloseCoC()
-				_RestartAndroidCoC(False, False, True, 0, 0, True)
-				$bContinue = True
-				$i = 0
-			EndIf
+			;If $i > $iCheckBeforeRestartAndroidCount Then
+			;	SaveDebugImage("checkMainScreen_RestartCoC", False) ; why do we need to restart ?
+			;	SetLog("=========checkMainScreen_RestartCoC==========", $COLOR_INFO)
+			;	CloseCoC()
+			;	_RestartAndroidCoC(False, False, True, 0, 0, True)
+			;	$bContinue = True
+			;	$i = 0
+			;EndIf
 		Else
 			$g_bRestart = True
 			$bContinue = True
