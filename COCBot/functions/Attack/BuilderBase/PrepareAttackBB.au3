@@ -259,8 +259,8 @@ Func ReturnHomeDropTrophyBB()
 	For $i = 1 To 3
 		SetDebugLog("Waiting OK Cancel Window #" & $i, $COLOR_ACTION)
 		If IsOKCancelPage(True) Then
-			ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
-			_Sleep(2000)
+			Click(510, 400); Click Okay to Confirm surrender
+			_Sleep(1000)
 			ExitLoop
 		EndIf
 		_Sleep(1000)
