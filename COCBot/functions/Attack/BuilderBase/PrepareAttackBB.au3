@@ -246,7 +246,7 @@ Func BBDropTrophy()
 EndFunc
 
 Func ReturnHomeDropTrophyBB()
-	For $i = 1 To 3 
+	For $i = 1 To 5 
 		SetDebugLog("Waiting Surrender button #" & $i, $COLOR_ACTION)
 		If IsAttackPage() Then
 			Click(65, 540) ;click surrender
@@ -256,7 +256,7 @@ Func ReturnHomeDropTrophyBB()
 		_Sleep(1000)
 	Next
 	
-	For $i = 1 To 3
+	For $i = 1 To 5
 		SetDebugLog("Waiting OK Cancel Window #" & $i, $COLOR_ACTION)
 		If IsOKCancelPage(True) Then
 			Click(510, 400); Click Okay to Confirm surrender
@@ -266,7 +266,7 @@ Func ReturnHomeDropTrophyBB()
 		_Sleep(1000)
 	Next
 	
-	For $i = 1 To 3
+	For $i = 1 To 10
 		SetDebugLog("Waiting EndBattle Window #" & $i, $COLOR_ACTION)
 		If WaitforPixel(420, 600, 420,600, "000000", 0, 1) Then
 			If WaitforPixel(420, 563, 421,564, "6CBB1F", 20, 1) Then
@@ -281,7 +281,7 @@ Func ReturnHomeDropTrophyBB()
 		_Sleep(1000)
 	Next
 	
-	For $i = 1 To 3	
+	For $i = 1 To 5	
 		SetDebugLog("Waiting Opponent Attack Window #" & $i, $COLOR_ACTION)
 		If WaitforPixel(420, 600, 420,600, "E8E8E0", 10, 1) Then	
 			ClickAway()
