@@ -18,7 +18,6 @@ Func waitMainScreen() ;Waits for main screen to popup
 	Local $iCount
 	SetLog("Waiting for Main Screen")
 	$iCount = 0
-	Local $aPixelToCheck = $g_bStayOnBuilderBase ? $aIsOnBuilderBase : $aIsMain
 	For $i = 0 To 10 ;11*2000 = 22 seconds (this is only for blackscreen)
 		If Not $g_bRunState Then Return
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
@@ -36,7 +35,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 			getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
 		EndIf
 		_CaptureRegion()
-		If _CheckPixel($aPixelToCheck, $g_bCapturePixel, Default, "waitMainScreen") Then ;Checks for Main Screen
+		If checkChatTabPixel() Then 
 			SetDebugLog("Screen cleared, WaitMainScreen exit", $COLOR_SUCCESS)
 			Return
 		Else

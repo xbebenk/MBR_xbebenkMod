@@ -1566,12 +1566,10 @@ Func BuilderBase()
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
 		
+		$g_bStayOnBuilderBase = False
 		; switch back to normal village
 		SwitchBetweenBases()
-		$g_bStayOnBuilderBase = False
-
 	EndIf
-
 EndFunc
 
 Func TestBuilderBase()
