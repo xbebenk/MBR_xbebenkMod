@@ -61,7 +61,6 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 		$bContinue = False
 		If Not $bObstacleResult Then
 			If $g_bMinorObstacle Then $g_bMinorObstacle = False
-			ExitLoop
 		Else
 			$g_bRestart = True
 			$bContinue = True
