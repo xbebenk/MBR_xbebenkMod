@@ -268,28 +268,22 @@ Func ReturnHomeDropTrophyBB()
 	
 	For $i = 1 To 10
 		SetDebugLog("Waiting EndBattle Window #" & $i, $COLOR_ACTION)
-		If WaitforPixel(420, 600, 420,600, "000000", 0, 1) Then
-			If WaitforPixel(420, 563, 421,564, "6CBB1F", 20, 1) Then
-				SetDebugLog("ReturnHomeDropTrophyBB: Found Return Home Button")
-				Click(420, 560)
-				_Sleep(4000)
-				ExitLoop
-			Else
-				SetDebugLog("Expected: 6CBB1F, Got:" & _GetPixelColor(420, 563, True))
-			EndIf
-		EndIf
-		_Sleep(1000)
-	Next
-	
-	For $i = 1 To 5	
-		SetDebugLog("Waiting Opponent Attack Window #" & $i, $COLOR_ACTION)
-		If WaitforPixel(420, 600, 420,600, "E8E8E0", 10, 1) Then	
-			ClickAway("Left")
-			_Sleep(2000)
+		If QuickMIS("BC1", $g_sImgOkButton, 350, 520, 500, 570) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			_Sleep(3000)
 			ExitLoop
 		EndIf
 		_Sleep(1000)
 	Next
 	
+	For $i = 1 To 10	
+		SetDebugLog("Waiting Opponent Attack Window #" & $i, $COLOR_ACTION)
+		If QuickMIS("BC1", $g_sImgWatchButton, 600, 425, 730, 470) Then 
+			ClickAway("Left")
+			ExitLoop
+		EndIf
+		_Sleep(1000)
+	Next
+	ClickAway("Left")
 	If CheckMainScreen(True, $g_bStayOnBuilderBase, "ReturnHomeDropTrophyBB") Then Return True
 EndFunc

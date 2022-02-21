@@ -31,8 +31,9 @@ Func DoAttackBB()
 						ExitLoop 2
 					EndIf
 				Next
+			Else
+				_Sleep(2000)
 			EndIf
-			If _Sleep($DELAYRUNBOT3) Then Return
 			$count += 1
 			If $count > 10 Then
 				SetLog("Something maybe wrong", $COLOR_INFO)
@@ -43,6 +44,7 @@ Func DoAttackBB()
 
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
 		ClickAway("Left")
+		_Sleep(1000)
 	Else
 		For $i = 1 To $g_iBBAttackCount
 			If Not $g_bRunState Then Return
@@ -59,8 +61,9 @@ Func DoAttackBB()
 							ExitLoop 2
 						EndIf
 					Next
+				Else
+					_Sleep(2000)
 				EndIf
-				If _Sleep($DELAYRUNBOT3) Then Return
 			Else
 				ExitLoop
 			EndIf
@@ -287,10 +290,9 @@ EndFunc
 Func Okay()
 	local $timer = __TimerInit()
 
-	While 1
-		local $aCoords = decodeSingleCoord(findImage("OkayButton", $g_sImgOkButton, GetDiamondFromRect("590,420,740,480"), 1, True))
-		If IsArray($aCoords) And UBound($aCoords) = 2 Then
-			PureClickP($aCoords)
+	While 1 
+		If QuickMIS("BC1", $g_sImgOkButton, 600, 425, 730, 470) Then 
+			Click($g_iQuickMISX, $g_iQuickMISY)
 			Return True
 		EndIf
 

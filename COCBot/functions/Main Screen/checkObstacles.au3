@@ -15,23 +15,22 @@
 ;
 Func checkObstacles($bBuilderBase = False) ;Checks if something is in the way for mainscreen
 	If Not $bBuilderBase Then $bBuilderBase = $g_bStayOnBuilderBase
-	Static $iRecursive = 0
 	FuncEnter(checkObstacles)
 	If Not WinGetAndroidHandle() Then
 		SetLog("Android not available", $COLOR_ERROR)
 		Return
 	EndIf
-	
 	Local $Result = _checkObstacles($bBuilderBase)
 	Return FuncReturn($Result)
 EndFunc   ;==>checkObstacles
 
-Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if something is in the way for mainscreen
+Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way for mainscreen
 	Local $msg, $x, $y, $Result
 	$g_bMinorObstacle = False
 	_CaptureRegions()
 	
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
+	SetDebugLog("isOnBuilderBase() : " & String($bIsOnBuilderIsland), $COLOR_ERROR)
 	If Not $bBuilderBase And $bIsOnBuilderIsland And Not $g_bStayOnBuilderBase Then ;Not check for BB, Not in BB, and not stay on BB -> go to mainVillage
 		AndroidAdbScript("ZoomOut")
 		If SwitchBetweenBases() Then 
@@ -44,7 +43,15 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 	If isProblemAffect(True) Then
 		;;;;;;;##### 1- Another device #####;;;;;;;
 		If UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,300(130,60)", False))) > 1 Then
-			If TestCapture() Then Return "Another Device has connected"
+			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And Not $g_bChkSmartSwitch And $g_bChkSharedPrefs Then
+				SetLog("---- Forced Switch, Another device connected ----")
+				$g_iNextAccount = $g_iCurAccount + 1
+				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+				$g_bRestart = True
+				SwitchForceAnotherDevice($g_iNextAccount)
+				Return True
+			EndIf
+			
 			If $g_iAnotherDeviceWaitTime > 3600 Then
 				SetLog("Another Device has connected, waiting " & Floor(Floor($g_iAnotherDeviceWaitTime / 60) / 60) & " hours " & Floor(Mod(Floor($g_iAnotherDeviceWaitTime / 60), 60)) & " minutes " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " seconds", $COLOR_ERROR)
 				PushMsg("AnotherDevice3600")
@@ -55,16 +62,9 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				SetLog("Another Device has connected, waiting " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " seconds", $COLOR_ERROR)
 				PushMsg("AnotherDevice")
 			EndIf
-			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And Not $g_bChkSmartSwitch And $g_bChkSharedPrefs Then
-				SetLog("---- Forced Switch, Another device connected ----")
-				$g_iNextAccount = $g_iCurAccount + 1
-				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
-				$g_bRestart = True
-				SwitchForceAnotherDevice($g_iNextAccount)
-				Return True
-			EndIf
+			
 			If _SleepStatus($g_iAnotherDeviceWaitTime * 1000) Then Return ; Wait as long as user setting in GUI, default 120 seconds
-			checkObstacles_ReloadCoC($aReloadButton, "#0127", $bRecursive)
+			checkObstacles_ReloadCoC($aReloadButton, "#0127")
 			If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			checkObstacles_ResetSearch()
 			Return True
@@ -84,7 +84,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Else
 				If _SleepStatus($DELAYCHECKOBSTACLES4) Then Return ; 2 Minutes
 			EndIf
-			checkObstacles_ReloadCoC($aReloadButton, "#0128", $bRecursive) ;Click on reload button
+			checkObstacles_ReloadCoC($aReloadButton, "#0128") ;Click on reload button
 			If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			checkObstacles_ResetSearch()
 			Return True
@@ -95,15 +95,9 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			Case UBound(decodeSingleCoord(FindImageInPlace("AnyoneThere", $g_sImgAnyoneThere, "440,310,580,360", False))) > 1 ; Inactive only
 				SetLog("Village was Inactive, Reloading CoC", $COLOR_ERROR)
 				If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
-			Case _CheckPixel($aIsConnectLost, $g_bNoCapturePixel) Or UBound(decodeSingleCoord(FindImageInPlace("ConnectionLost", $g_sImgConnectionLost, "160,270,700,420", False))) > 1 ; Connection Lost
+			Case UBound(decodeSingleCoord(FindImageInPlace("ConnectionLost", $g_sImgConnectionLost, "160,270,700,420", False))) > 1 ; Connection Lost
 				SetLog("Connection lost, Reloading CoC", $COLOR_ERROR)
-				;If $g_bChkSharedPrefs And HaveSharedPrefs() Then
-				;	SetLog("Please wait for loading CoC!")
-				;	PushSharedPrefs()
-				;	If Not $bRecursive Then OpenCoC()
-				;	Return True
-				;EndIf
-			Case _CheckPixel($aIsCheckOOS, $g_bNoCapturePixel) Or (UBound(decodeSingleCoord(FindImageInPlace("OOS", $g_sImgOutOfSync, "355,300,435,365", False, $g_iAndroidLollipop))) > 1) ; Check OoS
+			Case UBound(decodeSingleCoord(FindImageInPlace("OOS", $g_sImgOutOfSync, "355,300,435,365", False, $g_iAndroidLollipop))) > 1 ; Check OoS
 				SetLog("Out of Sync Error, Reloading CoC", $COLOR_ERROR)
 			Case (UBound(decodeSingleCoord(FindImageInPlace("ImportantNotice", $G_sImgImportantNotice, "150,220,430,290", False))) > 1)
 				SetLog("Found the 'Important Notice' window, closing it", $COLOR_INFO)
@@ -147,7 +141,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 				EndIf
 				SetLog("Warning: Cannot find type of Reload error message", $COLOR_ERROR)
 		EndSelect
-		Return checkObstacles_ReloadCoC($aReloadButton, "#0131", $bRecursive) ;Last chance -> Reload CoC
+		Return checkObstacles_ReloadCoC($aReloadButton, "#0131") ;Last chance -> Reload CoC
 	EndIf
 	
 	If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
@@ -163,7 +157,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 			SetDebugLog("checkObstacles: Found Return Home Button")
 			Click(420, 560)
 			$g_bMinorObstacle = True
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			_Sleep(3000)
 			Return False
 		Else
 			SetDebugLog("Expected: 6CBB1F, Got:" & _GetPixelColor(420, 563, True))
@@ -184,14 +178,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	If _CheckPixel($aEndFightSceneBtn, $g_bNoCapturePixel) Then
-		SetDebugLog("checkObstacles: Found End Fight Scene to close")
-		PureClickP($aEndFightSceneBtn, 1, 0, "#0137") ;If in that victory or defeat scene
-		$g_bMinorObstacle = True
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
+	
 	If _ColorCheck(_GetPixelColor(422, 505, True), Hex(0x86D435, 6), 20) Then
 		SetDebugLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
 		Click(422, 500)
@@ -209,7 +196,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		;PureClick(250 + $x, 328 + $y, 1, 0, "#0129");Check for "CoC has stopped error, looking for OK message" on screen
 		PureClick($CSFoundCoords[0], $CSFoundCoords[1], 1, 0, "#0129") ;Check for "CoC has stopped error, looking for OK message" on screen
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return checkObstacles_ReloadCoC(Default, "", $bRecursive)
+		Return checkObstacles_ReloadCoC(Default, "")
 	EndIf
 	
 	;;;;;;;##### 7- SCID Login Screen #####;;;;;;;
@@ -281,6 +268,7 @@ Func _checkObstacles($bBuilderBase = False, $bRecursive = False) ;Checks if some
 		$g_bMinorObstacle = True
 		Return False
 	EndIf	
+	ClickAway()
 	Return False
 EndFunc   ;==>_checkObstacles
 
@@ -330,20 +318,13 @@ Func SwitchForceAnotherDevice($NextAccount)
 	If Not $g_bRunState Then Return
 EndFunc
 
-; It's more stable to restart CoC app than click the message restarting the game
-Func checkObstacles_ReloadCoC($point = Default, $debugtxt = "", $bRecursive = False)
-	If TestCapture() Then Return "Reload CoC"
-	ForceCaptureRegion(True)
-	OcrForceCaptureRegion(True)
+Func checkObstacles_ReloadCoC($point = Default, $debugtxt = "")
 	If $point = Default Then
-		If Not $bRecursive Then CloseCoC(True)
+		CloseCoC(True) ;restart coc
 	Else
-		If UBound($point) > 1 Then
-			PureClickP($point, 1, 0, $debugtxt)
-		EndIf
-		If Not $bRecursive Then OpenCoC()
+		PureClickP($point, 1, 0, $debugtxt)
+		_SleepStatus(15000)
 	EndIf
-	If _Sleep($DELAYCHECKOBSTACLES3) Then Return
 	Return True
 EndFunc   ;==>checkObstacles_ReloadCoC
 
@@ -408,7 +389,6 @@ Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 	Else
 		$hCocReconnectingTimer = 0
 	EndIf
-
 	Return False
 EndFunc   ;==>checkObstacles_Network
 

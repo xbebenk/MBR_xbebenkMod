@@ -48,6 +48,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	SetLog("=========RESTART COC==========", $COLOR_INFO)
 	CloseCoC()
 	_RestartAndroidCoC(False, False, True, 0, 0, True)
+	_SleepStatus(10000)
 	For $i = 1 To 20
 		SetDebugLog("Waiting for mainscreen #" & $i, $COLOR_ACTION)
 		If checkChatTabPixel() Then Return
