@@ -1547,6 +1547,7 @@ Func BuilderBase()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		
 		If Not BBDropTrophy() Then 		
+			If _Sleep($DELAYRUNBOT3) Then Return
 			DoAttackBB()
 			If _Sleep($DELAYRUNBOT3) Then Return
 		EndIf

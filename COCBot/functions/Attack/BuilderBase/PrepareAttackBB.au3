@@ -191,6 +191,7 @@ Func BBDropTrophy()
 		If CheckLootAvail() Then 
 			SetLog("BB Loot Available, Skip BB Drop Trophy")
 			ClickAway()
+			_Sleep(1000)
 			Return False
 		Else
 			CheckArmyReady()
