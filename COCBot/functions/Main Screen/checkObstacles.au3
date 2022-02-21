@@ -49,6 +49,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
 				$g_bRestart = True
 				SwitchForceAnotherDevice($g_iNextAccount)
+				checkObstacles_ResetSearch()
 				Return True
 			EndIf
 			

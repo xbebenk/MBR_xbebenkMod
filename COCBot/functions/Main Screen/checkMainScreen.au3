@@ -48,13 +48,12 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 	$iCheckBeforeRestartAndroidCount = 5
 
 	If $bBuilderBase Then $aPixelToCheck = $aIsOnBuilderBase
-	Local $bLocated
-	While _CaptureRegions() And Not _checkMainScreenImage($bLocated, $aPixelToCheck)
+	Local $bLocated = False
+	While Not $bLocated
+	;While _CaptureRegions() And Not _checkMainScreenImage($bLocated, $aPixelToCheck)
 		$i += 1
-		If TestCapture() Then
-			SetLog("Main Screen not Located", $COLOR_ERROR)
-			ExitLoop
-		EndIf
+		SetDebugLog("Checking Mainscreen, $aPixelToCheck:" & _ArrayToString($aPixelToCheck))
+		$bLocated = _checkMainScreenImage($aPixelToCheck)
 		
 		WinGetAndroidHandle()
 		$bObstacleResult = checkObstacles($bBuilderBase)
@@ -63,15 +62,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 		$bContinue = False
 		If Not $bObstacleResult Then
 			If $g_bMinorObstacle Then $g_bMinorObstacle = False
-			$bContinue = False
-			;If $i > $iCheckBeforeRestartAndroidCount Then
-			;	SaveDebugImage("checkMainScreen_RestartCoC", False) ; why do we need to restart ?
-			;	SetLog("=========checkMainScreen_RestartCoC==========", $COLOR_INFO)
-			;	CloseCoC()
-			;	_RestartAndroidCoC(False, False, True, 0, 0, True)
-			;	$bContinue = True
-			;	$i = 0
-			;EndIf
+			ExitLoop
 		Else
 			$g_bRestart = True
 			$bContinue = True
@@ -111,9 +102,10 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 	Return $bLocated
 EndFunc   ;==>_checkMainScreen
 
-Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = True)
-	$bLocated = _CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False) And checkChatTabPixel()
-	Return $bLocated
+Func _checkMainScreenImage($aPixelToCheck)
+	Local $bRet
+	$bRet = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage") And checkChatTabPixel()
+	Return $bRet
 EndFunc
 
 Func checkChatTabPixel()
@@ -136,5 +128,6 @@ EndFunc   ;==>checkChatTabPixel
 Func isOnMainVillage($bNeedCaptureRegion = $g_bNoCapturePixel)
 	Local $aPixelToCheck = $aIsMain
 	Local $bLocated = False
-	Return _checkMainScreenImage($bLocated, $aPixelToCheck)
+	$bLocated = _checkMainScreenImage($aPixelToCheck)
+	Return $bLocated
 EndFunc
