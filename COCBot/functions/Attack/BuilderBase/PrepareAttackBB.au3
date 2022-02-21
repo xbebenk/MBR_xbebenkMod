@@ -278,12 +278,12 @@ Func ReturnHomeDropTrophyBB()
 	
 	For $i = 1 To 10	
 		SetDebugLog("Waiting Opponent Attack Window #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgWatchButton, 600, 425, 730, 470) Then 
+		If QuickMIS("BC1", $g_sImgWatchButton, 520, 280, 570, 370) Then 
 			ClickAway("Left")
 			ExitLoop
 		EndIf
 		_Sleep(1000)
 	Next
 	ClickAway("Left")
-	If CheckMainScreen(True, $g_bStayOnBuilderBase, "ReturnHomeDropTrophyBB") Then Return True
+	If CheckMainScreen(True, True, "ReturnHomeDropTrophyBB") Then Return True
 EndFunc
