@@ -1545,22 +1545,21 @@ Func BuilderBase()
 		CleanBBYard()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		
-		DoAttackBB()
+		BBDropTrophy()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		
-		BBDropTrophy()
+		DoAttackBB()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		
 		AutoUpgradeBB()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		AndroidAdbScript("ZoomOut")
+		If checkObstacles() Then Return
 		
 		StarLaboratory()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
 		
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return

@@ -185,7 +185,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			ClickP($aiSwitchBtn)
 			; wait to appears the new small window
 			Local $iLastX = $aiSwitchBtn[0] - 30, $iLastY = $aiSwitchBtn[1]
-			If _Sleep(1250) Then Return
+			If _Sleep(1500) Then Return
 
 			; Lets detect the CC & Sieges and click - search window is - X, 530, X + 390, 530 + 30
 			Local $aSearchResult = GetListSiege($iX - 50, 480, $iX + 390, 540)
