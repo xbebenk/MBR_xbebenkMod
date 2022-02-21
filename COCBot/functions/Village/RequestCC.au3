@@ -101,38 +101,37 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 EndFunc   ;==>RequestCC
 
 Func _makerequest($aRequestButtonPos)
-	Local $sSendButtonArea = GetDiamondFromRect("220,370,630,540")
-
 	ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
-
-	If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
-		SetLog("Request has already been made, or request window not available", $COLOR_ERROR)
-		ClickAway()
-		If _Sleep($DELAYMAKEREQUEST2) Then Return
-	Else
+	Local $RequestWindowOpen = False
+	For $i = 1 To 5
+		SetDebugLog("Wait for Send Request Window #" & $i, $COLOR_ACTION)
+		If QuickMis("BC1", $g_sImgSendRequestButton, 440, 410, 600, 550) Then 
+			SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
+			$RequestWindowOpen = True
+			ExitLoop
+		EndIf
+		_Sleep(500)
+	Next
+	If $RequestWindowOpen Then 
 		If $g_sRequestTroopsText <> "" Then
 			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
 			; fix for Android send text bug sending symbols like ``"
 			AndroidSendText($g_sRequestTroopsText, True)
-			Click(Int($g_avWindowCoordinates[0]), Int($g_avWindowCoordinates[1] - 75), 1, 0, "#0254")
-			If _Sleep($DELAYMAKEREQUEST2) Then Return
+			Click($g_iQuickMISX - 50, $g_iQuickMISY - 100)
+			If _Sleep(500) Then Return
 			If SendText($g_sRequestTroopsText) = 0 Then
 				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
-				Return
+				ClickAway()
 			EndIf
 		EndIf
-		If _Sleep($DELAYMAKEREQUEST2) Then Return ; wait time for text request to complete
-
-		If Not IsWindowOpen($g_sImgSendRequestButton, 20, 100, $sSendButtonArea) Then
-			SetDebugLog("Send request button not found", $COLOR_DEBUG)
-			CheckMainScreen(False, $g_bStayOnBuilderBase, "RequestCC") ;emergency exit
-		EndIf
-
-		If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "") ; make sure Android has window focus
-		ClickP($g_avWindowCoordinates, 1, 100, "#0256")
+		If _Sleep(1000) Then Return ; wait time for text request to complete
+		Click($g_iQuickMISX, $g_iQuickMISY)
 		$g_bCanRequestCC = False
+	Else
+		SetDebugLog("Send request button not found", $COLOR_DEBUG)
 	EndIf
-
+	ClickAway()
+	If _Sleep($DELAYMAKEREQUEST2) Then Return
 EndFunc   ;==>_makerequest
 
 Func IsFullClanCastleType($CCType = 0) ; Troops = 0, Spells = 1, Siege Machine = 2
