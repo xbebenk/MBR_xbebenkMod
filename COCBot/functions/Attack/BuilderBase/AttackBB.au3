@@ -71,7 +71,7 @@ Func DoAttackBB()
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
 		ClickAway()
 	EndIf
-	ZoomOut()
+	AndroidAdbScript("ZoomOut")
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 

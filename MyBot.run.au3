@@ -1554,8 +1554,8 @@ Func BuilderBase()
 		
 		AutoUpgradeBB()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		CheckMainScreen(True, $g_bStayOnBuilderBase, "AutoUpgradeBB")
-
+		AndroidAdbScript("ZoomOut")
+		
 		StarLaboratory()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		
