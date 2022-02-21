@@ -285,5 +285,4 @@ Func ReturnHomeDropTrophyBB()
 		_Sleep(1000)
 	Next
 	ClickAway("Left")
-	If CheckMainScreen(True, True, "ReturnHomeDropTrophyBB") Then Return True
 EndFunc
