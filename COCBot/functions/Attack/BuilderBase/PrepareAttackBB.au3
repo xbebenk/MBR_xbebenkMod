@@ -290,6 +290,6 @@ Func ReturnHomeDropTrophyBB()
 	Next
 	ClickAway("Left")
 	_Sleep(2000)
-	AndroidAdbScript("ZoomOut")
+	ZoomOut()
 	Return True
 EndFunc
