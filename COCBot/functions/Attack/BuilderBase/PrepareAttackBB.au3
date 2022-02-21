@@ -191,7 +191,7 @@ Func BBDropTrophy()
 		If CheckLootAvail() Then 
 			SetLog("BB Loot Available, Skip BB Drop Trophy")
 			ClickAway()
-			Return
+			Return False
 		Else
 			CheckArmyReady()
 			SetLog("Going to attack for BB Drop Trophy", $COLOR_INFO)
@@ -211,7 +211,7 @@ Func BBDropTrophy()
 			
 			Local $count = 1
 			While Not WaitforPixel(88, 586, 89, 588, "5095D8", 10, 1) 
-				SetLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
+				SetDebugLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
 				If $count > 20 Then 
 					CloseCoC(True)
 					Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search
@@ -229,7 +229,7 @@ Func BBDropTrophy()
 			If IsArray($aBMPos) Then
 				SetLog("Deploying BM")
 				DeployBM($aBMPos, $iSide)
-				If ReturnHomeDropTrophyBB() Then Return 
+				If ReturnHomeDropTrophyBB() Then Return True
 			EndIf
 			
 			If Not $Return Then
@@ -243,10 +243,11 @@ Func BBDropTrophy()
 						If IsAttackPage() Then ExitLoop
 					Next
 				EndIf
-				If ReturnHomeDropTrophyBB() Then Return
+				If ReturnHomeDropTrophyBB() Then Return True
 			EndIf
 		EndIf
 	EndIf
+	Return False
 EndFunc
 
 Func ReturnHomeDropTrophyBB()
