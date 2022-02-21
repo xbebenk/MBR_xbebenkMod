@@ -1547,7 +1547,6 @@ Func BuilderBase()
 		
 		DoAttackBB()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		CheckMainScreen(True, $g_bStayOnBuilderBase, "DoAttackBB")
 		
 		BBDropTrophy()
 		If _Sleep($DELAYRUNBOT3) Then Return
