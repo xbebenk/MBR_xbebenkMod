@@ -236,7 +236,12 @@ Func BBDropTrophy()
 				; Get troops on attack bar and their quantities
 				local $aBBAttackBar = GetAttackBarBB()
 				If IsArray($aBBAttackBar) Then
-					DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], $aBBAttackBar[0][4], $iSide)
+					For $i = 1 To 10
+						SetDebugLog("Try Drop Troops #" & $i, $COLOR_ACTION)
+						DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], 1, $iSide)
+						_Sleep(1000)
+						If IsAttackPage() Then ExitLoop
+					Next
 				EndIf
 				If ReturnHomeDropTrophyBB() Then Return
 			EndIf

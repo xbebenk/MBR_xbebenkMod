@@ -16,10 +16,6 @@
 Func checkObstacles($bBuilderBase = False) ;Checks if something is in the way for mainscreen
 	If Not $bBuilderBase Then $bBuilderBase = $g_bStayOnBuilderBase
 	FuncEnter(checkObstacles)
-	If Not WinGetAndroidHandle() Then
-		SetLog("Android not available", $COLOR_ERROR)
-		Return
-	EndIf
 	Local $Result = _checkObstacles($bBuilderBase)
 	Return FuncReturn($Result)
 EndFunc   ;==>checkObstacles
@@ -31,7 +27,16 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
 	SetDebugLog("isOnBuilderBase() : " & String($bIsOnBuilderIsland), $COLOR_ERROR)
-	If Not $bBuilderBase And $bIsOnBuilderIsland And Not $g_bStayOnBuilderBase Then ;Not check for BB, Not in BB, and not stay on BB -> go to mainVillage
+	If Not $bBuilderBase And $bIsOnBuilderIsland And Not $g_bStayOnBuilderBase Then ;Check for MainVillage, but coc is on BB, and not stay on BB -> go to mainVillage
+		AndroidAdbScript("ZoomOut")
+		If SwitchBetweenBases() Then 
+			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			$g_bMinorObstacle = True
+			Return False
+		EndIf
+	EndIf
+	
+	If $bBuilderBase And Not $bIsOnBuilderIsland Then ;Check for BB, but Not in BB -> go to BB
 		AndroidAdbScript("ZoomOut")
 		If SwitchBetweenBases() Then 
 			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
