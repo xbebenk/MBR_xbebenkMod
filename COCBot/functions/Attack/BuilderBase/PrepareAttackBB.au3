@@ -230,7 +230,6 @@ Func BBDropTrophy()
 				SetLog("Deploying BM")
 				DeployBM($aBMPos, $iSide)
 				If ReturnHomeDropTrophyBB() Then Return 
-				$Return = True
 			EndIf
 			
 			If Not $Return Then
@@ -285,4 +284,6 @@ Func ReturnHomeDropTrophyBB()
 		_Sleep(1000)
 	Next
 	ClickAway("Left")
+	_Sleep(3000)
+	Return True
 EndFunc
