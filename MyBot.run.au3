@@ -1546,11 +1546,10 @@ Func BuilderBase()
 		CleanBBYard()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		
-		BBDropTrophy()
-		If _Sleep($DELAYRUNBOT3) Then Return
-		
-		DoAttackBB()
-		If _Sleep($DELAYRUNBOT3) Then Return
+		If Not BBDropTrophy() Then 		
+			DoAttackBB()
+			If _Sleep($DELAYRUNBOT3) Then Return
+		EndIf
 		
 		AutoUpgradeBB()
 		If _Sleep($DELAYRUNBOT3) Then Return
