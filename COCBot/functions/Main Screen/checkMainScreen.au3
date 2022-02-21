@@ -49,12 +49,13 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 
 	If $bBuilderBase Then $aPixelToCheck = $aIsOnBuilderBase
 	Local $bLocated = False
-	While Not $bLocated
+	While True
 		$i += 1
-		SetDebugLog("Checking Mainscreen, $aPixelToCheck:" & _ArrayToString($aPixelToCheck))
+		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))
 		$bLocated = _checkMainScreenImage($aPixelToCheck)
+		If $bLocated Then ExitLoop
+		;WinGetAndroidHandle() ;for what?
 		
-		WinGetAndroidHandle()
 		$bObstacleResult = checkObstacles($bBuilderBase)
 		SetDebugLog("CheckObstacles[" & $i & "] Result = " & $bObstacleResult, $COLOR_DEBUG)
 
@@ -89,7 +90,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 			SetLog("Main Screen not located", $COLOR_ERROR)
 		EndIf
 	EndIf
-	SetDebugLog("Located: " & String($bLocated) & ", CalledFrom: " & $CalledFrom, $COLOR_ERROR)
+	SetDebugLog("Located: " & String($bLocated) & ", CalledFrom: " & $CalledFrom, $COLOR_INFO)
 
 	;After checkscreen dispose windows
 	DisposeWindows()
