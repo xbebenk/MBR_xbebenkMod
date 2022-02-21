@@ -153,7 +153,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 	
-	If WaitforPixel(420, 600, 420,600, "000000", 0, 1) Then
+	If WaitforPixel(420, 600, 420,600, "000000", 20, 1) Then
 		If WaitforPixel(420, 563, 421,564, "6CBB1F", 20, 1) Then
 			SetDebugLog("checkObstacles: Found Return Home Button")
 			Click(420, 560)

@@ -50,7 +50,6 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 	If $bBuilderBase Then $aPixelToCheck = $aIsOnBuilderBase
 	Local $bLocated = False
 	While Not $bLocated
-	;While _CaptureRegions() And Not _checkMainScreenImage($bLocated, $aPixelToCheck)
 		$i += 1
 		SetDebugLog("Checking Mainscreen, $aPixelToCheck:" & _ArrayToString($aPixelToCheck))
 		$bLocated = _checkMainScreenImage($aPixelToCheck)
