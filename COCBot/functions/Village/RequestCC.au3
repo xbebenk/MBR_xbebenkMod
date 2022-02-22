@@ -110,7 +110,7 @@ Func _makerequest($aRequestButtonPos)
 			$RequestWindowOpen = True
 			ExitLoop
 		EndIf
-		_Sleep(500)
+		_Sleep(1000)
 	Next
 	If $RequestWindowOpen Then 
 		If $g_sRequestTroopsText <> "" Then
@@ -118,7 +118,7 @@ Func _makerequest($aRequestButtonPos)
 			; fix for Android send text bug sending symbols like ``"
 			AndroidSendText($g_sRequestTroopsText, True)
 			Click($g_iQuickMISX - 50, $g_iQuickMISY - 100)
-			If _Sleep(500) Then Return
+			If _Sleep(1000) Then Return
 			If SendText($g_sRequestTroopsText) = 0 Then
 				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
 				ClickAway()
@@ -130,6 +130,7 @@ Func _makerequest($aRequestButtonPos)
 	Else
 		SetDebugLog("Send request button not found", $COLOR_DEBUG)
 	EndIf
+	ClickAway()
 	ClickAway()
 	If _Sleep($DELAYMAKEREQUEST2) Then Return
 EndFunc   ;==>_makerequest
