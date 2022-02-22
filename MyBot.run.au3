@@ -687,6 +687,7 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
+	ZoomOut()
 	checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop")
 	If $g_bIsHidden Then 
 		HideAndroidWindow(True, Default, Default, "btnHide")
@@ -1223,7 +1224,6 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	SetLog("-- FirstCheck Loop --")
 	If _Sleep(50) Then Return
-	AndroidAdbScript("ZoomOut")
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
 	
