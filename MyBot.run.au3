@@ -1354,6 +1354,7 @@ Func FirstCheckRoutine()
 			_Sleep(1500)
 			CloseClangamesWindow()
 			For $count = 1 to 11
+				If Not $g_bRunState Then Return
 				If $count > 10 Then
 					SetLog("Something maybe wrong!", $COLOR_INFO)
 					If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
