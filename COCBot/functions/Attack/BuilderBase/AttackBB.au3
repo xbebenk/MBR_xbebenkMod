@@ -407,7 +407,9 @@ Func CheckBMLoop($aBMPos)
 			SetDebugLog("Waiting Battle Machine Ability", $COLOR_DEBUG2)
 			ContinueLoop
 		Else
-			SetDebugLog("Expected: 8C8C8C, Got: " & _getpixelcolor($TmpBMPosX, $BMPosY, True))
+			Local $color = _getpixelcolor($TmpBMPosX, $BMPosY, True)
+			SetDebugLog("Expected: 8C8C8C, Got: " & $color)
+			If $color = "000000" Then ExitLoop
 		EndIf
 		
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "240571", 10, 1) Then
@@ -415,7 +417,9 @@ Func CheckBMLoop($aBMPos)
 			SetLog("Activate Battle Machine Ability", $COLOR_SUCCESS)
 			_SleepStatus(5000)
 		Else
-			SetDebugLog("Expected: 240571, Got: " & _getpixelcolor($TmpBMPosX, $BMPosY, True))
+			Local $color = _getpixelcolor($TmpBMPosX, $BMPosY, True)
+			SetDebugLog("Expected: 240571, Got: " & $color)
+			If $color = "000000" Then ExitLoop
 		EndIf
 		
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "0E0E0E", 6, 1) Then
