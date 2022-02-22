@@ -138,16 +138,21 @@ Func _makerequest($x, $y)
 	If $RequestWindowOpen Then 
 		If $g_sRequestTroopsText <> "" Then
 			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-			;AndroidSendText($g_sRequestTroopsText, True) ;fix for Android send text bug sending symbols like ``"
-			Click($g_iQuickMISX - 50, $g_iQuickMISY - 100)
+			Click($g_iQuickMISX - 50, $g_iQuickMISY - 100);click text box 
 			If _Sleep(1000) Then Return
-			If SendText($g_sRequestTroopsText) = 0 Then
+			If SendText($g_sRequestTroopsText) = 0 Then ;type the request
 				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
 				ClickAway()
 			EndIf
 		EndIf
 		If _Sleep(2000) Then Return ; wait time for text request to complete
-		Click($g_iQuickMISX, $g_iQuickMISY)
+		If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600) Then ;lets check again the send button position with wider height
+			SetDebugLog("Make final request", $COLOR_ACTION)
+			Click($g_iQuickMISX, $g_iQuickMISY)
+		Else
+			SetLog("Send Button not Found!!!", $COLOR_ERROR)
+			ClickAway()
+		EndIf
 		$g_bCanRequestCC = False
 	Else
 		SetDebugLog("Send request button not found", $COLOR_DEBUG)
