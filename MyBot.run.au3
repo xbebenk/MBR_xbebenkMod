@@ -1445,6 +1445,7 @@ Func FirstCheckRoutine()
 					If Not $g_bRunState Then Return
 					If AttackMain(True) Then 
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
+						ZoomOut()
 						ExitLoop
 					Else
 						$loopcount += 1
@@ -1495,6 +1496,7 @@ Func FirstCheckRoutine()
 						If AttackMain(True) Then 
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 							$b_SuccessAttack = True
+							ZoomOut()
 							ExitLoop
 						Else
 							$loopcount += 1
