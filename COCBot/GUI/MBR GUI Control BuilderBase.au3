@@ -62,8 +62,10 @@ EndFunc   ;==>cmbBBSameTroopDelay
 Func chkBBDropTrophy()
 	If GUICtrlRead($g_hChkBBDropTrophy) = $GUI_CHECKED Then
 		$g_bChkBBDropTrophy = True
+		GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_ENABLE)
 	Else
 		$g_bChkBBDropTrophy = False
+		GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkBBDropTrophy
 
