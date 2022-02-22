@@ -22,7 +22,7 @@ Global $aCenterHomeVillageClickDrag = [640, 400] ; Scroll village using this loc
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
 Global $aIsMain[4] = [279, 9, 0x7ABDE0, 20] ; Main Screen, Builder Info Icon
 Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
-Global $aIsOnBuilderBase[4] = [838, 18, 0xffff46, 10] ; Check the Gold Coin from resources , is a square not round
+Global $aIsOnBuilderBase[4] = [838, 18, 0xffff46, 20] ; Check the Gold Coin from resources , is a square not round
 
 Global $aIsConnectLost[4] = [255, 271, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device
 Global $aIsCheckOOS[4] = [223, 272, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device

@@ -987,6 +987,7 @@ EndFunc   ;==>_Idle
 Func AttackMain($bFirstStart = False) ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	ClickAway()
+	ZoomOut()
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
 			If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCount - 2) Then checkSwitchAcc()
@@ -1545,30 +1546,29 @@ Func BuilderBase()
 		CleanBBYard()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		
-		DoAttackBB()
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
-
+		If Not BBDropTrophy() Then 		
+			If _Sleep($DELAYRUNBOT3) Then Return
+			DoAttackBB()
+			If _Sleep($DELAYRUNBOT3) Then Return
+		EndIf
+		
 		AutoUpgradeBB()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		If checkObstacles() Then Return
-
+		
 		StarLaboratory()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
 		
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
 		
+		$g_bStayOnBuilderBase = False
 		; switch back to normal village
 		SwitchBetweenBases()
-		$g_bStayOnBuilderBase = False
-
 	EndIf
-
 EndFunc
 
 Func TestBuilderBase()

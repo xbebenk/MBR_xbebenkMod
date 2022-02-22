@@ -106,16 +106,12 @@ Func SearchUpgrade($bTest = False)
 	If Not $g_bRunState Then Return
 	If AutoUpgradeCheckBuilder($bTest) Then 
 		AutoUpgradeSearchExisting($bTest) ;search upgrade for existing building
-	Else
-		Return
 	EndIf
 
 	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
 		If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing
 			AutoUpgradeSearchNewBuilding($bTest)
 		EndIf
-	Else
-		Return
 	EndIf
 	If Not $g_bRunState Then Return
 	ClickAway()

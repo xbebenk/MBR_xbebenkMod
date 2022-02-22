@@ -31,9 +31,9 @@ Func DoAttackBB()
 						ExitLoop 2
 					EndIf
 				Next
+			Else
+				_Sleep(2000)
 			EndIf
-			If _Sleep($DELAYRUNBOT3) Then Return
-			If checkObstacles(True) Then Return
 			$count += 1
 			If $count > 10 Then
 				SetLog("Something maybe wrong", $COLOR_INFO)
@@ -44,6 +44,7 @@ Func DoAttackBB()
 
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
 		ClickAway("Left")
+		_Sleep(1000)
 	Else
 		For $i = 1 To $g_iBBAttackCount
 			If Not $g_bRunState Then Return
@@ -60,9 +61,9 @@ Func DoAttackBB()
 							ExitLoop 2
 						EndIf
 					Next
+				Else
+					_Sleep(2000)
 				EndIf
-				If _Sleep($DELAYRUNBOT3) Then Return
-				If checkObstacles(True) Then Return
 			Else
 				ExitLoop
 			EndIf
@@ -104,14 +105,13 @@ Func _AttackBB()
 	local $timer = __TimerInit()
 	local $iPrevTime = 0
 
-	Static $aAttackerVersusBattle[2][3] = [[0xFFFF99, 0, 1], [0xFFFF99, 0, 2]]
-	While _MultiPixelSearch(711, 2, 856, 55 + $g_iMidOffsetYNew, 1, 1, Hex(0xFFFF99, 6), $aAttackerVersusBattle, 15) = 0
+	While Not WaitforPixel(88, 586, 89, 588, "5095D8", 10, 1) 
 		local $iTime = Int(__TimerDiff($timer)/ 60000)
 		If $iTime > $iPrevTime Then ; if we have increased by a minute
 			SetLog("Clouds: " & $iTime & "-Minute(s)")
 			If $iTime > 2 Then 
 				CloseCoC(True)
-				Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search, if more there must be something no right
+				Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search
 			EndIf
 			$iPrevTime = $iTime
 		EndIf
@@ -290,10 +290,9 @@ EndFunc
 Func Okay()
 	local $timer = __TimerInit()
 
-	While 1
-		local $aCoords = decodeSingleCoord(findImage("OkayButton", $g_sImgOkButton, GetDiamondFromRect("590,420,740,480"), 1, True))
-		If IsArray($aCoords) And UBound($aCoords) = 2 Then
-			PureClickP($aCoords)
+	While 1 
+		If QuickMIS("BC1", $g_sImgOkButton, 600, 425, 730, 470) Then 
+			Click($g_iQuickMISX, $g_iQuickMISY)
 			Return True
 		EndIf
 
@@ -358,8 +357,8 @@ Func DeployBM($aBMPos, $iSide = False)
 
 	If $g_bBBMachineReady And IsArray($aBMPos) Then
 		SetLog("Deploying Battle Machine.", $COLOR_BLUE)
+		Local $DP[0][3]
 		If Not $UseDefaultBBDP Then
-			Local $DP[0][3]
 			For $i = 0 To Ubound($g_BBDP) - 1
 				If $g_BBDP[$i][0] = $g_BBDPSide Then
 					_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2], Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
@@ -397,7 +396,7 @@ Func DeployBM($aBMPos, $iSide = False)
 EndFunc ; DeployBM
 
 Func CheckBMLoop($aBMPos)
-	Local $count = 0
+	Local $count = 0, $loopcount = 0
 	Local $TmpBMPosX = $aBMPos[0] - 17
 	Local $BMPosY = 578
 	
@@ -408,7 +407,9 @@ Func CheckBMLoop($aBMPos)
 			SetDebugLog("Waiting Battle Machine Ability", $COLOR_DEBUG2)
 			ContinueLoop
 		Else
-			SetDebugLog("Expected: 8C8C8C, Got: " & _getpixelcolor($TmpBMPosX, $BMPosY, True))
+			Local $color = _getpixelcolor($TmpBMPosX, $BMPosY, True)
+			SetDebugLog("Expected: 8C8C8C, Got: " & $color)
+			If $color = "000000" Then ExitLoop
 		EndIf
 		
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "240571", 10, 1) Then
@@ -416,7 +417,9 @@ Func CheckBMLoop($aBMPos)
 			SetLog("Activate Battle Machine Ability", $COLOR_SUCCESS)
 			_SleepStatus(5000)
 		Else
-			SetDebugLog("Expected: 240571, Got: " & _getpixelcolor($TmpBMPosX, $BMPosY, True))
+			Local $color = _getpixelcolor($TmpBMPosX, $BMPosY, True)
+			SetDebugLog("Expected: 240571, Got: " & $color)
+			If $color = "000000" Then ExitLoop
 		EndIf
 		
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "0E0E0E", 6, 1) Then
@@ -428,6 +431,8 @@ Func CheckBMLoop($aBMPos)
 		EndIf
 		If _Sleep(250) Then Return
 		SetDebugLog("Battle Machine LoopCheck", $COLOR_ACTION)
+		If $loopcount > 240 Then Return ;1 minute
+		$loopcount += 1
 	Wend
 EndFunc
 

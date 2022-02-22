@@ -111,7 +111,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 				While 1 ; dynamic wait for Okay button
 					SetDebugLog("Wait for OK button to appear #" & $j)
 					If IsOKCancelPage(True) Then
-						ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
+						Click(510, 400); Click Okay to Confirm surrender
 						If _Sleep(1000) Then Return
 						$OKCancel = True
 						ExitLoop
@@ -122,6 +122,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					If _Sleep(500) Then Return
 				WEnd
 				If Not $OKCancel Then
+					If _Sleep(1000) Then Return
 					If CheckMainScreen(False, $g_bStayOnBuilderBase, "ReturnHome") Then
 						SetLog("Success Return Home", $COLOR_INFO)
 						Return
@@ -208,25 +209,31 @@ EndFunc   ;==>ReturnHomeMainPage
 Func ReturnfromDropTrophies()
 	Local $aiSurrenderButton
 	SetDebugLog(" -- ReturnfromDropTrophies -- ")
-
-	If WaitforPixel(18, 548, 19, 549, "CD0D0D", 10, 1) Then
-		Click(65, 540, 1, 0, "#0099")
+	
+	For $i = 1 To 10 
+		SetDebugLog("Waiting Surrender button #" & $i, $COLOR_ACTION)
+		If IsAttackPage() Then
+			Click(65, 540) ;click surrender
+			_Sleep(1000)
+			ExitLoop
+		EndIf
+		_Sleep(1000)
+	Next
+	Local $OKCancel = False
+	For $i = 1 To 10
+		SetDebugLog("Wait for OK button to appear #" & $i)
+		If IsOKCancelPage(True) Then
+			Click(510, 400); Click Okay to Confirm surrender
+			If _Sleep(1000) Then Return
+			$OKCancel = True
+			ExitLoop
+		EndIf
 		If _Sleep(500) Then Return
-		Local $j = 0
-		While 1 ; dynamic wait for Okay button
-			SetDebugLog("Wait for OK button to appear #" & $j)
-			If IsOKCancelPage(True) Then
-				ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
-				If _Sleep(500) Then Return
-				ExitLoop
-			Else
-				$j += 1
-			EndIf
-			If $j > 4 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
-			If _Sleep(500) Then Return
-		WEnd
-	Else
+	Next
+	
+	If Not $OKCancel Then 
 		SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
+		Return
 	EndIf
 
 	For $i = 1 To 5

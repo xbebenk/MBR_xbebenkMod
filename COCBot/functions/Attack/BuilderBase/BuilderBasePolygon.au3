@@ -228,7 +228,7 @@ Func GetBuilderBaseSize($bWithClick = False, $bVersusMode = Default, $bDebugLog 
 	If $bVersusMode = False Then
 		If Not IsOnBuilderBase(False) Then
 			SetDebugLog("You not are in builder base!")
-			CheckObstacles(True)
+			;CheckObstacles(True)
 		EndIf
 	EndIf
 	

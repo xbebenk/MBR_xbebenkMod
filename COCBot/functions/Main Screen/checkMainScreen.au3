@@ -48,42 +48,20 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 	$iCheckBeforeRestartAndroidCount = 5
 
 	If $bBuilderBase Then $aPixelToCheck = $aIsOnBuilderBase
-	Local $bLocated
-	While _CaptureRegions() And Not _checkMainScreenImage($bLocated, $aPixelToCheck)
+	Local $bLocated = False
+	While True
 		$i += 1
-		If TestCapture() Then
-			SetLog("Main Screen not Located", $COLOR_ERROR)
-			ExitLoop
-		EndIf
-		If $g_bRestart And WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
-			For $i = 1 To 10
-				If WaitforPixel(330, 610, 331, 611, Hex(0x233048, 6), 6, 1) Then
-					SetLog("Waiting COC Loading Page #" & $i, $COLOR_ACTION)
-					If _Sleep(1000) Then Return
-				Else
-					ExitLoop
-				EndIf
-			Next
-		EndIf
+		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))
+		$bLocated = _checkMainScreenImage($aPixelToCheck)
+		If $bLocated Then ExitLoop
+		;WinGetAndroidHandle() ;for what?
 		
-		WinGetAndroidHandle()
 		$bObstacleResult = checkObstacles($bBuilderBase)
 		SetDebugLog("CheckObstacles[" & $i & "] Result = " & $bObstacleResult, $COLOR_DEBUG)
 
 		$bContinue = False
 		If Not $bObstacleResult Then
-			If $g_bMinorObstacle Then
-				$g_bMinorObstacle = False
-				$bContinue = False
-			Else
-				If $i > $iCheckBeforeRestartAndroidCount Then
-					SaveDebugImage("checkMainScreen_RestartCoC", False) ; why do we need to restart ?
-					SetLog("=========checkMainScreen_RestartCoC==========", $COLOR_INFO)
-					CloseCoC()
-					_RestartAndroidCoC(False, False, True, 0, 0, True)
-					$bContinue = True
-				EndIf
-			EndIf
+			If $g_bMinorObstacle Then $g_bMinorObstacle = False
 		Else
 			$g_bRestart = True
 			$bContinue = True
@@ -112,7 +90,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 			SetLog("Main Screen not located", $COLOR_ERROR)
 		EndIf
 	EndIf
-	SetDebugLog("Located: " & String($bLocated) & ", CalledFrom: " & $CalledFrom, $COLOR_ERROR)
+	SetDebugLog("Located: " & String($bLocated) & ", CalledFrom: " & $CalledFrom, $COLOR_INFO)
 
 	;After checkscreen dispose windows
 	DisposeWindows()
@@ -123,9 +101,10 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 	Return $bLocated
 EndFunc   ;==>_checkMainScreen
 
-Func _checkMainScreenImage(ByRef $bLocated, $aPixelToCheck, $bNeedCaptureRegion = True)
-	$bLocated = _CheckPixel($aPixelToCheck, $bNeedCaptureRegion) And Not checkObstacles_Network(False, False) And checkChatTabPixel()
-	Return $bLocated
+Func _checkMainScreenImage($aPixelToCheck)
+	Local $bRet
+	$bRet = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage") And checkChatTabPixel()
+	Return $bRet
 EndFunc
 
 Func checkChatTabPixel()
@@ -148,5 +127,6 @@ EndFunc   ;==>checkChatTabPixel
 Func isOnMainVillage($bNeedCaptureRegion = $g_bNoCapturePixel)
 	Local $aPixelToCheck = $aIsMain
 	Local $bLocated = False
-	Return _checkMainScreenImage($bLocated, $aPixelToCheck)
+	$bLocated = _checkMainScreenImage($aPixelToCheck)
+	Return $bLocated
 EndFunc

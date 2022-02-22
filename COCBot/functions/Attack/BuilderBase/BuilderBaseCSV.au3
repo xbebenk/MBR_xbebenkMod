@@ -426,12 +426,12 @@ Func BuilderBaseParseAttackCSV($aAvailableTroops, $DeployPoints, $DeployBestPoin
 			TriggerMachineAbility()
 			If _Sleep(50) Then Return
 
-			If _CheckPixel($aBlackArts, True) Then
-				If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615") Then
-					SetDebugLog("BattleIsOver | $bIsEnded.")
-					ExitLoop
-				EndIf
-			EndIf
+			;If _CheckPixel($aBlackArts, True) Then
+			;	If _WaitForCheckImg($g_sImgOkButton, "345, 540, 524, 615") Then
+			;		SetDebugLog("BattleIsOver | $bIsEnded.")
+			;		ExitLoop
+			;	EndIf
+			;EndIf
 
 		Next
 		

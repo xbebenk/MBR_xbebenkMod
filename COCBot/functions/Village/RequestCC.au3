@@ -42,11 +42,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 	If $bClickPAtEnd Then CheckCCArmy()
 
 	If Not $g_bRunState Then Return
-
-	Local $sSearchDiamond = GetDiamondFromRect("710,548,840,588")
-	Local Static $aRequestButtonPos[2] = [-1, -1]
-
-	Local $aRequestButton = findMultiple($g_sImgRequestCCButton, $sSearchDiamond, $sSearchDiamond, 0, 1000, 1, "objectname,objectpoints", True)
+	Local $aRequestButton = QuickMIS("CNX", $g_sImgRequestCCButton, 710, 548, 840, 588)
 	If Not IsArray($aRequestButton) Then
 		SetDebugLog("Error in RequestCC(): $aRequestButton is no Array")
 		If $g_bDebugImageSave Then SaveDebugImage("RequestButtonStateError")
@@ -54,16 +50,11 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 	EndIf
 
 	If Not $g_bRunState Then Return
-
-	If UBound($aRequestButton, 1) >= 1 Then
-		Local $sButtonState
-		Local $aRequestButtonSubResult = $aRequestButton[0]
-		$sButtonState = $aRequestButtonSubResult[0]
-		If $aRequestButtonPos[0] = -1 Then
-			$aRequestButtonPos = StringSplit($aRequestButtonSubResult[1], ",", $STR_NOCOUNT)
-		EndIf
-
-		If StringInStr($sButtonState, "Available", 0) > 0 Then
+	
+	Switch $aRequestButton[0][0]
+		Case "AlreadyMade"
+			SetLog("Clan Castle Request has already been made", $COLOR_INFO)
+		Case "Available"
 			Local $bNeedRequest = False
 			If Not $g_abRequestType[0] And Not $g_abRequestType[1] And Not $g_abRequestType[2] Then
 				SetDebugLog("Request for Specific CC is not enable")
@@ -78,21 +69,51 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 					EndIf
 				Next
 			EndIf
-
 			If $bNeedRequest Then
-				If Not $g_bRunState Then Return
-				Local $x = _makerequest($aRequestButtonPos)
+				_makerequest($aRequestButton[0][1], $aRequestButton[0][2])
 			EndIf
-		ElseIf StringInStr($sButtonState, "Already", 0) > 0 Then
-			SetLog("Clan Castle Request has already been made", $COLOR_INFO)
-		ElseIf StringInStr($sButtonState, "Full", 0) > 0 Then
+		Case "FullOrUnavail"
 			SetLog("Clan Castle is full or not available", $COLOR_INFO)
-		Else
-			SetDebugLog("Error in RequestCC(): Couldn't detect Request Button State", $COLOR_ERROR)
-		EndIf
-	Else
-		SetDebugLog("Error in RequestCC(): $aRequestButton did not return a Button State", $COLOR_ERROR)
-	EndIf
+	EndSwitch
+	
+	;If UBound($aRequestButton, 1) >= 1 Then
+	;	Local $sButtonState
+	;	Local $aRequestButtonSubResult = $aRequestButton[0]
+	;	$sButtonState = $aRequestButtonSubResult[0]
+	;	If $aRequestButtonPos[0] = -1 Then
+	;		$aRequestButtonPos = StringSplit($aRequestButtonSubResult[1], ",", $STR_NOCOUNT)
+	;	EndIf
+	;
+	;	If StringInStr($sButtonState, "Available", 0) > 0 Then
+	;		Local $bNeedRequest = False
+	;		If Not $g_abRequestType[0] And Not $g_abRequestType[1] And Not $g_abRequestType[2] Then
+	;			SetDebugLog("Request for Specific CC is not enable")
+	;			$bNeedRequest = True
+	;		ElseIf Not $bClickPAtEnd Then
+	;			$bNeedRequest = True
+	;		Else
+	;			For $i = 0 To 2
+	;				If Not IsFullClanCastleType($i) Then
+	;					$bNeedRequest = True
+	;					ExitLoop
+	;				EndIf
+	;			Next
+	;		EndIf
+	;
+	;		If $bNeedRequest Then
+	;			If Not $g_bRunState Then Return
+	;			Local $x = _makerequest($aRequestButtonPos)
+	;		EndIf
+	;	ElseIf StringInStr($sButtonState, "Already", 0) > 0 Then
+	;		SetLog("Clan Castle Request has already been made", $COLOR_INFO)
+	;	ElseIf StringInStr($sButtonState, "Full", 0) > 0 Then
+	;		SetLog("Clan Castle is full or not available", $COLOR_INFO)
+	;	Else
+	;		SetDebugLog("Error in RequestCC(): Couldn't detect Request Button State", $COLOR_ERROR)
+	;	EndIf
+	;Else
+	;	SetDebugLog("Error in RequestCC(): $aRequestButton did not return a Button State", $COLOR_ERROR)
+	;EndIf
 
 	;exit from army overview
 	If _Sleep($DELAYREQUESTCC1) Then Return
@@ -100,23 +121,24 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 
 EndFunc   ;==>RequestCC
 
-Func _makerequest($aRequestButtonPos)
-	ClickP($aRequestButtonPos, 1, 0, "0336") ;click button request troops
+Func _makerequest($x, $y)
+	
+	Click($x, $y, 1, 0, "0336") ;click button request troops	
 	Local $RequestWindowOpen = False
-	For $i = 1 To 5
+	For $i = 1 To 10
 		SetDebugLog("Wait for Send Request Window #" & $i, $COLOR_ACTION)
 		If QuickMis("BC1", $g_sImgSendRequestButton, 440, 410, 600, 550) Then 
-			SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
+			SetDebugLog("_makerequest: Request window open", $COLOR_ACTION)
 			$RequestWindowOpen = True
 			ExitLoop
 		EndIf
-		_Sleep(1000)
+		_Sleep(250)
 	Next
+	
 	If $RequestWindowOpen Then 
 		If $g_sRequestTroopsText <> "" Then
 			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-			; fix for Android send text bug sending symbols like ``"
-			AndroidSendText($g_sRequestTroopsText, True)
+			;AndroidSendText($g_sRequestTroopsText, True) ;fix for Android send text bug sending symbols like ``"
 			Click($g_iQuickMISX - 50, $g_iQuickMISY - 100)
 			If _Sleep(1000) Then Return
 			If SendText($g_sRequestTroopsText) = 0 Then
@@ -131,8 +153,7 @@ Func _makerequest($aRequestButtonPos)
 		SetDebugLog("Send request button not found", $COLOR_DEBUG)
 	EndIf
 	If _Sleep(1000) Then Return
-	ClickAway()
-	ClickAway()
+
 	If _Sleep($DELAYMAKEREQUEST2) Then Return
 EndFunc   ;==>_makerequest
 
