@@ -124,12 +124,13 @@ Func _makerequest($aRequestButtonPos)
 				ClickAway()
 			EndIf
 		EndIf
-		If _Sleep(1000) Then Return ; wait time for text request to complete
+		If _Sleep(2000) Then Return ; wait time for text request to complete
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		$g_bCanRequestCC = False
 	Else
 		SetDebugLog("Send request button not found", $COLOR_DEBUG)
 	EndIf
+	If _Sleep(1000) Then Return
 	ClickAway()
 	ClickAway()
 	If _Sleep($DELAYMAKEREQUEST2) Then Return
