@@ -778,7 +778,7 @@ Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName, $getCapture)
 	If Not $YourAccScore[$g_iCurAccount][1] Then
 		Local $Text = "", $color = $COLOR_SUCCESS
 		If $YourAccScore[$g_iCurAccount][0] <> $ScoreLimits[0] Then
-			$Text = "You on " & $ScoreLimits[0] - $YourAccScore[$g_iCurAccount][0] & "points in last Event"
+			$Text = "You got " & $ScoreLimits[0] - $YourAccScore[$g_iCurAccount][0] & "points on the last event."
 		Else
 			$Text = "You could not complete the last event!"
 			$color = $COLOR_WARNING
