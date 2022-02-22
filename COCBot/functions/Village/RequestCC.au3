@@ -153,6 +153,7 @@ Func _makerequest($x, $y)
 		SetDebugLog("Send request button not found", $COLOR_DEBUG)
 	EndIf
 	If _Sleep(1000) Then Return
+
 	If _Sleep($DELAYMAKEREQUEST2) Then Return
 EndFunc   ;==>_makerequest
 

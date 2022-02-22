@@ -97,7 +97,7 @@ Func CleanYard($bTest = False)
 		Return
 	EndIf
 	
-	If RemoveGembox() Then _SleepStatus(33000) ;Remove gembox first, and wait till gembox removed
+	If RemoveGembox() Then _SleepStatus(35000) ;Remove gembox first, and wait till gembox removed
 	
 	; Setup arrays, including default return values for $return
 	Local $Filename = ""

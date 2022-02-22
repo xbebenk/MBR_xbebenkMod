@@ -88,6 +88,7 @@ Func GetFreeMagic()
 		SetLog("But Storage on TownHall is Full", $COLOR_INFO)
 		ClickAway()
 		SaleFreeMagics()
+		_Sleep(1500)
 		OpenTraderWindow()
 		For $i = 0 To 2
 			Local $Read = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 200, 25, True)
