@@ -282,6 +282,7 @@ Func OkayBBEnd() ; Find if battle has ended and click okay
 			Return False
 		EndIf
 		If IsProblemAffect(True) Then Return
+		If Not $g_bRunState Then Return
 		If _Sleep(3000) Then Return
 	WEnd
 	Return True
@@ -302,6 +303,7 @@ Func Okay()
 			Return True
 		EndIf
 		If IsProblemAffect(True) Then Return
+		If Not $g_bRunState Then Return
 		If _Sleep(2000) Then Return
 	WEnd
 
@@ -402,6 +404,7 @@ Func CheckBMLoop($aBMPos)
 	
 	While IsAttackPage()
 		If IsProblemAffect(True) Then Return
+		If Not $g_bRunState Then Return
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "8C8C8C", 10, 1) Then
 			_Sleep(1000)
 			SetDebugLog("Waiting Battle Machine Ability", $COLOR_DEBUG2)

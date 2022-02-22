@@ -1331,6 +1331,24 @@ Func FirstCheck()
 		Laboratory()
 		VillageReport(True, True)
 	EndIf
+	
+	If $g_iFreeBuilderCount > 0 Then 
+		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
+		If Not $g_bRunState Then Return
+		_RunFunction('CleanYard')
+		_Sleep(8000) ;add wait after clean yard
+		If Not $g_bRunState Then Return
+		If $g_bUpgradeWallEarly Then
+			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
+			UpgradeWall()
+		EndIf
+		If Not $g_bRunState Then Return
+		If $g_bAutoUpgradeEarly Then
+			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
+			AutoUpgrade()
+		EndIf
+		VillageReport()
+	EndIf
 
 	If BotCommand() Then btnStop()
 	
@@ -1353,6 +1371,7 @@ Func FirstCheckRoutine()
 		If isClanGamesWindow() Then ; check if clangames is running or not
 			_Sleep(1500)
 			CloseClangamesWindow()
+			If Not $g_bRunState Then Return
 			For $count = 1 to 11
 				If $count > 10 Then
 					SetLog("Something maybe wrong!", $COLOR_INFO)
@@ -1385,10 +1404,12 @@ Func FirstCheckRoutine()
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 			SetLog("Check ClanGames Early", $COLOR_INFO)
 			_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
+			If Not $g_bRunState Then Return
 			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 				GotoBBTodoCG()
 			EndIf
+			If Not $g_bRunState Then Return
 			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
 				SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 				PrepareDonateCC()
@@ -1400,23 +1421,6 @@ Func FirstCheckRoutine()
 		EndIf
 	EndIf
 	
-	If $g_iFreeBuilderCount > 0 Then 
-		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
-		If Not $g_bRunState Then Return
-		_RunFunction('CleanYard')
-		_Sleep(8000) ;add wait after clean yard
-		If Not $g_bRunState Then Return
-		If $g_bUpgradeWallEarly Then
-			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
-			UpgradeWall()
-		EndIf
-		If Not $g_bRunState Then Return
-		If $g_bAutoUpgradeEarly Then
-			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
-			AutoUpgrade()
-		EndIf
-	EndIf
-
 	If Not $g_bRunState Then Return
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
