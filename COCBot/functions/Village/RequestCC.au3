@@ -146,13 +146,17 @@ Func _makerequest($x, $y)
 			EndIf
 		EndIf
 		If _Sleep(2000) Then Return ; wait time for text request to complete
-		If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600) Then ;lets check again the send button position with wider height
-			SetDebugLog("Make final request", $COLOR_ACTION)
-			Click($g_iQuickMISX, $g_iQuickMISY)
-		Else
-			SetLog("Send Button not Found!!!", $COLOR_ERROR)
-			ClickAway()
-		EndIf
+		For $i = 1 To 3
+			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
+			If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600) Then ;lets check again the send button position with wider height
+				SetDebugLog("Make final request", $COLOR_ACTION)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+			Else
+				SetDebugLog("Send Button Is gone!!!", $COLOR_SUCCESS)
+				ExitLoop
+			EndIf
+			_Sleep(1000)
+		Next
 		$g_bCanRequestCC = False
 	Else
 		SetDebugLog("Send request button not found", $COLOR_DEBUG)
