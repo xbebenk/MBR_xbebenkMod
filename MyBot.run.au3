@@ -687,8 +687,9 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
-	ZoomOut()
 	checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop")
+	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then ZoomOut()
 	If $g_bIsHidden Then 
 		HideAndroidWindow(True, Default, Default, "btnHide")
 		updateBtnHideState()
@@ -988,7 +989,9 @@ EndFunc   ;==>_Idle
 Func AttackMain($bFirstStart = False) ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	ClickAway()
-	ZoomOut()
+	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then ZoomOut()
+	
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
 			If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCount - 2) Then checkSwitchAcc()
@@ -1445,7 +1448,8 @@ Func FirstCheckRoutine()
 					If Not $g_bRunState Then Return
 					If AttackMain(True) Then 
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
-						ZoomOut()
+						Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+						If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then ZoomOut()
 						ExitLoop
 					Else
 						$loopcount += 1
@@ -1496,7 +1500,8 @@ Func FirstCheckRoutine()
 						If AttackMain(True) Then 
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 							$b_SuccessAttack = True
-							ZoomOut()
+							Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+							If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then ZoomOut()
 							ExitLoop
 						Else
 							$loopcount += 1

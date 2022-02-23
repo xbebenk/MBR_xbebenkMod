@@ -71,7 +71,8 @@ Func DoAttackBB()
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
 		ClickAway()
 	EndIf
-	ZoomOut()
+	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then ZoomOut()
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 
