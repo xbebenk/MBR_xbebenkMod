@@ -547,6 +547,7 @@ Func ReadConfig_600_6()
 	; Builder Base Attack
 	IniReadS($g_bChkEnableBBAttack, $g_sProfileConfigPath, "other", "ChkEnableBBAttack", False, "Bool")
 	IniReadS($g_bChkBBDropTrophy, $g_sProfileConfigPath, "other", "ChkBBDropTrophy", True, "Bool")
+	IniReadS($g_iTxtBBTrophyLowerLimit, $g_sProfileConfigPath, "other", "BBTrophyLowerLimit", 4000, "int")
 	IniReadS($g_bChkBBAttIfLootAvail, $g_sProfileConfigPath, "other", "ChkBBAttIfLootAvail", False, "Bool")
 	IniReadS($g_bChkBBWaitForMachine, $g_sProfileConfigPath, "other", "ChkBBWaitForMachine", False, "Bool")
 	IniReadS($g_bChkBBDropBMFirst, $g_sProfileConfigPath, "other", "ChkBBDropBMFirst", False, "Bool")
