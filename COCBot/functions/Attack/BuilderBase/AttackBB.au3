@@ -72,7 +72,9 @@ Func DoAttackBB()
 		ClickAway()
 	EndIf
 	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then ZoomOut()
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+		If checkMainScreen(False, $g_bStayOnBuilderBase, "DoAttackBB") Then ZoomOut() 
+	EndIf
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 

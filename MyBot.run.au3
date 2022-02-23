@@ -687,9 +687,12 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
-	checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop")
+	
 	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then ZoomOut()
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+		If checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop") Then ZoomOut() 
+	EndIf
+	
 	If $g_bIsHidden Then 
 		HideAndroidWindow(True, Default, Default, "btnHide")
 		updateBtnHideState()
@@ -990,7 +993,9 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	ClickAway()
 	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then ZoomOut()
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+		If checkMainScreen(False, $g_bStayOnBuilderBase, "AttackMain") Then ZoomOut() 
+	EndIf
 	
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
@@ -1449,7 +1454,9 @@ Func FirstCheckRoutine()
 					If AttackMain(True) Then 
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
 						Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-						If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then ZoomOut()
+						If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
+						EndIf
 						ExitLoop
 					Else
 						$loopcount += 1
@@ -1501,7 +1508,9 @@ Func FirstCheckRoutine()
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 							$b_SuccessAttack = True
 							Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-							If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then ZoomOut()
+							If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+								If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
+							EndIf
 							ExitLoop
 						Else
 							$loopcount += 1
