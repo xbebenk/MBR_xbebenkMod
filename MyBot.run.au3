@@ -1379,8 +1379,8 @@ Func FirstCheckRoutine()
 		If isClanGamesWindow() Then ; check if clangames is running or not
 			_Sleep(1500)
 			CloseClangamesWindow()
-			If Not $g_bRunState Then Return
 			For $count = 1 to 11
+				If Not $g_bRunState Then Return
 				If $count > 10 Then
 					SetLog("Something maybe wrong!", $COLOR_INFO)
 					If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
@@ -1396,7 +1396,7 @@ Func FirstCheckRoutine()
 				Else
 					; Exit loop if want to purge near max point
 					If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop
-					If $g_bForceSwitchifNoCGEvent Then 
+					If $g_bForceSwitchifNoCGEvent Then
 						SetLog("No event on ClanGames, trying to switch account", $COLOR_SUCCESS)
 						If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
 						SetLog("Account switch is off, returning to main loop", $COLOR_INFO)
