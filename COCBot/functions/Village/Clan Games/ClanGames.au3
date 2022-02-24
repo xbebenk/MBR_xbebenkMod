@@ -84,7 +84,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 				CloseClangamesWindow()
 				Return
 			ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
-				SetLog("You are almost reached max point")
+				SetLog("You almost reached max point")
 				$g_bIsCGPointAlmostMax = True
 				If $g_bChkClanGamesStopBeforeReachAndPurge Then
 					If IsEventRunning() Then Return
@@ -747,7 +747,7 @@ Func IsEventRunning($bOpenWindow = False)
 			If QuickMIS("BC1", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 300, 130, 380, 210, True, False) Then
 				SetLog("Active Challenge is Enabled on Setting, OK!!", $COLOR_DEBUG)
 				;check if Challenge is BB Challenge, enabling force BB attack
-				If $g_bChkForceBBAttackOnClanGames Then
+				If $g_bChkForceBBAttackOnClanGames or $g_bChkCGBBAttackOnly Then
 					Click(340,180) ; click first slot
 					If _Sleep(1000) Then Return
 					SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
@@ -757,6 +757,11 @@ Func IsEventRunning($bOpenWindow = False)
 						$g_bIsCGEventRunning = True
 					Else
 						Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
+						If $g_bChkCGBBAttackOnly Then ;Purge main village event because we using BBCGOnly Mode
+							Setlog("We are running only BB events. Event started by mistake?", $COLOR_ERROR)
+							Click(340,180) ;unclick so ForcePurgeEvent can work
+							ForcePurgeEvent(False, False)
+						EndIf
 						$g_bIsBBevent = False
 					EndIf
 				EndIf
