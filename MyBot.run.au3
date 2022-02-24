@@ -1195,11 +1195,13 @@ Func __RunFunction($action)
 			UpgradeBuilding()
 			If _Sleep($DELAYRUNBOT3) Then Return
 			AutoUpgrade()
+			AndroidAdbScript("ZoomOut")
 			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeWall"
 			$g_iNbrOfWallsUpped = 0
 			ClickAway()
 			UpgradeWall()
+			AndroidAdbScript("ZoomOut")
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
@@ -1356,6 +1358,7 @@ Func FirstCheck()
 			AutoUpgrade()
 		EndIf
 		VillageReport()
+		AndroidAdbScript("ZoomOut")
 	EndIf
 
 	If BotCommand() Then btnStop()
