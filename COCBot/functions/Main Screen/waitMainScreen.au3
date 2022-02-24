@@ -34,24 +34,23 @@ Func waitMainScreen() ;Waits for main screen to popup
 			EndIf
 			getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
 		EndIf
-		_CaptureRegion()
+		_CaptureRegions() ;force capture screen
 		If checkChatTabPixel() Then 
 			SetDebugLog("Screen cleared, WaitMainScreen exit", $COLOR_SUCCESS)
 			Return
-		Else
-			If Not TestCapture() And _Sleep(2000) Then Return
-			If checkObstacles() Then $i = 0 ;See if there is anything in the way of mainscreen
 		EndIf
+		If Not checkObstacles() And $i > 5 Then ExitLoop ;something wrong with coc screen exit this loop and try to restart coc
 	Next
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	SetLog("Wait MainScreen Timout", $COLOR_ERROR)
 	SetLog("=========RESTART COC==========", $COLOR_INFO)
-	CloseCoC()
-	_RestartAndroidCoC(False, False, True, 0, 0, True)
-	_SleepStatus(10000)
+	CloseCoC() ;only close coc
+	_RestartAndroidCoC(False, False, True, 0, 0, True) ;start coc, not updating shared_prefs
+	_SleepStatus(10000) ;give time for coc loading
 	For $i = 1 To 20
 		SetDebugLog("Waiting for mainscreen #" & $i, $COLOR_ACTION)
-		If checkChatTabPixel() Then Return
+		If checkChatTabPixel() Then ExitLoop ;finally we have clear main screen
 		_Sleep(2000)
 	Next
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

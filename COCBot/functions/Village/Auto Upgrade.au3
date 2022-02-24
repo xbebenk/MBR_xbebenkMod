@@ -94,8 +94,11 @@ Func SearchUpgrade($bTest = False)
 		If $g_bNewBuildingFirst Then
 			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
 			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
-				ZoomOut() ;no builder, exit
-				Return
+				Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+				If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+					If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeCheckBuilder") Then ZoomOut() 
+				EndIf
+				Return ;no builder, exit
 			EndIf
 			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
 		EndIf
@@ -115,7 +118,10 @@ Func SearchUpgrade($bTest = False)
 	EndIf
 	If Not $g_bRunState Then Return
 	ClickAway()
-	ZoomOut()
+	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+		If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeCheckBuilder") Then ZoomOut() 
+	EndIf
 	Return False
 EndFunc
 

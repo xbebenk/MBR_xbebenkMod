@@ -54,7 +54,6 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))
 		$bLocated = _checkMainScreenImage($aPixelToCheck)
 		If $bLocated Then ExitLoop
-		;WinGetAndroidHandle() ;for what?
 		
 		$bObstacleResult = checkObstacles($bBuilderBase)
 		SetDebugLog("CheckObstacles[" & $i & "] Result = " & $bObstacleResult, $COLOR_DEBUG)
@@ -62,6 +61,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 		$bContinue = False
 		If Not $bObstacleResult Then
 			If $g_bMinorObstacle Then $g_bMinorObstacle = False
+			If $i > 5 Then $bContinue = True
 		Else
 			$g_bRestart = True
 			$bContinue = True
@@ -112,10 +112,10 @@ Func checkChatTabPixel()
 	If _CheckPixel($aChatTab, True) Then
 		SetDebugLog("checkChatTabPixel: Found Chat Tab to close")
 		PureClickP($aChatTab, 1, 0, "#0136") ;Click Close chat tab
-		If _Sleep(1500) Then Return
+		If _Sleep(2000) Then Return
 	EndIf
 	
-	If WaitforPixel(18, 376, 20, 378, "C55115", 10, 1) Then 
+	If WaitforPixel(18, 376, 20, 378, "C55115", 20, 1) Then 
 		SetDebugLog("checkChatTabPixel: Found ChatTabPixel", $COLOR_SUCCESS)
 		Return True
 	Else

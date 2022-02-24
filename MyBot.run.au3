@@ -687,7 +687,12 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
-	checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop")
+	
+	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+		If checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop") Then ZoomOut() 
+	EndIf
+	
 	If $g_bIsHidden Then 
 		HideAndroidWindow(True, Default, Default, "btnHide")
 		updateBtnHideState()
@@ -987,7 +992,11 @@ EndFunc   ;==>_Idle
 Func AttackMain($bFirstStart = False) ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	ClickAway()
-	ZoomOut()
+	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+		If checkMainScreen(False, $g_bStayOnBuilderBase, "AttackMain") Then ZoomOut() 
+	EndIf
+	
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
 			If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCount - 2) Then checkSwitchAcc()
@@ -1223,7 +1232,6 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	SetLog("-- FirstCheck Loop --")
 	If _Sleep(50) Then Return
-	AndroidAdbScript("ZoomOut")
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
 	
@@ -1331,6 +1339,24 @@ Func FirstCheck()
 		Laboratory()
 		VillageReport(True, True)
 	EndIf
+	
+	If $g_iFreeBuilderCount > 0 Then 
+		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
+		If Not $g_bRunState Then Return
+		_RunFunction('CleanYard')
+		_Sleep(8000) ;add wait after clean yard
+		If Not $g_bRunState Then Return
+		If $g_bUpgradeWallEarly Then
+			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
+			UpgradeWall()
+		EndIf
+		If Not $g_bRunState Then Return
+		If $g_bAutoUpgradeEarly Then
+			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
+			AutoUpgrade()
+		EndIf
+		VillageReport()
+	EndIf
 
 	If BotCommand() Then btnStop()
 	
@@ -1370,7 +1396,7 @@ Func FirstCheckRoutine()
 				Else
 					; Exit loop if want to purge near max point
 					If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop
-					If $g_bForceSwitchifNoCGEvent Then 
+					If $g_bForceSwitchifNoCGEvent Then
 						SetLog("No event on ClanGames, trying to switch account", $COLOR_SUCCESS)
 						If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
 						SetLog("Account switch is off, returning to main loop", $COLOR_INFO)
@@ -1386,10 +1412,12 @@ Func FirstCheckRoutine()
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 			SetLog("Check ClanGames Early", $COLOR_INFO)
 			_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
+			If Not $g_bRunState Then Return
 			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 				GotoBBTodoCG()
 			EndIf
+			If Not $g_bRunState Then Return
 			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
 				SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 				PrepareDonateCC()
@@ -1401,23 +1429,6 @@ Func FirstCheckRoutine()
 		EndIf
 	EndIf
 	
-	If $g_iFreeBuilderCount > 0 Then 
-		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
-		If Not $g_bRunState Then Return
-		_RunFunction('CleanYard')
-		_Sleep(8000) ;add wait after clean yard
-		If Not $g_bRunState Then Return
-		If $g_bUpgradeWallEarly Then
-			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
-			UpgradeWall()
-		EndIf
-		If Not $g_bRunState Then Return
-		If $g_bAutoUpgradeEarly Then
-			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
-			AutoUpgrade()
-		EndIf
-	EndIf
-
 	If Not $g_bRunState Then Return
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
@@ -1442,6 +1453,10 @@ Func FirstCheckRoutine()
 					If Not $g_bRunState Then Return
 					If AttackMain(True) Then 
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
+						Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+						If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
+						EndIf
 						ExitLoop
 					Else
 						$loopcount += 1
@@ -1492,6 +1507,10 @@ Func FirstCheckRoutine()
 						If AttackMain(True) Then 
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 							$b_SuccessAttack = True
+							Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+							If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+								If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
+							EndIf
 							ExitLoop
 						Else
 							$loopcount += 1

@@ -266,14 +266,22 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		SetDebugLog("checkObstacles: Found Post Defense Summary to close")
 		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
 		$g_bMinorObstacle = True
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
 	If IsFullScreenWindow() Then
 		Click(825,45)
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		$g_bMinorObstacle = True
 		Return False
 	EndIf	
+	If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then 
+		SetDebugLog("checkObstacles: Found RequestCC Window, Click Send")
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		$g_bMinorObstacle = True
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
 	ClickAway()
 	Return False
 EndFunc   ;==>_checkObstacles

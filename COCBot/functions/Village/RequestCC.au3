@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func RequestCC($bClickPAtEnd = True, $sText = "")
+Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
 
 	If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then
 		Return
@@ -70,50 +70,12 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 				Next
 			EndIf
 			If $bNeedRequest Then
-				_makerequest($aRequestButton[0][1], $aRequestButton[0][2])
+				_makerequest($aRequestButton[0][1], $aRequestButton[0][2], $bTest)
 			EndIf
 		Case "FullOrUnavail"
 			SetLog("Clan Castle is full or not available", $COLOR_INFO)
 	EndSwitch
 	
-	;If UBound($aRequestButton, 1) >= 1 Then
-	;	Local $sButtonState
-	;	Local $aRequestButtonSubResult = $aRequestButton[0]
-	;	$sButtonState = $aRequestButtonSubResult[0]
-	;	If $aRequestButtonPos[0] = -1 Then
-	;		$aRequestButtonPos = StringSplit($aRequestButtonSubResult[1], ",", $STR_NOCOUNT)
-	;	EndIf
-	;
-	;	If StringInStr($sButtonState, "Available", 0) > 0 Then
-	;		Local $bNeedRequest = False
-	;		If Not $g_abRequestType[0] And Not $g_abRequestType[1] And Not $g_abRequestType[2] Then
-	;			SetDebugLog("Request for Specific CC is not enable")
-	;			$bNeedRequest = True
-	;		ElseIf Not $bClickPAtEnd Then
-	;			$bNeedRequest = True
-	;		Else
-	;			For $i = 0 To 2
-	;				If Not IsFullClanCastleType($i) Then
-	;					$bNeedRequest = True
-	;					ExitLoop
-	;				EndIf
-	;			Next
-	;		EndIf
-	;
-	;		If $bNeedRequest Then
-	;			If Not $g_bRunState Then Return
-	;			Local $x = _makerequest($aRequestButtonPos)
-	;		EndIf
-	;	ElseIf StringInStr($sButtonState, "Already", 0) > 0 Then
-	;		SetLog("Clan Castle Request has already been made", $COLOR_INFO)
-	;	ElseIf StringInStr($sButtonState, "Full", 0) > 0 Then
-	;		SetLog("Clan Castle is full or not available", $COLOR_INFO)
-	;	Else
-	;		SetDebugLog("Error in RequestCC(): Couldn't detect Request Button State", $COLOR_ERROR)
-	;	EndIf
-	;Else
-	;	SetDebugLog("Error in RequestCC(): $aRequestButton did not return a Button State", $COLOR_ERROR)
-	;EndIf
 
 	;exit from army overview
 	If _Sleep($DELAYREQUESTCC1) Then Return
@@ -121,7 +83,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "")
 
 EndFunc   ;==>RequestCC
 
-Func _makerequest($x, $y)
+Func _makerequest($x, $y, $bTest)
 	
 	Click($x, $y, 1, 0, "0336") ;click button request troops	
 	Local $RequestWindowOpen = False
@@ -138,16 +100,30 @@ Func _makerequest($x, $y)
 	If $RequestWindowOpen Then 
 		If $g_sRequestTroopsText <> "" Then
 			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-			;AndroidSendText($g_sRequestTroopsText, True) ;fix for Android send text bug sending symbols like ``"
-			Click($g_iQuickMISX - 50, $g_iQuickMISY - 100)
+			Click($g_iQuickMISX - 50, $g_iQuickMISY - 60) ;click text box 
 			If _Sleep(1000) Then Return
-			If SendText($g_sRequestTroopsText) = 0 Then
+			If SendText($g_sRequestTroopsText) = 0 Then ;type the request
 				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
 				ClickAway()
 			EndIf
 		EndIf
-		If _Sleep(2000) Then Return ; wait time for text request to complete
-		Click($g_iQuickMISX, $g_iQuickMISY)
+		Click($g_iQuickMISX + 95, $g_iQuickMISY)
+		If _Sleep(1000) Then Return ; wait time for text request to complete
+		For $i = 1 To 3
+			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
+			If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
+				SetDebugLog("Make final request", $COLOR_ACTION)
+				If Not $bTest Then 
+					Click($g_iQuickMISX, $g_iQuickMISY)
+				Else
+					SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+				EndIf
+			Else
+				SetDebugLog("Send Button Is gone!!!", $COLOR_SUCCESS)
+				ExitLoop
+			EndIf
+			_Sleep(1000)
+		Next
 		$g_bCanRequestCC = False
 	Else
 		SetDebugLog("Send request button not found", $COLOR_DEBUG)

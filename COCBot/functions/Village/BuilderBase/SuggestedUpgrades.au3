@@ -268,7 +268,10 @@ Func AutoUpgradeBB($bTest = False)
 		EndIf
 	EndIf
 	$BuildingUpgraded = False
-	Zoomout()
+	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+		If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeBB") Then ZoomOut() 
+	EndIf
 	ClickAway("Left")
 EndFunc   ;==>MainSuggestedUpgradeCode
 
@@ -537,7 +540,10 @@ Func SearchNewBuilding($bTest = False)
 		If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
 	Next
 	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
-	ZoomOut()
+	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+		If checkMainScreen(False, $g_bStayOnBuilderBase, "FindNewBuilding") Then ZoomOut() 
+	EndIf
 	Return True
 EndFunc
 
@@ -660,11 +666,14 @@ Func SearchGreenZoneBB()
 EndFunc
 
 Func GoAttackBBAndReturn()
-	ZoomOut()
+	ClickAway("Left")
 	SetLog("Going attack, to clear field", $COLOR_DEBUG)
 	Click(60,600) ;click attack button
 	_AttackBB()
-	ZoomOut()
+	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+		If checkMainScreen(False, $g_bStayOnBuilderBase, "GoAttackBBAndReturn") Then ZoomOut() 
+	EndIf
 	SetLog("Field should be clear now", $COLOR_DEBUG)
 EndFunc
 

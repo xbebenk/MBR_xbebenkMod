@@ -878,7 +878,7 @@ Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $
 ; Builder Base Attack
 Global $g_hChkEnableBBAttack = 0, $g_hChkBBDropTrophy = 0, $g_hChkBBAttIfLootAvail = 0, $g_hChkBBWaitForMachine = 0, $g_hChkBBDropBMFirst = 0
 Global $g_bChkEnableBBAttack = False, $g_bChkBBDropTrophy = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False, $g_bChkBBDropBMFirst = False
-Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
+Global $g_hTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyLowerLimit = 0
 Global $g_bBBMachineReady = False
 Global $g_aBBMachine = [0,0] ; x,y coordinates of where to click for Battle machine on attack bar
 Global $g_iBBMachAbilityTime = 14000 ; in milliseconds, so 14 seconds between abilities

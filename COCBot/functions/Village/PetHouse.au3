@@ -64,6 +64,7 @@ Func PetHouse($test = False)
 				PureClickP($g_aiPetHousePos)
 			Else
 				SetLog("Cannot Find PetHouse, please locate manually")
+				Return
 			EndIf
 		EndIf
 	EndIf
