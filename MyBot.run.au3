@@ -1358,7 +1358,7 @@ Func FirstCheck()
 			AutoUpgrade()
 		EndIf
 		VillageReport()
-		AndroidAdbScript("ZoomOut")
+		ZoomOut()
 	EndIf
 
 	If BotCommand() Then btnStop()

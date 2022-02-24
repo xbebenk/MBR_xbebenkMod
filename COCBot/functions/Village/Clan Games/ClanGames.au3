@@ -453,7 +453,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 
 		; Drop to top again , because coordinates Xaxis and Yaxis
 		ClickP($TabChallengesPosition, 2, 0, "#Tab")
-		If _sleep(250) Then Return
+		If _sleep(1000) Then Return
 		ClickDrag(807, 210, 807, 385, 500)
 		If _Sleep(500) Then Return
 	EndIf
@@ -827,7 +827,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 				Else
 					SetDebugLog("waiting for trash #" & $i)
 				EndIf
-				_Sleep(500)
+				_Sleep(1000)
 			Next
 
 			For $i = 1 To 5
@@ -842,7 +842,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 				Else
 					SetDebugLog("waiting for OK #" & $i)
 				EndIf
-				_Sleep(500)
+				_Sleep(1000)
 			Next
 			Return False
 		EndIf
@@ -908,6 +908,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 				If $bTest Then Return
 				Click(500, 400)
 				If _Sleep(1500) Then Return
+				CloseClangamesWindow()
 				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - ForcePurgeEvent: Purge a Wrong Challenge ", 1)
 				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - ForcePurgeEvent: Purge a Wrong Challenge ")
 				If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True

@@ -78,7 +78,7 @@ Func BoostSuperTroop($bTest = False)
 									$BoostDuration = getHeroUpgradeTime(575, 484) ; get duration
 									If Not $BoostCost = "" Then
 										Click($g_iQuickMISX, $g_iQuickMISY)
-										If _Sleep(1000) Then Return
+										If _Sleep(1500) Then Return
 										If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 400, 550, 490, True, False) Then ;find image of dark elixir button again (confirm upgrade)
 											Setlog("Using Dark Elixir, Boosting " & $sTroopName, $COLOR_SUCCESS)
 											Setlog("BoostCost = " & $BoostCost & " Dark Elixir, Duration = " & $BoostDuration, $COLOR_SUCCESS)
@@ -104,7 +104,7 @@ Func BoostSuperTroop($bTest = False)
 											Setlog("Let's try boosting " & $sTroopName & " with potion", $COLOR_INFO)
 											If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 400, 500, 580, 570, True, False) Then ;find image of Super Potion
 												Click($g_iQuickMISX, $g_iQuickMISY)
-												If _Sleep(1000) Then Return
+												If _Sleep(1500) Then Return
 												If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 330, 400, 520, 480, True, False) Then ;find image of Super Potion again (confirm upgrade)
 													;do click boost
 													If $bTest Then
