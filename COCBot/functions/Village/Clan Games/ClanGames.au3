@@ -758,10 +758,6 @@ Func IsEventRunning($bOpenWindow = False)
 					Else
 						Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
 						$g_bIsBBevent = False
-						If $g_bChkCGBBAttackOnly Then
-							SetLog("Force purging since we are only doing BB Challenges!", $COLOR_ERROR)
-							ForcePurgeEvent(False, False)
-						EndIf
 					EndIf
 				EndIf
 			Else
