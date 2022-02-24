@@ -504,9 +504,9 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			For $i = 0 To UBound($g_abCGMainLootItem) - 1
 				If $g_abCGMainLootItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "LootChallenges: " & $CGMainLoot[$i][1], $COLOR_DEBUG)
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainLoot[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainLoot[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainLoot[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainLoot[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "B"
@@ -514,9 +514,9 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			For $i = 0 To UBound($g_abCGMainBattleItem) - 1
 				If $g_abCGMainBattleItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BattleChallenges: " & $CGMainBattle[$i][1], $COLOR_DEBUG)
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainBattle[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainBattle[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainBattle[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainBattle[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "D"
@@ -524,9 +524,9 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			For $i = 0 To UBound($g_abCGMainDestructionItem) - 1
 				If $g_abCGMainDestructionItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "DestructionChallenges: " & $CGMainDestruction[$i][1], $COLOR_DEBUG)
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainDestruction[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainDestruction[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainDestruction[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainDestruction[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "A"
@@ -534,9 +534,9 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			For $i = 0 To UBound($g_abCGMainAirItem) - 1
 				If $g_abCGMainAirItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "AirTroopChallenges: " & $CGMainAir[$i][1], $COLOR_DEBUG)
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainAir[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainAir[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainAir[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainAir[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "G"
@@ -544,9 +544,9 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			For $i = 0 To UBound($g_abCGMainGroundItem) - 1
 				If $g_abCGMainGroundItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "GroundTroopChallenges: " & $CGMainGround[$i][1], $COLOR_DEBUG)
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainGround[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainGround[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainGround[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainGround[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "M"
@@ -554,9 +554,9 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			For $i = 0 To UBound($g_abCGMainMiscItem) - 1
 				If $g_abCGMainMiscItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "MiscChallenges: " & $CGMainMisc[$i][1], $COLOR_DEBUG)
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainMisc[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainMisc[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainMisc[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainMisc[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "S"
@@ -564,9 +564,9 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			For $i = 0 To UBound($g_abCGMainSpellItem) - 1
 				If $g_abCGMainSpellItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "SpellChallenges: " & $CGMainSpell[$i][1], $COLOR_DEBUG)
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainSpell[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainSpell[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainSpell[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainSpell[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "BBB"
@@ -574,9 +574,9 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			For $i = 0 To UBound($g_abCGBBBattleItem) - 1
 				If $g_abCGBBBattleItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBBattleChallenges: " & $CGBBBattle[$i][1], $COLOR_DEBUG)
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBBattle[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBBattle[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBBattle[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBBattle[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "BBD"
@@ -584,9 +584,9 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			For $i = 0 To UBound($g_abCGBBDestructionItem) - 1
 				If $g_abCGBBDestructionItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBDestructionChallenges: " & $CGBBDestruction[$i][1], $COLOR_DEBUG)
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBDestruction[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBDestruction[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBDestruction[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBDestruction[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case "BBT"
@@ -594,14 +594,14 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 			For $i = 0 To UBound($g_abCGBBTroopsItem) - 1
 				If $g_abCGBBTroopsItem[$i] > 0 Then
 					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBTroopsChallenges: " & $CGBBTroops[$i][1], $COLOR_DEBUG)
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBTroops[$i][0] & "_*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBTroops[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBTroops[$i][0] & "_*.xml", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
+					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBTroops[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
 		Case Else
-			If $g_bChkClanGamesDebug Then SetLog("Rest Challenges: " & $sImageType & "-" & "*.xml", $COLOR_DEBUG)
-			FileCopy($sImagePath & "\" & $sImageType & "-" & "*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
+			If $g_bChkClanGamesDebug Then SetLog("Rest Challenges: " & $sImageType & "-" & "*", $COLOR_DEBUG)
+			FileCopy($sImagePath & "\" & $sImageType & "-" & "*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 	EndSwitch
 EndFunc ;==>ClanGameImageCopy
 
