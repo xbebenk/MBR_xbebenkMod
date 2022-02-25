@@ -1427,7 +1427,7 @@ Func FirstCheckRoutine()
 				PrepareDonateCC()
 				DonateCC()
 				TrainSystem()
-				CommonRoutine("NoClanGamesEvent")
+				;CommonRoutine("NoClanGamesEvent")
 				checkSwitchAcc() ;switch to next account
 			EndIf
 		EndIf
