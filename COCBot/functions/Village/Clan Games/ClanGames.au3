@@ -52,17 +52,17 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 		;Remove All previous file (in case setting changed)
 		DirRemove($sTempPath, $DIR_REMOVE)
 
-		ClanGameImageCopy($sImagePath, $sTempPath, "L") ;L for Loot
-		ClanGameImageCopy($sImagePath, $sTempPath, "B") ;B for Battle
-		ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
-		ClanGameImageCopy($sImagePath, $sTempPath, "A") ;A for AirTroops
-		ClanGameImageCopy($sImagePath, $sTempPath, "G") ;G for GroundTroops
-		ClanGameImageCopy($sImagePath, $sTempPath, "M") ;M for Misc
-		ClanGameImageCopy($sImagePath, $sTempPath, "S") ;S for GroundTroops
-		
-		ClanGameImageCopy($sImagePath, $sTempPath, "BBB") ;BBB for BB Battle
-		ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
-		ClanGameImageCopy($sImagePath, $sTempPath, "BBT") ;BBT for BB Troops
+		If $g_bChkClanGamesLoot Then ClanGameImageCopy($sImagePath, $sTempPath, "L") ;L for Loot
+		If $g_bChkClanGamesBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "B") ;B for Battle
+		If $g_bChkClanGamesDes Then ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
+		If $g_bChkClanGamesAirTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "A") ;A for AirTroops
+		If $g_bChkClanGamesGroundTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "G") ;G for GroundTroops
+
+		If $g_bChkClanGamesMiscellaneous Then ClanGameImageCopy($sImagePath, $sTempPath, "M") ;M for Misc
+		If $g_bChkClanGamesSpell Then ClanGameImageCopy($sImagePath, $sTempPath, "S") ;S for GroundTroops
+		If $g_bChkClanGamesBBBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "BBB") ;BBB for BB Battle
+		If $g_bChkClanGamesBBDes Then ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
+		If $g_bChkClanGamesBBTroops Then ClanGameImageCopy($sImagePath, $sTempPath, "BBT") ;BBT for BB Troops
 
 		;now we need to copy selected challenge before checking current running event is not wrong event selected
 
@@ -615,9 +615,6 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBTroops[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
-		Case Else
-			If $g_bChkClanGamesDebug Then SetLog("Rest Challenges: " & $sImageType & "-" & "*", $COLOR_DEBUG)
-			FileCopy($sImagePath & "\" & $sImageType & "-" & "*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 	EndSwitch
 EndFunc ;==>ClanGameImageCopy
 
