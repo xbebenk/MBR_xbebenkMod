@@ -1402,6 +1402,7 @@ Func FirstCheckRoutine()
 					If $g_bForceSwitchifNoCGEvent Then
 						SetLog("No event on ClanGames, trying to switch account", $COLOR_SUCCESS)
 						If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
+						If Not $g_bRunState Then Return
 						SetLog("Account switch is off, returning to main loop", $COLOR_INFO)
 						ExitLoop
 					EndIf
