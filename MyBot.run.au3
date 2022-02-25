@@ -1457,10 +1457,7 @@ Func FirstCheckRoutine()
 					If Not $g_bRunState Then Return
 					If AttackMain(True) Then 
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
-						Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-						If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
-						EndIf
+						If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
 						ExitLoop
 					Else
 						$loopcount += 1
@@ -1511,10 +1508,7 @@ Func FirstCheckRoutine()
 						If AttackMain(True) Then 
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 							$b_SuccessAttack = True
-							Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-							If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-								If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
-							EndIf
+							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
 							ExitLoop
 						Else
 							$loopcount += 1
