@@ -134,12 +134,18 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True) ;check most bottom upgrade cost
 		Local $ExistingBuilding = FindExistingBuilding()
 		If IsArray($ExistingBuilding) And UBound($ExistingBuilding) > 0 Then
-			If $g_bChkRushTH Then _ArraySort($ExistingBuilding, 1, 0, 0, 4)
+			;If $g_bChkRushTH Then _ArraySort($ExistingBuilding, 1, 0, 0, 4)
 			For $i = 0 To UBound($ExistingBuilding) - 1
 				SetLog("Coord [" & $ExistingBuilding[$i][1] & "," & $ExistingBuilding[$i][2] & "], Cost: " & $ExistingBuilding[$i][3] & " UpgradeType: " & $ExistingBuilding[$i][0], $COLOR_INFO)
 			Next
+			
+			If $g_bChkRushTH Then 
+				Local $iIndexRushTH = _ArraySearch($ExistingBuilding, "RushTH", 0, 0, 0, 0, 1, 4)
+				If Not $iIndexRushTH Then ContinueLoop
+			EndIf
+			
 			For $i = 0 To UBound($ExistingBuilding) - 1
-				If $ExistingBuilding[$i][3] = 0 Then ContinueLoop
+				If $ExistingBuilding[$i][3] = "0" Then ContinueLoop
 				Click($ExistingBuilding[$i][1], $ExistingBuilding[$i][2])
 				If _Sleep(1000) Then Return
 				If DoUpgrade($bTest) Then
