@@ -29,8 +29,8 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)
 
-	CloseClangamesWindow()
-	CheckMainScreen(False, $g_bStayOnBuilderBase, "ClanGames")
+	If CloseClangamesWindow() Then _Sleep(1000)
+	If CheckMainScreen(False, $g_bStayOnBuilderBase, "ClanGames") Then ZoomOut()
 	If _Sleep(500) Then Return
 	SetLog("Entering Clan Games", $COLOR_INFO)
 	If Not $g_bRunState Then Return
@@ -134,6 +134,9 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 			If _Sleep(1500) Then Return
 			StartsEvent($EventName[2], True, $getCapture, $g_bChkClanGamesDebug, True)
 		EndIf
+		If _Sleep(1500) Then Return
+		CloseClangamesWindow()
+		Return
 	EndIf
 
 	Local $HowManyImages = _FileListToArray($sTempPath, "*", $FLTA_FILES)
@@ -1106,7 +1109,9 @@ EndFunc   ;==>ClanGames
 Func CloseClangamesWindow()
 	If IsFullScreenWindow() Then
 		Click(820, 40) ;close window
+		Return True
 	EndIf
+	Return False
 EndFunc
 
 #Tidy_Off
