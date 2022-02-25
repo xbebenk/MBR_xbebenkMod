@@ -225,6 +225,7 @@ Func CheckSwitchAcc()
 					TrainSystem()
 				EndIf
 			EndIf
+			_ClanGames(False, $g_bChkForceBBAttackOnClanGames, True)
 			If Not IsMainPage() Then CheckMainScreen(True, False, "CheckSwitchAcc")
 			SwitchCOCAcc($g_iNextAccount)
 		Else

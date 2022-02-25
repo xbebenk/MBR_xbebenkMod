@@ -12,7 +12,7 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
-Func _ClanGames($test = False, $bSearchBBEventFirst = False)
+Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 	$g_bIsBBevent = False ;just to be sure, reset to false
 	$g_bIsCGEventRunning = False ;just to be sure, reset to false
 	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false
@@ -70,6 +70,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 		If Not _ColorCheck(_GetPixelColor(300, 236, True), Hex(0x52DF50, 6), 5) Then ;no greenbar = there is active event or completed event
 			_Sleep(3000) ; just wait few second, as completed event will need sometime to animate on score
 		EndIf
+		
 		Local $aiScoreLimit = GetTimesAndScores()
 		If $aiScoreLimit = -1 Or UBound($aiScoreLimit) <> 2 Then
 			CloseClangamesWindow() ;need clickaway, as we are leaving
@@ -97,7 +98,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 						Local $aEvent = FindEventToPurge($sTempPath)
 						If IsArray($aEvent) And UBound($aEvent) > 0 Then
 							Local $EventName = StringSplit($aEvent[0][0], "-")
-							If $g_bChkClanGamesDebug Then SetLog("Detected Event to Purge: " & $EventName[2])
+							SetLog("Detected Event to Purge: " & $EventName[2])
 							Click($aEvent[0][1], $aEvent[0][2])
 							If _Sleep(1500) Then Return
 							StartsEvent($EventName[2], True)
@@ -122,6 +123,18 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False)
 	If IsEventRunning() Then Return
 	If Not $g_bRunState Then Return ;trap pause or stop bot
 	UpdateStats()
+	
+	If $OnlyPurge Then
+		SetLog("OnlyPurge before switch Account", $COLOR_INFO)
+		Local $aEvent = FindEventToPurge($sTempPath)
+		If IsArray($aEvent) And UBound($aEvent) > 0 Then
+			Local $EventName = StringSplit($aEvent[0][0], "-")
+			SetLog("Detected Event to Purge: " & $EventName[2])
+			Click($aEvent[0][1], $aEvent[0][2])
+			If _Sleep(1500) Then Return
+			StartsEvent($EventName[2], True)
+		EndIf
+	EndIf
 
 	Local $HowManyImages = _FileListToArray($sTempPath, "*", $FLTA_FILES)
 	If IsArray($HowManyImages) Then
@@ -808,15 +821,15 @@ Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName, $getCapture)
 	Return True
 EndFunc   ;==>ClickOnEvent
 
-Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkClanGamesDebug = False)
+Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkClanGamesDebug = False, $OnlyPurge = False)
 	If Not $g_bRunState Then Return
 
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, $getCapture, False) Then
 		Local $Timer = GetEventTimeInMinutes($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Starting Event" & " [" & $Timer & " min]", $COLOR_SUCCESS)
 		Click($g_iQuickMISX, $g_iQuickMISY)
-		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min", 1)
-		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting " & $sEventName & " for " & $Timer & " min")
+		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting : " & $sEventName & " for " & $Timer & " min", 1)
+		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting : " & $sEventName & " for " & $Timer & " min")
 
 		If $g_bPurgeJob Then
 			For $i = 1 To 5
@@ -835,8 +848,8 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 					SetLog("Click OK", $COLOR_INFO)
 					Click(500, 400)
 					SetLog("StartsEvent and Purge job!", $COLOR_SUCCESS)
-					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging Event" & $sEventName & ", NearMaxPoint", 1)
-					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging Event " & $sEventName & ", NearMaxPoint")
+					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NearMaxPoint"))
+					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NearMaxPoint"))
 					CloseClangamesWindow()
 					Return True
 				Else
