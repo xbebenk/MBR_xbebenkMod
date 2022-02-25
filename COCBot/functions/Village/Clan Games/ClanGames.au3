@@ -132,7 +132,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 			SetLog("Detected Event to Purge: " & $EventName[2])
 			Click($aEvent[0][1], $aEvent[0][2])
 			If _Sleep(1500) Then Return
-			StartsEvent($EventName[2], True)
+			StartsEvent($EventName[2], True, $getCapture, $g_bChkClanGamesDebug, True)
 		EndIf
 	EndIf
 
@@ -848,7 +848,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 					SetLog("Click OK", $COLOR_INFO)
 					Click(500, 400)
 					SetLog("StartsEvent and Purge job!", $COLOR_SUCCESS)
-					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NearMaxPoint"))
+					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NearMaxPoint"), 1)
 					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NearMaxPoint"))
 					CloseClangamesWindow()
 					Return True
