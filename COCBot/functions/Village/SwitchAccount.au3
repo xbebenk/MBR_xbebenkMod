@@ -99,9 +99,6 @@ Func CheckSwitchAcc()
 	; Force switch if no clangames event active
 	If $g_bForceSwitchifNoCGEvent Then $bForceSwitch = True
 	
-	;  Force switch if clangames almost maxed out or maxed out and option is enabled to purge
-	If ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkClanGamesStopBeforeReachAndPurge Then $bForceSwitch = True
-
 	; Force Switch when PBT detected
 	If $g_abPBActive[$g_iCurAccount] Then $bForceSwitch = True
 
@@ -218,18 +215,22 @@ Func CheckSwitchAcc()
 					SetLog("Try RequestCC before switching account", $COLOR_DEBUG)
 					RequestCC()
 				EndIf
+				If $g_bForceSwitchifNoCGEvent Then
+					PrepareDonateCC()
+					DonateCC()
+					TrainSystem()
+				EndIf
 			Else
 				If $g_bRequestTroopsEnable Then
 					SetLog("Try RequestCC, Donate And Train before switching account", $COLOR_DEBUG)
 					RequestCC(False)
-					checkArmyCamp(False, True)
 					PrepareDonateCC()
 					DonateCC()
 					TrainSystem()
 				EndIf
 			EndIf
-			_ClanGames(False, $g_bChkForceBBAttackOnClanGames, True)
-			If Not IsMainPage() Then CheckMainScreen(True, False, "CheckSwitchAcc")
+			If Not $g_bForceSwitchifNoCGEvent Then _ClanGames(False, $g_bChkForceBBAttackOnClanGames, True)
+			CheckMainScreen(True, $g_bStayOnBuilderBase, "CheckSwitchAcc")
 			SwitchCOCAcc($g_iNextAccount)
 		Else
 			SetLog("Staying in this account")

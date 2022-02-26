@@ -113,7 +113,7 @@ Func UpgradeWall($bTest = False)
 			Wend
 		Next
 	EndIf
-	CheckMainScreen(False, False, "UpgradeWall")
+	CheckMainScreen(False, $g_bStayOnBuilderBase, "UpgradeWall")
 EndFunc   ;==>UpgradeWall
 
 Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = $g_aUpgradeWall[0]+4)

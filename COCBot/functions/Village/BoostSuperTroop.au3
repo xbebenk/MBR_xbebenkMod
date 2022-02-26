@@ -23,7 +23,7 @@ Func BoostSuperTroop($bTest = False)
 			Return False
 		EndIf
 	EndIf
-	CheckMainScreen(False, False, "BoostSuperTroop")
+	CheckMainScreen(False, $g_bStayOnBuilderBase, "BoostSuperTroop")
 	VillageReport(True, True) ;update village resource
 	If OpenBarrel() Then
 		For $i = 0 To 1
