@@ -1427,7 +1427,6 @@ Func FirstCheckRoutine()
 				PrepareDonateCC()
 				DonateCC()
 				TrainSystem()
-				;CommonRoutine("NoClanGamesEvent")
 				checkSwitchAcc() ;switch to next account
 			EndIf
 		EndIf
@@ -1474,6 +1473,13 @@ Func FirstCheckRoutine()
 					SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
 					GotoBBTodoCG() ;force go to bb todo event 
 				EndIf 
+				If ProfileSwitchAccountEnabled() And $g_bIsCGPointAlmostMax And $g_bChkClanGamesStopBeforeReachAndPurge Then ; forced switch after first attack if cg point is almost max
+					SetLog("ClanGames point almost max, Forced switch account!", $COLOR_SUCCESS)
+					PrepareDonateCC()
+					DonateCC()
+					TrainSystem()
+					checkSwitchAcc() ;switch to next account
+				EndIf
 				If $g_bOutOfGold Then
 					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
 					$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
