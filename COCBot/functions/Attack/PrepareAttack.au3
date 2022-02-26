@@ -190,15 +190,20 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			; Lets detect the CC & Sieges and click - search window is - X, 530, X + 390, 530 + 30
 			Local $aSearchResult = GetListSiege($iX - 50, 480, $iX + 390, 540)
 			If IsArray($aSearchResult) And Ubound($aSearchResult) > 0 Then
-				Local $FinalCoordX, $FinalCoordY, $iFinalLevel = 0, $HigherLevelFound = False
+				Local $FinalCoordX, $FinalCoordY, $iFinalLevel = 1, $HigherLevelFound = False
 				If $ToUse = $eCastle Then
+					SetDebugLog("ToUse : Castle")
 					Local $TmpIndex = 0
 					$TmpIndex = _ArraySearch($aSearchResult, $eCastle, 0, 0, 0, 0, 1, 5)
 					If $aSearchResult[$TmpIndex][5] = $eCastle Then
 						$iTroopIndex = $eCastle ;set ByRef
-						Click($aSearchResult[$i][1], $aSearchResult[$i][2])
+						SetDebugLog("Castle found on : [" & $aSearchResult[$TmpIndex][1] & "," & $aSearchResult[$TmpIndex][2] & "]")
+						Click($aSearchResult[$TmpIndex][1], $aSearchResult[$TmpIndex][2])
 						If _Sleep(750) Then Return
 						Return
+					Else
+						SetLog("No " & GetTroopName($ToUse) & " found")
+						Click($iLastX, $iLastY, 1)
 					EndIf
 				EndIf 
 				
@@ -217,12 +222,13 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 									$SiegeName = $aSearchResult[$i][0]
 									$FinalCoordX = $aSearchResult[$i][1]
 									$FinalCoordY = $aSearchResult[$i][2]
-									$iTroopIndex = $iSiegeIndex ;set ByRef
 								EndIf
 							EndIf
 						Next
 						SetDebugLog("Selected SiegeName:" & $SiegeName & " Level:" & $iFinalLevel & " Coord:[" & $FinalCoordX & "," & $FinalCoordY & "]")
 						Click($FinalCoordX, $FinalCoordY)
+						$iTroopIndex = $iSiegeIndex ;set ByRef
+						$g_iSiegeLevel = $iFinalLevel
 						Return
 					Else
 						Local $TmpIndex = _ArraySearch($aSearchResult, $ToUse, 0, 0, 0, 0, 1, 5)
