@@ -1474,7 +1474,7 @@ Func FirstCheckRoutine()
 					SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
 					GotoBBTodoCG() ;force go to bb todo event 
 				EndIf 
-				If ProfileSwitchAccountEnabled() And $g_bIsCGPointAlmostMax And $g_bChkClanGamesStopBeforeReachAndPurge Then ; forced switch after first attack if cg point is almost max
+				If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkClanGamesStopBeforeReachAndPurge Then ; forced switch after first attack if cg point is almost max
 					SetLog("ClanGames point almost max, Forced switch account!", $COLOR_SUCCESS)
 					PrepareDonateCC()
 					DonateCC()

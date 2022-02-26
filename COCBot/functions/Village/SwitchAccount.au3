@@ -98,6 +98,9 @@ Func CheckSwitchAcc()
 	SetLog("Start Switch Account!", $COLOR_INFO)
 	; Force switch if no clangames event active
 	If $g_bForceSwitchifNoCGEvent Then $bForceSwitch = True
+	
+	;  Force switch if clangames almost maxed out and option is enabled to purge
+	If $g_bIsCGPointAlmostMax And $g_bChkClanGamesStopBeforeReachAndPurge Then $bForceSwitch = True
 
 	; Force Switch when PBT detected
 	If $g_abPBActive[$g_iCurAccount] Then $bForceSwitch = True
