@@ -1466,6 +1466,7 @@ Func FirstCheckRoutine()
 						Else
 							Setlog("[" & $loopcount & "] 1st Attack Loop, Failed", $COLOR_INFO)
 						EndIf
+						If Not $g_bRunState Then Return
 					EndIf
 				Wend
 				If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then 
@@ -1524,6 +1525,7 @@ Func FirstCheckRoutine()
 							Else
 								Setlog("[" & $loopcount & "] 2nd Attack Loop, Failed", $COLOR_INFO)
 							EndIf
+							If Not $g_bRunState Then Return
 						EndIf
 					Wend
 					If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then 
