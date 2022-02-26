@@ -79,7 +79,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
 			If _Sleep(500) Then Return
 			Local $sTimeCG
-			;$aiScoreLimit[0] = 3900
+			$aiScoreLimit[0] = 3200
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 				SetLog("Your score limit is reached! Congrats")
 				$g_bIsCGPointMaxed = True
@@ -149,73 +149,78 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 
 	; To store the detections
 	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis
-	Local $aAllDetectionsOnScreen[0][4]
-
-	Local $sClanGamesWindow = GetDiamondFromRect("300,155,765,550")
-	Local $aCurrentDetection = findMultiple($sTempPath, $sClanGamesWindow, $sClanGamesWindow, 0, 1000, 0, "objectname,objectpoints", True)
-	Local $aEachDetection
-
-	If $g_bChkClanGamesDebug Then Setlog("_ClanGames findMultiple (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
-	$hTimer = TimerInit()
-
-	; Let's split Names and Coordinates and populate a new array
-	If UBound($aCurrentDetection) > 0 Then
-
-		; Temp Variables
-		Local $FullImageName, $StringCoordinates, $sString, $tempObbj, $tempObbjs, $aNames
-		Local $BBCheck[2] = ["BBD-WallDes", "BBD-BuildingDes"]
-
-		For $i = 0 To UBound($aCurrentDetection) - 1
-			If _Sleep(50) Then Return ; just in case of PAUSE
-			If Not $g_bRunState Then Return ; Stop Button
-
-			$aEachDetection = $aCurrentDetection[$i]
-			; Justto debug
-			SetDebugLog(_ArrayToString($aEachDetection))
-
-			$FullImageName = String($aEachDetection[0])
-			$StringCoordinates = $aEachDetection[1]
-
-			If $FullImageName = "" Or $StringCoordinates = "" Then ContinueLoop
-
-			; Exist more than One coordinate!?
-			If StringInStr($StringCoordinates, "|") Then
-				; Code to test the string if exist anomalies on string
-				$StringCoordinates = StringReplace($StringCoordinates, "||", "|")
-				$sString = StringRight($StringCoordinates, 1)
-				If $sString = "|" Then $StringCoordinates = StringTrimRight($StringCoordinates, 1)
-				; Split the coordinates
-				$tempObbjs = StringSplit($StringCoordinates, "|", $STR_NOCOUNT)
-				; Just get the first [0]
-				$tempObbj = StringSplit($tempObbjs[0], ",", $STR_NOCOUNT) ;  will be a string : 708,360
-				If UBound($tempObbj) <> 2 Then ContinueLoop
-			Else
-				$tempObbj = StringSplit($StringCoordinates, ",", $STR_NOCOUNT) ;  will be a string : 708,360
-				If UBound($tempObbj) <> 2 Then ContinueLoop
-			EndIf
-
-			For $x = 0 To UBound($BBCheck) - 1
-				If $FullImageName = $BBCheck[$x] Then
-					If $g_bChkClanGamesDebug Then SetLog("Detection for " & $FullImageName & " :", $COLOR_INFO)
-					If Not IsBBChallenge($tempObbj[0],$tempObbj[1]) Then
-						If $g_bChkClanGamesDebug Then SetLog("False Detection, Skip this Challenge", $COLOR_ERROR)
-						ContinueLoop 2
-					Else
-						If $g_bChkClanGamesDebug Then SetLog("OK, Continue", $COLOR_SUCCESS)
-					Endif
-				EndIf
-			Next
-
-			$aNames = StringSplit($FullImageName, "-", $STR_NOCOUNT)
-			SetDebugLog("filename: " & $FullImageName & " $aNames[0] = " & $aNames[0] & " $aNames[1]= " & $aNames[1], $COLOR_ORANGE)
-			ReDim $aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) + 1][4]
-			$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][0] = $aNames[0] ; Challenge Name
-			$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][1] = $aNames[1] ; Event Name
-			$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][2] = $tempObbj[0] ; Xaxis
-			$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][3] = $tempObbj[1] ; Yaxis
-		Next
-	EndIf
-
+	;Local $aAllDetectionsOnScreen[0][4]
+	;Local $hStarttime = _Timer_Init()
+	;Local $sClanGamesWindow = GetDiamondFromRect("300,155,765,550")
+	;Local $aCurrentDetection = findMultiple($sTempPath, $sClanGamesWindow, $sClanGamesWindow, 0, 1000, 0, "objectname,objectpoints", True)
+	;Local $aEachDetection
+	;
+	;If $g_bChkClanGamesDebug Then Setlog("_ClanGames findMultiple (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+	;$hTimer = TimerInit()
+	;
+	;; Let's split Names and Coordinates and populate a new array
+	;If UBound($aCurrentDetection) > 0 Then
+	;
+	;	; Temp Variables
+	;	Local $FullImageName, $StringCoordinates, $sString, $tempObbj, $tempObbjs, $aNames
+	;	Local $BBCheck[2] = ["BBD-WallDes", "BBD-BuildingDes"]
+	;
+	;	For $i = 0 To UBound($aCurrentDetection) - 1
+	;		If _Sleep(50) Then Return ; just in case of PAUSE
+	;		If Not $g_bRunState Then Return ; Stop Button
+	;
+	;		$aEachDetection = $aCurrentDetection[$i]
+	;		; Justto debug
+	;		SetDebugLog(_ArrayToString($aEachDetection))
+	;
+	;		$FullImageName = String($aEachDetection[0])
+	;		$StringCoordinates = $aEachDetection[1]
+	;
+	;		If $FullImageName = "" Or $StringCoordinates = "" Then ContinueLoop
+	;
+	;		; Exist more than One coordinate!?
+	;		If StringInStr($StringCoordinates, "|") Then
+	;			; Code to test the string if exist anomalies on string
+	;			$StringCoordinates = StringReplace($StringCoordinates, "||", "|")
+	;			$sString = StringRight($StringCoordinates, 1)
+	;			If $sString = "|" Then $StringCoordinates = StringTrimRight($StringCoordinates, 1)
+	;			; Split the coordinates
+	;			$tempObbjs = StringSplit($StringCoordinates, "|", $STR_NOCOUNT)
+	;			; Just get the first [0]
+	;			$tempObbj = StringSplit($tempObbjs[0], ",", $STR_NOCOUNT) ;  will be a string : 708,360
+	;			If UBound($tempObbj) <> 2 Then ContinueLoop
+	;		Else
+	;			$tempObbj = StringSplit($StringCoordinates, ",", $STR_NOCOUNT) ;  will be a string : 708,360
+	;			If UBound($tempObbj) <> 2 Then ContinueLoop
+	;		EndIf
+	;
+	;		For $x = 0 To UBound($BBCheck) - 1
+	;			If $FullImageName = $BBCheck[$x] Then
+	;				If $g_bChkClanGamesDebug Then SetLog("Detection for " & $FullImageName & " :", $COLOR_INFO)
+	;				If Not IsBBChallenge($tempObbj[0],$tempObbj[1]) Then
+	;					If $g_bChkClanGamesDebug Then SetLog("False Detection, Skip this Challenge", $COLOR_ERROR)
+	;					ContinueLoop 2
+	;				Else
+	;					If $g_bChkClanGamesDebug Then SetLog("OK, Continue", $COLOR_SUCCESS)
+	;				Endif
+	;			EndIf
+	;		Next
+	;
+	;		$aNames = StringSplit($FullImageName, "-", $STR_NOCOUNT)
+	;		SetDebugLog("filename: " & $FullImageName & " $aNames[0] = " & $aNames[0] & " $aNames[1]= " & $aNames[1], $COLOR_ORANGE)
+	;		ReDim $aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) + 1][4]
+	;		$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][0] = $aNames[0] ; Challenge Name
+	;		$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][1] = $aNames[1] ; Event Name
+	;		$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][2] = $tempObbj[0] ; Xaxis
+	;		$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][3] = $tempObbj[1] ; Yaxis
+	;	Next
+	;EndIf
+	;SetLog("Benchmark FindEvent Official : " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms", $COLOR_DEBUG)
+	;_ArrayDisplay($aAllDetectionsOnScreen)
+	
+	
+	Local $aAllDetectionsOnScreen = FindEvent()
+	
 	Local $aSelectChallenges[0][5]
 
 	If UBound($aAllDetectionsOnScreen) > 0 Then
@@ -235,7 +240,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 							; Disable this event from INI File
 							If $LootChallenges[$j][3] = 0 Then ExitLoop
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$LootChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $LootChallenges[$j][4], "CGMain"]
+							Local $aArray[5] = [$LootChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $LootChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
 						EndIf
 					Next
 				Case "A"
@@ -246,7 +251,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 						; Match the names
 						If $aAllDetectionsOnScreen[$i][1] = $AirTroopChallenges[$j][0] Then
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$AirTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $AirTroopChallenges[$j][4], "CGMain"]
+							Local $aArray[5] = [$AirTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $AirTroopChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
 						EndIf
 					Next
 
@@ -258,7 +263,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 						; Match the names
 						If $aAllDetectionsOnScreen[$i][1] = $SpellChallenges[$j][0] Then
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$SpellChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $SpellChallenges[$j][4], "CGMain"]
+							Local $aArray[5] = [$SpellChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $SpellChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
 						EndIf
 					Next
 
@@ -270,7 +275,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 						; Match the names
 						If $aAllDetectionsOnScreen[$i][1] = $GroundTroopChallenges[$j][0] Then
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$GroundTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $GroundTroopChallenges[$j][4], "CGMain"]
+							Local $aArray[5] = [$GroundTroopChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $GroundTroopChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
 						EndIf
 					 Next
 
@@ -309,7 +314,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 							; Check if you are using Heroes
 							If $BattleChallenges[$j][1] = "No Heroics Allowed" And ((Int($g_aiAttackUseHeroes[$DB]) > $eHeroNone And $g_iMatchMode = $DB) Or (Int($g_aiAttackUseHeroes[$LB]) > $eHeroNone And $g_iMatchMode = $LB)) Then ExitLoop
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$BattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BattleChallenges[$j][4], "CGMain"]
+							Local $aArray[5] = [$BattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BattleChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
 						EndIf
 					Next
 				Case "D"
@@ -331,7 +336,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 									$DestructionChallenges[$j][1] = "Queen Level Hunter" Or _
 									$DestructionChallenges[$j][1] = "Warden Level Hunter" And ((Int($g_aiAttackUseHeroes[$DB]) = $eHeroNone And $g_iMatchMode = $DB) Or (Int($g_aiAttackUseHeroes[$LB]) = $eHeroNone And $g_iMatchMode = $LB)) Then ExitLoop
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$DestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $DestructionChallenges[$j][4], "CGMain"]
+							Local $aArray[5] = [$DestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $DestructionChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
 						EndIf
 					Next
 				Case "M"
@@ -358,7 +363,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 							If $MiscChallenges[$j][1] = "Donate Spells" And ($g_aiPrepDon[2] = 0 And $g_aiPrepDon[3] = 0) Then ExitLoop
 
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
-							Local $aArray[5] = [$MiscChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $MiscChallenges[$j][4], "CGMain"]
+							Local $aArray[5] = [$MiscChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $MiscChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
 						EndIf
 					Next
                 Case "BBB" ; BB Battle challenges
@@ -369,7 +374,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
                     For $j = 0 To UBound($BBBattleChallenges) - 1
                         ; Match the names
                         If $aAllDetectionsOnScreen[$i][1] = $BBBattleChallenges[$j][0] Then
-                            Local $aArray[5] = [$BBBattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBBattleChallenges[$j][4], $aAllDetectionsOnScreen[$i][0]]
+                            Local $aArray[5] = [$BBBattleChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBBattleChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
                         EndIf
                     Next
                 Case "BBD" ; BB Destruction challenges
@@ -380,7 +385,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
                     For $j = 0 To UBound($BBDestructionChallenges) - 1
 						; Match the names
                         If $aAllDetectionsOnScreen[$i][1] = $BBDestructionChallenges[$j][0] Then
-							Local $aArray[5] = [$BBDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBDestructionChallenges[$j][4], $aAllDetectionsOnScreen[$i][0]]
+							Local $aArray[5] = [$BBDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBDestructionChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
                         EndIf
                     Next
 				Case "BBT" ; BB Troop challenges
@@ -391,7 +396,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
                     For $j = 0 To UBound($BBTroopsChallenges) - 1
                         ; Match the names
                         If $aAllDetectionsOnScreen[$i][1] = $BBTroopsChallenges[$j][0] Then
-							Local $aArray[5] = [$BBTroopsChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBTroopsChallenges[$j][4], $aAllDetectionsOnScreen[$i][0]]
+							Local $aArray[5] = [$BBTroopsChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBTroopsChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
                         EndIf
                     Next
 			EndSwitch
@@ -471,7 +476,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 		ClickP($TabChallengesPosition, 2, 0, "#Tab")
 		If _sleep(1000) Then Return
 		ClickDrag(807, 210, 807, 385, 500)
-		If _Sleep(500) Then Return
+		If _Sleep(1000) Then Return
 	EndIf
 
 	; After removing is necessary check Ubound
@@ -485,16 +490,24 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 						_ArraySort($aTempSelectChallenges, 1, 0, 0, 4) ;sort descending, longest time first
 				EndSwitch
 			EndIf
-
-			SetDebugLog("$aTempSelectChallenges: " & _ArrayToString($aTempSelectChallenges))
-			Setlog("Next Event will be " & $aTempSelectChallenges[0][5] & "-" & $aTempSelectChallenges[0][0] & " to make in " & $aTempSelectChallenges[0][4] & " min.")
-			; Select and Start EVENT
-			$sEventName = $aTempSelectChallenges[0][0]
-			Click($aTempSelectChallenges[0][1], $aTempSelectChallenges[0][2])
-			If _Sleep(1750) Then Return
-			If ClickOnEvent($YourAccScore, $aiScoreLimit, $sEventName, $getCapture) Then Return
-			; Some error occurred let's click on Challenges Tab and proceeds
-			ClickP($TabChallengesPosition, 2, 0, "#Tab")
+			For $i = 0 To UBound($aTempSelectChallenges) - 1
+				If Not $g_bRunState Then Return
+				SetDebugLog("$aTempSelectChallenges: " & _ArrayToString($aTempSelectChallenges))
+				Setlog("Next Event will be " & $aTempSelectChallenges[$i][0] & " to make in " & $aTempSelectChallenges[$i][4] & " min.")
+				; Select and Start EVENT
+				$sEventName = $aTempSelectChallenges[$i][0]
+				If Not QuickMIS("BC1", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\Selected\", $aTempSelectChallenges[$i][1] - 60, $aTempSelectChallenges[$i][2] - 60, $aTempSelectChallenges[$i][1] + 60, $aTempSelectChallenges[$i][2] + 60) Then 
+					SetLog($sEventName & " not found on previous location detected", $COLOR_ERROR)
+					SetLog("Maybe event tile changed, Looking Next Event...", $COLOR_INFO)
+					ContinueLoop
+				EndIf
+				
+				Click($aTempSelectChallenges[$i][1], $aTempSelectChallenges[$i][2])
+				If _Sleep(1750) Then Return
+				If ClickOnEvent($YourAccScore, $aiScoreLimit, $sEventName, $getCapture) Then Return
+				; Some error occurred let's click on Challenges Tab and proceeds
+				ClickP($TabChallengesPosition, 2, 0, "#Tab")
+			Next
 		EndIf
 	EndIf
 
@@ -512,7 +525,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 	EndIf
 EndFunc ;==>_ClanGames
 
-Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
+Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageName = Default)
 	If $sImageType = Default Then Return
 	Switch $sImageType
 		Case "L"
@@ -616,21 +629,35 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default)
 				EndIf
 			Next
 	EndSwitch
+	If $sImageType = "Selected" Then 
+		If $g_bChkClanGamesDebug Then SetLog("[" & $ImageName & "] Selected", $COLOR_DEBUG)
+		FileCopy($sImagePath & "\" & $ImageName & "_*", $sTempPath & "\Selected\", $FC_OVERWRITE + $FC_CREATEPATH)
+	EndIf
 EndFunc ;==>ClanGameImageCopy
 
 Func FindEvent()
+	Local $hStarttime = _Timer_Init()
+	Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
 	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
-	Local $aEvent
+	Local $aEvent, $aReturn[0][6], $toBottom = False
 	Local $aX[4] = [290, 410, 540, 660]
-	Local $aY[3] = [120, 280, 430]
+	Local $aY[3] = [120, 280, 445]
 	
 	For $y = 0 To Ubound($aY) - 1
 		For $x = 0 To Ubound($aX) - 1
 			$aEvent = QuickMIS("CNX", $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 100, $aY[$y] + 110)
-			If IsArray($aEvent) And UBound($aEvent) > 0 Then ExitLoop 2
+			If IsArray($aEvent) And UBound($aEvent) > 0 Then 
+				Local $IsBBEvent = IsBBChallenge($aEvent[0][1], $aEvent[0][2])
+				If $IsBBEvent Then $IsBBEvent = "CGBB"
+				If Not $IsBBEvent Then $IsBBEvent = "CGMain"
+				Local $ChallengeEvent = StringSplit($aEvent[0][0], "-", $STR_NOCOUNT)
+				ClanGameImageCopy($sImagePath, $sTempPath, "Selected", $aEvent[0][0])
+				_ArrayAdd($aReturn, $ChallengeEvent[0] & "|" & $ChallengeEvent[1] & "|" & $aEvent[0][1] & "|" & $aEvent[0][2] & "|" & $IsBBEvent & "|" & $aEvent[0][0] )
+			EndIf
 		Next
 	Next
-	Return $aEvent
+	SetDebugLog("Benchmark FindEvent selection: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms", $COLOR_DEBUG)
+	Return $aReturn
 EndFunc
 
 Func IsClanGamesWindow($getCapture = True)

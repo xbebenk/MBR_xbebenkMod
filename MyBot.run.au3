@@ -1024,7 +1024,7 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
 			If Not $g_bRunState Then Return
-			_ClanGames() ;Trying to do this above in the main loop
+			_ClanGames(False, $g_bChkForceBBAttackOnClanGames) ;Trying to do this above in the main loop
 			;ClickAway()
 			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
 				SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
