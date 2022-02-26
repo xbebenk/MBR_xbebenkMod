@@ -15,6 +15,7 @@
 ; ===============================================================================================================================
 
 Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom = "Default") ;Checks if in main screen
+	If Not $g_bRunState Then Return
 	FuncEnter(checkMainScreen)
 	If GetAndroidProcessPID() = 0 Then StartAndroidCoC()
 	Return FuncReturn(_checkMainScreen($bSetLog, $bBuilderBase, $CalledFrom))

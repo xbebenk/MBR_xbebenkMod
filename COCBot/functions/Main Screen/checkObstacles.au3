@@ -15,6 +15,7 @@
 ;
 Func checkObstacles($bBuilderBase = False) ;Checks if something is in the way for mainscreen
 	If Not $bBuilderBase Then $bBuilderBase = $g_bStayOnBuilderBase
+	If Not $g_bRunState Then Return
 	FuncEnter(checkObstacles)
 	Local $Result = _checkObstacles($bBuilderBase)
 	Return FuncReturn($Result)

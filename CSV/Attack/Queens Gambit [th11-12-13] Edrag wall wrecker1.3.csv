@@ -39,6 +39,8 @@ SIDEB |9          |5          |0          |0          |0          |0          |0
       |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|___________|___________|
 MAKE  |Q          |FRONT-LEFT |10         |0          |EXT-INT    |0          |0          |           |           |           |
 MAKE  |R          |FRONT-RIGHT|10         |0          |INT-EXT    |0          |0          |           |           |           |
+MAKE  |M          |FRONT-LEFT |10         |0          |INT-EXT    |0          |0          |           |           |           |
+MAKE  |N          |FRONT-RIGHT|10         |0          |INT-EXT    |0          |0          |           |           |           |
 MAKE  |O          |FRONT-LEFT |10         |-10        |INT-EXT    |3          |2          |           |           |           |
 MAKE  |S          |FRONT-LEFT |10         |-9         |INT-EXT    |3          |2          |           |           |           |
 MAKE  |T          |FRONT-RIGHT|10         |-10        |INT-EXT    |2          |2          |           |           |           |
@@ -75,7 +77,7 @@ DROP  |Q          |10         |1          |StoneS     |0          |50-70      |1
 DROP  |Q-R        |2-8        |7          |Ball       |50-70      |27-50      |15-20      |           |           | 		  |
 DROP  |Q          |10         |1          |WallW      |0          |50-70      |100        |           |           |           |
 WAIT  |1000       |           |           |           |           |           |           |           |			  |			  |
-DROP  |Q-R        |2-8        |7          |EDrag      |50-70      |27-50      |15-20      |           |           |           |
+DROP  |M-N        |2-7        |6          |EDrag      |50-70      |27-50      |15-20      |           |           |           |
 DROP  |Q          |10         |1          |SiegeB     |0          |50-70      |100        |           |           |           |
 DROP  |Q          |10         |1          |Warden     |50-70      |0          |0          |           |           |           |
 WAIT  |2500-3000  |           |           |           |           |           |           |           |           |           |

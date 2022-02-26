@@ -94,10 +94,7 @@ Func SearchUpgrade($bTest = False)
 		If $g_bNewBuildingFirst Then
 			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
 			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
-				Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-				If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-					If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeCheckBuilder") Then ZoomOut() 
-				EndIf
+				If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeCheckBuilder") Then ZoomOut()
 				Return ;no builder, exit
 			EndIf
 			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
@@ -118,10 +115,7 @@ Func SearchUpgrade($bTest = False)
 	EndIf
 	If Not $g_bRunState Then Return
 	ClickAway()
-	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-		If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeCheckBuilder") Then ZoomOut() 
-	EndIf
+	If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeCheckBuilder") Then ZoomOut() 
 	Return False
 EndFunc
 
@@ -134,12 +128,12 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 100, 30, True) ;check most bottom upgrade cost
 		Local $ExistingBuilding = FindExistingBuilding()
 		If IsArray($ExistingBuilding) And UBound($ExistingBuilding) > 0 Then
-			If $g_bChkRushTH Then _ArraySort($ExistingBuilding, 1, 0, 0, 4)
 			For $i = 0 To UBound($ExistingBuilding) - 1
 				SetLog("Coord [" & $ExistingBuilding[$i][1] & "," & $ExistingBuilding[$i][2] & "], Cost: " & $ExistingBuilding[$i][3] & " UpgradeType: " & $ExistingBuilding[$i][0], $COLOR_INFO)
 			Next
+			
 			For $i = 0 To UBound($ExistingBuilding) - 1
-				If $ExistingBuilding[$i][3] = 0 Then ContinueLoop
+				If $ExistingBuilding[$i][3] = "0" Then ContinueLoop
 				Click($ExistingBuilding[$i][1], $ExistingBuilding[$i][2])
 				If _Sleep(1000) Then Return
 				If DoUpgrade($bTest) Then
@@ -176,13 +170,18 @@ Func FindExistingBuilding($bTest = False)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
+			If $g_bChkRushTH Then 
+				If Not QuickMIS("BC1", $g_sImgAUpgradeRushTH, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then 
+					SetDebugLog("RushTH enabled, Skip this upgrade")
+					ContinueLoop
+				EndIf
+			EndIf
 			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]))
 		Next
 		
 		For $j = 0 To UBound($aBuilding) -1
 			$UpgradeCost = getOcrAndCapture("coc-NewCapacity", $aBuilding[$j][1], $aBuilding[$j][2] - 10, 100, 30, True)
 			$aBuilding[$j][3] = Number($UpgradeCost)
-			If QuickMIS("BC1", $g_sImgAUpgradeRushTH, $aBuilding[$j][1] - 200, $aBuilding[$j][2] - 10, $aBuilding[$j][1], $aBuilding[$j][2] + 10) Then $aBuilding[$j][4] = "RushTH"
 			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][0] & ", Cost=" & $aBuilding[$j][3] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf

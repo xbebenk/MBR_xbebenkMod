@@ -1402,6 +1402,7 @@ Func FirstCheckRoutine()
 					If $g_bForceSwitchifNoCGEvent Then
 						SetLog("No event on ClanGames, trying to switch account", $COLOR_SUCCESS)
 						If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
+						If Not $g_bRunState Then Return
 						SetLog("Account switch is off, returning to main loop", $COLOR_INFO)
 						ExitLoop
 					EndIf
@@ -1426,7 +1427,6 @@ Func FirstCheckRoutine()
 				PrepareDonateCC()
 				DonateCC()
 				TrainSystem()
-				CommonRoutine("NoClanGamesEvent")
 				checkSwitchAcc() ;switch to next account
 			EndIf
 		EndIf
@@ -1456,10 +1456,7 @@ Func FirstCheckRoutine()
 					If Not $g_bRunState Then Return
 					If AttackMain(True) Then 
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
-						Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-						If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
-						EndIf
+						If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
 						ExitLoop
 					Else
 						$loopcount += 1
@@ -1469,6 +1466,7 @@ Func FirstCheckRoutine()
 						Else
 							Setlog("[" & $loopcount & "] 1st Attack Loop, Failed", $COLOR_INFO)
 						EndIf
+						If Not $g_bRunState Then Return
 					EndIf
 				Wend
 				If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then 
@@ -1485,6 +1483,14 @@ Func FirstCheckRoutine()
 			EndIf
 		EndIf
 	EndIf
+	
+	If Not $g_bRunState Then Return
+	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent Then ; forced switch after first attack if cg point is almost max
+		SetLog("ClanGames point almost max, Forced switch account!", $COLOR_SUCCESS)
+		$g_bForceSwitchifNoCGEvent = True
+		checkSwitchAcc() ;switch to next account
+	EndIf
+	
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
 		RequestCC() ;only do requestCC here
@@ -1510,10 +1516,7 @@ Func FirstCheckRoutine()
 						If AttackMain(True) Then 
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 							$b_SuccessAttack = True
-							Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-							If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-								If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
-							EndIf
+							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
 							ExitLoop
 						Else
 							$loopcount += 1
@@ -1523,6 +1526,7 @@ Func FirstCheckRoutine()
 							Else
 								Setlog("[" & $loopcount & "] 2nd Attack Loop, Failed", $COLOR_INFO)
 							EndIf
+							If Not $g_bRunState Then Return
 						EndIf
 					Wend
 					If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then 
