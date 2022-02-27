@@ -336,6 +336,8 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 									$DestructionChallenges[$j][1] = "Queen Level Hunter" Or _
 									$DestructionChallenges[$j][1] = "Warden Level Hunter" And ((Int($g_aiAttackUseHeroes[$DB]) = $eHeroNone And $g_iMatchMode = $DB) Or (Int($g_aiAttackUseHeroes[$LB]) = $eHeroNone And $g_iMatchMode = $LB)) Then ExitLoop
 							; [0]Event Name Full Name  , [1] Xaxis ,  [2] Yaxis , [3] difficulty
+							If $aAllDetectionsOnScreen[$j][1] = "BBreakdown" And $aAllDetectionsOnScreen[$i][4] = "CGBB" Then ContinueLoop
+							If $aAllDetectionsOnScreen[$j][1] = "WallWhacker" And $aAllDetectionsOnScreen[$i][4] = "CGBB" Then ContinueLoop
 							Local $aArray[5] = [$DestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $DestructionChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
 						EndIf
 					Next
@@ -385,6 +387,8 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
                     For $j = 0 To UBound($BBDestructionChallenges) - 1
 						; Match the names
                         If $aAllDetectionsOnScreen[$i][1] = $BBDestructionChallenges[$j][0] Then
+							If $aAllDetectionsOnScreen[$j][1] = "BuildingDes" And $aAllDetectionsOnScreen[$i][4] = "CGMain" Then ContinueLoop
+							If $aAllDetectionsOnScreen[$j][1] = "WallWhacker" And $aAllDetectionsOnScreen[$i][4] = "CGMain" Then ContinueLoop
 							Local $aArray[5] = [$BBDestructionChallenges[$j][1], $aAllDetectionsOnScreen[$i][2], $aAllDetectionsOnScreen[$i][3], $BBDestructionChallenges[$j][4], $aAllDetectionsOnScreen[$i][4]]
                         EndIf
                     Next
@@ -446,7 +450,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][4] = Number($aSelectChallenges[$i][4]) ; timer minutes
 			$aTempSelectChallenges[UBound($aTempSelectChallenges) - 1][5] = $aSelectChallenges[$i][5] ; EventType: Battle Loot BB and so on
 		Next
-
+		
 		Local $aTmpBBChallenges[0][6]
 		If $g_bChkForceBBAttackOnClanGames And $bSearchBBEventFirst Then
 			SetDebugLog("ForceBBAttack on ClanGames enabled", $COLOR_INFO)
@@ -496,7 +500,8 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 				Setlog("Next Event will be " & $aTempSelectChallenges[$i][0] & " to make in " & $aTempSelectChallenges[$i][4] & " min.")
 				; Select and Start EVENT
 				$sEventName = $aTempSelectChallenges[$i][0]
-				If Not QuickMIS("BC1", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\Selected\", $aTempSelectChallenges[$i][1] - 60, $aTempSelectChallenges[$i][2] - 60, $aTempSelectChallenges[$i][1] + 60, $aTempSelectChallenges[$i][2] + 60) Then 
+				SetLog("QuickMIS(BC1, " & $sTempPath & "Selected\" & "," & $aTempSelectChallenges[$i][1] - 60 & "," & $aTempSelectChallenges[$i][2] - 60 & "," & $aTempSelectChallenges[$i][1] + 60 & "," & $aTempSelectChallenges[$i][2] + 60 & ", True)" )
+				If Not QuickMIS("BC1", $sTempPath & "Selected\", $aTempSelectChallenges[$i][1] - 60, $aTempSelectChallenges[$i][2] - 60, $aTempSelectChallenges[$i][1] + 60, $aTempSelectChallenges[$i][2] + 60, True) Then 
 					SetLog($sEventName & " not found on previous location detected", $COLOR_ERROR)
 					SetLog("Maybe event tile changed, Looking Next Event...", $COLOR_INFO)
 					ContinueLoop
@@ -792,8 +797,10 @@ Func IsEventRunning($bOpenWindow = False)
 		Else
 			SetLog("An event is already in progress!", $COLOR_SUCCESS)
 			;check if its Enabled Challenge, if not = purge
-			If QuickMIS("BC1", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 300, 130, 380, 210, True, False) Then
-				SetLog("Active Challenge is Enabled on Setting, OK!!", $COLOR_DEBUG)
+			Local $bNeedPurge = False
+			Local $aActiveEvent = QuickMIS("CNX", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 300, 130, 380, 210, True) 
+			If IsArray($aActiveEvent) And UBound($aActiveEvent) > 0 Then
+				SetLog("Active Challenge " & $aActiveEvent[0][0] & " is Enabled on Setting, OK!!", $COLOR_DEBUG)
 				;check if Challenge is BB Challenge, enabling force BB attack
 				If $g_bChkForceBBAttackOnClanGames Then
 					Click(340,180) ; click first slot
@@ -805,7 +812,12 @@ Func IsEventRunning($bOpenWindow = False)
 						$g_bIsCGEventRunning = True
 					Else
 						Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
-						If $g_bChkCGBBAttackOnly Then ;Purge main village event because we using BBCGOnly Mode
+						If $aActiveEvent[0][0] = "BBD-WallDes" Or $aActiveEvent[0][0] = "BBD-WallWhacker" Then 
+							SetLog("Event with shared Image: " & $aActiveEvent[0][0])
+							If $g_abCGMainDestructionItem[23] < 1 Then $bNeedPurge = True ;BBreakdown
+							If $g_abCGMainDestructionItem[22] < 1 Then $bNeedPurge = True ;WallWhacker
+						EndIf
+						If $g_bChkCGBBAttackOnly Or $bNeedPurge Then ;Purge main village event because we using BBCGOnly Mode
 							Setlog("We are running only BB events. Event started by mistake?", $COLOR_ERROR)
 							Click(340,180) ;unclick so ForcePurgeEvent can work
 							ForcePurgeEvent(False, False)
