@@ -97,7 +97,6 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 									Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF
 										If $g_aiAttackUseSiege[$pMatchMode] <= $eSiegeMachineCount + 1 Then
 											SelectCastleOrSiege($avAttackBar[$j][0], Number($avAttackBar[$j][5]), $g_aiAttackUseSiege[$pMatchMode])
-											If $g_iSiegeLevel < 2 Then SelectCastleOrSiege($avAttackBar[$j][0], Number($avAttackBar[$j][5]), $g_aiAttackUseSiege[$pMatchMode]) ;try again :))
 											If $g_aiAttackUseSiege[$pMatchMode] = 0 And Not($avAttackBar[$j][0] = $eCastle) Then ; if the user wanted to drop castle and no troops were available, do not drop a siege
 												SetDebugLog("Discard use of " & GetTroopName($avAttackBar[$j][0]) & " (" & $avAttackBar[$j][0] & ")", $COLOR_ERROR)
 												ContinueLoop
@@ -190,7 +189,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			; Lets detect the CC & Sieges and click - search window is - X, 530, X + 390, 530 + 30
 			Local $aSearchResult = GetListSiege($iX - 50, 480, $iX + 390, 540)
 			If IsArray($aSearchResult) And Ubound($aSearchResult) > 0 Then
-				Local $FinalCoordX, $FinalCoordY, $iFinalLevel = 1, $HigherLevelFound = False
+				Local $FinalCoordX = $iLastX, $FinalCoordY = $iLastY, $iFinalLevel = 1, $HigherLevelFound = False
 				If $ToUse = $eCastle Then
 					SetDebugLog("ToUse : Castle")
 					Local $TmpIndex = 0
@@ -207,6 +206,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 					EndIf
 				EndIf 
 				
+				_ArraySort($aSearchResult, 0, 0, 0, 1) ;sort desc by x coord
 				If $NeedHigherLevel Or $bAnySiege Then
 					If $bAnySiege Then 
 						SetDebugLog("AnySiege")
@@ -223,6 +223,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 									$FinalCoordX = $aSearchResult[$i][1]
 									$FinalCoordY = $aSearchResult[$i][2]
 								EndIf
+								If $iFinalLevel = 4 Then ExitLoop
 							EndIf
 						Next
 						SetDebugLog("Selected SiegeName:" & $SiegeName & " Level:" & $iFinalLevel & " Coord:[" & $FinalCoordX & "," & $FinalCoordY & "]")
@@ -286,11 +287,12 @@ EndFunc   ;==>SelectCastleOrSiege
 Func GetListSiege($x = 135, $y = 480, $x1 = 500, $y1 = 540)
 	Local $aResult[0][6], $CheckLvlY = 524 
 	Local $aTmp = QuickMIS("CNX", $g_sImgSwitchSiegeMachine, $x, $y, $x1, $y1)
+	
 	If IsArray($aTmp) And UBound($aTmp) > 0 Then
 		For $i = 0 To UBound($aTmp) - 1
 			SetDebugLog("[" & $i & "] Siege: " & $aTmp[$i][0] & ", Coord[" & $aTmp[$i][1] & "," & $aTmp[$i][2] & "]")
 			SetDebugLog("getTroopsSpellsLevel(" & $aTmp[$i][1] - 30 & "," & $CheckLvlY & ")", $COLOR_ACTION)
-			Local $SiegeLevel = getTroopsSpellsLevel($aTmp[$i][1] - 30, $CheckLvlY)
+			Local $SiegeLevel = getOcrAndCapture("coc-spellslevel", $aTmp[$i][1] - 30, $CheckLvlY, 20, 20, True); getTroopsSpellsLevel($aTmp[$i][1] - 30, $CheckLvlY)
 			SetDebugLog("SiegeLevel=" & $SiegeLevel)
 			If $SiegeLevel = "" Then $SiegeLevel = 1
 			Local $TroopIndex = TroopIndexLookup($aTmp[$i][0])
@@ -298,16 +300,6 @@ Func GetListSiege($x = 135, $y = 480, $x1 = 500, $y1 = 540)
 			If _ColorCheck(_GetPixelColor($aTmp[$i][1] - 30, 466, True), Hex(0x559CDD, 6), 10) Then $OwnSiege = String(True)
 			_ArrayAdd($aResult, $aTmp[$i][0] & "|" & $aTmp[$i][1] & "|" & $aTmp[$i][2] & "|" & $SiegeLevel & "|" & $OwnSiege & "|" & $TroopIndex)
 		Next
-		;Comment for now, not effective siege level read will always fail if above fail
-		;For $i = 0 To Ubound($aResult) - 1
-		;	Local $reReadLevel, $reReadOwner
-		;	If $aResult[$i][3] = 1 Then 
-		;		$reReadLevel = getTroopsSpellsLevel($aResult[$i][1] - 30, $CheckLvlY)
-		;		SetDebugLog($aResult[$i][0] & " reReadLevel=" & $reReadLevel)
-		;		If $reReadLevel > $aResult[$i][3] Then $aResult[$i][3] = $reReadLevel
-		;		If _ColorCheck(_GetPixelColor($aResult[$i][1] - 30, 466, True), Hex(0x559CDD, 6), 10) Then $reReadOwner = String(True)
-		;	EndIf
-		;Next
 	Else
 		SetDebugLog("GetListSiege: ERR", $COLOR_ERROR)
 	EndIf
