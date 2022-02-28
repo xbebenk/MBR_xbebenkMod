@@ -38,7 +38,7 @@ SIDEB |9          |5          |0          |0          |0          |0          |0
       |                                                                                                                       |
       |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|___________|___________|
 MAKE  |Q          |FRONT-LEFT |10         |0          |EXT-INT    |0          |0          |           |           |           |
-MAKE  |R          |FRONT-RIGHT|10         |0          |INT-EXT    |0          |0          |           |           |           |
+MAKE  |R          |FRONT-RIGHT|10         |0          |EXT-INT    |0          |0          |           |           |           |
 MAKE  |M          |FRONT-LEFT |10         |0          |INT-EXT    |0          |0          |           |           |           |
 MAKE  |N          |FRONT-RIGHT|10         |0          |INT-EXT    |0          |0          |           |           |           |
 MAKE  |O          |FRONT-LEFT |10         |-10        |INT-EXT    |3          |2          |           |           |           |
@@ -67,14 +67,14 @@ DROP  |H          |1          |3          |LSpell     |0          |200        |1
 DROP  |I          |1          |3          |LSpell     |0          |200        |1000       |AIRDEFENSE |           |           |
 DROP  |J          |1          |3          |LSpell     |0          |200        |1000       |AIRDEFENSE |           |           |
 DROP  |Q          |2          |1          |Ball       |0          |27-50      |50-70      |           |           |           |
-DROP  |R          |9          |1          |Ball       |0          |27-50      |1050-1090  |           |           |           |
+DROP  |R          |2          |1          |Ball       |0          |27-50      |1050-1090  |           |           |           |
 DROP  |Q          |2          |1          |EDrag      |55-70      |27-50      |15-20      |           |           |           |
-DROP  |R          |9          |1          |EDrag      |55-70      |27-50      |150-250    |           |           |      	  |
+DROP  |R          |2          |1          |EDrag      |55-70      |27-50      |150-250    |           |           |      	  |
 WAIT  |12000      |           |           |           |           |           |           |           |           |           |
 DROP  |Q          |10         |1          |King       |0          |0          |150-200    |           |    ﻿       |           |
 DROP  |Q          |10         |1          |LogL       |0          |50-70      |100        |           |           |           |
 DROP  |Q          |10         |1          |StoneS     |0          |50-70      |100        |           |           |           |
-DROP  |Q-R        |2-8        |7          |Ball       |50-70      |27-50      |15-20      |           |           | 		  |
+DROP  |M-N        |1-8        |8          |Ball       |50-70      |27-50      |15-20      |           |           | 		  |
 DROP  |Q          |10         |1          |WallW      |0          |50-70      |100        |           |           |           |
 WAIT  |1000       |           |           |           |           |           |           |           |			  |			  |
 DROP  |M-N        |2-7        |6          |EDrag      |50-70      |27-50      |15-20      |           |           |           |

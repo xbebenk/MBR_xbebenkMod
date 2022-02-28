@@ -19,6 +19,7 @@ Func DoAttackBB()
 		Local $count = 1
 		While PrepareAttackBB()
 			If Not $g_bRunState Then Return
+			If IsProblemAffect(True) Then Return
 			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			_AttackBB()
@@ -48,6 +49,7 @@ Func DoAttackBB()
 	Else
 		For $i = 1 To $g_iBBAttackCount
 			If Not $g_bRunState Then Return
+			If IsProblemAffect(True) Then Return
 			If PrepareAttackBB() Then
 				SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 				SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
@@ -72,7 +74,7 @@ Func DoAttackBB()
 		ClickAway()
 	EndIf
 	If Not $g_bRunState Then Return
-	If checkMainScreen(False, $g_bStayOnBuilderBase, "DoAttackBB") Then ZoomOut() 
+	If checkMainScreen(True, $g_bStayOnBuilderBase, "DoAttackBB") Then ZoomOut() 
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 
@@ -531,7 +533,6 @@ Func GetBBDropPoint()
 		$UseDefaultBBDP = True
 		If $g_bDebugClick Then SetLog("Insufficient count of DP, Fallback to Default DP", $COLOR_INFO)
 	EndIf
-	
 	Return $aDPResult
 EndFunc
 

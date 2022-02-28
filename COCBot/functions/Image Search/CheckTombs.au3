@@ -86,7 +86,7 @@ EndFunc
 
 Func CleanYard($bTest = False)
 	If Not $g_bChkCleanYard And Not $g_bChkGemsBox Then Return
-
+	checkMainScreen(True, $g_bStayOnBuilderBase, "CleanYard")
 	VillageReport(True, True)
 	SetLog("CleanYard: Try removing obstacles", $COLOR_DEBUG)
 	If Not CleanYardCheckBuilder($bTest) Then Return

@@ -29,9 +29,8 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 	Local $aPixelToCheck = $aIsMain
 
 	If $bSetLog Then
-		SetLog("Trying to locate Main Screen")
+		SetLog("[" & $CalledFrom & "] Locate Main Screen", $COLOR_INFO)
 	EndIf
-	SetDebugLog("_checkMainScreen CalledFrom: " & $CalledFrom, $COLOR_INFO)
 	
 	If Not TestCapture() Then
 		If CheckAndroidRunning(False) = False Then Return False
@@ -86,13 +85,12 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 
 	If $bSetLog Then
 		If $bLocated Then
-			SetLog("Main Screen located", $COLOR_SUCCESS)
+			SetLog("[" & $CalledFrom & "] Main Screen located", $COLOR_SUCCESS)
 		Else
-			SetLog("Main Screen not located", $COLOR_ERROR)
+			SetLog("[" & $CalledFrom & "] Main Screen not located", $COLOR_ERROR)
 		EndIf
 	EndIf
-	SetDebugLog("Located: " & String($bLocated) & ", CalledFrom: " & $CalledFrom, $COLOR_INFO)
-
+	
 	;After checkscreen dispose windows
 	DisposeWindows()
 
@@ -109,7 +107,6 @@ Func _checkMainScreenImage($aPixelToCheck)
 EndFunc
 
 Func checkChatTabPixel()
-	SetDebugLog("Checking chat tab pixel exists to ensure images have loaded correctly")
 	If _CheckPixel($aChatTab, True) Then
 		SetDebugLog("checkChatTabPixel: Found Chat Tab to close")
 		PureClickP($aChatTab, 1, 0, "#0136") ;Click Close chat tab
