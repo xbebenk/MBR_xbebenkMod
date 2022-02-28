@@ -480,7 +480,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		ClickP($TabChallengesPosition, 2, 0, "#Tab")
 		If _sleep(1000) Then Return
 		ClickDrag(807, 210, 807, 385, 500)
-		If _Sleep(1000) Then Return
+		If _Sleep(2000) Then Return
 	EndIf
 
 	; After removing is necessary check Ubound
