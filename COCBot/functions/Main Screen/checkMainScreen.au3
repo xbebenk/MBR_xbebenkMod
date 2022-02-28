@@ -42,11 +42,15 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 		EndIf
 		If $g_bAndroidAdbScreencap = False And _WinAPI_IsIconic($g_hAndroidWindow) Then WinSetState($g_hAndroidWindow, "", @SW_RESTORE)
 	EndIf
-
+	
+	If Not IsProblemAffect(True) Then 
+		Local $SearchZoomOut = SearchZoomOut(False, True, "checkMainScreen", True)
+		If $SearchZoomOut[0] = "" Then ZoomOut()
+	EndIf
+	
 	$i = 0
 	$iErrorCount = 0
 	$iCheckBeforeRestartAndroidCount = 5
-
 	If $bBuilderBase Then $aPixelToCheck = $aIsOnBuilderBase
 	Local $bLocated = False
 	While True

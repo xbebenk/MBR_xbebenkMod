@@ -97,9 +97,9 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 									Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF
 										If $g_aiAttackUseSiege[$pMatchMode] <= $eSiegeMachineCount + 1 Then
 											SelectCastleOrSiege($avAttackBar[$j][0], Number($avAttackBar[$j][5]), $g_aiAttackUseSiege[$pMatchMode])
-											If $g_aiAttackUseSiege[$pMatchMode] = 0 And Not($avAttackBar[$j][0] = $eCastle) Then ; if the user wanted to drop castle and no troops were available, do not drop a siege
-												SetDebugLog("Discard use of " & GetTroopName($avAttackBar[$j][0]) & " (" & $avAttackBar[$j][0] & ")", $COLOR_ERROR)
-												ContinueLoop
+											If $avAttackBar[$j][0] = -1 Then ; no cc troops available, do not drop a siege
+												SetDebugLog("Discard use of Siege/CC", $COLOR_ERROR)
+												$avAttackBar[$j][2] = 0
 											EndIf
 											If $avAttackBar[$j][0] <> $eCastle Then $sLogExtension = " (level " & $g_iSiegeLevel & ")"
 										EndIf
@@ -190,9 +190,18 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			Local $aSearchResult = GetListSiege($iX - 50, 480, $iX + 390, 540)
 			If IsArray($aSearchResult) And Ubound($aSearchResult) > 0 Then
 				Local $FinalCoordX = $iLastX, $FinalCoordY = $iLastY, $iFinalLevel = 1, $HigherLevelFound = False
+				Local $TmpIndex = 0
+				$TmpIndex = _ArraySearch($aSearchResult, $eCastle, 0, 0, 0, 0, 1, 5)
+				If $TmpIndex = -1 Then 
+					$iTroopIndex = -1 ;set ByRef
+					SetLog("No CC" & GetTroopName($eCastle) & " Detected, discard Siege use", $COLOR_INFO)
+					Click($iLastX, $iLastY, 1)
+				EndIf
+				
+				
 				If $ToUse = $eCastle Then
 					SetDebugLog("ToUse : Castle")
-					Local $TmpIndex = 0
+					
 					$TmpIndex = _ArraySearch($aSearchResult, $eCastle, 0, 0, 0, 0, 1, 5)
 					If $aSearchResult[$TmpIndex][5] = $eCastle Then
 						$iTroopIndex = $eCastle ;set ByRef
@@ -280,6 +289,9 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 				Return
 			EndIf
 			If _Sleep(750) Then Return
+		Else
+			$iTroopIndex = -1 ;set ByRef
+			SetLog("No " & GetTroopName($eCastle) & " Detected, discard Siege use", $COLOR_INFO)
 		EndIf
 	EndIf
 EndFunc   ;==>SelectCastleOrSiege
