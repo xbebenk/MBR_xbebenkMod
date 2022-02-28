@@ -215,7 +215,6 @@ Func AttackBB($aBBAttackBar = Default)
 	If Not $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
 		SetLog("Dropping BM Last")
 		$bBMDeployed = DeployBM($aBMPos, $iSide)
-		If _Sleep($g_iBBMachAbilityTime - 2000) Then Return
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
@@ -320,7 +319,9 @@ EndFunc
 
 Func DeployBM($aBMPos, $iSide = False)
 	Local $bBMDeployed = False
-
+	Local $TmpBMPosX = $aBMPos[0] - 17
+	Local $BMPosY = 578
+	
 	If $g_bBBMachineReady And IsArray($aBMPos) Then
 		SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 		Local $DP[0][3]
@@ -353,6 +354,8 @@ Func DeployBM($aBMPos, $iSide = False)
 			Else
 				PureClick($DP[$iPoint][1], $DP[$iPoint][2])
 			EndIf
+			_Sleep(500)
+			If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "240571", 10, 1) Then ExitLoop
 		Next
 		$bBMDeployed = True ;we dont know BM is deployed or no, just set it true as already try 3 time to deployBM
 	EndIf
@@ -370,7 +373,7 @@ Func CheckBMLoop($aBMPos)
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "8C8C8C", 10, 1) Then
-			_Sleep(1000)
+			_Sleep(500)
 			SetDebugLog("Waiting Battle Machine Ability", $COLOR_DEBUG2)
 			ContinueLoop
 		Else
@@ -398,7 +401,7 @@ Func CheckBMLoop($aBMPos)
 		EndIf
 		If _Sleep(250) Then Return
 		SetDebugLog("Battle Machine LoopCheck", $COLOR_ACTION)
-		If $loopcount > 240 Then Return ;1 minute
+		If $loopcount > 60 Then Return ;1 minute
 		$loopcount += 1
 	Wend
 EndFunc
