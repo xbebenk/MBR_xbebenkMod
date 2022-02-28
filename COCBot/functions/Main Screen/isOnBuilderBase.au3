@@ -14,10 +14,7 @@
 ; ===============================================================================================================================
 
 Func isOnBuilderBase($bNeedCaptureRegion = True)
-	If _Sleep($DELAYISBUILDERBASE) Then Return
-	Local $asSearchResult = findMultiple($g_sImgIsOnBB, GetDiamondFromRect("260,0,406,54"), GetDiamondFromRect("260,0,406,54"), 0, 1000, 1, "objectname", $bNeedCaptureRegion)
-
-	If IsArray($asSearchResult) And UBound($asSearchResult) > 0 Then
+	If _ColorCheck(_GetPixelColor(356, 12, True), Hex(0x9CD2EE, 6), 20) Then
 		SetDebugLog("Builder Base Builder detected", $COLOR_DEBUG)
 		Return True
 	Else

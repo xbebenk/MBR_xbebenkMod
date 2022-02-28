@@ -51,7 +51,7 @@ EndFunc
 
 Func SearchUpgrade($bTest = False)
 	SetLog("Check for Auto Upgrade", $COLOR_DEBUG)
-	ClickAway()
+	checkMainScreen(True, $g_bStayOnBuilderBase, "AutoUpgrade")
 	Local $bDebug = $g_bDebugSetlog
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
@@ -114,7 +114,7 @@ Func SearchUpgrade($bTest = False)
 		EndIf
 	EndIf
 	If Not $g_bRunState Then Return
-	ClickAway()
+	Clickaway("Right")
 	If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeCheckBuilder") Then ZoomOut() 
 	Return False
 EndFunc
@@ -423,7 +423,7 @@ Func DoUpgrade($bTest = False)
 		;SetLog($g_aUpgradeResourceCostDuration[$i])
 		If $g_aUpgradeResourceCostDuration[$i] = "" Then
 			SetLog("Error at $g_aUpgradeResourceCostDuration, looking next...", $COLOR_ERROR)
-			ClickAway()
+			Clickaway("Right")
 			Return False
 		EndIf
 	Next
@@ -709,7 +709,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 
 				If Not $aCoord[$j][2] = "" Then	
 					If Not $ZoomedIn Then
-						ClickAway()
+						Clickaway("Right")
 						If _Sleep(1000) Then Return
 						If SearchGreenZone() Then
 							$ZoomedIn = True
@@ -1002,7 +1002,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 	If Not $g_bRunState Then Return
 	; open the builders menu
 	If Not _ColorCheck(_GetPixelColor(350,73, True), "FDFEFD", 30) Then
-		Click(295, 30)
+		Click(295, 20)
 		If _Sleep(1000) Then Return
 	EndIf
 
@@ -1016,7 +1016,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 				Click(825,45)
 				If _Sleep(1000) Then Return
 			EndIf
-			Click(295, 30)
+			Click(295, 20)
 			If _Sleep(1000) Then Return
 			If _ColorCheck(_GetPixelColor(350, 73, True), "FDFEFD", 20) Then
 				$b_WindowOpened = True
@@ -1032,7 +1032,7 @@ EndFunc ;==>ClickMainBuilder
 
 Func GoGoblinMap()
 	Local $GoblinFaceCoord, $CircleCoord
-	ClickAway()
+	Clickaway("Right")
 	ClickP($aAttackButton)
 	SetLog("Going to Goblin Map to reset Field", $COLOR_INFO)
 	If Not $g_bRunState Then Return

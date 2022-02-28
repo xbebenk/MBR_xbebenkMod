@@ -1560,41 +1560,40 @@ Func BuilderBase()
 	If SwitchBetweenBases() And isOnBuilderBase()  Then
 
 		$g_bStayOnBuilderBase = True
-		If _Sleep($DELAYRUNBOT3) Then Return
-		AndroidAdbScript("ZoomOut")
-		If checkObstacles() Then Return
+		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 
 		BuilderBaseReport()
-		If _Sleep($DELAYRUNBOT3) Then Return
-		
 		CollectBuilderBase()
-		If _Sleep($DELAYRUNBOT3) Then Return
+		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		
+		If $g_bElixirStorageFullBB Then StartClockTowerBoost()
 		
 		CleanBBYard()
-		If _Sleep($DELAYRUNBOT3) Then Return
+		If _Sleep($DELAYRUNBOT1) Then Return
+		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		
 		If Not BBDropTrophy() Then 		
-			If _Sleep($DELAYRUNBOT3) Then Return
+			If _Sleep($DELAYRUNBOT1) Then Return
 			DoAttackBB()
-			If _Sleep($DELAYRUNBOT3) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+			If _Sleep($DELAYRUNBOT1) Then Return
 		EndIf
 		
 		AutoUpgradeBB()
-		If _Sleep($DELAYRUNBOT3) Then Return
-		If checkObstacles() Then Return
+		If _Sleep($DELAYRUNBOT1) Then Return
+		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		
 		StarLaboratory()
-		If _Sleep($DELAYRUNBOT3) Then Return
+		If _Sleep($DELAYRUNBOT1) Then Return
+		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
-		
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
-		
-		$g_bStayOnBuilderBase = False
 		; switch back to normal village
 		SwitchBetweenBases()
+		$g_bStayOnBuilderBase = False
 	EndIf
 EndFunc
 

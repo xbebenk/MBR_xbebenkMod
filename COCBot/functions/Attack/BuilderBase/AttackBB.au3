@@ -19,6 +19,7 @@ Func DoAttackBB()
 		Local $count = 1
 		While PrepareAttackBB()
 			If Not $g_bRunState Then Return
+			If IsProblemAffect(True) Then Return
 			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			_AttackBB()
@@ -48,6 +49,7 @@ Func DoAttackBB()
 	Else
 		For $i = 1 To $g_iBBAttackCount
 			If Not $g_bRunState Then Return
+			If IsProblemAffect(True) Then Return
 			If PrepareAttackBB() Then
 				SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 				SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
@@ -72,7 +74,7 @@ Func DoAttackBB()
 		ClickAway()
 	EndIf
 	If Not $g_bRunState Then Return
-	If checkMainScreen(False, $g_bStayOnBuilderBase, "DoAttackBB") Then ZoomOut() 
+	If checkMainScreen(True, $g_bStayOnBuilderBase, "DoAttackBB") Then ZoomOut() 
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 
@@ -96,11 +98,6 @@ Func _AttackBB()
 	If _Sleep(1500) Then Return ; give time for find now button to go away
 
 	If Not $g_bRunState Then Return ; Stop Button
-
-	local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
-	$g_iAndroidSuspendModeFlags = 0 ; disable suspend and resume
-	SetDebugLog("Android Suspend Mode Disabled")
-
 	; wait for the clouds to clear
 	SetLog("Searching for Opponent.", $COLOR_BLUE)
 	local $timer = __TimerInit()
@@ -116,11 +113,6 @@ Func _AttackBB()
 			EndIf
 			$iPrevTime = $iTime
 		EndIf
-		If _Sleep($DELAYRESPOND) Then
-			$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-			SetDebugLog("Android Suspend Mode Enabled")
-			Return
-		EndIf
 		If _Sleep(2000) Then Return
 		If isProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return ; Stop Button
@@ -129,14 +121,8 @@ Func _AttackBB()
 	; Get troops on attack bar and their quantities
 	local $aBBAttackBar = GetAttackBarBB()
 	If $g_bChkBBCustomArmyEnable Then CorrectAttackBarBB($aBBAttackBar) ; xbebenk
-	If _Sleep($DELAYRESPOND) Then
-		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-		SetDebugLog("Android Suspend Mode Enabled")
-		Return
-	EndIf
 	
 	$aBBAttackBar = GetAttackBarBB()
-	
 	If $g_BBBCSVAttack Then
 		; Zoomout the Opponent Village.
 		BuilderBaseZoomOut(False, True)
@@ -156,17 +142,9 @@ Func _AttackBB()
 	; wait for end of battle
 	SetLog("Waiting for end of battle.", $COLOR_BLUE)
 	If Not $g_bRunState Then Return ; Stop Button
-	If Not OkayBBEnd() Then
-		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-		SetDebugLog("Android Suspend Mode Enabled")
-		Return
-	EndIf
+	If Not OkayBBEnd() Then Return
 	SetLog("Battle ended")
-	If _Sleep(3000) Then
-		$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-		SetDebugLog("Android Suspend Mode Enabled")
-		Return
-	EndIf
+	If _Sleep(3000) Then Return
 
 	; wait for ok after both attacks are finished
 	If Not $g_bRunState Then Return ; Stop Button
@@ -174,9 +152,6 @@ Func _AttackBB()
 	Okay()
 	ClickAway("Left")
 	SetLog("Done", $COLOR_SUCCESS)
-
-	$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast ; reset android suspend and resume stuff
-	SetDebugLog("Android Suspend Mode Enabled")
 EndFunc
 
 Func AttackBB($aBBAttackBar = Default)
@@ -185,8 +160,8 @@ Func AttackBB($aBBAttackBar = Default)
 	;local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $iSide = True
 	Local $aBMPos = GetMachinePos()
-	local $iAndroidSuspendModeFlagsLast = $g_iAndroidSuspendModeFlags
 	local $bTroopsDropped = False, $bBMDeployed = False
+	
 	$g_BBDP = GetBBDropPoint()
 	
 	If $UseDefaultBBDP Then 
@@ -214,11 +189,7 @@ Func AttackBB($aBBAttackBar = Default)
 						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
 						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
 							$bDone = True
-							If _Sleep($g_iBBNextTroopDelay) Then ; wait before next troop
-								$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-								SetDebugLog("Android Suspend Mode Enabled")
-								Return
-							EndIf
+							_Sleep($g_iBBNextTroopDelay) ; wait before next troop
 						EndIf
 					EndIf
 					$j+=1
@@ -228,17 +199,9 @@ Func AttackBB($aBBAttackBar = Default)
 			For $i=0 To $iNumSlots - 1
 				DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide)
 				If $i = $iNumSlots-1 Or $aBBAttackBar[$i][0] <> $aBBAttackBar[$i+1][0] Then
-					If _Sleep($g_iBBNextTroopDelay) Then ; wait before next troop
-						$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-						SetDebugLog("Android Suspend Mode Enabled")
-						Return
-					EndIf
+					_Sleep($g_iBBNextTroopDelay) ; wait before next troop
 				Else
-					If _Sleep($DELAYRESPOND) Then ; we are still on same troop so lets drop them all down a bit faster
-						$g_iAndroidSuspendModeFlags = $iAndroidSuspendModeFlagsLast
-						SetDebugLog("Android Suspend Mode Enabled")
-						Return
-					EndIf
+					_Sleep($DELAYRESPOND) ; we are still on same troop so lets drop them all down a bit faster
 				EndIf
 			Next
 		EndIf
@@ -252,7 +215,6 @@ Func AttackBB($aBBAttackBar = Default)
 	If Not $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
 		SetLog("Dropping BM Last")
 		$bBMDeployed = DeployBM($aBMPos, $iSide)
-		If _Sleep($g_iBBMachAbilityTime - 2000) Then Return
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
@@ -357,7 +319,9 @@ EndFunc
 
 Func DeployBM($aBMPos, $iSide = False)
 	Local $bBMDeployed = False
-
+	Local $TmpBMPosX = $aBMPos[0] - 17
+	Local $BMPosY = 578
+	
 	If $g_bBBMachineReady And IsArray($aBMPos) Then
 		SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 		Local $DP[0][3]
@@ -390,6 +354,8 @@ Func DeployBM($aBMPos, $iSide = False)
 			Else
 				PureClick($DP[$iPoint][1], $DP[$iPoint][2])
 			EndIf
+			_Sleep(500)
+			If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "240571", 10, 1) Then ExitLoop
 		Next
 		$bBMDeployed = True ;we dont know BM is deployed or no, just set it true as already try 3 time to deployBM
 	EndIf
@@ -407,7 +373,7 @@ Func CheckBMLoop($aBMPos)
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "8C8C8C", 10, 1) Then
-			_Sleep(1000)
+			_Sleep(500)
 			SetDebugLog("Waiting Battle Machine Ability", $COLOR_DEBUG2)
 			ContinueLoop
 		Else
@@ -435,7 +401,7 @@ Func CheckBMLoop($aBMPos)
 		EndIf
 		If _Sleep(250) Then Return
 		SetDebugLog("Battle Machine LoopCheck", $COLOR_ACTION)
-		If $loopcount > 240 Then Return ;1 minute
+		If $loopcount > 60 Then Return ;1 minute
 		$loopcount += 1
 	Wend
 EndFunc
@@ -495,6 +461,10 @@ Func GetBBDropPoint()
 		$YMiddle = $BHCoord[2]	
 	EndIf
 	
+	Local $hTimer = TimerInit()
+	$g_bAttackActive = True
+	SuspendAndroid()
+	
 	Local $THhOffset = 150, $aResult[0][3]
 	Local $xstart[2] = [70, 430], $ystart = 30, $xend[2] = [430, 800], $yend = 600
 	For $i = 0 To 1
@@ -525,13 +495,16 @@ Func GetBBDropPoint()
 	If $g_bDebugImageSave Then DebugAttackBBImage($aDPResult, $g_BBDPSide)
 	If $g_bDebugClick Then SetLog("g_BBDPSide = " & $g_BBDPSide)
 	
+	ResumeAndroid()
+	$g_bAttackActive = False
+	SetDebugLog("BBDropPoint Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+	
 	FindLavaLauncher($aDPResult)
 	
 	If Ubound($aDPResult) < 10 Then 
 		$UseDefaultBBDP = True
 		If $g_bDebugClick Then SetLog("Insufficient count of DP, Fallback to Default DP", $COLOR_INFO)
 	EndIf
-	
 	Return $aDPResult
 EndFunc
 

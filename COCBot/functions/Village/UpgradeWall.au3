@@ -29,6 +29,7 @@ Func UpgradeWall($bTest = False)
 	If Not $g_bAutoUpgradeWallsEnable Then Return
 
 	SetLog("Checking Upgrade Walls", $COLOR_INFO)
+	checkMainScreen(True, $g_bStayOnBuilderBase, "UpgradeWall")
 	VillageReport(True, True) ;update village resource capacity
 	SetLog("FreeBuilderCount: " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	If $bTest Then $g_iFreeBuilderCount = 1
@@ -55,7 +56,7 @@ Func UpgradeWall($bTest = False)
 
 	If Not $g_bRunState Then Return
 	If $GoUpgrade And Not $g_bUpgradeAnyWallLevel Then
-		ClickAway()
+		Clickaway("Right")
 		VillageReport(True, True) ;update village resource capacity
 		If $g_iFreeBuilderCount < 1 Then Return
 		For $z = 0 To 2
@@ -105,7 +106,7 @@ Func UpgradeWall($bTest = False)
 						EndIf
 				EndSwitch
 
-				ClickAway()
+				Clickaway("Right")
 				VillageReport(True, True)
 				$MinWallGold = IsGoldEnough($iWallCost)
 				$MinWallElixir = IsElixEnough($iWallCost)
@@ -178,7 +179,7 @@ Func UpgradeLowLevelWall($bTest = False)
 	If Not $g_bRunState Then Return
 	SetLog("Upgrade LowLevel Wall using autoupgrade enabled", $COLOR_DEBUG)
 	VillageReport(True, True) ;update village resource capacity
-	ClickMainBuilder()
+	If Not ClickMainBuilder($bTest) Then Return
 	Local $aWallCoord, $Try = 1, $WallNotFound = False
 	While True
 		If Not $g_bRunState Then Return
@@ -204,7 +205,7 @@ Func UpgradeLowLevelWall($bTest = False)
 		EndIf
 	Wend
 	ClickDragAUpgrade("down")
-	ClickAway()
+	Clickaway("Right")
 	SetDebugLog("Upgrade Wall using autoupgrade EXIT", $COLOR_DEBUG)
 EndFunc
 
@@ -285,9 +286,9 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				EndSwitch 
 			Else
 				SetLog("Testing Only!", $COLOR_ERROR)
-				ClickAway()
+				Clickaway("Right")
 				If _Sleep(250) Then Return
-				ClickAway()
+				Clickaway("Right")
 				Return False
 			EndIf
 			If IsGemOpen(True) Then
@@ -347,7 +348,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 		;			SetLog("Upgrade with Gold failed, not Enough Gold", $COLOR_INFO)
 		;		EndIf
 		;EndSwitch
-		ClickAway()
+		Clickaway("Right")
 		Return True
 	EndIf
 	If Not $g_bRunState Then Return
@@ -387,9 +388,9 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 					EndSwitch 
 				Else
 					SetLog("Testing Only!", $COLOR_ERROR)
-					ClickAway()
+					Clickaway("Right")
 					If _Sleep(250) Then Return
-					ClickAway()
+					Clickaway("Right")
 					Return False
 				EndIf
 				If IsGemOpen(True) Then
@@ -404,7 +405,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 			EndIf
 			If _Sleep(800) Then Return
 		Next
-		ClickAway()
+		Clickaway("Right")
 		Return True
 	EndIf
 EndFunc
@@ -488,16 +489,16 @@ Func UpgradeWallGold($iWallCost = $g_iWallCost, $bTest = False)
 			Click(440, 500, 1, 0, "#0317")
 		Else
 			SetLog("Testing Only!", $COLOR_ERROR)
-			ClickAway()
+			Clickaway("Right")
 		EndIf
 		If _Sleep(1000) Then Return
 		If isGemOpen(True) Then
-			ClickAway()
+			Clickaway("Right")
 			SetLog("Upgrade stopped due no loot", $COLOR_ERROR)
 			Return False
 		Else
 			If _Sleep($DELAYUPGRADEWALLGOLD3) Then Return
-			ClickAway()
+			Clickaway("Right")
 			SetLog("Upgrade complete", $COLOR_SUCCESS)
 			PushMsg("UpgradeWithGold")
 			$g_iNbrOfWallsUppedGold += 1
@@ -507,7 +508,7 @@ Func UpgradeWallGold($iWallCost = $g_iWallCost, $bTest = False)
 			Return True
 		EndIf
 	EndIf
-	ClickAway()
+	Clickaway("Right")
 EndFunc   ;==>UpgradeWallGold
 
 Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
@@ -528,7 +529,7 @@ Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
 			Click(440, 500, 1, 0, "#0318")
 		Else
 			SetLog("Testing Only!", $COLOR_ERROR)
-			ClickAway()
+			Clickaway("Right")
 		EndIf
 		If _Sleep(1000) Then Return
 		If isGemOpen(True) Then
@@ -536,7 +537,7 @@ Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
 			Return False
 		Else
 			If _Sleep($DELAYUPGRADEWALLELIXIR3) Then Return
-			ClickAway()
+			Clickaway("Right")
 			SetLog("Upgrade complete", $COLOR_SUCCESS)
 			PushMsg("UpgradeWithElixir")
 			$g_iNbrOfWallsUppedElixir += 1
@@ -546,7 +547,7 @@ Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
 			Return True
 		EndIf
 	EndIf
-	ClickAway()
+	Clickaway("Right")
 EndFunc   ;==>UpgradeWallElixir
 
 Func IsGoldEnough($iWallCost = $g_aUpgradeWall[0])

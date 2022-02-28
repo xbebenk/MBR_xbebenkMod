@@ -12,7 +12,7 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
-Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
+Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClanGames, $OnlyPurge = False)
 	$g_bIsBBevent = False ;just to be sure, reset to false
 	$g_bIsCGEventRunning = False ;just to be sure, reset to false
 	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false
@@ -480,7 +480,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = False, $OnlyPurge = False)
 		ClickP($TabChallengesPosition, 2, 0, "#Tab")
 		If _sleep(1000) Then Return
 		ClickDrag(807, 210, 807, 385, 500)
-		If _Sleep(1000) Then Return
+		If _Sleep(2000) Then Return
 	EndIf
 
 	; After removing is necessary check Ubound
@@ -668,7 +668,7 @@ EndFunc
 Func IsClanGamesWindow($getCapture = True)
 	Local $sState, $bRet = False
 
-	If QuickMIS("BC1", $g_sImgCaravan, 230, 55, 330, 155, $getCapture, False) Then
+	If QuickMIS("BC1", $g_sImgCaravan, 200, 55, 330, 155, $getCapture, False) Then
 		SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		; Just wait for window open
@@ -1158,8 +1158,8 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["GoldChallenge", 			"Gold Challenge", 				 7,  5, 8, "Loot certain amount of Gold from a single Multiplayer Battle"								], _ ;|8h 	|50
 			["ElixirChallenge", 		"Elixir Challenge", 			 7,  5, 8, "Loot certain amount of Elixir from a single Multiplayer Battle"								], _ ;|8h 	|50
 			["DarkEChallenge", 			"Dark Elixir Challenge", 		 8,  5, 8, "Loot certain amount of Dark elixir from a single Multiplayer Battle"						], _ ;|8h 	|50
-			["GoldGrab", 				"Gold Grab", 					 6,  1, 1, "Loot a total amount of Gold (accumulated from many attacks) from Multiplayer Battle"		], _ ;|1h-2d 	|100-600
-			["ElixirEmbezz", 			"Elixir Embezzlement", 			 6,  1, 1, "Loot a total amount of Elixir (accumulated from many attacks) from Multiplayer Battle"		], _ ;|1h-2d 	|100-600
+			["GoldGrab", 				"Gold Grab", 					 6,  3, 1, "Loot a total amount of Gold (accumulated from many attacks) from Multiplayer Battle"		], _ ;|1h-2d 	|100-600
+			["ElixirEmbezz", 			"Elixir Embezzlement", 			 6,  3, 1, "Loot a total amount of Elixir (accumulated from many attacks) from Multiplayer Battle"		], _ ;|1h-2d 	|100-600
 			["DarkEHeist", 				"Dark Elixir Heist", 			 9,  3, 1, "Loot a total amount of Dark Elixir (accumulated from many attacks) from Multiplayer Battle"	]]   ;|1h-2d 	|100-600
 
 	Local $AirTroopChallenges[14][6] = [ _
@@ -1294,21 +1294,21 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 
 	Local $BBDestructionChallenges[18][6] = [ _
             ["Airbomb",					"Air Bomb",                 	6,  1, 4, "Destroy certain number of Air Bomb in Versus Battles"		], _
-			["BuildingDes",             "BB Building",					6,  1, 1, "Destroy certain number of Building in Versus Battles"		], _
+			["BuildingDes",             "BB Building",					6,  1, 4, "Destroy certain number of Building in Versus Battles"		], _
 			["BuilderHall",             "BuilderHall",					6,  1, 2, "Destroy certain number of Builder Hall in Versus Battles"	], _
             ["Cannon",                 	"BB Cannon",                  	6,  1, 1, "Destroy certain number of Cannon in Versus Battles"			], _
-			["ClockTower",             	"Clock Tower",                 	6,  1, 2, "Destroy certain number of Clock Tower in Versus Battles"		], _
+			["ClockTower",             	"Clock Tower",                 	6,  1, 1, "Destroy certain number of Clock Tower in Versus Battles"		], _
             ["DoubleCannon",         	"Double Cannon",             	6,  1, 1, "Destroy certain number of Double Cannon in Versus Battles"	], _
-			["FireCrackers",         	"Fire Crackers",              	6,  1, 3, "Destroy certain number of Fire Crackers in Versus Battles"	], _
-			["GemMine",                 "Gem Mine",                  	6,  1, 2, "Destroy certain number of Gem Mine in Versus Battles"		], _
+			["FireCrackers",         	"Fire Crackers",              	6,  1, 2, "Destroy certain number of Fire Crackers in Versus Battles"	], _
+			["GemMine",                 "Gem Mine",                  	6,  1, 1, "Destroy certain number of Gem Mine in Versus Battles"		], _
 			["GiantCannon",             "Giant Cannon",               	6,  1, 4, "Destroy certain number of Giant Cannon in Versus Battles"	], _
 			["GuardPost",               "Guard Post",                 	6,  1, 4, "Destroy certain number of Guard Post in Versus Battles"		], _
 			["MegaTesla",               "Mega Tesla",               	6,  1, 5, "Destroy certain number of Mega Tesla in Versus Battles"		], _
-			["MultiMortar",             "Multi Mortar",               	6,  1, 4, "Destroy certain number of Multi Mortar in Versus Battles"	], _
+			["MultiMortar",             "Multi Mortar",               	6,  1, 2, "Destroy certain number of Multi Mortar in Versus Battles"	], _
 			["Roaster",                 "Roaster",			            6,  1, 4, "Destroy certain number of Roaster in Versus Battles"			], _
 			["StarLab",                 "Star Laboratory",              6,  1, 1, "Destroy certain number of Star Laboratory in Versus Battles"	], _
 			["WallDes",             	"Wall Whacker",              	6,  1, 2, "Destroy certain number of Wall in Versus Battles"			], _
-			["Crusher",             	"Crusher",                 		6,  1, 3, "Destroy certain number of Crusher in Versus Battles"			], _
+			["Crusher",             	"Crusher",                 		6,  1, 2, "Destroy certain number of Crusher in Versus Battles"			], _
 			["ArcherTower",             "Archer Tower",            		6,  1, 1, "Destroy certain number of Archer Tower in Versus Battles"	], _
 			["LavaLauncher",            "Lava Launcher",           		6,  1, 5, "Destroy certain number of Lava Launcher in Versus Battles"	]]
 

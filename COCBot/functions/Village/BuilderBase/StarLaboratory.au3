@@ -257,9 +257,6 @@ Func GetSLabTroopResPos($Troop)
 EndFunc   ;==>FullNametroops
 
 Func LocateStarLab()
-	; Zoomout before locating
-	ZoomOut()
-	
 	If $g_aiStarLaboratoryPos[0] > 0 And $g_aiStarLaboratoryPos[1] > 0 Then
 		ClickP($g_aiStarLaboratoryPos)
 		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for description to popup
