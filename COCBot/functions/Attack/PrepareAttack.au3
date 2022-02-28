@@ -194,10 +194,10 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 				$TmpIndex = _ArraySearch($aSearchResult, $eCastle, 0, 0, 0, 0, 1, 5)
 				If $TmpIndex = -1 Then 
 					$iTroopIndex = -1 ;set ByRef
-					SetLog("No CC" & GetTroopName($eCastle) & " Detected, discard Siege use", $COLOR_INFO)
+					SetLog("No " & GetTroopName($eCastle) & " Detected, discard Siege use", $COLOR_INFO)
 					Click($iLastX, $iLastY, 1)
+					Return
 				EndIf
-				
 				
 				If $ToUse = $eCastle Then
 					SetDebugLog("ToUse : Castle")
