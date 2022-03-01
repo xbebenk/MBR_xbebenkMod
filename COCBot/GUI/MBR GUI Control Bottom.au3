@@ -20,9 +20,10 @@ Func Initiate()
 	WinGetAndroidHandle()
 	If $g_hAndroidWindow <> 0 And ($g_bAndroidBackgroundLaunched = True Or AndroidControlAvailable()) Then
 		SetLogCentered(" " & $g_sBotTitle & " Powered by MyBot.run ", "~", $COLOR_DEBUG)
-
+		
 		Local $Compiled = @ScriptName & (@Compiled ? " Executable" : " Script")
 		SetLog($Compiled & " running on " & @OSVersion & " " & @OSServicePack & " " & @OSArch)
+		SetLog("xbebenkMod version " & $g_sXModversion, $COLOR_INFO)
 		If Not $g_bSearchMode Then
 			SetLogCentered(" Bot Start ", Default, $COLOR_SUCCESS)
 		Else
