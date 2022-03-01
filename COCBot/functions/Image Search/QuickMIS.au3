@@ -22,7 +22,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 	If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
 	Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
-	If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+	;If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
 
 	If IsArray($Res) Then
 		;_ArrayDisplay($Res)
@@ -72,6 +72,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					$g_iQuickMISY = $aCord[1] + $Top
 
 					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
+					$g_iQuickMISName = $Name
 
 					If $g_bDebugSetlog Or $Debug Then
 						SetDebugLog($ValueReturned & " Found: " & $Result & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)

@@ -184,10 +184,10 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			ClickP($aiSwitchBtn)
 			; wait to appears the new small window
 			Local $iLastX = $aiSwitchBtn[0] - 30, $iLastY = $aiSwitchBtn[1]
-			If _Sleep(1500) Then Return
+			If _Sleep(2000) Then Return
 
 			; Lets detect the CC & Sieges and click - search window is - X, 530, X + 390, 530 + 30
-			Local $aSearchResult = GetListSiege($iX - 50, 480, $iX + 390, 540)
+			Local $aSearchResult = GetListSiege($iX - 50, 470, $iX + 350, 550)
 			If IsArray($aSearchResult) And Ubound($aSearchResult) > 0 Then
 				Local $FinalCoordX = $iLastX, $FinalCoordY = $iLastY, $iFinalLevel = 1, $HigherLevelFound = False
 				Local $TmpIndex = 0
@@ -296,21 +296,28 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 	EndIf
 EndFunc   ;==>SelectCastleOrSiege
 
-Func GetListSiege($x = 135, $y = 480, $x1 = 500, $y1 = 540)
+Func GetListSiege($x = 135, $y = 470, $x1 = 700, $y1 = 540)
 	Local $aResult[0][6], $CheckLvlY = 524 
-	Local $aTmp = QuickMIS("CNX", $g_sImgSwitchSiegeMachine, $x, $y, $x1, $y1)
+	Local $aSiege[0][3]
+	$x += 22
+	For $i = 1 To 5
+		If QuickMIS("BC1", $g_sImgSwitchSiegeMachine, $x, $y, $x+70, $y1) Then
+			_ArrayAdd($aSiege, $g_iQuickMISName & "|" & $g_iQuickMISX & "|" & $g_iQuickMISY)
+		EndIf
+		$x += 72
+	Next
 	
-	If IsArray($aTmp) And UBound($aTmp) > 0 Then
-		For $i = 0 To UBound($aTmp) - 1
-			SetDebugLog("[" & $i & "] Siege: " & $aTmp[$i][0] & ", Coord[" & $aTmp[$i][1] & "," & $aTmp[$i][2] & "]")
-			SetDebugLog("getTroopsSpellsLevel(" & $aTmp[$i][1] - 30 & "," & $CheckLvlY & ")", $COLOR_ACTION)
-			Local $SiegeLevel = getOcrAndCapture("coc-spellslevel", $aTmp[$i][1] - 30, $CheckLvlY, 20, 20, True); getTroopsSpellsLevel($aTmp[$i][1] - 30, $CheckLvlY)
+	If IsArray($aSiege) And UBound($aSiege) > 0 Then
+		For $i = 0 To UBound($aSiege) - 1
+			SetDebugLog("[" & $i & "] Siege: " & $aSiege[$i][0] & ", Coord[" & $aSiege[$i][1] & "," & $aSiege[$i][2] & "]")
+			SetDebugLog("getTroopsSpellsLevel(" & $aSiege[$i][1] - 30 & "," & $CheckLvlY & ")", $COLOR_ACTION)
+			Local $SiegeLevel = getOcrAndCapture("coc-spellslevel", $aSiege[$i][1] - 30, $CheckLvlY, 20, 20, True); getTroopsSpellsLevel($aTmp[$i][1] - 30, $CheckLvlY)
 			SetDebugLog("SiegeLevel=" & $SiegeLevel)
 			If $SiegeLevel = "" Then $SiegeLevel = 1
-			Local $TroopIndex = TroopIndexLookup($aTmp[$i][0])
+			Local $TroopIndex = TroopIndexLookup($aSiege[$i][0])
 			Local $OwnSiege = False
-			If _ColorCheck(_GetPixelColor($aTmp[$i][1] - 30, 466, True), Hex(0x559CDD, 6), 10) Then $OwnSiege = String(True)
-			_ArrayAdd($aResult, $aTmp[$i][0] & "|" & $aTmp[$i][1] & "|" & $aTmp[$i][2] & "|" & $SiegeLevel & "|" & $OwnSiege & "|" & $TroopIndex)
+			If _ColorCheck(_GetPixelColor($aSiege[$i][1] - 30, 466, True), Hex(0x559CDD, 6), 10) Then $OwnSiege = String(True)
+			_ArrayAdd($aResult, $aSiege[$i][0] & "|" & $aSiege[$i][1] & "|" & $aSiege[$i][2] & "|" & $SiegeLevel & "|" & $OwnSiege & "|" & $TroopIndex)
 		Next
 	Else
 		SetDebugLog("GetListSiege: ERR", $COLOR_ERROR)
