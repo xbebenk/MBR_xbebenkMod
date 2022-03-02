@@ -1928,7 +1928,7 @@ Global $g_sPetUpgradeTime = ""
 
 Global $g_bUpgradePetsEnable[4] = [False, False, False, False]
 
-Global $g_iMinDark4PetUpgrade = 0
+Global $g_iMinDark4PetUpgrade = 115000
 
 Local $g_aiPetLevel[4] = [0, 0, 0, 0]
 
