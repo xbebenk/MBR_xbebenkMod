@@ -28,7 +28,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
 	SetDebugLog("isOnBuilderBase() : " & String($bIsOnBuilderIsland), $COLOR_ERROR)
-	If Not $bBuilderBase And $bIsOnBuilderIsland And Not $g_bStayOnBuilderBase Then ;Check for MainVillage, but coc is on BB, and not stay on BB -> go to mainVillage
+	If Not $bBuilderBase And $bIsOnBuilderIsland Then ;Check for MainVillage, but coc is on BB -> go to mainVillage
 		AndroidAdbScript("ZoomOut")
 		If SwitchBetweenBases() Then 
 			If _Sleep($DELAYCHECKOBSTACLES1) Then Return

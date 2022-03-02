@@ -21,13 +21,9 @@ Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom = 
 	Return FuncReturn(_checkMainScreen($bSetLog, $bBuilderBase, $CalledFrom))
 EndFunc   ;==>checkMainScreen
 
-Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom = "Default") ;Checks if in main screen
+Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase, $CalledFrom = "Default") ;Checks if in main screen
 
 	If $bSetLog = Default Then $bSetLog = True
-	If $bBuilderBase = Default Then $bBuilderBase = $g_bStayOnBuilderBase
-	Local $i, $iErrorCount, $iCheckBeforeRestartAndroidCount, $bObstacleResult, $bContinue
-	Local $aPixelToCheck = $aIsMain
-
 	If $bSetLog Then
 		SetLog("[" & $CalledFrom & "] Locate Main Screen", $COLOR_INFO)
 	EndIf
@@ -43,16 +39,9 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 		If $g_bAndroidAdbScreencap = False And _WinAPI_IsIconic($g_hAndroidWindow) Then WinSetState($g_hAndroidWindow, "", @SW_RESTORE)
 	EndIf
 	
-	If Not IsProblemAffect(True) Then 
-		Local $SearchZoomOut = SearchZoomOut(False, True, "checkMainScreen", True)
-		If $SearchZoomOut[0] = "" Then ZoomOut()
-	EndIf
-	
-	$i = 0
-	$iErrorCount = 0
-	$iCheckBeforeRestartAndroidCount = 5
+	Local $i = 0, $iErrorCount = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue, $bLocated
+	Local $aPixelToCheck = $aIsMain
 	If $bBuilderBase Then $aPixelToCheck = $aIsOnBuilderBase
-	Local $bLocated = False
 	While True
 		$i += 1
 		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))
@@ -72,7 +61,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom =
 		EndIf
 		If $bContinue Then
 			waitMainScreen() ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
-			If Not $g_bRunState Then Return False
+			If Not $g_bRunState Then Return
 			If @extended Then Return SetError(1, 1, False)
 			If @error Then $iErrorCount += 1
 			If $iErrorCount > 2 Then
