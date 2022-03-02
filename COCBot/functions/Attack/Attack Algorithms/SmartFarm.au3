@@ -220,7 +220,7 @@ Func ChkSmartFarm($TypeResources = "All")
 
 EndFunc   ;==>ChkSmartFarm
 
-Func SmartFarmDetection($txtBuildings = "Mines")
+Func SmartFarmDetection($txtBuildings = "All")
 
 	; This Function will fill an Array with several informations after Mines, Collectores or Drills detection with Imgloc
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
@@ -256,7 +256,8 @@ Func SmartFarmDetection($txtBuildings = "Mines")
 			$iMaxLevel = 8
 		Case "All"
 			If $g_iDetectedImageType = 1 Then
-				$sdirectory = @ScriptDir & "\imgxml\Storages\All_Snow"
+				;$sdirectory = @ScriptDir & "\imgxml\Storages\All_Snow"
+				$sdirectory = @ScriptDir & "\imgxml\Storages\All"
 			Else
 				$sdirectory = @ScriptDir & "\imgxml\Storages\All"
 			EndIf
@@ -439,18 +440,18 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 
 	; Needed for editing the picture
 	Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($editedImage)
-	Local $hPen = _GDIPlus_PenCreate(0xFFFF0000, 2) ; Create a pencil Color FF0000/RED
-	Local $hPen2 = _GDIPlus_PenCreate(0xFF000000, 2) ; Create a pencil Color FFFFFF/BLACK
+	Local $hPenRed = _GDIPlus_PenCreate(0xFFFFD800, 2) ; Create a pencil Color FF0000/RED
+	Local $hPenBlack = _GDIPlus_PenCreate(0xFF000000, 2) ; Create a pencil Color FFFFFF/BLACK
 
 
 	; TH
-	addInfoToDebugImage($hGraphic, $hPen, "TH_" & $THdetails[0] & "|" & $THdetails[3], $THdetails[1], $THdetails[2])
-	_GDIPlus_GraphicsDrawRect($hGraphic, $THdetails[1] - 5, $THdetails[2] - 5, 10, 10, $hPen2)
+	addInfoToDebugImage($hGraphic, $hPenRed, "TH_" & $THdetails[0] & "|" & $THdetails[3], $THdetails[1], $THdetails[2])
+	_GDIPlus_GraphicsDrawRect($hGraphic, $THdetails[1] - 5, $THdetails[2] - 5, 10, 10, $hPenBlack)
 
 	Local $tempObbj, $tempObbjs
 	For $i = 0 To UBound($aIn) - 1
 		; Objects Detected Inside the village
-		addInfoToDebugImage($hGraphic, $hPen, $aIn[$i][3] & "|" & $aIn[$i][4] & "|" & $aIn[$i][2], $aIn[$i][0], $aIn[$i][1])
+		addInfoToDebugImage($hGraphic, $hPenRed, $aIn[$i][3] & "|" & $aIn[$i][4] & "|" & $aIn[$i][2], $aIn[$i][0], $aIn[$i][1])
 
 		; Deploy points near Red Line
 		If StringInStr($aIn[$i][5], "|") Then
@@ -458,11 +459,11 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 			$tempObbj = StringSplit($aIn[$i][5], "|", $STR_NOCOUNT) ; several detected points
 			For $t = 0 To UBound($tempObbj) - 1
 				$tempObbjs = StringSplit($tempObbj[$t], ",", $STR_NOCOUNT)
-				If UBound($tempObbjs) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPen2)
+				If UBound($tempObbjs) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPenBlack)
 			Next
 		Else
 			$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT)
-			If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPen2)
+			If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPenBlack)
 		EndIf
 		$tempObbj = Null
 		$tempObbjs = Null
@@ -470,32 +471,32 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 
 	For $i = 0 To UBound($aOut) - 1
 		; Objects Detected Outside the village
-		addInfoToDebugImage($hGraphic, $hPen, $aOut[$i][3] & "|" & $aOut[$i][4] & "|" & $aOut[$i][2], $aOut[$i][0], $aOut[$i][1])
+		addInfoToDebugImage($hGraphic, $hPenRed, $aOut[$i][3] & "|" & $aOut[$i][4] & "|" & $aOut[$i][2], $aOut[$i][0], $aOut[$i][1])
 
 		; Deploy points near Red Line
 		If StringInStr($aOut[$i][5], "|") Then
 			$tempObbj = StringSplit($aOut[$i][5], "|", $STR_NOCOUNT) ; several detected points
 			For $t = 0 To UBound($tempObbj) - 1
 				$tempObbjs = StringSplit($tempObbj[$t], ",", $STR_NOCOUNT)
-				If UBound($tempObbjs) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPen2)
+				If UBound($tempObbjs) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPenBlack)
 			Next
 		Else
 			$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT)
-			If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPen2)
+			If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPenBlack)
 		EndIf
 		$tempObbj = Null
 		$tempObbjs = Null
 	Next
 
 	; ############################# Best Side to attack INSIDE ###################################
-	$hPen2 = _GDIPlus_PenCreate(0xFF0038ff, 2) ; Create a pencil Color BLUE
+	Local $hPenCyan = _GDIPlus_PenCreate(0xFF00FFFF, 2) ; Create a pencil Color BLUE
 	Local $aTEMP, $DecodeEachPoint
 	SetDebugLog("$redline: " & _ArrayToString($redline))
 	For $l = 0 To UBound($redline) - 1
 		$aTEMP = StringSplit($redline[$l], "|", 2)
 		For $i = 0 To UBound($aTEMP) - 1
 			$DecodeEachPoint = StringSplit($aTEMP[$i], ",", 2)
-			If UBound($DecodeEachPoint) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $DecodeEachPoint[0], $DecodeEachPoint[1], 5, 5, $hPen2)
+			If UBound($DecodeEachPoint) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $DecodeEachPoint[0], $DecodeEachPoint[1], 5, 5, $hPenCyan)
 		Next
 	Next
 
@@ -504,8 +505,9 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 
 	; Save the image and release any memory
 	_GDIPlus_ImageSaveToFile($editedImage, $subDirectory & $fileName)
-	_GDIPlus_PenDispose($hPen)
-	_GDIPlus_PenDispose($hPen2)
+	_GDIPlus_PenDispose($hPenRed)
+	_GDIPlus_PenDispose($hPenBlack)
+	_GDIPlus_PenDispose($hPenCyan)
 	_GDIPlus_GraphicsDispose($hGraphic)
 	Setlog("Debug Image saved!")
 
