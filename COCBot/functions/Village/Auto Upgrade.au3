@@ -190,7 +190,9 @@ Func FindExistingBuilding($bTest = False)
 EndFunc
 
 Func DoUpgrade($bTest = False)
-
+	;add check builder here.. sometime you have 2 or more builder and bot detect more than 1 building to upgrade
+	;this check is for stop upgrade if have builder reserved for wall/heroes
+	If Not AutoUpgradeCheckBuilder($bTest) Then Return 
 	If Not $g_bRunState Then Return
 	$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
 	$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
