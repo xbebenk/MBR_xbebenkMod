@@ -23,6 +23,7 @@ Func BoostSuperTroop($bTest = False)
 			Return False
 		EndIf
 	EndIf
+	ZoomOut()
 	CheckMainScreen(False, $g_bStayOnBuilderBase, "BoostSuperTroop")
 	VillageReport(True, True) ;update village resource
 	If OpenBarrel() Then
@@ -73,13 +74,13 @@ Func BoostSuperTroop($bTest = False)
 								Click($g_iQuickMISX, $g_iQuickMISY)
 								If _Sleep(1000) Then Return
 								Setlog("Using Dark Elixir...", $COLOR_INFO)
-								If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 500, 750, 570, True, False) Then ;find image of dark elixir button
+								If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 500, 750, 570) Then ;find image of dark elixir button
 									$BoostCost = getResourcesBonus(628, 524) ; get cost
 									$BoostDuration = getHeroUpgradeTime(575, 484) ; get duration
 									If Not $BoostCost = "" Then
 										Click($g_iQuickMISX, $g_iQuickMISY)
 										If _Sleep(1500) Then Return
-										If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 320, 400, 550, 490, True, False) Then ;find image of dark elixir button again (confirm upgrade)
+										If QuickMis("BC1", $g_sImgGeneralCloseButton, 570, 160, 640, 230) Then ;find image of Close Button
 											Setlog("Using Dark Elixir, Boosting " & $sTroopName, $COLOR_SUCCESS)
 											Setlog("BoostCost = " & $BoostCost & " Dark Elixir, Duration = " & $BoostDuration, $COLOR_SUCCESS)
 											;do click boost
@@ -87,7 +88,7 @@ Func BoostSuperTroop($bTest = False)
 												CancelBoost("Using Dark Elixir")
 												$TroopBoosted = True
 											Else
-												Click($g_iQuickMISX, $g_iQuickMISY)
+												Click($g_iQuickMISX - 189, $g_iQuickMISY + 256) ;relative from close button image to boost button
 												ClickAway()
 											EndIf
 										Else
@@ -102,10 +103,10 @@ Func BoostSuperTroop($bTest = False)
 										;Let's try using potion
 										If $g_bSuperTroopsBoostUsePotion Then
 											Setlog("Let's try boosting " & $sTroopName & " with potion", $COLOR_INFO)
-											If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 400, 500, 580, 570, True, False) Then ;find image of Super Potion
+											If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 400, 500, 580, 570) Then ;find image of Super Potion
 												Click($g_iQuickMISX, $g_iQuickMISY)
 												If _Sleep(1500) Then Return
-												If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 330, 400, 520, 480, True, False) Then ;find image of Super Potion again (confirm upgrade)
+												If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 330, 400, 520, 480) Then ;find image of Super Potion again (confirm upgrade)
 													;do click boost
 													If $bTest Then
 														CancelBoost("Using Potion")
@@ -241,8 +242,8 @@ Func FindStroopIcons($iIndex, $iColumnX, $iColumnY1, $iColumnX1, $iColumnY2)
 EndFunc   ;==>FindStroopIcons
 
 Func CancelBoost($aMessage = "")
-	SetLog($aMessage & ", Test = True", $COLOR_DEBUG)
-	SetLog("Emulate Click(" & $g_iQuickMISX & "," & $g_iQuickMISY & ") -- Cancelling", $COLOR_DEBUG)
+	SetLog($aMessage & ", Only Testing", $COLOR_ERROR)
+	SetLog(" -- Cancelling", $COLOR_DEBUG)
 	ClickAway()
 	If _Sleep(500) Then Return
 	ClickAway()
