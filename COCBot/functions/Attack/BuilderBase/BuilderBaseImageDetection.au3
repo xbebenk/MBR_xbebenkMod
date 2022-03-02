@@ -961,7 +961,7 @@ EndFunc   ;==>BuilderBaseBuildingsOnEdge
 
 Func findMultipleQuick($sDirectory, $iQuantityMatch = Default, $vArea2SearchOri = Default, $vForceCaptureOrPtr = True, $sOnlyFind = "", $bExactFind = False, $iDistance2check = 25, $bDebugLog = $g_bDebugImageSave, $minLevel = 0, $maxLevel = 1000, $vArea2SearchOri2 = Default)
 
-	$g_aImageSearchXML = -1
+	Local $g_aImageSearchXML = -1
 	Local $iCount = 0, $returnProps = "objectname,objectlevel,objectpoints"
 
 	Static $_hHBitmap = 0

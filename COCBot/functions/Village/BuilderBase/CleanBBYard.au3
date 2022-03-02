@@ -42,7 +42,11 @@ Func CleanBBYard()
 						If Not ClickRemoveObstacle() Then ContinueLoop
 						$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
 						If $g_aiCurrentLootBB[$eLootElixirBB] < 20000 Then ExitLoop 2
-						_SleepStatus(11000)
+						If $Filename = "Groove" or $Filename = "Groove1" Then
+							_SleepStatus(61000)
+						Else
+							_SleepStatus(11000)
+						EndIf
 						ClickAway()
 						$Locate += 1
 					EndIf

@@ -217,6 +217,7 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 		For $j = 1 To 5
 			ClickMainBuilder()
 			SetLog("Wall " & "[" & $i & "] : [" & $aWallCoord[$i][0] & "," & $aWallCoord[$i][1] & " Cost = " & $aWallCoord[$i][2] & "]", $COLOR_DEBUG)
+			If QuickMIS("BC1", $g_sImgAUpgradeObstGear, $aWallCoord[$i][0] - 50, $aWallCoord[$i][1] - 10, $aWallCoord[$i][0] + 50, $aWallCoord[$i][1] + 10) Then ContinueLoop
 			Click($aWallCoord[$i][0], $aWallCoord[$i][1])
 			If _Sleep(1000) Then Return
 			Local $aWallLevel = BuildingInfo(242, 494)
@@ -262,17 +263,18 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 		
 		Switch $aIsEnoughResource[1]
 			Case "Gold"
-				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 700, 580)
+				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 720, 580)
 			Case "Elix"
-				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 700, 580)
+				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 720, 580)
 		EndSwitch
 		
 		If $UpgradeButtonFound Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
+			_Sleep(800)
 			For $i = 1 To 10
 				SetDebugLog("Waiting for Wall Upgrade Page #" & $i)
-				If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then ExitLoop
-				_Sleep(250)
+				If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 110, 720, 180) Then ExitLoop
+				_Sleep(50)
 			Next
 			
 			If Not $bTest Then
@@ -301,80 +303,44 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 			SetLog("No " & $aIsEnoughResource[1] & " Button Found!", $COLOR_ERROR)
 			Return False
 		EndIf
-		;
-		;
-		;
-		;Local $MinWallGold = IsGoldEnough($iWallCost)
-		;Local $MinWallElixir = IsElixEnough($iWallCost)
-		;SetDebugLog("$MinWallGold=" & String($MinWallGold) & " $MinWallElixir=" & String($MinWallElixir), $COLOR_INFO)
-		;Switch $g_iUpgradeWallLootType
-		;	Case 0 ;Gold
-		;		If $MinWallGold Then
-		;			SetLog("Try Upgrade Wall using Gold", $COLOR_INFO)
-		;			If Not UpgradeWallGold($iWallCost, $bTest) Then
-		;				SetLog("Upgrade with Gold failed", $COLOR_ERROR)
-		;				Return False
-		;			Else
-		;				SetLog("Successfully Upgrade a Wall Level " & $WallLevel & " To lvl " & $WallLevel+1, $COLOR_SUCCESS)
-		;			EndIf
-		;		EndIf
-		;	Case 1 ;Elixir
-		;		If $MinWallElixir Then
-		;			SetLog("Try Upgrade Wall using Elixir", $COLOR_INFO)
-		;			If Not UpgradeWallElixir($iWallCost, $bTest) Then
-		;				SetLog("Upgrade with Elixir failed", $COLOR_ERROR)
-		;				Return False
-		;			Else
-		;				SetLog("Successfully Upgrade a Wall Level " & $WallLevel & " To lvl " & $WallLevel+1, $COLOR_SUCCESS)
-		;			EndIf
-		;		EndIf
-		;	Case 2 ;Elixir then Gold
-		;		If $MinWallElixir Then
-		;			SetLog("Try Upgrade Wall using Elixir", $COLOR_INFO)
-		;			If Not UpgradeWallElixir($iWallCost, $bTest) Then
-		;				SetLog("Upgrade with Elixir failed, attempt to upgrade using Gold", $COLOR_INFO)
-		;			Else
-		;				SetLog("Successfully Upgrade a Wall Level " & $WallLevel & " To lvl " & $WallLevel+1, $COLOR_SUCCESS)
-		;				Return True
-		;			EndIf
-		;		EndIf
-		;		If $MinWallGold Then
-		;			SetLog("Try Upgrade Wall using Gold", $COLOR_INFO)
-		;			If Not UpgradeWallGold($iWallCost, $bTest) Then
-		;				SetLog("Upgrade with Gold failed, skip!", $COLOR_ERROR)
-		;				Return False
-		;			EndIf
-		;		Else
-		;			SetLog("Upgrade with Gold failed, not Enough Gold", $COLOR_INFO)
-		;		EndIf
-		;EndSwitch
+
 		Clickaway("Right")
 		Return True
 	EndIf
 	If Not $g_bRunState Then Return
 	If $WallLevel <= $UpgradeToLvl Then
+		Local $aWallCost[14] = [1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 3000000, 5000000, 7000000]
+		
 		For $x = $WallLevel To $UpgradeToLvl
 			If Not $g_bRunState Then Return
-			Local $aIsEnoughResource = WallCheckResource($iWallCost, $x)
+			Local $aIsEnoughResource = WallCheckResource($aWallCost[$x-1], $x)
 			If Not $aIsEnoughResource[0] Then Return
 			Local $UpgradeButtonFound = False
 			
 			Switch $aIsEnoughResource[1]
 				Case "Gold"
-					$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 700, 580)
+					For $i = 1 To 10
+						SetDebugLog("Waiting Gold Button for Wall Upgrade #" & $i)
+						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 720, 580)
+						If $UpgradeButtonFound Then ExitLoop
+						_Sleep(50)
+					Next
 				Case "Elix"
-					$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 700, 580)
+					For $i = 1 To 10
+						SetDebugLog("Waiting Gold Button for Wall Upgrade #" & $i)
+						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 720, 580)
+						If $UpgradeButtonFound Then ExitLoop
+						_Sleep(50)
+					Next
 			EndSwitch
 			
 			If $UpgradeButtonFound Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
+				_Sleep(800)
 				For $i = 1 To 10
-					If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
-						ExitLoop
-					Else
-						SetDebugLog("Waiting for Wall Upgrade Page #" & $i)
-					EndIf
-					_Sleep(250)
+					SetDebugLog("Waiting for Wall Upgrade Page #" & $i)
+					If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 110, 720, 180) Then ExitLoop
+					_Sleep(50)
 				Next
 				
 				If Not $bTest Then
@@ -400,10 +366,10 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 					SetLog("Successfully Upgrade a Wall Level " & $x & " To lvl " & $x+1, $COLOR_SUCCESS)
 				EndIf
 			Else
-				SetLog("Not Enough Resource...", $COLOR_ERROR)
+				SetLog("Upgrade Button not Found", $COLOR_ERROR)
 				ExitLoop
 			EndIf
-			If _Sleep(800) Then Return
+			If _Sleep(1000) Then Return
 		Next
 		Clickaway("Right")
 		Return True

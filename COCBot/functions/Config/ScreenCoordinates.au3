@@ -18,11 +18,11 @@ Global $aiClickAwayRegionLeft = [235, 10, 245, 20]
 Global $aiClickAwayRegionRight = [625, 10, 635, 20]
 
 Global $aCenterEnemyVillageClickDrag = [65, 545] ; Scroll village using this location in the water
-Global $aCenterHomeVillageClickDrag = [520, 510] ; Scroll village using this location in the water
+Global $aCenterHomeVillageClickDrag = [800, 370] ; Scroll village using this location : upper from setting button
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
 Global $aIsMain[4] = [279, 9, 0x7ABDE0, 20] ; Main Screen, Builder Info Icon
 Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
-Global $aIsOnBuilderBase[4] = [838, 18, 0xffff46, 20] ; Check the Gold Coin from resources , is a square not round
+Global $aIsOnBuilderBase[4] = [356, 12, 0x9CD2EE, 20] ; BuilderBase, Builder Info Icon
 
 Global $aIsConnectLost[4] = [255, 271, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device
 Global $aIsCheckOOS[4] = [223, 272, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device
@@ -58,7 +58,7 @@ Global $aArmyTrainButton[2] = [40, 525] ; Main Screen, Army Train Button
 Global $aWonOneStar[4] = [714, 540, 0xC0C8C0, 20] ; Center of 1st Star for winning attack on enemy
 Global $aWonTwoStar[4] = [739, 540, 0xC0C8C0, 20] ; Center of 2nd Star for winning attack on enemy
 Global $aWonThreeStar[4] = [763, 540, 0xC0C8C0, 20] ; Center of 3rd Star for winning attack on enemy
-Global $aIsAtkDarkElixirFull[4] = [743, 62, 0x270D33, 10] ; Attack Screen DE Resource bar is full
+Global $aIsAtkDarkElixirFull[4] = [743, 95, 0x270D33, 10] ; Attack Screen DE Resource bar is full
 Global $aIsDarkElixirFull[4] = [709, 136, 0x270D33, 10] ; Main Screen DE Resource bar is full
 Global $aIsGoldFull[4] = [662, 37, 0xE7C00D, 10] ; Main Screen Gold Resource bar is Full
 Global $aIsElixirFull[4] = [662, 86, 0xC027C0, 10] ; Main Screen Elixir Resource bar is Full

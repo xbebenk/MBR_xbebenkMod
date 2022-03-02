@@ -21,7 +21,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 	If Not $g_bRunState Then Return
 
 	For $i = 0 To 2
-		If isOnBuilderBase(True) Then
+		If isOnBuilderBase() Then
 			$sSwitchFrom = "Builder Base"
 			$sSwitchTo = "Normal Village"
 			$bIsOnBuilderBase = True
@@ -50,19 +50,22 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 			If _Sleep($DELAYSWITCHBASES1) Then Return
 
 			; switch can take up to 2 Seconds, check for 3 additional Seconds...
-			Local $hTimerHandle = __TimerInit()
-			$bSwitched = False
-			While __TimerDiff($hTimerHandle) < 5000 And Not $bSwitched
-				If _Sleep(500) Then Return
-				If Not $g_bRunState Then Return
-				ForceCaptureRegion()
-				$bSwitched = isOnBuilderBase(True) <> $bIsOnBuilderBase
-			WEnd
+			For $j = 1 To 5
+				If _Sleep(1000) Then Return
+				SetDebugLog("[" & $j & "] Waiting for switched to " & $sSwitchTo)
+				If IsProblemAffect(True) Then Return
+				$bSwitched = isOnBuilderBase() <> $bIsOnBuilderBase
+				If $bSwitched Then ExitLoop
+			Next
 			
+			If Not $g_bRunState Then Return
+			If IsProblemAffect(True) Then Return
 			If $bSwitched Then
 				If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase, "SwitchBetweenBases")
 				Return True
-			Else
+			EndIf
+			
+			If Not $bSwitched Then
 				SetLog("Failed to go to the " & $sSwitchTo, $COLOR_ERROR)
 				If $i = 1 And ($g_bPlaceNewBuilding Or $g_iChkPlacingNewBuildings) Then
 					If $bIsOnBuilderBase Then 
@@ -71,6 +74,7 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 						GoGoblinMap()
 					EndIf
 				EndIf
+				Return False
 			EndIf
 		Else
 			Setlog("[" & $i & "] SwitchBetweenBases Tile: " & $sTile, $COLOR_ERROR)
