@@ -223,7 +223,7 @@ Func SellHeroPot()
 		For $i = 0 To UBound($Pot) - 1
 			Local $MagicItemCount = getBuilders($Pot[$i][1]-30, $aMagicPosY)
 			If $MagicItemCount = "" Then 
-				SetLog("Read MagicItemCount Failed at " & $aMagicPosX[$i] & "," & $aMagicPosY, $COLOR_ERROR)
+				SetLog("Read MagicItemCount Failed at " & $Pot[$i][1]-30 & "," & $aMagicPosY, $COLOR_ERROR)
 				ContinueLoop
 			EndIf
 			Local $ItemCount = StringSplit($MagicItemCount, "#", $STR_NOCOUNT)
