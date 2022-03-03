@@ -148,6 +148,10 @@ Func SaleFreeMagics()
 	If Not OpenMagicItemWindow() Then Return
 	For $i = 0 To UBound($aMagicPosX) - 1
 		Local $MagicItemCount = getBuilders($aMagicPosX[$i], $aMagicPosY)
+		If $MagicItemCount = "" Then 
+			SetLog("Read MagicItemCount Failed at " & $aMagicPosX[$i] & "," & $aMagicPosY, $COLOR_ERROR)
+			ContinueLoop
+		EndIf
 		Local $ItemCount = StringSplit($MagicItemCount, "#", $STR_NOCOUNT)
 		If $ItemCount[0] > 4 Then 
 			Click($aMagicPosX[$i], $aMagicPosY)
@@ -219,7 +223,7 @@ Func SellHeroPot()
 		For $i = 0 To UBound($Pot) - 1
 			Local $MagicItemCount = getBuilders($Pot[$i][1]-30, $aMagicPosY)
 			If $MagicItemCount = "" Then 
-				SetDebugLog("Failed to read MagicItemCount", $COLOR_ERROR)
+				SetLog("Read MagicItemCount Failed at " & $aMagicPosX[$i] & "," & $aMagicPosY, $COLOR_ERROR)
 				ContinueLoop
 			EndIf
 			Local $ItemCount = StringSplit($MagicItemCount, "#", $STR_NOCOUNT)
