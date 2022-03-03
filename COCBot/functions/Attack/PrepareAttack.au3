@@ -158,10 +158,10 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 
 	Switch $ToUse
 		Case $iTroopIndex ; the same as current castle/siege
-			If $iTroopIndex <> $eCastle And $g_iSiegeLevel < 4 Then
+			If $iTroopIndex <> $eCastle Then
 				$bNeedSwitch = True
 				$NeedHigherLevel = True
-				SetLog(GetTroopName($iTroopIndex) & " level " & $g_iSiegeLevel & " detected. Try looking for higher level.")
+				SetLog(GetTroopName($iTroopIndex) & " level " & $g_iSiegeLevel & " detected. Looking for higher level or Donated Siege.")
 			EndIf
 
 		Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF ; NOT the same as current castle/siege
