@@ -1557,7 +1557,7 @@ EndFunc
 Func BuilderBase()
 
 	; switch to builderbase and check it is builderbase
-	If SwitchBetweenBases() And isOnBuilderBase()  Then
+	If SwitchBetweenBases("BB") And isOnBuilderBase()  Then
 
 		$g_bStayOnBuilderBase = True
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1592,7 +1592,7 @@ Func BuilderBase()
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
 		; switch back to normal village
-		SwitchBetweenBases()
+		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False
 	EndIf
 EndFunc
@@ -1632,12 +1632,12 @@ Func TestBuilderBase()
 EndFunc
 
 Func GotoBBTodoCG()
-	If SwitchBetweenBases() And isOnBuilderBase() Then
+	If SwitchBetweenBases("BB") And isOnBuilderBase() Then
 		$g_bStayOnBuilderBase = True
 		CollectBuilderBase()
 		DoAttackBB()
 		; switch back to normal village
-		SwitchBetweenBases()
+		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False
 	EndIf
 EndFunc
