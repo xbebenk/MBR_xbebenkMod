@@ -185,7 +185,7 @@ Func PetHouse($test = False)
 				SetLog("Upgrade Failed - Not enough Dark Elixir", $COLOR_ERROR)
 			EndIf
 		Else
-			SetLog($aPet[$i][1] & "EnableUpgrade: " & ($g_bUpgradePetsEnable[$aPet[$i][0]] ? "True" : "False") & ", Is Unlocked: " & ($aPet[$i][2] = "True" ? "True" : "False")
+			SetLog($aPet[$i][1] & "EnableUpgrade: " & ($g_bUpgradePetsEnable[$aPet[$i][0]] ? "True" : "False") & ", Is Unlocked: " & ($aPet[$i][2] = "True" ? "True" : "False"))
 		EndIf
 	Next
 	SetLog("Pet upgrade failed, check your settings", $COLOR_ERROR)
