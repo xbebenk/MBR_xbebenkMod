@@ -129,17 +129,17 @@ Func SwitchTo($To = "BB")
 		$sSwitchTo = "Normal Village"
 		$sTile = "BoatBuilderBase"
 		$aPixelToCheck = $aIsMain
-		$x = 570
-		$y = 25
+		$x = 550
+		$y = 30
 		$x1 = 700
-		$y1 = 160
+		$y1 = 200
 	Else
 		$sSwitchFrom = "Normal Village"
 		$sSwitchTo = "Builder Base"
 		$sTile = "BoatNormalVillage"
 		$aPixelToCheck = $aIsOnBuilderBase
-		$x = 120
-		$y = 475
+		$x = 100
+		$y = 460
 		$x1 = 250
 		$y1 = 575
 	EndIf	
@@ -153,6 +153,7 @@ Func SwitchTo($To = "BB")
 			ExitLoop
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
+			If $g_bDebugClick Or $g_bDebugSetlog Then SaveDebugImage("SwitchBetweenBases", True)
 			ContinueLoop
 		EndIf
 	Next
