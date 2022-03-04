@@ -310,7 +310,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 	If Not $g_bRunState Then Return
 	If $WallLevel <= $UpgradeToLvl Then
 		Local $aWallCost[14] = [1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 3000000, 5000000, 7000000]
-		
+		If $WallLevel < 1 Then Return ;prevent further action, Wall level not readed properly
 		For $x = $WallLevel To $UpgradeToLvl
 			If Not $g_bRunState Then Return
 			Local $aIsEnoughResource = WallCheckResource($aWallCost[$x-1], $x)

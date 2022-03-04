@@ -690,7 +690,9 @@ Func IsClanGamesWindow($getCapture = True)
 		$sState = "Not Running"
 		$bRet = False
 	EndIf
-
+	
+	If $g_bCollectCGReward Then CollectCGReward()
+	
 	SetLog("Clan Games State is : " & $sState, $COLOR_INFO)
 	Return $bRet
 EndFunc   ;==>IsClanGamesWindow
@@ -700,7 +702,7 @@ Func IsClanGamesRunning($getCapture = True) ;to check whether clangames current 
 	Local $sState = "Running"
 	If QuickMIS("BC1", $g_sImgWindow, 50, 50, 150, 200, $getCapture, False) Then
 		SetLog("Window Opened", $COLOR_DEBUG)
-		If QuickMIS("BC1", $g_sImgReward, 580, 450, 830, 570, $getCapture, False) Then
+		If QuickMIS("BC1", $g_sImgRewardText, 580, 450, 830, 570, $getCapture, False) Then
 			SetLog("Your Reward is Ready", $COLOR_INFO)
 			$sState = "Ended"
 		EndIf
@@ -1148,6 +1150,157 @@ Func CloseClangamesWindow()
 		Return True
 	EndIf
 	Return False
+EndFunc
+
+Func CollectCGReward()
+	SetLog("Checking to Collect ClanGames Reward")
+	Local $aiScoreLimit, $sYourGameScore
+	
+	$sYourGameScore = getOcrYourScore(45, 500) ;  Read your Score
+	$aiScoreLimit = StringSplit($sYourGameScore, "#", $STR_NOCOUNT)
+	SetDebugLog(_ArrayToString($aiScoreLimit))
+	If UBound($aiScoreLimit) < 2 Then  ;error read score, leave
+		SetLog("Fail reading Score", $COLOR_ERROR)
+		Return
+	EndIf
+	
+	SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
+	If $aiScoreLimit[0] = $aiScoreLimit[1] Then
+		SetLog("You reach Max Point! Congrats")
+		$g_bIsCGPointMaxed = True
+	EndIf
+	Local $OnlyClaimMax = False
+	If QuickMIS("BC1", $g_sImgRewardText, 620, 490, 700, 530) Then 
+		If $g_iQuickMISName = "Claim" Then $OnlyClaimMax = True
+	EndIf
+	
+	Local $aRewardButton[4] = [800, 490, 0xBDE98A, 10] ;green reward button
+	Local $aCGSummary[4] = [825, 490, 0xD8BA30, 10] ;yellow summary Window
+	Local $aLowerX[3] = [290, 400, 500]
+	Local $Drag = True
+	For $i = 0 To 7
+		If $OnlyClaimMax Then ExitLoop
+		SetDebugLog("CHECK #" & $i+1, $COLOR_ACTION)
+		If _CheckPixel($aRewardButton, True) Then ExitLoop
+		If $i < 3 Then 
+			If QuickMIS("BC1", $g_sImgRewardTileSelected, $aLowerX[$i] - 50, 195, $aLowerX[$i] + 50, 470) Then ;Check if Reward already selected
+				SetDebugLog("Already select Reward on this Tier, Looking next", $COLOR_ERROR)
+				ContinueLoop
+			EndIf
+			SetLog("Selecting Low Reward (gems)", $COLOR_INFO)
+			Click($aLowerX[$i], 420)
+			_Sleep(1000)
+			ContinueLoop
+		EndIf
+		
+		If $Drag Then 
+			ClickDrag(660, 168, 550, 168, 500)
+			_Sleep(3000)
+			$Drag = False
+		EndIf
+		
+		Local $aTile = GetCGRewardList()
+		If IsArray($aTile) And UBound($aTile) > 0 Then
+			SetDebugLog(_ArrayToString($aTile))
+			SetLog("Selecting Reward Looking for Magic Items", $COLOR_INFO)
+			For $i = 0 To UBound($aTile) -1 
+				SetDebugLog("Items: " & $aTile[$i][0] & " Value: " & $aTile[$i][3])
+			Next
+			
+			Click($aTile[0][1], $aTile[0][2]+10)
+			_Sleep(1000)			
+			If IsOKCancelPage() Then 
+				SetLog("Magic Item storage is Full (Take gems)", $COLOR_INFO)
+				Click(510, 400)
+				_Sleep(1000)
+			EndIf
+			If _CheckPixel($aRewardButton, True) Then ExitLoop
+		EndIf
+		
+	Next
+	
+	If $OnlyClaimMax Then 
+		ClickDrag(660, 168, 550, 168, 500)
+		_Sleep(3000)
+		Click(770, 420) ;100 Gems
+		_Sleep(2000)
+	EndIf
+	
+	If _CheckPixel($aRewardButton, True) Then ; Last check, if we found green Reward Button click it
+		Click($aRewardButton[0], $aRewardButton[1])
+		SetLog("Collecting Reward", $COLOR_SUCCESS)
+		If $OnlyClaimMax Then 
+			CloseClangamesWindow()
+			Return
+		EndIf
+	EndIf
+	
+	If $g_bIsCGPointMaxed Then 
+		_Sleep(3000)
+		For $i = 1 To 10
+			SetLog("Waiting Max Point Reward #" & $i, $COLOR_ACTION)
+			If WaitforPixel(780, 490, 781,491, "D1D1D1", 10, 1) Then ExitLoop
+			_Sleep(500)
+		Next
+		
+		Click(770, 420) ;100 Gems
+		
+		For $i = 1 To 5
+			SetLog("Waiting Reward Button #" & $i, $COLOR_ACTION)
+			If _CheckPixel($aRewardButton, True) Then ExitLoop
+			_Sleep(1000)
+		Next
+		
+		If _CheckPixel($aRewardButton, True) Then
+			Click($aRewardButton[0], $aRewardButton[1])
+			SetLog("Collecting Max Point Reward", $COLOR_SUCCESS)
+		EndIf
+		
+		CloseClangamesWindow()
+		Return
+	Else
+		If _CheckPixel($aCGSummary, True) Then Click(820, 55)	
+	EndIf
+	CloseClangamesWindow()
+EndFunc
+
+Func GetCGRewardList()	
+	Local $aResult[0][4]
+	Local $aTier = QuickMIS("CNX", $g_sImgRewardTier, 280, 150, 820, 190) ;search green check on top of Tier
+	_ArraySort($aTier, 0, 0, 0, 1) ;Sort by x coord
+	;_ArrayDisplay($aTier)
+	If IsArray($aTier) And UBound($aTier) > 0 Then
+		For $i = 0 To UBound($aTier) - 1
+			If Not $g_bRunState Then Return
+			SetDebugLog("Checking Tier #" & $i + 1, $COLOR_ACTION) 
+			If QuickMIS("BC1", $g_sImgRewardTileSelected, $aTier[$i][1] - 50, $aTier[$i][2], $aTier[$i][1] + 50, 470) Then ;Check if Reward already selected
+				;SetDebugLog("Already select Reward on this Tier, Looking next", $COLOR_ERROR)
+				ContinueLoop
+			EndIf
+			
+			Local $aTmp = QuickMIS("CNX", $g_sImgRewardItems, $aTier[$i][1] - 50, $aTier[$i][2], $aTier[$i][1] + 50, 470)
+			If IsArray($aTmp) And Ubound($aTmp) > 0 Then
+				Local $Value = 0
+				For $i = 0 To UBound($aTmp) - 1
+					Switch $aTmp[$i][0]
+						Case "Books"
+							$Value = 5
+						Case "BBGoldRune", "DERune", "Shovel", "SuperPot"
+							$Value = 4
+						Case "BuilderPot", "ClockTowerPot", "PowerPot", "ResearchPot", "TrainingPot"
+							$Value = 3
+						Case "DarkElix", "Elix", "Gold", "WallRing"
+							$Value = 2
+						Case "Gem"
+							$Value = 1
+					EndSwitch
+					_ArrayAdd($aResult, $aTmp[$i][0] & "|" & $aTmp[$i][1] & "|" & $aTmp[$i][2] & "|" & $Value)
+				Next
+			EndIf
+			_ArraySort($aResult, 1, 0, 0, 3)
+			Return $aResult
+		Next
+	EndIf
 EndFunc
 
 #Tidy_Off

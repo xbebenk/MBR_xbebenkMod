@@ -397,6 +397,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkClanGamesEnabled", $g_bChkClanGamesEnabled ? 1 : 0)
 	_Ini_Add("other", "ChkClanGames60", $g_bChkClanGames60 ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesDebug", $g_bChkClanGamesDebug ? 1 : 0)
+	_Ini_Add("other", "CollectCGReward", $g_bCollectCGReward ? 1 : 0)
 	
 	_Ini_Add("other", "ChkClanGamesLoot", $g_bChkClanGamesLoot ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesBattle", $g_bChkClanGamesBattle ? 1 : 0)

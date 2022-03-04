@@ -670,6 +670,14 @@ Func chkClanGamesBB()
 	EndIf
 EndFunc
 
+Func chkCollectCGReward()
+	If GUICtrlRead($g_hChkCollectCGReward) = $GUI_CHECKED Then
+		$g_bCollectCGReward = True
+	Else
+		$g_bCollectCGReward = False
+	EndIf
+EndFunc
+
 Func btnCGSettings()
 	GUISetState(@SW_SHOW, $g_hGUI_CGSettings)
 EndFunc

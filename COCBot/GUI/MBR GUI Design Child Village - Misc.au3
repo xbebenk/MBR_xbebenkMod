@@ -30,7 +30,7 @@ Global $g_hChkTreasuryCollect = 0, $g_hTxtTreasuryGold = 0, $g_hTxtTreasuryElixi
 ;ClanGames Challenges
 Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames60 = 0, $g_hChkClanGamesDebug = 0
 Global $g_hTxtClanGamesLog = 0, $g_hLblRemainTime = 0 , $g_hLblYourScore = 0
-Global $g_hGUI_CGSettings = 0, $g_hBtnCGSettingsOpen = 0, $g_hBtnCGSettingsClose = 0
+Global $g_hGUI_CGSettings = 0, $g_hBtnCGSettingsOpen = 0, $g_hBtnCGSettingsClose = 0, $g_hChkCollectCGReward = 0
 Global $g_hChkForceBBAttackOnClanGames = 0, $g_hChkClanGamesPurgeAny = 0, $g_hChkClanGamesStopBeforeReachAndPurge = 0 
 Global $g_hChkClanGamesSort = 0, $g_hCmbClanGamesSort = 0, $g_hChkCGBBAttackOnly = 0
 Global $g_hLabelClangamesDesc = 0, $g_hChkCGRootEnabledAll = 0
@@ -425,6 +425,9 @@ Func CreateMiscClanGamesV3SubTab()
 			$y += 23
 			$g_hBtnCGSettingsOpen = GUICtrlCreateButton("ClanGames Setting", $x + 90, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "btnCGSettings")
+			$y += 50
+			$g_hChkCollectCGReward = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectCGReward", "Auto Collect ClanGames Reward"), 190, $y, -1, -1)
+			GUICtrlSetOnEvent(-1, "chkCollectCGReward")
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 		
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
