@@ -1854,6 +1854,7 @@ Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkCla
 Global $g_bChkClanGamesPurgeAny = 0
 Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0
+Global $g_bCollectCGReward = False
 Global $g_abCGMainLootItem[UBound(ClanGamesChallenges("$LootChallenges"))]
 Global $g_abCGMainBattleItem[Ubound(ClanGamesChallenges("$BattleChallenges"))]
 Global $g_abCGMainDestructionItem[Ubound(ClanGamesChallenges("$DestructionChallenges"))]
