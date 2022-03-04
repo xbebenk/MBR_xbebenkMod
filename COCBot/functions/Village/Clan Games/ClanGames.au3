@@ -1223,6 +1223,7 @@ Func CollectCGReward()
 		ClickDrag(660, 168, 550, 168, 500)
 		_Sleep(3000)
 		Click(770, 420) ;100 Gems
+		_Sleep(2000)
 	EndIf
 	
 	If _CheckPixel($aRewardButton, True) Then ; Last check, if we found green Reward Button click it
@@ -1238,8 +1239,8 @@ Func CollectCGReward()
 		_Sleep(3000)
 		For $i = 1 To 10
 			SetLog("Waiting Max Point Reward #" & $i, $COLOR_ACTION)
-			If _GetPixelColor(780, 490, True) = "D1D1D1" Then ExitLoop
-			_Sleep(1000)
+			If WaitforPixel(780, 490, 781,491, "D1D1D1", 10, 1) Then ExitLoop
+			_Sleep(500)
 		Next
 		
 		Click(770, 420) ;100 Gems
