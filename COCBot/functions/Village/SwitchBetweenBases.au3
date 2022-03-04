@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func SwitchBetweenBases($bCheckMainScreen = True)
+Func SwitchBetweenBases_Old($bCheckMainScreen = True)
 	Local $sSwitchFrom, $sSwitchTo, $bIsOnBuilderBase = False, $aButtonCoords
 	Local $sTile, $sTileDir, $sRegionToSearch
 	Local $bSwitched = False
@@ -91,3 +91,87 @@ Func SwitchBetweenBases($bCheckMainScreen = True)
 
 	Return False
 EndFunc   ;==>SwitchBetweenBases
+
+
+Func SwitchBetweenBases($ForcedSwitchTo = "BB")
+	
+	Local $bIsOnBuilderBase = isOnBuilderBase()
+	If $bIsOnBuilderBase And $ForcedSwitchTo = "BB" Then
+		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_ERROR)
+		Return
+	EndIf
+	
+	If IsProblemAffect(True) Then Return
+	If Not $g_bRunState Then Return
+	
+	If $g_bStayOnBuilderBase And Not $bIsOnBuilderBase Then
+		SetLog("StayOnBuilderBase = " & String($g_bStayOnBuilderBase), $COLOR_INFO)
+		SetLog(" --- Are we on BuilderBase ? " & String($bIsOnBuilderBase), $COLOR_INFO)
+		SetLog("Switching To BuilderBase")
+		Return SwitchTo("BB")
+	EndIf
+	
+	Switch $ForcedSwitchTo
+		Case "BB"
+			Return SwitchTo("BB")
+		Case "Main"
+			Return SwitchTo("Main")
+	EndSwitch
+EndFunc
+
+Func SwitchTo($To = "BB")
+	Local $sSwitchFrom, $sSwitchTo, $aPixelToCheck
+	Local $sTile, $x, $y, $x1, $y1
+	Local $bRet = False
+	
+	If $To = "Main" Then 
+		$sSwitchFrom = "Builder Base"
+		$sSwitchTo = "Normal Village"
+		$sTile = "BoatBuilderBase"
+		$aPixelToCheck = $aIsMain
+		$x = 550
+		$y = 30
+		$x1 = 700
+		$y1 = 200
+	Else
+		$sSwitchFrom = "Normal Village"
+		$sSwitchTo = "Builder Base"
+		$sTile = "BoatNormalVillage"
+		$aPixelToCheck = $aIsOnBuilderBase
+		$x = 100
+		$y = 460
+		$x1 = 250
+		$y1 = 575
+	EndIf	
+	
+	For $i = 1 To 3
+		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
+		ZoomOut() ;zoomout first
+		SetDebugLog("QuickMIS(BC1, " & $g_sImgBoat & "," & $x & "," & $y & "," &  $x1 & "," & $y1 & ")")
+		If QuickMIS("BC1", $g_sImgBoat, $x, $y, $x1, $y1) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			ExitLoop
+		Else
+			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
+			If $g_bDebugClick Or $g_bDebugSetlog Then SaveDebugImage("SwitchBetweenBases", True)
+			ContinueLoop
+		EndIf
+	Next
+	
+	If IsProblemAffect(True) Then Return
+	If Not $g_bRunState Then Return
+	
+	For $i = 1 To 10
+		$bRet = _CheckPixel($aPixelToCheck, True, Default, "SwitchBetweenBases")
+		If $bRet Then 
+			SetDebugLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success")
+			ExitLoop
+		EndIf
+		_Sleep(500)
+	Next
+	
+	If IsProblemAffect(True) Then Return
+	If Not $g_bRunState Then Return
+	
+	Return $bRet
+EndFunc

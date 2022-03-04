@@ -64,7 +64,6 @@ Func OpenPersonalChallenges()
 		If $counter > 8 Then Return False
 	WEnd
 	Return True
-
 EndFunc   ;==>OpenPersonalChallenges
 
 Func CollectDailyRewards($bGoldPass = False)
@@ -154,20 +153,10 @@ EndFunc   ;==>CheckDiscountPerks
 Func ClosePersonalChallenges()
 	If $g_bDebugSetlog Then SetLog("Closing personal challenges", $COLOR_INFO)
 
-	If _CheckPixel($aPersonalChallengeCloseButton, $g_bCapturePixel) Then
-		ClickP($aPersonalChallengeCloseButton, 1, 0, "#0667")
-	Else
-		SetLog("Can't find close button", $COLOR_ERROR)
-		Click(825, 42)
-		ClickAway()
+	If IsFullScreenWindow() Then
+		Click(820, 40) ;close window
+		Return True
 	EndIf
-
-	Local $counter = 0
-	While Not IsMainPage(1) ; test for Personal Challenge Close Button
-		SetDebugLog("Wait for Personal Challenge Window to close #" & $counter)
-		If _Sleep($DELAYRUNBOT6) Then ExitLoop
-		$counter += 1
-		If $counter > 40 Then ExitLoop
-	WEnd
+	Return False
 
 EndFunc   ;==>ClosePersonalChallenges

@@ -17,8 +17,8 @@ Func waitMainScreen() ;Waits for main screen to popup
 	If Not $g_bRunState Then Return
 	Local $iCount
 	SetLog("Waiting for Main Screen")
-	$iCount = 0
-	For $i = 0 To 10 ;11*2000 = 22 seconds (this is only for blackscreen)
+	$iCount = 1
+	For $i = 0 To 10 ;11*2000 = 22 seconds (for blackscreen) and plus loading screen
 		If Not $g_bRunState Then Return
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
@@ -39,7 +39,12 @@ Func waitMainScreen() ;Waits for main screen to popup
 			SetDebugLog("Screen cleared, WaitMainScreen exit", $COLOR_SUCCESS)
 			Return
 		EndIf
-		If Not checkObstacles() And $i > 5 Then ExitLoop ;something wrong with coc screen exit this loop and try to restart coc
+		
+		If _CheckPixel($aIsLoading, True, Default, "waitMainScreen") Then ;seen loading screen add delay 5 seconds
+			SetDebugLog("We still on loading screen, adding +5 second wait")
+			_SleepStatus(5000) 
+		EndIf
+		If Not checkObstacles() And $i = 10 Then ExitLoop ;something wrong with coc screen exit this loop and try to restart coc
 	Next
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -48,13 +53,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	CloseCoC() ;only close coc
 	_RestartAndroidCoC(False, False, True, 0, 0, True) ;start coc, not updating shared_prefs
 	_SleepStatus(10000) ;give time for coc loading
-	For $i = 1 To 20
-		SetDebugLog("Waiting for mainscreen #" & $i, $COLOR_ACTION)
-		If checkChatTabPixel() Then ExitLoop ;finally we have clear main screen
-		_Sleep(2000)
-	Next
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 EndFunc   ;==>waitMainScreen
 
 Func waitMainScreenMini()

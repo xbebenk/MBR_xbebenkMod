@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 
 Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
-	ClickAway()
+	ClickAway("Left")
 	If _Sleep($DELAYVILLAGEREPORT1) Then Return
 
 	Switch $bBypass
@@ -53,11 +53,11 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 			If isBHMaxed() Then isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
 		EndIf
 	EndIf
-	ClickAway()
+	ClickAway("Left")
 EndFunc   ;==>BuilderBaseReport
 
 Func isBHMaxed()
-	ClickAway()
+	ClickAway("Left")
 	Local $sBHCoords
 	Local $sSLcoords, $bRet = False
 	$sBHCoords = findImage("BuilderHall", $g_sImgBuilderHall, "FV", 1, True) ; Search for Builder Hall
@@ -104,7 +104,7 @@ Func isBHMaxed()
 EndFunc
 
 Func isMegaTeslaMaxed()
-	ClickAway()
+	ClickAway("Left")
 	Local $sMTCoords
 	$sMTCoords = findImage("MegaTesla", $g_sImgMegaTesla, "FV", 1, True) ; Search for Clock Tower
 	If $sMTCoords <> "" Then

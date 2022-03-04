@@ -21,7 +21,7 @@ Func CollectBuilderBase($bSwitchToBB = False, $bSwitchToNV = False)
 
 	If $bSwitchToBB Then
 		ClickAway()
-		If Not SwitchBetweenBases() Then Return ; Switching to Builders Base
+		If Not SwitchBetweenBases("BB") Then Return ; Switching to Builders Base
 	EndIf
 
 	SetLog("Collecting Resources on Builders Base", $COLOR_INFO)
@@ -48,5 +48,5 @@ Func CollectBuilderBase($bSwitchToBB = False, $bSwitchToNV = False)
 	EndIf
 
 	If _Sleep($DELAYCOLLECT3) Then Return
-	If $bSwitchToNV Then SwitchBetweenBases() ; Switching back to the normal Village
+	If $bSwitchToNV Then SwitchBetweenBases("Main") ; Switching back to the normal Village
 EndFunc
