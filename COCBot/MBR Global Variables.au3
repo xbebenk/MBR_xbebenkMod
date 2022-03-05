@@ -1951,7 +1951,7 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = False, $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False, $g_bTrainPreviousArmy = False, $g_bAlwaysDropHero = True
 Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
 
-;builder baae
+;Builder Base
 
 ; Attack CSV
 Global $g_bChkBBRandomAttack = False
@@ -1980,3 +1980,4 @@ Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBas
 
 Global $g_bBBForceCustomArmy = False, $g_bBBGetArmyFromCSV = False, $g_bBBCSVAttack = False, $g_iBBCSVSettings = False ; Custom
 
+Global $g_iBBAttacked = False ; DoAttackBB attacked or not

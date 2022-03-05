@@ -35,6 +35,7 @@ Func DoAttackBB()
 			Else
 				_Sleep(2000)
 			EndIf
+			$g_iBBAttacked = True
 			$count += 1
 			If $count > 10 Then
 				SetLog("Something maybe wrong", $COLOR_INFO)

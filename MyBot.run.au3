@@ -1564,6 +1564,7 @@ Func BuilderBase()
 		$g_bStayOnBuilderBase = True
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 
+		$g_iBBAttacked = False	; Reset Variable
 		BuilderBaseReport()
 		CollectBuilderBase()
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1574,13 +1575,6 @@ Func BuilderBase()
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		
-		If Not BBDropTrophy() Then 		
-			If _Sleep($DELAYRUNBOT1) Then Return
-			DoAttackBB()
-			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-			If _Sleep($DELAYRUNBOT1) Then Return
-		EndIf
-		
 		AutoUpgradeBB()
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1588,6 +1582,25 @@ Func BuilderBase()
 		StarLaboratory()
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		
+		If Not BBDropTrophy() Then 		
+			If _Sleep($DELAYRUNBOT1) Then Return
+			DoAttackBB()
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+			If _Sleep($DELAYRUNBOT1) Then Return
+		EndIf
+		
+		If $g_iBBAttacked Then 
+			AutoUpgradeBB()
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
+		
+		If $g_sStarLabUpgradeTime = "" And $g_iBBAttacked Then 
+			StarLaboratory()
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
 		
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
