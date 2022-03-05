@@ -684,14 +684,13 @@ Func IsClanGamesWindow($getCapture = True)
 				$bRet = True
 			Case "Ended"
 				$bRet = False
+				If $g_bCollectCGReward Then CollectCGReward()
 		EndSwitch
 	Else
 		SetLog("Caravan not available", $COLOR_WARNING)
 		$sState = "Not Running"
 		$bRet = False
 	EndIf
-	
-	If $g_bCollectCGReward Then CollectCGReward()
 	
 	SetLog("Clan Games State is : " & $sState, $COLOR_INFO)
 	Return $bRet
