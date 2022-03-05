@@ -1594,13 +1594,17 @@ Func BuilderBase()
 			If _Sleep($DELAYRUNBOT1) Then Return
 		EndIf
 		
-		If (AutoUpgradeBBCheckBuilder() > 0) Then AutoUpgradeBB()
-		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		If (AutoUpgradeBBCheckBuilder() > 0) Then 
+			AutoUpgradeBB()
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
 		
-		If ($g_sStarLabUpgradeTime = "") Then StarLaboratory()
-		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		If ($g_sStarLabUpgradeTime = "") Then 
+			StarLaboratory()
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
 		
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
