@@ -1980,3 +1980,4 @@ Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBas
 
 Global $g_bBBForceCustomArmy = False, $g_bBBGetArmyFromCSV = False, $g_bBBCSVAttack = False, $g_iBBCSVSettings = False ; Custom
 
+Global $g_iBBAttacked = False ; DoAttackBB attacked or not

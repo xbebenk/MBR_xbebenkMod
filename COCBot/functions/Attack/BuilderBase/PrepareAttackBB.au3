@@ -18,7 +18,7 @@ Func PrepareAttackBB($Mode = Default)
 	
 	
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-		Setlog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+		SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
 		_Sleep(1500)
@@ -28,17 +28,10 @@ Func PrepareAttackBB($Mode = Default)
 		Return True
 	EndIf
 	
-	If $g_iChkBBSuggestedUpgradesOTTO and $g_iFreeBuilderCountBB = 0 Then 
-		isElixirFullBB()
-		isGoldFullBB()
-		If $g_bGoldStorageFullBB Then
-			Setlog("Gold Storage is nearly full, skip attack", $COLOR_INFO)
-			Return False
-		EndIf
-		If $g_bElixirStorageFullBB Then
-			Setlog("Elixir Storage is nearly full, skip attack", $COLOR_INFO)
-			Return False
-		EndIf
+	If $g_iChkBBSuggestedUpgradesOTTO and (isGoldFullBB() and isElixirFullBB()) Then
+		If $g_sStarLabUpgradeTime = "" Or $g_iFreeBuilderCount > 0 Then Return True
+		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
+		Return False
 	EndIf
 	
 	If Not $g_bRunState Then Return ; Stop Button

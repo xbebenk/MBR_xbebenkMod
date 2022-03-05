@@ -1564,6 +1564,7 @@ Func BuilderBase()
 		$g_bStayOnBuilderBase = True
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 
+		$g_iBBAttacked = False	; Reset Variable
 		BuilderBaseReport()
 		CollectBuilderBase()
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1584,23 +1585,18 @@ Func BuilderBase()
 		
 		If Not BBDropTrophy() Then 		
 			If _Sleep($DELAYRUNBOT1) Then Return
-			;	Will not attack if resources are full			Will override if lab is empty and builder is empty (Max Base/Wrong setting)
-			If (Not isGoldFullBB() and Not isElixirFullBB()) Or $g_sStarLabUpgradeTime = "" Or AutoUpgradeBBCheckBuilder() > 0 Then
-				DoAttackBB()
-			Else
-				Setlog("Skip BB attack, saving resources!", $COLOR_INFO)
-			EndIf
+			DoAttackBB()
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			If _Sleep($DELAYRUNBOT1) Then Return
 		EndIf
 		
-		If (AutoUpgradeBBCheckBuilder() > 0) Then 
+		If $g_iBBAttacked Then 
 			AutoUpgradeBB()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
 		
-		If ($g_sStarLabUpgradeTime = "") Then 
+		If $g_sStarLabUpgradeTime = "" And $g_iBBAttacked Then 
 			StarLaboratory()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
