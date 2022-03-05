@@ -115,6 +115,19 @@ Func PetHouse($test = False)
 		_ArrayAdd($aPet, $i & "|" & $Name & "|" & $Unlocked & "|" & $iPetLevel & "|" & $iDarkElixirReq & "|" & $x & "|" & $y)
 	Next
 	
+	Local $AllPetMax = True
+	For $i = 0 To UBound($aPet) - 1
+		If $aPet[$i][3] < $g_ePetLevels Then 
+			$AllPetMax = False
+			ExitLoop
+		EndIf
+	Next
+	
+	If $AllPetMax Then 
+		SetLog("All pets are on max level, Congrats", $COLOR_SUCCESS)
+		Return
+	EndIf
+	
 	_ArraySort($aPet, 0, 0, 0, 4) ;sort by cost
 	SetDebugLog(_ArrayToString($aPet))
 	For $i = 0 to UBound($aPet) - 1
@@ -189,6 +202,7 @@ Func PetHouse($test = False)
 			SetLog($aPet[$i][1] & " Enabled: " & ($g_bUpgradePetsEnable[$aPet[$i][0]] ? "True" : "False") & ", Is Unlocked: " & $aPet[$i][2])
 		EndIf
 	Next
+	
 	SetLog("Pet upgrade failed, check your settings", $COLOR_ERROR)
 	Return
 EndFunc
