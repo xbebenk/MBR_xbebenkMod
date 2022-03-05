@@ -102,13 +102,14 @@ Func PetHouse($test = False)
 
 	; Pet upgrade is not in progress and not upgradeing, so we need to start an upgrade.
 	Local $iPetUnlockedxCoord[4] = [190, 345, 500, 655]
-	Local $iPetLevelxCoord[4] = [134, 288, 443, 598]
+	Local $iPetLevelxCoord[4] = [134, 288, 443, 596]
 			
 	Local $aPet[0][7]
 	For $i = 0 to $ePetCount - 1
 		Local $Name = $g_asPetNames[$i]
 		Local $Unlocked = String(_ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 385, True), Hex(0xc3b6a5, 6), 20))
 		Local $iPetLevel = Number(getTroopsSpellsLevel($iPetLevelxCoord[$i], 503))
+		If $iPetLevel = $g_ePetLevels Then $Unlocked = "MaxLevel"
 		Local $iDarkElixirReq = Number(1000 * number($g_aiPetUpgradeCostPerLevel[$i][$iPetLevel]))
 		Local $x = $iPetUnlockedxCoord[$i], $y = $iPetUnlockedxCoord[$i] + 20
 		_ArrayAdd($aPet, $i & "|" & $Name & "|" & $Unlocked & "|" & $iPetLevel & "|" & $iDarkElixirReq & "|" & $x & "|" & $y)
@@ -185,7 +186,7 @@ Func PetHouse($test = False)
 				SetLog("Upgrade Failed - Not enough Dark Elixir", $COLOR_ERROR)
 			EndIf
 		Else
-			SetLog($aPet[$i][1] & "EnableUpgrade: " & ($g_bUpgradePetsEnable[$aPet[$i][0]] ? "True" : "False") & ", Is Unlocked: " & ($aPet[$i][2] = "True" ? "True" : "False"))
+			SetLog($aPet[$i][1] & " Enabled: " & ($g_bUpgradePetsEnable[$aPet[$i][0]] ? "True" : "False") & ", Is Unlocked: " & $aPet[$i][2])
 		EndIf
 	Next
 	SetLog("Pet upgrade failed, check your settings", $COLOR_ERROR)
