@@ -622,7 +622,7 @@ Func ZoomInBB($Region = "Top")
 		Case "Nox"
 			SetDebugLog("ZoomInBBNox()")
 			If ZoomInBBMEmu($Region) Then Return True
-		Case "BlueStacks"
+		Case "BlueStacks2"
 			SetDebugLog("ZoomInBBBluestacks()")
 			If ZoomInBBMEmu($Region) Then Return True
 	EndSwitch
