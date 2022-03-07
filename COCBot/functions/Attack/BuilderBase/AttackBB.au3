@@ -476,7 +476,7 @@ Func GetBBDropPoint()
 		Next
 		;_ArrayDisplay($aTmp)
 	Next
-	SetDebugLog("aResult : " & UBound($aResult) & " Coords", $COLOR_ERROR)
+	SetLog("Search BBDropPoint result : " & UBound($aResult) & " Coords", $COLOR_INFO)
 	;_ArrayDisplay($aResult)
 	Local $aaCoords[0][4], $iSide
 	For $i = 0 To UBound($aResult) - 1
@@ -487,20 +487,19 @@ Func GetBBDropPoint()
 		If $aResult[$i][0] > $XMiddle And $aResult[$i][1] > $YMiddle And $aResult[$i][0] < ($XMiddle + $THhOffset) And $aResult[$i][1] < ($YMiddle + $THhOffset) Then ContinueLoop ;TR
 		_ArrayAdd($aaCoords, $iSide & "|" & $aResult[$i][0] & "|" & $aResult[$i][1] & "|" & $aResult[$i][2])
 	Next	
-	SetDebugLog("aaCoords : " & UBound($aaCoords) & " Coords", $COLOR_INFO)
-	;_ArrayDisplay($aaCoords)
-	If $g_bDebugImageSave Then DebugAttackBBImage($aaCoords)
+	SetLog("Cleared BBDropPoint result : " & UBound($aaCoords) & " Coords", $COLOR_INFO)
 	
 	Local $aDPResult = SortBBDP($aaCoords)
+	SetLog("BBDropPoint after sort : " & UBound($aDPResult) & " Coords", $COLOR_INFO)
 	;_ArrayDisplay($aDPResult)
 	If $g_bDebugImageSave Then DebugAttackBBImage($aDPResult, $g_BBDPSide)
-	If $g_bDebugClick Then SetLog("g_BBDPSide = " & $g_BBDPSide)
 	
 	ResumeAndroid()
 	$g_bAttackActive = False
-	SetDebugLog("BBDropPoint Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+	SetLog("BBDropPoint Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 	
 	FindLavaLauncher($aDPResult)
+	If $g_bDebugClick Then SetLog("g_BBDPSide = " & $g_BBDPSide)
 	
 	If Ubound($aDPResult) < 10 Then 
 		$UseDefaultBBDP = True
