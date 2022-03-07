@@ -362,9 +362,9 @@ Func SwitchCOCAcc($NextAccount)
 		EndIf
 		If $bSharedPrefs Then
 			SetLog("Please wait for loading CoC")
-			PushSharedPrefs()
+			;PushSharedPrefs()
 			OpenCoC()
-			waitMainScreen()
+			;waitMainScreen()
 		EndIf
 
 		SetSwitchAccLog("Switched to Acc [" & $NextAccount + 1 & "]", $COLOR_SUCCESS)
