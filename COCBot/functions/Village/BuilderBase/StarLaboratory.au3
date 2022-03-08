@@ -53,7 +53,7 @@ Func StarLaboratory($bTestRun = False)
 	
 	If Not ClickB("Research") Then 
 		SetLog("Cannot find the Star Laboratory Research Button!", $COLOR_ERROR)
-		ClickAway()
+		ClickAway("Left")
 		Return False
 	EndIf
 	
@@ -85,7 +85,7 @@ Func StarLaboratory($bTestRun = False)
 			SetDebugLog("Invalid getRemainTLaboratory OCR", $COLOR_DEBUG)
 		EndIf
 		If Not $bTestRun Then
-			ClickAway()
+			ClickAway("Left")
 			Return False
 		EndIf
 	EndIf
@@ -123,7 +123,7 @@ Func StarLaboratory($bTestRun = False)
 					EndIf
 					If SLabUpgrade($aTroopUpgrade[$Index][2], $aTroopUpgrade[$Index][3], $aTroopUpgrade[$Index][4], $bTestRun) Then
 						SetLog("Elixir used = " & $aTroopUpgrade[$Index][5], $COLOR_INFO)
-						ClickAway()
+						ClickAway("Left")
 						Return True
 					EndIf
 				Else
@@ -145,7 +145,7 @@ Func StarLaboratory($bTestRun = False)
 				SetLog("Try Upgrade " & $aTroopUpgrade[$i][2] & " Cost=" & $aTroopUpgrade[$i][5], $COLOR_ACTION)
 				If SLabUpgrade($aTroopUpgrade[$i][2], $aTroopUpgrade[$i][3], $aTroopUpgrade[$i][4], $bTestRun) Then
 					SetLog("Elixir used = " & $aTroopUpgrade[$i][5], $COLOR_INFO)
-					ClickAway()
+					ClickAway("Left")
 					Return True
 				EndIf
 			Next
@@ -167,12 +167,12 @@ Func StarLaboratory($bTestRun = False)
 				If $iAvailElixir < $aTroopUpgrade[$Index][5] Then 
 					SetLog($aTroopUpgrade[$Index][2] & " Insufficient Elixir, skip!", $COLOR_INFO)
 					SetLog("Upgrade Cost = " & $aTroopUpgrade[$Index][5] & " Available = " & $iAvailElixir, $COLOR_INFO)
-					ClickAway()
+					ClickAway("Left")
 					Return False
 				EndIf
 				If SLabUpgrade($aTroopUpgrade[$Index][2], $aTroopUpgrade[$Index][3], $aTroopUpgrade[$Index][4], $bTestRun) Then
 					SetLog("Elixir used = " & $aTroopUpgrade[$Index][5], $COLOR_INFO)
-					ClickAway()
+					ClickAway("Left")
 					Return True
 				EndIf
 			Else
@@ -181,11 +181,11 @@ Func StarLaboratory($bTestRun = False)
 		EndIf
 	Else
 		SetLog("No upgradable troop found!", $COLOR_ERROR)
-		ClickAway()
+		ClickAway("Left")
 		Return False
 	EndIf
 	SetLog("No Upgradable troop, exit!", $COLOR_ERROR)
-	ClickAway()
+	ClickAway("Left")
 	Return False
 EndFunc   ;==>Laboratory
 
@@ -209,7 +209,7 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 		StarLabStatusGUIUpdate()
 		PushMsg("StarLabSuccess")
 		If _Sleep($DELAYLABUPGRADE2) Then Return
-		ClickAway()
+		ClickAway("Left")
 		$bRet = True
 	EndIf
 	
@@ -268,7 +268,7 @@ Func LocateStarLab()
 				SetLog("It reads as Level " & $aResult[2] & ".", $COLOR_INFO)
 				Return True
 			Else
-				ClickAway()
+				ClickAway("Left")
 				SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
 				SetDebugLog("Found instead: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG)
 				SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
@@ -278,7 +278,7 @@ Func LocateStarLab()
 				$g_aiStarLaboratoryPos[1] = -1
 			EndIf
 		Else
-			ClickAway()
+			ClickAway("Left")
 			SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
 			SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
 			ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
@@ -349,7 +349,7 @@ Func LocateStarLab()
 				SetLog("It reads as Level " & $aResult[2] & ".", $COLOR_INFO)
 				Return True
 			Else
-				ClickAway()
+				ClickAway("Left")
 				SetDebugLog("Found Star Laboratory Position is not valid.", $COLOR_ERROR)
 				SetDebugLog("Found instead: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG)
 				SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
@@ -359,7 +359,7 @@ Func LocateStarLab()
 				$g_aiStarLaboratoryPos[1] = -1
 			EndIf
 		Else
-			ClickAway()
+			ClickAway("Left")
 			SetDebugLog("Found Star Laboratory Position is not valid.", $COLOR_ERROR)
 			SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
 			ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
