@@ -42,13 +42,7 @@ Func PetHouse($test = False)
 	If Not $bUpgradePets Then Return
 	
 	$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(728, 123) ;get current DE
-	; not enought Dark Elixir to upgrade lowest Pet
-	If $g_aiCurrentLoot[$eLootDarkElixir] < ($g_iMinDark4PetUpgrade + $g_iTxtSmartMinDark) Then		
-		SetLog("Current DE Storage: " & $g_aiCurrentLoot[$eLootDarkElixir])
-		SetLog("Minimum DE for Pet upgrade: " & $g_iMinDark4PetUpgrade + $g_iTxtSmartMinDark)
-		Return False
-	EndIf
-	
+	If Number($g_aiCurrentLoot[$eLootDarkElixir]) < 115000 Then Return
 	ZoomOut() ;make sure village is zoomout 
 	ClickAway()
 	
