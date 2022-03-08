@@ -36,7 +36,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 		SetLog("Boosting Clock Tower", $COLOR_INFO)
 		If _Sleep($DELAYCOLLECT2) Then Return
 		
-		ClickAway()
+		ClickAway("Left")
 		AndroidAdbScript("ZoomOut")
 
 		Local $sCTCoords, $aCTCoords, $aCTBoost
@@ -66,7 +66,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 			SetLog("Clock Tower boost is not available!")
 		EndIf
 	EndIf
-	ClickAway()
+	ClickAway("Left")
 
 	If $bSwitchToNV Then SwitchBetweenBases("Main") ; Switching back to the normal Village if true
 EndFunc   ;==>StartClockTowerBoost
