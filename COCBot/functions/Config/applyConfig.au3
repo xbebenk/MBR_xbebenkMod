@@ -544,7 +544,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			; Builder Base Attack
 			$g_bChkEnableBBAttack = (GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)
 			$g_bChkBBDropTrophy = (GUICtrlRead($g_hChkBBDropTrophy) = $GUI_CHECKED)
-			$g_iTxtBBTrophyLowerLimit = GUICtrlRead($g_hTxtBBTrophyLowerLimit)
+			$g_iTxtBBTrophyLowerLimit = Number(GUICtrlRead($g_hTxtBBTrophyLowerLimit))
 			$g_bChkBBAttIfLootAvail = (GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
 			$g_bChkBBWaitForMachine = (GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
 			$g_bChkBBDropBMFirst = (GUICtrlRead($g_hChkBBDropBMFirst) = $GUI_CHECKED)
