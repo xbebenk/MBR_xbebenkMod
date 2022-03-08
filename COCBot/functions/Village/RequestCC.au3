@@ -107,8 +107,9 @@ Func _makerequest($x, $y, $bTest)
 				ClickAway()
 			EndIf
 		EndIf
+		If _Sleep(2000) Then Return ; wait time for text request to complete
 		Click($g_iQuickMISX + 95, $g_iQuickMISY)
-		If _Sleep(1000) Then Return ; wait time for text request to complete
+		If _Sleep(1000) Then Return ; wait time after clicking request window border
 		For $i = 1 To 5
 			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
 			If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
