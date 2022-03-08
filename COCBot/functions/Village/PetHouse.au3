@@ -27,18 +27,16 @@ Func TestPetHouse()
 EndFunc
 
 Func PetHouse($test = False)
-	Local $bUpgradePets = False
-	
-    If $g_iTownHallLevel < 14 Then
+	If $g_iTownHallLevel < 14 Then
 		SetDebugLog("Townhall Lvl " & $g_iTownHallLevel & " has no Pet House.", $COLOR_ERROR)
 		Return
 	EndIf
 
 	; Check at least one pet upgrade is enabled
+	Local $bUpgradePets = False
 	For $i = 0 to $ePetCount - 1
 		If $g_bUpgradePetsEnable[$i] Then
 			$bUpgradePets = True
-			SetLog($g_asPetNames[$i] & " upgrade enabled");
 		EndIf
 	Next
 	If Not $bUpgradePets Then Return
@@ -50,6 +48,9 @@ Func PetHouse($test = False)
 		SetLog("Minimum DE for Pet upgrade: " & $g_iMinDark4PetUpgrade + $g_iTxtSmartMinDark)
 		Return False
 	EndIf
+	
+	ZoomOut() ;make sure village is zoomout 
+	ClickAway()
 	
 	If PetUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the Pet House
 
@@ -116,10 +117,18 @@ Func PetHouse($test = False)
 	Next
 	
 	Local $AllPetMax = True
+	SetLog("Current DE: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_INFO)
 	For $i = 0 To UBound($aPet) - 1
 		If $aPet[$i][3] < $g_ePetLevels Then 
 			$AllPetMax = False
-			ExitLoop
+		EndIf
+		
+		If Number($g_aiCurrentLoot[$eLootDarkElixir]) > (Number($g_iTxtSmartMinDark) + Number($iDarkElixirReq)) Then
+			SetLog($aPet[$i][1] & ", DE Upgrade Cost: " & $aPet[$i][4], $COLOR_SUCCESS)
+			SetLog("Unlocked: " & $aPet[$i][2] & ", Level: " & $aPet[$i][3] & ", Upgrade Enabled: " & $g_bUpgradePetsEnable[$aPet[$i][0]], $COLOR_SUCCESS)
+		Else
+			SetLog($aPet[$i][1] & ", DE Upgrade Cost: " & $aPet[$i][4], $COLOR_ERROR)
+			SetLog("Unlocked: " & $aPet[$i][2] & ", Level: " & $aPet[$i][3] & ", Upgrade Enabled: " & $g_bUpgradePetsEnable[$aPet[$i][0]], $COLOR_ERROR)
 		EndIf
 	Next
 	
@@ -139,9 +148,9 @@ Func PetHouse($test = False)
 			Local $iDarkElixirReq = $aPet[$i][4]
 			SetLog("DE Requirement: " & $iDarkElixirReq)
 
-			If $g_aiCurrentLoot[$eLootDarkElixir] > ($g_iTxtSmartMinDark + $iDarkElixirReq) Then
+			If Number($g_aiCurrentLoot[$eLootDarkElixir]) > (Number($g_iTxtSmartMinDark) + Number($iDarkElixirReq)) Then
 				SetLog("Will now upgrade " & $aPet[$i][1])
-				Click($aPet[$i][5], $aPet[$i][6])
+				Click($aPet[$i][5], 465)
 
 			   ; wait for ungrade window to open
 				If _Sleep(1500) Then Return
@@ -185,7 +194,7 @@ Func PetHouse($test = False)
 						ClickAway() ; close pet upgrade window
 					EndIf
 
-					SetLog("Started upgrade for: " & $g_asPetNames[$i])
+					SetLog("Started upgrade for: " & $aPet[$i][1])
 					ClickAway() ; close pet house window
 					Return True
 				Else
@@ -198,8 +207,6 @@ Func PetHouse($test = False)
 				SetDebugLog("DE:" & $g_aiCurrentLoot[$eLootDarkElixir] & " - " & $iDarkElixirReq & " = " & $g_aiCurrentLoot[$eLootDarkElixir] - $iDarkElixirReq)
 				SetLog("Upgrade Failed - Not enough Dark Elixir", $COLOR_ERROR)
 			EndIf
-		Else
-			SetLog($aPet[$i][1] & " Enabled: " & ($g_bUpgradePetsEnable[$aPet[$i][0]] ? "True" : "False") & ", Is Unlocked: " & $aPet[$i][2])
 		EndIf
 	Next
 	
