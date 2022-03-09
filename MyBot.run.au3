@@ -1668,7 +1668,7 @@ Func CommonRoutine($RoutineType = Default)
 				If _Sleep(500) Then Return
 				If $g_bRestart Then Return
 			Next
-			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
+			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

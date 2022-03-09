@@ -1924,15 +1924,9 @@ Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Pet House Alpha
 Global $g_aiPetHousePos[2] = [-1, -1] ; Position of Pet House
-
 Global $g_sPetUpgradeTime = ""
-
 Global $g_bUpgradePetsEnable[4] = [False, False, False, False]
-
-Global $g_iMinDark4PetUpgrade = 115000
-
 Local $g_aiPetLevel[4] = [0, 0, 0, 0]
-
 
 Global Enum $ePetLassi, $ePetEletroOwl, $ePetMightyYak, $ePetUnicorn, $ePetCount
 Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Eletro Owl", "Mighty Yak", "Unicorn"]

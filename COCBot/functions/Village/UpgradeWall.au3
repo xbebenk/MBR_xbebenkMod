@@ -69,7 +69,7 @@ Func UpgradeWall($bTest = False)
 			If Not $MinWallGold And Not $MinWallElixir Then ExitLoop
 
 			While $MinWallGold Or $MinWallElixir
-				If $searchcount > 1 Then ExitLoop 2
+				If $searchcount > 1 Then ExitLoop
 				If Not $g_bRunState Then Return
 				$searchcount += 1
 				Switch $g_iUpgradeWallLootType

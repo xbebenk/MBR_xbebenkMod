@@ -354,9 +354,8 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 					TrainIt($iTroopIndex, $rWTT[$i][1], $g_iTrainClickDelay)
 				Else
 					SetLog("No resources to Train " & $rWTT[$i][1] & "x " & $sTroopName, $COLOR_ACTION)
-					$g_bOutOfElixir = True
+					;$g_bOutOfElixir = True
 				EndIf
-
 			EndIf
 		EndIf
 		If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
@@ -1526,8 +1525,9 @@ Func CheckValuesCost($Troop = "Arch", $troopQuantity = 1)
 		Return False
 	Else
 		; If Isn't Dark Troop And Spells, Then is Elixir Troop : )
+		If $g_bDebugSetlogTrain Then SetLog("Troop " & $Troop & " Is Elixir Troop")
+		If $g_bDebugSetlogTrain Then SetLog("Cost:" & $troopCost & " Current Elix: " & $nElixirCurrent)
 		If $troopCost <= $nElixirCurrent Then
-			If $g_bDebugSetlogTrain Then SetLog("Troop " & $Troop & " Is Elixir Troop")
 			Return True
 		EndIf
 		Return False

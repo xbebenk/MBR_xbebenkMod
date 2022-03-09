@@ -13,88 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func SwitchBetweenBases_Old($bCheckMainScreen = True)
-	Local $sSwitchFrom, $sSwitchTo, $bIsOnBuilderBase = False, $aButtonCoords
-	Local $sTile, $sTileDir, $sRegionToSearch
-	Local $bSwitched = False
-
-	If Not $g_bRunState Then Return
-
-	For $i = 0 To 2
-		If isOnBuilderBase() Then
-			$sSwitchFrom = "Builder Base"
-			$sSwitchTo = "Normal Village"
-			$bIsOnBuilderBase = True
-			$sTile = "BoatBuilderBase"
-			$sTileDir = $g_sImgBoatBB
-			$sRegionToSearch = "487,44,708,242"
-		Else
-			$sSwitchFrom = "Normal Village"
-			$sSwitchTo = "Builder Base"
-			$bIsOnBuilderBase = False
-			$sTile = "BoatNormalVillage"
-			$sTileDir = $g_sImgBoat
-			$sRegionToSearch = "66,432,388,627"
-		EndIf
-
-		If _sleep(1000) Then Return
-		If Not $g_bRunState Then Return
-
-		ZoomOut() ; ensure boat is visible
-		If Not $g_bRunState Then Return
-
-		$aButtonCoords = decodeSingleCoord(findImageInPlace($sTile, $sTileDir, $sRegionToSearch))
-		If UBound($aButtonCoords) > 1 Then
-			SetLog("[" & $i & "] Going to " & $sSwitchTo, $COLOR_INFO)
-			ClickP($aButtonCoords)
-			If _Sleep($DELAYSWITCHBASES1) Then Return
-
-			; switch can take up to 2 Seconds, check for 3 additional Seconds...
-			For $j = 1 To 5
-				If _Sleep(1000) Then Return
-				SetDebugLog("[" & $j & "] Waiting for switched to " & $sSwitchTo)
-				If IsProblemAffect(True) Then Return
-				$bSwitched = isOnBuilderBase() <> $bIsOnBuilderBase
-				If $bSwitched Then ExitLoop
-			Next
-			
-			If Not $g_bRunState Then Return
-			If IsProblemAffect(True) Then Return
-			If $bSwitched Then
-				If $bCheckMainScreen Then checkMainScreen(True, Not $bIsOnBuilderBase, "SwitchBetweenBases")
-				Return True
-			EndIf
-			
-			If Not $bSwitched Then
-				SetLog("Failed to go to the " & $sSwitchTo, $COLOR_ERROR)
-				If $i = 1 And ($g_bPlaceNewBuilding Or $g_iChkPlacingNewBuildings) Then
-					If $bIsOnBuilderBase Then 
-						GoAttackBBAndReturn()
-					Else
-						GoGoblinMap()
-					EndIf
-				EndIf
-				Return False
-			EndIf
-		Else
-			Setlog("[" & $i & "] SwitchBetweenBases Tile: " & $sTile, $COLOR_ERROR)
-			Setlog("[" & $i & "] SwitchBetweenBases isOnBuilderBase: " & isOnBuilderBase(True), $COLOR_ERROR)
-			If $bIsOnBuilderBase Then
-				SetLog("Cannot find the Boat on the Coast", $COLOR_ERROR)
-			Else
-				SetLog("Cannot find the Boat on the Coast. Maybe it is still broken or not visible", $COLOR_ERROR)
-			EndIf
-
-			If $i >= 1 Then RestartAndroidCoC() ; Need to try to restart CoC
-		EndIf
-	Next
-
-	Return False
-EndFunc   ;==>SwitchBetweenBases
-
-
 Func SwitchBetweenBases($ForcedSwitchTo = "BB")
-	
 	Local $bIsOnBuilderBase = isOnBuilderBase()
 	If $bIsOnBuilderBase And $ForcedSwitchTo = "BB" Then
 		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_ERROR)
@@ -141,7 +60,7 @@ Func SwitchTo($To = "BB")
 		$x = 100
 		$y = 460
 		$x1 = 250
-		$y1 = 575
+		$y1 = 585
 	EndIf	
 	
 	For $i = 1 To 3
@@ -164,7 +83,7 @@ Func SwitchTo($To = "BB")
 	For $i = 1 To 10
 		$bRet = _CheckPixel($aPixelToCheck, True, Default, "SwitchBetweenBases")
 		If $bRet Then 
-			SetDebugLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success")
+			SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
 			ExitLoop
 		EndIf
 		_Sleep(500)

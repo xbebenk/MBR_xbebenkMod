@@ -36,7 +36,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		EndIf
 		_CaptureRegions() ;force capture screen
 		If checkChatTabPixel() Then 
-			SetDebugLog("Screen cleared, WaitMainScreen exit", $COLOR_SUCCESS)
+			SetLog("waitMainScreen: MainScreen Located", $COLOR_SUCCESS)
 			Return
 		EndIf
 		
