@@ -362,6 +362,7 @@ Func DeployBM($aBMPos, $iSide = False)
 	EndIf
 
 	If $bBMDeployed Then SetLog("Battle Machine Deployed", $COLOR_SUCCESS)
+	If $bBMDeployed Then PureClick($aBMPos)
 	Return $bBMDeployed
 EndFunc ; DeployBM
 
