@@ -157,7 +157,7 @@ Func AutoUpgradeBB($bTest = False)
 					If $g_bRestart Then Return
 				Else
 					ZoomOut()
-					ClickAway()
+					ClickAway("Left")
 					ClickOnBuilder($bTest)
 					ClickDrag(400, 100, 400, 800, 1000);do scroll down
 					If _Sleep(5000) Then Return
@@ -478,7 +478,7 @@ Func SearchNewBuilding($bTest = False)
 				EndIf
 				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $aCoord[$j][0] + 100, $aCoord[$j][1] - 8, $aCoord[$j][0] + 250, $aCoord[$j][1] + 8, True) Then
 					SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1], $COLOR_INFO)
-					ClickAway()
+					ClickAway("Left")
 					If _Sleep(1000) Then Return
 					If Not $ZoomedIn Then
 						If SearchGreenZoneBB() Then 

@@ -47,7 +47,7 @@ Func CleanBBYard()
 						Else
 							_SleepStatus(11000)
 						EndIf
-						ClickAway()
+						ClickAway("Left")
 						$Locate += 1
 					EndIf
 				Next
@@ -63,6 +63,6 @@ Func CleanBBYard()
 	SetDebugLog("Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_SUCCESS)
 	
 	UpdateStats()
-	ClickAway()
+	ClickAway("Left")
 
 EndFunc   ;==>CleanBBYard

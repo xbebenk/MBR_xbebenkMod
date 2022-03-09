@@ -165,7 +165,7 @@ Func BBDropTrophy()
 	If Not $g_bChkBBDropTrophy Then Return
 	SetLog("Prepare BB Drop Trophy", $COLOR_INFO)
 	
-	$g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
+	$g_aiCurrentLootBB[$eLootTrophyBB] = Number(getTrophyMainScreen(67, 84))
 	If $g_aiCurrentLootBB[$eLootTrophyBB] <= $g_iTxtBBTrophyLowerLimit Then
 		SetLog("Current BB Trophy:[" & $g_aiCurrentLootBB[$eLootTrophyBB] & "] BBDropTrophy Limit:[" & $g_iTxtBBTrophyLowerLimit & "]", $COLOR_INFO)
 		SetLog("Skip BB Drop Trophy", $COLOR_INFO)
