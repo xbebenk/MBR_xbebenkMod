@@ -191,7 +191,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			If IsProblemAffect(True) Then Return
 			If Not $g_bRunState Then Return
 			If IsArray($aSearchResult) And Ubound($aSearchResult) > 0 Then
-				Local $FinalCoordX = $iLastX, $FinalCoordY = $iLastY, $iFinalLevel = 1, $HigherLevelFound = False
+				Local $FinalCoordX = $iLastX, $FinalCoordY = $iLastY, $iFinalLevel = 1, $HigherLevelFound = False, $AnySiegeFound = False
 				Local $TmpIndex = 0
 				$TmpIndex = _ArraySearch($aSearchResult, $eCastle, 0, 0, 0, 0, 1, 5)
 				If $TmpIndex = -1 Then 
@@ -217,7 +217,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 					EndIf
 				EndIf 
 				
-				_ArraySort($aSearchResult, 0, 0, 0, 1) ;sort desc by x coord
+				_ArraySort($aSearchResult, 0, 0, 0, 1) ;sort asc by x coord
 				If $NeedHigherLevel Or $bAnySiege Then
 					If $bAnySiege Then 
 						SetDebugLog("AnySiege")
@@ -233,15 +233,21 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 									$SiegeName = $aSearchResult[$i][0]
 									$FinalCoordX = $aSearchResult[$i][1]
 									$FinalCoordY = $aSearchResult[$i][2]
+									$AnySiegeFound = True
+									SetDebugLog("Selected SiegeName:" & $SiegeName & " Level:" & $iFinalLevel & " Coord:[" & $FinalCoordX & "," & $FinalCoordY & "]")
 								EndIf
 								If $iFinalLevel = 4 Then ExitLoop
 							EndIf
 						Next
-						SetDebugLog("Selected SiegeName:" & $SiegeName & " Level:" & $iFinalLevel & " Coord:[" & $FinalCoordX & "," & $FinalCoordY & "]")
-						Click($FinalCoordX, $FinalCoordY)
-						$iTroopIndex = $iSiegeIndex ;set ByRef
-						$g_iSiegeLevel = $iFinalLevel
-						Return
+						
+						If $AnySiegeFound Then 
+							Click($FinalCoordX, $FinalCoordY)
+							$iTroopIndex = $iSiegeIndex ;set ByRef
+							$g_iSiegeLevel = $iFinalLevel
+						Else
+							SetLog("AnySiege : Not found any", $COLOR_ERROR)
+							Click($iLastX, $iLastY, 1)
+						EndIf
 					Else
 						Local $TmpIndex = _ArraySearch($aSearchResult, $ToUse, 0, 0, 0, 0, 1, 5)
 						SetDebugLog("To Use = [" & $ToUse & "] " & GetTroopName($ToUse) & ", Got:" & $TmpIndex)
