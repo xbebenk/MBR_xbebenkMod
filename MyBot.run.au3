@@ -29,6 +29,19 @@ Opt("MustDeclareVars", 1)
 Global $g_sBotTitle = "" ;~ Don't assign any title here, use Func UpdateBotTitle()
 Global $g_hFrmBot = 0 ; The main GUI window
 
+Local $AutoItVersion = @AutoItVersion
+Local $aAutoItVersion = StringSplit($AutoItVersion, ".", 2)
+If Number($aAutoItVersion[2]) > 14 Then
+	Local $answer = MsgBox(0x41, @ScriptName , "Unsupported AutoIt Version" & @CRLF & @CRLF & "Your Installed AutoIt Version : " & $AutoItVersion & @CRLF & "Please Download and Install AutoIt Version 3.3.14.5" & @CRLF & "Click OK will open archive download link for lower version of AutoIt")
+	Switch $answer 
+		Case 1
+			Run(@ComSpec & " /c " & 'start www.autoitscript.com/autoit3/files/archive/autoit/', "", @SW_HIDE)
+			Exit
+		Case 2
+			Exit
+	EndSwitch
+EndIf
+
 ; MBR includes
 #include "COCBot\MBR Global Variables.au3"
 #include "COCBot\functions\Config\DelayTimes.au3"
