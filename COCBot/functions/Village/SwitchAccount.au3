@@ -250,7 +250,7 @@ Func SwitchCOCAcc($NextAccount)
 	If Not $g_bRunState Then Return
 
 	SetLog("Switching to Account [" & $NextAccount + 1 & "]")
-
+	checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchCOCAcc")
 	Local $bSharedPrefs = $g_bChkSharedPrefs And HaveSharedPrefs($g_asProfileName[$g_iNextAccount])
 	If $bSharedPrefs And $g_PushedSharedPrefsProfile = $g_asProfileName[$g_iNextAccount] Then
 		; shared prefs already pushed
