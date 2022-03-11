@@ -70,7 +70,6 @@ Global $g_sImgBoostTroopsIcons = @ScriptDir & "\imgxml\SuperTroops\Troops\"
 Global $g_sImgBoostTroopsButtons = @ScriptDir & "\imgxml\SuperTroops\Buttons\"
 Global $g_sImgBoostTroopsPotion = @ScriptDir & "\imgxml\SuperTroops\Potions\"
 Global $g_sImgBoostTroopsClock = @ScriptDir & "\imgxml\SuperTroops\Clock\"
-Global $g_sImgSTProgress = @ScriptDir & "\imgxml\SuperTroops\Progress\"
 #EndRegion
 
 #Region Builder Base

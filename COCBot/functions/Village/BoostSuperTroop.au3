@@ -155,26 +155,40 @@ Func BoostSuperTroop($bTest = False)
 EndFunc   ;==>BoostSuperTroop
 
 Func OpenBarrel()
-	ClickAway()
 	Local $bOpenBarrel = True
 	If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 0, 0, 220, 225, True, False) Then
 		; Check if is already boosted.
-		Local $Progress = QuickMIS("CNX", $g_sImgSTProgress, $g_iQuickMISX - 50, $g_iQuickMISY - 50, $g_iQuickMISX + 50, $g_iQuickMISY + 50)
-		If IsArray($Progress) And UBound($Progress) > 0 Then
-			Local $EnabledStroop = 0
-			For $i = 0 To Ubound($g_iCmbSuperTroops) - 1
-				If $g_iCmbSuperTroops[$i] > 0 Then
-					$EnabledStroop += 1
-				EndIf
-			Next
-			SetDebugLog("Enabled BoostSuperTroops: " & $EnabledStroop)
-			SetDebugLog("Detected Progress: " & Ubound($Progress))
-			If Ubound($Progress) >= $EnabledStroop Then
+		Local $EnabledStroop = 0
+		For $i = 0 To Ubound($g_iCmbSuperTroops) - 1
+			If $g_iCmbSuperTroops[$i] > 0 Then
+				$EnabledStroop += 1
+			EndIf
+		Next
+		SetDebugLog("Enabled boost count: " & $EnabledStroop)
+		If $EnabledStroop = 1 Then 
+			Local $Color = _GetPixelColor($g_iQuickMISX - 9, $g_iQuickMISY - 18, True)
+			SetDebugLog("Color:" &$Color)
+			If _ColorCheck($Color, Hex(0xEB7100, 6), 50) Or _ColorCheck($Color, Hex(0xF3C127, 6), 50) Or _ColorCheck($Color, Hex(0xC26B00, 6), 10) Then
+				SetLog("1 Boost Detected, troops already boosted", $COLOR_SUCCESS) 
 				$bOpenBarrel = False
-				SetLog("Troops Already boosted", $COLOR_INFO)
+			Else
+				SetDebugLog("Pixel Color on [" & $g_iQuickMISX - 9 & "," & $g_iQuickMISY - 18 & "] are : " & _GetPixelColor($g_iQuickMISX - 9, $g_iQuickMISY - 18, True))
 			EndIf
 		EndIf
-
+		
+		If $EnabledStroop = 2 Then 
+			Local $Color = _GetPixelColor($g_iQuickMISX - 9, $g_iQuickMISY - 18, True)
+			Local $Color1 = _GetPixelColor($g_iQuickMISX - 9, $g_iQuickMISY - 18 - 11, True)
+			SetDebugLog("Color:" &$Color & ", Color1:" & $Color1)
+			If _ColorCheck($Color, Hex(0xF3C427, 6), 50) And _ColorCheck($Color1, Hex(0xF2C227, 6), 50) Then
+				SetLog("2 Boost Detected, troops already boosted", $COLOR_SUCCESS) 
+				$bOpenBarrel = False
+			Else
+				SetDebugLog("Pixel Color on [" & $g_iQuickMISX - 9 & "," & $g_iQuickMISY - 18 & "] are : " & _GetPixelColor($g_iQuickMISX - 9, $g_iQuickMISY - 18, True))
+				SetDebugLog("Pixel Color on [" & $g_iQuickMISX - 9 & "," & $g_iQuickMISY - 18 - 11 & "] are : " & _GetPixelColor($g_iQuickMISX - 9, $g_iQuickMISY - 18 - 11, True))
+			EndIf
+		EndIf
+		
 		If $bOpenBarrel Then
 			SetLog("Found Barrel at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_DEBUG)
 			Click($g_iQuickMISX, $g_iQuickMISY)
