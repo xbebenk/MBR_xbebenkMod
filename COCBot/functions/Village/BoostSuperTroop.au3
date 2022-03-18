@@ -156,7 +156,7 @@ EndFunc   ;==>BoostSuperTroop
 
 Func OpenBarrel()
 	Local $bOpenBarrel = True
-	If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 0, 0, 220, 225, True, False) Then
+	If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 60, 120, 220, 225) Then
 		; Check if is already boosted.
 		Local $EnabledStroop = 0
 		For $i = 0 To Ubound($g_iCmbSuperTroops) - 1
@@ -167,7 +167,7 @@ Func OpenBarrel()
 		SetDebugLog("Enabled boost count: " & $EnabledStroop)
 		If $EnabledStroop = 1 Then 
 			Local $Color = _GetPixelColor($g_iQuickMISX - 9, $g_iQuickMISY - 18, True)
-			SetDebugLog("Color:" &$Color)
+			SetDebugLog("[" & $g_iQuickMISX - 9 &","& $g_iQuickMISY - 18 & "] Color:" & $Color)
 			If _ColorCheck($Color, Hex(0xEB7100, 6), 50) Or _ColorCheck($Color, Hex(0xF3C127, 6), 50) Or _ColorCheck($Color, Hex(0xC26B00, 6), 10) Then
 				SetLog("1 Boost Detected, troops already boosted", $COLOR_SUCCESS) 
 				$bOpenBarrel = False
