@@ -461,6 +461,7 @@ Func GetBBDropPoint()
 		$BHFound = $BHCoord[0]
 		$XMiddle = $BHCoord[1]
 		$YMiddle = $BHCoord[2]	
+		_Sleep(2000) ;add more delay after drag
 	EndIf
 	
 	Local $hTimer = TimerInit()
@@ -499,7 +500,7 @@ Func GetBBDropPoint()
 	$g_bAttackActive = False
 	SetLog("BBDropPoint Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 	
-	FindLavaLauncher($aDPResult)
+	;FindLavaLauncher($aDPResult)
 	If $g_bDebugClick Then SetLog("g_BBDPSide = " & $g_BBDPSide)
 	
 	If Ubound($aDPResult) < 10 Then 
@@ -511,7 +512,7 @@ EndFunc
 
 Func SortBBDP($aDropPoints)
 	Local $aResult[0][4]
-	Local $TmpYL = 0, $TmpXR = 0, $DPChange = 0, $DpDistance = 10
+	Local $TmpYL = 0, $TmpXR = 0, $DPChange = 5, $DpDistance = 10
 	Local $TmpYMaxTLFound = False, $TmpYMinBLFound = False, $TmpYMinBRLFound = False, $TmpYMaxTRFound = False
 	Local $TmpXMinTL = 0, $TmpYMaxTL = 0
 	Local $TmpXMinBL = 0, $TmpYMinBL = 0
