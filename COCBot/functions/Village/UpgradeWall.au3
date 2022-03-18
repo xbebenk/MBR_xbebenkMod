@@ -321,7 +321,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				Case "Gold"
 					For $i = 1 To 10
 						SetDebugLog("Waiting Gold Button for Wall Upgrade #" & $i)
-						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 720, 580)
+						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 300, 520, 720, 580)
 						If $UpgradeButtonFound Then ExitLoop
 						_Sleep(50)
 					Next
