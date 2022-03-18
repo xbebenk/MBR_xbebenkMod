@@ -159,6 +159,10 @@ Func getOcrPBTtime($x_start, $y_start) ;  -> Get the Time until PBT starts from 
 	Return getOcrAndCapture("coc-pbttime", $x_start, $y_start, 80, 15)
 EndFunc   ;==>getOcrPBTtime
 
+Func getBuilderLeastUpgradeTime($x_start, $y_start) ;  -> Get least upgradetime on builder menu
+	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 60, 16, True)
+EndFunc   ;==>getBuilderLeastUpgradeTime
+
 Func getOcrReloadMessage($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
 	Local $result = getOcrAndCapture("coc-reloadmsg", $x_start, $y_start, 116, 19, True)
 	Local $String = ""
