@@ -55,7 +55,7 @@ Func UpgradeWall($bTest = False)
 	EndIf
 
 	If Not $g_bRunState Then Return
-	If $GoUpgrade And Not $g_bUpgradeAnyWallLevel Then
+	If $GoUpgrade And Not $g_bUpgradeAnyWallLevel And Not $g_bUpgradeLowWall Then
 		Clickaway("Right")
 		VillageReport(True, True) ;update village resource capacity
 		If $g_iFreeBuilderCount < 1 Then Return
@@ -185,8 +185,8 @@ Func UpgradeLowLevelWall($bTest = False)
 		If Not $g_bRunState Then Return
 		If Not WallUpgradeCheckBuilder($bTest) Then Return
 		If $Try > 2 Then ExitLoop
-		$Try += 1
 		SetLog("[" & $Try & "] Search Wall on Builder Menu", $COLOR_INFO)
+		$Try += 1
 		$aWallCoord = ClickDragFindWallUpgrade()
 		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then ; found a wall or list of wall
 			Local $aIsEnoughResource = WallCheckResource($aWallCoord[0][2]) ;check upgrade from lowest to highest price 
@@ -223,17 +223,17 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 			Local $aWallLevel = BuildingInfo(242, 494)
 			If $aWallLevel[0] = "" Then
 				SetLog("Cannot read building Info, wrong click...", $COLOR_ERROR)
-				ContinueLoop 2
+				Return False
 			EndIf
 			If $aWallLevel[1] = "Wall" Then
 				SetDebugLog("is a Wall...", $COLOR_INFO)
 			Else
 				SetLog("Not Wall, wrong click...", $COLOR_ERROR)
-				ExitLoop 2
+				Return False
 			EndIf
 			If Not $g_bUpgradeAnyWallLevel And $aWallLevel[2] > $UpgradeToLvl Then
 				SetLog("Skip this Wall, searching wall level " & $UpgradeToLvl & " and below", $COLOR_ERROR)
-				ContinueLoop 2
+				Return False
 			EndIf
 			SetLog("BuildingInfo: " & $aWallLevel[1] & " Level: " & $aWallLevel[2], $COLOR_SUCCESS)
 			Local $aIsEnoughResource = WallCheckResource($aWallCoord[$i][2], $aWallLevel[2])
@@ -321,13 +321,13 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				Case "Gold"
 					For $i = 1 To 10
 						SetDebugLog("Waiting Gold Button for Wall Upgrade #" & $i)
-						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 720, 580)
+						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 300, 520, 720, 580)
 						If $UpgradeButtonFound Then ExitLoop
 						_Sleep(50)
 					Next
 				Case "Elix"
 					For $i = 1 To 10
-						SetDebugLog("Waiting Gold Button for Wall Upgrade #" & $i)
+						SetDebugLog("Waiting Elix Button for Wall Upgrade #" & $i)
 						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 720, 580)
 						If $UpgradeButtonFound Then ExitLoop
 						_Sleep(50)
