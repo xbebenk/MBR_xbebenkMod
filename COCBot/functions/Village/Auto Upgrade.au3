@@ -52,33 +52,22 @@ EndFunc
 Func SearchUpgrade($bTest = False)
 	SetLog("Check for Auto Upgrade", $COLOR_DEBUG)
 	checkMainScreen(True, $g_bStayOnBuilderBase, "AutoUpgrade")
-	Local $bDebug = $g_bDebugSetlog
+	
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
 	$g_bSkipWallReserve = False ;reset first
 	
-	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder Then
-		getBuilderCount(True)
-		If $g_iFreeBuilderCount = 1 Then
-			ClickMainBuilder()
-			SetLog("Checking current upgrade", $COLOR_INFO)
-			Local $Hour = QuickMIS("CNX", $g_sImgAUpgradeHour, 375, 105, 440, 135) ;Skip Wall Reserve, detected upgrade remain time on most top list upgrade < 24h
-			If IsArray($Hour) And UBound($Hour) > 0 Then 
-				For $i = 0 To UBound($Hour) - 1
-					If $Hour[$i][0] = "Day" Then
-						$g_bSkipWallReserve = False
-						ExitLoop
-					EndIf
-					If $Hour[$i][0] = "Hour" Then
-						$g_bSkipWallReserve = True
-					EndIf
-				Next
-				If $g_bSkipWallReserve Then
-					SetLog("Current Upgrade remain time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
-				Else
-					SetLog("Current Upgrade remain time > 24h, Skip Upgrade", $COLOR_INFO)
-				EndIf
-			EndIf
+	If AutoUpgradeCheckBuilder($bTest) And $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder Then
+		ClickMainBuilder()
+		SetLog("Checking current upgrade", $COLOR_INFO)
+		Local $sUpgradeTime = getBuilderLeastUpgradeTime(380, 110)
+		Local $mUpgradeTime = ConvertOCRTime("UpgradeTime", $sUpgradeTime)
+		If $mUpgradeTime < 1440 Then
+			$g_bSkipWallReserve = True
+			SetLog("Current Upgrade remain time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
+		Else
+			$g_bSkipWallReserve = False
+			SetLog("Current Upgrade remain time > 24h, Skip Upgrade", $COLOR_INFO)
 		EndIf
 	EndIf
 	
@@ -137,6 +126,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 				Click($ExistingBuilding[$i][1], $ExistingBuilding[$i][2])
 				If _Sleep(1000) Then Return
 				If DoUpgrade($bTest) Then
+					$g_bSkipWallReserve = False
 					If Not AutoUpgradeCheckBuilder($bTest) Then Return
 				Endif
 				ClickMainBuilder($bTest)
