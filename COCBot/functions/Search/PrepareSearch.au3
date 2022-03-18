@@ -87,13 +87,13 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			If StringInStr($sButtonState, "Ended", 0) > 0 Then
 				SetLog("League Day ended already! Trying again later", $COLOR_INFO)
 				$g_bRestart = True
-				ClickAway()
+				CloseClangamesWindow()
 				$g_bForceSwitch = True     ; set this switch accounts next check
 				Return
 			ElseIf StringInStr($sButtonState, "Made", 0) > 0 Then
 				SetLog("All Attacks already made! Returning home", $COLOR_INFO)
 				$g_bRestart = True
-				ClickAway()
+				CloseClangamesWindow()
 				$g_bForceSwitch = True     ; set this switch accounts next check
 				Return
 			ElseIf StringInStr($sButtonState, "FindMatchLegend", 0) > 0 Then

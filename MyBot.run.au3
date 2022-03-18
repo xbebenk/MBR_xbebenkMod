@@ -1474,6 +1474,7 @@ Func FirstCheckRoutine()
 						If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
 						ExitLoop
 					Else
+						If $g_bForceSwitch Then ExitLoop ;exit here
 						$loopcount += 1
 						If $loopcount > 5 Then 
 							Setlog("1st Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
@@ -1507,6 +1508,14 @@ Func FirstCheckRoutine()
 	EndIf
 	
 	If Not $g_bRunState Then Return
+	If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then 
+		PrepareDonateCC()
+		DonateCC()
+		TrainSystem()
+		checkSwitchAcc() ;switch to next account
+	EndIf
+	
+	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
 		RequestCC() ;only do requestCC here
 		If _Sleep($DELAYRUNBOT2) Then Return
@@ -1534,6 +1543,7 @@ Func FirstCheckRoutine()
 							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
 							ExitLoop
 						Else
+							If $g_bForceSwitch Then ExitLoop ;exit here
 							$loopcount += 1
 							If $loopcount > 5 Then 
 								Setlog("2nd Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
@@ -1559,6 +1569,7 @@ Func FirstCheckRoutine()
 			EndIf
 		EndIf
 	EndIf
+	
 	If Not $g_bRunState Then Return
 	RequestCC(False)
 	checkArmyCamp(False, True)
@@ -1566,6 +1577,8 @@ Func FirstCheckRoutine()
 	_Sleep(1000)
 	DonateCC()
 	If $b_SuccessAttack Then TrainSystem()
+	If Not $g_bRunState Then Return
+	If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then checkSwitchAcc() ;switch to next account
 	CommonRoutine("FirstCheckRoutine")
 EndFunc
 
