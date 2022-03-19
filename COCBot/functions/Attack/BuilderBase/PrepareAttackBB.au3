@@ -28,7 +28,7 @@ Func PrepareAttackBB($Mode = Default)
 	Local $GoldIsFull = isGoldFullBB()
 	Local $ElixIsFull = isElixirFullBB()
 
-	If $g_iChkBBSuggestedUpgradesOTTO And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCount = 0 And Not $g_sStarLabUpgradeTime = "" Then
+	If $g_iChkBBSuggestedUpgradesOTTO And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCount = 0 Then ; And Not $g_sStarLabUpgradeTime = "" Then
 		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
 		Return False
 	EndIf
