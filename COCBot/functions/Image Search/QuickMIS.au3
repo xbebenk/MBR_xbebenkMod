@@ -112,16 +112,17 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					Return $Result
 					
 				Case "CNX" 
-					Local $Result[0][3]
+					Local $Result[0][4]
 					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
 					For $i = 0 To UBound($KeyValue) - 1
 						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
 						Local $objName = StringSplit($KeyValue[$i], "_", $STR_NOCOUNT)
 						Local $xy = StringSplit($DLLRes[0], "|", $STR_NOCOUNT)
+						;SetDebugLog(_ArrayToString($xy))
 						For $j = 0 To Ubound($xy) - 1
 							If UBound(decodeSingleCoord($xy[$j])) > 1 Then 
 								Local $Tmpxy = StringSplit($xy[$j], ",", $STR_NOCOUNT)
-								_ArrayAdd($Result, $objName[0] & "|" & $Tmpxy[0] + $Left & "|" & $Tmpxy[1] + $Top)
+								_ArrayAdd($Result, $objName[0] & "|" & $Tmpxy[0] + $Left & "|" & $Tmpxy[1] + $Top & "|" & $objName[1])
 							EndIf
 						Next
 					Next
