@@ -1578,8 +1578,8 @@ Func FirstCheckRoutine()
 	DonateCC()
 	If $b_SuccessAttack Then TrainSystem()
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then checkSwitchAcc() ;switch to next account
 	CommonRoutine("FirstCheckRoutine")
+	If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then checkSwitchAcc() ;switch to next account
 EndFunc
 
 Func BuilderBase()
