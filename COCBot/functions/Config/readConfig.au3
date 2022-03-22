@@ -970,6 +970,7 @@ Func ReadConfig_auto()
 		$g_aiCmbRushTHOption[$i] = $str[$i]
 	Next
 	IniReadS($g_bUpgradeOnlyTHLevelAchieve, $g_sProfileConfigPath, "Auto Upgrade", "UpgradeOnlyTHLevelAchieve", True, "Bool")
+	IniReadS($g_bHeroPriority, $g_sProfileConfigPath, "Auto Upgrade", "HeroPriority", False, "Bool")
 	$str = StringSplit(IniRead($g_sProfileConfigPath, "Auto Upgrade", "EssentialBuildings", "1|1|1|1|0|0|0|0"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
 		$g_aichkEssentialUpgrade[$i] = $str[$i]

@@ -996,7 +996,7 @@ Global Const $g_aiWallCost[11] = [20000, 30000, 50000, 75000, 100000, 200000, 50
 Global $g_iWallCost = 0
 
 ; Auto Upgrade
-Global $g_bPlaceNewBuilding = False, $g_bChkRushTH = False, $g_bNewBuildingFirst = False
+Global $g_bPlaceNewBuilding = False, $g_bChkRushTH = False, $g_bNewBuildingFirst = False, $g_bHeroPriority = False
 Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False, $g_bSkipWallReserve = False
 Global $g_iChkIgnoreTH = 0, $g_iChkIgnoreKing = 0, $g_iChkIgnoreQueen = 0, $g_iChkIgnoreWarden = 0, $g_iChkIgnoreChampion = 0, $g_iChkIgnoreCC = 0, $g_iChkIgnoreLab = 0
 Global $g_iChkIgnoreBarrack = 0, $g_iChkIgnoreDBarrack = 0, $g_iChkIgnoreFactory = 0, $g_iChkIgnoreDFactory = 0

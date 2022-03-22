@@ -697,7 +697,7 @@ Func SaveConfig_auto()
 	Next
 	_Ini_Add("Auto Upgrade", "EssentialBuildings", $string)
 	_Ini_Add("Auto Upgrade", "UpgradeOnlyTHLevelAchieve", $g_bUpgradeOnlyTHLevelAchieve)
-	
+	_Ini_Add("Auto Upgrade", "HeroPriority", $g_bHeroPriority)
 	For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 		_Ini_Add("Auto Upgrade", "ChkUpgradesToIgnore[" & $i & "]", $g_iChkUpgradesToIgnore[$i])
 	Next
