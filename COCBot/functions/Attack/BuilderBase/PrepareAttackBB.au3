@@ -15,13 +15,13 @@
 
 Func PrepareAttackBB($Mode = Default)
 	AutoUpgradeBBCheckBuilder()
-	
-	
+		
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 		SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
 		_Sleep(1500)
+		CheckArmyReady()
 		Return True
 	EndIf
 	
