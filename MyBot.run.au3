@@ -1394,35 +1394,39 @@ Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
-	If $g_bChkCGBBAttackOnly Then		
-		For $count = 1 to 10
-			If Not $g_bRunState Then Return
-			If _ClanGames(False, $g_bChkCGBBAttackOnly) = 0 Then
-				If $g_bIsBBevent Then
-					SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
-					GotoBBTodoCG()
-				Else
-					SetLog("Active Challenges is Not BB Challenges", $COLOR_INFO)
+	If $g_bChkCGBBAttackOnly Then
+		If isClanGamesWindow() Then ; check if clangames is running or not
+			_Sleep(1500)
+			CloseClangamesWindow()
+			For $count = 1 to 11
+				If Not $g_bRunState Then Return
+				If $count > 10 Then
+					SetLog("Something maybe wrong!", $COLOR_INFO)
+					If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
+					SetLog("Exiting to main loop!", $COLOR_INFO)
 					ExitLoop
 				EndIf
-			Else
-				; Exit loop if want to purge near max point
-				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop
+				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
+				_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
 				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
-				If $g_bForceSwitchifNoCGEvent Then
-					If ProfileSwitchAccountEnabled() Then 
+				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+					GotoBBTodoCG()
+				Else
+					; Exit loop if want to purge near max point
+					If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop
+					If $g_bForceSwitchifNoCGEvent Then
 						SetLog("No event on ClanGames, trying to switch account", $COLOR_SUCCESS)
-						CheckSwitchAcc()
-					Else
+						If ProfileSwitchAccountEnabled() Then CheckSwitchAcc()
+						If Not $g_bRunState Then Return
 						SetLog("Account switch is off, returning to main loop", $COLOR_INFO)
 						ExitLoop
 					EndIf
 				EndIf
-			EndIf
-			If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
-		Next		
-		SetLog("Something maybe wrong!", $COLOR_INFO)
-		SetLog("Exiting to main loop!", $COLOR_INFO)
+				If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
+			Next
+		EndIf
+		_Sleep(1500)
 		CloseClangamesWindow()
 	Else
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
@@ -1673,7 +1677,7 @@ Func GotoBBTodoCG()
 	If SwitchBetweenBases("BB") And isOnBuilderBase() Then
 		$g_bStayOnBuilderBase = True
 		CollectBuilderBase()
-		DoAttackBB(0)
+		DoAttackBB()
 		; switch back to normal village
 		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False

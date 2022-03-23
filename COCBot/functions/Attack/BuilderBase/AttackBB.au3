@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
+Func DoAttackBB()
 	If Not $g_bChkEnableBBAttack Then Return
 	If $g_iBBAttackCount = 0 Then
 		Local $count = 1
