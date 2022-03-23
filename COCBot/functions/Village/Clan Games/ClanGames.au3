@@ -74,7 +74,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		Local $aiScoreLimit = GetTimesAndScores()
 		If $aiScoreLimit = -1 Or UBound($aiScoreLimit) <> 2 Then
 			CloseClangamesWindow() ;need clickaway, as we are leaving
-			Return
+			Return False
 		Else
 			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
 			If _Sleep(500) Then Return
@@ -84,7 +84,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 				SetLog("Your score limit is reached! Congrats")
 				$g_bIsCGPointMaxed = True
 				CloseClangamesWindow()
-				Return
+				Return False
 			ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
 				SetLog("You almost reached max point")
 				$g_bIsCGPointAlmostMax = True
@@ -94,7 +94,6 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 					Setlog("Clan Games Minute Remain: " & $sTimeCG)
 					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1440 Then ; purge, but not purge on last day of clangames
 						SetLog("Stop before completing your limit and only Purge")
-						
 						Local $aEvent = FindEventToPurge($sTempPath)
 						If IsArray($aEvent) And UBound($aEvent) > 0 Then
 							Local $EventName = StringSplit($aEvent[0][0], "-")
@@ -106,21 +105,22 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 							ForcePurgeEvent(False, True) ; maybe will never hit here, but..
 						EndIf
 						CloseClangamesWindow()
-						Return
+						Return False
 					EndIf
 				EndIf
+				Return False
 			EndIf
 			If $YourAccScore[$g_iCurAccount][0] = -1 Then $YourAccScore[$g_iCurAccount][0] = $aiScoreLimit[0]
 		EndIf
 	Else
 		CloseClangamesWindow()
-		Return
+		Return False
 	EndIf
 
 	;check cooldown purge
-	If CooldownTime() Then Return
+	If CooldownTime() Then Return False
 	If Not $g_bRunState Then Return ;trap pause or stop bot
-	If IsEventRunning() Then Return
+	If IsEventRunning() Then Return True
 	If Not $g_bRunState Then Return ;trap pause or stop bot
 	UpdateStats()
 	
@@ -136,7 +136,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		EndIf
 		If _Sleep(1500) Then Return
 		CloseClangamesWindow()
-		Return
+		Return False
 	EndIf
 
 	Local $HowManyImages = _FileListToArray($sTempPath, "*", $FLTA_FILES)
@@ -144,7 +144,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		Setlog($HowManyImages[0] & " Events to search")
 	Else
 		Setlog("ClanGames-Error on $HowManyImages: " & @error)
-		Return
+		Return False
 	EndIf
 
 	; To store the detections
@@ -509,9 +509,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 				
 				Click($aTempSelectChallenges[$i][1], $aTempSelectChallenges[$i][2])
 				If _Sleep(1750) Then Return
-				If ClickOnEvent($YourAccScore, $aiScoreLimit, $sEventName, $getCapture) Then Return
-				; Some error occurred let's click on Challenges Tab and proceeds
-				ClickP($TabChallengesPosition, 2, 0, "#Tab")
+				Return ClickOnEvent($YourAccScore, $aiScoreLimit, $sEventName, $getCapture)
 			Next
 		EndIf
 	EndIf
@@ -522,11 +520,13 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		If $g_bDebugClick Or $g_bDebugSetlog Or $g_bChkClanGamesDebug Then SaveDebugImage("ClanGames_Challenges", True)
 		ForcePurgeEvent(False, True)
 		CloseClangamesWindow()
-		If _Sleep(1000) Then Return
+		_Sleep(1000)
+		Return False
 	Else
 		SetLog("No Event found, Check your settings", $COLOR_WARNING)
 		CloseClangamesWindow()
-		If _Sleep(2000) Then Return
+		_Sleep(1000)
+		Return False
 	EndIf
 EndFunc ;==>_ClanGames
 
