@@ -57,7 +57,7 @@ Func SearchUpgrade($bTest = False)
 	If Not $g_bRunState Then Return
 	$g_bSkipWallReserve = False ;reset first
 	
-	If AutoUpgradeCheckBuilder($bTest) And $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder Then
+	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		Local $sUpgradeTime = getBuilderLeastUpgradeTime(380, 110)
@@ -114,7 +114,8 @@ Func AutoUpgradeSearchExisting($bTest = False)
 	If Not ClickMainBuilder($bTest) Then Return
 	Local $b_BuildingFound = False, $NeedDrag = True, $TmpUpgradeCost, $UpgradeCost, $sameCost = 0
 	For $z = 0 To 9 ;for do scroll 10 times
-		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost",350, 335, 120, 30, True) ;check most bottom upgrade cost
+		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
+		
 		Local $ExistingBuilding = FindExistingBuilding()
 		If IsArray($ExistingBuilding) And UBound($ExistingBuilding) > 0 Then
 			For $i = 0 To UBound($ExistingBuilding) - 1
@@ -138,6 +139,57 @@ Func AutoUpgradeSearchExisting($bTest = False)
 			Next
 		Else
 			SetLog("No Upgrade found!", $COLOR_INFO)
+		EndIf
+		
+		If IsTHLevelAchieved() Then
+			SetLog("Search Essential Building on Builder Menu", $COLOR_INFO)
+			ClickMainBuilder()
+			Local $aResult = FindEssentialBuilding()
+			If isArray($aResult) And UBound($aResult) > 0 Then
+				_ArraySort($aResult, 0, 0, 0, 3)
+				For $y = 0 To UBound($aResult) - 1
+					SetDebugLog("Essential Building: " & $aResult[$y][0] & ", Type: " & $aResult[$y][3] & ", Cost: " & $aResult[$y][4] & " Coord [" & $aResult[$y][1] & "," & $aResult[$y][2] & "]", $COLOR_INFO)
+				Next
+				For $y = 0 To UBound($aResult) - 1
+					If $aResult[$y][4] > 100 Then ;filter only upgrade with readable upgrade cost
+						$sameCost = 0 ;reset here as we found building with cost readable
+						If $aResult[$y][3] = "Hero" Then
+							Local $UpgradeUsing = "DE"
+							If $aResult[$y][0] = "GrandWarden" Then $UpgradeUsing = "Elixir"
+							If $UpgradeUsing = "DE" Then 
+								SetDebugLog($g_iTxtSmartMinDark & " + " & $aResult[$y][4] & " = " & $g_iTxtSmartMinDark + $aResult[$y][4])
+								SetDebugLog("DE = " & $g_aiCurrentLoot[$eLootDarkElixir])
+								If $g_aiCurrentLoot[$eLootDarkElixir] < ($aResult[$y][4] + $g_iTxtSmartMinDark) Then 
+									SetLog($aResult[$y][0] & " Skip Upgrade, Insufficent Resource", $COLOR_WARNING)
+									ContinueLoop
+								EndIf
+							EndIf
+							If $UpgradeUsing = "Elixir" Then 
+								SetDebugLog($g_iTxtSmartMinElixir & " + " & $aResult[$y][4] & " = " & $g_iTxtSmartMinElixir + $aResult[$y][4])
+								SetDebugLog("Elixir = " & $g_aiCurrentLoot[$eLootElixir])
+								If $g_aiCurrentLoot[$eLootElixir] < ($aResult[$y][4] + $g_iTxtSmartMinElixir) Then 
+									SetLog($aResult[$y][0] & " Skip Upgrade, Insufficent Resource", $COLOR_WARNING)
+									ContinueLoop
+								EndIf
+							EndIf
+						EndIf
+						Click($aResult[$y][1], $aResult[$y][2])
+						If _Sleep(1000) Then Return
+						If DoUpgrade($bTest) Then
+							$z = 0 ;reset
+							$sameCost = 0
+						Endif
+						ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
+					Else
+						SetDebugLog("Skip this building, Cost not readable", $COLOR_WARNING)
+					EndIf
+				Next
+			Else
+				SetLog("Essential Building Not Found", $COLOR_INFO)
+			EndIf
+			If Not $g_bRunState Then Return
+		Else 
+			SetLog("Skip Search Essential Building", $COLOR_INFO)
 		EndIf
 		
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
@@ -744,7 +796,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("New Building Not Found", $COLOR_INFO)
 		EndIf
 		
-		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost",350, 335, 120, 30, True) ;check most bottom upgrade cost
+		
 		
 		;If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
 		;	SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
@@ -776,57 +828,8 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		
 		
 		;If $g_bChkRushTH And $IsTHLevelAchieved Then
-		If IsTHLevelAchieved() Then
-			SetLog("Search Essential Building on Builder Menu", $COLOR_INFO)
-			ClickMainBuilder()
-			Local $aResult = FindEssentialBuilding()
-			If isArray($aResult) And UBound($aResult) > 0 Then
-				_ArraySort($aResult, 0, 0, 0, 3)
-				For $y = 0 To UBound($aResult) - 1
-					SetDebugLog("Essential Building: " & $aResult[$y][0] & ", Type: " & $aResult[$y][3] & ", Cost: " & $aResult[$y][4] & " Coord [" & $aResult[$y][1] & "," & $aResult[$y][2] & "]", $COLOR_INFO)
-				Next
-				For $y = 0 To UBound($aResult) - 1
-					If $aResult[$y][4] > 100 Then ;filter only upgrade with readable upgrade cost
-						$sameCost = 0 ;reset here as we found building with cost readable
-						If $aResult[$y][3] = "Hero" Then
-							Local $UpgradeUsing = "DE"
-							If $aResult[$y][0] = "GrandWarden" Then $UpgradeUsing = "Elixir"
-							If $UpgradeUsing = "DE" Then 
-								SetDebugLog($g_iTxtSmartMinDark & " + " & $aResult[$y][4] & " = " & $g_iTxtSmartMinDark + $aResult[$y][4])
-								SetDebugLog("DE = " & $g_aiCurrentLoot[$eLootDarkElixir])
-								If $g_aiCurrentLoot[$eLootDarkElixir] < ($aResult[$y][4] + $g_iTxtSmartMinDark) Then 
-									SetLog($aResult[$y][0] & " Skip Upgrade, Insufficent Resource", $COLOR_WARNING)
-									ContinueLoop
-								EndIf
-							EndIf
-							If $UpgradeUsing = "Elixir" Then 
-								SetDebugLog($g_iTxtSmartMinElixir & " + " & $aResult[$y][4] & " = " & $g_iTxtSmartMinElixir + $aResult[$y][4])
-								SetDebugLog("Elixir = " & $g_aiCurrentLoot[$eLootElixir])
-								If $g_aiCurrentLoot[$eLootElixir] < ($aResult[$y][4] + $g_iTxtSmartMinElixir) Then 
-									SetLog($aResult[$y][0] & " Skip Upgrade, Insufficent Resource", $COLOR_WARNING)
-									ContinueLoop
-								EndIf
-							EndIf
-						EndIf
-						Click($aResult[$y][1], $aResult[$y][2])
-						If _Sleep(1000) Then Return
-						If DoUpgrade($bTest) Then
-							$z = 0 ;reset
-							$sameCost = 0
-						Endif
-						ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
-					Else
-						SetDebugLog("Skip this building, Cost not readable", $COLOR_WARNING)
-					EndIf
-				Next
-			Else
-				SetLog("Essential Building Not Found", $COLOR_INFO)
-			EndIf
-			If Not $g_bRunState Then Return
-		Else 
-			SetLog("Skip Search Essential Building", $COLOR_INFO)
-		EndIf
 		
+		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
 		If Not ($UpgradeCost = $TmpUpgradeCost) Then $sameCost = 0
@@ -1086,4 +1089,12 @@ Func IsTHLevelAchieved()
 		$THLevelAchieved = True ;set true to bypass
 	EndIf
 	Return $THLevelAchieved
+EndFunc
+
+Func getMostBottomCost()
+	Local $TmpUpgradeCost = 0
+	If QuickMIS("BC1", $g_sImgResourceIcon, 300, 330, 400, 360) Then 
+		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $g_iQuickMISX, $g_iQuickMISY - 10, 120, $g_iQuickMISY + 10, True) ;check most bottom upgrade cost
+	EndIf
+	Return $TmpUpgradeCost
 EndFunc
