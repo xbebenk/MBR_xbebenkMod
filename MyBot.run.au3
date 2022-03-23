@@ -1360,7 +1360,8 @@ Func FirstCheck()
 	If $g_iFreeBuilderCount > 0 Then 
 		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
 		If Not $g_bRunState Then Return
-		_RunFunction('CleanYard')
+		CheckTombs()
+		CleanYard()
 		_Sleep(8000) ;add wait after clean yard
 		If Not $g_bRunState Then Return
 		If $g_bUpgradeWallEarly Then
