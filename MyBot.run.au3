@@ -1677,7 +1677,7 @@ Func GotoBBTodoCG()
 	If SwitchBetweenBases("BB") And isOnBuilderBase() Then
 		$g_bStayOnBuilderBase = True
 		CollectBuilderBase()
-		DoAttackBB()
+		DoAttackBB(0)
 		; switch back to normal village
 		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False
