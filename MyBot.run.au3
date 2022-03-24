@@ -1400,12 +1400,11 @@ Func FirstCheckRoutine()
 			If Not $g_bRunState Then Return
 			If $count > 10 Then
 				SetLog("Something maybe wrong, exiting to MainLoop!", $COLOR_INFO)
-				$g_bForceSwitch = True
 				ExitLoop
 			EndIf
 			SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
 			If _ClanGames(False, $g_bChkForceBBAttackOnClanGames) Then 
-				If $g_bIsBBevent Then
+				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 					GotoBBTodoCG()
 				Else
@@ -1421,14 +1420,15 @@ Func FirstCheckRoutine()
 				EndIf
 			EndIf
 			If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
-		Next
-			
-		If ProfileSwitchAccountEnabled() Then 
-			CheckSwitchAcc()
-		Else
-			SetLog("Account switch is off, returning to main loop", $COLOR_INFO)
-		EndIf
-		CloseClangamesWindow() ;close if any
+		Next		
+		If Not $g_bRunState Then Return
+		If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then 
+			SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
+			PrepareDonateCC()
+			DonateCC()
+			TrainSystem()
+			checkSwitchAcc() ;switch to next account
+		EndIf	
 	Else
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 			SetLog("Check ClanGames Early", $COLOR_INFO)
