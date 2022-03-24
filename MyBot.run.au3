@@ -1413,16 +1413,12 @@ Func FirstCheckRoutine()
 			Else
 				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
 				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
-				If $g_bForceSwitchifNoCGEvent Then
-					SetLog("No event on ClanGames, trying to switch account", $COLOR_SUCCESS)
-					$g_bForceSwitch = True
-					ExitLoop
-				EndIf
 			EndIf
 			If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
 		Next		
+		
 		If Not $g_bRunState Then Return
-		If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then 
+		If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
 			SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 			PrepareDonateCC()
 			DonateCC()
