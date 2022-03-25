@@ -838,6 +838,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop
 		If Not $NeedDrag Then
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
+			ExitLoop
 		EndIf
 		If Not $g_bRunState Then Return
 		ClickDragAUpgrade("up", 328);do scroll up
