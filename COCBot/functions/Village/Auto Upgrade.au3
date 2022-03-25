@@ -752,47 +752,41 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
 		Local $New, $NewCoord, $aCoord[0][3]
-		$NewCoord = QuickMIS("CX", $g_sImgAUpgradeObstNew, 180, 73, 280, 370, True) ;find New Building
+		$NewCoord = FindNewBuilding() ;find New Building
 		If IsArray($NewCoord) And UBound($NewCoord) > 0 Then
-			If Not $g_bRunState Then Return
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
-			For $j = 0 To UBound($NewCoord)-1
-				$New = StringSplit($NewCoord[$j], ",", $STR_NOCOUNT)
-				$UpgradeCost = getOcrAndCapture("buildermenu-cost",$New[0] + 180 + 110, $New[1] + 73 - 8, 180, 20, True)
-				SetDebugLog("[" & $j & "] New Building: " & $New[0] + 180 & "," & $New[1] + 73 & " UpgradeCost=" & $UpgradeCost, $COLOR_INFO)
-				_ArrayAdd($aCoord, $New[0] + 180 & "|" & $New[1] + 73 & "|" & $UpgradeCost, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
+			For $j = 0 To UBound($NewCoord) - 1
+				SetLog("New:" & $NewCoord[$j][4] & ", cost:" & $NewCoord[$j][6] & " " & $NewCoord[$j][0], $COLOR_INFO)
 			Next
-			_ArraySort($aCoord, 0, 0, 0, 2)
 			$isWall = False ;reset var 
-			For $j = 0 To UBound($aCoord) - 1
+			For $j = 0 To UBound($NewCoord) - 1
 				If Not $g_bRunState Then Return
-				If $aCoord[$j][2] = "50" Then 
+				If $NewCoord[$j][4] = "Wall" Then 
 					$IsWall = True
 					SetLog("New Building: Is Wall, let's try place 10 Wall", $COLOR_INFO)
 				EndIf
-
-				If Not $aCoord[$j][2] = "" Then	
+				If CheckResourceForDoUpgrade($NewCoord[$j][4], $NewCoord[$j][6], $NewCoord[$j][0]) Then 
 					If Not $ZoomedIn Then
 						Clickaway("Right")
-						If _Sleep(1000) Then Return
+						If _Sleep(1000) Then Return ;wait builder menu closed
 						If SearchGreenZone() Then
 							$ZoomedIn = True
 							ClickMainBuilder($bTest)
 						Else
-							ExitLoop 2 ;zoomin failed, cancel placing newbuilding
+							ExitLoop ;zoomin failed, cancel placing newbuilding
 						EndIf
 					EndIf
 					
-					If AUNewBuildings($aCoord[$j][0], $aCoord[$j][1], $bTest, $IsWall) Then
+					If AUNewBuildings($NewCoord[$j][1], $NewCoord[$j][2], $bTest, $IsWall) Then
 						ClickMainBuilder($bTest)
 						$z = 0 ;reset
 						$sameCost = 0
 						ExitLoop
 					Else
-						ExitLoop 2 ;Place NewBuilding failed, cancel placing newbuilding
+						ExitLoop ;Place NewBuilding failed, cancel placing newbuilding
 					EndIf
 				Else
-					SetDebugLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " Not Enough Resource", $COLOR_ERROR)
+					SetDebugLog("[" & $j & "] New Building: " & $NewCoord[$j][4] & ", Not Enough Resource", $COLOR_ERROR)
 				EndIf
 			Next
 		Else
@@ -852,7 +846,30 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		If _Sleep(1000) Then Return
 	Next
 	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
-EndFunc ;==>FindNewBuilding
+EndFunc ;==>AutoUpgradeSearchNewBuilding
+
+Func FindNewBuilding()
+	Local $aTmpCoord, $aBuilding[0][7], $UpgradeCost, $aUpgradeName, $UpgradeType = ""
+	$aTmpCoord = QuickMIS("CNX", $g_sImgAUpgradeObstNew, 200, 73, 300, 390)
+	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		For $i = 0 To UBound($aTmpCoord) - 1
+			If QuickMIS("BC1", $g_sImgResourceIcon, $aTmpCoord[$i][1] + 100 , $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 250, $aTmpCoord[$i][2] + 12) Then
+				$UpgradeType =  $g_iQuickMISName
+			EndIf
+			_ArrayAdd($aBuilding, $UpgradeType & "|" & $g_iQuickMISX & "|" & $g_iQuickMISY & "|" & $aTmpCoord[$i][1])
+		Next
+		
+		For $j = 0 To UBound($aBuilding) -1
+			$aUpgradeName = getBuildingName($aBuilding[$j][3], $aBuilding[$j][2] - 12) ;get upgrade name and amount 
+			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $aBuilding[$j][1], $aBuilding[$j][2] - 12, 120, 25, True)
+			$aBuilding[$j][4] = $aUpgradeName[0]
+			$aBuilding[$j][5] = $aUpgradeName[1]
+			$aBuilding[$j][6] = Number($UpgradeCost)
+			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][4] & ", Cost=" & $aBuilding[$j][5] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
+		Next
+	EndIf
+	Return $aBuilding
+EndFunc
 
 Func FindRushTHPriority()
 	Local $aTmpTHRushCoord, $aTHRushCoord[0][4], $aRushTH[3], $UpgradeCost

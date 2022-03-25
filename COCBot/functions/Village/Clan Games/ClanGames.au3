@@ -430,11 +430,15 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 			Click($aSelectChallenges[$i][1], $aSelectChallenges[$i][2])
 			If _Sleep(1500) Then Return
 			Local $aEventInfo = GetEventInfo()
-			Setlog("Detected " & $aSelectChallenges[$i][0] & " difficulty of " & $aSelectChallenges[$i][3] & " [score:" & $aEventInfo[0] & ", " & $aEventInfo[1] & " min]", $COLOR_INFO)
+			If IsArray($aEventInfo) Then 
+				Setlog("Detected " & $aSelectChallenges[$i][0] & " difficulty of " & $aSelectChallenges[$i][3] & " [score:" & $aEventInfo[0] & ", " & $aEventInfo[1] & " min]", $COLOR_INFO)
+				$aSelectChallenges[$i][4] = Number($aEventInfo[1])
+				$aSelectChallenges[$i][6] = Number($aEventInfo[0])
+			Else
+				ContinueLoop ; fail get event info, mostly because lag
+			EndIf
 			Click($aSelectChallenges[$i][1], $aSelectChallenges[$i][2])
 			If _Sleep(250) Then Return
-			$aSelectChallenges[$i][4] = Number($aEventInfo[1])
-			$aSelectChallenges[$i][6] = Number($aEventInfo[0])
 		Next
 
 		; let's get the 60 minutes events and remove from array
@@ -868,12 +872,11 @@ Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName, $getCapture)
 			$color = $COLOR_WARNING
 		EndIf
 		SetLog($Text, $color)
+		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - " & $Text, 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - " & $Text)
 	EndIf
 	$YourAccScore[$g_iCurAccount][1] = False
 	$YourAccScore[$g_iCurAccount][0] = $ScoreLimits[0]
-	If $g_bChkClanGamesDebug Then SetLog("ClickOnEvent $YourAccScore[" & $g_iCurAccount & "][1]: " & $YourAccScore[$g_iCurAccount][1])
-	If $g_bChkClanGamesDebug Then SetLog("ClickOnEvent $YourAccScore[" & $g_iCurAccount & "][0]: " & $YourAccScore[$g_iCurAccount][0])
 	If Not StartsEvent($sEventName, False, $getCapture, $g_bChkClanGamesDebug) Then Return False
 	CloseClangamesWindow()
 	Return True
