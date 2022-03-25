@@ -270,6 +270,8 @@ Func CheckResourceForDoUpgrade($BuildingName, $Cost, $CostType)
 	Switch $CostType
 		Case "Gold"
 			If $g_aiCurrentLoot[$eLootGold] >= ($Cost + $g_iTxtSmartMinGold) Then $bSufficentResourceToUpgrade = True
+			If StringInStr($BuildingName, "Giga") Then $bSufficentResourceToUpgrade = True ;bypass for Giga Tesla or Giga Inferno
+			If StringInStr($BuildingName, "Town") Then $bSufficentResourceToUpgrade = True ;bypass for TownHall
 		Case "Elix"
 			If $g_aiCurrentLoot[$eLootElixir] >= ($Cost + $g_iTxtSmartMinElixir) Then $bSufficentResourceToUpgrade = True
 		Case "DE"
