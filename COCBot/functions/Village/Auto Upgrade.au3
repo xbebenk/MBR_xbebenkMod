@@ -761,7 +761,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			$isWall = False ;reset var 
 			For $j = 0 To UBound($NewCoord) - 1
 				If Not $g_bRunState Then Return
-				If $NewCoord[$j][4] = "Wall" Then 
+				If StringInStr($NewCoord[$j][4], "Wall") Then 
 					$IsWall = True
 					SetLog("New Building: Is Wall, let's try place 10 Wall", $COLOR_INFO)
 				EndIf
