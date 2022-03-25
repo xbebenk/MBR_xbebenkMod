@@ -1502,6 +1502,7 @@ Func FirstCheckRoutine()
 	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent Then ; forced switch after first attack if cg point is almost max
 		SetLog("ClanGames point almost max, Forced switch account!", $COLOR_SUCCESS)
 		$g_bForceSwitchifNoCGEvent = True
+		CommonRoutine("NoClanGamesEvent")
 		checkSwitchAcc() ;switch to next account
 	EndIf
 	
@@ -1701,7 +1702,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 			
 		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'CollectFreeMagicItems']
+			Local $aRndFuncList = ['Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
