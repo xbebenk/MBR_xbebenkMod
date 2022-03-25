@@ -234,7 +234,7 @@ Func getOcrYourScore($x_start, $y_start) ; -> Gets CheckValuesCost on Train Wind
 EndFunc   ;==>getOcrYourScore
 
 Func getOcrEventTime($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
-	Return getOcrAndCapture("coc-events", $x_start, $y_start, 80, 20, True)
+	Return getOcrAndCapture("coc-events", $x_start, $y_start, 60, 20, True)
 EndFunc   ;==>getOcrEventTime
 
 Func getOcrRateCoc($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
