@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($Mode = Default)
-	AutoUpgradeBBCheckBuilder()
+	getBuilderCount(True, True) 
 		
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 		SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
@@ -28,7 +28,7 @@ Func PrepareAttackBB($Mode = Default)
 	Local $GoldIsFull = isGoldFullBB()
 	Local $ElixIsFull = isElixirFullBB()
 
-	If $g_iChkBBSuggestedUpgradesOTTO And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCount = 0 Then ; And Not $g_sStarLabUpgradeTime = "" Then
+	If $g_iChkBBSuggestedUpgradesOTTO And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then ; And Not $g_sStarLabUpgradeTime = "" Then
 		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
 		Return False
 	EndIf
