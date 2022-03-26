@@ -686,14 +686,14 @@ Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQ
 
 	If Not $g_bIsFullArmywithHeroesAndSpells Then
 		If $removeExtraTroopsQueue Then
-			If Not _ColorCheck(_GetPixelColor(230, 208, True), Hex(0x677CB5, 6), 30) Then RemoveExtraTroopsQueue()
+			If Not _ColorCheck(_GetPixelColor(238, 190, True), Hex(0x677CB5, 6), 30) Then RemoveExtraTroopsQueue()
 		EndIf
 	EndIf
 
 	If $removeExtraTroopsQueue Then
-		If _ColorCheck(_GetPixelColor(230, 208, True), Hex(0x677CB5, 6), 20) Then Return True ; If No troops were in Queue Return True
+		If _ColorCheck(_GetPixelColor(238, 190, True), Hex(0x677CB5, 6), 20) Then Return True ; If No troops were in Queue Return True
 	Else
-		If _ColorCheck(_GetPixelColor(820, 208, True), Hex(0xD0D0C8, 6), 20) Then Return True ; check gray background at 1st training slot
+		If _ColorCheck(_GetPixelColor(825, 190, True), Hex(0xCFCFC8, 6), 20) Then Return True ; check gray background at 1st training slot
 	EndIf
 
 	Return False
