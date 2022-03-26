@@ -116,8 +116,13 @@ Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
 			EndIf
 			SetDebugLog("Early Log Off time=" & $g_sPBStartTime & ", In " & _DateDiff('n', $g_sPBStartTime, _NowCalc()) & " Minutes", $COLOR_DEBUG)
 		Else
-			SetLog("Bad getPBTtime() return value: " & $Result, $COLOR_ERROR)
-			$g_sPBStartTime = "" ; reset to force update next pass
+			If $Result = "Legend" Then 
+				SetLog("No PBT on Legend League", $COLOR_INFO)
+				Return 
+			Else
+				SetLog("Bad getPBTtime() return value: " & $Result, $COLOR_ERROR)
+				$g_sPBStartTime = "" ; reset to force update next pass
+			EndIf
 		EndIf
 	EndIf
 

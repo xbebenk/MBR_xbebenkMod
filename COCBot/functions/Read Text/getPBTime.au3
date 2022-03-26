@@ -48,6 +48,11 @@ Func getPBTime()
 			If _Sleep($DELAYPERSONALSHIELD2) Then Return ; wait for close
 			Return
 		EndIf
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 650, 140, 700, 180) Then
+			SetLog("LegendShield window Found", $COLOR_ACTION)
+			ClickAway()
+			Return "Legend"
+		EndIf
 	WEnd
 
 	If _CheckPixel($aIsShieldInfo, $g_bCapturePixel) Or $bPBTStart Then ; PB Info window open?
