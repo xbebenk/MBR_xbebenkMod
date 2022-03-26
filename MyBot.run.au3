@@ -1418,7 +1418,7 @@ Func FirstCheckRoutine()
 		Next		
 		
 		If Not $g_bRunState Then Return
-		If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
+		If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 Then 
 			SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 			PrepareDonateCC()
 			DonateCC()
@@ -1435,7 +1435,7 @@ Func FirstCheckRoutine()
 				GotoBBTodoCG()
 			EndIf
 			If Not $g_bRunState Then Return
-			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then 
+			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 Then 
 				SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 				PrepareDonateCC()
 				DonateCC()
