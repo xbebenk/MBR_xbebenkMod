@@ -218,7 +218,7 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 					Local $aCoordinates = StringSplit($aResult[1], ",", $STR_NOCOUNT)
 					If UBound($aCoordinates) > 1 Then
 						Local $iButtonX = 25 + Int($aCoordinates[0])
-						Local $iButtonY = 375 + Int($aCoordinates[1])
+						Local $iButtonY = 350 + Int($aCoordinates[1])
 						Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
 						Local $iTolerance = 40
 						Local $aTrainPos[5] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance, $eBarb]
@@ -268,6 +268,8 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 				$iSlotH = 502
 			Case 499 To 597 ; 6 Column
 				$iSlotH = 597
+			Case 620 To 713 ; 7th Column
+				$iSlotH = 668
 			Case Else
 				If _ColorCheck(_GetPixelColor($iTrainPos[0], $iTrainPos[1], True), Hex(0xd3d3cb, 6), 5) Then
 					SetLog("GetFullNameSlot(): It seems that there is no Slot for an Spell on: " & $iTrainPos[0] & "," & $iTrainPos[1] & "!", $COLOR_ERROR)
