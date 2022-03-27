@@ -42,7 +42,8 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 
 	; Initial Timer
 	Local $hTimer = TimerInit()
-
+	Local $iWaitPurgeScore = 150
+	
 	; Enter on Clan Games window
 	If IsClanGamesWindow() Then
 		; Let's selected only the necessary images
@@ -72,27 +73,27 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		EndIf
 
 		Local $aiScoreLimit = GetTimesAndScores()
+		Local $sTimeCG
 		If $aiScoreLimit = -1 Or UBound($aiScoreLimit) <> 2 Then
 			CloseClangamesWindow() ;need clickaway, as we are leaving
 			Return False
 		Else
 			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
 			If _Sleep(500) Then Return
-			Local $sTimeCG
-			;$aiScoreLimit[0] = 3200
+			$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
+			Setlog("Clan Games Minute Remain: " & $sTimeCG)
+			
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 				SetLog("Your score limit is reached! Congrats")
 				$g_bIsCGPointMaxed = True
 				CloseClangamesWindow()
 				Return False
-			ElseIf $aiScoreLimit[0] + 300 > $aiScoreLimit[1] Then
+			ElseIf $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Then
 				SetLog("You almost reached max point")
 				$g_bIsCGPointAlmostMax = True
-				If $g_bChkClanGamesStopBeforeReachAndPurge Then
-					If IsEventRunning() Then Return
-					$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
-					Setlog("Clan Games Minute Remain: " & $sTimeCG)
-					If $g_bChkClanGamesPurgeAny And $sTimeCG > 1440 Then ; purge, but not purge on last day of clangames
+				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > 1440 Then ; purge, but not purge on last day of clangames
+					If IsEventRunning() Then Return True
+					If $g_bChkClanGamesPurgeAny Then
 						SetLog("Stop before completing your limit and only Purge")
 						Local $aEvent = FindEventToPurge($sTempPath)
 						If IsArray($aEvent) And UBound($aEvent) > 0 Then
@@ -108,7 +109,6 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 						Return False
 					EndIf
 				EndIf
-				Return False
 			EndIf
 			If $YourAccScore[$g_iCurAccount][0] = -1 Then $YourAccScore[$g_iCurAccount][0] = $aiScoreLimit[0]
 		EndIf
@@ -490,7 +490,8 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		ClickDrag(807, 210, 807, 385, 500)
 		If _Sleep(2000) Then Return
 	EndIf
-
+	
+	Local $bPurgePreventMax = False
 	; After removing is necessary check Ubound
 	If IsDeclared("aTempSelectChallenges") Then
 		If UBound($aTempSelectChallenges) > 0 Then
@@ -502,21 +503,22 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 						_ArraySort($aTempSelectChallenges, 1, 0, 0, 4) ;sort descending, longest time first
 				EndSwitch
 			EndIf
-			
+			If $g_bChkClanGamesStopBeforeReachAndPurge And Number($aiScoreLimit[0]) > Number($aiScoreLimit[1]) - 1000 Then _ArraySort($aTempSelectChallenges, 1, 0, 0, 6) ;sort descending, Force Higher score first
 			For $i = 0 To UBound($aTempSelectChallenges) - 1
 				If Not $g_bRunState Then Return
 				SetDebugLog("$aTempSelectChallenges: " & _ArrayToString($aTempSelectChallenges))
 				Setlog("Next Event will be " & $aTempSelectChallenges[$i][0] & " to make in " & $aTempSelectChallenges[$i][4] & " min.")
-				; if enabled stop and purge, and event score will make clangames maxpoint, and there is another event on array
-				If $g_bChkClanGamesStopBeforeReachAndPurge And Number($aiScoreLimit[0]) + Number($aTempSelectChallenges[$i][6]) > Number($aiScoreLimit[1]) Then 
+				; if enabled stop and purge, more than 1 day CG time, and event score will make clangames maxpoint, and there is another event on array
+				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > 1440 And (Number($aiScoreLimit[0]) + Number($aTempSelectChallenges[$i][6])) >= Number($aiScoreLimit[1]) Then 
 					If $i < UBound($aTempSelectChallenges) - 1 Then 
 						SetLog($aTempSelectChallenges[$i][0] & ", score:" & $aTempSelectChallenges[$i][6], $COLOR_INFO)
-						SetLog("StopBeforeReachAndPurge enabled, looking next event")
+						SetLog("Doing this challenge will maxing score, looking next", $COLOR_INFO)
 						ContinueLoop
 					Else
 						SetLog($aTempSelectChallenges[$i][0] & ", score:" & $aTempSelectChallenges[$i][6], $COLOR_INFO)
-						SetLog("StopBeforeReachAndPurge enabled, this is the last event detected")
-						SetLog("Now lets just purge")
+						SetLog("Doing this challenge will maxing score", $COLOR_INFO)
+						SetLog("Now lets just purge", $COLOR_INFO)
+						$bPurgePreventMax = True
 						ExitLoop ; there is no next event, so exit and just purge
 					EndIf
 				EndIf
@@ -537,13 +539,26 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 	EndIf
 
 	If $g_bChkClanGamesPurgeAny Then ; still have to purge, because no enabled event on setting found
-		SetLog("Still have to purge, because no enabled event on setting found", $COLOR_WARNING)
-		SetLog("No Event found, lets purge 1 most top event", $COLOR_WARNING)
-		If $g_bDebugClick Or $g_bDebugSetlog Or $g_bChkClanGamesDebug Then SaveDebugImage("ClanGames_Challenges", True)
-		ForcePurgeEvent(False, True)
-		CloseClangamesWindow()
-		_Sleep(1000)
-		Return False
+		If $bPurgePreventMax Then
+			Local $aEvent = FindEventToPurge($sTempPath)
+			If IsArray($aEvent) And UBound($aEvent) > 0 Then
+				Local $EventName = StringSplit($aEvent[0][0], "-")
+				SetLog("Detected Event to Purge: " & $EventName[2])
+				Click($aEvent[0][1], $aEvent[0][2])
+				If _Sleep(1500) Then Return
+				StartsEvent($EventName[2], True)
+			Else
+				ForcePurgeEvent(False, True) ; maybe will never hit here, but..
+			EndIf
+		Else
+			SetLog("Still have to purge, because no enabled event on setting found", $COLOR_WARNING)
+			SetLog("No Event found, lets purge 1 most top event", $COLOR_WARNING)
+			If $g_bDebugClick Or $g_bDebugSetlog Or $g_bChkClanGamesDebug Then SaveDebugImage("ClanGames_Challenges", True)
+			ForcePurgeEvent(False, True)
+			CloseClangamesWindow()
+			_Sleep(1000)
+			Return False
+		EndIf
 	Else
 		SetLog("No Event found, Check your settings", $COLOR_WARNING)
 		CloseClangamesWindow()
@@ -1200,6 +1215,7 @@ Func CollectCGReward()
 	Local $Drag = True
 	For $i = 0 To 7
 		If $OnlyClaimMax Then ExitLoop
+		If Not $g_bRunState Then Return
 		SetDebugLog("CHECK #" & $i+1, $COLOR_ACTION)
 		If _CheckPixel($aRewardButton, True) Then ExitLoop
 		If $i < 3 Then
