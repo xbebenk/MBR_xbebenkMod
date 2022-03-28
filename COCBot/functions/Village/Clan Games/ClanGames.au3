@@ -501,6 +501,8 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 						_ArraySort($aTempSelectChallenges, 0, 0, 0, 3) ;sort ascending, lower difficulty = easiest
 					Case 1 ;sort by Time
 						_ArraySort($aTempSelectChallenges, 1, 0, 0, 4) ;sort descending, longest time first
+					Case 2 ;sort by Score
+						_ArraySort($aTempSelectChallenges, 1, 0, 0, 6) ;sort descending, Higher score first
 				EndSwitch
 			EndIf
 			If $g_bChkClanGamesStopBeforeReachAndPurge And Number($aiScoreLimit[0]) > Number($aiScoreLimit[1]) - 1000 Then _ArraySort($aTempSelectChallenges, 1, 0, 0, 6) ;sort descending, Force Higher score first
