@@ -1189,7 +1189,7 @@ Func CloseClangamesWindow()
 	Return False
 EndFunc
 
-Func CollectCGReward()
+Func CollectCGReward($bTest = False)
 	SetLog("Checking to Collect ClanGames Reward")
 	Local $aiScoreLimit, $sYourGameScore
 
@@ -1220,21 +1220,38 @@ Func CollectCGReward()
 		If Not $g_bRunState Then Return
 		SetDebugLog("CHECK #" & $i+1, $COLOR_ACTION)
 		If _CheckPixel($aRewardButton, True) Then ExitLoop
+		
 		If $i < 3 Then
-			If QuickMIS("BC1", $g_sImgRewardTileSelected, $aLowerX[$i] - 50, 195, $aLowerX[$i] + 50, 470) Then ;Check if Reward already selected
-				SetDebugLog("Already select Reward on this Tier, Looking next", $COLOR_ERROR)
+			;If QuickMIS("BC1", $g_sImgRewardTileSelected, $aLowerX[$i] - 50, 195, $aLowerX[$i] + 50, 470) Then ;Check if Reward already selected
+			;	SetLog("Already select Reward on this Tier, Looking next", $COLOR_ERROR)
+			;	ContinueLoop
+			;EndIf
+			
+			Local $aTile = GetCGRewardList()
+			If IsArray($aTile) And UBound($aTile) > 0 Then
+				For $j = 0 To UBound($aTile) -1
+					SetDebugLog("Items: " & $aTile[$j][0] & " Value: " & $aTile[$j][3])
+				Next
+				Click($aTile[0][1], $aTile[0][2]+10)
+				SetLog("Selecting Magic Items:" & $aTile[0][0], $COLOR_INFO)
+				_Sleep(1000)
+				If IsOKCancelPage() Then ;check if we found gems popup, accept
+					SetLog("Magic Item storage is Full (Take gems)", $COLOR_INFO)
+					Click(510, 400)
+					_Sleep(1000)
+				EndIf
 				ContinueLoop
 			EndIf
-			SetLog("Selecting Low Reward (gems)", $COLOR_INFO)
-			Click($aLowerX[$i], 420)
-			_Sleep(1000)
-			If IsOKCancelPage() Then ;check if we found gems popup, accept
-				SetLog("Magic Item storage is Full (Take gems)", $COLOR_INFO)
-				Click(510, 400)
-				_Sleep(1000)
-			EndIf
+			_Sleep(500)
+			;SetLog("Selecting Low Reward (gems)", $COLOR_INFO)
+			;Click($aLowerX[$i], 420)
+			;_Sleep(1000)
+			;If IsOKCancelPage() Then ;check if we found gems popup, accept
+			;	SetLog("Magic Item storage is Full (Take gems)", $COLOR_INFO)
+			;	Click(510, 400)
+			;	_Sleep(1000)
+			;EndIf
 			If _CheckPixel($aRewardButton, True) Then ExitLoop ;check if Reward Button already turns green
-			ContinueLoop
 		EndIf
 
 		If $Drag Then
@@ -1245,13 +1262,11 @@ Func CollectCGReward()
 
 		Local $aTile = GetCGRewardList()
 		If IsArray($aTile) And UBound($aTile) > 0 Then
-			SetDebugLog(_ArrayToString($aTile))
-			SetLog("Selecting Reward Looking for Magic Items", $COLOR_INFO)
-			For $i = 0 To UBound($aTile) -1
-				SetDebugLog("Items: " & $aTile[$i][0] & " Value: " & $aTile[$i][3])
+			For $j = 0 To UBound($aTile) -1
+				SetDebugLog("Items: " & $aTile[$j][0] & " Value: " & $aTile[$j][3])
 			Next
-
 			Click($aTile[0][1], $aTile[0][2]+10)
+			SetLog("Selecting Magic Items:" & $aTile[0][0], $COLOR_INFO)
 			_Sleep(1000)
 			If IsOKCancelPage() Then ;check if we found gems popup, accept
 				SetLog("Magic Item storage is Full (Take gems)", $COLOR_INFO)
@@ -1266,12 +1281,22 @@ Func CollectCGReward()
 	If $OnlyClaimMax Then
 		ClickDrag(660, 168, 550, 168, 500)
 		_Sleep(3000)
-		Click(770, 420) ;100 Gems
-		_Sleep(2000)
+		Local $aTile = GetCGRewardList(730)
+		If IsArray($aTile) And UBound($aTile) > 0 Then
+			Click($aTile[0][1], $aTile[0][2]+10)
+			_Sleep(1000)
+			If IsOKCancelPage() Then ;check if we found gems popup, decline
+				SetLog("Magic Item storage is Full (Decline)", $COLOR_INFO)
+				Click(350, 400) ;Click No
+				_Sleep(1000)
+				Click(770, 420) ;100 Gems
+				_Sleep(1000)
+			EndIf
+		EndIf
 	EndIf
 
 	If _CheckPixel($aRewardButton, True) Then ; Last check, if we found green Reward Button click it
-		Click($aRewardButton[0], $aRewardButton[1])
+		If Not $bTest Then Click($aRewardButton[0], $aRewardButton[1])
 		SetLog("Collecting Reward", $COLOR_SUCCESS)
 		If $OnlyClaimMax Then
 			CloseClangamesWindow()
@@ -1282,14 +1307,30 @@ Func CollectCGReward()
 	If $g_bIsCGPointMaxed Then
 		_Sleep(3000)
 		For $i = 1 To 10
+			If Not $g_bRunState Then Return
 			SetLog("Waiting Max Point Reward #" & $i, $COLOR_ACTION)
 			If WaitforPixel(780, 490, 781,491, "D1D1D1", 10, 1) Then ExitLoop
 			_Sleep(500)
 		Next
-
-		Click(770, 420) ;100 Gems
-
+		
+		Local $aTile = GetCGRewardList(730)
+		If IsArray($aTile) And UBound($aTile) > 0 Then
+			Click($aTile[0][1], $aTile[0][2]+10)
+			_Sleep(1000)
+			If IsOKCancelPage() Then ;check if we found gems popup, decline
+				SetLog("Magic Item storage is Full (Decline)", $COLOR_INFO)
+				Click(350, 400) ;Click No
+				_Sleep(1000)
+				Click(770, 420) ;100 Gems
+				_Sleep(1000)
+			EndIf
+		Else
+			; Image Magic Items Not found, maybe image not exist yet
+			Click(770, 420) ;100 Gems
+		EndIf
+		
 		For $i = 1 To 5
+			If Not $g_bRunState Then Return
 			SetLog("Waiting Reward Button #" & $i, $COLOR_ACTION)
 			If _CheckPixel($aRewardButton, True) Then ExitLoop
 			_Sleep(1000)
@@ -1308,9 +1349,9 @@ Func CollectCGReward()
 	CloseClangamesWindow()
 EndFunc
 
-Func GetCGRewardList()
+Func GetCGRewardList($X = 280)
 	Local $aResult[0][4]
-	Local $aTier = QuickMIS("CNX", $g_sImgRewardTier, 280, 150, 820, 190) ;search green check on top of Tier
+	Local $aTier = QuickMIS("CNX", $g_sImgRewardTier, $X, 150, 820, 190) ;search green check on top of Tier
 	_ArraySort($aTier, 0, 0, 0, 1) ;Sort by x coord
 	;_ArrayDisplay($aTier)
 	If IsArray($aTier) And UBound($aTier) > 0 Then
@@ -1329,9 +1370,9 @@ Func GetCGRewardList()
 					Switch $aTmp[$i][0]
 						Case "Books"
 							$Value = 5
-						Case "BBGoldRune", "DERune", "Shovel", "SuperPot"
+						Case "BBGoldRune", "DERune", "ElixRune", "Shovel", "SuperPot"
 							$Value = 4
-						Case "BuilderPot", "ClockTowerPot", "PowerPot", "ResearchPot", "TrainingPot"
+						Case "BuilderPot", "ClockTowerPot", "PowerPot", "ResearchPot", "TrainingPot", "HeroPot"
 							$Value = 3
 						Case "DarkElix", "Elix", "Gold", "WallRing"
 							$Value = 2
