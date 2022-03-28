@@ -40,10 +40,19 @@ Func waitMainScreen() ;Waits for main screen to popup
 			Return
 		EndIf
 		
-		If _CheckPixel($aIsLoading, True, Default, "waitMainScreen") Then ;seen loading screen add delay 5 seconds
-			SetDebugLog("We still on loading screen, adding +5 second wait")
-			_SleepStatus(5000) 
+		Local $sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
+		If $sLoading = "Loading" Then 
+			SetLog("Still on Loading Screen...", $COLOR_INFO)
+			_Sleep(2000)
 		EndIf
+		
+		Local $sUpdateAvail = getOcrAndCapture("coc-UpdateAvail", 320, 235, 220, 30)
+		If $sUpdateAvail = "Update Available" Then 
+			SetLog("Chief, we have minor coc Update!", $COLOR_INFO)
+			ClickAway()
+			_Sleep(1000)
+		EndIf
+		
 		If Not checkObstacles() And $i = 10 Then ExitLoop ;something wrong with coc screen exit this loop and try to restart coc
 	Next
 

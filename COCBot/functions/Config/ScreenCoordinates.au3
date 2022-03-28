@@ -23,7 +23,6 @@ Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point 
 Global $aIsMain[4] = [279, 9, 0x7ABDE0, 20] ; Main Screen, Builder Info Icon
 Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
 Global $aIsOnBuilderBase[4] = [356, 12, 0x9CD2EE, 20] ; BuilderBase, Builder Info Icon
-Global $aIsLoading[4] = [536, 600, 0x81837F, 10] ; Loading Screen end of progress bar
 
 Global $aIsConnectLost[4] = [255, 271, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device
 Global $aIsCheckOOS[4] = [223, 272, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device
@@ -96,7 +95,7 @@ Global $aQueenHealth = [-1, 569, 0x00D500, 15, 8]
 ; Warden Health Bar, check at the middle of the bar, index 4 is x-offset added to middle of health bar
 Global $aWardenHealth = [-1, 569, 0x00D500, 15, 3]
 ; Champion Health Bar, check at the middle of the bar, index 4 is x-offset added to middle of health bar
-Global $aChampionHealth = [-1, 567, 0x00D500, 15, 7]
+Global $aChampionHealth = [-1, 569, 0x00D500, 15, 5]
 
 ; attack report... stars won
 Global $aWonOneStarAtkRprt[4] = [325, 180, 0xC8CaC4, 30] ; Center of 1st Star reached attacked village

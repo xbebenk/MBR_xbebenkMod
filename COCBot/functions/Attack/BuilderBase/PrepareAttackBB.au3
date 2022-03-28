@@ -14,26 +14,25 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($Mode = Default)
-	AutoUpgradeBBCheckBuilder()
-	
-	
+	getBuilderCount(True, True) 
+		
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 		SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
 		_Sleep(1500)
 		CheckArmyReady()
-		CheckLootAvail()
-		$g_bBBMachineReady = CheckMachReady()
 		Return True
 	EndIf
 	
-	If $g_iChkBBSuggestedUpgradesOTTO And (isGoldFullBB() Or isElixirFullBB()) Then
-		If $g_sStarLabUpgradeTime = "" Or $g_iFreeBuilderCount > 0 Then Return True
+	Local $GoldIsFull = isGoldFullBB()
+	Local $ElixIsFull = isElixirFullBB()
+
+	If $g_iChkBBSuggestedUpgradesOTTO And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then ; And Not $g_sStarLabUpgradeTime = "" Then
 		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
 		Return False
 	EndIf
-	
+
 	If Not $g_bRunState Then Return ; Stop Button
 
 	If Not ClickBBAttackButton() Then 

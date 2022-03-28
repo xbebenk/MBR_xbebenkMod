@@ -150,7 +150,7 @@ Func CheckHeroesHealth()
 			If $g_bCheckChampionPower Then
 				Local $aChampionHealthCopy = $aChampionHealth
 				Local $aSlotPosition = GetSlotPosition($TempChampionSlot)
-				$aChampionHealthCopy[0] = $aSlotPosition[0] + $aChampionHealthCopy[4] ; Slot11+
+				$aChampionHealthCopy[0] = $aSlotPosition[0] - $aChampionHealthCopy[4] ; Slot11+
 				Local $ChampionPixelColor = _GetPixelColor($aChampionHealthCopy[0], $aChampionHealthCopy[1], $g_bCapturePixel)
 				SetDebugLog("Royal Champion _GetPixelColor(" & $aChampionHealthCopy[0] & "," & $aChampionHealthCopy[1] & "): " & $ChampionPixelColor, $COLOR_DEBUG)
 				If Not _CheckPixel2($aChampionHealthCopy, $ChampionPixelColor, "Red+Blue") Then

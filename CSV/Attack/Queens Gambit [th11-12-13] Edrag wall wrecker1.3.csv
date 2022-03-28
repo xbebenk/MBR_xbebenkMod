@@ -1,17 +1,18 @@
 ﻿NOTE  |ElectroLoon xbebenk version
 NOTE  |Author: xbebenk (03-2022)
 NOTE  |version 0.1
-NOTE  |TH 12/13/14: 7 Electrodragons, 14 Balloons, Any Siege CC
-NOTE  |Spells:4 Rage, 3 Freeze
+NOTE  |TH 13/14: 5 SuperDragons, 2 Electrodragons, 8 Balloons, Any Siege CC
+NOTE  |Spells:5 Rage, 1 Freeze
 NOTE  |CCTroops: Loons/Dragon
-NOTE  |CCSpells: Rage + Freeze / TH14: 3 Lightning
+NOTE  |CCSpells: Rage + Freeze
 NOTE  |Script work on "EXTERNAL EDGES"
       |                                                                                                                       |
       |_TROOPNAME_|__FLEXIBLE_|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|____TH14___|
-TRAIN |EDrag      |0          |0          |0          |0          |0          |0          |0          |7          |7          |8          |
-TRAIN |Ball       |0          |0          |0          |0          |0          |0          |0          |14         |14         |12         |
-TRAIN |RSpell     |0          |0          |0          |0          |0          |0          |0          |4          |4          |4          |
-TRAIN |FSpell     |0          |0          |0          |0          |0          |0          |0          |3          |3          |3          |
+TRAIN |SDrag      |0          |0          |0          |0          |0          |0          |0          |0          |5          |5          |
+TRAIN |EDrag      |0          |0          |0          |0          |0          |0          |0          |7          |2          |2          |
+TRAIN |Ball       |0          |0          |0          |0          |0          |0          |0          |14         |8          |8          |
+TRAIN |RSpell     |0          |0          |0          |0          |0          |0          |0          |5          |5          |5          |
+TRAIN |FSpell     |0          |0          |0          |0          |0          |0          |0          |1          |1          |1          |
       |                                                                                                                                   |
       |_TROOPNAME_|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|____TH14___|
 TRAIN |King       |0          |0          |0          |0          |0          |0          |0          |1          |1          |1          |

@@ -672,7 +672,7 @@ Func CreateClanGamesSettings()
 		GUICtrlSetOnEvent(-1, "chkSortClanGames")
 	$y += 23
 		$g_hCmbClanGamesSort = GUICtrlCreateCombo("", $x + 20, $y, 120, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-		Local $sCmbTxt = "Easier Difficulties|Longest Time"
+		Local $sCmbTxt = "Easier Difficulties|Longest Time|Higher Score"
 		GUICtrlSetData(-1, $sCmbTxt, "Easier Difficulties")
 	$y += 23
 		$g_hChkCGBBAttackOnly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCGBBAttackOnly", "Forced Only Do BuilderBase Event"), $x, $y, -1, -1)

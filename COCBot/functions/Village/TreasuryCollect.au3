@@ -139,7 +139,7 @@ Func AutoLocateCC()
 					$CCFound = True
 					ExitLoop
 				Else
-					SetLog("Not ClanCastle, its a " & $BuildingInfo[2])
+					SetLog("Not ClanCastle, its a " & $BuildingInfo[1])
 					ClickAway()
 				EndIf
 				If _Sleep(500) Then Return

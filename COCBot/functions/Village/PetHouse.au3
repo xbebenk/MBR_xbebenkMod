@@ -112,7 +112,8 @@ Func PetHouse($test = False)
 		If Number($iPetLevel) = $g_ePetLevels Then 
 			$Unlocked = "MaxLevel"
 		Else
-			$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 10, 503, 80, 16, True)
+			Local $tmpDEReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 10, 503, 80, 16, True)
+			If Number($tmpDEReq) > 115000 Then $iDarkElixirReq = $tmpDEReq 
 		EndIf
 		Local $x = $iPetUnlockedxCoord[$i], $y = $iPetUnlockedxCoord[$i] + 20
 		_ArrayAdd($aPet, $i & "|" & $Name & "|" & $Unlocked & "|" & $iPetLevel & "|" & $iDarkElixirReq & "|" & $x & "|" & $y)
@@ -125,11 +126,13 @@ Func PetHouse($test = False)
 			$AllPetMax = False
 		EndIf
 		
-		If Number($g_aiCurrentLoot[$eLootDarkElixir]) > (Number($g_iTxtSmartMinDark) + Number($iDarkElixirReq)) Then
+		If Number($g_aiCurrentLoot[$eLootDarkElixir]) > (Number($g_iTxtSmartMinDark) + Number($aPet[$i][4])) Then
 			SetLog($aPet[$i][1] & ", DE Upgrade Cost: " & $aPet[$i][4], $COLOR_SUCCESS)
+			SetLog(Number($g_aiCurrentLoot[$eLootDarkElixir]) & " > (" & Number($g_iTxtSmartMinDark) & " + " & Number($aPet[$i][4]) & ")", $COLOR_INFO)
 			SetLog("Unlocked: " & $aPet[$i][2] & ", Level: " & $aPet[$i][3] & ", Upgrade Enabled: " & $g_bUpgradePetsEnable[$aPet[$i][0]], $COLOR_SUCCESS)
 		Else
 			SetLog($aPet[$i][1] & ", DE Upgrade Cost: " & $aPet[$i][4], $COLOR_ERROR)
+			SetLog(Number($g_aiCurrentLoot[$eLootDarkElixir]) & " < (" & Number($g_iTxtSmartMinDark) & " + " & Number($aPet[$i][4]) & ")", $COLOR_INFO)
 			SetLog("Unlocked: " & $aPet[$i][2] & ", Level: " & $aPet[$i][3] & ", Upgrade Enabled: " & $g_bUpgradePetsEnable[$aPet[$i][0]], $COLOR_ERROR)
 		EndIf
 	Next

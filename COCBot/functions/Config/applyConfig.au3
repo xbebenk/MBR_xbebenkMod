@@ -1028,6 +1028,7 @@ Func ApplyConfig_auto($TypeReadSave)
 				GUICtrlSetState($g_hchkEssentialUpgrade[$y], $g_aichkEssentialUpgrade[$y] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
 			GUICtrlSetState($g_hUpgradeOnlyTHLevelAchieve, $g_bUpgradeOnlyTHLevelAchieve ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hHeroPriority, $g_bHeroPriority ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				GUICtrlSetState($g_hChkUpgradesToIgnore[$i], $g_iChkUpgradesToIgnore[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
@@ -1051,6 +1052,7 @@ Func ApplyConfig_auto($TypeReadSave)
 				$g_aichkEssentialUpgrade[$y] = GUICtrlRead($g_hchkEssentialUpgrade[$y]) = $GUI_CHECKED ? 1 : 0
 			Next
 			$g_bUpgradeOnlyTHLevelAchieve = (GUICtrlRead($g_hUpgradeOnlyTHLevelAchieve) = $GUI_CHECKED)
+			$g_bHeroPriority = (GUICtrlRead($g_hHeroPriority) = $GUI_CHECKED)
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				$g_iChkUpgradesToIgnore[$i] = GUICtrlRead($g_hChkUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next

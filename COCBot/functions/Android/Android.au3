@@ -1465,8 +1465,6 @@ Func WaitForAndroidBootCompleted($WaitInSec = 120, $hTimer = 0)
 	;adding support for Memu 7.2.9 android 4.4.4 as it have different getprop to determine emulator has completed boot
 	$MemuVersion = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " getprop ro.version", $process_killed)
 	$AndroidVersion = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " getprop ro.build.version.release", $process_killed)
-	$Memu = StringLeft($MemuVersion, 5) = "7.2.9"
-	$Version = StringLeft($AndroidVersion, 5) = "4.4.4"
 	
 	; Wait for boot completed
 	$hMyTimer = ($hTimer = 0 ? __TimerInit() : $hTimer)
@@ -1477,11 +1475,6 @@ Func WaitForAndroidBootCompleted($WaitInSec = 120, $hTimer = 0)
 			$cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " getprop sys.boot_completed", $process_killed)
 		EndIf
 		
-		;adding support for Memu 7.2.9 android 4.4.4 as it have different getprop to determine emulator has completed boot
-		If $Memu And $Version Then 
-			$cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " getprop service.bootanim.exit", $process_killed)
-		EndIf
-	
 		If Not $g_bRunState Then Return True
 		; Test ADB is connected
 		$connected_to = IsAdbConnected($cmdOutput)
@@ -4848,7 +4841,7 @@ Func CheckEmuNewVersions()
 
 	Switch $g_sAndroidEmulator
 		Case "BlueStacks2"
-			$NewVersion = GetVersionNormalized("4.250.1.0")
+			$NewVersion = GetVersionNormalized("4.280.1.0")
 		Case "MEmu"
 			$NewVersion = GetVersionNormalized("7.2.9.0")
 		Case "Nox"

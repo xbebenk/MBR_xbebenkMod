@@ -16,24 +16,14 @@
 Func drillSearch()
 	Local $aReturnResult[0][5]
 	Local $pixelerror = 15
-
-	Local $Maxpositions = 0 ; Return all found Positions
-	Local $aResult = multiMatches($g_sImgSearchDrill, $Maxpositions, "ECD", "ECD")
-
-	For $iResult = 1 To UBound($aResult) - 1 ; Loop through all resultrows, skipping first row, which is searcharea, each matched img has its own row, if no resultrow, for is skipped
-		If _Sleep(10) Then Return
-		Local $aTemp[0][2]
-		_ArrayAdd($aTemp, $aResult[$iResult][5], 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING) ; Copy Positionarray to temp array
-		_ArrayColInsert($aTemp, 2) ; Adding Level Column
-		_ArrayColInsert($aTemp, 3) ; Adding Hold Column
-		_ArrayColInsert($aTemp, 4) ; Adding Last Zap Column
-		For $iRow = 0 To UBound($aTemp) - 1
-			$aTemp[$iRow][2] = $aResult[$iResult][2] ; Setting Level Column to Result Level
-			$aTemp[$iRow][4] = 0 ; Set Last Zap to 0
+	
+	Local $aResult = QuickMIS("CNX", $g_sImgSearchDrill, 100, 45, 800, 590)
+	If IsArray($aResult) And UBound($aResult) > 0 Then
+		For $i = 0 To UBound($aResult) - 1
+			_ArrayAdd($aReturnResult, $aResult[$i][1] & "|" & $aResult[$i][2] & "|" & $aResult[$i][3] & "||" & 0)
 		Next
-		_ArrayAdd($aReturnResult, $aTemp, 0, "|", @CRLF, $ARRAYFILL_FORCE_STRING) ; Adding temp array to return array
-	Next
-
+	EndIf
+	
 	Local $iResult = 0
 	While $iResult < UBound($aReturnResult)
 		If _Sleep(10) Then Return

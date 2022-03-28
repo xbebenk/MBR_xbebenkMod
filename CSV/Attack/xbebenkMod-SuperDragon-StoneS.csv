@@ -1,0 +1,82 @@
+﻿NOTE  |xbebenkMod - SuperDragon + Edrag
+NOTE  |Author: xbebenk (03-2022)
+NOTE  |version 0.1
+NOTE  |
+NOTE  |TH 13/14: 5 SuperDragon, 2 Electro Dragons, 8 Balloons, Any Siege CC
+NOTE  |Spells: 5 Rage, 1 Freeze
+NOTE  |CCTroops: Loons/Dragon/Electro
+NOTE  |CCSpells: Rage + Freeze
+NOTE  |Please set Redline = "EXTERNAL EDGES"
+      |                                                                                                                       |
+      |_TROOPNAME_|__FLEXIBLE_|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|_______TH14_______|
+TRAIN |EDrag      |0          |0          |0          |0          |0          |0          |0          |0          |2          |2          		 |
+TRAIN |Ball       |0          |0          |0          |0          |0          |0          |0          |0          |8          |8          		 |
+TRAIN |RSpell     |0          |0          |0          |0          |0          |0          |0          |0          |5          |5          		 |
+TRAIN |FSpell     |0          |0          |0          |0          |0          |0          |0          |0          |1          |1          		 |
+      |           |           |           |           |           |           |           |           |           |           |            		 |
+      |_TROOPNAME_|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|_______TH14_______|
+TRAIN |King       |0          |0          |0          |0          |0          |0          |0          |0          |1          |1          		 |
+TRAIN |Queen      |0          |0          |0          |0          |0          |0          |0          |0          |1          |1          		 |
+TRAIN |Warden     |0          |0          |0          |0          |0          |0          |0          |0          |1          |1          		 |
+TRAIN |Champion   |0          |0          |0          |0          |0          |0          |0          |0          |1          |1          		 |
+      |           |           |           |           |           |           |           |           |           |           |            		 |                                                                                                                                   		 |
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|_______TH14_______|
+REDLN |0          |0          |0          |0          |0          |0          |0          |0          |0          |4          |4          		 |
+DRPLN |0          |0          |0          |0          |0          |0          |0          |0          |0          |0          |0          		 |
+      |           |           |           |           |           |           |           |           |           |           |            		 |
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|_______TH14_______|
+CCREQ |           |           |           |           |           |           |           |			  |Loons/Rage |Loons/Rage |Loons/Rage/Freeze |
+      |                                                                                                                                   		 |
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|___________|___________|__________________|
+SIDE  |0          |0          |0          |0          |0          |0          |10         |           |           |           |           		 |
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |           |           |           		 |
+SIDEB |8          |5          |0          |0          |0          |0          |0          |           |           |           |           		 |
+      |           |           |           |           |           |           |           |           |           |           |            		 |
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|___________|___________|__________________|
+MAKE  |A          |LEFT-FRONT |10         |1          |EXT-INT    |0          |0          |           |           |           |           		 |
+MAKE  |B          |RIGHT-FRONT|10         |1          |EXT-INT    |0          |0          |           |           |           |           		 |
+MAKE  |C          |FRONT-LEFT |10         |1          |EXT-INT    |0          |0          |           |           |           |           		 |
+MAKE  |D          |FRONT-RIGHT|10         |1          |EXT-INT    |0          |0          |           |           |           |           		 |
+MAKE  |E          |FRONT-LEFT |10         |1          |INT-EXT    |0          |0          |           |           |           |           		 |
+MAKE  |F          |FRONT-RIGHT|10         |1          |INT-EXT    |0          |0          |           |           |           |           		 |
+MAKE  |M          |FRONT-LEFT |10         |-8         |INT-EXT    |1          |1          |           |           |           |           		 |
+MAKE  |N          |FRONT-LEFT |10         |-8         |INT-EXT    |1          |1          |           |           |           |           		 |
+MAKE  |O          |FRONT-RIGHT|10         |-8         |INT-EXT    |2          |1          |           |           |           |           		 |
+MAKE  |P          |FRONT-LEFT |10         |-15        |INT-EXT    |2          |2          |           |           |           |           		 |
+MAKE  |Q          |FRONT-LEFT |10         |-15        |INT-EXT    |1          |2          |           |           |           |           		 |
+MAKE  |R          |FRONT-RIGHT|10         |-15        |INT-EXT    |1          |2          |           |           |           |           		 |
+MAKE  |I          |FRONT-RIGHT|1          |0          |IGNORE     |0          |0          |EAGLE      |           |           |           		 |
+MAKE  |J          |FRONT-LEFT |1          |0          |IGNORE     |0          |0          |TOWNHALL   |           |           |           		 |
+MAKE  |K          |LEFT-BACK  |1          |0          |IGNORE     |0          |0          |INFERNO    |           |           |           		 |
+MAKE  |L          |RIGHT-BACK |1          |0          |IGNORE     |0          |0          |INFERNO    |           |           |           		 |
+      |           |           |           |           |           |           |           |           |           |           |            		 |
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|___________|___________|__________________|
+DROP  |A          |3          |1          |Ball       |0          |27-50      |50-70      |           |           |           |           		 |
+DROP  |B          |3          |1          |Ball       |0          |27-50      |1050-1090  |           |           |           |           		 |
+DROP  |A          |3          |1          |EDrag      |55-70      |27-50      |15-20      |           |           |           |           		 |
+DROP  |B          |3          |1          |EDrag      |55-70      |27-50      |150-250    |           |           |      	  |      	  		 |
+WAIT  |10000      |           |           |           |           |           |           |           |           |           |           		 |
+DROP  |E-F        |6          |1          |Ball       |50-70      |27-50      |1000-1500  |           |           | 		  | 		  		 |
+DROP  |E-F        |7          |1          |SDrag      |50-70      |27-50      |1000-1500  |           |           | 		  | 		  		 |
+DROP  |E-F        |2-6        |5          |Ball       |50-70      |27-50      |1000-1500  |           |           | 		  | 		  		 |
+DROP  |C          |10         |1          |StoneS     |0          |50-70      |50         |           |           |           |           		 |
+DROP  |E-F        |2-6        |5          |SDrag      |50-70      |27-50      |15-20      |           |           | 		  | 		  		 |
+DROP  |C          |10         |1          |Warden     |50-70      |0          |100        |           |           |           |           		 |
+DROP  |C          |10         |1          |King       |0          |0          |100        |           |    ﻿       |           |           		 |
+DROP  |M          |5          |1          |RSpell     |0          |0          |150-200    |           |           |           |           		 |
+DROP  |N          |1          |1          |RSpell     |0          |0          |150-200    |           |           |           |           		 |
+DROP  |O          |3          |1          |RSpell     |0          |0          |150-200    |           |           |           |           		 |
+DROP  |C          |10         |1          |Queen      |0          |0          |150-200    |           |           |           |           		 |
+DROP  |A          |4          |1          |Champion   |0          |0          |150-200    |           |           |      	  |      	  		 |
+WAIT  |1500-2500  |           |           |           |           |           |           |           |           |           |           		 |
+DROP  |C          |10         |1          |Warden     |50-70      |0          |1000-1500  |           |           |           |           		 |
+DROP  |P          |3          |1          |RSpell     |0          |0          |500        |           |           |           |           		 |
+DROP  |R          |1          |1          |RSpell     |0          |0          |500        |           |           |           |           		 |
+DROP  |I          |1          |1          |FSpell     |0          |0          |100        |EAGLE      |           |           |           		 |
+DROP  |R          |4          |1          |RSpell     |0          |0          |2000       |           |           |           |           		 |
+DROP  |J          |1          |1          |FSpell     |0          |0          |100        |TOWNHALL   |           |           |           		 |
+WAIT  |2000       |           |           |           |           |           |           |           |           |           |           		 |
+RECALC|           |           |           |           |           |           |           |           |           |           |            		 |
+DROP  |I          |1          |1          |FSpell     |0          |0          |100        |EAGLE      |           |           |           		 |
+DROP  |K          |1          |1          |FSpell     |0          |0          |100-150    |INFERNO    |           |           |           		 |
+DROP  |L          |1          |1          |FSpell     |0          |0          |100-150    |INFERNO    |           |           |           		 |
