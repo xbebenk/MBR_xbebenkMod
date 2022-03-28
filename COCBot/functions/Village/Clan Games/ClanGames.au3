@@ -1317,6 +1317,7 @@ Func CollectCGReward($bTest = False)
 		Local $aTile = GetCGRewardList(730)
 		If IsArray($aTile) And UBound($aTile) > 0 Then
 			Click($aTile[0][1], $aTile[0][2]+10)
+			SetLog("Selecting Magic Items:" & $aTile[0][0], $COLOR_INFO)
 			_Sleep(1000)
 			If IsOKCancelPage() Then ;check if we found gems popup, decline
 				SetLog("Magic Item storage is Full (Decline)", $COLOR_INFO)
