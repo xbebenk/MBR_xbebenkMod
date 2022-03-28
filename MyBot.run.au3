@@ -1412,19 +1412,11 @@ Func FirstCheckRoutine()
 				EndIf
 			Else
 				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
+				If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
 				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
 			EndIf
 			If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
-		Next		
-		
-		If Not $g_bRunState Then Return
-		If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 Then 
-			SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-			PrepareDonateCC()
-			DonateCC()
-			TrainSystem()
-			checkSwitchAcc() ;switch to next account
-		EndIf	
+		Next	
 	Else
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 			SetLog("Check ClanGames Early", $COLOR_INFO)
@@ -1434,16 +1426,17 @@ Func FirstCheckRoutine()
 				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 				GotoBBTodoCG()
 			EndIf
-			If Not $g_bRunState Then Return
-			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 Then 
-				SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-				PrepareDonateCC()
-				DonateCC()
-				TrainSystem()
-				checkSwitchAcc() ;switch to next account
-			EndIf
 		EndIf
 	EndIf
+	
+	If Not $g_bRunState Then Return
+	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 Then 
+		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
+		PrepareDonateCC()
+		DonateCC()
+		TrainSystem()
+		checkSwitchAcc() ;switch to next account
+	EndIf	
 	
 	If Not $g_bRunState Then Return
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
