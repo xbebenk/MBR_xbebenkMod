@@ -80,7 +80,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		Else
 			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
 			If _Sleep(500) Then Return
-			$sTimeCG = ConvertOCRTime("ClanGames()", $g_sClanGamesTimeRemaining, True)
+			$sTimeCG = ConvertOCRTime("ClanGames()", StringLower($g_sClanGamesTimeRemaining), True)
 			Setlog("Clan Games Minute Remain: " & $sTimeCG)
 			
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
@@ -1104,7 +1104,7 @@ Func GetEventTimeScore($iXStartBtn, $iYStartBtn, $bIsStartBtn = True)
 	Local $Ocr = getOcrEventTime($XAxis, $YAxis)
 	If $Ocr = "1" Then $Ocr = "1d"
 	If $Ocr = "2" Then $Ocr = "2d"
-	$aEventInfo[1] = ConvertOCRTime("ClanGames()", $Ocr, False)
+	$aEventInfo[1] = ConvertOCRTime("ClanGames()", StringLower($Ocr), False)
     $aEventInfo[0] = getOcrEventTime($XAxis, $YAxis - 38)
 	
 	Return $aEventInfo
