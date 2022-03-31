@@ -364,7 +364,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkClanGamesSort, $g_bSortClanGames ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbClanGamesSort, $g_iSortClanGames)
 			GUICtrlSetState($g_hChkCGBBAttackOnly, $g_bChkCGBBAttackOnly ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
 			For $i = 0 To UBound($g_ahCGMainLootItem) - 1
 				GUICtrlSetState($g_ahCGMainLootItem[$i], $g_abCGMainLootItem[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
@@ -395,7 +395,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			For $i = 0 To UBound($g_ahCGBBTroopsItem) - 1
 				GUICtrlSetState($g_ahCGBBTroopsItem[$i], $g_abCGBBTroopsItem[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
-			
+
 			chkActivateClangames()
 
 			; Builder Base Attack
@@ -510,7 +510,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bSortClanGames = (GUICtrlRead($g_hChkClanGamesSort) = $GUI_CHECKED) ? 1 : 0
 			$g_iSortClanGames = _GUICtrlComboBox_GetCurSel($g_hCmbClanGamesSort)
 			$g_bChkCGBBAttackOnly = (GUICtrlRead($g_hChkCGBBAttackOnly) = $GUI_CHECKED) ? 1 : 0
-			
+
 			For $i = 0 To UBound($g_ahCGMainLootItem) - 1
 				$g_abCGMainLootItem[$i] = BitAND(GUICtrlRead($g_ahCGMainLootItem[$i]), $GUI_CHECKED) ? 1 : 0
 			Next
@@ -1029,6 +1029,8 @@ Func ApplyConfig_auto($TypeReadSave)
 			Next
 			GUICtrlSetState($g_hUpgradeOnlyTHLevelAchieve, $g_bUpgradeOnlyTHLevelAchieve ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hHeroPriority, $g_bHeroPriority ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hUseHeroBooks, $g_bUseHeroBooks ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hHeroMinUpgradeTime, $g_iHeroMinUpgradeTime)
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				GUICtrlSetState($g_hChkUpgradesToIgnore[$i], $g_iChkUpgradesToIgnore[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
@@ -1053,6 +1055,8 @@ Func ApplyConfig_auto($TypeReadSave)
 			Next
 			$g_bUpgradeOnlyTHLevelAchieve = (GUICtrlRead($g_hUpgradeOnlyTHLevelAchieve) = $GUI_CHECKED)
 			$g_bHeroPriority = (GUICtrlRead($g_hHeroPriority) = $GUI_CHECKED)
+			$g_bUseHeroBooks = (GUICtrlRead($g_hUseHeroBooks) = $GUI_CHECKED)
+			$g_iHeroMinUpgradeTime =  GUICtrlRead($g_hHeroMinUpgradeTime)
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				$g_iChkUpgradesToIgnore[$i] = GUICtrlRead($g_hChkUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next
