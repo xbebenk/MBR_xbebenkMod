@@ -50,11 +50,11 @@ Func LocateUpgrades()
 		If _GetPixelColor(1, 1) <> Hex(0x000000, 6) Or _GetPixelColor(850, 1) <> Hex(0x000000, 6) Then ; Check for zoomout in case user tried to zoom in.
 			ZoomOut()
 			$g_bDisableBreakCheck = True ; stop early PB log off when locating upgrades
-			Collect()
+			Collect(False) ;only collect from mine and collector
 			$g_bDisableBreakCheck = False ; restore flag
 		EndIf
 		$g_bDisableBreakCheck = True ; stop early PB log off when locating upgrades
-		Collect() ; must collect or clicking on collectors will fail 1st time
+		Collect(False) ; must collect or clicking on collectors will fail 1st time
 		$g_bDisableBreakCheck = False ; restore flag
 
 		If $bInitGraphics Then
@@ -68,7 +68,7 @@ Func LocateUpgrades()
 					If $hGraphic <> 0 And $g_avBuildingUpgrades[$icount][0] > 0 And $g_avBuildingUpgrades[$icount][0] > 0 Then
 						Local $xUpgrade = $g_avBuildingUpgrades[$icount][0]
 						Local $yUpgrade = $g_avBuildingUpgrades[$icount][1]
-						ConvertToVillagePos($xUpgrade, $yUpgrade)
+						;ConvertToVillagePos($xUpgrade, $yUpgrade)
 						Local $bMarkerDrawn = _GDIPlus_GraphicsDrawEllipse($hGraphic, $xUpgrade - 10, $yUpgrade - 10, 20, 20, $hPen)
 						AndroidGraphicsGdiUpdate()
 						SetDebugLog("Existing Updgrade #" & $icount & " found at " & $g_avBuildingUpgrades[$icount][0] & "/" & $g_avBuildingUpgrades[$icount][1] & ", marker drawn: " & $bMarkerDrawn)
@@ -97,7 +97,7 @@ Func LocateUpgrades()
 						If $hGraphic <> 0 Then
 							Local $xUpgrade = $g_avBuildingUpgrades[$icount][0]
 							Local $yUpgrade = $g_avBuildingUpgrades[$icount][1]
-							ConvertToVillagePos($xUpgrade, $yUpgrade)
+							;ConvertToVillagePos($xUpgrade, $yUpgrade)
 							$bMarkerDrawn = _GDIPlus_GraphicsDrawEllipse($hGraphic, $xUpgrade - 10, $yUpgrade - 10, 20, 20, $hPen)
 							AndroidGraphicsGdiUpdate()
 						EndIf
