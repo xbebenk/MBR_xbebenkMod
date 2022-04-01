@@ -277,10 +277,8 @@ Func ArmyHeroStatus($i)
 				EndSwitch
 		EndSelect
 		Return $sResult
-	Else
-		SetLog("ERROR Search Hero position", $COLOR_ERROR)
 	EndIf
-	SetDebugLog("sResult : " & $sResult,  $COLOR_ERROR)
+	
 	;return 'none' if there was a problem with the search ; or no Hero slot
 	Switch $i
 		Case 0
