@@ -57,7 +57,7 @@ Func SearchUpgrade($bTest = False)
 	If Not $g_bRunState Then Return
 	$g_bSkipWallReserve = False ;reset first
 	
-	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder Then
+	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		Local $sUpgradeTime = getBuilderLeastUpgradeTime(380, 110)
@@ -494,12 +494,14 @@ Func DoUpgrade($bTest = False)
 	; if upgrade not to be ignored, click on the Upgrade button to open Upgrade window
 	ClickP($aUpgradeButton)
 	If _Sleep($DELAYAUTOUPGRADEBUILDING1) Then Return
-
+	
+	Local $bHeroUpgrade = False
 	Switch $g_aUpgradeNameLevel[1]
 		Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion"
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 500, 730, 580) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522) ; get cost
 			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 465) ; get duration
+			$bHeroUpgrade = True
 		Case Else
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 480, 500, 550) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487) ; get cost
@@ -578,21 +580,35 @@ Func DoUpgrade($bTest = False)
 				$g_aUpgradeNameLevel[1] = "Giga Inferno"
 				SetLog("Launched upgrade of Giga Inferno successfully !", $COLOR_SUCCESS)
 		EndSwitch
-
 	Else
 		SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
 	Endif
+	
 	If IsGemOpen(True) Then
 		ClickAway("Right")
-		
-		SetLog("Something is wrong, no builder is available?", $COLOR_ERROR)
+		SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
 	Else
-		ClickAway("Right")
-
 		SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
 		SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
-
 		AutoUpgradeLog($g_aUpgradeNameLevel, $g_aUpgradeResourceCostDuration)
+	EndIf
+	
+	If $bHeroUpgrade And $g_bUseHeroBooks Then
+		_Sleep(500)
+		Local $HeroUpgradeTime = ConvertOCRTime("UseHeroBooks", $g_aUpgradeResourceCostDuration[2])
+		If $HeroUpgradeTime >= ($g_iHeroMinUpgradeTime * 1440) Then
+			Local $HeroBooks = FindButton("HeroBooks")
+			If IsArray($HeroBooks) And UBound($HeroBooks) = 2 Then
+				SetLog("Use Hero Books to Complete Now this Hero Upgrade", $COLOR_INFO)
+				Click($HeroBooks[0], $HeroBooks[1])
+				_Sleep(1000)
+				If QuickMis("BC1", $g_sImgGeneralCloseButton, 560, 225, 610, 275) Then 
+					Click(430, 400)
+				EndIf
+			Else
+				SetLog("No Books of Heroes Found", $COLOR_DEBUG)
+			EndIf
+		EndIf
 	EndIf
 	
 	Return True

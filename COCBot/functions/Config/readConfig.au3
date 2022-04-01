@@ -971,6 +971,8 @@ Func ReadConfig_auto()
 	Next
 	IniReadS($g_bUpgradeOnlyTHLevelAchieve, $g_sProfileConfigPath, "Auto Upgrade", "UpgradeOnlyTHLevelAchieve", True, "Bool")
 	IniReadS($g_bHeroPriority, $g_sProfileConfigPath, "Auto Upgrade", "HeroPriority", False, "Bool")
+	IniReadS($g_bUseHeroBooks, $g_sProfileConfigPath, "Auto Upgrade", "UseHeroBooks", True, "Bool")
+	IniReadS($g_iHeroMinUpgradeTime, $g_sProfileConfigPath, "Auto Upgrade", "HeroMinUpgradeTime", 5, "int")
 	$str = StringSplit(IniRead($g_sProfileConfigPath, "Auto Upgrade", "EssentialBuildings", "1|1|1|1|0|0|0|0"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
 		$g_aichkEssentialUpgrade[$i] = $str[$i]

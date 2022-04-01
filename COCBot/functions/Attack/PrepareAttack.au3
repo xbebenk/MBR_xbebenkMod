@@ -299,6 +299,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 				; If was not detectable lets click again on green icon to hide the window!
 				Setlog("Undetected " & ($bAnySiege ? "any siege machine " : GetTroopName($ToUse)) & " after click on switch btn!", $COLOR_DEBUG)
 				Click($iLastX, $iLastY, 1)
+				$iTroopIndex = $eCastle
 				If _Sleep(750) Then Return
 				Return
 			EndIf
