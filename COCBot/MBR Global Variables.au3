@@ -1420,7 +1420,7 @@ Global $g_bFullArmySpells = False ; true when $g_iTotalTrainSpaceSpell = $iTotal
 Global $g_CurrentCampUtilization = 0, $g_iTotalCampSpace = 0
 
 ; Upgrading - Lab
-Global $g_iLaboratoryElixirCost = 0, $g_iLaboratoryDElixirCost = 0
+Global $g_iLaboratoryElixirCost = 0, $g_iLaboratoryDElixirCost = 0, $g_bUseLabPotion = False
 Global $g_sLabUpgradeTime = ""
 Global $g_sStarLabUpgradeTime = ""
 

@@ -292,8 +292,27 @@ Func ChkLabUpgradeInProgress($debug)
 			SetLog("Research will finish in " & $sLabTimeOCR & " (" & $g_sLabUpgradeTime & ")")
 		EndIf
 		ClickAway()
-		If ProfileSwitchAccountEnabled() Then SwitchAccountVariablesReload("Save") ; saving $asLabUpgradeTime[$g_iCurAccount] = $g_sLabUpgradeTime for instantly displaying in multi-stats
 		If $debug Then Return False
+		If ProfileSwitchAccountEnabled() Then SwitchAccountVariablesReload("Save") ; saving $asLabUpgradeTime[$g_iCurAccount] = $g_sLabUpgradeTime for instantly displaying in multi-stats
+		If $g_bUseLabPotion And $iLabFinishTime > 1440 Then
+			_Sleep(1000)
+			Local $LabPotion = FindButton("LabPotion")
+			If IsArray($LabPotion) And UBound($LabPotion) = 2 Then
+				SetLog("Use Laboratory Potion", $COLOR_INFO)
+				Local $LabBoosted = FindButton("LabBoosted")
+				If IsArray($LabBoosted) And UBound($LabBoosted) = 2 Then ; Lab already boosted skip using potion
+					SetLog("Detected Laboratory already boosted", $COLOR_INFO)
+					Return True
+				EndIf
+				Click($LabPotion[0], $LabPotion[1])
+				_Sleep(1000)
+				If QuickMis("BC1", $g_sImgGeneralCloseButton, 560, 225, 610, 275) Then 
+					Click(430, 400)
+				EndIf
+			Else
+				SetLog("No Laboratory Potion Found", $COLOR_DEBUG)
+			EndIf
+		EndIf
 		Return True
 	EndIf
 	Return False
