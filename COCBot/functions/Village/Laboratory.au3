@@ -294,7 +294,7 @@ Func ChkLabUpgradeInProgress($debug)
 		ClickAway()
 		If $debug Then Return False
 		If ProfileSwitchAccountEnabled() Then SwitchAccountVariablesReload("Save") ; saving $asLabUpgradeTime[$g_iCurAccount] = $g_sLabUpgradeTime for instantly displaying in multi-stats
-		If $g_bUseLabPotion And $iLabFinishTime > 1440 Then
+		If $g_bUseLabPotion And $iLabFinishTime > 1440 Then ; only use potion if lab upgrade time is more than 1 day
 			_Sleep(1000)
 			Local $LabPotion = FindButton("LabPotion")
 			If IsArray($LabPotion) And UBound($LabPotion) = 2 Then
@@ -309,6 +309,7 @@ Func ChkLabUpgradeInProgress($debug)
 				If QuickMis("BC1", $g_sImgGeneralCloseButton, 560, 225, 610, 275) Then 
 					Click(430, 400)
 				EndIf
+				ClickAway("Right")
 			Else
 				SetLog("No Laboratory Potion Found", $COLOR_DEBUG)
 			EndIf
