@@ -1402,8 +1402,9 @@ Func FirstCheckRoutine()
 				SetLog("Something maybe wrong, exiting to MainLoop!", $COLOR_INFO)
 				ExitLoop
 			EndIf
-			SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
+			
 			If _ClanGames(False, $g_bChkForceBBAttackOnClanGames) Then 
+				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
 				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 					GotoBBTodoCG()
