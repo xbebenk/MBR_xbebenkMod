@@ -240,13 +240,19 @@ Func FindExistingBuilding($bTest = False)
 						$aBuilding[$j][6] = $aRushTHPriority[$k][1]
 						$aBuilding[$j][7] = "Priority"
 					EndIf
-					If $UpgradeName[0] = "Army Camp" And $g_bAutoUpgradeWallsEnable Then 
-						If $g_iTownHallLevel = 13 Then $g_iUpgradeWallMinElixir = 16000000 ;rushth enabled, set min elixir save on wall upgrade to 16M so armycamp can be upgraded
-					EndIf
-					If StringInStr($UpgradeName[0], "Giga") And $g_bAutoUpgradeWallsEnable Then 
-						If $g_iTownHallLevel = 13 Then $g_iUpgradeWallMinGold = $UpgradeCost ;rushth enabled, set min gold save on wall upgrade same as upgradecost, so giga can be upgraded
-					EndIf
 				Next
+				If StringInStr($UpgradeName[0], "Army") And $g_bAutoUpgradeWallsEnable Then 
+					If $g_iTownHallLevel = "13" Then 
+						SetLog("Set Save Elixir on Wall upgrade = 16000000", $COLOR_DEBUG)
+						$g_iUpgradeWallMinElixir = 16000000 ;rushth enabled, set min elixir save on wall upgrade to 16M so armycamp can be upgraded
+					EndIf
+				EndIf
+				If StringInStr($UpgradeName[0], "Giga") And $g_bAutoUpgradeWallsEnable Then 
+					If $g_iTownHallLevel = "13" Then 
+						SetLog("Set Save Gold on Wall upgrade = " & $UpgradeCost, $COLOR_DEBUG)
+						$g_iUpgradeWallMinGold = $UpgradeCost ;rushth enabled, set min gold save on wall upgrade same as upgradecost, so giga can be upgraded
+					EndIf
+				EndIf
 			EndIf
 			If $g_bHeroPriority Then ;set score = 20 for Heroes, so if there is heroes found for upgrade it will attempt first
 				For $l = 0 To UBound($aHeroes) - 1
