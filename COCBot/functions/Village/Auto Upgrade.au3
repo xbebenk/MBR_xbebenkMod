@@ -212,7 +212,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 EndFunc
 
 Func FindExistingBuilding($bTest = False)
-	Local $aTmpCoord, $aBuilding[0][7], $UpgradeCost, $UpgradeName
+	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName
 	Local $aRushTHPriority[4][2] = [["Laboratory", 15], ["Storage", 13], ["Army", 12], ["Giga", 11]]
 	Local $aHeroes[4][2] = [["King", 20], ["Queen", 20], ["Warden", 20], ["Champion", 20]]
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390) 
@@ -236,7 +236,16 @@ Func FindExistingBuilding($bTest = False)
 			$aBuilding[$j][5] = $UpgradeName[1]
 			If $g_bChkRushTH Then ;set score for RushTH Building
 				For $k = 0 To UBound($aRushTHPriority) - 1
-					If StringInStr($UpgradeName[0], $aRushTHPriority[$k][0]) Then $aBuilding[$j][6] = $aRushTHPriority[$k][1]
+					If StringInStr($UpgradeName[0], $aRushTHPriority[$k][0]) Then 
+						$aBuilding[$j][6] = $aRushTHPriority[$k][1]
+						$aBuilding[$j][7] = "Priority"
+					EndIf
+					If $UpgradeName[0] = "Army Camp" And $g_bAutoUpgradeWallsEnable Then 
+						If $g_iTownHallLevel = 13 Then $g_iUpgradeWallMinElixir = 16000000 ;rushth enabled, set min elixir save on wall upgrade to 16M so armycamp can be upgraded
+					EndIf
+					If StringInStr($UpgradeName[0], "Giga") And $g_bAutoUpgradeWallsEnable Then 
+						If $g_iTownHallLevel = 13 Then $g_iUpgradeWallMinGold = $UpgradeCost ;rushth enabled, set min gold save on wall upgrade same as upgradecost, so giga can be upgraded
+					EndIf
 				Next
 			EndIf
 			If $g_bHeroPriority Then ;set score = 20 for Heroes, so if there is heroes found for upgrade it will attempt first
@@ -809,38 +818,30 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("New Building Not Found", $COLOR_INFO)
 		EndIf
 		
+		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
+			SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
+			Local $aResult = FindExistingBuilding()
+			If isArray($aResult) And UBound($aResult) > 0 Then
+				For $y = 0 To UBound($aResult) - 1
+					If $aResult[$y][7] = "Priority" Then 
+						SetLog("RushTHPriority: " & $aResult[$y][4] & ", Cost: " & $aResult[$y][3], $COLOR_INFO)
+					EndIf
+				Next
+				For $y = 0 To UBound($aResult) - 1
+					If $aResult[$y][7] = "Priority" Then 
+						If CheckResourceForDoUpgrade($aResult[$y][4], $aResult[$y][3], $aResult[$y][0]) Then ;name, cost, type
+							Click($aResult[$y][1], $aResult[$y][2])
+							If _Sleep(1000) Then Return
+							If DoUpgrade($bTest) Then ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
+						Else
+							SetDebugLog("Skip this building, not enough resource", $COLOR_WARNING)
+						EndIf
+					EndIf
+				Next
+			EndIf
+			If Not $g_bRunState Then Return
+		EndIf
 		
-		
-		;If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
-		;	SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
-		;	Local $aResult = FindRushTHPriority()
-		;	If isArray($aResult) And UBound($aResult) > 0 Then
-		;		_ArraySort($aResult, 0, 0, 0, 3)
-		;		For $y = 0 To UBound($aResult) - 1
-		;			SetDebugLog("RushTHPriority: " & $aResult[$y][0] & ", Cost: " & $aResult[$y][3] & " Coord [" & $aResult[$y][1] & "," & $aResult[$y][2] & "]", $COLOR_INFO)
-		;		Next
-		;		For $y = 0 To UBound($aResult) - 1
-		;			If $aResult[$y][3] > 100 Then ;filter only upgrade with readable upgrade cost
-		;				Click($aResult[$y][1], $aResult[$y][2])
-		;				$sameCost = 0 ;reset here as we found building with cost readable
-		;				If _Sleep(1000) Then Return
-		;				If DoUpgrade($bTest) Then
-		;					$z = 0 ;reset
-		;				Endif
-		;				ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
-		;			Else
-		;				SetDebugLog("Skip this building, Cost not readable", $COLOR_WARNING)
-		;			EndIf
-		;		Next
-		;	Else
-		;		SetLog("RushTHPriority Building Not Found", $COLOR_INFO)
-		;	EndIf
-		;	If Not $g_bRunState Then Return
-		;EndIf
-		
-		
-		
-		;If $g_bChkRushTH And $IsTHLevelAchieved Then
 		
 		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
