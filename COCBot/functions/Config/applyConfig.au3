@@ -891,6 +891,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			chkLab()
 
 			GUICtrlSetState($g_hChkLabUpgradeOrder, $g_bLabUpgradeOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hUpgradeAnyTroops, $g_bUpgradeAnyTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbLabUpgradeOrder[$i], $g_aCmbLabUpgradeOrder[$i])
 			Next
@@ -913,6 +914,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			$g_iCmbStarLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbStarLaboratory)
 
 			$g_bLabUpgradeOrderEnable = (GUICtrlRead($g_hChkLabUpgradeOrder) = $GUI_CHECKED)
+			$g_bUpgradeAnyTroops = (GUICtrlRead($g_hUpgradeAnyTroops) = $GUI_CHECKED)
 			For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
 				$g_aCmbLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i])
 			Next

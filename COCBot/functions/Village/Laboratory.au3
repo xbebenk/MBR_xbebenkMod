@@ -16,6 +16,7 @@ Local $iSlotWidth = 107, $iDistBetweenSlots = 12, $iYMidPoint = 460; use for log
 Local $iPicsPerPage = 12, $iPages = 4 ; use to know exactly which page the users choice is on
 Local $sLabWindow = "99,122,760,616", $sLabTroopsSection = "110,340,740,540"
 Local $sLabWindowDiam = GetDiamondFromRect($sLabWindow), $sLabTroopsSectionDiam = GetDiamondFromRect($sLabTroopsSection) ; easy to change search areas
+Local $bLabIsOnUpgrade = False
 
 Func TestLaboratory()
 	Local $bWasRunState = $g_bRunState
@@ -31,7 +32,7 @@ Func TestLaboratory()
 	Return $Result
 EndFunc
 
-Func Laboratory($debug=False)
+Func Laboratory($bDebug = False)
 	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 	If ChkUpgradeInProgress() Then Return
 	If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
@@ -48,7 +49,8 @@ Func Laboratory($debug=False)
 
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 	If _Sleep(1500) Then Return
-	If ChkLabUpgradeInProgress($debug) Then Return False ; Lab currently running skip going further
+	If ChkLabUpgradeInProgress($bDebug) Then Return False ; Lab currently running skip going further
+	If $bLabIsOnUpgrade Then Return False ; detected cancel button when try to open lab
 
 	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
 	Local $iCurPage = 1
@@ -65,7 +67,7 @@ Func Laboratory($debug=False)
 			; Get coords of upgrade the user wants
 			Local $aCoords = decodeSingleCoord(findImage($g_avLabTroops[$g_iCmbLaboratory][2], $g_sImgLabResearch & $g_avLabTroops[$g_iCmbLaboratory][2] & "*", $sLabTroopsSectionDiam, 1, True))
 			If IsArray($aCoords) And UBound($aCoords) = 2 Then
-				Local $sCostResult = GetLabCostResult($aCoords[0], $aCoords[1])
+				Local $sCostResult = GetLabCostResult($aCoords[0], $aCoords[1], $g_avLabTroops[$g_iCmbLaboratory][0])
 				If $sCostResult > 0 Then
 					SetDebugLog("LabUpgrade:" & $g_avLabTroops[$g_iCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
 					$bUpgradeFound = True
@@ -81,7 +83,7 @@ Func Laboratory($debug=False)
 			EndIf
 
 			If $bUpgradeFound Then
-				Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
+				Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 			EndIf
 		Else ; users choice is any upgrade
 			If $g_bLabUpgradeOrderEnable Then
@@ -113,7 +115,7 @@ Func Laboratory($debug=False)
 						; Get coords of upgrade the user wants
 						Local $aCoords = decodeSingleCoord(findImage($g_avLabTroops[$iTmpCmbLaboratory][2], $g_sImgLabResearch & $g_avLabTroops[$iTmpCmbLaboratory][2] & "*", $sLabTroopsSectionDiam, 1, True))
 						If IsArray($aCoords) And UBound($aCoords) = 2 Then
-							Local $sCostResult = GetLabCostResult($aCoords[0], $aCoords[1])
+							Local $sCostResult = GetLabCostResult($aCoords[0], $aCoords[1], $g_avLabTroops[$iTmpCmbLaboratory][0])
 							If $sCostResult > 0 Then
 								If Not IsLabUpgradeResourceEnough($g_avLabTroops[$iTmpCmbLaboratory][2], $sCostResult) Then
 									SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Skip, Not Enough Resource", $COLOR_INFO)
@@ -130,12 +132,11 @@ Func Laboratory($debug=False)
 					EndIf
 				Next
 				If $bUpgradeFound Then
-					Return LaboratoryUpgrade($g_avLabTroops[$iTmpCmbLaboratory][0], $aCoords, $sCostResult, $debug) ; return whether or not we successfully upgraded
+					Return LaboratoryUpgrade($g_avLabTroops[$iTmpCmbLaboratory][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 				Else
 					SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
 				EndIf
 			Else ; no LabUpgradeOrder
-
 				While($iCurPage <= $iPages)
 					Local $Upgrades = FindLabUpgrade()
 					Local $aUpgradeCoord[2], $sUpgrade
@@ -161,7 +162,7 @@ Func Laboratory($debug=False)
 					EndIf
 
 					If $bUpgradeFound Then
-						Return LaboratoryUpgrade($sUpgrade, $aUpgradeCoord, $sCostResult, $debug) ; return whether or not we successfully upgraded
+						Return LaboratoryUpgrade($sUpgrade, $aUpgradeCoord, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 					EndIf
 
 					LabNextPage() ; go to next page of upgrades
@@ -172,6 +173,9 @@ Func Laboratory($debug=False)
 			EndIf
 			; If We got to here without returning, then nothing available for upgrade
 			SetLog("Nothing available for upgrade at the moment, try again later.")
+			If $g_bLabUpgradeOrderEnable And $g_bUpgradeAnyTroops Then 
+				Return UpgradeLabAny($bDebug)
+			EndIf
 			ClickAway()
 		EndIf
 	ClickAway()
@@ -179,7 +183,7 @@ Func Laboratory($debug=False)
 EndFunc
 
 ; start a given upgrade
-Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
+Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $bDebug = False)
 
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
@@ -199,7 +203,7 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 	If $sEnoughResource Then
 		SetLog("Selected upgrade: " & $name & " Cost: " & $sCostResult, $COLOR_INFO)
 
-		If $debug = True Then ; if debugging, do not actually click it
+		If $bDebug = True Then ; if debugging, do not actually click it
 			SetLog("[debug mode] - Start Upgrade, Click (" & 660 & "," & 520 & ")", $COLOR_ACTION)
 			ClickAway()
 			Return True ; return true as if we really started an upgrade
@@ -207,7 +211,7 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $debug = False)
 			Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
 			If isGemOpen(True) = False Then ; check for gem window
 				_Sleep(1000)
-				ChkLabUpgradeInProgress($debug)
+				ChkLabUpgradeInProgress($bDebug)
 				; success
 				SetLog("Upgrade " & $name & " in your laboratory started with success...", $COLOR_SUCCESS)
 				PushMsg("LabSuccess")
@@ -247,8 +251,8 @@ EndFunc
 
 ; get the cost of an upgrade based on its coords
 ; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
-Func GetLabCostResult($XCoords, $YCoords)
-	Local $xColumn =  $XCoords - 50, $yRow, $sCostResult = 0
+Func GetLabCostResult($XCoords, $YCoords, $UpgradeName = "")
+	Local $xColumn =  $XCoords - 40, $yRow, $sCostResult = 0
 	If $YCoords + 10 < $iYMidPoint Then
 		$yRow = 410
 	Else
@@ -256,7 +260,7 @@ Func GetLabCostResult($XCoords, $YCoords)
 	EndIf
 	$sCostResult = getLabUpgrdResourceWht($xColumn, $yRow)
 	If $sCostResult = "" Then
-		SetDebugLog("Laboratory Upgrade Cost read failed", $COLOR_ERROR)
+		SetLog($UpgradeName & " Cost read failed", $COLOR_ERROR)
 	EndIf
 	Return $sCostResult
 EndFunc
@@ -273,7 +277,7 @@ Func LabPrevPage()
 EndFunc
 
 ; check the lab to see if something is upgrading in the lab already
-Func ChkLabUpgradeInProgress($debug)
+Func ChkLabUpgradeInProgress($bDebug = False)
 	; check for upgrade in process - look for green in finish upgrade with gems button
 	If _Sleep(500) Then Return
 	If _ColorCheck(_GetPixelColor(125, 160, True), Hex(0xBDE36B, 6), 20) Or _ColorCheck(_GetPixelColor(722, 278, True), Hex(0xA2CB6C, 6), 20) Then ; Look for light green in upper right corner of lab window.
@@ -291,8 +295,9 @@ Func ChkLabUpgradeInProgress($debug)
 			$g_sLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), _NowCalc())
 			SetLog("Research will finish in " & $sLabTimeOCR & " (" & $g_sLabUpgradeTime & ")")
 		EndIf
+		If $bDebug Then Return False
+		If _Sleep(50) Then Return
 		ClickAway()
-		If $debug Then Return False
 		If ProfileSwitchAccountEnabled() Then SwitchAccountVariablesReload("Save") ; saving $asLabUpgradeTime[$g_iCurAccount] = $g_sLabUpgradeTime for instantly displaying in multi-stats
 		If $g_bUseLabPotion And $iLabFinishTime > 1440 Then ; only use potion if lab upgrade time is more than 1 day
 			_Sleep(1000)
@@ -312,6 +317,7 @@ Func ChkLabUpgradeInProgress($debug)
 				ClickAway("Right")
 			Else
 				SetLog("No Laboratory Potion Found", $COLOR_DEBUG)
+				ClickAway("Right")
 			EndIf
 		EndIf
 		Return True
@@ -324,7 +330,7 @@ Func ChkUpgradeInProgress()
 	Local $TimeDiff ; time remaining on lab upgrade
 	If $g_sLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sLabUpgradeTime) ; what is difference between end time and now in minutes?
 	If @error Then _logErrorDateDiff(@error)
-	SetDebugLog($g_avLabTroops[$g_iCmbLaboratory][0] & " Lab end time: " & $g_sLabUpgradeTime & ", DIFF= " & $TimeDiff, $COLOR_DEBUG)
+	SetLog("Lab Endtime: " & $g_sLabUpgradeTime, $COLOR_DEBUG)
 
 	If Not $g_bRunState Then Return
 	If $TimeDiff <= 0 Then
@@ -343,8 +349,7 @@ Func FindLabUpgrade() ;default = sort name of selected upgrade
 	Local $TmpResult = QuickMIS("CNX", $g_sImgLabResearch, $x1, $y1, $x2, $y2, True)
 	If IsArray($TmpResult) And UBound($TmpResult) > 0 Then
 		For $i = 0 To UBound($TmpResult) - 1
-			Local $cost = GetLabCostResult($TmpResult[$i][1], $TmpResult[$i][2])
-			If $cost = "111" Then $cost = 0
+			Local $cost = GetLabCostResult($TmpResult[$i][1], $TmpResult[$i][2], $TmpResult[$i][0])
 			_ArrayAdd($aResult, 0 & "|" & $TmpResult[$i][1] & "|" & $TmpResult[$i][2] & "|" & Number($cost), Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 			$aResult[$i][0] = $TmpResult[$i][0]
 		Next
@@ -423,7 +428,6 @@ Func FindResearchButton()
 	EndIf
 
 	If $TryLabAutoLocate Then
-
 		$LabFound = AutoLocateLab()
 		If $LabFound Then
 			applyConfig()
@@ -438,13 +442,11 @@ Func FindResearchButton()
 		Local $aBtnCancel = FindButton("cancel")
 		If IsArray($aBtnCancel) And UBound($aBtnCancel) > 0 Then
 			SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
-			ClickAway()
-			Return False
-		Else
-			ClickB("Research")
-			If _Sleep(1000) Then Return
-			Return True
+			$bLabIsOnUpgrade = True
 		EndIf
+		ClickB("Research")
+		If _Sleep(1000) Then Return
+		Return True
 	EndIf
 EndFunc
 
@@ -480,4 +482,49 @@ Func AutoLocateLab()
 		EndIf
 	EndIf
 	Return $LabFound
+EndFunc
+
+Func UpgradeLabAny($bDebug = False)
+	;just start from page 1, close and open again lab window
+	ClickAway()
+	If _Sleep(1000) Then Return
+	ClickB("Research")
+	If _Sleep(1000) Then Return
+	Local $iCurPage = 1, $bUpgradeFound = False, $sCostResult = 0
+	While(True)
+		Local $Upgrades = FindLabUpgrade()
+		Local $aUpgradeCoord[2], $sUpgrade
+		If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
+			For $i = 0 To UBound($Upgrades) - 1
+				SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
+				If $Upgrades[$i][3] > 0 Then
+					If Not IsLabUpgradeResourceEnough($Upgrades[$i][0], $Upgrades[$i][3]) Then
+						SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Skip, Not Enough Resource", $COLOR_INFO)
+					Else
+						SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
+						$bUpgradeFound = True
+						$sUpgrade = $Upgrades[0][0]
+						$aUpgradeCoord[0] = $Upgrades[0][1]
+						$aUpgradeCoord[1] = $Upgrades[0][2]
+						$sCostResult = $Upgrades[0][3]
+						ExitLoop
+					EndIf
+				EndIf
+			Next
+		Else
+			If $iCurPage = 4 Then ExitLoop
+			SetLog("Not found Any Upgrade here, looking next", $COLOR_INFO)
+		EndIf
+
+		If $bUpgradeFound Then
+			Return LaboratoryUpgrade($sUpgrade, $aUpgradeCoord, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
+		EndIf
+
+		LabNextPage() ; go to next page of upgrades
+		$iCurPage += 1 ; Next page
+		If $iCurPage = 4 Then _Sleep(2000)
+		If _Sleep($DELAYLABORATORY2) Then Return
+	WEnd
+	ClickAway()
+	Return False
 EndFunc

@@ -953,7 +953,7 @@ Global $g_iDonateSkipNearFullPercent = 90
 ; Lab
 Global $g_bAutoLabUpgradeEnable = False, $g_iCmbLaboratory = 0, $g_bAutoStarLabUpgradeEnable = False, $g_iCmbStarLaboratory = 0
 
-Global $g_hChkLabUpgradeOrder = 0, $g_hBtnRemoveLabUpgradeOrder = 0, $g_hBtnSetLabUpgradeOrder = 0
+Global $g_hChkLabUpgradeOrder = 0, $g_hBtnRemoveLabUpgradeOrder = 0, $g_hBtnSetLabUpgradeOrder = 0, $g_hUpgradeAnyTroops = 0
 Global $g_hChkSLabUpgradeOrder = 0, $g_hBtnRemoveSLabUpgradeOrder = 0, $g_hBtnSetSLabUpgradeOrder = 0
 Global $g_bLabUpgradeOrderEnable = False
 Global $g_bSLabUpgradeOrderEnable = False
@@ -1420,7 +1420,7 @@ Global $g_bFullArmySpells = False ; true when $g_iTotalTrainSpaceSpell = $iTotal
 Global $g_CurrentCampUtilization = 0, $g_iTotalCampSpace = 0
 
 ; Upgrading - Lab
-Global $g_iLaboratoryElixirCost = 0, $g_iLaboratoryDElixirCost = 0, $g_bUseLabPotion = False
+Global $g_iLaboratoryElixirCost = 0, $g_iLaboratoryDElixirCost = 0, $g_bUseLabPotion = False, $g_bUpgradeAnyTroops = False
 Global $g_sLabUpgradeTime = ""
 Global $g_sStarLabUpgradeTime = ""
 

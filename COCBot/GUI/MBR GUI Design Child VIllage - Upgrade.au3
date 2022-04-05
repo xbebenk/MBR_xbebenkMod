@@ -129,7 +129,7 @@ Func CreateLaboratorySubTab()
 					   GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtFlameFlinger", "Flame Flinger")
 
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_01", "Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 215)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_01", "Laboratory"), $x - 20, $y - 20, $g_iSizeWGrpTab3 - 2, 235)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnLaboratory, $x, $y, 64, 64)
 		$g_hChkAutoLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades", "Auto Laboratory Upgrades"), $x + 80, $y , -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_01", "Check box to enable automatically starting Upgrades in laboratory"))
@@ -159,10 +159,10 @@ Func CreateLaboratorySubTab()
 			GUICtrlSetState(-1, $GUI_HIDE)
 
 		;Enable Lab Upgrade Order
-		$g_hChkLabUpgradeOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkLabUpgradeOrder", "Enable Upgrades Order"), $x + 80, $y + 45, -1, -1)
+		$g_hChkLabUpgradeOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkLabUpgradeOrder", "Enable Order"), $x + 80, $y + 45, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_04", "Check box to enable Upgrades Order in laboratory"))
 			GUICtrlSetOnEvent(-1, "chkLabUpgradeOrder")
-
+		
 		; Create translated list of Troops for combo box
 		Local $sComboData = ""
 		$sComboData = StringTrimLeft($sTxtNames, 4); trim "Any," from list
@@ -193,7 +193,7 @@ Func CreateLaboratorySubTab()
 		Next
 
 		$x += 140
-		$y -= 90
+		$y -= 100
 		$g_hBtnRemoveLabUpgradeOrder = GUICtrlCreateButton("Clear List", $x - 6, $y, 96, 20)
 		GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 		GUICtrlSetOnEvent(-1, "btnRemoveLabUpgradeOrder")
@@ -205,7 +205,11 @@ Func CreateLaboratorySubTab()
 		
 		$y += 25
 		$g_hUseLabPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkUseLabPotion", "Use Potion"), $x, $y , -1, -1)
-
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkUseLabPotion_Info", "Enable Use of Laboratory Potion, If Upgrade is more than 1 Day"))
+		$y += 55
+		$x = 25
+		$g_hUpgradeAnyTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkUpgradeAny", "Upgrade Any Troops/Spells/Sieges If All in Order Cannot be Upgraded"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkUpgradeAny_Info", "Enable Upgrade Any after Upgrade Order" & @CRLF & "And all upgrades on list cannot be upgraded"))
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	$x = 25
