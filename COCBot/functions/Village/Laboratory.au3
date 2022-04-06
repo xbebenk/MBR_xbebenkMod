@@ -409,6 +409,7 @@ EndFunc
 Func FindResearchButton()
 	Local $TryLabAutoLocate = False
 	Local $LabFound = False
+	$bLabIsOnUpgrade = False ;reset value
 	ClickAway()
 	CheckMainScreen(False, $g_bStayOnBuilderBase, "FindResearchButton")
 
