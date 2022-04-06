@@ -211,7 +211,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 EndFunc
 
 Func FindExistingBuilding($bTest = False)
-	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName
+	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
 	Local $aRushTHPriority[5][2] = [["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10]]
 	Local $aRushTH[8][2] = [["Barracks", 8], ["Castle", 10], ["Spell", 9], ["WorkShop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
 	Local $aHeroes[4] = ["King", "Queen", "Warden", "Champion"]
@@ -223,8 +223,9 @@ Func FindExistingBuilding($bTest = False)
 			If $g_bChkRushTH Then ;if rushth enabled, filter only rushth buildings
 				Local $bRusTHFound = False
 				For $x = 0 To UBound($aRushTH) - 1
-					If StringInStr($UpgradeName[0], $aRushTH[$x]) Then 
-						$bRusTHFound = True
+					If StringInStr($UpgradeName[0], $aRushTH[$x][0]) Then 
+						$bRusTHFound = True ;used for add array
+						$bFoundRusTH = True ;used for sorting array
 						ExitLoop
 					EndIf
 				Next
@@ -278,7 +279,7 @@ Func FindExistingBuilding($bTest = False)
 		Next
 	EndIf
 	
-	If ($g_bChkRushTH And $bRusTHFound) Or $g_bHeroPriority Then
+	If ($g_bChkRushTH And $bFoundRusTH) Or $g_bHeroPriority Then
 		_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
 	Else
 		_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
