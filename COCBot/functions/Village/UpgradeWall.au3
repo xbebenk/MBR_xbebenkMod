@@ -385,7 +385,29 @@ Func ClickDragFindWallUpgrade()
 		If _ColorCheck(_GetPixelColor(350, 73, True), "fdfefd", 20) Then
 			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
 			If _Sleep(1000) Then Return
-
+			
+			If $g_bChkRushTH Then ;find new building while searching wall, if found and resource enough, set min wall save value
+				Local $NewCoord = FindNewBuilding()
+				If IsArray($NewCoord) And UBound($NewCoord) > 0 Then
+					SetLog("Found " & UBound($NewCoord) & " New Building while searching wall!", $COLOR_INFO)
+					For $j = 0 To UBound($NewCoord) - 1
+						SetLog("New:" & $NewCoord[$j][4] & ", cost:" & $NewCoord[$j][6] & " " & $NewCoord[$j][0], $COLOR_INFO)
+						If $NewCoord[$j][0] = "Gold" And Number($g_iUpgradeWallMinGold) < Number($NewCoord[$j][6]) And $g_bAutoUpgradeWallsEnable Then 
+							$g_iUpgradeWallMinGold = $NewCoord[$j][6] ;set min wall save gold same as new building cost, so next time this building can be placed
+							SetLog("Set Save Gold on Wall upgrade = " & $g_iUpgradeWallMinGold, $COLOR_DEBUG)
+							applyConfig()
+							saveConfig()
+						EndIf
+						If $NewCoord[$j][0] = "Elix" And Number($g_iUpgradeWallMinElixir) < Number($NewCoord[$j][6]) And $g_bAutoUpgradeWallsEnable Then 
+							$g_iUpgradeWallMinElixir = $NewCoord[$j][6] ;set min wall save elix same as new building cost, so next time this building can be placed
+							SetLog("Set Save Elix on Wall upgrade = " & $g_iUpgradeWallMinElixir, $COLOR_DEBUG)
+							applyConfig()
+							saveConfig()
+						EndIf
+					Next
+				EndIf
+			EndIf
+			
 			If QuickMIS("BC1", $g_sImgAUpgradeWall, 180, 80, 300, 369, True) Then
 				If _Sleep(2000) Then Return
 				$aWallCoord = GetWallPos()
@@ -394,11 +416,11 @@ Func ClickDragFindWallUpgrade()
 				EndIf
 			EndIf
 
-			$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 150, 30, True)
+			$TmpUpgradeCost = getMostBottomCost()
 			SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 			SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
 			If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
-			If $sameCost > 3 Then ExitLoop
+			If $sameCost > 2 Then ExitLoop
 			$UpgradeCost = $TmpUpgradeCost
 		EndIf
 		If _ColorCheck(_GetPixelColor(350, 73, True), "fdfefd", 20) Then ;check upgrade window border
