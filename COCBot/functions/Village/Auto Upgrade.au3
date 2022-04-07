@@ -807,7 +807,22 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
 			For $j = 0 To UBound($NewCoord) - 1
 				SetLog("New:" & $NewCoord[$j][4] & ", cost:" & $NewCoord[$j][6] & " " & $NewCoord[$j][0], $COLOR_INFO)
+				If $g_bChkRushTH Then ;find new building while searching wall, if found and resource enough, set min wall save value
+					If $NewCoord[$j][0] = "Gold" And Number($g_iUpgradeWallMinGold) < Number($NewCoord[$j][6]) And $g_bAutoUpgradeWallsEnable Then 
+						$g_iUpgradeWallMinGold = $NewCoord[$j][6] ;set min wall save gold same as new building cost, so next time this building can be placed
+						SetLog("Set Save Gold on Wall upgrade = " & $g_iUpgradeWallMinGold, $COLOR_DEBUG)
+						applyConfig()
+						saveConfig()
+					EndIf
+					If $NewCoord[$j][0] = "Elix" And Number($g_iUpgradeWallMinElixir) < Number($NewCoord[$j][6]) And $g_bAutoUpgradeWallsEnable Then 
+						$g_iUpgradeWallMinElixir = $NewCoord[$j][6] ;set min wall save elix same as new building cost, so next time this building can be placed
+						SetLog("Set Save Elix on Wall upgrade = " & $g_iUpgradeWallMinElixir, $COLOR_DEBUG)
+						applyConfig()
+						saveConfig()
+					EndIf
+				EndIf
 			Next
+			
 			$isWall = False ;reset var 
 			For $j = 0 To UBound($NewCoord) - 1
 				If Not $g_bRunState Then Return
