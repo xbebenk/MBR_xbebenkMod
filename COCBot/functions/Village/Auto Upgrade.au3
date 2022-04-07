@@ -256,14 +256,16 @@ Func FindExistingBuilding($bTest = False)
 					If $g_iTownHallLevel = "13" Then 
 						SetLog("Set Save Elixir on Wall upgrade = 16000000", $COLOR_DEBUG)
 						$g_iUpgradeWallMinElixir = 16000000 ;rushth enabled, set min elixir save on wall upgrade to 16M so armycamp can be upgraded
-						ApplyConfig_600_17("Read")
+						applyConfig()
+						saveConfig()
 					EndIf
 				EndIf
 				If StringInStr($BuildingName, "Giga") And $g_bAutoUpgradeWallsEnable Then 
 					If $g_iTownHallLevel = "13" Then 
 						SetLog("Set Save Gold on Wall upgrade = " & $UpgradeCost, $COLOR_DEBUG)
 						$g_iUpgradeWallMinGold = $UpgradeCost ;rushth enabled, set min gold save on wall upgrade same as upgradecost, so giga can be upgraded
-						ApplyConfig_600_17("Read")
+						applyConfig()
+						saveConfig()
 					EndIf
 				EndIf
 			EndIf
