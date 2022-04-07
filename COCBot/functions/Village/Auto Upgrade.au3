@@ -229,6 +229,15 @@ Func FindExistingBuilding($bTest = False)
 						ExitLoop
 					EndIf
 				Next
+				If Not $bRusTHFound Then ; Optimization: no need to check if already found before
+					For $x = 0 To UBound($aRushTHPriority) - 1
+						If StringInStr($UpgradeName[0], $aRushTHPriority[$x][0]) Then 
+							$bRusTHFound = True ;used for add array
+							$bFoundRusTH = True ;used for sorting array
+							ExitLoop
+						EndIf
+					Next
+				EndIf
 				If Not $bRusTHFound Then ContinueLoop ;skip this building, RushTh enabled but this building is not RushTH building
 			EndIf
 			
