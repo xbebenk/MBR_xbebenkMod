@@ -245,7 +245,7 @@ Func DropTrophy()
 					$iRandomXY = Round(Random(0, 4))
 					SetDebugLog("Troop Loc = " & $iRandomXY & ", X:Y= " & $aRandomEdge[$iRandomXY][0] & "|" & $aRandomEdge[$iRandomXY][1], $COLOR_DEBUG)
 					For $i = 0 To UBound($g_avAttackTroops) - 1
-						If ($g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eWiza) Or $g_avAttackTroops[$i][0] = $eMini Then
+						If ($g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eWiza) Or $g_avAttackTroops[$i][0] = $eMini Or $g_avAttackTroops[$i][0] = $eSMini Then
 							SelectDropTroop($i)
 							If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
 							Click($aRandomEdge[$iRandomXY][0], $aRandomEdge[$iRandomXY][1], 1, 0, "#0181") ;Drop one troop
