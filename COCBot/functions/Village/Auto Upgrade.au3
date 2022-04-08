@@ -211,6 +211,11 @@ Func AutoUpgradeSearchExisting($bTest = False)
 EndFunc
 
 Func FindExistingBuilding($bTest = False)
+	Local $ElixMultiply = 1, $GoldMultiply = 1 ;used for multiply score
+	Local $Gold = getResourcesMainScreen(701, 23)
+	Local $Elix = getResourcesMainScreen(701, 74)
+	If $Gold > $Elix Then $GoldMultiply += 1
+	If $Elix > $Gold Then $ElixMultiply += 1
 	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
 	Local $aRushTHPriority[5][2] = [["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10]]
 	Local $aRushTH[8][2] = [["Barracks", 8], ["Castle", 10], ["Spell", 9], ["WorkShop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
@@ -240,7 +245,6 @@ Func FindExistingBuilding($bTest = False)
 				EndIf
 				If Not $bRusTHFound Then ContinueLoop ;skip this building, RushTh enabled but this building is not RushTH building
 			EndIf
-			
 			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
 		Next
 		
@@ -250,14 +254,28 @@ Func FindExistingBuilding($bTest = False)
 			Local $BuildingName = $aBuilding[$j][3]
 			If $g_bChkRushTH Then ;set score for RushTHPriority Building
 				For $k = 0 To UBound($aRushTHPriority) - 1
-					If StringInStr($BuildingName, $aRushTHPriority[$k][0]) Then 
-						$aBuilding[$j][6] = $aRushTHPriority[$k][1]
+					If StringInStr($BuildingName, $aRushTHPriority[$k][0]) Then
+						Switch $aBuilding[$j][0]
+							Case "Gold"
+								$aBuilding[$j][6] = $aRushTHPriority[$k][1] * $GoldMultiply
+							Case "Elix"
+								$aBuilding[$j][6] = $aRushTHPriority[$k][1] * $ElixMultiply
+							Case "DE"
+								$aBuilding[$j][6] = $aRushTHPriority[$k][1]
+						EndSwitch
 						$aBuilding[$j][7] = "Priority"
 					EndIf
 				Next
 				For $k = 0 To UBound($aRushTH) - 1
 					If StringInStr($BuildingName, $aRushTH[$k][0]) Then 
-						$aBuilding[$j][6] =  $aRushTH[$k][1]
+						Switch $aBuilding[$j][0]
+							Case "Gold"
+								$aBuilding[$j][6] = $aRushTH[$k][1] * $GoldMultiply
+							Case "Elix"
+								$aBuilding[$j][6] = $aRushTH[$k][1] * $ElixMultiply
+							Case "DE"
+								$aBuilding[$j][6] = $aRushTH[$k][1]
+						EndSwitch
 						$aBuilding[$j][7] = "RushTH"
 					EndIf
 				Next
