@@ -181,7 +181,7 @@ Func AttackReport()
 		Case 1
 			$sMatchMode = "LB" ;Livebase
 		Case 2
-			$sMatchMode = "TB" ;THBully
+			$sMatchMode = "DT" ;Drop Trophy
 	EndSwitch
 	;---
 	Local $AtkLogTxt

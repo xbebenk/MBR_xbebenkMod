@@ -206,7 +206,7 @@ Func ReturnHomeMainPage()
 	Return False
 EndFunc   ;==>ReturnHomeMainPage
 
-Func ReturnfromDropTrophies()
+Func ReturnfromDropTrophies($AttackLog = False)
 	Local $aiSurrenderButton
 	SetDebugLog(" -- ReturnfromDropTrophies -- ")
 	
@@ -239,6 +239,11 @@ Func ReturnfromDropTrophies()
 	For $i = 1 To 5
 		SetDebugLog("Wait for End Fight Scene to appear #" & $i)
 		If IsReturnHomeBattlePage(True) Then
+			If $AttackLog Then
+				If _Sleep(2000) Then Return ;add more delay to wait all resource appear
+				_CaptureRegion()
+				AttackReport()
+			EndIf
 			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			; sometimes 1st click is not closing, so try again
 			_Sleep(2000)

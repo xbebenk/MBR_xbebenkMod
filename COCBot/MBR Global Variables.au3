@@ -1286,7 +1286,7 @@ Global $g_bShareAttackEnable = 0, $g_iShareMinGold = 300000, $g_iShareMinElixir 
 
 ; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
 Global $g_bDropTrophyEnable = False, $g_iDropTrophyMax = 1200, $g_iDropTrophyMin = 800, $g_bDropTrophyUseHeroes = False, $g_iDropTrophyHeroesPriority = 0, _
-		$g_bDropTrophyAtkDead = 0, $g_iDropTrophyArmyMinPct = 70
+		$g_bDropTrophyAtkDead = 0, $g_iDropTrophyArmyMinPct = 70, $g_bDropTrophyZap = True
 
 ; <><><><> Attack Plan / Strategies <><><><>
 ; <<< nothing here >>>
