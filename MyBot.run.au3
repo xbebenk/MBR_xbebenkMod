@@ -1461,7 +1461,7 @@ Func FirstCheckRoutine()
 				While True
 					$g_bRestart = False
 					If Not $g_bRunState Then Return
-					If AttackMain(True) Then 
+					If AttackMain($g_bSkipDT) Then 
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
 						If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
 						ExitLoop
@@ -1531,7 +1531,7 @@ Func FirstCheckRoutine()
 					While True
 						$g_bRestart = False
 						If Not $g_bRunState Then Return
-						If AttackMain(True) Then 
+						If AttackMain($g_bSkipDT) Then 
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 							$b_SuccessAttack = True
 							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
