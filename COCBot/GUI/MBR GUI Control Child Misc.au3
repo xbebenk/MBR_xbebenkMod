@@ -1090,3 +1090,11 @@ Func chkSkipSnowDetection()
 	EndIf
 EndFunc ;==> chkSkipSnowDetection
 
+Func chkSetCCSleep()
+	If GUICtrlRead($g_hChkEnableCCSleep) = $GUI_CHECKED Then
+		$g_bEnableCCSleep = True
+	Else
+		$g_bEnableCCSleep = False
+	EndIf
+EndFunc ;==> chkSetCCSleep
+

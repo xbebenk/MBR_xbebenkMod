@@ -51,7 +51,7 @@ Func TreasuryCollect()
 			$TryCCAutoLocate = False
 		Else
 			$TryCCAutoLocate = True
-			If ClickCC() Then $TryCCAutoLocate = True
+			If ClickCC() Then $TryCCAutoLocate = False
 		EndIf
 	EndIf
 	
@@ -64,6 +64,10 @@ Func TreasuryCollect()
 			SetLog("TryCCAutoLocate Failed, please locate manually", $COLOR_DEBUG)
 			Return
 		EndIf
+	EndIf
+	
+	If $g_bEnableCCSleep Then
+		SetCCSleep()
 	EndIf
 	
 	If Not ClickB("Treasury") Then SetLog("Treasury Button not found!", $COLOR_ERROR)
@@ -147,4 +151,18 @@ Func AutoLocateCC()
 		EndIf
 	EndIf
 	Return $CCFound
+EndFunc
+
+Func SetCCSleep()
+	SetDebugLog("Check: Set Clan Castle")
+	Local $aCCDefense = findButton("CCGuard")
+	If IsArray($aCCDefense) And UBound($aCCDefense, 1) = 2 Then
+		SetLog("Set Clan Castle to Sleep Mode", $COLOR_INFO)
+		ClickP($aCCDefense)
+	Else
+		Local $aCCSleep = findButton("CCSleep")
+		If IsArray($aCCDefense) And UBound($aCCDefense, 1) = 2 Then
+			SetLog("Clan Castle already on Sleep Mode", $COLOR_INFO)
+		EndIf
+	EndIf
 EndFunc

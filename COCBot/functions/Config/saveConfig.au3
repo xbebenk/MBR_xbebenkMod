@@ -512,6 +512,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "CheckAutoUpgradeEarly", $g_bAutoUpgradeEarly)
 	_Ini_Add("other", "CheckCGEarly", $g_bCheckCGEarly)
 	_Ini_Add("other", "ForceSwitchifNoCGEvent", $g_bChkForceSwitchifNoCGEvent)
+	_Ini_Add("other", "EnableCCSleep", $g_bEnableCCSleep)
 	
 	SaveBuilderBaseMod()
 EndFunc   ;==>SaveConfig_600_6

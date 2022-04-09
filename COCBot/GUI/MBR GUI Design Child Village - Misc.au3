@@ -444,7 +444,7 @@ EndFunc   ;==>CreateMiscClanGamesV3SubTab
 Global $g_hChkMMSkipFirstCheckRoutine = 0, $g_hChkMMSkipBB = 0, $g_hChkMMSkipTrain = 0, $g_hChkMMIgnoreIncorrectTroopCombo = 0, $g_hLblFillIncorrectTroopCombo = 0
 Global $g_hCmbFillIncorrectTroopCombo = 0, $g_hChkMMIgnoreIncorrectSpellCombo = 0, $g_hLblFillIncorrectSpellCombo = 0, $g_hCmbFillIncorrectSpellCombo = 0
 Global $g_hChkMMTrainPreviousArmy = 0, $g_hRandomArmyComp = 0, $g_hChkMMSkipWallPlacingOnBB = 0, $g_hChkMMCheckCGEarly = 0, $g_hUpgradeWallEarly = 0
-Global $g_hAutoUpgradeEarly = 0, $g_hChkForceSwitchifNoCGEvent = 0, $g_hDonateEarly = 0, $g_hChkSkipSnowDetection = 0
+Global $g_hAutoUpgradeEarly = 0, $g_hChkForceSwitchifNoCGEvent = 0, $g_hDonateEarly = 0, $g_hChkSkipSnowDetection = 0, $g_hChkEnableCCSleep = 0
 
 Global $g_sCmbFICTroops[7][3] = [ _ 
 								["Barb",	"Barbarians",		1], _
@@ -535,7 +535,7 @@ Func CreateMiscModSubTab()
 	
 	$x = 180 + 55
 	$y = 40
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On FirstCheck"), $x - 10, $y - 15, 210, 155)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On FirstCheck"), $x - 10, $y - 15, 210, 175)
 	$g_hDonateEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckDonateEarly", "Check Donate Early"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnFirstCheckDonateEarly", "Enable Check Donate on First Start"))
 		GUICtrlSetOnEvent(-1, "chkCheckDonateEarly")
@@ -565,6 +565,10 @@ Func CreateMiscModSubTab()
 		$g_hChkSkipSnowDetection = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SkipSnowDetection", "Skip Snow Detection"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnFirstCheckSkipSnow", "Enable Skip Snow Detection." & @CRLF & "Latest update of coc : now obstacle and building not covered by snow"))
 		GUICtrlSetOnEvent(-1, "chkSkipSnowDetection")
+	$y += 22
+		$g_hChkEnableCCSleep = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetCCSleep", "Set Clan Castle to Sleep"), $x, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetCCSleep", "Enable Clan Castle sleep Mode"))
+		GUICtrlSetOnEvent(-1, "chkSetCCSleep")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc ;==>CreateMiscModSubTab
 
