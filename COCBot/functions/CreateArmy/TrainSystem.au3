@@ -54,7 +54,7 @@ Func TrainSystem()
 	checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 EndFunc   ;==>TrainSystem
 
-Func TrainPreviousArmy()
+Func TrainPreviousArmy($bCloseWindow = False)
 	If Not OpenQuickTrainTab(False, "TrainPreviousArmy()") Then Return
 	If _Sleep(750) Then Return
 	If _ColorCheck(_GetPixelColor(777, 177, True), Hex(0xBDE98D, 6), 1) Then
@@ -62,6 +62,7 @@ Func TrainPreviousArmy()
 	Else
 		SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
 	EndIf
+	If $bCloseWindow Then ClickAway()
 EndFunc ;==>TrainPreviousArmy
 
 Func CheckSTroopsIcon()
