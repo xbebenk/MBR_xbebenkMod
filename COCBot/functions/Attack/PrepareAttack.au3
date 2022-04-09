@@ -28,7 +28,7 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 			SaveDebugImage("clean", False, Default, "TH" & $g_iSearchTH & "-") ; make clean snapshot as well
 		EndIf
 	EndIf
-
+	
 	If Not $bRemaining Then ; reset Hero variables before attack if not checking remaining troops
 		$g_bDropKing = False ; reset hero dropped flags
 		$g_bDropQueen = False
@@ -305,7 +305,6 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			EndIf
 			If _Sleep(750) Then Return
 		Else
-			$iTroopIndex = -1 ;set ByRef
 			SetLog("No " & GetTroopName($eCastle) & " Detected, discard Siege use", $COLOR_INFO)
 		EndIf
 	EndIf
