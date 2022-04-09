@@ -228,7 +228,7 @@ Func FindExistingBuilding($bTest = False)
 			If $g_bChkRushTH Then ;if rushth enabled, filter only rushth buildings
 				Local $bRusTHFound = False
 				For $x = 0 To UBound($aRushTH) - 1
-					If StringInStr($UpgradeName[0], $aRushTH[$x][0]) Then 
+					If StringInStr($UpgradeName[0], $aRushTH[$x][0], 1) Then 
 						$bRusTHFound = True ;used for add array
 						$bFoundRusTH = True ;used for sorting array
 						ExitLoop
@@ -236,7 +236,7 @@ Func FindExistingBuilding($bTest = False)
 				Next
 				If Not $bRusTHFound Then ; Optimization: no need to check if already found before
 					For $x = 0 To UBound($aRushTHPriority) - 1
-						If StringInStr($UpgradeName[0], $aRushTHPriority[$x][0]) Then 
+						If StringInStr($UpgradeName[0], $aRushTHPriority[$x][0], 1) Then 
 							$bRusTHFound = True ;used for add array
 							$bFoundRusTH = True ;used for sorting array
 							ExitLoop
