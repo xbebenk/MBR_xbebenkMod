@@ -139,15 +139,17 @@ Func DropTrophy()
 					EndIf
 				EndIf
 				
+				If $g_bDropTrophyZap And $g_bSmartZapEnable Then
+					If aaaaaa() Then ContinueLoop
+				EndIf
+				
 				; Normal Drop Trophy, no check for Dead Base
 				SetLog("Identification of your troops:", $COLOR_INFO)
 				PrepareAttack($DT) ; ==== Troops :checks for type, slot, and quantity ===
 				If $g_bRestart Then Return
 
 				If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
-				If $g_bDropTrophyZap And $g_bSmartZapEnable Then
-					If aaaaaa() Then ExitLoop
-				EndIf
+				
 				; Drop a Hero or Troop
 				If $g_bDropTrophyUseHeroes Then
 					;a) identify heroes avaiables...
@@ -301,11 +303,12 @@ EndFunc   ;==>SetTrophyLoss
 
 Func aaaaaa()
 	If checkDeadBaseSuperNew() Then
-		PrepareAttack($DB)
-		Local $SbarbFound = False, $iIndex = 0
+		PrepareAttack($DT)
+		Local $SbarbFound = False, $iIndex = 0, $iSBarbCount = 0
 		For $i = 0 To UBound($g_avAttackTroops) - 1 
 			If $g_avAttackTroops[$i][0] = $eSBarb Then 
 				$SbarbFound = True
+				$iSBarbCount = $g_avAttackTroops[$i][1] ;amount of sbarb
 				$iIndex = $i
 			EndIf
 			If $SbarbFound Then ExitLoop
@@ -329,8 +332,10 @@ Func aaaaaa()
 			Next
 			SelectDropTroop($iIndex)
 			For $j = 0 To UBound($aDP) - 1
+				If $iSBarbCount < 1 Then ExitLoop
 				Click($aDP[$j][1], $aDP[$j][2], 2, 0, "#0181") ;Drop one troop
-				SetLog("Deploying 2 " & $g_asTroopNames[$g_avAttackTroops[$iIndex][0]], $COLOR_INFO)
+				SetLog("Deploying 2 " & $g_asTroopNames[$g_avAttackTroops[$iIndex][0]] & " on [" & $aDP[$j][1] & "," & $aDP[$j][2] & "]", $COLOR_SUCCESS)
+				$iSBarbCount -= 2
 			Next
 			_Sleep(15000) ;just add delay after deploy SBarb
 		EndIf
@@ -348,7 +353,12 @@ Func aaaaaa()
 		If $ZapFound Then 
 			SmartZap()
 		EndIf
+		
 		ReturnfromDropTrophies(True)
+		If OpenArmyOverview() Then
+			TrainPreviousArmy(True)
+			_Sleep(500)
+		EndIf
 		Return True
 	EndIf
 	Return False
