@@ -115,25 +115,16 @@ Func AutoLocateCC()
 	Local $CCFound = False
 	SetLog("Try to Auto Locate Clan Castle", $COLOR_INFO)
 	ClickAway()
-	Local $TreasuryCoord = decodeSingleCoord(findImage("TreasuryFull", $g_sImgTreasuryFull & "\Treasury*", GetDiamondFromRect("77,70(700,510)"), 1, True))
-	If IsArray($TreasuryCoord) And UBound($TreasuryCoord) = 2 Then
-		Click($TreasuryCoord[0], $TreasuryCoord[1] + 30)
-		If _Sleep(500) Then Return
-		Local $BuildingInfo = BuildingInfo(290, 494)
-		If $BuildingInfo[1] = "Clan Castle" Then 
-			$g_aiClanCastlePos[0] = $TreasuryCoord[0]
-			$g_aiClanCastlePos[1] = $TreasuryCoord[1] + 30
-			SetLog("Found Clan Castle Lvl " & $BuildingInfo[2] & ", save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
-			$CCFound = True
-		EndIf
-	EndIf
 	
 	If Not $CCFound Then 
 		Local $ClanCastleCoord = QuickMIS("CNX", $g_sImgClanCastle, 77,70,800,580)
-		;Local $ClanCastleCoord = decodeSingleCoord(findImage("ClanCastle", $g_sImgClanCastle & "\ClanCastle*", GetDiamondFromRect("77,70(700,510)"), 1, True))
 		If IsArray($ClanCastleCoord) And UBound($ClanCastleCoord) > 0 Then
 			For $i = 0 To UBound($ClanCastleCoord) - 1
-				Click($ClanCastleCoord[$i][1] + 10, $ClanCastleCoord[$i][2] + 10)
+				If $ClanCastleCoord[$i][0] = "TreasuryFull" Or $ClanCastleCoord[$i][0] = "Full" Then 
+					Click($ClanCastleCoord[$i][1], $ClanCastleCoord[$i][2] + 30)
+				Else
+					Click($ClanCastleCoord[$i][1] + 10, $ClanCastleCoord[$i][2] + 10)
+				EndIf
 				If _Sleep(500) Then Return
 				Local $BuildingInfo = BuildingInfo(290, 494)
 				If $BuildingInfo[1] = "Clan Castle" Then 
