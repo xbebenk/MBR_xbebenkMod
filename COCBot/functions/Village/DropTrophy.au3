@@ -322,7 +322,7 @@ Func aaaaaa()
 					Local $DP = StringSplit($all[$x][5], "|", $STR_NOCOUNT)
 					SetDebugLog(_ArrayToString($DP))
 					If IsArray($DP) And UBound($DP) > 0 Then
-						Local $iRandomXY = Round(Random(0, 4))
+						Local $iRandomXY = Round(Random(0, 4)) ;pick random point from nearpoint list
 						Local $tmp = StringSplit($DP[$iRandomXY], ",", $STR_NOCOUNT)
 						_ArrayAdd($aDP, $all[$x][4] & "|" & $tmp[0] & "|" & $tmp[1])
 					Else
@@ -331,10 +331,12 @@ Func aaaaaa()
 				EndIf								
 			Next
 			SelectDropTroop($iIndex)
+			_ArraySort($aDP) ;sort by side
 			For $j = 0 To UBound($aDP) - 1
 				If $iSBarbCount < 1 Then ExitLoop
-				Click($aDP[$j][1], $aDP[$j][2], 2, 0, "#0181") ;Drop one troop
-				SetLog("Deploying 2 " & $g_asTroopNames[$g_avAttackTroops[$iIndex][0]] & " on [" & $aDP[$j][1] & "," & $aDP[$j][2] & "]", $COLOR_SUCCESS)
+				Click($aDP[$j][1], $aDP[$j][2], 2, 0, "#0181") ;Drop SBarb
+				SetLog("Deploying 2 " & $g_asTroopNames[$g_avAttackTroops[$iIndex][0]] & " on " & $aDP[$j][0] & " [" & $aDP[$j][1] & "," & $aDP[$j][2] & "]", $COLOR_SUCCESS)
+				_Sleep(500) ;add small delay
 				$iSBarbCount -= 2
 			Next
 			_Sleep(15000) ;just add delay after deploy SBarb
