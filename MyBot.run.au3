@@ -1402,8 +1402,9 @@ Func FirstCheckRoutine()
 				SetLog("Something maybe wrong, exiting to MainLoop!", $COLOR_INFO)
 				ExitLoop
 			EndIf
-			SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
+			
 			If _ClanGames(False, $g_bChkForceBBAttackOnClanGames) Then 
+				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
 				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 					GotoBBTodoCG()
@@ -1460,7 +1461,7 @@ Func FirstCheckRoutine()
 				While True
 					$g_bRestart = False
 					If Not $g_bRunState Then Return
-					If AttackMain(True) Then 
+					If AttackMain($g_bSkipDT) Then 
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
 						If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
 						ExitLoop
@@ -1530,7 +1531,7 @@ Func FirstCheckRoutine()
 					While True
 						$g_bRestart = False
 						If Not $g_bRunState Then Return
-						If AttackMain(True) Then 
+						If AttackMain($g_bSkipDT) Then 
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 							$b_SuccessAttack = True
 							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 

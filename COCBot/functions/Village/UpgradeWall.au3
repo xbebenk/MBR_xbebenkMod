@@ -385,7 +385,7 @@ Func ClickDragFindWallUpgrade()
 		If _ColorCheck(_GetPixelColor(350, 73, True), "fdfefd", 20) Then
 			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
 			If _Sleep(1000) Then Return
-
+			
 			If QuickMIS("BC1", $g_sImgAUpgradeWall, 180, 80, 300, 369, True) Then
 				If _Sleep(2000) Then Return
 				$aWallCoord = GetWallPos()
@@ -394,11 +394,11 @@ Func ClickDragFindWallUpgrade()
 				EndIf
 			EndIf
 
-			$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",350, 335, 150, 30, True)
+			$TmpUpgradeCost = getMostBottomCost()
 			SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 			SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
 			If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
-			If $sameCost > 3 Then ExitLoop
+			If $sameCost > 2 Then ExitLoop
 			$UpgradeCost = $TmpUpgradeCost
 		EndIf
 		If _ColorCheck(_GetPixelColor(350, 73, True), "fdfefd", 20) Then ;check upgrade window border

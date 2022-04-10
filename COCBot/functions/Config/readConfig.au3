@@ -577,6 +577,8 @@ Func ReadConfig_600_6()
 	IniReadS($g_bAutoUpgradeEarly, $g_sProfileConfigPath, "other", "CheckAutoUpgradeEarly", True, "Bool")
 	IniReadS($g_bCheckCGEarly, $g_sProfileConfigPath, "other", "CheckCGEarly", True, "Bool")
 	IniReadS($g_bChkForceSwitchifNoCGEvent, $g_sProfileConfigPath, "other", "ForceSwitchifNoCGEvent", True, "Bool")
+	IniReadS($g_bEnableCCSleep, $g_sProfileConfigPath, "other", "EnableCCSleep", False, "Bool")
+	IniReadS($g_bSkipDT, $g_sProfileConfigPath, "other", "SkipDT", False, "Bool")
 
 	ReadConfigBuilderBaseMod()
 EndFunc   ;==>ReadConfig_600_6
@@ -920,9 +922,11 @@ Func ReadConfig_600_14()
 	IniReadS($g_iLaboratoryDElixirCost, $g_sProfileBuildingPath, "upgrade", "upgradelabdelexircost", 0, "int")
 	IniReadS($g_bAutoStarLabUpgradeEnable, $g_sProfileBuildingPath, "upgrade", "upgradestartroops", False, "Bool")
 	IniReadS($g_iCmbStarLaboratory, $g_sProfileBuildingPath, "upgrade", "upgradestartroopname", 0, "int")
-
+	IniReadS($g_bUseLabPotion, $g_sProfileBuildingPath, "upgrade", "uselabpotion", True, "Bool")
+	
 	;xbenk
 	IniReadS($g_bLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "upgradeorder", False, "Bool")
+	IniReadS($g_bUpgradeAnyTroops, $g_sProfileBuildingPath, "upgrade", "upgradeanytroops", False, "Bool")
 	Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "upgradeorderlist", "-1| -1| -1| -1| -1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 		$g_aCmbLabUpgradeOrder[$i] = $str[$i]

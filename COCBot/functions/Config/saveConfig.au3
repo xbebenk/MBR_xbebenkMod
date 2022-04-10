@@ -129,9 +129,11 @@ Func SaveBuildingConfig()
 	_Ini_Add("upgrade", "upgradelabdelexircost", $g_iLaboratoryDElixirCost)
 	_Ini_Add("upgrade", "upgradestartroops", $g_bAutoStarLabUpgradeEnable ? 1 : 0)
 	_Ini_Add("upgrade", "upgradestartroopname", $g_iCmbStarLaboratory)
+	_Ini_Add("upgrade", "uselabpotion", $g_bUseLabPotion)
 
 	;xbenk
 	_Ini_Add("upgrade", "upgradeorder", $g_bLabUpgradeOrderEnable ? 1 : 0)
+	_Ini_Add("upgrade", "upgradeanytroops", $g_bUpgradeAnyTroops ? 1 : 0)
 	Local $string = ""
 	For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 		$string &= $g_aCmbLabUpgradeOrder[$i] & "|"
@@ -510,6 +512,8 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "CheckAutoUpgradeEarly", $g_bAutoUpgradeEarly)
 	_Ini_Add("other", "CheckCGEarly", $g_bCheckCGEarly)
 	_Ini_Add("other", "ForceSwitchifNoCGEvent", $g_bChkForceSwitchifNoCGEvent)
+	_Ini_Add("other", "EnableCCSleep", $g_bEnableCCSleep)
+	_Ini_Add("other", "SkipDT", $g_bSkipDT)
 	
 	SaveBuilderBaseMod()
 EndFunc   ;==>SaveConfig_600_6

@@ -1090,3 +1090,21 @@ Func chkSkipSnowDetection()
 	EndIf
 EndFunc ;==> chkSkipSnowDetection
 
+Func chkSkipDropTrophyOnFirstStart()
+	If GUICtrlRead($g_hChkSkipDT) = $GUI_CHECKED Then
+		$g_bSkipDT = True
+	Else
+		$g_bSkipDT = False
+	EndIf
+EndFunc ;==> chkSkipDropTrophyOnFirstStart
+
+Func chkSetCCSleep()
+	If GUICtrlRead($g_hChkEnableCCSleep) = $GUI_CHECKED Then
+		$g_bEnableCCSleep = True
+	Else
+		$g_bEnableCCSleep = False
+	EndIf
+EndFunc ;==> chkSetCCSleep
+
+
+

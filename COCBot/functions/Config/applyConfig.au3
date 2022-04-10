@@ -440,6 +440,8 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hAutoUpgradeEarly, $g_bAutoUpgradeEarly ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMCheckCGEarly, $g_bCheckCGEarly ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkForceSwitchifNoCGEvent, $g_bChkForceSwitchifNoCGEvent ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkEnableCCSleep, $g_bEnableCCSleep ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSkipDT, $g_bSkipDT ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 		Case "Save"
 			$g_bChkBotStop = (GUICtrlRead($g_hChkBotStop) = $GUI_CHECKED)
@@ -567,6 +569,8 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bAutoUpgradeEarly = (GUICtrlRead($g_hAutoUpgradeEarly) = $GUI_CHECKED)
 			$g_bCheckCGEarly = (GUICtrlRead($g_hChkMMCheckCGEarly) = $GUI_CHECKED)
 			$g_bChkForceSwitchifNoCGEvent = (GUICtrlRead($g_hChkForceSwitchifNoCGEvent) = $GUI_CHECKED)
+			$g_bEnableCCSleep = (GUICtrlRead($g_hChkEnableCCSleep) = $GUI_CHECKED)
+			$g_bSkipDT = (GUICtrlRead($g_hChkSkipDT) = $GUI_CHECKED)
 
 	EndSwitch
 	ApplyBuilderBaseMod($TypeReadSave)
@@ -885,11 +889,13 @@ Func ApplyConfig_600_14($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			GUICtrlSetState($g_hChkAutoLabUpgrades, $g_bAutoLabUpgradeEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hUseLabPotion, $g_bUseLabPotion ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbLaboratory, $g_iCmbLaboratory)
 			_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
 			chkLab()
 
 			GUICtrlSetState($g_hChkLabUpgradeOrder, $g_bLabUpgradeOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hUpgradeAnyTroops, $g_bUpgradeAnyTroops ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbLabUpgradeOrder[$i], $g_aCmbLabUpgradeOrder[$i])
 			Next
@@ -906,11 +912,13 @@ Func ApplyConfig_600_14($TypeReadSave)
 			chkSLabUpgradeOrder()
 		Case "Save"
 			$g_bAutoLabUpgradeEnable = (GUICtrlRead($g_hChkAutoLabUpgrades) = $GUI_CHECKED)
+			$g_bUseLabPotion = (GUICtrlRead($g_hUseLabPotion) = $GUI_CHECKED)
 			$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
 			$g_bAutoStarLabUpgradeEnable = (GUICtrlRead($g_hChkAutoStarLabUpgrades) = $GUI_CHECKED)
 			$g_iCmbStarLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbStarLaboratory)
 
 			$g_bLabUpgradeOrderEnable = (GUICtrlRead($g_hChkLabUpgradeOrder) = $GUI_CHECKED)
+			$g_bUpgradeAnyTroops = (GUICtrlRead($g_hUpgradeAnyTroops) = $GUI_CHECKED)
 			For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
 				$g_aCmbLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i])
 			Next

@@ -176,12 +176,15 @@ Func AttackReport()
 	;---
 	Local $sMatchMode
 	Switch $g_iMatchMode
-		Case 0
+		Case $DB
 			$sMatchMode = "DB" ;Deadbase
-		Case 1
+		Case $LB
 			$sMatchMode = "LB" ;Livebase
-		Case 2
-			$sMatchMode = "TB" ;THBully
+		Case $TB
+			$sMatchMode = "TB" ;TH Bully
+		Case $DT
+			$sMatchMode = "DT" ;Drop Trophy
+			$g_iMatchMode = $DB
 	EndSwitch
 	;---
 	Local $AtkLogTxt

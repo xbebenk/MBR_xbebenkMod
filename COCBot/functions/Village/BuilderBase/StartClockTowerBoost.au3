@@ -37,7 +37,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 		If _Sleep($DELAYCOLLECT2) Then Return
 		
 		ClickAway("Left")
-		AndroidAdbScript("ZoomOut")
+		;AndroidAdbScript("ZoomOut")
 
 		Local $sCTCoords, $aCTCoords, $aCTBoost
 		$sCTCoords = findImage("ClockTowerAvailable", $g_sImgStartCTBoost, "FV", 1, True) ; Search for Clock Tower

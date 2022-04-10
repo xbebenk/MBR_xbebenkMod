@@ -206,12 +206,18 @@ EndFunc   ;==>btnResetUpgrade
 Func chkLab()
 	If GUICtrlRead($g_hChkAutoLabUpgrades) = $GUI_CHECKED Then
 		$g_bAutoLabUpgradeEnable = True
+		For $i = $g_hLblNextUpgrade To $g_hUpgradeAnyTroops
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
 		GUICtrlSetState($g_hPicLabUpgrade, $GUI_SHOW)
 		GUICtrlSetState($g_hLblNextUpgrade, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbLaboratory, $GUI_ENABLE)
 		_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
 	Else
 		$g_bAutoLabUpgradeEnable = False
+		For $i = $g_hLblNextUpgrade To $g_hUpgradeAnyTroops
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
 		GUICtrlSetState($g_hPicLabUpgrade, $GUI_HIDE)
 		GUICtrlSetState($g_hLblNextUpgrade, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbLaboratory, $GUI_DISABLE)
@@ -231,6 +237,7 @@ Func chkLabUpgradeOrder()
 		GUICtrlSetState($g_hCmbLaboratory, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnRemoveLabUpgradeOrder, $GUI_ENABLE)
 		GUICtrlSetState($g_hBtnSetLabUpgradeOrder, $GUI_ENABLE)
+		GUICtrlSetState($g_hUpgradeAnyTroops, $GUI_ENABLE)
 		For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
 			GUICtrlSetState($g_ahCmbLabUpgradeOrder[$i], $GUI_ENABLE)
 		Next
@@ -239,6 +246,7 @@ Func chkLabUpgradeOrder()
 		GUICtrlSetState($g_hCmbLaboratory, $GUI_ENABLE)
 		GUICtrlSetState($g_hBtnRemoveLabUpgradeOrder, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnSetLabUpgradeOrder, $GUI_DISABLE)
+		GUICtrlSetState($g_hUpgradeAnyTroops, $GUI_DISABLE)
 		For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
 			GUICtrlSetState($g_ahCmbLabUpgradeOrder[$i], $GUI_DISABLE)
 		Next

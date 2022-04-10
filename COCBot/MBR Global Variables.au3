@@ -616,7 +616,7 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 ; Attack types
 Global Enum $DB, $LB, $TB, $DT ; DeadBase, ActiveBase, TownhallBully, DropTrophy
 Global Const $g_iModeCount = 3
-Global $g_iMatchMode = 0 ; 0 Dead / 1 Live / 2 TH Bully / 2 Drop Trophy
+Global $g_iMatchMode = 0 ; 0 Dead / 1 Live / 2 TH Bully / 3 Drop Trophy
 Global Const $g_asModeText[4] = ["Dead Base", "Live Base", "TH Bully", "Drop Trophy"]
 
 ; Troops
@@ -953,7 +953,7 @@ Global $g_iDonateSkipNearFullPercent = 90
 ; Lab
 Global $g_bAutoLabUpgradeEnable = False, $g_iCmbLaboratory = 0, $g_bAutoStarLabUpgradeEnable = False, $g_iCmbStarLaboratory = 0
 
-Global $g_hChkLabUpgradeOrder = 0, $g_hBtnRemoveLabUpgradeOrder = 0, $g_hBtnSetLabUpgradeOrder = 0
+Global $g_hChkLabUpgradeOrder = 0, $g_hBtnRemoveLabUpgradeOrder = 0, $g_hBtnSetLabUpgradeOrder = 0, $g_hUpgradeAnyTroops = 0
 Global $g_hChkSLabUpgradeOrder = 0, $g_hBtnRemoveSLabUpgradeOrder = 0, $g_hBtnSetSLabUpgradeOrder = 0
 Global $g_bLabUpgradeOrderEnable = False
 Global $g_bSLabUpgradeOrderEnable = False
@@ -1286,7 +1286,7 @@ Global $g_bShareAttackEnable = 0, $g_iShareMinGold = 300000, $g_iShareMinElixir 
 
 ; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
 Global $g_bDropTrophyEnable = False, $g_iDropTrophyMax = 1200, $g_iDropTrophyMin = 800, $g_bDropTrophyUseHeroes = False, $g_iDropTrophyHeroesPriority = 0, _
-		$g_bDropTrophyAtkDead = 0, $g_iDropTrophyArmyMinPct = 70
+		$g_bDropTrophyAtkDead = 0, $g_iDropTrophyArmyMinPct = 70, $g_bDropTrophyZap = True
 
 ; <><><><> Attack Plan / Strategies <><><><>
 ; <<< nothing here >>>
@@ -1420,7 +1420,7 @@ Global $g_bFullArmySpells = False ; true when $g_iTotalTrainSpaceSpell = $iTotal
 Global $g_CurrentCampUtilization = 0, $g_iTotalCampSpace = 0
 
 ; Upgrading - Lab
-Global $g_iLaboratoryElixirCost = 0, $g_iLaboratoryDElixirCost = 0
+Global $g_iLaboratoryElixirCost = 0, $g_iLaboratoryDElixirCost = 0, $g_bUseLabPotion = False, $g_bUpgradeAnyTroops = False
 Global $g_sLabUpgradeTime = ""
 Global $g_sStarLabUpgradeTime = ""
 
@@ -1535,10 +1535,10 @@ Global $g_iImglocTHLevel = 0
 Global $g_aiTownHallDetails[4] = [-1, -1, -1, -1] ; [LocX, LocY, BldgLvl, Quantity]
 
 ; Attack
-Global Const $g_aaiTopLeftDropPoints[5][2] = [[66, 299], [174, 210], [240, 169], [303, 127], [390, 55]]
-Global Const $g_aaiTopRightDropPoints[5][2] = [[466, 60], [556, 120], [622, 170], [684, 220], [775, 285]]
-Global Const $g_aaiBottomLeftDropPoints[5][2] = [[50, 326], [100, 359], [155, 400], [185, 430], [221, 450]]
-Global Const $g_aaiBottomRightDropPoints[5][2] = [[466, 600], [554, 555], [615, 510], [678, 460], [765, 394]]
+Global Const $g_aaiTopLeftDropPoints[5][2] = [[51, 288], [129, 230], [183, 193], [305, 104], [400, 33]]
+Global Const $g_aaiTopRightDropPoints[5][2] = [[482, 50], [590, 131], [710, 224], [735, 241], [805, 296]]
+Global Const $g_aaiBottomLeftDropPoints[5][2] = [[73, 330], [120, 365], [185, 420], [234, 458], [262, 480]]
+Global Const $g_aaiBottomRightDropPoints[5][2] = [[510, 547], [605, 479], [680, 420], [720, 390], [770, 335]]
 Global Const $g_aaiEdgeDropPoints[4] = [$g_aaiBottomRightDropPoints, $g_aaiTopLeftDropPoints, $g_aaiBottomLeftDropPoints, $g_aaiTopRightDropPoints]
 Global Const $g_aiUseAllTroops[$eArmyCount - 1] = [$eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eSDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, $eYeti, $eRDrag, $eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt, $eKing, $eQueen, $eWarden, $eChampion, $eCastle, $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $eISpell, $ePSpell, $eESpell, $eHaSpell, $eBtSpell, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF]
 Global Const $g_aiUseBarracks[42] = [$eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eSDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, $eYeti, $eRDrag, $eKing, $eQueen, $eWarden, $eChampion , $eCastle, $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $eISpell, $eISpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell]
@@ -1661,7 +1661,7 @@ Global $g_iTroopsReceived = 0
 Global $g_iDonationWindowY = 0
 
 ; Drop trophy
-Global $g_avDTtroopsToBeUsed[8][2] = [["Barb", 0], ["Arch", 0], ["Giant", 0], ["Wall", 0], ["Gobl", 0], ["Mini", 0], ["Ball", 0], ["Wiza", 0]] ; DT available troops [type, qty]
+Global $g_avDTtroopsToBeUsed[10][2] = [["Barb", 0], ["SBarb", 0], ["Arch", 0], ["Giant", 0], ["Wall", 0], ["Gobl", 0], ["Mini", 0], ["Ball", 0], ["Wiza", 0], ["SMini", 0]] ; DT available troops [type, qty]
 
 ; Obstacles
 Global $g_bMinorObstacle = False
@@ -1696,10 +1696,10 @@ Global $g_iLSpellLevel = 1
 Global $g_iESpellLevel = 1
 Global Const $g_fDarkStealFactor = 0.75
 Global Const $g_fDarkFillLevel = 0.70
-; Array to hold Total HP of DE Drills at each level (1-8)
-Global Const $g_aDrillLevelHP[8] = [800, 860, 920, 980, 1060, 1160, 1280, 1380]
-; Array to hold Total Amount of DE available from Drill at each level (1-8)
-Global Const $g_aDrillLevelTotal[8] = [160, 300, 540, 840, 1280, 1800, 2400, 3000]
+; Array to hold Total HP of DE Drills at each level (1-9)
+Global Const $g_aDrillLevelHP[9] = [800, 860, 920, 980, 1060, 1160, 1280, 1380, 1480]
+; Array to hold Total Amount of DE available from Drill at each level (1-9)
+Global Const $g_aDrillLevelTotal[9] = [160, 300, 540, 840, 1280, 1800, 2400, 3000, 3600]
 ; Array to hold Total Damage of Lightning Spell at each level (1-9)
 Global Const $g_aLSpellDmg[9] = [150, 180, 210, 240, 270, 320, 400, 480, 560]
 ; Array to hold Total Damage of Earthquake Spell at each level (1-5)
@@ -1946,6 +1946,7 @@ Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = Fa
 Global $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False
 Global $g_bTrainPreviousArmy = False, $g_bAlwaysDropHero = True, $g_bSkipSnowDetection = False
 Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
+Global $g_bEnableCCSleep = False, $g_bSkipDT = False
 
 ;Builder Base
 

@@ -119,12 +119,11 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		Local $ExistingBuilding = FindExistingBuilding()
 		If IsArray($ExistingBuilding) And UBound($ExistingBuilding) > 0 Then
 			For $i = 0 To UBound($ExistingBuilding) - 1
-				SetLog($ExistingBuilding[$i][0] & " Cost:" & $ExistingBuilding[$i][3] & " Building:" & $ExistingBuilding[$i][4], $COLOR_INFO)
+				SetLog($ExistingBuilding[$i][0] & " Cost:" & $ExistingBuilding[$i][5] & " Building:" & $ExistingBuilding[$i][3], $COLOR_INFO)
 			Next
 			
 			For $i = 0 To UBound($ExistingBuilding) - 1
-				If $ExistingBuilding[$i][3] = "0" Then ContinueLoop
-				If CheckResourceForDoUpgrade($ExistingBuilding[$i][4], $ExistingBuilding[$i][3], $ExistingBuilding[$i][0]) Then 
+				If CheckResourceForDoUpgrade($ExistingBuilding[$i][3], $ExistingBuilding[$i][5], $ExistingBuilding[$i][0]) Then 
 					If Not $g_bRunState Then Return
 					Click($ExistingBuilding[$i][1], $ExistingBuilding[$i][2])
 					If _Sleep(1000) Then Return
@@ -212,45 +211,107 @@ Func AutoUpgradeSearchExisting($bTest = False)
 EndFunc
 
 Func FindExistingBuilding($bTest = False)
-	Local $aTmpCoord, $aBuilding[0][7], $UpgradeCost, $UpgradeName
-	Local $aRushTHPriority[4][2] = [["Laboratory", 15], ["Storage", 13], ["Army", 12], ["Giga", 11]]
-	Local $aHeroes[4][2] = [["King", 20], ["Queen", 20], ["Warden", 20], ["Champion", 20]]
+	Local $ElixMultiply = 1, $GoldMultiply = 1 ;used for multiply score
+	Local $Gold = getResourcesMainScreen(701, 23)
+	Local $Elix = getResourcesMainScreen(701, 74)
+	If $Gold > $Elix Then $GoldMultiply += 1
+	If $Elix > $Gold Then $ElixMultiply += 1
+	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
+	Local $aRushTHPriority[5][2] = [["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10]]
+	Local $aRushTH[8][2] = [["Barracks", 8], ["Castle", 10], ["Spell", 9], ["WorkShop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
+	Local $aHeroes[4] = ["King", "Queen", "Warden", "Champion"]
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390) 
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
-			If $g_bChkRushTH Then 
-				If Not QuickMIS("BC1", $g_sImgAUpgradeRushTH, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then 
-					SetDebugLog("RushTH enabled, Skip this upgrade")
-					ContinueLoop
+			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount 
+			If $g_bChkRushTH Then ;if rushth enabled, filter only rushth buildings
+				Local $bRusTHFound = False
+				For $x = 0 To UBound($aRushTH) - 1
+					If StringInStr($UpgradeName[0], $aRushTH[$x][0], 1) Then 
+						$bRusTHFound = True ;used for add array
+						$bFoundRusTH = True ;used for sorting array
+						ExitLoop
+					EndIf
+				Next
+				If Not $bRusTHFound Then ; Optimization: no need to check if already found before
+					For $x = 0 To UBound($aRushTHPriority) - 1
+						If StringInStr($UpgradeName[0], $aRushTHPriority[$x][0], 1) Then 
+							$bRusTHFound = True ;used for add array
+							$bFoundRusTH = True ;used for sorting array
+							ExitLoop
+						EndIf
+					Next
 				EndIf
+				If Not $bRusTHFound Then ContinueLoop ;skip this building, RushTh enabled but this building is not RushTH building
 			EndIf
-			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]))
+			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
 		Next
 		
-		For $j = 0 To UBound($aBuilding) -1
+		For $j = 0 To UBound($aBuilding) -1	
 			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $aBuilding[$j][1], $aBuilding[$j][2] - 10, 120, 30, True)
-			$UpgradeName = getBuildingName(200, $aBuilding[$j][2] - 12) ;get upgrade name and amount 
-			$aBuilding[$j][3] = Number($UpgradeCost)
-			$aBuilding[$j][4] = $UpgradeName[0]
-			$aBuilding[$j][5] = $UpgradeName[1]
-			If $g_bChkRushTH Then ;set score for RushTH Building
+			$aBuilding[$j][5] = Number($UpgradeCost)
+			Local $BuildingName = $aBuilding[$j][3]
+			If $g_bChkRushTH Then ;set score for RushTHPriority Building
 				For $k = 0 To UBound($aRushTHPriority) - 1
-					If StringInStr($UpgradeName[0], $aRushTHPriority[$k][0]) Then $aBuilding[$j][6] = $aRushTHPriority[$k][1]
+					If StringInStr($BuildingName, $aRushTHPriority[$k][0]) Then
+						Switch $aBuilding[$j][0]
+							Case "Gold"
+								$aBuilding[$j][6] = $aRushTHPriority[$k][1] * $GoldMultiply
+							Case "Elix"
+								$aBuilding[$j][6] = $aRushTHPriority[$k][1] * $ElixMultiply
+							Case "DE"
+								$aBuilding[$j][6] = $aRushTHPriority[$k][1]
+						EndSwitch
+						$aBuilding[$j][7] = "Priority"
+					EndIf
 				Next
+				For $k = 0 To UBound($aRushTH) - 1
+					If StringInStr($BuildingName, $aRushTH[$k][0]) Then 
+						Switch $aBuilding[$j][0]
+							Case "Gold"
+								$aBuilding[$j][6] = $aRushTH[$k][1] * $GoldMultiply
+							Case "Elix"
+								$aBuilding[$j][6] = $aRushTH[$k][1] * $ElixMultiply
+							Case "DE"
+								$aBuilding[$j][6] = $aRushTH[$k][1]
+						EndSwitch
+						$aBuilding[$j][7] = "RushTH"
+					EndIf
+				Next
+				If StringInStr($BuildingName, "Army") And $g_bAutoUpgradeWallsEnable Then 
+					If $g_iTownHallLevel = "13" Then 
+						SetLog("Set Save Elixir on Wall upgrade = 16000000", $COLOR_DEBUG)
+						$g_iUpgradeWallMinElixir = 16000000 ;rushth enabled, set min elixir save on wall upgrade to 16M so armycamp can be upgraded
+						applyConfig()
+						saveConfig()
+					EndIf
+				EndIf
+				If StringInStr($BuildingName, "Giga") And $g_bAutoUpgradeWallsEnable Then 
+					If $g_iTownHallLevel = "13" Then 
+						SetLog("Set Save Gold on Wall upgrade = " & $UpgradeCost, $COLOR_DEBUG)
+						$g_iUpgradeWallMinGold = $UpgradeCost ;rushth enabled, set min gold save on wall upgrade same as upgradecost, so giga can be upgraded
+						applyConfig()
+						saveConfig()
+					EndIf
+				EndIf
 			EndIf
 			If $g_bHeroPriority Then ;set score = 20 for Heroes, so if there is heroes found for upgrade it will attempt first
 				For $l = 0 To UBound($aHeroes) - 1
-					If StringInStr($UpgradeName[0], $aHeroes[$l][0]) Then $aBuilding[$j][6] = $aHeroes[$l][1]
+					If StringInStr($BuildingName, $aHeroes[$l]) Then 
+						SetDebugLog("Enabled HeroPriority = " & String($g_bHeroPriority) & ", Set Hero High Priority")
+						$aBuilding[$j][6] = 20
+					EndIf
 				Next		
 			EndIf
-			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][0] & ", Cost=" & $aBuilding[$j][3] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
+			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
-	If $g_bChkRushTH Or $g_bHeroPriority Then
+	
+	If ($g_bChkRushTH And $bFoundRusTH) Or $g_bHeroPriority Then
 		_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
 	Else
-		_ArraySort($aBuilding, 0, 0, 0, 3) ;sort by cost
+		_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
 	EndIf
 	Return $aBuilding
 EndFunc
@@ -773,7 +834,22 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
 			For $j = 0 To UBound($NewCoord) - 1
 				SetLog("New:" & $NewCoord[$j][4] & ", cost:" & $NewCoord[$j][6] & " " & $NewCoord[$j][0], $COLOR_INFO)
+				If $g_bChkRushTH Then ;find new building while searching wall, if found and resource enough, set min wall save value
+					If $NewCoord[$j][0] = "Gold" And Number($g_iUpgradeWallMinGold) < Number($NewCoord[$j][6]) And $g_bAutoUpgradeWallsEnable Then 
+						$g_iUpgradeWallMinGold = $NewCoord[$j][6] ;set min wall save gold same as new building cost, so next time this building can be placed
+						SetLog("Set Save Gold on Wall upgrade = " & $g_iUpgradeWallMinGold, $COLOR_DEBUG)
+						applyConfig()
+						saveConfig()
+					EndIf
+					If $NewCoord[$j][0] = "Elix" And Number($g_iUpgradeWallMinElixir) < Number($NewCoord[$j][6]) And $g_bAutoUpgradeWallsEnable Then 
+						$g_iUpgradeWallMinElixir = $NewCoord[$j][6] ;set min wall save elix same as new building cost, so next time this building can be placed
+						SetLog("Set Save Elix on Wall upgrade = " & $g_iUpgradeWallMinElixir, $COLOR_DEBUG)
+						applyConfig()
+						saveConfig()
+					EndIf
+				EndIf
 			Next
+			
 			$isWall = False ;reset var 
 			For $j = 0 To UBound($NewCoord) - 1
 				If Not $g_bRunState Then Return
@@ -809,38 +885,30 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("New Building Not Found", $COLOR_INFO)
 		EndIf
 		
+		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
+			SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
+			Local $aResult = FindExistingBuilding()
+			If isArray($aResult) And UBound($aResult) > 0 Then
+				For $y = 0 To UBound($aResult) - 1
+					If $aResult[$y][7] = "Priority" Then 
+						SetLog("RushTHPriority: " & $aResult[$y][3] & ", Cost: " & $aResult[$y][5], $COLOR_INFO)
+					EndIf
+				Next
+				For $y = 0 To UBound($aResult) - 1
+					If $aResult[$y][7] = "Priority" Then 
+						If CheckResourceForDoUpgrade($aResult[$y][3], $aResult[$y][5], $aResult[$y][0]) Then ;name, cost, type
+							Click($aResult[$y][1], $aResult[$y][2])
+							If _Sleep(1000) Then Return
+							If DoUpgrade($bTest) Then ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
+						Else
+							SetDebugLog("Skip this building, not enough resource", $COLOR_WARNING)
+						EndIf
+					EndIf
+				Next
+			EndIf
+			If Not $g_bRunState Then Return
+		EndIf
 		
-		
-		;If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno
-		;	SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
-		;	Local $aResult = FindRushTHPriority()
-		;	If isArray($aResult) And UBound($aResult) > 0 Then
-		;		_ArraySort($aResult, 0, 0, 0, 3)
-		;		For $y = 0 To UBound($aResult) - 1
-		;			SetDebugLog("RushTHPriority: " & $aResult[$y][0] & ", Cost: " & $aResult[$y][3] & " Coord [" & $aResult[$y][1] & "," & $aResult[$y][2] & "]", $COLOR_INFO)
-		;		Next
-		;		For $y = 0 To UBound($aResult) - 1
-		;			If $aResult[$y][3] > 100 Then ;filter only upgrade with readable upgrade cost
-		;				Click($aResult[$y][1], $aResult[$y][2])
-		;				$sameCost = 0 ;reset here as we found building with cost readable
-		;				If _Sleep(1000) Then Return
-		;				If DoUpgrade($bTest) Then
-		;					$z = 0 ;reset
-		;				Endif
-		;				ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
-		;			Else
-		;				SetDebugLog("Skip this building, Cost not readable", $COLOR_WARNING)
-		;			EndIf
-		;		Next
-		;	Else
-		;		SetLog("RushTHPriority Building Not Found", $COLOR_INFO)
-		;	EndIf
-		;	If Not $g_bRunState Then Return
-		;EndIf
-		
-		
-		
-		;If $g_bChkRushTH And $IsTHLevelAchieved Then
 		
 		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)

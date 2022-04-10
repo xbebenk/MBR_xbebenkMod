@@ -121,8 +121,7 @@ Func DropTrophy()
 						If $g_bDebugDeadBaseImage Then setZombie()
 						ForceCaptureRegion()
 						_CaptureRegion2() ; take new capture for deadbase
-						If checkDeadBase() Then
-
+						If checkDeadBaseSuperNew() Then
 							SetLog("      " & "Dead Base Found while dropping Trophies!", $COLOR_SUCCESS, "Lucida Console", 7.5)
 							SetLog("Identification of your troops:", $COLOR_INFO)
 							PrepareAttack($DB) ; ==== Troops :checks for type, slot, and quantity ===
@@ -139,14 +138,18 @@ Func DropTrophy()
 						EndIf
 					EndIf
 				EndIf
-
+				
+				If $g_bDropTrophyZap And $g_bSmartZapEnable Then
+					If aaaaaa() Then ContinueLoop
+				EndIf
+				
 				; Normal Drop Trophy, no check for Dead Base
 				SetLog("Identification of your troops:", $COLOR_INFO)
 				PrepareAttack($DT) ; ==== Troops :checks for type, slot, and quantity ===
 				If $g_bRestart Then Return
 
 				If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
-
+				
 				; Drop a Hero or Troop
 				If $g_bDropTrophyUseHeroes Then
 					;a) identify heroes avaiables...
@@ -245,7 +248,7 @@ Func DropTrophy()
 					$iRandomXY = Round(Random(0, 4))
 					SetDebugLog("Troop Loc = " & $iRandomXY & ", X:Y= " & $aRandomEdge[$iRandomXY][0] & "|" & $aRandomEdge[$iRandomXY][1], $COLOR_DEBUG)
 					For $i = 0 To UBound($g_avAttackTroops) - 1
-						If ($g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eWiza) Or $g_avAttackTroops[$i][0] = $eMini Then
+						If ($g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eWiza) Or $g_avAttackTroops[$i][0] = $eMini Or $g_avAttackTroops[$i][0] = $eSMini Then
 							SelectDropTroop($i)
 							If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
 							Click($aRandomEdge[$iRandomXY][0], $aRandomEdge[$iRandomXY][1], 1, 0, "#0181") ;Drop one troop
@@ -296,3 +299,69 @@ Func SetTrophyLoss()
 	$g_iDroppedTrophyCount -= Number($sTrophyLoss)
 	UpdateStats()
 EndFunc   ;==>SetTrophyLoss
+
+
+Func aaaaaa()
+	If checkDeadBaseSuperNew() Then
+		PrepareAttack($DT)
+		Local $SbarbFound = False, $iIndex = 0, $iSBarbCount = 0
+		For $i = 0 To UBound($g_avAttackTroops) - 1 
+			If $g_avAttackTroops[$i][0] = $eSBarb Then 
+				$SbarbFound = True
+				$iSBarbCount = $g_avAttackTroops[$i][1] ;amount of sbarb
+				$iIndex = $i
+			EndIf
+			If $SbarbFound Then ExitLoop
+		Next
+		If $g_bRestart Then Return
+		If $SbarbFound Then 
+			Local $all = SmartFarmDetection()
+			Local $aDP[0][3]
+			For $x = 0 To UBound($all) - 1
+				If $all[$x][3] = "Out" Then
+					Local $DP = StringSplit($all[$x][5], "|", $STR_NOCOUNT)
+					SetDebugLog(_ArrayToString($DP))
+					If IsArray($DP) And UBound($DP) > 0 Then
+						Local $iRandomXY = Round(Random(0, 4)) ;pick random point from nearpoint list
+						Local $tmp = StringSplit($DP[$iRandomXY], ",", $STR_NOCOUNT)
+						_ArrayAdd($aDP, $all[$x][4] & "|" & $tmp[0] & "|" & $tmp[1])
+					Else
+						SetLog("Not array $DP", $COLOR_ERROR)
+					EndIf
+				EndIf								
+			Next
+			SelectDropTroop($iIndex)
+			_ArraySort($aDP) ;sort by side
+			For $j = 0 To UBound($aDP) - 1
+				If $iSBarbCount < 1 Then ExitLoop
+				Click($aDP[$j][1], $aDP[$j][2], 2, 0, "#0181") ;Drop SBarb
+				SetLog("Deploying 2 " & $g_asTroopNames[$g_avAttackTroops[$iIndex][0]] & " on " & $aDP[$j][0] & " [" & $aDP[$j][1] & "," & $aDP[$j][2] & "]", $COLOR_SUCCESS)
+				_Sleep(500) ;add small delay
+				$iSBarbCount -= 2
+			Next
+			_Sleep(15000) ;just add delay after deploy SBarb
+		EndIf
+		
+		Local $ZapFound = False
+		SetLog("====> Dead Base Found while dropping Trophies!", $COLOR_SUCCESS)
+		SetLog("Proceed Zap", $COLOR_INFO)
+		For $i = 0 To UBound($g_avAttackTroops) - 1 
+			If $g_avAttackTroops[$i][0] = $eLSpell Then 
+				$ZapFound = True
+			EndIf
+			If $ZapFound Then ExitLoop
+		Next
+		If $g_bRestart Then Return
+		If $ZapFound Then 
+			SmartZap()
+		EndIf
+		
+		ReturnfromDropTrophies(True)
+		If OpenArmyOverview() Then
+			TrainPreviousArmy(True)
+			_Sleep(500)
+		EndIf
+		Return True
+	EndIf
+	Return False
+EndFunc

@@ -1654,7 +1654,7 @@ Func SetTime($bForceUpdate = False)
 		GUICtrlSetData($g_hLblResultRuntimeNow, StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
 	EndIf
 
-	If _DateIsValid($g_sLabUpgradeTime) Then
+	If _DateIsValid($g_sLabUpgradeTime) = 1 Then
 		Local $iLabTime = _DateDiff("s", _NowCalc(), $g_sLabUpgradeTime) * 1000
 		If $iLabTime > 0 Then
 			_TicksToDay($iLabTime, $day, $hour, $min, $sec)
