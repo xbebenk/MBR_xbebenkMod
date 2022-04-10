@@ -218,7 +218,7 @@ Func FindExistingBuilding($bTest = False)
 	If $Elix > $Gold Then $ElixMultiply += 1
 	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
 	Local $aRushTHPriority[5][2] = [["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10]]
-	Local $aRushTH[8][2] = [["Barracks", 8], ["Castle", 10], ["Spell", 9], ["WorkShop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
+	Local $aRushTH[8][2] = [["Barracks", 8], ["Castle", 10], ["Spell", 9], ["Workshop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
 	Local $aHeroes[4] = ["King", "Queen", "Warden", "Champion"]
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390) 
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
@@ -243,6 +243,7 @@ Func FindExistingBuilding($bTest = False)
 						EndIf
 					Next
 				EndIf
+				If Not $bRusTHFound Then SetDebugLog("Building:" & $UpgradeName[0] & ", not rushTH or rushTH priority")
 				If Not $bRusTHFound Then ContinueLoop ;skip this building, RushTh enabled but this building is not RushTH building
 			EndIf
 			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
