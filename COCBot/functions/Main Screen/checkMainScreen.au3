@@ -65,6 +65,9 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 			$g_bRestart = True
 			$bContinue = True
 		EndIf
+		If $i > 10 Then ;loop checking, restart coc
+			CloseCoc(True)
+		EndIf
 		If $bContinue Then
 			waitMainScreen() ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
 			If Not $g_bRunState Then Return
