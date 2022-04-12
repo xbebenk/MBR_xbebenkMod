@@ -145,9 +145,8 @@ Func AutoUpgradeSearchExisting($bTest = False)
 			ClickMainBuilder()
 			Local $aResult = FindEssentialBuilding()
 			If isArray($aResult) And UBound($aResult) > 0 Then
-				_ArraySort($aResult, 0, 0, 0, 3)
 				For $y = 0 To UBound($aResult) - 1
-					SetDebugLog("Essential Building: " & $aResult[$y][0] & ", Type: " & $aResult[$y][3] & ", Cost: " & $aResult[$y][4] & " Coord [" & $aResult[$y][1] & "," & $aResult[$y][2] & "]", $COLOR_INFO)
+					SetDebugLog("Essential Building: " & $aResult[$y][3] & ", Type: " & $aResult[$y][0] & ", Cost: " & $aResult[$y][5] & " Coord [" & $aResult[$y][1] & "," & $aResult[$y][2] & "]", $COLOR_INFO)
 				Next
 				For $y = 0 To UBound($aResult) - 1
 					If $aResult[$y][4] > 100 Then ;filter only upgrade with readable upgrade cost
@@ -265,6 +264,7 @@ Func FindExistingBuilding($bTest = False)
 								$aBuilding[$j][6] = $aRushTHPriority[$k][1]
 						EndSwitch
 						$aBuilding[$j][7] = "Priority"
+						If $g_bAutoUpgradeWallsEnable Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
 					EndIf
 				Next
 				For $k = 0 To UBound($aRushTH) - 1
@@ -278,24 +278,9 @@ Func FindExistingBuilding($bTest = False)
 								$aBuilding[$j][6] = $aRushTH[$k][1]
 						EndSwitch
 						$aBuilding[$j][7] = "RushTH"
+						If $g_bAutoUpgradeWallsEnable Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
 					EndIf
 				Next
-				If StringInStr($BuildingName, "Army") And $g_bAutoUpgradeWallsEnable Then 
-					If $g_iTownHallLevel = "13" Then 
-						SetLog("Set Save Elixir on Wall upgrade = 16000000", $COLOR_DEBUG)
-						$g_iUpgradeWallMinElixir = 16000000 ;rushth enabled, set min elixir save on wall upgrade to 16M so armycamp can be upgraded
-						applyConfig()
-						saveConfig()
-					EndIf
-				EndIf
-				If StringInStr($BuildingName, "Giga") And $g_bAutoUpgradeWallsEnable Then 
-					If $g_iTownHallLevel = "13" Then 
-						SetLog("Set Save Gold on Wall upgrade = " & $UpgradeCost, $COLOR_DEBUG)
-						$g_iUpgradeWallMinGold = $UpgradeCost ;rushth enabled, set min gold save on wall upgrade same as upgradecost, so giga can be upgraded
-						applyConfig()
-						saveConfig()
-					EndIf
-				EndIf
 			EndIf
 			If $g_bHeroPriority Then ;set score = 20 for Heroes, so if there is heroes found for upgrade it will attempt first
 				For $l = 0 To UBound($aHeroes) - 1
@@ -340,7 +325,7 @@ Func CheckResourceForDoUpgrade($BuildingName, $Cost, $CostType)
 		Case "DE"
 			If $g_aiCurrentLoot[$eLootDarkElixir] >= ($Cost + $g_iTxtSmartMinDark) Then $bSufficentResourceToUpgrade = True
 	EndSwitch
-	SetLog("Checking:" & $BuildingName & " Cost:" & $Cost & " CostType:" & $CostType, $COLOR_INFO)
+	SetLog("Checking: " & $BuildingName & " Cost: " & $Cost & " CostType: " & $CostType, $COLOR_INFO)
 	SetLog("Is Enough " & $CostType & " ? " & String($bSufficentResourceToUpgrade), $bSufficentResourceToUpgrade ? $COLOR_SUCCESS : $COLOR_ERROR)
 	Return $bSufficentResourceToUpgrade
 	
@@ -834,21 +819,8 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		If IsArray($NewCoord) And UBound($NewCoord) > 0 Then
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
 			For $j = 0 To UBound($NewCoord) - 1
-				SetLog("New:" & $NewCoord[$j][4] & ", cost:" & $NewCoord[$j][6] & " " & $NewCoord[$j][0], $COLOR_INFO)
-				If $g_bChkRushTH Then ;find new building while searching wall, if found and resource enough, set min wall save value
-					If $NewCoord[$j][0] = "Gold" And Number($g_iUpgradeWallMinGold) < Number($NewCoord[$j][6]) And $g_bAutoUpgradeWallsEnable Then 
-						$g_iUpgradeWallMinGold = $NewCoord[$j][6] ;set min wall save gold same as new building cost, so next time this building can be placed
-						SetLog("Set Save Gold on Wall upgrade = " & $g_iUpgradeWallMinGold, $COLOR_DEBUG)
-						applyConfig()
-						saveConfig()
-					EndIf
-					If $NewCoord[$j][0] = "Elix" And Number($g_iUpgradeWallMinElixir) < Number($NewCoord[$j][6]) And $g_bAutoUpgradeWallsEnable Then 
-						$g_iUpgradeWallMinElixir = $NewCoord[$j][6] ;set min wall save elix same as new building cost, so next time this building can be placed
-						SetLog("Set Save Elix on Wall upgrade = " & $g_iUpgradeWallMinElixir, $COLOR_DEBUG)
-						applyConfig()
-						saveConfig()
-					EndIf
-				EndIf
+				SetLog("New: " & $NewCoord[$j][4] & ", cost: " & $NewCoord[$j][6] & " " & $NewCoord[$j][0], $COLOR_INFO)
+				If $g_bChkRushTH And $g_bAutoUpgradeWallsEnable Then setMinSaveWall($NewCoord[$j][0], Number($NewCoord[$j][6]))
 			Next
 			
 			$isWall = False ;reset var 
@@ -940,8 +912,8 @@ Func FindNewBuilding()
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1", $g_sImgResourceIcon, $aTmpCoord[$i][1] + 100 , $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 250, $aTmpCoord[$i][2] + 12) Then
 				$UpgradeType =  $g_iQuickMISName
+				_ArrayAdd($aBuilding, $UpgradeType & "|" & $g_iQuickMISX & "|" & $g_iQuickMISY & "|" & $aTmpCoord[$i][1])
 			EndIf
-			_ArrayAdd($aBuilding, $UpgradeType & "|" & $g_iQuickMISX & "|" & $g_iQuickMISY & "|" & $aTmpCoord[$i][1])
 		Next
 		
 		For $j = 0 To UBound($aBuilding) -1
@@ -950,7 +922,8 @@ Func FindNewBuilding()
 			$aBuilding[$j][4] = $aUpgradeName[0]
 			$aBuilding[$j][5] = $aUpgradeName[1]
 			$aBuilding[$j][6] = Number($UpgradeCost)
-			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][4] & ", Cost=" & $aBuilding[$j][5] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
+			If $g_bChkRushTH And $g_bAutoUpgradeWallsEnable Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][6])
+			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][4] & ", Cost=" & $aBuilding[$j][6] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
 	Return $aBuilding
@@ -982,45 +955,68 @@ Func FindRushTHPriority()
 EndFunc
 
 Func FindEssentialBuilding()
-	Local $sImagePath = @ScriptDir & "\imgxml\Resources\Auto Upgrade\EssentialBuilding\"
-	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\EssentialBuilding\"
-	Local $BuildingCoord, $aEssentialBuildingCoord[0][5], $aEssentialBuilding, $UpgradeCost
-	DirRemove($sTempPath, $DIR_REMOVE)
-	EssentialBuildingImageCopy($sImagePath, $sTempPath)
-	
-	$BuildingCoord = QuickMIS("CNX", $sTempPath, 180, 80, 350, 400, True)
-	If IsArray($BuildingCoord) And UBound($BuildingCoord) > 0 Then
-		SetLog("Found " & UBound($BuildingCoord) & " Image EssentialBuilding", $COLOR_INFO)
-		For $j = 0 To UBound($BuildingCoord) - 1
-			If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 180, $BuildingCoord[$j][2] - 10, 260, $BuildingCoord[$j][2] + 10) Then
-				SetDebugLog("Building " & $j & " is new, skip!", $COLOR_ERROR)
-				ContinueLoop ;skip New Building
-			EndIf
-			If $BuildingCoord[$j][0] = "BombT" Then
-				SetDebugLog("Building " & $j & " Detected as Bomb Tower, lets check if it Bomb or a Bomb Tower", $COLOR_INFO)
-				If Not QuickMIS("BC1", $sImagePath & "Tower\", $BuildingCoord[$j][1] + 10, $BuildingCoord[$j][2] - 10, 300, $BuildingCoord[$j][2] + 10) Then
-					SetDebugLog("Building " & $j & " is Not Bomb Tower, skip!", $COLOR_ERROR)
-					ContinueLoop ;skip Not Bomb Tower
-				EndIf				
-			EndIf
-			Local $Hero[4] = ["ArcherQueen", "BarbarianKing", "GrandWarden", "RoyalChampion"]
-			Local $BuildingType = "Building"
-			For $z = 0 To UBound($Hero) - 1
-				If $BuildingCoord[$j][0] = $Hero[$z] Then $BuildingType = "Hero"
+	Local $aTmpCoord, $aBuilding[0][6], $UpgradeCost, $UpgradeName
+	Local $aEssentialBuilding[8] = ["X Bow", "Inferno Tower", "Eagle Artillery", "Scattershot", "Wizard Tower", "Bomb Tower", "Air Defense", "Air Sweeper"]
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390)
+	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		For $i = 0 To UBound($aTmpCoord) - 1
+			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
+			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount 
+			For $j = 0 To UBound($g_aichkEssentialUpgrade) - 1
+				SetDebugLog($UpgradeName[0] & "|" & $aEssentialBuilding[$j])
+				If $g_aichkEssentialUpgrade[$j] > 0 And $UpgradeName[0] = $aEssentialBuilding[$j] Then
+					_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
+				EndIf
 			Next
-			_ArrayAdd($aEssentialBuildingCoord, String($BuildingCoord[$j][0]) & "|" & $BuildingCoord[$j][1] & "|" & $BuildingCoord[$j][2] & "|" & $BuildingType)
 		Next
-		For $j = 0 To UBound($aEssentialBuildingCoord) - 1 
-			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", 350, $BuildingCoord[$j][2] - 8, 150, 20, True)
-			$aEssentialBuildingCoord[$j][4] = Number($UpgradeCost)
-			SetLog("[" & $j & "] Building: " & $aEssentialBuildingCoord[$j][0] & ", Cost=" & $aEssentialBuildingCoord[$j][4], $COLOR_INFO)
+		For $j = 0 To UBound($aBuilding) -1	
+			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $aBuilding[$j][1], $aBuilding[$j][2] - 10, 120, 30, True)
+			$aBuilding[$j][5] = Number($UpgradeCost)
+			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][5] & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
-		_ArraySort($aEssentialBuildingCoord, 1, 0, 0, 4)
-		Return $aEssentialBuildingCoord
-	Else
-		SetDebugLog("Not Array Essential Building", $COLOR_DEBUG)
+		_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
+		Return $aBuilding
 	EndIf
-	Return $aEssentialBuildingCoord
+	
+	;Local $sImagePath = @ScriptDir & "\imgxml\Resources\Auto Upgrade\EssentialBuilding\"
+	;Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\EssentialBuilding\"
+	;Local $BuildingCoord, $aEssentialBuildingCoord[0][5], $aEssentialBuilding, $UpgradeCost
+	;DirRemove($sTempPath, $DIR_REMOVE)
+	;EssentialBuildingImageCopy($sImagePath, $sTempPath)
+	;
+	;$BuildingCoord = QuickMIS("CNX", $sTempPath, 180, 80, 350, 400, True)
+	;If IsArray($BuildingCoord) And UBound($BuildingCoord) > 0 Then
+	;	SetLog("Found " & UBound($BuildingCoord) & " Image EssentialBuilding", $COLOR_INFO)
+	;	For $j = 0 To UBound($BuildingCoord) - 1
+	;		If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 180, $BuildingCoord[$j][2] - 10, 260, $BuildingCoord[$j][2] + 10) Then
+	;			SetDebugLog("Building " & $j & " is new, skip!", $COLOR_ERROR)
+	;			ContinueLoop ;skip New Building
+	;		EndIf
+	;		If $BuildingCoord[$j][0] = "BombT" Then
+	;			SetDebugLog("Building " & $j & " Detected as Bomb Tower, lets check if it Bomb or a Bomb Tower", $COLOR_INFO)
+	;			If Not QuickMIS("BC1", $sImagePath & "Tower\", $BuildingCoord[$j][1] + 10, $BuildingCoord[$j][2] - 10, 300, $BuildingCoord[$j][2] + 10) Then
+	;				SetDebugLog("Building " & $j & " is Not Bomb Tower, skip!", $COLOR_ERROR)
+	;				ContinueLoop ;skip Not Bomb Tower
+	;			EndIf				
+	;		EndIf
+	;		Local $Hero[4] = ["ArcherQueen", "BarbarianKing", "GrandWarden", "RoyalChampion"]
+	;		Local $BuildingType = "Building"
+	;		For $z = 0 To UBound($Hero) - 1
+	;			If $BuildingCoord[$j][0] = $Hero[$z] Then $BuildingType = "Hero"
+	;		Next
+	;		_ArrayAdd($aEssentialBuildingCoord, String($BuildingCoord[$j][0]) & "|" & $BuildingCoord[$j][1] & "|" & $BuildingCoord[$j][2] & "|" & $BuildingType)
+	;	Next
+	;	For $j = 0 To UBound($aEssentialBuildingCoord) - 1 
+	;		$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", 350, $BuildingCoord[$j][2] - 8, 150, 20, True)
+	;		$aEssentialBuildingCoord[$j][4] = Number($UpgradeCost)
+	;		SetLog("[" & $j & "] Building: " & $aEssentialBuildingCoord[$j][0] & ", Cost=" & $aEssentialBuildingCoord[$j][4], $COLOR_INFO)
+	;	Next
+	;	_ArraySort($aEssentialBuildingCoord, 1, 0, 0, 4)
+	;	Return $aEssentialBuildingCoord
+	;Else
+	;	SetDebugLog("Not Array Essential Building", $COLOR_DEBUG)
+	;EndIf
+	;Return $aEssentialBuildingCoord
 EndFunc
 
 Func EssentialBuildingImageCopy($sImagePath = "", $sTempPath = "")
@@ -1032,11 +1028,6 @@ Func EssentialBuildingImageCopy($sImagePath = "", $sTempPath = "")
 			SetDebugLog("[" & $i & "]" & "Essential Building: " & $asImageName[$i], $COLOR_DEBUG)
 			FileCopy($sImagePath & "\" & $asImageName[$i] & "*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 		EndIf
-	Next
-	Local $asHeroName[4] = ["ArcherQueen", "BarbarianKing", "GrandWarden", "RoyalChampion"]
-	For $i = 0 To UBound($asHeroName) - 1
-		SetDebugLog("[" & $i & "]" & "Heroes: " & $asHeroName[$i], $COLOR_DEBUG)
-		FileCopy($sImagePath & "\" & $asHeroName[$i] & "*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 	Next
 EndFunc
 
@@ -1202,4 +1193,21 @@ Func getMostBottomCost()
 		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $g_iQuickMISX, $g_iQuickMISY - 10, 120, $g_iQuickMISY + 10, True) ;check most bottom upgrade cost
 	EndIf
 	Return $TmpUpgradeCost
+EndFunc
+
+Func setMinSaveWall($Type, $cost)
+	Switch $Type 
+		Case "Gold"
+			If Number($g_iUpgradeWallMinGold) >= Number($cost) Then Return
+			$g_iUpgradeWallMinGold = $cost
+			SetLog("Set Save Gold on Wall upgrade = " & $g_iUpgradeWallMinGold, $COLOR_DEBUG)
+			applyConfig()
+			saveConfig()
+		Case "Elix"
+			If Number($g_iUpgradeWallMinElixir) >= Number($cost) Then Return
+			$g_iUpgradeWallMinElixir = $cost
+			SetLog("Set Save Elix on Wall upgrade = " & $g_iUpgradeWallMinElixir, $COLOR_DEBUG)
+			applyConfig()
+			saveConfig()
+	EndSwitch
 EndFunc
