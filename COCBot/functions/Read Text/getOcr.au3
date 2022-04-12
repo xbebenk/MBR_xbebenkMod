@@ -186,8 +186,9 @@ Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
 		SetDebugLog($aReplace[0])
 		Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
 		SetDebugLog($TmpBuildingName)
+		$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
 	EndIf
-	$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+	
 	Local $aResult[2]
 	$aResult[0] = $BuildingName
 	$aResult[1] = Number($Count)
