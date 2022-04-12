@@ -182,14 +182,12 @@ Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
 	EndIf
 	
 	If StringRegExp($BuildingName, "x\d{1,}") Then
-		Local $aReplace = StringRegExp($BuildingName, "(x\d{1,})", 1)
+		Local $aReplace = StringRegExp($BuildingName, "( x\d{1,})", 1)
 		SetDebugLog($aReplace[0])
 		Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
-		StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
 		SetDebugLog($TmpBuildingName)
-		$BuildingName = $TmpBuildingName
 	EndIf
-	
+	$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
 	Local $aResult[2]
 	$aResult[0] = $BuildingName
 	$aResult[1] = Number($Count)
