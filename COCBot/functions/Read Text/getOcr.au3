@@ -87,6 +87,10 @@ Func getLabUpgrdResourceRed($x_start, $y_start) ; -> Gets complete value of Elix
 	Return getOcrAndCapture("coc-lab-r", $x_start, $y_start, 70, 14, True)
 EndFunc   ;==>getLabUpgrdResourceRed
 
+Func getLabCost($x_start, $y_start)
+	Return getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 16, True)
+EndFunc 
+
 Func getStarLabUpgrdResourceRed($x_start, $y_start) ; -> Gets complete value of Elixir on the troop buttons,  xxx,xxx for "starlaboratory.au3" when red text
 	Return getOcrAndCapture("coc-starlab-r", $x_start, $y_start, 70, 14, True)
 EndFunc   ;==>getLabUpgrdResourceRed

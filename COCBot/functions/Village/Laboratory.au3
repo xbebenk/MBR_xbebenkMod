@@ -65,16 +65,22 @@ Func Laboratory($bDebug = False)
 			WEnd
 
 			; Get coords of upgrade the user wants
+			SetDebugLog("FindImage: " & $g_avLabTroops[$g_iCmbLaboratory][2])
 			Local $aCoords = decodeSingleCoord(findImage($g_avLabTroops[$g_iCmbLaboratory][2], $g_sImgLabResearch & $g_avLabTroops[$g_iCmbLaboratory][2] & "*", $sLabTroopsSectionDiam, 1, True))
 			If IsArray($aCoords) And UBound($aCoords) = 2 Then
-				Local $sCostResult = GetLabCostResult($aCoords[0], $aCoords[1], $g_avLabTroops[$g_iCmbLaboratory][0])
-				If $sCostResult > 0 Then
-					SetDebugLog("LabUpgrade:" & $g_avLabTroops[$g_iCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
-					$bUpgradeFound = True
-				Else
-					SetLog("Lab Upgrade " & $g_avLabTroops[$g_iCmbLaboratory][0] & " - Not enough Resources, will try again later", $COLOR_INFO)
-					Return False
+				If QuickMIS("BC1", $g_sImgResIcon, $aCoords[0], $aCoords[1], $aCoords[0] + 60, $aCoords[1] + 70) Then 
+					Local $sCostResult = getLabCost($g_iQuickMISX - 75, $g_iQuickMISY - 10)
+					Local $level = getTroopsSpellsLevel($g_iQuickMISX - 75, $g_iQuickMISY - 30)
+					If $level = "" Then $level = 1
+					If Not IsLabUpgradeResourceEnough($g_avLabTroops[$g_iCmbLaboratory][2], $sCostResult) Then
+						SetLog($g_avLabTroops[$g_iCmbLaboratory][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
+					Else
+						SetLog($g_avLabTroops[$g_iCmbLaboratory][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
+						$bUpgradeFound = True
+					EndIf
 				EndIf
+			Else
+				SetDebugLog("Image " & $g_avLabTroops[$g_iCmbLaboratory][2] & " not found")
 			EndIf
 
 			If Not $bUpgradeFound Then
@@ -113,21 +119,23 @@ Func Laboratory($bDebug = False)
 						WEnd
 
 						; Get coords of upgrade the user wants
+						SetDebugLog("FindImage: " & $g_avLabTroops[$iTmpCmbLaboratory][2])
 						Local $aCoords = decodeSingleCoord(findImage($g_avLabTroops[$iTmpCmbLaboratory][2], $g_sImgLabResearch & $g_avLabTroops[$iTmpCmbLaboratory][2] & "*", $sLabTroopsSectionDiam, 1, True))
 						If IsArray($aCoords) And UBound($aCoords) = 2 Then
-							Local $sCostResult = GetLabCostResult($aCoords[0], $aCoords[1], $g_avLabTroops[$iTmpCmbLaboratory][0])
-							If $sCostResult > 0 Then
+							If QuickMIS("BC1", $g_sImgResIcon, $aCoords[0], $aCoords[1], $aCoords[0] + 60, $aCoords[1] + 70) Then 
+								Local $sCostResult = getLabCost($g_iQuickMISX - 75, $g_iQuickMISY - 10)
+								Local $level = getTroopsSpellsLevel($g_iQuickMISX - 75, $g_iQuickMISY - 30)
+								If $level = "" Then $level = 1
 								If Not IsLabUpgradeResourceEnough($g_avLabTroops[$iTmpCmbLaboratory][2], $sCostResult) Then
-									SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Skip, Not Enough Resource", $COLOR_INFO)
+									SetLog($g_avLabTroops[$iTmpCmbLaboratory][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
 								Else
-									SetDebugLog("LabUpgrade:" & $g_avLabTroops[$iTmpCmbLaboratory][0] & " Cost:" & $sCostResult, $COLOR_INFO)
+									SetLog($g_avLabTroops[$iTmpCmbLaboratory][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
 									$bUpgradeFound = True
 									ExitLoop
 								EndIf
-							Else
-								SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not enough Resources, will try again later", $COLOR_INFO)
-								ContinueLoop
 							EndIf
+						Else
+							SetDebugLog("Image " & $g_avLabTroops[$iTmpCmbLaboratory][2] & " not found")
 						EndIf
 					EndIf
 				Next
@@ -142,19 +150,17 @@ Func Laboratory($bDebug = False)
 					Local $aUpgradeCoord[2], $sUpgrade
 					If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
 						For $i = 0 To UBound($Upgrades) - 1
-							SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
-							If $Upgrades[$i][3] > 0 Then
-								If Not IsLabUpgradeResourceEnough($Upgrades[$i][0], $Upgrades[$i][3]) Then
-									SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Skip, Not Enough Resource", $COLOR_INFO)
-								Else
-									SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
-									$bUpgradeFound = True
-									$sUpgrade = $Upgrades[0][0]
-									$aUpgradeCoord[0] = $Upgrades[0][1]
-									$aUpgradeCoord[1] = $Upgrades[0][2]
-									$sCostResult = $Upgrades[0][3]
-									ExitLoop
-								EndIf
+							SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)							
+							If Not IsLabUpgradeResourceEnough($Upgrades[$i][4], $Upgrades[$i][3]) Then
+								SetDebugLog($Upgrades[$i][4] & " Skip, Not Enough Resource", $COLOR_INFO)
+							Else
+								SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Cost:" & $Upgrades[$i][3], $COLOR_SUCCESS)
+								$bUpgradeFound = True
+								$sUpgrade = $Upgrades[$i][4]
+								$aUpgradeCoord[0] = $Upgrades[$i][1]
+								$aUpgradeCoord[1] = $Upgrades[$i][2]
+								$sCostResult = $Upgrades[$i][3]
+								ExitLoop
 							EndIf
 						Next
 					Else
@@ -330,7 +336,7 @@ Func ChkUpgradeInProgress()
 	Local $TimeDiff ; time remaining on lab upgrade
 	If $g_sLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sLabUpgradeTime) ; what is difference between end time and now in minutes?
 	If @error Then _logErrorDateDiff(@error)
-	SetLog("Lab Endtime: " & $g_sLabUpgradeTime, $COLOR_DEBUG)
+	SetDebugLog("Lab Endtime: " & $g_sLabUpgradeTime, $COLOR_DEBUG)
 
 	If Not $g_bRunState Then Return
 	If $TimeDiff <= 0 Then
@@ -342,27 +348,28 @@ Func ChkUpgradeInProgress()
 	Return False ; we currently do not know of any upgrades in progress
 EndFunc
 
-Func FindLabUpgrade() ;default = sort name of selected upgrade
-	Local $x1 = 110, $y1 = 330, $x2 = 740, $y2 = 540
-	Local $aResult[0][4], $Result[0][4]
-
-	Local $TmpResult = QuickMIS("CNX", $g_sImgLabResearch, $x1, $y1, $x2, $y2, True)
+Func FindLabUpgrade()
+	Local $aResult[0][6]
+	Local $TmpResult = QuickMIS("CNX", $g_sImgResIcon, 110, 330, 740, 540)
 	If IsArray($TmpResult) And UBound($TmpResult) > 0 Then
 		For $i = 0 To UBound($TmpResult) - 1
-			Local $cost = GetLabCostResult($TmpResult[$i][1], $TmpResult[$i][2], $TmpResult[$i][0])
-			_ArrayAdd($aResult, 0 & "|" & $TmpResult[$i][1] & "|" & $TmpResult[$i][2] & "|" & Number($cost), Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
-			$aResult[$i][0] = $TmpResult[$i][0]
+			_ArrayAdd($aResult, $TmpResult[$i][0] & "|" & $TmpResult[$i][1] & "|" & $TmpResult[$i][2])
+		Next
+		For $i = 0 To UBound($aResult) - 1
+			If QuickMIS("BC1", $g_sImgLabResearch, $aResult[$i][1] - 75, $aResult[$i][2] - 80, $aResult[$i][1], $aResult[$i][2]) Then
+				Local $cost = getLabCost($aResult[$i][1] - 75, $aResult[$i][2] - 10)
+				Local $level = getTroopsSpellsLevel($aResult[$i][1] - 75, $aResult[$i][2] - 30)
+				If $level = "" Then $level = 1
+				$aResult[$i][3] = Number($cost)
+				$aResult[$i][4] = $g_iQuickMISName
+				$aResult[$i][5] = Number($level)
+			EndIf
 		Next
 	Else
 		SetLog("Result Not Array", $COLOR_ERROR)
 	EndIf
 	_ArraySort($aResult, 0, 0, 0, 3)
-	For $i = 0 To Ubound($aResult) - 1
-		If $aResult[$i][3] > 0 Then
-			_ArrayAdd($Result, $aResult[$i][0] & "|" & $aResult[$i][1] & "|" & $aResult[$i][2] & "|" & $aResult[$i][3])
-		EndIf
-	Next
-	Return $Result
+	Return $aResult
 EndFunc
 
 Func GetUpgradeName($shortName)
@@ -497,33 +504,30 @@ Func UpgradeLabAny($bDebug = False)
 		Local $aUpgradeCoord[2], $sUpgrade
 		If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
 			For $i = 0 To UBound($Upgrades) - 1
-				SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
-				If $Upgrades[$i][3] > 0 Then
-					If Not IsLabUpgradeResourceEnough($Upgrades[$i][0], $Upgrades[$i][3]) Then
-						SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Skip, Not Enough Resource", $COLOR_INFO)
-					Else
-						SetDebugLog("LabUpgrade:" & $Upgrades[$i][0] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)
-						$bUpgradeFound = True
-						$sUpgrade = $Upgrades[0][0]
-						$aUpgradeCoord[0] = $Upgrades[0][1]
-						$aUpgradeCoord[1] = $Upgrades[0][2]
-						$sCostResult = $Upgrades[0][3]
-						ExitLoop
-					EndIf
+				SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Cost:" & $Upgrades[$i][3] & " " & $Upgrades[$i][0], $COLOR_INFO)
+				If Not IsLabUpgradeResourceEnough($Upgrades[$i][4], $Upgrades[$i][3]) Then
+					SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Skip, Not Enough Resource", $COLOR_INFO)
+				Else
+					SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Cost:" & $Upgrades[$i][3], $COLOR_SUCCESS)
+					$bUpgradeFound = True
+					$sUpgrade = $Upgrades[$i][4]
+					$aUpgradeCoord[0] = $Upgrades[$i][1]
+					$aUpgradeCoord[1] = $Upgrades[$i][2]
+					$sCostResult = $Upgrades[$i][3]
+					ExitLoop
 				EndIf
 			Next
 		Else
-			If $iCurPage = 4 Then ExitLoop
 			SetLog("Not found Any Upgrade here, looking next", $COLOR_INFO)
 		EndIf
-
+		If Number($iCurPage) = 4 Then ExitLoop
 		If $bUpgradeFound Then
 			Return LaboratoryUpgrade($sUpgrade, $aUpgradeCoord, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 		EndIf
-
+		SetDebugLog("CurrentPage=" & $iCurPage)
 		LabNextPage() ; go to next page of upgrades
 		$iCurPage += 1 ; Next page
-		If $iCurPage = 4 Then _Sleep(2000)
+		If Number($iCurPage) = 4 Then _Sleep(2000)
 		If _Sleep($DELAYLABORATORY2) Then Return
 	WEnd
 	ClickAway()
