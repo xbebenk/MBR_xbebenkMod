@@ -119,7 +119,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		Local $ExistingBuilding = FindExistingBuilding()
 		If IsArray($ExistingBuilding) And UBound($ExistingBuilding) > 0 Then
 			For $i = 0 To UBound($ExistingBuilding) - 1
-				SetLog($ExistingBuilding[$i][0] & " Cost:" & $ExistingBuilding[$i][5] & " Building:" & $ExistingBuilding[$i][3], $COLOR_INFO)
+				SetLog("Building: " & $ExistingBuilding[$i][3] & ", Cost:" & $ExistingBuilding[$i][5] & " " & $ExistingBuilding[$i][0], $COLOR_INFO)
 			Next
 			
 			For $i = 0 To UBound($ExistingBuilding) - 1
@@ -128,7 +128,8 @@ Func AutoUpgradeSearchExisting($bTest = False)
 					Click($ExistingBuilding[$i][1], $ExistingBuilding[$i][2])
 					If _Sleep(1000) Then Return
 					If DoUpgrade($bTest) Then
-						$g_bSkipWallReserve = False
+						$z = 0 ;reset
+						$g_bSkipWallReserve = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
 						If Not AutoUpgradeCheckBuilder($bTest) Then Return
 					Endif
 					ClickMainBuilder($bTest)
@@ -146,40 +147,18 @@ Func AutoUpgradeSearchExisting($bTest = False)
 			Local $aResult = FindEssentialBuilding()
 			If isArray($aResult) And UBound($aResult) > 0 Then
 				For $y = 0 To UBound($aResult) - 1
-					SetDebugLog("Essential Building: " & $aResult[$y][3] & ", Type: " & $aResult[$y][0] & ", Cost: " & $aResult[$y][5] & " Coord [" & $aResult[$y][1] & "," & $aResult[$y][2] & "]", $COLOR_INFO)
+					SetLog($aResult[$y][3] & ", Cost: " & $aResult[$y][5] & " " & $aResult[$y][0], $COLOR_SUCCESS)
 				Next
 				For $y = 0 To UBound($aResult) - 1
-					If $aResult[$y][4] > 100 Then ;filter only upgrade with readable upgrade cost
-						$sameCost = 0 ;reset here as we found building with cost readable
-						If $aResult[$y][3] = "Hero" Then
-							Local $UpgradeUsing = "DE"
-							If $aResult[$y][0] = "GrandWarden" Then $UpgradeUsing = "Elixir"
-							If $UpgradeUsing = "DE" Then 
-								SetDebugLog($g_iTxtSmartMinDark & " + " & $aResult[$y][4] & " = " & $g_iTxtSmartMinDark + $aResult[$y][4])
-								SetDebugLog("DE = " & $g_aiCurrentLoot[$eLootDarkElixir])
-								If $g_aiCurrentLoot[$eLootDarkElixir] < ($aResult[$y][4] + $g_iTxtSmartMinDark) Then 
-									SetLog($aResult[$y][0] & " Skip Upgrade, Insufficent Resource", $COLOR_WARNING)
-									ContinueLoop
-								EndIf
-							EndIf
-							If $UpgradeUsing = "Elixir" Then 
-								SetDebugLog($g_iTxtSmartMinElixir & " + " & $aResult[$y][4] & " = " & $g_iTxtSmartMinElixir + $aResult[$y][4])
-								SetDebugLog("Elixir = " & $g_aiCurrentLoot[$eLootElixir])
-								If $g_aiCurrentLoot[$eLootElixir] < ($aResult[$y][4] + $g_iTxtSmartMinElixir) Then 
-									SetLog($aResult[$y][0] & " Skip Upgrade, Insufficent Resource", $COLOR_WARNING)
-									ContinueLoop
-								EndIf
-							EndIf
-						EndIf
+					If CheckResourceForDoUpgrade($aResult[$y][3], $aResult[$y][5], $aResult[$y][0]) Then 
 						Click($aResult[$y][1], $aResult[$y][2])
 						If _Sleep(1000) Then Return
 						If DoUpgrade($bTest) Then
 							$z = 0 ;reset
-							$sameCost = 0
+							$g_bSkipWallReserve = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
+							If Not AutoUpgradeCheckBuilder($bTest) Then Return
 						Endif
 						ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
-					Else
-						SetDebugLog("Skip this building, Cost not readable", $COLOR_WARNING)
 					EndIf
 				Next
 			Else
@@ -194,7 +173,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
 		If Not ($UpgradeCost = $TmpUpgradeCost) Then $sameCost = 0
 		SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
-		If $sameCost > 2 Then $NeedDrag = False
+		If $sameCost > 1 Then $NeedDrag = False
 		$UpgradeCost = $TmpUpgradeCost
 		
 		If Not $NeedDrag Then
@@ -325,7 +304,7 @@ Func CheckResourceForDoUpgrade($BuildingName, $Cost, $CostType)
 		Case "DE"
 			If $g_aiCurrentLoot[$eLootDarkElixir] >= ($Cost + $g_iTxtSmartMinDark) Then $bSufficentResourceToUpgrade = True
 	EndSwitch
-	SetLog("Checking: " & $BuildingName & " Cost: " & $Cost & " CostType: " & $CostType, $COLOR_INFO)
+	SetLog("Checking: " & $BuildingName & ", Cost: " & $Cost & " " & $CostType, $COLOR_INFO)
 	SetLog("Is Enough " & $CostType & " ? " & String($bSufficentResourceToUpgrade), $bSufficentResourceToUpgrade ? $COLOR_SUCCESS : $COLOR_ERROR)
 	Return $bSufficentResourceToUpgrade
 	
@@ -642,8 +621,11 @@ Func DoUpgrade($bTest = False)
 	
 	If $bHeroUpgrade And $g_bUseHeroBooks Then
 		_Sleep(500)
-		Local $HeroUpgradeTime = ConvertOCRTime("UseHeroBooks", $g_aUpgradeResourceCostDuration[2])
+		Local $HeroUpgradeTime = ConvertOCRTime("UseHeroBooks", $g_aUpgradeResourceCostDuration[2], False)
 		If $HeroUpgradeTime >= ($g_iHeroMinUpgradeTime * 1440) Then
+			SetLog("Hero Upgrade Time minutes: " & $HeroUpgradeTime, $COLOR_DEBUG)
+			SetLog("MinUpgradeTime on Setting: " & ($g_iHeroMinUpgradeTime * 1440), $COLOR_DEBUG)
+			SetLog("Looking if Hero Books avail")
 			Local $HeroBooks = FindButton("HeroBooks")
 			If IsArray($HeroBooks) And UBound($HeroBooks) = 2 Then
 				SetLog("Use Hero Books to Complete Now this Hero Upgrade", $COLOR_INFO)
@@ -809,6 +791,11 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	If Not ClickMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
 	
+	If FindTHInUpgradeProgress() Then
+		SetLog("TownHall Upgrade in progress, skip search new building!", $COLOR_SUCCESS)
+		Return False
+	EndIf
+	
 	Local $ZoomedIn = False, $isWall = False 
 	Local $NeedDrag = True, $TmpUpgradeCost, $UpgradeCost, $sameCost = 0
 	If Not $g_bRunState Then Return
@@ -830,6 +817,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 					$IsWall = True
 					SetLog("New Building: Is Wall, let's try place 10 Wall", $COLOR_INFO)
 				EndIf
+				If Not $g_bRunState Then Return
 				If CheckResourceForDoUpgrade($NewCoord[$j][4], $NewCoord[$j][6], $NewCoord[$j][0]) Then 
 					If Not $ZoomedIn Then
 						Clickaway("Right")
@@ -867,6 +855,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 						SetLog("RushTHPriority: " & $aResult[$y][3] & ", Cost: " & $aResult[$y][5], $COLOR_INFO)
 					EndIf
 				Next
+				If Not $g_bRunState Then Return
 				For $y = 0 To UBound($aResult) - 1
 					If $aResult[$y][7] = "Priority" Then 
 						If CheckResourceForDoUpgrade($aResult[$y][3], $aResult[$y][5], $aResult[$y][0]) Then ;name, cost, type
@@ -1210,4 +1199,19 @@ Func setMinSaveWall($Type, $cost)
 			applyConfig()
 			saveConfig()
 	EndSwitch
+EndFunc
+
+Func FindTHInUpgradeProgress()
+	Local $bRet = False
+	Local $Progress = QuickMIS("CNX", $g_sImgAUpgradeHour, 350, 90, 450, 280)
+	If IsArray($Progress) And UBound($Progress) > 0 Then
+		For $i = 0 To UBound($Progress) - 1
+			Local $UpgradeName = getBuildingName(200, $Progress[$i][2] - 5) ;get upgrade name and amount 
+			If StringInStr($UpgradeName[0], "Town", 1) Then 
+				$bRet = True
+				ExitLoop
+			EndIf
+		Next
+	EndIf
+	Return $bRet
 EndFunc
