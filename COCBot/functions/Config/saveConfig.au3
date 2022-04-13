@@ -133,6 +133,7 @@ Func SaveBuildingConfig()
 
 	;xbenk
 	_Ini_Add("upgrade", "upgradeorder", $g_bLabUpgradeOrderEnable ? 1 : 0)
+	_Ini_Add("upgrade", "limitsiegelevel", $g_bUpgradeSiegeToLvl2 ? 1 : 0)
 	_Ini_Add("upgrade", "upgradeanytroops", $g_bUpgradeAnyTroops ? 1 : 0)
 	Local $string = ""
 	For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
