@@ -802,6 +802,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
 		Local $New, $NewCoord, $aCoord[0][3]
+		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
 		$NewCoord = FindNewBuilding() ;find New Building
 		If IsArray($NewCoord) And UBound($NewCoord) > 0 Then
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
@@ -833,7 +834,6 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 					If AUNewBuildings($NewCoord[$j][1], $NewCoord[$j][2], $bTest, $IsWall) Then
 						ClickMainBuilder($bTest)
 						$z = 0 ;reset
-						$sameCost = 0
 						ExitLoop
 					Else
 						ExitLoop ;Place NewBuilding failed, cancel placing newbuilding
@@ -871,13 +871,11 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			If Not $g_bRunState Then Return
 		EndIf
 		
-		
-		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
 		If Not ($UpgradeCost = $TmpUpgradeCost) Then $sameCost = 0
 		SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
-		If $sameCost > 2 Then $NeedDrag = False
+		If $sameCost > 1 Then $NeedDrag = False
 		$UpgradeCost = $TmpUpgradeCost
 		
 		If Not $g_bRunState Then Return
