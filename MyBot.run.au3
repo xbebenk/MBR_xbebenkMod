@@ -102,9 +102,11 @@ Func UpdateBotTitle()
 EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
-
+	_VrtDesktObjCreation() ;virtual desktop object
+	Local $NumVD = _GetEnumVirtDskt()
+	If $NumVD = 1 Then _CreateNewVirtDskt()
 	ProcessCommandLine()
-
+	
 	If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then ; Set developer mode
 		$g_bDevMode = True
 		Local $aText = FileReadToArray(@ScriptDir & "\EnableMBRDebug.txt") ; check if special debug flags set inside EnableMBRDebug.txt file
