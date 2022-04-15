@@ -61,7 +61,7 @@ Func SearchUpgrade($bTest = False)
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		Local $sUpgradeTime = getBuilderLeastUpgradeTime(380, 110)
-		Local $mUpgradeTime = ConvertOCRTime("UpgradeTime", $sUpgradeTime)
+		Local $mUpgradeTime = ConvertOCRTime("Lease Upgrade", $sUpgradeTime)
 		If $mUpgradeTime < 1440 Then
 			$g_bSkipWallReserve = True
 			SetLog("Current Upgrade remain time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
