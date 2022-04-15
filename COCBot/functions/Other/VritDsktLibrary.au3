@@ -334,9 +334,9 @@ Func _GetApplicationObj_FromWinHandle($hWnd)                                    
 			"GetNeediness hresult(int*);"
 
 	$iHresult = $oApplicationViewCollection.GetViewForHwnd($hWnd, $pView)                    ;>>>***<<<
-	If $g_bDebugSetlog Then ConsoleWrite("- ###DEBUG View from handle = " & $pView & "/" & $iHresult & @CRLF)
+	;If $g_bDebugSetlog Then ConsoleWrite("- ###DEBUG View from handle = " & $pView & "/" & $iHresult & @CRLF)
 	$oApplicationView = ObjCreateInterface($pView, $IID_IApplicationView, $tagIApplicationView)
-	ConsoleWrite("- ###DEBUG Appl view obj = " & IsObj($oApplicationView) & @CRLF)
+	;ConsoleWrite("- ###DEBUG Appl view obj = " & IsObj($oApplicationView) & @CRLF)
 	Return $oApplicationView
 EndFunc   ;==>_GetApplicationObj_FromWinHandle
 
@@ -352,7 +352,7 @@ EndFunc   ;==>_GetApplicationID_FromWinHandle
 Func _GetApplicationcCollectionView_FromWinwHandle($hWnd)                               ;>>>***<<<
 	Local $pView
 	Local $iHresult = $oApplicationViewCollection.GetViewForHwnd($hWnd, $pView)
-	If $g_bDebugSetlog Then ConsoleWrite("- ###DEBUG View from handle = " & $pView & "/" & $iHresult & @CRLF)
+	;If $g_bDebugSetlog Then ConsoleWrite("- ###DEBUG View from handle = " & $pView & "/" & $iHresult & @CRLF)
 	Return $pView
 EndFunc   ;==>_GetApplicationcCollectionView_FromWinwHandle
 
@@ -406,7 +406,7 @@ Func _MoveAppToSpecificDesktop($hWnd, $iDsktNumb = 2)                           
 	If $iDsktNumb > $aVirtDskt[0] Or $iDsktNumb = 0 Then Return -1 ;wrong dskt
 	Local $iHresult = $oVirtualDesktopManagerInternal.MoveViewToDesktop($pView, $aVirtDskt[$iDsktNumb])
 	Sleep(10)
-	If $g_bDebugSetlog Then ConsoleWrite("- ###DEBUG Move = " & $iHresult & @CRLF)
+	;If $g_bDebugSetlog Then ConsoleWrite("- ###DEBUG Move = " & $iHresult & @CRLF)
 	Return $iHresult
 EndFunc   ;==>_MoveAppToSpecificDesktop
 
