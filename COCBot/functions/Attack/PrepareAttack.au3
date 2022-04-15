@@ -305,7 +305,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			EndIf
 			If _Sleep(750) Then Return
 		Else
-			$iTroopIndex = -1 ;set ByRef
+			If Not $iTroopIndex = $eCastle Then $iTroopIndex = -1 ;set ByRef
 			SetLog("No switch button = No CC Detected, discard Siege use", $COLOR_INFO)
 		EndIf
 	EndIf
