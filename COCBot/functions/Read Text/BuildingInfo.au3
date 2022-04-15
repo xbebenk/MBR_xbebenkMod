@@ -13,7 +13,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func BuildingInfo($iXstart, $iYstart)
+Func BuildingInfo($iXstart = 220, $iYstart = 495)
 
 	Local $sBldgText, $sBldgLevel, $aString
 	Local $aResult[3] = ["", "", ""]
