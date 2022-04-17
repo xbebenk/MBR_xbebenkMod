@@ -343,16 +343,6 @@ Func checkObstacles_ReloadCoC($point = Default, $debugtxt = "")
 	Return True
 EndFunc   ;==>checkObstacles_ReloadCoC
 
-; It's more stable to restart CoC app than click the message restarting the game
-Func checkObstacles_RebootAndroid()
-	If TestCapture() Then Return "Reboot Android"
-	ForceCaptureRegion(True)
-	OcrForceCaptureRegion(True)
-	$g_bGfxError = True
-	CheckAndroidReboot()
-	Return True
-EndFunc   ;==>checkObstacles_RebootAndroid
-
 Func checkObstacles_StopBot($msg)
 	SetLog($msg, $COLOR_ERROR)
 	If TestCapture() Then Return $msg
