@@ -824,7 +824,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 				If $g_bChkRushTH And $g_bAutoUpgradeWallsEnable Then setMinSaveWall($NewCoord[$j][0], Number($NewCoord[$j][6]))
 			Next
 			
-			If $NewCoord[$j][0] = "Gem" And Number($g_iGemAmount) < Number($NewCoord[$j][6]) Then
+			If $NewCoord[$j][0] = "Gem" And (Number($g_iGemAmount) < Number($NewCoord[$j][6])) Then
 				SetLog("Detected New Builder's Hut, but not enough gems")
 				ContinueLoop
 			EndIf
@@ -837,7 +837,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 					SetLog("New Building: Is Wall, let's try place 10 Wall", $COLOR_INFO)
 				EndIf
 				If Not $g_bRunState Then Return
-				If CheckResourceForDoUpgrade($NewCoord[$j][4], $NewCoord[$j][6], $NewCoord[$j][0]) Then
+				If CheckResourceForDoUpgrade($NewCoord[$j][4], $NewCoord[$j][6], $NewCoord[$j][0]) Or $NewCoord[$j][0] = "Gem" Then
 					If Not $ZoomedIn Then
 						Clickaway("Right")
 						If _Sleep(1000) Then Return ;wait builder menu closed
