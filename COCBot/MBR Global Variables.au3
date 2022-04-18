@@ -1855,16 +1855,17 @@ Global $g_bChkClanGamesPurgeAny = 0
 Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0
 Global $g_bCollectCGReward = False
-Global $g_abCGMainLootItem[UBound(ClanGamesChallenges("$LootChallenges"))]
-Global $g_abCGMainBattleItem[Ubound(ClanGamesChallenges("$BattleChallenges"))]
-Global $g_abCGMainDestructionItem[Ubound(ClanGamesChallenges("$DestructionChallenges"))]
-Global $g_abCGMainAirItem[Ubound(ClanGamesChallenges("$AirTroopChallenges"))]
-Global $g_abCGMainGroundItem[Ubound(ClanGamesChallenges("$GroundTroopChallenges"))]
-Global $g_abCGMainMiscItem[Ubound(ClanGamesChallenges("$MiscChallenges"))]
-Global $g_abCGMainSpellItem[Ubound(ClanGamesChallenges("$SpellChallenges"))]
-Global $g_abCGBBBattleItem[Ubound(ClanGamesChallenges("$BBBattleChallenges"))]
-Global $g_abCGBBDestructionItem[Ubound(ClanGamesChallenges("$BBDestructionChallenges"))]
-Global $g_abCGBBTroopsItem[Ubound(ClanGamesChallenges("$BBTroopsChallenges"))]
+
+Global $g_abCGMainLootItem[6]
+Global $g_abCGMainBattleItem[21]
+Global $g_abCGMainDestructionItem[34]
+Global $g_abCGMainAirItem[14]
+Global $g_abCGMainGroundItem[27]
+Global $g_abCGMainMiscItem[3]
+Global $g_abCGMainSpellItem[11]
+Global $g_abCGBBBattleItem[4]
+Global $g_abCGBBDestructionItem[18]
+Global $g_abCGBBTroopsItem[11]
 
 ; Collect Achievement Rewards
 Global $g_bChkCollectAchievements = True

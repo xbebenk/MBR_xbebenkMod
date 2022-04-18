@@ -186,6 +186,8 @@ Func ProcessCommandLine()
 					$g_iGuiMode = 2
 				Case "/nogui", "/ng", "-nogui", "-ng"
 					$g_iGuiMode = 0
+				Case "/hideandroid", "/ha", "-hideandroid", "-ha"
+					$g_bBotLaunchOption_HideAndroid = True
 				Case "/console", "/c", "-console", "-c"
 					_WinAPI_AllocConsole()
 					_WinAPI_SetConsoleIcon($g_sLibIconPath, $eIcnGUI)
