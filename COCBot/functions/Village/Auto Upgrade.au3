@@ -823,7 +823,12 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 				SetLog("New: " & $NewCoord[$j][4] & ", cost: " & $NewCoord[$j][6] & " " & $NewCoord[$j][0], $COLOR_INFO)
 				If $g_bChkRushTH And $g_bAutoUpgradeWallsEnable Then setMinSaveWall($NewCoord[$j][0], Number($NewCoord[$j][6]))
 			Next
-
+			
+			If $NewCoord[$j][0] = "Gem" And Number($g_iGemAmount) < Number($NewCoord[$j][6]) Then
+				SetLog("Detected New Builder's Hut, but not enough gems")
+				ContinueLoop
+			EndIf
+			
 			$isWall = False ;reset var
 			For $j = 0 To UBound($NewCoord) - 1
 				If Not $g_bRunState Then Return
