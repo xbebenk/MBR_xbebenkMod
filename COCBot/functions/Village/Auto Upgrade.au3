@@ -22,7 +22,9 @@ EndFunc
 
 Func AutoUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
-
+	
+	PlaceBuilder()
+	
 	getBuilderCount(True) ;check if we have available builder
 	;Check if there is a free builder for Auto Upgrade
 	If $g_iFreeBuilderCount > 0 Then $bRet = True;builder available
@@ -1230,4 +1232,67 @@ Func FindTHInUpgradeProgress()
 		Next
 	EndIf
 	Return $bRet
+EndFunc
+
+Func PlaceBuilder($bTest = False)
+	Local $a_Gem = Number($g_iGemAmount)
+	Local $a_Builder = Number($g_iTotalBuilderCount)
+	If $a_Builder < 5 Then
+		If $a_Builder = 2 And $a_Gem > 499 Then
+			SearchBuilder($bTest)
+		ElseIf $a_Builder = 3 And $a_Gem > 999 Then
+			SearchBuilder($bTest)
+		ElseIf $a_Builder = 4 And $a_Gem > 1999 Then
+			SearchBuilder($bTest)
+		EndIf
+	EndIf
+EndFunc
+
+Func SearchBuilder($bTest = False)
+	If Not $g_bRunState Then Return
+	If Not $g_bPlaceNewBuilding Then Return
+	SetLog("Search For Place New Builder", $COLOR_DEBUG)
+
+	Local $ZoomedIn = False, $a_Builder = False
+
+	If Not ClickMainBuilder($bTest) Then Return False
+	If _Sleep(500) Then Return
+
+	If Not $g_bRunState Then Return
+	Local $New, $NewCoord, $aCoord[0][3]
+	$NewCoord = FindNewBuilding() ;find New Building
+	If IsArray($NewCoord) And UBound($NewCoord) > 0 Then
+		SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)		
+		For $j = 0 To UBound($NewCoord) - 1
+			If $NewCoord[$j][0] = "Gem" Then
+				SetLog("New Builder Found!")
+				$a_Builder = True
+			EndIf
+			
+			If $a_Builder Then
+				If Not $ZoomedIn Then
+					Clickaway("Right")
+					If _Sleep(1000) Then Return ;wait builder menu closed
+					If SearchGreenZone() Then
+						$ZoomedIn = True
+						ClickMainBuilder($bTest)
+					Else
+						ExitLoop ;zoomin failed, cancel placing newbuilding
+					EndIf
+				EndIf
+
+				If AUNewBuildings($NewCoord[$j][1], $NewCoord[$j][2], $bTest, False) Then ;False is for IsWall var
+					ClickMainBuilder($bTest)
+					ExitLoop
+				Else
+					ExitLoop ;Place NewBuilding failed, cancel placing newbuilding
+				EndIf
+			EndIf
+		Next
+	Else
+		SetLog("New Building Not Found", $COLOR_INFO)
+	EndIf
+	If _Sleep(1000) Then Return
+
+	SetLog("Exit Find Builder", $COLOR_DEBUG)
 EndFunc
