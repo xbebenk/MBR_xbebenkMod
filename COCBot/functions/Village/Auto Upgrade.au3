@@ -1292,6 +1292,8 @@ Func SearchBuilder($bTest = False)
 	Else
 		SetLog("New Building Not Found", $COLOR_INFO)
 	EndIf
+	
+	Zoomout()
 	If _Sleep(1000) Then Return
 
 	SetLog("Exit Find Builder", $COLOR_DEBUG)
