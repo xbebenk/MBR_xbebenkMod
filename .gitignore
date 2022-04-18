@@ -10,6 +10,7 @@
 #*.exe
 *.bmp
 *.zip
+*.bat
 build.bat
 BuildMBR.exe
 
