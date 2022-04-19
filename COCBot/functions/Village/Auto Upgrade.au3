@@ -934,32 +934,6 @@ Func FindNewBuilding()
 	Return $aBuilding
 EndFunc
 
-Func FindRushTHPriority()
-	Local $aTmpTHRushCoord, $aTHRushCoord[0][4], $aRushTH[3], $UpgradeCost
-	$aTmpTHRushCoord = QuickMIS("CNX", $g_sImgAUpgradeRushTHPriority, 180, 80, 350, 369)
-	If IsArray($aTmpTHRushCoord) And UBound($aTmpTHRushCoord) > 0 Then
-		SetLog("Found " & UBound($aTmpTHRushCoord) & " Image RushTHPriority", $COLOR_INFO)
-		For $j = 0 To UBound($aTmpTHRushCoord) - 1
-			If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 180, $aTmpTHRushCoord[$j][2] -10, 260, $aTmpTHRushCoord[$j][2] + 10) Then
-				SetDebugLog("Building " & $j & " is new, skip!", $COLOR_ERROR)
-				ContinueLoop ;skip New Building
-			EndIf
-			If $g_bUpgradeLowCost Then ContinueLoop
-			_ArrayAdd($aTHRushCoord, String($aTmpTHRushCoord[$j][0]) & "|" & $aTmpTHRushCoord[$j][1] & "|" & $aTmpTHRushCoord[$j][2])
-		Next
-		For $j = 0 To UBound($aTHRushCoord) - 1
-			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", 350, $aTHRushCoord[$j][2] - 8, 150, 20, True)
-			$aTHRushCoord[$j][3] = Number($UpgradeCost)
-			SetDebugLog("[" & $j & "] Building: " & $aTHRushCoord[$j][0] & ", Cost=" & $aTHRushCoord[$j][3] & " Coord [" &  $aTHRushCoord[$j][1] & "," & $aTHRushCoord[$j][2] & "]", $COLOR_DEBUG)
-		Next
-		_ArraySort($aTHRushCoord, 0, 0, 0, 3)
-		Return $aTHRushCoord
-	Else
-		SetDebugLog("Not Array Building", $COLOR_DEBUG)
-	EndIf
-	Return $aTHRushCoord
-EndFunc
-
 Func FindEssentialBuilding()
 	Local $aTmpCoord, $aBuilding[0][6], $UpgradeCost, $UpgradeName
 	Local $aEssentialBuilding[8] = ["X Bow", "Inferno Tower", "Eagle Artillery", "Scattershot", "Wizard Tower", "Bomb Tower", "Air Defense", "Air Sweeper"]
