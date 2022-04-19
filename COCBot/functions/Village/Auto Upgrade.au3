@@ -837,7 +837,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 					SetLog("New Building: Is Wall, let's try place 10 Wall", $COLOR_INFO)
 				EndIf
 				If Not $g_bRunState Then Return
-				If CheckResourceForDoUpgrade($NewCoord[$j][4], $NewCoord[$j][6], $NewCoord[$j][0]) and Not $NewCoord[$j][0] = "Gem" Then
+				If CheckResourceForDoUpgrade($NewCoord[$j][4], $NewCoord[$j][6], $NewCoord[$j][0]) And $NewCoord[$j][0] <> "Gem" Then
 					If Not $ZoomedIn Then
 						Clickaway("Right")
 						If _Sleep(1000) Then Return ;wait builder menu closed
