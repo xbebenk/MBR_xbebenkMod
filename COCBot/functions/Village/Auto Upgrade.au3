@@ -39,7 +39,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	EndIf
 
 	If ($g_bSkipWallReserve Or $g_bUpgradeLowCost) And $g_iFreeBuilderCount > 0 Then
-		SetLog("CheckBuilder: " & $g_bUpgradeLowCost ? "Upgrade remain time > 1day, but < 2day" : "Upgrade remain time < 24h", $COLOR_WARNING)
+		SetLog("CheckBuilder: " & ($g_bUpgradeLowCost ? "Upgrade remain time > 1day, but < 2day" : "Upgrade remain time < 24h"), $COLOR_WARNING)
 		$bRet = True
 	EndIf
 
@@ -64,16 +64,18 @@ Func SearchUpgrade($bTest = False)
 	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
-		Local $sUpgradeTime = getBuilderLeastUpgradeTime(380, 110)
-		Local $mUpgradeTime = ConvertOCRTime("Lease Upgrade", $sUpgradeTime)
-		If $mUpgradeTime > 0 And $mUpgradeTime < 1440 Then
-			SetLog("Upgrade time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
-			$g_bSkipWallReserve = True
-		ElseIf $mUpgradeTime > 1400 And $mUpgradeTime < 2880 Then
-			$g_bUpgradeLowCost = True
-			SetLog("Upgrade time > 24h And < 2day, Will Use Wall Reserved Builder", $COLOR_INFO)
-		Else
-			SetLog("Upgrade time > 24h, Skip Upgrade", $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
+			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
+			Local $mUpgradeTime = ConvertOCRTime("Lease Upgrade", $sUpgradeTime)
+			If $mUpgradeTime > 0 And $mUpgradeTime < 1440 Then
+				SetLog("Upgrade time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
+				$g_bSkipWallReserve = True
+			ElseIf $mUpgradeTime > 1400 And $mUpgradeTime < 2880 Then
+				$g_bUpgradeLowCost = True
+				SetLog("Upgrade time > 24h And < 2day, Will Use Wall Reserved Builder", $COLOR_INFO)
+			Else
+				SetLog("Upgrade time > 24h, Skip Upgrade", $COLOR_INFO)
+			EndIf
 		EndIf
 	EndIf
 
@@ -1196,7 +1198,7 @@ EndFunc
 
 Func getMostBottomCost()
 	Local $TmpUpgradeCost = 0
-	If QuickMIS("BC1", $g_sImgResourceIcon, 300, 330, 400, 360) Then
+	If QuickMIS("BC1", $g_sImgResourceIcon, 300, 300, 450, 360) Then
 		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $g_iQuickMISX, $g_iQuickMISY - 10, 120, $g_iQuickMISY + 10, True) ;check most bottom upgrade cost
 	EndIf
 	Return $TmpUpgradeCost

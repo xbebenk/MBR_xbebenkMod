@@ -164,7 +164,7 @@ Func getOcrPBTtime($x_start, $y_start) ;  -> Get the Time until PBT starts from 
 EndFunc   ;==>getOcrPBTtime
 
 Func getBuilderLeastUpgradeTime($x_start, $y_start) ;  -> Get least upgradetime on builder menu
-	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 70, 16, True)
+	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 100, 18, True)
 EndFunc   ;==>getBuilderLeastUpgradeTime
 
 Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
