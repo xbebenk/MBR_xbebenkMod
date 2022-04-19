@@ -957,46 +957,6 @@ Func FindEssentialBuilding()
 		_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
 		Return $aBuilding
 	EndIf
-
-	;Local $sImagePath = @ScriptDir & "\imgxml\Resources\Auto Upgrade\EssentialBuilding\"
-	;Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\EssentialBuilding\"
-	;Local $BuildingCoord, $aEssentialBuildingCoord[0][5], $aEssentialBuilding, $UpgradeCost
-	;DirRemove($sTempPath, $DIR_REMOVE)
-	;EssentialBuildingImageCopy($sImagePath, $sTempPath)
-	;
-	;$BuildingCoord = QuickMIS("CNX", $sTempPath, 180, 80, 350, 400, True)
-	;If IsArray($BuildingCoord) And UBound($BuildingCoord) > 0 Then
-	;	SetLog("Found " & UBound($BuildingCoord) & " Image EssentialBuilding", $COLOR_INFO)
-	;	For $j = 0 To UBound($BuildingCoord) - 1
-	;		If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 180, $BuildingCoord[$j][2] - 10, 260, $BuildingCoord[$j][2] + 10) Then
-	;			SetDebugLog("Building " & $j & " is new, skip!", $COLOR_ERROR)
-	;			ContinueLoop ;skip New Building
-	;		EndIf
-	;		If $BuildingCoord[$j][0] = "BombT" Then
-	;			SetDebugLog("Building " & $j & " Detected as Bomb Tower, lets check if it Bomb or a Bomb Tower", $COLOR_INFO)
-	;			If Not QuickMIS("BC1", $sImagePath & "Tower\", $BuildingCoord[$j][1] + 10, $BuildingCoord[$j][2] - 10, 300, $BuildingCoord[$j][2] + 10) Then
-	;				SetDebugLog("Building " & $j & " is Not Bomb Tower, skip!", $COLOR_ERROR)
-	;				ContinueLoop ;skip Not Bomb Tower
-	;			EndIf
-	;		EndIf
-	;		Local $Hero[4] = ["ArcherQueen", "BarbarianKing", "GrandWarden", "RoyalChampion"]
-	;		Local $BuildingType = "Building"
-	;		For $z = 0 To UBound($Hero) - 1
-	;			If $BuildingCoord[$j][0] = $Hero[$z] Then $BuildingType = "Hero"
-	;		Next
-	;		_ArrayAdd($aEssentialBuildingCoord, String($BuildingCoord[$j][0]) & "|" & $BuildingCoord[$j][1] & "|" & $BuildingCoord[$j][2] & "|" & $BuildingType)
-	;	Next
-	;	For $j = 0 To UBound($aEssentialBuildingCoord) - 1
-	;		$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", 350, $BuildingCoord[$j][2] - 8, 150, 20, True)
-	;		$aEssentialBuildingCoord[$j][4] = Number($UpgradeCost)
-	;		SetLog("[" & $j & "] Building: " & $aEssentialBuildingCoord[$j][0] & ", Cost=" & $aEssentialBuildingCoord[$j][4], $COLOR_INFO)
-	;	Next
-	;	_ArraySort($aEssentialBuildingCoord, 1, 0, 0, 4)
-	;	Return $aEssentialBuildingCoord
-	;Else
-	;	SetDebugLog("Not Array Essential Building", $COLOR_DEBUG)
-	;EndIf
-	;Return $aEssentialBuildingCoord
 EndFunc
 
 Func EssentialBuildingImageCopy($sImagePath = "", $sTempPath = "")
