@@ -1237,13 +1237,7 @@ Func PlaceBuilder($bTest = False)
 	Local $a_Gem = Number($g_iGemAmount)
 	Local $a_Builder = Number($g_iTotalBuilderCount)
 	If $a_Builder < 5 Then
-		If $a_Builder = 2 And $a_Gem > 499 Then
-			SearchBuilder($bTest)
-		ElseIf $a_Builder = 3 And $a_Gem > 999 Then
-			SearchBuilder($bTest)
-		ElseIf $a_Builder = 4 And $a_Gem > 1999 Then
-			SearchBuilder($bTest)
-		EndIf
+		If ($a_Builder = 2 And $a_Gem > 499) Or  ($a_Builder = 3 And $a_Gem > 999) Or ($a_Builder = 4 And $a_Gem > 1999 ) Then SearchBuilder($bTest)
 	EndIf
 EndFunc
 
