@@ -831,16 +831,13 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			$isWall = False ;reset var
 			For $j = 0 To UBound($NewCoord) - 1
 				If Not $g_bRunState Then Return
+				If $NewCoord[$j][0] = "Gem" Then ContinueLoop
 				If StringInStr($NewCoord[$j][4], "Wall") Then
 					$IsWall = True
 					SetLog("New Building: Is Wall, let's try place 10 Wall", $COLOR_INFO)
 				EndIf
-				If $NewCoord[$j][0] = "Gem" And (Number($g_iGemAmount) < Number($NewCoord[$j][6])) Then
-					SetLog("Detected New Builder's Hut, but not enough gems")
-					ContinueLoop
-				EndIf
 				If Not $g_bRunState Then Return
-				If CheckResourceForDoUpgrade($NewCoord[$j][4], $NewCoord[$j][6], $NewCoord[$j][0]) Or $NewCoord[$j][0] = "Gem" Then
+				If CheckResourceForDoUpgrade($NewCoord[$j][4], $NewCoord[$j][6], $NewCoord[$j][0]) and Not $NewCoord[$j][0] = "Gem" Then
 					If Not $ZoomedIn Then
 						Clickaway("Right")
 						If _Sleep(1000) Then Return ;wait builder menu closed
