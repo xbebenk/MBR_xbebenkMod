@@ -167,8 +167,8 @@ Func Laboratory($bDebug = False)
 								SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Cost:" & $Upgrades[$i][3], $COLOR_SUCCESS)
 								$bUpgradeFound = True
 								$sUpgrade = $Upgrades[$i][4]
-								$aUpgradeCoord[0] = $Upgrades[$i][1]
-								$aUpgradeCoord[1] = $Upgrades[$i][2]
+								$aUpgradeCoord[0] = $Upgrades[$i][1] - 35
+								$aUpgradeCoord[1] = $Upgrades[$i][2] - 35
 								$sCostResult = $Upgrades[$i][3]
 								ExitLoop
 							EndIf
@@ -525,8 +525,8 @@ Func UpgradeLabAny($bDebug = False)
 					SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Cost:" & $Upgrades[$i][3], $COLOR_SUCCESS)
 					$bUpgradeFound = True
 					$sUpgrade = $Upgrades[$i][4]
-					$aUpgradeCoord[0] = $Upgrades[$i][1]
-					$aUpgradeCoord[1] = $Upgrades[$i][2]
+					$aUpgradeCoord[0] = $Upgrades[$i][1] - 35 
+					$aUpgradeCoord[1] = $Upgrades[$i][2] - 35
 					$sCostResult = $Upgrades[$i][3]
 					ExitLoop
 				EndIf
