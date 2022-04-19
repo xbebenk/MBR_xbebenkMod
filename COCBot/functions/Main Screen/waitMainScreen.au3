@@ -51,6 +51,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 			SetLog("Chief, we have minor coc Update!", $COLOR_INFO)
 			ClickAway()
 			_Sleep(1000)
+			Return
 		EndIf
 		
 		If Not checkObstacles() And $i = 10 Then ExitLoop ;something wrong with coc screen exit this loop and try to restart coc

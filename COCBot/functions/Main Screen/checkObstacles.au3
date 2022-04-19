@@ -148,7 +148,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				EndIf
 				SetLog("Warning: Cannot find type of Reload error message", $COLOR_ERROR)
 		EndSelect
-		Return checkObstacles_ReloadCoC($aReloadButton, "#0131") ;Last chance -> Reload CoC
+		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
 	
 	If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
