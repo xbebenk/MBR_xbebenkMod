@@ -64,12 +64,9 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 						If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $Result &= $DLLRes[0] & "|"
 					Next
 					If StringRight($Result, 1) = "|" Then $Result = StringLeft($Result, (StringLen($Result) - 1))
-					Local $aCords = decodeMultipleCoords($Result, 60, 10, 1)
-					If UBound($aCords) = 0 Then Return False ; should never happen, but it did...
-					Local $aCord = $aCords[0] ; sorted by Y
-					If UBound($aCord) < 2 Then Return False ; should never happen, but anyway...
-					$g_iQuickMISX = $aCord[0] + $Left
-					$g_iQuickMISY = $aCord[1] + $Top
+					Local $aCords = decodeSingleCoord($Result)
+					$g_iQuickMISX = $aCords[0] + $Left
+					$g_iQuickMISY = $aCords[1] + $Top
 
 					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
 					$g_iQuickMISName = $Name
