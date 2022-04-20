@@ -222,6 +222,8 @@ Func ProcessCommandLine()
 					$g_bDevMode = True
 				Case "/minigui", "/mg", "-minigui", "-mg"
 					$g_iGuiMode = 2
+				Case "/rg", "-rg", "/remgui", "-remgui"
+					$g_iRemUnusedGUI = 1
 				Case "/nogui", "/ng", "-nogui", "-ng"
 					$g_iGuiMode = 0
 				Case "/hideandroid", "/ha", "-hideandroid", "-ha"
@@ -666,7 +668,10 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 
 	; Check the Supported Emulator versions
 	CheckEmuNewVersions()
-
+	If $g_iRemUnusedGUI Then 
+		SetLog("Warning: SomeGUI removed to allow more instance", $COLOR_ACTION)
+		RemControl()
+	EndIf
 	;Reset Telegram message
 	NotifyGetLastMessageFromTelegram()
 	$g_iTGLastRemote = $g_sTGLast_UID
@@ -1707,4 +1712,46 @@ Func CommonRoutine($RoutineType = Default)
 				If $g_bRestart Then Return
 			Next
 	EndSwitch
+EndFunc
+
+Func RemControl()
+	For $i = $g_hChkCustomTrainOrderEnable To $g_ahImgTroopOrderSet
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_hChkCustomBrewOrderEnable To $g_ahImgSpellsOrderSet
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahChkArmy[0] To $g_ahChkArmy[UBound($g_ahChkArmy) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahChkUseInGameArmy[0] To $g_ahChkUseInGameArmy[UBound($g_ahChkUseInGameArmy) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahBtnEditArmy[0] To $g_ahBtnEditArmy[UBound($g_ahBtnEditArmy) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahLblEditArmy[0] To $g_ahLblEditArmy[UBound($g_ahLblEditArmy) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahLblTotalQTroop[0] To $g_ahLblTotalQTroop[UBound($g_ahLblTotalQTroop) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahPicTotalQTroop[0] To $g_ahPicTotalQTroop[UBound($g_ahPicTotalQTroop) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahLblTotalQSpell[0] To $g_ahLblTotalQSpell[UBound($g_ahLblTotalQSpell) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahPicTotalQSpell[0] To $g_ahPicTotalQSpell[UBound($g_ahPicTotalQSpell) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahLblQuickTrainNote[0] To $g_ahLblQuickTrainNote[UBound($g_ahLblQuickTrainNote) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahLblUseInGameArmyNote[0] To $g_ahLblUseInGameArmyNote[UBound($g_ahLblUseInGameArmyNote) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_hChkCustomDropOrderEnable To $g_hBtnRemoveDropOrder
+		GUICtrlDelete($i)
+	Next
 EndFunc

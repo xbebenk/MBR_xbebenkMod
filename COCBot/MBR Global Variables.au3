@@ -483,6 +483,7 @@ Global $g_iBotLaunchOption_Dock = 0 ; If 1 bot will dock Android, 2 dock and sli
 Global $g_bBotLaunchOption_NoBotSlot = False ; If True, bot slot Mutex are not used in function LockBotSlot
 Global $g_iBotLaunchOption_Console = False ; Console option used
 Global $g_iBotLaunchOption_Help = False ; If specified, bot just shows command line options and exits
+Global $g_iRemUnusedGUI = False
 Global $g_asCmdLine[1] = [0] ; Clone of $CmdLine without options, please use instead of $CmdLine
 Global Const $g_sWorkingDir = @WorkingDir ; Working Directory at bot launch
 
@@ -1018,7 +1019,8 @@ Global $g_sUpgradeResource = 0
 Global $g_sUpgradeDuration
 
 ; Builder Base
-Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0, $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_iChkBBSuggestedUpgradesOTTO = 0 
+Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0
+Global $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_bOptimizeOTTO = 0, $g_bUpgradeWallLowCost = 0
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
