@@ -159,6 +159,7 @@ Global $g_sImgAUpgradeGreenZoneBB = @ScriptDir & "\imgxml\Resources\BuildersBase
 Global $g_sImgAUpgradeObstacleBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\ObstacleBB"
 Global $g_sImgAUpgradeOttoBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\OptimizeOTTO\"
 Global $g_sImgAUpgradeOttoBBPriority = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\OptimizeOTTOPri\"
+Global $g_sImgBBResourceIcon = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\BBResourceIcon\"
 #EndRegion
 
 #Region Train

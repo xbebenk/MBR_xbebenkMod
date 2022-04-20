@@ -394,7 +394,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall)
 
 	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
-	_Ini_Add("other", "ChkOptimizeOTTO", $g_iChkBBSuggestedUpgradesOTTO)
+	_Ini_Add("other", "ChkOptimizeOTTO", $g_bOptimizeOTTO)
 
 	# NEW CLANGAMES GUI
 	_Ini_Add("other", "ChkClanGamesEnabled", $g_bChkClanGamesEnabled ? 1 : 0)

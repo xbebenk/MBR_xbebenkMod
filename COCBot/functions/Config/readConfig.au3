@@ -427,7 +427,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_iChkBBSuggestedUpgradesIgnoreWall, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall, "Int")
 
 	IniReadS($g_iChkPlacingNewBuildings, $g_sProfileConfigPath, "other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings, "Int")
-	IniReadS($g_iChkBBSuggestedUpgradesOTTO, $g_sProfileConfigPath, "other", "ChkOptimizeOTTO", $g_iChkBBSuggestedUpgradesOTTO, "Int")
+	IniReadS($g_bOptimizeOTTO, $g_sProfileConfigPath, "other", "ChkOptimizeOTTO", $g_bOptimizeOTTO, "Int")
 
 	# NEW CLANGAMES GUI
 	IniReadS($g_bChkClanGamesEnabled, $g_sProfileConfigPath, "other", "ChkClanGamesEnabled", False, "Bool")

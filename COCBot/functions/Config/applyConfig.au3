@@ -334,7 +334,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, $g_iChkBBSuggestedUpgradesIgnoreWall = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			GUICtrlSetState($g_hChkPlacingNewBuildings, $g_iChkPlacingNewBuildings = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBSuggestedUpgradesOTTO, $g_iChkBBSuggestedUpgradesOTTO = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBSuggestedUpgradesOTTO, $g_bOptimizeOTTO = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			chkActivateBBSuggestedUpgrades()
 			chkActivateBBSuggestedUpgradesGold()
@@ -487,7 +487,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iChkBBSuggestedUpgradesIgnoreWall = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreWall) = $GUI_CHECKED) ? 1 : 0
 
 			$g_iChkPlacingNewBuildings = (GUICtrlRead($g_hChkPlacingNewBuildings) = $GUI_CHECKED) ? 1 : 0
-			$g_iChkBBSuggestedUpgradesOTTO = (GUICtrlRead($g_hChkBBSuggestedUpgradesOTTO) = $GUI_CHECKED) ? 1 : 0
+			$g_bOptimizeOTTO = (GUICtrlRead($g_hChkBBSuggestedUpgradesOTTO) = $GUI_CHECKED) ? 1 : 0
 
 			#NEW CLANGAMES GUI
 			$g_bChkClanGamesEnabled = (GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED) ? 1 : 0

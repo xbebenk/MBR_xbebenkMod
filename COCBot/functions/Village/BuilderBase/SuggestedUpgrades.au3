@@ -75,7 +75,7 @@ EndFunc   ;==>chkActivateBBSuggestedUpgrades
 
 Func chkActivateOptimizeOTTO()
 	If GUICtrlRead($g_hChkBBSuggestedUpgradesOTTO) = $GUI_CHECKED Then
-		$g_iChkBBSuggestedUpgradesOTTO = 1
+		$g_bOptimizeOTTO = 1
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
@@ -84,7 +84,7 @@ Func chkActivateOptimizeOTTO()
 		$g_iChkPlacingNewBuildings = True
 		$g_iChkBBSuggestedUpgradesIgnoreWall = True
 	Else
-		$g_iChkBBSuggestedUpgradesOTTO = 0
+		$g_bOptimizeOTTO = 0
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $GUI_ENABLE)
@@ -138,9 +138,8 @@ Local $BuildingUpgraded = False
 ; MAIN CODE
 Func AutoUpgradeBB($bTest = False)
 	If $g_bRestart Then Return
-	; If is not selected return
 	If $g_iChkBBSuggestedUpgrades = 0 Then Return
-	Local $bDebug = $g_bDebugImageSave
+	Local $bDebug = $g_bDebugSetlog
 	Local $bScreencap = True
 	
 	If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
@@ -183,7 +182,7 @@ Func AutoUpgradeBB($bTest = False)
 						Switch $aResult[2]
 							Case "Elixir"
 								$bSkipGoldCheck = True
-								If $g_iChkBBSuggestedUpgradesOTTO Then
+								If $g_bOptimizeOTTO Then
 									If QuickMIS("BC1", $g_sImgAUpgradeOttoBB, 260, $y, 450, $y1, $bScreencap, $bDebug) Then
 										SetLog("[" & $i & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
 										Click($g_iQuickMISX, $g_iQuickMISY)
@@ -218,7 +217,7 @@ Func AutoUpgradeBB($bTest = False)
 						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
 						Switch $aResult[2]
 							Case "Gold"
-								If $g_iChkBBSuggestedUpgradesOTTO And Not $g_bisMegaTeslaMaxed Then
+								If $g_bOptimizeOTTO And Not $g_bisMegaTeslaMaxed Then
 									If QuickMIS("BC1", $g_sImgAUpgradeOttoBB, 260, $y, 450, $y1, $bScreencap, $bDebug) Then
 										SetLog("[" & $i & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
 										Click($g_iQuickMISX, $g_iQuickMISY)
@@ -345,12 +344,12 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 				$sUpgButtom = $g_sImgAutoUpgradeBtnGold
 			Case "Gold Storage"
 				$sUpgButtom = $g_sImgAutoUpgradeBtnElixir
-			Case "S ar Laboratory"
+			Case "Star Laboratory"
 				$sUpgButtom = $g_sImgAutoUpgradeBtnElixir
 		EndSwitch
 	EndIf
 	
-	If $sUpgButtom = "Elixir" And $aBuildingName[1] = "Wall" And $g_iChkBBSuggestedUpgradesOTTO Then 
+	If $sUpgButtom = "Elixir" And $aBuildingName[1] = "Wall" And $g_bOptimizeOTTO Then 
 		SetLog("Wall Upgrade using elixir, skipped due to OptimizeOTTO!", $COLOR_SUCCESS)
 		Return False
 	EndIf
@@ -378,7 +377,7 @@ Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
 				$FoundOTTOBuilding = True
 			EndIf
 			
-			If $g_iChkBBSuggestedUpgradesOTTO And Not $g_bisMegaTeslaMaxed And Not $FoundOTTOBuilding Then
+			If $g_bOptimizeOTTO And Not $g_bisMegaTeslaMaxed And Not $FoundOTTOBuilding Then
 				;check the upgrade until reach spesific level
 				For $i = 0 To UBound($OptimizeOTTO) - 1
 					If StringInStr($aBuildingName[1], $OptimizeOTTO[$i]) Then
@@ -501,7 +500,7 @@ Func SearchNewBuilding($bTest = False)
 			
 		EndIf
 		If Not $g_bRunState Then Return
-		If $g_iChkBBSuggestedUpgradesOTTO Then ;add add BuiderHall and Storage for priority upgrade on optimize OTTO
+		If $g_bOptimizeOTTO Then ;add add BuiderHall and Storage for priority upgrade on optimize OTTO
 			If QuickMIS("BC1", $g_sImgAUpgradeOttoBBPriority, 270, 80, 540, 370, True) Then
 				SetLog("Found OptimizeOTTO Priority Building", $COLOR_INFO)
 				Local $tmpX = $g_iQuickMISX, $tmpY = $g_iQuickMISY
@@ -519,7 +518,7 @@ Func SearchNewBuilding($bTest = False)
 		EndIf
 		If Not $g_bRunState Then Return
 
-		$TmpUpgradeCost = getOcrAndCapture("coc-NewCapacity",435, 335, 100, 30, True)
+		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost",435, 335, 100, 30, True)
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost And $z > 4 Then $NeedDrag = False
 		$UpgradeCost = $TmpUpgradeCost
@@ -713,4 +712,94 @@ Func AutoUpgradeBBCheckBuilder($bTest = False)
 	EndIf
 	SetLog("Free Master Builder : " & $g_iFreeBuilderCountBB, $COLOR_DEBUG)
 	Return $bRet
+EndFunc
+
+Func FindBBNewBuilding()
+	Local $aTmpCoord, $aBuilding[0][7], $UpgradeCost, $aUpgradeName, $UpgradeType = ""
+	$aTmpCoord = QuickMIS("CNX", $g_sImgAUpgradeObstNew, 280, 73, 430, 370)
+	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		For $i = 0 To UBound($aTmpCoord) - 1
+			If QuickMIS("BC1", $g_sImgBBResourceIcon, $aTmpCoord[$i][1] + 100 , $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 250, $aTmpCoord[$i][2] + 12) Then
+				$UpgradeType =  $g_iQuickMISName
+				_ArrayAdd($aBuilding, $UpgradeType & "|" & $g_iQuickMISX & "|" & $g_iQuickMISY & "|" & $aTmpCoord[$i][1])
+			EndIf
+		Next
+
+		For $j = 0 To UBound($aBuilding) -1
+			$aUpgradeName = getBuildingName($aBuilding[$j][3], $aBuilding[$j][2] - 12) ;get upgrade name and amount
+			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $aBuilding[$j][1], $aBuilding[$j][2] - 12, 120, 25, True)
+			$aBuilding[$j][4] = $aUpgradeName[0]
+			$aBuilding[$j][5] = $aUpgradeName[1]
+			$aBuilding[$j][6] = Number($UpgradeCost)
+			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][4] & ", Cost=" & $aBuilding[$j][6] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
+		Next
+	EndIf
+	Return $aBuilding
+EndFunc
+
+Func FindBBExistingBuilding($bTest = False)
+	Local $ElixMultiply = 1, $GoldMultiply = 1 ;used for multiply score
+	Local $Gold = getResourcesMainScreen(701, 23)
+	Local $Elix = getResourcesMainScreen(701, 74)
+	If $Gold > $Elix Then $GoldMultiply += 1
+	If $Elix > $Gold Then $ElixMultiply += 1
+	
+	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
+	Local $OptimizeOTTO[14][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 11], ["Storage", 12], _ 
+									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 12], ["Builder Hall", 12], ["Clock Tower", 5], ["Barracks", 8], _
+									["Army Camp", 12], ["Wall", 5]]
+	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 400, 73, 500, 370)
+	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		For $i = 0 To UBound($aTmpCoord) - 1
+			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
+			$UpgradeName = getBuildingName(300, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount 
+			If $g_bOptimizeOTTO Then ;if OptimizeOTTO enabled, filter only OptimizeOTTO buildings
+				Local $bFoundOptimizeOTTO = False
+				For $x = 0 To UBound($OptimizeOTTO) - 1
+					If StringInStr($UpgradeName[0], $OptimizeOTTO[$x][0], 1) Then 
+						$bFoundOptimizeOTTO = True ;used for add array
+						ExitLoop
+					EndIf
+				Next
+				
+				If $g_bUpgradeWallLowCost Then
+					Local $tmpcost = getOcrAndCapture("coc-buildermenu-cost", $aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10, 120, 30, True)
+					If Number($tmpcost) = 0 Then ContinueLoop
+					If Number($tmpcost) > 500000 Then ContinueLoop
+				EndIf
+				
+				If Not $bFoundOptimizeOTTO And Not $g_bUpgradeWallLowCost Then SetDebugLog("Building:" & $UpgradeName[0] & ", not OptimizeOTTO building")
+				If Not $bFoundOptimizeOTTO And Not $g_bUpgradeWallLowCost Then ContinueLoop 
+			EndIf
+			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
+		Next
+
+		For $j = 0 To UBound($aBuilding) -1
+			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $aBuilding[$j][1], $aBuilding[$j][2] - 10, 120, 30, True)
+			$aBuilding[$j][5] = Number($UpgradeCost)
+			Local $BuildingName = $aBuilding[$j][3]
+			If $g_bOptimizeOTTO Then ;set score for OptimizeOTTO Building
+				For $k = 0 To UBound($OptimizeOTTO) - 1
+					If StringInStr($BuildingName, $OptimizeOTTO[$k][0]) Then
+						Switch $aBuilding[$j][0]
+							Case "Gold"
+								$aBuilding[$j][6] = $OptimizeOTTO[$k][1] * $GoldMultiply
+							Case "Elix"
+								$aBuilding[$j][6] = $OptimizeOTTO[$k][1] * $ElixMultiply
+						EndSwitch
+						$aBuilding[$j][7] = "OptimizeOTTO"
+					EndIf
+				Next
+			EndIf
+			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
+		Next
+	EndIf
+
+	If $g_bOptimizeOTTO Then
+		_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
+	Else
+		_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
+	EndIf
+	
+	Return $aBuilding
 EndFunc
