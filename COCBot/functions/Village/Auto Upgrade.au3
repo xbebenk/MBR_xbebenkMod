@@ -182,7 +182,6 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
 		If Not ($UpgradeCost = $TmpUpgradeCost) Then $sameCost = 0
-		SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
 		If $sameCost > 1 Then $NeedDrag = False
 		$UpgradeCost = $TmpUpgradeCost
 		
@@ -193,7 +192,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		If Not $g_bRunState Then Return
 		If Not AutoUpgradeCheckBuilder($bTest) Then Return
 		ClickDragAUpgrade("up", 328) ;do scroll up
-		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
+		SetLog("[" & $z & "] SameCost=" & $sameCost & " [" & $UpgradeCost & "]", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
 	Next
 EndFunc
@@ -892,7 +891,6 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
 		If Not ($UpgradeCost = $TmpUpgradeCost) Then $sameCost = 0
-		SetDebugLog("sameCost = " & $sameCost, $COLOR_INFO)
 		If $sameCost > 1 Then $NeedDrag = False
 		$UpgradeCost = $TmpUpgradeCost
 
@@ -904,7 +902,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		EndIf
 		If Not $g_bRunState Then Return
 		ClickDragAUpgrade("up", 328);do scroll up
-		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
+		SetLog("[" & $z & "] SameCost=" & $sameCost & " [" & $UpgradeCost & "]", $COLOR_DEBUG)
 		If _Sleep(1000) Then Return
 	Next
 	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
@@ -1128,11 +1126,13 @@ Func IsTHLevelAchieved()
 EndFunc
 
 Func getMostBottomCost()
-	Local $TmpUpgradeCost = 0
+	Local $TmpUpgradeCost, $TmpName
 	If QuickMIS("BC1", $g_sImgResourceIcon, 300, 300, 450, 360) Then
 		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $g_iQuickMISX, $g_iQuickMISY - 10, 120, $g_iQuickMISY + 10, True) ;check most bottom upgrade cost
+		$TmpName = getBuildingName(200, $g_iQuickMISY - 8)
+		Local $ret = $TmpName[0] & "|" & $TmpUpgradeCost
 	EndIf
-	Return $TmpUpgradeCost
+	Return $ret
 EndFunc
 
 Func setMinSaveWall($Type, $cost)
