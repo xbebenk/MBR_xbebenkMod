@@ -91,6 +91,7 @@ Global $g_hFrmBotEmbeddedMouse = 0
 
 ; MBR includes
 #include "COCBot\MBR Global Variables.au3"
+#Include "COCBot\functions\Other\VritDsktLibrary.au3"
 #include "COCBot\functions\Other\ExtendedErrorInfo.au3"
 #include "COCBot\functions\Other\MBRFunc.au3"
 #include "COCBot\functions\Other\Multilanguage.au3"
@@ -946,11 +947,26 @@ Func btnVillageStat($source = "")
 		GUICtrlSetState($g_hPicResultAttackedHourNow, $GUI_ENABLE + $GUI_HIDE)
 		GUICtrlSetState($g_hPicResultSkippedHourNow, $GUI_ENABLE + $GUI_HIDE)
 	EndIf
-
 EndFunc   ;==>btnVillageStat
 
 Func btnHide()
+	$g_bIsHidden = Not $g_bIsHidden
+	btnHideAndroid($g_bIsHidden)
+	BtnHideState()
 EndFunc   ;==>btnHide
+
+Func BtnHideState()
+	Local $sText
+	If $g_bIsHidden Then
+		$sText = GetTranslatedFileIni("MBR GUI Control Bottom", "Func_btnHide_False", "Show")
+	Else
+		$sText = GetTranslatedFileIni("MBR GUI Control Bottom", "Func_btnHide_True", "Hide")
+	EndIf
+	If GUICtrlRead($g_hBtnHide) <> $sText Then
+		; update text
+		GUICtrlSetData($g_hBtnHide, $sText)
+	EndIf
+EndFunc   ;==>updateBtnHideState
 
 Func btnSearchMode()
 EndFunc   ;==>btnSearchMode
@@ -1171,11 +1187,11 @@ Func UpdateManagedMyBot($aBotDetails)
 
 	If $g_iDebugWindowMessages Then SetDebugLog("UpdateManagedMyBot: " & $aBotDetails[$g_eBotDetailsBotForm] & ", Profile: " & $sProfile & ", Android: " & $sEmulator & ", Instance: " & $sInstance & ", StructType: " & $eStructType & ", Ptr: " & $pStructPtr & ", Data:" & $AdditionalData)
 
-	If $g_sProfileCurrentName <> $sProfile Then
-		$g_sProfileCurrentName = $sProfile
-		; Set the profile name on the village info group.
-		GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village") & ": " & $g_sProfileCurrentName)
-	EndIf
+	If $g_sProfileCurrentName <> $sProfile Then $g_sProfileCurrentName = $sProfile
+
+	; Set the profile name on the village info group.
+	GUICtrlSetData($g_hGrpVillage, GetTranslatedFileIni("MBR GUI Design Bottom", "GrpVillage", "Village") & ": " & $g_sProfileCurrentName)
+
 	If $sEmulator <> "" Then $g_sAndroidEmulator = $sEmulator
 	If $sInstance <> "" Then $g_sAndroidInstance = $sInstance
 
@@ -1309,6 +1325,14 @@ Func btnMakeScreenshot()
 	_WinAPI_PostMessage($g_hFrmBotBackend, $WM_MYBOTRUN_API, 0x1050, $g_hFrmBot)
 EndFunc   ;==>btnMakeScreenshot
 
+Func btnHideAndroid($g_bIsHidden = True)
+	If $g_bIsHidden Then
+		_WinAPI_PostMessage($g_hFrmBotBackend, $WM_MYBOTRUN_API, 0x1070, $g_hFrmBot)
+	Else
+		_WinAPI_PostMessage($g_hFrmBotBackend, $WM_MYBOTRUN_API, 0x1080, $g_hFrmBot)
+	EndIf
+EndFunc   ;==>btnMakeScreenshot
+
 Func TogglePauseImpl($source)
 	If $g_bBotPaused Then
 		_WinAPI_PostMessage($g_hFrmBotBackend, $WM_MYBOTRUN_API, 0x1020, $g_hFrmBot)
@@ -1396,6 +1420,10 @@ EndIf
 
 ;UpdateMainGUI()
 GUICtrlSetState($g_hBtnStart, $GUI_ENABLE)
+GUICtrlSetState($g_hBtnHide, $GUI_ENABLE)
+_VrtDesktObjCreation() ;virtual desktop object
+Local $Desktop = _GetEnumVirtDskt()
+Setlog("Number of Desktop = " & $Desktop)
 
 ; Show main GUI
 ShowMainGUI()
@@ -1417,6 +1445,7 @@ DllCall("user32.dll", "none", "DisableProcessWindowsGhosting")
 
 Local $hStatusUpdateTimer = 0, $hTimeUpdateTimer = 0
 Local $iMainLoop = 1
+WinGetAndroidHandle()
 While 1
 	_Sleep($g_iMainLoopSleep, True, False)
 

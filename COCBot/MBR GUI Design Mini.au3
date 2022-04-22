@@ -209,7 +209,7 @@ Func CreateMainGUIControls()
 		Case 0
 			Return
 		Case 2
-			$_GUI_MAIN_BUTTON_COUNT = 2
+			$_GUI_MAIN_BUTTON_COUNT = 3
 	EndSwitch
 
 	;mini SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_01", "Loading Main GUI..."))
