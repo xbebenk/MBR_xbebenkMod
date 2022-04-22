@@ -345,7 +345,9 @@ Func WinGetAndroidHandle($bInitAndroid = Default, $bTestPid = False)
 			EndIf
 			If $g_bIsHidden = True And ($aPos[0] > -30000 Or $aPos[1] > -30000) Then
 				; rehide Android
-				HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
+				If @OSVersion = "WIN_10" And $g_iAndroidBackgroundMode <> 1 Then
+					HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
+				EndIf
 			EndIf
 		EndIf
 		$g_bWinGetAndroidHandleActive = False
@@ -4139,15 +4141,19 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 		WinGetPos($g_hAndroidWindow)
 	EndIf
 	If @error <> 0 Or AndroidEmbedded() Then Return SetError(0, 0, 0)
-	Local $DesktopWidth = @DeskTopWidth
-	Local $mid = $DesktopWidth/2
+	
 	If $bHide = True Then
 		If @OSVersion = "WIN_10" And $g_iAndroidBackgroundMode = 1 Then
 			_MoveAppToSpecificDesktop($g_hAndroidWindow, 2)
 		Else
 			WinMove($g_hAndroidWindow, "", -32000, -32000)
 		EndIf
-	ElseIf $bHide = False Then
+		SetDebugLog($sSource & " - Hide Android window", $COLOR_INFO)
+	EndIf
+	
+	Local $DesktopWidth = @DeskTopWidth
+	Local $mid = $DesktopWidth/2
+	If $bHide = False Then
 		Switch $bRestorePosAndActivateWhenShow
 			Case True
 				; move and activate
