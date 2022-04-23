@@ -4164,7 +4164,6 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 					Else
 						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX - 870, $g_iFrmBotPosY)
 					EndIf
-					WinActivate($g_hAndroidWindow)
 				Else
 					WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
 					WinActivate($g_hAndroidWindow)
