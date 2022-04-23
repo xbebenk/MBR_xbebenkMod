@@ -43,7 +43,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		Local $sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
 		If $sLoading = "Loading" Then 
 			SetLog("Still on Loading Screen...", $COLOR_INFO)
-			_Sleep(2000)
+			_Sleep(5000)
 		EndIf
 		
 		Local $sUpdateAvail = getOcrAndCapture("coc-UpdateAvail", 320, 235, 220, 30)
