@@ -1131,11 +1131,11 @@ Func IsTHLevelAchieved()
 EndFunc
 
 Func getMostBottomCost()
-	Local $TmpUpgradeCost, $TmpName
+	Local $TmpUpgradeCost, $TmpName, $ret
 	If QuickMIS("BC1", $g_sImgResourceIcon, 300, 300, 450, 360) Then
 		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $g_iQuickMISX, $g_iQuickMISY - 10, 120, $g_iQuickMISY + 10, True) ;check most bottom upgrade cost
 		$TmpName = getBuildingName(200, $g_iQuickMISY - 8)
-		Local $ret = $TmpName[0] & "|" & $TmpUpgradeCost
+		$ret = $TmpName[0] & "|" & $TmpUpgradeCost
 	EndIf
 	Return $ret
 EndFunc
