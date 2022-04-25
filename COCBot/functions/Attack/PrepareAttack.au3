@@ -224,14 +224,16 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 				If $NeedHigherLevel Or $bAnySiege Then
 					If $bAnySiege Then 
 						SetDebugLog("AnySiege")
+						Local $iSiegeIndex
 						For $i = 0 To UBound($aSearchResult) - 1
-							Local $iSiegeIndex = $aSearchResult[$i][5]
+							$iSiegeIndex = $aSearchResult[$i][5]
 							If $iSiegeIndex >= $eWallW And $iSiegeIndex <= $eFlameF Then
 								Local $SiegeLevel = $aSearchResult[$i][3]
 								Local $OwnSiege = $aSearchResult[$i][4]
 								Local $SiegeName = $aSearchResult[$i][0]
 								SetDebugLog($i & ". SiegeName: " & $SiegeName & ", OwnSiege: " & $OwnSiege & ", Level: " & $SiegeLevel & ", Coords: " & $aSearchResult[$i][1] & "," & $aSearchResult[$i][2])
 								If $iFinalLevel < $SiegeLevel Then 
+									$iTroopIndex = $iSiegeIndex ;set ByRef
 									$iFinalLevel = $SiegeLevel
 									$SiegeName = $aSearchResult[$i][0]
 									$FinalCoordX = $aSearchResult[$i][1]
@@ -245,7 +247,6 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 						
 						If $AnySiegeFound Then 
 							Click($FinalCoordX, $FinalCoordY)
-							$iTroopIndex = $iSiegeIndex ;set ByRef
 							$g_iSiegeLevel = $iFinalLevel
 						Else
 							SetLog("AnySiege : Not found any", $COLOR_ERROR)

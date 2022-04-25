@@ -1580,7 +1580,7 @@ Func FirstCheckRoutine()
 	If $b_SuccessAttack Then TrainSystem()
 	If Not $g_bRunState Then Return
 	CommonRoutine("FirstCheckRoutine")
-	If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then checkSwitchAcc() ;switch to next account
+	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then checkSwitchAcc() ;switch to next account
 EndFunc
 
 Func BuilderBase()

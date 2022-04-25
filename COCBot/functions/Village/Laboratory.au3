@@ -467,7 +467,6 @@ Func AutoLocateLab()
 			Click($g_iQuickMISX, $g_iQuickMISY)
 		EndIf
 		_Sleep(500)
-		SetLog(BuildingInfo())
 		Local $BuildingInfo = BuildingInfo(240, 494)
 		If StringInStr($BuildingInfo[1], "Lab") Then
 			If $g_iQuickMISName = "Research" Then
