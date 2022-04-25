@@ -570,6 +570,9 @@ Func smartZap($minDE = -1)
 	If $iPercentageNeeded < 1 Then 
 		SetLog("Percentage needed is less than 1, cancelling!", $COLOR_ERROR)
 		Return $performedZap
+	ElseIf $iPercentageNeeded > 10 Then
+		SetLog("Percentage needed: " & $iPercentageNeeded & "! Too much, skipping!", $COLOR_INFO)
+		Return $performedZap
 	Else
 		SetLog("Percentage needed: " & $iPercentageNeeded, $COLOR_INFO)
 	EndIf
