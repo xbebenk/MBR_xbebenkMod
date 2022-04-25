@@ -38,7 +38,6 @@ EndFunc
 Func TreasuryCollect()
 	SetLog("Begin CollectTreasury:", $COLOR_DEBUG)
 	If Not $g_bRunState Then Return 
-	AndroidAdbScript("ZoomOut")
 	Local $CCFound = False
 	Local $TryCCAutoLocate = False
 	If Int($g_aiClanCastlePos[0]) < 1 Or Int($g_aiClanCastlePos[1]) < 1 Then
