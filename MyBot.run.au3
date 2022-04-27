@@ -1217,21 +1217,16 @@ Func __RunFunction($action)
 			UpgradeBuilding()
 			If _Sleep($DELAYRUNBOT3) Then Return
 			AutoUpgrade()
-			AndroidAdbScript("ZoomOut")
+			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeWall"
 			$g_iNbrOfWallsUpped = 0
 			ClickAway()
 			UpgradeWall()
-			AndroidAdbScript("ZoomOut")
+			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
-				_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
-				If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
-					SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-					checkSwitchAcc()
-				EndIf
 				BuilderBase()
 			EndIf
 			_Sleep($DELAYRUNBOT3)
@@ -1580,7 +1575,49 @@ Func FirstCheckRoutine()
 	If $b_SuccessAttack Then TrainSystem()
 	If Not $g_bRunState Then Return
 	CommonRoutine("FirstCheckRoutine")
-	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then checkSwitchAcc() ;switch to next account
+	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then 
+		CommonRoutine("Switch")
+		checkSwitchAcc() ;switch to next account
+	EndIf
+EndFunc
+
+Func CommonRoutine($RoutineType = Default)
+	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
+	Switch $RoutineType
+		Case "FirstCheckRoutine"
+			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(500) Then Return
+				If $g_bRestart Then Return
+			Next
+			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(500) Then Return
+				If $g_bRestart Then Return
+			Next
+			
+		Case "NoClanGamesEvent"
+			Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(50) Then Return
+				If $g_bRestart Then Return
+			Next
+			
+		Case "Switch"
+			Local $aRndFuncList = ['BuilderBase', 'DonateCC,Train']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(50) Then Return
+				If $g_bRestart Then Return
+			Next
+	EndSwitch
 EndFunc
 
 Func BuilderBase()
@@ -1682,36 +1719,6 @@ Func GotoBBTodoCG()
 		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False
 	EndIf
-EndFunc
-
-Func CommonRoutine($RoutineType = Default)
-	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
-	Switch $RoutineType
-		Case "FirstCheckRoutine"
-			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep(500) Then Return
-				If $g_bRestart Then Return
-			Next
-			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse']
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep(500) Then Return
-				If $g_bRestart Then Return
-			Next
-			
-		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase']
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep(50) Then Return
-				If $g_bRestart Then Return
-			Next
-	EndSwitch
 EndFunc
 
 Func RemControl()
