@@ -59,7 +59,7 @@ Func Laboratory($bDebug = False)
 		If $g_iCmbLaboratory <> 0 Then
 			Local $iPage = Ceiling($g_iCmbLaboratory / $iPicsPerPage) ; page # of user choice
 			While($iCurPage < $iPage) ; go directly to the needed page
-				LabNextPage() ; go to next page of upgrades
+				LabNextPage($iCurPage) ; go to next page of upgrades
 				$iCurPage += 1 ; Next page
 				If _Sleep(1000) Then Return
 			WEnd
@@ -103,19 +103,19 @@ Func Laboratory($bDebug = False)
 					If $iTmpCmbLaboratory > 0 Then
 						SetLog("Try Lab Upgrade: " & $g_avLabTroops[$iTmpCmbLaboratory][0], $COLOR_INFO)
 						Local $iPage = Ceiling($iTmpCmbLaboratory / $iPicsPerPage) ; page # of user choice
-						SetDebugLog("Go to Page: " & $iPage, $COLOR_INFO)
+						SetDebugLog("CurrentPage:" & $iCurPage & ", Go to Page:" & $iPage, $COLOR_INFO)
 						While ($iCurPage > $iPage)
-							LabPrevPage()
+							LabPrevPage($iCurPage)
 							$iCurPage -= 1 ;Prev Page
 							If _Sleep(1000) Then Return
-							If $iCurPage = 1 Then _Sleep(2000)
+							If $iCurPage = 1 Then _Sleep(1000)
 						Wend
 
 						While ($iCurPage < $iPage)
-							LabNextPage() ; go to next page of upgrades
+							LabNextPage($iCurPage) ; go to next page of upgrades
 							$iCurPage += 1 ; Next page
 							If _Sleep(1000) Then Return
-							If $iPage = 4 Then _Sleep(2000)
+							If $iPage = 4 Then _Sleep(1000)
 						WEnd
 
 						; Get coords of upgrade the user wants
@@ -180,10 +180,10 @@ Func Laboratory($bDebug = False)
 					If $bUpgradeFound Then
 						Return LaboratoryUpgrade($sUpgrade, $aUpgradeCoord, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 					EndIf
-
-					LabNextPage() ; go to next page of upgrades
+					
+					LabNextPage($iCurPage) ; go to next page of upgrades
 					$iCurPage += 1 ; Next page
-					If $iCurPage = 4 Then _Sleep(2000)
+					If $iCurPage = 4 Then _Sleep(1000)
 					If _Sleep($DELAYLABORATORY2) Then Return
 				WEnd
 			EndIf
@@ -260,15 +260,24 @@ Func GetLabCostResult($XCoords, $YCoords, $UpgradeName = "")
 	Return $sCostResult
 EndFunc
 
-; if we are on last page, smaller clickdrag... for future dev: this is whatever is enough distance to move 6 off to the left and have the next page similarily aligned
-Func LabNextPage()
+Func LabNextPage($iPage = 1)
 	Local $MidPoint = 500
-	ClickDrag(720, $MidPoint, 85, $MidPoint, 500)
+	SetDebugLog("CurrentPage:" & $iPage)
+	If $iPage = 3 Then 
+		ClickDrag(720, 500, 406, 500, 500)
+	Else
+		ClickDrag(720, 500, 82, 500, 500)
+	EndIf
 EndFunc
 
-Func LabPrevPage()
+Func LabPrevPage($iPage = 1)
 	Local $MidPoint = 500
-	ClickDrag(130, $MidPoint, 760, $MidPoint, 500) ;600
+	SetDebugLog("CurrentPage:" & $iPage)
+	If $iPage = 4 Then 
+		ClickDrag(130, 500, 442, 500, 500) ;600
+	Else
+		ClickDrag(130, 500, 768, 500, 500) ;600
+	EndIf
 EndFunc
 
 ; check the lab to see if something is upgrading in the lab already
@@ -517,8 +526,8 @@ Func UpgradeLabAny($bDebug = False)
 			Return LaboratoryUpgrade($sUpgrade, $aUpgradeCoord, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 		EndIf
 		SetDebugLog("CurrentPage=" & $iCurPage)
-		LabNextPage() ; go to next page of upgrades
 		$iCurPage += 1 ; Next page
+		LabNextPage($iCurPage) ; go to next page of upgrades
 		If Number($iCurPage) = 4 Then _Sleep(2000)
 		If _Sleep($DELAYLABORATORY2) Then Return
 	WEnd
