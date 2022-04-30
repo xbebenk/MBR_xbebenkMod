@@ -672,19 +672,19 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 			SetDebugLog("No Wast time... exit, no troops usable left", $COLOR_DEBUG)
 			ExitLoop ;Check remaining quantities
 		EndIf
-		For $i = $eBarb To $eHunt
-		   ; launch remaining troops
-			If LaunchTroop($i, $nbSides, 1, 1, 1) Then
-				CheckHeroesHealth()
+		Local $aRandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3))]
+		Local $iRandomXY = Round(Random(0, 4))
+		For $i = 0 To UBound($g_avAttackTroops) - 1
+			If $g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eHunt Then
+				; launch remaining troops
+				SelectDropTroop($i)
+				Click($aRandomEdge[$iRandomXY][0], $aRandomEdge[$iRandomXY][1], $g_avAttackTroops[$i][1]) ;Drop one troop
 				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 			EndIf
 		Next
 	Next
-
 	CheckHeroesHealth()
-
 	SetLog("Finished Attacking, waiting for the battle to end")
-
 EndFunc   ;==>AttackSmartFarm
 
 Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion, $SIDESNAMES = "TR|TL|BR|BL")
