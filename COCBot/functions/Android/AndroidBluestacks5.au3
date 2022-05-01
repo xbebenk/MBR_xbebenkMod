@@ -229,7 +229,8 @@ Func RestartBlueStacks5CoC()
 EndFunc   ;==>RestartBlueStacks2CoC
 
 Func CheckScreenBlueStacks5($bSetLog = True)
-	Return CheckScreenBlueStacksX($bSetLog)
+	;Return CheckScreenBlueStacksX($bSetLog)
+	Return True
 EndFunc   ;==>CheckScreenBlueStacks
 
 Func SetScreenBlueStacks5()
