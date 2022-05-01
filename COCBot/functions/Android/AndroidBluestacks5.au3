@@ -191,7 +191,7 @@ Func InitBlueStacks5($bCheckOnly = False)
 		CheckBlueStacksVersionMod()
 
 		; read ADB port
-		Local $BstAdbPort = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\Guests\" & $g_sAndroidInstance & "\Config\", "BstAdbPort")
+		Local $BstAdbPort = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\Guests\" & $g_sAndroidInstance & "\Config\", "BstAdbPort")
 		If $BstAdbPort Then
 			$g_sAndroidAdbDevice = "127.0.0.1:" & $BstAdbPort
 		Else
@@ -385,3 +385,8 @@ Func CloseUnsupportedBlueStacks5()
 	Opt("WinTitleMatchMode", $WinTitleMatchMode)
 	Return False
 EndFunc   ;==>CloseUnsupportedBlueStacks2
+
+Func BlueStacks5AdjustClickCoordinates(ByRef $x, ByRef $y)
+	$x = Round(32767.0 / $g_iAndroidClientWidth * $x)
+	$y = Round(32767.0 / $g_iAndroidClientHeight * $y)
+EndFunc   ;==>BlueStacksAdjustClickCoordinates

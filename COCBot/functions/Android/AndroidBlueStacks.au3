@@ -696,11 +696,6 @@ Func BlueStacks2AdjustClickCoordinates(ByRef $x, ByRef $y)
 	;$y = Int(($Num * $y) / $g_iAndroidClientHeight)
 EndFunc   ;==>BlueStacks2AdjustClickCoordinates
 
-Func BlueStacks5AdjustClickCoordinates(ByRef $x, ByRef $y)
-	$x = Round(32767.0 / $g_iAndroidClientWidth * $x)
-	$y = Round(32767.0 / $g_iAndroidClientHeight * $y)
-EndFunc   ;==>BlueStacksAdjustClickCoordinates
-
 Func DisableBS($HWnD, $iButton)
 	Local $hSysMenu = _GUICtrlMenu_GetSystemMenu($HWnD, 0)
 	_GUICtrlMenu_RemoveMenu($hSysMenu, $iButton, False)
