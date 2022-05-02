@@ -1762,3 +1762,84 @@ Func RemControl()
 		GUICtrlDelete($i)
 	Next
 EndFunc
+
+Func CCTutorial()
+	For $i = 1 To 6
+		SetLog("Wait for Arrow For Travel to Clan Capital #" & $i, $COLOR_INFO)
+		ClickAway()
+		_Sleep(3000)
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 330, 320, 450, 400) Then
+			Click(400, 450)
+			SetLog("Going to Clan Capital", $COLOR_SUCCESS)
+			_Sleep(5000)
+			ExitLoop ;arrow clicked now go to next step
+		EndIf
+		If $i > 1 And Not QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then Return
+	Next
+	
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;tutorial page, with strange person, click until arrow
+		For $i = 1 To 5 
+			SetLog("Wait for Arrow on CC Peak #" & $i, $COLOR_INFO)
+			ClickAway()
+			_Sleep(3000)
+			If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 330, 100, 450, 200) Then ;check clan capital map
+				Click($g_iQuickMISX, $g_iQuickMISY) ;click capital peak arrow
+				SetLog("Going to Capital Peak", $COLOR_SUCCESS)
+				_Sleep(10000)
+				ExitLoop ;arrow clicked now go to next step
+			EndIf
+		Next
+	EndIf
+	
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;tutorial page, with strange person, click until map button
+		For $i = 1 To 5 
+			SetLog("Wait for Map Button #" & $i, $COLOR_INFO)
+			ClickAway()
+			_Sleep(3000)
+			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 20, 620, 90, 660) Then
+				Click($g_iQuickMISX, $g_iQuickMISY) ;click map
+				SetLog("Going back to Clan Capital", $COLOR_SUCCESS)
+				_Sleep(5000)
+				Click($g_iQuickMISX, $g_iQuickMISY) ;click return home
+				SetLog("Return Home", $COLOR_SUCCESS)
+				_Sleep(5000)
+				ExitLoop ;map button clicked now go to next step
+			EndIf
+		Next
+	EndIf
+	
+	For $i = 1 To 8 
+		SetLog("Wait for Arrow on CC Forge #" & $i, $COLOR_INFO)
+		ClickAway()
+		_Sleep(3000)
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then ;check arrow on Clan Capital forge
+			Click(420, 490) ;click CC Forge
+			_Sleep(3000)
+			ExitLoop
+		EndIf
+	Next
+
+	For $i = 1 To 12 
+		SetLog("Wait for Arrow on CC Forge Window #" & $i, $COLOR_INFO)
+		ClickAway()
+		_Sleep(3000)
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then 
+			Click(420, 490) ;click CC Forge
+			_Sleep(3000)
+		EndIf
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 125, 270, 225, 360) Then
+			Click(180, 375) ;click collect
+			_Sleep(3000)
+			ExitLoop
+		EndIf
+	Next
+
+	For $i = 1 To 10 
+		SetLog("Wait for MainScreen #" & $i, $COLOR_INFO)
+		ClickAway()
+		If _checkMainScreenImage($aIsMain) Then ExitLoop
+		_Sleep(3000)
+	Next
+	ClickDrag(800, 420, 500, 420, 500)
+	ZoomOut()
+EndFunc

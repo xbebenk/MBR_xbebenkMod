@@ -62,6 +62,7 @@ Global Const $g_sImgLabResearch = @ScriptDir & "\imgxml\Research\Laboratory\"
 Global Const $g_sImgResIcon = @ScriptDir & "\imgxml\Research\ResIcon\"
 Global $g_sImgUpgradeWallElix = @ScriptDir & "\imgxml\imglocbuttons\WallElix*.xml"
 Global $g_sImgUpgradeWallGold = @ScriptDir & "\imgxml\imglocbuttons\WallGold*.xml"
+Global $g_sImgClanCapitalTutorial = @ScriptDir & "\imgxml\Resources\ClanCapitalTutorial\"
 #EndRegion
 
 #Region Boost Super Troops
