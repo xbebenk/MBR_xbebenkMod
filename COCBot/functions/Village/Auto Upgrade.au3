@@ -66,7 +66,7 @@ Func SearchUpgrade($bTest = False)
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
-			Local $mUpgradeTime = ConvertOCRTime("Lease Upgrade", $sUpgradeTime)
+			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade:", $sUpgradeTime)
 			If $mUpgradeTime > 0 And $mUpgradeTime < 1440 Then
 				SetLog("Upgrade time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
 				$g_bSkipWallReserve = True
