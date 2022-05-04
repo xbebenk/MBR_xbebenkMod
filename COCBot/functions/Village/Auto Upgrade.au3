@@ -736,7 +736,7 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 		If $IsWall Then
 			Local $aWall[3] = ["2","Wall",1]
 			Local $aCostWall[3] = ["Gold", 50, 0]
-			local $aCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
+			Local $aCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
 			If IsArray($aCoords) And UBound($aCoords) = 2 Then
 				For $ProMac = 0 To 9
 					If Not $g_bRunState Then Return

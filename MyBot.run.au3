@@ -1843,3 +1843,71 @@ Func CCTutorial()
 	ClickDrag(800, 420, 500, 420, 500)
 	ZoomOut()
 EndFunc
+
+Func PlaceUnplacedBuilding($bTest=False)
+	If SearchUnplacedBuilding() Then
+		SetLog("Unplaced Building Found!", $COLOR_SUCCESS)
+		If SearchGreenZone() Then
+			If SearchUnplacedBuilding() Then
+				SetLog("Trying to place Unplaced Bulding!", $COLOR_INFO)
+				
+				Click(431,571)
+				If _Sleep(1500) Then Return False
+				
+				Local $GreenCheckCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
+				SetDebugLog("Looking for GreenCheck Button", $COLOR_INFO)
+				If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
+					SetDebugLog("GreenCheck Button Found in [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_INFO)
+					If Not $g_bRunState Then Return
+					If Not $bTest Then
+						Click($GreenCheckCoords[0], $GreenCheckCoords[1])
+					Else
+						SetDebugLog("ONLY for TESTING!!!", $COLOR_ERROR)
+						Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1])
+						Return True
+					EndIf
+					SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
+					If _Sleep(500) Then Return
+					ZoomOut()
+					Return True
+				Else
+					SetDebugLog("GreenCheck Button NOT Found", $COLOR_ERROR)
+					NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in Main Village.")
+					If Not $g_bRunState Then Return
+					;Lets check if exist the [x], it should not exist, but to be safe
+					Local $RedXCoords = decodeSingleCoord(findImage("FindRedX", $g_sImgRedX & "\RedX*", "FV", 1, True))
+					If IsArray($RedXCoords) And UBound($RedXCoords) = 2 Then
+						Click($RedXCoords[0], $RedXCoords[1])
+						SetLog("Sorry! Wrong place to deploy a new building on Main Village!", $COLOR_ERROR)
+						If _Sleep(500) Then Return
+						Return False
+					Else
+						GoGoblinMap()
+						ZoomOut()
+						Return False
+					EndIf
+				EndIf
+			Else
+				SetLog("Unplaced Building Window Lost!", $COLOR_ERROR)
+				ZoomOut()
+			EndIf
+		EndIf
+	EndIf
+EndFunc
+
+Func SearchUnplacedBuilding()
+	Local $atmpInfo = getNameBuilding(292, 494)
+	If $atmpInfo = "" Then
+		SetDebugLog("Search: Unplaced Building Not Found!")
+		Return False
+	Else
+		If StringInStr($atmpInfo, "placed") = 0 Then
+			SetDebugLog("Search: Not Unplaced Building Text!", $COLOR_INFO)
+			Return False
+		Else
+			SetDebugLog("Search: Unplaced Building Found!", $COLOR_SUCCESS)
+			Return True
+		EndIf
+	EndIf
+EndFunc
+

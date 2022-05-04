@@ -287,6 +287,10 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		CCTutorial()
 		Return False
 	EndIf
+	If SearchUnplacedBuilding() Then
+		PlaceUnplacedBuilding()
+		Return False
+	EndIf
 	ClickAway()
 	Return False
 EndFunc   ;==>_checkObstacles
