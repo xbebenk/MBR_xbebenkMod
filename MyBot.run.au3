@@ -1844,7 +1844,7 @@ Func CCTutorial()
 	ZoomOut()
 EndFunc
 
-Func PlaceUnplacedBuilding($bTest=False)
+Func PlaceUnplacedBuilding($bTest = False)
 	If SearchUnplacedBuilding() Then
 		SetLog("Unplaced Building Found!", $COLOR_SUCCESS)
 		If SearchGreenZone() Then
