@@ -345,7 +345,7 @@ Func WinGetAndroidHandle($bInitAndroid = Default, $bTestPid = False)
 			EndIf
 			If $g_bIsHidden = True And ($aPos[0] > -30000 Or $aPos[1] > -30000) Then
 				; rehide Android
-				If @OSVersion = "WIN_10" And $g_iAndroidBackgroundMode <> 1 Then
+				If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
 					HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
 				EndIf
 			EndIf
@@ -4143,7 +4143,7 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 	If @error <> 0 Or AndroidEmbedded() Then Return SetError(0, 0, 0)
 	
 	If $bHide = True Then
-		If @OSVersion = "WIN_10" And $g_iAndroidBackgroundMode = 1 Then
+		If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
 			_MoveAppToSpecificDesktop($g_hAndroidWindow, 2)
 		Else
 			WinMove($g_hAndroidWindow, "", -32000, -32000)
@@ -4157,7 +4157,7 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 		Switch $bRestorePosAndActivateWhenShow
 			Case True
 				; move and activate
-				If @OSVersion = "WIN_10" And $g_iAndroidBackgroundMode = 1 Then
+				If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
 					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
 					If $g_iFrmBotPosX + 236 <= $mid Then 
 						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX + 472, $g_iFrmBotPosY)
@@ -4170,7 +4170,7 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 				EndIf
 			Case False
 				; don't move, only when hidden
-				If @OSVersion = "WIN_10" And $g_iAndroidBackgroundMode = 1 Then
+				If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
 					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
 					_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
 				Else
@@ -4180,7 +4180,7 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 				EndIf
 			Case Default
 				; just move
-				If @OSVersion = "WIN_10" And $g_iAndroidBackgroundMode = 1 Then
+				If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
 					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
 					If $g_iFrmBotPosX + 236 <= $mid Then 
 						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX + 472, $g_iFrmBotPosY)
