@@ -148,7 +148,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				EndIf
 				SetLog("Warning: Cannot find type of Reload error message", $COLOR_ERROR)
 		EndSelect
-		Return checkObstacles_ReloadCoC($aReloadButton, "#0131") ;Last chance -> Reload CoC
+		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
 	
 	If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
@@ -283,6 +283,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then 
+		CCTutorial()
+		Return False
+	EndIf
+	If SearchUnplacedBuilding() Then
+		PlaceUnplacedBuilding()
+		Return False
+	EndIf
 	ClickAway()
 	Return False
 EndFunc   ;==>_checkObstacles
@@ -342,16 +350,6 @@ Func checkObstacles_ReloadCoC($point = Default, $debugtxt = "")
 	EndIf
 	Return True
 EndFunc   ;==>checkObstacles_ReloadCoC
-
-; It's more stable to restart CoC app than click the message restarting the game
-Func checkObstacles_RebootAndroid()
-	If TestCapture() Then Return "Reboot Android"
-	ForceCaptureRegion(True)
-	OcrForceCaptureRegion(True)
-	$g_bGfxError = True
-	CheckAndroidReboot()
-	Return True
-EndFunc   ;==>checkObstacles_RebootAndroid
 
 Func checkObstacles_StopBot($msg)
 	SetLog($msg, $COLOR_ERROR)

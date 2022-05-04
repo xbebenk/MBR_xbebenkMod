@@ -345,7 +345,9 @@ Func WinGetAndroidHandle($bInitAndroid = Default, $bTestPid = False)
 			EndIf
 			If $g_bIsHidden = True And ($aPos[0] > -30000 Or $aPos[1] > -30000) Then
 				; rehide Android
-				HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
+				If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
+					HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
+				EndIf
 			EndIf
 		EndIf
 		$g_bWinGetAndroidHandleActive = False
@@ -4139,24 +4141,57 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 		WinGetPos($g_hAndroidWindow)
 	EndIf
 	If @error <> 0 Or AndroidEmbedded() Then Return SetError(0, 0, 0)
-
+	
 	If $bHide = True Then
-		WinMove($g_hAndroidWindow, "", -32000, -32000)
-	ElseIf $bHide = False Then
+		If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
+			_MoveAppToSpecificDesktop($g_hAndroidWindow, 2)
+		Else
+			WinMove($g_hAndroidWindow, "", -32000, -32000)
+		EndIf
+		SetDebugLog($sSource & " - Hide Android window", $COLOR_INFO)
+	EndIf
+	
+	Local $DesktopWidth = @DeskTopWidth
+	Local $mid = $DesktopWidth/2
+	If $bHide = False Then
 		Switch $bRestorePosAndActivateWhenShow
 			Case True
 				; move and activate
-				WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
-				WinActivate($g_hAndroidWindow)
+				If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
+					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
+					If $g_iFrmBotPosX + 236 <= $mid Then 
+						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX + 472, $g_iFrmBotPosY)
+					Else
+						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX - 870, $g_iFrmBotPosY)
+					EndIf
+				Else
+					WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
+					WinActivate($g_hAndroidWindow)
+				EndIf
 			Case False
 				; don't move, only when hidden
-				Local $a = WinGetPos($g_hAndroidWindow)
-				If UBound($a) > 1 And ($a[0] < -30000 Or $a[1] < -30000) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
-				_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
+				If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
+					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
+					_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
+				Else
+					Local $a = WinGetPos($g_hAndroidWindow)
+					If UBound($a) > 1 And ($a[0] < -30000 Or $a[1] < -30000) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
+					_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
+				EndIf
 			Case Default
 				; just move
-				Local $a = WinGetPos($g_hAndroidWindow)
-				If UBound($a) > 1 And ($a[0] <> $g_iAndroidPosX Or $a[1] <> $g_iAndroidPosY) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
+				If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
+					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
+					If $g_iFrmBotPosX + 236 <= $mid Then 
+						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX + 472, $g_iFrmBotPosY)
+					Else
+						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX - 870, $g_iFrmBotPosY)
+					EndIf
+					WinActivate($g_hAndroidWindow)
+				Else
+					Local $a = WinGetPos($g_hAndroidWindow)
+					If UBound($a) > 1 And ($a[0] <> $g_iAndroidPosX Or $a[1] <> $g_iAndroidPosY) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
+				EndIf
 		EndSwitch
 		If $hHWndAfter <> $g_hAndroidWindow Then AndroidToFront($hHWndAfter, $sSource & "->HideAndroidWindow")
 	EndIf

@@ -11,7 +11,7 @@
 ; ===============================================================================================================================
 
 Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets complete name and level of the buildings, bottom of screen
-	Return getOcrAndCapture("coc-build", $x_start, $y_start, 377, 27)
+	Return getOcrAndCapture("coc-build", $x_start, $y_start, 420, 27)
 EndFunc   ;==>getNameBuilding
 
 Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
@@ -87,6 +87,10 @@ Func getLabUpgrdResourceRed($x_start, $y_start) ; -> Gets complete value of Elix
 	Return getOcrAndCapture("coc-lab-r", $x_start, $y_start, 70, 14, True)
 EndFunc   ;==>getLabUpgrdResourceRed
 
+Func getLabCost($x_start, $y_start)
+	Return getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 16, True)
+EndFunc 
+
 Func getStarLabUpgrdResourceRed($x_start, $y_start) ; -> Gets complete value of Elixir on the troop buttons,  xxx,xxx for "starlaboratory.au3" when red text
 	Return getOcrAndCapture("coc-starlab-r", $x_start, $y_start, 70, 14, True)
 EndFunc   ;==>getLabUpgrdResourceRed
@@ -160,7 +164,7 @@ Func getOcrPBTtime($x_start, $y_start) ;  -> Get the Time until PBT starts from 
 EndFunc   ;==>getOcrPBTtime
 
 Func getBuilderLeastUpgradeTime($x_start, $y_start) ;  -> Get least upgradetime on builder menu
-	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 70, 16, True)
+	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 100, 18, True)
 EndFunc   ;==>getBuilderLeastUpgradeTime
 
 Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
@@ -178,12 +182,11 @@ Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
 	EndIf
 	
 	If StringRegExp($BuildingName, "x\d{1,}") Then
-		Local $aReplace = StringRegExp($BuildingName, "(x\d{1,})", 1)
+		Local $aReplace = StringRegExp($BuildingName, "( x\d{1,})", 1)
 		SetDebugLog($aReplace[0])
 		Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
-		StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
 		SetDebugLog($TmpBuildingName)
-		$BuildingName = $TmpBuildingName
+		$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
 	EndIf
 	
 	Local $aResult[2]

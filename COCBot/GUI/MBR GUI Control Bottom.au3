@@ -24,7 +24,7 @@ Func Initiate()
 		Local $Compiled = @ScriptName & (@Compiled ? " Executable" : " Script")
 		SetLog($Compiled & " running on " & @OSVersion & " " & @OSServicePack & " " & @OSArch)
 		SetLog("AutoIt Version : " & @AutoItVersion)
-		SetLog("xbebenkMod Version :" & $g_sXModversion, $COLOR_INFO)
+		SetLog("xbebenkMod Version : " & $g_sXModversion, $COLOR_INFO)
 		If Not $g_bSearchMode Then
 			SetLogCentered(" Bot Start ", Default, $COLOR_SUCCESS)
 		Else

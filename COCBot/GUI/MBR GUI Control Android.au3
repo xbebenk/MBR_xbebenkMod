@@ -168,7 +168,12 @@ Func getAllEmulators()
 		If GetVersionNormalized($__BlueStacks_Version) < GetVersionNormalized("0.10") Then $sEmulatorString &= "BlueStacks|"
 		If GetVersionNormalized($__BlueStacks_Version) > GetVersionNormalized("1.0") Then $sEmulatorString &= "BlueStacks2|"
 	EndIf
-
+	
+	$__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
+	If Not @error Then
+		If GetVersionNormalized($__BlueStacks_Version) > GetVersionNormalized("5.0") Then $sEmulatorString &= "BlueStacks5|"
+	EndIf
+	
 	; Nox :
 	Local $NoxEmulator = GetNoxPath()
 	If FileExists($NoxEmulator) Then $sEmulatorString &= "Nox|"
@@ -183,8 +188,12 @@ Func getAllEmulators()
 
 	Local $sResult = StringRight($sEmulatorString, 1)
 	If $sResult == "|" Then $sEmulatorString = StringTrimRight($sEmulatorString, 1)
+	Local $aEmulator = StringSplit($sEmulatorString, "|", $STR_NOCOUNT)
 	If $sEmulatorString <> "" Then
-		Setlog("All Emulator found in your machine: " & $sEmulatorString)
+		Setlog("All Emulator found in your machine:")
+		For $i = 0 To UBound($aEmulator) - 1
+			SetLog("  - " & $aEmulator[$i])
+		Next
 	Else
 		Setlog("No Emulator found in your machine")
 		Return
@@ -214,6 +223,9 @@ Func getAllEmulatorsInstances()
 		Case "BlueStacks2"
 			Local $VMsBlueStacks = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\", "DataDir")
 			$sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks\Engine
+		Case "BlueStacks5"
+			Local $VMsBlueStacks = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "DataDir")
+			$sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks\Engine
 		Case "Nox"
 			$sEmulatorPath = GetNoxPath() & "\BignoxVMS"  ; C:\Program Files\Nox\bin\BignoxVMS
 		Case "MEmu"
@@ -228,6 +240,7 @@ Func getAllEmulatorsInstances()
 	; BS Multi Instance
 	Local $sBlueStacksFolder = ""
 	If $Emulator = "BlueStacks2" Then $sBlueStacksFolder = "Android"
+	If $Emulator = "BlueStacks5" Then $sBlueStacksFolder = "Nougat32"
 
 	; Getting all VM Folders
 	Local $aEmulatorFolders = _FileListToArray($sEmulatorPath, $sBlueStacksFolder & "*", $FLTA_FOLDERS)

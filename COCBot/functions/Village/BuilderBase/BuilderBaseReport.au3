@@ -45,7 +45,7 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 	EndIf
 	
 	$g_bisBHMaxed = False
-	If $g_iChkBBSuggestedUpgradesOTTO Then
+	If $g_bOptimizeOTTO Then
 		isGoldFullBB()
 		isElixirFullBB()
 		$g_bisMegaTeslaMaxed = False

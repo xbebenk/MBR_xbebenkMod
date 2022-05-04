@@ -146,6 +146,9 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 	If $stone[0] = 0 And $fixed[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "HiddenStone\", 55, 290, 130, 450) Then 
+			ClickDrag(800, 320, 720, 420, 500)
+		EndIf
 		Return FuncReturn($aResult)
 	EndIf
 

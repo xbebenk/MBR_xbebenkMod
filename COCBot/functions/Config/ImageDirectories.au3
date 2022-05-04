@@ -39,7 +39,7 @@ Global $g_sImgCollectResources = @ScriptDir & "\imgxml\Resources\Collect"
 Global $g_sImgCollectLootCart = @ScriptDir & "\imgxml\Resources\LootCart*"
 Global $g_sImgTreasuryFull = @ScriptDir & "\imgxml\Resources\Treasury"
 Global $g_sImgClanCastle = @ScriptDir & "\imgxml\Buildings\ClanCastle"
-Global $g_sImgLaboratory = @ScriptDir & "\imgxml\Buildings\Laboratory"
+Global $g_sImgLaboratory = @ScriptDir & "\imgxml\Buildings\Laboratory\"
 Global $g_sImgBoat = @ScriptDir & "\imgxml\Boat"
 Global $g_sImgZoomOutDir = @ScriptDir & "\imgxml\village\NormalVillage\"
 Global $g_sImgCheckWallDir = @ScriptDir & "\imgxml\Walls"
@@ -54,14 +54,14 @@ Global $g_sImgAchievementsClaimReward = @ScriptDir & "\imgxml\AchievementRewards
 Global $g_sImgAchievementsScrollEnd = @ScriptDir & "\imgxml\AchievementRewards\ScrollEnd*"
 Global $g_sImgCollectReward = @ScriptDir & "\imgxml\Resources\ClaimReward"
 Global $g_sImgTrader = @ScriptDir & "\imgxml\FreeMagicItems\TraderIcon"
-Global $g_sImgFree = @ScriptDir & "\imgxml\FreeMagicItems\Free"
 Global $g_sImgHeroPotion = @ScriptDir & "\imgxml\FreeMagicItems\HeroPotion"
 Global Const $g_sImgUpgradeWhiteZero = @ScriptDir & "\imgxml\Main Village\Upgrade\WhiteZero*"
 Global Const $g_sImgDonateCC = @ScriptDir & "\imgxml\DonateCC\"
 Global Const $g_sImgLabResearch = @ScriptDir & "\imgxml\Research\Laboratory\"
-Global Const $g_sImgLabZero = @ScriptDir & "\imgxml\Research\LabZero\"
+Global Const $g_sImgResIcon = @ScriptDir & "\imgxml\Research\ResIcon\"
 Global $g_sImgUpgradeWallElix = @ScriptDir & "\imgxml\imglocbuttons\WallElix*.xml"
 Global $g_sImgUpgradeWallGold = @ScriptDir & "\imgxml\imglocbuttons\WallGold*.xml"
+Global $g_sImgClanCapitalTutorial = @ScriptDir & "\imgxml\Resources\ClanCapitalTutorial\"
 #EndRegion
 
 #Region Boost Super Troops
@@ -136,7 +136,6 @@ Global $g_sImgGreenCheck = @ScriptDir & "\imgxml\Resources\Auto Upgrade\GreenChe
 Global $g_sImgGoblin = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Goblin\"
 Global $g_sImgRedX = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RedX\"
 Global $g_sImgAUpgradeRushTH = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RushTH\"
-Global $g_sImgAUpgradeRushTHPriority = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RushTHPriority\"
 Global $g_sImgAUpgradeHour = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Hour\"
 Global $g_sImgResourceIcon = @ScriptDir & "\imgxml\Resources\Auto Upgrade\ResourceIcon\"
 #EndRegion
@@ -160,6 +159,7 @@ Global $g_sImgAUpgradeGreenZoneBB = @ScriptDir & "\imgxml\Resources\BuildersBase
 Global $g_sImgAUpgradeObstacleBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\ObstacleBB"
 Global $g_sImgAUpgradeOttoBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\OptimizeOTTO\"
 Global $g_sImgAUpgradeOttoBBPriority = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\OptimizeOTTOPri\"
+Global $g_sImgBBResourceIcon = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\BBResourceIcon\"
 #EndRegion
 
 #Region Train

@@ -322,7 +322,7 @@ Func aaaaaa()
 					Local $DP = StringSplit($all[$x][5], "|", $STR_NOCOUNT)
 					SetDebugLog(_ArrayToString($DP))
 					If IsArray($DP) And UBound($DP) > 0 Then
-						Local $iRandomXY = Round(Random(0, 4)) ;pick random point from nearpoint list
+						Local $iRandomXY = Round(Random(0, UBound($DP) - 1)) ;pick random point from nearpoint list
 						Local $tmp = StringSplit($DP[$iRandomXY], ",", $STR_NOCOUNT)
 						_ArrayAdd($aDP, $all[$x][4] & "|" & $tmp[0] & "|" & $tmp[1])
 					Else

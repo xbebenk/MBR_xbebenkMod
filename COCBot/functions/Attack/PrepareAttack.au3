@@ -157,7 +157,6 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 
 	Local $ToUse = $aSiegeTypes[$iCmbSiege]
 	Local $bNeedSwitch = False, $bAnySiege = False, $NeedHigherLevel = False
-
 	Local $sLog = GetTroopName($iTroopIndex)
 
 	Switch $ToUse
@@ -225,14 +224,16 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 				If $NeedHigherLevel Or $bAnySiege Then
 					If $bAnySiege Then 
 						SetDebugLog("AnySiege")
+						Local $iSiegeIndex
 						For $i = 0 To UBound($aSearchResult) - 1
-							Local $iSiegeIndex = $aSearchResult[$i][5]
+							$iSiegeIndex = $aSearchResult[$i][5]
 							If $iSiegeIndex >= $eWallW And $iSiegeIndex <= $eFlameF Then
 								Local $SiegeLevel = $aSearchResult[$i][3]
 								Local $OwnSiege = $aSearchResult[$i][4]
 								Local $SiegeName = $aSearchResult[$i][0]
 								SetDebugLog($i & ". SiegeName: " & $SiegeName & ", OwnSiege: " & $OwnSiege & ", Level: " & $SiegeLevel & ", Coords: " & $aSearchResult[$i][1] & "," & $aSearchResult[$i][2])
 								If $iFinalLevel < $SiegeLevel Then 
+									$iTroopIndex = $iSiegeIndex ;set ByRef
 									$iFinalLevel = $SiegeLevel
 									$SiegeName = $aSearchResult[$i][0]
 									$FinalCoordX = $aSearchResult[$i][1]
@@ -246,7 +247,6 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 						
 						If $AnySiegeFound Then 
 							Click($FinalCoordX, $FinalCoordY)
-							$iTroopIndex = $iSiegeIndex ;set ByRef
 							$g_iSiegeLevel = $iFinalLevel
 						Else
 							SetLog("AnySiege : Not found any", $COLOR_ERROR)
@@ -305,7 +305,11 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			EndIf
 			If _Sleep(750) Then Return
 		Else
-			SetLog("No " & GetTroopName($eCastle) & " Detected, discard Siege use", $COLOR_INFO)
+			If $iTroopIndex <> $eCastle Then $iTroopIndex = -1 ;setting other than castle only (spesific siege or anysiege) but no switch button, will discard use of siege
+			If $ToUse = $eCastle And $iTroopIndex = $eCastle Then $iTroopIndex = $eCastle ;setting castle only, there is castle on attackbar, but no switch button, will use cc 
+			If $ToUse = $eCastle And $iTroopIndex <> $eCastle Then $iTroopIndex = -1 ;setting castle only, there is siege on attackbar, but no switch button, will discard use siege 
+			SetDebugLog("ToUse=" & $ToUse & " |iTroopIndex=" & $iTroopIndex)
+			SetLog("No switch button = No CC Detected, discard Siege use", $COLOR_INFO)
 		EndIf
 	EndIf
 EndFunc   ;==>SelectCastleOrSiege

@@ -19,7 +19,7 @@
 ;#include "functions\Other\Synchronization.au3" ; now included in LaunchConsole.au3
 #include "functions\Other\OnAutoItErrorRegisterBot.au3"
 #Include "functions\Other\Json.au3"
-
+#Include "functions\Other\VritDsktLibrary.au3"
 
 #include "functions\Attack\AttackReport.au3"
 #include "functions\Attack\AttackStats.au3"
@@ -154,6 +154,7 @@
 #include "functions\Android\CheckAndroidPageError.au3"
 #include "functions\Android\CheckAndroidRebootCondition.au3"
 #include "functions\Android\AndroidBlueStacks.au3"
+#include "functions\Android\AndroidBlueStacks5.au3"
 #include "functions\Android\AndroidMEmu.au3"
 #include "functions\Android\AndroidNox.au3"
 #include "functions\Android\AndroidiTools.au3"

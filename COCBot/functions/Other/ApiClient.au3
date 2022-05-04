@@ -154,7 +154,25 @@ Func WM_MYBOTRUN_API_CLIENT($hWind, $iMsg, $wParam, $lParam)
 				SetBotGuiPID($pid)
 			EndIf
 			$wParam += BitShift($wParamHi, -16)
-
+			
+		Case 0x1070 ; Hide Android
+			$lParam = $g_hFrmBot
+			$wParam = $wParamLo + 1		
+			$wParamHi = 0
+			If $g_bRunState = True Then $wParamHi += 1
+			If IsBotLaunched() Then $wParamHi += 4 ; bot launched
+			HideAndroidWindow(True, Default, Default, "btnHide")
+			$wParam += BitShift($wParamHi, -16)
+		
+		Case 0x1080 ; Show Android
+			$lParam = $g_hFrmBot
+			$wParam = $wParamLo + 1		
+			$wParamHi = 0
+			If $g_bRunState = True Then $wParamHi += 1
+			If IsBotLaunched() Then $wParamHi += 4 ; bot launched
+			HideAndroidWindow(False, Default, Default, "btnShow")
+			$wParam += BitShift($wParamHi, -16)
+			
 		Case Else ; do nothing
 			$hWind = 0
 	EndSwitch

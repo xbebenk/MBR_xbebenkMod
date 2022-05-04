@@ -102,9 +102,14 @@ Func UpdateBotTitle()
 EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
-
+	If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
+		_VrtDesktObjCreation() ;virtual desktop object
+		Local $NumVD = _GetEnumVirtDskt()
+		If $NumVD = 1 Then _CreateNewVirtDskt()
+    EndIf
+	
 	ProcessCommandLine()
-
+	
 	If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then ; Set developer mode
 		$g_bDevMode = True
 		Local $aText = FileReadToArray(@ScriptDir & "\EnableMBRDebug.txt") ; check if special debug flags set inside EnableMBRDebug.txt file
@@ -220,6 +225,8 @@ Func ProcessCommandLine()
 					$g_bDevMode = True
 				Case "/minigui", "/mg", "-minigui", "-mg"
 					$g_iGuiMode = 2
+				Case "/rg", "-rg", "/remgui", "-remgui"
+					$g_iRemUnusedGUI = 1
 				Case "/nogui", "/ng", "-nogui", "-ng"
 					$g_iGuiMode = 0
 				Case "/hideandroid", "/ha", "-hideandroid", "-ha"
@@ -664,7 +671,10 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 
 	; Check the Supported Emulator versions
 	CheckEmuNewVersions()
-
+	If $g_iRemUnusedGUI Then 
+		SetLog("Warning: SomeGUI removed to allow more instance", $COLOR_ACTION)
+		RemControl()
+	EndIf
 	;Reset Telegram message
 	NotifyGetLastMessageFromTelegram()
 	$g_iTGLastRemote = $g_sTGLast_UID
@@ -1012,7 +1022,7 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 	
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
-			If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCount - 2) Then checkSwitchAcc()
+			;If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCount - 2) Then checkSwitchAcc()
 			If $g_bUseCCBalanced Then ;launch profilereport() only if option balance D/R is activated
 				ProfileReport()
 				If Not $g_bRunState Then Return
@@ -1210,21 +1220,16 @@ Func __RunFunction($action)
 			UpgradeBuilding()
 			If _Sleep($DELAYRUNBOT3) Then Return
 			AutoUpgrade()
-			AndroidAdbScript("ZoomOut")
+			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeWall"
 			$g_iNbrOfWallsUpped = 0
 			ClickAway()
 			UpgradeWall()
-			AndroidAdbScript("ZoomOut")
+			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
-				_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
-				If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
-					SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-					checkSwitchAcc()
-				EndIf
 				BuilderBase()
 			EndIf
 			_Sleep($DELAYRUNBOT3)
@@ -1573,7 +1578,49 @@ Func FirstCheckRoutine()
 	If $b_SuccessAttack Then TrainSystem()
 	If Not $g_bRunState Then Return
 	CommonRoutine("FirstCheckRoutine")
-	If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then checkSwitchAcc() ;switch to next account
+	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then 
+		CommonRoutine("Switch")
+		checkSwitchAcc() ;switch to next account
+	EndIf
+EndFunc
+
+Func CommonRoutine($RoutineType = Default)
+	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
+	Switch $RoutineType
+		Case "FirstCheckRoutine"
+			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(500) Then Return
+				If $g_bRestart Then Return
+			Next
+			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(500) Then Return
+				If $g_bRestart Then Return
+			Next
+			
+		Case "NoClanGamesEvent"
+			Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(50) Then Return
+				If $g_bRestart Then Return
+			Next
+			
+		Case "Switch"
+			Local $aRndFuncList = ['BuilderBase', 'DonateCC,Train']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(50) Then Return
+				If $g_bRestart Then Return
+			Next
+	EndSwitch
 EndFunc
 
 Func BuilderBase()
@@ -1677,32 +1724,193 @@ Func GotoBBTodoCG()
 	EndIf
 EndFunc
 
-Func CommonRoutine($RoutineType = Default)
-	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
-	Switch $RoutineType
-		Case "FirstCheckRoutine"
-			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep(500) Then Return
-				If $g_bRestart Then Return
-			Next
-			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse']
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep(500) Then Return
-				If $g_bRestart Then Return
-			Next
-			
-		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase']
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep(50) Then Return
-				If $g_bRestart Then Return
-			Next
-	EndSwitch
+Func RemControl()
+	For $i = $g_hChkCustomTrainOrderEnable To $g_ahImgTroopOrderSet
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_hChkCustomBrewOrderEnable To $g_ahImgSpellsOrderSet
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahChkArmy[0] To $g_ahChkArmy[UBound($g_ahChkArmy) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahChkUseInGameArmy[0] To $g_ahChkUseInGameArmy[UBound($g_ahChkUseInGameArmy) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahBtnEditArmy[0] To $g_ahBtnEditArmy[UBound($g_ahBtnEditArmy) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahLblEditArmy[0] To $g_ahLblEditArmy[UBound($g_ahLblEditArmy) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahLblTotalQTroop[0] To $g_ahLblTotalQTroop[UBound($g_ahLblTotalQTroop) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahPicTotalQTroop[0] To $g_ahPicTotalQTroop[UBound($g_ahPicTotalQTroop) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahLblTotalQSpell[0] To $g_ahLblTotalQSpell[UBound($g_ahLblTotalQSpell) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahPicTotalQSpell[0] To $g_ahPicTotalQSpell[UBound($g_ahPicTotalQSpell) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahLblQuickTrainNote[0] To $g_ahLblQuickTrainNote[UBound($g_ahLblQuickTrainNote) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_ahLblUseInGameArmyNote[0] To $g_ahLblUseInGameArmyNote[UBound($g_ahLblUseInGameArmyNote) - 1] 
+		GUICtrlDelete($i)
+	Next
+	For $i = $g_hChkCustomDropOrderEnable To $g_hBtnRemoveDropOrder
+		GUICtrlDelete($i)
+	Next
 EndFunc
+
+Func CCTutorial()
+	For $i = 1 To 6
+		SetLog("Wait for Arrow For Travel to Clan Capital #" & $i, $COLOR_INFO)
+		ClickAway()
+		_Sleep(3000)
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 330, 320, 450, 400) Then
+			Click(400, 450)
+			SetLog("Going to Clan Capital", $COLOR_SUCCESS)
+			_Sleep(5000)
+			ExitLoop ;arrow clicked now go to next step
+		EndIf
+		If $i > 1 And Not QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then Return
+	Next
+	
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;tutorial page, with strange person, click until arrow
+		For $i = 1 To 5 
+			SetLog("Wait for Arrow on CC Peak #" & $i, $COLOR_INFO)
+			ClickAway()
+			_Sleep(3000)
+			If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 330, 100, 450, 200) Then ;check clan capital map
+				Click($g_iQuickMISX, $g_iQuickMISY) ;click capital peak arrow
+				SetLog("Going to Capital Peak", $COLOR_SUCCESS)
+				_Sleep(10000)
+				ExitLoop ;arrow clicked now go to next step
+			EndIf
+		Next
+	EndIf
+	
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;tutorial page, with strange person, click until map button
+		For $i = 1 To 5 
+			SetLog("Wait for Map Button #" & $i, $COLOR_INFO)
+			ClickAway()
+			_Sleep(3000)
+			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 20, 620, 90, 660) Then
+				Click($g_iQuickMISX, $g_iQuickMISY) ;click map
+				SetLog("Going back to Clan Capital", $COLOR_SUCCESS)
+				_Sleep(5000)
+				Click($g_iQuickMISX, $g_iQuickMISY) ;click return home
+				SetLog("Return Home", $COLOR_SUCCESS)
+				_Sleep(5000)
+				ExitLoop ;map button clicked now go to next step
+			EndIf
+		Next
+	EndIf
+	
+	For $i = 1 To 8 
+		SetLog("Wait for Arrow on CC Forge #" & $i, $COLOR_INFO)
+		ClickAway()
+		_Sleep(3000)
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then ;check arrow on Clan Capital forge
+			Click(420, 490) ;click CC Forge
+			_Sleep(3000)
+			ExitLoop
+		EndIf
+	Next
+
+	For $i = 1 To 12 
+		SetLog("Wait for Arrow on CC Forge Window #" & $i, $COLOR_INFO)
+		ClickAway()
+		_Sleep(3000)
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then 
+			Click(420, 490) ;click CC Forge
+			_Sleep(3000)
+		EndIf
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 125, 270, 225, 360) Then
+			Click(180, 375) ;click collect
+			_Sleep(3000)
+			ExitLoop
+		EndIf
+	Next
+
+	For $i = 1 To 10 
+		SetLog("Wait for MainScreen #" & $i, $COLOR_INFO)
+		ClickAway()
+		If _checkMainScreenImage($aIsMain) Then ExitLoop
+		_Sleep(3000)
+	Next
+	ClickDrag(800, 420, 500, 420, 500)
+	ZoomOut()
+EndFunc
+
+Func PlaceUnplacedBuilding($bTest = False)
+	If SearchUnplacedBuilding() Then
+		SetLog("Unplaced Building Found!", $COLOR_SUCCESS)
+		If SearchGreenZone() Then
+			If SearchUnplacedBuilding() Then
+				SetLog("Trying to place Unplaced Bulding!", $COLOR_INFO)
+				
+				Click(431,571)
+				If _Sleep(1500) Then Return False
+				
+				Local $GreenCheckCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
+				SetDebugLog("Looking for GreenCheck Button", $COLOR_INFO)
+				If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
+					SetDebugLog("GreenCheck Button Found in [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_INFO)
+					If Not $g_bRunState Then Return
+					If Not $bTest Then
+						Click($GreenCheckCoords[0], $GreenCheckCoords[1])
+					Else
+						SetDebugLog("ONLY for TESTING!!!", $COLOR_ERROR)
+						Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1])
+						Return True
+					EndIf
+					SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
+					If _Sleep(500) Then Return
+					ZoomOut()
+					Return True
+				Else
+					SetDebugLog("GreenCheck Button NOT Found", $COLOR_ERROR)
+					NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in Main Village.")
+					If Not $g_bRunState Then Return
+					;Lets check if exist the [x], it should not exist, but to be safe
+					Local $RedXCoords = decodeSingleCoord(findImage("FindRedX", $g_sImgRedX & "\RedX*", "FV", 1, True))
+					If IsArray($RedXCoords) And UBound($RedXCoords) = 2 Then
+						Click($RedXCoords[0], $RedXCoords[1])
+						SetLog("Sorry! Wrong place to deploy a new building on Main Village!", $COLOR_ERROR)
+						If _Sleep(500) Then Return
+						Return False
+					Else
+						GoGoblinMap()
+						ZoomOut()
+						Return False
+					EndIf
+				EndIf
+			Else
+				SetLog("Unplaced Building Window Lost!", $COLOR_ERROR)
+				ZoomOut()
+			EndIf
+		EndIf
+	EndIf
+EndFunc
+
+Func SearchUnplacedBuilding()
+	Local $atmpInfo = getNameBuilding(292, 494)
+	If $atmpInfo = "" Then
+		SetDebugLog("Search: Unplaced Building Not Found!")
+		Return False
+	Else
+		If StringInStr($atmpInfo, "placed") = 0 Then
+			SetDebugLog("Search: Not Unplaced Building Text!", $COLOR_INFO)
+			Return False
+		Else
+			SetDebugLog("Search: Unplaced Building Found!", $COLOR_SUCCESS)
+			Return True
+		EndIf
+	EndIf
+EndFunc
+

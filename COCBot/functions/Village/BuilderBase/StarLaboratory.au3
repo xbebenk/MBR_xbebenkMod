@@ -95,7 +95,7 @@ Func StarLaboratory($bTestRun = False)
 		For $i = 0 To UBound($aTroopUpgrade) -1 
 			SetDebugLog("[" & $aTroopUpgrade[$i][0] & "]" & " Coord:[" & $aTroopUpgrade[$i][3] & "," & $aTroopUpgrade[$i][4] & "] Troop: " & $aTroopUpgrade[$i][2] & " Cost: " & $aTroopUpgrade[$i][5])
 		Next
-		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable Then ;Any Upgrade
+		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable Then ;Any Upgrade, enable order
 			SetLog("StarLab Upgrade Order Enabled", $COLOR_INFO)
 			For $z = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
 				If $g_aCmbSLabUpgradeOrder[$z] = -1 Then ContinueLoop
@@ -158,10 +158,12 @@ Func StarLaboratory($bTestRun = False)
 				SetLog("Try Upgrade: " & $aTroopUpgrade[$Index][2])
 				If $aTroopUpgrade[$Index][5] = "MaxLevel" Then
 					SetLog($aTroopUpgrade[$Index][2] & " at Max Level, skip!", $COLOR_INFO)
+					ClickAway("Left")
 					Return False
 				EndIf
 				If $aTroopUpgrade[$Index][5] = "NeedUpgradeLab" Then
 					SetLog($aTroopUpgrade[$Index][2] & " Higher StarLab Level Required, skip!", $COLOR_INFO)
+					ClickAway("Left")
 					Return False
 				EndIf
 				If $iAvailElixir < $aTroopUpgrade[$Index][5] Then 

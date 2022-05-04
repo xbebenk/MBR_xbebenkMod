@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 
 Func CollectFreeMagicItems($bTest = False)
-	If Not $g_bChkCollectFreeMagicItems Or Not $g_bRunState Then Return
+	If Not $g_bChkCollectFreeMagicItems Then Return
 	$g_bRemoveFreeMagicItems = False ;reset first
 	Local Static $iLastTimeChecked[16] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
 	If $iLastTimeChecked[$g_iCurAccount] = @MDAY And Not $bTest Then Return
@@ -45,34 +45,21 @@ Func CollectFreeMagicItems($bTest = False)
 	Next
 	
 	If Not $Collected Then 
-		If QuickMIS("BC1", $g_sImgFree, 160, 400, 320, 450, True, False) Then
-			If Not $bTest Then
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				SetLog("Try Collect Special Offer By Image, Success", $COLOR_SUCCESS)
-				If _Sleep(1000) Then Return
-				$Collected = True
-			Else
-				SetLog("Try Collect Special Offer By Image, ONLY TEST!", $COLOR_ERROR)
-			EndIf
-		EndIf
-	EndIf
-	
-	If Not $Collected Then 
 		SetLog("Nothing free to collect!", $COLOR_INFO)
-		SetLog("Daily Discounts: " & $aGem[0] & " | " & $aGem[1] & " | " & $aGem[2])
 	EndIf
+	SetLog("Daily Discounts: " & $aGem[0] & " | " & $aGem[1] & " | " & $aGem[2])
 	
 	ClickAway()
 	Return $Collected
 EndFunc   ;==>CollectFreeMagicItems
 
 Func GetFreeMagic()
-	Local $aOcrPositions[3][2] = [[203, 411], [400, 411], [590, 411]]
+	Local $aOcrPositions[3][2] = [[285, 322], [465, 322], [635, 322]]
 	Local $aResults[0][3]
-	For $i = 0 To 2
+	For $i = 0 To UBound($aOcrPositions) - 1
 		Local $Read = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 200, 25, True)
 		If $Read = "FREE" Then 
-			If WaitforPixel($aOcrPositions[$i][0] - 10, $aOcrPositions[$i][1], $aOcrPositions[$i][0] - 9, $aOcrPositions[$i][1] + 1, "7A7A7A", 10, 1) Then
+			If WaitforPixel($aOcrPositions[$i][0] - 10, $aOcrPositions[$i][1], $aOcrPositions[$i][0] - 9, $aOcrPositions[$i][1] + 1, "A3A3A3", 10, 1) Then
 				$g_bRemoveFreeMagicItems = True
 			EndIf
 		EndIf
@@ -83,29 +70,14 @@ Func GetFreeMagic()
 		_ArrayAdd($aResults, $Read & "|" & $aOcrPositions[$i][0] & "|" & $aOcrPositions[$i][1])
 	Next
 	If $g_bRemoveFreeMagicItems Then
-		Redim $aResults[0][3]
 		SetLog("Free Magic Item detected", $COLOR_INFO)
 		SetLog("But Storage on TownHall is Full", $COLOR_INFO)
 		ClickAway()
 		SaleFreeMagics()
 		_Sleep(1500)
 		OpenTraderWindow()
-		For $i = 0 To 2
-			Local $Read = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 200, 25, True)
-			If $Read = "FREE" Then 
-				If WaitforPixel($aOcrPositions[$i][0] - 10, $aOcrPositions[$i][1], $aOcrPositions[$i][0] - 9, $aOcrPositions[$i][1] + 1, "7A7A7A", 10, 1) Then
-					$g_bRemoveFreeMagicItems = True
-				EndIf
-			EndIf
-			If $Read = "" Then $Read = "N/A"
-			If Number($Read) > 10 Then 
-				$Read = $Read & " Gems"
-			EndIf
-			_ArrayAdd($aResults, $Read & "|" & $aOcrPositions[$i][0] & "|" & $aOcrPositions[$i][1])
-		Next
-	Else
-		Return $aResults
 	EndIf
+	Return $aResults
 EndFunc
 
 Func OpenTraderWindow()
@@ -130,7 +102,7 @@ EndFunc
 Func IsFreeMagicWindowOpen()
 	Local $bRet = False
 	For $i = 1 To 8
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 650, 125, 750, 210) Then
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 110, 780, 150) Then
 			$bRet = True
 			ExitLoop
 		Else
