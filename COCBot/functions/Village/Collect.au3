@@ -65,7 +65,7 @@ Func Collect($bCheckTreasury = True)
 
 	If _Sleep($DELAYCOLLECT3) Then Return
 	If Not $g_bChkCollectCartFirst And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
-
+	CollectCCGold()
 	If $g_bChkTreasuryCollect And $bCheckTreasury Then TreasuryCollect()
 	EndGainCost("Collect")
 EndFunc   ;==>Collect
@@ -99,3 +99,24 @@ Func CollectLootCart()
 
 	$g_abNotNeedAllTime[0] = False
 EndFunc   ;==>CollectLootCart
+
+Func CollectCCGold()
+	SetLog("Start Collecting Clan CapitalGold", $COLOR_INFO)
+	ClickAway()
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "CapitalGold\", 280, 560, 350, 620) Then
+		Click($g_iQuickMISX, $g_iQuickMISY + 20)
+		For $i = 1 To 5
+			SetDebugLog("Waiting for Forge Window #" & $i, $COLOR_ACTION)
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 710, 150, 760, 190) Then
+				ExitLoop
+			EndIf
+			_Sleep(500)
+		Next
+		Click(180, 366) ;Click Collect
+		_Sleep(500)
+		Click($g_iQuickMISX, $g_iQuickMISY) ;Click close button
+	Else
+		Return
+	EndIf
+	If _Sleep($DELAYCOLLECT3) Then Return
+EndFunc
