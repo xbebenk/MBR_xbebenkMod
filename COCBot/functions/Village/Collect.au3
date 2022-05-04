@@ -101,7 +101,7 @@ Func CollectLootCart()
 EndFunc   ;==>CollectLootCart
 
 Func CollectCCGold()
-	SetLog("Start Collecting Clan CapitalGold", $COLOR_INFO)
+	SetLog("Start Collecting Clan Capital Gold", $COLOR_INFO)
 	ClickAway()
 	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "CapitalGold\", 280, 560, 350, 620) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
@@ -115,7 +115,9 @@ Func CollectCCGold()
 		Click(180, 366) ;Click Collect
 		_Sleep(500)
 		Click($g_iQuickMISX, $g_iQuickMISY) ;Click close button
+		SetLog("Clan Capital Gold collected successfully!", $COLOR_SUCCESS)
 	Else
+		SetLog("No available Clan Capital Gold to be collected!", $COLOR_INFO)
 		Return
 	EndIf
 	If _Sleep($DELAYCOLLECT3) Then Return
