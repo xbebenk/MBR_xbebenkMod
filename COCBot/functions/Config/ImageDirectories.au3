@@ -54,7 +54,6 @@ Global $g_sImgAchievementsClaimReward = @ScriptDir & "\imgxml\AchievementRewards
 Global $g_sImgAchievementsScrollEnd = @ScriptDir & "\imgxml\AchievementRewards\ScrollEnd*"
 Global $g_sImgCollectReward = @ScriptDir & "\imgxml\Resources\ClaimReward"
 Global $g_sImgTrader = @ScriptDir & "\imgxml\FreeMagicItems\TraderIcon"
-Global $g_sImgFree = @ScriptDir & "\imgxml\FreeMagicItems\Free"
 Global $g_sImgHeroPotion = @ScriptDir & "\imgxml\FreeMagicItems\HeroPotion"
 Global Const $g_sImgUpgradeWhiteZero = @ScriptDir & "\imgxml\Main Village\Upgrade\WhiteZero*"
 Global Const $g_sImgDonateCC = @ScriptDir & "\imgxml\DonateCC\"
