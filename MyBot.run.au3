@@ -102,8 +102,9 @@ Func UpdateBotTitle()
 EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
+	_VrtDesktObjCreation() ;virtual desktop object
 	If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
-		_VrtDesktObjCreation() ;virtual desktop object
+		
 		Local $NumVD = _GetEnumVirtDskt()
 		If $NumVD = 1 Then _CreateNewVirtDskt()
     EndIf
