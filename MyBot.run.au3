@@ -1626,8 +1626,7 @@ EndFunc
 Func BuilderBase()
 
 	; switch to builderbase and check it is builderbase
-	If SwitchBetweenBases("BB") And isOnBuilderBase()  Then
-
+	If SwitchBetweenBases("BB") Then
 		$g_bStayOnBuilderBase = True
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 
