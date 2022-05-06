@@ -1956,4 +1956,4 @@ Global $g_bEnableCCSleep = False, $g_bSkipDT = False
 Global $g_bDebugBBattack = False
 Global $g_bBBForceCustomArmy = False
 Global $g_iBBAttacked = False ; DoAttackBB attacked or not
-Global $g_bEnableCollectCCGold = False
+Global $g_bChkEnableCollectCCGold = False, $g_bChkEnableForgeGold = False, $g_bChkEnableForgeElix = False, $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEnableForgeBBElix = False

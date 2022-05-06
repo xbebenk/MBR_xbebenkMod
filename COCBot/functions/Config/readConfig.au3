@@ -560,6 +560,14 @@ Func ReadConfig_600_6()
 	IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool")
 	$g_sBBDropOrder = IniRead($g_sProfileConfigPath, "other", "sBBDropOrder", $g_sBBDropOrderDefault)
 
+	;Clan Capital
+	IniReadS($g_bChkEnableCollectCCGold, $g_sProfileConfigPath, "ClanCapital", "ChkCollectCCGold", False, "Bool")
+	IniReadS($g_bChkEnableForgeGold, $g_sProfileConfigPath, "ClanCapital", "ChkEnableForgeGold", False, "Bool")
+	IniReadS($g_bChkEnableForgeElix, $g_sProfileConfigPath, "ClanCapital", "ChkEnableForgeElix", False, "Bool")
+	IniReadS($g_bChkEnableForgeDE, $g_sProfileConfigPath, "ClanCapital", "ChkEnableForgeDE", False, "Bool")
+	IniReadS($g_bChkEnableForgeBBGold, $g_sProfileConfigPath, "ClanCapital", "ChkEnableForgeBBGold", False, "Bool")
+	IniReadS($g_bChkEnableForgeBBElix, $g_sProfileConfigPath, "ClanCapital", "ChkEnableForgeBBElix", False, "Bool")
+	
 	;Misc Mod
 	IniReadS($g_bSkipFirstCheckRoutine, $g_sProfileConfigPath, "other", "SkipFirstCheckRoutine", False, "Bool")
 	IniReadS($g_bSkipBB, $g_sProfileConfigPath, "other", "SkipBB", False, "Bool")

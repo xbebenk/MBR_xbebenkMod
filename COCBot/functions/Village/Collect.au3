@@ -101,6 +101,7 @@ Func CollectLootCart()
 EndFunc   ;==>CollectLootCart
 
 Func CollectCCGold()
+	If Not $g_bChkEnableCollectCCGold Then Return
 	SetLog("Start Collecting Clan Capital Gold", $COLOR_INFO)
 	ClickAway()
 	If QuickMIS("BC1", $g_sImgCCGold, 280, 550, 480, 630) Then
