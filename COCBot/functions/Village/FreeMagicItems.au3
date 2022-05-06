@@ -58,11 +58,15 @@ Func GetFreeMagic()
 	Local $aResults[0][3]
 	For $i = 0 To UBound($aOcrPositions) - 1
 		Local $Read = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 200, 25, True)
+		Local $Capa = getOcrAndCapture("coc-buildermenu-name", $aOcrPositions[$i][0], 209, 100, 25, True)
 		If $Read = "FREE" Then 
-			If WaitforPixel($aOcrPositions[$i][0] - 10, $aOcrPositions[$i][1], $aOcrPositions[$i][0] - 9, $aOcrPositions[$i][1] + 1, "A3A3A3", 10, 1) Then
+			If WaitforPixel($aOcrPositions[$i][0] - 10, $aOcrPositions[$i][1], $aOcrPositions[$i][0] - 9, $aOcrPositions[$i][1] + 1, "A3A3A3", 10, 1) _
+				And StringLeft($Capa, 1) = "1" Then
 				$g_bRemoveFreeMagicItems = True
 			EndIf
+			SetDebugLog("Capacity Read: " & $Capa & " RemoveFirst: " & String($g_bRemoveFreeMagicItems))
 		EndIf
+		If $Read = "FREE" And StringLeft($Capa, 1) = "0" Then $Read = "WAIT For FREE"
 		If $Read = "" Then $Read = "N/A"
 		If Number($Read) > 10 Then 
 			$Read = $Read & " Gems"
