@@ -42,6 +42,7 @@ Global $g_sImgClanCastle = @ScriptDir & "\imgxml\Buildings\ClanCastle"
 Global $g_sImgLaboratory = @ScriptDir & "\imgxml\Buildings\Laboratory\"
 Global $g_sImgBoat = @ScriptDir & "\imgxml\Boat"
 Global $g_sImgZoomOutDir = @ScriptDir & "\imgxml\village\NormalVillage\"
+Global $g_sImgHiddenStone = @ScriptDir & "\imgxml\village\NormalVillage\HiddenStone\"
 Global $g_sImgCheckWallDir = @ScriptDir & "\imgxml\Walls"
 Global $g_sImgClearTombs = @ScriptDir & "\imgxml\Resources\Tombs"
 Global $g_sImgCleanYard = @ScriptDir & "\imgxml\Resources\Obstacles"
@@ -61,7 +62,12 @@ Global Const $g_sImgLabResearch = @ScriptDir & "\imgxml\Research\Laboratory\"
 Global Const $g_sImgResIcon = @ScriptDir & "\imgxml\Research\ResIcon\"
 Global $g_sImgUpgradeWallElix = @ScriptDir & "\imgxml\imglocbuttons\WallElix*.xml"
 Global $g_sImgUpgradeWallGold = @ScriptDir & "\imgxml\imglocbuttons\WallGold*.xml"
-Global $g_sImgClanCapitalTutorial = @ScriptDir & "\imgxml\Resources\ClanCapitalTutorial\"
+#EndRegion
+
+#Region Clan Capital
+Global $g_sImgClanCapitalTutorial = @ScriptDir & "\imgxml\Resources\ClanCapital\Tutorial\"
+Global $g_sImgCCMap = @ScriptDir & "\imgxml\Resources\ClanCapital\CCMap\"
+Global $g_sImgCCGold = @ScriptDir & "\imgxml\Resources\ClanCapital\CCMap\CCGold"
 #EndRegion
 
 #Region Boost Super Troops

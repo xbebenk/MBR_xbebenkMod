@@ -103,7 +103,7 @@ EndFunc   ;==>CollectLootCart
 Func CollectCCGold()
 	SetLog("Start Collecting Clan Capital Gold", $COLOR_INFO)
 	ClickAway()
-	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "CapitalGold\", 280, 550, 480, 630) Then
+	If QuickMIS("BC1", $g_sImgCCGold, 280, 550, 480, 630) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
 		For $i = 1 To 5
 			SetDebugLog("Waiting for Forge Window #" & $i, $COLOR_ACTION)
