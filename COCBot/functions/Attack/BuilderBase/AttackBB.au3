@@ -121,25 +121,12 @@ Func _AttackBB()
 
 	; Get troops on attack bar and their quantities
 	local $aBBAttackBar = GetAttackBarBB()
-	If $g_bChkBBCustomArmyEnable Then CorrectAttackBarBB($aBBAttackBar) ; xbebenk
-	
-	$aBBAttackBar = GetAttackBarBB()
-	If $g_BBBCSVAttack Then
-		; Zoomout the Opponent Village.
-		BuilderBaseZoomOut(False, True)
-
-		; Correct script.
+	If $g_bChkBBCustomArmyEnable Then 
 		CorrectAttackBarBB($aBBAttackBar)
-
-		Local $FurtherFrom = 5 ; 5 pixels before the deploy point.
-		BuilderBaseGetDeployPoints($FurtherFrom, True)
-
-		; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window.
-		BuilderBaseParseAttackCSV($aBBAttackBar, $g_aDeployPoints, $g_aDeployBestPoints, True)
-	Else
-		AttackBB($aBBAttackBar)
+		$aBBAttackBar = GetAttackBarBB()
 	EndIf
-
+	AttackBB($aBBAttackBar)
+	
 	; wait for end of battle
 	SetLog("Waiting for end of battle.", $COLOR_BLUE)
 	If Not $g_bRunState Then Return ; Stop Button

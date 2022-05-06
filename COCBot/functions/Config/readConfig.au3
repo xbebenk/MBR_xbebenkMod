@@ -589,18 +589,6 @@ Func ReadConfigBuilderBaseMod()
 	For $i = 0 To UBound($g_iCmbTroopBB) - 1
 		IniReadS($g_iCmbTroopBB[$i], $g_sProfileConfigPath, "BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbTroopBB[$i], "Int")
 	Next
-
-	; Misc Settings
-	IniReadS($g_bBBForceCustomArmy, $g_sProfileConfigPath, "BBCustomArmy", "BBForceCustomArmy", False, "Bool")
-	IniReadS($g_bBBGetArmyFromCSV, $g_sProfileConfigPath, "BBCustomArmy", "BBGetArmyFromCSV", False, "Bool")
-	IniReadS($g_bBBCSVAttack, $g_sProfileConfigPath, "BBCustomArmy", "BBCSVAttack", False, "Bool")
-	IniReadS($g_iBBCSVSettings, $g_sProfileConfigPath, "BBCustomArmy", "BBCSVSettings", 0, "Int")
-
-	; CSV's settings
-	For $i = 0 To 2
-		IniReadS($g_sAttackScrScriptNameBB[$i], $g_sProfileConfigPath, "BuilderBase", "ScriptBB" & $i, "Barch four fingers")
-	Next
-
 EndFunc   ;==>ReadBuilderBaseMod
 
 Func ReadConfig_600_9()

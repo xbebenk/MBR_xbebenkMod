@@ -584,51 +584,14 @@ Func ApplyBuilderBaseMod($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTroopBB[$i], $g_iCmbTroopBB[$i])
 			_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbTroopBB[$i] + 1][4])
 		Next
-
-		; Misc Settings
-		GUICtrlSetState($g_hChkBBForceCustomArmy, $g_bBBForceCustomArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkBBGetArmyFromCSV, $g_bBBGetArmyFromCSV ? $GUI_CHECKED : $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkBBCSVAttack, $g_bBBCSVAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
-		_GUICtrlComboBox_SetCurSel($g_hCmbBBCSVSettings, $g_iBBCSVSettings)
-		CmbBBCSVSettings()
-
-		; CSV's settings
-		PopulateComboScriptsFilesBB()
-		For $i = 0 To 2
-			Local $tempindex = _GUICtrlComboBox_FindStringExact($g_hCmbBBAttackStyle[$i], $g_sAttackScrScriptNameBB[$i])
-			If $tempindex = -1 Then
-				$tempindex = 0
-				SetLog("Previous saved BB Scripted Attack not found (deleted, renamed?)", $COLOR_ERROR)
-				SetLog("Automatically setted a default script, please check your config", $COLOR_ERROR)
-			EndIf
-			_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackStyle[$i], $tempindex)
-		Next
-		cmbScriptNameBB()
 	Else
 		; Custom Army
 		$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED)
 		For $i = 0 To UBound($g_hCmbTroopBB) - 1
 			$g_iCmbTroopBB[$i] = _GUICtrlComboBox_GetCurSel($g_hCmbTroopBB[$i])
 		Next
-
-		; Misc Settings
-		$g_bBBForceCustomArmy = (GUICtrlRead($g_hChkBBForceCustomArmy) = $GUI_CHECKED)
-		$g_bBBGetArmyFromCSV = (GUICtrlRead($g_hChkBBGetArmyFromCSV) = $GUI_CHECKED)
-		$g_bBBCSVAttack = (GUICtrlRead($g_hChkBBCSVAttack) = $GUI_CHECKED)
-		$g_iBBCSVSettings = _GUICtrlComboBox_GetCurSel($g_hCmbBBCSVSettings)
-
-		; CSV's settings
-		For $i = 0 To 2
-			Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbBBAttackStyle[$i])
-			Local $scriptname
-			_GUICtrlComboBox_GetLBText($g_hCmbBBAttackStyle[$i], $indexofscript, $scriptname)
-			$g_sAttackScrScriptNameBB[$i] = $scriptname
-			IniWriteS($g_sProfileConfigPath, "BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
-		Next
 	EndIf
 	ChkBBCustomArmyEnable()
-
-
 EndFunc   ;==>ApplyBuilderBaseMod
 
 Func ApplyConfig_600_9($TypeReadSave)

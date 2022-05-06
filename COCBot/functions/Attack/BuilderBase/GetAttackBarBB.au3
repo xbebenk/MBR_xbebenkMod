@@ -19,14 +19,6 @@ Func GetAttackBarBB($bRemaining = False)
 	local $iSlotOffset = 72 ; slots are 73 pixels apart
 	local $iBarOffset = 66 ; 66 pixels from side to attack bar
 
-	; testing troop count logic
-	;PureClickP($aSlot1)
-	;local $iTroopCount = Number(getTroopCountSmall($aSlot1[0], $aSlot1[1]))
-	;If $iTroopCount == 0 Then $iTroopCount = Number(getTroopCountBig($aSlot1[0], $aSlot1[1]-2))
-	;SetLog($iTroopCount)
-	;$iTroopCount = Number(getTroopCountSmall($aSlot1[0] + 144, $aSlot1[1]))
-	;SetLog($iTroopCount)
-
 	local $aBBAttackBar[0][5]
 	#comments-start
 		$aAttackBar[n][8]
@@ -151,113 +143,16 @@ EndFunc   ;==>TestCorrectAttackBarBB
 Func CorrectAttackBarBB(ByRef $aAvailableTroops)
 
 	If Not $g_bRunState Then Return
-	Local $bIsCampCSV = False
 	Local $aLines[0]
-	Local $sModeAttack = "CSV"
+	Local $sModeAttack = "SMART"
 
-	_CaptureRegions()
-
+	
 	Local $sLastObj = "Barbarian", $sTmp
 	Local $aFakeCsv[1]
 
-	; Strange logic but works.
-	If $g_bBBCSVAttack = True Then
-		$sModeAttack = "CSV"
-		If $g_bBBForceCustomArmy = True And $g_bChkBBCustomArmyEnable = True Then
-			$sModeAttack = "SMART"
-		EndIf
-	Else
-		$sModeAttack = "SMART"
-		If $g_bBBGetArmyFromCSV = True Then
-			$sModeAttack = "CSV"
-		EndIf
-	EndIf
+	
 
 	Local $bCanGetFromCSV = False
-
-	; CSV
-	If $sModeAttack = "CSV" Then
-
-		; 0 - Only one CSV (Redundant)
-		$g_iBuilderBaseScript = 0
-
-		; 1 - Custom CSV by base
-		If $g_iBBCSVSettings = 1 Then
-			Local $aMode[2] = [0, 0]    ; Ground - Air
-			Local $aBuildings[4] = ["AirDefenses", "Crusher", "GuardPost", "Cannon"]
-			Local $a, $i3
-			For $i = 0 To UBound($aBuildings) - 1
-				$a = BuilderBaseBuildingsDetection($i, False)
-				If Not IsArray($a) Then ContinueLoop
-				$i3 = ($i = 0) ? (1) : (0)
-				For $i2 = 0 To UBound($a) - 1
-					If $aMode[$i3] < $a[$i2][3] Then
-						$aMode[$i3] = $a[$i2][3]
-					EndIf
-				Next
-			Next
-
-			If $aMode[1] < $aMode[0] Then		; Air mode.
-				$g_iBuilderBaseScript = 2
-			ElseIf $aMode[1] > $aMode[0] Then	; Ground mode
-				$g_iBuilderBaseScript = 1
-			Else								; Standard mode.
-				$g_iBuilderBaseScript = 0
-			EndIf
-
-			SetDebugLog("Script mode : " & $g_iBuilderBaseScript & " / " & " Ground calc : " & $aMode[0] & " Air calc : " & $aMode[1], $COLOR_INFO)
-			Setlog("Attack using the " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
-
-		; 2 - Random CSV
-		ElseIf $g_iBBCSVSettings = 2 Then
-
-			Switch Random(0, 90, 1)
-				Case 0 To 30
-					$g_iBuilderBaseScript = 2
-				Case 31 To 60
-					$g_iBuilderBaseScript = 1
-				Case Else ; 61 To 90
-					$g_iBuilderBaseScript = 0
-			EndSwitch
-
-			Setlog("Attack using the random " & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & " script.", $COLOR_INFO)
-		EndIf
-
-		; Let load the Command [Troop] from CSV
-		Local $aLArray[0]
-		Local $FileNamePath = @ScriptDir & "\CSV\BuilderBase\" & $g_sAttackScrScriptNameBB[$g_iBuilderBaseScript] & ".csv"
-		If FileExists($FileNamePath) Then $aLArray = FileReadToArray($FileNamePath)
-
-		Local $iLast = 0, $aSplitLine, $sName
-		For $iLine = 0 To UBound($aLArray) - 1
-			If Not $g_bRunState Then Return
-			$aSplitLine = StringSplit(StringStripWS($aLArray[$iLine], $STR_STRIPALL), "|", $STR_NOCOUNT)
-
-			If ($aSplitLine[0] = "CAMP") Then
-				$sName = "CAMP" & "|"
-				For $i = 1 To UBound($aSplitLine) - 1
-					$iLast = _ArraySearchCSV($g_sTroopsBBAtk, $aSplitLine[$i])
-					If $iLast > -1 Then
-						$bCanGetFromCSV = True
-						$sTmp = $g_asAttackBarBB2[$iLast]
-						If Not StringIsSpace($sTmp) Then
-							$sLastObj = $sTmp
-						EndIf
-						$sName &= $sLastObj
-						If $i <> UBound($aSplitLine) - 1 Then
-							$sName &= "|"
-						EndIf
-					EndIf
-				Next
-				$aFakeCsv[0] = $sName
-				_ArrayAdd($aLines, $aFakeCsv)
-			EndIf
-		Next
-
-		If $bCanGetFromCSV = False Then
-			SetLog("Badly CSV troops army.", $COLOR_WARNING)
-		EndIf
-	EndIf
 
 	; Smart attack or badly CSV or Force Army
 	If $bCanGetFromCSV = False And $g_bChkBBCustomArmyEnable = True Then

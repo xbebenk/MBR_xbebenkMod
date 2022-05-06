@@ -1954,32 +1954,7 @@ Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_i
 Global $g_bEnableCCSleep = False, $g_bSkipDT = False
 
 ;Builder Base
-
-; Attack CSV
-Global $g_bChkBBRandomAttack = False
-Global Const $g_sCSVBBAttacksPath = @ScriptDir & "\CSV\BuilderBase"
-Global $g_sAttackScrScriptNameBB[3] = ["", "", ""]
-Global $g_iBuilderBaseScript = 0
-
 Global $g_bDebugBBattack = False
-
-Global $g_bIsMachinePresent = False
-Global $g_iBBMachAbilityLastActivatedTime = -1 ; time between abilities
-; Globals for BB Machine
-; X, Y, g_bIsBBMachineD, g_bBBIsFirst
-Global Const $g_aMachineBBReset[4] = [-1, -1, False, True]
-Global $g_aMachineBB[4] = [-1, -1, False, True]
-Global $g_iFurtherFromBBDefault = 3
-
-; Report
-Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
-Global $g_sTxtRegistrationToken = ""
-
-Global $g_aBuilderHallPos = -1, $g_aAirdefensesPos = -1, $g_aCrusherPos = -1, $g_aCannonPos = -1, $g_aGuardPostPos = -1, _
-$g_aAirBombs = -1, $g_aLavaLauncherPos = -1, $g_aRoasterPos = -1, $g_aDeployPoints, $g_aDeployBestPoints
-
-Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aBuilderBaseAttackPolygon, $g_aFinalOuter[4]
-
-Global $g_bBBForceCustomArmy = False, $g_bBBGetArmyFromCSV = False, $g_bBBCSVAttack = False, $g_iBBCSVSettings = False ; Custom
-
+Global $g_bBBForceCustomArmy = False
 Global $g_iBBAttacked = False ; DoAttackBB attacked or not
+Global $g_bEnableCollectCCGold = False

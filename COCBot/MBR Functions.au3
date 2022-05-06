@@ -87,11 +87,6 @@
 #include "functions\Attack\BuilderBase\AttackBB.au3"
 #include "functions\Attack\BuilderBase\GetAttackBarBB.au3"
 
-; AIO
-#include "functions\Attack\BuilderBase\BuilderBaseCSV.au3"
-#include "functions\Attack\BuilderBase\BuilderBaseImageDetection.au3"
-#include "functions\Attack\BuilderBase\BuilderBasePolygon.au3"
-
 #Region CreateArmy / Train
 #include "functions\CreateArmy\CheckFullArmy.au3"
 #include "functions\CreateArmy\CheckArmyCamp.au3"
@@ -211,8 +206,6 @@
 #include "functions\Pixels\_PixelSearch.au3"
 #include "functions\Pixels\_MultiPixelSearch.au3"
 #include "functions\Pixels\isInsideDiamond.au3"
-; AIO
-#include "functions\Pixels\PixelMods.au3"
 
 #include "functions\Read Text\getBuilderCount.au3"
 #include "functions\Read Text\BuildingInfo.au3"
