@@ -4148,7 +4148,7 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 		Else
 			WinMove($g_hAndroidWindow, "", -32000, -32000)
 		EndIf
-		SetDebugLog($sSource & " - Hide Android window", $COLOR_INFO)
+		;SetDebugLog($sSource & " - Hide Android window", $COLOR_INFO)
 	EndIf
 	
 	Local $DesktopWidth = @DeskTopWidth
