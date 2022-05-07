@@ -361,6 +361,12 @@ Func CheckBMLoop($aBMPos)
 	While IsAttackPage()
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
+		
+		If _CheckPixel($aBlackHead, True) Then
+			SetLog("Battle Ended, Exiting BMLoop", $COLOR_DEBUG2)
+			ExitLoop
+		EndIf
+		
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "8C8C8C", 10, 1) Then
 			_Sleep(500)
 			SetDebugLog("Waiting Battle Machine Ability", $COLOR_DEBUG2)
