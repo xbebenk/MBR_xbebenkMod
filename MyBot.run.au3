@@ -1673,6 +1673,7 @@ Func BuilderBase()
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
 		; switch back to normal village
+		ZoomOut()
 		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False
 	EndIf
