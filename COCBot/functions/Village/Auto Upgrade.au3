@@ -721,7 +721,7 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 	Click($x, $y); click on upgrade window
 	For $i = 1 To 5
 		If IsFullScreenWindow() Then
-			_Sleep(2000)
+			_Sleep(1000)
 			ExitLoop
 		EndIf
 	Next
