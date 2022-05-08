@@ -254,7 +254,7 @@ Func _cmbSwitchAcc($bReadSaveConfig = True)
 	Else
 		If $g_iCmbSwitchAcc And $iCmbSwitchAcc = 0 Then
 			; No Switch Accounts selected, check if current profile was enabled and disable if so
-			For $i = 0 To UBound($g_ahChkDonate) - 9
+			For $i = 0 To UBound($g_ahChkDonate) - 15
 				If GUICtrlRead($g_ahChkAccount[$i]) = $GUI_CHECKED And GUICtrlRead($g_ahCmbProfile[$i]) = $g_sProfileCurrentName Then
 					SetLog("Disabled Profile " & $g_sProfileCurrentName & " in Group " & $g_iCmbSwitchAcc)
 					SetSwitchAccLog("Disabled Profile " & $g_sProfileCurrentName & " in Group " & $g_iCmbSwitchAcc)

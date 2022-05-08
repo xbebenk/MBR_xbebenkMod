@@ -1218,12 +1218,11 @@ EndFunc   ;==>SaveConfig_600_35_1
 Func SaveConfig_600_35_2()
 	; <><><><> Bot / Profile / Switch Account <><><><>
 	ApplyConfig_600_35_2(GetApplyConfigSaveAction())
-
 	Local $sSwitchAccFile
 	Local $iCmbSwitchAcc = $g_iCmbSwitchAcc
 	If $iCmbSwitchAcc = 0 Then
 		; find group this profile belongs to: no switch profile config is saved in config.ini on purpose!
-		For $g = 1 To UBound($g_abAccountNo)
+		For $g = 1 To UBound($iCmbSwitchAcc) ;group number
 			$sSwitchAccFile = $g_sProfilePath & "\SwitchAccount.0" & $g & ".ini"
 			If FileExists($sSwitchAccFile) = 0 Then ContinueLoop
 			Local $sProfile

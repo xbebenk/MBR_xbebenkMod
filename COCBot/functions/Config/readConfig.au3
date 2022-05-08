@@ -1473,7 +1473,7 @@ Func ReadConfig_600_35_2()
 	Local $sSwitchAccFile
 	$g_iCmbSwitchAcc = 0
 	$g_bChkSwitchAcc = False
-	For $g = 1 To 8 ;group number
+	For $g = 1 To 16 ;group number
 		; find group this profile belongs to: no switch profile config is saved in config.ini on purpose!
 		$sSwitchAccFile = $g_sProfilePath & "\SwitchAccount.0" & $g & ".ini"
 		If FileExists($sSwitchAccFile) = 0 Then ContinueLoop
