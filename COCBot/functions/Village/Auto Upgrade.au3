@@ -48,7 +48,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		$bRet = True
 	EndIf
 
-	SetDebugLog("Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
+	SetDebugLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
 EndFunc
 
@@ -60,31 +60,25 @@ Func SearchUpgrade($bTest = False)
 	If Not $g_bRunState Then Return
 	$g_bSkipWallReserve = False ;reset first
 	$g_bUpgradeLowCost = False ;reset first
-
-	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable Then
+	
+	VillageReport(True,True)
+	
+	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
 			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade:", $sUpgradeTime)
-			If $mUpgradeTime > 0 And $mUpgradeTime < 1440 Then
+			If $mUpgradeTime > 0 And $mUpgradeTime <= 1440 Then
 				SetLog("Upgrade time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
 				$g_bSkipWallReserve = True
-			ElseIf $mUpgradeTime > 1400 And $mUpgradeTime < 2880 Then
+			ElseIf $mUpgradeTime > 1400 And $mUpgradeTime <= 2880 Then
 				$g_bUpgradeLowCost = True
 				SetLog("Upgrade time > 24h And < 2day, Will Use Wall Reserved Builder", $COLOR_INFO)
 			Else
 				SetLog("Upgrade time > 24h, Skip Upgrade", $COLOR_INFO)
 			EndIf
 		EndIf
-	EndIf
-
-	VillageReport(True,True)
-
-	; check if builder head is clickable
-	If Not (_ColorCheck(_GetPixelColor(275, 15, True), "F5F5ED", 20) = True) Then
-		SetLog("Unable to find the Builder menu button... Exiting Auto Upgrade...", $COLOR_ERROR)
-		Return
 	EndIf
 
 	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder 
@@ -210,7 +204,7 @@ Func FindExistingBuilding($bTest = False)
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390) 
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
-			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
+			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 250, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
 			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount 
 			If $g_bChkRushTH Then ;if rushth enabled, filter only rushth buildings
 				Local $bRusTHFound = False
