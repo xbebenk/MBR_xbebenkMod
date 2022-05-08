@@ -287,7 +287,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		CCTutorial()
 		Return False
 	EndIf
-	If QuickMIS("BC1", $g_sImgCCMap, 375, 20, 400, 40) Then 
+	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then 
 		SetDebugLog("checkObstacles: Found Clan Capital Map, Returning Home")
 		Click(60, 610)
 		_Sleep(1000)

@@ -503,6 +503,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("ClanCapital", "ChkEnableForgeDE", $g_bChkEnableForgeDE)
 	_Ini_Add("ClanCapital", "ChkEnableForgeBBGold", $g_bChkEnableForgeBBGold)
 	_Ini_Add("ClanCapital", "ChkEnableForgeBBElix", $g_bChkEnableForgeBBElix)
+	_Ini_Add("ClanCapital", "ForgeUseBuilder", $g_iTxtForgeBuilder)
 
 	;Misc Mod
 	_Ini_Add("other", "SkipFirstCheckRoutine", $g_bSkipFirstCheckRoutine)

@@ -703,34 +703,43 @@ Func CreateClanGamesSettings()
 		GUICtrlSetOnEvent(-1, "CloseCGSettings")
 
 EndFunc
-Global $g_lblCapitalGold = 0, $g_lblCapitalMedal = 0
+Global $g_lblCapitalGold = 0, $g_lblCapitalMedal = 0, $g_hTxtForgeBuilder = 0
 Global $g_hChkEnableCollectCCGold = 0, $g_hChkEnableForgeGold = 0, $g_hChkEnableForgeElix = 0, $g_hChkEnableForgeDE = 0, $g_hChkEnableForgeBBGold = 0, $g_hChkEnableForgeBBElix = 0
 
 Func CreateClanCapitalTab()
 	Local $x = 15, $y = 40
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_ClanCapital", "Clan Capital Stats"), $x - 10, $y - 15, $g_iSizeWGrpTab4, 75)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_ClanCapital", "Stats"), $x - 10, $y - 15, $g_iSizeWGrpTab4, 70)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCapitalGold,  $x, $y, 24, 24)
-		$g_lblCapitalGold = GUICtrlCreateLabel("---", $x + 35, $y + 2, 100, -1)
+		$g_lblCapitalGold = GUICtrlCreateLabel("---", $x + 35, $y + 5, 100, -1)
 			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCapitalMedal, $x + 140, $y, 24, 24)
-		$g_lblCapitalMedal = GUICtrlCreateLabel("---", $x + 175, $y + 2, 100, -1)
+		$g_lblCapitalMedal = GUICtrlCreateLabel("---", $x + 175, $y + 5, 100, -1)
 			GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 		$y += 30
 		$g_hChkEnableCollectCCGold = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CollectCCGold", "Collect Clan Capital Gold"), $x, $y, -1, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_ClanCapital", "Forge Clan Capital Gold"), $x - 10, $y - 15, 210, 120)
-		$g_hChkEnableForgeGold = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "EnableCCGoldForgeGold", "Craft With Gold"), $x, $y, -1, -1)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_ClanCapital", "Forge/Craft Gold"), $x - 10, $y - 15, $g_iSizeWGrpTab4, 88)
+		$g_hChkEnableForgeGold = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "EnableCCGoldForgeGold", "Use Gold"), $x, $y, -1, -1)
 	$y += 20
-		$g_hChkEnableForgeElix = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "EnableCCGoldForgeElix", "Craft With Elixir"), $x, $y, -1, -1)
+		$g_hChkEnableForgeElix = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "EnableCCGoldForgeElix", "Use Elixir"), $x, $y, -1, -1)
+	$x += 100
+	$y -= 20
+		$g_hChkEnableForgeDE = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "EnableCCGoldForgeDE", "Use Dark Elixir"), $x, $y, -1, -1)
 	$y += 20
-		$g_hChkEnableForgeDE = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "EnableCCGoldForgeDE", "Craft With DE"), $x, $y, -1, -1)
-	$y += 20
-		$g_hChkEnableForgeBBGold = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "EnableCCGoldForgeBBGold", "Craft With BuilderBase Gold"), $x, $y, -1, -1)
-	$y += 20
-		$g_hChkEnableForgeBBElix = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "EnableCCGoldForgeBBElix", "Craft With BuilderBase Elixir"), $x, $y, -1, -1)
+		$g_hChkEnableForgeBBGold = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "EnableCCGoldForgeBBGold", "Use BuilderBase Gold"), $x, $y, -1, -1)
+	$x += 140
+	$y -= 20
+		$g_hChkEnableForgeBBElix = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "EnableCCGoldForgeBBElix", "Use BuilderBase Elixir"), $x, $y, -1, -1)
+	$x = 15
+	$y += 48
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblForgeUseBuilder", "Use "), $x, $y + 2, 45, 17)
+		$g_hTxtForgeBuilder = GUICtrlCreateInput("", $x + 23, $y, 40, 18,  BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "InputForgeUseBuilder", "Put How many builder to use to Forge"))
+		GUICtrlSetLimit(-1, 1)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblForgeBuilder", "Builder for Forge"), $x + 65, $y + 2, 100, 17)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc
 
