@@ -1002,7 +1002,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
 		If Not $g_bRunState Then Return
-		If _ColorCheck(_GetPixelColor(350,73, True), "fdfefd", 20) Then ;check upgrade window border
+		If _ColorCheck(_GetPixelColor(350,73, True), "fdfefd", 50) Then ;check upgrade window border
 			Switch $Direction
 				Case "Up"
 					If $YY < 100 Then $YY = 150
@@ -1022,7 +1022,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 					If _Sleep(5000) Then Return
 			EndSwitch
 		EndIf
-		If _ColorCheck(_GetPixelColor(350,73, True), "fdfefd", 20) Then ;check upgrade window border
+		If _ColorCheck(_GetPixelColor(350,73, True), "fdfefd", 50) Then ;check upgrade window border
 			SetLog("Upgrade Window Exist", $COLOR_INFO)
 			Return True
 		Else
@@ -1038,7 +1038,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 	Local $b_WindowOpened = False
 	If Not $g_bRunState Then Return
 	; open the builders menu
-	If Not _ColorCheck(_GetPixelColor(350,73, True), "FDFEFD", 30) Then
+	If Not _ColorCheck(_GetPixelColor(350,73, True), "FDFEFD", 50) Then
 		Click(295, 20)
 		If _Sleep(1000) Then Return
 	EndIf
