@@ -47,6 +47,8 @@ Func UpgradeWall($bTest = False)
 				SetLog("Upgrade time < 3d, No Discounts!", $COLOR_INFO)
 				$g_aWallSaveMode = 0
 			EndIf
+		Else
+			SetLog("Cannot find least upgrade time", $COLOR_ERROR)
 		EndIf
 	EndIf
 
@@ -150,19 +152,23 @@ Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = 
 		Case 0 ;Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			$HaveResource = $HaveGold
-			If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold Then $HaveResource = False
+			Local $iWallSave = WallDiscount($g_iUpgradeWallMinGold)
+			If $g_aiCurrentLoot[$eLootGold] < $iWallSave Then $HaveResource = False
 			If $HaveResource Then $UpgradeType = "Gold"
 			If Not $HaveResource Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
 		Case 1 ;Elixir
 			Local $HaveElix = IsElixEnough($Cost)
 			$HaveResource = $HaveElix
-			If $g_aiCurrentLoot[$eLootElixir] < $g_iUpgradeWallMinElixir Then $HaveResource = False
+			Local $iWallSave = WallDiscount($g_iUpgradeWallMinElixir)
+			If $g_aiCurrentLoot[$eLootElixir] < $iWallSave Then $HaveResource = False
 			If $HaveResource Then $UpgradeType = "Elix"
 			If Not $HaveResource Then SetLog("- Insufficient Elixir", $COLOR_DEBUG)
 		Case 2 ;Elixir then Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			Local $HaveElix = IsElixEnough($Cost)
-			If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold And $g_aiCurrentLoot[$eLootElixir] < $g_iUpgradeWallMinElixir Then $HaveResource = False
+			Local $iWallSaveG = WallDiscount($g_iUpgradeWallMinGold)
+			Local $iWallSaveE = WallDiscount($g_iUpgradeWallMinElixir)
+			If $g_aiCurrentLoot[$eLootGold] < $iWallSaveG And $g_aiCurrentLoot[$eLootElixir] < $iWallSaveE Then $HaveResource = False
 			If Number($iWallLevel) > 7 Then
 				$HaveResource = $HaveElix
 				If $HaveResource Then $UpgradeType = "Elix"
