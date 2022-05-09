@@ -1957,7 +1957,7 @@ Global $g_bDebugBBattack = False
 Global $g_bBBForceCustomArmy = False
 Global $g_iBBAttacked = False ; DoAttackBB attacked or not
 Global $g_bChkEnableCollectCCGold = False, $g_bChkEnableForgeGold = False, $g_bChkEnableForgeElix = False
-Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEnableForgeBBElix = False, $g_iTxtForgeBuilder = 0
+Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEnableForgeBBElix = False, $g_iCmbForgeBuilder = 0
 
 ;Loot ClanCapital
 Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0

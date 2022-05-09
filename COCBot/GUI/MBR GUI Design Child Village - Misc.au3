@@ -703,7 +703,7 @@ Func CreateClanGamesSettings()
 		GUICtrlSetOnEvent(-1, "CloseCGSettings")
 
 EndFunc
-Global $g_lblCapitalGold = 0, $g_lblCapitalMedal = 0, $g_hTxtForgeBuilder = 0
+Global $g_lblCapitalGold = 0, $g_lblCapitalMedal = 0, $g_hCmbForgeBuilder = 0
 Global $g_hChkEnableCollectCCGold = 0, $g_hChkEnableForgeGold = 0, $g_hChkEnableForgeElix = 0, $g_hChkEnableForgeDE = 0, $g_hChkEnableForgeBBGold = 0, $g_hChkEnableForgeBBElix = 0
 
 Func CreateClanCapitalTab()
@@ -736,9 +736,9 @@ Func CreateClanCapitalTab()
 	$x = 15
 	$y += 48
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblForgeUseBuilder", "Use "), $x, $y + 2, 45, 17)
-		$g_hTxtForgeBuilder = GUICtrlCreateInput("", $x + 23, $y, 40, 18,  BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$g_hCmbForgeBuilder = GUICtrlCreateCombo("", $x + 23, $y, 40, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		GUICtrlSetData(-1, "1|2|3|4", "1")
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "InputForgeUseBuilder", "Put How many builder to use to Forge"))
-		GUICtrlSetLimit(-1, 1)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblForgeBuilder", "Builder for Forge"), $x + 65, $y + 2, 100, 17)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc

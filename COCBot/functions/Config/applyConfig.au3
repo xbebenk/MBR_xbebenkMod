@@ -430,7 +430,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkEnableForgeDE, $g_bChkEnableForgeDE ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkEnableForgeBBGold, $g_bChkEnableForgeBBGold ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkEnableForgeBBElix, $g_bChkEnableForgeBBElix ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetData($g_hTxtForgeBuilder, $g_iTxtForgeBuilder)
+			_GUICtrlComboBox_SetCurSel($g_hCmbForgeBuilder, $g_iCmbForgeBuilder)
 			
 			;Misc Mod
 			GUICtrlSetState($g_hChkMMSkipFirstCheckRoutine, $g_bSkipFirstCheckRoutine ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -568,7 +568,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkEnableForgeDE = (GUICtrlRead($g_hChkEnableForgeDE) = $GUI_CHECKED)
 			$g_bChkEnableForgeBBGold = (GUICtrlRead($g_hChkEnableForgeBBGold) = $GUI_CHECKED)
 			$g_bChkEnableForgeBBElix = (GUICtrlRead($g_hChkEnableForgeBBElix) = $GUI_CHECKED)
-			$g_iTxtForgeBuilder = Number(GUICtrlRead($g_hTxtForgeBuilder))
+			$g_iCmbForgeBuilder = _GUICtrlComboBox_GetCurSel($g_hCmbForgeBuilder)
 
 			;Misc Mod
 			$g_bSkipFirstCheckRoutine = (GUICtrlRead($g_hChkMMSkipFirstCheckRoutine) = $GUI_CHECKED)
