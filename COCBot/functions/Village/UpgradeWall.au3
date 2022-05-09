@@ -36,10 +36,12 @@ Func UpgradeWall($bTest = False)
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
 			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade:", $sUpgradeTime)
 			If $mUpgradeTime >= 7200 Then ;5 days
-				SetLog("Long Upgrade Duration > 5d, discounting wall save resources by 50%", $COLOR_INFO)
+				SetLog("Long Upgrade Duration > 5d", $COLOR_INFO)
+				SetLog("Discounting wall save resources by 50%", $COLOR_INFO)
 				$g_aWallSaveMode = 1
 			ElseIf $mUpgradeTime >= 4320 Then
-				SetLog("Long Upgrade duration > 3d And < 5d, discounting wall save resources by 25%", $COLOR_INFO)
+				SetLog("Long Upgrade duration > 3d And < 5d", $COLOR_INFO)
+				SetLog("Discounting wall save resources by 25%", $COLOR_INFO)
 				$g_aWallSaveMode = 2
 			Else
 				SetLog("Upgrade time < 3d, No Discounts!", $COLOR_INFO)
