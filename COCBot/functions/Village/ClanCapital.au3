@@ -61,6 +61,7 @@ Func WaitStartCraftWindow()
 EndFunc
 
 Func ForgeClanCapitalGold($bTest = False)
+	ZoomOut()
 	Local $aForgeType[5] = [$g_bChkEnableForgeGold, $g_bChkEnableForgeElix, $g_bChkEnableForgeDE, $g_bChkEnableForgeBBGold, $g_bChkEnableForgeBBElix]
 	Local $bForgeEnabled = False
 	Local $iBuilderToUse = $g_iCmbForgeBuilder + 1

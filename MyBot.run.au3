@@ -1210,6 +1210,8 @@ Func __RunFunction($action)
 			checkMainScreen(False, $g_bStayOnBuilderBase, "Laboratory")
 		Case "PetHouse"
 			PetHouse()
+		Case "ForgeClanCapitalGold"
+			ForgeClanCapitalGold()
 		Case "BoostSuperTroop"
 			BoostSuperTroop()
 			_Sleep($DELAYRUNBOT3)
@@ -1596,7 +1598,7 @@ Func CommonRoutine($RoutineType = Default)
 				If _Sleep(500) Then Return
 				If $g_bRestart Then Return
 			Next
-			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse']
+			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'ForgeClanCapitalGold']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
