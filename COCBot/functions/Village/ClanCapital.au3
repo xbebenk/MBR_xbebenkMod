@@ -32,7 +32,7 @@ EndFunc
 
 Func OpenForgeWindow()
 	Local $bRet = False
-	If QuickMIS("BC1", $g_sImgForgeHouse, 270, 580, 340, 660) Then 
+	If QuickMIS("BC1", $g_sImgForgeHouse, 260, 570, 340, 660) Then 
 		Click($g_iQuickMISX + 10, $g_iQuickMISY + 10)
 		For $i = 1 To 5
 			SetDebugLog("Waiting for Forge Window #" & $i, $COLOR_ACTION)
@@ -40,7 +40,7 @@ Func OpenForgeWindow()
 				$bRet = True
 				ExitLoop
 			EndIf
-			_Sleep(500)
+			_Sleep(600)
 		Next
 	EndIf
 	Return $bRet
@@ -54,9 +54,9 @@ Func WaitStartCraftWindow()
 			$bRet = True
 			ExitLoop
 		EndIf
-		_Sleep(500)
+		_Sleep(600)
 	Next
-	If Not $bRet Then SetLog("StartCraftWindow does not open", $COLOR_ERROR)
+	If Not $bRet Then SetLog("StartCraft Window does not open", $COLOR_ERROR)
 	Return $bRet
 EndFunc
 
@@ -160,3 +160,28 @@ Func ForgeClanCapitalGold($bTest = False)
 	_Sleep(1000)
 	ClickAway()
 EndFunc
+
+Func SwitchToClanCapital()
+	Local $bRet = False
+	If QuickMIS("BC1", $g_sImgAirShip, 200, 520, 300, 660) Then 
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		For $i = 1 To 10
+			SetDebugLog("Waiting for Travel to Clan Capital Map #" & $i, $COLOR_ACTION)
+			If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
+				$bRet = True
+				ExitLoop
+			EndIf
+			_Sleep(800)
+		Next
+	EndIf
+	Return $bRet
+EndFunc
+
+
+Func AutoUpgradeCC($bTest = False)
+	If Not $g_bChkEnableAutoUpgradeCC Then Return
+	ZoomOut() ;ZoomOut first
+	If Not SwitchToClanCapital() Then Return
+	_Sleep(1000)
+	
+EndFunc 
