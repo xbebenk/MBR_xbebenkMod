@@ -1002,7 +1002,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 	If $YY = Default Then $YY = $Yscroll
 	For $checkCount = 0 To 2
 		If Not $g_bRunState Then Return
-		If _ColorCheck(_GetPixelColor(350,73, True), "fdfefd", 50) Then ;check upgrade window border
+		If IsBuilderMenuOpen() Then ;check upgrade window border
 			Switch $Direction
 				Case "Up"
 					If $YY < 100 Then $YY = 150
@@ -1022,7 +1022,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 					If _Sleep(5000) Then Return
 			EndSwitch
 		EndIf
-		If _ColorCheck(_GetPixelColor(350,73, True), "fdfefd", 50) Then ;check upgrade window border
+		If IsBuilderMenuOpen() Then ;check upgrade window border
 			SetLog("Upgrade Window Exist", $COLOR_INFO)
 			Return True
 		Else
@@ -1043,7 +1043,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 		If _Sleep(1000) Then Return
 	EndIf
 
-	If _ColorCheck(_GetPixelColor(350, 73, True), "FDFEFD", 30) Then
+	If IsBuilderMenuOpen() Then
 		SetDebugLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
@@ -1055,7 +1055,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 			EndIf
 			Click(295, 20)
 			If _Sleep(1000) Then Return
-			If _ColorCheck(_GetPixelColor(350, 73, True), "FDFEFD", 20) Then
+			If IsBuilderMenuOpen() Then
 				$b_WindowOpened = True
 				ExitLoop
 			EndIf
@@ -1371,4 +1371,11 @@ Func SearchUnplacedBuilding()
 			Return True
 		EndIf
 	EndIf
+EndFunc
+
+Func IsBuilderMenuOpen()
+	Local $bRet = False
+	Local $anyresource = QuickMIS("CNX", $g_sImgResourceIcon, 320, 83, 430, 360)
+	If IsArray($anyresource) And UBound($anyresource) > 0 Then $bRet = True
+	Return $bRet
 EndFunc
