@@ -996,6 +996,8 @@ Global $g_aUpgradeWall[3] = [0, 0, 0] ;wall level
 ;First cost is for walls level 5.  MBR doesn't support walls until level 4.
 Global Const $g_aiWallCost[11] = [20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 3000000, 5000000, 7000000]
 Global $g_iWallCost = 0
+; xbebenkmod - Wall Upgrade
+Global $g_aWallSaveMode = 0
 
 ; Auto Upgrade
 Global $g_bPlaceNewBuilding = False, $g_bChkRushTH = False, $g_bNewBuildingFirst = False, $g_bHeroPriority = False

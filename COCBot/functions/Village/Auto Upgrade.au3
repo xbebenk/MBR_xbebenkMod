@@ -74,7 +74,7 @@ Func SearchUpgrade($bTest = False)
 				$g_bSkipWallReserve = True
 			ElseIf $mUpgradeTime > 1400 And $mUpgradeTime <= 2880 Then
 				$g_bUpgradeLowCost = True
-				SetLog("Upgrade time > 24h And < 2day, Will Use Wall Reserved Builder", $COLOR_INFO)
+				SetLog("Upgrade time > 24h And < 2d, Will Use Wall Reserved Builder", $COLOR_INFO)
 			Else
 				SetLog("Upgrade time > 24h, Skip Upgrade", $COLOR_INFO)
 			EndIf

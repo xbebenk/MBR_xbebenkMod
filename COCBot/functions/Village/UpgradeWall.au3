@@ -27,6 +27,26 @@ Func UpgradeWall($bTest = False)
 	If Not $g_bRunState Then Return
 
 	If Not $g_bAutoUpgradeWallsEnable Then Return
+	
+	$g_aWallSaveMode = 0 ;Reset Var
+	If $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
+		ClickMainBuilder()
+		SetLog("Checking current upgrade", $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
+			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
+			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade:", $sUpgradeTime)
+			If $mUpgradeTime >= 7200 Then ;5 days
+				SetLog("Long Upgrade Duration > 5d, discounting wall save resources by 50%", $COLOR_INFO)
+				$g_aWallSaveMode = 1
+			ElseIf $mUpgradeTime >= 4320 Then
+				SetLog("Long Upgrade duration > 3d And < 5d, discounting wall save resources by 25%", $COLOR_INFO)
+				$g_aWallSaveMode = 2
+			Else
+				SetLog("Upgrade time < 3d, No Discounts!", $COLOR_INFO)
+				$g_aWallSaveMode = 0
+			EndIf
+		EndIf
+	EndIf
 
 	SetLog("Checking Upgrade Walls", $COLOR_INFO)
 	checkMainScreen(True, $g_bStayOnBuilderBase, "UpgradeWall")
@@ -521,23 +541,39 @@ Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
 EndFunc   ;==>UpgradeWallElixir
 
 Func IsGoldEnough($iWallCost = $g_aUpgradeWall[0])
+	Local $iWallSave = WallDiscount($g_iUpgradeWallMinGold)
 	Local $EnoughGold = True
-	If ($g_aiCurrentLoot[$eLootGold] - $iWallCost) < $g_iUpgradeWallMinGold Then
+	If ($g_aiCurrentLoot[$eLootGold] - $iWallCost) < $iWallSave Then
 		$EnoughGold = False
 	EndIf
 	If Not $EnoughGold Then
-		SetDebugLog("[Insufficient Gold] " & $g_aiCurrentLoot[$eLootGold] & " - " & $iWallCost & " = " & ($g_aiCurrentLoot[$eLootGold] - $iWallCost) & " < " & $g_iUpgradeWallMinGold, $COLOR_INFO)
+		SetDebugLog("[Insufficient Gold] " & $g_aiCurrentLoot[$eLootGold] & " - " & $iWallCost & " = " & ($g_aiCurrentLoot[$eLootGold] - $iWallCost) & " < " & $iWallSave, $COLOR_INFO)
 	EndIf
 	Return $EnoughGold
 EndFunc
 
 Func IsElixEnough($iWallCost = $g_aUpgradeWall[0])
+	Local $iWallSave = WallDiscount($g_iUpgradeWallMinElixir)
 	Local $EnoughElix = True
-	If ($g_aiCurrentLoot[$eLootElixir] - $iWallCost) < $g_iUpgradeWallMinElixir Then
+	If ($g_aiCurrentLoot[$eLootElixir] - $iWallCost) < $iWallSave Then
 		$EnoughElix = False
 	EndIf
 	If Not $EnoughElix Then
-		SetDebugLog("[Insufficient Elixir] " & $g_aiCurrentLoot[$eLootElixir] & " - " & $iWallCost & " = " & ($g_aiCurrentLoot[$eLootElixir] - $iWallCost) & " < " & $g_iUpgradeWallMinElixir, $COLOR_INFO)
+		SetDebugLog("[Insufficient Elixir] " & $g_aiCurrentLoot[$eLootElixir] & " - " & $iWallCost & " = " & ($g_aiCurrentLoot[$eLootElixir] - $iWallCost) & " < " & $iWallSave, $COLOR_INFO)
 	EndIf
 	Return $EnoughElix
+EndFunc
+
+Func WallDiscount($iWallSave = 0)
+	SetDebugLog("Wall save mode: " & $g_aWallSaveMode, $COLOR_DEBUG)
+	Switch $g_aWallSaveMode
+		Case 0
+			Return $iWallSave
+		Case 1
+			Return Int($iWallSave * 0.5)
+		Case 2
+			Return Int($iWallSave * 0.75)
+		Case Else
+			Return $iWallSave
+	EndSwitch
 EndFunc
