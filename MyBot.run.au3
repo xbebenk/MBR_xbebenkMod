@@ -1376,6 +1376,7 @@ Func FirstCheck()
 		If Not $g_bRunState Then Return
 		If $g_bAutoUpgradeEarly Then
 			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
+			checkArmyCamp(True, True) ;need to check reserved builder for heroes
 			AutoUpgrade()
 		EndIf
 		VillageReport()
