@@ -3,6 +3,7 @@ Func CollectCCGold()
 	If Not $g_bChkEnableCollectCCGold Then Return
 	SetLog("Start Collecting Clan Capital Gold", $COLOR_INFO)
 	ClickAway()
+	ZoomOut() ;ZoomOut first
 	If QuickMIS("BC1", $g_sImgCCGold, 280, 550, 480, 630) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
 		For $i = 1 To 5
@@ -91,8 +92,11 @@ Func ForgeClanCapitalGold($bTest = False)
 		SetLog("Forge Window not Opened, exiting", $COLOR_ACTION)
 		Return
 	EndIf
+	
 	If Not $g_bRunState Then Return
+	SetLog("Number of Enabled builder for Forge = " & $iBuilderToUse, $COLOR_ACTION)
 	If $iBuilderToUse > 3 Then ClickDrag(720, 315, 600, 315)
+	
 	Local $iBuilder = 0
 	Local $iActiveForge = QuickMIS("CNX", $g_sImgCCGold, 120, 230, 740, 410) ;check if we have forge in progress
 	If IsArray($iActiveForge) And UBound($iActiveForge) > 0 Then
@@ -105,7 +109,7 @@ Func ForgeClanCapitalGold($bTest = False)
 			$iBuilder += 1
 		Next
 	EndIf
-	SetLog("Number of Enabled builder for Forge = " & $iBuilderToUse, $COLOR_ACTION)
+	
 	SetLog("Already active builder Forging = " & $iBuilder, $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	For $builder = $iBuilder To $iBuilderToUse - 1
@@ -163,7 +167,7 @@ EndFunc
 
 Func SwitchToClanCapital()
 	Local $bRet = False
-	If QuickMIS("BC1", $g_sImgAirShip, 200, 520, 300, 660) Then 
+	If QuickMIS("BC1", $g_sImgAirShip, 200, 520, 400, 660) Then 
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		For $i = 1 To 10
 			SetDebugLog("Waiting for Travel to Clan Capital Map #" & $i, $COLOR_ACTION)
@@ -177,11 +181,128 @@ Func SwitchToClanCapital()
 	Return $bRet
 EndFunc
 
+Func IsCCBuilderMenuOpen()
+	Local $bRet = False
+	If QuickMIS("BC1", $g_sImgResourceCC, 400, 100, 550, 360) Then $bRet = True
+	Return $bRet
+EndFunc
+
+Func ClickCCBuilder()
+	Local $bRet = False
+	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then 
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		_Sleep(600)
+		If IsCCBuilderMenuOpen() Then $bRet = True
+	EndIf
+	Return $bRet
+EndFunc
+
+Func FindCCExistingUpgrade()
+	Local $aResult[0][3], $name[2]
+	Local $aIgnore[4] = ["Groove", "Tree", "Forest", "Campsite"]
+	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 550, 360)
+	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
+		For $i = 0 To UBound($aUpgrade) - 1
+			$name = getBuildingName($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 8)
+			If $g_bChkAutoUpgradeCCIgnore Then 
+				For $y In $aIgnore
+					If StringInStr($name[0], $y) Then 
+						SetDebugLog("Upgrade for " & $name[0] & " Ignored, Skip!!", $COLOR_ACTION)
+						ContinueLoop 2 ;skip this upgrade, looking next 
+					EndIf
+				Next
+			EndIf
+			;Local $name = getOcrAndCapture("coc-buildermenu-name", $aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 8, 200, 25, True)
+			_ArrayAdd($aResult, $name[0] & "|" & $aUpgrade[$i][1] & "|" &  $aUpgrade[$i][2])
+		Next
+	EndIf
+	Return $aResult
+EndFunc
+
+Func WaitUpgradeButton()
+	Local $aRet[3]
+	For $i = 1 To 10
+		SetDebugLog("Waiting for Upgrade Button #" & $i, $COLOR_ACTION)
+		If QuickMIS("BC1", $g_sImgCCUpgradeButton, 300, 520, 600, 660) Then
+			$aRet[0] = True
+			$aRet[1] = $g_iQuickMISX
+			$aRet[2] = $g_iQuickMISY
+			ExitLoop
+		EndIf
+		_Sleep(800)
+	Next
+	Return $aRet
+EndFunc
+
+Func WaitCCUpgradeWindow()
+	Local $bRet = False
+	For $i = 1 To 5
+		SetDebugLog("Waiting for Upgrade Window #" & $i, $COLOR_ACTION)
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 680, 99, 730, 140) Then
+			$bRet = True
+			ExitLoop
+		EndIf
+		_Sleep(600)
+	Next
+	If Not $bRet Then SetLog("Upgrade Window does not open", $COLOR_ERROR)
+	Return $bRet
+EndFunc
+
+Func SwitchToMainVillage()
+	Local $bRet = False
+	For $i = 1 To 5
+		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
+			Click(60, 610) ;Click ReturnHome/Map
+		EndIf
+		_Sleep(800)
+		If isOnMainVillage() Then 
+			$bRet = True
+			ExitLoop
+		EndIf
+	Next
+	Return $bRet
+EndFunc
 
 Func AutoUpgradeCC($bTest = False)
 	If Not $g_bChkEnableAutoUpgradeCC Then Return
 	ZoomOut() ;ZoomOut first
 	If Not SwitchToClanCapital() Then Return
 	_Sleep(1000)
-	
+	ClanCapitalReport()
+	If $g_iLootCCGold = 0 Then 
+		SetLog("No Capital Gold to spend to Contribute", $COLOR_INFO)
+		SwitchToMainVillage()
+		Return
+	EndIf
+	If Not $g_bRunState Then Return
+	If Not ClickCCBuilder() Then 
+		SetLog("Fail to open Builder Menu", $COLOR_ERROR)
+		Return
+	EndIf
+	_Sleep(500)
+	Local $aUpgrade = FindCCExistingUpgrade()
+	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
+		For $i = 0 To UBound($aUpgrade) - 1
+			SetLog("Upgrade: " & $aUpgrade[$i][0])
+			Click($aUpgrade[$i][1], $aUpgrade[$i][2])
+			Local $aRet = WaitUpgradeButton()
+			If Not $aRet[0] Then 
+				SetLog("Upgrade Button Not Found", $COLOR_ERROR)
+				Return
+			Else
+				Click($aRet[1], $aRet[2])
+				If Not WaitCCUpgradeWindow() Then Return
+				If Not $bTest Then 
+					Click(640, 520) ;Click Contribute
+				Else
+					SetLog("Only Test, should click on [640, 520]", $COLOR_INFO)
+					ClickAway()
+				EndIf
+				_Sleep(500)
+				ClickAway()
+			EndIf
+			ClanCapitalReport()
+			SwitchToMainVillage()
+		Next
+	EndIf
 EndFunc 
