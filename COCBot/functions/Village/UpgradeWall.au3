@@ -28,7 +28,6 @@ Func UpgradeWall($bTest = False)
 
 	If Not $g_bAutoUpgradeWallsEnable Then Return
 	
-	$g_aWallSaveMode = 0 ;Reset Var
 	If $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 And $g_aWallSaveMode < 0 Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
