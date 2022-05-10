@@ -575,9 +575,7 @@ EndFunc
 Func WallDiscount($iWallSave = 0)
 	SetDebugLog("Wall save mode: " & $g_aWallSaveMode, $COLOR_DEBUG)
 	Switch $g_aWallSaveMode
-		Case -1
-			Return $iWallSave
-		Case 0
+		Case -1 To 0
 			Return $iWallSave
 		Case 1
 			Return Int($iWallSave * 0.5)
