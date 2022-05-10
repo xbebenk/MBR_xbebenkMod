@@ -27,6 +27,24 @@ Func UpgradeWall($bTest = False)
 	If Not $g_bRunState Then Return
 
 	If Not $g_bAutoUpgradeWallsEnable Then Return
+
+	SetLog("Checking Upgrade Walls", $COLOR_INFO)
+	checkMainScreen(True, $g_bStayOnBuilderBase, "UpgradeWall")
+	VillageReport(True, True) ;update village resource capacity
+	SetLog("FreeBuilderCount: " & $g_iFreeBuilderCount, $COLOR_DEBUG)
+	If $bTest Then $g_iFreeBuilderCount = 1
+	If $g_iFreeBuilderCount < 1 Then Return
+
+	If $g_iFreeBuilderCount = 0 Then
+		SetLog("No builder available, Upgrade Walls skipped", $COLOR_DEBUG)
+		Return
+	EndIf
+
+	If $g_iFreeBuilderCount > 0 Then $GoUpgrade = True
+	If $g_bChkOnly1Builder And $g_iFreeBuilderCount > 1 Then
+		SetLog("Have more than 1 builder, Upgrade Walls skipped", $COLOR_DEBUG)
+		Return
+	EndIf
 	
 	If $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 And $g_aWallSaveMode < 0 Then
 		ClickMainBuilder()
@@ -49,24 +67,6 @@ Func UpgradeWall($bTest = False)
 		Else
 			SetLog("Cannot find least upgrade time", $COLOR_ERROR)
 		EndIf
-	EndIf
-
-	SetLog("Checking Upgrade Walls", $COLOR_INFO)
-	checkMainScreen(True, $g_bStayOnBuilderBase, "UpgradeWall")
-	VillageReport(True, True) ;update village resource capacity
-	SetLog("FreeBuilderCount: " & $g_iFreeBuilderCount, $COLOR_DEBUG)
-	If $bTest Then $g_iFreeBuilderCount = 1
-	If $g_iFreeBuilderCount < 1 Then Return
-
-	If $g_iFreeBuilderCount = 0 Then
-		SetLog("No builder available, Upgrade Walls skipped", $COLOR_DEBUG)
-		Return
-	EndIf
-
-	If $g_iFreeBuilderCount > 0 Then $GoUpgrade = True
-	If $g_bChkOnly1Builder And $g_iFreeBuilderCount > 1 Then
-		SetLog("Have more than 1 builder, Upgrade Walls skipped", $COLOR_DEBUG)
-		Return
 	EndIf
 	
 	Local $aIsResourceAvail = WallCheckResource($iWallCost, $iWallLevel+4) ;WallLevel from combolist, pick array[0], need to add 4 as cmblist start with 4
