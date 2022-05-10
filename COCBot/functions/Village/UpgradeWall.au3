@@ -29,7 +29,7 @@ Func UpgradeWall($bTest = False)
 	If Not $g_bAutoUpgradeWallsEnable Then Return
 	
 	$g_aWallSaveMode = 0 ;Reset Var
-	If $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
+	If $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 And $g_aWallSaveMode < 0 Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
@@ -575,6 +575,8 @@ EndFunc
 Func WallDiscount($iWallSave = 0)
 	SetDebugLog("Wall save mode: " & $g_aWallSaveMode, $COLOR_DEBUG)
 	Switch $g_aWallSaveMode
+		Case -1
+			Return $iWallSave
 		Case 0
 			Return $iWallSave
 		Case 1

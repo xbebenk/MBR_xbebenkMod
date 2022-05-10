@@ -77,6 +77,9 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 
 	Static $abNotNeedAllTime0 = $aiTrue
 	Static $abNotNeedAllTime1 = $aiTrue
+	
+	; xbebenk - Smart save resource for wall
+	$g_aWallSaveMode = -1
 
 	; First time switch account
 	Switch $sType
