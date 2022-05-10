@@ -719,7 +719,7 @@ EndFunc   ;==>DebugAttackBBImage
 
 Func BBBarbarianHead()
 	If _CheckPixel($aBlackHead, True) Then
-		SetDebugLogLog("Battle Ended, Black Barbarian Head Found", $COLOR_DEBUG2)
+		SetDebugLog("Battle Ended, Black Barbarian Head Found", $COLOR_DEBUG2)
 		Return True
 	Else
 		Return False
