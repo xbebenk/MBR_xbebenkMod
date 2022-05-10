@@ -66,7 +66,7 @@ Func GetFreeMagic()
 			EndIf
 			SetDebugLog("Capacity Read: " & $Capa & " RemoveFirst: " & String($g_bRemoveFreeMagicItems))
 		EndIf
-		If $Read = "FREE" And StringLeft($Capa, 1) = "0" Then $Read = "WAIT For FREE"
+		If $Read = "FREE" And StringLeft($Capa, 1) = "0" Then $Read = "Claimed"
 		If $Read = "" Then $Read = "N/A"
 		If Number($Read) > 10 Then 
 			$Read = $Read & " Gems"
