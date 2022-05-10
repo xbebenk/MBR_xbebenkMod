@@ -70,6 +70,7 @@ Global $g_sImgCCMap = @ScriptDir & "\imgxml\Resources\ClanCapital\CCMap\"
 Global $g_sImgAirShip = @ScriptDir & "\imgxml\Resources\ClanCapital\CCMap\AirShip\"
 Global $g_sImgCCGold = @ScriptDir & "\imgxml\Resources\ClanCapital\CCMap\CCGold\"
 Global $g_sImgForgeHouse = @ScriptDir & "\imgxml\Resources\ClanCapital\ForgeHouse\"
+Global $g_sImgResourceCC = @ScriptDir & "\imgxml\Resources\ClanCapital\CCMap\BuilderMenu\"
 #EndRegion
 
 #Region Boost Super Troops

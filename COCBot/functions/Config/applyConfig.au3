@@ -431,6 +431,8 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkEnableForgeBBGold, $g_bChkEnableForgeBBGold ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkEnableForgeBBElix, $g_bChkEnableForgeBBElix ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbForgeBuilder, $g_iCmbForgeBuilder)
+			GUICtrlSetState($g_hChkEnableAutoUpgradeCC, $g_bChkEnableAutoUpgradeCC ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkAutoUpgradeCCIgnore, $g_bChkAutoUpgradeCCIgnore ? $GUI_CHECKED : $GUI_UNCHECKED)
 			
 			;Misc Mod
 			GUICtrlSetState($g_hChkMMSkipFirstCheckRoutine, $g_bSkipFirstCheckRoutine ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -569,6 +571,9 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkEnableForgeBBGold = (GUICtrlRead($g_hChkEnableForgeBBGold) = $GUI_CHECKED)
 			$g_bChkEnableForgeBBElix = (GUICtrlRead($g_hChkEnableForgeBBElix) = $GUI_CHECKED)
 			$g_iCmbForgeBuilder = _GUICtrlComboBox_GetCurSel($g_hCmbForgeBuilder)
+			$g_bChkEnableAutoUpgradeCC = (GUICtrlRead($g_hChkEnableAutoUpgradeCC) = $GUI_CHECKED)
+			$g_bChkAutoUpgradeCCIgnore = (GUICtrlRead($g_hChkAutoUpgradeCCIgnore) = $GUI_CHECKED)
+			
 
 			;Misc Mod
 			$g_bSkipFirstCheckRoutine = (GUICtrlRead($g_hChkMMSkipFirstCheckRoutine) = $GUI_CHECKED)
