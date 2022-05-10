@@ -1,10 +1,10 @@
 #include-once
-Func CollectCCGold()
+Func CollectCCGold($bTest = False)
 	If Not $g_bChkEnableCollectCCGold Then Return
 	SetLog("Start Collecting Clan Capital Gold", $COLOR_INFO)
 	ClickAway()
 	ZoomOut() ;ZoomOut first
-	If QuickMIS("BC1", $g_sImgCCGold, 280, 550, 480, 630) Then
+	If QuickMIS("BC1", $g_sImgCCGoldCollect, 250, 550, 400, 670) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
 		For $i = 1 To 5
 			SetDebugLog("Waiting for Forge Window #" & $i, $COLOR_ACTION)
@@ -13,8 +13,19 @@ Func CollectCCGold()
 			EndIf
 			_Sleep(500)
 		Next
-		Click(180, 366) ;Click Collect
-		_Sleep(500)
+		Local $aCollect = QuickMIS("CNX", $g_sImgCCGoldCollect, 120, 340, 740, 410)
+		If IsArray($aCollect) And UBound($aCollect) > 0 Then
+			SetLog("Collecting " & UBound($aCollect) & " Clan Capital Gold", $COLOR_INFO)
+			For $i = 0 To UBound($aCollect) - 1
+				If Not $bTest Then 
+					Click($aCollect[$i][1], $aCollect[$i][2]) ;Click Collect
+				Else
+					SetLog("Test Only, Should Click on [" & $aCollect[$i][1] & "," & $aCollect[$i][2] & "]")
+				EndIf
+				_Sleep(500)
+			Next
+		EndIf
+		_Sleep(800)
 		Click($g_iQuickMISX, $g_iQuickMISY) ;Click close button
 		SetLog("Clan Capital Gold collected successfully!", $COLOR_SUCCESS)
 	Else
@@ -98,7 +109,7 @@ Func ForgeClanCapitalGold($bTest = False)
 	If $iBuilderToUse > 3 Then ClickDrag(720, 315, 600, 315)
 	
 	Local $iBuilder = 0
-	Local $iActiveForge = QuickMIS("CNX", $g_sImgCCGold, 120, 230, 740, 410) ;check if we have forge in progress
+	Local $iActiveForge = QuickMIS("CNX", $g_sImgActiveForge, 120, 230, 740, 410) ;check if we have forge in progress
 	If IsArray($iActiveForge) And UBound($iActiveForge) > 0 Then
 		If UBound($iActiveForge) >= $iBuilderToUse Then
 			SetLog("We have All Builder Active for Forge", $COLOR_INFO)
@@ -113,7 +124,7 @@ Func ForgeClanCapitalGold($bTest = False)
 	SetLog("Already active builder Forging = " & $iBuilder, $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	For $builder = $iBuilder To $iBuilderToUse - 1
-		Local $aCraft = QuickMIS("CNX", $g_sImgCCGold & "Craft\", 120, 230, 740, 410)
+		Local $aCraft = QuickMIS("CNX", $g_sImgCCGoldCraft, 120, 230, 740, 410)
 		_ArraySort($aCraft)
 		Local $aResource[5][2] = [["Gold", 240], ["Elixir", 330], ["Dark Elixir", 425], ["Builder Base Gold", 520], ["Builder Base Elixir", 610]]
 		If IsArray($aCraft) And UBound($aCraft) > 0 Then
@@ -269,7 +280,7 @@ Func AutoUpgradeCC($bTest = False)
 	If Not SwitchToClanCapital() Then Return
 	_Sleep(1000)
 	ClanCapitalReport()
-	If $g_iLootCCGold = 0 Then 
+	If Number($g_iLootCCGold) = 0 Then 
 		SetLog("No Capital Gold to spend to Contribute", $COLOR_INFO)
 		SwitchToMainVillage()
 		Return
@@ -280,7 +291,7 @@ Func AutoUpgradeCC($bTest = False)
 		Return
 	EndIf
 	_Sleep(500)
-	Local $aUpgrade = FindCCExistingUpgrade()
+	Local $aUpgrade = FindCCExistingUpgrade() ;Find on Capital Map, should only find currently on progress building
 	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 		For $i = 0 To UBound($aUpgrade) - 1
 			SetLog("Upgrade: " & $aUpgrade[$i][0])
@@ -302,7 +313,46 @@ Func AutoUpgradeCC($bTest = False)
 				ClickAway()
 			EndIf
 			ClanCapitalReport()
-			SwitchToMainVillage()
+			If Number($g_iLootCCGold) = 0 Then 
+				SwitchToMainVillage()
+				Return
+			EndIf
 		Next
 	EndIf
+	
+	#cs ;not completed yet
+	ClanCapitalReport()
+	Local $aMapCoord[7][3] = [["Capital Peak", 400, 225], ["Barbarian Camp", 530, 340], ["Wizard Valley", 410, 400], ["Balloon Lagoon", 300, 490], _
+								["Builder's Workshop", 490, 525], ["Dragon Cliffs", 630, 465], ["Golem Quarry", 185, 590]]
+	
+	If Number($g_iLootCCGold) > 0 Then
+		SetLog("Upgrade Attempt from Clan Capital Map, not succeed", $COLOR_DEBUG)
+		For $i = 0 To UBound($aMapCoord) - 1
+			SetLog("Go to " & $aMapCoord[$i][0] & " to Check Upgrades", $COLOR_ACTION)
+			Click($aMapCoord[$i][1], $aMapCoord[$i][2])
+			If Not WaitForMap($aMapCoord[$i][0]) Then 
+				SetLog("Going to " & $aMapCoord[$i][0] & " Failed", $COLOR_ERROR)
+				Return
+			EndIf
+			If Not ClickCCBuilder() Then Return
+		Next
+	EndIf
+	#ce
 EndFunc 
+
+
+Func WaitForMap($sMapName = "Capital Peak")
+	Local $bRet
+	For $i = 1 To 5
+		SetDebugLog("Waiting for " & $sMapName & "#" & $i, $COLOR_ACTION)
+		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ExitLoop
+		_Sleep(800)
+	Next
+	Local $Text = getOcrAndCapture("coc-mapname", $g_iQuickMISX, $g_iQuickMISY - 8, 230, 25)
+	SetDebugLog("$Text: " & $Text)
+	If StringInStr($sMapName, $Text) Then 
+		SetDebugLog("Match with: " & $sMapName)
+		$bRet = True
+	EndIf
+	Return $bRet
+EndFunc
