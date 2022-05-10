@@ -1391,15 +1391,14 @@ EndFunc
 
 Func IsBuilderMenuOpen()
 	Local $bRet = False
-	Local $asTest[4] = ["upgrade", "progress", "suggested", "other"]
-	Local $sUpgradeText = getOcrAndCapture("coc-buildermenu", 200, 83, 200, 20)
-	SetDebugLog("$sUpgradeText: " & $sUpgradeText)
-	For $Text In $asTest
-		If StringInStr($sUpgradeText, $Text) Then
-			SetDebugLog("Match with: " & $Text)
-			$bRet = True
-			ExitLoop
-		EndIf
-	Next
+	Local $aBorder[4] = [350, 73, 0xF7F8F5, 40]
+	If _CheckPixel($aBorder, True) Then $bRet = True ;got correct color for border 
+	
+	If Not $bRet Then ;lets re check if border color check not success
+		Local $sTriangle = getOcrAndCapture("coc-buildermenu-main", 320, 60, 345, 73)
+		SetDebugLog("$sTriangle: " & $sTriangle)
+		If $sTriangle = "^" Then $bRet = True
+	EndIf
+	
 	Return $bRet
 EndFunc
