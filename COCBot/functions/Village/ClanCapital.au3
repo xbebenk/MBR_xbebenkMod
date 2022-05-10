@@ -261,9 +261,10 @@ EndFunc
 
 Func SwitchToMainVillage()
 	Local $bRet = False
-	For $i = 1 To 5
+	For $i = 1 To 10
 		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
 			Click(60, 610) ;Click ReturnHome/Map
+			_Sleep(2000)
 		EndIf
 		_Sleep(800)
 		If isOnMainVillage() Then 
@@ -271,11 +272,13 @@ Func SwitchToMainVillage()
 			ExitLoop
 		EndIf
 	Next
+	ZoomOut()
 	Return $bRet
 EndFunc
 
 Func AutoUpgradeCC($bTest = False)
 	If Not $g_bChkEnableAutoUpgradeCC Then Return
+	SetLog("Checking Clan Capital AutoUpgrade", $COLOR_INFO)
 	ZoomOut() ;ZoomOut first
 	If Not SwitchToClanCapital() Then Return
 	_Sleep(1000)
@@ -308,6 +311,8 @@ Func AutoUpgradeCC($bTest = False)
 				Else
 					SetLog("Only Test, should click on [640, 520]", $COLOR_INFO)
 					ClickAway()
+					SwitchToMainVillage()
+				Return
 				EndIf
 				_Sleep(500)
 				ClickAway()
