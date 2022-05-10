@@ -210,6 +210,9 @@ Func AttackBB($aBBAttackBar = Default)
 	If $bBMDeployed Then CheckBMLoop($aBMPos) ;check if BM is Still alive and activate ability
 	Local $waitcount = 0
 	While IsAttackPage()
+		If BBBarbarianHead() Then
+			ExitLoop
+		EndIf
 		$waitcount += 1
 		SetDebugLog("Waiting Battle End #" & $waitcount, $COLOR_ACTION)
 		_Sleep(2000)
@@ -222,7 +225,7 @@ EndFunc   ;==>AttackBB
 Func OkayBBEnd() ; Find if battle has ended and click okay
 	local $timer = __TimerInit()
 	While 1
-		If _CheckPixel($aBlackHead, True) Then
+		If BBBarbarianHead() Then
 			ClickP($aOkayButton)
 			Return True
 		EndIf
@@ -362,7 +365,7 @@ Func CheckBMLoop($aBMPos)
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
 		
-		If _CheckPixel($aBlackHead, True) Then
+		If BBBarbarianHead() Then
 			SetLog("Battle Ended, Exiting BMLoop", $COLOR_DEBUG2)
 			ExitLoop
 		EndIf
@@ -714,4 +717,11 @@ Func DebugAttackBBImage($aCoords, $g_BBDPSide = 1)
 
 EndFunc   ;==>DebugAttackBBImage
 
-
+Func BBBarbarianHead()
+	If _CheckPixel($aBlackHead, True) Then
+		SetDebugLogLog("Battle Ended, Black Barbarian Head Found", $COLOR_DEBUG2)
+		Return True
+	Else
+		Return False
+	EndIf
+EndFunc
