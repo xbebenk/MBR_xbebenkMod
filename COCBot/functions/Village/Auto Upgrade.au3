@@ -22,9 +22,9 @@ EndFunc
 
 Func AutoUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
-	
+
 	PlaceBuilder()
-	
+
 	getBuilderCount(True) ;check if we have available builder
 	;Check if there is a free builder for Auto Upgrade
 	If $g_iFreeBuilderCount > 0 Then $bRet = True;builder available
@@ -60,9 +60,9 @@ Func SearchUpgrade($bTest = False)
 	If Not $g_bRunState Then Return
 	$g_bSkipWallReserve = False ;reset first
 	$g_bUpgradeLowCost = False ;reset first
-	
+
 	VillageReport(True,True)
-	
+
 	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
@@ -78,9 +78,9 @@ Func SearchUpgrade($bTest = False)
 			Else
 				SetLog("Upgrade time > 24h, Skip Upgrade", $COLOR_INFO)
 			EndIf
-			
+
 			; Smart Save Resources for Wall Upgrade
-			If $g_aWallSaveMode < 0 Then 
+			If $g_aWallSaveMode < 0 Then
 				If $mUpgradeTime >= 7200 Then
 					SetLog("Long Upgrade Duration > 5d", $COLOR_INFO)
 					SetLog("Discounting wall save resources by 50%", $COLOR_INFO)
@@ -97,7 +97,7 @@ Func SearchUpgrade($bTest = False)
 		EndIf
 	EndIf
 
-	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder 
+	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
 		If $g_bNewBuildingFirst And Not $g_bUpgradeLowCost Then ;skip if will use for lowcost upgrade
 			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
 			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
@@ -111,7 +111,7 @@ Func SearchUpgrade($bTest = False)
 	EndIf
 
 	If Not $g_bRunState Then Return
-	If AutoUpgradeCheckBuilder($bTest) Then 
+	If AutoUpgradeCheckBuilder($bTest) Then
 		AutoUpgradeSearchExisting($bTest) ;search upgrade for existing building
 	EndIf
 
@@ -122,7 +122,7 @@ Func SearchUpgrade($bTest = False)
 	EndIf
 	If Not $g_bRunState Then Return
 	Clickaway("Right")
-	If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeCheckBuilder") Then ZoomOut() 
+	If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeCheckBuilder") Then ZoomOut()
 	Return False
 EndFunc
 
@@ -159,7 +159,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		Else
 			SetLog("No Upgrade found!", $COLOR_INFO)
 		EndIf
-		
+
 		If IsTHLevelAchieved() And Not $g_bUpgradeLowCost Then
 			SetLog("Search Essential Building on Builder Menu", $COLOR_INFO)
 			ClickMainBuilder()
@@ -185,16 +185,16 @@ Func AutoUpgradeSearchExisting($bTest = False)
 				SetLog("Essential Building Not Found", $COLOR_INFO)
 			EndIf
 			If Not $g_bRunState Then Return
-		Else 
+		Else
 			SetLog("Skip Search Essential Building", $COLOR_INFO)
 		EndIf
-		
+
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
 		If Not ($UpgradeCost = $TmpUpgradeCost) Then $sameCost = 0
 		If $sameCost > 1 Then $NeedDrag = False
 		$UpgradeCost = $TmpUpgradeCost
-		
+
 		If Not $NeedDrag Then
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
@@ -217,15 +217,15 @@ Func FindExistingBuilding($bTest = False)
 	Local $aRushTHPriority[5][2] = [["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10]]
 	Local $aRushTH[8][2] = [["Barracks", 8], ["Castle", 10], ["Spell", 9], ["Workshop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
 	Local $aHeroes[4] = ["King", "Queen", "Warden", "Champion"]
-	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390) 
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 250, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
-			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount 
+			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
 			If $g_bChkRushTH Then ;if rushth enabled, filter only rushth buildings
 				Local $bRusTHFound = False
 				For $x = 0 To UBound($aRushTH) - 1
-					If StringInStr($UpgradeName[0], $aRushTH[$x][0], 1) Then 
+					If StringInStr($UpgradeName[0], $aRushTH[$x][0], 1) Then
 						$bRusTHFound = True ;used for add array
 						$bFoundRusTH = True ;used for sorting array
 						ExitLoop
@@ -245,7 +245,7 @@ Func FindExistingBuilding($bTest = False)
 					If Number($tmpcost) = 0 Then ContinueLoop
 					If Number($tmpcost) > 500000 Or $aTmpCoord[$i][0] <> "Gold" Then ContinueLoop
 				EndIf
-				
+
 				If Not $bRusTHFound And Not $g_bUpgradeLowCost Then SetDebugLog("Building:" & $UpgradeName[0] & ", not rushTH or rushTH priority")
 				If Not $bRusTHFound And Not $g_bUpgradeLowCost Then ContinueLoop ;skip this building, RushTh enabled but this building is not RushTH building
 			EndIf
@@ -272,7 +272,7 @@ Func FindExistingBuilding($bTest = False)
 					EndIf
 				Next
 				For $k = 0 To UBound($aRushTH) - 1
-					If StringInStr($BuildingName, $aRushTH[$k][0]) Then 
+					If StringInStr($BuildingName, $aRushTH[$k][0]) Then
 						Switch $aBuilding[$j][0]
 							Case "Gold"
 								$aBuilding[$j][6] = $aRushTH[$k][1] * $GoldMultiply
@@ -836,7 +836,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 				SetLog("New: " & $NewCoord[$j][4] & ", cost: " & $NewCoord[$j][6] & " " & $NewCoord[$j][0], $COLOR_INFO)
 				If $g_bChkRushTH And $g_bAutoUpgradeWallsEnable Then setMinSaveWall($NewCoord[$j][0], Number($NewCoord[$j][6]))
 			Next
-			
+
 			$isWall = False ;reset var
 			For $j = 0 To UBound($NewCoord) - 1
 				If Not $g_bRunState Then Return
@@ -920,7 +920,7 @@ EndFunc ;==>AutoUpgradeSearchNewBuilding
 
 Func FindNewBuilding()
 	Local $aTmpCoord, $aBuilding[0][7], $UpgradeCost, $aUpgradeName, $UpgradeType = ""
-	If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 200, 73, 300, 390) Then 
+	If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 200, 73, 300, 390) Then
 		_Sleep(1000); search for 1 'new' image first, if found, add more delay
 	Else
 		Return $aBuilding
@@ -1204,13 +1204,13 @@ Func SearchBuilder($bTest = False)
 	Local $New, $NewCoord, $aCoord[0][3]
 	$NewCoord = FindNewBuilding() ;find New Building
 	If IsArray($NewCoord) And UBound($NewCoord) > 0 Then
-		SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)		
+		SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
 		For $j = 0 To UBound($NewCoord) - 1
 			If $NewCoord[$j][0] = "Gem" Then
 				SetLog("New Builder Found!")
 				$a_Builder = True
 			EndIf
-			
+
 			If $a_Builder Then
 				If Not $ZoomedIn Then
 					Clickaway("Right")
@@ -1234,7 +1234,7 @@ Func SearchBuilder($bTest = False)
 	Else
 		SetLog("New Building Not Found", $COLOR_INFO)
 	EndIf
-	
+
 	Zoomout()
 	If _Sleep(1000) Then Return
 
@@ -1254,9 +1254,9 @@ Func CCTutorial()
 		EndIf
 		If $i > 1 And Not QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then Return
 	Next
-	
+
 	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;tutorial page, with strange person, click until arrow
-		For $i = 1 To 5 
+		For $i = 1 To 5
 			SetLog("Wait for Arrow on CC Peak #" & $i, $COLOR_INFO)
 			ClickAway()
 			_Sleep(3000)
@@ -1268,9 +1268,9 @@ Func CCTutorial()
 			EndIf
 		Next
 	EndIf
-	
+
 	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;tutorial page, with strange person, click until map button
-		For $i = 1 To 5 
+		For $i = 1 To 5
 			SetLog("Wait for Map Button #" & $i, $COLOR_INFO)
 			ClickAway()
 			_Sleep(3000)
@@ -1285,8 +1285,8 @@ Func CCTutorial()
 			EndIf
 		Next
 	EndIf
-	
-	For $i = 1 To 8 
+
+	For $i = 1 To 8
 		SetLog("Wait for Arrow on CC Forge #" & $i, $COLOR_INFO)
 		ClickAway()
 		_Sleep(3000)
@@ -1297,11 +1297,11 @@ Func CCTutorial()
 		EndIf
 	Next
 
-	For $i = 1 To 12 
+	For $i = 1 To 12
 		SetLog("Wait for Arrow on CC Forge Window #" & $i, $COLOR_INFO)
 		ClickAway()
 		_Sleep(3000)
-		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then 
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then
 			Click(420, 490) ;click CC Forge
 			_Sleep(3000)
 		EndIf
@@ -1312,7 +1312,7 @@ Func CCTutorial()
 		EndIf
 	Next
 
-	For $i = 1 To 10 
+	For $i = 1 To 10
 		SetLog("Wait for MainScreen #" & $i, $COLOR_INFO)
 		ClickAway()
 		If _checkMainScreenImage($aIsMain) Then ExitLoop
@@ -1328,10 +1328,10 @@ Func PlaceUnplacedBuilding($bTest = False)
 		If SearchGreenZone() Then
 			If SearchUnplacedBuilding() Then
 				SetLog("Trying to place Unplaced Bulding!", $COLOR_INFO)
-				
+
 				Click(431,571)
 				If _Sleep(1500) Then Return False
-				
+
 				Local $GreenCheckCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
 				SetDebugLog("Looking for GreenCheck Button", $COLOR_INFO)
 				If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
@@ -1391,7 +1391,15 @@ EndFunc
 
 Func IsBuilderMenuOpen()
 	Local $bRet = False
-	Local $anyresource = QuickMIS("CNX", $g_sImgResourceIcon, 320, 83, 430, 360)
-	If IsArray($anyresource) And UBound($anyresource) > 0 Then $bRet = True
+	Local $asTest[4] = ["upgrade", "progress", "suggested", "other"]
+	Local $sUpgradeText = getOcrAndCapture("coc-buildermenu", 200, 83, 200, 20)
+	SetDebugLog("$sUpgradeText: " & $sUpgradeText)
+	For $Text In $asTest
+		If StringInStr($sUpgradeText, $Text) Then
+			SetDebugLog("Match with: " & $Text)
+			$bRet = True
+			ExitLoop
+		EndIf
+	Next
 	Return $bRet
 EndFunc
