@@ -39,9 +39,9 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""], $fixed = [0, 0, 0, 0, 0, ""]
 	Local $x0, $y0, $d0, $x, $y, $x1, $y1, $right, $bottom, $a
 
-	Local $iAdditionalY = 100
-	Local $iAdditionalX = 100
-
+	Local $iAdditionalY = 75
+	Local $iAdditionalX = 75
+	
 	If $bOnBuilderBase = Default Then
 		$bOnBuilderBase = isOnBuilderBase(True)
 	EndIf
@@ -195,7 +195,10 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		EndIf
 
 		If $tree[0] = 0 Then ; And $fixed[0] = 0 And Not $g_bRestart Then
-			SetDebugLog("GetVillageSize cannot find tree", $COLOR_WARNING)
+			SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
+			If QuickMIS("BC1", $g_sImgHiddenStone, 340, 620, 420, 676) Then 
+				ClickDrag(800, 420, 800 + 467 - $g_iQuickMISX, 420, 500)
+			EndIf
 			Return FuncReturn($aResult)
 		EndIf
 	EndIf
