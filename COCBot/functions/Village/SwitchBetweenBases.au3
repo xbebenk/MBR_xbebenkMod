@@ -75,6 +75,7 @@ Func SwitchTo($To = "BB")
 			If $g_bDebugClick Or $g_bDebugSetlog Then SaveDebugImage("SwitchBetweenBases", True)
 			ContinueLoop
 		EndIf
+		_Sleep(1000)
 	Next
 	
 	If IsProblemAffect(True) Then Return
@@ -86,7 +87,7 @@ Func SwitchTo($To = "BB")
 			SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
 			ExitLoop
 		EndIf
-		_Sleep(500)
+		_Sleep(1000)
 	Next
 	
 	If IsProblemAffect(True) Then Return
