@@ -1683,6 +1683,8 @@ Func BuilderBase()
 		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False
 	EndIf
+	
+	If Not $g_bStayOnBuilderBase And IsOnBuilderBase() Then SwitchBetweenBases("Main")
 EndFunc
 
 Func TestBuilderBase()
