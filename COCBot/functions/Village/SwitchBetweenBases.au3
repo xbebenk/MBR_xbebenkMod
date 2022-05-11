@@ -88,10 +88,15 @@ Func SwitchTo($To = "BB")
 			ExitLoop
 		EndIf
 		_Sleep(1000)
+		
+		If $i = 10 Then ; Debug Line
+			SaveDebugImage("BBSwitchOld", False)
+			SaveDebugImage("BBSwitchNew", True)
+		EndIf
 	Next
 	
 	If IsProblemAffect(True) Then Return
 	If Not $g_bRunState Then Return
-	
+	If Not $bRet Then SetLog("SwitchBetweenBases Failed", $COLOR_ERROR)
 	Return $bRet
 EndFunc
