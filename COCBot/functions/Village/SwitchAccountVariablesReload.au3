@@ -80,6 +80,14 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	
 	; xbebenk - Smart save resource for wall
 	$g_aWallSaveMode = -1
+	
+	; xbebenk - Hot Fix to reset Pet House Var and GUI
+	;==========Hide Red Hide Green Show Gray===
+	GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
+	GUICtrlSetState($g_hPicPetGreen, $GUI_HIDE)
+	GUICtrlSetState($g_hPicPetGray, $GUI_SHOW)
+	;===========================================
+	$g_sPetUpgradeTime = ""
 
 	; First time switch account
 	Switch $sType
