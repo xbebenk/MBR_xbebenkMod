@@ -508,8 +508,8 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 						$iCallCount = 0
 						Return FuncReturn($aResult)
 					EndIf
-					CloseCoC() ; ensure CoC is gone
-					OpenCoC()
+					CloseCoC(True) ;restart coc
+					checkMainScreen(True, $g_bStayOnBuilderBase, "RestartCoC--ResetZoom")
 					Return FuncReturn(SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, "SearchZoomOut(2):" & $sSource, True, $DebugLog))
 				Else
 					SetLog("Restart Android to reset zoom" & $sSource & "...", $COLOR_INFO)
