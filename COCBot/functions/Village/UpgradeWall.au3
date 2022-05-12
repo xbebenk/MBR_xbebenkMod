@@ -561,11 +561,7 @@ EndFunc
 
 Func IsElixEnough($iWallCost = $g_aUpgradeWall[0])
 	Local $iWallSave = $g_iUpgradeWallMinElixir
-	If _DateDiff("n", _NowCalc(), $g_sLabUpgradeTime) < 4320 Then ; Lab Upgrade Time < 3 days, no discounts!
-		SetLog("Cancelling any discounts as lab time < 3d!", $COLOR_INFO)
-	Else
-		$iWallSave = WallDiscount($g_iUpgradeWallMinElixir)
-	EndIf
+	If _DateDiff("n", _NowCalc(), $g_sLabUpgradeTime) > 4320 Then $iWallSave = WallDiscount($g_iUpgradeWallMinElixir) ; Lab Upgrade Time < 3 days, no discounts!
 	Local $EnoughElix = True
 	If ($g_aiCurrentLoot[$eLootElixir] - $iWallCost) < $iWallSave Then
 		$EnoughElix = False
