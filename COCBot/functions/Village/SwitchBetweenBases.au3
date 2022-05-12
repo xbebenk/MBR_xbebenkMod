@@ -87,7 +87,7 @@ Func SwitchTo($To = "BB")
 			SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
 			ExitLoop
 		EndIf
-		_Sleep(1000)
+		_Sleep(2000)
 	Next
 	
 	If IsProblemAffect(True) Then Return

@@ -205,6 +205,7 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 	
 	If isGemOpen(True) Then ; check for gem window
 		SetLog("Oops, Gems required for " & $UpgradeName & " Upgrade, try again.", $COLOR_ERROR)
+		$iLabFinishTime = 0
 		$bRet = False
 	Else
 		SetLog("Upgrade " & $UpgradeName & " in your star laboratory started with success...", $COLOR_SUCCESS)
