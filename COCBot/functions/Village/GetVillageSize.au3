@@ -149,6 +149,9 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		If QuickMIS("BC1", $g_sImgHiddenStone, 55, 290, 130, 450) Then 
 			ClickDrag(800, 420, 800 - $g_iQuickMISX + 20, 420, 500)
 		EndIf
+		If QuickMIS("BC1", $g_sImgHiddenStone, 300, 620, 420, 676) Then 
+			ClickDrag(800, 420, 800 + 415 - $g_iQuickMISX, 420, 500)
+		EndIf
 		Return FuncReturn($aResult)
 	EndIf
 
