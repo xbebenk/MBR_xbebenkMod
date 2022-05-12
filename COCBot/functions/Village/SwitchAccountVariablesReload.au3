@@ -87,7 +87,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	GUICtrlSetState($g_hPicPetGreen, $GUI_HIDE)
 	GUICtrlSetState($g_hPicPetGray, $GUI_SHOW)
 	;===========================================
-	$g_sPetUpgradeTime = 0
+	$g_sPetUpgradeTime = ""
 
 	; First time switch account
 	Switch $sType
