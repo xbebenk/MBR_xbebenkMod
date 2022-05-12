@@ -184,7 +184,7 @@ Func SwitchToClanCapital()
 			SetDebugLog("Waiting for Travel to Clan Capital Map #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
 				$bRet = True
-				SetLog("We are on Clan Capital Map", $COLOR_INFO)
+				SetLog("Success Travel to Clan Capital Map", $COLOR_INFO)
 				ExitLoop
 			EndIf
 			_Sleep(800)
@@ -219,7 +219,7 @@ Func FindCCExistingUpgrade()
 	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 550, 360)
 	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 		For $i = 0 To UBound($aUpgrade) - 1
-			$name = getBuildingName($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 10)
+			$name = getCCBuildingName($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 10)
 			If $g_bChkAutoUpgradeCCIgnore Then 
 				For $y In $aIgnore
 					If StringInStr($name[0], $y) Then 
@@ -240,7 +240,7 @@ Func FindCCSuggestedUpgrade()
 	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 550, 360)
 	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 		For $i = 0 To UBound($aUpgrade) - 1
-			$name = getBuildingNameBlue($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 10)
+			$name = getCCBuildingNameBlue($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 10)
 			If $g_bChkAutoUpgradeCCIgnore Then 
 				For $y In $aIgnore
 					If StringInStr($name[0], $y) Then 
@@ -279,7 +279,7 @@ Func WaitUpgradeButton()
 					Return $aRet
 				EndIf
 			EndIf
-			_Sleep(1000)
+			_Sleep(500)
 		Next
 		_Sleep(800)
 	Next
@@ -344,23 +344,25 @@ Func AutoUpgradeCC($bTest = False)
 		Return
 	EndIf
 	_Sleep(500)
+	Local $aRet[3] = [False, 0, 0]
 	If $bUpgradeFound Then 
 		Local $aUpgrade = FindCCExistingUpgrade() ;Find on Capital Map, should only find currently on progress building
 		If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 			For $i = 0 To UBound($aUpgrade) - 1
-				SetLog("Upgrade: " & $aUpgrade[$i][0])
+				SetDebugLog("Upgrade: " & $aUpgrade[$i][0])
 				Click($aUpgrade[$i][1], $aUpgrade[$i][2])
-				Local $aRet = WaitUpgradeButton()
+				$aRet = WaitUpgradeButton()
 				If Not $aRet[0] Then 
 					SetLog("Upgrade Button Not Found", $COLOR_ERROR)
 					Return
 				Else
 					Click($aRet[1], $aRet[2])
 					If Not WaitCCUpgradeWindow() Then Return
+					_Sleep(1000)
 					If Not $bTest Then 
 						Click(640, 520) ;Click Contribute
 					Else
-						SetLog("Only Test, should click on [640, 520]", $COLOR_INFO)
+						SetLog("Only Test, should click Contibute on [640, 520]", $COLOR_INFO)
 						ClickAway()
 						SwitchToMainVillage()
 					Return
@@ -411,10 +413,11 @@ Func AutoUpgradeCC($bTest = False)
 						Else
 							Click($aRet[1], $aRet[2])
 							If Not WaitCCUpgradeWindow() Then Return
+							_Sleep(500)
 							If Not $bTest Then 
 								Click(640, 520) ;Click Contribute
 							Else
-								SetLog("Only Test, should click on [640, 520]", $COLOR_INFO)
+								SetLog("Only Test, should click Contibute on [640, 520]", $COLOR_INFO)
 								ClickAway()
 								SwitchToMainVillage()
 							Return
