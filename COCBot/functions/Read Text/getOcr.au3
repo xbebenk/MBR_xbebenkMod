@@ -195,6 +195,34 @@ Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
 	Return $aResult
 EndFunc   ;==>getBuildingName
 
+Func getBuildingNameBlue($x_start, $y_start) ;  -> Get BuildingName on builder menu
+	Local $BuildingName = "", $Count = 1
+	Local $Name = getOcrAndCapture("coc-ccbuildermenu-nameblue", $x_start, $y_start, 160, 20, False)
+	If StringRegExp($Name, "x\d{1,}") Then
+		Local $aCount = StringRegExp($Name, "\d{1,}", 1) ;check if we found count of building
+		If IsArray($aCount) Then $Count = $aCount[0]
+	EndIf
+	
+	If StringLeft($Name, 2) = "l " Then 
+		$BuildingName = StringTrimLeft($Name, 2) ;remove first "l" because sometimes buildermenu border captured as "l"
+	Else
+		$BuildingName = $Name
+	EndIf
+	
+	If StringRegExp($BuildingName, "x\d{1,}") Then
+		Local $aReplace = StringRegExp($BuildingName, "( x\d{1,})", 1)
+		;SetDebugLog($aReplace[0])
+		Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
+		;SetDebugLog($TmpBuildingName)
+		$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+	EndIf
+	
+	Local $aResult[2]
+	$aResult[0] = $BuildingName
+	$aResult[1] = Number($Count)
+	Return $aResult
+EndFunc   ;==>getBuildingName
+
 Func getOcrReloadMessage($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
 	Local $result = getOcrAndCapture("coc-reloadmsg", $x_start, $y_start, 116, 19, True)
 	Local $String = ""

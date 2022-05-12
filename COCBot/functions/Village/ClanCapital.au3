@@ -184,6 +184,7 @@ Func SwitchToClanCapital()
 			SetDebugLog("Waiting for Travel to Clan Capital Map #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
 				$bRet = True
+				SetLog("We are on Clan Capital Map", $COLOR_INFO)
 				ExitLoop
 			EndIf
 			_Sleep(800)
@@ -194,27 +195,31 @@ EndFunc
 
 Func IsCCBuilderMenuOpen()
 	Local $bRet = False
+	If QuickMIS("BC1", $g_sImgCCMenuTriangle, 400, 55, 470, 73) Then $bRet = True
 	If QuickMIS("BC1", $g_sImgResourceCC, 400, 100, 550, 360) Then $bRet = True
 	Return $bRet
 EndFunc
 
 Func ClickCCBuilder()
 	Local $bRet = False
-	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then 
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		_Sleep(600)
-		If IsCCBuilderMenuOpen() Then $bRet = True
+	If IsCCBuilderMenuOpen() Then $bRet = True
+	If Not $bRet Then
+		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then 
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			_Sleep(1000)
+			If IsCCBuilderMenuOpen() Then $bRet = True
+		EndIf
 	EndIf
 	Return $bRet
 EndFunc
 
 Func FindCCExistingUpgrade()
-	Local $aResult[0][3], $name[2]
+	Local $aResult[0][3], $name[2] = ["", 0]
 	Local $aIgnore[4] = ["Groove", "Tree", "Forest", "Campsite"]
 	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 550, 360)
 	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 		For $i = 0 To UBound($aUpgrade) - 1
-			$name = getBuildingName($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 8)
+			$name = getBuildingName($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 10)
 			If $g_bChkAutoUpgradeCCIgnore Then 
 				For $y In $aIgnore
 					If StringInStr($name[0], $y) Then 
@@ -223,7 +228,27 @@ Func FindCCExistingUpgrade()
 					EndIf
 				Next
 			EndIf
-			;Local $name = getOcrAndCapture("coc-buildermenu-name", $aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 8, 200, 25, True)
+			_ArrayAdd($aResult, $name[0] & "|" & $aUpgrade[$i][1] & "|" &  $aUpgrade[$i][2])
+		Next
+	EndIf
+	Return $aResult
+EndFunc
+
+Func FindCCSuggestedUpgrade()
+	Local $aResult[0][3], $name[2] = ["", 0]
+	Local $aIgnore[4] = ["Groove", "Tree", "Forest", "Campsite"]
+	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 550, 360)
+	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
+		For $i = 0 To UBound($aUpgrade) - 1
+			$name = getBuildingNameBlue($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 10)
+			If $g_bChkAutoUpgradeCCIgnore Then 
+				For $y In $aIgnore
+					If StringInStr($name[0], $y) Then 
+						SetDebugLog("Upgrade for " & $name[0] & " Ignored, Skip!!", $COLOR_ACTION)
+						ContinueLoop 2 ;skip this upgrade, looking next 
+					EndIf
+				Next
+			EndIf
 			_ArrayAdd($aResult, $name[0] & "|" & $aUpgrade[$i][1] & "|" &  $aUpgrade[$i][2])
 		Next
 	EndIf
@@ -232,7 +257,8 @@ EndFunc
 
 Func WaitUpgradeButton()
 	Local $aRet[3]
-	For $i = 1 To 10
+	For $i = 1 To 20
+		If Not $g_bRunState Then Return
 		SetDebugLog("Waiting for Upgrade Button #" & $i, $COLOR_ACTION)
 		If QuickMIS("BC1", $g_sImgCCUpgradeButton, 300, 520, 600, 660) Then
 			$aRet[0] = True
@@ -240,6 +266,21 @@ Func WaitUpgradeButton()
 			$aRet[2] = $g_iQuickMISY
 			ExitLoop
 		EndIf
+		For $y = 1 To 8 
+			If Not $g_bRunState Then Return
+			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then			
+				Click($g_iQuickMISX + 100, $g_iQuickMISY)
+				SetLog("Skip chat #" & $y, $COLOR_INFO)
+				_Sleep(5000)
+				If QuickMIS("BC1", $g_sImgCCUpgradeButton, 300, 520, 600, 660) Then 
+					$aRet[0] = True
+					$aRet[1] = $g_iQuickMISX
+					$aRet[2] = $g_iQuickMISY
+					Return $aRet
+				EndIf
+			EndIf
+			_Sleep(1000)
+		Next
 		_Sleep(800)
 	Next
 	Return $aRet
@@ -289,75 +330,128 @@ Func AutoUpgradeCC($bTest = False)
 		Return
 	EndIf
 	If Not $g_bRunState Then Return
-	If Not ClickCCBuilder() Then 
+	Local $bUpgradeFound = True ;lets assume there is upgrade in progress exists
+	If ClickCCBuilder() Then 
+		_Sleep(1000)
+		Local $Text = getOcrAndCapture("coc-buildermenu-capital", 345, 81, 100, 25)
+		If StringInStr($Text, "No") Then 
+			SetLog("No Upgrades in progress", $COLOR_INFO)
+			$bUpgradeFound = False ;builder menu opened but no upgrades on progress exists
+		EndIf
+	Else
 		SetLog("Fail to open Builder Menu", $COLOR_ERROR)
+		SwitchToMainVillage()
 		Return
 	EndIf
 	_Sleep(500)
-	Local $aUpgrade = FindCCExistingUpgrade() ;Find on Capital Map, should only find currently on progress building
-	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
-		For $i = 0 To UBound($aUpgrade) - 1
-			SetLog("Upgrade: " & $aUpgrade[$i][0])
-			Click($aUpgrade[$i][1], $aUpgrade[$i][2])
-			Local $aRet = WaitUpgradeButton()
-			If Not $aRet[0] Then 
-				SetLog("Upgrade Button Not Found", $COLOR_ERROR)
-				Return
-			Else
-				Click($aRet[1], $aRet[2])
-				If Not WaitCCUpgradeWindow() Then Return
-				If Not $bTest Then 
-					Click(640, 520) ;Click Contribute
+	If $bUpgradeFound Then 
+		Local $aUpgrade = FindCCExistingUpgrade() ;Find on Capital Map, should only find currently on progress building
+		If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
+			For $i = 0 To UBound($aUpgrade) - 1
+				SetLog("Upgrade: " & $aUpgrade[$i][0])
+				Click($aUpgrade[$i][1], $aUpgrade[$i][2])
+				Local $aRet = WaitUpgradeButton()
+				If Not $aRet[0] Then 
+					SetLog("Upgrade Button Not Found", $COLOR_ERROR)
+					Return
 				Else
-					SetLog("Only Test, should click on [640, 520]", $COLOR_INFO)
+					Click($aRet[1], $aRet[2])
+					If Not WaitCCUpgradeWindow() Then Return
+					If Not $bTest Then 
+						Click(640, 520) ;Click Contribute
+					Else
+						SetLog("Only Test, should click on [640, 520]", $COLOR_INFO)
+						ClickAway()
+						SwitchToMainVillage()
+					Return
+					EndIf
+					_Sleep(500)
 					ClickAway()
-					SwitchToMainVillage()
-				Return
 				EndIf
-				_Sleep(500)
-				ClickAway()
-			EndIf
-			ClanCapitalReport()
-			If Number($g_iLootCCGold) = 0 Then 
-				SwitchToMainVillage()
-				Return
-			EndIf
-		Next
+				ClanCapitalReport()
+				If Number($g_iLootCCGold) = 0 Then 
+					SwitchToMainVillage()
+					Return
+				EndIf
+			Next
+		EndIf
+	Else
+		
+		ClanCapitalReport()
+		Local $aMapCoord[7][3] = [["Capital Peak", 400, 225], ["Barbarian Camp", 530, 340], ["Wizard Valley", 410, 400], ["Balloon Lagoon", 300, 490], _
+									["Builder's Workshop", 490, 525], ["Dragon Cliffs", 630, 465], ["Golem Quarry", 185, 590]]
+		
+		If Number($g_iLootCCGold) > 0 Then
+			SetLog("Upgrade Attempt from Clan Capital Map, not succeed", $COLOR_DEBUG)
+			For $i = UBound($aMapCoord) - 1 To 0 Step -1
+				SetLog("Checking " & $aMapCoord[$i][0], $COLOR_ACTION)
+				If QuickMIS("BC1", $g_sImgLock, $aMapCoord[$i][1], $aMapCoord[$i][2] - 120, $aMapCoord[$i][1] + 100, $aMapCoord[$i][2]) Then 
+					SetLog($aMapCoord[$i][0] & " is Locked", $COLOR_INFO)
+					ContinueLoop
+				Else
+					SetLog($aMapCoord[$i][0] & " is UnLocked", $COLOR_INFO)
+				EndIf
+				SetLog("Go to " & $aMapCoord[$i][0] & " to Check Upgrades", $COLOR_ACTION)
+				Click($aMapCoord[$i][1], $aMapCoord[$i][2])
+				If Not WaitForMap($aMapCoord[$i][0]) Then 
+					SetLog("Going to " & $aMapCoord[$i][0] & " Failed", $COLOR_ERROR)
+					SwitchToMainVillage()
+					Return
+				EndIf
+				If Not ClickCCBuilder() Then Return
+				Local $aUpgrade = FindCCSuggestedUpgrade() ;Find on Distric Map, Will Read Blue Font (Ruins.. etc)
+				If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
+					For $i = 0 To UBound($aUpgrade) - 1
+						SetLog("Upgrade: " & $aUpgrade[$i][0])
+						Click($aUpgrade[$i][1], $aUpgrade[$i][2])
+						Local $aRet = WaitUpgradeButton()
+						If Not $aRet[0] Then 
+							SetLog("Upgrade Button Not Found", $COLOR_ERROR)
+							Return
+						Else
+							Click($aRet[1], $aRet[2])
+							If Not WaitCCUpgradeWindow() Then Return
+							If Not $bTest Then 
+								Click(640, 520) ;Click Contribute
+							Else
+								SetLog("Only Test, should click on [640, 520]", $COLOR_INFO)
+								ClickAway()
+								SwitchToMainVillage()
+							Return
+							EndIf
+							_Sleep(500)
+							ClickAway()
+						EndIf
+						ClanCapitalReport()
+						If Number($g_iLootCCGold) = 0 Then 
+							SwitchToMainVillage()
+							Return
+						EndIf
+					Next
+				EndIf
+				
+			Next
+		EndIf
 	EndIf
 	
-	#cs ;not completed yet
-	ClanCapitalReport()
-	Local $aMapCoord[7][3] = [["Capital Peak", 400, 225], ["Barbarian Camp", 530, 340], ["Wizard Valley", 410, 400], ["Balloon Lagoon", 300, 490], _
-								["Builder's Workshop", 490, 525], ["Dragon Cliffs", 630, 465], ["Golem Quarry", 185, 590]]
-	
-	If Number($g_iLootCCGold) > 0 Then
-		SetLog("Upgrade Attempt from Clan Capital Map, not succeed", $COLOR_DEBUG)
-		For $i = 0 To UBound($aMapCoord) - 1
-			SetLog("Go to " & $aMapCoord[$i][0] & " to Check Upgrades", $COLOR_ACTION)
-			Click($aMapCoord[$i][1], $aMapCoord[$i][2])
-			If Not WaitForMap($aMapCoord[$i][0]) Then 
-				SetLog("Going to " & $aMapCoord[$i][0] & " Failed", $COLOR_ERROR)
-				Return
-			EndIf
-			If Not ClickCCBuilder() Then Return
-		Next
-	EndIf
-	#ce
 EndFunc 
-
 
 Func WaitForMap($sMapName = "Capital Peak")
 	Local $bRet
-	For $i = 1 To 5
+	For $i = 1 To 10
 		SetDebugLog("Waiting for " & $sMapName & "#" & $i, $COLOR_ACTION)
+		_Sleep(2000)
 		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ExitLoop
-		_Sleep(800)
 	Next
-	Local $Text = getOcrAndCapture("coc-mapname", $g_iQuickMISX, $g_iQuickMISY - 8, 230, 25)
+	Local $aMapName = StringSplit($sMapName, "|", $STR_NOCOUNT)
+	Local $Text = getOcrAndCapture("coc-mapname", $g_iQuickMISX, $g_iQuickMISY - 12, 230, 35)
 	SetDebugLog("$Text: " & $Text)
-	If StringInStr($sMapName, $Text) Then 
-		SetDebugLog("Match with: " & $sMapName)
-		$bRet = True
-	EndIf
+	For $i In $aMapName
+		If StringInStr($Text, $i) Then 
+			SetDebugLog("Match with: " & $i)
+			$bRet = True
+			SetLog("We are on " & $sMapName, $COLOR_INFO)
+		EndIf
+	Next
 	Return $bRet
 EndFunc
