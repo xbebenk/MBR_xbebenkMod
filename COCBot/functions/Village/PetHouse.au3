@@ -113,7 +113,7 @@ Func PetHouse($test = False)
 			$Unlocked = "MaxLevel"
 		Else
 			Local $tmpDEReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 10, 503, 80, 16, True)
-			If Number($tmpDEReq) > 115000 Then $iDarkElixirReq = $tmpDEReq 
+			If Number($tmpDEReq) > 90000 Then $iDarkElixirReq = $tmpDEReq 
 		EndIf
 		Local $x = $iPetUnlockedxCoord[$i], $y = $iPetUnlockedxCoord[$i] + 20
 		_ArrayAdd($aPet, $i & "|" & $Name & "|" & $Unlocked & "|" & $iPetLevel & "|" & $iDarkElixirReq & "|" & $x & "|" & $y)
