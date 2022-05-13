@@ -1636,7 +1636,7 @@ Func BuilderBase()
 		$g_bStayOnBuilderBase = True
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 
-		$g_iBBAttacked = False	; Reset Variable
+		$g_iBBAttacked = True	; Reset Variable
 		BuilderBaseReport()
 		CollectBuilderBase()
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1647,13 +1647,20 @@ Func BuilderBase()
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		
-		AutoUpgradeBB()
-		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		If isGoldFullBB() Or isElixirFullBB()
+			AutoUpgradeBB()
+			$g_iBBAttacked = False
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+			$g_iBBAttacked = False
+		EndIf
 		
-		StarLaboratory()
-		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		If isElixirFullBB() Then
+			StarLaboratory()
+			$g_iBBAttacked = False
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
 		
 		If Not BBDropTrophy() Then 		
 			If _Sleep($DELAYRUNBOT1) Then Return
@@ -1662,13 +1669,11 @@ Func BuilderBase()
 			If _Sleep($DELAYRUNBOT1) Then Return
 		EndIf
 		
-		If $g_iBBAttacked Then 
+		If $g_iBBAttacked Then
 			AutoUpgradeBB()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-		EndIf
-		
-		If $g_sStarLabUpgradeTime = "" And $g_iBBAttacked Then 
+			
 			StarLaboratory()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
