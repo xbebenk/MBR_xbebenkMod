@@ -1647,7 +1647,7 @@ Func BuilderBase()
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		
-		If isGoldFullBB() Or isElixirFullBB()
+		If isGoldFullBB() Or isElixirFullBB() Then
 			AutoUpgradeBB()
 			$g_iBBAttacked = False
 			If _Sleep($DELAYRUNBOT1) Then Return
