@@ -102,8 +102,9 @@ Func UpdateBotTitle()
 EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
-	_VrtDesktObjCreation() ;virtual desktop object
-	If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
+	
+	If @OSVersion = "WIN_10" And @OSBuild < 22000 Then ;only supported on win10, using osbuild to filter win11 as autoit v3.3.14.5 doesn't know win11 yet
+		_VrtDesktObjCreation() ;virtual desktop object
 		Local $NumVD = _GetEnumVirtDskt()
 		If $NumVD = 1 Then _CreateNewVirtDskt()
     EndIf
