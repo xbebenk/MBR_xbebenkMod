@@ -251,11 +251,12 @@ Func FindCCSuggestedUpgrade()
 	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 550, 360)
 	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 		For $i = 0 To UBound($aUpgrade) - 1
-			$name = getCCBuildingNameBlue($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 8)
+			$name = getCCBuildingNameBlue($aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 9)
+			If $name[0] = "" Then $name = getCCBuildingName($aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 9)
 			If $g_bChkAutoUpgradeCCIgnore Then 
 				For $y In $aIgnore
 					If StringInStr($name[0], $y) Then 
-						SetDebugLog("Upgrade for " & $name[0] & " Ignored, Skip!!", $COLOR_ACTION)
+						SetLog("Upgrade for " & $name[0] & " Ignored, Skip!!", $COLOR_ACTION)
 						ContinueLoop 2 ;skip this upgrade, looking next 
 					EndIf
 				Next
@@ -268,9 +269,9 @@ EndFunc
 
 Func WaitUpgradeButton()
 	Local $aRet[3] = [False, 0, 0]
-	For $i = 1 To 20
+	For $i = 1 To 10
 		If Not $g_bRunState Then Return
-		SetDebugLog("Waiting for Upgrade Button #" & $i, $COLOR_ACTION)
+		SetLog("Waiting for Upgrade Button #" & $i, $COLOR_ACTION)
 		If QuickMIS("BC1", $g_sImgCCUpgradeButton, 300, 520, 600, 660) Then ;check for upgrade button (Hammer)
 			$aRet[0] = True
 			$aRet[1] = $g_iQuickMISX
@@ -286,7 +287,7 @@ EndFunc
 Func WaitCCUpgradeWindow()
 	Local $bRet = False
 	For $i = 1 To 10
-		SetDebugLog("Waiting for Upgrade Window #" & $i, $COLOR_ACTION)
+		SetLog("Waiting for Upgrade Window #" & $i, $COLOR_ACTION)
 		_Sleep(1000)
 		If QuickMis("BC1", $g_sImgGeneralCloseButton, 680, 99, 730, 140) Then ;check if upgrade window opened
 			If Not QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then	;also check if there is no tutorial
@@ -308,7 +309,10 @@ Func SkipChat()
 			SetLog("Skip chat #" & $y, $COLOR_INFO)
 			_Sleep(5000)
 		Else
-			If $y = 3 Then ExitLoop
+			If $y > 5 Then 
+				SetLog("Seem's there is no tutorial chat, continue", $COLOR_INFO)
+				ExitLoop
+			EndIf
 		EndIf
 		_Sleep(1000)
 	Next
@@ -365,7 +369,7 @@ Func AutoUpgradeCC($bTest = False)
 		If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 			_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by Y value
 			For $i = 0 To UBound($aUpgrade) - 1
-				SetDebugLog("Upgrade: " & $aUpgrade[$i][0])
+				SetDebugLog("CCExistingUpgrade: " & $aUpgrade[$i][0])
 				Click($aUpgrade[$i][1], $aUpgrade[$i][2])
 				_Sleep(2000)
 				$aRet = WaitUpgradeButton()
@@ -428,7 +432,7 @@ Func AutoUpgradeCC($bTest = False)
 				Local $aUpgrade = FindCCSuggestedUpgrade() ;Find on Distric Map, Will Read Blue Font (any Rebuild)
 				If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 					For $j = 0 To UBound($aUpgrade) - 1
-						SetLog("Upgrade: " & $aUpgrade[$j][0])
+						SetLog("CCSuggestedUpgrade: " & $aUpgrade[$j][0])
 						Click($aUpgrade[$j][1], $aUpgrade[$j][2])
 						Local $aRet = WaitUpgradeButton()
 						If Not $aRet[0] Then 
