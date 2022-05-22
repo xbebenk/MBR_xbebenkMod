@@ -88,6 +88,16 @@ Func ZoomOutNox()
 	;Return DefaultZoomOut("{CTRLDOWN}{DOWN}{CTRLUP}", 0)
 EndFunc
 
+Func ZoomOutHelper()
+	Local $x = 0, $y = 0
+	If QuickMIS("BC1", $g_sImgZoomOutHelper, 300, 50, 700, 150) Then 
+		$x = $g_iQuickMISX - 567
+		$y = $g_iQuickMISY - 72
+		SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+		ClickDrag(800, 420, 800 - $x, 420 - $y, 500)
+	EndIf
+EndFunc
+
 Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40, $bAndroidZoomOut = True) ;Zooms out
 	SetDebugLog("DefaultZoomOut()")
 	Local $sFunc = "DefaultZoomOut"
@@ -96,7 +106,12 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $delayCount = 20
 	ForceCaptureRegion()
 	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
-
+	
+	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
+		ZoomOutHelper()
+		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+	EndIf
+	
 	If StringInStr($aPicture[0], "zoomou") = 0 Then
 		If $g_bDebugSetlog Then
 			SetDebugLog("Zooming Out (" & $sFunc & ")", $COLOR_INFO)
@@ -150,6 +165,10 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				$i += 1  ; add one to index value to prevent endless loop if controlsend fails
 				ForceCaptureRegion()
 				$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+				If $aPicture[0] = "" And $aPicture[1] = "0" Then 
+					ZoomOutHelper()
+					$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+				EndIf
 			WEnd
 		EndIf
 			
