@@ -156,7 +156,7 @@ Func PetHouse($test = False)
 			Local $iDarkElixirReq = $aPet[$i][4]
 			SetLog("DE Requirement: " & $iDarkElixirReq)
 
-			If Number($g_aiCurrentLoot[$eLootDarkElixir]) > (Number($g_iTxtSmartMinDark) + Number($iDarkElixirReq)) Then
+			If Number($g_aiCurrentLoot[$eLootDarkElixir]) > Number($iDarkElixirReq) Then
 				SetLog("Will now upgrade " & $aPet[$i][1])
 				Click($aPet[$i][5], 465)
 
@@ -214,6 +214,7 @@ Func PetHouse($test = False)
 			Else
 				SetDebugLog("DE:" & $g_aiCurrentLoot[$eLootDarkElixir] & " - " & $iDarkElixirReq & " = " & $g_aiCurrentLoot[$eLootDarkElixir] - $iDarkElixirReq)
 				SetLog("Upgrade Failed - Not enough Dark Elixir", $COLOR_ERROR)
+				Return False
 			EndIf
 		EndIf
 	Next
