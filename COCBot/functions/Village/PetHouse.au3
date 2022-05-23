@@ -120,7 +120,6 @@ Func PetHouse($test = False)
 			Local $aTmpCost = $aPet[$i][4]
 			$aPet[$i][4] += $g_iTxtSmartMinDark
 			SetLog($aPet[$i][1] & ": Required: [" & $aTmpCost & "+" & $g_iTxtSmartMinDark & " = " & $aPet[$i][4] & "]", $COLOR_INFO)
-			
 		EndIf
 
 		If Number($g_aiCurrentLoot[$eLootDarkElixir]) >= Number($aPet[$i][4]) Then
@@ -133,12 +132,22 @@ Func PetHouse($test = False)
 	Next
 
 	If $AllPetMax Then
-		SetLog("All pets already Maxlevel, Congrats", $COLOR_SUCCESS)
+		SetLog("No pets available to upgrade!", $COLOR_SUCCESS)
 		ClickAway()
 		Return
 	EndIf
 
-	_ArraySort($aPet, 0, 0, 0, 4) ;sort by cost
+	If $g_bChkSortPetUpgrade Then
+		Switch $g_iCmbSortPetUpgrade
+			Case 0
+				_ArraySort($aPet, 0, 0, 0, 3) ;sort by level
+			Case 1
+				_ArraySort($aPet, 0, 0, 0, 4) ;sort by cost
+			Case Else
+				SetLog("You must be drunk!", $COLOR_ERROR)
+		EndSwitch
+	EndIf
+	
 	SetDebugLog(_ArrayToString($aPet))
 	For $i = 0 to UBound($aPet) - 1
 		If $g_bUpgradePetsEnable[$aPet[$i][0]] And $aPet[$i][2] = "True" Then
@@ -280,17 +289,22 @@ Func GetPetUpgradeList()
 	Local $iDarkElixirReq = 0
 	Local $aPet[0][7]
 	For $i = 0 to $ePetCount - 1
-		Local $Name = $g_asPetNames[$i]
-		Local $Unlocked = String(_ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 385, True), Hex(0xc3b6a5, 6), 20))
-		Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 503)
-		$iDarkElixirReq = 0 ;reset value
-		If Number($iPetLevel) = $g_ePetLevels Then ;skip read upgrade cost because pet is maxed
-			$Unlocked = "MaxLevel"
+		If $g_bUpgradePetsEnable[$i] Then ; skip detection for unchecked pets
+			Local $Name = $g_asPetNames[$i]
+			Local $Unlocked = String(_ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 385, True), Hex(0xc3b6a5, 6), 20))
+			Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 503)
+			$iDarkElixirReq = 0 ;reset value
+			If Number($iPetLevel) = $g_ePetLevels Then ;skip read upgrade cost because pet is maxed
+				$Unlocked = "MaxLevel"
+				ContinueLoop
+			Else
+				$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 10, 503, 80, 16, True)
+			EndIf
+			Local $x = $iPetUnlockedxCoord[$i], $y = $iPetUnlockedxCoord[$i] + 20
+			_ArrayAdd($aPet, $i & "|" & $Name & "|" & $Unlocked & "|" & $iPetLevel & "|" & $iDarkElixirReq & "|" & $x & "|" & $y)
 		Else
-			$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 10, 503, 80, 16, True)
+			SetDebugLog("Upgrade for " &  $g_asPetNames[$i] & " is disabled")
 		EndIf
-		Local $x = $iPetUnlockedxCoord[$i], $y = $iPetUnlockedxCoord[$i] + 20
-		_ArrayAdd($aPet, $i & "|" & $Name & "|" & $Unlocked & "|" & $iPetLevel & "|" & $iDarkElixirReq & "|" & $x & "|" & $y)
 	Next
 	Return $aPet
 EndFunc
