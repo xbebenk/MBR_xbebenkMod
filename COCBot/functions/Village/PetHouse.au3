@@ -29,6 +29,11 @@ EndFunc
 Func PetHouse($test = False)
 	If $g_iTownHallLevel < 14 Then
 		SetDebugLog("Townhall Lvl " & $g_iTownHallLevel & " has no Pet House.", $COLOR_ERROR)
+		;==========Hide Red  Show Green Hide Gray===
+		GUICtrlSetState($g_hPicPetGray, $GUI_SHOW)
+		GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
+		GUICtrlSetState($g_hPicPetGreen, $GUI_HIDE)
+		;===========================================
 		Return
 	EndIf
 
@@ -40,13 +45,16 @@ Func PetHouse($test = False)
 		EndIf
 	Next
 	If Not $bUpgradePets Then Return
-	
+
 	$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(728, 123) ;get current DE
-	If Number($g_aiCurrentLoot[$eLootDarkElixir]) < 115000 Then Return
-	ZoomOut() ;make sure village is zoomout 
+	If Number($g_aiCurrentLoot[$eLootDarkElixir]) <= 90000 Then
+		SetLog("Current DE: " & $g_aiCurrentLoot[$eLootDarkElixir] & " < Mininum to upgrade Pet, exiting!", $COLOR_INFO)
+		Return
+	EndIf
+	ZoomOut() ;make sure village is zoomout
 	ClickAway()
-	
-	If Not $test Then 
+
+	If Not $test Then
 		If PetUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the Pet House
 	EndIf
 
@@ -66,7 +74,7 @@ Func PetHouse($test = False)
 		Else
 			SetDebugLog("Wrong Click on PetHouse, its a " & $BuildingName[1])
 			ClickAway()
-			If LocatePetHouse() Then 
+			If LocatePetHouse() Then
 				PureClickP($g_aiPetHousePos)
 			Else
 				SetLog("Cannot Find PetHouse, please locate manually")
@@ -74,76 +82,72 @@ Func PetHouse($test = False)
 			EndIf
 		EndIf
 	EndIf
-	
+
 	Local $PawFound = False
-	For $i = 1 To 5 
+	For $i = 1 To 5
 		_Sleep(500)
-		If FindPetsButton() Then 
+		If FindPetsButton() Then
 			$PawFound = True
 			ExitLoop
 		EndIf
 		SetLog("Waiting for Pet House Paw Button #" & $i, $COLOR_ACTION)
-	Next	
+	Next
 	If Not $PawFound Then Return
-	
+
 	For $i = 1 To 5
 		_Sleep(500)
-		If IsPetHousePage() Then 
+		If IsPetHousePage() Then
 			ExitLoop
 		Else
 			SetLog("Waiting for Pet House Window #" & $i, $COLOR_ACTION)
 		EndIf
 	Next
-	
-	If Not $test Then 
+
+	If Not $test Then
 		If CheckPetUpgrade() Then Return False ; cant start if something upgrading
 	EndIf
-
-	; Pet upgrade is not in progress and not upgradeing, so we need to start an upgrade.
-	Local $iPetUnlockedxCoord[4] = [190, 345, 500, 655]
-	Local $iPetLevelxCoord[4] = [134, 288, 443, 596]
-			
-	Local $aPet[0][7]
-	For $i = 0 to $ePetCount - 1
-		Local $Name = $g_asPetNames[$i]
-		Local $Unlocked = String(_ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 385, True), Hex(0xc3b6a5, 6), 20))
-		Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 503)
-		Local $iDarkElixirReq = 999999
-		If Number($iPetLevel) = $g_ePetLevels Then 
-			$Unlocked = "MaxLevel"
-		Else
-			Local $tmpDEReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 10, 503, 80, 16, True)
-			If Number($tmpDEReq) > 90000 Then $iDarkElixirReq = $tmpDEReq 
-		EndIf
-		Local $x = $iPetUnlockedxCoord[$i], $y = $iPetUnlockedxCoord[$i] + 20
-		_ArrayAdd($aPet, $i & "|" & $Name & "|" & $Unlocked & "|" & $iPetLevel & "|" & $iDarkElixirReq & "|" & $x & "|" & $y)
-	Next
 	
+	Local $aPet = GetPetUpgradeList()
 	Local $AllPetMax = True
 	SetLog("Current DE: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_INFO)
 	For $i = 0 To UBound($aPet) - 1
-		If $aPet[$i][3] < $g_ePetLevels Then 
+		If $aPet[$i][3] < $g_ePetLevels Then
 			$AllPetMax = False
 		EndIf
-		
-		If Number($g_aiCurrentLoot[$eLootDarkElixir]) > (Number($g_iTxtSmartMinDark) + Number($aPet[$i][4])) Then
+
+		If $g_bChkSyncSaveDE Then ; if sync enabled, add value g_iTxtSmartMinDark to cost for save de
+			SetLog("SyncSaveDE Enabled, adding save value to cost", $COLOR_INFO)
+			Local $aTmpCost = $aPet[$i][4]
+			$aPet[$i][4] += $g_iTxtSmartMinDark
+			SetLog($aPet[$i][1] & ": Required: [" & $aTmpCost & "+" & $g_iTxtSmartMinDark & " = " & $aPet[$i][4] & "]", $COLOR_INFO)
+		EndIf
+
+		If Number($g_aiCurrentLoot[$eLootDarkElixir]) >= Number($aPet[$i][4]) Then
 			SetLog($aPet[$i][1] & ", DE Upgrade Cost: " & $aPet[$i][4], $COLOR_SUCCESS)
-			SetLog(Number($g_aiCurrentLoot[$eLootDarkElixir]) & " > (" & Number($g_iTxtSmartMinDark) & " + " & Number($aPet[$i][4]) & ")", $COLOR_INFO)
 			SetLog("Unlocked: " & $aPet[$i][2] & ", Level: " & $aPet[$i][3] & ", Upgrade Enabled: " & $g_bUpgradePetsEnable[$aPet[$i][0]], $COLOR_SUCCESS)
 		Else
 			SetLog($aPet[$i][1] & ", DE Upgrade Cost: " & $aPet[$i][4], $COLOR_ERROR)
-			SetLog(Number($g_aiCurrentLoot[$eLootDarkElixir]) & " < (" & Number($g_iTxtSmartMinDark) & " + " & Number($aPet[$i][4]) & ")", $COLOR_INFO)
 			SetLog("Unlocked: " & $aPet[$i][2] & ", Level: " & $aPet[$i][3] & ", Upgrade Enabled: " & $g_bUpgradePetsEnable[$aPet[$i][0]], $COLOR_ERROR)
 		EndIf
 	Next
-	
-	If $AllPetMax Then 
-		SetLog("All pets already Maxlevel, Congrats", $COLOR_SUCCESS)
+
+	If $AllPetMax Then
+		SetLog("No pets available to upgrade!", $COLOR_SUCCESS)
 		ClickAway()
 		Return
 	EndIf
+
+	If $g_bChkSortPetUpgrade Then
+		Switch $g_iCmbSortPetUpgrade
+			Case 0
+				_ArraySort($aPet, 0, 0, 0, 3) ;sort by level
+			Case 1
+				_ArraySort($aPet, 0, 0, 0, 4) ;sort by cost
+			Case Else
+				SetLog("You must be drunk!", $COLOR_ERROR)
+		EndSwitch
+	EndIf
 	
-	_ArraySort($aPet, 0, 0, 0, 4) ;sort by cost
 	SetDebugLog(_ArrayToString($aPet))
 	For $i = 0 to UBound($aPet) - 1
 		If $g_bUpgradePetsEnable[$aPet[$i][0]] And $aPet[$i][2] = "True" Then
@@ -152,7 +156,7 @@ Func PetHouse($test = False)
 			Local $iDarkElixirReq = $aPet[$i][4]
 			SetLog("DE Requirement: " & $iDarkElixirReq)
 
-			If Number($g_aiCurrentLoot[$eLootDarkElixir]) > (Number($g_iTxtSmartMinDark) + Number($iDarkElixirReq)) Then
+			If Number($g_aiCurrentLoot[$eLootDarkElixir]) > Number($iDarkElixirReq) Then
 				SetLog("Will now upgrade " & $aPet[$i][1])
 				Click($aPet[$i][5], 465)
 
@@ -210,10 +214,11 @@ Func PetHouse($test = False)
 			Else
 				SetDebugLog("DE:" & $g_aiCurrentLoot[$eLootDarkElixir] & " - " & $iDarkElixirReq & " = " & $g_aiCurrentLoot[$eLootDarkElixir] - $iDarkElixirReq)
 				SetLog("Upgrade Failed - Not enough Dark Elixir", $COLOR_ERROR)
+				Return False
 			EndIf
 		EndIf
 	Next
-	
+
 	SetLog("Pet upgrade failed, check your settings", $COLOR_ERROR)
 	ClickAway() ; close pet upgrade window
 	Return
@@ -278,3 +283,29 @@ Func FindPetsButton()
 	EndIf
 EndFunc
 
+Func GetPetUpgradeList()
+	; Pet upgrade is not in progress and not upgrading, so we need to start an upgrade.
+	Local $iPetUnlockedxCoord[4] = [190, 345, 500, 655]
+	Local $iPetLevelxCoord[4] = [134, 288, 443, 596]
+	Local $iDarkElixirReq = 0
+	Local $aPet[0][7]
+	For $i = 0 to $ePetCount - 1
+		If $g_bUpgradePetsEnable[$i] Then ; skip detection for unchecked pets
+			Local $Name = $g_asPetNames[$i]
+			Local $Unlocked = String(_ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 385, True), Hex(0xc3b6a5, 6), 20))
+			Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 503)
+			$iDarkElixirReq = 0 ;reset value
+			If Number($iPetLevel) = $g_ePetLevels Then ;skip read upgrade cost because pet is maxed
+				$Unlocked = "MaxLevel"
+				ContinueLoop
+			Else
+				$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 10, 503, 80, 16, True)
+			EndIf
+			Local $x = $iPetUnlockedxCoord[$i], $y = $iPetUnlockedxCoord[$i] + 20
+			_ArrayAdd($aPet, $i & "|" & $Name & "|" & $Unlocked & "|" & $iPetLevel & "|" & $iDarkElixirReq & "|" & $x & "|" & $y)
+		Else
+			SetDebugLog("Upgrade for " &  $g_asPetNames[$i] & " is disabled")
+		EndIf
+	Next
+	Return $aPet
+EndFunc

@@ -705,6 +705,7 @@ Func CreateClanGamesSettings()
 EndFunc
 Global $g_lblCapitalGold = 0, $g_lblCapitalMedal = 0, $g_hCmbForgeBuilder = 0, $g_hChkEnableAutoUpgradeCC = 0, $g_hChkAutoUpgradeCCIgnore = 0
 Global $g_hChkEnableCollectCCGold = 0, $g_hChkEnableForgeGold = 0, $g_hChkEnableForgeElix = 0, $g_hChkEnableForgeDE = 0, $g_hChkEnableForgeBBGold = 0, $g_hChkEnableForgeBBElix = 0
+Global $g_hTxtAutoUpgradeLog = 0
 
 Func CreateClanCapitalTab()
 	Local $x = 15, $y = 40
@@ -749,5 +750,10 @@ Func CreateClanCapitalTab()
 		$g_hChkAutoUpgradeCCIgnore = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAutoUpgradeCCIgnore", "Ignore Decoration Building"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Info_ChkAutoUpgradeCCIgnore", "Enable Ignore Upgrade for Groove, Tree, Forest, Campsite"))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
+	$y += 50
+	$x = 0
+		$g_hTxtAutoUpgradeLog = GUICtrlCreateEdit("", $x, $y, $g_iSizeWGrpTab3 + 3, 62, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
+		GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtCCLog", "------------------------------------------------ CLAN CAPITAL LOG ------------------------------------------------"))
 EndFunc
 
