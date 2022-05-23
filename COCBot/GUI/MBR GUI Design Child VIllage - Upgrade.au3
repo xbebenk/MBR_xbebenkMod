@@ -23,7 +23,7 @@ Global $g_hChkAutoLabUpgrades = 0, $g_hCmbLaboratory = 0, $g_hLblNextUpgrade = 0
 Global $g_hChkUpgradeKing = 0, $g_hChkUpgradeQueen = 0, $g_hChkUpgradeWarden = 0, $g_hPicChkKingSleepWait = 0, $g_hPicChkQueenSleepWait = 0, $g_hPicChkWardenSleepWait = 0
 Global $g_hCmbHeroReservedBuilder = 0, $g_hLblHeroReservedBuilderTop = 0, $g_hLblHeroReservedBuilderBottom = 0
 Global $g_hChkUpgradeChampion = 0, $g_hPicChkChampionSleepWait = 0
-Global $g_hChkUpgradePets[$ePetCount]
+Global $g_hChkUpgradePets[$ePetCount], $g_hChkSortPetUpgrade = 0, $g_hCmbSortPetUpgrade = 0, $g_hChkSyncSaveDE = 0
 
 ; Buildings
 Global $g_hChkUpgrade[$g_iUpgradeSlots] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -221,7 +221,7 @@ EndFunc   ;==>CreateLaboratorySubTab
 Func CreateHeroesSubTab()
 	Local $sTxtTip = ""
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "Group_01", "Upgrade Heroes Continuously"), $x - 20, $y - 20, $g_iSizeWGrpTab3, $g_iSizeHGrpTab3)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "Group_01", "Upgrade Heroes Continuously"), $x - 20, $y - 20, $g_iSizeWGrpTab3 - 2, 200)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "LblAutoUpgrading_01", "Auto upgrading of your Heroes"), $x - 10, $y, -1, -1)
 
 	$y += 20
@@ -293,10 +293,8 @@ Func CreateHeroesSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 ; Pets
-	Local $x = 25, $y = 300
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "LblAutoUpgrading_02", "Auto upgrading of your Pets"), $x - 10, $y, -1, -1)
-
-	$y += 20
+	Local $x = 25, $y = 250
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "LblAutoUpgrading_02", "Auto upgrading of your Pets:"), $x - 20, $y -20, $g_iSizeWGrpTab3 - 2, 160)
 		$g_hChkUpgradePets[$ePetLassi] = GUICtrlCreateCheckbox("", $x, $y + 25, 17, 17)
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkUpgradeLassi_Info_01", "Enable upgrading of your Pet, Lassi, when you have enough Dark Elixir")
 			_GUICtrlSetTip(-1, $sTxtTip)
@@ -329,6 +327,18 @@ Func CreateHeroesSubTab()
 			GUICtrlSetColor ( -1, $COLOR_ERROR )
 			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPetUnicorn, $x + 18, $y, 64, 64)
 			_GUICtrlSetTip(-1, $sTxtTip)
+			
+	$x = 20
+	$y += 75
+		$g_hChkSortPetUpgrade = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "ChkSortPetUpgrade", "Sort Pet Upgrade By:"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "SortPetUpgrade")
+		$g_hCmbSortPetUpgrade = GUICtrlCreateCombo("", $x + 120, $y, 120, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		Local $sCmbTxt = "Lower Level|Lower Cost"
+		GUICtrlSetData(-1, $sCmbTxt, "Lower Cost")
+		GUICtrlSetOnEvent(-1, "SortPetUpgrade")
+	$y += 23
+		$g_hChkSyncSaveDE = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "ChkSortPetUpgrade", "Sync Save DE with AutoUpgrade"), $x, $y, -1, -1)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc   ;==>CreateHeroesSubTab
 
 Func CreateBuildingsSubTab()

@@ -667,6 +667,10 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradeWarden", $g_bUpgradeWardenEnable ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradeChampion", $g_bUpgradeChampionEnable ? 1 : 0)
 	_Ini_Add("upgrade", "HeroReservedBuilder", $g_iHeroReservedBuilder)
+	
+	_Ini_Add("upgrade", "ChkSortPetUpgrade", $g_bChkSortPetUpgrade ? 1 : 0)
+	_Ini_Add("upgrade", "CmbSortPetUpgrade", $g_iCmbSortPetUpgrade)
+	_Ini_Add("upgrade", "ChkSyncSaveDE", $g_bChkSyncSaveDE ? 1 : 0)
 
 	_Ini_Add("upgrade", "UpgradePetLassi", $g_bUpgradePetsEnable[$ePetLassi] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetEletroOwl", $g_bUpgradePetsEnable[$ePetEletroOwl] ? 1 : 0)

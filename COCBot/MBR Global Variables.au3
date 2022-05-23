@@ -1932,7 +1932,8 @@ Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aiPetHousePos[2] = [-1, -1] ; Position of Pet House
 Global $g_sPetUpgradeTime = ""
 Global $g_bUpgradePetsEnable[4] = [False, False, False, False]
-Local $g_aiPetLevel[4] = [0, 0, 0, 0]
+Global $g_aiPetLevel[4] = [0, 0, 0, 0]
+Global $g_bChkSyncSaveDE = True, $g_bChkSortPetUpgrade = False, $g_iCmbSortPetUpgrade = 0
 
 Global Enum $ePetLassi, $ePetEletroOwl, $ePetMightyYak, $ePetUnicorn, $ePetCount
 Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Eletro Owl", "Mighty Yak", "Unicorn"]
@@ -1963,3 +1964,4 @@ Global $g_iBBAttacked = False ; DoAttackBB attacked or not
 Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0, $g_bChkEnableAutoUpgradeCC = False, $g_bChkAutoUpgradeCCIgnore = False
 Global $g_bChkEnableCollectCCGold = False, $g_bChkEnableForgeGold = False, $g_bChkEnableForgeElix = False
 Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEnableForgeBBElix = False, $g_iCmbForgeBuilder = 0
+Global $g_bStartRaidWeekend = True

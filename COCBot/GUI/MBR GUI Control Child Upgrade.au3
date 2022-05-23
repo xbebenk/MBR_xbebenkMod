@@ -821,6 +821,17 @@ Func chkUpgradePets()
 	Next
 EndFunc
 
+Func SortPetUpgrade()
+	If GUICtrlRead($g_hChkSortPetUpgrade) = $GUI_CHECKED Then
+		$g_bChkSortPetUpgrade = True
+		GUICtrlSetState($g_hCmbSortPetUpgrade, $GUI_ENABLE)
+	Else
+		$g_bChkSortPetUpgrade = False
+		GUICtrlSetState($g_hCmbSortPetUpgrade, $GUI_DISABLE)
+	EndIf
+	$g_iCmbSortPetUpgrade = _GUICtrlComboBox_GetCurSel($g_hCmbSortPetUpgrade)
+EndFunc
+
 Func ChkPlaceNew()
 	If GUICtrlRead($g_ChkPlaceNewBuilding) = $GUI_CHECKED Then
 		$g_bPlaceNewBuilding = True
