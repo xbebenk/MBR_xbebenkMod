@@ -90,12 +90,28 @@ EndFunc
 
 Func ZoomOutHelper()
 	Local $x = 0, $y = 0
-	If QuickMIS("BC1", $g_sImgZoomOutHelper, 300, 50, 700, 150) Then 
-		$x = $g_iQuickMISX - 567
-		$y = $g_iQuickMISY - 72
+	Local $bIsMain = isOnMainVillage()
+	Local $Dir = "", $xOffset = 0, $yOffset = 0
+	
+	If $bIsMain Then 
+		$Dir = $g_sImgZoomOutHelper
+		$xOffset = 567
+		$yOffset = 72
+	Else
+		$Dir = $g_sImgBBZoomOutHelper
+		$xOffset = 621
+		$yOffset = 112
+	EndIf
+	
+	If QuickMIS("BC1", $Dir, 300, 40, 750, 200) Then 
+		$x = $g_iQuickMISX - $xOffset
+		$y = $g_iQuickMISY - $yOffset
 		SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 		ClickDrag(800, 420, 800 - $x, 420 - $y, 500)
+	Else
+		SaveDebugImage("Zoom-" & ($bIsMain ? "MainVillage" : "BuilderBase"), True)
 	EndIf
+	
 EndFunc
 
 Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40, $bAndroidZoomOut = True) ;Zooms out
