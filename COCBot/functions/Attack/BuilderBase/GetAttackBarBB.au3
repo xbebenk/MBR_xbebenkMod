@@ -58,7 +58,7 @@ Func GetAttackBarBB($bRemaining = False)
 			;If $iCount == 0 Then
 			;	SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR) ; xbebenk comment this because it bot actually get right count
 			;EndIf
-			local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]] ; element to add to attack bar list
+			local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $iTroopBanners + 25, $iSlot, $iCount]] ; element to add to attack bar list
 			_ArrayAdd($aBBAttackBar, $aTempElement)
 		Next
 
