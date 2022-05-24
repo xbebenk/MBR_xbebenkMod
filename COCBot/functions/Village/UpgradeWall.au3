@@ -51,7 +51,7 @@ Func UpgradeWall($bTest = False)
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
-			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade ", $sUpgradeTime)
+			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
 			If $mUpgradeTime >= 7200 Then ;5 days
 				SetLog("Long Upgrade Duration > 5d", $COLOR_INFO)
 				SetLog("Discounting wall save resources by 50%", $COLOR_INFO)

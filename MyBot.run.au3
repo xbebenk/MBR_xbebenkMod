@@ -1611,7 +1611,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 			
 		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase']
+			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
