@@ -109,7 +109,7 @@ Func ZoomOutHelper()
 		SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 		ClickDrag(800, 420, 800 - $x, 420 - $y, 500)
 	Else
-		SaveDebugImage("Zoom-" & ($bIsMain ? "MainVillage" : "BuilderBase"), True)
+		If $g_aiSearchZoomOutCounter[0] = 9 Then SaveDebugImage("Zoom-" & ($bIsMain ? "MainVillage" : "BuilderBase"), True)
 	EndIf
 	
 EndFunc
