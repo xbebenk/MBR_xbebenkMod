@@ -99,8 +99,8 @@ Func ZoomOutHelper()
 		$yOffset = 72
 	Else
 		$Dir = $g_sImgBBZoomOutHelper
-		$xOffset = 621
-		$yOffset = 112
+		$xOffset = 622
+		$yOffset = 140
 	EndIf
 	
 	If QuickMIS("BC1", $Dir, 300, 40, 750, 200) Then 
@@ -109,7 +109,11 @@ Func ZoomOutHelper()
 		SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 		ClickDrag(800, 420, 800 - $x, 420 - $y, 500)
 	Else
-		If $g_aiSearchZoomOutCounter[0] = 9 Then SaveDebugImage("Zoom-" & ($bIsMain ? "MainVillage" : "BuilderBase"), True)
+		SetDebugLog("SearchZoomOut CallCount = " & $g_aiSearchZoomOutCounter[0])
+		If $g_aiSearchZoomOutCounter[0] > 1 And $g_aiSearchZoomOutCounter[0] < 5 Then ClickDrag(800, 420, 700, 480, 500)
+		If $g_aiSearchZoomOutCounter[0] >= 9 And $g_aiSearchZoomOutCounter[0] < 11 Then
+			SaveDebugImage("Zoom-" & ($bIsMain ? "MainVillage" : "BuilderBase"), True)
+		EndIf
 	EndIf
 	
 EndFunc
