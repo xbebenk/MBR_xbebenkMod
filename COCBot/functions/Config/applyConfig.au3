@@ -426,6 +426,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			
 			;ClanCapital
 			GUICtrlSetState($g_hChkEnableCollectCCGold, $g_bChkEnableCollectCCGold ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkStartWeekendRaid, $g_bChkStartWeekendRaid ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkEnableForgeGold, $g_bChkEnableForgeGold ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkEnableForgeElix, $g_bChkEnableForgeElix ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkEnableForgeDE, $g_bChkEnableForgeDE ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -567,6 +568,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			
 			;ClanCapital
 			$g_bChkEnableCollectCCGold = (GUICtrlRead($g_hChkEnableCollectCCGold) = $GUI_CHECKED)
+			$g_bChkStartWeekendRaid = (GUICtrlRead($g_hChkStartWeekendRaid) = $GUI_CHECKED)
 			$g_bChkEnableForgeGold = (GUICtrlRead($g_hChkEnableForgeGold) = $GUI_CHECKED)
 			$g_bChkEnableForgeElix = (GUICtrlRead($g_hChkEnableForgeElix) = $GUI_CHECKED)
 			$g_bChkEnableForgeDE = (GUICtrlRead($g_hChkEnableForgeDE) = $GUI_CHECKED)

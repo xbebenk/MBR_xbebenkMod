@@ -499,6 +499,7 @@ Func SaveConfig_600_6()
 	
 	;Clan Capital
 	_Ini_Add("ClanCapital", "ChkCollectCCGold", $g_bChkEnableCollectCCGold)
+	_Ini_Add("ClanCapital", "ChkStartWeekendRaid", $g_bChkStartWeekendRaid)
 	_Ini_Add("ClanCapital", "ChkEnableForgeGold", $g_bChkEnableForgeGold)
 	_Ini_Add("ClanCapital", "ChkEnableForgeElix", $g_bChkEnableForgeElix)
 	_Ini_Add("ClanCapital", "ChkEnableForgeDE", $g_bChkEnableForgeDE)

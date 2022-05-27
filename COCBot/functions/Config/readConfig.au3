@@ -563,6 +563,7 @@ Func ReadConfig_600_6()
 
 	;Clan Capital
 	IniReadS($g_bChkEnableCollectCCGold, $g_sProfileConfigPath, "ClanCapital", "ChkCollectCCGold", False, "Bool")
+	IniReadS($g_bChkStartWeekendRaid, $g_sProfileConfigPath, "ClanCapital", "ChkStartWeekendRaid", False, "Bool")
 	IniReadS($g_bChkEnableForgeGold, $g_sProfileConfigPath, "ClanCapital", "ChkEnableForgeGold", False, "Bool")
 	IniReadS($g_bChkEnableForgeElix, $g_sProfileConfigPath, "ClanCapital", "ChkEnableForgeElix", False, "Bool")
 	IniReadS($g_bChkEnableForgeDE, $g_sProfileConfigPath, "ClanCapital", "ChkEnableForgeDE", False, "Bool")
