@@ -361,6 +361,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkForceBBAttackOnClanGames, $g_bChkForceBBAttackOnClanGames ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesPurgeAny, $g_bChkClanGamesPurgeAny ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesStopBeforeReachAndPurge, $g_bChkClanGamesStopBeforeReachAndPurge ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbClanGamesPurgeDay, $g_iCmbClanGamesPurgeDay)
 			GUICtrlSetState($g_hChkClanGamesSort, $g_bSortClanGames ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbClanGamesSort, $g_iSortClanGames)
 			GUICtrlSetState($g_hChkCGBBAttackOnly, $g_bChkCGBBAttackOnly ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -520,6 +521,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkForceBBAttackOnClanGames = (GUICtrlRead($g_hChkForceBBAttackOnClanGames) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesPurgeAny = (GUICtrlRead($g_hChkClanGamesPurgeAny) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesStopBeforeReachAndPurge = (GUICtrlRead($g_hChkClanGamesStopBeforeReachAndPurge) = $GUI_CHECKED) ? 1 : 0
+			$g_iCmbClanGamesPurgeDay = _GUICtrlComboBox_GetCurSel($g_hCmbClanGamesPurgeDay)
 			$g_bSortClanGames = (GUICtrlRead($g_hChkClanGamesSort) = $GUI_CHECKED) ? 1 : 0
 			$g_iSortClanGames = _GUICtrlComboBox_GetCurSel($g_hCmbClanGamesSort)
 			$g_bChkCGBBAttackOnly = (GUICtrlRead($g_hChkCGBBAttackOnly) = $GUI_CHECKED) ? 1 : 0

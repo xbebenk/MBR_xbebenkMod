@@ -31,7 +31,7 @@ Global $g_hChkTreasuryCollect = 0, $g_hTxtTreasuryGold = 0, $g_hTxtTreasuryElixi
 Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames60 = 0, $g_hChkClanGamesDebug = 0
 Global $g_hTxtClanGamesLog = 0, $g_hLblRemainTime = 0 , $g_hLblYourScore = 0
 Global $g_hGUI_CGSettings = 0, $g_hBtnCGSettingsOpen = 0, $g_hBtnCGSettingsClose = 0, $g_hChkCollectCGReward = 0
-Global $g_hChkForceBBAttackOnClanGames = 0, $g_hChkClanGamesPurgeAny = 0, $g_hChkClanGamesStopBeforeReachAndPurge = 0
+Global $g_hChkForceBBAttackOnClanGames = 0, $g_hChkClanGamesPurgeAny = 0, $g_hChkClanGamesStopBeforeReachAndPurge = 0, $g_hCmbClanGamesPurgeDay
 Global $g_hChkClanGamesSort = 0, $g_hCmbClanGamesSort = 0, $g_hChkCGBBAttackOnly = 0
 Global $g_hLabelClangamesDesc = 0, $g_hChkCGRootEnabledAll = 0
 Global $g_hClanGamesTV = 0, $g_hChkCGMainLoot = 0, $g_hChkCGMainBattle = 0, $g_hChkCGMainDestruction = 0
@@ -676,8 +676,13 @@ Func CreateClanGamesSettings()
 		GUICtrlSetOnEvent(-1, "chkActivateClangames")
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGames60_Info_03", "If No Event Found, Purge Any Event"))
 	$y += 23
-		$g_hChkClanGamesStopBeforeReachAndPurge = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesStopBeforeReachAndPurge", "Stop before completing your limit and only Purge"), $x, $y, -1, -1)
-
+		$g_hChkClanGamesStopBeforeReachAndPurge = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesStopBeforeReachAndPurge", "Help Purge when point is nearly Maxed"), $x, $y, -1, -1)
+	$y += 23
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblPurgeDay1", "Try to complete on last: "), $x + 20, $y + 2, -1, 17)
+		$g_hCmbClanGamesPurgeDay = GUICtrlCreateCombo("", $x + 133, $y, 45, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		Local $sCmbPurgeDayTxt = "1|2"
+		GUICtrlSetData(-1, $sCmbPurgeDayTxt, "2")
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblPurgeDay2", "day"), $x + 185, $y + 2, -1, 17)
 	$y += 23
 		$g_hChkClanGamesSort = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesSort", "Sort ClanGames By:"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkSortClanGames")
