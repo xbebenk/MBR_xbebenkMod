@@ -214,6 +214,7 @@ Func PetHouse($test = False)
 			Else
 				SetDebugLog("DE:" & $g_aiCurrentLoot[$eLootDarkElixir] & " - " & $iDarkElixirReq & " = " & $g_aiCurrentLoot[$eLootDarkElixir] - $iDarkElixirReq)
 				SetLog("Upgrade Failed - Not enough Dark Elixir", $COLOR_ERROR)
+				ClickAway()
 				Return False
 			EndIf
 		EndIf
