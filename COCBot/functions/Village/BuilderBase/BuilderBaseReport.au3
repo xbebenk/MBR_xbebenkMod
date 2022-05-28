@@ -32,23 +32,21 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 	If _Sleep($DELAYRESPOND) Then Return
 
 	$g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
-	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(705, 23)
-	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
+	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(695, 23)
+	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(695, 72)
 	If $bSetLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]) & " [E]: " & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]) & "[T]: " & _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB]), $COLOR_SUCCESS)
 
 	If Not $bBypass Then ; update stats
 		UpdateStats()
 	EndIf
 	
-	If Not $CheckBH Then 
-		Return
-	EndIf
+	If Not $CheckBH Then Return
 	
 	$g_bisBHMaxed = False
 	If $g_bOptimizeOTTO Then
 		isGoldFullBB()
 		isElixirFullBB()
-		$g_bisMegaTeslaMaxed = False
+		$g_bIsMegaTeslaMaxed = False
 		If $g_iFreeBuilderCountBB > 0 Then
 			If isBHMaxed() Then isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
 		EndIf
@@ -57,14 +55,12 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 EndFunc   ;==>BuilderBaseReport
 
 Func isBHMaxed()
+	Local $aBuildingName, $bRet = False
 	ClickAway("Left")
-	Local $sBHCoords
-	Local $sSLcoords, $bRet = False
-	$sBHCoords = findImage("BuilderHall", $g_sImgBuilderHall, "FV", 1, True) ; Search for Builder Hall
-	If $sBHCoords <> "" Then
-		$sBHCoords = StringSplit($sBHCoords, ",", $STR_NOCOUNT)
-		ClickP($sBHCoords)
-		Local $aBuildingName = BuildingInfo(260, 494)
+	If QuickMIS("BC1", $g_sImgBuilderHall) Then ; Search for Builder Hall
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		_Sleep(1000)
+		Local $aBuildingName = BuildingInfo(242, 494)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Builder Hall and max level
 			If $aBuildingName[1] = "Builder Hall" Then
@@ -81,11 +77,13 @@ Func isBHMaxed()
 	Else
 		Setlog("Trying to find Star Lab to guess your Builder Hall level!", $COLOR_DEBUG)
 		; If Builder Hall cannot be found, try search for lab
-		If LocateStarLab() Then 
-			Local $aBuildingName = BuildingInfo(260, 494)
+		If QuickMIS("BC1", $g_sImgStarLaboratory) Then 
+			Click($g_iQuickMISX + 5, $g_iQuickMISY + 5)
+			_Sleep(1000)
+			Local $aBuildingName = BuildingInfo(242, 494)
 			If $aBuildingName[0] = 2 Then
 				; Verify if is Star Laboratory and max level
-				If $aBuildingName[1] = "S ar Laboratory" Then
+				If $aBuildingName[1] = "Star Laboratory" Then
 					If $aBuildingName[2] = 9 Then
 						SetLog("Your Builder Hall is Maxed!", $COLOR_SUCCESS)
 						$g_bisBHMaxed = True
@@ -105,18 +103,15 @@ EndFunc
 
 Func isMegaTeslaMaxed()
 	ClickAway("Left")
-	Local $sMTCoords
-	$sMTCoords = findImage("MegaTesla", $g_sImgMegaTesla, "FV", 1, True) ; Search for Clock Tower
-	If $sMTCoords <> "" Then
-		$sMTCoords = StringSplit($sMTCoords, ",", $STR_NOCOUNT)
-		ClickP($sMTCoords)
-		Local $aBuildingName = BuildingInfo(260, 494)
+	If QuickMIS("BC1", $g_sImgMegaTesla) Then ;Search for Mega Tesla
+		Click($g_iQuickMISX, $g_iQuickMISY + 5)
+		Local $aBuildingName = BuildingInfo(242, 494)
 		If $aBuildingName[0] = 2 Then
-			; Verify if is Builder Hall and max level
+			; Verify if is Mega Tesla is MaxLevel
 			If $aBuildingName[1] = "Mega Tesla" Then
 				If $aBuildingName[2] = 9 Then
 					SetLog("Your Mega Tesla is Maxed!", $COLOR_SUCCESS)
-					$g_bisMegaTeslaMaxed = True
+					$g_bIsMegaTeslaMaxed = True
 					Return True
 				Else
 					SetLog("Your Mega Tesla Level is : " & $aBuildingName[2], $COLOR_SUCCESS)

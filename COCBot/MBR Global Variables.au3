@@ -1023,7 +1023,7 @@ Global $g_sUpgradeDuration
 
 ; Builder Base
 Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0
-Global $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_bOptimizeOTTO = 0, $g_bUpgradeWallLowCost = 0
+Global $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_bOptimizeOTTO = 0, $g_bReserveElixirBB = False
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
@@ -1409,7 +1409,7 @@ Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 ;Builder Base
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
 Global $g_aiStarLaboratoryPos[2] = [-1, -1] ; Position of Starlaboratory
-Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_iBHLevel = 0
+Global $g_bisBHMaxed = False, $g_bIsMegaTeslaMaxed = False, $g_iBHLevel = 0
 Global $g_bGoldStorageFullBB = False, $g_bElixirStorageFullBB = False, $g_bGoldStorage50BB = False
 Global $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
 Global $g_bChkBBCustomArmyEnable = False

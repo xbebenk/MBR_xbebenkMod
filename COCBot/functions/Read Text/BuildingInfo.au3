@@ -31,6 +31,7 @@ Func BuildingInfo($iXstart = 220, $iYstart = 495)
 	If StringInStr($sBldgText, "Bush") Then $sBldgText &= " (FakeLevel 96)"
 	If StringInStr($sBldgText, "Bark") Then $sBldgText &= " (FakeLevel 95)"
 	If StringInStr($sBldgText, "Gem") Then $sBldgText &= " (FakeLevel 94)"
+	If StringInStr($sBldgText, "Gem Mine") Then $sBldgText = "Gem Mine (FakeLevel 93)"
 	$aString = StringSplit($sBldgText, "(") ; Spilt the name and building level
 	If $aString[0] = 2 Then ; If we have name and level then use it
 		SetDebugLog("1st $aString = " & $aString[0] & ", " & $aString[1] & ", " & $aString[2], $COLOR_DEBUG) ;debug

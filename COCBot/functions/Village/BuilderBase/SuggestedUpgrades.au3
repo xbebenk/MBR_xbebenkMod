@@ -133,420 +133,250 @@ EndFunc   ;==>chkActivateBBSuggestedUpgradesElixir
 Func chkPlacingNewBuildings()
 	$g_iChkPlacingNewBuildings = (GUICtrlRead($g_hChkPlacingNewBuildings) = $GUI_CHECKED) ? 1 : 0
 EndFunc   ;==>chkPlacingNewBuildings
-Local $BuildingUpgraded = False
 
 ; MAIN CODE
 Func AutoUpgradeBB($bTest = False)
-	If $g_bRestart Then Return
 	If $g_iChkBBSuggestedUpgrades = 0 Then Return
-	Local $bDebug = $g_bDebugSetlog
-	Local $bScreencap = True
-	
-	If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
+	If Not isOnBuilderBase(True) Then Return
+	If Not AutoUpgradeBBCheckBuilder($bTest) Then Return ;check if we have masterBuilder
 	BuilderBaseReport(True)
-	
-	If isOnBuilderBase(True) Then
-		If ClickOnBuilder($bTest) Then
-			SetLog(" - Upg Window Opened successfully", $COLOR_INFO)
-			If $g_iChkPlacingNewBuildings And Not $g_bisMegaTeslaMaxed Then
-				If SearchNewBuilding($bTest) Then
-					ClickOnBuilder($bTest)
-					ClickDrag(400, 100, 400, 800, 1000);do scroll down
-					If _Sleep(5000) Then Return
-					If $g_bRestart Then Return
-				Else
-					ZoomOut()
-					ClickAway("Left")
-					ClickOnBuilder($bTest)
-					ClickDrag(400, 100, 400, 800, 1000);do scroll down
-					If _Sleep(5000) Then Return
-					If $g_bRestart Then Return
-				EndIf
-			EndIf
+	ZoomOut()
+	If Not ClickBBBuilder() Then Return
 
-			If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
-			Local $NeedDrag = True
-			For $z = 0 To 4 ;for do scroll 5 times
-				If _Sleep(50) Then Return
-				If $g_bRestart Then Return
-				SetLog("[" & $z & "] Search Upgrade for Existing Building", $COLOR_DEBUG)
-				Local $x = 270, $y = 73, $x1 = 540, $y1 = 103, $step = 28
-				For $i = 0 To 9
-					If _Sleep(20) Then Return
-					If $g_bRestart Then Return
-					Local $bSkipGoldCheck = False
-					Local $BuildingFound = False
-					If $g_iChkBBSuggestedUpgradesIgnoreElixir = 0 And $g_aiCurrentLootBB[$eLootElixirBB] > 250 Then
-						; Proceeds with Elixir icon detection
-						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeElixir, "Elixir", $bScreencap, $bDebug)
-						Switch $aResult[2]
-							Case "Elixir"
-								$bSkipGoldCheck = True
-								If $g_bOptimizeOTTO Then
-									If QuickMIS("BC1", $g_sImgAUpgradeOttoBB, 260, $y, 450, $y1, $bScreencap, $bDebug) Then
-										SetLog("[" & $i & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
-										Click($g_iQuickMISX, $g_iQuickMISY)
-										$BuildingFound = True
-									Else
-										SetLog("[" & $i & "] Not Optimize OTTO Building", $COLOR_INFO)
-										$BuildingFound = False
-									EndIf
-								Else
-									SetLog("[" & $i & "] Upgrade Found!", $COLOR_SUCCESS)
-									Click($aResult[0], $aResult[1])
-									$BuildingFound = True
-								EndIf
-								If $BuildingFound Then
-									If _Sleep(2000) Then Return
-									If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
-										$BuildingFound = False ;reset
-										$z = 0 ;reset
-										Return True
-									EndIf
-								EndIf
-							Case "NoResources"
-								SetLog("[" & $i + 1 & "]" & " Not enough Elixir, continuing...", $COLOR_INFO)
-								If $z > 2 And $i = 9 Then $NeedDrag = False ; sudah 3 kali scroll tapi yang paling bawah nol nya nggak putih
-								$bSkipGoldCheck = True
-							Case Else
-								SetDebugLog("[" & $i & "]" & " Unsupport Elixir icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-						EndSwitch
-					EndIf
-					If $g_iChkBBSuggestedUpgradesIgnoreGold = 0 And $g_aiCurrentLootBB[$eLootGoldBB] > 250 And Not $bSkipGoldCheck Then
-						; Proceeds with Gold coin detection
-						Local $aResult = GetIconPosition($x, $y, $x1, $y1, $g_sImgAutoUpgradeGold, "Gold", $bScreencap, $bDebug)
-						Switch $aResult[2]
-							Case "Gold"
-								If $g_bOptimizeOTTO And Not $g_bisMegaTeslaMaxed Then
-									If QuickMIS("BC1", $g_sImgAUpgradeOttoBB, 260, $y, 450, $y1, $bScreencap, $bDebug) Then
-										SetLog("[" & $i & "] Optimize OTTO Building Found!", $COLOR_SUCCESS)
-										Click($g_iQuickMISX, $g_iQuickMISY)
-										$BuildingFound = True
-									Else
-										SetLog("[" & $i & "] Not Optimize OTTO Building", $COLOR_INFO)
-										$BuildingFound = False
-									EndIf
-								Else
-									SetLog("[" & $i & "] Upgrade Found!", $COLOR_SUCCESS)
-									Click($aResult[0], $aResult[1])
-									$BuildingFound = True
-								EndIf
-								If $BuildingFound Then
-									If _Sleep(2000) Then Return
-									If GetUpgradeButton($aResult[2], $bDebug, $bTest) Then
-										$BuildingFound = False ;reset
-										$z = 0 ;reset
-										Return True
-									Else
-										ClickOnBuilder($bTest)
-									EndIf
-								EndIf
-							Case "NoResources"
-								SetLog("[" & $i & "]" & " Not enough Gold, continuing...", $COLOR_INFO)
-								If $z > 2 And $i = 9 Then $NeedDrag = False ; sudah 3 kali scroll tapi yang paling bawah nol nya nggak putih
-							Case Else
-								SetDebugLog("[" & $i & "]" & " Unsupport Gold icon '" & $aResult[2] & "', continuing...", $COLOR_INFO)
-						EndSwitch
-					EndIf
-					$y += $step
-					$y1 += $step
-				Next
-				
-				If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
-				If Not $NeedDrag Then
-					SetLog("[" & $z & "] Scroll Not Needed! Most Bottom Upgrade Need More resource", $COLOR_DEBUG)
-					ExitLoop
-				EndIf
-				If Not QuickMIS("BC1", $g_sImgAutoUpgradeElixir, 400, 340, 500, 370) And Not QuickMIS("BC1", $g_sImgAutoUpgradeGold, 400, 340, 500, 370) Then
-					SetLog("Upgrade Window Exist, not need to scroll", $COLOR_INFO)
-					ExitLoop
-				EndIf
-				SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
-				ClickDragAutoUpgradeBB("up", $y)
-			Next
-		EndIf
+	If $g_iChkPlacingNewBuildings And Not $g_bIsMegaTeslaMaxed Then
+		SearchNewBuilding($bTest)
 	EndIf
-	$BuildingUpgraded = False
-	If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeBB") Then ZoomOut() 
+
+	If Not AutoUpgradeBBCheckBuilder($bTest) Then Return ;check if we have masterBuilder
+	SearchExistingBuilding($bTest)
+
+	If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeBB") Then ZoomOut()
 	ClickAway("Left")
 EndFunc   ;==>MainSuggestedUpgradeCode
 
-Func ClickOnBuilder($bTest = False, $Counter = 3)
-	Local $b_WindowOpened = False
-	; open the builders menu
-	If Not _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 30) Then
-		Click(360, 11)
-		If _Sleep(1000) Then Return
-	EndIf
-	If _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 30) Then
-		SetLog("Open Upgrade Window, Success", $COLOR_SUCCESS)
-		$b_WindowOpened = True
-	Else
-		For $i = 1 To $Counter
-			SetLog("Upgrade Window didn't open, trying again!", $COLOR_DEBUG)
-			If IsFullScreenWindow() Then 
-				Click(825,45)
-				If _Sleep(1000) Then Return
-			EndIf
-			Click(360, 11)
-			If _Sleep(1000) Then Return
-			If _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 30) Then
-				$b_WindowOpened = True
-				ExitLoop
-			EndIf
-		Next
-		If Not $b_WindowOpened Then 
-			SetLog("Something is wrong with upgrade window, already tried 3 times!", $COLOR_DEBUG)
-		EndIf
-	EndIf
-	Return $b_WindowOpened
-EndFunc   ;==>ClickOnBuilder
+Func SearchNewBuilding($bTest = False)
+	Local $NeedDrag = True, $ZoomedIn = False, $TmpUpgradeCost = "Dummy|Cost|10", $UpgradeCost, $sameCost
+	ClickBBBuilder()
+	$g_bReserveElixirBB = False
 
-Func GetIconPosition($x, $y, $x1, $y1, $directory, $Name = "Elixir", $Screencap = True, $Debug = False)
-	; [0] = x position , [1] y postion , [2] Gold, Elixir or New
-	Local $aResult[3] = [-1, -1, ""]
-
-	If QuickMIS("BC1", $directory, $x, $y, $x1, $y1, $Screencap, $Debug) Then
-		; Correct positions to Check Green 'New' Building word
-		; Store the values
-		$aResult[0] = $g_iQuickMISX
-		$aResult[1] = $g_iQuickMISY
-		$aResult[2] = $Name
-		; The pink/salmon color on zeros
-		If QuickMIS("BC1", $g_sImgAutoUpgradeNoRes, $x, $y, $x1, $y1, True, $Debug) Then
-			; Store new values
-			$aResult[2] = "NoResources"
-			Return $aResult
-		EndIf
-		; Proceeds with 'New' detection
-		If QuickMIS("BC1", $g_sImgAutoUpgradeNew, $x, $y, $x1, $y1, True, $Debug) Then
-			; Store new values
-			$aResult[0] = $g_iQuickMISX + 35
-			$aResult[1] = $g_iQuickMISY
-			$aResult[2] = "New"
-		EndIf
-	EndIf
-	Return $aResult
-EndFunc   ;==>GetIconPosition
-
-Func GetUpgradeButton($sUpgButtom = "", $Debug = False, $bTest = False)
-	Local $OptimizeOTTO[12] = ["Tower", "Mortar", "Mega Tesla", "Battle Machine", "Storage", "Gold Mine", "Collector", "Laboratory", "Hall", "Double", "Barracks", "Wall"]
-	Local $bCheck = False
-	Local $aBuildingName = BuildingInfo(245, 494)
-	
-	If $sUpgButtom = "" Then Return
-	If $sUpgButtom = "OptimizeOTTO" Then
-		SetLog("Checking OptimizeOTTO Priority Building", $COLOR_INFO)
-		Switch $aBuildingName[1]
-			Case "Builder Hall"
-				$sUpgButtom = $g_sImgAutoUpgradeBtnGold
-			Case "Elixir Storage"
-				$sUpgButtom = $g_sImgAutoUpgradeBtnGold
-			Case "Gold Storage"
-				$sUpgButtom = $g_sImgAutoUpgradeBtnElixir
-			Case "Star Laboratory"
-				$sUpgButtom = $g_sImgAutoUpgradeBtnElixir
-		EndSwitch
-	EndIf
-	
-	If $sUpgButtom = "Elixir" And $aBuildingName[1] = "Wall" And $g_bOptimizeOTTO Then 
-		SetLog("Wall Upgrade using elixir, skipped due to OptimizeOTTO!", $COLOR_SUCCESS)
+	If FindBHInUpgradeProgress() Then
+		SetLog("BuilderHall Upgrade in progress, skip search new building!", $COLOR_SUCCESS)
 		Return False
 	EndIf
-	
-	If $aBuildingName[1] = "poaster" Then $aBuildingName[1] = "Roaster"
-	If $sUpgButtom = "Elixir" Then $sUpgButtom = $g_sImgAutoUpgradeBtnElixir
-	If $sUpgButtom = "Gold" Then $sUpgButtom = $g_sImgAutoUpgradeBtnGold
 
-	If QuickMIS("BC1", $g_sImgAutoUpgradeBtnDir, 218, 514, 662, 653, True, $Debug) Then
-		If $aBuildingName[0] = 2 Then
-			If $aBuildingName[1] = "D uble Cannon" Then $aBuildingName[1] = "Double Cannon"
-			SetLog("Building: " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " isMegaTeslaMaxed: " & String($g_bisMegaTeslaMaxed), $COLOR_INFO)
-			; Verify if is Builder Hall and If is to Upgrade
-			If StringInStr($aBuildingName[1], "Hall") And $g_iChkBBSuggestedUpgradesIgnoreHall Then
-				SetLog("Ups! Builder Hall is not to Upgrade!", $COLOR_ERROR)
-				Return False
-			EndIf
-			
-			Local $FoundOTTOBuilding = False
-			;only upgrade wall if BuilderHall is Max level And If Gold Storage is Nearly Full and Mega Tesla Already Maxed
-			If $aBuildingName[1] = "Wall" And $g_bisMegaTeslaMaxed Then
-				SetLog("BuilderHall is Maxed, Mega Tesla is Maxed", $COLOR_INFO)
-				SetLog("Will Upgrade " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
-				$g_iChkBBSuggestedUpgradesIgnoreWall = False
-				$FoundOTTOBuilding = True
-			EndIf
-			
-			If $g_bOptimizeOTTO And Not $g_bisMegaTeslaMaxed And Not $FoundOTTOBuilding Then
-				;check the upgrade until reach spesific level
-				For $i = 0 To UBound($OptimizeOTTO) - 1
-					If StringInStr($aBuildingName[1], $OptimizeOTTO[$i]) Then
-						;SetLog("Trying to upgrade : " & $aBuildingName[1] & " Level: " & $aBuildingName[2], $COLOR_SUCCESS)
-						If $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6 Then
-							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-						ElseIf $aBuildingName[1] = "Double Cannon" And $aBuildingName[2] >= 4 Then
-							SetLog("Upgrade for Double Cannon Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-						ElseIf $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8 Then
-							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-						ElseIf $aBuildingName[1] = "Builder Barracks" And $aBuildingName[2] >= 7 Then
-							SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
-						Else
-							$FoundOTTOBuilding = True
-							ExitLoop
-						EndIf
-					EndIf
-				Next
-				
-				If Not $FoundOTTOBuilding Then
-					SetLog("Building skipped due to OptimizeOTTO", $COLOR_DEBUG)
-					Return False
-				EndIf
-			EndIf
-			
-			
-			If StringInStr($aBuildingName[1], "Wall") And $g_iChkBBSuggestedUpgradesIgnoreWall Then
-				SetLog("Ups! Wall is not to Upgrade!", $COLOR_ERROR)
-				Return False
-			EndIf
-		
-			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(1500) Then Return
-
-			If QuickMIS("BC1", $sUpgButtom, 300, 410, 760, 620, True, $Debug) Then
-				If Not $bTest Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					BBAutoUpgradeLog($aBuildingName)
-				Else
-					SetLog("Only for Test!", $COLOR_ERROR)
-					ClickAway("Left")
-					ClickOnBuilder()
-					Return False
-				EndIf
-				If _Sleep(1500) Then Return
-				;ClickAway("Left")
-				If isGemOpen(True) Then
-					SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
-					ClickAway("Left")
-					If _Sleep(500) Then Return
-					ClickAway("Left")
-					Return False
-				Else
-					SetLog($aBuildingName[1] & " Upgrading!", $COLOR_INFO)
-					$BuildingUpgraded = True
-					ClickAway("Left")
-					Return True
-				EndIf
-			Else
-				ClickAway("Left")
-				$BuildingUpgraded = True
-				SetLog("Not enough Resources to Upgrade " & $aBuildingName[1] & " !", $COLOR_ERROR)
-			EndIf
-		EndIf
-	EndIf
-
-	Return False
-EndFunc   ;==>GetUpgradeButton
-
-Func SearchNewBuilding($bTest = False)
-	Local $bDebug = $g_bDebugImageSave
-	Local $bScreencap = True
-	Local $NeedDrag = True, $ZoomedIn = False, $TmpUpgradeCost, $UpgradeCost
-	
-	For $z = 0 To 6 ;for do scroll 3 times
+	For $z = 1 To 5 ;do scroll 5 times
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
-		Local $New, $NewCoord, $aCoord[0][2], $ZeroCoord
-		Local $x = 180, $y = 80, $x1 = 480, $y1 = 103, $step = 28
-		$NewCoord = QuickMIS("CX", $g_sImgAUpgradeObstNew, 280, 73, 430, 370, True) ;find New Building
-		If IsArray($NewCoord) And UBound($NewCoord) > 0 Then 
-			If Not $g_bRunState Then Return
-			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
-			For $j = 0 To UBound($NewCoord)-1
-				$New = StringSplit($NewCoord[$j], ",", $STR_NOCOUNT)
-				_ArrayAdd($aCoord, $New[0]+280 & "|" & $New[1]+73)
+		Local $New = FindBBNewBuilding()
+		If IsArray($New) And UBound($New) > 0 Then
+			_ArraySort($New, 0, 0, 0, 6) ;sort by cost
+			For $i = 0 To UBound($New) - 1
+				SetLog("New: " & $New[$i][4] & " cost: " & $New[$i][6] & " " & $New[$i][0])
 			Next
-			_ArraySort($aCoord, 0, 0, 0, 1)
-			For $j = 0 To UBound($aCoord) - 1
-				If Not $g_bRunState Then Return
-				If $g_bSkipWallPlacingOnBB Then
-					If QuickMIS("N1", $g_sImgAUpgradeWall, $aCoord[$j][0] - 50, $aCoord[$j][1] - 10, $aCoord[$j][0] + 100, $aCoord[$j][1] + 10, True) = "Wall" Then
-						SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & ", Is Wall, skip!", $COLOR_INFO)
-						NotifyPushToTelegram($g_sProfileCurrentName & ": There is a new wall in BB.")
-						ContinueLoop
-					EndIf
+			For $i = 0 To UBound($New) - 1
+				If $New[$i][4] = "Wall" Then
+					SetLog("Building is New Wall, Skip!", $COLOR_INFO)
+					NotifyPushToTelegram($g_sProfileCurrentName & ": There is a new wall in BB.")
+					ContinueLoop ;skip wall
 				EndIf
-				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $aCoord[$j][0] + 100, $aCoord[$j][1] - 8, $aCoord[$j][0] + 250, $aCoord[$j][1] + 8, True) Then
-					SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1], $COLOR_INFO)
-					ClickAway("Left")
-					If _Sleep(1000) Then Return
-					If Not $ZoomedIn Then
-						If SearchGreenZoneBB() Then 
-							$ZoomedIn = True
-						Else
-							ExitLoop 2 ;zoomin failed, cancel placing newbuilding
-						EndIf
+				
+				If Not CheckResourceForDoUpgradeBB($New[$i][4], $New[$i][6], $New[$i][0]) Then ;name, cost, costtype
+					SetLog("Not Enough " & $New[$i][0] & " to place New " & $New[$i][4], $COLOR_INFO)
+					If $New[$i][4] = "Army Camp" Then
+						SetLog("Building is New ArmyCamp, Set Reserve Cost for Elixir!", $COLOR_INFO)
+						$g_bReserveElixirBB = True
 					EndIf
-					ClickOnBuilder($bTest)
-					If NewBuildings($aCoord[$j][0], $aCoord[$j][1], $bTest) Then
-						ClickOnBuilder($bTest)
-						ExitLoop
-					Else
-						ExitLoop 2 ;Place NewBuilding failed, cancel placing newbuilding
-					EndIf
-				Else
-					SetLog("[" & $j & "] New Building: " & $aCoord[$j][0] & "," & $aCoord[$j][1] & " Not Enough Resource", $COLOR_ERROR)
+					ContinueLoop ;check for resource
 				EndIf
-			Next
-			
-		EndIf
-		If Not $g_bRunState Then Return
-		If $g_bOptimizeOTTO Then ;add add BuiderHall and Storage for priority upgrade on optimize OTTO
-			If QuickMIS("BC1", $g_sImgAUpgradeOttoBBPriority, 270, 80, 540, 370, True) Then
-				SetLog("Found OptimizeOTTO Priority Building", $COLOR_INFO)
-				Local $tmpX = $g_iQuickMISX, $tmpY = $g_iQuickMISY
-				If QuickMIS("BC1", $g_sImgAUpgradeZero & "\", $tmpX, $tmpY - 10, $tmpX + 200, $tmpY + 10) Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					GetUpgradeButton("OptimizeOTTO", False, $bTest)
-				Else
-					SetLog("But No resource", $COLOR_SUCCESS)
-					If QuickMIS("N1", $g_sImgAUpgradeOttoBBPriority & "\", $tmpX - 100, $tmpY - 10, $tmpX + 50, $tmpY + 10, True) = "BuilderHall" Then
-						SetLog("Found BuiderHall for Upgrade = No NewBuilding", $COLOR_INFO)
-						ExitLoop
-					EndIf
-				EndIf 
-			EndIf
-		EndIf
-		If Not $g_bRunState Then Return
+				SetLog("Try Placing " & $New[$i][4])
 
-		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost",435, 335, 100, 30, True)
+				If Not $ZoomedIn Then
+					If SearchGreenZoneBB() Then
+						$ZoomedIn = True
+					Else
+						ExitLoop 2 ;zoomin failed, exit
+					EndIf
+				EndIf
+				ClickBBBuilder($bTest)
+				Local $aBuildingName[3] = [2, $New[$i][4], "New"]
+				If NewBuildings($New[$i][1], $New[$i][2], $aBuildingName, $bTest) Then
+					ClickBBBuilder($bTest)
+					ExitLoop
+				Else
+					ExitLoop 2 ;Place NewBuilding failed, exit
+				EndIf
+			Next
+		EndIf
+		If Not $g_bRunState Then Return
+		$TmpUpgradeCost = getMostBottomCostBB() ;check most bottom upgrade cost
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
-		If $UpgradeCost = $TmpUpgradeCost And $z > 4 Then $NeedDrag = False
+		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
+		If Not ($UpgradeCost = $TmpUpgradeCost) Then $sameCost = 0
+		If $sameCost > 1 Then $NeedDrag = False
 		$UpgradeCost = $TmpUpgradeCost
-			
 		If Not $NeedDrag Then
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
-		If Not QuickMIS("BC1", $g_sImgAutoUpgradeElixir, 400, 340, 500, 370) And Not QuickMIS("BC1", $g_sImgAutoUpgradeGold, 400, 340, 500, 370) Then
-			SetLog("Upgrade Window Exist, not need to scroll", $COLOR_INFO)
-			ExitLoop
-		EndIf
-		ClickDragAutoUpgradeBB("up")
+		Local $Y = 200
+		Local $IconY = StringSplit($TmpUpgradeCost, "|", $STR_NOCOUNT)
+		If Number($IconY[2]) > 100 Then $Y = $IconY[2]
+		ClickDragAutoUpgradeBB("up", $Y)
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
-		If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
+		If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop
 	Next
-	SetLog("Exit Find NewBuilding", $COLOR_DEBUG)
-	If checkMainScreen(False, $g_bStayOnBuilderBase, "FindNewBuilding") Then ZoomOut() 
+
+	SetLog("Exit BB FindNewBuilding", $COLOR_DEBUG)
+	ClickDragAutoUpgradeBB("down")
+	ZoomOut()
 	Return True
 EndFunc
+
+Global $g_aOptimizeOTTO[14][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 11], ["Storage", 12], _
+									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 12], ["Builder Hall", 12], ["Clock Tower", 5], ["Barracks", 8], _
+									["Army Camp", 12], ["Wall", 5]]
+
+Func SearchExistingBuilding($bTest = False)
+	Local $NeedDrag = True, $TmpUpgradeCost, $UpgradeCost, $sameCost
+	ClickBBBuilder()
+	For $z = 1 To 8 ;do scroll 8 times
+		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		Local $Building = FindBBExistingBuilding()
+		If IsArray($Building) And UBound($Building) > 0 Then
+			SetLog("Building List:", $COLOR_INFO)
+			For $i = 0 To UBound($Building) - 1
+				SetLog($Building[$i][3] & ", Cost:" & $Building[$i][5] & "|" & $Building[$i][0] & ", Score[" & $Building[$i][6] & "], " & $Building[$i][7], $COLOR_INFO)
+			Next
+			For $i = 0 To UBound($Building) - 1
+				If Not CheckResourceForDoUpgradeBB($Building[$i][3], $Building[$i][5], $Building[$i][0]) Then ;name, cost, costtype
+					SetLog("Not Enough " & $Building[$i][0] & " to Upgrade " & $Building[$i][3], $COLOR_INFO)
+					ContinueLoop
+				EndIf
+				Local $bOptimizeOTTOFound = False
+				Select
+					Case $g_bOptimizeOTTO And $Building[$i][7] = "OptimizeOTTO"
+						$bOptimizeOTTOFound = True
+					Case $g_bOptimizeOTTO And $Building[$i][3] = "Wall" And $g_bGoldStorageFullBB
+						$bOptimizeOTTOFound = True
+				EndSelect
+				
+				If $g_bOptimizeOTTO And Not $bOptimizeOTTOFound Then 
+					SetLog("Building: " & $Building[$i][3] & ", skip due to optimizeOTTO", $COLOR_ACTION)
+					ContinueLoop
+				EndIf
+
+				SetLog("Try Upgrade: " & $Building[$i][3], $COLOR_INFO)
+				Click($Building[$i][1], $Building[$i][2])
+				If _Sleep(1000) Then Return
+				If DoUpgradeBB($Building[$i][0], $Building[$i][3], $bTest) Then
+					Return True ;upgrade success
+				Else
+					ClickBBBuilder()
+					ContinueLoop ;upgrade not success
+				EndIf
+			Next
+		EndIf
+		If Not $g_bRunState Then Return
+		$TmpUpgradeCost = getMostBottomCostBB() ;check most bottom upgrade cost
+		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
+		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
+		If Not ($UpgradeCost = $TmpUpgradeCost) Then $sameCost = 0
+		If $sameCost > 1 Then $NeedDrag = False
+		$UpgradeCost = $TmpUpgradeCost
+		If Not $NeedDrag Then
+			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
+			ExitLoop
+		EndIf
+		Local $IconY = StringSplit($TmpUpgradeCost, "|", $STR_NOCOUNT)
+		ClickDragAutoUpgradeBB("up", $IconY[2])
+		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
+		If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop
+	Next
+
+	SetLog("Exit BB FindExistingBuilding", $COLOR_DEBUG)
+	ZoomOut()
+	Return True
+EndFunc
+
+Func DoUpgradeBB($CostType = "Gold", $Name = "", $bTest = False)
+	Local $aBuildingName = BuildingInfo(242, 494)
+	If $aBuildingName[0] = "" Then
+		SetLog("Error when trying to get upgrade name and level...", $COLOR_ERROR)
+		Return False
+	EndIf
+
+	If $g_bOptimizeOTTO And Not $g_bIsMegaTeslaMaxed Then ;set upgrade only to certain level when mega tesla is not maxed
+		Select
+			Case $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6
+				SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+				Return False
+			Case $aBuildingName[1] = "Double Cannon" And $aBuildingName[2] >= 4
+				SetLog("Upgrade for Double Cannon Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+				Return False
+			Case $aBuildingName[1] = "Multi Mortar" And $aBuildingName[2] >= 8
+				SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+				Return False
+			Case $aBuildingName[1] = "Builder Barracks" And $aBuildingName[2] >= 7
+				SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
+				Return False
+		EndSelect
+	EndIf
+	
+	If Not $g_bOptimizeOTTO Then
+		If StringInStr($aBuildingName[1], "Hall") And $g_iChkBBSuggestedUpgradesIgnoreHall Then
+			SetLog("Ups! Builder Hall is not to Upgrade!", $COLOR_ERROR)
+			Return False
+		EndIf
+		
+		If StringInStr($aBuildingName[1], "Wall") And $g_iChkBBSuggestedUpgradesIgnoreWall Then
+			SetLog("Ups! Wall is not to Upgrade!", $COLOR_ERROR)
+			Return False
+		EndIf
+	EndIf
+	
+	Local $Dir = $g_sImgAutoUpgradeBtnDir
+	If $Name = "Wall" Then $Dir = $g_sImgBBGoldButton 
+	If QuickMIS("BC1", $Dir, 260, 520, 650, 620) Then
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If Not $bTest Then
+			If _Sleep(500) Then Return
+			If WaitBBUpgradeWindow() Then
+				If QuickMIS("BC1", $g_sImgBBUpgradeWindowButton, 300, 400, 770, 570) Then
+					Click($g_iQuickMISX - 50, $g_iQuickMISY + 20)
+					If _Sleep(1000) Then Return
+					If isGemOpen(True) Then
+						SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
+						ClickAway("Left")
+						If _Sleep(500) Then Return
+						ClickAway("Left")
+						Return False
+					Else
+						SetLog($aBuildingName[1] & " Upgrading!", $COLOR_INFO)
+						BBAutoUpgradeLog($aBuildingName)
+						ClickAway("Left")
+						Return True
+					EndIf
+				EndIf
+			EndIf
+		Else
+			SetLog("Only for Test!", $COLOR_ERROR)
+			ClickAway("Left")
+			ClickBBBuilder()
+			Return True
+		EndIf
+	EndIf
+
+	Return False
+EndFunc   ;==>DoUpgradeBB
 
 Func ClickDragAutoUpgradeBB($Direction = "up", $YY = Default, $DragCount = 1)
 	Local $x = 450, $yUp = 125, $yDown = 800, $Delay = 500
 	If $YY = Default Then $YY = 330
-	
+
 	For $checkCount = 0 To 2
 		If Not $g_bRunState Then Return
-		If _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) Then ;check upgrade window border
+		If IsBBBuilderMenuOpen() Then ;check upgrade window border
 			Switch $Direction
 				Case "Up"
 					If $YY < 100 Then $YY = 150
@@ -560,63 +390,73 @@ Func ClickDragAutoUpgradeBB($Direction = "up", $YY = Default, $DragCount = 1)
 					If _Sleep(1000) Then Return
 				Case "Down"
 					ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
+					If WaitforPixel(510, 90, 515, 95, "FFFFFF", 10, 2) Then
+						ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
+					EndIf
 					If _Sleep(5000) Then Return
 			EndSwitch
 		EndIf
-		If _ColorCheck(_GetPixelColor(500, 73, True), "FFFFFF", 20) Then ;check upgrade window border
+		If IsBBBuilderMenuOpen() Then ;check upgrade window border
 			SetLog("Upgrade Window Exist", $COLOR_INFO)
 			Return True
 		Else
 			SetLog("Upgrade Window Gone!", $COLOR_DEBUG)
-			ClickOnBuilder()
+			ClickBBBuilder()
 			If _Sleep(1000) Then Return
 		EndIf
 	Next
 	Return False
 EndFunc
 
-Func NewBuildings($x, $y, $bTest = False)
+Func NewBuildings($x, $y, $aBuildingName, $bTest = False)
 	Local $Screencap = True, $Debug = False
 
 	Click($x, $y)
-	If _Sleep(5000) Then Return
+	Local $bShopOpened = False
+	If Not $g_bRunState Then Return
+	For $i = 1 To 10
+		If _Sleep(1000) Then Return
+		If Not $g_bRunState Then Return
+		SetLog("Waiting for Shop window #" & $i, $COLOR_ACTION)
+		If IsFullScreenWindow() Then
+			If _Sleep(1000) Then Return
+			$bShopOpened = True
+			ExitLoop
+		EndIf
+	Next
+
+	If Not $bShopOpened Then
+		SetLog("Cannot find Orange Arrow", $COLOR_ERROR)
+		Click(820, 40)
+		If _Sleep(5000) Then Return
+		Return
+	EndIf
 
 	;Search the arrow
-	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,200,860,600"), 1, True, Default))
-	If UBound($ArrowCoordinates) > 1 Then
-		;Check if its wall or not (wall should skip)
-		If $g_bSkipWallPlacingOnBB Then
-			If QuickMIS("BC1", $g_sImgisWall, $ArrowCoordinates[0] - 150, $ArrowCoordinates[1] - 50, $ArrowCoordinates[0], $ArrowCoordinates[1], $Screencap, $Debug) Then
-				SetLog("New Building is Wall!, Cancelling...", $COLOR_INFO)
-				NotifyPushToTelegram($g_sProfileCurrentName & ": There is a new wall in BB.")
-				Click(820, 38, 1) ; exit from Shop
-				If _Sleep(2000) Then Return
-				ClickOnBuilder($bTest)
-				Return False
-			EndIf
-		EndIf
-
-		Click($ArrowCoordinates[0] - 50, $ArrowCoordinates[1] + 50)
+	If QuickMIS("BC1", $g_sImgArrowNewBuilding, 10, 130, 840, 560) Then
+		Click($g_iQuickMISX - 50, $g_iQuickMISY + 50)
+		If Not $g_bRunState Then Return
 		If _Sleep(2500) Then Return
 		; Lets search for the Correct Symbol on field
-		Local $GreenCheckCoord = decodeSingleCoord(findImage("GreenCheck", $g_sImgAutoUpgradeGreenCheck & "\GreenCheck*", "FV", 1, True))
-		If IsArray($GreenCheckCoord) And UBound($GreenCheckCoord) = 2 Then
-			SetLog("Placed a new Building on Builder Island! [" & $GreenCheckCoord[0] & "," & $GreenCheckCoord[1] & "]", $COLOR_SUCCESS)
+		If QuickMIS("BC1", $g_sImgAutoUpgradeGreenCheck, 100, 80, 740, 560) Then
+			SetLog("Placed a new Building on Builder Island! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
 			If Not $bTest Then
-				Click($GreenCheckCoord[0], $GreenCheckCoord[1])
+				Click($g_iQuickMISX, $g_iQuickMISY)
 			EndIf
-			If _Sleep(1000) Then Return
-			Click($GreenCheckCoord[0], $GreenCheckCoord[1]) ;click GreenCheck in case it exist
-			Click($GreenCheckCoord[0] - 75, $GreenCheckCoord[1]) ;click redX in case it exist
-			BBAutoUpgradeLog()
+			If Not $g_bRunState Then Return
+			If _Sleep(2000) Then Return
+			Click($g_iQuickMISX, $g_iQuickMISY) ;click GreenCheck in case it exist
+			Click($g_iQuickMISX - 75, $g_iQuickMISY) ;click redX in case it exist
+			BBAutoUpgradeLog($aBuildingName)
 			Return True
 		Else
-			NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in BB.") 
-			Local $RedXCoord = decodeSingleCoord(findImage("RedX", $g_sImgAutoUpgradeRedX & "\RedX*", "FV", 1, True))
-			If IsArray($RedXCoord) And UBound($RedXCoord) = 2 Then
-				SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $RedXCoord[0] & "," & $RedXCoord[1] & "]", $COLOR_ERROR)
-				Click($RedXCoord[0], $RedXCoord[1])
+			NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in BB.")
+			If QuickMIS("BC1", $g_sImgAutoUpgradeRedX, 100, 80, 740, 560) Then
+				SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_ERROR)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If Not $g_bRunState Then Return
 			Else
+				If Not $g_bRunState Then Return
 				SetLog("Error on Undo symbol!", $COLOR_ERROR)
 				;todo do attack bb
 				GoAttackBBAndReturn()
@@ -624,9 +464,6 @@ Func NewBuildings($x, $y, $bTest = False)
 			EndIf
 			Return True
 		EndIf
-	Else
-		SetLog("Cannot find Orange Arrow", $COLOR_ERROR)
-		Click(820, 38, 1) ; exit from Shop
 	EndIf
 	Return False
 EndFunc   ;==>NewBuildings
@@ -663,35 +500,28 @@ Func GoAttackBBAndReturn()
 	SetLog("Going attack, to clear field", $COLOR_DEBUG)
 	Click(60,600) ;click attack button
 	_AttackBB()
-	If checkMainScreen(False, $g_bStayOnBuilderBase, "GoAttackBBAndReturn") Then ZoomOut() 
+	If checkMainScreen(False, $g_bStayOnBuilderBase, "GoAttackBBAndReturn") Then ZoomOut()
 	SetLog("Field should be clear now", $COLOR_DEBUG)
 EndFunc
 
-Func BBAutoUpgradeLog($aUpgradeNameLevel = Default)
+Func BBAutoUpgradeLog($aBuilding)
 	Local $txtAcc = $g_iCurAccount
 	Local $txtAccName = $g_asProfileName[$g_iCurAccount]
-
-	If $aUpgradeNameLevel = Default Then
-		$aUpgradeNameLevel = BuildingInfo(242, 494)
-		If $aUpgradeNameLevel[0] = "" Then
-			SetLog("Error when trying to get upgrade name and level", $COLOR_ERROR)
-			$aUpgradeNameLevel[1] = "Traps"
-		EndIf
+	Local $BuildingName = $aBuilding[1], $BuildingLevel = $aBuilding[2]
+	If $BuildingLevel = "New" Then
 		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
 				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
-				" - BB Placing New Building: " & $aUpgradeNameLevel[1])
+				" - BB Placing New Building: " & $BuildingName)
 
 		_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc + 1 & "] " & $txtAccName & _
-				" - BB Placing New Building: " & $aUpgradeNameLevel[1])
+				" - BB Placing New Building: " & $BuildingName)
 	Else
 		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
 				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
-				" - BB Upgrading " & $aUpgradeNameLevel[1] & _
-				" to level " & $aUpgradeNameLevel[2] + 1)
+				" - BB Upgrading " & $BuildingName & " to level " & $BuildingLevel + 1)
 
 		_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc + 1 & "] " & $txtAccName & _
-				" - Upgrading " & $aUpgradeNameLevel[1] & _
-				" to level " & $aUpgradeNameLevel[2] + 1)
+				" - BB Upgrading " & $BuildingName & " to level " & $BuildingLevel + 1)
 	EndIf
 	Return True
 EndFunc
@@ -699,12 +529,12 @@ EndFunc
 Func AutoUpgradeBBCheckBuilder($bTest = False)
 	Local $bRet = False
 	getBuilderCount(False, True) ;check masterBuilder
-	If $bTest Then 
+	If $bTest Then
 		$g_iFreeBuilderCountBB = 1
 		$bRet = True
 	EndIf
 	;Check if there is a free builder for Auto Upgrade
-	If $g_iFreeBuilderCountBB > 0 Then 
+	If $g_iFreeBuilderCountBB > 0 Then
 		$bRet = True
 	Else
 		SetLog("Master Builder Not Available", $COLOR_DEBUG)
@@ -716,7 +546,7 @@ EndFunc
 
 Func FindBBNewBuilding()
 	Local $aTmpCoord, $aBuilding[0][7], $UpgradeCost, $aUpgradeName, $UpgradeType = ""
-	$aTmpCoord = QuickMIS("CNX", $g_sImgAUpgradeObstNew, 280, 73, 430, 370)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgAUpgradeObstNew, 250, 73, 400, 370)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1", $g_sImgBBResourceIcon, $aTmpCoord[$i][1] + 100 , $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 250, $aTmpCoord[$i][2] + 12) Then
@@ -726,7 +556,7 @@ Func FindBBNewBuilding()
 		Next
 
 		For $j = 0 To UBound($aBuilding) -1
-			$aUpgradeName = getBuildingName($aBuilding[$j][3], $aBuilding[$j][2] - 12) ;get upgrade name and amount
+			$aUpgradeName = getBuildingName($aBuilding[$j][1] - 180, $aBuilding[$j][2] - 12) ;get upgrade name and amount
 			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $aBuilding[$j][1], $aBuilding[$j][2] - 12, 120, 25, True)
 			$aBuilding[$j][4] = $aUpgradeName[0]
 			$aBuilding[$j][5] = $aUpgradeName[1]
@@ -739,37 +569,45 @@ EndFunc
 
 Func FindBBExistingBuilding($bTest = False)
 	Local $ElixMultiply = 1, $GoldMultiply = 1 ;used for multiply score
-	Local $Gold = getResourcesMainScreen(701, 23)
-	Local $Elix = getResourcesMainScreen(701, 74)
+	Local $Gold = getResourcesMainScreen(695, 23)
+	Local $Elix = getResourcesMainScreen(695, 74)
 	If $Gold > $Elix Then $GoldMultiply += 1
 	If $Elix > $Gold Then $ElixMultiply += 1
-	
-	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
-	Local $OptimizeOTTO[14][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 11], ["Storage", 12], _ 
-									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 12], ["Builder Hall", 12], ["Clock Tower", 5], ["Barracks", 8], _
-									["Army Camp", 12], ["Wall", 5]]
+
+	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundOptimizeOTTO = False
 	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 400, 73, 500, 370)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
+			$bFoundOptimizeOTTO = False ;reset 
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
-			$UpgradeName = getBuildingName(300, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount 
+			$UpgradeName = getBuildingName(300, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
 			If $g_bOptimizeOTTO Then ;if OptimizeOTTO enabled, filter only OptimizeOTTO buildings
-				Local $bFoundOptimizeOTTO = False
-				For $x = 0 To UBound($OptimizeOTTO) - 1
-					If StringInStr($UpgradeName[0], $OptimizeOTTO[$x][0], 1) Then 
+				For $x = 0 To UBound($g_aOptimizeOTTO) - 1
+					If StringInStr($UpgradeName[0], $g_aOptimizeOTTO[$x][0], 1) Then
 						$bFoundOptimizeOTTO = True ;used for add array
 						ExitLoop
 					EndIf
 				Next
 				
-				If $g_bUpgradeWallLowCost Then
-					Local $tmpcost = getOcrAndCapture("coc-buildermenu-cost", $aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10, 120, 30, True)
-					If Number($tmpcost) = 0 Then ContinueLoop
-					If Number($tmpcost) > 500000 Then ContinueLoop
+				If $UpgradeName[0] = "Wall" Then ;include wall to upgrade only after mega tesla is maxed
+					If $g_bIsMegaTeslaMaxed And $g_bGoldStorageFullBB Then 
+						Local $tmpcost = getOcrAndCapture("coc-buildermenu-cost", $aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10, 120, 30, True)
+						If Number($tmpcost) = 0 Then ContinueLoop ;skip wall cost read error
+						If Number($tmpcost) > 1000000 Then ContinueLoop ;only upgrade wall cost below 1000000
+					Else
+						ContinueLoop ;just skip if above condition not met
+					EndIf
 				EndIf
 				
-				If Not $bFoundOptimizeOTTO And Not $g_bUpgradeWallLowCost Then SetDebugLog("Building:" & $UpgradeName[0] & ", not OptimizeOTTO building")
-				If Not $bFoundOptimizeOTTO And Not $g_bUpgradeWallLowCost Then ContinueLoop 
+				If $g_bOptimizeOTTO And $g_bReserveElixirBB And $aTmpCoord[$i][0] = "Elix" Then 
+					SetLog("ReserveElixirBB for NewBuilding, Building " & $UpgradeName[0] & " skip!!", $COLOR_ACTION)
+					ContinueLoop
+				EndIf
+
+				If Not $bFoundOptimizeOTTO Then
+					SetDebugLog("Building:" & $UpgradeName[0] & ", not OptimizeOTTO building")
+					ContinueLoop
+				EndIf
 			EndIf
 			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
 		Next
@@ -779,13 +617,13 @@ Func FindBBExistingBuilding($bTest = False)
 			$aBuilding[$j][5] = Number($UpgradeCost)
 			Local $BuildingName = $aBuilding[$j][3]
 			If $g_bOptimizeOTTO Then ;set score for OptimizeOTTO Building
-				For $k = 0 To UBound($OptimizeOTTO) - 1
-					If StringInStr($BuildingName, $OptimizeOTTO[$k][0]) Then
+				For $k = 0 To UBound($g_aOptimizeOTTO) - 1
+					If StringInStr($BuildingName, $g_aOptimizeOTTO[$k][0]) Then
 						Switch $aBuilding[$j][0]
 							Case "Gold"
-								$aBuilding[$j][6] = $OptimizeOTTO[$k][1] * $GoldMultiply
+								$aBuilding[$j][6] = $g_aOptimizeOTTO[$k][1] * $GoldMultiply
 							Case "Elix"
-								$aBuilding[$j][6] = $OptimizeOTTO[$k][1] * $ElixMultiply
+								$aBuilding[$j][6] = $g_aOptimizeOTTO[$k][1] * $ElixMultiply
 						EndSwitch
 						$aBuilding[$j][7] = "OptimizeOTTO"
 					EndIf
@@ -800,6 +638,119 @@ Func FindBBExistingBuilding($bTest = False)
 	Else
 		_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
 	EndIf
-	
+
 	Return $aBuilding
+EndFunc
+
+Func ClickBBBuilder($Counter = 3)
+	Local $b_WindowOpened = False
+	If Not $g_bRunState Then Return
+	; open the builders menu
+	If Not _ColorCheck(_GetPixelColor(380,73, True), "F4F4F4", 40) Then
+		Click(380, 30)
+		If _Sleep(1000) Then Return
+	EndIf
+
+	If IsBBBuilderMenuOpen() Then
+		SetDebugLog("Open BB BuilderMenu, Success", $COLOR_SUCCESS)
+		$b_WindowOpened = True
+	Else
+		For $i = 1 To $Counter
+			SetLog("BB BuilderMenu didn't open, trying again!", $COLOR_DEBUG)
+			If IsFullScreenWindow() Then
+				Click(825,45)
+				If _Sleep(1000) Then Return
+			EndIf
+			Click(380, 30)
+			If _Sleep(1000) Then Return
+			If IsBBBuilderMenuOpen() Then
+				$b_WindowOpened = True
+				ExitLoop
+			EndIf
+		Next
+		If Not $b_WindowOpened Then
+			SetLog("Something is wrong with BB BuilderMenu, already tried 3 times!", $COLOR_DEBUG)
+		EndIf
+	EndIf
+	Return $b_WindowOpened
+EndFunc ;==>ClickBBBuilder
+
+Func IsBBBuilderMenuOpen()
+	Local $bRet = False
+	Local $aBorder[4] = [380, 73, 0xF4F4F4, 40]
+	Local $sTriangle
+	If _CheckPixel($aBorder, True) Then
+		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
+		$bRet = True ;got correct color for border
+	EndIf
+
+	If Not $bRet Then ;lets re check if border color check not success
+		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 380, 60, 420, 30)
+		SetDebugLog("$sTriangle: " & $sTriangle)
+		If $sTriangle = "^" Or $sTriangle = "~" Then $bRet = True
+	EndIf
+
+	Return $bRet
+EndFunc ;IsBBBuilderMenuOpen
+
+Func getMostBottomCostBB()
+	Local $TmpUpgradeCost, $TmpName, $ret
+	Local $Icon = QuickMIS("CNX", $g_sImgBBResourceIcon, 400, 100, 500, 360)
+	If IsArray($Icon) And UBound($Icon) > 0 Then
+		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord
+		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 10, 120, $Icon[0][2] + 10, True) ;check most bottom upgrade cost
+		$TmpName = getBuildingName($Icon[0][1] - 190, $Icon[0][2] - 8)
+		$ret = $TmpName[0] & "|" & $TmpUpgradeCost & "|" & $Icon[0][2]
+	EndIf
+	Return $ret
+EndFunc
+
+Func CheckResourceForDoUpgradeBB($BuildingName, $Cost, $CostType)
+	If Not $g_bRunState Then Return
+
+	Local $Gold = getResourcesMainScreen(695, 23)
+	Local $Elix = getResourcesMainScreen(695, 72)
+	SetDebugLog("Gold:" & $Gold & " Elix:" & $Elix)
+
+	; initiate a False boolean, that firstly says that there is no sufficent resource to launch upgrade
+	Local $bSafeToUpgrade = False
+	Switch $CostType
+		Case "Gold"
+			If $Gold >= $Cost Then $bSafeToUpgrade = True
+		Case "Elix"
+			If $Elix >= $Cost Then $bSafeToUpgrade = True
+	EndSwitch
+	SetLog("Checking: " & $BuildingName & ", Cost: " & $Cost & " " & $CostType, $COLOR_INFO)
+	SetLog("Is Enough " & $CostType & " ? " & String($bSafeToUpgrade), $bSafeToUpgrade ? $COLOR_SUCCESS : $COLOR_ERROR)
+	Return $bSafeToUpgrade
+EndFunc
+
+Func FindBHInUpgradeProgress()
+	Local $bRet = False
+	Local $Progress = QuickMIS("CNX", $g_sImgAUpgradeHour, 450, 100, 525, 130)
+	If IsArray($Progress) And UBound($Progress) > 0 Then
+		For $i = 0 To UBound($Progress) - 1
+			Local $UpgradeName = getBuildingName(260, $Progress[$i][2] - 5) ;get upgrade name and amount
+			If StringInStr($UpgradeName[0], "Hall", 1) Then
+				$bRet = True
+				ExitLoop
+			EndIf
+		Next
+	EndIf
+	Return $bRet
+EndFunc
+
+Func WaitBBUpgradeWindow()
+	Local $bRet = False
+	For $i = 1 To 5
+		SetLog("Waiting for Upgrade Window #" & $i, $COLOR_ACTION)
+		If _Sleep(1000) Then Return
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 600, 85, 770, 250) Then
+			$bRet = True
+			SetLog("Upgrade Window OK", $COLOR_ACTION)
+			ExitLoop
+		EndIf
+	Next
+	If Not $bRet Then SetLog("Upgrade Window Opened", $COLOR_ERROR)
+	Return $bRet
 EndFunc
