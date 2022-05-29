@@ -516,6 +516,7 @@ Func NewBuildings($x, $y, $aBuildingName, $bTest = False)
 			NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in BB.")
 			If QuickMIS("BC1", $g_sImgAutoUpgradeRedX, 100, 80, 740, 560) Then
 				SetLog("Sorry! Wrong place to deploy a new building on BB! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_ERROR)
+				SaveDebugImage("BBPlaceNewBuilding", True)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If Not $g_bRunState Then Return
 			Else
