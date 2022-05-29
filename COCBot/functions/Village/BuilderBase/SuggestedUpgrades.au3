@@ -195,6 +195,8 @@ Func SearchNewBuilding($bTest = False)
 				Local $Region = Default
 				If $New[$i][4] = "Wall" Then $Region = "Middle"
 				If Not $ZoomedIn Then
+					ClickAway("Left") ;close builder menu
+					_Sleep(1000)
 					If SearchGreenZoneBB($Region) Then
 						$ZoomedIn = True
 					Else
@@ -842,8 +844,11 @@ Func TPW()
 	For $i = 1 To 10
 		If IsGreenCheck() Then 
 			$bGreenCheckFound = True
-			Click($g_iQuickMISX, $g_iQuickMISY)
-			_Sleep(1500)
+			For $i = 1 To 4
+				SetLog("Try Placing Wall #" $i, $COLOR_INFO)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				_Sleep(1000)
+			Next
 		EndIf
 		If Not $g_bRunState Then Return
 		If Not $bGreenCheckFound Then 
