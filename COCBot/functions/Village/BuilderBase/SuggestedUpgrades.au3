@@ -873,8 +873,12 @@ Func IsGreenCheck()
 	Local $bRet = False
 	For $i = 1 To 2
 		If QuickMIS("BC1", $g_sImgAutoUpgradeGreenCheck, 80, 80, 780, 600) Then
-			SetDebugLog("GreenCheck Color: " & _GetPixelColor($g_iQuickMISX, $g_iQuickMISY, 1))
 			$bRet = True
+			Local $color = _GetPixelColor($g_iQuickMISX, $g_iQuickMISY, 1)
+			SetDebugLog("GreenCheck Color: " & $color)
+			If Not _ColorCheck($color, Hex(0xA4A4AF, 6), 10) Then
+				$bRet = False
+			EndIf
 			ExitLoop
 		EndIf
 		If Not $bRet Then 
