@@ -635,10 +635,9 @@ Func AutoUpgradeCC($bTest = False)
 						If StringInStr($Text, $z) Then
 							SetDebugLog("Match with: " & $z)
 							SetLog("All Possible Upgrades Done", $COLOR_INFO)
-							$bAllDone = True
 						EndIf
 					Next
-					If $bAllDone Then SwitchToCapitalMain()
+					SwitchToCapitalMain()
 				EndIf	
 			Next
 		EndIf
