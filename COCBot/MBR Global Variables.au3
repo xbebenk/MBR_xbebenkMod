@@ -1023,7 +1023,7 @@ Global $g_sUpgradeDuration
 
 ; Builder Base
 Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0
-Global $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_bOptimizeOTTO = 0, $g_bReserveElixirBB = False
+Global $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_bOptimizeOTTO = 0, $g_bReserveElixirBB = False, $g_bReserveGoldBB = False
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 

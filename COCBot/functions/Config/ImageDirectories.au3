@@ -163,6 +163,7 @@ Global $g_sImgAUpgradeGreenZoneBB = @ScriptDir & "\imgxml\Resources\BuildersBase
 Global $g_sImgBBResourceIcon = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\BBResourceIcon\"
 Global $g_sImgBBUpgradeWindowButton = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Upgrade\UpgradeWindowButton\"
 Global $g_sImgBBGoldButton = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Upgrade\Gold\"
+Global $g_sImgBBWallRotate = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\WallRotate\"
 #EndRegion
 
 #Region Train
