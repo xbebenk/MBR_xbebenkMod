@@ -501,7 +501,10 @@ Func NewBuildings($x, $y, $aBuildingName, $bTest = False)
 		If Not $g_bRunState Then Return
 		If _Sleep(2500) Then Return
 
-		If $aBuildingName[1] = "Wall" Then TPW() ;Try Placing Wall (no guarantee) Sucks SC's AI
+		If $aBuildingName[1] = "Wall" Then 
+			TPW() ;Try Placing Wall (no guarantee) Sucks SC's AI
+			Return True
+		EndIf
 		; Lets search for the Correct Symbol on field
 		If QuickMIS("BC1", $g_sImgAutoUpgradeGreenCheck, 100, 80, 740, 560) Then
 			SetLog("Placed a new Building on Builder Island! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
