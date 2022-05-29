@@ -54,8 +54,6 @@ EndFunc
 
 Func SearchUpgrade($bTest = False)
 	SetLog("Check for Auto Upgrade", $COLOR_DEBUG)
-	checkMainScreen(True, $g_bStayOnBuilderBase, "AutoUpgrade")
-
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
 	$g_bSkipWallReserve = False ;reset first
@@ -101,7 +99,7 @@ Func SearchUpgrade($bTest = False)
 		If $g_bNewBuildingFirst And Not $g_bUpgradeLowCost Then ;skip if will use for lowcost upgrade
 			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
 			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
-				If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeCheckBuilder") Then ZoomOut()
+				ZoomOut()
 				Return ;no builder, exit
 			EndIf
 			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
@@ -122,7 +120,7 @@ Func SearchUpgrade($bTest = False)
 	EndIf
 	If Not $g_bRunState Then Return
 	Clickaway("Right")
-	If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeCheckBuilder") Then ZoomOut()
+	ZoomOut()
 	Return False
 EndFunc
 
@@ -737,21 +735,17 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 	Next
 	If Not $g_bRunState Then Return
 	;Search the arrow
-	Local $ArrowCoordinates = decodeSingleCoord(findImage("BBNewBuildingArrow", $g_sImgArrowNewBuilding, GetDiamondFromRect("40,180,860,600"), 1, True, Default))
-	If UBound($ArrowCoordinates) > 1 Then
+	If QuickMIS("BC1", $g_sImgArrowNewBuilding, 10, 130, 840, 560) Then
+		Click($g_iQuickMISX - 50, $g_iQuickMISY + 50)
+		If _Sleep(2500) Then Return
 		If Not $g_bRunState Then Return
-		Click($ArrowCoordinates[0] - 100, $ArrowCoordinates[1] + 50) ;click new building on shop
-		If _Sleep(2000) Then Return
-
 		If $IsWall Then
 			Local $aWall[3] = ["2","Wall",1]
 			Local $aCostWall[3] = ["Gold", 50, 0]
-			Local $aCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
-			If IsArray($aCoords) And UBound($aCoords) = 2 Then
+			If QuickMIS("BC1", $g_sImgGreenCheck, 100, 80, 740, 560) Then
 				For $ProMac = 0 To 9
 					If Not $g_bRunState Then Return
-					If Not $g_bRunState Then Return
-					Click($aCoords[0], $aCoords[1]+5)
+					Click($g_iQuickMISX, $g_iQuickMISY + 5)
 					If _Sleep(500) Then Return
 					If IsGemOpen(True) Then
 						SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
@@ -759,30 +753,29 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 					Endif
 					AutoUpgradeLogPlacingWall($aWall, $aCostWall)
 				Next
-				Click($aCoords[0] - 75, $aCoords[1])
+				Click($g_iQuickMISX - 75, $g_iQuickMISY)
 				Return True
 			EndIf
 		EndIf
 
 		; Lets search for the Correct Symbol on field
-		Local $GreenCheckCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
 		SetDebugLog("Looking for GreenCheck Button", $COLOR_INFO)
-		If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
-			SetDebugLog("GreenCheck Button Found in [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgGreenCheck, 100, 80, 740, 560) Then
+			SetDebugLog("GreenCheck Button Found in [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			If Not $g_bRunState Then Return
 			If Not $bTest Then
-				Click($GreenCheckCoords[0], $GreenCheckCoords[1])
+				Click($g_iQuickMISX, $g_iQuickMISY)
 			Else
 				SetDebugLog("ONLY for TESTING!!!", $COLOR_ERROR)
-				Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1])
+				Click($g_iQuickMISX - 75, $g_iQuickMISY)
 				Return True
 			EndIf
-			SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
+			SetLog("Placed a new Building on Main Village! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
 			If _Sleep(500) Then Return
 			If AutoUpgradeLog() Then
-				Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1]) ; Just click RedX position, in case its still there
+				Click($g_iQuickMISX - 75, $g_iQuickMISY) ; Just click RedX position, in case its still there
 			Else
-				Click($GreenCheckCoords[0], $GreenCheckCoords[1]) ; Just click GreenCheck position, in case its still there
+				Click($g_iQuickMISX, $g_iQuickMISY) ; Just click GreenCheck position, in case its still there
 			EndIf
 			Return True
 		Else
@@ -790,9 +783,8 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 			NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in Main Village.")
 			If Not $g_bRunState Then Return
 			;Lets check if exist the [x], it should not exist, but to be safe
-			Local $RedXCoords = decodeSingleCoord(findImage("FindRedX", $g_sImgRedX & "\RedX*", "FV", 1, True))
-			If IsArray($RedXCoords) And UBound($RedXCoords) = 2 Then
-				Click($RedXCoords[0], $RedXCoords[1])
+			If QuickMIS("BC1", $g_sImgRedX, 100, 80, 740, 560) Then
+				Click($g_iQuickMISX, $g_iQuickMISY)
 				SetLog("Sorry! Wrong place to deploy a new building on Main Village!", $COLOR_ERROR)
 				If _Sleep(500) Then Return
 				Return False
@@ -861,7 +853,8 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 					If AUNewBuildings($NewCoord[$j][1], $NewCoord[$j][2], $bTest, $IsWall) Then
 						ClickMainBuilder($bTest)
 						$z = 0 ;reset
-						ExitLoop
+						If Not AutoUpgradeCheckBuilder() Then ExitLoop
+						ContinueLoop 2
 					Else
 						ExitLoop ;Place NewBuilding failed, cancel placing newbuilding
 					EndIf
@@ -1014,8 +1007,20 @@ EndFunc
 
 Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 	Local $x = 420, $yUp = 103, $yDown = 800, $Delay = 1000
-	Local $Yscroll =  164 + (($g_iTotalBuilderCount - $g_iFreeBuilderCount) * 28)
-	If $YY = Default Then $YY = $Yscroll
+	ClickMainBuilder()
+	If $YY = Default And $Direction = "up" Then 
+		Local $Tmp = QuickMIS("CNX", $g_sImgResourceIcon, 320, 80, 460, 360)
+		If IsArray($Tmp) And UBound($Tmp) > 0 Then
+			$YY = _ArrayMax($Tmp, 1, 0, -1, 2)
+			SetDebugLog("DragUpY = " & $YY)
+			If Number($YY) < 300 Then 
+				SetLog("No need to dragUp!", $COLOR_INFO)
+				Return
+			EndIf
+		Else
+			$YY = 150
+		EndIf
+	EndIf
 	For $checkCount = 0 To 2
 		If Not $g_bRunState Then Return
 		If IsBuilderMenuOpen() Then ;check upgrade window border
@@ -1142,9 +1147,11 @@ EndFunc
 
 Func getMostBottomCost()
 	Local $TmpUpgradeCost, $TmpName, $ret
-	If QuickMIS("BC1", $g_sImgResourceIcon, 300, 300, 450, 360) Then
-		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $g_iQuickMISX, $g_iQuickMISY - 10, 120, $g_iQuickMISY + 10, True) ;check most bottom upgrade cost
-		$TmpName = getBuildingName(200, $g_iQuickMISY - 8)
+	Local $Icon = QuickMIS("CNX", $g_sImgResourceIcon, 300, 300, 450, 360)
+	If IsArray($Icon) And UBound($Icon) > 0 Then
+		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord
+		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 12, 120, 20, True) ;check most bottom upgrade cost
+		$TmpName = getBuildingName($Icon[0][1] - 200, $Icon[0][2] - 8)
 		$ret = $TmpName[0] & "|" & $TmpUpgradeCost
 	EndIf
 	Return $ret

@@ -139,8 +139,8 @@ Func AutoUpgradeBB($bTest = False)
 	If $g_iChkBBSuggestedUpgrades = 0 Then Return
 	If Not isOnBuilderBase(True) Then Return
 	If Not AutoUpgradeBBCheckBuilder($bTest) Then Return ;check if we have masterBuilder
-	BuilderBaseReport(True)
 	ZoomOut()
+	BuilderBaseReport(True)
 	If Not ClickBBBuilder() Then Return
 
 	If $g_iChkPlacingNewBuildings And Not $g_bIsMegaTeslaMaxed Then
@@ -150,12 +150,12 @@ Func AutoUpgradeBB($bTest = False)
 	If Not AutoUpgradeBBCheckBuilder($bTest) Then Return ;check if we have masterBuilder
 	SearchExistingBuilding($bTest)
 
-	If checkMainScreen(False, $g_bStayOnBuilderBase, "AutoUpgradeBB") Then ZoomOut()
+	ZoomOut()
 	ClickAway("Left")
 EndFunc   ;==>MainSuggestedUpgradeCode
 
 Func SearchNewBuilding($bTest = False)
-	Local $NeedDrag = True, $ZoomedIn = False, $TmpUpgradeCost = "Dummy|Cost|10", $UpgradeCost, $sameCost
+	Local $NeedDrag = True, $ZoomedIn = False, $TmpUpgradeCost, $UpgradeCost, $sameCost
 	ClickBBBuilder()
 	$g_bReserveElixirBB = False
 
@@ -183,7 +183,7 @@ Func SearchNewBuilding($bTest = False)
 				If Not CheckResourceForDoUpgradeBB($New[$i][4], $New[$i][6], $New[$i][0]) Then ;name, cost, costtype
 					SetLog("Not Enough " & $New[$i][0] & " to place New " & $New[$i][4], $COLOR_INFO)
 					If $New[$i][4] = "Army Camp" Then
-						SetLog("Building is New ArmyCamp, Set Reserve Cost for Elixir!", $COLOR_INFO)
+						SetLog("Building is New Army Camp, Set Reserve Cost for Elixir!", $COLOR_INFO)
 						$g_bReserveElixirBB = True
 					EndIf
 					ContinueLoop ;check for resource
@@ -201,12 +201,42 @@ Func SearchNewBuilding($bTest = False)
 				Local $aBuildingName[3] = [2, $New[$i][4], "New"]
 				If NewBuildings($New[$i][1], $New[$i][2], $aBuildingName, $bTest) Then
 					ClickBBBuilder($bTest)
-					ExitLoop
+					If Not AutoUpgradeBBCheckBuilder($bTest) Then Return
 				Else
 					ExitLoop 2 ;Place NewBuilding failed, exit
 				EndIf
 			Next
 		EndIf
+		
+		If $g_bOptimizeOTTO Then 
+			Local $OTTO = FindBBExistingBuilding()
+			If IsArray($OTTO) And UBound($OTTO) > 0 Then
+				For $i = 0 To UBound($OTTO) - 1
+					SetLog("OptimizeOTTO: " & $OTTO[$i][3] & " cost: " & $OTTO[$i][5] & " " & $OTTO[$i][0])
+				Next 
+				
+				For $i = 0 To UBound($OTTO) - 1
+					If Not CheckResourceForDoUpgradeBB($OTTO[$i][3], $OTTO[$i][5], $OTTO[$i][0]) Then ;name, cost, costtype
+						SetLog("Not Enough " & $OTTO[$i][0] & " to Upgrade " & $OTTO[$i][3], $COLOR_INFO)
+						If $OTTO[$i][3] = "Army Camp" Then
+							SetLog("Building Army Camp, Set Reserve Cost for Elixir!", $COLOR_INFO)
+							$g_bReserveElixirBB = True
+						EndIf
+						ContinueLoop ;check for resource
+					EndIf
+					SetLog("Try Upgrade: " & $OTTO[$i][3], $COLOR_INFO)
+					Click($OTTO[$i][1], $OTTO[$i][2])
+					If _Sleep(1000) Then Return
+					If DoUpgradeBB($OTTO[$i][0], $OTTO[$i][3], $bTest) Then
+						Return True ;upgrade success
+					Else
+						ClickBBBuilder()
+						ContinueLoop ;upgrade not success
+					EndIf
+				Next
+			EndIf
+		EndIf
+		
 		If Not $g_bRunState Then Return
 		$TmpUpgradeCost = getMostBottomCostBB() ;check most bottom upgrade cost
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
@@ -218,10 +248,8 @@ Func SearchNewBuilding($bTest = False)
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
-		Local $Y = 200
-		Local $IconY = StringSplit($TmpUpgradeCost, "|", $STR_NOCOUNT)
-		If Number($IconY[2]) > 100 Then $Y = $IconY[2]
-		ClickDragAutoUpgradeBB("up", $Y)
+		
+		If Not ClickDragAutoUpgradeBB("up") Then Return
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop
 	Next
@@ -231,10 +259,6 @@ Func SearchNewBuilding($bTest = False)
 	ZoomOut()
 	Return True
 EndFunc
-
-Global $g_aOptimizeOTTO[14][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 11], ["Storage", 12], _
-									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 12], ["Builder Hall", 12], ["Clock Tower", 5], ["Barracks", 8], _
-									["Army Camp", 12], ["Wall", 5]]
 
 Func SearchExistingBuilding($bTest = False)
 	Local $NeedDrag = True, $TmpUpgradeCost, $UpgradeCost, $sameCost
@@ -288,8 +312,8 @@ Func SearchExistingBuilding($bTest = False)
 			SetLog("[" & $z & "] Scroll Not Needed!", $COLOR_DEBUG)
 			ExitLoop
 		EndIf
-		Local $IconY = StringSplit($TmpUpgradeCost, "|", $STR_NOCOUNT)
-		ClickDragAutoUpgradeBB("up", $IconY[2])
+		
+		ClickDragAutoUpgradeBB("up")
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 		If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop
 	Next
@@ -372,14 +396,26 @@ EndFunc   ;==>DoUpgradeBB
 
 Func ClickDragAutoUpgradeBB($Direction = "up", $YY = Default, $DragCount = 1)
 	Local $x = 450, $yUp = 125, $yDown = 800, $Delay = 500
-	If $YY = Default Then $YY = 330
-
-	For $checkCount = 0 To 2
+	ClickBBBuilder()
+	If $YY = Default And $Direction = "up" Then 
+		Local $Tmp = QuickMIS("CNX", $g_sImgBBResourceIcon, 400, 73, 500, 370)
+		If IsArray($Tmp) And UBound($Tmp) > 0 Then
+			$YY = _ArrayMax($Tmp, 1, 0, -1, 2)
+			SetDebugLog("DragUpY = " & $YY)
+			If Number($YY) < 300 Then 
+				SetLog("No need to dragUp!", $COLOR_INFO)
+				Return False
+			EndIf
+		Else
+			$YY = 150
+		EndIf
+	EndIf
+	
+	For $z = 1 To 2
 		If Not $g_bRunState Then Return
 		If IsBBBuilderMenuOpen() Then ;check upgrade window border
 			Switch $Direction
 				Case "Up"
-					If $YY < 100 Then $YY = 150
 					If $DragCount > 1 Then
 						For $i = 1 To $DragCount
 							ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
@@ -567,6 +603,10 @@ Func FindBBNewBuilding()
 	Return $aBuilding
 EndFunc
 
+Global $g_aOptimizeOTTO[14][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 11], ["Storage", 12], _
+									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 12], ["Builder Hall", 12], ["Clock Tower", 5], ["Barracks", 8], _
+									["Army Camp", 12], ["Wall", 5]]
+									
 Func FindBBExistingBuilding($bTest = False)
 	Local $ElixMultiply = 1, $GoldMultiply = 1 ;used for multiply score
 	Local $Gold = getResourcesMainScreen(695, 23)
@@ -600,10 +640,10 @@ Func FindBBExistingBuilding($bTest = False)
 				EndIf
 				
 				If $g_bOptimizeOTTO And $g_bReserveElixirBB And $aTmpCoord[$i][0] = "Elix" Then 
-					SetLog("ReserveElixirBB for NewBuilding, Building " & $UpgradeName[0] & " skip!!", $COLOR_ACTION)
+					SetLog("Reserve ElixirBB for NewBuilding, Building " & $UpgradeName[0] & " skip!!", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
-
+				
 				If Not $bFoundOptimizeOTTO Then
 					SetDebugLog("Building:" & $UpgradeName[0] & ", not OptimizeOTTO building")
 					ContinueLoop
@@ -698,9 +738,9 @@ Func getMostBottomCostBB()
 	Local $Icon = QuickMIS("CNX", $g_sImgBBResourceIcon, 400, 100, 500, 360)
 	If IsArray($Icon) And UBound($Icon) > 0 Then
 		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord
-		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 10, 120, $Icon[0][2] + 10, True) ;check most bottom upgrade cost
+		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 12, 120, 20, True) ;check most bottom upgrade cost
 		$TmpName = getBuildingName($Icon[0][1] - 190, $Icon[0][2] - 8)
-		$ret = $TmpName[0] & "|" & $TmpUpgradeCost & "|" & $Icon[0][2]
+		$ret = $TmpName[0] & "|" & $TmpUpgradeCost
 	EndIf
 	Return $ret
 EndFunc
