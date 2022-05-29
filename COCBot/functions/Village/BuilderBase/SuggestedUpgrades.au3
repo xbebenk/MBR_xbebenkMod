@@ -845,7 +845,7 @@ Func TPW()
 		If IsGreenCheck() Then 
 			$bGreenCheckFound = True
 			For $i = 1 To 4
-				SetLog("Try Placing Wall #" $i, $COLOR_INFO)
+				SetLog("Try Placing Wall #" & $i, $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				_Sleep(1000)
 			Next
