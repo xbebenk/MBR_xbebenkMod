@@ -1409,7 +1409,7 @@ Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 ;Builder Base
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
 Global $g_aiStarLaboratoryPos[2] = [-1, -1] ; Position of Starlaboratory
-Global $g_bisBHMaxed = False, $g_bIsMegaTeslaMaxed = False, $g_iBHLevel = 0
+Global $g_bisBHMaxed = False, $g_bIsMegaTeslaMaxed = -1, $g_iBHLevel = 0
 Global $g_bGoldStorageFullBB = False, $g_bElixirStorageFullBB = False, $g_bGoldStorage50BB = False
 Global $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
 Global $g_bChkBBCustomArmyEnable = False

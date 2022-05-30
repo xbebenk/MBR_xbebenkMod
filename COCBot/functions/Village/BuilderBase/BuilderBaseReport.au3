@@ -46,7 +46,6 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 	If $g_bOptimizeOTTO Then
 		isGoldFullBB()
 		isElixirFullBB()
-		$g_bIsMegaTeslaMaxed = False
 		If $g_iFreeBuilderCountBB > 0 Then
 			If isBHMaxed() Then isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
 		EndIf
@@ -103,6 +102,7 @@ EndFunc
 
 Func isMegaTeslaMaxed()
 	ClickAway("Left")
+	If Not $g_bIsMegaTeslaMaxed = -1 Then Return
 	If QuickMIS("BC1", $g_sImgMegaTesla) Then ;Search for Mega Tesla
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
 		Local $aBuildingName = BuildingInfo(242, 494)
@@ -111,10 +111,11 @@ Func isMegaTeslaMaxed()
 			If $aBuildingName[1] = "Mega Tesla" Then
 				If $aBuildingName[2] = 9 Then
 					SetLog("Your Mega Tesla is Maxed!", $COLOR_SUCCESS)
-					$g_bIsMegaTeslaMaxed = True
+					$g_bIsMegaTeslaMaxed = 1
 					Return True
 				Else
 					SetLog("Your Mega Tesla Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
+					$g_bIsMegaTeslaMaxed = 0
 				EndIf
 			Endif
 		EndIf
