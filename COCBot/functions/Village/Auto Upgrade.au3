@@ -212,8 +212,8 @@ Func FindExistingBuilding($bTest = False)
 	If $Gold > $Elix Then $GoldMultiply += 1
 	If $Elix > $Gold Then $ElixMultiply += 1
 	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
-	Local $aRushTHPriority[6][2] = [["Pet", 15], ["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10]]
-	Local $aRushTH[8][2] = [["Barracks", 8], ["Castle", 10], ["Spell", 9], ["Workshop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
+	Local $aRushTHPriority[7][2] = [["Castle", 15], ["Pet", 15], ["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10]]
+	Local $aRushTH[7][2] = [["Barracks", 8], ["Spell", 9], ["Workshop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
 	Local $aHeroes[4] = ["King", "Queen", "Warden", "Champion"]
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
