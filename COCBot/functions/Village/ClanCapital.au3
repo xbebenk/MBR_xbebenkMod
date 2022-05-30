@@ -227,11 +227,11 @@ Func ForgeClanCapitalGold($bTest = False)
 	SetLog("Already active builder Forging = " & $iBuilder, $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	Local $iBuilderToAssign = Number($iBuilderToUse) - Number($iBuilder)
-	SetLog("Available Builder for forge = " & $iBuilderToAssign, $COLOR_INFO)
 	Local $aResource[5][2] = [["Gold", 240], ["Elixir", 330], ["Dark Elixir", 425], ["Builder Base Gold", 520], ["Builder Base Elixir", 610]]
 	Local $aCraft = QuickMIS("CNX", $g_sImgCCGoldCraft, 120, 230, 740, 450)
 	_ArraySort($aCraft, 0, 0, 0, 1) ;sort by column 1 (x coord)
 	SetDebugLog("Count of Craft Button: " & UBound($aCraft))
+	SetLog("Available Builder for forge = " & $iBuilderToAssign, $COLOR_INFO)
 	If IsArray($aCraft) And UBound($aCraft) > 0 Then
 		For $j = 1 To $iBuilderToAssign
 			SetDebugLog("Proceed with builder #" & $j)
@@ -568,7 +568,6 @@ Func AutoUpgradeCC($bTest = False)
 	Local $aMapCoord[7][3] = [["Golem Quarry", 185, 590], ["Dragon Cliffs", 630, 465], ["Builder's Workshop", 490, 525], ["Balloon Lagoon", 300, 490], _ 
 									["Wizard Valley", 410, 400], ["Barbarian Camp", 530, 340], ["Capital Peak", 400, 225]]
 	While $g_iLootCCGold > 0
-		;SetDebugLog(_ArrayToString($aMapCoord))
 		If Number($g_iLootCCGold) > 0 Then
 			SetLog("Checking Upgrade From District Map", $COLOR_INFO)
 			For $i = 0 To UBound($aMapCoord) - 1
@@ -614,8 +613,6 @@ Func AutoUpgradeCC($bTest = False)
 							Else
 								SetLog("Only Test, should click Contibute on [640, 520]", $COLOR_INFO)
 								ClickAway()
-								;SwitchToMainVillage()
-								;Return
 							EndIf
 							_Sleep(500)
 							ClickAway()
