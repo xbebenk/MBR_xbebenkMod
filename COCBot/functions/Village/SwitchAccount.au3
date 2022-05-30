@@ -223,7 +223,7 @@ Func CheckSwitchAcc()
 			Else
 				If $g_bRequestTroopsEnable Then
 					SetLog("Try RequestCC, Donate And Train before switching account", $COLOR_DEBUG)
-					RequestCC(False)
+					RequestCC()
 					PrepareDonateCC()
 					DonateCC()
 					TrainSystem()
