@@ -215,7 +215,7 @@ Func UpgradeLowLevelWall($bTest = False)
 	While True
 		If Not $g_bRunState Then Return
 		If Not WallUpgradeCheckBuilder($bTest) Then Return
-		If $Try > 2 Then ExitLoop
+		If $Try > 4 Then ExitLoop
 		SetLog("[" & $Try & "] Search Wall on Builder Menu", $COLOR_INFO)
 		$Try += 1
 		$aWallCoord = ClickDragFindWallUpgrade()
@@ -224,7 +224,7 @@ Func UpgradeLowLevelWall($bTest = False)
 			If Not $aIsEnoughResource[0] Then 
 				SetDebugLog("01-Not WallCheckResource, Exiting")
 				ContinueLoop ; lets check another wall on list
-				If $try > 2 And $WallNotFound Then ExitLoop ; jump to exit 
+				If $Try > 2 And $WallNotFound Then ExitLoop ; jump to exit 
 			EndIf
 			
 			IF TryUpgradeWall($aWallCoord, $bTest) Then ;select wall on builder menu and do upgrade
@@ -413,7 +413,7 @@ Func ClickDragFindWallUpgrade()
 	Local $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost = 0, $aWallCoord
 	For $checkCount = 0 To 9
 		If Not $g_bRunState Then Return
-		If _ColorCheck(_GetPixelColor(350, 73, True), "fdfefd", 20) Then
+		If IsBuilderMenuOpen() Then
 			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
 			If _Sleep(1000) Then Return
 			
@@ -432,7 +432,7 @@ Func ClickDragFindWallUpgrade()
 			If $sameCost > 2 Then ExitLoop
 			$UpgradeCost = $TmpUpgradeCost
 		EndIf
-		If _ColorCheck(_GetPixelColor(350, 73, True), "fdfefd", 20) Then ;check upgrade window border
+		If IsBuilderMenuOpen() Then ;check upgrade window border
 			SetDebugLog("Upgrade Window Exist", $COLOR_INFO)
 		Else
 			SetDebugLog("Upgrade Window Gone!", $COLOR_DEBUG)
