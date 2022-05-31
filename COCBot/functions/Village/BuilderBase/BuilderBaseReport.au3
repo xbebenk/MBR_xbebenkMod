@@ -26,8 +26,6 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 			If $bSetLog Then SetLog("Builder Base Village Report Error, You have been a BAD programmer!", $COLOR_ERROR)
 	EndSwitch
 
-	If Not $bSetLog Then SetLog("Builder Base Village Report", $COLOR_INFO)
-
 	getBuilderCount($bSetLog, True) ; update builder data
 	If _Sleep($DELAYRESPOND) Then Return
 
@@ -127,7 +125,8 @@ EndFunc
 
 Func isGoldFullBB()
 	$g_bGoldStorageFullBB = False
-	Local $aIsGoldFullBB[4] = [670, 40 , 0xE7C00D, 10] ; Main Screen Gold Resource bar is 90% Full
+	Local $aIsGoldFullBB[4] = [685, 40 , 0xE7C00D, 10] ; Main Screen Gold Resource bar is 90% Full
+	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(695, 23)
 	If _CheckPixel($aIsGoldFullBB, True) Then ;Hex if color of gold (orange)
 		SetLog("Builder Base Gold Storages are > 90% : " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]), $COLOR_SUCCESS)
 		$g_bGoldStorageFullBB = True
@@ -147,7 +146,8 @@ EndFunc   ;==>isGoldFull
 
 Func isElixirFullBB()
 	$g_bElixirStorageFullBB = False
-	Local $aIsElixirFullBB[4] = [670, 90 , 0x7945C5, 10] ; Main Screen Elixir Resource bar is 90% Full
+	Local $aIsElixirFullBB[4] = [685, 90 , 0x7945C5, 10] ; Main Screen Elixir Resource bar is 90% Full
+	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(695, 72)
 	If _CheckPixel($aIsElixirFullBB, True) Then ;Hex if color of Elixir (orange)
 		SetLog("Builder Base Elixir Storages are > 90% : " & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]), $COLOR_SUCCESS)
 		$g_bElixirStorageFullBB = True

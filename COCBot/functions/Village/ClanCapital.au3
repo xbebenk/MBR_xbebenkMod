@@ -60,14 +60,16 @@ Func CollectCCGold($bTest = False)
 	If _Sleep(500) Then Return
 EndFunc
 
-Func ClanCapitalReport()
+Func ClanCapitalReport($SetLog = True)
 	$g_iLootCCGold = getOcrAndCapture("coc-ms", 670, 17, 160, 25)
 	$g_iLootCCMedal = getOcrAndCapture("coc-ms", 670, 70, 160, 25)
 	GUICtrlSetData($g_lblCapitalGold, $g_iLootCCGold)
 	GUICtrlSetData($g_lblCapitalMedal, $g_iLootCCMedal)
 	
-	SetLog("Capital Report", $COLOR_INFO)
-	SetLog("[Gold]:" & $g_iLootCCGold & " [Medal]:" & $g_iLootCCMedal, $COLOR_SUCCESS)
+	If $SetLog Then
+		SetLog("Capital Report", $COLOR_INFO)
+		SetLog("[Gold]:" & $g_iLootCCGold & " [Medal]:" & $g_iLootCCMedal, $COLOR_SUCCESS)
+	EndIf
 	
 	Local $sRaidText = getOcrAndCapture("coc-mapname", 773, 613, 50, 30)
 	If $sRaidText = "Raid" Then
@@ -563,7 +565,7 @@ Func AutoUpgradeCC($bTest = False)
 	EndIf
 	
 	ClickAway() ;close builder menu
-	ClanCapitalReport()
+	ClanCapitalReport(False)
 	;Upgrade through district map
 	Local $aMapCoord[7][3] = [["Golem Quarry", 185, 590], ["Dragon Cliffs", 630, 465], ["Builder's Workshop", 490, 525], ["Balloon Lagoon", 300, 490], _ 
 									["Wizard Valley", 410, 400], ["Barbarian Camp", 530, 340], ["Capital Peak", 400, 225]]
@@ -617,7 +619,7 @@ Func AutoUpgradeCC($bTest = False)
 							_Sleep(500)
 							ClickAway()
 						EndIf
-						ClanCapitalReport()
+						ClanCapitalReport(False)
 						If Number($g_iLootCCGold) = 0 Then 
 							SwitchToMainVillage()
 							Return
@@ -638,7 +640,7 @@ Func AutoUpgradeCC($bTest = False)
 				EndIf	
 			Next
 		EndIf
-		ClanCapitalReport()
+		ClanCapitalReport(False)
 	WEnd
 	SwitchToMainVillage() ;last call, we should go back to main screen
 EndFunc 
