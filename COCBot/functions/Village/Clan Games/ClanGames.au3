@@ -18,14 +18,21 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false
 	$g_bIsCGPointAlmostMax = False ;just to be sure, reset to false
 	$g_bisCGPointMaxed = False ;just to be sure, reset to false
-
+	Local $PurgeDayMinute = ($g_iCmbClanGamesPurgeDay + 1) * 1440
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
 	If $g_iTownHallLevel <= 5 Then
 		SetLog("TownHall Level : " & $g_iTownHallLevel & ", Skip Clan Games", $COLOR_INFO)
 		Return
 	Endif
-
+	
+	;Prevent checking clangames before date 22 (clangames should start on 22 and end on 28 or 29) depends on how many tiers/maxpoint
+	Local $currentDate = Number(@MDAY)
+	If $currentDate < 22 And $currentDate < 5 Then
+		SetLog("Current date : " & $currentDate & ", Skip Clan Games", $COLOR_INFO)
+		Return
+	EndIf
+	
 	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)
 
@@ -91,10 +98,11 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 			ElseIf $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Then
 				SetLog("You almost reached max point")
 				$g_bIsCGPointAlmostMax = True
-				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > 1440 Then ; purge, but not purge on last day of clangames
+				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > $PurgeDayMinute Then ; purge, but not purge on last day of clangames
 					If IsEventRunning() Then Return True
 					If $g_bChkClanGamesPurgeAny Then
-						SetLog("Stop before completing your limit and only Purge")
+						SetLog("Clangames remain time: " & $sTimeCG & " > " & $PurgeDayMinute, $COLOR_INFO)
+						SetLog("Stop before completing and only Purge", $COLOR_INFO)
 						Local $aEvent = FindEventToPurge($sTempPath)
 						If IsArray($aEvent) And UBound($aEvent) > 0 Then
 							Local $EventName = StringSplit($aEvent[0][0], "-")
@@ -144,80 +152,12 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		Setlog($HowManyImages[0] & " Events to search")
 	Else
 		Setlog("ClanGames-Error on $HowManyImages: " & @error)
+		CloseClangamesWindow()
+		Setlog("Please check your clangames settings!", $COLOR_ERROR)
+		Setlog("Expand the Challenge!", $COLOR_ERROR)
+		SetLog("Enable any event that your account can do!", $COLOR_ERROR)
 		Return False
 	EndIf
-
-	; To store the detections
-	; [0]=ChallengeName [1]=EventName [2]=Xaxis [3]=Yaxis
-	;Local $aAllDetectionsOnScreen[0][4]
-	;Local $hStarttime = _Timer_Init()
-	;Local $sClanGamesWindow = GetDiamondFromRect("300,155,765,550")
-	;Local $aCurrentDetection = findMultiple($sTempPath, $sClanGamesWindow, $sClanGamesWindow, 0, 1000, 0, "objectname,objectpoints", True)
-	;Local $aEachDetection
-	;
-	;If $g_bChkClanGamesDebug Then Setlog("_ClanGames findMultiple (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
-	;$hTimer = TimerInit()
-	;
-	;; Let's split Names and Coordinates and populate a new array
-	;If UBound($aCurrentDetection) > 0 Then
-	;
-	;	; Temp Variables
-	;	Local $FullImageName, $StringCoordinates, $sString, $tempObbj, $tempObbjs, $aNames
-	;	Local $BBCheck[2] = ["BBD-WallDes", "BBD-BuildingDes"]
-	;
-	;	For $i = 0 To UBound($aCurrentDetection) - 1
-	;		If _Sleep(50) Then Return ; just in case of PAUSE
-	;		If Not $g_bRunState Then Return ; Stop Button
-	;
-	;		$aEachDetection = $aCurrentDetection[$i]
-	;		; Justto debug
-	;		SetDebugLog(_ArrayToString($aEachDetection))
-	;
-	;		$FullImageName = String($aEachDetection[0])
-	;		$StringCoordinates = $aEachDetection[1]
-	;
-	;		If $FullImageName = "" Or $StringCoordinates = "" Then ContinueLoop
-	;
-	;		; Exist more than One coordinate!?
-	;		If StringInStr($StringCoordinates, "|") Then
-	;			; Code to test the string if exist anomalies on string
-	;			$StringCoordinates = StringReplace($StringCoordinates, "||", "|")
-	;			$sString = StringRight($StringCoordinates, 1)
-	;			If $sString = "|" Then $StringCoordinates = StringTrimRight($StringCoordinates, 1)
-	;			; Split the coordinates
-	;			$tempObbjs = StringSplit($StringCoordinates, "|", $STR_NOCOUNT)
-	;			; Just get the first [0]
-	;			$tempObbj = StringSplit($tempObbjs[0], ",", $STR_NOCOUNT) ;  will be a string : 708,360
-	;			If UBound($tempObbj) <> 2 Then ContinueLoop
-	;		Else
-	;			$tempObbj = StringSplit($StringCoordinates, ",", $STR_NOCOUNT) ;  will be a string : 708,360
-	;			If UBound($tempObbj) <> 2 Then ContinueLoop
-	;		EndIf
-	;
-	;		For $x = 0 To UBound($BBCheck) - 1
-	;			If $FullImageName = $BBCheck[$x] Then
-	;				If $g_bChkClanGamesDebug Then SetLog("Detection for " & $FullImageName & " :", $COLOR_INFO)
-	;				If Not IsBBChallenge($tempObbj[0],$tempObbj[1]) Then
-	;					If $g_bChkClanGamesDebug Then SetLog("False Detection, Skip this Challenge", $COLOR_ERROR)
-	;					ContinueLoop 2
-	;				Else
-	;					If $g_bChkClanGamesDebug Then SetLog("OK, Continue", $COLOR_SUCCESS)
-	;				Endif
-	;			EndIf
-	;		Next
-	;
-	;		$aNames = StringSplit($FullImageName, "-", $STR_NOCOUNT)
-	;		SetDebugLog("filename: " & $FullImageName & " $aNames[0] = " & $aNames[0] & " $aNames[1]= " & $aNames[1], $COLOR_ORANGE)
-	;		ReDim $aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) + 1][4]
-	;		$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][0] = $aNames[0] ; Challenge Name
-	;		$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][1] = $aNames[1] ; Event Name
-	;		$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][2] = $tempObbj[0] ; Xaxis
-	;		$aAllDetectionsOnScreen[UBound($aAllDetectionsOnScreen) - 1][3] = $tempObbj[1] ; Yaxis
-	;	Next
-	;EndIf
-	;SetLog("Benchmark FindEvent Official : " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms", $COLOR_DEBUG)
-	;_ArrayDisplay($aAllDetectionsOnScreen)
-
 
 	Local $aAllDetectionsOnScreen = FindEvent()
 

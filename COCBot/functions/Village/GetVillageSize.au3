@@ -39,9 +39,9 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""], $fixed = [0, 0, 0, 0, 0, ""]
 	Local $x0, $y0, $d0, $x, $y, $x1, $y1, $right, $bottom, $a
 
-	Local $iAdditionalY = 75
-	Local $iAdditionalX = 75
-
+	Local $iAdditionalY = 100
+	Local $iAdditionalX = 100
+	
 	If $bOnBuilderBase = Default Then
 		$bOnBuilderBase = isOnBuilderBase(True)
 	EndIf
@@ -146,9 +146,6 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 	If $stone[0] = 0 And $fixed[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
-		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "HiddenStone\", 55, 290, 130, 450) Then 
-			ClickDrag(800, 320, 720, 420, 500)
-		EndIf
 		Return FuncReturn($aResult)
 	EndIf
 
@@ -194,8 +191,8 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			$fixed = $stone
 		EndIf
 
-		If $tree[0] = 0 And $fixed[0] = 0 And Not $g_bRestart Then
-			SetDebugLog("GetVillageSize cannot find tree", $COLOR_WARNING)
+		If $tree[0] = 0 Then ; And $fixed[0] = 0 And Not $g_bRestart Then
+			SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
 			Return FuncReturn($aResult)
 		EndIf
 	EndIf
@@ -205,6 +202,12 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $b = $stone[1] - $tree[1]
 	Local $c = Sqrt($a * $a + $b * $b) - $stone[4] - $tree[4]
 
+	SetDebugLog("X axis = " & $a)
+	SetDebugLog("Y axis = " & $b)
+	SetDebugLog("Diagonal = " & Sqrt($a * $a + $b * $b))
+	SetDebugLog("VillageMeas = " & $c)
+	
+	
 	If $g_bUpdateSharedPrefs And Not $bOnBuilderBase And $fixed[0] = 0 And $c >= 500 Then
 		; On main village use stone as fixed point when village size is too large, as that might cause an infinite loop when obstacle blocked (and another tree found)
 		$fixed = $stone
@@ -212,9 +215,10 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 
 	; initial reference village had a width of 473.60282919315 (and not 440) and stone located at 226, 567, so center on that reference and used zoom factor on that size
 	;Local $z = $c / 473.60282919315 ; don't use size of 440, as beta already using reference village
-	Local $iRefSize = 445;458 ; 2019-01-02 Update village measuring as outer edges didn't align anymore
+	Local $iRefSize = 456;458 ; 2019-01-02 Update village measuring as outer edges didn't align anymore
 	Local $iDefSize = 444 ; 2019-04-01 New default size using shared_prefs zoom level
 	Local $z = $c / $iRefSize
+	SetDebugLog("ZoomLevel = " & $z)
 
 	Local $stone_x_exp = $stone[2]
 	Local $stone_y_exp = $stone[3]

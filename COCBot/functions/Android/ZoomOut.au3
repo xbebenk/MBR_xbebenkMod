@@ -88,6 +88,36 @@ Func ZoomOutNox()
 	;Return DefaultZoomOut("{CTRLDOWN}{DOWN}{CTRLUP}", 0)
 EndFunc
 
+Func ZoomOutHelper()
+	Local $x = 0, $y = 0
+	Local $bIsMain = isOnMainVillage()
+	Local $Dir = "", $xOffset = 0, $yOffset = 0
+	
+	If $bIsMain Then 
+		$Dir = $g_sImgZoomOutHelper
+		$xOffset = 567
+		$yOffset = 72
+	Else
+		$Dir = $g_sImgBBZoomOutHelper
+		$xOffset = 622
+		$yOffset = 140
+	EndIf
+	
+	If QuickMIS("BC1", $Dir, 300, 40, 750, 200) Then 
+		$x = $g_iQuickMISX - $xOffset
+		$y = $g_iQuickMISY - $yOffset
+		SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+		ClickDrag(800, 420, 800 - $x, 420 - $y, 500)
+	Else
+		SetDebugLog("SearchZoomOut CallCount = " & $g_aiSearchZoomOutCounter[0])
+		If $g_aiSearchZoomOutCounter[0] > 1 And $g_aiSearchZoomOutCounter[0] < 5 Then ClickDrag(800, 420, 700, 480, 500)
+		If $g_aiSearchZoomOutCounter[0] >= 9 And $g_aiSearchZoomOutCounter[0] < 11 Then
+			SaveDebugImage("Zoom-" & ($bIsMain ? "MainVillage" : "BuilderBase"), True)
+		EndIf
+	EndIf
+	
+EndFunc
+
 Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40, $bAndroidZoomOut = True) ;Zooms out
 	SetDebugLog("DefaultZoomOut()")
 	Local $sFunc = "DefaultZoomOut"
@@ -96,7 +126,12 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $delayCount = 20
 	ForceCaptureRegion()
 	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
-
+	
+	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
+		ZoomOutHelper()
+		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+	EndIf
+	
 	If StringInStr($aPicture[0], "zoomou") = 0 Then
 		If $g_bDebugSetlog Then
 			SetDebugLog("Zooming Out (" & $sFunc & ")", $COLOR_INFO)
@@ -150,6 +185,10 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				$i += 1  ; add one to index value to prevent endless loop if controlsend fails
 				ForceCaptureRegion()
 				$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+				If $aPicture[0] = "" And $aPicture[1] = "0" Then 
+					ZoomOutHelper()
+					$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+				EndIf
 			WEnd
 		EndIf
 			
@@ -508,8 +547,8 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 						$iCallCount = 0
 						Return FuncReturn($aResult)
 					EndIf
-					CloseCoC() ; ensure CoC is gone
-					OpenCoC()
+					CloseCoC(True) ;restart coc
+					checkMainScreen(True, $g_bStayOnBuilderBase, "RestartCoC--ResetZoom")
 					Return FuncReturn(SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, "SearchZoomOut(2):" & $sSource, True, $DebugLog))
 				Else
 					SetLog("Restart Android to reset zoom" & $sSource & "...", $COLOR_INFO)

@@ -416,6 +416,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkForceBBAttackOnClanGames", $g_bChkForceBBAttackOnClanGames ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesPurgeAny", $g_bChkClanGamesPurgeAny ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesStopBeforeReachAndPurge", $g_bChkClanGamesStopBeforeReachAndPurge ? 1 : 0)
+	_Ini_Add("other", "ClanGamesPurgeDay", $g_iCmbClanGamesPurgeDay)
 	_Ini_Add("other", "ChkClanGamesSort", $g_bSortClanGames ? 1 : 0)
 	_Ini_Add("other", "ClanGamesSortBy", $g_iSortClanGames)
 	_Ini_Add("other", "ChkCGBBAttackOnly", $g_bChkCGBBAttackOnly ? 1 : 0)
@@ -495,7 +496,19 @@ Func SaveConfig_600_6()
 	; Builder Base Drop Order
 	_Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
 	_Ini_Add("other", "sBBDropOrder", $g_sBBDropOrder)
-
+	
+	;Clan Capital
+	_Ini_Add("ClanCapital", "ChkCollectCCGold", $g_bChkEnableCollectCCGold)
+	_Ini_Add("ClanCapital", "ChkStartWeekendRaid", $g_bChkStartWeekendRaid)
+	_Ini_Add("ClanCapital", "ChkEnableForgeGold", $g_bChkEnableForgeGold)
+	_Ini_Add("ClanCapital", "ChkEnableForgeElix", $g_bChkEnableForgeElix)
+	_Ini_Add("ClanCapital", "ChkEnableForgeDE", $g_bChkEnableForgeDE)
+	_Ini_Add("ClanCapital", "ChkEnableForgeBBGold", $g_bChkEnableForgeBBGold)
+	_Ini_Add("ClanCapital", "ChkEnableForgeBBElix", $g_bChkEnableForgeBBElix)
+	_Ini_Add("ClanCapital", "ForgeUseBuilder", $g_iCmbForgeBuilder)
+	_Ini_Add("ClanCapital", "AutoUpgradeCC", $g_bChkEnableAutoUpgradeCC)
+	_Ini_Add("ClanCapital", "ChkAutoUpgradeCCIgnore", $g_bChkAutoUpgradeCCIgnore)
+	
 	;Misc Mod
 	_Ini_Add("other", "SkipFirstCheckRoutine", $g_bSkipFirstCheckRoutine)
 	_Ini_Add("other", "SkipBB", $g_bSkipBB)
@@ -525,18 +538,6 @@ Func SaveBuilderBaseMod()
 	For $i = 0 To UBound($g_hCmbTroopBB) - 1
 		_Ini_Add("BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbTroopBB[$i])
 	Next
-
-	; Misc Settings
-	_Ini_Add("BBCustomArmy", "BBForceCustomArmy", $g_bBBForceCustomArmy)
-	_Ini_Add("BBCustomArmy", "BBGetArmyFromCSV", $g_bBBGetArmyFromCSV)
-	_Ini_Add("BBCustomArmy", "BBCSVAttack", $g_bBBCSVAttack)
-	_Ini_Add("BBCustomArmy", "BBCSVSettings", $g_iBBCSVSettings)
-
-	; CSV's settings
-	For $i = 0 To 2
-		_Ini_Add("BuilderBase", "ScriptBB" & $i, $g_sAttackScrScriptNameBB[$i])
-	Next
-
 EndFunc   ;==>SaveBuilderBaseMod
 
 Func SaveConfig_600_9()
@@ -668,6 +669,10 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradeWarden", $g_bUpgradeWardenEnable ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradeChampion", $g_bUpgradeChampionEnable ? 1 : 0)
 	_Ini_Add("upgrade", "HeroReservedBuilder", $g_iHeroReservedBuilder)
+	
+	_Ini_Add("upgrade", "ChkSortPetUpgrade", $g_bChkSortPetUpgrade ? 1 : 0)
+	_Ini_Add("upgrade", "CmbSortPetUpgrade", $g_iCmbSortPetUpgrade)
+	_Ini_Add("upgrade", "ChkSyncSaveDE", $g_bChkSyncSaveDE ? 1 : 0)
 
 	_Ini_Add("upgrade", "UpgradePetLassi", $g_bUpgradePetsEnable[$ePetLassi] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetEletroOwl", $g_bUpgradePetsEnable[$ePetEletroOwl] ? 1 : 0)
@@ -1221,12 +1226,11 @@ EndFunc   ;==>SaveConfig_600_35_1
 Func SaveConfig_600_35_2()
 	; <><><><> Bot / Profile / Switch Account <><><><>
 	ApplyConfig_600_35_2(GetApplyConfigSaveAction())
-
 	Local $sSwitchAccFile
 	Local $iCmbSwitchAcc = $g_iCmbSwitchAcc
 	If $iCmbSwitchAcc = 0 Then
 		; find group this profile belongs to: no switch profile config is saved in config.ini on purpose!
-		For $g = 1 To UBound($g_abAccountNo)
+		For $g = 1 To UBound($iCmbSwitchAcc) ;group number
 			$sSwitchAccFile = $g_sProfilePath & "\SwitchAccount.0" & $g & ".ini"
 			If FileExists($sSwitchAccFile) = 0 Then ContinueLoop
 			Local $sProfile

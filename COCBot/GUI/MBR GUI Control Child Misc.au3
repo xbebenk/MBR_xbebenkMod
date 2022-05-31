@@ -1105,6 +1105,3 @@ Func chkSetCCSleep()
 		$g_bEnableCCSleep = False
 	EndIf
 EndFunc ;==> chkSetCCSleep
-
-
-

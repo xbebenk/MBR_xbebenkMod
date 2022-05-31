@@ -102,9 +102,8 @@ Func UpdateBotTitle()
 EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
-	_VrtDesktObjCreation() ;virtual desktop object
-	If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
-		
+	If @OSVersion = "WIN_10" And @OSBuild < 22000 Then ;only supported on win10, using osbuild to filter win11 as autoit v3.3.14.5 doesn't know win11 yet
+		_VrtDesktObjCreation() ;virtual desktop object
 		Local $NumVD = _GetEnumVirtDskt()
 		If $NumVD = 1 Then _CreateNewVirtDskt()
     EndIf
@@ -1211,6 +1210,8 @@ Func __RunFunction($action)
 			checkMainScreen(False, $g_bStayOnBuilderBase, "Laboratory")
 		Case "PetHouse"
 			PetHouse()
+		Case "ForgeClanCapitalGold"
+			ForgeClanCapitalGold()
 		Case "BoostSuperTroop"
 			BoostSuperTroop()
 			_Sleep($DELAYRUNBOT3)
@@ -1242,6 +1243,9 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "SellHeroPot"
 			SellHeroPot()
+			_Sleep($DELAYRUNBOT3)
+		Case "AutoUpgradeCC"
+			AutoUpgradeCC()
 			_Sleep($DELAYRUNBOT3)
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
@@ -1377,6 +1381,7 @@ Func FirstCheck()
 		If Not $g_bRunState Then Return
 		If $g_bAutoUpgradeEarly Then
 			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
+			checkArmyCamp(True, True) ;need to check reserved builder for heroes
 			AutoUpgrade()
 		EndIf
 		VillageReport()
@@ -1596,7 +1601,7 @@ Func CommonRoutine($RoutineType = Default)
 				If _Sleep(500) Then Return
 				If $g_bRestart Then Return
 			Next
-			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse']
+			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'ForgeClanCapitalGold', 'AutoUpgradeCC']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1605,7 +1610,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 			
 		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase']
+			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1627,12 +1632,11 @@ EndFunc
 Func BuilderBase()
 
 	; switch to builderbase and check it is builderbase
-	If SwitchBetweenBases("BB") And isOnBuilderBase()  Then
-
+	If SwitchBetweenBases("BB") Then
 		$g_bStayOnBuilderBase = True
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 
-		$g_iBBAttacked = False	; Reset Variable
+		$g_iBBAttacked = True	; Reset Variable
 		BuilderBaseReport()
 		CollectBuilderBase()
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1643,13 +1647,20 @@ Func BuilderBase()
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		
-		AutoUpgradeBB()
-		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		If isGoldFullBB() Or isElixirFullBB() Then
+			AutoUpgradeBB()
+			$g_iBBAttacked = False
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+			$g_iBBAttacked = False
+		EndIf
 		
-		StarLaboratory()
-		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		If isElixirFullBB() Then
+			StarLaboratory()
+			$g_iBBAttacked = False
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
 		
 		If Not BBDropTrophy() Then 		
 			If _Sleep($DELAYRUNBOT1) Then Return
@@ -1658,13 +1669,11 @@ Func BuilderBase()
 			If _Sleep($DELAYRUNBOT1) Then Return
 		EndIf
 		
-		If $g_iBBAttacked Then 
+		If $g_iBBAttacked Then
 			AutoUpgradeBB()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-		EndIf
-		
-		If $g_sStarLabUpgradeTime = "" And $g_iBBAttacked Then 
+			
 			StarLaboratory()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1675,9 +1684,12 @@ Func BuilderBase()
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
 		; switch back to normal village
+		ZoomOut()
 		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False
 	EndIf
+	
+	If Not $g_bStayOnBuilderBase And IsOnBuilderBase() Then SwitchBetweenBases("Main")
 EndFunc
 
 Func TestBuilderBase()
@@ -1767,151 +1779,4 @@ Func RemControl()
 	Next
 EndFunc
 
-Func CCTutorial()
-	For $i = 1 To 6
-		SetLog("Wait for Arrow For Travel to Clan Capital #" & $i, $COLOR_INFO)
-		ClickAway()
-		_Sleep(3000)
-		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 330, 320, 450, 400) Then
-			Click(400, 450)
-			SetLog("Going to Clan Capital", $COLOR_SUCCESS)
-			_Sleep(5000)
-			ExitLoop ;arrow clicked now go to next step
-		EndIf
-		If $i > 1 And Not QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then Return
-	Next
-	
-	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;tutorial page, with strange person, click until arrow
-		For $i = 1 To 5 
-			SetLog("Wait for Arrow on CC Peak #" & $i, $COLOR_INFO)
-			ClickAway()
-			_Sleep(3000)
-			If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 330, 100, 450, 200) Then ;check clan capital map
-				Click($g_iQuickMISX, $g_iQuickMISY) ;click capital peak arrow
-				SetLog("Going to Capital Peak", $COLOR_SUCCESS)
-				_Sleep(10000)
-				ExitLoop ;arrow clicked now go to next step
-			EndIf
-		Next
-	EndIf
-	
-	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;tutorial page, with strange person, click until map button
-		For $i = 1 To 5 
-			SetLog("Wait for Map Button #" & $i, $COLOR_INFO)
-			ClickAway()
-			_Sleep(3000)
-			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 20, 620, 90, 660) Then
-				Click($g_iQuickMISX, $g_iQuickMISY) ;click map
-				SetLog("Going back to Clan Capital", $COLOR_SUCCESS)
-				_Sleep(5000)
-				Click($g_iQuickMISX, $g_iQuickMISY) ;click return home
-				SetLog("Return Home", $COLOR_SUCCESS)
-				_Sleep(5000)
-				ExitLoop ;map button clicked now go to next step
-			EndIf
-		Next
-	EndIf
-	
-	For $i = 1 To 8 
-		SetLog("Wait for Arrow on CC Forge #" & $i, $COLOR_INFO)
-		ClickAway()
-		_Sleep(3000)
-		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then ;check arrow on Clan Capital forge
-			Click(420, 490) ;click CC Forge
-			_Sleep(3000)
-			ExitLoop
-		EndIf
-	Next
-
-	For $i = 1 To 12 
-		SetLog("Wait for Arrow on CC Forge Window #" & $i, $COLOR_INFO)
-		ClickAway()
-		_Sleep(3000)
-		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then 
-			Click(420, 490) ;click CC Forge
-			_Sleep(3000)
-		EndIf
-		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 125, 270, 225, 360) Then
-			Click(180, 375) ;click collect
-			_Sleep(3000)
-			ExitLoop
-		EndIf
-	Next
-
-	For $i = 1 To 10 
-		SetLog("Wait for MainScreen #" & $i, $COLOR_INFO)
-		ClickAway()
-		If _checkMainScreenImage($aIsMain) Then ExitLoop
-		_Sleep(3000)
-	Next
-	ClickDrag(800, 420, 500, 420, 500)
-	ZoomOut()
-EndFunc
-
-Func PlaceUnplacedBuilding($bTest = False)
-	If SearchUnplacedBuilding() Then
-		SetLog("Unplaced Building Found!", $COLOR_SUCCESS)
-		If SearchGreenZone() Then
-			If SearchUnplacedBuilding() Then
-				SetLog("Trying to place Unplaced Bulding!", $COLOR_INFO)
-				
-				Click(431,571)
-				If _Sleep(1500) Then Return False
-				
-				Local $GreenCheckCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
-				SetDebugLog("Looking for GreenCheck Button", $COLOR_INFO)
-				If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
-					SetDebugLog("GreenCheck Button Found in [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_INFO)
-					If Not $g_bRunState Then Return
-					If Not $bTest Then
-						Click($GreenCheckCoords[0], $GreenCheckCoords[1])
-					Else
-						SetDebugLog("ONLY for TESTING!!!", $COLOR_ERROR)
-						Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1])
-						Return True
-					EndIf
-					SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
-					If _Sleep(500) Then Return
-					ZoomOut()
-					Return True
-				Else
-					SetDebugLog("GreenCheck Button NOT Found", $COLOR_ERROR)
-					NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in Main Village.")
-					If Not $g_bRunState Then Return
-					;Lets check if exist the [x], it should not exist, but to be safe
-					Local $RedXCoords = decodeSingleCoord(findImage("FindRedX", $g_sImgRedX & "\RedX*", "FV", 1, True))
-					If IsArray($RedXCoords) And UBound($RedXCoords) = 2 Then
-						Click($RedXCoords[0], $RedXCoords[1])
-						SetLog("Sorry! Wrong place to deploy a new building on Main Village!", $COLOR_ERROR)
-						If _Sleep(500) Then Return
-						Return False
-					Else
-						GoGoblinMap()
-						ZoomOut()
-						Return False
-					EndIf
-				EndIf
-			Else
-				SetLog("Unplaced Building Window Lost!", $COLOR_ERROR)
-				ZoomOut()
-			EndIf
-		EndIf
-	EndIf
-EndFunc
-
-Func SearchUnplacedBuilding()
-	Local $atmpInfo = getNameBuilding(292, 494)
-	If $atmpInfo = "" Then
-		SetDebugLog("Search: Unplaced Building Not Found!")
-		Return False
-	Else
-		If StringInStr($atmpInfo, "placed") = 0 Then
-			SetDebugLog("Search: Not Unplaced Building Text!", $COLOR_INFO)
-			Return False
-		Else
-			SetDebugLog("Search: Unplaced Building Found!", $COLOR_SUCCESS)
-			Return True
-		EndIf
-	EndIf
-EndFunc
 

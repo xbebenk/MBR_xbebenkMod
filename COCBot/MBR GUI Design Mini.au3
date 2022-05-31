@@ -288,7 +288,7 @@ Func CreateMainGUIControls()
 	GUICtrlSetOnEvent(-1, "BotMoveRequest")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	
-	$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion & " ", $_GUI_MAIN_WIDTH - 135, 15, 135 , 20 ,$SS_RIGHT)
+	$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion & " ", $_GUI_MAIN_WIDTH - 145, 15, 145 , 20 ,$SS_RIGHT)
 	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 	GUICtrlSetColor(-1, $COLOR_INFO)
 	GUICtrlSetFont (-1,9, 800)

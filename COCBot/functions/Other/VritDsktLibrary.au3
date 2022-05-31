@@ -13,7 +13,7 @@ Opt("MustDeclareVars", True)
 
 #ce ----------------------------------------------------------------------------
 
-If @OSVersion <> "WIN_10" Then Exit MsgBox($MB_SYSTEMMODAL, "", "This script only runs on Win 10")
+;If @OSVersion <> "WIN_10" Then Exit MsgBox($MB_SYSTEMMODAL, "", "This script only runs on Win 10")
 Global $oVirtualDesktopManagerInternal
 Global $oApplicationViewCollection
 Global $oVirtualDesktopPinnedApps

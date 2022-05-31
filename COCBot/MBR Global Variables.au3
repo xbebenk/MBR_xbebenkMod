@@ -553,15 +553,14 @@ Global Enum $eIcnArcher = 1, $eIcnDonArcher, $eIcnBalloon, $eIcnDonBalloon, $eIc
 		$eIcnWorkshopBoost, $eIcnStrongMan, $eIcnPowerPotion, $eIcnHogGlider, $eIcnYeti, $eIcnSiegeB, $eIcnChampion, $eIcnChampionUpgr, $eIcnChampionBoost, $eHdV13, $eIcnScattershot, $eIcnChampionBoostLocate, $eIcnTH13, $eWall14, _
 		$eIcnHeadhunter, $eIcnCollectAchievements, $eIcnInvisibilitySpell, $eIcnLogL, _
 		$eIcnSuperBarbarian, $eIcnSuperArcher, $eIcnSuperGiant, $eIcnSneakyGoblin, $eIcnSuperWallBreaker, $eIcnSuperWizard, $eIcnInfernoDragon, $eIcnSuperMinion, $eIcnSuperValkyrie, $eIcnSuperWitch, $eIcnIceHound, _
-		$eIcnPetLassi, $eIcnPetElectroOwl, $eIcnPetMightyYak, $eIcnPetUnicorn, $eIcnTH14, $eWall15, $eIcnPetHouse, $eIcnRocketBalloon, $eIcnDragonRider, $eHdV14, $eIcnSuperBowler;, $eIcnFlameF, $eIcnSuperDragon
+		$eIcnPetLassi, $eIcnPetElectroOwl, $eIcnPetMightyYak, $eIcnPetUnicorn, $eIcnTH14, $eWall15, $eIcnPetHouse, $eIcnRocketBalloon, $eIcnDragonRider, $eHdV14, $eIcnSuperBowler, $eIcnFlameF, $eIcnSuperDragon, _ 
+		$eIcnClanCapital, $eIcnCapitalGold, $eIcnCapitalMedal
 
 Global $eIcnDonBlank = $eIcnDonBlacklist
 Global $eIcnOptions = $eIcnDonBlacklist
 Global $eIcnAchievements = $eIcnMain
 Global $eIcnStrategies = $eIcnBlank
 Global $eIcnSleepingChampion = $eIcnSleepingWarden
-Global $eIcnFlameF = $eIcnDonBlacklist
-Global $eIcnSuperDragon = $eIcnDonBlacklist
 
 ; Controls bot startup and ongoing operation
 Global Const $g_iCollectAtCount = 10 ; Run Collect() after this amount of times before actually collect
@@ -997,6 +996,8 @@ Global $g_aUpgradeWall[3] = [0, 0, 0] ;wall level
 ;First cost is for walls level 5.  MBR doesn't support walls until level 4.
 Global Const $g_aiWallCost[11] = [20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 3000000, 5000000, 7000000]
 Global $g_iWallCost = 0
+; xbebenkmod - Wall Upgrade
+Global $g_aWallSaveMode = -1
 
 ; Auto Upgrade
 Global $g_bPlaceNewBuilding = False, $g_bChkRushTH = False, $g_bNewBuildingFirst = False, $g_bHeroPriority = False
@@ -1022,7 +1023,7 @@ Global $g_sUpgradeDuration
 
 ; Builder Base
 Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0
-Global $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_bOptimizeOTTO = 0, $g_bUpgradeWallLowCost = 0
+Global $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_bOptimizeOTTO = 0, $g_bReserveElixirBB = False, $g_bReserveGoldBB = False
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
@@ -1408,7 +1409,7 @@ Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 ;Builder Base
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
 Global $g_aiStarLaboratoryPos[2] = [-1, -1] ; Position of Starlaboratory
-Global $g_bisBHMaxed = False, $g_bisMegaTeslaMaxed = False, $g_iBHLevel = 0
+Global $g_bisBHMaxed = False, $g_bIsMegaTeslaMaxed = -1, $g_iBHLevel = 0
 Global $g_bGoldStorageFullBB = False, $g_bElixirStorageFullBB = False, $g_bGoldStorage50BB = False
 Global $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
 Global $g_bChkBBCustomArmyEnable = False
@@ -1857,7 +1858,7 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
 Global $g_bChkClanGamesPurgeAny = 0
 Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
-Global $g_bSortClanGames = False, $g_iSortClanGames = 0
+Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDay = 0
 Global $g_bCollectCGReward = False
 
 Global $g_abCGMainLootItem[6]
@@ -1931,7 +1932,8 @@ Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aiPetHousePos[2] = [-1, -1] ; Position of Pet House
 Global $g_sPetUpgradeTime = ""
 Global $g_bUpgradePetsEnable[4] = [False, False, False, False]
-Local $g_aiPetLevel[4] = [0, 0, 0, 0]
+Global $g_aiPetLevel[4] = [0, 0, 0, 0]
+Global $g_bChkSyncSaveDE = True, $g_bChkSortPetUpgrade = False, $g_iCmbSortPetUpgrade = 0
 
 Global Enum $ePetLassi, $ePetEletroOwl, $ePetMightyYak, $ePetUnicorn, $ePetCount
 Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Eletro Owl", "Mighty Yak", "Unicorn"]
@@ -1954,32 +1956,13 @@ Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_i
 Global $g_bEnableCCSleep = False, $g_bSkipDT = False
 
 ;Builder Base
-
-; Attack CSV
-Global $g_bChkBBRandomAttack = False
-Global Const $g_sCSVBBAttacksPath = @ScriptDir & "\CSV\BuilderBase"
-Global $g_sAttackScrScriptNameBB[3] = ["", "", ""]
-Global $g_iBuilderBaseScript = 0
-
 Global $g_bDebugBBattack = False
-
-Global $g_bIsMachinePresent = False
-Global $g_iBBMachAbilityLastActivatedTime = -1 ; time between abilities
-; Globals for BB Machine
-; X, Y, g_bIsBBMachineD, g_bBBIsFirst
-Global Const $g_aMachineBBReset[4] = [-1, -1, False, True]
-Global $g_aMachineBB[4] = [-1, -1, False, True]
-Global $g_iFurtherFromBBDefault = 3
-
-; Report
-Global $g_iAvailableAttacksBB = 0, $g_iLastDamage = 0
-Global $g_sTxtRegistrationToken = ""
-
-Global $g_aBuilderHallPos = -1, $g_aAirdefensesPos = -1, $g_aCrusherPos = -1, $g_aCannonPos = -1, $g_aGuardPostPos = -1, _
-$g_aAirBombs = -1, $g_aLavaLauncherPos = -1, $g_aRoasterPos = -1, $g_aDeployPoints, $g_aDeployBestPoints
-
-Global $g_aExternalEdges, $g_aBuilderBaseDiamond, $g_aOuterEdges, $g_aBuilderBaseOuterDiamond, $g_aBuilderBaseOuterPolygon, $g_aBuilderBaseAttackPolygon, $g_aFinalOuter[4]
-
-Global $g_bBBForceCustomArmy = False, $g_bBBGetArmyFromCSV = False, $g_bBBCSVAttack = False, $g_iBBCSVSettings = False ; Custom
-
+Global $g_bBBForceCustomArmy = False
 Global $g_iBBAttacked = False ; DoAttackBB attacked or not
+
+;ClanCapital
+Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0, $g_bChkEnableAutoUpgradeCC = False, $g_bChkAutoUpgradeCCIgnore = False
+Global $g_bChkEnableCollectCCGold = False, $g_bChkEnableForgeGold = False, $g_bChkEnableForgeElix = False
+Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEnableForgeBBElix = False, $g_iCmbForgeBuilder = 0
+Global $aCCBuildingIgnore[9] = ["Grove", "Tree", "Forest", "Campsite", "Stone Circle", "Stone", "Pillar", "Forest Circle", "The First"]
+Global $g_bChkStartWeekendRaid = True

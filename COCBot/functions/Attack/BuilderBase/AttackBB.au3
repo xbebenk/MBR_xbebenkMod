@@ -121,25 +121,12 @@ Func _AttackBB()
 
 	; Get troops on attack bar and their quantities
 	local $aBBAttackBar = GetAttackBarBB()
-	If $g_bChkBBCustomArmyEnable Then CorrectAttackBarBB($aBBAttackBar) ; xbebenk
-	
-	$aBBAttackBar = GetAttackBarBB()
-	If $g_BBBCSVAttack Then
-		; Zoomout the Opponent Village.
-		BuilderBaseZoomOut(False, True)
-
-		; Correct script.
+	If $g_bChkBBCustomArmyEnable Then 
 		CorrectAttackBarBB($aBBAttackBar)
-
-		Local $FurtherFrom = 5 ; 5 pixels before the deploy point.
-		BuilderBaseGetDeployPoints($FurtherFrom, True)
-
-		; Parse CSV , Deploy Troops and Get Machine Status [attack algorithm] , waiting for Battle ends window.
-		BuilderBaseParseAttackCSV($aBBAttackBar, $g_aDeployPoints, $g_aDeployBestPoints, True)
-	Else
-		AttackBB($aBBAttackBar)
+		$aBBAttackBar = GetAttackBarBB()
 	EndIf
-
+	AttackBB($aBBAttackBar)
+	
 	; wait for end of battle
 	SetLog("Waiting for end of battle.", $COLOR_BLUE)
 	If Not $g_bRunState Then Return ; Stop Button
@@ -223,6 +210,9 @@ Func AttackBB($aBBAttackBar = Default)
 	If $bBMDeployed Then CheckBMLoop($aBMPos) ;check if BM is Still alive and activate ability
 	Local $waitcount = 0
 	While IsAttackPage()
+		If BBBarbarianHead() Then
+			ExitLoop
+		EndIf
 		$waitcount += 1
 		SetDebugLog("Waiting Battle End #" & $waitcount, $COLOR_ACTION)
 		_Sleep(2000)
@@ -235,7 +225,7 @@ EndFunc   ;==>AttackBB
 Func OkayBBEnd() ; Find if battle has ended and click okay
 	local $timer = __TimerInit()
 	While 1
-		If _CheckPixel($aBlackHead, True) Then
+		If BBBarbarianHead() Then
 			ClickP($aOkayButton)
 			Return True
 		EndIf
@@ -374,6 +364,12 @@ Func CheckBMLoop($aBMPos)
 	While IsAttackPage()
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
+		
+		If BBBarbarianHead() Then
+			SetLog("Battle Ended, Exiting BMLoop", $COLOR_DEBUG2)
+			ExitLoop
+		EndIf
+		
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "8C8C8C", 10, 1) Then
 			_Sleep(500)
 			SetDebugLog("Waiting Battle Machine Ability", $COLOR_DEBUG2)
@@ -721,4 +717,11 @@ Func DebugAttackBBImage($aCoords, $g_BBDPSide = 1)
 
 EndFunc   ;==>DebugAttackBBImage
 
-
+Func BBBarbarianHead()
+	If _CheckPixel($aBlackHead, True) Then
+		SetDebugLog("Battle Ended, Black Barbarian Head Found", $COLOR_DEBUG2)
+		Return True
+	Else
+		Return False
+	EndIf
+EndFunc

@@ -205,6 +205,8 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 	
 	If isGemOpen(True) Then ; check for gem window
 		SetLog("Oops, Gems required for " & $UpgradeName & " Upgrade, try again.", $COLOR_ERROR)
+		If _Sleep(1000) Then Return
+		Click(133,117) ;Click Back to Upgrade Menu
 		$bRet = False
 	Else
 		SetLog("Upgrade " & $UpgradeName & " in your star laboratory started with success...", $COLOR_SUCCESS)
@@ -215,12 +217,15 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 		$bRet = True
 	EndIf
 	
-	Local $StartTime = _NowCalc() ; what is date:time now
-	SetDebugLog($UpgradeName & " Upgrade Started @ " & $StartTime, $COLOR_SUCCESS)
-	If $iLabFinishTime > 0 Then
-		$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), $StartTime)
-		SetLog($UpgradeName & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
+	If $bRet Then 
+		Local $StartTime = _NowCalc() ; what is date:time now
+		SetDebugLog($UpgradeName & " Upgrade Started @ " & $StartTime, $COLOR_SUCCESS)
+		If $iLabFinishTime > 0 Then
+			$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), $StartTime)
+			SetLog($UpgradeName & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
+		EndIf
 	EndIf
+	
 	Return $bRet
 EndFunc
 

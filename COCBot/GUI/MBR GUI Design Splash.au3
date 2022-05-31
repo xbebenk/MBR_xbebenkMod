@@ -85,7 +85,7 @@ Func CreateSplashScreen($iSteps = Default)
 		GUICtrlSetOnEvent(-1, "MoveSplashScreen")
 		GUICtrlSetState(-1, $GUI_DISABLE)
 	
-		$g_hSplashlbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion & " ", $iX - 135, 0, 135 , 20 ,$SS_RIGHT)
+		$g_hSplashlbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion & " ", $iX - 145, 0, 145 , 20 ,$SS_RIGHT)
 		GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 		GUICtrlSetColor(-1, $COLOR_INFO)
 		GUICtrlSetFont (-1,9, 800)

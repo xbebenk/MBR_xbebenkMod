@@ -51,7 +51,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		Local $sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
 		If $sLoading = "Loading" Then 
 			SetLog("Still on Loading Screen...", $COLOR_INFO)
-			_Sleep(2000)
+			_Sleep(5000)
 		EndIf
 		
 		$bObstacleResult = checkObstacles($bBuilderBase)

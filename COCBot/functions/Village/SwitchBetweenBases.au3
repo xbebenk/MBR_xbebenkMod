@@ -73,8 +73,10 @@ Func SwitchTo($To = "BB")
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
 			If $g_bDebugClick Or $g_bDebugSetlog Then SaveDebugImage("SwitchBetweenBases", True)
+			ZoomOutHelper()
 			ContinueLoop
 		EndIf
+		_Sleep(1000)
 	Next
 	
 	If IsProblemAffect(True) Then Return
@@ -86,11 +88,11 @@ Func SwitchTo($To = "BB")
 			SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
 			ExitLoop
 		EndIf
-		_Sleep(500)
+		_Sleep(2000)
 	Next
 	
 	If IsProblemAffect(True) Then Return
 	If Not $g_bRunState Then Return
-	
+	If Not $bRet Then SetLog("SwitchBetweenBases Failed", $COLOR_ERROR)
 	Return $bRet
 EndFunc
