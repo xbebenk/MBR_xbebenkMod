@@ -216,8 +216,8 @@ Global Const $DELAYCOLLECT3 = 800
 
 ;DonateCC
 Global Const $DELAYDONATECC1 = 200
-Global Const $DELAYDONATECC2 = 500
-Global Const $DELAYDONATECC3 = 50 ; click
+Global Const $DELAYDONATECC2 = 1000
+Global Const $DELAYDONATECC3 = 75 ; click
 Global Const $DELAYDONATECC4 = 1250
 
 ;DonateWindow
