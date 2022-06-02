@@ -216,9 +216,11 @@ Func UpgradeLowLevelWall($bTest = False)
 		If Not $g_bRunState Then Return
 		If Not WallUpgradeCheckBuilder($bTest) Then Return
 		If $Try > 4 Then ExitLoop
+		If $Try > 2 And $WallNotFound Then ExitLoop ; jump to exit 
 		SetLog("[" & $Try & "] Search Wall on Builder Menu", $COLOR_INFO)
 		$Try += 1
 		$aWallCoord = ClickDragFindWallUpgrade()
+			
 		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then ; found a wall or list of wall
 			Local $aIsEnoughResource = WallCheckResource($aWallCoord[0][2]) ;check upgrade from lowest to highest price 
 			If Not $aIsEnoughResource[0] Then 
