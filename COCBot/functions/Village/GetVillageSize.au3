@@ -224,7 +224,7 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAddition
 			SetDebugLog("GetVillageSize check for image " & $findImage)
 			$b = decodeSingleCoord(findImage($scenerycode, $sDirectory & "tree\" & $findImage, $sArea, 1, True))
 			; sort by x because there can be a 2nd at the right that should not be used
-			If UBound($b) > 0 Then
+			If UBound($b) > 2 Then
 				$x = Int($b[0])
 				$y = Int($b[1])
 				SetDebugLog("Found tree image at " & $x & ", " & $y & ": " & $findImage, $COLOR_INFO)
