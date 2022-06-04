@@ -93,7 +93,6 @@ Func ZoomOutHelper()
 	Local $bIsMain = isOnMainVillage()
 	Local $Dir = "", $aOffset, $bRet = False
 	
-	SetLog("ZoomOutHelper()", $COLOR_INFO)
 	If $bIsMain Then 
 		$Dir = $g_sImgZoomOutDir 
 	Else
@@ -106,7 +105,7 @@ Func ZoomOutHelper()
 			$x = $g_iQuickMISX - $aOffset[1]
 			$y = $g_iQuickMISY - $aOffset[2]
 			SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
-			SetLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
+			SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
 			ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
 			$bRet = True
 		Else
@@ -122,7 +121,7 @@ Func ZoomOutHelper()
 				$x = $g_iQuickMISX - $aOffset[1]
 				$y = $g_iQuickMISY - $aOffset[2]
 				SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
-				SetLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
+				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
 				ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
 				$bRet = True
 			Else

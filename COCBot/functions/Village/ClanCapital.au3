@@ -443,10 +443,22 @@ Func FindCCSuggestedUpgrade()
 	Return $aResult
 EndFunc
 
-Func SkipChat()
+Func SkipChat($WaitFor = "UpgradeButton")
 	For $y = 1 To 10 
 		If Not $g_bRunState Then Return
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then			
+			Switch $WaitFor
+				Case "UpgradeButton"
+					If QuickMIS("BC1", $g_sImgCCUpgradeButton, 300, 520, 600, 660) Then
+						SetLog($WaitFor & " OK", $COLOR_ACTION)
+						Return
+					EndIf
+				Case "UpgradeWindow"
+					If QuickMis("BC1", $g_sImgGeneralCloseButton, 680, 99, 730, 140) Then
+						SetLog($WaitFor & " OK", $COLOR_ACTION)
+						Return
+					EndIf
+			EndSwitch
 			Click($g_iQuickMISX + 100, $g_iQuickMISY)
 			SetLog("Skip chat #" & $y, $COLOR_INFO)
 			_Sleep(5000)
@@ -472,7 +484,7 @@ Func WaitUpgradeButtonCC()
 			Return $aRet ;immediately return as we found upgrade button
 		EndIf
 		_Sleep(1000)
-		If $i > 3 Then SkipChat()
+		If $i > 3 Then SkipChat("UpgradeButton")
 	Next
 	Return $aRet
 EndFunc
@@ -488,7 +500,7 @@ Func WaitUpgradeWindowCC()
 				Return $bRet
 			EndIf
 		EndIf
-		SkipChat()
+		SkipChat("UpgradeWindow")
 	Next
 	If Not $bRet Then SetLog("Upgrade Window doesn't open", $COLOR_ERROR)
 	Return $bRet
