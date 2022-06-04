@@ -13,8 +13,16 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func SwitchBetweenBases($ForcedSwitchTo = "BB")
+Func SwitchBetweenBases($ForcedSwitchTo = Default)
 	Local $bIsOnBuilderBase = isOnBuilderBase()
+	If $ForcedSwitchTo = Default Then
+		If $bIsOnBuilderBase Then 
+			$ForcedSwitchTo = "Main"
+		Else
+			$ForcedSwitchTo = "BB"
+		EndIf
+	EndIf
+	
 	If $bIsOnBuilderBase And $ForcedSwitchTo = "BB" Then
 		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_ERROR)
 		Return True
@@ -40,7 +48,7 @@ EndFunc
 
 Func SwitchTo($To = "BB")
 	Local $sSwitchFrom, $sSwitchTo, $aPixelToCheck
-	Local $sTile, $x, $y, $x1, $y1
+	Local $sTile, $x, $y, $x1, $y1, $Dir
 	Local $bRet = False
 	
 	If $To = "Main" Then 
@@ -48,27 +56,29 @@ Func SwitchTo($To = "BB")
 		$sSwitchTo = "Normal Village"
 		$sTile = "BoatBuilderBase"
 		$aPixelToCheck = $aIsMain
-		$x = 550
-		$y = 30
+		$x = 500
+		$y = 20
 		$x1 = 700
 		$y1 = 200
+		$Dir = $g_sImgBoatBB
 	Else
 		$sSwitchFrom = "Normal Village"
 		$sSwitchTo = "Builder Base"
 		$sTile = "BoatNormalVillage"
 		$aPixelToCheck = $aIsOnBuilderBase
-		$x = 100
-		$y = 460
-		$x1 = 250
-		$y1 = 585
+		$x = 60
+		$y = 400
+		$x1 = 350
+		$y1 = 600
+		$Dir = $g_sImgBoat
 	EndIf	
 	
 	For $i = 1 To 3
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
-		ZoomOut() ;zoomout first
-		SetDebugLog("QuickMIS(BC1, " & $g_sImgBoat & "," & $x & "," & $y & "," &  $x1 & "," & $y1 & ")")
-		If QuickMIS("BC1", $g_sImgBoat, $x, $y, $x1, $y1) Then
+		If $i > 1 Then ZoomOut() ;zoomout only if 1st try failed
+		If QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
+			_Sleep(1000)
 			ExitLoop
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)

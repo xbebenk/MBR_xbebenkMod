@@ -91,31 +91,51 @@ EndFunc
 Func ZoomOutHelper()
 	Local $x = 0, $y = 0
 	Local $bIsMain = isOnMainVillage()
-	Local $Dir = "", $xOffset = 0, $yOffset = 0
+	Local $Dir = "", $aOffset, $bRet = False
 	
+	SetLog("ZoomOutHelper()", $COLOR_INFO)
 	If $bIsMain Then 
-		$Dir = $g_sImgZoomOutHelper
-		$xOffset = 567
-		$yOffset = 72
+		$Dir = $g_sImgZoomOutDir 
 	Else
-		$Dir = $g_sImgBBZoomOutHelper
-		$xOffset = 622
-		$yOffset = 140
+		$Dir = $g_sImgZoomOutDirBB
 	EndIf
 	
-	If QuickMIS("BC1", $Dir, 300, 40, 750, 200) Then 
-		$x = $g_iQuickMISX - $xOffset
-		$y = $g_iQuickMISY - $yOffset
-		SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
-		ClickDrag(800, 420, 800 - $x, 420 - $y, 500)
-	Else
-		SetDebugLog("SearchZoomOut CallCount = " & $g_aiSearchZoomOutCounter[0])
-		If $g_aiSearchZoomOutCounter[0] > 1 And $g_aiSearchZoomOutCounter[0] < 5 Then ClickDrag(800, 420, 700, 480, 500)
-		If $g_aiSearchZoomOutCounter[0] >= 9 And $g_aiSearchZoomOutCounter[0] < 11 Then
-			SaveDebugImage("Zoom-" & ($bIsMain ? "MainVillage" : "BuilderBase"), True)
+	If QuickMIS("BC1", $Dir & "tree\", 430, 20, 750, 200) Then 
+		$aOffset = StringRegExp($g_iQuickMISName, "tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+		If IsArray($aOffset) Then 
+			$x = $g_iQuickMISX - $aOffset[1]
+			$y = $g_iQuickMISY - $aOffset[2]
+			SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+			SetLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
+			ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+			$bRet = True
+		Else
+			SetDebugLog("Bad Tree ImageName!")
+			Return
 		EndIf
 	EndIf
 	
+	If Not $bRet Then
+		If QuickMIS("BC1", $Dir & "stone\", 0, 330, 430, 560) Then 
+			$aOffset = StringRegExp($g_iQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+			If IsArray($aOffset) Then 
+				$x = $g_iQuickMISX - $aOffset[1]
+				$y = $g_iQuickMISY - $aOffset[2]
+				SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+				SetLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
+				ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+				$bRet = True
+			Else
+				SetDebugLog("Bad Stone ImageName!")
+				Return
+			EndIf
+		EndIf
+	EndIf
+	If Not $bRet Then
+		ClickDrag(800, 350, 750, 400, 500) ;just drag
+		ZoomOutHelper()
+	EndIf
+	Return $bRet
 EndFunc
 
 Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40, $bAndroidZoomOut = True) ;Zooms out
@@ -177,7 +197,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				EndIf
 				If $tryCtrlWheelScrollAfterCycles > 0 And $i > $tryCtrlWheelScrollAfterCycles Then $tryCtrlWheelScroll = True
 				If $i > $exitCount Then Return
-				If $g_bRunState = False Then ExitLoop
+				If Not $g_bRunState Then Return 
 				If IsProblemAffect(True) Then  ; added to catch errors during Zoomout
 					SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_ERROR)
 					If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out", $COLOR_INFO)  ; call to clear normal errors
@@ -486,10 +506,11 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 			Return FuncReturn($aResult)
 		EndIf
 	EndIf
-
+	
 	If IsArray($village) = 1 Then
 		$villageSize = $village[0]
-		If $villageSize < 500 Or $g_bDebugDisableZoomout Then
+		If $villageSize = "" Then ZoomOutHelper()
+		If $villageSize < 750 Or $g_bDebugDisableZoomout Then
 			$z = $village[1]
 			$x = $village[2]
 			$y = $village[3]
