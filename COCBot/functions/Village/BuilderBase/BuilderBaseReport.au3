@@ -100,7 +100,8 @@ EndFunc
 
 Func isMegaTeslaMaxed()
 	ClickAway("Left")
-	If Not $g_bIsMegaTeslaMaxed = -1 Then Return
+	If $g_bIsMegaTeslaMaxed = 1 Then Return True
+	If $g_bIsMegaTeslaMaxed <> -1 Then Return False
 	If QuickMIS("BC1", $g_sImgMegaTesla) Then ;Search for Mega Tesla
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
 		Local $aBuildingName = BuildingInfo(242, 494)

@@ -17,7 +17,7 @@ Func SwitchBetweenBases($ForcedSwitchTo = "BB")
 	Local $bIsOnBuilderBase = isOnBuilderBase()
 	If $bIsOnBuilderBase And $ForcedSwitchTo = "BB" Then
 		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_ERROR)
-		Return
+		Return True
 	EndIf
 	
 	If IsProblemAffect(True) Then Return
