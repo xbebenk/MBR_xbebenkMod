@@ -133,7 +133,6 @@ Func ZoomOutHelper()
 	EndIf
 	If Not $bRet Then
 		ClickDrag(800, 350, 750, 400, 500) ;just drag
-		ZoomOutHelper()
 	EndIf
 	Return $bRet
 EndFunc
