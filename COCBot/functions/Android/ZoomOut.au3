@@ -16,11 +16,11 @@
 
 Global $g_aiSearchZoomOutCounter[2] = [0, 1] ; 0: Counter of SearchZoomOut calls, 1: # of post zoomouts after image found
 
-Func ZoomOut() ;Zooms out
+Func ZoomOut($bZoomOutFirst = False) ;Zooms out
 	Static $s_bZoomOutActive = False
 	If $s_bZoomOutActive Then Return ; recursive not allowed here
 	$s_bZoomOutActive = True
-
+	If $bZoomOutFirst Then AndroidZoomOut()
 	Local $Result = _ZoomOut()
 	$s_bZoomOutActive = False
 	Return $Result

@@ -352,7 +352,7 @@ Func SwitchToMainVillage($caller = "Default")
 			ExitLoop
 		EndIf
 	Next
-	ZoomOut()
+	ZoomOut(True)
 	Return $bRet
 EndFunc
 
