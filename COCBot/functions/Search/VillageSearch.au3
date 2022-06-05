@@ -158,6 +158,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 		; measure enemy village (only if resources match)
 		Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
+		If $bAlwaysMeasure Then TestDropLine(True) ;g_bVillageSearchAlwaysMeasure must enabled manually by editing Global var
 		For $i = 0 To $g_iModeCount - 1
 			If $match[$i] Or $bAlwaysMeasure Then
 				If Not CheckZoomOut("VillageSearch", True, False) Then

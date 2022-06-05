@@ -725,6 +725,9 @@ Func ReadConfig_600_12()
 	$g_asTxtDonateTroop[$eTroopDragon] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateDragons", "dragon"), "|", @CRLF)
 	$g_asTxtBlacklistTroop[$eTroopDragon] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistDragons", "no dragon|dragon no"), "|", @CRLF)
 
+	$g_asTxtDonateTroop[$eTroopSuperDragon] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateSuperDragons", "super dragon"), "|", @CRLF)
+	$g_asTxtBlacklistTroop[$eTroopSuperDragon] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistSuperDragons", "no super dragon|super dragon no"), "|", @CRLF)
+
 	$g_asTxtDonateTroop[$eTroopPekka] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonatePekkas", "PEKKA|pekka"), "|", @CRLF)
 	$g_asTxtBlacklistTroop[$eTroopPekka] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistPekkas", "no PEKKA|pekka no"), "|", @CRLF)
 
@@ -863,6 +866,9 @@ Func ReadConfig_600_12()
 
 	$g_asTxtDonateTroop[$eTroopCount + $g_iCustomDonateConfigs + $eSiegeLogLauncher] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateLogL", "Log Launcher"), "|", @CRLF)
 	$g_asTxtBlacklistTroop[$eTroopCount + $g_iCustomDonateConfigs + $eSiegeLogLauncher] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistLogL", "Log Launcher No"), "|", @CRLF)
+
+	$g_asTxtDonateTroop[$eTroopCount + $g_iCustomDonateConfigs + $eSiegeFlameFlinger] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateFlameF", "Flame Flinger"), "|", @CRLF)
+	$g_asTxtBlacklistTroop[$eTroopCount + $g_iCustomDonateConfigs + $eSiegeFlameFlinger] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistFlameF", "Flame Flinger No"), "|", @CRLF)
 
 	$g_aiDonateCustomTrpNumA[0][0] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbDonateCustomA1", 6))
 	$g_aiDonateCustomTrpNumA[1][0] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbDonateCustomA2", 1))

@@ -1642,7 +1642,7 @@ Global $g_bCheckClanCastleTroops = False
 
 ; Donate
 Global Const $g_aiDonateTroopPriority[$eTroopCount] = [ _
-		$eTroopIceHound, $eTroopSuperWitch, $eTroopLavaHound, $eTroopSuperBowler, $eTroopElectroDragon, $eTroopGolem, $eTroopPekka, $eTroopDragonRider, $eTroopDragon, $eTroopSuperValkyrie, $eTroopRocketBalloon, _
+		$eTroopIceHound, $eTroopSuperWitch, $eTroopLavaHound, $eTroopSuperDragon, $eTroopSuperBowler, $eTroopElectroDragon, $eTroopGolem, $eTroopPekka, $eTroopDragonRider, $eTroopDragon, $eTroopSuperValkyrie, $eTroopRocketBalloon, _
 		$eTroopYeti, $eTroopIceGolem, $eTroopInfernoDragon, $eTroopSuperMinion, $eTroopSuperArcher, $eTroopWitch, $eTroopHealer, $eTroopBabyDragon, _
 		$eTroopSuperWizard, $eTroopSuperGiant, $eTroopValkyrie, $eTroopSuperWallBreaker, $eTroopBowler, $eTroopHeadhunter, $eTroopMiner, _
 		$eTroopGiant, $eTroopSuperBarbarian, $eTroopBalloon, $eTroopHogRider, $eTroopWizard, _
