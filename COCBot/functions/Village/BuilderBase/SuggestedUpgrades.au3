@@ -143,7 +143,7 @@ Func AutoUpgradeBB($bTest = False)
 	BuilderBaseReport(True)
 	If Not ClickBBBuilder() Then Return
 
-	If $g_iChkPlacingNewBuildings And Not $g_bIsMegaTeslaMaxed = 1 Then
+	If $g_iChkPlacingNewBuildings And $g_bIsMegaTeslaMaxed <> 1 Then
 		SearchNewBuilding($bTest)
 	EndIf
 
@@ -241,7 +241,7 @@ Func SearchNewBuilding($bTest = False)
 							$g_bReserveGoldBB = True
 						EndIf
 						If $OTTO[$i][3] = "Army Camp" Or $OTTO[$i][3] = "Gold Storage" Then
-							SetLog("OTTO Priority, Set Reserve Cost for Gold!", $COLOR_INFO)
+							SetLog("OTTO Priority, Set Reserve Cost for Elixir!", $COLOR_INFO)
 							$g_bReserveElixirBB = True
 						EndIf
 						ContinueLoop ;check for resource
@@ -367,7 +367,7 @@ Func DoUpgradeBB($CostType = "Gold", $bTest = False)
 		Return False
 	EndIf
 	If Not $g_bRunState Then Return
-	If $g_bOptimizeOTTO And Not $g_bIsMegaTeslaMaxed = 1 Then ;set upgrade only to certain level when mega tesla is not maxed
+	If $g_bOptimizeOTTO And $g_bIsMegaTeslaMaxed <> 1 Then ;set upgrade only to certain level when mega tesla is not maxed
 		Select
 			Case $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6
 				SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)

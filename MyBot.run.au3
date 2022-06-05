@@ -1247,6 +1247,9 @@ Func __RunFunction($action)
 		Case "AutoUpgradeCC"
 			AutoUpgradeCC()
 			_Sleep($DELAYRUNBOT3)
+		Case "CollectCCGold"
+			CollectCCGold()
+			_Sleep($DELAYRUNBOT3)
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
@@ -1601,7 +1604,7 @@ Func CommonRoutine($RoutineType = Default)
 				If _Sleep(500) Then Return
 				If $g_bRestart Then Return
 			Next
-			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'ForgeClanCapitalGold', 'AutoUpgradeCC']
+			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1610,7 +1613,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 			
 		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase']
+			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase', 'CollectCCGold', 'AutoUpgradeCC']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

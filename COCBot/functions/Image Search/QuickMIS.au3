@@ -14,14 +14,22 @@
 ;================================================================================================================================
 
 Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME_WIDTH, $Bottom = $g_iGAME_HEIGHT, $bNeedCapture = True, $Debug = False)
-	If ($ValueReturned <> "BC1") And ($ValueReturned <> "CX") And ($ValueReturned <> "CXR") And ($ValueReturned <> "CNX") And ($ValueReturned <> "N1") And ($ValueReturned <> "NX") And ($ValueReturned <> "Q1") And ($ValueReturned <> "QX") Then
+	Local $error, $extError
+	If ($ValueReturned <> "BC1") And ($ValueReturned <> "CX") And ($ValueReturned <> "CNX") And ($ValueReturned <> "N1") And _
+		($ValueReturned <> "NX") And ($ValueReturned <> "Q1") And ($ValueReturned <> "QX") Then
 		SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_RED)
 		Return
 	EndIf
 
 	If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
 	Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
-	If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
+	$error = @error ; Store error values as they reset at next function call
+	$extError = @extended
+	If $error Then
+		_logErrorDLLCall($g_sLibMyBotPath, $error)
+		SetDebugLog(" QuickMIS DLL Error : " & $error & " --- " & $extError)
+		Return -1
+	EndIf
 	If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
 
 	If IsArray($Res) Then
@@ -35,8 +43,6 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					Return False
 				Case "CX"
 					Return -1
-				Case "CXR"
-					Return -1
 				Case "CNX"
 					Return -1
 				Case "N1"
@@ -49,8 +55,8 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					Return 0
 			EndSwitch
 
-		ElseIf StringInStr($Res[0], "-1") <> 0 Then
-			SetLog("DLL Error", $COLOR_RED)
+		;ElseIf StringInStr($Res[0], "-1") <> 0 Then
+		;	SetLog("DLL Error", $COLOR_RED)
 
 		Else
 			Switch $ValueReturned
@@ -90,23 +96,6 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $Result, $COLOR_PURPLE)
 					Local $CoordsInArray = StringSplit($Result, "|", $STR_NOCOUNT)
 					Return $CoordsInArray
-					
-				Case "CXR" ; coordinates of each image found - eg: $Array[0] = [X1, Y1] ; $Array[1] = [X2, Y2]
-
-					Local $Result[0][2]
-					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
-					For $i = 0 To UBound($KeyValue) - 1
-						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
-						Local $xy = StringSplit($DLLRes[0], "|", $STR_NOCOUNT)
-						For $j = 0 To Ubound($xy) - 1
-							If UBound(decodeSingleCoord($xy[$j])) > 1 Then 
-								Local $Tmpxy = StringSplit($xy[$j], ",", $STR_NOCOUNT)
-								_ArrayAdd($Result, $Tmpxy[0] + $Left & "|" & $Tmpxy[1] + $Top)
-							EndIf
-						Next
-					Next
-					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & _ArrayToString($Result), $COLOR_PURPLE)
-					Return $Result
 					
 				Case "CNX" 
 					Local $Result[0][4]

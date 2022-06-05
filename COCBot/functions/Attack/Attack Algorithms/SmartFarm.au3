@@ -212,6 +212,7 @@ Func ChkSmartFarm($TypeResources = "All")
 			$redline[$i] = GetOffsetRedline($BestSideToAttack[$i], 5)
 		Next
 		DebugImageSmartFarm($THdetails, $aResourcesIN, $aResourcesOUT, Round(TimerDiff($hTimer) / 1000, 2) & "'s", _ArrayToString($BestSideToAttack), $redline)
+		TestDropLine()
 	EndIf
 
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
