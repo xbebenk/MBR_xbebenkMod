@@ -292,6 +292,7 @@ Func SwitchToClanCapital()
 	Local $bRet = False
 	If QuickMIS("BC1", $g_sImgAirShip, 200, 520, 400, 660) Then 
 		Click($g_iQuickMISX, $g_iQuickMISY)
+		SetLog("Click AirShip at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_ACTION)
 		For $i = 1 To 10
 			SetDebugLog("Waiting for Travel to Clan Capital Map #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
@@ -302,6 +303,7 @@ Func SwitchToClanCapital()
 			_Sleep(800)
 		Next
 	EndIf
+	If Not $bRet Then SwitchToMainVillage()
 	If $bRet Then ClanCapitalReport() 
 	Return $bRet
 EndFunc
