@@ -103,6 +103,10 @@ Func SwitchTo($To = "BB")
 	
 	If IsProblemAffect(True) Then Return
 	If Not $g_bRunState Then Return
-	If Not $bRet Then SetLog("SwitchBetweenBases Failed", $COLOR_ERROR)
+	If Not $bRet Then 
+		SetLog("SwitchBetweenBases Failed", $COLOR_ERROR)
+		CloseCoC(True) ; restart coc
+		waitMainScreen()
+	EndIf
 	Return $bRet
 EndFunc
