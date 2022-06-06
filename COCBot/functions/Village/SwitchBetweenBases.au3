@@ -87,7 +87,7 @@ Func SwitchTo($To = "BB")
 			ExitLoop
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
-			If $g_bDebugClick Or $g_bDebugSetlog Then SaveDebugImage("SwitchBetweenBases", True)
+			SaveDebugImage("SwitchBetweenBases", True)
 			ZoomOutHelper()
 			ContinueLoop
 		EndIf
