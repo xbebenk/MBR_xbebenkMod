@@ -23,8 +23,13 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 		EndIf
 	EndIf
 	
-	If $bIsOnBuilderBase And $ForcedSwitchTo = "BB" Then
-		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_ERROR)
+	If $ForcedSwitchTo = "BB" And IsOnBuilderBase() Then
+		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_INFO)
+		Return True
+	EndIf
+	
+	If $ForcedSwitchTo = "Main" And isOnMainVillage() Then
+		SetLog("Already on MainVillage, Skip SwitchBetweenBases", $COLOR_INFO)
 		Return True
 	EndIf
 	
