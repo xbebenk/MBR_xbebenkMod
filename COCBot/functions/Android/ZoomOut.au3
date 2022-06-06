@@ -93,13 +93,9 @@ Func ZoomOutHelper($caller = "Default")
 	Local $bIsMain = isOnMainVillage()
 	Local $Dir = "", $aOffset, $bRet = False
 	
-	If $bIsMain Then 
-		$Dir = $g_sImgZoomOutDir 
-	Else
-		$Dir = $g_sImgZoomOutDirBB
-	EndIf
+	If Not $bIsMain Then Return ;leave if not in mainvillage
 	
-	If QuickMIS("BC1", $Dir & "tree\", 430, 20, 750, 200) Then 
+	If QuickMIS("BC1", $g_sImgZoomOutDir & "tree\", 430, 20, 750, 200) Then 
 		$aOffset = StringRegExp($g_iQuickMISName, "tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
@@ -115,7 +111,7 @@ Func ZoomOutHelper($caller = "Default")
 	EndIf
 	
 	If Not $bRet Then
-		If QuickMIS("BC1", $Dir & "stone\", 0, 330, 430, 560) Then 
+		If QuickMIS("BC1", $g_sImgZoomOutDir & "stone\", 0, 330, 430, 560) Then 
 			$aOffset = StringRegExp($g_iQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 			If IsArray($aOffset) Then 
 				$x = $g_iQuickMISX - $aOffset[1]

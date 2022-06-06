@@ -1681,13 +1681,13 @@ Func BuilderBase()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
-		
+		ZoomOut(True) ;directly zoom 
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
 		; switch back to normal village
-		ZoomOut()
+		ZoomOut(True) ;directly zoom 
 		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False
 	EndIf
