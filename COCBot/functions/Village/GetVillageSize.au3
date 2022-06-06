@@ -53,6 +53,12 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	If $DebugLog = Default Then $DebugLog = False
 	If $sStonePrefix = Default Then $sStonePrefix = "stone"
 	If $sTreePrefix = Default Then $sTreePrefix = "tree"
+	
+	If IsFullScreenWindow() Then
+		Click(825,45)
+		_Sleep(2000)
+	EndIf
+	
 	If $bOnBuilderBase = Default Then
 		$bOnBuilderBase = isOnBuilderBase(True)
 	EndIf
@@ -69,17 +75,13 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $aResult = 0, $stone, $tree, $x, $y
 	Local $bStoneSameScenery = False
 		
-	If Not $bOnBuilderBase Then
+	If Not $bOnBuilderBase And $g_sSceneryCode <> "BB" Then
+		SetDebugLog("GetVillageSize, checking for same scenery")
 		$stone = FindStone($sDirectory, "stone" & $g_sSceneryCode, $iAdditionalX, $iAdditionalY)
-		If IsArray($stone) And String($stone[4]) = $g_sSceneryCode Then 
-			$bStoneSameScenery = True
+		If IsArray($stone) And $stone[0] <> 0 Then 
+			If String($stone[4]) = $g_sSceneryCode Then $bStoneSameScenery = True
 			SetDebugLog(String($bStoneSameScenery) & "," & String($stone[4]) & "," & $g_sSceneryCode)
 		EndIf
-	EndIf
-	
-	If IsFullScreenWindow() Then
-		Click(825,45)
-		_Sleep(2000)
 	EndIf
 	
 	If Not $bStoneSameScenery Then $stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY)
@@ -87,8 +89,10 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
 		Return FuncReturn($aResult)
 	EndIf
-
-	If $stone[0] Then
+	
+	SetDebugLog("stone: " & _ArrayToString($stone))
+	
+	If IsArray($stone) And $stone[0] <> 0 Then
 		$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4])
 		If IsArray($tree) And $tree[0] = 0 Then
 			SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
@@ -115,11 +119,12 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$InnerDiamondBottom = $g_aVillageRefSize[$iIndex][6]
 		SetDebugLog("LRTB: " & $InnerDiamondLeft & "," & $InnerDiamondRight & "," & $InnerDiamondTop & "," & $InnerDiamondBottom)
 	Else
-		SetLog("Reference Size no match", $COLOR_ACTION)
+		SetLog("Reference Size no match", $COLOR_ERROR)
+		Return FuncReturn($aResult)
 	EndIf
-	;Local $iRefSize = Int($stone[4]) ;reference size based on village manual measure
+	
 	Local $z = $c / $iRefSize
-	SetDebugLog("Scenery = " & $g_sCurrentScenery)
+	SetLog("Scenery = " & $g_sCurrentScenery, $COLOR_INFO)
 	SetDebugLog("Stone2tree = " & $c)
 	SetDebugLog("Reference = " & $iRefSize)
 	SetDebugLog("ZoomLevel = " & $z)
