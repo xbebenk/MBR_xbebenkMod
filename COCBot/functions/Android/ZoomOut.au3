@@ -88,7 +88,7 @@ Func ZoomOutNox()
 	;Return DefaultZoomOut("{CTRLDOWN}{DOWN}{CTRLUP}", 0)
 EndFunc
 
-Func ZoomOutHelper()
+Func ZoomOutHelper($caller = "Default")
 	Local $x = 0, $y = 0
 	Local $bIsMain = isOnMainVillage()
 	Local $Dir = "", $aOffset, $bRet = False
@@ -104,12 +104,12 @@ Func ZoomOutHelper()
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
 			$y = $g_iQuickMISY - $aOffset[2]
-			SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+			SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
 			ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
 			$bRet = True
 		Else
-			SetDebugLog("Bad Tree ImageName!")
+			SetDebugLog("[" & $caller & "] Bad Tree ImageName!")
 			Return
 		EndIf
 	EndIf
@@ -120,12 +120,12 @@ Func ZoomOutHelper()
 			If IsArray($aOffset) Then 
 				$x = $g_iQuickMISX - $aOffset[1]
 				$y = $g_iQuickMISY - $aOffset[2]
-				SetLog("ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+				SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
 				ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
 				$bRet = True
 			Else
-				SetDebugLog("Bad Stone ImageName!")
+				SetDebugLog("[" & $caller & "] Bad Stone ImageName!")
 				Return
 			EndIf
 		EndIf
@@ -146,7 +146,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
-		ZoomOutHelper()
+		ZoomOutHelper("DefaultZoomOut")
 		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 	EndIf
 	
@@ -204,7 +204,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				ForceCaptureRegion()
 				$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 				If $aPicture[0] = "" And $aPicture[1] = "0" Then 
-					ZoomOutHelper()
+					ZoomOutHelper("DefaultZoomOut")
 					$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 				EndIf
 			WEnd
@@ -507,7 +507,6 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 	
 	If IsArray($village) = 1 Then
 		$villageSize = $village[0]
-		If $villageSize = "" Then ZoomOutHelper()
 		If $villageSize < 750 Or $g_bDebugDisableZoomout Then
 			$z = $village[1]
 			$x = $village[2]
