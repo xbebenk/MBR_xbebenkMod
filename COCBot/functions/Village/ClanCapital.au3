@@ -346,6 +346,11 @@ Func SwitchToMainVillage($caller = "Default")
 			Click(60, 610) ;Click ReturnHome/Map
 			_Sleep(2000)
 		EndIf
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 700, 120, 750, 160) Then ; check if we have window covering map, close it!
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			SetLog("Found Next Raid Window covering map, close it!", $COLOR_INFO)
+			_Sleep(1000)
+		EndIf
 		_Sleep(800)
 		If isOnMainVillage() Then 
 			$bRet = True
