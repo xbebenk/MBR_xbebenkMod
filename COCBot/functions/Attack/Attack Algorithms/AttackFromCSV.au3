@@ -850,168 +850,31 @@ EndFunc
 Func TestDropLine($SearchRedLine = False)
 	$g_iMatchMode = $DB ; define which script to use
 	SetLog("TestDropLine()", $COLOR_INFO)
-	SetDebugLog("Redline mode: " & $g_aiAttackScrRedlineRoutine[$g_iMatchMode])
-	SetDebugLog("Dropline mode: " & $g_aiAttackScrDroplineEdge[$g_iMatchMode])
 	
 	SearchZoomOut(False, True, "TestDropLine", False, False)
 	ConvertInternalExternArea()
-	_CaptureRegion2() ; ensure full screen is captured (not ideal for debugging as clean image was already saved, but...)
+	
 	If $SearchRedLine And IsAttackPage(True) Then 
+		Local $hTimer = __timerinit()
+
+		SetDebugLog("Redline mode: " & $g_aiAttackScrRedlineRoutine[$g_iMatchMode])
+		SetDebugLog("Dropline mode: " & $g_aiAttackScrDroplineEdge[$g_iMatchMode])
+
+		_CaptureRegion2()
 		_GetRedArea($g_aiAttackScrRedlineRoutine[$g_iMatchMode])
-		SearchRedLines()
-		imglocTHSearch()
-	EndIf
-	
-	Local $hTimerTOTAL = __timerinit()
-	;02.01 - REDAREA -----------------------------------------------------------------------------------------------------------------------------------------
-	Local $hTimer = __timerinit()
-	
-	If _Sleep($DELAYRESPOND) Then Return
-
-	Local $htimerREDAREA = Round(__timerdiff($hTimer) / 1000, 2)
-	debugAttackCSV("Calculated  (in " & $htimerREDAREA & " seconds) :")
-	debugAttackCSV("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")
-	debugAttackCSV("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
-	debugAttackCSV("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
-	debugAttackCSV("	[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight")
-	
-	If $g_aiAttackScrDroplineEdge[$g_iMatchMode] = $DROPLINE_DROPPOINTS_ONLY Then
-
-		$g_aiPixelTopLeftDropLine = $g_aiPixelTopLeft
-		$g_aiPixelTopRightDropLine = $g_aiPixelTopRight
-		$g_aiPixelBottomLeftDropLine = $g_aiPixelBottomLeft
-		$g_aiPixelBottomRightDropLine = $g_aiPixelBottomRight
-
+		Local $htimerREDAREA = Round(__timerdiff($hTimer) / 1000, 2)
+		debugAttackCSV("Calculated  (in " & $htimerREDAREA & " seconds) :")
+		debugAttackCSV("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")
+		debugAttackCSV("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
+		debugAttackCSV("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
+		debugAttackCSV("	[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight")
 	Else
-
-		Local $coordLeft = [$ExternalArea[0][0], $ExternalArea[0][1]]
-		Local $coordTop = [$ExternalArea[2][0], $ExternalArea[2][1]]
-		Local $coordRight = [$ExternalArea[1][0], $ExternalArea[1][1]]
-		Local $coordBottom = [$ExternalArea[3][0], $ExternalArea[3][1]]
-
-		Local $StartEndTopLeft = [$coordLeft, $coordTop]
-		If UBound($g_aiPixelTopLeft) > 2 Then Local $StartEndTopLeft = [$g_aiPixelTopLeft[0], $g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) - 1]]
-		Local $StartEndTopRight = [$coordTop, $coordRight]
-		If UBound($g_aiPixelTopRight) > 2 Then Local $StartEndTopRight = [$g_aiPixelTopRight[0], $g_aiPixelTopRight[UBound($g_aiPixelTopRight) - 1]]
-		Local $StartEndBottomLeft = [$coordLeft, $coordBottom]
-		If UBound($g_aiPixelBottomLeft) > 2 Then Local $StartEndBottomLeft = [$g_aiPixelBottomLeft[0], $g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) - 1]]
-		Local $StartEndBottomRight = [$coordBottom, $coordRight]
-		If UBound($g_aiPixelBottomRight) > 2 Then Local $StartEndBottomRight = [$g_aiPixelBottomRight[0], $g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) - 1]]
-
-		Switch $g_aiAttackScrDroplineEdge[$g_iMatchMode]
-			Case $DROPLINE_EDGE_FIXED, $DROPLINE_FULL_EDGE_FIXED ; default inner area edges
-				; reset fix corners
-				Local $StartEndTopLeft = [$coordLeft, $coordTop]
-				Local $StartEndTopRight = [$coordTop, $coordRight]
-				Local $StartEndBottomLeft = [$coordLeft, $coordBottom]
-				Local $StartEndBottomRight = [$coordBottom, $coordRight]
-		EndSwitch
-
-		SetDebugLog("MakeDropLines, StartEndTopLeft     = " & PixelArrayToString($StartEndTopLeft, ","))
-		SetDebugLog("MakeDropLines, StartEndTopRight    = " & PixelArrayToString($StartEndTopRight, ","))
-		SetDebugLog("MakeDropLines, StartEndBottomLeft  = " & PixelArrayToString($StartEndBottomLeft, ","))
-		SetDebugLog("MakeDropLines, StartEndBottomRight = " & PixelArrayToString($StartEndBottomRight, ","))
-
-		Switch $g_aiAttackScrDroplineEdge[$g_iMatchMode]
-			Case $DROPLINE_EDGE_FIXED, $DROPLINE_EDGE_FIRST ; default drop line
-				$g_aiPixelTopLeftDropLine = MakeDropLineOriginal($g_aiPixelTopLeft, $StartEndTopLeft[0], $StartEndTopLeft[1])
-				$g_aiPixelTopRightDropLine = MakeDropLineOriginal($g_aiPixelTopRight, $StartEndTopRight[0], $StartEndTopRight[1])
-				$g_aiPixelBottomLeftDropLine = MakeDropLineOriginal($g_aiPixelBottomLeft, $StartEndBottomLeft[0], $StartEndBottomLeft[1])
-				$g_aiPixelBottomRightDropLine = MakeDropLineOriginal($g_aiPixelBottomRight, $StartEndBottomRight[0], $StartEndBottomRight[1])
-			Case $DROPLINE_FULL_EDGE_FIXED, $DROPLINE_FULL_EDGE_FIRST ; full drop line
-				Local $iLineDistanceThreshold = 75
-				If $g_aiAttackScrRedlineRoutine[$g_iMatchMode] = $REDLINE_IMGLOC Then $iLineDistanceThreshold = 25
-				$g_aiPixelTopLeftDropLine = MakeDropLine($g_aiPixelTopLeft, $StartEndTopLeft[0], $StartEndTopLeft[1], $iLineDistanceThreshold, $g_aiAttackScrDroplineEdge[$g_iMatchMode] = $DROPLINE_FULL_EDGE_FIXED)
-				$g_aiPixelTopRightDropLine = MakeDropLine($g_aiPixelTopRight, $StartEndTopRight[0], $StartEndTopRight[1], $iLineDistanceThreshold, $g_aiAttackScrDroplineEdge[$g_iMatchMode] = $DROPLINE_FULL_EDGE_FIXED)
-				$g_aiPixelBottomLeftDropLine = MakeDropLine($g_aiPixelBottomLeft, $StartEndBottomLeft[0], $StartEndBottomLeft[1], $iLineDistanceThreshold, $g_aiAttackScrDroplineEdge[$g_iMatchMode] = $DROPLINE_FULL_EDGE_FIXED)
-				$g_aiPixelBottomRightDropLine = MakeDropLine($g_aiPixelBottomRight, $StartEndBottomRight[0], $StartEndBottomRight[1], $iLineDistanceThreshold, $g_aiAttackScrDroplineEdge[$g_iMatchMode] = $DROPLINE_FULL_EDGE_FIXED)
-		EndSwitch
+		$g_aiPixelTopLeft = 0
+		$g_aiPixelTopRight = 0
+		$g_aiPixelBottomLeft = 0
+		$g_aiPixelBottomRight = 0
 	EndIf
 	
-	;02.04 - MAKE DROP LINE SLICE ----------------------------------------------------------------------------------------------------------------------------
-	;-- TOP LEFT
-	Local $tempvectstr1 = ""
-	Local $tempvectstr2 = ""
-	For $i = 0 To UBound($g_aiPixelTopLeftDropLine) - 1
-		Local $pixel = $g_aiPixelTopLeftDropLine[$i]
-		Local $slice = Slice8($pixel)
-		Switch StringLeft($slice, 1)
-			Case "6"
-				$tempvectstr1 &= $pixel[0] & "," & $pixel[1] & "|"
-			Case "5"
-				$tempvectstr2 &= $pixel[0] & "," & $pixel[1] & "|"
-			Case Else
-				;SetDebugLog("TOP LEFT: Skip slice " & $slice & " at " & $pixel[0] & ", " & $pixel[1])
-		EndSwitch
-	Next
-	If StringLen($tempvectstr1) > 0 Then $tempvectstr1 = StringLeft($tempvectstr1, StringLen($tempvectstr1) - 1)
-	If StringLen($tempvectstr2) > 0 Then $tempvectstr2 = StringLeft($tempvectstr2, StringLen($tempvectstr2) - 1)
-	$g_aiPixelTopLeftDOWNDropLine = GetListPixel($tempvectstr1, ",", "TL-DOWN")
-	$g_aiPixelTopLeftUPDropLine = GetListPixel($tempvectstr2, ",", "TL-UP")
-
-	;-- TOP RIGHT
-	Local $tempvectstr1 = ""
-	Local $tempvectstr2 = ""
-	For $i = 0 To UBound($g_aiPixelTopRightDropLine) - 1
-		Local $pixel = $g_aiPixelTopRightDropLine[$i]
-		Local $slice = Slice8($pixel)
-		Switch StringLeft($slice, 1)
-			Case "3"
-				$tempvectstr1 &= $pixel[0] & "," & $pixel[1] & "|"
-			Case "4"
-				$tempvectstr2 &= $pixel[0] & "," & $pixel[1] & "|"
-			Case Else
-				;SetDebugLog("TOP RIGHT: Skip slice " & $slice & " at " & $pixel[0] & ", " & $pixel[1])
-		EndSwitch
-	Next
-	If StringLen($tempvectstr1) > 0 Then $tempvectstr1 = StringLeft($tempvectstr1, StringLen($tempvectstr1) - 1)
-	If StringLen($tempvectstr2) > 0 Then $tempvectstr2 = StringLeft($tempvectstr2, StringLen($tempvectstr2) - 1)
-	$g_aiPixelTopRightDOWNDropLine = GetListPixel($tempvectstr1, ",", "TR-DOWN")
-	$g_aiPixelTopRightUPDropLine = GetListPixel($tempvectstr2, ",", "TR-UP")
-
-	;-- BOTTOM LEFT
-	Local $tempvectstr1 = ""
-	Local $tempvectstr2 = ""
-	For $i = 0 To UBound($g_aiPixelBottomLeftDropLine) - 1
-		Local $pixel = $g_aiPixelBottomLeftDropLine[$i]
-		Local $slice = Slice8($pixel)
-		Switch StringLeft($slice, 1)
-			Case "8"
-				$tempvectstr1 &= $pixel[0] & "," & $pixel[1] & "|"
-			Case "7"
-				$tempvectstr2 &= $pixel[0] & "," & $pixel[1] & "|"
-			Case Else
-				;SetDebugLog("BOTTOM LEFT: Skip slice " & $slice & " at " & $pixel[0] & ", " & $pixel[1])
-		EndSwitch
-	Next
-	If StringLen($tempvectstr1) > 0 Then $tempvectstr1 = StringLeft($tempvectstr1, StringLen($tempvectstr1) - 1)
-	If StringLen($tempvectstr2) > 0 Then $tempvectstr2 = StringLeft($tempvectstr2, StringLen($tempvectstr2) - 1)
-	$g_aiPixelBottomLeftDOWNDropLine = GetListPixel($tempvectstr1, ",", "BL-DOWN")
-	$g_aiPixelBottomLeftUPDropLine = GetListPixel($tempvectstr2, ",", "BL-UP")
-
-	;-- BOTTOM RIGHT
-	Local $tempvectstr1 = ""
-	Local $tempvectstr2 = ""
-	For $i = 0 To UBound($g_aiPixelBottomRightDropLine) - 1
-		Local $pixel = $g_aiPixelBottomRightDropLine[$i]
-		Local $slice = Slice8($pixel)
-		Switch StringLeft($slice, 1)
-			Case "1"
-				$tempvectstr1 &= $pixel[0] & "," & $pixel[1] & "|"
-			Case "2"
-				$tempvectstr2 &= $pixel[0] & "," & $pixel[1] & "|"
-			Case Else
-				;SetDebugLog("BOTTOM RIGHT: Skip slice " & $slice & " at " & $pixel[0] & ", " & $pixel[1])
-		EndSwitch
-	Next
-	If StringLen($tempvectstr1) > 0 Then $tempvectstr1 = StringLeft($tempvectstr1, StringLen($tempvectstr1) - 1)
-	If StringLen($tempvectstr2) > 0 Then $tempvectstr2 = StringLeft($tempvectstr2, StringLen($tempvectstr2) - 1)
-	$g_aiPixelBottomRightDOWNDropLine = GetListPixel($tempvectstr1, ",", "BR-DOWN")
-	$g_aiPixelBottomRightUPDropLine = GetListPixel($tempvectstr2, ",", "BR-UP")
-	
-	SetLog("> Drop Lines located in  " & Round(__timerdiff($hTimer) / 1000, 2) & " seconds", $COLOR_INFO)
-	If _Sleep($DELAYRESPOND) Then Return
-
 	AttackCSVDEBUGIMAGE() ;make IMG debug
 
 EndFunc   ;==>TestDropLine
