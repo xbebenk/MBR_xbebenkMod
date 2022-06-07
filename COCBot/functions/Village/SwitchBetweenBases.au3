@@ -71,7 +71,7 @@ Func SwitchTo($To = "BB")
 		$sSwitchTo = "Builder Base"
 		$sTile = "BoatNormalVillage"
 		$aPixelToCheck = $aIsOnBuilderBase
-		$x = 60
+		$x = 70
 		$y = 400
 		$x1 = 350
 		$y1 = 600
@@ -114,4 +114,10 @@ Func SwitchTo($To = "BB")
 		waitMainScreen()
 	EndIf
 	Return $bRet
+EndFunc
+
+Func TestloopBB()
+	While True
+		BuilderBase()
+	WEnd
 EndFunc

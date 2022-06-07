@@ -127,7 +127,7 @@ Func ZoomOutHelper($caller = "Default")
 		EndIf
 	EndIf
 	If Not $bRet Then
-		ClickDrag(800, 350, 750, 400, 500) ;just drag
+		ClickDrag(800, 350, 800, 400, 500) ;just drag
 	EndIf
 	Return $bRet
 EndFunc
@@ -227,6 +227,11 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 	If $hWin = Default Then $hWin = ($g_bAndroidEmbedded = False ? $g_hAndroidWindow : $g_aiAndroidEmbeddedCtrlTarget[1])
 	ForceCaptureRegion()
 	Local $aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+	
+	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
+		ZoomOutHelper("DefaultZoomOut")
+		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+	EndIf
 
 	If StringInStr($aPicture[0], "zoomou") = 0 Then
 
@@ -308,6 +313,10 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 			$i += 1  ; add one to index value to prevent endless loop if controlsend fails
 			ForceCaptureRegion()
 			$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+			If $aPicture[0] = "" And $aPicture[1] = "0" Then 
+				ZoomOutHelper("DefaultZoomOut")
+				$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+			EndIf
 		 WEnd
 
 		 If $CenterMouseWhileZooming And $AndroidZoomOut = False Then MouseMove($aMousePos[0], $aMousePos[1], 0)

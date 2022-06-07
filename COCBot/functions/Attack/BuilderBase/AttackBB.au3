@@ -72,7 +72,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			EndIf
 		Next
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
-		ClickAway()
+		ClickAway("Left")
 	EndIf
 	If Not $g_bRunState Then Return
 	If checkMainScreen(True, $g_bStayOnBuilderBase, "DoAttackBB") Then ZoomOut() 
