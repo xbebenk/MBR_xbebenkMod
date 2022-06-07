@@ -133,7 +133,7 @@ Func CleanYard($bTest = False)
 	ClickAway()
 EndFunc   ;==>CleanYard
 
-Func ClickRemoveObstacle($bTest = False)
+Func ClickRemoveObstacle($bTest = False, $BuilderBase = False)
 	If Not $bTest Then 
 		If ClickB("RemoveObstacle") Then 
 			If _Sleep(1000) Then Return
@@ -143,7 +143,11 @@ Func ClickRemoveObstacle($bTest = False)
 				Return True
 			EndIf
 		Else
-			ClickAway()
+			If $BuilderBase Then
+				ClickAway("Left")
+			Else
+				ClickAway()
+			EndIf
 		EndIf
 	Else
 		SetLog("Only for Testing", $COLOR_ERROR)
