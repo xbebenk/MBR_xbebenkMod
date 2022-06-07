@@ -674,8 +674,8 @@ Func AutoUpgradeCC($bTest = False)
 							SetLog("All Possible Upgrades Done", $COLOR_INFO)
 						EndIf
 					Next
-					SwitchToCapitalMain()
-				EndIf	
+				EndIf
+				SwitchToCapitalMain() ;back to capital main 
 			Next
 		EndIf
 		ClanCapitalReport(False)
