@@ -582,13 +582,13 @@ Func SearchGreenZoneBB($Region = Default, $ZoomIn = True)
 EndFunc
 
 Func GoAttackBBAndReturn()
-	ClickAway("Left")
 	If Not $g_bRunState Then Return
 	SetLog("Going attack, to clear field", $COLOR_DEBUG)
 	PrepareAttackBB()
 	_AttackBB()
 	If Not $g_bRunState Then Return
-	If checkMainScreen(False, $g_bStayOnBuilderBase, "GoAttackBBAndReturn") Then ZoomOut()
+	ClickAway("Left")
+	ZoomOut()
 	SetLog("Field should be clear now", $COLOR_DEBUG)
 EndFunc
 
@@ -853,12 +853,12 @@ Func WaitBBUpgradeWindow()
 	Return $bRet
 EndFunc
 
-Func TPW()
+Func TPW($region = "Left")
 	Local $bGreenCheckFound = False
-	Local $TmpX
-	Local $xCenter = 430, $x
-	Local $yCenter = 300, $y
-	For $i = 1 To 10
+	Local $xstart, $ystart
+	
+	For $i = 1 To 8
+		SetLog("Try to Place New Wall #" & $i, $COLOR_INFO)
 		If IsGreenCheck() Then
 			$bGreenCheckFound = True
 			For $i = 1 To 4
@@ -867,20 +867,41 @@ Func TPW()
 				_Sleep(1000)
 			Next
 		EndIf
+		
 		If Not $g_bRunState Then Return
+		Local $RandomDrag = Random(-100, -80, 1)
+		Local $DragX = 0, $DragY = 0
+		Switch $region
+			Case "Left"
+				$DragX += $RandomDrag
+			Case "Right"
+				$DragX += Abs($RandomDrag)
+			Case "Top"
+				$DragY += $RandomDrag
+			Case "Bottom"
+				$DragY += Abs($RandomDrag)
+		EndSwitch
+		SetLog("Random Value [x,y] : [" & $DragX & "," & $DragY, $COLOR_INFO)
+		
 		If Not $bGreenCheckFound Then
 			SaveDebugImage("BBTryPlaceWall")
 			If QuickMIS("BC1", $g_sImgAutoUpgradeRedX, 80, 80, 780, 600) Then
 				$bGreenCheckFound = False
-				Local $Drag = Random(120, 150, 1)
-				SetLog("Try to Find Place for New Wall #" & $i, $COLOR_INFO)
-				ClickDrag($g_iQuickMISX + 30, $g_iQuickMISY + 50, $g_iQuickMISX + $Drag, $g_iQuickMISY + 50)
+				$xstart = $g_iQuickMISX + 30
+				$ystart = $g_iQuickMISY + 50
+				ClickDrag($xstart, $ystart, $xstart + $DragX, $ystart + $DragY)
 				_Sleep(1500)
-				$x = $g_iQuickMISX + 30 - $xCenter
-				$y = $g_iQuickMISY + 50 - $yCenter
-				ClickDrag(800, 420, 800 - $x, 420 - $y, 500)
-				;ClickDrag($g_iQuickMISX - 80, $g_iQuickMISY + 150, $g_iQuickMISX + 80, $g_iQuickMISY + 150)
-				_Sleep(1500)
+				Switch $region
+					Case "Left"
+						$xstart += 120
+					Case "Right"
+						$xstart -= 120
+					Case "Top"
+						$ystart += 120
+					Case "Bottom"
+						$ystart -= 120
+				EndSwitch
+				ClickDrag($xstart + $DragX, $ystart + $DragY, $xstart, $ystart, 500)
 			EndIf
 		EndIf
 		$bGreenCheckFound = False
@@ -891,17 +912,23 @@ Func IsGreenCheck()
 	Local $bRet = False
 	For $i = 1 To 2
 		If QuickMIS("BC1", $g_sImgAutoUpgradeGreenCheck, 80, 80, 780, 600) Then
-			$bRet = True
+			$bRet = True ;quickmis found a check mark, lets check the color
 			Local $color = _GetPixelColor($g_iQuickMISX, $g_iQuickMISY, 1)
 			SetDebugLog("GreenCheck Color: " & $color)
-			If Not _ColorCheck($color, Hex(0xA4A4AF, 6), 10) Then
+			If _ColorCheck($color, Hex(0xF2F2F2, 6), 10) Or _ColorCheck($color, Hex(0xC3C3C8, 6), 10) Or _ColorCheck($color, Hex(0xA3A3AE, 6), 10) Then
+				$bRet = True
+			Else
 				$bRet = False
 			EndIf
 			ExitLoop
 		EndIf
 		If Not $bRet Then
-			If QuickMIS("BC1", $g_sImgBBWallRotate, 360, 530, 500, 610) Then Click(430, 580)
-			_Sleep(1000)
+			If QuickMIS("BC1", $g_sImgBBWallRotate, 360, 530, 500, 610) Then 
+				Click(430, 580)
+				_Sleep(1000)
+			Else
+				Return $bRet
+			EndIf
 		EndIf
 	Next
 	Return $bRet
