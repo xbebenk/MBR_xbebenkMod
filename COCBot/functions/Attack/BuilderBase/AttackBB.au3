@@ -23,6 +23,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			_AttackBB()
+			If Not $g_bRunState Then Return
 			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 				SetLog("Check if ClanGames Challenge is Completed", $COLOR_DEBUG)
 				For $x = 0 To 4
@@ -55,6 +56,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 				SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
 				_AttackBB()
+				If Not $g_bRunState Then Return
 				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 					SetLog("Check if ClanGames Challenge is Completed", $COLOR_DEBUG)
 					For $x = 0 To 4
@@ -167,6 +169,7 @@ Func AttackBB($aBBAttackBar = Default)
 	;local $bTroopsDropped = False, $bBMDeployed = False
 	SetLog( $g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
 	While Not $bTroopsDropped
+		If Not $g_bRunState Then Return
 		local $iNumSlots = UBound($aBBAttackBar, 1)
 		If $g_bBBDropOrderSet = True Then
 			local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
@@ -217,6 +220,7 @@ Func AttackBB($aBBAttackBar = Default)
 		SetDebugLog("Waiting Battle End #" & $waitcount, $COLOR_ACTION)
 		_Sleep(2000)
 		If IsProblemAffect(True) Then Return
+		If Not $g_bRunState Then Return
 		If $waitcount > 30 Then ExitLoop
 	Wend
 	Return
