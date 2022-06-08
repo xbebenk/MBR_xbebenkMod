@@ -43,9 +43,9 @@ Func CleanBBYard($bTest = False)
 						$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
 						If $g_aiCurrentLootBB[$eLootElixirBB] < 20000 Then ExitLoop 2
 						If $Filename = "Groove" or $Filename = "Groove1" Then
-							_SleepStatus(61000)
+							_SleepStatus(65000)
 						Else
-							_SleepStatus(11000)
+							_SleepStatus(12000)
 						EndIf
 						ClickAway("Left")
 						$Locate += 1
