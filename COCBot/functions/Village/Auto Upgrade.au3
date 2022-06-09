@@ -547,7 +547,7 @@ Func DoUpgrade($bTest = False)
 
 	Local $bHeroUpgrade = False
 	Switch $g_aUpgradeNameLevel[1]
-		Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion"
+		Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion", "poyal Champion"
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 500, 730, 580) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522) ; get cost
 			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 465) ; get duration
@@ -590,7 +590,7 @@ Func DoUpgrade($bTest = False)
 	; final click on upgrade button, click coord is get looking at upgrade type (heroes have a diferent place for Upgrade button)
 	If Not $bTest Then
 		Switch $g_aUpgradeNameLevel[1]
-			Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion"
+			Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion", "poyal Champion"
 				Click(660, 560)
 			Case Else
 				Click(440, 530)
