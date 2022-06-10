@@ -551,6 +551,7 @@ Func NewBuildings($x, $y, $aBuildingName, $bTest = False)
 	Return False
 EndFunc   ;==>NewBuildings
 
+Global $greenZoneBB = "Top"
 Func SearchGreenZoneBB($Region = Default, $ZoomIn = True)
 	SetLog("Search GreenZone on BB for Placing new Building", $COLOR_INFO)
 	Local $aTop = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 360, 160, 500, 230) ;top
@@ -562,12 +563,15 @@ Func SearchGreenZoneBB($Region = Default, $ZoomIn = True)
 	If $g_bDebugClick Then SetLog("Top:" & UBound($aTop) & " Left:" & UBound($aLeft) & " Bottom:" & UBound($aBottom) & " Right:" & UBound($aRight))
 	_ArraySort($aAll,1,0,0,1)
 	If $g_bDebugClick Then SetLog($aAll[0][0] & ":" & $aAll[0][1] & "|" & $aAll[1][0] & ":" & $aAll[1][1] & "|" & $aAll[2][0] & ":" & $aAll[2][1] & "|" & $aAll[3][0] & ":" & $aAll[3][1] & "|", $COLOR_DEBUG)
-	If Not $ZoomIn Then Return $aAll[0][0]
-
+	
 	If $aAll[0][1] > 0 Then
 		SetLog("Found GreenZone, On " & $aAll[0][0] & " Region", $COLOR_SUCCESS)
+		If Not $ZoomIn Then Return $aAll[0][0]
 		Local $tmpRegion = $aAll[0][0]
-		If $Region = "Middle" Then $tmpRegion = $Region
+		If $Region = "Middle" Then 
+			$greenZoneBB = $tmpRegion
+			$tmpRegion = $Region
+		EndIf
 		If ZoomInBB($tmpRegion) Then
 			SetLog("Succeed ZoomIn", $COLOR_DEBUG)
 			Return True
@@ -853,7 +857,7 @@ Func WaitBBUpgradeWindow()
 	Return $bRet
 EndFunc
 
-Func TPW($region = "Left")
+Func TPW($region = $greenZoneBB)
 	Local $bGreenCheckFound = False
 	Local $xstart, $ystart
 	
@@ -915,7 +919,7 @@ Func IsGreenCheck()
 			$bRet = True ;quickmis found a check mark, lets check the color
 			Local $color = _GetPixelColor($g_iQuickMISX, $g_iQuickMISY, 1)
 			SetDebugLog("GreenCheck Color: " & $color)
-			If _ColorCheck($color, Hex(0xF2F2F2, 6), 10) Or _ColorCheck($color, Hex(0xC3C3C8, 6), 10) Or _ColorCheck($color, Hex(0xA3A3AE, 6), 10) Then
+			If _ColorCheck($color, Hex(0xF2F2F2, 6), 10) Or _ColorCheck($color, Hex(0xFDFDFD, 6), 10) Or _ColorCheck($color, Hex(0xC3C3C8, 6), 10) Or _ColorCheck($color, Hex(0xA3A3AE, 6), 10) Then
 				$bRet = True
 			Else
 				$bRet = False
