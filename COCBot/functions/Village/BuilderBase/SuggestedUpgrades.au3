@@ -919,12 +919,13 @@ Func IsGreenCheck()
 			$bRet = True ;quickmis found a check mark, lets check the color
 			Local $color = _GetPixelColor($g_iQuickMISX, $g_iQuickMISY, 1)
 			SetDebugLog("GreenCheck Color: " & $color)
-			If _ColorCheck($color, Hex(0xF2F2F2, 6), 10) Or _ColorCheck($color, Hex(0xFDFDFD, 6), 10) Or _ColorCheck($color, Hex(0xC3C3C8, 6), 10) Or _ColorCheck($color, Hex(0xA3A3AE, 6), 10) Then
+			If _ColorCheck($color, Hex(0xF2F2F2, 6), 10) Or _ColorCheck($color, Hex(0xFDFDFD, 6), 10) Or _
+				_ColorCheck($color, Hex(0xC3C3C8, 6), 10) Or _ColorCheck($color, Hex(0xA3A3AE, 6), 10) Then
 				$bRet = True
+				ExitLoop
 			Else
 				$bRet = False
 			EndIf
-			ExitLoop
 		EndIf
 		If Not $bRet Then
 			If QuickMIS("BC1", $g_sImgBBWallRotate, 360, 530, 500, 610) Then 
