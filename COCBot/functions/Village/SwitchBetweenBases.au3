@@ -110,6 +110,7 @@ Func SwitchTo($To = "BB")
 	If Not $g_bRunState Then Return
 	If Not $bRet Then 
 		SetLog("SwitchBetweenBases Failed", $COLOR_ERROR)
+		SaveDebugImage("SwitchBetweenBases", True)
 		CloseCoC(True) ; restart coc
 		_SleepStatus(10000) ;give time for coc loading
 		checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")

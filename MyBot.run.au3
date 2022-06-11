@@ -1688,8 +1688,8 @@ Func BuilderBase()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		; switch back to normal village
 		ZoomOut(True) ;directly zoom 
-		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False
+		SwitchBetweenBases("Main")
 	EndIf
 	
 	If Not $g_bStayOnBuilderBase And IsOnBuilderBase() Then SwitchBetweenBases("Main")
