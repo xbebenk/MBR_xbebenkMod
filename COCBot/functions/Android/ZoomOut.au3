@@ -100,7 +100,7 @@ Func ZoomOutHelper($caller = "Default")
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
 			$y = $g_iQuickMISY - $aOffset[2]
-			SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+			SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
 			ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
 			$bRet = True
@@ -116,7 +116,7 @@ Func ZoomOutHelper($caller = "Default")
 			If IsArray($aOffset) Then 
 				$x = $g_iQuickMISX - $aOffset[1]
 				$y = $g_iQuickMISY - $aOffset[2]
-				SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+				SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
 				ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
 				$bRet = True
