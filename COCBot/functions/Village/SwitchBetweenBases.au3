@@ -122,5 +122,6 @@ EndFunc
 Func TestloopBB()
 	While True
 		BuilderBase()
+		If Not $g_bRunState Then Return
 	WEnd
 EndFunc
