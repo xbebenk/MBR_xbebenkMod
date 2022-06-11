@@ -355,7 +355,7 @@ Func AttackCSVDEBUGIMAGE()
 
 	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
 	Local $Time = @HOUR & "." & @MIN & "." & @SEC
-	Local $filename = $g_sProfileTempDebugPath & String("AttackDebug_" & $Date & "_" & $Time) & ".png"
+	Local $filename = $g_sProfileTempDebugPath & String("AttackDebug_" & DetectScenery($g_aVillageSize[6]) & "_" & $Date & "_" & $Time) & ".png"
 	_GDIPlus_ImageSaveToFile($EditedImage, $filename)
 	If @error Then SetLog("Debug Image save error: " & @extended, $COLOR_ERROR)
 	SetDebugLog("Attack CSV image saved: " & $filename)
