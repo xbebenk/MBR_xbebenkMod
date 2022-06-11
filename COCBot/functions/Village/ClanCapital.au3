@@ -346,6 +346,11 @@ Func SwitchToMainVillage($caller = "Default")
 			Click(60, 610) ;Click ReturnHome/Map
 			_Sleep(2000)
 		EndIf
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 700, 120, 750, 160) Then ; check if we have window covering map, close it!
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			SetLog("Found Next Raid Window covering map, close it!", $COLOR_INFO)
+			_Sleep(1000)
+		EndIf
 		_Sleep(800)
 		If isOnMainVillage() Then 
 			$bRet = True
@@ -363,7 +368,7 @@ Func WaitForMap($sMapName = "Capital Peak")
 		_Sleep(2000)
 		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ExitLoop
 	Next
-	Local $aMapName = StringSplit($sMapName, "|", $STR_NOCOUNT)
+	Local $aMapName = StringSplit($sMapName, " ", $STR_NOCOUNT)
 	Local $Text = getOcrAndCapture("coc-mapname", $g_iQuickMISX, $g_iQuickMISY - 12, 230, 35)
 	SetDebugLog("$Text: " & $Text)
 	For $i In $aMapName
@@ -371,8 +376,27 @@ Func WaitForMap($sMapName = "Capital Peak")
 			SetDebugLog("Match with: " & $i)
 			$bRet = True
 			SetLog("We are on " & $sMapName, $COLOR_INFO)
+			ExitLoop
 		EndIf
 	Next
+	If Not $bRet Then
+		SetDebugLog("checking with image")
+		Local $ccMap = QuickMIS("CNX", $g_sImgCCMapName, $g_iQuickMISX, $g_iQuickMISY - 10, $g_iQuickMISX + 200, $g_iQuickMISY + 50)
+		If IsArray($ccMap) And UBound($ccMap) > 0 Then
+			Local $mapName = "dummyName"
+			For $z = 0 To UBound($ccMap) - 1
+				$mapName = String($ccMap[$z][0])
+				For $i In $aMapName
+					If StringInStr($mapName, $i) Then 
+						SetDebugLog("Match with: " & $i)
+						$bRet = True
+						SetLog("We are on " & $sMapName, $COLOR_INFO)
+						ExitLoop
+					EndIf
+				Next
+			Next
+		EndIf
+	EndIf
 	Return $bRet
 EndFunc
 
@@ -669,8 +693,8 @@ Func AutoUpgradeCC($bTest = False)
 							SetLog("All Possible Upgrades Done", $COLOR_INFO)
 						EndIf
 					Next
-					SwitchToCapitalMain()
-				EndIf	
+				EndIf
+				SwitchToCapitalMain() ;back to capital main 
 			Next
 		EndIf
 		ClanCapitalReport(False)

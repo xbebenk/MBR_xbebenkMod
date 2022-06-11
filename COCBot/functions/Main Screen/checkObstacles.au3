@@ -26,26 +26,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	$g_bMinorObstacle = False
 	_CaptureRegions()
 	
-	Local $bIsOnBuilderIsland = isOnBuilderBase()
-	SetDebugLog("isOnBuilderBase() : " & String($bIsOnBuilderIsland), $COLOR_ERROR)
-	If Not $bBuilderBase And $bIsOnBuilderIsland Then ;Check for MainVillage, but coc is on BB -> go to mainVillage
-		ZoomOut()
-		If SwitchBetweenBases("Main") Then 
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			$g_bMinorObstacle = True
-			Return False
-		EndIf
-	EndIf
-	
-	If $bBuilderBase And Not $bIsOnBuilderIsland Then ;Check for BB, but Not in BB -> go to BB
-		ZoomOut()
-		If SwitchBetweenBases("BB") Then 
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			$g_bMinorObstacle = True
-			Return False
-		EndIf
-	EndIf
-	
 	If isProblemAffect(True) Then
 		;;;;;;;##### 1- Another device #####;;;;;;;
 		If UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,300(130,60)", False))) > 1 Then
@@ -297,6 +277,28 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		PlaceUnplacedBuilding()
 		Return False
 	EndIf
+	
+	;====move switch bb/main to bottom, so we only check if all above test is False
+	Local $bIsOnBuilderIsland = isOnBuilderBase()
+	SetDebugLog("isOnBuilderBase() : " & String($bIsOnBuilderIsland), $COLOR_ERROR)
+	If Not $bBuilderBase And $bIsOnBuilderIsland Then ;Check for MainVillage, but coc is on BB -> go to mainVillage
+		ZoomOut()
+		If SwitchBetweenBases("Main") Then 
+			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			$g_bMinorObstacle = True
+			Return False
+		EndIf
+	EndIf
+	
+	If $bBuilderBase And Not $bIsOnBuilderIsland Then ;Check for BB, but Not in BB -> go to BB
+		ZoomOut()
+		If SwitchBetweenBases("BB") Then 
+			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			$g_bMinorObstacle = True
+			Return False
+		EndIf
+	EndIf
+	
 	ClickAway()
 	Return False
 EndFunc   ;==>_checkObstacles

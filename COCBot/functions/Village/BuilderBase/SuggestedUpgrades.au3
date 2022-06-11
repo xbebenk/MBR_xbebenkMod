@@ -193,7 +193,7 @@ Func SearchNewBuilding($bTest = False)
 				EndIf
 				SetLog("Try Placing " & $New[$i][4])
 				Local $Region = Default
-				If $New[$i][4] = "Wall" Then $Region = "Middle"
+				If $New[$i][4] = "Wall" Then $Region = 1
 				If Not $ZoomedIn Then
 					ClickAway("Left") ;close builder menu
 					_Sleep(1000)
@@ -551,23 +551,30 @@ Func NewBuildings($x, $y, $aBuildingName, $bTest = False)
 	Return False
 EndFunc   ;==>NewBuildings
 
-Func SearchGreenZoneBB($Region = Default, $ZoomIn = True)
+Global $greenZoneBB = "Top"
+Func SearchGreenZoneBB($Region = 0, $ZoomIn = True)
 	SetLog("Search GreenZone on BB for Placing new Building", $COLOR_INFO)
-	Local $aTop = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 360, 160, 500, 230) ;top
-	Local $aLeft = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 200, 280, 290, 410) ;left
-	Local $aBottom = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 375, 440, 520, 525) ;bottom
-	Local $aRight = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 550, 300, 650, 400) ;right
-
-	Local $aAll[4][2] = [["Top", UBound($aTop)], ["Left", UBound($aLeft)], ["Bottom", UBound($aBottom)], ["Right", UBound($aRight)]]
-	If $g_bDebugClick Then SetLog("Top:" & UBound($aTop) & " Left:" & UBound($aLeft) & " Bottom:" & UBound($aBottom) & " Right:" & UBound($aRight))
+	Local $sAreaTop = GetDiamondFromRect("257,97,622,359")
+	Local $sAreaLeft = GetDiamondFromRect("72,229,442,490")
+	Local $sAreaBottom = GetDiamondFromRect("260,360,623,633")
+	Local $sAreaRight = GetDiamondFromRect("442,229,790,490")
+	Local $aTop = StringSplit(findImage("GreenZoneBBTop", $g_sImgAUpgradeGreenZoneBB & "GreenZoneBB_0_95.xml", $sAreaTop, 1000, True), "|")
+	Local $aLeft = StringSplit(findImage("GreenZoneBBLeft", $g_sImgAUpgradeGreenZoneBB & "GreenZoneBB_0_95.xml", $sAreaLeft, 1000, True), "|")
+	Local $aBottom = StringSplit(findImage("GreenZoneBBBottom", $g_sImgAUpgradeGreenZoneBB & "GreenZoneBB_0_95.xml", $sAreaBottom, 1000, True), "|")
+	Local $aRight = StringSplit(findImage("GreenZoneBBRight", $g_sImgAUpgradeGreenZoneBB & "GreenZoneBB_0_95.xml", $sAreaRight, 1000, True), "|")
+	
+	Local $aAll[4][2] = [["Top", $aTop[0]], ["Left", $aLeft[0]], ["Bottom", $aBottom[0]], ["Right", $aRight[0]]]
 	_ArraySort($aAll,1,0,0,1)
-	If $g_bDebugClick Then SetLog($aAll[0][0] & ":" & $aAll[0][1] & "|" & $aAll[1][0] & ":" & $aAll[1][1] & "|" & $aAll[2][0] & ":" & $aAll[2][1] & "|" & $aAll[3][0] & ":" & $aAll[3][1] & "|", $COLOR_DEBUG)
-	If Not $ZoomIn Then Return $aAll[0][0]
-
+	SetDebugLog($aAll[0][0] & ":" & $aAll[0][1] & "|" & $aAll[1][0] & ":" & $aAll[1][1] & "|" & $aAll[2][0] & ":" & $aAll[2][1] & "|" & $aAll[3][0] & ":" & $aAll[3][1] & "|", $COLOR_DEBUG)
+	
 	If $aAll[0][1] > 0 Then
 		SetLog("Found GreenZone, On " & $aAll[0][0] & " Region", $COLOR_SUCCESS)
+		If Not $ZoomIn Then Return $aAll[0][0]
 		Local $tmpRegion = $aAll[0][0]
-		If $Region = "Middle" Then $tmpRegion = $Region
+		If $Region = 1 Then 
+			$greenZoneBB = $tmpRegion
+			$tmpRegion = "Middle" ;only use for wall placing, zoomin on center of village
+		EndIf
 		If ZoomInBB($tmpRegion) Then
 			SetLog("Succeed ZoomIn", $COLOR_DEBUG)
 			Return True
@@ -582,13 +589,13 @@ Func SearchGreenZoneBB($Region = Default, $ZoomIn = True)
 EndFunc
 
 Func GoAttackBBAndReturn()
-	ClickAway("Left")
 	If Not $g_bRunState Then Return
 	SetLog("Going attack, to clear field", $COLOR_DEBUG)
 	PrepareAttackBB()
 	_AttackBB()
 	If Not $g_bRunState Then Return
-	If checkMainScreen(False, $g_bStayOnBuilderBase, "GoAttackBBAndReturn") Then ZoomOut()
+	ClickAway("Left")
+	ZoomOut()
 	SetLog("Field should be clear now", $COLOR_DEBUG)
 EndFunc
 
@@ -682,7 +689,7 @@ Func FindBBExistingBuilding($bTest = False)
 				Next
 
 				If $UpgradeName[0] = "Wall" Then ;include wall to upgrade only after mega tesla is maxed
-					If $g_bIsMegaTeslaMaxed = 1 And $g_bGoldStorageFullBB Then
+					If ($g_bIsMegaTeslaMaxed = 1 And $g_bGoldStorageFullBB) Or ($g_bGoldStorageFullBB And $g_bReserveElixirBB) Then
 						Local $tmpcost = getOcrAndCapture("coc-buildermenu-cost", $aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10, 120, 30, True)
 						If Number($tmpcost) = 0 Then ContinueLoop ;skip wall cost read error
 						If Number($tmpcost) > 1000000 Then ContinueLoop ;only upgrade wall cost below 1000000
@@ -853,12 +860,12 @@ Func WaitBBUpgradeWindow()
 	Return $bRet
 EndFunc
 
-Func TPW()
+Func TPW($region = $greenZoneBB)
 	Local $bGreenCheckFound = False
-	Local $TmpX
-	Local $xCenter = 430, $x
-	Local $yCenter = 300, $y
-	For $i = 1 To 10
+	Local $xstart, $ystart
+	
+	For $i = 1 To 8
+		SetLog("Try to Place New Wall #" & $i, $COLOR_INFO)
 		If IsGreenCheck() Then
 			$bGreenCheckFound = True
 			For $i = 1 To 4
@@ -867,20 +874,41 @@ Func TPW()
 				_Sleep(1000)
 			Next
 		EndIf
+		
 		If Not $g_bRunState Then Return
+		Local $RandomDrag = Random(-100, -80, 1)
+		Local $DragX = 0, $DragY = 0
+		Switch $region
+			Case "Left"
+				$DragX += $RandomDrag
+			Case "Right"
+				$DragX += Abs($RandomDrag)
+			Case "Top"
+				$DragY += $RandomDrag
+			Case "Bottom"
+				$DragY += Abs($RandomDrag)
+		EndSwitch
+		SetLog("Random Value [x,y] : [" & $DragX & "," & $DragY & "]", $COLOR_INFO)
+		
 		If Not $bGreenCheckFound Then
 			SaveDebugImage("BBTryPlaceWall")
 			If QuickMIS("BC1", $g_sImgAutoUpgradeRedX, 80, 80, 780, 600) Then
 				$bGreenCheckFound = False
-				Local $Drag = Random(120, 150, 1)
-				SetLog("Try to Find Place for New Wall #" & $i, $COLOR_INFO)
-				ClickDrag($g_iQuickMISX + 30, $g_iQuickMISY + 50, $g_iQuickMISX + $Drag, $g_iQuickMISY + 50)
+				$xstart = $g_iQuickMISX + 30
+				$ystart = $g_iQuickMISY + 50
+				ClickDrag($xstart, $ystart, $xstart + $DragX, $ystart + $DragY)
 				_Sleep(1500)
-				$x = $g_iQuickMISX + 30 - $xCenter
-				$y = $g_iQuickMISY + 50 - $yCenter
-				ClickDrag(800, 420, 800 - $x, 420 - $y, 500)
-				;ClickDrag($g_iQuickMISX - 80, $g_iQuickMISY + 150, $g_iQuickMISX + 80, $g_iQuickMISY + 150)
-				_Sleep(1500)
+				Switch $region
+					Case "Left"
+						$xstart += 120
+					Case "Right"
+						$xstart -= 120
+					Case "Top"
+						$ystart += 120
+					Case "Bottom"
+						$ystart -= 120
+				EndSwitch
+				ClickDrag($xstart + $DragX, $ystart + $DragY, $xstart, $ystart, 500)
 			EndIf
 		EndIf
 		$bGreenCheckFound = False
@@ -891,17 +919,24 @@ Func IsGreenCheck()
 	Local $bRet = False
 	For $i = 1 To 2
 		If QuickMIS("BC1", $g_sImgAutoUpgradeGreenCheck, 80, 80, 780, 600) Then
-			$bRet = True
+			$bRet = True ;quickmis found a check mark, lets check the color
 			Local $color = _GetPixelColor($g_iQuickMISX, $g_iQuickMISY, 1)
 			SetDebugLog("GreenCheck Color: " & $color)
-			If Not _ColorCheck($color, Hex(0xA4A4AF, 6), 10) Then
+			If _ColorCheck($color, Hex(0xF2F2F2, 6), 16) Or _ColorCheck($color, Hex(0xFDFDFD, 6), 10) Or _
+				_ColorCheck($color, Hex(0xC3C3C8, 6), 10) Or _ColorCheck($color, Hex(0xA3A3AE, 6), 10) Then
+				$bRet = True
+				ExitLoop
+			Else
 				$bRet = False
 			EndIf
-			ExitLoop
 		EndIf
 		If Not $bRet Then
-			If QuickMIS("BC1", $g_sImgBBWallRotate, 360, 530, 500, 610) Then Click(430, 580)
-			_Sleep(1000)
+			If QuickMIS("BC1", $g_sImgBBWallRotate, 360, 530, 500, 610) Then 
+				Click(430, 580)
+				_Sleep(1000)
+			Else
+				Return $bRet
+			EndIf
 		EndIf
 	Next
 	Return $bRet

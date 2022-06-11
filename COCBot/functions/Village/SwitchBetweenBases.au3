@@ -23,8 +23,13 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 		EndIf
 	EndIf
 	
-	If $bIsOnBuilderBase And $ForcedSwitchTo = "BB" Then
-		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_ERROR)
+	If $ForcedSwitchTo = "BB" And IsOnBuilderBase() Then
+		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_INFO)
+		Return True
+	EndIf
+	
+	If $ForcedSwitchTo = "Main" And isOnMainVillage() Then
+		SetLog("Already on MainVillage, Skip SwitchBetweenBases", $COLOR_INFO)
 		Return True
 	EndIf
 	
@@ -66,7 +71,7 @@ Func SwitchTo($To = "BB")
 		$sSwitchTo = "Builder Base"
 		$sTile = "BoatNormalVillage"
 		$aPixelToCheck = $aIsOnBuilderBase
-		$x = 60
+		$x = 70
 		$y = 400
 		$x1 = 350
 		$y1 = 600
@@ -77,13 +82,14 @@ Func SwitchTo($To = "BB")
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
 		If $i > 1 Then ZoomOut() ;zoomout only if 1st try failed
 		If QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
+			If $g_iQuickMISName = "BBBoatBadge" Then $g_iQuickMISY += 10
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			_Sleep(1000)
 			ExitLoop
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
-			If $g_bDebugClick Or $g_bDebugSetlog Then SaveDebugImage("SwitchBetweenBases", True)
-			ZoomOutHelper()
+			SaveDebugImage("SwitchBetweenBases", True)
+			ZoomOutHelper("SwitchBetweenBases")
 			ContinueLoop
 		EndIf
 		_Sleep(1000)
@@ -105,8 +111,17 @@ Func SwitchTo($To = "BB")
 	If Not $g_bRunState Then Return
 	If Not $bRet Then 
 		SetLog("SwitchBetweenBases Failed", $COLOR_ERROR)
+		SaveDebugImage("SwitchBetweenBases", True)
 		CloseCoC(True) ; restart coc
-		waitMainScreen()
+		_SleepStatus(10000) ;give time for coc loading
+		checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
 	EndIf
 	Return $bRet
+EndFunc
+
+Func TestloopBB()
+	While True
+		BuilderBase()
+		If Not $g_bRunState Then Return
+	WEnd
 EndFunc

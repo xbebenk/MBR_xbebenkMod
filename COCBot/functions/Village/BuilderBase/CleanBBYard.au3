@@ -1,4 +1,4 @@
-Func CleanBBYard()
+Func CleanBBYard($bTest = False)
 	; Early exist if noting to do
 	If Not $g_bChkCleanBBYard Then Return	
 	
@@ -39,13 +39,13 @@ Func CleanBBYard()
 						If IsMainPageBuilderBase() Then Click($CleanBBYardXY[0], $CleanBBYardXY[1], 1, 0, "#0430")
 						If _Sleep($DELAYCOLLECT3) Then Return
 						_Sleep(1000)
-						If Not ClickRemoveObstacle() Then ContinueLoop
+						If Not ClickRemoveObstacle($bTest, True) Then ContinueLoop
 						$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
 						If $g_aiCurrentLootBB[$eLootElixirBB] < 20000 Then ExitLoop 2
 						If $Filename = "Groove" or $Filename = "Groove1" Then
-							_SleepStatus(61000)
+							_SleepStatus(65000)
 						Else
-							_SleepStatus(11000)
+							_SleepStatus(12000)
 						EndIf
 						ClickAway("Left")
 						$Locate += 1
