@@ -193,7 +193,7 @@ Func SearchNewBuilding($bTest = False)
 				EndIf
 				SetLog("Try Placing " & $New[$i][4])
 				Local $Region = Default
-				If $New[$i][4] = "Wall" Then $Region = "Middle"
+				If $New[$i][4] = "Wall" Then $Region = 1
 				If Not $ZoomedIn Then
 					ClickAway("Left") ;close builder menu
 					_Sleep(1000)
@@ -552,25 +552,28 @@ Func NewBuildings($x, $y, $aBuildingName, $bTest = False)
 EndFunc   ;==>NewBuildings
 
 Global $greenZoneBB = "Top"
-Func SearchGreenZoneBB($Region = Default, $ZoomIn = True)
+Func SearchGreenZoneBB($Region = 0, $ZoomIn = True)
 	SetLog("Search GreenZone on BB for Placing new Building", $COLOR_INFO)
-	Local $aTop = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 360, 160, 500, 230) ;top
-	Local $aLeft = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 200, 280, 290, 410) ;left
-	Local $aBottom = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 375, 440, 520, 525) ;bottom
-	Local $aRight = QuickMIS("CX", $g_sImgAUpgradeGreenZoneBB, 550, 300, 650, 400) ;right
-
-	Local $aAll[4][2] = [["Top", UBound($aTop)], ["Left", UBound($aLeft)], ["Bottom", UBound($aBottom)], ["Right", UBound($aRight)]]
-	If $g_bDebugClick Then SetLog("Top:" & UBound($aTop) & " Left:" & UBound($aLeft) & " Bottom:" & UBound($aBottom) & " Right:" & UBound($aRight))
+	Local $sAreaTop = GetDiamondFromRect("257,97,622,359")
+	Local $sAreaLeft = GetDiamondFromRect("72,229,442,490")
+	Local $sAreaBottom = GetDiamondFromRect("260,360,623,633")
+	Local $sAreaRight = GetDiamondFromRect("442,229,790,490")
+	Local $aTop = StringSplit(findImage("GreenZoneBBTop", $g_sImgAUpgradeGreenZoneBB & "GreenZoneBB_0_95.xml", $sAreaTop, 1000, True), "|")
+	Local $aLeft = StringSplit(findImage("GreenZoneBBLeft", $g_sImgAUpgradeGreenZoneBB & "GreenZoneBB_0_95.xml", $sAreaLeft, 1000, True), "|")
+	Local $aBottom = StringSplit(findImage("GreenZoneBBBottom", $g_sImgAUpgradeGreenZoneBB & "GreenZoneBB_0_95.xml", $sAreaBottom, 1000, True), "|")
+	Local $aRight = StringSplit(findImage("GreenZoneBBRight", $g_sImgAUpgradeGreenZoneBB & "GreenZoneBB_0_95.xml", $sAreaRight, 1000, True), "|")
+	
+	Local $aAll[4][2] = [["Top", $aTop[0]], ["Left", $aLeft[0]], ["Bottom", $aBottom[0]], ["Right", $aRight[0]]]
 	_ArraySort($aAll,1,0,0,1)
-	If $g_bDebugClick Then SetLog($aAll[0][0] & ":" & $aAll[0][1] & "|" & $aAll[1][0] & ":" & $aAll[1][1] & "|" & $aAll[2][0] & ":" & $aAll[2][1] & "|" & $aAll[3][0] & ":" & $aAll[3][1] & "|", $COLOR_DEBUG)
+	SetDebugLog($aAll[0][0] & ":" & $aAll[0][1] & "|" & $aAll[1][0] & ":" & $aAll[1][1] & "|" & $aAll[2][0] & ":" & $aAll[2][1] & "|" & $aAll[3][0] & ":" & $aAll[3][1] & "|", $COLOR_DEBUG)
 	
 	If $aAll[0][1] > 0 Then
 		SetLog("Found GreenZone, On " & $aAll[0][0] & " Region", $COLOR_SUCCESS)
 		If Not $ZoomIn Then Return $aAll[0][0]
 		Local $tmpRegion = $aAll[0][0]
-		If $Region = "Middle" Then 
+		If $Region = 1 Then 
 			$greenZoneBB = $tmpRegion
-			$tmpRegion = $Region
+			$tmpRegion = "Middle" ;only use for wall placing, zoomin on center of village
 		EndIf
 		If ZoomInBB($tmpRegion) Then
 			SetLog("Succeed ZoomIn", $COLOR_DEBUG)
@@ -885,7 +888,7 @@ Func TPW($region = $greenZoneBB)
 			Case "Bottom"
 				$DragY += Abs($RandomDrag)
 		EndSwitch
-		SetLog("Random Value [x,y] : [" & $DragX & "," & $DragY, $COLOR_INFO)
+		SetLog("Random Value [x,y] : [" & $DragX & "," & $DragY & "]", $COLOR_INFO)
 		
 		If Not $bGreenCheckFound Then
 			SaveDebugImage("BBTryPlaceWall")
@@ -919,7 +922,7 @@ Func IsGreenCheck()
 			$bRet = True ;quickmis found a check mark, lets check the color
 			Local $color = _GetPixelColor($g_iQuickMISX, $g_iQuickMISY, 1)
 			SetDebugLog("GreenCheck Color: " & $color)
-			If _ColorCheck($color, Hex(0xF2F2F2, 6), 10) Or _ColorCheck($color, Hex(0xFDFDFD, 6), 10) Or _
+			If _ColorCheck($color, Hex(0xF2F2F2, 6), 16) Or _ColorCheck($color, Hex(0xFDFDFD, 6), 10) Or _
 				_ColorCheck($color, Hex(0xC3C3C8, 6), 10) Or _ColorCheck($color, Hex(0xA3A3AE, 6), 10) Then
 				$bRet = True
 				ExitLoop
