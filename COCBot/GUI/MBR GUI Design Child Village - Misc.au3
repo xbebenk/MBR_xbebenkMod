@@ -755,7 +755,7 @@ Func CreateClanCapitalTab()
 	
 	$y += 50
 	$x = 0
-		$g_hTxtAutoUpgradeCCLog = GUICtrlCreateEdit("", $x, $y, $g_iSizeWGrpTab3 + 3, 62, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY, $ES_AUTOVSCROLL))
+		$g_hTxtAutoUpgradeCCLog = GUICtrlCreateEdit("", $x, $y, $g_iSizeWGrpTab3 + 3, 120, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY, $ES_AUTOVSCROLL))
 		GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtCCLog", "------------------------------------------------ CLAN CAPITAL LOG ------------------------------------------------"))
 		
 EndFunc
