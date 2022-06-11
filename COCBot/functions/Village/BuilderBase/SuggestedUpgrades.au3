@@ -689,7 +689,7 @@ Func FindBBExistingBuilding($bTest = False)
 				Next
 
 				If $UpgradeName[0] = "Wall" Then ;include wall to upgrade only after mega tesla is maxed
-					If $g_bIsMegaTeslaMaxed = 1 And $g_bGoldStorageFullBB Then
+					If ($g_bIsMegaTeslaMaxed = 1 And $g_bGoldStorageFullBB) Or ($g_bGoldStorageFullBB And $g_bReserveElixirBB) Then
 						Local $tmpcost = getOcrAndCapture("coc-buildermenu-cost", $aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10, 120, 30, True)
 						If Number($tmpcost) = 0 Then ContinueLoop ;skip wall cost read error
 						If Number($tmpcost) > 1000000 Then ContinueLoop ;only upgrade wall cost below 1000000
