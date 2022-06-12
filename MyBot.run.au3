@@ -1638,7 +1638,7 @@ Func BuilderBase()
 	If SwitchBetweenBases("BB") Then
 		$g_bStayOnBuilderBase = True
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-
+		ZoomOut()
 		$g_iBBAttacked = True	; Reset Variable
 		BuilderBaseReport()
 		CollectBuilderBase()
