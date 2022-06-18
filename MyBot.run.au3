@@ -1580,8 +1580,8 @@ Func FirstCheckRoutine()
 	EndIf
 	
 	If Not $g_bRunState Then Return
-	RequestCC(False)
-	checkArmyCamp(False, True)
+	RequestCC(True)
+	checkArmyCamp(True, True)
 	PrepareDonateCC()
 	_Sleep(1000)
 	DonateCC()
