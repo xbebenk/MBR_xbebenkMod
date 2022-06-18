@@ -311,13 +311,29 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 			Next
 			
 			If Not $bTest Then
+				If _ColorCheck(_GetPixelColor(370, 490, True), Hex(0xDBDBDB, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
+					SetLog("Need More Resource or Higher THLevel", $COLOR_ERROR)
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					_Sleep(500)
+					Return False 
+				EndIf
 				Local $CurrentCost = getResourcesBonus(370, 490)
 				Click(420, 500) ;Final Upgrade Button
 				Switch $aIsEnoughResource[1]
 					Case "Gold"
 						$g_aiCurrentLoot[$eLootGold] -= $CurrentCost
+						PushMsg("UpgradeWithGold")
+						$g_iNbrOfWallsUppedGold += 1
+						$g_iNbrOfWallsUpped += 1
+						$g_iCostGoldWall += $CurrentCost
+						UpdateStats()
 					Case "Elix"
 						$g_aiCurrentLoot[$eLootElixir] -= $CurrentCost
+						PushMsg("UpgradeWithElixir")
+						$g_iNbrOfWallsUppedElixir += 1
+						$g_iNbrOfWallsUpped += 1
+						$g_iCostElixirWall += $CurrentCost
+						UpdateStats()
 				EndSwitch 
 			Else
 				SetLog("Testing Only!", $COLOR_ERROR)
@@ -377,13 +393,29 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				Next
 				
 				If Not $bTest Then
+					If _ColorCheck(_GetPixelColor(370, 490, True), Hex(0xDBDBDB, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
+						SetLog("Need More Resource or Higher THLevel", $COLOR_ERROR)
+						Click($g_iQuickMISX, $g_iQuickMISY)
+						_Sleep(500)
+						Return False 
+					EndIf
 					Local $CurrentCost = getResourcesBonus(370, 490)
 					Click(420, 500) ;Final Upgrade Button
 					Switch $aIsEnoughResource[1]
 						Case "Gold"
 							$g_aiCurrentLoot[$eLootGold] -= $CurrentCost
+							PushMsg("UpgradeWithGold")
+							$g_iNbrOfWallsUppedGold += 1
+							$g_iNbrOfWallsUpped += 1
+							$g_iCostGoldWall += $CurrentCost
+							UpdateStats()
 						Case "Elix"
 							$g_aiCurrentLoot[$eLootElixir] -= $CurrentCost
+							PushMsg("UpgradeWithElixir")
+							$g_iNbrOfWallsUppedElixir += 1
+							$g_iNbrOfWallsUpped += 1
+							$g_iCostElixirWall += $CurrentCost
+							UpdateStats()
 					EndSwitch 
 				Else
 					SetLog("Testing Only!", $COLOR_ERROR)
