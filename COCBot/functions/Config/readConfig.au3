@@ -384,9 +384,9 @@ EndFunc   ;==>ReadConfig_600_1
 
 Func ReadConfig_600_6()
 	; <><><><> Village / Misc <><><><>
-	IniReadS($g_bChkBotStop, $g_sProfileConfigPath, "general", "BotStop", False, "Bool")
+	IniReadS($g_bChkBotStop, $g_sProfileConfigPath, "general", "BotStop", True, "Bool")
 	IniReadS($g_iCmbBotCommand, $g_sProfileConfigPath, "general", "Command", 0, "int")
-	IniReadS($g_iCmbBotCond, $g_sProfileConfigPath, "general", "Cond", 0, "int")
+	IniReadS($g_iCmbBotCond, $g_sProfileConfigPath, "general", "Cond", 4, "int")
 	IniReadS($g_iCmbHoursStop, $g_sProfileConfigPath, "general", "Hour", 0, "int")
 	For $i = 0 To $eLootCount - 1
 		IniReadS($g_aiResumeAttackLoot[$i], $g_sProfileConfigPath, "other", "MinResumeAttackLoot_" & $i, 100, "int")
