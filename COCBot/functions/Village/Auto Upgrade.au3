@@ -751,13 +751,18 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 			If QuickMIS("BC1", $g_sImgGreenCheck, 100, 80, 740, 560) Then
 				For $ProMac = 0 To 9
 					If Not $g_bRunState Then Return
-					Click($g_iQuickMISX, $g_iQuickMISY + 5)
-					If _Sleep(500) Then Return
-					If IsGemOpen(True) Then
-						SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
+					If Not $bTest Then 
+						Click($g_iQuickMISX, $g_iQuickMISY + 3)
+						If _Sleep(500) Then Return
+						If IsGemOpen(True) Then
+							SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
+							ExitLoop
+						Endif
+						AutoUpgradeLogPlacingWall($aWall, $aCostWall)
+					Else
+						SetLog("Only Test, should place wall on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
 						ExitLoop
-					Endif
-					AutoUpgradeLogPlacingWall($aWall, $aCostWall)
+					EndIf
 				Next
 				Click($g_iQuickMISX - 75, $g_iQuickMISY)
 				Return True
