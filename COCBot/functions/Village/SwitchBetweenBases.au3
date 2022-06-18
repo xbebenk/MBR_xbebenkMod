@@ -15,6 +15,7 @@
 
 Func SwitchBetweenBases($ForcedSwitchTo = Default)
 	Local $bIsOnBuilderBase = isOnBuilderBase()
+	Local $bIsOnMainVillage = isOnMainVillage()
 	If $ForcedSwitchTo = Default Then
 		If $bIsOnBuilderBase Then 
 			$ForcedSwitchTo = "Main"
@@ -23,15 +24,18 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 		EndIf
 	EndIf
 	
-	If $ForcedSwitchTo = "BB" And IsOnBuilderBase() Then
+	If $ForcedSwitchTo = "BB" And $bIsOnBuilderBase Then
 		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_INFO)
 		Return True
 	EndIf
 	
-	If $ForcedSwitchTo = "Main" And isOnMainVillage() Then
+	If $ForcedSwitchTo = "Main" And $bIsOnMainVillage Then
 		SetLog("Already on MainVillage, Skip SwitchBetweenBases", $COLOR_INFO)
 		Return True
 	EndIf
+	
+	;we are not on builderbase nor in mainvillage, something need to be check, check obstacles called on checkmainscreen
+	If Not $bIsOnBuilderBase And Not $bIsOnMainVillage Then checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
 	
 	If IsProblemAffect(True) Then Return
 	If Not $g_bRunState Then Return
@@ -88,7 +92,7 @@ Func SwitchTo($To = "BB")
 			ExitLoop
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
-			SaveDebugImage("SwitchBetweenBases", True)
+			;SaveDebugImage("SwitchBetweenBases", True)
 			ZoomOutHelper("SwitchBetweenBases")
 			ContinueLoop
 		EndIf
@@ -109,13 +113,13 @@ Func SwitchTo($To = "BB")
 	
 	If IsProblemAffect(True) Then Return
 	If Not $g_bRunState Then Return
-	If Not $bRet Then 
-		SetLog("SwitchBetweenBases Failed", $COLOR_ERROR)
-		SaveDebugImage("SwitchBetweenBases", True)
-		CloseCoC(True) ; restart coc
-		_SleepStatus(10000) ;give time for coc loading
-		checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
-	EndIf
+	;If Not $bRet Then 
+	;	SetLog("SwitchBetweenBases Failed", $COLOR_ERROR)
+	;	SaveDebugImage("SwitchBetweenBases", True)
+	;	CloseCoC(True) ; restart coc
+	;	_SleepStatus(10000) ;give time for coc loading
+	;	checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
+	;EndIf
 	Return $bRet
 EndFunc
 
