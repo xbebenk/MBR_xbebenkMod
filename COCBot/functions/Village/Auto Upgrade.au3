@@ -552,6 +552,10 @@ Func DoUpgrade($bTest = False)
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522) ; get cost
 			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 465) ; get duration
 			$bHeroUpgrade = True
+		Case "Clan Castle"
+			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 520, 430, 700, 500) ; get resource
+			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(550, 453) ; get cost
+			$g_aUpgradeResourceCostDuration[2] = "Instance Upgrade"
 		Case Else
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 480, 500, 550) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487) ; get cost
@@ -592,6 +596,8 @@ Func DoUpgrade($bTest = False)
 		Switch $g_aUpgradeNameLevel[1]
 			Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion", "poyal Champion"
 				Click(660, 560)
+			Case "Clan Castle"
+				Click(600, 460)
 			Case Else
 				Click(440, 530)
 		EndSwitch
