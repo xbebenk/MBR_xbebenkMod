@@ -668,18 +668,16 @@ Func ZoomInMEmu($Region = "Top")
 		Case "Top"
 			ClickDrag(400, 100, 400, 600, 200)
 			If _Sleep(500) Then Return
-			ClickDrag(400, 100, 400, 300, 200)
+			ClickDrag(400, 100, 400, 250, 200)
 		Case "Left"
 			ClickDrag(100, 400, 800, 400, 200)
 			If _Sleep(500) Then Return
 		Case "Bottom"
 			ClickDrag(400, 500, 400, 100, 200)
 			If _Sleep(500) Then Return
-			ClickDrag(400, 500, 400, 300, 200)
+			ClickDrag(400, 500, 400, 350, 200)
 		Case "Right"
 			ClickDrag(800, 400, 100, 400, 200)
-			If _Sleep(500) Then Return
-			ClickDrag(400, 100, 400, 300, 200)
 	EndSwitch
 	Return True
 EndFunc
