@@ -812,7 +812,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bChkFastSwitchAcc Then
 				Local $aRndFuncList = ['UpgradeHeroes', 'PetHouse', 'BuilderBase']
 			Else
-				Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'BuilderBase']
+				Local $aRndFuncList = ['Collect', 'CollectAchievements', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'BuilderBase']
 			EndIf
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
