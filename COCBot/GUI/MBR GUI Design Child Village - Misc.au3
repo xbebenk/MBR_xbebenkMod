@@ -312,7 +312,7 @@ Func CreateMiscNormalVillageSubTab()
 
 		$g_hChkSellHeroPot = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSellHeroPotion", "Sell Hero Potion"), $x + 265, $y + 4, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCleanYard_Info_01", "Check this to automatically Sell Hero Or Troop Potion" & @CRLF & "Because if avail it will shown as button while attacking" & @CRLF & "And make trouble when bot scanning Drop Point"))
-			GUICtrlSetState(-1, $GUI_CHECKED)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
 
 	$y += 21
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCollectAchievements, $x + 22, $y - 8 , 48, 48)
