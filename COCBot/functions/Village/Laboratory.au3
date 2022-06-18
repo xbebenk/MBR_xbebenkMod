@@ -35,7 +35,7 @@ EndFunc
 Func Laboratory($bDebug = False)
 	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 	If ChkUpgradeInProgress() Then Return
-	If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
+	If $g_aiLaboratoryPos[0] < 70 Or $g_aiLaboratoryPos[1] = 0 Then
 		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
 		LocateLab() ; Lab location unknown, so find it.
 		If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
