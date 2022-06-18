@@ -1689,6 +1689,8 @@ Func ApplyConfig_600_29_DB($TypeReadSave)
 			GUICtrlSetState($g_hChkDBBatSpell, $g_abAttackUseBatSpell[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBWardenMode, $g_aiAttackUseWardenMode[$DB])
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBSiege, $g_aiAttackUseSiege[$DB])
+			GUICtrlSetState($g_hChkDBDropEmptySiege, $g_bDropEmptySiege[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
 		Case "Save"
 			$g_aiAttackAlgorithm[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBAlgorithm)
 			$g_aiAttackTroopSelection[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBSelectTroop)
@@ -1714,6 +1716,7 @@ Func ApplyConfig_600_29_DB($TypeReadSave)
 
 			$g_aiAttackUseWardenMode[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBWardenMode)
 			$g_aiAttackUseSiege[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBSiege)
+			$g_bDropEmptySiege[$DB] = (GUICtrlRead($g_hChkDBDropEmptySiege) = $GUI_CHECKED)
 	EndSwitch
 
 	ApplyConfig_600_29_DB_Standard($TypeReadSave)
@@ -1822,6 +1825,8 @@ Func ApplyConfig_600_29_LB($TypeReadSave)
 			GUICtrlSetState($g_hChkABBatSpell, $g_abAttackUseBatSpell[$LB] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbABWardenMode, $g_aiAttackUseWardenMode[$LB])
 			_GUICtrlComboBox_SetCurSel($g_hCmbABSiege, $g_aiAttackUseSiege[$LB])
+			GUICtrlSetState($g_hChkABDropEmptySiege, $g_bDropEmptySiege[$LB] ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
 		Case "Save"
 			$g_aiAttackAlgorithm[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbABAlgorithm)
 			$g_aiAttackTroopSelection[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbABSelectTroop)
@@ -1847,6 +1852,7 @@ Func ApplyConfig_600_29_LB($TypeReadSave)
 
 			$g_aiAttackUseWardenMode[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbABWardenMode)
 			$g_aiAttackUseSiege[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbABSiege)
+			$g_bDropEmptySiege[$LB] = (GUICtrlRead($g_hChkABDropEmptySiege) = $GUI_CHECKED)
 	EndSwitch
 
 	ApplyConfig_600_29_LB_Standard($TypeReadSave)

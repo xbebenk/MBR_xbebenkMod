@@ -1304,6 +1304,7 @@ Func ReadConfig_600_29_DB()
 
 	IniReadS($g_aiAttackUseWardenMode[$DB], $g_sProfileConfigPath, "attack", "DBAtkUseWardenMode", 2, "int")
 	IniReadS($g_aiAttackUseSiege[$DB], $g_sProfileConfigPath, "attack", "DBAtkUseSiege", 4, "int")
+	IniReadS($g_bDropEmptySiege[$DB], $g_sProfileConfigPath, "attack", "DBDropEmptySiege", False, "Bool")
 
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / SmartFarm <><><><>
 	IniReadS($g_iTxtInsidePercentage, $g_sProfileConfigPath, "SmartFarm", "InsidePercentage", 40, "int")
@@ -1351,6 +1352,7 @@ Func ReadConfig_600_29_LB()
 
 	IniReadS($g_aiAttackUseWardenMode[$LB], $g_sProfileConfigPath, "attack", "ABAtkUseWardenMode", 2, "int")
 	IniReadS($g_aiAttackUseSiege[$LB], $g_sProfileConfigPath, "attack", "ABAtkUseSiege", 4, "int")
+	IniReadS($g_bDropEmptySiege[$LB], $g_sProfileConfigPath, "attack", "ABDropEmptySiege", False, "Bool")
 EndFunc   ;==>ReadConfig_600_29_LB
 
 Func ReadConfig_600_30()
