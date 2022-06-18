@@ -1157,13 +1157,12 @@ Func IsTHLevelAchieved()
 EndFunc
 
 Func getMostBottomCost()
-	Local $TmpUpgradeCost, $TmpName, $ret
+	Local $TmpUpgradeCost, $ret
 	Local $Icon = QuickMIS("CNX", $g_sImgResourceIcon, 300, 300, 450, 360)
 	If IsArray($Icon) And UBound($Icon) > 0 Then
-		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord
+		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord, descending
 		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 12, 120, 20, True) ;check most bottom upgrade cost
-		$TmpName = getBuildingName($Icon[0][1] - 200, $Icon[0][2] - 8)
-		$ret = $TmpName[0] & "|" & $TmpUpgradeCost
+		$ret = $Icon[0][0] & "|" & $TmpUpgradeCost
 	EndIf
 	Return $ret
 EndFunc
