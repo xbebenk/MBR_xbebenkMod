@@ -294,9 +294,9 @@ Func BBTutorial($x = 170, $y = 560)
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then
 			SetLog("Found Tutorial Chat", $COLOR_INFO)
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			_SleepStatus(8000)
+			_SleepStatus(10000)
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			_SleepStatus(8000)
+			_SleepStatus(10000)
 		EndIf
 		_Sleep(5000)
 		If QuickMIS("BC1", $g_sImgArrowNewBuilding, 75, 480, 200, 600) Then 
@@ -310,13 +310,13 @@ Func BBTutorial($x = 170, $y = 560)
 		SetLog("Waiting Next Tutorial For Builder Menu #" & $i, $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgArrowNewBuilding, 260, 30, 380, 150) Then 
 			Click(380, 30) ;Click Builder Menu
-			_SleepStatus(5000)
+			_SleepStatus(10000)
 			Click(380, 30) ;Click Builder Menu
-			_SleepStatus(5000)
+			_SleepStatus(10000)
 			Click(380, 30) ;Click Builder Menu
-			_SleepStatus(5000)
+			_SleepStatus(10000)
 			Click(380, 30) ;Click Builder Menu
-			_SleepStatus(5000)
+			_SleepStatus(10000)
 			ExitLoop
 		EndIf
 		_Sleep(3000)
