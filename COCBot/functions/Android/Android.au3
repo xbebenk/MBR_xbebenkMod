@@ -1462,12 +1462,10 @@ EndFunc   ;==>GetAndroidVMinfo
 Func WaitForAndroidBootCompleted($WaitInSec = 120, $hTimer = 0)
 	ResumeAndroid()
 	If Not $g_bRunState Then Return True
-	Local $cmdOutput, $connected_to, $booted, $process_killed, $hMyTimer, $AndroidVersion, $MemuVersion, $Memu, $Version
-	
-	;adding support for Memu 7.2.9 android 4.4.4 as it have different getprop to determine emulator has completed boot
-	$MemuVersion = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " getprop ro.version", $process_killed)
+	Local $cmdOutput, $connected_to, $booted, $process_killed, $hMyTimer, $AndroidVersion
+
 	$AndroidVersion = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " getprop ro.build.version.release", $process_killed)
-	
+
 	; Wait for boot completed
 	$hMyTimer = ($hTimer = 0 ? __TimerInit() : $hTimer)
 	While True

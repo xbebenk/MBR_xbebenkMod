@@ -171,27 +171,27 @@ Func _VrtDesktObjCreation()                                                     
 	; objects creation
 	Local $pService
 	Local $oImmersiveShell = ObjCreateInterface($CLSID_ImmersiveShell, $IID_IUnknown, "")
-	ConsoleWrite("Immersive shell = " & IsObj($oImmersiveShell) & @CRLF)
+	;ConsoleWrite("Immersive shell = " & IsObj($oImmersiveShell) & @CRLF)
 	$oImmersiveShell.QueryInterface($tIID_IServiceProvider, $pService)
-	ConsoleWrite("Service pointer = " & $pService & @CRLF)
+	;ConsoleWrite("Service pointer = " & $pService & @CRLF)
 	Local $oService = ObjCreateInterface($pService, $IID_IServiceProvider, $tagIServiceProvider)
-	ConsoleWrite("Service = " & IsObj($oService) & @CRLF)
+	;ConsoleWrite("Service = " & IsObj($oService) & @CRLF)
 
 	Local $pApplicationViewCollection, $pVirtualDesktopManagerInternal, $pVirtualDesktopPinnedApps
 	$oService.QueryService($tCLSID_IApplicationViewCollection, $tIID_IApplicationViewCollection, $pApplicationViewCollection)
-	ConsoleWrite("View collection pointer = " & $pApplicationViewCollection & @CRLF)
+	;ConsoleWrite("View collection pointer = " & $pApplicationViewCollection & @CRLF)
 	$oApplicationViewCollection = ObjCreateInterface($pApplicationViewCollection, $IID_IApplicationViewCollection, $tagIApplicationViewCollection)
-	ConsoleWrite("View collection = " & IsObj($oApplicationViewCollection) & @CRLF)
+	;ConsoleWrite("View collection = " & IsObj($oApplicationViewCollection) & @CRLF)
 
 	$oService.QueryService($tCLSID_VirtualDesktopManagerInternal, $tIID_IVirtualDesktopManagerInternal, $pVirtualDesktopManagerInternal)
-	ConsoleWrite("Virtual Desktop pointer = " & $pVirtualDesktopManagerInternal & @CRLF)
+	;ConsoleWrite("Virtual Desktop pointer = " & $pVirtualDesktopManagerInternal & @CRLF)
 	$oVirtualDesktopManagerInternal = ObjCreateInterface($pVirtualDesktopManagerInternal, $IID_IVirtualDesktopManagerInternal, $tagIVirtualDesktopManagerInternal)
-	ConsoleWrite("Virtual Desktop = " & IsObj($oVirtualDesktopManagerInternal) & @CRLF)
+	;ConsoleWrite("Virtual Desktop = " & IsObj($oVirtualDesktopManagerInternal) & @CRLF)
 
 	$oService.QueryService($tCLSID_VirtualDesktopPinnedApps, $tIID_IVirtualDesktopPinnedApps, $pVirtualDesktopPinnedApps)
-	ConsoleWrite("Virtual Desktop Pinned Apps = " & $pVirtualDesktopPinnedApps & @CRLF)
+	;ConsoleWrite("Virtual Desktop Pinned Apps = " & $pVirtualDesktopPinnedApps & @CRLF)
 	$oVirtualDesktopPinnedApps = ObjCreateInterface($pVirtualDesktopPinnedApps, $IID_IVirtualDesktopPinnedApps, $tagIVirtualDesktopPinnedApps)
-	ConsoleWrite("Virtual Desktop Pinned Apps = " & IsObj($oVirtualDesktopPinnedApps) & @CRLF)
+	;ConsoleWrite("Virtual Desktop Pinned Apps = " & IsObj($oVirtualDesktopPinnedApps) & @CRLF)
 EndFunc   ;==>_VrtDesktObjCreation
 
 Func _VrtDesktObjDestroy()                                                              ;>>>***<<<
@@ -224,6 +224,7 @@ Func _GetEnumVirtDskt()                                                         
 EndFunc   ;==>_GetEnumVirtDskt
 
 Func _AddressOfAllVirutalDesktops()                                                     ;>>>***<<<
+	_VrtDesktObjCreation() ;virtual desktop object
 	Local $pArray, $aArrayDsktPtr[2], $ii, $iCount, $pDskt, $iHresult, $oArray
 	Local $IID_IObjectArray = "{92ca9dcd-5622-4bba-a805-5e9f541bd8c9}"
 	Local $tagIObjectArray = _
