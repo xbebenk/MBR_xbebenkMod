@@ -244,24 +244,34 @@ Func BBTutorial($x = 170, $y = 560)
 			Click(650, 540) ;Click Upgrade Button
 			_Sleep(2000)
 			SetLog("Waiting Raged Barbarian upgrade, 30s", $COLOR_INFO)
-			_SleepStatus(32000)
+			_SleepStatus(35000)
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			_SleepStatus(10000)
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			_SleepStatus(10000)
 			ExitLoop
 		EndIf
-		_Sleep(5000)
+		_Sleep(7500)
 	Next
 	
 	SetLog("Going Attack For Tutorial", $COLOR_INFO)
-	ClickBBAttackButton()
+	For $i = 1 To 10
+		If Not ClickBBAttackButton() Then
+			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				_SleepStatus(10000)
+				SetDebugLog("Check for ClickBBAttackButton", $COLOR_DEBUG)
+			EndIf
+		Else	
+			ExitLoop
+		EndIf
+	Next
 	
 	For $i = 1 To 10
 		If WaitforPixel(588, 321, 589, 322, "D7540E", 20, 2) Then
 			SetDebugLog("Found FindNow Button", $COLOR_ACTION)
 			Click(590, 300)
-			_SleepStatus(1500)
+			_SleepStatus(25000) ;wait for clouds and other animations
 			ExitLoop
 		EndIf
 		_Sleep(1000)
@@ -271,13 +281,14 @@ Func BBTutorial($x = 170, $y = 560)
 	For $i = 1 To 10
 		SetLog("Wait For AttackBar #" & $i, $COLOR_ACTION)
 		Local $AttackBarBB = GetAttackBarBB()
-		If IsArray($AttackBarBB) And UBound($AttackBarBB) > 0 Then
-			Click($AttackBarBB[1], $AttackBarBB[2]) ;Click Raged Barbarian on AttackBar
+		If IsArray($AttackBarBB) And UBound($AttackBarBB) > 0 And $AttackBarBB[0][0] = "Barbarian" Then
+			Click($AttackBarBB[0][1], $AttackBarBB[0][2]) ;Click Raged Barbarian on AttackBar
 			_SleepStatus(1000)
 			Click(450, 430, 10) ;Deploy Raged Barbarian
 			ExitLoop
+		Else
+			_SleepStatus(5000)
 		EndIf
-		_Sleep(5000)
 	Next
 	
 	For $i = 1 To 10
@@ -285,6 +296,7 @@ Func BBTutorial($x = 170, $y = 560)
 		If BBBarbarianHead() Then
 			ClickP($aOkayButton)
 			_SleepStatus(5000)
+			ExitLoop
 		EndIf
 		_Sleep(5000)
 	Next
