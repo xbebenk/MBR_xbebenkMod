@@ -850,7 +850,13 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 					_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
 					_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
 
-				Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $Quant, $DELAYDONATECC3, "#0175")
+				Local $QuantHalf = Floor($Quant/2)
+				
+				If $QuantHalf > 1 Then Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
+				If _Sleep(1000) Then Return
+				If Mod($Quant, 2) = 1 Then $QuantHalf += 1 ;Compensate for odd numbers
+				Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
+				
 				$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
 				If $g_iCommandStop = 3 Then
 					$g_iCommandStop = 0
