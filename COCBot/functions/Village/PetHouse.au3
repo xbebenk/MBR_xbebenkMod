@@ -39,6 +39,7 @@ Func PetHouse($test = False)
 
 	; Check at least one pet upgrade is enabled
 	Local $bUpgradePets = False
+	Local $bPetHouseOnUpgrade = False
 	For $i = 0 to $ePetCount - 1
 		If $g_bUpgradePetsEnable[$i] Then
 			$bUpgradePets = True
@@ -82,6 +83,12 @@ Func PetHouse($test = False)
 			EndIf
 		EndIf
 	EndIf
+	
+	Local $aBtnCancel = FindButton("cancel")
+	If IsArray($aBtnCancel) And UBound($aBtnCancel) > 0 Then
+		SetLog("Pet House is upgrading! Cannot start any upgrade.", $COLOR_ERROR)
+		$bPetHouseOnUpgrade  = True
+	EndIf
 
 	Local $PawFound = False
 	For $i = 1 To 5
@@ -105,6 +112,11 @@ Func PetHouse($test = False)
 
 	If Not $test Then
 		If CheckPetUpgrade() Then Return False ; cant start if something upgrading
+	EndIf
+	
+	If $bPetHouseOnUpgrade Then
+		ClickAway()
+		Return False
 	EndIf
 	
 	Local $aPet = GetPetUpgradeList()
