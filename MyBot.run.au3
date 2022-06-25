@@ -1605,7 +1605,7 @@ Func CommonRoutine($RoutineType = Default)
 				If _Sleep(500) Then Return
 				If $g_bRestart Then Return
 			Next
-			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC']
+			Local $aRndFuncList = ['PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1623,7 +1623,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 			
 		Case "Switch"
-			Local $aRndFuncList = ['BuilderBase', 'DonateCC,Train']
+			Local $aRndFuncList = ['BuilderBase', 'DonateCC,Train', 'UpgradeBuilding', 'UpgradeWall']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
