@@ -79,21 +79,13 @@ Func _OpenBlueStacks5($bRestart = False)
 EndFunc   ;==>_OpenBlueStacks
 
 Func GetBlueStacks5AdbPath()
-	Return GetBlueStacksXAdbPath()
-EndFunc   ;==>GetBlueStacks5AdbPath
+	Local $adbPath = $__BlueStacks_Path & "HD-Adb.exe"
+	If FileExists($adbPath) Then Return $adbPath
+	Return ""
+EndFunc   ;==>GetBlueStacksXAdbPath
 
 Func InitBlueStacks5X($bCheckOnly = False, $bAdjustResolution = False, $bLegacyMode = False)
-	;Bluestacks5 doesn't have registry tree for engine
-	Local $frontend_exe = ["HD-Frontend.exe", "HD-Player.exe"]
-	Local $i, $aFiles = [$frontend_exe, "HD-Adb.exe"] ; first element can be $frontend_exe array!
-	Local $Values[4][3] = [ _
-			["Screen Width", $g_iAndroidClientWidth, $g_iAndroidClientWidth], _
-			["Screen Height", $g_iAndroidClientHeight, $g_iAndroidClientHeight], _
-			["Window Width", $g_iAndroidWindowWidth, $g_iAndroidWindowWidth], _
-			["Window Height", $g_iAndroidWindowHeight, $g_iAndroidWindowHeight] _
-			]
-	Local $bChanged = False
-
+	;Bluestacks5 doesn't have registry tree for engine, only installation dir info
 	$__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
 	$__BlueStacks_Path = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "InstallDir")
 	If @error <> 0 Then
@@ -101,9 +93,18 @@ Func InitBlueStacks5X($bCheckOnly = False, $bAdjustResolution = False, $bLegacyM
 		SetError(0, 0, 0)
 	EndIf
 	$__BlueStacks_Path = StringReplace($__BlueStacks_Path, "\\", "\")
-
-	Local $sPreferredADB = FindPreferredAdbPath()
-	If $sPreferredADB Then _ArrayDelete($aFiles, 1)
+	
+	Local $frontend_exe = ["HD-Frontend.exe", "HD-Player.exe"]
+	Local $i, $aFiles = ["HD-Player.exe", "HD-Adb.exe"] ; first element can be $frontend_exe array!
+	Local $Values[4][3] = [ _
+			["Screen Width", $g_iAndroidClientWidth, $g_iAndroidClientWidth], _
+			["Screen Height", $g_iAndroidClientHeight, $g_iAndroidClientHeight], _
+			["Window Width", $g_iAndroidWindowWidth, $g_iAndroidWindowWidth], _
+			["Window Height", $g_iAndroidWindowHeight, $g_iAndroidWindowHeight] _
+			]
+	
+	;Local $sPreferredADB = FindPreferredAdbPath()
+	;If $sPreferredADB Then _ArrayDelete($aFiles, 1)
 
 	For $i = 0 To UBound($aFiles) - 1
 		Local $File
@@ -133,20 +134,31 @@ Func InitBlueStacks5X($bCheckOnly = False, $bAdjustResolution = False, $bLegacyM
 		; update global variables
 		$g_sAndroidPath = $__BlueStacks_Path
 		$g_sAndroidProgramPath = $__BlueStacks_Path & $frontend_exe
-		$g_sAndroidAdbPath = $sPreferredADB
-		If $g_sAndroidAdbPath = "" Then $g_sAndroidAdbPath = $__BlueStacks_Path & "HD-Adb.exe"
+		$g_sAndroidAdbPath = $__BlueStacks_Path & "HD-Adb.exe"
 		$g_sAndroidVersion = $__BlueStacks_Version
-
 		ConfigureSharedFolderBlueStacks5() ; something like D:\ProgramData\BlueStacks\Engine\UserData\SharedFolder\
 		WinGetAndroidHandle()
 	EndIf
+	
 	Return True
 EndFunc   ;==>InitBlueStacks5
 
 Func ConfigureSharedFolderBlueStacks5($iMode = 0, $bSetLog = Default)
 	If $bSetLog = Default Then $bSetLog = True
 	Local $bResult = False
-
+	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
+	Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
+	Local $iLineCount = @extended
+	
+	For $i = 0 To $iLineCount - 1
+		If StringInStr($__Bluestacks5Conf[$i], "bst.instance." & $g_sAndroidInstance & ".") Then 
+			Local $propkey = StringReplace($__Bluestacks5Conf[$i], "bst.instance." & $g_sAndroidInstance & ".", "")
+			SetLog($propkey)
+			If $propkey = "status.adb_port" Then 
+			EndIf
+		EndIf
+	Next
+	
 	Switch $iMode
 		Case 0 ; check that shared folder is configured in VM
 			For $i = 0 To 5
@@ -163,7 +175,6 @@ Func ConfigureSharedFolderBlueStacks5($iMode = 0, $bSetLog = Default)
 	EndSwitch
 
 	Return SetError(0, 0, $bResult)
-
 EndFunc   ;==>ConfigureSharedFolderBlueStacks5
 
 Func InitBlueStacks5($bCheckOnly = False)
