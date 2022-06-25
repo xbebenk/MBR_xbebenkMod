@@ -61,39 +61,39 @@ Func SearchUpgrade($bTest = False)
 
 	VillageReport(True,True)
 
-	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
-		ClickMainBuilder()
-		SetLog("Checking current upgrade", $COLOR_INFO)
-		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
-			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
-			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
-			If $mUpgradeTime > 0 And $mUpgradeTime <= 1440 Then
-				SetLog("Upgrade time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
-				$g_bSkipWallReserve = True
-			ElseIf $mUpgradeTime > 1400 And $mUpgradeTime <= 2880 Then
-				$g_bUpgradeLowCost = True
-				SetLog("Upgrade time > 24h And < 2d, Will Use Wall Reserved Builder", $COLOR_INFO)
-			Else
-				SetLog("Upgrade time > 24h, Skip Upgrade", $COLOR_INFO)
-			EndIf
-
-			; Smart Save Resources for Wall Upgrade
-			If $g_aWallSaveMode < 0 Then
-				If $mUpgradeTime >= 7200 Then
-					SetLog("Long Upgrade Duration > 5d", $COLOR_INFO)
-					SetLog("Discounting wall save resources by 50%", $COLOR_INFO)
-					$g_aWallSaveMode = 1
-				ElseIf $mUpgradeTime >= 4320 Then
-					SetLog("Long Upgrade duration > 3d And < 5d", $COLOR_INFO)
-					SetLog("Discounting wall save resources by 25%", $COLOR_INFO)
-					$g_aWallSaveMode = 2
-				Else
-					SetLog("Upgrade time < 3d, No Discounts!", $COLOR_INFO)
-					$g_aWallSaveMode = 0
-				EndIf
-			EndIf
-		EndIf
-	EndIf
+	;If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
+	;	ClickMainBuilder()
+	;	SetLog("Checking current upgrade", $COLOR_INFO)
+	;	If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
+	;		Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
+	;		Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
+	;		If $mUpgradeTime > 0 And $mUpgradeTime <= 1440 Then
+	;			SetLog("Upgrade time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
+	;			$g_bSkipWallReserve = True
+	;		ElseIf $mUpgradeTime > 1400 And $mUpgradeTime <= 2880 Then
+	;			$g_bUpgradeLowCost = True
+	;			SetLog("Upgrade time > 24h And < 2d, Will Use Wall Reserved Builder", $COLOR_INFO)
+	;		Else
+	;			SetLog("Upgrade time > 24h, Skip Upgrade", $COLOR_INFO)
+	;		EndIf
+	;
+	;		; Smart Save Resources for Wall Upgrade
+	;		If $g_bWallSaveMode < 0 Then
+	;			If $mUpgradeTime >= 7200 Then
+	;				SetLog("Long Upgrade Duration > 5d", $COLOR_INFO)
+	;				SetLog("Discounting wall save resources by 50%", $COLOR_INFO)
+	;				$g_bWallSaveMode = 1
+	;			ElseIf $mUpgradeTime >= 4320 Then
+	;				SetLog("Long Upgrade duration > 3d And < 5d", $COLOR_INFO)
+	;				SetLog("Discounting wall save resources by 25%", $COLOR_INFO)
+	;				$g_bWallSaveMode = 2
+	;			Else
+	;				SetLog("Upgrade time < 3d, No Discounts!", $COLOR_INFO)
+	;				$g_bWallSaveMode = 0
+	;			EndIf
+	;		EndIf
+	;	EndIf
+	;EndIf
 
 	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
 		If $g_bNewBuildingFirst And Not $g_bUpgradeLowCost Then ;skip if will use for lowcost upgrade
@@ -103,6 +103,7 @@ Func SearchUpgrade($bTest = False)
 				Return ;no builder, exit
 			EndIf
 			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
+			_Sleep(5000)
 		EndIf
 	Else
 		Return
