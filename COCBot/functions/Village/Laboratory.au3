@@ -456,7 +456,7 @@ Func FindResearchButton()
 	If $LabFound Then
 		Local $aBtnCancel = FindButton("cancel")
 		If IsArray($aBtnCancel) And UBound($aBtnCancel) > 0 Then
-			SetLog("Laboratory is Upgrading!, Cannot start any upgrade", $COLOR_ERROR)
+			SetLog("Laboratory is upgrading! Cannot start any upgrade.", $COLOR_ERROR)
 			$bLabIsOnUpgrade = True
 		EndIf
 		ClickB("Research")
