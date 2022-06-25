@@ -85,7 +85,7 @@ Func GetBlueStacks5AdbPath()
 EndFunc   ;==>GetBlueStacksXAdbPath
 
 Func InitBlueStacks5X($bCheckOnly = False, $bAdjustResolution = False, $bLegacyMode = False)
-	;Bluestacks5 doesn't have registry tree for engine, only installation dir info
+	;Bluestacks5 doesn't have registry tree for engine, only installation dir info available on registry
 	$__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
 	$__BlueStacks_Path = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "InstallDir")
 	If @error <> 0 Then
@@ -96,16 +96,7 @@ Func InitBlueStacks5X($bCheckOnly = False, $bAdjustResolution = False, $bLegacyM
 	
 	Local $frontend_exe = ["HD-Frontend.exe", "HD-Player.exe"]
 	Local $i, $aFiles = ["HD-Player.exe", "HD-Adb.exe"] ; first element can be $frontend_exe array!
-	Local $Values[4][3] = [ _
-			["Screen Width", $g_iAndroidClientWidth, $g_iAndroidClientWidth], _
-			["Screen Height", $g_iAndroidClientHeight, $g_iAndroidClientHeight], _
-			["Window Width", $g_iAndroidWindowWidth, $g_iAndroidWindowWidth], _
-			["Window Height", $g_iAndroidWindowHeight, $g_iAndroidWindowHeight] _
-			]
 	
-	;Local $sPreferredADB = FindPreferredAdbPath()
-	;If $sPreferredADB Then _ArrayDelete($aFiles, 1)
-
 	For $i = 0 To UBound($aFiles) - 1
 		Local $File
 		Local $bFileFound = False
@@ -146,16 +137,25 @@ EndFunc   ;==>InitBlueStacks5
 Func ConfigureSharedFolderBlueStacks5($iMode = 0, $bSetLog = Default)
 	If $bSetLog = Default Then $bSetLog = True
 	Local $bResult = False
+	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
+	Local $__BlueStacks5_InstanceConf = FileReadToArray($__BlueStacks5_ProgramData & "\Engine\" & $g_sAndroidInstance & "\" & $g_sAndroidInstance & ".bstk")
+	Local $iLineCount = @extended
 	
 	Switch $iMode
 		Case 0 ; check that shared folder is configured in VM
-			For $i = 0 To 5
-				If FileExists("C:\ProgramData\BlueStacks_nxt\Engine\UserData\SharedFolder") Then
-					$bResult = True
-					$g_bAndroidSharedFolderAvailable = True
-					$g_sAndroidPicturesPath = "/storage/sdcard/windows/BstSharedFolder/"
-					$g_sAndroidPicturesHostPath = "C:\ProgramData\BlueStacks_nxt\Engine\UserData\SharedFolder\"
-					ExitLoop
+			For $i = 0 To $iLineCount - 1
+				If StringInStr($__BlueStacks5_InstanceConf[$i], "BstSharedFolder") Then 
+					Local $aPath = StringRegExp($__BlueStacks5_InstanceConf[$i], "hostPath=(.+)writable", $STR_REGEXPARRAYMATCH)
+					If IsArray($aPath) And Not @error Then 
+						Local $path = StringStripWS((StringReplace($aPath[0], '"', '')), $STR_STRIPTRAILING)
+						If StringRight($path, 1) <> "\" Then $path &= "\"
+						$g_sAndroidPicturesHostPath = $path
+						$bResult = True
+						$g_bAndroidSharedFolderAvailable = True
+						$g_sAndroidPicturesPath = "/mnt/windows/BstSharedFolder/"
+						SetDebugLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
+						SetDebugLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
+					EndIf
 				EndIf
 			Next
 		Case 1 ; create missing shared folder
@@ -191,8 +191,6 @@ Func InitBlueStacks5($bCheckOnly = False)
 		EndIf
 	Next
 	
-	SetLog($g_sAndroidAdbDevice)
-
 	If $bInstalled And Not $bCheckOnly Then
 		$__VBoxManage_Path = $__BlueStacks_Path & "BstkVMMgr.exe"
 		Local $bsNow = GetVersionNormalized($__BlueStacks_Version)
@@ -200,7 +198,7 @@ Func InitBlueStacks5($bCheckOnly = False)
 			; only Version 4 requires new options
 			;$g_sAndroidAdbInstanceShellOptions = " -t -t" ; Additional shell options, only used by BlueStacks2 " -t -t"
 			$g_sAndroidAdbShellOptions = " /data/anr/../../system/xbin/bstk/su root" ; Additional shell options when launch shell with command, only used by BlueStacks2 " /data/anr/../../system/xbin/bstk/su root"
-
+		
 			; tcp forward not working in BS4
 			$g_iAndroidAdbMinitouchMode = 1
 		EndIf
@@ -215,22 +213,6 @@ Func GetBlueStacks5BackgroundMode()
 	; Only DirectX-Mode is supported for Background Mode
 	Return $g_iAndroidBackgroundModeDirectX
 EndFunc   ;==>GetBlueStacksBackgroundMode
-
-;Func GetBlueStacks2BackgroundMode()
-;	; check if BlueStacks 2 is running in OpenGL mode
-;	Local $GlRenderMode = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\Guests\" & $g_sAndroidInstance & "\Config\", "GlRenderMode")
-;	Switch $GlRenderMode
-;		Case 4
-;			; DirectX
-;			Return $g_iAndroidBackgroundModeDirectX
-;		Case 1
-;			; OpenGL
-;			Return $g_iAndroidBackgroundModeOpenGL
-;		Case Else
-;			SetLog($g_sAndroidEmulator & " unsupported render mode " & $GlRenderMode, $COLOR_WARNING)
-;			Return 0
-;	EndSwitch
-;EndFunc   ;==>GetBlueStacks2BackgroundMode
 
 Func RestartBlueStacks5CoC()
 	Return RestartBlueStacksXCoC()

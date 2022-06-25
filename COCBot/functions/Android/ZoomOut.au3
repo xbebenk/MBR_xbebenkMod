@@ -640,7 +640,7 @@ Func ZoomIn($Region = "Top")
 		Case "Nox"
 			SetDebugLog("ZoomInNox()")
 			If ZoomInMEmu($Region) Then Return True
-		Case "BlueStacks2"
+		Case "BlueStacks2", "BlueStacks5"
 			SetDebugLog("ZoomInBlueStacks2()")
 			If ZoomInMEmu($Region) Then Return True
 	EndSwitch
@@ -654,7 +654,7 @@ Func ZoomInMEmu($Region = "Top")
 		Switch $g_sAndroidEmulator
 			Case "Memu", "Nox"
 				If Not AndroidAdbScript("ZoomIn") Then Return False
-			Case "BlueStacks2"
+			Case "BlueStacks2", "BlueStacks5"
 				If Not AndroidAdbScript("ZoomIn.BlueStacks") Then Return False
 		EndSwitch
 		If _Sleep(1500) Then Return
@@ -696,7 +696,7 @@ Func ZoomInBB($Region = "Top")
 		Case "Nox"
 			SetDebugLog("ZoomInBBNox()")
 			If ZoomInBBMEmu($Region) Then Return True
-		Case "BlueStacks2"
+		Case "BlueStacks2", "BlueStacks5"
 			SetDebugLog("ZoomInBBBluestacks()")
 			If ZoomInBBMEmu($Region) Then Return True
 	EndSwitch
@@ -710,7 +710,7 @@ Func ZoomInBBMEmu($Region = "Top")
 		Switch $g_sAndroidEmulator
 			Case "Memu", "Nox"
 				If Not AndroidAdbScript("ZoomInBB") Then Return False
-			Case "BlueStacks2"
+			Case "BlueStacks2", "BlueStacks5"
 				If Not AndroidAdbScript("ZoomInBB.BlueStacks") Then Return False
 		EndSwitch
 		If _Sleep(1500) Then Return

@@ -1848,6 +1848,14 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				SetLog("Cannot create dummy file: " & $g_sAndroidPicturesHostPath & $dummyFile, $COLOR_ERROR)
 				Return SetError(4, 0)
 			EndIf
+			
+			$s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " ls '" & $g_sAndroidPicturesPath & $dummyFile & "'", $process_killed)
+			If StringInStr($s, $dummyFile) > 0 And StringInStr($s, $dummyFile & ":") = 0 And StringInStr($s, "No such file or directory") = 0 And StringInStr($s, "syntax error") = 0 And StringInStr($s, "Permission denied") = 0 Then
+				$pathFound = True
+				SetDebugLog("Using " & $g_sAndroidPicturesPath & " for Android shared folder")
+				ExitLoop
+			EndIf
+			
 			For $i = 0 To UBound($aMounts) - 1
 				$path = $aMounts[$i]
 				If $path = "" Then ContinueLoop
@@ -2215,6 +2223,7 @@ Func AndroidAdbLaunchMinitouchShellInstance($wasRunState = Default, $rebootAndro
 		EndIf
 		AndroidAdbTerminateMinitouchShellInstance()
 		; minitouch: Uses STDIN and doesn't start socket
+		SetDebugLog("------------> " & $g_sAndroidPicturesPath)
 		If $bUseMouseDevice Then
 			Local $cmdMinitouch = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/") & "minitouch -d " & $g_sAndroidMouseDevice & " -i"
 		Else
