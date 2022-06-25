@@ -146,18 +146,6 @@ EndFunc   ;==>InitBlueStacks5
 Func ConfigureSharedFolderBlueStacks5($iMode = 0, $bSetLog = Default)
 	If $bSetLog = Default Then $bSetLog = True
 	Local $bResult = False
-	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
-	Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
-	Local $iLineCount = @extended
-	
-	For $i = 0 To $iLineCount - 1
-		If StringInStr($__Bluestacks5Conf[$i], "bst.instance." & $g_sAndroidInstance & ".") Then 
-			Local $propkey = StringReplace($__Bluestacks5Conf[$i], "bst.instance." & $g_sAndroidInstance & ".", "")
-			SetLog($propkey)
-			If $propkey = "status.adb_port" Then 
-			EndIf
-		EndIf
-	Next
 	
 	Switch $iMode
 		Case 0 ; check that shared folder is configured in VM
@@ -180,12 +168,30 @@ EndFunc   ;==>ConfigureSharedFolderBlueStacks5
 Func InitBlueStacks5($bCheckOnly = False)
 	Local $bInstalled = InitBlueStacks5X($bCheckOnly, True)
 	If $bInstalled And StringInStr($__BlueStacks_Version, "5.") <> 1 Then
-		If Not $bCheckOnly Then
-			SetLog("BlueStacks 5 supported version 5.x not found", $COLOR_ERROR)
-			SetError(1, @extended, False)
-		EndIf
+		SetLog("BlueStacks 5 supported version 5.x not found", $COLOR_ERROR)
+		SetError(1, @extended, False)
 		Return False
 	EndIf
+	
+	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
+	Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
+	Local $iLineCount = @extended
+	
+	For $i = 0 To $iLineCount - 1
+		If StringInStr($__Bluestacks5Conf[$i], "bst.instance." & $g_sAndroidInstance & ".") Then 
+			Local $propkey = StringReplace($__Bluestacks5Conf[$i], "bst.instance." & $g_sAndroidInstance & ".", "")
+			SetDebugLog($propkey)
+			Local $aProperty = StringSplit($propkey, "=", $STR_NOCOUNT)
+			If IsArray($aProperty) And UBound($aProperty) = 2 Then 
+				If StringInStr($aProperty[0], "adb_port") Then 
+					Local $port = StringReplace($aProperty[1], '"', '')
+					$g_sAndroidAdbDevice = "127.0.0.1:" & $port
+				EndIf
+			EndIf
+		EndIf
+	Next
+	
+	SetLog($g_sAndroidAdbDevice)
 
 	If $bInstalled And Not $bCheckOnly Then
 		$__VBoxManage_Path = $__BlueStacks_Path & "BstkVMMgr.exe"
@@ -200,15 +206,6 @@ Func InitBlueStacks5($bCheckOnly = False)
 		EndIf
 
 		CheckBlueStacksVersionMod()
-
-		; read ADB port
-		Local $BstAdbPort = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\Guests\" & $g_sAndroidInstance & "\Config\", "BstAdbPort")
-		If $BstAdbPort Then
-			$g_sAndroidAdbDevice = "127.0.0.1:" & $BstAdbPort
-		Else
-			; use default
-			$g_sAndroidAdbDevice = $g_avAndroidAppConfig[$__BS5_Idx][10]
-		EndIf
 	EndIf
 
 	Return $bInstalled
