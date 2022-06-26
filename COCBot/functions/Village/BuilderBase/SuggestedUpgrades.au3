@@ -591,7 +591,7 @@ EndFunc
 Func GoAttackBBAndReturn()
 	If Not $g_bRunState Then Return
 	SetLog("Going attack, to clear field", $COLOR_DEBUG)
-	PrepareAttackBB()
+	PrepareAttackBB("CleanYard")
 	_AttackBB()
 	If Not $g_bRunState Then Return
 	ClickAway("Left")
