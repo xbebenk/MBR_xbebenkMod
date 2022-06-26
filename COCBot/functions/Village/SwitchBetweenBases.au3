@@ -114,13 +114,7 @@ Func SwitchTo($To = "BB")
 	
 	If IsProblemAffect(True) Then Return
 	If Not $g_bRunState Then Return
-	;If Not $bRet Then 
-	;	SetLog("SwitchBetweenBases Failed", $COLOR_ERROR)
-	;	SaveDebugImage("SwitchBetweenBases", True)
-	;	CloseCoC(True) ; restart coc
-	;	_SleepStatus(10000) ;give time for coc loading
-	;	checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
-	;EndIf
+	If QuickMIS("BC1", $g_sImgBBWallRotate, 360, 530, 500, 610) Then GoAttackBBAndReturn()
 	Return $bRet
 EndFunc
 
