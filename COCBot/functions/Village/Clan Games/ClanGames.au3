@@ -451,7 +451,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 				SetDebugLog("$aTempSelectChallenges: " & _ArrayToString($aTempSelectChallenges))
 				Setlog("Next Event will be " & $aTempSelectChallenges[$i][0] & " to make in " & $aTempSelectChallenges[$i][4] & " min.")
 				; if enabled stop and purge, more than 1 day CG time, and event score will make clangames maxpoint, and there is another event on array
-				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > 1440 And (Number($aiScoreLimit[0]) + Number($aTempSelectChallenges[$i][6])) >= Number($aiScoreLimit[1]) Then 
+				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > $PurgeDayMinute And (Number($aiScoreLimit[0]) + Number($aTempSelectChallenges[$i][6])) >= Number($aiScoreLimit[1]) Then 
 					If $i < UBound($aTempSelectChallenges) - 1 Then 
 						SetLog($aTempSelectChallenges[$i][0] & ", score:" & $aTempSelectChallenges[$i][6], $COLOR_INFO)
 						SetLog("Doing this challenge will maxing score, looking next", $COLOR_INFO)
