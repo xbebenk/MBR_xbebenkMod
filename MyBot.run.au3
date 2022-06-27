@@ -906,16 +906,14 @@ Func _Idle() ;Sequence that runs until Full Army
 		Local $hTimer = __TimerInit()
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
-		;xbenk
-		;checkMainScreen(False) ; required here due to many possible exits
-		If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = True Then
-			CheckArmyCamp(True, True)
-			If _Sleep($DELAYIDLE1) Then Return
-			If ($g_bIsFullArmywithHeroesAndSpells = False) Then
-				SetLog("Army Camp is not full, Training Continues...", $COLOR_ACTION)
-				$g_iCommandStop = 0
-			EndIf
-		EndIf
+		;If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = True Then
+		;	CheckArmyCamp(True, True)
+		;	If _Sleep($DELAYIDLE1) Then Return
+		;	If ($g_bIsFullArmywithHeroesAndSpells = False) Then
+		;		SetLog("Army Camp is not full, Training Continues...", $COLOR_ACTION)
+		;		$g_iCommandStop = 0
+		;	EndIf
+		;EndIf
 		If $g_bRestart Then ExitLoop
 		If Random(0, $g_iCollectAtCount - 1, 1) = 0 Then ; This is prevent from collecting all the time which isn't needed anyway, chance to run is 1/$g_iCollectAtCount
 			If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then
@@ -1451,6 +1449,8 @@ Func FirstCheckRoutine()
 		PrepareDonateCC()
 		DonateCC()
 		TrainSystem()
+		CommonRoutine("NoClanGamesEvent")
+		$g_bForceSwitchifNoCGEvent = True
 		checkSwitchAcc() ;switch to next account
 	EndIf	
 	
