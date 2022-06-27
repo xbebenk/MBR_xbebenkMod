@@ -350,13 +350,8 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 					Local $sTroopName = ($rWTT[$i][1] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
 				EndIf
 
-				If CheckValuesCost($rWTT[$i][0], $rWTT[$i][1]) Then
-					SetLog("Training " & $rWTT[$i][1] & "x " & $sTroopName, $COLOR_SUCCESS)
-					TrainIt($iTroopIndex, $rWTT[$i][1], $g_iTrainClickDelay)
-				Else
-					SetLog("No resources to Train " & $rWTT[$i][1] & "x " & $sTroopName, $COLOR_ACTION)
-					;$g_bOutOfElixir = True
-				EndIf
+				SetLog("Training " & $rWTT[$i][1] & "x " & $sTroopName, $COLOR_SUCCESS)
+				TrainIt($iTroopIndex, $rWTT[$i][1], $g_iTrainClickDelay)
 			EndIf
 		EndIf
 		If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
@@ -387,13 +382,8 @@ Func BrewUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 			If $NeededSpace > $LeftSpace Then $rWTT[$i][1] = Int($LeftSpace / $g_aiSpellSpace[$iSpellIndex - $eLSpell])
 			If $rWTT[$i][1] > 0 Then
 				Local $sSpellName = $g_asSpellNames[$iSpellIndex - $eLSpell]
-				If CheckValuesCost($rWTT[$i][0], $rWTT[$i][1]) Then
-					SetLog("Brewing " & $rWTT[$i][1] & "x " & $sSpellName & ($rWTT[$i][1] > 1 ? " Spells" : " Spell"), $COLOR_SUCCESS)
-					TrainIt($iSpellIndex, $rWTT[$i][1], $g_iTrainClickDelay)
-				Else
-					SetLog("No resources to Brew " & $rWTT[$i][1] & "x " & $sSpellName & ($rWTT[$i][1] > 1 ? " Spells" : " Spell"), $COLOR_ACTION)
-					$g_bOutOfElixir = True
-				EndIf
+				SetLog("Brewing " & $rWTT[$i][1] & "x " & $sSpellName & ($rWTT[$i][1] > 1 ? " Spells" : " Spell"), $COLOR_SUCCESS)
+				TrainIt($iSpellIndex, $rWTT[$i][1], $g_iTrainClickDelay)
 			EndIf
 		EndIf
 		If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
