@@ -516,7 +516,7 @@ Func NewBuildings($x, $y, $aBuildingName, $bTest = False)
 		If _Sleep(2500) Then Return
 
 		If $aBuildingName[1] = "Wall" Then
-			TPW() ;Try Placing Wall (no guarantee) Sucks SC's AI
+			TPW($greenZoneBB) ;Try Placing Wall (no guarantee) Sucks SC's AI
 			Return True
 		EndIf
 		; Lets search for the Correct Symbol on field
@@ -872,6 +872,11 @@ Func TPW($region = $greenZoneBB)
 				SetLog("Try Placing Wall #" & $i, $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				_Sleep(1000)
+				If IsGemOpen(True) Then
+					SetLog("Need Gem!", $COLOR_ERROR)
+					Return False
+				EndIf
+			Else
 			Next
 		EndIf
 		
