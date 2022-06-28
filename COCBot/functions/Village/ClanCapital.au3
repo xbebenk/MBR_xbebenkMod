@@ -10,7 +10,7 @@ Func CollectCCGold($bTest = False)
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
 		For $i = 1 To 5
 			SetDebugLog("Waiting for Forge Window #" & $i, $COLOR_ACTION)
-			If QuickMis("BC1", $g_sImgGeneralCloseButton, 710, 150, 760, 190) Then
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 710, 160, 760, 205) Then
 				$bWindowOpened = True
 				ExitLoop
 			EndIf
