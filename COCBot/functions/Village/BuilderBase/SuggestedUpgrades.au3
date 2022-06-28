@@ -874,6 +874,7 @@ Func TPW($region = $greenZoneBB)
 				_Sleep(1000)
 				If IsGemOpen(True) Then
 					SetLog("Need Gem!", $COLOR_ERROR)
+					If QuickMIS("BC1", $g_sImgAutoUpgradeRedX, 80, 80, 780, 600) Then Click($g_iQuickMISX, $g_iQuickMISY)
 					Return False
 				EndIf
 			Next
