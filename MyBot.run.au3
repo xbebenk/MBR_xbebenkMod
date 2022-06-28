@@ -812,7 +812,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bChkFastSwitchAcc Then
 				Local $aRndFuncList = ['UpgradeHeroes', 'PetHouse', 'BuilderBase']
 			Else
-				Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'BuilderBase']
+				Local $aRndFuncList = ['Collect', 'CollectAchievements', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'BuilderBase']
 			EndIf
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -906,16 +906,14 @@ Func _Idle() ;Sequence that runs until Full Army
 		Local $hTimer = __TimerInit()
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
-		;xbenk
-		;checkMainScreen(False) ; required here due to many possible exits
-		If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = True Then
-			CheckArmyCamp(True, True)
-			If _Sleep($DELAYIDLE1) Then Return
-			If ($g_bIsFullArmywithHeroesAndSpells = False) Then
-				SetLog("Army Camp is not full, Training Continues...", $COLOR_ACTION)
-				$g_iCommandStop = 0
-			EndIf
-		EndIf
+		;If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = True Then
+		;	CheckArmyCamp(True, True)
+		;	If _Sleep($DELAYIDLE1) Then Return
+		;	If ($g_bIsFullArmywithHeroesAndSpells = False) Then
+		;		SetLog("Army Camp is not full, Training Continues...", $COLOR_ACTION)
+		;		$g_iCommandStop = 0
+		;	EndIf
+		;EndIf
 		If $g_bRestart Then ExitLoop
 		If Random(0, $g_iCollectAtCount - 1, 1) = 0 Then ; This is prevent from collecting all the time which isn't needed anyway, chance to run is 1/$g_iCollectAtCount
 			If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then
@@ -1005,6 +1003,7 @@ Func _Idle() ;Sequence that runs until Full Army
 
 		If $g_iCommandStop = -1 Then ; Check if closing bot/emulator while training and not in halt mode
 			SmartWait4Train()
+			checkObstacles()
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
 		EndIf
@@ -1450,6 +1449,8 @@ Func FirstCheckRoutine()
 		PrepareDonateCC()
 		DonateCC()
 		TrainSystem()
+		CommonRoutine("NoClanGamesEvent")
+		$g_bForceSwitchifNoCGEvent = True
 		checkSwitchAcc() ;switch to next account
 	EndIf	
 	
@@ -1579,8 +1580,8 @@ Func FirstCheckRoutine()
 	EndIf
 	
 	If Not $g_bRunState Then Return
-	RequestCC(False)
-	checkArmyCamp(False, True)
+	RequestCC(True)
+	checkArmyCamp(True, True)
 	PrepareDonateCC()
 	_Sleep(1000)
 	DonateCC()
@@ -1604,7 +1605,7 @@ Func CommonRoutine($RoutineType = Default)
 				If _Sleep(500) Then Return
 				If $g_bRestart Then Return
 			Next
-			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC']
+			Local $aRndFuncList = ['PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1622,7 +1623,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 			
 		Case "Switch"
-			Local $aRndFuncList = ['BuilderBase', 'DonateCC,Train']
+			Local $aRndFuncList = ['BuilderBase', 'DonateCC,Train', 'UpgradeBuilding', 'UpgradeWall']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1638,7 +1639,7 @@ Func BuilderBase()
 	If SwitchBetweenBases("BB") Then
 		$g_bStayOnBuilderBase = True
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-
+		ZoomOut()
 		$g_iBBAttacked = True	; Reset Variable
 		BuilderBaseReport()
 		CollectBuilderBase()

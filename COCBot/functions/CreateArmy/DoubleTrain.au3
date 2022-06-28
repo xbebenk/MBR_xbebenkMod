@@ -162,12 +162,8 @@ Func DoubleTrain()
 		If $TroopQuantToFill > 0 Then
 			SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
 			If Not DragIfNeeded($g_sCmbFICTroops[$FillTroopIndex][0]) Then Return False
-			If CheckValuesCost($g_sCmbFICTroops[$FillTroopIndex][0], $TroopQuantToFill) Then
-				SetLog("Training " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_SUCCESS)
-				TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
-			Else
-				SetLog("No resources to Train " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_ACTION)
-			EndIf
+			SetLog("Training " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_SUCCESS)
+			TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
 		EndIf
 	EndIf
 	
@@ -186,12 +182,8 @@ Func DoubleTrain()
 		If $SpellQuantToFill > 0 Then
 			SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
 			If Not DragIfNeeded($g_sCmbFICSpells[$FillSpellIndex][0]) Then Return False
-			If CheckValuesCost($g_sCmbFICSpells[$FillSpellIndex][0], $SpellQuantToFill) Then
-				SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
-				TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
-			Else
-				SetLog("No resources to Brew " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_ACTION)
-			EndIf
+			SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
+			TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
 		EndIf
 	EndIf
 	If _Sleep(250) Then Return

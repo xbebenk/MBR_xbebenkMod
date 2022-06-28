@@ -66,6 +66,11 @@ Func PrepareAttackBB($Mode = Default)
 		Return True
 	EndIf
 	
+	If $Mode = "CleanYard" Then 
+		SetLog("Preparing Attack Clean Yard", $COLOR_ACTION)
+		Return True
+	EndIf
+	
 	If $g_bChkBBAttIfLootAvail Then
 		If Not CheckLootAvail() Then
 			_Sleep(500)

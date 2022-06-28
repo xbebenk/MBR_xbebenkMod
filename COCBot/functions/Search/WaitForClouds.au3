@@ -23,59 +23,16 @@ Func WaitForClouds()
 	Local $hMinuteTimer, $iSearchTime
 	Local $bEnabledGUI = False
 
-	Local $maxSearchCount = 720 ; $maxSearchCount * 250ms ($DELAYGETRESOURCES1) = seconds wait time before reset in lower leagues: 720*250ms = 3 minutes
-	Local $maxLongSearchCount = 7 ; $maxLongSearchCount * $maxSearchCount = seconds total wait time in higher leagues: ; 21 minutes, set a value here but is never used unless error
-
-	Switch Int($g_aiCurrentLoot[$eLootTrophy]) ; add randomization to SearchCounters (long cloud keep alive time) for higher leagues
-		Case 3700 To 4099 ; champion 1 league
-			$maxSearchCount = Random(480, 840, 1) ; random range 2-3.5 minutes
-			$maxLongSearchCount = Random(10, 12, 1) ; random range 20-40 minutes
-		Case 4100 To 4399 ; Titan 3 league
-			$maxSearchCount = Random(480, 840, 1) ; random range 2-3.5 minutes
-			$maxLongSearchCount = Random(15, 25, 1) ; random range 30-87 minutes
-		Case 4400 To 4699 ; Titan 2 league
-			$maxSearchCount = Random(600, 840, 1) ; random range 2.5-3.5 minutes
-			$maxLongSearchCount = Random(24, 42, 1) ; random range 60-147 minutes
-		Case 4700 To 4999 ; Titan 1 league
-			$maxSearchCount = Random(600, 840, 1) ; random range 2.5-3.5 minutes
-			$maxLongSearchCount = Random(36, 50, 1) ; random range 90-175 minutes
-		Case 5000 To 6500 ; Legend league
-			$maxSearchCount = Random(600, 840, 1) ; random range 2.5-3.5 minutes
-			$maxLongSearchCount = Random(80, 85, 1) ; random range 200-300 minutes
-	EndSwitch
-	If $g_bDebugSetlog Then ; display random values if debug log
-		SetLog("RANDOM: $maxSearchCount= " & $maxSearchCount & "= " & Round($maxSearchCount / $DELAYGETRESOURCES1, 2) & " min between cloud chk", $COLOR_DEBUG)
-		SetLog("RANDOM: $maxLongSearchCount= " & $maxLongSearchCount & "= " & Round(($maxSearchCount / $DELAYGETRESOURCES1) * $maxLongSearchCount, 2) & " min max search time", $COLOR_DEBUG)
-	EndIf
-
-	ForceCaptureRegion() ; ensure screenshots are not cached
 	Local $hMinuteTimer = __TimerInit() ; initialize timer for tracking search time
-
-	While $g_bRestart = False And _CaptureRegions() And _CheckPixel($aIsAttackPage) = False ; loop to wait for clouds to disappear
+	
+	While Not _CheckPixel($aIsAttackPage, True) ; loop to wait for clouds to disappear
 		; notice: don't exit function with return in this loop, use ExitLoop ! ! !
-		If _Sleep($DELAYGETRESOURCES1 * 10) Then ExitLoop ;250ms * 10 = 2.5 sec
 		$iCount += 1
 		If isProblemAffect(True) Then ; check for reload error messages and restart search if needed
 			resetAttackSearch()
 			ExitLoop
 		EndIf
-		If $iCount >= $maxSearchCount Then ; If clouds do not clear in alloted time do something
-			If EnableLongSearch() = False Then ; Check if attacking in Champion 1 or higher league with long search that needs to be continued
-				resetAttackSearch()
-				ExitLoop
-			Else
-				$bigCount += 1 ; Increment long wait time fail safe timer
-				If $bigCount > $maxLongSearchCount Then ; check maximum wait time
-					$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
-					SetLog("Spent " & $iSearchTime & " minutes in Clouds searching, Restarting CoC and Bot...", $COLOR_ERROR)
-					$g_bIsClientSyncError = False ; disable fast OOS restart if not simple error and restarting CoC
-					$g_bRestart = True
-					CloseCoC(True)
-					ExitLoop
-				EndIf
-				$iCount = 0 ; reset outer loop value
-			EndIf
-		EndIf
+		
 		If (Mod($iCount, 10) = 0 And checkObstacles_Network(False, False)) Then
 			; network error -> restart CoC
 			$g_bIsClientSyncError = True
@@ -84,6 +41,7 @@ Func WaitForClouds()
 			ExitLoop
 		EndIf
 		If $g_bDebugSetlog Then _GUICtrlStatusBar_SetTextEx($g_hStatusBar, " Status: Loop to clean screen without Clouds, # " & $iCount)
+		
 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
 		If $iSearchTime >= $iLastTime + 1 Then
 			SetLog("Cloud wait time " & StringFormat("%.1f", $iSearchTime) & " minute(s)", $COLOR_INFO)
@@ -94,6 +52,7 @@ Func WaitForClouds()
 				CloseCoC(True)
 				ExitLoop
 			EndIf
+			
 			; once a minute safety checks for search fail/retry msg and Personal Break events and early detection if CoC app has crashed inside emulator (Bluestacks issue mainly)
 			If chkAttackSearchFail() = 2 Or chkAttackSearchPersonalBreak() = True Or GetAndroidProcessPID() = 0 Then
 				resetAttackSearch()
@@ -114,14 +73,8 @@ Func WaitForClouds()
 				$bEnabledGUI = True
 			EndIf
 		EndIf
-		If Int($g_aiCurrentLoot[$eLootTrophy]) < 4000 And $iSearchTime > 5 Then 
-			SetLog("Restart Search cause long wait search on low league", $COLOR_SUCCESS)
-			$g_bRestart = True
-			resetAttackSearch()
-			ExitLoop
-		EndIf
 		If Not $g_bRunState Then ExitLoop
-		ForceCaptureRegion() ; ensure screenshots are not cached
+		_Sleep(500)
 	WEnd
 
 	If $bEnabledGUI = True Then
@@ -132,10 +85,6 @@ Func WaitForClouds()
 		readConfig()
 		applyConfig()
 	EndIf
-
-	; add delay as few clouds might be still on screen (better to check for remaining clouds at top right?)
-	If _Sleep($DELAYCLOUDSCLEARED) Then Return
-
 EndFunc   ;==>WaitForClouds
 
 Func EnableLongSearch()

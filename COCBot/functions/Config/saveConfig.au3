@@ -1006,6 +1006,7 @@ Func SaveConfig_600_29_DB()
 
 	_Ini_Add("attack", "DBAtkUseWardenMode", $g_aiAttackUseWardenMode[$DB])
 	_Ini_Add("attack", "DBAtkUseSiege", $g_aiAttackUseSiege[$DB])
+	_Ini_Add("attack", "DBDropEmptySiege", $g_bDropEmptySiege[$DB] ? 1 : 0)
 
 	SaveConfig_600_29_DB_Standard()
 
@@ -1067,6 +1068,7 @@ Func SaveConfig_600_29_LB()
 
 	_Ini_Add("attack", "ABAtkUseWardenMode", $g_aiAttackUseWardenMode[$LB])
 	_Ini_Add("attack", "ABAtkUseSiege", $g_aiAttackUseSiege[$LB])
+	_Ini_Add("attack", "ABDropEmptySiege", $g_bDropEmptySiege[$LB] ? 1 : 0)
 
 	SaveConfig_600_29_LB_Standard()
 

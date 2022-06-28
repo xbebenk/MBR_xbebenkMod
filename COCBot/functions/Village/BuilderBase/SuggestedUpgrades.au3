@@ -591,7 +591,7 @@ EndFunc
 Func GoAttackBBAndReturn()
 	If Not $g_bRunState Then Return
 	SetLog("Going attack, to clear field", $COLOR_DEBUG)
-	PrepareAttackBB()
+	PrepareAttackBB("CleanYard")
 	_AttackBB()
 	If Not $g_bRunState Then Return
 	ClickAway("Left")
@@ -872,9 +872,14 @@ Func TPW($region = $greenZoneBB)
 				SetLog("Try Placing Wall #" & $i, $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				_Sleep(1000)
+				If IsGemOpen(True) Then
+					SetLog("Need Gem!", $COLOR_ERROR)
+					If QuickMIS("BC1", $g_sImgAutoUpgradeRedX, 80, 80, 780, 600) Then Click($g_iQuickMISX, $g_iQuickMISY)
+					Return False
+				EndIf
 			Next
 		EndIf
-		
+
 		If Not $g_bRunState Then Return
 		Local $RandomDrag = Random(-100, -80, 1)
 		Local $DragX = 0, $DragY = 0

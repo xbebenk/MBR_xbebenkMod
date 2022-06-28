@@ -395,7 +395,7 @@ EndFunc   ;==>BanMsgBox
 Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 	Static $hCocReconnectingTimer = 0 ; TimerHandle of first CoC reconnecting animation
 
-	If UBound(decodeSingleCoord(FindImageInPlace("CocReconnecting", $g_sImgCocReconnecting, "420,325,440,345", $bForceCapture))) > 1 Then
+	If QuickMIS("BC1", $g_sImgCocReconnecting, 420,325,440,345) Then
 		If $hCocReconnectingTimer = 0 Then
 			SetLog("Network Connection lost...", $COLOR_ERROR)
 			$hCocReconnectingTimer = __TimerInit()

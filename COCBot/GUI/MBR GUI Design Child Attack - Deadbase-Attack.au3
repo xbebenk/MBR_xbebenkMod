@@ -23,7 +23,7 @@ Global $g_hPicDBKingAttack = 0, $g_hPicDBQueenAttack = 0, $g_hPicDBWardenAttack 
 Global $g_hPicDBLightSpell = 0, $g_hPicDBHealSpell = 0, $g_hPicDBRageSpell = 0, $g_hPicDBJumpSpell = 0, $g_hPicDBFreezeSpell = 0, $g_hPicDBCloneSpell = 0, _
 	   $g_hPicDBInvisibilitySpell, $g_hPicDBPoisonSpell = 0, $g_hPicDBEarthquakeSpell = 0, $g_hPicDBHasteSpell = 0, $g_hPicDBSkeletonSpell = 0, $g_hPicDBBatSpell = 0
 
-Global $g_hCmbDBSiege = 0, $g_hCmbDBWardenMode = 0, $g_hChkDBChampionAttack = 0, $g_hPicDBChampionAttack = 0
+Global $g_hCmbDBSiege = 0, $g_hCmbDBWardenMode = 0, $g_hChkDBChampionAttack = 0, $g_hPicDBChampionAttack = 0, $g_hChkDBDropEmptySiege = 0
 
 Func CreateAttackSearchDeadBaseAttack()
 	Local $sTxtTip = ""
@@ -211,4 +211,9 @@ Func CreateAttackSearchDeadBaseAttack()
 				_GUICtrlSetTip(-1, $sTxtTip)
 				GUICtrlSetState(-1, $GUI_CHECKED)
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
+		
+		$y += 50
+		$x = 10
+		$g_hChkDBDropEmptySiege = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "ChkDropEmptySiege", "Drop Empty Siege"), $x, $y, -1, -1)
+		
 EndFunc   ;==>CreateAttackSearchDeadBaseAttack
