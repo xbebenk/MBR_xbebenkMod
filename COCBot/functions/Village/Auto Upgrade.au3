@@ -78,20 +78,20 @@ Func SearchUpgrade($bTest = False)
 			EndIf
 	
 			; Smart Save Resources for Wall Upgrade
-			If $g_bWallSaveMode < 0 Then
-				If $mUpgradeTime >= 7200 Then
-					SetLog("Long Upgrade Duration > 5d", $COLOR_INFO)
-					SetLog("Discounting wall save resources by 50%", $COLOR_INFO)
-					$g_bWallSaveMode = 1
-				ElseIf $mUpgradeTime >= 4320 Then
-					SetLog("Long Upgrade duration > 3d And < 5d", $COLOR_INFO)
-					SetLog("Discounting wall save resources by 25%", $COLOR_INFO)
-					$g_bWallSaveMode = 2
-				Else
-					SetLog("Upgrade time < 3d, No Discounts!", $COLOR_INFO)
-					$g_bWallSaveMode = 0
-				EndIf
-			EndIf
+			;If $g_bWallSaveMode < 0 Then
+			;	If $mUpgradeTime >= 7200 Then
+			;		SetLog("Long Upgrade Duration > 5d", $COLOR_INFO)
+			;		SetLog("Discounting wall save resources by 50%", $COLOR_INFO)
+			;		$g_bWallSaveMode = 1
+			;	ElseIf $mUpgradeTime >= 4320 Then
+			;		SetLog("Long Upgrade duration > 3d And < 5d", $COLOR_INFO)
+			;		SetLog("Discounting wall save resources by 25%", $COLOR_INFO)
+			;		$g_bWallSaveMode = 2
+			;	Else
+			;		SetLog("Upgrade time < 3d, No Discounts!", $COLOR_INFO)
+			;		$g_bWallSaveMode = 0
+			;	EndIf
+			;EndIf
 		EndIf
 	EndIf
 
