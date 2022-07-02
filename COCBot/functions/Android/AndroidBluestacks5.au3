@@ -250,12 +250,14 @@ Func CheckScreenBlueStacks5($bSetLog = True)
 	Local $aiSearch = ["bst.instance." & $g_sAndroidInstance & ".fb_width", _
 					   "bst.instance." & $g_sAndroidInstance & ".fb_height", _
 					   'bst.instance.' & $g_sAndroidInstance & '.dpi="160"', _
-					   "bst.instance." & $g_sAndroidInstance & ".gl_win_height"]
+					   "bst.instance." & $g_sAndroidInstance & ".gl_win_height", _
+					   "bst.instance." & $g_sAndroidInstance & ".display_name"]
 
 	Local $aiMustBe = ['"860"', _
 					   '"676"', _
 					   '"160"', _
-					   '"676"']
+					   '"676"', _
+					   '"Bluestacks5']
 
 	For $i = 0 To $iLineCount - 1
 		For $iSearch = 0 To UBound($aiSearch) - 1
@@ -280,13 +282,19 @@ Func SetScreenBlueStacks5()
 					   "bst.instance." & $g_sAndroidInstance & ".fb_height", _
 					   "bst.instance." & $g_sAndroidInstance & ".dpi", _
 					   "bst.instance." & $g_sAndroidInstance & ".gl_win_height", _
-					   "bst.instance." & $g_sAndroidInstance & ".show_sidebar"]
+					   "bst.instance." & $g_sAndroidInstance & ".show_sidebar", _
+					   "bst.instance." & $g_sAndroidInstance & ".display_name", _
+					   "bst.instance." & $g_sAndroidInstance & ".enable_fps_display", _
+					   "bst.instance." & $g_sAndroidInstance & ".google_login_popup_shown"]
 
 	Local $aiMustBe = ['bst.instance.' & $g_sAndroidInstance & '.fb_width="860"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.fb_height="676"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.dpi="160"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.gl_win_height="676"', _
-					   'bst.instance.' & $g_sAndroidInstance & '.show_sidebar="0"']
+					   'bst.instance.' & $g_sAndroidInstance & '.show_sidebar="0"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.display_name="BlueStacks5"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.enable_fps_display="1"', _
+					   "bst.instance." & $g_sAndroidInstance & '.google_login_popup_shown="0"']
 
 	For $i = 0 To $iLineCount - 1
 		For $iSearch = 0 To UBound($aiSearch) - 1
