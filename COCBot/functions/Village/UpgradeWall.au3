@@ -168,7 +168,7 @@ Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = 
 			Local $iWallSaveG = WallDiscount($g_iUpgradeWallMinGold)
 			Local $iWallSaveE = WallDiscount($g_iUpgradeWallMinElixir)
 			If $g_aiCurrentLoot[$eLootGold] < $iWallSaveG And $g_aiCurrentLoot[$eLootElixir] < $iWallSaveE Then $HaveResource = False
-			If Number($iWallLevel) > 7 Then
+			If Number($iWallLevel) > 3 Then
 				$HaveResource = $HaveElix
 				If $HaveResource Then $UpgradeType = "Elix"
 				If Not $HaveResource Then
@@ -256,6 +256,7 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 			Local $aWallLevel = BuildingInfo(242, 494)
 			If $aWallLevel[0] = "" Then
 				SetLog("Cannot read building Info, wrong click...", $COLOR_ERROR)
+				If IsFullScreenWindow() Then Click(825,45)
 				Return False
 			EndIf
 			If $aWallLevel[1] = "Wall" Then

@@ -20,13 +20,23 @@ Func isInsideDiamondXY($Coordx, $Coordy)
 	If $Coordy < 73 Then Return False
 	Local $aCoords = [$Coordx, $Coordy]
 	Return isInsideDiamond($aCoords)
-	Return True
 EndFunc   ;==>isInsideDiamondXY
 
 Func isInsideDiamond($aCoords)
 	Local $x = $aCoords[0], $y = $aCoords[1], $xD, $yD
-	;Local $Left = 15, $Right = 835, $Top = 30, $Bottom = 645 ; set the diamond shape 860x780
-	Local $Left = 19, $Right = 840, $Top = 19, $Bottom = 625 ; set the diamond shape based on reference village
+	Local $Left, $Right, $Top, $Bottom
+    Local $iIndex = _ArraySearch($g_aVillageRefSize, $g_sCurrentScenery) ;get the diamond shape based on reference village
+    If $iIndex <> -1 Then 
+        $Left = $g_aVillageRefSize[$iIndex][3]
+        $Right = $g_aVillageRefSize[$iIndex][4]
+        $Top = $g_aVillageRefSize[$iIndex][5]
+        $Bottom = $g_aVillageRefSize[$iIndex][6]
+        SetDebugLog("[isInsideDiamond] LRTB: " & $Left & "," & $Right & "," & $Top & "," & $Bottom)
+    Else
+        SetLog("[isInsideDiamond] Reference Size no match", $COLOR_ERROR)
+        Return False
+    EndIf
+	
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
 	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
 
@@ -34,22 +44,22 @@ Func isInsideDiamond($aCoords)
 	; top diamond point
 	$xD = $aMiddle[0]
 	$yD = $Top
-	;ConvertToVillagePos($xD, $yD)
+	ConvertToVillagePos($xD, $yD)
 	$Top = $yD
 	; bottom diamond point
 	$xD = $aMiddle[0]
 	$yD = $Bottom
-	;ConvertToVillagePos($xD, $yD)
+	ConvertToVillagePos($xD, $yD)
 	$Bottom = $yD
 	; left diamond point
 	$xD = $Left
 	$yD = $aMiddle[1]
-	;ConvertToVillagePos($xD, $yD)
+	ConvertToVillagePos($xD, $yD)
 	$Left = $xD
 	; right diamond point
 	$xD = $Right
 	$yD = $aMiddle[1]
-	;ConvertToVillagePos($xD, $yD)
+	ConvertToVillagePos($xD, $yD)
 	$Right = $xD
 
 	;SetDebugLog("isInsideDiamond coordinates updated by offset: " & $Left & ", " & $Right & ", " & $Top & ", " & $Bottom, $COLOR_DEBUG)

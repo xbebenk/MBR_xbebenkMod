@@ -210,8 +210,32 @@ Func InitBlueStacks5($bCheckOnly = False)
 EndFunc   ;==>InitBlueStacks2
 
 Func GetBlueStacks5BackgroundMode()
-	; Only DirectX-Mode is supported for Background Mode
-	Return $g_iAndroidBackgroundModeDirectX
+	; check if BlueStacks 2 is running in OpenGL mode
+	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
+	Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
+	Local $iLineCount = @extended
+	Local $GlRenderMode = "dx"
+	For $i = 0 To $iLineCount - 1
+		If StringInStr($__Bluestacks5Conf[$i], "bst.instance." & $g_sAndroidInstance & ".graphics_renderer") Then
+			$GlRenderMode = StringRegExp($__Bluestacks5Conf[$i], '=\"(.+)\"', $STR_REGEXPARRAYMATCH)
+			ExitLoop
+		EndIf
+	Next
+	
+	If IsArray($GlRenderMode) Then
+		SetDebugLog("GlRenderMode = " & $GlRenderMode[0])
+		Switch $GlRenderMode[0]
+			Case "dx"
+				; DirectX
+				Return $g_iAndroidBackgroundModeDirectX
+			Case "gl"
+				; OpenGL
+				Return $g_iAndroidBackgroundModeOpenGL
+			Case Else
+				SetLog($g_sAndroidEmulator & " unsupported render mode " & $GlRenderMode, $COLOR_WARNING)
+				Return 0
+		EndSwitch
+	EndIf
 EndFunc   ;==>GetBlueStacksBackgroundMode
 
 Func RestartBlueStacks5CoC()
@@ -219,30 +243,68 @@ Func RestartBlueStacks5CoC()
 EndFunc   ;==>RestartBlueStacks2CoC
 
 Func CheckScreenBlueStacks5($bSetLog = True)
-	;Return CheckScreenBlueStacksX($bSetLog)
+	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
+	Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
+	Local $iLineCount = @extended
+
+	Local $aiSearch = ["bst.instance." & $g_sAndroidInstance & ".fb_width", _
+					   "bst.instance." & $g_sAndroidInstance & ".fb_height", _
+					   'bst.instance.' & $g_sAndroidInstance & '.dpi="160"', _
+					   "bst.instance." & $g_sAndroidInstance & ".gl_win_height", _
+					   "bst.instance." & $g_sAndroidInstance & ".display_name"]
+
+	Local $aiMustBe = ['"860"', _
+					   '"676"', _
+					   '"160"', _
+					   '"676"', _
+					   '"Bluestacks5']
+
+	For $i = 0 To $iLineCount - 1
+		For $iSearch = 0 To UBound($aiSearch) - 1
+			If StringInStr($__Bluestacks5Conf[$i], $aiSearch[$iSearch]) Then
+				SetDebugLog($__Bluestacks5Conf[$i])
+				If StringInStr($__Bluestacks5Conf[$i], $aiMustBe[$iSearch]) = 0 Then
+					If $bSetLog = True Then SetLog("The bot will configure your Bluestacks", $COLOR_ERROR)
+					Return False
+				EndIf
+			EndIf
+		Next
+	Next
 	Return True
 EndFunc   ;==>CheckScreenBlueStacks
 
 Func SetScreenBlueStacks5()
-	Local $REGISTRY_KEY_DIRECTORY = $g_sHKLM & "\SOFTWARE\BlueStacks_nxt\Guests\" & $g_sAndroidInstance & "\FrameBuffer\0"
-	RegWrite($REGISTRY_KEY_DIRECTORY, "FullScreen", "REG_DWORD", "0")
-	RegWrite($REGISTRY_KEY_DIRECTORY, "GuestHeight", "REG_DWORD", $g_iAndroidClientHeight)
-	RegWrite($REGISTRY_KEY_DIRECTORY, "GuestWidth", "REG_DWORD", $g_iAndroidClientWidth)
-	RegWrite($REGISTRY_KEY_DIRECTORY, "WindowHeight", "REG_DWORD", $g_iAndroidClientHeight)
-	RegWrite($REGISTRY_KEY_DIRECTORY, "WindowWidth", "REG_DWORD", $g_iAndroidClientWidth)
-	; Enable bottom action bar with Back- and Home-Button (Menu-Button has no function and don't click Full-Screen-Button at the right as you cannot go back - F11 is not working!)
-	; 2015-12-24 cosote Disabled with "0" again because latest version 2.0.2.5623 doesn't support it anymore
-	$REGISTRY_KEY_DIRECTORY = $g_sHKLM & "\SOFTWARE\BlueStacks_nxt\Guests\" & $g_sAndroidInstance & "\Config"
-	RegWrite($REGISTRY_KEY_DIRECTORY, "FEControlBar", "REG_DWORD", "0")
-	$REGISTRY_KEY_DIRECTORY = $g_sHKLM & "\SOFTWARE\BlueStacks_nxt\Guests\" & $g_sAndroidInstance
-	Local $BootParameter = RegRead($REGISTRY_KEY_DIRECTORY, "BootParameters")
-	$BootParameter = StringRegExpReplace($BootParameter, "DPI=\d+", "DPI=160")
-	If @error = 0 And @extended > 0 Then
-		RegWrite($REGISTRY_KEY_DIRECTORY, "BootParameters", "REG_SZ", $BootParameter)
-	Else
-		; DPI=160 was missing
-		RegWrite($REGISTRY_KEY_DIRECTORY, "BootParameters", "REG_SZ", $BootParameter & " DPI=160")
-	EndIf
+	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
+	Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
+	Local $iLineCount = @extended
+
+	Local $aiSearch = ["bst.instance." & $g_sAndroidInstance & ".fb_width", _
+					   "bst.instance." & $g_sAndroidInstance & ".fb_height", _
+					   "bst.instance." & $g_sAndroidInstance & ".dpi", _
+					   "bst.instance." & $g_sAndroidInstance & ".gl_win_height", _
+					   "bst.instance." & $g_sAndroidInstance & ".show_sidebar", _
+					   "bst.instance." & $g_sAndroidInstance & ".display_name", _
+					   "bst.instance." & $g_sAndroidInstance & ".enable_fps_display", _
+					   "bst.instance." & $g_sAndroidInstance & ".google_login_popup_shown"]
+
+	Local $aiMustBe = ['bst.instance.' & $g_sAndroidInstance & '.fb_width="860"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.fb_height="676"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.dpi="160"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.gl_win_height="676"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.show_sidebar="0"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.display_name="BlueStacks5-' & $g_sAndroidInstance & '"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.enable_fps_display="1"', _
+					   "bst.instance." & $g_sAndroidInstance & '.google_login_popup_shown="0"']
+
+	For $i = 0 To $iLineCount - 1
+		For $iSearch = 0 To UBound($aiSearch) - 1
+			If StringInStr($__Bluestacks5Conf[$i], $aiSearch[$iSearch]) Then
+				$__Bluestacks5Conf[$i] = $aiMustBe[$iSearch]
+			EndIf
+		Next
+	Next
+;~ 	_ArrayDisplay($__Bluestacks5Conf)
+	_FileWriteFromArray($__BlueStacks5_ProgramData & "\bluestacks.conf", $__Bluestacks5Conf)
 EndFunc   ;==>SetScreenBlueStacks2
 
 Func ConfigBlueStacks5WindowManager()
