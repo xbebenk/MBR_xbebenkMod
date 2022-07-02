@@ -852,7 +852,7 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 
 				Local $QuantHalf = Floor($Quant/2)
 				
-				If $QuantHalf > 1 Then Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
+				If $QuantHalf >= 1 Then Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
 				If _Sleep(1000) Then Return
 				If Mod($Quant, 2) = 1 Then $QuantHalf += 1 ;Compensate for odd numbers
 				Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
