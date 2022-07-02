@@ -256,6 +256,7 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 			Local $aWallLevel = BuildingInfo(242, 494)
 			If $aWallLevel[0] = "" Then
 				SetLog("Cannot read building Info, wrong click...", $COLOR_ERROR)
+				If IsFullScreenWindow() Then Click(825,45)
 				Return False
 			EndIf
 			If $aWallLevel[1] = "Wall" Then
