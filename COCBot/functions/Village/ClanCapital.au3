@@ -122,7 +122,7 @@ Func OpenForgeWindow()
 		Click($g_iQuickMISX + 10, $g_iQuickMISY + 10)
 		For $i = 1 To 5
 			SetDebugLog("Waiting for Forge Window #" & $i, $COLOR_ACTION)
-			If QuickMis("BC1", $g_sImgGeneralCloseButton, 710, 150, 760, 190) Then
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 715, 160, 760, 200) Then
 				$bRet = True
 				ExitLoop
 			EndIf
