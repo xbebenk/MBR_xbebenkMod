@@ -292,7 +292,7 @@ Func SetScreenBlueStacks5()
 					   'bst.instance.' & $g_sAndroidInstance & '.dpi="160"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.gl_win_height="676"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.show_sidebar="0"', _
-					   'bst.instance.' & $g_sAndroidInstance & '.display_name="BlueStacks5"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.display_name="BlueStacks5-' & $g_sAndroidInstance & '"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.enable_fps_display="1"', _
 					   "bst.instance." & $g_sAndroidInstance & '.google_login_popup_shown="0"']
 
