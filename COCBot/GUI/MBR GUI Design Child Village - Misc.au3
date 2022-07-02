@@ -444,7 +444,7 @@ Func CreateMiscClanGamesV3SubTab()
 EndFunc   ;==>CreateMiscClanGamesV3SubTab
 
 Global $g_hChkMMSkipFirstCheckRoutine = 0, $g_hChkMMSkipBB = 0, $g_hChkMMSkipTrain = 0, $g_hChkMMIgnoreIncorrectTroopCombo = 0, $g_hLblFillIncorrectTroopCombo = 0
-Global $g_hCmbFillIncorrectTroopCombo = 0, $g_hChkMMIgnoreIncorrectSpellCombo = 0, $g_hLblFillIncorrectSpellCombo = 0, $g_hCmbFillIncorrectSpellCombo = 0
+Global $g_hCmbFillIncorrectTroopCombo = 0, $g_hChkMMIgnoreIncorrectSpellCombo = 0, $g_hLblFillIncorrectSpellCombo = 0, $g_hCmbFillIncorrectSpellCombo = 0, $g_hUseQueuedTroopSpell = 0
 Global $g_hChkMMTrainPreviousArmy = 0, $g_hRandomArmyComp = 0, $g_hChkMMSkipWallPlacingOnBB = 0, $g_hChkMMCheckCGEarly = 0, $g_hUpgradeWallEarly = 0
 Global $g_hAutoUpgradeEarly = 0, $g_hChkForceSwitchifNoCGEvent = 0, $g_hDonateEarly = 0, $g_hChkSkipSnowDetection = 0, $g_hChkEnableCCSleep = 0, $g_hChkSkipDT = 0
 
@@ -481,7 +481,7 @@ Func CreateMiscModSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 10, $y - 15, 210, 110)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 10, $y - 15, 210, 135)
 		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo", "Ignore Bad Troop Combo"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "If Enabled DoubleTrain, Wont Empty Queued Troop, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
@@ -494,6 +494,7 @@ Func CreateMiscModSubTab()
 			$sCmbTxt &= $g_sCmbFICTroops[$z][1] & "|"
 		Next
 		GUICtrlSetData(-1, $sCmbTxt, "Barbarians")
+		GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 23
 		$g_hChkMMIgnoreIncorrectSpellCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadSpellCombo", "Ignore Bad Spell Combo"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_02", "If Enabled DoubleTrain, Wont Empty Queued Spell, will Disable Precise Army"))
@@ -507,6 +508,11 @@ Func CreateMiscModSubTab()
 			$sCmbTxt &= $g_sCmbFICSpells[$z][1] & "|"
 		Next
 		GUICtrlSetData(-1, $sCmbTxt, "Lightning Spell")
+		GUICtrlSetState(-1, $GUI_DISABLE)
+	$y += 23
+		$g_hUseQueuedTroopSpell = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "UseQueuedTroopSpell", "Dont Remove Queued Troop/Spell"), $x, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_03", "If enabled, will not remove queued troop on every check train"))
+		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 48

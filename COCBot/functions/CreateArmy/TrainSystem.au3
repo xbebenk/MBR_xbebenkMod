@@ -175,6 +175,7 @@ Func CheckIfArmyIsReady()
 	If _Sleep(250) Then Return
 
 	CheckArmyCamp(False, False, True, True)
+	RequestCC(False, "IsFullClanCastle")
 
 	If $g_bDebugSetlogTrain Then
 		SetLog(" - $g_CurrentCampUtilization : " & $g_CurrentCampUtilization)
@@ -625,20 +626,16 @@ Func DeleteInvalidTroopInArray(ByRef $aTroopArray)
 	EndSwitch
 EndFunc   ;==>DeleteInvalidTroopInArray
 
-Func RemoveExtraTroopsQueue() ; Will remove All Extra troops in queue If there's a Low Opacity red color on them
-	
+Func RemoveExtraTroopsQueue()
 	Local $IsButtonExist = False
-	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200)
-	While $IsButtonExist
-		For $i = 1 To 5
-			Click($g_iQuickMISX, $g_iQuickMISY, 20)
-			If Not $g_bRunState Then Return
-			If _Sleep(500) Then Return
-		Next
-		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200, True)
-	Wend
-
-	Return True
+	For $i = 1 To 50
+		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200)
+		If Not $IsButtonExist Then ExitLoop
+		SetDebugLog("Remove 10 Troops #" & $i)
+		Click($g_iQuickMISX, $g_iQuickMISY, 10)
+		If Not $g_bRunState Then Return
+		If _Sleep(200) Then Return
+	Next
 EndFunc   ;==>RemoveExtraTroopsQueue
 
 Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQueue = True)
@@ -667,15 +664,15 @@ Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQ
 
 	If Not $bSkipTabCheck Or $removeExtraTroopsQueue Then
 		If $sType = "Troops" Then
-			If Not OpenTroopsTab(True, "IsQueueEmpty()") Then Return
+			If Not OpenTroopsTab(True, "IsQueueEmpty(Troops)") Then Return
 		ElseIf $sType = "Spells" Then
-			If Not OpenSpellsTab(True, "IsQueueEmpty()") Then Return
+			If Not OpenSpellsTab(True, "IsQueueEmpty(Spells)") Then Return
 		Else
-			If Not OpenSiegeMachinesTab(True, "IsQueueEmpty()") Then Return
+			If Not OpenSiegeMachinesTab(True, "IsQueueEmpty(SiegeMachines)") Then Return
 		EndIf
 	EndIf
 
-	If Not $g_bIsFullArmywithHeroesAndSpells Then
+	If Not $g_bIsFullArmywithHeroesAndSpells And Not $g_bUseQueuedTroopSpell Then
 		If $removeExtraTroopsQueue Then
 			If Not _ColorCheck(_GetPixelColor(238, 190, True), Hex(0x677CB5, 6), 30) Then RemoveExtraTroopsQueue()
 		EndIf
