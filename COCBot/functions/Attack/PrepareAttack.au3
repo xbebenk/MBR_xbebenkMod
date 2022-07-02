@@ -102,10 +102,12 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 										Local $tmpSiege = $avAttackBar[$j][0]
 										If $g_aiAttackUseSiege[$pMatchMode] <= $eSiegeMachineCount + 1 Then
 											SelectCastleOrSiege($avAttackBar[$j][0], Number($avAttackBar[$j][5]), $g_aiAttackUseSiege[$pMatchMode])
-											If $g_bDropEmptySiege[$pMatchMode] = 0 And $avAttackBar[$j][0] = -1 Then ; no cc troops available, do not drop a siege
+											SetDebugLog("$avAttackBar[$j][0]=" & $avAttackBar[$j][0])
+											If $avAttackBar[$j][0] = -1 Then ; no cc troops available, do not drop a siege
 												SetLog("Discard use of Siege/CC", $COLOR_ERROR)
 												$avAttackBar[$j][2] = 0
-											Else
+											EndIf
+											If $g_bDropEmptySiege[$pMatchMode] = True And $avAttackBar[$j][0] = -1 Then
 												$avAttackBar[$j][0] = $tmpSiege
 											EndIf
 											If $avAttackBar[$j][0] <> $eCastle Then $sLogExtension = " (level " & $g_iSiegeLevel & ")"
