@@ -402,17 +402,18 @@ EndFunc
 
 Func IsCCBuilderMenuOpen()
 	Local $bRet = False
-	Local $aBorder[4] = [350, 73, 0xF7F8F5, 40]
+	Local $aBorder0[4] = [370, 73, 0x8C9CB6, 20]
+	Local $aBorder1[4] = [370, 73, 0xF8F8F7, 20]
 	Local $sTriangle
-	If _CheckPixel($aBorder, True) Then 
-		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
+	If _CheckPixel($aBorder0, True) Or _CheckPixel($aBorder1, True) Then 
+		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder0[0], $aBorder0[1], True), $COLOR_ACTION)
 		$bRet = True ;got correct color for border 
 	EndIf
 	
 	If Not $bRet Then ;lets re check if border color check not success
 		$sTriangle = getOcrAndCapture("coc-buildermenu-cc", 350, 55, 200, 25)
 		SetDebugLog("$sTriangle: " & $sTriangle)
-		If $sTriangle = "^" Or $sTriangle = "~" Then $bRet = True
+		If $sTriangle = "^" Or $sTriangle = "~" Or $sTriangle = "@" Or $sTriangle = "$" Then $bRet = True
 	EndIf
 	SetDebugLog(String($bRet))
 	Return $bRet
