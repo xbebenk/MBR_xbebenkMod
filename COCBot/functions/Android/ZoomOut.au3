@@ -138,6 +138,48 @@ Func ZoomOutHelper($caller = "Default")
 	Return $bRet
 EndFunc
 
+Func ZoomOutHelperBB($caller = "Default")
+	Local $x = 0, $y = 0
+	Local $bIsOnBuilderBase = isOnBuilderBase()
+	Local $Dir = "", $aOffset, $bRet = False
+	
+	If Not $bIsOnBuilderBase Then Return ;leave if not in mainvillage
+	
+	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "tree\", 430, 20, 800, 300) Then 
+		$aOffset = StringRegExp($g_iQuickMISName, "tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+		If IsArray($aOffset) Then 
+			$x = $g_iQuickMISX - $aOffset[1]
+			$y = $g_iQuickMISY - $aOffset[2]
+			SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+			SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
+			ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+			$bRet = True
+		Else
+			SetDebugLog("[" & $caller & "] Bad Tree ImageName!")
+			Return
+		EndIf
+	EndIf
+	
+	If Not $bRet Then
+		If QuickMIS("BC1", $g_sImgZoomOutDirBB & "stone\", 0, 330, 430, 560) Then 
+			$aOffset = StringRegExp($g_iQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+			If IsArray($aOffset) Then 
+				$x = $g_iQuickMISX - $aOffset[1]
+				$y = $g_iQuickMISY - $aOffset[2]
+				SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
+				ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+				$bRet = True
+			Else
+				SetDebugLog("[" & $caller & "] Bad Stone ImageName!")
+				Return
+			EndIf
+		EndIf
+	EndIf
+	
+	Return $bRet
+EndFunc
+
 Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40, $bAndroidZoomOut = True) ;Zooms out
 	SetDebugLog("DefaultZoomOut()")
 	Local $sFunc = "DefaultZoomOut"
@@ -149,6 +191,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		ZoomOutHelper("DefaultZoomOut")
+		If $g_sSceneryCode = "BB" Then ZoomOutHelperBB("DefaultZoomOut")
 		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 	EndIf
 	If Not $g_bRunState Then Return
@@ -238,6 +281,7 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		ZoomOutHelper("DefaultZoomOut")
+		If $g_sSceneryCode = "BB" Then ZoomOutHelperBB("DefaultZoomOut")
 		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 	EndIf
 
