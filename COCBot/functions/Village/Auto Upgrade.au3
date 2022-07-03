@@ -296,7 +296,12 @@ Func FindExistingBuilding($bTest = False)
 			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
-
+	Local $iIndex = _ArraySearch($aBuilding, "0", 0, 0, 0, 0, 0, 5)
+	If $iIndex > -1 Then 
+		SetDebugLog(_ArrayToString($aBuilding))
+		SetDebugLog("Found Building with Zero cost, remove it", $COLOR_INFO)
+		_ArrayDelete($aBuilding, $iIndex)
+	EndIf
 	If ($g_bChkRushTH And $bFoundRusTH) Or $g_bHeroPriority Then
 		_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
 	Else
