@@ -4,7 +4,7 @@ Func CollectCCGold($bTest = False)
 	Local $bWindowOpened = False
 	Local $aCollect, $iBuilderToUse = $g_iCmbForgeBuilder + 1
 	SetLog("Start Collecting Clan Capital Gold", $COLOR_INFO)
-	ClickAway()
+	ClickAway("Right")
 	ZoomOut() ;ZoomOut first
 	If QuickMIS("BC1", $g_sImgCCGoldCollect, 250, 550, 400, 670) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
@@ -56,7 +56,7 @@ Func CollectCCGold($bTest = False)
 		SetLog("No available Clan Capital Gold to be collected!", $COLOR_INFO)
 		Return
 	EndIf
-	ClickAway()
+	ClickAway("Right")
 	If _Sleep(500) Then Return
 EndFunc
 
@@ -96,7 +96,7 @@ Func StartRaidWeekend()
 			EndIf
 		Next
 		If Not $bWindowOpened Then 
-			ClickAway()
+			ClickAway("Right")
 			Return
 		EndIf
 		If $bWindowOpened Then
@@ -104,12 +104,12 @@ Func StartRaidWeekend()
 				SetLog("Starting Raid Weekend", $COLOR_INFO)
 				Click(430, 520) ;Click Start Raid Button
 				_Sleep(1000)
-				ClickAway()
+				ClickAway("Right")
 				SwitchToMainVillage("Start Weekend Raid")
 				SwitchToClanCapital()
 			Else
 				SetLog("Start Raid Button not Available", $COLOR_ACTION)
-				ClickAway()
+				ClickAway("Right")
 				Return
 			EndIf
 		EndIf
@@ -178,7 +178,7 @@ Func ForgeClanCapitalGold($bTest = False)
 	Next
 	If Not $bForgeEnabled Then Return
 	If Not $g_bRunState Then Return
-	ClickAway()
+	ClickAway("Right")
 	ZoomOut()
 	getBuilderCount(True) ;check if we have available builder
 	If $bTest Then $g_iFreeBuilderCount = $iBuilderToUse
@@ -221,7 +221,7 @@ Func ForgeClanCapitalGold($bTest = False)
 		_ArraySort($iActiveForge, 0, 0, 0, 1)
 		If UBound($iActiveForge) >= $iBuilderToUse Then
 			SetLog("We have All Builder Active for Forge", $COLOR_INFO)
-			ClickAway()
+			ClickAway("Right")
 			Return
 		EndIf
 		$iBuilder = UBound($iActiveForge)
@@ -241,7 +241,7 @@ Func ForgeClanCapitalGold($bTest = False)
 			Click($aCraft[$j-1][1], $aCraft[$j-1][2])
 			_Sleep(500)
 			If Not WaitStartCraftWindow() Then 
-				ClickAway()
+				ClickAway("Right")
 				Return
 			EndIf
 			For $i = 0 To UBound($aForgeType) -1
@@ -277,7 +277,7 @@ Func ForgeClanCapitalGold($bTest = False)
 						ExitLoop
 					Else
 						SetLog("Only Test, should click on [430,450]", $COLOR_INFO)
-						ClickAway()
+						ClickAway("Right")
 					EndIf
 				EndIf
 				_Sleep(1000)
@@ -286,7 +286,7 @@ Func ForgeClanCapitalGold($bTest = False)
 		Next
 	EndIf
 	_Sleep(1000)
-	ClickAway()
+	ClickAway("Right")
 EndFunc
 
 Func SwitchToClanCapital()
@@ -310,7 +310,7 @@ Func SwitchToClanCapital()
 		Next
 	EndIf
 	If Not $bRet Then 
-		ClickAway()
+		ClickAway("Right")
 		SwitchToMainVillage("SwitchToClanCapital Failed")
 	EndIf
 	If $bRet Then ClanCapitalReport() 
@@ -601,11 +601,11 @@ Func AutoUpgradeCC($bTest = False)
 					If Not $bTest Then 
 						Click(640, 520) ;Click Contribute
 						AutoUpgradeCCLog($BuildingName, $cost)
-						ClickAway()
+						ClickAway("Right")
 					Else
 						SetLog("Only Test, should click Contibute on [640, 520]", $COLOR_INFO)
 						AutoUpgradeCCLog($BuildingName, $cost)
-						ClickAway()
+						ClickAway("Right")
 						SwitchToMainVillage("Only Test")
 						Return
 					EndIf
@@ -617,7 +617,7 @@ Func AutoUpgradeCC($bTest = False)
 		EndIf
 	EndIf
 	
-	ClickAway() ;close builder menu
+	ClickAway("Right") ;close builder menu
 	ClanCapitalReport(False)
 	;Upgrade through district map
 	Local $aMapCoord[7][3] = [["Golem Quarry", 185, 590], ["Dragon Cliffs", 630, 465], ["Builder's Workshop", 490, 525], ["Balloon Lagoon", 300, 490], _ 
@@ -668,14 +668,14 @@ Func AutoUpgradeCC($bTest = False)
 							If Not $bTest Then 
 								Click(640, 520) ;Click Contribute
 								AutoUpgradeCCLog($BuildingName, $cost)
-								ClickAway()
+								ClickAway("Right")
 							Else
 								SetLog("Only Test, should click Contibute on [640, 520]", $COLOR_INFO)
 								AutoUpgradeCCLog($BuildingName, $cost)
-								ClickAway()
+								ClickAway("Right")
 							EndIf
 							_Sleep(500)
-							ClickAway()
+							ClickAway("Right")
 						EndIf
 						ClanCapitalReport(False)
 						If Number($g_iLootCCGold) = 0 Then 
