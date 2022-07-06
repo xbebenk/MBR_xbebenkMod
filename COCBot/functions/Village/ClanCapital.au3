@@ -5,7 +5,7 @@ Func CollectCCGold($bTest = False)
 	Local $aCollect, $iBuilderToUse = $g_iCmbForgeBuilder + 1
 	SetLog("Start Collecting Clan Capital Gold", $COLOR_INFO)
 	ClickAway("Right")
-	ZoomOut() ;ZoomOut first
+	ZoomOut(True) ;ZoomOut first
 	If QuickMIS("BC1", $g_sImgCCGoldCollect, 250, 550, 400, 670) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
 		For $i = 1 To 5
