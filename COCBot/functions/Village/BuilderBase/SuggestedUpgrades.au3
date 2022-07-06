@@ -868,8 +868,8 @@ Func TPW($region = $greenZoneBB)
 		SetLog("Try to Place New Wall #" & $i, $COLOR_INFO)
 		If IsGreenCheck() Then
 			$bGreenCheckFound = True
-			For $i = 1 To 4
-				SetLog("Try Placing Wall #" & $i, $COLOR_INFO)
+			For $j = 1 To 4
+				SetLog("Try Placing Wall #" & $j, $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				_Sleep(1000)
 				If IsGemOpen(True) Then
