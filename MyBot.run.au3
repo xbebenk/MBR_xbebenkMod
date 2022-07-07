@@ -1526,7 +1526,6 @@ Func FirstCheckRoutine()
 	
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
-		RequestCC() ;only do requestCC here
 		If _Sleep($DELAYRUNBOT2) Then Return
 		VillageReport()
 		If _Sleep($DELAYRUNBOT2) Then Return
