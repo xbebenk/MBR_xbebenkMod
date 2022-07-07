@@ -32,7 +32,7 @@ Func CleanBBYard($bTest = False)
 				$Filename = $matchedValues[0] ; Filename
 				For $i = 0 To UBound($aPoints) - 1
 					$CleanBBYardXY = $aPoints[$i] ; Coords
-					If UBound($CleanBBYardXY) > 1 And isInsideDiamondXY($CleanBBYardXY[0], $CleanBBYardXY[1]) Then ; secure x because of clan chat tab
+					If UBound($CleanBBYardXY) > 1 And isSafeCleanYardXY($CleanBBYardXY[0], $CleanBBYardXY[1]) Then ; secure x because of clan chat tab
 						SetDebugLog($Filename & " found (" & $CleanBBYardXY[0] & "," & $CleanBBYardXY[1] & ")", $COLOR_SUCCESS)
 						getBuilderCount(False, True)
 						If $g_iFreeBuilderCountBB = 0 Then ExitLoop 2
@@ -66,3 +66,17 @@ Func CleanBBYard($bTest = False)
 	ClickAway("Left")
 
 EndFunc   ;==>CleanBBYard
+
+Func isSafeCleanYardXY($x, $y)
+	If $x < 68 And $y > 316 Then ; coordinates where the game will click on the CHAT tab (safe margin)
+		SetDebugLog("Coordinate Inside Village, but Exclude CHAT")
+		Return False
+	ElseIf $y < 73 Then ; coordinates where the game will click on the BUILDER button or SHIELD button (safe margin)
+		SetDebugLog("Coordinate Inside Village, but Exclude BUILDER")
+		Return False
+	ElseIf $x > 690 And $y > 165 And $y < 215 Then ; coordinates where the game will click on the GEMS button (safe margin)
+		SetDebugLog("Coordinate Inside Village, but Exclude GEMS")
+		Return False
+	EndIf
+	Return True
+EndFunc   ;==>isSafeCleanYardXY
