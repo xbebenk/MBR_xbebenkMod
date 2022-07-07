@@ -191,7 +191,6 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		ZoomOutHelper("DefaultZoomOut")
-		If $g_sSceneryCode = "BB" Then ZoomOutHelperBB("DefaultZoomOut")
 		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 	EndIf
 	If Not $g_bRunState Then Return
@@ -281,7 +280,6 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		ZoomOutHelper("DefaultZoomOut")
-		If $g_sSceneryCode = "BB" Then ZoomOutHelperBB("DefaultZoomOut")
 		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 	EndIf
 
@@ -541,6 +539,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 
 	Local $village
 	Local $bOnBuilderBase = isOnBuilderBase(True)
+	If $bOnBuilderBase Then ZoomOutHelperBB("SearchZoomOut")
 	If $g_aiSearchZoomOutCounter[0] = 10 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
 	If $g_aiSearchZoomOutCounter[0] < 10 Then
 		$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase)
