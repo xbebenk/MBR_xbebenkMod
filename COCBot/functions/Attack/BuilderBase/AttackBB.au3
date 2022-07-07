@@ -481,7 +481,7 @@ Func GetBBDropPoint($bSetBHToMid = True)
 	SetLog("BBDropPoint Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 	
 	FindLavaLauncher($aDPResult)
-	SetDebugLog("MainSide = " & $g_BBDPSide)
+	SetDebugLog("FindLavaLauncher MainSide = " & $g_BBDPSide)
 	If $g_bDebugImageSave Then DebugAttackBBImage($aDPResult, $g_BBDPSide)
 	
 	Return $aDPResult
@@ -495,6 +495,7 @@ Func SortBBDP($aDropPoints)
 	Local $TmpXMinBL = 0, $TmpYMinBL = 0
 	Local $TmpXMinBR = 0, $TmpYMinBR = 0
 	Local $TmpXMinTR = 0, $TmpYMinTR = 0
+	Local $iTL = 0, $iBL = 0, $iBR = 0, $iTR = 0
 	
 	_ArraySort($aDropPoints, 0, 0, 0, 1) ;sort x axis
 	For $i = 0 To UBound($aDropPoints) - 1
@@ -511,6 +512,7 @@ Func SortBBDP($aDropPoints)
 			EndIf
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinTL:" & $TmpXMinTL & " TmpYMaxTL:" & $TmpYMaxTL)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] - $DPChange & "|" & $aDropPoints[$i][2] - $DPChange & "|" & $aDropPoints[$i][3])
+			$iTL += 1
 		EndIf
 	Next
 
@@ -531,6 +533,7 @@ Func SortBBDP($aDropPoints)
 			
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBL:" & $TmpXMinBL & " TmpYMinBL:" & $TmpYMinBL)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] - $DPChange & "|" & $aDropPoints[$i][2] + $DPChange & "|" & $aDropPoints[$i][3])
+			$iBL += 1
 		EndIf
 	Next
 	_ArraySort($aDropPoints, 1, 0, 0, 2) ;sort y axis desc
@@ -549,6 +552,7 @@ Func SortBBDP($aDropPoints)
 			
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBR:" & $TmpXMinBR & " TmpYMinBR:" & $TmpYMinBR)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] + $DPChange & "|" & $aDropPoints[$i][2] + $DPChange & "|" & $aDropPoints[$i][3])
+			$iBR += 1
 		EndIf
 	Next
 	
@@ -567,8 +571,13 @@ Func SortBBDP($aDropPoints)
 			EndIf
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinTR:" & $TmpXMinTR & " TmpYMinTR:" & $TmpYMinTR)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] + $DPChange & "|" & $aDropPoints[$i][2] - $DPChange & "|" & $aDropPoints[$i][3])
+			$iTR += 1
 		EndIf
 	Next
+	Local $aCount[4][2] = [[1, $iTL], [2, $iBL], [3, $iBR], [4, $iTR]]
+	_ArraySort($aCount, 1, 0, 0, 1)
+	$g_BBDPSide = $aCount[0][0]
+	SetDebugLog("Original MainSide = " & $g_BBDPSide)
 	Return $aResult
 EndFunc
 
@@ -581,7 +590,6 @@ Func FindLavaLauncher($DP)
 		SetDebugLog("LavaSide: " & $LavaSide, $COLOR_INFO)
 		$g_BBDPSide = $LavaSide
 	EndIf
-	If $LavaSide = 0 Then $g_BBDPSide = 1
 EndFunc
 
 Func DebugAttackBBImage($aCoords, $g_BBDPSide = 1)
