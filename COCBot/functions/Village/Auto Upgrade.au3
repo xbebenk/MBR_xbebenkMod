@@ -39,7 +39,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	EndIf
 
 	If ($g_bSkipWallReserve Or $g_bUpgradeLowCost) And $g_iFreeBuilderCount > 0 Then
-		SetLog("CheckBuilder: " & ($g_bUpgradeLowCost ? "Upgrade remain time > 1day, but < 2day" : "Upgrade remain time < 24h"), $COLOR_WARNING)
+		SetLog("CheckBuilder: " & ($g_bUpgradeLowCost ? "Upgrade remain time > 1day" : "Upgrade remain time < 24h"), $COLOR_WARNING)
 		$bRet = True
 	EndIf
 
