@@ -1971,7 +1971,7 @@ Global $g_bChkStartWeekendRaid = True
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
 Global $g_aVillageRefSize[16][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], _ ;ok
 									["JS", "Jungle", 566.60, 69, 796, 64, 609], _ ;ok
-									["BB", "BuilderBase", 523, 117, 748, 128, 595], _
+									["BB", "BuilderBase", 560.2, 88, 793, 91, 617], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
 									["PC", "Pirate", 598.68, 50, 812, 63, 634], _ ;ok
 									["EW", "Winter", 576.41, 68, 794, 61, 607], _ ;ok

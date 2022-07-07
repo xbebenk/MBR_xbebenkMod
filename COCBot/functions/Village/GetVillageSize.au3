@@ -59,6 +59,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	SetDebugLog("stone: " & _ArrayToString($stone))
 	If $stone[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
+		If $bOnBuilderBase Then ZoomOutHelperBB("GetVillageSize")
 		Return FuncReturn($aResult)
 	EndIf
 	
