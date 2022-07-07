@@ -278,8 +278,8 @@ Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide)
 		EndIf
 	Next
 	SetDebugLog(_ArrayToString($g_BBDP))
-	SetLog("DPSide = " & $g_BBDPSide, $COLOR_INFO)
-	SetLog("AltSide = " & $AltSide, $COLOR_INFO)
+	SetDebugLog("DPSide = " & $g_BBDPSide, $COLOR_INFO)
+	SetDebugLog("AltSide = " & $AltSide, $COLOR_INFO)
 
 	Local $iPoint = 0
     For $j = 0 To $iAmount - 1
