@@ -265,7 +265,6 @@ Func FindExistingBuilding($bTest = False)
 								$aBuilding[$j][6] = $aRushTHPriority[$k][1]
 						EndSwitch
 						$aBuilding[$j][7] = "Priority"
-						If $g_bAutoUpgradeWallsEnable Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
 					EndIf
 				Next
 				For $k = 0 To UBound($aRushTH) - 1
@@ -279,7 +278,6 @@ Func FindExistingBuilding($bTest = False)
 								$aBuilding[$j][6] = $aRushTH[$k][1]
 						EndSwitch
 						$aBuilding[$j][7] = "RushTH"
-						If $g_bAutoUpgradeWallsEnable Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
 					EndIf
 				Next
 			EndIf
@@ -842,7 +840,6 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
 			For $j = 0 To UBound($NewCoord) - 1
 				SetLog("New: " & $NewCoord[$j][4] & ", cost: " & $NewCoord[$j][6] & " " & $NewCoord[$j][0], $COLOR_INFO)
-				If $g_bChkRushTH And $g_bAutoUpgradeWallsEnable Then setMinSaveWall($NewCoord[$j][0], Number($NewCoord[$j][6]))
 			Next
 
 			$isWall = False ;reset var
@@ -949,7 +946,6 @@ Func FindNewBuilding()
 			$aBuilding[$j][4] = $aUpgradeName[0]
 			$aBuilding[$j][5] = $aUpgradeName[1]
 			$aBuilding[$j][6] = Number($UpgradeCost)
-			If $g_bChkRushTH And $g_bAutoUpgradeWallsEnable Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][6])
 			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][4] & ", Cost=" & $aBuilding[$j][6] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
