@@ -17,7 +17,21 @@
 Func CheckVersion()
 
 	If not $g_bCheckVersion Then Return
-
+	Local $sModVersion = "", $sUrlFetchMod = "", $aResult, $sCurrentVersion = ""
+	
+	$aResult = StringRegExp($g_sXModversion, '\[#(\d+)\]', $STR_REGEXPARRAYMATCH)
+	If IsArray($aResult) And Ubound($aResult) > 0 Then $sCurrentVersion = $aResult[0]
+	
+	$sUrlFetchMod = BinaryToString(InetRead("https://github.com/xbebenk/MBR_xbebenkMod/releases/latest"))
+	Local $aTmp = StringSplit($sUrlFetchMod, @CRLF, $STR_NOCOUNT)
+	;_ArrayDisplay($aTmp)
+	For $i = 0 To UBound($aTmp) - 1
+		If StringInStr($aTmp[$i], "<title>") Then
+			$aResult = StringRegExp($aTmp[$i], '\[#(\d+)\]', $STR_REGEXPARRAYMATCH)
+			If IsArray($aResult) And Ubound($aResult) > 0 Then $sModVersion = $aResult[0]
+		EndIf
+	Next
+	
 	; Get the last Version from API
 	Local $g_sBotGitVersion = ""
 	Local $sCorrectStdOut = InetRead("https://api.github.com/repos/MyBotRun/MyBot/releases/latest")
@@ -48,6 +62,22 @@ Func CheckVersion()
 			SetLog("WELCOME CHIEF, YOU HAVE THE LATEST MYBOT VERSION", $COLOR_SUCCESS)
 		Else
 			SetLog("YOU ARE USING A FUTURE VERSION CHIEF!", $COLOR_ACTION)
+		EndIf
+		
+		If StringRegExp($g_sXModversion, "v.+b", $STR_REGEXPMATCH) Then
+			SetLog("##############################################", $COLOR_SUCCESS)
+			SetLog("You are using dev Mod version (" & $g_sXModversion & ")", $COLOR_INFO)
+			SetLog("Dev version is actively updated", $COLOR_INFO)
+			SetLog("Check github for newest commit with fix/new feature", $COLOR_INFO)
+			SetLog("##############################################", $COLOR_SUCCESS)
+			Return
+		EndIf
+		If Number($sModVersion) > Number($sCurrentVersion) Then 
+			SetLog("##############################################", $COLOR_INFO)
+			SetLog("WARNING, YOUR MOD VERSION (#" & $sCurrentVersion & ") IS OUT OF DATE.", $COLOR_ERROR)
+			SetLog("PLEASE UPDATE TO LATEST MOD VERSION (#" & $sModVersion & ")", $COLOR_ERROR)
+			SetLog($g_sXModSupportUrl, $COLOR_INFO)
+			SetLog("##############################################", $COLOR_INFO)
 		EndIf
 	Else
 		SetDebugLog($Temp)
