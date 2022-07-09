@@ -1301,50 +1301,22 @@ Func FirstCheck()
 		saveConfig()
 	EndIf
 	
-	If $g_iTownHallLevel > 5 Then
-		If $g_bchkSyncTHWall Then
-			For $z = 0 To 2
-				$g_aUpgradeWall[$z] = $g_iTownHallLevel - 2 + $z - 4
-				SetDebugLog("Set WallUpgrade [" & $z & "] -> Level = " & $g_aUpgradeWall[$z] + 4, $COLOR_INFO)
-			Next
-			;SaveResource 			 	 0 = TH6	  TH7		TH8			TH9		TH10	TH11	TH12
-			Local $WallSaveResourceGold[7] = [750000, 1000000, 2000000, 4000000, 5500000, 8500000, 11500000]
-			Local $WallSaveResourceElix[7] = [750000, 1500000, 1500000, 2000000, 3000000, 8000000, 10500000]
-			For $j = 0 To UBound($WallSaveResourceGold) - 1
-				If Int($g_iTownHallLevel) - 6 = $j Then
-					If IsGoldFull() And $g_aiCurrentLoot[$eLootGold] < $WallSaveResourceGold[$j] Then 
-						$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j] - Abs($WallSaveResourceGold[$j] - $g_aiCurrentLoot[$eLootGold])
-					Else
-						$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j]
-					EndIf
-					If IsElixirFull() And $g_aiCurrentLoot[$eLootElixir] < $WallSaveResourceElix[$j] Then 
-						$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j] - Abs($WallSaveResourceElix[$j] - $g_aiCurrentLoot[$eLootElixir])
-					Else
-						$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j]
-					EndIf
-					SetDebugLog("Set Gold WallSaveResource = " & $g_iUpgradeWallMinGold, $COLOR_INFO)
-					SetDebugLog("Set Elix WallSaveResource = " & $g_iUpgradeWallMinElixir, $COLOR_INFO)
-				EndIf
-			Next
+	If $g_bAlwaysDropHero Then
+		If $g_iTownHallLevel > 12 Then
+			GUICtrlSetState($g_hChkABChampionAttack, $GUI_CHECKED)
+			GUICtrlSetState($g_hChkDBChampionAttack, $GUI_CHECKED)
 		EndIf
-		applyConfig()
-		If $g_bAlwaysDropHero Then
-			If $g_iTownHallLevel > 12 Then
-				GUICtrlSetState($g_hChkABChampionAttack, $GUI_CHECKED)
-				GUICtrlSetState($g_hChkDBChampionAttack, $GUI_CHECKED)
-			EndIf
-			If $g_iTownHallLevel > 10 Then
-				GUICtrlSetState($g_hChkABWardenAttack, $GUI_CHECKED)
-				GUICtrlSetState($g_hChkDBWardenAttack, $GUI_CHECKED)
-			EndIf
-			If $g_iTownHallLevel > 8 Then
-				GUICtrlSetState($g_hChkABQueenAttack, $GUI_CHECKED)
-				GUICtrlSetState($g_hChkDBQueenAttack, $GUI_CHECKED)
-			EndIf
-			If $g_iTownHallLevel > 6 Then
-				GUICtrlSetState($g_hChkABKingAttack, $GUI_CHECKED)
-				GUICtrlSetState($g_hChkDBKingAttack, $GUI_CHECKED)
-			EndIf
+		If $g_iTownHallLevel > 10 Then
+			GUICtrlSetState($g_hChkABWardenAttack, $GUI_CHECKED)
+			GUICtrlSetState($g_hChkDBWardenAttack, $GUI_CHECKED)
+		EndIf
+		If $g_iTownHallLevel > 8 Then
+			GUICtrlSetState($g_hChkABQueenAttack, $GUI_CHECKED)
+			GUICtrlSetState($g_hChkDBQueenAttack, $GUI_CHECKED)
+		EndIf
+		If $g_iTownHallLevel > 6 Then
+			GUICtrlSetState($g_hChkABKingAttack, $GUI_CHECKED)
+			GUICtrlSetState($g_hChkDBKingAttack, $GUI_CHECKED)
 		EndIf
 		saveConfig()
 	EndIf
