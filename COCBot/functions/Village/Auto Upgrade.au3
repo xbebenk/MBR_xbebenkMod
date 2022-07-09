@@ -1168,23 +1168,6 @@ Func getMostBottomCost()
 	Return $ret
 EndFunc
 
-Func setMinSaveWall($Type, $cost)
-	Switch $Type
-		Case "Gold"
-			If Number($g_iUpgradeWallMinGold) >= Number($cost) Then Return
-			$g_iUpgradeWallMinGold = $cost
-			SetLog("Set Save Gold on Wall upgrade = " & $g_iUpgradeWallMinGold, $COLOR_DEBUG)
-			applyConfig()
-			saveConfig()
-		Case "Elix"
-			If Number($g_iUpgradeWallMinElixir) >= Number($cost) Then Return
-			$g_iUpgradeWallMinElixir = $cost
-			SetLog("Set Save Elix on Wall upgrade = " & $g_iUpgradeWallMinElixir, $COLOR_DEBUG)
-			applyConfig()
-			saveConfig()
-	EndSwitch
-EndFunc
-
 Func FindTHInUpgradeProgress()
 	Local $bRet = False
 	Local $Progress = QuickMIS("CNX", $g_sImgAUpgradeHour, 350, 90, 450, 280)
