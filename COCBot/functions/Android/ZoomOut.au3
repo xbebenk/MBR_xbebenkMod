@@ -778,7 +778,7 @@ Func ZoomInBBMEmu($Region = "Top")
 			If _Sleep(500) Then Return
 			ClickDrag(400, 150, 400, 300, 200)
 		Case "Bottom"
-			ClickDrag(400, 450, 400, 200, 200)
+			ClickDrag(400, 450, 400, 50, 200)
 			If _Sleep(500) Then Return
 		Case "Right"
 			ClickDrag(700, 400, 200, 400, 200)
