@@ -719,7 +719,7 @@ Func IsUpgradeCCIgnore()
 	Local $bRet = False
 	Local $UpgradeName = getOcrAndCapture("coc-build", 200, 494, 400, 30)
 	If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
-		If StringInStr($name[0], "Wall") Then 
+		If StringInStr($UpgradeName, "Wall") Then 
 				SetDebugLog($UpgradeName & " Match with: Wall") 
 				SetLog("Upgrade for wall Ignored, Skip!!", $COLOR_ACTION)
 				$bRet = True
