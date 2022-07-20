@@ -439,7 +439,13 @@ Func FindCCExistingUpgrade()
 		_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by Y coord
 		For $i = 0 To UBound($aUpgrade) - 1
 			$name = getCCBuildingName($aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 8)
-			If $g_bChkAutoUpgradeCCIgnore Then 
+			If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
+				If StringInStr($name[0], "Wall") Then 
+						SetLog("Upgrade for Wall Ignored, Skip!!", $COLOR_ACTION)
+						ContinueLoop ;skip this upgrade, looking next 
+				EndIf
+			EndIf
+			If $g_bChkAutoUpgradeCCIgnore Then ; Filter for decoration
 				For $y In $aCCBuildingIgnore
 					If StringInStr($name[0], $y) Then 
 						SetLog("Upgrade for " & $name[0] & " Ignored, Skip!!", $COLOR_ACTION)
@@ -464,6 +470,12 @@ Func FindCCSuggestedUpgrade()
 				$name = getCCBuildingName($aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 11)
 			Else
 				$name = getCCBuildingNameBlue($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 12)
+			EndIf
+			If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
+				If StringInStr($name[0], "Wall") Then 
+						SetLog("Upgrade for Wall Ignored, Skip!!", $COLOR_ACTION)
+						ContinueLoop ;skip this upgrade, looking next 
+				EndIf
 			EndIf
 			If $g_bChkAutoUpgradeCCIgnore Then 
 				For $y In $aCCBuildingIgnore
@@ -706,7 +718,14 @@ EndFunc
 Func IsUpgradeCCIgnore()
 	Local $bRet = False
 	Local $UpgradeName = getOcrAndCapture("coc-build", 200, 494, 400, 30)
-	If $g_bChkAutoUpgradeCCIgnore Then 
+	If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
+		If StringInStr($name[0], "Wall") Then 
+				SetDebugLog($UpgradeName & " Match with: Wall") 
+				SetLog("Upgrade for wall Ignored, Skip!!", $COLOR_ACTION)
+				$bRet = True
+		EndIf
+	EndIf
+	If $g_bChkAutoUpgradeCCIgnore And Not $bRet Then 
 		For $y In $aCCBuildingIgnore
 			If StringInStr($UpgradeName, $y) Then 
 				SetDebugLog($UpgradeName & " Match with: " & $y) 

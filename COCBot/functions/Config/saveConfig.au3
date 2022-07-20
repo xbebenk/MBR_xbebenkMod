@@ -508,6 +508,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("ClanCapital", "ForgeUseBuilder", $g_iCmbForgeBuilder)
 	_Ini_Add("ClanCapital", "AutoUpgradeCC", $g_bChkEnableAutoUpgradeCC)
 	_Ini_Add("ClanCapital", "ChkAutoUpgradeCCIgnore", $g_bChkAutoUpgradeCCIgnore)
+	_Ini_Add("ClanCapital", "ChkAutoUpgradeCCWallIgnore", $g_bChkAutoUpgradeCCWallIgnore)
 	
 	;Misc Mod
 	_Ini_Add("other", "SkipFirstCheckRoutine", $g_bSkipFirstCheckRoutine)
