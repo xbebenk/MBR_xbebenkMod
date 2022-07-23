@@ -431,7 +431,7 @@ Func ReadConfig_600_6()
 
 	# NEW CLANGAMES GUI
 	IniReadS($g_bChkClanGamesEnabled, $g_sProfileConfigPath, "other", "ChkClanGamesEnabled", False, "Bool")
-	IniReadS($g_bChkClanGames60, $g_sProfileConfigPath, "other", "ChkClanGames60", False, "Bool")
+	IniReadS($g_bChkClanGames3H, $g_sProfileConfigPath, "other", "ChkClanGames60", False, "Bool")
 	IniReadS($g_bChkClanGamesDebug, $g_sProfileConfigPath, "other", "ChkClanGamesDebug", False, "Bool")
 	IniReadS($g_bCollectCGReward, $g_sProfileConfigPath, "other", "CollectCGReward", False, "Bool")
 	

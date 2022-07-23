@@ -652,11 +652,11 @@ EndFunc   ;==>chkStartClockTowerBoost
 Func chkActivateClangames()
 	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hBtnCGSettingsOpen, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkClanGames60, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkClanGames3H, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkClanGamesDebug, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hBtnCGSettingsOpen, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkClanGames60, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkClanGames3H, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkClanGamesDebug, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkActivateClangames

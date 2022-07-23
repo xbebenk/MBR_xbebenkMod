@@ -1837,7 +1837,7 @@ Global $g_bCheckCGEarly = False, $g_bChkForceSwitchifNoCGEvent = False, $g_bForc
 ; Clan Games v3
 Global $g_bChkClanGamesAir = 0, $g_bChkClanGamesGround = 0, $g_bChkClanGamesMisc = 0
 Global $g_bChkClanGamesEnabled = 0
-Global $g_bChkClanGames60 = 0
+Global $g_bChkClanGames3H = 0
 Global $g_bChkClanGamesLoot = 0
 Global $g_bChkClanGamesBattle = 0
 

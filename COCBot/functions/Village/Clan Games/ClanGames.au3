@@ -384,8 +384,8 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		; let's get the 60 minutes events and remove from array
 		Local $aTempSelectChallenges[0][7]
 		For $i = 0 To UBound($aSelectChallenges) - 1
-			If $aSelectChallenges[$i][4] = 60 And $g_bChkClanGames60 Then
-				Setlog($aSelectChallenges[$i][0] & " unselected, is a 60min event!", $COLOR_INFO)
+			If $aSelectChallenges[$i][4] = 180 And $g_bChkClanGames3H Then
+				Setlog($aSelectChallenges[$i][0] & " unselected, is a 3 Hour event!", $COLOR_INFO)
 				ContinueLoop
 			EndIf
 			ReDim $aTempSelectChallenges[UBound($aTempSelectChallenges) + 1][7]

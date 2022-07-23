@@ -343,7 +343,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 
 			#NEW CLANGAMES GUI
 			GUICtrlSetState($g_hChkClanGamesEnabled, $g_bChkClanGamesEnabled ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkClanGames60, $g_bChkClanGames60 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkClanGames3H, $g_bChkClanGames3H ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesDebug, $g_bChkClanGamesDebug ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCollectCGReward, $g_bCollectCGReward ? $GUI_CHECKED : $GUI_UNCHECKED)
 
@@ -506,7 +506,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 
 			#NEW CLANGAMES GUI
 			$g_bChkClanGamesEnabled = (GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED) ? 1 : 0
-			$g_bChkClanGames60 = (GUICtrlRead($g_hChkClanGames60) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkClanGames3H = (GUICtrlRead($g_hChkClanGames3H) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesDebug = (GUICtrlRead($g_hChkClanGamesDebug) = $GUI_CHECKED) ? 1 : 0
 			$g_bCollectCGReward = (GUICtrlRead($g_hChkCollectCGReward) = $GUI_CHECKED) ? 1 : 0
 

@@ -398,7 +398,7 @@ Func SaveConfig_600_6()
 
 	# NEW CLANGAMES GUI
 	_Ini_Add("other", "ChkClanGamesEnabled", $g_bChkClanGamesEnabled ? 1 : 0)
-	_Ini_Add("other", "ChkClanGames60", $g_bChkClanGames60 ? 1 : 0)
+	_Ini_Add("other", "ChkClanGames60", $g_bChkClanGames3H ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesDebug", $g_bChkClanGamesDebug ? 1 : 0)
 	_Ini_Add("other", "CollectCGReward", $g_bCollectCGReward ? 1 : 0)
 	
