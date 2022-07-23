@@ -902,18 +902,12 @@ Func _Idle() ;Sequence that runs until Full Army
 		;Execute Notify Pending Actions
 		NotifyPendingActions()
 		If _Sleep($DELAYIDLE1) Then Return
+
 		If $g_iCommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_SUCCESS)
 		Local $hTimer = __TimerInit()
 		If _Sleep($DELAYIDLE1) Then ExitLoop
-		checkObstacles() ; trap common error messages also check for reconnecting animation
-		;If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And $g_bTrainEnabled = True Then
-		;	CheckArmyCamp(True, True)
-		;	If _Sleep($DELAYIDLE1) Then Return
-		;	If ($g_bIsFullArmywithHeroesAndSpells = False) Then
-		;		SetLog("Army Camp is not full, Training Continues...", $COLOR_ACTION)
-		;		$g_iCommandStop = 0
-		;	EndIf
-		;EndIf
+		checkObstacles()
+
 		If $g_bRestart Then ExitLoop
 		If Random(0, $g_iCollectAtCount - 1, 1) = 0 Then ; This is prevent from collecting all the time which isn't needed anyway, chance to run is 1/$g_iCollectAtCount
 			If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then
@@ -931,22 +925,18 @@ Func _Idle() ;Sequence that runs until Full Army
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ExitLoop
 			If _Sleep($DELAYIDLE1) Or Not $g_bRunState Then ExitLoop
-		ElseIf $g_bCheckDonateOften Then
-			_RunFunction('DonateCC')
-			If Not $g_bRunState Then Return
-			If $g_bRestart Then ExitLoop
-			If _Sleep($DELAYIDLE1) Or Not $g_bRunState Then ExitLoop
 		EndIf
+
+		If $g_bCheckDonateOften Then _RunFunction('DonateCC')
+		If $g_bRestart Then ExitLoop
+
 		AddIdleTime()
-		;xbenk
-		;checkMainScreen(False) ; required here due to many possible exits
+
 		If $g_iCommandStop = -1 Then
 			If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 				If CheckNeedOpenTrain($g_sTimeBeforeTrain) Then TrainSystem()
 				If $g_bRestart = True Then ExitLoop
 				If _Sleep($DELAYIDLE1) Then ExitLoop
-				;xbenk
-				;checkMainScreen(False)
 				$g_iActualTrainSkip = $g_iActualTrainSkip + 1
 			Else
 				SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $color_blue)
@@ -1583,18 +1573,18 @@ Func CommonRoutine($RoutineType = Default)
 				If _Sleep(500) Then Return
 				If $g_bRestart Then Return
 			Next
-			
+
 		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase', 'CollectCCGold', 'AutoUpgradeCC']
+			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'UpgradeWall', 'UpgradeBuilding', 'BuilderBase', 'CollectCCGold', 'AutoUpgradeCC']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
 				If _Sleep(50) Then Return
 				If $g_bRestart Then Return
 			Next
-			
+
 		Case "Switch"
-			Local $aRndFuncList = ['BuilderBase', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall']
+			Local $aRndFuncList = ['BuilderBase', 'CollectCCGold', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeWall', 'UpgradeBuilding']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
