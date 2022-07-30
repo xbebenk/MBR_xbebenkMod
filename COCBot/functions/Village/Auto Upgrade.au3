@@ -885,6 +885,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 							If DoUpgrade($bTest) Then ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
 						Else
 							SetDebugLog("Skip this building, not enough resource", $COLOR_WARNING)
+							If $g_bChkRushTH Then setMinSaveWall($aResult[$y][0], $aResult[$y][5])
 						EndIf
 					EndIf
 				Next
