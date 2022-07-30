@@ -311,14 +311,12 @@ Func CreateBBAttackSubTab()
 	
 	$x = 15
 	$y = 135
-	$g_hGrpAttackStyleBB = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_03", "Attack Style"), $x - 10,  $y, $g_iSizeWGrpTab2, 130)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_03", "Attack Style"), $x - 10,  $y, $g_iSizeWGrpTab2, 130)
 	
 	$g_hChkBBCustomArmyEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCustomArmyEnable", "Enable Custom Army"), $x + 5, $y + 13, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCustomArmyEnable", "Enable Use Custom Army"))
 		GUICtrlSetOnEvent(-1, "ChkBBCustomArmyEnable")
 
-	;$g_hChkBBForceCustomArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBForceCustomArmy", "Force"), $x + 5 + 127, $y + 13, -1, -1)
-	
 	Static $sTroops = ""
 	If $sTroops = "" Then
 		For $i = 1 To UBound($g_avStarLabTroops) - 1
