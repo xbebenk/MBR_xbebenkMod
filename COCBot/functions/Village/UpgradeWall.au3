@@ -127,23 +127,16 @@ Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = 
 		Case 0 ;Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			$HaveResource = $HaveGold
-			;Local $iWallSave = WallDiscount($g_iUpgradeWallMinGold)
-			;If $g_aiCurrentLoot[$eLootGold] < $iWallSave Then $HaveResource = False
 			If $HaveResource Then $UpgradeType = "Gold"
 			If Not $HaveResource Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
 		Case 1 ;Elixir
 			Local $HaveElix = IsElixEnough($Cost)
 			$HaveResource = $HaveElix
-			;Local $iWallSave = WallDiscount($g_iUpgradeWallMinElixir)
-			;If $g_aiCurrentLoot[$eLootElixir] < $iWallSave Then $HaveResource = False
 			If $HaveResource Then $UpgradeType = "Elix"
 			If Not $HaveResource Then SetLog("- Insufficient Elixir", $COLOR_DEBUG)
 		Case 2 ;Elixir then Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			Local $HaveElix = IsElixEnough($Cost)
-			;Local $iWallSaveG = WallDiscount($g_iUpgradeWallMinGold)
-			;Local $iWallSaveE = WallDiscount($g_iUpgradeWallMinElixir)
-			;If $g_aiCurrentLoot[$eLootGold] < $iWallSaveG And $g_aiCurrentLoot[$eLootElixir] < $iWallSaveE Then $HaveResource = False
 			If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold And $g_aiCurrentLoot[$eLootElixir] < $g_iUpgradeWallMinElixir Then $HaveResource = False
 			If Number($iWallLevel) > 3 Then
 				$HaveResource = $HaveElix
@@ -196,7 +189,13 @@ Func UpgradeLowLevelWall($bTest = False)
 		SetLog("[" & $Try & "] Search Wall on Builder Menu", $COLOR_INFO)
 		$Try += 1
 		$aWallCoord = ClickDragFindWallUpgrade()
-			
+		
+		If $g_iSaveGoldWall > $g_aiCurrentLoot[$eLootGold] Or $g_iSaveElixWall > $g_aiCurrentLoot[$eLootElixir] Then 
+			SetLog("Upgrade Wall skipped, need to save for RushTH Priority Building", $COLOR_ACTION)
+			ClickDragAUpgrade("down")
+			Return
+		EndIf
+		
 		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then ; found a wall or list of wall
 			Local $aIsEnoughResource = WallCheckResource($aWallCoord[0][2]) ;check upgrade from lowest to highest price 
 			If Not $aIsEnoughResource[0] Then 
@@ -215,7 +214,7 @@ Func UpgradeLowLevelWall($bTest = False)
 	Wend
 	ClickDragAUpgrade("down")
 	Clickaway("Right")
-	SetDebugLog("Upgrade Wall using autoupgrade EXIT", $COLOR_DEBUG)
+	SetDebugLog("Upgrade Wall using autoupgrade EXIT")
 EndFunc
 
 Func TryUpgradeWall($aWallCoord, $bTest = False)
