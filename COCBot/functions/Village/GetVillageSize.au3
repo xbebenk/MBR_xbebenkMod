@@ -55,6 +55,11 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $iAdditionalY = 100
 	Local $aResult = 0, $stone, $tree, $x, $y
 	
+	If $bOnBuilderBase Then
+		$iAdditionalX += 50
+		$iAdditionalY += 50
+	EndIf
+	
 	$stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY)
 	SetDebugLog("stone: " & _ArrayToString($stone))
 	If $stone[0] = 0 Then
