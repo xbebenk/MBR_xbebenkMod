@@ -143,7 +143,7 @@ Func AutoUpgradeBB($bTest = False)
 	BuilderBaseReport(True)
 	If Not ClickBBBuilder() Then Return
 
-	If $g_iChkPlacingNewBuildings And $g_bIsMegaTeslaMaxed <> 1 Then
+	If $g_iChkPlacingNewBuildings And $g_bIsMegaTeslaMaxed = False Then
 		SearchNewBuilding($bTest)
 	EndIf
 
@@ -367,7 +367,7 @@ Func DoUpgradeBB($CostType = "Gold", $bTest = False)
 		Return False
 	EndIf
 	If Not $g_bRunState Then Return
-	If $g_bOptimizeOTTO And $g_bIsMegaTeslaMaxed <> 1 Then ;set upgrade only to certain level when mega tesla is not maxed
+	If $g_bOptimizeOTTO And $g_bIsMegaTeslaMaxed = False Then ;set upgrade only to certain level when mega tesla is not maxed
 		Select
 			Case $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6
 				SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
@@ -689,7 +689,7 @@ Func FindBBExistingBuilding($bTest = False)
 				Next
 
 				If $UpgradeName[0] = "Wall" Then ;include wall to upgrade only after mega tesla is maxed
-					If ($g_bIsMegaTeslaMaxed = 1 And $g_bGoldStorageFullBB) Or ($g_bGoldStorageFullBB And $g_bReserveElixirBB) Then
+					If ($g_bIsMegaTeslaMaxed = True And $g_bGoldStorageFullBB) Or ($g_bGoldStorageFullBB And $g_bReserveElixirBB) Then
 						Local $tmpcost = getOcrAndCapture("coc-buildermenu-cost", $aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10, 120, 30, True)
 						If Number($tmpcost) = 0 Then ContinueLoop ;skip wall cost read error
 						If Number($tmpcost) > 1000000 Then ContinueLoop ;only upgrade wall cost below 1000000

@@ -79,10 +79,9 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	Static $abNotNeedAllTime1 = $aiTrue
 	
 	; xbebenk
-	$g_aWallSaveMode = -1 ;Smart save resource for wall
-	$g_bIsMegaTeslaMaxed = -1 ;MegaTeslaMaxed var reset 
-	
-	; xbebenk - Hot Fix to reset Pet House Var and GUI
+	$g_iSaveGoldWall = 0 ;reset
+	$g_iSaveElixWall = 0 ;reset
+	$g_bIsMegaTeslaMaxed = False ;MegaTeslaMaxed var reset 
 	;==========Hide Red Hide Green Show Gray===
 	GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
 	GUICtrlSetState($g_hPicPetGreen, $GUI_HIDE)

@@ -882,7 +882,6 @@ Global $g_hChkEnableBBAttack = 0, $g_hChkBBDropTrophy = 0, $g_hChkBBAttIfLootAva
 Global $g_bChkEnableBBAttack = False, $g_bChkBBDropTrophy = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False, $g_bChkBBDropBMFirst = False
 Global $g_hTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyLowerLimit = 0
 Global $g_bBBMachineReady = False
-Global $g_aBBMachine = [0,0] ; x,y coordinates of where to click for Battle machine on attack bar
 Global $g_iBBMachAbilityTime = 14000 ; in milliseconds, so 14 seconds between abilities
 Global Const $g_iBBNextTroopDelayDefault = 2000,  $g_iBBSameTroopDelayDefault = 300 ; default delay times
 Global $g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault,  $g_iBBSameTroopDelay = $g_iBBSameTroopDelayDefault; delay time between different and same troops
@@ -989,6 +988,7 @@ Global $g_bAutoUpgradeWallsEnable = 0
 Global $g_iUpgradeWallMinGold = 0, $g_iUpgradeWallMinElixir = 0, $g_bUpgradeWallIfStorageIsFull = True
 Global $g_iUpgradeWallLootType = 0, $g_bUpgradeWallSaveBuilder = False, $g_bChkOnly1Builder = False
 Global $g_iUpgradedWallLevel = 0, $g_bUpgradeLowWall = False, $g_iLowLevelWall = 4, $g_bUpgradeAnyWallLevel = False
+Global $g_iSaveGoldWall = 0, $g_iSaveElixWall = 0
 Global $g_aiWallsCurrentCount[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 to 3 are not referenced
 Global $g_aiLastGoodWallPos[2] = [0, 0] ;0 = x, 1 = y, 2 = wall level
 Global $g_aUpgradeWall[3] = [0, 0, 0] ;wall level
@@ -1409,7 +1409,7 @@ Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 ;Builder Base
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
 Global $g_aiStarLaboratoryPos[2] = [-1, -1] ; Position of Starlaboratory
-Global $g_bisBHMaxed = False, $g_bIsMegaTeslaMaxed = -1, $g_iBHLevel = 0
+Global $g_bisBHMaxed = False, $g_bIsMegaTeslaMaxed = False, $g_iBHLevel = 0
 Global $g_bGoldStorageFullBB = False, $g_bElixirStorageFullBB = False, $g_bGoldStorage50BB = False
 Global $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
 Global $g_bChkBBCustomArmyEnable = False
