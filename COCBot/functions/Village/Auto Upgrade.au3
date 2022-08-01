@@ -137,7 +137,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 					Endif
 					ClickMainBuilder($bTest)
 				Else
-					If $g_bChkRushTH Then setMinSaveWall($ExistingBuilding[$i][0], $ExistingBuilding[$i][5])
+					If $g_bChkRushTH And ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($ExistingBuilding[$i][0], $ExistingBuilding[$i][5])
 				EndIf
 			Next
 		Else
@@ -885,7 +885,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 							If DoUpgrade($bTest) Then ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
 						Else
 							SetDebugLog("Skip this building, not enough resource", $COLOR_WARNING)
-							If $g_bChkRushTH Then setMinSaveWall($aResult[$y][0], $aResult[$y][5])
+							If $g_bChkRushTH And ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aResult[$y][0], $aResult[$y][5])
 						EndIf
 					EndIf
 				Next
