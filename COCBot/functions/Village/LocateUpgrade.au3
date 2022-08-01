@@ -68,7 +68,7 @@ Func LocateUpgrades()
 					If $hGraphic <> 0 And $g_avBuildingUpgrades[$icount][0] > 0 And $g_avBuildingUpgrades[$icount][0] > 0 Then
 						Local $xUpgrade = $g_avBuildingUpgrades[$icount][0]
 						Local $yUpgrade = $g_avBuildingUpgrades[$icount][1]
-						;ConvertToVillagePos($xUpgrade, $yUpgrade)
+						ConvertToVillagePos($xUpgrade, $yUpgrade)
 						Local $bMarkerDrawn = _GDIPlus_GraphicsDrawEllipse($hGraphic, $xUpgrade - 10, $yUpgrade - 10, 20, 20, $hPen)
 						AndroidGraphicsGdiUpdate()
 						SetDebugLog("Existing Updgrade #" & $icount & " found at " & $g_avBuildingUpgrades[$icount][0] & "/" & $g_avBuildingUpgrades[$icount][1] & ", marker drawn: " & $bMarkerDrawn)
@@ -97,7 +97,7 @@ Func LocateUpgrades()
 						If $hGraphic <> 0 Then
 							Local $xUpgrade = $g_avBuildingUpgrades[$icount][0]
 							Local $yUpgrade = $g_avBuildingUpgrades[$icount][1]
-							;ConvertToVillagePos($xUpgrade, $yUpgrade)
+							ConvertToVillagePos($xUpgrade, $yUpgrade)
 							$bMarkerDrawn = _GDIPlus_GraphicsDrawEllipse($hGraphic, $xUpgrade - 10, $yUpgrade - 10, 20, 20, $hPen)
 							AndroidGraphicsGdiUpdate()
 						EndIf
