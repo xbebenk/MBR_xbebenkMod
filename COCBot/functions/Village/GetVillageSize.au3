@@ -55,11 +55,6 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $iAdditionalY = 100
 	Local $aResult = 0, $stone, $tree, $x, $y
 	
-	If $bOnBuilderBase Then
-		$iAdditionalX += 50
-		$iAdditionalY += 50
-	EndIf
-	
 	$stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY)
 	SetDebugLog("stone: " & _ArrayToString($stone))
 	If $stone[0] = 0 Then
@@ -100,6 +95,8 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		SetDebugLog("Stone2tree = " & $c)
 		SetDebugLog("Reference = " & $iRefSize)
 		SetDebugLog("ZoomLevel = " & $z)
+		
+		If $z > 1 Then Return FuncReturn($aResult)
 
 		Local $stone_x_exp = $stone[2]
 		Local $stone_y_exp = $stone[3]
