@@ -138,6 +138,31 @@ Func ZoomOutHelper($caller = "Default")
 	Return $bRet
 EndFunc
 
+Func ZoomOutHelperBB($caller = "Default")
+	Local $x = 0, $y = 0
+	Local $bIsOnBuilderBase = isOnBuilderBase()
+	Local $Dir = "", $aOffset, $bRet = False
+	
+	If Not $bIsOnBuilderBase Then Return ;leave if not in mainvillage
+	
+	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "ZoomOutHelper\", 430, 20, 800, 300) Then 
+		$aOffset = StringRegExp($g_iQuickMISName, "BoatSail([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+		If IsArray($aOffset) Then 
+			$x = $g_iQuickMISX - $aOffset[1]
+			$y = $g_iQuickMISY - $aOffset[2]
+			SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+			SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
+			ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+			$bRet = True
+		Else
+			SetDebugLog("[" & $caller & "] Bad BoatSail ImageName!")
+			Return
+		EndIf
+	EndIf
+	
+	Return $bRet
+EndFunc
+
 Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40, $bAndroidZoomOut = True) ;Zooms out
 	SetDebugLog("DefaultZoomOut()")
 	Local $sFunc = "DefaultZoomOut"
@@ -736,7 +761,7 @@ Func ZoomInBBMEmu($Region = "Top")
 			If _Sleep(500) Then Return
 			ClickDrag(400, 150, 400, 300, 200)
 		Case "Bottom"
-			ClickDrag(400, 450, 400, 200, 200)
+			ClickDrag(400, 450, 400, 50, 200)
 			If _Sleep(500) Then Return
 		Case "Right"
 			ClickDrag(700, 400, 200, 400, 200)

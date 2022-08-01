@@ -109,6 +109,7 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 											EndIf
 											If $g_bDropEmptySiege[$pMatchMode] = True And $avAttackBar[$j][0] = -1 Then
 												$avAttackBar[$j][0] = $tmpSiege
+												$avAttackBar[$j][2] = 1
 											EndIf
 											If $avAttackBar[$j][0] <> $eCastle Then $sLogExtension = " (level " & $g_iSiegeLevel & ")"
 										EndIf
@@ -290,6 +291,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 							EndIf
 						Else
 							$iTroopIndex = $ToUse ;set ByRef
+							SetDebugLog("ToUse=" & $ToUse)
 							$g_iSiegeLevel = $aSearchResult[$TmpIndex][3]
 							Click($aSearchResult[$TmpIndex][1], $aSearchResult[$TmpIndex][2])
 							If _Sleep(750) Then Return

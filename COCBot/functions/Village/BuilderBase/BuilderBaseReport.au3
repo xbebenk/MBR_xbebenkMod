@@ -100,8 +100,8 @@ EndFunc
 
 Func isMegaTeslaMaxed()
 	ClickAway("Left")
-	If $g_bIsMegaTeslaMaxed = 1 Then Return True
-	If $g_bIsMegaTeslaMaxed <> -1 Then Return False
+	If $g_bIsMegaTeslaMaxed = True Then Return True
+	
 	If QuickMIS("BC1", $g_sImgMegaTesla) Then ;Search for Mega Tesla
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
 		Local $aBuildingName = BuildingInfo(242, 494)
@@ -110,11 +110,11 @@ Func isMegaTeslaMaxed()
 			If $aBuildingName[1] = "Mega Tesla" Then
 				If $aBuildingName[2] = 9 Then
 					SetLog("Your Mega Tesla is Maxed!", $COLOR_SUCCESS)
-					$g_bIsMegaTeslaMaxed = 1
+					$g_bIsMegaTeslaMaxed = True
 					Return True
 				Else
 					SetLog("Your Mega Tesla Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
-					$g_bIsMegaTeslaMaxed = 0
+					$g_bIsMegaTeslaMaxed = False
 				EndIf
 			Endif
 		EndIf

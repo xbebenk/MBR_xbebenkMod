@@ -14,7 +14,6 @@
 ; ===============================================================================================================================
 
 Func UpgradeWall($bTest = False)
-
 	Local $aSelectedWall[3][2]
 	For $z = 0 To 2
 		$aSelectedWall[$z][0] = $g_aUpgradeWall[$z]
@@ -46,38 +45,15 @@ Func UpgradeWall($bTest = False)
 		Return
 	EndIf
 	
-	If $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 And $g_aWallSaveMode < 0 Then
-		ClickMainBuilder()
-		SetLog("Checking current upgrade", $COLOR_INFO)
-		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
-			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
-			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
-			If $mUpgradeTime >= 7200 Then ;5 days
-				SetLog("Long Upgrade Duration > 5d", $COLOR_INFO)
-				SetLog("Discounting wall save resources by 50%", $COLOR_INFO)
-				$g_aWallSaveMode = 1
-			ElseIf $mUpgradeTime >= 4320 Then
-				SetLog("Long Upgrade duration > 3d And < 5d", $COLOR_INFO)
-				SetLog("Discounting wall save resources by 25%", $COLOR_INFO)
-				$g_aWallSaveMode = 2
-			Else
-				SetLog("Upgrade time < 3d, No Discounts!", $COLOR_INFO)
-				$g_aWallSaveMode = 0
-			EndIf
-		Else
-			SetLog("Cannot find least upgrade time", $COLOR_ERROR)
-		EndIf
+	If Not $g_bRunState Then Return
+	If $GoUpgrade And $g_bUpgradeLowWall Then
+		UpgradeLowLevelWall($bTest)
 	EndIf
 	
 	Local $aIsResourceAvail = WallCheckResource($iWallCost, $iWallLevel+4) ;WallLevel from combolist, pick array[0], need to add 4 as cmblist start with 4
 	SetDebugLog(_ArrayToString($aIsResourceAvail))
 	If Not $aIsResourceAvail[0] Then Return
-
-	If Not $g_bRunState Then Return
-	If $GoUpgrade And $g_bUpgradeLowWall Then
-		UpgradeLowLevelWall($bTest)
-	EndIf
-
+	
 	If Not $g_bRunState Then Return
 	If $GoUpgrade And Not $g_bUpgradeAnyWallLevel And Not $g_bUpgradeLowWall Then
 		Clickaway("Right")
@@ -151,23 +127,17 @@ Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = 
 		Case 0 ;Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			$HaveResource = $HaveGold
-			Local $iWallSave = WallDiscount($g_iUpgradeWallMinGold)
-			If $g_aiCurrentLoot[$eLootGold] < $iWallSave Then $HaveResource = False
 			If $HaveResource Then $UpgradeType = "Gold"
 			If Not $HaveResource Then SetLog("- Insufficient Gold", $COLOR_DEBUG)
 		Case 1 ;Elixir
 			Local $HaveElix = IsElixEnough($Cost)
 			$HaveResource = $HaveElix
-			Local $iWallSave = WallDiscount($g_iUpgradeWallMinElixir)
-			If $g_aiCurrentLoot[$eLootElixir] < $iWallSave Then $HaveResource = False
 			If $HaveResource Then $UpgradeType = "Elix"
 			If Not $HaveResource Then SetLog("- Insufficient Elixir", $COLOR_DEBUG)
 		Case 2 ;Elixir then Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			Local $HaveElix = IsElixEnough($Cost)
-			Local $iWallSaveG = WallDiscount($g_iUpgradeWallMinGold)
-			Local $iWallSaveE = WallDiscount($g_iUpgradeWallMinElixir)
-			If $g_aiCurrentLoot[$eLootGold] < $iWallSaveG And $g_aiCurrentLoot[$eLootElixir] < $iWallSaveE Then $HaveResource = False
+			If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold And $g_aiCurrentLoot[$eLootElixir] < $g_iUpgradeWallMinElixir Then $HaveResource = False
 			If Number($iWallLevel) > 3 Then
 				$HaveResource = $HaveElix
 				If $HaveResource Then $UpgradeType = "Elix"
@@ -209,7 +179,6 @@ EndFunc
 Func UpgradeLowLevelWall($bTest = False)
 	If Not $g_bRunState Then Return
 	SetLog("Upgrade LowLevel Wall using autoupgrade enabled", $COLOR_DEBUG)
-	VillageReport(True, True) ;update village resource capacity
 	If Not ClickMainBuilder($bTest) Then Return
 	Local $aWallCoord, $Try = 1, $WallNotFound = False
 	While True
@@ -220,7 +189,13 @@ Func UpgradeLowLevelWall($bTest = False)
 		SetLog("[" & $Try & "] Search Wall on Builder Menu", $COLOR_INFO)
 		$Try += 1
 		$aWallCoord = ClickDragFindWallUpgrade()
-			
+		
+		If $g_iSaveGoldWall > $g_aiCurrentLoot[$eLootGold] Or $g_iSaveElixWall > $g_aiCurrentLoot[$eLootElixir] Then 
+			SetLog("Upgrade Wall skipped, need to save for RushTH Priority Building", $COLOR_ACTION)
+			ClickDragAUpgrade("down")
+			Return
+		EndIf
+		
 		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then ; found a wall or list of wall
 			Local $aIsEnoughResource = WallCheckResource($aWallCoord[0][2]) ;check upgrade from lowest to highest price 
 			If Not $aIsEnoughResource[0] Then 
@@ -239,7 +214,7 @@ Func UpgradeLowLevelWall($bTest = False)
 	Wend
 	ClickDragAUpgrade("down")
 	Clickaway("Right")
-	SetDebugLog("Upgrade Wall using autoupgrade EXIT", $COLOR_DEBUG)
+	SetDebugLog("Upgrade Wall using autoupgrade EXIT")
 EndFunc
 
 Func TryUpgradeWall($aWallCoord, $bTest = False)
@@ -445,19 +420,19 @@ EndFunc
 Func ClickDragFindWallUpgrade()
 	Local $x = 420, $yUp = 60, $Delay = 800
 	Local $YY = 345
-	Local $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost = 0, $aWallCoord
+	Local $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost = 0, $aWallCoord[0][4], $aTmpWallCoord
 	For $checkCount = 0 To 9
 		If Not $g_bRunState Then Return
 		If IsBuilderMenuOpen() Then
-			ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
-			If _Sleep(1000) Then Return
-			
-			If QuickMIS("BC1", $g_sImgAUpgradeWall, 180, 80, 300, 369, True) Then
-				If _Sleep(2000) Then Return
-				$aWallCoord = GetWallPos()
-				If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then
-					Return $aWallCoord
-				EndIf
+			If _Sleep(2000) Then Return
+			$aTmpWallCoord = FindWallOnBuilderMenu()
+			If IsArray($aTmpWallCoord) And UBound($aTmpWallCoord) > 0 Then
+				For $i = 0 To UBound($aTmpWallCoord) - 1
+					If StringInStr($aTmpWallCoord[$i][3], "Wall") Then
+						_ArrayAdd($aWallCoord, $aTmpWallCoord[$i][1] & "|" & $aTmpWallCoord[$i][2] & "|" & $aTmpWallCoord[$i][5] & "|" & $aTmpWallCoord[$i][0])
+					EndIf
+				Next
+				If UBound($aWallCoord) > 0 Then Return $aWallCoord
 			EndIf
 
 			$TmpUpgradeCost = getMostBottomCost()
@@ -467,8 +442,11 @@ Func ClickDragFindWallUpgrade()
 			If $sameCost > 2 Then ExitLoop
 			$UpgradeCost = $TmpUpgradeCost
 		EndIf
+		If _Sleep(1000) Then Return
+			
 		If IsBuilderMenuOpen() Then ;check upgrade window border
 			SetDebugLog("Upgrade Window Exist", $COLOR_INFO)
+			ClickDragAUpgrade()
 		Else
 			SetDebugLog("Upgrade Window Gone!", $COLOR_DEBUG)
 			ClickMainBuilder()
@@ -477,30 +455,65 @@ Func ClickDragFindWallUpgrade()
 	Return $aWallCoord
 EndFunc ;==>IsUpgradeWindow
 
-Func GetWallPos()
-	Local $aTmpWallCoord, $aWallCoord[0][3], $aWall, $TmpUpgradeCost = 0, $UpgradeCost = 0
-	$aTmpWallCoord = QuickMIS("CX", $g_sImgAUpgradeWall, 180, 80, 300, 369, True)
-	If IsArray($aTmpWallCoord) And UBound($aTmpWallCoord) > 0 Then
-		SetDebugLog("Found " & UBound($aTmpWallCoord) & " Image Wall")
-		For $j = 0 To UBound($aTmpWallCoord) - 1
-			$aWall = StringSplit($aTmpWallCoord[$j], ",", $STR_NOCOUNT)
-			$UpgradeCost = getOcrAndCapture("coc-NewCapacity",$aWall[0] + 180 + 110, $aWall[1] + 80 - 8, 150, 20, True)
-			If Not $UpgradeCost = "" Then
-				SetDebugLog("Wall " & $j & " UpgradeCost=" & $UpgradeCost, $COLOR_INFO)
-				If $UpgradeCost = "50" Then
-					SetDebugLog("Wall " & $j & " is new wall, skip!", $COLOR_INFO)
-					ContinueLoop ;skip New Wall
-				EndIf
-				_ArrayAdd($aWallCoord, $aWall[0]+180 & "|" & $aWall[1]+80 & "|" & $UpgradeCost, Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
-			Else
-				SetDebugLog("Wall " & $j & " not enough resource, skip!", $COLOR_DEBUG)
-			EndIf
+Func FindWallOnBuilderMenu()
+	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
+	Local $aRushTHPriority[7][2] = [["Castle", 15], ["Pet", 15], ["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10]]
+	Local $aHeroes[4] = ["King", "Queen", "Warden", "Champion"]
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390)
+	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		For $i = 0 To UBound($aTmpCoord) - 1
+			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 250, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
+			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
+			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
 		Next
-		_ArraySort($aWallCoord, 0, 0, 0, 2)
-		Return $aWallCoord
-	Else
-		SetDebugLog("Not Array Wall", $COLOR_DEBUG)
+
+		For $j = 0 To UBound($aBuilding) -1
+			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $aBuilding[$j][1], $aBuilding[$j][2] - 10, 120, 30, True)
+			$aBuilding[$j][5] = Number($UpgradeCost)
+			
+			If $aBuilding[$j][5] = "50" Then
+				SetDebugLog("Wall " & $j & " is new wall, skip!", $COLOR_INFO)
+				ContinueLoop ;skip New Wall
+			EndIf
+			
+			Local $BuildingName = $aBuilding[$j][3]
+			For $k = 0 To UBound($aRushTHPriority) - 1
+				If StringInStr($BuildingName, $aRushTHPriority[$k][0]) Then
+					Switch $aBuilding[$j][0]
+						Case "Gold"
+							$aBuilding[$j][6] = $aRushTHPriority[$k][1]
+						Case "Elix"
+							$aBuilding[$j][6] = $aRushTHPriority[$k][1]
+						Case "DE"
+							$aBuilding[$j][6] = $aRushTHPriority[$k][1]
+					EndSwitch
+					$aBuilding[$j][7] = "Priority"
+					If $g_bChkRushTH And ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
+				EndIf
+			Next
+			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
+		Next
 	EndIf
+	
+	Local $iIndex = _ArraySearch($aBuilding, "0", 0, 0, 0, 0, 0, 5)
+	If $iIndex > -1 Then
+		SetDebugLog("Failed to read cost, remove!")
+		_ArrayDelete($aBuilding, $iIndex)
+	EndIf
+	
+	_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
+	Return $aBuilding
+EndFunc
+
+Func setMinSaveWall($Type, $cost)
+	Switch $Type
+		Case "Gold"
+			$g_iSaveGoldWall = $cost
+			SetLog("Set Save Gold for RusTH Priority = " & $g_iSaveGoldWall, $COLOR_ACTION)
+		Case "Elix"
+			$g_iSaveElixWall = $cost
+			SetLog("Set Save Elixir for RusTH Priority = " & $g_iSaveElixWall, $COLOR_ACTION)
+	EndSwitch
 EndFunc
 
 Func UpgradeWallGold($iWallCost = $g_iWallCost, $bTest = False)
@@ -583,7 +596,8 @@ Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
 EndFunc   ;==>UpgradeWallElixir
 
 Func IsGoldEnough($iWallCost = $g_aUpgradeWall[0])
-	Local $iWallSave = WallDiscount($g_iUpgradeWallMinGold)
+	Local $iWallSave = $g_iUpgradeWallMinGold
+	If $g_iSaveGoldWall > 0 Then $iWallSave = $g_iSaveGoldWall
 	Local $EnoughGold = True
 	If ($g_aiCurrentLoot[$eLootGold] - $iWallCost) < $iWallSave Then
 		$EnoughGold = False
@@ -596,7 +610,7 @@ EndFunc
 
 Func IsElixEnough($iWallCost = $g_aUpgradeWall[0])
 	Local $iWallSave = $g_iUpgradeWallMinElixir
-	If _DateDiff("n", _NowCalc(), $g_sLabUpgradeTime) > 4320 Then $iWallSave = WallDiscount($g_iUpgradeWallMinElixir) ; Lab Upgrade Time < 3 days, no discounts!
+	If $g_iSaveElixWall > 0 Then $iWallSave = $g_iSaveElixWall
 	Local $EnoughElix = True
 	If ($g_aiCurrentLoot[$eLootElixir] - $iWallCost) < $iWallSave Then
 		$EnoughElix = False

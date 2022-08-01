@@ -120,12 +120,14 @@ Func InitBlueStacks5X($bCheckOnly = False, $bAdjustResolution = False, $bLegacyM
 			Return False
 		EndIf
 	Next
-
+	Local $sPreferredADB = FindPreferredAdbPath()
+	
 	If Not $bCheckOnly Then
 		; update global variables
 		$g_sAndroidPath = $__BlueStacks_Path
 		$g_sAndroidProgramPath = $__BlueStacks_Path & $frontend_exe
-		$g_sAndroidAdbPath = $__BlueStacks_Path & "HD-Adb.exe"
+		;$g_sAndroidAdbPath = $__BlueStacks_Path & "HD-Adb.exe"
+		$g_sAndroidAdbPath = $sPreferredADB
 		$g_sAndroidVersion = $__BlueStacks_Version
 		ConfigureSharedFolderBlueStacks5() ; something like D:\ProgramData\BlueStacks\Engine\UserData\SharedFolder\
 		WinGetAndroidHandle()
@@ -362,14 +364,6 @@ Func GetBlueStacks5RunningInstance($bStrictCheck = True)
 	Return $a
 EndFunc   ;==>GetBlueStacks2RunningInstance
 
-Func BlueStacks5BotStartEvent()
-	Return False
-EndFunc   ;==>BlueStacks2BotStartEvent
-
-Func BlueStacks5BotStopEvent()
-	Return False
-EndFunc   ;==>BlueStacks2BotStopEvent
-
 Func GetBlueStacks5SvcPid()
 	; find process PID
 	Local $PID = ProcessExists2("HD-Service.exe")
@@ -437,7 +431,15 @@ Func CloseUnsupportedBlueStacks5()
 	EndIf
 	Opt("WinTitleMatchMode", $WinTitleMatchMode)
 	Return False
-EndFunc   ;==>CloseUnsupportedBlueStacks2
+EndFunc 
+
+Func BlueStacks5BotStartEvent()
+	Return AndroidCloseSystemBar()
+EndFunc  
+
+Func BlueStacks5BotStopEvent()
+	Return AndroidOpenSystemBar()
+EndFunc  
 
 Func BlueStacks5AdjustClickCoordinates(ByRef $x, ByRef $y)
 	$x = Round(32767.0 / $g_iAndroidClientWidth * $x)

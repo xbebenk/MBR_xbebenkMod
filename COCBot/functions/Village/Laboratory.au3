@@ -55,6 +55,7 @@ Func Laboratory($bDebug = False)
 	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
 	Local $iCurPage = 1
 	Local $sCostResult, $bUpgradeFound = False
+	Local $tmpNoResources = False
 
 		If $g_iCmbLaboratory <> 0 Then
 			Local $iPage = Ceiling($g_iCmbLaboratory / $iPicsPerPage) ; page # of user choice
@@ -136,6 +137,7 @@ Func Laboratory($bDebug = False)
 									Next
 								EndIf
 								If Not IsLabUpgradeResourceEnough($g_avLabTroops[$iTmpCmbLaboratory][2], $sCostResult) Then
+									$tmpNoResources = True
 									SetLog($g_avLabTroops[$iTmpCmbLaboratory][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
 								Else
 									SetLog($g_avLabTroops[$iTmpCmbLaboratory][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
@@ -189,7 +191,7 @@ Func Laboratory($bDebug = False)
 			EndIf
 			; If We got to here without returning, then nothing available for upgrade
 			SetLog("Nothing available for upgrade at the moment, try again later.")
-			If $g_bLabUpgradeOrderEnable And $g_bUpgradeAnyTroops Then 
+			If $g_bLabUpgradeOrderEnable And $g_bUpgradeAnyTroops And Not $tmpNoResources Then 
 				Return UpgradeLabAny($bDebug)
 			EndIf
 			ClickAway()

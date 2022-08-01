@@ -50,7 +50,7 @@ Func CheckTombs()
 		If IsArray($TombsXY) Then
 			; Loop through all found points for the item and click them to clear them, there should only be one
 			For $j = 0 To UBound($TombsXY) - 1
-				If isInsideDiamondXY($TombsXY[$j][0], $TombsXY[$j][1]) Then
+				If isSafeCleanYardXY($TombsXY[$j][0], $TombsXY[$j][1]) Then
 					SetDebugLog("Coords :" & $TombsXY[$j][0] & "," & $TombsXY[$j][1])
 					If IsMainPage() Then
 						Click($TombsXY[$j][0], $TombsXY[$j][1], 1, 0, "#0430")
@@ -110,7 +110,7 @@ Func CleanYard($bTest = False)
 				$Filename = $aResult[$i][0]
 				$x = $aResult[$i][1]
 				$y = $aResult[$i][2]
-				If Not isInsideDiamondXY($x, $y) Then ContinueLoop
+				If Not isSafeCleanYardXY($x, $y) Then ContinueLoop
 				SetLog($Filename & " found [" & $x & "," & $y & "]", $COLOR_SUCCESS)
 				Click($x, $y, 1, 0, "#0430") ;click CleanYard
 				_Sleep(1000)
@@ -160,7 +160,7 @@ Func RemoveGembox()
 	If Not IsMainPage() Then Return
 	
 	If QuickMIS("BC1", $g_sImgGemBox, 70,70,830,620) Then
-		If Not isInsideDiamondXY($g_iQuickMISX, $g_iQuickMISY) Then 
+		If Not isSafeCleanYardXY($g_iQuickMISX, $g_iQuickMISY) Then 
 			SetLog("Cannot Remove GemBox!", $COLOR_INFO)
 			Return False
 		EndIf

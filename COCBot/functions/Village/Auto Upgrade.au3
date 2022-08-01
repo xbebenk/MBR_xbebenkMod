@@ -39,7 +39,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	EndIf
 
 	If ($g_bSkipWallReserve Or $g_bUpgradeLowCost) And $g_iFreeBuilderCount > 0 Then
-		SetLog("CheckBuilder: " & ($g_bUpgradeLowCost ? "Upgrade remain time > 1day, but < 2day" : "Upgrade remain time < 24h"), $COLOR_WARNING)
+		SetLog("CheckBuilder: " & ($g_bUpgradeLowCost ? "Upgrade remain time > 1day" : "Upgrade remain time < 24h"), $COLOR_WARNING)
 		$bRet = True
 	EndIf
 
@@ -70,28 +70,10 @@ Func SearchUpgrade($bTest = False)
 			If $mUpgradeTime > 0 And $mUpgradeTime <= 1440 Then
 				SetLog("Upgrade time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
 				$g_bSkipWallReserve = True
-			ElseIf $mUpgradeTime > 1400 And $mUpgradeTime <= 2880 Then
+			ElseIf $mUpgradeTime > 1440 Then
 				$g_bUpgradeLowCost = True
-				SetLog("Upgrade time > 24h And < 2d, Will Use Wall Reserved Builder", $COLOR_INFO)
-			Else
-				SetLog("Upgrade time > 24h, Skip Upgrade", $COLOR_INFO)
+				SetLog("Upgrade time > 24h, will use for upgrade lowcost building", $COLOR_INFO)
 			EndIf
-	
-			; Smart Save Resources for Wall Upgrade
-			;If $g_bWallSaveMode < 0 Then
-			;	If $mUpgradeTime >= 7200 Then
-			;		SetLog("Long Upgrade Duration > 5d", $COLOR_INFO)
-			;		SetLog("Discounting wall save resources by 50%", $COLOR_INFO)
-			;		$g_bWallSaveMode = 1
-			;	ElseIf $mUpgradeTime >= 4320 Then
-			;		SetLog("Long Upgrade duration > 3d And < 5d", $COLOR_INFO)
-			;		SetLog("Discounting wall save resources by 25%", $COLOR_INFO)
-			;		$g_bWallSaveMode = 2
-			;	Else
-			;		SetLog("Upgrade time < 3d, No Discounts!", $COLOR_INFO)
-			;		$g_bWallSaveMode = 0
-			;	EndIf
-			;EndIf
 		EndIf
 	EndIf
 
@@ -112,13 +94,14 @@ Func SearchUpgrade($bTest = False)
 	If Not $g_bRunState Then Return
 	If AutoUpgradeCheckBuilder($bTest) Then
 		AutoUpgradeSearchExisting($bTest) ;search upgrade for existing building
+		If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
+		_Sleep(5000)
 	EndIf
-
-	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
-		If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing
-			AutoUpgradeSearchNewBuilding($bTest)
-		EndIf
+	
+	If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing
+		If AutoUpgradeCheckBuilder($bTest) Then AutoUpgradeSearchNewBuilding($bTest)
 	EndIf
+	
 	If Not $g_bRunState Then Return
 	Clickaway("Right")
 	ZoomOut()
@@ -153,6 +136,8 @@ Func AutoUpgradeSearchExisting($bTest = False)
 						If Not AutoUpgradeCheckBuilder($bTest) Then Return
 					Endif
 					ClickMainBuilder($bTest)
+				Else
+					If $g_bChkRushTH And ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($ExistingBuilding[$i][0], $ExistingBuilding[$i][5])
 				EndIf
 			Next
 		Else
@@ -267,7 +252,6 @@ Func FindExistingBuilding($bTest = False)
 								$aBuilding[$j][6] = $aRushTHPriority[$k][1]
 						EndSwitch
 						$aBuilding[$j][7] = "Priority"
-						If $g_bAutoUpgradeWallsEnable Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
 					EndIf
 				Next
 				For $k = 0 To UBound($aRushTH) - 1
@@ -281,7 +265,6 @@ Func FindExistingBuilding($bTest = False)
 								$aBuilding[$j][6] = $aRushTH[$k][1]
 						EndSwitch
 						$aBuilding[$j][7] = "RushTH"
-						If $g_bAutoUpgradeWallsEnable Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
 					EndIf
 				Next
 			EndIf
@@ -296,7 +279,12 @@ Func FindExistingBuilding($bTest = False)
 			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
-
+	Local $iIndex = _ArraySearch($aBuilding, "0", 0, 0, 0, 0, 0, 5)
+	If $iIndex > -1 Then 
+		SetDebugLog(_ArrayToString($aBuilding))
+		SetDebugLog("Found Building with Zero cost, remove it", $COLOR_INFO)
+		_ArrayDelete($aBuilding, $iIndex)
+	EndIf
 	If ($g_bChkRushTH And $bFoundRusTH) Or $g_bHeroPriority Then
 		_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
 	Else
@@ -833,13 +821,12 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
 		Local $New, $NewCoord, $aCoord[0][3]
-		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
+		
 		$NewCoord = FindNewBuilding() ;find New Building
 		If IsArray($NewCoord) And UBound($NewCoord) > 0 Then
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
 			For $j = 0 To UBound($NewCoord) - 1
 				SetLog("New: " & $NewCoord[$j][4] & ", cost: " & $NewCoord[$j][6] & " " & $NewCoord[$j][0], $COLOR_INFO)
-				If $g_bChkRushTH And $g_bAutoUpgradeWallsEnable Then setMinSaveWall($NewCoord[$j][0], Number($NewCoord[$j][6]))
 			Next
 
 			$isWall = False ;reset var
@@ -879,6 +866,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("New Building Not Found", $COLOR_INFO)
 		EndIf
 
+		If Not ClickMainBuilder($bTest) Then Return False
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno //skip if will use builder for lowcost
 			SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
 			Local $aResult = FindExistingBuilding()
@@ -897,13 +885,15 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 							If DoUpgrade($bTest) Then ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
 						Else
 							SetDebugLog("Skip this building, not enough resource", $COLOR_WARNING)
+							If $g_bChkRushTH And ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aResult[$y][0], $aResult[$y][5])
 						EndIf
 					EndIf
 				Next
 			EndIf
 			If Not $g_bRunState Then Return
 		EndIf
-
+		
+		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
 		If Not ($UpgradeCost = $TmpUpgradeCost) Then $sameCost = 0
@@ -946,7 +936,6 @@ Func FindNewBuilding()
 			$aBuilding[$j][4] = $aUpgradeName[0]
 			$aBuilding[$j][5] = $aUpgradeName[1]
 			$aBuilding[$j][6] = Number($UpgradeCost)
-			If $g_bChkRushTH And $g_bAutoUpgradeWallsEnable Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][6])
 			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][4] & ", Cost=" & $aBuilding[$j][6] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
@@ -1167,23 +1156,6 @@ Func getMostBottomCost()
 		$ret = $Icon[0][0] & "|" & $TmpUpgradeCost
 	EndIf
 	Return $ret
-EndFunc
-
-Func setMinSaveWall($Type, $cost)
-	Switch $Type
-		Case "Gold"
-			If Number($g_iUpgradeWallMinGold) >= Number($cost) Then Return
-			$g_iUpgradeWallMinGold = $cost
-			SetLog("Set Save Gold on Wall upgrade = " & $g_iUpgradeWallMinGold, $COLOR_DEBUG)
-			applyConfig()
-			saveConfig()
-		Case "Elix"
-			If Number($g_iUpgradeWallMinElixir) >= Number($cost) Then Return
-			$g_iUpgradeWallMinElixir = $cost
-			SetLog("Set Save Elix on Wall upgrade = " & $g_iUpgradeWallMinElixir, $COLOR_DEBUG)
-			applyConfig()
-			saveConfig()
-	EndSwitch
 EndFunc
 
 Func FindTHInUpgradeProgress()

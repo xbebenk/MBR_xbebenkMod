@@ -398,7 +398,7 @@ Func SaveConfig_600_6()
 
 	# NEW CLANGAMES GUI
 	_Ini_Add("other", "ChkClanGamesEnabled", $g_bChkClanGamesEnabled ? 1 : 0)
-	_Ini_Add("other", "ChkClanGames60", $g_bChkClanGames60 ? 1 : 0)
+	_Ini_Add("other", "ChkClanGames60", $g_bChkClanGames3H ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesDebug", $g_bChkClanGamesDebug ? 1 : 0)
 	_Ini_Add("other", "CollectCGReward", $g_bCollectCGReward ? 1 : 0)
 	
@@ -508,6 +508,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("ClanCapital", "ForgeUseBuilder", $g_iCmbForgeBuilder)
 	_Ini_Add("ClanCapital", "AutoUpgradeCC", $g_bChkEnableAutoUpgradeCC)
 	_Ini_Add("ClanCapital", "ChkAutoUpgradeCCIgnore", $g_bChkAutoUpgradeCCIgnore)
+	_Ini_Add("ClanCapital", "ChkAutoUpgradeCCWallIgnore", $g_bChkAutoUpgradeCCWallIgnore)
 	
 	;Misc Mod
 	_Ini_Add("other", "SkipFirstCheckRoutine", $g_bSkipFirstCheckRoutine)
@@ -731,7 +732,6 @@ Func SaveConfig_600_17()
 	_Ini_Add("upgrade", "use-storage", $g_iUpgradeWallLootType)
 	_Ini_Add("upgrade", "savebldr", $g_bUpgradeWallSaveBuilder ? 1 : 0)
 	_Ini_Add("upgrade", "Only1Builder", $g_bChkOnly1Builder ? 1 : 0)
-	_Ini_Add("upgrade", "SyncTHWall", $g_bchkSyncTHWall ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradeLowWall", $g_bUpgradeLowWall ? 1 : 0)
 	_Ini_Add("upgrade", "LowLevelWall", $g_iLowLevelWall)
 	_Ini_Add("upgrade", "UpgradeAnyWall", $g_bUpgradeAnyWallLevel ? 1 : 0)

@@ -191,8 +191,62 @@ Func CreateBBPlaySubTab()
 
 EndFunc   ;==>CreateBBPlaySubTab
 
-Global $g_hLblNotesScriptBB[3] = [0, 0, 0], $g_hGrpOptionsBB = 0, $g_hGrpAttackStyleBB = 0, $g_hGrpGuideScriptBB[3] = [0, 0, 0], $g_hIcnBBCSV[4] = [0, 0, 0, 0], $g_hCmbBBAttackStyle[3] = [0, 0, 0]
-Global $g_hChkBBForceCustomArmy = 0, $g_hChkBBGetArmyFromCSV = 0, $g_hChkBBCSVAttack = 0, $g_hCmbBBCSVSettings = 0 ; Custom
+; Builder base drop order gui
+Func CreateBBDropOrderGUI()
+	$g_hGUI_BBDropOrder = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_BBDropOrder", "BB Custom Drop Order"), 322, 313, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
+
+
+	Local $x = 25, $y = 25
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBDropOrderGroup", "BB Custom Dropping Order"), $x - 20, $y - 20, 308, 250)
+		$x += 10
+		$y += 20
+
+		$g_hChkBBCustomDropOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBChkCustomDropOrderEnable", "Enable Custom Dropping Order"), $x - 13, $y - 22, -1, -1)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBChkCustomDropOrderEnable_Info_01", "Enable to select a custom troops dropping order"))
+			GUICtrlSetOnEvent(-1, "chkBBDropOrder")
+
+		$y+=5
+		For $i=0 To $g_iBBTroopCount-1
+			If $i < 6 Then
+				GUICtrlCreateLabel($i + 1 & ":", $x - 19, $y + 3 + 25*$i, -1, 18)
+				$g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x, $y + 25*$i, 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+					GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
+					GUICtrlSetData(-1,  $g_sBBDropOrderDefault)
+					_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & $i + 1))
+					GUICtrlSetState(-1, $GUI_DISABLE)
+			Else
+				GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-6), -1, 18)
+				$g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-6), 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+					GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
+					GUICtrlSetData(-1,  $g_sBBDropOrderDefault)
+					_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & $i + 1))
+					GUICtrlSetState(-1, $GUI_DISABLE)
+			EndIf
+		Next
+
+		$x = 25
+		$y = 225
+		; Create push button to set training order once completed
+		$g_hBtnBBDropOrderSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet", "Apply New Order"), $x, $y, 100, 25)
+			GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet_Info_01", "Push button when finished selecting custom troops dropping order") & @CRLF & _
+							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet_Info_02", "When not all troop slots are filled, will use default order."))
+			GUICtrlSetOnEvent(-1, "BtnBBDropOrderSet")
+
+		$x += 150
+		$g_hBtnBBRemoveDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBRemoveDropOrder", "Empty Drop List"), $x, $y, 118, 25)
+			GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBRemoveDropOrder_Info_01", "Push button to remove all troops from list and start over"))
+			GUICtrlSetOnEvent(-1, "BtnBBRemoveDropOrder")
+
+		$g_hBtnBBClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderClose", "Close"), 229, 258, 85, 25)
+			GUICtrlSetOnEvent(-1, "CloseCustomBBDropOrder")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+EndFunc ;==>CreateBBDropOrderGUI
+
+Global $g_hChkBBForceCustomArmy = 0
 
 Func CreateBBAttackSubTab()
 	Local $x = 15, $y = 25
@@ -257,15 +311,11 @@ Func CreateBBAttackSubTab()
 	
 	$x = 15
 	$y = 135
-	$g_hGrpAttackStyleBB = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_03", "Attack Style"), $x - 10,  $y, $g_iSizeWGrpTab2, 130)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_03", "Attack Style"), $x - 10,  $y, $g_iSizeWGrpTab2, 130)
 	
 	$g_hChkBBCustomArmyEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCustomArmyEnable", "Enable Custom Army"), $x + 5, $y + 13, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCustomArmyEnable", "Enable Use Custom Army"))
 		GUICtrlSetOnEvent(-1, "ChkBBCustomArmyEnable")
-
-	;$g_hChkBBForceCustomArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBForceCustomArmy", "Force"), $x + 5 + 127, $y + 13, -1, -1)
-	;
-	;$g_hChkBBGetArmyFromCSV = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBGetArmyFromCSV", "Force from CSV"), $x + 5 + 270, $y + 13, -1, -1)
 
 	Static $sTroops = ""
 	If $sTroops = "" Then
@@ -327,59 +377,3 @@ Func CreateBBAttackSubTab()
 	$g_hIcnTroopBB[5] = _GUICtrlCreateIcon($g_sLibIconPath, $g_avStarLabTroops[1][4], $x + 365, $y, 45, 45)
 	
 EndFunc
-
-
-; Builder base drop order gui
-Func CreateBBDropOrderGUI()
-	$g_hGUI_BBDropOrder = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_BBDropOrder", "BB Custom Drop Order"), 322, 313, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
-
-
-	Local $x = 25, $y = 25
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBDropOrderGroup", "BB Custom Dropping Order"), $x - 20, $y - 20, 308, 250)
-		$x += 10
-		$y += 20
-
-		$g_hChkBBCustomDropOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBChkCustomDropOrderEnable", "Enable Custom Dropping Order"), $x - 13, $y - 22, -1, -1)
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBChkCustomDropOrderEnable_Info_01", "Enable to select a custom troops dropping order"))
-			GUICtrlSetOnEvent(-1, "chkBBDropOrder")
-
-		$y+=5
-		For $i=0 To $g_iBBTroopCount-1
-			If $i < 6 Then
-				GUICtrlCreateLabel($i + 1 & ":", $x - 19, $y + 3 + 25*$i, -1, 18)
-				$g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x, $y + 25*$i, 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-					GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
-					GUICtrlSetData(-1,  $g_sBBDropOrderDefault)
-					_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & $i + 1))
-					GUICtrlSetState(-1, $GUI_DISABLE)
-			Else
-				GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-6), -1, 18)
-				$g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-6), 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-					GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
-					GUICtrlSetData(-1,  $g_sBBDropOrderDefault)
-					_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & $i + 1))
-					GUICtrlSetState(-1, $GUI_DISABLE)
-			EndIf
-		Next
-
-		$x = 25
-		$y = 225
-		; Create push button to set training order once completed
-		$g_hBtnBBDropOrderSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet", "Apply New Order"), $x, $y, 100, 25)
-			GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet_Info_01", "Push button when finished selecting custom troops dropping order") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet_Info_02", "When not all troop slots are filled, will use default order."))
-			GUICtrlSetOnEvent(-1, "BtnBBDropOrderSet")
-
-		$x += 150
-		$g_hBtnBBRemoveDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBRemoveDropOrder", "Empty Drop List"), $x, $y, 118, 25)
-			GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBRemoveDropOrder_Info_01", "Push button to remove all troops from list and start over"))
-			GUICtrlSetOnEvent(-1, "BtnBBRemoveDropOrder")
-
-		$g_hBtnBBClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderClose", "Close"), 229, 258, 85, 25)
-			GUICtrlSetOnEvent(-1, "CloseCustomBBDropOrder")
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-EndFunc ;==>CreateBBDropOrderGUI

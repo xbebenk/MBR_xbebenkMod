@@ -28,7 +28,7 @@ Global $g_hBtnLocateKingAltar = 0, $g_hBtnLocateQueenAltar = 0, $g_hBtnLocateWar
 Global $g_hChkTreasuryCollect = 0, $g_hTxtTreasuryGold = 0, $g_hTxtTreasuryElixir = 0, $g_hTxtTreasuryDark = 0 , $g_hChkCollectAchievements = 0, $g_hChkFreeMagicItems = 0, $g_hChkCollectRewards = 0, $g_hChkSellRewards = 0
 
 ;ClanGames Challenges
-Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames60 = 0, $g_hChkClanGamesDebug = 0
+Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames3H = 0, $g_hChkClanGamesDebug = 0
 Global $g_hTxtClanGamesLog = 0, $g_hLblRemainTime = 0 , $g_hLblYourScore = 0
 Global $g_hGUI_CGSettings = 0, $g_hBtnCGSettingsOpen = 0, $g_hBtnCGSettingsClose = 0, $g_hChkCollectCGReward = 0
 Global $g_hChkForceBBAttackOnClanGames = 0, $g_hChkClanGamesPurgeAny = 0, $g_hChkClanGamesStopBeforeReachAndPurge = 0, $g_hCmbClanGamesPurgeDay
@@ -418,8 +418,8 @@ Func CreateMiscClanGamesV3SubTab()
 	$x = 135
 		$g_hChkClanGamesEnabled = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesEnabled", "Enabled"), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkActivateClangames")
-		$g_hChkClanGames60 = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGames60", "No 60min Events"), $x + 90 , $y, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGames60_Info_01", "will not choose 60 minute events"))
+		$g_hChkClanGames3H = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGames60", "No 3 Hour Events"), $x + 90 , $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGames60_Info_01", "will not choose 3 Hour Events"))
 		$g_hChkClanGamesDebug = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkClanGamesDebug", "Debug"), $x + 215, $y, -1, -1)
 
 	$y += 40
@@ -709,7 +709,7 @@ Func CreateClanGamesSettings()
 		GUICtrlSetOnEvent(-1, "CloseCGSettings")
 
 EndFunc
-Global $g_lblCapitalGold = 0, $g_lblCapitalMedal = 0, $g_hCmbForgeBuilder = 0, $g_hChkEnableAutoUpgradeCC = 0, $g_hChkAutoUpgradeCCIgnore = 0
+Global $g_lblCapitalGold = 0, $g_lblCapitalMedal = 0, $g_hCmbForgeBuilder = 0, $g_hChkEnableAutoUpgradeCC = 0, $g_hChkAutoUpgradeCCIgnore = 0, $g_hChkAutoUpgradeCCWallIgnore = 0
 Global $g_hChkEnableCollectCCGold = 0, $g_hChkStartWeekendRaid = 0
 Global $g_hChkEnableForgeGold = 0, $g_hChkEnableForgeElix = 0, $g_hChkEnableForgeDE = 0, $g_hChkEnableForgeBBGold = 0, $g_hChkEnableForgeBBElix = 0
 Global $g_hTxtAutoUpgradeCCLog = 0
@@ -754,7 +754,11 @@ Func CreateClanCapitalTab()
 	$y += 47
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_ClanCapital_AutoUpgradeCC", "Auto Upgrade Clan Capital"), $x - 10, $y - 15, $g_iSizeWGrpTab3 - 3, 65)
 		$g_hChkEnableAutoUpgradeCC = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableAutoUpgradeCC", "Enable"), $x, $y, -1, -1)
-	$y += 20	
+	$x += 100	
+		$g_hChkAutoUpgradeCCWallIgnore = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAutoUpgradeCCWallIgnore", "Ignore Wall Upgrade"), $x, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Info_ChkAutoUpgradeCCWallIgnore", "Enable Ignore Upgrade for Wall"))
+	$x = 15
+	$y += 20
 		$g_hChkAutoUpgradeCCIgnore = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAutoUpgradeCCIgnore", "Ignore Decoration Building"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Info_ChkAutoUpgradeCCIgnore", "Enable Ignore Upgrade for Grove, Tree, Forest, Campsite"))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

@@ -59,6 +59,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	SetDebugLog("stone: " & _ArrayToString($stone))
 	If $stone[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
+		If $bOnBuilderBase Then ZoomOutHelperBB("GetVillageSize")
 		Return FuncReturn($aResult)
 	EndIf
 	
@@ -94,6 +95,8 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		SetDebugLog("Stone2tree = " & $c)
 		SetDebugLog("Reference = " & $iRefSize)
 		SetDebugLog("ZoomLevel = " & $z)
+		
+		If $z > 1 Then Return FuncReturn($aResult)
 
 		Local $stone_x_exp = $stone[2]
 		Local $stone_y_exp = $stone[3]
@@ -182,7 +185,7 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAddition
 	Local $aTreeFiles = _FileListToArray($sDirectory & "tree\", $sTreePrefix & "*.*", $FLTA_FILES)
 	If @error Then
 		SetLog("Error: Missing tree (" & @error & ")", $COLOR_ERROR)
-		Return
+		Return $tree
 	EndIf
 	
 	Local $scenerycode = "tree" & $sStoneName

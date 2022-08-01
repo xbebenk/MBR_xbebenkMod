@@ -4,8 +4,28 @@ Func CollectCCGold($bTest = False)
 	Local $bWindowOpened = False
 	Local $aCollect, $iBuilderToUse = $g_iCmbForgeBuilder + 1
 	SetLog("Start Collecting Clan Capital Gold", $COLOR_INFO)
-	ClickAway()
-	ZoomOut() ;ZoomOut first
+	ClickAway("Right")
+	_Sleep(500)
+	ZoomOut(True) ;ZoomOut first
+	_Sleep(500)
+	
+	;handle for turtorial
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 250, 520, 400, 670) Then 
+		Click($g_iQuickMISX, $g_iQuickMISY + 10)
+		_Sleep(8000)
+		While 1
+			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then 
+				Click($g_iQuickMISX, $g_iQuickMISY)
+			EndIf
+			_Sleep(3000)
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 710, 160, 760, 205) Then
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				_Sleep(2000)
+				ExitLoop
+			EndIf
+		WEnd
+	EndIf
+	
 	If QuickMIS("BC1", $g_sImgCCGoldCollect, 250, 550, 400, 670) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
 		For $i = 1 To 5
@@ -56,7 +76,7 @@ Func CollectCCGold($bTest = False)
 		SetLog("No available Clan Capital Gold to be collected!", $COLOR_INFO)
 		Return
 	EndIf
-	ClickAway()
+	ClickAway("Right")
 	If _Sleep(500) Then Return
 EndFunc
 
@@ -96,7 +116,7 @@ Func StartRaidWeekend()
 			EndIf
 		Next
 		If Not $bWindowOpened Then 
-			ClickAway()
+			ClickAway("Right")
 			Return
 		EndIf
 		If $bWindowOpened Then
@@ -104,12 +124,12 @@ Func StartRaidWeekend()
 				SetLog("Starting Raid Weekend", $COLOR_INFO)
 				Click(430, 520) ;Click Start Raid Button
 				_Sleep(1000)
-				ClickAway()
+				ClickAway("Right")
 				SwitchToMainVillage("Start Weekend Raid")
 				SwitchToClanCapital()
 			Else
 				SetLog("Start Raid Button not Available", $COLOR_ACTION)
-				ClickAway()
+				ClickAway("Right")
 				Return
 			EndIf
 		EndIf
@@ -178,7 +198,7 @@ Func ForgeClanCapitalGold($bTest = False)
 	Next
 	If Not $bForgeEnabled Then Return
 	If Not $g_bRunState Then Return
-	ClickAway()
+	ClickAway("Right")
 	ZoomOut()
 	getBuilderCount(True) ;check if we have available builder
 	If $bTest Then $g_iFreeBuilderCount = $iBuilderToUse
@@ -221,7 +241,7 @@ Func ForgeClanCapitalGold($bTest = False)
 		_ArraySort($iActiveForge, 0, 0, 0, 1)
 		If UBound($iActiveForge) >= $iBuilderToUse Then
 			SetLog("We have All Builder Active for Forge", $COLOR_INFO)
-			ClickAway()
+			ClickAway("Right")
 			Return
 		EndIf
 		$iBuilder = UBound($iActiveForge)
@@ -241,7 +261,7 @@ Func ForgeClanCapitalGold($bTest = False)
 			Click($aCraft[$j-1][1], $aCraft[$j-1][2])
 			_Sleep(500)
 			If Not WaitStartCraftWindow() Then 
-				ClickAway()
+				ClickAway("Right")
 				Return
 			EndIf
 			For $i = 0 To UBound($aForgeType) -1
@@ -277,7 +297,7 @@ Func ForgeClanCapitalGold($bTest = False)
 						ExitLoop
 					Else
 						SetLog("Only Test, should click on [430,450]", $COLOR_INFO)
-						ClickAway()
+						ClickAway("Right")
 					EndIf
 				EndIf
 				_Sleep(1000)
@@ -286,7 +306,7 @@ Func ForgeClanCapitalGold($bTest = False)
 		Next
 	EndIf
 	_Sleep(1000)
-	ClickAway()
+	ClickAway("Right")
 EndFunc
 
 Func SwitchToClanCapital()
@@ -310,7 +330,7 @@ Func SwitchToClanCapital()
 		Next
 	EndIf
 	If Not $bRet Then 
-		ClickAway()
+		ClickAway("Right")
 		SwitchToMainVillage("SwitchToClanCapital Failed")
 	EndIf
 	If $bRet Then ClanCapitalReport() 
@@ -439,7 +459,13 @@ Func FindCCExistingUpgrade()
 		_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by Y coord
 		For $i = 0 To UBound($aUpgrade) - 1
 			$name = getCCBuildingName($aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 8)
-			If $g_bChkAutoUpgradeCCIgnore Then 
+			If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
+				If StringInStr($name[0], "Wall") Then 
+						SetLog("Upgrade for Wall Ignored, Skip!!", $COLOR_ACTION)
+						ContinueLoop ;skip this upgrade, looking next 
+				EndIf
+			EndIf
+			If $g_bChkAutoUpgradeCCIgnore Then ; Filter for decoration
 				For $y In $aCCBuildingIgnore
 					If StringInStr($name[0], $y) Then 
 						SetLog("Upgrade for " & $name[0] & " Ignored, Skip!!", $COLOR_ACTION)
@@ -464,6 +490,12 @@ Func FindCCSuggestedUpgrade()
 				$name = getCCBuildingName($aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 11)
 			Else
 				$name = getCCBuildingNameBlue($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 12)
+			EndIf
+			If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
+				If StringInStr($name[0], "Wall") Then 
+						SetLog("Upgrade for Wall Ignored, Skip!!", $COLOR_ACTION)
+						ContinueLoop ;skip this upgrade, looking next 
+				EndIf
 			EndIf
 			If $g_bChkAutoUpgradeCCIgnore Then 
 				For $y In $aCCBuildingIgnore
@@ -601,11 +633,11 @@ Func AutoUpgradeCC($bTest = False)
 					If Not $bTest Then 
 						Click(640, 520) ;Click Contribute
 						AutoUpgradeCCLog($BuildingName, $cost)
-						ClickAway()
+						ClickAway("Right")
 					Else
 						SetLog("Only Test, should click Contibute on [640, 520]", $COLOR_INFO)
 						AutoUpgradeCCLog($BuildingName, $cost)
-						ClickAway()
+						ClickAway("Right")
 						SwitchToMainVillage("Only Test")
 						Return
 					EndIf
@@ -617,7 +649,7 @@ Func AutoUpgradeCC($bTest = False)
 		EndIf
 	EndIf
 	
-	ClickAway() ;close builder menu
+	ClickAway("Right") ;close builder menu
 	ClanCapitalReport(False)
 	;Upgrade through district map
 	Local $aMapCoord[7][3] = [["Golem Quarry", 185, 590], ["Dragon Cliffs", 630, 465], ["Builder's Workshop", 490, 525], ["Balloon Lagoon", 300, 490], _ 
@@ -668,14 +700,14 @@ Func AutoUpgradeCC($bTest = False)
 							If Not $bTest Then 
 								Click(640, 520) ;Click Contribute
 								AutoUpgradeCCLog($BuildingName, $cost)
-								ClickAway()
+								ClickAway("Right")
 							Else
 								SetLog("Only Test, should click Contibute on [640, 520]", $COLOR_INFO)
 								AutoUpgradeCCLog($BuildingName, $cost)
-								ClickAway()
+								ClickAway("Right")
 							EndIf
 							_Sleep(500)
-							ClickAway()
+							ClickAway("Right")
 						EndIf
 						ClanCapitalReport(False)
 						If Number($g_iLootCCGold) = 0 Then 
@@ -706,7 +738,14 @@ EndFunc
 Func IsUpgradeCCIgnore()
 	Local $bRet = False
 	Local $UpgradeName = getOcrAndCapture("coc-build", 200, 494, 400, 30)
-	If $g_bChkAutoUpgradeCCIgnore Then 
+	If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
+		If StringInStr($UpgradeName, "Wall") Then 
+				SetDebugLog($UpgradeName & " Match with: Wall") 
+				SetLog("Upgrade for wall Ignored, Skip!!", $COLOR_ACTION)
+				$bRet = True
+		EndIf
+	EndIf
+	If $g_bChkAutoUpgradeCCIgnore And Not $bRet Then 
 		For $y In $aCCBuildingIgnore
 			If StringInStr($UpgradeName, $y) Then 
 				SetDebugLog($UpgradeName & " Match with: " & $y) 

@@ -28,7 +28,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 	
 	;Prevent checking clangames before date 22 (clangames should start on 22 and end on 28 or 29) depends on how many tiers/maxpoint
 	Local $currentDate = Number(@MDAY)
-	If $currentDate < 22 And $currentDate < 5 Then
+	If $currentDate < 21 Then
 		SetLog("Current date : " & $currentDate & ", Skip Clan Games", $COLOR_INFO)
 		Return
 	EndIf
@@ -384,8 +384,8 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		; let's get the 60 minutes events and remove from array
 		Local $aTempSelectChallenges[0][7]
 		For $i = 0 To UBound($aSelectChallenges) - 1
-			If $aSelectChallenges[$i][4] = 60 And $g_bChkClanGames60 Then
-				Setlog($aSelectChallenges[$i][0] & " unselected, is a 60min event!", $COLOR_INFO)
+			If $aSelectChallenges[$i][4] = 180 And $g_bChkClanGames3H Then
+				Setlog($aSelectChallenges[$i][0] & " unselected, is a 3 Hour event!", $COLOR_INFO)
 				ContinueLoop
 			EndIf
 			ReDim $aTempSelectChallenges[UBound($aTempSelectChallenges) + 1][7]

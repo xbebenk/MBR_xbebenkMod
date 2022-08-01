@@ -343,7 +343,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 
 			#NEW CLANGAMES GUI
 			GUICtrlSetState($g_hChkClanGamesEnabled, $g_bChkClanGamesEnabled ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkClanGames60, $g_bChkClanGames60 ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkClanGames3H, $g_bChkClanGames3H ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkClanGamesDebug, $g_bChkClanGamesDebug ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCollectCGReward, $g_bCollectCGReward ? $GUI_CHECKED : $GUI_UNCHECKED)
 
@@ -435,6 +435,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbForgeBuilder, $g_iCmbForgeBuilder)
 			GUICtrlSetState($g_hChkEnableAutoUpgradeCC, $g_bChkEnableAutoUpgradeCC ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAutoUpgradeCCIgnore, $g_bChkAutoUpgradeCCIgnore ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkAutoUpgradeCCWallIgnore, $g_bChkAutoUpgradeCCWallIgnore ? $GUI_CHECKED : $GUI_UNCHECKED)
 			
 			;Misc Mod
 			GUICtrlSetState($g_hChkMMSkipFirstCheckRoutine, $g_bSkipFirstCheckRoutine ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -505,7 +506,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 
 			#NEW CLANGAMES GUI
 			$g_bChkClanGamesEnabled = (GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED) ? 1 : 0
-			$g_bChkClanGames60 = (GUICtrlRead($g_hChkClanGames60) = $GUI_CHECKED) ? 1 : 0
+			$g_bChkClanGames3H = (GUICtrlRead($g_hChkClanGames3H) = $GUI_CHECKED) ? 1 : 0
 			$g_bChkClanGamesDebug = (GUICtrlRead($g_hChkClanGamesDebug) = $GUI_CHECKED) ? 1 : 0
 			$g_bCollectCGReward = (GUICtrlRead($g_hChkCollectCGReward) = $GUI_CHECKED) ? 1 : 0
 
@@ -578,7 +579,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iCmbForgeBuilder = _GUICtrlComboBox_GetCurSel($g_hCmbForgeBuilder)
 			$g_bChkEnableAutoUpgradeCC = (GUICtrlRead($g_hChkEnableAutoUpgradeCC) = $GUI_CHECKED)
 			$g_bChkAutoUpgradeCCIgnore = (GUICtrlRead($g_hChkAutoUpgradeCCIgnore) = $GUI_CHECKED)
-			
+			$g_bChkAutoUpgradeCCWallIgnore = (GUICtrlRead($g_hChkAutoUpgradeCCWallIgnore) = $GUI_CHECKED)
 
 			;Misc Mod
 			$g_bSkipFirstCheckRoutine = (GUICtrlRead($g_hChkMMSkipFirstCheckRoutine) = $GUI_CHECKED)
@@ -1095,7 +1096,6 @@ Func ApplyConfig_600_17($TypeReadSave)
 			EndSwitch
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOnly1Builder, $g_bChkOnly1Builder ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkSyncTHLvlWalls, $g_bchkSyncTHWall ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkLowLevelAutoUpgradeWall, $g_bUpgradeLowWall ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkUpgradeAnyWallLevel, $g_bUpgradeAnyWallLevel ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbLowLevelWall, $g_iLowLevelWall - 1)
@@ -1125,7 +1125,6 @@ Func ApplyConfig_600_17($TypeReadSave)
 			EndIf
 			$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
 			$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
-			$g_bchkSyncTHWall = (GUICtrlRead($g_hChkSyncTHLvlWalls) = $GUI_CHECKED)
 			$g_bUpgradeLowWall = (GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED)
 			$g_bUpgradeAnyWallLevel = (GUICtrlRead($g_hChkUpgradeAnyWallLevel) = $GUI_CHECKED)
 			$g_iLowLevelWall = _GUICtrlComboBox_GetCurSel($g_hCmbLowLevelWall) + 1

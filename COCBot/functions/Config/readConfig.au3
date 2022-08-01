@@ -431,7 +431,7 @@ Func ReadConfig_600_6()
 
 	# NEW CLANGAMES GUI
 	IniReadS($g_bChkClanGamesEnabled, $g_sProfileConfigPath, "other", "ChkClanGamesEnabled", False, "Bool")
-	IniReadS($g_bChkClanGames60, $g_sProfileConfigPath, "other", "ChkClanGames60", False, "Bool")
+	IniReadS($g_bChkClanGames3H, $g_sProfileConfigPath, "other", "ChkClanGames60", False, "Bool")
 	IniReadS($g_bChkClanGamesDebug, $g_sProfileConfigPath, "other", "ChkClanGamesDebug", False, "Bool")
 	IniReadS($g_bCollectCGReward, $g_sProfileConfigPath, "other", "CollectCGReward", False, "Bool")
 	
@@ -572,6 +572,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_iCmbForgeBuilder, $g_sProfileConfigPath, "ClanCapital", "ForgeUseBuilder", 1, "int")
 	IniReadS($g_bChkEnableAutoUpgradeCC, $g_sProfileConfigPath, "ClanCapital", "AutoUpgradeCC", False, "Bool")
 	IniReadS($g_bChkAutoUpgradeCCIgnore, $g_sProfileConfigPath, "ClanCapital", "ChkAutoUpgradeCCIgnore", False, "Bool")
+	IniReadS($g_bChkAutoUpgradeCCWallIgnore, $g_sProfileConfigPath, "ClanCapital", "ChkAutoUpgradeCCWallIgnore", False, "Bool")
 	
 	;Misc Mod
 	IniReadS($g_bSkipFirstCheckRoutine, $g_sProfileConfigPath, "other", "SkipFirstCheckRoutine", False, "Bool")
@@ -1013,7 +1014,6 @@ Func ReadConfig_600_17()
 	IniReadS($g_iUpgradeWallLootType, $g_sProfileConfigPath, "upgrade", "use-storage", 0, "int")
 	IniReadS($g_bUpgradeWallSaveBuilder, $g_sProfileConfigPath, "upgrade", "savebldr", False, "Bool")
 	IniReadS($g_bChkOnly1Builder, $g_sProfileConfigPath, "upgrade", "Only1Builder", True, "Bool")
-	IniReadS($g_bchkSyncTHWall, $g_sProfileConfigPath, "upgrade", "SyncTHWall", True, "Bool")
 	IniReadS($g_bUpgradeLowWall, $g_sProfileConfigPath, "upgrade", "UpgradeLowWall", True, "Bool")
 	IniReadS($g_iLowLevelWall, $g_sProfileConfigPath, "upgrade", "LowLevelWall", 4, "int")
 	IniReadS($g_bUpgradeAnyWallLevel, $g_sProfileConfigPath, "upgrade", "UpgradeAnyWall", False, "Bool")
