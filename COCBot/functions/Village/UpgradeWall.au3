@@ -488,7 +488,7 @@ Func FindWallOnBuilderMenu()
 							$aBuilding[$j][6] = $aRushTHPriority[$k][1]
 					EndSwitch
 					$aBuilding[$j][7] = "Priority"
-					If $g_bChkRushTH Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
+					If $g_bChkRushTH And ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
 				EndIf
 			Next
 			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
@@ -512,7 +512,7 @@ Func setMinSaveWall($Type, $cost)
 			SetLog("Set Save Gold for RusTH Priority = " & $g_iSaveGoldWall, $COLOR_ACTION)
 		Case "Elix"
 			$g_iSaveElixWall = $cost
-			SetLog("Set Save Gold for RusTH Priority = " & $g_iSaveGoldWall, $COLOR_ACTION)
+			SetLog("Set Save Elixir for RusTH Priority = " & $g_iSaveElixWall, $COLOR_ACTION)
 	EndSwitch
 EndFunc
 
