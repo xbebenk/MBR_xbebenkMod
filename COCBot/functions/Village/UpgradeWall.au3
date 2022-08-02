@@ -190,7 +190,7 @@ Func UpgradeLowLevelWall($bTest = False)
 		$Try += 1
 		$aWallCoord = ClickDragFindWallUpgrade()
 		
-		If $g_iSaveGoldWall > $g_aiCurrentLoot[$eLootGold] Or $g_iSaveElixWall > $g_aiCurrentLoot[$eLootElixir] Then 
+		If $g_iSaveGoldWall > $g_aiCurrentLoot[$eLootGold] And $g_iSaveElixWall > $g_aiCurrentLoot[$eLootElixir] Then 
 			SetLog("Upgrade Wall skipped, need to save for RushTH Priority Building", $COLOR_ACTION)
 			ClickDragAUpgrade("down")
 			Return
@@ -488,7 +488,23 @@ Func FindWallOnBuilderMenu()
 							$aBuilding[$j][6] = $aRushTHPriority[$k][1]
 					EndSwitch
 					$aBuilding[$j][7] = "Priority"
-					If $g_bChkRushTH And ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
+					;If $g_bChkRushTH And ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
+					If $g_bChkRushTH Then 
+						If $aBuilding[$j][0] = "Gold" And StringInStr($aBuilding[$j][3], "Town") Then
+							Click($aBuilding[$j][1], $aBuilding[$j][2])
+							If _Sleep(1000) Then Return
+							Local $Building = BuildingInfo(242, 494)
+							If $Building[0] = 2 And $Building[2] < $g_aiCmbRushTHOption[0] + 9 Then
+								SetLog("TownHall Level = " & $Building[2] & " < " &$g_aiCmbRushTHOption[0] + 9, $COLOR_ACTION)
+								setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
+							EndIf
+							If $Building[0] = 2 And $Building[2] >= $g_aiCmbRushTHOption[0] + 9 Then
+								SetLog("TownHall Level = " & $Building[2] & " >= " &$g_aiCmbRushTHOption[0] + 9 & ", should skip this upgrade", $COLOR_ACTION)
+							EndIf
+						Else
+							If ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aBuilding[$j][0], $aBuilding[$j][5])
+						EndIf
+					EndIf
 				EndIf
 			Next
 			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
