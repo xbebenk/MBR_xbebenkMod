@@ -125,7 +125,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 
 			For $i = 0 To UBound($ExistingBuilding) - 1
 				If $g_bUpgradeLowCost And (StringInStr($ExistingBuilding[$i][3], "Mine") Or StringInStr($ExistingBuilding[$i][3], "Collector") Or StringInStr($ExistingBuilding[$i][3], "Mortar")) Then ContinueLoop
-				If CheckResourceForDoUpgrade($ExistingBuilding[$i][3], $ExistingBuilding[$i][5], $ExistingBuilding[$i][0]) Then
+				If CheckResourceForDoUpgrade($ExistingBuilding[$i][3], $ExistingBuilding[$i][5], $ExistingBuilding[$i][0]) Then ;($BuildingName, $Cost, $CostType)
 					If Not $g_bRunState Then Return
 					Click($ExistingBuilding[$i][1], $ExistingBuilding[$i][2])
 					If _Sleep(1000) Then Return
@@ -137,7 +137,22 @@ Func AutoUpgradeSearchExisting($bTest = False)
 					Endif
 					ClickMainBuilder($bTest)
 				Else
-					If $g_bChkRushTH And ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($ExistingBuilding[$i][0], $ExistingBuilding[$i][5])
+					If $g_bChkRushTH Then 
+						If $ExistingBuilding[$i][0] = "Gold" And StringInStr($ExistingBuilding[$i][3], "Town") Then
+							Click($ExistingBuilding[$i][1], $ExistingBuilding[$i][2])
+							If _Sleep(1000) Then Return
+							Local $Building = BuildingInfo(242, 494)
+							If $Building[0] = 2 And $Building[2] < $g_aiCmbRushTHOption[0] + 9 Then
+								SetLog("TownHall Level = " & $Building[2] & " < " &$g_aiCmbRushTHOption[0] + 9, $COLOR_ACTION)
+								setMinSaveWall($ExistingBuilding[$i][0], $ExistingBuilding[$i][5])
+							EndIf
+							If $Building[0] = 2 And $Building[2] >= $g_aiCmbRushTHOption[0] + 9 Then
+								SetLog("TownHall Level = " & $Building[2] & " >= " &$g_aiCmbRushTHOption[0] + 9 & ", should skip this upgrade", $COLOR_ACTION)
+							EndIf
+						Else
+							If ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($ExistingBuilding[$i][0], $ExistingBuilding[$i][5])
+						EndIf
+					EndIf
 				EndIf
 			Next
 		Else
@@ -885,7 +900,22 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 							If DoUpgrade($bTest) Then ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
 						Else
 							SetDebugLog("Skip this building, not enough resource", $COLOR_WARNING)
-							If $g_bChkRushTH And ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aResult[$y][0], $aResult[$y][5])
+							If $g_bChkRushTH Then 
+								If $aResult[$y][0] = "Gold" And StringInStr($aResult[$y][3], "Town") Then
+									Click($aResult[$y][1], $aResult[$y][2])
+									If _Sleep(1000) Then Return
+									Local $Building = BuildingInfo(242, 494)
+									If $Building[0] = 2 And $Building[2] < $g_aiCmbRushTHOption[0] + 9 Then
+										SetLog("TownHall Level = " & $Building[2] & " < " &$g_aiCmbRushTHOption[0] + 9, $COLOR_ACTION)
+										setMinSaveWall($aResult[$y][0], $aResult[$y][5])
+									EndIf
+									If $Building[0] = 2 And $Building[2] >= $g_aiCmbRushTHOption[0] + 9 Then
+										SetLog("TownHall Level = " & $Building[2] & " >= " &$g_aiCmbRushTHOption[0] + 9 & ", should skip this upgrade", $COLOR_ACTION)
+									EndIf
+								Else
+									If ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aResult[$y][0], $aResult[$y][5])
+								EndIf
+							EndIf
 						EndIf
 					EndIf
 				Next
