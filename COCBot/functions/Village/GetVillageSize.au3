@@ -96,8 +96,6 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		SetDebugLog("Reference = " & $iRefSize)
 		SetDebugLog("ZoomLevel = " & $z)
 		
-		If $z > 1 Then Return FuncReturn($aResult)
-
 		Local $stone_x_exp = $stone[2]
 		Local $stone_y_exp = $stone[3]
 		ConvertVillagePos($stone_x_exp, $stone_y_exp, $z) ; expected x, y position of stone
