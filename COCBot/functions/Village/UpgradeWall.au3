@@ -320,6 +320,7 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 			EndIf
 			If IsGemOpen(True) Then
 				SetLog("Need Gem!", $COLOR_ERROR)
+				ClickAway()
 				Return False
 			Else
 				SetLog("Successfully Upgrade a Wall Level " & $WallLevel & " To lvl " & $WallLevel+1, $COLOR_SUCCESS)
