@@ -137,7 +137,7 @@ Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = 
 		Case 2 ;Elixir then Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			Local $HaveElix = IsElixEnough($Cost)
-			If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold And $g_aiCurrentLoot[$eLootElixir] < $g_iUpgradeWallMinElixir Then $HaveResource = False
+			;If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold And $g_aiCurrentLoot[$eLootElixir] < $g_iUpgradeWallMinElixir Then $HaveResource = False
 			If Number($iWallLevel) > 3 Then
 				$HaveResource = $HaveElix
 				If $HaveResource Then $UpgradeType = "Elix"
@@ -526,10 +526,10 @@ Func setMinSaveWall($Type, $cost)
 	Switch $Type
 		Case "Gold"
 			$g_iSaveGoldWall = $cost
-			SetLog("Set Save Gold for RusTH Priority = " & $g_iSaveGoldWall, $COLOR_ACTION)
+			SetLog("Set Save Gold for RushTH Priority = " & $g_iSaveGoldWall, $COLOR_ACTION)
 		Case "Elix"
 			$g_iSaveElixWall = $cost
-			SetLog("Set Save Elixir for RusTH Priority = " & $g_iSaveElixWall, $COLOR_ACTION)
+			SetLog("Set Save Elixir for RushTH Priority = " & $g_iSaveElixWall, $COLOR_ACTION)
 	EndSwitch
 EndFunc
 
