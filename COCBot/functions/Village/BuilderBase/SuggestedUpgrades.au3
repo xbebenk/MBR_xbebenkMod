@@ -221,7 +221,6 @@ Func SearchNewBuilding($bTest = False)
 					SetLog("OptimizeOTTO: " & $OTTO[$i][3] & " cost: " & $OTTO[$i][5] & " " & $OTTO[$i][0])
 				Next
 				If Not $g_bRunState Then Return
-
 				For $i = 0 To UBound($OTTO) - 1
 					If Not $g_bRunState Then Return
 					Local $bOTTOPrioFound = False
@@ -229,6 +228,16 @@ Func SearchNewBuilding($bTest = False)
 					For $OTTOPriority In $aOTTOPriority
 						If $OTTO[$i][3] = $OTTOPriority Then
 							SetLog("Building: " & $OTTO[$i][3] & ", OTTO Priority Building", $COLOR_ACTION)
+							$bOTTOPrioFound = True
+							ExitLoop
+						EndIf
+						If $OTTO[$i][3] = "Builder Barracks" And Int($OTTO[$i][5]) < 300001 Then ;Priority to unlock cannon cart
+							SetLog("OTTO Priority: Force Upgrade Low Level Builder Barracks", $COLOR_ACTION)
+							$bOTTOPrioFound = True
+							ExitLoop
+						EndIf
+						If $OTTO[$i][3] = "Battle Machine" And Int($OTTO[$i][5]) < 900001 Then ;Priority to unlock battle machine
+							SetLog("OTTO Priority: Force Rebuild Battle Machine", $COLOR_ACTION)
 							$bOTTOPrioFound = True
 							ExitLoop
 						EndIf
