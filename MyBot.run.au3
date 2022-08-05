@@ -1213,6 +1213,10 @@ Func __RunFunction($action)
 			AutoUpgrade()
 			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
+		Case "UpgradeLow"
+			AutoUpgrade(False, True)
+			ZoomOut()
+			_Sleep($DELAYRUNBOT3)
 		Case "UpgradeWall"
 			$g_iNbrOfWallsUpped = 0
 			ClickAway()
@@ -1584,7 +1588,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
-			Local $aRndFuncList = ['BuilderBase', 'CollectCCGold', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall']
+			Local $aRndFuncList = ['BuilderBase', 'CollectCCGold', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
