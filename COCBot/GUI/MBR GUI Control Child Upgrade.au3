@@ -632,6 +632,10 @@ Func chkWallOnly1Builder()
 	$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
 EndFunc   ;==>chkWallOnly1Builder
 
+Func chkWallOnlyGEFull()
+	$g_bChkWallOnlyGEFull = (GUICtrlRead($g_hChkWallOnlyGEFull) = $GUI_CHECKED)
+EndFunc   ;==>chkWallOnlyGEFull
+
 Func ChkLowLevelAutoUpgradeWall()
 	$g_bUpgradeLowWall = (GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED)
 	If GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED Then

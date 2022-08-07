@@ -45,6 +45,11 @@ Func UpgradeWall($bTest = False)
 		Return
 	EndIf
 	
+	If $g_bAutoUpgradeWallsOnlyGEFull And Not (isGoldFull() Or isElixirFull()) Then
+		SetLog("Gold or Elixir is not full! Skipping wall upgrade!", $COLOR_INFO)
+		Return
+	EndIf
+	
 	If Not $g_bRunState Then Return
 	If $GoUpgrade And $g_bUpgradeLowWall Then
 		UpgradeLowLevelWall($bTest)
