@@ -45,7 +45,7 @@ Func UpgradeWall($bTest = False)
 		Return
 	EndIf
 	
-	If $g_bAutoUpgradeWallsOnlyGEFull And Not (isGoldFull() Or isElixirFull()) Then
+	If $g_bChkWallOnlyGEFull And Not (isGoldFull() Or isElixirFull()) Then
 		SetLog("Gold or Elixir is not full! Skipping wall upgrade!", $COLOR_INFO)
 		Return
 	EndIf
@@ -625,7 +625,7 @@ Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
 EndFunc   ;==>UpgradeWallElixir
 
 Func IsGoldEnough($iWallCost = $g_aUpgradeWall[0])
-	If $g_bAutoUpgradeWallsOnlyGEFull And Not isGoldFull() Then Return False
+	If $g_bChkWallOnlyGEFull And Not isGoldFull() Then Return False
 	Local $iWallSave = $g_iUpgradeWallMinGold
 	If $g_iSaveGoldWall > 0 Then $iWallSave = $g_iSaveGoldWall
 	Local $EnoughGold = True
@@ -639,7 +639,7 @@ Func IsGoldEnough($iWallCost = $g_aUpgradeWall[0])
 EndFunc
 
 Func IsElixEnough($iWallCost = $g_aUpgradeWall[0])
-	If $g_bAutoUpgradeWallsOnlyGEFull And Not isElixirFull() Then Return False
+	If $g_bChkWallOnlyGEFull And Not isElixirFull() Then Return False
 	Local $iWallSave = $g_iUpgradeWallMinElixir
 	If $g_iSaveElixWall > 0 Then $iWallSave = $g_iSaveElixWall
 	Local $EnoughElix = True
