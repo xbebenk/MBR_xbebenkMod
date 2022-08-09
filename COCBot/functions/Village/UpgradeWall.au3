@@ -635,7 +635,6 @@ EndFunc   ;==>UpgradeWallElixir
 
 Func IsGoldEnough($iWallCost = $g_aUpgradeWall[0])
 	If $g_bChkWallOnlyGEFull And Not ($g_WallGEFull = 1 or $g_WallGEFull = 2) Then Return False
-	If $g_bChkWallOnlyGEFull And Not isGoldFull() Then Return False
 	Local $iWallSave = $g_iUpgradeWallMinGold
 	If $g_iSaveGoldWall > 0 Then $iWallSave = $g_iSaveGoldWall
 	Local $EnoughGold = True
