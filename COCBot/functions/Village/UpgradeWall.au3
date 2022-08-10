@@ -47,10 +47,26 @@ Func UpgradeWall($bTest = False)
 	
 	If $g_bChkWallOnlyGEFull Then
 		Local $tmp_GoldFull = isGoldFull(), $tmp_ElixFull = isElixirFull()
-		If Not ($tmp_GoldFull Or $tmp_ElixFull) Then
-			SetLog("Gold or Elixir is not full! Skipping wall upgrade!", $COLOR_INFO)
-			Return
-		ElseIf $tmp_GoldFull And $tmp_ElixFull Then
+		
+		Switch $g_iUpgradeWallLootType
+			Case 0 ;Gold
+				If Not $tmp_GoldFull Then
+					SetLog("Gold is not full, skipping upgrade wall!", $COLOR_INFO)
+					Return
+				EndIf
+			Case 1 ;Elixir
+				If Not $tmp_ElixFull Then
+					SetLog("Elixir is not full, skipping upgrade wall!", $COLOR_INFO)
+					Return
+				EndIf
+			Case 2 ;Elixir then Gold
+				If Not ($tmp_GoldFull Or $tmp_ElixFull) Then
+					SetLog("Gold or Elixir is not full! Skipping wall upgrade!", $COLOR_INFO)
+					Return
+				EndIf
+		EndSwitch
+		
+		If $tmp_GoldFull And $tmp_ElixFull Then
 			$g_WallGEFull = 2
 		ElseIf $tmp_GoldFull Then
 			$g_WallGEFull = 1
