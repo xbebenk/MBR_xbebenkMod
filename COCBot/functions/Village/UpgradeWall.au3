@@ -210,7 +210,7 @@ Func UpgradeLowLevelWall($bTest = False)
 	If Not $g_bRunState Then Return
 	SetLog("Upgrade LowLevel Wall using autoupgrade enabled", $COLOR_DEBUG)
 	If Not ClickMainBuilder($bTest) Then Return
-	Local $aWallCoord, $Try = 1, $WallNotFound = False, $PrevCost = 0
+	Local $aWallCoord, $Try = 1, $WallNotFound = False, $PrevCost = 0, $ForceScroll = False
 	While True
 		If Not $g_bRunState Then Return
 		If Not WallUpgradeCheckBuilder($bTest) Then Return
@@ -218,7 +218,8 @@ Func UpgradeLowLevelWall($bTest = False)
 		If $Try > 2 And $WallNotFound Then ExitLoop ; jump to exit 
 		SetLog("[" & $Try & "] Search Wall on Builder Menu", $COLOR_INFO)
 		$Try += 1
-		$aWallCoord = ClickDragFindWallUpgrade()
+		$aWallCoord = ClickDragFindWallUpgrade($ForceScroll)
+		$ForceScroll = False
 		
 		If $g_iSaveGoldWall > $g_aiCurrentLoot[$eLootGold] And $g_iSaveElixWall > $g_aiCurrentLoot[$eLootElixir] Then 
 			SetLog("Upgrade Wall skipped, need to save for RushTH Priority Building", $COLOR_ACTION)
@@ -237,12 +238,15 @@ Func UpgradeLowLevelWall($bTest = False)
 			
 			If Not $aIsEnoughResource[0] Then 
 				SetDebugLog("01-Not WallCheckResource, Exiting")
+				$ForceScroll = True
 				ContinueLoop ; lets check another wall on list
 				If $Try > 2 And $WallNotFound Then ExitLoop ; jump to exit 
 			EndIf
 			
 			IF TryUpgradeWall($aWallCoord, $bTest) Then ;select wall on builder menu and do upgrade
 				$Try = 1 ;reset as we found a wall
+			Else
+				$ForceScroll = True
 			EndIf
 		Else
 			SetLog("[" & $Try & "] Not Found Wall on Builder Menu", $COLOR_ERROR)
@@ -455,10 +459,16 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 	EndIf
 EndFunc
 
-Func ClickDragFindWallUpgrade()
+Func ClickDragFindWallUpgrade($ForceScroll = False)
 	Local $x = 420, $yUp = 60, $Delay = 800
 	Local $YY = 345
 	Local $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost = 0, $aWallCoord[0][4], $aTmpWallCoord
+	
+	If $ForceScroll And IsBuilderMenuOpen() Then ;check upgrade window border
+			SetDebugLog("Upgrade Window Exist", $COLOR_INFO)
+			ClickDragAUpgrade()
+	EndIf
+	
 	For $checkCount = 0 To 9
 		If Not $g_bRunState Then Return
 		If IsBuilderMenuOpen() Then
