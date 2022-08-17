@@ -105,6 +105,7 @@ Func isMegaTeslaMaxed()
 	
 	If QuickMIS("BC1", $g_sImgMegaTesla) Then ;Search for Mega Tesla
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
+		_Sleep(1000)
 		Local $aBuildingName = BuildingInfo(242, 494)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Mega Tesla is MaxLevel
