@@ -524,7 +524,7 @@ Func NewBuildings($x, $y, $aBuildingName, $bTest = False)
 		If Not $g_bRunState Then Return
 		If _Sleep(2500) Then Return
 
-		If $aBuildingName[1] = "Wall" Then
+		If StringInStr($aBuildingName[1], "Wall", 1) Then
 			TPW() ;Try Placing Wall (no guarantee) Sucks SC's AI
 			Return True
 		EndIf
