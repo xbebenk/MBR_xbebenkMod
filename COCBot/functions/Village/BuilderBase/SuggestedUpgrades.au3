@@ -177,7 +177,7 @@ Func SearchNewBuilding($bTest = False)
 				SetLog("New: " & $New[$i][4] & " cost: " & $New[$i][6] & " " & $New[$i][0])
 			Next
 			For $i = 0 To UBound($New) - 1
-				If $g_bSkipWallPlacingOnBB And $New[$i][4] = "Wall" Then
+				If $g_bSkipWallPlacingOnBB And StringInStr($New[$i][4], "Wall", 1) Then
 					SetLog("Building is New Wall, Skip!", $COLOR_INFO)
 					NotifyPushToTelegram($g_sProfileCurrentName & ": There is a new wall in BB.")
 					ContinueLoop ;skip wall
@@ -193,7 +193,7 @@ Func SearchNewBuilding($bTest = False)
 				EndIf
 				SetLog("Try Placing " & $New[$i][4])
 				Local $Region = Default
-				If $New[$i][4] = "Wall" Then $Region = 1
+				If StringInStr($New[$i][4], "Wall", 1) Then $Region = 1
 				If Not $ZoomedIn Then
 					ClickAway("Left") ;close builder menu
 					_Sleep(1000)
@@ -697,7 +697,7 @@ Func FindBBExistingBuilding($bTest = False)
 					EndIf
 				Next
 
-				If $UpgradeName[0] = "Wall" Then ;include wall to upgrade only after mega tesla is maxed
+				If StringInStr($UpgradeName[0], "Wall", 1) Then ;include wall to upgrade only after mega tesla is maxed
 					If ($g_bisMegaTeslaMaxed = True And $g_bGoldStorageFullBB) Or ($g_bGoldStorageFullBB And $g_bReserveElixirBB) Then
 						Local $tmpcost = getOcrAndCapture("coc-buildermenu-cost", $aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10, 120, 30, True)
 						If Number($tmpcost) = 0 Then ContinueLoop ;skip wall cost read error
