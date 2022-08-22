@@ -320,6 +320,7 @@ Func SwitchToClanCapital()
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				SetLog("Found Next Raid Window covering map, close it!", $COLOR_INFO)
 				_Sleep(1000)
+				Click(54,612) ;Lazy Fix for exiting raid map
 			EndIf
 			If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
 				$bRet = True
