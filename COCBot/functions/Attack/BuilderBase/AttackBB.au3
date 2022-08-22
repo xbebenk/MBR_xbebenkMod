@@ -27,7 +27,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 				SetLog("Check if ClanGames Challenge is Completed", $COLOR_DEBUG)
 				For $x = 0 To 4
-					_Sleep(1000)
+					_Sleep(2000)
 					If QuickMIS("BC1", $g_sImgGameComplete, 760, 450, 820, 520, True, $g_bDebugImageSave) Then
 						SetLog("Nice, Game Completed", $COLOR_INFO)
 						ExitLoop 2
@@ -60,7 +60,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 					SetLog("Check if ClanGames Challenge is Completed", $COLOR_DEBUG)
 					For $x = 0 To 4
-						_Sleep(1000)
+						_Sleep(2000)
 						If QuickMIS("BC1", $g_sImgGameComplete, 760, 450, 820, 520, True, $g_bDebugImageSave) Then
 							SetLog("Nice, Game Completed", $COLOR_INFO)
 							ExitLoop 2
