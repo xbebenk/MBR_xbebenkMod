@@ -24,7 +24,7 @@ Global $g_hChkAutoStarLabUpgrades = 0, $g_hCmbStarLaboratory = 0, $g_hLblNextSLU
 
 Global $g_hIcnTroopBB[6]
 Global $g_hCmbTroopBB[6]
-Global $g_hChkBBCustomArmyEnable = 0, $g_hLblGUIBBCustomArmy = 0
+Global $g_hChkBBCustomArmyEnable = 0, $g_hLblGUIBBCustomArmy = 0, $g_hChk2SideAttack = 0, $g_hChkAllSideBBAttack = 0
 
 Func CreateBuilderBaseTab()
 	$g_hGUI_BB = _GUICreate("", $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, $_GUI_CHILD_LEFT, $_GUI_CHILD_TOP, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hFrmBotEx)
@@ -316,6 +316,12 @@ Func CreateBBAttackSubTab()
 	$g_hChkBBCustomArmyEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCustomArmyEnable", "Enable Custom Army"), $x + 5, $y + 13, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCustomArmyEnable", "Enable Use Custom Army"))
 		GUICtrlSetOnEvent(-1, "ChkBBCustomArmyEnable")
+	$g_hChk2SideAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Chk2SideAttack", "2 Side Attack"), $x + 155, $y + 13, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Chk2SideAttack", "Use 2 Side Attack"))
+		GUICtrlSetOnEvent(-1, "Chk2SideAttack")
+	$g_hChkAllSideBBAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAllSideBBAttack", "All Side Attack"), $x + 255, $y + 13, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAllSideBBAttack", "Use All Side Attack"))
+		GUICtrlSetOnEvent(-1, "ChkAllSideBBAttack")
 
 	Static $sTroops = ""
 	If $sTroops = "" Then

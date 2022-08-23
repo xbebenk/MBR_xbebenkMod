@@ -230,6 +230,7 @@ Func BBDropTrophy()
 			Local $iSide = True
 			Local $aBMPos = GetMachinePos()
 			$g_BBDP = GetBBDropPoint()
+			
 			Local $Return = False
 			If IsArray($aBMPos) Then
 				SetLog("Deploying BM")
@@ -243,7 +244,7 @@ Func BBDropTrophy()
 				If IsArray($aBBAttackBar) Then
 					For $i = 1 To 10
 						SetDebugLog("Try Drop Troops #" & $i, $COLOR_ACTION)
-						DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], 1, $iSide)
+						DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], 1, 1, 2)
 						_Sleep(1000)
 						If IsAttackPage() Then ExitLoop
 					Next

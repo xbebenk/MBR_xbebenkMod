@@ -890,7 +890,16 @@ Global $g_hCmbBBNextTroopDelay = 0, $g_hCmbBBSameTroopDelay = 0
 Global $g_apTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139]]
 Global $g_apTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123]]
 Global $g_BBDP[0][3]
-Global $g_BBDPSide = 0, $UseDefaultBBDP = False
+Global $g_BBDPSide = 0, $UseDefaultBBDP = False, $g_b2SideBBAttack = False, $g_bAllSideBBAttack = False
+
+;Builder Base
+Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
+Global $g_aiStarLaboratoryPos[2] = [-1, -1] ; Position of Starlaboratory
+Global $g_bisBHMaxed = False, $g_bIsMegaTeslaMaxed = False, $g_iBHLevel = 0
+Global $g_bGoldStorageFullBB = False, $g_bElixirStorageFullBB = False, $g_bGoldStorage50BB = False
+Global $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
+Global $g_bChkBBCustomArmyEnable = False
+Global $g_iCmbTroopBB[6] = [0, 0, 0, 0, 0, 0]
 
 ; BB Drop Order
 Global $g_hBtnBBDropOrder = 0
@@ -1405,15 +1414,6 @@ Global $g_aiLaboratoryPos[2] = [-1, -1] ; Position of laboratory
 Global $g_aiClanCastlePos[2] = [391, 411] ; Default Position of clan castle placed before Rebuild 
 Global $g_iDetectedImageType = 0 ; Image theme; 0 = normal, 1 = snow
 Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
-
-;Builder Base
-Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
-Global $g_aiStarLaboratoryPos[2] = [-1, -1] ; Position of Starlaboratory
-Global $g_bisBHMaxed = False, $g_bIsMegaTeslaMaxed = False, $g_iBHLevel = 0
-Global $g_bGoldStorageFullBB = False, $g_bElixirStorageFullBB = False, $g_bGoldStorage50BB = False
-Global $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
-Global $g_bChkBBCustomArmyEnable = False
-Global $g_iCmbTroopBB[6] = [0, 0, 0, 0, 0, 0]
 
 ; Army camps
 Global $g_iArmyCapacity = 0 ; Calculated percentage of troops currently in camp / total camp space, expressed as an integer from 0 to 100

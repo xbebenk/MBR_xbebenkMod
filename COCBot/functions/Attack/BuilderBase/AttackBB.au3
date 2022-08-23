@@ -147,12 +147,28 @@ EndFunc
 Func AttackBB($aBBAttackBar = Default)
 	; Get troops on attack bar and their quantities
 	If $aBBAttackBar = Default Then $aBBAttackBar = GetAttackBarBB()
-	;local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
-	local $iSide = True
 	Local $aBMPos = GetMachinePos()
 	local $bTroopsDropped = False, $bBMDeployed = False
 	
 	$g_BBDP = GetBBDropPoint()
+	
+	SetDebugLog(_ArrayToString($g_BBDP))
+	
+	Local $iSide = $g_BBDPSide
+	Local $AltSide = 0, $countTL = 0, $countBL = 0, $countBR = 0, $countTR = 0
+	For $i = 0 To Ubound($g_BBDP) - 1
+		If $g_BBDP[$i][0] = 1 Then $countTL += 1
+		If $g_BBDP[$i][0] = 2 Then $countBL += 1
+		If $g_BBDP[$i][0] = 3 Then $countBR += 1
+		If $g_BBDP[$i][0] = 4 Then $countTR += 1
+	Next
+	
+	Local $acountDP[4][2] = [[1, $countTL], [2, $countBL], [3, $countBR], [3, $countTR]]
+	_ArraySort($acountDP, 1, 0, 0, 1)
+	SetDebugLog(_ArrayToString($acountDP))
+	If $acountDP[1][1] > 0 Then $AltSide = $acountDP[1][0]
+	SetDebugLog("DPSide = " & $iSide)
+	SetDebugLog("AltSide = " & $AltSide)
 	
 	;Function uses this list of local variables...
 	If $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
@@ -174,7 +190,7 @@ Func AttackBB($aBBAttackBar = Default)
 				local $j=0, $bDone = 0
 				While $j < $iNumSlots And Not $bDone
 					If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then
-						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
+						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide, $AltSide)
 						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
 							$bDone = True
 							_Sleep($g_iBBNextTroopDelay) ; wait before next troop
@@ -185,7 +201,7 @@ Func AttackBB($aBBAttackBar = Default)
 			Next
 		Else
 			For $i=0 To $iNumSlots - 1
-				DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide)
+				DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide, $AltSide)
 				If $i = $iNumSlots-1 Or $aBBAttackBar[$i][0] <> $aBBAttackBar[$i+1][0] Then
 					_Sleep($g_iBBNextTroopDelay) ; wait before next troop
 				Else
@@ -265,22 +281,26 @@ Func Okay()
 	Return True
 EndFunc
 
-Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide)
+Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide, $AltSide)
     SetLog("Deploying " & $sName & " x" & String($iAmount), $COLOR_ACTION)
     PureClick($x, $y) ; select troop
     If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
-	
 	Local $DP[0][3]
-	Local $AltSide = ($g_BBDPSide > 1 ? $g_BBDPSide - 1 : 4)
 	For $i = 0 To Ubound($g_BBDP) - 1
-		If $g_BBDP[$i][0] = $g_BBDPSide Or $g_BBDP[$i][0] = $AltSide Then
+		If $g_bAllSideBBAttack Then 
 			_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2])
+		Else
+			If $g_BBDP[$i][0] = $iSide Then
+				_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2])
+			EndIf
+			If $g_b2SideBBAttack And $AltSide > 0 Then 
+				If $g_BBDP[$i][0] = $AltSide Then
+					_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2])
+				EndIf
+			EndIf
 		EndIf
 	Next
-	SetDebugLog(_ArrayToString($g_BBDP))
-	SetDebugLog("DPSide = " & $g_BBDPSide, $COLOR_INFO)
-	SetDebugLog("AltSide = " & $AltSide, $COLOR_INFO)
-
+	
 	Local $iPoint = 0
     For $j = 0 To $iAmount - 1
 		$iPoint = Random(0, Ubound($DP) - 1, 1)
@@ -401,29 +421,19 @@ EndFunc
 Func SetVersusBHToMid()
 	Local $xMiddle = 430, $yMiddle = 275, $Delay = 500 
 	Local $aRet[3] = [False, $xMiddle, $yMiddle]
-	Local $aResult = decodeSingleCoord(findImage("VersusBuilderHall", $g_sImgVersusBH, GetDiamondFromRect("100,150,760,570"), 1, True))
-	If IsArray($aResult) And UBound($aResult) > 1 Then
-		ClickDrag($aResult[0], $aResult[1], $xMiddle, $yMiddle, $Delay) ;drag up
-		_Sleep(1500)
-		Local $Ret = decodeSingleCoord(findImage("VersusBuilderHall", $g_sImgVersusBH, GetDiamondFromRect("300,200,500,400"), 1, True))
-		If IsArray($Ret) And UBound($Ret) > 1 Then
-			$aRet[0] = True
-			$aRet[1] = $Ret[0]
-			$aRet[2] = $Ret[1]
-		Endif
+	If $g_bAllSideBBAttack Then Return $aRet
+	_Sleep(1500)
+	If QuickMIS("BC1", $g_sImgVersusBH, 50,50,800,570) Then 
+		ClickDrag($g_iQuickMISX, $g_iQuickMISY, $xMiddle, $yMiddle, $Delay) ;drag to center
+		$aRet[0] = True
 	Else
-		ClickDrag(430, 500, 430, 200)	;If we cannot find BH on first search, try to scroll down. Maybe BH is at the bottom of the base.
+		SaveDebugImage("SetVersusBHToMid")
+		ClickDrag(430, 500, 430, 300)	;If we cannot find BH on first search, try to scroll down. Maybe BH is at the bottom of the base.
 		_Sleep(1500)
-		Local $aResult = decodeSingleCoord(findImage("VersusBuilderHall", $g_sImgVersusBH, GetDiamondFromRect("100,150,760,570"), 1, True))
-		If IsArray($aResult) And UBound($aResult) > 1 Then
-			ClickDrag($aResult[0], $aResult[1], $xMiddle, $yMiddle, $Delay) ;drag up
+		If QuickMIS("BC1", $g_sImgVersusBH, 50,50,800,570) Then 
+			ClickDrag($g_iQuickMISX, $g_iQuickMISY, $xMiddle, $yMiddle, $Delay) ;drag to center
 			_Sleep(1500)
-			Local $Ret = decodeSingleCoord(findImage("VersusBuilderHall", $g_sImgVersusBH, GetDiamondFromRect("300,200,500,400"), 1, True))
-			If IsArray($Ret) And UBound($Ret) > 1 Then
-				$aRet[0] = True
-				$aRet[1] = $Ret[0]
-				$aRet[2] = $Ret[1]
-			Endif
+			$aRet[0] = True
 		Else
 			SetDebugLog("SetVersusBHToMid(): Versus BH Not Found", $COLOR_INFO)
 		Endif
@@ -431,20 +441,12 @@ Func SetVersusBHToMid()
 	Return $aRet
 EndFunc
 
-Func GetBBDropPoint($bSetBHToMid = True)
+Func GetBBDropPoint()
 	Local $XMiddle = 430, $YMiddle = 275
+	Local $BHCoord = SetVersusBHToMid()
+	_ArrayToString($BHCoord)
 	
-	If $bSetBHToMid Then 
-		Local $BHCoord = SetVersusBHToMid()
-		Local $BHFound = False
-		If IsArray($BHCoord) And UBound($BHCoord) > 1 Then
-			$BHFound = $BHCoord[0]
-			$XMiddle = $BHCoord[1]
-			$YMiddle = $BHCoord[2]	
-			_Sleep(2000) ;add more delay after drag
-		EndIf
-	EndIf
-	
+	If _Sleep(1000) Then Return
 	Local $hTimer = TimerInit()
 	$g_bAttackActive = True
 	SuspendAndroid()

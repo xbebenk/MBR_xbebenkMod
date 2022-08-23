@@ -170,6 +170,24 @@ Func ChkBBCustomArmyEnable()
 	EndIf
 EndFunc
 
+Func Chk2SideAttack()
+	If GUICtrlRead($g_hChk2SideAttack) = $GUI_CHECKED Then 
+		$g_b2SideBBAttack = True
+		GUICtrlSetState($g_hChkAllSideBBAttack, $GUI_UNCHECKED)
+	Else
+		$g_b2SideBBAttack = False
+	EndIf
+EndFunc
+
+Func ChkAllSideBBAttack()
+	If GUICtrlRead($g_hChkAllSideBBAttack) = $GUI_CHECKED Then 
+		$g_bAllSideBBAttack = True
+		GUICtrlSetState($g_hChk2SideAttack, $GUI_UNCHECKED)
+	Else
+		$g_bAllSideBBAttack = False
+	EndIf
+EndFunc
+
 Func GUIBBCustomArmy()
 	Local $iGUI_CtrlId = @GUI_CtrlId
 	Local $iDropIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
