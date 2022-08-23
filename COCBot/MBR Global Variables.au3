@@ -1985,7 +1985,7 @@ Global $g_aVillageRefSize[18][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], 
 									["SH", "Shadow", 598.40, 81, 790, 61, 592], _ ;ok
 									["RY", "Royal", 610.20, 57, 799, 48, 603], _ ;ok
 									["SM", "Summer", 568, 85, 813, 56, 604], _ ;ok
-									["PS", "Pixel", 589.62, 66, 791, 35, 586], _ ;ok
+									["PS", "Pixel", 598.2, 63, 793, 63, 612], _ ;ok
 									["10", "10th Clasivery", 561, 92, 791, 47, 570]] ;ok
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
 
