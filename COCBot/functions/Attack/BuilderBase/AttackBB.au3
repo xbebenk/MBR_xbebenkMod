@@ -77,7 +77,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 		ClickAway("Left")
 	EndIf
 	If Not $g_bRunState Then Return
-	If checkMainScreen(True, $g_bStayOnBuilderBase, "DoAttackBB") Then ZoomOut() 
+	If checkMainScreen(True, $g_bStayOnBuilderBase, "DoAttackBB") Then ZoomOut()
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 
@@ -106,11 +106,11 @@ Func _AttackBB()
 	local $timer = __TimerInit()
 	local $iPrevTime = 0
 
-	While Not WaitforPixel(88, 586, 89, 588, "5095D8", 10, 1) 
+	While Not WaitforPixel(88, 586, 89, 588, "5095D8", 10, 1)
 		local $iTime = Int(__TimerDiff($timer)/ 60000)
 		If $iTime > $iPrevTime Then ; if we have increased by a minute
 			SetLog("Clouds: " & $iTime & "-Minute(s)")
-			If $iTime > 2 Then 
+			If $iTime > 2 Then
 				CloseCoC(True)
 				Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search
 			EndIf
@@ -123,12 +123,12 @@ Func _AttackBB()
 
 	; Get troops on attack bar and their quantities
 	local $aBBAttackBar = GetAttackBarBB()
-	If $g_bChkBBCustomArmyEnable Then 
+	If $g_bChkBBCustomArmyEnable Then
 		CorrectAttackBarBB($aBBAttackBar)
 		$aBBAttackBar = GetAttackBarBB()
 	EndIf
 	AttackBB($aBBAttackBar)
-	
+
 	; wait for end of battle
 	SetLog("Waiting for end of battle.", $COLOR_BLUE)
 	If Not $g_bRunState Then Return ; Stop Button
@@ -149,10 +149,9 @@ Func AttackBB($aBBAttackBar = Default)
 	If $aBBAttackBar = Default Then $aBBAttackBar = GetAttackBarBB()
 	Local $aBMPos = GetMachinePos()
 	local $bTroopsDropped = False, $bBMDeployed = False
-	
+
 	$g_BBDP = GetBBDropPoint()
-	
-	SetDebugLog(_ArrayToString($g_BBDP))
+	SetDebugLog(_ArrayToString($g_BBDP), ",", 0, 0, "|")
 	
 	Local $iSide = $g_BBDPSide
 	Local $AltSide = 0, $countTL = 0, $countBL = 0, $countBR = 0, $countTR = 0
@@ -162,14 +161,32 @@ Func AttackBB($aBBAttackBar = Default)
 		If $g_BBDP[$i][0] = 3 Then $countBR += 1
 		If $g_BBDP[$i][0] = 4 Then $countTR += 1
 	Next
-	
+
 	Local $acountDP[4][2] = [[1, $countTL], [2, $countBL], [3, $countBR], [3, $countTR]]
 	_ArraySort($acountDP, 1, 0, 0, 1)
-	SetDebugLog(_ArrayToString($acountDP))
+	
+	SetDebugLog(_ArrayToString($acountDP), ",", 0, 0, "|")
 	If $acountDP[1][1] > 0 Then $AltSide = $acountDP[1][0]
 	SetDebugLog("DPSide = " & $iSide)
 	SetDebugLog("AltSide = " & $AltSide)
-	
+
+	Local $DP[0][3]
+	For $i = 0 To Ubound($g_BBDP) - 1
+		If $g_bAllSideBBAttack Then
+			_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2])
+		Else
+			If $g_BBDP[$i][0] = $iSide Then
+				_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2])
+			EndIf
+			If $g_b2SideBBAttack And $AltSide > 0 Then
+				If $g_BBDP[$i][0] = $AltSide Then
+					_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2])
+				EndIf
+			EndIf
+		EndIf
+	Next
+	SetDebugLog(_ArrayToString($DP), ",", 0, 0, "|")
+
 	;Function uses this list of local variables...
 	If $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
 		SetLog("Dropping BM First")
@@ -183,14 +200,14 @@ Func AttackBB($aBBAttackBar = Default)
 	SetLog( $g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
 	While Not $bTroopsDropped
 		If Not $g_bRunState Then Return
-		local $iNumSlots = UBound($aBBAttackBar, 1)
+		Local $iNumSlots = UBound($aBBAttackBar, 1)
 		If $g_bBBDropOrderSet = True Then
-			local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
-			For $i=0 To $g_iBBTroopCount - 1 ; loop through each name in the drop order
-				local $j=0, $bDone = 0
+			Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
+			For $i = 0 To $g_iBBTroopCount - 1 ; loop through each name in the drop order
+				Local $j = 0, $bDone = False
 				While $j < $iNumSlots And Not $bDone
 					If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then
-						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide, $AltSide)
+						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide, $AltSide, $DP)
 						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
 							$bDone = True
 							_Sleep($g_iBBNextTroopDelay) ; wait before next troop
@@ -200,13 +217,15 @@ Func AttackBB($aBBAttackBar = Default)
 				WEnd
 			Next
 		Else
-			For $i=0 To $iNumSlots - 1
-				DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide, $AltSide)
-				If $i = $iNumSlots-1 Or $aBBAttackBar[$i][0] <> $aBBAttackBar[$i+1][0] Then
+			Local $sTroopName = ""
+			For $i = 0 To $iNumSlots - 1
+				DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide, $AltSide, $DP)
+				If $sTroopName <> $aBBAttackBar[$i][0] Then
 					_Sleep($g_iBBNextTroopDelay) ; wait before next troop
 				Else
 					_Sleep($DELAYRESPOND) ; we are still on same troop so lets drop them all down a bit faster
 				EndIf
+				$sTroopName = $aBBAttackBar[$i][0]
 			Next
 		EndIf
 		$aBBAttackBar = GetAttackBarBB(True)
@@ -239,6 +258,20 @@ Func AttackBB($aBBAttackBar = Default)
 	Return
 EndFunc   ;==>AttackBB
 
+Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide, $AltSide, $aDP)
+    SetLog("Deploying " & $sName & " x" & String($iAmount), $COLOR_ACTION)
+	SetDebugLog("countDP = " & UBound($aDP))
+	If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
+    PureClick($x, $y) ; select troop
+	Local $iPoint = 0
+	For $j = 0 To $iAmount - 1
+		$iPoint = Random(0, Ubound($aDP) - 1, 1)
+		PureClick($aDP[$iPoint][1], $aDP[$iPoint][2])
+		If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
+	Next
+EndFunc
+
+
 Func OkayBBEnd() ; Find if battle has ended and click okay
 	local $timer = __TimerInit()
 	While 1
@@ -262,8 +295,8 @@ EndFunc
 Func Okay()
 	local $timer = __TimerInit()
 
-	While 1 
-		If QuickMIS("BC1", $g_sImgOkButton, 600, 425, 730, 470) Then 
+	While 1
+		If QuickMIS("BC1", $g_sImgOkButton, 600, 425, 730, 470) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			Return True
 		EndIf
@@ -279,34 +312,6 @@ Func Okay()
 	WEnd
 
 	Return True
-EndFunc
-
-Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide, $AltSide)
-    SetLog("Deploying " & $sName & " x" & String($iAmount), $COLOR_ACTION)
-    PureClick($x, $y) ; select troop
-    If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
-	Local $DP[0][3]
-	For $i = 0 To Ubound($g_BBDP) - 1
-		If $g_bAllSideBBAttack Then 
-			_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2])
-		Else
-			If $g_BBDP[$i][0] = $iSide Then
-				_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2])
-			EndIf
-			If $g_b2SideBBAttack And $AltSide > 0 Then 
-				If $g_BBDP[$i][0] = $AltSide Then
-					_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2])
-				EndIf
-			EndIf
-		EndIf
-	Next
-	
-	Local $iPoint = 0
-    For $j = 0 To $iAmount - 1
-		$iPoint = Random(0, Ubound($DP) - 1, 1)
-		PureClick($DP[$iPoint][1], $DP[$iPoint][2])	
-        If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
-    Next
 EndFunc
 
 Func GetMachinePos()
@@ -325,7 +330,7 @@ Func DeployBM($aBMPos, $iSide = False)
 	Local $bBMDeployed = False
 	Local $TmpBMPosX = $aBMPos[0] - 17
 	Local $BMPosY = 578
-	
+
 	If $g_bBBMachineReady And IsArray($aBMPos) Then
 		SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 		Local $DP[0][3]
@@ -335,17 +340,17 @@ Func DeployBM($aBMPos, $iSide = False)
 				_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2], Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
 			EndIf
 		Next
-		
+
 		For $i = 0 To 2
 			If $g_bDebugClick Then SetLog("[" & $i & "] Try DeployBM", $COLOR_ACTION)
 			PureClickP($aBMPos)
-			If $i > 1 Then 
+			If $i > 1 Then
 				PureClick(40, 280)
 				PureClick(410, 26)
 				PureClick(780, 470)
 				ExitLoop; desperate ...just leave it
 			EndIf
-			
+
 			Local $iPoint = Random(0, UBound($DP) - 1, 1)
 			PureClick($DP[$iPoint][1], $DP[$iPoint][2])
 			_Sleep(500)
@@ -363,16 +368,16 @@ Func CheckBMLoop($aBMPos)
 	Local $count = 0, $loopcount = 0
 	Local $TmpBMPosX = $aBMPos[0] - 17
 	Local $BMPosY = 578
-	
+
 	While IsAttackPage()
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
-		
+
 		If BBBarbarianHead() Then
 			SetLog("Battle Ended, Exiting BMLoop", $COLOR_DEBUG2)
 			ExitLoop
 		EndIf
-		
+
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "8C8C8C", 10, 1) Then
 			_Sleep(500)
 			SetDebugLog("Waiting Battle Machine Ability", $COLOR_DEBUG2)
@@ -382,7 +387,7 @@ Func CheckBMLoop($aBMPos)
 			SetDebugLog("Expected: 8C8C8C, Got: " & $color)
 			If $color = "000000" Then ExitLoop
 		EndIf
-		
+
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "240571", 10, 1) Then
 			PureClickP($aBMPos)
 			SetLog("Activate Battle Machine Ability", $COLOR_SUCCESS)
@@ -392,7 +397,7 @@ Func CheckBMLoop($aBMPos)
 			SetDebugLog("Expected: 240571, Got: " & $color)
 			If $color = "000000" Then ExitLoop
 		EndIf
-		
+
 		If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "0E0E0E", 6, 1) Then
 			$count += 1
 			If $count > 3 Then
@@ -416,21 +421,21 @@ Func GetBBDPPixelSection($XMiddle, $YMiddle, $x, $y)
 	EndIf
 	If $isTop Then Return 4 ; Top Right
 	Return 3 ; Bottom Right
-EndFunc 
+EndFunc
 
 Func SetVersusBHToMid()
-	Local $xMiddle = 430, $yMiddle = 275, $Delay = 500 
+	Local $xMiddle = 430, $yMiddle = 275, $Delay = 500
 	Local $aRet[3] = [False, $xMiddle, $yMiddle]
-	If $g_bAllSideBBAttack Then Return $aRet
+	;If $g_bAllSideBBAttack Then Return $aRet
 	_Sleep(1500)
-	If QuickMIS("BC1", $g_sImgVersusBH, 50,50,800,570) Then 
+	If QuickMIS("BC1", $g_sImgVersusBH, 50,50,800,570) Then
 		ClickDrag($g_iQuickMISX, $g_iQuickMISY, $xMiddle, $yMiddle, $Delay) ;drag to center
 		$aRet[0] = True
 	Else
 		SaveDebugImage("SetVersusBHToMid")
 		ClickDrag(430, 500, 430, 300)	;If we cannot find BH on first search, try to scroll down. Maybe BH is at the bottom of the base.
 		_Sleep(1500)
-		If QuickMIS("BC1", $g_sImgVersusBH, 50,50,800,570) Then 
+		If QuickMIS("BC1", $g_sImgVersusBH, 50,50,800,570) Then
 			ClickDrag($g_iQuickMISX, $g_iQuickMISY, $xMiddle, $yMiddle, $Delay) ;drag to center
 			_Sleep(1500)
 			$aRet[0] = True
@@ -445,12 +450,12 @@ Func GetBBDropPoint()
 	Local $XMiddle = 430, $YMiddle = 275
 	Local $BHCoord = SetVersusBHToMid()
 	_ArrayToString($BHCoord)
-	
+
 	If _Sleep(1000) Then Return
 	Local $hTimer = TimerInit()
 	$g_bAttackActive = True
 	SuspendAndroid()
-	
+
 	Local $THhOffset = 150, $aResult[0][3]
 	Local $xstart[2] = [70, 430], $ystart = 30, $xend[2] = [430, 800], $yend = 600
 	For $i = 0 To 1
@@ -471,21 +476,21 @@ Func GetBBDropPoint()
 		If $aResult[$i][0] < $XMiddle And $aResult[$i][1] > $YMiddle And $aResult[$i][0] > ($XMiddle - $THhOffset) And $aResult[$i][1] < ($YMiddle + $THhOffset) Then ContinueLoop ;BR
 		If $aResult[$i][0] > $XMiddle And $aResult[$i][1] > $YMiddle And $aResult[$i][0] < ($XMiddle + $THhOffset) And $aResult[$i][1] < ($YMiddle + $THhOffset) Then ContinueLoop ;TR
 		_ArrayAdd($aaCoords, $iSide & "|" & $aResult[$i][0] & "|" & $aResult[$i][1] & "|" & $aResult[$i][2])
-	Next	
+	Next
 	SetLog("Cleared BBDropPoint result : " & UBound($aaCoords) & " Coords", $COLOR_INFO)
-	
+
 	Local $aDPResult = SortBBDP($aaCoords)
 	SetLog("BBDropPoint after sort : " & UBound($aDPResult) & " Coords", $COLOR_INFO)
 	;_ArrayDisplay($aDPResult)
-	
+
 	ResumeAndroid()
 	$g_bAttackActive = False
 	SetLog("BBDropPoint Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
-	
+
 	FindLavaLauncher($aDPResult)
 	SetDebugLog("FindLavaLauncher MainSide = " & $g_BBDPSide)
 	If $g_bDebugImageSave Then DebugAttackBBImage($aDPResult, $g_BBDPSide)
-	
+
 	Return $aDPResult
 EndFunc
 
@@ -498,7 +503,7 @@ Func SortBBDP($aDropPoints)
 	Local $TmpXMinBR = 0, $TmpYMinBR = 0
 	Local $TmpXMinTR = 0, $TmpYMinTR = 0
 	Local $iTL = 0, $iBL = 0, $iBR = 0, $iTR = 0
-	
+
 	_ArraySort($aDropPoints, 0, 0, 0, 1) ;sort x axis
 	For $i = 0 To UBound($aDropPoints) - 1
 		If $aDropPoints[$i][0] = 1 Then ;Top Left
@@ -506,7 +511,7 @@ Func SortBBDP($aDropPoints)
 			If $aDropPoints[$i][1] > $TmpXMinTL And $aDropPoints[$i][2] > $TmpYMaxTL And $TmpYMaxTLFound Then ContinueLoop
 			$TmpXMinTL = $aDropPoints[$i][1]
 			$TmpYMaxTL = $aDropPoints[$i][2]
-			
+
 			If Not $TmpYMaxTLFound Then
 				$TmpXMinTL = $aDropPoints[$i][1]
 				$TmpYMaxTL = $aDropPoints[$i][2]
@@ -526,13 +531,13 @@ Func SortBBDP($aDropPoints)
 			If $aDropPoints[$i][1] > 250 And $aDropPoints[$i][2] > 500 Then ContinueLoop
 			$TmpXMinBL = $aDropPoints[$i][1]
 			$TmpYMinBL = $aDropPoints[$i][2]
-			
+
 			If Not $TmpYMinBLFound Then
 				$TmpXMinBL = $aDropPoints[$i][1]
 				$TmpYMinBL = $aDropPoints[$i][2]
 				$TmpYMinBLFound = True
 			EndIf
-			
+
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBL:" & $TmpXMinBL & " TmpYMinBL:" & $TmpYMinBL)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] - $DPChange & "|" & $aDropPoints[$i][2] + $DPChange & "|" & $aDropPoints[$i][3])
 			$iBL += 1
@@ -545,19 +550,19 @@ Func SortBBDP($aDropPoints)
 			If $aDropPoints[$i][1] > $TmpXMinBR And $aDropPoints[$i][2] > $TmpYMinBR + $DpDistance And $TmpYMinBRLFound Then ContinueLoop
 			$TmpXMinBR = $aDropPoints[$i][1]
 			$TmpYMinBR = $aDropPoints[$i][2]
-			
+
 			If Not $TmpYMinBRLFound Then
 				$TmpXMinBR = $aDropPoints[$i][1]
 				$TmpYMinBR = $aDropPoints[$i][2]
 				$TmpYMinBRLFound = True
 			EndIf
-			
+
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBR:" & $TmpXMinBR & " TmpYMinBR:" & $TmpYMinBR)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] + $DPChange & "|" & $aDropPoints[$i][2] + $DPChange & "|" & $aDropPoints[$i][3])
 			$iBR += 1
 		EndIf
 	Next
-	
+
 	_ArraySort($aDropPoints, 0, 0, 0, 2) ;sort y axis
 	For $i = 0 To UBound($aDropPoints) - 1
 		If $aDropPoints[$i][0] = 4 Then ;Top Right
@@ -565,7 +570,7 @@ Func SortBBDP($aDropPoints)
 			If $aDropPoints[$i][2] > $TmpYMinTR And $aDropPoints[$i][1] < $TmpXMinTR And $TmpYMaxTRFound Then ContinueLoop
 			$TmpXMinTR = $aDropPoints[$i][1]
 			$TmpYMinTR = $aDropPoints[$i][2]
-			
+
 			If Not $TmpYMaxTRFound Then
 				$TmpXMinTR = $aDropPoints[$i][1]
 				$TmpYMinTR = $aDropPoints[$i][2]
@@ -602,8 +607,8 @@ Func DebugAttackBBImage($aCoords, $g_BBDPSide = 1)
 	Local $hPenWhite = _GDIPlus_PenCreate(0xFFFFFFFF, 2)
 	Local $hPenRed = _GDIPlus_PenCreate(0xFFFF0000, 2)
 	Local $hPenCyan = _GDIPlus_PenCreate(0xFF00FFFF, 2)
-	
-	If IsArray($aCoords) Then 
+
+	If IsArray($aCoords) Then
 		For $i = 0 To UBound($aCoords) - 1
 			Local $color = $hPenYellow
 			Switch $aCoords[$i][0]
@@ -633,7 +638,7 @@ Func DebugAttackBBImage($aCoords, $g_BBDPSide = 1)
 	Else
 		SetDebugLog("DebugAttackBBImage: No Array")
 	EndIf
-	
+
 	Switch $g_BBDPSide
 		Case 1
 			_GDIPlus_GraphicsDrawRect($hGraphic, 140, 185, 20, 20, $hPenRed)
@@ -644,9 +649,9 @@ Func DebugAttackBBImage($aCoords, $g_BBDPSide = 1)
 		Case 4
 			_GDIPlus_GraphicsDrawRect($hGraphic, 650, 185, 20, 20, $hPenRed)
 	EndSwitch
-	
+
 	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
-	Local $Time = @HOUR & "." & @MIN & "." & @SEC & "." & @MSEC 
+	Local $Time = @HOUR & "." & @MIN & "." & @SEC & "." & @MSEC
 	Local $filename = $g_sProfileTempDebugPath & String("AttackBBDebug_" & $Date & "_" & $Time) & ".png"
 	_GDIPlus_ImageSaveToFile($EditedImage, $filename)
 	If @error Then SetLog("Debug Image save error: " & @extended, $COLOR_ERROR)

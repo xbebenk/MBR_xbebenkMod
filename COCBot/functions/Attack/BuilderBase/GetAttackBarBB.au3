@@ -14,8 +14,8 @@
 ; ===============================================================================================================================
 
 Func GetAttackBarBB($bRemaining = False)
-	local $iTroopBanners = 584 ; y location of where to find troop quantities
-	local $aSlot1 = [85, 584] ; location of first slot
+	local $iTroopBanners = 577 ; y location of where to find troop quantities
+	local $aSlotX[6] = [108, 180, 252, 325, 397, 468] ; location of x Amount on slot
 	local $iSlotOffset = 72 ; slots are 73 pixels apart
 	local $iBarOffset = 66 ; 66 pixels from side to attack bar
 
@@ -50,14 +50,12 @@ Func GetAttackBarBB($bRemaining = False)
 
 		local $aTempMultiCoords = decodeMultipleCoords($aTroop[1])
 		For $j=0 To UBound($aTempMultiCoords, 1) - 1
-			local $aTempCoords = $aTempMultiCoords[$j]
+			Local $aTempCoords = $aTempMultiCoords[$j]
 			If UBound($aTempCoords) < 2 Then ContinueLoop
-			local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
-			local $iCount = Number(getTroopCountSmall($aTempCoords[0], $iTroopBanners))
+			Local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
+			Local $iCount = Number(getOcrAndCapture("coc-t-s", $aSlotX[$iSlot], $iTroopBanners, 57, 24))
 			If $iCount < 1 Then $iCount = 2 ;just assume there are 2 avail troop on this slot for now
-			;If $iCount == 0 Then
-			;	SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR) ; xbebenk comment this because it bot actually get right count
-			;EndIf
+			
 			local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $iTroopBanners + 25, $iSlot, $iCount]] ; element to add to attack bar list
 			_ArrayAdd($aBBAttackBar, $aTempElement)
 		Next
