@@ -540,6 +540,8 @@ Func SaveBuilderBaseMod()
 	For $i = 0 To UBound($g_hCmbTroopBB) - 1
 		_Ini_Add("BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbTroopBB[$i])
 	Next
+	_Ini_Add("BBCustomArmy", "Chk1SideBBAttack", $g_b1SideBBAttack)
+	_Ini_Add("BBCustomArmy", "1SideBBAttack", $g_i1SideBBAttack)
 	_Ini_Add("BBCustomArmy", "Chk2SideBBAttack", $g_b2SideBBAttack)
 	_Ini_Add("BBCustomArmy", "ChkAllSideBBAttack", $g_bAllSideBBAttack)
 EndFunc   ;==>SaveBuilderBaseMod

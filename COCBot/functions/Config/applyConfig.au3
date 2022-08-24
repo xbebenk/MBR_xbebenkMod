@@ -614,6 +614,8 @@ Func ApplyBuilderBaseMod($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTroopBB[$i], $g_iCmbTroopBB[$i])
 			_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbTroopBB[$i] + 1][4])
 		Next
+		GUICtrlSetState($g_hChk1SideAttack, $g_b1SideBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
+		_GUICtrlComboBox_SetCurSel($g_hCmbSideAttack, $g_i1SideBBAttack)
 		GUICtrlSetState($g_hChk2SideAttack, $g_b2SideBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
 		GUICtrlSetState($g_hChkAllSideBBAttack, $g_bAllSideBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
 	Else
@@ -622,6 +624,8 @@ Func ApplyBuilderBaseMod($TypeReadSave)
 		For $i = 0 To UBound($g_hCmbTroopBB) - 1
 			$g_iCmbTroopBB[$i] = _GUICtrlComboBox_GetCurSel($g_hCmbTroopBB[$i])
 		Next
+		$g_b1SideBBAttack = (GUICtrlRead($g_hChk1SideAttack) = $GUI_CHECKED)
+		$g_i1SideBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbSideAttack)
 		$g_b2SideBBAttack = (GUICtrlRead($g_hChk2SideAttack) = $GUI_CHECKED)
 		$g_bAllSideBBAttack = (GUICtrlRead($g_hChkAllSideBBAttack) = $GUI_CHECKED)
 	EndIf

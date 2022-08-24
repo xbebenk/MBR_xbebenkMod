@@ -152,7 +152,7 @@ Func AttackBB($aBBAttackBar = Default)
 
 	$g_BBDP = GetBBDropPoint()
 	SetDebugLog(_ArrayToString($g_BBDP), ",", 0, 0, "|")
-	
+
 	Local $iSide = $g_BBDPSide
 	Local $AltSide = 0, $countTL = 0, $countBL = 0, $countBR = 0, $countTR = 0
 	For $i = 0 To Ubound($g_BBDP) - 1
@@ -164,7 +164,7 @@ Func AttackBB($aBBAttackBar = Default)
 
 	Local $acountDP[4][2] = [[1, $countTL], [2, $countBL], [3, $countBR], [3, $countTR]]
 	_ArraySort($acountDP, 1, 0, 0, 1)
-	
+
 	SetDebugLog(_ArrayToString($acountDP), ",", 0, 0, "|")
 	If $acountDP[1][1] > 0 Then $AltSide = $acountDP[1][0]
 	SetDebugLog("DPSide = " & $iSide)
@@ -415,6 +415,7 @@ EndFunc
 Func GetBBDPPixelSection($XMiddle, $YMiddle, $x, $y)
 	Local $isLeft = ($x <= $XMiddle)
 	Local $isTop = ($y <= $YMiddle )
+	If $y > 565 Then Return 0 ;coord y overlap attackbar
 	If $isLeft Then
 		If $isTop Then Return 1 ; Top Left
 		Return 2 ; Bottom Left
@@ -486,9 +487,20 @@ Func GetBBDropPoint()
 	ResumeAndroid()
 	$g_bAttackActive = False
 	SetLog("BBDropPoint Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
-
-	FindLavaLauncher($aDPResult)
-	SetDebugLog("FindLavaLauncher MainSide = " & $g_BBDPSide)
+	If $g_b1SideBBAttack Then
+		Switch $g_i1SideBBAttack
+			Case 0 ;Lava launcher
+				FindLavaLauncher()
+			Case 1 ;Air Bomb
+				FindAirBomb()
+			Case 2 ;Mega Telsa
+				FindMegaTelsa()
+			Case 3 ;Guard Post
+				FindGuardPost()
+		EndSwitch
+	EndIf
+	
+	SetDebugLog("MainSide = " & $g_BBDPSide)
 	If $g_bDebugImageSave Then DebugAttackBBImage($aDPResult, $g_BBDPSide)
 
 	Return $aDPResult
@@ -588,14 +600,43 @@ Func SortBBDP($aDropPoints)
 	Return $aResult
 EndFunc
 
-Func FindLavaLauncher($DP)
+Func FindLavaLauncher()
 	Local $LavaSide = 0
-	Local $aRet = decodeSingleCoord(findImage("LavaLauncher", $g_sImgOpponentBuildingsBB & "LavaLauncher\*", GetDiamondFromRect("100,150,760,570"), 1, True))
-	If IsArray($aRet) And UBound($aRet) > 1 Then
-		SetDebugLog("Found LavaLauncher at " & $aRet[0] & "," & $aRet[1], $COLOR_INFO)
-		$LavaSide = GetBBDPPixelSection(430, 275, $aRet[0], $aRet[1])
-		SetDebugLog("LavaSide: " & $LavaSide, $COLOR_INFO)
+	If QuickMIS("BC1", $g_sImgOpponentBuildingsBB & "LavaLauncher\", 50,50,800,570) Then
+		SetDebugLog("Found Lava Launcher at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
+		$LavaSide = GetBBDPPixelSection(430, 275, $g_iQuickMISX, $g_iQuickMISY)
+		SetLog("LavaSide: " & $LavaSide, $COLOR_INFO)
 		$g_BBDPSide = $LavaSide
+	EndIf
+EndFunc
+
+Func FindAirBomb()
+	Local $AirBombSide = 0
+	If QuickMIS("BC1", $g_sImgOpponentBuildingsBB & "AirBomb\", 50,50,800,570) Then
+		SetDebugLog("Found Air Bomb at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
+		$AirBombSide = GetBBDPPixelSection(430, 275, $g_iQuickMISX, $g_iQuickMISY)
+		SetLog("AirBombSide: " & $AirBombSide, $COLOR_INFO)
+		$g_BBDPSide = $AirBombSide
+	EndIf
+EndFunc
+
+Func FindMegaTelsa()
+	Local $MegaTelsaSide = 0
+	If QuickMIS("BC1", $g_sImgOpponentBuildingsBB & "MegaTelsa\", 50,50,800,570) Then
+		SetDebugLog("Found Mega Telsa at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
+		$MegaTelsaSide = GetBBDPPixelSection(430, 275, $g_iQuickMISX, $g_iQuickMISY)
+		SetLog("MegaTelsaSide: " & $MegaTelsaSide, $COLOR_INFO)
+		$g_BBDPSide = $MegaTelsaSide
+	EndIf
+EndFunc
+
+Func FindGuardPost()
+	Local $GuardPostSide = 0
+	If QuickMIS("BC1", $g_sImgOpponentBuildingsBB & "GuardPost\", 50,50,800,570) Then
+		SetDebugLog("Found GuardPostSide at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
+		$GuardPostSide = GetBBDPPixelSection(430, 275, $g_iQuickMISX, $g_iQuickMISY)
+		SetLog("GuardPostSide: " & $GuardPostSide, $COLOR_INFO)
+		$g_BBDPSide = $GuardPostSide
 	EndIf
 EndFunc
 

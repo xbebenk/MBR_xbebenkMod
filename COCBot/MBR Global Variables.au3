@@ -890,7 +890,8 @@ Global $g_hCmbBBNextTroopDelay = 0, $g_hCmbBBSameTroopDelay = 0
 Global $g_apTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139]]
 Global $g_apTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123]]
 Global $g_BBDP[0][3]
-Global $g_BBDPSide = 0, $UseDefaultBBDP = False, $g_b2SideBBAttack = False, $g_bAllSideBBAttack = False
+Global $g_BBDPSide = 0, $UseDefaultBBDP = False, $g_b1SideBBAttack = False, $g_i1SideBBAttack = 0
+Global $g_b2SideBBAttack = False, $g_bAllSideBBAttack = False
 
 ;Builder Base
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
