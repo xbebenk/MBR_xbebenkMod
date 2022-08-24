@@ -64,7 +64,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	EndIf
 	
 	$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4])
-	SetDebugLog("stone: " & _ArrayToString($stone))
+	SetDebugLog("tree: " & _ArrayToString($tree))
 	If $tree[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
 		Return FuncReturn($aResult)
