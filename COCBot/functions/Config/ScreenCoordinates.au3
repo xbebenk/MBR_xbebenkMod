@@ -18,7 +18,7 @@ Global $aiClickAwayRegionLeft = [235, 10, 245, 20]
 Global $aiClickAwayRegionRight = [625, 10, 635, 20]
 
 Global $aCenterEnemyVillageClickDrag = [65, 545] ; Scroll village using this location in the water
-Global $aCenterHomeVillageClickDrag = [800, 370] ; Scroll village using this location : upper from setting button
+Global $aCenterHomeVillageClickDrag = [750, 370] ; Scroll village using this location : upper from setting button
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
 Global $aIsMain[4] = [279, 9, 0x7ABDE0, 20] ; Main Screen, Builder Info Icon
 Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
