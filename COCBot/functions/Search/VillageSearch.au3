@@ -118,9 +118,9 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		WaitForClouds() ; Wait for clouds to disappear
 		AttackRemainingTime(True) ; Timer for knowing when attack starts, in 30 Sec. attack automatically starts and lasts for 3 Minutes
 		If $g_bRestart Then Return ; exit func
-
 		$g_bCloudsActive = False
-
+		
+		If _Sleep(1000) Then Return ;add small delay before check resource
 		GetResources(False) ;Reads Resource Values
 		If $g_bRestart Then Return ; exit func
 
@@ -140,47 +140,16 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		Next
 
 		If _Sleep($DELAYRESPOND) Then Return
-
+		
 		For $i = 0 To $g_iModeCount - 1
 			$isModeActive[$i] = IsSearchModeActive($i)
 			If $isModeActive[$i] Then
 				$match[$i] = CompareResources($i)
 			EndIf
 		Next
-
-		; reset village measures
-		setVillageOffset(0, 0, 1)
-		ConvertInternalExternArea()
-
-		; only one capture here, very important for consistent debug images, zombies, redline calc etc.
-		ForceCaptureRegion()
-		_CaptureRegion2()
-
-		; measure enemy village (only if resources match)
-		Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
-		If $bAlwaysMeasure Then TestDropLine(True) ;g_bVillageSearchAlwaysMeasure must enabled manually by editing Global var
-		For $i = 0 To $g_iModeCount - 1
-			If $match[$i] Or $bAlwaysMeasure Then
-				If Not CheckZoomOut("VillageSearch", True, False) Then
-					SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
-					ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
-					; check two more times, only required for snow theme (snow fall can make it easily fail), but don't hurt to keep it
-					$i = 0
-					Local $bMeasured
-					Do
-						$i += 1
-						If _Sleep($DELAYPREPARESEARCH2) Then Return ; wait 500 ms
-						ForceCaptureRegion()
-						_CaptureRegion2()
-						$bMeasured = CheckZoomOut("VillageSearch", $i < 2, False)
-					Until $bMeasured = True Or $i >= 2
-					If Not $bMeasured Then Return ; exit func
-				EndIf
-				ExitLoop
-			EndIf
-		Next
+		
 		If $g_bRestart Then Return
-
+		_CaptureRegion2()
 		; ----------------- FIND TARGET TOWNHALL -------------------------------------------
 		; $g_iSearchTH name of level of townhall (return "-" if no th found)
 		; $g_iTHx and $g_iTHy coordinates of townhall
@@ -431,7 +400,38 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 	; centering disabled and village measuring moved to top
 	;Local $aCenterVillage = SearchZoomOut($aCenterEnemyVillageClickDrag, True, "VillageSearch")
 	;updateGlobalVillageOffset($aCenterVillage[3], $aCenterVillage[4]) ; update red line and TH location
-
+	
+	; measure enemy village (only if search match)
+	Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
+	For $i = 0 To $g_iModeCount - 1
+		If $match[$i] Or $bAlwaysMeasure Then
+			; reset village measures
+			setVillageOffset(0, 0, 1)
+			ConvertInternalExternArea()
+			If $g_bDebugImageSave Then TestDropLine(True) ;g_bVillageSearchAlwaysMeasure must enabled manually by editing Global var
+			If Not CheckZoomOut("VillageSearch") Then
+				If isProblemAffect(True) Then 
+					$g_bRestart = True ; Restart Attack
+					Return
+				EndIf
+				SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
+				ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
+				; check two more times, only required for snow theme (snow fall can make it easily fail), but don't hurt to keep it
+				;$i = 0
+				;Local $bMeasured
+				;Do
+				;	$i += 1
+				;	If _Sleep($DELAYPREPARESEARCH2) Then Return ; wait 500 ms
+				;	ForceCaptureRegion()
+				;	_CaptureRegion2()
+				;	$bMeasured = CheckZoomOut("VillageSearch", $i < 2, False)
+				;Until $bMeasured = True Or $i >= 2
+				;If Not $bMeasured Then Return ; exit func
+			EndIf
+			ExitLoop
+		EndIf
+	Next
+	
 	;--- show buttons attacknow ----
 	If $g_bBtnAttackNowPressed = True Then
 		SetLogCentered(" Attack Now Pressed! ", "~", $COLOR_SUCCESS)
