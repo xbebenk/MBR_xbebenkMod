@@ -1195,7 +1195,7 @@ Func CollectCGReward($bTest = False)
 		EndIf
 
 		If $Drag Then
-			ClickDrag(660, 168, 550, 168, 500)
+			ClickDrag(660, 168, 510, 168, 500)
 			_Sleep(3000)
 			$Drag = False
 		EndIf
