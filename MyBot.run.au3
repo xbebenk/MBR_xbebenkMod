@@ -1409,8 +1409,13 @@ Func FirstCheckRoutine()
 		EndIf
 	EndIf
 	
+	;Skip switch if Free Builder > 0 Or Storage Fill is Low, when clangames
+	Local $bSwitch = True
+	If $g_iFreeBuilderCount - ($g_bUpgradeWallSaveBuilder ? 1 : 0) > 0 Then $bSwitch = False
+	If $g_abLowStorage[$eLootElixir] Or $g_abLowStorage[$eLootGold] Then $bSwitch = False
+	
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 Then 
+	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 And $bSwitch Then 
 		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 		PrepareDonateCC()
 		DonateCC()
