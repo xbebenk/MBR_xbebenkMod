@@ -1162,11 +1162,6 @@ Func CollectCGReward($bTest = False)
 		If _CheckPixel($aRewardButton, True) Then ExitLoop
 		
 		If $i < 3 Then
-			;If QuickMIS("BC1", $g_sImgRewardTileSelected, $aLowerX[$i] - 50, 195, $aLowerX[$i] + 50, 470) Then ;Check if Reward already selected
-			;	SetLog("Already select Reward on this Tier, Looking next", $COLOR_ERROR)
-			;	ContinueLoop
-			;EndIf
-			
 			Local $aTile = GetCGRewardList()
 			If IsArray($aTile) And UBound($aTile) > 0 Then
 				For $j = 0 To UBound($aTile) -1
@@ -1183,14 +1178,6 @@ Func CollectCGReward($bTest = False)
 				ContinueLoop
 			EndIf
 			_Sleep(500)
-			;SetLog("Selecting Low Reward (gems)", $COLOR_INFO)
-			;Click($aLowerX[$i], 420)
-			;_Sleep(1000)
-			;If IsOKCancelPage() Then ;check if we found gems popup, accept
-			;	SetLog("Magic Item storage is Full (Take gems)", $COLOR_INFO)
-			;	Click(510, 400)
-			;	_Sleep(1000)
-			;EndIf
 			If _CheckPixel($aRewardButton, True) Then ExitLoop ;check if Reward Button already turns green
 		EndIf
 
