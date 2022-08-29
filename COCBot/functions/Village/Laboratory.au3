@@ -34,7 +34,7 @@ EndFunc
 
 Func Laboratory($bDebug = False)
 	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
-	If ChkUpgradeInProgress() Then Return
+	If ChkUpgradeInProgress($bDebug) Then Return
 	If $g_aiLaboratoryPos[0] < 70 Or $g_aiLaboratoryPos[1] = 0 Then
 		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
 		LocateLab() ; Lab location unknown, so find it.
@@ -335,7 +335,8 @@ Func ChkLabUpgradeInProgress($bDebug = False)
 EndFunc
 
 ; checks our global variable to see if we know of something already upgrading
-Func ChkUpgradeInProgress()
+Func ChkUpgradeInProgress($bDebug = False)
+	If $bDebug Then Return False
 	Local $TimeDiff ; time remaining on lab upgrade
 	If $g_sLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sLabUpgradeTime) ; what is difference between end time and now in minutes?
 	If @error Then _logErrorDateDiff(@error)
