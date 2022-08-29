@@ -190,7 +190,7 @@ Func AttackBB($aBBAttackBar = Default)
 	;Function uses this list of local variables...
 	If $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
 		SetLog("Dropping BM First")
-		$bBMDeployed = DeployBM($aBMPos, $iSide)
+		$bBMDeployed = DeployBM($aBMPos, $iSide, $AltSide, $DP)
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
@@ -237,7 +237,7 @@ Func AttackBB($aBBAttackBar = Default)
 	;If not dropping Builder Machine first, drop it now
 	If Not $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
 		SetLog("Dropping BM Last")
-		$bBMDeployed = DeployBM($aBMPos, $iSide)
+		$bBMDeployed = DeployBM($aBMPos, $iSide, $AltSide, $DP)
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
@@ -326,21 +326,13 @@ Func GetMachinePos()
     Return
 EndFunc
 
-Func DeployBM($aBMPos, $iSide = False)
+Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 	Local $bBMDeployed = False
 	Local $TmpBMPosX = $aBMPos[0] - 17
 	Local $BMPosY = 578
-
+	
 	If $g_bBBMachineReady And IsArray($aBMPos) Then
 		SetLog("Deploying Battle Machine.", $COLOR_BLUE)
-		Local $DP[0][3]
-		Local $AltSide = ($g_BBDPSide > 1 ? $g_BBDPSide - 1 : 4)
-		For $i = 0 To Ubound($g_BBDP) - 1
-			If $g_BBDP[$i][0] = $g_BBDPSide Or $g_BBDP[$i][0] = $AltSide Then
-				_ArrayAdd($DP, $g_BBDP[$i][0] & "|" & $g_BBDP[$i][1] & "|" & $g_BBDP[$i][2], Default, Default, Default, $ARRAYFILL_FORCE_NUMBER)
-			EndIf
-		Next
-
 		For $i = 0 To 2
 			If $g_bDebugClick Then SetLog("[" & $i & "] Try DeployBM", $COLOR_ACTION)
 			PureClickP($aBMPos)
@@ -351,8 +343,8 @@ Func DeployBM($aBMPos, $iSide = False)
 				ExitLoop; desperate ...just leave it
 			EndIf
 
-			Local $iPoint = Random(0, UBound($DP) - 1, 1)
-			PureClick($DP[$iPoint][1], $DP[$iPoint][2])
+			Local $iPoint = Random(0, UBound($aDP) - 1, 1)
+			PureClick($aDP[$iPoint][1], $aDP[$iPoint][2])
 			_Sleep(500)
 			If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "240571", 10, 1) Then ExitLoop
 		Next

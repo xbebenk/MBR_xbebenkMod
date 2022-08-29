@@ -234,7 +234,7 @@ Func BBDropTrophy()
 			Local $Return = False
 			If IsArray($aBMPos) Then
 				SetLog("Deploying BM")
-				DeployBM($aBMPos, $iSide)
+				DeployBM($aBMPos, $iSide, $iSide, $g_BBDP)
 				If ReturnHomeDropTrophyBB() Then Return True
 			EndIf
 			
