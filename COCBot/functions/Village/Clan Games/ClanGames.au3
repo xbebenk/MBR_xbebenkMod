@@ -1148,7 +1148,12 @@ Func CollectCGReward($bTest = False)
 	EndIf
 	Local $OnlyClaimMax = False
 	If QuickMIS("BC1", $g_sImgRewardText, 620, 490, 700, 530) Then
-		If $g_iQuickMISName = "Claim" Then $OnlyClaimMax = True
+		If $g_iQuickMISName = "Claim" Then 
+			$OnlyClaimMax = True
+			$g_bIsCGPointMaxed = True
+			SetLog("OnlyClaimMax = " & String($OnlyClaimMax))
+			SetLog("CGPoint Considered Maxed = " & String($g_bIsCGPointMaxed))
+		EndIf
 	EndIf
 
 	Local $aRewardButton[4] = [800, 490, 0xBDE98A, 10] ;green reward button
@@ -1206,7 +1211,7 @@ Func CollectCGReward($bTest = False)
 	Next
 
 	If $OnlyClaimMax Then
-		ClickDrag(660, 168, 550, 168, 500)
+		ClickDrag(660, 168, 500, 168, 500)
 		_Sleep(3000)
 		Local $aTile = GetCGRewardList(730)
 		If IsArray($aTile) And UBound($aTile) > 0 Then
