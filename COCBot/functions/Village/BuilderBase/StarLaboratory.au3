@@ -90,6 +90,7 @@ Func StarLaboratory($bTestRun = False)
 		EndIf
 	EndIf
 	
+	Local $bAnyUpgradeOn = True
 	Local $aTroopUpgrade = FindSLabTroopsUpgrade()
 	If IsArray($aTroopUpgrade) And UBound($aTroopUpgrade) > 0 Then
 		For $i = 0 To UBound($aTroopUpgrade) -1 
@@ -114,11 +115,13 @@ Func StarLaboratory($bTestRun = False)
 					EndIf
 					If $aTroopUpgrade[$Index][5] = "NeedUpgradeLab" Then
 						SetLog("[" & $z + 1 & "]: " & $aTroopUpgrade[$Index][2] & " Higher StarLab Level Required, skip!", $COLOR_INFO)
+						$bAnyUpgradeOn = False
 						ContinueLoop
 					EndIf
 					If $iAvailElixir < $aTroopUpgrade[$Index][5] Then 
 						SetLog("[" & $z + 1 & "]: " & $aTroopUpgrade[$Index][2] & " Insufficient Elixir, skip!", $COLOR_INFO)
 						SetLog("Upgrade Cost = " & $aTroopUpgrade[$Index][5] & " Available = " & $iAvailElixir, $COLOR_INFO)
+						$bAnyUpgradeOn = False
 						ContinueLoop
 					EndIf
 					If SLabUpgrade($aTroopUpgrade[$Index][2], $aTroopUpgrade[$Index][3], $aTroopUpgrade[$Index][4], $bTestRun) Then
@@ -180,6 +183,26 @@ Func StarLaboratory($bTestRun = False)
 			Else
 				SetLog("Selected Upgrade: " & $g_avStarLabTroops[$g_iCmbStarLaboratory][3] & " Is not Upgradable!", $COLOR_DEBUG)
 			EndIf
+		EndIf
+		
+		;any upgrade if all on troops lab order is maxed
+		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn Then
+			_ArraySort($aTroopUpgrade, 0, 0, 0, 5)
+			For $i = 0 To UBound($aTroopUpgrade) - 1
+				If $aTroopUpgrade[$i][5] = "MaxLevel" Then ContinueLoop
+				If $aTroopUpgrade[$i][5] = "NeedUpgradeLab" Then ExitLoop
+				If $iAvailElixir < $aTroopUpgrade[$i][5] Then 
+					SetLog("[" & $i + 1 & "]: " & $aTroopUpgrade[$i][2] & " Insufficient Elixir, skip!", $COLOR_INFO)
+					SetLog("Upgrade Cost = " & $aTroopUpgrade[$i][5] & " Available = " & $iAvailElixir, $COLOR_INFO)
+					ContinueLoop
+				EndIf
+				SetLog("Try Upgrade " & $aTroopUpgrade[$i][2] & " Cost=" & $aTroopUpgrade[$i][5], $COLOR_ACTION)
+				If SLabUpgrade($aTroopUpgrade[$i][2], $aTroopUpgrade[$i][3], $aTroopUpgrade[$i][4], $bTestRun) Then
+					SetLog("Elixir used = " & $aTroopUpgrade[$i][5], $COLOR_INFO)
+					ClickAway("Left")
+					Return True
+				EndIf
+			Next
 		EndIf
 	Else
 		SetLog("No upgradable troop found!", $COLOR_ERROR)

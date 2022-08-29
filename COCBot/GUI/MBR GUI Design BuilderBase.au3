@@ -56,17 +56,17 @@ Func CreateBBPlaySubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	Local $x = 15, $y = 95
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_04", "Collect && Activate"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 85)
-		GUICtrlCreateIcon($g_sLibIconPath, $eIcnGoldMineL5, $x + 7, $y, 24, 24)
-		GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixirCollectorL5, $x + 32, $y, 24, 24)
-		GUICtrlCreateIcon($g_sLibIconPath, $eIcnGemMine, $x + 57, $y, 24, 24)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_04", "Collect && Activate"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 70)
+		GUICtrlCreateIcon($g_sLibIconPath, $eIcnGoldMineL5, $x + 7, $y - 5, 24, 24)
+		GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixirCollectorL5, $x + 32, $y - 5, 24, 24)
+		GUICtrlCreateIcon($g_sLibIconPath, $eIcnGemMine, $x + 57, $y - 5, 24, 24)
 		$g_hChkCollectBuilderBase = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectBuilderBase", "Collect Resources"), $x + 100, $y + 4, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectBuildersBase_Info_01", "Check this to collect Resources on the Builder Base"))
 		$g_hChkCleanBBYard = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCleanBBYard", "Remove Obstacles"), $x + 260, $y + 4, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCleanBBYard_Info_01", "Check this to automatically clear Yard from Trees, Trunks, etc."))
 			GUICtrlSetState (-1, $GUI_ENABLE)
 
-	$y += 32
+	$y += 18
 		GUICtrlCreateIcon($g_sLibIconPath, $eIcnClockTower, $x + 32, $y, 24, 24)
 		$g_hChkStartClockTowerBoost = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkActivateClockTowerBoost", "Activate Clock Tower Boost"), $x + 100, $y + 4, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkActivateClockTowerBoost_Info_01", "Check this to activate the Clock Tower Boost when it is available.\r\nThis option doesn't use your Gems"))
@@ -76,11 +76,11 @@ Func CreateBBPlaySubTab()
 			GUICtrlSetState (-1, $GUI_DISABLE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	Local $x = 15, $y = 180
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_06", "Suggested Upgrades"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 110)
+	Local $x = 15, $y = 165
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_06", "Suggested Upgrades"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 90)
 
 		_GUICtrlCreatePic($g_sIcnMBisland, $x , $y , 64, 64)
-		$g_hChkBBSuggestedUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgrades", "Suggested Upgrades"), $x + 70, $y + 25, -1, -1)
+		$g_hChkBBSuggestedUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgrades", "Suggested Upgrades"), $x + 70, $y + 10, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgrades")
 		$g_hChkBBSuggestedUpgradesIgnoreGold = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_01", "Ignore Gold values"), $x + 200, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgradesGold")
@@ -90,12 +90,10 @@ Func CreateBBPlaySubTab()
 			GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgradesGold")
 		$g_hChkBBSuggestedUpgradesIgnoreWall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_04", "Ignore Wall"), $x + 315, $y + 20, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgradesGold")
-		$g_hChkBBSuggestedUpgradesOTTO = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_05", "Optimize O.T.T.O"), $x + 315, $y + 50, -1, -1)
+		$g_hChkBBSuggestedUpgradesOTTO = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_05", "Optimize O.T.T.O"), $x + 315, $y + 40, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_05", "Optimize OTTO, will only upgrade suggested on OTTO Upgrade.\r\nSuch: Archer Tower, DoubleCannon, MultiMortar, Mega Tesla and Battle Machine"))
 			GUICtrlSetOnEvent(-1, "chkActivateOptimizeOTTO")
-
-	$y = 180
-		$g_hChkPlacingNewBuildings = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkPlacingNewBuildings", "Build 'New' tagged buildings"), $x + 70, $y + 60, -1, -1)
+		$g_hChkPlacingNewBuildings = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkPlacingNewBuildings", "Build 'New' tagged buildings"), $x + 70, $y + 40, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkPlacingNewBuildings")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
@@ -113,8 +111,8 @@ Func CreateBBPlaySubTab()
 					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSuperPekka", "Super Pekka") & "|" & _
 					   GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider")
 					
-	$y += 110
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_02", "Star Laboratory"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 173)
+	$y += 90
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_02", "Star Laboratory"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 198)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnStarLaboratory, $x, $y, 64, 64)
 		$g_hChkAutoStarLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades", "Auto Star Laboratory Upgrades"), $x + 80, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades_Info_01", "Check box to enable automatically starting Upgrades in star laboratory"))
@@ -186,6 +184,13 @@ Func CreateBBPlaySubTab()
 		$g_hBtnSetSLabUpgradeOrder = GUICtrlCreateButton("Apply Order", $x - 6, $y, 96, 20)
 		GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 		GUICtrlSetOnEvent(-1, "btnSetSLabUpgradeOrder")
+		
+		$x = 30
+		$y += 40
+		;Any Upgrade If All Upgrade Order Troops are Maxed
+		$g_hChkUpgradeAnyIfAllOrderMaxed = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkUpgradeAnyIfAllOrderMaxed", "Upgrade Any Troops If Upgrades Order All Maxed"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoLabUpgrades_Info_05", "Check box to enable Any Troops If Upgrades Order All Maxed"))
+			GUICtrlSetOnEvent(-1, "chkSLabUpgradeOrder")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 

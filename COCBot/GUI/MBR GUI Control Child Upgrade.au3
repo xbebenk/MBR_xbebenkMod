@@ -262,6 +262,7 @@ Func chkSLabUpgradeOrder()
 		For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
 			GUICtrlSetState($g_ahCmbSLabUpgradeOrder[$i], $GUI_ENABLE)
 		Next
+		GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $GUI_ENABLE)
 	Else
 		$g_bSLabUpgradeOrderEnable = False
 		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_ENABLE)
@@ -270,6 +271,12 @@ Func chkSLabUpgradeOrder()
 		For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
 			GUICtrlSetState($g_ahCmbSLabUpgradeOrder[$i], $GUI_DISABLE)
 		Next
+		GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $GUI_DISABLE)
+	EndIf
+	If GUICtrlRead($g_hChkUpgradeAnyIfAllOrderMaxed) = $GUI_CHECKED Then
+		$g_bUpgradeAnyIfAllOrderMaxed = True
+	Else
+		$g_bUpgradeAnyIfAllOrderMaxed = False
 	EndIf
 EndFunc ;==>chkSLabUpgradeOrder
 
@@ -341,7 +348,7 @@ Func chkStarLab()
 		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_DISABLE)
 		_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[0][4])
 	EndIf
-	If $g_iCmbStarLaboratory = 0 Then
+	If $g_iCmbStarLaboratory = 0 And $g_bAutoStarLabUpgradeEnable Then
 		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
