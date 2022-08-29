@@ -320,7 +320,7 @@ Func btnSetLabUpgradeOrder()
 	For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
 		$g_aCmbLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i])
 		$d = $g_aCmbLabUpgradeOrder[$i]
-		SetLog($i+1 & " : " & $g_avLabTroops[$d+1][0], $COLOR_SUCCESS)
+		SetLog($i+1 & " : [" & $d+1 & "] " & $g_avLabTroops[$d+1][0], $COLOR_SUCCESS)
 	Next
 EndFunc
 
@@ -393,12 +393,11 @@ EndFunc   ;==>StarLabStatusGUIUpdate
 Func cmbLab()
 	$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
 	_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
+	SetLog("Set Laboratory Upgrade [" & $g_iCmbLaboratory & "] " & $g_avLabTroops[$g_iCmbLaboratory][0])
 	If $g_iCmbLaboratory = 0 Then
 		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
-		SetLog($g_iCmbLaboratory)
 	Else
 		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
-		SetLog($g_iCmbLaboratory)
 	EndIf
 	chkLabUpgradeOrder()
 EndFunc   ;==>cmbLab

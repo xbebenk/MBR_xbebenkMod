@@ -166,6 +166,7 @@ Func CreateLaboratorySubTab()
 		; Create translated list of Troops for combo box
 		Local $sComboData = ""
 		$sComboData = StringTrimLeft($sTxtNames, 4); trim "Any," from list
+		$sComboData &= "|Any Spell|Any Siege"
 
 		; Create ComboBox(es) for selection of troop training order
 		$y += 70
