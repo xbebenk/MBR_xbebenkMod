@@ -84,7 +84,12 @@ Func SwitchTo($To = "BB")
 	
 	For $i = 1 To 3
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
-		If $i > 1 Then ZoomOut(True) ;zoomout only if 1st try failed
+		
+		Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+		If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+			ZoomOut() 
+		EndIf
+		
 		If QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
 			If $g_iQuickMISName = "BrokenBoat" Then Return BBTutorial($g_iQuickMISX, $g_iQuickMISY)
 			If $g_iQuickMISName = "BBBoatBadge" Then $g_iQuickMISY += 10
@@ -93,9 +98,7 @@ Func SwitchTo($To = "BB")
 			ExitLoop
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
-			;SaveDebugImage("SwitchBetweenBases", True)
 			ZoomOutHelper("SwitchBetweenBases")
-			ContinueLoop
 		EndIf
 		_Sleep(1000)
 	Next
