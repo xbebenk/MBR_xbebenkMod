@@ -42,11 +42,15 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 	
 	$g_bisBHMaxed = False
 	$g_bisMegaTeslaMaxed = False
+	$g_bisMegaTeslaMaxed = False
 	If $g_bOptimizeOTTO Then
 		isGoldFullBB()
 		isElixirFullBB()
 		If $g_iFreeBuilderCountBB > 0 Then
-			If isBHMaxed() Then isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
+			If isBHMaxed() Then 
+				isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
+				isBattleMachineMaxed()
+			EndIf
 		EndIf
 	EndIf
 	ClickAway("Left")
@@ -122,6 +126,34 @@ Func isMegaTeslaMaxed()
 		EndIf
 	Else
 		Setlog("isMegaTeslaMaxed(): Cannot Find Mega Tesla", $COLOR_DEBUG)
+	EndIf
+	Return False
+EndFunc
+
+Func isBattleMachineMaxed()
+	ClickAway("Left")
+	If $g_bisBattleMachineMaxed = True Then Return True
+	
+	If QuickMIS("BC1", $g_sImgBattleMachine) Then ;Search for Battle Machine
+		If $g_iQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 5
+		Click($g_iQuickMISX, $g_iQuickMISY + 5)
+		_Sleep(1000)
+		Local $aBuildingName = BuildingInfo(242, 494)
+		If $aBuildingName[0] = 2 Then
+			; Verify if is Mega Tesla is MaxLevel
+			If $aBuildingName[1] = "Battle Machine" Then
+				If $aBuildingName[2] = 30 Then
+					SetLog("Your Battle Machine is Maxed!", $COLOR_SUCCESS)
+					$g_bisBattleMachineMaxed = True
+					Return True
+				Else
+					SetLog("Your Battle Machine Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
+					$g_bisBattleMachineMaxed = False
+				EndIf
+			Endif
+		EndIf
+	Else
+		Setlog("isBattleMachineMaxed(): Cannot Find Battle Machine", $COLOR_DEBUG)
 	EndIf
 	Return False
 EndFunc

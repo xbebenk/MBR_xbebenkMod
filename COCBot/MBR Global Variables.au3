@@ -897,7 +897,7 @@ Global $g_b2SideBBAttack = False, $g_bAllSideBBAttack = False
 ;Builder Base
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
 Global $g_aiStarLaboratoryPos[2] = [-1, -1] ; Position of Starlaboratory
-Global $g_bisBHMaxed = False, $g_bIsMegaTeslaMaxed = False, $g_iBHLevel = 0
+Global $g_bisBHMaxed = False, $g_bIsMegaTeslaMaxed = False, $g_iBHLevel = 0, $g_bisBattleMachineMaxed = False
 Global $g_bGoldStorageFullBB = False, $g_bElixirStorageFullBB = False, $g_bGoldStorage50BB = False
 Global $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
 Global $g_bChkBBCustomArmyEnable = False

@@ -671,7 +671,7 @@ Func FindBBNewBuilding()
 	Return $aBuilding
 EndFunc
 
-Global $g_aOptimizeOTTO[14][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 11], ["Storage", 12], _
+Global $g_aOptimizeOTTO[14][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 13], ["Storage", 12], _
 									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 12], ["Builder Hall", 12], ["Clock Tower", 5], ["Barracks", 12], _
 									["Army Camp", 12], ["Wall", 5]]
 
@@ -707,16 +707,18 @@ Func FindBBExistingBuilding($bTest = False)
 					EndIf
 				EndIf
 
-				If $g_bOptimizeOTTO And $g_bReserveElixirBB And $aTmpCoord[$i][0] = "Elix" And $UpgradeName[0] <> "Army Camp" And $UpgradeName[0] <> "Gold Storage" Then
+				If $g_bReserveElixirBB And $aTmpCoord[$i][0] = "Elix" And $UpgradeName[0] <> "Army Camp" And $UpgradeName[0] <> "Gold Storage" Then
 					SetLog("Reserve Elixir BB for OptimizeOTTO, Building " & $UpgradeName[0] & " skip!!", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
 
-				If $g_bOptimizeOTTO And $g_bReserveGoldBB And $aTmpCoord[$i][0] = "Gold" And $UpgradeName[0] <> "Builder Hall" And $UpgradeName[0] <> "Elixir Storage" Then
+				If $g_bReserveGoldBB And $aTmpCoord[$i][0] = "Gold" And $UpgradeName[0] <> "Builder Hall" And $UpgradeName[0] <> "Elixir Storage" Then
 					SetLog("Reserve Gold BB for OptimizeOTTO, Building " & $UpgradeName[0] & " skip!!", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
-
+				
+				If $g_bisMegaTeslaMaxed And $aTmpCoord[$i][0] = "Gold" Then $bFoundOptimizeOTTO = True ;assign gold upgrade if mega tesla already maxed
+				
 				If Not $bFoundOptimizeOTTO Then
 					SetDebugLog("Building:" & $UpgradeName[0] & ", not OptimizeOTTO building")
 					ContinueLoop
