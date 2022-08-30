@@ -1213,7 +1213,7 @@ Func CollectCGReward($bTest = False)
 	If $OnlyClaimMax Then
 		ClickDrag(660, 168, 500, 168, 500)
 		_Sleep(3000)
-		Local $aTile = GetCGRewardList(730)
+		Local $aTile = GetCGRewardList(500, $OnlyClaimMax)
 		If IsArray($aTile) And UBound($aTile) > 0 Then
 			Click($aTile[0][1], $aTile[0][2]+10)
 			SetLog("Selecting Magic Items:" & $aTile[0][0], $COLOR_INFO)
@@ -1283,7 +1283,7 @@ Func CollectCGReward($bTest = False)
 	CloseClangamesWindow()
 EndFunc
 
-Func GetCGRewardList($X = 280)
+Func GetCGRewardList($X = 280, $OnlyClaimMax = False)
 	Local $aResult[0][4]
 	Local $aTier = QuickMIS("CNX", $g_sImgRewardTier, $X, 150, 820, 190) ;search green check on top of Tier
 	_ArraySort($aTier, 0, 0, 0, 1) ;Sort by x coord
@@ -1293,15 +1293,15 @@ Func GetCGRewardList($X = 280)
 			If Not $g_bRunState Then Return
 			SetDebugLog("Checking Tier #" & $i + 1, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgRewardTileSelected, $aTier[$i][1] - 50, $aTier[$i][2], $aTier[$i][1] + 50, 470) Then ;Check if Reward already selected
-				;SetDebugLog("Already select Reward on this Tier, Looking next", $COLOR_ERROR)
+				SetDebugLog("Already select Reward on this Tier, Looking next", $COLOR_ERROR)
 				ContinueLoop
 			EndIf
 
 			Local $aTmp = QuickMIS("CNX", $g_sImgRewardItems, $aTier[$i][1] - 50, $aTier[$i][2], $aTier[$i][1] + 50, 470)
 			If IsArray($aTmp) And Ubound($aTmp) > 0 Then
 				Local $Value = 0
-				For $i = 0 To UBound($aTmp) - 1
-					Switch $aTmp[$i][0]
+				For $j = 0 To UBound($aTmp) - 1
+					Switch $aTmp[$j][0]
 						Case "Books"
 							$Value = 5
 						Case "BBGoldRune", "DERune", "ElixRune", "Shovel", "SuperPot"
@@ -1313,12 +1313,13 @@ Func GetCGRewardList($X = 280)
 						Case "Gem"
 							$Value = 1
 					EndSwitch
-					_ArrayAdd($aResult, $aTmp[$i][0] & "|" & $aTmp[$i][1] & "|" & $aTmp[$i][2] & "|" & $Value)
+					_ArrayAdd($aResult, $aTmp[$j][0] & "|" & $aTmp[$j][1] & "|" & $aTmp[$j][2] & "|" & $Value)
 				Next
 			EndIf
 			_ArraySort($aResult, 1, 0, 0, 3)
-			Return $aResult
+			If Not $OnlyClaimMax Then Return $aResult
 		Next
+		If $OnlyClaimMax Then Return $aResult
 	EndIf
 EndFunc
 
