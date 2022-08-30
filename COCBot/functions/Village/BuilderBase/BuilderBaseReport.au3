@@ -42,7 +42,7 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 	
 	$g_bisBHMaxed = False
 	$g_bisMegaTeslaMaxed = False
-	$g_bisMegaTeslaMaxed = False
+	$g_bisBattleMachineMaxed = False
 	If $g_bOptimizeOTTO Then
 		isGoldFullBB()
 		isElixirFullBB()
