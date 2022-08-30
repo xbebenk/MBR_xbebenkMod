@@ -184,8 +184,7 @@ Func Laboratory($bDebug = False)
 												Else
 													SetLog($aSpell[$i][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
 													$bUpgradeFound = True
-													$aCoords[0] = $aSpell[$i][1]
-													$aCoords[1] = $aSpell[$i][2]
+													Local $aCoords[2] = [$aSpell[$i][1], $aSpell[$i][2]]
 													If Not $bDebug Then Return LaboratoryUpgrade($aSpell[$i][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 												EndIf
 											EndIf
@@ -232,8 +231,7 @@ Func Laboratory($bDebug = False)
 											Else
 												SetLog($aSiege[$i][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
 												$bUpgradeFound = True
-												$aCoords[0] = $aSiege[$i][1]
-												$aCoords[1] = $aSiege[$i][2]
+												Local $aCoords[2] = [$aSiege[$i][1], $aSiege[$i][2]]
 												If Not $bDebug Then Return LaboratoryUpgrade($aSiege[$i][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 											EndIf
 										EndIf
