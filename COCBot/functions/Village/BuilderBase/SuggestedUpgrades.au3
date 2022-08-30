@@ -320,7 +320,7 @@ Func SearchExistingBuilding($bTest = False)
 					$IsWall = True
 				EndIf
 				If Not $g_bRunState Then Return
-				If $g_bOptimizeOTTO And Not $bOptimizeOTTOFound Then
+				If $g_bOptimizeOTTO And Not $bOptimizeOTTOFound And Not $g_bisMegaTeslaMaxed Then
 					SetLog("Building: " & $Building[$i][3] & ", skip due to optimizeOTTO", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
