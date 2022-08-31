@@ -262,6 +262,7 @@ Func chkSLabUpgradeOrder()
 		For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
 			GUICtrlSetState($g_ahCmbSLabUpgradeOrder[$i], $GUI_ENABLE)
 		Next
+		GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $GUI_ENABLE)
 	Else
 		$g_bSLabUpgradeOrderEnable = False
 		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_ENABLE)
@@ -270,6 +271,12 @@ Func chkSLabUpgradeOrder()
 		For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
 			GUICtrlSetState($g_ahCmbSLabUpgradeOrder[$i], $GUI_DISABLE)
 		Next
+		GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $GUI_DISABLE)
+	EndIf
+	If GUICtrlRead($g_hChkUpgradeAnyIfAllOrderMaxed) = $GUI_CHECKED Then
+		$g_bUpgradeAnyIfAllOrderMaxed = True
+	Else
+		$g_bUpgradeAnyIfAllOrderMaxed = False
 	EndIf
 EndFunc ;==>chkSLabUpgradeOrder
 
@@ -313,7 +320,7 @@ Func btnSetLabUpgradeOrder()
 	For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
 		$g_aCmbLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i])
 		$d = $g_aCmbLabUpgradeOrder[$i]
-		SetLog($i+1 & " : " & $g_avLabTroops[$d+1][0], $COLOR_SUCCESS)
+		SetLog($i+1 & " : [" & $d+1 & "] " & $g_avLabTroops[$d+1][0], $COLOR_SUCCESS)
 	Next
 EndFunc
 
@@ -341,7 +348,7 @@ Func chkStarLab()
 		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_DISABLE)
 		_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[0][4])
 	EndIf
-	If $g_iCmbStarLaboratory = 0 Then
+	If $g_iCmbStarLaboratory = 0 And $g_bAutoStarLabUpgradeEnable Then
 		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
@@ -386,12 +393,11 @@ EndFunc   ;==>StarLabStatusGUIUpdate
 Func cmbLab()
 	$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
 	_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
+	SetLog("Set Laboratory Upgrade [" & $g_iCmbLaboratory & "] " & $g_avLabTroops[$g_iCmbLaboratory][0])
 	If $g_iCmbLaboratory = 0 Then
 		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_ENABLE)
-		SetLog($g_iCmbLaboratory)
 	Else
 		GUICtrlSetState($g_hChkLabUpgradeOrder, $GUI_DISABLE)
-		SetLog($g_iCmbLaboratory)
 	EndIf
 	chkLabUpgradeOrder()
 EndFunc   ;==>cmbLab
@@ -631,6 +637,10 @@ EndFunc   ;==>chkSaveWallBldr
 Func chkWallOnly1Builder()
 	$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
 EndFunc   ;==>chkWallOnly1Builder
+
+Func chkWallOnlyGEFull()
+	$g_bChkWallOnlyGEFull = (GUICtrlRead($g_hChkWallOnlyGEFull) = $GUI_CHECKED)
+EndFunc   ;==>chkWallOnlyGEFull
 
 Func ChkLowLevelAutoUpgradeWall()
 	$g_bUpgradeLowWall = (GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED)

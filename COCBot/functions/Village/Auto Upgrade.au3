@@ -12,10 +12,10 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
-Func AutoUpgrade($bTest = False)
+Func AutoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	Local $bWasRunState = $g_bRunState
 	$g_bRunState = True
-	Local $Result = SearchUpgrade($bTest)
+	Local $Result = SearchUpgrade($bTest, $bUpgradeLowCost)
 	$g_bRunState = $bWasRunState
 	Return $Result
 EndFunc
@@ -52,7 +52,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	Return $bRet
 EndFunc
 
-Func SearchUpgrade($bTest = False)
+Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	SetLog("Check for Auto Upgrade", $COLOR_DEBUG)
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
@@ -61,7 +61,7 @@ Func SearchUpgrade($bTest = False)
 
 	VillageReport(True,True)
 
-	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
+	If $bUpgradeLowCost And $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
@@ -75,6 +75,8 @@ Func SearchUpgrade($bTest = False)
 				SetLog("Upgrade time > 24h, will use for upgrade lowcost building", $COLOR_INFO)
 			EndIf
 		EndIf
+	ElseIf $bUpgradeLowCost Then ;Trying LowCost Upgrade but other criterias are not met
+		Return False
 	EndIf
 
 	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder

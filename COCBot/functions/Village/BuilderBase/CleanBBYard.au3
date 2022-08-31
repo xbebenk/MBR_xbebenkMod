@@ -68,7 +68,7 @@ Func CleanBBYard($bTest = False)
 EndFunc   ;==>CleanBBYard
 
 Func isSafeCleanYardXY($x, $y)
-	If $x < 68 And $y > 316 Then ; coordinates where the game will click on the CHAT tab (safe margin)
+	If $x < 68 And $y > 290 Then ; coordinates where the game will click on the CHAT tab (safe margin)
 		SetDebugLog("Coordinate Inside Village, but Exclude CHAT")
 		Return False
 	ElseIf $y < 73 Then ; coordinates where the game will click on the BUILDER button or SHIELD button (safe margin)

@@ -20,12 +20,12 @@ Func CheckZoomOut($sSource = "CheckZoomOut", $bCheckOnly = False, $bForecCapture
 	Local $aVillageResult = SearchZoomOut(False, True, $sSource, False)
 	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
 		; not zoomed out, Return
-		If $bCheckOnly = False Then
-			SetLog("Not Zoomed Out! Exiting to MainScreen...", $COLOR_ERROR)
-			checkMainScreen(True, $g_bStayOnBuilderBase, "CheckZoomOut")  ;exit battle screen
-			$g_bRestart = True ; Restart Attack
-			$g_bIsClientSyncError = True ; quick restart
-		EndIf
+		;If $bCheckOnly = False Then
+		;	SetLog("Not Zoomed Out! Exiting to MainScreen...", $COLOR_ERROR)
+		;	checkMainScreen(True, $g_bStayOnBuilderBase, "CheckZoomOut")  ;exit battle screen
+		;	$g_bRestart = True ; Restart Attack
+		;	$g_bIsClientSyncError = True ; quick restart
+		;EndIf
 		Return False
 	EndIf
 	Return True

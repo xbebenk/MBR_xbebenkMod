@@ -20,5 +20,11 @@ Func isGoldFull()
 	Else
 		$g_abFullStorage[$eLootGold] = False
 	EndIf
+	If Not _CheckPixel($aIsGoldlow, $g_bCapturePixel) Then ;Hex if color of gold (orange)
+		SetLog("Gold Storages are Low!", $COLOR_DEBUG)
+		$g_abLowStorage[$eLootGold] = True
+	Else
+		$g_abLowStorage[$eLootGold] = False
+	EndIf
 	Return $g_abFullStorage[$eLootGold]
 EndFunc   ;==>isGoldFull

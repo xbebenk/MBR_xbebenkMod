@@ -20,5 +20,11 @@ Func isElixirFull()
 	Else
 		$g_abFullStorage[$eLootElixir] = False
 	EndIf
+	If Not _CheckPixel($aIsElixirLow, $g_bCapturePixel) Then ;Hex if color of elixir (purple)
+		SetLog("Elixir Storages are Low!", $COLOR_DEBUG)
+		$g_abLowStorage[$eLootElixir] = True
+	Else
+		$g_abLowStorage[$eLootElixir] = False
+	EndIf
 	Return $g_abFullStorage[$eLootElixir]
 EndFunc   ;==>isElixirFull

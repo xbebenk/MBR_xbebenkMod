@@ -143,7 +143,7 @@ Func AutoUpgradeBB($bTest = False)
 	BuilderBaseReport(True)
 	If Not ClickBBBuilder() Then Return
 
-	If $g_iChkPlacingNewBuildings And $g_bIsMegaTeslaMaxed = False Then
+	If $g_iChkPlacingNewBuildings And $g_bisMegaTeslaMaxed = False Then
 		SearchNewBuilding($bTest)
 	EndIf
 
@@ -177,7 +177,7 @@ Func SearchNewBuilding($bTest = False)
 				SetLog("New: " & $New[$i][4] & " cost: " & $New[$i][6] & " " & $New[$i][0])
 			Next
 			For $i = 0 To UBound($New) - 1
-				If $g_bSkipWallPlacingOnBB And $New[$i][4] = "Wall" Then
+				If $g_bSkipWallPlacingOnBB And StringInStr($New[$i][4], "Wall", 1) Then
 					SetLog("Building is New Wall, Skip!", $COLOR_INFO)
 					NotifyPushToTelegram($g_sProfileCurrentName & ": There is a new wall in BB.")
 					ContinueLoop ;skip wall
@@ -193,7 +193,7 @@ Func SearchNewBuilding($bTest = False)
 				EndIf
 				SetLog("Try Placing " & $New[$i][4])
 				Local $Region = Default
-				If $New[$i][4] = "Wall" Then $Region = 1
+				If StringInStr($New[$i][4], "Wall", 1) Then $Region = 1
 				If Not $ZoomedIn Then
 					ClickAway("Left") ;close builder menu
 					_Sleep(1000)
@@ -221,7 +221,6 @@ Func SearchNewBuilding($bTest = False)
 					SetLog("OptimizeOTTO: " & $OTTO[$i][3] & " cost: " & $OTTO[$i][5] & " " & $OTTO[$i][0])
 				Next
 				If Not $g_bRunState Then Return
-
 				For $i = 0 To UBound($OTTO) - 1
 					If Not $g_bRunState Then Return
 					Local $bOTTOPrioFound = False
@@ -229,6 +228,16 @@ Func SearchNewBuilding($bTest = False)
 					For $OTTOPriority In $aOTTOPriority
 						If $OTTO[$i][3] = $OTTOPriority Then
 							SetLog("Building: " & $OTTO[$i][3] & ", OTTO Priority Building", $COLOR_ACTION)
+							$bOTTOPrioFound = True
+							ExitLoop
+						EndIf
+						If $OTTO[$i][3] = "Builder Barracks" And Int($OTTO[$i][5]) < 300001 Then ;Priority to unlock cannon cart
+							SetLog("OTTO Priority: Force Upgrade Low Level Builder Barracks", $COLOR_ACTION)
+							$bOTTOPrioFound = True
+							ExitLoop
+						EndIf
+						If $OTTO[$i][3] = "Battle Machine" And Int($OTTO[$i][5]) < 900001 Then ;Priority to unlock battle machine
+							SetLog("OTTO Priority: Force Rebuild Battle Machine", $COLOR_ACTION)
 							$bOTTOPrioFound = True
 							ExitLoop
 						EndIf
@@ -311,7 +320,7 @@ Func SearchExistingBuilding($bTest = False)
 					$IsWall = True
 				EndIf
 				If Not $g_bRunState Then Return
-				If $g_bOptimizeOTTO And Not $bOptimizeOTTOFound Then
+				If $g_bOptimizeOTTO And Not $bOptimizeOTTOFound And Not $g_bisMegaTeslaMaxed Then
 					SetLog("Building: " & $Building[$i][3] & ", skip due to optimizeOTTO", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
@@ -367,7 +376,7 @@ Func DoUpgradeBB($CostType = "Gold", $bTest = False)
 		Return False
 	EndIf
 	If Not $g_bRunState Then Return
-	If $g_bOptimizeOTTO And $g_bIsMegaTeslaMaxed = False Then ;set upgrade only to certain level when mega tesla is not maxed
+	If $g_bOptimizeOTTO And $g_bisMegaTeslaMaxed = False Then ;set upgrade only to certain level when mega tesla is not maxed
 		Select
 			Case $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6
 				SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to OptimizeOTTO", $COLOR_SUCCESS)
@@ -515,7 +524,7 @@ Func NewBuildings($x, $y, $aBuildingName, $bTest = False)
 		If Not $g_bRunState Then Return
 		If _Sleep(2500) Then Return
 
-		If $aBuildingName[1] = "Wall" Then
+		If StringInStr($aBuildingName[1], "Wall", 1) Then
 			TPW() ;Try Placing Wall (no guarantee) Sucks SC's AI
 			Return True
 		EndIf
@@ -662,7 +671,7 @@ Func FindBBNewBuilding()
 	Return $aBuilding
 EndFunc
 
-Global $g_aOptimizeOTTO[14][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 11], ["Storage", 12], _
+Global $g_aOptimizeOTTO[14][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 13], ["Storage", 12], _
 									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 12], ["Builder Hall", 12], ["Clock Tower", 5], ["Barracks", 12], _
 									["Army Camp", 12], ["Wall", 5]]
 
@@ -688,8 +697,8 @@ Func FindBBExistingBuilding($bTest = False)
 					EndIf
 				Next
 
-				If $UpgradeName[0] = "Wall" Then ;include wall to upgrade only after mega tesla is maxed
-					If ($g_bIsMegaTeslaMaxed = True And $g_bGoldStorageFullBB) Or ($g_bGoldStorageFullBB And $g_bReserveElixirBB) Then
+				If StringInStr($UpgradeName[0], "Wall", 1) Then ;include wall to upgrade only after mega tesla is maxed
+					If ($g_bisMegaTeslaMaxed = True And $g_bGoldStorageFullBB) Or ($g_bGoldStorageFullBB And $g_bReserveElixirBB) Then
 						Local $tmpcost = getOcrAndCapture("coc-buildermenu-cost", $aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10, 120, 30, True)
 						If Number($tmpcost) = 0 Then ContinueLoop ;skip wall cost read error
 						If Number($tmpcost) > 1000000 Then ContinueLoop ;only upgrade wall cost below 1000000
@@ -698,16 +707,18 @@ Func FindBBExistingBuilding($bTest = False)
 					EndIf
 				EndIf
 
-				If $g_bOptimizeOTTO And $g_bReserveElixirBB And $aTmpCoord[$i][0] = "Elix" And $UpgradeName[0] <> "Army Camp" And $UpgradeName[0] <> "Gold Storage" Then
+				If $g_bReserveElixirBB And $aTmpCoord[$i][0] = "Elix" And $UpgradeName[0] <> "Army Camp" And $UpgradeName[0] <> "Gold Storage" Then
 					SetLog("Reserve Elixir BB for OptimizeOTTO, Building " & $UpgradeName[0] & " skip!!", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
 
-				If $g_bOptimizeOTTO And $g_bReserveGoldBB And $aTmpCoord[$i][0] = "Gold" And $UpgradeName[0] <> "Builder Hall" And $UpgradeName[0] <> "Elixir Storage" Then
+				If $g_bReserveGoldBB And $aTmpCoord[$i][0] = "Gold" And $UpgradeName[0] <> "Builder Hall" And $UpgradeName[0] <> "Elixir Storage" Then
 					SetLog("Reserve Gold BB for OptimizeOTTO, Building " & $UpgradeName[0] & " skip!!", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
-
+				
+				If $g_bisMegaTeslaMaxed And $aTmpCoord[$i][0] = "Gold" Then $bFoundOptimizeOTTO = True ;assign gold upgrade if mega tesla already maxed
+				
 				If Not $bFoundOptimizeOTTO Then
 					SetDebugLog("Building:" & $UpgradeName[0] & ", not OptimizeOTTO building")
 					ContinueLoop

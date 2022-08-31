@@ -28,12 +28,13 @@ EndFunc
 
 Func PetHouse($test = False)
 	If $g_iTownHallLevel < 14 Then
-		SetDebugLog("Townhall Lvl " & $g_iTownHallLevel & " has no Pet House.", $COLOR_ERROR)
-		;==========Hide Red  Show Green Hide Gray===
-		GUICtrlSetState($g_hPicPetGray, $GUI_SHOW)
+		;==========Hide Red Hide Green Show Gray====
 		GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
 		GUICtrlSetState($g_hPicPetGreen, $GUI_HIDE)
+		GUICtrlSetState($g_hPicPetGray, $GUI_SHOW)
 		;===========================================
+		$g_sPetUpgradeTime = ""
+		GUICtrlSetData($g_hLbLPetTime, "")
 		Return
 	EndIf
 

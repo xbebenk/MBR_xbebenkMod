@@ -72,7 +72,6 @@ EndFunc   ;==>chkBBDropTrophy
 Func btnBBDropOrder()
 	GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
 	GUICtrlSetState($g_hChkEnableBBAttack, $GUI_DISABLE)
-	GUISetState(@SW_SHOW, $g_hGUI_BBDropOrder)
 EndFunc   ;==>btnBBDropOrder
 
 Func chkBBDropOrder()
@@ -167,6 +166,37 @@ Func ChkBBCustomArmyEnable()
 		For $i = $g_hLblGUIBBCustomArmy To $g_hCmbTroopBB[UBound($g_hCmbTroopBB)-1]
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
+	EndIf
+EndFunc
+
+Func Chk1SideAttack()
+	If GUICtrlRead($g_hChk1SideAttack) = $GUI_CHECKED Then 
+		$g_b1SideBBAttack = True
+		GUICtrlSetState($g_hChk2SideAttack, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkAllSideBBAttack, $GUI_UNCHECKED)
+		$g_i1SideBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbSideAttack)
+	Else
+		$g_b2SideBBAttack = False
+	EndIf
+EndFunc
+
+Func Chk2SideAttack()
+	If GUICtrlRead($g_hChk2SideAttack) = $GUI_CHECKED Then 
+		$g_b2SideBBAttack = True
+		GUICtrlSetState($g_hChk1SideAttack, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkAllSideBBAttack, $GUI_UNCHECKED)
+	Else
+		$g_b2SideBBAttack = False
+	EndIf
+EndFunc
+
+Func ChkAllSideBBAttack()
+	If GUICtrlRead($g_hChkAllSideBBAttack) = $GUI_CHECKED Then 
+		$g_bAllSideBBAttack = True
+		GUICtrlSetState($g_hChk1SideAttack, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChk2SideAttack, $GUI_UNCHECKED)
+	Else
+		$g_bAllSideBBAttack = False
 	EndIf
 EndFunc
 

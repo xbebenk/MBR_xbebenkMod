@@ -247,7 +247,8 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 									$AnySiegeFound = True
 									SetDebugLog("Selected SiegeName:" & $SiegeName & " Level:" & $iFinalLevel & " Coord:[" & $FinalCoordX & "," & $FinalCoordY & "]")
 								EndIf
-								If $iFinalLevel = 4 Then ExitLoop
+								;If $iFinalLevel = 4 Then ExitLoop
+								If $OwnSiege = "False" Then ExitLoop
 							EndIf
 						Next
 						

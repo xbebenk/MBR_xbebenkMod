@@ -117,6 +117,23 @@ Func ZoomOutHelper($caller = "Default")
 	EndIf
 	
 	If Not $bRet Then
+		If QuickMIS("BC1", $g_sImgZoomOutHelper, 320, 100, 500, 250) Then 
+			$aOffset = StringRegExp($g_iQuickMISName, "CGHelper-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+			If IsArray($aOffset) Then 
+				$x = $g_iQuickMISX - $aOffset[0]
+				$y = $g_iQuickMISY - $aOffset[1]
+				SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
+				ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+				$bRet = True
+			Else
+				SetDebugLog("[" & $caller & "] Bad CGHelper ImageName!")
+				Return
+			EndIf
+		EndIf
+	EndIf
+	
+	If Not $bRet Then
 		If QuickMIS("BC1", $g_sImgZoomOutDir & "stone\", 0, 330, 430, 560) Then 
 			$aOffset = StringRegExp($g_iQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 			If IsArray($aOffset) Then 
@@ -132,6 +149,7 @@ Func ZoomOutHelper($caller = "Default")
 			EndIf
 		EndIf
 	EndIf
+	
 	If Not $bRet Then
 		ClickDrag(800, 350, 800, 400, 500) ;just drag
 	EndIf

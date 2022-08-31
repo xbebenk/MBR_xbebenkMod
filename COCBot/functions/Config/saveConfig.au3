@@ -540,6 +540,10 @@ Func SaveBuilderBaseMod()
 	For $i = 0 To UBound($g_hCmbTroopBB) - 1
 		_Ini_Add("BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbTroopBB[$i])
 	Next
+	_Ini_Add("BBCustomArmy", "Chk1SideBBAttack", $g_b1SideBBAttack)
+	_Ini_Add("BBCustomArmy", "1SideBBAttack", $g_i1SideBBAttack)
+	_Ini_Add("BBCustomArmy", "Chk2SideBBAttack", $g_b2SideBBAttack)
+	_Ini_Add("BBCustomArmy", "ChkAllSideBBAttack", $g_bAllSideBBAttack)
 EndFunc   ;==>SaveBuilderBaseMod
 
 Func SaveConfig_600_9()
@@ -732,6 +736,7 @@ Func SaveConfig_600_17()
 	_Ini_Add("upgrade", "use-storage", $g_iUpgradeWallLootType)
 	_Ini_Add("upgrade", "savebldr", $g_bUpgradeWallSaveBuilder ? 1 : 0)
 	_Ini_Add("upgrade", "Only1Builder", $g_bChkOnly1Builder ? 1 : 0)
+	_Ini_Add("upgrade", "WallOnlyGEFull", $g_bChkWallOnlyGEFull ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradeLowWall", $g_bUpgradeLowWall ? 1 : 0)
 	_Ini_Add("upgrade", "LowLevelWall", $g_iLowLevelWall)
 	_Ini_Add("upgrade", "UpgradeAnyWall", $g_bUpgradeAnyWallLevel ? 1 : 0)

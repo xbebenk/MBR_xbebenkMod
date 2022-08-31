@@ -614,12 +614,20 @@ Func ApplyBuilderBaseMod($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTroopBB[$i], $g_iCmbTroopBB[$i])
 			_GUICtrlSetImage($g_hIcnTroopBB[$i], $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbTroopBB[$i] + 1][4])
 		Next
+		GUICtrlSetState($g_hChk1SideAttack, $g_b1SideBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
+		_GUICtrlComboBox_SetCurSel($g_hCmbSideAttack, $g_i1SideBBAttack)
+		GUICtrlSetState($g_hChk2SideAttack, $g_b2SideBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkAllSideBBAttack, $g_bAllSideBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
 	Else
 		; Custom Army
 		$g_bChkBBCustomArmyEnable = (GUICtrlRead($g_hChkBBCustomArmyEnable) = $GUI_CHECKED)
 		For $i = 0 To UBound($g_hCmbTroopBB) - 1
 			$g_iCmbTroopBB[$i] = _GUICtrlComboBox_GetCurSel($g_hCmbTroopBB[$i])
 		Next
+		$g_b1SideBBAttack = (GUICtrlRead($g_hChk1SideAttack) = $GUI_CHECKED)
+		$g_i1SideBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbSideAttack)
+		$g_b2SideBBAttack = (GUICtrlRead($g_hChk2SideAttack) = $GUI_CHECKED)
+		$g_bAllSideBBAttack = (GUICtrlRead($g_hChkAllSideBBAttack) = $GUI_CHECKED)
 	EndIf
 	ChkBBCustomArmyEnable()
 EndFunc   ;==>ApplyBuilderBaseMod
@@ -1096,6 +1104,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 			EndSwitch
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOnly1Builder, $g_bChkOnly1Builder ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkWallOnlyGEFull, $g_bChkWallOnlyGEFull ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkLowLevelAutoUpgradeWall, $g_bUpgradeLowWall ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkUpgradeAnyWallLevel, $g_bUpgradeAnyWallLevel ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbLowLevelWall, $g_iLowLevelWall - 1)
@@ -1125,6 +1134,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 			EndIf
 			$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
 			$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
+			$g_bChkWallOnlyGEFull = (GUICtrlRead($g_hChkWallOnlyGEFull) = $GUI_CHECKED)
 			$g_bUpgradeLowWall = (GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED)
 			$g_bUpgradeAnyWallLevel = (GUICtrlRead($g_hChkUpgradeAnyWallLevel) = $GUI_CHECKED)
 			$g_iLowLevelWall = _GUICtrlComboBox_GetCurSel($g_hCmbLowLevelWall) + 1

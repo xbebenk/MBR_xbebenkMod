@@ -31,10 +31,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,300(130,60)", False))) > 1 Then
 			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And Not $g_bChkSmartSwitch And $g_bChkSharedPrefs Then
 				SetLog("---- Forced Switch, Another device connected ----")
-				$g_iNextAccount = $g_iCurAccount + 1
-				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
-				$g_bRestart = True
-				SwitchForceAnotherDevice($g_iNextAccount)
+				SwitchForceAnotherDevice()
 				checkObstacles_ResetSearch()
 				Return True
 			EndIf
@@ -66,7 +63,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				$g_iNextAccount = $g_iCurAccount + 1
 				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
 				$g_bRestart = True
-				SwitchForceAnotherDevice($g_iNextAccount)
+				SwitchForceAnotherDevice()
 				Return True
 			Else
 				If _SleepStatus($DELAYCHECKOBSTACLES4) Then Return ; 2 Minutes
@@ -305,14 +302,18 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	Return False
 EndFunc   ;==>_checkObstacles
 
-Func SwitchForceAnotherDevice($NextAccount)
+Func SwitchForceAnotherDevice()
 	Local $bResult = True
-	$g_bReMatchAcc = False
 	Local $abAccountNo = AccountNoActive()
-	If Not $abAccountNo[$NextAccount] Then $NextAccount = 0
+	$g_bReMatchAcc = False
+	
+	Local $NextAccount = _ArraySearch($abAccountNo, True, $g_iCurAccount + 1)
+	If $NextAccount < 0 Then 
+		$NextAccount = _ArraySearch($abAccountNo, True)
+	EndIf
 	$g_iNextAccount = $NextAccount
 	If Not $g_bRunState Then Return
-
+	SetLog("Current Account = [" & $g_iCurAccount + 1 & "]")
 	SetLog("Switching to Account [" & $g_iNextAccount + 1 & "]")
 	Local $bSharedPrefs = $g_bChkSharedPrefs And HaveSharedPrefs($g_asProfileName[$g_iNextAccount])
 	SwitchAccountVariablesReload("Save")
@@ -322,7 +323,8 @@ Func SwitchForceAnotherDevice($NextAccount)
 		$g_aiRunTime[$g_iCurAccount] += __TimerDiff($g_ahTimerSinceSwitched[$g_iNextAccount])
 		$g_ahTimerSinceSwitched[$g_iCurAccount] = 0
 	EndIf
-
+	
+	$g_iCurAccount = $NextAccount
 	SwitchAccountVariablesReload()
 
 	$g_ahTimerSinceSwitched[$g_iCurAccount] = __TimerInit()
@@ -339,6 +341,7 @@ Func SwitchForceAnotherDevice($NextAccount)
 			LoadProfile(False)
 		EndIf
 	EndIf
+	
 	If $bSharedPrefs Then
 		SetLog("Please wait for loading CoC")
 		PushSharedPrefs()

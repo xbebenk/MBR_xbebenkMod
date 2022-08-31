@@ -1148,7 +1148,12 @@ Func CollectCGReward($bTest = False)
 	EndIf
 	Local $OnlyClaimMax = False
 	If QuickMIS("BC1", $g_sImgRewardText, 620, 490, 700, 530) Then
-		If $g_iQuickMISName = "Claim" Then $OnlyClaimMax = True
+		If $g_iQuickMISName = "Claim" Then 
+			$OnlyClaimMax = True
+			$g_bIsCGPointMaxed = True
+			SetLog("OnlyClaimMax = " & String($OnlyClaimMax))
+			SetLog("CGPoint Considered Maxed = " & String($g_bIsCGPointMaxed))
+		EndIf
 	EndIf
 
 	Local $aRewardButton[4] = [800, 490, 0xBDE98A, 10] ;green reward button
@@ -1162,11 +1167,6 @@ Func CollectCGReward($bTest = False)
 		If _CheckPixel($aRewardButton, True) Then ExitLoop
 		
 		If $i < 3 Then
-			;If QuickMIS("BC1", $g_sImgRewardTileSelected, $aLowerX[$i] - 50, 195, $aLowerX[$i] + 50, 470) Then ;Check if Reward already selected
-			;	SetLog("Already select Reward on this Tier, Looking next", $COLOR_ERROR)
-			;	ContinueLoop
-			;EndIf
-			
 			Local $aTile = GetCGRewardList()
 			If IsArray($aTile) And UBound($aTile) > 0 Then
 				For $j = 0 To UBound($aTile) -1
@@ -1183,19 +1183,11 @@ Func CollectCGReward($bTest = False)
 				ContinueLoop
 			EndIf
 			_Sleep(500)
-			;SetLog("Selecting Low Reward (gems)", $COLOR_INFO)
-			;Click($aLowerX[$i], 420)
-			;_Sleep(1000)
-			;If IsOKCancelPage() Then ;check if we found gems popup, accept
-			;	SetLog("Magic Item storage is Full (Take gems)", $COLOR_INFO)
-			;	Click(510, 400)
-			;	_Sleep(1000)
-			;EndIf
 			If _CheckPixel($aRewardButton, True) Then ExitLoop ;check if Reward Button already turns green
 		EndIf
 
 		If $Drag Then
-			ClickDrag(660, 168, 550, 168, 500)
+			ClickDrag(660, 168, 510, 168, 500)
 			_Sleep(3000)
 			$Drag = False
 		EndIf
@@ -1219,9 +1211,9 @@ Func CollectCGReward($bTest = False)
 	Next
 
 	If $OnlyClaimMax Then
-		ClickDrag(660, 168, 550, 168, 500)
+		ClickDrag(660, 168, 500, 168, 500)
 		_Sleep(3000)
-		Local $aTile = GetCGRewardList(730)
+		Local $aTile = GetCGRewardList(500, $OnlyClaimMax)
 		If IsArray($aTile) And UBound($aTile) > 0 Then
 			Click($aTile[0][1], $aTile[0][2]+10)
 			SetLog("Selecting Magic Items:" & $aTile[0][0], $COLOR_INFO)
@@ -1291,7 +1283,7 @@ Func CollectCGReward($bTest = False)
 	CloseClangamesWindow()
 EndFunc
 
-Func GetCGRewardList($X = 280)
+Func GetCGRewardList($X = 280, $OnlyClaimMax = False)
 	Local $aResult[0][4]
 	Local $aTier = QuickMIS("CNX", $g_sImgRewardTier, $X, 150, 820, 190) ;search green check on top of Tier
 	_ArraySort($aTier, 0, 0, 0, 1) ;Sort by x coord
@@ -1301,15 +1293,15 @@ Func GetCGRewardList($X = 280)
 			If Not $g_bRunState Then Return
 			SetDebugLog("Checking Tier #" & $i + 1, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgRewardTileSelected, $aTier[$i][1] - 50, $aTier[$i][2], $aTier[$i][1] + 50, 470) Then ;Check if Reward already selected
-				;SetDebugLog("Already select Reward on this Tier, Looking next", $COLOR_ERROR)
+				SetDebugLog("Already select Reward on this Tier, Looking next", $COLOR_ERROR)
 				ContinueLoop
 			EndIf
 
 			Local $aTmp = QuickMIS("CNX", $g_sImgRewardItems, $aTier[$i][1] - 50, $aTier[$i][2], $aTier[$i][1] + 50, 470)
 			If IsArray($aTmp) And Ubound($aTmp) > 0 Then
 				Local $Value = 0
-				For $i = 0 To UBound($aTmp) - 1
-					Switch $aTmp[$i][0]
+				For $j = 0 To UBound($aTmp) - 1
+					Switch $aTmp[$j][0]
 						Case "Books"
 							$Value = 5
 						Case "BBGoldRune", "DERune", "ElixRune", "Shovel", "SuperPot"
@@ -1321,12 +1313,13 @@ Func GetCGRewardList($X = 280)
 						Case "Gem"
 							$Value = 1
 					EndSwitch
-					_ArrayAdd($aResult, $aTmp[$i][0] & "|" & $aTmp[$i][1] & "|" & $aTmp[$i][2] & "|" & $Value)
+					_ArrayAdd($aResult, $aTmp[$j][0] & "|" & $aTmp[$j][1] & "|" & $aTmp[$j][2] & "|" & $Value)
 				Next
 			EndIf
 			_ArraySort($aResult, 1, 0, 0, 3)
-			Return $aResult
+			If Not $OnlyClaimMax Then Return $aResult
 		Next
+		If $OnlyClaimMax Then Return $aResult
 	EndIf
 EndFunc
 

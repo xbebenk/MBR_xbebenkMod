@@ -604,6 +604,10 @@ Func ReadConfigBuilderBaseMod()
 	For $i = 0 To UBound($g_iCmbTroopBB) - 1
 		IniReadS($g_iCmbTroopBB[$i], $g_sProfileConfigPath, "BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbTroopBB[$i], "Int")
 	Next
+	IniReadS($g_b1SideBBAttack, $g_sProfileConfigPath, "BBCustomArmy", "Chk1SideBBAttack", True, "Bool")
+	IniReadS($g_i1SideBBAttack, $g_sProfileConfigPath, "BBCustomArmy", "1SideBBAttack", $g_hCmbSideAttack, "Int")
+	IniReadS($g_b2SideBBAttack, $g_sProfileConfigPath, "BBCustomArmy", "Chk2SideBBAttack", False, "Bool")
+	IniReadS($g_bAllSideBBAttack, $g_sProfileConfigPath, "BBCustomArmy", "ChkAllSideBBAttack", False, "Bool")
 EndFunc   ;==>ReadBuilderBaseMod
 
 Func ReadConfig_600_9()
@@ -1014,6 +1018,7 @@ Func ReadConfig_600_17()
 	IniReadS($g_iUpgradeWallLootType, $g_sProfileConfigPath, "upgrade", "use-storage", 0, "int")
 	IniReadS($g_bUpgradeWallSaveBuilder, $g_sProfileConfigPath, "upgrade", "savebldr", False, "Bool")
 	IniReadS($g_bChkOnly1Builder, $g_sProfileConfigPath, "upgrade", "Only1Builder", True, "Bool")
+	IniReadS($g_bChkWallOnlyGEFull, $g_sProfileConfigPath, "upgrade", "WallOnlyGEFull", True, "Bool")
 	IniReadS($g_bUpgradeLowWall, $g_sProfileConfigPath, "upgrade", "UpgradeLowWall", True, "Bool")
 	IniReadS($g_iLowLevelWall, $g_sProfileConfigPath, "upgrade", "LowLevelWall", 4, "int")
 	IniReadS($g_bUpgradeAnyWallLevel, $g_sProfileConfigPath, "upgrade", "UpgradeAnyWall", False, "Bool")

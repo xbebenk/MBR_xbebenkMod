@@ -15,7 +15,7 @@
 ; ===============================================================================================================================
 Func WaitForClouds()
 
-	SetDebugLog("Begin WaitForClouds:", $COLOR_DEBUG1)
+	SetDebugLog("Begin WaitForClouds", $COLOR_DEBUG1)
 	$g_bCloudsActive = True
 	
 	Local $iCount = 0
@@ -85,6 +85,7 @@ Func WaitForClouds()
 		readConfig()
 		applyConfig()
 	EndIf
+	SetDebugLog("End WaitForClouds", $COLOR_DEBUG1)
 EndFunc   ;==>WaitForClouds
 
 Func EnableLongSearch()
