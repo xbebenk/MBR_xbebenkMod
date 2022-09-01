@@ -47,6 +47,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $sDirectory
 	If $bOnBuilderBase Then
 		$sDirectory = $g_sImgZoomOutDirBB
+		$g_sSceneryCode = "BB"
 	Else
 		$sDirectory = $g_sImgZoomOutDir
 	EndIf
@@ -67,6 +68,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	SetDebugLog("tree: " & _ArrayToString($tree))
 	If $tree[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
+		If $bOnBuilderBase Then ZoomOutHelperBB("GetVillageSize")
 		Return FuncReturn($aResult)
 	Else
 		; calculate village size, see https://en.wikipedia.org/wiki/Pythagorean_theorem
