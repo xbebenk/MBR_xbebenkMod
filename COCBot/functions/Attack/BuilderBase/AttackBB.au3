@@ -124,8 +124,7 @@ Func _AttackBB()
 	; Get troops on attack bar and their quantities
 	local $aBBAttackBar = GetAttackBarBB()
 	If $g_bChkBBCustomArmyEnable Then
-		CorrectAttackBarBB($aBBAttackBar)
-		$aBBAttackBar = GetAttackBarBB()
+		If CorrectAttackBarBB($aBBAttackBar) Then $aBBAttackBar = GetAttackBarBB()
 	EndIf
 	AttackBB($aBBAttackBar)
 
@@ -151,7 +150,7 @@ Func AttackBB($aBBAttackBar = Default)
 	local $bTroopsDropped = False, $bBMDeployed = False
 
 	$g_BBDP = GetBBDropPoint()
-	SetDebugLog(_ArrayToString($g_BBDP), ",", 0, 0, "|")
+	;SetDebugLog(_ArrayToString($g_BBDP), ",", 0, 0, "|")
 
 	Local $iSide = $g_BBDPSide
 	Local $AltSide = 0, $countTL = 0, $countBL = 0, $countBR = 0, $countTR = 0
@@ -165,7 +164,7 @@ Func AttackBB($aBBAttackBar = Default)
 	Local $acountDP[4][2] = [[1, $countTL], [2, $countBL], [3, $countBR], [3, $countTR]]
 	_ArraySort($acountDP, 1, 0, 0, 1)
 
-	SetDebugLog(_ArrayToString($acountDP), ",", 0, 0, "|")
+	;SetDebugLog(_ArrayToString($acountDP), ",", 0, 0, "|")
 	If $acountDP[1][1] > 0 Then $AltSide = $acountDP[1][0]
 	SetDebugLog("DPSide = " & $iSide)
 	SetDebugLog("AltSide = " & $AltSide)
@@ -185,7 +184,7 @@ Func AttackBB($aBBAttackBar = Default)
 			EndIf
 		EndIf
 	Next
-	SetDebugLog(_ArrayToString($DP), ",", 0, 0, "|")
+	;SetDebugLog(_ArrayToString($DP), ",", 0, 0, "|")
 
 	;Function uses this list of local variables...
 	If $g_bChkBBDropBMFirst And IsArray($aBMPos) Then

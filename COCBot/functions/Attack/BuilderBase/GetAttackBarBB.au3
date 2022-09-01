@@ -339,7 +339,7 @@ Func CorrectAttackBarBB(ByRef $aAvailableTroops)
 			Click(8, 720, 1)
 		EndIf
 	Else
-		Return
+		Return False
 	EndIf
 
 	; populate the correct array with correct Troops
@@ -351,6 +351,7 @@ Func CorrectAttackBarBB(ByRef $aAvailableTroops)
 		If Not $g_bRunState Then Return
 		If $aAvailableTroops[$i][0] <> "" Then SetLog("[" & $i + 1 & "] - " & $aAvailableTroops[$i][4] & "x " & FullNametroops($aAvailableTroops[$i][0]), $COLOR_SUCCESS)
 	Next
+	Return True
 EndFunc   ;==>CorrectAttackBarBB
 
 Func GetAMissingCamp($aCurCamps, $aCorrectCamps)
