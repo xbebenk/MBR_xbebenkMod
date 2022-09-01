@@ -11,9 +11,11 @@ Func CollectCCGold($bTest = False)
 	
 	;handle for turtorial
 	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 250, 520, 400, 670) Then 
+		SetLog("Tutorial Arrow detected, click it!", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY + 10)
 		_Sleep(8000)
-		While 1
+		For $i = 1 To 3
+			SetLog("Waiting Tutorial and Forge window open #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then 
 				Click($g_iQuickMISX, $g_iQuickMISY)
 			EndIf
@@ -23,7 +25,8 @@ Func CollectCCGold($bTest = False)
 				_Sleep(2000)
 				ExitLoop
 			EndIf
-		WEnd
+		Next
+		SetLog("Failed doing Clan Capital Tutorial", $COLOR_ERROR)
 	EndIf
 	
 	If QuickMIS("BC1", $g_sImgCCGoldCollect, 250, 550, 400, 670) Then
