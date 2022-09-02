@@ -1615,8 +1615,6 @@ Func BuilderBase()
 		CollectBuilderBase()
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		
-		If $g_bElixirStorageFullBB Then StartClockTowerBoost()
-		
 		CleanBBYard()
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
