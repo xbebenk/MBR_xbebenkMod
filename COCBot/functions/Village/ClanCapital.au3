@@ -99,7 +99,16 @@ Func ClanCapitalReport($SetLog = True)
 		SetLog("Raid Weekend is Available", $COLOR_INFO)
 		Local $iAttack = getOcrAndCapture("coc-mapname", 780, 545, 20, 30)
 		SetLog("You have " & $iAttack & " available attack", $COLOR_SUCCESS)
-		If Number($iAttack) > 0 Then NotifyPushToTelegram($g_sProfileCurrentName & " have " & $iAttack & " Available attack on Capital Raid Weekend")
+		If Number($g_iLootCCGold) > 0 Then 
+			If _Sleep(8000) Then Return
+		EndIf
+		If QuickMis("BC1", $g_sImgCCRaid, 360, 450, 500, 500) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(5000) Then Return
+			SkipChat()
+			SwitchToCapitalMain()
+		EndIf
+		;If Number($iAttack) > 0 Then NotifyPushToTelegram($g_sProfileCurrentName & " have " & $iAttack & " Available attack on Capital Raid Weekend")
 	EndIf
 	
 	If $g_bChkStartWeekendRaid Then StartRaidWeekend()
