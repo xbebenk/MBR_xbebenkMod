@@ -2,16 +2,19 @@
   -----------
 - A Free Clash of Clans bot. 
 - A bot is a general term in gaming that is used to refer to a character controlled by a computer.
-- https://mybot.run
+- [https://mybot.run](https://mybot.run/forums/)
 
 The Latest Version
   ------------------
-- Details of the latest version can be found on the MyBot forum under https://mybot.run/forums/index.php?/forum/4-official-releases/
+- Official Mybot version can be found on the MyBot forum under https://mybot.run/forums/index.php?/forum/4-official-releases/
+- This Mod version can be found here https://github.com/xbebenk/MBR_xbebenkMod/releases/
 
 Documentation
   -------------
-- How to Start Bot - https://mybot.run/forums/index.php?/topic/4978-guide-how-to-use-the-bot/
-- How to Report Bug/Help - https://mybot.run/forums/index.php?/forum/20-bug-reporting/
+- How to Start Bot :
+  - https://mybot.run/forums/index.php?/forum/5-the-how-to-guides/
+  - https://mybot.run/forums/index.php?/topic/58541-xbebenkmod-v121-mbr-mybot-v797/&do=findComment&comment=395541
+- How to Report Bug/Help - https://mybot.run/forums/index.php?/topic/58541-xbebenkmod-v123-mbr-mybot-v798/
 
 Installation
   ------------
