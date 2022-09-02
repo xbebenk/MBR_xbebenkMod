@@ -418,8 +418,7 @@ EndFunc
 Func SetVersusBHToMid()
 	Local $xMiddle = 430, $yMiddle = 275, $Delay = 500
 	Local $aRet[3] = [False, $xMiddle, $yMiddle]
-	;If $g_bAllSideBBAttack Then Return $aRet
-	_Sleep(1500)
+	
 	If QuickMIS("BC1", $g_sImgVersusBH, 50,50,800,570) Then
 		ClickDrag($g_iQuickMISX, $g_iQuickMISY, $xMiddle, $yMiddle, $Delay) ;drag to center
 		$aRet[0] = True
@@ -445,6 +444,7 @@ Func GetBBDropPoint()
 
 	If _Sleep(1000) Then Return
 	Local $hTimer = TimerInit()
+	SetLog("GetBBDropPoint start", $COLOR_ACTION)
 	$g_bAttackActive = True
 	SuspendAndroid()
 
