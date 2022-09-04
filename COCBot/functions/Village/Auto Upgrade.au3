@@ -80,7 +80,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	EndIf
 
 	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
-		If $g_bNewBuildingFirst And Not $g_bUpgradeLowCost Then ;skip if will use for lowcost upgrade
+		If $g_bNewBuildingFirst And Not $g_bUpgradeLowCost And Not $g_bSkipWallReserve Then ;skip if will use for lowcost/use wall reserve builder for upgrade
 			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
 			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
 				ZoomOut(True)
