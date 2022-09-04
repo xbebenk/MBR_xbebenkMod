@@ -701,6 +701,7 @@ Func SaveConfig_auto()
 	_Ini_Add("Auto Upgrade", "AUpgradePlaceNew", $g_bPlaceNewBuilding)
 	_Ini_Add("Auto Upgrade", "ChkRushTH", $g_bChkRushTH)
 	_Ini_Add("Auto Upgrade", "UseWallReserveBuilder", $g_bUseWallReserveBuilder)
+	_Ini_Add("Auto Upgrade", "UseBuilderPotion", $g_bUseBuilderPotion)
 	
 	Local $string = ""
 	For $i = 0 To UBound($g_aiCmbRushTHOption) - 1

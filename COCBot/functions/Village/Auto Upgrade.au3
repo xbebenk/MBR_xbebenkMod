@@ -47,7 +47,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		$g_iFreeBuilderCount = 1
 		$bRet = True
 	EndIf
-
+	
 	SetDebugLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
 EndFunc
@@ -90,6 +90,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 			_Sleep(5000)
 		EndIf
 	Else
+		CheckBuilderPotion()
 		Return
 	EndIf
 
@@ -104,10 +105,37 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 		If AutoUpgradeCheckBuilder($bTest) Then AutoUpgradeSearchNewBuilding($bTest)
 	EndIf
 	
+	CheckBuilderPotion()
 	If Not $g_bRunState Then Return
 	Clickaway("Right")
 	ZoomOut()
 	Return False
+EndFunc
+
+Func CheckBuilderPotion()
+	If Not $g_bRunState Then Return
+	If $g_bUseBuilderPotion And $g_iFreeBuilderCount = 0 Then 
+		SetLog("Checking for Use Builder Potion", $COLOR_INFO)
+		ClickMainBuilder()
+		SetLog("Checking current upgrade", $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
+			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
+			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
+			If $mUpgradeTime > 1440 Then
+				SetLog("Upgrade time > 24h, will use Builder Potion", $COLOR_INFO)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(1000) Then Return
+				If ClickB("BuilderPot") Then
+					If _Sleep(1000) Then Return
+					If ClickB("BoostPotion") Then
+						SetLog("Builder Boosted using potion", $COLOR_SUCCESS)
+					EndIf
+				Else
+					SetLog("BuilderPot Not Found", $COLOR_DEBUG)
+				EndIf
+			EndIf
+		EndIf
+	EndIf
 EndFunc
 
 Func AutoUpgradeSearchExisting($bTest = False)
