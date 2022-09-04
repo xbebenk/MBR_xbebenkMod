@@ -690,6 +690,10 @@ Func btnTestDeadBase()
 	SetLog("Testing checkDeadBase()", $COLOR_INFO)
 	SetLog("Result checkDeadBase() = " & checkDeadBase(), $COLOR_INFO)
 	SetLog("Testing checkDeadBase() DONE", $COLOR_INFO)
+	
+	SetLog("Testing Redlines()", $COLOR_INFO)
+	SetLog("Result Redlines() = " & SearchRedLines(), $COLOR_INFO)
+	SetLog("Testing SearchRedLines() DONE", $COLOR_INFO)
 
 	If $hHBMP <> 0 Then
 		_WinAPI_DeleteObject($hHBMP)
