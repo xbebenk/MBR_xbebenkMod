@@ -148,10 +148,11 @@ Func AttackBB($aBBAttackBar = Default)
 	If $aBBAttackBar = Default Then $aBBAttackBar = GetAttackBarBB()
 	Local $aBMPos = GetMachinePos()
 	local $bTroopsDropped = False, $bBMDeployed = False
-
+	
 	$g_BBDP = GetBBDropPoint()
+	If IsProblemAffect(True) Then Return
 	;SetDebugLog(_ArrayToString($g_BBDP), ",", 0, 0, "|")
-
+	
 	Local $iSide = $g_BBDPSide
 	Local $AltSide = 0, $countTL = 0, $countBL = 0, $countBR = 0, $countTR = 0
 	For $i = 0 To Ubound($g_BBDP) - 1
@@ -185,7 +186,7 @@ Func AttackBB($aBBAttackBar = Default)
 		EndIf
 	Next
 	;SetDebugLog(_ArrayToString($DP), ",", 0, 0, "|")
-
+	If IsProblemAffect(True) Then Return
 	;Function uses this list of local variables...
 	If $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
 		SetLog("Dropping BM First")
@@ -193,7 +194,7 @@ Func AttackBB($aBBAttackBar = Default)
 	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
-
+	If IsProblemAffect(True) Then Return
 	; Deploy all troops
 	;local $bTroopsDropped = False, $bBMDeployed = False
 	SetLog( $g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
@@ -258,16 +259,19 @@ Func AttackBB($aBBAttackBar = Default)
 EndFunc   ;==>AttackBB
 
 Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide, $AltSide, $aDP)
+	If isProblemAffect(True) Then Return
     SetLog("Deploying " & $sName & " x" & String($iAmount), $COLOR_ACTION)
 	SetDebugLog("countDP = " & UBound($aDP))
 	If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
     PureClick($x, $y) ; select troop
 	Local $iPoint = 0
-	For $j = 0 To $iAmount - 1
-		$iPoint = Random(0, Ubound($aDP) - 1, 1)
-		PureClick($aDP[$iPoint][1], $aDP[$iPoint][2])
-		If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
-	Next
+	If UBound($aDP) > 0 Then
+		For $j = 0 To $iAmount - 1
+			$iPoint = Random(0, Ubound($aDP) - 1, 1)
+			PureClick($aDP[$iPoint][1], $aDP[$iPoint][2])
+			If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
+		Next
+	EndIf
 EndFunc
 
 
@@ -314,8 +318,9 @@ Func Okay()
 EndFunc
 
 Func GetMachinePos()
-    local $sSearchDiamond = GetDiamondFromRect("0,580,860,670")
-    local $aCoords = decodeSingleCoord(findImage("BBBattleMachinePos", $g_sImgBBBattleMachine, $sSearchDiamond, 1, True))
+	If isProblemAffect(True) Then Return
+    Local $sSearchDiamond = GetDiamondFromRect("0,580,860,670")
+    Local $aCoords = decodeSingleCoord(findImage("BBBattleMachinePos", $g_sImgBBBattleMachine, $sSearchDiamond, 1, True))
     If IsArray($aCoords) And UBound($aCoords) = 2 Then
         $g_bBBMachineReady = True
 		Return $aCoords
@@ -333,6 +338,7 @@ Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 	If $g_bBBMachineReady And IsArray($aBMPos) Then
 		SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 		For $i = 0 To 2
+			If isProblemAffect(True) Then Return
 			If $g_bDebugClick Then SetLog("[" & $i & "] Try DeployBM", $COLOR_ACTION)
 			PureClickP($aBMPos)
 			If $i > 1 Then
@@ -439,15 +445,13 @@ EndFunc
 
 Func GetBBDropPoint()
 	Local $XMiddle = 430, $YMiddle = 275
-	Local $BHCoord = SetVersusBHToMid()
-	_ArrayToString($BHCoord)
-
-	If _Sleep(1000) Then Return
+	SetVersusBHToMid()
+	
 	Local $hTimer = TimerInit()
 	SetLog("GetBBDropPoint start", $COLOR_ACTION)
 	$g_bAttackActive = True
 	SuspendAndroid()
-
+	
 	Local $THhOffset = 150, $aResult[0][3]
 	Local $xstart[2] = [70, 430], $ystart = 30, $xend[2] = [430, 800], $yend = 600
 	For $i = 0 To 1
@@ -458,6 +462,8 @@ Func GetBBDropPoint()
 		Next
 		;_ArrayDisplay($aTmp)
 	Next
+	
+	If isProblemAffect(True) Then Return
 	SetLog("Search BBDropPoint result : " & UBound($aResult) & " Coords", $COLOR_INFO)
 	;_ArrayDisplay($aResult)
 	Local $aaCoords[0][4], $iSide
@@ -474,7 +480,8 @@ Func GetBBDropPoint()
 	Local $aDPResult = SortBBDP($aaCoords)
 	SetLog("BBDropPoint after sort : " & UBound($aDPResult) & " Coords", $COLOR_INFO)
 	;_ArrayDisplay($aDPResult)
-
+	
+	If isProblemAffect(True) Then Return
 	ResumeAndroid()
 	$g_bAttackActive = False
 	SetLog("BBDropPoint Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
