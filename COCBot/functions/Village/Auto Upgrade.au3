@@ -692,6 +692,12 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 			$aUpgradeNameLevel[1] = "Traps"
 			$bRet = False
 		EndIf
+		
+		Switch $aUpgradeNameLevel[1]
+			Case "Cannon", "Elixir Collector", "Gold Mine"
+				_SleepStatus(12000)
+		EndSwitch
+		
 		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
 				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
 				" - Placing New Building: " & $aUpgradeNameLevel[1])
