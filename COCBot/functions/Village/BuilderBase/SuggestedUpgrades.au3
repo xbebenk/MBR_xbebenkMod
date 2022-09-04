@@ -142,7 +142,10 @@ Func AutoUpgradeBB($bTest = False)
 	ZoomOut()
 	BuilderBaseReport(True)
 	If Not ClickBBBuilder() Then Return
-
+	
+	$g_bReserveElixirBB = False
+	$g_bReserveGoldBB = False
+	
 	If $g_iChkPlacingNewBuildings And $g_bisMegaTeslaMaxed = False Then
 		SearchNewBuilding($bTest)
 	EndIf
@@ -159,9 +162,7 @@ EndFunc   ;==>MainSuggestedUpgradeCode
 Func SearchNewBuilding($bTest = False)
 	Local $NeedDrag = True, $ZoomedIn = False, $TmpUpgradeCost, $UpgradeCost, $sameCost
 	ClickBBBuilder()
-	$g_bReserveElixirBB = False
-	$g_bReserveGoldBB = False
-
+	
 	If FindBHInUpgradeProgress() Then
 		SetLog("BuilderHall Upgrade in progress, skip search new building!", $COLOR_SUCCESS)
 		Return False
