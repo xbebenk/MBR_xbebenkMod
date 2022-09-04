@@ -42,7 +42,7 @@ Func StarLaboratory($bTestRun = False)
 		SetLog("Checking Troop Upgrade in Star Laboratory", $COLOR_INFO)
 	Else
 		SetLog("Star Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
-		If Not $bTestRun Then Return False
+		If Not $bTestRun Then Return True
 	EndIf
 
 	$sElixirCount = getResourcesMainScreen(705, 74)
@@ -81,6 +81,7 @@ Func StarLaboratory($bTestRun = False)
 			$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), _NowCalc())
 			If @error Then _logErrorDateAdd(@error)
 			SetLog("Research will finish in " & $sLabTimeOCR & " (" & $g_sStarLabUpgradeTime & ")")
+			Return True
 		Else
 			SetDebugLog("Invalid getRemainTLaboratory OCR", $COLOR_DEBUG)
 		EndIf

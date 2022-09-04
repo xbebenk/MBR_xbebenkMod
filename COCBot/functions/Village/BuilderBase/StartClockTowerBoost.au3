@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 #include-once
 
-Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
+Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotion = False)
 
 	If Not $g_bChkStartClockTowerBoost Then Return
 	If Not $g_bRunState Then Return
@@ -37,8 +37,6 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 		If _Sleep($DELAYCOLLECT2) Then Return
 		
 		ClickAway("Left")
-		;AndroidAdbScript("ZoomOut")
-
 		Local $sCTCoords, $aCTCoords, $aCTBoost
 		$sCTCoords = findImage("ClockTowerAvailable", $g_sImgStartCTBoost, "FV", 1, True) ; Search for Clock Tower
 		If $sCTCoords <> "" Then
@@ -64,6 +62,17 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
 			EndIf
 		Else
 			SetLog("Clock Tower boost is not available!")
+		EndIf
+		
+		If $bUsePotion Then 
+			Local $click = ClickB("ClockTowerPot") ;click Clock Tower Boost potion Button
+			If $click Then
+				If ClickB("BoostPotion") Then
+					SetLog("Successfully Boost Builderbase with potion", $COLOR_SUCCESS)
+				EndIf
+			Else
+				SetLog("Boost Builder Base Potion Not Found", $COLOR_DEBUG)
+			EndIf
 		EndIf
 	EndIf
 	ClickAway("Left")

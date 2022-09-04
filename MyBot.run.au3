@@ -1608,6 +1608,7 @@ Func BuilderBase()
 	; switch to builderbase and check it is builderbase
 	If SwitchBetweenBases("BB") Then
 		$g_bStayOnBuilderBase = True
+		Local $StartLabON = False
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		ZoomOut()
 		$g_iBBAttacked = True	; Reset Variable
@@ -1628,7 +1629,7 @@ Func BuilderBase()
 		EndIf
 		
 		If isElixirFullBB() Then
-			StarLaboratory()
+			$StartLabON = StarLaboratory()
 			$g_iBBAttacked = False
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1646,13 +1647,15 @@ Func BuilderBase()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			
-			StarLaboratory()
+			$StartLabON = StarLaboratory()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			ZoomOut(True) ;directly zoom 
 		EndIf
 		
-		StartClockTowerBoost()
+		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
+		StartClockTowerBoost(False, False, $bUseCTPot)
+		
 		If _Sleep($DELAYRUNBOT3) Then Return
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
