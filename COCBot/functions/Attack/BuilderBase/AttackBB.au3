@@ -151,7 +151,6 @@ Func AttackBB($aBBAttackBar = Default)
 	
 	$g_BBDP = GetBBDropPoint()
 	If IsProblemAffect(True) Then Return
-	;SetDebugLog(_ArrayToString($g_BBDP), ",", 0, 0, "|")
 	
 	Local $iSide = $g_BBDPSide
 	Local $AltSide = 0, $countTL = 0, $countBL = 0, $countBR = 0, $countTR = 0
@@ -165,10 +164,15 @@ Func AttackBB($aBBAttackBar = Default)
 	Local $acountDP[4][2] = [[1, $countTL], [2, $countBL], [3, $countBR], [3, $countTR]]
 	_ArraySort($acountDP, 1, 0, 0, 1)
 
-	;SetDebugLog(_ArrayToString($acountDP), ",", 0, 0, "|")
 	If $acountDP[1][1] > 0 Then $AltSide = $acountDP[1][0]
 	SetDebugLog("DPSide = " & $iSide)
 	SetDebugLog("AltSide = " & $AltSide)
+	
+	If $acountDP[$iSide][1] < 1 Then 
+		SetDebugLog("Side " & $iSide & " have no DP found, fallback to most reliable DP Side")
+		$iSide = $acountDP[0][0]
+		SetDebugLog("Side Change to " & $iSide)
+	EndIf
 
 	Local $DP[0][3]
 	For $i = 0 To Ubound($g_BBDP) - 1
@@ -185,7 +189,13 @@ Func AttackBB($aBBAttackBar = Default)
 			EndIf
 		EndIf
 	Next
-	;SetDebugLog(_ArrayToString($DP), ",", 0, 0, "|")
+	
+	If UBound($DP) = 0 Then 
+		SetLog("Sorry, we cannot continue attack, waiting for surrender", $COLOR_ERROR)
+		_SleepStatus(60000)
+		If ReturnHomeDropTrophyBB() Then Return
+	EndIf
+	
 	If IsProblemAffect(True) Then Return
 	;Function uses this list of local variables...
 	If $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
