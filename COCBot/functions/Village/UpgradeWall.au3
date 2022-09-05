@@ -313,9 +313,9 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 
 		Switch $aIsEnoughResource[1]
 			Case "Gold"
-				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 400, 520, 720, 580)
+				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 395, 520, 720, 580)
 			Case "Elix"
-				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 720, 580)
+				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 395, 520, 720, 580)
 		EndSwitch
 
 		If $UpgradeButtonFound Then
