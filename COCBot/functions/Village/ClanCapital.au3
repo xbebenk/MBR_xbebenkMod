@@ -495,7 +495,7 @@ EndFunc
 
 Func FindCCSuggestedUpgrade()
 	Local $aResult[0][3], $name[2] = ["", 0]
-	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 550, 360)
+	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 560, 360)
 	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 		_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by Y coord
 		For $i = 0 To UBound($aUpgrade) - 1
