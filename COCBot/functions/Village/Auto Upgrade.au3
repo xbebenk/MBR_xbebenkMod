@@ -127,7 +127,7 @@ Func CheckBuilderPotion()
 				If _Sleep(1000) Then Return
 				If ClickB("BuilderPot") Then
 					If _Sleep(1000) Then Return
-					If ClickB("BoostPotion") Then
+					If ClickB("BoostConfirm") Then
 						SetLog("Builder Boosted using potion", $COLOR_SUCCESS)
 					EndIf
 				Else

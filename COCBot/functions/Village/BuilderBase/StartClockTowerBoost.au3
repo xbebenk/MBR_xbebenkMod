@@ -65,9 +65,11 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotio
 		EndIf
 		
 		If $bUsePotion Then 
+			If _Sleep(1500) Then Return
 			Local $click = ClickB("ClockTowerPot") ;click Clock Tower Boost potion Button
 			If $click Then
-				If ClickB("BoostPotion") Then
+				If _Sleep(500) Then Return
+				If ClickB("BoostConfirm") Then
 					SetLog("Successfully Boost Builderbase with potion", $COLOR_SUCCESS)
 				EndIf
 			Else

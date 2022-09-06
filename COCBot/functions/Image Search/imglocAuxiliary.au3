@@ -263,7 +263,7 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = "697,542|850,542|850,610|697,610"
 		Case "ObjectButtons", "BoostOne", "BoostCT", "ClockTowerPot", "Upgrade", "Research", "Treasury", "RemoveObstacle", "CollectLootCart", "Pets", "Cancel", "MagicItem", "HeroBooks", "LabPotion", "LabBoosted", "CCGuard", "CCSleep", "BuilderPot" ; Full size of object buttons at the bottom
 			$btnDiamond = GetDiamondFromRect("120,520,750,620")
-		Case "GEM", "BOOSTBtn" ; Boost window button (full button size)
+		Case "GEM", "BOOSTBtn" , "BoostConfirm"; Boost window button (full button size)
 			$btnDiamond = GetDiamondFromRect("359,385(148,66)")
 		Case "EnterShop"
 			$btnDiamond = GetDiamondFromRect("359,392(148,66)")
