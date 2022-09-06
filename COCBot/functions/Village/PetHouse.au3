@@ -35,7 +35,6 @@ Func PetHouse($test = False)
 	$g_sPetUpgradeTime = ""
 	GUICtrlSetData($g_hLbLPetTime, "")
 	If $g_iTownHallLevel < 14 Then
-		SetLog("Town Hall Level is Below 14, Pet is not available!", $COLOR_ERROR)
 		Return
 	EndIf
 

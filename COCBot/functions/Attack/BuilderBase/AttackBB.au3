@@ -168,7 +168,7 @@ Func AttackBB($aBBAttackBar = Default)
 	SetDebugLog("DPSide = " & $iSide)
 	SetDebugLog("AltSide = " & $AltSide)
 	
-	If $acountDP[$iSide][1] < 1 Then 
+	If $acountDP[$iSide-1][1] < 1 Then 
 		SetDebugLog("Side " & $iSide & " have no DP found, fallback to most reliable DP Side")
 		$iSide = $acountDP[0][0]
 		SetDebugLog("Side Change to " & $iSide)
