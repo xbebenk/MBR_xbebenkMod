@@ -1006,6 +1006,12 @@ Func FindNewBuilding()
 			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][4] & ", Cost=" & $aBuilding[$j][6] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
+	Local $iIndex = _ArraySearch($aBuilding, "0", 0, 0, 0, 0, 0, 6)
+	If $iIndex > -1 Then 
+		SetDebugLog(_ArrayToString($aBuilding))
+		SetDebugLog("Found Building with Zero cost, remove it", $COLOR_INFO)
+		_ArrayDelete($aBuilding, $iIndex)
+	EndIf
 	Return $aBuilding
 EndFunc
 
