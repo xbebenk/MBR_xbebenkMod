@@ -553,6 +553,11 @@ Func SkipChat($WaitFor = "UpgradeButton")
 			SetLog("Skip chat #" & $y, $COLOR_INFO)
 			_Sleep(5000)
 		Else
+			If _GetPixelColor(340, 484, 1) = "FFFFFF" Then 
+				Click(340, 484) ;check if we have white chat balloon tips, click it
+				SetLog("Skip chat #" & $y, $COLOR_INFO)
+				_Sleep(5000)
+			EndIf
 			If $y > 5 Then 
 				SetLog("Seem's there is no tutorial chat, continue", $COLOR_INFO)
 				ExitLoop
