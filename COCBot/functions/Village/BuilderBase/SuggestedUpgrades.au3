@@ -232,17 +232,24 @@ Func SearchNewBuilding($bTest = False)
 							$bOTTOPrioFound = True
 							ExitLoop
 						EndIf
-						If $OTTO[$i][3] = "Builder Barracks" And Int($OTTO[$i][5]) < 300001 Then ;Priority to unlock cannon cart
-							SetLog("OTTO Priority: Force Upgrade Low Level Builder Barracks", $COLOR_ACTION)
-							$bOTTOPrioFound = True
-							ExitLoop
-						EndIf
-						If $OTTO[$i][3] = "Battle Machine" And Int($OTTO[$i][5]) < 900001 Then ;Priority to unlock battle machine
-							SetLog("OTTO Priority: Force Rebuild Battle Machine", $COLOR_ACTION)
-							$bOTTOPrioFound = True
-							ExitLoop
-						EndIf
 					Next
+					
+					If $OTTO[$i][3] = "Builder Barracks" And Int($OTTO[$i][5]) < 300001 Then ;Priority to unlock cannon cart
+						SetLog("OTTO Priority: Force Upgrade Low Level Builder Barracks", $COLOR_ACTION)
+						$bOTTOPrioFound = True
+						ExitLoop
+					EndIf
+					If $OTTO[$i][3] = "Battle Machine" And Int($OTTO[$i][5]) < 900001 Then ;Priority to unlock battle machine
+						SetLog("OTTO Priority: Force Rebuild Battle Machine", $COLOR_ACTION)
+						$bOTTOPrioFound = True
+						ExitLoop
+					EndIf
+					If $OTTO[$i][3] = "Gem Mine" And Int($OTTO[$i][5]) < 120001 Then ;Priority to unlock gem mine
+						SetLog("OTTO Priority: Force Rebuild Gem Mine", $COLOR_ACTION)
+						$bOTTOPrioFound = True
+						ExitLoop
+					EndIf
+					
 					If Not $bOTTOPrioFound Then ContinueLoop
 					If Not CheckResourceForDoUpgradeBB($OTTO[$i][3], $OTTO[$i][5], $OTTO[$i][0]) Then ;name, cost, costtype
 						SetLog("Not Enough " & $OTTO[$i][0] & " to Upgrade " & $OTTO[$i][3], $COLOR_INFO)
