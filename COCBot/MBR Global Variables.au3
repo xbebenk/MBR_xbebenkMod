@@ -869,7 +869,7 @@ Global $g_bCollectStarBonus = False
 Global $g_iTxtRestartGold = 10000
 Global $g_iTxtRestartElixir = 25000
 Global $g_iTxtRestartDark = 500
-Global $g_bChkCollect = True, $g_bChkTombstones = True, $g_bChkCleanYard = False, $g_bChkGemsBox = False, $g_bChkSellHeroPot = False
+Global $g_bChkCollect = True, $g_bChkTombstones = True, $g_bChkCleanYard = False, $g_bChkGemsBox = False
 Global $g_bChkCollectCartFirst = False, $g_iTxtCollectGold = 0, $g_iTxtCollectElixir = 0, $g_iTxtCollectDark = 0
 Global $g_bChkTreasuryCollect = False
 Global $g_iTxtTreasuryGold = 0
@@ -1881,7 +1881,13 @@ Global $g_abCGBBTroopsItem[11]
 Global $g_bChkCollectAchievements = True
 
 ; Collect Free Magic Items
-Global $g_bChkCollectFreeMagicItems = True, $g_bRemoveFreeMagicItems = False
+Global $g_bChkCollectFreeMagicItems = True, $g_aRemoveFreeMagicItems[3] = [False, "", 0] ;Remove[True/False], ItemName, Amount
+Global $g_bChkEnableSaleMagicItem = False
+Global $g_bChkSaleBOF = False, $g_bChkSaleBOB = False, $g_bChkSaleBOS = False, $g_bChkSaleBOH = False, $g_bChkSaleBOE = False, $g_bChkSaleShovel = False, $g_bChkSaleWallRing = False
+Global $g_bChkSalePowerPot = False, $g_bChkSaleResourcePot = False, $g_bChkSaleTrainingPot = False, $g_bChkSaleBuilderPot = False, $g_bChkSaleCTPot = False, $g_bChkSaleHeroPot = False, $g_bChkSaleResearchPot = False
+Global $g_bChkSaleSuperPot = False, $g_bChkSaleROG = False, $g_bChkSaleROE = False, $g_bChkSaleRODE = False, $g_bChkSaleROBG = False, $g_bChkSaleROBE = False
+Global $g_aSaleMagicItem[20] = [$g_bChkSaleBOF, $g_bChkSaleBOB, $g_bChkSaleBOS, $g_bChkSaleBOH, $g_bChkSaleBOE, $g_bChkSaleShovel, $g_bChkSaleWallRing, $g_bChkSalePowerPot, $g_bChkSaleResourcePot, $g_bChkSaleTrainingPot, $g_bChkSaleBuilderPot, $g_bChkSaleCTPot, $g_bChkSaleHeroPot, $g_bChkSaleResearchPot, $g_bChkSaleSuperPot, $g_bChkSaleROG, $g_bChkSaleROE, $g_bChkSaleRODE, $g_bChkSaleROBG, $g_bChkSaleROBE]
+Global $g_aMagicItemName[20] = ["BookOfFighting", "BookOfBuilding", "BookOfSpell", "BookOfHero", "BookOfEverything", "Shovel", "WallRing", "PowerPot", "ResourcePot", "TrainingPot", "BuilderPot", "ClockTowerPot", "HeroPot", "ResearchPot", "SuperPot", "RuneOfGold", "RuneOfElixir", "RuneOfDarkElixir", "RuneOfBuilderGold", "RuneOfBuilderElixir"]
 
 ; Daily challenge
 Global $g_bChkCollectRewards = True

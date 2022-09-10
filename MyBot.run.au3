@@ -1234,8 +1234,8 @@ Func __RunFunction($action)
 		Case "CollectFreeMagicItems"
 			CollectFreeMagicItems()
 			_Sleep($DELAYRUNBOT3)
-		Case "SellHeroPot"
-			SellHeroPot()
+		Case "SaleMagicItem"
+			SaleMagicItem()
 			_Sleep($DELAYRUNBOT3)
 		Case "AutoUpgradeCC"
 			AutoUpgradeCC()
@@ -1568,7 +1568,7 @@ Func CommonRoutine($RoutineType = Default)
 	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
 	Switch $RoutineType
 		Case "FirstCheckRoutine"
-			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']
+			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', "SaleMagicItem", 'Laboratory', 'CollectFreeMagicItems']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1593,7 +1593,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
-			Local $aRndFuncList = ['BuilderBase', 'CollectCCGold', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
+			Local $aRndFuncList = ['BuilderBase', 'CollectCCGold', 'CollectFreeMagicItems', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

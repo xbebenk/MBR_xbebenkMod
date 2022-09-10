@@ -640,6 +640,33 @@ Func ChkFreeMagicItems()
 	EndIf
 EndFunc   ;==>ChkFreeMagicItems
 
+Func btnOpenSalePotion()
+	GUISetState(@SW_SHOW, $g_hGUI_SaleMagicItems)
+EndFunc
+
+Func btnCloseSalePotion()
+	GUISetState(@SW_HIDE, $g_hGUI_SaleMagicItems)
+EndFunc
+
+Func chkEnableSaleMagicItem()
+	If GUICtrlRead($g_hChkEnableSaleMagicItem) = $GUI_CHECKED Then
+		$g_bChkEnableSaleMagicItem = True
+		Local $iCtrl = 0
+		For $i = $g_hChkSaleBOF To $g_hChkSaleROBE
+			GUICtrlSetState($i, $GUI_ENABLE)
+			$g_aSaleMagicItem[$iCtrl] = (GUICtrlRead($i) = $GUI_CHECKED ? True : False)
+			$iCtrl += 1
+		Next
+	Else
+		$g_bChkEnableSaleMagicItem = False
+		Local $iCtrl = 0
+		For $i = $g_hChkSaleBOF To $g_hChkSaleROBE
+			GUICtrlSetState($i, $GUI_DISABLE)
+			$g_aSaleMagicItem[$iCtrl] = (GUICtrlRead($i) = $GUI_CHECKED ? True : False)
+			$iCtrl += 1
+		Next
+	EndIf
+EndFunc
 
 Func chkStartClockTowerBoost()
 	If GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED Then

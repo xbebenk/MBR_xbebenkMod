@@ -780,7 +780,7 @@ Func CreateAutoUpgradeSubTab()
 	$x = 330
 	$g_hUseBuilderPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "UseBuilderPotion", "Use BuilderPotion"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkUseWallReserveBuilder")
-		_GUICtrlSetTip(-1, "Enable Using Builder Potion" & @CRLF & "Will Only activate if current upgrade time > 24H")
+		_GUICtrlSetTip(-1, "Enable Using Builder Potion" & @CRLF & "Will Only activate if current upgrade time > 9H")
 
 	$x = 5
 		$g_hTxtAutoUpgradeLog = GUICtrlCreateEdit("", $x, 340, $g_iSizeWGrpTab3, 62, BitOR($GUI_SS_DEFAULT_EDIT, $ES_READONLY))
