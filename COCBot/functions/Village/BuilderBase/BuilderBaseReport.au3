@@ -145,6 +145,7 @@ Func isBattleMachineMaxed()
 				If $aBuildingName[2] = 30 Then
 					SetLog("Your Battle Machine is Maxed!", $COLOR_SUCCESS)
 					$g_bisBattleMachineMaxed = True
+					ClickAway("Left")
 					Return True
 				Else
 					SetLog("Your Battle Machine Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
@@ -155,6 +156,7 @@ Func isBattleMachineMaxed()
 	Else
 		Setlog("isBattleMachineMaxed(): Cannot Find Battle Machine", $COLOR_DEBUG)
 	EndIf
+	ClickAway("Left")
 	Return False
 EndFunc
 
