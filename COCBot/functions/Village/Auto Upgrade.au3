@@ -117,6 +117,7 @@ Func CheckBuilderPotion()
 	If $g_bUseBuilderPotion And $g_iFreeBuilderCount = 0 Then 
 		SetLog("Checking for Use Builder Potion", $COLOR_INFO)
 		ClickMainBuilder()
+		If _Sleep(500) Then Return
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
 			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
@@ -128,13 +129,17 @@ Func CheckBuilderPotion()
 					If _Sleep(1000) Then Return
 					If ClickB("BoostConfirm") Then
 						SetLog("Builder Boosted using potion", $COLOR_SUCCESS)
+						ClickAway()
 					EndIf
 				Else
 					SetLog("BuilderPot Not Found", $COLOR_DEBUG)
+					ClickAway()
 				EndIf
 			Else
 				SetLog("Upgrade time < 9h, cancel using builder potion", $COLOR_INFO)
 			EndIf
+		Else
+			SetLog("Failed to read Upgrade time on BuilderMenu", $COLOR_ERROR)
 		EndIf
 	EndIf
 EndFunc
