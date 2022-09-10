@@ -686,6 +686,7 @@ Global Const $g_aiTroopDonateXP[$eTroopCount] = [1, 5, 1, 12, 5, 10, 1, 3, 2, 8,
 
 ; Super Troops
 Global Const $iSuperTroopsCount = 14, $iMaxSupersTroop = 2
+Global $g_bForceUseSuperTroopPotion = False
 Global Const $g_asSuperTroopNames[$iSuperTroopsCount] = [ _
 		"Super Barbarian", "Super Archer", "Super Giant", "Sneaky Goblin", "Super WallBreaker", "Rocket Balloon", "Super Wizard", "Super Dragon", "Inferno Dragon", "Super Minion", "Super Valkyrie", "Super Witch", "Ice Hound", "Super Bowler"]
 Global Const $g_asSuperTroopIndex[$iSuperTroopsCount] = [ _
