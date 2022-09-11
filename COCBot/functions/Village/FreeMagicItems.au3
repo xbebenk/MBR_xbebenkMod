@@ -195,7 +195,6 @@ Func SaleMagicItem($bTest = False)
 				$Count = $asReadItemCount[0]
 				$MaxCount = $asReadItemCount[1]
 			EndIf
-			If Not $bTest Then ContinueLoop
 			SetLog($g_aMagicItemName[$i] & " Count: " & $Count, $COLOR_INFO) 
 			If $Count > 0 Then 
 				If $g_aSaleMagicItem[$i] Then
