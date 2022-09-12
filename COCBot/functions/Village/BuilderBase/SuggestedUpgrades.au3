@@ -321,7 +321,7 @@ Func SearchExistingBuilding($bTest = False)
 					$IsWall = True
 				EndIf
 				If Not $g_bRunState Then Return
-				If $g_bOptimizeOTTO And Number($Building[$i][5]) >= 180000 Then
+				If $g_bOptimizeOTTO And StringInStr($Building[$i][3], "Gem Mine") And Number($Building[$i][5]) >= 180000 Then
 					SetLog("Building: " & $Building[$i][3] & ", skip (OptimizeOTTO enabled, Only Rebuild)", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
