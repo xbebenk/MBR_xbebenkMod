@@ -185,19 +185,19 @@ Func SaleMagicItem($bTest = False)
 	For $i = 0 To UBound($g_aSaleMagicItem) - 1
 		SetDebugLog($g_aMagicItemName[$i] & ":" &$g_aSaleMagicItem[$i])
 		SetLog("Checking for sell " & $g_aMagicItemName[$i], $COLOR_INFO)
-		Local $aSearch = decodeSingleCoord(findImage($g_aMagicItemName[$i], $g_sImgTraderWindow & $g_aMagicItemName[$i] & "*", GetDiamondFromRect("160, 200, 700, 400")))
-		If IsArray($aSearch) And UBound($aSearch) = 2 Then 
-			$Count = 0
-			$MaxCount = 0
-			$sReadItemCount = MagicItemCount($aSearch[0], $aSearch[1])
-			Local $asReadItemCount = StringSplit($sReadItemCount, "#", $STR_NOCOUNT)
-			If IsArray($asReadItemCount) And UBound($asReadItemCount) = 2 Then
-				$Count = $asReadItemCount[0]
-				$MaxCount = $asReadItemCount[1]
-			EndIf
-			SetLog($g_aMagicItemName[$i] & " Count: " & $Count, $COLOR_INFO) 
-			If $Count > 0 Then 
-				If $g_aSaleMagicItem[$i] Then
+		If $g_aSaleMagicItem[$i] Then
+			Local $aSearch = decodeSingleCoord(findImage($g_aMagicItemName[$i], $g_sImgTraderWindow & $g_aMagicItemName[$i] & "*", GetDiamondFromRect("160, 200, 700, 400")))
+			If IsArray($aSearch) And UBound($aSearch) = 2 Then 
+				$Count = 0
+				$MaxCount = 0
+				$sReadItemCount = MagicItemCount($aSearch[0], $aSearch[1])
+				Local $asReadItemCount = StringSplit($sReadItemCount, "#", $STR_NOCOUNT)
+				If IsArray($asReadItemCount) And UBound($asReadItemCount) = 2 Then
+					$Count = $asReadItemCount[0]
+					$MaxCount = $asReadItemCount[1]
+				EndIf
+				SetLog($g_aMagicItemName[$i] & " Count: " & $Count, $COLOR_INFO) 
+				If $Count > 0 Then 
 					For $j = 1 To $Count
 						Click($aSearch[0], $aSearch[1])
 						If _Sleep(1000) Then Return
@@ -219,13 +219,15 @@ Func SaleMagicItem($bTest = False)
 						EndIf
 						If _Sleep(1000) Then Return
 					Next
+				Else
+					SetLog("Unable to read count of " & $g_aMagicItemName[$i], $COLOR_ERROR)
+					ContinueLoop
 				EndIf
 			Else
-				SetLog("Unable to read count of " & $g_aMagicItemName[$i], $COLOR_ERROR)
-				ContinueLoop
+				SetLog($g_aMagicItemName[$i] & " not Found", $COLOR_ERROR)
 			EndIf
 		Else
-			SetLog($g_aMagicItemName[$i] & " not Found", $COLOR_ERROR)
+			SetLog($g_aMagicItemName[$i] & " sale is not enabled")
 		EndIf
 	Next
 	ClickAway()
