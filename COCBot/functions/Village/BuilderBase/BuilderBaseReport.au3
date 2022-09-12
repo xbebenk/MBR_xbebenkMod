@@ -135,7 +135,7 @@ Func isBattleMachineMaxed()
 	If $g_bisBattleMachineMaxed = True Then Return True
 	
 	If QuickMIS("BC1", $g_sImgBattleMachine) Then ;Search for Battle Machine
-		If $g_iQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 5
+		If $g_iQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 10
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
 		_Sleep(1000)
 		Local $aBuildingName = BuildingInfo(242, 494)
