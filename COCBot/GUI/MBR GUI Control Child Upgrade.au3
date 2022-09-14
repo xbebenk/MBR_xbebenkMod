@@ -618,12 +618,12 @@ EndFunc   ;==>cmbHeroReservedBuilder
 Func chkWalls()
 	If GUICtrlRead($g_hChkWalls) = $GUI_CHECKED Then
 		$g_bAutoUpgradeWallsEnable = True
-		For $i = $g_hChkUseGold To $g_hChkLowLevelAutoUpgradeWall
+		For $i = $g_hChkUseGold To $g_hChkUpgradeAnyWallLevel
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
 		$g_bAutoUpgradeWallsEnable = False
-		For $i = $g_hChkUseGold To $g_hChkLowLevelAutoUpgradeWall
+		For $i = $g_hChkUseGold To $g_hChkUpgradeAnyWallLevel
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
