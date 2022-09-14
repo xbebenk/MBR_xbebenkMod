@@ -1146,11 +1146,11 @@ Func ApplyConfig_600_17($TypeReadSave)
 			GUICtrlSetData($g_hTxtWallMinElixir, $g_iUpgradeWallMinElixir)
 			Switch $g_iUpgradeWallLootType
 				Case 0
-					GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
+					GUICtrlSetState($g_hChkUseGold, $GUI_CHECKED)
 				Case 1
-					GUICtrlSetState($g_hRdoUseElixir, $GUI_CHECKED)
+					GUICtrlSetState($g_hChkUseElixir, $GUI_CHECKED)
 				Case 2
-					GUICtrlSetState($g_hRdoUseElixirGold, $GUI_CHECKED)
+					GUICtrlSetState($g_hChkUseElixirGold, $GUI_CHECKED)
 			EndSwitch
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOnly1Builder, $g_bChkOnly1Builder ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1175,11 +1175,11 @@ Func ApplyConfig_600_17($TypeReadSave)
 			For $y = 0 To 2
 				$g_aUpgradeWall[$y] = _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$y])
 			Next
-			If GUICtrlRead($g_hRdoUseGold) = $GUI_CHECKED Then
+			If GUICtrlRead($g_hChkUseGold) = $GUI_CHECKED Then
 				$g_iUpgradeWallLootType = 0
-			ElseIf GUICtrlRead($g_hRdoUseElixir) = $GUI_CHECKED Then
+			ElseIf GUICtrlRead($g_hChkUseElixir) = $GUI_CHECKED Then
 				$g_iUpgradeWallLootType = 1
-			ElseIf GUICtrlRead($g_hRdoUseElixirGold) = $GUI_CHECKED Then
+			ElseIf GUICtrlRead($g_hChkUseElixirGold) = $GUI_CHECKED Then
 				$g_iUpgradeWallLootType = 2
 			EndIf
 			$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
