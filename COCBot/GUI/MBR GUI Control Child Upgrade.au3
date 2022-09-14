@@ -274,9 +274,9 @@ Func chkSLabUpgradeOrder()
 		GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $GUI_DISABLE)
 	EndIf
 	If GUICtrlRead($g_hChkUpgradeAnyIfAllOrderMaxed) = $GUI_CHECKED Then
-		$g_bUpgradeAnyIfAllOrderMaxed = True
+		$g_bChkUpgradeAnyIfAllOrderMaxed = True
 	Else
-		$g_bUpgradeAnyIfAllOrderMaxed = False
+		$g_bChkUpgradeAnyIfAllOrderMaxed = False
 	EndIf
 EndFunc ;==>chkSLabUpgradeOrder
 

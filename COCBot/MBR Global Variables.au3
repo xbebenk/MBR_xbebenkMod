@@ -969,7 +969,7 @@ Global $g_bAutoLabUpgradeEnable = False, $g_iCmbLaboratory = 0, $g_bAutoStarLabU
 Global $g_hChkLabUpgradeOrder = 0, $g_hBtnRemoveLabUpgradeOrder = 0, $g_hBtnSetLabUpgradeOrder = 0, $g_hUpgradeAnyTroops = 0, $g_hUpgradeSiegeToLvl2 = 0
 Global $g_hChkSLabUpgradeOrder = 0, $g_hBtnRemoveSLabUpgradeOrder = 0, $g_hBtnSetSLabUpgradeOrder = 0, $g_hChkUpgradeAnyIfAllOrderMaxed = 0
 Global $g_bLabUpgradeOrderEnable = False
-Global $g_bSLabUpgradeOrderEnable = False, $g_bUpgradeAnyIfAllOrderMaxed = False
+Global $g_bSLabUpgradeOrderEnable = False, $g_bChkUpgradeAnyIfAllOrderMaxed = False
 Global $g_aCmbLabUpgradeOrder[10] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 Global $g_ahCmbLabUpgradeOrder[10] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 Global $g_aCmbSLabUpgradeOrder[6] = [-1, -1, -1, -1, -1, -1]
