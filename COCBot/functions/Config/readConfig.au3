@@ -972,6 +972,7 @@ Func ReadConfig_600_14()
 	For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
 		$g_aCmbSLabUpgradeOrder[$i] = $str[$i]
 	Next
+	IniReadS($g_bChkUpgradeAnyIfAllOrderMaxed, $g_sProfileBuildingPath, "upgrade", "SUpgradeAnyIfAllOrderMaxed", False, "Bool")
 EndFunc   ;==>ReadConfig_600_14
 
 Func ReadConfig_600_15()

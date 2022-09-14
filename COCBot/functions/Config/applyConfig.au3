@@ -957,6 +957,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbSLabUpgradeOrder[$i], $g_aCmbSLabUpgradeOrder[$i])
 			Next
+			GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $g_bChkUpgradeAnyIfAllOrderMaxed ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkSLabUpgradeOrder()
 		Case "Save"
 			$g_bAutoLabUpgradeEnable = (GUICtrlRead($g_hChkAutoLabUpgrades) = $GUI_CHECKED)
@@ -975,6 +976,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
 				$g_aCmbSLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSLabUpgradeOrder[$i])
 			Next
+			$g_bChkUpgradeAnyIfAllOrderMaxed = (GUICtrlRead($g_hChkUpgradeAnyIfAllOrderMaxed) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_14
 

@@ -147,7 +147,7 @@ Func SaveBuildingConfig()
 		$string &= $g_aCmbSLabUpgradeOrder[$i] & "|"
 	Next
 	_Ini_Add("upgrade", "Supgradeorderlist", $string)
-
+	_Ini_Add("upgrade", "SUpgradeAnyIfAllOrderMaxed", $g_bChkUpgradeAnyIfAllOrderMaxed ? 1 : 0)
 
 	; <><><><> Village / Upgrade - Buildings <><><><>
 	ApplyConfig_600_16(GetApplyConfigSaveAction())
