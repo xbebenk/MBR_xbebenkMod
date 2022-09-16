@@ -47,7 +47,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		$g_iFreeBuilderCount = 1
 		$bRet = True
 	EndIf
-
+	
 	SetDebugLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
 EndFunc
@@ -80,7 +80,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	EndIf
 
 	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
-		If $g_bNewBuildingFirst And Not $g_bUpgradeLowCost Then ;skip if will use for lowcost upgrade
+		If $g_bNewBuildingFirst And Not $g_bUpgradeLowCost And Not $g_bSkipWallReserve Then ;skip if will use for lowcost/use wall reserve builder for upgrade
 			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
 			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
 				ZoomOut(True)
@@ -90,6 +90,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 			_Sleep(5000)
 		EndIf
 	Else
+		CheckBuilderPotion()
 		Return
 	EndIf
 
@@ -104,10 +105,43 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 		If AutoUpgradeCheckBuilder($bTest) Then AutoUpgradeSearchNewBuilding($bTest)
 	EndIf
 	
+	CheckBuilderPotion()
 	If Not $g_bRunState Then Return
 	Clickaway("Right")
 	ZoomOut()
 	Return False
+EndFunc
+
+Func CheckBuilderPotion()
+	If Not $g_bRunState Then Return
+	If $g_bUseBuilderPotion And $g_iFreeBuilderCount = 0 Then 
+		SetLog("Checking for Use Builder Potion", $COLOR_INFO)
+		ClickMainBuilder()
+		If _Sleep(500) Then Return
+		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
+			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
+			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
+			If $mUpgradeTime > 540 Then
+				SetLog("Upgrade time > 9h, will use Builder Potion", $COLOR_INFO)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(1000) Then Return
+				If ClickB("BuilderPot") Then
+					If _Sleep(1000) Then Return
+					If ClickB("BoostConfirm") Then
+						SetLog("Builder Boosted using potion", $COLOR_SUCCESS)
+						ClickAway()
+					EndIf
+				Else
+					SetLog("BuilderPot Not Found", $COLOR_DEBUG)
+					ClickAway()
+				EndIf
+			Else
+				SetLog("Upgrade time < 9h, cancel using builder potion", $COLOR_INFO)
+			EndIf
+		Else
+			SetLog("Failed to read Upgrade time on BuilderMenu", $COLOR_ERROR)
+		EndIf
+	EndIf
 EndFunc
 
 Func AutoUpgradeSearchExisting($bTest = False)
@@ -293,7 +327,7 @@ Func FindExistingBuilding($bTest = False)
 					EndIf
 				Next
 			EndIf
-			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
+			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & ", score=" & $aBuilding[$j][6] & ", Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
 	Local $iIndex = _ArraySearch($aBuilding, "0", 0, 0, 0, 0, 0, 5)
@@ -302,11 +336,15 @@ Func FindExistingBuilding($bTest = False)
 		SetDebugLog("Found Building with Zero cost, remove it", $COLOR_INFO)
 		_ArrayDelete($aBuilding, $iIndex)
 	EndIf
+	
 	If ($g_bChkRushTH And $bFoundRusTH) Or $g_bHeroPriority Then
 		_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
 	Else
 		_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
 	EndIf
+	
+	If Not $g_bChkRushTH And Not $g_bHeroPriority Then _ArraySort($aBuilding, 1, 0, 0, 5) ;sort by cost
+	
 	If $g_bUpgradeLowCost Then _ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
 	Return $aBuilding
 EndFunc
@@ -692,6 +730,12 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 			$aUpgradeNameLevel[1] = "Traps"
 			$bRet = False
 		EndIf
+		
+		Switch $aUpgradeNameLevel[1]
+			Case "Cannon", "Elixir Collector", "Gold Mine"
+				_SleepStatus(12000)
+		EndSwitch
+		
 		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
 				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
 				" - Placing New Building: " & $aUpgradeNameLevel[1])
@@ -913,6 +957,8 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 									EndIf
 									If $Building[0] = 2 And $Building[2] >= $g_aiCmbRushTHOption[0] + 9 Then
 										SetLog("TownHall Level = " & $Building[2] & " >= " &$g_aiCmbRushTHOption[0] + 9 & ", should skip this upgrade", $COLOR_ACTION)
+										SetLog("Found TownHall, skip Search NewBuilding", $COLOR_INFO)
+										ExitLoop 2
 									EndIf
 								Else
 									If ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aResult[$y][0], $aResult[$y][5])
@@ -970,6 +1016,12 @@ Func FindNewBuilding()
 			$aBuilding[$j][6] = Number($UpgradeCost)
 			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][4] & ", Cost=" & $aBuilding[$j][6] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
+	EndIf
+	Local $iIndex = _ArraySearch($aBuilding, "0", 0, 0, 0, 0, 0, 6)
+	If $iIndex > -1 Then 
+		SetDebugLog(_ArrayToString($aBuilding))
+		SetDebugLog("Found Building with Zero cost, remove it", $COLOR_INFO)
+		_ArrayDelete($aBuilding, $iIndex)
 	EndIf
 	Return $aBuilding
 EndFunc

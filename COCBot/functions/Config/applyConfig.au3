@@ -309,7 +309,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetData($g_hTxtCollectDark, $g_iTxtCollectDark)
 			GUICtrlSetState($g_hChkTombstones, $g_bChkTombstones ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCleanYard, $g_bChkCleanYard ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkSellHeroPot, $g_bChkSellHeroPot ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkGemsBox, $g_bChkGemsBox ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkTreasuryCollect, $g_bChkTreasuryCollect ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCollectAchievements, $g_bChkCollectAchievements ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -321,6 +320,30 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetData($g_hTxtTreasuryDark, $g_iTxtTreasuryDark)
 			GUICtrlSetState($g_hChkCollectRewards, $g_bChkCollectRewards ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSellRewards, $g_bChkSellRewards ? $GUI_CHECKED : $GUI_UNCHECKED)
+
+			;Sale Magic Items
+			GUICtrlSetState($g_hChkEnableSaleMagicItem, $g_bChkEnableSaleMagicItem ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleBOF, $g_bChkSaleBOF ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleBOB, $g_bChkSaleBOB ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleBOS, $g_bChkSaleBOS ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleBOH, $g_bChkSaleBOH ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleBOE, $g_bChkSaleBOE ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleShovel, $g_bChkSaleShovel ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleWallRing, $g_bChkSaleWallRing ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSalePowerPot, $g_bChkSalePowerPot ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleResourcePot, $g_bChkSaleResourcePot ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleTrainingPot, $g_bChkSaleTrainingPot ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleBuilderPot, $g_bChkSaleBuilderPot ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleCTPot, $g_bChkSaleCTPot ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleHeroPot, $g_bChkSaleHeroPot ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleResearchPot, $g_bChkSaleResearchPot ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleSuperPot, $g_bChkSaleSuperPot ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleROG, $g_bChkSaleROG ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleROE, $g_bChkSaleROE ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleRODE, $g_bChkSaleRODE ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleROBG, $g_bChkSaleROBG ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSaleROBE, $g_bChkSaleROBE ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkEnableSaleMagicItem()
 
 			GUICtrlSetState($g_hChkCollectBuilderBase, $g_bChkCollectBuilderBase ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCleanBBYard, $g_bChkCleanBBYard ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -423,7 +446,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 				Next
 				GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
 			EndIf
-			
+
 			;ClanCapital
 			GUICtrlSetState($g_hChkEnableCollectCCGold, $g_bChkEnableCollectCCGold ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkStartWeekendRaid, $g_bChkStartWeekendRaid ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -436,7 +459,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkEnableAutoUpgradeCC, $g_bChkEnableAutoUpgradeCC ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAutoUpgradeCCIgnore, $g_bChkAutoUpgradeCCIgnore ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAutoUpgradeCCWallIgnore, $g_bChkAutoUpgradeCCWallIgnore ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
 			;Misc Mod
 			GUICtrlSetState($g_hChkMMSkipFirstCheckRoutine, $g_bSkipFirstCheckRoutine ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMSkipBB, $g_bSkipBB ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -480,7 +503,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iTxtCollectDark = GUICtrlRead($g_hTxtCollectDark)
 			$g_bChkTombstones = (GUICtrlRead($g_hChkTombstones) = $GUI_CHECKED)
 			$g_bChkCleanYard = (GUICtrlRead($g_hChkCleanYard) = $GUI_CHECKED)
-			$g_bChkSellHeroPot = (GUICtrlRead($g_hChkSellHeroPot) = $GUI_CHECKED)
+			$g_bChkEnableSaleMagicItem = (GUICtrlRead($g_hChkEnableSaleMagicItem) = $GUI_CHECKED)
 			$g_bChkCollectAchievements = (GUICtrlRead($g_hChkCollectAchievements) = $GUI_CHECKED)
 			$g_bChkCollectFreeMagicItems = (GUICtrlRead($g_hChkFreeMagicItems) = $GUI_CHECKED)
 			$g_bChkGemsBox = (GUICtrlRead($g_hChkGemsBox) = $GUI_CHECKED)
@@ -490,6 +513,29 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iTxtTreasuryDark = GUICtrlRead($g_hTxtTreasuryDark)
 			$g_bChkCollectRewards = (GUICtrlRead($g_hChkCollectRewards) = $GUI_CHECKED)
 			$g_bChkSellRewards = (GUICtrlRead($g_hChkSellRewards) = $GUI_CHECKED)
+
+			;Sale Magic Items
+			$g_bChkSaleBOF = ((GUICtrlRead($g_hChkSaleBOF) = $GUI_CHECKED))
+			$g_bChkSaleBOB = (GUICtrlRead($g_hChkSaleBOB) = $GUI_CHECKED)
+			$g_bChkSaleBOS = (GUICtrlRead($g_hChkSaleBOS) = $GUI_CHECKED)
+			$g_bChkSaleBOH = (GUICtrlRead($g_hChkSaleBOH) = $GUI_CHECKED)
+			$g_bChkSaleBOE = (GUICtrlRead($g_hChkSaleBOE) = $GUI_CHECKED)
+			$g_bChkSaleShovel = (GUICtrlRead($g_hChkSaleShovel) = $GUI_CHECKED)
+			$g_bChkSaleWallRing = (GUICtrlRead($g_hChkSaleWallRing) = $GUI_CHECKED)
+			$g_bChkSalePowerPot = (GUICtrlRead($g_hChkSalePowerPot) = $GUI_CHECKED)
+			$g_bChkSaleResourcePot = (GUICtrlRead($g_hChkSaleResourcePot) = $GUI_CHECKED)
+			$g_bChkSaleTrainingPot = (GUICtrlRead($g_hChkSaleTrainingPot) = $GUI_CHECKED)
+			$g_bChkSaleBuilderPot = (GUICtrlRead($g_hChkSaleBuilderPot) = $GUI_CHECKED)
+			$g_bChkSaleCTPot = (GUICtrlRead($g_hChkSaleCTPot) = $GUI_CHECKED)
+			$g_bChkSaleHeroPot = (GUICtrlRead($g_hChkSaleHeroPot) = $GUI_CHECKED)
+			$g_bChkSaleResearchPot = (GUICtrlRead($g_hChkSaleResearchPot) = $GUI_CHECKED)
+			$g_bChkSaleSuperPot = (GUICtrlRead($g_hChkSaleSuperPot) = $GUI_CHECKED)
+			$g_bChkSaleROG = (GUICtrlRead($g_hChkSaleROG) = $GUI_CHECKED)
+			$g_bChkSaleROE = (GUICtrlRead($g_hChkSaleROE) = $GUI_CHECKED)
+			$g_bChkSaleRODE = (GUICtrlRead($g_hChkSaleRODE) = $GUI_CHECKED)
+			$g_bChkSaleROBG = (GUICtrlRead($g_hChkSaleROBG) = $GUI_CHECKED)
+			$g_bChkSaleROBE = (GUICtrlRead($g_hChkSaleROBE) = $GUI_CHECKED)
+			chkEnableSaleMagicItem()
 
 			$g_bChkCollectBuilderBase = (GUICtrlRead($g_hChkCollectBuilderBase) = $GUI_CHECKED)
 			$g_bChkCleanBBYard = (GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED)
@@ -567,7 +613,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkBBAttIfLootAvail = (GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
 			$g_bChkBBWaitForMachine = (GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
 			$g_bChkBBDropBMFirst = (GUICtrlRead($g_hChkBBDropBMFirst) = $GUI_CHECKED)
-			
+
 			;ClanCapital
 			$g_bChkEnableCollectCCGold = (GUICtrlRead($g_hChkEnableCollectCCGold) = $GUI_CHECKED)
 			$g_bChkStartWeekendRaid = (GUICtrlRead($g_hChkStartWeekendRaid) = $GUI_CHECKED)
@@ -911,6 +957,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbSLabUpgradeOrder[$i], $g_aCmbSLabUpgradeOrder[$i])
 			Next
+			GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $g_bChkUpgradeAnyIfAllOrderMaxed ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkSLabUpgradeOrder()
 		Case "Save"
 			$g_bAutoLabUpgradeEnable = (GUICtrlRead($g_hChkAutoLabUpgrades) = $GUI_CHECKED)
@@ -929,6 +976,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
 				$g_aCmbSLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSLabUpgradeOrder[$i])
 			Next
+			$g_bChkUpgradeAnyIfAllOrderMaxed = (GUICtrlRead($g_hChkUpgradeAnyIfAllOrderMaxed) = $GUI_CHECKED)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_14
 
@@ -974,7 +1022,7 @@ Func ApplyConfig_600_15($TypeReadSave)
 			$g_bChkSortPetUpgrade = (GUICtrlRead($g_hChkSortPetUpgrade) = $GUI_CHECKED)
 			$g_iCmbSortPetUpgrade = _GUICtrlComboBox_GetCurSel($g_hCmbSortPetUpgrade)
 			$g_bChkSyncSaveDE = (GUICtrlRead($g_hChkSyncSaveDE) = $GUI_CHECKED)
-			
+
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_15
 
@@ -1039,6 +1087,7 @@ Func ApplyConfig_auto($TypeReadSave)
 			GUICtrlSetState($g_ChkPlaceNewBuilding, $g_bPlaceNewBuilding ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkRushTH, $g_bChkRushTH ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hUseWallReserveBuilder, $g_bUseWallReserveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hUseBuilderPotion, $g_bUseBuilderPotion ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $y = 0 To UBound($g_aiCmbRushTHOption) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbRushTHOption[$y], $g_aiCmbRushTHOption[$y])
 			Next
@@ -1065,6 +1114,7 @@ Func ApplyConfig_auto($TypeReadSave)
 			$g_bPlaceNewBuilding = (GUICtrlRead($g_ChkPlaceNewBuilding) = $GUI_CHECKED)
 			$g_bChkRushTH = (GUICtrlRead($g_hChkRushTH) = $GUI_CHECKED)
 			$g_bUseWallReserveBuilder = (GUICtrlRead($g_hUseWallReserveBuilder) = $GUI_CHECKED)
+			$g_bUseBuilderPotion = (GUICtrlRead($g_hUseBuilderPotion) = $GUI_CHECKED)
 			For $y = 0 To UBound($g_aiCmbRushTHOption) - 1
 				$g_aiCmbRushTHOption[$y] = _GUICtrlComboBox_GetCurSel($g_ahCmbRushTHOption[$y])
 			Next
@@ -1096,11 +1146,11 @@ Func ApplyConfig_600_17($TypeReadSave)
 			GUICtrlSetData($g_hTxtWallMinElixir, $g_iUpgradeWallMinElixir)
 			Switch $g_iUpgradeWallLootType
 				Case 0
-					GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
+					GUICtrlSetState($g_hChkUseGold, $GUI_CHECKED)
 				Case 1
-					GUICtrlSetState($g_hRdoUseElixir, $GUI_CHECKED)
+					GUICtrlSetState($g_hChkUseElixir, $GUI_CHECKED)
 				Case 2
-					GUICtrlSetState($g_hRdoUseElixirGold, $GUI_CHECKED)
+					GUICtrlSetState($g_hChkUseElixirGold, $GUI_CHECKED)
 			EndSwitch
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOnly1Builder, $g_bChkOnly1Builder ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1125,11 +1175,11 @@ Func ApplyConfig_600_17($TypeReadSave)
 			For $y = 0 To 2
 				$g_aUpgradeWall[$y] = _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$y])
 			Next
-			If GUICtrlRead($g_hRdoUseGold) = $GUI_CHECKED Then
+			If GUICtrlRead($g_hChkUseGold) = $GUI_CHECKED Then
 				$g_iUpgradeWallLootType = 0
-			ElseIf GUICtrlRead($g_hRdoUseElixir) = $GUI_CHECKED Then
+			ElseIf GUICtrlRead($g_hChkUseElixir) = $GUI_CHECKED Then
 				$g_iUpgradeWallLootType = 1
-			ElseIf GUICtrlRead($g_hRdoUseElixirGold) = $GUI_CHECKED Then
+			ElseIf GUICtrlRead($g_hChkUseElixirGold) = $GUI_CHECKED Then
 				$g_iUpgradeWallLootType = 2
 			EndIf
 			$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
@@ -1701,7 +1751,7 @@ Func ApplyConfig_600_29_DB($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBWardenMode, $g_aiAttackUseWardenMode[$DB])
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBSiege, $g_aiAttackUseSiege[$DB])
 			GUICtrlSetState($g_hChkDBDropEmptySiege, $g_bDropEmptySiege[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
 		Case "Save"
 			$g_aiAttackAlgorithm[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBAlgorithm)
 			$g_aiAttackTroopSelection[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBSelectTroop)
@@ -1837,7 +1887,7 @@ Func ApplyConfig_600_29_LB($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbABWardenMode, $g_aiAttackUseWardenMode[$LB])
 			_GUICtrlComboBox_SetCurSel($g_hCmbABSiege, $g_aiAttackUseSiege[$LB])
 			GUICtrlSetState($g_hChkABDropEmptySiege, $g_bDropEmptySiege[$LB] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
 		Case "Save"
 			$g_aiAttackAlgorithm[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbABAlgorithm)
 			$g_aiAttackTroopSelection[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbABSelectTroop)
@@ -2217,7 +2267,6 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 			If $g_bChkSuperCellID Then GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_CHECKED)
 			If $g_bChkSharedPrefs Then GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_CHECKED)
 			GUICtrlSetState($g_hChkSmartSwitch, $g_bChkSmartSwitch ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkDonateLikeCrazy, $g_bDonateLikeCrazy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTotalAccount, $g_iTotalAcc - 1)
 			For $i = 0 To UBound($g_abAccountNo) - 1
 				GUICtrlSetState($g_ahChkAccount[$i], $g_abAccountNo[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -2235,7 +2284,6 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 			$g_bChkSuperCellID = (GUICtrlRead($g_hRadSwitchSuperCellID) = $GUI_CHECKED)
 			$g_bChkSharedPrefs = (GUICtrlRead($g_hRadSwitchSharedPrefs) = $GUI_CHECKED)
 			$g_bChkSmartSwitch = (GUICtrlRead($g_hChkSmartSwitch) = $GUI_CHECKED)
-			$g_bDonateLikeCrazy = (GUICtrlRead($g_hChkDonateLikeCrazy) = $GUI_CHECKED)
 			$g_iTotalAcc = _GUICtrlComboBox_GetCurSel($g_hCmbTotalAccount) + 1 ; at least 2 accounts needed
 			For $i = 0 To UBound($g_abAccountNo) - 1
 				$g_abAccountNo[$i] = (GUICtrlRead($g_ahChkAccount[$i]) = $GUI_CHECKED)

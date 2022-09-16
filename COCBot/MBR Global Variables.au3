@@ -553,7 +553,7 @@ Global Enum $eIcnArcher = 1, $eIcnDonArcher, $eIcnBalloon, $eIcnDonBalloon, $eIc
 		$eIcnWorkshopBoost, $eIcnStrongMan, $eIcnPowerPotion, $eIcnHogGlider, $eIcnYeti, $eIcnSiegeB, $eIcnChampion, $eIcnChampionUpgr, $eIcnChampionBoost, $eHdV13, $eIcnScattershot, $eIcnChampionBoostLocate, $eIcnTH13, $eWall14, _
 		$eIcnHeadhunter, $eIcnCollectAchievements, $eIcnInvisibilitySpell, $eIcnLogL, _
 		$eIcnSuperBarbarian, $eIcnSuperArcher, $eIcnSuperGiant, $eIcnSneakyGoblin, $eIcnSuperWallBreaker, $eIcnSuperWizard, $eIcnInfernoDragon, $eIcnSuperMinion, $eIcnSuperValkyrie, $eIcnSuperWitch, $eIcnIceHound, _
-		$eIcnPetLassi, $eIcnPetElectroOwl, $eIcnPetMightyYak, $eIcnPetUnicorn, $eIcnTH14, $eWall15, $eIcnPetHouse, $eIcnRocketBalloon, $eIcnDragonRider, $eHdV14, $eIcnSuperBowler, $eIcnFlameF, $eIcnSuperDragon, _ 
+		$eIcnPetLassi, $eIcnPetElectroOwl, $eIcnPetMightyYak, $eIcnPetUnicorn, $eIcnTH14, $eWall15, $eIcnPetHouse, $eIcnRocketBalloon, $eIcnDragonRider, $eHdV14, $eIcnSuperBowler, $eIcnFlameF, $eIcnSuperDragon, _
 		$eIcnClanCapital, $eIcnCapitalGold, $eIcnCapitalMedal
 
 Global $eIcnDonBlank = $eIcnDonBlacklist
@@ -614,7 +614,7 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 		$eKing, $eQueen, $eWarden, $eChampion, $eCastle, _
 		$eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $eISpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell, _
 		$eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eArmyCount
-		
+
 ; Attack types
 Global Enum $DB, $LB, $TB, $DT ; DeadBase, ActiveBase, TownhallBully, DropTrophy
 Global Const $g_iModeCount = 3
@@ -686,6 +686,7 @@ Global Const $g_aiTroopDonateXP[$eTroopCount] = [1, 5, 1, 12, 5, 10, 1, 3, 2, 8,
 
 ; Super Troops
 Global Const $iSuperTroopsCount = 14, $iMaxSupersTroop = 2
+Global $g_bForceUseSuperTroopPotion = False
 Global Const $g_asSuperTroopNames[$iSuperTroopsCount] = [ _
 		"Super Barbarian", "Super Archer", "Super Giant", "Sneaky Goblin", "Super WallBreaker", "Rocket Balloon", "Super Wizard", "Super Dragon", "Inferno Dragon", "Super Minion", "Super Valkyrie", "Super Witch", "Ice Hound", "Super Bowler"]
 Global Const $g_asSuperTroopIndex[$iSuperTroopsCount] = [ _
@@ -869,7 +870,7 @@ Global $g_bCollectStarBonus = False
 Global $g_iTxtRestartGold = 10000
 Global $g_iTxtRestartElixir = 25000
 Global $g_iTxtRestartDark = 500
-Global $g_bChkCollect = True, $g_bChkTombstones = True, $g_bChkCleanYard = False, $g_bChkGemsBox = False, $g_bChkSellHeroPot = False
+Global $g_bChkCollect = True, $g_bChkTombstones = True, $g_bChkCleanYard = False, $g_bChkGemsBox = False
 Global $g_bChkCollectCartFirst = False, $g_iTxtCollectGold = 0, $g_iTxtCollectElixir = 0, $g_iTxtCollectDark = 0
 Global $g_bChkTreasuryCollect = False
 Global $g_iTxtTreasuryGold = 0
@@ -968,7 +969,7 @@ Global $g_bAutoLabUpgradeEnable = False, $g_iCmbLaboratory = 0, $g_bAutoStarLabU
 Global $g_hChkLabUpgradeOrder = 0, $g_hBtnRemoveLabUpgradeOrder = 0, $g_hBtnSetLabUpgradeOrder = 0, $g_hUpgradeAnyTroops = 0, $g_hUpgradeSiegeToLvl2 = 0
 Global $g_hChkSLabUpgradeOrder = 0, $g_hBtnRemoveSLabUpgradeOrder = 0, $g_hBtnSetSLabUpgradeOrder = 0, $g_hChkUpgradeAnyIfAllOrderMaxed = 0
 Global $g_bLabUpgradeOrderEnable = False
-Global $g_bSLabUpgradeOrderEnable = False, $g_bUpgradeAnyIfAllOrderMaxed = False
+Global $g_bSLabUpgradeOrderEnable = False, $g_bChkUpgradeAnyIfAllOrderMaxed = False
 Global $g_aCmbLabUpgradeOrder[10] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 Global $g_ahCmbLabUpgradeOrder[10] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 Global $g_aCmbSLabUpgradeOrder[6] = [-1, -1, -1, -1, -1, -1]
@@ -1013,6 +1014,7 @@ Global $g_WallGEFull = -1 ;-1 = unset, 0 = elixir, 1 = gold, 2 = both
 ; Auto Upgrade
 Global $g_bPlaceNewBuilding = False, $g_bChkRushTH = False, $g_bNewBuildingFirst = False, $g_bHeroPriority = False
 Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False, $g_bUseHeroBooks = False, $g_iHeroMinUpgradeTime = 0, $g_bSkipWallReserve = False, $g_bUpgradeLowCost = False
+Global $g_bUseBuilderPotion = False
 Global $g_iChkIgnoreTH = 0, $g_iChkIgnoreKing = 0, $g_iChkIgnoreQueen = 0, $g_iChkIgnoreWarden = 0, $g_iChkIgnoreChampion = 0, $g_iChkIgnoreCC = 0, $g_iChkIgnoreLab = 0
 Global $g_iChkIgnoreBarrack = 0, $g_iChkIgnoreDBarrack = 0, $g_iChkIgnoreFactory = 0, $g_iChkIgnoreDFactory = 0
 Global $g_iChkIgnoreGColl = 0, $g_iChkIgnoreEColl = 0, $g_iChkIgnoreDColl = 0
@@ -1339,7 +1341,7 @@ Global $g_bForceClanCastleDetection = 0
 Global $g_iCmbSwitchAcc = 0 ; Group switch accounts
 Global $g_bForceSwitch = false ; use as a flag for when we want to force an account switch
 Global $g_bChkSharedPrefs = True, $g_bChkGooglePlay = False, $g_bChkSuperCellID = False ; Accounts switch mode
-Global $g_bChkSwitchAcc = False, $g_bChkFastSwitchAcc = False, $g_bChkSmartSwitch = False, $g_bDonateLikeCrazy = False, $g_iTotalAcc = -1, $g_iTrainTimeToSkip = 0
+Global $g_bChkSwitchAcc = False, $g_bChkFastSwitchAcc = False, $g_bChkSmartSwitch = False, $g_iTotalAcc = -1, $g_iTrainTimeToSkip = 0
 Global $g_bInitiateSwitchAcc = True, $g_bReMatchAcc = False, $g_bWaitForCCTroopSpell = False, $g_iNextAccount, $g_iCurAccount
 Global $g_abAccountNo[16], $g_asProfileName[16], $g_abDonateOnly[16]
 Global $g_aiAttackedCountSwitch[16], $g_iActiveSwitchCounter = 0, $g_iDonateSwitchCounter = 0
@@ -1407,13 +1409,13 @@ Global $g_bMainWindowOk = False ; Updated in IsMainPage() when main page found o
 ; My village
 Global $g_aiCurrentLoot[$eLootCount] = [0, 0, 0, 0] ; current stats
 Global $g_iTownHallLevel = 0 ; Level of user townhall (Level 1 = 1)
-Global $g_aiTownHallPos[2] = [458, 330] ; Default Position of TownHall placed from training 
+Global $g_aiTownHallPos[2] = [458, 330] ; Default Position of TownHall placed from training
 Global $g_aiKingAltarPos[2] = [-1, -1] ; position Kings Altar
 Global $g_aiQueenAltarPos[2] = [-1, -1] ; position Queens Altar
 Global $g_aiWardenAltarPos[2] = [-1, -1] ; position Grand Warden Altar
 Global $g_aiChampionAltarPos[2] = [-1, -1] ; position Royal Champion Altar
 Global $g_aiLaboratoryPos[2] = [-1, -1] ; Position of laboratory
-Global $g_aiClanCastlePos[2] = [391, 411] ; Default Position of clan castle placed before Rebuild 
+Global $g_aiClanCastlePos[2] = [391, 411] ; Default Position of clan castle placed before Rebuild
 Global $g_iDetectedImageType = 0 ; Image theme; 0 = normal, 1 = snow
 Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 
@@ -1880,7 +1882,13 @@ Global $g_abCGBBTroopsItem[11]
 Global $g_bChkCollectAchievements = True
 
 ; Collect Free Magic Items
-Global $g_bChkCollectFreeMagicItems = True, $g_bRemoveFreeMagicItems = False
+Global $g_bChkCollectFreeMagicItems = True, $g_aRemoveFreeMagicItems[3] = [False, "", 0] ;Remove[True/False], ItemName, Amount
+Global $g_bChkEnableSaleMagicItem = False
+Global $g_bChkSaleBOF = False, $g_bChkSaleBOB = False, $g_bChkSaleBOS = False, $g_bChkSaleBOH = False, $g_bChkSaleBOE = False, $g_bChkSaleShovel = False, $g_bChkSaleWallRing = False
+Global $g_bChkSalePowerPot = False, $g_bChkSaleResourcePot = False, $g_bChkSaleTrainingPot = False, $g_bChkSaleBuilderPot = False, $g_bChkSaleCTPot = False, $g_bChkSaleHeroPot = False, $g_bChkSaleResearchPot = False
+Global $g_bChkSaleSuperPot = False, $g_bChkSaleROG = False, $g_bChkSaleROE = False, $g_bChkSaleRODE = False, $g_bChkSaleROBG = False, $g_bChkSaleROBE = False
+Global $g_aSaleMagicItem[20] = [$g_bChkSaleBOF, $g_bChkSaleBOB, $g_bChkSaleBOS, $g_bChkSaleBOH, $g_bChkSaleBOE, $g_bChkSaleShovel, $g_bChkSaleWallRing, $g_bChkSalePowerPot, $g_bChkSaleResourcePot, $g_bChkSaleTrainingPot, $g_bChkSaleBuilderPot, $g_bChkSaleCTPot, $g_bChkSaleHeroPot, $g_bChkSaleResearchPot, $g_bChkSaleSuperPot, $g_bChkSaleROG, $g_bChkSaleROE, $g_bChkSaleRODE, $g_bChkSaleROBG, $g_bChkSaleROBE]
+Global $g_aMagicItemName[20] = ["BookOfFighting", "BookOfBuilding", "BookOfSpell", "BookOfHero", "BookOfEverything", "Shovel", "WallRing", "PowerPot", "ResourcePot", "TrainingPot", "BuilderPot", "ClockTowerPot", "HeroPot", "ResearchPot", "SuperPot", "RuneOfGold", "RuneOfElixir", "RuneOfDarkElixir", "RuneOfBuilderGold", "RuneOfBuilderElixir"]
 
 ; Daily challenge
 Global $g_bChkCollectRewards = True
@@ -1953,7 +1961,7 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 
 
 ;Misc Mod
-Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = False 
+Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = False
 Global $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False
 Global $g_bTrainPreviousArmy = False, $g_bAlwaysDropHero = True, $g_bSkipSnowDetection = False
 Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
@@ -1973,7 +1981,7 @@ Global $g_bChkStartWeekendRaid = True
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[18][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], _ ;ok
+Global $g_aVillageRefSize[19][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], _ ;ok
 									["JS", "Jungle", 566.60, 69, 796, 64, 609], _ ;ok
 									["BB", "BuilderBase", 560.2, 88, 793, 91, 617], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
@@ -1990,6 +1998,6 @@ Global $g_aVillageRefSize[18][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], 
 									["RY", "Royal", 610.20, 57, 799, 48, 603], _ ;ok
 									["SM", "Summer", 568, 85, 813, 56, 604], _ ;ok
 									["PS", "Pixel", 560.6, 90, 768, 54, 570], _ ;ok
-									["10", "10th Clasivery", 561, 92, 791, 47, 570]] ;ok
+									["10", "10th Clasivery", 561, 92, 791, 47, 570], _ ;ok
+									["W1", "Scenery1", 553.3, 61, 813, 55, 619]] ;ok
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
-

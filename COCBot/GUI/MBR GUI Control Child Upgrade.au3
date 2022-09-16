@@ -274,9 +274,9 @@ Func chkSLabUpgradeOrder()
 		GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $GUI_DISABLE)
 	EndIf
 	If GUICtrlRead($g_hChkUpgradeAnyIfAllOrderMaxed) = $GUI_CHECKED Then
-		$g_bUpgradeAnyIfAllOrderMaxed = True
+		$g_bChkUpgradeAnyIfAllOrderMaxed = True
 	Else
-		$g_bUpgradeAnyIfAllOrderMaxed = False
+		$g_bChkUpgradeAnyIfAllOrderMaxed = False
 	EndIf
 EndFunc ;==>chkSLabUpgradeOrder
 
@@ -618,17 +618,40 @@ EndFunc   ;==>cmbHeroReservedBuilder
 Func chkWalls()
 	If GUICtrlRead($g_hChkWalls) = $GUI_CHECKED Then
 		$g_bAutoUpgradeWallsEnable = True
-		For $i = $g_hRdoUseGold To $g_hChkLowLevelAutoUpgradeWall
+		For $i = $g_hChkUseGold To $g_hChkUpgradeAnyWallLevel
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
-		cmbWalls()
 	Else
 		$g_bAutoUpgradeWallsEnable = False
-		For $i = $g_hRdoUseGold To $g_hChkLowLevelAutoUpgradeWall
+		For $i = $g_hChkUseGold To $g_hChkUpgradeAnyWallLevel
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
+	If GUICtrlRead($g_hChkUseGold) = $GUI_CHECKED Then
+		GUICtrlSetState($g_hChkUseElixir, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkUseElixirGold, $GUI_UNCHECKED)
+	EndIf
+	If GUICtrlRead($g_hChkUseElixir) = $GUI_CHECKED Then
+		GUICtrlSetState($g_hChkUseGold, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkUseElixirGold, $GUI_UNCHECKED)
+	EndIf
+	If GUICtrlRead($g_hChkUseElixirGold) = $GUI_CHECKED Then
+		GUICtrlSetState($g_hChkUseGold, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkUseElixir, $GUI_UNCHECKED)
+	EndIf
 EndFunc   ;==>chkWalls
+
+Func cmbWalls()
+	For $z = 0 To 2
+		$g_aUpgradeWall[$z] = _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$z])
+		GUICtrlSetData($g_hLblWallCost[$z], _NumberFormat($g_aiWallCost[_GUICtrlComboBox_GetCurSel($g_hCmbWalls[$z])]))
+	Next
+
+	For $i = 4 To 14; $g_iUpgradedWallLevel+  ;Will now always show all.
+	  GUICtrlSetState($g_ahWallsCurrentCount[$i], $GUI_SHOW)
+	  GUICtrlSetState($g_ahPicWallsLevel[$i], $GUI_SHOW)
+	Next
+EndFunc   ;==>cmbWalls
 
 Func chkSaveWallBldr()
 	$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
@@ -662,47 +685,6 @@ Func ChkLowLevelAutoUpgradeWall()
 	EndIf
 	$g_iLowLevelWall = _GUICtrlComboBox_GetCurSel($g_hCmbLowLevelWall) + 1
 EndFunc   ;==>chkWallOnly1Builder
-
-Func cmbWalls()
-	Local $DisableOpt = False
-	For $z = 0 To 2
-		$g_aUpgradeWall[$z] = _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$z])
-		GUICtrlSetData($g_hLblWallCost[$z], _NumberFormat($g_aiWallCost[_GUICtrlComboBox_GetCurSel($g_hCmbWalls[$z])]))
-	Next
-
-	For $i = 4 To 14; $g_iUpgradedWallLevel+  ;Will now always show all.
-	  GUICtrlSetState($g_ahWallsCurrentCount[$i], $GUI_SHOW)
-	  GUICtrlSetState($g_ahPicWallsLevel[$i], $GUI_SHOW)
-	Next
-
-	;For $y = 0 To 2
-	;	If _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$y]) <= 3 Then 
-	;		$DisableOpt = True
-	;		$g_iUpgradeWallLootType = 0
-	;		ExitLoop
-	;	EndIf
-	;Next
-	;
-	;GUICtrlSetState($g_hRdoUseElixir, $DisableOpt ? BitOR($GUI_DISABLE, $GUI_UNCHECKED) : $GUI_ENABLE)
-	;GUICtrlSetState($g_hRdoUseElixirGold, $DisableOpt ? BitOR($GUI_DISABLE, $GUI_UNCHECKED) : $GUI_ENABLE)
-	;GUICtrlSetState($g_hTxtWallMinElixir, $DisableOpt ? $GUI_DISABLE : $GUI_ENABLE)
-	;
-	;Switch $g_iUpgradeWallLootType
-	;	Case 0
-	;		GUICtrlSetState($g_hRdoUseGold, $GUI_CHECKED)
-	;		GUICtrlSetState($g_hRdoUseElixir, $GUI_UNCHECKED)
-	;		GUICtrlSetState($g_hRdoUseElixirGold, $GUI_UNCHECKED)
-	;	Case 1
-	;		GUICtrlSetState($g_hRdoUseGold, $GUI_UNCHECKED)
-	;		GUICtrlSetState($g_hRdoUseElixir, $GUI_CHECKED)
-	;		GUICtrlSetState($g_hRdoUseElixirGold, $GUI_UNCHECKED)
-	;	Case 2
-	;		GUICtrlSetState($g_hRdoUseGold, $GUI_UNCHECKED)
-	;		GUICtrlSetState($g_hRdoUseElixir, $GUI_UNCHECKED)
-	;		GUICtrlSetState($g_hRdoUseElixirGold, $GUI_CHECKED)
-	;EndSwitch
-	
-EndFunc   ;==>cmbWalls
 
 Func btnWalls()
 	Local $wasRunState = $g_bRunState

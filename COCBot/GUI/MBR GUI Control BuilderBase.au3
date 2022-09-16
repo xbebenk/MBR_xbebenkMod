@@ -72,6 +72,7 @@ EndFunc   ;==>chkBBDropTrophy
 Func btnBBDropOrder()
 	GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
 	GUICtrlSetState($g_hChkEnableBBAttack, $GUI_DISABLE)
+	GUISetState(@SW_SHOW, $g_hGUI_BBDropOrder)
 EndFunc   ;==>btnBBDropOrder
 
 Func chkBBDropOrder()

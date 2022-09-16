@@ -178,6 +178,23 @@ Func ZoomOutHelperBB($caller = "Default")
 		EndIf
 	EndIf
 	
+	If Not $bRet Then
+		If QuickMIS("BC1", $g_sImgZoomOutDirBB & "stone\", 0, 330, 430, 560) Then 
+			$aOffset = StringRegExp($g_iQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+			If IsArray($aOffset) Then 
+				$x = $g_iQuickMISX - $aOffset[1]
+				$y = $g_iQuickMISY - $aOffset[2]
+				SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
+				ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+				$bRet = True
+			Else
+				SetDebugLog("[" & $caller & "] Bad Stone ImageName!")
+				Return
+			EndIf
+		EndIf
+	EndIf
+	
 	Return $bRet
 EndFunc
 

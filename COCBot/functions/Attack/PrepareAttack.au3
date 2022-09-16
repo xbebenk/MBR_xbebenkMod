@@ -14,12 +14,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
-	; Attack CSV has debug option to save attack line image, save have png of current $g_hHBitmap2
-	;If Not $bRemaining Then 
-	;	AndroidAdbScript("ZoomOut")
-	;	_Sleep(500)
-	;	ClickDrag(430, 550, 430, 520, 1500)
-	;EndIf
+	
 	If ($pMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($pMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
 		If $g_bDebugMakeIMGCSV And $bRemaining = False And TestCapture() = 0 Then
 			If $g_iSearchTH = "-" Then ; If TH is unknown, try again to find as it is needed for filename
@@ -28,7 +23,7 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 			SaveDebugImage("clean", False, Default, "TH" & $g_iSearchTH & "-") ; make clean snapshot as well
 		EndIf
 	EndIf
-	
+
 	If Not $bRemaining Then ; reset Hero variables before attack if not checking remaining troops
 		$g_bDropKing = False ; reset hero dropped flags
 		$g_bDropQueen = False
@@ -203,16 +198,16 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 				Local $FinalCoordX = $iLastX, $FinalCoordY = $iLastY, $iFinalLevel = 1, $HigherLevelFound = False, $AnySiegeFound = False
 				Local $TmpIndex = 0
 				$TmpIndex = _ArraySearch($aSearchResult, $eCastle, 0, 0, 0, 0, 1, 5)
-				If $TmpIndex = -1 Then 
+				If $TmpIndex = -1 Then
 					$iTroopIndex = -1 ;set ByRef
 					SetLog("No " & GetTroopName($eCastle) & " Detected, discard Siege use", $COLOR_INFO)
 					Click($iLastX, $iLastY, 1)
 					Return
 				EndIf
-				
+
 				If $ToUse = $eCastle Then
 					SetDebugLog("ToUse : Castle")
-					
+
 					$TmpIndex = _ArraySearch($aSearchResult, $eCastle, 0, 0, 0, 0, 1, 5)
 					If $aSearchResult[$TmpIndex][5] = $eCastle Then
 						$iTroopIndex = $eCastle ;set ByRef
@@ -224,11 +219,11 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 						SetLog("No " & GetTroopName($ToUse) & " found")
 						Click($iLastX, $iLastY, 1)
 					EndIf
-				EndIf 
-				
+				EndIf
+
 				_ArraySort($aSearchResult, 0, 0, 0, 1) ;sort asc by x coord
 				If $NeedHigherLevel Or $bAnySiege Then
-					If $bAnySiege Then 
+					If $bAnySiege Then
 						SetDebugLog("AnySiege")
 						Local $iSiegeIndex
 						For $i = 0 To UBound($aSearchResult) - 1
@@ -238,7 +233,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 								Local $OwnSiege = $aSearchResult[$i][4]
 								Local $SiegeName = $aSearchResult[$i][0]
 								SetDebugLog($i & ". SiegeName: " & $SiegeName & ", OwnSiege: " & $OwnSiege & ", Level: " & $SiegeLevel & ", Coords: " & $aSearchResult[$i][1] & "," & $aSearchResult[$i][2])
-								If $iFinalLevel < $SiegeLevel Then 
+								If $iFinalLevel < $SiegeLevel Then
 									$iTroopIndex = $iSiegeIndex ;set ByRef
 									$iFinalLevel = $SiegeLevel
 									$SiegeName = $aSearchResult[$i][0]
@@ -251,8 +246,8 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 								If $OwnSiege = "False" Then ExitLoop
 							EndIf
 						Next
-						
-						If $AnySiegeFound Then 
+
+						If $AnySiegeFound Then
 							Click($FinalCoordX, $FinalCoordY)
 							$g_iSiegeLevel = $iFinalLevel
 						Else
@@ -264,7 +259,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 						SetDebugLog("To Use = [" & $ToUse & "] " & GetTroopName($ToUse) & ", Got:" & $TmpIndex)
 						If $TmpIndex < 0 Then
 							SetDebugLog(GetTroopName($ToUse) & " ===== Not Found, lets pick any siege", $COLOR_INFO)
-							For $i = 0 To UBound($aSearchResult) - 1	
+							For $i = 0 To UBound($aSearchResult) - 1
 								Local $iSiegeIndex = $aSearchResult[$i][5]
 								SetDebugLog(GetTroopName($iSiegeIndex))
 								If $iSiegeIndex >= $eWallW And $iSiegeIndex <= $eFlameF Then
@@ -283,7 +278,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 								EndIf
 							Next
 
-							If $HigherLevelFound Then 
+							If $HigherLevelFound Then
 								Click($FinalCoordX, $FinalCoordY)
 								$g_iSiegeLevel = $iFinalLevel
 							Else
@@ -314,8 +309,8 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			If _Sleep(750) Then Return
 		Else
 			If $iTroopIndex <> $eCastle Then $iTroopIndex = -1 ;setting other than castle only (spesific siege or anysiege) but no switch button, will discard use of siege
-			If $ToUse = $eCastle And $iTroopIndex = $eCastle Then $iTroopIndex = $eCastle ;setting castle only, there is castle on attackbar, but no switch button, will use cc 
-			If $ToUse = $eCastle And $iTroopIndex <> $eCastle Then $iTroopIndex = -1 ;setting castle only, there is siege on attackbar, but no switch button, will discard use siege 
+			If $ToUse = $eCastle And $iTroopIndex = $eCastle Then $iTroopIndex = $eCastle ;setting castle only, there is castle on attackbar, but no switch button, will use cc
+			If $ToUse = $eCastle And $iTroopIndex <> $eCastle Then $iTroopIndex = -1 ;setting castle only, there is siege on attackbar, but no switch button, will discard use siege
 			SetDebugLog("ToUse=" & $ToUse & " |iTroopIndex=" & $iTroopIndex)
 			SetLog("No switch button = No CC Detected, discard Siege use", $COLOR_INFO)
 		EndIf
@@ -323,7 +318,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 EndFunc   ;==>SelectCastleOrSiege
 
 Func GetListSiege($x = 135, $y = 470, $x1 = 700, $y1 = 540)
-	Local $aResult[0][6], $CheckLvlY = 524 
+	Local $aResult[0][6], $CheckLvlY = 524
 	Local $aSiege[0][3]
 	$x += 22
 	For $i = 1 To 5
@@ -332,7 +327,7 @@ Func GetListSiege($x = 135, $y = 470, $x1 = 700, $y1 = 540)
 		EndIf
 		$x += 72
 	Next
-	
+
 	If IsArray($aSiege) And UBound($aSiege) > 0 Then
 		For $i = 0 To UBound($aSiege) - 1
 			SetDebugLog("[" & $i & "] Siege: " & $aSiege[$i][0] & ", Coord[" & $aSiege[$i][1] & "," & $aSiege[$i][2] & "]")

@@ -120,12 +120,12 @@ Func BoostPotion($sName, $sOcrName, $aPos, ByRef $icmbBoostValue, $cmbBoostCtrl)
 				SetDebugLog("Boost Potion Button X|Y = " & $Boost[0] & "|" & $Boost[1], $COLOR_DEBUG)
 				ClickP($Boost)
 				If _Sleep($DELAYBOOSTHEROES1) Then Return
-				If Not _ColorCheck(_GetPixelColor(255, 535, True), Hex(0xFFFFFF, 6), 25) Then
+				If Not _ColorCheck(_GetPixelColor(255, 505, True), Hex(0xFFFFFF, 6), 25) Then
 					SetLog("Cannot find/verify 'Use' Button", $COLOR_WARNING)
 					ClickAway()
 					Return False ; Exit Function
 				EndIf
-				Click(305, 556) ; Click on 'Use'
+				Click(255, 505) ; Click on 'Use'
 				If _Sleep($DELAYBOOSTHEROES2) Then Return
 				$Boost = findButton("BoostPotionGreen")
 				If IsArray($Boost) Then

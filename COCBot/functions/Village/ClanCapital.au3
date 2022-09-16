@@ -11,9 +11,11 @@ Func CollectCCGold($bTest = False)
 	
 	;handle for turtorial
 	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 250, 520, 400, 670) Then 
+		SetLog("Tutorial Arrow detected, click it!", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY + 10)
 		_Sleep(8000)
-		While 1
+		For $i = 1 To 3
+			SetLog("Waiting Tutorial and Forge window open #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then 
 				Click($g_iQuickMISX, $g_iQuickMISY)
 			EndIf
@@ -23,7 +25,8 @@ Func CollectCCGold($bTest = False)
 				_Sleep(2000)
 				ExitLoop
 			EndIf
-		WEnd
+		Next
+		SetLog("Failed doing Clan Capital Tutorial", $COLOR_ERROR)
 	EndIf
 	
 	If QuickMIS("BC1", $g_sImgCCGoldCollect, 250, 550, 400, 670) Then
@@ -96,7 +99,16 @@ Func ClanCapitalReport($SetLog = True)
 		SetLog("Raid Weekend is Available", $COLOR_INFO)
 		Local $iAttack = getOcrAndCapture("coc-mapname", 780, 545, 20, 30)
 		SetLog("You have " & $iAttack & " available attack", $COLOR_SUCCESS)
-		If Number($iAttack) > 0 Then NotifyPushToTelegram($g_sProfileCurrentName & " have " & $iAttack & " Available attack on Capital Raid Weekend")
+		If Number($g_iLootCCGold) > 0 Then 
+			If _Sleep(8000) Then Return
+		EndIf
+		If QuickMis("BC1", $g_sImgCCRaid, 360, 450, 500, 500) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(5000) Then Return
+			SkipChat()
+			SwitchToCapitalMain()
+		EndIf
+		;If Number($iAttack) > 0 Then NotifyPushToTelegram($g_sProfileCurrentName & " have " & $iAttack & " Available attack on Capital Raid Weekend")
 	EndIf
 	
 	If $g_bChkStartWeekendRaid Then StartRaidWeekend()
@@ -309,7 +321,7 @@ Func ForgeClanCapitalGold($bTest = False)
 	ClickAway("Right")
 EndFunc
 
-Func SwitchToClanCapital()
+Func SwitchToClanCapital($bTest = False)
 	Local $bRet = False
 	If QuickMIS("BC1", $g_sImgAirShip, 200, 520, 400, 660) Then 
 		Click($g_iQuickMISX, $g_iQuickMISY)
@@ -319,8 +331,8 @@ Func SwitchToClanCapital()
 			If QuickMis("BC1", $g_sImgGeneralCloseButton, 700, 120, 750, 160) Then ; check if we have window covering map, close it!
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				SetLog("Found Next Raid Window covering map, close it!", $COLOR_INFO)
-				_Sleep(1000)
-				Click(54,612) ;Lazy Fix for exiting raid map
+				_Sleep(5000)
+				SwitchToCapitalMain()
 			EndIf
 			If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
 				$bRet = True
@@ -369,8 +381,9 @@ Func SwitchToMainVillage($caller = "Default")
 		EndIf
 		If QuickMis("BC1", $g_sImgGeneralCloseButton, 700, 120, 750, 160) Then ; check if we have window covering map, close it!
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			SetLog("Found Next Raid Window covering map, close it!", $COLOR_INFO)
-			_Sleep(1000)
+			SetLog("Found a window covering map, close it!", $COLOR_INFO)
+			_Sleep(2000)
+			SwitchToCapitalMain()
 		EndIf
 		_Sleep(800)
 		If isOnMainVillage() Then 
@@ -436,7 +449,7 @@ Func IsCCBuilderMenuOpen()
 		SetDebugLog("$sTriangle: " & $sTriangle)
 		If $sTriangle = "^" Or $sTriangle = "~" Or $sTriangle = "@" Or $sTriangle = "$" Then $bRet = True
 	EndIf
-	SetDebugLog(String($bRet))
+	SetDebugLog("IsCCBuilderMenuOpen : " & String($bRet))
 	Return $bRet
 EndFunc
 
@@ -482,7 +495,7 @@ EndFunc
 
 Func FindCCSuggestedUpgrade()
 	Local $aResult[0][3], $name[2] = ["", 0]
-	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 550, 360)
+	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 560, 360)
 	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 		_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by Y coord
 		For $i = 0 To UBound($aUpgrade) - 1
@@ -492,10 +505,18 @@ Func FindCCSuggestedUpgrade()
 			Else
 				$name = getCCBuildingNameBlue($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 12)
 			EndIf
+			
+			If $g_bChkAutoUpgradeCCIgnore Then 
+				If QuickMIS("BC1", $g_sImgDecoration, $aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 10, $aUpgrade[$i][1], $aUpgrade[$i][2] + 13) Then
+					SetLog("Decoration detected, Skip!!", $COLOR_ACTION)
+					ContinueLoop ;skip this upgrade, looking next
+				EndIf
+			EndIf
+			
 			If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
 				If StringInStr($name[0], "Wall") Then 
-						SetLog("Upgrade for Wall Ignored, Skip!!", $COLOR_ACTION)
-						ContinueLoop ;skip this upgrade, looking next 
+					SetLog("Upgrade for Wall Ignored, Skip!!", $COLOR_ACTION)
+					ContinueLoop ;skip this upgrade, looking next 
 				EndIf
 			EndIf
 			If $g_bChkAutoUpgradeCCIgnore Then 
@@ -532,6 +553,11 @@ Func SkipChat($WaitFor = "UpgradeButton")
 			SetLog("Skip chat #" & $y, $COLOR_INFO)
 			_Sleep(5000)
 		Else
+			If _GetPixelColor(340, 484, 1) = "FFFFFF" Then 
+				Click(340, 484) ;check if we have white chat balloon tips, click it
+				SetLog("Skip chat #" & $y, $COLOR_INFO)
+				_Sleep(5000)
+			EndIf
 			If $y > 5 Then 
 				SetLog("Seem's there is no tutorial chat, continue", $COLOR_INFO)
 				ExitLoop
@@ -544,7 +570,7 @@ EndFunc
 Func WaitUpgradeButtonCC()
 	Local $aRet[3] = [False, 0, 0]
 	For $i = 1 To 10
-		If Not $g_bRunState Then Return
+		If Not $g_bRunState Then Return $aRet
 		SetLog("Waiting for Upgrade Button #" & $i, $COLOR_ACTION)
 		If QuickMIS("BC1", $g_sImgCCUpgradeButton, 300, 520, 600, 660) Then ;check for upgrade button (Hammer)
 			$aRet[0] = True
@@ -580,10 +606,9 @@ Func AutoUpgradeCC($bTest = False)
 	Local $aRet[3] = [False, 0, 0]
 	SetLog("Checking Clan Capital AutoUpgrade", $COLOR_INFO)
 	ZoomOut() ;ZoomOut first
-	If Not SwitchToClanCapital() Then Return
+	If Not SwitchToClanCapital($bTest) Then Return
 	_Sleep(1000)
-	ClanCapitalReport()
-	If Number($g_iLootCCGold) = 0 Then 
+	If Number($g_iLootCCGold) = 0 And Not $bTest Then 
 		SetLog("No Capital Gold to spend to Contribute", $COLOR_INFO)
 		SwitchToMainVillage("Cannot Contribute")
 		Return

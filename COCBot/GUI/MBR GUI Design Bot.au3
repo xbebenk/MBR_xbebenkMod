@@ -50,6 +50,7 @@ Func CreateBotTab()
 		CreateBotStats()
 
 	CreateBotSwitchAccLog()
+	CreateSaveToProfiles()
 	GUICtrlCreateTabItem("")
 
 EndFunc   ;==>CreateBotTab

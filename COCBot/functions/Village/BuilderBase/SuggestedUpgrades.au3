@@ -142,7 +142,10 @@ Func AutoUpgradeBB($bTest = False)
 	ZoomOut()
 	BuilderBaseReport(True)
 	If Not ClickBBBuilder() Then Return
-
+	
+	$g_bReserveElixirBB = False
+	$g_bReserveGoldBB = False
+	
 	If $g_iChkPlacingNewBuildings And $g_bisMegaTeslaMaxed = False Then
 		SearchNewBuilding($bTest)
 	EndIf
@@ -159,9 +162,7 @@ EndFunc   ;==>MainSuggestedUpgradeCode
 Func SearchNewBuilding($bTest = False)
 	Local $NeedDrag = True, $ZoomedIn = False, $TmpUpgradeCost, $UpgradeCost, $sameCost
 	ClickBBBuilder()
-	$g_bReserveElixirBB = False
-	$g_bReserveGoldBB = False
-
+	
 	If FindBHInUpgradeProgress() Then
 		SetLog("BuilderHall Upgrade in progress, skip search new building!", $COLOR_SUCCESS)
 		Return False
@@ -320,11 +321,15 @@ Func SearchExistingBuilding($bTest = False)
 					$IsWall = True
 				EndIf
 				If Not $g_bRunState Then Return
+				If $g_bOptimizeOTTO And StringInStr($Building[$i][3], "Gem Mine") And Number($Building[$i][5]) >= 180000 Then
+					SetLog("Building: " & $Building[$i][3] & ", skip (OptimizeOTTO enabled, Only Rebuild)", $COLOR_ACTION)
+					ContinueLoop
+				EndIf
 				If $g_bOptimizeOTTO And Not $bOptimizeOTTOFound And Not $g_bisMegaTeslaMaxed Then
 					SetLog("Building: " & $Building[$i][3] & ", skip due to optimizeOTTO", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
-
+				
 				If $IsWall Then
 					Click($Building[$i][1], $Building[$i][2])
 					While $g_bGoldStorageFullBB
@@ -671,9 +676,9 @@ Func FindBBNewBuilding()
 	Return $aBuilding
 EndFunc
 
-Global $g_aOptimizeOTTO[14][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 13], ["Storage", 12], _
-									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 12], ["Builder Hall", 12], ["Clock Tower", 5], ["Barracks", 12], _
-									["Army Camp", 12], ["Wall", 5]]
+Global $g_aOptimizeOTTO[15][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 13], ["Storage", 12], _
+									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 12], ["Builder Hall", 12], ["Clock Tower", 6], ["Barracks", 12], _
+									["Army Camp", 12], ["Wall", 5], ["Gem Mine", 5]]
 
 Func FindBBExistingBuilding($bTest = False)
 	Local $ElixMultiply = 1, $GoldMultiply = 1 ;used for multiply score
@@ -696,7 +701,7 @@ Func FindBBExistingBuilding($bTest = False)
 						ExitLoop
 					EndIf
 				Next
-
+				
 				If StringInStr($UpgradeName[0], "Wall", 1) Then ;include wall to upgrade only after mega tesla is maxed
 					If ($g_bisMegaTeslaMaxed = True And $g_bGoldStorageFullBB) Or ($g_bGoldStorageFullBB And $g_bReserveElixirBB) Then
 						Local $tmpcost = getOcrAndCapture("coc-buildermenu-cost", $aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10, 120, 30, True)
@@ -706,7 +711,7 @@ Func FindBBExistingBuilding($bTest = False)
 						ContinueLoop ;just skip if above condition not met
 					EndIf
 				EndIf
-
+				
 				If $g_bReserveElixirBB And $aTmpCoord[$i][0] = "Elix" And $UpgradeName[0] <> "Army Camp" And $UpgradeName[0] <> "Gold Storage" Then
 					SetLog("Reserve Elixir BB for OptimizeOTTO, Building " & $UpgradeName[0] & " skip!!", $COLOR_ACTION)
 					ContinueLoop
@@ -747,7 +752,7 @@ Func FindBBExistingBuilding($bTest = False)
 			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
-
+	
 	If $g_bOptimizeOTTO Then
 		_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
 	Else

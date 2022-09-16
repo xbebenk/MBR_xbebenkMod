@@ -17,8 +17,8 @@
 Global $g_hCmbProfile = 0, $g_hTxtVillageName = 0, $g_hBtnAddProfile = 0, $g_hBtnConfirmAddProfile = 0, $g_hBtnConfirmRenameProfile = 0, $g_hChkOnlySCIDAccounts = 0, $g_hCmbWhatSCIDAccount2Use = 0 , _
 	   $g_hBtnDeleteProfile = 0, $g_hBtnCancelProfileChange = 0, $g_hBtnRenameProfile = 0, $g_hBtnPullSharedPrefs = 0, $g_hBtnPushSharedPrefs = 0 , $g_hBtnSaveprofile = 0
 
-Global $g_hChkSwitchAcc = 0, $g_hChkFastSwitchAcc = 0, $g_hCmbSwitchAcc = 0, $g_hChkSharedPrefs = 0, $g_hCmbTotalAccount = 0, $g_hChkSmartSwitch = 0, $g_hCmbTrainTimeToSkip = 0, $g_hChkDonateLikeCrazy = 0, _
-	   $g_ahChkAccount[16], $g_ahCmbProfile[16], $g_ahChkDonate[16], _
+Global $g_hChkSwitchAcc = 0, $g_hChkFastSwitchAcc = 0, $g_hCmbSwitchAcc = 0, $g_hChkSharedPrefs = 0, $g_hCmbTotalAccount = 0, $g_hChkSmartSwitch = 0, $g_hCmbTrainTimeToSkip = 0, _
+	   $g_ahChkAccount[16], $g_ahCmbProfile[16], $g_ahChkDonate[16], $g_hBtnSaveToAll = 0, _
 	   $g_hRadSwitchGooglePlay = 0, $g_hRadSwitchSuperCellID = 0, $g_hRadSwitchSharedPrefs = 0
 
 Func CreateBotProfiles()
@@ -148,7 +148,7 @@ Func CreateBotProfiles()
 		$g_hChkSwitchAcc = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "ChkSwitchAcc", "Enable Switch"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkSwitchAcc")
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "ChkSwitchAcc_Info_01", "Enable or disable current selected Switch Accounts Group"))
-		
+
 		$g_hChkFastSwitchAcc = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "ChkFastSwitchAcc", "Fast Switch"), $x + 100, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkSwitchAcc")
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "ChkSwitchAcc_Info_01", "Enable Fast Switch Account"))
@@ -170,20 +170,14 @@ Func CreateBotProfiles()
 		$g_hChkSmartSwitch = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "ChkSmartSwitch", "Smart switch"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "ChkSmartSwitch_Info_01", "Switch to account with the shortest remain training time"))
 		GUICtrlSetState(-1, $GUI_UNCHECKED)
-		GUICtrlSetOnEvent(-1, "chkSmartSwitch")
 
-		$g_hChkDonateLikeCrazy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "DonateLikeCrazy", "Donate like Crazy"), $x + 100, $y, -1, -1)
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "DonateLikeCrazy_Info_01", "Enable it allows account switching in the order: Donate - Shortest Active - Donate - Shortest Active  - Donate...!"))
-		GUICtrlSetOnEvent(-1, "chkSmartSwitch")
+		$g_hBtnSaveToAll = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "BtnSaveToAll", "Apply To"), $x + 100, $y - 3, 70, 22)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "BtnSaveToAll", "Apply Current Profile Setting To Other Profile"))
+			GUICtrlSetOnEvent(-1, "btnSaveToAllOpen")
 
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "CmbTrainTime", "Skip switch if train time") & " <", $x + 220, $y + 4, -1, -1)
 		$g_hCmbTrainTimeToSkip = GUICtrlCreateCombo("", $x + 345, $y - 1, 77, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		GUICtrlSetData(-1, "0 minute|1 minute|2 minutes|3 minutes|4 minutes|5 minutes|6 minutes|7 minutes|8 minutes|9 minutes", "1 minute")
-
-	;$y += 23
-	;	GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Description", _
-	;		"Using Switch Accounts requires that not more Google Accounts are registered in Android than configured here. " & _
-	;		"Maximum of 8 Google/CoC Accounts is supported."), $x, $y, $g_iSizeWGrpTab2 - 20, 42, $SS_CENTER)
 
 	$y += 20
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_01", "Accounts"), $x - 5, $y, 60, -1, $SS_CENTER)
@@ -194,14 +188,14 @@ Func CreateBotProfiles()
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_02", "Profile name"), $x + 72, $y, 70, -1, $SS_CENTER)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_03", "Donate only"), $x + 150, $y, 60, -1, $SS_CENTER)
 		;GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Label_04", "SwitchAcc log"), $x + 285, $y, -1, -1, $SS_CENTER)
-	
+
 	$x = 15
 	$y += 14
 		GUICtrlCreateGraphic($x, $y, 422, 1, $SS_GRAYRECT)
 
 	$y += 7
 		For $i = 0 To UBound($g_ahChkAccount) - 1
-			If $i < 10 Then 
+			If $i < 10 Then
 				$g_ahChkAccount[$i] = GUICtrlCreateCheckbox($i + 1 & ".", $x, $y + ($i) * 25, -1, -1)
 				GUICtrlSetOnEvent(-1, "chkAccountX")
 				$g_ahCmbProfile[$i] = GUICtrlCreateCombo("", $x + 40, $y + ($i) * 25, 130, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
@@ -209,7 +203,7 @@ Func CreateBotProfiles()
 				GUICtrlSetData(-1, _GUICtrlComboBox_GetList($g_hCmbProfile))
 				$g_ahChkDonate[$i] = GUICtrlCreateCheckbox("", $x + 180, $y + ($i) * 25 - 3, -1, 25)
 			Else
-				$x = 230 
+				$x = 230
 				$y = 180
 				$g_ahChkAccount[$i] = GUICtrlCreateCheckbox($i + 1 & ".", $x, $y + ($i - 10) * 25, -1, -1)
 				GUICtrlSetOnEvent(-1, "chkAccountX")
@@ -222,3 +216,40 @@ Func CreateBotProfiles()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateBotProfiles
+
+Global $g_hGUI_SaveToProfiles = 0, $g_ahChkCopyAccount[16], $g_ahTxtCopyAccount[16], $g_hChkEnableSaveAll = 0, $g_hBtnSaveToAllClose = 0, $g_hBtnSaveToAllApply = 0
+Func CreateSaveToProfiles()
+	Local $aActiveProfile = AccountNoActive()
+	$g_hGUI_SaveToProfiles = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - SaveTo", "GUI_SaveToProfiles", "Save Current Profile Settings to Others"), 430, 380, $g_iFrmBotPosX, $g_iFrmBotPosY + 200, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	
+	Local $x = 25, $y = 25
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - SaveTo", "SaveTo", "Save Current Profile settings to :"), $x - 20, $y - 20, 420, 280)
+		For $i = 0 To UBound($aActiveProfile) - 1
+			If $i < 10 Then
+				If $aActiveProfile[$i] Then 
+					$g_ahChkCopyAccount[$i] = GUICtrlCreateCheckbox($i + 1 & ".", $x, $y + ($i) * 25, -1, -1)
+					$g_ahTxtCopyAccount[$i] = GUICtrlCreateInput($g_asProfileName[$i], $x + 40, $y + ($i) * 25, 130, 22)
+					GUICtrlSetState(-1, $GUI_DISABLE)
+				EndIf
+			Else
+				$x = 230
+				$y = 25
+				If $aActiveProfile[$i] Then 
+					$g_ahChkCopyAccount[$i] = GUICtrlCreateCheckbox($i + 1 & ".", $x, $y + ($i - 10) * 25, -1, -1)
+					$g_ahTxtCopyAccount[$i] = GUICtrlCreateInput($g_asProfileName[$i], $x + 40, $y + ($i - 10) * 25, 130, 22)
+					GUICtrlSetState(-1, $GUI_DISABLE)
+				EndIf
+			EndIf
+		Next
+		
+		$g_hBtnSaveToAllApply = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "BtnSaveToAllApply", "Apply"), 290, $y + 160, 85, 25)
+			GUICtrlSetOnEvent(-1, "btnSaveToAllApply")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
+	$y = 290
+	$g_hChkEnableSaveAll = GUICtrlCreateCheckbox("Check All", 30, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkCheckAllSaveProfile")
+	$g_hBtnSaveToAllClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "BtnSaveToAllClose", "Close"), 200, $y, 85, 25)
+		GUICtrlSetOnEvent(-1, "btnSaveToAllClose")
+	
+EndFunc

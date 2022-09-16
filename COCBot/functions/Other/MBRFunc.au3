@@ -240,7 +240,7 @@ Func ConvertVillagePos(ByRef $x, ByRef $y, $zoomfactor = 0)
 	EndIf
 	Local $a = StringSplit($result[0], "|")
 	If UBound($a) < 3 Then Return
-	If $g_bDebugSetlog Then SetDebugLog("ConvertVillagePos x = [" & $x & " -> " & Int($a[1]) & "] | y = [" & $y & " -> " & Int($a[2]) & "]")
+	If $g_bDebugSetlog Then SetDebugLog("ConvertFromVillagePos [x,y] = [" & $x & "," & $y & "] -> [" & Int($a[1]) & "," & Int($a[2]) & "]")
 	$x = Int($a[1])
 	$y = Int($a[2])
 EndFunc   ;==>ConvertVillagePos
@@ -254,7 +254,7 @@ Func ConvertToVillagePos(ByRef $x, ByRef $y, $zoomfactor = 0)
 	EndIf
 	Local $a = StringSplit($result[0], "|")
 	If UBound($a) < 3 Then Return
-	If $g_bDebugSetlog Then SetDebugLog("ConvertToVillagePos x = [" & $x & " -> " & Int($a[1]) & "] | y = [" & $y & " -> " & Int($a[2]) & "]")
+	If $g_bDebugSetlog Then SetDebugLog("ConvertFromVillagePos [x,y] = [" & $x & "," & $y & "] -> [" & Int($a[1]) & "," & Int($a[2]) & "]")
 	$x = Int($a[1])
 	$y = Int($a[2])
 EndFunc   ;==>ConvertToVillagePos
@@ -268,7 +268,7 @@ Func ConvertFromVillagePos(ByRef $x, ByRef $y)
 	EndIf
 	Local $a = StringSplit($result[0], "|")
 	If UBound($a) < 3 Then Return
-	If $g_bDebugSetlog Then SetDebugLog("ConvertFromVillagePos x = [" & $x & " -> " & Int($a[1]) & "] | y = [" & $y & " -> " & Int($a[2]) & "]")
+	If $g_bDebugSetlog Then SetDebugLog("ConvertFromVillagePos [x,y] = [" & $x & "," & $y & "] -> [" & Int($a[1]) & "," & Int($a[2]) & "]")
 	$x = Int($a[1])
 	$y = Int($a[2])
 EndFunc   ;==>ConvertFromVillagePos

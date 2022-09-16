@@ -42,7 +42,7 @@ Func StarLaboratory($bTestRun = False)
 		SetLog("Checking Troop Upgrade in Star Laboratory", $COLOR_INFO)
 	Else
 		SetLog("Star Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
-		If Not $bTestRun Then Return False
+		If Not $bTestRun Then Return True
 	EndIf
 
 	$sElixirCount = getResourcesMainScreen(705, 74)
@@ -81,6 +81,7 @@ Func StarLaboratory($bTestRun = False)
 			$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), _NowCalc())
 			If @error Then _logErrorDateAdd(@error)
 			SetLog("Research will finish in " & $sLabTimeOCR & " (" & $g_sStarLabUpgradeTime & ")")
+			Return True
 		Else
 			SetDebugLog("Invalid getRemainTLaboratory OCR", $COLOR_DEBUG)
 		EndIf
@@ -186,8 +187,8 @@ Func StarLaboratory($bTestRun = False)
 		EndIf
 		
 		;any upgrade if all on troops lab order is maxed
-		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn And $g_bisBattleMachineMaxed Then
-			_ArraySort($aTroopUpgrade, 0, 0, 0, 5)
+		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bChkUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn And $g_bisBattleMachineMaxed Then
+			_ArraySort($aTroopUpgrade, 1, 0, 0, 5) ;sort by cost descending
 			For $i = 0 To UBound($aTroopUpgrade) - 1
 				If $aTroopUpgrade[$i][5] = "MaxLevel" Then ContinueLoop
 				If $aTroopUpgrade[$i][5] = "NeedUpgradeLab" Then ExitLoop
