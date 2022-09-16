@@ -327,7 +327,7 @@ Func FindExistingBuilding($bTest = False)
 					EndIf
 				Next
 			EndIf
-			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
+			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & ", score=" & $aBuilding[$j][6] & ", Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
 	Local $iIndex = _ArraySearch($aBuilding, "0", 0, 0, 0, 0, 0, 5)
@@ -336,11 +336,15 @@ Func FindExistingBuilding($bTest = False)
 		SetDebugLog("Found Building with Zero cost, remove it", $COLOR_INFO)
 		_ArrayDelete($aBuilding, $iIndex)
 	EndIf
+	
 	If ($g_bChkRushTH And $bFoundRusTH) Or $g_bHeroPriority Then
 		_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
 	Else
 		_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
 	EndIf
+	
+	If Not $g_bChkRushTH And Not $g_bHeroPriority Then _ArraySort($aBuilding, 1, 0, 0, 5) ;sort by cost
+	
 	If $g_bUpgradeLowCost Then _ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
 	Return $aBuilding
 EndFunc
@@ -953,6 +957,8 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 									EndIf
 									If $Building[0] = 2 And $Building[2] >= $g_aiCmbRushTHOption[0] + 9 Then
 										SetLog("TownHall Level = " & $Building[2] & " >= " &$g_aiCmbRushTHOption[0] + 9 & ", should skip this upgrade", $COLOR_ACTION)
+										SetLog("Found TownHall, skip Search NewBuilding", $COLOR_INFO)
+										ExitLoop 2
 									EndIf
 								Else
 									If ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aResult[$y][0], $aResult[$y][5])
