@@ -414,7 +414,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_iTxtTreasuryGold, $g_sProfileConfigPath, "other", "minTreasurygold", 0, "int")
 	IniReadS($g_iTxtTreasuryElixir, $g_sProfileConfigPath, "other", "minTreasuryelixir", 0, "int")
 	IniReadS($g_iTxtTreasuryDark, $g_sProfileConfigPath, "other", "minTreasurydark", 0, "int")
-	
+
 	;Sale Magic Items
 	IniReadS($g_bChkEnableSaleMagicItem, $g_sProfileConfigPath, "MagicItems", "ChkSaleMagicItems", False, "Bool")
 	IniReadS($g_bChkSaleBOF, $g_sProfileConfigPath, "MagicItems", "ChkSaleBOF", False, "Bool")
@@ -437,7 +437,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkSaleRODE, $g_sProfileConfigPath, "MagicItems", "ChkSaleRODE", False, "Bool")
 	IniReadS($g_bChkSaleROBG, $g_sProfileConfigPath, "MagicItems", "ChkSaleROBG", False, "Bool")
 	IniReadS($g_bChkSaleROBE, $g_sProfileConfigPath, "MagicItems", "ChkSaleROBE", False, "Bool")
-	
+
 	IniReadS($g_bChkCollectBuilderBase, $g_sProfileConfigPath, "other", "ChkCollectBuildersBase", False, "Bool")
 	IniReadS($g_bChkCleanBBYard, $g_sProfileConfigPath, "other", "ChkCleanBBYard", False, "Bool")
 	IniReadS($g_bChkStartClockTowerBoost, $g_sProfileConfigPath, "other", "ChkStartClockTowerBoost", False, "Bool")
@@ -456,7 +456,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkClanGames3H, $g_sProfileConfigPath, "other", "ChkClanGames60", False, "Bool")
 	IniReadS($g_bChkClanGamesDebug, $g_sProfileConfigPath, "other", "ChkClanGamesDebug", False, "Bool")
 	IniReadS($g_bCollectCGReward, $g_sProfileConfigPath, "other", "CollectCGReward", False, "Bool")
-	
+
 	IniReadS($g_bChkClanGamesLoot, $g_sProfileConfigPath, "other", "ChkClanGamesLoot", False, "Bool")
 	IniReadS($g_bChkClanGamesBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBattle", False, "Bool")
 	IniReadS($g_bChkClanGamesDes, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
@@ -467,7 +467,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkClanGamesBBBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBBBattle", False, "Bool")
 	IniReadS($g_bChkClanGamesBBDes, $g_sProfileConfigPath, "other", "ChkClanGamesBBDestruction", False, "Bool")
 	IniReadS($g_bChkClanGamesBBTroops, $g_sProfileConfigPath, "other", "ChkClanGamesBBTroops", False, "Bool")
-	
+
 	IniReadS($g_bChkForceBBAttackOnClanGames, $g_sProfileConfigPath, "other", "ChkForceBBAttackOnClanGames", False, "Bool")
 	IniReadS($g_bChkClanGamesPurgeAny, $g_sProfileConfigPath, "other", "ChkClanGamesPurgeAny", False, "Bool")
 	IniReadS($g_bChkClanGamesStopBeforeReachAndPurge, $g_sProfileConfigPath, "other", "ChkClanGamesStopBeforeReachAndPurge", False, "Bool")
@@ -475,7 +475,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bSortClanGames, $g_sProfileConfigPath, "other", "ChkClanGamesSort", False, "Bool")
 	IniReadS($g_iSortClanGames, $g_sProfileConfigPath, "other", "ClanGamesSortBy", 0, "int")
 	IniReadS($g_bChkCGBBAttackOnly, $g_sProfileConfigPath, "other", "ChkCGBBAttackOnly", False, "Bool")
-	
+
 	Local $str
 	;ClanGames MainVillage Loot Challenges
 	$str = StringSplit(IniRead($g_sProfileConfigPath, "other", "EnabledCGLoot", "1|1|1|1|1|1|"), "|", $STR_NOCOUNT)
@@ -595,7 +595,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkEnableAutoUpgradeCC, $g_sProfileConfigPath, "ClanCapital", "AutoUpgradeCC", False, "Bool")
 	IniReadS($g_bChkAutoUpgradeCCIgnore, $g_sProfileConfigPath, "ClanCapital", "ChkAutoUpgradeCCIgnore", False, "Bool")
 	IniReadS($g_bChkAutoUpgradeCCWallIgnore, $g_sProfileConfigPath, "ClanCapital", "ChkAutoUpgradeCCWallIgnore", False, "Bool")
-	
+
 	;Misc Mod
 	IniReadS($g_bSkipFirstCheckRoutine, $g_sProfileConfigPath, "other", "SkipFirstCheckRoutine", False, "Bool")
 	IniReadS($g_bSkipBB, $g_sProfileConfigPath, "other", "SkipBB", False, "Bool")
@@ -958,7 +958,7 @@ Func ReadConfig_600_14()
 	IniReadS($g_bAutoStarLabUpgradeEnable, $g_sProfileBuildingPath, "upgrade", "upgradestartroops", False, "Bool")
 	IniReadS($g_iCmbStarLaboratory, $g_sProfileBuildingPath, "upgrade", "upgradestartroopname", 0, "int")
 	IniReadS($g_bUseLabPotion, $g_sProfileBuildingPath, "upgrade", "uselabpotion", True, "Bool")
-	
+
 	;xbenk
 	IniReadS($g_bLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "upgradeorder", False, "Bool")
 	IniReadS($g_bUpgradeSiegeToLvl2, $g_sProfileBuildingPath, "upgrade", "limitsiegelevel", False, "Bool")
@@ -982,11 +982,11 @@ Func ReadConfig_600_15()
 	IniReadS($g_bUpgradeWardenEnable, $g_sProfileConfigPath, "upgrade", "UpgradeWarden", False, "Bool")
 	IniReadS($g_bUpgradeChampionEnable, $g_sProfileConfigPath, "upgrade", "UpgradeChampion", False, "Bool")
 	IniReadS($g_iHeroReservedBuilder, $g_sProfileConfigPath, "upgrade", "HeroReservedBuilder", 0, "int")
-	
+
 	IniReadS($g_bChkSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "ChkSortPetUpgrade", False, "Bool")
 	IniReadS($g_iCmbSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "CmbSortPetUpgrade", 0, "int")
 	IniReadS($g_bChkSyncSaveDE, $g_sProfileConfigPath, "upgrade", "ChkSyncSaveDE", False, "Bool")
-	
+
 	IniReadS($g_bUpgradePetsEnable[$ePetLassi], $g_sProfileConfigPath, "upgrade", "UpgradePetLassi", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetEletroOwl], $g_sProfileConfigPath, "upgrade", "UpgradePetEletroOwl", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetMightyYak], $g_sProfileConfigPath, "upgrade", "UpgradePetMightyYak", False, "Bool")
@@ -1009,7 +1009,7 @@ Func ReadConfig_auto()
 	IniReadS($g_bChkRushTH, $g_sProfileConfigPath, "Auto Upgrade", "ChkRushTH", True, "Bool")
 	IniReadS($g_bUseWallReserveBuilder, $g_sProfileConfigPath, "Auto Upgrade", "UseWallReserveBuilder", True, "Bool")
 	IniReadS($g_bUseBuilderPotion, $g_sProfileConfigPath, "Auto Upgrade", "UseBuilderPotion", False, "Bool")
-	
+
 	Local $str = ""
 	$str = StringSplit(IniRead($g_sProfileConfigPath, "Auto Upgrade", "RushTHOption", "5|13|7|4|3"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aiCmbRushTHOption) - 1
@@ -1556,7 +1556,6 @@ Func ReadConfig_SwitchAccounts()
 		$g_bChkSuperCellID = IniRead($sSwitchAccFile, "SwitchAccount", "SuperCellID", "0") = "1"
 		$g_bChkSharedPrefs = IniRead($sSwitchAccFile, "SwitchAccount", "SharedPrefs", "0") = "1"
 		$g_bChkSmartSwitch = IniRead($sSwitchAccFile, "SwitchAccount", "SmartSwitch", "0") = "1"
-		$g_bDonateLikeCrazy = IniRead($sSwitchAccFile, "SwitchAccount", "DonateLikeCrazy", "0") = "1"
 		$g_iTotalAcc = Int(IniRead($sSwitchAccFile, "SwitchAccount", "TotalCocAccount", "-1"))
 		$g_iTrainTimeToSkip = Int(IniRead($sSwitchAccFile, "SwitchAccount", "TrainTimeToSkip", "1"))
 		For $i = 1 To UBound($g_abAccountNo)

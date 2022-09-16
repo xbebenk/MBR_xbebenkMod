@@ -381,7 +381,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "minTreasurygold", $g_iTxtTreasuryGold)
 	_Ini_Add("other", "minTreasuryelixir", $g_iTxtTreasuryElixir)
 	_Ini_Add("other", "minTreasurydark", $g_iTxtTreasuryDark)
-	
+
 	_Ini_Add("MagicItems", "ChkSaleMagicItems", $g_bChkEnableSaleMagicItem ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkSaleBOF", $g_bChkSaleBOF ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkSaleBOB", $g_bChkSaleBOB ? 1 : 0)
@@ -403,7 +403,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("MagicItems", "ChkSaleRODE", $g_bChkSaleRODE ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkSaleROBG", $g_bChkSaleROBG ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkSaleROBE", $g_bChkSaleROBE ? 1 : 0)
-	
+
 	_Ini_Add("other", "ChkCollectBuildersBase", $g_bChkCollectBuilderBase ? 1 : 0)
 	_Ini_Add("other", "ChkCleanBBYard", $g_bChkCleanBBYard ? 1 : 0)
 	_Ini_Add("other", "ChkStartClockTowerBoost", $g_bChkStartClockTowerBoost ? 1 : 0)
@@ -422,7 +422,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkClanGames60", $g_bChkClanGames3H ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesDebug", $g_bChkClanGamesDebug ? 1 : 0)
 	_Ini_Add("other", "CollectCGReward", $g_bCollectCGReward ? 1 : 0)
-	
+
 	_Ini_Add("other", "ChkClanGamesLoot", $g_bChkClanGamesLoot ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesBattle", $g_bChkClanGamesBattle ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesDestruction", $g_bChkClanGamesDes ? 1 : 0)
@@ -433,7 +433,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkClanGamesBBBattle", $g_bChkClanGamesBBBattle ? 1 : 0)
     _Ini_Add("other", "ChkClanGamesBBDestruction", $g_bChkClanGamesBBDes ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesBBTroops", $g_bChkClanGamesBBTroops ? 1 : 0)
-	
+
 	_Ini_Add("other", "ChkForceBBAttackOnClanGames", $g_bChkForceBBAttackOnClanGames ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesPurgeAny", $g_bChkClanGamesPurgeAny ? 1 : 0)
 	_Ini_Add("other", "ChkClanGamesStopBeforeReachAndPurge", $g_bChkClanGamesStopBeforeReachAndPurge ? 1 : 0)
@@ -441,67 +441,67 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkClanGamesSort", $g_bSortClanGames ? 1 : 0)
 	_Ini_Add("other", "ClanGamesSortBy", $g_iSortClanGames)
 	_Ini_Add("other", "ChkCGBBAttackOnly", $g_bChkCGBBAttackOnly ? 1 : 0)
-	
+
 	Local $str = ""
 	For $i = 0 To UBound($g_abCGMainLootItem) - 1
 		$str &= $g_abCGMainLootItem[$i] & "|"
 	Next
 	_Ini_Add("other", "EnabledCGLoot", $str)
-	
+
 	$str = ""
 	For $i = 0 To UBound($g_abCGMainBattleItem) - 1
 		$str &= $g_abCGMainBattleItem[$i] & "|"
 	Next
 	_Ini_Add("other", "EnabledCGBattle", $str)
-	
+
 	$str = ""
 	For $i = 0 To UBound($g_abCGMainDestructionItem) - 1
 		$str &= $g_abCGMainDestructionItem[$i] & "|"
 	Next
 	_Ini_Add("other", "EnabledCGDes", $str)
-	
+
 	$str = ""
 	For $i = 0 To UBound($g_abCGMainAirItem) - 1
 		$str &= $g_abCGMainAirItem[$i] & "|"
 	Next
 	_Ini_Add("other", "EnabledCGAirTroop", $str)
-	
+
 	$str = ""
 	For $i = 0 To UBound($g_abCGMainGroundItem) - 1
 		$str &= $g_abCGMainGroundItem[$i] & "|"
 	Next
 	_Ini_Add("other", "EnabledCGGroundTroop", $str)
-	
+
 	$str = ""
 	For $i = 0 To UBound($g_abCGMainMiscItem) - 1
 		$str &= $g_abCGMainMiscItem[$i] & "|"
 	Next
 	_Ini_Add("other", "EnabledCGMisc", $str)
-	
+
 	$str = ""
 	For $i = 0 To UBound($g_abCGMainSpellItem) - 1
 		$str &= $g_abCGMainSpellItem[$i] & "|"
 	Next
 	_Ini_Add("other", "EnabledCGSpell", $str)
-	
+
 	$str = ""
 	For $i = 0 To UBound($g_abCGBBBattleItem) - 1
 		$str &= $g_abCGBBBattleItem[$i] & "|"
 	Next
 	_Ini_Add("other", "EnabledBBBattle", $str)
-	
+
 	$str = ""
 	For $i = 0 To UBound($g_abCGBBDestructionItem) - 1
 		$str &= $g_abCGBBDestructionItem[$i] & "|"
 	Next
 	_Ini_Add("other", "EnabledBBDestruction", $str)
-	
+
 	$str = ""
 	For $i = 0 To UBound($g_abCGBBTroopsItem) - 1
 		$str &= $g_abCGBBTroopsItem[$i] & "|"
 	Next
 	_Ini_Add("other", "EnabledBBTroops", $str)
-	
+
 
 	; Builder Base Attack
 	_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)
@@ -517,7 +517,7 @@ Func SaveConfig_600_6()
 	; Builder Base Drop Order
 	_Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
 	_Ini_Add("other", "sBBDropOrder", $g_sBBDropOrder)
-	
+
 	;Clan Capital
 	_Ini_Add("ClanCapital", "ChkCollectCCGold", $g_bChkEnableCollectCCGold)
 	_Ini_Add("ClanCapital", "ChkStartWeekendRaid", $g_bChkStartWeekendRaid)
@@ -530,7 +530,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("ClanCapital", "AutoUpgradeCC", $g_bChkEnableAutoUpgradeCC)
 	_Ini_Add("ClanCapital", "ChkAutoUpgradeCCIgnore", $g_bChkAutoUpgradeCCIgnore)
 	_Ini_Add("ClanCapital", "ChkAutoUpgradeCCWallIgnore", $g_bChkAutoUpgradeCCWallIgnore)
-	
+
 	;Misc Mod
 	_Ini_Add("other", "SkipFirstCheckRoutine", $g_bSkipFirstCheckRoutine)
 	_Ini_Add("other", "SkipBB", $g_bSkipBB)
@@ -551,7 +551,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ForceSwitchifNoCGEvent", $g_bChkForceSwitchifNoCGEvent)
 	_Ini_Add("other", "EnableCCSleep", $g_bEnableCCSleep)
 	_Ini_Add("other", "SkipDT", $g_bSkipDT)
-	
+
 	SaveBuilderBaseMod()
 EndFunc   ;==>SaveConfig_600_6
 
@@ -696,7 +696,7 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradeWarden", $g_bUpgradeWardenEnable ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradeChampion", $g_bUpgradeChampionEnable ? 1 : 0)
 	_Ini_Add("upgrade", "HeroReservedBuilder", $g_iHeroReservedBuilder)
-	
+
 	_Ini_Add("upgrade", "ChkSortPetUpgrade", $g_bChkSortPetUpgrade ? 1 : 0)
 	_Ini_Add("upgrade", "CmbSortPetUpgrade", $g_iCmbSortPetUpgrade)
 	_Ini_Add("upgrade", "ChkSyncSaveDE", $g_bChkSyncSaveDE ? 1 : 0)
@@ -723,7 +723,7 @@ Func SaveConfig_auto()
 	_Ini_Add("Auto Upgrade", "ChkRushTH", $g_bChkRushTH)
 	_Ini_Add("Auto Upgrade", "UseWallReserveBuilder", $g_bUseWallReserveBuilder)
 	_Ini_Add("Auto Upgrade", "UseBuilderPotion", $g_bUseBuilderPotion)
-	
+
 	Local $string = ""
 	For $i = 0 To UBound($g_aiCmbRushTHOption) - 1
 		$string &= $g_aiCmbRushTHOption[$i] & "|"
@@ -762,13 +762,13 @@ Func SaveConfig_600_17()
 	_Ini_Add("upgrade", "UpgradeLowWall", $g_bUpgradeLowWall ? 1 : 0)
 	_Ini_Add("upgrade", "LowLevelWall", $g_iLowLevelWall)
 	_Ini_Add("upgrade", "UpgradeAnyWall", $g_bUpgradeAnyWallLevel ? 1 : 0)
-	
+
 	Local $string = ""
 	For $i = 0 To UBound($g_aUpgradeWall) - 1
 		$string &= $g_aUpgradeWall[$i] & "|"
 	Next
 	_Ini_Add("upgrade", "UpgradeWall", $string)
-	
+
 	For $i = 4 To 15
 		_Ini_Add("Walls", "Wall" & StringFormat("%02d", $i), $g_aiWallsCurrentCount[$i])
 	Next
@@ -1289,7 +1289,6 @@ Func SaveConfig_600_35_2()
 		IniWrite($sSwitchAccFile, "SwitchAccount", "SuperCellID", $g_bChkSuperCellID ? 1 : 0)
 		IniWrite($sSwitchAccFile, "SwitchAccount", "SharedPrefs", $g_bChkSharedPrefs ? 1 : 0)
 		IniWrite($sSwitchAccFile, "SwitchAccount", "SmartSwitch", $g_bChkSmartSwitch ? 1 : 0)
-		IniWrite($sSwitchAccFile, "SwitchAccount", "DonateLikeCrazy", $g_bDonateLikeCrazy ? 1 : 0)
 		IniWrite($sSwitchAccFile, "SwitchAccount", "TotalCocAccount", $g_iTotalAcc)
 		IniWrite($sSwitchAccFile, "SwitchAccount", "TrainTimeToSkip", $g_iTrainTimeToSkip)
 		For $i = 1 To UBound($g_abAccountNo)

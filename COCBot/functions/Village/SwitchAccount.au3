@@ -157,7 +157,7 @@ Func CheckSwitchAcc()
 			SetDebugLog("-Smart Switch-")
 			$nMinRemainTrain = CheckTroopTimeAllAccount($bForceSwitch)
 
-			If $nMinRemainTrain <= 1 And Not $bForceSwitch And Not $g_bDonateLikeCrazy Then ; Active (force switch shall give priority to Donate Account)
+			If $nMinRemainTrain <= 1 And Not $bForceSwitch Then ; Active (force switch shall give priority to Donate Account)
 				SetDebugLog("Switch to or Stay at Active Account: " & $g_iNextAccount + 1, $COLOR_DEBUG)
 				$g_iDonateSwitchCounter = 0
 			Else

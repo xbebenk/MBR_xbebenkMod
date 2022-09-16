@@ -331,15 +331,6 @@ Func cmbTotalAcc()
 	Next
 EndFunc   ;==>cmbTotalAcc
 
-Func chkSmartSwitch()
-	If GUICtrlRead($g_hChkSmartSwitch) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkDonateLikeCrazy, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hChkDonateLikeCrazy, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkDonateLikeCrazy, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkSmartSwitch
-
 Func chkAccount($i)
 	If GUICtrlRead($g_ahChkAccount[$i]) = $GUI_CHECKED Then
 		_GUI_Value_STATE("ENABLE", $g_ahCmbProfile[$i] & "#" & $g_ahChkDonate[$i])
@@ -349,6 +340,46 @@ Func chkAccount($i)
 		_GUI_Value_STATE("DISABLE", $g_ahCmbProfile[$i] & "#" & $g_ahChkDonate[$i])
 	EndIf
 EndFunc   ;==>chkAccount
+
+Func btnSaveToAllOpen()
+	GUISetState(@SW_SHOW, $g_hGUI_SaveToProfiles)
+EndFunc
+
+Func btnSaveToAllClose()
+	GUISetState(@SW_HIDE, $g_hGUI_SaveToProfiles)
+EndFunc
+
+Func chkCheckAllSaveProfile()
+	If GUICtrlRead($g_hChkEnableSaveAll) = $GUI_CHECKED Then
+		For $i = 0 To Ubound($g_ahChkCopyAccount) - 1
+			GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_CHECKED)
+		Next
+	Else
+		For $i = 0 To Ubound($g_ahChkCopyAccount) - 1
+			GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_UNCHECKED)
+		Next
+	EndIf
+EndFunc
+
+Func btnSaveToAllApply()
+	Local $bRet = False
+	Local $sConfigSource = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\" & "config.ini"
+	Local $sBuildingSource = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\" & "building.ini"
+	saveConfig() ;save current profile first
+	
+	For $i = 0 To UBound($g_ahChkCopyAccount) - 1
+		Local $sDestinationDir = $g_sProfilePath & "\" & $g_asProfileName[$i]
+		If GUICtrlRead($g_ahChkCopyAccount[$i]) = $GUI_CHECKED Then
+			If $g_sProfileCurrentName <> $g_asProfileName[$i] Then 
+				SetLog("Applying current profile setting to " & $g_asProfileName[$i], $COLOR_SUCCESS)
+				FileCopy($sConfigSource, $sDestinationDir, $FC_OVERWRITE + $FC_CREATEPATH)
+				FileCopy($sBuildingSource, $sDestinationDir, $FC_OVERWRITE + $FC_CREATEPATH)
+				$bRet = True
+			EndIf
+		EndIf
+	Next
+	Return $bRet
+EndFunc
 
 Func chkAccountX()
 	For $i = 0 To UBound($g_ahChkAccount) - 1
