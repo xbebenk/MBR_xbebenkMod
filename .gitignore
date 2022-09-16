@@ -27,6 +27,9 @@ BuildMBR.exe
 [Tt]emp/
 [Bb]ackup/
 
+# Mod TestFiles
+COCBot/Test420/*
+
 # Obsolete Files and Folders
 [Ll]oots/
 [Aa]llTowns/
