@@ -188,7 +188,7 @@ Func StarLaboratory($bTestRun = False)
 		
 		;any upgrade if all on troops lab order is maxed
 		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bChkUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn And $g_bisBattleMachineMaxed Then
-			_ArraySort($aTroopUpgrade, 0, 0, 0, 5)
+			_ArraySort($aTroopUpgrade, 1, 0, 0, 5) ;sort by cost descending
 			For $i = 0 To UBound($aTroopUpgrade) - 1
 				If $aTroopUpgrade[$i][5] = "MaxLevel" Then ContinueLoop
 				If $aTroopUpgrade[$i][5] = "NeedUpgradeLab" Then ExitLoop
