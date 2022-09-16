@@ -242,7 +242,7 @@ Func CreateSaveToProfiles()
 			EndIf
 		Next
 		
-		$g_hBtnSaveToAllApply = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "BtnSaveToAllApply", "Apply"), 290, $y + 130, 85, 25)
+		$g_hBtnSaveToAllApply = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "BtnSaveToAllApply", "Apply"), 290, $y + 160, 85, 25)
 			GUICtrlSetOnEvent(-1, "btnSaveToAllApply")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
