@@ -1371,10 +1371,7 @@ Func FirstCheck()
 EndFunc   ;==>FirstCheck
 
 Func FirstCheckRoutine()
-	If T420() Then
-		SetLog("Test420 Done!", $COLOR_SUCCESS)
-	EndIf
-
+	
 	Local $b_SuccessAttack = False
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
@@ -1446,6 +1443,9 @@ Func FirstCheckRoutine()
 		TrainSystem()
 		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 		If $g_bIsFullArmywithHeroesAndSpells Then
+			If T420() Then
+				SetLog("Test420 Done!", $COLOR_SUCCESS)
+			EndIf
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
