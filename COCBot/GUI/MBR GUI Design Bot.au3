@@ -43,7 +43,6 @@ Func CreateBotTab()
 		CreateBotDebug()
 	$g_hGUI_BOT_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_04", "Profiles"))
 		CreateBotProfiles()
-		CreateSaveToProfiles()
 	$g_hGUI_BOT_TAB_ITEM5 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_04_STab_05", "Stats"))
 	; This dummy is used in btnStart and btnStop to disable/enable all labels, text, buttons etc. on all tabs.
 	$g_hLastControlToHide = GUICtrlCreateDummy()
@@ -51,6 +50,7 @@ Func CreateBotTab()
 		CreateBotStats()
 
 	CreateBotSwitchAccLog()
+	CreateSaveToProfiles()
 	GUICtrlCreateTabItem("")
 
 EndFunc   ;==>CreateBotTab
