@@ -1371,7 +1371,6 @@ Func FirstCheck()
 EndFunc   ;==>FirstCheck
 
 Func FirstCheckRoutine()
-	
 	Local $b_SuccessAttack = False
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
@@ -1764,7 +1763,5 @@ Func T420()
 	If IsDeclared("g_VariableTest123") = 1 Then
 		SetLog("Execute Test420()", $COLOR_INFO)
 		Return Execute("Test420()")
-	Else
-		Return SetLog("© © © © © © © © © © © ©", $COLOR_ERROR)
 	EndIf
 EndFunc
