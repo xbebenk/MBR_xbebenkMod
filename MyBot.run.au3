@@ -1361,6 +1361,9 @@ Func FirstCheck()
 	If BotCommand() Then btnStop()
 
 	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 1) Then
+		If T420() Then
+			SetLog("Test420 Done!", $COLOR_SUCCESS)
+		EndIf
 		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
 		If Not $g_bSkipTrain Then TrainSystem()
