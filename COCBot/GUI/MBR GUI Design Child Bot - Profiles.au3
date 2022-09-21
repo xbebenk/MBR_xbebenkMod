@@ -220,7 +220,7 @@ EndFunc   ;==>CreateBotProfiles
 Global $g_hGUI_SaveToProfiles = 0, $g_ahChkCopyAccount[16], $g_ahTxtCopyAccount[16], $g_hChkEnableSaveAll = 0, $g_hBtnSaveToAllClose = 0, $g_hBtnSaveToAllApply = 0
 Func CreateSaveToProfiles()
 	Local $aActiveProfile = AccountNoActive()
-	$g_hGUI_SaveToProfiles = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - SaveTo", "GUI_SaveToProfiles", "Save Current Profile Settings to Others"), 430, 380, $g_iFrmBotPosX, $g_iFrmBotPosY + 200, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	$g_hGUI_SaveToProfiles = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - SaveTo", "GUI_SaveToProfiles", "Save Current Profile Settings to Others"), 430, 380, $g_iFrmBotPosX, $g_iFrmBotPosY + 200, $WS_DLGFRAME, -1, $g_hFrmBot)
 	
 	Local $x = 25, $y = 25
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - SaveTo", "SaveTo", "Save Current Profile settings to :"), $x - 20, $y - 20, 420, 280)
