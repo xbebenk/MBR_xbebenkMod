@@ -188,7 +188,8 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 	If $bRepeat Or $g_abUpgradeRepeatEnable[$inum] Then ; check for upgrade in process when continiously upgrading
 		ClickAway()
 		If _Sleep($DELAYUPGRADEVALUE1) Then Return
-		BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select upgrade trained
+		Click($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) 
+		;BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select upgrade trained
 		If _Sleep($DELAYUPGRADEVALUE4) Then Return
 		If $bOopsFlag = True Then SaveDebugImage("ButtonView")
 		; check if upgrading collector type building, and reselect in case previous click only collect resource
@@ -197,7 +198,8 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 				StringInStr($g_avBuildingUpgrades[$inum][4], "drill", $STR_NOCASESENSEBASIC) Then
 			ClickAway()
 			If _Sleep($DELAYUPGRADEVALUE1) Then Return
-			BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select collector upgrade trained
+			Click($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select collector upgrade trained
+			;BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select collector upgrade trained
 			If _Sleep($DELAYUPGRADEVALUE4) Then Return
 		EndIf
 		; check for upgrade in process
@@ -230,7 +232,8 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 		ClickAway()
 		SetLog("-$Upgrade #" & $inum + 1 & " Location =  " & "(" & $g_avBuildingUpgrades[$inum][0] & "," & $g_avBuildingUpgrades[$inum][1] & ")", $COLOR_DEBUG1) ;Debug
 		If _Sleep($DELAYUPGRADEVALUE1) Then Return
-		BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "#0212") ;Select upgrade trained
+		Click($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select upgrade trained
+		;BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "#0212") ;Select upgrade trained
 		If _Sleep($DELAYUPGRADEVALUE2) Then Return
 		If $bOopsFlag = True Then SaveDebugImage("ButtonView")
 	EndIf
