@@ -1040,10 +1040,10 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 			If Not $g_bRunState Then Return
 			_ClanGames(False, $g_bChkForceBBAttackOnClanGames) ;Trying to do this above in the main loop
 			;ClickAway()
-			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
-				SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-				checkSwitchAcc()
-			EndIf
+			;If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
+			;	SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
+			;	checkSwitchAcc()
+			;EndIf
 			If Not $g_bRunState Then Return
 			If $g_bUpdateSharedPrefs And $g_bChkSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
@@ -1446,9 +1446,6 @@ Func FirstCheckRoutine()
 		TrainSystem()
 		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 		If $g_bIsFullArmywithHeroesAndSpells Then
-			If T420() Then
-				SetLog("Test420 Done!", $COLOR_SUCCESS)
-			EndIf
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
