@@ -254,8 +254,19 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 		SetLog("Error: Name & Level for Upgrade not found?", $COLOR_ERROR)
 	EndIf
 	SetLog("Upgrade Name = " & $g_avBuildingUpgrades[$inum][4] & ", Level = " & $g_avBuildingUpgrades[$inum][5], $COLOR_INFO) ;Debug
-
-	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
+	
+	
+	Local $aUpgradeButton, $aTmpUpgradeButton
+	$aUpgradeButton = findButton("Upgrade", Default, 1, True)
+	If $aResult[1] = "Town Hall" And $aResult[2] > 11 And UBound($aUpgradeButton, 1) <> 2 Then ;Upgrade THWeapon
+		$aTmpUpgradeButton = findButton("THWeapon", Default, 1, True) ;try to find UpgradeTHWeapon button (swords)
+		If IsArray($aTmpUpgradeButton) And UBound($aTmpUpgradeButton) = 2 Then
+			$g_avBuildingUpgrades[$inum][4] = "TH Weapon"
+			GUICtrlSetData($g_hTxtUpgradeName[$inum], $g_avBuildingUpgrades[$inum][4])
+			$aUpgradeButton = $aTmpUpgradeButton
+		EndIf
+	Endif
+	
 	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
 		ClickP($aUpgradeButton, 1, 0, "#0213") ; Click Upgrade Button
 		If _Sleep($DELAYUPGRADEVALUE5) Then Return
