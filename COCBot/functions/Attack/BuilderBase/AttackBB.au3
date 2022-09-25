@@ -13,6 +13,20 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+Func CheckCGCompleted()
+	Local $bRet = False
+	For $x = 1 To 8
+		SetLog("Checkin challenges progress #" &$x, $COLOR_ACTION)
+		_Sleep(1500)
+		If QuickMIS("BC1", $g_sImgGameComplete, 760, 450, 820, 520) Then
+			SetLog("Nice, Game Completed", $COLOR_INFO)
+			$bRet = True
+			ExitLoop
+		EndIf
+	Next
+	Return $bRet
+EndFunc
+
 Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 	If Not $g_bChkEnableBBAttack Then Return
 	If $g_iBBAttackCount = 0 Then
@@ -25,14 +39,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			_AttackBB()
 			If Not $g_bRunState Then Return
 			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-				SetLog("Check if ClanGames Challenge is Completed", $COLOR_DEBUG)
-				For $x = 0 To 4
-					_Sleep(2000)
-					If QuickMIS("BC1", $g_sImgGameComplete, 760, 450, 820, 520) Then
-						SetLog("Nice, Game Completed", $COLOR_INFO)
-						ExitLoop 2
-					EndIf
-				Next
+				If CheckCGCompleted() Then ExitLoop
 			Else
 				_Sleep(2000)
 			EndIf
@@ -58,14 +65,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				_AttackBB()
 				If Not $g_bRunState Then Return
 				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-					SetLog("Check if ClanGames Challenge is Completed", $COLOR_DEBUG)
-					For $x = 0 To 4
-						_Sleep(2000)
-						If QuickMIS("BC1", $g_sImgGameComplete, 760, 450, 820, 520) Then
-							SetLog("Nice, Game Completed", $COLOR_INFO)
-							ExitLoop 2
-						EndIf
-					Next
+					If CheckCGCompleted() Then ExitLoop
 				Else
 					_Sleep(2000)
 				EndIf
