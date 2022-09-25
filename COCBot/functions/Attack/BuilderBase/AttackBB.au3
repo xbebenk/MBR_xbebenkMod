@@ -16,7 +16,7 @@
 Func CheckCGCompleted()
 	Local $bRet = False
 	For $x = 1 To 8
-		SetLog("Checkin challenges progress #" &$x, $COLOR_ACTION)
+		SetLog("Check challenges progress #" &$x, $COLOR_ACTION)
 		_Sleep(1500)
 		If QuickMIS("BC1", $g_sImgGameComplete, 760, 450, 820, 520) Then
 			SetLog("Nice, Game Completed", $COLOR_INFO)
