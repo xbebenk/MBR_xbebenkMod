@@ -16,7 +16,7 @@
 
 Global $g_aiUpgradeLevel[$g_iUpgradeSlots] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-Func UpgradeBuilding()
+Func UpgradeBuilding($bTest = False)
 
 	Local $iz = 0
 	Local $iUpgradeAction = -1
@@ -56,11 +56,15 @@ Func UpgradeBuilding()
 	; also reserve builders for hero upgrading
 	$iAvailBldr = $g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0) - ReservedBuildersForHeroes()
 
-	If $iAvailBldr <= 0 Then
+	If $iAvailBldr <= 0 And Not $bTest Then
 		SetLog("No builder available for upgrade process")
 		Return False
 	EndIf
-
+	
+	;align base first
+	Local $aZoomOut = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+	If IsArray($aZoomOut) And $aZoomOut[0] = "" Then ZoomOut()
+	
 	For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1
 
 		If $g_bDebugSetlog Then SetlogUpgradeValues($iz) ; massive debug data dump for each upgrade
@@ -72,7 +76,7 @@ Func UpgradeBuilding()
 		; Check free builder in case of multiple upgrades, but skip check when time to check repeated upgrades.
 		; Why? Can't do repeat upgrades if there are no builders?  Does it correct the upgrade list?
 		;If $iAvailBldr <= 0 And Not $bChkAllRptUpgrade Then
-		If $iAvailBldr <= 0 Then
+		If $iAvailBldr <= 0 And Not $bTest Then
 			SetLog("No builder available for #" & $iz + 1 & ", " & $g_avBuildingUpgrades[$iz][4], $COLOR_DEBUG)
 			Return False
 		EndIf
@@ -128,7 +132,7 @@ Func UpgradeBuilding()
 					SetLog("Insufficent Gold for #" & $iz + 1 & ", requires: " & $g_avBuildingUpgrades[$iz][2] & " + " & $g_iUpgradeMinGold, $COLOR_INFO)
 					ContinueLoop
 				EndIf
-				If UpgradeNormal($iz) = False Then ContinueLoop
+				If UpgradeNormal($bTest, $iz) = False Then ContinueLoop
 				$iUpgradeAction += 2 ^ ($iz + 1)
 				SetLog("Gold used = " & $g_avBuildingUpgrades[$iz][2], $COLOR_INFO)
 				$g_iNbrOfBuildingsUppedGold += 1
@@ -141,7 +145,7 @@ Func UpgradeBuilding()
 					SetLog("Insufficent Elixir for #" & $iz + 1 & ", requires: " & $g_avBuildingUpgrades[$iz][2] & " + " & $g_iUpgradeMinElixir, $COLOR_INFO)
 					ContinueLoop
 				EndIf
-				If UpgradeNormal($iz) = False Then ContinueLoop
+				If UpgradeNormal($bTest, $iz) = False Then ContinueLoop
 				$iUpgradeAction += 2 ^ ($iz + 1)
 				SetLog("Elixir used = " & $g_avBuildingUpgrades[$iz][2], $COLOR_INFO)
 				$g_iNbrOfBuildingsUppedElixir += 1
@@ -209,11 +213,12 @@ Func UpgradeBuilding()
 
 EndFunc   ;==>UpgradeBuilding
 ;
-Func UpgradeNormal($iUpgradeNumber)
+Func UpgradeNormal($bTest, $iUpgradeNumber)
 	ClickAway()
 	If _Sleep($DELAYUPGRADENORMAL1) Then Return
-
-	BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "#0296") ; Select the item to be upgrade
+	
+	Click($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1]) ; Select the item to be upgrade
+	;BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "#0296") ; Select the item to be upgrade
 	If _Sleep($DELAYUPGRADENORMAL1) Then Return ; Wait for window to open
 
 	Local $aResult = BuildingInfo(242, 494) ; read building name/level to check we have right bldg or if collector was not full
@@ -223,8 +228,9 @@ Func UpgradeNormal($iUpgradeNumber)
 		SetLog("#" & $iUpgradeNumber + 1 & ":" & $g_avBuildingUpgrades[$iUpgradeNumber][4] & ": Not same as :" & $aResult[1] & ":? Retry now...", $COLOR_INFO)
 		ClickAway()
 		If _Sleep($DELAYUPGRADENORMAL1) Then Return
-
-		BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "#0296") ; Select the item to be upgrade again in case full collector/mine
+		
+		Click($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1])
+		;BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "#0296") ; Select the item to be upgrade again in case full collector/mine
 		If _Sleep($DELAYUPGRADENORMAL1) Then Return ; Wait for window to open
 
 		$aResult = BuildingInfo(242, 494) ; read building name/level to check we have right bldg or if collector was not full
@@ -235,9 +241,10 @@ Func UpgradeNormal($iUpgradeNumber)
 			EndIf
 		EndIf
 	EndIf
-
+	
+	If $bTest Then Return False
+	
 	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)
-
 	If IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2 Then
 		If _Sleep($DELAYUPGRADENORMAL2) Then Return
 		ClickP($aUpgradeButton, 1, 0, "#0297") ; Click Upgrade Button
