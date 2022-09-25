@@ -1566,12 +1566,14 @@ Func FirstCheckRoutine()
 	CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
 		CommonRoutine("Switch")
+		_ClanGames(False, False, True) ; Do Only Purge
 		checkSwitchAcc() ;switch to next account
 	EndIf
 EndFunc
 
 Func CommonRoutine($RoutineType = Default)
 	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
+	SetLog("Doing CommonRoutine: " & $RoutineType, $COLOR_SUCCESS)
 	Switch $RoutineType
 		Case "FirstCheckRoutine"
 			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', "SaleMagicItem", 'Laboratory', 'CollectFreeMagicItems']
