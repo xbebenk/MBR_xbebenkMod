@@ -14,10 +14,12 @@
 ; ===============================================================================================================================
 
 Func isOnBuilderBase($bNeedCaptureRegion = True)
-	If _ColorCheck(_GetPixelColor(356, 12, True), Hex(0x9CD2EE, 6), 20) Then
-		SetDebugLog("Builder Base Builder detected", $COLOR_DEBUG)
+	Local $sColor = _GetPixelColor(356, 12, $bNeedCaptureRegion)
+	If _ColorCheck($sColor, Hex(0x9CD2EE, 6), 10) Then
+		SetDebugLog("Builder Base detected")
 		Return True
 	Else
+		SetDebugLog("Not In BuilderBase, Colorcheck:" & $sColor)
 		Return False
 	EndIf
 EndFunc
