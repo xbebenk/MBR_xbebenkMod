@@ -1039,11 +1039,6 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 			EndIf
 			If Not $g_bRunState Then Return
 			_ClanGames(False, $g_bChkForceBBAttackOnClanGames) ;Trying to do this above in the main loop
-			;ClickAway()
-			;If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
-			;	SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-			;	checkSwitchAcc()
-			;EndIf
 			If Not $g_bRunState Then Return
 			If $g_bUpdateSharedPrefs And $g_bChkSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
