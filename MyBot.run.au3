@@ -1494,10 +1494,11 @@ Func FirstCheckRoutine()
 	EndIf
 
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then
+	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bForceSwitchifNoCGEvent) Then
 		PrepareDonateCC()
 		DonateCC()
 		TrainSystem()
+		CommonRoutine("Switch")
 		checkSwitchAcc() ;switch to next account
 	EndIf
 
