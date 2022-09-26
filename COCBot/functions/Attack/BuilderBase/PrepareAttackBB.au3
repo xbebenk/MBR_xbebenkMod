@@ -15,7 +15,12 @@
 
 Func PrepareAttackBB($Mode = Default)
 	getBuilderCount(True, True) 
-		
+	
+	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then 
+		SetLog("ForceSwitchifNoCGEvent Enabled, Skip Attack until we have BBEvent", $COLOR_SUCCESS)
+		Return False
+	EndIf
+	
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 		SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)

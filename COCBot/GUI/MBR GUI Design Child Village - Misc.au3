@@ -400,7 +400,7 @@ Func CreateMiscNormalVillageSubTab()
 EndFunc   ;==>CreateMiscNormalVillageSubTab
 
 Func CreateSellMagicSetting()
-	$g_hGUI_SaleMagicItems = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_SaleMagicItem", "Sale Magic Items Settings"), $_GUI_MAIN_WIDTH - 20, $_GUI_MAIN_HEIGHT - 370, $g_iFrmBotPosX, $g_iFrmBotPosY + 60, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	$g_hGUI_SaleMagicItems = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_SaleMagicItem", "Sale Magic Items Settings"), $_GUI_MAIN_WIDTH - 20, $_GUI_MAIN_HEIGHT - 370, $g_iFrmBotPosX, $g_iFrmBotPosY + 60, $WS_DLGFRAME, -1, $g_hFrmBot)
 	; GUI SubTab
 	Local $x = 15, $y = 10
 	
@@ -683,7 +683,7 @@ EndFunc ;==>CreateMiscModSubTab
 
 Func CreateClanGamesSettings()
 	Local $tmpChallenges
-	$g_hGUI_CGSettings = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGSettings", "ClanGames Challenge Setting"), $_GUI_MAIN_WIDTH - 4, $_GUI_MAIN_HEIGHT - 100, $g_iFrmBotPosX, $g_iFrmBotPosY + 80, $WS_DLGFRAME, $WS_EX_TOPMOST)
+	$g_hGUI_CGSettings = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGSettings", "ClanGames Challenge Setting"), $_GUI_MAIN_WIDTH - 4, $_GUI_MAIN_HEIGHT - 100, $g_iFrmBotPosX, $g_iFrmBotPosY + 80, $WS_DLGFRAME, -1, $g_hFrmBot)
 	Local $x = 25, $y = 25
 
 	$g_hClanGamesTV = GUICtrlCreateTreeView(6, 6, 200, $_GUI_MAIN_HEIGHT - 140, BitOR($TVS_HASBUTTONS, $TVS_HASLINES, $TVS_LINESATROOT, $TVS_CHECKBOXES), $WS_EX_CLIENTEDGE)

@@ -59,6 +59,7 @@ EndFunc   ;==>BuilderBaseReport
 Func isBHMaxed()
 	Local $aBuildingName, $bRet = False
 	ClickAway("Left")
+	_Sleep(1000)
 	If QuickMIS("BC1", $g_sImgBuilderHall) Then ; Search for Builder Hall
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		_Sleep(1000)
@@ -106,6 +107,7 @@ EndFunc
 Func isMegaTeslaMaxed()
 	ClickAway("Left")
 	If $g_bisMegaTeslaMaxed = True Then Return True
+	_Sleep(1000)
 	
 	If QuickMIS("BC1", $g_sImgMegaTesla) Then ;Search for Mega Tesla
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
@@ -133,6 +135,7 @@ EndFunc
 Func isBattleMachineMaxed()
 	ClickAway("Left")
 	If $g_bisBattleMachineMaxed = True Then Return True
+	_Sleep(1000)
 	
 	If QuickMIS("BC1", $g_sImgBattleMachine) Then ;Search for Battle Machine
 		If $g_iQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 15

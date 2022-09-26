@@ -59,6 +59,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Else
 			SetLog("Waiting For Multiplayer Window #" & $i, $COLOR_ACTION)
 		EndIf
+		If _Sleep(1000) Then Return
 	Next
 	
 	If Not $MultiplayerWindowOpened Then
