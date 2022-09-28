@@ -100,6 +100,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 				Case "CNX" 
 					Local $Result[0][4]
 					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
+					Local $sResult = ""
 					For $i = 0 To UBound($KeyValue) - 1
 						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
 						Local $objName = StringSplit($KeyValue[$i], "_", $STR_NOCOUNT)
@@ -109,10 +110,11 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 							If UBound(decodeSingleCoord($xy[$j])) > 1 Then 
 								Local $Tmpxy = StringSplit($xy[$j], ",", $STR_NOCOUNT)
 								_ArrayAdd($Result, $objName[0] & "|" & $Tmpxy[0] + $Left & "|" & $Tmpxy[1] + $Top & "|" & $objName[1])
+								$sResult &= "|" & $objName[0] & "," & $Tmpxy[0] + $Left & "," & $Tmpxy[1] + $Top & "," & $objName[1]
 							EndIf
 						Next
 					Next
-					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & _ArrayToString($Result), $COLOR_PURPLE)
+					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $sResult)
 					Return $Result
 
 				Case "N1" ; name of first file found
