@@ -96,9 +96,9 @@ Func ClanCapitalReport($SetLog = True)
 	
 	Local $sRaidText = getOcrAndCapture("coc-mapname", 773, 613, 50, 30)
 	If $sRaidText = "Raid" Then
-		SetLog("Raid Weekend is Available", $COLOR_INFO)
+		If $SetLog Then SetLog("Raid Weekend is Available", $COLOR_INFO)
 		Local $iAttack = getOcrAndCapture("coc-mapname", 780, 545, 20, 30)
-		SetLog("You have " & $iAttack & " available attack", $COLOR_SUCCESS)
+		If $SetLog Then SetLog("You have " & $iAttack & " available attack", $COLOR_SUCCESS)
 		If Number($g_iLootCCGold) > 0 Then 
 			If _Sleep(8000) Then Return
 		EndIf
@@ -734,6 +734,7 @@ Func AutoUpgradeCC($bTest = False)
 							EndIf
 							_Sleep(500)
 							ClickAway("Right")
+							_Sleep(1000)
 						EndIf
 						ClanCapitalReport(False)
 						If Number($g_iLootCCGold) = 0 Then 

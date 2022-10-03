@@ -110,6 +110,7 @@ Func CleanYard($bTest = False)
 				$Filename = $aResult[$i][0]
 				$x = $aResult[$i][1]
 				$y = $aResult[$i][2]
+				If Not $g_bRunState Then Return
 				If Not isSafeCleanYardXY($x, $y) Then ContinueLoop
 				SetLog($Filename & " found [" & $x & "," & $y & "]", $COLOR_SUCCESS)
 				Click($x, $y, 1, 0, "#0430") ;click CleanYard
@@ -117,7 +118,6 @@ Func CleanYard($bTest = False)
 				If Not ClickRemoveObstacle($bTest) Then ContinueLoop
 				CleanYardCheckBuilder($bTest)
 				If $g_iFreeBuilderCount = 0 Then _SleepStatus(12000)
-				If Not $g_bRunState Then Return
 				ClickAway()
 				$Locate += 1
 			Next
