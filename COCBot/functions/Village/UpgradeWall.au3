@@ -293,9 +293,8 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 			EndIf
 			If DoLowLevelWallUpgrade($aWallLevel[2], $bTest, $aWallCoord[$i][2]) Then
 				If _Sleep(1000) Then Return
-				ContinueLoop
 			Else
-				ExitLoop
+				Return False
 			EndIf
 		Next
 	Next
