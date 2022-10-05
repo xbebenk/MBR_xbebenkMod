@@ -16,7 +16,7 @@
 
 Func CheckVersion()
 
-	If not $g_bCheckVersion Then Return
+	;If Not $g_bCheckVersion Then Return
 	Local $sModVersion = "", $sUrlFetchMod = "", $aResult, $sCurrentVersion = ""
 	
 	$aResult = StringRegExp($g_sXModversion, '\[#(\d+)\]', $STR_REGEXPARRAYMATCH)
@@ -59,7 +59,7 @@ Func CheckVersion()
 			Next
 			PushMsg("Update")
 		ElseIf _VersionCompare($g_iBotVersionN, $g_sBotGitVersion) = 0 Then
-			SetLog("WELCOME CHIEF, YOU HAVE THE LATEST MYBOT VERSION", $COLOR_SUCCESS)
+			SetLog("YOU HAVE THE LATEST MYBOT VERSION", $COLOR_SUCCESS)
 		Else
 			SetLog("YOU ARE USING A FUTURE VERSION CHIEF!", $COLOR_ACTION)
 		EndIf
@@ -72,10 +72,18 @@ Func CheckVersion()
 			SetLog("##############################################", $COLOR_SUCCESS)
 			Return
 		EndIf
+		
 		If Number($sModVersion) > Number($sCurrentVersion) Then 
 			SetLog("##############################################", $COLOR_INFO)
 			SetLog("WARNING, YOUR MOD VERSION (#" & $sCurrentVersion & ") IS OUT OF DATE.", $COLOR_ERROR)
 			SetLog("PLEASE UPDATE TO LATEST MOD VERSION (#" & $sModVersion & ")", $COLOR_ERROR)
+			SetLog($g_sXModSupportUrl, $COLOR_INFO)
+			SetLog("##############################################", $COLOR_INFO)
+		EndIf
+		
+		If Number($sModVersion) = Number($sCurrentVersion) Then 
+			SetLog("##############################################", $COLOR_INFO)
+			SetLog("YOUR MOD VERSION (#" & $sCurrentVersion & ") IS LATEST VERSION.", $COLOR_SUCCESS)
 			SetLog($g_sXModSupportUrl, $COLOR_INFO)
 			SetLog("##############################################", $COLOR_INFO)
 		EndIf
