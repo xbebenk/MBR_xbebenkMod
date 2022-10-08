@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func LocateQueenAltar($bCollect = True)
-	Return True
+	;Return True
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateQueenAltar 1") ; Update shield status due to manual $g_bRunState
@@ -142,7 +142,7 @@ Func _LocateQueenAltar($bCollect = True)
 EndFunc   ;==>_LocateQueenAltar
 
 Func LocateKingAltar($bCollect = True)
-	Return True
+	;Return True
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateKingAltar 1") ; Update shield status due to manual $g_bRunState
@@ -270,7 +270,7 @@ Func _LocateKingAltar($bCollect = True)
 EndFunc   ;==>_LocateKingAltar
 
 Func LocateWardenAltar($bCollect = True)
-	Return True
+	;Return True
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateWardenAltar 1") ; Update shield status due to manual $g_bRunState
@@ -403,7 +403,7 @@ Func _LocateWardenAltar($bCollect = True)
 EndFunc   ;==>_LocateWardenAltar
 
 Func LocateChampionAltar($bCollect = True)
-	Return True
+	;Return True
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateChampionAltar 1") ; Update shield status due to manual $g_bRunState
