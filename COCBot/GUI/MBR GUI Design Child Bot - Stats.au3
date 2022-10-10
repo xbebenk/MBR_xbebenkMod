@@ -18,7 +18,7 @@ Global $g_hGUI_STATS = 0, $g_hGUI_STATS_TAB = 0, $g_hGUI_STATS_TAB_ITEM1 = 0, $g
 Global $btnResetStats = 0
 
 ; Gain
-Global $g_ahPicTHLevels[15], $g_hLblTHLevels = 0
+Global $g_ahPicTHLevels[16], $g_hLblTHLevels = 0
 Global $g_ahPicLeague[$eLeagueCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0], $g_hLblLeague = 0
 Global $g_ahLblStatsStartedWith[$eLootCount] = [0, 0, 0, 0], $g_ahLblStatsGainPerHour[$eLootCount] = [0, 0, 0, 0]
 Global $g_ahLblStatsTotalGain[$eLootCount] = [0, 0, 0, 0], $g_ahLblStatsLastAttack[$eLootCount] = [0, 0, 0, 0]
@@ -111,6 +111,8 @@ Func CreateGainSubTab()
 		$g_ahPicTHLevels[13] = _GUICtrlCreateIcon($g_sLibIconPath, $eHdV13, $x - 11, $y + 15, 52, 52)
 			GUICtrlSetState(-1, $GUI_HIDE)
 		$g_ahPicTHLevels[14] = _GUICtrlCreateIcon($g_sLibIconPath, $eHdV14, $x - 11, $y + 15, 52, 52)
+			GUICtrlSetState(-1, $GUI_HIDE)
+		$g_ahPicTHLevels[15] = _GUICtrlCreateIcon($g_sLibIconPath, $eHdV15, $x - 11, $y + 15, 52, 52)
 			GUICtrlSetState(-1, $GUI_HIDE)
 
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "LblTownhall", "TownHall"), $x - 11, $y, -1, -1, $SS_CENTER)
