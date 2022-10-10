@@ -371,7 +371,7 @@ Global $g_sAndroidPicturesPath = "" ; Android mounted path to pictures on host
 Global $g_sAndroidPicturesHostPath = "" ; Windows host path to mounted pictures in android
 Global $g_bAndroidSharedFolderAvailable = True
 Global $g_sAndroidSharedFolderName = "" ; Set during Android initialization
-Global Const $g_iAndroidSecureFlags = 3 ; Bits 0 = disabled file renaming/folder less mode, 1 = Secure (SHA-1 filenames no folder), 2 = Delete files after use immediately
+Global Const $g_iAndroidSecureFlags = 1 ; Bits 0 = disabled file renaming/folder less mode, 1 = Secure (SHA-1 filenames no folder), 2 = Delete files after use immediately
 Global $g_sAndroidPicturesHostFolder = "" ; Subfolder for host and android, can be "", must end with "\" when used
 Global $g_bAndroidPicturesPathAutoConfig = True ; Try to configure missing shared folder if missing (set by android support feature bit 512)
 ; Special ADB modes for screencap, mouse clicks and input text
@@ -1862,7 +1862,7 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
 Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
-Global $g_bChkClanGamesPurgeAny = 0
+Global $g_bChkClanGamesPurgeAny = 0, $g_bChkClanGamesZapChallenge = True, $g_bIsZapEvent = False, $g_sZapEventName = ""
 Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDay = 0
 Global $g_bCollectCGReward = False
@@ -1981,13 +1981,14 @@ Global $g_bChkStartWeekendRaid = True
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[21][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], _ ;ok
+Global $g_aVillageRefSize[22][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], _ ;ok
 									["JS", "Jungle", 566.60, 69, 796, 64, 609], _ ;ok
+									["MS", "Magic", 524, 91, 778, 58, 578], _ ;ok
 									["BB", "BuilderBase", 560.2, 88, 793, 91, 617], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
 									["PC", "Pirate", 598.68, 50, 812, 63, 634], _ ;ok
 									["EW", "Winter", 576.41, 68, 794, 61, 607], _ ;ok
-									["HM", "Hog Mountain", 637.4, 52, 810, 62, 636], _ ;ok
+									["HM", "Hog Mountain", 637.4, 52, 810, 62, 636], _ ;ok
 									["EP", "Epic Jungle", 636.8, 45, 815, 60, 636], _ ;ok
 									["9C", "9th Clashivery", 617.21, 76, 803, 64, 611], _ ;ok
 									["PG", "Pumpkin Graveyard", 567.01, 94, 784, 58, 581], _
