@@ -106,8 +106,7 @@ Func _AttackBB()
 	SetLog("Searching for Opponent.", $COLOR_BLUE)
 	local $timer = __TimerInit()
 	local $iPrevTime = 0
-
-	While Not WaitforPixel(88, 586, 89, 588, "5095D8", 10, 1)
+	While Not _ColorCheck(_GetPixelColor(50, 582, True), Hex(0x7FD7FB, 6), 20)
 		local $iTime = Int(__TimerDiff($timer)/ 60000)
 		If $iTime > $iPrevTime Then ; if we have increased by a minute
 			SetLog("Clouds: " & $iTime & "-Minute(s)")

@@ -139,15 +139,15 @@ Func CheckDiscountPerks()
 	If _Sleep(500) Then Return
 
 	; find builder boost rate %
-	Local $sDiscount = getOcrAndCapture("coc-builderboost", 370, 330, 110, 46)
-	SetDebugLog("Builder boost OCR: " & $sDiscount)
-	If StringInStr($sDiscount, "%") Then
-		Local $aDiscount = StringSplit($sDiscount, "%", $STR_NOCOUNT)
-		$g_iBuilderBoostDiscount = Number($aDiscount[0])
-		SetLog($g_iBuilderBoostDiscount > 0 ? "Current Builder boost: " & $g_iBuilderBoostDiscount & "%" : "Keep working hard on challenges", $COLOR_SUCCESS)
-	Else
-		SetLog("Cannot read builder boost", $COLOR_ERROR)
-	EndIf
+	;Local $sDiscount = getOcrAndCapture("coc-builderboost", 370, 330, 110, 46)
+	;SetDebugLog("Builder boost OCR: " & $sDiscount)
+	;If StringInStr($sDiscount, "%") Then
+	;	Local $aDiscount = StringSplit($sDiscount, "%", $STR_NOCOUNT)
+	;	$g_iBuilderBoostDiscount = Number($aDiscount[0])
+	;	SetLog($g_iBuilderBoostDiscount > 0 ? "Current Builder boost: " & $g_iBuilderBoostDiscount & "%" : "Keep working hard on challenges", $COLOR_SUCCESS)
+	;Else
+	;	SetLog("Cannot read builder boost", $COLOR_ERROR)
+	;EndIf
 EndFunc   ;==>CheckDiscountPerks
 
 Func ClosePersonalChallenges()

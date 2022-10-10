@@ -259,7 +259,7 @@ Func FindSLabTroopsUpgrade()
 	If IsArray($aTmp) And UBound($aTmp) > 0 Then
 		For $i = 0 To UBound($aTmp) -1 
 			$aTroop = GetSLabTroopResPos($aTmp[$i][0])
-			$UpgradeCost = getLabUpgrdResourceWht($aTroop[1], $aTroop[2])
+			$UpgradeCost = getLabCost($aTroop[1], $aTroop[2])
 			If $UpgradeCost = 111 Then $UpgradeCost = "MaxLevel"
 			If $UpgradeCost = "" Then $UpgradeCost = getStarLabUpgrdResourceRed($aTroop[1], $aTroop[2])
 			If $UpgradeCost = "" Then 

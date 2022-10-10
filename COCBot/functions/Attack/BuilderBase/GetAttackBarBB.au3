@@ -15,7 +15,7 @@
 
 Func GetAttackBarBB($bRemaining = False)
 	local $iTroopBanners = 577 ; y location of where to find troop quantities
-	local $aSlotX[6] = [108, 180, 252, 325, 397, 468] ; location of x Amount on slot
+	local $aSlotX[9] = [70, 144, 218, 292, 362, 433, 506, 579, 652] ; location of x Amount on slot
 	local $iSlotOffset = 72 ; slots are 73 pixels apart
 	local $iBarOffset = 66 ; 66 pixels from side to attack bar
 

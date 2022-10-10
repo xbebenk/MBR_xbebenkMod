@@ -338,22 +338,6 @@ Func SetLabUpgradeTime($sTrooopName)
 	Return True ; success
 EndFunc
 
-; get the cost of an upgrade based on its coords
-; find image slot that we found so that we can read the cost to see if we can upgrade it... slots read 1-12 top to bottom so barb = 1, arch = 2, giant = 3, etc...
-Func GetLabCostResult($XCoords, $YCoords, $UpgradeName = "")
-	Local $xColumn =  $XCoords - 40, $yRow, $sCostResult = 0
-	If $YCoords + 10 < $iYMidPoint Then
-		$yRow = 410
-	Else
-		$yRow = 520
-	EndIf
-	$sCostResult = getLabUpgrdResourceWht($xColumn, $yRow)
-	If $sCostResult = "" Then
-		SetLog($UpgradeName & " Cost read failed", $COLOR_ERROR)
-	EndIf
-	Return $sCostResult
-EndFunc
-
 Func LabNextPage($iPage = 1)
 	If $iPage = 3 Then 
 		ClickDrag(720, 500, 406, 500, 500)
