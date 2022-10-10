@@ -812,81 +812,45 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 
 	; Verify if the type of troop to donate exists
 	SetLog("Troops Condition Matched", $COLOR_ORANGE)
-	If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-			_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-			_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
+	
+	If $bDonateAll Then $sTextToAll = " (to all requests)"
+	SetLog("Donating " & $Quant & " " & ($Quant > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]) & $sTextToAll, $COLOR_SUCCESS)
 
-		If $bDonateAll Then $sTextToAll = " (to all requests)"
-		SetLog("Donating " & $Quant & " " & ($Quant > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]) & $sTextToAll, $COLOR_SUCCESS)
-
-		If $g_bDebugOCRdonate Then
-			SetLog("donate", $COLOR_ERROR)
-			SetLog("row: " & $donaterow, $COLOR_ERROR)
-			SetLog("pos in row: " & $donateposinrow, $COLOR_ERROR)
-			SetLog("coordinate: " & 365 + ($Slot * 68) & "," & $g_iDonationWindowY + 100 + $YComp, $COLOR_ERROR)
-			SaveDebugImage("LiveDonateCC-r" & $donaterow & "-c" & $donateposinrow & "-" & $g_asTroopNames[$iTroopIndex] & "_")
-		EndIf
-		; Use slow click when the Train system is Quicktrain
-		If $g_bQuickTrainEnable Then
-			Local $icount = 0
-			For $x = 0 To $Quant
-				If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-						_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-						_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
-
-					Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, 1, $DELAYDONATECC3, "#0175")
-					If $g_iCommandStop = 3 Then
-						$g_iCommandStop = 0
-						$g_bFullArmy = False
-					EndIf
-					If _Sleep(1000) Then Return
-					$icount += 1
-				EndIf
-			Next
-			$Quant = $icount ; Count Troops Donated Clicks
-			$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
-		Else
-			If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-					_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-					_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
-
-				Local $QuantHalf = Floor($Quant/2)
-				
-				If $QuantHalf >= 1 Then Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
-				If _Sleep(1000) Then Return
-				If Mod($Quant, 2) = 1 Then $QuantHalf += 1 ;Compensate for odd numbers
-				Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
-				
-				$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
-				If $g_iCommandStop = 3 Then
-					$g_iCommandStop = 0
-					$g_bFullArmy = False
-				EndIf
-			EndIf
-		EndIf
-
-		; Adjust Values for donated troops to prevent a Double ghost donate to stats and train
-		If $iTroopIndex >= $eTroopBarbarian And $iTroopIndex <= $eTroopHeadhunter Then
-			;Reduce iTotalDonateCapacity by troops donated
-			$g_iTotalDonateTroopCapacity -= ($Quant * $g_aiTroopSpace[$iTroopIndex])
-			;If donated max allowed troop qty set $g_bSkipDonTroops = True
-			If $g_iDonTroopsLimit = $Quant Then
-				$g_bSkipDonTroops = True
-			EndIf
-		EndIf
-
-		; Assign the donated quantity troops to train : $Don $g_asTroopName
-		$g_aiDonateTroops[$iTroopIndex] += $Quant
-		If $bDonateQueueOnly Then $g_aiAvailQueuedTroop[$iTroopIndex] -= $Quant
-	Else
-		Local $Text = "Unable to donate " & ($g_iDonTroopsQuantity > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]) & ".Donate screen not visible, will retry next run.", $LocalColor = $COLOR_ERROR
-		If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x5e5e5e, 6), 10) Or _  	 ; Dark Gray from Queued Spells
-				_ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0xdadad5, 6), 10) Then ; Light Gray from Empty Slots
-			$Text = "No " & ($g_iDonTroopsQuantity > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]) & " available to donate.."
-			$LocalColor = $COLOR_INFO
-		EndIf
-		SetLog($Text, $LocalColor)
+	If $g_bDebugOCRdonate Then
+		SetLog("donate", $COLOR_ERROR)
+		SetLog("row: " & $donaterow, $COLOR_ERROR)
+		SetLog("pos in row: " & $donateposinrow, $COLOR_ERROR)
+		SetLog("coordinate: " & 365 + ($Slot * 68) & "," & $g_iDonationWindowY + 100 + $YComp, $COLOR_ERROR)
+		SaveDebugImage("LiveDonateCC-r" & $donaterow & "-c" & $donateposinrow & "-" & $g_asTroopNames[$iTroopIndex] & "_")
 	EndIf
+	
+	Local $QuantHalf = Floor($Quant/2)
+	
+	If $QuantHalf >= 1 Then Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
+	If _Sleep(1000) Then Return
+	If Mod($Quant, 2) = 1 Then $QuantHalf += 1 ;Compensate for odd numbers
+	Click(365 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
+	
+	$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
+	If $g_iCommandStop = 3 Then
+		$g_iCommandStop = 0
+		$g_bFullArmy = False
+	EndIf
+	
+	; Adjust Values for donated troops to prevent a Double ghost donate to stats and train
+	If $iTroopIndex >= $eTroopBarbarian And $iTroopIndex <= $eTroopHeadhunter Then
+		;Reduce iTotalDonateCapacity by troops donated
+		$g_iTotalDonateTroopCapacity -= ($Quant * $g_aiTroopSpace[$iTroopIndex])
+		;If donated max allowed troop qty set $g_bSkipDonTroops = True
+		If $g_iDonTroopsLimit = $Quant Then
+			$g_bSkipDonTroops = True
+		EndIf
+	EndIf
+
+	; Assign the donated quantity troops to train : $Don $g_asTroopName
+	$g_aiDonateTroops[$iTroopIndex] += $Quant
+	If $bDonateQueueOnly Then $g_aiAvailQueuedTroop[$iTroopIndex] -= $Quant
+	
 
 EndFunc   ;==>DonateTroopType
 
