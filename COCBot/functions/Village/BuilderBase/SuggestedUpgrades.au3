@@ -673,6 +673,14 @@ Func FindBBNewBuilding()
 			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][4] & ", Cost=" & $aBuilding[$j][6] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
+	
+	Local $iIndex = _ArraySearch($aBuilding, "", 0, 0, 0, 0, 0, 5)
+	If $iIndex > -1 Then 
+		SetDebugLog(_ArrayToString($aBuilding))
+		SetDebugLog("Found Building with Zero cost, remove it", $COLOR_INFO)
+		_ArrayDelete($aBuilding, $iIndex)
+	EndIf
+	
 	Return $aBuilding
 EndFunc
 
@@ -753,6 +761,13 @@ Func FindBBExistingBuilding($bTest = False)
 		Next
 	EndIf
 	
+	Local $iIndex = _ArraySearch($aBuilding, "", 0, 0, 0, 0, 0, 5)
+	If $iIndex > -1 Then 
+		SetDebugLog(_ArrayToString($aBuilding))
+		SetDebugLog("Found Building with Zero cost, remove it", $COLOR_INFO)
+		_ArrayDelete($aBuilding, $iIndex)
+	EndIf
+	
 	If $g_bOptimizeOTTO Then
 		_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
 	Else
@@ -766,7 +781,7 @@ Func ClickBBBuilder($Counter = 3)
 	Local $b_WindowOpened = False
 	If Not $g_bRunState Then Return
 	; open the builders menu
-	If Not _ColorCheck(_GetPixelColor(380,73, True), "F4F4F4", 40) Then
+	If Not _ColorCheck(_GetPixelColor(380,73, True), "BABBBC", 40) Then
 		Click(380, 30)
 		If _Sleep(1000) Then Return
 	EndIf
@@ -798,7 +813,7 @@ EndFunc ;==>ClickBBBuilder
 
 Func IsBBBuilderMenuOpen()
 	Local $bRet = False
-	Local $aBorder[4] = [380, 73, 0xF4F4F4, 40]
+	Local $aBorder[4] = [380, 73, 0xBABBBC, 40]
 	Local $sTriangle
 	If _CheckPixel($aBorder, True) Then
 		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
