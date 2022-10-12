@@ -419,34 +419,44 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	If $bImgLoc = Default Then $bImgLoc = False
 	If $bForceCaptureRegion = Default Then $bForceCaptureRegion = $g_bOcrForceCaptureRegion
 	Static $_hHBitmap = 0
-	If $bForceCaptureRegion = True Then
-		_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
-	Else
-		$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
-	EndIf
+	
 	Local $result
-	If $bImgLoc Then
-		If $_hHBitmap <> 0 Then
-			$result = getOcrImgLoc($_hHBitmap, $language)
+	For $i = 1 To 3
+		If $bForceCaptureRegion = True Then
+			_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
 		Else
-			$result = getOcrImgLoc($g_hHBitmap2, $language)
+			$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
 		EndIf
-	Else
-		If $_hHBitmap <> 0 Then
-			$result = getOcr($_hHBitmap, $language)
+		If $bImgLoc Then
+			If $_hHBitmap <> 0 Then
+				$result = getOcrImgLoc($_hHBitmap, $language)
+			Else
+				$result = getOcrImgLoc($g_hHBitmap2, $language)
+			EndIf
 		Else
-			$result = getOcr($g_hHBitmap2, $language)
+			If $_hHBitmap <> 0 Then
+				$result = getOcr($_hHBitmap, $language)
+			Else
+				$result = getOcr($g_hHBitmap2, $language)
+			EndIf
 		EndIf
-	EndIf
-	If $_hHBitmap <> 0 Then
-		GdiDeleteHBitmap($_hHBitmap)
-	EndIf
-	$_hHBitmap = 0
-	If ($removeSpace) Then
-		$result = StringReplace($result, " ", "")
-	Else
-		$result = StringStripWS($result, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
-	EndIf
+		If $_hHBitmap <> 0 Then
+			GdiDeleteHBitmap($_hHBitmap)
+		EndIf
+		$_hHBitmap = 0
+		If ($removeSpace) Then
+			$result = StringReplace($result, " ", "")
+		Else
+			$result = StringStripWS($result, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
+		EndIf
+		If $g_bDebugSetlog Then 
+			SetLog("#" & $i & " handle:" & $g_hHBitmap2 & " ocrRead:" & $result )
+			If $g_bDebugImageSave Then SaveDebugImage("ocrRead", False)
+		EndIf
+		If $result <> "" Then 
+			ExitLoop
+		EndIf
+	Next
 	Return $result
 EndFunc   ;==>getOcrAndCapture
 
