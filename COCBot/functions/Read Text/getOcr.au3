@@ -421,42 +421,34 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	Static $_hHBitmap = 0
 	
 	Local $result
-	For $i = 1 To 3
-		If $bForceCaptureRegion = True Then
-			_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
-		Else
-			$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
-		EndIf
-		If $bImgLoc Then
-			If $_hHBitmap <> 0 Then
-				$result = getOcrImgLoc($_hHBitmap, $language)
-			Else
-				$result = getOcrImgLoc($g_hHBitmap2, $language)
-			EndIf
-		Else
-			If $_hHBitmap <> 0 Then
-				$result = getOcr($_hHBitmap, $language)
-			Else
-				$result = getOcr($g_hHBitmap2, $language)
-			EndIf
-		EndIf
+	
+	If $bForceCaptureRegion = True Then
+		_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
+	Else
+		$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
+	EndIf
+	If $bImgLoc Then
 		If $_hHBitmap <> 0 Then
-			GdiDeleteHBitmap($_hHBitmap)
-		EndIf
-		$_hHBitmap = 0
-		If ($removeSpace) Then
-			$result = StringReplace($result, " ", "")
+			$result = getOcrImgLoc($_hHBitmap, $language)
 		Else
-			$result = StringStripWS($result, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
+			$result = getOcrImgLoc($g_hHBitmap2, $language)
 		EndIf
-		If $g_bDebugSetlog Then 
-			SetLog("#" & $i & " handle:" & $g_hHBitmap2 & " ocrRead:" & $result )
-			If $g_bDebugImageSave Then SaveDebugImage("ocrRead", False)
+	Else
+		If $_hHBitmap <> 0 Then
+			$result = getOcr($_hHBitmap, $language)
+		Else
+			$result = getOcr($g_hHBitmap2, $language)
 		EndIf
-		If $result <> "" Then 
-			ExitLoop
-		EndIf
-	Next
+	EndIf
+	If $_hHBitmap <> 0 Then
+		GdiDeleteHBitmap($_hHBitmap)
+	EndIf
+	$_hHBitmap = 0
+	If ($removeSpace) Then
+		$result = StringReplace($result, " ", "")
+	Else
+		$result = StringStripWS($result, BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
+	EndIf
 	Return $result
 EndFunc   ;==>getOcrAndCapture
 
