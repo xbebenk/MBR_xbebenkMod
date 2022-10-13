@@ -1051,18 +1051,6 @@ Func FindEssentialBuilding()
 	EndIf
 EndFunc
 
-Func EssentialBuildingImageCopy($sImagePath = "", $sTempPath = "")
-	If $sImagePath = "" Then Return
-	If $sTempPath = "" Then Return
-	Local $asImageName[8] = ["Xbow", "Inferno", "Eagle", "Scatter", "WizardT", "BombT", "AirD", "AirS"]
-	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
-		If $g_aichkEssentialUpgrade[$i] > 0 Then
-			SetDebugLog("[" & $i & "]" & "Essential Building: " & $asImageName[$i], $COLOR_DEBUG)
-			FileCopy($sImagePath & "\" & $asImageName[$i] & "*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
-		EndIf
-	Next
-EndFunc
-
 Func SearchGreenZone()
 	SetLog("Search GreenZone for Placing new Building", $COLOR_INFO)
 	If Not $g_bRunState Then Return
