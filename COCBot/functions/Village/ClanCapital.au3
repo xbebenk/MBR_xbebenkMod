@@ -698,7 +698,7 @@ Func AutoUpgradeCC($bTest = False)
 					SwitchToMainVillage("WaitforMap Failed")
 					Return
 				EndIf
-				If Not ClickCCBuilder() Then Return
+				If Not ClickCCBuilder() Then ExitLoop
 				Local $aUpgrade = FindCCSuggestedUpgrade() ;Find on Distric Map, Will Read White and Blue Font
 				If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 					For $j = 0 To UBound($aUpgrade) - 1
