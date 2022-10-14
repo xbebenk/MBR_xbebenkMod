@@ -1184,7 +1184,7 @@ Func RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True,
 	$iRecursive += 1
 	Local $Result = _RestartAndroidCoC($bInitAndroid, $bRestart, $bStopCoC, $iRetry, $iRecursive)
 	$iRecursive -= 1
-	Return FuncReturn()
+	Return FuncReturn($Result)
 EndFunc   ;==>RestartAndroidCoC
 
 Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True, $iRetry = 0, $iRecursive = 0, $SkipSharedPrefs = False)
@@ -1223,7 +1223,6 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	If ((ProfileSwitchAccountEnabled() And $g_bChkSharedPrefs) Or $g_bUpdateSharedPrefs) And HaveSharedPrefs() And _
 			($g_bUpdateSharedPrefs Or $g_PushedSharedPrefsProfile <> $g_sProfileCurrentName Or ($g_PushedSharedPrefsProfile_Timer = 0 Or _ 
 			__TimerDiff($g_PushedSharedPrefsProfile_Timer) > 120000)) And Not $SkipSharedPrefs Then 
-			If _SleepStatus(5000) Then Return
 			PushSharedPrefs()
 	EndIf
 
@@ -1250,10 +1249,18 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	; reset time lag
 	InitAndroidTimeLag()
 
-	; wait 3 sec. CoC might have just crashed
-	If _SleepStatus(20000) Then Return False ;AndroidAdbSendShellCommand $timeout seem not working, make more time here 
-	
-	If GetAndroidProcessPID(Default, False) > 0 Then Return True
+	; wait 5 sec. CoC might have just crashed
+	If _SleepStatus(5000) Then Return
+	Local $iCoCPID = 0
+	For $i = 1 To 20
+		SetDebugLog("Waiting Coc Process start #" & $i)
+		$iCoCPID = GetAndroidProcessPID()
+		If $iCoCPID > 0 Then 
+			SetDebugLog("Android PID : " & $iCoCPID)
+			Return True
+		EndIf
+		If _Sleep(1000) Then Return
+	Next
 	
 	If GetAndroidProcessPID(Default, False) = 0 And @error = 0 Then
 		If $iRetry > 2 And $iRecursive > 2 Then
@@ -1296,7 +1303,7 @@ Func ResetAndroidProcess()
 	$g_bMainWindowOk = False
 EndFunc   ;==>ResetAndroidProcess
 
-Func CloseAndroid($sSource)
+Func CloseAndroid($sSource = "Command")
 	FuncEnter(CloseAndroid)
 	ResumeAndroid()
 
