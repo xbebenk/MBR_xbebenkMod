@@ -485,7 +485,6 @@ Global $g_iBotLaunchOption_Dock = 0 ; If 1 bot will dock Android, 2 dock and sli
 Global $g_bBotLaunchOption_NoBotSlot = False ; If True, bot slot Mutex are not used in function LockBotSlot
 Global $g_iBotLaunchOption_Console = False ; Console option used
 Global $g_iBotLaunchOption_Help = False ; If specified, bot just shows command line options and exits
-Global $g_iRemUnusedGUI = False
 Global $g_asCmdLine[1] = [0] ; Clone of $CmdLine without options, please use instead of $CmdLine
 Global Const $g_sWorkingDir = @WorkingDir ; Working Directory at bot launch
 
