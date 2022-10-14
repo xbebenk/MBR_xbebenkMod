@@ -1133,7 +1133,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 	Local $b_WindowOpened = False
 	If Not $g_bRunState Then Return
 	; open the builders menu
-	If Not _ColorCheck(_GetPixelColor(350,73, True), "C9D0C0", 50) Then
+	If Not IsBuilderMenuOpen() Then
 		Click(295, 20)
 		If _Sleep(1000) Then Return
 	EndIf
@@ -1455,9 +1455,10 @@ EndFunc
 
 Func IsBuilderMenuOpen()
 	Local $bRet = False
-	Local $aBorder[4] = [350, 73, 0xC9D0C0, 40]
+	Local $aBorder[4] = [350, 73, 0xC7CCBF, 40]
+	Local $aBorder1[4] = [350, 73, 0xFFFFFF, 40]
 	Local $sTriangle
-	If _CheckPixel($aBorder, True) Then 
+	If _CheckPixel($aBorder, True) Or _CheckPixel($aBorder1, True) Then 
 		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
 		$bRet = True ;got correct color for border 
 	Else
@@ -1467,7 +1468,7 @@ Func IsBuilderMenuOpen()
 	If Not $bRet Then ;lets re check if border color check not success
 		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 320, 60, 40, 30)
 		SetDebugLog("$sTriangle: " & $sTriangle)
-		If $sTriangle = "^" Then $bRet = True
+		If $sTriangle = "^" Or $sTriangle = "~" Then $bRet = True
 	EndIf
 	
 	Return $bRet
