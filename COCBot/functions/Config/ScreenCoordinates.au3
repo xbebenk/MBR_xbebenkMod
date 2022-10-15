@@ -69,7 +69,7 @@ Global $aIsGemWindow1[4] = [573, 239, 0xFF8D95, 20] ; Main Screen, pixel left of
 Global $aIsGemWindow2[4] = [577, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
 Global $aIsGemWindow3[4] = [586, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
 Global $aIsGemWindow4[4] = [595, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
-Global $aIsTrainPgChk1[4] = [822, 93, 0xFFFFFF, 10] ; Main Screen, Train page open - left upper corner of x button
+Global $aIsTrainPgChk1[4] = [822, 92, 0xFFFFFF, 20] ; Main Screen, Train page open - left upper corner of x button
 Global $aIsTrainPgChk2[4] = [762, 328, 0xF18439, 10] ; Main Screen, Train page open - Dark Orange in left arrow
 Global $aRtnHomeCloud1[4] = [56, 592, 0x0A223F, 15] ; Cloud Screen, during search, blue pixel in left eye
 Global $aRtnHomeCloud2[4] = [72, 592, 0x103F7E, 15] ; Cloud Screen, during search, blue pixel in right eye
@@ -126,7 +126,7 @@ Global Const $aRtnHomeCheck2[4] = [497, 548, 0x79C326, 20]
 
 Global Const $aProfileReport[4] = [619, 344, 0x4E4D79, 20] ; Dark Purple of Profile Page when no Attacks were made
 
-Global $aArmyTrainButtonRND[4] = [20, 540, 55, 570] ; Main Screen, Army Train Button, RND  Screen 860x732
+Global $aArmyTrainButtonRND[4] = [20, 500, 55, 550] ; Main Screen, Army Train Button, RND  Screen 860x732
 Global $aAttackButtonRND[4] = [20, 625, 100, 655] ; Attack Button, Main Screen, RND  Screen 860x676
 Global $aFindMatchButtonRND[4] = [200, 510, 300, 530] ; Find Multiplayer Match Button, Both Shield or without shield Screen 860x732
 Global $NextBtnRND[4] = [710, 530, 830, 570] ;  Next Button
