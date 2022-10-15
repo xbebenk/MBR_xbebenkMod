@@ -487,6 +487,16 @@ Func UpdateMainGUI()
 			GUICtrlSetState($g_hBtnSearchMode, $GUI_ENABLE)
 		EndIf
 	EndIf
+	
+	If StringInStr($g_sAndroidEmulator, "Bluestacks") Then
+		$g_bAndroidAdbClickEnabled = True
+		$g_bAndroidAdbClick = True
+		GUICtrlSetState($g_hChkAndroidAdbClick, $GUI_CHECKED)
+	Else
+		$g_bAndroidAdbClickEnabled = False
+		$g_bAndroidAdbClick = False
+		GUICtrlSetState($g_hChkAndroidAdbClick, $GUI_UNCHECKED)
+	EndIf
 EndFunc   ;==>UpdateMainGUI
 
 Func CheckDpiAwareness($bCheckOnlyIfAlreadyAware = False, $bForceDpiAware = False, $bForceDpiAware2 = False)
