@@ -1589,7 +1589,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
-			Local $aRndFuncList = ['Laboratory', 'CollectCCGold', 'CollectFreeMagicItems', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'BuilderBase']
+			Local $aRndFuncList = ['DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'BuilderBase']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1686,16 +1686,6 @@ Func TestBuilderBase()
 	$g_bChkCleanBBYard = $bChkCleanBBYard
 	$g_bChkEnableBBAttack = $bChkEnableBBAttack
  EndFunc
-
- Func SetSAtk($attack = False)
-
-	If $attack = True Then
-		$g_bTestSceneryAttack = True
-	Else
-		$g_bTestSceneryAttack = False
-	EndIf
-
-EndFunc
 
 Func GotoBBTodoCG()
 	If SwitchBetweenBases("BB") And isOnBuilderBase() Then
