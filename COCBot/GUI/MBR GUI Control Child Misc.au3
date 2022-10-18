@@ -1059,14 +1059,6 @@ Func chkTrainPrev()
 	EndIf
 EndFunc ;==> chkTrainPrev
 
-Func chkRandomQuickTrain()
-	If GUICtrlRead($g_hRandomArmyComp) = $GUI_CHECKED Then
-		$g_bRandomArmyComp = True
-	Else
-		$g_bRandomArmyComp = False
-	EndIf
-EndFunc ;==> chkRandomQuickTrain
-
 Func chkSkipWallPlacingOnBB()
 	If GUICtrlRead($g_hChkMMSkipWallPlacingOnBB) = $GUI_CHECKED Then
 		$g_bSkipWallPlacingOnBB = True

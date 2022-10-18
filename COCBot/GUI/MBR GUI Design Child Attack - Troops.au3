@@ -45,22 +45,6 @@ Global $g_hLblTotalTimeCamp = 0, $g_hLblElixirCostCamp = 0, $g_hLblDarkCostCamp 
 		$g_hTxtTotalCountSpell = 0, $g_hLblTotalTimeSpell = 0, $g_hLblElixirCostSpell = 0, $g_hLblDarkCostSpell = 0, _
 		$g_hLblTotalTimeSiege = 0, $g_hLblCountTotalSiege = 0, $g_hLblGoldCostSiege = 0
 
-; Quick Train sub-tab
-Global $g_aQuickTroopIcon[$eTroopCount] = [$eIcnBarbarian, $eIcnSuperBarbarian, $eIcnArcher, $eIcnSuperArcher, $eIcnGiant, $eIcnSuperGiant, $eIcnGoblin, $eIcnSneakyGoblin, $eIcnWallBreaker, $eIcnSuperWallBreaker, _
-	$eIcnBalloon, $eIcnRocketBalloon, $eIcnWizard, $eIcnSuperWizard, $eIcnHealer, $eIcnDragon, $eIcnPekka, $eIcnBabyDragon, $eIcnInfernoDragon, $eIcnMiner, $eIcnElectroDragon, $eIcnYeti, $eIcnDragonRider, $eIcnMinion, $eIcnSuperMinion, _
-	$eIcnHogRider, $eIcnValkyrie, $eIcnSuperValkyrie, $eIcnGolem, $eIcnWitch, $eIcnSuperWitch, $eIcnLavaHound, $eIcnIceHound, $eIcnBowler, $eIcnSuperBowler, $eIcnIceGolem, $eIcnHeadhunter]
-Global $g_aQuickSpellIcon[$eSpellCount] = [$eIcnLightSpell, $eIcnHealSpell, $eIcnRageSpell, $eIcnJumpSpell, $eIcnFreezeSpell, $eIcnCloneSpell, $eIcnInvisibilitySpell, $eIcnPoisonSpell, $eIcnEarthQuakeSpell, $eIcnHasteSpell, $eIcnSkeletonSpell, $eIcnBatSpell]
-Global $g_ahChkUseInGameArmy[3], $g_ahPicTotalQTroop[3], $g_ahPicTotalQSpell[3], $g_ahLblTotalQTroop[3], $g_ahLblTotalQSpell[3]
-Global $g_ahBtnEditArmy[3], $g_ahLblEditArmy[3], $g_ahPicQuickTroop[3][22], $g_ahLblQuickTroop[3][22], $g_ahPicQuickSpell[3][11], $g_ahLblQuickSpell[3][11]
-Global $g_ahLblQuickTrainNote[3], $g_ahLblUseInGameArmyNote[3]
-
-Global $g_hGUI_QuickTrainEdit = 0, $g_hGrp_QTEdit = 0
-Global $g_hBtnRemove_QTEdit, $g_hBtnSave_QTEdit, $g_hBtnCancel_QTEdit
-Global $g_ahPicQTEdit_Troop[7], $g_ahTxtQTEdit_Troop[7], $g_ahPicQTEdit_Spell[7], $g_ahTxtQTEdit_Spell[7]
-Global $g_ahLblQTEdit_TotalTroop, $g_ahLblQTEdit_TotalSpell
-Global $g_ahPicTroop_QTEdit[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahPicSpell_QTEdit[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
 ; Boost sub-tab
 Global $g_hCmbBoostBarracks = 0, $g_hCmbBoostSpellFactory = 0, $g_hCmbBoostWorkshop = 0, $g_hCmbBoostBarbarianKing = 0, $g_hCmbBoostArcherQueen = 0, $g_hCmbBoostWarden = 0, $g_hCmbBoostChampion = 0, $g_hCmbBoostEverything = 0
 Global $g_hCmbBoostMaxSuperTroops = 0
@@ -169,8 +153,6 @@ Func CreateAttackTroops()
 	$g_hGUI_TRAINTYPE_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_03", "Train Order"))
 	$g_hGUI_TRAINTYPE_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_04", "Options"))
 
-	CreateQuickTrainEdit()
-
 	GUICtrlCreateTabItem("")
 
 EndFunc   ;==>CreateAttackTroops
@@ -183,12 +165,7 @@ Func CreateTrainArmy()
 	$g_hRadCustomTrain = GUICtrlCreateRadio("", 75, 35, 13, 13)
 	GUICtrlSetState(-1, $GUI_CHECKED)
 	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-	GUICtrlSetOnEvent(-1, "radSelectTrainType")
-	$g_hRadQuickTrain = GUICtrlCreateRadio("", 165, 35, 13, 13)
-	GUICtrlSetState(-1, $GUI_UNCHECKED)
-	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-	GUICtrlSetOnEvent(-1, "radSelectTrainType")
-
+	
 	Local $x = 12
 	Local $y = 5
 
@@ -229,143 +206,9 @@ Func CreateTrainArmy()
 	$g_hGUI_TRAINARMY_ARMY_TAB = GUICtrlCreateTab(0, 30, $g_iSizeWGrpTab3, $g_iSizeHGrpTab3 - 30, BitOR($TCS_FORCELABELLEFT, $TCS_FIXEDWIDTH))
 	_GUICtrlTab_SetItemSize($g_hGUI_TRAINARMY_ARMY_TAB, 90, 20)
 	CreateCustomTrainSubTab()
-	CreateQuickTrainSubTab()
+	;CreateQuickTrainSubTab()
 
 EndFunc   ;==>CreateTrainArmy
-
-Func CreateQuickTrainSubTab()
-	$g_hGUI_TRAINARMY_ARMY_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_03_STab_01_STab_01_STab_02", "Quick Train"))
-
-	Local $x = 12, $y = 50, $del_y = 108
-
-	For $i = 0 To 2
-		GUICtrlCreateGroup("", $x - 2, $y, 412, $del_y)
-		$g_ahChkArmy[$i] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkArmy", "Army ") & $i + 1, $x + 10, $y + 20, 70, 15)
-		If $i = 0 Then GUICtrlSetState(-1, $GUI_CHECKED)
-		GUICtrlSetOnEvent(-1, "chkQuickTrainArmy")
-
-		$g_ahChkUseInGameArmy[$i] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "ChkUseInGameArmy", "In-Game Army"), $x + 10, $y + 45, -1, 15)
-		GUICtrlSetState(-1, $GUI_CHECKED)
-		GUICtrlSetOnEvent(-1, "chkUseInGameArmy")
-		GUICtrlSetTip(-1, "Uncheck and create preset army here, MBR will apply this preset to in-game quick train setting")
-
-		$g_ahBtnEditArmy[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnTrain, $x + 10, $y + 70, 22, 22)
-		GUICtrlSetOnEvent(-1, "EditQuickTrainArmy")
-		$g_ahLblEditArmy[$i] = GUICtrlCreateLabel(" " & GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Btn_Edit_Army", "Edit Army"), $x + 35, $y + 75, 50, 15, $SS_LEFT)
-
-		$g_ahLblTotalQTroop[$i] = GUICtrlCreateLabel(0, $x + 360, $y + 25, 40, 15, $SS_RIGHT)
-		GUICtrlSetBkColor(-1, $COLOR_GRAY)
-		GUICtrlSetColor(-1, $COLOR_WHITE)
-		GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-		$g_ahPicTotalQTroop[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnTroopsCost, $x + 353, $y + 20, 24, 24)
-
-		$g_ahLblTotalQSpell[$i] = GUICtrlCreateLabel(0, $x + 360, $y + 70, 40, 15, $SS_RIGHT)
-		GUICtrlSetBkColor(-1, $COLOR_GRAY)
-		GUICtrlSetColor(-1, $COLOR_WHITE)
-		GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-		$g_ahPicTotalQSpell[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnSpellsCost, $x + 350, $y + 65, 24, 24)
-
-		$g_ahLblQuickTrainNote[$i] = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblQuickTrainNote", "Use button 'Edit Army' to create troops and spells in quick Army ") & $i + 1, $x + 120, $y + 30, 200, 70, $SS_CENTER)
-			GUICtrlSetFont(-1, 12, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-			GUICtrlSetColor(-1, $COLOR_SKYBLUE)
-		$g_ahLblUseInGameArmyNote[$i] = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "LblUseInGameArmyNote", "Quick train using in-game troops and spells preset Army ") & $i + 1, $x + 120, $y + 30, 270, 70, $SS_CENTER)
-			GUICtrlSetFont(-1, 12, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-			GUICtrlSetColor(-1, $COLOR_SKYBLUE)
-
-		For $j = 0 To 6
-			$g_ahPicQuickTroop[$i][$j] = _GUICtrlCreateIcon($g_sLibIconPath, $eEmpty3, $x + 100 + $j * 36, $y + 10, 32, 32)
-			$g_ahLblQuickTroop[$i][$j] = GUICtrlCreateLabel("", $x + 101 + $j * 36, $y + 42, 30, 11, $ES_CENTER)
-			$g_ahPicQuickSpell[$i][$j] = _GUICtrlCreateIcon($g_sLibIconPath, $eEmpty3, $x + 100 + $j * 36, $y + 58, 32, 32)
-			$g_ahLblQuickSpell[$i][$j] = GUICtrlCreateLabel("", $x + 101 + $j * 36, $y + 90, 30, 11, $ES_CENTER)
-		Next
-
-		GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-		For $j = $g_ahLblQuickTrainNote[$i] To $g_ahLblQuickSpell[$i][6]
-			GUICtrlSetState($j, $GUI_HIDE)
-		Next
-
-		$x = 12
-		$y += $del_y
-	Next
-EndFunc   ;==>CreateQuickTrainSubTab
-
-Func CreateQuickTrainEdit()
-
-	$g_hGUI_QuickTrainEdit = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "GUI_QuickTrainEdit", "Edit troops and spells for quick train"), $g_iSizeWGrpTab2, 370, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
-
-	Local $x = 7
-	Local $y = 5
-	$g_hGrp_QTEdit = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "GUI_QuickTrainEdit", "Edit troops and spells for quick train"), $x, $y, 422, 280)
-
-		$x = 12
-		$y = 20
-		GUICtrlCreateGroup("", $x, $y - 3, 412, 125)
-
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnResetButton, $x + 10, $y + 15, 22, 22)
-		GUICtrlSetOnEvent(-1, "RemoveArmy_QTEdit")
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Btn_Remove", "Remove"), $x + 35, $y + 20, -1, 15, $SS_LEFT)
-		GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Btn_Cancel", "Cancel"), $x + 10, $y + 40, 65, 20, $SS_LEFT)
-		GUICtrlSetOnEvent(-1, "ExitQuickTrainEdit")
-		GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "Btn_Save", "Save"), $x + 10, $y + 65, 65, 20, $SS_LEFT)
-		GUICtrlSetOnEvent(-1, "SaveArmy_QTEdit")
-
-		For $i = 0 To 6
-			$g_ahPicQTEdit_Troop[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eEmpty3, $x + 100 + $i * 36, $y + 10, 32, 32)
-			GUICtrlSetOnEvent(-1, "RemoveTroop_QTEdit")
-			GUICtrlSetState(-1, $GUI_HIDE)
-			$g_ahTxtQTEdit_Troop[$i] = GUICtrlCreateInput(0, $x + 101 + $i * 36, $y + 45, 30, 15, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-			GUICtrlSetOnEvent(-1, "TxtQTEdit_Troop")
-			GUICtrlSetState(-1, $GUI_HIDE)
-			$g_ahPicQTEdit_Spell[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $eEmpty3, $x + 100 + $i * 36, $y + 65, 32, 32)
-			GUICtrlSetOnEvent(-1, "RemoveSpell_QTEdit")
-			GUICtrlSetState(-1, $GUI_HIDE)
-			$g_ahTxtQTEdit_Spell[$i] = GUICtrlCreateInput(0, $x + 101 + $i * 36, $y + 100, 30, 15, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-			GUICtrlSetOnEvent(-1, "TxtQTEdit_Spell")
-			GUICtrlSetState(-1, $GUI_HIDE)
-		Next
-
-		$g_ahLblQTEdit_TotalTroop = GUICtrlCreateLabel(0, $x + 360, $y + 25, 40, 15, $SS_RIGHT)
-		GUICtrlSetBkColor(-1, $COLOR_GRAY)
-		GUICtrlSetColor(-1, $COLOR_WHITE)
-		GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnTroopsCost, $x + 353, $y + 20, 24, 24)
-
-		$g_ahLblQTEdit_TotalSpell = GUICtrlCreateLabel(0, $x + 360, $y + 85, 40, 15, $SS_RIGHT)
-		GUICtrlSetBkColor(-1, $COLOR_GRAY)
-		GUICtrlSetColor(-1, $COLOR_WHITE)
-		GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnSpellsCost, $x + 350, $y + 80, 24, 24)
-
-		GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-		For $i = 0 To $eTroopCount - 1
-			If $i <= 11 Then
-				$x = 14 + (34 * $i)
-				$y = 160
-			ElseIf $i > 11 And $i <= 23 Then
-				$x = 14 + (34 * ($i - 12))
-				$y = 200
-			Else
-				$x = 14 + (34 * ($i - 24))
-				$y = 240
-			EndIf
-			$g_ahPicTroop_QTEdit[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $g_aQuickTroopIcon[$i], $x, $y, 32, 32)
-			GUICtrlSetTip(-1, $g_asTroopNames[$i])
-			GUICtrlSetOnEvent(-1, "SelectTroop_QTEdit")
-		Next
-
-		$x = 14
-		$y = 290
-		For $i = 0 To $eSpellCount - 1
-			$g_ahPicSpell_QTEdit[$i] = _GUICtrlCreateIcon($g_sLibIconPath, $g_aQuickSpellIcon[$i], $x, $y, 32, 32)
-			GUICtrlSetTip(-1, $g_asSpellNames[$i])
-			GUICtrlSetOnEvent(-1, "SelectSpell_QTEdit")
-			$x += 34
-		Next
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-EndFunc   ;==>CreateQuickTrainEdit
 
 Func CreateCustomTrainSubTab()
 

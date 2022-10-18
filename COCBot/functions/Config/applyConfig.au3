@@ -123,9 +123,6 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	ApplyConfig_600_35_1($TypeReadSave)
 	; <><><><> Bot / Profile / Switch Account <><><><>
 	ApplyConfig_600_35_2($TypeReadSave)
-	; <><><> Attack Plan / Train Army / Troops/Spells <><><>
-	; Quick train
-	ApplyConfig_600_52_1($TypeReadSave)
 	; <><><> Attack Plan / Train Army / Train Order <><><>
 	ApplyConfig_600_54($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Options / SmartZap <><><><>
@@ -470,7 +467,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hUseQueuedTroopSpell, $g_bUseQueuedTroopSpell ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMTrainPreviousArmy, $g_bTrainPreviousArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMSkipWallPlacingOnBB, $g_bSkipWallPlacingOnBB ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hRandomArmyComp, $g_bRandomArmyComp ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hDonateEarly, $g_bDonateEarly ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hUpgradeWallEarly, $g_bUpgradeWallEarly ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hAutoUpgradeEarly, $g_bAutoUpgradeEarly ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -637,7 +633,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bUseQueuedTroopSpell = (GUICtrlRead($g_hUseQueuedTroopSpell) = $GUI_CHECKED)
 			$g_bTrainPreviousArmy = (GUICtrlRead($g_hChkMMTrainPreviousArmy) = $GUI_CHECKED)
 			$g_bSkipWallPlacingOnBB = (GUICtrlRead($g_hChkMMSkipWallPlacingOnBB) = $GUI_CHECKED)
-			$g_bRandomArmyComp = (GUICtrlRead($g_hRandomArmyComp) = $GUI_CHECKED)
 			$g_bDonateEarly = (GUICtrlRead($g_hDonateEarly) = $GUI_CHECKED)
 			$g_bUpgradeWallEarly = (GUICtrlRead($g_hUpgradeWallEarly) = $GUI_CHECKED)
 			$g_bAutoUpgradeEarly = (GUICtrlRead($g_hAutoUpgradeEarly) = $GUI_CHECKED)
@@ -2292,27 +2287,6 @@ Func ApplyConfig_600_35_2($TypeReadSave)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_35_2
 
-Func ApplyConfig_600_52_1($TypeReadSave)
-	; <><><> Attack Plan / Train Army / Troops/Spells <><><>
-	; Quick train
-	Switch $TypeReadSave
-		Case "Read"
-			GUICtrlSetState($g_bQuickTrainEnable ? $g_hRadQuickTrain : $g_hRadCustomTrain, $GUI_CHECKED)
-			For $i = 0 To 2
-				GUICtrlSetState($g_ahChkArmy[$i], $g_bQuickTrainArmy[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
-				GUICtrlSetState($g_ahChkUseInGameArmy[$i], $g_abUseInGameArmy[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
-				ApplyQuickTrainArmy($i)
-				_chkUseInGameArmy($i)
-			Next
-		Case "Save"
-			$g_bQuickTrainEnable = (GUICtrlRead($g_hRadQuickTrain) = $GUI_CHECKED)
-			For $i = 0 To 2
-				$g_bQuickTrainArmy[$i] = (GUICtrlRead($g_ahChkArmy[$i]) = $GUI_CHECKED)
-				$g_abUseInGameArmy[$i] = (GUICtrlRead($g_ahChkUseInGameArmy[$i]) = $GUI_CHECKED)
-			Next
-	EndSwitch
-EndFunc   ;==>ApplyConfig_600_52_1
-
 Func ApplyConfig_600_52_2($TypeReadSave)
 	; troop/spell levels and counts
 	Switch $TypeReadSave
@@ -2415,7 +2389,6 @@ Func ApplyConfig_600_54($TypeReadSave)
 			EndIf
 
 			chkTotalCampForced()
-			radSelectTrainType() ; this function also calls calls lblTotalCount and TotalSpellCountClick
 			SetComboTroopComp() ; this function also calls lblTotalCount
 		Case "Save"
 			; Troops Order
