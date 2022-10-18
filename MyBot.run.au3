@@ -1099,11 +1099,6 @@ EndFunc   ;==>_RunFunction
 
 Func __RunFunction($action)
 	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
-	If $g_bChkOnlyAttack And Not $action = 'BuilderBase' Then
-		SetLog($Action & " - Only attack enabled, Skip", $COLOR_ACTION)
-		Return
-	EndIf
-
 	Switch $action
 		Case "Collect"
 			Collect()

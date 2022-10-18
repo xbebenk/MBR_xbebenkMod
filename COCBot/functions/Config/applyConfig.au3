@@ -43,10 +43,8 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 			Switch $TypeReadSave
                 Case "Read"
                     GUICtrlSetState($g_hChkBackgroundMode, $g_bChkBackgroundMode = True ? $GUI_CHECKED : $GUI_UNCHECKED)
-					GUICtrlSetState($g_hChkOnlyAttack, $g_bChkOnlyAttack = True ? $GUI_CHECKED : $GUI_UNCHECKED)
 				Case "Save"
 					$g_bChkBackgroundMode = (GUICtrlRead($g_hChkBackgroundMode) = $GUI_CHECKED)
-					$g_bChkOnlyAttack = (GUICtrlRead($g_hChkOnlyAttack) = $GUI_CHECKED)
 			EndSwitch
 		EndIf
 		UpdateBotTitle()

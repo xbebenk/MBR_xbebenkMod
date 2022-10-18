@@ -345,7 +345,6 @@ Func SaveConfig_600_1()
 	_Ini_Add("general", "LogDividerY", $g_iLogDividerY)
 	; <><><><> Bottom panel <><><><>
 	_Ini_Add("general", "Background", $g_bChkBackgroundMode ? 1 : 0)
-	_Ini_Add("general", "OnlyAttack", $g_bChkOnlyAttack ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_1
 
 Func SaveConfig_600_6()

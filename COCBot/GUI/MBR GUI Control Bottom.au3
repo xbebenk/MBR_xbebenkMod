@@ -155,14 +155,6 @@ Func UpdateChkBackground()
 	EndIf
 EndFunc   ;==>UpdateChkBackground
 
-Func chkOnlyAttack()
-	If GUICtrlRead($g_hChkOnlyAttack) = $GUI_CHECKED Then
-		$g_bChkOnlyAttack = True
-	Else
-		$g_bChkOnlyAttack = False
-	EndIf
-EndFunc   ;==>chkOnlyAttack
-
 Func btnStart()
 	; decide when to run
 	EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
