@@ -1593,7 +1593,10 @@ Func ReadConfig_600_52_2()
 		IniReadS($g_aiArmyCustomSpells[$S], $g_sProfileConfigPath, "Spells", $g_asSpellShortNames[$S], 0, "int")
 		IniReadS($g_aiTrainArmySpellLevel[$S], $g_sProfileConfigPath, "LevelSpell", $g_asSpellShortNames[$S], 0, "int")
 	Next
-
+	
+	$g_aiArmyCompTroops = $g_aiArmyCustomTroops
+	$g_aiArmyCompSpells = $g_aiArmyCustomSpells
+	
 	For $S = 0 To $eSiegeMachineCount - 1
 		IniReadS($g_aiArmyCompSiegeMachines[$S], $g_sProfileConfigPath, "Siege", $g_asSiegeMachineShortNames[$S], 0, "int")
 		IniReadS($g_aiTrainArmySiegeMachineLevel[$S], $g_sProfileConfigPath, "LevelSiege", $g_asSiegeMachineShortNames[$S], 0, "int")
