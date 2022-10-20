@@ -26,6 +26,8 @@ Func TrainSystem()
 	StartGainCost()
 
 	BoostSuperTroop()
+	;Add small delay after boost
+	If _Sleep(1000) Then Return
 	
 	CheckIfArmyIsReady()
 	;CheckSTroopsIcon()
