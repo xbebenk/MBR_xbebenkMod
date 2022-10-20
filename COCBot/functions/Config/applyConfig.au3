@@ -2292,22 +2292,13 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			For $T = 0 To $eTroopCount - 1
-				Local $iColor = ($g_aiTrainArmyTroopLevel[$T] = $g_aiTroopCostPerLevel[$T][0] ? $COLOR_YELLOW : $COLOR_WHITE)
 				GUICtrlSetData($g_ahTxtTrainArmyTroopCount[$T], $g_aiArmyCustomTroops[$T])
-				GUICtrlSetData($g_ahLblTrainArmyTroopLevel[$T], $g_aiTrainArmyTroopLevel[$T])
-				If GUICtrlGetBkColor($g_ahLblTrainArmyTroopLevel[$T]) <> $iColor Then GUICtrlSetBkColor($g_ahLblTrainArmyTroopLevel[$T], $iColor)
 			Next
 			For $S = 0 To $eSpellCount - 1
-				Local $iColor = ($g_aiTrainArmySpellLevel[$S] = $g_aiSpellCostPerLevel[$S][0] ? $COLOR_YELLOW : $COLOR_WHITE)
 				GUICtrlSetData($g_ahTxtTrainArmySpellCount[$S], $g_aiArmyCustomSpells[$S])
-				GUICtrlSetData($g_ahLblTrainArmySpellLevel[$S], $g_aiTrainArmySpellLevel[$S])
-				If GUICtrlGetBkColor($g_ahLblTrainArmySpellLevel[$S]) <> $iColor Then GUICtrlSetBkColor($g_ahLblTrainArmySpellLevel[$S], $iColor)
 			Next
 			For $S = 0 To $eSiegeMachineCount - 1
-				Local $iColor = ($g_aiTrainArmySiegeMachineLevel[$S] = $g_aiSiegeMachineCostPerLevel[$S][0] ? $COLOR_YELLOW : $COLOR_WHITE)
 				GUICtrlSetData($g_ahTxtTrainArmySiegeCount[$S], $g_aiArmyCompSiegeMachines[$S])
-				GUICtrlSetData($g_ahLblTrainArmySiegeLevel[$S], $g_aiTrainArmySiegeMachineLevel[$S])
-				If GUICtrlGetBkColor($g_ahLblTrainArmySiegeLevel[$S]) <> $iColor Then GUICtrlSetBkColor($g_ahLblTrainArmySiegeLevel[$S], $iColor)
 			Next
 			; full & forced Total Camp values
 			GUICtrlSetData($g_hTxtFullTroop, $g_iTrainArmyFullTroopPct)
@@ -2322,15 +2313,12 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			; troop/spell levels and counts
 			For $T = 0 To $eTroopCount - 1
 				$g_aiArmyCustomTroops[$T] = GUICtrlRead($g_ahTxtTrainArmyTroopCount[$T])
-				$g_aiTrainArmyTroopLevel[$T] = GUICtrlRead($g_ahLblTrainArmyTroopLevel[$T])
 			Next
 			For $S = 0 To $eSpellCount - 1
 				$g_aiArmyCustomSpells[$S] = GUICtrlRead($g_ahTxtTrainArmySpellCount[$S])
-				$g_aiTrainArmySpellLevel[$S] = GUICtrlRead($g_ahLblTrainArmySpellLevel[$S])
 			Next
 			For $S = 0 To $eSiegeMachineCount - 1
 				$g_aiArmyCompSiegeMachines[$S] = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$S])
-				$g_aiTrainArmySiegeMachineLevel[$S] = GUICtrlRead($g_ahLblTrainArmySiegeLevel[$S])
 			Next
 			; full & forced Total Camp values
 			$g_iTrainArmyFullTroopPct = Int(GUICtrlRead($g_hTxtFullTroop))
