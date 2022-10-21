@@ -436,10 +436,12 @@ EndFunc
 
 Func IsCCBuilderMenuOpen()
 	Local $bRet = False
-	Local $aBorder0[4] = [370, 73, 0x8C9CB6, 20]
-	Local $aBorder1[4] = [370, 73, 0xF8F8F7, 20]
+	Local $aBorder0[4] = [400, 73, 0x8C9CB6, 20]
+	Local $aBorder1[4] = [400, 73, 0xC0C9D3, 20]
+	Local $aBorder2[4] = [400, 73, 0xBEBFBC, 20]
+	
 	Local $sTriangle
-	If _CheckPixel($aBorder0, True) Or _CheckPixel($aBorder1, True) Then 
+	If _CheckPixel($aBorder0, True) Or _CheckPixel($aBorder1, True) Or _CheckPixel($aBorder2, True) Then 
 		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder0[0], $aBorder0[1], True), $COLOR_ACTION)
 		$bRet = True ;got correct color for border 
 	EndIf
@@ -447,7 +449,7 @@ Func IsCCBuilderMenuOpen()
 	If Not $bRet Then ;lets re check if border color check not success
 		$sTriangle = getOcrAndCapture("coc-buildermenu-cc", 350, 55, 200, 25)
 		SetDebugLog("$sTriangle: " & $sTriangle)
-		If $sTriangle = "^" Or $sTriangle = "~" Or $sTriangle = "@" Or $sTriangle = "$" Then $bRet = True
+		If $sTriangle = "^" Or $sTriangle = "~" Or $sTriangle = "@" Or $sTriangle = "#" Or $sTriangle = "%" Or $sTriangle = "$" Or $sTriangle = "&" Then $bRet = True
 	EndIf
 	SetDebugLog("IsCCBuilderMenuOpen : " & String($bRet))
 	Return $bRet
@@ -698,7 +700,7 @@ Func AutoUpgradeCC($bTest = False)
 					SwitchToMainVillage("WaitforMap Failed")
 					Return
 				EndIf
-				If Not ClickCCBuilder() Then Return
+				If Not ClickCCBuilder() Then ExitLoop
 				Local $aUpgrade = FindCCSuggestedUpgrade() ;Find on Distric Map, Will Read White and Blue Font
 				If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 					For $j = 0 To UBound($aUpgrade) - 1

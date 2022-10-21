@@ -97,7 +97,6 @@
 #include "functions\CreateArmy\TrainSiege.au3"
 #include "functions\CreateArmy\TrainIt.au3"
 #include "functions\CreateArmy\DoubleTrain.au3" ; DoubleTrain Demen
-#include "functions\CreateArmy\QuickTrain.au3"
 
 #include "functions\CreateArmy\getArmyTroops\getArmyTroopTime.au3"
 #include "functions\CreateArmy\getArmyTroops\getArmyTroopCapacity.au3"

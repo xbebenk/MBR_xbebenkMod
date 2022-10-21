@@ -299,7 +299,6 @@ Func ApplyScriptDB()
 		$g_aiArmyCustomSpells = $aiCSVSpells
 		ApplyConfig_600_52_2("Read")
 		SetComboTroopComp() ; GUI refresh
-		lblTotalCountSpell2()
 		SetLog("CSV Train settings applied", $COLOR_SUCCESS)
 	EndIf
 
@@ -409,7 +408,6 @@ Func ApplyScriptAB()
 		$g_aiArmyCustomSpells = $aiCSVSpells
 		ApplyConfig_600_52_2("Read")
 		SetComboTroopComp() ; GUI refresh
-		lblTotalCountSpell2()
 		SetLog("CSV Train settings applied", $COLOR_SUCCESS)
 	EndIf
 

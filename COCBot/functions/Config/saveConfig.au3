@@ -250,8 +250,6 @@ Func SaveRegularConfig()
 	; <><><><> Bot / Profile / Switch Account <><><><>
 	SaveConfig_600_35_2()
 	; <><><> Attack Plan / Train Army / Troops/Spells <><><>
-	; Quick train
-	SaveConfig_600_52_1()
 	; troop/spell levels and counts
 	SaveConfig_600_52_2()
 	; <><><> Attack Plan / Train Army / Train Order <><><>
@@ -345,7 +343,6 @@ Func SaveConfig_600_1()
 	_Ini_Add("general", "LogDividerY", $g_iLogDividerY)
 	; <><><><> Bottom panel <><><><>
 	_Ini_Add("general", "Background", $g_bChkBackgroundMode ? 1 : 0)
-	_Ini_Add("general", "OnlyAttack", $g_bChkOnlyAttack ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_1
 
 Func SaveConfig_600_6()
@@ -543,7 +540,6 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "UseQueuedTroopSpell", $g_bUseQueuedTroopSpell)
 	_Ini_Add("other", "TrainPreviousArmy", $g_bTrainPreviousArmy)
 	_Ini_Add("other", "SkipWallPlacingOnBB", $g_bSkipWallPlacingOnBB)
-	_Ini_Add("other", "RandomArmyComp", $g_bRandomArmyComp)
 	_Ini_Add("other", "CheckDonateEarly", $g_bDonateEarly)
 	_Ini_Add("other", "CheckUpgradeWallEarly", $g_bUpgradeWallEarly)
 	_Ini_Add("other", "CheckAutoUpgradeEarly", $g_bAutoUpgradeEarly)
@@ -1299,25 +1295,6 @@ Func SaveConfig_600_35_2()
 	EndIf
 
 EndFunc   ;==>SaveConfig_600_35_2
-
-Func SaveConfig_600_52_1()
-	; <><><> Attack Plan / Train Army / Troops/Spells <><><>
-	ApplyConfig_600_52_1(GetApplyConfigSaveAction())
-	_Ini_Add("other", "ChkUseQTrain", $g_bQuickTrainEnable ? 1 : 0)
-
-	For $i = 0 To 2
-		_Ini_Add("troop", "QuickTrainArmy" & $i + 1, $g_bQuickTrainArmy[$i] ? 1 : 0)
-		_Ini_Add("troop", "UseInGameArmy_" & $i + 1, $g_abUseInGameArmy[$i] ? 1 : 0)
-		For $j = 0 To 6
-			_Ini_Add("QuickTroop", "QuickTroopType_" & $i + 1 & "_Slot_" & $j, $g_aiQuickTroopType[$i][$j])
-			_Ini_Add("QuickTroop", "QuickTroopQty_" & $i + 1 & "_Slot_" & $j, $g_aiQuickTroopQty[$i][$j])
-			_Ini_Add("QuickTroop", "QuickSpellType_" & $i + 1 & "_Slot_" & $j, $g_aiQuickSpellType[$i][$j])
-			_Ini_Add("QuickTroop", "QuickSpellQty_" & $i + 1 & "_Slot_" & $j, $g_aiQuickSpellQty[$i][$j])
-		Next
-		_Ini_Add("QuickTroop", "TotalQuickTroop" & $i + 1, $g_aiTotalQuickTroop[$i])
-		_Ini_Add("QuickTroop", "TotalQuickSpell" & $i + 1, $g_aiTotalQuickSpell[$i])
-	Next
-EndFunc   ;==>SaveConfig_600_52_1
 
 Func SaveConfig_600_52_2()
 	; troop/spell levels and counts

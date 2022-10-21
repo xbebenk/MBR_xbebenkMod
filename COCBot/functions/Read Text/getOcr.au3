@@ -419,12 +419,14 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	If $bImgLoc = Default Then $bImgLoc = False
 	If $bForceCaptureRegion = Default Then $bForceCaptureRegion = $g_bOcrForceCaptureRegion
 	Static $_hHBitmap = 0
+	
+	Local $result
+	
 	If $bForceCaptureRegion = True Then
 		_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)
 	Else
 		$_hHBitmap = GetHHBitmapArea($g_hHBitmap2, $x_start, $y_start, $x_start + $width, $y_start + $height)
 	EndIf
-	Local $result
 	If $bImgLoc Then
 		If $_hHBitmap <> 0 Then
 			$result = getOcrImgLoc($_hHBitmap, $language)

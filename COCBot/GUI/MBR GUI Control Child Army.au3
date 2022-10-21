@@ -14,88 +14,6 @@
 ; ===============================================================================================================================
 #include-once
 
-Func radSelectTrainType()
-	If GUICtrlRead($g_hRadCustomTrain) = $GUI_CHECKED Then
-		_GUICtrlTab_ClickTab($g_hGUI_TRAINARMY_ARMY_TAB, 0)
-		For $i = 0 To 2
-			_GUI_Value_STATE("DISABLE", $g_ahChkArmy[$i] & "#" & $g_ahChkUseInGameArmy[$i] & "#" & $g_ahLblEditArmy[$i] & "#" & $g_ahBtnEditArmy[$i])
-		Next
-		_GUI_Value_STATE("ENABLE", $grpTrainTroops & "#" & $grpCookSpell)
-		lblTotalCountTroop1()
-		TotalSpellCountClick()
-	Else
-		_GUICtrlTab_ClickTab($g_hGUI_TRAINARMY_ARMY_TAB, 1)
-		_GUI_Value_STATE("ENABLE", $g_ahChkArmy[0] & "#" & $g_ahChkArmy[1] & "#" & $g_ahChkArmy[2])
-		For $i = 0 To 2
-			_chkQuickTrainArmy($i)
-		Next
-		_GUI_Value_STATE("DISABLE", $grpTrainTroops & "#" & $grpCookSpell)
-		GUICtrlSetData($g_hLblTotalTimeCamp, " 0s")
-		GUICtrlSetData($g_hLblTotalTimeSpell, " 0s")
-		GUICtrlSetData($g_hLblElixirCostCamp, "0")
-		GUICtrlSetData($g_hLblDarkCostCamp, "0")
-		GUICtrlSetData($g_hLblElixirCostSpell, "0")
-		GUICtrlSetData($g_hLblDarkCostSpell, "0")
-	EndIf
-	lblTotalCountSiege()
-EndFunc   ;==>radSelectTrainType
-
-Func chkQuickTrainArmy()
-	For $i = 0 To 2
-		If @GUI_CtrlId = $g_ahChkArmy[$i] Then
-			_chkQuickTrainArmy($i)
-			ExitLoop
-		EndIf
-	Next
-EndFunc   ;==>chkQuickTrainArmy
-
-Func chkQuickTrainCombo()
-	If GUICtrlRead($g_ahChkArmy[0]) = $GUI_UNCHECKED And GUICtrlRead($g_ahChkArmy[1]) = $GUI_UNCHECKED And GUICtrlRead($g_ahChkArmy[2]) = $GUI_UNCHECKED Then
-		GUICtrlSetState($g_ahChkArmy[0], $GUI_CHECKED)
-		ToolTip("QuickTrainCombo: " & @CRLF & "At least 1 Army Check is required! Default Army 1.")
-		Sleep(2000)
-		ToolTip('')
-		_chkQuickTrainArmy(0)
-	EndIf
-EndFunc   ;==>chkQuickTrainCombo
-
-Func _chkQuickTrainArmy($i)
-	If GUICtrlRead($g_ahChkArmy[$i]) = $GUI_UNCHECKED Then
-		_GUI_Value_STATE("DISABLE", $g_ahChkUseInGameArmy[$i] & "#" & $g_ahLblEditArmy[$i] & "#" & $g_ahBtnEditArmy[$i])
-		GUICtrlSetState($g_ahLblUseInGameArmyNote[$i], $GUI_HIDE)
-		If GUICtrlRead($g_ahChkArmy[0]) = $GUI_UNCHECKED And GUICtrlRead($g_ahChkArmy[1]) = $GUI_UNCHECKED And GUICtrlRead($g_ahChkArmy[2]) = $GUI_UNCHECKED Then chkQuickTrainCombo()
-	Else
-		_GUI_Value_STATE("ENABLE", $g_ahChkUseInGameArmy[$i] & "#" & $g_ahLblEditArmy[$i] & "#" & $g_ahBtnEditArmy[$i])
-		_chkUseInGameArmy($i)
-	EndIf
-EndFunc   ;==>_chkQuickTrainArmy
-
-Func chkUseInGameArmy()
-	For $i = 0 To 2
-		If @GUI_CtrlId = $g_ahChkUseInGameArmy[$i] Then
-			_chkUseInGameArmy($i)
-			ExitLoop
-		EndIf
-	Next
-EndFunc   ;==>chkUseInGameArmy
-
-Func _chkUseInGameArmy($i)
-	If GUICtrlRead($g_ahChkUseInGameArmy[$i]) = $GUI_CHECKED Then
-		For $j = $g_ahBtnEditArmy[$i] To $g_ahLblQuickSpell[$i][6]
-			GUICtrlSetState($j, $GUI_HIDE)
-		Next
-		GUICtrlSetState($g_ahLblUseInGameArmyNote[$i], $GUI_SHOW)
-	Else
-		_GUI_Value_STATE("SHOW", $g_ahBtnEditArmy[$i] & "#" & $g_ahLblEditArmy[$i] & "#" & $g_ahLblTotalQTroop[$i] & "#" & $g_ahPicTotalQTroop[$i] & "#" & $g_ahLblTotalQSpell[$i] & "#" & $g_ahPicTotalQSpell[$i])
-		GUICtrlSetState($g_ahLblUseInGameArmyNote[$i], $GUI_HIDE)
-		For $j = 0 To 6
-			If $g_aiQuickTroopType[$i][$j] > -1 Then _GUI_Value_STATE("SHOW", $g_ahPicQuickTroop[$i][$j] & "#" & $g_ahLblQuickTroop[$i][$j])
-			If $g_aiQuickSpellType[$i][$j] > -1 Then _GUI_Value_STATE("SHOW", $g_ahPicQuickSpell[$i][$j] & "#" & $g_ahLblQuickSpell[$i][$j])
-		Next
-		ApplyQuickTrainArmy($i)
-	EndIf
-EndFunc   ;==>_chkUseInGameArmy
-
 Func SetComboTroopComp()
 	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "SetComboTroopComp")
 	Local $ArmyCampTemp = 0
@@ -183,8 +101,6 @@ Func lblTotalCountTroop2()
 
 	$TotalTotalTimeTroop = CalculTimeTo($TotalTotalTimeTroop)
 	GUICtrlSetData($g_hLblTotalTimeCamp, $TotalTotalTimeTroop)
-
-	CalCostCamp()
 EndFunc   ;==>lblTotalCountTroop2
 
 Func lblTotalCountSpell2()
@@ -202,8 +118,6 @@ Func lblTotalCountSpell2()
 	Next
 
 	GUICtrlSetData($g_hLblTotalTimeSpell, CalculTimeTo($iTotalTotalTimeSpell))
-
-	CalCostSpell()
 EndFunc   ;==>lblTotalCountSpell2
 
 Func lblTotalCountSiege()
@@ -220,8 +134,6 @@ Func lblTotalCountSiege()
 	GUICtrlSetData($g_hLblTotalTimeSiege, CalculTimeTo($iTotalTotalTimeSiege))
 	GUICtrlSetData($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege)
 	GUICtrlSetBkColor($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege <= 3 ? $COLOR_MONEYGREEN : $COLOR_RED)
-
-	CalCostSiege()
 	; prepared for some new TH level !!
 	If $g_iTownHallLevel > 0 And $g_iTownHallLevel < 12 Then
 		$g_iTotalTrainSpaceSiege = 0
@@ -841,202 +753,6 @@ Func IsUseCustomTroopOrder()
 	Return True
 EndFunc   ;==>IsUseCustomTroopOrder
 
-Func LevUpDownTroop($iTroopIndex, $NoChangeLev = True)
-	Local $MaxLev = $g_aiTroopCostPerLevel[$iTroopIndex][0]
-	Local $TempLev = 0
-
-	If $NoChangeLev Then
-		If _IsPressed("10") Or _IsPressed("02") Then
-			$TempLev = $g_aiTrainArmyTroopLevel[$iTroopIndex] - 1
-		Else
-			$TempLev = $g_aiTrainArmyTroopLevel[$iTroopIndex] + 1
-		EndIf
-	Else
-		$TempLev = $g_aiTrainArmyTroopLevel[$iTroopIndex]
-	EndIf
-
-	Local $hLevel = $g_ahLblTrainArmyTroopLevel[$iTroopIndex]
-
-	If $TempLev > $MaxLev Or $TempLev = 0 Then
-		$TempLev = 0
-		If $NoChangeLev Then lblTotalCountTroop1()
-	ElseIf $TempLev < 0 Then
-		$TempLev = $MaxLev
-	EndIf
-
-	$g_aiTrainArmyTroopLevel[$iTroopIndex] = $TempLev
-
-	Local $iColor = ($TempLev = $MaxLev ? $COLOR_YELLOW : $COLOR_WHITE)
-	GUICtrlSetData($hLevel, $TempLev)
-	If GUICtrlGetBkColor($hLevel) <> $iColor Then GUICtrlSetBkColor($hLevel, $iColor)
-EndFunc   ;==>LevUpDownTroop
-
-Func LevUpDownSiege($iSiege, $NoChangeLev = True)
-	Local $MaxLev = $g_aiSiegeMachineCostPerLevel[$iSiege][0]
-	Local $TempLev = 0
-
-	If $NoChangeLev Then
-		If _IsPressed("10") Or _IsPressed("02") Then
-			$TempLev = $g_aiTrainArmySiegeMachineLevel[$iSiege] - 1
-		Else
-			$TempLev = $g_aiTrainArmySiegeMachineLevel[$iSiege] + 1
-		EndIf
-	Else
-		$TempLev = $g_aiTrainArmySiegeMachineLevel[$iSiege]
-	EndIf
-
-	Local $hLevel = $g_ahLblTrainArmySiegeLevel[$iSiege]
-
-	If $TempLev > $MaxLev Or $TempLev = 0 Then
-		$TempLev = 0
-	ElseIf $TempLev < 0 Then
-		$TempLev = $MaxLev
-	EndIf
-
-	$g_aiTrainArmySiegeMachineLevel[$iSiege] = $TempLev
-
-	Local $iColor = ($TempLev = $MaxLev ? $COLOR_YELLOW : $COLOR_WHITE)
-	GUICtrlSetData($hLevel, $TempLev)
-	If GUICtrlGetBkColor($hLevel) <> $iColor Then GUICtrlSetBkColor($hLevel, $iColor)
-	lblTotalCountSiege()
-	CalCostSiege()
-EndFunc   ;==>LevUpDownSiege
-
-Func LevUpDownSpell($iSpellIndex, $NoChangeLev = True)
-	Local $MaxLev = $g_aiSpellCostPerLevel[$iSpellIndex][0]
-	Local $TempLev = 0
-
-	If $NoChangeLev Then
-		If _IsPressed("10") Or _IsPressed("02") Then
-			$TempLev = $g_aiTrainArmySpellLevel[$iSpellIndex] - 1
-		Else
-			$TempLev = $g_aiTrainArmySpellLevel[$iSpellIndex] + 1
-		EndIf
-	Else
-		$TempLev = $g_aiTrainArmySpellLevel[$iSpellIndex]
-	EndIf
-
-	Local $hLevel = $g_ahLblTrainArmySpellLevel[$iSpellIndex]
-
-	If $TempLev > $MaxLev Or $TempLev = 0 Then
-		$TempLev = 0
-		If $NoChangeLev Then lblTotalCountSpell2()
-	ElseIf $TempLev < 0 Then
-		$TempLev = $MaxLev
-	EndIf
-
-	$g_aiTrainArmySpellLevel[$iSpellIndex] = $TempLev
-
-	Local $iColor = ($TempLev = $MaxLev ? $COLOR_YELLOW : $COLOR_WHITE)
-	GUICtrlSetData($hLevel, $TempLev)
-	If GUICtrlGetBkColor($hLevel) <> $iColor Then GUICtrlSetBkColor($hLevel, $iColor)
-EndFunc   ;==>LevUpDownSpell
-
-Func TrainTroopLevelClick()
-	If $g_bRunState = True Then Return
-
-	Local $iTroop = -1
-	For $i = 0 To $eTroopCount - 1
-		If @GUI_CtrlId = $g_ahPicTrainArmyTroop[$i] Then
-			$iTroop = $i
-			ExitLoop
-		EndIf
-	Next
-
-	If $iTroop = -1 Then Return
-
-	While _IsPressed(01)
-		LevUpDownTroop($iTroop)
-		Sleep($DELAYLVUP)
-		lblTotalCountTroop2()
-	WEnd
-EndFunc   ;==>TrainTroopLevelClick
-
-Func TrainSiegeLevelClick()
-	If $g_bRunState = True Then Return
-
-	Local $iSiege = -1
-	For $i = 0 To $eSiegeMachineCount - 1
-		If @GUI_CtrlId = $g_ahPicTrainArmySiege[$i] Then
-			$iSiege = $i
-			ExitLoop
-		EndIf
-	Next
-
-	If $iSiege = -1 Then Return
-
-	While _IsPressed(01)
-		LevUpDownSiege($iSiege)
-		Sleep($DELAYLVUP)
-		lblTotalCountSiege()
-	WEnd
-EndFunc   ;==>TrainSiegeLevelClick
-
-Func TrainSpellLevelClick()
-	If $g_bRunState = True Then Return
-
-	Local $iSpell = -1
-	For $i = 0 To $eSpellCount - 1
-		If @GUI_CtrlId = $g_ahPicTrainArmySpell[$i] Then
-			$iSpell = $i
-			ExitLoop
-		EndIf
-	Next
-
-	If $iSpell = -1 Then Return
-
-	While _IsPressed(01)
-		LevUpDownSpell($iSpell)
-		Sleep($DELAYLVUP)
-		lblTotalCountSpell2()
-	WEnd
-EndFunc   ;==>TrainSpellLevelClick
-
-Func CalCostCamp()
-	Local $iElixirCostCamp = 0, $iDarkCostCamp = 0, $indexLevel = 0
-
-	For $i = $eTroopBarbarian To $eTroopDragonRider
-		$indexLevel = $g_aiTrainArmyTroopLevel[$i] > 0 ? $g_aiTrainArmyTroopLevel[$i] : $g_aiTroopCostPerLevel[$i][0]
-		$iElixirCostCamp += $g_aiArmyCustomTroops[$i] * $g_aiTroopCostPerLevel[$i][$indexLevel]
-	Next
-
-	For $i = $eTroopMinion To $eTroopHeadhunter
-		$indexLevel = $g_aiTrainArmyTroopLevel[$i] > 0 ? $g_aiTrainArmyTroopLevel[$i] : $g_aiTroopCostPerLevel[$i][0]
-		$iDarkCostCamp += $g_aiArmyCustomTroops[$i] * $g_aiTroopCostPerLevel[$i][$indexLevel]
-	Next
-
-	GUICtrlSetData($g_hLblElixirCostCamp, _NumberFormat($iElixirCostCamp, True))
-	GUICtrlSetData($g_hLblDarkCostCamp, _NumberFormat($iDarkCostCamp, True))
-EndFunc   ;==>CalCostCamp
-
-Func CalCostSpell()
-	Local $iElixirCostSpell = 0, $iDarkCostSpell = 0, $indexLevel = 0
-
-	For $i = $eSpellLightning To $eSpellInvisibility
-		$indexLevel = $g_aiTrainArmySpellLevel[$i] > 0 ? $g_aiTrainArmySpellLevel[$i] : $g_aiSpellCostPerLevel[$i][0]
-		$iElixirCostSpell += $g_aiArmyCustomSpells[$i] * $g_aiSpellCostPerLevel[$i][$indexLevel]
-	Next
-
-	For $i = $eSpellPoison To $eSpellBat
-		$indexLevel = $g_aiTrainArmySpellLevel[$i] > 0 ? $g_aiTrainArmySpellLevel[$i] : $g_aiSpellCostPerLevel[$i][0]
-		$iDarkCostSpell += $g_aiArmyCustomSpells[$i] * $g_aiSpellCostPerLevel[$i][$indexLevel]
-	Next
-
-	GUICtrlSetData($g_hLblElixirCostSpell, _NumberFormat($iElixirCostSpell, True))
-	GUICtrlSetData($g_hLblDarkCostSpell, _NumberFormat($iDarkCostSpell, True))
-EndFunc   ;==>CalCostSpell
-
-Func CalCostSiege()
-	Local $iGoldCostSiege = 0, $indexLevel = 0
-
-	For $i = 0 To $eSiegeMachineCount - 1
-		$indexLevel = $g_aiTrainArmySiegeMachineLevel[$i] > 0 ? $g_aiTrainArmySiegeMachineLevel[$i] : $g_aiSiegeMachineCostPerLevel[$i][0]
-		$iGoldCostSiege += $g_aiArmyCompSiegeMachines[$i] * $g_aiSiegeMachineCostPerLevel[$i][$indexLevel]
-	Next
-
-	GUICtrlSetData($g_hLblGoldCostSiege, _NumberFormat($iGoldCostSiege, True))
-EndFunc   ;==>CalCostSiege
-
 Func CalculTimeTo($TotalTotalTime)
 	Local $HourToTrain = 0
 	Local $MinToTrain = 0
@@ -1063,19 +779,16 @@ Func Removecamp()
 		$g_aiArmyCustomTroops[$T] = 0
 		$g_aiTrainArmyTroopLevel[$T] = 0
 		GUICtrlSetData($g_ahTxtTrainArmyTroopCount[$T], $g_aiArmyCustomTroops[$T])
-		GUICtrlSetData($g_ahLblTrainArmyTroopLevel[$T], $g_aiTrainArmyTroopLevel[$T])
 	Next
 	For $S = 0 To $eSpellCount - 1
 		$g_aiArmyCustomSpells[$S] = 0
 		$g_aiTrainArmySpellLevel[$S] = 0
 		GUICtrlSetData($g_ahTxtTrainArmySpellCount[$S], $g_aiArmyCustomSpells[$S])
-		GUICtrlSetData($g_ahLblTrainArmySpellLevel[$S], $g_aiTrainArmySpellLevel[$S])
 	Next
 	For $S = 0 To $eSiegeMachineCount - 1
 		$g_aiArmyCompSiegeMachines[$S] = 0
 		$g_aiTrainArmySiegeMachineLevel[$S] = 0
 		GUICtrlSetData($g_ahTxtTrainArmySiegeCount[$S], $g_aiArmyCompSiegeMachines[$S])
-		GUICtrlSetData($g_ahLblTrainArmySiegeLevel[$S], $g_aiTrainArmySiegeMachineLevel[$S])
 	Next
 
 	GUICtrlSetData($g_hCalTotalTroops, 0)
@@ -1134,436 +847,436 @@ Func chkAddDelayIdlePhaseEnable()
 	Next
 EndFunc   ;==>chkAddDelayIdlePhaseEnable
 
-#Region QuickTrain
-Func EditQuickTrainArmy()
-	If $g_bRunState Then Return
-	If $g_bRunState Or $g_iQuickTrainEdit > -1 Then
-		Local $sMessage = $g_bRunState ? ("Bot is running" & @CRLF & "Please stop the bot completely and try again") : ("Edit window for Army " & $g_iQuickTrainEdit + 1 & " is currently open" & @CRLF & "Please exit and try again")
-		ToolTip("EditQuickTrainArmy: " & @CRLF & $sMessage)
-		Sleep(2000)
-		ToolTip('')
-		Return
-	EndIf
-	For $i = 0 To 2
-		If @GUI_CtrlId = $g_ahBtnEditArmy[$i] Then
-			$g_iQuickTrainEdit = $i
-			_EditQuickTrainArmy($i)
-			ExitLoop
-		EndIf
-	Next
-EndFunc   ;==>EditQuickTrainArmy
-
-Func _EditQuickTrainArmy($i)
-	GUISetState(@SW_SHOW, $g_hGUI_QuickTrainEdit)
-	GUICtrlSetData($g_hGrp_QTEdit, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "GUI_QuickTrainEdit", "Edit troops and spells for quick train") & " Army " & $i + 1)
-	For $j = 0 To 6
-		$g_aiQTEdit_TroopType[$j] = $g_aiQuickTroopType[$i][$j]
-		$g_aiQTEdit_SpellType[$j] = $g_aiQuickSpellType[$i][$j]
-
-		If $g_aiQTEdit_TroopType[$j] > -1 Then
-			_GUICtrlSetImage($g_ahPicQTEdit_Troop[$j], $g_sLibIconPath, $g_aQuickTroopIcon[$g_aiQTEdit_TroopType[$j]])
-			GUICtrlSetData($g_ahTxtQTEdit_Troop[$j], $g_aiQuickTroopQty[$i][$j])
-			_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Troop[$j] & "#" & $g_ahTxtQTEdit_Troop[$j])
-			GUICtrlSetTip($g_ahPicQTEdit_Troop[$j], $g_asTroopNames[$g_aiQTEdit_TroopType[$j]])
-		EndIf
-		If $g_aiQTEdit_SpellType[$j] > -1 Then
-			_GUICtrlSetImage($g_ahPicQTEdit_Spell[$j], $g_sLibIconPath, $g_aQuickSpellIcon[$g_aiQTEdit_SpellType[$j]])
-			GUICtrlSetData($g_ahTxtQTEdit_Spell[$j], $g_aiQuickSpellQty[$i][$j])
-			_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Spell[$j] & "#" & $g_ahTxtQTEdit_Spell[$j])
-			GUICtrlSetTip($g_ahPicQTEdit_Spell[$j], $g_asSpellNames[$g_aiQTEdit_SpellType[$j]])
-		EndIf
-	Next
-	TotalTroopCount_QTEdit()
-	TotalSpellCount_QTEdit()
-EndFunc   ;==>_EditQuickTrainArmy
-
-Func ExitQuickTrainEdit()
-	RemoveArmy_QTEdit()
-	GUISetState(@SW_HIDE, $g_hGUI_QuickTrainEdit)
-	$g_iQuickTrainEdit = -1
-EndFunc   ;==>ExitQuickTrainEdit
-
-Func SelectTroop_QTEdit()
-	Local $iTroop = -1
-	For $i = 0 To $eTroopCount - 1
-		If @GUI_CtrlId = $g_ahPicTroop_QTEdit[$i] Then
-			$iTroop = $i
-			ExitLoop
-		EndIf
-	Next
-	If $iTroop = -1 Then Return
-	While _IsPressed(01)
-		If Not AddTroop_QTEdit($iTroop) Then ExitLoop
-		TotalTroopCount_QTEdit()
-		Sleep(100)
-	WEnd
-EndFunc   ;==>SelectTroop_QTEdit
-
-Func AddTroop_QTEdit($iTroop)
-	Local $bOverSpace = False, $bOverSlot = False, $iTotalCampSpace=0
-
-   $iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
-
-	If $g_iQTEdit_TotalTroop + $g_aiTroopSpace[$iTroop] > $iTotalCampSpace Then $bOverSpace = True
-
-	For $j = 0 To 6
-		If $bOverSpace Then ExitLoop
-		Select
-			Case $g_aiQTEdit_TroopType[$j] = -1
-				$g_aiQTEdit_TroopType[$j] = $iTroop
-				_GUICtrlSetImage($g_ahPicQTEdit_Troop[$j], $g_sLibIconPath, $g_aQuickTroopIcon[$iTroop])
-				Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$j]) + 1
-				GUICtrlSetData($g_ahTxtQTEdit_Troop[$j], $iQty)
-				_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Troop[$j] & "#" & $g_ahTxtQTEdit_Troop[$j])
-				GUICtrlSetTip($g_ahPicQTEdit_Troop[$j], $g_asTroopNames[$g_aiQTEdit_TroopType[$j]])
-				ExitLoop
-
-			Case $g_aiQTEdit_TroopType[$j] = $iTroop
-				Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$j]) + 1
-				GUICtrlSetData($g_ahTxtQTEdit_Troop[$j], $iQty)
-				ExitLoop
-
-			Case $g_aiQTEdit_TroopType[$j] > $iTroop And $g_aiQTEdit_TroopType[6] = -1
-				For $k = 6 To $j + 1 Step -1 ; shifting the higher troops to the right
-					If $g_aiQTEdit_TroopType[$k - 1] >= 0 Then
-						$g_aiQTEdit_TroopType[$k] = $g_aiQTEdit_TroopType[$k - 1]
-						Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$k - 1])
-						_GUICtrlSetImage($g_ahPicQTEdit_Troop[$k], $g_sLibIconPath, $g_aQuickTroopIcon[$g_aiQTEdit_TroopType[$k]])
-						GUICtrlSetData($g_ahTxtQTEdit_Troop[$k], $iQty)
-						_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Troop[$k] & "#" & $g_ahTxtQTEdit_Troop[$k])
-						GUICtrlSetTip($g_ahPicQTEdit_Troop[$k], $g_asTroopNames[$g_aiQTEdit_TroopType[$k]])
-					EndIf
-				Next
-				$g_aiQTEdit_TroopType[$j] = $iTroop
-				_GUICtrlSetImage($g_ahPicQTEdit_Troop[$j], $g_sLibIconPath, $g_aQuickTroopIcon[$iTroop])
-				GUICtrlSetData($g_ahTxtQTEdit_Troop[$j], 1)
-				GUICtrlSetTip($g_ahPicQTEdit_Troop[$j], $g_asTroopNames[$g_aiQTEdit_TroopType[$j]])
-				ExitLoop
-
-		EndSelect
-		If $j = 6 Then $bOverSlot = True
-	Next
-
-	If $bOverSpace Or $bOverSlot Then
-		ToolTip($bOverSlot ? "Quick train does not support more than 7 troop slots" : "Total selected troops exceeds possible camp capacity (" & $iTotalCampSpace & ")")
-		Sleep(2000)
-		ToolTip('')
-	Else
-		Return True
-	EndIf
-EndFunc   ;==>AddTroop_QTEdit
-
-Func RemoveTroop_QTEdit()
-	Local $iSlot = -1
-	For $i = 0 To 6
-		If @GUI_CtrlId = $g_ahPicQTEdit_Troop[$i] Then
-			If $g_aiQTEdit_TroopType[$i] = -1 Then Return
-			$iSlot = $i
-			ExitLoop
-		EndIf
-	Next
-	If $iSlot = -1 Then Return
-	While _IsPressed(01)
-		_RemoveTroop_QTEdit($iSlot)
-		TotalTroopCount_QTEdit()
-	WEnd
-EndFunc   ;==>RemoveTroop_QTEdit
-
-Func _RemoveTroop_QTEdit($iSlot)
-	Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$iSlot])
-	If $iQty > 0 Then
-		$iQty -= 1
-		GUICtrlSetData($g_ahTxtQTEdit_Troop[$iSlot], $iQty)
-	EndIf
-	Sleep(100)
-	If $iQty = 0 Then
-		For $k = $iSlot To 6
-			If $k < 6 Then
-				If $g_aiQTEdit_TroopType[$k] = -1 Then ExitLoop
-				$g_aiQTEdit_TroopType[$k] = $g_aiQTEdit_TroopType[$k + 1]
-				$iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$k + 1])
-			Else
-				$g_aiQTEdit_TroopType[$k] = -1
-				$iQty = 0
-			EndIf
-			If $g_aiQTEdit_TroopType[$k] > -1 Then
-				_GUICtrlSetImage($g_ahPicQTEdit_Troop[$k], $g_sLibIconPath, $g_aQuickTroopIcon[$g_aiQTEdit_TroopType[$k]])
-				GUICtrlSetData($g_ahTxtQTEdit_Troop[$k], $iQty)
-				_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Troop[$k] & "#" & $g_ahTxtQTEdit_Troop[$k])
-				GUICtrlSetTip($g_ahPicQTEdit_Troop[$k], $g_asTroopNames[$g_aiQTEdit_TroopType[$k]])
-			Else
-				_GUICtrlSetImage($g_ahPicQTEdit_Troop[$k], $g_sLibIconPath, $eEmpty3)
-				GUICtrlSetData($g_ahTxtQTEdit_Troop[$k], 0)
-				_GUI_Value_STATE("HIDE", $g_ahPicQTEdit_Troop[$k] & "#" & $g_ahTxtQTEdit_Troop[$k])
-				GUICtrlSetTip($g_ahPicQTEdit_Troop[$k], "Empty")
-			EndIf
-		Next
-	EndIf
-EndFunc   ;==>_RemoveTroop_QTEdit
-
-Func SelectSpell_QTEdit()
-	Local $iSpell = -1
-	For $i = 0 To $eSpellCount - 1
-		If @GUI_CtrlId = $g_ahPicSpell_QTEdit[$i] Then
-			$iSpell = $i
-			ExitLoop
-		EndIf
-	Next
-	If $iSpell = -1 Then Return
-	While _IsPressed(01)
-		If Not AddSpell_QTEdit($iSpell) Then ExitLoop
-		TotalSpellCount_QTEdit()
-		Sleep(100)
-	WEnd
-EndFunc   ;==>SelectSpell_QTEdit
-
-Func AddSpell_QTEdit($iSpell)
-	Local $bOverSpace = False, $bOverSlot = False, $iTotalSpellSpace=0
-
-	$iTotalSpellSpace=Number(GUICtrlRead($g_hTxtTotalCountSpell))
-
-	If $g_iQTEdit_TotalSpell + $g_aiSpellSpace[$iSpell] > $iTotalSpellSpace Then $bOverSpace = True
-
-	For $j = 0 To 6
-		If $bOverSpace Then ExitLoop
-		Select
-			Case $g_aiQTEdit_SpellType[$j] = -1
-				$g_aiQTEdit_SpellType[$j] = $iSpell
-				_GUICtrlSetImage($g_ahPicQTEdit_Spell[$j], $g_sLibIconPath, $g_aQuickSpellIcon[$iSpell])
-				Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$j]) + 1
-				GUICtrlSetData($g_ahTxtQTEdit_Spell[$j], $iQty)
-				_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Spell[$j] & "#" & $g_ahTxtQTEdit_Spell[$j])
-				GUICtrlSetTip($g_ahPicQTEdit_Spell[$j], $g_asSpellNames[$g_aiQTEdit_SpellType[$j]])
-				ExitLoop
-
-			Case $g_aiQTEdit_SpellType[$j] = $iSpell
-				Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$j]) + 1
-				GUICtrlSetData($g_ahTxtQTEdit_Spell[$j], $iQty)
-				ExitLoop
-
-			Case $g_aiQTEdit_SpellType[$j] > $iSpell And $g_aiQTEdit_SpellType[6] = -1
-				For $k = 6 To $j + 1 Step -1 ; shifting the higher spells to the right
-					If $g_aiQTEdit_SpellType[$k - 1] >= 0 Then
-						$g_aiQTEdit_SpellType[$k] = $g_aiQTEdit_SpellType[$k - 1]
-						Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$k - 1])
-						_GUICtrlSetImage($g_ahPicQTEdit_Spell[$k], $g_sLibIconPath, $g_aQuickSpellIcon[$g_aiQTEdit_SpellType[$k]])
-						GUICtrlSetData($g_ahTxtQTEdit_Spell[$k], $iQty)
-						_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Spell[$k] & "#" & $g_ahTxtQTEdit_Spell[$k])
-						GUICtrlSetTip($g_ahPicQTEdit_Spell[$k], $g_asSpellNames[$g_aiQTEdit_SpellType[$k]])
-					EndIf
-				Next
-				$g_aiQTEdit_SpellType[$j] = $iSpell
-				_GUICtrlSetImage($g_ahPicQTEdit_Spell[$j], $g_sLibIconPath, $g_aQuickSpellIcon[$iSpell])
-				GUICtrlSetData($g_ahTxtQTEdit_Spell[$j], 1)
-				GUICtrlSetTip($g_ahPicQTEdit_Spell[$j], $g_asSpellNames[$g_aiQTEdit_SpellType[$j]])
-				ExitLoop
-
-		EndSelect
-		If $j = 6 Then $bOverSlot = True
-	Next
-
-	If $bOverSpace Or $bOverSlot Then
-		ToolTip($bOverSlot ? "Quick train does not support more than 7 Spell slots" : "Total selected Spells exceeds possible spell camp capacity (" & $iTotalSpellSpace & ")")
-		Sleep(2000)
-		ToolTip('')
-	Else
-		Return True
-	EndIf
-EndFunc   ;==>AddSpell_QTEdit
-
-Func RemoveSpell_QTEdit()
-	Local $iSlot = -1
-	For $i = 0 To 6
-		If @GUI_CtrlId = $g_ahPicQTEdit_Spell[$i] Then
-			If $g_aiQTEdit_SpellType[$i] = -1 Then Return
-			$iSlot = $i
-			ExitLoop
-		EndIf
-	Next
-	If $iSlot = -1 Then Return
-	While _IsPressed(01)
-		_RemoveSpell_QTEdit($iSlot)
-		TotalSpellCount_QTEdit()
-	WEnd
-EndFunc   ;==>RemoveSpell_QTEdit
-
-Func _RemoveSpell_QTEdit($iSlot)
-	Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$iSlot])
-	If $iQty > 0 Then
-		$iQty -= 1
-		GUICtrlSetData($g_ahTxtQTEdit_Spell[$iSlot], $iQty)
-	EndIf
-	Sleep(100)
-	If $iQty = 0 Then
-		For $k = $iSlot To 6
-			If $k < 6 Then
-				If $g_aiQTEdit_SpellType[$k] = -1 Then ExitLoop
-				$g_aiQTEdit_SpellType[$k] = $g_aiQTEdit_SpellType[$k + 1]
-				$iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$k + 1])
-			Else
-				$g_aiQTEdit_SpellType[$k] = -1
-				$iQty = 0
-			EndIf
-			If $g_aiQTEdit_SpellType[$k] > -1 Then
-				_GUICtrlSetImage($g_ahPicQTEdit_Spell[$k], $g_sLibIconPath, $g_aQuickSpellIcon[$g_aiQTEdit_SpellType[$k]])
-				GUICtrlSetData($g_ahTxtQTEdit_Spell[$k], $iQty)
-				_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Spell[$k] & "#" & $g_ahTxtQTEdit_Spell[$k])
-				GUICtrlSetTip($g_ahPicQTEdit_Spell[$k], $g_asSpellNames[$g_aiQTEdit_SpellType[$k]])
-			Else
-				_GUICtrlSetImage($g_ahPicQTEdit_Spell[$k], $g_sLibIconPath, $eEmpty3)
-				GUICtrlSetData($g_ahTxtQTEdit_Spell[$k], 0)
-				_GUI_Value_STATE("HIDE", $g_ahPicQTEdit_Spell[$k] & "#" & $g_ahTxtQTEdit_Spell[$k])
-				GUICtrlSetTip($g_ahPicQTEdit_Spell[$k], "Empty")
-			EndIf
-		Next
-	EndIf
-EndFunc   ;==>_RemoveSpell_QTEdit
-
-Func RemoveArmy_QTEdit()
-	For $j = 0 To 6
-		$g_aiQTEdit_TroopType[$j] = -1
-		$g_aiQTEdit_SpellType[$j] = -1
-		_GUICtrlSetImage($g_ahPicQTEdit_Troop[$j], $g_sLibIconPath, $eEmpty3)
-		_GUICtrlSetImage($g_ahPicQTEdit_Spell[$j], $g_sLibIconPath, $eEmpty3)
-		GUICtrlSetData($g_ahTxtQTEdit_Troop[$j], 0)
-		GUICtrlSetData($g_ahTxtQTEdit_Spell[$j], 0)
-		_GUI_Value_STATE("HIDE", $g_ahPicQTEdit_Troop[$j] & "#" & $g_ahTxtQTEdit_Troop[$j] & "#" & $g_ahPicQTEdit_Spell[$j] & "#" & $g_ahTxtQTEdit_Spell[$j])
-		GUICtrlSetTip($g_ahPicQTEdit_Troop[$j], "Empty")
-		GUICtrlSetTip($g_ahPicQTEdit_Spell[$j], "Empty")
-	Next
-	TotalTroopCount_QTEdit()
-	TotalSpellCount_QTEdit()
-EndFunc   ;==>RemoveArmy_QTEdit
-
-Func SaveArmy_QTEdit()
-	$i = $g_iQuickTrainEdit
-	For $j = 0 To 6
-		$g_aiQuickTroopType[$i][$j] = $g_aiQTEdit_TroopType[$j]
-		$g_aiQuickSpellType[$i][$j] = $g_aiQTEdit_SpellType[$j]
-		$g_aiQuickTroopQty[$i][$j] = GUICtrlRead($g_ahTxtQTEdit_Troop[$j])
-		$g_aiQuickSpellQty[$i][$j] = GUICtrlRead($g_ahTxtQTEdit_Spell[$j])
-	Next
-	$g_aiTotalQuickTroop[$i] = $g_iQTEdit_TotalTroop
-	$g_aiTotalQuickSpell[$i] = $g_iQTEdit_TotalSpell
-	RemoveArmy_QTEdit()
-	GUISetState(@SW_HIDE, $g_hGUI_QuickTrainEdit)
-	ApplyQuickTrainArmy($i)
-	$g_iQuickTrainEdit = -1
-EndFunc   ;==>SaveArmy_QTEdit
-
-Func ApplyQuickTrainArmy($Army)
-	For $i = 0 To 2
-		If $i <> $Army Then ContinueLoop
-		Local $bNoArmy = True
-		GUICtrlSetState($g_ahLblQuickTrainNote[$i], $GUI_HIDE)
-		For $j = 0 To 6
-			If $g_aiQuickTroopType[$i][$j] > -1 Then
-				_GUICtrlSetImage($g_ahPicQuickTroop[$i][$j], $g_sLibIconPath, $g_aQuickTroopIcon[$g_aiQuickTroopType[$i][$j]])
-				GUICtrlSetData($g_ahLblQuickTroop[$i][$j], $g_aiQuickTroopQty[$i][$j] & "x")
-				_GUI_Value_STATE("SHOW", $g_ahPicQuickTroop[$i][$j] & "#" & $g_ahLblQuickTroop[$i][$j])
-				GUICtrlSetTip($g_ahPicQuickTroop[$i][$j], $g_asTroopNames[$g_aiQuickTroopType[$i][$j]])
-				$bNoArmy = False
-			Else
-				_GUICtrlSetImage($g_ahPicQuickTroop[$i][$j], $g_sLibIconPath, $eEmpty3)
-				_GUI_Value_STATE("HIDE", $g_ahPicQuickTroop[$i][$j] & "#" & $g_ahLblQuickTroop[$i][$j])
-				GUICtrlSetTip($g_ahPicQuickTroop[$i][$j], "Empty")
-			EndIf
-			If $g_aiQuickSpellType[$i][$j] > -1 Then
-				_GUICtrlSetImage($g_ahPicQuickSpell[$i][$j], $g_sLibIconPath, $g_aQuickSpellIcon[$g_aiQuickSpellType[$i][$j]])
-				GUICtrlSetData($g_ahLblQuickSpell[$i][$j], $g_aiQuickSpellQty[$i][$j] & "x")
-				_GUI_Value_STATE("SHOW", $g_ahPicQuickSpell[$i][$j] & "#" & $g_ahLblQuickSpell[$i][$j])
-				GUICtrlSetTip($g_ahPicQuickSpell[$i][$j], $g_asSpellNames[$g_aiQuickSpellType[$i][$j]])
-				$bNoArmy = False
-			Else
-				_GUICtrlSetImage($g_ahPicQuickSpell[$i][$j], $g_sLibIconPath, $eEmpty3)
-				_GUI_Value_STATE("HIDE", $g_ahPicQuickSpell[$i][$j] & "#" & $g_ahLblQuickSpell[$i][$j])
-				GUICtrlSetTip($g_ahPicQuickSpell[$i][$j], "Empty")
-			EndIf
-		Next
-		If $bNoArmy Then GUICtrlSetState($g_ahLblQuickTrainNote[$i], $GUI_SHOW)
-		GUICtrlSetData($g_ahLblTotalQTroop[$i], $g_aiTotalQuickTroop[$i])
-		GUICtrlSetData($g_ahLblTotalQSpell[$i], $g_aiTotalQuickSpell[$i])
-	Next
-EndFunc   ;==>ApplyQuickTrainArmy
-
-Func TxtQTEdit_Troop()
-	Local $iTroop, $iQty, $iSpace, $iSlot, $iTotalCampSpace=0
-
-   $iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
-
-   For $j = 0 To 6
-		If @GUI_CtrlId = $g_ahTxtQTEdit_Troop[$j] Then
-			$iTroop = $g_aiQTEdit_TroopType[$j]
-			$iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$j])
-			If _ArrayIndexValid($g_aiTroopSpace, $iTroop) Then $iSpace = $iQty * $g_aiTroopSpace[$iTroop]
-			$iSlot = $j
-			If $iQty = 0 Then _RemoveTroop_QTEdit($iSlot)
-			ExitLoop
-		EndIf
-		If $j = 6 Then Return
-	Next
-	TotalTroopCount_QTEdit()
-
-	If $g_iQTEdit_TotalTroop > $iTotalCampSpace Then
-		Local $iSpaceLeft = $iTotalCampSpace - ($g_iQTEdit_TotalTroop - $iSpace)
-		Local $iMaxQtyLeft = Int($iSpaceLeft / $g_aiTroopSpace[$iTroop])
-	    ToolTip("Your input of " & $iQty & "x " & $g_asTroopNames[$iTroop] & " makes total troops to exceed possible camp capacity (" & $iTotalCampSpace & ")." & @CRLF & "Automatically changing to: " & $iMaxQtyLeft & "x " & $g_asTroopNames[$iTroop])
-		Sleep(2000)
-		ToolTip('')
-		GUICtrlSetData($g_ahTxtQTEdit_Troop[$iSlot], $iMaxQtyLeft)
-		TotalTroopCount_QTEdit()
-	EndIf
-EndFunc   ;==>TxtQTEdit_Troop
-
-Func TxtQTEdit_Spell()
-	Local $iSpell, $iQty, $iSpace, $iSlot, $iTotalSpellSpace=0
-
-	$iTotalSpellSpace=Number(GUICtrlRead($g_hTxtTotalCountSpell))
-
-	For $j = 0 To 6
-		If @GUI_CtrlId = $g_ahTxtQTEdit_Spell[$j] Then
-			$iSpell = $g_aiQTEdit_SpellType[$j]
-			$iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$j])
-			If _ArrayIndexValid($g_aiSpellSpace, $iSpell) Then $iSpace = $iQty * $g_aiSpellSpace[$iSpell]
-			$iSlot = $j
-			If $iQty = 0 Then _RemoveSpell_QTEdit($iSlot)
-			ExitLoop
-		EndIf
-		If $j = 6 Then Return
-	Next
-	TotalSpellCount_QTEdit()
-
-	If $g_iQTEdit_TotalSpell > $iTotalSpellSpace Then
-		Local $iSpaceLeft = $iTotalSpellSpace - ($g_iQTEdit_TotalSpell - $iSpace)
-		Local $iMaxQtyLeft = Int($iSpaceLeft / $g_aiSpellSpace[$iSpell])
-		ToolTip("Your input of " & $iQty & "x " & $g_asSpellNames[$iSpell] & " makes total Spells to exceed possible camp capacity (" & $iTotalSpellSpace & ")." & @CRLF & "Automatically changing to: " & $iMaxQtyLeft & "x " & $g_asSpellNames[$iSpell])
-		Sleep(2000)
-		ToolTip('')
-		GUICtrlSetData($g_ahTxtQTEdit_Spell[$iSlot], $iMaxQtyLeft)
-		TotalSpellCount_QTEdit()
-	EndIf
-EndFunc   ;==>TxtQTEdit_Spell
-
-Func TotalTroopCount_QTEdit()
-	$g_iQTEdit_TotalTroop = 0
-	For $j = 0 To 6
-		Local $iCount = GUICtrlRead($g_ahTxtQTEdit_Troop[$j])
-		Local $iTroop = $g_aiQTEdit_TroopType[$j]
-		If $iCount > 0 Then $g_iQTEdit_TotalTroop += $iCount * $g_aiTroopSpace[$iTroop]
-	Next
-	GUICtrlSetData($g_ahLblQTEdit_TotalTroop, $g_iQTEdit_TotalTroop)
-EndFunc   ;==>TotalTroopCount_QTEdit
-
-Func TotalSpellCount_QTEdit()
-	$g_iQTEdit_TotalSpell = 0
-	For $j = 0 To 6
-		Local $iCount = GUICtrlRead($g_ahTxtQTEdit_Spell[$j])
-		Local $iSpell = $g_aiQTEdit_SpellType[$j]
-		If $iCount > 0 Then $g_iQTEdit_TotalSpell += $iCount * $g_aiSpellSpace[$iSpell]
-	Next
-	GUICtrlSetData($g_ahLblQTEdit_TotalSpell, $g_iQTEdit_TotalSpell)
-EndFunc   ;==>TotalSpellCount_QTEdit
-#EndRegion QuickTrain
+;#Region QuickTrain
+;Func EditQuickTrainArmy()
+;	If $g_bRunState Then Return
+;	If $g_bRunState Or $g_iQuickTrainEdit > -1 Then
+;		Local $sMessage = $g_bRunState ? ("Bot is running" & @CRLF & "Please stop the bot completely and try again") : ("Edit window for Army " & $g_iQuickTrainEdit + 1 & " is currently open" & @CRLF & "Please exit and try again")
+;		ToolTip("EditQuickTrainArmy: " & @CRLF & $sMessage)
+;		Sleep(2000)
+;		ToolTip('')
+;		Return
+;	EndIf
+;	For $i = 0 To 2
+;		If @GUI_CtrlId = $g_ahBtnEditArmy[$i] Then
+;			$g_iQuickTrainEdit = $i
+;			_EditQuickTrainArmy($i)
+;			ExitLoop
+;		EndIf
+;	Next
+;EndFunc   ;==>EditQuickTrainArmy
+;
+;Func _EditQuickTrainArmy($i)
+;	GUISetState(@SW_SHOW, $g_hGUI_QuickTrainEdit)
+;	GUICtrlSetData($g_hGrp_QTEdit, GetTranslatedFileIni("MBR GUI Design Child Attack - Troops", "GUI_QuickTrainEdit", "Edit troops and spells for quick train") & " Army " & $i + 1)
+;	For $j = 0 To 6
+;		$g_aiQTEdit_TroopType[$j] = $g_aiQuickTroopType[$i][$j]
+;		$g_aiQTEdit_SpellType[$j] = $g_aiQuickSpellType[$i][$j]
+;
+;		If $g_aiQTEdit_TroopType[$j] > -1 Then
+;			_GUICtrlSetImage($g_ahPicQTEdit_Troop[$j], $g_sLibIconPath, $g_aQuickTroopIcon[$g_aiQTEdit_TroopType[$j]])
+;			GUICtrlSetData($g_ahTxtQTEdit_Troop[$j], $g_aiQuickTroopQty[$i][$j])
+;			_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Troop[$j] & "#" & $g_ahTxtQTEdit_Troop[$j])
+;			GUICtrlSetTip($g_ahPicQTEdit_Troop[$j], $g_asTroopNames[$g_aiQTEdit_TroopType[$j]])
+;		EndIf
+;		If $g_aiQTEdit_SpellType[$j] > -1 Then
+;			_GUICtrlSetImage($g_ahPicQTEdit_Spell[$j], $g_sLibIconPath, $g_aQuickSpellIcon[$g_aiQTEdit_SpellType[$j]])
+;			GUICtrlSetData($g_ahTxtQTEdit_Spell[$j], $g_aiQuickSpellQty[$i][$j])
+;			_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Spell[$j] & "#" & $g_ahTxtQTEdit_Spell[$j])
+;			GUICtrlSetTip($g_ahPicQTEdit_Spell[$j], $g_asSpellNames[$g_aiQTEdit_SpellType[$j]])
+;		EndIf
+;	Next
+;	TotalTroopCount_QTEdit()
+;	TotalSpellCount_QTEdit()
+;EndFunc   ;==>_EditQuickTrainArmy
+;
+;Func ExitQuickTrainEdit()
+;	RemoveArmy_QTEdit()
+;	GUISetState(@SW_HIDE, $g_hGUI_QuickTrainEdit)
+;	$g_iQuickTrainEdit = -1
+;EndFunc   ;==>ExitQuickTrainEdit
+;
+;Func SelectTroop_QTEdit()
+;	Local $iTroop = -1
+;	For $i = 0 To $eTroopCount - 1
+;		If @GUI_CtrlId = $g_ahPicTroop_QTEdit[$i] Then
+;			$iTroop = $i
+;			ExitLoop
+;		EndIf
+;	Next
+;	If $iTroop = -1 Then Return
+;	While _IsPressed(01)
+;		If Not AddTroop_QTEdit($iTroop) Then ExitLoop
+;		TotalTroopCount_QTEdit()
+;		Sleep(100)
+;	WEnd
+;EndFunc   ;==>SelectTroop_QTEdit
+;
+;Func AddTroop_QTEdit($iTroop)
+;	Local $bOverSpace = False, $bOverSlot = False, $iTotalCampSpace=0
+;
+;   $iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
+;
+;	If $g_iQTEdit_TotalTroop + $g_aiTroopSpace[$iTroop] > $iTotalCampSpace Then $bOverSpace = True
+;
+;	For $j = 0 To 6
+;		If $bOverSpace Then ExitLoop
+;		Select
+;			Case $g_aiQTEdit_TroopType[$j] = -1
+;				$g_aiQTEdit_TroopType[$j] = $iTroop
+;				_GUICtrlSetImage($g_ahPicQTEdit_Troop[$j], $g_sLibIconPath, $g_aQuickTroopIcon[$iTroop])
+;				Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$j]) + 1
+;				GUICtrlSetData($g_ahTxtQTEdit_Troop[$j], $iQty)
+;				_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Troop[$j] & "#" & $g_ahTxtQTEdit_Troop[$j])
+;				GUICtrlSetTip($g_ahPicQTEdit_Troop[$j], $g_asTroopNames[$g_aiQTEdit_TroopType[$j]])
+;				ExitLoop
+;
+;			Case $g_aiQTEdit_TroopType[$j] = $iTroop
+;				Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$j]) + 1
+;				GUICtrlSetData($g_ahTxtQTEdit_Troop[$j], $iQty)
+;				ExitLoop
+;
+;			Case $g_aiQTEdit_TroopType[$j] > $iTroop And $g_aiQTEdit_TroopType[6] = -1
+;				For $k = 6 To $j + 1 Step -1 ; shifting the higher troops to the right
+;					If $g_aiQTEdit_TroopType[$k - 1] >= 0 Then
+;						$g_aiQTEdit_TroopType[$k] = $g_aiQTEdit_TroopType[$k - 1]
+;						Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$k - 1])
+;						_GUICtrlSetImage($g_ahPicQTEdit_Troop[$k], $g_sLibIconPath, $g_aQuickTroopIcon[$g_aiQTEdit_TroopType[$k]])
+;						GUICtrlSetData($g_ahTxtQTEdit_Troop[$k], $iQty)
+;						_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Troop[$k] & "#" & $g_ahTxtQTEdit_Troop[$k])
+;						GUICtrlSetTip($g_ahPicQTEdit_Troop[$k], $g_asTroopNames[$g_aiQTEdit_TroopType[$k]])
+;					EndIf
+;				Next
+;				$g_aiQTEdit_TroopType[$j] = $iTroop
+;				_GUICtrlSetImage($g_ahPicQTEdit_Troop[$j], $g_sLibIconPath, $g_aQuickTroopIcon[$iTroop])
+;				GUICtrlSetData($g_ahTxtQTEdit_Troop[$j], 1)
+;				GUICtrlSetTip($g_ahPicQTEdit_Troop[$j], $g_asTroopNames[$g_aiQTEdit_TroopType[$j]])
+;				ExitLoop
+;
+;		EndSelect
+;		If $j = 6 Then $bOverSlot = True
+;	Next
+;
+;	If $bOverSpace Or $bOverSlot Then
+;		ToolTip($bOverSlot ? "Quick train does not support more than 7 troop slots" : "Total selected troops exceeds possible camp capacity (" & $iTotalCampSpace & ")")
+;		Sleep(2000)
+;		ToolTip('')
+;	Else
+;		Return True
+;	EndIf
+;EndFunc   ;==>AddTroop_QTEdit
+;
+;Func RemoveTroop_QTEdit()
+;	Local $iSlot = -1
+;	For $i = 0 To 6
+;		If @GUI_CtrlId = $g_ahPicQTEdit_Troop[$i] Then
+;			If $g_aiQTEdit_TroopType[$i] = -1 Then Return
+;			$iSlot = $i
+;			ExitLoop
+;		EndIf
+;	Next
+;	If $iSlot = -1 Then Return
+;	While _IsPressed(01)
+;		_RemoveTroop_QTEdit($iSlot)
+;		TotalTroopCount_QTEdit()
+;	WEnd
+;EndFunc   ;==>RemoveTroop_QTEdit
+;
+;Func _RemoveTroop_QTEdit($iSlot)
+;	Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$iSlot])
+;	If $iQty > 0 Then
+;		$iQty -= 1
+;		GUICtrlSetData($g_ahTxtQTEdit_Troop[$iSlot], $iQty)
+;	EndIf
+;	Sleep(100)
+;	If $iQty = 0 Then
+;		For $k = $iSlot To 6
+;			If $k < 6 Then
+;				If $g_aiQTEdit_TroopType[$k] = -1 Then ExitLoop
+;				$g_aiQTEdit_TroopType[$k] = $g_aiQTEdit_TroopType[$k + 1]
+;				$iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$k + 1])
+;			Else
+;				$g_aiQTEdit_TroopType[$k] = -1
+;				$iQty = 0
+;			EndIf
+;			If $g_aiQTEdit_TroopType[$k] > -1 Then
+;				_GUICtrlSetImage($g_ahPicQTEdit_Troop[$k], $g_sLibIconPath, $g_aQuickTroopIcon[$g_aiQTEdit_TroopType[$k]])
+;				GUICtrlSetData($g_ahTxtQTEdit_Troop[$k], $iQty)
+;				_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Troop[$k] & "#" & $g_ahTxtQTEdit_Troop[$k])
+;				GUICtrlSetTip($g_ahPicQTEdit_Troop[$k], $g_asTroopNames[$g_aiQTEdit_TroopType[$k]])
+;			Else
+;				_GUICtrlSetImage($g_ahPicQTEdit_Troop[$k], $g_sLibIconPath, $eEmpty3)
+;				GUICtrlSetData($g_ahTxtQTEdit_Troop[$k], 0)
+;				_GUI_Value_STATE("HIDE", $g_ahPicQTEdit_Troop[$k] & "#" & $g_ahTxtQTEdit_Troop[$k])
+;				GUICtrlSetTip($g_ahPicQTEdit_Troop[$k], "Empty")
+;			EndIf
+;		Next
+;	EndIf
+;EndFunc   ;==>_RemoveTroop_QTEdit
+;
+;Func SelectSpell_QTEdit()
+;	Local $iSpell = -1
+;	For $i = 0 To $eSpellCount - 1
+;		If @GUI_CtrlId = $g_ahPicSpell_QTEdit[$i] Then
+;			$iSpell = $i
+;			ExitLoop
+;		EndIf
+;	Next
+;	If $iSpell = -1 Then Return
+;	While _IsPressed(01)
+;		If Not AddSpell_QTEdit($iSpell) Then ExitLoop
+;		TotalSpellCount_QTEdit()
+;		Sleep(100)
+;	WEnd
+;EndFunc   ;==>SelectSpell_QTEdit
+;
+;Func AddSpell_QTEdit($iSpell)
+;	Local $bOverSpace = False, $bOverSlot = False, $iTotalSpellSpace=0
+;
+;	$iTotalSpellSpace=Number(GUICtrlRead($g_hTxtTotalCountSpell))
+;
+;	If $g_iQTEdit_TotalSpell + $g_aiSpellSpace[$iSpell] > $iTotalSpellSpace Then $bOverSpace = True
+;
+;	For $j = 0 To 6
+;		If $bOverSpace Then ExitLoop
+;		Select
+;			Case $g_aiQTEdit_SpellType[$j] = -1
+;				$g_aiQTEdit_SpellType[$j] = $iSpell
+;				_GUICtrlSetImage($g_ahPicQTEdit_Spell[$j], $g_sLibIconPath, $g_aQuickSpellIcon[$iSpell])
+;				Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$j]) + 1
+;				GUICtrlSetData($g_ahTxtQTEdit_Spell[$j], $iQty)
+;				_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Spell[$j] & "#" & $g_ahTxtQTEdit_Spell[$j])
+;				GUICtrlSetTip($g_ahPicQTEdit_Spell[$j], $g_asSpellNames[$g_aiQTEdit_SpellType[$j]])
+;				ExitLoop
+;
+;			Case $g_aiQTEdit_SpellType[$j] = $iSpell
+;				Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$j]) + 1
+;				GUICtrlSetData($g_ahTxtQTEdit_Spell[$j], $iQty)
+;				ExitLoop
+;
+;			Case $g_aiQTEdit_SpellType[$j] > $iSpell And $g_aiQTEdit_SpellType[6] = -1
+;				For $k = 6 To $j + 1 Step -1 ; shifting the higher spells to the right
+;					If $g_aiQTEdit_SpellType[$k - 1] >= 0 Then
+;						$g_aiQTEdit_SpellType[$k] = $g_aiQTEdit_SpellType[$k - 1]
+;						Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$k - 1])
+;						_GUICtrlSetImage($g_ahPicQTEdit_Spell[$k], $g_sLibIconPath, $g_aQuickSpellIcon[$g_aiQTEdit_SpellType[$k]])
+;						GUICtrlSetData($g_ahTxtQTEdit_Spell[$k], $iQty)
+;						_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Spell[$k] & "#" & $g_ahTxtQTEdit_Spell[$k])
+;						GUICtrlSetTip($g_ahPicQTEdit_Spell[$k], $g_asSpellNames[$g_aiQTEdit_SpellType[$k]])
+;					EndIf
+;				Next
+;				$g_aiQTEdit_SpellType[$j] = $iSpell
+;				_GUICtrlSetImage($g_ahPicQTEdit_Spell[$j], $g_sLibIconPath, $g_aQuickSpellIcon[$iSpell])
+;				GUICtrlSetData($g_ahTxtQTEdit_Spell[$j], 1)
+;				GUICtrlSetTip($g_ahPicQTEdit_Spell[$j], $g_asSpellNames[$g_aiQTEdit_SpellType[$j]])
+;				ExitLoop
+;
+;		EndSelect
+;		If $j = 6 Then $bOverSlot = True
+;	Next
+;
+;	If $bOverSpace Or $bOverSlot Then
+;		ToolTip($bOverSlot ? "Quick train does not support more than 7 Spell slots" : "Total selected Spells exceeds possible spell camp capacity (" & $iTotalSpellSpace & ")")
+;		Sleep(2000)
+;		ToolTip('')
+;	Else
+;		Return True
+;	EndIf
+;EndFunc   ;==>AddSpell_QTEdit
+;
+;Func RemoveSpell_QTEdit()
+;	Local $iSlot = -1
+;	For $i = 0 To 6
+;		If @GUI_CtrlId = $g_ahPicQTEdit_Spell[$i] Then
+;			If $g_aiQTEdit_SpellType[$i] = -1 Then Return
+;			$iSlot = $i
+;			ExitLoop
+;		EndIf
+;	Next
+;	If $iSlot = -1 Then Return
+;	While _IsPressed(01)
+;		_RemoveSpell_QTEdit($iSlot)
+;		TotalSpellCount_QTEdit()
+;	WEnd
+;EndFunc   ;==>RemoveSpell_QTEdit
+;
+;Func _RemoveSpell_QTEdit($iSlot)
+;	Local $iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$iSlot])
+;	If $iQty > 0 Then
+;		$iQty -= 1
+;		GUICtrlSetData($g_ahTxtQTEdit_Spell[$iSlot], $iQty)
+;	EndIf
+;	Sleep(100)
+;	If $iQty = 0 Then
+;		For $k = $iSlot To 6
+;			If $k < 6 Then
+;				If $g_aiQTEdit_SpellType[$k] = -1 Then ExitLoop
+;				$g_aiQTEdit_SpellType[$k] = $g_aiQTEdit_SpellType[$k + 1]
+;				$iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$k + 1])
+;			Else
+;				$g_aiQTEdit_SpellType[$k] = -1
+;				$iQty = 0
+;			EndIf
+;			If $g_aiQTEdit_SpellType[$k] > -1 Then
+;				_GUICtrlSetImage($g_ahPicQTEdit_Spell[$k], $g_sLibIconPath, $g_aQuickSpellIcon[$g_aiQTEdit_SpellType[$k]])
+;				GUICtrlSetData($g_ahTxtQTEdit_Spell[$k], $iQty)
+;				_GUI_Value_STATE("SHOW", $g_ahPicQTEdit_Spell[$k] & "#" & $g_ahTxtQTEdit_Spell[$k])
+;				GUICtrlSetTip($g_ahPicQTEdit_Spell[$k], $g_asSpellNames[$g_aiQTEdit_SpellType[$k]])
+;			Else
+;				_GUICtrlSetImage($g_ahPicQTEdit_Spell[$k], $g_sLibIconPath, $eEmpty3)
+;				GUICtrlSetData($g_ahTxtQTEdit_Spell[$k], 0)
+;				_GUI_Value_STATE("HIDE", $g_ahPicQTEdit_Spell[$k] & "#" & $g_ahTxtQTEdit_Spell[$k])
+;				GUICtrlSetTip($g_ahPicQTEdit_Spell[$k], "Empty")
+;			EndIf
+;		Next
+;	EndIf
+;EndFunc   ;==>_RemoveSpell_QTEdit
+;
+;Func RemoveArmy_QTEdit()
+;	For $j = 0 To 6
+;		$g_aiQTEdit_TroopType[$j] = -1
+;		$g_aiQTEdit_SpellType[$j] = -1
+;		_GUICtrlSetImage($g_ahPicQTEdit_Troop[$j], $g_sLibIconPath, $eEmpty3)
+;		_GUICtrlSetImage($g_ahPicQTEdit_Spell[$j], $g_sLibIconPath, $eEmpty3)
+;		GUICtrlSetData($g_ahTxtQTEdit_Troop[$j], 0)
+;		GUICtrlSetData($g_ahTxtQTEdit_Spell[$j], 0)
+;		_GUI_Value_STATE("HIDE", $g_ahPicQTEdit_Troop[$j] & "#" & $g_ahTxtQTEdit_Troop[$j] & "#" & $g_ahPicQTEdit_Spell[$j] & "#" & $g_ahTxtQTEdit_Spell[$j])
+;		GUICtrlSetTip($g_ahPicQTEdit_Troop[$j], "Empty")
+;		GUICtrlSetTip($g_ahPicQTEdit_Spell[$j], "Empty")
+;	Next
+;	TotalTroopCount_QTEdit()
+;	TotalSpellCount_QTEdit()
+;EndFunc   ;==>RemoveArmy_QTEdit
+;
+;Func SaveArmy_QTEdit()
+;	$i = $g_iQuickTrainEdit
+;	For $j = 0 To 6
+;		$g_aiQuickTroopType[$i][$j] = $g_aiQTEdit_TroopType[$j]
+;		$g_aiQuickSpellType[$i][$j] = $g_aiQTEdit_SpellType[$j]
+;		$g_aiQuickTroopQty[$i][$j] = GUICtrlRead($g_ahTxtQTEdit_Troop[$j])
+;		$g_aiQuickSpellQty[$i][$j] = GUICtrlRead($g_ahTxtQTEdit_Spell[$j])
+;	Next
+;	$g_aiTotalQuickTroop[$i] = $g_iQTEdit_TotalTroop
+;	$g_aiTotalQuickSpell[$i] = $g_iQTEdit_TotalSpell
+;	RemoveArmy_QTEdit()
+;	GUISetState(@SW_HIDE, $g_hGUI_QuickTrainEdit)
+;	ApplyQuickTrainArmy($i)
+;	$g_iQuickTrainEdit = -1
+;EndFunc   ;==>SaveArmy_QTEdit
+;
+;Func ApplyQuickTrainArmy($Army)
+;	For $i = 0 To 2
+;		If $i <> $Army Then ContinueLoop
+;		Local $bNoArmy = True
+;		GUICtrlSetState($g_ahLblQuickTrainNote[$i], $GUI_HIDE)
+;		For $j = 0 To 6
+;			If $g_aiQuickTroopType[$i][$j] > -1 Then
+;				_GUICtrlSetImage($g_ahPicQuickTroop[$i][$j], $g_sLibIconPath, $g_aQuickTroopIcon[$g_aiQuickTroopType[$i][$j]])
+;				GUICtrlSetData($g_ahLblQuickTroop[$i][$j], $g_aiQuickTroopQty[$i][$j] & "x")
+;				_GUI_Value_STATE("SHOW", $g_ahPicQuickTroop[$i][$j] & "#" & $g_ahLblQuickTroop[$i][$j])
+;				GUICtrlSetTip($g_ahPicQuickTroop[$i][$j], $g_asTroopNames[$g_aiQuickTroopType[$i][$j]])
+;				$bNoArmy = False
+;			Else
+;				_GUICtrlSetImage($g_ahPicQuickTroop[$i][$j], $g_sLibIconPath, $eEmpty3)
+;				_GUI_Value_STATE("HIDE", $g_ahPicQuickTroop[$i][$j] & "#" & $g_ahLblQuickTroop[$i][$j])
+;				GUICtrlSetTip($g_ahPicQuickTroop[$i][$j], "Empty")
+;			EndIf
+;			If $g_aiQuickSpellType[$i][$j] > -1 Then
+;				_GUICtrlSetImage($g_ahPicQuickSpell[$i][$j], $g_sLibIconPath, $g_aQuickSpellIcon[$g_aiQuickSpellType[$i][$j]])
+;				GUICtrlSetData($g_ahLblQuickSpell[$i][$j], $g_aiQuickSpellQty[$i][$j] & "x")
+;				_GUI_Value_STATE("SHOW", $g_ahPicQuickSpell[$i][$j] & "#" & $g_ahLblQuickSpell[$i][$j])
+;				GUICtrlSetTip($g_ahPicQuickSpell[$i][$j], $g_asSpellNames[$g_aiQuickSpellType[$i][$j]])
+;				$bNoArmy = False
+;			Else
+;				_GUICtrlSetImage($g_ahPicQuickSpell[$i][$j], $g_sLibIconPath, $eEmpty3)
+;				_GUI_Value_STATE("HIDE", $g_ahPicQuickSpell[$i][$j] & "#" & $g_ahLblQuickSpell[$i][$j])
+;				GUICtrlSetTip($g_ahPicQuickSpell[$i][$j], "Empty")
+;			EndIf
+;		Next
+;		If $bNoArmy Then GUICtrlSetState($g_ahLblQuickTrainNote[$i], $GUI_SHOW)
+;		GUICtrlSetData($g_ahLblTotalQTroop[$i], $g_aiTotalQuickTroop[$i])
+;		GUICtrlSetData($g_ahLblTotalQSpell[$i], $g_aiTotalQuickSpell[$i])
+;	Next
+;EndFunc   ;==>ApplyQuickTrainArmy
+;
+;Func TxtQTEdit_Troop()
+;	Local $iTroop, $iQty, $iSpace, $iSlot, $iTotalCampSpace=0
+;
+;   $iTotalCampSpace=Number(GUICtrlRead($g_hTxtTotalCampForced))
+;
+;   For $j = 0 To 6
+;		If @GUI_CtrlId = $g_ahTxtQTEdit_Troop[$j] Then
+;			$iTroop = $g_aiQTEdit_TroopType[$j]
+;			$iQty = GUICtrlRead($g_ahTxtQTEdit_Troop[$j])
+;			If _ArrayIndexValid($g_aiTroopSpace, $iTroop) Then $iSpace = $iQty * $g_aiTroopSpace[$iTroop]
+;			$iSlot = $j
+;			If $iQty = 0 Then _RemoveTroop_QTEdit($iSlot)
+;			ExitLoop
+;		EndIf
+;		If $j = 6 Then Return
+;	Next
+;	TotalTroopCount_QTEdit()
+;
+;	If $g_iQTEdit_TotalTroop > $iTotalCampSpace Then
+;		Local $iSpaceLeft = $iTotalCampSpace - ($g_iQTEdit_TotalTroop - $iSpace)
+;		Local $iMaxQtyLeft = Int($iSpaceLeft / $g_aiTroopSpace[$iTroop])
+;	    ToolTip("Your input of " & $iQty & "x " & $g_asTroopNames[$iTroop] & " makes total troops to exceed possible camp capacity (" & $iTotalCampSpace & ")." & @CRLF & "Automatically changing to: " & $iMaxQtyLeft & "x " & $g_asTroopNames[$iTroop])
+;		Sleep(2000)
+;		ToolTip('')
+;		GUICtrlSetData($g_ahTxtQTEdit_Troop[$iSlot], $iMaxQtyLeft)
+;		TotalTroopCount_QTEdit()
+;	EndIf
+;EndFunc   ;==>TxtQTEdit_Troop
+;
+;Func TxtQTEdit_Spell()
+;	Local $iSpell, $iQty, $iSpace, $iSlot, $iTotalSpellSpace=0
+;
+;	$iTotalSpellSpace=Number(GUICtrlRead($g_hTxtTotalCountSpell))
+;
+;	For $j = 0 To 6
+;		If @GUI_CtrlId = $g_ahTxtQTEdit_Spell[$j] Then
+;			$iSpell = $g_aiQTEdit_SpellType[$j]
+;			$iQty = GUICtrlRead($g_ahTxtQTEdit_Spell[$j])
+;			If _ArrayIndexValid($g_aiSpellSpace, $iSpell) Then $iSpace = $iQty * $g_aiSpellSpace[$iSpell]
+;			$iSlot = $j
+;			If $iQty = 0 Then _RemoveSpell_QTEdit($iSlot)
+;			ExitLoop
+;		EndIf
+;		If $j = 6 Then Return
+;	Next
+;	TotalSpellCount_QTEdit()
+;
+;	If $g_iQTEdit_TotalSpell > $iTotalSpellSpace Then
+;		Local $iSpaceLeft = $iTotalSpellSpace - ($g_iQTEdit_TotalSpell - $iSpace)
+;		Local $iMaxQtyLeft = Int($iSpaceLeft / $g_aiSpellSpace[$iSpell])
+;		ToolTip("Your input of " & $iQty & "x " & $g_asSpellNames[$iSpell] & " makes total Spells to exceed possible camp capacity (" & $iTotalSpellSpace & ")." & @CRLF & "Automatically changing to: " & $iMaxQtyLeft & "x " & $g_asSpellNames[$iSpell])
+;		Sleep(2000)
+;		ToolTip('')
+;		GUICtrlSetData($g_ahTxtQTEdit_Spell[$iSlot], $iMaxQtyLeft)
+;		TotalSpellCount_QTEdit()
+;	EndIf
+;EndFunc   ;==>TxtQTEdit_Spell
+;
+;Func TotalTroopCount_QTEdit()
+;	$g_iQTEdit_TotalTroop = 0
+;	For $j = 0 To 6
+;		Local $iCount = GUICtrlRead($g_ahTxtQTEdit_Troop[$j])
+;		Local $iTroop = $g_aiQTEdit_TroopType[$j]
+;		If $iCount > 0 Then $g_iQTEdit_TotalTroop += $iCount * $g_aiTroopSpace[$iTroop]
+;	Next
+;	GUICtrlSetData($g_ahLblQTEdit_TotalTroop, $g_iQTEdit_TotalTroop)
+;EndFunc   ;==>TotalTroopCount_QTEdit
+;
+;Func TotalSpellCount_QTEdit()
+;	$g_iQTEdit_TotalSpell = 0
+;	For $j = 0 To 6
+;		Local $iCount = GUICtrlRead($g_ahTxtQTEdit_Spell[$j])
+;		Local $iSpell = $g_aiQTEdit_SpellType[$j]
+;		If $iCount > 0 Then $g_iQTEdit_TotalSpell += $iCount * $g_aiSpellSpace[$iSpell]
+;	Next
+;	GUICtrlSetData($g_ahLblQTEdit_TotalSpell, $g_iQTEdit_TotalSpell)
+;EndFunc   ;==>TotalSpellCount_QTEdit
+;#EndRegion QuickTrain
 
 Func chkSuperTroops()
 	If GUICtrlRead($g_hChkSuperTroops) = $GUI_CHECKED Then
@@ -1612,7 +1325,7 @@ Func cmbSuperTroops()
 		Next
 	Next
  EndFunc
- 
+
  Func ChkPreciseArmy()
 	If GUICtrlRead($g_hChkPreciseArmy) = $GUI_CHECKED Then
 		$g_bPreciseArmy = True

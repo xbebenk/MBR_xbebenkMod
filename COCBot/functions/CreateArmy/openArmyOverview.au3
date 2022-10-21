@@ -21,15 +21,19 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 		EndIf
 	EndIf
 	
-	For $i = 0 To 2 ;try 3 time to OpenArmyOverview 
-		If WaitforPixel(23, 520, 53, 525, Hex(0xFFFFE4, 6), 5, 5) Then
+	For $i = 1 To 5
+		If _ColorCheck(_GetPixelColor(32, 523, True), Hex(0xFFFFE2, 6), 20) Then
 			If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
 			ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
+			If _Sleep(1000) Then Return
+		Else
+			SetLog("Cannot verify ArmyTrain Button", $COLOR_ERROR)
+			SetLog("expected FFFFE2, got " & _GetPixelColor(32, 523, True), $COLOR_ACTION)
 		EndIf
-		For $z = 0 To 3
-			If _Sleep(500) Then Return
-			If _ColorCheck(_GetPixelColor(40, 580, True), Hex(0xE8E8E0, 6), 1) Then Return True
-		Next
+		
+		If IsTrainPage(True, 3) Then Return True
+		If _Sleep(500) Then Return
+		If $i > 1 Then SetLog("[" & $i & "] Repeated Try to Open ArmyWindow", $COLOR_ERROR)
 	Next
 	Return False
 EndFunc   ;==>OpenArmyOverview

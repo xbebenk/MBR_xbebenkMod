@@ -57,7 +57,7 @@ Func CheckVersion()
 			For $i = 0 To UBound($Changelog) - 1
 				SetLog($Changelog[$i] )
 			Next
-			PushMsg("Update")
+			;PushMsg("Update")
 		ElseIf _VersionCompare($g_iBotVersionN, $g_sBotGitVersion) = 0 Then
 			SetLog("YOU HAVE THE LATEST MYBOT VERSION", $COLOR_SUCCESS)
 		Else
@@ -79,6 +79,7 @@ Func CheckVersion()
 			SetLog("PLEASE UPDATE TO LATEST MOD VERSION (#" & $sModVersion & ")", $COLOR_ERROR)
 			SetLog($g_sXModSupportUrl, $COLOR_INFO)
 			SetLog("##############################################", $COLOR_INFO)
+			PushMsg("Update")
 		EndIf
 		
 		If Number($sModVersion) = Number($sCurrentVersion) Then 

@@ -60,12 +60,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	Static $aiHeroAvailable = $aiZero
 	Static $aiHeroUpgradingBit = $aiZero
 	Static $aiHeroUpgrading = $aiZero83
-
-	; QuickTrain comp
-	Static $aaArmyQuickTroops[16] = [$aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop, $aiZeroTroop]
-	Static $aaArmyQuickSpells[16] = [$aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell, $aiZeroSpell]
-	Static $aiTotalQuickTroops = $aiZero
-	Static $aiTotalQuickSpells = $aiZero
 	Static $abQuickArmyMixed = $aiZero
 
 	; Other global status
@@ -153,15 +147,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiHeroUpgradingBit = $aiZero
 			$aiHeroUpgrading = $aiZero83
 
-			; QuickTrain comp
-			For $i = 0 To UBound($g_abAccountNo) - 1
-				$aaArmyQuickTroops[$i] = $aiZeroTroop
-				$aaArmyQuickSpells[$i] = $aiZeroSpell
-			Next
-			$aiTotalQuickTroops = $aiZero
-			$aiTotalQuickSpells = $aiZero
-			$abQuickArmyMixed = $aiZero
-
 			; Other global status
 			$aiCommandStop = $aiMinus
 			$aiAllBarracksUpgd = $aiZero
@@ -243,13 +228,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			For $i = 0 To 2
 				$aiHeroUpgrading[$iAccount][$i] = $g_iHeroUpgrading[$i]
 			Next
-
-			; QuickTrain comp
-			$aaArmyQuickTroops[$iAccount] = $g_aiArmyQuickTroops
-			$aaArmyQuickSpells[$iAccount] = $g_aiArmyQuickSpells
-			$aiTotalQuickTroops[$iAccount] = $g_iTotalQuickTroops
-			$aiTotalQuickSpells[$iAccount] = $g_iTotalQuickSpells
-			$abQuickArmyMixed[$iAccount] = $g_bQuickArmyMixed
 
 			; Other global status
 			$aiCommandStop[$iAccount] = $g_iCommandStop
@@ -335,13 +313,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			For $i = 0 To 2
 				$g_iHeroUpgrading[$i] = $aiHeroUpgrading[$iAccount][$i]
 			Next
-
-			; QuickTrain comp
-			$g_aiArmyQuickTroops = $aaArmyQuickTroops[$iAccount]
-			$g_aiArmyQuickSpells = $aaArmyQuickSpells[$iAccount]
-			$g_iTotalQuickTroops = $aiTotalQuickTroops[$iAccount]
-			$g_iTotalQuickSpells = $aiTotalQuickSpells[$iAccount]
-			$g_bQuickArmyMixed = $abQuickArmyMixed[$iAccount]
 
 			; Other global status
 			$g_iCommandStop = $aiCommandStop[$iAccount]

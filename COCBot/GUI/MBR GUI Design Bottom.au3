@@ -35,9 +35,6 @@ Global $g_hlblLab = 0, $g_hPicLabGray = 0, $g_hPicLabRed = 0, $g_hPicLabGreen = 
 ; Pet House
 Global $g_hlblPet = 0, $g_hPicPetGray = 0, $g_hPicPetRed = 0, $g_hPicPetGreen = 0, $g_hLbLPetTime = 0
 
-; Only Attack - lilmeeee - credits: Team AiO MOD++
-Global $g_hChkOnlyAttack = 0
-
 Func CreateBottomPanel()
 	Local $sTxtTip = ""
 	;~ ------------------------------------------------------
@@ -90,13 +87,6 @@ Func CreateBottomPanel()
 			GUICtrlSetOnEvent(-1, "chkBackground")
 			GUICtrlSetState(-1, (($g_bAndroidAdbScreencap = True) ? ($GUI_CHECKED) : ($GUI_UNCHECKED)))
 		
-		;Only Attack - lilmeeee - credits: Team AiO MOD++
-		$g_hChkOnlyAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyAttack", "Only Attack"), $x + 109, $y + 65, -1, -1)
-			GUICtrlSetFont(-1, 7)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "ChkOnlyAttack_01", "Only do Attack on MainVillage and BuilderBase"))
-			GUICtrlSetOnEvent(-1, "chkOnlyAttack")
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
-
 		$g_hBtnAttackNowDB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowDB", "DB Attack!"), $x + 190, $y - 4, 60, -1)
 			GUICtrlSetState(-1, $GUI_HIDE)
 		$g_hBtnAttackNowLB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowLB", "LB Attack!"), $x + 190, $y + 23, 60, -1)

@@ -43,13 +43,19 @@ Func IsSettingPage($bSetLog = True, $iLoop = 30)
 	Return False
 EndFunc   ;==>IsSettingPage
 
-Func IsTrainPage($bSetLog = True, $iLoop = 30)
-
+Func IsTrainPage($bSetLog = True, $iLoop = 5)
+	If Not $g_bRunState Then Return
 	If IsPageLoop($aIsTrainPgChk1, $iLoop) Then
-		If ($g_bDebugSetlog Or $g_bDebugClick) And $bSetLog Then SetLog("**Army Window OK**", $COLOR_ACTION)
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Army Window OK**", $COLOR_ACTION)
 		Return True
 	EndIf
-
+	
+	If $g_bDebugSetlog Or $g_bDebugClick Then
+		Local $colorRead = _GetPixelColor($aIsTrainPgChk1[0], $aIsTrainPgChk1[1], True)
+		SetLog("**Army Window FAIL**", $COLOR_ACTION)
+		SetLog("expected in (" & $aIsTrainPgChk1[0] & "," & $aIsTrainPgChk1[1] & ")  = " & Hex($aIsTrainPgChk1[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
+	EndIf
+	
 	If $bSetLog Then SetLog("Cannot find Army Window...", $COLOR_ERROR) ; in case of $i = 29 in while loop
 	If $g_bDebugImageSave Then SaveDebugImage("IsTrainPage")
 	If $iLoop > 1 Then AndroidPageError("IsTrainPage")

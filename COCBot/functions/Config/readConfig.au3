@@ -248,8 +248,6 @@ Func ReadRegularConfig()
 	; <><><><> Bot / Profile / Switch Account <><><><>
 	ReadConfig_600_35_2()
 	; <><><> Attack Plan / Train Army / Troops/Spells <><><>
-	; Quick train
-	ReadConfig_600_52_1()
 	; troop/spell levels and counts
 	ReadConfig_600_52_2()
 	; <><><> Attack Plan / Train Army / Train Order <><><>
@@ -379,7 +377,6 @@ Func ReadConfig_600_1()
 	IniReadS($g_iLogDividerY, $g_sProfileConfigPath, "general", "LogDividerY", 243, "int")
 	; <><><><> Bottom panel <><><><>
 	IniReadS($g_bChkBackgroundMode, $g_sProfileConfigPath, "general", "Background", True, "Bool")
-	IniReadS($g_bChkOnlyAttack, $g_sProfileConfigPath, "general", "OnlyAttack", False, "Bool")
 EndFunc   ;==>ReadConfig_600_1
 
 Func ReadConfig_600_6()
@@ -608,7 +605,6 @@ Func ReadConfig_600_6()
 	IniReadS($g_bUseQueuedTroopSpell, $g_sProfileConfigPath, "other", "UseQueuedTroopSpell", False, "Bool")
 	IniReadS($g_bTrainPreviousArmy, $g_sProfileConfigPath, "other", "TrainPreviousArmy", False, "Bool")
 	IniReadS($g_bSkipWallPlacingOnBB, $g_sProfileConfigPath, "other", "SkipWallPlacingOnBB", True, "Bool")
-	IniReadS($g_bRandomArmyComp, $g_sProfileConfigPath, "other", "RandomArmyComp", False, "Bool")
 	IniReadS($g_bDonateEarly, $g_sProfileConfigPath, "other", "CheckDonateEarly", True, "Bool")
 	IniReadS($g_bUpgradeWallEarly, $g_sProfileConfigPath, "other", "CheckUpgradeWallEarly", True, "Bool")
 	IniReadS($g_bAutoUpgradeEarly, $g_sProfileConfigPath, "other", "CheckAutoUpgradeEarly", True, "Bool")
@@ -1566,23 +1562,6 @@ Func ReadConfig_SwitchAccounts()
 	EndIf
 EndFunc   ;==>ReadConfig_SwitchAccounts
 
-Func ReadConfig_600_52_1()
-	; <><><><> Attack Plan / Train Army / Troops/Spells <><><><>
-	$g_bQuickTrainEnable = (IniRead($g_sProfileConfigPath, "other", "ChkUseQTrain", "0") = "1")
-	For $i = 0 To 2
-		$g_bQuickTrainArmy[$i] = (IniRead($g_sProfileConfigPath, "troop", "QuickTrainArmy" & $i + 1, "0") = "1")
-		$g_abUseInGameArmy[$i] = (IniRead($g_sProfileConfigPath, "troop", "UseInGameArmy_" & $i + 1, "1") = "1")
-		For $j = 0 To 6
-			IniReadS($g_aiQuickTroopType[$i][$j], $g_sProfileConfigPath, "QuickTroop", "QuickTroopType_" & $i + 1 & "_Slot_" & $j, -1, "int")
-			IniReadS($g_aiQuickTroopQty[$i][$j], $g_sProfileConfigPath, "QuickTroop", "QuickTroopQty_" & $i + 1 & "_Slot_" & $j, 0, "int")
-			IniReadS($g_aiQuickSpellType[$i][$j], $g_sProfileConfigPath, "QuickTroop", "QuickSpellType_" & $i + 1 & "_Slot_" & $j, -1, "int")
-			IniReadS($g_aiQuickSpellQty[$i][$j], $g_sProfileConfigPath, "QuickTroop", "QuickSpellQty_" & $i + 1 & "_Slot_" & $j, 0, "int")
-		Next
-		IniReadS($g_aiTotalQuickTroop[$i], $g_sProfileConfigPath, "QuickTroop", "TotalQuickTroop" & $i + 1, 0, "int")
-		IniReadS($g_aiTotalQuickSpell[$i], $g_sProfileConfigPath, "QuickTroop", "TotalQuickSpell" & $i + 1, 0, "int")
-	Next
-EndFunc   ;==>ReadConfig_600_52_1
-
 Func ReadConfig_600_52_2()
 	For $T = 0 To $eTroopCount - 1
 		Local $tempTroopCount, $tempTroopLevel
@@ -1614,9 +1593,10 @@ Func ReadConfig_600_52_2()
 		IniReadS($g_aiArmyCustomSpells[$S], $g_sProfileConfigPath, "Spells", $g_asSpellShortNames[$S], 0, "int")
 		IniReadS($g_aiTrainArmySpellLevel[$S], $g_sProfileConfigPath, "LevelSpell", $g_asSpellShortNames[$S], 0, "int")
 	Next
-	$g_aiArmyCompTroops = $g_bQuickTrainEnable ? $g_aiArmyQuickTroops : $g_aiArmyCustomTroops
-	$g_aiArmyCompSpells = $g_bQuickTrainEnable ? $g_aiArmyQuickSpells : $g_aiArmyCustomSpells
-
+	
+	$g_aiArmyCompTroops = $g_aiArmyCustomTroops
+	$g_aiArmyCompSpells = $g_aiArmyCustomSpells
+	
 	For $S = 0 To $eSiegeMachineCount - 1
 		IniReadS($g_aiArmyCompSiegeMachines[$S], $g_sProfileConfigPath, "Siege", $g_asSiegeMachineShortNames[$S], 0, "int")
 		IniReadS($g_aiTrainArmySiegeMachineLevel[$S], $g_sProfileConfigPath, "LevelSiege", $g_asSiegeMachineShortNames[$S], 0, "int")

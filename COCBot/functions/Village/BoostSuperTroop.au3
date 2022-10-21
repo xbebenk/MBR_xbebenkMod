@@ -48,8 +48,9 @@ Func BoostSuperTroop($bTest = False)
 					EndSelect
 
 					Local $iRow = Ceiling($g_iCmbSuperTroops[$i] / $iPicsPerRow) ; get row Stroop
-					SetDebugLog("$iRow = " & $iRow, $COLOR_DEBUG)
+					SetDebugLog("curRow = " & $curRow & ", iRow = " & $iRow, $COLOR_DEBUG)
 					StroopNextPage($iRow) ; go directly to the needed Row
+					$curRow = $iRow
 
 					If $iRow = 4 Then ; for last row, we cannot scroll it to middle page
 						$iColumnY1 = 360
@@ -169,7 +170,6 @@ Func BoostSuperTroop($bTest = False)
 					EndIf
 			EndIf
 			If _Sleep(1000) Then Return
-			$curRow = 1
 			If $TroopBoosted = True And $g_iCmbSuperTroops[UBound($g_iCmbSuperTroops) - 1] > 0 And $i = 0 Then OpenBarrel()
 		Next
 	EndIf ;open barrel
@@ -305,10 +305,6 @@ EndFunc   ;==>FindStroopIcons
 Func CancelBoost($aMessage = "")
 	SetLog($aMessage & ", Only Testing", $COLOR_ERROR)
 	SetLog(" -- Cancelling", $COLOR_DEBUG)
-	ClickAway()
-	If _Sleep(500) Then Return
-	ClickAway()
-	If _Sleep(500) Then Return
 	ClickAway()
 	If _Sleep(1000) Then Return
 EndFunc   ;==>CancelBoost

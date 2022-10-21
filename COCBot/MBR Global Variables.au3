@@ -371,7 +371,7 @@ Global $g_sAndroidPicturesPath = "" ; Android mounted path to pictures on host
 Global $g_sAndroidPicturesHostPath = "" ; Windows host path to mounted pictures in android
 Global $g_bAndroidSharedFolderAvailable = True
 Global $g_sAndroidSharedFolderName = "" ; Set during Android initialization
-Global Const $g_iAndroidSecureFlags = 3 ; Bits 0 = disabled file renaming/folder less mode, 1 = Secure (SHA-1 filenames no folder), 2 = Delete files after use immediately
+Global Const $g_iAndroidSecureFlags = 1 ; Bits 0 = disabled file renaming/folder less mode, 1 = Secure (SHA-1 filenames no folder), 2 = Delete files after use immediately
 Global $g_sAndroidPicturesHostFolder = "" ; Subfolder for host and android, can be "", must end with "\" when used
 Global $g_bAndroidPicturesPathAutoConfig = True ; Try to configure missing shared folder if missing (set by android support feature bit 512)
 ; Special ADB modes for screencap, mouse clicks and input text
@@ -485,7 +485,6 @@ Global $g_iBotLaunchOption_Dock = 0 ; If 1 bot will dock Android, 2 dock and sli
 Global $g_bBotLaunchOption_NoBotSlot = False ; If True, bot slot Mutex are not used in function LockBotSlot
 Global $g_iBotLaunchOption_Console = False ; Console option used
 Global $g_iBotLaunchOption_Help = False ; If specified, bot just shows command line options and exits
-Global $g_iRemUnusedGUI = False
 Global $g_asCmdLine[1] = [0] ; Clone of $CmdLine without options, please use instead of $CmdLine
 Global Const $g_sWorkingDir = @WorkingDir ; Working Directory at bot launch
 
@@ -556,6 +555,7 @@ Global Enum $eIcnArcher = 1, $eIcnDonArcher, $eIcnBalloon, $eIcnDonBalloon, $eIc
 		$eIcnPetLassi, $eIcnPetElectroOwl, $eIcnPetMightyYak, $eIcnPetUnicorn, $eIcnTH14, $eWall15, $eIcnPetHouse, $eIcnRocketBalloon, $eIcnDragonRider, $eHdV14, $eIcnSuperBowler, $eIcnFlameF, $eIcnSuperDragon, _
 		$eIcnClanCapital, $eIcnCapitalGold, $eIcnCapitalMedal
 
+Global $eHdV15 = $eHdV14
 Global $eIcnDonBlank = $eIcnDonBlacklist
 Global $eIcnOptions = $eIcnDonBlacklist
 Global $eIcnAchievements = $eIcnMain
@@ -640,48 +640,6 @@ Global Const $g_asTroopShortNames[$eTroopCount] = [ _
 
 Global Const $g_aiTroopSpace[$eTroopCount] = [1, 5, 1, 12, 5, 10, 1, 3, 2, 8, 5, 8, 4, 10, 14, 20, 40, 25, 10, 15, 6, 30, 18, 25, 2, 12, 5, 8, 20, 30, 12, 40, 30, 40, 6, 30, 15, 6]
 Global Const $g_aiTroopTrainTime[$eTroopCount] = [20, 25, 24, 288, 120, 240, 28, 84, 60, 240, 120, 192, 120, 300, 480, 720, 1440, 720, 360, 540, 120, 1440, 720, 4000, 36, 216, 90, 180, 450, 600, 360, 1200, 600, 800, 120, 0, 360, 120] ;Training times with 1 barracks
-
-; Zero element contains number of levels, elements 1 thru n contain cost of that level troop
-Global Const $g_aiTroopCostPerLevel[$eTroopCount][12] = [ _
-		[10, 15, 30, 60, 100, 150, 200, 250, 300, 350, 400], _							; Barbarian
-        [10, 00, 00, 00, 00, 00, 00, 00, 1500, 1750, 2000], _							; Super Barbarian
-        [10, 30, 60, 120, 200, 300, 400, 500, 600, 700, 800], _							; Archer
-        [10, 00, 00, 00, 00, 00, 00, 00, 7200, 8400, 9600], _							; Super Archer
-        [10, 150, 300, 750, 1500, 2250, 3000, 3500, 4000, 4500, 5000], _				; Giant
-        [10, 00, 00, 00, 00, 00, 00, 00, 00, 9000, 10000], _							; Super Giant
-		[8, 25, 40, 60, 80, 100, 150, 200, 250], _										; Goblin
-        [8, 00, 00, 00, 00, 00, 00, 600, 750], _										; Sneaky Goblin
-        [10, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400], _				; WallBreaker
-        [10, 00, 00, 00, 00, 00, 00, 7200, 8000, 8800, 9600], _							; Super WallBreaker
-		[10, 1750, 2250, 2750, 3500, 4000, 4500, 5000, 5500, 6000, 6500], _ 			; Balloon
-        [10, 00, 00, 00, 00, 00, 00, 00, 8800, 9600, 10400], _							; RocketBalloon
-		[10, 1000, 1400, 1800, 2200, 2600, 3000, 3400, 3800, 4200, 4600], _    			; Wizard
-        [10, 00, 00, 00, 00, 00, 00, 00, 00, 10500, 11500], _							; Super Wizard
-        [7, 5000, 6000, 8000, 10000, 14000, 17000, 20000], _                            ; Healer
-		[9, 10000, 12000, 14000, 16000, 18000, 20000, 22000, 24000, 26000], _  			; Dragon
-		[9, 00, 00, 00, 00, 00, 00, 44000, 48000, 52000], _								; Super Dragon
-		[9, 14000, 16000, 18000, 20000, 22500, 25000, 27500, 30000, 32500], _  			; Pekka
-        [8, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000], _						; BabyDragon
-        [8, 00, 00, 00, 00, 00, 15000, 16500, 18000], _									; Inferno Dragon
-        [8, 4200, 4800, 5200, 5600, 6000, 6400, 6800, 7200], _							; Miner
-		[5, 28000, 32000, 36000, 40000, 44000], _  		                 				; ElectroDragon
-        [4, 19000, 21000, 23000, 25000], _ 												; Yeti
-		[3, 22000, 25000, 28000], _  		                 	        				; Dragon Rider
-        [10, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], _										; Minion
-        [10, 00, 00, 00, 00, 00, 00, 00, 66, 72, 78], _									; Super Minion
-        [11, 30, 34, 38, 42, 48, 60, 80, 100, 120, 140, 160], _							; HogRider
-        [9, 50, 65, 80, 100, 130, 160, 190, 220, 250], _								; Valkyrie
-        [9, 0, 0, 0, 0, 0, 0, 475, 550, 625], _											; Super Valkyrie
-        [11, 200, 250, 300, 350, 425, 500, 575, 650, 725, 800, 875], _					; Golem
-		[5, 125, 150, 175, 225, 275], _ 												; Witch
-        [5, 0, 0, 0, 0, 915], _															; Super Witch
-		[6, 390, 450, 510, 570, 630, 750], _  											; Lavahound
-        [6, 0, 0, 0, 0, 840, 1000], _													; Ice hound
-        [6, 70, 95, 115, 140, 175, 200], _												; Bowler
-        [6, 00, 00, 00, 700, 875, 1000], _												; Super Bowler
-        [6, 220, 240, 260, 280, 300, 320], _											; IceGolem
-		[3, 100, 120, 140]]																; Headhunter
-
 Global Const $g_aiTroopDonateXP[$eTroopCount] = [1, 5, 1, 12, 5, 10, 1, 3, 2, 8, 5, 8, 4, 10, 14, 20, 40, 25, 10, 15, 6, 30, 18, 25, 2, 12, 5, 8, 20, 30, 12, 40, 30, 40, 6, 30, 15, 6]
 
 ; Super Troops
@@ -859,7 +817,6 @@ Global $g_iCmbLogDividerOption = 0
 
 ; <><><><> Bottom panel <><><><>
 Global $g_bChkBackgroundMode ; Background mode enabled/disabled
-Global $g_bChkOnlyAttack ; Only Attack Mode
 Global $g_bMakeScreenshotNow = False ; Used to create Screenshot in _Sleep if Screenshot Button got pressed
 
 ; <><><><> Village / Misc <><><><>
@@ -1040,7 +997,7 @@ Global $g_iChkBBSuggestedUpgradesIgnoreWall = 0, $g_bOptimizeOTTO = 0, $g_bReser
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
-Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_iQuickMISName = ""
+Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_iQuickMISName = "", $g_iQuickMISLevel = ""
 
 ; <><><><> Village / Achievements <><><><>
 Global $g_iUnbrkMode = 0, $g_iUnbrkWait = 5
@@ -1075,29 +1032,6 @@ Global $g_abNotifyScheduleHours[24] = [False, False, False, False, False, False,
 Global $g_abNotifyScheduleWeekDays[7] = [False, False, False, False, False, False, False]
 
 ; <><><><> Attack Plan / Train Army / Troops/Spells <><><><>
-Global $g_bQuickTrainEnable = False, $g_bRandomArmyComp = False
-Global $g_bQuickTrainArmy[3] = [True, False, False]
-Global $g_aiArmyQuickTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]			; troop array for ?
-Global $g_aiArmyQuickSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]											; troop array for ?
-Global $g_aiArmyQuickSiegeMachines[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
-
-Global $g_iTotalQuickTroops = 0, $g_iTotalQuickSpells = 0, $g_iTotalQuickSiegeMachines = 0, $g_bQuickArmyMixed = False
-Global $g_abUseInGameArmy[3]
-
-Global $g_aiQuickTroopType[3][7] = [[-1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1]]
-Global $g_aiQuickSpellType[3][7] = [[-1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1]]
-Global $g_aiQuickSiegeMachineType[3][7] = [[-1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1]]
-Global $g_aiQuickTroopQty[3][7] = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
-Global $g_aiQuickSpellQty[3][7] = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
-Global $g_aiQuickSiegeMachineQty[3][7] = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
-Global $g_aiTotalQuickTroop[3] = [0, 0, 0], $g_aiTotalQuickSpell[3] = [0, 0, 0], $g_aiTotalQuickSiegeMachine[3] = [0, 0, 0]
-
-Global $g_iQuickTrainEdit = -1
-Global $g_aiQTEdit_TroopType[7] = [-1, -1, -1, -1, -1, -1, -1]
-Global $g_aiQTEdit_SpellType[7] = [-1, -1, -1, -1, -1, -1, -1]
-Global $g_aiQTEdit_SiegeMachineType[7] = [-1, -1, -1, -1, -1, -1, -1]
-Global $g_iQTEdit_TotalTroop = 0, $g_iQTEdit_TotalSpell = 0, $g_iQTEdit_TotalSiegeMachine = 0
-
 Global $g_aiArmyCustomTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aiArmyCustomSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aiArmyCustomSiegeMachines[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
@@ -1524,9 +1458,9 @@ Global $g_bCloudsActive = False ;True when waiting for clouds
 Global $g_bAttackActive = False ;True when attacking Village
 
 ; Search
-Global Const $g_iMaxTHLevel = 14
-Global Const $g_asTHText[9] = ["4-6", "7", "8", "9", "10", "11", "12", "13", "14"]
-Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200, 1300]
+Global Const $g_iMaxTHLevel = 15
+Global Const $g_asTHText[10] = ["4-6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]
+Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200, 1300, 1400]
 Global $g_bSearchMode = False
 Global $g_bIsSearchLimit = False
 Global $g_bIsClientSyncError = False ;If true means while searching Client Out Of Sync error occurred.
@@ -1862,7 +1796,7 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
 Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
-Global $g_bChkClanGamesPurgeAny = 0
+Global $g_bChkClanGamesPurgeAny = 0, $g_bChkClanGamesZapChallenge = True, $g_bIsZapEvent = False, $g_sZapEventName = ""
 Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDay = 0
 Global $g_bCollectCGReward = False
@@ -1981,13 +1915,14 @@ Global $g_bChkStartWeekendRaid = True
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[21][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], _ ;ok
+Global $g_aVillageRefSize[22][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], _ ;ok
 									["JS", "Jungle", 566.60, 69, 796, 64, 609], _ ;ok
+									["MS", "Magic", 524, 91, 778, 58, 578], _ ;ok
 									["BB", "BuilderBase", 560.2, 88, 793, 91, 617], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
 									["PC", "Pirate", 598.68, 50, 812, 63, 634], _ ;ok
 									["EW", "Winter", 576.41, 68, 794, 61, 607], _ ;ok
-									["HM", "Hog Mountain", 637.4, 52, 810, 62, 636], _ ;ok
+									["HM", "Hog Mountain", 637.4, 52, 810, 62, 636], _ ;ok
 									["EP", "Epic Jungle", 636.8, 45, 815, 60, 636], _ ;ok
 									["9C", "9th Clashivery", 617.21, 76, 803, 64, 611], _ ;ok
 									["PG", "Pumpkin Graveyard", 567.01, 94, 784, 58, 581], _

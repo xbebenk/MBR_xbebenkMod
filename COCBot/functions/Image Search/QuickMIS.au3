@@ -63,7 +63,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 
 				Case "BC1" ; coordinates of first/one image found + boolean value
 
-					Local $Result = "" , $Name = ""
+					Local $Result = "" , $Name = "", $Level = ""
 					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
 					For $i = 0 To UBound($KeyValue) - 1
 						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
@@ -76,9 +76,11 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 
 					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
 					$g_iQuickMISName = $Name
+					$Level = RetrieveImglocProperty($KeyValue[0], "objectlevel")
+					$g_iQuickMISLevel = $Level
 
 					If $g_bDebugSetlog Or $Debug Then
-						SetDebugLog($ValueReturned & " Found: " & $Name & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
+						SetDebugLog($ValueReturned & " Found: " & $Name & " Level:" & $Level & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
 						If $g_bDebugImageSave Then DebugQuickMIS($Left, $Top, "BC1_detected[" & $Name & "_" & $g_iQuickMISX & "x" & $g_iQuickMISY & "]")
 					EndIf
 
@@ -114,7 +116,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 							EndIf
 						Next
 					Next
-					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $sResult)
+					If $g_bDebugSetlog Or $Debug Then SetDebugLog($ValueReturned & " Found: " & $sResult)
 					Return $Result
 
 				Case "N1" ; name of first file found

@@ -26,21 +26,14 @@ Func TrainSystem()
 	StartGainCost()
 
 	BoostSuperTroop()
+	;Add small delay after boost
+	If _Sleep(1000) Then Return
 	
 	CheckIfArmyIsReady()
 	;CheckSTroopsIcon()
 	
-	If $g_bQuickTrainEnable Then	
-		If $g_bRandomArmyComp Then
-			RandomArmyComp()
-		Else
-			CheckQuickTrainTroop()
-			QuickTrain()
-		EndIf
-	Else
-		If $g_bTrainPreviousArmy Then TrainPreviousArmy()
-		TrainCustomArmy()
-	EndIf
+	If $g_bTrainPreviousArmy Then TrainPreviousArmy()
+	TrainCustomArmy()
 
 	TrainSiege()
 
@@ -64,64 +57,6 @@ Func TrainPreviousArmy($bCloseWindow = False)
 	EndIf
 	If $bCloseWindow Then ClickAway()
 EndFunc ;==>TrainPreviousArmy
-
-Func CheckSTroopsIcon()
-	If $g_bSuperTroopsEnable And ($g_iCmbSuperTroops[0] > 0 Or $g_iCmbSuperTroops[1] > 0) Then
-		For $z = 0 To 1
-			
-		Next
-	EndIf
-EndFunc
-
-; #FUNCTION# ====================================================================================================================
-; Name ..........: RandomArmyComp
-; Description ...: New and complete RandomArmyComp using quick train. Will ONLY work if Quick Train is ENABLED.
-; Syntax ........:
-; Parameters ....: None
-; Return values .: None
-; Author ........: Lilmeeee (09-2021), xbebenk (09-2021)
-; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
-; ===============================================================================================================================
-
-Func RandomArmyComp()
-	If Not $g_bRandomArmyComp Then Return False
-    If Not OpenQuickTrainTab(False, "RandomArmyComp()") Then Return
-    If _Sleep(750) Then Return
-	
-	Local $Available_Comps[0] = [], $Result = 0
-	Local $Army_Coords[4] = ["783,324", "798,434", "801,540", "777,177"]
-	
-	If _ColorCheck(_GetPixelColor(752, 309, True), Hex(0xBDE98D, 6), 1) Then
-        _ArrayAdd($Available_Comps, 1)
-	EndIf
-	If _ColorCheck(_GetPixelColor(752, 456, True), Hex(0xE8E8E0, 6), 1) Then
-        _ArrayAdd($Available_Comps, 2)
-	EndIf
-	If _ColorCheck(_GetPixelColor(751, 567, True), Hex(0xE8E8E0, 6), 1) Then
-        _ArrayAdd($Available_Comps, 3)
-	EndIf
-	If _ColorCheck(_GetPixelColor(777, 177, True), Hex(0xBDE98D, 6), 1) Then
-		_ArrayAdd($Available_Comps, 4)
-	EndIf
-	
-	If UBound($Available_Comps) = 0 Then
-		SetLog("There is no available QuickTrain Army! Skipped!", $COLOR_WARNING)
-		Return False
-	Else
-		_ArrayShuffle($Available_Comps)
-	EndIf
-
-	SetLog("Training QuickTrain Army " & $Available_Comps[0], $COLOR_INFO)
-	Execute("PureClick(" & $Army_Coords[$Available_Comps[0]-1] & ")")
-	
-	Return True
-EndFunc ;==>RandomArmyComp
-
 
 Func TrainCustomArmy()
 	If Not $g_bRunState Then Return
@@ -1074,15 +1009,6 @@ Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = 
 		Next
 	EndIf
 
-	If $sArmyType = "Quick Train" Then
-		Local $xSlot
-		For $i = 0 To UBound($aResult) - 1
-			$xSlot = Int((Number($aResult[$i][1]) - 25) / 71)
-			$aResult[$i][3] = Number(getQueueTroopsQuantity(25 + $xSlot * 71, 162))
-			SetDebugLog($aResult[$i][0] & " (" & $xSlot & ") x" & $aResult[$i][3])
-		Next
-	EndIf
-
 	Return $aResult
 EndFunc   ;==>SearchArmy
 
@@ -1128,27 +1054,6 @@ Func ResetVariables($sArmyType = "")
 	EndIf
 
 EndFunc   ;==>ResetVariables
-
-Func TrainArmyNumber($abQuickTrainArmy)
-	Local $iDistanceBetweenArmies = 110
-	Local $aiTrainButton, $aiSearchArea[4] = [750, 270, 815, 380]
-
-	For $iArmyNumber = 0 To 2
-		If $abQuickTrainArmy[$iArmyNumber] Then
-			$aiTrainButton = decodeSingleCoord(findImage("QuickTrainButton", $g_sImgQuickTrain, GetDiamondFromArray($aiSearchArea), 1, True))
-			If UBound($aiTrainButton, 1) = 2 Then
-				ClickP($aiTrainButton)
-				SetLog(" - Making the Army " & $iArmyNumber + 1, $COLOR_INFO)
-				If _Sleep(500) Then Return
-			Else
-				SetLog(" - Army: " & $iArmyNumber + 1 & " is already trained.")
-			EndIf
-		EndIf
-		$aiSearchArea[1] = ($aiSearchArea[1] + $iDistanceBetweenArmies)
-		$aiSearchArea[3] = ($aiSearchArea[3] + $iDistanceBetweenArmies)
-	Next
-
-EndFunc   ;==>TrainArmyNumber
 
 Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 
@@ -1464,20 +1369,8 @@ Func CheckValuesCost($Troop = "Arch", $troopQuantity = 1)
 		If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
 			Local $sTroopType = ($iTroopIndex >= $eMini ? "Dark" : "Normal")
 			$aTempTrainPos = GetFullNameSlot($aTrainPos, $sTroopType)
-			$iTempTroopCost = getArmyResourcesFromButtons($aTempTrainPos[0], $aTempTrainPos[1])
-			If $iTempTroopCost <> "" Then
-				$troopCost = Number($iTempTroopCost)
-			Else
-				$troopCost = $g_aiTroopCostPerLevel[$iTroopIndex][$g_aiTrainArmyTroopLevel[$iTroopIndex]]
-			EndIf
 		ElseIf $iTroopIndex >= $eLSpell And $iTroopIndex <= $eBtSpell Then
 			$aTempTrainPos = GetFullNameSlot($aTrainPos, "Spell")
-			$iTempSpellCost = getArmyResourcesFromButtons($aTempTrainPos[0], $aTempTrainPos[1])
-			If $iTempSpellCost <> "" Then
-				$troopCost = Number($iTempSpellCost)
-			Else
-				$troopCost = $g_aiSpellCostPerLevel[$iTroopIndex - $eLSpell][$g_aiTrainArmySpellLevel[$iTroopIndex - $eLSpell]]
-			EndIf
 		EndIf
 	EndIf
 

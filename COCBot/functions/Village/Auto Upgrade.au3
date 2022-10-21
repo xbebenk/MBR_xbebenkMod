@@ -1051,18 +1051,6 @@ Func FindEssentialBuilding()
 	EndIf
 EndFunc
 
-Func EssentialBuildingImageCopy($sImagePath = "", $sTempPath = "")
-	If $sImagePath = "" Then Return
-	If $sTempPath = "" Then Return
-	Local $asImageName[8] = ["Xbow", "Inferno", "Eagle", "Scatter", "WizardT", "BombT", "AirD", "AirS"]
-	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
-		If $g_aichkEssentialUpgrade[$i] > 0 Then
-			SetDebugLog("[" & $i & "]" & "Essential Building: " & $asImageName[$i], $COLOR_DEBUG)
-			FileCopy($sImagePath & "\" & $asImageName[$i] & "*.xml", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
-		EndIf
-	Next
-EndFunc
-
 Func SearchGreenZone()
 	SetLog("Search GreenZone for Placing new Building", $COLOR_INFO)
 	If Not $g_bRunState Then Return
@@ -1145,7 +1133,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 	Local $b_WindowOpened = False
 	If Not $g_bRunState Then Return
 	; open the builders menu
-	If Not _ColorCheck(_GetPixelColor(350,73, True), "FDFEFD", 50) Then
+	If Not IsBuilderMenuOpen() Then
 		Click(295, 20)
 		If _Sleep(1000) Then Return
 	EndIf
@@ -1155,6 +1143,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 		$b_WindowOpened = True
 	Else
 		For $i = 1 To $Counter
+			If Not $g_bRunState Then Return
 			SetLog("Upgrade Window didn't open, trying again!", $COLOR_DEBUG)
 			If IsFullScreenWindow() Then
 				Click(825,45)
@@ -1466,17 +1455,20 @@ EndFunc
 
 Func IsBuilderMenuOpen()
 	Local $bRet = False
-	Local $aBorder[4] = [350, 73, 0xF7F8F5, 40]
+	Local $aBorder[4] = [350, 73, 0xC7CCBF, 40]
+	Local $aBorder1[4] = [350, 73, 0xFFFFFF, 40]
 	Local $sTriangle
-	If _CheckPixel($aBorder, True) Then 
+	If _CheckPixel($aBorder, True) Or _CheckPixel($aBorder1, True) Then 
 		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
 		$bRet = True ;got correct color for border 
+	Else
+		SetDebugLog("Border Color Not Matched: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
 	EndIf
 	
 	If Not $bRet Then ;lets re check if border color check not success
-		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 320, 60, 345, 73)
+		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 320, 60, 40, 30)
 		SetDebugLog("$sTriangle: " & $sTriangle)
-		If $sTriangle = "^" Then $bRet = True
+		If $sTriangle = "^" Or $sTriangle = "~" Then $bRet = True
 	EndIf
 	
 	Return $bRet

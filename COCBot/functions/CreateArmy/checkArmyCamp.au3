@@ -29,13 +29,16 @@ Func _checkArmyCamp($bOpenArmyWindow, $bCloseArmyWindow, $bGetHeroesTime, $bSetL
 	If Not $bOpenArmyWindow And Not IsTrainPage() Then ; check for train page
 		SetError(1)
 		Return; not open, not requested to be open - error.
-	ElseIf $bOpenArmyWindow Then
+	EndIf
+	
+	If $bOpenArmyWindow Then
 		If Not OpenArmyOverview(True, "_checkArmyCamp()") Then
 			SetError(2)
 			Return; not open, requested to be open - error.
 		EndIf
 		If _Sleep($DELAYCHECKARMYCAMP5) Then Return
 	EndIf
+	
 	If $g_bDebugFuncTime Then StopWatchStopLog()
 
 	If $g_bDebugFuncTime Then StopWatchStart("getArmyTroopsCapacity")
