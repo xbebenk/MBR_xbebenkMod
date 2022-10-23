@@ -59,7 +59,7 @@ EndIf
 ; MBR References.au3 must be last include
 #include "COCBot\MBR References.au3"
 
-;#include "COCBot\Test420\Test420.au3"
+;#include "C:\Test420\Test420\Test420.au3"
 
 ; Autoit Options
 Opt("GUIResizeMode", $GUI_DOCKALL) ; Default resize mode for dock android support
@@ -671,7 +671,7 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 
 	; Check the Supported Emulator versions
 	CheckEmuNewVersions()
-	
+
 	;Reset Telegram message
 	NotifyGetLastMessageFromTelegram()
 	$g_iTGLastRemote = $g_sTGLast_UID
