@@ -698,7 +698,7 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "ChkSyncSaveDE", $g_bChkSyncSaveDE ? 1 : 0)
 
 	_Ini_Add("upgrade", "UpgradePetLassi", $g_bUpgradePetsEnable[$ePetLassi] ? 1 : 0)
-	_Ini_Add("upgrade", "UpgradePetEletroOwl", $g_bUpgradePetsEnable[$ePetEletroOwl] ? 1 : 0)
+	_Ini_Add("upgrade", "UpgradePetElectroOwl", $g_bUpgradePetsEnable[$ePetElectroOwl] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetMightyYak", $g_bUpgradePetsEnable[$ePetMightyYak] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetUnicorn", $g_bUpgradePetsEnable[$ePetUnicorn] ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_15
