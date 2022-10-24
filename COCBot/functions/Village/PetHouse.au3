@@ -300,7 +300,7 @@ EndFunc
 Func GetPetUpgradeList()
 	; Pet upgrade is not in progress and not upgrading, so we need to start an upgrade.
 	Local $iPetUnlockedxCoord[4] = [190, 345, 500, 655]
-	Local $iPetLevelxCoord[4] = [134, 288, 443, 596]
+	Local $iPetLevelxCoord[4] = [130, 275, 420, 567]
 	Local $iDarkElixirReq = 0
 	Local $aPet[0][7]
 	For $i = 0 to $ePetCount - 1
