@@ -508,16 +508,16 @@ Func BtnTroopOrderSet()
 			If $iEmpty > -1 Then $aiUsedTroop[$iEmpty] = -1
 		EndIf
 	Next
-	_ArrayDisplay($aTmpTrainOrder, "aTmpTrainOrder")
+	;_ArrayDisplay($aTmpTrainOrder, "aTmpTrainOrder")
 	$iStartShuffle = Ubound($aTmpTrainOrder)
 	
 	_ArraySort($aiUsedTroop)
-	_ArrayDisplay($aiUsedTroop, "aiUsedTroop")
+	;_ArrayDisplay($aiUsedTroop, "aiUsedTroop")
 	
 	For $i = 0 To UBound($aTmpTrainOrder) - 1
 		If $aiUsedTroop[$i] = -1 Then $aiUsedTroop[$i] = $aTmpTrainOrder[$i]
 	Next
-	_ArrayDisplay($aiUsedTroop, "Updated aiUsedTroop")
+	;_ArrayDisplay($aiUsedTroop, "Updated aiUsedTroop")
 	
 	
 	_ArrayShuffle($aiUsedTroop, $iStartShuffle)

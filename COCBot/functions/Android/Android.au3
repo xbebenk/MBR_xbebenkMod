@@ -4090,8 +4090,8 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	Local $error = @error
 	SetError(0)
 	If $error = 0 Then
-		SetDebugLog("$g_sAndroidGamePackage: " & $sPackage)
-		SetDebugLog("GetAndroidProcessPID StdOut :" & @CRLF & $output)
+		If $g_bDebugAndroid Then SetLog("$g_sAndroidGamePackage: " & $sPackage)
+		If $g_bDebugAndroid Then SetLog("GetAndroidProcessPID StdOut :" & @CRLF & $output & @CRLF)
 		$output = StringStripWS($output, 7)
 		Local $aPkgList[0][26] ; adjust to any suffisent size to accommodate
 		Local $iCols
@@ -4106,6 +4106,7 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 				; scheduling policy : SCHED_NORMAL = 0
 				$CorrectSCHED = "0"
 		EndSwitch
+		If $g_bDebugAndroid Then SetLog("CorrectSCHED : " & $CorrectSCHED, $COLOR_ERROR)
 		
 		For $i = 1 To UBound($aPkgList)
 			$iCols = _ArraySearch($aPkgList, "", 0, 0, 0, 0, 1, $i, True)
@@ -4118,7 +4119,7 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 						Sleep(100)
 						Return GetAndroidProcessPID($sPackage, $bForeground, $iRetryCount + 1)
 					EndIf
-					SetDebugLog("Android process " & $sPackage & " not running in foreground")
+					If $g_bDebugAndroid Then SetLog("Android process " & $sPackage & " not running in foreground")
 					Return 0
 				EndIf
 				Return Int($aPkgList[$i - 1][1])
@@ -4130,7 +4131,7 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	;	Sleep(100)
 	;	Return GetAndroidProcessPID($sPackage, $bForeground, $iRetryCount + 1)
 	;EndIf
-	SetDebugLog("Android process " & $sPackage & " not running")
+	SetLog("Android process " & $sPackage & " not running", $COLOR_INFO)
 	Return SetError($error, 0, 0)
 EndFunc   ;==>GetAndroidProcessPID
 

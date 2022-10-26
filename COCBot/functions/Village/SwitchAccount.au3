@@ -209,26 +209,21 @@ Func CheckSwitchAcc()
 		EndIf
 
 		If $g_iNextAccount <> $g_iCurAccount Then
-			If $g_bChkFastSwitchAcc Then
-				If $g_bRequestTroopsEnable Then
-					If _Sleep(1000) Then Return
-					SetLog("Try RequestCC before switching account", $COLOR_DEBUG)
-					RequestCC()
-				EndIf
-				If $g_bForceSwitchifNoCGEvent Then
-					PrepareDonateCC()
-					DonateCC()
-					TrainSystem()
-				EndIf
-			Else
-				If $g_bRequestTroopsEnable Then
-					SetLog("Try RequestCC, Donate And Train before switching account", $COLOR_DEBUG)
-					RequestCC()
-					PrepareDonateCC()
-					DonateCC()
-					TrainSystem()
-				EndIf
-			EndIf
+			;If $g_bChkFastSwitchAcc Then
+			;	If $g_bRequestTroopsEnable Then
+			;		If _Sleep(1000) Then Return
+			;		SetLog("Try RequestCC before switching account", $COLOR_DEBUG)
+			;		RequestCC()
+			;	EndIf
+			;Else
+			;	If $g_bRequestTroopsEnable Then
+			;		SetLog("Try RequestCC, Donate And Train before switching account", $COLOR_DEBUG)
+			;		RequestCC()
+			;		PrepareDonateCC()
+			;		DonateCC()
+			;		TrainSystem()
+			;	EndIf
+			;EndIf
 			If Not $g_bForceSwitchifNoCGEvent Then _ClanGames(False, $g_bChkForceBBAttackOnClanGames, True)
 			CheckMainScreen(True, $g_bStayOnBuilderBase, "CheckSwitchAcc")
 			SwitchCOCAcc($g_iNextAccount)

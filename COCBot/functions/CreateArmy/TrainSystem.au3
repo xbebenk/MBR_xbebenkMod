@@ -569,7 +569,7 @@ EndFunc   ;==>DeleteInvalidTroopInArray
 Func RemoveExtraTroopsQueue()
 	For $i = 1 To 50
 		If QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200) Then 
-			SetDebugLog("Remove 10 Troops #" & $i)
+			SetLog("Remove All Queued Troops #" & $i, $COLOR_ACTION)
 			Click($g_iQuickMISX, $g_iQuickMISY, 10, 50, "Remove Troops")
 			If Not $g_bRunState Then Return
 			If _Sleep(1000) Then Return
