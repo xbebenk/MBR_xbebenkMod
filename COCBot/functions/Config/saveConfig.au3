@@ -1301,16 +1301,13 @@ Func SaveConfig_600_52_2()
 	ApplyConfig_600_52_2(GetApplyConfigSaveAction())
 	For $t = 0 To $eTroopCount - 1
 		_Ini_Add("troop", $g_asTroopShortNames[$t], $g_aiArmyCustomTroops[$t])
-		_Ini_Add("LevelTroop", $g_asTroopShortNames[$t], $g_aiTrainArmyTroopLevel[$t])
 	Next
 
 	For $s = 0 To $eSpellCount - 1
 		_Ini_Add("Spells", $g_asSpellShortNames[$s], $g_aiArmyCustomSpells[$s])
-		_Ini_Add("LevelSpell", $g_asSpellShortNames[$s], $g_aiTrainArmySpellLevel[$s])
 	Next
 	For $s = 0 To $eSiegeMachineCount - 1
 		_Ini_Add("Siege", $g_asSiegeMachineShortNames[$s], $g_aiArmyCompSiegeMachines[$s])
-		_Ini_Add("LevelSiege", $g_asSiegeMachineShortNames[$s], $g_aiTrainArmySiegeMachineLevel[$s])
 	Next
 	; full & forced Total Camp values
 	_Ini_Add("troop", "fulltroop", $g_iTrainArmyFullTroopPct)

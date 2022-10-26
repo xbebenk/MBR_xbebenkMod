@@ -17,18 +17,18 @@
 ; Attack with
 Global $g_hCmbDBAlgorithm = 0, $g_hCmbDBSelectTroop = 0, $g_hChkDBKingAttack = 0, $g_hChkDBQueenAttack = 0, $g_hChkDBWardenAttack = 0, $g_hChkDBDropCC = 0
 Global $g_hChkDBLightSpell = 0, $g_hChkDBHealSpell = 0, $g_hChkDBRageSpell = 0, $g_hChkDBJumpSpell = 0, $g_hChkDBFreezeSpell = 0, $g_hChkDBCloneSpell = 0, _
-	   $g_hChkDBInvisibilitySpell, $g_hChkDBPoisonSpell = 0, $g_hChkDBEarthquakeSpell = 0, $g_hChkDBHasteSpell = 0, $g_hChkDBSkeletonSpell = 0, $g_hChkDBBatSpell = 0
+	   $g_hChkDBInvisibilitySpell, $g_hChkDBRecallSpell = 0, $g_hChkDBPoisonSpell = 0, $g_hChkDBEarthquakeSpell = 0, $g_hChkDBHasteSpell = 0, $g_hChkDBSkeletonSpell = 0, $g_hChkDBBatSpell = 0
 
 Global $g_hPicDBKingAttack = 0, $g_hPicDBQueenAttack = 0, $g_hPicDBWardenAttack = 0, $g_hPicDBDropCC = 0
 Global $g_hPicDBLightSpell = 0, $g_hPicDBHealSpell = 0, $g_hPicDBRageSpell = 0, $g_hPicDBJumpSpell = 0, $g_hPicDBFreezeSpell = 0, $g_hPicDBCloneSpell = 0, _
-	   $g_hPicDBInvisibilitySpell, $g_hPicDBPoisonSpell = 0, $g_hPicDBEarthquakeSpell = 0, $g_hPicDBHasteSpell = 0, $g_hPicDBSkeletonSpell = 0, $g_hPicDBBatSpell = 0
+	   $g_hPicDBInvisibilitySpell, $g_hPicDBRecallSpell = 0, $g_hPicDBPoisonSpell = 0, $g_hPicDBEarthquakeSpell = 0, $g_hPicDBHasteSpell = 0, $g_hPicDBSkeletonSpell = 0, $g_hPicDBBatSpell = 0
 
 Global $g_hCmbDBSiege = 0, $g_hCmbDBWardenMode = 0, $g_hChkDBChampionAttack = 0, $g_hPicDBChampionAttack = 0, $g_hChkDBDropEmptySiege = 0
 
 Func CreateAttackSearchDeadBaseAttack()
 	Local $sTxtTip = ""
 	Local $x = 25, $y = 40
-		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Group_01", "Attack with"), $x - 20, $y - 15, 145, 263)
+		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Group_01", "Attack with"), $x - 20, $y - 15, 145, 290)
 		$x -= 15
 		$y += 2
 			$g_hCmbDBAlgorithm = GUICtrlCreateCombo("", $x, $y, 135, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
@@ -115,6 +115,7 @@ Func CreateAttackSearchDeadBaseAttack()
 								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-Siege_Item_07", "Siege Barracks") & "|" & _
 								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-Siege_Item_08", "Log Launcher") & "|" & _
 								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-Siege_Item_09", "Flame Flinger") & "|" & _
+								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-Siege_Item_10", "Battle Drill") & "|" & _
 								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-Siege_Item_05", "Any Siege") & "|" & _
 								   GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-Siege_Item_06", "Default"), GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-Siege_Item_06", -1))
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Cmb-Siege_Tip", "Select Castle or Siege to be used." & @CRLF & _
@@ -129,21 +130,21 @@ Func CreateAttackSearchDeadBaseAttack()
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBLightSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
+
 		$x += 46
 			$g_hPicDBHealSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnHealSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Healing_Info_01", "Use your Healing Spells when Attacking")
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBHealSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
+
 		$x += 46
 			$g_hPicDBRageSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnRageSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Rage_Info_01", "Use your Rage Spells when Attacking")
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBRageSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
+
 		$y += 27
 		$x -= 92
 			$g_hPicDBJumpSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnJumpSpell, $x, $y, 24, 24)
@@ -151,21 +152,21 @@ Func CreateAttackSearchDeadBaseAttack()
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBJumpSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
+
 		$x += 46
 			$g_hPicDBFreezeSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnFreezeSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Freeze_Info_01", "Use your Freeze Spells when Attacking")
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBFreezeSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
+
 		$x += 46
 			$g_hPicDBCloneSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnCloneSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Clone_Info_01", "Use your Clone Spells when Attacking")
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBCloneSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
+
 		$y += 27
 		$x -= 92
 			$g_hPicDBInvisibilitySpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnInvisibilitySpell, $x, $y, 24, 24)
@@ -173,43 +174,50 @@ Func CreateAttackSearchDeadBaseAttack()
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBInvisibilitySpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
+				
+		$x += 46
+			$g_hPicDBRecallSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnRecallSpell, $x, $y, 24, 24)
+				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Recall_Info_01", "Use your Recall Spells when Attacking")
+				_GUICtrlSetTip(-1, $sTxtTip)
+			$g_hChkDBRecallSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
+				_GUICtrlSetTip(-1, $sTxtTip)		
+
 		$x += 46
 			$g_hPicDBPoisonSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnPoisonSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Poison_Info_01", "Use your Poison Spells when Attacking")
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBPoisonSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
-		$x += 46
+
+		$y += 27
+		$x -= 92
 			$g_hPicDBEarthquakeSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnEarthquakeSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Earthquake_Info_01", "Use your Earthquake Spells when Attacking")
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBEarthquakeSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
-		$y += 27
-		$x -= 92
+
+		$x += 46
 			$g_hPicDBHasteSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnHasteSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Haste_Info_01", "Use your Haste Spells when Attacking")
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBHasteSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
+
 		$x += 46
 			$g_hPicDBSkeletonSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnSkeletonSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Skeleton_Info_01", "Use your Skeleton Spells when Attacking")
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBSkeletonSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
-		$x += 46
+
+		$y += 27
+		$x -= 92
 			$g_hPicDBBatSpell = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBatSpell, $x, $y, 24, 24)
 				$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Chk-Use-Bat_Info_01", "Use your Bats Spells when Attacking")
 				_GUICtrlSetTip(-1, $sTxtTip)
 			$g_hChkDBBatSpell = GUICtrlCreateCheckbox("", $x + 27, $y, 17, 17)
 				_GUICtrlSetTip(-1, $sTxtTip)
-				GUICtrlSetState(-1, $GUI_CHECKED)
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 		
 		$y += 50

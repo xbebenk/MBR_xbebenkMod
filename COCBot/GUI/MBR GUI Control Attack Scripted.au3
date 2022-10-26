@@ -266,8 +266,8 @@ EndFunc   ;==>DuplicateScriptAB
 
 Func ApplyScriptDB()
 	Local $iApply = 0
-	Local $aiCSVTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-	Local $aiCSVSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aiCSVTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aiCSVSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	Local $aiCSVHeros[$eHeroCount][2] = [[0, 0], [0, 0], [0, 0], [0, 0]]
 	Local $iCSVRedlineRoutineItem = 0, $iCSVDroplineEdgeItem = 0
 	Local $sCSVCCReq = ""
@@ -289,13 +289,7 @@ Func ApplyScriptDB()
 		If $aiCSVSpells[$i] > 0 Then $iApply += 1
 	Next
 	If $iApply > 0 Then
-		For $t = 0 To UBound($aiCSVTroops) - 1 ; set troops to level 1 if none on GUI
-			If $aiCSVTroops[$t] > 0 And $g_aiTrainArmyTroopLevel[$t] = 0 Then $g_aiTrainArmyTroopLevel[$t] = 1
-		Next
 		$g_aiArmyCustomTroops = $aiCSVTroops
-		For $s = 0 To UBound($aiCSVSpells) - 1 ; set spells to level 1 if none on GUI
-			If $aiCSVSpells[$s] > 0 And $g_aiTrainArmySpellLevel[$s] = 0 Then $g_aiTrainArmySpellLevel[$s] = 1
-		Next
 		$g_aiArmyCustomSpells = $aiCSVSpells
 		ApplyConfig_600_52_2("Read")
 		SetComboTroopComp() ; GUI refresh
@@ -376,7 +370,7 @@ EndFunc   ;==>ApplyScriptDB
 Func ApplyScriptAB()
 	Local $iApply = 0
 	Local $aiCSVTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-	Local $aiCSVSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	Local $aiCSVSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	Local $aiCSVHeros[$eHeroCount][2] = [[0, 0], [0, 0], [0, 0], [0, 0]]
 	Local $iCSVRedlineRoutineItem = 0, $iCSVDroplineEdgeItem = 0
 	Local $sCSVCCReq = ""
@@ -398,13 +392,7 @@ Func ApplyScriptAB()
 		If $aiCSVSpells[$i] > 0 Then $iApply += 1
 	Next
 	If $iApply > 0 Then
-		For $t = 0 To UBound($aiCSVTroops) - 1 ; set troops to level 1 if none on GUI
-			If $aiCSVTroops[$t] > 0 And $g_aiTrainArmyTroopLevel[$t] = 0 Then $g_aiTrainArmyTroopLevel[$t] = 1
-		Next
 		$g_aiArmyCustomTroops = $aiCSVTroops
-		For $s = 0 To UBound($aiCSVSpells) - 1 ; set spells to level 1 if none on GUI
-			If $aiCSVSpells[$s] > 0 And $g_aiTrainArmySpellLevel[$s] = 0 Then $g_aiTrainArmySpellLevel[$s] = 1
-		Next
 		$g_aiArmyCustomSpells = $aiCSVSpells
 		ApplyConfig_600_52_2("Read")
 		SetComboTroopComp() ; GUI refresh

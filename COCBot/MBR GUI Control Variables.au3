@@ -152,31 +152,31 @@ Func InitializeControlVariables()
 				   $g_ahTxtTrainArmySpellCount[$eSpellHaste]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellSkeleton]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellBat]
 
    ;Spell
-   $groupLightning = $g_ahPicTrainArmySpell[$eSpellLightning]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellLightning]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellLightning]
-   $groupHeal = $g_ahPicTrainArmySpell[$eSpellHeal]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellHeal]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellHeal]
-   $groupRage = $g_ahPicTrainArmySpell[$eSpellRage]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellRage]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellRage]
-   $groupJump = $g_ahPicTrainArmySpell[$eSpellJump]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellJump]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellJump]
-   $groupFreeze = $g_ahPicTrainArmySpell[$eSpellFreeze]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellFreeze]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellFreeze]
-   $groupClone = $g_ahPicTrainArmySpell[$eSpellClone]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellClone]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellClone]
-   $groupInvisibility = $g_ahPicTrainArmySpell[$eSpellInvisibility]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellInvisibility]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellInvisibility]
+   $groupLightning = $g_ahPicTrainArmySpell[$eSpellLightning]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellLightning]
+   $groupHeal = $g_ahPicTrainArmySpell[$eSpellHeal]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellHeal]
+   $groupRage = $g_ahPicTrainArmySpell[$eSpellRage]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellRage]
+   $groupJump = $g_ahPicTrainArmySpell[$eSpellJump]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellJump]
+   $groupFreeze = $g_ahPicTrainArmySpell[$eSpellFreeze]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellFreeze]
+   $groupClone = $g_ahPicTrainArmySpell[$eSpellClone]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellClone]
+   $groupInvisibility = $g_ahPicTrainArmySpell[$eSpellInvisibility]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellInvisibility]
 
 
    ;Dark Spell
-   $groupPoison = $g_ahPicTrainArmySpell[$eSpellPoison]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellPoison]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellPoison]
-   $groupEarthquake = $g_ahPicTrainArmySpell[$eSpellEarthquake]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellEarthquake]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellEarthquake]
-   $groupHaste = $g_ahPicTrainArmySpell[$eSpellHaste]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellHaste]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellHaste]
-   $groupSkeleton = $g_ahPicTrainArmySpell[$eSpellSkeleton]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellSkeleton]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellSkeleton]
-   $groupBat = $g_ahPicTrainArmySpell[$eSpellBat]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellBat]&"#"&$g_ahLblTrainArmySpellLevel[$eSpellBat]
+   $groupPoison = $g_ahPicTrainArmySpell[$eSpellPoison]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellPoison]
+   $groupEarthquake = $g_ahPicTrainArmySpell[$eSpellEarthquake]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellEarthquake]
+   $groupHaste = $g_ahPicTrainArmySpell[$eSpellHaste]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellHaste]
+   $groupSkeleton = $g_ahPicTrainArmySpell[$eSpellSkeleton]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellSkeleton]
+   $groupBat = $g_ahPicTrainArmySpell[$eSpellBat]&"#"&$g_ahTxtTrainArmySpellCount[$eSpellBat]
 
    $groupListSpells = $groupLightning&"#"&$groupHeal&"#"&$groupRage&"#"&$groupJump&"#"&$groupFreeze&"#"&$groupClone&"#"&$groupInvisibility&"#"&$groupPoison&"#"& _
 					  $groupEarthquake&"#"&$groupHaste&"#"&$groupSkeleton&"#"&$groupBat
 
 	; Sieges
-	$groupWallWrecker = $g_ahPicTrainArmySiege[$eSiegeWallWrecker]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeWallWrecker]&"#"&$g_ahLblTrainArmySiegeLevel[$eSiegeWallWrecker]
-	$groupBattleBlimp = $g_ahPicTrainArmySiege[$eSiegeBattleBlimp]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeBattleBlimp]&"#"&$g_ahLblTrainArmySiegeLevel[$eSiegeBattleBlimp]
-	$groupStoneSlammer = $g_ahPicTrainArmySiege[$eSiegeStoneSlammer]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeStoneSlammer]&"#"&$g_ahLblTrainArmySiegeLevel[$eSiegeStoneSlammer]
-	$groupSiegeBarracks = $g_ahPicTrainArmySiege[$eSiegeBarracks]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeBarracks]&"#"&$g_ahLblTrainArmySiegeLevel[$eSiegeBarracks]
-	$groupLogLauncher = $g_ahPicTrainArmySiege[$eSiegeLogLauncher]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeLogLauncher]&"#"&$g_ahLblTrainArmySiegeLevel[$eSiegeLogLauncher]
+	$groupWallWrecker = $g_ahPicTrainArmySiege[$eSiegeWallWrecker]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeWallWrecker]
+	$groupBattleBlimp = $g_ahPicTrainArmySiege[$eSiegeBattleBlimp]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeBattleBlimp]
+	$groupStoneSlammer = $g_ahPicTrainArmySiege[$eSiegeStoneSlammer]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeStoneSlammer]
+	$groupSiegeBarracks = $g_ahPicTrainArmySiege[$eSiegeBarracks]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeBarracks]
+	$groupLogLauncher = $g_ahPicTrainArmySiege[$eSiegeLogLauncher]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeLogLauncher]
 	$groupListSieges = $groupWallWrecker&"#"&$groupBattleBlimp&"#"&$groupStoneSlammer&"#"&$groupSiegeBarracks&"#"&$groupLogLauncher
 
    ;TH Level

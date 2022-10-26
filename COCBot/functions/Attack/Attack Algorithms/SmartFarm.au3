@@ -571,7 +571,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	SetDebugLog("Giants : " & $GiantComp & "  , per side: " & ($GiantComp / $nbSides) & " / deploy points per side: " & $g_iSlotsGiants)
 
 	If $g_bCustomDropOrderEnable Then
-		Local $listInfoDeploy[38][5] = [[MatchTroopDropName(0), $nbSides, MatchTroopWaveNb(0), 1, MatchSlotsPerEdge(0)], _
+		Local $listInfoDeploy[41][5] = [[MatchTroopDropName(0), $nbSides, MatchTroopWaveNb(0), 1, MatchSlotsPerEdge(0)], _
 				[MatchTroopDropName(1), $nbSides, MatchTroopWaveNb(1), 1, MatchSlotsPerEdge(1)], _
 				[MatchTroopDropName(2), $nbSides, MatchTroopWaveNb(2), 1, MatchSlotsPerEdge(2)], _
 				[MatchTroopDropName(3), $nbSides, MatchTroopWaveNb(3), 1, MatchSlotsPerEdge(3)], _
@@ -608,16 +608,20 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				[MatchTroopDropName(34), $nbSides, MatchTroopWaveNb(34), 1, MatchSlotsPerEdge(34)], _
 				[MatchTroopDropName(35), $nbSides, MatchTroopWaveNb(35), 1, MatchSlotsPerEdge(35)], _
 				[MatchTroopDropName(36), $nbSides, MatchTroopWaveNb(36), 1, MatchSlotsPerEdge(36)], _
-				[MatchTroopDropName(37), $nbSides, MatchTroopWaveNb(37), 1, MatchSlotsPerEdge(37)]]
+				[MatchTroopDropName(37), $nbSides, MatchTroopWaveNb(37), 1, MatchSlotsPerEdge(37)], _
+				[MatchTroopDropName(38), $nbSides, MatchTroopWaveNb(38), 1, MatchSlotsPerEdge(38)], _
+				[MatchTroopDropName(39), $nbSides, MatchTroopWaveNb(39), 1, MatchSlotsPerEdge(39)], _
+				[MatchTroopDropName(40), $nbSides, MatchTroopWaveNb(40), 1, MatchSlotsPerEdge(40)]]
 	Else
-			; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
-			Local $listInfoDeploy[40][5] = [[$eGole, $nbSides, 1, 1, 2] _
+		Local $listInfoDeploy[45][5] = [[$eGole, $nbSides, 1, 1, 2] _
 				, [$eLava, $nbSides, 1, 1, 2] _
 				, [$eIceH, $nbSides, 1, 1, 2] _
 				, [$eIceG, $nbSides, 1, 1, 2] _
 				, [$eYeti, $nbSides, 1, 1, 2] _
 				, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
 				, [$eSGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
+				, [$eGSkel, $nbSides, 1, 1, 0] _
+				, [$eRGhost, $nbSides, 1, 1, 0] _
 				, [$eDrag, $nbSides, 1, 1, 0] _
 				, [$eSDrag, $nbSides, 1, 1, 0] _
 				, [$eBall, $nbSides, 1, 1, 0] _
@@ -632,14 +636,17 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, [$eMine, $nbSides, 1, 1, 0] _
 				, [$eEDrag, $nbSides, 1, 1, 0] _
 				, [$eRDrag, $nbSides, 1, 1, 0] _
-				, [$eBarb, $nbSides, 1, 1, 0] _
-				, [$eSBarb, $nbSides, 1, 1, 0] _
+				, [$eETitan, $nbSides, 1, 1, 0] _
 				, [$eWall, $nbSides, 1, 1, 1] _
 				, [$eSWall, $nbSides, 1, 1, 1] _
+				, [$eBarb, $nbSides, 1, 1, 0] _
+				, [$eSBarb, $nbSides, 1, 1, 0] _
 				, [$eArch, $nbSides, 1, 1, 0] _
 				, [$eSArch, $nbSides, 1, 1, 0] _
 				, [$eWiza, $nbSides, 1, 1, 0] _
 				, [$eSWiza, $nbSides, 1, 1, 0] _
+				, [$ePWiza, $nbSides, 1, 1, 0] _
+				, [$eIWiza, $nbSides, 1, 1, 0] _
 				, [$eMini, $nbSides, 1, 1, 0] _
 				, [$eSMini, $nbSides, 1, 1, 0] _
 				, [$eWitc, $nbSides, 1, 1, 1] _
@@ -676,7 +683,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 		Local $aRandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3))]
 		Local $iRandomXY = Round(Random(0, 4))
 		For $i = 0 To UBound($g_avAttackTroops) - 1
-			If $g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eHunt Then
+			If $g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eIWiza Then
 				; launch remaining troops
 				SelectDropTroop($i)
 				Click($aRandomEdge[$iRandomXY][0], $aRandomEdge[$iRandomXY][1], $g_avAttackTroops[$i][1]) ;Drop one troop
