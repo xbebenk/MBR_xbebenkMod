@@ -1281,6 +1281,7 @@ Func FirstCheck()
 		applyConfig()
 		saveConfig()
 	EndIf
+	setupProfile()
 
 	If $g_bAlwaysDropHero Then
 		If $g_iTownHallLevel > 12 Then

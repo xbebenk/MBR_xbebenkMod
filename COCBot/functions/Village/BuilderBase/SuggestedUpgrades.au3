@@ -822,7 +822,7 @@ Func IsBBBuilderMenuOpen()
 	EndIf
 	
 	If Not $bRet Then 
-		If _CheckPixel($aBorder, True) Then
+		If _CheckPixel($aBorder1, True) Then
 			SetDebugLog("Found Border1 Color: " & _GetPixelColor($aBorder1[0], $aBorder1[1], True), $COLOR_ACTION)
 			$bRet = True ;got correct color for border
 		EndIf
