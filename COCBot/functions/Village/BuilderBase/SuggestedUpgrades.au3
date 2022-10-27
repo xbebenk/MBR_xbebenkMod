@@ -814,13 +814,22 @@ EndFunc ;==>ClickBBBuilder
 Func IsBBBuilderMenuOpen()
 	Local $bRet = False
 	Local $aBorder[4] = [380, 73, 0xBABBBC, 40]
+	Local $aBorder1[4] = [380, 73, 0xFFFFFF, 40]
 	Local $sTriangle
 	If _CheckPixel($aBorder, True) Then
 		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
 		$bRet = True ;got correct color for border
 	EndIf
-
+	
+	If Not $bRet Then 
+		If _CheckPixel($aBorder, True) Then
+			SetDebugLog("Found Border1 Color: " & _GetPixelColor($aBorder1[0], $aBorder1[1], True), $COLOR_ACTION)
+			$bRet = True ;got correct color for border
+		EndIf
+	EndIf
+	
 	If Not $bRet Then ;lets re check if border color check not success
+		SetDebugLog("Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
 		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 380, 60, 420, 30)
 		SetDebugLog("$sTriangle: " & $sTriangle)
 		If $sTriangle = "^" Or $sTriangle = "~" Then $bRet = True
