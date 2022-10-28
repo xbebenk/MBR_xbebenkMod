@@ -304,7 +304,7 @@ Func CreateHeroesSubTab()
 			_GUICtrlSetTip(-1, $sTxtTip)
 
 	$x += 95
-		$g_hChkUpgradePets[$ePetEletroOwl] = GUICtrlCreateCheckbox("", $x, $y + 25, 17, 17)
+		$g_hChkUpgradePets[$ePetElectroOwl] = GUICtrlCreateCheckbox("", $x, $y + 25, 17, 17)
 			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkUpgradeElectroOwl_Info_01", "Enable upgrading of your Pet, Electro Owl, when you have enough Dark Elixir")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetOnEvent(-1, "chkUpgradePets")

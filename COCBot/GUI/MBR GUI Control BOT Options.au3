@@ -219,6 +219,7 @@ Func chkSwitchAcc()
 		Next
 		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_UNCHECKED)
 		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkFastSwitchAcc, $GUI_ENABLE)
 		OnlySCIDAccounts()
 	Else
 		releaseSwitchAccountMutex()
@@ -226,6 +227,7 @@ Func chkSwitchAcc()
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkFastSwitchAcc, $GUI_DISABLE)
 		OnlySCIDAccounts()
 	EndIf
 EndFunc   ;==>chkSwitchAcc

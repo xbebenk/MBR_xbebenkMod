@@ -259,14 +259,14 @@ Func CheckScreenBlueStacks5($bSetLog = True)
 					   '"676"', _
 					   '"160"', _
 					   '"676"', _
-					   '"Bluestacks5']
+					   '"BS5']
 
 	For $i = 0 To $iLineCount - 1
 		For $iSearch = 0 To UBound($aiSearch) - 1
 			If StringInStr($__Bluestacks5Conf[$i], $aiSearch[$iSearch]) Then
 				SetDebugLog($__Bluestacks5Conf[$i])
 				If StringInStr($__Bluestacks5Conf[$i], $aiMustBe[$iSearch]) = 0 Then
-					If $bSetLog = True Then SetLog("The bot will configure your Bluestacks", $COLOR_ERROR)
+					If $bSetLog = True Then SetLog("Please wait, Bot will configure your Bluestacks", $COLOR_ERROR)
 					Return False
 				EndIf
 			EndIf
@@ -294,7 +294,7 @@ Func SetScreenBlueStacks5()
 					   'bst.instance.' & $g_sAndroidInstance & '.dpi="160"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.gl_win_height="676"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.show_sidebar="0"', _
-					   'bst.instance.' & $g_sAndroidInstance & '.display_name="BlueStacks5-' & $g_sAndroidInstance & '"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.display_name="BS5-' & $g_sAndroidInstance & '"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.enable_fps_display="1"', _
 					   "bst.instance." & $g_sAndroidInstance & '.google_login_popup_shown="0"']
 

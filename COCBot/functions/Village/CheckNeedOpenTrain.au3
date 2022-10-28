@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func CheckNeedOpenTrain($TimeBeforeTrain)
+Func CheckNeedOpenTrain($TimeBeforeTrain = $g_sTimeBeforeTrain)
 	Local $bToReturn = False
 	Local $QuickArmyCamps = 100
 	If $g_abSearchCampsEnable[$DB] Then
@@ -26,7 +26,11 @@ Func CheckNeedOpenTrain($TimeBeforeTrain)
 	EndIf
 
 	If $g_aiTimeTrain[0] = 0 Then $bToReturn = True
-
+	If $g_bDebugSetlogTrain Then 
+		SetLog("g_aiTimeTrain : " & $g_aiTimeTrain[0])
+		SetLog("QuickArmyCamps : " & $QuickArmyCamps)
+		SetLog("TimeBeforeTrain : " & $TimeBeforeTrain)
+	EndIf
 	Local $sNowTime = ""
 	Local $iTimeBeforeTrain1, $iTimeBeforeTrain2
 	$sNowTime = _NowCalc()
@@ -41,7 +45,7 @@ Func CheckNeedOpenTrain($TimeBeforeTrain)
 	EndIf
 
 	If $iTimeBeforeTrain2 <= 0 Then $bToReturn = True
-	If ($g_iActiveDonate Or $g_bDonationEnabled) And $g_bChkDonate Then $bToReturn = True
+	;If ($g_iActiveDonate Or $g_bDonationEnabled) And $g_bChkDonate Then $bToReturn = True
 	If Not $bToReturn Then SetLog("Train end time: " & $iTimeBeforeTrain1, $COLOR_DEBUG)
 	If Not $bToReturn Then ClickAway()
 

@@ -59,7 +59,7 @@ EndIf
 ; MBR References.au3 must be last include
 #include "COCBot\MBR References.au3"
 
-;#include "COCBot\Test420\Test420.au3"
+;#include "C:\Test420\Test420\Test420.au3"
 
 ; Autoit Options
 Opt("GUIResizeMode", $GUI_DOCKALL) ; Default resize mode for dock android support
@@ -671,7 +671,7 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 
 	; Check the Supported Emulator versions
 	CheckEmuNewVersions()
-	
+
 	;Reset Telegram message
 	NotifyGetLastMessageFromTelegram()
 	$g_iTGLastRemote = $g_sTGLast_UID
@@ -931,7 +931,7 @@ Func _Idle() ;Sequence that runs until Full Army
 
 		If $g_iCommandStop = -1 Then
 			If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
-				If CheckNeedOpenTrain($g_sTimeBeforeTrain) Then TrainSystem()
+				If CheckNeedOpenTrain() Then TrainSystem()
 				If $g_bRestart = True Then ExitLoop
 				If _Sleep($DELAYIDLE1) Then ExitLoop
 				$g_iActualTrainSkip = $g_iActualTrainSkip + 1
@@ -947,7 +947,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $g_iCommandStop = 0 And $g_bTrainEnabled Then
 			If Not ($g_bIsFullArmywithHeroesAndSpells) Then
 				If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
-					If CheckNeedOpenTrain($g_sTimeBeforeTrain) Or (ProfileSwitchAccountEnabled() And $g_iActiveDonate And $g_bChkDonate) Then TrainSystem() ; force check trainsystem after donate and before switch account
+					If CheckNeedOpenTrain() Or (ProfileSwitchAccountEnabled() And $g_iActiveDonate And $g_bChkDonate) Then TrainSystem() ; force check trainsystem after donate and before switch account
 					If $g_bRestart Then ExitLoop
 					If _Sleep($DELAYIDLE1) Then ExitLoop
 					;xbenk
@@ -1033,7 +1033,7 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
 			If Not $g_bRunState Then Return
-			_ClanGames(False, $g_bChkForceBBAttackOnClanGames) ;Trying to do this above in the main loop
+			If Not $g_bisCGPointMaxed Then _ClanGames(False, $g_bChkForceBBAttackOnClanGames) ;Trying to do this above in the main loop
 			If Not $g_bRunState Then Return
 			If $g_bUpdateSharedPrefs And $g_bChkSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
@@ -1281,6 +1281,7 @@ Func FirstCheck()
 		applyConfig()
 		saveConfig()
 	EndIf
+	setupProfile()
 
 	If $g_bAlwaysDropHero Then
 		If $g_iTownHallLevel > 12 Then
@@ -1410,9 +1411,10 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 And $bSwitch Then
 		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-		PrepareDonateCC()
-		DonateCC()
-		TrainSystem()
+		;PrepareDonateCC()
+		;DonateCC()
+		;If CheckNeedOpenTrain() Then TrainSystem()
+		_RunFunction("DonateCC,Train")
 		CommonRoutine("NoClanGamesEvent")
 		$g_bForceSwitchifNoCGEvent = True
 		checkSwitchAcc() ;switch to next account
@@ -1425,13 +1427,11 @@ Func FirstCheckRoutine()
 		If Not $g_bRunState Then Return
 		If $g_bDonateEarly Then
 			SetLog("Donate Early Enabled", $COLOR_INFO)
-			checkArmyCamp(True, True)
-			_Sleep(1000)
-			PrepareDonateCC()
-			DonateCC()
+			_RunFunction("DonateCC,Train")
 		EndIf
-		TrainSystem()
-		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
+		;If CheckNeedOpenTrain() Then TrainSystem()
+		;SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
+		If Not $g_bDonateEarly Then CheckIfArmyIsReady()
 		If $g_bIsFullArmywithHeroesAndSpells Then
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
@@ -1443,6 +1443,7 @@ Func FirstCheckRoutine()
 					If AttackMain($g_bSkipDT) Then
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
 						If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut()
+						$g_bIsFullArmywithHeroesAndSpells = False
 						ExitLoop
 					Else
 						If $g_bForceSwitch Then ExitLoop ;exit here
@@ -1474,7 +1475,7 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent Then ; forced switch after first attack if cg point is almost max
 		SetLog("ClanGames point almost max/maxed, Forced switch account!", $COLOR_SUCCESS)
-		TrainSystem()
+		If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
 		CommonRoutine("NoClanGamesEvent")
 		$g_bForceSwitchifNoCGEvent = True
 		checkSwitchAcc() ;switch to next account
@@ -1482,9 +1483,10 @@ Func FirstCheckRoutine()
 
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bForceSwitchifNoCGEvent) Then
-		PrepareDonateCC()
-		DonateCC()
-		TrainSystem()
+		;PrepareDonateCC()
+		;DonateCC()
+		;If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
+		_RunFunction("DonateCC,Train")
 		CommonRoutine("Switch")
 		checkSwitchAcc() ;switch to next account
 	EndIf
@@ -1500,8 +1502,9 @@ Func FirstCheckRoutine()
 			; VERIFY THE TROOPS AND ATTACK IF IS FULL
 			SetLog("-- SecondCheck on Train --", $COLOR_DEBUG)
 			SetLog("Fast Switch Account Enabled", $COLOR_DEBUG)
-			TrainSystem()
-			SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
+			;If CheckNeedOpenTrain() Then TrainSystem()
+			;SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
+			If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
 			If $g_bIsFullArmywithHeroesAndSpells Then
 				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 					Setlog("Before any other routine let's attack!", $COLOR_INFO)
@@ -1544,11 +1547,12 @@ Func FirstCheckRoutine()
 	EndIf
 
 	If Not $g_bRunState Then Return
-	RequestCC(True)
-	checkArmyCamp(True, True)
-	PrepareDonateCC()
-	_Sleep(1000)
-	DonateCC()
+	;RequestCC(True)
+	;checkArmyCamp(True, True)
+	;PrepareDonateCC()
+	;_Sleep(1000)
+	;DonateCC()
+	_RunFunction("DonateCC,Train")
 	If $b_SuccessAttack Then TrainSystem()
 	If Not $g_bRunState Then Return
 	CommonRoutine("FirstCheckRoutine")
@@ -1589,7 +1593,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
-			Local $aRndFuncList = ['DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'BuilderBase']
+			Local $aRndFuncList = ['UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'BuilderBase', 'CollectCCGold']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

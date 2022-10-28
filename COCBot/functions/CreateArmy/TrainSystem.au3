@@ -265,7 +265,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 			If IsSpellToBrew($rWTT[$i][0]) Then ContinueLoop
 			Local $iTroopIndex = TroopIndexLookup($rWTT[$i][0], "TrainUsingWhatToTrain()")
 
-			If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
+			If $iTroopIndex >= $eBarb And $iTroopIndex <= $eIWiza Then
 				Local $NeededSpace = $g_aiTroopSpace[$iTroopIndex] * $rWTT[$i][1]
 			EndIf
 
@@ -274,7 +274,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 
 
 			If $NeededSpace > $LeftSpace Then
-				If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
+				If $iTroopIndex >= $eBarb And $iTroopIndex <= $eIWiza Then
 					$rWTT[$i][1] = Int($LeftSpace / $g_aiTroopSpace[$iTroopIndex])
 				EndIf
 			EndIf
@@ -282,7 +282,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 			If $rWTT[$i][1] > 0 Then
 				If Not DragIfNeeded($rWTT[$i][0]) Then Return False
 
-				If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
+				If $iTroopIndex >= $eBarb And $iTroopIndex <= $eIWiza Then
 					Local $sTroopName = ($rWTT[$i][1] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
 				EndIf
 
@@ -340,14 +340,19 @@ Func DragIfNeeded($Troop)
 
 	If Not $g_bRunState Then Return
 	Local $bCheckPixel = False
+	Local $iIndex = TroopIndexLookup($Troop, "DragIfNeeded")
+	Local $bDrag = False
+	
+	If $iIndex > $eMine Then $bDrag = True ;Drag if Troops is on Right side from miner
+	If $iIndex > $eHunt Then $bDrag = False ; Not Drag if Troops is Event Troops
 
-	If IsDarkTroop($Troop) Then
+	If $bDrag Then ;Drag if Troops is on Right side from miner
 		If _ColorCheck(_GetPixelColor(834, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Dark Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
-				ClickDrag(715, 445, 220, 445, 2000)
-				If _Sleep(1500) Then Return
+				ClickDrag(750, 445, 20, 445)
+				If _Sleep(1000) Then Return
 				If _ColorCheck(_GetPixelColor(834, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
 				Return True
@@ -358,8 +363,8 @@ Func DragIfNeeded($Troop)
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Normal Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
-				ClickDrag(220, 445, 725, 445, 2000)
-				If _Sleep(1500) Then Return
+				ClickDrag(100, 445, 850, 445)
+				If _Sleep(1000) Then Return
 				If _ColorCheck(_GetPixelColor(22, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
 				Return True
@@ -396,7 +401,7 @@ EndFunc   ;==>IsElixirTroop
 
 Func IsDarkTroop($Troop)
 	Local $iIndex = TroopIndexLookup($Troop, "IsDarkTroop")
-	If $iIndex >= $eRDrag And $iIndex <= $eHunt Then Return True
+	If $iIndex >= $eMini And $iIndex <= $eHunt Then Return True
 	Return False
 EndFunc   ;==>IsDarkTroop
 
@@ -505,7 +510,7 @@ Func RemoveExtraTroops($toRemove)
 		If Not _CheckPixel($aButtonRemoveTroopsOK1, True) Then ; If no 'Okay' button found in army tab to save changes
 			SetLog("Cannot find/verify 'Okay' Button in Army tab", $COLOR_WARNING)
 			ClickAway() ; Click Away, Necessary! due to possible errors/changes
-			If _Sleep(400) Then OpenArmyOverview(True, "RemoveExtraTroops()") ; Open Army Window AGAIN
+			If _Sleep(1000) Then OpenArmyOverview(True, "RemoveExtraTroops()") ; Open Army Window AGAIN
 			Return False ; Exit Function
 		EndIf
 
@@ -562,14 +567,15 @@ Func DeleteInvalidTroopInArray(ByRef $aTroopArray)
 EndFunc   ;==>DeleteInvalidTroopInArray
 
 Func RemoveExtraTroopsQueue()
-	Local $IsButtonExist = False
 	For $i = 1 To 50
-		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200)
-		If Not $IsButtonExist Then ExitLoop
-		SetDebugLog("Remove 10 Troops #" & $i)
-		Click($g_iQuickMISX, $g_iQuickMISY, 10)
-		If Not $g_bRunState Then Return
-		If _Sleep(200) Then Return
+		If QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200) Then 
+			SetLog("Remove All Queued Troops #" & $i, $COLOR_ACTION)
+			Click($g_iQuickMISX, $g_iQuickMISY, 10, 50, "Remove Troops")
+			If Not $g_bRunState Then Return
+			If _Sleep(1000) Then Return
+		Else
+			ExitLoop
+		EndIf
 	Next
 EndFunc   ;==>RemoveExtraTroopsQueue
 
@@ -591,9 +597,9 @@ Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQ
 		Return
 	EndIf
 
-	If Not _ColorCheck(_GetPixelColor($iArrowX, $iArrowY, True), Hex(0x9FCF76, 6), 30) And Not _ColorCheck(_GetPixelColor($iArrowX, $iArrowY + 4, True), Hex(0x67B325, 6), 30) Then
+	If Not _ColorCheck(_GetPixelColor($iArrowX, $iArrowY, True), Hex(0x9FCF76, 6), 30) And Not _ColorCheck(_GetPixelColor($iArrowX, $iArrowY + 4, True), Hex(0x6BB31F, 6), 30) Then
 		Return True ; Check Green Arrows at top first, if not there -> Return
-	ElseIf _ColorCheck(_GetPixelColor($iArrowX, $iArrowY, True), Hex(0x9FCF76, 6), 30) And _ColorCheck(_GetPixelColor($iArrowX, $iArrowY + 4, True), Hex(0x67B325, 6), 30) And Not $removeExtraTroopsQueue Then
+	ElseIf _ColorCheck(_GetPixelColor($iArrowX, $iArrowY, True), Hex(0x9FCF76, 6), 30) And _ColorCheck(_GetPixelColor($iArrowX, $iArrowY + 4, True), Hex(0x6BB31F, 6), 30) And Not $removeExtraTroopsQueue Then
 		If Not WaitforPixel($iArrowX - 11, $iArrowY - 1, $iArrowX - 9, $iArrowY + 1, Hex(0x9FCF76, 6), 30, 2) Then Return False  ; check if boost arrow
 	EndIf
 
@@ -656,7 +662,7 @@ Func GetSlotNumber($bSpells = False)
 	Select
 		Case $bSpells = False
 			Local Const $Orders = [$eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eSDrag, $eYeti, $eRDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, _
-					$eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt] ; Set Order of troop display in Army Tab
+					$eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt, $eGSkel, $eRGhost, $ePWiza, $eIWiza] ; Set Order of troop display in Army Tab
 
 			Local $allCurTroops[UBound($Orders)]
 
@@ -1366,7 +1372,7 @@ Func CheckValuesCost($Troop = "Arch", $troopQuantity = 1)
 	Local $aTrainPos = GetTrainPos($iTroopIndex)
 	Local $iTempTroopCost, $iTempSpellCost, $aTempTrainPos
 	If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
-		If $iTroopIndex >= $eBarb And $iTroopIndex <= $eHunt Then
+		If $iTroopIndex >= $eBarb And $iTroopIndex <= $eIWiza Then
 			Local $sTroopType = ($iTroopIndex >= $eMini ? "Dark" : "Normal")
 			$aTempTrainPos = GetFullNameSlot($aTrainPos, $sTroopType)
 		ElseIf $iTroopIndex >= $eLSpell And $iTroopIndex <= $eBtSpell Then

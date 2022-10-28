@@ -984,7 +984,7 @@ Func ReadConfig_600_15()
 	IniReadS($g_bChkSyncSaveDE, $g_sProfileConfigPath, "upgrade", "ChkSyncSaveDE", False, "Bool")
 
 	IniReadS($g_bUpgradePetsEnable[$ePetLassi], $g_sProfileConfigPath, "upgrade", "UpgradePetLassi", False, "Bool")
-	IniReadS($g_bUpgradePetsEnable[$ePetEletroOwl], $g_sProfileConfigPath, "upgrade", "UpgradePetEletroOwl", False, "Bool")
+	IniReadS($g_bUpgradePetsEnable[$ePetElectroOwl], $g_sProfileConfigPath, "upgrade", "UpgradePetElectroOwl", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetMightyYak], $g_sProfileConfigPath, "upgrade", "UpgradePetMightyYak", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetUnicorn], $g_sProfileConfigPath, "upgrade", "UpgradePetUnicorn", False, "Bool")
 EndFunc   ;==>ReadConfig_600_15
@@ -1564,34 +1564,26 @@ EndFunc   ;==>ReadConfig_SwitchAccounts
 
 Func ReadConfig_600_52_2()
 	For $T = 0 To $eTroopCount - 1
-		Local $tempTroopCount, $tempTroopLevel
+		Local $tempTroopCount
 		Switch $T
 			Case $eTroopBarbarian
 				IniReadS($tempTroopCount, $g_sProfileConfigPath, "troop", $g_asTroopShortNames[$T], 58, "int")
-				IniReadS($tempTroopLevel, $g_sProfileConfigPath, "LevelTroop", $g_asTroopShortNames[$T], 1, "int")
 			Case $eTroopArcher
 				IniReadS($tempTroopCount, $g_sProfileConfigPath, "troop", $g_asTroopShortNames[$T], 115, "int")
-				IniReadS($tempTroopLevel, $g_sProfileConfigPath, "LevelTroop", $g_asTroopShortNames[$T], 1, "int")
 			Case $eTroopGoblin
 				IniReadS($tempTroopCount, $g_sProfileConfigPath, "troop", $g_asTroopShortNames[$T], 19, "int")
-				IniReadS($tempTroopLevel, $g_sProfileConfigPath, "LevelTroop", $g_asTroopShortNames[$T], 1, "int")
 			Case $eTroopGiant
 				IniReadS($tempTroopCount, $g_sProfileConfigPath, "troop", $g_asTroopShortNames[$T], 4, "int")
-				IniReadS($tempTroopLevel, $g_sProfileConfigPath, "LevelTroop", $g_asTroopShortNames[$T], 1, "int")
 			Case $eTroopWallBreaker
 				IniReadS($tempTroopCount, $g_sProfileConfigPath, "troop", $g_asTroopShortNames[$T], 4, "int")
-				IniReadS($tempTroopLevel, $g_sProfileConfigPath, "LevelTroop", $g_asTroopShortNames[$T], 1, "int")
 			Case Else
 				IniReadS($tempTroopCount, $g_sProfileConfigPath, "troop", $g_asTroopShortNames[$T], 0, "int")
-				IniReadS($tempTroopLevel, $g_sProfileConfigPath, "LevelTroop", $g_asTroopShortNames[$T], 0, "int")
 		EndSwitch
 		$g_aiArmyCustomTroops[$T] = $tempTroopCount
-		$g_aiTrainArmyTroopLevel[$T] = $tempTroopLevel
 	Next
 
 	For $S = 0 To $eSpellCount - 1
 		IniReadS($g_aiArmyCustomSpells[$S], $g_sProfileConfigPath, "Spells", $g_asSpellShortNames[$S], 0, "int")
-		IniReadS($g_aiTrainArmySpellLevel[$S], $g_sProfileConfigPath, "LevelSpell", $g_asSpellShortNames[$S], 0, "int")
 	Next
 	
 	$g_aiArmyCompTroops = $g_aiArmyCustomTroops
@@ -1599,7 +1591,6 @@ Func ReadConfig_600_52_2()
 	
 	For $S = 0 To $eSiegeMachineCount - 1
 		IniReadS($g_aiArmyCompSiegeMachines[$S], $g_sProfileConfigPath, "Siege", $g_asSiegeMachineShortNames[$S], 0, "int")
-		IniReadS($g_aiTrainArmySiegeMachineLevel[$S], $g_sProfileConfigPath, "LevelSiege", $g_asSiegeMachineShortNames[$S], 0, "int")
 	Next
 	IniReadS($g_iTrainArmyFullTroopPct, $g_sProfileConfigPath, "troop", "fullTroop", 100, "int")
 	$g_bTotalCampForced = (IniRead($g_sProfileConfigPath, "other", "ChkTotalCampForced", "1") = "1")

@@ -351,8 +351,8 @@ EndFunc
 
 Func CheckResourceForDoUpgrade($BuildingName, $Cost, $CostType)
 	If Not $g_bRunState Then Return
-	$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
-	$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
+	$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(695, 23) ;get current Gold
+	$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(695, 74) ;get current Elixir
 	If _CheckPixel($aVillageHasDarkElixir, True) Then ; check if the village have a Dark Elixir Storage
 		$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(728, 123)
 	EndIf
