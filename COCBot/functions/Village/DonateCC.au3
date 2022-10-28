@@ -1268,8 +1268,9 @@ Func DetectSlotTroop(Const $iTroopIndex)
 		Local $x = 343 + (68 * $Slot)
 		Local $y = $g_iDonationWindowY + 37
 		Local $x1 = $x + 75
-		Local $y1 = $y + 43
-
+		Local $y1 = $y + 59
+		If $g_bDebugSetLog Then SetLog("$x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
+		
 		$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1)
 		SetDebugLog("Troop Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
 
@@ -1294,15 +1295,16 @@ Func DetectSlotTroop(Const $iTroopIndex)
 		Local $x = 343 + (68 * ($Slot - 7))
 		Local $y = $g_iDonationWindowY + 124
 		Local $x1 = $x + 75
-		Local $y1 = $y + 43
-
+		Local $y1 = $y + 59
+		If $g_bDebugSetLog Then SetLog("$x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
+		
 		$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1)
 		SetDebugLog("Troop Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
 
 		If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
 
 		If $FullTemp[0] <> "" Then
-			For $i = $eTroopArcher To $eTroopCount - 1
+			For $i = $eTroopBarbarian To $eTroopCount - 1
 				Local $iFoundTroopIndex = TroopIndexLookup($FullTemp[0])
 				If $iFoundTroopIndex = $i Then
 					SetDebugLog("Detected " & $g_asTroopNames[$i], $COLOR_DEBUG)
@@ -1310,7 +1312,7 @@ Func DetectSlotTroop(Const $iTroopIndex)
 					ExitLoop
 				EndIf
 				If $i = $eTroopCount - 1 Then ; detection failed
-					SetDebugLog("Slot: " & $Slot & "Troop Detection Failed", $COLOR_DEBUG)
+					SetDebugLog("Slot: " & $Slot & " Troop Detection Failed", $COLOR_DEBUG)
 				EndIf
 			Next
 		EndIf
