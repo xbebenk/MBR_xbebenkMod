@@ -15,9 +15,9 @@
 
 Func GetAttackBarBB($bRemaining = False)
 	local $iTroopBanners = 577 ; y location of where to find troop quantities
-	local $aSlotX[9] = [70, 144, 218, 292, 362, 433, 506, 579, 652] ; location of x Amount on slot
+	local $aSlotX[9] = [64, 136, 210, 280, 353, 425, 505, 575, 650] ; location of x Amount on slot
 	local $iSlotOffset = 72 ; slots are 73 pixels apart
-	local $iBarOffset = 66 ; 66 pixels from side to attack bar
+	local $iBarOffset = 33 ; 66 pixels from side to attack bar
 
 	local $aBBAttackBar[0][5]
 	#comments-start
@@ -53,7 +53,7 @@ Func GetAttackBarBB($bRemaining = False)
 			Local $aTempCoords = $aTempMultiCoords[$j]
 			If UBound($aTempCoords) < 2 Then ContinueLoop
 			Local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
-			Local $iCount = Number(getOcrAndCapture("coc-t-s", $aSlotX[$iSlot], $iTroopBanners, 57, 24))
+			Local $iCount = Number(getOcrAndCapture("coc-t-s", $aSlotX[$iSlot], $iTroopBanners, 50, 24, True))
 			If $iCount < 1 Then $iCount = 2 ;just assume there are 2 avail troop on this slot for now
 			
 			local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $iTroopBanners + 25, $iSlot, $iCount]] ; element to add to attack bar list
