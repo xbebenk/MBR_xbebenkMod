@@ -60,7 +60,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		$bContinue = False
 		If Not $bObstacleResult Then
 			If $g_bMinorObstacle Then $g_bMinorObstacle = False
-			If $i > 5 Then $bContinue = True
+			If $i > 8 Then $bContinue = True
 		Else
 			$g_bRestart = True
 			$bContinue = True
