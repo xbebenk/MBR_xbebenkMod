@@ -643,7 +643,16 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = $aCenterHomeVillageClickDrag,
 						$iCallCount = 0
 						Return FuncReturn($aResult)
 					EndIf
+					
+					;check same PID ?
+					Local $CocPid1 = 0, $CocPid2 = 0
+					$CocPid1 = GetAndroidProcessPID()
 					CloseCoC(True) ;restart coc
+					$CocPid2 = GetAndroidProcessPID()
+					If $CocPid1 = $CocPid2 Then
+						RebootAndroid()
+					EndIf
+					
 					checkMainScreen(True, $g_bStayOnBuilderBase, "RestartCoC--ResetZoom")
 					Return FuncReturn(SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, "SearchZoomOut(2):" & $sSource, True, $DebugLog))
 				Else
