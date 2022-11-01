@@ -217,18 +217,13 @@ Func chkSwitchAcc()
 		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[Ubound($g_abAccountNo) - 1]
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
-		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkFastSwitchAcc, $GUI_ENABLE)
-		OnlySCIDAccounts()
 	Else
 		releaseSwitchAccountMutex()
 		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[Ubound($g_abAccountNo) - 1]
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
-		GUICtrlSetState($g_hChkOnlySCIDAccounts, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkFastSwitchAcc, $GUI_DISABLE)
-		OnlySCIDAccounts()
 	EndIf
 EndFunc   ;==>chkSwitchAcc
 

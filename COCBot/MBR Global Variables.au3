@@ -1839,10 +1839,6 @@ Global $g_bChkCollectRewards = True
 Global $g_bChkSellRewards = True  ; Sell "storage full" extra magic items for gems
 Global $g_iBuilderBoostDiscount = 0 ; in percent
 
-; SC_ID without shared_prefs
-Global $g_bOnlySCIDAccounts = False
-Global $g_iWhatSCIDAccount2Use = 0
-
 ; All Variables to DB sqlite
 Global $g_bUseStatistics = False
 Global $g_hSQLiteDB = Null

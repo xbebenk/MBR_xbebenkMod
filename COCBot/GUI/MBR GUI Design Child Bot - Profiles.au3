@@ -24,9 +24,10 @@ Global $g_hChkSwitchAcc = 0, $g_hChkFastSwitchAcc = 0, $g_hCmbSwitchAcc = 0, $g_
 Func CreateBotProfiles()
 
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Group_01", "Switch Profiles"), $x - 20, $y - 20, $g_iSizeWGrpTab2, 50)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Group_01", "Switch Profiles"), $x - 20, $y - 20, $g_iSizeWGrpTab2, 47)
 	$x -= 5
-		$g_hCmbProfile = GUICtrlCreateCombo("", $x - 3, $y + 1, 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
+	$y -= 3
+		$g_hCmbProfile = GUICtrlCreateCombo("", $x - 3, $y, 115, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "CmbProfile_Info_01", "Use this to switch to a different profile")& @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "CmbProfile_Info_02", "Your profiles can be found in") & ": " & @CRLF & $g_sProfilePath)
 			setupProfileComboBox()
@@ -39,7 +40,7 @@ Func CreateBotProfiles()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "TxtVillageName_Info_01", "Your village/profile's name"))
 			GUICtrlSetState(-1, $GUI_HIDE)
 			; GUICtrlSetOnEvent(-1, "txtVillageName") - No longer needed
-
+	$y -= 2
 		; Local static to avoid GDI Handle leak
 		Static $bIconAdd = 0
 		If $bIconAdd = 0 Then
@@ -122,15 +123,6 @@ Func CreateBotProfiles()
 			_GUICtrlButton_SetImageList($g_hBtnSaveprofile, $bIconSave, 4)
 			GUICtrlSetOnEvent(-1, "BtnSaveprofile")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "BtnSaveprofile_Info_01", "Save your current setting."))
-
-		$x += 17
-		$g_hChkOnlySCIDAccounts = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "ChkOnlySCIDAccounts", "SCid"), $x + 297, $y , -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "ChkOnlySCIDAccounts_Info_01", "Are you using SC_ID?"))
-			GUICtrlSetOnEvent(-1, "OnlySCIDAccounts")
-		$g_hCmbWhatSCIDAccount2Use = GUICtrlCreateCombo("", $x + 295 + 47, $y , 75, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-			GUICtrlSetData(-1, "Account 1|Account 2|Account 3|Account 4|Account 5|Account 6|Account 7|Account 8", "Account 1")
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "WhatSCIDAccount2Use_Info_01", "Select the correct account from Login Window!"))
-			GUICtrlSetOnEvent(-1, "WhatSCIDAccount2Use")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	Local $x = 25, $y = 95

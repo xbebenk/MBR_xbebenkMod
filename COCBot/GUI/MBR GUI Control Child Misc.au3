@@ -190,23 +190,6 @@ Func BtnSaveprofile()
 	Setlog("Done!", $COLOR_SUCCESS)
 EndFunc   ;==>BtnSaveprofile
 
-Func OnlySCIDAccounts()
-	; $g_hChkOnlySCIDAccounts
-	If GUICtrlRead($g_hChkOnlySCIDAccounts) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hCmbWhatSCIDAccount2Use, $GUI_ENABLE)
-		WhatSCIDAccount2Use()
-		$g_bOnlySCIDAccounts = True
-	Else
-		GUICtrlSetState($g_hCmbWhatSCIDAccount2Use, $GUI_DISABLE)
-		$g_bOnlySCIDAccounts = False
-	EndIf
-EndFunc   ;==>OnlySCIDAccounts
-
-Func WhatSCIDAccount2Use()
-	; $g_hCmbWhatSCIDAccount2Use
-	$g_iWhatSCIDAccount2Use = _GUICtrlComboBox_GetCurSel($g_hCmbWhatSCIDAccount2Use)
-EndFunc   ;==>WhatSCIDAccount2Use
-
 Func cmbBotCond()
 	Local $iCond = _GUICtrlComboBox_GetCurSel($g_hCmbBotCond)
 	If $iCond = 15 Then

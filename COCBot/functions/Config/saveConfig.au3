@@ -1243,10 +1243,6 @@ Func SaveConfig_600_35_1()
 	_Ini_Add("other", "ChkDisableNotifications", $g_bDisableNotifications)
 	_Ini_Add("other", "ChkFixClanCastle", $g_bForceClanCastleDetection ? 1 : 0)
 	_Ini_Add("other", "ChkSqlite", $g_bUseStatistics ? 1 : 0)
-
-	_Ini_Add("ProfileSCID", "OnlySCIDAccounts", $g_bOnlySCIDAccounts ? 1 : 0)
-	_Ini_Add("ProfileSCID", "WhatSCIDAccount2Use", $g_iWhatSCIDAccount2Use)
-
 EndFunc   ;==>SaveConfig_600_35_1
 
 Func SaveConfig_600_35_2()
