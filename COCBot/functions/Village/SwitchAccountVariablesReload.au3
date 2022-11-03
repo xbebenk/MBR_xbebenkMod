@@ -147,7 +147,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 
 			; Other global status
 			$aiCommandStop = $aiMinus
-			$aiAllBarracksUpgd = $aiZero
 			$abFullStorage = $aiZero84
 			$aiBuilderBoostDiscount = $aiZero
 			$abNotNeedAllTime0 = $aiTrue
