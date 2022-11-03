@@ -346,14 +346,12 @@ Func UpdateStats($bForceUpdate = False)
 		$bStatsUpdated = True
 		GUICtrlSetData($g_hLblWallGoldMake, $g_iNbrOfWallsUppedGold)
 		$iOldNbrOfWallsUppedGold = $g_iNbrOfWallsUppedGold
-		WallsStatsMAJ()
 	EndIf
 
 	If $iOldNbrOfWallsUppedElixir <> $g_iNbrOfWallsUppedElixir Then
 		$bStatsUpdated = True
 		GUICtrlSetData($g_hLblWallElixirMake, $g_iNbrOfWallsUppedElixir)
 		$iOldNbrOfWallsUppedElixir = $g_iNbrOfWallsUppedElixir
-		WallsStatsMAJ()
 	EndIf
 
 	If $iOldNbrOfBuildingsUppedGold <> $g_iNbrOfBuildingsUppedGold Then
@@ -742,16 +740,6 @@ Func ResetStats()
 	EndIf
 	UpdateStats()
 EndFunc   ;==>ResetStats
-
-Func WallsStatsMAJ()
-	$g_aiWallsCurrentCount[$g_iUpgradedWallLevel + 4] -= Number($g_iNbrOfWallsUpped)
-	$g_aiWallsCurrentCount[$g_iUpgradedWallLevel + 5] += Number($g_iNbrOfWallsUpped)
-	$g_iNbrOfWallsUpped = 0
-	For $i = 4 To 15
-		GUICtrlSetData($g_ahWallsCurrentCount[$i], $g_aiWallsCurrentCount[$i])
-	Next
-	SaveConfig()
-EndFunc   ;==>WallsStatsMAJ
 
 Func UpdateStats_ClearArray(ByRef $a)
 	For $i = 0 To UBound($a) - 1

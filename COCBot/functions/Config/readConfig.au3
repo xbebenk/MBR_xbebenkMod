@@ -1047,10 +1047,6 @@ Func ReadConfig_600_17()
 	For $i = 0 To UBound($g_aUpgradeWall) - 1
 		$g_aUpgradeWall[$i] = $str[$i]
 	Next
-
-	For $i = 4 To 15
-		IniReadS($g_aiWallsCurrentCount[$i], $g_sProfileConfigPath, "Walls", "Wall" & StringFormat("%02d", $i), 0, "int")
-	Next
 	IniReadS($g_iWallCost, $g_sProfileConfigPath, "upgrade", "WallCost", 0, "int")
 EndFunc   ;==>ReadConfig_600_17
 

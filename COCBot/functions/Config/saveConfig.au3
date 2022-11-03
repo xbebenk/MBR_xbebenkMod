@@ -764,10 +764,6 @@ Func SaveConfig_600_17()
 		$string &= $g_aUpgradeWall[$i] & "|"
 	Next
 	_Ini_Add("upgrade", "UpgradeWall", $string)
-
-	For $i = 4 To 15
-		_Ini_Add("Walls", "Wall" & StringFormat("%02d", $i), $g_aiWallsCurrentCount[$i])
-	Next
 	_Ini_Add("upgrade", "WallCost", $g_iWallCost)
 EndFunc   ;==>SaveConfig_600_17
 

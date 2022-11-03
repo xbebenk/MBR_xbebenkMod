@@ -1154,10 +1154,6 @@ Func ApplyConfig_600_17($TypeReadSave)
 			For $y = 0 To 2
 				_GUICtrlComboBox_SetCurSel($g_hCmbWalls[$y], $g_aUpgradeWall[$y])
 			Next
-
-			For $i = 4 To 15
-				GUICtrlSetData($g_ahWallsCurrentCount[$i], $g_aiWallsCurrentCount[$i])
-			Next
 			cmbWalls()
 			chkWalls()
 			ChkLowLevelAutoUpgradeWall()
@@ -1181,9 +1177,6 @@ Func ApplyConfig_600_17($TypeReadSave)
 			$g_bUpgradeLowWall = (GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED)
 			$g_bUpgradeAnyWallLevel = (GUICtrlRead($g_hChkUpgradeAnyWallLevel) = $GUI_CHECKED)
 			$g_iLowLevelWall = _GUICtrlComboBox_GetCurSel($g_hCmbLowLevelWall) + 1
-			For $i = 4 To 15 ; added wall-lvl15
-				$g_aiWallsCurrentCount[$i] = Number(GUICtrlRead($g_ahWallsCurrentCount[$i]))
-			Next
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_17
 

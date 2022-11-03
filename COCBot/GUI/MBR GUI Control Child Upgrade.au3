@@ -646,11 +646,6 @@ Func cmbWalls()
 		$g_aUpgradeWall[$z] = _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$z])
 		GUICtrlSetData($g_hLblWallCost[$z], _NumberFormat($g_aiWallCost[_GUICtrlComboBox_GetCurSel($g_hCmbWalls[$z])]))
 	Next
-
-	For $i = 4 To 14; $g_iUpgradedWallLevel+  ;Will now always show all.
-	  GUICtrlSetState($g_ahWallsCurrentCount[$i], $GUI_SHOW)
-	  GUICtrlSetState($g_ahPicWallsLevel[$i], $GUI_SHOW)
-	Next
 EndFunc   ;==>cmbWalls
 
 Func chkSaveWallBldr()
