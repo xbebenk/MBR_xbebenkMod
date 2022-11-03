@@ -24,7 +24,7 @@ Func TrainSystem()
 
 	$g_sTimeBeforeTrain = _NowCalc()
 	StartGainCost()
-
+	SetLog("====== TrainSystem =====", $COLOR_ACTION)
 	BoostSuperTroop()
 	;Add small delay after boost
 	If _Sleep(1000) Then Return
@@ -61,7 +61,7 @@ EndFunc ;==>TrainPreviousArmy
 Func TrainCustomArmy()
 	If Not $g_bRunState Then Return
 	If isProblemAffect(True) Then Return
-	If $g_bDebugSetlogTrain Then SetLog(" == Initial Custom Train == ", $COLOR_ACTION)
+	SetLog(" ====== CustomTrain ====== ", $COLOR_ACTION)
 
 	;If $bDonateTrain = -1 Then SetbDonateTrain()
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
@@ -568,7 +568,8 @@ EndFunc   ;==>DeleteInvalidTroopInArray
 
 Func RemoveExtraTroopsQueue()
 	For $i = 1 To 50
-		If QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200) Then 
+		If QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200) Then
+			If Not $g_bRunState Then Return
 			SetLog("Remove All Queued Troops #" & $i, $COLOR_ACTION)
 			Click($g_iQuickMISX, $g_iQuickMISY, 10, 50, "Remove Troops")
 			If Not $g_bRunState Then Return
@@ -1169,7 +1170,7 @@ Func MakingDonatedTroops($sType = "All")
 					Local $sTroopName = ($avDefaultTroopGroup[$i][4] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
 					SetLog(" - Trained " & $avDefaultTroopGroup[$i][4] & " " & $sTroopName, $COLOR_ACTION)
 					$avDefaultTroopGroup[$i][4] = 0
-					If _Sleep(1000) Then Return ; Needed Delay, OCR was not picking up Troop Changes
+					If _Sleep(500) Then Return ; Needed Delay, OCR was not picking up Troop Changes
 				Else
 					For $z = 0 To $RemainTrainSpace[2] - 1
 						$RemainTrainSpace = GetOCRCurrent(42, 133)
@@ -1315,21 +1316,21 @@ Func GetOCRCurrent($x_start, $y_start)
 EndFunc   ;==>GetOCRCurrent
 
 Func getReceivedTroops($x_start, $y_start, $bSkipCheck = False) ; Check if 'you received Castle Troops from' , will proceed with a Sleep until the message disappear
-	If $bSkipCheck Or Not $g_bRunState Then Return False
-	Local $iOCRResult = ""
-
-	$iOCRResult = getOcrAndCapture("coc-DonTroops", $x_start, $y_start, 120, 27, True) ; X = 162  Y = 200
-
-	If IsString($iOCRResult) <> "" Or IsString($iOCRResult) <> " " Then
-		If StringInStr($iOCRResult, "you") Then ; If exist Minutes or only Seconds
-			Return True
-		Else
-			Return False
-		EndIf
-	Else
-		Return False
-	EndIf
-
+	;If $bSkipCheck Or Not $g_bRunState Then Return False
+	;Local $iOCRResult = ""
+	;
+	;$iOCRResult = getOcrAndCapture("coc-DonTroops", $x_start, $y_start, 120, 27, True) ; X = 162  Y = 200
+	;
+	;If IsString($iOCRResult) <> "" Or IsString($iOCRResult) <> " " Then
+	;	If StringInStr($iOCRResult, "you") Then ; If exist Minutes or only Seconds
+	;		Return True
+	;	Else
+	;		Return False
+	;	EndIf
+	;Else
+	;	Return False
+	;EndIf
+	Return False
 EndFunc   ;==>getReceivedTroops
 
 Func _ArryRemoveBlanks(ByRef $aArray)

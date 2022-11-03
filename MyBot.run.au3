@@ -1121,10 +1121,8 @@ Func __RunFunction($action)
 		Case "DonateCC,Train"
 			If $g_iActiveDonate And $g_bChkDonate Then
 				If $g_bFirstStart Then
-					getArmyTroopCapacity(True, False)
-					If _Sleep($DELAYRESPOND) Then Return
-					getArmySpellCapacity(False, True)
-					If _Sleep($DELAYRESPOND) Then Return
+					PrepareDonateCC()
+					CheckArmyCamp(True, True)
 				EndIf
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
@@ -1411,9 +1409,6 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 And $bSwitch Then
 		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-		;PrepareDonateCC()
-		;DonateCC()
-		;If CheckNeedOpenTrain() Then TrainSystem()
 		_RunFunction("DonateCC,Train")
 		CommonRoutine("NoClanGamesEvent")
 		$g_bForceSwitchifNoCGEvent = True
@@ -1429,8 +1424,7 @@ Func FirstCheckRoutine()
 			SetLog("Donate Early Enabled", $COLOR_INFO)
 			_RunFunction("DonateCC,Train")
 		EndIf
-		;If CheckNeedOpenTrain() Then TrainSystem()
-		;SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
+		
 		If Not $g_bDonateEarly Then CheckIfArmyIsReady()
 		If $g_bIsFullArmywithHeroesAndSpells Then
 			; Now the bot can attack
@@ -1483,9 +1477,6 @@ Func FirstCheckRoutine()
 
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bForceSwitchifNoCGEvent) Then
-		;PrepareDonateCC()
-		;DonateCC()
-		;If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
 		_RunFunction("DonateCC,Train")
 		CommonRoutine("Switch")
 		checkSwitchAcc() ;switch to next account
@@ -1502,8 +1493,6 @@ Func FirstCheckRoutine()
 			; VERIFY THE TROOPS AND ATTACK IF IS FULL
 			SetLog("-- SecondCheck on Train --", $COLOR_DEBUG)
 			SetLog("Fast Switch Account Enabled", $COLOR_DEBUG)
-			;If CheckNeedOpenTrain() Then TrainSystem()
-			;SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 			If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
 			If $g_bIsFullArmywithHeroesAndSpells Then
 				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
@@ -1547,13 +1536,7 @@ Func FirstCheckRoutine()
 	EndIf
 
 	If Not $g_bRunState Then Return
-	;RequestCC(True)
-	;checkArmyCamp(True, True)
-	;PrepareDonateCC()
-	;_Sleep(1000)
-	;DonateCC()
 	_RunFunction("DonateCC,Train")
-	If $b_SuccessAttack Then TrainSystem()
 	If Not $g_bRunState Then Return
 	CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then

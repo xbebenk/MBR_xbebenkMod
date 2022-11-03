@@ -20,7 +20,7 @@ Func DoubleTrain()
 	If isProblemAffect(True) Then Return
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
 
-	If $bDebug then SetLog(" == Double Train Army == ", $COLOR_ACTION)
+	SetLog(" ====== Double Train ====== ", $COLOR_ACTION)
 
 	Local $bNeedReCheckTroopTab = False, $bNeedReCheckSpellTab = False
 
