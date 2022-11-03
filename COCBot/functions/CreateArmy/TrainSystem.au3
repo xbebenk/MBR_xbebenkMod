@@ -352,7 +352,7 @@ Func DragIfNeeded($Troop)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
 				ClickDrag(750, 445, 20, 445)
-				If _Sleep(1000) Then Return
+				If _Sleep(2000) Then Return
 				If _ColorCheck(_GetPixelColor(834, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
 				Return True
@@ -364,7 +364,7 @@ Func DragIfNeeded($Troop)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
 				ClickDrag(100, 445, 850, 445)
-				If _Sleep(1000) Then Return
+				If _Sleep(2000) Then Return
 				If _ColorCheck(_GetPixelColor(22, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
 				Return True
