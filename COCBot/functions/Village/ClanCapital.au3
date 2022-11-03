@@ -439,11 +439,14 @@ Func IsCCBuilderMenuOpen()
 	Local $aBorder0[4] = [400, 73, 0x8C9CB6, 20]
 	Local $aBorder1[4] = [400, 73, 0xC0C9D3, 20]
 	Local $aBorder2[4] = [400, 73, 0xBEBFBC, 20]
+	Local $aBorder3[4] = [400, 73, 0xFFFFFF, 20]
 	
 	Local $sTriangle
-	If _CheckPixel($aBorder0, True) Or _CheckPixel($aBorder1, True) Or _CheckPixel($aBorder2, True) Then 
-		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder0[0], $aBorder0[1], True), $COLOR_ACTION)
+	If _CheckPixel($aBorder0, True) Or _CheckPixel($aBorder1, True) Or _CheckPixel($aBorder2, True) Or _CheckPixel($aBorder3, True) Then 
+		;SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder0[0], $aBorder0[1], True), $COLOR_ACTION)
 		$bRet = True ;got correct color for border 
+	Else
+		SetDebugLog("Border Color Not Matched: " & _GetPixelColor($aBorder0[0], $aBorder0[1], True), $COLOR_ACTION)
 	EndIf
 	
 	If Not $bRet Then ;lets re check if border color check not success
