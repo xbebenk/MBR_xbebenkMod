@@ -1459,7 +1459,7 @@ Func IsBuilderMenuOpen()
 	Local $aBorder1[4] = [350, 73, 0xFFFFFF, 40]
 	Local $sTriangle
 	If _CheckPixel($aBorder, True) Or _CheckPixel($aBorder1, True) Then 
-		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
+		;SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
 		$bRet = True ;got correct color for border 
 	Else
 		SetDebugLog("Border Color Not Matched: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
