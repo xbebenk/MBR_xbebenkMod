@@ -64,8 +64,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 
 	; Other global status
 	Static $aiCommandStop = $aiMinus
-	Static $aiAllBarracksUpgd = $aiZero
-
 	Static $abFullStorage = $aiZero84
 	Static $aiBuilderBoostDiscount = $aiZero
 
@@ -231,8 +229,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 
 			; Other global status
 			$aiCommandStop[$iAccount] = $g_iCommandStop
-			$aiAllBarracksUpgd[$iAccount] = $g_bAllBarracksUpgd
-
+			
 			For $i = 0 To 3
 				$abFullStorage[$iAccount][$i] = $g_abFullStorage[$i]
 			Next
@@ -316,7 +313,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 
 			; Other global status
 			$g_iCommandStop = $aiCommandStop[$iAccount]
-			$g_bAllBarracksUpgd = $aiAllBarracksUpgd[$iAccount]
 			For $i = 0 To 3
 				$g_abFullStorage[$i] = $abFullStorage[$iAccount][$i]
 			Next

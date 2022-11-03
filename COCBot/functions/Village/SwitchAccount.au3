@@ -118,11 +118,6 @@ Func CheckSwitchAcc()
 		SetLog("Still waiting for CC Troops/Spells, switching to another Account", $COLOR_ACTION)
 		SetSwitchAccLog(" - Waiting for CC")
 		$bForceSwitch = True
-	ElseIf $g_bAllBarracksUpgd Then ;Check if all barrack are upgrading, no army can be train --> Force Switch account
-		SetLog("Seems all your barracks are upgrading", $COLOR_INFO)
-		SetLog("No troops can be trained, let's switch account", $COLOR_INFO)
-		SetSwitchAccLog(" - All Barracks Upgrading, Force switch")
-		$bForceSwitch = True
 	Else
 		getArmyTroopTime(True, False) ; update $g_aiTimeTrain[0]
 
