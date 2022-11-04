@@ -21,20 +21,22 @@ Func TrainSystem()
 		If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 		Return
 	EndIf
-
+	
+	If Not $g_bRunState Then Return
 	$g_sTimeBeforeTrain = _NowCalc()
 	StartGainCost()
 	SetLog("====== TrainSystem =====", $COLOR_ACTION)
+	If Not $g_bRunState Then Return
 	BoostSuperTroop()
 	;Add small delay after boost
 	If _Sleep(1000) Then Return
-	
+	If Not $g_bRunState Then Return
 	CheckIfArmyIsReady()
-	;CheckSTroopsIcon()
 	
+	If Not $g_bRunState Then Return
 	If $g_bTrainPreviousArmy Then TrainPreviousArmy()
 	TrainCustomArmy()
-
+	If Not $g_bRunState Then Return
 	TrainSiege()
 
 	If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
