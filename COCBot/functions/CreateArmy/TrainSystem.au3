@@ -1077,17 +1077,17 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 	EndIf
 	If _Sleep(500) Then Return
 	
-	Local $IsButtonExist = False
-	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215)
-	While $IsButtonExist
-		For $i = 1 To 3
-			Click($g_iQuickMISX, $g_iQuickMISY, 20)
+	For $i = 1 To 50
+		If QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200) Then
 			If Not $g_bRunState Then Return
-			If _Sleep(500) Then Return
-		Next
-		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215, True)
-	Wend
-	
+			SetLog("Remove All Queued " & $sArmyTypeQueued & " #" & $i, $COLOR_ACTION)
+			Click($g_iQuickMISX, $g_iQuickMISY, 10, 50, "Remove Troops")
+			If Not $g_bRunState Then Return
+			If _Sleep(1000) Then Return
+		Else
+			ExitLoop
+		EndIf
+	Next
 EndFunc   ;==>DeleteQueued
 
 Func MakingDonatedTroops($sType = "All")

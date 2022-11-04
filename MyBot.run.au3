@@ -924,7 +924,7 @@ Func _Idle() ;Sequence that runs until Full Army
 			If _Sleep($DELAYIDLE1) Or Not $g_bRunState Then ExitLoop
 		EndIf
 
-		If $g_bCheckDonateOften Then _RunFunction('DonateCC')
+		If $g_bCheckDonateOften Then _RunFunction('DonateCC,Train')
 		If $g_bRestart Then ExitLoop
 
 		AddIdleTime()
@@ -1119,34 +1119,41 @@ Func __RunFunction($action)
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
 			EndIf
 		Case "DonateCC,Train"
+			If Not $g_bRunState Then Return
 			If $g_iActiveDonate And $g_bChkDonate Then
 				If $g_bFirstStart Then
 					PrepareDonateCC()
 					CheckArmyCamp(True, True)
 				EndIf
 				; if in "Halt/Donate" don't skip near full army
-				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
-			EndIf
-
-			If $g_bTrainEnabled Then ; check for training enabled in halt mode
-				If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
-					TrainSystem()
-					_Sleep($DELAYRUNBOT1)
-				Else
-					SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $color_blue)
-					$g_iActualTrainSkip = $g_iActualTrainSkip + 1
-					If $g_iActualTrainSkip >= $g_iMaxTrainSkip Then
-						$g_iActualTrainSkip = 0
+				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then 
+					If DonateCC() Then
+						$g_bDonated = False
+						If $g_bTrainEnabled Then ; check for training enabled in halt mode
+							If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
+								TrainSystem()
+								_Sleep($DELAYRUNBOT1)
+							Else
+								SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $COLOR_INFO)
+								$g_iActualTrainSkip = $g_iActualTrainSkip + 1
+								If $g_iActualTrainSkip >= $g_iMaxTrainSkip Then
+									$g_iActualTrainSkip = 0
+								EndIf
+								CheckOverviewFullArmy(True, False) ; use true parameter to open train overview window
+								If _Sleep($DELAYRESPOND) Then Return
+								getArmySpells()
+								If _Sleep($DELAYRESPOND) Then Return
+								getArmyHeroCount(False, True)
+							EndIf
+						Else
+							If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
+						EndIf
 					EndIf
-					CheckOverviewFullArmy(True, False) ; use true parameter to open train overview window
-					If _Sleep($DELAYRESPOND) Then Return
-					getArmySpells()
-					If _Sleep($DELAYRESPOND) Then Return
-					getArmyHeroCount(False, True)
 				EndIf
-			Else
-				If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 			EndIf
+			If Not $g_bRunState Then Return
+			
+			
 		Case "BoostBarracks"
 			BoostBarracks()
 			_Sleep($DELAYRESPOND)
@@ -1425,7 +1432,8 @@ Func FirstCheckRoutine()
 			_RunFunction("DonateCC,Train")
 		EndIf
 		
-		If Not $g_bDonateEarly Then CheckIfArmyIsReady()
+		CheckIfArmyIsReady()
+		ClickAway()
 		If $g_bIsFullArmywithHeroesAndSpells Then
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
@@ -1463,6 +1471,8 @@ Func FirstCheckRoutine()
 				EndIf
 				If _Sleep($DELAYRUNBOT1) Then Return
 			EndIf
+		Else
+			If Not $g_bDonateEarly Then TrainSystem()
 		EndIf
 	EndIf
 
@@ -1536,10 +1546,12 @@ Func FirstCheckRoutine()
 	EndIf
 
 	If Not $g_bRunState Then Return
-	_RunFunction("DonateCC,Train")
+	If CheckNeedOpenTrain() Then TrainSystem()
+	
 	If Not $g_bRunState Then Return
 	CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
+		_RunFunction("DonateCC,Train")
 		CommonRoutine("Switch")
 		_ClanGames(False, False, True) ; Do Only Purge
 		checkSwitchAcc() ;switch to next account

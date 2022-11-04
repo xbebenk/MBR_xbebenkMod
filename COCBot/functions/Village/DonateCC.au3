@@ -188,7 +188,9 @@ Func DonateCC($bCheckForNewMsg = False)
 	Local $bNewSystemToDonate = False
 
 	Local $iScrollY = 77
-
+	
+	$g_bDonated = False
+	
 	If Not $g_bChkDonate Or Not $bDonate Or Not $g_bDonationEnabled Then
 		SetDebugLog("Donate Clan Castle troops skip", $COLOR_DEBUG)
 		Return ; exit func if no donate checkmarks
@@ -684,11 +686,11 @@ Func DonateCC($bCheckForNewMsg = False)
 
 	ClickAway("Left")
 	If _Sleep($DELAYDONATECC2) Then Return
-	
 	checkChatTabPixel()
-	
 	UpdateStats()
 	If _Sleep($DELAYDONATECC2) Then Return
+	
+	Return $g_bDonated
 EndFunc   ;==>DonateCC
 
 Func CheckDonateTroop(Const $iTroopIndex, Const $sDonateTroopString, Const $sBlacklistTroopString, Const $sClanString, $bNewSystemDonate = False)
@@ -815,7 +817,8 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 	
 	If $bDonateAll Then $sTextToAll = " (to all requests)"
 	SetLog("Donating " & $Quant & " " & ($Quant > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]) & $sTextToAll, $COLOR_SUCCESS)
-
+	$g_bDonated = True ;set To Return value
+	
 	If $g_bDebugOCRdonate Then
 		SetLog("donate", $COLOR_ERROR)
 		SetLog("row: " & $donaterow, $COLOR_ERROR)
@@ -931,7 +934,7 @@ Func DonateSpellType(Const $iSpellIndex, Const $bDonateQueueOnly = False, Const 
 		EndIf
 
 		SetLog("Donating " & $g_iDonSpellsQuantity & " " & $g_asSpellNames[$iSpellIndex] & " Spell.", $COLOR_GREEN)
-
+		$g_bDonated = True ;set To Return value
 		; Assign the donated quantity Spells to train : $Don $g_asSpellName
 		; need to implement assign $DonPoison etc later
 	Else
@@ -996,6 +999,7 @@ Func DonateSiegeType(Const $iSiegeIndex, $bDonateAll = False)
 			$g_bFullArmy = False
 		EndIf
 		SetLog("Donating 1 " & ($g_asSiegeMachineNames[$iSiegeIndex]) & ($bDonateAll ? " (to all requests)" : ""), $COLOR_GREEN)
+		$g_bDonated = True ;set To Return value
 		$g_aiDonateSiegeMachines[$iSiegeIndex] += 1
 		$g_aiDonateStatsSieges[$iSiegeIndex][0] += 1
 	Else

@@ -1612,6 +1612,7 @@ Global $g_bDonationEnabled = True
 Global $g_iTroopsDonated = 0
 Global $g_iTroopsReceived = 0
 Global $g_iDonationWindowY = 0
+Global $g_bDonated = False
 
 ; Drop trophy
 Global $g_avDTtroopsToBeUsed[10][2] = [["Barb", 0], ["SBarb", 0], ["Arch", 0], ["Giant", 0], ["Wall", 0], ["Gobl", 0], ["Mini", 0], ["Ball", 0], ["Wiza", 0], ["SMini", 0]] ; DT available troops [type, qty]

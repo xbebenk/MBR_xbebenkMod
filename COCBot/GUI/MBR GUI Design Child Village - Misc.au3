@@ -613,7 +613,7 @@ Func CreateMiscModSubTab()
 	$y += 23
 		$g_hUseQueuedTroopSpell = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "UseQueuedTroopSpell", "Dont Remove Queued Troop/Spell"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_03", "If enabled, will not remove queued troop on every check train"))
-		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
+		;GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 48
