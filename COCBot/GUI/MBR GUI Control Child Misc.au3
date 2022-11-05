@@ -1026,12 +1026,6 @@ Func chkOnDoubleTrain()
 	Else
 		GUICtrlSetState($g_hChkPreciseArmy, $GUI_ENABLE)
 	EndIf
-	
-	If GUICtrlRead($g_hUseQueuedTroopSpell) = $GUI_CHECKED Then
-		$g_bUseQueuedTroopSpell = True
-	Else
-		$g_bUseQueuedTroopSpell = False
-	EndIf
 EndFunc ;==> chkOnDoubleTrain
 
 Func chkTrainPrev()

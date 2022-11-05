@@ -616,7 +616,7 @@ Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQ
 		EndIf
 	EndIf
 
-	If Not $g_bIsFullArmywithHeroesAndSpells And Not $g_bUseQueuedTroopSpell Then
+	If Not $g_bIsFullArmywithHeroesAndSpells Then
 		If $removeExtraTroopsQueue Then
 			If Not _ColorCheck(_GetPixelColor(238, 190, True), Hex(0x677CB5, 6), 30) Then RemoveExtraTroopsQueue()
 		EndIf

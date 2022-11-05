@@ -287,13 +287,10 @@ Func CreateAttackSearchDeadBaseSearch()
 			GUICtrlSetOnEvent(-1, "chkDBMeetDeadEagle")
 
 		$g_hTxtDeadEagleSearch = GUICtrlCreateInput("50", $x + 115, $y, 20, 18)
-			;$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_03", "Set the Max. amount of Trophies to search for on a village to attack.")
-			;_GUICtrlSetTip(-1, $sTxtTip)
-			;_GUICtrlEdit_SetReadOnly(-1, True)
-			;GUICtrlSetLimit(-1, 2)
-
-		;$g_hChkDBMeetTHO = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTHO", "Townhall Outside"), $x, $y, -1, -1)
-		;	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTHO_Info_01", "Search for a base that has an exposed Townhall. (Outside of Walls)"))
+			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetTrophy_Info_DeadEagleSearch", "Set the Max. amount of search for Dead Eagle")
+			_GUICtrlSetTip(-1, $sTxtTip)
+			GUICtrlSetLimit(-1, 2)
+			
 	$y += 24
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "Group_03", "Weak base | max defenses"), $x, $y, 215, 120)
 	$x += 5

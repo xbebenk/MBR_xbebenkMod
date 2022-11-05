@@ -1904,7 +1904,7 @@ Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = Fa
 Global $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False
 Global $g_bTrainPreviousArmy = False, $g_bAlwaysDropHero = True, $g_bSkipSnowDetection = False
 Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
-Global $g_bEnableCCSleep = False, $g_bSkipDT = False, $g_bUseQueuedTroopSpell = False
+Global $g_bEnableCCSleep = False, $g_bSkipDT = False
 
 ;Builder Base
 Global $g_bDebugBBattack = False
