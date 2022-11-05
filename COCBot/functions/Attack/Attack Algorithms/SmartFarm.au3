@@ -622,10 +622,10 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 		;_ArrayDisplay($aTmpListInfoDeploy, "aTmpListInfoDeploy1")
 		For $i = 0 To UBound($g_ahCmbDropOrder) - 1
 			Local $iValue = $g_aiCmbCustomDropOrder[$i]
-			SetLog("iValue : " & $iValue)
-			If $iValue <> -1 Then
+			If $g_bDebugSmartFarm Then SetLog("iValue : " & $iValue & " [" & GetTroopName($iValue) & "]")
+			If $iValue <> -1 And $iValue < $eKing Then
 				Local $iDelete = _ArraySearch($aTmpListInfoDeploy, $iValue, 0, 0, 0, 0, 1, 0)
-				SetLog("iDelete : " & $iDelete)
+				If $g_bDebugSmartFarm Then SetLog("iDelete : " & $iDelete)
 				Local $troop = $aTmpListInfoDeploy[$i][0]
 				Local $nside1 = $aTmpListInfoDeploy[$i][1]
 				Local $wave = $aTmpListInfoDeploy[$i][2]
