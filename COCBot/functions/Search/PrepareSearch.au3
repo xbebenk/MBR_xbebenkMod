@@ -32,23 +32,35 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 
 	ChkAttackCSVConfig()
 	If $Mode = $DT Then $g_bRestart = False
-	If IsMainPage() Then
-		If _Sleep($DELAYTREASURY4) Then Return
-		If _CheckPixel($aAttackForTreasury, $g_bCapturePixel, Default, "Is attack for treasury:") Then
-			SetLog("It isn't attack for Treasury :-(", $COLOR_SUCCESS)
-			Return
-		EndIf
-		If _Sleep($DELAYTREASURY4) Then Return
+	For $i = 1 To 3
+		If isOnMainVillage() Then
+			If _Sleep($DELAYTREASURY4) Then Return
+			If _CheckPixel($aAttackForTreasury, $g_bCapturePixel, Default, "Is attack for treasury:") Then
+				SetLog("It isn't attack for Treasury :-(", $COLOR_SUCCESS)
+				Return
+			EndIf
+			If _Sleep($DELAYTREASURY4) Then Return
 
-		Local $aAttack = findButton("AttackButton", Default, 1, True)
-		If IsArray($aAttack) And UBound($aAttack, 1) = 2 Then
-			ClickP($aAttack, 1, 0, "#0149")
+			Local $aAttack = findButton("AttackButton", Default, 1, True)
+			If IsArray($aAttack) And UBound($aAttack, 1) = 2 Then
+				ClickP($aAttack, 1, 0, "#0149")
+				ExitLoop
+			Else
+				SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
+				If $g_bDebugImageSave Then SaveDebugImage("AttackButtonNotFound")
+				Return
+			EndIf
 		Else
-			SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("AttackButtonNotFound")
+			checkObstacles()
+		EndIf
+		If _Sleep(1000) Then Return
+		ClickAway()
+		SetLog("Waiting For MainPage #" & $i, $COLOR_ACTION)
+		If $i = 3 Then 
+			SetLog("PrepareSearch: MainPage Not Found!", $COLOR_ERROR)
 			Return
 		EndIf
-	EndIf
+	Next
 
 	If _Sleep($DELAYPREPARESEARCH1) Then Return
 	Local $MultiplayerWindowOpened = False
