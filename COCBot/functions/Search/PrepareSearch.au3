@@ -34,16 +34,10 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	If $Mode = $DT Then $g_bRestart = False
 	For $i = 1 To 3
 		If isOnMainVillage() Then
-			If _Sleep($DELAYTREASURY4) Then Return
-			If _CheckPixel($aAttackForTreasury, $g_bCapturePixel, Default, "Is attack for treasury:") Then
-				SetLog("It isn't attack for Treasury :-(", $COLOR_SUCCESS)
-				Return
-			EndIf
-			If _Sleep($DELAYTREASURY4) Then Return
-
-			Local $aAttack = findButton("AttackButton", Default, 1, True)
-			If IsArray($aAttack) And UBound($aAttack, 1) = 2 Then
-				ClickP($aAttack, 1, 0, "#0149")
+			ClickP($aAttackButton)
+			SetLog("Opening Multiplayer Tab!", $COLOR_INFO)
+			If _Sleep(1000) Then Return
+			If IsMultiplayerTabOpen() Then 
 				ExitLoop
 			Else
 				SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
@@ -62,31 +56,6 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		EndIf
 	Next
 
-	If _Sleep($DELAYPREPARESEARCH1) Then Return
-	Local $MultiplayerWindowOpened = False
-	For $i = 1 To 5
-		If IsFullScreenWindow() Then 
-			$MultiplayerWindowOpened = True
-			ExitLoop
-		Else
-			SetLog("Waiting For Multiplayer Window #" & $i, $COLOR_ACTION)
-		EndIf
-		If _Sleep(1000) Then Return
-	Next
-	
-	If Not $MultiplayerWindowOpened Then
-		SetLog("Attack Window did not open!", $COLOR_ERROR)
-		AndroidPageError("PrepareSearch")
-		checkMainScreen(True, $g_bStayOnBuilderBase, "PrepareSearch")
-		$g_bRestart = True
-		$g_bIsClientSyncError = False
-		Return
-	EndIf
-
-	If Not IsMultiplayerTabOpen() Then
-		SetLog("Error while checking if Multiplayer Tab is opened", $COLOR_ERROR)
-		Return
-	EndIf
 	$g_bCloudsActive = True ; early set of clouds to ensure no android suspend occurs that might cause infinite waits
 	$g_bLeagueAttack = False
 	Do
