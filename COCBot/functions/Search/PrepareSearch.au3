@@ -36,7 +36,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		If isOnMainVillage() Then
 			ClickP($aAttackButton)
 			SetLog("Opening Multiplayer Tab!", $COLOR_INFO)
-			If _Sleep(1000) Then Return
+			If _Sleep(1500) Then Return
 			If IsMultiplayerTabOpen() Then 
 				ExitLoop
 			Else
@@ -60,7 +60,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	$g_bLeagueAttack = False
 	Do
 		Local $bSignedUpLegendLeague = False
-		Local $sSearchDiamond = GetDiamondFromRect("271,185,834,659")
+		Local $sSearchDiamond = GetDiamondFromRect("275,190,835,545")
 		Local $avAttackButton = findMultiple($g_sImgPrepareLegendLeagueSearch, $sSearchDiamond, $sSearchDiamond, 0, 1000, 1, "objectname,objectpoints", True)
 		If IsArray($avAttackButton) And UBound($avAttackButton, 1) > 0 Then
 			$g_bLeagueAttack = True
