@@ -258,8 +258,9 @@ Func FindExistingBuilding($bTest = False)
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 250, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then 
 				If $g_bOptimizeOTTO And $g_iQuickMISName = "Gear" Then
 					Local $bRet = DoGearUp($g_iQuickMISX + 20, $g_iQuickMISY)
-					SetLog("Do GearUp result : " & String($bRet))
+					SetLog("Do GearUp result : " & String($bRet), $COLOR_INFO)
 					ClickMainBuilder()
+					Return $aBuilding
 				EndIf
 				ContinueLoop ;skip geared and new
 			EndIf
