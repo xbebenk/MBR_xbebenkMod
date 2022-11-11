@@ -176,12 +176,8 @@ Func IsLaunchAttackPage()
 EndFunc   ;==>IsLaunchAttackPage
 
 Func IsMultiplayerTabOpen()
-	If QuickMIS("BC1", $g_sImgIsMultiplayerTab, 4,46,258,680) Then 
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(100) Then Return False
-		SetLog("Opened Multiplayer Tab!", $COLOR_INFO)
-		Return True
-	Else
+	Local $aCheckPixel[4] = [525, 55, 0xD8A61E, 20]
+	If _CheckPixel($aCheckPixel, True) Then
 		SetDebugLog("Multiplayer Tab is open", $COLOR_INFO)
 		Return True
 	EndIf

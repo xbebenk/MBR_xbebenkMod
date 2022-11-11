@@ -20,7 +20,7 @@ Func DoubleTrain()
 	If isProblemAffect(True) Then Return
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
 
-	If $bDebug then SetLog(" == Double Train Army == ", $COLOR_ACTION)
+	SetLog(" ====== Double Train ====== ", $COLOR_ACTION)
 
 	Local $bNeedReCheckTroopTab = False, $bNeedReCheckSpellTab = False
 
@@ -58,7 +58,7 @@ Func DoubleTrain()
 			If CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) Then
 				If $bDebug Then SetLog($Step & ". CheckQueueAndTrainRemain() done!", $COLOR_DEBUG)
 			Else
-				If Not $g_bIgnoreIncorrectTroopCombo And Not $g_bUseQueuedTroopSpell Then
+				If Not $g_bIgnoreIncorrectTroopCombo Then
 					RemoveExtraTroopsQueue()
 					If _Sleep(500) Then Return
 					If $bDebug Then SetLog($Step & ". RemoveExtraTroopsQueue()", $COLOR_DEBUG)
@@ -114,7 +114,7 @@ Func DoubleTrain()
 					If $SpellCamp[0] < ($SpellCamp[1] + $iUnbalancedSpell) * 2 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 					If $bDebug Then SetLog($Step & ". CheckQueueSpellAndTrainRemain() done!", $COLOR_DEBUG)
 				Else
-					If Not $g_bIgnoreIncorrectSpellCombo And Not $g_bUseQueuedTroopSpell Then
+					If Not $g_bIgnoreIncorrectSpellCombo Then
 						RemoveExtraTroopsQueue()
 						If _Sleep(500) Then Return
 						If $bDebug Then SetLog($Step & ". RemoveExtraTroopsQueue()", $COLOR_DEBUG)

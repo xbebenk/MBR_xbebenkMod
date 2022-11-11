@@ -36,3 +36,12 @@ Func GetSlotPosition($iSlotIndex, $bOCRPosition = False)
 	EndIf
 	Return $aiReturnPosition
 EndFunc   ;==>GetSlotPosition
+
+Func GetSlotTroopName($iSlotIndex)
+	If $iSlotIndex < 0 Or $iSlotIndex > UBound($g_avAttackTroops, 1) - 1 Then 
+		SetDebugLog("GetSlotTroopName(" & $iSlotIndex & "): Invalid slot index: " & $iSlotIndex)
+		Return "Unknown"
+	EndIf
+		
+	Return GetTroopName($g_avAttackTroops[$iSlotIndex][0])
+EndFunc   ;==>GetSlotTroopName

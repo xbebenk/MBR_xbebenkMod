@@ -155,27 +155,27 @@ Func CreateMiscNormalVillageSubTab()
 
 		$g_hChkCollectStarBonus = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectStarBonus", "When star bonus available"), $x - 5 , $y + 20, -1, -1)
 
-	;$x += 80
-	;	GUICtrlCreateLabel("<", $x , $y + 2, -1, -1)
-	;	$g_ahTxtResumeAttackLoot[$eLootGold] = GUICtrlCreateInput("", $x + 10, $y, 70, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-	;	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkResumeAttackTip_02", -1))
-	;	GUICtrlSetLimit(-1, 8)
-	;	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 80, $y, 16, 16)
-	;
-	;$x += 100
-	;	GUICtrlCreateLabel("<", $x, $y + 2, -1, -1)
-	;	$g_ahTxtResumeAttackLoot[$eLootElixir] = GUICtrlCreateInput("", $x + 10, $y, 70, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-	;	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkResumeAttackTip_02", -1))
-	;	GUICtrlSetLimit(-1, 8)
-	;	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 80, $y, 16, 16)
-	;
-	;$x += 100
-	;	GUICtrlCreateLabel("<", $x, $y + 2, -1, -1)
-	;	$g_ahTxtResumeAttackLoot[$eLootDarkElixir] = GUICtrlCreateInput("", $x + 10, $y, 57, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-	;	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkResumeAttackTip_02", -1))
-	;	GUICtrlSetLimit(-1, 6)
-	;	_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 70, $y, 16, 16)
-	;
+	$x += 80
+		GUICtrlCreateLabel("<", $x , $y + 2, -1, -1)
+		$g_ahTxtResumeAttackLoot[$eLootGold] = GUICtrlCreateInput("", $x + 10, $y, 70, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkResumeAttackTip_02", -1))
+		GUICtrlSetLimit(-1, 8)
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 80, $y, 16, 16)
+	
+	$x += 100
+		GUICtrlCreateLabel("<", $x, $y + 2, -1, -1)
+		$g_ahTxtResumeAttackLoot[$eLootElixir] = GUICtrlCreateInput("", $x + 10, $y, 70, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkResumeAttackTip_02", -1))
+		GUICtrlSetLimit(-1, 8)
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 80, $y, 16, 16)
+	
+	$x += 100
+		GUICtrlCreateLabel("<", $x, $y + 2, -1, -1)
+		$g_ahTxtResumeAttackLoot[$eLootDarkElixir] = GUICtrlCreateInput("", $x + 10, $y, 57, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkResumeAttackTip_02", -1))
+		GUICtrlSetLimit(-1, 6)
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 70, $y, 16, 16)
+	
 	$x = 15
 	$y += 45
         GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBotWillHaltAutomatically", "The bot will Halt automatically when you run out of Resources. It will resume when reaching these minimal values:"), $x + 20, $y, 400, 25, $BS_MULTILINE)
@@ -582,7 +582,7 @@ Func CreateMiscModSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 10, $y - 15, 210, 135)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 10, $y - 15, 210, 115)
 		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo", "Ignore Bad Troop Combo"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "If Enabled DoubleTrain, Wont Empty Queued Troop, will Disable Precise Army"))
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
@@ -610,13 +610,9 @@ Func CreateMiscModSubTab()
 		Next
 		GUICtrlSetData(-1, $sCmbTxt, "Lightning Spell")
 		GUICtrlSetState(-1, $GUI_DISABLE)
-	$y += 23
-		$g_hUseQueuedTroopSpell = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "UseQueuedTroopSpell", "Dont Remove Queued Troop/Spell"), $x, $y, -1, -1)
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_03", "If enabled, will not remove queued troop on every check train"))
-		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$y += 48
+	$y += 50
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Train"), $x - 10, $y - 15, 210, 40)
 		$g_hChkMMTrainPreviousArmy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTrainPreviousArmy", "Train Previous Army"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "Will Use Train Previous Army"))

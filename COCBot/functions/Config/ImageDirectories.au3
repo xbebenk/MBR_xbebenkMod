@@ -187,7 +187,6 @@ Global $g_sImgDelQueue = @ScriptDir & "\imgxml\Train\Delete\"
 Global $g_sImgAttackBarDir = @ScriptDir & "\imgxml\AttackBar"
 Global $g_sImgSwitchSiegeMachine = @ScriptDir & "\imgxml\SwitchSiegeMachines\"
 Global $g_sImgSwitchWardenMode = @ScriptDir & "\imgxml\SwitchWardenMode"
-Global $g_sImgIsMultiplayerTab = @ScriptDir & "\imgxml\Attack\Search"
 #EndRegion
 
 #Region Search

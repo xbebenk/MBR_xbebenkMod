@@ -121,30 +121,22 @@ EndFunc   ;==>LocatePetHouse
 Func ImgLocatePetHouse()
 	Local $sImgDir = @ScriptDir & "\imgxml\Buildings\PetHouse\"
 
-	Local $sSearchArea = "FV"
-	Local $avPetHouse = findMultiple($sImgDir, $sSearchArea, $sSearchArea, 0, 1000, 1, "objectname,objectpoints", True)
+	Local $avPetHouse = QuickMIS("CNX", $sImgDir)
 
 	If Not IsArray($avPetHouse) Or UBound($avPetHouse, $UBOUND_ROWS) <= 0 Then
 		SetLog("Couldn't find Pet House on main village", $COLOR_ERROR)
 		If $g_bDebugImageSave Then SaveDebugImage("PetHouse", False)
 		Return False
+	Else
+		For $i = 0 To UBound($avPetHouse) - 1
+			If StringInStr($avPetHouse[$i][0], "PetHouse") Then 
+				$g_aiPetHousePos[0] = $avPetHouse[$i][1]
+				$g_aiPetHousePos[1] = $avPetHouse[$i][2]
+				SetLog("PetHouse Search find : " & _ArrayToString($g_aiPetHousePos))
+				Return True
+			EndIf
+		Next
 	EndIf
 
-	Local $avPetHouseRes, $aiPetHouseCoords
-	
-	; active/inactive Pet House have different images
-	; loop thro the detected images
-	For $i = 0 To UBound($avPetHouse, $UBOUND_ROWS) - 1
-		$avPetHouseRes = $avPetHouse[$i]
-		SetLog("PetHouse Search find : " & $avPetHouseRes[0])
-		$aiPetHouseCoords = decodeSingleCoord($avPetHouseRes[1])
-	Next
-
-	If IsArray($aiPetHouseCoords) And UBound($aiPetHouseCoords, $UBOUND_ROWS) > 1 Then
-		$g_aiPetHousePos[0] = $aiPetHouseCoords[0]
-		$g_aiPetHousePos[1] = $aiPetHouseCoords[1]
-		Return True
-	EndIf
-	
 	Return False
 EndFunc

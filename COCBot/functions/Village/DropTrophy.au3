@@ -324,7 +324,13 @@ Func aaaaaa()
 					If IsArray($DP) And UBound($DP) > 0 Then
 						Local $iRandomXY = Round(Random(0, UBound($DP) - 1)) ;pick random point from nearpoint list
 						Local $tmp = StringSplit($DP[$iRandomXY], ",", $STR_NOCOUNT)
-						_ArrayAdd($aDP, $all[$x][4] & "|" & $tmp[0] & "|" & $tmp[1])
+						If IsArray($tmp) And UBound($tmp) > 0 Then
+							_ArrayAdd($aDP, $all[$x][4] & "|" & $tmp[0] & "|" & $tmp[1])
+						Else
+							SetLog("Something wrong on NearPoints calculations", $COLOR_ERROR)
+							SetLog("Fallback to normal DropTrophy", $COLOR_SUCCESS)
+							Return False
+						EndIf
 					Else
 						SetLog("Not array $DP", $COLOR_ERROR)
 					EndIf
@@ -340,6 +346,10 @@ Func aaaaaa()
 				$iSBarbCount -= 2
 			Next
 			_Sleep(15000) ;just add delay after deploy SBarb
+		Else
+			SetLog("No Super Barbarian found", $COLOR_ERROR)
+			SetLog("Fallback to normal DropTrophy", $COLOR_SUCCESS)
+			Return False
 		EndIf
 		
 		Local $ZapFound = False

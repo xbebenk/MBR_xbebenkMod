@@ -537,7 +537,6 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "FillIncorrectTroopCombo", $g_iCmbFillIncorrectTroopCombo)
 	_Ini_Add("other", "IgnoreIncorrectSpellCombo", $g_bIgnoreIncorrectSpellCombo)
 	_Ini_Add("other", "FillIncorrectSpellCombo", $g_iCmbFillIncorrectSpellCombo)
-	_Ini_Add("other", "UseQueuedTroopSpell", $g_bUseQueuedTroopSpell)
 	_Ini_Add("other", "TrainPreviousArmy", $g_bTrainPreviousArmy)
 	_Ini_Add("other", "SkipWallPlacingOnBB", $g_bSkipWallPlacingOnBB)
 	_Ini_Add("other", "CheckDonateEarly", $g_bDonateEarly)
@@ -764,10 +763,6 @@ Func SaveConfig_600_17()
 		$string &= $g_aUpgradeWall[$i] & "|"
 	Next
 	_Ini_Add("upgrade", "UpgradeWall", $string)
-
-	For $i = 4 To 15
-		_Ini_Add("Walls", "Wall" & StringFormat("%02d", $i), $g_aiWallsCurrentCount[$i])
-	Next
 	_Ini_Add("upgrade", "WallCost", $g_iWallCost)
 EndFunc   ;==>SaveConfig_600_17
 
@@ -1025,6 +1020,7 @@ Func SaveConfig_600_29_DB()
 	_Ini_Add("attack", "DBHasteSpell", $g_abAttackUseHasteSpell[$DB] ? 1 : 0)
 	_Ini_Add("attack", "DBCloneSpell", $g_abAttackUseCloneSpell[$DB] ? 1 : 0)
 	_Ini_Add("attack", "DBInvisibilitySpell", $g_abAttackUseInvisibilitySpell[$DB] ? 1 : 0)
+	_Ini_Add("attack", "DBRecallSpell", $g_abAttackUseRecallSpell[$DB] ? 1 : 0)
 	_Ini_Add("attack", "DBSkeletonSpell", $g_abAttackUseSkeletonSpell[$DB] ? 1 : 0)
 	_Ini_Add("attack", "DBBatSpell", $g_abAttackUseBatSpell[$DB] ? 1 : 0)
 
@@ -1084,6 +1080,7 @@ Func SaveConfig_600_29_LB()
 	_Ini_Add("attack", "ABFreezeSpell", $g_abAttackUseFreezeSpell[$LB] ? 1 : 0)
 	_Ini_Add("attack", "ABCloneSpell", $g_abAttackUseCloneSpell[$LB] ? 1 : 0)
 	_Ini_Add("attack", "ABInvisibilitySpell", $g_abAttackUseInvisibilitySpell[$LB] ? 1 : 0)
+	_Ini_Add("attack", "ABRecallSpell", $g_abAttackUseRecallSpell[$LB] ? 1 : 0)
 	_Ini_Add("attack", "ABPoisonSpell", $g_abAttackUsePoisonSpell[$LB] ? 1 : 0)
 	_Ini_Add("attack", "ABEarthquakeSpell", $g_abAttackUseEarthquakeSpell[$LB] ? 1 : 0)
 	_Ini_Add("attack", "ABHasteSpell", $g_abAttackUseHasteSpell[$LB] ? 1 : 0)
@@ -1241,12 +1238,7 @@ Func SaveConfig_600_35_1()
 	_Ini_Add("other", "ChkAutoResume", $g_bAutoResumeEnable ? 1 : 0)
 	_Ini_Add("other", "AutoResumeTime", $g_iAutoResumeTime)
 	_Ini_Add("other", "ChkDisableNotifications", $g_bDisableNotifications)
-	_Ini_Add("other", "ChkFixClanCastle", $g_bForceClanCastleDetection ? 1 : 0)
 	_Ini_Add("other", "ChkSqlite", $g_bUseStatistics ? 1 : 0)
-
-	_Ini_Add("ProfileSCID", "OnlySCIDAccounts", $g_bOnlySCIDAccounts ? 1 : 0)
-	_Ini_Add("ProfileSCID", "WhatSCIDAccount2Use", $g_iWhatSCIDAccount2Use)
-
 EndFunc   ;==>SaveConfig_600_35_1
 
 Func SaveConfig_600_35_2()

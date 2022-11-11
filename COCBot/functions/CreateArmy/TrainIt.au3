@@ -24,7 +24,6 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 
 		Local $aTrainPos = GetTrainPos($iIndex)
 		If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
-			$g_bAllBarracksUpgd = False
 			If _ColorCheck(_GetPixelColor($aTrainPos[0], $aTrainPos[1], $g_bCapturePixel), Hex($aTrainPos[2], 6), $aTrainPos[3]) Then
 				Local $FullName = GetFullName($iIndex, $aTrainPos)
 				If IsArray($FullName) Then
@@ -64,21 +63,12 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 			EndIf
 		Else
 			If UBound($aTrainPos) > 0 And $aTrainPos[0] = -1 Then
-				If $i < 5 Then
-					ForceCaptureRegion()
-				Else
-					If $g_bDebugSetlogTrain Then SaveDebugImage("TroopIconNotFound_" & GetTroopName($iIndex))
-					SetLog("TrainIt troop position " & GetTroopName($iIndex) & " did not find icon", $COLOR_ERROR)
-					If $i = 5 Then
-						SetLog("Seems all your barracks are upgrading!", $COLOR_ERROR)
-						$g_bAllBarracksUpgd = True
-					EndIf
-				EndIf
+				If $g_bDebugSetlogTrain Then SaveDebugImage("TroopIconNotFound_" & GetTroopName($iIndex))
+				SetLog("TrainIt troop position " & GetTroopName($iIndex) & " did not find icon", $COLOR_ERROR)
 			Else
 				SetLog("Impossible happened? TrainIt troop position " & GetTroopName($iIndex) & " did not return array", $COLOR_ERROR)
 			EndIf
 		EndIf
-
 	Next ; Until $iErrors = 0
 EndFunc   ;==>TrainIt
 

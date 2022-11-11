@@ -248,11 +248,6 @@ Func CreateBotOptions()
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR Global GUI Design", "min.", -1), $x + 167, $y + 3, -1, -1)
 
 	$y += 20
-		$g_hChkFixClanCastle = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkFixClanCastle", "Force Clan Castle Detection"), $x, $y + 2, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkFixClanCastle_Info_01", "If clan Castle it is undetected and it is NOT placed in the last slot, force bot to consider the undetected slot as Clan Castle"))
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
-
-	$y += 20
 		$g_hChkSqlite = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkSqlite", "Use SQLite for statistics"), $x, $y + 2, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkSqlite_Info_01", "Will collect data from attacks to SQlite, exporting to CSV.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Bot - Options", "ChkSqlite_Info_02", "Excellent to use with Smart-Farm, to collect sides, resources inside and outside, etc."))

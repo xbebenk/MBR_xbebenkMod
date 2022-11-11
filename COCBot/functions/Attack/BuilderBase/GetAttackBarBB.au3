@@ -328,7 +328,7 @@ Func CorrectAttackBarBB(ByRef $aAvailableTroops)
 			_ArraySort($aNewAvailableTroops, 0, 0, 0, 1)
 			SetDebugLog("New Army is " & _ArrayToString($aNewAvailableTroops, "-", -1, -1, "|", -1, -1), $COLOR_INFO)
 		Else
-			Click(8, 720, 1)
+			Click($aSwicthBtn[$aWrongCamps[0]], $iDefaultY)
 			Return False
 		EndIf
 	WEnd
@@ -336,7 +336,7 @@ Func CorrectAttackBarBB(ByRef $aAvailableTroops)
 
 	If $bWaschanged Then
 		If QuickMIS("N1", $g_sImgCustomArmyBB, 60, 632, 800, 666) = "ChangeTDis" Then
-			Click(8, 720, 1)
+			Click($aSwicthBtn[$aWrongCamps[0]], $iDefaultY)
 		EndIf
 	Else
 		Return False

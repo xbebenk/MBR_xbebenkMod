@@ -118,11 +118,6 @@ Func CheckSwitchAcc()
 		SetLog("Still waiting for CC Troops/Spells, switching to another Account", $COLOR_ACTION)
 		SetSwitchAccLog(" - Waiting for CC")
 		$bForceSwitch = True
-	ElseIf $g_bAllBarracksUpgd Then ;Check if all barrack are upgrading, no army can be train --> Force Switch account
-		SetLog("Seems all your barracks are upgrading", $COLOR_INFO)
-		SetLog("No troops can be trained, let's switch account", $COLOR_INFO)
-		SetSwitchAccLog(" - All Barracks Upgrading, Force switch")
-		$bForceSwitch = True
 	Else
 		getArmyTroopTime(True, False) ; update $g_aiTimeTrain[0]
 
@@ -985,41 +980,6 @@ Func CheckLoginWithSupercellID()
 
 	Return $bResult
 EndFunc   ;==>CheckLoginWithSupercellID
-
-Func CheckLoginWithSupercellIDScreen()
-
-	Local $bResult = False
-	Local $aSearchForAccount, $aCoordinates[0][2], $aTempArray
-	Local $acount = $g_iWhatSCIDAccount2Use
-
-	If $g_bChkSuperCellID And ProfileSwitchAccountEnabled() Then
-		$acount = $g_iCurAccount
-	EndIf
-
-	; Account List check be there, validate with imgloc
-	If UBound(decodeSingleCoord(FindImageInPlace("LoginWithSupercellID", $g_sImgLoginWithSupercellID, "318,678(125,30)", False))) > 1 Then
-		; Google Account selection found
-		SetLog("Verified Log in with Supercell ID boot screen for login")
-
-		Click($aLoginWithSupercellID[0], $aLoginWithSupercellID[1], 1, 0, "Click Log in with SC_ID")
-		If _Sleep(2000) Then Return
-
-		$bResult = True
-		Switch SwitchCOCAcc_ClickAccountSCID($bResult, $acount, 1)
-			Case "OK"
-				; all good
-			Case "Error"
-				; some problem
-				Return
-			Case "Exit"
-				; no $g_bRunState
-				Return
-		EndSwitch
-	Else
-		SetDebugLog("Log in with Supercell ID boot screen not verified for login")
-	EndIf
-
-EndFunc   ;==>CheckLoginWithSupercellIDScreen
 
 Func SwitchAccountCheckProfileInUse($sNewProfile)
 	; now check if profile is used in another group

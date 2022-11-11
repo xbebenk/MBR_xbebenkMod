@@ -570,50 +570,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 
 	SetDebugLog("Giants : " & $GiantComp & "  , per side: " & ($GiantComp / $nbSides) & " / deploy points per side: " & $g_iSlotsGiants)
 
-	If $g_bCustomDropOrderEnable Then
-		Local $listInfoDeploy[41][5] = [[MatchTroopDropName(0), $nbSides, MatchTroopWaveNb(0), 1, MatchSlotsPerEdge(0)], _
-				[MatchTroopDropName(1), $nbSides, MatchTroopWaveNb(1), 1, MatchSlotsPerEdge(1)], _
-				[MatchTroopDropName(2), $nbSides, MatchTroopWaveNb(2), 1, MatchSlotsPerEdge(2)], _
-				[MatchTroopDropName(3), $nbSides, MatchTroopWaveNb(3), 1, MatchSlotsPerEdge(3)], _
-				[MatchTroopDropName(4), $nbSides, MatchTroopWaveNb(4), 1, MatchSlotsPerEdge(4)], _
-				[MatchTroopDropName(5), $nbSides, MatchTroopWaveNb(5), 1, MatchSlotsPerEdge(5)], _
-				[MatchTroopDropName(6), $nbSides, MatchTroopWaveNb(6), 1, MatchSlotsPerEdge(6)], _
-				[MatchTroopDropName(7), $nbSides, MatchTroopWaveNb(7), 1, MatchSlotsPerEdge(7)], _
-				[MatchTroopDropName(8), $nbSides, MatchTroopWaveNb(8), 1, MatchSlotsPerEdge(8)], _
-				[MatchTroopDropName(9), $nbSides, MatchTroopWaveNb(9), 1, MatchSlotsPerEdge(9)], _
-				[MatchTroopDropName(10), $nbSides, MatchTroopWaveNb(10), 1, MatchSlotsPerEdge(10)], _
-				[MatchTroopDropName(11), $nbSides, MatchTroopWaveNb(11), 1, MatchSlotsPerEdge(11)], _
-				[MatchTroopDropName(12), $nbSides, MatchTroopWaveNb(12), 1, MatchSlotsPerEdge(12)], _
-				[MatchTroopDropName(13), $nbSides, MatchTroopWaveNb(13), 1, MatchSlotsPerEdge(13)], _
-				[MatchTroopDropName(14), $nbSides, MatchTroopWaveNb(14), 1, MatchSlotsPerEdge(14)], _
-				[MatchTroopDropName(15), $nbSides, MatchTroopWaveNb(15), 1, MatchSlotsPerEdge(15)], _
-				[MatchTroopDropName(16), $nbSides, MatchTroopWaveNb(16), 1, MatchSlotsPerEdge(16)], _
-				[MatchTroopDropName(17), $nbSides, MatchTroopWaveNb(17), 1, MatchSlotsPerEdge(17)], _
-				[MatchTroopDropName(18), $nbSides, MatchTroopWaveNb(18), 1, MatchSlotsPerEdge(18)], _
-				[MatchTroopDropName(19), $nbSides, MatchTroopWaveNb(19), 1, MatchSlotsPerEdge(19)], _
-				[MatchTroopDropName(20), $nbSides, MatchTroopWaveNb(20), 1, MatchSlotsPerEdge(20)], _
-				[MatchTroopDropName(21), $nbSides, MatchTroopWaveNb(21), 1, MatchSlotsPerEdge(21)], _
-				[MatchTroopDropName(22), $nbSides, MatchTroopWaveNb(22), 1, MatchSlotsPerEdge(22)], _
-				[MatchTroopDropName(23), $nbSides, MatchTroopWaveNb(23), 1, MatchSlotsPerEdge(23)], _
-				[MatchTroopDropName(24), $nbSides, MatchTroopWaveNb(24), 1, MatchSlotsPerEdge(24)], _
-				[MatchTroopDropName(25), $nbSides, MatchTroopWaveNb(25), 1, MatchSlotsPerEdge(25)], _
-				[MatchTroopDropName(26), $nbSides, MatchTroopWaveNb(26), 1, MatchSlotsPerEdge(26)], _
-				[MatchTroopDropName(27), $nbSides, MatchTroopWaveNb(27), 1, MatchSlotsPerEdge(27)], _
-				[MatchTroopDropName(28), $nbSides, MatchTroopWaveNb(28), 1, MatchSlotsPerEdge(28)], _
-				[MatchTroopDropName(29), $nbSides, MatchTroopWaveNb(29), 1, MatchSlotsPerEdge(29)], _
-				[MatchTroopDropName(30), $nbSides, MatchTroopWaveNb(30), 1, MatchSlotsPerEdge(30)], _
-				[MatchTroopDropName(31), $nbSides, MatchTroopWaveNb(31), 1, MatchSlotsPerEdge(31)], _
-				[MatchTroopDropName(32), $nbSides, MatchTroopWaveNb(32), 1, MatchSlotsPerEdge(32)], _
-				[MatchTroopDropName(33), $nbSides, MatchTroopWaveNb(33), 1, MatchSlotsPerEdge(33)], _
-				[MatchTroopDropName(34), $nbSides, MatchTroopWaveNb(34), 1, MatchSlotsPerEdge(34)], _
-				[MatchTroopDropName(35), $nbSides, MatchTroopWaveNb(35), 1, MatchSlotsPerEdge(35)], _
-				[MatchTroopDropName(36), $nbSides, MatchTroopWaveNb(36), 1, MatchSlotsPerEdge(36)], _
-				[MatchTroopDropName(37), $nbSides, MatchTroopWaveNb(37), 1, MatchSlotsPerEdge(37)], _
-				[MatchTroopDropName(38), $nbSides, MatchTroopWaveNb(38), 1, MatchSlotsPerEdge(38)], _
-				[MatchTroopDropName(39), $nbSides, MatchTroopWaveNb(39), 1, MatchSlotsPerEdge(39)], _
-				[MatchTroopDropName(40), $nbSides, MatchTroopWaveNb(40), 1, MatchSlotsPerEdge(40)]]
-	Else
-		Local $listInfoDeploy[45][5] = [[$eGole, $nbSides, 1, 1, 2] _
+	Local $listInfoDeploy[45][5] = [[$eGole, $nbSides, 1, 1, 2] _
 				, [$eLava, $nbSides, 1, 1, 2] _
 				, [$eIceH, $nbSides, 1, 1, 2] _
 				, [$eIceG, $nbSides, 1, 1, 2] _
@@ -658,8 +615,40 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, [$eHunt, $nbSides, 1, 1, 0] _
 				, ["CC", 1, 1, 1, 1] _
 				, ["HEROES", 1, 2, 1, 1]]
+	If $g_bCustomDropOrderEnable Then
+		Local $aTmpDelete
+		Local $aTmpListInfoDeploy = $listInfoDeploy
+		;AttackSmartFarm(4, "TL|BR|BL|TR")
+		;_ArrayDisplay($aTmpListInfoDeploy, "aTmpListInfoDeploy1")
+		For $i = 0 To UBound($g_ahCmbDropOrder) - 1
+			Local $iValue = $g_aiCmbCustomDropOrder[$i]
+			If $g_bDebugSmartFarm Then SetLog("iValue : " & $iValue & " [" & GetTroopName($iValue) & "]")
+			If $iValue <> -1 And $iValue < $eKing Then
+				Local $iDelete = _ArraySearch($aTmpListInfoDeploy, $iValue, 0, 0, 0, 0, 1, 0)
+				If $g_bDebugSmartFarm Then SetLog("iDelete : " & $iDelete)
+				Local $troop = $aTmpListInfoDeploy[$i][0]
+				Local $nside1 = $aTmpListInfoDeploy[$i][1]
+				Local $wave = $aTmpListInfoDeploy[$i][2]
+				Local $x = $aTmpListInfoDeploy[$i][3]
+				Local $slotedge = $aTmpListInfoDeploy[$i][4]
+				
+				$aTmpListInfoDeploy[$i][0] = $aTmpListInfoDeploy[$iDelete][0]
+				$aTmpListInfoDeploy[$i][1] = $aTmpListInfoDeploy[$iDelete][1]
+				$aTmpListInfoDeploy[$i][2] = $aTmpListInfoDeploy[$iDelete][2]
+				$aTmpListInfoDeploy[$i][3] = $aTmpListInfoDeploy[$iDelete][3]
+				$aTmpListInfoDeploy[$i][4] = $aTmpListInfoDeploy[$iDelete][4]
+				
+				$aTmpListInfoDeploy[$iDelete][0] = $troop
+				$aTmpListInfoDeploy[$iDelete][1] = $nside1
+				$aTmpListInfoDeploy[$iDelete][2] = $wave
+				$aTmpListInfoDeploy[$iDelete][3] = $x
+				$aTmpListInfoDeploy[$iDelete][4] = $slotedge
+			EndIf
+		Next
+		$listInfoDeploy = $aTmpListInfoDeploy
 	EndIf
-
+	;_ArrayDisplay($listInfoDeploy, "listInfoDeploy")
+	
 	$g_bIsCCDropped = False
 	$g_aiDeployCCPosition[0] = -1
 	$g_aiDeployCCPosition[1] = -1
@@ -716,7 +705,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 		Local $waveNb = $listInfoDeploy[$i][2] ; waves
 		Local $maxWaveNb = $listInfoDeploy[$i][3] ; Max waves
 		Local $slotsPerEdge = $listInfoDeploy[$i][4] ; deploy Points per Edge
-		SetDebugLog("**ListInfoDeploy row " & $i & ": USE " & GetTroopName($troopKind, 0) & " SIDES " & $nbSides & " WAVE " & $waveNb & " XWAVE " & $maxWaveNb & " SLOTXEDGE " & $slotsPerEdge, $COLOR_DEBUG)
+		SetDebugLog("**ListInfoDeploy row " & $i & ": USE " & "[" & $troopKind & "] " & GetTroopName($troopKind, 0) & " SIDES " & $nbSides & " WAVE " & $waveNb & " XWAVE " & $maxWaveNb & " SLOTXEDGE " & $slotsPerEdge, $COLOR_DEBUG)
 
 		; Regular Troops , not Heroes or Castle
 		If (IsNumber($troopKind)) Then
@@ -835,7 +824,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 			If Not (IsString($infoPixelDropTroop[0]) And ($infoPixelDropTroop[0] = "CC" Or $infoPixelDropTroop[0] = "HEROES")) Then
 				Local $numberLeft = ReadTroopQuantity($infoPixelDropTroop[0])
 				If $g_bDebugSetlog Then
-					Local $aiSlotPos = GetSlotPosition($infoDropTroop[0])
+					Local $aiSlotPos = GetSlotPosition($infoPixelDropTroop[0])
 					SetDebugLog("Slot Nun= " & $infoPixelDropTroop[0])
 					SetDebugLog("Slot Xaxis= " & $aiSlotPos[0])
 				    SetDebugLog($infoPixelDropTroop[5] & " - NumberLeft : " & $numberLeft)
@@ -867,7 +856,7 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 
 	If ($number > 0 And $nbTroopsPerEdge = 0) Then $nbTroopsPerEdge = 1
 
-	If $g_bDebugSmartFarm Then Setlog(" - " & GetTroopName($troop) & " Number: " & $number & " Sides: " & $nbSides & " SlotsPerEdge: " & $slotsPerEdge)
+	If $g_bDebugSmartFarm Then Setlog(" - " & GetSlotTroopName($troop) & " Number: " & $number & " Sides: " & $nbSides & " SlotsPerEdge: " & $slotsPerEdge)
 
 	If $nbSides = 4 Then
 		; $listInfoPixelDropTroop = [$newPixelBottomRight, $newPixelTopLeft, $newPixelBottomLeft, $newPixelTopRight]
@@ -916,8 +905,9 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 EndFunc   ;==>DropTroopSmartFarm
 
 Func TestSF()
-	PrepareAttack($g_iMatchMode)
+	PrepareAttack($DB)
 	Local $Nside = ChkSmartFarm()
 	AttackSmartFarm($Nside[1], $Nside[2])
 	ReturnHome()
 EndFunc
+

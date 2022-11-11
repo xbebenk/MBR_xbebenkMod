@@ -17,12 +17,12 @@ Global Const $TELEGRAM_URL = "https://api.telegram.org/bot"
 Global Const $HTTP_STATUS_OK = 200
 
 Func NotifyRemoteControl()
-	SetDebugLog("Notify | NotifyRemoteControl()")
+	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyRemoteControl()")
 	If $g_bNotifyRemoteEnable = True Then NotifyRemoteControlProc()
 EndFunc   ;==>NotifyRemoteControl
 
 Func NotifyReport()
-	SetDebugLog("Notify | NotifyReport()")
+	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyReport()")
 	If $g_bNotifyAlertVillageReport = True Then
 		Local $text = $g_sNotifyOrigin & ":" & "%0A"
 		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold])
@@ -48,13 +48,13 @@ EndFunc   ;==>NotifyReport
 
 ; GENERAL FUNCTION TO PUSH MSG
 Func PushMsg($Message, $Source = "")
-	SetDebugLog("Notify | PushMsg()")
+	If $g_bDebugSetlog Then SetDebugLog("Notify | PushMsg()")
 	NotifyPushMessageToBoth($Message, $Source)
 EndFunc   ;==>PushMsg
 
 ; EXECUTE NOTIFY PENDING ACTIONS
 Func NotifyPendingActions()
-	SetDebugLog("Notify | NotifyPendingActions()")
+	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyPendingActions()")
 	If ($g_bNotifyTGEnable = False Or $g_sNotifyTGToken = "") Then Return
 
 	NotifyRemoteControl()
@@ -105,7 +105,7 @@ EndFunc   ;==>NotifyPushToTelegram
 ; ONLY PUSH TELEGRAM FILES
 Func NotifyPushFileToTelegram($File, $Folder, $FileType, $body)
 
-	SetDebugLog("Notify | NotifyPushFileToTelegram($File, $Folder, $FileType, $body): " & $File & "," & $Folder & "," & $FileType & "," & $body)
+	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyPushFileToTelegram($File, $Folder, $FileType, $body): " & $File & "," & $Folder & "," & $FileType & "," & $body)
 
 	If Not $g_bNotifyTGEnable Or $g_sNotifyTGToken = "" Then Return
 
@@ -141,7 +141,7 @@ EndFunc   ;==>NotifyPushFileToTelegram
 
 ; GET LAST MSG ID USED AT MainLoop()
 Func NotifyGetLastMessageFromTelegram()
-	SetDebugLog("Notify | NotifyGetLastMessageFromTelegram()")
+	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyGetLastMessageFromTelegram()")
 
 	Local $TGLastMessage = ""
 	If Not $g_bNotifyTGEnable Or $g_sNotifyTGToken = "" Then Return
@@ -157,7 +157,7 @@ Func NotifyGetLastMessageFromTelegram()
 	; Convert Binary to String/Json Format
 	Local $sCorrectStdOut = BinaryToString($SdtOut)
 	If @error Or $sCorrectStdOut = "" Then Return
-	SetDebugLog("Notify | getUpdates(): " & $sCorrectStdOut)
+	If $g_bDebugSetlog Then SetDebugLog("Notify | getUpdates(): " & $sCorrectStdOut)
 	; Parse user_id from Json Format
 	Local $chat_id = _StringBetween($sCorrectStdOut, 'from":{"id":', ',"is_bot":')
 	If @error Or Not IsArray($chat_id) Then Return
@@ -182,7 +182,7 @@ Func NotifyGetLastMessageFromTelegram()
 	Local $SdtOut = InetRead("https://api.telegram.org/bot" & $g_sNotifyTGToken & "/getupdates?offset=" & $g_sTGLast_UID, $INET_FORCERELOAD)
 	If @error Or $SdtOut = "" Then Return
 	Local $sCorrectStdOut = BinaryToString($SdtOut)
-	SetDebugLog("Notify | getupdates?offset=" & $g_sTGLast_UID & " : " & $sCorrectStdOut)
+	If $g_bDebugSetlog Then SetDebugLog("Notify | getupdates?offset=" & $g_sTGLast_UID & " : " & $sCorrectStdOut)
 
 	; Parse message text from Json Format
 	Local $msg = _StringBetween($sCorrectStdOut, '"text":"', '"')
@@ -198,7 +198,7 @@ EndFunc   ;==>NotifyGetLastMessageFromTelegram
 
 ; SENDING CUSTOM KEYBOARD
 Func NotifyActivateKeyboardOnTelegram($TGMsg)
-	SetDebugLog("Notify | NotifyActivateKeyboardOnTelegram($TGMsg): " & $TGMsg)
+	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyActivateKeyboardOnTelegram($TGMsg): " & $TGMsg)
 
 	If $TGMsg = "" Or $g_sNotifyTGToken = "" Or $g_sTGChatID = "" Then Return False
 	Local $ReplayMarkup = '{"keyboard": [["' & _
@@ -236,9 +236,9 @@ Func NotifyRemoteControlProcBtnStart()
 		$g_sTGLastMessage = NotifyGetLastMessageFromTelegram()
 		If $g_sTGLastMessage = "" Then Return
 		Local $TGActionMSG = StringUpper(StringStripWS($g_sTGLastMessage, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)) ;upercase & remove space laset message
-		SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $TGActionMSG : " & $TGActionMSG)
-		SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $g_iTGLastRemote : " & $g_iTGLastRemote)
-		SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $g_sTGLast_UID : " & $g_sTGLast_UID)
+		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $TGActionMSG : " & $TGActionMSG)
+		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $g_iTGLastRemote : " & $g_iTGLastRemote)
+		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $g_sTGLast_UID : " & $g_sTGLast_UID)
 		If $g_iTGLastRemote <> $g_sTGLast_UID Then
 			$g_iTGLastRemote = $g_sTGLast_UID
 
@@ -256,7 +256,7 @@ EndFunc   ;==>NotifyRemoteControlProcBtnStart
 
 ; CONTROL TELEGRAM : REMOTE CONTROL
 Func NotifyRemoteControlProc()
-	SetDebugLog("Notify | NotifyRemoteControlProc()")
+	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyRemoteControlProc()")
 	Static $bShutdown = False
 	Static $bHibernate = False
 	Static $bStandby = False
@@ -266,9 +266,9 @@ Func NotifyRemoteControlProc()
 	If $g_bNotifyTGEnable And $g_sNotifyTGToken <> "" And $g_bRunState Then
 		$g_sTGLastMessage = NotifyGetLastMessageFromTelegram()
 		Local $TGActionMSG = StringUpper(StringStripWS($g_sTGLastMessage, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)) ;upercase & remove space laset message
-		SetDebugLog("Telegram | NotifyRemoteControlProc $TGActionMSG : " & $TGActionMSG)
-		SetDebugLog("Telegram | NotifyRemoteControlProc $g_iTGLastRemote : " & $g_iTGLastRemote)
-		SetDebugLog("Telegram | NotifyRemoteControlProc $g_sTGLast_UID : " & $g_sTGLast_UID)
+		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProc $TGActionMSG : " & $TGActionMSG)
+		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProc $g_iTGLastRemote : " & $g_iTGLastRemote)
+		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProc $g_sTGLast_UID : " & $g_sTGLast_UID)
 		If ($TGActionMSG = "/START" Or $TGActionMSG = "KEYB") And $g_iTGLastRemote <> $g_sTGLast_UID Then
 			$g_iTGLastRemote = $g_sTGLast_UID
 			NotifyActivateKeyboardOnTelegram($g_sBotTitle & " | Notify " & $g_sNotifyVersion)
@@ -510,7 +510,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 
 	If Not $g_bNotifyTGEnable Then Return
 
-	SetDebugLog("Notify | NotifyPushMessageToBoth($Message, $Source = ""): " & $Message & "," & $Source)
+	If $g_bDebugSetlog Then SetDebugLog("Notify | NotifyPushMessageToBoth($Message, $Source = ""): " & $Message & "," & $Source)
 	Static $iReportIdleBuilder = 0
 
 	If Not IsPlanUseTelegram($Message) Then Return

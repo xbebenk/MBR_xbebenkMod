@@ -21,20 +21,22 @@ Func TrainSystem()
 		If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 		Return
 	EndIf
-
+	
+	If Not $g_bRunState Then Return
 	$g_sTimeBeforeTrain = _NowCalc()
 	StartGainCost()
-
+	SetLog("====== TrainSystem =====", $COLOR_ACTION)
+	If Not $g_bRunState Then Return
 	BoostSuperTroop()
 	;Add small delay after boost
 	If _Sleep(1000) Then Return
-	
+	If Not $g_bRunState Then Return
 	CheckIfArmyIsReady()
-	;CheckSTroopsIcon()
 	
+	If Not $g_bRunState Then Return
 	If $g_bTrainPreviousArmy Then TrainPreviousArmy()
 	TrainCustomArmy()
-
+	If Not $g_bRunState Then Return
 	TrainSiege()
 
 	If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
@@ -61,7 +63,7 @@ EndFunc ;==>TrainPreviousArmy
 Func TrainCustomArmy()
 	If Not $g_bRunState Then Return
 	If isProblemAffect(True) Then Return
-	If $g_bDebugSetlogTrain Then SetLog(" == Initial Custom Train == ", $COLOR_ACTION)
+	SetLog(" ====== CustomTrain ====== ", $COLOR_ACTION)
 
 	;If $bDonateTrain = -1 Then SetbDonateTrain()
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
@@ -352,7 +354,7 @@ Func DragIfNeeded($Troop)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
 				ClickDrag(750, 445, 20, 445)
-				If _Sleep(1000) Then Return
+				If _Sleep(2000) Then Return
 				If _ColorCheck(_GetPixelColor(834, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
 				Return True
@@ -364,7 +366,7 @@ Func DragIfNeeded($Troop)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
 				ClickDrag(100, 445, 850, 445)
-				If _Sleep(1000) Then Return
+				If _Sleep(2000) Then Return
 				If _ColorCheck(_GetPixelColor(22, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
 				Return True
@@ -568,7 +570,8 @@ EndFunc   ;==>DeleteInvalidTroopInArray
 
 Func RemoveExtraTroopsQueue()
 	For $i = 1 To 50
-		If QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200) Then 
+		If QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200) Then
+			If Not $g_bRunState Then Return
 			SetLog("Remove All Queued Troops #" & $i, $COLOR_ACTION)
 			Click($g_iQuickMISX, $g_iQuickMISY, 10, 50, "Remove Troops")
 			If Not $g_bRunState Then Return
@@ -613,7 +616,7 @@ Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQ
 		EndIf
 	EndIf
 
-	If Not $g_bIsFullArmywithHeroesAndSpells And Not $g_bUseQueuedTroopSpell Then
+	If Not $g_bIsFullArmywithHeroesAndSpells Then
 		If $removeExtraTroopsQueue Then
 			If Not _ColorCheck(_GetPixelColor(238, 190, True), Hex(0x677CB5, 6), 30) Then RemoveExtraTroopsQueue()
 		EndIf
@@ -1074,17 +1077,17 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 	EndIf
 	If _Sleep(500) Then Return
 	
-	Local $IsButtonExist = False
-	$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215)
-	While $IsButtonExist
-		For $i = 1 To 3
-			Click($g_iQuickMISX, $g_iQuickMISY, 20)
+	For $i = 1 To 50
+		If QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200) Then
 			If Not $g_bRunState Then Return
-			If _Sleep(500) Then Return
-		Next
-		$IsButtonExist = QuickMIS("BC1", $g_sImgDelQueue, 805, 180, 840, 215, True)
-	Wend
-	
+			SetLog("Remove All Queued " & $sArmyTypeQueued & " #" & $i, $COLOR_ACTION)
+			Click($g_iQuickMISX, $g_iQuickMISY, 10, 50, "Remove Troops")
+			If Not $g_bRunState Then Return
+			If _Sleep(1000) Then Return
+		Else
+			ExitLoop
+		EndIf
+	Next
 EndFunc   ;==>DeleteQueued
 
 Func MakingDonatedTroops($sType = "All")
@@ -1169,7 +1172,7 @@ Func MakingDonatedTroops($sType = "All")
 					Local $sTroopName = ($avDefaultTroopGroup[$i][4] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
 					SetLog(" - Trained " & $avDefaultTroopGroup[$i][4] & " " & $sTroopName, $COLOR_ACTION)
 					$avDefaultTroopGroup[$i][4] = 0
-					If _Sleep(1000) Then Return ; Needed Delay, OCR was not picking up Troop Changes
+					If _Sleep(500) Then Return ; Needed Delay, OCR was not picking up Troop Changes
 				Else
 					For $z = 0 To $RemainTrainSpace[2] - 1
 						$RemainTrainSpace = GetOCRCurrent(42, 133)
@@ -1315,21 +1318,21 @@ Func GetOCRCurrent($x_start, $y_start)
 EndFunc   ;==>GetOCRCurrent
 
 Func getReceivedTroops($x_start, $y_start, $bSkipCheck = False) ; Check if 'you received Castle Troops from' , will proceed with a Sleep until the message disappear
-	If $bSkipCheck Or Not $g_bRunState Then Return False
-	Local $iOCRResult = ""
-
-	$iOCRResult = getOcrAndCapture("coc-DonTroops", $x_start, $y_start, 120, 27, True) ; X = 162  Y = 200
-
-	If IsString($iOCRResult) <> "" Or IsString($iOCRResult) <> " " Then
-		If StringInStr($iOCRResult, "you") Then ; If exist Minutes or only Seconds
-			Return True
-		Else
-			Return False
-		EndIf
-	Else
-		Return False
-	EndIf
-
+	;If $bSkipCheck Or Not $g_bRunState Then Return False
+	;Local $iOCRResult = ""
+	;
+	;$iOCRResult = getOcrAndCapture("coc-DonTroops", $x_start, $y_start, 120, 27, True) ; X = 162  Y = 200
+	;
+	;If IsString($iOCRResult) <> "" Or IsString($iOCRResult) <> " " Then
+	;	If StringInStr($iOCRResult, "you") Then ; If exist Minutes or only Seconds
+	;		Return True
+	;	Else
+	;		Return False
+	;	EndIf
+	;Else
+	;	Return False
+	;EndIf
+	Return False
 EndFunc   ;==>getReceivedTroops
 
 Func _ArryRemoveBlanks(ByRef $aArray)

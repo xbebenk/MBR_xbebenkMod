@@ -602,7 +602,6 @@ Func ReadConfig_600_6()
 	IniReadS($g_iCmbFillIncorrectTroopCombo, $g_sProfileConfigPath, "other", "FillIncorrectTroopCombo", 0, "int")
 	IniReadS($g_bIgnoreIncorrectSpellCombo, $g_sProfileConfigPath, "other", "IgnoreIncorrectSpellCombo", False, "Bool")
 	IniReadS($g_iCmbFillIncorrectSpellCombo, $g_sProfileConfigPath, "other", "FillIncorrectSpellCombo", 0, "int")
-	IniReadS($g_bUseQueuedTroopSpell, $g_sProfileConfigPath, "other", "UseQueuedTroopSpell", False, "Bool")
 	IniReadS($g_bTrainPreviousArmy, $g_sProfileConfigPath, "other", "TrainPreviousArmy", False, "Bool")
 	IniReadS($g_bSkipWallPlacingOnBB, $g_sProfileConfigPath, "other", "SkipWallPlacingOnBB", True, "Bool")
 	IniReadS($g_bDonateEarly, $g_sProfileConfigPath, "other", "CheckDonateEarly", True, "Bool")
@@ -623,7 +622,7 @@ Func ReadConfigBuilderBaseMod()
 		IniReadS($g_iCmbTroopBB[$i], $g_sProfileConfigPath, "BBCustomArmy", "ComboTroopBB" & $i, $g_iCmbTroopBB[$i], "Int")
 	Next
 	IniReadS($g_b1SideBBAttack, $g_sProfileConfigPath, "BBCustomArmy", "Chk1SideBBAttack", True, "Bool")
-	IniReadS($g_i1SideBBAttack, $g_sProfileConfigPath, "BBCustomArmy", "1SideBBAttack", $g_hCmbSideAttack, "Int")
+	IniReadS($g_i1SideBBAttack, $g_sProfileConfigPath, "BBCustomArmy", "1SideBBAttack", $g_i1SideBBAttack, "Int")
 	IniReadS($g_b2SideBBAttack, $g_sProfileConfigPath, "BBCustomArmy", "Chk2SideBBAttack", False, "Bool")
 	IniReadS($g_bAllSideBBAttack, $g_sProfileConfigPath, "BBCustomArmy", "ChkAllSideBBAttack", False, "Bool")
 EndFunc   ;==>ReadBuilderBaseMod
@@ -1047,10 +1046,6 @@ Func ReadConfig_600_17()
 	For $i = 0 To UBound($g_aUpgradeWall) - 1
 		$g_aUpgradeWall[$i] = $str[$i]
 	Next
-
-	For $i = 4 To 15
-		IniReadS($g_aiWallsCurrentCount[$i], $g_sProfileConfigPath, "Walls", "Wall" & StringFormat("%02d", $i), 0, "int")
-	Next
 	IniReadS($g_iWallCost, $g_sProfileConfigPath, "upgrade", "WallCost", 0, "int")
 EndFunc   ;==>ReadConfig_600_17
 
@@ -1313,6 +1308,7 @@ Func ReadConfig_600_29_DB()
 	IniReadS($g_abAttackUseHasteSpell[$DB], $g_sProfileConfigPath, "attack", "DBHasteSpell", False, "Bool")
 	IniReadS($g_abAttackUseCloneSpell[$DB], $g_sProfileConfigPath, "attack", "DBCloneSpell", False, "Bool")
 	IniReadS($g_abAttackUseInvisibilitySpell[$DB], $g_sProfileConfigPath, "attack", "DBInvisibilitySpell", False, "Bool")
+	IniReadS($g_abAttackUseRecallSpell[$DB], $g_sProfileConfigPath, "attack", "DBRecallSpell", False, "Bool")
 	IniReadS($g_abAttackUseSkeletonSpell[$DB], $g_sProfileConfigPath, "attack", "DBSkeletonSpell", False, "Bool")
 	IniReadS($g_abAttackUseBatSpell[$DB], $g_sProfileConfigPath, "attack", "DBBatSpell", False, "Bool")
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / Standard <><><><>
@@ -1361,6 +1357,7 @@ Func ReadConfig_600_29_LB()
 	IniReadS($g_abAttackUseHasteSpell[$LB], $g_sProfileConfigPath, "attack", "ABHasteSpell", False, "Bool")
 	IniReadS($g_abAttackUseCloneSpell[$LB], $g_sProfileConfigPath, "attack", "ABCloneSpell", False, "Bool")
 	IniReadS($g_abAttackUseInvisibilitySpell[$LB], $g_sProfileConfigPath, "attack", "ABInvisibilitySpell", False, "Bool")
+	IniReadS($g_abAttackUseRecallSpell[$LB], $g_sProfileConfigPath, "attack", "ABRecallSpell", False, "Bool")
 	IniReadS($g_abAttackUseSkeletonSpell[$LB], $g_sProfileConfigPath, "attack", "ABSkeletonSpell", False, "Bool")
 	IniReadS($g_abAttackUseBatSpell[$LB], $g_sProfileConfigPath, "attack", "ABBatSpell", False, "Bool")
 	; <><><><> Attack Plan / Search & Attack / Activebase / Attack / Standard <><><><>
@@ -1503,11 +1500,7 @@ Func ReadConfig_600_35_1()
 	$g_bAutoResumeEnable = (IniRead($g_sProfileConfigPath, "other", "ChkAutoResume", "0") = "1")
 	$g_iAutoResumeTime = Int(IniRead($g_sProfileConfigPath, "other", "AutoResumeTime", 5))
 	IniReadS($g_bDisableNotifications, $g_sProfileConfigPath, "other", "ChkDisableNotifications", True, "Bool")
-	$g_bForceClanCastleDetection = (IniRead($g_sProfileConfigPath, "other", "ChkFixClanCastle", "0") = "1")
 	IniReadS($g_bUseStatistics, $g_sProfileConfigPath, "other", "ChkSqlite", False, "Bool")
-
-	IniReadS($g_bOnlySCIDAccounts, $g_sProfileConfigPath, "ProfileSCID", "OnlySCIDAccounts", True, "Bool")
-	$g_iWhatSCIDAccount2Use = Int(IniRead($g_sProfileConfigPath, "ProfileSCID", "WhatSCIDAccount2Use", 0))
 EndFunc   ;==>ReadConfig_600_35_1
 
 Func ReadConfig_600_35_2()
