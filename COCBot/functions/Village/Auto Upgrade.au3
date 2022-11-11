@@ -236,7 +236,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		EndIf
 		If Not $g_bRunState Then Return
 		If Not AutoUpgradeCheckBuilder($bTest) Then Return
-		ClickDragAUpgrade("up", 328) ;do scroll up
+		ClickDragAUpgrade("up") ;do scroll up
 		SetLog("[" & $z & "] SameCost=" & $sameCost & " [" & $UpgradeCost & "]", $COLOR_DEBUG)
 		If _Sleep(1500) Then Return
 	Next
@@ -255,7 +255,14 @@ Func FindExistingBuilding($bTest = False)
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
-			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 250, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
+			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 250, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then 
+				If $g_bOptimizeOTTO And $g_iQuickMISName = "Gear" Then
+					Local $bRet = DoGearUp($g_iQuickMISX + 20, $g_iQuickMISY)
+					SetLog("Do GearUp result : " & String($bRet))
+					ClickMainBuilder()
+				EndIf
+				ContinueLoop ;skip geared and new
+			EndIf
 			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
 			If $g_bChkRushTH Then ;if rushth enabled, filter only rushth buildings
 				Local $bRusTHFound = False
@@ -985,7 +992,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			ExitLoop
 		EndIf
 		If Not $g_bRunState Then Return
-		ClickDragAUpgrade("up", 328);do scroll up
+		ClickDragAUpgrade("up");do scroll up
 		SetLog("[" & $z & "] SameCost=" & $sameCost & " [" & $UpgradeCost & "]", $COLOR_DEBUG)
 		If _Sleep(1000) Then Return
 	Next
@@ -1473,3 +1480,32 @@ Func IsBuilderMenuOpen()
 	
 	Return $bRet
 EndFunc
+
+Func DoGearUp($x, $y)
+	If Not $g_bRunState Then Return
+	SetLog("Do GearUp for OptimizeOTTO", $COLOR_INFO)
+	Click($x, $y)
+	If _Sleep(1000) Then Return
+	Local $g_aUpgradeNameLevel = BuildingInfo(242, 494)
+	If $g_aUpgradeNameLevel[0] = "" Then
+		SetLog("Error when trying to get upgrade name and level...", $COLOR_ERROR)
+		Return False
+	EndIf
+	
+	If ClickB("GearUp") Then
+		If _Sleep(1000) Then Return
+		If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(1000) Then Return
+			If IsGemOpen(True) Then
+				ClickAway()
+				SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
+				Return False
+			Else
+				SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
+				Return True
+			EndIf
+		EndIf
+	EndIf
+EndFunc
+
