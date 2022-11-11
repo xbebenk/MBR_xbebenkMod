@@ -36,8 +36,8 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		If isOnMainVillage() Then
 			ClickP($aAttackButton)
 			SetLog("Opening Multiplayer Tab!", $COLOR_INFO)
-			If _Sleep(1500) Then Return
 			If IsMultiplayerTabOpen() Then 
+				If _Sleep(1500) Then Return
 				ExitLoop
 			Else
 				SetLog("Couldn't find the Attack Button!", $COLOR_ERROR)
