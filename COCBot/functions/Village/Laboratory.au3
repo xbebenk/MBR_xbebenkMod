@@ -433,6 +433,11 @@ Func ChkLabUpgradeInProgress($bDebug = False)
 		ClickAway()
 		If $bUseBooks Then 
 			$g_sLabUpgradeTime = "" ;reset lab upgrade time
+			;==========Hide Red  Show Green Hide Gray===
+			GUICtrlSetState($g_hPicLabGray, $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabRed, $GUI_SHOW)
+			GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
+			;===========================================
 		EndIf
 		
 		If $g_bUseLabPotion And $iLabFinishTime > 2880 And Not $bUseBooks Then ; only use potion if lab upgrade time is more than 2 day
