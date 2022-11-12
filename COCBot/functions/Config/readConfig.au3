@@ -958,6 +958,13 @@ Func ReadConfig_600_14()
 	IniReadS($g_bLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "upgradeorder", False, "Bool")
 	IniReadS($g_bUpgradeSiegeToLvl2, $g_sProfileBuildingPath, "upgrade", "limitsiegelevel", False, "Bool")
 	IniReadS($g_bUpgradeAnyTroops, $g_sProfileBuildingPath, "upgrade", "upgradeanytroops", False, "Bool")
+	IniReadS($g_bUseBOF, $g_sProfileBuildingPath, "upgrade", "usebookfighting", False, "Bool")
+	IniReadS($g_iUseBOFTime, $g_sProfileConfigPath, "upgrade", "usebookfightingMinTime", 7, "int")
+	IniReadS($g_bUseBOS, $g_sProfileBuildingPath, "upgrade", "usebookspell", False, "Bool")
+	IniReadS($g_iUseBOSTime, $g_sProfileConfigPath, "upgrade", "usebookspellMinTime", 7, "int")
+	IniReadS($g_bUseBOE, $g_sProfileBuildingPath, "upgrade", "usebookeverything", False, "Bool")
+	IniReadS($g_iUseBOETime, $g_sProfileConfigPath, "upgrade", "usebookeverythingMinTime", 14, "int")
+	
 	Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "upgradeorderlist", "-1| -1| -1| -1| -1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 		$g_aCmbLabUpgradeOrder[$i] = $str[$i]

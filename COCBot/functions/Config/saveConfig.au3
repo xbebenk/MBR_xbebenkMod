@@ -135,6 +135,13 @@ Func SaveBuildingConfig()
 	_Ini_Add("upgrade", "upgradeorder", $g_bLabUpgradeOrderEnable ? 1 : 0)
 	_Ini_Add("upgrade", "limitsiegelevel", $g_bUpgradeSiegeToLvl2 ? 1 : 0)
 	_Ini_Add("upgrade", "upgradeanytroops", $g_bUpgradeAnyTroops ? 1 : 0)
+	_Ini_Add("upgrade", "usebookfighting", $g_bUseBOF ? 1 : 0)
+	_Ini_Add("upgrade", "usebookfightingMinTime", $g_iUseBOFTime)
+	_Ini_Add("upgrade", "usebookspell", $g_bUseBOS ? 1 : 0)
+	_Ini_Add("upgrade", "usebookspellMinTime", $g_iUseBOSTime)
+	_Ini_Add("upgrade", "usebookeverything", $g_bUseBOE ? 1 : 0)
+	_Ini_Add("upgrade", "usebookeverythingMinTime", $g_iUseBOETime)
+	
 	Local $string = ""
 	For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 		$string &= $g_aCmbLabUpgradeOrder[$i] & "|"

@@ -63,6 +63,7 @@ Global $g_sImgLabResearch = @ScriptDir & "\imgxml\Research\Laboratory\"
 Global $g_sImgAnySpell = @ScriptDir & "\imgxml\Research\Laboratory\AllSpell\"
 Global $g_sImgAnySiege = @ScriptDir & "\imgxml\Research\Laboratory\AllSiege\"
 Global $g_sImgResIcon = @ScriptDir & "\imgxml\Research\ResIcon\"
+Global $g_sImgBooks = @ScriptDir & "\imgxml\Research\Books\"
 Global $g_sImgUpgradeWallElix = @ScriptDir & "\imgxml\imglocbuttons\WallElix*.xml"
 Global $g_sImgUpgradeWallGold = @ScriptDir & "\imgxml\imglocbuttons\WallGold*.xml"
 #EndRegion

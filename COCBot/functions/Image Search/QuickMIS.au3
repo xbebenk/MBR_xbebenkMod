@@ -16,13 +16,51 @@
 Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME_WIDTH, $Bottom = $g_iGAME_HEIGHT, $bNeedCapture = True, $Debug = False)
 	Local $error, $extError
 	If ($ValueReturned <> "BC1") And ($ValueReturned <> "CX") And ($ValueReturned <> "CNX") And ($ValueReturned <> "N1") And _
-		($ValueReturned <> "NX") And ($ValueReturned <> "Q1") And ($ValueReturned <> "QX") Then
+		($ValueReturned <> "NX") And ($ValueReturned <> "Q1") And ($ValueReturned <> "QX") And ($ValueReturned <> "BFI") Then
 		SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_RED)
 		Return
 	EndIf
-
-	If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
-	Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
+	
+	Local $Res, $aCoords
+	Local $RectArea[4] = [$Left, $Top, $Right, $Bottom]
+	Local $sImageArea = GetDiamondFromArray($RectArea)
+	If $ValueReturned = "BFI" Then 
+		Local $iPattern = StringInStr($directory, "*")
+		If $iPattern > 0 Then
+			Local $dir = ""
+			Local $pat = $directory
+			Local $iLastBS = StringInStr($directory, "\", 0, -1)
+			If $iLastBS > 0 Then
+				$dir = StringLeft($directory, $iLastBS)
+				$pat = StringMid($directory, $iLastBS + 1)
+			EndIf
+			Local $files = _FileListToArray($dir, $pat, $FLTA_FILES, True)
+			If @error Or UBound($files) < 2 Then
+				SetDebugLog("findImage files not found : " & $directory, $COLOR_ERROR)
+				SetError(1, 0, $aCoords) ; Set external error code = 1 for bad input values
+				Return
+			EndIf
+			For $i = 1 To $files[0]
+				$aCoords = ""
+				$aCoords = findImage($pat, $files[$i], $sImageArea, 1, True)
+				If $aCoords <> "" Then 
+					Local $coord = StringSplit($aCoords, ",", $STR_NOCOUNT)
+					If UBound($coord) = 2 Then 
+						$g_iQuickMISX = $coord[0]
+						$g_iQuickMISY = $coord[1]
+						$g_iQuickMISName = $files[$i]
+						If $g_bDebugSetlog THen SetDebugLog("FI Found : " & $g_iQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
+						Return True
+					EndIf
+				Else
+					If $g_bDebugSetlog THen SetDebugLog("FI No result")
+				EndIf
+			Next
+		EndIf
+	Else
+		If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
+		$Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
+	EndIf
 	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
 	If $error Then

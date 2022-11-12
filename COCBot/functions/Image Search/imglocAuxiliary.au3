@@ -390,13 +390,14 @@ Func findImage($sImageName, $sImageTile, $sImageArea, $maxReturnPoints = 1, $bFo
 	EndIf
 
 	If $result[0] <> "" Then ;despite being a string, AutoIt receives a array[0]
-		SetDebugLog("findImage : " & $sImageName & " Found in: " & $result[0])
 		$aCoords = StringSplit($result[0], "|", $STR_NOCOUNT)
 		;[0] - total points found
 		;[1] -  coordinates
 		If $maxReturnPoints = 1 Then
+			SetDebugLog("findImage : " & $sImageName & " Found in: " & $aCoords[1])
 			Return $aCoords[1] ; return just X,Y coord
 		Else
+			SetDebugLog("findImage : " & $sImageName & " Found in: " & $result[0])
 			Return $result[0] ; return full string with count and points
 		EndIf
 	Else

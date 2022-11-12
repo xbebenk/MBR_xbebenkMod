@@ -81,7 +81,7 @@ Global $g_aShopWindowOpen[4] = [804, 54, 0xC00508, 15] ; Red pixel in lower righ
 Global $aTreasuryWindow[4] = [688, 165, 0xD51115, 20] ; Redish pixel above X to close treasury window
 Global $aAttackForTreasury[4] = [88, 619, 0xF0EBE8, 5] ; Red pixel below X to close treasury window
 Global $aAtkHasDarkElixir[4]  = [ 31, 144, 0x282020, 10] ; Attack Page, Check for DE icon
-Global $aVillageHasDarkElixir[4] = [843, 143, 0x0D0D0D, 10] ; Main Page, Base has dark elixir storage
+Global $aVillageHasDarkElixir[4] = [847, 134, 0x0D0D0D, 10] ; Main Page, Base has dark elixir storage
 
 Global $aCheckTopProfile[4] = [200, 166, 0x868CAC, 5]
 Global $aCheckTopProfile2[4] = [220, 355, 0x4E4D79, 5]

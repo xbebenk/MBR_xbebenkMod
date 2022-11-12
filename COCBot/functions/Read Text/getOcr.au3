@@ -55,7 +55,7 @@ Func getUpgradeResource($x_start, $y_start) ; -> Gets complete value of Gold/Eli
 EndFunc   ;==>getUpgradeResource
 
 Func getResourcesMainScreen($x_start, $y_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 110, 16, True)
+	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 120, 16, True)
 EndFunc   ;==>getResourcesMainScreen
 
 Func getResourcesLoot($x_start, $y_start) ; -> Gets complete value of Gold/Elixir after attack xxx,xxx "AttackReport"
