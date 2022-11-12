@@ -307,7 +307,7 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $bDebug = False)
 		Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
 		_Sleep(1000)
 		If Not isGemOpen(True) Then ; check for gem window
-			ChkLabUpgradeInProgress($bDebug)
+			ChkLabUpgradeInProgress($bDebug, $name)
 			; success
 			SetLog("Upgrade " & GetUpgradeName($name) & " in your laboratory started with success...", $COLOR_SUCCESS)
 			PushMsg("LabSuccess")
@@ -358,7 +358,7 @@ Func LabPrevPage($iPage = 1)
 EndFunc
 
 ; check the lab to see if something is upgrading in the lab already
-Func ChkLabUpgradeInProgress($bDebug = False)
+Func ChkLabUpgradeInProgress($bDebug = False, $name = "")
 	; check for upgrade in process - look for green in finish upgrade with gems button
 	If _Sleep(500) Then Return
 	If _ColorCheck(_GetPixelColor(125, 160, True), Hex(0xBDE36B, 6), 20) Or _ColorCheck(_GetPixelColor(722, 278, True), Hex(0xA2CB6C, 6), 20) Then ; Look for light green in upper right corner of lab window.
@@ -380,54 +380,62 @@ Func ChkLabUpgradeInProgress($bDebug = False)
 		If _Sleep(50) Then Return
 		
 		Local $bUseBooks = False
-		Local $iLabFinishTimeDay = ConvertOCRTime("Lab Time (Day)", $sLabTimeOCR, False, "day")
-		If $g_bUseBOF And $iLabFinishTimeDay >= $g_iUseBOFTime Then
-			SetLog("Use Book of Fighting Enabled", $COLOR_INFO)
-			SetLog("Lab Upgrade time > than " & $g_iUseBOFTime & " day", $COLOR_INFO)
-			If QuickMIS("BFI", $g_sImgBooks & "BOF*", 650, 230, 730, 290) Then
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(1000) Then Return
-				If QuickMIS("BC1", $g_sImgBooks, 400, 360, 500, 430) Then
+		If $name <> "" Then
+			Local $iLabFinishTimeDay = ConvertOCRTime("Lab Time (Day)", $sLabTimeOCR, False, "day")
+			
+			If Not $bUseBooks And $g_bUseBOE And $iLabFinishTimeDay >= $g_iUseBOETime Then
+				SetLog("Use Book of Everything Enabled", $COLOR_INFO)
+				SetLog("Lab Upgrade time > than " & $g_iUseBOETime & " day", $COLOR_INFO)
+				If QuickMIS("BFI", $g_sImgBooks & "BOE*", 650, 230, 730, 290) Then
 					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Successfully use Book of Fighting", $COLOR_SUCCESS)
-					$bUseBooks = True
 					If _Sleep(1000) Then Return
+					If QuickMIS("BC1", $g_sImgBooks, 400, 360, 500, 430) Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
+						SetLog("Successfully use Book of Spell", $COLOR_SUCCESS)
+						$bUseBooks = True
+						If _Sleep(1000) Then Return
+					EndIf
+				Else
+					SetLog("Book of Everything Not Found", $COLOR_ERROR)
+				EndIf
+			EndIf
+			
+			If StringInStr($name, "Spell") Then 
+				If Not $bUseBooks And $g_bUseBOS And $iLabFinishTimeDay >= $g_iUseBOSTime Then
+					SetLog("Use Book of Spell Enabled", $COLOR_INFO)
+					SetLog("Lab Upgrade time > than " & $g_iUseBOSTime & " day", $COLOR_INFO)
+					If QuickMIS("BFI", $g_sImgBooks & "BOS*", 650, 230, 730, 290) Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
+						If _Sleep(1000) Then Return
+						If QuickMIS("BC1", $g_sImgBooks, 400, 360, 500, 430) Then
+							Click($g_iQuickMISX, $g_iQuickMISY)
+							SetLog("Successfully use Book of Spell", $COLOR_SUCCESS)
+							$bUseBooks = True
+							If _Sleep(1000) Then Return
+						EndIf
+					Else
+						SetLog("Book of Spell Not Found", $COLOR_ERROR)
+					EndIf
 				EndIf
 			Else
-				SetLog("Book of Fighting Not Found", $COLOR_ERROR)
-			EndIf
-		EndIf
-		If Not $bUseBooks And $g_bUseBOS And $iLabFinishTimeDay >= $g_iUseBOSTime Then
-			SetLog("Use Book of Spell Enabled", $COLOR_INFO)
-			SetLog("Lab Upgrade time > than " & $g_iUseBOSTime & " day", $COLOR_INFO)
-			If QuickMIS("BFI", $g_sImgBooks & "BOS*", 650, 230, 730, 290) Then
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(1000) Then Return
-				If QuickMIS("BC1", $g_sImgBooks, 400, 360, 500, 430) Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Successfully use Book of Spell", $COLOR_SUCCESS)
-					$bUseBooks = True
-					If _Sleep(1000) Then Return
+				If Not $bUseBooks And $g_bUseBOF And $iLabFinishTimeDay >= $g_iUseBOFTime Then
+					SetLog("Use Book of Fighting Enabled", $COLOR_INFO)
+					SetLog("Lab Upgrade time > than " & $g_iUseBOFTime & " day", $COLOR_INFO)
+					If QuickMIS("BFI", $g_sImgBooks & "BOF*", 650, 230, 730, 290) Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
+						If _Sleep(1000) Then Return
+						If QuickMIS("BC1", $g_sImgBooks, 400, 360, 500, 430) Then
+							Click($g_iQuickMISX, $g_iQuickMISY)
+							SetLog("Successfully use Book of Fighting", $COLOR_SUCCESS)
+							$bUseBooks = True
+							If _Sleep(1000) Then Return
+						EndIf
+					Else
+						SetLog("Book of Fighting Not Found", $COLOR_ERROR)
+					EndIf
 				EndIf
-			Else
-				SetLog("Book of Spell Not Found", $COLOR_ERROR)
 			EndIf
-		EndIf
-		If Not $bUseBooks And $g_bUseBOE And $iLabFinishTimeDay >= $g_iUseBOETime Then
-			SetLog("Use Book of Everything Enabled", $COLOR_INFO)
-			SetLog("Lab Upgrade time > than " & $g_iUseBOETime & " day", $COLOR_INFO)
-			If QuickMIS("BFI", $g_sImgBooks & "BOE*", 650, 230, 730, 290) Then
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(1000) Then Return
-				If QuickMIS("BC1", $g_sImgBooks, 400, 360, 500, 430) Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Successfully use Book of Spell", $COLOR_SUCCESS)
-					$bUseBooks = True
-					If _Sleep(1000) Then Return
-				EndIf
-			Else
-				SetLog("Book of Everything Not Found", $COLOR_ERROR)
-			EndIf
+			
 		EndIf
 		
 		ClickAway()
