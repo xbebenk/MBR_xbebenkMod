@@ -1323,7 +1323,7 @@ Func FirstCheck()
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
 
-	If isElixirFull() Then
+	If isElixirFull() or isDarkElixirFull() Then
 		Laboratory()
 		VillageReport(True, True)
 	EndIf
