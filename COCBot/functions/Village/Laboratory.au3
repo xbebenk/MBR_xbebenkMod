@@ -34,6 +34,7 @@ EndFunc
 
 Func Laboratory($bDebug = False)
 	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
+	If $bDebug Then $g_sLabUpgradeTime = ""
 	If ChkUpgradeInProgress($bDebug) Then Return
 	If $g_aiLaboratoryPos[0] < 70 Or $g_aiLaboratoryPos[1] = 0 Then
 		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
@@ -90,7 +91,7 @@ Func Laboratory($bDebug = False)
 			EndIf
 
 			If $bUpgradeFound Then
-				Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
+				Return LaboratoryUpgrade($g_avLabTroops[$g_iCmbLaboratory][2], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 			EndIf
 		Else ; users choice is any upgrade
 			Local $aCoords[2]
@@ -107,7 +108,7 @@ Func Laboratory($bDebug = False)
 					If $iTmpCmbLaboratory > 0 Then
 						SetLog("Try Lab Upgrade: " & $g_avLabTroops[$iTmpCmbLaboratory][0], $COLOR_INFO)
 						; Get coords of upgrade the user wants
-						If $iTmpCmbLaboratory < 43 Then ;all normal upgrade not AnySpell or AnySiege
+						If $iTmpCmbLaboratory < 46 Then ;all normal upgrade not AnySpell or AnySiege
 							$iPage = Ceiling($iTmpCmbLaboratory / $iPicsPerPage) ; page # of user choice
 							SetDebugLog("CurrentPage:" & $iCurPage & ", Go to Page:" & $iPage, $COLOR_INFO)
 							While ($iCurPage > $iPage)
@@ -142,9 +143,9 @@ Func Laboratory($bDebug = False)
 									EndIf
 									If Not IsLabUpgradeResourceEnough($g_avLabTroops[$iTmpCmbLaboratory][2], $sCostResult) Then
 										$tmpNoResources = True
-										SetLog($g_avLabTroops[$iTmpCmbLaboratory][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
+										SetLog(GetUpgradeName($g_avLabTroops[$iTmpCmbLaboratory][0]) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
 									Else
-										SetLog($g_avLabTroops[$iTmpCmbLaboratory][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
+										SetLog(GetUpgradeName($g_avLabTroops[$iTmpCmbLaboratory][0]) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
 										$bUpgradeFound = True
 										ExitLoop
 									EndIf
@@ -153,9 +154,9 @@ Func Laboratory($bDebug = False)
 								SetDebugLog("Image " & $g_avLabTroops[$iTmpCmbLaboratory][2] & " not found")
 							EndIf
 						Else
-						
-							If $iTmpCmbLaboratory = 43 Then ;Any Spell
+							If $iTmpCmbLaboratory = 46 Then ;Any Spell
 								$iPage = 2
+								$bUpgradeFound = False
 								SetDebugLog("CurrentPage:" & $iCurPage & ", Go to Page:" & $iPage, $COLOR_INFO)
 								While ($iCurPage > $iPage)
 									LabPrevPage($iCurPage)
@@ -180,9 +181,9 @@ Func Laboratory($bDebug = False)
 												If $level = "" Then $level = 1
 												If Not IsLabUpgradeResourceEnough($aSpell[$i][0], $sCostResult) Then
 													$tmpNoResources = True
-													SetLog($aSpell[$i][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
+													SetLog(GetUpgradeName($aSpell[$i][0]) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
 												Else
-													SetLog($aSpell[$i][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
+													SetLog(GetUpgradeName($aSpell[$i][0]) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
 													$bUpgradeFound = True
 													Local $aCoords[2] = [$aSpell[$i][1], $aSpell[$i][2]]
 													If Not $bDebug Then Return LaboratoryUpgrade($aSpell[$i][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
@@ -197,7 +198,7 @@ Func Laboratory($bDebug = False)
 								Next
 							EndIf
 							
-							If $iTmpCmbLaboratory = 44 Then ;Any Siege
+							If $iTmpCmbLaboratory = 47 Then ;Any Siege
 								$iPage = 4
 								SetDebugLog("CurrentPage:" & $iCurPage & ", Go to Page:" & $iPage, $COLOR_INFO)
 								While ($iCurPage > $iPage)
@@ -242,8 +243,8 @@ Func Laboratory($bDebug = False)
 					EndIf
 				Next
 				
-				If $bUpgradeFound And Not $bDebug Then
-					Return LaboratoryUpgrade($g_avLabTroops[$iTmpCmbLaboratory][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
+				If $bUpgradeFound Then
+					Return LaboratoryUpgrade($g_avLabTroops[$iTmpCmbLaboratory][2], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 				Else
 					SetLog("Lab Upgrade " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " - Not available.", $COLOR_INFO)
 				EndIf
@@ -294,28 +295,28 @@ EndFunc
 
 ; start a given upgrade
 Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $bDebug = False)
-	
-	SetLog("Selected upgrade: " & $name & " Cost: " & $sCostResult, $COLOR_INFO)
+	SetLog("Selected upgrade: " & GetUpgradeName($name) & " Cost: " & $sCostResult, $COLOR_INFO)
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
 	
 	If $bDebug Then ; if debugging, do not actually click it
-		SetLog("[debug mode] - Start Upgrade, Click (" & 660 & "," & 520 & ")", $COLOR_ACTION)
-		ClickAway()
+		SetLog("[debug mode] - Start Upgrade, Click Back Button", $COLOR_ACTION)
+		Click(150, 115)
 		Return True ; return true as if we really started an upgrade
 	Else
 		Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
 		_Sleep(1000)
 		If Not isGemOpen(True) Then ; check for gem window
-			ChkLabUpgradeInProgress($bDebug)
+			ChkLabUpgradeInProgress($bDebug, $name)
 			; success
-			SetLog("Upgrade " & $name & " in your laboratory started with success...", $COLOR_SUCCESS)
+			SetLog("Upgrade " & GetUpgradeName($name) & " in your laboratory started with success...", $COLOR_SUCCESS)
 			PushMsg("LabSuccess")
+			
 			If _Sleep($DELAYLABUPGRADE2) Then Return
 			ClickAway()
 			Return True ; upgrade started
 		Else
-			SetLog("Oops, Gems required for " & $name & " Upgrade, try again.", $COLOR_ERROR)
+			SetLog("Oops, Gems required for " & GetUpgradeName($name) & " Upgrade, try again.", $COLOR_ERROR)
 			Return False
 		EndIf
 	EndIf
@@ -340,7 +341,7 @@ EndFunc
 
 Func LabNextPage($iPage = 1)
 	If $iPage = 3 Then 
-		ClickDrag(720, 500, 406, 500, 500)
+		ClickDrag(720, 500, 190, 500, 500)
 	Else
 		ClickDrag(720, 500, 82, 500, 500)
 	EndIf
@@ -349,7 +350,7 @@ EndFunc
 
 Func LabPrevPage($iPage = 1)
 	If $iPage = 4 Then 
-		ClickDrag(130, 500, 442, 500, 500) ;600
+		ClickDrag(130, 500, 660, 500, 500) ;600
 	Else
 		ClickDrag(130, 500, 768, 500, 500) ;600
 	EndIf
@@ -357,7 +358,7 @@ Func LabPrevPage($iPage = 1)
 EndFunc
 
 ; check the lab to see if something is upgrading in the lab already
-Func ChkLabUpgradeInProgress($bDebug = False)
+Func ChkLabUpgradeInProgress($bDebug = False, $name = "")
 	; check for upgrade in process - look for green in finish upgrade with gems button
 	If _Sleep(500) Then Return
 	If _ColorCheck(_GetPixelColor(125, 160, True), Hex(0xBDE36B, 6), 20) Or _ColorCheck(_GetPixelColor(722, 278, True), Hex(0xA2CB6C, 6), 20) Then ; Look for light green in upper right corner of lab window.
@@ -368,7 +369,7 @@ Func ChkLabUpgradeInProgress($bDebug = False)
 		GUICtrlSetState($g_hPicLabGreen, $GUI_SHOW)
 		;===========================================
 		If _Sleep($DELAYLABORATORY2) Then Return
-		Local $sLabTimeOCR = getRemainTLaboratory(270, 227)
+		Local $sLabTimeOCR = getRemainTLaboratory(268, 227)
 		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)
 		SetDebugLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
 		If $iLabFinishTime > 0 Then
@@ -377,9 +378,77 @@ Func ChkLabUpgradeInProgress($bDebug = False)
 		EndIf
 		If $bDebug Then Return False
 		If _Sleep(50) Then Return
-		ClickAway()
 		
-		If $g_bUseLabPotion And $iLabFinishTime > 2880 Then ; only use potion if lab upgrade time is more than 2 day
+		Local $bUseBooks = False
+		If $name <> "" Then
+			Local $iLabFinishTimeDay = ConvertOCRTime("Lab Time (Day)", $sLabTimeOCR, False, "day")
+			
+			If Not $bUseBooks And $g_bUseBOE And $iLabFinishTimeDay >= $g_iUseBOETime Then
+				SetLog("Use Book of Everything Enabled", $COLOR_INFO)
+				SetLog("Lab Upgrade time > than " & $g_iUseBOETime & " day", $COLOR_INFO)
+				If QuickMIS("BFI", $g_sImgBooks & "BOE*", 650, 230, 730, 290) Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					If _Sleep(1000) Then Return
+					If QuickMIS("BC1", $g_sImgBooks, 400, 360, 500, 430) Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
+						SetLog("Successfully use Book of Spell", $COLOR_SUCCESS)
+						$bUseBooks = True
+						If _Sleep(1000) Then Return
+					EndIf
+				Else
+					SetLog("Book of Everything Not Found", $COLOR_ERROR)
+				EndIf
+			EndIf
+			
+			If StringInStr($name, "Spell") Then 
+				If Not $bUseBooks And $g_bUseBOS And $iLabFinishTimeDay >= $g_iUseBOSTime Then
+					SetLog("Use Book of Spell Enabled", $COLOR_INFO)
+					SetLog("Lab Upgrade time > than " & $g_iUseBOSTime & " day", $COLOR_INFO)
+					If QuickMIS("BFI", $g_sImgBooks & "BOS*", 650, 230, 730, 290) Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
+						If _Sleep(1000) Then Return
+						If QuickMIS("BC1", $g_sImgBooks, 400, 360, 500, 430) Then
+							Click($g_iQuickMISX, $g_iQuickMISY)
+							SetLog("Successfully use Book of Spell", $COLOR_SUCCESS)
+							$bUseBooks = True
+							If _Sleep(1000) Then Return
+						EndIf
+					Else
+						SetLog("Book of Spell Not Found", $COLOR_ERROR)
+					EndIf
+				EndIf
+			Else
+				If Not $bUseBooks And $g_bUseBOF And $iLabFinishTimeDay >= $g_iUseBOFTime Then
+					SetLog("Use Book of Fighting Enabled", $COLOR_INFO)
+					SetLog("Lab Upgrade time > than " & $g_iUseBOFTime & " day", $COLOR_INFO)
+					If QuickMIS("BFI", $g_sImgBooks & "BOF*", 650, 230, 730, 290) Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
+						If _Sleep(1000) Then Return
+						If QuickMIS("BC1", $g_sImgBooks, 400, 360, 500, 430) Then
+							Click($g_iQuickMISX, $g_iQuickMISY)
+							SetLog("Successfully use Book of Fighting", $COLOR_SUCCESS)
+							$bUseBooks = True
+							If _Sleep(1000) Then Return
+						EndIf
+					Else
+						SetLog("Book of Fighting Not Found", $COLOR_ERROR)
+					EndIf
+				EndIf
+			EndIf
+			
+		EndIf
+		
+		ClickAway()
+		If $bUseBooks Then 
+			$g_sLabUpgradeTime = "" ;reset lab upgrade time
+			;==========Hide Red  Show Green Hide Gray===
+			GUICtrlSetState($g_hPicLabGray, $GUI_HIDE)
+			GUICtrlSetState($g_hPicLabRed, $GUI_SHOW)
+			GUICtrlSetState($g_hPicLabGreen, $GUI_HIDE)
+			;===========================================
+		EndIf
+		
+		If $g_bUseLabPotion And $iLabFinishTime > 2880 And Not $bUseBooks Then ; only use potion if lab upgrade time is more than 2 day
 			_Sleep(1000)
 			Local $LabPotion = FindButton("LabPotion")
 			If IsArray($LabPotion) And UBound($LabPotion) = 2 Then

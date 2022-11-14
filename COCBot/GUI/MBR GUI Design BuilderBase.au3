@@ -38,6 +38,8 @@ Func CreateBuilderBaseTab()
 	GUICtrlCreateTabItem("")
 EndFunc 
 
+Global $g_hChkSLabUpgradeOrder = 0, $g_hBtnRemoveSLabUpgradeOrder = 0, $g_hBtnSetSLabUpgradeOrder = 0, $g_hChkUpgradeAnyIfAllOrderMaxed = 0
+
 Func CreateBBPlaySubTab()
 	Local $x = 15, $y = 45
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_05", "Builders Base Stats"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 50)
