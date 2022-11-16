@@ -138,7 +138,7 @@ EndFunc   ;==>IsDonateQueueOnly
 
 Func getArmyRequest($aiDonateCoords, $bNeedCapture = True)
 	; Contains iXStart, $iYStart, $iXEnd, $iYEnd
-	Local $aiSearchArray[4] = [35, $aiDonateCoords[1] - 76, 297, $aiDonateCoords[1] - 52]
+	Local $aiSearchArray[4] = [35, $aiDonateCoords[1] - 82, 297, $aiDonateCoords[1] - 38]
 	Local $sRequestDiamond = GetDiamondFromRect($aiSearchArray)
 	; Returns $aCurrentRequests[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
 	Local $aCurrentArmyRequest = findMultiple(@ScriptDir & "\imgxml\DonateCC\Army", $sRequestDiamond, $sRequestDiamond, 0, 1000, 0, "objectname,objectpoints", $bNeedCapture)
@@ -155,7 +155,7 @@ Func getArmyRequest($aiDonateCoords, $bNeedCapture = True)
 			ElseIf $iArmyIndex >= $eLSpell And $iArmyIndex <= $eBtSpell Then
 				$sClanText &= ", " & $g_asSpellNames[$iArmyIndex - $eLSpell]
 			; Sieges
-			ElseIf $iArmyIndex >= $eWallW And $iArmyIndex <= $eFlameF Then
+			ElseIf $iArmyIndex >= $eWallW And $iArmyIndex <= $eBattleD Then
 				$sClanText &= ", " & $g_asSiegeMachineNames[$iArmyIndex - $eWallW]
 			ElseIf $iArmyIndex = -1 Then
 				ContinueLoop
@@ -417,7 +417,7 @@ Func DonateCC($bCheckForNewMsg = False)
 			If Not $bDonateSiege And Not $bDonateAllSiege Then
 				SetLog("Siege donation is not enabled, skip siege donation", $COLOR_ACTION)
 				$g_bSkipDonSiege = True
-			ElseIf $g_aiCurrentSiegeMachines[$eSiegeWallWrecker] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] = 0 And $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBarracks] = 0 And $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] = 0 Then
+			ElseIf $g_aiCurrentSiegeMachines[$eSiegeWallWrecker] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] = 0 And $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBarracks] = 0 And $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBattleDrill] = 0 Then
 				SetLog("No siege machines available, skip siege donation", $COLOR_ORANGE)
 				$g_bSkipDonSiege = True
 			ElseIf $g_iTotalDonateSiegeMachineCapacity = -1 Then
@@ -1137,7 +1137,7 @@ Func RemainingCCcapacity($aiDonateButton)
 	; Skip reading unnecessary items
 	Local $bDonateSpell = ($g_aiPrepDon[2] = 1 Or $g_aiPrepDon[3] = 1) And ($g_iCurrentSpells > 0 Or $g_iCurrentSpells = "")
 	;Local $bDonateSiege = ($g_aiPrepDon[4] = 1 Or $g_aiPrepDon[5] = 1) And ($g_aiCurrentSiegeMachines[$eSiegeWallWrecker] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBarracks] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] > 0)
-	Local $bDonateSiege = ($g_aiPrepDon[4] = 1 Or $g_aiPrepDon[5] = 1) And ($g_aiCurrentSiegeMachines[$eSiegeWallWrecker] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBarracks] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] > 0)
+	Local $bDonateSiege = ($g_aiPrepDon[4] = 1 Or $g_aiPrepDon[5] = 1) And ($g_aiCurrentSiegeMachines[$eSiegeWallWrecker] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBarracks] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBattleDrill] > 0)
 	SetDebugLog("$g_aiPrepDon[2]: " & $g_aiPrepDon[2] & ", $g_aiPrepDon[3]: " & $g_aiPrepDon[3] & ", $g_iCurrentSpells: " & $g_iCurrentSpells & ", $bDonateSpell: " & $bDonateSpell)
 	SetDebugLog("$g_aiPrepDon[4]: " & $g_aiPrepDon[4] & ", $g_aiPrepDon[5]: " & $g_aiPrepDon[5] & ", $bDonateSiege: " & $bDonateSiege)
 
@@ -1145,7 +1145,7 @@ Func RemainingCCcapacity($aiDonateButton)
 	SetDebugLog("Start dual getOcrSpaceCastleDonate", $COLOR_DEBUG)
 
 	;Button Image is a little bit lower than the Capacity Numbers, adjusting for all here
-	$aiDonateButton[1] -= 10
+	$aiDonateButton[1] -= 8
 
 	$sCapTroops = getOcrSpaceCastleDonate(27, $aiDonateButton[1])
 	If StringInStr($sCapTroops, "#") Then ;CC got Troops & Spells & Siege Machine
@@ -1333,13 +1333,14 @@ Func DetectSlotSpell(Const $iSpellIndex)
 		Local $x = 343 + (68 * ($Slot - 14))
 		Local $y = $g_iDonationWindowY + 241
 		Local $x1 = $x + 75
-		Local $y1 = $y + 43
-
+		Local $y1 = $y + 63
+		
+		If $g_bDebugSetLog Then SetLog($iSpellIndex & "-> $x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
 		$FullTemp = SearchImgloc($g_sImgDonateSpells, $x, $y, $x1, $y1)
 		SetDebugLog("Spell Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
 
 		If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
-
+		
 		If $FullTemp[0] <> "" Then
 			For $i = $eSpellLightning To $eSpellCount - 1
 				Local $sTmp = StringLeft($g_asSpellNames[$i], 4)
@@ -1349,7 +1350,7 @@ Func DetectSlotSpell(Const $iSpellIndex)
 					ExitLoop
 				EndIf
 				If $i = $eSpellCount - 1 Then ; detection failed
-					SetDebugLog("Slot: " & $Slot & "Spell Detection Failed", $COLOR_DEBUG)
+					SetDebugLog("Slot: " & $Slot & " Spell Detection Failed", $COLOR_DEBUG)
 				EndIf
 			Next
 		EndIf

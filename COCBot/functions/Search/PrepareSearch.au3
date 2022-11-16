@@ -68,6 +68,16 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				If StringInStr($aButton[$i][0], "Normal") Then
 					$g_bLeagueAttack = False
 					Click($aButton[$i][1], $aButton[$i][2])
+					For $k = 1 To 10 
+						If _Sleep(500) Then Return
+						If QuickMIS("BC1", $g_sImgPrepareLegendLeagueSearch, $aButton[$i][1] - 50, $aButton[$i][2] - 50, $aButton[$i][1] + 50, $aButton[$i][2] + 50) Then 
+							SetDebugLog("Still see " & $aButton[$i][0])
+							ContinueLoop 2
+						Else
+							ExitLoop
+						EndIf
+						If _Sleep(500) Then Return
+					Next
 					ExitLoop 2
 				ElseIf StringInStr($aButton[$i][0], "Ended") Then
 					SetLog("League Day ended already! Trying again later", $COLOR_INFO)
