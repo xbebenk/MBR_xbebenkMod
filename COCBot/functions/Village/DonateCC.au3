@@ -316,14 +316,11 @@ Func DonateCC($bCheckForNewMsg = False)
 							If $Alphabets[$i] Then $log = $TextAlphabetsNames[$i]
 							$ClanString = ""
 							SetLog("Using OCR to read " & $log & " derived alphabets.", $COLOR_ACTION)
-							For $j = 0 To 2
-								If $ClanString = "" Or $ClanString = " " Then
-									$ClanString &= $BlankSpaces & getChatString(30, $aiDonateButton[1] - $aCoordinates[$j], $OcrName)
-									SetDebugLog("$OcrName: " & $OcrName)
-									SetDebugLog("$aCoordinates: " & $aCoordinates[$j])
-									SetDebugLog("$ClanString: " & $ClanString)
-									If $ClanString <> "" And $ClanString <> " " Then ExitLoop
-								EndIf
+							For $j = 1 To 2 ;only read 2 line
+								$ClanString &= $BlankSpaces & getChatString(30, $aiDonateButton[1] - $aCoordinates[$j], $OcrName)
+								SetDebugLog("$OcrName: " & $OcrName)
+								SetDebugLog("$aCoordinates: " & $aCoordinates[$j])
+								SetDebugLog("$ClanString: " & $ClanString)
 								If $ClanString <> "" Then $BlankSpaces = " "
 							Next
 						Else
