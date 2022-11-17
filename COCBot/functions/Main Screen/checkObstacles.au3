@@ -170,6 +170,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
+	If IsAttackPage() Then Click($aIsAttackPage[0], $aIsAttackPage[1])
 
 	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
 	If UBound($CSFoundCoords) > 1 Then
