@@ -265,7 +265,7 @@ Func DonateCC($bCheckForNewMsg = False)
 	Local $aiDonateButton
 
 	While $bDonate
-		checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+		;checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
 		$ClanString = ""
 		$sNewClanString = ""
 		If _Sleep($DELAYDONATECC2) Then ExitLoop
@@ -310,7 +310,7 @@ Func DonateCC($bCheckForNewMsg = False)
 					For $i = 0 To UBound($Alphabets) - 1
 						If $i = 0 Then
 							; Line 3 to 1
-							Local $aCoordinates[3] = [60, 47, 34] ; Extra coordinates for Latin (3 Lines)
+							Local $aCoordinates[3] = [60, 47, 33] ; Extra coordinates for Latin (3 Lines)
 							Local $OcrName = ($Alphabets[$i] = True) ? ("coc-latin-cyr") : ("coc-latinA")
 							Local $log = "Latin"
 							If $Alphabets[$i] Then $log = $TextAlphabetsNames[$i]

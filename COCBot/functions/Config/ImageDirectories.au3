@@ -58,7 +58,6 @@ Global $g_sImgTrader = @ScriptDir & "\imgxml\FreeMagicItems\TraderIcon\"
 Global $g_sImgTraderWindow = @ScriptDir & "\imgxml\FreeMagicItems\TraderWindow\"
 Global $g_sImgHeroPotion = @ScriptDir & "\imgxml\FreeMagicItems\HeroPotion"
 Global $g_sImgUpgradeWhiteZero = @ScriptDir & "\imgxml\Main Village\Upgrade\WhiteZero*"
-Global $g_sImgDonateCC = @ScriptDir & "\imgxml\DonateCC\"
 Global $g_sImgLabResearch = @ScriptDir & "\imgxml\Research\Laboratory\"
 Global $g_sImgAnySpell = @ScriptDir & "\imgxml\Research\Laboratory\AllSpell\"
 Global $g_sImgAnySiege = @ScriptDir & "\imgxml\Research\Laboratory\AllSiege\"
@@ -126,13 +125,11 @@ Global $g_sImgCustomArmyBB = @ScriptDir & "\imgxml\Attack\BuilderBase\ChangeTroo
 Global Const $g_sBundleBuilderHall = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\BuilderHall"
 Global Const $g_sBundleDeployPointsBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\DeployPoints\"
 Global Const $g_sImgOpponentBuildingsBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\"
-; Global Const $g_sImgAttackBtnBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Attack\AttackBtn\"
-; Global Const $g_sImgVersusWindow = @ScriptDir & "\imgxml\Attack\BuilderBase\Attack\VersusBattle\Window\"
-; Global Const $g_sImgCloudSearch = @ScriptDir & "\imgxml\Attack\BuilderBase\Attack\VersusBattle\Clouds\"
 
 #EndRegion
 
 #Region DonateCC
+Global $g_sImgDonateCC = @ScriptDir & "\imgxml\DonateCC\"
 Global $g_sImgDonateTroops = @ScriptDir & "\imgxml\DonateCC\Troops\"
 Global $g_sImgDonateSpells = @ScriptDir & "\imgxml\DonateCC\Spells\"
 Global $g_sImgDonateSiege = @ScriptDir & "\imgxml\DonateCC\SiegeMachines\"

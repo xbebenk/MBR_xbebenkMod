@@ -100,7 +100,7 @@ Func getHeroUpgradeTime($x_start, $y_start) ; -> Gets complete upgrade time for 
 EndFunc   ;==>getHeroUpgradeTime
 
 Func getChatString($x_start, $y_start, $language) ; -> Get string chat request - Latin Alphabetic - EN "DonateCC.au3"
-	Return getOcrAndCapture($language, $x_start, $y_start, 280, 14)
+	Return getOcrAndCapture($language, $x_start, $y_start, 280, 15)
 EndFunc   ;==>getChatString
 
 Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)  coc-profile
