@@ -744,7 +744,7 @@ Func chkRushTH()
 	;Ignore All Defense, Only Upgrade for Rush
 	If GUICtrlRead($g_hChkRushTH) = $GUI_CHECKED Then
 		$g_bChkRushTH = True
-		For $i = $g_hChkUpgradesToIgnore[0] To $g_hChkUpgradesToIgnore[11]
+		For $i = $g_hChkUpgradesToIgnore[5] To $g_hChkUpgradesToIgnore[11]
 			GUICtrlSetState($i, $GUI_UNCHECKED)
 		Next
 		GUICtrlSetState($g_hChkUpgradesToIgnore[7], $GUI_CHECKED) ;ignore wall
@@ -761,13 +761,13 @@ Func chkRushTH()
 		$g_bChkRushTH = False
 	EndIf
 	If GUICtrlRead($g_hChkRushTH) = $GUI_CHECKED Then
-		For $i = $g_hChkUpgradesToIgnore[0] To $g_hChkUpgradesToIgnore[35]
+		For $i = $g_hChkUpgradesToIgnore[5] To $g_hChkUpgradesToIgnore[35]
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 		GUICtrlSetState($g_hChkNewBuildingFirst, BitOR($GUI_DISABLE, $GUI_CHECKED))
 		GUICtrlSetState($g_ChkPlaceNewBuilding, BitOR($GUI_DISABLE, $GUI_CHECKED))
 	Else
-		For $i = $g_hChkUpgradesToIgnore[0] To $g_hChkUpgradesToIgnore[35]
+		For $i = $g_hChkUpgradesToIgnore[5] To $g_hChkUpgradesToIgnore[35]
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 		GUICtrlSetState($g_hChkNewBuildingFirst, $GUI_ENABLE)
