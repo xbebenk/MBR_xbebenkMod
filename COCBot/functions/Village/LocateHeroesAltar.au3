@@ -13,7 +13,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func LocateQueenAltar($bCollect = True)
-	Return True
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateQueenAltar 1") ; Update shield status due to manual $g_bRunState
@@ -43,6 +42,7 @@ Func _LocateQueenAltar($bCollect = True)
 			Local $aPos = FindPos()
 			$g_aiQueenAltarPos[0] = $aPos[0]
 			$g_aiQueenAltarPos[1] = $aPos[1]
+			SetDebugLog(_ArrayToString($aPos))
 			If Not isInsideDiamond($g_aiQueenAltarPos) Then
 				$iStupid += 1
 				Select
@@ -142,7 +142,6 @@ Func _LocateQueenAltar($bCollect = True)
 EndFunc   ;==>_LocateQueenAltar
 
 Func LocateKingAltar($bCollect = True)
-	Return True
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateKingAltar 1") ; Update shield status due to manual $g_bRunState
@@ -172,6 +171,7 @@ Func _LocateKingAltar($bCollect = True)
 			Local $aPos = FindPos()
 			$g_aiKingAltarPos[0] = $aPos[0]
 			$g_aiKingAltarPos[1] = $aPos[1]
+			SetDebugLog(_ArrayToString($aPos))
 			If Not isInsideDiamond($g_aiKingAltarPos) Then
 				$iStupid += 1
 				Select
@@ -270,7 +270,6 @@ Func _LocateKingAltar($bCollect = True)
 EndFunc   ;==>_LocateKingAltar
 
 Func LocateWardenAltar($bCollect = True)
-	Return True
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateWardenAltar 1") ; Update shield status due to manual $g_bRunState
@@ -304,6 +303,7 @@ Func _LocateWardenAltar($bCollect = True)
 			Local $aPos = FindPos()
 			$g_aiWardenAltarPos[0] = $aPos[0]
 			$g_aiWardenAltarPos[1] = $aPos[1]
+			SetDebugLog(_ArrayToString($aPos))
 			If Not isInsideDiamond($g_aiWardenAltarPos) Then
 				$iStupid += 1
 				Select
@@ -403,7 +403,6 @@ Func _LocateWardenAltar($bCollect = True)
 EndFunc   ;==>_LocateWardenAltar
 
 Func LocateChampionAltar($bCollect = True)
-	Return True
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	AndroidShield("LocateChampionAltar 1") ; Update shield status due to manual $g_bRunState
@@ -437,6 +436,7 @@ Func _LocateChampionAltar($bCollect = True)
 			Local $aPos = FindPos()
 			$g_aiChampionAltarPos[0] = $aPos[0]
 			$g_aiChampionAltarPos[1] = $aPos[1]
+			SetDebugLog(_ArrayToString($aPos))
 			If Not isInsideDiamond($g_aiChampionAltarPos) Then
 				$iStupid += 1
 				Select
@@ -534,3 +534,30 @@ Func _LocateChampionAltar($bCollect = True)
 	IniWrite($g_sProfileBuildingPath, "other", "xChampionAltarPos", $g_aiChampionAltarPos[0])
 	IniWrite($g_sProfileBuildingPath, "other", "yChampionAltarPos", $g_aiChampionAltarPos[1])
 EndFunc   ;==>_LocateChampionAltar
+
+
+Func AutoLocateAltar($Hero = "King")
+	Local $bRet = False
+	Local $sDir = $g_sImgWeakBaseBuildingsDir & "\Altar\"
+	If QuickMis("BFI", $g_sImgWeakBaseBuildingsDir & "\Altar\" & $Hero & "*") Then
+		$bRet = True	
+		Switch $Hero 
+			Case "King"
+				$g_aiKingAltarPos[0] = $g_iQuickMISX
+				$g_aiKingAltarPos[1] = $g_iQuickMISY
+			Case "Queen"
+				$g_aiQueenAltarPos[0] = $g_iQuickMISX
+				$g_aiQueenAltarPos[1] = $g_iQuickMISY
+			Case "Warden"
+				$g_aiWardenAltarPos[0] = $g_iQuickMISX
+				$g_aiWardenAltarPos[1] = $g_iQuickMISY
+			Case "Champ"
+				$g_aiChampionAltarPos[0] = $g_iQuickMISX
+				$g_aiChampionAltarPos[1] = $g_iQuickMISY
+			Case Else
+				$bRet = False
+		EndSwitch
+	EndIf
+	If _Sleep(500) Then Return
+	Return $bRet
+EndFunc

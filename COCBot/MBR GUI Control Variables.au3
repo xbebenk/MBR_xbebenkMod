@@ -35,9 +35,6 @@ Global $groupPoison = "", $groupEarthquake = "", $groupHaste = "", $groupSkeleto
 ;All Spells
 Global $groupListSpells = ""
 
-;Sieges
-Global $groupWallWrecker = "", $groupBattleBlimp = "", $groupStoneSlammer = "", $groupSiegeBarracks = "", $groupLogLauncher = "", $groupListSieges = ""
-
 ;TH Level
 Global $g_aGroupListTHLevels = ""
 
@@ -46,6 +43,8 @@ Global $g_aGroupListPicDBMaxTH = ""
 
 ;PicABMaxTH
 Global $g_aGroupListPicABMaxTH = ""
+
+
 
 ;PicBullyMaxTH
 Global $g_aGroupListPicBullyMaxTH = ""
@@ -171,13 +170,6 @@ Func InitializeControlVariables()
    $groupListSpells = $groupLightning&"#"&$groupHeal&"#"&$groupRage&"#"&$groupJump&"#"&$groupFreeze&"#"&$groupClone&"#"&$groupInvisibility&"#"&$groupPoison&"#"& _
 					  $groupEarthquake&"#"&$groupHaste&"#"&$groupSkeleton&"#"&$groupBat
 
-	; Sieges
-	$groupWallWrecker = $g_ahPicTrainArmySiege[$eSiegeWallWrecker]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeWallWrecker]
-	$groupBattleBlimp = $g_ahPicTrainArmySiege[$eSiegeBattleBlimp]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeBattleBlimp]
-	$groupStoneSlammer = $g_ahPicTrainArmySiege[$eSiegeStoneSlammer]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeStoneSlammer]
-	$groupSiegeBarracks = $g_ahPicTrainArmySiege[$eSiegeBarracks]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeBarracks]
-	$groupLogLauncher = $g_ahPicTrainArmySiege[$eSiegeLogLauncher]&"#"&$g_ahTxtTrainArmySiegeCount[$eSiegeLogLauncher]
-	$groupListSieges = $groupWallWrecker&"#"&$groupBattleBlimp&"#"&$groupStoneSlammer&"#"&$groupSiegeBarracks&"#"&$groupLogLauncher
 
    ;TH Level
    $g_aGroupListTHLevels = $g_ahPicTHLevels[4]&"#"&$g_ahPicTHLevels[5]&"#"&$g_ahPicTHLevels[6]&"#"&$g_ahPicTHLevels[7]&"#"&$g_ahPicTHLevels[8]&"#"& _

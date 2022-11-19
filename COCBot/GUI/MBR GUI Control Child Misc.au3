@@ -240,30 +240,19 @@ Func chkBotStop()
 	EndIf
 EndFunc   ;==>chkBotStop
 
-;~ Func btnLocateBarracks()
-;~ 	Local $wasRunState = $g_bRunState
-;~ 	$g_bRunState = True
-;~ 	ZoomOut()
-;~ 	;LocateOneBarrack()
-;~ 	$g_bRunState = $wasRunState
-;~ 	AndroidShield("btnLocateBarracks") ; Update shield status due to manual $g_bRunState
-;~ EndFunc   ;==>btnLocateBarracks
-
-;~ Func btnLocateArmyCamp()
-;~ 	Local $wasRunState = $g_bRunState
-;~ 	$g_bRunState = True
-;~ 	ZoomOut()
-;~ 	;LocateBarrack(True)
-;~ 	$g_bRunState = $wasRunState
-;~ 	AndroidShield("btnLocateArmyCamp") ; Update shield status due to manual $g_bRunState
-;~ EndFunc   ;==>btnLocateArmyCamp
-
 Func btnLocateClanCastle()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	LocateClanCastle()
-	$g_bRunState = $wasRunState
+	If AutoLocateCC() Then 
+		$g_bRunState = $wasRunState
+		ClickAway()
+		Return
+	Else
+		LocateClanCastle()
+		$g_bRunState = $wasRunState
+	EndIf
+	
 	AndroidShield("btnLocateClanCastle") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnLocateClanCastle
 
@@ -286,19 +275,79 @@ EndFunc   ;==>btnLocateClanCastle
 ;~ EndFunc   ;==>btnLocateDarkSpellfactory
 
 Func btnLocateKingAltar()
+	$g_bRunState = True
+	ZoomOut()
+	If AutoLocateAltar("King") Then
+		ClickP($g_aiKingAltarPos)
+		If _Sleep(800) Then Return
+		Local $BuildingInfo = BuildingInfo(245, 494)
+		If StringInStr($BuildingInfo[1], "King") Then
+			applyConfig()
+			saveConfig()
+			$g_bRunState = False
+			ClickAway()
+			SetLog("Successfully Locate Barbarian King Altar [" & _ArrayToString($g_aiKingAltarPos) & "]", $COLOR_SUCCESS)
+			Return True
+		EndIf
+	EndIf
 	LocateKingAltar()
 EndFunc   ;==>btnLocateKingAltar
 
 
 Func btnLocateQueenAltar()
+	$g_bRunState = True
+	ZoomOut()
+	If AutoLocateAltar("Queen") Then
+		ClickP($g_aiQueenAltarPos)
+		If _Sleep(800) Then Return
+		Local $BuildingInfo = BuildingInfo(245, 494)
+		If StringInStr($BuildingInfo[1], "Queen") Then
+			applyConfig()
+			saveConfig()
+			$g_bRunState = False
+			ClickAway()
+			SetLog("Successfully Locate Acher Queen Altar [" & _ArrayToString($g_aiQueenAltarPos) & "]", $COLOR_SUCCESS)
+			Return True
+		EndIf
+	EndIf
 	LocateQueenAltar()
 EndFunc   ;==>btnLocateQueenAltar
 
 Func btnLocateWardenAltar()
+	$g_bRunState = True
+	ZoomOut()
+	If AutoLocateAltar("Warden") Then
+		ClickP($g_aiWardenAltarPos)
+		If _Sleep(800) Then Return
+		Local $BuildingInfo = BuildingInfo(245, 494)
+		If StringInStr($BuildingInfo[1], "Warden") Then
+			applyConfig()
+			saveConfig()
+			$g_bRunState = False
+			ClickAway()
+			SetLog("Successfully Locate Grand Warden Altar [" & _ArrayToString($g_aiWardenAltarPos) & "]", $COLOR_SUCCESS)
+			Return True
+		EndIf
+	EndIf
 	LocateWardenAltar()
 EndFunc   ;==>btnLocateWardenAltar
 
 Func btnLocateChampionAltar()
+	$g_bRunState = True
+	ZoomOut()
+	If AutoLocateAltar("Champ") Then
+		ClickP($g_aiChampionAltarPos)
+		If _Sleep(800) Then Return
+		Local $BuildingInfo = BuildingInfo(245, 494)
+		If StringInStr($BuildingInfo[1], "Champ") Then
+			applyConfig()
+			saveConfig()
+			$g_bRunState = False
+			ClickAway()
+			SetLog("Successfully Locate Champion Altar [" & _ArrayToString($g_aiChampionAltarPos) & "]", $COLOR_SUCCESS)
+			Return True
+		EndIf
+	EndIf
 	LocateChampionAltar()
 EndFunc   ;==>btnLocateChampionAltar
 
@@ -306,7 +355,41 @@ Func btnLocateTownHall()
 	Local $wasRunState = $g_bRunState
 	Local $g_iOldTownHallLevel = $g_iTownHallLevel
 	$g_bRunState = True
+	
 	ZoomOut()
+	Local $iTownHallLevel = $g_iTownHallLevel
+	Local $bLocateTH = False, $bTHFound = False
+	SetLog("Locating Town Hall", $COLOR_ACTION)
+	Collect(False) ;only collect from mine and collector
+	For $i = 1 To 2
+		SetLog("Searching TH #" & $i, $COLOR_ACTION)
+		If $g_aiTownHallPos[0] > -1 Then
+			ClickP($g_aiTownHallPos)
+			If _Sleep(800) Then Return
+			Local $BuildingInfo = BuildingInfo(245, 494)
+			If $BuildingInfo[1] = "Town Hall" Then
+				$g_iTownHallLevel = Number($BuildingInfo[2])
+				$bTHFound = True
+				applyConfig()
+				saveConfig()
+				ExitLoop
+			Else
+				$bLocateTH = True
+			EndIf
+		EndIf
+
+		If $g_iTownHallLevel = 0 Or $bLocateTH Then
+			imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
+		EndIf
+	Next
+	
+	ClickAway()
+	
+	SetLog("Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
+	SetLog("Coord : " &  _ArrayToString($g_aiTownHallPos), $COLOR_INFO)
+	
+	If $bTHFound Then Return
+	
 	LocateTownHall()
 	If Not $g_iOldTownHallLevel = $g_iTownHallLevel Then
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
