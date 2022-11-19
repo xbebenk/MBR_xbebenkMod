@@ -112,6 +112,7 @@ Func CheckIfArmyIsReady()
 	If _Sleep(250) Then Return
 
 	CheckArmyCamp(False, False, True, True)
+	CheckCCArmy()
 	RequestCC(False, "IsFullClanCastle")
 
 	If $g_bDebugSetlogTrain Then
