@@ -99,6 +99,7 @@ Func SwitchTo($To = "BB")
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
 			ZoomOutHelper("SwitchBetweenBases")
+			If $i = 3 Then AndroidPageError("SwitchBetweenBases")
 		EndIf
 		_Sleep(1000)
 	Next

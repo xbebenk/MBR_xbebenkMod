@@ -1050,5 +1050,6 @@ Func ParseAttackCSV_MainSide($debug = False)
 	Else
 		SetLog("Cannot find attack file " & $g_sCSVAttacksPath & "\" & $filename & ".csv", $COLOR_ERROR)
 	EndIf
+	Return $MAINSIDE
 EndFunc   ;==>ParseAttackCSV_MainSide
 

@@ -718,7 +718,7 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	EndIf
 
 	; Calculate main attack side
-	ParseAttackCSV_MainSide()
+	Local $sMainSide = ParseAttackCSV_MainSide()
 
 	; 13 - Wall
 	If $g_bCSVLocateWall Then
@@ -741,7 +741,19 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	; 15 - LAUNCH PARSE FUNCTION -------------------------------------------------------------
 	SetSlotSpecialTroops()
 	If _Sleep($DELAYRESPOND) Then Return
-
+	If $sMainSide = "BOTTOM-RIGHT" Or $sMainSide = "BOTTOM-LEFT" Then
+		SetDebugLog("BOTTOM LEFT/RIGHT as MainSide, checking boost button")
+		For $i = 1 To 15
+			If QuickMIS("BFI", $g_sImgImgLocButtons & "\BoostButton*.xml", 300,520,390,550) Then
+				If _Sleep(2000) Then Return
+				SetLog("Wait Battle Start #" & $i, $COLOR_ACTION)
+			Else
+				If _Sleep(3000) Then Return
+				ExitLoop
+			EndIf
+		Next
+	EndIf
+	
 	ParseAttackCSV($testattack)
 
 	CheckHeroesHealth()

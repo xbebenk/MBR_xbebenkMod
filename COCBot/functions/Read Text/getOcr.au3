@@ -179,10 +179,10 @@ Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
 	
 	If StringRegExp($BuildingName, "x\d{1,}") Then
 		Local $aReplace = StringRegExp($BuildingName, "( x\d{1,})", 1)
-		;SetDebugLog($aReplace[0])
-		Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
-		;SetDebugLog($TmpBuildingName)
-		$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
+			$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
 	EndIf
 	
 	Local $aResult[2]
@@ -207,10 +207,10 @@ Func getCCBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder men
 	
 	If StringRegExp($BuildingName, "x\d{1,}") Then
 		Local $aReplace = StringRegExp($BuildingName, "( x\d{1,})", 1)
-		;SetDebugLog($aReplace[0])
-		Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
-		;SetDebugLog($TmpBuildingName)
-		$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
+			$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
 	EndIf
 	
 	Local $aResult[2]
@@ -235,10 +235,10 @@ Func getCCBuildingNameBlue($x_start, $y_start) ;  -> Get BuildingName on builder
 	
 	If StringRegExp($BuildingName, "x\d{1,}") Then
 		Local $aReplace = StringRegExp($BuildingName, "( x\d{1,})", 1)
-		;SetDebugLog($aReplace[0])
-		Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
-		;SetDebugLog($TmpBuildingName)
-		$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
+			$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
 	EndIf
 	
 	Local $aResult[2]
