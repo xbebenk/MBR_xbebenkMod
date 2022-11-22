@@ -51,11 +51,8 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Next
 	Else
 		checkObstacles()
-		SetLog("Waiting For MainPage #" & $i, $COLOR_ACTION)		
 		SetLog("PrepareSearch: MainPage Not Found!", $COLOR_ERROR)
-		Return False
-	EndIf
-	
+	EndIf	
 
 	Local $bSignedUpLegendLeague = False
 	Local $aButton

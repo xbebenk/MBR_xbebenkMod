@@ -1,0 +1,74 @@
+NOTE  |      PUSH: SPAM YETI WITCH
+NOTE  |      ==== TH 13/14/15 ====
+NOTE  |300 ArmyCamp Space
+NOTE  |Army  : Yeti x8, Witch x8, IceGolem x2
+NOTE  |Army  : Giant x6
+NOTE  |Spell : TH13 ----- EarthQuack x11
+NOTE  |Spell : TH14/15 -- EarthQuack x9, Rage x1
+NOTE  |CC    : TH13/14/15 : Yeti 1x, Witch x1, Fill Giant, EQ x3
+NOTE  |Siege : Log Launcher
+NOTE  |Redline: External edges
+NOTE  |Apply csv settings only for TH13
+NOTE  |TH14/15 please do manually!
+
+      |_TROOPNAME_|__FLEXIBLE_|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|
+TRAIN |Giant      |0          |0          |0          |0          |0          |0          |0          |0          |6          |
+TRAIN |Yeti       |0          |0          |0          |0          |0          |0          |0          |0          |8          |
+TRAIN |Witc       |0          |0          |0          |0          |0          |0          |0          |0          |8          |
+TRAIN |IceG       |0          |0          |0          |0          |0          |0          |0          |0          |2          |
+TRAIN |ESpell     |0          |0          |0          |0          |0          |0          |0          |0          |11         |
+TRAIN |King       |0          |0          |0          |0          |0          |0          |0          |0          |1          |
+TRAIN |Queen      |0          |0          |0          |0          |0          |0          |0          |0          |1          |
+TRAIN |Warden     |0          |0          |0          |0          |0          |0          |0          |0          |1          |
+TRAIN |Champion   |0          |0          |0          |0          |0          |0          |0          |0          |1          |
+
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|
+REDLN |0          |0          |0          |0          |0          |0          |0          |0          |0          |4          |
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
+SIDE  |0          |0          |0          |0          |0          |0          |5          |           |
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |           |           |
+SIDEB |10         |0          |0          |0          |0          |0          |0          |           |           |           |
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|
+MAKE  |A          |FRONT-RIGHT|10         |0          |EXT-INT    |2          |2          |           |Troops
+MAKE  |B          |FRONT-LEFT |10         |0          |EXT-INT    |2          |2          |           |Troops
+MAKE  |C          |FRONT-LEFT |10         |-9         |EXT-INT    |0          |0          |           |ESpell
+MAKE  |D          |FRONT-RIGHT|10         |-9         |EXT-INT    |2          |2          |           |ESpell
+MAKE  |E          |FRONT-RIGHT|10         |-18        |EXT-INT    |0          |0          |           |ESpell
+MAKE  |F          |FRONT-RIGHT|10         |-14        |EXT-INT    |0          |0          |           |RSpell
+MAKE  |G          |FRONT-LEFT |1          |0          |IGNORE     |0          |0          |TOWNHALL   |ESpell   
+MAKE  |H          |LEFT-FRONT |10         |0          |EXT-INT    |5          |5          |           |Start
+MAKE  |I          |RIGHT-FRONT|10         |0          |EXT-INT    |5          |5          |           |Start
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|
+DROP  |H          |3          |1          |Yeti       |40         |27-50      |50-70      |           |
+DROP  |I          |3          |1          |Yeti       |40         |27-50      |550-690    |           |
+DROP  |H          |3          |1          |Witc       |40         |27-50      |50-70      |           |
+DROP  |I          |3          |1          |Witc       |40         |27-50      |550-690    |           |
+DROP  |H          |3          |1          |FlameF     |55-70      |27-50      |15-20      |           |
+ 
+DROP  |C          |8          |4          |Espell     |55-70      |25-70      |100-200    |           |
+WAIT  |500-600    |           |           |           |           |           |           |           |
+DROP  |D          |7          |4          |Espell     |55-70      |25-70      |100-200    |           |
+WAIT  |500-600    |           |           |           |           |           |           |           |
+DROP  |E          |9          |4          |Espell     |55-70      |25-70      |100-200    |           |
+WAIT  |500-600    |           |           |           |           |           |           |           |
+DROP  |G          |1          |2          |Espell     |55-70      |25-70      |100-200    |           |
+WAIT  |12000-13000|           |           |           |           |           |           |           |
+DROP  |A-B        |7,8,9,10   |4          |Yeti       |45-70      |26-50      |90-150     |           |
+DROP  |A-B        |7,8,9,10   |4          |Giant      |45-70      |26-50      |90-150     |           |
+DROP  |A-B        |8          |2          |IceG       |45-70      |26-50      |90-150     |           |
+WAIT  |500-700    |           |           |           |           |           |           |           |
+DROP  |A-B        |7,8,9,10   |4          |Witc       |45-70      |26-50      |90-150     |           |
+DROP  |A          |10         |1          |LogL       |45-70      |26-50      |90-120     |           |
+DROP  |B          |8          |1          |King       |45-70      |26-50      |90-120     |           |
+WAIT  |2000-2500  |           |           |           |           |           |           |           |
+DROP  |A          |10         |1          |Warden     |45-70      |50         |90-120     |           |
+DROP  |A          |7          |1          |Queen      |45-70      |26-50      |90-120     |           |
+WAIT  |2500-3000  |           |           |           |           |           |           |           |
+DROP  |A          |8          |1          |Champion   |45-70      |36-50      |90-120     |           |
+DROP  |A          |10         |1          |Warden     |45-70      |90         |90-120     |           |
+DROP  |A-B        |7,8,9,10   |4          |REMAIN     |45-70      |26-50      |90-150     |           |
+WAIT  |2500-3000  |           |           |           |           |           |           |           |
+DROP  |F          |10         |1          |RSpell     |55-70      |25-70      |100-200    |           |

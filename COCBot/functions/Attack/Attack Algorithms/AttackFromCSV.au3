@@ -890,3 +890,11 @@ Func TestDropLine($SearchRedLine = False)
 	AttackCSVDEBUGIMAGE() ;make IMG debug
 
 EndFunc   ;==>TestDropLine
+
+Func TestCSV($iMode = $LB)
+	PrepareAttack($iMode)
+	setVillageOffset(0, 0, 1)
+	CheckZoomOut("TestCSV")
+	ConvertInternalExternArea()
+	Algorithm_AttackCSV()
+EndFunc
