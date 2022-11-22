@@ -260,7 +260,7 @@ Func FindExistingBuilding($bTest = False)
 					Local $bRet = DoGearUp($g_iQuickMISX + 20, $g_iQuickMISY)
 					SetLog("Do GearUp result : " & String($bRet), $COLOR_INFO)
 					ClickMainBuilder()
-					Return $aBuilding
+					If $bRet Then Return $aBuilding
 				EndIf
 				ContinueLoop ;skip geared and new
 			EndIf

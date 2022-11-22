@@ -1128,7 +1128,6 @@ Func __RunFunction($action)
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then 
 					If DonateCC() Then
-						$g_bDonated = False
 						If $g_bTrainEnabled Then ; check for training enabled in halt mode
 							If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 								TrainSystem()
@@ -1148,6 +1147,7 @@ Func __RunFunction($action)
 						Else
 							If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 						EndIf
+						$g_bDonated = False
 					EndIf
 				EndIf
 			EndIf
@@ -1343,7 +1343,7 @@ Func FirstCheck()
 		If $g_bAutoUpgradeEarly Then
 			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
 			checkArmyCamp(True, True) ;need to check reserved builder for heroes
-			AutoUpgrade()
+			_RunFunction("UpgradeBuilding")
 		EndIf
 		VillageReport()
 		ZoomOut()

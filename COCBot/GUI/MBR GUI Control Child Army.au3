@@ -174,13 +174,6 @@ Func lblTotalCountSiege()
 			GUICtrlSetBkColor($g_ahTxtTrainArmySiegeCount[$i], $COLOR_RED)
 		EndIf
 	Next
-	; prepared for some new TH level !!
-	If $g_iTownHallLevel > 0 And $g_iTownHallLevel < 12 Then
-		$g_iTotalTrainSpaceSiege = 0
-		_GUI_Value_STATE("DISABLE", $groupListSieges)
-	Else
-		_GUI_Value_STATE("ENABLE", $groupListSieges)
-	EndIf
 EndFunc   ;==>lblTotalCountSiege
 
 Func TotalSpellCountClick()

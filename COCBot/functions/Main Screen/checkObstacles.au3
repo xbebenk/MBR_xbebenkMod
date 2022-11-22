@@ -170,7 +170,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
-
+	
 	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
 	If UBound($CSFoundCoords) > 1 Then
 		SetLog("CoC Has Stopped Error .....", $COLOR_ERROR)
@@ -296,6 +296,22 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			$g_bMinorObstacle = True
 			Return False
 		EndIf
+	EndIf
+	
+	If Not isOnMainVillage() And IsAttackPage() Then 
+		ClickP($aIsAttackPage)
+		If _Sleep(1000) Then Return
+		For $i = 1 To 5
+			If isOnMainVillage() Then ExitLoop
+			SetLog("Waiting Main Page #" & $i, $COLOR_ACTION)
+			If IsOKCancelPage(True) Then
+				Click(510, 400); Click Okay to Confirm surrender
+				If _Sleep(1000) Then Return
+			EndIf
+			If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
+			If _Sleep(1000) Then Return
+		Next
+		Return False
 	EndIf
 	
 	ClickAway()

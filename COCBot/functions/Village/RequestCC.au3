@@ -43,7 +43,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
 
 	If Not $g_bRunState Then Return
 	Local $aRequestButton = QuickMIS("CNX", $g_sImgRequestCCButton, 710, 548, 840, 588)
-	If Not IsArray($aRequestButton) Then
+	If UBound($aRequestButton) < 1 Then
 		SetDebugLog("Error in RequestCC(): $aRequestButton is no Array")
 		If $g_bDebugImageSave Then SaveDebugImage("RequestButtonStateError")
 		Return

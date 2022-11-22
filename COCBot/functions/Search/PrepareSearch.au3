@@ -51,16 +51,12 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Next
 	Else
 		checkObstacles()
-		SetLog("Waiting For MainPage #" & $i, $COLOR_ACTION)		
 		SetLog("PrepareSearch: MainPage Not Found!", $COLOR_ERROR)
-		Return False
-	EndIf
-	
+	EndIf	
 
-	Local $bSignedUpLegendLeague = False
 	Local $aButton
 	
-	For $s = 1 To 5
+	For $s = 1 To 20
 		If $g_bDebugSetlog Then SetLog("Search for attack Button #" & $s, $COLOR_ACTION)
 		$aButton = QuickMIS("CNX", $g_sImgPrepareLegendLeagueSearch, 275,190,835,545)
 		If IsArray($aButton) And UBound($aButton) > 0 Then
@@ -68,6 +64,16 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				If StringInStr($aButton[$i][0], "Normal") Then
 					$g_bLeagueAttack = False
 					Click($aButton[$i][1], $aButton[$i][2])
+					For $k = 1 To 10 
+						If _Sleep(500) Then Return
+						If QuickMIS("BC1", $g_sImgPrepareLegendLeagueSearch, $aButton[$i][1] - 50, $aButton[$i][2] - 50, $aButton[$i][1] + 50, $aButton[$i][2] + 50) Then 
+							SetDebugLog("Still see " & $aButton[$i][0])
+							ContinueLoop 2
+						Else
+							ExitLoop
+						EndIf
+						If _Sleep(500) Then Return
+					Next
 					ExitLoop 2
 				ElseIf StringInStr($aButton[$i][0], "Ended") Then
 					SetLog("League Day ended already! Trying again later", $COLOR_INFO)
@@ -101,7 +107,6 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 						If IsOKCancelPage() Then
 							ClickP($aConfirmSurrender)
 							SetLog("Sign-up to Legend League done", $COLOR_INFO)
-							$bSignedUpLegendLeague = True
 							If _Sleep(1000) Then Return
 							ExitLoop 2
 						Else
@@ -111,6 +116,9 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					Next
 					SetLog("Problem SignUp to Legend League", $COLOR_ERROR)
 					Return False
+				ElseIf StringInStr($aButton[$i][0], "Oppo", 0) Then
+					SetLog("Finding opponents! Waiting 2 minutes and then try again to find a match", $COLOR_INFO)
+					_SleepStatus(120000) ; Wait 2 mins before searching again
 				EndIf
 			Next
 		Else
@@ -120,7 +128,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				Return False
 			EndIf
 		EndIf
-		If _Sleep(500) Then Return
+		If _Sleep(1500) Then Return
 	Next
 	$g_bCloudsActive = True ; early set of clouds to ensure no android suspend occurs that might cause infinite waits
 	

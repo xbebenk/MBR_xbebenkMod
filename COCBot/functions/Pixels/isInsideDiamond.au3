@@ -26,6 +26,7 @@ Func isInsideDiamond($aCoords)
 	Local $x = $aCoords[0], $y = $aCoords[1], $xD, $yD
 	Local $Left, $Right, $Top, $Bottom
     Local $iIndex = _ArraySearch($g_aVillageRefSize, $g_sCurrentScenery) ;get the diamond shape based on reference village
+	If $g_bDebugSetLog Then SetDebugLog("[isInsideDiamond] " & _ArrayToString($aCoords))
     If $iIndex <> -1 Then 
         $Left = $g_aVillageRefSize[$iIndex][3]
         $Right = $g_aVillageRefSize[$iIndex][4]
