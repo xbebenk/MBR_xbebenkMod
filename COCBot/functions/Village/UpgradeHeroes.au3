@@ -114,7 +114,7 @@ Func QueenUpgrade()
 	SetLog("Upgrade Queen")
 	ClickAway()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	BuildingClickP($g_aiQueenAltarPos) ;Click Queen Altar
+	ClickP($g_aiQueenAltarPos) ;Click Queen Altar
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Queen info and Level
@@ -218,7 +218,7 @@ Func KingUpgrade()
 	SetLog("Upgrade King")
 	ClickAway()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	BuildingClickP($g_aiKingAltarPos) ;Click King Altar
+	ClickP($g_aiKingAltarPos) ;Click King Altar
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get King info
@@ -442,7 +442,7 @@ Func ChampionUpgrade()
 	SetLog("Upgrade Champion")
 	ClickAway()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	BuildingClickP($g_aiChampionAltarPos) ;Click Champion Altar
+	ClickP($g_aiChampionAltarPos) ;Click Champion Altar
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Champion info and Level
