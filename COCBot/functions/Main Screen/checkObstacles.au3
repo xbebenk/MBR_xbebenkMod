@@ -311,6 +311,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			If _Sleep(1000) Then Return
 		Next
+		Return False
 	EndIf
 	
 	ClickAway()
