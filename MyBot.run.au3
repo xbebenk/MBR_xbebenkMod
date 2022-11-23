@@ -1595,6 +1595,8 @@ Func CommonRoutine($RoutineType = Default)
 				If _Sleep(50) Then Return
 				If $g_bRestart Then Return
 			Next
+			CheckIfArmyIsReady()
+			If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
 	EndSwitch
 EndFunc
 
