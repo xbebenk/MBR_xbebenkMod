@@ -26,9 +26,9 @@ TRAIN |Champion   |0          |0          |0          |0          |0          |0
 REDLN |0          |0          |0          |0          |0          |0          |0          |0          |0          |4          |
 
       |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
-SIDE  |0          |0          |0          |0          |0          |0          |5          |           |
+SIDE  |0          |0          |0          |0          |0          |0          |15         |           |
       |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |           |           |
-SIDEB |10         |0          |0          |0          |0          |0          |0          |           |           |           |
+SIDEB |5          |0          |0          |0          |0          |0          |0          |           |           |           |
 
       |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|
 MAKE  |A          |FRONT-RIGHT|10         |0          |EXT-INT    |2          |2          |           |Troops
@@ -36,7 +36,7 @@ MAKE  |B          |FRONT-LEFT |10         |0          |EXT-INT    |2          |2
 MAKE  |C          |FRONT-LEFT |10         |-9         |EXT-INT    |0          |0          |           |ESpell
 MAKE  |D          |FRONT-RIGHT|10         |-9         |EXT-INT    |2          |2          |           |ESpell
 MAKE  |E          |FRONT-RIGHT|10         |-18        |EXT-INT    |0          |0          |           |ESpell
-MAKE  |F          |FRONT-RIGHT|10         |-14        |EXT-INT    |0          |0          |           |RSpell
+MAKE  |F          |FRONT-RIGHT|10         |-16        |EXT-INT    |2          |0          |           |RSpell
 MAKE  |G          |FRONT-LEFT |1          |0          |IGNORE     |0          |0          |TOWNHALL   |ESpell   
 MAKE  |H          |LEFT-FRONT |10         |0          |EXT-INT    |5          |5          |           |Start
 MAKE  |I          |RIGHT-FRONT|10         |0          |EXT-INT    |5          |5          |           |Start
@@ -50,9 +50,9 @@ DROP  |H          |3          |1          |FlameF     |55-70      |27-50      |1
  
 DROP  |C          |8          |4          |Espell     |55-70      |25-70      |100-200    |           |
 WAIT  |500-600    |           |           |           |           |           |           |           |
-DROP  |D          |7          |4          |Espell     |55-70      |25-70      |100-200    |           |
+DROP  |D          |8          |4          |Espell     |55-70      |25-70      |100-200    |           |
 WAIT  |500-600    |           |           |           |           |           |           |           |
-DROP  |E          |9          |4          |Espell     |55-70      |25-70      |100-200    |           |
+DROP  |E          |10         |4          |Espell     |55-70      |25-70      |100-200    |           |
 WAIT  |500-600    |           |           |           |           |           |           |           |
 DROP  |G          |1          |2          |Espell     |55-70      |25-70      |100-200    |           |
 WAIT  |12000-13000|           |           |           |           |           |           |           |

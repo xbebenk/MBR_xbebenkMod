@@ -784,7 +784,7 @@ Func IsEventRunning($bOpenWindow = False)
 				;check if Challenge is BB Challenge, enabling force BB attack
 				If $g_bChkForceBBAttackOnClanGames Then
 					Click(340,180) ; click first slot
-					If _Sleep(1000) Then Return
+					If _Sleep(2000) Then Return
 					SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
 					If QuickMIS("BC1", $g_sImgVersus, 425, 150, 700, 215, True, False) Then
 						Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
@@ -885,7 +885,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 			Click(300,50) ;Click Challenge Tab
 			If _Sleep(500) Then Return
 			Click(340,180) ;Click Active Challenge
-			If _Sleep(1000) Then Return
+			If _Sleep(2000) Then Return
 
 			SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
 			If QuickMIS("BC1", $g_sImgVersus, 425, 150, 700, 215, True, False) Then

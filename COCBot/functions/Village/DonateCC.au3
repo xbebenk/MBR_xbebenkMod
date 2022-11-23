@@ -21,6 +21,8 @@ Global $g_iDonTroopsQuantityAv = 0, $g_iDonTroopsQuantity = 0, $g_iDonSpellsQuan
 Global $g_bSkipDonTroops = False, $g_bSkipDonSpells = False, $g_bSkipDonSiege = False
 Global $g_bDonateAllRespectBlk = False ; is turned on off durning donate all section, must be false all other times
 Global $g_aiAvailQueuedTroop[$eTroopCount], $g_aiAvailQueuedSpell[$eSpellCount]
+Global $g_aiDonQuant
+Global $g_aiZero52[5][2] = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
 
 Func PrepareDonateCC()
 	;Troops
@@ -137,17 +139,24 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 EndFunc   ;==>IsDonateQueueOnly
 
 Func getArmyRequest($aiDonateCoords, $bNeedCapture = True)
-	; Contains iXStart, $iYStart, $iXEnd, $iYEnd
-	Local $aiSearchArray[4] = [35, $aiDonateCoords[1] - 82, 297, $aiDonateCoords[1] - 38]
-	Local $sRequestDiamond = GetDiamondFromRect($aiSearchArray)
-	; Returns $aCurrentRequests[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
-	Local $aCurrentArmyRequest = findMultiple(@ScriptDir & "\imgxml\DonateCC\Army", $sRequestDiamond, $sRequestDiamond, 0, 1000, 0, "objectname,objectpoints", $bNeedCapture)
-
 	Local $aTempRequestArray, $iArmyIndex = -1, $sClanText = ""
-	If UBound($aCurrentArmyRequest, 1) >= 1 Then
-		For $i = 0 To UBound($aCurrentArmyRequest, 1) - 1 ; Loop through found CC Requests
-			$aTempRequestArray = $aCurrentArmyRequest[$i] ; Declare Array to Temp Array
-			$iArmyIndex = TroopIndexLookup($aTempRequestArray[0], "getArmyRequest()") ; Get the Index of the Troop from the ShortName
+	$g_aiDonQuant = $g_aiZero52 ;reset array
+	Local $aQuick = QuickMIS("CNX", @ScriptDir & "\imgxml\DonateCC\Army", 35, $aiDonateCoords[1] - 90, 297, $aiDonateCoords[1] - 38)
+	;_ArrayDisplay($aQuick)
+	Local $axCoord[5] = [35, 86, 138, 190, 241]
+	If Ubound($aQuick) > 0 Then
+		For $i = 0 To UBound($aQuick) - 1
+			If $i > 4 Then ExitLoop
+			Local $iPos = 0
+			For $j = 0 To Ubound($axCoord) - 1
+				If Number($aQuick[$i][1]) > $axCoord[$j] Then 
+					$iPos = $j
+					ContinueLoop
+				EndIf
+				If Number($aQuick[$i][1]) < $axCoord[$j] Then ExitLoop
+			Next
+			
+			$iArmyIndex = TroopIndexLookup($aQuick[$i][0])
 			; Troops
 			If $iArmyIndex >= $eBarb And $iArmyIndex <= $eHunt Then
 				$sClanText &= ", " & $g_asTroopNames[$iArmyIndex]
@@ -160,8 +169,13 @@ Func getArmyRequest($aiDonateCoords, $bNeedCapture = True)
 			ElseIf $iArmyIndex = -1 Then
 				ContinueLoop
 			EndIf
+			Local $sQuant = getOcrAndCapture("coc-singlereq", $axCoord[$iPos], $aiDonateCoords[1] - 90, 50, 20, True)
+			SetDebugLog("$sQuant : " & $sQuant)
+			$g_aiDonQuant[$i][0] = $iArmyIndex
+			$g_aiDonQuant[$i][1] = Number($sQuant)
 		Next
 	EndIf
+	If $g_bDebugSetLog Then SetLog(_ArrayToString($g_aiDonQuant), $COLOR_DEBUG)
 	Return StringTrimLeft($sClanText, 2)
 EndFunc   ;==>getArmyRequest
 
@@ -494,7 +508,10 @@ Func DonateCC($bCheckForNewMsg = False)
 							Local $iTroopIndex = $g_aiDonateTroopPriority[$i]
 							If $g_abChkDonateTroop[$iTroopIndex] Then
 								If CheckDonateTroop($iTroopIndex, $g_asTxtDonateTroop[$iTroopIndex], $g_asTxtBlacklistTroop[$iTroopIndex], $ClanString, $bNewSystemToDonate) Then
-									DonateTroopType($iTroopIndex, 0, $abDonateQueueOnly[0])
+									Local $iQuant = -1, $Quant = 0
+									$iQuant = _ArraySearch($g_aiDonQuant, $iTroopIndex, 0, 0, 0, 0, 1, 0)
+									If $iQuant <> -1 Then $Quant = $g_aiDonQuant[$iQuant][1]
+									DonateTroopType($iTroopIndex, $Quant, $abDonateQueueOnly[0])
 									If _Sleep($DELAYDONATECC3) Then ExitLoop
 								EndIf
 							EndIf
@@ -764,7 +781,7 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 	Local $sTextToAll = ""
 
 	If $g_iTotalDonateTroopCapacity = 0 Then Return
-	SetDebugLog("$DonateTroopType Start: " & $g_asTroopNames[$iTroopIndex], $COLOR_DEBUG)
+	SetDebugLog("$DonateTroopType Start: " & $g_asTroopNames[$iTroopIndex] & " Quant:" & $Quant, $COLOR_DEBUG)
 
 	; Space to donate troop?
 	$g_iDonTroopsQuantityAv = Floor($g_iTotalDonateTroopCapacity / $g_aiTroopSpace[$iTroopIndex])
