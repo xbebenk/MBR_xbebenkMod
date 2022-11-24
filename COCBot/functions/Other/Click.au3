@@ -19,8 +19,8 @@
 Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
     If $g_bUseRandomClick Then
-		;$x = Random($x - 2, $x + 2, 1)
-		;$y = Random($y - 2, $y + 2, 1)
+		$x = Random($x - 2, $x + 2, 1)
+		$y = Random($y - 2, $y + 2, 1)
 		If $g_bDebugClick Then
 			$txt = _DecodeDebug($debugtxt)
 			SetLog("Random Click X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
@@ -106,10 +106,10 @@ EndFunc   ;==>ClickP
 Func BuildingClick($x, $y, $debugtxt = "")
 	Local $point[2] = [$x, $y]
 	ConvertToVillagePos($x, $y)
-	If $g_bDebugClick Then
-		Local $txt = _DecodeDebug($debugtxt)
+	;If $g_bDebugClick Then
+	;	Local $txt = _DecodeDebug($debugtxt)
 		SetLog("BuildingClick " & $point[0] & "," & $point[1] & " converted to " & $x & "," & $y & " " & $debugtxt & $txt, $COLOR_ACTION)
-	EndIf
+	;EndIf
 	Return Click($x, $y, 1, 0, $debugtxt)
 EndFunc   ;==>BuildingClick
 
@@ -120,8 +120,8 @@ EndFunc   ;==>BuildingClickP
 Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
     If $g_bUseRandomClick Then
-		;$x = Random($x - 2, $x + 2, 1)
-		;$y = Random($y - 2, $y + 2, 1)
+		$x = Random($x - 2, $x + 2, 1)
+		$y = Random($y - 2, $y + 2, 1)
 		If $g_bDebugClick Then
 			$txt = _DecodeDebug($debugtxt)
 			SetLog("Random PureClick X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
@@ -164,8 +164,8 @@ EndFunc   ;==>PureClickP
 Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
     If $g_bUseRandomClick Then
-		;$x = Random($x - 2, $x + 2, 1)
-		;$y = Random($y - 2, $y + 2, 1)
+		$x = Random($x - 2, $x + 2, 1)
+		$y = Random($y - 2, $y + 2, 1)
 		If $g_bDebugClick Then
 			$txt = _DecodeDebug($debugtxt)
 			SetLog("Random GemClick X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)

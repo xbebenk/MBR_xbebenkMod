@@ -230,8 +230,8 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 	ClickAway()
 	If _Sleep($DELAYUPGRADENORMAL1) Then Return
 	
-	Click($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1]) ; Select the item to be upgrade
-	;BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "#0296") ; Select the item to be upgrade
+	;Click($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1]) ; Select the item to be upgrade
+	BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "#0296") ; Select the item to be upgrade
 	If _Sleep($DELAYUPGRADENORMAL1) Then Return ; Wait for window to open
 
 	Local $aResult = BuildingInfo(242, 494) ; read building name/level to check we have right bldg or if collector was not full
