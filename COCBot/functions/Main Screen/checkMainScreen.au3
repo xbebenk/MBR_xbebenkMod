@@ -124,7 +124,7 @@ Func checkChatTabPixel()
 	Return False
 EndFunc   ;==>checkChatTabPixel
 
-Func isOnMainVillage($bNeedCaptureRegion = $g_bNoCapturePixel)
+Func isOnMainVillage()
 	Local $aPixelToCheck = $aIsMain
 	Local $bLocated = False
 	$bLocated = _checkMainScreenImage($aPixelToCheck)
