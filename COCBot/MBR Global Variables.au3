@@ -79,6 +79,7 @@ Global $g_iBotLaunchTime = 0 ; Keeps track of time (in millseconds) from bot lau
 
 ; Since October 12th 2016 Update, Village cannot be entirely zoomed out, offset updated in func SearchZoomOut
 Global $g_iVILLAGE_OFFSET[3] = [0, 0, 1]
+Global $g_iZoomFactor = 0
 
 #Region debugging
 #Tidy_Off
@@ -947,6 +948,7 @@ For $i = 0 To $g_iUpgradeSlots - 1
 	$g_avBuildingUpgrades[$i][5] = "" ; string Bldg level
 	$g_avBuildingUpgrades[$i][6] = "" ; string upgrade time
 	$g_avBuildingUpgrades[$i][7] = "" ; string upgrade end date/time (_datediff compatible)
+	$g_avBuildingUpgrades[$i][8] = -1 ; zoomfactor
 Next
 Global $g_iUpgradeMinGold = 100000, $g_iUpgradeMinElixir = 100000, $g_iUpgradeMinDark = 3000
 Global $g_abUpgradeRepeatEnable[$g_iUpgradeSlots] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False]

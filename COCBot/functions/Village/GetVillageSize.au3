@@ -97,6 +97,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		SetDebugLog("Stone2tree = " & $c)
 		SetDebugLog("Reference = " & $iRefSize)
 		SetDebugLog("ZoomLevel = " & $z)
+		$g_iZoomFactor = $z
 		
 		Local $stone_x_exp = $stone[2]
 		Local $stone_y_exp = $stone[3]

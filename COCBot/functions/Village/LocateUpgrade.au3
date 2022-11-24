@@ -68,7 +68,7 @@ Func LocateUpgrades()
 					If $hGraphic <> 0 And $g_avBuildingUpgrades[$icount][0] > 0 And $g_avBuildingUpgrades[$icount][0] > 0 Then
 						Local $xUpgrade = $g_avBuildingUpgrades[$icount][0]
 						Local $yUpgrade = $g_avBuildingUpgrades[$icount][1]
-						ConvertToVillagePos($xUpgrade, $yUpgrade)
+						ConvertToVillagePos($xUpgrade, $yUpgrade, $g_iZoomFactor)
 						Local $bMarkerDrawn = _GDIPlus_GraphicsDrawEllipse($hGraphic, $xUpgrade - 10, $yUpgrade - 10, 20, 20, $hPen)
 						AndroidGraphicsGdiUpdate()
 						SetDebugLog("Existing Updgrade #" & $icount & " found at " & $g_avBuildingUpgrades[$icount][0] & "/" & $g_avBuildingUpgrades[$icount][1] & ", marker drawn: " & $bMarkerDrawn)
@@ -97,7 +97,9 @@ Func LocateUpgrades()
 						If $hGraphic <> 0 Then
 							Local $xUpgrade = $g_avBuildingUpgrades[$icount][0]
 							Local $yUpgrade = $g_avBuildingUpgrades[$icount][1]
-							ConvertToVillagePos($xUpgrade, $yUpgrade)
+							SetDebugLog("x,y before: " & $xUpgrade & "," & $yUpgrade)
+							ConvertToVillagePos($xUpgrade, $yUpgrade, $g_iZoomFactor)
+							SetDebugLog("x,y before: " & $xUpgrade & "," & $yUpgrade)
 							$bMarkerDrawn = _GDIPlus_GraphicsDrawEllipse($hGraphic, $xUpgrade - 10, $yUpgrade - 10, 20, 20, $hPen)
 							AndroidGraphicsGdiUpdate()
 						EndIf
@@ -230,7 +232,7 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 		$g_avBuildingUpgrades[$inum][7] = "" ; Clear upgrade end date/time if run before
 		GUICtrlSetData($g_hTxtUpgradeEndTime[$inum], "") ; Set GUI time to match $g_avBuildingUpgrades variable
 		ClickAway()
-		SetLog("-$Upgrade #" & $inum + 1 & " Location =  " & "(" & $g_avBuildingUpgrades[$inum][0] & "," & $g_avBuildingUpgrades[$inum][1] & ")", $COLOR_DEBUG1) ;Debug
+		SetLog(" - $Upgrade #" & $inum + 1 & " Location =  " & "(" & $g_avBuildingUpgrades[$inum][0] & "," & $g_avBuildingUpgrades[$inum][1] & ")", $COLOR_DEBUG1) ;Debug
 		If _Sleep($DELAYUPGRADEVALUE1) Then Return
 		Click($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select upgrade trained
 		;BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "#0212") ;Select upgrade trained
@@ -432,4 +434,5 @@ Func ClearUpgradeInfo($inum)
 	$g_avBuildingUpgrades[$inum][5] = "" ; Clear upgrade level as it is invalid
 	$g_avBuildingUpgrades[$inum][6] = "" ; Clear upgrade time as it is invalid
 	$g_avBuildingUpgrades[$inum][7] = "" ; Clear upgrade end date/time as it is invalid
+	$g_avBuildingUpgrades[$inum][8] = -1 ; Clear value as it is invalid
 EndFunc   ;==>ClearUpgradeInfo
