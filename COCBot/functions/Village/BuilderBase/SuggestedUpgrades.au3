@@ -299,6 +299,7 @@ Func SearchExistingBuilding($bTest = False)
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 		Local $Building = FindBBExistingBuilding()
+		If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop
 		If IsArray($Building) And UBound($Building) > 0 Then
 			SetLog("Building List:", $COLOR_INFO)
 			For $i = 0 To UBound($Building) - 1
@@ -332,11 +333,14 @@ Func SearchExistingBuilding($bTest = False)
 				
 				If $IsWall Then
 					Click($Building[$i][1], $Building[$i][2])
+					Local $iCount = 0
 					While $g_bGoldStorageFullBB
+						$iCount += 1
 						SetLog("Upgrading Wall to spend Gold", $COLOR_INFO)
 						DoUpgradeBB($Building[$i][0], $bTest)
 						If _Sleep(1000) Then Return
 						isGoldFullBB()
+						If $iCount > 4 Then ExitLoop
 					Wend
 					Return True ;As wall recursively upgraded to spend Gold we stop here
 				EndIf
@@ -350,6 +354,7 @@ Func SearchExistingBuilding($bTest = False)
 					ClickBBBuilder()
 					ContinueLoop ;upgrade not success
 				EndIf
+				If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop 2
 			Next
 		EndIf
 		If Not $g_bRunState Then Return
@@ -415,9 +420,14 @@ Func DoUpgradeBB($CostType = "Gold", $bTest = False)
 	EndIf
 
 	If Not $g_bRunState Then Return
-	Local $Dir = $g_sImgAutoUpgradeBtnDir
-	If StringInStr($aBuildingName[1], "Wall") Then $Dir = $g_sImgBBGoldButton
-	If QuickMIS("BC1", $Dir, 260, 520, 650, 620) Then
+	If StringInStr($aBuildingName[1], "Gem") And $aBuildingName[2] = "" Then $CostType = "Rebuild" 
+	If StringInStr($aBuildingName[1], "Battle") And $aBuildingName[2] = "" Then $CostType = "Rebuild"
+	If StringInStr($aBuildingName[1], "Clock") And $aBuildingName[2] = "" Then $CostType = "Rebuild"	
+	
+	Local $Dir = $g_sImgAutoUpgradeBtnDir & $CostType & "*"
+	;OptimizeOTTO enabled, BM not Maxed, And Upgrade Wall, Force use Gold
+	If $g_bOptimizeOTTO And Not $g_bisBattleMachineMaxed And StringInStr($aBuildingName[1], "Wall") Then $Dir = $g_sImgAutoUpgradeBtnDir & "\Gold*"
+	If QuickMIS("BFI", $Dir, 260, 520, 650, 620) Then
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If Not $bTest Then
 			If _Sleep(500) Then Return
@@ -685,7 +695,7 @@ Func FindBBNewBuilding()
 EndFunc
 
 Global $g_aOptimizeOTTO[15][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 13], ["Storage", 12], _
-									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 12], ["Builder Hall", 12], ["Clock Tower", 6], ["Barracks", 12], _
+									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 14], ["Builder Hall", 12], ["Clock Tower", 6], ["Barracks", 12], _
 									["Army Camp", 12], ["Wall", 5], ["Gem Mine", 5]]
 
 Func FindBBExistingBuilding($bTest = False)
