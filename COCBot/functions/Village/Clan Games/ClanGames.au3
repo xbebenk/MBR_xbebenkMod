@@ -807,6 +807,8 @@ Func IsEventRunning($bOpenWindow = False)
 				EndIf
 			Else
 				Setlog("Active Challenge Not Enabled on Setting! started by mistake?", $COLOR_ERROR)
+				_CaptureRegion2(300, 130, 384, 218)
+				SaveDebugImage("CG-FailVerifyChallenge", False)
 				ForcePurgeEvent(False, False)
 			EndIf
 			CloseClangamesWindow()
