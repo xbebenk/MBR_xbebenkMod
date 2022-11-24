@@ -938,7 +938,7 @@ Global Const $g_iUpgradeSlots = 14
 Global $g_aiPicUpgradeStatus[$g_iUpgradeSlots] = [$eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, _
 		$eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight]
 Global $g_abBuildingUpgradeEnable[$g_iUpgradeSlots] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False]
-Global $g_avBuildingUpgrades[$g_iUpgradeSlots][8] ; Fill empty array [8] to store upgrade data
+Global $g_avBuildingUpgrades[$g_iUpgradeSlots][9] ; Fill empty array [8] to store upgrade data
 For $i = 0 To $g_iUpgradeSlots - 1
 	$g_avBuildingUpgrades[$i][0] = -1 ; position x
 	$g_avBuildingUpgrades[$i][1] = -1 ; position y
