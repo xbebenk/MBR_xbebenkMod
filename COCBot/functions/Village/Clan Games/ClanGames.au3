@@ -33,6 +33,23 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		Return
 	EndIf
 	
+	If IsCGCoolDownTime() Then Return
+	
+	If $g_bChkClanGamesZapChallenge And $g_bChkCGBBAttackOnly And Not $OnlyPurge Then
+		OpenArmyOverview(True, "_ClanGames()") 
+		getArmyTroops(False, False, False)
+		If Number($g_aiCurrentTroops[$eTroopSuperBarbarian]) > 30 Then
+			$bDoSubaDestruction = True
+		EndIf
+
+		getArmySpells(False, True)
+		If Number($g_aiCurrentSpells[$eSpellLightning]) > 1 Then
+			$bDoZapChallenges = True
+		EndIf
+		
+		SetDebugLog("DoZapChallenges:" & String($bDoZapChallenges) & " DoSubaDestruction:" & String($bDoSubaDestruction))
+	EndIf
+	
 	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)
 
@@ -825,7 +842,7 @@ Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName, $getCapture)
 	If Not $YourAccScore[$g_iCurAccount][1] Then
 		Local $Text = "", $color = $COLOR_SUCCESS
 		If $YourAccScore[$g_iCurAccount][0] <> $ScoreLimits[0] Then
-			$Text = "You got " & $ScoreLimits[0] - $YourAccScore[$g_iCurAccount][0] & "points on the last event."
+			$Text = "You got " & $ScoreLimits[0] - $YourAccScore[$g_iCurAccount][0] & " points on the last event."
 		Else
 			$Text = "You could not complete the last event!"
 			$color = $COLOR_WARNING
@@ -846,7 +863,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, $getCapture, False) Then
 		Local $aTimer = GetEventTimeScore($g_iQuickMISX, $g_iQuickMISY)
-		SetLog("Starting Event" & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", $COLOR_SUCCESS)
+		SetLog("Starting Event " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", $COLOR_SUCCESS)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting : " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting : " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]")
@@ -870,6 +887,8 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 					SetLog("StartsEvent and Purge job!", $COLOR_SUCCESS)
 					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NearMaxPoint"), 1)
 					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NearMaxPoint"))
+					$g_iCoolDownTimer = TimerInit()
+					$g_bIsCGCoolDownTime = True
 					CloseClangamesWindow()
 					Return True
 				Else
@@ -919,6 +938,8 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		If StartAndPurgeEvent($bTest) Then
 			If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
 			CloseClangamesWindow()
+			$g_iCoolDownTimer = TimerInit()
+			$g_bIsCGCoolDownTime = True
 			Return True
 		EndIf
 	Else
@@ -954,6 +975,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 			Return False
 		EndIf
 	EndIf
+	$g_iCoolDownTimer = TimerInit()
 	Return True
 EndFunc   ;==>ForcePurgeEvent
 
@@ -1329,6 +1351,23 @@ Func GetCGRewardList($X = 280, $OnlyClaimMax = False)
 	EndIf
 EndFunc
 
+Func IsCGCoolDownTime()
+	Local $bRet = False
+	Local $iTimer = Round(TimerDiff($g_iCoolDownTimer) / 1000, 2)
+	SetDebugLog("CG Cooldown Timer : " & $iTimer)
+	If $iTimer > 600 Then 
+		$g_bIsCGCoolDownTime = False
+	Else
+		SetLog("Cooldown Time Detected: " & Round($iTimer/60, 2) & " Minutes", $COLOR_DEBUG2) 
+		$g_bIsCGCoolDownTime = True
+	EndIf
+	
+	Return $g_bIsCGCoolDownTime
+EndFunc
+
+Func ZapZapZap($aSearchBuilding)
+	
+EndFunc
 #Tidy_Off
 Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebug = False)
 

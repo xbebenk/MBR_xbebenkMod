@@ -106,6 +106,8 @@ EndFunc   ;==>ClickP
 Func BuildingClick($x, $y, $debugtxt = "")
 	Local $point[2] = [$x, $y]
 	ConvertVillagePos($x, $y, $g_iZoomFactor)
+	$x += $g_ixOffset
+	$x += $g_iyOffset
 	Local $txt = _DecodeDebug($debugtxt)
 	SetLog("BuildingClick " & $point[0] & "," & $point[1] & " converted to " & $x & "," & $y & " zoomfactor: " & $g_iZoomFactor & " " & $debugtxt & $txt, $COLOR_ACTION)
 	Return Click($x, $y, 1, 0, $debugtxt)
