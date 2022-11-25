@@ -92,14 +92,13 @@ Func LocateUpgrades()
 					Local $aPos = FindPos()
 					$g_avBuildingUpgrades[$icount][0] = $aPos[0]
 					$g_avBuildingUpgrades[$icount][1] = $aPos[1]
+					$g_avBuildingUpgrades[$icount][8] = $g_iZoomFactor
 					If isInsideDiamondXY($g_avBuildingUpgrades[$icount][0], $g_avBuildingUpgrades[$icount][1]) Then ; Check value to make sure its valid.
 						Local $bMarkerDrawn = False
 						If $hGraphic <> 0 Then
 							Local $xUpgrade = $g_avBuildingUpgrades[$icount][0]
 							Local $yUpgrade = $g_avBuildingUpgrades[$icount][1]
-							SetDebugLog("x,y before: " & $xUpgrade & "," & $yUpgrade)
 							ConvertToVillagePos($xUpgrade, $yUpgrade, $g_iZoomFactor)
-							SetDebugLog("x,y before: " & $xUpgrade & "," & $yUpgrade)
 							$bMarkerDrawn = _GDIPlus_GraphicsDrawEllipse($hGraphic, $xUpgrade - 10, $yUpgrade - 10, 20, 20, $hPen)
 							AndroidGraphicsGdiUpdate()
 						EndIf

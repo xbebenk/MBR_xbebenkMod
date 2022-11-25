@@ -77,7 +77,7 @@ Func UpgradeBuilding($bTest = False)
 	;align base first
 	Local $aZoomOut = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 	If IsArray($aZoomOut) And $aZoomOut[0] = "" Then ZoomOut()
-	
+	GetVillageSize(True)
 	For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1
 
 		If $g_bDebugSetlog Then SetlogUpgradeValues($iz) ; massive debug data dump for each upgrade

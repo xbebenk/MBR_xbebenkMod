@@ -58,7 +58,8 @@ Func picUpgradeTypeLocation()
 	$g_bRunState = True
 	ClickAway() ; Clear screen
 	Sleep(500)
-	Zoomout()
+	;Zoomout()
+	GetVillageSize(True)
 	Local $inum
 	For $inum = 0 To UBound($g_avBuildingUpgrades, 1) - 1
 		If @GUI_CtrlId = $g_hPicUpgradeType[$inum] Then

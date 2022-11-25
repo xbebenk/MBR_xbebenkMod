@@ -79,7 +79,7 @@ Global $g_iBotLaunchTime = 0 ; Keeps track of time (in millseconds) from bot lau
 
 ; Since October 12th 2016 Update, Village cannot be entirely zoomed out, offset updated in func SearchZoomOut
 Global $g_iVILLAGE_OFFSET[3] = [0, 0, 1]
-Global $g_iZoomFactor = 0
+Global $g_iZoomFactor = 0, $g_ixOffset = 0, $g_iyOffset = 0
 
 #Region debugging
 #Tidy_Off

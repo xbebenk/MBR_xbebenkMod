@@ -97,13 +97,16 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		SetDebugLog("Stone2tree = " & $c)
 		SetDebugLog("Reference = " & $iRefSize)
 		SetDebugLog("ZoomLevel = " & $z)
-		$g_iZoomFactor = $z
 		
 		Local $stone_x_exp = $stone[2]
 		Local $stone_y_exp = $stone[3]
 		ConvertVillagePos($stone_x_exp, $stone_y_exp, $z) ; expected x, y position of stone
 		$x = $stone[0] - $stone_x_exp
 		$y = $stone[1] - $stone_y_exp
+		
+		$g_iZoomFactor = $z
+		$g_ixOffset = $x
+		$g_iyOffset = $y
 		
 		If $DebugLog Then SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
 
