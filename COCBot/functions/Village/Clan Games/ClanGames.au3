@@ -947,6 +947,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		While Not WaitforPixel(570, 285, 571, 286, "F51D20", 10, 1)
 			SetDebugLog("Waiting for trash Button", $COLOR_DEBUG)
 			$count1 += 1
+			If _Sleep(500) Then Return
 			If $count1 > 10 Then ExitLoop
 		Wend
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
@@ -955,6 +956,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 			While Not IsOKCancelPage()
 				SetDebugLog("Waiting for trash Confirm OK", $COLOR_DEBUG)
 				$count2 += 1
+				If _Sleep(500) Then Return
 				If $count2 > 10 Then ExitLoop
 			Wend
 			If IsOKCancelPage() Then
