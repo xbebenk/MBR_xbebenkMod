@@ -52,8 +52,8 @@ Func UpgradeBuilding($bTest = False)
 	$iAvailElixir = Number($g_aiCurrentLoot[$eLootElixir])
 	$iAvailDark = Number($g_aiCurrentLoot[$eLootDarkElixir])
 	
-	$g_bSkipWallReserve = False
-	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
+	Local $SkipWallReserve = False
+	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 And Not $bTest Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
@@ -61,7 +61,7 @@ Func UpgradeBuilding($bTest = False)
 			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
 			If $mUpgradeTime > 0 And $mUpgradeTime <= 1440 Then
 				SetLog("Upgrade time < 24h, Will Use Wall Reserved Builder", $COLOR_INFO)
-				$g_bSkipWallReserve = True
+				$SkipWallReserve = True
 			ElseIf $mUpgradeTime > 1440 Then
 				Return False
 			EndIf
@@ -69,15 +69,16 @@ Func UpgradeBuilding($bTest = False)
 	EndIf
 	
 	$iAvailBldr = $g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0) - ReservedBuildersForHeroes()
-	If $iAvailBldr <= 0 And Not $bTest And Not $g_bSkipWallReserve Then
+	If $iAvailBldr <= 0 And Not $bTest And Not $SkipWallReserve Then
 		SetLog("No builder available for upgrade process")
 		Return False
 	EndIf
 	
 	;align base first
 	Local $aZoomOut = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
-	If IsArray($aZoomOut) And $aZoomOut[0] = "" Then ZoomOut()
-	GetVillageSize(True)
+	If IsArray($aZoomOut) And $aZoomOut[0] = "" Then ZoomOut(True)
+	If $g_iZoomFactor > 1.10 Then ZoomOut(True)
+	
 	For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1
 
 		If $g_bDebugSetlog Then SetlogUpgradeValues($iz) ; massive debug data dump for each upgrade
@@ -89,7 +90,7 @@ Func UpgradeBuilding($bTest = False)
 		; Check free builder in case of multiple upgrades, but skip check when time to check repeated upgrades.
 		; Why? Can't do repeat upgrades if there are no builders?  Does it correct the upgrade list?
 		;If $iAvailBldr <= 0 And Not $bChkAllRptUpgrade Then
-		If $iAvailBldr <= 0 And Not $bTest And Not $g_bSkipWallReserve Then
+		If $iAvailBldr <= 0 And Not $bTest And Not $SkipWallReserve Then
 			SetLog("No builder available for #" & $iz + 1 & ", " & $g_avBuildingUpgrades[$iz][4], $COLOR_DEBUG)
 			Return False
 		EndIf

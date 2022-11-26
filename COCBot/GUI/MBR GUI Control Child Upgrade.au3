@@ -71,8 +71,9 @@ Func picUpgradeTypeLocation()
 				BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "Select", $g_avBuildingUpgrades[$inum][8])
 				Sleep(100)
 				If StringInStr($n, "collect", $STR_NOCASESENSEBASIC) Or _
-						StringInStr($n, "mine", $STR_NOCASESENSEBASIC) Or _
+						StringInStr($n, "gold mine", $STR_NOCASESENSEBASIC) Or _
 						StringInStr($n, "drill", $STR_NOCASESENSEBASIC) Then
+						SetLog("Building is " & $n & ", need second click", $COLOR_DEBUG)
 					ClickAway() ;Click away to deselect collector if was not full, and collected with previous click
 					Sleep(100)
 					BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "Select", $g_avBuildingUpgrades[$inum][8]) ;Select collector
