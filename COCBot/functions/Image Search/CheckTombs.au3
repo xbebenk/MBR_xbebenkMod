@@ -14,61 +14,66 @@
 ; ===============================================================================================================================
 
 Func CheckTombs()
-	If Not TestCapture() Then
-		If Not $g_bChkTombstones Then Return False
-		If Not $g_abNotNeedAllTime[1] Then Return
-	EndIf
+	;If Not TestCapture() Then
+	;	If Not $g_bChkTombstones Then Return False
+	;	If Not $g_abNotNeedAllTime[1] Then Return
+	;EndIf
 	; Timer
-	Local $hTimer = __TimerInit()
+	;Local $hTimer = __TimerInit()
 
 	; Setup arrays, including default return values for $return
-	Local $return[7] = ["None", "None", 0, 0, 0, "", ""]
-	Local $TombsXY[2] = [0, 0]
-
-	; Perform a parallel search with all images inside the directory
-	Local $aResult = returnSingleMatchOwnVillage($g_sImgClearTombs)
-
-	If UBound($aResult) > 1 Then
-		; Now loop through the array to modify values, select the highest entry to return
-		For $i = 1 To UBound($aResult) - 1
-			; Check to see if its a higher level then currently stored
-			If Number($aResult[$i][2]) > Number($return[2]) Then
-				; Store the data because its higher
-				$return[0] = $aResult[$i][0] ; Filename
-				$return[1] = $aResult[$i][1] ; Type
-				$return[4] = $aResult[$i][4] ; Total Objects
-				$return[5] = $aResult[$i][5] ; Coords
-			EndIf
-		Next
-		$TombsXY = $return[5]
-
-		SetDebugLog("Filename :" & $return[0])
-		SetDebugLog("Type :" & $return[1])
-		SetDebugLog("Total Objects :" & $return[4])
-
-		Local $bRemoved = False
-		If IsArray($TombsXY) Then
-			; Loop through all found points for the item and click them to clear them, there should only be one
-			For $j = 0 To UBound($TombsXY) - 1
-				If isInsideDiamondXY($TombsXY[$j][0], $TombsXY[$j][1]) Then
-					SetDebugLog("Coords :" & $TombsXY[$j][0] & "," & $TombsXY[$j][1])
-					If IsMainPage() Then
-						Click($TombsXY[$j][0], $TombsXY[$j][1], 1, 0, "#0430")
-						If Not $bRemoved Then $bRemoved = IsMainPage()
-					EndIf
-				EndIf
-			Next
-		EndIf
-		If $bRemoved Then
-			SetLog("Tombs removed!", $COLOR_DEBUG1)
-			$g_abNotNeedAllTime[1] = False
-		Else
-			SetLog("Tombs not removed, please do manually!", $COLOR_WARNING)
-		EndIf
+	;Local $return[7] = ["None", "None", 0, 0, 0, "", ""]
+	;Local $TombsXY[2] = [0, 0]
+	If QuickMIS("BC1", $g_sImgClearTombs, 100, 100, 700, 500) Then
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		SetLog("Tombs removed!", $COLOR_SUCCESS)
 	Else
-		SetLog("No Tombs Found!", $COLOR_SUCCESS)
-		$g_abNotNeedAllTime[1] = False
+		SetLog("No Tombs Found!", $COLOR_DEBUG1)
 	EndIf
+	;; Perform a parallel search with all images inside the directory
+	;Local $aResult = returnSingleMatchOwnVillage($g_sImgClearTombs)
+	;
+	;If UBound($aResult) > 1 Then
+	;	; Now loop through the array to modify values, select the highest entry to return
+	;	For $i = 1 To UBound($aResult) - 1
+	;		; Check to see if its a higher level then currently stored
+	;		If Number($aResult[$i][2]) > Number($return[2]) Then
+	;			; Store the data because its higher
+	;			$return[0] = $aResult[$i][0] ; Filename
+	;			$return[1] = $aResult[$i][1] ; Type
+	;			$return[4] = $aResult[$i][4] ; Total Objects
+	;			$return[5] = $aResult[$i][5] ; Coords
+	;		EndIf
+	;	Next
+	;	$TombsXY = $return[5]
+	;
+	;	SetDebugLog("Filename :" & $return[0])
+	;	SetDebugLog("Type :" & $return[1])
+	;	SetDebugLog("Total Objects :" & $return[4])
+	;
+	;	Local $bRemoved = False
+	;	If IsArray($TombsXY) Then
+	;		; Loop through all found points for the item and click them to clear them, there should only be one
+	;		For $j = 0 To UBound($TombsXY) - 1
+	;			If isInsideDiamondXY($TombsXY[$j][0], $TombsXY[$j][1]) Then
+	;				SetDebugLog("Coords :" & $TombsXY[$j][0] & "," & $TombsXY[$j][1])
+	;				If IsMainPage() Then
+	;					Click($TombsXY[$j][0], $TombsXY[$j][1], 1, 0, "#0430")
+	;					If Not $bRemoved Then $bRemoved = IsMainPage()
+	;				EndIf
+	;			EndIf
+	;		Next
+	;	EndIf
+	;	If $bRemoved Then
+	;		SetLog("Tombs removed!", $COLOR_DEBUG1)
+	;		$g_abNotNeedAllTime[1] = False
+	;	Else
+	;		SetLog("Tombs not removed, please do manually!", $COLOR_WARNING)
+	;	EndIf
+	;Else
+	;	SetLog("No Tombs Found!", $COLOR_SUCCESS)
+	;	$g_abNotNeedAllTime[1] = False
+	;EndIf
 EndFunc   ;==>CheckTombs
 
 Func CleanYardCheckBuilder($bTest = False)
