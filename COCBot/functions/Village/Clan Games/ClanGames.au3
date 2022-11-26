@@ -887,8 +887,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 					SetLog("StartsEvent and Purge job!", $COLOR_SUCCESS)
 					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NearMaxPoint"), 1)
 					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NearMaxPoint"))
-					$g_iCoolDownTimer = TimerInit()
-					$g_bIsCGCoolDownTime = True
+					SetCGCoolDownTime()
 					CloseClangamesWindow()
 					Return True
 				Else
@@ -938,8 +937,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		If StartAndPurgeEvent($bTest) Then
 			If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
 			CloseClangamesWindow()
-			$g_iCoolDownTimer = TimerInit()
-			$g_bIsCGCoolDownTime = True
+			SetCGCoolDownTime()
 			Return True
 		EndIf
 	Else
@@ -977,7 +975,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 			Return False
 		EndIf
 	EndIf
-	$g_iCoolDownTimer = TimerInit()
+	SetCGCoolDownTime()
 	Return True
 EndFunc   ;==>ForcePurgeEvent
 
@@ -1355,14 +1353,30 @@ Func GetCGRewardList($X = 280, $OnlyClaimMax = False)
 	EndIf
 EndFunc
 
+Func SetCGCoolDownTime($bTest = False)
+	$g_hCoolDownTimer = 0
+	SetDebugLog("$g_hCoolDownTimer before: " & $g_hCoolDownTimer, $COLOR_DEBUG2)
+	$g_hCoolDownTimer = TimerInit()
+	Local $sleep = Random(500, 1500, 1)
+	If _Sleep($sleep) Then Return
+	SetDebugLog("$g_hCoolDownTimer after: " & Round(TimerDiff($g_hCoolDownTimer)/1000/60, 2), $COLOR_DEBUG2)
+	
+	If $bTest Then
+		$sleep = Random(500, 5500, 1)
+		If _Sleep($sleep) Then Return
+		SetLog("Timer after " & $sleep & " : " & Round(TimerDiff($g_hCoolDownTimer)/1000/60, 2) & " Minutes", $COLOR_DEBUG2) 
+		$g_hCoolDownTimer = 0
+	EndIf
+EndFunc
+
 Func IsCGCoolDownTime()
 	Local $bRet = False
-	Local $iTimer = Round(TimerDiff($g_iCoolDownTimer) / 1000, 2)
+	Local $iTimer = Round(TimerDiff($g_hCoolDownTimer)/1000/60, 2)
 	SetDebugLog("CG Cooldown Timer : " & $iTimer)
 	If $iTimer > 600 Then 
 		$g_bIsCGCoolDownTime = False
 	Else
-		SetLog("Cooldown Time Detected: " & Round($iTimer/60, 2) & " Minutes", $COLOR_DEBUG2) 
+		SetLog("Cooldown Time Detected: " & $iTimer & " Minutes", $COLOR_DEBUG2) 
 		$g_bIsCGCoolDownTime = True
 	EndIf
 	

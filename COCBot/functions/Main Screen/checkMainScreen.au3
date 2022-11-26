@@ -17,7 +17,6 @@
 Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom = "Default") ;Checks if in main screen
 	If Not $g_bRunState Then Return
 	FuncEnter(checkMainScreen)
-	If GetAndroidProcessPID() = 0 Then StartAndroidCoC()
 	Return FuncReturn(_checkMainScreen($bSetLog, $bBuilderBase, $CalledFrom))
 EndFunc   ;==>checkMainScreen
 
@@ -46,6 +45,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		$i += 1
 		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))
 		$bLocated = _checkMainScreenImage($aPixelToCheck)
+		If Not $bLocated And GetAndroidProcessPID() = 0 Then StartAndroidCoC()
 		If $bLocated Then ExitLoop
 		
 		Local $sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
