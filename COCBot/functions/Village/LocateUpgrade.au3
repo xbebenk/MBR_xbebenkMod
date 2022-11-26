@@ -189,8 +189,8 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 	If $bRepeat Or $g_abUpgradeRepeatEnable[$inum] Then ; check for upgrade in process when continiously upgrading
 		ClickAway()
 		If _Sleep($DELAYUPGRADEVALUE1) Then Return
-		Click($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) 
-		;BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select upgrade trained
+		;Click($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) 
+		BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "UpgradeValue", $g_avBuildingUpgrades[$inum][8]) ;Select upgrade trained
 		If _Sleep($DELAYUPGRADEVALUE4) Then Return
 		If $bOopsFlag = True Then SaveDebugImage("ButtonView")
 		; check if upgrading collector type building, and reselect in case previous click only collect resource
@@ -199,8 +199,8 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 				StringInStr($g_avBuildingUpgrades[$inum][4], "drill", $STR_NOCASESENSEBASIC) Then
 			ClickAway()
 			If _Sleep($DELAYUPGRADEVALUE1) Then Return
-			Click($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select collector upgrade trained
-			;BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select collector upgrade trained
+			;Click($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select collector upgrade trained
+			BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "UpgradeValue", $g_avBuildingUpgrades[$inum][8]) ;Select collector upgrade trained
 			If _Sleep($DELAYUPGRADEVALUE4) Then Return
 		EndIf
 		; check for upgrade in process
@@ -233,8 +233,8 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 		ClickAway()
 		SetLog(" - $Upgrade #" & $inum + 1 & " Location =  " & "(" & $g_avBuildingUpgrades[$inum][0] & "," & $g_avBuildingUpgrades[$inum][1] & ")", $COLOR_DEBUG1) ;Debug
 		If _Sleep($DELAYUPGRADEVALUE1) Then Return
-		Click($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select upgrade trained
-		;BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "#0212") ;Select upgrade trained
+		;Click($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1]) ;Select upgrade trained
+		BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "UpgradeValue", $g_avBuildingUpgrades[$inum][8]) ;Select upgrade trained
 		If _Sleep($DELAYUPGRADEVALUE2) Then Return
 		If $bOopsFlag = True Then SaveDebugImage("ButtonView")
 	EndIf
@@ -298,8 +298,8 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 				If _ColorCheck(_GetPixelColor(485, 500), Hex(0xFFD115, 6), 20) Then $g_avBuildingUpgrades[$inum][3] = "Gold" ;Check if Gold required and update type
 				If _ColorCheck(_GetPixelColor(480, 500), Hex(0xBD21EF, 6), 20) Then $g_avBuildingUpgrades[$inum][3] = "Elixir" ;Check if Elixir required and update type
 
-				$g_avBuildingUpgrades[$inum][2] = Number(getResourcesBonus(366, 487)) ; Try to read white text.
-				If $g_avBuildingUpgrades[$inum][2] = "" Then $g_avBuildingUpgrades[$inum][2] = Number(getUpgradeResource(366, 487)) ;read RED upgrade text
+				$g_avBuildingUpgrades[$inum][2] = Number(getResourcesBonus(366, 490)) ; Try to read white text.
+				If $g_avBuildingUpgrades[$inum][2] = "" Then $g_avBuildingUpgrades[$inum][2] = Number(getUpgradeResource(366, 490)) ;read RED upgrade text
 				If $g_avBuildingUpgrades[$inum][2] = "" And $g_abUpgradeRepeatEnable[$inum] = False Then $bOopsFlag = True ; set error flag for user to set value if not repeat upgrade
 
 				;HArchH X value was 195
@@ -327,10 +327,10 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 					Return False
 				EndIf
 				If _ColorCheck(_GetPixelColor(710, 535), Hex(0x3C3035, 6), 20) Then $g_avBuildingUpgrades[$inum][3] = "Dark" ; Check if DE required and update type
-				$g_avBuildingUpgrades[$inum][2] = Number(getResourcesBonus(598, 519)) ; Try to read white text.
-				If $g_avBuildingUpgrades[$inum][2] = "" Then $g_avBuildingUpgrades[$inum][2] = Number(getUpgradeResource(598, 519)) ;read RED upgrade text
+				$g_avBuildingUpgrades[$inum][2] = Number(getResourcesBonus(598, 522)) ; Try to read white text.
+				If $g_avBuildingUpgrades[$inum][2] = "" Then $g_avBuildingUpgrades[$inum][2] = Number(getUpgradeResource(598, 522)) ;read RED upgrade text
 				If $g_avBuildingUpgrades[$inum][2] = "" And $g_abUpgradeRepeatEnable[$inum] = False Then $bOopsFlag = True ; set error flag for user to set value
-				$g_avBuildingUpgrades[$inum][6] = getHeroUpgradeTime(464, 527) ; Try to read white text showing time for upgrade
+				$g_avBuildingUpgrades[$inum][6] = getHeroUpgradeTime(571, 464) ; Try to read white text showing time for upgrade
 				SetLog("Upgrade #" & $inum + 1 & " Time = " & $g_avBuildingUpgrades[$inum][6], $COLOR_INFO)
 				If $g_avBuildingUpgrades[$inum][6] <> "" Then $g_avBuildingUpgrades[$inum][7] = "" ; Clear old upgrade end time
 

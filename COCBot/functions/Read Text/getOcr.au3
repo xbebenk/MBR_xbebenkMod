@@ -51,7 +51,7 @@ Func getTrophyLossAttackScreen($x_start, $y_start) ; 48,214 or 48,184 WO/DE -> G
 EndFunc   ;==>getTrophyLossAttackScreen
 
 Func getUpgradeResource($x_start, $y_start) ; -> Gets complete value of Gold/Elixir xxx,xxx , RED text on green upgrade button."UpgradeBuildings.au3"
-	Return getOcrAndCapture("coc-u-r", $x_start, $y_start, 98, 16, True)
+	Return getOcrAndCapture("coc-u-r", $x_start, $y_start, 100, 18, True)
 EndFunc   ;==>getUpgradeResource
 
 Func getResourcesMainScreen($x_start, $y_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"

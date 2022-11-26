@@ -58,25 +58,24 @@ Func picUpgradeTypeLocation()
 	$g_bRunState = True
 	ClickAway() ; Clear screen
 	Sleep(500)
-	;Zoomout()
-	GetVillageSize(True)
+	Zoomout()
 	Local $inum
 	For $inum = 0 To UBound($g_avBuildingUpgrades, 1) - 1
 		If @GUI_CtrlId = $g_hPicUpgradeType[$inum] Then
 			Local $x = $g_avBuildingUpgrades[$inum][0]
 			Local $y = $g_avBuildingUpgrades[$inum][1]
 			Local $n = $g_avBuildingUpgrades[$inum][4]
-			SetDebugLog("Selecting #" & $inum + 1 & ": " & $n & ", " & $x & "/" & $y)
+			SetDebugLog("Selecting #" & $inum + 1 & ": " & $n & ", (" & $x & "," & $y & ")")
 			If isInsideDiamondXY($x, $y) Then ; check for valid location
 				SetDebugLog("Building Location : " & $x & "," & $y)
-				BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "picUpgradeTypeLocation")
+				BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "Select", $g_avBuildingUpgrades[$inum][8])
 				Sleep(100)
 				If StringInStr($n, "collect", $STR_NOCASESENSEBASIC) Or _
 						StringInStr($n, "mine", $STR_NOCASESENSEBASIC) Or _
 						StringInStr($n, "drill", $STR_NOCASESENSEBASIC) Then
 					ClickAway() ;Click away to deselect collector if was not full, and collected with previous click
 					Sleep(100)
-					BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "picUpgradeTypeLocation") ;Select collector
+					BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "Select", $g_avBuildingUpgrades[$inum][8]) ;Select collector
 				EndIf
 			EndIf
 			ExitLoop

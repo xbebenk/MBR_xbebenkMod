@@ -143,7 +143,7 @@ Func UpgradeBuilding($bTest = False)
 			Case "Gold"
 				If $iAvailGold < $g_avBuildingUpgrades[$iz][2] + $g_iUpgradeMinGold Then ; Do we have enough Gold?
 					SetLog("Insufficent Gold for #" & $iz + 1 & ", requires: " & $g_avBuildingUpgrades[$iz][2] & " + " & $g_iUpgradeMinGold, $COLOR_INFO)
-					ContinueLoop
+					If Not $bTest Then ContinueLoop
 				EndIf
 				If UpgradeNormal($bTest, $iz) = False Then ContinueLoop
 				$iUpgradeAction += 2 ^ ($iz + 1)
@@ -156,7 +156,7 @@ Func UpgradeBuilding($bTest = False)
 			Case "Elixir"
 				If $iAvailElixir < $g_avBuildingUpgrades[$iz][2] + $g_iUpgradeMinElixir Then
 					SetLog("Insufficent Elixir for #" & $iz + 1 & ", requires: " & $g_avBuildingUpgrades[$iz][2] & " + " & $g_iUpgradeMinElixir, $COLOR_INFO)
-					ContinueLoop
+					If Not $bTest Then ContinueLoop
 				EndIf
 				If UpgradeNormal($bTest, $iz) = False Then ContinueLoop
 				$iUpgradeAction += 2 ^ ($iz + 1)
@@ -169,7 +169,7 @@ Func UpgradeBuilding($bTest = False)
 			Case "Dark"
 				If $iAvailDark < $g_avBuildingUpgrades[$iz][2] + $g_iUpgradeMinDark Then
 					SetLog("Insufficent Dark for #" & $iz + 1 & ", requires: " & $g_avBuildingUpgrades[$iz][2] & " + " & $g_iUpgradeMinDark, $COLOR_INFO)
-					ContinueLoop
+					If Not $bTest Then ContinueLoop
 				EndIf
 				If UpgradeHero($iz) = False Then ContinueLoop
 				$iUpgradeAction += 2 ^ ($iz + 1)
@@ -231,7 +231,7 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 	If _Sleep($DELAYUPGRADENORMAL1) Then Return
 	
 	;Click($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1]) ; Select the item to be upgrade
-	BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "#0296") ; Select the item to be upgrade
+	BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "UpgradeNormal", $g_avBuildingUpgrades[$iUpgradeNumber][8]) ; Select the item to be upgrade
 	If _Sleep($DELAYUPGRADENORMAL1) Then Return ; Wait for window to open
 
 	Local $aResult = BuildingInfo(242, 494) ; read building name/level to check we have right bldg or if collector was not full
@@ -255,7 +255,7 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 		SetLog("#" & $iUpgradeNumber + 1 & ":" & $g_avBuildingUpgrades[$iUpgradeNumber][4] & ": Not same as :" & $aResult[1] & ":? Retry now...", $COLOR_INFO)
 		ClickAway()
 		If _Sleep(1000) Then Return
-		BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "#0296") ; Select the item to be upgrade again in case full collector/mine
+		BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "UpgradeHero", $g_avBuildingUpgrades[$iUpgradeNumber][8]) ; Select the item to be upgrade again in case full collector/mine
 		If _Sleep($DELAYUPGRADENORMAL1) Then Return ; Wait for window to open
 
 		$aResult = BuildingInfo(242, 494) ; read building name/level to check we have right bldg or if collector was not full
@@ -370,7 +370,7 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 EndFunc   ;==>UpgradeNormal
 
 Func UpgradeHero($iUpgradeNumber)
-	BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "#0304") ; Select the item to be upgrade
+	BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "UpgradeNormal", $g_avBuildingUpgrades[$iUpgradeNumber][8]) ; Select the item to be upgrade
 	If _Sleep($DELAYUPGRADEHERO1) Then Return ; Wait for window to open
 
 	Local $aUpgradeButton = findButton("Upgrade", Default, 1, True)

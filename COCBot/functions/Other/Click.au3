@@ -103,13 +103,17 @@ Func ClickP($point, $howMuch = 1, $speed = 0, $debugtxt = "")
 	Click($point[0], $point[1], $howMuch, $speed, $debugtxt)
 EndFunc   ;==>ClickP
 
-Func BuildingClick($x, $y, $debugtxt = "")
+Func BuildingClick($x, $y, $debugtxt = "", $iZF = 0)
 	Local $point[2] = [$x, $y]
 	ConvertVillagePos($x, $y, $g_iZoomFactor)
-	$x += $g_ixOffset
-	$x += $g_iyOffset
+	If $iZF - $g_iZoomFactor > 0.05 Then
+		SetDebugLog("Adding Offset x:" & $g_ixOffset & " y:" & $g_iyOffset)
+		$x += $g_ixOffset
+		$x += $g_iyOffset
+	EndIf
 	Local $txt = _DecodeDebug($debugtxt)
-	SetLog("BuildingClick " & $point[0] & "," & $point[1] & " converted to " & $x & "," & $y & " zoomfactor: " & $g_iZoomFactor & " " & $debugtxt & $txt, $COLOR_ACTION)
+	SetLog("BuildingClick " & $point[0] & "," & $point[1] & " converted to " & $x & "," & $y & " " & $debugtxt & $txt, $COLOR_ACTION)
+	SetLog(" --currentZF: " & $g_iZoomFactor & ", --coordZF: " & $iZF, $COLOR_ACTION)
 	Return Click($x, $y, 1, 0, $debugtxt)
 EndFunc   ;==>BuildingClick
 
