@@ -48,7 +48,7 @@ Func StarLaboratory($bTestRun = False)
 	$sElixirCount = getResourcesMainScreen(705, 74)
 	SetLog("Updating village values [E]: " & $sElixirCount, $COLOR_SUCCESS)
 	$iAvailElixir = Number($sElixirCount)
-
+	If Not $g_bOptimizeOTTO Then isBattleMachineMaxed()
 	If Not LocateStarLab() Then Return False
 	
 	If Not ClickB("Research") Then 
