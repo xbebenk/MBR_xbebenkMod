@@ -563,7 +563,7 @@ Func DoUpgrade($bTest = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[32] = 1) ? True : False
 		Case "Pet House"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1) ? True : False
-		Case "Builder's Hut"
+		Case "Builder s Hut"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1) ? True : False
 		Case Else
 			$bMustIgnoreUpgrade = False
