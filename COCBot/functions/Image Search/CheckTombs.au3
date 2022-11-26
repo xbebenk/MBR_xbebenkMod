@@ -50,7 +50,7 @@ Func CheckTombs()
 		If IsArray($TombsXY) Then
 			; Loop through all found points for the item and click them to clear them, there should only be one
 			For $j = 0 To UBound($TombsXY) - 1
-				If isSafeCleanYardXY($TombsXY[$j][0], $TombsXY[$j][1]) Then
+				If isInsideDiamondXY($TombsXY[$j][0], $TombsXY[$j][1]) Then
 					SetDebugLog("Coords :" & $TombsXY[$j][0] & "," & $TombsXY[$j][1])
 					If IsMainPage() Then
 						Click($TombsXY[$j][0], $TombsXY[$j][1], 1, 0, "#0430")
