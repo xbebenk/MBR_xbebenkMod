@@ -289,3 +289,14 @@ Func DetectScenery($stone = "None")
 
 	Return $sScenery
 EndFunc
+
+Func getVillageCenteringCoord()
+	Local $aValue[2] = [0, 0]
+	Local $iRan = Random(0, Ubound($aVillageCenteringCoord) - 1, 1)
+
+	$aValue[0] = $aVillageCenteringCoord[$iRan][0]
+	$aValue[1] = $aVillageCenteringCoord[$iRan][1]
+	
+	If $g_bDebugSetLog Then SetDebugLog("aVillageCenteringCoord : [" & $aValue[0] & "," & $aValue[1] & "]")
+	Return $aValue
+EndFunc

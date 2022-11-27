@@ -75,7 +75,7 @@ Func UpgradeBuilding($bTest = False)
 	EndIf
 	
 	;align base first
-	Local $aZoomOut = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
+	Local $aZoomOut = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 	If IsArray($aZoomOut) And $aZoomOut[0] = "" Then ZoomOut(True)
 	If $g_iZoomFactor > 1.10 Then ZoomOut(True)
 	
