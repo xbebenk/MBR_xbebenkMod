@@ -86,7 +86,7 @@ EndFunc   ;==>GetBlueStacksXAdbPath
 
 Func InitBlueStacks5X($bCheckOnly = False, $bAdjustResolution = False, $bLegacyMode = False)
 	;Bluestacks5 doesn't have registry tree for engine, only installation dir info available on registry
-	$__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
+	$__BlueStacks5_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
 	$__BlueStacks_Path = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "InstallDir")
 	If @error <> 0 Then
 		$__BlueStacks_Path = @ProgramFilesDir & "\BlueStacks_nxt\"

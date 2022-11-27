@@ -492,10 +492,6 @@ Func UpdateMainGUI()
 		$g_bAndroidAdbClickEnabled = True
 		$g_bAndroidAdbClick = True
 		GUICtrlSetState($g_hChkAndroidAdbClick, $GUI_CHECKED)
-	Else
-		$g_bAndroidAdbClickEnabled = False
-		$g_bAndroidAdbClick = False
-		GUICtrlSetState($g_hChkAndroidAdbClick, $GUI_UNCHECKED)
 	EndIf
 EndFunc   ;==>UpdateMainGUI
 

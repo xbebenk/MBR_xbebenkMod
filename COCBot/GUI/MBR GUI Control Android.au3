@@ -169,9 +169,9 @@ Func getAllEmulators()
 		If GetVersionNormalized($__BlueStacks_Version) > GetVersionNormalized("1.0") Then $sEmulatorString &= "BlueStacks2|"
 	EndIf
 	
-	$__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
+	$__BlueStacks5_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
 	If Not @error Then
-		If GetVersionNormalized($__BlueStacks_Version) > GetVersionNormalized("5.0") Then $sEmulatorString &= "BlueStacks5|"
+		If GetVersionNormalized($__BlueStacks5_Version) > GetVersionNormalized("5.0") Then $sEmulatorString &= "BlueStacks5|"
 	EndIf
 	
 	; Nox :
@@ -192,7 +192,20 @@ Func getAllEmulators()
 	If $sEmulatorString <> "" Then
 		Setlog("All Emulator found in your machine:")
 		For $i = 0 To UBound($aEmulator) - 1
-			SetLog("  - " & $aEmulator[$i])
+			Local $emuVer = ""
+			If StringInStr($aEmulator[$i], "BlueStacks") Then $emuVer = $__BlueStacks_Version
+			If StringInStr($aEmulator[$i], "BlueStacks5") Then $emuVer = $__BlueStacks5_Version
+			If StringInStr($aEmulator[$i], "Memu") Then $emuVer = $__MEmu_Version
+			If StringInStr($aEmulator[$i], "nox") Then $emuVer = $__Nox_Version
+			SetLog("  - " & $aEmulator[$i] & " version: " & $emuVer, $COLOR_SUCCESS)
+			If StringInStr($aEmulator[$i], "Memu") And GetVersionNormalized($__MEmu_Version) > GetVersionNormalized("5.2") And GetVersionNormalized($__MEmu_Version) < GetVersionNormalized("7.2") Then 
+				Setlog("Memu v" & $__MEmu_Version & " not fully supported on this Mod", $COLOR_WARNING)
+				Setlog("Please upgrade to Memu version 7.2.9 or later", $COLOR_WARNING)
+			EndIf
+			If StringInStr($aEmulator[$i], "nox") Then
+				Setlog("Nox emulator never tested on this Mod", $COLOR_WARNING)
+				Setlog("Consider to switch to Bluestacks2 or BlueStacks5", $COLOR_WARNING)
+			EndIf
 		Next
 	Else
 		Setlog("No Emulator found in your machine")

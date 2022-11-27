@@ -414,7 +414,7 @@ Global $g_bInitAndroid = True ; Used to cache android config, is set to False on
 Global Const $g_iCoCReconnectingTimeout = 60000 ; When still (or again) CoC reconnecting animation then restart CoC (handled in checkObstacles)
 
 ; Special Android Emulator variables
-Global $__BlueStacks_Version
+Global $__BlueStacks_Version, $__BlueStacks5_Version, $__MEmu_Version, $__Nox_Version
 Global $__BlueStacks_Path
 Global $__MEmu_Path
 Global $__Nox_Path

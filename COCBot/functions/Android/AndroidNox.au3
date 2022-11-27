@@ -115,6 +115,7 @@ Func GetNoxRtPath()
 EndFunc   ;==>GetNoxRtPath
 
 Func GetNoxPath()
+	$__Nox_Version = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\Nox\", "DisplayVersion")
 	Local $path = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\DuoDianOnline\SetupInfo\", "InstallPath")
 	If @error = 0 Then
 		If StringRight($path, 1) <> "\" Then $path &= "\"
@@ -161,7 +162,7 @@ EndFunc   ;==>GetNoxBackgroundMode
 
 Func InitNox($bCheckOnly = False)
 	Local $process_killed, $aRegexResult, $g_sAndroidAdbDeviceHost, $g_sAndroidAdbDevicePort, $oops = 0
-	Local $Version = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\Nox\", "DisplayVersion")
+	;Local $Version = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\Nox\", "DisplayVersion")
 	SetError(0, 0, 0)
 
 	Local $path = GetNoxPath()
