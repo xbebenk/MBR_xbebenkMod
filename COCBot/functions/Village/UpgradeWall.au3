@@ -214,6 +214,8 @@ Func UpgradeLowLevelWall($bTest = False)
 	While True
 		If Not $g_bRunState Then Return
 		If Not WallUpgradeCheckBuilder($bTest) Then Return
+		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(701, 23) ;get current Gold
+		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(701, 74) ;get current Elixir
 		If $Try > 4 Then ExitLoop
 		If $Try > 2 And $WallNotFound Then ExitLoop ; jump to exit
 		SetLog("[" & $Try & "] Search Wall on Builder Menu", $COLOR_INFO)
