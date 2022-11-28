@@ -265,6 +265,20 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 				SetLog("Found #" & $iUpgradeNumber + 1 & ":" & $g_avBuildingUpgrades[$iUpgradeNumber][4] & ": Not same as : " & $aResult[1] & ":, May need new location?", $COLOR_ERROR)
 				Return False
 			EndIf
+			
+			If $g_bOptimizeOTTO Then
+				Local $aGearUp[3][2] = [["Mortar", 8], ["Archer T", 10], ["Cannon", 7]]
+				For $i = 0 To UBound($aGearUp) - 1 
+					If StringInStr($aResult[1], $aGearUp[$i][0]) Then
+						SetDebugLog("Matched with : " & $i)
+						If Number($aResult[2]) >= $aGearUp[$i][1] Then
+							SetLog("Building : " & $aResult[1] & " Level: " & $aResult[2] & " >= " & $aGearUp[$i][1], $COLOR_INFO)
+							SetLog("OptimizeOTTO enabled, should skip this Building", $COLOR_INFO)
+							Return False
+						EndIf
+					EndIf
+				Next
+			EndIf
 		EndIf
 	EndIf
 	
