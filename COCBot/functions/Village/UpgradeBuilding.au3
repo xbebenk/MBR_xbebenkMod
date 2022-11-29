@@ -245,6 +245,24 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 				If Number($aResult[2]) >= $aGearUp[$i][1] Then
 					SetLog("Building : " & $aResult[1] & " Level: " & $aResult[2] & " >= " & $aGearUp[$i][1], $COLOR_INFO)
 					SetLog("OptimizeOTTO enabled, should skip this Building", $COLOR_INFO)
+					SetLog("Now, trying to gear up building!", $COLOR_INFO)
+					
+					If ClickB("GearUp") Then
+						If _Sleep(1000) Then Return
+						If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+							Click($g_iQuickMISX, $g_iQuickMISY)
+							If _Sleep(1000) Then Return
+							If IsGemOpen(True) Then
+								ClickAway()
+								SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
+								Return False
+							Else
+								SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
+								Return True
+							EndIf
+						EndIf
+					EndIf
+					
 					Return False
 				EndIf
 			EndIf
@@ -274,6 +292,24 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 						If Number($aResult[2]) >= $aGearUp[$i][1] Then
 							SetLog("Building : " & $aResult[1] & " Level: " & $aResult[2] & " >= " & $aGearUp[$i][1], $COLOR_INFO)
 							SetLog("OptimizeOTTO enabled, should skip this Building", $COLOR_INFO)
+							SetLog("Now, trying to gear up building!", $COLOR_INFO)
+							
+							If ClickB("GearUp") Then
+								If _Sleep(1000) Then Return
+								If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+									Click($g_iQuickMISX, $g_iQuickMISY)
+									If _Sleep(1000) Then Return
+									If IsGemOpen(True) Then
+										ClickAway()
+										SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
+										Return False
+									Else
+										SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
+										Return True
+									EndIf
+								EndIf
+							EndIf
+							
 							Return False
 						EndIf
 					EndIf
