@@ -80,7 +80,14 @@ Func UpgradeBuilding($bTest = False)
 	If $g_iZoomFactor > 1.10 Then ZoomOut(True)
 	
 	For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1
-
+		getBuilderCount(True)
+		$iAvailBldr = $g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0) - ReservedBuildersForHeroes()
+		If $iAvailBldr <= 0 And Not $bTest And Not $SkipWallReserve Then
+			SetLog("Upgrade #" & $iz + 1 & " " & $g_avBuildingUpgrades[$iz][4], $COLOR_ACTION)
+			SetLog("No builder available for upgrade process", $COLOR_ACTION)
+			Return False
+		EndIf
+		
 		If $g_bDebugSetlog Then SetlogUpgradeValues($iz) ; massive debug data dump for each upgrade
 
 		If Not $g_abBuildingUpgradeEnable[$iz] Then ContinueLoop ; Is the upgrade checkbox selected?
@@ -94,47 +101,6 @@ Func UpgradeBuilding($bTest = False)
 			SetLog("No builder available for #" & $iz + 1 & ", " & $g_avBuildingUpgrades[$iz][4], $COLOR_DEBUG)
 			Return False
 		EndIf
-
-		;If $g_abUpgradeRepeatEnable[$iz] Then ; if repeated upgrade, may need to check upgrade value
-		;
-		;	If $bChkAllRptUpgrade = False Then
-		;		$iDTDiff = Int(_DateDiff("n", _NowCalc(), $sNextCheckTime)) ; get date/time difference for repeat upgrade check
-		;		If @error Then _logErrorDateDiff(@error)
-		;		If $g_bDebugSetlog Then
-		;			SetDebugLog("Delay time between repeat upgrade checks = " & $aCheckFrequency[($g_iTownHallLevel < 3 ? 0 : $g_iTownHallLevel - 3)] & " Min", $COLOR_DEBUG)
-		;			SetDebugLog("Delay time remaining = " & $iDTDiff & " Min", $COLOR_DEBUG)
-		;		EndIf
-		;		If $iDTDiff < 0 Then ; check dwell time clock to avoid checking repeats too often
-		;			$sNextCheckTime = _DateAdd("n", $aCheckFrequency[($g_iTownHallLevel < 3 ? 0 : $g_iTownHallLevel - 3)], _NowCalc()) ; create new check date/time
-		;			If @error Then _logErrorDateAdd(@error) ; log Date function errors
-		;			$bChkAllRptUpgrade = True ; set flag to allow entire array of updates to get updated values if delay time is past.
-		;			SetDebugLog("New delayed check time=  " & $sNextCheckTime, $COLOR_DEBUG)
-		;		EndIf
-		;	EndIf
-		;
-		;	If _DateIsValid($g_avBuildingUpgrades[$iz][7]) Then ; check for valid date in upgrade array
-		;		$iUpGrdEndTimeDiff = Int(_DateDiff("n", _NowCalc(), $g_avBuildingUpgrades[$iz][7])) ; what is difference between End time and now in minutes?
-		;		If @error Then ; trap/log errors and zero time difference
-		;			_logErrorDateDiff(@error)
-		;			$iUpGrdEndTimeDiff = 0
-		;		EndIf
-		;		SetDebugLog("Difference between upgrade end and NOW= " & $iUpGrdEndTimeDiff & " Min", $COLOR_DEBUG)
-		;	EndIf
-		;
-		;	If $bChkAllRptUpgrade = True Or $iUpGrdEndTimeDiff < 0 Then ; when past delay time or past end time for previous upgrade then check status
-		;		If UpgradeValue($iz, True) = False Then ; try to get new upgrade values
-		;			If $g_bDebugSetlog Then SetlogUpgradeValues($iz) ; Debug data for when upgrade is not ready or done repeating
-		;			SetLog("Repeat upgrade #" & $iz + 1 & " " & $g_avBuildingUpgrades[$iz][4] & " not ready yet", $COLOR_ERROR)
-		;			ContinueLoop ; Not ready yet..
-		;		ElseIf ($iAvailBldr <= 0) Then
-		;			; must stop upgrade attempt if no builder here, due bypass of available builder check when $bChkAllRptUpgrade=true to get updated building values.
-		;			SetLog("No builder available for " & $g_avBuildingUpgrades[$iz][4])
-		;			SetLog("Testing Return False now as no builders available.", $COLOR_DEBUG)
-		;			;ContinueLoop
-		;			Return False
-		;		EndIf
-		;	EndIf
-		;EndIf
 
 		SetLog("Upgrade #" & $iz + 1 & " " & $g_avBuildingUpgrades[$iz][4] & " Selected", $COLOR_SUCCESS) ; Tell logfile which upgrade working on.
 		SetDebugLog("-Upgrade location =  " & "(" & $g_avBuildingUpgrades[$iz][0] & "," & $g_avBuildingUpgrades[$iz][1] & ")", $COLOR_DEBUG) ;Debug
