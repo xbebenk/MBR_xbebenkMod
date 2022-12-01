@@ -129,34 +129,35 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	EndIf
 	
 	If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
-		SetDebugLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
+		SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
 		Click(440, 526)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		$g_bMinorObstacle = True
 		Return False
 	EndIf
 	
-	If WaitforPixel(420, 600, 420,600, "000000", 20, 1) Then
-		If WaitforPixel(420, 563, 421,564, "6CBB1F", 20, 1) Then
-			SetDebugLog("checkObstacles: Found Return Home Button")
-			Click(420, 560)
-			$g_bMinorObstacle = True
-			_Sleep(3000)
-			Return False
-		Else
-			SetDebugLog("Expected: 6CBB1F, Got:" & _GetPixelColor(420, 563, True))
-		EndIf
-	EndIf
+	;If WaitforPixel(420, 600, 420,600, "000000", 20, 1) Then
+	;	If WaitforPixel(420, 563, 421,564, "6CBB1F", 20, 1) Then
+	;		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
+	;		Click(420, 560)
+	;		$g_bMinorObstacle = True
+	;		_Sleep(3000)
+	;		Return False
+	;	Else
+	;		SetDebugLog("Expected: 6CBB1F, Got:" & _GetPixelColor(420, 563, True))
+	;	EndIf
+	;EndIf
 	
 	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20) Then
-		SetDebugLog("checkObstacles: Found Window with Close Button to close")
+		SetLog("checkObstacles: Found Window with Close Button to close", $COLOR_ACTION)
 		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
 		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
+	
 	If _CheckPixel($aChatTab, True) Then
-		SetDebugLog("checkObstacles: Found Chat Tab to close")
+		SetLog("checkObstacles: Found Chat Tab to close", $COLOR_ACTION)
 		PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
 		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
@@ -164,9 +165,16 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	EndIf
 	
 	If _ColorCheck(_GetPixelColor(422, 505, True), Hex(0x86D435, 6), 20) Then
-		SetDebugLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
+		SetLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
 		Click(422, 500)
 		$g_bMinorObstacle = True
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf
+	
+	If _CheckPixel($aIsTrainPgChk1, True) Then
+		SetLog("checkObstacles: Found Army Window to close", $COLOR_ACTION)
+		ClickAway(Default, True)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
@@ -219,60 +227,69 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		checkObstacles_ResetSearch()
 	EndIf
 	
-	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then 
-		SetDebugLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
+	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then ;ads event popup window (usually covering 80% of coc screen)
+		SetLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		$g_bMinorObstacle = True
 		Return False
 	EndIf
-	If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 66, 790, 120) Then 
-		SetDebugLog("checkObstacles: Found AttackLog Page", $COLOR_ACTION)
+	
+	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 660, 300, 720, 400) Then 
+		SetLog("checkObstacles: Found TownHall Upgraded Page", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		$g_bMinorObstacle = True
 		Return False
 	EndIf
-	If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 300, 720, 400) Then 
-		SetDebugLog("checkObstacles: Found TownHall Upgraded Page", $COLOR_ACTION)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		$g_bMinorObstacle = True
-		Return False
-	EndIf
-	If IsPostDefenseSummaryPage() Then
-		SetDebugLog("checkObstacles: Found Post Defense Summary to close")
+	
+	If IsPostDefenseSummaryPage() Then ;post defense (when bot start coc and find account are under attack, will click return home)
+		SetLog("checkObstacles: Found Post Defense Summary to close", $COLOR_ACTION)
 		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
 		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
-	If IsFullScreenWindow() Then
+	
+	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 730, 66, 790, 120) Then ;attack log page, usually because bot start and user left this page open
+		SetLog("checkObstacles: Found Attack/Defense Log Page", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		$g_bMinorObstacle = True
+		Return False
+	EndIf
+	
+	If IsFullScreenWindow() Then ; all pages that covering coc screen and have red close button on right upper corner
+		SetLog("checkObstacles: Found FullScreenWindow to close", $COLOR_ACTION)
 		Click(825,45)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		$g_bMinorObstacle = True
 		Return False
 	EndIf	
-	If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then 
-		SetDebugLog("checkObstacles: Found RequestCC Window, Click Send")
+	
+	If QuickMIS("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;this check formerly used for bluestacks without minitouch, bot stuck on request page
+		SetLog("checkObstacles: Found RequestCC Window, Click Send", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
 	
-	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then 
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;handle for clan capital tutorial
+		SetLog("checkObstacles: Found Clan Capital Tutorial, Doing Tutorial", $COLOR_ACTION)
 		CCTutorial()
 		Return False
 	EndIf
 	
-	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then 
-		SetDebugLog("checkObstacles: Found Clan Capital Map, Returning Home")
+	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ; if bot started or situated on clan capital map, and need to go back to main village
+		SetLog("checkObstacles: Found Clan Capital Map, Returning Home", $COLOR_ACTION)
 		Click(60, 610)
 		_Sleep(1000)
 		Return False
 	EndIf
-	If SearchUnplacedBuilding() Then
+	
+	If SearchUnplacedBuilding() Then ;check for unplaced building button, after several achievement/season account may rewarded special building and need to be placed on map
+		SetLog("checkObstacles: Found Unplaced Building Button, Try Place it on Map", $COLOR_ACTION)
 		PlaceUnplacedBuilding()
 		Return False
 	EndIf
@@ -298,7 +315,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		EndIf
 	EndIf
 	
-	If Not isOnMainVillage() And IsAttackPage() Then 
+	If Not isOnMainVillage() And IsAttackPage() Then ; bot seeing attackbar while it shouldn't, will do surrender and/or return home   
 		ClickP($aIsAttackPage)
 		If _Sleep(1000) Then Return
 		For $i = 1 To 5
@@ -311,10 +328,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			If _Sleep(1000) Then Return
 		Next
+		SetLog("CheckObstacle: Not in MainVillage And detected AttackPage", $COLOR_ACTION)
+		ClickAway(Default, True)
 		Return False
 	EndIf
 	
-	ClickAway()
+	;xbebenk: I need this click away to be logged
+	SetLog("CheckObstacle: Not Found Any obs, just do clickaway()", $COLOR_ACTION)
+	ClickAway(Default, True)
 	Return False
 EndFunc   ;==>_checkObstacles
 

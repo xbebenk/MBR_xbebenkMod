@@ -259,15 +259,16 @@ Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = ""
 	Return $result
 EndFunc   ;==>AttackClick
 
-Func ClickAway($Region = Default)
+Func ClickAway($Region = Default, $b_Debug = False)
 	Local $aiRegionToUse = Random(0, 1, 1) > 0 ? $aiClickAwayRegionLeft : $aiClickAwayRegionRight
-	
+	If $b_Debug Then $g_bDebugClick = True
 	If $Region = "Left" Then
 		$aiRegionToUse = $aiClickAwayRegionLeft
 	ElseIf $Region = "Right" Then
 		$aiRegionToUse = $aiClickAwayRegionRight
 	ElseIf $Region = "RCorner" Then
 		Click(820, 38, 1) ; exit from Shop
+		If $b_Debug Then $g_bDebugClick = False
 		Return
 	EndIf
 	
@@ -275,6 +276,7 @@ Func ClickAway($Region = Default)
 	
 	If $g_bDebugClick Then SetDebugLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_DEBUG)
 	ClickP($aiSpot, 1, 0, "#0000")
+	If $b_Debug Then $g_bDebugClick = False
 EndFunc
 
 Func _DecodeDebug($message)
