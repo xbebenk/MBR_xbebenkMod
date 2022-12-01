@@ -80,18 +80,8 @@ Func UpgradeBuilding($bTest = False)
 	If $g_iZoomFactor > 1.10 Then ZoomOut(True)
 	
 	For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1
-		getBuilderCount(True)
-		$iAvailBldr = $g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0) - ReservedBuildersForHeroes()
-		If $iAvailBldr <= 0 And Not $bTest And Not $SkipWallReserve Then
-			SetLog("Upgrade #" & $iz + 1 & " " & $g_avBuildingUpgrades[$iz][4], $COLOR_ACTION)
-			SetLog("No builder available for upgrade process", $COLOR_ACTION)
-			Return False
-		EndIf
-		
 		If $g_bDebugSetlog Then SetlogUpgradeValues($iz) ; massive debug data dump for each upgrade
-
 		If Not $g_abBuildingUpgradeEnable[$iz] Then ContinueLoop ; Is the upgrade checkbox selected?
-
 		If $g_avBuildingUpgrades[$iz][0] <= 0 Or $g_avBuildingUpgrades[$iz][1] <= 0 Or $g_avBuildingUpgrades[$iz][3] = "" Then ContinueLoop ; Now check to see if upgrade has locatation?
 
 		; Check free builder in case of multiple upgrades, but skip check when time to check repeated upgrades.
@@ -180,7 +170,14 @@ Func UpgradeBuilding($bTest = False)
 		Else
 			SetLog("Non critical error processing upgrade time for " & "#" & $iz + 1 & ": " & $g_avBuildingUpgrades[$iz][4], $COLOR_WARNING)
 		EndIf
-
+		
+		getBuilderCount(True)
+		$iAvailBldr = $g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0) - ReservedBuildersForHeroes()
+		If $iAvailBldr <= 0 And Not $bTest Then
+			SetLog("Upgrade #" & $iz + 1 & " " & $g_avBuildingUpgrades[$iz][4], $COLOR_ACTION)
+			SetLog("No builder available for upgrade process", $COLOR_ACTION)
+			Return False
+		EndIf
 	Next
 	If $iUpgradeAction <= 0 Then
 		SetLog("No Upgrades Available", $COLOR_SUCCESS)
