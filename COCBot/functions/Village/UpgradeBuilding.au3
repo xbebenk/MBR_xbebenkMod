@@ -220,13 +220,14 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 								SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
 								Return False
 							Else
-								SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
-								Return True
-							EndIf
-							If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
-								ClickAway()
-								SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
-								Return False
+								If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+									ClickAway()
+									SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
+									Return False
+								Else
+									SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
+									Return True
+								EndIf
 							EndIf
 						EndIf
 					Else
@@ -274,13 +275,14 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 										SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
 										Return False
 									Else
-										SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
-										Return True
-									EndIf
-									If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
-										ClickAway()
-										SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
-										Return False
+										If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+											ClickAway()
+											SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
+											Return False
+										Else
+											SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
+											Return True
+										EndIf
 									EndIf
 								EndIf
 							Else
