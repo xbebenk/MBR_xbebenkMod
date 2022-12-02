@@ -930,10 +930,10 @@ Func HideAllTroops()
 	For $i = $g_ahTxtTrainArmySpellCount[$eSpellLightning] To $g_ahTxtTrainArmySpellCount[$eSpellBat]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
-	For $i = $g_ahPicTrainArmySiege[$eSiegeBattleBlimp] To $g_ahPicTrainArmySiege[$eSiegeBattleDrill]
+	For $i = $g_ahPicTrainArmySiege[$eSiegeWallWrecker] To $g_ahPicTrainArmySiege[$eSiegeBattleDrill]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
-	For $i = $g_ahTxtTrainArmySiegeCount[$eSiegeBattleBlimp] To $g_ahTxtTrainArmySiegeCount[$eSiegeBattleDrill]
+	For $i = $g_ahTxtTrainArmySiegeCount[$eSiegeWallWrecker] To $g_ahTxtTrainArmySiegeCount[$eSiegeBattleDrill]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
 	For $i = $g_ahPicTrainArmyTroop[$eTroopGiantSkeleton] To $g_ahPicTrainArmyTroop[$eTroopIceWizard]
@@ -1011,10 +1011,10 @@ EndFunc
 
 Func BtnSieges()
 	HideAllTroops()
-	For $i = $g_ahPicTrainArmySiege[$eSiegeBattleBlimp] To $g_ahPicTrainArmySiege[$eSiegeBattleDrill]
+	For $i = $g_ahPicTrainArmySiege[$eSiegeWallWrecker] To $g_ahPicTrainArmySiege[$eSiegeBattleDrill]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
-	For $i = $g_ahTxtTrainArmySiegeCount[$eSiegeBattleBlimp] To $g_ahTxtTrainArmySiegeCount[$eSiegeBattleDrill]
+	For $i = $g_ahTxtTrainArmySiegeCount[$eSiegeWallWrecker] To $g_ahTxtTrainArmySiegeCount[$eSiegeBattleDrill]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
 	SetBtnSelector("Sieges")
