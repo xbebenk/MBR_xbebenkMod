@@ -1359,6 +1359,10 @@ Func FirstCheck()
 		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
 		If Not $g_bSkipTrain Then TrainSystem()
+		If $g_bDonateEarly Then
+			SetLog("Donate Early Enabled", $COLOR_INFO)
+			_RunFunction("DonateCC,Train")
+		EndIf
 		checkSwitchAcc()
 	Else
 		FirstCheckRoutine()
