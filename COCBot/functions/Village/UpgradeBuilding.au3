@@ -223,7 +223,14 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 								SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
 								Return True
 							EndIf
+							If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+								ClickAway()
+								SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
+								Return False
+							EndIf
 						EndIf
+					Else
+						SetLog("GearUp button not found!", $COLOR_ERROR)
 					EndIf
 					
 					Return False
@@ -270,7 +277,14 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 										SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
 										Return True
 									EndIf
+									If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+										ClickAway()
+										SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
+										Return False
+									EndIf
 								EndIf
+							Else
+								SetLog("GearUp button not found!", $COLOR_ERROR)
 							EndIf
 							
 							Return False
