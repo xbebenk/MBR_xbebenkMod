@@ -225,7 +225,7 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 									SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
 									Return False
 								Else
-									SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
+									SetLog(" - GearUp : " & $aResult[1], $COLOR_SUCCESS)
 									Return True
 								EndIf
 							EndIf
@@ -280,7 +280,7 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 											SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
 											Return False
 										Else
-											SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
+											SetLog(" - GearUp : " & $aResult[1], $COLOR_SUCCESS)
 											Return True
 										EndIf
 									EndIf
