@@ -346,7 +346,7 @@ Func DragIfNeeded($Troop)
 	Local $iIndex = TroopIndexLookup($Troop, "DragIfNeeded")
 	Local $bDrag = False
 	
-	If $iIndex > $eMine Then $bDrag = True ;Drag if Troops is on Right side from miner
+	If $iIndex > $eYeti Then $bDrag = True ;Drag if Troops is on Right side from miner
 	If $iIndex > $eHunt Then $bDrag = False ; Not Drag if Troops is Event Troops
 
 	If $bDrag Then ;Drag if Troops is on Right side from miner
