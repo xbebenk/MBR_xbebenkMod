@@ -274,7 +274,9 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 
 			Local $aLeftSpace = GetOCRCurrent(42, 133)
 			Local $LeftSpace = $bQueue ? ($aLeftSpace[1] * 2) - $aLeftSpace[0] : $aLeftSpace[2]
-
+			If $g_bIgnoreIncorrectTroopCombo And $g_bDoubleTrain And $bQueue Then
+				$LeftSpace = $aLeftSpace[0]
+			EndIf
 
 			If $NeededSpace > $LeftSpace Then
 				If $iTroopIndex >= $eBarb And $iTroopIndex <= $eIWiza Then
@@ -433,10 +435,7 @@ Func RemoveExtraTroops($toRemove)
 	; 1 Means Removed Troops without Deleting Troops Queued
 	; 2 Means Removed Troops And Also Deleted Troops Queued
 	; 3 Means Didn't removed troop... Everything was well
-	If $g_bIgnoreIncorrectTroopCombo Then 
-		$iResult = 3
-		Return $iResult
-	EndIf
+	
 	If UBound($toRemove) = 1 And $toRemove[0][0] = "Arch" And $toRemove[0][1] = 0 Then Return 3
 
 	If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And Not $g_iActiveDonate Then Return 3
@@ -446,13 +445,13 @@ Func RemoveExtraTroops($toRemove)
 		; Check if Troops to remove are already in Train Tab Queue!! If was, Will Delete All Troops Queued Then Check Everything Again...
 		If DoWhatToTrainContainTroop($toRemove) And Not IsQueueEmpty("Troops", True, False) Then
 			SetLog("Clear troop queue before removing unexpected troops in army", $COLOR_INFO)
-			If Not $g_bIgnoreIncorrectTroopCombo Then DeleteQueued("Troops")
+			DeleteQueued("Troops")
 			$iResult = 2
 		EndIf
 
 		If DoWhatToTrainContainSpell($toRemove) And Not IsQueueEmpty("Spells", True, False) Then
 			SetLog("Clear spell queue before removing unexpected spells in army", $COLOR_INFO)
-			If Not $g_bIgnoreIncorrectSpellCombo Then DeleteQueued("Spells")
+			DeleteQueued("Spells")
 			$iResult = 2
 		EndIf
 

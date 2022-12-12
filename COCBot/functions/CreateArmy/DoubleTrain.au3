@@ -27,41 +27,42 @@ Func DoubleTrain()
 	; Troop
 	If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
 	If _Sleep(250) Then Return
-
+	
 	Local $Step = 1
 	While 1
 		Local $TroopCamp = GetCurrentArmy(46, 131)
 		If IsProblemAffect(True) Then Return
-		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2)
+		SetLog("[" & $Step & "] Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2, $COLOR_DEBUG1)
 		If $TroopCamp[1] = 0 Then ExitLoop
 		If $TroopCamp[1] <> $g_iTotalCampSpace Then _
-			SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
-
+			SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG1)
+		
 		If $TroopCamp[0] < $TroopCamp[1] Then ; <280/280
 			If $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then
-				If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Troops')", $COLOR_DEBUG)
+				If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Troops')", $COLOR_DEBUG1)
 				$Step += 1
 				If $Step = 6 Then ExitLoop
 				ContinueLoop
 			EndIf
 			If Not $g_bIgnoreIncorrectTroopCombo Then
 				If Not IsQueueEmpty("Troops", False, False) Then DeleteQueued("Troops")
-				$bNeedReCheckTroopTab = True
+				SetLog($Step & ". DeleteQueued('Troops'). $bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab, $COLOR_DEBUG1)
 			EndIf
-			If $bDebug Then SetLog($Step & ". DeleteQueued('Troops'). $bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab, $COLOR_DEBUG)
+			$bNeedReCheckTroopTab = True
+			ExitLoop
 
 		ElseIf $TroopCamp[0] = $TroopCamp[1] Then ; 280/280
 			TrainFullTroop(True)
-			If $bDebug Then SetLog($Step & ". TrainFullTroop(True) done!", $COLOR_DEBUG)
+			SetLog($Step & ". TrainFullTroop(True) done!", $COLOR_DEBUG)
 
 		ElseIf $TroopCamp[0] <= $TroopCamp[1] * 2 Then ; 281-540/540
 			If CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) Then
-				If $bDebug Then SetLog($Step & ". CheckQueueAndTrainRemain() done!", $COLOR_DEBUG)
+				If $bDebug Then SetLog($Step & ". CheckQueueAndTrainRemain() done!", $COLOR_DEBUG1)
 			Else
 				If Not $g_bIgnoreIncorrectTroopCombo Then
 					RemoveExtraTroopsQueue()
 					If _Sleep(500) Then Return
-					If $bDebug Then SetLog($Step & ". RemoveExtraTroopsQueue()", $COLOR_DEBUG)
+					SetLog($Step & ". RemoveExtraTroopsQueue()", $COLOR_DEBUG1)
 					$Step += 1
 					If $Step > 7 Then ExitLoop
 					ContinueLoop
@@ -100,9 +101,10 @@ Func DoubleTrain()
 				EndIf
 				If Not $g_bIgnoreIncorrectSpellCombo Then
 					If Not IsQueueEmpty("Spells", False, False) Then DeleteQueued("Spells")
-					$bNeedReCheckSpellTab = True
+					If $bDebug Then SetLog($Step & ". DeleteQueued('Spells'). $bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
 				EndIf
-				If $bDebug Then SetLog($Step & ". DeleteQueued('Spells'). $bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
+				$bNeedReCheckSpellTab = True
+				ExitLoop
 
 			ElseIf $SpellCamp[0] = $SpellCamp[1] Or $SpellCamp[0] <= $SpellCamp[1] + $iUnbalancedSpell Then ; 11/22
 				BrewFullSpell(True)
@@ -127,64 +129,71 @@ Func DoubleTrain()
 			ExitLoop
 		WEnd
 	EndIf
-
+	
+	Local $CampOCR = ""
 	If $bNeedReCheckTroopTab Or $bNeedReCheckSpellTab Then
 		Local $aWhatToRemove = WhatToTrain(True)
 		Local $rRemoveExtraTroops = RemoveExtraTroops($aWhatToRemove)
-		If $bDebug Then SetLog("RemoveExtraTroops(): " & $rRemoveExtraTroops, $COLOR_DEBUG)
+		SetLog("RemoveExtraTroops(): " & $rRemoveExtraTroops, $COLOR_DEBUG1)
 
 		Local $aWhatToTrain = WhatToTrain(False, False)
 		If DoWhatToTrainContainTroop($aWhatToTrain) Then
 			TrainUsingWhatToTrain($aWhatToTrain)
+			$CampOCR = GetCurrentArmy(46, 131)
+			FillIncorrectTroopCombo(False, $CampOCR)
 			TrainFullTroop(True)
-			If $bDebug Then SetLog("TrainFullTroop(True) done.", $COLOR_DEBUG)
+			SetLog("TrainFullTroop(True) done.", $COLOR_DEBUG1)
 		EndIf
 		If DoWhatToTrainContainSpell($aWhatToTrain) Then
 			BrewUsingWhatToTrain($aWhatToTrain)
+			$CampOCR = GetCurrentArmy(46, 131)
+			FillIncorrectSpellCombo(False, $CampOCR)
 			BrewFullSpell(True)
 			If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
-			If $bDebug Then SetLog("BrewFullSpell(True) done.", $COLOR_DEBUG)
+			SetLog("BrewFullSpell(True) done.", $COLOR_DEBUG1)
 		EndIf
 	EndIf
 	
 	If $g_bIgnoreIncorrectTroopCombo Then
 		If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
 		Local $TroopCamp = GetCurrentArmy(46, 131)
-		
-		SetLog("QueueTroop = " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2, $COLOR_DEBUG)
-		Local $MaxTroop = ($TroopCamp[1] * 2)
-		Local $TroopSpace = $MaxTroop - $TroopCamp[0]
-		Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
-		Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
-		Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
-		Local $TroopQuantToFill = Floor($TroopSpace/$g_sCmbFICTroops[$FillTroopIndex][2])
-		
-		If $TroopQuantToFill > 0 Then
-			SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
-			If Not DragIfNeeded($g_sCmbFICTroops[$FillTroopIndex][0]) Then Return False
-			SetLog("Training " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_SUCCESS)
-			TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
-		EndIf
+		Local $bQueue = $TroopCamp[0] >= $TroopCamp[1]
+		FillIncorrectTroopCombo($bQueue, $TroopCamp)
+		;SetLog("QueueTroop = " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2, $COLOR_DEBUG)
+		;Local $MaxTroop = ($TroopCamp[1] * 2)
+		;Local $TroopSpace = $MaxTroop - $TroopCamp[0]
+		;Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
+		;Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
+		;Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
+		;Local $TroopQuantToFill = Floor($TroopSpace/$g_sCmbFICTroops[$FillTroopIndex][2])
+		;
+		;If $TroopQuantToFill > 0 Then
+		;	SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
+		;	If Not DragIfNeeded($g_sCmbFICTroops[$FillTroopIndex][0]) Then Return False
+		;	SetLog("Training " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_SUCCESS)
+		;	TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
+		;EndIf
 	EndIf
 	
 	If $g_bIgnoreIncorrectSpellCombo Then
 		If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
 		Local $SpellCamp = GetCurrentArmy(46, 131)
-		
-		SetLog("QueueSpell = " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2, $COLOR_DEBUG)
-		Local $MaxSpell = ($SpellCamp[1] * 2)
-		Local $SpellSpace = $MaxSpell - $SpellCamp[0]
-		Local $FillSpellIndex = $g_iCmbFillIncorrectSpellCombo
-		Local $sSpellName = $g_sCmbFICSpells[$FillSpellIndex][1]
-		Local $iSpellIndex = TroopIndexLookup($g_sCmbFICSpells[$FillSpellIndex][0])
-		Local $SpellQuantToFill = Floor($SpellSpace/$g_sCmbFICSpells[$FillSpellIndex][2])
-		
-		If $SpellQuantToFill > 0 Then
-			SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
-			If Not DragIfNeeded($g_sCmbFICSpells[$FillSpellIndex][0]) Then Return False
-			SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
-			TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
-		EndIf
+		Local $bQueue = $SpellCamp[0] >= $SpellCamp[1]
+		FillIncorrectSpellCombo($bQueue, $SpellCamp)
+		;SetLog("QueueSpell = " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2, $COLOR_DEBUG)
+		;Local $MaxSpell = ($SpellCamp[1] * 2)
+		;Local $SpellSpace = $MaxSpell - $SpellCamp[0]
+		;Local $FillSpellIndex = $g_iCmbFillIncorrectSpellCombo
+		;Local $sSpellName = $g_sCmbFICSpells[$FillSpellIndex][1]
+		;Local $iSpellIndex = TroopIndexLookup($g_sCmbFICSpells[$FillSpellIndex][0])
+		;Local $SpellQuantToFill = Floor($SpellSpace/$g_sCmbFICSpells[$FillSpellIndex][2])
+		;
+		;If $SpellQuantToFill > 0 Then
+		;	SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
+		;	If Not DragIfNeeded($g_sCmbFICSpells[$FillSpellIndex][0]) Then Return False
+		;	SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
+		;	TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
+		;EndIf
 	EndIf
 	If _Sleep(250) Then Return
 
@@ -210,7 +219,27 @@ Func TrainFullTroop($bQueue = False)
 
 	Local $CampOCR = GetCurrentArmy(46, 131)
 	SetDebugLog("Checking troop tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
+	If $g_bIgnoreIncorrectTroopCombo And $g_bDoubleTrain Then
+		FillIncorrectTroopCombo($bQueue, $CampOCR)
+	EndIf
 EndFunc   ;==>TrainFullTroop
+
+Func FillIncorrectTroopCombo($bQueue, $CampOCR)
+	Local $TroopSpace = $bQueue ? Number($CampOCR[1]) + Number($CampOCR[2]) : Number($CampOCR[2])
+	SetLog("TroopCamp = " & $CampOCR[0] & "/" & $CampOCR[1], $COLOR_DEBUG)
+	
+	Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
+	Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
+	Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
+	Local $TroopQuantToFill = Floor($TroopSpace/$g_sCmbFICTroops[$FillTroopIndex][2])
+	
+	If $TroopQuantToFill > 0 Then
+		SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
+		If Not DragIfNeeded($g_sCmbFICTroops[$FillTroopIndex][0]) Then Return False
+		SetLog("Training " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_SUCCESS)
+		TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
+	EndIf
+EndFunc
 
 Func BrewFullSpell($bQueue = False)
 	SetLog("Brewing " & ($bQueue ? "2nd Army..." : "1st Army..."))
@@ -232,7 +261,29 @@ Func BrewFullSpell($bQueue = False)
 
 	Local $CampOCR = GetCurrentArmy(46, 131)
 	SetDebugLog("Checking spell tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
+	
+	If $g_bIgnoreIncorrectSpellCombo And $g_bDoubleTrain Then
+		FillIncorrectSpellCombo($bQueue, $CampOCR)
+	EndIf
 EndFunc   ;==>BrewFullSpell
+
+Func FillIncorrectSpellCombo($bQueue, $CampOCR)
+	If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
+	Local $SpellSpace = $bQueue ? Number($CampOCR[1]) + Number($CampOCR[2]) : Number($CampOCR[2])
+	SetLog("SpellQuantity = " & $CampOCR[0] & "/" & $CampOCR[1], $COLOR_DEBUG1)
+	
+	Local $FillSpellIndex = $g_iCmbFillIncorrectSpellCombo
+	Local $sSpellName = $g_sCmbFICSpells[$FillSpellIndex][1]
+	Local $iSpellIndex = TroopIndexLookup($g_sCmbFICSpells[$FillSpellIndex][0])
+	Local $SpellQuantToFill = Floor($SpellSpace/$g_sCmbFICSpells[$FillSpellIndex][2])
+	
+	If $SpellQuantToFill > 0 Then
+		SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
+		If Not DragIfNeeded($g_sCmbFICSpells[$FillSpellIndex][0]) Then Return False
+		SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
+		TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
+	EndIf
+EndFunc
 
 Func TopUpUnbalancedSpell($iUnbalancedSpell = 0)
 
