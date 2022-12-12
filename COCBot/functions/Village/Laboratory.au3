@@ -16,7 +16,6 @@ Local $iSlotWidth = 107, $iDistBetweenSlots = 12, $iYMidPoint = 460; use for log
 Local $iPicsPerPage = 12, $iPages = 4 ; use to know exactly which page the users choice is on
 Local $sLabWindow = "99,122,760,616", $sLabTroopsSection = "110,340,740,540"
 Local $sLabWindowDiam = GetDiamondFromRect($sLabWindow), $sLabTroopsSectionDiam = GetDiamondFromRect($sLabTroopsSection) ; easy to change search areas
-Local $bLabIsOnUpgrade = False
 
 Func TestLaboratory()
 	Local $bWasRunState = $g_bRunState
@@ -51,7 +50,6 @@ Func Laboratory($bDebug = False)
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 	If _Sleep(1500) Then Return
 	If ChkLabUpgradeInProgress($bDebug) Then Return False ; Lab currently running skip going further
-	If $bLabIsOnUpgrade And Not $bDebug Then Return False ; detected cancel button when try to open lab
 
 	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
 	Local $iCurPage = 1
@@ -572,7 +570,6 @@ EndFunc
 Func FindResearchButton()
 	Local $TryLabAutoLocate = False
 	Local $LabFound = False
-	$bLabIsOnUpgrade = False ;reset value
 	ClickAway()
 	CheckMainScreen(False, $g_bStayOnBuilderBase, "FindResearchButton")
 
@@ -603,11 +600,6 @@ Func FindResearchButton()
 	EndIf
 
 	If $LabFound Then
-		Local $aBtnCancel = FindButton("cancel")
-		If IsArray($aBtnCancel) And UBound($aBtnCancel) > 0 Then
-			SetLog("Laboratory is upgrading! Cannot start any upgrade.", $COLOR_ERROR)
-			$bLabIsOnUpgrade = True
-		EndIf
 		ClickB("Research")
 		If _Sleep(1000) Then Return
 		Return True
