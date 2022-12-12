@@ -84,12 +84,6 @@ Func PetHouse($test = False)
 			EndIf
 		EndIf
 	EndIf
-	
-	Local $aBtnCancel = FindButton("cancel")
-	If IsArray($aBtnCancel) And UBound($aBtnCancel) > 0 Then
-		SetLog("Pet House is upgrading! Cannot start any upgrade.", $COLOR_ERROR)
-		$bPetHouseOnUpgrade  = True
-	EndIf
 
 	Local $PawFound = False
 	For $i = 1 To 5
