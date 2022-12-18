@@ -1556,6 +1556,7 @@ Func FirstCheckRoutine()
 	CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
 		_RunFunction("DonateCC,Train")
+		checkObstacles()
 		CommonRoutine("Switch")
 		_ClanGames(False, False, True) ; Do Only Purge
 		checkSwitchAcc() ;switch to next account

@@ -164,13 +164,13 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(422, 505, True), Hex(0x86D435, 6), 20) Then
-		SetLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
-		Click(422, 500)
-		$g_bMinorObstacle = True
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		Return False
-	EndIf
+	;If _ColorCheck(_GetPixelColor(422, 505, True), Hex(0x86D435, 6), 20) Then
+	;	SetLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
+	;	Click(422, 500)
+	;	$g_bMinorObstacle = True
+	;	If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+	;	Return False
+	;EndIf
 	
 	If _CheckPixel($aIsTrainPgChk1, True) Then
 		SetLog("checkObstacles: Found Army Window to close", $COLOR_ACTION)
