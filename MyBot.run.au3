@@ -1593,7 +1593,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
-			Local $aRndFuncList = ['UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'BuilderBase', 'CollectCCGold']
+			Local $aRndFuncList = ['BuilderBase', 'CollectCCGold', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

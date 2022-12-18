@@ -118,6 +118,12 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					Return False
 				ElseIf StringInStr($aButton[$i][0], "Oppo", 0) Then
 					SetLog("Finding opponents! Waiting 2 minutes and then try again to find a match", $COLOR_INFO)
+					If ProfileSwitchAccountEnabled() Then 
+						$g_bForceSwitch = True
+						CloseClangamesWindow()
+						_Sleep(1000)
+						checkSwitchAcc()
+					EndIf
 					_SleepStatus(120000) ; Wait 2 mins before searching again
 				EndIf
 			Next
