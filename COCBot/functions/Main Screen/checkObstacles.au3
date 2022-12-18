@@ -98,6 +98,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 					SetLog("Clash feedback window found, permanently closed!", $COLOR_ERROR)
 					PureClick($Result[0] + 5, $Result[1] + 5, 1, 0, "#9999") ; Click on never to close window and stop reappear. Never=248,408 & Later=429,408
 					$g_bMinorObstacle = True
+					PullSharedPrefs()
 					Return True
 				EndIf
 				$Result = getOcrReloadMessage(171, 325, "Check Obstacles OCR 'Good News!'=") ; OCR text for "Good News!"
