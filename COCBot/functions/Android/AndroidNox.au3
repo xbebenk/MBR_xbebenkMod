@@ -115,6 +115,7 @@ Func GetNoxRtPath()
 EndFunc   ;==>GetNoxRtPath
 
 Func GetNoxPath()
+	$__Nox_Version = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\Nox\", "DisplayVersion")
 	Local $path = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\DuoDianOnline\SetupInfo\", "InstallPath")
 	If @error = 0 Then
 		If StringRight($path, 1) <> "\" Then $path &= "\"
@@ -161,25 +162,15 @@ EndFunc   ;==>GetNoxBackgroundMode
 
 Func InitNox($bCheckOnly = False)
 	Local $process_killed, $aRegexResult, $g_sAndroidAdbDeviceHost, $g_sAndroidAdbDevicePort, $oops = 0
-	Local $Version = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\Nox\", "DisplayVersion")
 	SetError(0, 0, 0)
 
 	Local $path = GetNoxPath()
 	Local $RtPath = GetNoxRtPath()
-
 	Local $NoxFile = $path & "Nox.exe"
 	Local $AdbFile = $path & "nox_adb.exe"
 	Local $VBoxFile = $RtPath & "BigNoxVMMgr.exe"
-
 	Local $Files = [$NoxFile, $AdbFile, $VBoxFile]
 
-	#cs
-	If Not $bCheckOnly And $g_bAndroidAdbReplaceEmulatorVersion And GetVersionNormalized($Version) >= GetVersionNormalized("6.2.0") Then
-		; replace adb with dummy
-		$g_bAndroidAdbReplaceEmulatorVersionWithDummy = True
-	EndIf
-	#ce
-	
 	Local $sPreferredADB = FindPreferredAdbPath()
 	If $sPreferredADB Then _ArrayDelete($Files, 1)
 
@@ -203,7 +194,7 @@ Func InitNox($bCheckOnly = False)
 		$g_sAndroidProgramPath = $NoxFile
 		$g_sAndroidAdbPath = $sPreferredADB
 		If $g_sAndroidAdbPath = "" Then $g_sAndroidAdbPath = GetNoxAdbPath()
-		$g_sAndroidVersion = $Version
+		$g_sAndroidVersion = $__Nox_Version
 		$__Nox_Path = $path
 		$g_sAndroidPath = $__Nox_Path
 		$__VBoxManage_Path = $VBoxFile
@@ -243,14 +234,7 @@ Func InitNox($bCheckOnly = False)
 				ExitLoop
 			EndIf
 		Next
-		#cs
-			If $v >= GetVersionNormalized("5.0.0.0") Then
-			$g_aiMouseOffset[0] = 6
-			$g_aiMouseOffset[1] = 7
-			SetDebugLog("Update Android Mouse Offset to " & $g_aiMouseOffset[0] & ", " & $g_aiMouseOffset[1])
-			EndIf
-		#ce
-
+		
 		; Update shared folder state
 		$g_sAndroidSharedFolderName = "Other"
 		ConfigureSharedFolderNox(0) ; something like C:\Users\Administrator\Documents\Nox_share\Other\

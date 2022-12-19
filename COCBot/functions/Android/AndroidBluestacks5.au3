@@ -86,7 +86,7 @@ EndFunc   ;==>GetBlueStacksXAdbPath
 
 Func InitBlueStacks5X($bCheckOnly = False, $bAdjustResolution = False, $bLegacyMode = False)
 	;Bluestacks5 doesn't have registry tree for engine, only installation dir info available on registry
-	$__BlueStacks_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
+	$__BlueStacks5_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
 	$__BlueStacks_Path = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "InstallDir")
 	If @error <> 0 Then
 		$__BlueStacks_Path = @ProgramFilesDir & "\BlueStacks_nxt\"
@@ -128,7 +128,7 @@ Func InitBlueStacks5X($bCheckOnly = False, $bAdjustResolution = False, $bLegacyM
 		$g_sAndroidProgramPath = $__BlueStacks_Path & $frontend_exe
 		;$g_sAndroidAdbPath = $__BlueStacks_Path & "HD-Adb.exe"
 		$g_sAndroidAdbPath = $sPreferredADB
-		$g_sAndroidVersion = $__BlueStacks_Version
+		$g_sAndroidVersion = $__BlueStacks5_Version
 		ConfigureSharedFolderBlueStacks5() ; something like D:\ProgramData\BlueStacks\Engine\UserData\SharedFolder\
 		WinGetAndroidHandle()
 	EndIf
@@ -169,7 +169,7 @@ EndFunc   ;==>ConfigureSharedFolderBlueStacks5
 
 Func InitBlueStacks5($bCheckOnly = False)
 	Local $bInstalled = InitBlueStacks5X($bCheckOnly, True)
-	If $bInstalled And StringInStr($__BlueStacks_Version, "5.") <> 1 Then
+	If $bInstalled And StringInStr($__BlueStacks5_Version, "5.") <> 1 Then
 		SetLog("BlueStacks 5 supported version 5.x not found", $COLOR_ERROR)
 		SetError(1, @extended, False)
 		Return False
@@ -195,7 +195,7 @@ Func InitBlueStacks5($bCheckOnly = False)
 	
 	If $bInstalled And Not $bCheckOnly Then
 		$__VBoxManage_Path = $__BlueStacks_Path & "BstkVMMgr.exe"
-		Local $bsNow = GetVersionNormalized($__BlueStacks_Version)
+		Local $bsNow = GetVersionNormalized($__BlueStacks5_Version)
 		If $bsNow > GetVersionNormalized("5.0") Then
 			; only Version 4 requires new options
 			;$g_sAndroidAdbInstanceShellOptions = " -t -t" ; Additional shell options, only used by BlueStacks2 " -t -t"

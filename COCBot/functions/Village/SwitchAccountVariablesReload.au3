@@ -73,6 +73,8 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	; xbebenk
 	$g_iSaveGoldWall = 0 ;reset
 	$g_iSaveElixWall = 0 ;reset
+	$g_hCoolDownTimer = 0
+	$g_bIsCGCoolDownTime = False
 
 	; First time switch account
 	Switch $sType

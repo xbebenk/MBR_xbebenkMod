@@ -66,7 +66,7 @@ Func OpenCoC()
 	If _Sleep($DELAYCLOSEOPEN500) Then Return FuncReturn()
 	If Not $g_bRunState Then Return FuncReturn()
 	If Not StartAndroidCoC() Then Return FuncReturn()
-	waitMainScreenMini()
+	waitMainScreen()
 	FuncReturn()
 EndFunc   ;==>OpenCoC
 

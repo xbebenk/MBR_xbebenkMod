@@ -72,6 +72,7 @@ EndFunc   ;==>GetMEmuProgramParameter
 
 Func GetMEmuPath()
 	Local $MEmu_Path = EnvGet("MEmu_Path") & "\MEmu\" ;RegRead($g_sHKLM & "\SOFTWARE\MEmu\", "InstallDir") ; Doesn't exist (yet)
+	$__MEmu_Version = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\MEmu\", "DisplayVersion")
 	If FileExists($MEmu_Path & "MEmu.exe") = 0 Then ; work-a-round
 		Local $InstallLocation = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\MEmu\", "InstallLocation")
 		If @error = 0 And FileExists($InstallLocation & "\MEmu\MEmu.exe") = 1 Then
@@ -132,7 +133,7 @@ EndFunc   ;==>GetMEmuBackgroundMode
 
 Func InitMEmu($bCheckOnly = False)
 	Local $process_killed, $aRegExResult, $g_sAndroidAdbDeviceHost, $g_sAndroidAdbDevicePort, $oops = 0
-	Local $MEmuVersion = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\MEmu\", "DisplayVersion")
+	
 	SetError(0, 0, 0)
 	; Could also read MEmu paths from environment variables MEmu_Path and MEmuHyperv_Path
 	Local $MEmu_Path = GetMEmuPath()
@@ -173,10 +174,10 @@ Func InitMEmu($bCheckOnly = False)
 	If Not $bCheckOnly Then
 		;$g_iAndroidRecoverStrategy = 0
 		; newer MEmu doesn't support yet ADB mouse click/minitouch
-		local $memuCurr = GetVersionNormalized($MEmuVersion)
+		local $memuCurr = GetVersionNormalized($__MEmu_Version)
 		Local $memu6 = GetVersionNormalized("6.0")
 		If $memuCurr > $memu6 Then
-			;SetDebugLog("Disable ADB Mouse Click as not support for " & $g_sAndroidEmulator & " version " & $MEmuVersion)
+			;SetDebugLog("Disable ADB Mouse Click as not support for " & $g_sAndroidEmulator & " version " & $__MEmu_Version)
 			;AndroidSupportFeaturesRemove(4) ; disable ADB Mouse Click support
 		EndIf
 
@@ -187,7 +188,7 @@ Func InitMEmu($bCheckOnly = False)
 		$g_sAndroidProgramPath = $MEmu_Path & "MEmu.exe"
 		$g_sAndroidAdbPath = $sPreferredADB
 		If $g_sAndroidAdbPath = "" Then $g_sAndroidAdbPath = $MEmu_Path & "adb.exe"
-		$g_sAndroidVersion = $MEmuVersion
+		$g_sAndroidVersion = $__MEmu_Version
 		$__MEmu_Path = $MEmu_Path
 		$g_sAndroidPath = $__MEmu_Path
 		$__VBoxManage_Path = $MEmu_Manage_Path

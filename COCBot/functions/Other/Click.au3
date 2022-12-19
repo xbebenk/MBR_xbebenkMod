@@ -103,13 +103,24 @@ Func ClickP($point, $howMuch = 1, $speed = 0, $debugtxt = "")
 	Click($point[0], $point[1], $howMuch, $speed, $debugtxt)
 EndFunc   ;==>ClickP
 
-Func BuildingClick($x, $y, $debugtxt = "")
+Func TestPinch()
+	AndroidAdbScript("minipinch")
+EndFunc
+
+Func ConvertBuildingCoord(ByRef $x, ByRef $y, $iZF = 0)
+	Local $xOffset = $g_iVILLAGE_OFFSET[0]
+	Local $yOffset = $g_iVILLAGE_OFFSET[1]
+	SetLog("$xOffset:" & $xOffset & " $yOffset:" & $yOffset, $COLOR_ACTION)
+	If $xOffset >= 2 Or $xOffset <= -2 Then $x = $x + $xOffset/2
+	If $yOffset > 5 Or $yOffset < -5 Then $y = $y + $yOffset/2
+EndFunc
+
+Func BuildingClick($x, $y, $debugtxt = "", $iZF = 0)
 	Local $point[2] = [$x, $y]
-	ConvertToVillagePos($x, $y)
-	If $g_bDebugClick Then
-		Local $txt = _DecodeDebug($debugtxt)
-		SetLog("BuildingClick " & $point[0] & "," & $point[1] & " converted to " & $x & "," & $y & " " & $debugtxt & $txt, $COLOR_ACTION)
-	EndIf
+	ConvertBuildingCoord($x, $y, $iZF)
+	Local $txt = _DecodeDebug($debugtxt)
+	SetLog("BuildingClick " & $point[0] & "," & $point[1] & " converted to " & $x & "," & $y & " [" & $debugtxt & "]" & $txt, $COLOR_ACTION)
+	SetLog(" --currentZF: " & $g_iZoomFactor & ", --coordZF: " & $iZF, $COLOR_ACTION)
 	Return Click($x, $y, 1, 0, $debugtxt)
 EndFunc   ;==>BuildingClick
 
@@ -248,15 +259,16 @@ Func AttackClick($x, $y, $times = 1, $speed = 0, $afterDelay = 0, $debugtxt = ""
 	Return $result
 EndFunc   ;==>AttackClick
 
-Func ClickAway($Region = Default)
+Func ClickAway($Region = Default, $b_Debug = False)
 	Local $aiRegionToUse = Random(0, 1, 1) > 0 ? $aiClickAwayRegionLeft : $aiClickAwayRegionRight
-	
+	If $b_Debug Then $g_bDebugClick = True
 	If $Region = "Left" Then
 		$aiRegionToUse = $aiClickAwayRegionLeft
 	ElseIf $Region = "Right" Then
 		$aiRegionToUse = $aiClickAwayRegionRight
 	ElseIf $Region = "RCorner" Then
 		Click(820, 38, 1) ; exit from Shop
+		If $b_Debug Then $g_bDebugClick = False
 		Return
 	EndIf
 	
@@ -264,6 +276,7 @@ Func ClickAway($Region = Default)
 	
 	If $g_bDebugClick Then SetDebugLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_DEBUG)
 	ClickP($aiSpot, 1, 0, "#0000")
+	If $b_Debug Then $g_bDebugClick = False
 EndFunc
 
 Func _DecodeDebug($message)

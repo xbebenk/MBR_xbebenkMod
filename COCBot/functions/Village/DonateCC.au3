@@ -139,7 +139,7 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 EndFunc   ;==>IsDonateQueueOnly
 
 Func getArmyRequest($aiDonateCoords, $bNeedCapture = True)
-	Local $aTempRequestArray, $iArmyIndex = -1, $sClanText = ""
+	Local $aTempRequestArray, $iArmyIndex = -1, $sClanText = "", $sDebugText = ""
 	$g_aiDonQuant = $g_aiZero52 ;reset array
 	Local $aQuick = QuickMIS("CNX", @ScriptDir & "\imgxml\DonateCC\Army", 35, $aiDonateCoords[1] - 90, 297, $aiDonateCoords[1] - 38)
 	;_ArrayDisplay($aQuick)
@@ -156,26 +156,28 @@ Func getArmyRequest($aiDonateCoords, $bNeedCapture = True)
 				If Number($aQuick[$i][1]) < $axCoord[$j] Then ExitLoop
 			Next
 			
+			Local $sQuant = getOcrAndCapture("coc-singlereq", $axCoord[$iPos], $aiDonateCoords[1] - 90, 50, 20, True)
 			$iArmyIndex = TroopIndexLookup($aQuick[$i][0])
 			; Troops
 			If $iArmyIndex >= $eBarb And $iArmyIndex <= $eHunt Then
 				$sClanText &= ", " & $g_asTroopNames[$iArmyIndex]
+				$sDebugText &= ", " & $g_asTroopNames[$iArmyIndex] & ":" & $sQuant
 			; Spells
 			ElseIf $iArmyIndex >= $eLSpell And $iArmyIndex <= $eBtSpell Then
 				$sClanText &= ", " & $g_asSpellNames[$iArmyIndex - $eLSpell]
+			    $sDebugText &= ", " & $g_asSpellNames[$iArmyIndex - $eLSpell] & ":" & $sQuant
 			; Sieges
 			ElseIf $iArmyIndex >= $eWallW And $iArmyIndex <= $eBattleD Then
 				$sClanText &= ", " & $g_asSiegeMachineNames[$iArmyIndex - $eWallW]
+				$sDebugText &= ", " & $g_asSiegeMachineNames[$iArmyIndex - $eWallW] & ":" & $sQuant
 			ElseIf $iArmyIndex = -1 Then
 				ContinueLoop
 			EndIf
-			Local $sQuant = getOcrAndCapture("coc-singlereq", $axCoord[$iPos], $aiDonateCoords[1] - 90, 50, 20, True)
-			SetDebugLog("$sQuant : " & $sQuant)
 			$g_aiDonQuant[$i][0] = $iArmyIndex
 			$g_aiDonQuant[$i][1] = Number($sQuant)
 		Next
+		SetLog("[Request] " & StringTrimLeft($sDebugText, 2), $COLOR_ACTION)
 	EndIf
-	If $g_bDebugSetLog Then SetLog(_ArrayToString($g_aiDonQuant), $COLOR_DEBUG)
 	Return StringTrimLeft($sClanText, 2)
 EndFunc   ;==>getArmyRequest
 

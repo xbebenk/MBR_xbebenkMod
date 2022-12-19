@@ -48,7 +48,7 @@ Func StarLaboratory($bTestRun = False)
 	$sElixirCount = getResourcesMainScreen(705, 74)
 	SetLog("Updating village values [E]: " & $sElixirCount, $COLOR_SUCCESS)
 	$iAvailElixir = Number($sElixirCount)
-
+	If Not $g_bOptimizeOTTO Then isBattleMachineMaxed()
 	If Not LocateStarLab() Then Return False
 	
 	If Not ClickB("Research") Then 
@@ -298,105 +298,28 @@ Func LocateStarLab()
 				SetLog("Star Laboratory located.", $COLOR_INFO)
 				SetLog("It reads as Level " & $aResult[2] & ".", $COLOR_INFO)
 				Return True
-			Else
-				ClickAway("Left")
-				SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
-				SetDebugLog("Found instead: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG)
-				SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-				ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
-				SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-				$g_aiStarLaboratoryPos[0] = -1
-				$g_aiStarLaboratoryPos[1] = -1
 			EndIf
 		Else
 			ClickAway("Left")
 			SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
-			SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-			ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
-			SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
 			$g_aiStarLaboratoryPos[0] = -1
 			$g_aiStarLaboratoryPos[1] = -1
 		EndIf
+		If _Sleep(1000) Then Return ; Wait for description to popup
 	EndIf
-
-	SetLog("Looking for Star Laboratory...", $COLOR_ACTION)
-
-	Local $sCocDiamond = "FV"
-	Local $sRedLines = $sCocDiamond
-	Local $iMinLevel = 0
-	Local $iMaxLevel = 1000
-	Local $iMaxReturnPoints = 1
-	Local $sReturnProps = "objectname,objectpoints"
-	Local $bForceCapture = True
-
-	; DETECTION IMGLOC
-	Local $aResult = findMultiple($g_sImgStarLaboratory, $sCocDiamond, $sRedLines, $iMinLevel, $iMaxLevel, $iMaxReturnPoints, $sReturnProps, $bForceCapture)
-	If IsArray($aResult) And UBound($aResult) > 0 Then ; we have an array with data of images found
-		For $i = 0 To UBound($aResult) - 1
-			If _Sleep(50) Then Return ; just in case on PAUSE
-			If Not $g_bRunState Then Return ; Stop Button
-			SetDebugLog(_ArrayToString($aResult[$i]))
-			Local $aTEMP = $aResult[$i]
-			Local $sObjectname = String($aTEMP[0])
-			SetDebugLog("Image name: " & String($aTEMP[0]), $COLOR_INFO)
-			Local $aObjectpoints = $aTEMP[1] ; number of  objects returned
-			SetDebugLog("Object points: " & String($aTEMP[1]), $COLOR_INFO)
-			If StringInStr($aObjectpoints, "|") Then
-				$aObjectpoints = StringReplace($aObjectpoints, "||", "|")
-				Local $sString = StringRight($aObjectpoints, 1)
-				If $sString = "|" Then $aObjectpoints = StringTrimRight($aObjectpoints, 1)
-				Local $tempObbjs = StringSplit($aObjectpoints, "|", $STR_NOCOUNT) ; several detected points
-				For $j = 0 To UBound($tempObbjs) - 1
-					; Test the coordinates
-					Local $tempObbj = StringSplit($tempObbjs[$j], ",", $STR_NOCOUNT) ;  will be a string : 708,360
-					If UBound($tempObbj) = 2 Then
-						$g_aiStarLaboratoryPos[0] = Number($tempObbj[0]) + 9
-						$g_aiStarLaboratoryPos[1] = Number($tempObbj[1]) + 15
-						ConvertFromVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
-						ExitLoop 2
-					EndIf
-				Next
-			Else
-				; Test the coordinate
-				Local $tempObbj = StringSplit($aObjectpoints, ",", $STR_NOCOUNT) ;  will be a string : 708,360
-				If UBound($tempObbj) = 2 Then
-					$g_aiStarLaboratoryPos[0] = Number($tempObbj[0]) + 9
-					$g_aiStarLaboratoryPos[1] = Number($tempObbj[1]) + 15
-					ConvertFromVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
-					ExitLoop
-				EndIf
-			EndIf
-		Next
-	EndIf
-
-	If $g_aiStarLaboratoryPos[0] > 0 And $g_aiStarLaboratoryPos[1] > 0 Then
-		BuildingClickP($g_aiStarLaboratoryPos, "#0197")
-		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for description to popup
-
+	
+	If QuickMis("BC1", $g_sImgStarLaboratory) Then 
+		Click($g_iQuickMISX + 10, $g_iQuickMISY + 20)
+		$g_aiStarLaboratoryPos[0] = $g_iQuickMISX + 10
+		$g_aiStarLaboratoryPos[1] = $g_iQuickMISY + 20
+		If _Sleep(1000) Then Return
 		Local $aResult = BuildingInfo(245, 494) ; Get building name and level with OCR
 		If $aResult[0] = 2 Then ; We found a valid building name
-			If StringInStr($aResult[1], "Lab") = True Then ; we found the Star Laboratory
+			If StringInStr($aResult[1], "Lab") Then ; we found the Star Laboratory
 				SetLog("Star Laboratory located.", $COLOR_INFO)
 				SetLog("It reads as Level " & $aResult[2] & ".", $COLOR_INFO)
 				Return True
-			Else
-				ClickAway("Left")
-				SetDebugLog("Found Star Laboratory Position is not valid.", $COLOR_ERROR)
-				SetDebugLog("Found instead: " & $aResult[1] & ", " & $aResult[2] & " !", $COLOR_DEBUG)
-				SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-				ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
-				SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-				$g_aiStarLaboratoryPos[0] = -1
-				$g_aiStarLaboratoryPos[1] = -1
 			EndIf
-		Else
-			ClickAway("Left")
-			SetDebugLog("Found Star Laboratory Position is not valid.", $COLOR_ERROR)
-			SetDebugLog("Village position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-			ConvertToVillagePos($g_aiStarLaboratoryPos[0],$g_aiStarLaboratoryPos[1])
-			SetDebugLog("Real position: " & $g_aiStarLaboratoryPos[0] & ", " & $g_aiStarLaboratoryPos[1], $COLOR_DEBUG, True)
-			$g_aiStarLaboratoryPos[0] = -1
-			$g_aiStarLaboratoryPos[1] = -1
 		EndIf
 	EndIf
 

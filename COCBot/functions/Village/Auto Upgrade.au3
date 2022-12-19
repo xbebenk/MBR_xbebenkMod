@@ -244,8 +244,8 @@ EndFunc
 
 Func FindExistingBuilding($bTest = False)
 	Local $ElixMultiply = 1, $GoldMultiply = 1 ;used for multiply score
-	Local $Gold = getResourcesMainScreen(701, 23)
-	Local $Elix = getResourcesMainScreen(701, 74)
+	Local $Gold = getResourcesMainScreen(695, 23)
+	Local $Elix = getResourcesMainScreen(695, 74)
 	If $Gold > $Elix Then $GoldMultiply += 1
 	If $Elix > $Gold Then $ElixMultiply += 1
 	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
@@ -563,7 +563,7 @@ Func DoUpgrade($bTest = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[32] = 1) ? True : False
 		Case "Pet House"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1) ? True : False
-		Case "Builder's Hut"
+		Case "Builder s Hut"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1) ? True : False
 		Case Else
 			$bMustIgnoreUpgrade = False

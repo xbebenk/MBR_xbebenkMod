@@ -56,25 +56,27 @@ EndFunc   ;==>btnchkbxRepeat
 Func picUpgradeTypeLocation()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
-	PureClick(1, 40, 1, 0, "#9999") ; Clear screen
-	Sleep(100)
-	Zoomout() ; Zoom out if needed
+	ClickAway() ; Clear screen
+	Sleep(500)
+	Zoomout()
 	Local $inum
 	For $inum = 0 To UBound($g_avBuildingUpgrades, 1) - 1
 		If @GUI_CtrlId = $g_hPicUpgradeType[$inum] Then
 			Local $x = $g_avBuildingUpgrades[$inum][0]
 			Local $y = $g_avBuildingUpgrades[$inum][1]
 			Local $n = $g_avBuildingUpgrades[$inum][4]
-			SetDebugLog("Selecting #" & $inum + 1 & ": " & $n & ", " & $x & "/" & $y)
+			SetDebugLog("Selecting #" & $inum + 1 & ": " & $n & ", (" & $x & "," & $y & ")")
 			If isInsideDiamondXY($x, $y) Then ; check for valid location
-				BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "#9999")
+				SetDebugLog("Building Location : " & $x & "," & $y)
+				BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "Select", $g_avBuildingUpgrades[$inum][8])
 				Sleep(100)
 				If StringInStr($n, "collect", $STR_NOCASESENSEBASIC) Or _
-						StringInStr($n, "mine", $STR_NOCASESENSEBASIC) Or _
+						StringInStr($n, "gold mine", $STR_NOCASESENSEBASIC) Or _
 						StringInStr($n, "drill", $STR_NOCASESENSEBASIC) Then
-					Click(1, 40, 1, 0, "#0999") ;Click away to deselect collector if was not full, and collected with previous click
+						SetLog("Building is " & $n & ", need second click", $COLOR_DEBUG)
+					ClickAway() ;Click away to deselect collector if was not full, and collected with previous click
 					Sleep(100)
-					BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "#9999") ;Select collector
+					BuildingClick($g_avBuildingUpgrades[$inum][0], $g_avBuildingUpgrades[$inum][1], "Select", $g_avBuildingUpgrades[$inum][8]) ;Select collector
 				EndIf
 			EndIf
 			ExitLoop
@@ -107,6 +109,7 @@ Func btnResetUpgrade()
 		    $g_avBuildingUpgrades[$iEmptyRow][5] = $g_avBuildingUpgrades[$i][5] ;Upgrade Level
 		    $g_avBuildingUpgrades[$iEmptyRow][6] = $g_avBuildingUpgrades[$i][6] ;Upgrade Duration
 		    $g_avBuildingUpgrades[$iEmptyRow][7] = $g_avBuildingUpgrades[$i][7] ;Upgrade Finish Time
+			$g_avBuildingUpgrades[$iEmptyRow][8] = $g_avBuildingUpgrades[$i][8] ;Upgrade Finish Time
 
 			;Set the GUI data for new row and clear the GUI data for the cleared row.
 			;GUI Unit Name
@@ -163,8 +166,8 @@ Func btnResetUpgrade()
 		    $g_avBuildingUpgrades[$i][5] = "" ;Upgrade Level
 		    $g_avBuildingUpgrades[$i][6] = "" ;Upgrade Duration
 		    $g_avBuildingUpgrades[$i][7] = "" ;Upgrade Finish Time
-
-
+			$g_avBuildingUpgrades[$i][8] = -1 ;ZoomFactor
+			
 			$i = $iEmptyRow ;Reset counter to this row so we continue forward from here.
 			$iEmptyRow = -1 ;This should be the first empty row now.
 
@@ -188,6 +191,7 @@ Func btnResetUpgrade()
 		  $g_avBuildingUpgrades[$i][5] = "" ;Upgrade Level
 		  $g_avBuildingUpgrades[$i][6] = "" ;Upgrade Duration
 		  $g_avBuildingUpgrades[$i][7] = "" ;Upgrade Finish Time
+		  $g_avBuildingUpgrades[$i][8] = -1 ;ZoomFactor
 		  GUICtrlSetData($g_hTxtUpgradeName[$i], "")  ;GUI Unit Name
 		  GUICtrlSetData($g_hTxtUpgradeLevel[$i], "") ;GUI Unit Level
 		  GUICtrlSetData($g_hTxtUpgradeValue[$i], "") ;Upgrade value in GUI

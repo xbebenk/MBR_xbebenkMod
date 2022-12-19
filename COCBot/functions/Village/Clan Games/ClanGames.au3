@@ -33,6 +33,23 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		Return
 	EndIf
 	
+	If IsCGCoolDownTime() Then Return
+	
+	If $g_bChkClanGamesZapChallenge And $g_bChkCGBBAttackOnly And Not $OnlyPurge Then
+		OpenArmyOverview(True, "_ClanGames()") 
+		getArmyTroops(False, False, False)
+		If Number($g_aiCurrentTroops[$eTroopSuperBarbarian]) > 30 Then
+			$bDoSubaDestruction = True
+		EndIf
+
+		getArmySpells(False, True)
+		If Number($g_aiCurrentSpells[$eSpellLightning]) > 1 Then
+			$bDoZapChallenges = True
+		EndIf
+		
+		SetDebugLog("DoZapChallenges:" & String($bDoZapChallenges) & " DoSubaDestruction:" & String($bDoSubaDestruction))
+	EndIf
+	
 	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)
 
@@ -807,6 +824,8 @@ Func IsEventRunning($bOpenWindow = False)
 				EndIf
 			Else
 				Setlog("Active Challenge Not Enabled on Setting! started by mistake?", $COLOR_ERROR)
+				_CaptureRegion2(300, 130, 384, 218)
+				SaveDebugImage("CG-FailVerifyChallenge", False)
 				ForcePurgeEvent(False, False)
 			EndIf
 			CloseClangamesWindow()
@@ -823,7 +842,7 @@ Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName, $getCapture)
 	If Not $YourAccScore[$g_iCurAccount][1] Then
 		Local $Text = "", $color = $COLOR_SUCCESS
 		If $YourAccScore[$g_iCurAccount][0] <> $ScoreLimits[0] Then
-			$Text = "You got " & $ScoreLimits[0] - $YourAccScore[$g_iCurAccount][0] & "points on the last event."
+			$Text = "You got " & $ScoreLimits[0] - $YourAccScore[$g_iCurAccount][0] & " points on the last event."
 		Else
 			$Text = "You could not complete the last event!"
 			$color = $COLOR_WARNING
@@ -844,7 +863,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580, $getCapture, False) Then
 		Local $aTimer = GetEventTimeScore($g_iQuickMISX, $g_iQuickMISY)
-		SetLog("Starting Event" & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", $COLOR_SUCCESS)
+		SetLog("Starting Event " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", $COLOR_SUCCESS)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting : " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting : " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]")
@@ -868,6 +887,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $getCapture = True, $g_bChkC
 					SetLog("StartsEvent and Purge job!", $COLOR_SUCCESS)
 					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NearMaxPoint"), 1)
 					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NearMaxPoint"))
+					SetCGCoolDownTime()
 					CloseClangamesWindow()
 					Return True
 				Else
@@ -917,6 +937,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		If StartAndPurgeEvent($bTest) Then
 			If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
 			CloseClangamesWindow()
+			SetCGCoolDownTime()
 			Return True
 		EndIf
 	Else
@@ -924,6 +945,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		While Not WaitforPixel(570, 285, 571, 286, "F51D20", 10, 1)
 			SetDebugLog("Waiting for trash Button", $COLOR_DEBUG)
 			$count1 += 1
+			If _Sleep(500) Then Return
 			If $count1 > 10 Then ExitLoop
 		Wend
 		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
@@ -932,6 +954,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 			While Not IsOKCancelPage()
 				SetDebugLog("Waiting for trash Confirm OK", $COLOR_DEBUG)
 				$count2 += 1
+				If _Sleep(500) Then Return
 				If $count2 > 10 Then ExitLoop
 			Wend
 			If IsOKCancelPage() Then
@@ -952,6 +975,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 			Return False
 		EndIf
 	EndIf
+	SetCGCoolDownTime()
 	Return True
 EndFunc   ;==>ForcePurgeEvent
 
@@ -968,6 +992,7 @@ Func StartAndPurgeEvent($bTest = False)
 		While Not WaitforPixel(570, 285, 571, 286, "F51D20", 10, 1)
 			SetDebugLog("Waiting for trash Button", $COLOR_DEBUG)
 			$count1 += 1
+			If _Sleep(500) Then Return
 			If $count1 > 10 Then ExitLoop
 		Wend
 
@@ -977,6 +1002,7 @@ Func StartAndPurgeEvent($bTest = False)
 			While Not IsOKCancelPage()
 				SetDebugLog("Waiting for trash Confirm OK", $COLOR_DEBUG)
 				$count2 += 1
+				If _Sleep(500) Then Return
 				If $count2 > 10 Then ExitLoop
 			Wend
 			If IsOKCancelPage() Then
@@ -1327,6 +1353,39 @@ Func GetCGRewardList($X = 280, $OnlyClaimMax = False)
 	EndIf
 EndFunc
 
+Func SetCGCoolDownTime($bTest = False)
+	$g_hCoolDownTimer = 0
+	SetDebugLog("$g_hCoolDownTimer before: " & $g_hCoolDownTimer, $COLOR_DEBUG2)
+	$g_hCoolDownTimer = TimerInit()
+	Local $sleep = Random(500, 1500, 1)
+	If _Sleep($sleep) Then Return
+	SetDebugLog("$g_hCoolDownTimer after: " & Round(TimerDiff($g_hCoolDownTimer)/1000/60, 2), $COLOR_DEBUG2)
+	
+	If $bTest Then
+		$sleep = Random(500, 5500, 1)
+		If _Sleep($sleep) Then Return
+		SetLog("Timer after " & $sleep & " : " & Round(TimerDiff($g_hCoolDownTimer)/1000/60, 2) & " Minutes", $COLOR_DEBUG2) 
+		$g_hCoolDownTimer = 0
+	EndIf
+EndFunc
+
+Func IsCGCoolDownTime()
+	Local $bRet = False
+	Local $iTimer = Round(TimerDiff($g_hCoolDownTimer)/1000/60, 2)
+	SetDebugLog("CG Cooldown Timer : " & $iTimer)
+	If $iTimer > 600 Then 
+		$g_bIsCGCoolDownTime = False
+	Else
+		SetLog("Cooldown Time Detected: " & $iTimer & " Minutes", $COLOR_DEBUG2) 
+		$g_bIsCGCoolDownTime = True
+	EndIf
+	
+	Return $g_bIsCGCoolDownTime
+EndFunc
+
+Func ZapZapZap($aSearchBuilding)
+	
+EndFunc
 #Tidy_Off
 Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebug = False)
 

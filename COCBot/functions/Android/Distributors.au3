@@ -20,7 +20,7 @@ Func InitializeCOCDistributors() ;initialized in InitializeMBR() after language 
 	$g_sNO_COC = "<" & GetTranslatedFileIni("MBR Distributors", "NO_COC", "No COC") & ">"
 	$g_sUNKNOWN_COC = "<" & GetTranslatedFileIni("MBR Distributors", "Unknown_COC", "Unknown COC") & ">"
 
-	Dim $_g_asDISTRIBUTORS[21][4] = [ _
+	Dim $_g_asDISTRIBUTORS[22][4] = [ _
 			["Google", "com.supercell.clashofclans", "com.supercell.titan.GameApp", "Google"], _
 			["Kunlun", "com.supercell.clashofclans.kunlun", "com.supercell.titan.kunlun.GameAppKunlun", "Kunlun"], _
 			["Qihoo", "com.supercell.clashofclans.qihoo", "com.supercell.titan.kunlun.GameAppKunlun","Qihoo"], _
@@ -41,7 +41,8 @@ Func InitializeCOCDistributors() ;initialized in InitializeMBR() after language 
 			["Yeshen", "com.supercell.clashofclans.ewan.yeshen", "cn.ewan.supersdk.activity.SplashActivity","Yeshen"], _
 			["Aiyouxi", "com.supercell.clashofclans.ewan.egame", "cn.ewan.supersdk.activity.SplashActivity","Aiyouxi"], _
 			["Tencent", "com.tencent.tmgp.supercell.clashofclans", "com.supercell.titan.tencent.GameAppTencent","Tencent"], _
-			["Ewan", "com.supercell.clashofclans.ewan", "com.supercell.titan.kunlun.GameAppKunlun","Ewan"]]
+			["Ewan", "com.supercell.clashofclans.ewan", "com.supercell.titan.kunlun.GameAppKunlun","Ewan"], _
+			["Amazon", "com.supercell.clashofclans.amazon", "com.supercell.titan.amazon.GameAppAmazon", "Amazon"]]
 EndFunc   ;==>InitializeCOCDistributors
 
 Func GetCOCDistributors()

@@ -79,6 +79,7 @@ Global $g_iBotLaunchTime = 0 ; Keeps track of time (in millseconds) from bot lau
 
 ; Since October 12th 2016 Update, Village cannot be entirely zoomed out, offset updated in func SearchZoomOut
 Global $g_iVILLAGE_OFFSET[3] = [0, 0, 1]
+Global $g_iZoomFactor = 0, $g_ixOffset = 0, $g_iyOffset = 0
 
 #Region debugging
 #Tidy_Off
@@ -413,7 +414,7 @@ Global $g_bInitAndroid = True ; Used to cache android config, is set to False on
 Global Const $g_iCoCReconnectingTimeout = 60000 ; When still (or again) CoC reconnecting animation then restart CoC (handled in checkObstacles)
 
 ; Special Android Emulator variables
-Global $__BlueStacks_Version
+Global $__BlueStacks_Version, $__BlueStacks5_Version, $__MEmu_Version, $__Nox_Version
 Global $__BlueStacks_Path
 Global $__MEmu_Path
 Global $__Nox_Path
@@ -937,7 +938,7 @@ Global Const $g_iUpgradeSlots = 14
 Global $g_aiPicUpgradeStatus[$g_iUpgradeSlots] = [$eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, _
 		$eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight, $eIcnRedLight]
 Global $g_abBuildingUpgradeEnable[$g_iUpgradeSlots] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False]
-Global $g_avBuildingUpgrades[$g_iUpgradeSlots][8] ; Fill empty array [8] to store upgrade data
+Global $g_avBuildingUpgrades[$g_iUpgradeSlots][9] ; Fill empty array [8] to store upgrade data
 For $i = 0 To $g_iUpgradeSlots - 1
 	$g_avBuildingUpgrades[$i][0] = -1 ; position x
 	$g_avBuildingUpgrades[$i][1] = -1 ; position y
@@ -947,6 +948,7 @@ For $i = 0 To $g_iUpgradeSlots - 1
 	$g_avBuildingUpgrades[$i][5] = "" ; string Bldg level
 	$g_avBuildingUpgrades[$i][6] = "" ; string upgrade time
 	$g_avBuildingUpgrades[$i][7] = "" ; string upgrade end date/time (_datediff compatible)
+	$g_avBuildingUpgrades[$i][8] = -1 ; zoomfactor
 Next
 Global $g_iUpgradeMinGold = 100000, $g_iUpgradeMinElixir = 100000, $g_iUpgradeMinDark = 3000
 Global $g_abUpgradeRepeatEnable[$g_iUpgradeSlots] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False]
@@ -1807,7 +1809,7 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 ;ClanGames Challenges
 Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
 Global $g_bChkClanGamesPurgeAny = 0, $g_bChkClanGamesZapChallenge = False, $g_bIsZapEvent = False, $g_sZapEventName = ""
-Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
+Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False, $g_bIsCGCoolDownTime = False, $g_hCoolDownTimer = 0
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDay = 0
 Global $g_bCollectCGReward = False
 
@@ -1916,7 +1918,7 @@ Global $g_iBBAttacked = False ; DoAttackBB attacked or not
 Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0, $g_bChkEnableAutoUpgradeCC = False, $g_bChkAutoUpgradeCCIgnore = False, $g_bChkAutoUpgradeCCWallIgnore = False
 Global $g_bChkEnableCollectCCGold = False, $g_bChkEnableForgeGold = False, $g_bChkEnableForgeElix = False
 Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEnableForgeBBElix = False, $g_iCmbForgeBuilder = 0
-Global $aCCBuildingIgnore[12] = ["Ruined", "Big Barbarian", "Pyre", "Boulder", "Bonfire", "Grove", "Tree", "Forest", "Campsite", "Stone", "Pillar", "The First"]
+Global $aCCBuildingIgnore[13] = ["Ruined", "Big Barbarian", "Pyre", "Boulder", "Bonfire", "Grove", "Tree", "Forest", "Campsite", "Stone", "Pillar", "The First", "Tombs"]
 Global $g_bChkStartWeekendRaid = True
 
 ;Village Reference size, add info here for every scenery:

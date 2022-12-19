@@ -160,7 +160,7 @@ Global $g_sImgResourceIcon = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Resour
 #EndRegion
 
 #Region Auto Upgrade Builder Base
-Global $g_sImgAutoUpgradeBtnDir = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Upgrade"
+Global $g_sImgAutoUpgradeBtnDir = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Upgrade\"
 Global $g_sImgAutoUpgradeGreenCheck = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\GreenCheck\"
 Global $g_sImgAutoUpgradeRedX = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\RedX\"
 Global $g_sImgArrowNewBuilding = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\Arrow\"
@@ -237,4 +237,5 @@ Global Const $g_sImgRewardTier  = @ScriptDir & "\imgxml\Resources\ClanGamesImage
 Global Const $g_sImgRewardTile  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\Tile"
 Global Const $g_sImgRewardTileSelected  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\TileSelected"
 Global Const $g_sImgRewardItems  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\Items"
+Global Const $g_sImgZapChallenges = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Attack\ZapChallenges"
 #EndRegion

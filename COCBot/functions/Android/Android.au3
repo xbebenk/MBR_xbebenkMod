@@ -1157,11 +1157,11 @@ Func _OpenAndroid($bRestart = False, $bStartOnlyAndroid = False)
 	If Not StartAndroidCoC() Then Return False
 
 	If $bRestart = False Then
-		waitMainScreenMini()
+		waitMainScreen()
 		If Not $g_bRunState Then Return False
 		Zoomout()
 	Else
-		WaitMainScreenMini()
+		WaitMainScreen()
 		If Not $g_bRunState Then Return False
 		If @error = 1 Then
 			Return False

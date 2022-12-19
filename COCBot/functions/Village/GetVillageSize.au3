@@ -104,7 +104,11 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$x = $stone[0] - $stone_x_exp
 		$y = $stone[1] - $stone_y_exp
 		
-		If $DebugLog Then SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
+		$g_iZoomFactor = $z
+		$g_ixOffset = $x
+		$g_iyOffset = $y
+		
+		SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
 
 		Dim $aResult[10]
 		$aResult[0] = $c
@@ -284,4 +288,15 @@ Func DetectScenery($stone = "None")
 	EndIf
 
 	Return $sScenery
+EndFunc
+
+Func getVillageCenteringCoord()
+	Local $aValue[2] = [0, 0]
+	Local $iRan = Random(0, Ubound($aVillageCenteringCoord) - 1, 1)
+
+	$aValue[0] = $aVillageCenteringCoord[$iRan][0]
+	$aValue[1] = $aVillageCenteringCoord[$iRan][1]
+	
+	If $g_bDebugSetLog Then SetDebugLog("aVillageCenteringCoord : [" & $aValue[0] & "," & $aValue[1] & "]")
+	Return $aValue
 EndFunc

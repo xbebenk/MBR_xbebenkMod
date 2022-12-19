@@ -23,8 +23,11 @@ Func Initiate()
 		
 		Local $Compiled = @ScriptName & (@Compiled ? " Executable" : " Script")
 		SetLog($Compiled & " running on " & @OSVersion & " " & @OSServicePack & " " & @OSArch)
-		SetLog("AutoIt Version : " & @AutoItVersion)
-		SetLog("xbebenkMod Version : " & $g_sXModversion, $COLOR_INFO)
+		SetLog("AutoIt Version : " & @AutoItVersion, $COLOR_SUCCESS)
+		SetLog("xbebenkMod Version : " & $g_sXModversion, $COLOR_SUCCESS)
+		SetLog("Emulator: " & $g_sAndroidEmulator, $COLOR_SUCCESS)
+		SetLog("Emulator Version: " & $g_sAndroidVersion, $COLOR_SUCCESS)
+		SetLog("Android Version: " & GetAndroidCodeName(), $COLOR_SUCCESS)
 		If Not $g_bSearchMode Then
 			SetLogCentered(" Bot Start ", Default, $COLOR_SUCCESS)
 		Else

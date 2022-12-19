@@ -32,7 +32,6 @@ Func isInsideDiamond($aCoords)
         $Right = $g_aVillageRefSize[$iIndex][4]
         $Top = $g_aVillageRefSize[$iIndex][5]
         $Bottom = $g_aVillageRefSize[$iIndex][6]
-        SetDebugLog("[isInsideDiamond] LRTB: " & $Left & "," & $Right & "," & $Top & "," & $Bottom)
     Else
         SetLog("[isInsideDiamond] Reference Size no match", $COLOR_ERROR)
         Return False
