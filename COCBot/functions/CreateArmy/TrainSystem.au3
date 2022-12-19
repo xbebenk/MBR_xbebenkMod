@@ -113,7 +113,7 @@ Func CheckIfArmyIsReady()
 
 	CheckArmyCamp(False, False, True, True)
 	CheckCCArmy()
-	RequestCC(False, "IsFullClanCastle")
+	;RequestCC(False, "IsFullClanCastle")
 
 	If $g_bDebugSetlogTrain Then
 		SetLog(" - $g_CurrentCampUtilization : " & $g_CurrentCampUtilization)
