@@ -80,12 +80,14 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					$g_bRestart = True
 					$g_bForceSwitch = True     ; set this switch accounts next check
 					CloseClangamesWindow()
+					_Sleep(1000)
 					Return False
 				ElseIf StringInStr($aButton[$i][0], "Made") Then
 					SetLog("All Attacks already made! Returning home", $COLOR_INFO)
 					$g_bRestart = True
 					$g_bForceSwitch = True     ; set this switch accounts next check
 					CloseClangamesWindow()
+					_Sleep(1000)
 					Return
 				ElseIf StringInStr($aButton[$i][0], "Legend") Then
 					Click($aButton[$i][1], $aButton[$i][2])
@@ -122,7 +124,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 						$g_bForceSwitch = True
 						CloseClangamesWindow()
 						_Sleep(1000)
-						checkSwitchAcc()
+						Return
 					EndIf
 					_SleepStatus(120000) ; Wait 2 mins before searching again
 				EndIf
