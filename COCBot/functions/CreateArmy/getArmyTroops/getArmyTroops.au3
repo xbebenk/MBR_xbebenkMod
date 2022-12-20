@@ -62,8 +62,9 @@ Func getArmyTroops($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bCheckW
 			$aTroopCoords = StringSplit($aTempTroopArray[1], ",", $STR_NOCOUNT) ; Split the Coordinates where the Troop got found into X and Y
 			If $iTroopIndex = -1 Then ContinueLoop
 			Local $yHeader = 167
-			If _GetPixelColor($aTroopCoords[0], $yHeader, True) <> "86E0F9" Then 
-				If $g_bDebugSetLog Then SetLog("Skip read troop " & $aTempTroopArray[0] & ", header is not blue, color:" & _GetPixelColor($aTroopCoords[0], $yHeader, True), $COLOR_DEBUG1)
+			
+			If Not _ColorCheck(_GetPixelColor($aTroopCoords[0], $yHeader, True), Hex(0x86E0F9, 6), 20) Then 
+				SetDebugLog("Skip read troop " & $aTempTroopArray[0] & ", header is not blue, color:" & _GetPixelColor($aTroopCoords[0], $yHeader, True), $COLOR_DEBUG1)
 				ContinueLoop
 			EndIf
 			$g_aiCurrentTroops[$iTroopIndex] = Number(getBarracksNewTroopQuantity(Slot($aTroopCoords[0], $aTroopCoords[1]), 167, $bNeedCapture)) ; Get The Quantity of the Troop, Slot() Does return the exact spot to read the Number from
