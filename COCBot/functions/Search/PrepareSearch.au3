@@ -23,6 +23,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 				If IsUnitUsed($pMatchMode, $pTroopType) Then
 					If Not _DateIsValid($g_asHeroHealTime[$pTroopType - $eKing]) Then
 						getArmyHeroTime("All", True, True)
+						If _Sleep(1000) Then Return
 						ExitLoop 2
 					EndIf
 				EndIf
