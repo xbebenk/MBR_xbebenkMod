@@ -1373,7 +1373,7 @@ Func IsCGCoolDownTime()
 	Local $bRet = False
 	Local $iTimer = Round(TimerDiff($g_hCoolDownTimer)/1000/60, 2)
 	SetDebugLog("CG Cooldown Timer : " & $iTimer)
-	If $iTimer > 600 Then 
+	If $iTimer > 10 Then 
 		$g_bIsCGCoolDownTime = False
 	Else
 		SetLog("Cooldown Time Detected: " & $iTimer & " Minutes", $COLOR_DEBUG2) 
