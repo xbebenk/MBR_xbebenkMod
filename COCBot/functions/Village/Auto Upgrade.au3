@@ -602,12 +602,12 @@ Func DoUpgrade($bTest = False)
 		Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion", "poyal Champion"
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 500, 730, 580) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522) ; get cost
-			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 465) ; get duration
+			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(576, 465) ; get duration
 			$bHeroUpgrade = True
 		Case Else
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 480, 500, 550) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487) ; get cost
-			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(195, 307) ; get duration
+			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(192, 307) ; get duration
 	EndSwitch
 	
 	If $g_aUpgradeNameLevel[1] = "Clan Castle" And $g_aUpgradeNameLevel[2] = "Broken" Then 

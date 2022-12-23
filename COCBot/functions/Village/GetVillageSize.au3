@@ -135,8 +135,8 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAddit
 	Local $aStoneFiles
 	
 	For $check = 1 To 2
+		SetLog("[" & $check & "] Checking for same scenery: " & $g_sSceneryCode, $COLOR_DEBUG1)
 		If $check = 1 Then 
-			SetDebugLog("Checking for same scenery: " & $g_sSceneryCode)
 			$aStoneFiles = _FileListToArray($sDirectory & "stone\", $sStonePrefix & $g_sSceneryCode & "*.*", $FLTA_FILES)
 		Else
 			$aStoneFiles = _FileListToArray($sDirectory & "stone\", $sStonePrefix & "*.*", $FLTA_FILES)

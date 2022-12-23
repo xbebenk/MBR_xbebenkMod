@@ -113,7 +113,7 @@ Func CheckIfArmyIsReady()
 
 	CheckArmyCamp(False, False, True, True)
 	CheckCCArmy()
-	;RequestCC(False, "IsFullClanCastle")
+	RequestCC(False, "IsFullClanCastle")
 
 	If $g_bDebugSetlogTrain Then
 		SetLog(" - $g_CurrentCampUtilization : " & $g_CurrentCampUtilization)
@@ -356,7 +356,7 @@ Func DragIfNeeded($Troop)
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Dark Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
-				ClickDrag(750, 445, 20, 445)
+				ClickDrag(750, 448, 20, 448)
 				If _Sleep(2000) Then Return
 				If _ColorCheck(_GetPixelColor(834, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
@@ -368,7 +368,7 @@ Func DragIfNeeded($Troop)
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Normal Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
-				ClickDrag(100, 445, 850, 445)
+				ClickDrag(100, 448, 850, 448)
 				If _Sleep(2000) Then Return
 				If _ColorCheck(_GetPixelColor(22, 403, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
@@ -439,7 +439,9 @@ Func RemoveExtraTroops($toRemove)
 	If UBound($toRemove) = 1 And $toRemove[0][0] = "Arch" And $toRemove[0][1] = 0 Then Return 3
 
 	If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And Not $g_iActiveDonate Then Return 3
-
+	
+	If ($g_bIgnoreIncorrectTroopCombo Or $g_bIgnoreIncorrectSpellCombo) And Not $g_bPreciseArmy Then Return 3
+	
 	If UBound($toRemove) > 0 Then ; If needed to remove troops
 
 		; Check if Troops to remove are already in Train Tab Queue!! If was, Will Delete All Troops Queued Then Check Everything Again...

@@ -1923,14 +1923,14 @@ Global $g_bChkStartWeekendRaid = True
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[23][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], _ ;ok
+Global $g_aVillageRefSize[24][7] = [["DS", "Default", 571.62, 82, 770, 58, 577], _ ;ok
 									["JS", "Jungle", 566.60, 69, 796, 64, 609], _ ;ok
 									["MS", "Magic", 524, 91, 778, 58, 578], _ ;ok
 									["BB", "BuilderBase", 560.2, 88, 793, 91, 617], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
 									["PC", "Pirate", 598.68, 50, 812, 63, 634], _ ;ok
 									["EW", "Winter", 576.41, 68, 794, 61, 607], _ ;ok
-									["HM", "Hog Mountain", 637.4, 52, 810, 62, 636], _ ;ok
+									["HM", "Hog Mountain", 637.4, 52, 810, 62, 636], _ ;ok
 									["EP", "Epic Jungle", 636.8, 45, 815, 60, 636], _ ;ok
 									["9C", "9th Clashivery", 617.21, 76, 803, 64, 611], _ ;ok
 									["PG", "Pumpkin Graveyard", 567.01, 94, 784, 58, 581], _
@@ -1945,5 +1945,6 @@ Global $g_aVillageRefSize[23][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], 
 									["CF", "Clash Fest", 517.81, 119, 771, 112, 602], _ ;ok
 									["SP", "Spooky", 515.81, 103, 769, 61, 563], _ ;ok
 									["W1", "Scenery1", 553.3, 61, 813, 55, 619], _ ;ok
-									["W2", "Scenery2", 619.29, 61, 796, 64, 607]] ;ok
+									["W2", "Scenery2", 619.29, 61, 796, 64, 607], _ ;ok
+									["JL", "Jolly", 543.76, 86, 762, 93, 602]] ;ok
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"

@@ -20,6 +20,7 @@
 ; ===============================================================================================================================
 
 Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops)
+	If Not $g_bRunState Then Return
 	If IsTrainPage() Then
 		If $g_bDebugClick Then
 			Local $txt = _DecodeDebug($sdebugtxt)
@@ -91,5 +92,5 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 EndFunc   ;==>TrainClick
 
 Func TrainClickP($aPoint, $iHowOften, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops)
-	Return TrainClick($aPoint[0], $aPoint[1], $iHowOften, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops)
+	Return TrainClick($aPoint[0], $aWatchSpot[1], $iHowOften, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops)
 EndFunc   ;==>TrainClickP
