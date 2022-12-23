@@ -33,22 +33,22 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		Return
 	EndIf
 	
-	If IsCGCoolDownTime() Then Return
+	;If IsCGCoolDownTime() Then Return
 	
-	If $g_bChkClanGamesZapChallenge And $g_bChkCGBBAttackOnly And Not $OnlyPurge Then
-		OpenArmyOverview(True, "_ClanGames()") 
-		getArmyTroops(False, False, False)
-		If Number($g_aiCurrentTroops[$eTroopSuperBarbarian]) > 30 Then
-			$bDoSubaDestruction = True
-		EndIf
-
-		getArmySpells(False, True)
-		If Number($g_aiCurrentSpells[$eSpellLightning]) > 1 Then
-			$bDoZapChallenges = True
-		EndIf
-		
-		SetDebugLog("DoZapChallenges:" & String($bDoZapChallenges) & " DoSubaDestruction:" & String($bDoSubaDestruction))
-	EndIf
+	;If $g_bChkClanGamesZapChallenge And $g_bChkCGBBAttackOnly And Not $OnlyPurge Then
+	;	OpenArmyOverview(True, "_ClanGames()") 
+	;	getArmyTroops(False, False, False)
+	;	If Number($g_aiCurrentTroops[$eTroopSuperBarbarian]) > 30 Then
+	;		$bDoSubaDestruction = True
+	;	EndIf
+	;
+	;	getArmySpells(False, True)
+	;	If Number($g_aiCurrentSpells[$eSpellLightning]) > 1 Then
+	;		$bDoZapChallenges = True
+	;	EndIf
+	;	
+	;	SetDebugLog("DoZapChallenges:" & String($bDoZapChallenges) & " DoSubaDestruction:" & String($bDoSubaDestruction))
+	;EndIf
 	
 	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
 	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)

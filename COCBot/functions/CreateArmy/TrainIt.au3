@@ -21,7 +21,7 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 	Local $bDark = ($iIndex >= $eMini And $iIndex <= $eIWiza)
 
 	For $i = 1 To 5 ; Do
-
+		If Not $g_bRunState Then Return
 		Local $aTrainPos = GetTrainPos($iIndex)
 		If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
 			If _ColorCheck(_GetPixelColor($aTrainPos[0], $aTrainPos[1], $g_bCapturePixel), Hex($aTrainPos[2], 6), $aTrainPos[3]) Then
@@ -31,12 +31,6 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 					If IsArray($RNDName) Then
 						TrainClickP($aTrainPos, $iQuantity, $g_iTrainClickDelay, $FullName, "#0266", $RNDName)
 						If _Sleep($iSleep) Then Return
-						If $g_bOutOfElixir Then
-							SetLog("Not enough " & ($bDark ? "Dark " : "") & "Elixir to train position " & GetTroopName($iIndex) & " troops!", $COLOR_ERROR)
-							SetLog("Switching to Halt Attack, Stay Online Mode", $COLOR_ERROR)
-							If Not $g_bFullArmy Then $g_bRestart = True ;If the army camp is full, If yes then use it to refill storages
-							Return ; We are out of Elixir stop training.
-						EndIf
 						Return True
 					Else
 						SetLog("TrainIt position " & GetTroopName($iIndex) & " - RNDName did not return array?", $COLOR_ERROR)
@@ -268,9 +262,9 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 
 		Switch $iTrainPos[1]
 			Case 0 To 445
-				$iSlotV = 358 ; First ROW
+				$iSlotV = 420 ; First ROW
 			Case 446 To 550 ; Second ROW
-				$iSlotV = 459
+				$iSlotV = 520
 		EndSwitch
 
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0xB9B9B9, 20] ; Gray [i] icon
@@ -304,9 +298,9 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 
 		Switch $iTrainPos[1]
 			Case 0 To 445
-				$iSlotV = 358 ; First ROW
+				$iSlotV = 420 ; First ROW
 			Case 446 To 550 ; Second ROW
-				$iSlotV = 459
+				$iSlotV = 520
 		EndSwitch
 
 		Local $aSlot[4] = [$iSlotH, $iSlotV, 0xB9B9B9, 20] ; Gray [i] icon

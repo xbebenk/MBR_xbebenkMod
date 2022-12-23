@@ -37,6 +37,12 @@ Func DoubleTrain()
 		If $TroopCamp[1] <> $g_iTotalCampSpace Then _
 			SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG1)
 		
+		If $TroopCamp[1] > $g_iTotalCampSpace Then
+			If Not IsQueueEmpty("Troops", False, False) Then DeleteQueued("Troops")
+			$bNeedReCheckTroopTab = True
+			ExitLoop
+		EndIf
+		
 		If $TroopCamp[0] < $TroopCamp[1] Then ; <280/280
 			If $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then
 				If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Troops')", $COLOR_DEBUG1)
@@ -44,10 +50,8 @@ Func DoubleTrain()
 				If $Step = 6 Then ExitLoop
 				ContinueLoop
 			EndIf
-			If Not $g_bIgnoreIncorrectTroopCombo Then
-				If Not IsQueueEmpty("Troops", False, False) Then DeleteQueued("Troops")
-				SetLog($Step & ". DeleteQueued('Troops'). $bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab, $COLOR_DEBUG1)
-			EndIf
+			If Not IsQueueEmpty("Troops", False, False) Then DeleteQueued("Troops")
+			SetLog($Step & ". DeleteQueued('Troops'). $bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab, $COLOR_DEBUG1)
 			$bNeedReCheckTroopTab = True
 			ExitLoop
 
@@ -75,6 +79,8 @@ Func DoubleTrain()
 	; Spell
 	Local $iUnbalancedSpell = 0
 	Local $TotalSpell = _Min(Number(TotalSpellsToBrewInGUI()), Number($g_iTotalSpellValue))
+	
+	If $g_bIgnoreIncorrectSpellCombo Then $TotalSpell = 1
 	If $TotalSpell = 0 Then
 		If $bDebug Then SetLog("No spell is required, skip checking spell tab", $COLOR_DEBUG)
 	Else
@@ -99,10 +105,8 @@ Func DoubleTrain()
 					If $Step = 6 Then ExitLoop
 					ContinueLoop
 				EndIf
-				If Not $g_bIgnoreIncorrectSpellCombo Then
-					If Not IsQueueEmpty("Spells", False, False) Then DeleteQueued("Spells")
-					If $bDebug Then SetLog($Step & ". DeleteQueued('Spells'). $bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
-				EndIf
+				If Not IsQueueEmpty("Spells", False, False) Then DeleteQueued("Spells")
+				If $bDebug Then SetLog($Step & ". DeleteQueued('Spells'). $bNeedReCheckSpellTab: " & $bNeedReCheckSpellTab, $COLOR_DEBUG)
 				$bNeedReCheckSpellTab = True
 				ExitLoop
 
@@ -138,23 +142,32 @@ Func DoubleTrain()
 
 		Local $aWhatToTrain = WhatToTrain(False, False)
 		If DoWhatToTrainContainTroop($aWhatToTrain) Then
+			SetLog("New troop Fill way", $COLOR_DEBUG1)
 			TrainUsingWhatToTrain($aWhatToTrain)
 			$CampOCR = GetCurrentArmy(46, 131)
 			FillIncorrectTroopCombo(False, $CampOCR)
 			TrainFullTroop(True)
 			SetLog("TrainFullTroop(True) done.", $COLOR_DEBUG1)
+		Else
+			SetLog("No troop train on setting, only fill", $COLOR_DEBUG1)
+			If $g_bIgnoreIncorrectTroopCombo Then TrainFullTroop(False)
 		EndIf
 		If DoWhatToTrainContainSpell($aWhatToTrain) Then
+			SetLog("New spell Fill way", $COLOR_DEBUG1)
 			BrewUsingWhatToTrain($aWhatToTrain)
 			$CampOCR = GetCurrentArmy(46, 131)
 			FillIncorrectSpellCombo(False, $CampOCR)
 			BrewFullSpell(True)
 			If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 			SetLog("BrewFullSpell(True) done.", $COLOR_DEBUG1)
+		Else
+			SetLog("No spell train on setting, only fill", $COLOR_DEBUG1)
+			If $g_bIgnoreIncorrectSpellCombo Then BrewFullSpell(False)
 		EndIf
 	EndIf
 	
 	If $g_bIgnoreIncorrectTroopCombo Then
+		SetLog("Old troop Fill way", $COLOR_DEBUG1)
 		If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
 		Local $TroopCamp = GetCurrentArmy(46, 131)
 		Local $bQueue = $TroopCamp[0] >= $TroopCamp[1]
@@ -176,6 +189,7 @@ Func DoubleTrain()
 	EndIf
 	
 	If $g_bIgnoreIncorrectSpellCombo Then
+		SetLog("Old spell Fill way", $COLOR_DEBUG1)
 		If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
 		Local $SpellCamp = GetCurrentArmy(46, 131)
 		Local $bQueue = $SpellCamp[0] >= $SpellCamp[1]
@@ -212,11 +226,12 @@ Func TrainFullTroop($bQueue = False)
 		EndIf
 	Next
 	
-	If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 Then Return
+	If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 And Not $g_bIgnoreIncorrectTroopCombo Then Return
 	
 	TrainUsingWhatToTrain($ToReturn, $bQueue)
 	If _Sleep(500) Then Return
-
+	
+	If Not OpenTroopsTab(False, "TrainFullTroop()") Then Return
 	Local $CampOCR = GetCurrentArmy(46, 131)
 	SetDebugLog("Checking troop tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
 	If $g_bIgnoreIncorrectTroopCombo And $g_bDoubleTrain Then
@@ -254,14 +269,14 @@ Func BrewFullSpell($bQueue = False)
 		EndIf
 	Next
 
-	If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 Then Return
+	If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 And Not $g_bIgnoreIncorrectSpellCombo Then Return
 
 	BrewUsingWhatToTrain($ToReturn, $bQueue)
 	If _Sleep(750) Then Return
-
+	
+	If Not OpenSpellsTab(True, "BrewFullSpell()") Then Return
 	Local $CampOCR = GetCurrentArmy(46, 131)
 	SetDebugLog("Checking spell tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
-	
 	If $g_bIgnoreIncorrectSpellCombo And $g_bDoubleTrain Then
 		FillIncorrectSpellCombo($bQueue, $CampOCR)
 	EndIf

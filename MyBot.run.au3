@@ -1388,8 +1388,6 @@ Func FirstCheckRoutine()
 					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 					SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
 					GotoBBTodoCG()
-				ElseIf $g_bIsZapEvent Then
-					DoZapChallenges()
 				Else
 					ExitLoop ;should be will never get here, but
 				EndIf
