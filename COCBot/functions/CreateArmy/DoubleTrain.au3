@@ -238,6 +238,7 @@ Func TrainFullTroop($bQueue = False)
 EndFunc   ;==>TrainFullTroop
 
 Func FillIncorrectTroopCombo($bQueue, $CampOCR)
+	If Not $g_bIgnoreIncorrectTroopCombo Then Return
 	Local $TroopSpace = $bQueue ? Number($CampOCR[1]) + Number($CampOCR[2]) : Number($CampOCR[2])
 	SetLog("TroopCamp = " & $CampOCR[0] & "/" & $CampOCR[1], $COLOR_DEBUG)
 	
@@ -281,6 +282,8 @@ Func BrewFullSpell($bQueue = False)
 EndFunc   ;==>BrewFullSpell
 
 Func FillIncorrectSpellCombo($bQueue, $CampOCR)
+	If Not $g_bIgnoreIncorrectSpellCombo Then Return
+
 	If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
 	Local $SpellSpace = $bQueue ? Number($CampOCR[1]) + Number($CampOCR[2]) : Number($CampOCR[2])
 	SetLog("SpellQuantity = " & $CampOCR[0] & "/" & $CampOCR[1], $COLOR_DEBUG1)
