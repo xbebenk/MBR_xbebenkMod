@@ -78,7 +78,7 @@ Func GetFreeMagic()
 		Local $Read = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 200, 25, True)
 		Local $Capa = getOcrAndCapture("coc-buildermenu-name", $aOcrPositions[$i][0], 209, 100, 25, True)
 		SetDebugLog("Magic Item Capacity: " & $Capa)
-		If $Read = "FREE" And StringLeft($Capa, 1) = "0" Then $Read = "Claimed"
+		;If $Read = "FREE" And StringLeft($Capa, 1) = "0" Then $Read = "Claimed"
 		If $Read = "" Then $Read = "N/A"
 		If Number($Read) > 10 Then
 			$Read = $Read & " Gems"
