@@ -324,7 +324,7 @@ Func aaaaaa()
 					If IsArray($DP) And UBound($DP) > 0 Then
 						Local $iRandomXY = Round(Random(0, UBound($DP) - 1)) ;pick random point from nearpoint list
 						Local $tmp = StringSplit($DP[$iRandomXY], ",", $STR_NOCOUNT)
-						If IsArray($tmp) And UBound($tmp) > 0 Then
+						If IsArray($tmp) And UBound($tmp) = 2 Then
 							_ArrayAdd($aDP, $all[$x][4] & "|" & $tmp[0] & "|" & $tmp[1])
 						Else
 							SetLog("Something wrong on NearPoints calculations", $COLOR_ERROR)
