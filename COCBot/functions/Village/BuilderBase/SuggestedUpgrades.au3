@@ -791,7 +791,7 @@ Func ClickBBBuilder($Counter = 3)
 	Local $b_WindowOpened = False
 	If Not $g_bRunState Then Return
 	; open the builders menu
-	If Not _ColorCheck(_GetPixelColor(380,73, True), "BABBBC", 40) Then
+	If Not _ColorCheck(_GetPixelColor(380,73, True), "F4F4F5", 40) Then
 		Click(380, 30)
 		If _Sleep(1000) Then Return
 	EndIf
@@ -823,7 +823,7 @@ EndFunc ;==>ClickBBBuilder
 
 Func IsBBBuilderMenuOpen()
 	Local $bRet = False
-	Local $aBorder[4] = [380, 73, 0xBABBBC, 40]
+	Local $aBorder[4] = [380, 73, 0xF4F4F5, 40]
 	Local $aBorder1[4] = [380, 73, 0xFFFFFF, 40]
 	Local $sTriangle
 	If _CheckPixel($aBorder, True) Then
