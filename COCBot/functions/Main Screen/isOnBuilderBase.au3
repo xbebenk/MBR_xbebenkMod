@@ -13,13 +13,15 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func isOnBuilderBase($bNeedCaptureRegion = True)
-	Local $sColor = _GetPixelColor(356, 12, $bNeedCaptureRegion)
-	If _ColorCheck($sColor, Hex(0x9CD2EE, 6), 10) Then
-		SetDebugLog("Builder Base detected")
+Func isOnBuilderBase()
+	Local $sColor = _GetPixelColor(356, 12, True)
+	Local $sColorGold = _GetPixelColor(837, 13, True)
+	If _ColorCheck($sColor, Hex(0x9DD2EE, 6), 20) Or _ColorCheck($sColorGold, Hex(0xF8FA7A, 6), 10) Then
+		SetDebugLog("Builder Base detected, sColor:" & $sColor & " sColorGold:" & $sColorGold)
 		Return True
 	Else
-		SetDebugLog("Not In BuilderBase, Colorcheck:" & $sColor)
+		SetLog("Not In BuilderBase, BuilderInfoIconColor:" & $sColor, $COLOR_DEBUG1)
+		SetLog("Not In BuilderBase, GoldColor:" & $sColorGold, $COLOR_DEBUG1)
 		Return False
 	EndIf
 EndFunc

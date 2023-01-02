@@ -12,6 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Global $FalseDetectionCount = 0
 
 Func SwitchBetweenBases($ForcedSwitchTo = Default)
 	Local $bIsOnBuilderBase = isOnBuilderBase()
@@ -44,6 +45,13 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 		SetLog("StayOnBuilderBase = " & String($g_bStayOnBuilderBase), $COLOR_INFO)
 		SetLog(" --- Are we on BuilderBase ? " & String($bIsOnBuilderBase), $COLOR_INFO)
 		SetLog("Switching To BuilderBase")
+		$FalseDetectionCount += 1
+		SetDebugLog("CountFalseDetection: " & $FalseDetectionCount)
+		If $FalseDetectionCount > 2 Then 
+			SetDebugLog("BuilderBase Detection Maybe Failed, been trying " & $FalseDetectionCount & " times")
+			SetDebugLog("Let's assume we are on BuilderBase")
+			Return True ;just return true as assumed on BB
+		EndIf
 		Return SwitchTo("BB")
 	EndIf
 	
@@ -112,6 +120,7 @@ Func SwitchTo($To = "BB")
 		$bRet = _CheckPixel($aPixelToCheck, True, Default, "SwitchBetweenBases")
 		If $bRet Then 
 			SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
+			$FalseDetectionCount = 0
 			If $To = "BB" Then
 				$sScode = $g_sSceneryCode
 				$g_sSceneryCode = "BB"
