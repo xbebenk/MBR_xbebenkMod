@@ -107,10 +107,17 @@ Func SwitchTo($To = "BB")
 	If IsProblemAffect(True) Then Return
 	If Not $g_bRunState Then Return
 	
+	Local $sScode = "DS"
 	For $i = 1 To 5
 		$bRet = _CheckPixel($aPixelToCheck, True, Default, "SwitchBetweenBases")
 		If $bRet Then 
 			SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
+			If $To = "BB" Then
+				$sScode = $g_sSceneryCode
+				$g_sSceneryCode = "BB"
+			Else
+				$g_sSceneryCode = $sScode
+			EndIf
 			ExitLoop
 		EndIf
 		_Sleep(2000)
