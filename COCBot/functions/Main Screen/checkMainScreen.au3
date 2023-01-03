@@ -46,7 +46,6 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))
 		$bLocated = _checkMainScreenImage($aPixelToCheck)
 		If Not $bLocated And GetAndroidProcessPID() = 0 Then StartAndroidCoC()
-		If $bLocated Then ExitLoop
 		
 		Local $sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
 		If $sLoading = "Loading" Then 
@@ -56,7 +55,8 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		
 		$bObstacleResult = checkObstacles($bBuilderBase)
 		SetDebugLog("CheckObstacles[" & $i & "] Result = " & $bObstacleResult, $COLOR_DEBUG)
-
+		If $bLocated Then ExitLoop
+		
 		$bContinue = False
 		If Not $bObstacleResult Then
 			If $g_bMinorObstacle Then $g_bMinorObstacle = False
