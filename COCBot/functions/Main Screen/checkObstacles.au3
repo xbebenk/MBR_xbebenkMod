@@ -330,13 +330,13 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			If _Sleep(1000) Then Return
 		Next
 		SetLog("CheckObstacle: Not in MainVillage And detected AttackPage", $COLOR_ACTION)
-		ClickAway(Default, True)
+		ClickAway("Left", True)
 		Return False
 	EndIf
 	
 	;xbebenk: I need this click away to be logged
 	SetLog("CheckObstacle: Not Found Any obs, just do clickaway()", $COLOR_ACTION)
-	ClickAway(Default, True)
+	ClickAway("Left", True)
 	Return False
 EndFunc   ;==>_checkObstacles
 
