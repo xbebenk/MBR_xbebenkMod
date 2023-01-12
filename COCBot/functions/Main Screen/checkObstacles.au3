@@ -295,6 +295,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 	
+	Local $sUpdateAvail = getOcrAndCapture("coc-UpdateAvail", 320, 235, 220, 30)
+	If $sUpdateAvail = "Update Available" Then 
+		SetLog("Chief, we have minor coc Update!", $COLOR_INFO)
+		ClickAway()
+		_Sleep(1000)
+		Return
+	EndIf
+	
 	;====move switch bb/main to bottom, so we only check if all above test is False
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
 	SetDebugLog("isOnBuilderBase() : " & String($bIsOnBuilderIsland), $COLOR_ERROR)
