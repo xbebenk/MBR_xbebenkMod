@@ -199,13 +199,13 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 			If IsArray($aSearchResult) And Ubound($aSearchResult) > 0 Then
 				Local $FinalCoordX = $iLastX, $FinalCoordY = $iLastY, $iFinalLevel = 1, $HigherLevelFound = False, $AnySiegeFound = False
 				Local $TmpIndex = 0
-				$TmpIndex = _ArraySearch($aSearchResult, $eCastle, 0, 0, 0, 0, 1, 5)
-				If $TmpIndex = -1 Then
-					$iTroopIndex = -1 ;set ByRef
-					SetLog("No " & GetTroopName($eCastle) & " Detected, discard Siege use", $COLOR_INFO)
-					Click($iLastX, $iLastY, 1)
-					Return
-				EndIf
+				;$TmpIndex = _ArraySearch($aSearchResult, $eCastle, 0, 0, 0, 0, 1, 5)
+				;If $TmpIndex = -1 Then
+				;	$iTroopIndex = -1 ;set ByRef
+				;	SetLog("No " & GetTroopName($eCastle) & " Detected, discard Siege use", $COLOR_INFO)
+				;	Click($iLastX, $iLastY, 1)
+				;	Return
+				;EndIf
 
 				If $ToUse = $eCastle Then
 					SetDebugLog("ToUse : Castle")
