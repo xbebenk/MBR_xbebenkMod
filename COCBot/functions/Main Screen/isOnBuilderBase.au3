@@ -20,8 +20,8 @@ Func isOnBuilderBase()
 		SetDebugLog("Builder Base detected, sColor:" & $sColor & " sColorGold:" & $sColorGold)
 		Return True
 	Else
-		SetLog("Not In BuilderBase, BuilderInfoIconColor:" & $sColor, $COLOR_DEBUG1)
-		SetLog("Not In BuilderBase, GoldColor:" & $sColorGold, $COLOR_DEBUG1)
+		;SetDebugLog("Not In BuilderBase, BuilderInfoIconColor:" & $sColor, $COLOR_DEBUG1)
+		;SetDebugLog("Not In BuilderBase, GoldColor:" & $sColorGold, $COLOR_DEBUG1)
 		Return False
 	EndIf
 EndFunc

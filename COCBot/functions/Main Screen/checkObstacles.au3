@@ -337,13 +337,13 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			If _Sleep(1000) Then Return
 		Next
-		SetLog("CheckObstacle: Not in MainVillage And detected AttackPage", $COLOR_ACTION)
+		;SetLog("CheckObstacle: Not in MainVillage And detected AttackPage", $COLOR_ACTION)
 		ClickAway("Left", True)
 		Return False
 	EndIf
 	
 	;xbebenk: I need this click away to be logged
-	SetLog("CheckObstacle: Not Found Any obs, just do clickaway()", $COLOR_ACTION)
+	;SetLog("CheckObstacle: Not Found Any obs, just do clickaway()", $COLOR_ACTION)
 	ClickAway("Left", True)
 	Return False
 EndFunc   ;==>_checkObstacles
