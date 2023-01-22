@@ -918,10 +918,10 @@ Func HideAllTroops()
 	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopElectroTitan]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
-	For $i = $g_ahPicTrainArmyTroop[$eTroopSuperBarbarian] To $g_ahPicTrainArmyTroop[$eTroopSuperDragon]
+	For $i = $g_ahPicTrainArmyTroop[$eTroopSuperBarbarian] To $g_ahPicTrainArmyTroop[$eTroopSuperMiner]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
-	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopSuperBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopSuperDragon]
+	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopSuperBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopSuperMiner]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
 	For $i = $g_ahPicTrainArmySpell[$eSpellLightning] To $g_ahPicTrainArmySpell[$eSpellBat]
@@ -989,10 +989,10 @@ EndFunc
 
 Func BtnSuperTroops()
 	HideAllTroops()
-	For $i = $g_ahPicTrainArmyTroop[$eTroopSuperBarbarian] To $g_ahPicTrainArmyTroop[$eTroopSuperDragon]
+	For $i = $g_ahPicTrainArmyTroop[$eTroopSuperBarbarian] To $g_ahPicTrainArmyTroop[$eTroopSuperMiner]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
-	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopSuperBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopSuperDragon]
+	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopSuperBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopSuperMiner]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
 	SetBtnSelector("SuperTroops")

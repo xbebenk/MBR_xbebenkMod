@@ -765,6 +765,9 @@ Func ReadConfig_600_12()
 	$g_asTxtDonateTroop[$eTroopMiner] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateMiners", "miner|mine"), "|", @CRLF)
 	$g_asTxtBlacklistTroop[$eTroopMiner] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistMiners", "no miner|miner no|no mine|mine no"), "|", @CRLF)
 
+	$g_asTxtDonateTroop[$eTroopSuperMiner] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateSuperMiners", "sminer|smine"), "|", @CRLF)
+	$g_asTxtBlacklistTroop[$eTroopSuperMiner] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistSuperMiners", "no sminer|sminer no|no smine|smine no"), "|", @CRLF)
+
 	$g_asTxtDonateTroop[$eTroopElectroDragon] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateElectroDragons", "electro dragon|electrodrag|edrag"), "|", @CRLF)
 	$g_asTxtBlacklistTroop[$eTroopElectroDragon] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtBlacklistElectroDragons", "no electro dragon|electrodrag no|edrag no"), "|", @CRLF)
 
