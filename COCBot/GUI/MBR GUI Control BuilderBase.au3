@@ -75,6 +75,15 @@ Func btnBBDropOrder()
 	GUISetState(@SW_SHOW, $g_hGUI_BBDropOrder)
 EndFunc   ;==>btnBBDropOrder
 
+Func chkStopAttackBB6thBuilder()
+	If GUICtrlRead($g_hChkStopAttackBB6thBuilder) = $GUI_CHECKED Then
+		$g_bChkStopAttackBB6thBuilder = True
+	Else
+		$g_bChkStopAttackBB6thBuilder = False
+	EndIf
+EndFunc   ;==>btnBBDropOrder
+
+
 Func chkBBDropOrder()
 	If GUICtrlRead($g_hChkBBCustomDropOrderEnable) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)

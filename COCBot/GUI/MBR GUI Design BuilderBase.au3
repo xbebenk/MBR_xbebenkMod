@@ -21,6 +21,7 @@ Global $g_hChkCollectBldGE = 0, $g_hChkCollectBldGems = 0, $g_hChkActivateClockT
 Global $g_hChkBBSuggestedUpgrades = 0, $g_hChkBBSuggestedUpgradesIgnoreGold = 0 , $g_hChkBBSuggestedUpgradesIgnoreElixir , $g_hChkBBSuggestedUpgradesIgnoreHall = 0
 Global $g_hChkPlacingNewBuildings = 0, $g_hChkBBSuggestedUpgradesIgnoreWall = 0, $g_hChkBBSuggestedUpgradesOTTO = 0
 Global $g_hChkAutoStarLabUpgrades = 0, $g_hCmbStarLaboratory = 0, $g_hLblNextSLUpgrade = 0, $g_hBtnResetStarLabUpgradeTime = 0, $g_hPicStarLabUpgrade = 0
+Global $g_hChkEnableBBAttack = 0, $g_hChkBBDropTrophy = 0, $g_hChkBBAttIfLootAvail = 0, $g_hChkBBWaitForMachine = 0, $g_hChkBBDropBMFirst = 0, $g_hChkStopAttackBB6thBuilder = 0
 
 Global $g_hIcnTroopBB[6]
 Global $g_hCmbTroopBB[6]
@@ -257,7 +258,7 @@ Global $g_hChkBBForceCustomArmy = 0
 
 Func CreateBBAttackSubTab()
 	Local $x = 15, $y = 25
-	Local $iBBAttackGroupSize = 110
+	Local $iBBAttackGroupSize = 130
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_13", "Builder Base Attacking"), $x - 10,  $y, $g_iSizeWGrpTab2, $iBBAttackGroupSize)
 		$g_hChkEnableBBAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack", "Attack"), $x + 20, $y + 30, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack_Info_01", "Uses the currently queued army to attack."))
@@ -293,6 +294,12 @@ Func CreateBBAttackSubTab()
 			GUICtrlSetBkColor(-1, $COLOR_RED)
 			GUICtrlSetOnEvent(-1, "btnBBDropOrder")
 			GUICtrlSetState(-1, $GUI_DISABLE)
+		
+		$y = 125
+		$g_hChkStopAttackBB6thBuilder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "chkStopAttackBB6thBuilder", "No Attack at 6th Builder"), $x + 20, $y)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "chkStopAttackBB6thBuilder", "Stop Attack If 6th Builder Unlocked"))
+			GUICtrlSetOnEvent(-1, "chkStopAttackBB6thBuilder")
+			
 		$x = $x + 240
 		$y = 35
 		$g_hChkBBDropTrophy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBDropTrophy", "Drop BB Trophy to "), $x, $y)
@@ -317,7 +324,7 @@ Func CreateBBAttackSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	$x = 15
-	$y = 140
+	$y = 160
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_03", "Custom Army"), $x - 10,  $y, $g_iSizeWGrpTab2, 135)
 	
 		$g_hChkBBCustomArmyEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBCustomArmyEnable", "Enable Custom Army"), $x + 5, $y + 13, -1, -1)
@@ -331,7 +338,7 @@ Func CreateBBAttackSubTab()
 			Next
 		EndIf
 		
-		$y = 160
+		$y += 20
 		$g_hLblGUIBBCustomArmy = GUICtrlCreateLabel("", $x, $y)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp1", "Army Camp 1"), $x + 5, $y + 15)
 		$g_hCmbTroopBB[0] = GUICtrlCreateCombo("", $x + 5, $y + 30, 62, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
@@ -375,7 +382,7 @@ Func CreateBBAttackSubTab()
 		GUICtrlSetOnEvent(-1, "GUIBBCustomArmy")
 		
 		
-		$y = 210
+		$y += 60
 		$g_hIcnTroopBB[0] = _GUICtrlCreateIcon($g_sLibIconPath, $g_avStarLabTroops[1][4], $x + 15, $y, 45, 45)
 		$g_hIcnTroopBB[1] = _GUICtrlCreateIcon($g_sLibIconPath, $g_avStarLabTroops[1][4], $x + 85, $y, 45, 45)
 		$g_hIcnTroopBB[2] = _GUICtrlCreateIcon($g_sLibIconPath, $g_avStarLabTroops[1][4], $x + 155, $y, 45, 45)
@@ -385,7 +392,7 @@ Func CreateBBAttackSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	$x = 15
-	$y = 280
+	$y = 300
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "Group_03", "Attack Side"), $x - 10,  $y, $g_iSizeWGrpTab2, 65)
 		$g_hChk1SideAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Chk2SideAttack", "1 Side Attack"), $x, $y + 13, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Chk2SideAttack", "Use 2 Side Attack"))

@@ -75,6 +75,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	$g_iSaveElixWall = 0 ;reset
 	$g_hCoolDownTimer = 0
 	$g_bIsCGCoolDownTime = False
+	$g_bIs6thBuilderUnlocked = False
 
 	; First time switch account
 	Switch $sType

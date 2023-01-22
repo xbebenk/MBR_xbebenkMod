@@ -838,9 +838,8 @@ Global $g_iTxtTreasuryDark = 0
 Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCleanBBYard = False
 
 ; Builder Base Attack
-Global $g_hChkEnableBBAttack = 0, $g_hChkBBDropTrophy = 0, $g_hChkBBAttIfLootAvail = 0, $g_hChkBBWaitForMachine = 0, $g_hChkBBDropBMFirst = 0
 Global $g_bChkEnableBBAttack = False, $g_bChkBBDropTrophy = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False, $g_bChkBBDropBMFirst = False
-Global $g_hTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyLowerLimit = 0
+Global $g_hTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyLowerLimit = 0, $g_bChkStopAttackBB6thBuilder = 0, $g_bIs6thBuilderUnlocked = False
 Global $g_bBBMachineReady = False
 Global $g_iBBMachAbilityTime = 14000 ; in milliseconds, so 14 seconds between abilities
 Global Const $g_iBBNextTroopDelayDefault = 2000,  $g_iBBSameTroopDelayDefault = 300 ; default delay times
