@@ -58,13 +58,13 @@ Func BotDetectFirstTime()
 		EndIf
 	EndIf
 
-	If Number($g_iTownHallLevel) >= 14 Then
-		If _Sleep($DELAYBOTDETECT3) Then Return
-		If $g_aiPetHousePos[0] = "" Or $g_aiPetHousePos[0] = -1 Then
-			LocatePetHouse(False)
-			SaveConfig()
-		EndIf
-	EndIf
+	;If Number($g_iTownHallLevel) >= 14 Then
+	;	If _Sleep($DELAYBOTDETECT3) Then Return
+	;	If $g_aiPetHousePos[0] = "" Or $g_aiPetHousePos[0] = -1 Then
+	;		LocatePetHouse(False)
+	;		SaveConfig()
+	;	EndIf
+	;EndIf
 
 	If Number($g_iTownHallLevel) >= 7 Then
 		If $g_iCmbBoostBarbarianKing > 0 Or $g_bUpgradeKingEnable Then

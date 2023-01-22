@@ -1883,22 +1883,27 @@ Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Pet House Alpha
 Global $g_aiPetHousePos[2] = [-1, -1] ; Position of Pet House
-Global $g_sPetUpgradeTime = ""
-Global $g_bUpgradePetsEnable[4] = [False, False, False, False]
-Global $g_aiPetLevel[4] = [0, 0, 0, 0]
+Global $g_sPetUpgradeTime = "", $g_iPetHouseLevel = 0
 Global $g_bChkSyncSaveDE = True, $g_bChkSortPetUpgrade = False, $g_iCmbSortPetUpgrade = 0
 
-Global Enum $ePetLassi, $ePetElectroOwl, $ePetMightyYak, $ePetUnicorn, $ePetCount
-Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Electro Owl", "Mighty Yak", "Unicorn"]
-Global Const $g_asPetShortNames[$ePetCount] = ["Lassi", "Owl", "Yak", "Unicorn"]
-Global Const $g_ePetLevels=10
+Global Enum $ePetLassi, $ePetElectroOwl, $ePetMightyYak, $ePetUnicorn, $ePetFrosty, $ePetDiggy, $ePetPoisonLizard, $ePetPhoenix, $ePetCount
+Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Electro Owl", "Mighty Yak", "Unicorn", "Frosty", "Diggy", "Poison Lizard", "Phoenix"]
+Global Const $g_asPetShortNames[$ePetCount] = ["Lassi", "Owl", "Yak", "Unicorn", "Frosty", "Diggy", "Lizard", "Phoenix"]
+Global $g_bUpgradePetsEnable[$ePetCount] = [False, False, False, False]
+Global $g_aiPetLevel[$ePetCount] = [0, 0, 0, 0, 0, 0, 0, 0]
+
+Global Const $g_ePetLevels = 10
 
 
 Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
-		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _  ; LASSI
-		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
-		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
-		[0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
+		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _; LASSI
+		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _; Electro Owl
+		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _; Mighty Yak
+		[0, 210, 220, 230, 240, 250, 260, 270, 280, 290], _; Unicorn
+		[0, 215, 225, 235, 245, 255, 265, 275, 285, 295], _; Frosty
+		[0, 220, 230, 240, 250, 260, 270, 280, 290, 300], _; Diggy
+		[0, 225, 235, 245, 255, 265, 275, 285, 295, 305], _; Poison Lizard
+		[0, 230, 240, 250, 260, 270, 280, 290, 300, 310]]; Phoenix
 
 
 ;Misc Mod

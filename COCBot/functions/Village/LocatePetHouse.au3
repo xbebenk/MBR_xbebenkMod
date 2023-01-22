@@ -23,12 +23,15 @@ Func LocatePetHouse($bCollect = True)
 	EndIf
 
 	; auto locate 
-	ImgLocatePetHouse()
+	Local $bAutoLocated = ImgLocatePetHouse()
+	If Not $bAutoLocated Then 
+		$g_aiPetHousePos[0] = 0
+		$g_aiPetHousePos[1] = 0
+	EndIf
 	
 	SetLog("PetHouse: (" & $g_aiPetHousePos[0] & "," & $g_aiPetHousePos[1] & ")", $COLOR_DEBUG)
-	If $g_aiPetHousePos[0] > 0 And $g_aiPetHousePos[1] > 0 Then Return True
-	
-	If $g_aiPetHousePos[1] = "" Or $g_aiPetHousePos[1] = -1 Then _LocatePetHouse($bCollect) ; manual locate
+	If $bAutoLocated And $g_aiPetHousePos[0] > 0 And $g_aiPetHousePos[1] > 0 Then Return True
+	If Not $bAutoLocated Then _LocatePetHouse($bCollect) ; manual locate
 EndFunc
 
 Func _LocatePetHouse($bCollect = True)

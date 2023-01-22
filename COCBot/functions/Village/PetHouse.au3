@@ -48,10 +48,10 @@ Func PetHouse($test = False)
 	Next
 	If Not $bUpgradePets Then Return
 
-	$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(728, 123) ;get current DE
+	$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(700, 123) ;get current DE
 	If Number($g_aiCurrentLoot[$eLootDarkElixir]) <= 90000 Then
 		SetLog("Current DE: " & $g_aiCurrentLoot[$eLootDarkElixir] & " < Mininum to upgrade Pet, exiting!", $COLOR_INFO)
-		Return
+		If Not $test Then Return
 	EndIf
 	ZoomOut() ;make sure village is zoomout
 	ClickAway()
@@ -62,26 +62,29 @@ Func PetHouse($test = False)
 
 	If $g_aiPetHousePos[0] <= 0 Or $g_aiPetHousePos[1] <= 0 Then
 		SetLog("Pet House Location unknown!", $COLOR_WARNING)
-		LocatePetHouse() ; Pet House location unknown, so find it.
+		Local $bPetHouseLocated = LocatePetHouse() ; Pet House location unknown, so find it.
 		If $g_aiPetHousePos[0] = 0 Or $g_aiPetHousePos[1] = 0 Then
 			SetLog("Problem locating Pet House, re-locate Pet House position before proceeding", $COLOR_ERROR)
 			Return False
 		EndIf
+		If $bPetHouseLocated Then PureClickP($g_aiPetHousePos)
 	Else
 		PureClickP($g_aiPetHousePos)
 		_Sleep(500)
-		Local $BuildingName = BuildingInfo(242, 498)
-		If StringInStr($BuildingName[1], "House") Then
-			SetLog("Click on PetHouse, Level:" & $BuildingName[2])
+	EndIf
+	
+	Local $BuildingName = BuildingInfo(242, 498)
+	If StringInStr($BuildingName[1], "House") Then
+		SetLog("Click on PetHouse, Level:" & $BuildingName[2])
+		$g_iPetHouseLevel = Number($BuildingName[2])
+	Else
+		SetDebugLog("Wrong Click on PetHouse, its a " & $BuildingName[1])
+		ClickAway()
+		If LocatePetHouse() Then
+			PureClickP($g_aiPetHousePos)
 		Else
-			SetDebugLog("Wrong Click on PetHouse, its a " & $BuildingName[1])
-			ClickAway()
-			If LocatePetHouse() Then
-				PureClickP($g_aiPetHousePos)
-			Else
-				SetLog("Cannot Find PetHouse, please locate manually")
-				Return
-			EndIf
+			SetLog("Cannot Find PetHouse, please locate manually")
+			Return
 		EndIf
 	EndIf
 
@@ -121,7 +124,10 @@ Func PetHouse($test = False)
 		If $aPet[$i][3] < $g_ePetLevels Then
 			$AllPetMax = False
 		EndIf
-
+		If $aPet[$i][3] = $g_ePetLevels Then 
+			SetLog($aPet[$i][1] & ", MaxLevel", $COLOR_INFO)
+			ContinueLoop
+		EndIf
 		If $g_bChkSyncSaveDE Then ; if sync enabled, add value g_iTxtSmartMinDark to cost for save de
 			SetLog("SyncSaveDE Enabled, adding save value to cost", $COLOR_INFO)
 			Local $aTmpCost = $aPet[$i][4]
@@ -156,15 +162,27 @@ Func PetHouse($test = False)
 	EndIf
 	
 	SetDebugLog(_ArrayToString($aPet))
+	Local $bSecondPage = False
 	For $i = 0 to UBound($aPet) - 1
 		If $g_bUpgradePetsEnable[$aPet[$i][0]] And $aPet[$i][2] = "True" Then
 			SetLog($aPet[$i][1] & " is at level " & $aPet[$i][3])
+			If $aPet[$i][3] = "MaxLevel" Then ContinueLoop
 			If _Sleep($DELAYLABORATORY2) Then Return
 			Local $iDarkElixirReq = $aPet[$i][4]
 			SetLog("DE Requirement: " & $iDarkElixirReq)
 
 			If Number($g_aiCurrentLoot[$eLootDarkElixir]) > Number($iDarkElixirReq) Then
 				SetLog("Will now upgrade " & $aPet[$i][1])
+				
+				If Not $bSecondPage And $aPet[$i][7] = "True" Then 
+					PetHouseNextPage()
+					$bSecondPage = True
+				EndIf
+				If $bSecondPage And $aPet[$i][7] = "False" Then 
+					PetHousePrevPage()
+					$bSecondPage = False
+				EndIf
+				
 				Click($aPet[$i][5], 465)
 
 			   ; wait for ungrade window to open
@@ -197,20 +215,18 @@ Func PetHouse($test = False)
 						GUICtrlSetState($g_hPicPetGreen, $GUI_SHOW)
 						;===========================================
 						If _Sleep($DELAYLABORATORY2) Then Return
+						SetLog("Started upgrade for: " & $aPet[$i][1], $COLOR_SUCCESS)
 						Local $sPetTimeOCR = getRemainTLaboratory(274, 256)
 						Local $iPetFinishTime = ConvertOCRTime("Lab Time", $sPetTimeOCR, False)
 						SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
 						If $iPetFinishTime > 0 Then
 							$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())
-							SetLog("Pet House will finish in " & $sPetTimeOCR & " (" & $g_sPetUpgradeTime & ")")
+							SetLog("Pet House will finish in " & $sPetTimeOCR & " (" & $g_sPetUpgradeTime & ")", $COLOR_SUCCESS)
 						EndIf
-
+						ClickAway() ; close pet house window
 					Else
 						ClickAway() ; close pet upgrade window
 					EndIf
-
-					SetLog("Started upgrade for: " & $aPet[$i][1])
-					ClickAway() ; close pet house window
 					Return True
 				Else
 					SetLog("Failed to find the Pets button!", $COLOR_ERROR)
@@ -292,29 +308,41 @@ Func FindPetsButton()
 EndFunc
 
 Func GetPetUpgradeList()
-	; Pet upgrade is not in progress and not upgrading, so we need to start an upgrade.
-	Local $iPetUnlockedxCoord[4] = [190, 345, 500, 655]
-	Local $iPetLevelxCoord[4] = [128, 274, 420, 566]
+	Local $iPetUnlockedxCoord[8] = [190, 345, 500, 655, 225, 375, 520, 670]
+	Local $iPetLevelxCoord[8] = [128, 274, 420, 566, 167, 313, 460, 606]
+	
 	Local $iDarkElixirReq = 0
-	Local $aPet[0][7]
-
-	For $i = 0 to $ePetCount - 1
-		If $g_bUpgradePetsEnable[$i] Then ; skip detection for unchecked pets
-			Local $Name = $g_asPetNames[$i]
-			Local $Unlocked = String(_ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 385, True), Hex(0xc3b6a5, 6), 20))
-			Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 503)
-			$iDarkElixirReq = 0 ;reset value
-			If Number($iPetLevel) = $g_ePetLevels Then ;skip read upgrade cost because pet is maxed
-				$Unlocked = "MaxLevel"
-				ContinueLoop
-			Else
-				$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 10, 503, 80, 16, True)
-			EndIf
-			Local $x = $iPetUnlockedxCoord[$i], $y = $iPetUnlockedxCoord[$i] + 20
-			_ArrayAdd($aPet, $i & "|" & $Name & "|" & $Unlocked & "|" & $iPetLevel & "|" & $iDarkElixirReq & "|" & $x & "|" & $y)
-		Else
-			SetDebugLog("Upgrade for " &  $g_asPetNames[$i] & " is disabled")
+	Local $aPet[0][8]
+	Local $bSecondPage = False
+	
+	For $i = $ePetLassi to $ePetPhoenix
+		If $i > $ePetUnicorn And Not $bSecondPage And $g_iPetHouseLevel > 4 Then 
+			PetHouseNextPage()
+			$bSecondPage = True
 		EndIf
+		If $g_iPetHouseLevel < 5 And $i = $ePetFrosty Then ExitLoop
+		Local $Name = $g_asPetNames[$i]
+		Local $Unlocked = String(_ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 385, True), Hex(0xc3b6a5, 6), 20))
+		Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 503)
+		$iDarkElixirReq = 0 ;reset value
+		$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 20, 503, 100, 16, True)
+		If Number($iPetLevel) = $g_ePetLevels Then 
+			$Unlocked = "MaxLevel"
+			$iDarkElixirReq = 0
+		EndIf
+		Local $x = $iPetUnlockedxCoord[$i], $y = $iPetUnlockedxCoord[$i] + 20
+		_ArrayAdd($aPet, $i & "|" & $Name & "|" & $Unlocked & "|" & $iPetLevel & "|" & $iDarkElixirReq & "|" & $x & "|" & $y & "|" & $bSecondPage)
 	Next
+	If $g_iPetHouseLevel > 4 And $bSecondPage Then PetHousePrevPage()
 	Return $aPet
+EndFunc
+
+Func PetHouseNextPage()
+	ClickDrag(720, 500, 180, 500, 500)
+	If _Sleep(1000) Then Return
+EndFunc
+
+Func PetHousePrevPage()
+	ClickDrag(200, 500, 740, 500, 500)
+	If _Sleep(1000) Then Return
 EndFunc

@@ -1004,6 +1004,11 @@ Func ReadConfig_600_15()
 	IniReadS($g_bUpgradePetsEnable[$ePetElectroOwl], $g_sProfileConfigPath, "upgrade", "UpgradePetElectroOwl", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetMightyYak], $g_sProfileConfigPath, "upgrade", "UpgradePetMightyYak", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetUnicorn], $g_sProfileConfigPath, "upgrade", "UpgradePetUnicorn", False, "Bool")
+	
+	IniReadS($g_bUpgradePetsEnable[$ePetFrosty], $g_sProfileConfigPath, "upgrade", "UpgradePetFrosty", False, "Bool")
+	IniReadS($g_bUpgradePetsEnable[$ePetDiggy], $g_sProfileConfigPath, "upgrade", "UpgradePetDiggy", False, "Bool")
+	IniReadS($g_bUpgradePetsEnable[$ePetPoisonLizard], $g_sProfileConfigPath, "upgrade", "UpgradePetPoisonLizard", False, "Bool")
+	IniReadS($g_bUpgradePetsEnable[$ePetPhoenix], $g_sProfileConfigPath, "upgrade", "UpgradePetPhoenix", False, "Bool")
 EndFunc   ;==>ReadConfig_600_15
 
 Func ReadConfig_600_16()

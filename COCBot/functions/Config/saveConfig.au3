@@ -709,6 +709,11 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradePetElectroOwl", $g_bUpgradePetsEnable[$ePetElectroOwl] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetMightyYak", $g_bUpgradePetsEnable[$ePetMightyYak] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetUnicorn", $g_bUpgradePetsEnable[$ePetUnicorn] ? 1 : 0)
+	
+	_Ini_Add("upgrade", "UpgradePetFrosty", $g_bUpgradePetsEnable[$ePetFrosty] ? 1 : 0)
+	_Ini_Add("upgrade", "UpgradePetDiggy", $g_bUpgradePetsEnable[$ePetDiggy] ? 1 : 0)
+	_Ini_Add("upgrade", "UpgradePetPoisonLizard", $g_bUpgradePetsEnable[$ePetPoisonLizard] ? 1 : 0)
+	_Ini_Add("upgrade", "UpgradePetPhoenix", $g_bUpgradePetsEnable[$ePetPhoenix] ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_15
 
 Func SaveConfig_600_16()
