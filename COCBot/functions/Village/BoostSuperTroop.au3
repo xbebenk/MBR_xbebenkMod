@@ -99,7 +99,7 @@ Func BoostSuperTroop($bTest = False)
 								EndIf
 								Setlog("Using Dark Elixir...", $COLOR_INFO)
 								If QuickMIS("BC1", $g_sImgBoostTroopsButtons, 600, 500, 750, 570) Then ;find image of dark elixir button
-									$BoostCost = getResourcesBonus(628, 542) ; get cost
+									$BoostCost = getResourcesBonus(628, 524) ; get cost
 									$BoostDuration = getHeroUpgradeTime(575, 464) ; get duration
 									If Not $BoostCost = "" Then
 										Click($g_iQuickMISX, $g_iQuickMISY)
