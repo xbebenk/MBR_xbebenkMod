@@ -1280,16 +1280,29 @@ Func CollectCGReward($bTest = False)
 		
 		Local $aTile = GetCGRewardList(730)
 		If IsArray($aTile) And UBound($aTile) > 0 Then
-			Click($aTile[0][1], $aTile[0][2]+10)
-			SetLog("Selecting Magic Items:" & $aTile[0][0], $COLOR_INFO)
-			_Sleep(1000)
-			If IsOKCancelPage() Then ;check if we found gems popup, decline
-				SetLog("Magic Item storage is Full (Decline)", $COLOR_INFO)
-				Click(350, 400) ;Click No
+			For $item = 0 To UBound($aTile) - 1
+				Click($aTile[$item][1], $aTile[$item][2]+10)
+				SetLog("Selecting Magic Items:" & $aTile[$item][0], $COLOR_INFO)
 				_Sleep(1000)
-				Click(770, 420) ;100 Gems
-				_Sleep(1000)
-			EndIf
+				If IsOKCancelPage() Then ;check if we found gems popup, decline
+					SetLog("Magic Item storage is Full (Decline)", $COLOR_INFO)
+					Click(350, 400) ;Click No
+					_Sleep(1000)
+				Else
+					ExitLoop
+				EndIf
+			Next
+			
+			;Click($aTile[0][1], $aTile[0][2]+10)
+			;SetLog("Selecting Magic Items:" & $aTile[0][0], $COLOR_INFO)
+			;_Sleep(1000)
+			;If IsOKCancelPage() Then ;check if we found gems popup, decline
+			;	SetLog("Magic Item storage is Full (Decline)", $COLOR_INFO)
+			;	Click(350, 400) ;Click No
+			;	_Sleep(1000)
+			;	Click(770, 420) ;100 Gems
+			;	_Sleep(1000)
+			;EndIf
 		Else
 			; Image Magic Items Not found, maybe image not exist yet
 			Click(770, 420) ;100 Gems
