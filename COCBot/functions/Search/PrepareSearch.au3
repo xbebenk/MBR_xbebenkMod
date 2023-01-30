@@ -34,10 +34,9 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	ChkAttackCSVConfig()
 	If $Mode = $DT Then $g_bRestart = False
 	
-	If isOnMainVillage() Then
-		ClickP($aAttackButton)
+	If ClickB("AttackButton") Then
 		SetLog("Opening Multiplayer Tab!", $COLOR_INFO)
-		If _Sleep(1500) Then Return
+		If _Sleep(1000) Then Return
 		For $i = 1 To 3
 			If IsMultiplayerTabOpen() Then 
 				ExitLoop
@@ -51,8 +50,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			If _Sleep(1000) Then Return
 		Next
 	Else
-		checkObstacles()
-		SetLog("PrepareSearch: MainPage Not Found!", $COLOR_ERROR)
+		SetLog("PrepareSearch Failed: MainPage Not Found!", $COLOR_ERROR)
 	EndIf	
 
 	Local $aButton
