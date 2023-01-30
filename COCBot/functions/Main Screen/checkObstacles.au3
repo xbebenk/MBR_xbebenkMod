@@ -284,8 +284,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	
 	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ; if bot started or situated on clan capital map, and need to go back to main village
 		SetLog("checkObstacles: Found Clan Capital Map, Returning Home", $COLOR_ACTION)
-		Click(60, 610)
-		_Sleep(1000)
+		SwitchToMainVillage("CheckObstacle")
 		Return False
 	EndIf
 	
