@@ -129,13 +129,18 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
 	
-	If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
+	If _ColorCheck(_GetPixelColor(823,176, True), Hex(0x882C19, 6), 20) And _ColorCheck(_GetPixelColor(430, 499, True), Hex(0xFFFFFF, 6), 20) Then 	
 		SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
 		Click(440, 526)
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		$g_bMinorObstacle = True
-		Return False
 	EndIf
+	
+	;If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
+	;	SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
+	;	Click(440, 526)
+	;	If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+	;	$g_bMinorObstacle = True
+	;	Return False
+	;EndIf
 	
 	;If WaitforPixel(420, 600, 420,600, "000000", 20, 1) Then
 	;	If WaitforPixel(420, 563, 421,564, "6CBB1F", 20, 1) Then
