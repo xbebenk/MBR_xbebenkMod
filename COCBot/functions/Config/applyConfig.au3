@@ -22,7 +22,7 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 		Return
 	EndIf
 	$g_bApplyConfigIsActive = True
-	SetDebugLog("applyConfig(), call number " & $iApplyConfigCount)
+	SetDebugLog("applyConfig(), " & $TypeReadSave & ", call number " & $iApplyConfigCount)
 
 	setMaxDegreeOfParallelism($g_iThreads)
 	setProcessingPoolSize($g_iGlobalThreads)
@@ -130,8 +130,8 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	; <><><> Attack Plan / Train Army / Options <><><>
 	ApplyConfig_641_1($TypeReadSave)
 
-	; <><><><> Attack Plan / Strategies <><><><>
-	; <<< nothing here >>>
+	; <><><><> BuilderBase <><><><>
+	ApplyBuilderBaseMod($TypeReadSave)
 
 	; <><><><> Bot / Profiles <><><><>
 	PopulatePresetComboBox()
@@ -642,7 +642,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bSkipDT = (GUICtrlRead($g_hChkSkipDT) = $GUI_CHECKED)
 
 	EndSwitch
-	ApplyBuilderBaseMod($TypeReadSave)
 EndFunc   ;==>ApplyConfig_600_6
 
 Func ApplyBuilderBaseMod($TypeReadSave)
