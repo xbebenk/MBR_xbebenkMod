@@ -76,6 +76,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	$g_hCoolDownTimer = 0
 	$g_bIsCGCoolDownTime = False
 	$g_bIs6thBuilderUnlocked = False
+	$g_bskipBBroutine = False
 
 	; First time switch account
 	Switch $sType

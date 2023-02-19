@@ -1495,9 +1495,8 @@ Func FirstCheckRoutine()
 	EndIf
 
 	If Not $g_bRunState Then Return
+	VillageReport()
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
-		If _Sleep($DELAYRUNBOT2) Then Return
-		VillageReport()
 		If _Sleep($DELAYRUNBOT2) Then Return
 		If BotCommand() Then btnStop()
 		If Not $g_bRunState Then Return
@@ -1593,10 +1592,8 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
-			CheckIfArmyIsReady()
-			ClickAway()
+			TrainSystem()
 			If _Sleep(1000) Then Return
-			If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
 			
 			Local $aRndFuncList = ['BuilderBase', 'CollectCCGold', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			For $Index In $aRndFuncList
@@ -1609,7 +1606,16 @@ Func CommonRoutine($RoutineType = Default)
 EndFunc
 
 Func BuilderBase()
-
+	If Number($g_iTotalBuilderCount) = 6 Then
+		$g_bIs6thBuilderUnlocked = True
+		SetLog("Is6thBuilderUnlocked = " & String($g_bIs6thBuilderUnlocked), $COLOR_DEBUG1)
+		If $g_bIs6thBuilderUnlocked And $g_bChkSkipBBRoutineOn6thBuilder Then $g_bskipBBroutine = True
+	Endif
+	If $g_bskipBBroutine Then 
+		SetLog("isSkipBBroutine = " & String($g_bskipBBroutine), $COLOR_DEBUG1)
+		SetLog("BB Routine Skip!", $COLOR_INFO)
+		Return
+	Endif
 	; switch to builderbase and check it is builderbase
 	If SwitchBetweenBases("BB") Then
 		$g_bStayOnBuilderBase = True

@@ -81,8 +81,15 @@ Func chkStopAttackBB6thBuilder()
 	Else
 		$g_bChkStopAttackBB6thBuilder = False
 	EndIf
-EndFunc   ;==>btnBBDropOrder
+EndFunc   ;==>chkStopAttackBB6thBuilder
 
+Func ChkSkipBBRoutineOn6thBuilder()
+	If GUICtrlRead($g_hChkSkipBBRoutineOn6thBuilder) = $GUI_CHECKED Then
+		$g_bChkSkipBBRoutineOn6thBuilder = True
+	Else
+		$g_bChkSkipBBRoutineOn6thBuilder = False
+	EndIf
+EndFunc   ;==>ChkSkipBBRoutineOn6thBuilder
 
 Func chkBBDropOrder()
 	If GUICtrlRead($g_hChkBBCustomDropOrderEnable) = $GUI_CHECKED Then
