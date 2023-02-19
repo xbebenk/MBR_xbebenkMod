@@ -1950,7 +1950,7 @@ Global $g_bBBForceCustomArmy = False
 Global $g_iBBAttacked = False ; DoAttackBB attacked or not
 
 ;ClanCapital
-Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0, $g_bChkEnableAutoUpgradeCC = False, $g_bChkAutoUpgradeCCIgnore = False, $g_bChkAutoUpgradeCCWallIgnore = False
+Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0, $g_bChkEnableMinGoldAUCC = False, $g_iMinCCGoldToUpgrade = 0, $g_bChkEnableAutoUpgradeCC = False, $g_bChkAutoUpgradeCCIgnore = False, $g_bChkAutoUpgradeCCWallIgnore = False
 Global $g_bChkEnableCollectCCGold = False, $g_bChkEnableForgeGold = False, $g_bChkEnableForgeElix = False
 Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEnableForgeBBElix = False, $g_iCmbForgeBuilder = 0
 Global $aCCBuildingIgnore[13] = ["Ruined", "Big Barbarian", "Pyre", "Boulder", "Bonfire", "Grove", "Tree", "Forest", "Campsite", "Stone", "Pillar", "The First", "Tombs"]

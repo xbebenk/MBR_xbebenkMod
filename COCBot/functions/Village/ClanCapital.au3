@@ -71,7 +71,9 @@ Func CollectCCGold($bTest = False)
 					Next
 				EndIf
 			EndIf
-			
+			If _Sleep(500) Then Return
+			$g_iLootCCGold = ReadCCGold()
+			SetLog("CC Gold = " & $g_iLootCCGold, $COLOR_INFO)
 			Click($g_iQuickMISX, $g_iQuickMISY) ;Click close button
 			SetLog("Clan Capital Gold collected successfully!", $COLOR_SUCCESS)
 		EndIf
@@ -83,9 +85,19 @@ Func CollectCCGold($bTest = False)
 	If _Sleep(500) Then Return
 EndFunc
 
+Func ReadCCGold()
+	Local $iRet = 0, $aRet
+	Local $sCCGold = getOcrAndCapture("coc-ccgold", 285, 456, 160, 25)
+	$aRet = StringSplit($sCCGold, "#", $STR_NOCOUNT)
+	If Ubound($aRet) = 2 Then
+		$iRet = $aRet[0]
+	EndIf
+	Return $iRet
+EndFunc
+
 Func ClanCapitalReport($SetLog = True)
-	$g_iLootCCGold = getOcrAndCapture("coc-ms", 670, 17, 160, 25)
-	$g_iLootCCMedal = getOcrAndCapture("coc-ms", 670, 70, 160, 25)
+	$g_iLootCCGold = getOcrAndCapture("coc-ms", 670, 17, 160, 25, True)
+	$g_iLootCCMedal = getOcrAndCapture("coc-ms", 670, 70, 160, 25, True)
 	GUICtrlSetData($g_lblCapitalGold, $g_iLootCCGold)
 	GUICtrlSetData($g_lblCapitalMedal, $g_iLootCCMedal)
 	
@@ -608,6 +620,10 @@ EndFunc
 
 Func AutoUpgradeCC($bTest = False)
 	If Not $g_bChkEnableAutoUpgradeCC Then Return
+	If $g_bChkEnableMinGoldAUCC And $g_iLootCCGold < $g_iMinCCGoldToUpgrade And $g_iLootCCGold > 0 Then 
+		SetLog("CCGold = " & $g_iLootCCGold & ", < Minimum:" & $g_iMinCCGoldToUpgrade & ", skip autoupgradeCC", $COLOR_INFO)
+		Return
+	EndIf
 	Local $aRet[3] = [False, 0, 0]
 	SetLog("Checking Clan Capital AutoUpgrade", $COLOR_INFO)
 	ZoomOut() ;ZoomOut first
@@ -618,6 +634,13 @@ Func AutoUpgradeCC($bTest = False)
 		SwitchToMainVillage("Cannot Contribute")
 		Return
 	EndIf
+	
+	If $g_bChkEnableMinGoldAUCC And $g_iLootCCGold < $g_iMinCCGoldToUpgrade And $g_iLootCCGold > 0 Then 
+		SetLog("CCGold = " & $g_iLootCCGold & ", < Minimum:" & $g_iMinCCGoldToUpgrade & ", skip autoupgradeCC", $COLOR_INFO)
+		SwitchToMainVillage("MinCCGoldToUpgrade")
+		Return
+	EndIf
+	
 	If Not $g_bRunState Then Return
 	Local $bUpgradeFound = True ;lets assume there is upgrade in progress exists
 	If ClickCCBuilder() Then 

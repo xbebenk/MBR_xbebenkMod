@@ -535,6 +535,8 @@ Func SaveConfig_600_6()
 	_Ini_Add("ClanCapital", "ChkEnableForgeBBElix", $g_bChkEnableForgeBBElix)
 	_Ini_Add("ClanCapital", "ForgeUseBuilder", $g_iCmbForgeBuilder)
 	_Ini_Add("ClanCapital", "AutoUpgradeCC", $g_bChkEnableAutoUpgradeCC)
+	_Ini_Add("ClanCapital", "MinGoldAUCC", $g_bChkEnableMinGoldAUCC)
+	_Ini_Add("ClanCapital", "MinCCGoldToUpgrade", $g_iMinCCGoldToUpgrade)
 	_Ini_Add("ClanCapital", "ChkAutoUpgradeCCIgnore", $g_bChkAutoUpgradeCCIgnore)
 	_Ini_Add("ClanCapital", "ChkAutoUpgradeCCWallIgnore", $g_bChkAutoUpgradeCCWallIgnore)
 

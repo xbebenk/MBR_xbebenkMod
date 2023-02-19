@@ -593,6 +593,8 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkEnableForgeBBElix, $g_sProfileConfigPath, "ClanCapital", "ChkEnableForgeBBElix", False, "Bool")
 	IniReadS($g_iCmbForgeBuilder, $g_sProfileConfigPath, "ClanCapital", "ForgeUseBuilder", 1, "int")
 	IniReadS($g_bChkEnableAutoUpgradeCC, $g_sProfileConfigPath, "ClanCapital", "AutoUpgradeCC", False, "Bool")
+	IniReadS($g_bChkEnableMinGoldAUCC, $g_sProfileConfigPath, "ClanCapital", "MinGoldAUCC", False, "Bool")
+	IniReadS($g_iMinCCGoldToUpgrade, $g_sProfileConfigPath, "ClanCapital", "MinCCGoldToUpgrade", 5000, "int")
 	IniReadS($g_bChkAutoUpgradeCCIgnore, $g_sProfileConfigPath, "ClanCapital", "ChkAutoUpgradeCCIgnore", False, "Bool")
 	IniReadS($g_bChkAutoUpgradeCCWallIgnore, $g_sProfileConfigPath, "ClanCapital", "ChkAutoUpgradeCCWallIgnore", False, "Bool")
 

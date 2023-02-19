@@ -801,10 +801,10 @@ Func CreateClanGamesSettings()
 		GuiCtrlSetState(-1, $GUI_UNCHECKED)
 	$g_hBtnCGSettingsClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnCGSettings", "Close"), $_GUI_MAIN_WIDTH - 100, $_GUI_MAIN_HEIGHT - 160, 85, 25)
 		GUICtrlSetOnEvent(-1, "CloseCGSettings")
-
 EndFunc
+
 Global $g_lblCapitalGold = 0, $g_lblCapitalMedal = 0, $g_hCmbForgeBuilder = 0, $g_hChkEnableAutoUpgradeCC = 0, $g_hChkAutoUpgradeCCIgnore = 0, $g_hChkAutoUpgradeCCWallIgnore = 0
-Global $g_hChkEnableCollectCCGold = 0, $g_hChkStartWeekendRaid = 0
+Global $g_hChkEnableCollectCCGold = 0, $g_hChkStartWeekendRaid = 0, $g_hChkEnableMinGoldAUCC = 0, $g_hTxtMinCCGoldToUpgrade = 0
 Global $g_hChkEnableForgeGold = 0, $g_hChkEnableForgeElix = 0, $g_hChkEnableForgeDE = 0, $g_hChkEnableForgeBBGold = 0, $g_hChkEnableForgeBBElix = 0
 Global $g_hTxtAutoUpgradeCCLog = 0
 
@@ -851,6 +851,11 @@ Func CreateClanCapitalTab()
 	$x += 100	
 		$g_hChkAutoUpgradeCCWallIgnore = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAutoUpgradeCCWallIgnore", "Ignore Wall Upgrade"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Info_ChkAutoUpgradeCCWallIgnore", "Enable Ignore Upgrade for Wall"))
+	$x += 125	
+	$g_hChkEnableMinGoldAUCC = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableMinGoldAUCC", "Only Upgrade If Gold > "), $x, $y)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBDropTrophy_Info_01", "Do 1 Attack and immediately surrender"))
+	$g_hTxtMinCCGoldToUpgrade = GUICtrlCreateInput($g_iMinCCGoldToUpgrade, $x + 135, $y + 3, 45, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "MinCCGoldToUpgrade", "Set Minimum CC Gold to do AutoUpgrade"))
 	$x = 15
 	$y += 20
 		$g_hChkAutoUpgradeCCIgnore = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAutoUpgradeCCIgnore", "Ignore Decoration Building"), $x, $y, -1, -1)

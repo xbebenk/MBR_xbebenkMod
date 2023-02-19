@@ -73,6 +73,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	; xbebenk
 	$g_iSaveGoldWall = 0 ;reset
 	$g_iSaveElixWall = 0 ;reset
+	$g_iLootCCGold = 0
 	$g_hCoolDownTimer = 0
 	$g_bIsCGCoolDownTime = False
 	$g_bIs6thBuilderUnlocked = False
