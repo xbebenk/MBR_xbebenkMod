@@ -533,6 +533,7 @@ EndFunc   ;==>AndroidOnlyZoomOut
 ; 2 = Current Village Y Offset (after centering village)
 ; 3 = Difference of previous Village X Offset and current (after centering village)
 ; 4 = Difference of previous Village Y Offset and current (after centering village)
+
 Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
 	FuncEnter(SearchZoomOut)
 	If Not $g_bRunState Then Return
@@ -589,7 +590,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $
 			$g_bAndroidZoomoutModeFallback = False
 
 			If $bCenterVillage And ($bOnBuilderBase Or Not $bUpdateSharedPrefs) And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
-				If $DebugLog Then SetDebugLog("Center Village" & $sSource & " by: " & $x & ", " & $y)
+				SetLog("Centering Village" & $sSource & " by: x=" & $x & ", y=" & $y, $COLOR_DEBUG1)
 				If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
 					Local $aCenterCoord = getVillageCenteringCoord()
 					$aScrollPos[0] = $aCenterCoord[0]

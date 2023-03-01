@@ -225,7 +225,7 @@ Func BBDropTrophy()
 			SetLog("Searching for Opponent.", $COLOR_BLUE)
 			
 			Local $count = 1
-			While Not WaitforPixel(88, 586, 89, 588, "5095D8", 10, 1) 
+			While Not _ColorCheck(_GetPixelColor(41, 591, True), Hex(0x4888C0, 6), 20) 
 				SetDebugLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
 				If $count > 20 Then 
 					CloseCoC(True)
@@ -307,6 +307,6 @@ Func ReturnHomeDropTrophyBB()
 	Next
 	ClickAway("Left")
 	_Sleep(2000)
-	ZoomOut()
+	ZoomOut(True)
 	Return True
 EndFunc

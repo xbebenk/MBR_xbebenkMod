@@ -52,7 +52,8 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				ExitLoop
 			EndIf
 		Wend
-
+		
+		ZoomOut(True)
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
 		ClickAway("Left")
 		_Sleep(1000)
@@ -74,11 +75,11 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				ExitLoop
 			EndIf
 		Next
+		ZoomOut(True)
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
 		ClickAway("Left")
 	EndIf
 	If Not $g_bRunState Then Return
-	If checkMainScreen(True, $g_bStayOnBuilderBase, "DoAttackBB") Then ZoomOut()
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 

@@ -93,7 +93,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		EndIf
 		
 		Local $z = $c / $iRefSize
-		SetDebugLog("Scenery = " & $g_sCurrentScenery, $COLOR_INFO)
+		SetLog("GetVillageSize, Scenery : " & $g_sSceneryCode & " : " & $g_sCurrentScenery & ", Zoom:" & $z, $COLOR_DEBUG1)
 		SetDebugLog("Stone2tree = " & $c)
 		SetDebugLog("Reference = " & $iRefSize)
 		SetDebugLog("ZoomLevel = " & $z)
@@ -135,7 +135,7 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAddit
 	Local $aStoneFiles
 	
 	For $check = 1 To 2
-		SetLog("[" & $check & "] Checking for same scenery: " & $g_sSceneryCode, $COLOR_DEBUG1)
+		;SetLog("[" & $check & "] Checking for same scenery: " & $g_sSceneryCode, $COLOR_DEBUG1)
 		If $check = 1 Then 
 			$aStoneFiles = _FileListToArray($sDirectory & "stone\", $sStonePrefix & $g_sSceneryCode & "*.*", $FLTA_FILES)
 		Else
