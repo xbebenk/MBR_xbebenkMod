@@ -334,6 +334,9 @@ Func GetCurrentArmy($x_start, $y_start)
 	If Not $g_bRunState Then Return $aResult
 
 	; [0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
+	
+	If _Sleep(500) Then Return ; wait until number stop changing
+	
 	Local $iOCRResult = getArmyCapacityOnTrainTroops($x_start, $y_start)
 
 	If StringInStr($iOCRResult, "#") Then
