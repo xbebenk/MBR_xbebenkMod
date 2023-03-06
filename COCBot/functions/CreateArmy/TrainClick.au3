@@ -33,7 +33,7 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 			If $g_bDebugClick Or $g_bDebugSetlogTrain Then SetLog("KeepClicks: " & KeepClicks(), $COLOR_DEBUG)
 			If IsKeepClicksActive() Then
 				For $i = 0 To ($iTimes - 1)
-					PureClick($iX, $iY) ;Click once.
+					Click($iX, $iY) ;Click once.
 				Next
 				If isProblemAffect(True) Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
 				Local $sLogText = Default
@@ -56,7 +56,7 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 							; Detected the gray [i] and will exit and return
 							ExitLoop
 						EndIf
-						PureClick($iX, $iY) ;Click once.
+						Click($iX, $iY) ;Click once.
 						If _Sleep($iSpeed, False) Then ExitLoop
 					Next
 				Else
@@ -81,7 +81,7 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 				If $g_bDebugClick Or $g_bDebugSetlogTrain Then SetLog("Camp is FULL", $COLOR_DEBUG)
 				Return ; Check to see if barrack full
 			EndIf
-			PureClick($iX, $iY)
+			Click($iX, $iY)
 
 			If _Sleep($iSpeed, False) Then Return
 		EndIf
