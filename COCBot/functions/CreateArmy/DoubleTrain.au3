@@ -164,7 +164,7 @@ Func DoubleTrain()
 		EndIf
 	EndIf
 	
-	If $g_bIgnoreIncorrectTroopCombo Then
+	If $g_bIgnoreIncorrectTroopCombo And Number(GUICtrlRead($g_hLblCountTotal)) = 0 Then
 		SetLog("Old troop Fill way", $COLOR_DEBUG1)
 		If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
 		Local $TroopCamp = GetCurrentArmy(46, 131)
