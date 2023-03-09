@@ -57,6 +57,8 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 EndFunc   ;==>BuilderBaseReport
 
 Func isBHMaxed()
+	If Number($g_iTotalBuilderCount) = 6 Then Return True
+	
 	Local $aBuildingName, $bRet = False
 	ClickAway("Left")
 	_Sleep(1000)
@@ -105,6 +107,8 @@ Func isBHMaxed()
 EndFunc
 
 Func isMegaTeslaMaxed()
+	If Number($g_iTotalBuilderCount) = 6 Then Return True
+	
 	ClickAway("Left")
 	If $g_bisMegaTeslaMaxed = True Then Return True
 	_Sleep(1000)
@@ -133,6 +137,8 @@ Func isMegaTeslaMaxed()
 EndFunc
 
 Func isBattleMachineMaxed()
+	If Number($g_iTotalBuilderCount) = 6 Then Return True
+
 	ClickAway("Left")
 	If $g_bisBattleMachineMaxed = True Then Return True
 	_Sleep(1000)
