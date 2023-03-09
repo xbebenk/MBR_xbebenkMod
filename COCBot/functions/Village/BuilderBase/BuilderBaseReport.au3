@@ -47,7 +47,11 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 		isGoldFullBB()
 		isElixirFullBB()
 		If $g_iFreeBuilderCountBB > 0 Or $g_bElixirStorageFullBB Then
-			If isBHMaxed() Then 
+			If Number($g_iTotalBuilderCount) = 6 Then
+				$g_bisBHMaxed = True
+				$g_bisMegaTeslaMaxed = True
+				$g_bisBattleMachineMaxed = True
+			ElseIf isBHMaxed() Then 
 				isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
 				isBattleMachineMaxed()
 			EndIf
