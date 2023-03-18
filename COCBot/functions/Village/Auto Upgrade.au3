@@ -1451,7 +1451,7 @@ Func SearchUnplacedBuilding()
 		SetDebugLog("Search: Unplaced Building Not Found!")
 		Return False
 	Else
-		If StringInStr($atmpInfo, "placed") = 0 Then
+		If StringInStr($atmpInfo, "items") = 0 Then
 			SetDebugLog("Search: Not Unplaced Building Text!", $COLOR_INFO)
 			Return False
 		Else
