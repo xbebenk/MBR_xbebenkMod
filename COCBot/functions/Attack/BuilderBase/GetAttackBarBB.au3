@@ -31,39 +31,23 @@ Func GetAttackBarBB($bRemaining = False)
 
 	If Not $g_bRunState Then Return ; Stop Button
 
-	local $sSearchDiamond = GetDiamondFromRect("0,580,860,670")
-	local $aBBAttackBarResult = findMultiple($g_sImgDirBBTroops, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
-
-	If UBound($aBBAttackBarResult) = 0 Then
-		If Not $bRemaining Then
-			SetLog("Error in BBAttackBarCheck(): Search did not return any results!", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("ErrorBBAttackBarCheck", False, Default, Default)
-		EndIf
-		Return ""
-	EndIf
-
-	If Not $g_bRunState Then Return ; Stop Button
-
-	; parse data into attackbar array... not done
-	For $i = 0 To UBound($aBBAttackBarResult, 1) - 1
-		local $aTroop = $aBBAttackBarResult[$i]
-
-		local $aTempMultiCoords = decodeMultipleCoords($aTroop[1])
-		For $j=0 To UBound($aTempMultiCoords, 1) - 1
-			Local $aTempCoords = $aTempMultiCoords[$j]
-			If UBound($aTempCoords) < 2 Then ContinueLoop
-			Local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
-			Local $iCount = Number(getOcrAndCapture("coc-tbb", $aSlotX[$iSlot], $iTroopBanners, 35, 24, True))
-			If $iCount < 1 Then $iCount = 2 ;just assume there are 2 avail troop on this slot for now
+	For $k = 0 To UBound($aSlotX) - 1
+		Local $aBBAttackBarResult = QuickMIS("CNX", $g_sImgDirBBTroops, $aSlotX[$k] - 35, 580, $aSlotX[$k] + 35, 670)
+		For $i = 0 To UBound($aBBAttackBarResult) - 1
+			Local $Troop = $aBBAttackBarResult[$i][0]
+			Local $Troopx = $aBBAttackBarResult[$i][1]
+			Local $Troopy = $aBBAttackBarResult[$i][2]
+			Local $iCount = Number(getOcrAndCapture("coc-tbb", $aSlotX[$k], $iTroopBanners, 35, 24, True))
 			
-			local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $iTroopBanners + 25, $iSlot, $iCount]] ; element to add to attack bar list
+			local $aTempElement[1][5] = [[$Troop, $Troopx, $Troopy + 20, $k, $iCount]] ; element to add to attack bar list
 			_ArrayAdd($aBBAttackBar, $aTempElement)
+			If Not $g_bRunState Then Return ; Stop Button
 		Next
-
-	If Not $g_bRunState Then Return ; Stop Button
 	Next
+	
 	_ArraySort($aBBAttackBar, 0, 0, 0, 3)
-	For $i=0 To UBound($aBBAttackBar, 1) - 1
+	
+	For $i = 0 To UBound($aBBAttackBar) - 1
 		SetLog($aBBAttackBar[$i][0] & ", (" & String($aBBAttackBar[$i][1]) & "," & String($aBBAttackBar[$i][2]) & "), Slot: " & String($aBBAttackBar[$i][3]) & ", Count: " & String($aBBAttackBar[$i][4]), $COLOR_SUCCESS)
 	Next
 	Return $aBBAttackBar
