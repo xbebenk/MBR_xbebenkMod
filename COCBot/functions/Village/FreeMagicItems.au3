@@ -116,7 +116,7 @@ Func OpenTraderWindow()
 		SetLog("Trader Icon Not Found", $COLOR_INFO)
 		Return False
 	EndIf
-	If Not IsFreeMagicWindowOpen() Then 
+	If Not IsTraderWindowOpen() Then 
 		SetLog("Free Magic Items Windows not Opened", $COLOR_ERROR)
 		ClickAway()
 	Else
@@ -125,7 +125,7 @@ Func OpenTraderWindow()
 	Return $bRet
 EndFunc
 
-Func IsFreeMagicWindowOpen()
+Func IsTraderWindowOpen()
 	Local $bRet = False
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
@@ -223,7 +223,7 @@ Func SaleMagicItem($bTest = False)
 	Local $sReadItemCount, $asReadItemCount, $Count, $MaxCount
 	
 	For $i = 0 To UBound($g_aSaleMagicItem) - 1
-		SetDebugLog($g_aMagicItemName[$i] & ":" &$g_aSaleMagicItem[$i])
+		SetDebugLog($g_aMagicItemName[$i] & " : " & $g_aSaleMagicItem[$i])
 		SetLog("Checking for sell " & $g_aMagicItemName[$i], $COLOR_INFO)
 		If $g_aSaleMagicItem[$i] Then
 			Local $aSearch = decodeSingleCoord(findImage($g_aMagicItemName[$i], $g_sImgTraderWindow & $g_aMagicItemName[$i] & "*", GetDiamondFromRect("160, 200, 700, 400")))
