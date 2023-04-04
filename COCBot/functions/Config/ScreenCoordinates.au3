@@ -106,7 +106,7 @@ Global $aWonThreeStarAtkRprt[4] = [534, 180, 0xC8CAC7, 30] ; Center of 3rd Star 
 ; pixel color: location information								BS 850MB (Reg GFX), BS 500MB (Med GFX) : location
 
 Global $NextBtn[4] = [720, 534, 0xE5590D, 20] ;  Next Button
-Global $a12OrMoreSlots[4] = [16, 648, 0x4583B9, 25] ; Attackbar Check if 12+ Slots exist
+Global $a12OrMoreSlots[4] = [16, 608, 0x5B95C9, 25] ; Attackbar Check if 12+ Slots exist
 Global $aDoubRowAttackBar[4] = [68, 486, 0xFC5D64, 20]
 Global $aTroopIsDeployed[4] = [0, 0, 0x404040, 20] ; Attackbar Remain Check X and Y are Dummies
 Global Const $aIsAttackPage[4] = [18, 548, 0xCD0D0D, 20] ; red button "end battle" but left portion
