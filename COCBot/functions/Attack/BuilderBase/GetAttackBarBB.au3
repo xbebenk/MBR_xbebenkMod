@@ -44,6 +44,7 @@ Func GetAttackBarBB($bRemaining = False)
 			If Not $g_bRunState Then Return ; Stop Button
 		Next
 	Next
+	If UBound($aBBAttackBar) = 0 Then Return ""
 	
 	_ArraySort($aBBAttackBar, 0, 0, 0, 3)
 	
