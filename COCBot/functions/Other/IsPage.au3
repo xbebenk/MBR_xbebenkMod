@@ -63,7 +63,7 @@ Func IsTrainPage($bSetLog = True, $iLoop = 5)
 EndFunc   ;==>IsTrainPage
 
 Func IsAttackPage($bCapturePixel = True)
-
+	If $bCapturePixel Then _CaptureRegions()
 	If IsPageLoop($aIsAttackPage, 1, $bCapturePixel) Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Attack Window OK**", $COLOR_ACTION)
 		Return True

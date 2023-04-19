@@ -335,7 +335,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		EndIf
 	EndIf
 	
-	If Not isOnMainVillage() And IsAttackPage() Then ; bot seeing attackbar while it shouldn't, will do surrender and/or return home   
+	If Not isOnMainVillage() And IsAttackPage() And Not isOnBuilderBase() Then ; bot seeing attackbar while it shouldn't, will do surrender and/or return home   
 		ClickP($aIsAttackPage)
 		If _Sleep(1000) Then Return
 		For $i = 1 To 5

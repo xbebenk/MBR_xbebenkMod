@@ -1659,14 +1659,14 @@ Func BuilderBase()
 		If $g_iBBAttacked Then
 			AutoUpgradeBB()
 			If _Sleep($DELAYRUNBOT1) Then Return
-			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-
-			$StartLabON = StarLaboratory()
-			If _Sleep($DELAYRUNBOT1) Then Return
-			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			ZoomOut(True) ;directly zoom
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+			;If _Sleep($DELAYRUNBOT1) Then Return
+			;checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+			;ZoomOut(True) ;directly zoom
 		EndIf
-
+		
+		$StartLabON = StarLaboratory()
 		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
 		StartClockTowerBoost(False, False, $bUseCTPot)
 
