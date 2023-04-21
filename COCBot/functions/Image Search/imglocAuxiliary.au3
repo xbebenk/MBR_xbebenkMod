@@ -632,7 +632,7 @@ Func SearchRedLines($sCocDiamond = "ECD")
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
 		SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
-		SetError(2, $extError) ; Set external error code = 2 for DLL error
+		;SetError(2, $extError) ; Set external error code = 2 for DLL error
 		Return ""
 	EndIf
 	If checkImglocError($result, "SearchRedLines") = True Then
