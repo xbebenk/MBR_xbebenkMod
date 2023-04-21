@@ -25,7 +25,7 @@ Func PrepareAttackBB($Mode = Default)
 		SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
-		_Sleep(1500)
+		If _Sleep(1500) Then Return
 		CheckArmyReady()
 		Return True
 	EndIf
@@ -49,24 +49,24 @@ Func PrepareAttackBB($Mode = Default)
 		ClickAway("Left")
 		Return False
 	EndIf
-	;_Sleep(1000)
+	;If _Sleep(1000) Then Return
 	For $i = 1 To 5
 		If WaitforPixel(588, 321, 589, 322, "D7540E", 20, 2) Then
 			SetDebugLog("Found FindNow Button", $COLOR_ACTION)
-			_Sleep(500)
+			If _Sleep(500) Then Return
 			ExitLoop
 		EndIf
 		If WaitforPixel(665, 437, 666, 438, "D9F481", 20, 1) Then
 			SetDebugLog("Found Previous Attack Result", $COLOR_ACTION)
 			Click(640, 440)
-			_Sleep(500)
+			If _Sleep(500) Then Return
 		EndIf
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		SetDebugLog("Wait For Find Now Button #" & $i, $COLOR_ACTION)
 	Next
 	
 	If Not CheckArmyReady() Then
-		_Sleep(500)
+		If _Sleep(500) Then Return
 		ClickAway("Left")
 		Return False
 	EndIf
@@ -83,7 +83,7 @@ Func PrepareAttackBB($Mode = Default)
 	
 	If $g_bChkBBAttIfLootAvail Then
 		If Not CheckLootAvail() Then
-			_Sleep(500)
+			If _Sleep(500) Then Return
 			ClickAway("Left")
 			Return False
 		EndIf
@@ -92,7 +92,7 @@ Func PrepareAttackBB($Mode = Default)
 	$g_bBBMachineReady = CheckMachReady()
 	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
-		_Sleep(500)
+		If _Sleep(500) Then Return
 		ClickAway("Left")
 		Return False
 	EndIf
@@ -190,22 +190,22 @@ Func BBDropTrophy()
 		For $i = 1 To 5
 			If WaitforPixel(588, 321, 589, 322, "D7540E", 20, 2) Then
 				SetDebugLog("Found FindNow Button", $COLOR_ACTION)
-				_Sleep(500)
+				If _Sleep(500) Then Return
 				ExitLoop
 			EndIf
 			If WaitforPixel(665, 437, 666, 438, "D9F481", 20, 1) Then
 				SetDebugLog("Found Previous Attack Result", $COLOR_ACTION)
 				Click(640, 440)
-				_Sleep(500)
+				If _Sleep(500) Then Return
 			EndIf
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			SetDebugLog("Wait For Find Now Button #" & $i, $COLOR_ACTION)
 		Next
 		
 		If CheckLootAvail() Then 
 			SetLog("BB Loot Available, Skip BB Drop Trophy")
 			ClickAway()
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			Return False
 		Else
 			CheckArmyReady()
@@ -234,7 +234,7 @@ Func BBDropTrophy()
 				If isProblemAffect(True) Then Return
 				If Not $g_bRunState Then Return ; Stop Button
 				$count += 1
-				_Sleep(2000)
+				If _Sleep(2000) Then Return
 			WEnd
 			
 			Local $iSide = True
@@ -255,7 +255,7 @@ Func BBDropTrophy()
 					For $i = 1 To 10
 						SetDebugLog("Try Drop Troops #" & $i, $COLOR_ACTION)
 						DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], 1, 1, 2, $g_BBDP)
-						_Sleep(1000)
+						If _Sleep(1000) Then Return
 						If IsAttackPage() Then ExitLoop
 					Next
 				EndIf
@@ -263,6 +263,7 @@ Func BBDropTrophy()
 			EndIf
 		EndIf
 	EndIf
+	If _Sleep(1000) Then Return
 	Return False
 EndFunc
 
@@ -271,30 +272,30 @@ Func ReturnHomeDropTrophyBB()
 		SetDebugLog("Waiting Surrender button #" & $i, $COLOR_ACTION)
 		If IsAttackPage() Then
 			Click(65, 540) ;click surrender
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			ExitLoop
 		EndIf
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 	Next
 	
 	For $i = 1 To 5
 		SetDebugLog("Waiting OK Cancel Window #" & $i, $COLOR_ACTION)
 		If IsOKCancelPage(True) Then
 			Click(510, 400); Click Okay to Confirm surrender
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			ExitLoop
 		EndIf
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 	Next
 	
 	For $i = 1 To 10
 		SetDebugLog("Waiting EndBattle Window #" & $i, $COLOR_ACTION)
 		If QuickMIS("BC1", $g_sImgOkButton, 350, 520, 500, 570) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			_Sleep(3000)
+			If _Sleep(3000) Then Return
 			ExitLoop
 		EndIf
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 	Next
 	
 	For $i = 1 To 10	
@@ -303,10 +304,10 @@ Func ReturnHomeDropTrophyBB()
 			ClickAway("Left")
 			ExitLoop
 		EndIf
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 	Next
 	ClickAway("Left")
-	_Sleep(2000)
+	If _Sleep(2000) Then Return
 	ZoomOut(True)
 	Return True
 EndFunc
