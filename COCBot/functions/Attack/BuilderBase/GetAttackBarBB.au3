@@ -37,7 +37,7 @@ Func GetAttackBarBB($bRemaining = False)
 			Local $Troop = $aBBAttackBarResult[$i][0]
 			Local $Troopx = $aBBAttackBarResult[$i][1]
 			Local $Troopy = $aBBAttackBarResult[$i][2]
-			Local $iCount = Number(getOcrAndCapture("coc-tbb", $aSlotX[$k], $iTroopBanners, 35, 24, True))
+			Local $iCount = Number(getOcrAndCapture("coc-tbb", $aSlotX[$k], $iTroopBanners, 38, 24, True))
 			
 			local $aTempElement[1][5] = [[$Troop, $Troopx, $Troopy, $k, $iCount]] ; element to add to attack bar list
 			_ArrayAdd($aBBAttackBar, $aTempElement)
