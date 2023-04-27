@@ -186,6 +186,8 @@ Func Laboratory($bDebug = False)
 													Local $aCoords[2] = [$aSpell[$i][1], $aSpell[$i][2]]
 													If Not $bDebug Then Return LaboratoryUpgrade($aSpell[$i][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 												EndIf
+											Else
+												SetLog("Any Spell - ResIcon Not Found", $COLOR_ERROR)
 											EndIf
 										Next
 									EndIf
@@ -216,7 +218,7 @@ Func Laboratory($bDebug = False)
 								Local $aSiege = QuickMIS("CNX", $g_sImgAnySiege, 110,340,740,540)
 								If IsArray($aSiege) And UBound($aSiege) > 0 Then
 									For $i = 0 To UBound($aSiege) - 1
-										If QuickMIS("BC1", $g_sImgResIcon, $aSiege[$i][1], $aSiege[$i][2], $aSiege[$i][1] + 60, $aSiege[$i][2] + 70) Then 
+										If QuickMIS("BC1", $g_sImgResIcon, $aSiege[$i][1], $aSiege[$i][2], $aSiege[$i][1] + 80, $aSiege[$i][2] + 80) Then 
 											Local $sCostResult = getLabCost($g_iQuickMISX - 75, $g_iQuickMISY - 10)
 											Local $level = getTroopsSpellsLevel($g_iQuickMISX - 75, $g_iQuickMISY - 30)
 											If $level = "" Then $level = 1
@@ -233,6 +235,8 @@ Func Laboratory($bDebug = False)
 												Local $aCoords[2] = [$aSiege[$i][1], $aSiege[$i][2]]
 												If Not $bDebug Then Return LaboratoryUpgrade($aSiege[$i][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 											EndIf
+										Else
+											SetLog("Any Siege - ResIcon Not Found", $COLOR_ERROR)
 										EndIf
 									Next
 								EndIf
@@ -496,7 +500,7 @@ EndFunc
 Func FindLabUpgrade()
 	Local $aResult[0][6]
 	Local $TmpResult = QuickMIS("CNX", $g_sImgResIcon, 110, 330, 740, 540)
-	Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF"]
+	Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD"]
 	If IsArray($TmpResult) And UBound($TmpResult) > 0 Then
 		For $i = 0 To UBound($TmpResult) - 1
 			_ArrayAdd($aResult, $TmpResult[$i][0] & "|" & $TmpResult[$i][1] & "|" & $TmpResult[$i][2])
@@ -534,6 +538,13 @@ EndFunc
 
 Func IsLabUpgradeResourceEnough($TroopOrSpell, $Cost)
 	Local $bRet = False
+	Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD"]
+	For $j = 0 To UBound($aSiege) - 1
+		If StringInStr($TroopOrSpell, $aSiege[$j]) Then 
+			SetDebugLog("IsLabUpgradeResourceEnough Found Siege, ret = True")
+			Return True
+		EndIf
+	Next
 	If StringInStr($TroopOrSpell, "Spell") Then
 		If IsDarkSpell($TroopOrSpell) Then ;DE Spell
 			If $g_aiCurrentLoot[$eLootDarkElixir] > ($g_iTxtSmartMinDark + $Cost) Then
