@@ -1625,7 +1625,7 @@ Func BuilderBase()
 		Local $StartLabON = False
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		ZoomOut()
-		$g_iBBAttacked = True	; Reset Variable
+		$g_bBBAttacked = True	; Reset Variable
 		BuilderBaseReport()
 		CollectBuilderBase()
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1636,15 +1636,15 @@ Func BuilderBase()
 
 		If isGoldFullBB() Or isElixirFullBB() Then
 			AutoUpgradeBB()
-			$g_iBBAttacked = False
+			$g_bBBAttacked = False
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-			$g_iBBAttacked = False
+			$g_bBBAttacked = False
 		EndIf
 
 		If isElixirFullBB() Then
 			$StartLabON = StarLaboratory()
-			$g_iBBAttacked = False
+			$g_bBBAttacked = False
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
@@ -1656,7 +1656,7 @@ Func BuilderBase()
 			If _Sleep($DELAYRUNBOT1) Then Return
 		EndIf
 
-		If $g_iBBAttacked Then
+		If $g_bBBAttacked Then
 			AutoUpgradeBB()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			ZoomOut(True) ;directly zoom
