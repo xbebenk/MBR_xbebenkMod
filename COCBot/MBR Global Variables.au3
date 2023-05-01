@@ -1947,7 +1947,7 @@ Global $g_bEnableCCSleep = False, $g_bSkipDT = False
 ;Builder Base
 Global $g_bDebugBBattack = False
 Global $g_bBBForceCustomArmy = False
-Global $g_iBBAttacked = False ; DoAttackBB attacked or not
+Global $g_bBBAttacked = False ; DoAttackBB attacked or not
 
 ;ClanCapital
 Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0, $g_bChkEnableMinGoldAUCC = False, $g_iMinCCGoldToUpgrade = 0, $g_bChkEnableAutoUpgradeCC = False, $g_bChkAutoUpgradeCCIgnore = False, $g_bChkAutoUpgradeCCWallIgnore = False

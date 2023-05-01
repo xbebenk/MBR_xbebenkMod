@@ -39,12 +39,12 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			_AttackBB()
 			If Not $g_bRunState Then Return
-			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+			If $g_bIsBBevent Then
 				If CheckCGCompleted() Then ExitLoop
 			Else
 				If _Sleep(2000) Then Return
 			EndIf
-			$g_iBBAttacked = True
+			$g_bBBAttacked = True
 			$count += 1
 			If $count > 10 Then
 				SetLog("Something maybe wrong", $COLOR_INFO)
