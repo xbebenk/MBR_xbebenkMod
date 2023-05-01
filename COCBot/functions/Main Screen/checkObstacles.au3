@@ -126,6 +126,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				EndIf
 				SetLog("Warning: Cannot find type of Reload error message", $COLOR_ERROR)
 		EndSelect
+		ClickAway("Left", True)
 		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
 	
