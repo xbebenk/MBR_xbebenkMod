@@ -28,7 +28,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 	
 	;Prevent checking clangames before date 22 (clangames should start on 22 and end on 28 or 29) depends on how many tiers/maxpoint
 	Local $currentDate = Number(@MDAY)
-	If $currentDate < 21 Then
+	If $currentDate > 4 And $currentDate < 21 Then
 		SetLog("Current date : " & $currentDate & ", Skip Clan Games", $COLOR_INFO)
 		Return
 	EndIf
