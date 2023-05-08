@@ -120,7 +120,7 @@ Func NotifyPushFileToTelegram($File, $Folder, $FileType, $body)
 				$sCmd1 = "document"
 			EndIf
 			Local $FullTelegram_url = $TELEGRAM_URL & $g_sNotifyTGToken & $sCmd
-			Local $Result = RunWait($g_sCurlPath & " -i -X POST " & $FullTelegram_url & ' -F chat_id="' & $g_sTGChatID & '" -F ' & $sCmd1 & '=@"' & $g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File & '"', "", @SW_HIDE)
+			Local $Result = RunWait($g_sCurlPath & " -k -i -X POST " & $FullTelegram_url & ' -F chat_id="' & $g_sTGChatID & '" -F ' & $sCmd1 & '=@"' & $g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File & '"', "", @SW_HIDE)
 
 			; Telegram Message attached to file
 			Local $SdtOut = InetRead("https://api.telegram.org/bot" & $g_sNotifyTGToken & "/sendMessage?chat_id=" & $g_sTGChatID & "&text=" & $body, $INET_FORCERELOAD)
