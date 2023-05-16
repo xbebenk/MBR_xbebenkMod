@@ -353,6 +353,7 @@ Global Const $g_iAndroidJellyBean = 17
 Global Const $g_iAndroidKitKat = 19
 Global Const $g_iAndroidLollipop = 21
 Global Const $g_iAndroidNougat = 24
+Global Const $g_iAndroidpie = 28
 Global $g_iAndroidVersionAPI = $g_iAndroidJellyBean ; getprop ro.build.version.sdk
 
 ; Updated in UpdateAndroidConfig() and $g_sAndroidEmulator&Init() as well

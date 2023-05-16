@@ -208,7 +208,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
-		ZoomOutHelper("DefaultZoomOut")
+		If ZoomOutHelper("DefaultZoomOut") Then Return True
 		$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 	EndIf
 	If Not $g_bRunState Then Return

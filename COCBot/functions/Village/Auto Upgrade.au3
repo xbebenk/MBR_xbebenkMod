@@ -617,14 +617,15 @@ Func DoUpgrade($bTest = False)
 	EndIf
 		
 	; if one of the value is empty, there is an error, we must exit Auto Upgrade
-	For $i = 0 To 2
-		;SetLog($g_aUpgradeResourceCostDuration[$i])
-		If $g_aUpgradeResourceCostDuration[$i] = "" Then
-			SetLog("Error at $g_aUpgradeResourceCostDuration, looking next...", $COLOR_ERROR)
-			Clickaway("Right")
-			Return False
-		EndIf
-	Next
+	;For $i = 0 To 2
+	;	;SetLog($g_aUpgradeResourceCostDuration[$i])
+	;	If $g_aUpgradeResourceCostDuration[$i] = "" Then
+	;		SetLog("Error at $g_aUpgradeResourceCostDuration, looking next...", $COLOR_ERROR)
+	;		Clickaway("Right")
+	;		Return False
+	;	EndIf
+	;Next
+	;disable cost verify (ocr cannot read) after mei 2023 update
 
 	Local $bMustIgnoreResource = False
 	; matchmaking between resource name and the ignore list

@@ -238,7 +238,7 @@ Func getAllEmulatorsInstances()
 			$sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks\Engine
 		Case "BlueStacks5"
 			Local $VMsBlueStacks = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "DataDir")
-			$sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks\Engine
+			$sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks_nxt\Engine\
 		Case "Nox"
 			$sEmulatorPath = GetNoxPath() & "\BignoxVMS"  ; C:\Program Files\Nox\bin\BignoxVMS
 		Case "MEmu"
@@ -257,6 +257,11 @@ Func getAllEmulatorsInstances()
 
 	; Getting all VM Folders
 	Local $aEmulatorFolders = _FileListToArray($sEmulatorPath, $sBlueStacksFolder & "*", $FLTA_FOLDERS)
+	If $Emulator = "BlueStacks5" Then
+		Local $PieFolders = _FileListToArray($sEmulatorPath, "Pie*", $FLTA_FOLDERS)
+		_ArrayDelete($PieFolders, 0)
+		_ArrayConcatenate($aEmulatorFolders, $PieFolders)
+	EndIf
 
 	If @error = 1 Then
 		Setlog($Emulator & " -- Path was invalid. " & $sEmulatorPath)

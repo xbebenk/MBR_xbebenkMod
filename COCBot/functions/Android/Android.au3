@@ -4076,6 +4076,8 @@ Func CheckAndroidReboot($bRebootAndroid = True)
 EndFunc   ;==>CheckAndroidReboot
 
 Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount = 0)
+	Local $cmd = "", $sDumpsys = "", $iRetryMax = 5
+
 	If $sPackage = Default Then $sPackage = $g_sAndroidGamePackage
 	; - USER  - PID - PPID  - VSS  - RSS  -   PRIO - NICE - RTPRIO - SCHED - WCHAN  - EIP    - STATE - NAME
 	; u0_a58    4395  580   1135308 187040     14    -6        0      0     ffffffff 00000000    S      com.supercell.clashofclans
@@ -4085,56 +4087,87 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	;u0_a54    12560 84    1336996 189660 10    -10   0     0     futex_wait b7725424 S com.supercell.clashofclans
 	;u0_a54    13303 84    1338548 188464 16    -4    0     0     sys_epoll_ b7725424 S com.supercell.clashofclans
 	If AndroidInvalidState() Then Return 0
-	Local $cmd = "set result=$(ps -p|grep """ & $sPackage & """ >&2)"
+	
+	If $g_iAndroidVersionAPI = $g_iAndroidPie Then
+		$cmd = "set result=$(ps -A|grep """ & $g_sAndroidGamePackage & """ >&2)"
+		; ps -A|grep "com.supercell.clashofclans" >&2
+		;USER           PID  PPID     VSZ    RSS WCHAN            ADDR S NAME
+		;u0_a69        8572   104 4358212 265080 __do_sys_+          0 S com.supercell.clashofclans
+	Else
+		$cmd = "set result=$(ps -p|grep """ & $g_sAndroidGamePackage & """ >&2)"
+	EndIf
+
 	Local $output = AndroidAdbSendShellCommand($cmd)
 	Local $error = @error
+	
+	;SetLog("$g_sAndroidGamePackage: " & $g_sAndroidGamePackage)
+	;SetLog("GetAndroidProcessPID StdOut :" & $output)
+
 	SetError(0)
 	If $error = 0 Then
-		If $g_bDebugAndroid Then SetLog("$g_sAndroidGamePackage: " & $sPackage)
-		If $g_bDebugAndroid Then SetLog("GetAndroidProcessPID StdOut :" & @CRLF & $output & @CRLF)
+		SetDebugLog("$g_sAndroidGamePackage: " & $g_sAndroidGamePackage)
+		SetDebugLog("GetAndroidProcessPID StdOut :" & $output)
 		$output = StringStripWS($output, 7)
 		Local $aPkgList[0][26] ; adjust to any suffisent size to accommodate
 		Local $iCols
 		_ArrayAdd($aPkgList, $output, 0, " ", @LF, $ARRAYFILL_FORCE_STRING)
-		
+
 		Local $CorrectSCHED = "0"
-		Switch $sPackage
-			Case "com.supercell.clashofclans2"
+		Switch $g_sAndroidGamePackage
+			Case $g_sAndroidGamePackage = "com.tencent.tmgp.supercell.clashofclans"
 				; scheduling policy : SCHED_BATCH = 3
 				$CorrectSCHED = "3"
 			Case Else
 				; scheduling policy : SCHED_NORMAL = 0
 				$CorrectSCHED = "0"
 		EndSwitch
-		If $g_bDebugAndroid Then SetLog("CorrectSCHED : " & $CorrectSCHED, $COLOR_ERROR)
-		
+
 		For $i = 1 To UBound($aPkgList)
 			$iCols = _ArraySearch($aPkgList, "", 0, 0, 0, 0, 1, $i, True)
-			If $iCols > 9 And StringInStr($aPkgList[$i - 1][$iCols - 1], $sPackage) Then
+			If $iCols > 9 And $aPkgList[$i - 1][$iCols - 1] = $g_sAndroidGamePackage Then
 				; process running
 				If $bForeground = True And $aPkgList[$i - 1][8] <> $CorrectSCHED Then
 					; not foreground
-					If $iRetryCount < 2 Then
+					If $iRetryCount < $iRetryMax Then
 						; retry 2 times
 						Sleep(100)
 						Return GetAndroidProcessPID($sPackage, $bForeground, $iRetryCount + 1)
 					EndIf
-					If $g_bDebugAndroid Then SetLog("Android process " & $sPackage & " not running in foreground")
+					SetDebugLog("Android process " & $sPackage & " not running in foreground")
 					Return 0
 				EndIf
 				Return Int($aPkgList[$i - 1][1])
 			EndIf
+
+			If $iCols = 9 And $aPkgList[$i - 1][$iCols - 1] = $g_sAndroidGamePackage Then ; ps -A
+				;$sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus.*" & $g_sAndroidGamePackage & "'")
+				$sDumpsys = AndroidAdbSendShellCommand("dumpsys window windows | grep -E 'mCurrentFocus'")
+				;SetLog("Dumpsys : " & $sDumpsys)
+
+				If $bForeground = True And StringInStr($sDumpsys, $g_sAndroidGamePackage) = 0 Then
+					; not foreground
+					If $iRetryCount < $iRetryMax Then
+						; retry 2 times
+						Sleep(100)
+						Return GetAndroidProcessPID($sPackage, $bForeground, $iRetryCount + 1)
+					EndIf
+					SetLog("Android process " & $sPackage & " not running in foreground")
+					Return 0
+				EndIf
+				Return Int($aPkgList[$i - 1][1]) ; return PID
+			EndIf
 		Next
 	EndIf
-	;If $iRetryCount < 2 Then
-	;	; retry 2 times
-	;	Sleep(100)
-	;	Return GetAndroidProcessPID($sPackage, $bForeground, $iRetryCount + 1)
-	;EndIf
-	SetLog("Android process " & $sPackage & " not running", $COLOR_INFO)
+
+	If $iRetryCount < $iRetryMax Then
+		; retry 2 times
+		Sleep(100)
+		Return GetAndroidProcessPID($sPackage, $bForeground, $iRetryCount + 1)
+	EndIf
+
+	SetLog("Android process " & $sPackage & " not running")
 	Return SetError($error, 0, 0)
 EndFunc   ;==>GetAndroidProcessPID
-
 Func AndroidToFront($hHWndAfter = Default, $sSource = "Unknown")
 	If $hHWndAfter = Default Then $hHWndAfter = $HWND_TOPMOST
 	;SetDebugLog("AndroidToFront: Source " & $sSource)
@@ -4899,12 +4932,14 @@ Func CheckEmuNewVersions()
 			$NewVersion = GetVersionNormalized("7.2.9.0")
 		Case "Nox"
 			$NewVersion = GetVersionNormalized("7.0.1.2")
+		Case "BlueStacks5"
+			$NewVersion = GetVersionNormalized("5.6.0.0")
 		Case Else
 			; diabled of the others
 			$NewVersion = GetVersionNormalized("99.0.0.0")
 	EndSwitch
 
-	If $Version > $NewVersion Then
+	If $Version < $NewVersion Then
 		SetLog("You are using an unsupported " & $g_sAndroidEmulator & " version (" & $g_sAndroidVersion & ")!", $COLOR_ERROR)
 		SetLog($HelpLink, $COLOR_INFO)
 	EndIf

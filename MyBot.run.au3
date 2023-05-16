@@ -1219,9 +1219,9 @@ Func __RunFunction($action)
 			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
-			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
-				BuilderBase()
-			EndIf
+			;If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
+			;	BuilderBase()
+			;EndIf
 			_Sleep($DELAYRUNBOT3)
 		Case "CollectAchievements"
 			CollectAchievements()
