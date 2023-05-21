@@ -178,6 +178,6 @@ Global $aOkayButton[2] = [430, 560]	; Okay button after BB attack, Screen 860x67
 Global $aOkayButtonRND[4] = [372, 530, 484, 565]	; Okay button after BB attack, RND Screen 860x676
 
 ;notif bar detection for BS5
-Global $aNotifBarBS5_a[4] = [266, 34, 0x01020B, 0]
-Global $aNotifBarBS5_b[4] = [622, 34, 0x01020B, 0]
-Global $aNotifBarBS5_c[4] = [191, 121, 0x01020B, 0]
+Global $aNotifBarBS5_a[4] = [266, 34, 0xFFFFFF, 0]
+Global $aNotifBarBS5_b[4] = [622, 34, 0xFFFFFF, 0]
+Global $aNotifBarBS5_c[4] = [191, 121, 0xFFFFFF, 0]
