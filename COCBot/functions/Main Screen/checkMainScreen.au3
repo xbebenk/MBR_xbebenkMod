@@ -137,7 +137,7 @@ Func NotifBarDropDownBS5()
 	If $g_sAndroidEmulator = "Bluestacks5" Then
 		If _CheckPixel($aNotifBarBS5_a, True) And _CheckPixel($aNotifBarBS5_b, True) And _CheckPixel($aNotifBarBS5_c, True) Then
 			SetLog("Found NotifBar Dropdown, Closing!", $COLOR_INFO)
-			Click(777,448)
+			Click(777, 34)
 			Return
 		EndIf
 	EndIf
