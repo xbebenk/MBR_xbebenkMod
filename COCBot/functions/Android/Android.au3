@@ -2005,6 +2005,8 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				SetDebugLog("Android Version 5.1")
 			Case $g_iAndroidNougat
 				SetDebugLog("Android Version 7.0")
+			Case $g_iAndroidpie
+				SetDebugLog("Android Version 9.0")
 			Case Else
 				SetDebugLog("Android Version not detected!")
 		EndSwitch
@@ -3993,7 +3995,12 @@ Func AndroidCloseSystemBar()
 		SetLog("Cannot close " & $g_sAndroidEmulator & " System Bar", $COLOR_ERROR)
 		Return False
 	EndIf
-	Local $cmdOutput = AndroidAdbSendShellCommand("service call activity 42 s16 com.android.systemui", Default, $wasRunState, False)
+	Local $cmdOutput = ""
+	If $g_iAndroidVersionAPI = $g_iAndroidPie Then 
+		$cmdOutput = AndroidAdbSendShellCommand("settings put global policy_control immersive.status=*", Default, $wasRunState, False)
+	Else
+		$cmdOutput = AndroidAdbSendShellCommand("service call activity 42 s16 com.android.systemui", Default, $wasRunState, False)
+	EndIf
 	Local $Result = StringLeft($cmdOutput, 6) = "Result"
 	SetDebugLog("Closed " & $g_sAndroidEmulator & " System Bar: " & $Result)
 	Return $Result
@@ -4091,7 +4098,6 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 		$cmd = "set result=$(ps -e -o USER,PID,PPID,VSIZE,RSS,PRI,NICE,RTPRIO,SCHED,NAME|grep """ & $g_sAndroidGamePackage & """ >&2)"
 	EndIf
 	
-	
 	Local $output = AndroidAdbSendShellCommand($cmd)
 	Local $error = @error
 	SetError(0)
@@ -4132,12 +4138,8 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 			EndIf
 		Next
 	EndIf
-	;If $iRetryCount < 2 Then
-	;	; retry 2 times
-	;	Sleep(100)
-	;	Return GetAndroidProcessPID($sPackage, $bForeground, $iRetryCount + 1)
-	;EndIf
-	SetLog("Android process " & $sPackage & " not running", $COLOR_INFO)
+	
+	If $g_bDebugAndroid Then SetLog("Android process " & $sPackage & " not running", $COLOR_INFO)
 	Return SetError($error, 0, 0)
 EndFunc   ;==>GetAndroidProcessPID
 
@@ -4511,9 +4513,10 @@ EndFunc   ;==>UpdateAndroidBackgroundMode
 
 Func GetAndroidCodeName($iAPI = $g_iAndroidVersionAPI)
 
+	If $iAPI >= $g_iAndroidpie Then Return "Pie"
 	If $iAPI >= $g_iAndroidNougat Then Return "Nougat"
 	If $iAPI >= $g_iAndroidLollipop Then Return "Lollipop"
-		If $iAPI >= $g_iAndroidKitKat Then Return "KitKat"
+	If $iAPI >= $g_iAndroidKitKat Then Return "KitKat"
 	If $iAPI >= $g_iAndroidJellyBean Then Return "JellyBean"
 
 	SetDebugLog("Unsupported Android API Version: " & $iAPI, $COLOR_ERROR)
