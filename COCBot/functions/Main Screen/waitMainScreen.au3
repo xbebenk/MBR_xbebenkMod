@@ -61,6 +61,13 @@ Func waitMainScreen() ;Waits for main screen to popup
 	SetLog("Wait MainScreen Timeout", $COLOR_ERROR)
 	SetLog("=========RESTART COC==========", $COLOR_INFO)
 	SaveDebugImage("WaitMainScreenTimeout", True)
+	If $g_sAndroidEmulator = "Bluestacks5") Then
+		If _CheckPixel($aNotifBarBS5_a, True) And _CheckPixel($aNotifBarBS5_b, True) And _CheckPixel($aNotifBarBS5_c, True) Then
+			SetLog("Found NotifBar Dropdown, Closing!", $COLOR_INFO)
+			Click(777,448)
+			Return
+		EndIf
+	EndIf
 	CloseCoC(True) ;only close coc
 	;_RestartAndroidCoC(False, False, True, 0, 0, True) ;start coc, not updating shared_prefs
 	;_SleepStatus(10000) ;give time for coc loading

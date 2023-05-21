@@ -176,3 +176,8 @@ Global Const $aPersonalChallengeOkBtn[4] = [510, 400, 0xDFF887, 20] ; Personal C
 Global $aBlackHead[4] = [804, 316, 0x000000, 0] ; Black Barbarian Head
 Global $aOkayButton[2] = [430, 560]	; Okay button after BB attack, Screen 860x676
 Global $aOkayButtonRND[4] = [372, 530, 484, 565]	; Okay button after BB attack, RND Screen 860x676
+
+;notif bar detection for BS5
+Global $aNotifBarBS5_a[4] = [262, 444, 0x01020B, 0]
+Global $aNotifBarBS5_b[4] = [865, 442, 0x01020B, 0]
+Global $aNotifBarBS5_c[4] = [407, 557, 0x01020B, 0]
