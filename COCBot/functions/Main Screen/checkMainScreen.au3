@@ -47,6 +47,8 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		$bLocated = _checkMainScreenImage($aPixelToCheck)
 		If Not $bLocated And GetAndroidProcessPID() = 0 Then StartAndroidCoC()
 		
+		If $g_sAndroidEmulator = "Bluestacks5" Then NotifBarDropDownBS5()
+		
 		Local $sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
 		If $sLoading = "Loading" Then 
 			SetLog("Still on Loading Screen...", $COLOR_INFO)
@@ -129,4 +131,14 @@ Func isOnMainVillage()
 	Local $bLocated = False
 	$bLocated = _checkMainScreenImage($aPixelToCheck)
 	Return $bLocated
+EndFunc
+
+Func NotifBarDropDownBS5()
+	If $g_sAndroidEmulator = "Bluestacks5" Then
+		If _CheckPixel($aNotifBarBS5_a, True) And _CheckPixel($aNotifBarBS5_b, True) And _CheckPixel($aNotifBarBS5_c, True) Then
+			SetLog("Found NotifBar Dropdown, Closing!", $COLOR_INFO)
+			Click(777,448)
+			Return
+		EndIf
+	EndIf
 EndFunc
