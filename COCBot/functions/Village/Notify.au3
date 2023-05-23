@@ -29,7 +29,7 @@ Func NotifyReport()
 		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & "%0A"
 		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-DE_Info_01", "DE") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir])
 		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-T_Info_01", "T") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootTrophy]) & "%0A"
-		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Free-Builders_Info_01", "No. of Free Builders") & "]: " & $g_iFreeBuilderCount
+		$text &= " [" & GetTranslatedFileIni("MBR Func_Notify", "Free-Builders_Info_01", "Free Builders") & "]: " & $g_iFreeBuilderCount
 		NotifyPushToTelegram($text)
 	EndIf
 	If $g_bNotifyAlertLastAttack = True Then
@@ -84,9 +84,7 @@ Func NotifyPushToTelegram($pMessage)
 	If Not IsPlanUseTelegram($pMessage) Then Return
 
 	If $g_bNotifyTGEnable And $g_sNotifyTGToken <> "" Then
-		Local $Date = @YEAR & '-' & @MON & '-' & @MDAY
-		Local $Time = @HOUR & '.' & @MIN
-		Local $text = $pMessage & '%0A' & $Date & '_' & $Time
+		Local $text = $pMessage
 		; Telegram Message
 		Local $SdtOut = InetRead("https://api.telegram.org/bot" & $g_sNotifyTGToken & "/sendMessage?chat_id=" & $g_sTGChatID & "&text=" & $text, $INET_FORCERELOAD)
 		If @error Or $SdtOut = "" Then Return
@@ -120,7 +118,7 @@ Func NotifyPushFileToTelegram($File, $Folder, $FileType, $body)
 				$sCmd1 = "document"
 			EndIf
 			Local $FullTelegram_url = $TELEGRAM_URL & $g_sNotifyTGToken & $sCmd
-			Local $Result = RunWait($g_sCurlPath & " -k -i -X POST " & $FullTelegram_url & ' -F chat_id="' & $g_sTGChatID & '" -F ' & $sCmd1 & '=@"' & $g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File & '"', "", @SW_HIDE)
+			Local $Result = RunWait($g_sCurlPath & " -i -X POST " & $FullTelegram_url & ' -F chat_id="' & $g_sTGChatID & '" -F ' & $sCmd1 & '=@"' & $g_sProfilePath & "\" & $g_sProfileCurrentName & '\' & $Folder & '\' & $File & '"', "", @SW_HIDE)
 
 			; Telegram Message attached to file
 			Local $SdtOut = InetRead("https://api.telegram.org/bot" & $g_sNotifyTGToken & "/sendMessage?chat_id=" & $g_sTGChatID & "&text=" & $body, $INET_FORCERELOAD)
@@ -235,7 +233,7 @@ Func NotifyRemoteControlProcBtnStart()
 	If $g_bNotifyTGEnable And $g_sNotifyTGToken <> "" Then
 		$g_sTGLastMessage = NotifyGetLastMessageFromTelegram()
 		If $g_sTGLastMessage = "" Then Return
-		Local $TGActionMSG = StringUpper(StringStripWS($g_sTGLastMessage, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)) ;upercase & remove space laset message
+		Local $TGActionMSG = StringUpper(StringStripWS($g_sTGLastMessage, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)) ;uppercase & remove space laset message
 		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $TGActionMSG : " & $TGActionMSG)
 		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $g_iTGLastRemote : " & $g_iTGLastRemote)
 		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProcBtnStart $g_sTGLast_UID : " & $g_sTGLast_UID)
@@ -265,7 +263,7 @@ Func NotifyRemoteControlProc()
 
 	If $g_bNotifyTGEnable And $g_sNotifyTGToken <> "" And $g_bRunState Then
 		$g_sTGLastMessage = NotifyGetLastMessageFromTelegram()
-		Local $TGActionMSG = StringUpper(StringStripWS($g_sTGLastMessage, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)) ;upercase & remove space laset message
+		Local $TGActionMSG = StringUpper(StringStripWS($g_sTGLastMessage, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)) ;uppercase & remove space laset message
 		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProc $TGActionMSG : " & $TGActionMSG)
 		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProc $g_iTGLastRemote : " & $g_iTGLastRemote)
 		If $g_bDebugSetlog Then SetDebugLog("Telegram | NotifyRemoteControlProc $g_sTGLast_UID : " & $g_sTGLast_UID)
@@ -324,7 +322,7 @@ Func NotifyRemoteControlProc()
 								$g_iAndroidCoCPid = GetAndroidProcessPID(Default, False)
 								If $g_iAndroidCoCPid = 0 Then ExitLoop
 							WEnd
-							NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_02", "Request to Stop...") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_03", "Your bot is now stopped"))
+							NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_02", "Your bot is now stopped"))
 							btnStop()
 						Else
 							NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_02", "Request to Stop...") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_04", "Your bot is currently stopped, no action was taken"))
@@ -369,13 +367,13 @@ Func NotifyRemoteControlProc()
 							$DarkGainPerHour = _NumberFormat(Round($g_iStatsTotalGain[$eLootDarkElixir] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600 * 1000)) & " / h"
 						EndIf
 						$TrophyGainPerHour = _NumberFormat(Round($g_iStatsTotalGain[$eLootTrophy] / (Int(__TimerDiff($g_hTimerSinceStarted) + $g_iTimePassed)) * 3600 * 1000)) & " / h"
-						Local $txtStats = " | " & GetTranslatedFileIni("MBR Func_Notify", "Stats_Info_02", "Stats Village Report") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Stats_Info_05", "At Start") & "%0A[" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_iStatsStartedWith[$eLootGold]) & " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: "
+						Local $txtStats = " | " & GetTranslatedFileIni("MBR Func_Notify", "Stats_Info_02", "Stats Village Report") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Stats_Info_05", "Started with") & "%0A[" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_iStatsStartedWith[$eLootGold]) & " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: "
 						$txtStats &= _NumberFormat($g_iStatsStartedWith[$eLootElixir]) & " [D]: " & _NumberFormat($g_iStatsStartedWith[$eLootDarkElixir]) & " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-T_Info_01", "T") & "]: " & $g_iStatsStartedWith[$eLootTrophy]
-						$txtStats &= "%0A%0A" & GetTranslatedFileIni("MBR Func_Notify", "Stats-Now_Info_01", "Now (Current Resources)") & "%0A[" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir])
+						$txtStats &= "%0A%0A" & GetTranslatedFileIni("MBR Func_Notify", "Stats-Now_Info_01", "Current Resources") & "%0A[" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir])
 						$txtStats &= " [D]: " & _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir]) & " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-T_Info_01", "T") & "]: " & $g_aiCurrentLoot[$eLootTrophy] & " [GEM]: " & $g_iGemAmount
 						$txtStats &= "%0A%0A" & GetTranslatedFileIni("MBR Func_Notify", "Stats_Info_04", "Gain per Hour") & ":%0A[" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & $GoldGainPerHour & " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: " & $ElixirGainPerHour
 						$txtStats &= "%0A[D]: " & $DarkGainPerHour & " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-T_Info_01", "T") & "]: " & $TrophyGainPerHour
-						$txtStats &= "%0A%0A" & GetTranslatedFileIni("MBR Func_Notify", "Free-Builders_Info_01", "No. of Free Builders") & ": " & $g_iFreeBuilderCount & "%0A[" & GetTranslatedFileIni("MBR Func_Notify", "Wall-Up_Info_01", "No. of Wall Up") & "]: [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: "
+						$txtStats &= "%0A%0A" & GetTranslatedFileIni("MBR Func_Notify", "Free-Builders_Info_01", "Free Builders") & ": " & $g_iFreeBuilderCount & "%0A[" & GetTranslatedFileIni("MBR Func_Notify", "Wall-Up_Info_01", "Wall Upgrades") & "]: [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: "
 						$txtStats &= $g_iNbrOfWallsUppedGold & "/ [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: " & $g_iNbrOfWallsUppedElixir & "%0A%0A" & GetTranslatedFileIni("MBR Func_Notify", "Attack_Info_01", "Attacked") & ": "
 						$txtStats &= $g_aiAttackedCount & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Skip_Info_02", "Skipped") & ": " & $g_iSkippedVillageCount
 						Local $day = 0, $hour = 0, $min = 0, $sec = 0
@@ -387,11 +385,11 @@ Func NotifyRemoteControlProc()
 						$txtStats &= "%0A" & " "
 						NotifyPushToTelegram($g_sNotifyOrigin & $txtStats)
 					Case GetTranslatedFileIni("MBR Func_Notify", "LOG", "LOG"), '\UD83D\UDCCB ' & GetTranslatedFileIni("MBR Func_Notify", "LOG", "LOG")
-						SetLog("Notify Telegram: Your request has been received from " & $g_sNotifyOrigin & ". Log is now sent", $COLOR_SUCCESS)
+						SetLog("Notify Telegram: Your request has been received from " & $g_sNotifyOrigin & ". Log has been sent.", $COLOR_SUCCESS)
 						NotifyPushFileToTelegram($g_sLogFileName, "Logs", "text\/plain; charset=utf-8", $g_sNotifyOrigin & " | Current Log " & "%0A")
 					Case GetTranslatedFileIni("MBR Func_Notify", "LASTRAID", "LASTRAID"), '\UD83C\UDF04 ' & GetTranslatedFileIni("MBR Func_Notify", "LASTRAID", "LASTRAID")
 						If $g_sLootFileName <> "" Then
-							NotifyPushFileToTelegram($g_sLootFileName, "Loots", "image/jpeg", $g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Last-Raid_Info_05", "Last Raid") & "%0A" & $g_sLootFileName)
+							NotifyPushFileToTelegram($g_sLootFileName, "Loots", "image/jpeg", $g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Last-Raid_Info_05", "Last Raid"))
 							SetLog("Notify Telegram: Push Last Raid Snapshot...", $COLOR_SUCCESS)
 						Else
 							NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Last-Raid_Info_03", "There is no last raid screenshot."))
@@ -404,27 +402,27 @@ Func NotifyRemoteControlProc()
 						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Last-Raid_Info_04", "Last Raid txt") & "%0A" & "[" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_iStatsLastAttack[$eLootGold]) & " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: " & _NumberFormat($g_iStatsLastAttack[$eLootElixir]) & " [D]: " & _NumberFormat($g_iStatsLastAttack[$eLootDarkElixir]) & " [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-T_Info_01", "T") & "]: " & $g_iStatsLastAttack[$eLootTrophy])
 					Case GetTranslatedFileIni("MBR Func_Notify", "SCREENSHOT", "SCREENSHOT")
 						SetLog("Notify Telegram: ScreenShot request received", $COLOR_SUCCESS)
-						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "SCREENSHOT_Info_03", "Chief, your request for Screenshot will be processed ASAP"))
+						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "SCREENSHOT_Info_03", "Chief, your request for Screenshot is being processed."))
 						$g_bTGRequestScreenshot = True
 					Case GetTranslatedFileIni("MBR Func_Notify", "SCREENSHOTHD", "SCREENSHOTHD"), '\UD83D\UDCF7 ' & GetTranslatedFileIni("MBR Func_Notify", "SCREENSHOT", "SCREENSHOT")
 						SetLog("Notify Telegram: ScreenShot HD request received", $COLOR_SUCCESS)
-						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "SCREENSHOT_Info_03", "Chief, your request for Screenshot will be processed ASAP"))
+						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "SCREENSHOT_Info_03", "Chief, your request for Screenshot is being processed."))
 						$g_bTGRequestScreenshot = True
 						$g_bTGRequestScreenshotHD = True
 						$g_bNotifyForced = False
 					Case GetTranslatedFileIni("MBR Func_Notify", "BUILDER", "BUILDER"), '\UD83D\UDD28 ' & GetTranslatedFileIni("MBR Func_Notify", "BUILDER", "BUILDER")
 						SetLog("Notify Telegram: Builder Status request received", $COLOR_SUCCESS)
 						$g_bTGRequestBuilderInfo = True
-						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "BUILDER_Info_04", "Chief, your request for Builder Info will be processed ASAP"))
+						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "BUILDER_Info_04", "Chief, your request for Builder Info is being processed."))
 					Case GetTranslatedFileIni("MBR Func_Notify", "SHIELD", "SHIELD"), '\UD83D\UDD30 ' & GetTranslatedFileIni("MBR Func_Notify", "SHIELD", "SHIELD")
 						SetLog("Notify Telegram: Shield Status request received", $COLOR_SUCCESS)
 						$g_bTGRequestShieldInfo = True
 						$g_bNotifyForced = False
-						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "SHIELD_Info_02", "Chief, your request for Shield Info will be processed ASAP"))
+						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "SHIELD_Info_02", "Chief, your request for Shield Info is being processed."))
 					Case GetTranslatedFileIni("MBR Func_Notify", "RESETSTATS", "RESETSTATS")
 						btnResetStats()
-						SetLog("Notify Telegram: Your request has been received. Statistics resetted", $COLOR_SUCCESS)
-						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "RESETSTATS_Info_02", "Statistics resetted."))
+						SetLog("Notify Telegram: Your request has been received. Statistics cleared.", $COLOR_SUCCESS)
+						NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "RESETSTATS_Info_02", "Statistics clear."))
 					Case GetTranslatedFileIni("MBR Func_Notify", "TROOPS", "TROOPS"), '\UD83D\UDCAA ' & GetTranslatedFileIni("MBR Func_Notify", "TROOPS", "TROOPS")
 						SetLog("Notify Telegram: Your request has been received. Sending Troop/Spell Stats...", $COLOR_SUCCESS)
 						Local $txtTroopStats = " | " & GetTranslatedFileIni("MBR Func_Notify", "Train_Info_01", "[Train Status]:%0A")
@@ -464,16 +462,16 @@ Func NotifyRemoteControlProc()
 						SetLog("Notify Telegram: Your request has been received from " & $g_sNotifyOrigin & ". Hibernate PC", $COLOR_SUCCESS)
 						$bHibernate = True
 						NotifyPushToTelegram(GetTranslatedFileIni("MBR Func_Notify", "CONFIRM_Info_01", "Are you sure?, Please send") & " CONFIRM" & "%0A" & _
-								GetTranslatedFileIni("MBR Func_Notify", "CONFIRM_Info_02", "If isn't to continue send") & " CANCEL")
+								GetTranslatedFileIni("MBR Func_Notify", "CONFIRM_Info_02", "If not, send") & " CANCEL")
 					Case GetTranslatedFileIni("MBR Func_Notify", "SHUTDOWN", "SHUTDOWN"), '\U26A1 ' & StringUpper(GetTranslatedFileIni("MBR Func_Notify", "SHUTDOWN", "SHUTDOWN"))
 						SetLog("Notify Telegram: Your request has been received from " & $g_sNotifyOrigin & ". Shutdown PC", $COLOR_SUCCESS)
 						$bShutdown = True
 						NotifyPushToTelegram(GetTranslatedFileIni("MBR Func_Notify", "CONFIRM_Info_01", "Are you sure?, Please send") & " CONFIRM" & "%0A" & _
-								GetTranslatedFileIni("MBR Func_Notify", "CONFIRM_Info_02", "If isn't to continue send") & " CANCEL")
+								GetTranslatedFileIni("MBR Func_Notify", "CONFIRM_Info_02", "If not, send") & " CANCEL")
 					Case GetTranslatedFileIni("MBR Func_Notify", "STANDBY", "STANDBY"), '\UD83d\UDD06 ' & GetTranslatedFileIni("MBR Func_Notify", "STANDBY", "STANDBY")
 						SetLog("Notify Telegram: Your request has been received from " & $g_sNotifyOrigin & ". Standby PC", $COLOR_SUCCESS)
 						NotifyPushToTelegram(GetTranslatedFileIni("MBR Func_Notify", "CONFIRM_Info_01", "Are you sure?, Please send") & " CONFIRM" & "%0A" & _
-								GetTranslatedFileIni("MBR Func_Notify", "CONFIRM_Info_02", "If isn't to continue send") & " CANCEL")
+								GetTranslatedFileIni("MBR Func_Notify", "CONFIRM_Info_02", "If not, send") & " CANCEL")
 						$bStandby = True
 					Case "CONFIRM"
 						If $bShutdown Then
@@ -520,7 +518,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 	Local $hBitmap_Scaled
 	Switch $Message
 		Case "Restarted"
-			If $g_bNotifyRemoteEnable Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_10", "Bot restarted"))
+			If $g_bNotifyRemoteEnable Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_10", "Bot restarted!"))
 		Case "OutOfSync"
 			If $g_bNotifyAlertOutOfSync Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "LOG_Info_05", "Restarted after Out of Sync Error") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Stats_Info_06", "Attacking now") & "...")
 		Case "LastRaid"
@@ -560,7 +558,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 				EndIf
 				;push the file
 				SetLog("Notify Telegram: Last Raid screenshot has been sent!", $COLOR_SUCCESS)
-				NotifyPushFileToTelegram($g_sAttackFile, "Loots", "image/jpeg", $g_sNotifyOrigin & " | " & "Last Raid" & "%0A" & $g_sAttackFile)
+				NotifyPushFileToTelegram($g_sAttackFile, "Loots", "image/jpeg", $g_sNotifyOrigin & " | " & "Last Raid")
 				;wait a second and then delete the file
 				If _Sleep($DELAYPUSHMSG1) Then Return
 				Local $iDelete = FileDelete($g_sProfileLootsPath & $g_sAttackFile)
@@ -598,21 +596,21 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 		Case "CocError"
 			If $g_bNotifyAlertOutOfSync Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "LOG_Info_04", "CoC Has Stopped Error") & ".....")
 		Case "Pause"
-			If $g_bNotifyRemoteEnable And $Source = "Push" Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_17", "Request to Pause") & "..." & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_13", "Your request has been received. Bot is now paused"))
+			If $g_bNotifyRemoteEnable And $Source = "Push" Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_17", "Request to Pause") & "..." & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_13", "Bot is now paused"))
 		Case "Resume"
-			If $g_bNotifyRemoteEnable And $Source = "Push" Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_18", "Request to Resume") & "..." & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_14", "Your request has been received. Bot is now resumed"))
+			If $g_bNotifyRemoteEnable And $Source = "Push" Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_18", "Request to Resume") & "..." & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Request-Stop_Info_14", "Bot is now resumed"))
 		Case "OoSResources"
 			If $g_bNotifyAlertOutOfSync Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "LOG_Info_06", "Disconnected after") & " " & StringFormat("%3s", $g_iSearchCount) & " " & GetTranslatedFileIni("MBR Func_Notify", "Skip_Info_01", "skip(s)") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Attack_Info_02", "Cannot locate Next button, Restarting Bot") & "...")
 		Case "MatchFound"
-			If $g_bNotifyAlertMatchFound Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & $g_asModeText[$g_iMatchMode] & " " & GetTranslatedFileIni("MBR Func_Notify", "Match-Found_Info_01", "Match Found! after") & " " & StringFormat("%3s", $g_iSearchCount) & " " & GetTranslatedFileIni("MBR Func_Notify", "Skip_Info_01", "skip(s)") & "%0A" & "[" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_iSearchGold) & "; [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: " & _NumberFormat($g_iSearchElixir) & "; [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-DE_Info_01", "DE") & "]: " & _NumberFormat($g_iSearchDark) & "; [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-T_Info_01", "T") & "]: " & $g_iSearchTrophy)
+			If $g_bNotifyAlertMatchFound Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & $g_asModeText[$g_iMatchMode] & " " & GetTranslatedFileIni("MBR Func_Notify", "Match-Found_Info_01", "Match Found! ") & " " & StringFormat("%3s", $g_iSearchCount)& GetTranslatedFileIni("MBR Func_Notify", "Skip_Info_01", "skip(s)") & "%0A" & "[" & GetTranslatedFileIni("MBR Func_Notify", "Stats-G_Info_01", "G") & "]: " & _NumberFormat($g_iSearchGold) & "; [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-E_Info_01", "E") & "]: " & _NumberFormat($g_iSearchElixir) & "; [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-DE_Info_01", "DE") & "]: " & _NumberFormat($g_iSearchDark) & "; [" & GetTranslatedFileIni("MBR Func_Notify", "Stats-T_Info_01", "T") & "]: " & $g_iSearchTrophy)
 		Case "UpgradeWithGold"
-			If $g_bNotifyAlertUpgradeWalls Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_07", "Upgrade completed by using GOLD") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_03", "Complete by using GOLD") & "...")
+			If $g_bNotifyAlertUpgradeWalls Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_07", "Wall upgraded using GOLD."))
 		Case "UpgradeWithElixir"
-			If $g_bNotifyAlertUpgradeWalls Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_08", "Upgrade completed by using ELIXIR") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_04", "Complete by using ELIXIR") & "...")
+			If $g_bNotifyAlertUpgradeWalls Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_08", "Wall upgraded using ELIXIR."))
 		Case "NoUpgradeWallButton"
-			If $g_bNotifyAlertUpgradeWalls Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_05", "No Upgrade Gold Button") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_10", "Cannot find gold upgrade button") & "...")
+			If $g_bNotifyAlertUpgradeWalls Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_05", "Cannot find gold upgrade button") & "...")
 		Case "NoUpgradeElixirButton"
-			If $g_bNotifyAlertUpgradeWalls Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_09", "No Upgrade Elixir Button") & "%0A" & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_06", "Cannot find elixir upgrade button") & "...")
+			If $g_bNotifyAlertUpgradeWalls Then NotifyPushToTelegram($g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "Upgrading_Info_09", "Cannot find elixir upgrade button") & "...")
 		Case "RequestScreenshot"
 			Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
 			Local $Time = @HOUR & "." & @MIN
@@ -627,7 +625,7 @@ Func NotifyPushMessageToBoth($Message, $Source = "")
 			_GDIPlus_ImageDispose($hBitmap_Scaled)
 			If $g_bTGRequestScreenshot Then
 				If $g_bTGRequestScreenshot Then
-					NotifyPushFileToTelegram($Screnshotfilename, "Temp", "image/jpeg", $g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "SCREENSHOT_Info_04", "Screenshot of your village") & " " & "%0A" & $Screnshotfilename)
+					NotifyPushFileToTelegram($Screnshotfilename, "Temp", "image/jpeg", $g_sNotifyOrigin & " | " & GetTranslatedFileIni("MBR Func_Notify", "SCREENSHOT_Info_04", "Screenshot of your village."))
 					SetLog("Notify Telegram: Screenshot sent!", $COLOR_SUCCESS)
 				EndIf
 			EndIf
