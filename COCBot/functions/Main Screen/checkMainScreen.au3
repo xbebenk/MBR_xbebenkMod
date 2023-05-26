@@ -23,8 +23,10 @@ EndFunc   ;==>checkMainScreen
 Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase, $CalledFrom = "Default") ;Checks if in main screen
 
 	If $bSetLog = Default Then $bSetLog = True
+	Local $VillageType = "MainVillage"
+	If $bBuilderBase Then $VillageType = "BuilderBase"
 	If $bSetLog Then
-		SetLog("[" & $CalledFrom & "] Locate Main Screen", $COLOR_INFO)
+		SetLog("[" & $CalledFrom & "] Locate " & $VillageType & " Main Screen", $COLOR_INFO)
 	EndIf
 	
 	If Not TestCapture() Then

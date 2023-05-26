@@ -253,15 +253,15 @@ Func getAllEmulatorsInstances()
 	; BS Multi Instance
 	Local $sBlueStacksFolder = ""
 	If $Emulator = "BlueStacks2" Then $sBlueStacksFolder = "Android"
-	If $Emulator = "BlueStacks5" Then $sBlueStacksFolder = "Nougat32"
+	If $Emulator = "BlueStacks5" Then $sBlueStacksFolder = "Pie"
 
 	; Getting all VM Folders
 	Local $aEmulatorFolders = _FileListToArray($sEmulatorPath, $sBlueStacksFolder & "*", $FLTA_FOLDERS)
-	If $Emulator = "BlueStacks5" Then
-		Local $PieFolders = _FileListToArray($sEmulatorPath, "Pie*", $FLTA_FOLDERS)
-		_ArrayDelete($PieFolders, 0)
-		_ArrayConcatenate($aEmulatorFolders, $PieFolders)
-	EndIf
+	;If $Emulator = "BlueStacks5" Then
+	;	Local $PieFolders = _FileListToArray($sEmulatorPath, "Pie*", $FLTA_FOLDERS)
+	;	_ArrayDelete($PieFolders, 0)
+	;	_ArrayConcatenate($aEmulatorFolders, $PieFolders)
+	;EndIf
 
 	If @error = 1 Then
 		Setlog($Emulator & " -- Path was invalid. " & $sEmulatorPath)
