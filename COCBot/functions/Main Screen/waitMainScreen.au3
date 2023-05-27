@@ -36,6 +36,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		EndIf
 		_CaptureRegions() ;force capture screen
 		If checkChatTabPixel() Then 
+			$g_iMainScreenTimeoutCount = 0
 			SetLog("waitMainScreen: MainScreen Located", $COLOR_SUCCESS)
 			Return
 		EndIf
@@ -60,7 +61,9 @@ Func waitMainScreen() ;Waits for main screen to popup
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	SetLog("Wait MainScreen Timeout", $COLOR_ERROR)
 	SetLog("=========RESTART COC==========", $COLOR_INFO)
-	SaveDebugImage("WaitMainScreenTimeout", True)
+	SaveDebugImage("WaitMainScreenTimeout", True) 
+	$g_iMainScreenTimeoutCount += 1
+	If $g_iMainScreenTimeoutCount > 1 Then CloseAndroid()
 	If $g_sAndroidEmulator = "Bluestacks5" Then NotifBarDropDownBS5()
 	CloseCoC(True) ;only close coc
 	;_RestartAndroidCoC(False, False, True, 0, 0, True) ;start coc, not updating shared_prefs
