@@ -74,7 +74,7 @@ Func SwitchTo($To = "BB")
 		$sTile = "BoatBuilderBase"
 		$aPixelToCheck = $aIsMain
 		$x = 500
-		$y = 20
+		$y = 0
 		$x1 = 700
 		$y1 = 200
 		$Dir = $g_sImgBoatBB
@@ -93,7 +93,7 @@ Func SwitchTo($To = "BB")
 	For $i = 1 To 3
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
 		
-		Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
+		Local $ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases", True)
 		If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
 			ZoomOut() 
 		EndIf
@@ -106,7 +106,9 @@ Func SwitchTo($To = "BB")
 			ExitLoop
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
-			ZoomOutHelper("SwitchBetweenBases")
+			If $To = "Main" Then CheckBB20Tutor()
+			If ZoomOutHelper("DefaultZoomOut") Then ContinueLoop
+			If ZoomOutHelperBB("DefaultZoomOut") Then ContinueLoop
 			If $i = 3 Then AndroidPageError("SwitchBetweenBases")
 		EndIf
 		_Sleep(1000)
@@ -128,6 +130,8 @@ Func SwitchTo($To = "BB")
 				$g_sSceneryCode = $sScode
 			EndIf
 			ExitLoop
+		Else
+			CheckBB20Tutor()
 		EndIf
 		_Sleep(2000)
 	Next

@@ -1219,9 +1219,9 @@ Func __RunFunction($action)
 			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
-			;If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
-			;	BuilderBase()
-			;EndIf
+			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
+				BuilderBase()
+			EndIf
 			_Sleep($DELAYRUNBOT3)
 		Case "CollectAchievements"
 			CollectAchievements()
@@ -1630,7 +1630,7 @@ Func BuilderBase()
 		CollectBuilderBase()
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 
-		CleanBBYard()
+		;CleanBBYard()
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 
@@ -1649,6 +1649,7 @@ Func BuilderBase()
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
 
+		#cs
 		If Not BBDropTrophy() Then
 			If _Sleep($DELAYRUNBOT1) Then Return
 			DoAttackBB()
@@ -1665,6 +1666,7 @@ Func BuilderBase()
 			;checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			;ZoomOut(True) ;directly zoom
 		EndIf
+		#ce
 		
 		$StartLabON = StarLaboratory()
 		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)

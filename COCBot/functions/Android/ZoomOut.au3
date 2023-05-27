@@ -209,6 +209,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		If ZoomOutHelper("DefaultZoomOut") Then Return True
+		If ZoomOutHelperBB("DefaultZoomOut") Then Return True
 		$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 	EndIf
 	If Not $g_bRunState Then Return
@@ -588,8 +589,9 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $
 			$aResult[1] = $x
 			$aResult[2] = $y
 			$g_bAndroidZoomoutModeFallback = False
-
-			If $bCenterVillage And ($bOnBuilderBase Or Not $bUpdateSharedPrefs) And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
+			SetDebugLog("bCenterVillage = " & String($bCenterVillage))
+			
+			If $bCenterVillage And ($x <> 0 Or $y <> 0) Then ;And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
 				SetLog("Centering Village" & $sSource & " by: x=" & $x & ", y=" & $y, $COLOR_DEBUG1)
 				If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
 					Local $aCenterCoord = getVillageCenteringCoord()

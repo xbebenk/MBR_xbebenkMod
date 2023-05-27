@@ -335,29 +335,104 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		EndIf
 	EndIf
 	
-	If Not isOnMainVillage() And IsAttackPage() And Not isOnBuilderBase() Then ; bot seeing attackbar while it shouldn't, will do surrender and/or return home   
-		ClickP($aIsAttackPage)
-		If _Sleep(1000) Then Return
-		For $i = 1 To 5
-			If isOnMainVillage() Then ExitLoop
-			SetLog("Waiting Main Page #" & $i, $COLOR_ACTION)
-			If IsOKCancelPage(True) Then
-				Click(510, 400); Click Okay to Confirm surrender
-				If _Sleep(1000) Then Return
-			EndIf
-			If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-			If _Sleep(1000) Then Return
-		Next
-		;SetLog("CheckObstacle: Not in MainVillage And detected AttackPage", $COLOR_ACTION)
-		ClickAway("Left", True)
-		Return False
-	EndIf
+	If $bBuilderBase Then CheckBB20Tutor()
+	
+	;If Not isOnMainVillage() And IsAttackPage() And Not isOnBuilderBase() Then ; bot seeing attackbar while it shouldn't, will do surrender and/or return home   
+	;	ClickP($aIsAttackPage)
+	;	If _Sleep(1000) Then Return
+	;	For $i = 1 To 5
+	;		If isOnMainVillage() Then ExitLoop
+	;		SetLog("Waiting Main Page #" & $i, $COLOR_ACTION)
+	;		If IsOKCancelPage(True) Then
+	;			Click(510, 400); Click Okay to Confirm surrender
+	;			If _Sleep(1000) Then Return
+	;		EndIf
+	;		If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
+	;		If _Sleep(1000) Then Return
+	;	Next
+	;	;SetLog("CheckObstacle: Not in MainVillage And detected AttackPage", $COLOR_ACTION)
+	;	ClickAway("Left", True)
+	;	Return False
+	;EndIf
 	
 	;xbebenk: I need this click away to be logged
 	;SetLog("CheckObstacle: Not Found Any obs, just do clickaway()", $COLOR_ACTION)
 	ClickAway("Left", True)
 	Return False
 EndFunc   ;==>_checkObstacles
+
+Func CheckBB20Tutor()
+	Local $bRet = False
+	For $i = 1 To 30
+		Setlog("Dealing with Tutorial #" & $i, $COLOR_ACTION)
+		If Not $g_bRunState Then Return
+		If _ColorCheck(_GetPixelColor(430, 362, True), Hex(0xFFFFFF, 6), 20) And _ColorCheck(_GetPixelColor(588, 362, True), Hex(0xFFFFFF, 6), 20) Then ;right balloon tips chat
+			Setlog("Found Right Chat Tutorial", $COLOR_DEBUG2)
+			ClickAway()
+			If _Sleep(5000) Then Return
+			$bRet = True
+			ContinueLoop
+		EndIf
+		If Not $g_bRunState Then Return
+		If _ColorCheck(_GetPixelColor(270, 402, True), Hex(0xFFFFFF, 6), 20) Or _ColorCheck(_GetPixelColor(435, 402, True), Hex(0xFFFFFF, 6), 20) Then ;left balloon tips chat
+			Setlog("Found Left Chat Tutorial", $COLOR_DEBUG2)
+			ClickAway()
+			If _Sleep(5000) Then Return
+			$bRet = True
+			ContinueLoop
+		EndIf
+		If Not $g_bRunState Then Return
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 200, 100, 680, 440) Then ;check arrow
+			If QuickMIS("BC1", $g_sImgBB20 & "OttoOutpost\", $g_iQuickMISX - 50, $g_iQuickMISY, $g_iQuickMISX + 50, $g_iQuickMISY + 150) Then ;check OttoOutpost Image
+				Setlog("Found Otto OutPost", $COLOR_DEBUG2)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(4000) Then Return
+				ContinueLoop
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 200, 100, 680, 440) Then ;check arrow
+			If QuickMIS("BC1", $g_sImgBB20 & "ReinforcementCamp\", $g_iQuickMISX - 50, $g_iQuickMISY, $g_iQuickMISX + 50, $g_iQuickMISY + 150) Then ;check ReinforcementCamp Image
+				Setlog("Found Reinforcement Camp", $COLOR_DEBUG2)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(4000) Then Return
+				ContinueLoop
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 200, 100, 680, 440) Then ;check arrow
+			If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", $g_iQuickMISX - 50, $g_iQuickMISY, $g_iQuickMISX + 50, $g_iQuickMISY + 150) Then ;check ElixCart Image
+				Setlog("Found Elix Cart", $COLOR_DEBUG2)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(4000) Then Return
+				ContinueLoop
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+		If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 600, 400, 760, 560) Then ;Down Tunnel
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(2000) Then Return
+			If QuickMIS("BC1", $g_sImgBB20 & "DownTunnel\", 170, 60, 290, 170) Then ;Down Tunnel
+				Setlog("Found DownSide of BuilderBase, exit CheckBB20Tutor", $COLOR_DEBUG2)
+				ExitLoop
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+		If _CheckPixel($aIsOnBuilderBase, True, Default, "CheckBB20Tutor") Then 
+			Setlog("Found MainScreen of BuilderBase, exit CheckBB20Tutor", $COLOR_DEBUG2)
+			ExitLoop
+		EndIf
+		
+		If _CheckPixel($aIsMain, True, Default, "CheckBB20Tutor") Then 
+			Setlog("Found MainScreen of MainVillage, exit CheckBB20Tutor", $COLOR_DEBUG2)
+			ExitLoop
+		EndIf
+		
+		If Not $g_bRunState Then Return
+	Next
+	
+	Return $bRet
+EndFunc
 
 Func SwitchForceAnotherDevice()
 	Local $bResult = True
