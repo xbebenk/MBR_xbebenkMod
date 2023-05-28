@@ -93,10 +93,17 @@ Func SwitchTo($To = "BB")
 	For $i = 1 To 3
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
 		
-		Local $ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases", True)
-		If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-			ZoomOut() 
+		Local $ZoomOutResult
+		If $To = "BB" Then 
+			If Not ZoomOutHelper("SwitchBetweenBases") Then 
+				$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases", True)
+				If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+					ZoomOut() 
+				EndIf
+			EndIf
 		EndIf
+		
+		If $To = "Main" Then ZoomOutHelperBB("SwitchBetweenBases")
 		
 		If QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
 			If $g_iQuickMISName = "BrokenBoat" Then Return BBTutorial($g_iQuickMISX, $g_iQuickMISY)
@@ -107,8 +114,6 @@ Func SwitchTo($To = "BB")
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
 			If $To = "Main" Then CheckBB20Tutor()
-			If ZoomOutHelper("DefaultZoomOut") Then ContinueLoop
-			If ZoomOutHelperBB("DefaultZoomOut") Then ContinueLoop
 			If $i = 3 Then AndroidPageError("SwitchBetweenBases")
 		EndIf
 		_Sleep(1000)

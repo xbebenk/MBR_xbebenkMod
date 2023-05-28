@@ -93,7 +93,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		EndIf
 		
 		Local $z = $c / $iRefSize
-		SetLog("GetVillageSize, Scenery : " & $g_sSceneryCode & " : " & $g_sCurrentScenery & ", Zoom:" & $z, $COLOR_DEBUG1)
+		SetDebugLog("GetVillageSize, Scenery : " & $g_sSceneryCode & " : " & $g_sCurrentScenery & ", Zoom:" & $z, $COLOR_DEBUG1)
 		SetDebugLog("Stone2tree = " & $c)
 		SetDebugLog("Reference = " & $iRefSize)
 		SetDebugLog("ZoomLevel = " & $z)

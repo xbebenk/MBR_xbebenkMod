@@ -1631,13 +1631,11 @@ Func BuilderBase()
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 
 		;CleanBBYard()
-		If _Sleep($DELAYRUNBOT1) Then Return
-		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		;If _Sleep($DELAYRUNBOT1) Then Return
+		;checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 
 		If isGoldFullBB() Or isElixirFullBB() Then
 			AutoUpgradeBB()
-			$g_bBBAttacked = False
-			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			$g_bBBAttacked = False
 		EndIf
@@ -1645,7 +1643,6 @@ Func BuilderBase()
 		If isElixirFullBB() Then
 			$StartLabON = StarLaboratory()
 			$g_bBBAttacked = False
-			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
 

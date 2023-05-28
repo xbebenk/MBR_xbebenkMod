@@ -236,8 +236,12 @@ Func IsPostDefenseSummaryPage($bCapture = True)
 EndFunc   ;==>IsPostDefenseSummaryPage
 
 Func IsFullScreenWindow()
-	Local $result
-	$result = WaitforPixel(823,44,825,46, "FFFFFF", 10, 2)
+	Local $result = False
+	$result = WaitforPixel(823,40,825,46, "FFFFFF", 10, 2)
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 20, 860, 100) Then $result = True
+	EndIf
 	
 	If $result Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found FullScreen Window", $COLOR_ACTION)

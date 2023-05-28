@@ -160,20 +160,22 @@ Func ZoomOutHelperBB($caller = "Default")
 	Local $x = 0, $y = 0
 	Local $bIsOnBuilderBase = isOnBuilderBase()
 	Local $Dir = "", $aOffset, $bRet = False
+	Local $xyOffsetSwitchBases = 0
+	If $caller = "SwitchBetweenBases" Then $xyOffsetSwitchBases = -30
 	
 	If Not $bIsOnBuilderBase Then Return ;leave if not in mainvillage
 	
 	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "ZoomOutHelper\", 430, 20, 800, 300) Then 
-		$aOffset = StringRegExp($g_iQuickMISName, "BoatSail([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+		$aOffset = StringRegExp($g_iQuickMISName, "Tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
 			$y = $g_iQuickMISY - $aOffset[2]
 			SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
-			SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
-			ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+			SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_INFO)
+			ClickDrag(800, 350, 800 - $x + $xyOffsetSwitchBases, 350 - $y - $xyOffsetSwitchBases, 500)
 			$bRet = True
 		Else
-			SetDebugLog("[" & $caller & "] Bad BoatSail ImageName!")
+			SetDebugLog("[" & $caller & "] Bad TreeBL ImageName!")
 			Return
 		EndIf
 	EndIf
@@ -185,8 +187,8 @@ Func ZoomOutHelperBB($caller = "Default")
 				$x = $g_iQuickMISX - $aOffset[1]
 				$y = $g_iQuickMISY - $aOffset[2]
 				SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
-				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
-				ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+				SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_INFO)
+				ClickDrag(800, 350, 800 - $x + $xyOffsetSwitchBases, 350 - $y - $xyOffsetSwitchBases, 500)
 				$bRet = True
 			Else
 				SetDebugLog("[" & $caller & "] Bad Stone ImageName!")
@@ -592,7 +594,7 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $
 			SetDebugLog("bCenterVillage = " & String($bCenterVillage))
 			
 			If $bCenterVillage And ($x <> 0 Or $y <> 0) Then ;And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
-				SetLog("Centering Village" & $sSource & " by: x=" & $x & ", y=" & $y, $COLOR_DEBUG1)
+				SetDebugLog("Centering Village" & $sSource & " by: x=" & $x & ", y=" & $y, $COLOR_DEBUG1)
 				If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
 					Local $aCenterCoord = getVillageCenteringCoord()
 					$aScrollPos[0] = $aCenterCoord[0]

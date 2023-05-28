@@ -48,5 +48,27 @@ Func CollectBuilderBase($bSwitchToBB = False, $bSwitchToNV = False)
 	EndIf
 
 	If _Sleep($DELAYCOLLECT3) Then Return
+	CollectBBCart()
+	If _Sleep($DELAYCOLLECT3) Then Return
 	If $bSwitchToNV Then SwitchBetweenBases("Main") ; Switching back to the normal Village
+EndFunc
+
+Func CollectBBCart()
+	If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", 540, 80, 630, 150) Then ;check ElixCart Image
+		Setlog("Found Elix Cart", $COLOR_DEBUG2)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(1000) Then Return
+		For $i = 1 To 5
+			SetLog("Waiting Cart Window #" & $i, $COLOR_ACTION)
+			If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", 636, 515, 730, 560) Then
+				Setlog("Collecting Elixir from BuilderBase Cart", $COLOR_ACTION)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				ClickAway()
+				If _Sleep(1000) Then Return
+				ExitLoop
+			EndIf
+			If _Sleep(1000) Then Return
+		Next
+		
+	EndIf
 EndFunc

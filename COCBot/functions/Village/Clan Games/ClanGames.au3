@@ -1149,7 +1149,7 @@ EndFunc   ;==>ClanGames
 
 Func CloseClangamesWindow()
 	If IsFullScreenWindow() Then
-		Click(820, 40) ;close window
+		Click(820, 45) ;close window
 		For $i = 1 To 5
 			If isOnMainVillage() Then Return True
 			If _Sleep(1000) Then Return

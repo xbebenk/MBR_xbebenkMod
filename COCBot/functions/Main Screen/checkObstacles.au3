@@ -412,11 +412,12 @@ Func CheckBB20Tutor()
 		If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 600, 400, 760, 560) Then ;Down Tunnel
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(2000) Then Return
-			If QuickMIS("BC1", $g_sImgBB20 & "DownTunnel\", 170, 60, 290, 170) Then ;Down Tunnel
+			If QuickMIS("BC1", $g_sImgBB20 & "DownTunnel\", 130, 60, 290, 300) Then ;Down Tunnel
 				Setlog("Found DownSide of BuilderBase, exit CheckBB20Tutor", $COLOR_DEBUG2)
 				ExitLoop
 			EndIf
 		EndIf
+		
 		If Not $g_bRunState Then Return
 		If _CheckPixel($aIsOnBuilderBase, True, Default, "CheckBB20Tutor") Then 
 			Setlog("Found MainScreen of BuilderBase, exit CheckBB20Tutor", $COLOR_DEBUG2)
