@@ -30,7 +30,7 @@ Func PrepareAttackBB($Mode = Default)
 		Return True
 	EndIf
 	
-	If $g_bChkStopAttackBB6thBuilder And (Number($g_iTotalBuilderCount) = 6 Or Number($g_iTotalBuilderCountBB) = 2) Then
+	If $g_bChkStopAttackBB6thBuilder And $g_bIs6thBuilderUnlocked Then
 		SetLog("6th Builder Unlocked, attackBB disabled", $COLOR_INFO)
 		Return False
 	EndIf
