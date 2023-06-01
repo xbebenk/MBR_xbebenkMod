@@ -110,7 +110,7 @@ Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLab
 Global $g_sImgisWall = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\isWall\"
 Global $g_sImgBB20 = @ScriptDir & "\imgxml\Resources\BuildersBase\BB20\"
 
-Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBMachReady_0_90.xml"
+Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine"
 Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBBattleMachine_0_90.xml"
 Global $g_sImgOkButton = @ScriptDir & "\imgxml\Attack\BuilderBase\OkayButton"
 Global $g_sImgWatchButton = @ScriptDir & "\imgxml\Attack\BuilderBase\WatchButton"

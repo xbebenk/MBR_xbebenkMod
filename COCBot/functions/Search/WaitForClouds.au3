@@ -21,25 +21,23 @@ Func WaitForClouds()
 	Local $iCount = 0
 	Local $bigCount = 0, $iLastTime = 0
 	Local $hMinuteTimer, $iSearchTime
-	Local $bEnabledGUI = False
 
 	Local $hMinuteTimer = __TimerInit() ; initialize timer for tracking search time
 	
 	While Not _CheckPixel($aIsAttackPage, True) ; loop to wait for clouds to disappear
-		; notice: don't exit function with return in this loop, use ExitLoop ! ! !
 		$iCount += 1
-		If isProblemAffect(True) Then ; check for reload error messages and restart search if needed
+		If isProblemAffect(True) Then ; check for reload error messages -> restart exitLoop, reset search
 			resetAttackSearch()
 			ExitLoop
 		EndIf
 		
-		If (Mod($iCount, 10) = 0 And checkObstacles_Network(False, False)) Then
-			; network error -> restart CoC
+		If checkObstacles_Network(False, False) Then ;network error -> restart CoC
 			$g_bIsClientSyncError = True
 			$g_bRestart = True
 			CloseCoC(True)
 			ExitLoop
 		EndIf
+		
 		_GUICtrlStatusBar_SetTextEx($g_hStatusBar, " Status: Loop to clean screen without Clouds, # " & $iCount)
 		
 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
@@ -53,11 +51,11 @@ Func WaitForClouds()
 				ExitLoop
 			EndIf
 			
-			; once a minute safety checks for search fail/retry msg and Personal Break events and early detection if CoC app has crashed inside emulator (Bluestacks issue mainly)
-			If chkAttackSearchFail() = 2 Or chkAttackSearchPersonalBreak() = True Or GetAndroidProcessPID() = 0 Then
-				resetAttackSearch()
-				ExitLoop
-			EndIf
+			;; once a minute safety checks for search fail/retry msg and Personal Break events and early detection if CoC app has crashed inside emulator (Bluestacks issue mainly)
+			;If chkAttackSearchFail() = 2 Or chkAttackSearchPersonalBreak() = True Or GetAndroidProcessPID() = 0 Then
+			;	resetAttackSearch()
+			;	ExitLoop
+			;EndIf
 			; Check if CoC app restarted without notice (where android restarted app automatically with same PID), and returned to main base
 			If _CheckPixel($aIsMain, $g_bCapturePixel) Then
 				SetLog("Strange error detected! 'WaitforClouds' returned to main base unexpectedly, OOS restart initiated", $COLOR_ERROR)
@@ -65,26 +63,11 @@ Func WaitForClouds()
 				resetAttackSearch()
 				ExitLoop
 			EndIf
-			; attempt to enable GUI during long wait?
-			If $iSearchTime > 2 And Not $bEnabledGUI Then
-				AndroidShieldForceDown(True)
-				EnableGuiControls() ; enable bot controls is more than 2 minutes wait
-				SetLog("Enabled bot controls due to long wait time", $COLOR_SUCCESS)
-				$bEnabledGUI = True
-			EndIf
 		EndIf
 		If Not $g_bRunState Then ExitLoop
-		_Sleep(500)
+		If _Sleep(1000) Then Return
 	WEnd
 
-	If $bEnabledGUI = True Then
-		SetLog("Disable bot controls after long wait time", $COLOR_SUCCESS)
-		AndroidShieldForceDown(False)
-		DisableGuiControls()
-		SaveConfig()
-		readConfig()
-		applyConfig()
-	EndIf
 	SetDebugLog("End WaitForClouds", $COLOR_DEBUG1)
 EndFunc   ;==>WaitForClouds
 

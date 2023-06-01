@@ -364,10 +364,10 @@ EndFunc   ;==>_checkObstacles
 Func CheckBB20Tutor()
 	Local $bRet = False
 	For $i = 1 To 30
-		Setlog("Dealing with Tutorial #" & $i, $COLOR_ACTION)
+		If $g_bDebugSetlog Then Setlog("Dealing with Tutorial #" & $i, $COLOR_ACTION)
 		If Not $g_bRunState Then Return
 		If _ColorCheck(_GetPixelColor(430, 362, True), Hex(0xFFFFFF, 6), 20) And _ColorCheck(_GetPixelColor(588, 362, True), Hex(0xFFFFFF, 6), 20) Then ;right balloon tips chat
-			Setlog("Found Right Chat Tutorial", $COLOR_DEBUG2)
+			If $g_bDebugSetlog Then Setlog("Found Right Chat Tutorial", $COLOR_DEBUG2)
 			ClickAway()
 			If _Sleep(5000) Then Return
 			$bRet = True
@@ -401,12 +401,19 @@ Func CheckBB20Tutor()
 		EndIf
 		If Not $g_bRunState Then Return
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 200, 100, 680, 440) Then ;check arrow
-			If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", $g_iQuickMISX - 50, $g_iQuickMISY, $g_iQuickMISX + 50, $g_iQuickMISY + 150) Then ;check ElixCart Image
+			If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", $g_iQuickMISX - 50, $g_iQuickMISY - 150, $g_iQuickMISX + 50, $g_iQuickMISY) Then ;check ElixCart Image
 				Setlog("Found Elix Cart", $COLOR_DEBUG2)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(4000) Then Return
 				ContinueLoop
 			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+		If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", 640, 515, 720, 560) Then ;check ElixCart Image
+			Setlog("Found Collect Cart", $COLOR_DEBUG2)
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(4000) Then Return
+			ContinueLoop
 		EndIf
 		If Not $g_bRunState Then Return
 		If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 600, 400, 760, 560) Then ;Down Tunnel
@@ -420,12 +427,12 @@ Func CheckBB20Tutor()
 		
 		If Not $g_bRunState Then Return
 		If _CheckPixel($aIsOnBuilderBase, True, Default, "CheckBB20Tutor") Then 
-			Setlog("Found MainScreen of BuilderBase, exit CheckBB20Tutor", $COLOR_DEBUG2)
+			If $g_bDebugSetlog Then Setlog("Found MainScreen of BuilderBase, exit CheckBB20Tutor", $COLOR_DEBUG2)
 			ExitLoop
 		EndIf
 		
 		If _CheckPixel($aIsMain, True, Default, "CheckBB20Tutor") Then 
-			Setlog("Found MainScreen of MainVillage, exit CheckBB20Tutor", $COLOR_DEBUG2)
+			If $g_bDebugSetlog Then Setlog("Found MainScreen of MainVillage, exit CheckBB20Tutor", $COLOR_DEBUG2)
 			ExitLoop
 		EndIf
 		

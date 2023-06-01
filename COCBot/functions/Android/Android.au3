@@ -4093,10 +4093,10 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	If $bForeground Then 
 		$output = AndroidAdbSendShellCommand($cmd)
 		If $output <> "" Then 
-			SetLog($sPackage & " is running in foreground", $COLOR_DEBUG)
+			If $g_bDebugAndroid Then SetLog($sPackage & " is running in foreground", $COLOR_DEBUG)
 			$bForeground = True
 		Else
-			SetLog($sPackage & " is not in foreground", $COLOR_DEBUG)
+			If $g_bDebugAndroid Then SetLog($sPackage & " is not in foreground", $COLOR_DEBUG)
 			$bForeground = False
 			Return 0
 		EndIf
@@ -4545,7 +4545,7 @@ Func PullSharedPrefs($sProfile = $g_sProfileCurrentName)
 	Local $iFilesPulled = 0
 
 	If Not $g_sAndroidPicturesPathAvailable Then
-		SetLog("Shard folder in Android not availble, cannot pull shared_prefs", $COLOR_RED)
+		SetLog("Shared folder in Android not availble, cannot pull shared_prefs", $COLOR_RED)
 		Return SetError(0, 0, $Result)
 	EndIf
 

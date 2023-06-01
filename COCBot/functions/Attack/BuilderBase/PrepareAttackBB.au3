@@ -49,10 +49,11 @@ Func PrepareAttackBB($Mode = Default)
 		ClickAway("Left")
 		Return False
 	EndIf
-	;If _Sleep(1000) Then Return
-	For $i = 1 To 5
-		If WaitforPixel(588, 321, 589, 322, "D7540E", 20, 2) Then
-			SetDebugLog("Found FindNow Button", $COLOR_ACTION)
+	
+	For $i = 1 To 10
+		SetLog("Searching Find Now Button #" & $i, $COLOR_ACTION)
+		If _ColorCheck(_GetPixelColor(655, 440, True), Hex(0x89D239, 6), 20) Then
+			SetLog("FindNow Button Found!", $COLOR_DEBUG)
 			If _Sleep(500) Then Return
 			ExitLoop
 		EndIf
@@ -61,8 +62,7 @@ Func PrepareAttackBB($Mode = Default)
 			Click(640, 440)
 			If _Sleep(500) Then Return
 		EndIf
-		If _Sleep(1000) Then Return
-		SetDebugLog("Wait For Find Now Button #" & $i, $COLOR_ACTION)
+		If _Sleep(500) Then Return
 	Next
 	
 	If Not CheckArmyReady() Then
@@ -81,13 +81,13 @@ Func PrepareAttackBB($Mode = Default)
 		Return True
 	EndIf
 	
-	If $g_bChkBBAttIfLootAvail Then
-		If Not CheckLootAvail() Then
-			If _Sleep(500) Then Return
-			ClickAway("Left")
-			Return False
-		EndIf
-	EndIf
+	;If $g_bChkBBAttIfLootAvail Then
+	;	If Not CheckLootAvail() Then
+	;		If _Sleep(500) Then Return
+	;		ClickAway("Left")
+	;		Return False
+	;	EndIf
+	;EndIf
 
 	$g_bBBMachineReady = CheckMachReady()
 	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
@@ -101,17 +101,25 @@ Func PrepareAttackBB($Mode = Default)
 EndFunc
 
 Func ClickBBAttackButton()
-	If WaitforPixel(20, 590, 22, 595, "DD9835", 15, 1) Then
-		Click(60,600) ;click attack button
+	If _ColorCheck(_GetPixelColor(95, 625, True), Hex(0xA86332, 6), 20) Then
+		Click(62,615) ;click attack button
+		For $i = 1 To 5
+			SetLog("Waiting for Start Attack Window #" & $i, $COLOR_ACTION)
+			If _Sleep(500) Then Return
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 720, 140, 800, 200) Then 
+				SetLog("Start Attack Window Found", $COLOR_DEBUG)
+				ExitLoop
+			EndIf
+		Next
 		Return True
 	Else
-		SetLog("Could not locate Attack button", $COLOR_ERROR)
+		SetLog("Could not Locate Attack button", $COLOR_ERROR)
 		Return False
 	EndIf	
 EndFunc
 
 Func CheckLootAvail()
-	local $bRet = False
+	Local $bRet = False
 	If Not _ColorCheck(_GetPixelColor(622, 611, True), Hex(0xFFFFFF, 6), 1) Then
 		SetLog("Loot is Available.")
 		$bRet = True
@@ -122,10 +130,9 @@ Func CheckLootAvail()
 EndFunc
 
 Func CheckMachReady()
-	local $aCoords = decodeSingleCoord(findImage("BBMachReady_bmp", $g_sImgBBMachReady, GetDiamondFromRect("113,360,170,415"), 1, True))
-	local $bRet = False
+	Local $bRet = False
 	
-	If IsArray($aCoords) And UBound($aCoords) = 2 Then
+	If QuickMis("BC1", $g_sImgBBMachReady, 120, 270, 180, 330) Then 
 		$bRet = True
 		SetLog("Battle Machine ready.")
 	EndIf
@@ -136,30 +143,41 @@ Func CheckArmyReady()
 	local $i = 0
 	local $bReady = True, $bNeedTrain = False, $bTraining = False
 	
-	If _Sleep($DELAYCHECKFULLARMY2) Then Return ; wait for window
-	
-	If QuickMIS("BC1", $g_sImgArmyNeedTrain, 130, 360, 190, 390) Then
+	If _ColorCheck(_GetPixelColor(126, 246, True), Hex(0xE24044, 6), 20) Then 
+		SetLog("Army is not Ready", $COLOR_DEBUG)
 		$bNeedTrain = True ;need train, so will train cannon cart
 		$bReady = False
 	EndIf
 	
 	If Not $bReady And $bNeedTrain Then
-		ClickP($aArmyTrainButton, 1, 0, "#0293")
+		SetLog("Train to Fill Army", $COLOR_INFO)
+		ClickAway()
+		If _Sleep(2000) Then Return
+		ClickP($aArmyTrainButton, 1, 0, "BB Train Button")
+		
 		If _Sleep(1000) Then Return ; wait for window
-		Local $Camp = QuickMIS("CNX", $g_sImgFillCamp, 40, 320, 800, 350)
+		For $i = 1 To 5
+			SetLog("Waiting for Army Window #" & $i, $COLOR_ACTION)
+			If _Sleep(500) Then Return
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 750, 130, 800, 190) Then ExitLoop
+		Next
+		
+		Local $Camp = QuickMIS("CNX", $g_sImgFillCamp, 70, 225, 800, 250)
 		For $i = 1 To UBound($Camp)
-			If QuickMIS("BC1", $g_sImgFillTrain, 40, 440, 820, 550) Then
-				Setlog("Army is not ready, fill BB ArmyCamp", $COLOR_DEBUG)
+			If QuickMIS("BC1", $g_sImgFillTrain, 75, 390, 800, 530) Then
+				Setlog("Fill ArmyCamp with :" & $g_iQuickMISName, $COLOR_DEBUG)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(500) Then Return
 			EndIf
 		Next
-		$Camp = QuickMIS("CNX", $g_sImgFillCamp, 40, 320, 800, 350)
+		
+		$Camp = QuickMIS("CNX", $g_sImgFillCamp, 70, 225, 800, 250)
 		If UBound($Camp) > 0 Then 
 			$bReady = False
 		Else
 			$bReady = True
 		EndIf
+		
 		ClickAway("Left")
 		If _Sleep(1000) Then Return ; wait for window close
 	EndIf

@@ -165,7 +165,7 @@ Func ZoomOutHelperBB($caller = "Default")
 	
 	If Not $bIsOnBuilderBase Then Return ;leave if not in mainvillage
 	
-	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "ZoomOutHelper\", 430, 20, 800, 300) Then 
+	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "ZoomOutHelper\", 100, 20, 800, 600) Then 
 		$aOffset = StringRegExp($g_iQuickMISName, "Tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
