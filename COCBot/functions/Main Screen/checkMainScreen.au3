@@ -51,11 +51,6 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		
 		If $g_sAndroidEmulator = "Bluestacks5" Then NotifBarDropDownBS5()
 		
-		If _ColorCheck(_GetPixelColor(824, 13, True), Hex(0x000000, 6), 5) Then 
-			SetLog("SUPERCELL Logo", $COLOR_DEBUG)
-			If _Sleep(2000) Then Return
-		EndIf
-		
 		Local $sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
 		If $sLoading = "Loading" Then 
 			SetLog("Still on Loading Screen...", $COLOR_INFO)
