@@ -345,7 +345,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		If $g_bDebugDeadBaseImage Then setZombie()
 		Local $i = 0
 		While $i < 100
-			If _Sleep($DELAYVILLAGESEARCH2) Then Return
+			If _Sleep(500) Then Return
 			$i += 1
 			_CaptureRegions()
 			If _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1]), Hex($NextBtn[2], 6), $NextBtn[3]) And IsAttackPage() Then

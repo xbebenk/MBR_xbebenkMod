@@ -132,6 +132,7 @@ Func SwitchTo($To = "BB")
 				$sScode = $g_sSceneryCode
 				$g_sSceneryCode = "BB"
 			Else
+				If $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = False
 				$g_sSceneryCode = $sScode
 			EndIf
 			ExitLoop
