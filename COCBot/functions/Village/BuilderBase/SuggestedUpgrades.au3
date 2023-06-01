@@ -161,6 +161,7 @@ EndFunc   ;==>MainSuggestedUpgradeCode
 
 Func SearchNewBuilding($bTest = False)
 	SetLog("SearchNewBuilding Disabled by Dev, Return", $COLOR_ERROR)
+	Return False
 	Local $NeedDrag = True, $ZoomedIn = False, $TmpUpgradeCost, $UpgradeCost, $sameCost
 	ClickBBBuilder()
 	
