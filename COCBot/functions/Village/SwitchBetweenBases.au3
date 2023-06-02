@@ -353,16 +353,6 @@ Func BBTutorial($x = 170, $y = 560)
 	Next
 	
 	For $i = 1 To 10
-		SetLog("Waiting End Battle #" & $i, $COLOR_INFO)
-		If BBBarbarianHead() Then
-			ClickP($aOkayButton)
-			_SleepStatus(15000)
-			ExitLoop
-		EndIf
-		_Sleep(5000)
-	Next
-	
-	For $i = 1 To 10
 		SetLog("Waiting Next Tutorial After Attack #" & $i, $COLOR_INFO)
 		If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then
 			SetLog("Found Tutorial Chat", $COLOR_INFO)

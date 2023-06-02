@@ -91,23 +91,23 @@ Func _AttackBB()
 	SetLog("Going to attack.", $COLOR_BLUE)
 
 	; search for a match
-	If _Sleep(2000) Then Return
-	local $aBBFindNow = [521, 278, 0xffc246, 30] ; search button
-	If _CheckPixel($aBBFindNow, True) Then
-		PureClick($aBBFindNow[0], $aBBFindNow[1])
-	Else
-		SetLog("Could not locate search button to go find an attack.", $COLOR_ERROR)
-		Return False
-	EndIf
-
-	If _Sleep(1500) Then Return ; give time for find now button to go away
+	For $i = 1 To 10
+		If _ColorCheck(_GetPixelColor(655, 440, True), Hex(0x89D239, 6), 20) Then
+			Click(655, 440, 1, "Click Find Now Button")
+			If _Sleep(500) Then Return
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+	Next
+	
+	If _Sleep(3000) Then Return ; give time for find now button to go away
 
 	If Not $g_bRunState Then Return ; Stop Button
 	; wait for the clouds to clear
 	SetLog("Searching for Opponent.", $COLOR_BLUE)
 	local $timer = __TimerInit()
 	local $iPrevTime = 0
-	While Not _ColorCheck(_GetPixelColor(50, 582, True), Hex(0x7FD7FB, 6), 20)
+	While Not QuickMIS("BC1", $g_sImgBBAttackStart, 430, 30, 465, 52)
 		local $iTime = Int(__TimerDiff($timer)/ 60000)
 		If $iTime > $iPrevTime Then ; if we have increased by a minute
 			SetLog("Clouds: " & $iTime & "-Minute(s)")
@@ -124,9 +124,9 @@ Func _AttackBB()
 
 	; Get troops on attack bar and their quantities
 	local $aBBAttackBar = GetAttackBarBB()
-	If $g_bChkBBCustomArmyEnable Then
-		If CorrectAttackBarBB($aBBAttackBar) Then $aBBAttackBar = GetAttackBarBB()
-	EndIf
+	;If $g_bChkBBCustomArmyEnable Then
+	;	If CorrectAttackBarBB($aBBAttackBar) Then $aBBAttackBar = GetAttackBarBB()
+	;EndIf
 	AttackBB($aBBAttackBar)
 
 	; wait for end of battle
@@ -255,7 +255,7 @@ Func AttackBB($aBBAttackBar = Default)
 
 	If $bBMDeployed Then CheckBMLoop($aBMPos) ;check if BM is Still alive and activate ability
 	Local $waitcount = 0
-	While IsAttackPage()
+	While IsBBAttackPage()
 		If BBBarbarianHead() Then
 			ExitLoop
 		EndIf
@@ -285,7 +285,6 @@ Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide, $AltSide, $aDP)
 	EndIf
 EndFunc
 
-
 Func OkayBBEnd() ; Find if battle has ended and click okay
 	local $timer = __TimerInit()
 	While 1
@@ -293,10 +292,14 @@ Func OkayBBEnd() ; Find if battle has ended and click okay
 			ClickP($aOkayButton)
 			Return True
 		EndIf
+		
+		If QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			Return True
+		EndIf
 
 		If __TimerDiff($timer) >= 180000 Then
 			SetLog("Could not find finish battle screen", $COLOR_ERROR)
-			If $g_bDebugImageSave Then SaveDebugImage("BBFindOkay")
 			Return False
 		EndIf
 		If IsProblemAffect(True) Then Return
@@ -310,7 +313,7 @@ Func Okay()
 	local $timer = __TimerInit()
 
 	While 1
-		If QuickMIS("BC1", $g_sImgOkButton, 600, 425, 730, 470) Then
+		If QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			Return True
 		EndIf
@@ -377,7 +380,7 @@ Func CheckBMLoop($aBMPos)
 	Local $TmpBMPosX = $aBMPos[0] - 17
 	Local $BMPosY = 578
 
-	While IsAttackPage()
+	While IsBBAttackPage()
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
 
@@ -418,6 +421,14 @@ Func CheckBMLoop($aBMPos)
 		If $loopcount > 60 Then Return ;1 minute
 		$loopcount += 1
 	Wend
+EndFunc
+
+Func IsBBAttackPage()
+	Local $bRet = False
+	If _ColorCheck(_GetPixelColor(20, 523, True), Hex(0xCD0D0D, 6), 20) Then
+		$bRet = True
+	EndIf
+	Return $bRet
 EndFunc
 
 Func GetBBDPPixelSection($XMiddle, $YMiddle, $x, $y)
@@ -715,7 +726,7 @@ EndFunc   ;==>DebugAttackBBImage
 
 Func BBBarbarianHead()
 	If _CheckPixel($aBlackHead, True) Then
-		SetDebugLog("Battle Ended, Black Barbarian Head Found", $COLOR_DEBUG2)
+		SetLog("Battle Ended,  Gold Icon Found", $COLOR_DEBUG2)
 		Return True
 	Else
 		Return False

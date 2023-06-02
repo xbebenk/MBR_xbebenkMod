@@ -15,9 +15,7 @@
 
 Func GetAttackBarBB($bRemaining = False)
 	local $iTroopBanners = 577 ; y location of where to find troop quantities
-	local $aSlotX[9] = [64, 136, 210, 280, 353, 425, 505, 575, 650] ; location of x Amount on slot
-	local $iSlotOffset = 72 ; slots are 73 pixels apart
-	local $iBarOffset = 33 ; 66 pixels from side to attack bar
+	local $aSlotX[9] = [120, 190, 260, 330, 400, 470, 545, 620, 690] ; location of x Amount on slot
 
 	local $aBBAttackBar[0][5]
 	#comments-start
@@ -32,13 +30,16 @@ Func GetAttackBarBB($bRemaining = False)
 	If Not $g_bRunState Then Return ; Stop Button
 
 	For $k = 0 To UBound($aSlotX) - 1
-		Local $aBBAttackBarResult = QuickMIS("CNX", $g_sImgDirBBTroops, $aSlotX[$k] - 35, 580, $aSlotX[$k] + 35, 670)
+		Local $aBBAttackBarResult = QuickMIS("CNX", $g_sImgDirBBTroops, $aSlotX[$k], $iTroopBanners, $aSlotX[$k] + 73, 670)
 		For $i = 0 To UBound($aBBAttackBarResult) - 1
 			Local $Troop = $aBBAttackBarResult[$i][0]
 			Local $Troopx = $aBBAttackBarResult[$i][1]
 			Local $Troopy = $aBBAttackBarResult[$i][2]
-			Local $iCount = Number(getOcrAndCapture("coc-tbb", $aSlotX[$k], $iTroopBanners, 38, 24, True))
-			
+			Local $iCount = Number(getOcrAndCapture("coc-tbb", $aSlotX[$k] + 35, $iTroopBanners, 38, 24, True))
+			If $iCount = "" And Not $bRemaining Then 
+				SetLog("Failed read Quantity of " & $aBBAttackBarResult[$i][0] & " set count = 1", $COLOR_DEBUG)
+				$iCount = 1
+			EndIf
 			local $aTempElement[1][5] = [[$Troop, $Troopx, $Troopy, $k, $iCount]] ; element to add to attack bar list
 			_ArrayAdd($aBBAttackBar, $aTempElement)
 			If Not $g_bRunState Then Return ; Stop Button

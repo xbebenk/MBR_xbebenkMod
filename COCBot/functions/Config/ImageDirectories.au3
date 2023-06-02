@@ -110,16 +110,14 @@ Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLab
 Global $g_sImgisWall = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\isWall\"
 Global $g_sImgBB20 = @ScriptDir & "\imgxml\Resources\BuildersBase\BB20\"
 
-Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine"
+Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttackBB\BattleMachine"
+Global $g_sImgBBAttackButton = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttackBB\AttackButton"
+Global $g_sImgFillTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttackBB\TrainTroop\"
+Global $g_sImgFillCamp = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttackBB\TrainTroop\Camp\"
+Global $g_sImgBBAttackStart = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackStart\"
+Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBar\"
+Global $g_sImgBBReturnHome = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\ReturnHome\"
 Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBBattleMachine_0_90.xml"
-Global $g_sImgOkButton = @ScriptDir & "\imgxml\Attack\BuilderBase\OkayButton"
-Global $g_sImgWatchButton = @ScriptDir & "\imgxml\Attack\BuilderBase\WatchButton"
-Global $g_sImgFillTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\TrainTroop\"
-Global $g_sImgFillCamp = @ScriptDir & "\imgxml\Attack\BuilderBase\TrainTroop\Camp\"
-Global $g_sImgArmyNeedTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyNeedTrain"
-Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\BBTroops"
-Global $g_sImgBBLootAvail = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\LootAvail_0_90.xml"
-Global $g_sImgBBLoot = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\"
 
 ; Builder Base Attack
 Global $g_sImgCustomArmyBB = @ScriptDir & "\imgxml\Attack\BuilderBase\ChangeTroops"

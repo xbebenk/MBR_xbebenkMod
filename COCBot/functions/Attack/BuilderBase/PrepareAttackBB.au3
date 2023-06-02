@@ -42,6 +42,14 @@ Func PrepareAttackBB($Mode = Default)
 		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
 		Return False
 	EndIf
+	
+	If $g_bChkBBAttIfLootAvail Then
+		If Not CheckLootAvail() Then
+			If _Sleep(500) Then Return
+			ClickAway("Left")
+			Return False
+		EndIf
+	EndIf
 
 	If Not $g_bRunState Then Return ; Stop Button
 
@@ -56,11 +64,6 @@ Func PrepareAttackBB($Mode = Default)
 			SetLog("FindNow Button Found!", $COLOR_DEBUG)
 			If _Sleep(500) Then Return
 			ExitLoop
-		EndIf
-		If WaitforPixel(665, 437, 666, 438, "D9F481", 20, 1) Then
-			SetDebugLog("Found Previous Attack Result", $COLOR_ACTION)
-			Click(640, 440)
-			If _Sleep(500) Then Return
 		EndIf
 		If _Sleep(500) Then Return
 	Next
@@ -81,14 +84,6 @@ Func PrepareAttackBB($Mode = Default)
 		Return True
 	EndIf
 	
-	;If $g_bChkBBAttIfLootAvail Then
-	;	If Not CheckLootAvail() Then
-	;		If _Sleep(500) Then Return
-	;		ClickAway("Left")
-	;		Return False
-	;	EndIf
-	;EndIf
-
 	$g_bBBMachineReady = CheckMachReady()
 	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
@@ -101,7 +96,7 @@ Func PrepareAttackBB($Mode = Default)
 EndFunc
 
 Func ClickBBAttackButton()
-	If _ColorCheck(_GetPixelColor(95, 625, True), Hex(0xA86332, 6), 20) Then
+	If QuickMis("BC1", $g_sImgBBAttackButton, 16, 590, 110, 630) Then
 		Click(62,615) ;click attack button
 		For $i = 1 To 5
 			SetLog("Waiting for Start Attack Window #" & $i, $COLOR_ACTION)
@@ -119,12 +114,21 @@ Func ClickBBAttackButton()
 EndFunc
 
 Func CheckLootAvail()
-	Local $bRet = False
-	If Not _ColorCheck(_GetPixelColor(622, 611, True), Hex(0xFFFFFF, 6), 1) Then
-		SetLog("Loot is Available.")
-		$bRet = True
-	Else
-		SetLog("No loot available.")
+	Local $bRet = False, $iRemainStars = 0, $iMaxStars = 0
+	Local $sStars = getOcrAndCapture("coc-BBAttackAvail", 40, 572, 50, 20)
+	
+	If $sStars <> "" And StringInStr($sStars, "#") Then 
+		Local $aStars = StringSplit($sStars, "#", $STR_NOCOUNT)
+		If IsArray($aStars) Then 
+			$iRemainStars = $aStars[0]
+			$iMaxStars = $aStars[1]
+		EndIf
+		If Number($iRemainStars) < Number($iMaxStars) Then
+			SetLog("Remain Stars : " & $iRemainStars & "/" & $iMaxStars, $COLOR_INFO)
+			$bRet = True
+		Else
+			SetLog("All attacks used")
+		EndIf
 	EndIf
 	Return $bRet
 EndFunc
@@ -308,7 +312,7 @@ Func ReturnHomeDropTrophyBB()
 	
 	For $i = 1 To 10
 		SetDebugLog("Waiting EndBattle Window #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgOkButton, 350, 520, 500, 570) Then
+		If QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(3000) Then Return
 			ExitLoop
@@ -316,14 +320,6 @@ Func ReturnHomeDropTrophyBB()
 		If _Sleep(1000) Then Return
 	Next
 	
-	For $i = 1 To 10	
-		SetDebugLog("Waiting Opponent Attack Window #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgWatchButton, 520, 280, 570, 370) Then 
-			ClickAway("Left")
-			ExitLoop
-		EndIf
-		If _Sleep(1000) Then Return
-	Next
 	ClickAway("Left")
 	If _Sleep(2000) Then Return
 	ZoomOut(True)

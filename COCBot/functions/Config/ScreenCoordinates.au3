@@ -173,8 +173,8 @@ Global Const $aPersonalChallengeCancelBtn[4] = [345, 400, 0xFDC875, 20] ; Person
 Global Const $aPersonalChallengeOkBtn[4] = [510, 400, 0xDFF887, 20] ; Personal Challenge Window - Okay button at Storage Full msg
 
 ;xbebenkmod
-Global $aBlackHead[4] = [804, 316, 0x000000, 0] ; Black Barbarian Head
-Global $aOkayButton[2] = [430, 560]	; Okay button after BB attack, Screen 860x676
+Global $aBlackHead[4] = [629, 405, 0xFFEF48, 0] ; Black Barbarian Head
+Global $aOkayButton[2] = [430, 540]	; Okay button after BB attack, Screen 860x676
 Global $aOkayButtonRND[4] = [372, 530, 484, 565]	; Okay button after BB attack, RND Screen 860x676
 
 ;notif bar detection for BS5

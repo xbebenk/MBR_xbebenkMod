@@ -307,13 +307,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return
 	EndIf
 	
-	;End Battle Page on BuilderBase (OK Button)
-	If QuickMIS("BC1", $g_sImgOkButton, 350, 520, 500, 570) Then
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		_Sleep(3000)
-		Return
-	EndIf
-	
 	;====move switch bb/main to bottom, so we only check if all above test is False
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
 	SetDebugLog("isOnBuilderBase() : " & String($bIsOnBuilderIsland), $COLOR_ERROR)
