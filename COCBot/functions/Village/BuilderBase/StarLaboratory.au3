@@ -218,26 +218,26 @@ EndFunc   ;==>Laboratory
 Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 	Local $bRet = False, $Result
 	Click($x, $y)
-	_Sleep(1000)
+	If _Sleep(1000) Then Return
 	
 	$Result = getLabUpgradeTime(555, 463) ; Try to read white text showing time for upgrade
 	Local $iLabFinishTime = ConvertOCRTime("Lab Time", $Result, False)
 	SetLog($UpgradeName & " Upgrade OCR Time = " & $Result & ", $iLabFinishTime = " & $iLabFinishTime & " m", $COLOR_INFO)
 	
-	If Not $bTest Then Click(640, 530)
-	_Sleep(1000)
+	If Not $bTest Then Click(640, 530) ;click Upgrade
+	If _Sleep(1000) Then Return ;wait if Gem window open
 	
 	If isGemOpen(True) Then ; check for gem window
 		SetLog("Oops, Gems required for " & $UpgradeName & " Upgrade, try again.", $COLOR_ERROR)
 		If _Sleep(1000) Then Return
-		Click(133,117) ;Click Back to Upgrade Menu
+		Click(133,117) ;click Cancel
 		$bRet = False
 	Else
 		SetLog("Upgrade " & $UpgradeName & " in your star laboratory started with success...", $COLOR_SUCCESS)
 		StarLabStatusGUIUpdate()
 		PushMsg("StarLabSuccess")
-		If _Sleep($DELAYLABUPGRADE2) Then Return
 		ClickAway("Left")
+		If _Sleep($DELAYLABUPGRADE2) Then Return
 		$bRet = True
 	EndIf
 	
@@ -249,7 +249,7 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 			SetLog($UpgradeName & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
 		EndIf
 	EndIf
-	
+	If _Sleep(1000) Then Return
 	Return $bRet
 EndFunc
 

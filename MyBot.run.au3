@@ -707,11 +707,7 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
-
-	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then
-		If checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop") Then ZoomOut()
-	EndIf
+	ZoomOut(True)
 
 	If $g_bIsHidden Then
 		HideAndroidWindow(True, Default, Default, "btnHide")
@@ -1250,7 +1246,6 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	SetLog("-- FirstCheck Loop --")
 	If _Sleep(50) Then Return
-	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
 
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
@@ -1349,7 +1344,7 @@ Func FirstCheck()
 			_RunFunction("UpgradeBuilding")
 		EndIf
 		VillageReport()
-		ZoomOut()
+		ZoomOut(True)
 	EndIf
 
 	If BotCommand() Then btnStop()
@@ -1399,7 +1394,7 @@ Func FirstCheckRoutine()
 				If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
 				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
 			EndIf
-			If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
+			If isOnMainVillage() Then ZoomOut(True)	; Verify is on main village and zoom out
 		Next
 	Else
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
@@ -1449,7 +1444,6 @@ Func FirstCheckRoutine()
 					If Not $g_bRunState Then Return
 					If AttackMain($g_bSkipDT) Then
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
-						If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut()
 						$g_bIsFullArmywithHeroesAndSpells = False
 						ExitLoop
 					Else
@@ -1519,7 +1513,6 @@ Func FirstCheckRoutine()
 						If AttackMain($g_bSkipDT) Then
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 							$b_SuccessAttack = True
-							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut()
 							ExitLoop
 						Else
 							If $g_bForceSwitch Then ExitLoop ;exit here
@@ -1624,7 +1617,7 @@ Func BuilderBase()
 		$g_bStayOnBuilderBase = True
 		Local $StartLabON = False
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-		ZoomOut()
+		ZoomOut(True)
 		$g_bBBAttacked = True	; Reset Variable
 		BuilderBaseReport()
 		CollectBuilderBase()
