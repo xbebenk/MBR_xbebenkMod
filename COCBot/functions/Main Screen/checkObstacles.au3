@@ -287,10 +287,13 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 	
-	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ; if bot started or situated on clan capital map, and need to go back to main village
-		SetLog("checkObstacles: Found Clan Capital Map, Returning Home", $COLOR_ACTION)
-		SwitchToMainVillage("CheckObstacle")
-		Return False
+	If $bBuilderBase Then CheckBB20Tutor()
+	If Not $bBuilderBase Then 
+		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ; if bot started or situated on clan capital map, and need to go back to main village
+			SetLog("checkObstacles: Found Clan Capital Map, Returning Home", $COLOR_ACTION)
+			SwitchToMainVillage("CheckObstacle")
+			Return False
+		EndIf
 	EndIf
 	
 	If SearchUnplacedBuilding() Then ;check for unplaced building button, after several achievement/season account may rewarded special building and need to be placed on map
@@ -327,8 +330,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			Return False
 		EndIf
 	EndIf
-	
-	If $bBuilderBase Then CheckBB20Tutor()
 	
 	;If Not isOnMainVillage() And IsAttackPage() And Not isOnBuilderBase() Then ; bot seeing attackbar while it shouldn't, will do surrender and/or return home   
 	;	ClickP($aIsAttackPage)

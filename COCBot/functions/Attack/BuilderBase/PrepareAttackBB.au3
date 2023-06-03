@@ -184,13 +184,11 @@ Func CheckArmyReady()
 		
 		ClickAway("Left")
 		If _Sleep(1000) Then Return ; wait for window close
+		ClickBBAttackButton()
 	EndIf
 
 	If Not $bReady Then
 		SetLog("Army is not ready.")
-		If $bTraining Then SetLog("Troops are training.")
-		If $bNeedTrain Then SetLog("Troops need to be trained in the training tab.")
-		If $g_bDebugImageSave Then SaveDebugImage("FindIfArmyReadyBB")
 	Else
 		SetLog("Army is ready.")
 	EndIf
@@ -208,81 +206,49 @@ Func BBDropTrophy()
 		Return
 	EndIf
 	
-	If ClickBBAttackButton() Then 
-		For $i = 1 To 5
-			If WaitforPixel(588, 321, 589, 322, "D7540E", 20, 2) Then
-				SetDebugLog("Found FindNow Button", $COLOR_ACTION)
-				If _Sleep(500) Then Return
-				ExitLoop
-			EndIf
-			If WaitforPixel(665, 437, 666, 438, "D9F481", 20, 1) Then
-				SetDebugLog("Found Previous Attack Result", $COLOR_ACTION)
-				Click(640, 440)
-				If _Sleep(500) Then Return
-			EndIf
-			If _Sleep(1000) Then Return
-			SetDebugLog("Wait For Find Now Button #" & $i, $COLOR_ACTION)
-		Next
-		
+	If $g_bChkBBAttIfLootAvail Then 
 		If CheckLootAvail() Then 
 			SetLog("BB Loot Available, Skip BB Drop Trophy")
-			ClickAway()
+			ClickAway("Left")
 			If _Sleep(1000) Then Return
 			Return False
-		Else
-			CheckArmyReady()
-			SetLog("Going to attack for BB Drop Trophy", $COLOR_INFO)
-			local $aBBFindNow = [521, 278, 0xffc246, 30] ; search button
-			If _CheckPixel($aBBFindNow, True) Then
-				PureClick($aBBFindNow[0], $aBBFindNow[1])
-			Else
-				SetLog("Could not locate search button to go find an attack.", $COLOR_ERROR)
-				ClickAway()
-				Return False
+		EndIf
+	EndIf
+	
+	If Not ClickBBAttackButton() Then 
+		ClickAway("Left")
+		Return False
+	Else
+		SetLog("Going to attack for BB Drop Trophy", $COLOR_INFO)
+		CheckArmyReady()
+		
+		If Not ClickFindNowButton() Then Return False
+		If Not $g_bRunState Then Return
+		If Not WaitCloudsBB() Then Return
+		
+		Local $iSide = True
+		Local $aBMPos = GetMachinePos()
+		$g_BBDP = GetBBDropPoint()
+		
+		Local $Return = False
+		If IsArray($aBMPos) Then
+			SetLog("Deploying BM")
+			DeployBM($aBMPos, $iSide, $iSide, $g_BBDP)
+			If ReturnHomeDropTrophyBB() Then Return True
+		EndIf
+		
+		If Not $Return Then
+			; Get troops on attack bar and their quantities
+			local $aBBAttackBar = GetAttackBarBB()
+			If IsArray($aBBAttackBar) Then
+				For $i = 1 To 10
+					SetDebugLog("Try Drop Troops #" & $i, $COLOR_ACTION)
+					DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], 1, 1, 2, $g_BBDP)
+					If _Sleep(1000) Then Return
+					If IsAttackPage() Then ExitLoop
+				Next
 			EndIf
-			
-			If _Sleep(1500) Then Return ; give time for find now button to go away
-			If Not $g_bRunState Then Return ; Stop Button
-			; wait for the clouds to clear
-			SetLog("Searching for Opponent.", $COLOR_BLUE)
-			
-			Local $count = 1
-			While Not _ColorCheck(_GetPixelColor(41, 591, True), Hex(0x4888C0, 6), 20) 
-				SetDebugLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
-				If $count > 20 Then 
-					CloseCoC(True)
-					Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search
-				EndIf
-				If isProblemAffect(True) Then Return
-				If Not $g_bRunState Then Return ; Stop Button
-				$count += 1
-				If _Sleep(2000) Then Return
-			WEnd
-			
-			Local $iSide = True
-			Local $aBMPos = GetMachinePos()
-			$g_BBDP = GetBBDropPoint()
-			
-			Local $Return = False
-			If IsArray($aBMPos) Then
-				SetLog("Deploying BM")
-				DeployBM($aBMPos, $iSide, $iSide, $g_BBDP)
-				If ReturnHomeDropTrophyBB() Then Return True
-			EndIf
-			
-			If Not $Return Then
-				; Get troops on attack bar and their quantities
-				local $aBBAttackBar = GetAttackBarBB()
-				If IsArray($aBBAttackBar) Then
-					For $i = 1 To 10
-						SetDebugLog("Try Drop Troops #" & $i, $COLOR_ACTION)
-						DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], 1, 1, 2, $g_BBDP)
-						If _Sleep(1000) Then Return
-						If IsAttackPage() Then ExitLoop
-					Next
-				EndIf
-				If ReturnHomeDropTrophyBB() Then Return True
-			EndIf
+			If ReturnHomeDropTrophyBB() Then Return True
 		EndIf
 	EndIf
 	If _Sleep(1000) Then Return
@@ -292,7 +258,7 @@ EndFunc
 Func ReturnHomeDropTrophyBB()
 	For $i = 1 To 5 
 		SetDebugLog("Waiting Surrender button #" & $i, $COLOR_ACTION)
-		If IsAttackPage() Then
+		If IsBBAttackPage() Then
 			Click(65, 540) ;click surrender
 			If _Sleep(1000) Then Return
 			ExitLoop

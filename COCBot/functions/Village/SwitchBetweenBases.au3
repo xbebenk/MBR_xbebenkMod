@@ -36,7 +36,10 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 	EndIf
 	
 	;we are not on builderbase nor in mainvillage, something need to be check, check obstacles called on checkmainscreen
-	If Not $bIsOnBuilderBase And Not $bIsOnMainVillage Then checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
+	If Not $bIsOnBuilderBase And Not $bIsOnMainVillage Then 
+		checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
+		If $g_bStayOnBuilderBase Then $bIsOnBuilderBase = isOnBuilderBase() ;check again if we are on builderbases, after mainscreen located
+	EndIf
 	
 	If IsProblemAffect(True) Then Return
 	If Not $g_bRunState Then Return

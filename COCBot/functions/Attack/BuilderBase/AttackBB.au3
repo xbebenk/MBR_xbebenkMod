@@ -83,44 +83,61 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 	SetLog("BB Attack Cycle Done", $COLOR_DEBUG)
 EndFunc
 
+Func ClickFindNowButton()
+	Local $bRet = False
+	For $i = 1 To 10
+		If _ColorCheck(_GetPixelColor(655, 440, True), Hex(0x89D239, 6), 20) Then
+			Click(655, 440, 1, "Click Find Now Button")
+			$bRet = True
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+	Next
+	
+	If _Sleep(8000) Then Return ; give time for find now button to go away
+	If Not $bRet Then
+		SetLog("Could not locate Find Now Button to go find an attack.", $COLOR_ERROR)
+		ClickAway("Left")
+		Return False
+	EndIf
+	
+	Return $bRet
+EndFunc
+
+Func WaitCloudsBB()
+	Local $bRet = True
+	SetLog("Searching for Opponent.", $COLOR_BLUE)
+	
+	Local $count = 1
+	While Not QuickMIS("BC1", $g_sImgBBAttackStart, 400, 22, 460, 60)
+		SetDebugLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
+		If $count > 20 Then 
+			CloseCoC(True)
+			$bRet = False
+			ExitLoop
+		EndIf
+		If isProblemAffect(True) Then Return
+		If Not $g_bRunState Then Return ; Stop Button
+		$count += 1
+		If _Sleep(1000) Then Return
+	WEnd
+	Return $bRet
+EndFunc
+
 Func _AttackBB()
 	If Not $g_bRunState Then Return
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $aBMPos = 0
 
 	SetLog("Going to attack.", $COLOR_BLUE)
-
-	; search for a match
-	For $i = 1 To 10
-		If _ColorCheck(_GetPixelColor(655, 440, True), Hex(0x89D239, 6), 20) Then
-			Click(655, 440, 1, "Click Find Now Button")
-			If _Sleep(500) Then Return
-			ExitLoop
-		EndIf
-		If _Sleep(500) Then Return
-	Next
+	If Not ClickFindNowButton() Then 
+		ClickAway("Left")
+		Return False
+	EndIf
 	
-	If _Sleep(3000) Then Return ; give time for find now button to go away
-
 	If Not $g_bRunState Then Return ; Stop Button
-	; wait for the clouds to clear
-	SetLog("Searching for Opponent.", $COLOR_BLUE)
-	local $timer = __TimerInit()
-	local $iPrevTime = 0
-	While Not QuickMIS("BC1", $g_sImgBBAttackStart, 430, 30, 465, 52)
-		local $iTime = Int(__TimerDiff($timer)/ 60000)
-		If $iTime > $iPrevTime Then ; if we have increased by a minute
-			SetLog("Clouds: " & $iTime & "-Minute(s)")
-			If $iTime > 2 Then
-				CloseCoC(True)
-				Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search
-			EndIf
-			$iPrevTime = $iTime
-		EndIf
-		If _Sleep(2000) Then Return
-		If isProblemAffect(True) Then Return
-		If Not $g_bRunState Then Return ; Stop Button
-	WEnd
+	
+	If Not WaitCloudsBB() Then Return
 
 	; Get troops on attack bar and their quantities
 	local $aBBAttackBar = GetAttackBarBB()
@@ -135,12 +152,7 @@ Func _AttackBB()
 	If Not OkayBBEnd() Then Return
 	SetLog("Battle ended")
 	If _Sleep(3000) Then Return
-
-	; wait for ok after both attacks are finished
-	If Not $g_bRunState Then Return ; Stop Button
-	SetLog("Waiting for opponent", $COLOR_BLUE)
-	Okay()
-	ClickAway("Left")
+	checkMainScreen(True, $g_bStayOnBuilderBase, "AttackBB")
 	SetLog("Done", $COLOR_SUCCESS)
 EndFunc
 
@@ -230,7 +242,7 @@ Func AttackBB($aBBAttackBar = Default)
 		Else
 			Local $sTroopName = ""
 			For $i = 0 To $iNumSlots - 1
-				DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide, $AltSide, $DP)
+				If $aBBAttackBar[$i][4] > 0 Then DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide, $AltSide, $DP)
 				If $sTroopName <> $aBBAttackBar[$i][0] Then
 					_Sleep($g_iBBNextTroopDelay) ; wait before next troop
 				Else
@@ -309,53 +321,35 @@ Func OkayBBEnd() ; Find if battle has ended and click okay
 	Return True
 EndFunc
 
-Func Okay()
-	local $timer = __TimerInit()
-
-	While 1
-		If QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) Then
-			Click($g_iQuickMISX, $g_iQuickMISY)
-			Return True
-		EndIf
-
-		If __TimerDiff($timer) >= 180000 Then ;	 Force quit if more than 3 minutes
-			SetLog("Could not find button 'Okay', forcing to quit", $COLOR_ERROR)
-			ClickAway()
-			Return True
-		EndIf
-		If IsProblemAffect(True) Then Return
-		If Not $g_bRunState Then Return
-		If _Sleep(2000) Then Return
-	WEnd
-
-	Return True
-EndFunc
-
 Func GetMachinePos()
 	If isProblemAffect(True) Then Return
-    Local $sSearchDiamond = GetDiamondFromRect("0,580,860,670")
-    Local $aCoords = decodeSingleCoord(findImage("BBBattleMachinePos", $g_sImgBBBattleMachine, $sSearchDiamond, 1, True))
-    If IsArray($aCoords) And UBound($aCoords) = 2 Then
-        $g_bBBMachineReady = True
+	Local $aBMPos = QuickMIS("CNX", $g_sImgBBBattleMachine, 28, 580, 100, 650)
+	Local $aCoords[3]
+    If IsArray($aBMPos) Then
+		$aCoords[0] = $aBMPos[0][1] ;x
+		$aCoords[1] = $aBMPos[0][2] ;y
+		$aCoords[2] = $aBMPos[0][0] ;Name
 		Return $aCoords
-    Else
-        If $g_bDebugImageSave Then SaveDebugImage("BBBattleMachinePos")
+	Else
+		SetLog("Failed to locate Machine Pos", $COLOR_ERROR)
     EndIf
-    Return
 EndFunc
 
 Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 	Local $bBMDeployed = False
-	Local $TmpBMPosX = $aBMPos[0] - 17
-	Local $BMPosY = 578
+	Local $iMachineBarX = $aBMPos[0] - 20
+	Local $iMachineBarY = 568
+	If $g_bDebugSetLog Then SetLog(_ArrayToString($aBMPos))
 	
 	If $g_bBBMachineReady And IsArray($aBMPos) Then
-		SetLog("Deploying Battle Machine.", $COLOR_BLUE)
-		For $i = 0 To 2
+		SetLog("Deploying Battle Machine", $COLOR_BLUE)
+		PureClickP($aBMPos)
+		If _Sleep(500) Then Return
+		
+		For $i = 1 To 3
 			If isProblemAffect(True) Then Return
-			If $g_bDebugClick Then SetLog("[" & $i & "] Try DeployBM", $COLOR_ACTION)
-			PureClickP($aBMPos)
-			If $i > 1 Then
+			If $g_bDebugSetLog Then SetLog("[" & $i & "] Try Deploy " & $aBMPos[2], $COLOR_ACTION)
+			If $i > 2 Then
 				PureClick(40, 280)
 				PureClick(410, 26)
 				PureClick(780, 470)
@@ -365,7 +359,7 @@ Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 			Local $iPoint = Random(0, UBound($aDP) - 1, 1)
 			PureClick($aDP[$iPoint][1], $aDP[$iPoint][2])
 			If _Sleep(500) Then Return
-			If WaitforPixel($TmpBMPosX - 1, $BMPosY - 1, $TmpBMPosX + 1, $BMPosY + 1, "240571", 10, 1) Then ExitLoop
+			If WaitforPixel($iMachineBarX - 1, $iMachineBarY - 1, $iMachineBarX + 1, $iMachineBarY + 1, "47D204", 10, 1) Then ExitLoop
 		Next
 		$bBMDeployed = True ;we dont know BM is deployed or no, just set it true as already try 3 time to deployBM
 	EndIf
@@ -425,7 +419,7 @@ EndFunc
 
 Func IsBBAttackPage()
 	Local $bRet = False
-	If _ColorCheck(_GetPixelColor(20, 523, True), Hex(0xCD0D0D, 6), 20) Then
+	If _ColorCheck(_GetPixelColor(22, 522, True), Hex(0xCD0D0D, 6), 20) Then ;check red color on surrender button
 		$bRet = True
 	EndIf
 	Return $bRet

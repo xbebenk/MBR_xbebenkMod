@@ -14,10 +14,10 @@
 ; ===============================================================================================================================
 
 Func GetAttackBarBB($bRemaining = False)
-	local $iTroopBanners = 577 ; y location of where to find troop quantities
-	local $aSlotX[9] = [120, 190, 260, 330, 400, 470, 545, 620, 690] ; location of x Amount on slot
-
-	local $aBBAttackBar[0][5]
+	Local $iTroopBanners = 584 ; y location of where to find troop quantities
+	Local $aSlotX[9] = [120, 190, 260, 330, 400, 470, 545, 620, 690] ; location of x Amount on slot
+	Local $aTroopBannerBlue[4] = [0, $iTroopBanners, 0x3874FF, 6]
+	Local $aBBAttackBar[0][5]
 	#comments-start
 		$aAttackBar[n][8]
 		[n][0] = Name of the found Troop/Spell/Hero/Siege
@@ -28,18 +28,51 @@ Func GetAttackBarBB($bRemaining = False)
 	#comments-end
 
 	If Not $g_bRunState Then Return ; Stop Button
-
+	
+	Local $iCount = 0, $isBlueBanner = False, $isDarkGreyBanner = False, $isGreyBanner = False, $Troop = "", $Troopx = 0, $Troopy = 0
 	For $k = 0 To UBound($aSlotX) - 1
 		Local $aBBAttackBarResult = QuickMIS("CNX", $g_sImgDirBBTroops, $aSlotX[$k], $iTroopBanners, $aSlotX[$k] + 73, 670)
 		For $i = 0 To UBound($aBBAttackBarResult) - 1
-			Local $Troop = $aBBAttackBarResult[$i][0]
-			Local $Troopx = $aBBAttackBarResult[$i][1]
-			Local $Troopy = $aBBAttackBarResult[$i][2]
-			Local $iCount = Number(getOcrAndCapture("coc-tbb", $aSlotX[$k] + 35, $iTroopBanners, 38, 24, True))
-			If $iCount = "" And Not $bRemaining Then 
-				SetLog("Failed read Quantity of " & $aBBAttackBarResult[$i][0] & " set count = 1", $COLOR_DEBUG)
-				$iCount = 1
+			$iCount = 0
+			$Troop = $aBBAttackBarResult[$i][0]
+			$Troopx = $aBBAttackBarResult[$i][1]
+			$Troopy = $aBBAttackBarResult[$i][2]
+			If Not $bRemaining Then 
+				$isBlueBanner = _ColorCheck(_GetPixelColor($Troopx, $iTroopBanners, True), Hex(0x3874FF, 6), 20)
+				$isDarkGreyBanner = _ColorCheck(_GetPixelColor($Troopx, $iTroopBanners, True), Hex(0x282828, 6), 10)
+				$isGreyBanner = _ColorCheck(_GetPixelColor($Troopx, $iTroopBanners, True), Hex(0x707070, 6), 10)
+				If Not $isBlueBanner Then
+					If $isDarkGreyBanner Or $isGreyBanner Then
+						SetLog("isDarkGreyBanner Or isGreyBanner on " & $aBBAttackBarResult[$i][0] & " set count = 0", $COLOR_DEBUG)
+						ContinueLoop 2
+					Else
+						$iCount = 1
+					EndIf
+				Else
+					$iCount = Number(getOcrAndCapture("coc-tbb", $aSlotX[$k] + 35, $iTroopBanners, 38, 20, True))
+					If $iCount = "" Then 
+						SetLog("Failed read Quantity of " & $aBBAttackBarResult[$i][0] & " set count = 1", $COLOR_DEBUG)
+						$iCount = 1
+					EndIf
+				EndIf
+			Else
+				$isBlueBanner = _ColorCheck(_GetPixelColor($Troopx, $iTroopBanners, True), Hex(0x3874FF, 6), 20)
+				If Not $isBlueBanner Then
+					$isDarkGreyBanner = _ColorCheck(_GetPixelColor($Troopx, $iTroopBanners, True), Hex(0x282828, 6), 10)
+					$isGreyBanner = _ColorCheck(_GetPixelColor($Troopx, $iTroopBanners, True), Hex(0x707070, 6), 10)
+					If $isDarkGreyBanner Then 
+						SetLog("isDarkGreyBanner Or isGreyBanner on " & $aBBAttackBarResult[$i][0] & " set count = 0", $COLOR_DEBUG)
+						ContinueLoop 2
+					EndIf
+				Else
+					$iCount = Number(getOcrAndCapture("coc-tbb", $aSlotX[$k] + 35, $iTroopBanners - 4, 38, 20, True))
+					If $iCount = "" Then 
+						SetLog("Failed read Quantity of " & $aBBAttackBarResult[$i][0] & " set count = 1", $COLOR_DEBUG)
+						$iCount = 1
+					EndIf
+				EndIf
 			EndIf
+			
 			local $aTempElement[1][5] = [[$Troop, $Troopx, $Troopy, $k, $iCount]] ; element to add to attack bar list
 			_ArrayAdd($aBBAttackBar, $aTempElement)
 			If Not $g_bRunState Then Return ; Stop Button
