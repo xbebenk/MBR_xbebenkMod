@@ -229,7 +229,6 @@
 #include "functions\Village\BotDetectFirstTime.au3"
 #include "functions\Village\BotCommand.au3"
 #include "functions\Village\BreakPersonalShield.au3"
-#include "functions\Village\CheckImageType.au3"
 #include "functions\Village\CheckBaseQuick.au3"
 #include "functions\Village\chkShieldStatus.au3"
 #include "functions\Village\Collect.au3"

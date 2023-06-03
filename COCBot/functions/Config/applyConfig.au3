@@ -463,7 +463,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkMMSkipFirstCheckRoutine, $g_bSkipFirstCheckRoutine ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMSkipBB, $g_bSkipBB ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMSkipTrain, $g_bSkipTrain ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkSkipSnowDetection, $g_bSkipSnowDetection ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMIgnoreIncorrectTroopCombo, $g_bIgnoreIncorrectTroopCombo ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbFillIncorrectTroopCombo, $g_iCmbFillIncorrectTroopCombo)
 			GUICtrlSetState($g_hChkMMIgnoreIncorrectSpellCombo, $g_bIgnoreIncorrectSpellCombo ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -632,7 +631,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bSkipFirstCheckRoutine = (GUICtrlRead($g_hChkMMSkipFirstCheckRoutine) = $GUI_CHECKED)
 			$g_bSkipBB = (GUICtrlRead($g_hChkMMSkipBB) = $GUI_CHECKED)
 			$g_bSkipTrain = (GUICtrlRead($g_hChkMMSkipTrain) = $GUI_CHECKED)
-			$g_bSkipSnowDetection = (GUICtrlRead($g_hChkSkipSnowDetection) = $GUI_CHECKED)
 			$g_bIgnoreIncorrectTroopCombo = (GUICtrlRead($g_hChkMMIgnoreIncorrectTroopCombo) = $GUI_CHECKED)
 			$g_iCmbFillIncorrectTroopCombo = _GUICtrlComboBox_GetCurSel($g_hCmbFillIncorrectTroopCombo)
 			$g_bIgnoreIncorrectSpellCombo = (GUICtrlRead($g_hChkMMIgnoreIncorrectSpellCombo) = $GUI_CHECKED)
@@ -948,7 +946,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			GUICtrlSetData($g_hUseBOSTime, $g_iUseBOSTime)
 			GUICtrlSetState($g_hUseBOE, $g_bUseBOE ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hUseBOETime, $g_iUseBOETime)
-			
+
 			For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbLabUpgradeOrder[$i], $g_aCmbLabUpgradeOrder[$i])
 			Next
@@ -980,7 +978,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			$g_iUseBOSTime =  GUICtrlRead($g_hUseBOSTime)
 			$g_bUseBOE = (GUICtrlRead($g_hUseBOE) = $GUI_CHECKED)
 			$g_iUseBOETime =  GUICtrlRead($g_hUseBOETime)
-			
+
 			For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
 				$g_aCmbLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i])
 			Next

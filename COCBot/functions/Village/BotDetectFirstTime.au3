@@ -40,8 +40,6 @@ Func BotDetectFirstTime()
 	EndIf
 
 	If _Sleep($DELAYBOTDETECT1) Then Return
-	If Not $g_bSkipSnowDetection Then CheckImageType()
-	If _Sleep($DELAYBOTDETECT1) Then Return
 
 	If $g_aiClanCastlePos[0] = -1 Then
 		If AutoLocateCC() Then 

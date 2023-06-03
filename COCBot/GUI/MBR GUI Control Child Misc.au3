@@ -1167,14 +1167,6 @@ Func chkForcedSwitchIfNoCG()
 	EndIf
 EndFunc ;==> chkForcedSwitchIfNoCG
 
-Func chkSkipSnowDetection()
-	If GUICtrlRead($g_hChkSkipSnowDetection) = $GUI_CHECKED Then
-		$g_bSkipSnowDetection = True
-	Else
-		$g_bSkipSnowDetection = False
-	EndIf
-EndFunc ;==> chkSkipSnowDetection
-
 Func chkSkipDropTrophyOnFirstStart()
 	If GUICtrlRead($g_hChkSkipDT) = $GUI_CHECKED Then
 		$g_bSkipDT = True

@@ -7,7 +7,7 @@
 *.orig
 *.png
 *.jpg
-#*.exe
+*.exe
 *.bmp
 *.zip
 *.bat
