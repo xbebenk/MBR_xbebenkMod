@@ -157,7 +157,7 @@ Func ZoomOutHelper($caller = "Default")
 EndFunc
 
 Func ZoomOutHelperBB($caller = "Default")
-	Local $x = 0, $y = 0
+	Local $x = 0, $y = 0, $sImage = ""
 	Local $bIsOnBuilderBase = isOnBuilderBase()
 	Local $Dir = "", $aOffset, $bRet = False
 	Local $xyOffsetSwitchBases = 0
@@ -170,10 +170,20 @@ Func ZoomOutHelperBB($caller = "Default")
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
 			$y = $g_iQuickMISY - $aOffset[2]
+			$sImage = $aOffset[0]
+			
 			SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_INFO)
 			ClickDrag(800, 350, 800 - $x + $xyOffsetSwitchBases, 350 - $y - $xyOffsetSwitchBases, 500)
 			$bRet = True
+			
+			If $sImage = "BH" Then 
+				If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 600, 400, 760, 560) Then
+					SetLog("Detected on BuilderBase HighZone, switch to LowerZone", $COLOR_INFO)
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					If _Sleep(3000) Then Return
+				EndIf
+			EndIf
 		Else
 			SetDebugLog("[" & $caller & "] Bad TreeBL ImageName!")
 			Return

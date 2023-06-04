@@ -30,7 +30,7 @@ EndFunc
 Func StarLaboratory($bTestRun = False)
 
 	If Not $g_bAutoStarLabUpgradeEnable Then Return ; Lab upgrade not enabled.
-
+	
 	;Create local array to hold upgrade values
 	Local $iAvailElixir, $sElixirCount, $TimeDiff, $aArray, $Result
 	If $g_sStarLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sStarLabUpgradeTime) ; what is difference between end time and now in minutes?
@@ -49,6 +49,8 @@ Func StarLaboratory($bTestRun = False)
 	SetLog("Updating village values [E]: " & $sElixirCount, $COLOR_SUCCESS)
 	$iAvailElixir = Number($sElixirCount)
 	If Not $g_bOptimizeOTTO Then isBattleMachineMaxed()
+	ZoomOutHelperBB("SwitchBetweenBases") ;go to BH LowerZone
+	
 	If Not LocateStarLab() Then Return False
 	
 	If Not ClickB("Research") Then 
@@ -288,6 +290,7 @@ Func GetSLabTroopResPos($Troop)
 EndFunc   ;==>FullNametroops
 
 Func LocateStarLab()
+	
 	If $g_aiStarLaboratoryPos[0] > 0 And $g_aiStarLaboratoryPos[1] > 0 Then
 		ClickP($g_aiStarLaboratoryPos)
 		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for description to popup
@@ -301,6 +304,7 @@ Func LocateStarLab()
 			EndIf
 		Else
 			ClickAway("Left")
+			ZoomOutHelperBB("SwitchBetweenBases") ;go to BH LowerZone
 			SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
 			$g_aiStarLaboratoryPos[0] = -1
 			$g_aiStarLaboratoryPos[1] = -1
@@ -326,3 +330,4 @@ Func LocateStarLab()
 	SetLog("Can not find Star Laboratory.", $COLOR_ERROR)
 	Return False
 EndFunc   ;==>LocateStarLab()
+

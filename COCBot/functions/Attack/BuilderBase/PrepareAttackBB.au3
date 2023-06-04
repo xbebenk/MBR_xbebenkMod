@@ -256,7 +256,6 @@ Func BBDropTrophy()
 EndFunc
 
 Func ReturnHomeDropTrophyBB($bOnlySurender = False)
-	If $bOnlySurender Then _SleepStatus(8000)
 	
 	For $i = 1 To 5 
 		SetDebugLog("Waiting Surrender button #" & $i, $COLOR_ACTION)

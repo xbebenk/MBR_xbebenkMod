@@ -393,7 +393,7 @@ Func CheckBB20Tutor()
 			ContinueLoop
 		EndIf
 		If Not $g_bRunState Then Return
-		If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 600, 400, 760, 560) Then ;Down Tunnel
+		If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 600, 400, 760, 560) Then ;Up Tunnel
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(2000) Then Return
 			If QuickMIS("BC1", $g_sImgBB20 & "DownTunnel\", 130, 60, 290, 300) Then ;Down Tunnel

@@ -16,6 +16,8 @@
 
 
 Func isInsideDiamondXY($Coordx, $Coordy, $bOuter = False)
+	If $Coordx < 73 Then Return False
+	If $Coordy < 73 Then Return False
 	Local $aCoords[2] = [$Coordx, $Coordy]
 	Return isInsideDiamond($aCoords, $bOuter)
 EndFunc   ;==>isInsideDiamondXY

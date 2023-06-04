@@ -351,7 +351,8 @@ Func SearchExistingBuilding($bTest = False)
 				Click($Building[$i][1], $Building[$i][2])
 				If _Sleep(1000) Then Return
 				If DoUpgradeBB($Building[$i][0], $bTest) Then
-					Return True ;upgrade success
+					SetLog("Upgrade Success", $COLOR_SUCCESS)
+					;Return True ;upgrade success
 				Else
 					ClickBBBuilder()
 					ContinueLoop ;upgrade not success
@@ -713,7 +714,7 @@ Func FindBBExistingBuilding($bTest = False)
 		For $i = 0 To UBound($aTmpCoord) - 1
 			$bFoundOptimizeOTTO = False ;reset
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
-			$UpgradeName = getBuildingName(300, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
+			$UpgradeName = getBuildingName($aTmpCoord[$i][1] - 220, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
 			If $g_bOptimizeOTTO Then ;if OptimizeOTTO enabled, filter only OptimizeOTTO buildings
 				For $x = 0 To UBound($g_aOptimizeOTTO) - 1
 					If StringInStr($UpgradeName[0], $g_aOptimizeOTTO[$x][0], 1) Then

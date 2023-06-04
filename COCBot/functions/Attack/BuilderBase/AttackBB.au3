@@ -437,8 +437,8 @@ Func CheckBMLoop($aBMPos)
 			$bCountSameDamage = 0
 		EndIf
 		$sTmpDamage = Number($sDamage)
-		If $bCountSameDamage > 5 Then 
-			If $g_bDebugSetLog Then SetLog("No Change on Overall Damage, Exit!", $COLOR_ERROR)
+		If $bCountSameDamage > 10 Then 
+			If $g_bDebugSetLog Then SetLog($MachineName & " LoopCheck: No Change on Overall Damage, Exit!", $COLOR_ERROR)
 			ExitLoop
 		EndIf
 		
