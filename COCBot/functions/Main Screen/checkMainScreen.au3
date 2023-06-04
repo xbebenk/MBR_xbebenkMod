@@ -56,14 +56,14 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 			SetLog("Still on Loading Screen...", $COLOR_INFO)
 			_Sleep(5000)
 		EndIf
+		If $bLocated Then ExitLoop
 		
+		;mainscreen not located, proceed to check if there is obstacle covering screen
 		$bObstacleResult = checkObstacles($bBuilderBase)
 		SetDebugLog("CheckObstacles[" & $i & "] Result = " & $bObstacleResult, $COLOR_DEBUG)
-		If $bLocated Then ExitLoop
 		
 		$bContinue = False
 		If Not $bObstacleResult Then
-			If $g_bMinorObstacle Then $g_bMinorObstacle = False
 			If $i > 8 Then $bContinue = True
 		Else
 			$g_bRestart = True

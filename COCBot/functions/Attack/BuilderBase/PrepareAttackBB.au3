@@ -59,9 +59,9 @@ Func PrepareAttackBB($Mode = Default)
 	EndIf
 	
 	For $i = 1 To 10
-		SetLog("Searching Find Now Button #" & $i, $COLOR_ACTION)
+		If $g_bDebugSetlog Then SetLog("Searching Find Now Button #" & $i, $COLOR_ACTION)
 		If _ColorCheck(_GetPixelColor(655, 440, True), Hex(0x89D239, 6), 20) Then
-			SetLog("FindNow Button Found!", $COLOR_DEBUG)
+			If $g_bDebugSetlog Then SetLog("FindNow Button Found!", $COLOR_DEBUG)
 			If _Sleep(500) Then Return
 			ExitLoop
 		EndIf
@@ -99,10 +99,10 @@ Func ClickBBAttackButton()
 	If QuickMis("BC1", $g_sImgBBAttackButton, 16, 590, 110, 630) Then
 		Click(62,615) ;click attack button
 		For $i = 1 To 5
-			SetLog("Waiting for Start Attack Window #" & $i, $COLOR_ACTION)
+			If $g_bDebugSetLog Then SetLog("Waiting for Start Attack Window #" & $i, $COLOR_ACTION)
 			If _Sleep(500) Then Return
 			If QuickMis("BC1", $g_sImgGeneralCloseButton, 720, 140, 800, 200) Then 
-				SetLog("Start Attack Window Found", $COLOR_DEBUG)
+				If $g_bDebugSetLog Then SetLog("Start Attack Window Found", $COLOR_DEBUG)
 				ExitLoop
 			EndIf
 		Next
@@ -255,11 +255,13 @@ Func BBDropTrophy()
 	Return False
 EndFunc
 
-Func ReturnHomeDropTrophyBB()
+Func ReturnHomeDropTrophyBB($bOnlySurender = False)
+	If $bOnlySurender Then _SleepStatus(8000)
+	
 	For $i = 1 To 5 
 		SetDebugLog("Waiting Surrender button #" & $i, $COLOR_ACTION)
 		If IsBBAttackPage() Then
-			Click(65, 540) ;click surrender
+			Click(65, 520) ;click surrender
 			If _Sleep(1000) Then Return
 			ExitLoop
 		EndIf
@@ -275,6 +277,8 @@ Func ReturnHomeDropTrophyBB()
 		EndIf
 		If _Sleep(1000) Then Return
 	Next
+	
+	If $bOnlySurender Then Return True
 	
 	For $i = 1 To 10
 		SetDebugLog("Waiting EndBattle Window #" & $i, $COLOR_ACTION)

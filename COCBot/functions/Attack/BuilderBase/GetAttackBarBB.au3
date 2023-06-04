@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func GetAttackBarBB($bRemaining = False)
+Func GetAttackBarBB_OLD($bRemaining = False)
 	Local $iTroopBanners = 584 ; y location of where to find troop quantities
 	Local $aSlotX[9] = [120, 190, 260, 330, 400, 470, 545, 620, 690] ; location of x Amount on slot
 	Local $aTroopBannerBlue[4] = [0, $iTroopBanners, 0x3874FF, 6]
@@ -82,6 +82,89 @@ Func GetAttackBarBB($bRemaining = False)
 	
 	_ArraySort($aBBAttackBar, 0, 0, 0, 3)
 	
+	For $i = 0 To UBound($aBBAttackBar) - 1
+		SetLog($aBBAttackBar[$i][0] & ", (" & String($aBBAttackBar[$i][1]) & "," & String($aBBAttackBar[$i][2]) & "), Slot: " & String($aBBAttackBar[$i][3]) & ", Count: " & String($aBBAttackBar[$i][4]), $COLOR_SUCCESS)
+	Next
+	Return $aBBAttackBar
+EndFunc
+
+
+Func GetAttackBarBB($bRemaining = False)
+	Local $iTroopBanners = 584 ; y location of where to find troop quantities
+	Local $iSelectTroopY = 620 ; y location to select troop on attackbar
+	Local $aSlotX[9] = [120, 190, 260, 330, 400, 470, 545, 620, 690] ; location of slot
+	Local $aBBAttackBar[0][5]
+	
+	#comments-start
+		$aAttackBar[n][8]
+		[n][0] = Name of the found Troop/Spell/Hero/Siege
+		[n][1] = The X Coordinate of the Troop
+		[n][2] = The Y Coordinate of the Troop/Spell/Hero/Siege
+		[n][3] = The Slot Number (Starts with 0)
+		[n][4] = The Amount
+	#comments-end
+
+	If Not $g_bRunState Then Return ; Stop Button
+	
+	Local $iCount = 0, $isBlueBanner = False, $isDarkGreyBanner = False, $isGreyBanner = False, $isVioletBanner = False
+	Local $aBBAttackBarResult, $Troop = "", $Troopx = 0, $Troopy = 0, $ColorPickBannerX = 0
+	Local $bReadTroop = False
+	
+	For $k = 0 To UBound($aSlotX) - 1
+		If Not $g_bRunState Then Return
+		
+		$Troopx = $aSlotX[$k]
+		$ColorPickBannerX = $aSlotX[$k] + 37 ; location to pick color from TroopSlot banner
+			
+		If $bRemaining Then 
+			If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
+			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopBanners, $Troopx + 73, 670) Then 
+				If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickY=" & $ColorPickBannerX, $COLOR_DEBUG2)
+				$isDarkGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x282828, 6), 10) ; DartkGrey Banner on TroopSlot = Troop Already Deployed
+				$isGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x707070, 6), 10) ;Grey Banner on TroopSlot = Troop Die
+				If $isDarkGreyBanner Or $isGreyBanner Then ContinueLoop ;skip read troop as they detected deployed or die
+				
+				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 30) ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
+				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 20) ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
+				
+				If $isBlueBanner Or $isVioletBanner Then
+					$Troop =  $g_iQuickMISName
+					$Troopx = $g_iQuickMISX
+					$Troopy = $iSelectTroopY
+					$iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
+					If $isVioletBanner Then $iCount = 1
+					
+					Local $aTempElement[1][5] = [[$Troop, $Troopx, $Troopy, $k, $iCount]] ; element to add to attack bar list
+					_ArrayAdd($aBBAttackBar, $aTempElement)
+				EndIf
+			EndIf
+		Else
+			If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
+			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopBanners, $Troopx + 73, 670) Then 
+				If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickY=" & $ColorPickBannerX, $COLOR_DEBUG2)
+				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 10) ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
+				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 20) ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
+				;$isDarkGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x282828, 6), 10) ; DartkGrey Banner on TroopSlot = Troop Already Deployed
+				;$isGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x707070, 6), 10) ;Grey Banner on TroopSlot = Troop Die
+				
+				If $isBlueBanner Or $isVioletBanner Then $bReadTroop = True
+				If $bReadTroop Then
+					$Troop =  $g_iQuickMISName
+					$Troopx = $g_iQuickMISX
+					$Troopy = $iSelectTroopY
+					$iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
+					If $isVioletBanner Then $iCount = 1
+					
+					Local $aTempElement[1][5] = [[$Troop, $Troopx, $Troopy, $k, $iCount]] ; element to add to attack bar list
+					_ArrayAdd($aBBAttackBar, $aTempElement)
+				EndIf
+			EndIf
+		EndIf
+	Next
+	
+	If UBound($aBBAttackBar) = 0 Then Return ""
+	
+	_ArraySort($aBBAttackBar, 0, 0, 0, 3)
 	For $i = 0 To UBound($aBBAttackBar) - 1
 		SetLog($aBBAttackBar[$i][0] & ", (" & String($aBBAttackBar[$i][1]) & "," & String($aBBAttackBar[$i][2]) & "), Slot: " & String($aBBAttackBar[$i][3]) & ", Count: " & String($aBBAttackBar[$i][4]), $COLOR_SUCCESS)
 	Next

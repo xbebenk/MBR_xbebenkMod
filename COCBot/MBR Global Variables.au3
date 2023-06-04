@@ -1652,7 +1652,6 @@ Global $g_bDonated = False
 Global $g_avDTtroopsToBeUsed[10][2] = [["Barb", 0], ["SBarb", 0], ["Arch", 0], ["Giant", 0], ["Wall", 0], ["Gobl", 0], ["Mini", 0], ["Ball", 0], ["Wiza", 0], ["SMini", 0]] ; DT available troops [type, qty]
 
 ; Obstacles
-Global $g_bMinorObstacle = False
 Global $g_bGfxError = False ; True when Android Gfx Errors detected that will initiate Android reboot
 Global $g_iGfxErrorCount = 0, $g_iGfxErrorMax = 5
 

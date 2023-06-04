@@ -1333,7 +1333,8 @@ Func FirstCheck()
 		CleanYard()
 		_Sleep(8000) ;add wait after clean yard
 		If Not $g_bRunState Then Return
-		If $g_bUpgradeWallEarly Then
+		Local $bWallUpgradeUseElixir = ($g_iUpgradeWallLootType = 1 Or $g_iUpgradeWallLootType = 2) And $g_abFullStorage[$eLootElixir] 
+		If $g_bUpgradeWallEarly Or ($g_abFullStorage[$eLootElixir] And $bWallUpgradeUseElixir) Then
 			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
 			UpgradeWall()
 		EndIf
@@ -1639,7 +1640,7 @@ Func BuilderBase()
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
 
-		#cs
+		
 		If Not BBDropTrophy() Then
 			If _Sleep($DELAYRUNBOT1) Then Return
 			DoAttackBB()
@@ -1656,7 +1657,7 @@ Func BuilderBase()
 			;checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			;ZoomOut(True) ;directly zoom
 		EndIf
-		#ce
+		
 		
 		$StartLabON = StarLaboratory()
 		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)

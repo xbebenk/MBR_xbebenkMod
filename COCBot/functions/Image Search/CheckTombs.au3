@@ -38,11 +38,12 @@ Func CleanYardCheckBuilder($bTest = False)
 EndFunc
 
 Func CleanYard($bTest = False)
+	Local $bRet = False
 	If Not $g_bChkCleanYard And Not $g_bChkGemsBox Then Return
-	checkMainScreen(True, $g_bStayOnBuilderBase, "CleanYard")
 	VillageReport(True, True)
 	If Not CleanYardCheckBuilder($bTest) Then Return
 	SetLog("CleanYard: Try removing obstacles", $COLOR_DEBUG)
+	checkMainScreen(True, $g_bStayOnBuilderBase, "CleanYard")
 	
 	If $g_aiCurrentLoot[$eLootElixir] < 30000 Then 
 		SetLog("Elixir < 30000, try again later", $COLOR_DEBUG)
@@ -65,7 +66,7 @@ Func CleanYard($bTest = False)
 				If Not $g_bRunState Then Return
 				If Not isInsideDiamondXY($x, $y, True) Then ContinueLoop
 				SetLog($Filename & " found [" & $x & "," & $y & "]", $COLOR_SUCCESS)
-				Click($x, $y, 1, 0, "#0430") ;click CleanYard
+				Click($x, $y, 1, 0, "CleanYard") ;click CleanYard
 				_Sleep(1000)
 				If Not ClickRemoveObstacle($bTest) Then ContinueLoop
 				CleanYardCheckBuilder($bTest)
@@ -79,10 +80,13 @@ Func CleanYard($bTest = False)
 	If $Locate = 0 Then 
 		SetLog("No Obstacles found, Yard is clean!", $COLOR_SUCCESS)
 	Else
+		$bRet = True
 		SetLog("CleanYard Found and Clearing " & $Locate & " Obstacles!", $COLOR_SUCCESS)
 	EndIf
 	UpdateStats()
 	ClickAway()
+	
+	Return $bRet
 EndFunc   ;==>CleanYard
 
 Func ClickRemoveObstacle($bTest = False, $BuilderBase = False)
