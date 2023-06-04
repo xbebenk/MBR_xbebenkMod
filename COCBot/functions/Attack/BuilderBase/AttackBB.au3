@@ -442,6 +442,11 @@ Func CheckBMLoop($aBMPos)
 			ExitLoop
 		EndIf
 		
+		If $sTmpDamage = 100 Then 
+			If $g_bDebugSetLog Then SetLog($MachineName & " LoopCheck: Overall Damage = 100, Exit!", $COLOR_ERROR)
+			ExitLoop
+		EndIf
+		
 		If _ColorCheck(_GetPixelColor($BMPosX, $BMPosY, True), Hex(0x242C4B, 6), 20) Then
 			PureClickP($aBMPos)
 			SetLog("Activate " & $MachineName & " Ability", $COLOR_SUCCESS)
