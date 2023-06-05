@@ -35,11 +35,6 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	If $sStonePrefix = Default Then $sStonePrefix = "stone"
 	If $sTreePrefix = Default Then $sTreePrefix = "tree"
 	
-	If IsFullScreenWindow() Then
-		Click(825,45)
-		_Sleep(2000)
-	EndIf
-	
 	If $bOnBuilderBase = Default Then
 		$bOnBuilderBase = isOnBuilderBase()
 	EndIf
