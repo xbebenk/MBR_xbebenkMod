@@ -142,12 +142,20 @@ Func _AttackBB()
 	If Not WaitCloudsBB() Then Return
 
 	; Get troops on attack bar and their quantities
-	local $aBBAttackBar = GetAttackBarBB()
-	;If $g_bChkBBCustomArmyEnable Then
-	;	If CorrectAttackBarBB($aBBAttackBar) Then $aBBAttackBar = GetAttackBarBB()
-	;EndIf
-	AttackBB($aBBAttackBar)
-
+	Local $aBBAttackBar
+	If $g_bChkBBCustomArmyEnable Then
+		$aBBAttackBar = GetAttackBarBB(False, True)
+		If CorrectAttackBarBB($aBBAttackBar) Then 
+			AttackBB()
+		Else
+			$aBBAttackBar = GetAttackBarBB()
+			AttackBB($aBBAttackBar)
+		EndIf
+	Else
+		$aBBAttackBar = GetAttackBarBB()
+		AttackBB($aBBAttackBar)
+	EndIf
+	
 	; wait for end of battle
 	SetLog("Waiting for end of battle.", $COLOR_BLUE)
 	If Not $g_bRunState Then Return ; Stop Button
