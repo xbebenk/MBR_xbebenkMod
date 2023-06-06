@@ -63,7 +63,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	SetLog("=========RESTART COC==========", $COLOR_INFO)
 	SaveDebugImage("WaitMainScreenTimeout", True) 
 	$g_iMainScreenTimeoutCount += 1
-	If $g_iMainScreenTimeoutCount > 1 Then CloseAndroid()
+	If $g_iMainScreenTimeoutCount > 2 Then CloseAndroid()
 	If $g_sAndroidEmulator = "Bluestacks5" Then NotifBarDropDownBS5()
 	CloseCoC(True) ;only close coc
 	;_RestartAndroidCoC(False, False, True, 0, 0, True) ;start coc, not updating shared_prefs
