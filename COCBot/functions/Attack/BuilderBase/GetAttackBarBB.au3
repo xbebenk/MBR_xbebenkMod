@@ -16,8 +16,24 @@
 Func GetAttackBarBB($bRemaining = False, $bCount = True)
 	Local $iTroopBanners = 584 ; y location of where to find troop quantities
 	Local $iSelectTroopY = 620 ; y location to select troop on attackbar
-	Local $aSlotX[9] = [120, 190, 260, 330, 400, 470, 545, 620, 690] ; location of slot
+	;Local $aSlotX[9] = [120, 190, 260, 330, 400, 470, 545, 620, 690] ; location of slot
 	Local $aBBAttackBar[0][5]
+	
+	Local $iMaxSlot = 9, $iSlotOffset = 70, $bMachineFound = False
+	Local $aSlotX[$iMaxSlot], $iStartSlot = 120
+	
+	If QuickMIS("BC1", $g_sImgBBBattleMachine, 28, 560, 100, 650) Then
+		$bMachineFound = True
+		For $i = 0 To UBound($aSlotX) - 1
+			$aSlotX[$i] = $iStartSlot + ($i * $iSlotOffset)
+		Next
+	Else
+		$iStartSlot = 40
+		For $i = 0 To UBound($aSlotX) - 1
+			$aSlotX[$i] = $iStartSlot + ($i * $iSlotOffset)
+		Next
+	EndIf
+	If $g_bDebugSetlog Then SetLog("Machine Found = " & String($bMachineFound) & " SlotX: " & _ArrayToString($aSlotX), $COLOR_DEBUG2)
 	
 	#comments-start
 		$aAttackBar[n][8]
@@ -53,7 +69,7 @@ Func GetAttackBarBB($bRemaining = False, $bCount = True)
 				
 				If $isBlueBanner Or $isVioletBanner Then
 					$Troop =  $g_iQuickMISName
-					$Troopx = $g_iQuickMISX
+					;$Troopx = $g_iQuickMISX
 					$Troopy = $iSelectTroopY
 					If $bCount Then $iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
 					If $isVioletBanner Then $iCount = 1
@@ -74,7 +90,7 @@ Func GetAttackBarBB($bRemaining = False, $bCount = True)
 				If $isBlueBanner Or $isVioletBanner Then $bReadTroop = True
 				If $bReadTroop Then
 					$Troop =  $g_iQuickMISName
-					$Troopx = $g_iQuickMISX
+					;$Troopx = $g_iQuickMISX
 					$Troopy = $iSelectTroopY
 					If $bCount Then $iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
 					If $isVioletBanner Then $iCount = 1
@@ -116,7 +132,7 @@ EndFunc   ;==>TestCorrectAttackBarBB
 
 Func CorrectAttackBarBB(ByRef $aBBAttackBar)
 	If Not $g_bRunState Then Return
-	Local $aSlotX[9] = [120, 190, 260, 330, 400, 470, 545, 620, 690] ; location of slot
+	;Local $aSlotX[9] = [120, 190, 260, 330, 400, 470, 545, 620, 690] ; location of slot
 	
 	For $i = 0 To UBound($aBBAttackBar) - 1
 		SetLog("Detected Troop [" & $aBBAttackBar[$i][3] & "] : " &  $aBBAttackBar[$i][0], $COLOR_ACTION)
@@ -135,7 +151,7 @@ Func CorrectAttackBarBB(ByRef $aBBAttackBar)
 			ContinueLoop
 		Else
 			SetLog("Slot[" & $iSlot & "] Troop: " & $sTroopName & ", Change to " & $sChangeTo, $COLOR_ACTION)
-			If ChangeBBTroopTo($sTroopName, $aSlotX[$iSlot], $sChangeTo) Then 
+			If ChangeBBTroopTo($sTroopName, $x, $sChangeTo) Then 
 				$aBBAttackBar[$i][0] = $sChangeTo
 				ContinueLoop
 			Else
@@ -150,19 +166,19 @@ Func ChangeBBTroopTo($sTroopName, $x, $sChangeTo)
 	Local $bRet = False
 	
 	Local $TmpX = 0, $TmpY = 0
-	If QuickMIS("BC1", $g_sImgCustomArmyBB, $x, 580, $x + 73, 676) Then
+	If QuickMIS("BC1", $g_sImgChangeTroops, $x, 580, $x + 70, 676) Then
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		$TmpX = $g_iQuickMISX
 		$TmpY = $g_iQuickMISY
 		If _Sleep(800) Then Return
 		If QuickMIS("BFI", $g_sImgDirBBTroops & $sChangeTo & "*", 0, 480, 860, 546) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(500) Then Return
+			If _Sleep(1000) Then Return
 			$bRet = True
 		Else
 			SetLog("Troop " & $sChangeTo & " not found", $COLOR_ERROR)
 			Click($TmpX, $TmpY)
-			If _Sleep(500) Then Return
+			If _Sleep(1000) Then Return
 		EndIf
 	Else
 		SetLog("Switch Button not found", $COLOR_ERROR)

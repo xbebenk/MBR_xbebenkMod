@@ -255,7 +255,7 @@ Func AttackBB($aBBAttackBar = Default)
 				Local $j = 0, $bDone = False
 				While $j < $iNumSlots And Not $bDone
 					If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then
-						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide, $AltSide, $DP)
+						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1] + 35, $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide, $AltSide, $DP)
 						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
 							$bDone = True
 							_Sleep($g_iBBNextTroopDelay) ; wait before next troop
@@ -268,7 +268,7 @@ Func AttackBB($aBBAttackBar = Default)
 			Local $sTroopName = ""
 			For $i = 0 To $iNumSlots - 1
 				If $aBBAttackBar[$i][4] > 0 Then 
-					DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide, $AltSide, $DP)
+					DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1] + 35, $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide, $AltSide, $DP)
 				EndIf
 				
 				If $sTroopName <> $aBBAttackBar[$i][0] Then
