@@ -80,11 +80,11 @@ Func getResourcesBonusPerc($x_start, $y_start) ; -> Gets complete value of Bonus
 EndFunc   ;==>getResourcesBonusPerc
 
 Func getLabCost($x_start, $y_start)
-	Return getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 16, True)
+	Return getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True)
 EndFunc 
 
 Func getStarLabUpgrdResourceRed($x_start, $y_start) ; -> Gets complete value of Elixir on the troop buttons,  xxx,xxx for "starlaboratory.au3" when red text
-	Return getOcrAndCapture("coc-starlab-r", $x_start, $y_start, 70, 14, True)
+	Return getOcrAndCapture("coc-starlab-r", $x_start, $y_start, 80, 18, True)
 EndFunc   ;==>getLabUpgrdResourceRed
 
 Func getBldgUpgradeTime($x_start, $y_start) ; -> Gets complete remain building upgrade time
