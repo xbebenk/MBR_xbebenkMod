@@ -584,6 +584,35 @@ Func btnTestAttackBar()
 	$g_bRunState = $bCurrentRunState
 EndFunc   ;==>btnTestAttackBar
 
+Func btnTestAttackBarBB()
+	Local $bCurrentOCR = $g_bDebugOcr, $bCurrentRunState = $g_bRunState, $bCurrentDebugImage = $g_bDebugImageSave
+
+	_GUICtrlTab_ClickTab($g_hTabMain, 0)
+
+	$g_bDebugOcr = True
+    $g_bDebugImageSave = True
+	$g_bRunState = True
+
+	If MsgBox($MB_YESNO, "Screenshot or Live Image", "Do you want to use a Screenshot instead of a Live Image?") = $IDYES Then
+	 Local $sImageFile = BeginImageTest() ; get image for testing
+	 If $sImageFile = False Then $sImageFile = "Live Screenshot"
+	EndIf
+
+
+	SetLog(_PadStringCenter(" Begin AttackBarBB Detection", 54, "="), $COlOR_INFO)
+
+	Local $avAttackBarBB = GetAttackBarBB()
+
+	SetLog(_PadStringCenter(" End AttackBarBB Detection ", 54, "="), $COlOR_INFO)
+
+	EndImageTest() ; clear test image handle
+
+	$g_bDebugOcr = $bCurrentOCR
+	$g_bDebugImageSave = $bCurrentDebugImage
+	$g_bRunState = $bCurrentRunState
+	Return $avAttackBarBB
+EndFunc   ;==>btnTestAttackBar
+
 
 Func btnTestClickDrag()
 	Local $sUserInputCoor = InputBox("Coordinators", "x1,y1,x2,y2", "650,469,290,469")

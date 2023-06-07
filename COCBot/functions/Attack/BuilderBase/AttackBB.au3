@@ -77,6 +77,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				ExitLoop
 			EndIf
 		Next
+		If Not $g_bRunState Then Return
 		ZoomOut(True)
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
 		ClickAway("Left")
@@ -313,13 +314,13 @@ Func AttackBB($aBBAttackBar = Default)
 		EndIf
 		$sTmpDamage = Number($sDamage)
 		If $bCountSameDamage > 5 Then 
-			If $g_bDebugSetLog Then SetLog("No Change on Overall Damage, Exit!", $COLOR_ERROR)
+			If $g_bDebugSetLog Then SetLog("AttackBB Loop: No Change on Overall Damage, Exit!", $COLOR_ERROR)
 			ReturnHomeDropTrophyBB(True)
 			ExitLoop
 		EndIf
 		
 		If $g_bDebugSetLog Then SetLog("Waiting Battle End #" & $waitcount, $COLOR_ACTION)
-		If _Sleep(2000) Then Return
+		If _Sleep(1000) Then Return
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
 		$waitcount += 1
