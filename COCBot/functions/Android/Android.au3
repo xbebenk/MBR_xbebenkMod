@@ -1280,15 +1280,15 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 			EndIf
 			$iRetry += 1
 			SetLog("Unable to load Clash of Clans, " & $iRetry & ". retry...", $COLOR_ERROR)
-			If $iRetry = 2 And $iRecursive = 0 And HaveSharedPrefs() Then
-				; crash might get fixed by clearing cache
-				$cmdOutput = AndroidAdbSendShellCommand("set export=$(pm clear " & $g_sAndroidGamePackage & " >&2)", 15000) ; timeout of 15 Seconds
-				If StringInStr($cmdOutput, "Success") Then
-					SetLog("Clash of Clans cache now cleared", $COLOR_SUCCESS)
-				Else
-					SetLog("Clash of Clans cache not cleared: " & $cmdOutput, $COLOR_ERROR)
-				EndIf
-			EndIf
+			;If $iRetry = 2 And $iRecursive = 0 And HaveSharedPrefs() Then
+			;	; crash might get fixed by clearing cache
+			;	$cmdOutput = AndroidAdbSendShellCommand("set export=$(pm clear " & $g_sAndroidGamePackage & " >&2)", 15000) ; timeout of 15 Seconds
+			;	If StringInStr($cmdOutput, "Success") Then
+			;		SetLog("Clash of Clans cache now cleared", $COLOR_SUCCESS)
+			;	Else
+			;		SetLog("Clash of Clans cache not cleared: " & $cmdOutput, $COLOR_ERROR)
+			;	EndIf
+			;EndIf
 			If _SleepStatus(5000) Then Return False
 			Return _RestartAndroidCoC($bInitAndroid, $bRestart, $bStopCoC, $iRetry, $iRecursive)
 		EndIf
