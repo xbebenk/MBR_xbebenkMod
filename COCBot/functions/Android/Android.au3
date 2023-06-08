@@ -809,10 +809,6 @@ Func FindPreferredAdbPath()
 			If $adbPath <> "" Then ExitLoop
 		Next
 	EndIf
-	If $adbPath <> "" Then
-		; Not used anymore since MBR v7.6.7
-		;_SaveProfileConfigAdbPath(Default, $adbPath) ; ensure profile.ini is saved as quickly as possible with new ADB path
-	EndIf
 	Return $adbPath
 EndFunc   ;==>FindPreferredAdbPath
 

@@ -315,7 +315,7 @@ Global $g_iAndroidClientWidth ; Expected width of android rendering control
 Global $g_iAndroidClientHeight ; Expected height of android rendering control
 Global $g_iAndroidWindowWidth ; Expected Width of android window
 Global $g_iAndroidWindowHeight ; Expected height of android window
-Global $g_bAndroidAdbUseMyBot = True ; Use MyBot provided adb.exe and not the one from emulator
+Global $g_bAndroidAdbUseMyBot = False ; Use MyBot provided adb.exe and not the one from emulator
 Global $g_iAndroidAdbReplace = 0 ; Replace Android Emulator adb.exe: 0 = don't replace, 1 = replace with MyBot version, 2 = repalce with dummy exe (default)
 Global $g_sAndroidAdbPath ; Path to executable HD-Adb.exe or adb.exe
 Global $g_sAndroidAdbGlobalOptions ; Additional adb global options like -P 5037 for port
