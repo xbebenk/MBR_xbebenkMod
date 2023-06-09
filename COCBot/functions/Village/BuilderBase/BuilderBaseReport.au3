@@ -51,7 +51,7 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 				$g_bisBHMaxed = True
 				$g_bisMegaTeslaMaxed = True
 				$g_bisBattleMachineMaxed = True
-				$$g_bOptimizeOTTO = False
+				$g_bOptimizeOTTO = False
 			ElseIf isBHMaxed() Then 
 				isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
 				isBattleMachineMaxed()
