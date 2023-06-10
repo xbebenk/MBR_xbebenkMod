@@ -28,27 +28,36 @@ Func _ColorCheck($nColor1, $nColor2, $sVari = 5, $Ignore = Default, $sLogText = 
 	Switch $Ignore
 		Case "Red" ; mask RGB - Red
 			$iCompare = Abs($Blue1 - $Blue2)
-				If $iCompare > $sVari Then $bRet = False
+				If $iCompare > $sVari Then Return False
 			$iCompare = Abs($Green1 - $Green2)
-				If $iCompare > $sVari Then $bRet = False
+				If $iCompare > $sVari Then Return False
 				
 		Case "Heroes" ; mask RGB - Green
 			$iCompare = Abs($Blue1 - $Blue2)
-				If $iCompare > $sVari Then $bRet = False
+				If $iCompare > $sVari Then Return False
 			$iCompare = Abs($Red1 - $Red2)
-				If $iCompare > $sVari Then $bRet = False
+				If $iCompare > $sVari Then Return False
 				
 		Case "Red+Blue" ; mask RGB - Red
 			$iCompare = Abs($Green1 - $Green2)
-				If $iCompare > $sVari Then $bRet = False
+				If $iCompare > $sVari Then Return False
 			
 		Case Else ; compare all color channels
 			$iCompare = Abs($Blue1 - $Blue2)
-				If $iCompare > $sVari Then $bRet = False
+				If $iCompare > $sVari Then 
+					$bRet = False
+					ContinueCase
+				EndIf
 			$iCompare = Abs($Green1 - $Green2)
-				If $iCompare > $sVari Then $bRet = False
+				If $iCompare > $sVari Then 
+					$bRet = False
+					ContinueCase
+				EndIf
 			$iCompare = Abs($Red1 - $Red2)
-				If $iCompare > $sVari Then $bRet = False
+				If $iCompare > $sVari Then 
+					$bRet = False
+					ContinueCase
+				EndIf
 	EndSwitch
 	
 	If $g_bDebugSetLog And Not $bRet And $sLogText <> Default Then SetDebugLog($sLogText & ":" & String($bRet) & ", Exp=" & $nColor1 & ", Got=" & $nColor2 & ", Var=" & $sVari & ", ixVar=" & $iCompare, $COLOR_DEBUG2)

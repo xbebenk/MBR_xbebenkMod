@@ -160,8 +160,7 @@ Func _AttackBB()
 	; wait for end of battle
 	SetLog("Waiting for end of battle.", $COLOR_BLUE)
 	If Not $g_bRunState Then Return ; Stop Button
-	If Not OkayBBEnd() Then Return
-	SetLog("Battle ended")
+	If OkayBBEnd() Then SetLog("Battle ended")
 	If _Sleep(3000) Then Return
 	
 	For $i = 1 To 5
@@ -180,6 +179,52 @@ Func _AttackBB()
 	EndIf
 	
 	SetLog("Done", $COLOR_SUCCESS)
+EndFunc
+
+Func OkayBBEnd() ; Find if battle has ended and click okay
+	Local $bRet = False
+	Local $sDamage = 0, $sTmpDamage = 0, $bCountSameDamage = 0
+	
+	For $i = 1 To 60
+		SetLog("Waiting EndBattle Screen #" & $i, $COLOR_ACTION)
+		
+		$sDamage = getOcrOverAllDamage(780, 529)
+		SetLog("[" & $i & "] OkayBBEnd LoopCheck, Overall Damage : " & $sDamage, $COLOR_DEBUG2)
+		If Number($sDamage) = Number($sTmpDamage) Then 
+			$bCountSameDamage += 1
+		Else
+			$bCountSameDamage = 0
+		EndIf
+		$sTmpDamage = Number($sDamage)
+		If $bCountSameDamage > 5 Then 
+			SetLog("OkayBBEnd LoopCheck: No Change on Overall Damage, Exit!", $COLOR_ERROR)
+			ExitLoop
+		EndIf
+		
+		If QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			$bRet = True
+			ExitLoop
+		EndIf
+		
+		If IsProblemAffect(True) Then Return
+		If Not $g_bRunState Then Return
+		If _Sleep(1000) Then Return
+	Next
+	
+	If ReturnHomeDropTrophyBB(True) Then $bRet = True
+	
+	For $i = 1 To 10
+		If _Sleep(500) Then Return
+		If BBBarbarianHead("OkayBBEnd") Then
+			ClickP($aOkayButton)
+		EndIf
+	Next
+	
+	
+	If Not $bRet Then SetLog("Could not find finish battle screen", $COLOR_ERROR)
+	Return $bRet
+	
 EndFunc
 
 Func AttackBB($aBBAttackBar = Default)
@@ -299,33 +344,39 @@ Func AttackBB($aBBAttackBar = Default)
 	If Not $g_bRunState Then Return ; Stop Button
 
 	If $bBMDeployed Then CheckBMLoop($aBMPos) ;check if BM is Still alive and activate ability
-	Local $waitcount = 0
-	Local $sDamage = 0, $sTmpDamage = 0, $bCountSameDamage = 0
-	While IsBBAttackPage()
-		If BBBarbarianHead() Then
-			ExitLoop
-		EndIf
-		
-		$sDamage = getOcrOverAllDamage(780, 529)
-		If $g_bDebugSetLog Then SetLog("[" & $waitcount & "] AttacBB Loop, Overall Damage : " & $sDamage, $COLOR_DEBUG2)
-		If Number($sDamage) = Number($sTmpDamage) Then 
-			$bCountSameDamage += 1
-		Else
-			$bCountSameDamage = 0
-		EndIf
-		$sTmpDamage = Number($sDamage)
-		If $bCountSameDamage > 5 Then 
-			If $g_bDebugSetLog Then SetLog("AttackBB Loop: No Change on Overall Damage, Exit!", $COLOR_ERROR)
-			ReturnHomeDropTrophyBB(True)
-			ExitLoop
-		EndIf
-		
-		If _Sleep(1000) Then Return
-		If IsProblemAffect(True) Then Return
-		If Not $g_bRunState Then Return
-		$waitcount += 1
-		If $waitcount > 30 Then ExitLoop
-	Wend
+	;Local $waitcount = 0
+	;Local $sDamage = 0, $sTmpDamage = 0, $bCountSameDamage = 0
+	;While IsBBAttackPage()
+	;	If BBBarbarianHead() Then
+	;		ExitLoop
+	;	EndIf
+	;	
+	;	$sDamage = getOcrOverAllDamage(780, 529)
+	;	SetLog("[" & $waitcount & "] AttacBB Loop, Overall Damage : " & $sDamage, $COLOR_DEBUG2)
+	;	If Number($sDamage) = Number($sTmpDamage) Then 
+	;		$bCountSameDamage += 1
+	;	Else
+	;		$bCountSameDamage = 0
+	;	EndIf
+	;	$sTmpDamage = Number($sDamage)
+	;	
+	;	If $sTmpDamage = 100 Then 
+	;		SetLog("AttackBB Loop: Overall Damage = 100, Exit!", $COLOR_ERROR)
+	;		ExitLoop
+	;	EndIf
+	;	
+	;	If $bCountSameDamage > 5 Then 
+	;		SetLog("AttackBB Loop: No Change on Overall Damage, Exit!", $COLOR_ERROR)
+	;		ReturnHomeDropTrophyBB(True)
+	;		ExitLoop
+	;	EndIf
+	;	
+	;	If _Sleep(1000) Then Return
+	;	If IsProblemAffect(True) Then Return
+	;	If Not $g_bRunState Then Return
+	;	$waitcount += 1
+	;	If $waitcount > 30 Then ExitLoop
+	;Wend
 	Return
 EndFunc   ;==>AttackBB
 
@@ -344,30 +395,6 @@ Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide, $AltSide, $aDP)
 		Next
 	EndIf
 	If $sName = "WallBreaker" Then PureClick($x, $y)
-EndFunc
-
-Func OkayBBEnd() ; Find if battle has ended and click okay
-	local $timer = __TimerInit()
-	While 1
-		If BBBarbarianHead() Then
-			ClickP($aOkayButton)
-			Return True
-		EndIf
-
-		If QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) Then
-			Click($g_iQuickMISX, $g_iQuickMISY)
-			Return True
-		EndIf
-
-		If __TimerDiff($timer) >= 180000 Then
-			SetLog("Could not find finish battle screen", $COLOR_ERROR)
-			Return False
-		EndIf
-		If IsProblemAffect(True) Then Return
-		If Not $g_bRunState Then Return
-		If _Sleep(3000) Then Return
-	WEnd
-	Return True
 EndFunc
 
 Func GetMachinePos()
@@ -440,30 +467,29 @@ Func CheckBMLoop($aBMPos)
 		If Not $g_bRunState Then Return
 		
 		Local $sDamage = getOcrOverAllDamage(780, 529)
-		If $g_bDebugSetLog Then SetLog("[" & $loopcount & "] " & $MachineName & " LoopCheck, Overall Damage : " & $sDamage, $COLOR_DEBUG2)
+		SetLog("[" & $loopcount & "] " & $MachineName & " LoopCheck, Overall Damage : " & $sDamage, $COLOR_DEBUG2)
 		If Number($sDamage) = Number($sTmpDamage) Then 
 			$bCountSameDamage += 1
 		Else
 			$bCountSameDamage = 0
 		EndIf
 		$sTmpDamage = Number($sDamage)
-		If $bCountSameDamage > 10 Then 
-			If $g_bDebugSetLog Then SetLog($MachineName & " LoopCheck: No Change on Overall Damage, Exit!", $COLOR_ERROR)
+		If $bCountSameDamage > 20 Then 
+			SetLog($MachineName & " LoopCheck: No Change on Overall Damage, Exit!", $COLOR_ERROR)
 			ExitLoop
 		EndIf
 		
 		If $sTmpDamage = 100 Then 
-			If $g_bDebugSetLog Then SetLog($MachineName & " LoopCheck: Overall Damage = 100, Exit!", $COLOR_ERROR)
+			SetLog($MachineName & " LoopCheck: Overall Damage = 100, Exit!", $COLOR_ERROR)
 			ExitLoop
 		EndIf
 		
 		If _ColorCheck(_GetPixelColor($BMPosX, $BMPosY, True), Hex(0x242C4B, 6), 20, Default, $MachineName) Then
 			PureClickP($aBMPos)
 			SetLog("Activate " & $MachineName & " Ability", $COLOR_SUCCESS)
-			_SleepStatus(5000)
 		Else
 			Local $color = _GetPixelColor($BMPosX, $BMPosY, True)
-			If $g_bDebugSetLog Then SetLog("1- Expected: 242C4B, Got: " & $color, $COLOR_DEBUG2)
+			If $g_bDebugSetLog Then SetLog("[" & $loopcount & "] " & $MachineName & " LoopCheck, Expected: 242C4B, Got: " & $color, $COLOR_DEBUG2)
 			If $color = "000000" Then ExitLoop
 		EndIf
 		
@@ -485,7 +511,7 @@ Func CheckBMLoop($aBMPos)
 			EndIf
 		EndIf
 		
-		If _Sleep(250) Then Return
+		If _Sleep(500) Then Return
 		If $g_bDebugSetLog Then SetLog($MachineName & " LoopCheck", $COLOR_ACTION)
 		If $loopcount > 60 Then Return ;1 minute
 		$loopcount += 1
