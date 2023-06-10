@@ -13,10 +13,9 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func GetAttackBarBB($bRemaining = False, $bTest = True)
+Func GetAttackBarBB($bRemaining = False)
 	Local $iTroopBanners = 584 ; y location of where to find troop quantities
 	Local $iSelectTroopY = 620 ; y location to select troop on attackbar
-	;Local $aSlotX[9] = [120, 190, 260, 330, 400, 470, 545, 620, 690] ; location of slot
 	Local $aBBAttackBar[0][5]
 	
 	Local $iMaxSlot = 9, $iSlotOffset = 70, $bMachineFound = False
@@ -59,7 +58,7 @@ Func GetAttackBarBB($bRemaining = False, $bTest = True)
 		If $bRemaining Then 
 			If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
 			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopBanners, $Troopx + 73, 670) Then 
-				If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickY=" & $ColorPickBannerX, $COLOR_DEBUG2)
+				If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
 				$isDarkGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x282828, 6), 10) ; DartkGrey Banner on TroopSlot = Troop Already Deployed
 				$isGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x707070, 6), 10) ;Grey Banner on TroopSlot = Troop Die
 				If $isDarkGreyBanner Or $isGreyBanner Then ContinueLoop ;skip read troop as they detected deployed or die
@@ -70,7 +69,7 @@ Func GetAttackBarBB($bRemaining = False, $bTest = True)
 				If $isBlueBanner Or $isVioletBanner Then
 					$Troop =  $g_iQuickMISName
 					$Troopy = $iSelectTroopY
-					If Not $bTest Then $iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
+					If $isBlueBanner Then $iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
 					If $isVioletBanner Then $iCount = 1
 					
 					Local $aTempElement[1][5] = [[$Troop, $Troopx, $Troopy, $k, $iCount]] ; element to add to attack bar list
@@ -80,16 +79,15 @@ Func GetAttackBarBB($bRemaining = False, $bTest = True)
 		Else
 			If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
 			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopBanners, $Troopx + 73, 670) Then 
-				If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickY=" & $ColorPickBannerX, $COLOR_DEBUG2)
+				If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
 				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 30) ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
 				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30) ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
 				
 				$bReadTroop = $isBlueBanner Or $isVioletBanner
-				If $bTest Then $bReadTroop = True
 				If $bReadTroop Then
 					$Troop =  $g_iQuickMISName
 					$Troopy = $iSelectTroopY
-					If Not $bTest Then $iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
+					If $isBlueBanner Then $iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
 					If $isVioletBanner Then $iCount = 1
 					
 					Local $aTempElement[1][5] = [[$Troop, $Troopx, $Troopy, $k, $iCount]] ; element to add to attack bar list
