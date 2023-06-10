@@ -117,13 +117,14 @@ Func CheckLootAvail()
 	Local $bRet = False, $iRemainStars = 0, $iMaxStars = 0
 	Local $sStars = getOcrAndCapture("coc-BBAttackAvail", 40, 572, 50, 20)
 	
+	If $g_bDebugSetLog Then SetLog("Stars: " & $sStars, $COLOR_DEBUG2)
 	If $sStars <> "" And StringInStr($sStars, "#") Then 
 		Local $aStars = StringSplit($sStars, "#", $STR_NOCOUNT)
 		If IsArray($aStars) Then 
 			$iRemainStars = $aStars[0]
 			$iMaxStars = $aStars[1]
 		EndIf
-		If Number($iRemainStars) < Number($iMaxStars) Then
+		If Number($iRemainStars) <= Number($iMaxStars) Then
 			SetLog("Remain Stars : " & $iRemainStars & "/" & $iMaxStars, $COLOR_INFO)
 			$bRet = True
 		Else

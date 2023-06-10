@@ -13,9 +13,10 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func _ColorCheck($nColor1, $nColor2, $sVari = 5, $Ignore = Default)
+Func _ColorCheck($nColor1, $nColor2, $sVari = 5, $Ignore = Default, $sLogText = Default)
+	Local $bRet = True, $iCompare = 0
 	Local $Red1, $Red2, $Blue1, $Blue2, $Green1, $Green2
-
+	
 	$Red1 = Dec(StringMid(String($nColor1), 1, 2))
 	$Blue1 = Dec(StringMid(String($nColor1), 3, 2))
 	$Green1 = Dec(StringMid(String($nColor1), 5, 2))
@@ -23,21 +24,34 @@ Func _ColorCheck($nColor1, $nColor2, $sVari = 5, $Ignore = Default)
 	$Red2 = Dec(StringMid(String($nColor2), 1, 2))
 	$Blue2 = Dec(StringMid(String($nColor2), 3, 2))
 	$Green2 = Dec(StringMid(String($nColor2), 5, 2))
-
+	
 	Switch $Ignore
 		Case "Red" ; mask RGB - Red
-			If Abs($Blue1 - $Blue2) > $sVari Then Return False
-			If Abs($Green1 - $Green2) > $sVari Then Return False
+			$iCompare = Abs($Blue1 - $Blue2)
+				If $iCompare > $sVari Then $bRet = False
+			$iCompare = Abs($Green1 - $Green2)
+				If $iCompare > $sVari Then $bRet = False
+				
 		Case "Heroes" ; mask RGB - Green
-			If Abs($Blue1 - $Blue2) > $sVari Then Return False
-			If Abs($Red1 - $Red2) > $sVari Then Return False
+			$iCompare = Abs($Blue1 - $Blue2)
+				If $iCompare > $sVari Then $bRet = False
+			$iCompare = Abs($Red1 - $Red2)
+				If $iCompare > $sVari Then $bRet = False
+				
 		Case "Red+Blue" ; mask RGB - Red
-			If Abs($Green1 - $Green2) > $sVari Then Return False
+			$iCompare = Abs($Green1 - $Green2)
+				If $iCompare > $sVari Then $bRet = False
+			
 		Case Else ; compare all color channels
-			If Abs($Blue1 - $Blue2) > $sVari Then Return False
-			If Abs($Green1 - $Green2) > $sVari Then Return False
-			If Abs($Red1 - $Red2) > $sVari Then Return False
+			$iCompare = Abs($Blue1 - $Blue2)
+				If $iCompare > $sVari Then $bRet = False
+			$iCompare = Abs($Green1 - $Green2)
+				If $iCompare > $sVari Then $bRet = False
+			$iCompare = Abs($Red1 - $Red2)
+				If $iCompare > $sVari Then $bRet = False
 	EndSwitch
+	
+	If $g_bDebugSetLog And Not $bRet And $sLogText <> Default Then SetDebugLog($sLogText & ":" & String($bRet) & ", Exp=" & $nColor1 & ", Got=" & $nColor2 & ", Var=" & $sVari & ", ixVar=" & $iCompare, $COLOR_DEBUG2)
 
-	Return True
+	Return $bRet
 EndFunc   ;==>_ColorCheck

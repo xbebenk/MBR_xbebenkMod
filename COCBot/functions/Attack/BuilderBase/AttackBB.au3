@@ -145,7 +145,7 @@ Func _AttackBB()
 	; Get troops on attack bar and their quantities
 	Local $aBBAttackBar
 	If $g_bChkBBCustomArmyEnable Then
-		$aBBAttackBar = GetAttackBarBB(False, True)
+		$aBBAttackBar = GetAttackBarBB(False)
 		If CorrectAttackBarBB($aBBAttackBar) Then 
 			AttackBB()
 		Else
@@ -289,6 +289,7 @@ Func AttackBB($aBBAttackBar = Default)
 	
 	If Not $g_bRunState Then Return ; Stop Button
 	If IsProblemAffect(True) Then Return
+	
 	;If not dropping Builder Machine first, drop it now
 	If Not $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
 		SetLog("Dropping BM Last")
@@ -306,7 +307,7 @@ Func AttackBB($aBBAttackBar = Default)
 		EndIf
 		
 		$sDamage = getOcrOverAllDamage(780, 529)
-		If $g_bDebugSetLog Then SetLog("[" & $waitcount & "] Overall Damage : " & $sDamage, $COLOR_DEBUG2)
+		If $g_bDebugSetLog Then SetLog("[" & $waitcount & "] AttacBB Loop, Overall Damage : " & $sDamage, $COLOR_DEBUG2)
 		If Number($sDamage) = Number($sTmpDamage) Then 
 			$bCountSameDamage += 1
 		Else
@@ -319,7 +320,6 @@ Func AttackBB($aBBAttackBar = Default)
 			ExitLoop
 		EndIf
 		
-		If $g_bDebugSetLog Then SetLog("Waiting Battle End #" & $waitcount, $COLOR_ACTION)
 		If _Sleep(1000) Then Return
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
@@ -379,6 +379,7 @@ Func GetMachinePos()
 		$aCoords[2] = $aBMPos[0][0] ;Name
 		Return $aCoords
 	Else
+		$g_bBBMachineReady = False
 		SetLog("Failed to locate Machine Pos", $COLOR_ERROR)
     EndIf
 	If isProblemAffect(True) Then Return $aCoords
@@ -439,7 +440,7 @@ Func CheckBMLoop($aBMPos)
 		If Not $g_bRunState Then Return
 		
 		Local $sDamage = getOcrOverAllDamage(780, 529)
-		If $g_bDebugSetLog Then SetLog("[" & $loopcount & "] Overall Damage : " & $sDamage, $COLOR_DEBUG2)
+		If $g_bDebugSetLog Then SetLog("[" & $loopcount & "] " & $MachineName & " LoopCheck, Overall Damage : " & $sDamage, $COLOR_DEBUG2)
 		If Number($sDamage) = Number($sTmpDamage) Then 
 			$bCountSameDamage += 1
 		Else
@@ -456,7 +457,7 @@ Func CheckBMLoop($aBMPos)
 			ExitLoop
 		EndIf
 		
-		If _ColorCheck(_GetPixelColor($BMPosX, $BMPosY, True), Hex(0x242C4B, 6), 20) Then
+		If _ColorCheck(_GetPixelColor($BMPosX, $BMPosY, True), Hex(0x242C4B, 6), 20, Default, $MachineName) Then
 			PureClickP($aBMPos)
 			SetLog("Activate " & $MachineName & " Ability", $COLOR_SUCCESS)
 			_SleepStatus(5000)
@@ -466,17 +467,17 @@ Func CheckBMLoop($aBMPos)
 			If $color = "000000" Then ExitLoop
 		EndIf
 		
-		If _ColorCheck(_GetPixelColor($BMPosX, $BMPosY, True), Hex(0x9DA2B2, 6), 20) Then
-			If _Sleep(500) Then Return
-			If $g_bDebugSetLog Then SetLog("Waiting " & $MachineName & " Ability", $COLOR_DEBUG2)
-			ContinueLoop
-		Else
-			Local $color = _GetPixelColor($BMPosX, $BMPosY, True)
-			If $g_bDebugSetLog Then SetLog("2 - Expected: 9DA2B2, Got: " & $color, $COLOR_DEBUG2)
-			If $color = "000000" Then ExitLoop
-		EndIf
+		;If _ColorCheck(_GetPixelColor($BMPosX, $BMPosY, True), Hex(0x9DA2B2, 6), 20, Default, "BMLoop") Then
+		;	If _Sleep(500) Then Return
+		;	If $g_bDebugSetLog Then SetLog("Waiting " & $MachineName & " Ability", $COLOR_DEBUG2)
+		;	ContinueLoop
+		;Else
+		;	Local $color = _GetPixelColor($BMPosX, $BMPosY, True)
+		;	If $g_bDebugSetLog Then SetLog("2 - Expected: 9DA2B2, Got: " & $color, $COLOR_DEBUG2)
+		;	If $color = "000000" Then ExitLoop
+		;EndIf
 
-		If _ColorCheck(_GetPixelColor($BMDeadX, $BMDeadY, True), Hex(0x484848, 6), 20) Then
+		If _ColorCheck(_GetPixelColor($BMDeadX, $BMDeadY, True), Hex(0x484848, 6), 20, Default, $MachineName) Then
 			$count += 1
 			If $count > 3 Then
 				SetLog($MachineName & " is Dead", $COLOR_INFO)
@@ -792,8 +793,8 @@ Func DebugAttackBBImage($aCoords, $g_BBDPSide = 1)
 
 EndFunc   ;==>DebugAttackBBImage
 
-Func BBBarbarianHead()
-	If _CheckPixel($aBlackHead, True) Then
+Func BBBarbarianHead($sLogText = "BBBarbarianHead")
+	If _CheckPixel($aBlackHead, True, Default, $sLogText) Then
 		SetLog("Battle Ended,  Gold Icon Found", $COLOR_DEBUG2)
 		Return True
 	Else

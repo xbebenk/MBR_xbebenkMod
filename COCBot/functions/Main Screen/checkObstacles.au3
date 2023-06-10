@@ -126,19 +126,26 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
 
-	If _ColorCheck(_GetPixelColor(823, 176), Hex(0x882C19, 6), 20) And _ColorCheck(_GetPixelColor(430, 499), Hex(0xFFFFFF, 6), 20) Then
+	If _ColorCheck(_GetPixelColor(823, 176), Hex(0x882C19, 6), 20, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 499), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then
 		SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
 		Click(440, 526)
 		Return False
 	EndIf
 
-	If _ColorCheck(_GetPixelColor(384, 564), Hex(0x6CBB1F, 6), 10) And _ColorCheck(_GetPixelColor(480, 564), Hex(0x6CBB1F, 6), 10) And _ColorCheck(_GetPixelColor(430, 600), Hex(0x000000, 6), 10)  Then
+	If _ColorCheck(_GetPixelColor(384, 564), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(480, 564), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 600), Hex(0x000000, 6), 10, Default, "checkObstacles")  Then
 		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
 		Click(425, 550)
 		If _Sleep(3000) Then Return
 		Return False
 	EndIf
-
+	
+	If BBBarbarianHead("checkObstacles") Then 
+		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
+		Click(430, 540)
+		If _Sleep(3000) Then Return
+		Return False
+	EndIf
+	
 	;If WaitforPixel(420, 600, 420,600, "000000", 20, 1) Then
 	;	If WaitforPixel(420, 563, 421,564, "6CBB1F", 20, 1) Then
 	;		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
@@ -150,7 +157,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	;	EndIf
 	;EndIf
 
-	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20) Then
+	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20, Default, "checkObstacles") Then
 		SetLog("checkObstacles: Found Window with Close Button to close", $COLOR_ACTION)
 		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return

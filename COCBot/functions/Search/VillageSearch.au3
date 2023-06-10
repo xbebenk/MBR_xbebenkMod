@@ -347,8 +347,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		While $i < 100
 			If _Sleep(500) Then Return
 			$i += 1
-			_CaptureRegions()
-			If _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1]), Hex($NextBtn[2], 6), $NextBtn[3]) And IsAttackPage() Then
+			If _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1], True), Hex($NextBtn[2], 6), $NextBtn[3], Default, "NextButton") And IsAttackPage() Then
 				$g_bCloudsActive = True
 				ClickP($NextBtn, 1, 0, "#0155") ;Click Next
 				ExitLoop

@@ -63,8 +63,8 @@ Func GetAttackBarBB($bRemaining = False)
 				$isGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x707070, 6), 10) ;Grey Banner on TroopSlot = Troop Die
 				If $isDarkGreyBanner Or $isGreyBanner Then ContinueLoop ;skip read troop as they detected deployed or die
 				
-				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 30) ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
-				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30) ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
+				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 30, Default, "isVioletBanner") ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
+				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30, Default, "isBlueBanner") ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
 				
 				If $isBlueBanner Or $isVioletBanner Then
 					$Troop =  $g_iQuickMISName
@@ -80,8 +80,8 @@ Func GetAttackBarBB($bRemaining = False)
 			If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
 			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopBanners, $Troopx + 73, 670) Then 
 				If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
-				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 30) ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
-				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30) ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
+				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 30, Default, "isVioletBanner") ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
+				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30, Default, "isBlueBanner") ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
 				
 				$bReadTroop = $isBlueBanner Or $isVioletBanner
 				If $bReadTroop Then
@@ -111,7 +111,7 @@ Global Const $g_asBBTroopShortNames[$g_iBBTroopCount + 1] = ["Barb", "Arch", "Gi
 Global Const $g_sTroopsBBAtk[$g_iBBTroopCount + 1] = ["Raged Barbarian", "Sneaky Archer", "Boxer Giant", "Beta Minion", "Bomber Breaker", "Baby Dragon", "Cannon Cart", "Night Witch", "Drop Ship", "Super Pekka", "Hog Glider", "Battle Machine"]
 
 Func TestCorrectAttackBarBB()
-	Local $aAvailableTroops = GetAttackBarBB(False, True)
+	Local $aAvailableTroops = GetAttackBarBB()
 	CorrectAttackBarBB($aAvailableTroops)
 	Return $aAvailableTroops
 EndFunc   ;==>TestCorrectAttackBarBB
