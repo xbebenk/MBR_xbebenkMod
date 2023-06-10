@@ -1836,8 +1836,8 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 		; check shared folder
 		Local $pathFound = False
 		Local $iMount
-		For $iMount = 0 To 29
-			$s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " mount", $process_killed)
+		For $iMount = 0 To 2
+			$s = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbShellOptions & " mount|grep vboxsf", $process_killed)
 			Local $path = $g_sAndroidPicturesPath
 			If StringRight($path, 1) = "/" Then $path = StringLeft($path, StringLen($path) - 1)
 			Local $aRegExResult = StringRegExp($s, "[^ ]+(?: on)* ([^ ]+).+", $STR_REGEXPARRAYGLOBALMATCH)
@@ -4201,7 +4201,7 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 		EndSwitch
 		If $hHWndAfter <> $g_hAndroidWindow Then AndroidToFront($hHWndAfter, $sSource & "->HideAndroidWindow")
 	EndIf
-	Execute("Hide" & $g_sAndroidEmulator & "Window($bHide, $hHWndAfter)")
+	;Execute("Hide" & $g_sAndroidEmulator & "Window($bHide, $hHWndAfter)")
 	SetError(0)
 EndFunc   ;==>HideAndroidWindow
 
@@ -4887,7 +4887,7 @@ Func CheckEmuNewVersions()
 		Case "MEmu"
 			$NewVersion = GetVersionNormalized("7.2.9.0")
 		Case "Nox"
-			$NewVersion = GetVersionNormalized("7.0.1.2")
+			$NewVersion = GetVersionNormalized("7.0.5.7")
 		Case "BlueStacks5"
 			$NewVersion = GetVersionNormalized("5.6.0.0")
 		Case Else

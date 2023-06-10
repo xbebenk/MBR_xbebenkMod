@@ -202,10 +202,6 @@ Func getAllEmulators()
 				Setlog("Memu v" & $__MEmu_Version & " not fully supported on this Mod", $COLOR_WARNING)
 				Setlog("Please upgrade to Memu version 7.2.9 or later", $COLOR_WARNING)
 			EndIf
-			If StringInStr($aEmulator[$i], "nox") Then
-				Setlog("Nox emulator never tested on this Mod", $COLOR_WARNING)
-				Setlog("Consider to switch to Bluestacks2 or BlueStacks5", $COLOR_WARNING)
-			EndIf
 		Next
 	Else
 		Setlog("No Emulator found in your machine")

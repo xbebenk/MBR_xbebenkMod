@@ -261,47 +261,34 @@ EndFunc   ;==>GetNoxConfigFile
 Func ConfigureSharedFolderNox($iMode = 0, $bSetLog = Default)
 	If $bSetLog = Default Then $bSetLog = True
 	Local $bResult = False
-
+	
+	
+	Local $NoxInstance_ConfigFile = GetNoxConfigFile()
+	Local $NoxInstance_Config = FileReadToArray($NoxInstance_ConfigFile)
+	Local $iLineCount = @extended
+	
 	Switch $iMode
 		Case 0 ; check that shared folder is configured in VM
-			;$g_sAndroidPicturesPath = "/mnt/shell/emulated/0/Download/other/"
-			;$g_sAndroidPicturesPath = "/mnt/shared/Other/"
-			$g_sAndroidPicturesPath = "(/mnt/shared/Other|/mnt/shell/emulated/0/Download/other|/mnt/shell/emulated/0/Others)"
-			Local $aRegexResult = StringRegExp($__VBoxVMinfo, "Name: '" & $g_sAndroidSharedFolderName & "', Host path: '(.*)'.*", $STR_REGEXPARRAYGLOBALMATCH)
-			If Not @error Then
-				$bResult = True
-				$g_bAndroidSharedFolderAvailable = True
-				$g_sAndroidPicturesHostPath = $aRegexResult[UBound($aRegexResult) - 1] & "\"
-			Else
-				; Check the shared folder 'Nox_share' , this is the default path on last version
-				If FileExists(@HomeDrive & @HomePath & "\Nox_share\OtherShare\") Then
-					; > Nox v6
-					$g_bAndroidSharedFolderAvailable = True
-					$g_sAndroidPicturesHostPath = @HomeDrive & @HomePath & "\Nox_share\OtherShare\"
-				ElseIf FileExists(@MyDocumentsDir & "\Nox_share\Other\") Then
-					; > Nox v5.2.1.0
-					$g_bAndroidSharedFolderAvailable = True
-					$g_sAndroidPicturesHostPath = @MyDocumentsDir & "\Nox_share\Other\"
-				ElseIf FileExists(@HomeDrive & @HomePath & "\Nox_share\") Then
-					; > Nox v5.2.0.0
-					$g_bAndroidSharedFolderAvailable = True
-					$g_sAndroidPicturesHostPath = @HomeDrive & @HomePath & "\Nox_share\"
-				Else
-					$g_bAndroidSharedFolderAvailable = False
-					$g_bAndroidAdbScreencap = False
-					$g_sAndroidPicturesHostPath = ""
-					SetLog($g_sAndroidEmulator & " Background Mode is not available", $COLOR_ERROR)
+			For $i = 0 To $iLineCount - 1
+				If StringInStr($NoxInstance_Config[$i], "share_path=") Then 
+					Local $aPath = StringRegExp($NoxInstance_Config[$i], "share_path=(.+)", $STR_REGEXPARRAYMATCH)
+					If IsArray($aPath) And Not @error Then 
+						Local $path = StringStripWS((StringReplace($aPath[0], '\\', '\')), $STR_STRIPTRAILING)
+						If StringRight($path, 1) <> "\" Then $path &= "\"
+						$g_sAndroidPicturesHostPath = $path & "ImageShare\"
+						$bResult = True
+						$g_bAndroidSharedFolderAvailable = True
+						$g_sAndroidPicturesPath = "/data/media/0/Pictures/"
+						SetDebugLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
+						SetDebugLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
+					EndIf
 				EndIf
-			EndIf
-
-		Case 1 ; create missing shared folder
-			$bResult = AndroidPicturePathAutoConfig(@MyDocumentsDir, "\Nox_share\Other", $bSetLog)
-
+			Next
 		Case Else
 			; use default impl.
 			Return SetError(1, 0, "")
 	EndSwitch
-
+	
 	Return SetError(0, 0, $bResult)
 EndFunc
 
