@@ -202,7 +202,7 @@ Func OkayBBEnd($aBMPos) ; Find if battle has ended and click okay
 			AttackBB($aBBAttackBar, True)
 		EndIf
 		
-		If $bCountSameDamage > 10 Then
+		If $bCountSameDamage > 20 Then
 			SetLog("OkayBBEnd LoopCheck: No Change on Overall Damage, Exit!", $COLOR_ERROR)
 			If ReturnHomeDropTrophyBB(True) Then $bRet = True
 			ExitLoop
