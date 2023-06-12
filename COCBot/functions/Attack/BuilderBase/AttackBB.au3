@@ -406,7 +406,7 @@ Func GetMachinePos()
 		$g_bBBMachineReady = False
 		SetLog("Failed to locate Machine Pos", $COLOR_ERROR)
     EndIf
-	If isProblemAffect(True) Then Return $aCoords
+	Return 0
 EndFunc
 
 Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
@@ -448,7 +448,10 @@ Func CheckBMLoop($aBMPos)
 	Local $BMPosX = 66, $BMDeadX = 93, $BMDeadColor
 	Local $BMPosY = 562, $BMDeadY = 666
 	Local $MachineName = ""
-
+	
+	If $aBMPos = 0 Then Return False
+	If Not IsArray($aBMPos) Then Return False
+	
 	If StringInStr($aBMPos[2], "Copter") Then
 		$MachineName = "Battle Copter"
 		$BMPosX = 66
