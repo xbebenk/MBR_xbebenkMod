@@ -4088,6 +4088,7 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	$cmd = "set result=$(dumpsys window windows | grep -E 'mCurrentFocus|mFocusedApp' |grep -E """ & $sPackage & """ >&2)"
 	If $bForeground Then 
 		$output = AndroidAdbSendShellCommand($cmd)
+		$error = @error
 		If $output <> "" Then 
 			If $g_bDebugAndroid Then SetLog($sPackage & " is running in foreground", $COLOR_DEBUG)
 			$bForeground = True

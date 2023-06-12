@@ -161,7 +161,10 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 							EndIf
 						Next
 					Next
-					If $g_bDebugSetlog Or $Debug Then SetDebugLog($ValueReturned & " Found: " & $sResult)
+					If $g_bDebugSetlog Or $Debug Then 
+						SetDebugLog($ValueReturned & " Found: " & $sResult)
+						If $g_bDebugImageSave Then DebugQuickMISCNX($Result, "CNX")
+					EndIf
 					Return $Result
 
 				Case "N1" ; name of first file found
@@ -217,6 +220,29 @@ Func DebugQuickMIS($x, $y, $DebugText)
 	Local $hPenRED = _GDIPlus_PenCreate(0xFFFFD800, 3) ; Create a pencil Color FFFFD800/Yellow
 
 	_GDIPlus_GraphicsDrawRect($hGraphic, $g_iQuickMISX - 5, $g_iQuickMISY - 5, 10, 10, $hPenRED)
+
+	_GDIPlus_ImageSaveToFile($editedImage, $subDirectory & "\" & $filename)
+	_GDIPlus_PenDispose($hPenRED)
+	_GDIPlus_GraphicsDispose($hGraphic)
+	_GDIPlus_BitmapDispose($editedImage)
+
+EndFunc   ;==>DebugQuickMIS
+
+Func DebugQuickMISCNX($aResult, $DebugText)
+
+	_CaptureRegion2()
+	Local $subDirectory = $g_sProfileTempDebugPath & "QuickMIS"
+	DirCreate($subDirectory)
+	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
+	Local $Time = @HOUR & "." & @MIN & "." & @SEC & "." & @MSEC
+	Local $filename = String($Date & "_" & $Time & "_" & $DebugText & "_.png")
+	Local $editedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+	Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($editedImage)
+	Local $hPenRED = _GDIPlus_PenCreate(0xFFFFD800, 3) ; Create a pencil Color FFFFD800/Yellow
+	
+	For $i = 0 To UBound($aResult) - 1
+		_GDIPlus_GraphicsDrawRect($hGraphic, $aResult[$i][1] - 3, $aResult[$i][2] - 3, 3, 3, $hPenRED)
+	Next
 
 	_GDIPlus_ImageSaveToFile($editedImage, $subDirectory & "\" & $filename)
 	_GDIPlus_PenDispose($hPenRED)

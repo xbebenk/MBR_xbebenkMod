@@ -174,7 +174,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			Next
 
 			; Misc Stats
-			$aiNbrOfOoS[$iAccount] = $g_iNbrOfOoS
+			;$aiNbrOfOoS[$iAccount] = $g_iNbrOfOoS
 			$aiDroppedTrophyCount[$iAccount] = $g_iDroppedTrophyCount
 			$aiSearchCost[$iAccount] = $g_iSearchCost
 			$aiTrainCostElixir[$iAccount] = $g_iTrainCostElixir
@@ -258,7 +258,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			Next
 
 			; Misc Stats
-			$g_iNbrOfOoS = $aiNbrOfOoS[$iAccount]
+			;$g_iNbrOfOoS = $aiNbrOfOoS[$iAccount]
 			$g_iDroppedTrophyCount = $aiDroppedTrophyCount[$iAccount]
 			$g_iSearchCost = $aiSearchCost[$iAccount]
 			$g_iTrainCostElixir = $aiTrainCostElixir[$iAccount]

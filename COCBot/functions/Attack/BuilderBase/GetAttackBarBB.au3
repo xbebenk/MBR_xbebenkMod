@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func GetAttackBarBB($bRemaining = False)
+Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 	Local $iTroopBanners = 584 ; y location of where to find troop quantities
 	Local $iSelectTroopY = 620 ; y location to select troop on attackbar
 	Local $aBBAttackBar[0][5]
@@ -82,6 +82,7 @@ Func GetAttackBarBB($bRemaining = False)
 				If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
 				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 30, Default, "isVioletBanner") ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
 				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30, Default, "isBlueBanner") ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
+				If Not $isVioletBanner And $bSecondAttack Then $isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x10224B, 6), 30, Default, "isVioletBanner") ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
 				
 				$bReadTroop = $isBlueBanner Or $isVioletBanner
 				If $bReadTroop Then

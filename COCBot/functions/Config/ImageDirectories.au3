@@ -114,6 +114,7 @@ Global $g_sImgFillTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttack
 Global $g_sImgFillCamp = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttackBB\TrainTroop\Camp\"
 Global $g_sImgBBAttackStart = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackStart\"
 Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBar\"
+Global $g_sImgDirMachineAbility = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBar\MachineAbility\"
 Global $g_sImgBBReturnHome = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\ReturnHome\"
 Global $g_sImgBBAttackBonus = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBonus\"
 Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBar\Machine\"
@@ -121,7 +122,8 @@ Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackB
 ; Builder Base Attack
 Global $g_sImgChangeTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\ChangeTroops\"
 Global Const $g_sBundleBuilderHall = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\BuilderHall"
-Global Const $g_sBundleDeployPointsBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\DeployPoints\"
+Global Const $g_sImgDirBBRedlinesHZ = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\Redlines\HighZone\"
+Global Const $g_sImgDirBBRedlinesLZ = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\Redlines\LowerZone\"
 Global Const $g_sImgOpponentBuildingsBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\"
 
 #EndRegion

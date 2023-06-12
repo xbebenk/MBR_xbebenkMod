@@ -43,6 +43,16 @@ Func PrepareAttackBB($Mode = Default)
 		Return False
 	EndIf
 	
+	If $Mode = "DropTrophy" Then 
+		SetLog("Preparing Attack for DropTrophy", $COLOR_ACTION)
+		Return True
+	EndIf
+	
+	If $Mode = "CleanYard" Then 
+		SetLog("Preparing Attack Clean Yard", $COLOR_ACTION)
+		Return True
+	EndIf
+	
 	If $g_bChkBBAttIfLootAvail Then
 		If Not CheckLootAvail() Then
 			If _Sleep(500) Then Return
@@ -72,16 +82,6 @@ Func PrepareAttackBB($Mode = Default)
 		If _Sleep(500) Then Return
 		ClickAway("Left")
 		Return False
-	EndIf
-	
-	If $Mode = "DropTrophy" Then 
-		SetLog("Preparing Attack for DropTrophy", $COLOR_ACTION)
-		Return True
-	EndIf
-	
-	If $Mode = "CleanYard" Then 
-		SetLog("Preparing Attack Clean Yard", $COLOR_ACTION)
-		Return True
 	EndIf
 	
 	$g_bBBMachineReady = CheckMachReady()
