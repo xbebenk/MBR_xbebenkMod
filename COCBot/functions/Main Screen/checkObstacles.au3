@@ -26,6 +26,11 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	_CaptureRegions()
 
 	If isProblemAffect() Then
+		If QuickMIS("BFI", $g_sImgUpdateCoC, 250, 280, 300, 305) Then 
+			SetLog("Good News, Updates available!", $COLOR_INFO)
+			$msg = "Game Update is required, Bot must stop!"
+			Return checkObstacles_StopBot($msg) ; stop bot
+		EndIf
 		;;;;;;;##### 1- Another device #####;;;;;;;
 		If UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,300(130,60)", False))) > 1 Then
 			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And Not $g_bChkSmartSwitch And $g_bChkSharedPrefs Then
@@ -72,7 +77,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			checkObstacles_ResetSearch()
 			Return True
 		EndIf
-
+		
 		;;;;;;;##### Connection Lost & OoS & Inactive & Maintenance #####;;;;;;;
 		Select
 			Case UBound(decodeSingleCoord(FindImageInPlace("AnyoneThere", $g_sImgAnyoneThere, "440,310,580,360", False))) > 1 ; Inactive only
@@ -99,15 +104,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 					PullSharedPrefs()
 					Return True
 				EndIf
-				$Result = getOcrReloadMessage(171, 325, "Check Obstacles OCR 'Good News!'=") ; OCR text for "Good News!"
-				If StringInStr($Result, "new", $STR_NOCASESENSEBASIC) Then
-					$msg = "Game Update is required, Bot must stop!"
-					Return checkObstacles_StopBot($msg) ; stop bot
-				ElseIf StringInStr($Result, "rate", $STR_NOCASESENSEBASIC) Then ; back up check for rate CoC reload window
-					SetLog("Clash feedback window found, permanently closed!", $COLOR_ERROR)
-					PureClick(248, 408, 1, 0, "#9999") ; Click on never to close window and stop reappear. Never=248,408 & Later=429,408
-					Return True
-				EndIf
+				
 				;  Add check for banned account :(
 				$Result = getOcrReloadMessage(171, 358, "Check Obstacles OCR 'policy at super'=") ; OCR text for "policy at super"
 				If StringInStr($Result, "policy", $STR_NOCASESENSEBASIC) Then
@@ -298,7 +295,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		EndIf
 	EndIf
 	
-	If UBound(decodeSingleCoord(FindImageInPlace("Maintenance", $g_sImgMaintenance, "270,40,640, 140", False))) > 1 Then ; Maintenance Break
+	If QuickMIS("BFI", $g_sImgMaintenance, 360, 70, 420, 110) Then 
 		$Result = getOcrMaintenanceTime(300, 550, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
 		Local $iMaintenanceWaitTime = 0
 		Local $avTime = StringRegExp($Result, "([\d]+)[Mm]|(soon)|([\d]+[Hh])", $STR_REGEXPARRAYMATCH)
