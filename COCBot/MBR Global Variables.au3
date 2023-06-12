@@ -1926,7 +1926,7 @@ Global $g_aiPetLevel[$ePetCount] = [0, 0, 0, 0, 0, 0, 0, 0]
 
 Global Const $g_ePetLevels[$ePetCount] = [15, 10, 15, 10, 10, 10, 10, 10]
 
-
+#cs
 Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _; LASSI
 		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _; Electro Owl
@@ -1936,7 +1936,7 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 		[0, 220, 230, 240, 250, 260, 270, 280, 290, 300], _; Diggy
 		[0, 225, 235, 245, 255, 265, 275, 285, 295, 305], _; Poison Lizard
 		[0, 230, 240, 250, 260, 270, 280, 290, 300, 310]]; Phoenix
-
+#ce
 
 ;Misc Mod
 Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = False
