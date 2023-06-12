@@ -121,10 +121,10 @@ Func PetHouse($test = False)
 	Local $AllPetMax = True
 	SetLog("Current DE: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_INFO)
 	For $i = 0 To UBound($aPet) - 1
-		If $aPet[$i][3] < $g_ePetLevels Then
+		If $aPet[$i][3] < $g_ePetLevels[$i] Then
 			$AllPetMax = False
 		EndIf
-		If $aPet[$i][3] = $g_ePetLevels Then 
+		If $aPet[$i][3] = $g_ePetLevels[$i] Then 
 			SetLog($aPet[$i][1] & ", MaxLevel", $COLOR_INFO)
 			ContinueLoop
 		EndIf
@@ -326,7 +326,7 @@ Func GetPetUpgradeList()
 		Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 503)
 		$iDarkElixirReq = 0 ;reset value
 		$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 20, 503, 100, 16, True)
-		If Number($iPetLevel) = $g_ePetLevels Then 
+		If Number($iPetLevel) = $g_ePetLevels[$i] Then 
 			$Unlocked = "MaxLevel"
 			$iDarkElixirReq = 0
 		EndIf
