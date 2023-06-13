@@ -62,7 +62,10 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 EndFunc   ;==>BuilderBaseReport
 
 Func isBHMaxed()
-	If $g_bIs6thBuilderUnlocked Then Return True
+	If $g_bIs6thBuilderUnlocked Then
+		$g_bisBHMaxed = True
+		Return True
+	EndIf
 	
 	Local $aBuildingName, $bRet = False
 	ClickAway("Left")
@@ -112,7 +115,10 @@ Func isBHMaxed()
 EndFunc
 
 Func isMegaTeslaMaxed()
-	If $g_bIs6thBuilderUnlocked Then Return True
+	If $g_bIs6thBuilderUnlocked Then
+		$g_bisMegaTeslaMaxed = True
+		Return True
+	EndIf
 	
 	ClickAway("Left")
 	If $g_bisMegaTeslaMaxed = True Then Return True
@@ -142,7 +148,10 @@ Func isMegaTeslaMaxed()
 EndFunc
 
 Func isBattleMachineMaxed()
-	If $g_bIs6thBuilderUnlocked Then Return True
+	If $g_bIs6thBuilderUnlocked Then
+		$g_bisBattleMachineMaxed = True
+		Return True
+	EndIf
 
 	ClickAway("Left")
 	If $g_bisBattleMachineMaxed = True Then Return True
