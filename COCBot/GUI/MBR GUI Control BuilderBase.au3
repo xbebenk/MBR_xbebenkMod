@@ -23,6 +23,7 @@ Func chkEnableBBAttack()
 		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbBBAttackCount, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkDebugAttackBB, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hChkBBDropTrophy, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_DISABLE)
@@ -32,6 +33,7 @@ Func chkEnableBBAttack()
 		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbBBAttackCount, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkDebugAttackBB, $GUI_DISABLE)
 	EndIf
 EndFunc
 
@@ -74,6 +76,24 @@ Func btnBBDropOrder()
 	GUICtrlSetState($g_hChkEnableBBAttack, $GUI_DISABLE)
 	GUISetState(@SW_SHOW, $g_hGUI_BBDropOrder)
 EndFunc   ;==>btnBBDropOrder
+
+Func ChkBBAttIfLootAvail()
+	If GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED Then
+		$g_bChkBBAttIfLootAvail = True
+	Else
+		$g_bChkBBAttIfLootAvail = False
+	EndIf
+EndFunc   ;==>ChkBBAttIfLootAvail
+
+Func ChkDebugAttackBB()
+	If GUICtrlRead($g_hChkDebugAttackBB) = $GUI_CHECKED Then
+		$g_bChkDebugAttackBB = True
+		SetLog("Debug Attack BB Enabled", $COLOR_DEBUG2)
+	Else
+		$g_bChkDebugAttackBB = False
+		SetLog("Debug Attack BB Disabled", $COLOR_DEBUG2)
+	EndIf
+EndFunc   ;==>ChkDebugAttackBB
 
 Func chkStopAttackBB6thBuilder()
 	If GUICtrlRead($g_hChkStopAttackBB6thBuilder) = $GUI_CHECKED Then

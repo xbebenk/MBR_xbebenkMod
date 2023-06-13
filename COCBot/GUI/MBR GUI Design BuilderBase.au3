@@ -22,6 +22,7 @@ Global $g_hChkBBSuggestedUpgrades = 0, $g_hChkBBSuggestedUpgradesIgnoreGold = 0 
 Global $g_hChkPlacingNewBuildings = 0, $g_hChkBBSuggestedUpgradesIgnoreWall = 0, $g_hChkBBSuggestedUpgradesOTTO = 0
 Global $g_hChkAutoStarLabUpgrades = 0, $g_hCmbStarLaboratory = 0, $g_hLblNextSLUpgrade = 0, $g_hBtnResetStarLabUpgradeTime = 0, $g_hPicStarLabUpgrade = 0
 Global $g_hChkEnableBBAttack = 0, $g_hChkBBDropTrophy = 0, $g_hChkBBAttIfLootAvail = 0, $g_hChkBBWaitForMachine = 0, $g_hChkBBDropBMFirst = 0, $g_hChkStopAttackBB6thBuilder = 0
+Global $g_hChkDebugAttackBB = 0
 
 Global $g_hIcnTroopBB[6]
 Global $g_hCmbTroopBB[6]
@@ -312,6 +313,7 @@ Func CreateBBAttackSubTab()
 		$y += 23
 		$g_hChkBBAttIfLootAvail = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBAttIfLootAvail", "Only if loot is available"), $x, $y)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBAttIfLootAvail_Info_01", "Only attack if there is loot available."))
+			GUICtrlSetOnEvent(-1, "ChkBBAttIfLootAvail")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$y += 23
 		$g_hChkBBWaitForMachine = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine", "Wait For Battle Machine"), $x, $y)
@@ -321,6 +323,12 @@ Func CreateBBAttackSubTab()
 		$g_hChkBBDropBMFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBDropBMFirst", "Drop Battle Machine First"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBBMDropFirst_01", "Check to drop BM first in battles."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
+		$y += 23
+		$g_hChkDebugAttackBB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkDebugAttackBB", "Debug AttackBB"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkDebugAttackBB", "Create Debug Image while BuilderBase Attack"))
+			GUICtrlSetOnEvent(-1, "ChkDebugAttackBB")
+			GUICtrlSetState(-1, $GUI_DISABLE)
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	$x = 15

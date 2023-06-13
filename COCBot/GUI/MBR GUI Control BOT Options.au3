@@ -613,6 +613,35 @@ Func btnTestAttackBarBB()
 	Return $avAttackBarBB
 EndFunc   ;==>btnTestAttackBarBB
 
+Func btnTestSearchRedLinesBB($bSecongAttack = False)
+	Local $bCurrentOCR = $g_bDebugOcr, $bCurrentRunState = $g_bRunState, $bCurrentDebugImage = $g_bDebugImageSave
+
+	_GUICtrlTab_ClickTab($g_hTabMain, 0)
+
+	$g_bDebugOcr = True
+    $g_bDebugImageSave = True
+	$g_bRunState = True
+
+	If MsgBox($MB_YESNO, "Screenshot or Live Image", "Do you want to use a Screenshot instead of a Live Image?") = $IDYES Then
+	 Local $sImageFile = BeginImageTest() ; get image for testing
+	 If $sImageFile = False Then $sImageFile = "Live Screenshot"
+	EndIf
+
+
+	SetLog(_PadStringCenter(" Begin SearchRedLinesBB Detection", 54, "="), $COlOR_INFO)
+
+	Local $avRedLinesBB = SearchRedLinesBB($bSecongAttack)
+
+	SetLog(_PadStringCenter(" End SearchRedLinesBB Detection ", 54, "="), $COlOR_INFO)
+
+	EndImageTest() ; clear test image handle
+
+	$g_bDebugOcr = $bCurrentOCR
+	$g_bDebugImageSave = $bCurrentDebugImage
+	$g_bRunState = $bCurrentRunState
+	Return $avRedLinesBB
+EndFunc   ;==>btnTestSearchRedLinesBB
+
 Func btnTestCheckObstacles()
 	Local $bCurrentOCR = $g_bDebugOcr, $bCurrentRunState = $g_bRunState, $bCurrentDebugImage = $g_bDebugImageSave
 

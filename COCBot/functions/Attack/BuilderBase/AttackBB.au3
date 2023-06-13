@@ -184,7 +184,7 @@ EndFunc
 Func OkayBBEnd($aBMPos) ; Find if battle has ended and click okay
 	Local $bRet = False, $bBattleMachine = True
 	Local $sDamage = 0, $sTmpDamage = 0, $bCountSameDamage = 1
-	
+
 	For $i = 1 To 200
 		;SetLog("Waiting EndBattle Screen #" & $i, $COLOR_ACTION)
 		If $bBattleMachine Then $bBattleMachine = CheckBMLoop($aBMPos)
@@ -196,19 +196,19 @@ Func OkayBBEnd($aBMPos) ; Find if battle has ended and click okay
 			$bCountSameDamage = 1
 		EndIf
 		$sTmpDamage = Number($sDamage)
-		If $sTmpDamage = 100 Then 
+		If $sTmpDamage = 100 Then
 			_SleepStatus(15000)
 			Local $aBBAttackBar = GetAttackBarBB(False, True)
 			AttackBB($aBBAttackBar, True)
 		EndIf
-		
+
 		If $bCountSameDamage > 20 Then
 			SetLog("OkayBBEnd LoopCheck: No Change on Overall Damage, Exit!", $COLOR_ERROR)
 			If ReturnHomeDropTrophyBB(True) Then $bRet = True
 			ExitLoop
 		EndIf
 
-		If BBBarbarianHead("OkayBBEnd") Then 
+		If BBBarbarianHead("OkayBBEnd") Then
 			$bRet = True
 			ClickP($aOkayButton)
 			ExitLoop
@@ -218,21 +218,24 @@ Func OkayBBEnd($aBMPos) ; Find if battle has ended and click okay
 		If Not $g_bRunState Then Return
 		If _Sleep(1000) Then Return
 	Next
-	
+
 	If Not $bRet Then SetLog("Could not find finish battle screen", $COLOR_ERROR)
 	Return $bRet
 
 EndFunc
 
 Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
+	
+	AndroidZoomOut()
+	If _Sleep(2000) Then Return
+	
+	$g_BBDP = GetBBDropPoint($bSecondAttack)
+
 	; Get troops on attack bar and their quantities
 	If $aBBAttackBar = Default Then $aBBAttackBar = GetAttackBarBB()
 	Local $aBMPos = GetMachinePos()
 	local $bTroopsDropped = False, $bBMDeployed = False
-
-	$g_BBDP = GetBBDropPoint($bSecondAttack)
-	If IsProblemAffect(True) Then Return
-
+	
 	Local $iSide = $g_BBDPSide
 	Local $AltSide = 0, $countTL = 0, $countBL = 0, $countBR = 0, $countTR = 0
 	For $i = 0 To Ubound($g_BBDP) - 1
@@ -416,7 +419,7 @@ Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 	If $g_bDebugSetLog Then SetLog(_ArrayToString($aBMPos))
 
 	If $g_bBBMachineReady And IsArray($aBMPos) Then
-		SetLog("Deploying Battle Machine", $COLOR_BLUE)
+		SetLog("Deploying " & $aBMPos[2], $COLOR_BLUE)
 		PureClickP($aBMPos)
 		If _Sleep(500) Then Return
 
@@ -448,10 +451,10 @@ Func CheckBMLoop($aBMPos)
 	Local $BMPosX = 66, $BMDeadX = 93, $BMDeadColor
 	Local $BMPosY = 562, $BMDeadY = 666
 	Local $MachineName = ""
-	
+
 	If $aBMPos = 0 Then Return False
 	If Not IsArray($aBMPos) Then Return False
-	
+
 	If StringInStr($aBMPos[2], "Copter") Then
 		$MachineName = "Battle Copter"
 		$BMPosX = 66
@@ -536,38 +539,57 @@ Func SetVersusBHToMid()
 	Return $aRet
 EndFunc
 
+Func isInsideDiamondAttackBB($aCoords, $aaDiamond)
+	Local $x = $aCoords[0], $y = $aCoords[1], $xD, $yD
+	Local $aDiamond[2][2] = [[$aaDiamond[0], $aaDiamond[2]], [$aaDiamond[1], $aaDiamond[3]]]
+	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
+	Local $aSize = [$aMiddle[0] - $aDiamond[0][0], $aMiddle[1] - $aDiamond[0][1]]
+
+	Local $DX = Abs($x - $aMiddle[0])
+	Local $DY = Abs($y - $aMiddle[1])
+
+	If ($DX / $aSize[0] + $DY / $aSize[1] <= 1) Then
+		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamondAttackBB: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_INFO)
+		Return True ; Inside Village
+	Else
+		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamondAttackBB: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_INFO)
+		Return False ; Outside Village
+	EndIf
+
+EndFunc   ;==>isInsideDiamondAttackBB
+
 Func SearchRedLinesBB($bSecondAttack = False)
 	Local $sDir = ""
-	If $bSecondAttack Then 
-		$sDir = $g_sImgDirBBRedlinesHZ
-		ClickAway()
-		If _Sleep(1000) Then Return
-	Else
-		$sDir = $g_sImgDirBBRedlinesLZ
-		AndroidZoomOut()
-		SearchZoomOut(getVillageCenteringCoord(), True, "AttackBB", True)
-		If _Sleep(5000) Then Return
-	EndIf
-	
-	
 	Local $aResult[0][3]
 	Local $xstart[2] = [70, 430], $ystart = 30, $xend[2] = [430, 800], $yend = 600
-	For $i = 0 To 1
-		Local $aTmp = QuickMIS("CNX", $sDir, $xstart[$i], $ystart, $xend[$i], $yend, True)
+	Local $aDiamond[4] = [110, 740, 100, 565] ;Left, Right, Top, Bottom
+	Local $SearchRedLinesBBMultipleTime = 3
+	
+	If $bSecondAttack Then
+		$sDir = $g_sImgDirBBRedlinesHZ
+		$SearchRedLinesBBMultipleTime = 1
+	Else
+		$sDir = $g_sImgDirBBRedlinesLZ
+	EndIf
+	
+	For $i = 1 To $SearchRedLinesBBMultipleTime
+		Local $aTmp = QuickMIS("CNX", $sDir, $aDiamond[0], $aDiamond[2], $aDiamond[1], $aDiamond[3])
 		SetDebugLog("aTmp" & $i & ": " & UBound($aTmp) & " Coords", $COLOR_INFO)
 		For $j = 0 To UBound($aTmp) - 1
-			If Not isInsideDiamondXY($aTmp[$j][1], $aTmp[$j][2]) Then ContinueLoop
+			Local $aCoord[2] = [$aTmp[$j][1], $aTmp[$j][2]]
+			If Not isInsideDiamondAttackBB($aCoord, $aDiamond) Then ContinueLoop
 			_ArrayAdd($aResult, $aTmp[$j][1] & "|" & $aTmp[$j][2] & "|" & $aTmp[$j][0])
 		Next
-		;_ArrayDisplay($aTmp)
+		If _Sleep(50) Then Return
 	Next
+	
 	If isProblemAffect(True) Then Return
 	SetLog("Search BBDropPoint result : " & UBound($aResult) & " Coords", $COLOR_INFO)
 	;_ArrayDisplay($aResult)
 
 	Local $XMiddle = 445, $YMiddle = 340
 	Local $aaCoords[0][4], $iSide
-	Local $THhOffset = 150
+	Local $THhOffset = 100
 
 	For $i = 0 To UBound($aResult) - 1
 		$iSide = GetBBDPPixelSection($XMiddle, $YMiddle, $aResult[$i][0], $aResult[$i][1])
@@ -578,21 +600,19 @@ Func SearchRedLinesBB($bSecondAttack = False)
 		_ArrayAdd($aaCoords, $iSide & "|" & $aResult[$i][0] & "|" & $aResult[$i][1] & "|" & $aResult[$i][2])
 	Next
 	SetLog("Cleared BBDropPoint result : " & UBound($aaCoords) & " Coords", $COLOR_INFO)
-	If $g_bDebugSetLog Then DebugAttackBBImage($aaCoords)
+	If $g_bChkDebugAttackBB Then DebugAttackBBImage($aaCoords)
 	Return $aaCoords
 EndFunc
 
 Func GetBBDropPoint($bSecondAttack = False)
 
 	;SetVersusBHToMid()
-
 	Local $hTimer = TimerInit()
 	SetLog("GetBBDropPoint start", $COLOR_ACTION)
 	$g_bAttackActive = True
 	SuspendAndroid()
 
 	Local $aaCoords = SearchRedLinesBB($bSecondAttack)
-	Local $aDPResult = SortBBDP($aaCoords)
 
 	Local $aDPResult = SortBBDP($aaCoords)
 	SetLog("BBDropPoint after sort : " & UBound($aDPResult) & " Coords", $COLOR_INFO)
@@ -616,14 +636,14 @@ Func GetBBDropPoint($bSecondAttack = False)
 	EndIf
 
 	SetDebugLog("MainSide = " & $g_BBDPSide)
-	If $g_bDebugSetLog Then DebugAttackBBImage($aDPResult, $g_BBDPSide)
+	If $g_bChkDebugAttackBB Then DebugAttackBBImage($aDPResult, $g_BBDPSide)
 
 	Return $aDPResult
 EndFunc
 
 Func SortBBDP($aDropPoints)
 	Local $aResult[0][4]
-	Local $TmpYL = 0, $TmpXR = 0, $DPChange = 5, $DpDistance = 8
+	Local $TmpYL = 0, $TmpXR = 0, $DPChange = 0, $DpDistance = 5
 	Local $TmpYMaxTLFound = False, $TmpYMinBLFound = False, $TmpYMinBRLFound = False, $TmpYMaxTRFound = False
 	Local $TmpXMinTL = 0, $TmpYMaxTL = 0
 	Local $TmpXMinBL = 0, $TmpYMinBL = 0
@@ -658,13 +678,13 @@ Func SortBBDP($aDropPoints)
 			If $aDropPoints[$i][1] > 250 And $aDropPoints[$i][2] > 500 Then ContinueLoop
 			$TmpXMinBL = $aDropPoints[$i][1]
 			$TmpYMinBL = $aDropPoints[$i][2]
-
+	
 			If Not $TmpYMinBLFound Then
 				$TmpXMinBL = $aDropPoints[$i][1]
 				$TmpYMinBL = $aDropPoints[$i][2]
 				$TmpYMinBLFound = True
 			EndIf
-
+	
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBL:" & $TmpXMinBL & " TmpYMinBL:" & $TmpYMinBL)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] - $DPChange & "|" & $aDropPoints[$i][2] + $DPChange & "|" & $aDropPoints[$i][3])
 			$iBL += 1
@@ -677,19 +697,19 @@ Func SortBBDP($aDropPoints)
 			If $aDropPoints[$i][1] > $TmpXMinBR And $aDropPoints[$i][2] > $TmpYMinBR + $DpDistance And $TmpYMinBRLFound Then ContinueLoop
 			$TmpXMinBR = $aDropPoints[$i][1]
 			$TmpYMinBR = $aDropPoints[$i][2]
-
+	
 			If Not $TmpYMinBRLFound Then
 				$TmpXMinBR = $aDropPoints[$i][1]
 				$TmpYMinBR = $aDropPoints[$i][2]
 				$TmpYMinBRLFound = True
 			EndIf
-
+	
 			SetDebugLog("Side:" & $aDropPoints[$i][0] & " $TmpXMinBR:" & $TmpXMinBR & " TmpYMinBR:" & $TmpYMinBR)
 			_ArrayAdd($aResult, $aDropPoints[$i][0] & "|" & $aDropPoints[$i][1] + $DPChange & "|" & $aDropPoints[$i][2] + $DPChange & "|" & $aDropPoints[$i][3])
 			$iBR += 1
 		EndIf
 	Next
-
+	
 	_ArraySort($aDropPoints, 0, 0, 0, 2) ;sort y axis
 	For $i = 0 To UBound($aDropPoints) - 1
 		If $aDropPoints[$i][0] = 4 Then ;Top Right
@@ -697,7 +717,7 @@ Func SortBBDP($aDropPoints)
 			If $aDropPoints[$i][2] > $TmpYMinTR And $aDropPoints[$i][1] < $TmpXMinTR And $TmpYMaxTRFound Then ContinueLoop
 			$TmpXMinTR = $aDropPoints[$i][1]
 			$TmpYMinTR = $aDropPoints[$i][2]
-
+	
 			If Not $TmpYMaxTRFound Then
 				$TmpXMinTR = $aDropPoints[$i][1]
 				$TmpYMinTR = $aDropPoints[$i][2]
