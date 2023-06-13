@@ -143,17 +143,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 	
-	;If WaitforPixel(420, 600, 420,600, "000000", 20, 1) Then
-	;	If WaitforPixel(420, 563, 421,564, "6CBB1F", 20, 1) Then
-	;		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
-	;		Click(420, 560)
-	;		_Sleep(3000)
-	;		Return False
-	;	Else
-	;		SetDebugLog("Expected: 6CBB1F, Got:" & _GetPixelColor(420, 563, True))
-	;	EndIf
-	;EndIf
-
 	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20, Default, "checkObstacles") Then
 		SetLog("checkObstacles: Found Window with Close Button to close", $COLOR_ACTION)
 		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
@@ -168,43 +157,12 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 
-	;If _ColorCheck(_GetPixelColor(422, 505, True), Hex(0x86D435, 6), 20) Then
-	;	SetLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
-	;	Click(422, 500)
-	;	If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-	;	Return False
-	;EndIf
-
 	If _CheckPixel($aIsTrainPgChk1) Then
 		SetLog("checkObstacles: Found Army Window to close", $COLOR_ACTION)
 		ClickAway(Default, True)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
-
-	;Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
-	;If UBound($CSFoundCoords) > 1 Then
-	;	SetLog("CoC Has Stopped Error .....", $COLOR_ERROR)
-	;	If TestCapture() Then Return "CoC Has Stopped Error ....."
-	;	PushMsg("CoCError")
-	;	If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-	;	;PureClick(250 + $x, 328 + $y, 1, 0, "#0129");Check for "CoC has stopped error, looking for OK message" on screen
-	;	PureClick($CSFoundCoords[0], $CSFoundCoords[1], 1, 0, "#0129") ;Check for "CoC has stopped error, looking for OK message" on screen
-	;	If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-	;	Return checkObstacles_ReloadCoC(Default, "")
-	;EndIf
-
-	;;;;;;;##### 7- SCID Login Screen #####;;;;;;;
-	;CheckLoginWithSupercellID()
-	;If CheckObstacles_SCIDPopup() Then Return False
-	;; optional game update
-	;If UBound(decodeSingleCoord(FindImageInPlace("OptUpdateCoC", $g_sImgOptUpdateCoC, "155, 190, 705, 480", False))) > 1 Then ; Found Optional Game Update Message
-	;	SetLog("Found Optional Game Update - Clicking No Thanks", $COLOR_INFO)
-	;	If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-	;	PureClick(520, 475, 1, 0) ; Click No Thanks
-	;	If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-	;	Return False
-	;EndIf
 
 	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then ;ads event popup window (usually covering 80% of coc screen)
 		SetLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
@@ -240,13 +198,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
-
-	;If QuickMIS("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, False) Then ;this check formerly used for bluestacks without minitouch, bot stuck on request page
-	;	SetLog("checkObstacles: Found RequestCC Window, Click Send", $COLOR_ACTION)
-	;	Click($g_iQuickMISX, $g_iQuickMISY)
-	;	If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-	;	Return False
-	;EndIf
 
 	If $bBuilderBase Then CheckBB20Tutor()
 	If Not $bBuilderBase Then
@@ -317,27 +268,8 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If ClickB("ReloadButton") Then SetLog("Trying to reload game after maintenance break", $COLOR_INFO)
 		checkObstacles_ResetSearch()
 	EndIf
-	
-	;If Not isOnMainVillage() And IsAttackPage() And Not isOnBuilderBase() Then ; bot seeing attackbar while it shouldn't, will do surrender and/or return home
-	;	ClickP($aIsAttackPage)
-	;	If _Sleep(1000) Then Return
-	;	For $i = 1 To 5
-	;		If isOnMainVillage() Then ExitLoop
-	;		SetLog("Waiting Main Page #" & $i, $COLOR_ACTION)
-	;		If IsOKCancelPage(True) Then
-	;			Click(510, 400); Click Okay to Confirm surrender
-	;			If _Sleep(1000) Then Return
-	;		EndIf
-	;		If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-	;		If _Sleep(1000) Then Return
-	;	Next
-	;	;SetLog("CheckObstacle: Not in MainVillage And detected AttackPage", $COLOR_ACTION)
-	;	ClickAway("Left", True)
-	;	Return False
-	;EndIf
 
 	;xbebenk: I need this click away to be logged
-	;SetLog("CheckObstacle: Not Found Any obs, just do clickaway()", $COLOR_ACTION)
 	ClickAway("Left", True)
 	Return False
 EndFunc   ;==>_checkObstacles

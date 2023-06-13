@@ -161,7 +161,7 @@ Func ZoomOutHelperBB($caller = "Default")
 	Local $bIsOnBuilderBase = isOnBuilderBase()
 	Local $Dir = "", $aOffset, $bRet = False
 	Local $xyOffsetSwitchBases = 0
-	If $caller = "SwitchBetweenBases" Then $xyOffsetSwitchBases = -30
+	If $caller = "SwitchBetweenBases" Then $xyOffsetSwitchBases = -40
 	
 	If Not $bIsOnBuilderBase Then Return ;leave if not in mainvillage
 	
