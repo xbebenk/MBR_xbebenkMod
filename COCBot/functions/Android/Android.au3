@@ -776,23 +776,22 @@ Func FindPreferredAdbPath()
 	Local $sAdbFolder = StringLeft($adbPath, StringInStr($adbPath, "\", 0, -1))
 	Local $sAdbFile = StringMid($adbPath, StringLen($sAdbFolder) + 1)
 	Local $sRealAdb = @ScriptDir & "\lib\adb\adb.exe"
-	Local $sDummyAdb = @ScriptDir & "\lib\DummyExe.exe"
-	Local $bDummy = $g_iAndroidAdbReplace = 2 And FileExists($sDummyAdb)
-	Local $sAdb = ($bDummy ? $sDummyAdb : $sRealAdb)
+	Local $sAdb = $sRealAdb
 
-	If $g_iAndroidAdbReplace And $adbPath And FileExists($sAdb) And (Not $bDummy Or (FileExists(@ScriptDir & "\lib\adb\" & $aDll[0]) And FileExists(@ScriptDir & "\lib\adb\" & $aDll[1]))) _
-			And (FileGetSize($adbPath) <> FileGetSize($sAdb) Or (Not $bDummy And (FileGetSize($sAdbFolder & $aDll[0]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[0]) Or FileGetSize($sAdbFolder & $aDll[1]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[1])))) Then
+	If $g_iAndroidAdbReplace And $adbPath And FileExists($sAdb) And (FileExists(@ScriptDir & "\lib\adb\" & $aDll[0]) And FileExists(@ScriptDir & "\lib\adb\" & $aDll[1])) _
+			And (FileGetSize($adbPath) <> FileGetSize($sAdb) Or (FileGetSize($sAdbFolder & $aDll[0]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[0]) Or FileGetSize($sAdbFolder & $aDll[1]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[1]))) Then
 		Local $aAdbProcess = ProcessesExist($adbPath)
 		For $i = 0 To UBound($aAdbProcess) -1
 			; ensure target process is not running
 			KillProcess($aAdbProcess[$i], "FindPreferredAdbPath")
 		Next
-		If FileCopy($sAdb, $adbPath, 1) And ($bDummy Or (FileCopy(@ScriptDir & "\lib\adb\" & $aDll[0], $sAdbFolder & $aDll[0], 1) And FileCopy(@ScriptDir & "\lib\adb\" & $aDll[1], $sAdbFolder & $aDll[1], 1))) Then
+		If FileCopy($sAdb, $adbPath, 1) And (FileCopy(@ScriptDir & "\lib\adb\" & $aDll[0], $sAdbFolder & $aDll[0], 1) And FileCopy(@ScriptDir & "\lib\adb\" & $aDll[1], $sAdbFolder & $aDll[1], 1)) Then
 			SetLog("Replaced " & $g_sAndroidEmulator & " ADB with MyBot.run version")
 		Else
 			SetLog("Cannot replace " & $g_sAndroidEmulator & " ADB with MyBot.run version", $COLOR_ERROR)
 		EndIf
 	EndIf
+	
 	$sAdb = $sRealAdb
 	If $g_bAndroidAdbUseMyBot And FileExists($sAdb) Then
 		Return $sAdb
