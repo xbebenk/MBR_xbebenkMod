@@ -90,11 +90,11 @@ Func PetHouse($test = False)
 	
 	;Setup Max Pet Levels
 	If Number($BuildingName[2]) < 5 Then
-		$g_ePetLevels[0] = 10
-		$g_ePetLevels[2] = 10
+		$g_ePetLevels[$ePetLassi] = 10
+		$g_ePetLevels[$ePetMightyYak] = 10
 	Else
-		$g_ePetLevels[0] = 15
-		$g_ePetLevels[2] = 15
+		$g_ePetLevels[$ePetLassi] = 15
+		$g_ePetLevels[$ePetMightyYak] = 15
 	EndIf
 
 	Local $PawFound = False
