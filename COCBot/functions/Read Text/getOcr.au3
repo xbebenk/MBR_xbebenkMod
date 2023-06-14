@@ -79,13 +79,13 @@ Func getResourcesBonusPerc($x_start, $y_start) ; -> Gets complete value of Bonus
 	Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 48, 16, True)
 EndFunc   ;==>getResourcesBonusPerc
 
-Func getLabCost($x_start, $y_start)
+Func getLabCost($x_start, $y_start) ;normal lab
 	Return getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True)
 EndFunc 
 
-Func getStarLabUpgrdResourceRed($x_start, $y_start) ; -> Gets complete value of Elixir on the troop buttons,  xxx,xxx for "starlaboratory.au3" when red text
-	Return getOcrAndCapture("coc-starlab-r", $x_start, $y_start, 80, 18, True)
-EndFunc   ;==>getLabUpgrdResourceRed
+Func getSLabCost($x_start, $y_start) ;builderbase lab
+	Return getOcrAndCapture("coc-slabcost", $x_start, $y_start, 100, 18, True)
+EndFunc 
 
 Func getBldgUpgradeTime($x_start, $y_start) ; -> Gets complete remain building upgrade time
 	Return getOcrAndCapture("coc-uptime", $x_start, $y_start, 72, 18) ; Was 42. 72 tested as enough : "12d 19h" now

@@ -261,9 +261,8 @@ Func FindSLabTroopsUpgrade()
 	If IsArray($aTmp) And UBound($aTmp) > 0 Then
 		For $i = 0 To UBound($aTmp) -1 
 			$aTroop = GetSLabTroopResPos($aTmp[$i][0])
-			$UpgradeCost = getLabCost($aTroop[1], $aTroop[2])
+			$UpgradeCost = getSLabCost($aTroop[1], $aTroop[2])
 			If $UpgradeCost = 111 Then $UpgradeCost = "MaxLevel"
-			If $UpgradeCost = "" Then $UpgradeCost = getStarLabUpgrdResourceRed($aTroop[1], $aTroop[2])
 			If $UpgradeCost = "" Then 
 				If QuickMIS("BC1", $g_sImgStarLabNeedUp, $aTroop[1], $aTroop[2], $aTroop[1] + 100, $aTroop[2] + 20) Then
 					$UpgradeCost = "NeedUpgradeLab"
