@@ -131,7 +131,7 @@ Func Laboratory($bDebug = False)
 									Local $sCostResult = getLabCost($g_iQuickMISX - 75, $g_iQuickMISY - 10)
 									Local $level = getTroopsSpellsLevel($g_iQuickMISX - 75, $g_iQuickMISY - 30)
 									If $level = "" Then $level = 1
-									If $g_bUpgradeSiegeToLvl2 And $level >= 2 Then
+									If $g_bUpgradeSiegeToLvl2 And $level >= 3 Then
 										For $x In $aSiege
 											If $g_avLabTroops[$iTmpCmbLaboratory][2] = $x Then
 												SetLog("Skip " & $g_avLabTroops[$iTmpCmbLaboratory][0] & ", already Level " & $level)
@@ -222,7 +222,7 @@ Func Laboratory($bDebug = False)
 											Local $sCostResult = getLabCost($g_iQuickMISX - 75, $g_iQuickMISY - 10)
 											Local $level = getTroopsSpellsLevel($g_iQuickMISX - 75, $g_iQuickMISY - 30)
 											If $level = "" Then $level = 1
-											If $g_bUpgradeSiegeToLvl2 And $level >= 2 Then
+											If $g_bUpgradeSiegeToLvl2 And $level >= 3 Then
 												SetLog("Skip " & $aSiege[$i][0] & ", already Level " & $level)
 												ContinueLoop								
 											EndIf
@@ -514,7 +514,7 @@ Func FindLabUpgrade()
 				$aResult[$i][4] = $g_iQuickMISName
 				$aResult[$i][5] = Number($level)
 			EndIf
-			If $g_bUpgradeSiegeToLvl2 And $aResult[$i][5] >= 2 Then
+			If $g_bUpgradeSiegeToLvl2 And $aResult[$i][5] >= 3 Then
 				For $x In $aSiege
 					If $aResult[$i][4] = $x Then
 						SetLog("Skip " & $aResult[$i][4] & ", already Level " & $aResult[$i][5])
