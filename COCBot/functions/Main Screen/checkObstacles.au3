@@ -26,11 +26,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	_CaptureRegions()
 
 	If isProblemAffect() Then
-		If QuickMIS("BFI", $g_sImgUpdateCoC, 250, 280, 300, 305) Then 
-			SetLog("Good News, Updates available!", $COLOR_INFO)
-			$msg = "Game Update is required, Bot must stop!"
-			Return checkObstacles_StopBot($msg) ; stop bot
-		EndIf
 		;;;;;;;##### 1- Another device #####;;;;;;;
 		If UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,300(130,60)", False))) > 1 Then
 			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And Not $g_bChkSmartSwitch And $g_bChkSharedPrefs Then
@@ -120,16 +115,23 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				EndIf
 				SetLog("Warning: Cannot find type of Reload error message", $COLOR_ERROR)
 		EndSelect
+		
+		If QuickMIS("BFI", $g_sImgUpdateCoC, 250, 280, 300, 305) Then 
+			SetLog("Good News, Updates available!", $COLOR_INFO)
+			$msg = "Game Update is required, Bot must stop!"
+			Return checkObstacles_StopBot($msg) ; stop bot
+		EndIf
+		
 		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
-
-	If _ColorCheck(_GetPixelColor(823, 176), Hex(0x882C19, 6), 20, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 499), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then
+	
+	If _ColorCheck(_GetPixelColor(823, 176, True), Hex(0x882C19, 6), 20, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 499, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then
 		SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
 		Click(440, 526)
 		Return False
 	EndIf
 
-	If _ColorCheck(_GetPixelColor(384, 564), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(480, 564), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 600), Hex(0x000000, 6), 10, Default, "checkObstacles")  Then
+	If _ColorCheck(_GetPixelColor(384, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(480, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 600, True), Hex(0x000000, 6), 10, Default, "checkObstacles")  Then
 		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
 		Click(425, 550)
 		If _Sleep(3000) Then Return
@@ -143,9 +145,16 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20, Default, "checkObstacles") Then
+	If _ColorCheck(_GetPixelColor(792, 39, True), Hex(0xDC0408, 6), 20, Default, "checkObstacles") Then
 		SetLog("checkObstacles: Found Window with Close Button to close", $COLOR_ACTION)
 		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf
+	
+	If _ColorCheck(_GetPixelColor(415, 260, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 455, True), Hex(0xBDE98D, 6), 20, Default, "checkObstacles") Then
+		SetLog("checkObstacles: Found BuilderBase Star Bonus", $COLOR_ACTION)
+		PureClick(430, 465) ;Clicks X
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf

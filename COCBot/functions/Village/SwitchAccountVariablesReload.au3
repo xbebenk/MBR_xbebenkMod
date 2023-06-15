@@ -162,7 +162,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiFirstRun[$iAccount] = $g_iFirstRun
 
 			; Multi-Stats
-			$aiSkippedVillageCount[$iAccount] = $g_iSkippedVillageCount
+			;$aiSkippedVillageCount[$iAccount] = $g_iSkippedVillageCount
 			$aiAttackedCount[$iAccount] = $g_aiAttackedCount
 
 			; Gain Stats
@@ -246,7 +246,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$g_iFirstRun = $aiFirstRun[$iAccount]
 
 			; Multi-Stats
-			$g_iSkippedVillageCount = $aiSkippedVillageCount[$iAccount]
+			;$g_iSkippedVillageCount = $aiSkippedVillageCount[$iAccount]
 			$g_aiAttackedCount = $aiAttackedCount[$iAccount]
 
 			; Gain Stats

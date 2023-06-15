@@ -843,7 +843,7 @@ Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $
 ; Builder Base Attack
 Global $g_bChkEnableBBAttack = False, $g_bChkBBDropTrophy = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False, $g_bChkBBDropBMFirst = False
 Global $g_hTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyLowerLimit = 0, $g_bChkStopAttackBB6thBuilder = 0, $g_bIs6thBuilderUnlocked = False, $g_bChkSkipBBRoutineOn6thBuilder = 0, $g_bskipBBroutine = False
-Global $g_bBBMachineReady = False, $g_bChkDebugAttackBB = False
+Global $g_bBBMachineReady = False, $g_bChkDebugAttackBB = False, $g_aMachinePos[3] = [0, 0, ""], $g_aWBOnAttackBar[0][2], $g_bWBOnAttackBar = False, $g_bChkBBAttackReport = False
 Global $g_iBBMachAbilityTime = 14000 ; in milliseconds, so 14 seconds between abilities
 Global Const $g_iBBNextTroopDelayDefault = 2000,  $g_iBBSameTroopDelayDefault = 300 ; default delay times
 Global $g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault,  $g_iBBSameTroopDelay = $g_iBBSameTroopDelayDefault; delay time between different and same troops
@@ -862,7 +862,7 @@ Global $g_bisBHMaxed = False, $g_bIsMegaTeslaMaxed = False, $g_iBHLevel = 0, $g_
 Global $g_bGoldStorageFullBB = False, $g_bElixirStorageFullBB = False, $g_bGoldStorage50BB = False
 Global $g_iBBAttackCount = 0, $g_hCmbBBAttackCount = 0
 Global $g_bChkBBCustomArmyEnable = False
-Global $g_iCmbTroopBB[6] = [0, 0, 0, 0, 0, 0]
+Global $g_iCmbTroopBB[8] = [0, 0, 0, 0, 0, 0, 2, 2]
 
 ; BB Drop Order
 Global $g_hBtnBBDropOrder = 0

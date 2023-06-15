@@ -24,6 +24,8 @@ Func chkEnableBBAttack()
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
 		GUICtrlSetState($g_hCmbBBAttackCount, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkDebugAttackBB, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkStopAttackBB6thBuilder, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBAttackReport, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hChkBBDropTrophy, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_DISABLE)
@@ -34,6 +36,8 @@ Func chkEnableBBAttack()
 		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbBBAttackCount, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkDebugAttackBB, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkStopAttackBB6thBuilder, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBBAttackReport, $GUI_DISABLE)
 	EndIf
 EndFunc
 
@@ -102,6 +106,14 @@ Func chkStopAttackBB6thBuilder()
 		$g_bChkStopAttackBB6thBuilder = False
 	EndIf
 EndFunc   ;==>chkStopAttackBB6thBuilder
+
+Func ChkBBAttackReport()
+	If GUICtrlRead($g_hChkBBAttackReport) = $GUI_CHECKED Then
+		$g_bChkBBAttackReport = True
+	Else
+		$g_bChkBBAttackReport = False
+	EndIf
+EndFunc   ;==>ChkBBAttackReport
 
 Func ChkSkipBBRoutineOn6thBuilder()
 	If GUICtrlRead($g_hChkSkipBBRoutineOn6thBuilder) = $GUI_CHECKED Then
@@ -209,17 +221,22 @@ EndFunc
 Func Chk1SideAttack()
 	If GUICtrlRead($g_hChk1SideAttack) = $GUI_CHECKED Then 
 		$g_b1SideBBAttack = True
+		$g_b2SideBBAttack = False
+		$g_bAllSideBBAttack = False
 		GUICtrlSetState($g_hChk2SideAttack, $GUI_UNCHECKED)
 		GUICtrlSetState($g_hChkAllSideBBAttack, $GUI_UNCHECKED)
 		$g_i1SideBBAttack = _GUICtrlComboBox_GetCurSel($g_hCmbSideAttack)
 	Else
-		$g_b2SideBBAttack = False
+		$g_b1SideBBAttack = False
+		
 	EndIf
 EndFunc
 
 Func Chk2SideAttack()
 	If GUICtrlRead($g_hChk2SideAttack) = $GUI_CHECKED Then 
+		$g_b1SideBBAttack = False
 		$g_b2SideBBAttack = True
+		$g_bAllSideBBAttack = False
 		GUICtrlSetState($g_hChk1SideAttack, $GUI_UNCHECKED)
 		GUICtrlSetState($g_hChkAllSideBBAttack, $GUI_UNCHECKED)
 	Else
@@ -229,6 +246,8 @@ EndFunc
 
 Func ChkAllSideBBAttack()
 	If GUICtrlRead($g_hChkAllSideBBAttack) = $GUI_CHECKED Then 
+		$g_b1SideBBAttack = False
+		$g_b2SideBBAttack = False
 		$g_bAllSideBBAttack = True
 		GUICtrlSetState($g_hChk1SideAttack, $GUI_UNCHECKED)
 		GUICtrlSetState($g_hChk2SideAttack, $GUI_UNCHECKED)

@@ -3,8 +3,8 @@
 ; Description ...: Gets the troops and there quantities for the current attack
 ; Syntax ........:
 ; Parameters ....: None
-; Return values .: None
-; Author ........: Chilly-Chill (04-2019)
+; Return values .: array attackBar
+; Author ........: xbebenk
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2017
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -13,36 +13,46 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+
+#comments-start
+	$aAttackBar[n][8]
+	[n][0] = Name of the found Troop/Spell/Hero/Siege
+	[n][1] = The X Coordinate of the Troop
+	[n][2] = The Y Coordinate of the Troop/Spell/Hero/Siege
+	[n][3] = The Slot Number (Starts with 0)
+	[n][4] = The Amount
+#comments-end	
+	
 Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 	Local $iTroopBanners = 584 ; y location of where to find troop quantities
 	Local $iSelectTroopY = 620 ; y location to select troop on attackbar
 	Local $aBBAttackBar[0][5]
+	Local $aEmpty[0][2]
+	If Not $bRemaining Then 
+		$g_bWBOnAttackBar = False
+		$g_aWBOnAttackBar = $aEmpty
+	EndIf
 	
 	Local $iMaxSlot = 9, $iSlotOffset = 70, $bMachineFound = False
 	Local $aSlotX[$iMaxSlot], $iStartSlot = 120
 	
-	If QuickMIS("BC1", $g_sImgBBBattleMachine, 28, 560, 100, 650) Then
-		$bMachineFound = True
-		For $i = 0 To UBound($aSlotX) - 1
-			$aSlotX[$i] = $iStartSlot + ($i * $iSlotOffset)
-		Next
-	Else
+	If $g_bChkDebugAttackBB Then SetLog("GetAttackBarBB Remaining=" & String($bRemaining) & ", SecondAttack=" & String($bSecondAttack), $COLOR_DEBUG)
+	
+	$g_aMachinePos = GetMachinePos()
+	If $g_aMachinePos = 0 Then
 		$iStartSlot = 40
 		For $i = 0 To UBound($aSlotX) - 1
 			$aSlotX[$i] = $iStartSlot + ($i * $iSlotOffset)
 		Next
+	Else
+		$bMachineFound = True
+		For $i = 0 To UBound($aSlotX) - 1
+			$aSlotX[$i] = $iStartSlot + ($i * $iSlotOffset)
+		Next
 	EndIf
-	If $g_bDebugSetlog Then SetLog("Machine Found = " & String($bMachineFound) & " SlotX: " & _ArrayToString($aSlotX), $COLOR_DEBUG2)
 	
-	#comments-start
-		$aAttackBar[n][8]
-		[n][0] = Name of the found Troop/Spell/Hero/Siege
-		[n][1] = The X Coordinate of the Troop
-		[n][2] = The Y Coordinate of the Troop/Spell/Hero/Siege
-		[n][3] = The Slot Number (Starts with 0)
-		[n][4] = The Amount
-	#comments-end
-
+	If $g_bChkDebugAttackBB Then SetLog("Machine Found = " & String($bMachineFound) & " SlotX: " & _ArrayToString($aSlotX), $COLOR_DEBUG2)
+	
 	If Not $g_bRunState Then Return ; Stop Button
 	
 	Local $iCount = 1, $isBlueBanner = False, $isDarkGreyBanner = False, $isGreyBanner = False, $isVioletBanner = False
@@ -56,9 +66,9 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 		$ColorPickBannerX = $aSlotX[$k] + 37 ; location to pick color from TroopSlot banner
 			
 		If $bRemaining Then 
-			If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
+			If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
 			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopBanners, $Troopx + 73, 670) Then 
-				If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
+				If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
 				$isDarkGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x282828, 6), 10, Default, "isDarkGreyBanner") ; DartkGrey Banner on TroopSlot = Troop Already Deployed
 				$isGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x707070, 6), 10, Default, "isGreyBanner") ;Grey Banner on TroopSlot = Troop Die
 				If $isDarkGreyBanner Or $isGreyBanner Then ContinueLoop ;skip read troop as they detected deployed or die
@@ -77,9 +87,9 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 				EndIf
 			EndIf
 		Else
-			If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
+			If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
 			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopBanners, $Troopx + 73, 670) Then 
-				If $g_bDebugSetlog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
+				If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
 				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 30, Default, "isVioletBanner") ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
 				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30, Default, "isBlueBanner") ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
 				If Not $isVioletBanner And $bSecondAttack Then $isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x10224B, 6), 30, Default, "isVioletBanner") ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
@@ -102,8 +112,13 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 	
 	_ArraySort($aBBAttackBar, 0, 0, 0, 3)
 	For $i = 0 To UBound($aBBAttackBar) - 1
-		SetLog($aBBAttackBar[$i][0] & ", (" & String($aBBAttackBar[$i][1]) & "," & String($aBBAttackBar[$i][2]) & "), Slot: " & String($aBBAttackBar[$i][3]) & ", Count: " & String($aBBAttackBar[$i][4]), $COLOR_SUCCESS)
+		SetLog("Slot[" & $aBBAttackBar[$i][3] & "] " & $aBBAttackBar[$i][0] & ", (" & $aBBAttackBar[$i][1] & "," & $aBBAttackBar[$i][2] & "), Count: " & $aBBAttackBar[$i][4], $COLOR_SUCCESS)
+		If Not $bRemaining And $aBBAttackBar[$i][0] = "WallBreaker" Then
+			$g_bWBOnAttackBar = True
+			_ArrayAdd($g_aWBOnAttackBar, $aBBAttackBar[$i][1] & "|" & $aBBAttackBar[$i][2])
+		EndIf
 	Next
+	If $g_bChkDebugAttackBB And UBound($g_aWBOnAttackBar) > 0 Then SetLog("WBOnAttackBar=" & String($g_bWBOnAttackBar) & " : " & _ArrayToString($g_aWBOnAttackBar, ",", Default, Default, "|"), $COLOR_DEBUG2)
 	Return $aBBAttackBar
 EndFunc
 
@@ -126,9 +141,8 @@ EndFunc   ;==>TestCorrectAttackBarBB
 		[n][4] = The Amount
 #comments-end
 
-Func CorrectAttackBarBB(ByRef $aBBAttackBar)
+Func CorrectAttackBarBB(ByRef $aBBAttackBar, $bSecondAttack = False)
 	If Not $g_bRunState Then Return
-	;Local $aSlotX[9] = [120, 190, 260, 330, 400, 470, 545, 620, 690] ; location of slot
 	
 	For $i = 0 To UBound($aBBAttackBar) - 1
 		SetLog("Detected Troop [" & $aBBAttackBar[$i][3] & "] : " &  $aBBAttackBar[$i][0], $COLOR_ACTION)
@@ -141,7 +155,7 @@ Func CorrectAttackBarBB(ByRef $aBBAttackBar)
 		$iSlot = $aBBAttackBar[$i][3]
 		$x = $aBBAttackBar[$i][1]
 		$sTroopName = $aTmpAttackBar[$i][0]
-		$sChangeTo = $g_asAttackBarBB2[$g_iCmbTroopBB[$i]]
+		$sChangeTo = $g_asAttackBarBB2[$g_iCmbTroopBB[$iSlot]]
 		If $sTroopName = $sChangeTo Then 
 			SetLog("Slot[" & $iSlot & "] Troop: " & $sTroopName & " is Correct", $COLOR_INFO)
 			ContinueLoop
@@ -151,7 +165,7 @@ Func CorrectAttackBarBB(ByRef $aBBAttackBar)
 				$aBBAttackBar[$i][0] = $sChangeTo
 				ContinueLoop
 			Else
-				SetLog("Fail to Change Troop on Slot " & $aBBAttackBar[$i][3], $COLOR_ERROR)
+				SetLog("Slot[" & $iSlot & "] Fail to Change Troop", $COLOR_ERROR)
 				ContinueLoop
 			EndIf
 		EndIf
@@ -166,18 +180,20 @@ Func ChangeBBTroopTo($sTroopName, $x, $sChangeTo)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		$TmpX = $g_iQuickMISX
 		$TmpY = $g_iQuickMISY
-		If _Sleep(800) Then Return
+		If _Sleep(1000) Then Return
 		If QuickMIS("BFI", $g_sImgDirBBTroops & $sChangeTo & "*", 0, 480, 860, 546) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1000) Then Return
 			$bRet = True
 		Else
 			SetLog("Troop " & $sChangeTo & " not found", $COLOR_ERROR)
+			If $g_bChkDebugAttackBB Then SaveDebugImage("ChangeBBTroopTo", False)
 			Click($TmpX, $TmpY)
 			If _Sleep(1000) Then Return
 		EndIf
 	Else
 		SetLog("Switch Button not found", $COLOR_ERROR)
+		If $g_bChkDebugAttackBB Then SaveDebugImage("ChangeBBTroopTo", False)
 	EndIf
 	Return $bRet
 EndFunc

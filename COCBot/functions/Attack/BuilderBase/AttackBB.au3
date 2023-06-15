@@ -4,7 +4,7 @@
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: Chilly-Chill (04-2019)
+; Author ........: xbebenk
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2017
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -109,8 +109,7 @@ EndFunc
 
 Func WaitCloudsBB()
 	Local $bRet = True
-	SetLog("Searching for Opponent.", $COLOR_BLUE)
-
+	
 	Local $count = 1
 	While Not QuickMIS("BC1", $g_sImgBBAttackStart, 400, 22, 460, 60)
 		SetDebugLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
@@ -120,7 +119,7 @@ Func WaitCloudsBB()
 			ExitLoop
 		EndIf
 		If isProblemAffect(True) Then Return
-		If Not $g_bRunState Then Return ; Stop Button
+		If Not $g_bRunState Then Return 
 		$count += 1
 		If _Sleep(1000) Then Return
 	WEnd
@@ -130,23 +129,24 @@ EndFunc
 Func _AttackBB()
 	If Not $g_bRunState Then Return
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
-	Local $aBMPos = 0
-
+	
 	SetLog("Going to attack.", $COLOR_INFO)
 	If Not ClickFindNowButton() Then
 		ClickAway("Left")
 		Return False
 	EndIf
 
-	If Not $g_bRunState Then Return ; Stop Button
-
+	If Not $g_bRunState Then Return
+	
+	SetLog("Searching for Opponent.", $COLOR_BLUE)
 	If Not WaitCloudsBB() Then Return
-
-	$aBMPos = GetMachinePos()
+	
+	AndroidZoomOut() ;zoomout first before any action
+	
 	; Get troops on attack bar and their quantities
 	Local $aBBAttackBar
 	If $g_bChkBBCustomArmyEnable Then
-		$aBBAttackBar = GetAttackBarBB(False)
+		$aBBAttackBar = GetAttackBarBB()
 		If CorrectAttackBarBB($aBBAttackBar) Then
 			AttackBB()
 		Else
@@ -160,36 +160,41 @@ Func _AttackBB()
 	If Not $g_bRunState Then Return
 
 	SetLog("Waiting for end of battle.", $COLOR_INFO)
-	If OkayBBEnd($aBMPos) Then SetLog("Battle ended", $COLOR_INFO)
+	If EndBattleBB() Then SetLog("Battle ended", $COLOR_INFO)
 	If _Sleep(3000) Then Return
 
 	For $i = 1 To 5
 		If QuickMIS("BC1", $g_sImgBBAttackBonus, 410, 464, 454, 490) Then
 			SetLog("Congrats Chief, Stars Bonus Awarded", $COLOR_INFO)
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(1000) Then Return
+			If _Sleep(2000) Then Return
 			ExitLoop
 		EndIf
-		If _Sleep(500) Then Return
+		If Not $g_bRunState Then Return
+		If _Sleep(1000) Then Return
 	Next
-
+	
 	If checkMainScreen(True, $g_bStayOnBuilderBase, "AttackBB") Then
 		ZoomOut(True)
 		CollectBBCart()
+	Else
+		checkObstacles($g_bStayOnBuilderBase)
 	EndIf
-
+	BuilderBaseReport(True, False)
 	SetLog("Done", $COLOR_SUCCESS)
 EndFunc
 
-Func OkayBBEnd($aBMPos) ; Find if battle has ended and click okay
-	Local $bRet = False, $bBattleMachine = True
+Func EndBattleBB() ; Find if battle has ended and click okay
+	Local $bRet = False, $bBattleMachine = True, $bWallBreaker = True
 	Local $sDamage = 0, $sTmpDamage = 0, $bCountSameDamage = 1
-
+	
 	For $i = 1 To 200
 		;SetLog("Waiting EndBattle Screen #" & $i, $COLOR_ACTION)
-		If $bBattleMachine Then $bBattleMachine = CheckBMLoop($aBMPos)
+		If Not $g_bRunState Then ExitLoop
+		If $bBattleMachine Then $bBattleMachine = CheckBMLoop()
+		If $bWallBreaker Then $bWallBreaker = CheckWBLoop()
 		$sDamage = getOcrOverAllDamage(776, 529)
-		SetLog("[" & $i & "] OkayBBEnd LoopCheck, [" & $bCountSameDamage & "] Overall Damage : " & $sDamage & "%", $COLOR_DEBUG2)
+		SetLog("[" & $i & "] EndBattleBB LoopCheck, [" & $bCountSameDamage & "] Overall Damage : " & $sDamage & "%", $COLOR_DEBUG2)
 		If Number($sDamage) = Number($sTmpDamage) Then
 			$bCountSameDamage += 1
 		Else
@@ -199,17 +204,31 @@ Func OkayBBEnd($aBMPos) ; Find if battle has ended and click okay
 		If $sTmpDamage = 100 Then
 			_SleepStatus(15000)
 			Local $aBBAttackBar = GetAttackBarBB(False, True)
-			AttackBB($aBBAttackBar, True)
+			If $g_bChkBBCustomArmyEnable Then 
+				CorrectAttackBarBB($aBBAttackBar) 
+				$aBBAttackBar = GetAttackBarBB(False, True) ;correct army troop doesnt have new quantities (if troop changes) so read again the attackbar
+				AttackBB($aBBAttackBar, True)
+			Else
+				AttackBB($aBBAttackBar, True)
+			EndIf
+			If _Sleep(5000) Then Return ; Add some delay for troops making some damage
+			$sTmpDamage = 0
+			$bBattleMachine = True
+			$bWallBreaker = True
 		EndIf
 
 		If $bCountSameDamage > 20 Then
-			SetLog("OkayBBEnd LoopCheck: No Change on Overall Damage, Exit!", $COLOR_ERROR)
+			If $g_bChkDebugAttackBB Then SetLog("EndBattleBB LoopCheck: No Change on Overall Damage, Exit!", $COLOR_ERROR)
 			If ReturnHomeDropTrophyBB(True) Then $bRet = True
 			ExitLoop
 		EndIf
 
-		If BBBarbarianHead("OkayBBEnd") Then
+		If BBBarbarianHead("EndBattleBB") Then
 			$bRet = True
+			If $g_bChkBBAttackReport Then
+				If _Sleep(8000) Then Return
+				BBAttackReport()
+			EndIf
 			ClickP($aOkayButton)
 			ExitLoop
 		EndIf
@@ -221,21 +240,18 @@ Func OkayBBEnd($aBMPos) ; Find if battle has ended and click okay
 
 	If Not $bRet Then SetLog("Could not find finish battle screen", $COLOR_ERROR)
 	Return $bRet
-
 EndFunc
 
 Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
+	;reset Machine var
+	$g_aMachinePos = 0
 	
-	AndroidZoomOut()
 	If _Sleep(2000) Then Return
 	
 	$g_BBDP = GetBBDropPoint($bSecondAttack)
 
 	; Get troops on attack bar and their quantities
 	If $aBBAttackBar = Default Then $aBBAttackBar = GetAttackBarBB()
-	Local $aBMPos = GetMachinePos()
-	local $bTroopsDropped = False, $bBMDeployed = False
-	
 	Local $iSide = $g_BBDPSide
 	Local $AltSide = 0, $countTL = 0, $countBL = 0, $countBR = 0, $countTR = 0
 	For $i = 0 To Ubound($g_BBDP) - 1
@@ -246,11 +262,11 @@ Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
 	Next
 
 	Local $acountDP[4][2] = [[1, $countTL], [2, $countBL], [3, $countBR], [3, $countTR]]
-	_ArraySort($acountDP, 1, 0, 0, 1)
+	_ArraySort($acountDP, 1, 0, 0, 1) ;sort desc by count Drop-points, index 0 will have more DP
 
 	If $acountDP[1][1] > 0 Then $AltSide = $acountDP[1][0]
-	SetDebugLog("DPSide = " & $iSide)
-	SetDebugLog("AltSide = " & $AltSide)
+	If $g_bChkDebugAttackBB Then SetLog("DPSide = " & $iSide)
+	If $g_bChkDebugAttackBB Then SetLog("AltSide = " & $AltSide)
 
 	If $acountDP[$iSide-1][1] < 1 Then
 		SetDebugLog("Side " & $iSide & " have no DP found, fallback to most reliable DP Side")
@@ -276,21 +292,23 @@ Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
 
 	If UBound($DP) = 0 Then
 		SetLog("Sorry, we cannot continue attack, waiting for surrender", $COLOR_ERROR)
-		_SleepStatus(60000)
+		If $g_bChkDebugAttackBB Then SaveDebugImage("CheckBBDropPoint", True)
+		_SleepStatus(30000)
 		If ReturnHomeDropTrophyBB() Then Return
 	EndIf
 
 	If IsProblemAffect(True) Then Return
-	;Function uses this list of local variables...
-	If $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
+	
+	Local $bTroopsDropped = False, $bBMDeployed = False
+	If $g_bChkBBDropBMFirst Then
 		SetLog("Dropping BM First")
-		$bBMDeployed = DeployBM($aBMPos, $iSide, $AltSide, $DP)
+		$bBMDeployed = DeployBM($g_aMachinePos, $iSide, $AltSide, $DP)
 	EndIf
 
-	If Not $g_bRunState Then Return ; Stop Button
+	If Not $g_bRunState Then Return
 	If IsProblemAffect(True) Then Return
+	
 	; Deploy all troops
-	;local $bTroopsDropped = False, $bBMDeployed = False
 	SetLog( $g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
 	While Not $bTroopsDropped
 		If Not $g_bRunState Then Return
@@ -332,51 +350,16 @@ Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
 		EndIf
 	WEnd
 
-	If Not $g_bRunState Then Return ; Stop Button
+	If Not $g_bRunState Then Return 
 	If IsProblemAffect(True) Then Return
 
 	;If not dropping Builder Machine first, drop it now
-	If Not $g_bChkBBDropBMFirst And IsArray($aBMPos) Then
+	If Not $g_bChkBBDropBMFirst Then
 		SetLog("Dropping BM Last")
-		$bBMDeployed = DeployBM($aBMPos, $iSide, $AltSide, $DP)
+		$bBMDeployed = DeployBM($g_aMachinePos, $iSide, $AltSide, $DP)
 	EndIf
 
-	If Not $g_bRunState Then Return ; Stop Button
-
-	;If $bBMDeployed Then CheckBMLoop($aBMPos) ;check if BM is Still alive and activate ability
-	;Local $waitcount = 0
-	;Local $sDamage = 0, $sTmpDamage = 0, $bCountSameDamage = 0
-	;While IsBBAttackPage()
-	;	If BBBarbarianHead() Then
-	;		ExitLoop
-	;	EndIf
-	;
-	;	$sDamage = getOcrOverAllDamage(780, 529)
-	;	SetLog("[" & $waitcount & "] AttacBB Loop, Overall Damage : " & $sDamage, $COLOR_DEBUG2)
-	;	If Number($sDamage) = Number($sTmpDamage) Then
-	;		$bCountSameDamage += 1
-	;	Else
-	;		$bCountSameDamage = 0
-	;	EndIf
-	;	$sTmpDamage = Number($sDamage)
-	;
-	;	If $sTmpDamage = 100 Then
-	;		SetLog("AttackBB Loop: Overall Damage = 100, Exit!", $COLOR_ERROR)
-	;		ExitLoop
-	;	EndIf
-	;
-	;	If $bCountSameDamage > 5 Then
-	;		SetLog("AttackBB Loop: No Change on Overall Damage, Exit!", $COLOR_ERROR)
-	;		ReturnHomeDropTrophyBB(True)
-	;		ExitLoop
-	;	EndIf
-	;
-	;	If _Sleep(1000) Then Return
-	;	If IsProblemAffect(True) Then Return
-	;	If Not $g_bRunState Then Return
-	;	$waitcount += 1
-	;	If $waitcount > 30 Then ExitLoop
-	;Wend
+	If Not $g_bRunState Then Return 
 	Return
 EndFunc   ;==>AttackBB
 
@@ -404,20 +387,21 @@ Func GetMachinePos()
 		$aCoords[0] = $aBMPos[0][1] ;x
 		$aCoords[1] = $aBMPos[0][2] ;y
 		$aCoords[2] = $aBMPos[0][0] ;Name
+		If $g_bChkDebugAttackBB Then SetLog("Machine Found: " & $aCoords[2], $COLOR_SUCCESS)
 		Return $aCoords
 	Else
+		If $g_bChkDebugAttackBB Then SaveDebugImage("GetMachinePos", False)
 		$g_bBBMachineReady = False
-		SetLog("Failed to locate Machine Pos", $COLOR_ERROR)
     EndIf
 	Return 0
 EndFunc
 
 Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
+	If $aBMPos = 0 Then Return
 	Local $bBMDeployed = False
 	Local $iMachineBarX = $aBMPos[0] - 20
 	Local $iMachineBarY = 568
-	If $g_bDebugSetLog Then SetLog(_ArrayToString($aBMPos))
-
+	
 	If $g_bBBMachineReady And IsArray($aBMPos) Then
 		SetLog("Deploying " & $aBMPos[2], $COLOR_BLUE)
 		PureClickP($aBMPos)
@@ -425,7 +409,7 @@ Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 
 		For $i = 1 To 3
 			If isProblemAffect(True) Then Return
-			If $g_bDebugSetLog Then SetLog("[" & $i & "] Try Deploy " & $aBMPos[2], $COLOR_ACTION)
+			If $g_bChkDebugAttackBB Then SetLog("[" & $i & "] Try Deploy " & $aBMPos[2], $COLOR_ACTION)
 			If $i > 2 Then
 				PureClick(40, 280)
 				PureClick(410, 26)
@@ -446,12 +430,12 @@ Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 	Return $bBMDeployed
 EndFunc ; DeployBM
 
-Func CheckBMLoop($aBMPos)
+Func CheckBMLoop($aBMPos = $g_aMachinePos)
 	Local $count = 0, $loopcount = 0
 	Local $BMPosX = 66, $BMDeadX = 93, $BMDeadColor
 	Local $BMPosY = 562, $BMDeadY = 666
 	Local $MachineName = ""
-
+	
 	If $aBMPos = 0 Then Return False
 	If Not IsArray($aBMPos) Then Return False
 
@@ -470,7 +454,7 @@ Func CheckBMLoop($aBMPos)
 
 		If QuickMIS("BC1", $g_sImgDirMachineAbility, $aBMPos[0] - 35, $aBMPos[1] - 40, $aBMPos[0] + 35, $aBMPos[1] + 40) Then
 			If StringInStr($g_iQuickMISName, "Wait") Then
-				SetLog("Waiting " & $MachineName & " Ability", $COLOR_ACTION)
+				If $g_bChkDebugAttackBB Then SetLog("Waiting " & $MachineName & " Ability", $COLOR_ACTION)
 				ExitLoop
 			ElseIf StringInStr($g_iQuickMISName, "Ability") Then
 				PureClickP($aBMPos)
@@ -485,16 +469,47 @@ Func CheckBMLoop($aBMPos)
 		EndIf
 
 		If $BMDeadColor = "000000" Then
-			SetLog($MachineName & " loopcheck : Battle Ended", $COLOR_DEBUG2)
+			If $g_bChkDebugAttackBB Then SetLog($MachineName & " loopcheck : Battle Ended", $COLOR_DEBUG2)
 			ExitLoop
 		EndIf
 
 		If _Sleep(500) Then Return
-		SetLog("[" & $i & "]" & $MachineName & " LoopCheck", $COLOR_ACTION)
+		If $g_bChkDebugAttackBB Then SetLog("[" & $i & "]" & $MachineName & " LoopCheck", $COLOR_ACTION)
 		If $loopcount > 60 Then Return ;1 minute
 		$loopcount += 1
 	Next
 	Return True
+EndFunc
+
+Func CheckWBLoop()
+	Local $bRet
+	If Not $g_bWBOnAttackBar Then Return
+	Local $isGreyBanner = False, $ColorPickBannerX = 0, $iTroopBanners = 584, $bIsWBDead = True
+	
+	For $i = 0 To UBound($g_aWBOnAttackBar) - 1
+		If Not $g_bRunState Then Return
+		$ColorPickBannerX = $g_aWBOnAttackBar[$i][0] + 37
+		$isGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x707070, 6), 10, Default, "isGreyBanner") ;Grey Banner on TroopSlot = Troop Die
+		If $isGreyBanner Then 
+			SetLog("WallBreaker Dead", $COLOR_INFO)
+			ContinueLoop
+		EndIf
+		If QuickMIS("BC1", $g_sImgDirWallBreakerAbility, $g_aWBOnAttackBar[$i][0], $g_aWBOnAttackBar[$i][1] - 30, $g_aWBOnAttackBar[$i][0] + 70, $g_aWBOnAttackBar[$i][1] + 30) Then
+			If StringInStr($g_iQuickMISName, "Wait") Then
+				If $g_bChkDebugAttackBB Then SetLog("Waiting WallBreaker Ability", $COLOR_ACTION)
+				$bIsWBDead = False
+			ElseIf StringInStr($g_iQuickMISName, "Ability") Then
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				SetLog("Activate WallBreaker Ability", $COLOR_SUCCESS)
+				$bIsWBDead = False
+			EndIf
+			$bRet = True
+		Else
+			If $g_bChkDebugAttackBB Then SaveDebugImage("CheckWBLoop", False)
+		EndIf
+	Next
+	If $bIsWBDead Then $bRet = False
+	Return $bRet
 EndFunc
 
 Func IsBBAttackPage()
@@ -549,10 +564,10 @@ Func isInsideDiamondAttackBB($aCoords, $aaDiamond)
 	Local $DY = Abs($y - $aMiddle[1])
 
 	If ($DX / $aSize[0] + $DY / $aSize[1] <= 1) Then
-		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamondAttackBB: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_INFO)
+		If $g_bChkDebugAttackBB Then SetDebugLog("isInsideDiamondAttackBB: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_INFO)
 		Return True ; Inside Village
 	Else
-		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamondAttackBB: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_INFO)
+		If $g_bChkDebugAttackBB Then SetDebugLog("isInsideDiamondAttackBB: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_INFO)
 		Return False ; Outside Village
 	EndIf
 
@@ -621,7 +636,7 @@ Func GetBBDropPoint($bSecondAttack = False)
 	If isProblemAffect(True) Then Return
 	ResumeAndroid()
 	$g_bAttackActive = False
-	SetLog("BBDropPoint Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+	SetLog("BBDropPoint Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_ACTION)
 	If $g_b1SideBBAttack Then
 		Switch $g_i1SideBBAttack
 			Case 0 ;Lava launcher
@@ -635,7 +650,7 @@ Func GetBBDropPoint($bSecondAttack = False)
 		EndSwitch
 	EndIf
 
-	SetDebugLog("MainSide = " & $g_BBDPSide)
+	If $g_bChkDebugAttackBB Then SetLog("MainSide = " & $g_BBDPSide)
 	If $g_bChkDebugAttackBB Then DebugAttackBBImage($aDPResult, $g_BBDPSide)
 
 	Return $aDPResult
@@ -738,9 +753,9 @@ EndFunc
 Func FindLavaLauncher()
 	Local $LavaSide = 0
 	If QuickMIS("BC1", $g_sImgOpponentBuildingsBB & "LavaLauncher\", 50,50,800,570) Then
-		SetDebugLog("Found Lava Launcher at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
+		If $g_bChkDebugAttackBB Then SetLog("Found Lava Launcher at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
 		$LavaSide = GetBBDPPixelSection(430, 275, $g_iQuickMISX, $g_iQuickMISY)
-		SetLog("LavaSide: " & $LavaSide, $COLOR_INFO)
+		If $g_bChkDebugAttackBB Then SetLog("LavaSide: " & $LavaSide, $COLOR_INFO)
 		$g_BBDPSide = $LavaSide
 	EndIf
 EndFunc
@@ -748,9 +763,9 @@ EndFunc
 Func FindAirBomb()
 	Local $AirBombSide = 0
 	If QuickMIS("BC1", $g_sImgOpponentBuildingsBB & "AirBomb\", 50,50,800,570) Then
-		SetDebugLog("Found Air Bomb at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
+		If $g_bChkDebugAttackBB Then SetLog("Found Air Bomb at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
 		$AirBombSide = GetBBDPPixelSection(430, 275, $g_iQuickMISX, $g_iQuickMISY)
-		SetLog("AirBombSide: " & $AirBombSide, $COLOR_INFO)
+		If $g_bChkDebugAttackBB Then SetLog("AirBombSide: " & $AirBombSide, $COLOR_INFO)
 		$g_BBDPSide = $AirBombSide
 	EndIf
 EndFunc
@@ -758,9 +773,9 @@ EndFunc
 Func FindMegaTelsa()
 	Local $MegaTelsaSide = 0
 	If QuickMIS("BC1", $g_sImgOpponentBuildingsBB & "MegaTelsa\", 50,50,800,570) Then
-		SetDebugLog("Found Mega Telsa at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
+		If $g_bChkDebugAttackBB Then SetLog("Found Mega Telsa at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
 		$MegaTelsaSide = GetBBDPPixelSection(430, 275, $g_iQuickMISX, $g_iQuickMISY)
-		SetLog("MegaTelsaSide: " & $MegaTelsaSide, $COLOR_INFO)
+		If $g_bChkDebugAttackBB Then SetLog("MegaTelsaSide: " & $MegaTelsaSide, $COLOR_INFO)
 		$g_BBDPSide = $MegaTelsaSide
 	EndIf
 EndFunc
@@ -768,9 +783,9 @@ EndFunc
 Func FindGuardPost()
 	Local $GuardPostSide = 0
 	If QuickMIS("BC1", $g_sImgOpponentBuildingsBB & "GuardPost\", 50,50,800,570) Then
-		SetDebugLog("Found GuardPostSide at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
+		If $g_bChkDebugAttackBB Then SetLog("Found GuardPostSide at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_INFO)
 		$GuardPostSide = GetBBDPPixelSection(430, 275, $g_iQuickMISX, $g_iQuickMISY)
-		SetLog("GuardPostSide: " & $GuardPostSide, $COLOR_INFO)
+		If $g_bChkDebugAttackBB Then SetLog("GuardPostSide: " & $GuardPostSide, $COLOR_INFO)
 		$g_BBDPSide = $GuardPostSide
 	EndIf
 EndFunc
@@ -841,9 +856,54 @@ EndFunc   ;==>DebugAttackBBImage
 
 Func BBBarbarianHead($sLogText = "BBBarbarianHead")
 	If _CheckPixel($aBlackHead, True, Default, $sLogText) Then
-		SetLog("Battle Ended,  Gold Icon Found", $COLOR_DEBUG2)
+		SetLog("Battle Ended, Gold Icon Found", $COLOR_DEBUG2)
 		Return True
 	Else
 		Return False
 	EndIf
 EndFunc
+
+Func BBAttackReport()
+
+	Local $sCurrentTrophy = $g_aiCurrentLootBB[$eLootTrophyBB]
+	Local $sSearch = 1, $sTH = "--", $sType = "BB", $sDamage = 0
+	Local $sGold = 0, $sElix = 0, $sDE = 0, $sTrophy = 0, $sStars = 0
+	Local $AtkLogTxt = ""
+	
+	$sGold = getOcrAndCapture("coc-Builders", 525, 400, 86, 18, True)
+	$sTrophy = getOcrAndCapture("coc-Builders", 550, 437, 38, 18, True)
+	
+	$sDamage = getOcrBBDamageReport(365, 280)
+	If _ColorCheck(_GetPixelColor(324, 214, True), Hex(0xEA9E2C, 6), 20, Default, "BBAttackReport") Then $sStars = 1 ; 1 bronze
+	If _ColorCheck(_GetPixelColor(430, 180, True), Hex(0xECA030, 6), 20, Default, "BBAttackReport") Then $sStars = 2 ; 2 bronze
+	If _ColorCheck(_GetPixelColor(550, 220, True), Hex(0xE99D2C, 6), 20, Default, "BBAttackReport") Then $sStars = 3 ; 3 bronze
+	
+	If _ColorCheck(_GetPixelColor(324, 214, True), Hex(0xB5DCF0, 6), 20, Default, "BBAttackReport") Then $sStars = 4 ; 1 silver
+	If _ColorCheck(_GetPixelColor(430, 180, True), Hex(0xBCDFF3, 6), 20, Default, "BBAttackReport") Then $sStars = 5 ; 2 silver
+	If _ColorCheck(_GetPixelColor(550, 220, True), Hex(0xB8DCF0, 6), 20, Default, "BBAttackReport") Then $sStars = 6 ; 3 silver
+	
+	SetLog("Attack Result :", $COLOR_INFO)
+	SetLog("Gain Stars[" & $sStars & "] Trophy[" & $sTrophy & "] Gold[" & $sGold & "] Destruction[" & $sDamage & "%]", $COLOR_SUCCESS)
+	
+	$AtkLogTxt =  StringFormat("%2s", $g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
+	$AtkLogTxt &= StringFormat("%4d", $sCurrentTrophy) & "|"
+	$AtkLogTxt &= StringFormat("%3d", $sSearch) & "|"
+	$AtkLogTxt &= StringFormat("%2s", $sTH) & "|"
+	$AtkLogTxt &= StringFormat("%2s", $sType) & "|"
+	$AtkLogTxt &= StringFormat("%5d", $sGold) & "|"
+	$AtkLogTxt &= StringFormat("%5d", $sElix) & "|"
+	$AtkLogTxt &= StringFormat("%5d", $sDE) & "|"
+	$AtkLogTxt &= StringFormat("%3d", $sTrophy) & "|"
+	$AtkLogTxt &= StringFormat("%1d", $sStars) & "|"
+	$AtkLogTxt &= StringFormat("%3d", $sDamage) & "|"
+	
+	If Int($sTrophy) >= 0 Then
+		SetAtkLog($AtkLogTxt, "", $COLOR_DEBUG)
+	Else
+		SetAtkLog($AtkLogTxt, "", $COLOR_ACTION)
+	EndIf
+	
+	If $g_bChkDebugAttackBB Then SaveDebugImage("BBAttackReport", True)
+EndFunc
+
+	
