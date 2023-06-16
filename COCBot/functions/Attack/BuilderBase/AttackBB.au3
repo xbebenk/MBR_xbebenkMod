@@ -145,6 +145,7 @@ Func _AttackBB()
 	
 	; Get troops on attack bar and their quantities
 	Local $aBBAttackBar
+	$g_aMachinePos = GetMachinePos()
 	If $g_bChkBBCustomArmyEnable Then
 		$aBBAttackBar = GetAttackBarBB()
 		If CorrectAttackBarBB($aBBAttackBar) Then
@@ -158,7 +159,7 @@ Func _AttackBB()
 		AttackBB($aBBAttackBar)
 	EndIf
 	If Not $g_bRunState Then Return
-
+	
 	SetLog("Waiting for end of battle.", $COLOR_INFO)
 	If EndBattleBB() Then SetLog("Battle ended", $COLOR_INFO)
 	If _Sleep(3000) Then Return
@@ -243,11 +244,6 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 EndFunc
 
 Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
-	;reset Machine var
-	$g_aMachinePos = 0
-	
-	If _Sleep(2000) Then Return
-	
 	$g_BBDP = GetBBDropPoint($bSecondAttack)
 
 	; Get troops on attack bar and their quantities
@@ -358,7 +354,7 @@ Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
 		SetLog("Dropping BM Last")
 		$bBMDeployed = DeployBM($g_aMachinePos, $iSide, $AltSide, $DP)
 	EndIf
-
+	
 	If Not $g_bRunState Then Return 
 	Return
 EndFunc   ;==>AttackBB
@@ -391,7 +387,6 @@ Func GetMachinePos()
 		Return $aCoords
 	Else
 		If $g_bChkDebugAttackBB Then SaveDebugImage("GetMachinePos", False)
-		$g_bBBMachineReady = False
     EndIf
 	Return 0
 EndFunc
@@ -399,17 +394,16 @@ EndFunc
 Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 	If $aBMPos = 0 Then Return
 	Local $bBMDeployed = False
-	Local $iMachineBarX = $aBMPos[0] - 20
-	Local $iMachineBarY = 568
 	
-	If $g_bBBMachineReady And IsArray($aBMPos) Then
-		SetLog("Deploying " & $aBMPos[2], $COLOR_BLUE)
+	If IsArray($aBMPos) Then
+		Local $MachineName = $aBMPos[2]
+		SetLog("Deploying " & $MachineName, $COLOR_BLUE)
 		PureClickP($aBMPos)
 		If _Sleep(500) Then Return
 
 		For $i = 1 To 3
 			If isProblemAffect(True) Then Return
-			If $g_bChkDebugAttackBB Then SetLog("[" & $i & "] Try Deploy " & $aBMPos[2], $COLOR_ACTION)
+			If $g_bChkDebugAttackBB Then SetLog("[" & $i & "] Try Deploy " & $MachineName, $COLOR_ACTION)
 			If $i > 2 Then
 				PureClick(40, 280)
 				PureClick(410, 26)
@@ -420,13 +414,15 @@ Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 			Local $iPoint = Random(0, UBound($aDP) - 1, 1)
 			PureClick($aDP[$iPoint][1], $aDP[$iPoint][2])
 			If _Sleep(500) Then Return
-			If WaitforPixel($iMachineBarX - 1, $iMachineBarY - 1, $iMachineBarX + 1, $iMachineBarY + 1, "47D204", 10, 1) Then ExitLoop
+			If QuickMIS("BC1", $g_sImgDirMachineAbility, $aBMPos[0] - 35, $aBMPos[1] - 40, $aBMPos[0] + 35, $aBMPos[1] + 40) Then
+				ExitLoop
+			EndIf
 		Next
 		$bBMDeployed = True ;we dont know BM is deployed or no, just set it true as already try 3 time to deployBM
 	EndIf
 
-	If $bBMDeployed Then SetLog("Battle Machine Deployed", $COLOR_SUCCESS)
-	If $bBMDeployed Then PureClickP($aBMPos)
+	If $bBMDeployed Then SetLog($MachineName & " Deployed", $COLOR_SUCCESS)
+	PureClickP($aBMPos)
 	Return $bBMDeployed
 EndFunc ; DeployBM
 
@@ -459,6 +455,7 @@ Func CheckBMLoop($aBMPos = $g_aMachinePos)
 			ElseIf StringInStr($g_iQuickMISName, "Ability") Then
 				PureClickP($aBMPos)
 				SetLog("Activate " & $MachineName & " Ability", $COLOR_SUCCESS)
+				ExitLoop
 			EndIf
 		EndIf
 
@@ -615,7 +612,7 @@ Func SearchRedLinesBB($bSecondAttack = False)
 		_ArrayAdd($aaCoords, $iSide & "|" & $aResult[$i][0] & "|" & $aResult[$i][1] & "|" & $aResult[$i][2])
 	Next
 	SetLog("Cleared BBDropPoint result : " & UBound($aaCoords) & " Coords", $COLOR_INFO)
-	If $g_bChkDebugAttackBB Then DebugAttackBBImage($aaCoords)
+	;If $g_bChkDebugAttackBB Then DebugAttackBBImage($aaCoords)
 	Return $aaCoords
 EndFunc
 
@@ -872,8 +869,12 @@ Func BBAttackReport()
 	
 	$sGold = getOcrAndCapture("coc-Builders", 525, 400, 86, 18, True)
 	$sTrophy = getOcrAndCapture("coc-Builders", 550, 437, 38, 18, True)
-	
 	$sDamage = getOcrBBDamageReport(365, 280)
+	If Number($sDamage) > 100 Then 
+		If $g_bChkDebugAttackBB Then SetLog("Adding more delay for animation", $COLOR_ACTION)
+		If _Sleep(3000) Then Return
+	EndIf
+	
 	If _ColorCheck(_GetPixelColor(324, 214, True), Hex(0xEA9E2C, 6), 20, Default, "BBAttackReport") Then $sStars = 1 ; 1 bronze
 	If _ColorCheck(_GetPixelColor(430, 180, True), Hex(0xECA030, 6), 20, Default, "BBAttackReport") Then $sStars = 2 ; 2 bronze
 	If _ColorCheck(_GetPixelColor(550, 220, True), Hex(0xE99D2C, 6), 20, Default, "BBAttackReport") Then $sStars = 3 ; 3 bronze

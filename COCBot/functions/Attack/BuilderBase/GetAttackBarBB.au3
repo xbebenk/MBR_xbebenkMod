@@ -33,14 +33,13 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 		$g_aWBOnAttackBar = $aEmpty
 	EndIf
 	
-	Local $iMaxSlot = 9, $iSlotOffset = 70, $bMachineFound = False
-	Local $aSlotX[$iMaxSlot], $iStartSlot = 120
+	Local $iMaxSlot = 9, $iSlotOffset = 71, $bMachineFound = False
+	Local $aSlotX[$iMaxSlot], $iStartSlot = 118
 	
 	If $g_bChkDebugAttackBB Then SetLog("GetAttackBarBB Remaining=" & String($bRemaining) & ", SecondAttack=" & String($bSecondAttack), $COLOR_DEBUG)
 	
-	$g_aMachinePos = GetMachinePos()
-	If $g_aMachinePos = 0 Then
-		$iStartSlot = 40
+	If GetMachinePos() = 0 Then
+		$iStartSlot = 35
 		For $i = 0 To UBound($aSlotX) - 1
 			$aSlotX[$i] = $iStartSlot + ($i * $iSlotOffset)
 		Next
@@ -63,15 +62,15 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 		If Not $g_bRunState Then Return
 		
 		$Troopx = $aSlotX[$k]
-		$ColorPickBannerX = $aSlotX[$k] + 30 ; location to pick color from TroopSlot banner
+		$ColorPickBannerX = $aSlotX[$k] + 35 ; location to pick color from TroopSlot banner
 			
 		If $bRemaining Then 
-			If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
 			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopBanners, $Troopx + 73, 670) Then 
 				If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
 				$isDarkGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x282828, 6), 10, Default, "isDarkGreyBanner") ; DartkGrey Banner on TroopSlot = Troop Already Deployed
 				$isGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x707070, 6), 10, Default, "isGreyBanner") ;Grey Banner on TroopSlot = Troop Die
 				If $isDarkGreyBanner Or $isGreyBanner Then ContinueLoop ;skip read troop as they detected deployed or die
+				If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
 				
 				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 30, Default, "isVioletBanner") ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
 				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30, Default, "isBlueBanner") ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
@@ -87,12 +86,12 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 				EndIf
 			EndIf
 		Else
-			If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
 			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopBanners, $Troopx + 73, 670) Then 
 				If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
 				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 30, Default, "isVioletBanner") ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
 				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30, Default, "isBlueBanner") ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
 				If Not $isVioletBanner And $bSecondAttack Then $isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x10224B, 6), 30, Default, "isVioletBanner") ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
+				If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)
 				
 				$bReadTroop = $isBlueBanner Or $isVioletBanner
 				If $bReadTroop Then

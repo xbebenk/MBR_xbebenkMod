@@ -327,6 +327,7 @@ Func CreateBBAttackSubTab()
 		$y += 23
 		$g_hChkBBDropBMFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBDropBMFirst", "Drop Battle Machine First"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBBMDropFirst_01", "Check to drop BM first in battles."))
+			GUICtrlSetOnEvent(-1, "ChkDropBMFirst")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$y += 23
 		$g_hChkDebugAttackBB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkDebugAttackBB", "Debug AttackBB"), $x, $y, -1, -1)

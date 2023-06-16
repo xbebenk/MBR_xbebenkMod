@@ -234,7 +234,6 @@ Func BBDropTrophy()
 		
 		Local $Return = False
 		If IsArray($aBMPos) Then
-			$g_bBBMachineReady = True
 			SetLog("Deploying BM")
 			DeployBM($aBMPos, $iSide, $iSide, $g_BBDP)
 			If ReturnHomeDropTrophyBB() Then Return True

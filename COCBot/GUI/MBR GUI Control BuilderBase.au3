@@ -82,6 +82,17 @@ Func ChkBBAttIfLootAvail()
 	EndIf
 EndFunc   ;==>ChkBBAttIfLootAvail
 
+Func ChkDropBMFirst()
+	If GUICtrlRead($g_hChkBBDropBMFirst) = $GUI_CHECKED Then
+		$g_bChkBBDropBMFirst = True
+		SetLog("DropBMFirst = True", $COLOR_DEBUG2)
+	Else
+		$g_bChkBBDropBMFirst = False
+		SetLog("BBDropBMFirst = False", $COLOR_DEBUG2)
+	EndIf
+EndFunc   ;==>ChkDropBMFirst
+
+
 Func ChkDebugAttackBB()
 	If GUICtrlRead($g_hChkDebugAttackBB) = $GUI_CHECKED Then
 		$g_bChkDebugAttackBB = True
@@ -103,8 +114,10 @@ EndFunc   ;==>chkStopAttackBB6thBuilder
 Func ChkBBAttackReport()
 	If GUICtrlRead($g_hChkBBAttackReport) = $GUI_CHECKED Then
 		$g_bChkBBAttackReport = True
+		SetLog("BBAttackReport Enabled", $COLOR_DEBUG2)
 	Else
 		$g_bChkBBAttackReport = False
+		SetLog("BBAttackReport Disabled", $COLOR_DEBUG2)
 	EndIf
 EndFunc   ;==>ChkBBAttackReport
 
