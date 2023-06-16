@@ -584,6 +584,10 @@ Func btnTestAttackBar()
 	$g_bRunState = $bCurrentRunState
 EndFunc   ;==>btnTestAttackBar
 
+Func minipinch($script = "minipinch")
+	Return AndroidAdbScript($script)
+EndFunc
+
 Func btnTestAttackBarBB()
 	Local $bCurrentOCR = $g_bDebugOcr, $bCurrentRunState = $g_bRunState, $bCurrentDebugImage = $g_bDebugImageSave
 
