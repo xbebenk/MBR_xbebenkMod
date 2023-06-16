@@ -63,7 +63,7 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 		If Not $g_bRunState Then Return
 		
 		$Troopx = $aSlotX[$k]
-		$ColorPickBannerX = $aSlotX[$k] + 25 ; location to pick color from TroopSlot banner
+		$ColorPickBannerX = $aSlotX[$k] + 30 ; location to pick color from TroopSlot banner
 			
 		If $bRemaining Then 
 			If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: isBlueBanner=" & String($isBlueBanner) & " isVioletBanner=" & String($isVioletBanner), $COLOR_DEBUG2)

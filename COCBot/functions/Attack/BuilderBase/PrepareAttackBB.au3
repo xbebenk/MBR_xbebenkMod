@@ -226,13 +226,15 @@ Func BBDropTrophy()
 		If Not ClickFindNowButton() Then Return False
 		If Not $g_bRunState Then Return
 		If Not WaitCloudsBB() Then Return
+		AndroidZoomOut() ;zoomout first before any action
 		
-		Local $iSide = True
+		Local $iSide = 1
 		Local $aBMPos = GetMachinePos()
 		$g_BBDP = GetBBDropPoint()
 		
 		Local $Return = False
 		If IsArray($aBMPos) Then
+			$g_bBBMachineReady = True
 			SetLog("Deploying BM")
 			DeployBM($aBMPos, $iSide, $iSide, $g_BBDP)
 			If ReturnHomeDropTrophyBB() Then Return True
