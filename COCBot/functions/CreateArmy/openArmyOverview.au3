@@ -13,7 +13,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
-
 	If $bCheckMain Then
 		If Not IsMainPage() Then ; check for main page, avoid random troop drop
 			SetLog("Cannot open Army Overview window", $COLOR_ERROR)
@@ -21,18 +20,11 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 		EndIf
 	EndIf
 	
-	For $i = 1 To 5
-		If _ColorCheck(_GetPixelColor(32, 523, True), Hex(0xFFFFE2, 6), 20) Then
-			If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
-			ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
-			If _Sleep(1000) Then Return
-		Else
-			SetLog("Cannot verify ArmyTrain Button", $COLOR_ERROR)
-			SetLog("expected FFFFE2, got " & _GetPixelColor(32, 523, True), $COLOR_ACTION)
-		EndIf
-		
+	For $i = 1 To 3
+		ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
+		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
+		If _Sleep(1000) Then Return
 		If IsTrainPage(True, 3) Then Return True
-		If _Sleep(500) Then Return
 		If $i > 1 Then SetLog("[" & $i & "] Repeated Try to Open ArmyWindow", $COLOR_ERROR)
 	Next
 	Return False
