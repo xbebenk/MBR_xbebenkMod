@@ -60,7 +60,7 @@ Func _ColorCheck($nColor1, $nColor2, $sVari = 5, $Ignore = Default, $sLogText = 
 				EndIf
 	EndSwitch
 	
-	If $g_bDebugSetLog And Not $bRet And $sLogText <> Default Then SetDebugLog($sLogText & ":" & String($bRet) & ", Exp=" & $nColor1 & ", Got=" & $nColor2 & ", Var=" & $sVari & ", ixVar=" & $iCompare, $COLOR_DEBUG2)
+	If $g_bDebugSetLog And Not $bRet And $sLogText <> Default Then SetDebugLog($sLogText & ":" & String($bRet) & ", Exp=" & $nColor2 & ", Got=" & $nColor1 & ", Var=" & $sVari & ", ixVar=" & $iCompare, $COLOR_DEBUG2)
 
 	Return $bRet
 EndFunc   ;==>_ColorCheck
