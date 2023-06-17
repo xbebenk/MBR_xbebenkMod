@@ -198,69 +198,74 @@ EndFunc
 
 Func BBDropTrophy()
 	If Not $g_bChkBBDropTrophy Then Return
+	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
 	SetLog("Prepare BB Drop Trophy", $COLOR_INFO)
-	
-	$g_aiCurrentLootBB[$eLootTrophyBB] = Number(getTrophyMainScreen(67, 84))
-	If $g_aiCurrentLootBB[$eLootTrophyBB] <= $g_iTxtBBTrophyLowerLimit Then
-		SetLog("Current BB Trophy:[" & $g_aiCurrentLootBB[$eLootTrophyBB] & "] BBDropTrophy Limit:[" & $g_iTxtBBTrophyLowerLimit & "]", $COLOR_INFO)
-		SetLog("Skip BB Drop Trophy", $COLOR_INFO)
-		Return
-	EndIf
 	
 	If $g_bChkBBAttIfLootAvail Then 
 		If CheckLootAvail() Then 
 			SetLog("BB Loot Available, Skip BB Drop Trophy")
-			ClickAway("Left")
-			If _Sleep(1000) Then Return
 			Return False
 		EndIf
 	EndIf
 	
-	If Not ClickBBAttackButton() Then 
-		ClickAway("Left")
-		Return False
-	Else
-		SetLog("Going to attack for BB Drop Trophy", $COLOR_INFO)
-		CheckArmyReady()
-		
-		If Not ClickFindNowButton() Then Return False
-		If Not $g_bRunState Then Return
-		If Not WaitCloudsBB() Then Return
-		AndroidZoomOut() ;zoomout first before any action
-		
-		Local $iSide = 1
-		Local $aBMPos = GetMachinePos()
-		$g_BBDP = GetBBDropPoint()
-		
-		Local $Return = False
-		If IsArray($aBMPos) Then
-			SetLog("Deploying BM")
-			DeployBM($aBMPos, $iSide, $iSide, $g_BBDP)
-			If ReturnHomeDropTrophyBB() Then Return True
+	Local $iCurrentTrophy = 0
+	For $iLoop = 1 To 3
+		$iCurrentTrophy = Number(getTrophyMainScreen(67, 84))
+		SetLog("Current BB Trophy:[" & $iCurrentTrophy & "] BBDropTrophy Limit:[" & $g_iTxtBBTrophyLowerLimit & "]", $COLOR_INFO)
+		If $iCurrentTrophy <= $g_iTxtBBTrophyLowerLimit Then
+			SetLog("Skip BB Drop Trophy", $COLOR_INFO)
+			ExitLoop
 		EndIf
 		
-		If Not $Return Then
+		If Not ClickBBAttackButton() Then 
+			ClickAway("Left")
+			Return False
+		Else
+			SetLog("Going to attack for BB Drop Trophy #" & $iLoop, $COLOR_ACTION)
+			CheckArmyReady()
+			
+			If Not ClickFindNowButton() Then Return False
+			If Not $g_bRunState Then Return
+			If Not WaitCloudsBB() Then Return
+			AndroidZoomOut() ;zoomout first before any action
+			
+			Local $iSide = 1
+			Local $aBMPos = GetMachinePos()
+			Local $BBDP[4][3] = [[1, 430, 130], [2, 128, 330], [3, 744, 330], [1, 596, 458]] ;dummy deploy point, 4 corner
+			;$g_BBDP = GetBBDropPoint()
+			
+			If IsArray($aBMPos) Then
+				Local $isBMDeployed = DeployBM($aBMPos, $iSide, $iSide, $BBDP)
+				If $isBMDeployed Then
+					If ReturnHomeDropTrophyBB() Then ContinueLoop
+				EndIf
+			EndIf
+			
 			; Get troops on attack bar and their quantities
-			local $aBBAttackBar = GetAttackBarBB()
+			$g_BBDP = GetBBDropPoint()
+			Local $aBBAttackBar = GetAttackBarBB()
 			If IsArray($aBBAttackBar) Then
 				For $i = 1 To 10
-					SetDebugLog("Try Drop Troops #" & $i, $COLOR_ACTION)
+					If $g_bChkDebugAttackBB Then SetLog("Try Drop Troops #" & $i, $COLOR_ACTION)
 					DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], 1, 1, 2, $g_BBDP)
 					If _Sleep(1000) Then Return
 					If IsAttackPage() Then ExitLoop
 				Next
 			EndIf
-			If ReturnHomeDropTrophyBB() Then Return True
+			
+			If ReturnHomeDropTrophyBB() Then ContinueLoop
 		EndIf
-	EndIf
-	If _Sleep(1000) Then Return
+	Next
+	
+	SetLog("BBDropTrophy Completed", $COLOR_SUCCESS)
+	CollectBBCart()
 	Return False
 EndFunc
 
 Func ReturnHomeDropTrophyBB($bOnlySurender = False)
-	
+	SetLog("Returning Home", $COLOR_ACTION)
 	For $i = 1 To 5 
-		SetDebugLog("Waiting Surrender button #" & $i, $COLOR_ACTION)
+		If $g_bChkDebugAttackBB Then SetLog("Waiting Surrender button #" & $i, $COLOR_ACTION)
 		If IsBBAttackPage() Then
 			Click(65, 520) ;click surrender
 			If _Sleep(1000) Then Return
@@ -270,7 +275,7 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False)
 	Next
 	
 	For $i = 1 To 5
-		SetDebugLog("Waiting OK Cancel Window #" & $i, $COLOR_ACTION)
+		If $g_bChkDebugAttackBB Then SetLog("Waiting OK Cancel Window #" & $i, $COLOR_ACTION)
 		If IsOKCancelPage(True) Then
 			Click(510, 400); Click Okay to Confirm surrender
 			If _Sleep(1000) Then Return
@@ -282,7 +287,7 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False)
 	If $bOnlySurender Then Return True
 	
 	For $i = 1 To 10
-		SetDebugLog("Waiting EndBattle Window #" & $i, $COLOR_ACTION)
+		If $g_bChkDebugAttackBB Then SetLog("Waiting EndBattle Window #" & $i, $COLOR_ACTION)
 		If QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(3000) Then Return
@@ -291,8 +296,13 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False)
 		If _Sleep(1000) Then Return
 	Next
 	
-	ClickAway("Left")
-	If _Sleep(2000) Then Return
-	ZoomOut(True)
+	For $i = 1 To 5
+		If $g_bChkDebugAttackBB Then SetLog("Waiting MainScreen #" & $i, $COLOR_ACTION)
+		If checkMainScreen(True, $g_bStayOnBuilderBase, "ReturnHomeDropTrophyBB") Then
+			ExitLoop
+		EndIf
+		If _Sleep(1000) Then Return
+	Next
+	
 	Return True
 EndFunc

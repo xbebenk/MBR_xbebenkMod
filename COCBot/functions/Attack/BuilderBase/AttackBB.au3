@@ -112,7 +112,13 @@ Func WaitCloudsBB()
 	
 	Local $count = 1
 	While Not QuickMIS("BC1", $g_sImgBBAttackStart, 400, 22, 460, 60)
-		SetDebugLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
+		If $g_bChkDebugAttackBB Then SetLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
+		
+		If $count = 10 Then 
+			SetLog("Too long waiting Clouds", $COLOR_ERROR)
+			If $g_bChkDebugAttackBB Then SaveDebugImage("WaitCloudsBB", True)
+		EndIf
+		
 		If $count > 20 Then
 			CloseCoC(True)
 			$bRet = False
@@ -394,6 +400,7 @@ EndFunc
 Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 	If $aBMPos = 0 Then Return
 	Local $bBMDeployed = False
+	Local $BBDP[4][3] = [[1, 430, 130], [2, 128, 330], [3, 744, 330], [1, 596, 458]] ;dummy deploy point, 4 corner
 	
 	If IsArray($aBMPos) Then
 		Local $MachineName = $aBMPos[2]
@@ -404,25 +411,27 @@ Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 		For $i = 1 To 3
 			If isProblemAffect(True) Then Return
 			If $g_bChkDebugAttackBB Then SetLog("[" & $i & "] Try Deploy " & $MachineName, $COLOR_ACTION)
-			If $i > 2 Then
-				PureClick(40, 280)
-				PureClick(410, 26)
-				PureClick(780, 470)
-				ExitLoop; desperate ...just leave it
-			EndIf
-
-			Local $iPoint = Random(0, UBound($aDP) - 1, 1)
-			PureClick($aDP[$iPoint][1], $aDP[$iPoint][2])
-			If _Sleep(500) Then Return
-			If QuickMIS("BC1", $g_sImgDirMachineAbility, $aBMPos[0] - 35, $aBMPos[1] - 40, $aBMPos[0] + 35, $aBMPos[1] + 40) Then
-				ExitLoop
+			If $i = 1 Then
+				Local $iPoint = Random(0, UBound($aDP) - 1, 1)
+				PureClick($aDP[$iPoint][1], $aDP[$iPoint][2])
+				If _Sleep(500) Then Return
+				If _ColorCheck(_GetPixelColor(65, 559, True), Hex(0x76F90C, 6), 10, Default, "DeployBM") Then 
+					$bBMDeployed = True
+					If $g_bChkDebugAttackBB Then SetLog($MachineName & " Deployed", $COLOR_SUCCESS)
+					PureClickP($aBMPos)
+					ExitLoop
+				Else
+					If $g_bChkDebugAttackBB Then SaveDebugImage("DeployBM", True)
+				EndIf
+			Else
+				For $dummyPoint = 0 To UBound($BBDP) - 1
+					PureClick($BBDP[$dummyPoint][1], $BBDP[$dummyPoint][2])
+				Next
 			EndIf
 		Next
 		$bBMDeployed = True ;we dont know BM is deployed or no, just set it true as already try 3 time to deployBM
 	EndIf
-
-	If $bBMDeployed Then SetLog($MachineName & " Deployed", $COLOR_SUCCESS)
-	PureClickP($aBMPos)
+	
 	Return $bBMDeployed
 EndFunc ; DeployBM
 
@@ -561,10 +570,10 @@ Func isInsideDiamondAttackBB($aCoords, $aaDiamond)
 	Local $DY = Abs($y - $aMiddle[1])
 
 	If ($DX / $aSize[0] + $DY / $aSize[1] <= 1) Then
-		If $g_bChkDebugAttackBB Then SetDebugLog("isInsideDiamondAttackBB: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_INFO)
+		;If $g_bChkDebugAttackBB Then SetDebugLog("isInsideDiamondAttackBB: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_INFO)
 		Return True ; Inside Village
 	Else
-		If $g_bChkDebugAttackBB Then SetDebugLog("isInsideDiamondAttackBB: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_INFO)
+		If $g_bChkDebugAttackBB Then SetDebugLog("isInsideDiamondAttackBB: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_DEBUG)
 		Return False ; Outside Village
 	EndIf
 
@@ -871,7 +880,7 @@ Func BBAttackReport()
 	$sTrophy = getOcrAndCapture("coc-Builders", 550, 437, 38, 18, True)
 	$sDamage = getOcrBBDamageReport(365, 280)
 	If Number($sDamage) > 100 Then 
-		If $g_bChkDebugAttackBB Then SetLog("Adding more delay for animation", $COLOR_ACTION)
+		If $g_bChkDebugAttackBB Then SetLog("Damage % more than 100, Adding delay for animation", $COLOR_ACTION)
 		If _Sleep(3000) Then Return
 	EndIf
 	
