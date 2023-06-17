@@ -159,14 +159,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 
-	If _CheckPixel($aChatTab) Then
+	If _CheckPixel($aChatTab, True) Then
 		SetLog("checkObstacles: Found Chat Tab to close", $COLOR_ACTION)
 		PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
 
-	If _CheckPixel($aIsTrainPgChk1) Then
+	If _CheckPixel($aIsTrainPgChk1, True) Then
 		SetLog("checkObstacles: Found Army Window to close", $COLOR_ACTION)
 		ClickAway(Default, True)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
