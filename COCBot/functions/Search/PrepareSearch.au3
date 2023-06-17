@@ -35,11 +35,11 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	If $Mode = $DT Then $g_bRestart = False
 	
 	If ClickB("AttackButton") Then
-		SetLog("Opening Multiplayer Tab!", $COLOR_ACTION)
+		SetDebugLog("Opening Multiplayer Tab!", $COLOR_ACTION)
 		For $i = 1 To 5
 			If _Sleep(1000) Then Return
 			If IsMultiplayerTabOpen() Then 
-				SetLog("Multiplayer Tab is Opened", $COLOR_DEBUG)
+				SetDebugLog("Multiplayer Tab is Opened", $COLOR_DEBUG)
 				ExitLoop
 			Else
 				If $i = 5 Then 
@@ -56,14 +56,14 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	Local $aButton
 	
 	For $s = 1 To 20
-		SetLog("Search for attack Button #" & $s, $COLOR_ACTION)
+		SetDebugLog("Search for attack Button #" & $s, $COLOR_ACTION)
 		$aButton = QuickMIS("CNX", $g_sImgPrepareLegendLeagueSearch, 275,190,835,545)
 		If IsArray($aButton) And UBound($aButton) > 0 Then
 			For $i = 0 To UBound($aButton) - 1
-				SetLog("Found Attack Button: " & $aButton[$i][0], $COLOR_DEBUG)
+				SetDebugLog("Found Attack Button: " & $aButton[$i][0], $COLOR_DEBUG)
 				If StringInStr($aButton[$i][0], "Normal") Then
 					$g_bLeagueAttack = False
-					SetLog("Click " & $aButton[$i][0] & " Attack Button", $COLOR_ACTION)
+					SetDebugLog("Click " & $aButton[$i][0] & " Attack Button", $COLOR_ACTION)
 					Click($aButton[$i][1], $aButton[$i][2])
 					For $k = 1 To 10 
 						If _Sleep(500) Then Return
@@ -71,7 +71,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 							SetLog("Still see " & $aButton[$i][0], $COLOR_DEBUG)
 							ContinueLoop 2
 						Else
-							SetLog("Attack Button" & $aButton[$i][0] & " is Gone", $COLOR_DEBUG)
+							SetDebugLog("Attack Button" & $aButton[$i][0] & " is Gone", $COLOR_DEBUG)
 							ExitLoop
 						EndIf
 					Next
