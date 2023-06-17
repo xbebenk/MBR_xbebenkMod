@@ -31,23 +31,24 @@ Func getShieldInfo()
 		Return
 	EndIf
 
-	Select ; Check for shield type
-		Case _CheckPixel($aNoShield, $g_bCapturePixel)
-			$aPBReturnResult[0] = "none"
-			SetDebugLog("No shield active", $COLOR_DEBUG)
-			Return $aPBReturnResult ; return with zero value
-		Case _CheckPixel($aHaveShield, $g_bCapturePixel)
-			$aPBReturnResult[0] = "shield" ; check for shield
-			SetDebugLog("Shield Active", $COLOR_DEBUG)
-		Case _CheckPixel($aHavePerGuard, $g_bCapturePixel)
-			$aPBReturnResult[0] = "guard" ; check for personal guard timer
-			SetDebugLog("Guard Active", $COLOR_DEBUG)
-		Case Else
-			SetLog("Sorry, Monkey needs more bananas to read shield type", $COLOR_ERROR) ; Check for pixel colors errors!
-			SetError(1, "Bad shield pixel read")
-			Return
-	EndSelect
-
+	If QuickMIS("BC1", $g_sImgShield, 430, 5, 460, 35) Then 
+		Select
+			Case $g_iQuickMISName = "NoShield"
+				$aPBReturnResult[0] = "none"
+				SetLog("No shield active", $COLOR_DEBUG)
+			Case $g_iQuickMISName = "Shield"
+				$aPBReturnResult[0] = "shield"
+				SetLog("Shield Active", $COLOR_DEBUG)
+			Case $g_iQuickMISName = "Guard"
+				$aPBReturnResult[0] = "guard"
+				SetLog("Guard Active", $COLOR_DEBUG)
+		EndSelect
+	Else
+		SetLog("Sorry, Your monkey not code anymore", $COLOR_ERROR) 
+		SetError(1, "Monkey read Shield")
+		Return
+	EndIf
+	
 	$sTimeResult = getOcrGuardShield(484, 21) ; read Shield time
 	SetDebugLog("OCR Shield Time= " & $sTimeResult, $COLOR_DEBUG)
 	If $sTimeResult = "" Then ; try a 2nd time after a short delay if slow PC and null read
