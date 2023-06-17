@@ -83,6 +83,7 @@ Func StarLaboratory($bTestRun = False)
 			$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), _NowCalc())
 			If @error Then _logErrorDateAdd(@error)
 			SetLog("Research will finish in " & $sLabTimeOCR & " (" & $g_sStarLabUpgradeTime & ")")
+			ClickAway("Left")
 			Return True
 		Else
 			SetDebugLog("Invalid getRemainTLaboratory OCR", $COLOR_DEBUG)
