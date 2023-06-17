@@ -57,8 +57,6 @@ Func getShieldInfo()
 		SetDebugLog("OCR2 Shield Time= " & $sTimeResult, $COLOR_DEBUG)
 		If $sTimeResult = "" Then ; error if no read value
 			$aPBReturnResult[1] = '00:00:00'
-			SetLog("strange error, no shield value found?", $COLOR_ERROR)
-			SetError(2, "Bad time value OCR")
 			Return $aPBReturnResult ; return zero value
 		EndIf
 	EndIf
