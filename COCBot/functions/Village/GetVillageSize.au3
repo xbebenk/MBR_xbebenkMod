@@ -70,6 +70,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		Local $a = $tree[0] - $stone[0]
 		Local $b = $stone[1] - $tree[1]
 		Local $c = Sqrt($a * $a + $b * $b) ;measure distance from stone to tree
+		Local $ZoomOffset = 35, $checkZoomOffset = 0
 			
 		Local $iRefSize = 600
 		Local $iIndex = _ArraySearch($g_aVillageRefSize, $stone[4])
@@ -81,17 +82,25 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			$InnerDiamondRight = $g_aVillageRefSize[$iIndex][4]
 			$InnerDiamondTop = $g_aVillageRefSize[$iIndex][5]
 			$InnerDiamondBottom = $g_aVillageRefSize[$iIndex][6]
-			SetDebugLog("LRTB: " & $InnerDiamondLeft & "," & $InnerDiamondRight & "," & $InnerDiamondTop & "," & $InnerDiamondBottom)
+			If $g_bDebugSetLog Then SetDebugLog("LRTB: " & $InnerDiamondLeft & "," & $InnerDiamondRight & "," & $InnerDiamondTop & "," & $InnerDiamondBottom)
 		Else
 			SetLog("Reference Size no match", $COLOR_ERROR)
 			Return FuncReturn($aResult)
 		EndIf
 		
 		Local $z = $c / $iRefSize
-		SetDebugLog("GetVillageSize, Scenery : " & $g_sSceneryCode & " : " & $g_sCurrentScenery & ", Zoom:" & $z, $COLOR_DEBUG1)
-		SetDebugLog("Stone2tree = " & $c)
-		SetDebugLog("Reference = " & $iRefSize)
-		SetDebugLog("ZoomLevel = " & $z)
+		If $g_bDebugSetLog Then SetDebugLog("GetVillageSize, Scenery : " & $g_sSceneryCode & " : " & $g_sCurrentScenery & ", Zoom:" & $z, $COLOR_DEBUG1)
+		If $g_bDebugSetLog Then SetDebugLog("Stone2tree = " & $c)
+		If $g_bDebugSetLog Then SetDebugLog("Reference = " & $iRefSize)
+		If $g_bDebugSetLog Then SetDebugLog("ZoomLevel = " & $z)
+		
+		$checkZoomOffset = Round(($c - $iRefSize), 2)
+		If $checkZoomOffset > $ZoomOffset Then 
+			SetLog("Stone2tree:" & Round($c, 2) & " - Reference:" & Round($iRefSize, 2) & " = " & $checkZoomOffset & " > " & $ZoomOffset, $COLOR_DEBUG2)
+			Return FuncReturn($aResult)
+		Else
+			SetLog("Stone2tree:" & Round($c, 2) & " Reference:" & Round($iRefSize, 2) & " checkZoomOffset: " & $checkZoomOffset, $COLOR_DEBUG2)
+		EndIf
 		
 		Local $stone_x_exp = $stone[2]
 		Local $stone_y_exp = $stone[3]
@@ -99,13 +108,14 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$x = $stone[0] - $stone_x_exp
 		$y = $stone[1] - $stone_y_exp
 		
+		;set global var
 		$g_iZoomFactor = $z
 		$g_ixOffset = $x
 		$g_iyOffset = $y
 		
-		SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
+		If $g_bDebugSetLog Then SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
 
-		Dim $aResult[10]
+		Dim $aResult[11]
 		$aResult[0] = $c
 		$aResult[1] = $z
 		$aResult[2] = $x
