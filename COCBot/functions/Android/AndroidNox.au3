@@ -298,31 +298,31 @@ Func SetScreenNox()
 
 	Local $cmdOutput, $process_killed
 
-	; These setting don't stick, so not used and instead using paramter: http://en.bignox.com/blog/?p=354
-	; Set width and height
-	;$cmdOutput = LaunchConsole($__VBoxManage_Path, "guestproperty set " & $g_sAndroidInstance & " vbox_graph_mode " & $g_iAndroidClientWidth & "x" & $g_iAndroidClientHeight & "-16", $process_killed)
-	; Set dpi
-	;$cmdOutput = LaunchConsole($__VBoxManage_Path, "guestproperty set " & $g_sAndroidInstance & " vbox_dpi 160", $process_killed)
-
 	ConfigureSharedFolder(1, True)
 	ConfigureSharedFolder(2, True)
 
 	; find Nox conf.ini in C:\Users\User\AppData\Local\Nox and set "Fix window size" to Enable, "Remember size and position" to Disable and screen res also
 	Local $sConfig = GetNoxConfigFile()
+	
 	If $sConfig Then
 		SetDebugLog("Configure Nox screen config: " & $sConfig)
 		IniWrite($sConfig, "setting", "h_resolution", $g_iAndroidClientWidth & "x" & $g_iAndroidClientHeight)
+		IniWrite($sConfig, "setting", "v_resolution", $g_iAndroidClientHeight & "x" & $g_iAndroidClientWidth)
 		IniWrite($sConfig, "setting", "h_dpi", "160")
+		IniWrite($sConfig, "setting", "v_dpi", "160")
+		IniWrite($sConfig, "setting", "language", "nox_en")
+		IniWrite($sConfig, "setting", "root", "true")
+		IniWrite($sConfig, "setting", "show_create_appshortcuts_guide_finished", "false")
 		IniWrite($sConfig, "setting", "fixsize", "true")
+		IniWrite($sConfig, "setting", "show_toolbar", "false")
+		IniWrite($sConfig, "setting", "isChangeResolution", "YES")
 		IniWrite($sConfig, "setting", "is_save_pos_and_size", "false")
 		IniWrite($sConfig, "setting", "last_player_width", "864")
 		IniWrite($sConfig, "setting", "last_player_height", "770")
 	Else
 		SetDebugLog("Cannot find Nox config to cnfigure screen: " & $sConfig, $COLOR_ERROR)
 	EndIf
-
 	Return True
-
 EndFunc   ;==>SetScreenNox
 
 Func RebootNoxSetScreen()
