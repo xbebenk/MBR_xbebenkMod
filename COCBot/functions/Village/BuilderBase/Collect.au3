@@ -27,11 +27,10 @@ Func CollectBuilderBase($bSwitchToBB = False, $bSwitchToNV = False)
 	SetLog("Collecting Resources on Builders Base", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
 	
-	ZoomOut()
 	Local $aResult = QuickMIS("CNX", $g_sImgCollectResourcesBB, 131,120,777, 584)
 	If IsArray($aResult) And UBound($aResult) > 0 Then
 		For $i = 0 To UBound($aResult) - 1
-			If isInsideDiamondXY($aResult[$i][1], $aResult[$i][2]) Then 
+			If isInsideDiamondCollectBB($aResult[$i][1], $aResult[$i][2]) Then 
 				Click($aResult[$i][1], $aResult[$i][2])
 				If $g_bDebugSetLog Then SetLog("Found random pick [" & $aResult[$i][1] & "," & $aResult[$i][2] & "]", $COLOR_SUCCESS)
 			EndIf
@@ -62,4 +61,11 @@ Func CollectBBCart()
 			If _Sleep(1000) Then Return
 		Next
 	EndIf
+EndFunc
+
+Func isInsideDiamondCollectBB($x, $y)
+	Local $aDiamond[4] = [110, 740, 100, 565] ;Left, Right, Top, Bottom
+	Local $aCoord[2] = [$x, $y]
+	
+	Return isInsideDiamondAttackBB($aCoord, $aDiamond)
 EndFunc
