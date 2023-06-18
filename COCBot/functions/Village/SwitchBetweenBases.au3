@@ -147,7 +147,6 @@ Func SwitchTo($To = "BB")
 	
 	If IsProblemAffect(True) Then Return
 	If Not $g_bRunState Then Return
-	If QuickMIS("BC1", $g_sImgBBWallRotate, 360, 530, 500, 610) Then GoAttackBBAndReturn()
 	Return $bRet
 EndFunc
 
