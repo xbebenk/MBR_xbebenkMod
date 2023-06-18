@@ -32,10 +32,8 @@ Func _ZoomOut() ;Zooms out
     ResumeAndroid()
     WinGetAndroidHandle()
 	getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
-	If Not $g_bRunState Then
-		SetDebugLog("Exit ZoomOut, bot not running")
-		Return
-	EndIf
+	If Not $g_bRunState Then Return
+	
 	Local $Result
 	If ($g_iAndroidZoomoutMode = 0 Or $g_iAndroidZoomoutMode = 3) And ($g_bAndroidEmbedded = False Or $g_iAndroidEmbedMode = 1) Then
 		; default zoomout
@@ -211,7 +209,7 @@ Func ZoomOutHelperBB($caller = "Default")
 EndFunc
 
 Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40, $bAndroidZoomOut = True) ;Zooms out
-	SetDebugLog("DefaultZoomOut()")
+	
 	Local $sFunc = "DefaultZoomOut"
 	Local $result0, $result1, $i = 0
 	Local $exitCount = 80
@@ -223,6 +221,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		AndroidZoomOut()
+		SetLog("ZoomOut() : " & $sFunc, $COLOR_DEBUG2)
 		If ZoomOutHelper($sFunc) Then Return True
 		If ZoomOutHelperBB($sFunc) Then Return True
 		$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
@@ -301,10 +300,8 @@ EndFunc   ;==>ZoomOut
 
 ;Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel = True, $AlwaysControlFocus = False, $AndroidZoomOut = True, $WheelRotation = -5, $WheelRotationCount = 1)
 Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel = True, $AlwaysControlFocus = False, $AndroidZoomOut = True, $hWin = Default, $ScrollSteps = -5, $ClickDelay = 250)
-	SetDebugLog("ZoomOutCtrlWheelScroll()")
 	Local $sFunc = "ZoomOutCtrlWheelScroll"
-   ;AutoItSetOption ( "SendKeyDownDelay", 3000)
-	Local $exitCount = 80
+    Local $exitCount = 80
 	Local $delayCount = 20
 	Local $result[4], $i = 0, $j
 	Local $ZoomActions[4] = ["ControlFocus", "Ctrl Down", "Mouse Wheel Scroll Down", "Ctrl Up"]
@@ -316,6 +313,7 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		AndroidZoomOut()
+		SetLog("ZoomOut() : " & $sFunc, $COLOR_DEBUG2)
 		If ZoomOutHelper($sFunc) Then Return True
 		If ZoomOutHelperBB($sFunc) Then Return True
 		$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)

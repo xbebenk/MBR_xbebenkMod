@@ -1607,66 +1607,70 @@ Func BuilderBase()
 		$g_bIs6thBuilderUnlocked = True
 		SetLog("Is6thBuilderUnlocked = " & String($g_bIs6thBuilderUnlocked), $COLOR_DEBUG1)
 		If $g_bIs6thBuilderUnlocked And $g_bChkSkipBBRoutineOn6thBuilder Then $g_bskipBBroutine = True
-	Endif
+	EndIf
+	
 	If $g_bskipBBroutine Then 
 		SetLog("isSkipBBroutine = " & String($g_bskipBBroutine), $COLOR_DEBUG1)
 		SetLog("BB Routine Skip!", $COLOR_INFO)
 		Return
-	Endif
+	EndIf
+	
 	; switch to builderbase and check it is builderbase
 	If SwitchBetweenBases("BB") Then
 		$g_bStayOnBuilderBase = True
-		Local $StartLabON = False
-		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-		ZoomOut(True)
 		$g_bBBAttacked = True	; Reset Variable
-		BuilderBaseReport()
-		CollectBuilderBase()
+		Local $StartLabON = False
+		
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-
+		CollectBuilderBase()
+		BuilderBaseReport(False, True, False)
+		
 		CleanBBYard()
-		;If _Sleep($DELAYRUNBOT1) Then Return
-		;checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		BuilderBaseReport(True, True)
 
 		If isGoldFullBB() Or isElixirFullBB() Then
-			AutoUpgradeBB()
+			If AutoUpgradeBB() Then 
+				If _Sleep($DELAYRUNBOT1) Then Return
+				ZoomOut(True) ;directly zoom
+			EndIf
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			$g_bBBAttacked = False
 		EndIf
-
-		If isElixirFullBB() Then
+		
+		Local $bElixFull = isElixirFullBB()
+		If $bElixFull Then
 			$StartLabON = StarLaboratory()
 			$g_bBBAttacked = False
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
-
 		
-		If Not BBDropTrophy() Then
-			If _Sleep($DELAYRUNBOT1) Then Return
+		BBDropTrophy()
+		
+		If $g_bChkStopAttackBB6thBuilder And $g_bIs6thBuilderUnlocked Then
+			SetLog("6th Builder Unlocked, attackBB disabled", $COLOR_DEBUG)
+		Else
+			SetLog("StopAttackBB6thBuilder: " & String($g_bChkStopAttackBB6thBuilder) & ", Is6thBuilderUnlocked: " & String($g_bIs6thBuilderUnlocked), $COLOR_DEBUG1)
 			DoAttackBB()
-			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-			If _Sleep($DELAYRUNBOT1) Then Return
+			BuilderBaseReport(True, True)
 		EndIf
-
+		
 		If $g_bBBAttacked Then
-			AutoUpgradeBB()
-			If _Sleep($DELAYRUNBOT1) Then Return
-			ZoomOut(True) ;directly zoom
+			If AutoUpgradeBB() Then 
+				If _Sleep($DELAYRUNBOT1) Then Return
+				ZoomOut(True) ;directly zoom
+			EndIf
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-			;If _Sleep($DELAYRUNBOT1) Then Return
-			;checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-			;ZoomOut(True) ;directly zoom
 		EndIf
 		
-		
-		$StartLabON = StarLaboratory()
+		If Not $bElixFull And $g_bBBAttacked Then $StartLabON = StarLaboratory()
 		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
+		
+		If _Sleep($DELAYRUNBOT1) Then Return
 		StartClockTowerBoost(False, False, $bUseCTPot)
 
-		If _Sleep($DELAYRUNBOT3) Then Return
+		If _Sleep($DELAYRUNBOT1) Then Return
 		BuilderBaseReport(False, True, False)
-		If _Sleep($DELAYRUNBOT3) Then Return
-
+		
 		$g_bStayOnBuilderBase = False
 		SwitchBetweenBases("Main")
 	EndIf

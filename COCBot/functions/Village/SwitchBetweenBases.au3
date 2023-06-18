@@ -98,11 +98,9 @@ Func SwitchTo($To = "BB")
 		
 		Local $ZoomOutResult
 		If $To = "BB" Then 
-			If Not ZoomOutHelper("SwitchBetweenBases") Then 
-				$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases", True)
-				If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-					ZoomOut() 
-				EndIf
+			$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases")
+			If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+				ZoomOut() 
 			EndIf
 		EndIf
 		

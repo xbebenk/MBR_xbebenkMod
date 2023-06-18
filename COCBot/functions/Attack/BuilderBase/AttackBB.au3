@@ -31,7 +31,7 @@ EndFunc
 Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 	If Not $g_bChkEnableBBAttack Then Return
 	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
-
+	
 	If $g_iBBAttackCount = 0 Then
 		Local $count = 1
 		While PrepareAttackBB()
@@ -54,8 +54,6 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				ExitLoop
 			EndIf
 		Wend
-
-		ZoomOut(True)
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
 		ClickAway("Left")
 		If _Sleep(1000) Then Return
@@ -78,7 +76,6 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			EndIf
 		Next
 		If Not $g_bRunState Then Return
-		ZoomOut(True)
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
 		ClickAway("Left")
 	EndIf
@@ -113,7 +110,7 @@ Func WaitCloudsBB()
 	Local $count = 1
 	While Not QuickMIS("BC1", $g_sImgBBAttackStart, 400, 22, 460, 60)
 		If $g_bChkDebugAttackBB Then SetLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
-		
+		If Not $g_bRunState Then Return
 		If $count = 10 Then 
 			SetLog("Too long waiting Clouds", $COLOR_ERROR)
 			If $g_bChkDebugAttackBB Then SaveDebugImage("WaitCloudsBB", True)
@@ -125,7 +122,6 @@ Func WaitCloudsBB()
 			ExitLoop
 		EndIf
 		If isProblemAffect(True) Then Return
-		If Not $g_bRunState Then Return 
 		$count += 1
 		If _Sleep(1000) Then Return
 	WEnd
@@ -146,7 +142,7 @@ Func _AttackBB()
 	
 	SetLog("Searching for Opponent.", $COLOR_BLUE)
 	If Not WaitCloudsBB() Then Return
-	
+	If Not $g_bRunState Then Return
 	AndroidZoomOut() ;zoomout first before any action
 	
 	; Get troops on attack bar and their quantities
@@ -170,17 +166,6 @@ Func _AttackBB()
 	If EndBattleBB() Then SetLog("Battle ended", $COLOR_INFO)
 	If _Sleep(3000) Then Return
 
-	For $i = 1 To 5
-		If QuickMIS("BC1", $g_sImgBBAttackBonus, 410, 464, 454, 490) Then
-			SetLog("Congrats Chief, Stars Bonus Awarded", $COLOR_INFO)
-			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(2000) Then Return
-			ExitLoop
-		EndIf
-		If Not $g_bRunState Then Return
-		If _Sleep(1000) Then Return
-	Next
-	
 	If checkMainScreen(True, $g_bStayOnBuilderBase, "AttackBB") Then
 		ZoomOut(True)
 		CollectBBCart()
@@ -233,7 +218,7 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		If BBBarbarianHead("EndBattleBB") Then
 			$bRet = True
 			If $g_bChkBBAttackReport Then
-				If _Sleep(8000) Then Return
+				If _SleepStatus(8000) Then Return
 				BBAttackReport()
 			EndIf
 			ClickP($aOkayButton)
@@ -242,6 +227,23 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
+		If _Sleep(1000) Then Return
+	Next
+	
+	For $i = 1 To 3
+		Select
+			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) = True
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If $g_bChkDebugAttackBB Then SetLog("Click Return Home", $COLOR_ACTION)
+				If _Sleep(3000) Then Return
+			Case QuickMIS("BC1", $g_sImgBBAttackBonus, 410, 464, 454, 490) = True
+				SetLog("Congrats Chief, Stars Bonus Awarded", $COLOR_INFO)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(2000) Then Return
+				$bRet = True
+			Case isOnBuilderBase() = True
+				$bRet = True
+		EndSelect
 		If _Sleep(1000) Then Return
 	Next
 
@@ -303,8 +305,10 @@ Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
 	
 	Local $bTroopsDropped = False, $bBMDeployed = False
 	If $g_bChkBBDropBMFirst Then
-		SetLog("Dropping BM First")
-		$bBMDeployed = DeployBM($g_aMachinePos, $iSide, $AltSide, $DP)
+		If IsArray($g_aMachinePos) And StringInStr($g_aMachinePos[2], "Dead") = 0 Then 
+			SetLog("Dropping BM First")
+			$bBMDeployed = DeployBM($g_aMachinePos, $iSide, $AltSide, $DP)
+		EndIf
 	EndIf
 
 	If Not $g_bRunState Then Return
@@ -357,8 +361,10 @@ Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
 
 	;If not dropping Builder Machine first, drop it now
 	If Not $g_bChkBBDropBMFirst Then
-		SetLog("Dropping BM Last")
-		$bBMDeployed = DeployBM($g_aMachinePos, $iSide, $AltSide, $DP)
+		If IsArray($g_aMachinePos) And StringInStr($g_aMachinePos[2], "Dead") = 0 Then 
+			SetLog("Dropping BM Last")
+			$bBMDeployed = DeployBM($g_aMachinePos, $iSide, $AltSide, $DP)
+		EndIf
 	EndIf
 	
 	If Not $g_bRunState Then Return 
@@ -414,8 +420,8 @@ Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 			If $i = 1 Then
 				Local $iPoint = Random(0, UBound($aDP) - 1, 1)
 				PureClick($aDP[$iPoint][1], $aDP[$iPoint][2])
-				If _Sleep(500) Then Return
-				If _ColorCheck(_GetPixelColor(65, 559, True), Hex(0x76F90C, 6), 10, Default, "DeployBM") Then 
+				If _Sleep(2000) Then Return
+				If _PixelSearch(41, 556, 42, 557, Hex(0xC224F8, 6), 0, True, True, "DeployBM") Then
 					$bBMDeployed = True
 					If $g_bChkDebugAttackBB Then SetLog($MachineName & " Deployed", $COLOR_SUCCESS)
 					PureClickP($aBMPos)
@@ -555,7 +561,7 @@ Func SetVersusBHToMid()
 			$aRet[0] = True
 		Else
 			SetDebugLog("SetVersusBHToMid(): Versus BH Not Found", $COLOR_INFO)
-		Endif
+		EndIf
 	EndIf
 	Return $aRet
 EndFunc

@@ -14,8 +14,6 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($Mode = Default)
-	getBuilderCount(True, True) 
-	
 	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then 
 		SetLog("ForceSwitchifNoCGEvent Enabled, Skip Attack until we have BBEvent", $COLOR_SUCCESS)
 		Return False
@@ -30,14 +28,10 @@ Func PrepareAttackBB($Mode = Default)
 		Return True
 	EndIf
 	
-	If $g_bChkStopAttackBB6thBuilder And $g_bIs6thBuilderUnlocked Then
-		SetLog("6th Builder Unlocked, attackBB disabled", $COLOR_INFO)
-		Return False
-	EndIf
-	
 	Local $GoldIsFull = isGoldFullBB()
 	Local $ElixIsFull = isElixirFullBB()
-
+	
+	getBuilderCount(True, True)
 	If $g_bOptimizeOTTO And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then ; And Not $g_sStarLabUpgradeTime = "" Then
 		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
 		Return False
@@ -170,7 +164,7 @@ Func CheckArmyReady()
 		Local $Camp = QuickMIS("CNX", $g_sImgFillCamp, 70, 225, 800, 250)
 		For $i = 1 To UBound($Camp)
 			If QuickMIS("BC1", $g_sImgFillTrain, 75, 390, 800, 530) Then
-				Setlog("Fill ArmyCamp with :" & $g_iQuickMISName, $COLOR_DEBUG)
+				Setlog("Fill ArmyCamp with : " & $g_iQuickMISName, $COLOR_DEBUG)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(500) Then Return
 			EndIf
@@ -214,7 +208,7 @@ Func BBDropTrophy()
 		SetLog("Current BB Trophy:[" & $iCurrentTrophy & "] BBDropTrophy Limit:[" & $g_iTxtBBTrophyLowerLimit & "]", $COLOR_INFO)
 		If $iCurrentTrophy <= $g_iTxtBBTrophyLowerLimit Then
 			SetLog("Skip BB Drop Trophy", $COLOR_INFO)
-			ExitLoop
+			Return False
 		EndIf
 		
 		If Not ClickBBAttackButton() Then 
@@ -237,6 +231,7 @@ Func BBDropTrophy()
 			If IsArray($aBMPos) Then
 				Local $isBMDeployed = DeployBM($aBMPos, $iSide, $iSide, $BBDP)
 				If $isBMDeployed Then
+					If _Sleep(1000) Then Return
 					If ReturnHomeDropTrophyBB() Then ContinueLoop
 				EndIf
 			EndIf
@@ -263,45 +258,35 @@ Func BBDropTrophy()
 EndFunc
 
 Func ReturnHomeDropTrophyBB($bOnlySurender = False)
-	SetLog("Returning Home", $COLOR_ACTION)
-	For $i = 1 To 5 
-		If $g_bChkDebugAttackBB Then SetLog("Waiting Surrender button #" & $i, $COLOR_ACTION)
-		If IsBBAttackPage() Then
-			Click(65, 520) ;click surrender
-			If _Sleep(1000) Then Return
-			ExitLoop
-		EndIf
-		If _Sleep(1000) Then Return
-	Next
+	SetLog("Returning Home", $COLOR_SUCCESS)
 	
-	For $i = 1 To 5
-		If $g_bChkDebugAttackBB Then SetLog("Waiting OK Cancel Window #" & $i, $COLOR_ACTION)
-		If IsOKCancelPage(True) Then
-			Click(510, 400); Click Okay to Confirm surrender
-			If _Sleep(1000) Then Return
-			ExitLoop
-		EndIf
-		If _Sleep(1000) Then Return
-	Next
-	
-	If $bOnlySurender Then Return True
-	
-	For $i = 1 To 10
-		If $g_bChkDebugAttackBB Then SetLog("Waiting EndBattle Window #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) Then
-			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(3000) Then Return
-			ExitLoop
-		EndIf
-		If _Sleep(1000) Then Return
-	Next
-	
-	For $i = 1 To 5
-		If $g_bChkDebugAttackBB Then SetLog("Waiting MainScreen #" & $i, $COLOR_ACTION)
-		If checkMainScreen(True, $g_bStayOnBuilderBase, "ReturnHomeDropTrophyBB") Then
-			ExitLoop
-		EndIf
-		If _Sleep(1000) Then Return
+	For $i = 1 To 15
+		Select
+			Case IsBBAttackPage() = True
+				Click(65, 520) ;click surrender
+				If $g_bChkDebugAttackBB Then SetLog("Click Surrender/EndBattle", $COLOR_ACTION)
+				If _Sleep(1000) Then Return
+			Case IsOKCancelPage() = True
+				ClickOkay("BB Attack Surrender"); Click Okay to Confirm surrender
+				If $g_bChkDebugAttackBB Then SetLog("Click OK", $COLOR_ACTION)
+				If _Sleep(1000) Then Return
+			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) = True
+				If $bOnlySurender Then 
+					If $g_bChkDebugAttackBB Then SetLog("ExitLoop, bOnlySurender = " & String($bOnlySurender), $COLOR_ACTION)
+					Return True
+				EndIf
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If $g_bChkDebugAttackBB Then SetLog("Click Return Home", $COLOR_ACTION)
+				If _Sleep(3000) Then Return
+			Case QuickMIS("BC1", $g_sImgBBAttackBonus, 410, 464, 454, 490) = True
+				SetLog("Congrats Chief, Stars Bonus Awarded", $COLOR_INFO)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(2000) Then Return
+				Return True
+			Case isOnBuilderBase() = True
+				Return True
+		EndSelect
+		If _Sleep(500) Then Return
 	Next
 	
 	Return True

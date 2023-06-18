@@ -19,7 +19,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $bNeedCapture = True)
+Func _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $bNeedCapture = True, $bReturnBool = False, $sMessage = "")
 	Local $x1, $x2, $y1, $y2
 	If $bNeedCapture = True Then
 		_CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
@@ -33,13 +33,23 @@ Func _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $
 		$y1 = $iTop
 		$y2 = $iBottom
 	EndIf
+	
 	For $x = $x1 To $x2 Step -1
 		For $y = $y1 To $y2
 			If _ColorCheck(_GetPixelColor($x, $y), $sColor, $iColorVariation) Then
 				Local $Pos[2] = [$iLeft + $x - $x2, $iTop + $y - $y1]
+				If $bReturnBool Then 
+					SetLog("[" & $sMessage & "] pixel search found, exp:" & $sColor & " => got:" & _GetPixelColor($x, $y), $COLOR_DEBUG2)
+					Return True
+				EndIf
 				Return $Pos
 			EndIf
 		Next
 	Next
-	Return 0
+	
+	If $bReturnBool Then 
+		Return False
+	Else
+		Return 0
+	EndIf
 EndFunc   ;==>_PixelSearch
