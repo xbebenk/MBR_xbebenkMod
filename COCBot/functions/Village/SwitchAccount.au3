@@ -409,6 +409,14 @@ Func SwitchCOCAcc($NextAccount)
 
 	CheckObstacles()
 	If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
+	
+	If $g_bDeleteLogs Then DeleteFiles($g_sProfileLogsPath, "*.*", $g_iDeleteLogsDays, 0)
+	If $g_bDeleteLoots Then DeleteFiles($g_sProfileLootsPath, "*.*", $g_iDeleteLootsDays, 0)
+	If $g_bDeleteTemp Then
+		DeleteFiles($g_sProfileTempPath, "*.*", $g_iDeleteTempDays, 0)
+		DeleteFiles($g_sProfileTempDebugPath, "*.*", $g_iDeleteTempDays, 0, $FLTAR_RECUR)
+	EndIf
+	
 	runBot()
 
 EndFunc   ;==>SwitchCOCAcc

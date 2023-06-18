@@ -15,20 +15,19 @@
 ; ===============================================================================================================================
 Func Deletefiles($Folder, $Filter, $daydiff = 120, $type = 0, $Recursion = $FLTAR_NORECUR)
 	Local $x
-	Local $FileListName = _FileListToArrayRec($Folder, $Filter, $FLTAR_FILESFOLDERS, $Recursion) ; list files to an array
-	If Not ((Not IsArray($FileListName)) Or (@error = 1)) Then
-		For $x = $FileListName[0] To 1 Step -1
-			Local $FileDate = FileGetTime($Folder & $FileListName[$x])
+	Local $File = _FileListToArrayRec($Folder, $Filter, $FLTA_FILES, $Recursion) ; list files to an array
+	
+	If $File = "" Then Return
+	If isArray($File) Then
+		For $i = 1 To $File[0]
+			Local $FileDate = FileGetTime($Folder & $File[$i])
 			If IsArray($FileDate) Then
 				Local $Date = $FileDate[0] & '/' & $FileDate[1] & '/' & $FileDate[2] & ' ' & $FileDate[3] & ':' & $FileDate[4] & ':' & $FileDate[5]
-				;msgbox ("" , "" , " " & $FileListname[$x] & " ____ " & $Date & "_____" &  _DateDiff('D', $Date, _NowCalc()) )
-				If _DateDiff('D', $Date, _NowCalc()) < $daydiff Then ContinueLoop
-				;msgbox ("" , "" , "Delete " & $FileListname[$x] & " ____ " & $Date & "_____" &  _DateDiff('D', $Date, _NowCalc()) )
-				If $type = 0 Then
-					FileDelete($Folder & $FileListName[$x])
-				Else
-					FileRecycle($Folder & $FileListName[$x])
-				EndIf
+				Local $sDayDiff = _DateDiff('D', $Date, _NowCalc())
+				If Number($sDayDiff) < $daydiff Then ContinueLoop
+				SetLog("Daydiff [" & $sDayDiff & "] days", $COLOR_DEBUG)
+				SetLog("Deleting file : " & $File[$i], $COLOR_DEBUG)
+				FileDelete($Folder & $File[$i])
 			Else
 				ContinueLoop
 			EndIf
@@ -36,14 +35,15 @@ Func Deletefiles($Folder, $Filter, $daydiff = 120, $type = 0, $Recursion = $FLTA
 	Else
 		Return False
 	EndIf
+	
 	If $Folder = $g_sProfileTempDebugPath Then ; remove empty folders in DEBUG directory
-			$FileListName = _FileListToArray($Folder, "*", $FLTA_FOLDERS)
-			If IsArray($FileListName) Then
-				For $x = $FileListName[0] To 1 Step -1
-					If DirGetSize($Folder & $FileListName[$x]) = 0 Then DirRemove($Folder & $FileListName[$x])
-				Next
-			EndIf
+		$File = _FileListToArray($Folder, "*", $FLTA_FOLDERS)
+		If IsArray($File) Then
+			For $x = 1 To $File[0]
+				If DirGetSize($Folder & $File[$x]) = 0 Then DirRemove($Folder & $File[$x])
+			Next
 		EndIf
+	EndIf
 	Return True
 EndFunc   ;==>Deletefiles
 
