@@ -988,14 +988,6 @@ Func IsGreenCheck()
 				$bRet = False
 			EndIf
 		EndIf
-		If Not $bRet Then
-			If QuickMIS("BC1", $g_sImgBBWallRotate, 360, 530, 500, 610) Then 
-				Click(430, 580)
-				_Sleep(1000)
-			Else
-				Return $bRet
-			EndIf
-		EndIf
 	Next
 	Return $bRet
 EndFunc
