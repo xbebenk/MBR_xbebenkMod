@@ -218,7 +218,6 @@
 #include "functions\Search\GetResources.au3"
 #include "functions\Search\PrepareSearch.au3"
 #include "functions\Search\VillageSearch.au3"
-#include "functions\Search\CheckZoomOut.au3"
 #include "functions\Search\FindTownHall.au3"
 #include "functions\Search\IsSearchModeActive.au3"
 #include "functions\Search\IsSearchAttackEnabled.au3"

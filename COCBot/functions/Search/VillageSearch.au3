@@ -529,3 +529,14 @@ Func WriteLogVillageSearch($x)
 	EndIf
 
 EndFunc   ;==>WriteLogVillageSearch
+
+Func CheckZoomOut($sSource = "CheckZoomOut", $bCheckOnly = False, $bForecCapture = True)
+	If $bForecCapture = True Then _CaptureRegion2()
+	
+	Local $aVillageResult = SearchZoomOut(False, True, $sSource, False)
+	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
+		Return False
+	EndIf
+	
+	Return True
+EndFunc   ;==>CheckZoomOut
