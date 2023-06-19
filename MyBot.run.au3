@@ -707,8 +707,7 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
-	ZoomOut(True)
-
+	
 	If $g_bIsHidden Then
 		HideAndroidWindow(True, Default, Default, "btnHide")
 		updateBtnHideState()
@@ -1247,13 +1246,13 @@ Func FirstCheck()
 	SetLog("-- FirstCheck Loop --")
 	If _Sleep(50) Then Return
 	VillageReport(True, True)
-
+	ZoomOut()
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
 	$g_bRestart = False
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
-
+	
 	;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	Local $bLocateTH = False
@@ -1326,10 +1325,10 @@ Func FirstCheck()
 		VillageReport(True, True)
 	EndIf
 
+	CheckTombs()
 	If $g_iFreeBuilderCount > 0 Then
 		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
 		If Not $g_bRunState Then Return
-		CheckTombs()
 		CleanYard()
 		_Sleep(8000) ;add wait after clean yard
 		If Not $g_bRunState Then Return
