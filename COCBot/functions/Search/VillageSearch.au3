@@ -343,18 +343,18 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			$g_bDebugDeadBaseImage = True
 		EndIf
 		If $g_bDebugDeadBaseImage Then setZombie()
+		
 		Local $i = 0
-		While $i < 100
-			If _Sleep(500) Then Return
-			$i += 1
-			If _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1], True), Hex($NextBtn[2], 6), $NextBtn[3], Default, "NextButton") And IsAttackPage() Then
+		For $i = 1 To 60
+			If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then
 				$g_bCloudsActive = True
 				ClickP($NextBtn, 1, 0, "#0155") ;Click Next
 				ExitLoop
 			Else
-				SetDebugLog("Wait to see Next Button... " & $i, $COLOR_DEBUG)
+				SetLog("Wait to see Next Button #" & $i, $COLOR_ACTION)
 			EndIf
-			If $i >= 99 Or isProblemAffect() Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
+			
+			If isProblemAffect(True) Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
 				$g_bIsClientSyncError = True
 				checkMainScreen(True, $g_bStayOnBuilderBase, "VillageSearch")
 				If $g_bRestart Then
@@ -369,7 +369,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				EndIf
 				Return
 			EndIf
-		WEnd
+			If _Sleep(500) Then Return
+		Next
 
 		If _Sleep($DELAYRESPOND) Then Return
 		$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
