@@ -18,7 +18,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	Local $iCount
 	SetLog("Waiting for Main Screen")
 	$iCount = 1
-	For $i = 0 To 10 ;11*2000 = 22 seconds (for blackscreen) and plus loading screen
+	For $i = 0 To 20 ;11*2000 = 22 seconds (for blackscreen) and plus loading screen
 		If Not $g_bRunState Then Return
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
 		$iCount += 1
@@ -54,8 +54,8 @@ Func waitMainScreen() ;Waits for main screen to popup
 			If _Sleep(1000) Then Return
 			Return
 		EndIf
-		
-		If Not checkObstacles() And $i = 10 Then ExitLoop ;something wrong with coc screen exit this loop and try to restart coc
+		If _Sleep(1000) Then Return
+		If Not checkObstacles() And $i = 20 Then ExitLoop ;something wrong with coc screen exit this loop and try to restart coc
 	Next
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -22,9 +22,11 @@ Func checkObstacles($bBuilderBase = False) ;Checks if something is in the way fo
 EndFunc   ;==>checkObstacles
 
 Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way for mainscreen
-	Local $msg, $x, $y, $Result
+	Local $msg, $Result
+	
+	If CheckSCLOGO() Then Return False
+	
 	_CaptureRegions()
-
 	If isProblemAffect() Then
 		;;;;;;;##### 1- Another device #####;;;;;;;
 		If UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,300(130,60)", False))) > 1 Then
@@ -282,6 +284,17 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	ClickAway("Left", True)
 	Return False
 EndFunc   ;==>_checkObstacles
+
+Func CheckSCLOGO()
+	Local $aCheckPixelSCLOGO[4][2] = [[100,100], [700,100], [333,268], [524,268]]
+	Local $aColorCheckSCLOGO[4] = ["000000", "000000", "FEFEFE", "FEFEFE"]
+	Local $bPixelFoundSCLOGO = False
+	For $i = 0 To UBound($aCheckPixelSCLOGO) - 1
+		$bPixelFoundSCLOGO = _ColorCheck(_GetPixelColor($aCheckPixelSCLOGO[$i][0], $aCheckPixelSCLOGO[$i][1], True), $aColorCheckSCLOGO[$i], 10, Default, "checkObstacles")
+	Next
+	If $bPixelFoundSCLOGO Then SetLog("SC Logo...", $COLOR_ACTION)
+	Return $bPixelFoundSCLOGO
+EndFunc
 
 Func CheckBB20Tutor()
 	Local $bRet = False
