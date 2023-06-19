@@ -793,34 +793,27 @@ EndFunc
 Func ClickBBBuilder($Counter = 3)
 	Local $b_WindowOpened = False
 	If Not $g_bRunState Then Return
-	; open the builders menu
-	If Not _ColorCheck(_GetPixelColor(380,73, True), "F4F4F5", 40) Then
+	
+	If Not IsBBBuilderMenuOpen() Then
 		Click(380, 30)
 		If _Sleep(1000) Then Return
-	EndIf
-
-	If IsBBBuilderMenuOpen() Then
-		SetDebugLog("Open BB BuilderMenu, Success", $COLOR_SUCCESS)
-		$b_WindowOpened = True
-	Else
 		For $i = 1 To $Counter
-			SetLog("BB BuilderMenu didn't open, trying again!", $COLOR_DEBUG)
 			If Not $g_bRunState Then Return
-			If IsFullScreenWindow() Then
-				Click(825,45)
-				If _Sleep(1000) Then Return
-			EndIf
-			Click(380, 30)
-			If _Sleep(1000) Then Return
 			If IsBBBuilderMenuOpen() Then
 				$b_WindowOpened = True
 				ExitLoop
 			EndIf
+			SetLog("[" & $i & "] BB BuilderMenu didn't open, trying again!", $COLOR_DEBUG)
+			Click(380, 30)
+			If _Sleep(1000) Then Return
 		Next
-		If Not $b_WindowOpened Then
-			SetLog("Something is wrong with BB BuilderMenu, already tried 3 times!", $COLOR_DEBUG)
-		EndIf
+	Else
+		If $g_bDebugSetLog Then SetLog("BB BuilderMenu, Already Open", $COLOR_SUCCESS)
+		$b_WindowOpened = True
 	EndIf
+
+	If Not $b_WindowOpened Then SetLog("Something wrong with BB BuilderMenu, already tried " & $Counter & " times!", $COLOR_DEBUG)
+
 	Return $b_WindowOpened
 EndFunc ;==>ClickBBBuilder
 
@@ -840,7 +833,8 @@ Func IsBBBuilderMenuOpen()
 			$bRet = True ;got correct color for border
 		EndIf
 	EndIf
-	
+	;_PixelSearch(380, 72, 383, 74, Hex(0xBDC1BE, 6), 20, True, True, "Test")
+	; _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $bNeedCapture = True, $bReturnBool = False, $sMessage = "")
 	If Not $bRet Then ;lets re check if border color check not success
 		SetDebugLog("Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
 		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 380, 60, 420, 30)
