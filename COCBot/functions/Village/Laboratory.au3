@@ -514,7 +514,7 @@ Func FindLabUpgrade()
 				$aResult[$i][4] = $g_iQuickMISName
 				$aResult[$i][5] = Number($level)
 			EndIf
-			If $g_bUpgradeSiegeToLvl2 And $aResult[$i][5] >= 3 Then
+			If $g_bUpgradeSiegeToLvl2 And $aResult[$i][5] >= 2 Then
 				For $x In $aSiege
 					If $aResult[$i][4] = $x Then
 						SetLog("Skip " & $aResult[$i][4] & ", already Level " & $aResult[$i][5])
