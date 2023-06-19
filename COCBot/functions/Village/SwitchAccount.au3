@@ -126,7 +126,7 @@ Func CheckSwitchAcc()
 
 		$g_aiTimeTrain[2] = 0
 		If IsWaitforHeroesActive() Then CheckWaitHero() ; update $g_aiTimeTrain[2]
-
+		RequestCC(False, "IsFullClanCastle")
 		ClickAway()
 
 		$iWaitTime = _ArrayMax($g_aiTimeTrain, 1, 0, 2) ; Not check Siege Machine time: $g_aiTimeTrain[3]
