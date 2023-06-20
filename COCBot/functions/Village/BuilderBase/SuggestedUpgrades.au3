@@ -709,7 +709,7 @@ Func FindBBExistingBuilding($bTest = False)
 	If $Elix > $Gold Then $ElixMultiply += 1
 
 	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundOptimizeOTTO = False
-	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 400, 73, 500, 370)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 425, 73, 560, 370)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			$bFoundOptimizeOTTO = False ;reset
