@@ -1959,7 +1959,7 @@ Global $g_bChkStartWeekendRaid = True
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[25][7] = [["DS", "Default", 571.62, 82, 770, 58, 577], _ ;ok
+Global $g_aVillageRefSize[29][7] = [["DS", "Default", 571.62, 82, 770, 58, 577], _ ;ok
 									["JS", "Jungle", 566.60, 69, 796, 64, 609], _ ;ok
 									["MS", "Magic", 524, 91, 778, 58, 578], _ ;ok
 									["BL", "BuilderBase Lower", 652.11, 131, 777, 102, 584], _ ;ok
@@ -1983,5 +1983,9 @@ Global $g_aVillageRefSize[25][7] = [["DS", "Default", 571.62, 82, 770, 58, 577],
 									["SP", "Spooky", 515.81, 103, 769, 61, 563], _ ;ok
 									["W1", "Scenery1", 553.3, 61, 813, 55, 619], _ ;ok
 									["W2", "Scenery2", 619.29, 61, 796, 64, 607], _ ;ok
-									["JL", "Jolly", 543.76, 86, 762, 93, 602]] ;ok
+									["JL", "Jolly", 543.76, 86, 762, 93, 602], _
+									["MT", "Magic Theatre", 549.18, 78, 777, 103, 626], _ ;ok
+									["PT", "Painter", 504.06, 80, 774, 104, 625], _ 
+									["DA", "Dark Ages", 581.83, 78, 775, 109, 627], _ 
+									["BC", "Book of Clash", 532.42, 77, 773, 105, 626]] 
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
