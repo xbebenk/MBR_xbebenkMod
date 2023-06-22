@@ -36,10 +36,10 @@ Func _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $
 	
 	For $x = $x1 To $x2 Step -1
 		For $y = $y1 To $y2
-			If _ColorCheck(_GetPixelColor($x, $y), $sColor, $iColorVariation, Default, "PixelSearch") Then
+			If _ColorCheck(_GetPixelColor($x, $y), $sColor, $iColorVariation) Then
 				Local $Pos[2] = [$iLeft + $x - $x2, $iTop + $y - $y1]
 				If $bReturnBool Then 
-					SetLog("[" & $sMessage & "] pixel search found, exp:" & $sColor & " => got:" & _GetPixelColor($x, $y), $COLOR_DEBUG2)
+					SetLog("[" & $sMessage & "] pixel search found, exp:" & $sColor & " => got:" & _GetPixelColor($x, $y) & " x=" & $x & " y=" & $y, $COLOR_DEBUG2)
 					Return True
 				EndIf
 				Return $Pos

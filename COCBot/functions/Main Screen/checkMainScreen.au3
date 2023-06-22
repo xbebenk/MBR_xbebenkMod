@@ -26,7 +26,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	Local $VillageType = "MainVillage"
 	If $bBuilderBase Then $VillageType = "BuilderBase"
 	If $bSetLog Then
-		SetLog("[" & $CalledFrom & "] Locate " & $VillageType & " Main Screen", $COLOR_INFO)
+		SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
 	EndIf
 	
 	If Not TestCapture() Then
@@ -114,19 +114,23 @@ Func _checkMainScreenImage($aPixelToCheck)
 EndFunc
 
 Func checkChatTabPixel()
-	If _CheckPixel($aChatTab, True) Then
-		SetDebugLog("checkChatTabPixel: Found Chat Tab to close")
-		PureClickP($aChatTab, 1, 0, "#0136") ;Click Close chat tab
-		If _Sleep(2000) Then Return
+	Local $bRet = False
+	
+	If _ColorCheck(_GetPixelColor(19, 376, True), Hex(0xC85415, 6), 20, Default, "checkChatTabPixel") Then
+		If $g_bDebugSetLog Then SetLog("checkChatTabPixel: Found ChatTab", $COLOR_ACTION)
+		$bRet = True
+	Else
+		If _CheckPixel($aChatTab, True) Then
+			SetDebugLog("checkChatTabPixel: Found Chat Tab to close", $COLOR_ACTION)
+			PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
+			If _Sleep(1000) Then Return
+			$bRet = True
+		Else
+			SetDebugLog("ChatTabPixel not found", $COLOR_ERROR)
+		EndIf
 	EndIf
 	
-	If WaitforPixel(18, 376, 20, 378, "C55115", 20, 1) Then 
-		SetDebugLog("checkChatTabPixel: Found ChatTabPixel", $COLOR_SUCCESS)
-		Return True
-	Else
-		SetDebugLog("ChatTabPixel not found", $COLOR_ERROR)
-	EndIf
-	Return False
+	Return $bRet
 EndFunc   ;==>checkChatTabPixel
 
 Func isOnMainVillage()

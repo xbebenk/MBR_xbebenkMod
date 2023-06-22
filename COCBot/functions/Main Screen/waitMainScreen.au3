@@ -15,26 +15,29 @@
 
 Func waitMainScreen() ;Waits for main screen to popup
 	If Not $g_bRunState Then Return
-	Local $iCount
+	Local $iCount = 30
 	SetLog("Waiting for Main Screen")
-	$iCount = 1
-	For $i = 0 To 20 ;11*2000 = 22 seconds (for blackscreen) and plus loading screen
+
+	For $i = 1 To $iCount ;30*1000 = 60 seconds (for blackscreen) and plus loading screen
 		If Not $g_bRunState Then Return
+		
+		;Local $hWin = $g_hAndroidWindow
+		;If TestCapture() = False Then
+		;	If WinGetAndroidHandle() = 0 Then
+		;		If $hWin = 0 Then
+		;			OpenAndroid(True)
+		;		Else
+		;			RebootAndroid()
+		;		EndIf
+		;		Return
+		;	EndIf
+		;	getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
+		;EndIf
+		If Not WinGetAndroidHandle() Then OpenAndroid(True)
+		
+		checkObstacles()
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
-		$iCount += 1
-		Local $hWin = $g_hAndroidWindow
-		If TestCapture() = False Then
-			If WinGetAndroidHandle() = 0 Then
-				If $hWin = 0 Then
-					OpenAndroid(True)
-				Else
-					RebootAndroid()
-				EndIf
-				Return
-			EndIf
-			getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
-		EndIf
-		_CaptureRegions() ;force capture screen
+		
 		If checkChatTabPixel() Then 
 			$g_iMainScreenTimeoutCount = 0
 			SetLog("waitMainScreen: MainScreen Located", $COLOR_SUCCESS)
@@ -44,7 +47,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		Local $sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
 		If $sLoading = "Loading" Then 
 			SetLog("Still on Loading Screen...", $COLOR_INFO)
-			If _Sleep(7500) Then Return
+			If _Sleep(1000) Then Return
 		EndIf
 		
 		Local $sUpdateAvail = getOcrAndCapture("coc-UpdateAvail", 320, 235, 220, 30)
@@ -55,11 +58,10 @@ Func waitMainScreen() ;Waits for main screen to popup
 			Return
 		EndIf
 		If _Sleep(1000) Then Return
-		If Not checkObstacles() And $i = 20 Then ExitLoop ;something wrong with coc screen exit this loop and try to restart coc
 	Next
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	SetLog("Wait MainScreen Timeout", $COLOR_ERROR)
+	SetLog("Wait MainScreen Timeout [" & $g_iMainScreenTimeoutCount & "]", $COLOR_ERROR)
 	SetLog("=========RESTART COC==========", $COLOR_INFO)
 	SaveDebugImage("WaitMainScreenTimeout", True) 
 	$g_iMainScreenTimeoutCount += 1

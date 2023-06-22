@@ -211,10 +211,9 @@ Func StarLaboratory($bTestRun = False)
 	Else
 		SetLog("No upgradable troop found!", $COLOR_ERROR)
 		ClickAway("Left")
+		If _Sleep(1000) Then Return ;wait window closed
 		Return False
 	EndIf
-	SetLog("No Upgradable troop, exit!", $COLOR_ERROR)
-	ClickAway("Left")
 	Return False
 EndFunc   ;==>Laboratory
 
