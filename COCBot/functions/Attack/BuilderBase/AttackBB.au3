@@ -43,6 +43,11 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			If Not $g_bRunState Then Return
 			If $g_bIsBBevent Then
 				If CheckCGCompleted() Then ExitLoop
+				If $count > 5 Then
+					SetLog("IsBBevent = " & String($g_bIsBBevent), $COLOR_INFO)
+					SetLog("Force stop, attacked 5 times!", $COLOR_INFO)
+					ExitLoop
+				EndIf
 			Else
 				If _Sleep(2000) Then Return
 			EndIf

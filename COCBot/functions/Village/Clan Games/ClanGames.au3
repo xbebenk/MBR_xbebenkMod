@@ -803,7 +803,7 @@ Func IsEventRunning($bOpenWindow = False)
 					Click(340,180) ; click first slot
 					If _Sleep(2000) Then Return
 					SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
-					If QuickMIS("BC1", $g_sImgVersus, 425, 150, 700, 215, True, False) Then
+					If QuickMIS("BC1", $g_sImgVersus, 425, 150, 700, 215) Then
 						Setlog("Running Challenge is BB Challenge", $COLOR_INFO)
 						$g_bIsBBevent = True
 						$g_bIsCGEventRunning = True
