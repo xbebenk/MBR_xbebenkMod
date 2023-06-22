@@ -1245,7 +1245,7 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	InitAndroidTimeLag()
 
 	; wait 5 sec. CoC might have just crashed
-	If _SleepStatus(5000) Then Return
+	If _SleepStatus(8000) Then Return
 	Local $iCoCPID = 0
 	For $i = 1 To 20
 		SetDebugLog("Waiting Coc Process start #" & $i)
@@ -4078,8 +4078,13 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	;dumpsys window windows | grep -E 'mCurrentFocus|mFocusedApp' |grep -E com.supercell.clashofclans
 	;mCurrentFocus=Window{446ad21 u0 com.supercell.clashofclans/com.supercell.titan.GameApp}
 	;mFocusedApp=AppWindowToken{695995b token=Token{606b06a ActivityRecord{9a68e55 u0 com.supercell.clashofclans/com.supercell.titan.GameApp t1123}}}
-	
 	;u0_a73        8997  1717 21275280 326220 29 -10      -   0 com.supercell.clashofclans
+	
+	;z3q:/ # dumpsys window windows | grep -E 'mCurrentFocus|mFocusedApp' |grep -E clashofmagic
+	;  mCurrentFocus=Window{8474fb2 u0 cc.clashofmagic.s2/com.atrasis.main.GameMain}
+	;  mFocusedApp=AppWindowToken{c5d9a3e token=Token{4ca6af9 ActivityRecord{c776dc0 u0 cc.clashofmagic.s2/com.atrasis.main.GameMain t493}}}
+	;z3q:/ # ps -e -o USER,PID,PPID,VSIZE,RSS,PRI,NICE,RTPRIO,SCHED,NAME|grep clashofmagic
+	;u0_a54        5602  1489 21147804 196096 29 -10      -   0 cc.clashofmagic.s2
 	
 	If AndroidInvalidState() Then Return 0
 	Local $cmd, $output = "", $error
@@ -4098,7 +4103,7 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 		EndIf
 	EndIf
 	
-	$cmd = "set result=$(ps -e -o USER,PID,PPID,VSIZE,RSS,PRI,NICE,RTPRIO,SCHED,NAME|grep """ & $g_sAndroidGamePackage & """ >&2)"
+	$cmd = "set result=$(ps -e -o USER,PID,PPID,VSIZE,RSS,PRI,NICE,RTPRIO,SCHED,NAME|grep """ & $sPackage & """ >&2)"
 	$output = AndroidAdbSendShellCommand($cmd)
 	$error = @error
 	
@@ -4889,7 +4894,7 @@ Func CheckEmuNewVersions()
 		Case "Nox"
 			$NewVersion = GetVersionNormalized("7.0.5.7")
 		Case "BlueStacks5"
-			$NewVersion = GetVersionNormalized("5.6.0.0")
+			$NewVersion = GetVersionNormalized("5.10.0.0")
 		Case Else
 			; diabled of the others
 			$NewVersion = GetVersionNormalized("99.0.0.0")

@@ -24,7 +24,10 @@ EndFunc   ;==>checkObstacles
 Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way for mainscreen
 	Local $msg, $Result
 	
-	If CheckSCLOGO() Then Return False
+	If CheckSCLOGO() Then 
+		If _Sleep(1000) Then Return
+		Return False
+	EndIf
 	
 	_CaptureRegions()
 	If isProblemAffect() Then
@@ -290,7 +293,10 @@ Func CheckSCLOGO()
 	Local $aColorCheckSCLOGO[4] = ["000000", "000000", "FEFEFE", "FEFEFE"]
 	Local $bPixelFoundSCLOGO = False
 	For $i = 0 To UBound($aCheckPixelSCLOGO) - 1
-		$bPixelFoundSCLOGO = _ColorCheck(_GetPixelColor($aCheckPixelSCLOGO[$i][0], $aCheckPixelSCLOGO[$i][1], True), $aColorCheckSCLOGO[$i], 10, Default, "checkObstacles")
+		Local $sColor = _GetPixelColor($aCheckPixelSCLOGO[$i][0], $aCheckPixelSCLOGO[$i][1], True)
+		$bPixelFoundSCLOGO = _ColorCheck($sColor, $aColorCheckSCLOGO[$i], 10, Default, "CheckSCLOGO")
+		If $g_bDebugSetlog Then SetLog("[" & $i & "] CheckSCLOGO, " & String($bPixelFoundSCLOGO) & ": exp=" & $aColorCheckSCLOGO[$i] & ", got=" & $sColor, $COLOR_DEBUG1)
+		If Not $bPixelFoundSCLOGO Then ExitLoop
 	Next
 	If $bPixelFoundSCLOGO Then SetLog("SC Logo...", $COLOR_ACTION)
 	Return $bPixelFoundSCLOGO
