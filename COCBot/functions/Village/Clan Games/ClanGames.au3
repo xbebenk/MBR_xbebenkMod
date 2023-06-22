@@ -1538,43 +1538,44 @@ Func ClanGamesChallenges($sReturnArray, $makeIni = False, $sINIPath = "", $bDebu
 			["BtSpell",					"Bat", 					 		10,  1, 1, "Use certain amount of Bat Spell to Win a Stars in Multiplayer Battles"			]]   ;
 
     Local $BBBattleChallenges[4][6] = [ _
-            ["StarM",					"BB Star Master",				6,  1, 1, "Collect certain amount of stars in Versus Battles"						], _ ; Earn 6 - 24 stars on the BB
-            ["Victories",				"BB Victories",					6,  5, 3, "Get certain count of Victories in Versus Battles"						], _ ; Earn 3 - 6 victories on the BB
-			["StarTimed",				"BB Star Timed",				6,  2, 2, "Earn stars in Versus Battles, but only stars gained below a minute counted"	], _
-            ["Destruction",				"BB Destruction",				6,  1, 1, "Earn certain amount of destruction percentage (%) in Versus Battles"			]] ; Earn 225% - 900% on BB attacks
+            ["StarM",					"BB Star Master",				6,  1, 1, "Collect certain amount of stars in Builder Battle"						], _ ; Earn 6 - 24 stars on the BB
+            ["Victories",				"BB Victories",					6,  5, 3, "Get certain count of Victories in Builder Battle"						], _ ; Earn 3 - 6 victories on the BB
+			["StarTimed",				"BB Star Timed",				6,  2, 2, "Earn stars in Builder Battle, but only stars gained below a minute counted"	], _
+            ["Destruction",				"BB Destruction",				6,  1, 1, "Earn certain amount of destruction percentage (%) in Builder Battle"			]] ; Earn 225% - 900% on BB attacks
 
-	Local $BBDestructionChallenges[18][6] = [ _
-            ["Airbomb",					"Air Bomb",                 	6,  1, 4, "Destroy certain number of Air Bomb in Versus Battles"		], _
-			["BuildingDes",             "BB Building",					6,  1, 4, "Destroy certain number of Building in Versus Battles"		], _
-			["BuilderHall",             "BuilderHall",					6,  1, 2, "Destroy certain number of Builder Hall in Versus Battles"	], _
-            ["Cannon",                 	"BB Cannon",                  	6,  1, 1, "Destroy certain number of Cannon in Versus Battles"			], _
-			["ClockTower",             	"Clock Tower",                 	6,  1, 1, "Destroy certain number of Clock Tower in Versus Battles"		], _
-            ["DoubleCannon",         	"Double Cannon",             	6,  1, 1, "Destroy certain number of Double Cannon in Versus Battles"	], _
-			["FireCrackers",         	"Fire Crackers",              	6,  1, 2, "Destroy certain number of Fire Crackers in Versus Battles"	], _
-			["GemMine",                 "Gem Mine",                  	6,  1, 1, "Destroy certain number of Gem Mine in Versus Battles"		], _
-			["GiantCannon",             "Giant Cannon",               	6,  1, 4, "Destroy certain number of Giant Cannon in Versus Battles"	], _
-			["GuardPost",               "Guard Post",                 	6,  1, 4, "Destroy certain number of Guard Post in Versus Battles"		], _
-			["MegaTesla",               "Mega Tesla",               	6,  1, 5, "Destroy certain number of Mega Tesla in Versus Battles"		], _
-			["MultiMortar",             "Multi Mortar",               	6,  1, 2, "Destroy certain number of Multi Mortar in Versus Battles"	], _
-			["Roaster",                 "Roaster",			            6,  1, 4, "Destroy certain number of Roaster in Versus Battles"			], _
-			["StarLab",                 "Star Laboratory",              6,  1, 1, "Destroy certain number of Star Laboratory in Versus Battles"	], _
-			["WallDes",             	"Wall Whacker",              	6,  1, 2, "Destroy certain number of Wall in Versus Battles"			], _
-			["Crusher",             	"Crusher",                 		6,  1, 2, "Destroy certain number of Crusher in Versus Battles"			], _
-			["ArcherTower",             "Archer Tower",            		6,  1, 1, "Destroy certain number of Archer Tower in Versus Battles"	], _
-			["LavaLauncher",            "Lava Launcher",           		6,  1, 5, "Destroy certain number of Lava Launcher in Versus Battles"	]]
+	Local $BBDestructionChallenges[19][6] = [ _
+            ["Airbomb",					"Air Bomb",                 	6,  1, 4, "Destroy certain number of Air Bomb in Builder Battle"		], _
+			["BuildingDes",             "BB Building",					6,  1, 4, "Destroy certain number of Building in Builder Battle"		], _
+			["BuilderHall",             "BuilderHall",					6,  1, 2, "Destroy certain number of Builder Hall in Builder Battle"	], _
+            ["Cannon",                 	"BB Cannon",                  	6,  1, 1, "Destroy certain number of Cannon in Builder Battle"			], _
+			["ClockTower",             	"Clock Tower",                 	6,  1, 1, "Destroy certain number of Clock Tower in Builder Battle"		], _
+            ["DoubleCannon",         	"Double Cannon",             	6,  1, 1, "Destroy certain number of Double Cannon in Builder Battle"	], _
+			["FireCrackers",         	"Fire Crackers",              	6,  1, 2, "Destroy certain number of Fire Crackers in Builder Battle"	], _
+			["GemMine",                 "Gem Mine",                  	6,  1, 1, "Destroy certain number of Gem Mine in Builder Battle"		], _
+			["GiantCannon",             "Giant Cannon",               	6,  1, 4, "Destroy certain number of Giant Cannon in Builder Battle"	], _
+			["GuardPost",               "Guard Post",                 	6,  1, 4, "Destroy certain number of Guard Post in Builder Battle"		], _
+			["MegaTesla",               "Mega Tesla",               	6,  1, 5, "Destroy certain number of Mega Tesla in Builder Battle"		], _
+			["MultiMortar",             "Multi Mortar",               	6,  1, 2, "Destroy certain number of Multi Mortar in Builder Battle"	], _
+			["Roaster",                 "Roaster",			            6,  1, 4, "Destroy certain number of Roaster in Builder Battle"			], _
+			["StarLab",                 "Star Laboratory",              6,  1, 1, "Destroy certain number of Star Laboratory in Builder Battle"	], _
+			["WallDes",             	"Wall Whacker",              	6,  1, 2, "Destroy certain number of Wall in Builder Battle"			], _
+			["Crusher",             	"Crusher",                 		6,  1, 2, "Destroy certain number of Crusher in Builder Battle"			], _
+			["ArcherTower",             "Archer Tower",            		6,  1, 1, "Destroy certain number of Archer Tower in Builder Battle"	], _
+			["LavaLauncher",            "Lava Launcher",           		6,  1, 5, "Destroy certain number of Lava Launcher in Builder Battle"	], _
+			["OttoOutpost",             "Otto OutPost",            		6,  1, 1, "Destroy certain number of Otto OutPost in Builder Battle"	]]
 
 	Local $BBTroopsChallenges[11][6] = [ _
-            ["RBarb",					"Raged Barbarian",              6,  1, 1, "Win 1-5 Attacks using Raged Barbarians in Versus Battle"	], _ ;BB Troops
-            ["SArch",                 	"Sneaky Archer",                6,  1, 1, "Win 1-5 Attacks using Sneaky Archer in Versus Battle"	], _
-            ["BGiant",         			"Boxer Giant",             		6,  1, 1, "Win 1-5 Attacks using Boxer Giant in Versus Battle"		], _
-			["BMini",         			"Beta Minion",              	6,  1, 1, "Win 1-5 Attacks using Beta Minion in Versus Battle"		], _
-			["Bomber",                 	"Bomber",                  		6,  1, 1, "Win 1-5 Attacks using Bomber in Versus Battle"			], _
-			["BabyD",               	"Baby Dragon",                 	6,  1, 1, "Win 1-5 Attacks using Baby Dragon in Versus Battle"		], _
-			["CannCart",             	"Cannon Cart",               	6,  1, 1, "Win 1-5 Attacks using Cannon Cart in Versus Battle"		], _
-			["NWitch",                 	"Night Witch",                 	6,  1, 1, "Win 1-5 Attacks using Night Witch in Versus Battle"		], _
-			["DShip",                 	"Drop Ship",                  	6,  1, 1, "Win 1-5 Attacks using Drop Ship in Versus Battle"		], _
-			["SPekka",                 	"Super Pekka",                  6,  1, 1, "Win 1-5 Attacks using Super Pekka in Versus Battle"		], _
-			["HGlider",                 "Hog Glider",                  	6,  1, 1, "Win 1-5 Attacks using Hog Glider in Versus Battle"		]]
+            ["RBarb",					"Raged Barbarian",              6,  1, 1, "Win 1-5 Attacks using Raged Barbarians in Builder Battle"	], _ ;BB Troops
+            ["SArch",                 	"Sneaky Archer",                6,  1, 1, "Win 1-5 Attacks using Sneaky Archer in Builder Battle"	], _
+            ["BGiant",         			"Boxer Giant",             		6,  1, 1, "Win 1-5 Attacks using Boxer Giant in Builder Battle"		], _
+			["BMini",         			"Beta Minion",              	6,  1, 1, "Win 1-5 Attacks using Beta Minion in Builder Battle"		], _
+			["Bomber",                 	"Bomber",                  		6,  1, 1, "Win 1-5 Attacks using Bomber in Builder Battle"			], _
+			["BabyD",               	"Baby Dragon",                 	6,  1, 1, "Win 1-5 Attacks using Baby Dragon in Builder Battle"		], _
+			["CannCart",             	"Cannon Cart",               	6,  1, 1, "Win 1-5 Attacks using Cannon Cart in Builder Battle"		], _
+			["NWitch",                 	"Night Witch",                 	6,  1, 1, "Win 1-5 Attacks using Night Witch in Builder Battle"		], _
+			["DShip",                 	"Drop Ship",                  	6,  1, 1, "Win 1-5 Attacks using Drop Ship in Builder Battle"		], _
+			["SPekka",                 	"Super Pekka",                  6,  1, 1, "Win 1-5 Attacks using Super Pekka in Builder Battle"		], _
+			["HGlider",                 "Hog Glider",                  	6,  1, 1, "Win 1-5 Attacks using Hog Glider in Builder Battle"		]]
 
 
 	; Just in Case

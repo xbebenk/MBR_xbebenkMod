@@ -1852,7 +1852,7 @@ Global $g_abCGMainGroundItem[27]
 Global $g_abCGMainMiscItem[3]
 Global $g_abCGMainSpellItem[11]
 Global $g_abCGBBBattleItem[4]
-Global $g_abCGBBDestructionItem[18]
+Global $g_abCGBBDestructionItem[19]
 Global $g_abCGBBTroopsItem[11]
 
 ; Collect Achievement Rewards
