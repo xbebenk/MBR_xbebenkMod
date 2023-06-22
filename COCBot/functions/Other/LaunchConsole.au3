@@ -102,7 +102,6 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	Local $iLastBS = StringInStr($exe, "\", 0, -1)
 	If $iLastBS > 0 Then $exe = StringMid($exe, $iLastBS + 1)
 	Local $commandLine = ($ProgramPath <> "" ? ('"' & $ProgramPath & '"' & ($ProgramParameter = "" ? "" : " " & $ProgramParameter)) : $ProgramParameter)
-	SetDebugLog("commandLine: " & $commandLine)
 	Local $commandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($commandLine, ".exe", "", 1), " ", ""), '"', ""), "'", "")
 	SetDebugLog("commandLineCompare: " & $commandLineCompare)
 	Local $query = "Select " & GetWmiSelectFields() & " from Win32_Process" ; replaced CommandLine with ExecutablePath
@@ -121,7 +120,7 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 		If $pid = 0 Then
 			Local $processCommandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace(StringReplace($Process[2], ".exe", "", 1), " ", ""), '"', ""), "'", ""), "\\", "\")
 			SetDebugLog("processCommandLineCompare: " & $processCommandLineCompare)
-			If ($CompareMode = 0 And StringInStr($processCommandLineCompare, $commandLineCompare)) Or _
+			If ($CompareMode = 0 And $processCommandLineCompare = $commandLineCompare) Or _
 					($CompareMode = 0 And StringRight($commandLineCompare, StringLen($processCommandLineCompare)) = $processCommandLineCompare) Or _
 					($CompareMode = 0 And $CompareCommandLineFunc <> "" And Execute($CompareCommandLineFunc & "(""" & StringReplace($Process[2], """", "") & """)") = True) Or _
 					$CompareMode = 1 Then
