@@ -70,24 +70,7 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 	
 	; Enter on Clan Games window
 	If IsClanGamesWindow() Then
-		; Let's selected only the necessary images
-		Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
 		Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
-
-		;Remove All previous file (in case setting changed)
-		DirRemove($sTempPath, $DIR_REMOVE)
-
-		If $g_bChkClanGamesLoot Then ClanGameImageCopy($sImagePath, $sTempPath, "L") ;L for Loot
-		If $g_bChkClanGamesBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "B") ;B for Battle
-		If $g_bChkClanGamesDes Then ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
-		If $g_bChkClanGamesAirTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "A") ;A for AirTroops
-		If $g_bChkClanGamesGroundTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "G") ;G for GroundTroops
-
-		If $g_bChkClanGamesMiscellaneous Then ClanGameImageCopy($sImagePath, $sTempPath, "M") ;M for Misc
-		If $g_bChkClanGamesSpell Then ClanGameImageCopy($sImagePath, $sTempPath, "S") ;S for GroundTroops
-		If $g_bChkClanGamesBBBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "BBB") ;BBB for BB Battle
-		If $g_bChkClanGamesBBDes Then ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
-		If $g_bChkClanGamesBBTroops Then ClanGameImageCopy($sImagePath, $sTempPath, "BBT") ;BBT for BB Troops
 
 		;now we need to copy selected challenge before checking current running event is not wrong event selected
 
@@ -161,18 +144,6 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		EndIf
 		If _Sleep(1500) Then Return
 		CloseClangamesWindow()
-		Return False
-	EndIf
-
-	Local $HowManyImages = _FileListToArray($sTempPath, "*", $FLTA_FILES)
-	If IsArray($HowManyImages) Then
-		Setlog($HowManyImages[0] & " Events to search")
-	Else
-		Setlog("ClanGames-Error on $HowManyImages: " & @error)
-		CloseClangamesWindow()
-		Setlog("Please check your clangames settings!", $COLOR_ERROR)
-		Setlog("Expand the Challenge!", $COLOR_ERROR)
-		SetLog("Enable any event that your account can do!", $COLOR_ERROR)
 		Return False
 	EndIf
 
@@ -448,7 +419,6 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 		If _Sleep(2000) Then Return
 	EndIf
 	
-	Local $bPurgePreventMax = False
 	; After removing is necessary check Ubound
 	If IsDeclared("aTempSelectChallenges") Then
 		If UBound($aTempSelectChallenges) > 0 Then
@@ -477,7 +447,6 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 						SetLog($aTempSelectChallenges[$i][0] & ", score:" & $aTempSelectChallenges[$i][6], $COLOR_INFO)
 						SetLog("Doing this challenge will maxing score", $COLOR_INFO)
 						SetLog("Now lets just purge", $COLOR_INFO)
-						$bPurgePreventMax = True
 						ExitLoop ; there is no next event, so exit and just purge
 					EndIf
 				EndIf
@@ -498,21 +467,17 @@ Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClan
 	EndIf
 
 	If $g_bChkClanGamesPurgeAny Then ; still have to purge, because no enabled event on setting found
-		If $bPurgePreventMax Then
-			Local $aEvent = FindEventToPurge($sTempPath)
-			If IsArray($aEvent) And UBound($aEvent) > 0 Then
-				Local $EventName = StringSplit($aEvent[0][0], "-")
-				SetLog("Detected Event to Purge: " & $EventName[2])
-				Click($aEvent[0][1], $aEvent[0][2])
-				If _Sleep(1500) Then Return
-				StartsEvent($EventName[2], True)
-			Else
-				ForcePurgeEvent(False, True) ; maybe will never hit here, but..
-			EndIf
+		SetLog("Still have to purge, because no enabled event on setting found", $COLOR_WARNING)
+		Local $aEvent = FindEventToPurge($sTempPath)
+		If IsArray($aEvent) And UBound($aEvent) > 0 Then
+			Local $EventName = StringSplit($aEvent[0][0], "-")
+			SetLog("Detected Event to Purge: " & $EventName[2])
+			Click($aEvent[0][1], $aEvent[0][2])
+			If _Sleep(1500) Then Return
+			StartsEvent($EventName[2], True)
 		Else
-			SetLog("Still have to purge, because no enabled event on setting found", $COLOR_WARNING)
 			SetLog("No Event found, lets purge 1 most top event", $COLOR_WARNING)
-			If $g_bDebugClick Or $g_bDebugSetlog Or $g_bChkClanGamesDebug Then SaveDebugImage("ClanGames_Challenges", True)
+			If $g_bChkClanGamesDebug Then SaveDebugImage("ClanGames_Challenges", True)
 			ForcePurgeEvent(False, True)
 			CloseClangamesWindow()
 			_Sleep(1000)
@@ -636,27 +601,75 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 	EndIf
 EndFunc ;==>ClanGameImageCopy
 
-Func FindEvent()
+Func FindEvent($bTestAllImage = False, $useBC1 = False)
+	; Let's selected only the necessary images
+	Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
+	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
+
+	;Remove All previous file (in case setting changed)
+	DirRemove($sTempPath, $DIR_REMOVE)
+
+	If $g_bChkClanGamesLoot Then ClanGameImageCopy($sImagePath, $sTempPath, "L") ;L for Loot
+	If $g_bChkClanGamesBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "B") ;B for Battle
+	If $g_bChkClanGamesDes Then ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
+	If $g_bChkClanGamesAirTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "A") ;A for AirTroops
+	If $g_bChkClanGamesGroundTroop Then ClanGameImageCopy($sImagePath, $sTempPath, "G") ;G for GroundTroops
+
+	If $g_bChkClanGamesMiscellaneous Then ClanGameImageCopy($sImagePath, $sTempPath, "M") ;M for Misc
+	If $g_bChkClanGamesSpell Then ClanGameImageCopy($sImagePath, $sTempPath, "S") ;S for GroundTroops
+	If $g_bChkClanGamesBBBattle Then ClanGameImageCopy($sImagePath, $sTempPath, "BBB") ;BBB for BB Battle
+	If $g_bChkClanGamesBBDes Then ClanGameImageCopy($sImagePath, $sTempPath, "BBD") ;BBD for BB Destruction
+	If $g_bChkClanGamesBBTroops Then ClanGameImageCopy($sImagePath, $sTempPath, "BBT") ;BBT for BB Troops
+	
+	Local $HowManyImages = _FileListToArray($sTempPath, "*", $FLTA_FILES)
+	If IsArray($HowManyImages) Then
+		Setlog($HowManyImages[0] & " Events to search")
+	Else
+		Setlog("ClanGames-Error on $HowManyImages: " & @error)
+		CloseClangamesWindow()
+		Setlog("Please check your clangames settings!", $COLOR_ERROR)
+		Setlog("Expand the Challenge!", $COLOR_ERROR)
+		SetLog("Enable any event that your account can do!", $COLOR_ERROR)
+		Return False
+	EndIf
+	
 	Local $hStarttime = _Timer_Init()
 	Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
 	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
 	Local $aEvent, $aReturn[0][6], $toBottom = False
-	Local $aX[4] = [290, 410, 540, 660]
-	Local $aY[3] = [120, 280, 445]
-
-	For $y = 0 To Ubound($aY) - 1
-		For $x = 0 To Ubound($aX) - 1
-			$aEvent = QuickMIS("CNX", $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 100, $aY[$y] + 110)
-			If IsArray($aEvent) And UBound($aEvent) > 0 Then
-				Local $IsBBEvent = IsBBChallenge($aEvent[0][1], $aEvent[0][2])
-				If $IsBBEvent Then $IsBBEvent = "CGBB"
-				If Not $IsBBEvent Then $IsBBEvent = "CGMain"
-				Local $ChallengeEvent = StringSplit($aEvent[0][0], "-", $STR_NOCOUNT)
-				ClanGameImageCopy($sImagePath, $sTempPath, "Selected", $aEvent[0][0])
-				_ArrayAdd($aReturn, $ChallengeEvent[0] & "|" & $ChallengeEvent[1] & "|" & $aEvent[0][1] & "|" & $aEvent[0][2] & "|" & $IsBBEvent & "|" & $aEvent[0][0] )
-			EndIf
+	Local $aX[4] = [299, 425, 551, 677]
+	Local $aY[3] = [130, 288, 448]
+	
+	If Not $useBC1 Then 
+		For $y = 0 To Ubound($aY) - 1
+			For $x = 0 To Ubound($aX) - 1
+				$aEvent = QuickMIS("CNX", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 90, $aY[$y] + 70)
+				If IsArray($aEvent) And UBound($aEvent) > 0 Then
+					Local $IsBBEvent = IsBBChallenge($aEvent[0][1], $aEvent[0][2])
+					If $IsBBEvent Then $IsBBEvent = "CGBB"
+					If Not $IsBBEvent Then $IsBBEvent = "CGMain"
+					Local $ChallengeEvent = StringSplit($aEvent[0][0], "-", $STR_NOCOUNT)
+					ClanGameImageCopy($sImagePath, $sTempPath, "Selected", $aEvent[0][0])
+					_ArrayAdd($aReturn, $ChallengeEvent[0] & "|" & $ChallengeEvent[1] & "|" & $aEvent[0][1] & "|" & $aEvent[0][2] & "|" & $IsBBEvent & "|" & $aEvent[0][0] )
+				EndIf
+			Next
 		Next
-	Next
+	Else
+		For $y = 0 To Ubound($aY) - 1
+			For $x = 0 To Ubound($aX) - 1
+				If QuickMIS("BC1", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 90, $aY[$y] + 70) Then
+					Local $BC1x = $g_iQuickMISX, $BC1y = $g_iQuickMISY
+					Local $ChallengeEvent = StringSplit($g_iQuickMISName, "-", $STR_NOCOUNT)
+					ClanGameImageCopy($sImagePath, $sTempPath, "Selected", $g_iQuickMISName)
+					Local $IsBBEvent = IsBBChallenge($g_iQuickMISX, $g_iQuickMISY)
+					If $IsBBEvent Then $IsBBEvent = "CGBB"
+					If Not $IsBBEvent Then $IsBBEvent = "CGMain"
+					_ArrayAdd($aReturn, $ChallengeEvent[0] & "|" & $ChallengeEvent[1] & "|" & $BC1x & "|" & $BC1y & "|" & $IsBBEvent & "|" & $g_iQuickMISName)
+				EndIf
+			Next
+		Next
+	EndIf
+	
 	SetDebugLog("Benchmark FindEvent selection: " & StringFormat("%.2f", _Timer_Diff($hStarttime)) & "'ms", $COLOR_DEBUG)
 	Return $aReturn
 EndFunc
@@ -1114,7 +1127,7 @@ Func IsBBChallenge($i = Default, $j = Default)
 		For $x = 0 To 3
 			If $iRow = ($y+1) And $iColumn = ($x+1) Then
 				;Search image border, our image is MainVillage event border, so If found return False
-				If QuickMIS("BC1", $g_sImgBorder, $BorderX[$x] - 50, $BorderY[$y] - 50, $BorderX[$x] + 50, $BorderY[$y] + 50, True, False) Then
+				If QuickMIS("BC1", $g_sImgBorder, $BorderX[$x] - 20, $BorderY[$y] - 30, $BorderX[$x] + 20, $BorderY[$y] + 20, True, False) Then
 					If $g_bChkClanGamesDebug Then SetLog("IsBBChallenge = False", $COLOR_ERROR)
 					Return False
 				Else
