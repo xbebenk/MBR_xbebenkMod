@@ -340,6 +340,15 @@ EndFunc   ;==>chkAccount
 
 Func btnSaveToAllOpen()
 	GUISetState(@SW_SHOW, $g_hGUI_SaveToProfiles)
+	Local $aActiveProfile = AccountNoActive()
+	For $i = 0 To UBound($aActiveProfile) - 1
+		If $aActiveProfile[$i] Then 
+			GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_ENABLE)
+		Else
+			GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_DISABLE)
+			GUICtrlSetData($g_ahTxtCopyAccount[$i], "")
+		EndIf
+	Next
 EndFunc
 
 Func btnSaveToAllClose()
@@ -347,13 +356,14 @@ Func btnSaveToAllClose()
 EndFunc
 
 Func chkCheckAllSaveProfile()
+	Local $aActiveProfile = AccountNoActive()
 	If GUICtrlRead($g_hChkEnableSaveAll) = $GUI_CHECKED Then
 		For $i = 0 To Ubound($g_ahChkCopyAccount) - 1
-			GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_CHECKED)
+			If $aActiveProfile[$i] Then GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_CHECKED)
 		Next
 	Else
 		For $i = 0 To Ubound($g_ahChkCopyAccount) - 1
-			GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_UNCHECKED)
+			If $aActiveProfile[$i] Then GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_UNCHECKED)
 		Next
 	EndIf
 EndFunc

@@ -43,7 +43,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			If Not $g_bRunState Then Return
 			If $g_bIsBBevent Then
 				If CheckCGCompleted() Then ExitLoop
-				If $count > 5 Then
+				If $count > 4 Then
 					SetLog("IsBBevent = " & String($g_bIsBBevent), $COLOR_INFO)
 					SetLog("Force stop, attacked 5 times!", $COLOR_INFO)
 					ExitLoop
@@ -402,6 +402,8 @@ EndFunc
 Func GetMachinePos()
 	Local $aBMPos = QuickMIS("CNX", $g_sImgBBBattleMachine, 28, 560, 100, 650)
 	Local $aCoords[3]
+	If $aBMPos = -1 Then Return 0
+	
     If IsArray($aBMPos) Then
 		$aCoords[0] = $aBMPos[0][1] ;x
 		$aCoords[1] = $aBMPos[0][2] ;y
@@ -896,21 +898,23 @@ Func BBAttackReport()
 	$sGold = getOcrAndCapture("coc-Builders", 525, 400, 86, 18, True)
 	$sTrophy = getOcrAndCapture("coc-Builders", 550, 437, 38, 18, True)
 	$sDamage = getOcrBBDamageReport(365, 280)
-	If Number($sDamage) > 100 Then 
+	
+	If Number($sDamage) = 200 Then 
+		$sStars = 6
+	ElseIf Number($sDamage) > 100 Then 
 		If $g_bChkDebugAttackBB Then SetLog("Damage % more than 100, Adding delay for animation", $COLOR_ACTION)
 		If _Sleep(3000) Then Return
+		If _ColorCheck(_GetPixelColor(324, 214, True), Hex(0xB5DCF0, 6), 20, Default, "BBAttackReport") Then $sStars = 4 ; 1 silver
+		If _ColorCheck(_GetPixelColor(430, 180, True), Hex(0xBCDFF3, 6), 20, Default, "BBAttackReport") Then $sStars = 5 ; 2 silver
+		;If _ColorCheck(_GetPixelColor(550, 220, True), Hex(0xB8DCF0, 6), 20, Default, "BBAttackReport") Then $sStars = 6 ; 3 silver
+	Else
+		If _ColorCheck(_GetPixelColor(324, 214, True), Hex(0xEA9E2C, 6), 20, Default, "BBAttackReport") Then $sStars = 1 ; 1 bronze
+		If _ColorCheck(_GetPixelColor(430, 180, True), Hex(0xECA030, 6), 20, Default, "BBAttackReport") Then $sStars = 2 ; 2 bronze
+		If _ColorCheck(_GetPixelColor(550, 220, True), Hex(0xE99D2C, 6), 20, Default, "BBAttackReport") Then $sStars = 3 ; 3 bronze
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(324, 214, True), Hex(0xEA9E2C, 6), 20, Default, "BBAttackReport") Then $sStars = 1 ; 1 bronze
-	If _ColorCheck(_GetPixelColor(430, 180, True), Hex(0xECA030, 6), 20, Default, "BBAttackReport") Then $sStars = 2 ; 2 bronze
-	If _ColorCheck(_GetPixelColor(550, 220, True), Hex(0xE99D2C, 6), 20, Default, "BBAttackReport") Then $sStars = 3 ; 3 bronze
-	
-	If _ColorCheck(_GetPixelColor(324, 214, True), Hex(0xB5DCF0, 6), 20, Default, "BBAttackReport") Then $sStars = 4 ; 1 silver
-	If _ColorCheck(_GetPixelColor(430, 180, True), Hex(0xBCDFF3, 6), 20, Default, "BBAttackReport") Then $sStars = 5 ; 2 silver
-	If _ColorCheck(_GetPixelColor(550, 220, True), Hex(0xB8DCF0, 6), 20, Default, "BBAttackReport") Then $sStars = 6 ; 3 silver
-	
 	SetLog("Attack Result :", $COLOR_INFO)
-	SetLog("Gain Stars[" & $sStars & "] Trophy[" & $sTrophy & "] Gold[" & $sGold & "] Destruction[" & $sDamage & "%]", $COLOR_SUCCESS)
+	SetLog("Gain Stars: [" & $sStars & "], Trophy: [" & $sTrophy & "], Gold: [" & $sGold & "], Destruction: [" & $sDamage & "%]", $COLOR_SUCCESS)
 	
 	$AtkLogTxt =  StringFormat("%2s", $g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
 	$AtkLogTxt &= StringFormat("%4d", $sCurrentTrophy) & "|"
@@ -923,6 +927,7 @@ Func BBAttackReport()
 	$AtkLogTxt &= StringFormat("%3d", $sTrophy) & "|"
 	$AtkLogTxt &= StringFormat("%1d", $sStars) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $sDamage) & "|"
+	If $g_bIsBBevent Then $AtkLogTxt &= $g_sCGCurrentEventName
 	
 	If Int($sTrophy) >= 0 Then
 		SetAtkLog($AtkLogTxt, "", $COLOR_DEBUG)

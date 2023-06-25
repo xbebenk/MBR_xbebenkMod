@@ -1705,7 +1705,7 @@ Func GotoBBTodoCG()
 		BuilderBaseReport(True, False)
 		CollectBuilderBase()
 		DoAttackBB(0)
-		CollectBuilderBase()
+		CollectBBCart()
 		; switch back to normal village
 		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False

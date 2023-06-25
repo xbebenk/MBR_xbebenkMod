@@ -1296,7 +1296,7 @@ Func ClanGamesChallenges($sReturnArray)
 			["DonateTroop", 			"Helping Hand", 				 6,  6, 8, "Donate a total of 45 housing space worth of troops"			]]   ; 	|8h	|50
 
 
-	Global $SpellChallenges[11][6] = [ _
+	Global $SpellChallenges[12][6] = [ _
 			["LSpell", 					"Lightning", 					 6,  1, 1, "Use certain amount of Lightning Spell to Win a Stars in Multiplayer Battles"	], _ ;
 			["HSpell", 					"Heal",							 6,  2, 1, "Use certain amount of Heal Spell to Win a Stars in Multiplayer Battles"			], _ ; updated 25/01/2021
 			["RSpell", 					"Rage", 					 	 6,  2, 1, "Use certain amount of Rage Spell to Win a Stars in Multiplayer Battles"			], _ ;
@@ -1307,7 +1307,8 @@ Func ClanGamesChallenges($sReturnArray)
 			["ESpell", 					"Earthquake", 					 6,  1, 1, "Use certain amount of Earthquake Spell to Win a Stars in Multiplayer Battles"	], _ ;
 			["HaSpell", 				"Haste",	 					 6,  1, 1, "Use certain amount of Haste Spell to Win a Stars in Multiplayer Battles"		], _ ; updated 25/01/2021
 			["SkSpell",					"Skeleton", 					11,  1, 1, "Use certain amount of Skeleton Spell to Win a Stars in Multiplayer Battles"		], _ ;
-			["BtSpell",					"Bat", 					 		10,  1, 1, "Use certain amount of Bat Spell to Win a Stars in Multiplayer Battles"			]]   ;
+			["BtSpell",					"Bat", 					 		10,  1, 1, "Use certain amount of Bat Spell to Win a Stars in Multiplayer Battles"			], _
+			["InSpell",					"Invisibility", 					 		10,  1, 1, "Use certain amount of Bat Spell to Win a Stars in Multiplayer Battles"			]]   ;
 
 	Global $BBBattleChallenges[4][6] = [ _
 			["StarM",					"BB Star Master",				6,  1, 1, "Collect certain amount of stars in Builder Battle"						], _ ; Earn 6 - 24 stars on the BB
@@ -1325,7 +1326,7 @@ Func ClanGamesChallenges($sReturnArray)
 			["FireCrackers",         	"Fire Crackers",              	6,  1, 2, "Destroy certain number of Fire Crackers in Builder Battle"	], _
 			["GemMine",                 "Gem Mine",                  	6,  1, 1, "Destroy certain number of Gem Mine in Builder Battle"		], _
 			["GiantCannon",             "Giant Cannon",               	6,  1, 4, "Destroy certain number of Giant Cannon in Builder Battle"	], _
-			["GuardPost",               "Guard Post",                 	6,  1, 4, "Destroy certain number of Guard Post in Builder Battle"		], _
+			["GuardPost",               "Guard Post",                 	6,  1, 5, "Destroy certain number of Guard Post in Builder Battle"		], _
 			["MegaTesla",               "Mega Tesla",               	6,  1, 5, "Destroy certain number of Mega Tesla in Builder Battle"		], _
 			["MultiMortar",             "Multi Mortar",               	6,  1, 2, "Destroy certain number of Multi Mortar in Builder Battle"	], _
 			["Roaster",                 "Roaster",			            6,  1, 4, "Destroy certain number of Roaster in Builder Battle"			], _
