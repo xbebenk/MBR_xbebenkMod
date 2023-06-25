@@ -904,6 +904,7 @@ Func BBAttackReport()
 	ElseIf Number($sDamage) > 100 Then 
 		If $g_bChkDebugAttackBB Then SetLog("Damage % more than 100, Adding delay for animation", $COLOR_ACTION)
 		If _Sleep(3000) Then Return
+		$sStars = 3
 		If _ColorCheck(_GetPixelColor(324, 214, True), Hex(0xB5DCF0, 6), 20, Default, "BBAttackReport") Then $sStars = 4 ; 1 silver
 		If _ColorCheck(_GetPixelColor(430, 180, True), Hex(0xBCDFF3, 6), 20, Default, "BBAttackReport") Then $sStars = 5 ; 2 silver
 		;If _ColorCheck(_GetPixelColor(550, 220, True), Hex(0xB8DCF0, 6), 20, Default, "BBAttackReport") Then $sStars = 6 ; 3 silver
