@@ -109,38 +109,39 @@ Func SwitchTo($To = "BB")
 		If QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
 			If $g_iQuickMISName = "BrokenBoat" Then Return BBTutorial($g_iQuickMISX, $g_iQuickMISY)
 			If $g_iQuickMISName = "BBBoatBadge" Then $g_iQuickMISY += 10
+			If $g_iQuickMISName = "BoatFront" Then 
+				$g_iQuickMISX += 10
+				$g_iQuickMISY -= 10
+			EndIf
+			
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			_Sleep(1000)
-			ExitLoop
+			
+			Local $sScode = "DS"
+			For $i = 1 To 5
+				$bRet = _CheckPixel($aPixelToCheck, True, Default, "SwitchBetweenBases")
+				If $bRet Then 
+					SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
+					$FalseDetectionCount = 0
+					If $To = "BB" Then
+						$sScode = $g_sSceneryCode
+						$g_sSceneryCode = "BB"
+					Else
+						If $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = False
+						$g_sSceneryCode = $sScode
+					EndIf
+					ExitLoop 2
+				Else
+					Click($g_iQuickMISX, $g_iQuickMISY)
+				EndIf
+				_Sleep(2000)
+			Next
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
 			If $To = "Main" Then CheckBB20Tutor()
 			If $i = 3 Then AndroidPageError("SwitchBetweenBases")
 		EndIf
 		_Sleep(1000)
-	Next
-	
-	If IsProblemAffect(True) Then Return
-	If Not $g_bRunState Then Return
-	
-	Local $sScode = "DS"
-	For $i = 1 To 5
-		$bRet = _CheckPixel($aPixelToCheck, True, Default, "SwitchBetweenBases")
-		If $bRet Then 
-			SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
-			$FalseDetectionCount = 0
-			If $To = "BB" Then
-				$sScode = $g_sSceneryCode
-				$g_sSceneryCode = "BB"
-			Else
-				If $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = False
-				$g_sSceneryCode = $sScode
-			EndIf
-			ExitLoop
-		Else
-			CheckBB20Tutor()
-		EndIf
-		_Sleep(2000)
 	Next
 	
 	If IsProblemAffect(True) Then Return

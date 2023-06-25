@@ -42,16 +42,16 @@ Global $g_hLabelClangamesDesc = 0, $g_hChkCGRootEnabledAll = 0
 Global $g_hClanGamesTV = 0, $g_hChkCGMainLoot = 0, $g_hChkCGMainBattle = 0, $g_hChkCGMainDestruction = 0
 Global $g_hChkCGMainAir = 0, $g_hChkCGMainGround = 0, $g_hChkCGMainMisc = 0, $g_hChkCGMainSpell = 0
 Global $g_hChkCGBBBattle = 0, $g_hChkCGBBDestruction = 0, $g_hChkCGBBTroops = 0
-Global $g_ahCGMainLootItem[UBound(ClanGamesChallenges("$LootChallenges"))]
-Global $g_ahCGMainBattleItem[Ubound(ClanGamesChallenges("$BattleChallenges"))]
-Global $g_ahCGMainDestructionItem[Ubound(ClanGamesChallenges("$DestructionChallenges"))]
-Global $g_ahCGMainAirItem[Ubound(ClanGamesChallenges("$AirTroopChallenges"))]
-Global $g_ahCGMainGroundItem[Ubound(ClanGamesChallenges("$GroundTroopChallenges"))]
-Global $g_ahCGMainMiscItem[Ubound(ClanGamesChallenges("$MiscChallenges"))]
-Global $g_ahCGMainSpellItem[Ubound(ClanGamesChallenges("$SpellChallenges"))]
-Global $g_ahCGBBBattleItem[Ubound(ClanGamesChallenges("$BBBattleChallenges"))]
-Global $g_ahCGBBDestructionItem[Ubound(ClanGamesChallenges("$BBDestructionChallenges"))]
-Global $g_ahCGBBTroopsItem[Ubound(ClanGamesChallenges("$BBTroopsChallenges"))]
+Global $g_ahCGMainLootItem[UBound(ClanGamesChallenges("L"))]
+Global $g_ahCGMainBattleItem[Ubound(ClanGamesChallenges("B"))]
+Global $g_ahCGMainDestructionItem[Ubound(ClanGamesChallenges("D"))]
+Global $g_ahCGMainAirItem[Ubound(ClanGamesChallenges("A"))]
+Global $g_ahCGMainGroundItem[Ubound(ClanGamesChallenges("G"))]
+Global $g_ahCGMainMiscItem[Ubound(ClanGamesChallenges("M"))]
+Global $g_ahCGMainSpellItem[Ubound(ClanGamesChallenges("S"))]
+Global $g_ahCGBBBattleItem[Ubound(ClanGamesChallenges("BBB"))]
+Global $g_ahCGBBDestructionItem[Ubound(ClanGamesChallenges("BBD"))]
+Global $g_ahCGBBTroopsItem[Ubound(ClanGamesChallenges("BBT"))]
 
 
 Func CreateVillageMisc()
@@ -678,7 +678,7 @@ Func CreateClanGamesSettings()
 
 	$g_hChkCGMainLoot = GUICtrlCreateTreeViewItem("Loot Challenges", $g_hClanGamesTV)
 		GUICtrlSetOnEvent(-1, "CGLootTVRoot")
-	$tmpChallenges = ClanGamesChallenges("$LootChallenges")
+	$tmpChallenges = ClanGamesChallenges("L")
 	For $j = 0 To UBound($tmpChallenges) - 1
 		$g_ahCGMainLootItem[$j] = GUICtrlCreateTreeViewItem($tmpChallenges[$j][1], $g_hChkCGMainLoot)
 		GUICtrlSetOnEvent(-1, "CGLootTVItem")
@@ -686,7 +686,7 @@ Func CreateClanGamesSettings()
 
 	$g_hChkCGMainBattle = GUICtrlCreateTreeViewItem("Battle Challenges", $g_hClanGamesTV)
 		GUICtrlSetOnEvent(-1, "CGMainBattleTVRoot")
-	$tmpChallenges = ClanGamesChallenges("$BattleChallenges")
+	$tmpChallenges = ClanGamesChallenges("B")
 	For $j = 0 To UBound($tmpChallenges) - 1
 		$g_ahCGMainBattleItem[$j] = GUICtrlCreateTreeViewItem($tmpChallenges[$j][1], $g_hChkCGMainBattle)
 		GUICtrlSetOnEvent(-1, "CGMainBattleTVItem")
@@ -694,7 +694,7 @@ Func CreateClanGamesSettings()
 
 	$g_hChkCGMainDestruction = GUICtrlCreateTreeViewItem("Destruction Challenges", $g_hClanGamesTV)
 		GUICtrlSetOnEvent(-1, "CGMainDestructionTVRoot")
-	$tmpChallenges = ClanGamesChallenges("$DestructionChallenges")
+	$tmpChallenges = ClanGamesChallenges("D")
 	For $j = 0 To UBound($tmpChallenges) - 1
 		$g_ahCGMainDestructionItem[$j] = GUICtrlCreateTreeViewItem($tmpChallenges[$j][1], $g_hChkCGMainDestruction)
 		GUICtrlSetOnEvent(-1, "CGMainDestructionTVItem")
@@ -702,7 +702,7 @@ Func CreateClanGamesSettings()
 
 	$g_hChkCGMainAir = GUICtrlCreateTreeViewItem("AirTroop Challenges", $g_hClanGamesTV)
 		GUICtrlSetOnEvent(-1, "CGMainAirTVRoot")
-	$tmpChallenges = ClanGamesChallenges("$AirTroopChallenges")
+	$tmpChallenges = ClanGamesChallenges("A")
 	For $j = 0 To UBound($tmpChallenges) - 1
 		$g_ahCGMainAirItem[$j] = GUICtrlCreateTreeViewItem($tmpChallenges[$j][1], $g_hChkCGMainAir)
 		GUICtrlSetOnEvent(-1, "CGMainAirTVItem")
@@ -710,7 +710,7 @@ Func CreateClanGamesSettings()
 
 	$g_hChkCGMainGround = GUICtrlCreateTreeViewItem("GroundTroop Challenges", $g_hClanGamesTV)
 		GUICtrlSetOnEvent(-1, "CGMainGroundTVRoot")
-	$tmpChallenges = ClanGamesChallenges("$GroundTroopChallenges")
+	$tmpChallenges = ClanGamesChallenges("G")
 	For $j = 0 To UBound($tmpChallenges) - 1
 		$g_ahCGMainGroundItem[$j] = GUICtrlCreateTreeViewItem($tmpChallenges[$j][1], $g_hChkCGMainGround)
 		GUICtrlSetOnEvent(-1, "CGMainGroundTVItem")
@@ -718,7 +718,7 @@ Func CreateClanGamesSettings()
 
 	$g_hChkCGMainMisc = GUICtrlCreateTreeViewItem("Miscellaneous Challenges", $g_hClanGamesTV)
 		GUICtrlSetOnEvent(-1, "CGMainMiscTVRoot")
-	$tmpChallenges = ClanGamesChallenges("$MiscChallenges")
+	$tmpChallenges = ClanGamesChallenges("M")
 	For $j = 0 To UBound($tmpChallenges) - 1
 		$g_ahCGMainMiscItem[$j] = GUICtrlCreateTreeViewItem($tmpChallenges[$j][1], $g_hChkCGMainMisc)
 		GUICtrlSetOnEvent(-1, "CGMainMiscTVItem")
@@ -726,7 +726,7 @@ Func CreateClanGamesSettings()
 
 	$g_hChkCGMainSpell = GUICtrlCreateTreeViewItem("Spell Challenges", $g_hClanGamesTV)
 		GUICtrlSetOnEvent(-1, "CGMainSpellTVRoot")
-	$tmpChallenges = ClanGamesChallenges("$SpellChallenges")
+	$tmpChallenges = ClanGamesChallenges("S")
 	For $j = 0 To UBound($tmpChallenges) - 1
 		$g_ahCGMainSpellItem[$j] = GUICtrlCreateTreeViewItem($tmpChallenges[$j][1], $g_hChkCGMainSpell)
 		GUICtrlSetOnEvent(-1, "CGMainSpellTVItem")
@@ -734,7 +734,7 @@ Func CreateClanGamesSettings()
 
 	$g_hChkCGBBBattle = GUICtrlCreateTreeViewItem("BB Battle Challenges", $g_hClanGamesTV)
 		GUICtrlSetOnEvent(-1, "CGBBBattleTVRoot")
-	$tmpChallenges = ClanGamesChallenges("$BBBattleChallenges")
+	$tmpChallenges = ClanGamesChallenges("BBB")
 	For $j = 0 To UBound($tmpChallenges) - 1
 		$g_ahCGBBBattleItem[$j] = GUICtrlCreateTreeViewItem($tmpChallenges[$j][1], $g_hChkCGBBBattle)
 		GUICtrlSetOnEvent(-1, "CGBBBattleTVItem")
@@ -742,7 +742,7 @@ Func CreateClanGamesSettings()
 
 	$g_hChkCGBBDestruction = GUICtrlCreateTreeViewItem("BB Destruction Challenges", $g_hClanGamesTV)
 		GUICtrlSetOnEvent(-1, "CGBBDestructionTVRoot")
-	$tmpChallenges = ClanGamesChallenges("$BBDestructionChallenges")
+	$tmpChallenges = ClanGamesChallenges("BBD")
 	For $j = 0 To UBound($tmpChallenges) - 1
 		$g_ahCGBBDestructionItem[$j] = GUICtrlCreateTreeViewItem($tmpChallenges[$j][1], $g_hChkCGBBDestruction)
 		GUICtrlSetOnEvent(-1, "CGBBDestructionTVItem")
@@ -750,7 +750,7 @@ Func CreateClanGamesSettings()
 
 	$g_hChkCGBBTroops = GUICtrlCreateTreeViewItem("BB Troops Challenges", $g_hClanGamesTV)
 		GUICtrlSetOnEvent(-1, "CGBBTroopsTVRoot")
-	$tmpChallenges = ClanGamesChallenges("$BBTroopsChallenges")
+	$tmpChallenges = ClanGamesChallenges("BBT")
 	For $j = 0 To UBound($tmpChallenges) - 1
 		$g_ahCGBBTroopsItem[$j] = GUICtrlCreateTreeViewItem($tmpChallenges[$j][1], $g_hChkCGBBTroops)
 		GUICtrlSetOnEvent(-1, "CGBBTroopsTVItem")

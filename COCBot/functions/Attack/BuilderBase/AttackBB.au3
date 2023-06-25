@@ -18,7 +18,7 @@ Func CheckCGCompleted()
 	For $x = 1 To 8
 		If Not $g_bRunState Then Return
 		SetLog("Check challenges progress #" &$x, $COLOR_ACTION)
-		If _Sleep(1500) Then Return
+		If _Sleep(1000) Then Return
 		If QuickMIS("BC1", $g_sImgGameComplete, 760, 450, 820, 520) Then
 			SetLog("Nice, Game Completed", $COLOR_INFO)
 			$bRet = True
@@ -71,7 +71,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
 				_AttackBB()
 				If Not $g_bRunState Then Return
-				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+				If $g_bIsBBevent Then
 					If CheckCGCompleted() Then ExitLoop
 				Else
 					If _Sleep(2000) Then Return
@@ -174,12 +174,12 @@ Func _AttackBB()
 	If checkMainScreen(True, $g_bStayOnBuilderBase, "AttackBB") Then
 		If Not $g_bIsBBevent Then  ;disable collect cart if doing CG Challenges, too much time waste, bot need to check If CG Challenges is Completed
 			CollectBBCart()
-			BuilderBaseReport(True, False)
 		EndIf
 	Else
 		checkObstacles($g_bStayOnBuilderBase)
 	EndIf
 	SetLog("Done", $COLOR_SUCCESS)
+	BuilderBaseReport(True, False)
 EndFunc
 
 Func EndBattleBB() ; Find if battle has ended and click okay
@@ -201,6 +201,12 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		$sTmpDamage = Number($sDamage)
 		If $sTmpDamage = 100 Then
 			_SleepStatus(15000)
+			
+			If ShouldStopAttackonCG() Then 
+				ReturnHomeDropTrophyBB(True)
+				ExitLoop
+			EndIf
+			
 			Local $aBBAttackBar = GetAttackBarBB(False, True)
 			If $g_bChkBBCustomArmyEnable Then 
 				CorrectAttackBarBB($aBBAttackBar) 
@@ -224,10 +230,9 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		If BBBarbarianHead("EndBattleBB") Then
 			$bRet = True
 			If $g_bChkBBAttackReport Then
-				If _SleepStatus(8000) Then Return
+				If _SleepStatus(5000) Then Return
 				BBAttackReport()
 			EndIf
-			ClickP($aOkayButton)
 			ExitLoop
 		EndIf
 
@@ -928,4 +933,17 @@ Func BBAttackReport()
 	If $g_bChkDebugAttackBB Then SaveDebugImage("BBAttackReport", True)
 EndFunc
 
+Func ShouldStopAttackonCG()
+	Local $bRet = False
+	Local $aCGEventLowerZone[4] = ["StarLab", "Clock", "Hall", "Gem"]
 	
+	If Not $g_bIsBBevent Then Return
+	For $i In $aCGEventLowerZone 
+		If StringInStr($g_sCGCurrentEventName, $i) Then
+			SetLog("Current Event:" & $g_sCGCurrentEventName & ", Should stop attack as it only avail on Lower Zone", $COLOR_ACTION)
+			$bRet = True
+			ExitLoop
+		EndIf
+	Next
+	Return $bRet
+EndFunc

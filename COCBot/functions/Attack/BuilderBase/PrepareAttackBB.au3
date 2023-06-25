@@ -266,10 +266,6 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False)
 				Click(65, 520) ;click surrender
 				If $g_bChkDebugAttackBB Then SetLog("Click Surrender/EndBattle", $COLOR_ACTION)
 				If _Sleep(1000) Then Return
-			Case IsOKCancelPage() = True
-				ClickOkay("BB Attack Surrender"); Click Okay to Confirm surrender
-				If $g_bChkDebugAttackBB Then SetLog("Click OK", $COLOR_ACTION)
-				If _Sleep(1000) Then Return
 			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) = True
 				If $bOnlySurender Then 
 					If $g_bChkDebugAttackBB Then SetLog("ExitLoop, bOnlySurender = " & String($bOnlySurender), $COLOR_ACTION)
@@ -285,6 +281,10 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False)
 				Return True
 			Case isOnBuilderBase() = True
 				Return True
+			Case IsOKCancelPage() = True
+				ClickOkay("BB Attack Surrender"); Click Okay to Confirm surrender
+				If $g_bChkDebugAttackBB Then SetLog("Click OK", $COLOR_ACTION)
+				If _Sleep(1000) Then Return
 		EndSelect
 		If _Sleep(500) Then Return
 	Next

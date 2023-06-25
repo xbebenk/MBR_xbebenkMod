@@ -1840,9 +1840,9 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 ;ClanGames Challenges
 Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
 Global $g_bChkClanGamesPurgeAny = 0, $g_bChkClanGamesZapChallenge = False, $g_bIsZapEvent = False, $g_sZapEventName = ""
-Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False, $g_bIsCGCoolDownTime = False, $g_hCoolDownTimer = 0
+Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False, $g_bIsCGCoolDownTime = False
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDay = 0
-Global $g_bCollectCGReward = False
+Global $g_bCollectCGReward = False, $g_sCGCurrentEventName = ""
 
 Global $g_abCGMainLootItem[6]
 Global $g_abCGMainBattleItem[21]
@@ -1852,8 +1852,8 @@ Global $g_abCGMainGroundItem[27]
 Global $g_abCGMainMiscItem[3]
 Global $g_abCGMainSpellItem[11]
 Global $g_abCGBBBattleItem[4]
-Global $g_abCGBBDestructionItem[19]
-Global $g_abCGBBTroopsItem[11]
+Global $g_abCGBBDestructionItem[21]
+Global $g_abCGBBTroopsItem[12]
 
 ; Collect Achievement Rewards
 Global $g_bChkCollectAchievements = True

@@ -794,7 +794,7 @@ Func CGLootTVRoot()
 EndFunc
 
 Func CGLootTVItem()	
-	Local $tmpChallenges = ClanGamesChallenges("$LootChallenges")
+	Local $tmpChallenges = ClanGamesChallenges("L")
 	For $i = 0 To UBound($g_ahCGMainLootItem) - 1
 		If GUICtrlRead($g_hClanGamesTV) = $g_ahCGMainLootItem[$i] Then
 			GUICtrlSetData($g_hLabelClangamesDesc, $tmpChallenges[$i][5] & @CRLF & "Required TH Level : " & $tmpChallenges[$i][2] _
@@ -821,7 +821,7 @@ Func CGMainBattleTVRoot()
 EndFunc
 
 Func CGMainBattleTVItem()	
-	Local $tmpChallenges = ClanGamesChallenges("$BattleChallenges")
+	Local $tmpChallenges = ClanGamesChallenges("B")
 	For $i = 0 To UBound($g_ahCGMainBattleItem) - 1
 		If GUICtrlRead($g_hClanGamesTV) = $g_ahCGMainBattleItem[$i] Then
 			GUICtrlSetData($g_hLabelClangamesDesc, $tmpChallenges[$i][5] & @CRLF & "Required TH Level : " & $tmpChallenges[$i][2] _
@@ -848,7 +848,7 @@ Func CGMainDestructionTVRoot()
 EndFunc
 
 Func CGMainDestructionTVItem()	
-	Local $tmpChallenges = ClanGamesChallenges("$DestructionChallenges")
+	Local $tmpChallenges = ClanGamesChallenges("D")
 	For $i = 0 To UBound($g_ahCGMainDestructionItem) - 1
 		If GUICtrlRead($g_hClanGamesTV) = $g_ahCGMainDestructionItem[$i] Then
 			GUICtrlSetData($g_hLabelClangamesDesc, $tmpChallenges[$i][5] & @CRLF & "Required TH Level : " & $tmpChallenges[$i][2] _
@@ -875,7 +875,7 @@ Func CGMainAirTVRoot()
 EndFunc
 
 Func CGMainAirTVItem()	
-	Local $tmpChallenges = ClanGamesChallenges("$AirTroopChallenges")
+	Local $tmpChallenges = ClanGamesChallenges("A")
 	For $i = 0 To UBound($g_ahCGMainAirItem) - 1
 		If GUICtrlRead($g_hClanGamesTV) = $g_ahCGMainAirItem[$i] Then
 			GUICtrlSetData($g_hLabelClangamesDesc, $tmpChallenges[$i][5] & @CRLF & "Required TH Level : " & $tmpChallenges[$i][2] _
@@ -902,7 +902,7 @@ Func CGMainGroundTVRoot()
 EndFunc
 
 Func CGMainGroundTVItem()	
-	Local $tmpChallenges = ClanGamesChallenges("$GroundTroopChallenges")
+	Local $tmpChallenges = ClanGamesChallenges("G")
 	For $i = 0 To UBound($g_ahCGMainGroundItem) - 1
 		If GUICtrlRead($g_hClanGamesTV) = $g_ahCGMainGroundItem[$i] Then
 			GUICtrlSetData($g_hLabelClangamesDesc, $tmpChallenges[$i][5] & @CRLF & "Required TH Level : " & $tmpChallenges[$i][2] _
@@ -929,7 +929,7 @@ Func CGMainMiscTVRoot()
 EndFunc
 
 Func CGMainMiscTVItem()	
-	Local $tmpChallenges = ClanGamesChallenges("$MiscChallenges")
+	Local $tmpChallenges = ClanGamesChallenges("M")
 	For $i = 0 To UBound($g_ahCGMainMiscItem) - 1
 		If GUICtrlRead($g_hClanGamesTV) = $g_ahCGMainMiscItem[$i] Then
 			GUICtrlSetData($g_hLabelClangamesDesc, $tmpChallenges[$i][5] & @CRLF & "Required TH Level : " & $tmpChallenges[$i][2] _
@@ -956,7 +956,7 @@ Func CGMainSpellTVRoot()
 EndFunc
 
 Func CGMainSpellTVItem()	
-	Local $tmpChallenges = ClanGamesChallenges("$SpellChallenges")
+	Local $tmpChallenges = ClanGamesChallenges("S")
 	For $i = 0 To UBound($g_ahCGMainSpellItem) - 1
 		If GUICtrlRead($g_hClanGamesTV) = $g_ahCGMainSpellItem[$i] Then
 			GUICtrlSetData($g_hLabelClangamesDesc, $tmpChallenges[$i][5] & @CRLF & "Required TH Level : " & $tmpChallenges[$i][2] _
@@ -983,7 +983,7 @@ Func CGBBBattleTVRoot()
 EndFunc
 
 Func CGBBBattleTVItem()	
-	Local $tmpChallenges = ClanGamesChallenges("$BBBattleChallenges")
+	Local $tmpChallenges = ClanGamesChallenges("BBB")
 	For $i = 0 To UBound($g_ahCGBBBattleItem) - 1
 		If GUICtrlRead($g_hClanGamesTV) = $g_ahCGBBBattleItem[$i] Then
 			GUICtrlSetData($g_hLabelClangamesDesc, $tmpChallenges[$i][5] & @CRLF & "Required TH Level : " & $tmpChallenges[$i][2] _
@@ -1010,7 +1010,7 @@ Func CGBBDestructionTVRoot()
 EndFunc
 
 Func CGBBDestructionTVItem()	
-	Local $tmpChallenges = ClanGamesChallenges("$BBDestructionChallenges")
+	Local $tmpChallenges = ClanGamesChallenges("BBD")
 	For $i = 0 To UBound($g_ahCGBBDestructionItem) - 1
 		If GUICtrlRead($g_hClanGamesTV) = $g_ahCGBBDestructionItem[$i] Then
 			GUICtrlSetData($g_hLabelClangamesDesc, $tmpChallenges[$i][5] & @CRLF & "Required TH Level : " & $tmpChallenges[$i][2] _
@@ -1037,7 +1037,7 @@ Func CGBBTroopsTVRoot()
 EndFunc
 
 Func CGBBTroopsTVItem()	
-	Local $tmpChallenges = ClanGamesChallenges("$BBTroopsChallenges")
+	Local $tmpChallenges = ClanGamesChallenges("BBT")
 	For $i = 0 To UBound($g_ahCGBBTroopsItem) - 1
 		If GUICtrlRead($g_hClanGamesTV) = $g_ahCGBBTroopsItem[$i] Then
 			GUICtrlSetData($g_hLabelClangamesDesc, $tmpChallenges[$i][5] & @CRLF & "Required TH Level : " & $tmpChallenges[$i][2] _
