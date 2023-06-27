@@ -17,7 +17,9 @@ Func waitMainScreen() ;Waits for main screen to popup
 	If Not $g_bRunState Then Return
 	Local $iCount = 30
 	SetLog("Waiting for Main Screen")
-
+	
+	If GetAndroidProcessPID() = 0 Then StartAndroidCoC()
+	
 	For $i = 1 To $iCount ;30*1000 = 60 seconds (for blackscreen) and plus loading screen
 		If Not $g_bRunState Then Return
 		
@@ -59,7 +61,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		EndIf
 		If _Sleep(1000) Then Return
 	Next
-
+	
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	SetLog("Wait MainScreen Timeout [" & $g_iMainScreenTimeoutCount & "]", $COLOR_ERROR)
 	SetLog("=========RESTART COC==========", $COLOR_INFO)
