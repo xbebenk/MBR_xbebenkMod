@@ -18,8 +18,6 @@ Func waitMainScreen() ;Waits for main screen to popup
 	Local $iCount = 30
 	SetLog("Waiting for Main Screen")
 	
-	If GetAndroidProcessPID() = 0 Then StartAndroidCoC()
-	
 	For $i = 1 To $iCount ;30*1000 = 60 seconds (for blackscreen) and plus loading screen
 		If Not $g_bRunState Then Return
 		
@@ -39,6 +37,8 @@ Func waitMainScreen() ;Waits for main screen to popup
 		
 		checkObstacles()
 		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
+		
+		If GetAndroidProcessPID() = 0 Then StartAndroidCoC()
 		
 		If checkChatTabPixel() Then 
 			$g_iMainScreenTimeoutCount = 0
