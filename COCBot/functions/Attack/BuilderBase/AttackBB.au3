@@ -169,8 +169,7 @@ Func _AttackBB()
 	
 	SetLog("Waiting for end of battle.", $COLOR_INFO)
 	If EndBattleBB() Then SetLog("Battle ended", $COLOR_INFO)
-	If _Sleep(2000) Then Return
-
+	
 	If checkMainScreen(True, $g_bStayOnBuilderBase, "AttackBB") Then
 		If Not $g_bIsBBevent Then  ;disable collect cart if doing CG Challenges, too much time waste, bot need to check If CG Challenges is Completed
 			CollectBBCart()
