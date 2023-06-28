@@ -344,6 +344,7 @@ Func btnSaveToAllOpen()
 	For $i = 0 To UBound($aActiveProfile) - 1
 		If $aActiveProfile[$i] Then 
 			GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_ENABLE)
+			GUICtrlSetData($g_ahTxtCopyAccount[$i], $g_asProfileName[$i])
 		Else
 			GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_DISABLE)
 			GUICtrlSetData($g_ahTxtCopyAccount[$i], "")
