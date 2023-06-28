@@ -45,10 +45,13 @@ Func CollectBuilderBase($bSwitchToBB = False, $bSwitchToNV = False)
 EndFunc
 
 Func CollectBBCart()
+	Local $x = 0, $y = 0, $yMul = 5
 	ZoomOutHelperBB()
 	If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", 540, 80, 630, 150) Then ;check ElixCart Image
 		Setlog("Found Elix Cart", $COLOR_DEBUG2)
 		Click($g_iQuickMISX, $g_iQuickMISY)
+		$x = $g_iQuickMISX
+		$y = $g_iQuickMISY
 		If _Sleep(1000) Then Return
 		For $i = 1 To 5
 			SetLog("Waiting Cart Window #" & $i, $COLOR_ACTION)
@@ -60,6 +63,7 @@ Func CollectBBCart()
 				ExitLoop
 			EndIf
 			If _Sleep(1000) Then Return
+			Click($x, $y + ($i * $yMul))
 		Next
 	EndIf
 EndFunc
