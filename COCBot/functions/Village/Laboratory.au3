@@ -125,7 +125,7 @@ Func Laboratory($bDebug = False)
 						
 							SetDebugLog("FindImage: " & $g_avLabTroops[$iTmpCmbLaboratory][2])
 							$aCoords = decodeSingleCoord(findImage($g_avLabTroops[$iTmpCmbLaboratory][2], $g_sImgLabResearch & $g_avLabTroops[$iTmpCmbLaboratory][2] & "*", $sLabTroopsSectionDiam, 1, True))
-							Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF"]
+							Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD"]
 							If IsArray($aCoords) And UBound($aCoords) = 2 Then
 								If QuickMIS("BC1", $g_sImgResIcon, $aCoords[0], $aCoords[1], $aCoords[0] + 60, $aCoords[1] + 70) Then 
 									Local $sCostResult = getLabCost($g_iQuickMISX - 75, $g_iQuickMISY - 10)
@@ -538,11 +538,16 @@ EndFunc
 
 Func IsLabUpgradeResourceEnough($TroopOrSpell, $Cost)
 	Local $bRet = False
-	Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD"]
+	Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD", "BattleD"]
 	For $j = 0 To UBound($aSiege) - 1
-		If StringInStr($TroopOrSpell, $aSiege[$j]) Then 
-			SetDebugLog("IsLabUpgradeResourceEnough Found Siege, ret = True")
-			Return True
+		If StringInStr($TroopOrSpell, $aSiege[$j]) Then
+			If $g_aiCurrentLoot[$eLootElixir] > ($g_iTxtSmartMinElixir + $Cost) Then
+				SetDebugLog($g_iTxtSmartMinElixir & " + " & $Cost & " = " & $g_iTxtSmartMinElixir + $Cost)
+				SetDebugLog("Elixir = " & $g_aiCurrentLoot[$eLootElixir])
+				Return True
+			Else
+				Return False
+			EndIf
 		EndIf
 	Next
 	If StringInStr($TroopOrSpell, "Spell") Then
