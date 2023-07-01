@@ -116,7 +116,7 @@ Func WaitCloudsBB()
 	While Not QuickMIS("BC1", $g_sImgBBAttackStart, 400, 22, 460, 60)
 		If $g_bChkDebugAttackBB Then SetLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
 		If Not $g_bRunState Then Return
-		If $count = 10 Then 
+		If $count = 19 Then 
 			SetLog("Too long waiting Clouds", $COLOR_ERROR)
 			If $g_bChkDebugAttackBB Then SaveDebugImage("WaitCloudsBB", True)
 		EndIf
@@ -128,7 +128,7 @@ Func WaitCloudsBB()
 		EndIf
 		If isProblemAffect(True) Then Return
 		$count += 1
-		If _Sleep(1000) Then Return
+		If _Sleep(2000) Then Return
 	WEnd
 	Return $bRet
 EndFunc
