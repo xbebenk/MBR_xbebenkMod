@@ -238,5 +238,6 @@ Global Const $g_sImgRewardTier  = @ScriptDir & "\imgxml\Resources\ClanGamesImage
 Global Const $g_sImgRewardTile  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\Tile"
 Global Const $g_sImgRewardTileSelected  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\TileSelected"
 Global Const $g_sImgRewardItems  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\Items"
+Global Const $g_sImgRewardItemStorageFull  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\StorageFull"
 Global Const $g_sImgZapChallenges = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Attack\ZapChallenges"
 #EndRegion
