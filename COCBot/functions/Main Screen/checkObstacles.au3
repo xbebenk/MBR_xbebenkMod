@@ -243,7 +243,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	EndIf
 	
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
-	SetDebugLog("isOnBuilderBase() : " & String($bIsOnBuilderIsland), $COLOR_ERROR)
 	If Not $bBuilderBase And $bIsOnBuilderIsland Then ;Check for MainVillage, but coc is on BB -> go to mainVillage
 		ZoomOut(True)
 		If SwitchBetweenBases("Main") Then
@@ -251,9 +250,9 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			Return False
 		EndIf
 	EndIf
-
-	If $bBuilderBase And Not $bIsOnBuilderIsland Then ;Check for BB, but Not in BB -> go to BB
-		ZoomOut(True)
+	
+	Local $bIsOnMainVillage = isOnMainVillage()
+	If $bBuilderBase And $bIsOnMainVillage Then ;Check for BB, but in MainVillage -> go to BB
 		If SwitchBetweenBases("BB") Then
 			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 			Return False

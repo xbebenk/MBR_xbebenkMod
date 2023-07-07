@@ -14,14 +14,16 @@
 ; ===============================================================================================================================
 
 Func isOnBuilderBase()
-	Local $sColor = _GetPixelColor(356, 12, True)
+	Local $sBuilderInfoColor = _GetPixelColor(356, 12, True)
 	Local $sColorGold = _GetPixelColor(837, 13, True)
-	If _ColorCheck($sColor, Hex(0x9DD2EE, 6), 20) Or _ColorCheck($sColorGold, Hex(0xF8FA7A, 6), 10) Then
-		SetDebugLog("Builder Base detected, sColor:" & $sColor & " sColorGold:" & $sColorGold)
+	Local $bBuilderInfoDetected = False, $bGoldDetected = False
+	
+	If _ColorCheck($sBuilderInfoColor, Hex(0x9DD2EE, 6), 20) Then $bBuilderInfoDetected = True 
+	If _ColorCheck($sColorGold, Hex(0xF9FB7B, 6), 10) Then $bGoldDetected = True
+	If $bBuilderInfoDetected And $bGoldDetected Then
+		SetDebugLog("Builder Base detected, sColor:" & $sBuilderInfoColor & " sColorGold:" & $sColorGold)
 		Return True
 	Else
-		;SetDebugLog("Not In BuilderBase, BuilderInfoIconColor:" & $sColor, $COLOR_DEBUG1)
-		;SetDebugLog("Not In BuilderBase, GoldColor:" & $sColorGold, $COLOR_DEBUG1)
 		Return False
 	EndIf
 EndFunc
