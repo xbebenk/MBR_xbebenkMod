@@ -1244,10 +1244,10 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	; reset time lag
 	InitAndroidTimeLag()
 
-	; wait 5 sec. CoC might have just crashed
-	If _SleepStatus(8000) Then Return
+	; wait 15 sec. Coc start after BB20 takes longer time
+	If _SleepStatus(15000) Then Return
 	Local $iCoCPID = 0
-	For $i = 1 To 20
+	For $i = 1 To 5
 		SetDebugLog("Waiting Coc Process start #" & $i)
 		$iCoCPID = GetAndroidProcessPID()
 		If $iCoCPID > 0 Then 
