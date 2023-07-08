@@ -29,18 +29,9 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
 	EndIf
 	
-	If Not TestCapture() Then
-		If CheckAndroidRunning(False) = False Then Return False
-		getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
-		WinGetAndroidHandle()
-		If Not $g_bChkBackgroundMode And $g_hAndroidWindow <> 0 Then
-			; ensure android is top
-			AndroidToFront(Default, "checkMainScreen")
-		EndIf
-		If $g_bAndroidAdbScreencap = False And _WinAPI_IsIconic($g_hAndroidWindow) Then WinSetState($g_hAndroidWindow, "", @SW_RESTORE)
-	EndIf
+	If Not CheckAndroidRunning(False) Then Return
 	
-	Local $i = 0, $iErrorCount = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue, $bLocated
+	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated
 	Local $aPixelToCheck = $aIsMain
 	If $bBuilderBase Then $aPixelToCheck = $aIsOnBuilderBase
 	While True
@@ -48,44 +39,25 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		If Not $g_bRunState Then Return
 		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))
 		$bLocated = _checkMainScreenImage($aPixelToCheck)
-		If Not $bLocated And GetAndroidProcessPID() = 0 Then StartAndroidCoC()
-		
-		If $g_sAndroidEmulator = "Bluestacks5" Then NotifBarDropDownBS5()
-		
-		Local $sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
-		If $sLoading = "Loading" Then 
-			SetLog("Still on Loading Screen...", $COLOR_INFO)
-			_Sleep(5000)
-		EndIf
 		If $bLocated Then ExitLoop
+		
+		If Not $bLocated And GetAndroidProcessPID() = 0 Then OpenCoC()
+		If $g_sAndroidEmulator = "Bluestacks5" Then NotifBarDropDownBS5()
 		
 		;mainscreen not located, proceed to check if there is obstacle covering screen
 		$bObstacleResult = checkObstacles($bBuilderBase)
 		SetDebugLog("CheckObstacles[" & $i & "] Result = " & $bObstacleResult, $COLOR_DEBUG)
 		
 		$bContinue = False
-		If Not $bObstacleResult Then
-			If $i > 8 Then $bContinue = True
-		Else
+		If Not $bObstacleResult And $i > 5 Then $bContinue = True ; 5 time no obstacle deteced but mainscreen not located, set continue true to proceed to waitMainScreen
+		
+		If $bObstacleResult Then ; obstacle found, set g_bRestart = true (go to mainloop)
 			$g_bRestart = True
 			$bContinue = True
 		EndIf
-		If $i > 10 Then ;loop checking, restart coc
-			CloseCoc(True)
-		EndIf
-		If $bContinue Then
-			waitMainScreen() ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
-			If Not $g_bRunState Then Return
-			If @extended Then Return SetError(1, 1, False)
-			If @error Then $iErrorCount += 1
-			If $iErrorCount > 2 Then
-				SetLog("Unable to fix the window error", $COLOR_ERROR)
-				CloseCoC(True)
-				ExitLoop
-			EndIf
-		Else
-			If _Sleep($DELAYCHECKMAINSCREEN1) Then Return
-		EndIf
+		
+		If $bContinue Then waitMainScreen() ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
+		If _Sleep(1000) Then Return
 	WEnd
 	
 	If Not $g_bRunState Then Return

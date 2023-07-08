@@ -15,30 +15,14 @@
 
 Func waitMainScreen() ;Waits for main screen to popup
 	If Not $g_bRunState Then Return
-	Local $iCount = 30
+	Local $iCount = 30, $sLoading = "", $iMaxLoading = 5
 	SetLog("Waiting for Main Screen")
+	Local $bCheckObs = False
 	
 	For $i = 1 To $iCount ;30*1000 = 60 seconds (for blackscreen) and plus loading screen
 		If Not $g_bRunState Then Return
-		
-		;Local $hWin = $g_hAndroidWindow
-		;If TestCapture() = False Then
-		;	If WinGetAndroidHandle() = 0 Then
-		;		If $hWin = 0 Then
-		;			OpenAndroid(True)
-		;		Else
-		;			RebootAndroid()
-		;		EndIf
-		;		Return
-		;	EndIf
-		;	getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
-		;EndIf
 		If Not WinGetAndroidHandle() Then OpenAndroid(True)
-		
-		checkObstacles()
-		SetDebugLog("waitMainScreen ChkObstl Loop = " & $i & ", ExitLoop = " & $iCount, $COLOR_DEBUG) ; Debug stuck loop
-		
-		If GetAndroidProcessPID() = 0 Then StartAndroidCoC()
+		If GetAndroidProcessPID() = 0 Then OpenCoC()
 		
 		If checkChatTabPixel() Then 
 			$g_iMainScreenTimeoutCount = 0
@@ -46,23 +30,20 @@ Func waitMainScreen() ;Waits for main screen to popup
 			Return
 		EndIf
 		
-		Local $sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
-		If $sLoading = "Loading" Then 
-			SetLog("Still on Loading Screen...", $COLOR_INFO)
-			If _Sleep(1000) Then Return
-		EndIf
+		$bCheckObs = checkObstacles()
+		SetLog("[" & $i & "/" & $iCount & "] waitMainScreen CheckObs = " & String($bCheckObs), $COLOR_DEBUG1) ; Debug stuck loop
 		
-		Local $sUpdateAvail = getOcrAndCapture("coc-UpdateAvail", 320, 235, 220, 30)
-		If $sUpdateAvail = "Update Available" Then 
-			SetLog("Chief, we have minor coc Update!", $COLOR_INFO)
-			ClickAway()
-			If _Sleep(1000) Then Return
-			Return
-		EndIf
+		$sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
+		For $iLoading = 1 To $iMaxLoading
+			If $sLoading = "Loading" Then 
+				SetLog("[" & $iLoading & "] Still on Loading Screen, Waiting", $COLOR_INFO)
+				If _Sleep(2000) Then Return
+			EndIf
+			$sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
+		Next
 		If _Sleep(1000) Then Return
 	Next
 	
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	SetLog("Wait MainScreen Timeout [" & $g_iMainScreenTimeoutCount & "]", $COLOR_ERROR)
 	SetLog("=========RESTART COC==========", $COLOR_INFO)
 	SaveDebugImage("WaitMainScreenTimeout", True) 
@@ -70,9 +51,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	If $g_iMainScreenTimeoutCount > 2 Then CloseAndroid()
 	If $g_sAndroidEmulator = "Bluestacks5" Then NotifBarDropDownBS5()
 	CloseCoC(True) ;only close coc
-	;_RestartAndroidCoC(False, False, True, 0, 0, True) ;start coc, not updating shared_prefs
-	;_SleepStatus(10000) ;give time for coc loading
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	
 EndFunc   ;==>waitMainScreen
 
 Func waitMainScreenMini()
