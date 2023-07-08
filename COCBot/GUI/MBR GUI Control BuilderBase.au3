@@ -16,7 +16,8 @@
 Func chkEnableBBAttack()
 	If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hChkBBDropTrophy, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBAttIfStarsAvail, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkSkipBBAttIfStorageFull, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBDropBMFirst, $GUI_ENABLE)
 		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
@@ -28,7 +29,8 @@ Func chkEnableBBAttack()
 		GUICtrlSetState($g_hChkBBAttackReport, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hChkBBDropTrophy, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBBAttIfStarsAvail, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkSkipBBAttIfStorageFull, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkBBDropBMFirst, $GUI_DISABLE)
 		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
@@ -74,13 +76,21 @@ Func btnBBDropOrder()
 	GUISetState(@SW_SHOW, $g_hGUI_BBDropOrder)
 EndFunc   ;==>btnBBDropOrder
 
-Func ChkBBAttIfLootAvail()
-	If GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED Then
-		$g_bChkBBAttIfLootAvail = True
+Func ChkBBAttIfStarsAvail()
+	If GUICtrlRead($g_hChkBBAttIfStarsAvail) = $GUI_CHECKED Then
+		$g_bChkBBAttIfStarsAvail = True
 	Else
-		$g_bChkBBAttIfLootAvail = False
+		$g_bChkBBAttIfStarsAvail = False
 	EndIf
-EndFunc   ;==>ChkBBAttIfLootAvail
+EndFunc   ;==>ChkBBAttIfStarsAvail
+
+Func ChkSkipBBAttIfStorageFull()
+	If GUICtrlRead($g_hChkSkipBBAttIfStorageFull) = $GUI_CHECKED Then
+		$g_bChkSkipBBAttIfStorageFull = True
+	Else
+		$g_bChkSkipBBAttIfStorageFull = False
+	EndIf
+EndFunc   ;==>ChkSkipBBAttIfStorageFull
 
 Func ChkDropBMFirst()
 	If GUICtrlRead($g_hChkBBDropBMFirst) = $GUI_CHECKED Then

@@ -507,7 +507,6 @@ Func SaveConfig_600_6()
 	Next
 	_Ini_Add("other", "EnabledBBTroops", $str)
 
-
 	; Builder Base Attack
 	_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)
 	_Ini_Add("other", "ChkBBDropTrophy", $g_bChkBBDropTrophy)
@@ -515,7 +514,8 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkBBAttackReport", $g_bChkBBAttackReport)
 	_Ini_Add("other", "ChkSkipBBRoutineOn6thBuilder", $g_bChkSkipBBRoutineOn6thBuilder)
 	_Ini_Add("other", "BBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
-	_Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
+	_Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfStarsAvail)
+	_Ini_Add("other", "ChkSkipBBAttIfStorageFull", $g_bChkSkipBBAttIfStorageFull)
 	_Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
 	_Ini_Add("other", "ChkBBDropBMFirst", $g_bChkBBDropBMFirst)
 	_Ini_Add("other", "ChkDebugAttackBB", $g_bChkDebugAttackBB)

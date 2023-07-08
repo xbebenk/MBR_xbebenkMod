@@ -841,7 +841,7 @@ Global $g_iTxtTreasuryDark = 0
 Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCleanBBYard = False
 
 ; Builder Base Attack
-Global $g_bChkEnableBBAttack = False, $g_bChkBBDropTrophy = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False, $g_bChkBBDropBMFirst = False
+Global $g_bChkEnableBBAttack = False, $g_bChkBBDropTrophy = False, $g_bChkBBAttIfStarsAvail = False, $g_bChkSkipBBAttIfStorageFull = False, $g_bChkBBWaitForMachine = False, $g_bChkBBDropBMFirst = False
 Global $g_hTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyLowerLimit = 0, $g_bChkStopAttackBB6thBuilder = 0, $g_bIs6thBuilderUnlocked = False, $g_bChkSkipBBRoutineOn6thBuilder = 0, $g_bskipBBroutine = False
 Global $g_bBBMachineReady = False, $g_bChkDebugAttackBB = False, $g_aMachinePos[3] = [0, 0, ""], $g_aWBOnAttackBar[0][2], $g_bWBOnAttackBar = False, $g_bChkBBAttackReport = False
 Global $g_iBBMachAbilityTime = 14000 ; in milliseconds, so 14 seconds between abilities

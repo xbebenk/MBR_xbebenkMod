@@ -28,15 +28,6 @@ Func PrepareAttackBB($Mode = Default)
 		Return True
 	EndIf
 	
-	Local $GoldIsFull = isGoldFullBB()
-	Local $ElixIsFull = isElixirFullBB()
-	
-	getBuilderCount(True, True)
-	If $g_bOptimizeOTTO And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then ; And Not $g_sStarLabUpgradeTime = "" Then
-		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
-		Return False
-	EndIf
-	
 	If $Mode = "DropTrophy" Then 
 		SetLog("Preparing Attack for DropTrophy", $COLOR_ACTION)
 		Return True
@@ -47,8 +38,17 @@ Func PrepareAttackBB($Mode = Default)
 		Return True
 	EndIf
 	
-	If $g_bChkBBAttIfLootAvail Then
-		If Not CheckLootAvail() Then
+	Local $GoldIsFull = isGoldFullBB()
+	Local $ElixIsFull = isElixirFullBB()
+	
+	getBuilderCount(True, True)
+	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then
+		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
+		Return False
+	EndIf
+	
+	If $g_bChkBBAttIfStarsAvail Then
+		If Not CheckStarsAvail() Then
 			If _Sleep(500) Then Return
 			ClickAway("Left")
 			Return False
@@ -107,7 +107,7 @@ Func ClickBBAttackButton()
 	EndIf	
 EndFunc
 
-Func CheckLootAvail()
+Func CheckStarsAvail()
 	Local $bRet = False, $iRemainStars = 0, $iMaxStars = 0
 	Local $sStars = getOcrAndCapture("coc-BBAttackAvail", 40, 572, 50, 20)
 	
@@ -195,11 +195,9 @@ Func BBDropTrophy()
 	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
 	SetLog("Prepare BB Drop Trophy", $COLOR_INFO)
 	
-	If $g_bChkBBAttIfLootAvail Then 
-		If CheckLootAvail() Then 
-			SetLog("BB Loot Available, Skip BB Drop Trophy")
-			Return False
-		EndIf
+	If CheckStarsAvail() Then 
+		SetLog("Stars Available, Skip BB Drop Trophy")
+		Return False
 	EndIf
 	
 	Local $iCurrentTrophy = 0
