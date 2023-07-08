@@ -462,7 +462,7 @@ Func btnPet()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	LocatePetHouse()
+	_LocatePetHouse()
 	$g_bRunState = $wasRunState
 	AndroidShield("btnPet") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnPet
