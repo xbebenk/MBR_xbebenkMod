@@ -59,7 +59,7 @@ EndIf
 ; MBR References.au3 must be last include
 #include "COCBot\MBR References.au3"
 
-#include "C:\Test420\Test420\Test420.au3"
+;#include "C:\Test420\Test420\Test420.au3"
 
 ; Autoit Options
 Opt("GUIResizeMode", $GUI_DOCKALL) ; Default resize mode for dock android support
