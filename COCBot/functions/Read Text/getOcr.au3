@@ -317,6 +317,10 @@ Func getRemainTLaboratory($x_start, $y_start) ; read actual time remaining in La
 	Return getOcrAndCapture("coc-RemainLaboratory", $x_start, $y_start, 194, 25)
 EndFunc   ;==>getRemainTLaboratory
 
+Func getRemainTPetHouse($x_start, $y_start) ; read actual time in PetHouse
+	Return getOcrAndCapture("coc-RemainPetHouse", $x_start, $y_start, 194, 25)
+EndFunc   ;==>getRemainTPetHouse
+
 Func getRemainTHero($x_start, $y_start, $bNeedCapture = True) ; Get time remaining for hero to be ready for attack from train window, BK:443,504 AQ:504,504 GW:565:504
 	Return getOcrAndCapture("coc-remainhero", $x_start, $y_start, 55, 12, True, False, $bNeedCapture)
 EndFunc   ;==>getRemainTHero

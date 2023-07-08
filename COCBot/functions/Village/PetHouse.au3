@@ -74,7 +74,7 @@ Func PetHouse($test = False)
 	EndIf
 	
 	Local $BuildingName = BuildingInfo(242, 498)
-	If StringInStr($BuildingName[1], "House") Then
+	If StringInStr($BuildingName[1], "Pet") Then
 		SetLog("Click on PetHouse, Level:" & $BuildingName[2])
 		$g_iPetHouseLevel = Number($BuildingName[2])
 	Else
@@ -265,7 +265,7 @@ Func CheckPetUpgrade()
 		SetLog("Pet House Upgrade in progress, waiting for completion", $COLOR_INFO)
 		If _Sleep($DELAYLABORATORY2) Then Return
 		; upgrade in process and time not recorded so update completion time!
-		Local $sPetTimeOCR = getRemainTLaboratory(274, 256)
+		Local $sPetTimeOCR = getRemainTPetHouse(274, 258)
 		Local $iPetFinishTime = ConvertOCRTime("Lab Time", $sPetTimeOCR, False)
 		SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
 		If $iPetFinishTime > 0 Then

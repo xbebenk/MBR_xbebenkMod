@@ -30,15 +30,20 @@ Func LocatePetHouse($bCollect = True)
 EndFunc
 
 Func autoLocatePetHouse()
-	Local $bRet = False
+	Local $bRet = False, $BuildingName = ""
 	Local $aPetHouse = QuickMIS("CNX", $g_sImgPetHouse)
 	If IsArray($aPetHouse) And Ubound($aPetHouse) > 0 Then 
 		For $i = 0 To UBound($aPetHouse) - 1
 			If StringInStr($aPetHouse[$i][0], "PetHouse") Then 
-				$g_aiPetHousePos[0] = $aPetHouse[$i][1]
-				$g_aiPetHousePos[1] = $aPetHouse[$i][2]
-				SetLog("PetHouse Search find : " & _ArrayToString($g_aiPetHousePos), $COLOR_DEBUG)
-				$bRet = True
+				SetLog("PetHouse Search find : " & _ArrayToString($aPetHouse), $COLOR_DEBUG)
+				Click($aPetHouse[$i][1], $aPetHouse[$i][2])
+				$BuildingName = BuildingInfo(242, 498)
+				If StringInStr($BuildingName[1], "Pet") Then
+					$g_aiPetHousePos[0] = $aPetHouse[$i][1]
+					$g_aiPetHousePos[1] = $aPetHouse[$i][2]
+					$bRet = True
+					ExitLoop
+				EndIf
 			EndIf
 		Next
 	Else
