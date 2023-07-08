@@ -25,7 +25,6 @@ Global Const $g_sImgAnotherDevice = @ScriptDir & "\imgxml\other\Device[[Android]
 Global Const $g_sImgCocStopped = @ScriptDir & "\imgxml\other\CocStopped*"
 Global Const $g_sImgCocReconnecting = @ScriptDir & "\imgxml\other\CocReconnecting\"
 Global Const $g_sImgAppRateNever = @ScriptDir & "\imgxml\other\RateNever[[Android]]*"
-Global Const $g_sImgGfxError = @ScriptDir & "\imgxml\other\GfxError*"
 Global Const $g_sImgError = @ScriptDir & "\imgxml\other\Error[[Android]]*"
 Global Const $g_sImgOutOfSync = @ScriptDir & "\imgxml\other\Oos[[Android]]*"
 Global Const $g_sImgConnectionLost = @ScriptDir & "\imgxml\other\ConnectionLost[[Android]]*"
