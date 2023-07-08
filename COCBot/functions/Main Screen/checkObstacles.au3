@@ -130,7 +130,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(823, 176, True), Hex(0x882C19, 6), 20, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 499, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then
+	If WelcomeBackCheck() Then 
 		SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
 		Click(440, 526)
 		Return False
@@ -287,6 +287,16 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	Return False
 EndFunc   ;==>_checkObstacles
 
+Func WelcomeBackCheck()
+	Local $bGreenButton = False, $bWhiteW = False, $bWhiteB = False, $bWhiteC = False
+	If _ColorCheck(_GetPixelColor(440, 497, True), Hex(0xDDF686, 6), 10, Default, "checkObstacles") Then $bGreenButton = True
+	If _ColorCheck(_GetPixelColor(292, 139, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteW = True
+	If _ColorCheck(_GetPixelColor(421, 139, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteB = True
+	If _ColorCheck(_GetPixelColor(501, 139, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteC = True
+	
+	If $bGreenButton And $bWhiteW And $bWhiteB And $bWhiteC Then Return True
+EndFunc
+
 Func CheckSCLOGO()
 	Local $aCheckPixelSCLOGO[4][2] = [[100,100], [700,100], [333,268], [524,268]]
 	Local $aColorCheckSCLOGO[4] = ["000000", "000000", "FEFEFE", "FEFEFE"]
@@ -297,7 +307,7 @@ Func CheckSCLOGO()
 		If $g_bDebugSetlog Then SetLog("[" & $i & "] CheckSCLOGO, " & String($bPixelFoundSCLOGO) & ": exp=" & $aColorCheckSCLOGO[$i] & ", got=" & $sColor, $COLOR_DEBUG1)
 		If Not $bPixelFoundSCLOGO Then ExitLoop
 	Next
-	If $bPixelFoundSCLOGO Then SetLog("SC Logo...", $COLOR_ACTION)
+	If $bPixelFoundSCLOGO Then SetDebugLog("SC Logo...", $COLOR_ACTION)
 	Return $bPixelFoundSCLOGO
 EndFunc
 
