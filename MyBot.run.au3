@@ -59,7 +59,7 @@ EndIf
 ; MBR References.au3 must be last include
 #include "COCBot\MBR References.au3"
 
-;#include "C:\Test420\Test420\Test420.au3"
+#include "C:\Test420\Test420\Test420.au3"
 
 ; Autoit Options
 Opt("GUIResizeMode", $GUI_DOCKALL) ; Default resize mode for dock android support
@@ -1372,17 +1372,12 @@ Func FirstCheckRoutine()
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
 	If $g_bChkCGBBAttackOnly Then
 		SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)
-		For $count = 1 to 11
+		For $count = 1 to 5
 			If Not $g_bRunState Then Return
-			If $count > 10 Then
-				SetLog("Something maybe wrong, exiting to MainLoop!", $COLOR_INFO)
-				ExitLoop
-			EndIf
-
 			If _ClanGames() Then
 				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-					SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
+					SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_ACTION)
 					GotoBBTodoCG()
 				Else
 					ExitLoop ;should be will never get here, but
