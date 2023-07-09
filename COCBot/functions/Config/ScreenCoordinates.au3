@@ -24,8 +24,6 @@ Global $aIsMain[4] = [279, 9, 0x7ABDE0, 20] ; Main Screen, Builder Info Icon
 Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
 Global $aIsOnBuilderBase[4] = [356, 12, 0x9CD2EE, 20] ; BuilderBase, Builder Info Icon
 
-Global $aIsConnectLost[4] = [255, 271, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device
-Global $aIsCheckOOS[4] = [223, 272, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device
 Global $aReloadButton[4] = [210, 385, 0x282828, 10] ; Reload Coc Button after Out of Sync, 860x780
 Global $aAttackButton[2] = [60, 620] ; Attack Button, Main Screen, 860x676
 Global $aFindMatchButton[4] = [470, 20, 0xD8A420, 10] ; Find Multiplayer Match Button, Attack Screen 860x780 without shield
