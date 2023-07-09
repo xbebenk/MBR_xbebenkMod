@@ -106,10 +106,28 @@ Func checkChatTabPixel()
 EndFunc   ;==>checkChatTabPixel
 
 Func isOnMainVillage()
+	Local $bRet = False
 	Local $aPixelToCheck = $aIsMain
-	Local $bLocated = False
-	$bLocated = _checkMainScreenImage($aPixelToCheck)
-	Return $bLocated
+	
+	$bRet = _checkMainScreenImage($aPixelToCheck)
+	If Not $bRet Then
+		SetDebugLog("Using Image to Check if isOnMainVillage")
+		If QuickMIS("BC1", $g_sImgInfo, 269, 3, 282, 15) Then $bRet = True
+	EndIf
+	Return $bRet
+EndFunc
+
+Func isOnBuilderBase()
+	Local $bRet = False
+	Local $aPixelToCheck = $aIsOnBuilderBase
+	
+	$bRet = _checkMainScreenImage($aPixelToCheck)
+	If Not $bRet Then
+		SetDebugLog("Using Image to Check if isOnBuilderBase")
+		If QuickMIS("BC1", $g_sImgInfo, 340, 3, 370, 13) Then $bRet = True
+	EndIf
+	
+	Return $bRet
 EndFunc
 
 Func NotifBarDropDownBS5()

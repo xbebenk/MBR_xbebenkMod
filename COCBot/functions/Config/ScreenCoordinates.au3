@@ -22,7 +22,7 @@ Global $aVillageCenteringCoord = [[750, 370], [636, 500], [777, 235]] ; Scroll v
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
 Global $aIsMain[4] = [279, 9, 0x7ABDE0, 20] ; Main Screen, Builder Info Icon
 Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
-Global $aIsOnBuilderBase[4] = [356, 12, 0x9CD2EE, 20] ; BuilderBase, Builder Info Icon
+Global $aIsOnBuilderBase[4] = [356, 12, 0x9DD2EE, 20] ; BuilderBase, Builder Info Icon
 
 Global $aReloadButton[4] = [210, 385, 0x282828, 10] ; Reload Coc Button after Out of Sync, 860x780
 Global $aAttackButton[2] = [60, 620] ; Attack Button, Main Screen, 860x676

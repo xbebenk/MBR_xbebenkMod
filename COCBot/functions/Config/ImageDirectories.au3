@@ -64,6 +64,7 @@ Global $g_sImgResIcon = @ScriptDir & "\imgxml\Research\ResIcon\"
 Global $g_sImgBooks = @ScriptDir & "\imgxml\Research\Books\"
 Global $g_sImgUpgradeWallElix = @ScriptDir & "\imgxml\imglocbuttons\WallElix*.xml"
 Global $g_sImgUpgradeWallGold = @ScriptDir & "\imgxml\imglocbuttons\WallGold*.xml"
+Global $g_sImgInfo = @ScriptDir & "\imgxml\Resources\Info\"
 #EndRegion
 
 #Region Clan Capital
