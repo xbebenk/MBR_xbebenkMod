@@ -190,7 +190,7 @@ Func StarLaboratory($bTestRun = False)
 		EndIf
 		
 		;any upgrade if all on troops lab order is maxed
-		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bChkUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn And $g_bisBattleMachineMaxed Then
+		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bChkUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn And ($g_bisBattleMachineMaxed Or $g_bIs6thBuilderUnlocked) Then
 			_ArraySort($aTroopUpgrade, 1, 0, 0, 5) ;sort by cost descending
 			For $i = 0 To UBound($aTroopUpgrade) - 1
 				If $aTroopUpgrade[$i][5] = "MaxLevel" Then ContinueLoop
