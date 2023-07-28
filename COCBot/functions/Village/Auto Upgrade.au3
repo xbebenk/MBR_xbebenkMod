@@ -1097,7 +1097,7 @@ Func FindOtherDefenses()
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
 			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
-			For $j = 0 To UBound($g_aichkEssentialUpgrade) - 1
+			For $j = 0 To UBound($aEssentialBuilding) - 1
 				SetDebugLog($UpgradeName[0] & "|" & $aEssentialBuilding[$j])
 				If $UpgradeName[0] = $aEssentialBuilding[$j] Then
 					_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
