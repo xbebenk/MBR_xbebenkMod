@@ -1035,6 +1035,7 @@ Func ReadConfig_auto()
 	IniReadS($g_bPlaceNewBuilding, $g_sProfileConfigPath, "Auto Upgrade", "AUpgradePlaceNew", True, "Bool")
 	IniReadS($g_bChkRushTH, $g_sProfileConfigPath, "Auto Upgrade", "ChkRushTH", True, "Bool")
 	IniReadS($g_bUseWallReserveBuilder, $g_sProfileConfigPath, "Auto Upgrade", "UseWallReserveBuilder", True, "Bool")
+	IniReadS($g_bUpgradeOtherDefenses, $g_sProfileConfigPath, "Auto Upgrade", "UpgradeOtherDefenses", False, "Bool")
 	IniReadS($g_bUseBuilderPotion, $g_sProfileConfigPath, "Auto Upgrade", "UseBuilderPotion", False, "Bool")
 
 	Local $str = ""

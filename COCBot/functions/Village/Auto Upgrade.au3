@@ -223,6 +223,35 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		Else
 			SetLog("Skip Search Essential Building", $COLOR_INFO)
 		EndIf
+		
+		If IsTHLevelAchieved() And Not $g_bUpgradeLowCost And $g_bUpgradeOtherDefenses Then
+			SetLog("Search Other Defenses Building on Builder Menu", $COLOR_INFO)
+			ClickMainBuilder()
+			Local $aResult = FindOtherDefensesBuilding()
+			If isArray($aResult) And UBound($aResult) > 0 Then
+				For $y = 0 To UBound($aResult) - 1
+					SetLog($aResult[$y][3] & ", Cost: " & $aResult[$y][5] & " " & $aResult[$y][0], $COLOR_SUCCESS)
+				Next
+				For $y = 0 To UBound($aResult) - 1
+					If CheckResourceForDoUpgrade($aResult[$y][3], $aResult[$y][5], $aResult[$y][0]) Then
+						Click($aResult[$y][1], $aResult[$y][2])
+						If _Sleep(1000) Then Return
+						If DoUpgrade($bTest) Then
+							$z = 0 ;reset
+							$g_bSkipWallReserve = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
+							$g_bUpgradeLowCost = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
+							If Not AutoUpgradeCheckBuilder($bTest) Then Return
+						Endif
+						ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
+					EndIf
+				Next
+			Else
+				SetLog("Other Defenses Not Found", $COLOR_INFO)
+			EndIf
+			If Not $g_bRunState Then Return
+		Else
+			SetLog("Skip Other Defenses Building", $COLOR_INFO)
+		EndIf
 
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
@@ -1046,6 +1075,31 @@ Func FindEssentialBuilding()
 			For $j = 0 To UBound($g_aichkEssentialUpgrade) - 1
 				SetDebugLog($UpgradeName[0] & "|" & $aEssentialBuilding[$j])
 				If $g_aichkEssentialUpgrade[$j] > 0 And $UpgradeName[0] = $aEssentialBuilding[$j] Then
+					_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
+				EndIf
+			Next
+		Next
+		For $j = 0 To UBound($aBuilding) -1
+			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $aBuilding[$j][1], $aBuilding[$j][2] - 10, 120, 30, True)
+			$aBuilding[$j][5] = Number($UpgradeCost)
+			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][5] & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
+		Next
+		_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
+		Return $aBuilding
+	EndIf
+EndFunc
+
+Func FindOtherDefenses()
+	Local $aTmpCoord, $aBuilding[0][6], $UpgradeCost, $UpgradeName
+	Local $aEssentialBuilding[4] = ["Cannon", "Archer Tower", "Mortar", "Hidden Tesla"]
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390)
+	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		For $i = 0 To UBound($aTmpCoord) - 1
+			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
+			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
+			For $j = 0 To UBound($g_aichkEssentialUpgrade) - 1
+				SetDebugLog($UpgradeName[0] & "|" & $aEssentialBuilding[$j])
+				If $UpgradeName[0] = $aEssentialBuilding[$j] Then
 					_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
 				EndIf
 			Next
