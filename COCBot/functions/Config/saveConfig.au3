@@ -735,7 +735,6 @@ Func SaveConfig_auto()
 	_Ini_Add("Auto Upgrade", "AUpgradePlaceNew", $g_bPlaceNewBuilding)
 	_Ini_Add("Auto Upgrade", "ChkRushTH", $g_bChkRushTH)
 	_Ini_Add("Auto Upgrade", "UseWallReserveBuilder", $g_bUseWallReserveBuilder)
-	_Ini_Add("Auto Upgrade", "UpgradeOtherDefenses", $g_bUpgradeOtherDefenses)
 	_Ini_Add("Auto Upgrade", "UseBuilderPotion", $g_bUseBuilderPotion)
 
 	Local $string = ""
@@ -752,6 +751,7 @@ Func SaveConfig_auto()
 	_Ini_Add("Auto Upgrade", "HeroPriority", $g_bHeroPriority)
 	_Ini_Add("Auto Upgrade", "UseHeroBooks", $g_bUseHeroBooks)
 	_Ini_Add("Auto Upgrade", "HeroMinUpgradeTime", $g_iHeroMinUpgradeTime)
+	_Ini_Add("Auto Upgrade", "UpgradeOtherDefenses", $g_bUpgradeOtherDefenses)
 	For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 		_Ini_Add("Auto Upgrade", "ChkUpgradesToIgnore[" & $i & "]", $g_iChkUpgradesToIgnore[$i])
 	Next

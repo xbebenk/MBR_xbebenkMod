@@ -824,7 +824,7 @@ Func CreateRushTHOption()
 		$g_hHeroPriority = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "UpgradeOtherDefenses", "Upgrades Other Defenses (From Essential Upgrade)"), $x, $y, -1, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$y = 330
+	$y = 300
 	$g_hBtnRushTHOptionClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - AutoUpgrade", "BtnRushTHOptionClose", "Close"), 230, $y + 65, 85, 25)
 		GUICtrlSetOnEvent(-1, "CloseRushTHOption")
 

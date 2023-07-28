@@ -1103,7 +1103,6 @@ Func ApplyConfig_auto($TypeReadSave)
 			GUICtrlSetState($g_ChkPlaceNewBuilding, $g_bPlaceNewBuilding ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkRushTH, $g_bChkRushTH ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hUseWallReserveBuilder, $g_bUseWallReserveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hUpgradeOtherDefenses, $g_bUpgradeOtherDefenses ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hUseBuilderPotion, $g_bUseBuilderPotion ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $y = 0 To UBound($g_aiCmbRushTHOption) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbRushTHOption[$y], $g_aiCmbRushTHOption[$y])
@@ -1115,6 +1114,7 @@ Func ApplyConfig_auto($TypeReadSave)
 			GUICtrlSetState($g_hHeroPriority, $g_bHeroPriority ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hUseHeroBooks, $g_bUseHeroBooks ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hHeroMinUpgradeTime, $g_iHeroMinUpgradeTime)
+			GUICtrlSetState($g_hUpgradeOtherDefenses, $g_bUpgradeOtherDefenses ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				GUICtrlSetState($g_hChkUpgradesToIgnore[$i], $g_iChkUpgradesToIgnore[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
@@ -1131,7 +1131,6 @@ Func ApplyConfig_auto($TypeReadSave)
 			$g_bPlaceNewBuilding = (GUICtrlRead($g_ChkPlaceNewBuilding) = $GUI_CHECKED)
 			$g_bChkRushTH = (GUICtrlRead($g_hChkRushTH) = $GUI_CHECKED)
 			$g_bUseWallReserveBuilder = (GUICtrlRead($g_hUseWallReserveBuilder) = $GUI_CHECKED)
-			$g_bUpgradeOtherDefenses = (GUICtrlRead($g_hUpgradeOtherDefenses) = $GUI_CHECKED)
 			$g_bUseBuilderPotion = (GUICtrlRead($g_hUseBuilderPotion) = $GUI_CHECKED)
 			For $y = 0 To UBound($g_aiCmbRushTHOption) - 1
 				$g_aiCmbRushTHOption[$y] = _GUICtrlComboBox_GetCurSel($g_ahCmbRushTHOption[$y])
@@ -1143,6 +1142,7 @@ Func ApplyConfig_auto($TypeReadSave)
 			$g_bHeroPriority = (GUICtrlRead($g_hHeroPriority) = $GUI_CHECKED)
 			$g_bUseHeroBooks = (GUICtrlRead($g_hUseHeroBooks) = $GUI_CHECKED)
 			$g_iHeroMinUpgradeTime =  GUICtrlRead($g_hHeroMinUpgradeTime)
+			$g_bUpgradeOtherDefenses = (GUICtrlRead($g_hUpgradeOtherDefenses) = $GUI_CHECKED)
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				$g_iChkUpgradesToIgnore[$i] = GUICtrlRead($g_hChkUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next
