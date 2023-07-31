@@ -218,18 +218,24 @@ Func CreateSaveToProfiles()
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - SaveTo", "SaveTo", "Save Current Profile settings to :"), $x - 20, $y - 20, 420, 280)
 		For $i = 0 To UBound($aActiveProfile) - 1
 			If $i < 10 Then
-				If $aActiveProfile[$i] Then 
-					$g_ahChkCopyAccount[$i] = GUICtrlCreateCheckbox($i + 1 & ".", $x, $y + ($i) * 25, -1, -1)
-					$g_ahTxtCopyAccount[$i] = GUICtrlCreateInput($g_asProfileName[$i], $x + 40, $y + ($i) * 25, 130, 22)
-					GUICtrlSetState(-1, $GUI_DISABLE)
+				$g_ahChkCopyAccount[$i] = GUICtrlCreateCheckbox($i + 1 & ".", $x, $y + ($i) * 25, -1, -1)
+				$g_ahTxtCopyAccount[$i] = GUICtrlCreateInput($g_asProfileName[$i], $x + 40, $y + ($i) * 25, 130, 22)
+				GUICtrlSetState(-1, $GUI_DISABLE)
+				If Not $aActiveProfile[$i] Then 
+					GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_UNCHECKED)
+					GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_DISABLE)
+					GUICtrlSetData($g_ahTxtCopyAccount[$i], "")
 				EndIf
 			Else
 				$x = 230
-				$y = 25
-				If $aActiveProfile[$i] Then 
-					$g_ahChkCopyAccount[$i] = GUICtrlCreateCheckbox($i + 1 & ".", $x, $y + ($i - 10) * 25, -1, -1)
-					$g_ahTxtCopyAccount[$i] = GUICtrlCreateInput($g_asProfileName[$i], $x + 40, $y + ($i - 10) * 25, 130, 22)
-					GUICtrlSetState(-1, $GUI_DISABLE)
+				$y = 25 
+				$g_ahChkCopyAccount[$i] = GUICtrlCreateCheckbox($i + 1 & ".", $x, $y + ($i - 10) * 25, -1, -1)
+				$g_ahTxtCopyAccount[$i] = GUICtrlCreateInput($g_asProfileName[$i], $x + 40, $y + ($i - 10) * 25, 130, 22)
+				GUICtrlSetState(-1, $GUI_DISABLE)
+				If Not $aActiveProfile[$i] Then 
+					GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_UNCHECKED)
+					GUICtrlSetState($g_ahChkCopyAccount[$i], $GUI_DISABLE)
+					GUICtrlSetData($g_ahTxtCopyAccount[$i], "")
 				EndIf
 			EndIf
 		Next

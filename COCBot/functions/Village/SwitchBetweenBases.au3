@@ -12,6 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Global $FalseDetectionCount = 0
 
 Func SwitchBetweenBases($ForcedSwitchTo = Default)
 	Local $bIsOnBuilderBase = isOnBuilderBase()
@@ -35,7 +36,10 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 	EndIf
 	
 	;we are not on builderbase nor in mainvillage, something need to be check, check obstacles called on checkmainscreen
-	If Not $bIsOnBuilderBase And Not $bIsOnMainVillage Then checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
+	If Not $bIsOnBuilderBase And Not $bIsOnMainVillage Then 
+		checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
+		If $g_bStayOnBuilderBase Then $bIsOnBuilderBase = isOnBuilderBase() ;check again if we are on builderbases, after mainscreen located
+	EndIf
 	
 	If IsProblemAffect(True) Then Return
 	If Not $g_bRunState Then Return
@@ -44,6 +48,13 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 		SetLog("StayOnBuilderBase = " & String($g_bStayOnBuilderBase), $COLOR_INFO)
 		SetLog(" --- Are we on BuilderBase ? " & String($bIsOnBuilderBase), $COLOR_INFO)
 		SetLog("Switching To BuilderBase")
+		$FalseDetectionCount += 1
+		SetDebugLog("CountFalseDetection: " & $FalseDetectionCount)
+		If $FalseDetectionCount > 2 Then 
+			SetDebugLog("BuilderBase Detection Maybe Failed, been trying " & $FalseDetectionCount & " times")
+			SetDebugLog("Let's assume we are on BuilderBase")
+			Return True ;just return true as assumed on BB
+		EndIf
 		Return SwitchTo("BB")
 	EndIf
 	
@@ -66,7 +77,7 @@ Func SwitchTo($To = "BB")
 		$sTile = "BoatBuilderBase"
 		$aPixelToCheck = $aIsMain
 		$x = 500
-		$y = 20
+		$y = 0
 		$x1 = 700
 		$y1 = 200
 		$Dir = $g_sImgBoatBB
@@ -85,20 +96,49 @@ Func SwitchTo($To = "BB")
 	For $i = 1 To 3
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
 		
-		Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-		If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-			ZoomOut() 
+		Local $ZoomOutResult
+		If $To = "BB" Then 
+			$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases")
+			If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+				ZoomOut() 
+			EndIf
 		EndIf
+		
+		If $To = "Main" Then ZoomOutHelperBB("SwitchBetweenBases")
 		
 		If QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
 			If $g_iQuickMISName = "BrokenBoat" Then Return BBTutorial($g_iQuickMISX, $g_iQuickMISY)
 			If $g_iQuickMISName = "BBBoatBadge" Then $g_iQuickMISY += 10
+			If $g_iQuickMISName = "BoatFront" Then 
+				$g_iQuickMISX += 10
+				$g_iQuickMISY -= 10
+			EndIf
+			
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			_Sleep(1000)
-			ExitLoop
+			
+			Local $sScode = "DS"
+			For $i = 1 To 5
+				$bRet = _CheckPixel($aPixelToCheck, True, Default, "SwitchBetweenBases")
+				If $bRet Then 
+					SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
+					$FalseDetectionCount = 0
+					If $To = "BB" Then
+						$sScode = $g_sSceneryCode
+						$g_sSceneryCode = "BB"
+					Else
+						If $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = False
+						$g_sSceneryCode = $sScode
+					EndIf
+					ExitLoop 2
+				Else
+					Click($g_iQuickMISX, $g_iQuickMISY)
+				EndIf
+				_Sleep(2000)
+			Next
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
-			ZoomOutHelper("SwitchBetweenBases")
+			If $To = "Main" Then CheckBB20Tutor()
 			If $i = 3 Then AndroidPageError("SwitchBetweenBases")
 		EndIf
 		_Sleep(1000)
@@ -106,19 +146,6 @@ Func SwitchTo($To = "BB")
 	
 	If IsProblemAffect(True) Then Return
 	If Not $g_bRunState Then Return
-	
-	For $i = 1 To 5
-		$bRet = _CheckPixel($aPixelToCheck, True, Default, "SwitchBetweenBases")
-		If $bRet Then 
-			SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
-			ExitLoop
-		EndIf
-		_Sleep(2000)
-	Next
-	
-	If IsProblemAffect(True) Then Return
-	If Not $g_bRunState Then Return
-	If QuickMIS("BC1", $g_sImgBBWallRotate, 360, 530, 500, 610) Then GoAttackBBAndReturn()
 	Return $bRet
 EndFunc
 
@@ -324,16 +351,6 @@ Func BBTutorial($x = 170, $y = 560)
 			ExitLoop
 		EndIf
 		_SleepStatus(5000)
-	Next
-	
-	For $i = 1 To 10
-		SetLog("Waiting End Battle #" & $i, $COLOR_INFO)
-		If BBBarbarianHead() Then
-			ClickP($aOkayButton)
-			_SleepStatus(15000)
-			ExitLoop
-		EndIf
-		_Sleep(5000)
 	Next
 	
 	For $i = 1 To 10

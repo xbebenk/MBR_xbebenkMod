@@ -22,11 +22,15 @@ Func checkObstacles($bBuilderBase = False) ;Checks if something is in the way fo
 EndFunc   ;==>checkObstacles
 
 Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way for mainscreen
-	Local $msg, $x, $y, $Result
-	$g_bMinorObstacle = False
-	_CaptureRegions()
+	Local $msg, $Result
 	
-	If isProblemAffect(True) Then
+	If CheckSCLOGO() Then 
+		If _Sleep(1000) Then Return
+		Return False
+	EndIf
+	
+	_CaptureRegions()
+	If isProblemAffect() Then
 		;;;;;;;##### 1- Another device #####;;;;;;;
 		If UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,300(130,60)", False))) > 1 Then
 			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And Not $g_bChkSmartSwitch And $g_bChkSharedPrefs Then
@@ -35,7 +39,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				checkObstacles_ResetSearch()
 				Return True
 			EndIf
-			
+
 			If $g_iAnotherDeviceWaitTime > 3600 Then
 				SetLog("Another Device has connected, waiting " & Floor(Floor($g_iAnotherDeviceWaitTime / 60) / 60) & " hours " & Floor(Mod(Floor($g_iAnotherDeviceWaitTime / 60), 60)) & " minutes " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " seconds", $COLOR_ERROR)
 				PushMsg("AnotherDevice3600")
@@ -46,14 +50,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				SetLog("Another Device has connected, waiting " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " seconds", $COLOR_ERROR)
 				PushMsg("AnotherDevice")
 			EndIf
-			
+
 			If _SleepStatus($g_iAnotherDeviceWaitTime * 1000) Then Return ; Wait as long as user setting in GUI, default 120 seconds
 			checkObstacles_ReloadCoC($aReloadButton, "#0127")
 			If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			checkObstacles_ResetSearch()
 			Return True
 		EndIf
-		
+
 		;;;;;;;##### 2- Take a break #####;;;;;;;
 		If UBound(decodeSingleCoord(FindImageInPlace("Break", $g_sImgPersonalBreak, "165,257,335,315", False))) > 1 Then ; used for all 3 different break messages
 			SetLog("Village must take a break, wait", $COLOR_ERROR)
@@ -97,20 +101,10 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				If UBound($Result) > 1 Then
 					SetLog("Clash feedback window found, permanently closed!", $COLOR_ERROR)
 					PureClick($Result[0] + 5, $Result[1] + 5, 1, 0, "#9999") ; Click on never to close window and stop reappear. Never=248,408 & Later=429,408
-					$g_bMinorObstacle = True
 					PullSharedPrefs()
 					Return True
 				EndIf
-				$Result = getOcrReloadMessage(171, 325, "Check Obstacles OCR 'Good News!'=") ; OCR text for "Good News!"
-				If StringInStr($Result, "new", $STR_NOCASESENSEBASIC) Then
-					$msg = "Game Update is required, Bot must stop!"
-					Return checkObstacles_StopBot($msg) ; stop bot
-				ElseIf StringInStr($Result, "rate", $STR_NOCASESENSEBASIC) Then ; back up check for rate CoC reload window
-					SetLog("Clash feedback window found, permanently closed!", $COLOR_ERROR)
-					PureClick(248, 408, 1, 0, "#9999") ; Click on never to close window and stop reappear. Never=248,408 & Later=429,408
-					$g_bMinorObstacle = True
-					Return True
-				EndIf
+				
 				;  Add check for banned account :(
 				$Result = getOcrReloadMessage(171, 358, "Check Obstacles OCR 'policy at super'=") ; OCR text for "policy at super"
 				If StringInStr($Result, "policy", $STR_NOCASESENSEBASIC) Then
@@ -126,86 +120,146 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				EndIf
 				SetLog("Warning: Cannot find type of Reload error message", $COLOR_ERROR)
 		EndSelect
+		
+		If QuickMIS("BFI", $g_sImgUpdateCoC, 250, 280, 300, 305) Then 
+			SetLog("Good News, Updates available!", $COLOR_INFO)
+			$msg = "Game Update is required, Bot must stop!"
+			Return checkObstacles_StopBot($msg) ; stop bot
+		EndIf
+		
 		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
 	
-	If WaitforPixel(400, 526, 440, 530, Hex(0x75BE2F, 6), 6, 1) Then
+	If WelcomeBackCheck() Then 
 		SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
 		Click(440, 526)
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		$g_bMinorObstacle = True
+		Return False
+	EndIf
+
+	If _ColorCheck(_GetPixelColor(384, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(480, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 600, True), Hex(0x000000, 6), 10, Default, "checkObstacles")  Then
+		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
+		Click(425, 550)
+		If _Sleep(3000) Then Return
 		Return False
 	EndIf
 	
-	;If WaitforPixel(420, 600, 420,600, "000000", 20, 1) Then
-	;	If WaitforPixel(420, 563, 421,564, "6CBB1F", 20, 1) Then
-	;		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
-	;		Click(420, 560)
-	;		$g_bMinorObstacle = True
-	;		_Sleep(3000)
-	;		Return False
-	;	Else
-	;		SetDebugLog("Expected: 6CBB1F, Got:" & _GetPixelColor(420, 563, True))
-	;	EndIf
-	;EndIf
+	If BBBarbarianHead("checkObstacles") Then 
+		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
+		Click(430, 540)
+		If _Sleep(3000) Then Return
+		Return False
+	EndIf
 	
-	If _ColorCheck(_GetPixelColor(792, 39), Hex(0xDC0408, 6), 20) Then
+	If _ColorCheck(_GetPixelColor(792, 39, True), Hex(0xDC0408, 6), 20, Default, "checkObstacles") Then
 		SetLog("checkObstacles: Found Window with Close Button to close", $COLOR_ACTION)
 		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
-		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
 	
+	If _ColorCheck(_GetPixelColor(415, 260, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 455, True), Hex(0xBDE98D, 6), 20, Default, "checkObstacles") Then
+		SetLog("checkObstacles: Found BuilderBase Star Bonus", $COLOR_ACTION)
+		PureClick(430, 465) ;Clicks X
+		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+		Return False
+	EndIf
+
 	If _CheckPixel($aChatTab, True) Then
 		SetLog("checkObstacles: Found Chat Tab to close", $COLOR_ACTION)
 		PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
-		$g_bMinorObstacle = True
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
-	
-	;If _ColorCheck(_GetPixelColor(422, 505, True), Hex(0x86D435, 6), 20) Then
-	;	SetLog("checkObstacles: Found End of Season Page", $COLOR_ACTION)
-	;	Click(422, 500)
-	;	$g_bMinorObstacle = True
-	;	If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-	;	Return False
-	;EndIf
-	
+
 	If _CheckPixel($aIsTrainPgChk1, True) Then
 		SetLog("checkObstacles: Found Army Window to close", $COLOR_ACTION)
 		ClickAway(Default, True)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
-	
-	Local $CSFoundCoords = decodeSingleCoord(FindImageInPlace("CocStopped", $g_sImgCocStopped, "250,358,618,432", False))
-	If UBound($CSFoundCoords) > 1 Then
-		SetLog("CoC Has Stopped Error .....", $COLOR_ERROR)
-		If TestCapture() Then Return "CoC Has Stopped Error ....."
-		PushMsg("CoCError")
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		;PureClick(250 + $x, 328 + $y, 1, 0, "#0129");Check for "CoC has stopped error, looking for OK message" on screen
-		PureClick($CSFoundCoords[0], $CSFoundCoords[1], 1, 0, "#0129") ;Check for "CoC has stopped error, looking for OK message" on screen
+
+	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then ;ads event popup window (usually covering 80% of coc screen)
+		SetLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return checkObstacles_ReloadCoC(Default, "")
-	EndIf
-	
-	;;;;;;;##### 7- SCID Login Screen #####;;;;;;;
-	CheckLoginWithSupercellID()
-	If CheckObstacles_SCIDPopup() Then Return False
-	; optional game update
-	If UBound(decodeSingleCoord(FindImageInPlace("OptUpdateCoC", $g_sImgOptUpdateCoC, "155, 190, 705, 480", False))) > 1 Then ; Found Optional Game Update Message
-		SetLog("Found Optional Game Update - Clicking No Thanks", $COLOR_INFO)
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-		PureClick(520, 475, 1, 0) ; Click No Thanks
-		$g_bMinorObstacle = True
-		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
+
+	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 660, 300, 720, 400) Then
+		SetLog("checkObstacles: Found TownHall Upgraded Page", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+
+	If IsPostDefenseSummaryPage() Then ;post defense (when bot start coc and find account are under attack, will click return home)
+		SetLog("checkObstacles: Found Post Defense Summary to close", $COLOR_ACTION)
+		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+
+	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 730, 66, 790, 120) Then ;attack log page, usually because bot start and user left this page open
+		SetLog("checkObstacles: Found Attack/Defense Log Page", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+
+	If IsFullScreenWindow() Then ; all pages that covering coc screen and have red close button on right upper corner
+		SetLog("checkObstacles: Found FullScreenWindow to close", $COLOR_ACTION)
+		Click(825,45)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+
+	If $bBuilderBase Then CheckBB20Tutor()
+	If Not $bBuilderBase Then
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;handle for clan capital tutorial
+			SetLog("checkObstacles: Found Clan Capital Tutorial, Doing Tutorial", $COLOR_ACTION)
+			CCTutorial()
+			Return False
+		EndIf
+	EndIf
+
+	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ; if bot started or situated on clan capital map, and need to go back to main village
+		SetLog("checkObstacles: Found Clan Capital Map, Returning Home", $COLOR_ACTION)
+		SwitchToMainVillage("CheckObstacle")
+		Return False
+	EndIf
+
+	If SearchUnplacedBuilding() Then ;check for unplaced building button, after several achievement/season account may rewarded special building and need to be placed on map
+		SetLog("checkObstacles: Found Unplaced Building Button, Try Place it on Map", $COLOR_ACTION)
+		PlaceUnplacedBuilding()
+		Return False
+	EndIf
+
+	Local $sUpdateAvail = getOcrAndCapture("coc-UpdateAvail", 320, 235, 220, 30)
+	If $sUpdateAvail = "Update Available" Then
+		SetLog("Chief, we have minor coc Update!", $COLOR_INFO)
+		ClickAway()
+		If _Sleep(500) Then Return
+		Return
+	EndIf
 	
-	If UBound(decodeSingleCoord(FindImageInPlace("Maintenance", $g_sImgMaintenance, "270,40,640, 140", False))) > 1 Then ; Maintenance Break
+	Local $bIsOnBuilderIsland = isOnBuilderBase()
+	If Not $bBuilderBase And $bIsOnBuilderIsland Then ;Check for MainVillage, but coc is on BB -> go to mainVillage
+		ZoomOut(True)
+		If SwitchBetweenBases("Main") Then
+			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			Return False
+		EndIf
+	EndIf
+	
+	Local $bIsOnMainVillage = isOnMainVillage()
+	If $bBuilderBase And $bIsOnMainVillage Then ;Check for BB, but in MainVillage -> go to BB
+		If SwitchBetweenBases("BB") Then
+			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
+			Return False
+		EndIf
+	EndIf
+	
+	If QuickMIS("BFI", $g_sImgMaintenance, 360, 70, 420, 110) Then 
 		$Result = getOcrMaintenanceTime(300, 550, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
 		Local $iMaintenanceWaitTime = 0
 		Local $avTime = StringRegExp($Result, "([\d]+)[Mm]|(soon)|([\d]+[Hh])", $STR_REGEXPARRAYMATCH)
@@ -227,126 +281,124 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If ClickB("ReloadButton") Then SetLog("Trying to reload game after maintenance break", $COLOR_INFO)
 		checkObstacles_ResetSearch()
 	EndIf
-	
-	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then ;ads event popup window (usually covering 80% of coc screen)
-		SetLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		$g_bMinorObstacle = True
-		Return False
-	EndIf
-	
-	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 660, 300, 720, 400) Then 
-		SetLog("checkObstacles: Found TownHall Upgraded Page", $COLOR_ACTION)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		$g_bMinorObstacle = True
-		Return False
-	EndIf
-	
-	If IsPostDefenseSummaryPage() Then ;post defense (when bot start coc and find account are under attack, will click return home)
-		SetLog("checkObstacles: Found Post Defense Summary to close", $COLOR_ACTION)
-		PureClick(67, 602, 1, 0, "#0138") ;Check if Return Home button available
-		$g_bMinorObstacle = True
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return False
-	EndIf
-	
-	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 730, 66, 790, 120) Then ;attack log page, usually because bot start and user left this page open
-		SetLog("checkObstacles: Found Attack/Defense Log Page", $COLOR_ACTION)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		$g_bMinorObstacle = True
-		Return False
-	EndIf
-	
-	If IsFullScreenWindow() Then ; all pages that covering coc screen and have red close button on right upper corner
-		SetLog("checkObstacles: Found FullScreenWindow to close", $COLOR_ACTION)
-		Click(825,45)
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		$g_bMinorObstacle = True
-		Return False
-	EndIf	
-	
-	If QuickMIS("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;this check formerly used for bluestacks without minitouch, bot stuck on request page
-		SetLog("checkObstacles: Found RequestCC Window, Click Send", $COLOR_ACTION)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		$g_bMinorObstacle = True
-		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
-		Return False
-	EndIf
-	
-	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;handle for clan capital tutorial
-		SetLog("checkObstacles: Found Clan Capital Tutorial, Doing Tutorial", $COLOR_ACTION)
-		CCTutorial()
-		Return False
-	EndIf
-	
-	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ; if bot started or situated on clan capital map, and need to go back to main village
-		SetLog("checkObstacles: Found Clan Capital Map, Returning Home", $COLOR_ACTION)
-		Click(60, 610)
-		_Sleep(1000)
-		Return False
-	EndIf
-	
-	If SearchUnplacedBuilding() Then ;check for unplaced building button, after several achievement/season account may rewarded special building and need to be placed on map
-		SetLog("checkObstacles: Found Unplaced Building Button, Try Place it on Map", $COLOR_ACTION)
-		PlaceUnplacedBuilding()
-		Return False
-	EndIf
-	
-	;====move switch bb/main to bottom, so we only check if all above test is False
-	Local $bIsOnBuilderIsland = isOnBuilderBase()
-	SetDebugLog("isOnBuilderBase() : " & String($bIsOnBuilderIsland), $COLOR_ERROR)
-	If Not $bBuilderBase And $bIsOnBuilderIsland Then ;Check for MainVillage, but coc is on BB -> go to mainVillage
-		ZoomOut()
-		If SwitchBetweenBases("Main") Then 
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			$g_bMinorObstacle = True
-			Return False
-		EndIf
-	EndIf
-	
-	If $bBuilderBase And Not $bIsOnBuilderIsland Then ;Check for BB, but Not in BB -> go to BB
-		ZoomOut()
-		If SwitchBetweenBases("BB") Then 
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			$g_bMinorObstacle = True
-			Return False
-		EndIf
-	EndIf
-	
-	If Not isOnMainVillage() And IsAttackPage() Then ; bot seeing attackbar while it shouldn't, will do surrender and/or return home   
-		ClickP($aIsAttackPage)
-		If _Sleep(1000) Then Return
-		For $i = 1 To 5
-			If isOnMainVillage() Then ExitLoop
-			SetLog("Waiting Main Page #" & $i, $COLOR_ACTION)
-			If IsOKCancelPage(True) Then
-				Click(510, 400); Click Okay to Confirm surrender
-				If _Sleep(1000) Then Return
-			EndIf
-			If IsReturnHomeBattlePage(True) Then ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-			If _Sleep(1000) Then Return
-		Next
-		SetLog("CheckObstacle: Not in MainVillage And detected AttackPage", $COLOR_ACTION)
-		ClickAway(Default, True)
-		Return False
-	EndIf
-	
+
 	;xbebenk: I need this click away to be logged
-	SetLog("CheckObstacle: Not Found Any obs, just do clickaway()", $COLOR_ACTION)
-	ClickAway(Default, True)
+	ClickAway("Left", True)
 	Return False
 EndFunc   ;==>_checkObstacles
+
+Func WelcomeBackCheck()
+	Local $bGreenButton = False, $bWhiteW = False, $bWhiteB = False, $bWhiteC = False
+	If _ColorCheck(_GetPixelColor(440, 497, True), Hex(0xDDF686, 6), 10, Default, "checkObstacles") Then $bGreenButton = True
+	If _ColorCheck(_GetPixelColor(292, 139, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteW = True
+	If _ColorCheck(_GetPixelColor(421, 139, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteB = True
+	If _ColorCheck(_GetPixelColor(501, 139, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteC = True
+	
+	If $bGreenButton And $bWhiteW And $bWhiteB And $bWhiteC Then Return True
+EndFunc
+
+Func CheckSCLOGO()
+	Local $aCheckPixelSCLOGO[4][2] = [[100,100], [700,100], [333,268], [524,268]]
+	Local $aColorCheckSCLOGO[4] = ["000000", "000000", "FEFEFE", "FEFEFE"]
+	Local $bPixelFoundSCLOGO = False
+	For $i = 0 To UBound($aCheckPixelSCLOGO) - 1
+		Local $sColor = _GetPixelColor($aCheckPixelSCLOGO[$i][0], $aCheckPixelSCLOGO[$i][1], True)
+		$bPixelFoundSCLOGO = _ColorCheck($sColor, $aColorCheckSCLOGO[$i], 10, Default, "CheckSCLOGO")
+		If $g_bDebugSetlog Then SetLog("[" & $i & "] CheckSCLOGO, " & String($bPixelFoundSCLOGO) & ": exp=" & $aColorCheckSCLOGO[$i] & ", got=" & $sColor, $COLOR_DEBUG1)
+		If Not $bPixelFoundSCLOGO Then ExitLoop
+	Next
+	If $bPixelFoundSCLOGO Then SetDebugLog("SC Logo...", $COLOR_ACTION)
+	Return $bPixelFoundSCLOGO
+EndFunc
+
+Func CheckBB20Tutor()
+	Local $bRet = False
+	For $i = 1 To 30
+		If $g_bDebugSetlog Then Setlog("Dealing with Tutorial #" & $i, $COLOR_ACTION)
+		If Not $g_bRunState Then Return
+		If _ColorCheck(_GetPixelColor(430, 362, True), Hex(0xFFFFFF, 6), 20) And _ColorCheck(_GetPixelColor(588, 362, True), Hex(0xFFFFFF, 6), 20) Then ;right balloon tips chat
+			If $g_bDebugSetlog Then Setlog("Found Right Chat Tutorial", $COLOR_DEBUG2)
+			ClickAway()
+			If _Sleep(5000) Then Return
+			$bRet = True
+			ContinueLoop
+		EndIf
+		If Not $g_bRunState Then Return
+		If _ColorCheck(_GetPixelColor(270, 402, True), Hex(0xFFFFFF, 6), 20) Or _ColorCheck(_GetPixelColor(435, 402, True), Hex(0xFFFFFF, 6), 20) Then ;left balloon tips chat
+			Setlog("Found Left Chat Tutorial", $COLOR_DEBUG2)
+			ClickAway()
+			If _Sleep(5000) Then Return
+			$bRet = True
+			ContinueLoop
+		EndIf
+		If Not $g_bRunState Then Return
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 200, 100, 680, 440) Then ;check arrow
+			If QuickMIS("BC1", $g_sImgBB20 & "OttoOutpost\", $g_iQuickMISX - 50, $g_iQuickMISY, $g_iQuickMISX + 50, $g_iQuickMISY + 150) Then ;check OttoOutpost Image
+				Setlog("Found Otto OutPost", $COLOR_DEBUG2)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(4000) Then Return
+				ContinueLoop
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 200, 100, 680, 440) Then ;check arrow
+			If QuickMIS("BC1", $g_sImgBB20 & "ReinforcementCamp\", $g_iQuickMISX - 50, $g_iQuickMISY, $g_iQuickMISX + 50, $g_iQuickMISY + 150) Then ;check ReinforcementCamp Image
+				Setlog("Found Reinforcement Camp", $COLOR_DEBUG2)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(4000) Then Return
+				ContinueLoop
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 200, 100, 680, 440) Then ;check arrow
+			If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", $g_iQuickMISX - 50, $g_iQuickMISY - 150, $g_iQuickMISX + 50, $g_iQuickMISY) Then ;check ElixCart Image
+				Setlog("Found Elix Cart", $COLOR_DEBUG2)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(4000) Then Return
+				ContinueLoop
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+		If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", 640, 515, 720, 560) Then ;check ElixCart Image
+			Setlog("Found Collect Cart", $COLOR_DEBUG2)
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(4000) Then Return
+			ContinueLoop
+		EndIf
+		If Not $g_bRunState Then Return
+		If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 600, 400, 760, 560) Then ;Up Tunnel
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(2000) Then Return
+			If QuickMIS("BC1", $g_sImgBB20 & "DownTunnel\", 130, 60, 290, 300) Then ;Down Tunnel
+				Setlog("Found DownSide of BuilderBase, exit CheckBB20Tutor", $COLOR_DEBUG2)
+				ExitLoop
+			EndIf
+		EndIf
+
+		If Not $g_bRunState Then Return
+		If _CheckPixel($aIsOnBuilderBase, True, Default, "CheckBB20Tutor") Then
+			If $g_bDebugSetlog Then Setlog("Found MainScreen of BuilderBase, exit CheckBB20Tutor", $COLOR_DEBUG2)
+			ExitLoop
+		EndIf
+
+		If _CheckPixel($aIsMain, True, Default, "CheckBB20Tutor") Then
+			If $g_bDebugSetlog Then Setlog("Found MainScreen of MainVillage, exit CheckBB20Tutor", $COLOR_DEBUG2)
+			ExitLoop
+		EndIf
+
+		If Not $g_bRunState Then Return
+	Next
+	If $i = 30 Then checkObstacles_ReloadCoC()
+	Return $bRet
+EndFunc
 
 Func SwitchForceAnotherDevice()
 	Local $bResult = True
 	Local $abAccountNo = AccountNoActive()
 	$g_bReMatchAcc = False
-	
+
 	Local $NextAccount = _ArraySearch($abAccountNo, True, $g_iCurAccount + 1)
-	If $NextAccount < 0 Then 
+	If $NextAccount < 0 Then
 		$NextAccount = _ArraySearch($abAccountNo, True)
 	EndIf
 	$g_iNextAccount = $NextAccount
@@ -361,7 +413,7 @@ Func SwitchForceAnotherDevice()
 		$g_aiRunTime[$g_iCurAccount] += __TimerDiff($g_ahTimerSinceSwitched[$g_iNextAccount])
 		$g_ahTimerSinceSwitched[$g_iCurAccount] = 0
 	EndIf
-	
+
 	$g_iCurAccount = $NextAccount
 	SwitchAccountVariablesReload()
 
@@ -379,7 +431,7 @@ Func SwitchForceAnotherDevice()
 			LoadProfile(False)
 		EndIf
 	EndIf
-	
+
 	If $bSharedPrefs Then
 		SetLog("Please wait for loading CoC")
 		PushSharedPrefs()

@@ -126,7 +126,7 @@ Func CheckSwitchAcc()
 
 		$g_aiTimeTrain[2] = 0
 		If IsWaitforHeroesActive() Then CheckWaitHero() ; update $g_aiTimeTrain[2]
-
+		RequestCC(False, "IsFullClanCastle")
 		ClickAway()
 
 		$iWaitTime = _ArrayMax($g_aiTimeTrain, 1, 0, 2) ; Not check Siege Machine time: $g_aiTimeTrain[3]
@@ -204,22 +204,7 @@ Func CheckSwitchAcc()
 		EndIf
 
 		If $g_iNextAccount <> $g_iCurAccount Then
-			;If $g_bChkFastSwitchAcc Then
-			;	If $g_bRequestTroopsEnable Then
-			;		If _Sleep(1000) Then Return
-			;		SetLog("Try RequestCC before switching account", $COLOR_DEBUG)
-			;		RequestCC()
-			;	EndIf
-			;Else
-			;	If $g_bRequestTroopsEnable Then
-			;		SetLog("Try RequestCC, Donate And Train before switching account", $COLOR_DEBUG)
-			;		RequestCC()
-			;		PrepareDonateCC()
-			;		DonateCC()
-			;		TrainSystem()
-			;	EndIf
-			;EndIf
-			If Not $g_bForceSwitchifNoCGEvent Then _ClanGames(False, $g_bChkForceBBAttackOnClanGames, True)
+			_ClanGames(False, True) ;Only Purge
 			CheckMainScreen(True, $g_bStayOnBuilderBase, "CheckSwitchAcc")
 			SwitchCOCAcc($g_iNextAccount)
 		Else
@@ -409,6 +394,14 @@ Func SwitchCOCAcc($NextAccount)
 
 	CheckObstacles()
 	If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
+	
+	If $g_bDeleteLogs Then DeleteFiles($g_sProfileLogsPath, "*.*", $g_iDeleteLogsDays, 0)
+	If $g_bDeleteLoots Then DeleteFiles($g_sProfileLootsPath, "*.*", $g_iDeleteLootsDays, 0)
+	If $g_bDeleteTemp Then
+		DeleteFiles($g_sProfileTempPath, "*.*", $g_iDeleteTempDays, 0)
+		DeleteFiles($g_sProfileTempDebugPath, "*.*", $g_iDeleteTempDays, 0, $FLTAR_RECUR)
+	EndIf
+	
 	runBot()
 
 EndFunc   ;==>SwitchCOCAcc

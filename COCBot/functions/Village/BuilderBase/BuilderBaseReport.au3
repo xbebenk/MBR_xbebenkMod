@@ -47,7 +47,12 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 		isGoldFullBB()
 		isElixirFullBB()
 		If $g_iFreeBuilderCountBB > 0 Or $g_bElixirStorageFullBB Then
-			If isBHMaxed() Then 
+			If $g_bIs6thBuilderUnlocked Then
+				$g_bisBHMaxed = True
+				$g_bisMegaTeslaMaxed = True
+				$g_bisBattleMachineMaxed = True
+				$g_bOptimizeOTTO = False
+			ElseIf isBHMaxed() Then 
 				isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
 				isBattleMachineMaxed()
 			EndIf
@@ -57,6 +62,11 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 EndFunc   ;==>BuilderBaseReport
 
 Func isBHMaxed()
+	If $g_bIs6thBuilderUnlocked Then
+		$g_bisBHMaxed = True
+		Return True
+	EndIf
+	
 	Local $aBuildingName, $bRet = False
 	ClickAway("Left")
 	_Sleep(1000)
@@ -105,6 +115,11 @@ Func isBHMaxed()
 EndFunc
 
 Func isMegaTeslaMaxed()
+	If $g_bIs6thBuilderUnlocked Then
+		$g_bisMegaTeslaMaxed = True
+		Return True
+	EndIf
+	
 	ClickAway("Left")
 	If $g_bisMegaTeslaMaxed = True Then Return True
 	_Sleep(1000)
@@ -133,12 +148,17 @@ Func isMegaTeslaMaxed()
 EndFunc
 
 Func isBattleMachineMaxed()
+	If $g_bIs6thBuilderUnlocked Then
+		$g_bisBattleMachineMaxed = True
+		Return True
+	EndIf
+
 	ClickAway("Left")
 	If $g_bisBattleMachineMaxed = True Then Return True
 	_Sleep(1000)
 	
 	If QuickMIS("BC1", $g_sImgBattleMachine) Then ;Search for Battle Machine
-		If $g_iQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 15
+		If $g_iQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 30
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
 		_Sleep(1000)
 		Local $aBuildingName = BuildingInfo(242, 494)

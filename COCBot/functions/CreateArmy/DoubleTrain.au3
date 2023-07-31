@@ -164,7 +164,7 @@ Func DoubleTrain()
 		EndIf
 	EndIf
 	
-	If $g_bIgnoreIncorrectTroopCombo Then
+	If $g_bIgnoreIncorrectTroopCombo And Number(GUICtrlRead($g_hLblCountTotal)) = 0 Then
 		SetLog("Old troop Fill way", $COLOR_DEBUG1)
 		If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
 		Local $TroopCamp = GetCurrentArmy(46, 131)
@@ -334,6 +334,9 @@ Func GetCurrentArmy($x_start, $y_start)
 	If Not $g_bRunState Then Return $aResult
 
 	; [0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
+	
+	If _Sleep(500) Then Return ; wait until number stop changing
+	
 	Local $iOCRResult = getArmyCapacityOnTrainTroops($x_start, $y_start)
 
 	If StringInStr($iOCRResult, "#") Then

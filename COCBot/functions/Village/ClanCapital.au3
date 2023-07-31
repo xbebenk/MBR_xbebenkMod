@@ -8,15 +8,15 @@ Func CollectCCGold($bTest = False)
 	_Sleep(500)
 	ZoomOut(True) ;ZoomOut first
 	_Sleep(500)
-	
+
 	;handle for turtorial
-	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 250, 520, 400, 670) Then 
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 250, 520, 400, 670) Then
 		SetLog("Tutorial Arrow detected, click it!", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY + 10)
 		_Sleep(8000)
 		For $i = 1 To 3
 			SetLog("Waiting Tutorial and Forge window open #" & $i, $COLOR_ACTION)
-			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then 
+			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
 			EndIf
 			_Sleep(3000)
@@ -28,7 +28,7 @@ Func CollectCCGold($bTest = False)
 		Next
 		SetLog("Failed doing Clan Capital Tutorial", $COLOR_ERROR)
 	EndIf
-	
+
 	If QuickMIS("BC1", $g_sImgCCGoldCollect, 250, 550, 400, 670) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
 		For $i = 1 To 5
@@ -39,13 +39,13 @@ Func CollectCCGold($bTest = False)
 			EndIf
 			_Sleep(500)
 		Next
-		
-		If $bWindowOpened Then 
+
+		If $bWindowOpened Then
 			$aCollect = QuickMIS("CNX", $g_sImgCCGoldCollect, 120, 340, 740, 410)
 			If IsArray($aCollect) And UBound($aCollect) > 0 Then
 				SetLog("Collecting " & UBound($aCollect) & " Clan Capital Gold", $COLOR_INFO)
 				For $i = 0 To UBound($aCollect) - 1
-					If Not $bTest Then 
+					If Not $bTest Then
 						Click($aCollect[$i][1], $aCollect[$i][2]) ;Click Collect
 					Else
 						SetLog("Test Only, Should Click on [" & $aCollect[$i][1] & "," & $aCollect[$i][2] & "]")
@@ -54,15 +54,15 @@ Func CollectCCGold($bTest = False)
 				Next
 			EndIf
 			_Sleep(1000)
-			
-			If $iBuilderToUse > 3 Then 
+
+			If $iBuilderToUse > 3 Then
 				SetLog("Checking 4th Builder forge result", $COLOR_INFO)
 				ClickDrag(720, 315, 600, 315, 500)
 				$aCollect = QuickMIS("CNX", $g_sImgCCGoldCollect, 500, 340, 740, 410)
 				If IsArray($aCollect) And UBound($aCollect) > 0 Then
 					SetLog("Collecting " & UBound($aCollect) & " Clan Capital Gold", $COLOR_INFO)
 					For $i = 0 To UBound($aCollect) - 1
-						If Not $bTest Then 
+						If Not $bTest Then
 							Click($aCollect[$i][1], $aCollect[$i][2]) ;Click Collect
 						Else
 							SetLog("Test Only, Should Click on [" & $aCollect[$i][1] & "," & $aCollect[$i][2] & "]")
@@ -71,7 +71,9 @@ Func CollectCCGold($bTest = False)
 					Next
 				EndIf
 			EndIf
-			
+			If _Sleep(500) Then Return
+			$g_iLootCCGold = ReadCCGold()
+			SetLog("CC Gold = " & $g_iLootCCGold, $COLOR_INFO)
 			Click($g_iQuickMISX, $g_iQuickMISY) ;Click close button
 			SetLog("Clan Capital Gold collected successfully!", $COLOR_SUCCESS)
 		EndIf
@@ -83,23 +85,33 @@ Func CollectCCGold($bTest = False)
 	If _Sleep(500) Then Return
 EndFunc
 
+Func ReadCCGold()
+	Local $iRet = 0, $aRet
+	Local $sCCGold = getOcrAndCapture("coc-ccgold", 285, 456, 160, 25)
+	$aRet = StringSplit($sCCGold, "#", $STR_NOCOUNT)
+	If Ubound($aRet) = 2 Then
+		$iRet = $aRet[0]
+	EndIf
+	Return $iRet
+EndFunc
+
 Func ClanCapitalReport($SetLog = True)
-	$g_iLootCCGold = getOcrAndCapture("coc-ms", 670, 17, 160, 25)
-	$g_iLootCCMedal = getOcrAndCapture("coc-ms", 670, 70, 160, 25)
+	$g_iLootCCGold = getOcrAndCapture("coc-ms", 670, 17, 160, 25, True)
+	$g_iLootCCMedal = getOcrAndCapture("coc-ms", 670, 70, 160, 25, True)
 	GUICtrlSetData($g_lblCapitalGold, $g_iLootCCGold)
 	GUICtrlSetData($g_lblCapitalMedal, $g_iLootCCMedal)
-	
+
 	If $SetLog Then
 		SetLog("Capital Report", $COLOR_INFO)
 		SetLog("[Gold]:" & $g_iLootCCGold & " [Medal]:" & $g_iLootCCMedal, $COLOR_SUCCESS)
 	EndIf
-	
+
 	Local $sRaidText = getOcrAndCapture("coc-mapname", 773, 613, 50, 30)
 	If $sRaidText = "Raid" Then
 		If $SetLog Then SetLog("Raid Weekend is Available", $COLOR_INFO)
 		Local $iAttack = getOcrAndCapture("coc-mapname", 780, 545, 20, 30)
 		If $SetLog Then SetLog("You have " & $iAttack & " available attack", $COLOR_SUCCESS)
-		If Number($g_iLootCCGold) > 0 Then 
+		If Number($g_iLootCCGold) > 0 Then
 			If _Sleep(8000) Then Return
 		EndIf
 		If QuickMis("BC1", $g_sImgCCRaid, 360, 450, 500, 500) Then
@@ -110,7 +122,7 @@ Func ClanCapitalReport($SetLog = True)
 		EndIf
 		;If Number($iAttack) > 0 Then NotifyPushToTelegram($g_sProfileCurrentName & " have " & $iAttack & " Available attack on Capital Raid Weekend")
 	EndIf
-	
+
 	If $g_bChkStartWeekendRaid Then StartRaidWeekend()
 EndFunc
 
@@ -119,7 +131,7 @@ Func StartRaidWeekend()
 		SetDebugLog("ClanCapital: Found Start Raid Weekend Button")
 		Click(800, 620) ;Click start Raid Button
 		Local $bWindowOpened = False
-		For $i = 1 To 5 
+		For $i = 1 To 5
 			_Sleep(1000)
 			SetDebugLog("Waiting for Start Raid Window #" & $i, $COLOR_ACTION)
 			If QuickMis("BC1", $g_sImgGeneralCloseButton, 645, 255, 700, 310 ) Then
@@ -127,7 +139,7 @@ Func StartRaidWeekend()
 				ExitLoop
 			EndIf
 		Next
-		If Not $bWindowOpened Then 
+		If Not $bWindowOpened Then
 			ClickAway("Right")
 			Return
 		EndIf
@@ -150,7 +162,7 @@ EndFunc
 
 Func OpenForgeWindow()
 	Local $bRet = False
-	If QuickMIS("BC1", $g_sImgForgeHouse, 260, 560, 460, 660) Then 
+	If QuickMIS("BC1", $g_sImgForgeHouse, 260, 560, 460, 660) Then
 		Click($g_iQuickMISX + 10, $g_iQuickMISY + 10)
 		For $i = 1 To 5
 			SetDebugLog("Waiting for Forge Window #" & $i, $COLOR_ACTION)
@@ -185,13 +197,13 @@ Func RemoveDupCNX(ByRef $arr, $sortBy = 1, $distance = 10)
 	For $i = 0 To UBound($arr) - 1
 		SetDebugLog("SortBy:" & $arr[$i][$sortBy])
 		SetDebugLog("tmpCoord:" & $tmpCoord)
-		If $arr[$i][$sortBy] >= $tmpCoord + $distance Then 
+		If $arr[$i][$sortBy] >= $tmpCoord + $distance Then
 			_ArrayAdd($atmparray, $arr[$i][0] & "|" & $arr[$i][1] & "|" & $arr[$i][2] & "|" & $arr[$i][3])
 			$tmpCoord = $arr[$i][$sortBy] + $distance
 		Else
 			SetDebugLog("Skip this dup: " & $arr[$i][$sortBy] & " is near " & $tmpCoord, $COLOR_INFO)
 			ContinueLoop
-		EndIf		
+		EndIf
 	Next
 	$arr = $atmparray
 	SetDebugLog(_ArrayToString($arr))
@@ -203,7 +215,7 @@ Func ForgeClanCapitalGold($bTest = False)
 	Local $bForgeEnabled = False
 	Local $iBuilderToUse = $g_iCmbForgeBuilder + 1
 	For $i In $aForgeType ;check for every option enabled
-		If $i = True Then 
+		If $i = True Then
 			$bForgeEnabled = True
 			ExitLoop
 		EndIf
@@ -220,19 +232,19 @@ Func ForgeClanCapitalGold($bTest = False)
 		SetLog("Not Have builder, exiting", $COLOR_INFO)
 		Return
 	EndIf
-	
+
 	Local $iCurrentGold = getResourcesMainScreen(695, 23) ;get current Gold
 	Local $iCurrentElix = getResourcesMainScreen(695, 74) ;get current Elixir
 	Local $iCurrentDE = getResourcesMainScreen(720, 120) ;get current Dark Elixir
 	If Not $g_bRunState Then Return
-	If Not OpenForgeWindow() Then 
+	If Not OpenForgeWindow() Then
 		SetLog("Forge Window not Opened, exiting", $COLOR_ACTION)
 		Return
 	EndIf
-	
+
 	If $iBuilderToUse > 3 Then ClickDrag(720, 315, 600, 315)
 	If _Sleep(1000) Then Return
-	
+
 	If Not $g_bRunState Then Return
 	SetLog("Number of Enabled builder for Forge = " & $iBuilderToUse, $COLOR_ACTION)
 	If ($g_iTownHallLevel = 13 Or $g_iTownHallLevel = 12) And $iBuilderToUse = 4 Then
@@ -245,7 +257,7 @@ Func ForgeClanCapitalGold($bTest = False)
 		SetLog("TH Level Allows Only 1 Builder For Forge", $COLOR_DEBUG)
 		$iBuilderToUse = 1
 	EndIf
-	
+
 	Local $iBuilder = 0
 	Local $iActiveForge = QuickMIS("CNX", $g_sImgActiveForge, 120, 230, 740, 450) ;check if we have forge in progress
 	RemoveDupCNX($iActiveForge)
@@ -258,7 +270,7 @@ Func ForgeClanCapitalGold($bTest = False)
 		EndIf
 		$iBuilder = UBound($iActiveForge)
 	EndIf
-	
+
 	SetLog("Already active builder Forging = " & $iBuilder, $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	Local $iBuilderToAssign = Number($iBuilderToUse) - Number($iBuilder)
@@ -272,7 +284,7 @@ Func ForgeClanCapitalGold($bTest = False)
 			SetDebugLog("Proceed with builder #" & $j)
 			Click($aCraft[$j-1][1], $aCraft[$j-1][2])
 			_Sleep(500)
-			If Not WaitStartCraftWindow() Then 
+			If Not WaitStartCraftWindow() Then
 				ClickAway("Right")
 				Return
 			EndIf
@@ -283,7 +295,7 @@ Func ForgeClanCapitalGold($bTest = False)
 					_Sleep(1000)
 					Local $cost = getOcrAndCapture("coc-forge", 240, 350, 160, 25, True)
 					Local $gain = getOcrAndCapture("coc-forge", 528, 365, 100, 25, True)
-					If $cost = "" Then 
+					If $cost = "" Then
 						SetLog("Not enough resource to forge with" & $aResource[$i][0], $COLOR_INFO)
 						ContinueLoop
 					EndIf
@@ -297,12 +309,12 @@ Func ForgeClanCapitalGold($bTest = False)
 							If Number($cost) + 10000 <= $iCurrentDE Then $bSafeToForge = True
 					EndSwitch
 					SetLog("Forge Cost:" & $cost & ", gain Capital Gold:" & $gain, $COLOR_ACTION)
-					If Not $bSafeToForge Then 
+					If Not $bSafeToForge Then
 						SetLog("Not safe to forge with" & $aResource[$i][0] & ", not enough resource to save", $COLOR_INFO)
 						ContinueLoop
 					EndIf
-					
-					If Not $bTest Then 
+
+					If Not $bTest Then
 						Click(430, 450)
 						SetLog("Succes Forge with " & $aResource[$i][0] & ", will gain " & $gain & " Capital Gold", $COLOR_SUCCESS)
 						_Sleep(1000)
@@ -323,7 +335,7 @@ EndFunc
 
 Func SwitchToClanCapital($bTest = False)
 	Local $bRet = False
-	If QuickMIS("BC1", $g_sImgAirShip, 200, 520, 400, 660) Then 
+	If QuickMIS("BC1", $g_sImgAirShip, 200, 520, 400, 660) Then
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Click AirShip at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_ACTION)
 		For $i = 1 To 10
@@ -342,11 +354,11 @@ Func SwitchToClanCapital($bTest = False)
 			_Sleep(800)
 		Next
 	EndIf
-	If Not $bRet Then 
+	If Not $bRet Then
 		ClickAway("Right")
 		SwitchToMainVillage("SwitchToClanCapital Failed")
 	EndIf
-	If $bRet Then ClanCapitalReport() 
+	If $bRet Then ClanCapitalReport()
 	Return $bRet
 EndFunc
 
@@ -354,19 +366,20 @@ Func SwitchToCapitalMain()
 	Local $bRet = False
 	SetDebugLog("Going to Clan Capital", $COLOR_ACTION)
 	For $i = 1 To 5
-		If QuickMIS("BC1", $g_sImgCCMap, 15, 610, 115, 670) Then 
-			If $g_iQuickMISName = "MapButton" Then 
+		If QuickMIS("BC1", $g_sImgCCMap, 15, 610, 115, 670) Then
+			If $g_iQuickMISName = "MapButton" Then
 				Click(60, 610) ;Click Map
 				_Sleep(3000)
 			EndIf
 		EndIf
-		If QuickMIS("BC1", $g_sImgCCMap, 15, 610, 115, 670) Then 
-			If $g_iQuickMISName = "ReturnHome" Then 
+		If QuickMIS("BC1", $g_sImgCCMap, 15, 610, 115, 670) Then
+			If $g_iQuickMISName = "ReturnHome" Then
 				SetDebugLog("We are on Clan Capital", $COLOR_ACTION)
 				$bRet = True
 				ExitLoop
 			EndIf
 		EndIf
+		If _Sleep(500) Then Return
 	Next
 	Return $bRet
 EndFunc
@@ -386,7 +399,7 @@ Func SwitchToMainVillage($caller = "Default")
 			SwitchToCapitalMain()
 		EndIf
 		_Sleep(800)
-		If isOnMainVillage() Then 
+		If isOnMainVillage() Then
 			$bRet = True
 			ExitLoop
 		EndIf
@@ -406,7 +419,7 @@ Func WaitForMap($sMapName = "Capital Peak")
 	Local $Text = getOcrAndCapture("coc-mapname", $g_iQuickMISX, $g_iQuickMISY - 12, 230, 35)
 	SetDebugLog("$Text: " & $Text)
 	For $i In $aMapName
-		If StringInStr($Text, $i) Then 
+		If StringInStr($Text, $i) Then
 			SetDebugLog("Match with: " & $i)
 			$bRet = True
 			SetLog("We are on " & $sMapName, $COLOR_INFO)
@@ -421,7 +434,7 @@ Func WaitForMap($sMapName = "Capital Peak")
 			For $z = 0 To UBound($ccMap) - 1
 				$mapName = String($ccMap[$z][0])
 				For $i In $aMapName
-					If StringInStr($mapName, $i) Then 
+					If StringInStr($mapName, $i) Then
 						SetDebugLog("Match with: " & $i)
 						$bRet = True
 						SetLog("We are on " & $sMapName, $COLOR_INFO)
@@ -440,15 +453,15 @@ Func IsCCBuilderMenuOpen()
 	Local $aBorder1[4] = [400, 73, 0xC0C9D3, 20]
 	Local $aBorder2[4] = [400, 73, 0xBEBFBC, 20]
 	Local $aBorder3[4] = [400, 73, 0xFFFFFF, 20]
-	
+
 	Local $sTriangle
-	If _CheckPixel($aBorder0, True) Or _CheckPixel($aBorder1, True) Or _CheckPixel($aBorder2, True) Or _CheckPixel($aBorder3, True) Then 
+	If _CheckPixel($aBorder0, True) Or _CheckPixel($aBorder1, True) Or _CheckPixel($aBorder2, True) Or _CheckPixel($aBorder3, True) Then
 		;SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder0[0], $aBorder0[1], True), $COLOR_ACTION)
-		$bRet = True ;got correct color for border 
+		$bRet = True ;got correct color for border
 	Else
 		SetDebugLog("Border Color Not Matched: " & _GetPixelColor($aBorder0[0], $aBorder0[1], True), $COLOR_ACTION)
 	EndIf
-	
+
 	If Not $bRet Then ;lets re check if border color check not success
 		$sTriangle = getOcrAndCapture("coc-buildermenu-cc", 350, 55, 200, 25)
 		SetDebugLog("$sTriangle: " & $sTriangle)
@@ -462,7 +475,7 @@ Func ClickCCBuilder()
 	Local $bRet = False
 	If IsCCBuilderMenuOpen() Then $bRet = True
 	If Not $bRet Then
-		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then 
+		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			_Sleep(1000)
 			If IsCCBuilderMenuOpen() Then $bRet = True
@@ -479,16 +492,16 @@ Func FindCCExistingUpgrade()
 		For $i = 0 To UBound($aUpgrade) - 1
 			$name = getCCBuildingName($aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 8)
 			If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
-				If StringInStr($name[0], "Wall") Then 
+				If StringInStr($name[0], "Wall") Then
 						SetLog("Upgrade for Wall Ignored, Skip!!", $COLOR_ACTION)
-						ContinueLoop ;skip this upgrade, looking next 
+						ContinueLoop ;skip this upgrade, looking next
 				EndIf
 			EndIf
 			If $g_bChkAutoUpgradeCCIgnore Then ; Filter for decoration
 				For $y In $aCCBuildingIgnore
-					If StringInStr($name[0], $y) Then 
+					If StringInStr($name[0], $y) Then
 						SetLog("Upgrade for " & $name[0] & " Ignored, Skip!!", $COLOR_ACTION)
-						ContinueLoop 2 ;skip this upgrade, looking next 
+						ContinueLoop 2 ;skip this upgrade, looking next
 					EndIf
 				Next
 			EndIf
@@ -510,25 +523,25 @@ Func FindCCSuggestedUpgrade()
 			Else
 				$name = getCCBuildingNameBlue($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 12)
 			EndIf
-			
-			If $g_bChkAutoUpgradeCCIgnore Then 
+
+			If $g_bChkAutoUpgradeCCIgnore Then
 				If QuickMIS("BC1", $g_sImgDecoration, $aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 10, $aUpgrade[$i][1], $aUpgrade[$i][2] + 13) Then
 					SetLog("Decoration detected, Skip!!", $COLOR_ACTION)
 					ContinueLoop ;skip this upgrade, looking next
 				EndIf
 			EndIf
-			
+
 			If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
-				If StringInStr($name[0], "Wall") Then 
+				If StringInStr($name[0], "Wall") Then
 					SetLog("Upgrade for Wall Ignored, Skip!!", $COLOR_ACTION)
-					ContinueLoop ;skip this upgrade, looking next 
+					ContinueLoop ;skip this upgrade, looking next
 				EndIf
 			EndIf
-			If $g_bChkAutoUpgradeCCIgnore Then 
+			If $g_bChkAutoUpgradeCCIgnore Then
 				For $y In $aCCBuildingIgnore
-					If StringInStr($name[0], $y) Then 
+					If StringInStr($name[0], $y) Then
 						SetLog("Upgrade for " & $name[0] & " Ignored, Skip!!", $COLOR_ACTION)
-						ContinueLoop 2 ;skip this upgrade, looking next 
+						ContinueLoop 2 ;skip this upgrade, looking next
 					EndIf
 				Next
 			EndIf
@@ -539,9 +552,9 @@ Func FindCCSuggestedUpgrade()
 EndFunc
 
 Func SkipChat($WaitFor = "UpgradeButton")
-	For $y = 1 To 10 
+	For $y = 1 To 10
 		If Not $g_bRunState Then Return
-		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then			
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then
 			Switch $WaitFor
 				Case "UpgradeButton"
 					If QuickMIS("BC1", $g_sImgCCUpgradeButton, 300, 520, 600, 660) Then
@@ -558,12 +571,12 @@ Func SkipChat($WaitFor = "UpgradeButton")
 			SetLog("Skip chat #" & $y, $COLOR_INFO)
 			_Sleep(5000)
 		Else
-			If _GetPixelColor(340, 484, 1) = "FFFFFF" Then 
+			If _GetPixelColor(340, 484, 1) = "FFFFFF" Then
 				Click(340, 484) ;check if we have white chat balloon tips, click it
 				SetLog("Skip chat #" & $y, $COLOR_INFO)
 				_Sleep(5000)
 			EndIf
-			If $y > 5 Then 
+			If $y > 5 Then
 				SetLog("Seem's there is no tutorial chat, continue", $COLOR_INFO)
 				ExitLoop
 			EndIf
@@ -608,22 +621,33 @@ EndFunc
 
 Func AutoUpgradeCC($bTest = False)
 	If Not $g_bChkEnableAutoUpgradeCC Then Return
+	If $g_bChkEnableMinGoldAUCC And $g_iLootCCGold < $g_iMinCCGoldToUpgrade And $g_iLootCCGold > 0 Then
+		SetLog("CCGold = " & $g_iLootCCGold & ", < Minimum:" & $g_iMinCCGoldToUpgrade & ", skip autoupgradeCC", $COLOR_INFO)
+		Return
+	EndIf
 	Local $aRet[3] = [False, 0, 0]
 	SetLog("Checking Clan Capital AutoUpgrade", $COLOR_INFO)
 	ZoomOut() ;ZoomOut first
 	If Not SwitchToClanCapital($bTest) Then Return
 	_Sleep(1000)
-	If Number($g_iLootCCGold) = 0 And Not $bTest Then 
+	If Number($g_iLootCCGold) = 0 And Not $bTest Then
 		SetLog("No Capital Gold to spend to Contribute", $COLOR_INFO)
 		SwitchToMainVillage("Cannot Contribute")
 		Return
 	EndIf
+
+	If $g_bChkEnableMinGoldAUCC And $g_iLootCCGold < $g_iMinCCGoldToUpgrade And $g_iLootCCGold > 0 Then
+		SetLog("CCGold = " & $g_iLootCCGold & ", < Minimum:" & $g_iMinCCGoldToUpgrade & ", skip autoupgradeCC", $COLOR_INFO)
+		SwitchToMainVillage("MinCCGoldToUpgrade")
+		Return
+	EndIf
+
 	If Not $g_bRunState Then Return
 	Local $bUpgradeFound = True ;lets assume there is upgrade in progress exists
-	If ClickCCBuilder() Then 
+	If ClickCCBuilder() Then
 		_Sleep(1000)
 		Local $Text = getOcrAndCapture("coc-buildermenu-capital", 345, 81, 100, 25)
-		If StringInStr($Text, "No") Then 
+		If StringInStr($Text, "No") Then
 			SetLog("No Upgrades in progress", $COLOR_INFO)
 			$bUpgradeFound = False ;builder menu opened but no upgrades on progress exists
 		EndIf
@@ -633,7 +657,7 @@ Func AutoUpgradeCC($bTest = False)
 		Return
 	EndIf
 	_Sleep(500)
-	If $bUpgradeFound Then 
+	If $bUpgradeFound Then
 		SetLog("Checking Upgrade From Capital Map", $COLOR_INFO)
 		Local $aUpgrade = FindCCExistingUpgrade() ;Find on Capital Map, should only find currently on progress building
 		If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
@@ -642,7 +666,7 @@ Func AutoUpgradeCC($bTest = False)
 				Click($aUpgrade[$i][1], $aUpgrade[$i][2]) ;click building on builder menu list
 				_Sleep(2000)
 				$aRet = WaitUpgradeButtonCC()
-				If Not $aRet[0] Then 
+				If Not $aRet[0] Then
 					SetLog("Upgrade Button Not Found", $COLOR_ERROR)
 					SwitchToMainVillage("No Upgrade Button")
 					Return
@@ -655,13 +679,13 @@ Func AutoUpgradeCC($bTest = False)
 					Local $BuildingName = getOcrAndCapture("coc-build", 200, 494, 400, 30)
 					Click($aRet[1], $aRet[2]) ;click upgrade Button
 					_Sleep(1000)
-					If Not WaitUpgradeWindowCC() Then 
+					If Not WaitUpgradeWindowCC() Then
 						SwitchToMainVillage("No Upgrade Window")
 						Return
 					EndIf
 					_Sleep(1000)
 					Local $cost = getOcrAndCapture("coc-ms", 590, 527, 160, 25)
-					If Not $bTest Then 
+					If Not $bTest Then
 						Click(640, 520) ;Click Contribute
 						AutoUpgradeCCLog($BuildingName, $cost)
 						ClickAway("Right")
@@ -679,18 +703,18 @@ Func AutoUpgradeCC($bTest = False)
 			SwitchToCapitalMain()
 		EndIf
 	EndIf
-	
+
 	ClickAway("Right") ;close builder menu
 	ClanCapitalReport(False)
 	;Upgrade through district map
-	Local $aMapCoord[7][3] = [["Golem Quarry", 185, 590], ["Dragon Cliffs", 630, 465], ["Builder's Workshop", 490, 525], ["Balloon Lagoon", 300, 490], _ 
+	Local $aMapCoord[7][3] = [["Golem Quarry", 185, 590], ["Dragon Cliffs", 630, 465], ["Builder's Workshop", 490, 525], ["Balloon Lagoon", 300, 490], _
 									["Wizard Valley", 410, 400], ["Barbarian Camp", 530, 340], ["Capital Peak", 400, 225]]
 	While $g_iLootCCGold > 0
 		If Number($g_iLootCCGold) > 0 Then
 			SetLog("Checking Upgrade From District Map", $COLOR_INFO)
 			For $i = 0 To UBound($aMapCoord) - 1
 				SetLog("[" & $i & "] Checking " & $aMapCoord[$i][0], $COLOR_ACTION)
-				If QuickMIS("BC1", $g_sImgLock, $aMapCoord[$i][1], $aMapCoord[$i][2] - 120, $aMapCoord[$i][1] + 100, $aMapCoord[$i][2]) Then 
+				If QuickMIS("BC1", $g_sImgLock, $aMapCoord[$i][1], $aMapCoord[$i][2] - 120, $aMapCoord[$i][1] + 100, $aMapCoord[$i][2]) Then
 					SetLog($aMapCoord[$i][0] & " is Locked", $COLOR_INFO)
 					ContinueLoop
 				Else
@@ -698,7 +722,7 @@ Func AutoUpgradeCC($bTest = False)
 				EndIf
 				SetLog("Go to " & $aMapCoord[$i][0] & " to Check Upgrades", $COLOR_ACTION)
 				Click($aMapCoord[$i][1], $aMapCoord[$i][2])
-				If Not WaitForMap($aMapCoord[$i][0]) Then 
+				If Not WaitForMap($aMapCoord[$i][0]) Then
 					SetLog("Going to " & $aMapCoord[$i][0] & " Failed", $COLOR_ERROR)
 					SwitchToMainVillage("WaitforMap Failed")
 					Return
@@ -710,7 +734,7 @@ Func AutoUpgradeCC($bTest = False)
 						SetLog("CCSuggestedUpgrade: " & $aUpgrade[$j][0])
 						Click($aUpgrade[$j][1], $aUpgrade[$j][2]) ;click building on builder menu list
 						$aRet = WaitUpgradeButtonCC()
-						If Not $aRet[0] Then 
+						If Not $aRet[0] Then
 							SetLog("Upgrade Button Not Found", $COLOR_ERROR)
 							SwitchToMainVillage()
 							Return
@@ -723,12 +747,12 @@ Func AutoUpgradeCC($bTest = False)
 							Local $BuildingName = getOcrAndCapture("coc-build", 200, 494, 400, 30)
 							Click($aRet[1], $aRet[2]) ;click upgrade Button
 							_Sleep(1000)
-							If Not WaitUpgradeWindowCC() Then 
+							If Not WaitUpgradeWindowCC() Then
 								SwitchToMainVillage("No Upgrade Window")
 								Return
 							EndIf
 							Local $cost = getOcrAndCapture("coc-ms", 590, 527, 160, 25)
-							If Not $bTest Then 
+							If Not $bTest Then
 								Click(640, 520) ;Click Contribute
 								AutoUpgradeCCLog($BuildingName, $cost)
 								ClickAway("Right")
@@ -742,7 +766,7 @@ Func AutoUpgradeCC($bTest = False)
 							_Sleep(1000)
 						EndIf
 						ClanCapitalReport(False)
-						If Number($g_iLootCCGold) = 0 Then 
+						If Number($g_iLootCCGold) = 0 Then
 							SwitchToMainVillage("CapitalGold=0")
 							Return
 						EndIf
@@ -759,28 +783,28 @@ Func AutoUpgradeCC($bTest = False)
 						EndIf
 					Next
 				EndIf
-				SwitchToCapitalMain() ;back to capital main 
+				SwitchToCapitalMain() ;back to capital main
 			Next
 		EndIf
 		ClanCapitalReport(False)
 	WEnd
 	SwitchToMainVillage("Back to Main") ;last call, we should go back to main screen
-EndFunc 
+EndFunc
 
 Func IsUpgradeCCIgnore()
 	Local $bRet = False
 	Local $UpgradeName = getOcrAndCapture("coc-build", 200, 494, 400, 30)
 	If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
-		If StringInStr($UpgradeName, "Wall") Then 
-				SetDebugLog($UpgradeName & " Match with: Wall") 
+		If StringInStr($UpgradeName, "Wall") Then
+				SetDebugLog($UpgradeName & " Match with: Wall")
 				SetLog("Upgrade for wall Ignored, Skip!!", $COLOR_ACTION)
 				$bRet = True
 		EndIf
 	EndIf
-	If $g_bChkAutoUpgradeCCIgnore And Not $bRet Then 
+	If $g_bChkAutoUpgradeCCIgnore And Not $bRet Then
 		For $y In $aCCBuildingIgnore
-			If StringInStr($UpgradeName, $y) Then 
-				SetDebugLog($UpgradeName & " Match with: " & $y) 
+			If StringInStr($UpgradeName, $y) Then
+				SetDebugLog($UpgradeName & " Match with: " & $y)
 				SetLog("Upgrade for " & $y & " Ignored, Skip!!", $COLOR_ACTION)
 				$bRet = True
 				ExitLoop

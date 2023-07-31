@@ -15,26 +15,26 @@
 ; ===============================================================================================================================
 
 
-Func isInsideDiamondXY($Coordx, $Coordy)
-	If $Coordx < 80 Then Return False
+Func isInsideDiamondXY($Coordx, $Coordy, $bOuter = False)
+	If $Coordx < 73 Then Return False
 	If $Coordy < 73 Then Return False
-	Local $aCoords = [$Coordx, $Coordy]
-	Return isInsideDiamond($aCoords)
+	Local $aCoords[2] = [$Coordx, $Coordy]
+	Return isInsideDiamond($aCoords, $bOuter)
 EndFunc   ;==>isInsideDiamondXY
 
-Func isInsideDiamond($aCoords)
+Func isInsideDiamond($aCoords, $bOuter = False)
 	Local $x = $aCoords[0], $y = $aCoords[1], $xD, $yD
 	Local $Left, $Right, $Top, $Bottom
-    Local $iIndex = _ArraySearch($g_aVillageRefSize, $g_sCurrentScenery) ;get the diamond shape based on reference village
-	If $g_bDebugSetLog Then SetDebugLog("[isInsideDiamond] " & _ArrayToString($aCoords))
-    If $iIndex <> -1 Then 
-        $Left = $g_aVillageRefSize[$iIndex][3]
-        $Right = $g_aVillageRefSize[$iIndex][4]
-        $Top = $g_aVillageRefSize[$iIndex][5]
-        $Bottom = $g_aVillageRefSize[$iIndex][6]
+    If $bOuter Then 
+        $Left = $OuterDiamondLeft
+        $Right = $OuterDiamondRight
+        $Top = $OuterDiamondTop
+        $Bottom = $OuterDiamondBottom
     Else
-        SetLog("[isInsideDiamond] Reference Size no match", $COLOR_ERROR)
-        Return False
+		$Left = $InnerDiamondLeft
+        $Right = $InnerDiamondRight
+        $Top = $InnerDiamondTop
+        $Bottom = $InnerDiamondBottom
     EndIf
 	
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
@@ -62,7 +62,7 @@ Func isInsideDiamond($aCoords)
 	ConvertToVillagePos($xD, $yD)
 	$Right = $xD
 
-	;SetDebugLog("isInsideDiamond coordinates updated by offset: " & $Left & ", " & $Right & ", " & $Top & ", " & $Bottom, $COLOR_DEBUG)
+	;If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond coordinates updated by offset: " & $Left & ", " & $Right & ", " & $Top & ", " & $Bottom, $COLOR_DEBUG)
 
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
 	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
@@ -82,10 +82,10 @@ Func isInsideDiamond($aCoords)
 			SetDebugLog("Coordinate Inside Village, but Exclude GEMS")
 			Return False
 		EndIf
-		;SetDebugLog("Coordinate Inside Village", $COLOR_DEBUG)
+		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_INFO)
 		Return True ; Inside Village
 	Else
-		;SetDebugLog("Coordinate Outside Village")
+		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_INFO)
 		Return False ; Outside Village
 	EndIf
 

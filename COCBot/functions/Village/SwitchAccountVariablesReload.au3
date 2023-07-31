@@ -70,12 +70,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 	Static $abNotNeedAllTime0 = $aiTrue
 	Static $abNotNeedAllTime1 = $aiTrue
 	
-	; xbebenk
-	$g_iSaveGoldWall = 0 ;reset
-	$g_iSaveElixWall = 0 ;reset
-	$g_hCoolDownTimer = 0
-	$g_bIsCGCoolDownTime = False
-
 	; First time switch account
 	Switch $sType
 		Case "Reset"
@@ -159,8 +153,8 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$aiFirstRun[$iAccount] = $g_iFirstRun
 
 			; Multi-Stats
-			$aiSkippedVillageCount[$iAccount] = $g_iSkippedVillageCount
-			$aiAttackedCount[$iAccount] = $g_aiAttackedCount
+			;$aiSkippedVillageCount[$iAccount] = $g_iSkippedVillageCount
+			;$aiAttackedCount[$iAccount] = $g_aiAttackedCount
 
 			; Gain Stats
 			For $i = 0 To 3
@@ -171,7 +165,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			Next
 
 			; Misc Stats
-			$aiNbrOfOoS[$iAccount] = $g_iNbrOfOoS
+			;$aiNbrOfOoS[$iAccount] = $g_iNbrOfOoS
 			$aiDroppedTrophyCount[$iAccount] = $g_iDroppedTrophyCount
 			$aiSearchCost[$iAccount] = $g_iSearchCost
 			$aiTrainCostElixir[$iAccount] = $g_iTrainCostElixir
@@ -243,8 +237,8 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$g_iFirstRun = $aiFirstRun[$iAccount]
 
 			; Multi-Stats
-			$g_iSkippedVillageCount = $aiSkippedVillageCount[$iAccount]
-			$g_aiAttackedCount = $aiAttackedCount[$iAccount]
+			;$g_iSkippedVillageCount = $aiSkippedVillageCount[$iAccount]
+			;$g_aiAttackedCount = $aiAttackedCount[$iAccount]
 
 			; Gain Stats
 			For $i = 0 To 3
@@ -255,7 +249,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			Next
 
 			; Misc Stats
-			$g_iNbrOfOoS = $aiNbrOfOoS[$iAccount]
+			;$g_iNbrOfOoS = $aiNbrOfOoS[$iAccount]
 			$g_iDroppedTrophyCount = $aiDroppedTrophyCount[$iAccount]
 			$g_iSearchCost = $aiSearchCost[$iAccount]
 			$g_iTrainCostElixir = $aiTrainCostElixir[$iAccount]
@@ -326,6 +320,14 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 
 			; Reset the log
 			$g_hLogFile = 0
+			
+			; xbebenk
+			$g_iSaveGoldWall = 0 ;reset
+			$g_iSaveElixWall = 0 ;reset
+			$g_iLootCCGold = 0
+			$g_bIsCGCoolDownTime = False
+			$g_bIs6thBuilderUnlocked = False
+			$g_bskipBBroutine = False
 
 		Case "UpdateStats"
 			For $i = 0 To 3

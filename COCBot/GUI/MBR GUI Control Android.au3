@@ -202,10 +202,6 @@ Func getAllEmulators()
 				Setlog("Memu v" & $__MEmu_Version & " not fully supported on this Mod", $COLOR_WARNING)
 				Setlog("Please upgrade to Memu version 7.2.9 or later", $COLOR_WARNING)
 			EndIf
-			If StringInStr($aEmulator[$i], "nox") Then
-				Setlog("Nox emulator never tested on this Mod", $COLOR_WARNING)
-				Setlog("Consider to switch to Bluestacks2 or BlueStacks5", $COLOR_WARNING)
-			EndIf
 		Next
 	Else
 		Setlog("No Emulator found in your machine")
@@ -238,7 +234,7 @@ Func getAllEmulatorsInstances()
 			$sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks\Engine
 		Case "BlueStacks5"
 			Local $VMsBlueStacks = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "DataDir")
-			$sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks\Engine
+			$sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks_nxt\Engine\
 		Case "Nox"
 			$sEmulatorPath = GetNoxPath() & "\BignoxVMS"  ; C:\Program Files\Nox\bin\BignoxVMS
 		Case "MEmu"
@@ -253,10 +249,15 @@ Func getAllEmulatorsInstances()
 	; BS Multi Instance
 	Local $sBlueStacksFolder = ""
 	If $Emulator = "BlueStacks2" Then $sBlueStacksFolder = "Android"
-	If $Emulator = "BlueStacks5" Then $sBlueStacksFolder = "Nougat32"
+	If $Emulator = "BlueStacks5" Then $sBlueStacksFolder = "Pie"
 
 	; Getting all VM Folders
 	Local $aEmulatorFolders = _FileListToArray($sEmulatorPath, $sBlueStacksFolder & "*", $FLTA_FOLDERS)
+	;If $Emulator = "BlueStacks5" Then
+	;	Local $PieFolders = _FileListToArray($sEmulatorPath, "Pie*", $FLTA_FOLDERS)
+	;	_ArrayDelete($PieFolders, 0)
+	;	_ArrayConcatenate($aEmulatorFolders, $PieFolders)
+	;EndIf
 
 	If @error = 1 Then
 		Setlog($Emulator & " -- Path was invalid. " & $sEmulatorPath)

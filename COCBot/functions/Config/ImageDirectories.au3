@@ -25,19 +25,20 @@ Global Const $g_sImgAnotherDevice = @ScriptDir & "\imgxml\other\Device[[Android]
 Global Const $g_sImgCocStopped = @ScriptDir & "\imgxml\other\CocStopped*"
 Global Const $g_sImgCocReconnecting = @ScriptDir & "\imgxml\other\CocReconnecting\"
 Global Const $g_sImgAppRateNever = @ScriptDir & "\imgxml\other\RateNever[[Android]]*"
-Global Const $g_sImgGfxError = @ScriptDir & "\imgxml\other\GfxError*"
 Global Const $g_sImgError = @ScriptDir & "\imgxml\other\Error[[Android]]*"
 Global Const $g_sImgOutOfSync = @ScriptDir & "\imgxml\other\Oos[[Android]]*"
 Global Const $g_sImgConnectionLost = @ScriptDir & "\imgxml\other\ConnectionLost[[Android]]*"
 Global Const $g_sImgMaintenance = @ScriptDir & "\imgxml\other\Maintenance*"
 Global Const $G_sImgImportantNotice = @ScriptDir & "\imgxml\other\ImportantNotice[[Android]]*"
-Global Const $g_sImgOptUpdateCoC = @ScriptDir & "\imgxml\other\OptUpdateCoC*"
+Global Const $g_sImgUpdateCoC = @ScriptDir & "\imgxml\other\UpdateCoC*"
 #EndRegion
 
 #Region Main Village
 Global $g_sImgCollectResources = @ScriptDir & "\imgxml\Resources\Collect"
 Global $g_sImgCollectLootCart = @ScriptDir & "\imgxml\Resources\LootCart*"
 Global $g_sImgTreasuryFull = @ScriptDir & "\imgxml\Resources\Treasury"
+Global $g_sImgShield = @ScriptDir & "\imgxml\Resources\Shield\"
+Global $g_sImgPetHouse = @ScriptDir & "\imgxml\Buildings\PetHouse\"
 Global $g_sImgClanCastle = @ScriptDir & "\imgxml\Buildings\ClanCastle"
 Global $g_sImgLaboratory = @ScriptDir & "\imgxml\Buildings\Laboratory\"
 Global $g_sImgBoat = @ScriptDir & "\imgxml\Boat\Main\"
@@ -46,8 +47,6 @@ Global $g_sImgZoomOutHelper = @ScriptDir & "\imgxml\village\NormalVillage\ZoomOu
 Global $g_sImgCheckWallDir = @ScriptDir & "\imgxml\Walls"
 Global $g_sImgClearTombs = @ScriptDir & "\imgxml\Resources\Tombs"
 Global $g_sImgCleanYard = @ScriptDir & "\imgxml\Resources\Obstacles"
-Global $g_sImgCleanYardSnow = @ScriptDir & "\imgxml\Obstacles_Snow"
-Global $sImgSnowTheme = @ScriptDir & "\imgxml\SnowTheme\"
 Global $g_sImgGemBox = @ScriptDir & "\imgxml\Resources\GemBox"
 Global $g_sImgAchievementsMainScreen = @ScriptDir & "\imgxml\AchievementRewards\MainScreen*"
 Global $g_sImgAchievementsMyProfile = @ScriptDir & "\imgxml\AchievementRewards\MyProfile*"
@@ -65,6 +64,7 @@ Global $g_sImgResIcon = @ScriptDir & "\imgxml\Research\ResIcon\"
 Global $g_sImgBooks = @ScriptDir & "\imgxml\Research\Books\"
 Global $g_sImgUpgradeWallElix = @ScriptDir & "\imgxml\imglocbuttons\WallElix*.xml"
 Global $g_sImgUpgradeWallGold = @ScriptDir & "\imgxml\imglocbuttons\WallGold*.xml"
+Global $g_sImgInfo = @ScriptDir & "\imgxml\Resources\Info\"
 #EndRegion
 
 #Region Clan Capital
@@ -93,12 +93,12 @@ Global $g_sImgBoostTroopsClock = @ScriptDir & "\imgxml\SuperTroops\Clock\"
 #EndRegion
 
 #Region Builder Base
-Global $g_sImgCollectResourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect"
+Global $g_sImgCollectResourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\Collect\"
 Global $g_sImgBBZoomOutHelper = @ScriptDir & "\imgxml\village\BuilderBase\ZoomOutHelper\"
 Global $g_sImgBoatBB = @ScriptDir & "\imgxml\Boat\BB\"
 Global $g_sImgZoomOutDirBB = @ScriptDir & "\imgxml\village\BuilderBase\"
 Global $g_sImgStartCTBoost = @ScriptDir & "\imgxml\Resources\BuildersBase\ClockTower\ClockTowerAvailable*.xml"
-Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"
+Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB\"
 Global $g_sImgBuilderHall = @ScriptDir & "\imgxml\Resources\BuildersBase\BuilderHall\"
 Global $g_sImgVersusBH = @ScriptDir & "\imgxml\Resources\BuildersBase\BuilderHall\"
 Global $g_sImgMegaTesla = @ScriptDir & "\imgxml\Resources\BuildersBase\MegaTesla\"
@@ -108,22 +108,25 @@ Global $g_sImgStarLabTroops = @ScriptDir & "\imgxml\Resources\BuildersBase\StarL
 Global $g_sImgStarLabNeedUp = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory\NeedUpgrade\"
 Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
 Global $g_sImgisWall = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\isWall\"
+Global $g_sImgBB20 = @ScriptDir & "\imgxml\Resources\BuildersBase\BB20\"
 
-Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBMachReady_0_90.xml"
-Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\BattleMachine\BBBattleMachine_0_90.xml"
-Global $g_sImgOkButton = @ScriptDir & "\imgxml\Attack\BuilderBase\OkayButton"
-Global $g_sImgWatchButton = @ScriptDir & "\imgxml\Attack\BuilderBase\WatchButton"
-Global $g_sImgFillTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\TrainTroop\"
-Global $g_sImgFillCamp = @ScriptDir & "\imgxml\Attack\BuilderBase\TrainTroop\Camp\"
-Global $g_sImgArmyNeedTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\ArmyNeedTrain"
-Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\BBTroops"
-Global $g_sImgBBLootAvail = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\LootAvail_0_90.xml"
-Global $g_sImgBBLoot = @ScriptDir & "\imgxml\Attack\BuilderBase\LootAvail\"
+Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttackBB\BattleMachine"
+Global $g_sImgBBAttackButton = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttackBB\AttackButton"
+Global $g_sImgFillTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttackBB\TrainTroop\"
+Global $g_sImgFillCamp = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttackBB\TrainTroop\Camp\"
+Global $g_sImgBBAttackStart = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackStart\"
+Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBar\"
+Global $g_sImgDirMachineAbility = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBar\MachineAbility\"
+Global $g_sImgDirWallBreakerAbility = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBar\WBAbility\"
+Global $g_sImgBBReturnHome = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\ReturnHome\"
+Global $g_sImgBBAttackBonus = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBonus\"
+Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBar\Machine\"
 
 ; Builder Base Attack
-Global $g_sImgCustomArmyBB = @ScriptDir & "\imgxml\Attack\BuilderBase\ChangeTroops"
+Global $g_sImgChangeTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\ChangeTroops\"
 Global Const $g_sBundleBuilderHall = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\BuilderHall"
-Global Const $g_sBundleDeployPointsBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\DeployPoints\"
+Global Const $g_sImgDirBBRedlinesHZ = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\Redlines\HighZone\"
+Global Const $g_sImgDirBBRedlinesLZ = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\Redlines\LowerZone\"
 Global Const $g_sImgOpponentBuildingsBB = @ScriptDir & "\imgxml\Attack\BuilderBase\Bundles\AttackBuildings\"
 
 #EndRegion
@@ -168,7 +171,6 @@ Global $g_sImgAUpgradeGreenZoneBB = @ScriptDir & "\imgxml\Resources\BuildersBase
 Global $g_sImgBBResourceIcon = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\BBResourceIcon\"
 Global $g_sImgBBUpgradeWindowButton = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Upgrade\UpgradeWindowButton\"
 Global $g_sImgBBGoldButton = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Upgrade\Gold\"
-Global $g_sImgBBWallRotate = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\WallRotate\"
 #EndRegion
 
 #Region Train
@@ -183,6 +185,7 @@ Global $g_sImgDelQueue = @ScriptDir & "\imgxml\Train\Delete\"
 
 #Region Attack
 Global $g_sImgAttackBarDir = @ScriptDir & "\imgxml\AttackBar"
+Global $g_sImgNextButton = @ScriptDir & "\imgxml\Attack\Search\NextButton\"
 Global $g_sImgSwitchSiegeMachine = @ScriptDir & "\imgxml\SwitchSiegeMachines\"
 Global $g_sImgSwitchWardenMode = @ScriptDir & "\imgxml\SwitchWardenMode"
 #EndRegion
@@ -204,7 +207,6 @@ Global $g_sImgSearchDrill = @ScriptDir & "\imgxml\Storages\Drills"
 Global $g_sImgSearchDrillLevel = @ScriptDir & "\imgxml\Storages\Drills\Level"
 Global $g_sImgEasyBuildings = @ScriptDir & "\imgxml\easybuildings"
 Global $g_sImgPrepareLegendLeagueSearch = @ScriptDir & "\imgxml\Attack\Search\LegendLeague"
-Global $g_sImgRetrySearchButton = @ScriptDir & "\imgxml\Resources\Clouds\RetryButton*"
 #EndRegion
 
 #Region SwitchAcc
@@ -237,5 +239,6 @@ Global Const $g_sImgRewardTier  = @ScriptDir & "\imgxml\Resources\ClanGamesImage
 Global Const $g_sImgRewardTile  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\Tile"
 Global Const $g_sImgRewardTileSelected  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\TileSelected"
 Global Const $g_sImgRewardItems  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\Items"
+Global Const $g_sImgRewardItemStorageFull  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\StorageFull"
 Global Const $g_sImgZapChallenges = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Attack\ZapChallenges"
 #EndRegion

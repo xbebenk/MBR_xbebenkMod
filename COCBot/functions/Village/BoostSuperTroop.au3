@@ -41,7 +41,7 @@ Func BoostSuperTroop($bTest = False)
 					Select
 						Case $g_iCmbSuperTroops[$i] = 2 Or $g_iCmbSuperTroops[$i] = 6 Or $g_iCmbSuperTroops[$i] = 10 Or $g_iCmbSuperTroops[$i] = 14 ;second column
 							$iColumnX = $columnStart + (1 * ($picswidth + $picspad))
-						Case $g_iCmbSuperTroops[$i] = 3 Or $g_iCmbSuperTroops[$i] = 7 Or $g_iCmbSuperTroops[$i] = 11 ;third column
+						Case $g_iCmbSuperTroops[$i] = 3 Or $g_iCmbSuperTroops[$i] = 7 Or $g_iCmbSuperTroops[$i] = 11 Or $g_iCmbSuperTroops[$i] = 15  ;third column
 							$iColumnX = $columnStart + (2 * ($picswidth + $picspad))
 						Case $g_iCmbSuperTroops[$i] = 4 Or $g_iCmbSuperTroops[$i] = 8 Or $g_iCmbSuperTroops[$i] = 12 ;fourth column
 							$iColumnX = $columnStart + (3 * ($picswidth + $picspad))
@@ -181,7 +181,7 @@ Func OpenBarrel()
 	$g_bForceUseSuperTroopPotion = False
 	Local $bOpenBarrel = True
 	Local $xBarrel = 0, $yBarrel = 0
-	If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 60, 120, 220, 225) Then
+	If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 60, 120, 220, 260) Then
 		$xBarrel = $g_iQuickMISX
 		$yBarrel = $g_iQuickMISY
 		; Check if is already boosted.

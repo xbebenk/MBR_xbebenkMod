@@ -32,10 +32,8 @@ Func _ZoomOut() ;Zooms out
     ResumeAndroid()
     WinGetAndroidHandle()
 	getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
-	If Not $g_bRunState Then
-		SetDebugLog("Exit ZoomOut, bot not running")
-		Return
-	EndIf
+	If Not $g_bRunState Then Return
+	
 	Local $Result
 	If ($g_iAndroidZoomoutMode = 0 Or $g_iAndroidZoomoutMode = 3) And ($g_bAndroidEmbedded = False Or $g_iAndroidEmbedMode = 1) Then
 		; default zoomout
@@ -157,23 +155,36 @@ Func ZoomOutHelper($caller = "Default")
 EndFunc
 
 Func ZoomOutHelperBB($caller = "Default")
-	Local $x = 0, $y = 0
+	Local $x = 0, $y = 0, $sImage = ""
 	Local $bIsOnBuilderBase = isOnBuilderBase()
 	Local $Dir = "", $aOffset, $bRet = False
+	Local $xyOffsetSwitchBases = 0
+	If $caller = "SwitchBetweenBases" Then $xyOffsetSwitchBases = -40
 	
 	If Not $bIsOnBuilderBase Then Return ;leave if not in mainvillage
 	
-	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "ZoomOutHelper\", 430, 20, 800, 300) Then 
-		$aOffset = StringRegExp($g_iQuickMISName, "BoatSail([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "ZoomOutHelper\", 100, 20, 800, 676) Then 
+		$aOffset = StringRegExp($g_iQuickMISName, "Tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
 			$y = $g_iQuickMISY - $aOffset[2]
+			$sImage = $aOffset[0]
+			
+			If $sImage = "BH" Then 
+				If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 600, 400, 760, 676) Then
+					SetLog("Detected on BuilderBase HighZone, switch to LowerZone", $COLOR_INFO)
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					If _Sleep(3000) Then Return
+					Return True
+				EndIf
+			EndIf
+			
 			SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
-			SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
-			ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+			SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_INFO)
+			ClickDrag(800, 350, 800 - $x + $xyOffsetSwitchBases, 350 - $y - $xyOffsetSwitchBases, 500)
 			$bRet = True
 		Else
-			SetDebugLog("[" & $caller & "] Bad BoatSail ImageName!")
+			SetDebugLog("[" & $caller & "] Bad TreeBL ImageName!")
 			Return
 		EndIf
 	EndIf
@@ -184,9 +195,9 @@ Func ZoomOutHelperBB($caller = "Default")
 			If IsArray($aOffset) Then 
 				$x = $g_iQuickMISX - $aOffset[1]
 				$y = $g_iQuickMISY - $aOffset[2]
-				SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
-				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
-				ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+				SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+				SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_INFO)
+				ClickDrag(800, 350, 800 - $x + $xyOffsetSwitchBases, 350 - $y - $xyOffsetSwitchBases, 500)
 				$bRet = True
 			Else
 				SetDebugLog("[" & $caller & "] Bad Stone ImageName!")
@@ -199,19 +210,24 @@ Func ZoomOutHelperBB($caller = "Default")
 EndFunc
 
 Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40, $bAndroidZoomOut = True) ;Zooms out
-	SetDebugLog("DefaultZoomOut()")
+	
 	Local $sFunc = "DefaultZoomOut"
 	Local $result0, $result1, $i = 0
 	Local $exitCount = 80
 	Local $delayCount = 20
+	Local $aPicture = ["", 0, 0, 0, 0]
 	ForceCaptureRegion()
-	Local $aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
+	
+	$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
-		ZoomOutHelper("DefaultZoomOut")
+		AndroidZoomOut()
+		SetLog("ZoomOut() : " & $sFunc, $COLOR_DEBUG2)
+		If ZoomOutHelper($sFunc) Then Return True
+		If ZoomOutHelperBB($sFunc) Then Return True
 		$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 	EndIf
-	If Not $g_bRunState Then Return
+	If Not $g_bRunState Then Return $aPicture
 	
 	If StringInStr($aPicture[0], "zoomou") = 0 Then
 		If $g_bDebugSetlog Then
@@ -258,7 +274,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				EndIf
 				If $tryCtrlWheelScrollAfterCycles > 0 And $i > $tryCtrlWheelScrollAfterCycles Then $tryCtrlWheelScroll = True
 				If $i > $exitCount Then Return
-				If Not $g_bRunState Then Return 
+				If Not $g_bRunState Then Return $aPicture
 				If IsProblemAffect(True) Then  ; added to catch errors during Zoomout
 					SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_ERROR)
 					If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out", $COLOR_INFO)  ; call to clear normal errors
@@ -267,10 +283,10 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				ForceCaptureRegion()
 				$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 				If IsArray($aPicture) And $aPicture[0] = "" And $aPicture[1] = "0" Then 
-					ZoomOutHelper("DefaultZoomOut")
+					ZoomOutHelper($sFunc)
 					$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 				EndIf
-				If Not $g_bRunState Then Return
+				If Not $g_bRunState Then Return $aPicture
 			WEnd
 		EndIf
 			
@@ -285,19 +301,22 @@ EndFunc   ;==>ZoomOut
 
 ;Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel = True, $AlwaysControlFocus = False, $AndroidZoomOut = True, $WheelRotation = -5, $WheelRotationCount = 1)
 Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel = True, $AlwaysControlFocus = False, $AndroidZoomOut = True, $hWin = Default, $ScrollSteps = -5, $ClickDelay = 250)
-	SetDebugLog("ZoomOutCtrlWheelScroll()")
 	Local $sFunc = "ZoomOutCtrlWheelScroll"
-   ;AutoItSetOption ( "SendKeyDownDelay", 3000)
-	Local $exitCount = 80
+    Local $exitCount = 80
 	Local $delayCount = 20
 	Local $result[4], $i = 0, $j
 	Local $ZoomActions[4] = ["ControlFocus", "Ctrl Down", "Mouse Wheel Scroll Down", "Ctrl Up"]
+	Local $aPicture = ["", 0, 0, 0, 0]
 	If $hWin = Default Then $hWin = ($g_bAndroidEmbedded = False ? $g_hAndroidWindow : $g_aiAndroidEmbeddedCtrlTarget[1])
 	ForceCaptureRegion()
-	Local $aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
+	
+	$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
-		ZoomOutHelper("DefaultZoomOut")
+		AndroidZoomOut()
+		SetLog("ZoomOut() : " & $sFunc, $COLOR_DEBUG2)
+		If ZoomOutHelper($sFunc) Then Return True
+		If ZoomOutHelperBB($sFunc) Then Return True
 		$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 	EndIf
 
@@ -373,7 +392,7 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 				If _Sleep($DELAYZOOMOUT3) Then ExitLoop
 			EndIf
 			If $i > $exitCount Then ExitLoop
-			If $g_bRunState = False Then ExitLoop
+			If Not $g_bRunState Then Return $aPicture
 			If IsProblemAffect(True) Then  ; added to catch errors during Zoomout
 				SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_ERROR)
 				If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out", $COLOR_INFO)  ; call to clear normal errors
@@ -385,8 +404,8 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 				ZoomOutHelper("DefaultZoomOut")
 				$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 			EndIf
-			If Not $g_bRunState Then Return
-		 WEnd
+			If Not $g_bRunState Then Return $aPicture
+		WEnd
 
 		 If $CenterMouseWhileZooming And $AndroidZoomOut = False Then MouseMove($aMousePos[0], $aMousePos[1], 0)
 		Return True
@@ -533,9 +552,9 @@ EndFunc   ;==>AndroidOnlyZoomOut
 ; 2 = Current Village Y Offset (after centering village)
 ; 3 = Difference of previous Village X Offset and current (after centering village)
 ; 4 = Difference of previous Village Y Offset and current (after centering village)
+
 Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
 	FuncEnter(SearchZoomOut)
-	If Not $g_bRunState Then Return
 	If $sSource <> "" Then $sSource = " (" & $sSource & ")"
 	Local $bCenterVillage = $CenterVillageBoolOrScrollPos
 	If $bCenterVillage = Default Or $g_bDebugDisableVillageCentering Then $bCenterVillage = (Not $g_bDebugDisableVillageCentering)
@@ -553,10 +572,13 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $
 	If $CaptureRegion Then _CaptureRegion2()
 
 	Local $aResult = ["", 0, 0, 0, 0] ; expected dummy value
+	If Not $g_bRunState Then Return FuncReturn($aResult)
 	Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4
 
 	Local $village
-	Local $bOnBuilderBase = isOnBuilderBase(True)
+	Local $bOnBuilderBase = isOnBuilderBase()
+	
+	If StringInStr($sSource, "AttackBB") Then $bOnBuilderBase = True
 	If $g_aiSearchZoomOutCounter[0] = 10 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
 	If $g_aiSearchZoomOutCounter[0] < 10 Then
 		$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase)
@@ -587,9 +609,10 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $
 			$aResult[1] = $x
 			$aResult[2] = $y
 			$g_bAndroidZoomoutModeFallback = False
-
-			If $bCenterVillage And ($bOnBuilderBase Or Not $bUpdateSharedPrefs) And ($x <> 0 Or $y <> 0) And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
-				If $DebugLog Then SetDebugLog("Center Village" & $sSource & " by: " & $x & ", " & $y)
+			SetDebugLog("bCenterVillage = " & String($bCenterVillage))
+			
+			If $bCenterVillage And ($x <> 0 Or $y <> 0) Then ;And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
+				SetDebugLog("Centering Village" & $sSource & " by: x=" & $x & ", y=" & $y, $COLOR_DEBUG1)
 				If $aScrollPos[0] = 0 And $aScrollPos[1] = 0 Then
 					Local $aCenterCoord = getVillageCenteringCoord()
 					$aScrollPos[0] = $aCenterCoord[0]
@@ -605,7 +628,8 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $
 					$iCallCount = 0
 					Return FuncReturn($aResult)
 				EndIf
-				Local $aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut(1):" & $sSource, True, $DebugLog)
+				Local $aResult2[4] = [0, 0, 0, 0]
+				$aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut(1):" & $sSource, True, $DebugLog)
 				; update difference in offset
 				$aResult2[3] = $aResult2[1] - $aResult[1]
 				$aResult2[4] = $aResult2[2] - $aResult[2]

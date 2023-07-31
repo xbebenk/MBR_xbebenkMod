@@ -103,10 +103,6 @@ Func ClickP($point, $howMuch = 1, $speed = 0, $debugtxt = "")
 	Click($point[0], $point[1], $howMuch, $speed, $debugtxt)
 EndFunc   ;==>ClickP
 
-Func TestPinch()
-	AndroidAdbScript("minipinch")
-EndFunc
-
 Func ConvertBuildingCoord(ByRef $x, ByRef $y, $iZF = 0)
 	Local $xOffset = $g_iVILLAGE_OFFSET[0]
 	Local $yOffset = $g_iVILLAGE_OFFSET[1]

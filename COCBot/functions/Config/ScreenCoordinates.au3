@@ -22,19 +22,14 @@ Global $aVillageCenteringCoord = [[750, 370], [636, 500], [777, 235]] ; Scroll v
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
 Global $aIsMain[4] = [279, 9, 0x7ABDE0, 20] ; Main Screen, Builder Info Icon
 Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
-Global $aIsOnBuilderBase[4] = [356, 12, 0x9CD2EE, 20] ; BuilderBase, Builder Info Icon
+Global $aIsOnBuilderBase[4] = [356, 12, 0x9DD2EE, 20] ; BuilderBase, Builder Info Icon
 
-Global $aIsConnectLost[4] = [255, 271, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device
-Global $aIsCheckOOS[4] = [223, 272, 0x33B5E5, 20] ; COC message : 'Connection Lost' network error or annother device
 Global $aReloadButton[4] = [210, 385, 0x282828, 10] ; Reload Coc Button after Out of Sync, 860x780
-Global $aAttackButton[2] = [60, 650] ; Attack Button, Main Screen, 860x676
+Global $aAttackButton[2] = [60, 620] ; Attack Button, Main Screen, 860x676
 Global $aFindMatchButton[4] = [470, 20, 0xD8A420, 10] ; Find Multiplayer Match Button, Attack Screen 860x780 without shield
 Global $aIsAttackShield[4] = [250, 415, 0xE8E8E0, 10] ; Attack window, white shield verification window
 Global $aAway[2] = [240, 20] ; Away click, moved from 1,1 to prevent scroll window from top, moved from 0,10 to 175,32 to prevent structure click or 175,10 to just fix MEmu 2.x opening and closing toolbar
 Global $aAway2[2] = [235, 10] ; Second Away Position for Windows like Donate Window where at $aAway is a button
-Global $aNoShield[4] = [448, 20, 0x43484B, 15] ; Main Screen, charcoal pixel center of shield when no shield is present
-Global $aHaveShield[4] = [455, 19, 0xF0F8FB, 15] ; Main Screen, Silver pixel top center of shield
-Global $aHavePerGuard[4] = [455, 19, 0x10100D, 15] ; Main Screen, black pixel in sword outline top center of shield
 Global $aShieldInfoButton[4] = [431, 10, 0x75BDE4, 15] ; Main Screen, Blue pixel upper part of "i"
 Global $aIsShieldInfo[4] = [645, 165, 0xEA1115, 20] ; Main Screen, Shield Info window, red pixel right of X
 Global $aSurrenderButton[4] = [18, 548, 0xCD0D0D, 40] ; Surrender Button, Attack Screen
@@ -69,7 +64,7 @@ Global $aIsGemWindow1[4] = [573, 239, 0xFF8D95, 20] ; Main Screen, pixel left of
 Global $aIsGemWindow2[4] = [577, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
 Global $aIsGemWindow3[4] = [586, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
 Global $aIsGemWindow4[4] = [595, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
-Global $aIsTrainPgChk1[4] = [822, 92, 0xFFFFFF, 20] ; Main Screen, Train page open - left upper corner of x button
+Global $aIsTrainPgChk1[4] = [825, 107, 0xD51115, 20] ; Main Screen, Train page open - bottom of x button
 Global $aIsTrainPgChk2[4] = [762, 328, 0xF18439, 10] ; Main Screen, Train page open - Dark Orange in left arrow
 Global $aRtnHomeCloud1[4] = [56, 592, 0x0A223F, 15] ; Cloud Screen, during search, blue pixel in left eye
 Global $aRtnHomeCloud2[4] = [72, 592, 0x103F7E, 15] ; Cloud Screen, during search, blue pixel in right eye
@@ -81,7 +76,7 @@ Global $g_aShopWindowOpen[4] = [804, 54, 0xC00508, 15] ; Red pixel in lower righ
 Global $aTreasuryWindow[4] = [688, 165, 0xD51115, 20] ; Redish pixel above X to close treasury window
 Global $aAttackForTreasury[4] = [88, 619, 0xF0EBE8, 5] ; Red pixel below X to close treasury window
 Global $aAtkHasDarkElixir[4]  = [ 31, 144, 0x282020, 10] ; Attack Page, Check for DE icon
-Global $aVillageHasDarkElixir[4] = [847, 134, 0x0D0D0D, 10] ; Main Page, Base has dark elixir storage
+Global $aVillageHasDarkElixir[4] = [845, 138, 0x270D33, 10] ; Main Page, Base has dark elixir storage
 
 Global $aCheckTopProfile[4] = [200, 166, 0x868CAC, 5]
 Global $aCheckTopProfile2[4] = [220, 355, 0x4E4D79, 5]
@@ -106,7 +101,7 @@ Global $aWonThreeStarAtkRprt[4] = [534, 180, 0xC8CAC7, 30] ; Center of 3rd Star 
 ; pixel color: location information								BS 850MB (Reg GFX), BS 500MB (Med GFX) : location
 
 Global $NextBtn[4] = [720, 534, 0xE5590D, 20] ;  Next Button
-Global $a12OrMoreSlots[4] = [16, 648, 0x4583B9, 25] ; Attackbar Check if 12+ Slots exist
+Global $a12OrMoreSlots[4] = [16, 608, 0x5B95C9, 25] ; Attackbar Check if 12+ Slots exist
 Global $aDoubRowAttackBar[4] = [68, 486, 0xFC5D64, 20]
 Global $aTroopIsDeployed[4] = [0, 0, 0x404040, 20] ; Attackbar Remain Check X and Y are Dummies
 Global Const $aIsAttackPage[4] = [18, 548, 0xCD0D0D, 20] ; red button "end battle" but left portion
@@ -164,7 +159,7 @@ Global Const $aPersonalChallengeOpenButton1[4] = [130, 618, 0xEDAF44, 20] ; Pers
 Global Const $aPersonalChallengeOpenButton2[4] = [130, 618, 0xFDE575, 20] ; Personal Challenge Button with Gold Pass
 Global Const $aPersonalChallengeOpenButton3[4] = [176, 615, 0xF5151D, 20] ; Personal Challenge Button with red symbol
 Global Const $aPersonalChallengeCloseButton[4] = [825, 42, 0xFFFFFF, 20] ; Personal Challenge Window Close Button
-Global Const $aPersonalChallengeRewardsAvail[4] = [542, 20, 0xFF6462, 20] ; Personal Challenge - Red symbol showing available rewards
+Global Const $aPersonalChallengeRewardsAvail[4] = [450, 20, 0xFF6462, 20] ; Personal Challenge - Red symbol showing available rewards
 Global Const $aPersonalChallengeRewardsCheckMark[4] = [50, 365, 0xEDEDED, 20] ; Personal Challenge - CheckMark available reward to drag more
 Global Const $aPersonalChallengeRewardsTab[4] = [450, 44, 0x988510, 20] ; Personal Challenge - Rewards tab unchecked with Gold Pass
 Global Const $aPersonalChallengePerksTab[4] = [660, 44, 0xEFE079, 20] ; Personal Challenge - Perks tab Checked
@@ -173,6 +168,11 @@ Global Const $aPersonalChallengeCancelBtn[4] = [345, 400, 0xFDC875, 20] ; Person
 Global Const $aPersonalChallengeOkBtn[4] = [510, 400, 0xDFF887, 20] ; Personal Challenge Window - Okay button at Storage Full msg
 
 ;xbebenkmod
-Global $aBlackHead[4] = [804, 316, 0x000000, 0] ; Black Barbarian Head
-Global $aOkayButton[2] = [430, 560]	; Okay button after BB attack, Screen 860x676
+Global $aBlackHead[4] = [629, 405, 0xFFEF48, 20] ; Black Barbarian Head
+Global $aOkayButton[2] = [430, 540]	; Okay button after BB attack, Screen 860x676
 Global $aOkayButtonRND[4] = [372, 530, 484, 565]	; Okay button after BB attack, RND Screen 860x676
+
+;notif bar detection for BS5
+Global $aNotifBarBS5_a[4] = [266, 34, 0xFFFFFF, 0]
+Global $aNotifBarBS5_b[4] = [622, 34, 0xFFFFFF, 0]
+Global $aNotifBarBS5_c[4] = [191, 121, 0xFFFFFF, 0]

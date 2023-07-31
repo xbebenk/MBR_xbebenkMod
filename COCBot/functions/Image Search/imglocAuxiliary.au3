@@ -415,7 +415,7 @@ Func GetDeployableNextTo($sPoints, $distance = 3, $redlineoverride = "")
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
 		SetDebugLog(" imgloc DLL Error imgloc " & $error & " --- " & $extError)
-		SetError(2, $extError, "") ; Set external error code = 2 for DLL error
+		;SetError(2, $extError, "") ; Set external error code = 2 for DLL error
 		Return ""
 	EndIf
 
@@ -431,7 +431,7 @@ Func GetOffsetRedline($sArea = "TL", $distance = 3)
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
 		SetDebugLog(" imgloc DLL Error imgloc " & $error & " --- " & $extError)
-		SetError(2, $extError, "") ; Set external error code = 2 for DLL error
+		;SetError(2, $extError, "") ; Set external error code = 2 for DLL error
 		Return ""
 	EndIf
 
@@ -632,7 +632,7 @@ Func SearchRedLines($sCocDiamond = "ECD")
 	If $error Then
 		_logErrorDLLCall($g_sLibMyBotPath, $error)
 		SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
-		SetError(2, $extError) ; Set external error code = 2 for DLL error
+		;SetError(2, $extError) ; Set external error code = 2 for DLL error
 		Return ""
 	EndIf
 	If checkImglocError($result, "SearchRedLines") = True Then

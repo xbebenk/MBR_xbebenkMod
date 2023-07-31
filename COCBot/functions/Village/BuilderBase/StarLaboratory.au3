@@ -30,7 +30,7 @@ EndFunc
 Func StarLaboratory($bTestRun = False)
 
 	If Not $g_bAutoStarLabUpgradeEnable Then Return ; Lab upgrade not enabled.
-
+	
 	;Create local array to hold upgrade values
 	Local $iAvailElixir, $sElixirCount, $TimeDiff, $aArray, $Result
 	If $g_sStarLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sStarLabUpgradeTime) ; what is difference between end time and now in minutes?
@@ -49,6 +49,8 @@ Func StarLaboratory($bTestRun = False)
 	SetLog("Updating village values [E]: " & $sElixirCount, $COLOR_SUCCESS)
 	$iAvailElixir = Number($sElixirCount)
 	If Not $g_bOptimizeOTTO Then isBattleMachineMaxed()
+	ZoomOutHelperBB("SwitchBetweenBases") ;go to BH LowerZone
+	
 	If Not LocateStarLab() Then Return False
 	
 	If Not ClickB("Research") Then 
@@ -81,6 +83,7 @@ Func StarLaboratory($bTestRun = False)
 			$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), _NowCalc())
 			If @error Then _logErrorDateAdd(@error)
 			SetLog("Research will finish in " & $sLabTimeOCR & " (" & $g_sStarLabUpgradeTime & ")")
+			ClickAway("Left")
 			Return True
 		Else
 			SetDebugLog("Invalid getRemainTLaboratory OCR", $COLOR_DEBUG)
@@ -187,7 +190,7 @@ Func StarLaboratory($bTestRun = False)
 		EndIf
 		
 		;any upgrade if all on troops lab order is maxed
-		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bChkUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn And $g_bisBattleMachineMaxed Then
+		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bChkUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn And ($g_bisBattleMachineMaxed Or $g_bIs6thBuilderUnlocked) Then
 			_ArraySort($aTroopUpgrade, 1, 0, 0, 5) ;sort by cost descending
 			For $i = 0 To UBound($aTroopUpgrade) - 1
 				If $aTroopUpgrade[$i][5] = "MaxLevel" Then ContinueLoop
@@ -208,36 +211,35 @@ Func StarLaboratory($bTestRun = False)
 	Else
 		SetLog("No upgradable troop found!", $COLOR_ERROR)
 		ClickAway("Left")
+		If _Sleep(1000) Then Return ;wait window closed
 		Return False
 	EndIf
-	SetLog("No Upgradable troop, exit!", $COLOR_ERROR)
-	ClickAway("Left")
 	Return False
 EndFunc   ;==>Laboratory
 
 Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 	Local $bRet = False, $Result
 	Click($x, $y)
-	_Sleep(1000)
+	If _Sleep(1000) Then Return
 	
 	$Result = getLabUpgradeTime(555, 463) ; Try to read white text showing time for upgrade
 	Local $iLabFinishTime = ConvertOCRTime("Lab Time", $Result, False)
 	SetLog($UpgradeName & " Upgrade OCR Time = " & $Result & ", $iLabFinishTime = " & $iLabFinishTime & " m", $COLOR_INFO)
 	
-	If Not $bTest Then Click(640, 530)
-	_Sleep(1000)
+	If Not $bTest Then Click(640, 530) ;click Upgrade
+	If _Sleep(1000) Then Return ;wait if Gem window open
 	
 	If isGemOpen(True) Then ; check for gem window
 		SetLog("Oops, Gems required for " & $UpgradeName & " Upgrade, try again.", $COLOR_ERROR)
 		If _Sleep(1000) Then Return
-		Click(133,117) ;Click Back to Upgrade Menu
+		Click(133,117) ;click Cancel
 		$bRet = False
 	Else
 		SetLog("Upgrade " & $UpgradeName & " in your star laboratory started with success...", $COLOR_SUCCESS)
 		StarLabStatusGUIUpdate()
 		PushMsg("StarLabSuccess")
-		If _Sleep($DELAYLABUPGRADE2) Then Return
 		ClickAway("Left")
+		If _Sleep($DELAYLABUPGRADE2) Then Return
 		$bRet = True
 	EndIf
 	
@@ -249,7 +251,7 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 			SetLog($UpgradeName & " Upgrade Finishes @ " & $Result & " (" & $g_sStarLabUpgradeTime & ")", $COLOR_SUCCESS)
 		EndIf
 	EndIf
-	
+	If _Sleep(1000) Then Return
 	Return $bRet
 EndFunc
 
@@ -259,9 +261,8 @@ Func FindSLabTroopsUpgrade()
 	If IsArray($aTmp) And UBound($aTmp) > 0 Then
 		For $i = 0 To UBound($aTmp) -1 
 			$aTroop = GetSLabTroopResPos($aTmp[$i][0])
-			$UpgradeCost = getLabCost($aTroop[1], $aTroop[2])
+			$UpgradeCost = getSLabCost($aTroop[1], $aTroop[2])
 			If $UpgradeCost = 111 Then $UpgradeCost = "MaxLevel"
-			If $UpgradeCost = "" Then $UpgradeCost = getStarLabUpgrdResourceRed($aTroop[1], $aTroop[2])
 			If $UpgradeCost = "" Then 
 				If QuickMIS("BC1", $g_sImgStarLabNeedUp, $aTroop[1], $aTroop[2], $aTroop[1] + 100, $aTroop[2] + 20) Then
 					$UpgradeCost = "NeedUpgradeLab"
@@ -288,6 +289,7 @@ Func GetSLabTroopResPos($Troop)
 EndFunc   ;==>FullNametroops
 
 Func LocateStarLab()
+	
 	If $g_aiStarLaboratoryPos[0] > 0 And $g_aiStarLaboratoryPos[1] > 0 Then
 		ClickP($g_aiStarLaboratoryPos)
 		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for description to popup
@@ -301,6 +303,7 @@ Func LocateStarLab()
 			EndIf
 		Else
 			ClickAway("Left")
+			ZoomOutHelperBB("SwitchBetweenBases") ;go to BH LowerZone
 			SetDebugLog("Stored Star Laboratory Position is not valid.", $COLOR_ERROR)
 			$g_aiStarLaboratoryPos[0] = -1
 			$g_aiStarLaboratoryPos[1] = -1
@@ -326,3 +329,4 @@ Func LocateStarLab()
 	SetLog("Can not find Star Laboratory.", $COLOR_ERROR)
 	Return False
 EndFunc   ;==>LocateStarLab()
+

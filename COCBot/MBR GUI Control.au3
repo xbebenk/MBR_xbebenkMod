@@ -1192,6 +1192,9 @@ Func BotGuiModeToggle()
 		Case 2
 			; Bot is in Mini GUI Mode, switch to Normal Mode
 			SetLog("Switch to Normal GUI Mode")
+			readConfig()
+			SetLog("ChkBBCustomArmyEnable = " & String($g_bChkBBCustomArmyEnable), $COLOR_DEBUG1)
+			SetLog("Chk1SideBBAttack = " & String($g_b1SideBBAttack), $COLOR_DEBUG1)
 			$g_iGuiMode = 1
 
 			; normal GUI mode
@@ -1199,10 +1202,10 @@ Func BotGuiModeToggle()
 			$_GUI_MAIN_HEIGHT = $_NORMALGUI_MAIN_HEIGHT
 
 			; Create controls
-			CreateSplashScreen(7) ; Create splash window
+			CreateSplashScreen() ; Create splash window
 
 			CreateMainGUIControls(True)
-
+			
 			; refresh tab states
 			tabBot()
 			tabDONATE()

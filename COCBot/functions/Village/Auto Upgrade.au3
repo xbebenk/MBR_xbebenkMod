@@ -249,7 +249,7 @@ Func FindExistingBuilding($bTest = False)
 	If $Gold > $Elix Then $GoldMultiply += 1
 	If $Elix > $Gold Then $ElixMultiply += 1
 	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
-	Local $aRushTHPriority[7][2] = [["Castle", 15], ["Pet", 15], ["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10]]
+	Local $aRushTHPriority[8][2] = [["Castle", 15], ["Pet", 15], ["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10], ["Hut", 10]]
 	Local $aRushTH[7][2] = [["Barracks", 8], ["Spell", 9], ["Workshop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
 	Local $aHeroes[4] = ["King", "Queen", "Warden", "Champion"]
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390)
@@ -602,7 +602,7 @@ Func DoUpgrade($bTest = False)
 		Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion", "poyal Champion"
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 500, 730, 580) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522) ; get cost
-			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(576, 465) ; get duration
+			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(576, 473) ; get duration
 			$bHeroUpgrade = True
 		Case Else
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 480, 500, 550) ; get resource
@@ -617,14 +617,15 @@ Func DoUpgrade($bTest = False)
 	EndIf
 		
 	; if one of the value is empty, there is an error, we must exit Auto Upgrade
-	For $i = 0 To 2
-		;SetLog($g_aUpgradeResourceCostDuration[$i])
-		If $g_aUpgradeResourceCostDuration[$i] = "" Then
-			SetLog("Error at $g_aUpgradeResourceCostDuration, looking next...", $COLOR_ERROR)
-			Clickaway("Right")
-			Return False
-		EndIf
-	Next
+	;For $i = 0 To 2
+	;	;SetLog($g_aUpgradeResourceCostDuration[$i])
+	;	If $g_aUpgradeResourceCostDuration[$i] = "" Then
+	;		SetLog("Error at $g_aUpgradeResourceCostDuration, looking next...", $COLOR_ERROR)
+	;		Clickaway("Right")
+	;		Return False
+	;	EndIf
+	;Next
+	;disable cost verify (ocr cannot read) after mei 2023 update
 
 	Local $bMustIgnoreResource = False
 	; matchmaking between resource name and the ignore list
@@ -1451,10 +1452,7 @@ Func SearchUnplacedBuilding()
 		SetDebugLog("Search: Unplaced Building Not Found!")
 		Return False
 	Else
-		If StringInStr($atmpInfo, "placed") = 0 Then
-			SetDebugLog("Search: Not Unplaced Building Text!", $COLOR_INFO)
-			Return False
-		Else
+		If StringInStr($atmpInfo, "place") Or StringInStr($atmpInfo, "Items") Then
 			SetDebugLog("Search: Unplaced Building Found!", $COLOR_SUCCESS)
 			Return True
 		EndIf

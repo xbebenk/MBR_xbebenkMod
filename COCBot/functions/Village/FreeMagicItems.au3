@@ -32,11 +32,20 @@ Func CollectFreeMagicItems($bTest = False)
 	SetLog("Magic Items: " & $aGem[0] & " | " & $aGem[1] & " | " & $aGem[2])
 	
 	For $i = 0 To UBound($aResults) - 1
+		If $aResults[$i][0] = "FullStorage" Then 
+			ClickAway()
+			If _Sleep(1000) Then Return
+			SaleFullMagicItem()
+			$aResults[$i][0] = "FREE"
+			If Not OpenTraderWindow() Then Return
+		EndIf
+		
 		If $aResults[$i][0] = "FREE" Then
 			If Not $bTest Then
 				Click($aResults[$i][1], $aResults[$i][2]) ;Click The Item
 				If _Sleep(3000) Then Return ;delay wait SoldOut Stamp
-				If _GetPixelColor($aResults[$i][1], 297, True) Then ;Check The SoldOut Stamp
+				
+				If _ColorCheck(_GetPixelColor($aResults[$i][1], 297, True), Hex(0xAD5B0D, 6), 20) Then ;Check The SoldOut Stamp
 					$Collected = True
 					SetLog("Free Item: " & $aResults[$i][4] & " Collected", $COLOR_INFO)
 					$iLastTimeChecked[$g_iCurAccount] = @MDAY
@@ -74,11 +83,16 @@ EndFunc   ;==>CollectFreeMagicItems
 Func GetFreeMagic()
 	Local $aOcrPositions[3][2] = [[285, 322], [465, 322], [635, 322]]
 	Local $aResults[0][5]
+	Local $bClaimed = False, $bFullStorage = False
 	For $i = 0 To UBound($aOcrPositions) - 1
 		Local $Read = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 200, 25, True)
 		Local $Capa = getOcrAndCapture("coc-buildermenu-name", $aOcrPositions[$i][0], 209, 100, 25, True)
 		SetDebugLog("Magic Item Capacity: " & $Capa)
+		$bClaimed = _ColorCheck(_GetPixelColor($aOcrPositions[$i][0], 297, True), Hex(0xAD5B0D, 6), 20)
+		$bFullStorage = _ColorCheck(_GetPixelColor($aOcrPositions[$i][0], $aOcrPositions[$i][1], True), Hex(0xA3A3A3, 6), 20)
 		;If $Read = "FREE" And StringLeft($Capa, 1) = "0" Then $Read = "Claimed"
+		If $Read = "FREE" And $bClaimed Then $Read = "Claimed"
+		If $Read = "FREE" And $bFullStorage Then $Read = "FullStorage"
 		If $Read = "" Then $Read = "N/A"
 		If Number($Read) > 10 Then
 			$Read = $Read & " Gems"
@@ -102,7 +116,7 @@ Func OpenTraderWindow()
 		SetLog("Trader Icon Not Found", $COLOR_INFO)
 		Return False
 	EndIf
-	If Not IsFreeMagicWindowOpen() Then 
+	If Not IsTraderWindowOpen() Then 
 		SetLog("Free Magic Items Windows not Opened", $COLOR_ERROR)
 		ClickAway()
 	Else
@@ -111,7 +125,7 @@ Func OpenTraderWindow()
 	Return $bRet
 EndFunc
 
-Func IsFreeMagicWindowOpen()
+Func IsTraderWindowOpen()
 	Local $bRet = False
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
@@ -150,6 +164,32 @@ Func SaleFullMagicItem($MagicItem = "", $Amount = 0)
 	If Not $g_bRunState Then Return
 	SetLog("Checking for Sale Magic Items", $COLOR_INFO)
 	If Not OpenMagicItemWindow() Then Return
+	
+	If $MagicItem = "" And $Amount = 0 Then 
+		Local $Items = QuickMIS("CNX", $g_sImgTraderWindow, 160, 200, 700, 300)
+		Local $sReadItemCount = 0
+		If IsArray($Items) And UBound($Items) > 0 Then 
+			For $i = 0 To UBound($Items) - 1
+				
+				$sReadItemCount = MagicItemCount($Items[$i][1], $Items[$i][2])
+				If $sReadItemCount = 5 Then 
+					Click($Items[$i][1], $Items[$i][2])
+					If _Sleep(2000) Then Return
+					If _ColorCheck(_GetPixelColor(550, 505, True), Hex(0xF51D21, 6), 20) Then ;Check Red Sell Button
+						Click(550, 505) ;Click Sell Button
+						If _Sleep(1500) Then Return
+						If _ColorCheck(_GetPixelColor(510, 425, True), Hex(0x6DBC1F, 6), 20) Then
+							Click(510, 425) ;Click Okay Button
+						EndIf
+					EndIf
+					If _Sleep(1500) Then Return
+				EndIf
+			Next
+		EndIf
+		ClickAway()
+		Return
+	EndIf
+	
 	Local $aSearch = decodeSingleCoord(findImage($MagicItem, $g_sImgTraderWindow & $MagicItem & "*", GetDiamondFromRect("160, 200, 700, 400")))
 	If IsArray($aSearch) And UBound($aSearch) = 2 Then
 		For $i = 1 To $Amount
@@ -183,7 +223,7 @@ Func SaleMagicItem($bTest = False)
 	Local $sReadItemCount, $asReadItemCount, $Count, $MaxCount
 	
 	For $i = 0 To UBound($g_aSaleMagicItem) - 1
-		SetDebugLog($g_aMagicItemName[$i] & ":" &$g_aSaleMagicItem[$i])
+		SetDebugLog($g_aMagicItemName[$i] & " : " & $g_aSaleMagicItem[$i])
 		SetLog("Checking for sell " & $g_aMagicItemName[$i], $COLOR_INFO)
 		If $g_aSaleMagicItem[$i] Then
 			Local $aSearch = decodeSingleCoord(findImage($g_aMagicItemName[$i], $g_sImgTraderWindow & $g_aMagicItemName[$i] & "*", GetDiamondFromRect("160, 200, 700, 400")))

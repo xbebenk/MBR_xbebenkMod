@@ -22,16 +22,34 @@ Func CheckVersion()
 	$aResult = StringRegExp($g_sXModversion, '\[#(\d+)\]', $STR_REGEXPARRAYMATCH)
 	If IsArray($aResult) And Ubound($aResult) > 0 Then $sCurrentVersion = $aResult[0]
 	
-	$sUrlFetchMod = BinaryToString(InetRead("https://github.com/xbebenk/MBR_xbebenkMod/releases/latest"))
+	$sUrlFetchMod = BinaryToString(InetRead("https://raw.githubusercontent.com/xbebenk/MBR_xbebenkMod/dev_1.2.4/MyBot.run.version.au3"))
 	Local $aTmp = StringSplit($sUrlFetchMod, @CRLF, $STR_NOCOUNT)
 	;_ArrayDisplay($aTmp)
 	For $i = 0 To UBound($aTmp) - 1
-		If StringInStr($aTmp[$i], "<title>") Then
+		If StringInStr($aTmp[$i], "sXModversion") Then
 			$aResult = StringRegExp($aTmp[$i], '\[#(\d+)\]', $STR_REGEXPARRAYMATCH)
 			If IsArray($aResult) And Ubound($aResult) > 0 Then $sModVersion = $aResult[0]
 		EndIf
 	Next
 	
+	If Number($sModVersion) > Number($sCurrentVersion) Then 
+		SetLog("##############################################", $COLOR_INFO)
+		SetLog("WARNING, YOUR MOD VERSION (#" & $sCurrentVersion & ") IS OUT OF DATE.", $COLOR_ERROR)
+		SetLog("PLEASE UPDATE TO LATEST MOD VERSION (#" & $sModVersion & ")", $COLOR_ERROR)
+		SetLog($g_sXModSupportUrl, $COLOR_INFO)
+		SetLog("##############################################", $COLOR_INFO)
+		PushMsg("Update")
+	EndIf
+	
+	If Number($sModVersion) = Number($sCurrentVersion) Then 
+		SetLog("##############################################", $COLOR_INFO)
+		SetLog("YOUR MOD VERSION (#" & $sCurrentVersion & ") IS LATEST VERSION.", $COLOR_SUCCESS)
+		SetLog($g_sXModSupportUrl, $COLOR_INFO)
+		SetLog("##############################################", $COLOR_INFO)
+	EndIf
+	
+	
+	#cs
 	; Get the last Version from API
 	Local $g_sBotGitVersion = ""
 	Local $sCorrectStdOut = InetRead("https://api.github.com/repos/MyBotRun/MyBot/releases/latest")
@@ -91,6 +109,7 @@ Func CheckVersion()
 	Else
 		SetDebugLog($Temp)
 	EndIf
+	#ce
 EndFunc   ;==>CheckVersion
 
 Func GetLastVersion($txt)

@@ -758,7 +758,10 @@ Func chkRushTH()
 		For $i = $g_hChkUpgradesToIgnore[15] To $g_hChkUpgradesToIgnore[27]
 			GUICtrlSetState($i, $GUI_CHECKED)
 		Next
-		For $i = $g_hChkUpgradesToIgnore[28] To $g_hChkUpgradesToIgnore[35]
+		For $i = $g_hChkUpgradesToIgnore[28] To $g_hChkUpgradesToIgnore[31]
+			GUICtrlSetState($i, $GUI_UNCHECKED)
+		Next
+		For $i = $g_hChkUpgradesToIgnore[33] To $g_hChkUpgradesToIgnore[35]
 			GUICtrlSetState($i, $GUI_UNCHECKED)
 		Next
 	Else
@@ -768,6 +771,7 @@ Func chkRushTH()
 		For $i = $g_hChkUpgradesToIgnore[5] To $g_hChkUpgradesToIgnore[35]
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
+		GUICtrlSetState($g_hChkUpgradesToIgnore[32], $GUI_ENABLE)
 		GUICtrlSetState($g_hChkNewBuildingFirst, BitOR($GUI_DISABLE, $GUI_CHECKED))
 		GUICtrlSetState($g_ChkPlaceNewBuilding, BitOR($GUI_DISABLE, $GUI_CHECKED))
 	Else

@@ -17,67 +17,30 @@
 
 Func BreakPersonalShield()
 
-	SetDebugLog("Begin BreakPersonalShield:", $COLOR_DEBUG1)
-
-	If $g_bDebugSetlog Then
-		SetDebugLog("Checking if Shield available", $COLOR_INFO)
-		SetDebugLog("Have shield pixel color: " & _GetPixelColor($aHaveShield, $g_bCapturePixel) & " :" & _CheckPixel($aHaveShield, $g_bCapturePixel), $COLOR_DEBUG)
-	EndIf
-
-	If _CheckPixel($aHaveShield, $g_bCapturePixel) Then ; check for shield
-		If IsMainPage() Then ; check for main page
+	SetLog("Checking if Shield available", $COLOR_INFO)
+	
+	For $i = 1 To 3
+		If QuickMIS("BC1", $g_sImgShield, 430, 5, 460, 35) Then
+			If $g_iQuickMISName = "NoShield" Then 
+				SetLog("No shield available", $COLOR_SUCCESS)
+				ExitLoop
+			EndIf
 			PureClickP($aShieldInfoButton)
-			If _Sleep($DELAYPERSONALSHIELD1) Then ; wait for break shield window
-				SetError(2) ; set error conditions to return to runbot if stop/pause
-				Return
-			EndIf
-			Local $result = ClickRemove("Shield") ; click remove shield
-			If ($result = False) Or @error Then ; check for errors
-				SetError(3, "shield remove button not found", "")
-				Return
-			EndIf
-			$result = ClickOkay("Shield") ; Confirm remove shield
-			If ($result = False) Or @error Then
-				SetError(4, "shield Okay button not found", "")
-				Return
-			EndIf
-			SetLog("Shield removed", $COLOR_SUCCESS)
+			If _Sleep(1000) Then Return
+			Switch $g_iQuickMISName
+				Case "Shield"
+					If QuickMIS("BC1", $g_sImgShield & "Remove\", 518, 230, 545, 245) Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
+						If _Sleep(1000) Then Return
+						If ClickOkay("Shield") Then SetLog("Shield removed", $COLOR_SUCCESS)
+					EndIf
+				Case "Guard"
+					If QuickMIS("BC1", $g_sImgShield & "Remove\", 518, 230, 545, 245) Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
+						If _Sleep(1000) Then Return
+						If ClickOkay("Shield") Then SetLog("Guard removed", $COLOR_SUCCESS)
+					EndIf
+			EndSwitch
 		EndIf
-	Else
-		SetDebugLog("No shield available", $COLOR_SUCCESS)
-	EndIf
-
-	If _Sleep($DELAYPERSONALSHIELD1) Then ; wait for break shield window
-		SetError(2) ; set error conditions to return to runbot if stop/pause
-		Return
-	EndIf
-
-	If $g_bDebugSetlog Then
-		SetDebugLog("Checking if Personal Guard available", $COLOR_INFO)
-		SetDebugLog("Have guard pixel color: " & _GetPixelColor($aHavePerGuard, $g_bCapturePixel) & " :" & _CheckPixel($aHavePerGuard, $g_bCapturePixel), $COLOR_DEBUG)
-	EndIf
-
-	If _CheckPixel($aHavePerGuard, $g_bCapturePixel) Then ; check for personal guard timer
-		If IsMainPage() Then
-			PureClickP($aShieldInfoButton)
-			If _Sleep($DELAYPERSONALSHIELD1) Then ; wait for break guard window
-				SetError(2) ; set error conditions to return to runbot if stop
-				Return
-			EndIf
-			Local $result = ClickRemove("Guard") ; remove shield
-			If ($result = False) Or @error Then ; check for errors
-				SetError(5, "guard remove button not found")
-				Return
-			EndIf
-			$result = ClickOkay("Guard") ; Confirm remove shield
-			If ($result = False) Or @error Then
-				SetError(6, "guard Okay button not found")
-				Return
-			EndIf
-			SetLog("Personal Guard removed", $COLOR_SUCCESS)
-		EndIf
-	Else
-		SetDebugLog("No guard available", $COLOR_SUCCESS)
-	EndIf
-
+	Next
 EndFunc   ;==>BreakPersonalShield

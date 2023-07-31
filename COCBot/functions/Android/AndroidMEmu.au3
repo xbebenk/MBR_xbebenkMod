@@ -217,7 +217,7 @@ Func InitMEmu($bCheckOnly = False)
 		EndIf
 
 		; get screencap paths: Name: 'picture', Host path: 'C:\Users\Administrator\Pictures\MEmu Photo' (machine mapping), writable
-		$g_sAndroidPicturesPath = "/mnt/shell/emulated/0/Pictures/"
+		$g_sAndroidPicturesPath = "/data/media/0/Pictures/"
 		$g_sAndroidSharedFolderName = "picture"
 		ConfigureSharedFolder(0) ; something like C:\Users\Administrator\Pictures\MEmu Photo\
 

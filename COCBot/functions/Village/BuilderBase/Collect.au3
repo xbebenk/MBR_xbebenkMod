@@ -26,27 +26,51 @@ Func CollectBuilderBase($bSwitchToBB = False, $bSwitchToNV = False)
 
 	SetLog("Collecting Resources on Builders Base", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
-
-	; Collect function to Parallel Search , will run all pictures inside the directory
-	; Setup arrays, including default return values for $return
-	Local $sFilename = ""
-	Local $aCollectXY, $t
-
-	Local $aResult = multiMatches($g_sImgCollectResourcesBB, 0, "FV", "FV")
-
-	If UBound($aResult) > 1 Then ; we have an array with data of images found
-		For $i = 1 To UBound($aResult) - 1  ; loop through array rows
-			$sFilename = $aResult[$i][1] ; Filename
-			$aCollectXY = $aResult[$i][5] ; Coords
-			If IsArray($aCollectXY) Then ; found array of locations
-				$t = Random(0, UBound($aCollectXY) - 1, 1) ; SC May 2017 update only need to pick one of each to collect all
-				SetDebugLog($sFilename & " found, random pick(" & $aCollectXY[$t][0] & "," & $aCollectXY[$t][1] & ")", $COLOR_SUCCESS)
-				If IsMainPageBuilderBase() Then Click($aCollectXY[$t][0], $aCollectXY[$t][1], 1, 0, "#0430")
-				If _Sleep($DELAYCOLLECT2) Then Return
+	
+	Local $aResult = QuickMIS("CNX", $g_sImgCollectResourcesBB, 131,120,777, 584)
+	If IsArray($aResult) And UBound($aResult) > 0 Then
+		For $i = 0 To UBound($aResult) - 1
+			If isInsideDiamondCollectBB($aResult[$i][1], $aResult[$i][2]) Then 
+				Click($aResult[$i][1], $aResult[$i][2])
+				If $g_bDebugSetLog Then SetLog("Found random pick [" & $aResult[$i][1] & "," & $aResult[$i][2] & "]", $COLOR_SUCCESS)
 			EndIf
 		Next
+	Else
+		SetLog("No Tombs Found!", $COLOR_DEBUG1)
 	EndIf
-
+	
+	CollectBBCart()
 	If _Sleep($DELAYCOLLECT3) Then Return
 	If $bSwitchToNV Then SwitchBetweenBases("Main") ; Switching back to the normal Village
+EndFunc
+
+Func CollectBBCart()
+	Local $x = 0, $y = 0, $yMul = 5
+	ZoomOutHelperBB()
+	If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", 540, 80, 630, 150) Then ;check ElixCart Image
+		Setlog("Found Elix Cart", $COLOR_DEBUG2)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		$x = $g_iQuickMISX
+		$y = $g_iQuickMISY
+		If _Sleep(1000) Then Return
+		For $i = 1 To 5
+			SetLog("Waiting Cart Window #" & $i, $COLOR_ACTION)
+			If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", 636, 515, 730, 560) Then
+				Setlog("Collecting Elixir from BuilderBase Cart", $COLOR_ACTION)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				ClickAway()
+				If _Sleep(1000) Then Return
+				ExitLoop
+			EndIf
+			If _Sleep(1000) Then Return
+			Click($x, $y + ($i * $yMul))
+		Next
+	EndIf
+EndFunc
+
+Func isInsideDiamondCollectBB($x, $y)
+	Local $aDiamond[4] = [110, 740, 100, 565] ;Left, Right, Top, Bottom
+	Local $aCoord[2] = [$x, $y]
+	
+	Return isInsideDiamondAttackBB($aCoord, $aDiamond)
 EndFunc

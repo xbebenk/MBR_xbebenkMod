@@ -14,8 +14,6 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($Mode = Default)
-	getBuilderCount(True, True) 
-	
 	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then 
 		SetLog("ForceSwitchifNoCGEvent Enabled, Skip Attack until we have BBEvent", $COLOR_SUCCESS)
 		Return False
@@ -25,45 +23,9 @@ Func PrepareAttackBB($Mode = Default)
 		SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
-		_Sleep(1500)
+		If _Sleep(1500) Then Return
 		CheckArmyReady()
 		Return True
-	EndIf
-	
-	Local $GoldIsFull = isGoldFullBB()
-	Local $ElixIsFull = isElixirFullBB()
-
-	If $g_bOptimizeOTTO And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then ; And Not $g_sStarLabUpgradeTime = "" Then
-		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
-		Return False
-	EndIf
-
-	If Not $g_bRunState Then Return ; Stop Button
-
-	If Not ClickBBAttackButton() Then 
-		ClickAway("Left")
-		Return False
-	EndIf
-	;_Sleep(1000)
-	For $i = 1 To 5
-		If WaitforPixel(588, 321, 589, 322, "D7540E", 20, 2) Then
-			SetDebugLog("Found FindNow Button", $COLOR_ACTION)
-			_Sleep(500)
-			ExitLoop
-		EndIf
-		If WaitforPixel(665, 437, 666, 438, "D9F481", 20, 1) Then
-			SetDebugLog("Found Previous Attack Result", $COLOR_ACTION)
-			Click(640, 440)
-			_Sleep(500)
-		EndIf
-		_Sleep(1000)
-		SetDebugLog("Wait For Find Now Button #" & $i, $COLOR_ACTION)
-	Next
-	
-	If Not CheckArmyReady() Then
-		_Sleep(500)
-		ClickAway("Left")
-		Return False
 	EndIf
 	
 	If $Mode = "DropTrophy" Then 
@@ -76,18 +38,50 @@ Func PrepareAttackBB($Mode = Default)
 		Return True
 	EndIf
 	
-	If $g_bChkBBAttIfLootAvail Then
-		If Not CheckLootAvail() Then
-			_Sleep(500)
+	Local $GoldIsFull = isGoldFullBB()
+	Local $ElixIsFull = isElixirFullBB()
+	
+	getBuilderCount(True, True)
+	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then
+		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
+		Return False
+	EndIf
+	
+	If $g_bChkBBAttIfStarsAvail Then
+		If Not CheckStarsAvail() Then
+			If _Sleep(500) Then Return
 			ClickAway("Left")
 			Return False
 		EndIf
 	EndIf
 
+	If Not $g_bRunState Then Return ; Stop Button
+
+	If Not ClickBBAttackButton() Then 
+		ClickAway("Left")
+		Return False
+	EndIf
+	
+	For $i = 1 To 10
+		If $g_bDebugSetlog Then SetLog("Searching Find Now Button #" & $i, $COLOR_ACTION)
+		If _ColorCheck(_GetPixelColor(655, 440, True), Hex(0x89D239, 6), 20) Then
+			If $g_bDebugSetlog Then SetLog("FindNow Button Found!", $COLOR_DEBUG)
+			If _Sleep(500) Then Return
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+	Next
+	
+	If Not CheckArmyReady() Then
+		If _Sleep(500) Then Return
+		ClickAway("Left")
+		Return False
+	EndIf
+	
 	$g_bBBMachineReady = CheckMachReady()
 	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
-		_Sleep(500)
+		If _Sleep(500) Then Return
 		ClickAway("Left")
 		Return False
 	EndIf
@@ -96,31 +90,48 @@ Func PrepareAttackBB($Mode = Default)
 EndFunc
 
 Func ClickBBAttackButton()
-	If WaitforPixel(20, 590, 22, 595, "DD9835", 15, 1) Then
-		Click(60,600) ;click attack button
+	If QuickMis("BC1", $g_sImgBBAttackButton, 16, 590, 110, 630) Then
+		Click(62,615) ;click attack button
+		For $i = 1 To 5
+			If $g_bDebugSetLog Then SetLog("Waiting for Start Attack Window #" & $i, $COLOR_ACTION)
+			If _Sleep(500) Then Return
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 720, 140, 800, 200) Then 
+				If $g_bDebugSetLog Then SetLog("Start Attack Window Found", $COLOR_DEBUG)
+				ExitLoop
+			EndIf
+		Next
 		Return True
 	Else
-		SetLog("Could not locate Attack button", $COLOR_ERROR)
+		SetLog("Could not Locate Attack button", $COLOR_ERROR)
 		Return False
 	EndIf	
 EndFunc
 
-Func CheckLootAvail()
-	local $bRet = False
-	If Not _ColorCheck(_GetPixelColor(622, 611, True), Hex(0xFFFFFF, 6), 1) Then
-		SetLog("Loot is Available.")
-		$bRet = True
-	Else
-		SetLog("No loot available.")
+Func CheckStarsAvail()
+	Local $bRet = False, $iRemainStars = 0, $iMaxStars = 0
+	Local $sStars = getOcrAndCapture("coc-BBAttackAvail", 40, 572, 50, 20)
+	
+	If $g_bDebugSetLog Then SetLog("Stars: " & $sStars, $COLOR_DEBUG2)
+	If $sStars <> "" And StringInStr($sStars, "#") Then 
+		Local $aStars = StringSplit($sStars, "#", $STR_NOCOUNT)
+		If IsArray($aStars) Then 
+			$iRemainStars = $aStars[0]
+			$iMaxStars = $aStars[1]
+		EndIf
+		If Number($iRemainStars) <= Number($iMaxStars) Then
+			SetLog("Remain Stars : " & $iRemainStars & "/" & $iMaxStars, $COLOR_INFO)
+			$bRet = True
+		Else
+			SetLog("All attacks used")
+		EndIf
 	EndIf
 	Return $bRet
 EndFunc
 
 Func CheckMachReady()
-	local $aCoords = decodeSingleCoord(findImage("BBMachReady_bmp", $g_sImgBBMachReady, GetDiamondFromRect("113,360,170,415"), 1, True))
-	local $bRet = False
+	Local $bRet = False
 	
-	If IsArray($aCoords) And UBound($aCoords) = 2 Then
+	If QuickMis("BC1", $g_sImgBBMachReady, 120, 270, 180, 330) Then 
 		$bRet = True
 		SetLog("Battle Machine ready.")
 	EndIf
@@ -131,39 +142,48 @@ Func CheckArmyReady()
 	local $i = 0
 	local $bReady = True, $bNeedTrain = False, $bTraining = False
 	
-	If _Sleep($DELAYCHECKFULLARMY2) Then Return ; wait for window
-	
-	If QuickMIS("BC1", $g_sImgArmyNeedTrain, 130, 360, 190, 390) Then
+	If _ColorCheck(_GetPixelColor(126, 246, True), Hex(0xE24044, 6), 20) Then 
+		SetLog("Army is not Ready", $COLOR_DEBUG)
 		$bNeedTrain = True ;need train, so will train cannon cart
 		$bReady = False
 	EndIf
 	
 	If Not $bReady And $bNeedTrain Then
-		ClickP($aArmyTrainButton, 1, 0, "#0293")
+		SetLog("Train to Fill Army", $COLOR_INFO)
+		ClickAway()
+		If _Sleep(2000) Then Return
+		ClickP($aArmyTrainButton, 1, 0, "BB Train Button")
+		
 		If _Sleep(1000) Then Return ; wait for window
-		Local $Camp = QuickMIS("CNX", $g_sImgFillCamp, 40, 320, 800, 350)
+		For $i = 1 To 5
+			SetLog("Waiting for Army Window #" & $i, $COLOR_ACTION)
+			If _Sleep(500) Then Return
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 750, 130, 800, 190) Then ExitLoop
+		Next
+		
+		Local $Camp = QuickMIS("CNX", $g_sImgFillCamp, 70, 225, 800, 250)
 		For $i = 1 To UBound($Camp)
-			If QuickMIS("BC1", $g_sImgFillTrain, 40, 440, 820, 550) Then
-				Setlog("Army is not ready, fill BB ArmyCamp", $COLOR_DEBUG)
+			If QuickMIS("BC1", $g_sImgFillTrain, 75, 390, 800, 530) Then
+				Setlog("Fill ArmyCamp with : " & $g_iQuickMISName, $COLOR_DEBUG)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(500) Then Return
 			EndIf
 		Next
-		$Camp = QuickMIS("CNX", $g_sImgFillCamp, 40, 320, 800, 350)
+		
+		$Camp = QuickMIS("CNX", $g_sImgFillCamp, 70, 225, 800, 250)
 		If UBound($Camp) > 0 Then 
 			$bReady = False
 		Else
 			$bReady = True
 		EndIf
+		
 		ClickAway("Left")
 		If _Sleep(1000) Then Return ; wait for window close
+		ClickBBAttackButton()
 	EndIf
 
 	If Not $bReady Then
 		SetLog("Army is not ready.")
-		If $bTraining Then SetLog("Troops are training.")
-		If $bNeedTrain Then SetLog("Troops need to be trained in the training tab.")
-		If $g_bDebugImageSave Then SaveDebugImage("FindIfArmyReadyBB")
 	Else
 		SetLog("Army is ready.")
 	EndIf
@@ -172,136 +192,100 @@ EndFunc
 
 Func BBDropTrophy()
 	If Not $g_bChkBBDropTrophy Then Return
+	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
 	SetLog("Prepare BB Drop Trophy", $COLOR_INFO)
 	
-	$g_aiCurrentLootBB[$eLootTrophyBB] = Number(getTrophyMainScreen(67, 84))
-	If $g_aiCurrentLootBB[$eLootTrophyBB] <= $g_iTxtBBTrophyLowerLimit Then
-		SetLog("Current BB Trophy:[" & $g_aiCurrentLootBB[$eLootTrophyBB] & "] BBDropTrophy Limit:[" & $g_iTxtBBTrophyLowerLimit & "]", $COLOR_INFO)
-		SetLog("Skip BB Drop Trophy", $COLOR_INFO)
-		Return
+	If CheckStarsAvail() Then 
+		SetLog("Stars Available, Skip BB Drop Trophy")
+		Return False
 	EndIf
 	
-	If ClickBBAttackButton() Then 
-		For $i = 1 To 5
-			If WaitforPixel(588, 321, 589, 322, "D7540E", 20, 2) Then
-				SetDebugLog("Found FindNow Button", $COLOR_ACTION)
-				_Sleep(500)
-				ExitLoop
-			EndIf
-			If WaitforPixel(665, 437, 666, 438, "D9F481", 20, 1) Then
-				SetDebugLog("Found Previous Attack Result", $COLOR_ACTION)
-				Click(640, 440)
-				_Sleep(500)
-			EndIf
-			_Sleep(1000)
-			SetDebugLog("Wait For Find Now Button #" & $i, $COLOR_ACTION)
-		Next
+	Local $iCurrentTrophy = 0
+	For $iLoop = 1 To 3
+		$iCurrentTrophy = Number(getTrophyMainScreen(67, 84))
+		SetLog("Current BB Trophy:[" & $iCurrentTrophy & "] BBDropTrophy Limit:[" & $g_iTxtBBTrophyLowerLimit & "]", $COLOR_INFO)
+		If $iCurrentTrophy <= $g_iTxtBBTrophyLowerLimit Then
+			SetLog("Skip BB Drop Trophy", $COLOR_INFO)
+			Return False
+		EndIf
 		
-		If CheckLootAvail() Then 
-			SetLog("BB Loot Available, Skip BB Drop Trophy")
-			ClickAway()
-			_Sleep(1000)
+		If Not ClickBBAttackButton() Then 
+			ClickAway("Left")
 			Return False
 		Else
+			SetLog("Going to attack for BB Drop Trophy #" & $iLoop, $COLOR_ACTION)
 			CheckArmyReady()
-			SetLog("Going to attack for BB Drop Trophy", $COLOR_INFO)
-			local $aBBFindNow = [521, 278, 0xffc246, 30] ; search button
-			If _CheckPixel($aBBFindNow, True) Then
-				PureClick($aBBFindNow[0], $aBBFindNow[1])
-			Else
-				SetLog("Could not locate search button to go find an attack.", $COLOR_ERROR)
-				ClickAway()
-				Return False
-			EndIf
 			
-			If _Sleep(1500) Then Return ; give time for find now button to go away
-			If Not $g_bRunState Then Return ; Stop Button
-			; wait for the clouds to clear
-			SetLog("Searching for Opponent.", $COLOR_BLUE)
+			If Not ClickFindNowButton() Then Return False
+			If Not $g_bRunState Then Return
+			If Not WaitCloudsBB() Then Return
+			AndroidZoomOut() ;zoomout first before any action
 			
-			Local $count = 1
-			While Not WaitforPixel(88, 586, 89, 588, "5095D8", 10, 1) 
-				SetDebugLog("Waiting Attack Page #" & $count, $COLOR_ACTION)
-				If $count > 20 Then 
-					CloseCoC(True)
-					Return ;xbebenk, prevent bot to long on cloud?, in fact BB attack should only takes seconds to search
-				EndIf
-				If isProblemAffect(True) Then Return
-				If Not $g_bRunState Then Return ; Stop Button
-				$count += 1
-				_Sleep(2000)
-			WEnd
-			
-			Local $iSide = True
+			Local $iSide = 1
 			Local $aBMPos = GetMachinePos()
-			$g_BBDP = GetBBDropPoint()
+			Local $BBDP[4][3] = [[1, 430, 130], [2, 128, 330], [3, 744, 330], [1, 596, 458]] ;dummy deploy point, 4 corner
+			;$g_BBDP = GetBBDropPoint()
 			
-			Local $Return = False
 			If IsArray($aBMPos) Then
-				SetLog("Deploying BM")
-				DeployBM($aBMPos, $iSide, $iSide, $g_BBDP)
-				If ReturnHomeDropTrophyBB() Then Return True
+				Local $isBMDeployed = DeployBM($aBMPos, $iSide, $iSide, $BBDP)
+				If $isBMDeployed Then
+					If _Sleep(1000) Then Return
+					If ReturnHomeDropTrophyBB() Then ContinueLoop
+				EndIf
 			EndIf
 			
-			If Not $Return Then
-				; Get troops on attack bar and their quantities
-				local $aBBAttackBar = GetAttackBarBB()
-				If IsArray($aBBAttackBar) Then
-					For $i = 1 To 10
-						SetDebugLog("Try Drop Troops #" & $i, $COLOR_ACTION)
-						DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], 1, 1, 2, $g_BBDP)
-						_Sleep(1000)
-						If IsAttackPage() Then ExitLoop
-					Next
-				EndIf
-				If ReturnHomeDropTrophyBB() Then Return True
+			; Get troops on attack bar and their quantities
+			$g_BBDP = GetBBDropPoint()
+			Local $aBBAttackBar = GetAttackBarBB()
+			If IsArray($aBBAttackBar) Then
+				For $i = 1 To 10
+					If $g_bChkDebugAttackBB Then SetLog("Try Drop Troops #" & $i, $COLOR_ACTION)
+					DeployBBTroop($aBBAttackBar[0][0], $aBBAttackBar[0][1], $aBBAttackBar[0][2], 1, 1, 2, $g_BBDP)
+					If _Sleep(1000) Then Return
+					If IsAttackPage() Then ExitLoop
+				Next
 			EndIf
+			
+			If ReturnHomeDropTrophyBB() Then ContinueLoop
 		EndIf
-	EndIf
+	Next
+	
+	SetLog("BBDropTrophy Completed", $COLOR_SUCCESS)
+	CollectBBCart()
 	Return False
 EndFunc
 
-Func ReturnHomeDropTrophyBB()
-	For $i = 1 To 5 
-		SetDebugLog("Waiting Surrender button #" & $i, $COLOR_ACTION)
-		If IsAttackPage() Then
-			Click(65, 540) ;click surrender
-			_Sleep(1000)
-			ExitLoop
-		EndIf
-		_Sleep(1000)
+Func ReturnHomeDropTrophyBB($bOnlySurender = False)
+	SetLog("Returning Home", $COLOR_SUCCESS)
+	
+	For $i = 1 To 15
+		Select
+			Case IsBBAttackPage() = True
+				Click(65, 520) ;click surrender
+				If $g_bChkDebugAttackBB Then SetLog("Click Surrender/EndBattle", $COLOR_ACTION)
+				If _Sleep(1000) Then Return
+			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) = True
+				If $bOnlySurender Then 
+					If $g_bChkDebugAttackBB Then SetLog("ExitLoop, bOnlySurender = " & String($bOnlySurender), $COLOR_ACTION)
+					Return True
+				EndIf
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If $g_bChkDebugAttackBB Then SetLog("Click Return Home", $COLOR_ACTION)
+				If _Sleep(3000) Then Return
+			Case QuickMIS("BC1", $g_sImgBBAttackBonus, 410, 464, 454, 490) = True
+				SetLog("Congrats Chief, Stars Bonus Awarded", $COLOR_INFO)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(2000) Then Return
+				Return True
+			Case isOnBuilderBase() = True
+				Return True
+			Case IsOKCancelPage() = True
+				ClickOkay("BB Attack Surrender"); Click Okay to Confirm surrender
+				If $g_bChkDebugAttackBB Then SetLog("Click OK", $COLOR_ACTION)
+				If _Sleep(1000) Then Return
+		EndSelect
+		If _Sleep(500) Then Return
 	Next
 	
-	For $i = 1 To 5
-		SetDebugLog("Waiting OK Cancel Window #" & $i, $COLOR_ACTION)
-		If IsOKCancelPage(True) Then
-			Click(510, 400); Click Okay to Confirm surrender
-			_Sleep(1000)
-			ExitLoop
-		EndIf
-		_Sleep(1000)
-	Next
-	
-	For $i = 1 To 10
-		SetDebugLog("Waiting EndBattle Window #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgOkButton, 350, 520, 500, 570) Then
-			Click($g_iQuickMISX, $g_iQuickMISY)
-			_Sleep(3000)
-			ExitLoop
-		EndIf
-		_Sleep(1000)
-	Next
-	
-	For $i = 1 To 10	
-		SetDebugLog("Waiting Opponent Attack Window #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgWatchButton, 520, 280, 570, 370) Then 
-			ClickAway("Left")
-			ExitLoop
-		EndIf
-		_Sleep(1000)
-	Next
-	ClickAway("Left")
-	_Sleep(2000)
-	ZoomOut()
 	Return True
 EndFunc

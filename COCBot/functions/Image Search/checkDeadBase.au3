@@ -157,10 +157,10 @@ EndFunc   ;==>checkDeadBaseNew
 
 Func checkDeadBase()
    If $g_bChkDeadEagle And $g_iSearchCount < $g_iDeadEagleSearch Then
-		SetDebugLog("Checking base for DeadEagle : " & $g_iSearchCount)
+		SetDebugLog("[" & $g_iSearchCount & "] Checking base for DeadEagle")
 		Return CheckForDeadEagle()
 	Else
-		SetDebugLog("Checking base for Collector Level : " & $g_iSearchCount)
+		SetDebugLog("[" & $g_iSearchCount & "] Checking base for Collector Level")
 		Return checkDeadBaseSuperNew(False)
 	EndIf
 EndFunc   ;==>checkDeadBase

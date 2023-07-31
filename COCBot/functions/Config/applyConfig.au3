@@ -22,7 +22,7 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 		Return
 	EndIf
 	$g_bApplyConfigIsActive = True
-	SetDebugLog("applyConfig(), call number " & $iApplyConfigCount)
+	SetDebugLog("applyConfig(), " & $TypeReadSave & ", call number " & $iApplyConfigCount)
 
 	setMaxDegreeOfParallelism($g_iThreads)
 	setProcessingPoolSize($g_iGlobalThreads)
@@ -130,8 +130,8 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	; <><><> Attack Plan / Train Army / Options <><><>
 	ApplyConfig_641_1($TypeReadSave)
 
-	; <><><><> Attack Plan / Strategies <><><><>
-	; <<< nothing here >>>
+	; <><><><> BuilderBase <><><><>
+	ApplyBuilderBaseMod($TypeReadSave)
 
 	; <><><><> Bot / Profiles <><><><>
 	PopulatePresetComboBox()
@@ -420,10 +420,15 @@ Func ApplyConfig_600_6($TypeReadSave)
 			; Builder Base Attack
 			GUICtrlSetState($g_hChkEnableBBAttack, $g_bChkEnableBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBDropTrophy, $g_bChkBBDropTrophy ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkStopAttackBB6thBuilder, $g_bChkStopAttackBB6thBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBAttackReport, $g_bChkBBAttackReport ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSkipBBRoutineOn6thBuilder, $g_bChkSkipBBRoutineOn6thBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtBBTrophyLowerLimit, $g_iTxtBBTrophyLowerLimit)
-			GUICtrlSetState($g_hChkBBAttIfLootAvail, $g_bChkBBAttIfLootAvail ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBAttIfStarsAvail, $g_bChkBBAttIfStarsAvail ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSkipBBAttIfStorageFull, $g_bChkSkipBBAttIfStorageFull ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBWaitForMachine, $g_bChkBBWaitForMachine ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBDropBMFirst, $g_bChkBBDropBMFirst ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkDebugAttackBB, $g_bChkDebugAttackBB ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay, (($g_iBBNextTroopDelay - $g_iBBNextTroopDelayDefault) / $g_iBBNextTroopDelayIncrement) + 4) ; set combos based on delays
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay, (($g_iBBSameTroopDelay - $g_iBBSameTroopDelayDefault) / $g_iBBSameTroopDelayIncrement) + 4)
 			_GUICtrlComboBox_SetCurSel($g_hCmbBBAttackCount, $g_iBBAttackCount)
@@ -452,6 +457,8 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkEnableForgeBBElix, $g_bChkEnableForgeBBElix ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbForgeBuilder, $g_iCmbForgeBuilder)
 			GUICtrlSetState($g_hChkEnableAutoUpgradeCC, $g_bChkEnableAutoUpgradeCC ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkEnableMinGoldAUCC, $g_bChkEnableMinGoldAUCC ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetData($g_hTxtMinCCGoldToUpgrade, $g_iMinCCGoldToUpgrade)
 			GUICtrlSetState($g_hChkAutoUpgradeCCIgnore, $g_bChkAutoUpgradeCCIgnore ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAutoUpgradeCCWallIgnore, $g_bChkAutoUpgradeCCWallIgnore ? $GUI_CHECKED : $GUI_UNCHECKED)
 
@@ -459,7 +466,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkMMSkipFirstCheckRoutine, $g_bSkipFirstCheckRoutine ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMSkipBB, $g_bSkipBB ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMSkipTrain, $g_bSkipTrain ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkSkipSnowDetection, $g_bSkipSnowDetection ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkMMIgnoreIncorrectTroopCombo, $g_bIgnoreIncorrectTroopCombo ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbFillIncorrectTroopCombo, $g_iCmbFillIncorrectTroopCombo)
 			GUICtrlSetState($g_hChkMMIgnoreIncorrectSpellCombo, $g_bIgnoreIncorrectSpellCombo ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -602,10 +608,15 @@ Func ApplyConfig_600_6($TypeReadSave)
 			; Builder Base Attack
 			$g_bChkEnableBBAttack = (GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)
 			$g_bChkBBDropTrophy = (GUICtrlRead($g_hChkBBDropTrophy) = $GUI_CHECKED)
+			$g_bChkStopAttackBB6thBuilder = (GUICtrlRead($g_hChkStopAttackBB6thBuilder) = $GUI_CHECKED)
+			$g_bChkBBAttackReport = (GUICtrlRead($g_hChkBBAttackReport) = $GUI_CHECKED)
+			$g_bChkSkipBBRoutineOn6thBuilder = (GUICtrlRead($g_hChkSkipBBRoutineOn6thBuilder) = $GUI_CHECKED)
 			$g_iTxtBBTrophyLowerLimit = Number(GUICtrlRead($g_hTxtBBTrophyLowerLimit))
-			$g_bChkBBAttIfLootAvail = (GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
+			$g_bChkBBAttIfStarsAvail = (GUICtrlRead($g_hChkBBAttIfStarsAvail) = $GUI_CHECKED)
+			$g_bChkSkipBBAttIfStorageFull = (GUICtrlRead($g_hChkSkipBBAttIfStorageFull) = $GUI_CHECKED)
 			$g_bChkBBWaitForMachine = (GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
 			$g_bChkBBDropBMFirst = (GUICtrlRead($g_hChkBBDropBMFirst) = $GUI_CHECKED)
+			$g_bChkDebugAttackBB = (GUICtrlRead($g_hChkDebugAttackBB) = $GUI_CHECKED)
 
 			;ClanCapital
 			$g_bChkEnableCollectCCGold = (GUICtrlRead($g_hChkEnableCollectCCGold) = $GUI_CHECKED)
@@ -617,6 +628,8 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkEnableForgeBBElix = (GUICtrlRead($g_hChkEnableForgeBBElix) = $GUI_CHECKED)
 			$g_iCmbForgeBuilder = _GUICtrlComboBox_GetCurSel($g_hCmbForgeBuilder)
 			$g_bChkEnableAutoUpgradeCC = (GUICtrlRead($g_hChkEnableAutoUpgradeCC) = $GUI_CHECKED)
+			$g_bChkEnableMinGoldAUCC = (GUICtrlRead($g_hChkEnableMinGoldAUCC) = $GUI_CHECKED)
+			$g_iMinCCGoldToUpgrade = Number(GUICtrlRead($g_hTxtMinCCGoldToUpgrade))
 			$g_bChkAutoUpgradeCCIgnore = (GUICtrlRead($g_hChkAutoUpgradeCCIgnore) = $GUI_CHECKED)
 			$g_bChkAutoUpgradeCCWallIgnore = (GUICtrlRead($g_hChkAutoUpgradeCCWallIgnore) = $GUI_CHECKED)
 
@@ -624,7 +637,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bSkipFirstCheckRoutine = (GUICtrlRead($g_hChkMMSkipFirstCheckRoutine) = $GUI_CHECKED)
 			$g_bSkipBB = (GUICtrlRead($g_hChkMMSkipBB) = $GUI_CHECKED)
 			$g_bSkipTrain = (GUICtrlRead($g_hChkMMSkipTrain) = $GUI_CHECKED)
-			$g_bSkipSnowDetection = (GUICtrlRead($g_hChkSkipSnowDetection) = $GUI_CHECKED)
 			$g_bIgnoreIncorrectTroopCombo = (GUICtrlRead($g_hChkMMIgnoreIncorrectTroopCombo) = $GUI_CHECKED)
 			$g_iCmbFillIncorrectTroopCombo = _GUICtrlComboBox_GetCurSel($g_hCmbFillIncorrectTroopCombo)
 			$g_bIgnoreIncorrectSpellCombo = (GUICtrlRead($g_hChkMMIgnoreIncorrectSpellCombo) = $GUI_CHECKED)
@@ -640,7 +652,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bSkipDT = (GUICtrlRead($g_hChkSkipDT) = $GUI_CHECKED)
 
 	EndSwitch
-	ApplyBuilderBaseMod($TypeReadSave)
 EndFunc   ;==>ApplyConfig_600_6
 
 Func ApplyBuilderBaseMod($TypeReadSave)
@@ -941,7 +952,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			GUICtrlSetData($g_hUseBOSTime, $g_iUseBOSTime)
 			GUICtrlSetState($g_hUseBOE, $g_bUseBOE ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hUseBOETime, $g_iUseBOETime)
-			
+
 			For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 				_GUICtrlComboBox_SetCurSel($g_ahCmbLabUpgradeOrder[$i], $g_aCmbLabUpgradeOrder[$i])
 			Next
@@ -973,7 +984,7 @@ Func ApplyConfig_600_14($TypeReadSave)
 			$g_iUseBOSTime =  GUICtrlRead($g_hUseBOSTime)
 			$g_bUseBOE = (GUICtrlRead($g_hUseBOE) = $GUI_CHECKED)
 			$g_iUseBOETime =  GUICtrlRead($g_hUseBOETime)
-			
+
 			For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1
 				$g_aCmbLabUpgradeOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbLabUpgradeOrder[$i])
 			Next

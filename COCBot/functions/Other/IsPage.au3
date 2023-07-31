@@ -63,7 +63,7 @@ Func IsTrainPage($bSetLog = True, $iLoop = 5)
 EndFunc   ;==>IsTrainPage
 
 Func IsAttackPage($bCapturePixel = True)
-
+	If $bCapturePixel Then _CaptureRegions()
 	If IsPageLoop($aIsAttackPage, 1, $bCapturePixel) Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Attack Window OK**", $COLOR_ACTION)
 		Return True
@@ -176,9 +176,15 @@ Func IsLaunchAttackPage()
 EndFunc   ;==>IsLaunchAttackPage
 
 Func IsMultiplayerTabOpen()
-	Local $aCheckPixel[4] = [525, 55, 0xD8A61E, 20]
-	If _CheckPixel($aCheckPixel, True) Then
-		SetDebugLog("Multiplayer Tab is open", $COLOR_INFO)
+	Local $result = False
+	$result = WaitforPixel(823,40,825,46, "FFFFFF", 10, 2)
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 20, 860, 100) Then $result = True
+	EndIf
+	
+	If $result Then
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found FullScreen Window", $COLOR_ACTION)
 		Return True
 	EndIf
 	Return False
@@ -236,8 +242,12 @@ Func IsPostDefenseSummaryPage($bCapture = True)
 EndFunc   ;==>IsPostDefenseSummaryPage
 
 Func IsFullScreenWindow()
-	Local $result
-	$result = WaitforPixel(823,44,825,46, "FFFFFF", 10, 2)
+	Local $result = False
+	$result = WaitforPixel(823,40,825,46, "FFFFFF", 10, 2)
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 20, 860, 100) Then $result = True
+	EndIf
 	
 	If $result Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found FullScreen Window", $COLOR_ACTION)

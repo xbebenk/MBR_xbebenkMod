@@ -13,27 +13,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 #include-once
-Func ClickCC()
-	Local $bRet = False
-	;try again with village size check
-	CheckMainScreen(False)
-	SetDebugLog("Try click with village size offset..")
-	Local $Yoffset 
-	If $g_aVillageSize[3] < 0 Then
-		$Yoffset = $g_aiClanCastlePos[1] + Ceiling(Abs($g_aVillageSize[3]))
-	Else
-		$Yoffset = $g_aiClanCastlePos[1] - Ceiling(Abs($g_aVillageSize[3]))
-	EndIf
-	SetDebugLog("g_aVillageSize[3]=" & $g_aVillageSize[3])
-	Click($g_aiClanCastlePos[0], $Yoffset)
-	If _Sleep(1000) Then Return
-	Local $BuildingInfo = BuildingInfo(260, 494)
-	If $BuildingInfo[1] = "Clan Castle" Then 
-		$bRet = True
-	EndIf
-	
-	Return $bRet
-EndFunc
 
 Func TreasuryCollect()
 	SetLog("Begin CollectTreasury:", $COLOR_DEBUG)
@@ -51,7 +30,6 @@ Func TreasuryCollect()
 			$TryCCAutoLocate = False
 		Else
 			$TryCCAutoLocate = True
-			If ClickCC() Then $TryCCAutoLocate = False
 		EndIf
 	EndIf
 	
@@ -86,7 +64,13 @@ Func TreasuryCollect()
 	Else
 		SetLog("Treasury not full yet", $COLOR_INFO)
 	EndIf
-
+	
+	If $g_iTxtTreasuryGold = 0 Or $g_iTxtTreasuryElixir = 0 Or $g_iTxtTreasuryDark = 0 Then 
+		SetLog("Forced Collect Treasury")
+		SetLog("Setting for Gold/Elix/DE = 0")
+		$bForceCollect = True
+	EndIf
+	
 	; Treasury window open, user msg logged, time to collect loot!
 	; check for collect treasury full GUI condition enabled and low resources
 	If $bForceCollect Or ($g_bChkTreasuryCollect And ((Number($g_aiCurrentLoot[$eLootGold]) <= $g_iTxtTreasuryGold) Or (Number($g_aiCurrentLoot[$eLootElixir]) <= $g_iTxtTreasuryElixir) Or (Number($g_aiCurrentLoot[$eLootDarkElixir]) <= $g_iTxtTreasuryDark))) Then

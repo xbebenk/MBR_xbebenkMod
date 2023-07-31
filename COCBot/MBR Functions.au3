@@ -138,7 +138,6 @@
 #include "functions\Main Screen\checkAttackDisable.au3"
 #include "functions\Main Screen\RemoveGhostTrayIcons.au3"
 #include "functions\Main Screen\waitMainScreen.au3"
-#include "functions\Main Screen\isOnBuilderBase.au3"
 
 ; Android support for MEmu, Nox, BlueStacks and iTools
 #include "functions\Android\AndroidMenuShortcuts.au3"
@@ -218,7 +217,6 @@
 #include "functions\Search\GetResources.au3"
 #include "functions\Search\PrepareSearch.au3"
 #include "functions\Search\VillageSearch.au3"
-#include "functions\Search\CheckZoomOut.au3"
 #include "functions\Search\FindTownHall.au3"
 #include "functions\Search\IsSearchModeActive.au3"
 #include "functions\Search\IsSearchAttackEnabled.au3"
@@ -229,7 +227,6 @@
 #include "functions\Village\BotDetectFirstTime.au3"
 #include "functions\Village\BotCommand.au3"
 #include "functions\Village\BreakPersonalShield.au3"
-#include "functions\Village\CheckImageType.au3"
 #include "functions\Village\CheckBaseQuick.au3"
 #include "functions\Village\chkShieldStatus.au3"
 #include "functions\Village\Collect.au3"

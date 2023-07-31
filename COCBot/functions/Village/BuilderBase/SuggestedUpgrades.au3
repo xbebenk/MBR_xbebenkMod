@@ -137,7 +137,7 @@ EndFunc   ;==>chkPlacingNewBuildings
 ; MAIN CODE
 Func AutoUpgradeBB($bTest = False)
 	If $g_iChkBBSuggestedUpgrades = 0 Then Return
-	If Not isOnBuilderBase(True) Then Return
+	If Not isOnBuilderBase() Then Return
 	If Not AutoUpgradeBBCheckBuilder($bTest) Then Return ;check if we have masterBuilder
 	ZoomOut()
 	BuilderBaseReport(True)
@@ -160,6 +160,8 @@ Func AutoUpgradeBB($bTest = False)
 EndFunc   ;==>MainSuggestedUpgradeCode
 
 Func SearchNewBuilding($bTest = False)
+	SetLog("SearchNewBuilding Disabled by Dev, Return", $COLOR_ERROR)
+	Return False
 	Local $NeedDrag = True, $ZoomedIn = False, $TmpUpgradeCost, $UpgradeCost, $sameCost
 	ClickBBBuilder()
 	
@@ -349,7 +351,8 @@ Func SearchExistingBuilding($bTest = False)
 				Click($Building[$i][1], $Building[$i][2])
 				If _Sleep(1000) Then Return
 				If DoUpgradeBB($Building[$i][0], $bTest) Then
-					Return True ;upgrade success
+					SetLog("Upgrade Success", $COLOR_SUCCESS)
+					;Return True ;upgrade success
 				Else
 					ClickBBBuilder()
 					ContinueLoop ;upgrade not success
@@ -706,12 +709,12 @@ Func FindBBExistingBuilding($bTest = False)
 	If $Elix > $Gold Then $ElixMultiply += 1
 
 	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundOptimizeOTTO = False
-	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 400, 73, 500, 370)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 425, 73, 560, 370)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			$bFoundOptimizeOTTO = False ;reset
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
-			$UpgradeName = getBuildingName(300, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
+			$UpgradeName = getBuildingName($aTmpCoord[$i][1] - 220, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
 			If $g_bOptimizeOTTO Then ;if OptimizeOTTO enabled, filter only OptimizeOTTO buildings
 				For $x = 0 To UBound($g_aOptimizeOTTO) - 1
 					If StringInStr($UpgradeName[0], $g_aOptimizeOTTO[$x][0], 1) Then
@@ -790,40 +793,33 @@ EndFunc
 Func ClickBBBuilder($Counter = 3)
 	Local $b_WindowOpened = False
 	If Not $g_bRunState Then Return
-	; open the builders menu
-	If Not _ColorCheck(_GetPixelColor(380,73, True), "BABBBC", 40) Then
+	
+	If Not IsBBBuilderMenuOpen() Then
 		Click(380, 30)
 		If _Sleep(1000) Then Return
-	EndIf
-
-	If IsBBBuilderMenuOpen() Then
-		SetDebugLog("Open BB BuilderMenu, Success", $COLOR_SUCCESS)
-		$b_WindowOpened = True
-	Else
 		For $i = 1 To $Counter
-			SetLog("BB BuilderMenu didn't open, trying again!", $COLOR_DEBUG)
 			If Not $g_bRunState Then Return
-			If IsFullScreenWindow() Then
-				Click(825,45)
-				If _Sleep(1000) Then Return
-			EndIf
-			Click(380, 30)
-			If _Sleep(1000) Then Return
 			If IsBBBuilderMenuOpen() Then
 				$b_WindowOpened = True
 				ExitLoop
 			EndIf
+			SetLog("[" & $i & "] BB BuilderMenu didn't open, trying again!", $COLOR_DEBUG)
+			Click(380, 30)
+			If _Sleep(1000) Then Return
 		Next
-		If Not $b_WindowOpened Then
-			SetLog("Something is wrong with BB BuilderMenu, already tried 3 times!", $COLOR_DEBUG)
-		EndIf
+	Else
+		If $g_bDebugSetLog Then SetLog("BB BuilderMenu, Already Open", $COLOR_SUCCESS)
+		$b_WindowOpened = True
 	EndIf
+
+	If Not $b_WindowOpened Then SetLog("Something wrong with BB BuilderMenu, already tried " & $Counter & " times!", $COLOR_DEBUG)
+
 	Return $b_WindowOpened
 EndFunc ;==>ClickBBBuilder
 
 Func IsBBBuilderMenuOpen()
 	Local $bRet = False
-	Local $aBorder[4] = [380, 73, 0xBABBBC, 40]
+	Local $aBorder[4] = [380, 73, 0xF4F4F5, 40]
 	Local $aBorder1[4] = [380, 73, 0xFFFFFF, 40]
 	Local $sTriangle
 	If _CheckPixel($aBorder, True) Then
@@ -837,7 +833,8 @@ Func IsBBBuilderMenuOpen()
 			$bRet = True ;got correct color for border
 		EndIf
 	EndIf
-	
+	;_PixelSearch(380, 72, 383, 74, Hex(0xBDC1BE, 6), 20, True, True, "Test")
+	; _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $bNeedCapture = True, $bReturnBool = False, $sMessage = "")
 	If Not $bRet Then ;lets re check if border color check not success
 		SetDebugLog("Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
 		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 380, 60, 420, 30)
@@ -983,14 +980,6 @@ Func IsGreenCheck()
 				ExitLoop
 			Else
 				$bRet = False
-			EndIf
-		EndIf
-		If Not $bRet Then
-			If QuickMIS("BC1", $g_sImgBBWallRotate, 360, 530, 500, 610) Then 
-				Click(430, 580)
-				_Sleep(1000)
-			Else
-				Return $bRet
 			EndIf
 		EndIf
 	Next

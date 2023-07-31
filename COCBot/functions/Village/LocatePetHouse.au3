@@ -23,12 +23,35 @@ Func LocatePetHouse($bCollect = True)
 	EndIf
 
 	; auto locate 
-	ImgLocatePetHouse()
+	Local $bAutoLocated = autoLocatePetHouse()
 	
 	SetLog("PetHouse: (" & $g_aiPetHousePos[0] & "," & $g_aiPetHousePos[1] & ")", $COLOR_DEBUG)
-	If $g_aiPetHousePos[0] > 0 And $g_aiPetHousePos[1] > 0 Then Return True
-	
-	If $g_aiPetHousePos[1] = "" Or $g_aiPetHousePos[1] = -1 Then _LocatePetHouse($bCollect) ; manual locate
+	If $bAutoLocated And $g_aiPetHousePos[0] > 0 And $g_aiPetHousePos[1] > 0 Then Return True
+EndFunc
+
+Func autoLocatePetHouse()
+	Local $bRet = False, $BuildingName = ""
+	Local $aPetHouse = QuickMIS("CNX", $g_sImgPetHouse)
+	If IsArray($aPetHouse) And Ubound($aPetHouse) > 0 Then 
+		For $i = 0 To UBound($aPetHouse) - 1
+			If StringInStr($aPetHouse[$i][0], "PetHouse") Then 
+				SetLog("PetHouse Search find : " & _ArrayToString($aPetHouse), $COLOR_DEBUG)
+				Click($aPetHouse[$i][1], $aPetHouse[$i][2])
+				$BuildingName = BuildingInfo(242, 498)
+				If StringInStr($BuildingName[1], "Pet") Then
+					$g_aiPetHousePos[0] = $aPetHouse[$i][1]
+					$g_aiPetHousePos[1] = $aPetHouse[$i][2]
+					$bRet = True
+					ExitLoop
+				EndIf
+			EndIf
+		Next
+	Else
+		SetLog("Couldn't find Pet House on main village", $COLOR_ERROR)
+		If $g_bDebugImageSave Then SaveDebugImage("PetHouse", True)
+		Return $bRet
+	EndIf
+	Return $bRet
 EndFunc
 
 Func _LocatePetHouse($bCollect = True)
@@ -114,29 +137,4 @@ Func _LocatePetHouse($bCollect = True)
 		ExitLoop
 	WEnd
 	ClickAway()
-
 EndFunc   ;==>LocatePetHouse
-
-; Image Search for Pet House
-Func ImgLocatePetHouse()
-	Local $sImgDir = @ScriptDir & "\imgxml\Buildings\PetHouse\"
-
-	Local $avPetHouse = QuickMIS("CNX", $sImgDir)
-
-	If Not IsArray($avPetHouse) Or UBound($avPetHouse, $UBOUND_ROWS) <= 0 Then
-		SetLog("Couldn't find Pet House on main village", $COLOR_ERROR)
-		If $g_bDebugImageSave Then SaveDebugImage("PetHouse", False)
-		Return False
-	Else
-		For $i = 0 To UBound($avPetHouse) - 1
-			If StringInStr($avPetHouse[$i][0], "PetHouse") Then 
-				$g_aiPetHousePos[0] = $avPetHouse[$i][1]
-				$g_aiPetHousePos[1] = $avPetHouse[$i][2]
-				SetLog("PetHouse Search find : " & _ArrayToString($g_aiPetHousePos))
-				Return True
-			EndIf
-		Next
-	EndIf
-
-	Return False
-EndFunc
