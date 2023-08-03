@@ -227,7 +227,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		If IsTHLevelAchieved() And Not $g_bUpgradeLowCost And $g_bUpgradeOtherDefenses Then
 			SetLog("Search Other Defenses Building on Builder Menu", $COLOR_INFO)
 			ClickMainBuilder()
-			Local $aResult = FindOtherDefensesBuilding()
+			Local $aResult = FindOtherDefenses()
 			If isArray($aResult) And UBound($aResult) > 0 Then
 				For $y = 0 To UBound($aResult) - 1
 					SetLog($aResult[$y][3] & ", Cost: " & $aResult[$y][5] & " " & $aResult[$y][0], $COLOR_SUCCESS)
