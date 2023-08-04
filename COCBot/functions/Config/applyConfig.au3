@@ -1114,6 +1114,7 @@ Func ApplyConfig_auto($TypeReadSave)
 			GUICtrlSetState($g_hHeroPriority, $g_bHeroPriority ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hUseHeroBooks, $g_bUseHeroBooks ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hHeroMinUpgradeTime, $g_iHeroMinUpgradeTime)
+			GUICtrlSetState($g_hUpgradeOtherDefenses, $g_bUpgradeOtherDefenses ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				GUICtrlSetState($g_hChkUpgradesToIgnore[$i], $g_iChkUpgradesToIgnore[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
@@ -1141,6 +1142,7 @@ Func ApplyConfig_auto($TypeReadSave)
 			$g_bHeroPriority = (GUICtrlRead($g_hHeroPriority) = $GUI_CHECKED)
 			$g_bUseHeroBooks = (GUICtrlRead($g_hUseHeroBooks) = $GUI_CHECKED)
 			$g_iHeroMinUpgradeTime =  GUICtrlRead($g_hHeroMinUpgradeTime)
+			$g_bUpgradeOtherDefenses = (GUICtrlRead($g_hUpgradeOtherDefenses) = $GUI_CHECKED)
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				$g_iChkUpgradesToIgnore[$i] = GUICtrlRead($g_hChkUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next
