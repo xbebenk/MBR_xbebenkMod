@@ -236,7 +236,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 					If CheckResourceForDoUpgrade($aResult[$y][3], $aResult[$y][5], $aResult[$y][0]) Then
 						Click($aResult[$y][1], $aResult[$y][2])
 						If _Sleep(1000) Then Return
-						If DoUpgrade($bTest, $iSpecialMode = 1) Then ;do upgrade special mode
+						If DoUpgrade($bTest, 1) Then ;do upgrade special mode
 							$z = 0 ;reset
 							$g_bSkipWallReserve = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
 							$g_bUpgradeLowCost = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
