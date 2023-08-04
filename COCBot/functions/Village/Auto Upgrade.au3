@@ -236,7 +236,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 					If CheckResourceForDoUpgrade($aResult[$y][3], $aResult[$y][5], $aResult[$y][0]) Then
 						Click($aResult[$y][1], $aResult[$y][2])
 						If _Sleep(1000) Then Return
-						If DoUpgrade($bTest) Then
+						If DoUpgrade($bTest, $iSpecialMode = 1) Then ;do upgrade special mode
 							$z = 0 ;reset
 							$g_bSkipWallReserve = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
 							$g_bUpgradeLowCost = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
@@ -415,7 +415,7 @@ Func CheckResourceForDoUpgrade($BuildingName, $Cost, $CostType)
 
 EndFunc
 
-Func DoUpgrade($bTest = False)
+Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 	If Not $g_bRunState Then Return
 
 	; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
@@ -596,6 +596,28 @@ Func DoUpgrade($bTest = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1) ? True : False
 		Case Else
 			$bMustIgnoreUpgrade = False
+	EndSwitch
+	
+	;Bypass and overwrite everything else when we are doing special upgrades
+	;Special Mode:
+	;0: Special Mode Off
+	;1: Upgrade Other Defenses
+	;2: Reserved for Future Implementations
+	Switch $iSpecialMode
+		Case 1
+			Local $aEssentialBuilding[4] = ["Cannon", "Archer Tower", "Mortar", "Hidden Tesla"]
+			For $j = 0 To UBound($aEssentialBuilding) - 1
+				SetDebugLog($g_aUpgradeNameLevel[1] & "|" & $aEssentialBuilding[$j])
+				If $g_aUpgradeNameLevel[1] = $aEssentialBuilding[$j] Then
+					If $THLevelAchieved Then
+						$bMustIgnoreUpgrade = False
+					Else
+						$bMustIgnoreUpgrade = True
+						SetLog("Other Defenses Building: " & $g_aUpgradeNameLevel[1] &" Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+					EndIf
+				EndIf
+			Next
+		Case Else
 	EndSwitch
 
 	Local $aUpgradeButton, $aTmpUpgradeButton
