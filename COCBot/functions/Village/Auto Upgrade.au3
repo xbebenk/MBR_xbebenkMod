@@ -623,7 +623,7 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 		Case 2 ;Remove Building if in Array
 			Local $aBuildingList2[3] = ["Collector", "Mine", "Mortar"]
 			For $j = 0 To UBound($aBuildingList2) - 1
-				If StringInStr($g_aUpgradeNameLevel[1], $aBuildingList2[$j])
+				If StringInStr($g_aUpgradeNameLevel[1], $aBuildingList2[$j]) Then
 						$bMustIgnoreUpgrade = True
 						SetLog("Skipped Wrong Building for Low Upgrade: " & $g_aUpgradeNameLevel[1], $COLOR_INFO)
 					EndIf
