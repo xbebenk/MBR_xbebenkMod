@@ -417,6 +417,8 @@ EndFunc
 
 Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 	If Not $g_bRunState Then Return
+	
+	If $g_bUpgradeLowCost Then $iSpecialMode = 2
 
 	; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
 	$g_aUpgradeNameLevel = BuildingInfo(242, 494)
@@ -602,18 +604,28 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 	;Special Mode:
 	;0: Special Mode Off
 	;1: Upgrade Other Defenses
-	;2: Reserved for Future Implementations
+	;2: Upgrade Low
+	;3: Reserved for Future Implementations
 	Switch $iSpecialMode
 		Case 1
-			Local $aEssentialBuilding[4] = ["Cannon", "Archer Tower", "Mortar", "Hidden Tesla"]
-			For $j = 0 To UBound($aEssentialBuilding) - 1
-				SetDebugLog($g_aUpgradeNameLevel[1] & "|" & $aEssentialBuilding[$j])
-				If $g_aUpgradeNameLevel[1] = $aEssentialBuilding[$j] Then
+			Local $aBuildingList1[4] = ["Cannon", "Archer Tower", "Mortar", "Hidden Tesla"]
+			For $j = 0 To UBound($aBuildingList1) - 1
+				SetDebugLog($g_aUpgradeNameLevel[1] & "|" & $aBuildingList1[$j])
+				If $g_aUpgradeNameLevel[1] = $aBuildingList1[$j] Then
 					If $THLevelAchieved Then
 						$bMustIgnoreUpgrade = False
 					Else
 						$bMustIgnoreUpgrade = True
 						SetLog("Other Defenses Building: " & $g_aUpgradeNameLevel[1] &" Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+					EndIf
+				EndIf
+			Next
+		Case 2 ;Remove Building if in Array
+			Local $aBuildingList2[3] = ["Collector", "Mine", "Mortar"]
+			For $j = 0 To UBound($aBuildingList2) - 1
+				If StringInStr($g_aUpgradeNameLevel[1], $aBuildingList2[$j])
+						$bMustIgnoreUpgrade = True
+						SetLog("Skipped Wrong Building for Low Upgrade: " & $g_aUpgradeNameLevel[1], $COLOR_INFO)
 					EndIf
 				EndIf
 			Next
@@ -637,7 +649,7 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 	EndIf
 
 	; check if the upgrade name is on the list of upgrades that must be ignored
-	If $bMustIgnoreUpgrade And Not $g_bUpgradeLowCost Then
+	If $bMustIgnoreUpgrade Then
 		SetLog($g_aUpgradeNameLevel[1] & " : This upgrade must be ignored, looking next...", $COLOR_WARNING)
 		Return False
 	Else
