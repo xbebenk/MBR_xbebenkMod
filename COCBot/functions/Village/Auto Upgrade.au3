@@ -626,7 +626,6 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 				If StringInStr($g_aUpgradeNameLevel[1], $aBuildingList2[$j]) Then
 						$bMustIgnoreUpgrade = True
 						SetLog("Skipped Wrong Building for Low Upgrade: " & $g_aUpgradeNameLevel[1], $COLOR_INFO)
-					EndIf
 				EndIf
 			Next
 		Case Else
