@@ -672,12 +672,17 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 480, 500, 550) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487) ; get cost
 			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(192, 307) ; get duration
+			; Don't upgrade when upgrade time is >24h for low upgrade
+			If $iSpecialMode = 2 And ConvertOCRTime("UpgradeLow", $g_aUpgradeResourceCostDuration[2], False) > 1440 Then
+				SetLog("[UpgradeLow] Wrong upgrade selected, time needed > 24h", $COLOR_INFO)
+ 				Return False
+			EndIf
 	EndSwitch
 	
 	If $g_aUpgradeNameLevel[1] = "Clan Castle" And $g_aUpgradeNameLevel[2] = "Broken" Then 
 		$g_aUpgradeResourceCostDuration[0] = "Gold"
 		$g_aUpgradeResourceCostDuration[1] = "10000" ; get cost
-		$g_aUpgradeResourceCostDuration[2] = "Instance Upgrade"
+		$g_aUpgradeResourceCostDuration[2] = "Instant Upgrade"
 	EndIf
 		
 	; if one of the value is empty, there is an error, we must exit Auto Upgrade
