@@ -697,7 +697,7 @@ Func FindBBNewBuilding()
 	Return $aBuilding
 EndFunc
 
-Global $g_aOptimizeOTTO[15][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 13], ["Storage", 12], _
+Global $g_aOptimizeOTTO[16][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 13], ["Battle Copter", 13], ["Storage", 12], _
 									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 14], ["Builder Hall", 12], ["Clock Tower", 6], ["Barracks", 12], _
 									["Army Camp", 12], ["Wall", 5], ["Gem Mine", 5]]
 
