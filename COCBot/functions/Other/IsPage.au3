@@ -30,11 +30,17 @@ Func IsPageLoop($aCheckPixel, $iLoop = 30, $bCapturePixel = $g_bCapturePixel)
 	Return $IsPage
 EndFunc   ;==>IsPageLoop
 
-Func IsSettingPage($bSetLog = True, $iLoop = 30)
+Func IsSettingPage($bSetLog = True, $iLoop = 5)
 
 	If IsPageLoop($aIsSettingPage, $iLoop) Then
 		If ($g_bDebugSetlog Or $g_bDebugClick) And $bSetLog Then SetLog("**Setting Window OK**", $COLOR_ACTION)
 		Return True
+	EndIf
+	
+	If $g_bDebugSetlog Or $g_bDebugClick Then
+		Local $colorRead = _GetPixelColor($aIsSettingPage[0], $aIsSettingPage[1], True)
+		SetLog("**IsSettingPage Window FAIL**", $COLOR_ACTION)
+		SetLog("expected in (" & $aIsSettingPage[0] & "," & $aIsSettingPage[1] & ")  = " & Hex($aIsSettingPage[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
 	EndIf
 
 	If $bSetLog Then SetLog("Cannot find Setting Window...", $COLOR_ERROR) ; in case of $i = 29 in while loop
@@ -177,10 +183,10 @@ EndFunc   ;==>IsLaunchAttackPage
 
 Func IsMultiplayerTabOpen()
 	Local $result = False
-	$result = WaitforPixel(823,40,825,46, "FFFFFF", 10, 2)
+	$result = WaitforPixel(785, 111, 798, 123, "FFFFFF", 10, 2)
 	
 	If Not $result Then 
-		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 20, 860, 100) Then $result = True
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 97, 812, 136) Then $result = True
 	EndIf
 	
 	If $result Then

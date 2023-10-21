@@ -128,7 +128,7 @@ Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army ca
 EndFunc   ;==>getArmyCampCap
 
 Func getArmySiegeCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 17, True, False, $bNeedCapture)
+	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 46, 17, True, False, $bNeedCapture)
 EndFunc   ;==>getArmyCampCap
 
 Func getCastleDonateCap($x_start, $y_start) ;  -> Gets clan castle capacity,  --> donatecc.au3
@@ -352,7 +352,7 @@ Func getCloudFailShort($x_start, $y_start, $sLogText = Default, $LogTextColor = 
 EndFunc   ;==>getCloudFailShort
 
 Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  -> Gets quantity of troops in army Window
-	Return getOcrAndCapture("coc-newarmy", $x_start, $y_start, 45, 18, True, False, $bNeedCapture)
+	Return getOcrAndCapture("coc-newarmy", $x_start, $y_start, 55, 18, True, False, $bNeedCapture)
 EndFunc   ;==>getBarracksNewTroopQuantity
 
 Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of troops in army Window

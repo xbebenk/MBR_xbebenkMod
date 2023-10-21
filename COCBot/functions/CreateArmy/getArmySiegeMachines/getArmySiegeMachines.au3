@@ -51,7 +51,7 @@ Func getArmySiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 	Local $aCurrentTroopsEmpty[$eSiegeMachineCount] = [0, 0, 0, 0, 0] ; Local Copy to reset Siege Machine Array
 
 	; Get Siege Capacities
-	Local $sSiegeInfo = getArmySiegeCap(755, 136, $bNeedCapture) ; OCR read Siege built and total
+	Local $sSiegeInfo = getArmySiegeCap($aSiegeMachineSize[0], $aSiegeMachineSize[1], $bNeedCapture) ; OCR read Siege built and total
 	If $g_bDebugSetlogTrain Then SetLog("OCR $sSiegeInfo = " & $sSiegeInfo, $COLOR_DEBUG)
 	Local $aGetSiegeCap = StringSplit($sSiegeInfo, "#", $STR_NOCOUNT) ; split the built Siege number from the total Siege number
 	If Ubound($aGetSiegeCap) = 2 Then
@@ -72,12 +72,12 @@ Func getArmySiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 
 			If $iSiegeIndex < 0 Then ContinueLoop
 
-			$g_aiCurrentSiegeMachines[$iSiegeIndex] = Number(getBarracksNewTroopQuantity(Slot($aSiegeCoords[0], $aSiegeCoords[1]), 166, $bNeedCapture)) ; Get The Quantity of the Troop, Slot() Does return the exact spot to read the Number from
+			$g_aiCurrentSiegeMachines[$iSiegeIndex] = Number(getBarracksNewTroopQuantity(Slot($aSiegeCoords[0], $aSiegeCoords[1]), 175, $bNeedCapture)) ; Get The Quantity of the Troop, Slot() Does return the exact spot to read the Number from
 
 			$sSiegeName = $g_aiCurrentSiegeMachines[$iSiegeIndex] >= 2 ? $g_asSiegeMachineNames[$iSiegeIndex] & "s" : $g_asSiegeMachineNames[$iSiegeIndex] & ""
 
 			If $g_bDebugSetlogTrain Then Setlog($sSiegeName & " Coord: (" & $aSiegeCoords[0] & "," & $aSiegeCoords[1] & ") Quant :" & $g_aiCurrentSiegeMachines[$iSiegeIndex])
-			If $g_bDebugSetlogTrain Then Setlog($sSiegeName & " Slot (" & Slot($aSiegeCoords[0], $aSiegeCoords[1]) & "," & 166 & ")")
+			If $g_bDebugSetlogTrain Then Setlog($sSiegeName & " Slot (" & Slot($aSiegeCoords[0], $aSiegeCoords[1]) & "," & 175 & ")")
 
 			If $bSetLog Then SetLog(" - " & $g_aiCurrentSiegeMachines[$iSiegeIndex] & " " & $sSiegeName & " Available", $COLOR_SUCCESS)
 		Next

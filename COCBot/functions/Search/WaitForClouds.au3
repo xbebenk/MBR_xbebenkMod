@@ -38,6 +38,11 @@ Func WaitForClouds()
 			ExitLoop
 		EndIf
 		
+		If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then 
+			SetDebugLog("Found Next Button, exitLoop")
+			ExitLoop
+		EndIf
+		
 		_GUICtrlStatusBar_SetTextEx($g_hStatusBar, " Status: Loop to clean screen without Clouds, # " & $iCount)
 		
 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
@@ -60,7 +65,7 @@ Func WaitForClouds()
 			EndIf
 		EndIf
 		If Not $g_bRunState Then ExitLoop
-		If _Sleep(1000) Then Return
+		If _Sleep(500) Then Return
 	WEnd
 
 	SetDebugLog("End WaitForClouds", $COLOR_DEBUG1)

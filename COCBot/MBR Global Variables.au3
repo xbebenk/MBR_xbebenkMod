@@ -611,12 +611,13 @@ Global Const $DROPLINE_DROPPOINTS_ONLY = 4
 ; Standard Enums and Consts - Attacks, Troops, Spells, Leagues, Loot Types
 ;--------------------------------------------------------------------------
 ; Complete list of all deployable/trainable objects
-Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, _
-		$eDrag, $eSDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, $eYeti, $eRDrag, $eETitan, _
-		$eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt, $eGSkel, $eRGhost, $ePWiza, $eIWiza, _
-		$eKing, $eQueen, $eWarden, $eChampion, $eCastle, _
-		$eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $eISpell, $eReSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell, _
-		$eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD, $eArmyCount
+Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, _ 
+			$eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eSDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eSMine, _ 
+			$eEDrag, $eYeti, $eRDrag, $eETitan, $eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, _ 
+			$eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt, $eGSkel, $eRGhost, _ 
+			$ePWiza, $eIWiza, $eKing, $eQueen, $eWarden, $eChampion, $eCastle, $eLSpell, $eHSpell, $eRSpell, _ 
+			$eJSpell, $eFSpell, $eCSpell, $eISpell, $eReSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell, _ 
+			$eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD, $eArmyCount
 
 ; Attack types
 Global Enum $DB, $LB, $TB, $DT ; DeadBase, ActiveBase, TownhallBully, DropTrophy
@@ -625,33 +626,38 @@ Global $g_iMatchMode = 0 ; 0 Dead / 1 Live / 2 TH Bully / 3 Drop Trophy
 Global Const $g_asModeText[4] = ["Dead Base", "Live Base", "TH Bully", "Drop Trophy"]
 
 ; Troops
-Global Enum $eTroopBarbarian, $eTroopSuperBarbarian, $eTroopArcher, $eTroopSuperArcher, $eTroopGiant, $eTroopSuperGiant, $eTroopGoblin, $eTroopSneakyGoblin, $eTroopWallBreaker, _
-		$eTroopSuperWallBreaker, $eTroopBalloon, $eTroopRocketBalloon, $eTroopWizard, $eTroopSuperWizard, $eTroopHealer, $eTroopDragon, $eTroopSuperDragon, _
-		$eTroopPekka, $eTroopBabyDragon, $eTroopInfernoDragon, $eTroopMiner, $eTroopSuperMiner, _
-		$eTroopElectroDragon, $eTroopYeti, $eTroopDragonRider, $eTroopElectroTitan, _
-		$eTroopMinion, $eTroopSuperMinion, $eTroopHogRider, $eTroopValkyrie, $eTroopSuperValkyrie, $eTroopGolem, $eTroopWitch, $eTroopSuperWitch, _
-		$eTroopLavaHound, $eTroopIceHound, $eTroopBowler, $eTroopSuperBowler, $eTroopIceGolem, $eTroopHeadhunter, _ 
-		$eTroopGiantSkeleton, $eTroopRoyalGhost, $eTroopPartyWizard, $eTroopIceWizard, $eTroopCount
+Global Enum $eTroopBarbarian, $eTroopSuperBarbarian, $eTroopArcher, $eTroopSuperArcher, $eTroopGiant, $eTroopSuperGiant, $eTroopGoblin, $eTroopSneakyGoblin, $eTroopWallBreaker, $eTroopSuperWallBreaker, $eTroopBalloon, _
+			$eTroopRocketBalloon, $eTroopWizard, $eTroopSuperWizard, $eTroopHealer, $eTroopDragon, $eTroopSuperDragon, $eTroopPekka, $eTroopBabyDragon, $eTroopInfernoDragon, $eTroopMiner, $eTroopSuperMiner, _
+			$eTroopElectroDragon, $eTroopYeti, $eTroopDragonRider, $eTroopElectroTitan, $eTroopMinion, $eTroopSuperMinion, $eTroopHogRider, $eTroopValkyrie, $eTroopSuperValkyrie, $eTroopGolem, _
+			$eTroopWitch, $eTroopSuperWitch, $eTroopLavaHound, $eTroopIceHound, $eTroopBowler, $eTroopSuperBowler, $eTroopIceGolem, $eTroopHeadhunter, $eTroopGiantSkeleton, $eTroopRoyalGhost, _ 
+			$eTroopPartyWizard, $eTroopIceWizard, $eTroopCount
 
 ; TroopsIcons
-Global Const $g_aTroopsIcon[$eTroopCount] = [$eIcnBarbarian, $eIcnSuperBarbarian, $eIcnArcher, $eIcnSuperArcher, $eIcnGiant, $eIcnSuperGiant, $eIcnGoblin, _
-		$eIcnSneakyGoblin, $eIcnWallBreaker, $eIcnSuperWallBreaker, $eIcnBalloon, $eIcnRocketBalloon, $eIcnWizard, $eIcnSuperWizard, $eIcnHealer, $eIcnDragon, _ 
-		$eIcnSuperDragon, $eIcnPekka, $eIcnBabyDragon, $eIcnInfernoDragon, $eIcnMiner,$eIcnSuperMiner, $eIcnElectroDragon, $eIcnYeti, $eIcnDragonRider, _ 
-		$eIcnElectroTitan, $eIcnMinion, $eIcnSuperMinion, $eIcnHogRider, $eIcnValkyrie, $eIcnSuperValkyrie, $eIcnGolem, $eIcnWitch, $eIcnSuperWitch, _
-		$eIcnLavaHound, $eIcnIceHound, $eIcnBowler, $eIcnSuperBowler, $eIcnIceGolem, $eIcnHeadhunter, $eIcnGiantSkeleton, $eIcnRoyalGhost, $eIcnPartyWizard, $eIcnIceWizard]
+Global Const $g_aTroopsIcon[$eTroopCount] = [ _ 
+		$eIcnBarbarian, $eIcnSuperBarbarian, $eIcnArcher, $eIcnSuperArcher, $eIcnGiant, $eIcnSuperGiant, $eIcnGoblin, $eIcnSneakyGoblin, $eIcnWallBreaker, $eIcnSuperWallBreaker, $eIcnBalloon, _
+		$eIcnRocketBalloon, $eIcnWizard, $eIcnSuperWizard, $eIcnHealer, $eIcnDragon, $eIcnSuperDragon, $eIcnPekka, $eIcnBabyDragon, $eIcnInfernoDragon, $eIcnMiner, $eIcnSuperMiner, _ 
+		$eIcnElectroDragon, $eIcnYeti, $eIcnDragonRider, $eIcnElectroTitan, $eIcnMinion, $eIcnSuperMinion, $eIcnHogRider, $eIcnValkyrie, $eIcnSuperValkyrie, $eIcnGolem, _ 
+		$eIcnWitch, $eIcnSuperWitch, $eIcnLavaHound, $eIcnIceHound, $eIcnBowler, $eIcnSuperBowler, $eIcnIceGolem, $eIcnHeadhunter, $eIcnGiantSkeleton, $eIcnRoyalGhost, _
+		$eIcnPartyWizard, $eIcnIceWizard]
 
 Global Const $g_asTroopNames[$eTroopCount] = [ _
-		"Barbarian", "Super Barbarian", "Archer", "Super Archer", "Giant", "Super Giant", "Goblin", "Sneaky Goblin", "Wall Breaker", "Super WallBreaker", "Balloon", "Rocket Balloon", "Wizard", "Super Wizard", "Healer", "Dragon", "Super Dragon", _
-		"Pekka", "Baby Dragon", "Inferno Dragon", "Miner", "Super Miner", "Electro Dragon", "Yeti", "Dragon Rider", "Electro Titan", "Minion", "Super Minion", "Hog Rider", "Valkyrie", "Super Valkyrie", "Golem", "Witch", "Super Witch", _
-		"Lava Hound", "Ice Hound", "Bowler", "Super Bowler", "Ice Golem", "Headhunter", "Giant Skeleton", "Royal Ghost", "Party Wizard", "Ice Wizard"]
+		"Barbarian", "Super Barbarian", "Archer", "Super Archer", "Giant", "Super Giant", "Goblin", "Sneaky Goblin", "Wall Breaker", "Super WallBreaker", "Balloon", _ 
+		"Rocket Balloon", "Wizard", "Super Wizard", "Healer", "Dragon", "Super Dragon", "Pekka", "Baby Dragon", "Inferno Dragon", "Miner", "Super Miner", _
+		"Electro Dragon", "Yeti", "Dragon Rider", "Electro Titan", "Minion", "Super Minion", "Hog Rider", "Valkyrie", "Super Valkyrie", "Golem", _ 
+		"Witch", "Super Witch", "Lava Hound", "Ice Hound", "Bowler", "Super Bowler", "Ice Golem", "Headhunter", "Giant Skeleton", "Royal Ghost", _
+		"Party Wizard", "Ice Wizard"]
 Global Const $g_asTroopNamesPlural[$eTroopCount] = [ _
-		"Barbarians", "Super Barbarians", "Archers", "Super Archers", "Giants", "Super Giants", "Goblins", "Sneaky Goblins", "Wall Breakers", "Super Wall Breakers", "Balloons", "Rocket Balloons", "Wizards", "Super Wizards", "Healers", _
-		"Dragons", "Super Dragons", "Pekkas", "Baby Dragons", "Inferno Dragons", "Miners", "Super Miners", "Electro Dragons", "Yetis", "Dragon Riders", "Electro Titans", "Minions", "Super Minions", "Hog Riders", "Valkyries", "Super Valkyries", "Golems", "Witches", "Super Witchs", _
-		"Lava Hounds", "Ice Hounds", "Bowlers", "Super Bowlers", "Ice Golems", "Headhunters", "Giant Skeletons", "Royal Ghosts", "Party Wizards", "Ice Wizards"]
+		"Barbarians", "Super Barbarians", "Archers", "Super Archers", "Giants", "Super Giants", "Goblins", "Sneaky Goblins", "Wall Breakers", "Super WallBreakers", "Balloons", _ 
+		"Rocket Balloons", "Wizards", "Super Wizards", "Healers", "Dragons", "Super Dragons", "Pekkas", "Baby Dragons", "Inferno Dragons", "Miners", "Super Miners", _
+		"Electro Dragons", "Yetis", "Dragon Riders", "Electro Titans", "Minions", "Super Minions", "Hog Riders", "Valkyries", "Super Valkyries", "Golems", _ 
+		"Witchs", "Super Witchs", "Lava Hounds", "Ice Hounds", "Bowlers", "Super Bowlers", "Ice Golems", "Headhunters", "Giant Skeletons", "Royal Ghosts", _
+		"Party Wizards", "Ice Wizard"]
 Global Const $g_asTroopShortNames[$eTroopCount] = [ _
-		"Barb", "SBarb", "Arch", "SArch", "Giant", "SGiant", "Gobl", "SGobl", "Wall", "SWall", "Ball", "RBall", "Wiza", "SWiza", "Heal", "Drag", _
-		"SDrag", "Pekk", "BabyD", "InfernoD", "Mine", "SMine", "EDrag", "Yeti", "RDrag", "ETitan", _
-		"Mini", "SMini", "Hogs", "Valk", "SValk", "Gole", "Witc", "SWitc", "Lava", "IceH", "Bowl", "SBowl", "IceG", "Hunt", "GSkel", "RGhost", "PWiza", "IWiza"]
+		"Barb", "SBarb", "Arch", "SArch", "Giant", "SGiant", "Gobl", "SGobl", "Wall", "SWall", "Ball", _ 
+		"RBall", "Wiza", "SWiza", "Heal", "Drag", "SDrag", "Pekk", "BabyD", "InfernoD", "Mine", "SMine", _ 
+		"EDrag", "Yeti", "RDrag", "ETitan", "Mini", "SMini", "Hogs", "Valk", "SValk", "Gole", _ 
+		"Witc", "SWitc", "Lava", "IceH", "Bowl", "SBowl", "IceG", "Hunt", "GSkel", "RGhost", _ 
+		"PWiza", "IWiza"]
 
 Global Const $g_aiTroopSpace[$eTroopCount] = [1, 5, 1, 12, 5, 10, 1, 3, 2, 8, 5, 8, 4, 10, 14, 20, 40, 25, 10, 15, 6, 24, 30, 18, 25, 32, 2, 12, 5, 8, 20, 30, 12, 40, 30, 40, 6, 30, 15, 6, 20, 8, 4, 4]
 Global Const $g_aiTroopTrainTime[$eTroopCount] = [20, 100, 24, 288, 120, 240, 28, 84, 60, 240, 120, 192, 120, 300, 480, 720, 1440, 720, 360, 540, 120, 480, 1440, 720, 250, 1480, 36, 216, 90, 180, 450, 600, 360, 1200, 600, 800, 120, 0, 360, 120, 30, 37, 30, 30]

@@ -1317,11 +1317,12 @@ Func FirstCheck()
 		SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_SUCCESS)
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
-
-	If isElixirFull() or isDarkElixirFull() Then
-		Laboratory()
-		VillageReport(True, True)
-	EndIf
+	
+	;skip
+	;If isElixirFull() or isDarkElixirFull() Then
+	;	Laboratory()
+	;	VillageReport(True, True)
+	;EndIf
 
 	CheckTombs()
 	If $g_iFreeBuilderCount > 0 Then
@@ -1375,7 +1376,7 @@ Func FirstCheckRoutine()
 		For $count = 1 to 5
 			If Not $g_bRunState Then Return
 			If _ClanGames() Then
-				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+				If $g_bIsBBevent Then
 					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 					SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_ACTION)
 					GotoBBTodoCG()

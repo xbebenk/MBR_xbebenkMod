@@ -60,6 +60,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		EndIf
 		
 		If $bContinue Then waitMainScreen() ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
+		If Not $g_bRunState Then Return
 		If _Sleep(1000) Then Return
 	WEnd
 	
@@ -91,7 +92,7 @@ EndFunc
 Func checkChatTabPixel()
 	Local $bRet = False
 	
-	If _ColorCheck(_GetPixelColor(19, 376, True), Hex(0xC85415, 6), 20, Default, "checkChatTabPixel") Then
+	If _ColorCheck(_GetPixelColor(12, 342, True), Hex(0xC55115, 6), 20, Default, "checkChatTabPixel") Then
 		If $g_bDebugSetLog Then SetLog("checkChatTabPixel: Found ChatTab", $COLOR_ACTION)
 		$bRet = True
 	Else
@@ -115,7 +116,7 @@ Func isOnMainVillage()
 	$bRet = _checkMainScreenImage($aPixelToCheck)
 	If Not $bRet Then
 		SetDebugLog("Using Image to Check if isOnMainVillage")
-		If QuickMIS("BC1", $g_sImgInfo, 269, 3, 282, 15) Then $bRet = True
+		If QuickMIS("BC1", $g_sImgInfo, 369, 3, 392, 15) Then $bRet = True
 	EndIf
 	Return $bRet
 EndFunc
@@ -127,7 +128,7 @@ Func isOnBuilderBase()
 	$bRet = _checkMainScreenImage($aPixelToCheck)
 	If Not $bRet Then
 		SetDebugLog("Using Image to Check if isOnBuilderBase")
-		If QuickMIS("BC1", $g_sImgInfo, 340, 3, 370, 13) Then $bRet = True
+		If QuickMIS("BC1", $g_sImgInfo, 447, 3, 466, 15) Then $bRet = True
 	EndIf
 	
 	Return $bRet

@@ -89,7 +89,7 @@ Func _makerequest($x, $y, $bTest)
 	Local $RequestWindowOpen = False
 	For $i = 1 To 10
 		SetDebugLog("Wait for Send Request Window #" & $i, $COLOR_ACTION)
-		If QuickMis("BC1", $g_sImgSendRequestButton, 440, 410, 600, 550) Then 
+		If QuickMis("BC1", $g_sImgSendRequestButton, 515, 480, 575, 495) Then 
 			SetDebugLog("_makerequest: Request window open", $COLOR_ACTION)
 			$RequestWindowOpen = True
 			ExitLoop
@@ -112,7 +112,7 @@ Func _makerequest($x, $y, $bTest)
 		If _Sleep(1000) Then Return ; wait time after clicking request window border
 		For $i = 1 To 5
 			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
-			If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
+			If QuickMis("BC1", $g_sImgSendRequestButton, 515, 430, 575, 510) Then ;lets check again the send button position with taller height
 				SetDebugLog("Make final request", $COLOR_ACTION)
 				If Not $bTest Then 
 					Click($g_iQuickMISX, $g_iQuickMISY)

@@ -31,7 +31,7 @@ Func getShieldInfo()
 		Return
 	EndIf
 
-	If QuickMIS("BC1", $g_sImgShield, 430, 5, 460, 35) Then 
+	If QuickMIS("BC1", $g_sImgShield, 506, 5, 530, 35) Then 
 		Select
 			Case $g_iQuickMISName = "NoShield"
 				$aPBReturnResult[0] = "none"
@@ -49,11 +49,11 @@ Func getShieldInfo()
 		Return
 	EndIf
 	
-	$sTimeResult = getOcrGuardShield(484, 21) ; read Shield time
+	$sTimeResult = getOcrGuardShield(540, 21) ; read Shield time
 	SetDebugLog("OCR Shield Time= " & $sTimeResult, $COLOR_DEBUG)
 	If $sTimeResult = "" Then ; try a 2nd time after a short delay if slow PC and null read
 		If _Sleep($DELAYPERSONALSHIELD2) Then Return $aPBReturnResult ; pause for slow PC
-		$sTimeResult = getOcrGuardShield(484, 21) ; read Shield time
+		$sTimeResult = getOcrGuardShield(540, 21) ; read Shield time
 		SetDebugLog("OCR2 Shield Time= " & $sTimeResult, $COLOR_DEBUG)
 		If $sTimeResult = "" Then ; error if no read value
 			$aPBReturnResult[1] = '00:00:00'

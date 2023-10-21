@@ -455,10 +455,10 @@ Func SelectEvent(ByRef $aSelectChallenges)
 	If _Sleep(1000) Then Return
 EndFunc
 
-Func IsClanGamesWindow($getCapture = True)
+Func IsClanGamesWindow()
 	Local $sState, $bRet = False
 
-	If QuickMIS("BC1", $g_sImgCaravan, 200, 55, 330, 155, $getCapture, False) Then
+	If QuickMIS("BC1", $g_sImgCaravan, 200, 55, 330, 155) Then
 		SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		; Just wait for window open
@@ -1099,17 +1099,6 @@ Func CollectCGReward($bTest = False)
 					ExitLoop
 				EndIf
 			Next
-
-			;Click($aTile[0][1], $aTile[0][2]+10)
-			;SetLog("Selecting Magic Items:" & $aTile[0][0], $COLOR_INFO)
-			;_Sleep(1000)
-			;If IsOKCancelPage() Then ;check if we found gems popup, decline
-			;	SetLog("Magic Item storage is Full (Decline)", $COLOR_INFO)
-			;	Click(350, 400) ;Click No
-			;	_Sleep(1000)
-			;	Click(770, 420) ;100 Gems
-			;	_Sleep(1000)
-			;EndIf
 		Else
 			; Image Magic Items Not found, maybe image not exist yet
 			Click(770, 420) ;100 Gems
@@ -1153,6 +1142,11 @@ Func GetCGRewardList($X = 280, $OnlyClaimMax = False)
 			If IsArray($aTmp) And Ubound($aTmp) > 0 Then
 				Local $Value = 0
 				For $j = 0 To UBound($aTmp) - 1
+					If QuickMIS("BC1", $g_sImgRewardItemStorageFull, $aTmp[$j][1] - 50, $aTmp[$j][2] - 50, $aTmp[$j][1] + 50, $aTmp[$j][2] + 50) Then 
+						SetDebugLog("Storage Full for " & $aTmp[$j][0], $COLOR_ERROR)
+						ContinueLoop
+					EndIf
+					
 					Switch $aTmp[$j][0]
 						Case "Books"
 							$Value = 5

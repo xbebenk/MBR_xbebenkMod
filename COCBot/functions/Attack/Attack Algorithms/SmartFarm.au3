@@ -463,8 +463,10 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 				If UBound($tempObbjs) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPenBlack)
 			Next
 		Else
-			$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT)
-			If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPenBlack)
+			If $aOut[$i][5] <> "" Then 
+				$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT)
+				If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPenBlack)
+			EndIf
 		EndIf
 		$tempObbj = Null
 		$tempObbjs = Null
@@ -616,7 +618,6 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, ["CC", 1, 1, 1, 1] _
 				, ["HEROES", 1, 2, 1, 1]]
 	If $g_bCustomDropOrderEnable Then
-		Local $aTmpDelete
 		Local $aTmpListInfoDeploy = $listInfoDeploy
 		;AttackSmartFarm(4, "TL|BR|BL|TR")
 		;_ArrayDisplay($aTmpListInfoDeploy, "aTmpListInfoDeploy1")
@@ -625,24 +626,26 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 			If $g_bDebugSmartFarm Then SetLog("iValue : " & $iValue & " [" & GetTroopName($iValue) & "]")
 			If $iValue <> -1 And $iValue < $eKing Then
 				Local $iDelete = _ArraySearch($aTmpListInfoDeploy, $iValue, 0, 0, 0, 0, 1, 0)
-				If $g_bDebugSmartFarm Then SetLog("iDelete : " & $iDelete)
-				Local $troop = $aTmpListInfoDeploy[$i][0]
-				Local $nside1 = $aTmpListInfoDeploy[$i][1]
-				Local $wave = $aTmpListInfoDeploy[$i][2]
-				Local $x = $aTmpListInfoDeploy[$i][3]
-				Local $slotedge = $aTmpListInfoDeploy[$i][4]
-				
-				$aTmpListInfoDeploy[$i][0] = $aTmpListInfoDeploy[$iDelete][0]
-				$aTmpListInfoDeploy[$i][1] = $aTmpListInfoDeploy[$iDelete][1]
-				$aTmpListInfoDeploy[$i][2] = $aTmpListInfoDeploy[$iDelete][2]
-				$aTmpListInfoDeploy[$i][3] = $aTmpListInfoDeploy[$iDelete][3]
-				$aTmpListInfoDeploy[$i][4] = $aTmpListInfoDeploy[$iDelete][4]
-				
-				$aTmpListInfoDeploy[$iDelete][0] = $troop
-				$aTmpListInfoDeploy[$iDelete][1] = $nside1
-				$aTmpListInfoDeploy[$iDelete][2] = $wave
-				$aTmpListInfoDeploy[$iDelete][3] = $x
-				$aTmpListInfoDeploy[$iDelete][4] = $slotedge
+				If $iDelete <> -1 Then
+					If $g_bDebugSmartFarm Then SetLog("iDelete : " & $iDelete)
+					Local $troop = $aTmpListInfoDeploy[$i][0]
+					Local $nside1 = $aTmpListInfoDeploy[$i][1]
+					Local $wave = $aTmpListInfoDeploy[$i][2]
+					Local $x = $aTmpListInfoDeploy[$i][3]
+					Local $slotedge = $aTmpListInfoDeploy[$i][4]
+					
+					$aTmpListInfoDeploy[$i][0] = $aTmpListInfoDeploy[$iDelete][0]
+					$aTmpListInfoDeploy[$i][1] = $aTmpListInfoDeploy[$iDelete][1]
+					$aTmpListInfoDeploy[$i][2] = $aTmpListInfoDeploy[$iDelete][2]
+					$aTmpListInfoDeploy[$i][3] = $aTmpListInfoDeploy[$iDelete][3]
+					$aTmpListInfoDeploy[$i][4] = $aTmpListInfoDeploy[$iDelete][4]
+					
+					$aTmpListInfoDeploy[$iDelete][0] = $troop
+					$aTmpListInfoDeploy[$iDelete][1] = $nside1
+					$aTmpListInfoDeploy[$iDelete][2] = $wave
+					$aTmpListInfoDeploy[$iDelete][3] = $x
+					$aTmpListInfoDeploy[$iDelete][4] = $slotedge
+				EndIf
 			EndIf
 		Next
 		$listInfoDeploy = $aTmpListInfoDeploy

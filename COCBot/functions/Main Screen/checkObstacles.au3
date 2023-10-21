@@ -289,10 +289,10 @@ EndFunc   ;==>_checkObstacles
 
 Func WelcomeBackCheck()
 	Local $bGreenButton = False, $bWhiteW = False, $bWhiteB = False, $bWhiteC = False
-	If _ColorCheck(_GetPixelColor(440, 497, True), Hex(0xDDF686, 6), 10, Default, "checkObstacles") Then $bGreenButton = True
-	If _ColorCheck(_GetPixelColor(292, 139, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteW = True
-	If _ColorCheck(_GetPixelColor(421, 139, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteB = True
-	If _ColorCheck(_GetPixelColor(501, 139, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteC = True
+	If _ColorCheck(_GetPixelColor(440, 497, True), Hex(0xCEE67C, 6), 10, Default, "checkObstacles") Then $bGreenButton = True
+	If _ColorCheck(_GetPixelColor(288, 150, True), Hex(0xEFEFEF, 6), 10, Default, "checkObstacles") Then $bWhiteW = True
+	If _ColorCheck(_GetPixelColor(425, 146, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteB = True
+	If _ColorCheck(_GetPixelColor(504, 146, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteC = True
 	
 	If $bGreenButton And $bWhiteW And $bWhiteB And $bWhiteC Then Return True
 EndFunc
@@ -540,5 +540,18 @@ Func CheckObstacles_SCIDPopup()
 		Return False
 	EndIf
 	Return True
+EndFunc
+
+Func SearchUnplacedBuilding()
+	Local $atmpInfo = getNameBuilding(330, 474)
+	If $atmpInfo = "" Then
+		SetDebugLog("Search: Unplaced Building Not Found!")
+		Return False
+	Else
+		If StringInStr($atmpInfo, "place") Or StringInStr($atmpInfo, "Items") Then
+			SetDebugLog("Search: Unplaced Building Found!", $COLOR_SUCCESS)
+			Return True
+		EndIf
+	EndIf
 EndFunc
 

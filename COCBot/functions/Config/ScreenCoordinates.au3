@@ -10,19 +10,19 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-; 	   $aiSomeVar = [StartX, StartY, EndX, EndY]
+;$aiSomeVar = [StartX, StartY, EndX, EndY]
 ;Global $aiClickAwayRegionLeft = [225, 10, 255, 30]
 ;Global $aiClickAwayRegionRight = [605, 10, 645, 30]
 ;Let's tighten these up to avoid clicking on shields.
-Global $aiClickAwayRegionLeft = [235, 10, 245, 20]
-Global $aiClickAwayRegionRight = [625, 10, 635, 20]
+Global $aiClickAwayRegionLeft = [229, 5, 242, 20]
+Global $aiClickAwayRegionRight = [630, 10, 650, 20]
 
 Global $aCenterEnemyVillageClickDrag = [65, 545] ; Scroll village using this location in the water
 Global $aVillageCenteringCoord = [[750, 370], [636, 500], [777, 235]] ; Scroll village using this location : upper from setting button
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
-Global $aIsMain[4] = [279, 9, 0x7ABDE0, 20] ; Main Screen, Builder Info Icon
-Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
-Global $aIsOnBuilderBase[4] = [356, 12, 0x9DD2EE, 20] ; BuilderBase, Builder Info Icon
+Global $aIsMain[4] = [382, 5, 0xA7D7F1, 20] ; Main Screen, Builder Info Icon
+Global $aIsMainGrayed[4] = [382, 5, 0x546C79, 15] ; Main Screen, Builder Info Icon grayed
+Global $aIsOnBuilderBase[4] = [458, 5, 0xA7D7F1, 20] ; BuilderBase, Builder Info Icon
 
 Global $aReloadButton[4] = [210, 385, 0x282828, 10] ; Reload Coc Button after Out of Sync, 860x780
 Global $aAttackButton[2] = [60, 620] ; Attack Button, Main Screen, 860x676
@@ -38,15 +38,15 @@ Global $aEndFightSceneBtn[4] = [429, 519, 0xCDF271, 20] ; Victory or defeat scen
 Global $aEndFightSceneAvl[4] = [241, 196, 0xFFF090, 20] ; Victory or defeat scene left side ribbon = light gold
 Global $aEndFightSceneReportGold = $aEndFightSceneAvl ; Missing... TripleM ???
 Global $aReturnHomeButton[4] = [376, 567, 0x60AC10, 20] ; Return Home Button, End Battle Screen
-Global $aChatTab[4] = [331, 380, 0xC55115, 20] ; Chat Window Open, Main Screen
-Global $aArmyCampSize[2] = [111, 137] ; Training Window, Overview screen, Current Size/Total Size
-Global $aSiegeMachineSize[2] = [755, 136] ; Training Window, Overview screen, Current Number/Total Number
-Global $aArmySpellSize[2] = [99, 284] ; Training Window Overviewscreen, current number/total capacity
+Global $aChatTab[4] = [389, 342, 0xC55115, 20] ; Chat Window Open, Main Screen
+Global $aArmyCampSize[2] = [123, 145] ; Training Window, Overview screen, Current Size/Total Size
+Global $aSiegeMachineSize[2] = [748, 145] ; Training Window, Overview screen, Current Number/Total Number
+Global $aArmySpellSize[2] = [112, 288] ; Training Window Overviewscreen, current number/total capacity
 Global $g_aArmyCCSpellSize[2] = [473, 438] ; Training Window, Overview Screen, Current CC Spell number/total cc spell capacity
 Global $aArmyCCRemainTime[2] = [782, 552] ; Training Window Overviewscreen, Minutes & Seconds remaining till can request again
-Global $aIsCampFull[4] = [128, 151, 0xFFFFFF, 10] ; Training Window, Overview screen White pixel in check mark with camp IS full (can not test for Green, as it has trees under it!)
-Global $aBuildersDigits[2] = [324, 21] ; Main Screen, Free/Total Builders
-Global $aBuildersDigitsBuilderBase[2] = [414, 21] ; Main Screen on Builders Base Free/Total Builders
+Global $aIsCampFull[4] = [42, 154, 0xFFFFFF, 10] ; Training Window, Overview screen White pixel in check mark with camp IS full (can not test for Green, as it has trees under it!)
+Global $aBuildersDigits[2] = [426, 22] ; Main Screen, Free/Total Builders
+Global $aBuildersDigitsBuilderBase[2] = [502, 22] ; Main Screen on Builders Base Free/Total Builders
 Global $aTrophies[2] = [69, 84] ; Main Screen, Trophies
 Global $aNoCloudsAttack[4] = [25, 606, 0xCD0D0D, 15] ; Attack Screen: No More Clouds
 Global $aArmyTrainButton[2] = [40, 525] ; Main Screen, Army Train Button
@@ -60,11 +60,11 @@ Global $aIsGoldLow[4] = [775, 41, 0xE7C00D, 10] ; Main Screen Gold Resource bar 
 Global $aIsElixirFull[4] = [666, 86, 0xC027C0, 10] ; Main Screen Elixir Resource bar is Full
 Global $aIsElixirLow[4] = [775, 92, 0xC027C0, 10] ; Main Screen Elixir Resource bar is Low
 Global $aPerkBtn[4] = [95, 243, 0x7cd8e8, 10] ; Clan Info Page, Perk Button (blue); 800x780
-Global $aIsGemWindow1[4] = [573, 239, 0xFF8D95, 20] ; Main Screen, pixel left of Red X to close gem window
-Global $aIsGemWindow2[4] = [577, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
-Global $aIsGemWindow3[4] = [586, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
-Global $aIsGemWindow4[4] = [595, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
-Global $aIsTrainPgChk1[4] = [825, 107, 0xD51115, 20] ; Main Screen, Train page open - bottom of x button
+Global $aIsGemWindow1[4] = [593, 248, 0x5E5451, 20] ; Main Screen, pixel left of Red X to close gem window
+Global $aIsGemWindow2[4] = [624, 249, 0xCE181E, 20] ; Main Screen, pixel below Red X to close gem window
+Global $aIsGemWindow3[4] = [608, 249, 0xD11D23, 20] ; Main Screen, pixel below Red X to close gem window
+Global $aIsGemWindow4[4] = [640, 249, 0xD11C22, 20] ; Main Screen, pixel below Red X to close gem window
+Global $aIsTrainPgChk1[4] = [825, 107, 0xEC1115, 20] ; Main Screen, Train page open - bottom of x button
 Global $aIsTrainPgChk2[4] = [762, 328, 0xF18439, 10] ; Main Screen, Train page open - Dark Orange in left arrow
 Global $aRtnHomeCloud1[4] = [56, 592, 0x0A223F, 15] ; Cloud Screen, during search, blue pixel in left eye
 Global $aRtnHomeCloud2[4] = [72, 592, 0x103F7E, 15] ; Cloud Screen, during search, blue pixel in right eye
@@ -130,7 +130,7 @@ Global $NextBtnRND[4] = [710, 530, 830, 570] ;  Next Button
 Global $aLoginWithSupercellID[4] = [280, 630, 0xDCF684, 20] ; Upper green button section "Log in with Supercell ID" 0xB1E25A
 Global $aLoginWithSupercellID2[4] = [266, 653, 0xFFFFFF , 10] ; White Font "Log in with Supercell ID"
 Global $aButtonSetting[4] = [820, 530, 0xFFFFFF, 10] ; Setting button, Main Screen
-Global $aIsSettingPage[4] = [764, 95, 0xFFFFFF, 10] ; Main Screen, Setting page open - left upper corner of x button
+Global $aIsSettingPage[4] = [700, 90, 0x5E5451, 10] ; Main Screen, Setting page open - left upper corner of x button
 
 ;Google Play
 Global $aListAccount[4] = [635, 230, 0xFFFFFF, 20] ; Accounts list google, White

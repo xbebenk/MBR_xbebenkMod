@@ -154,9 +154,9 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 
 	If isGemOpen(True) Then ; Check for gem window open)
 		SetLog(" Not enough gold to start searching!", $COLOR_ERROR)
-		Click(585, 252, 1, 0, "#0151") ; Click close gem window "X"
+		Click(623, 231, 1, 0, "#0151") ; Click close gem window "X"
 		If _Sleep($DELAYPREPARESEARCH1) Then Return
-		Click(822, 32, 1, 0, "#0152") ; Click close attack window "X"
+		Click(789, 117, 1, 0, "#0152") ; Click close attack window "X"
 		If _Sleep($DELAYPREPARESEARCH1) Then Return
 		$g_bOutOfGold = True ; Set flag for out of gold to search for attack
 	EndIf
@@ -170,11 +170,11 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Return
 	EndIf
 	If IsAttackWhileShieldPage(False) Then ; check for shield window and then button to lose time due attack and click okay
-		If WaitforPixel(430, 455, 431, 456, Hex(0x6FBD1F, 6), 6, 1) Then
+		If WaitforPixel(435, 480, 438, 484, Hex(0x6DBC1F, 6), 6, 1) Then
 			If $g_bDebugClick Or $g_bDebugSetlog Then
-				SetDebugLog("Shld Btn Pixel color found: " & _GetPixelColor(430, 455, True), $COLOR_DEBUG)
+				SetDebugLog("Shld Btn Pixel color found: " & _GetPixelColor(436, 482, True), $COLOR_DEBUG)
 			EndIf
-			Click(430,455)
+			Click(436, 482)
 		EndIf
 	EndIf
 EndFunc   ;==>PrepareSearch

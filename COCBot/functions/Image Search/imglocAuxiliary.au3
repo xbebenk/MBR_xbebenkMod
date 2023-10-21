@@ -729,19 +729,19 @@ EndFunc   ;==>SearchRedLinesMultipleTimes
 Func Slot($iX, $iY) ; Return Slots for Quantity Reading on Army Window
 	If $iY < 490 Then
 		Switch $iX ; Troops & Spells Slots
-			Case 0 To 94 ; Slot 1
-				If $iY < 315 Then Return 35 ; Troops
+			Case 0 To 100 ; Slot 1
+				If $iY < 315 Then Return 40 ; Troops
 				If $iY > 315 Then Return 40 ; Spells
 
-			Case 95 To 170 ; Slot 2
-				If $iY < 315 Then Return 111 ; Troops
+			Case 100 To 175 ; Slot 2
+				If $iY < 315 Then Return 116 ; Troops
 				If $iY > 315 Then Return 120 ; Spell
 
-			Case 171 To 243 ; Slot 3
-				If $iY < 315 Then Return 184 ; Troops
+			Case 171 To 247 ; Slot 3
+				If $iY < 315 Then Return 186 ; Troops
 				If $iY > 315 Then Return 195 ; Spell
 
-			Case 244 To 314 ; Slot 4
+			Case 244 To 319 ; Slot 4
 				If $iY < 315 Then Return 255 ; Troops
 				If $iY > 315 Then Return 272 ; Spell
 
@@ -759,13 +759,13 @@ Func Slot($iX, $iY) ; Return Slots for Quantity Reading on Army Window
 ;~ 			Case 534 To 600 ; Slot 7.5 (8)
 ;~ 				Return 551 ; Troops
 
-			Case 605 To 677 ; Slot 8
+			Case 602 To 670 ; Slot 8
 				Return 620 ; Siege Machines slot 1
 
-			Case 678 To 752 ; Slot 9
+			Case 672 To 741 ; Slot 9
 				Return 693 ; Siege Machines slot 2
 
-			Case 754 To 826 ; Slot 10
+			Case 743 To 810 ; Slot 10
 				Return 769 ; Siege Machines slot 2
 		EndSwitch
 	Else ;CC Troops & Spells

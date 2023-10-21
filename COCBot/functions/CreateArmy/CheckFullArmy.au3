@@ -19,30 +19,38 @@ Func CheckOverviewFullArmy($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 	;;;;;; Checks for full army using the green sign in army overview window ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	;;;;;; Will only get full army when the maximum capacity of your camps are reached regardless of the full army percentage you input in GUI ;;;;;;;;;
 	;;;;;; Use this only in halt attack mode and if an error happened in reading army current number Or Max capacity ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+	
 	If $bOpenArmyWindow Then
-		ClickAway()
-		If _Sleep($DELAYCHECKFULLARMY1) Then Return
-		Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0347") ; Click Button Army Overview
-		If _Sleep($DELAYCHECKFULLARMY2) Then Return
-		Local $j = 0
-		While Not _ColorCheck(_GetPixelColor(136, 129, True), Hex(0xE8E8E0, 6), 20) ; "ARMY tab"
-			If $g_bDebugSetlogTrain Then SetLog("OverView TabColor=" & _GetPixelColor(136, 129, True), $COLOR_DEBUG)
-			If _Sleep($DELAYCHECKFULLARMY1) Then Return ; wait for Train Window to be ready.
-			$j += 1
-			If $j > 15 Then ExitLoop
-		WEnd
-		If $j > 15 Then
-			SetLog("Army Window didn't open", $COLOR_ERROR)
-			Return
+		If Not OpenArmyOverview(True, "_checkArmyCamp()") Then
+			SetError(2)
+			Return; not open, requested to be open - error.
 		EndIf
+		If _Sleep($DELAYCHECKARMYCAMP5) Then Return
 	EndIf
+	
+	;If $bOpenArmyWindow Then
+	;	ClickAway()
+	;	If _Sleep($DELAYCHECKFULLARMY1) Then Return
+	;	Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0347") ; Click Button Army Overview
+	;	If _Sleep($DELAYCHECKFULLARMY2) Then Return
+	;	Local $j = 0
+	;	While Not _ColorCheck(_GetPixelColor(136, 129, True), Hex(0xE8E8E0, 6), 20) ; "ARMY tab"
+	;		If $g_bDebugSetlogTrain Then SetLog("OverView TabColor=" & _GetPixelColor(136, 129, True), $COLOR_DEBUG)
+	;		If _Sleep($DELAYCHECKFULLARMY1) Then Return ; wait for Train Window to be ready.
+	;		$j += 1
+	;		If $j > 15 Then ExitLoop
+	;	WEnd
+	;	If $j > 15 Then
+	;		SetLog("Army Window didn't open", $COLOR_ERROR)
+	;		Return
+	;	EndIf
+	;EndIf
 
 	If _sleep($DELAYCHECKFULLARMY2) Then Return
-	Local $Pixel = _CheckPixel($aIsCampFull, True) And _ColorCheck(_GetPixelColor(37, 177, True), Hex(0x91C030, 6), 20)
+	Local $Pixel = _CheckPixel($aIsCampFull, True) And _ColorCheck(_GetPixelColor(40, 144, True), Hex(0x87B928, 6), 20)
 	If Not $Pixel Then
 		If _sleep($DELAYCHECKFULLARMY2) Then Return
-		$Pixel = _CheckPixel($aIsCampFull, True) And _ColorCheck(_GetPixelColor(37, 177, True), Hex(0x91C030, 6), 20)
+		$Pixel = _CheckPixel($aIsCampFull, True) And _ColorCheck(_GetPixelColor(42, 161, True), Hex(0x8ABB2A, 6), 20)
 	EndIf
 
 	If $g_bDebugSetlogTrain Then SetLog("Checking Overview for full army [!] " & $Pixel & ", " & _GetPixelColor(128, 176, True), $COLOR_DEBUG)

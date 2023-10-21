@@ -1540,19 +1540,6 @@ Func PlaceUnplacedBuilding($bTest = False)
 	EndIf
 EndFunc
 
-Func SearchUnplacedBuilding()
-	Local $atmpInfo = getNameBuilding(292, 494)
-	If $atmpInfo = "" Then
-		SetDebugLog("Search: Unplaced Building Not Found!")
-		Return False
-	Else
-		If StringInStr($atmpInfo, "place") Or StringInStr($atmpInfo, "Items") Then
-			SetDebugLog("Search: Unplaced Building Found!", $COLOR_SUCCESS)
-			Return True
-		EndIf
-	EndIf
-EndFunc
-
 Func IsBuilderMenuOpen()
 	Local $bRet = False
 	Local $aBorder[4] = [350, 73, 0xC7CCBF, 40]

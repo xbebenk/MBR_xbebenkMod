@@ -35,7 +35,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		
 		$sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
 		For $iLoading = 1 To $iMaxLoading
-			If $sLoading = "Loading" Then 
+			If $sLoading = "Loading" Then
 				SetLog("[" & $iLoading & "] Still on Loading Screen, Waiting", $COLOR_INFO)
 				If _Sleep(2000) Then Return
 			EndIf
