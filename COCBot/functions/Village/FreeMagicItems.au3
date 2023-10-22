@@ -278,10 +278,10 @@ Func OpenMagicItemWindow()
 	Local $bRet = False
 	Local $bLocateTH = False
 	Click($g_aiTownHallPos[0], $g_aiTownHallPos[1])
-	If _Sleep(1000) Then Return
+	If _Sleep(500) Then Return
 	
 	If Not $g_bRunState Then Return
-	Local $BuildingInfo = BuildingInfo(245, 494)
+	Local $BuildingInfo = BuildingInfo(245, 472)
 	If $BuildingInfo[1] = "Town Hall" Then
 		SetDebugLog("Opening Magic Item Window")
 		If ClickB("MagicItem") Then
@@ -294,7 +294,7 @@ Func OpenMagicItemWindow()
 	If Not $g_bRunState Then Return
 	If $bLocateTH Then
 		If imglocTHSearch(False, True, True) Then ClickP($g_aiTownHallPos)
-		If _Sleep(1000) Then Return
+		If _Sleep(500) Then Return
 		If ClickB("MagicItem") Then
 			$bRet = True
 		EndIf
@@ -312,9 +312,9 @@ Func IsMagicItemWindowOpen()
 		Else
 			SetDebugLog("Waiting for FreeMagicWindowOpen #" & $i, $COLOR_ACTION)
 		EndIf
-		_Sleep(500)
+		If _Sleep(250) Then Return
 	Next
-	_Sleep(1000)
+	If _Sleep(200) Then Return
 	Return $bRet
 EndFunc
 

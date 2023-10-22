@@ -1110,127 +1110,127 @@ Func __RunFunction($action)
 		Case "NotifyReport"
 			NotifyReport()
 			_Sleep($DELAYRUNBOT3)
-		Case "DonateCC"
-			If $g_iActiveDonate And $g_bChkDonate Then
-				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
-			EndIf
-		Case "DonateCC,Train"
-			If Not $g_bRunState Then Return
-			If $g_iActiveDonate And $g_bChkDonate Then
-				If $g_bFirstStart Then
-					PrepareDonateCC()
-					CheckArmyCamp(True, True)
-				EndIf
-				; if in "Halt/Donate" don't skip near full army
-				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then
-					If DonateCC() Then
-						If $g_bTrainEnabled Then ; check for training enabled in halt mode
-							If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
-								TrainSystem()
-								_Sleep($DELAYRUNBOT1)
-							Else
-								SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $COLOR_INFO)
-								$g_iActualTrainSkip = $g_iActualTrainSkip + 1
-								If $g_iActualTrainSkip >= $g_iMaxTrainSkip Then
-									$g_iActualTrainSkip = 0
-								EndIf
-								CheckOverviewFullArmy(True, False) ; use true parameter to open train overview window
-								If _Sleep($DELAYRESPOND) Then Return
-								getArmySpells()
-								If _Sleep($DELAYRESPOND) Then Return
-								getArmyHeroCount(False, True)
-							EndIf
-						Else
-							If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
-						EndIf
-						$g_bDonated = False
-					EndIf
-				EndIf
-			EndIf
-			If Not $g_bRunState Then Return
-
-
-		Case "BoostBarracks"
-			BoostBarracks()
-			_Sleep($DELAYRESPOND)
-		Case "BoostSpellFactory"
-			BoostSpellFactory()
-			_Sleep($DELAYRESPOND)
-		Case "BoostWorkshop"
-			BoostWorkshop()
-			_Sleep($DELAYRESPOND)
-		Case "BoostKing"
-			BoostKing()
-			_Sleep($DELAYRESPOND)
-		Case "BoostQueen"
-			BoostQueen()
-			_Sleep($DELAYRESPOND)
-		Case "BoostWarden"
-			BoostWarden()
-			_Sleep($DELAYRESPOND)
-		Case "BoostChampion"
-			BoostChampion()
-			_Sleep($DELAYRESPOND)
-		Case "BoostEverything"
-			BoostEverything()
-			_Sleep($DELAYRESPOND)
-		Case "DailyChallenge"
-			DailyChallenges()
-			_Sleep($DELAYRUNBOT3)
-			checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenge")
-		 Case "RequestCC"
+		;Case "DonateCC"
+		;	If $g_iActiveDonate And $g_bChkDonate Then
+		;		If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
+		;	EndIf
+		;Case "DonateCC,Train"
+		;	If Not $g_bRunState Then Return
+		;	If $g_iActiveDonate And $g_bChkDonate Then
+		;		If $g_bFirstStart Then
+		;			PrepareDonateCC()
+		;			CheckArmyCamp(True, True)
+		;		EndIf
+		;		; if in "Halt/Donate" don't skip near full army
+		;		If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then
+		;			If DonateCC() Then
+		;				If $g_bTrainEnabled Then ; check for training enabled in halt mode
+		;					If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
+		;						TrainSystem()
+		;						_Sleep($DELAYRUNBOT1)
+		;					Else
+		;						SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $COLOR_INFO)
+		;						$g_iActualTrainSkip = $g_iActualTrainSkip + 1
+		;						If $g_iActualTrainSkip >= $g_iMaxTrainSkip Then
+		;							$g_iActualTrainSkip = 0
+		;						EndIf
+		;						CheckOverviewFullArmy(True, False) ; use true parameter to open train overview window
+		;						If _Sleep($DELAYRESPOND) Then Return
+		;						getArmySpells()
+		;						If _Sleep($DELAYRESPOND) Then Return
+		;						getArmyHeroCount(False, True)
+		;					EndIf
+		;				Else
+		;					If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
+		;				EndIf
+		;				$g_bDonated = False
+		;			EndIf
+		;		EndIf
+		;	EndIf
+		;	If Not $g_bRunState Then Return
+		;
+		;
+		;Case "BoostBarracks"
+		;	BoostBarracks()
+		;	_Sleep($DELAYRESPOND)
+		;Case "BoostSpellFactory"
+		;	BoostSpellFactory()
+		;	_Sleep($DELAYRESPOND)
+		;Case "BoostWorkshop"
+		;	BoostWorkshop()
+		;	_Sleep($DELAYRESPOND)
+		;Case "BoostKing"
+		;	BoostKing()
+		;	_Sleep($DELAYRESPOND)
+		;Case "BoostQueen"
+		;	BoostQueen()
+		;	_Sleep($DELAYRESPOND)
+		;Case "BoostWarden"
+		;	BoostWarden()
+		;	_Sleep($DELAYRESPOND)
+		;Case "BoostChampion"
+		;	BoostChampion()
+		;	_Sleep($DELAYRESPOND)
+		;Case "BoostEverything"
+		;	BoostEverything()
+		;	_Sleep($DELAYRESPOND)
+		;Case "DailyChallenge"
+		;	DailyChallenges()
+		;	_Sleep($DELAYRUNBOT3)
+		;	checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenge")
+		Case "RequestCC"
 			RequestCC()
 			ClickAway()
-		Case "Laboratory"
-			Laboratory()
-			_Sleep($DELAYRUNBOT3)
-			checkMainScreen(False, $g_bStayOnBuilderBase, "Laboratory")
-		Case "PetHouse"
-			PetHouse()
-		Case "ForgeClanCapitalGold"
-			ForgeClanCapitalGold()
+		;Case "Laboratory"
+		;	Laboratory()
+		;	_Sleep($DELAYRUNBOT3)
+		;	checkMainScreen(False, $g_bStayOnBuilderBase, "Laboratory")
+		;Case "PetHouse"
+		;	PetHouse()
+		;Case "ForgeClanCapitalGold"
+		;	ForgeClanCapitalGold()
 		Case "BoostSuperTroop"
 			BoostSuperTroop()
 			_Sleep($DELAYRUNBOT3)
-		Case "UpgradeHeroes"
-			UpgradeHeroes()
-			_Sleep($DELAYRUNBOT3)
-		Case "UpgradeBuilding"
-			UpgradeBuilding()
-			If _Sleep($DELAYRUNBOT3) Then Return
-			AutoUpgrade()
-			ZoomOut()
-			_Sleep($DELAYRUNBOT3)
-		Case "UpgradeLow"
-			AutoUpgrade(False, True)
-			ZoomOut()
-			_Sleep($DELAYRUNBOT3)
-		Case "UpgradeWall"
-			$g_iNbrOfWallsUpped = 0
-			ClickAway()
-			UpgradeWall()
-			ZoomOut()
-			_Sleep($DELAYRUNBOT3)
+		;Case "UpgradeHeroes"
+		;	UpgradeHeroes()
+		;	_Sleep($DELAYRUNBOT3)
+		;Case "UpgradeBuilding"
+		;	UpgradeBuilding()
+		;	If _Sleep($DELAYRUNBOT3) Then Return
+		;	AutoUpgrade()
+		;	ZoomOut()
+		;	_Sleep($DELAYRUNBOT3)
+		;Case "UpgradeLow"
+		;	AutoUpgrade(False, True)
+		;	ZoomOut()
+		;	_Sleep($DELAYRUNBOT3)
+		;Case "UpgradeWall"
+		;	$g_iNbrOfWallsUpped = 0
+		;	ClickAway()
+		;	UpgradeWall()
+		;	ZoomOut()
+		;	_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
 				BuilderBase()
 			EndIf
 			_Sleep($DELAYRUNBOT3)
-		Case "CollectAchievements"
-			CollectAchievements()
-			_Sleep($DELAYRUNBOT3)
-		Case "CollectFreeMagicItems"
-			CollectFreeMagicItems()
-			_Sleep($DELAYRUNBOT3)
-		Case "SaleMagicItem"
-			SaleMagicItem()
-			_Sleep($DELAYRUNBOT3)
-		Case "AutoUpgradeCC"
-			AutoUpgradeCC()
-			_Sleep($DELAYRUNBOT3)
-		Case "CollectCCGold"
-			CollectCCGold()
-			_Sleep($DELAYRUNBOT3)
+		;Case "CollectAchievements"
+		;	CollectAchievements()
+		;	_Sleep($DELAYRUNBOT3)
+		;Case "CollectFreeMagicItems"
+		;	CollectFreeMagicItems()
+		;	_Sleep($DELAYRUNBOT3)
+		;Case "SaleMagicItem"
+		;	SaleMagicItem()
+		;	_Sleep($DELAYRUNBOT3)
+		;Case "AutoUpgradeCC"
+		;	AutoUpgradeCC()
+		;	_Sleep($DELAYRUNBOT3)
+		;Case "CollectCCGold"
+		;	CollectCCGold()
+		;	_Sleep($DELAYRUNBOT3)
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
@@ -1260,7 +1260,7 @@ Func FirstCheck()
 	If $g_aiTownHallPos[0] > -1 Then
 		Click($g_aiTownHallPos[0], $g_aiTownHallPos[1])
 		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo(245, 494)
+		Local $BuildingInfo = BuildingInfo(245, 472)
 		If $BuildingInfo[1] = "Town Hall" Then
 			$g_iTownHallLevel =  $BuildingInfo[2]
 		Else
@@ -1621,21 +1621,21 @@ Func BuilderBase()
 		CleanBBYard()
 		BuilderBaseReport(True, True)
 
-		If isGoldFullBB() Or isElixirFullBB() Then
-			If AutoUpgradeBB() Then
-				If _Sleep($DELAYRUNBOT1) Then Return
-				ZoomOut(True) ;directly zoom
-			EndIf
-			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-			$g_bBBAttacked = False
-		EndIf
+		;If isGoldFullBB() Or isElixirFullBB() Then
+		;	If AutoUpgradeBB() Then
+		;		If _Sleep($DELAYRUNBOT1) Then Return
+		;		ZoomOut(True) ;directly zoom
+		;	EndIf
+		;	checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		;	$g_bBBAttacked = False
+		;EndIf
 
-		Local $bElixFull = isElixirFullBB()
-		If $bElixFull Then
-			$StartLabON = StarLaboratory()
-			$g_bBBAttacked = False
-			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-		EndIf
+		;Local $bElixFull = isElixirFullBB()
+		;If $bElixFull Then
+		;	$StartLabON = StarLaboratory()
+		;	$g_bBBAttacked = False
+		;	checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		;EndIf
 
 		BBDropTrophy()
 
@@ -1647,15 +1647,15 @@ Func BuilderBase()
 			BuilderBaseReport(True, True)
 		EndIf
 
-		If $g_bBBAttacked Then
-			If AutoUpgradeBB() Then
-				If _Sleep($DELAYRUNBOT1) Then Return
-				ZoomOut(True) ;directly zoom
-			EndIf
-			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-		EndIf
+		;If $g_bBBAttacked Then
+		;	If AutoUpgradeBB() Then
+		;		If _Sleep($DELAYRUNBOT1) Then Return
+		;		ZoomOut(True) ;directly zoom
+		;	EndIf
+		;	checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		;EndIf
 
-		If Not $bElixFull And $g_bBBAttacked Then $StartLabON = StarLaboratory()
+		;If Not $bElixFull And $g_bBBAttacked Then $StartLabON = StarLaboratory()
 		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
 
 		If _Sleep($DELAYRUNBOT1) Then Return

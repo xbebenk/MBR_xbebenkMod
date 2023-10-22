@@ -43,23 +43,23 @@ Func AttackReport()
 	;E was 290, is 285
 	;DE was 365, is 353
 	If _ColorCheck(_GetPixelColor($aAtkRprtDECheck[0], $aAtkRprtDECheck[1], True), Hex($aAtkRprtDECheck[2], 6), $aAtkRprtDECheck[3]) Then ; if the color of the DE drop detected
-		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(285, 289)
+		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(320, 290)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(285, 328)
+		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(320, 330)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootDarkElixir] = getResourcesLootDE(353, 365)
+		$g_iStatsLastAttack[$eLootDarkElixir] = getResourcesLootDE(353, 368)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 402)
+		$g_iStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 404)
 		If _ColorCheck(_GetPixelColor($aAtkRprtTrophyCheck[0], $aAtkRprtTrophyCheck[1], True), Hex($aAtkRprtTrophyCheck[2], 6), $aAtkRprtTrophyCheck[3]) Then
 			$g_iStatsLastAttack[$eLootTrophy] = -$g_iStatsLastAttack[$eLootTrophy]
 		EndIf
 		SetLog("Loot: [G]: " & _NumberFormat($g_iStatsLastAttack[$eLootGold]) & " [E]: " & _NumberFormat($g_iStatsLastAttack[$eLootElixir]) & " [DE]: " & _NumberFormat($g_iStatsLastAttack[$eLootDarkElixir]) & " [T]: " & $g_iStatsLastAttack[$eLootTrophy], $COLOR_SUCCESS)
 	Else
-		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(285, 289)
+		$g_iStatsLastAttack[$eLootGold] = getResourcesLoot(320, 290)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(285, 328)
+		$g_iStatsLastAttack[$eLootElixir] = getResourcesLoot(320, 330)
 		If _Sleep($DELAYATTACKREPORT2) Then Return
-		$g_iStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 365)
+		$g_iStatsLastAttack[$eLootTrophy] = getResourcesLootT(403, 404)
 		If _ColorCheck(_GetPixelColor($aAtkRprtTrophyCheck[0], $aAtkRprtTrophyCheck[1], True), Hex($aAtkRprtTrophyCheck[2], 6), $aAtkRprtTrophyCheck[3]) Then
 			$g_iStatsLastAttack[$eLootTrophy] = -$g_iStatsLastAttack[$eLootTrophy]
 		EndIf
@@ -68,20 +68,20 @@ Func AttackReport()
 	EndIf
 
 	If $g_iStatsLastAttack[$eLootTrophy] >= 0 Then
-		$iBonusLast = Number(getResourcesBonusPerc(570, 309))
+		$iBonusLast = Number(getResourcesBonusPerc(570, 310))
 		If $iBonusLast > 0 Then
 			SetLog("Bonus Percentage: " & $iBonusLast & "%")
 			Local $iCalcMaxBonus = 0, $iCalcMaxBonusDark = 0
 
 			If _ColorCheck(_GetPixelColor($aAtkRprtDECheck2[0], $aAtkRprtDECheck2[1], True), Hex($aAtkRprtDECheck2[2], 6), $aAtkRprtDECheck2[3]) Then
 				If _Sleep($DELAYATTACKREPORT2) Then Return
-				$g_iStatsBonusLast[$eLootGold] = getResourcesBonus(590, 340)
+				$g_iStatsBonusLast[$eLootGold] = getResourcesBonus(590, 341)
 				$g_iStatsBonusLast[$eLootGold] = StringReplace($g_iStatsBonusLast[$eLootGold], "+", "")
 				If _Sleep($DELAYATTACKREPORT2) Then Return
-				$g_iStatsBonusLast[$eLootElixir] = getResourcesBonus(590, 371)
+				$g_iStatsBonusLast[$eLootElixir] = getResourcesBonus(590, 373)
 				$g_iStatsBonusLast[$eLootElixir] = StringReplace($g_iStatsBonusLast[$eLootElixir], "+", "")
 				If _Sleep($DELAYATTACKREPORT2) Then Return
-				$g_iStatsBonusLast[$eLootDarkElixir] = getResourcesBonus(621, 402)
+				$g_iStatsBonusLast[$eLootDarkElixir] = getResourcesBonus(621, 404)
 				$g_iStatsBonusLast[$eLootDarkElixir] = StringReplace($g_iStatsBonusLast[$eLootDarkElixir], "+", "")
 
 				If $iBonusLast = 100 Then
@@ -95,10 +95,10 @@ Func AttackReport()
 				EndIf
 			Else
 				If _Sleep($DELAYATTACKREPORT2) Then Return
-				$g_iStatsBonusLast[$eLootGold] = getResourcesBonus(590, 340)
+				$g_iStatsBonusLast[$eLootGold] = getResourcesBonus(590, 341)
 				$g_iStatsBonusLast[$eLootGold] = StringReplace($g_iStatsBonusLast[$eLootGold], "+", "")
 				If _Sleep($DELAYATTACKREPORT2) Then Return
-				$g_iStatsBonusLast[$eLootElixir] = getResourcesBonus(590, 371)
+				$g_iStatsBonusLast[$eLootElixir] = getResourcesBonus(590, 373)
 				$g_iStatsBonusLast[$eLootElixir] = StringReplace($g_iStatsBonusLast[$eLootElixir], "+", "")
 				$g_iStatsBonusLast[$eLootDarkElixir] = 0
 

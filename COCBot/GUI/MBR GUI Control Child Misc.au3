@@ -280,7 +280,7 @@ Func btnLocateKingAltar()
 	If AutoLocateAltar("King") Then
 		ClickP($g_aiKingAltarPos)
 		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo(245, 494)
+		Local $BuildingInfo = BuildingInfo(245, 472)
 		If StringInStr($BuildingInfo[1], "King") Then
 			applyConfig()
 			saveConfig()
@@ -300,7 +300,7 @@ Func btnLocateQueenAltar()
 	If AutoLocateAltar("Queen") Then
 		ClickP($g_aiQueenAltarPos)
 		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo(245, 494)
+		Local $BuildingInfo = BuildingInfo(245, 472)
 		If StringInStr($BuildingInfo[1], "Queen") Then
 			applyConfig()
 			saveConfig()
@@ -319,7 +319,7 @@ Func btnLocateWardenAltar()
 	If AutoLocateAltar("Warden") Then
 		ClickP($g_aiWardenAltarPos)
 		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo(245, 494)
+		Local $BuildingInfo = BuildingInfo(245, 472)
 		If StringInStr($BuildingInfo[1], "Warden") Then
 			applyConfig()
 			saveConfig()
@@ -338,7 +338,7 @@ Func btnLocateChampionAltar()
 	If AutoLocateAltar("Champ") Then
 		ClickP($g_aiChampionAltarPos)
 		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo(245, 494)
+		Local $BuildingInfo = BuildingInfo(245, 472)
 		If StringInStr($BuildingInfo[1], "Champ") Then
 			applyConfig()
 			saveConfig()
@@ -366,7 +366,7 @@ Func btnLocateTownHall()
 		If $g_aiTownHallPos[0] > -1 Then
 			ClickP($g_aiTownHallPos)
 			If _Sleep(800) Then Return
-			Local $BuildingInfo = BuildingInfo(245, 494)
+			Local $BuildingInfo = BuildingInfo(245, 472)
 			If $BuildingInfo[1] = "Town Hall" Then
 				$g_iTownHallLevel = Number($BuildingInfo[2])
 				$bTHFound = True

@@ -15,14 +15,14 @@
 ;Global $aiClickAwayRegionRight = [605, 10, 645, 30]
 ;Let's tighten these up to avoid clicking on shields.
 Global $aiClickAwayRegionLeft = [229, 5, 242, 20]
-Global $aiClickAwayRegionRight = [630, 10, 650, 20]
+Global $aiClickAwayRegionRight = [633, 10, 650, 20]
 
 Global $aCenterEnemyVillageClickDrag = [65, 545] ; Scroll village using this location in the water
 Global $aVillageCenteringCoord = [[750, 370], [636, 500], [777, 235]] ; Scroll village using this location : upper from setting button
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
 Global $aIsMain[4] = [382, 5, 0xA7D7F1, 20] ; Main Screen, Builder Info Icon
 Global $aIsMainGrayed[4] = [382, 5, 0x546C79, 15] ; Main Screen, Builder Info Icon grayed
-Global $aIsOnBuilderBase[4] = [458, 5, 0xA7D7F1, 20] ; BuilderBase, Builder Info Icon
+Global $aIsOnBuilderBase[4] = [448, 5, 0xA7D7F1, 20] ; BuilderBase, Builder Info Icon
 
 Global $aReloadButton[4] = [210, 385, 0x282828, 10] ; Reload Coc Button after Out of Sync, 860x780
 Global $aAttackButton[2] = [60, 620] ; Attack Button, Main Screen, 860x676
@@ -33,11 +33,11 @@ Global $aAway2[2] = [235, 10] ; Second Away Position for Windows like Donate Win
 Global $aShieldInfoButton[4] = [431, 10, 0x75BDE4, 15] ; Main Screen, Blue pixel upper part of "i"
 Global $aIsShieldInfo[4] = [645, 165, 0xEA1115, 20] ; Main Screen, Shield Info window, red pixel right of X
 Global $aSurrenderButton[4] = [18, 548, 0xCD0D0D, 40] ; Surrender Button, Attack Screen
-Global $aConfirmSurrender[4] = [515, 415, 0x6DBC1F, 30] ; Confirm Surrender Button, Attack Screen, green color on button?
+Global $aConfirmSurrender[4] = [531, 438, 0x6DBC1F, 30] ; Confirm Surrender Button, Attack Screen, green color on button?
 Global $aEndFightSceneBtn[4] = [429, 519, 0xCDF271, 20] ; Victory or defeat scene buton = green edge
 Global $aEndFightSceneAvl[4] = [241, 196, 0xFFF090, 20] ; Victory or defeat scene left side ribbon = light gold
 Global $aEndFightSceneReportGold = $aEndFightSceneAvl ; Missing... TripleM ???
-Global $aReturnHomeButton[4] = [376, 567, 0x60AC10, 20] ; Return Home Button, End Battle Screen
+Global $aReturnHomeButton[4] = [425, 567, 0x6CBB1F, 20] ; Return Home Button, End Battle Screen
 Global $aChatTab[4] = [389, 342, 0xC55115, 20] ; Chat Window Open, Main Screen
 Global $aArmyCampSize[2] = [123, 145] ; Training Window, Overview screen, Current Size/Total Size
 Global $aSiegeMachineSize[2] = [748, 145] ; Training Window, Overview screen, Current Number/Total Number
@@ -75,13 +75,13 @@ Global $aGreenArrowTrainSiegeMachines[2] = [622, 98]
 Global $g_aShopWindowOpen[4] = [804, 54, 0xC00508, 15] ; Red pixel in lower right corner of RED X to close shop window
 Global $aTreasuryWindow[4] = [688, 165, 0xD51115, 20] ; Redish pixel above X to close treasury window
 Global $aAttackForTreasury[4] = [88, 619, 0xF0EBE8, 5] ; Red pixel below X to close treasury window
-Global $aAtkHasDarkElixir[4]  = [ 31, 144, 0x282020, 10] ; Attack Page, Check for DE icon
+Global $aAtkHasDarkElixir[4]  = [ 30, 150, 0x2A2124, 10] ; Attack Page, Check for DE icon
 Global $aVillageHasDarkElixir[4] = [845, 138, 0x270D33, 10] ; Main Page, Base has dark elixir storage
 
 Global $aCheckTopProfile[4] = [200, 166, 0x868CAC, 5]
 Global $aCheckTopProfile2[4] = [220, 355, 0x4E4D79, 5]
 
-Global $aIsTabOpen[4] = [0, 80, 0xF4F4F0, 25];Check if specific Tab is opened, X Coordinate is a dummy
+Global $aIsTabOpen[4] = [0, 126, 0xEAEAE3, 25];Check if specific Tab is opened, X Coordinate is a dummy
 
 Global $aRecievedTroops[4] = [200 ,215 ,0xFFFFFF, 20] ; Y of You have recieved blabla from xx!
 
@@ -110,8 +110,8 @@ Global Const $aIsAttackPage[4] = [18, 548, 0xCD0D0D, 20] ; red button "end battl
 Global $aRequestTroopsAO[6] = [761, 592, 0x565656, 0x71BA2F, 0xFFFFFE, 25] ; Button Request Troops in Army Overview  (x,y, Gray - Full/No Castle, Green - Available or Already, White - Available or Full)
 
 ;attackreport
-Global Const $aAtkRprtDECheck[4] = [459, 372, 0x2F2038, 20]
-Global Const $aAtkRprtTrophyCheck[4] = [327, 189, 0x3B321C, 30]
+Global Const $aAtkRprtDECheck[4] = [468, 371, 0x2F1D37, 20]
+Global Const $aAtkRprtTrophyCheck[4] = [423, 223, 0xFF6133, 30]
 Global Const $aAtkRprtDECheck2[4] = [678, 418, 0x030000, 30]
 
 ;returnhome

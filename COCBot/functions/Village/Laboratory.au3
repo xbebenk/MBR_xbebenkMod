@@ -595,7 +595,7 @@ Func FindResearchButton()
 	Else
 		Click($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1])
 		If _Sleep(1000) Then Return
-		Local $BuildingInfo = BuildingInfo(260, 494)
+		Local $BuildingInfo = BuildingInfo(260, 472)
 		If StringInStr($BuildingInfo[1], "Lab") Then
 			$TryLabAutoLocate = False
 			$LabFound = True
@@ -633,7 +633,7 @@ Func AutoLocateLab()
 			Click($g_iQuickMISX, $g_iQuickMISY)
 		EndIf
 		_Sleep(500)
-		Local $BuildingInfo = BuildingInfo(240, 494)
+		Local $BuildingInfo = BuildingInfo(240, 472)
 		If StringInStr($BuildingInfo[1], "Lab") Then
 			If $g_iQuickMISName = "Research" Then
 				$g_aiLaboratoryPos[0] = $g_iQuickMISX

@@ -30,7 +30,7 @@ Func DoubleTrain()
 	
 	Local $Step = 1
 	While 1
-		Local $TroopCamp = GetCurrentArmy(46, 131)
+		Local $TroopCamp = GetCurrentArmy(60, 140)
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
 		If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($TroopCamp))
@@ -103,7 +103,7 @@ Func DoubleTrain()
 		If _Sleep(250) Then Return
 		$Step = 1
 		While 1
-			Local $SpellCamp = GetCurrentArmy(46, 131)
+			Local $SpellCamp = GetCurrentArmy(56, 140)
 			If IsProblemAffect(True) Then Return
 			If Not $g_bRunState Then Return
 			SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2)
@@ -162,7 +162,7 @@ Func DoubleTrain()
 		If DoWhatToTrainContainTroop($aWhatToTrain) Then
 			SetLog("New troop Fill way", $COLOR_DEBUG1)
 			TrainUsingWhatToTrain($aWhatToTrain)
-			$CampOCR = GetCurrentArmy(46, 131)
+			$CampOCR = GetCurrentArmy(60, 140)
 			FillIncorrectTroopCombo(False, $CampOCR)
 			TrainFullTroop(True)
 			SetLog("TrainFullTroop(True) done.", $COLOR_DEBUG1)
@@ -170,7 +170,7 @@ Func DoubleTrain()
 		If DoWhatToTrainContainSpell($aWhatToTrain) Then
 			SetLog("New spell Fill way", $COLOR_DEBUG1)
 			BrewUsingWhatToTrain($aWhatToTrain)
-			$CampOCR = GetCurrentArmy(46, 131)
+			$CampOCR = GetCurrentArmy(56, 140)
 			FillIncorrectSpellCombo(False, $CampOCR)
 			BrewFullSpell(True)
 			If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
@@ -181,46 +181,18 @@ Func DoubleTrain()
 	If $g_bIgnoreIncorrectTroopCombo And Number(GUICtrlRead($g_hLblCountTotal)) = 0 Then
 		SetLog("Old troop Fill way", $COLOR_DEBUG1)
 		If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
-		Local $TroopCamp = GetCurrentArmy(46, 131)
+		Local $TroopCamp = GetCurrentArmy(60, 140)
 		Local $bQueue = $TroopCamp[0] >= $TroopCamp[1]
 		FillIncorrectTroopCombo($bQueue, $TroopCamp)
-		;SetLog("QueueTroop = " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2, $COLOR_DEBUG)
-		;Local $MaxTroop = ($TroopCamp[1] * 2)
-		;Local $TroopSpace = $MaxTroop - $TroopCamp[0]
-		;Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
-		;Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
-		;Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
-		;Local $TroopQuantToFill = Floor($TroopSpace/$g_sCmbFICTroops[$FillTroopIndex][2])
-		;
-		;If $TroopQuantToFill > 0 Then
-		;	SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
-		;	If Not DragIfNeeded($g_sCmbFICTroops[$FillTroopIndex][0]) Then Return False
-		;	SetLog("Training " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_SUCCESS)
-		;	TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
-		;EndIf
 	EndIf
 	
 	If $g_bIgnoreIncorrectSpellCombo Then
 		SetLog("Old spell Fill way", $COLOR_DEBUG1)
 		If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
-		Local $SpellCamp = GetCurrentArmy(46, 131)
+		Local $SpellCamp = GetCurrentArmy(56, 140)
 		If Not $g_bRunState Then Return
 		Local $bQueue = $SpellCamp[0] >= $SpellCamp[1]
 		FillIncorrectSpellCombo($bQueue, $SpellCamp)
-		;SetLog("QueueSpell = " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2, $COLOR_DEBUG)
-		;Local $MaxSpell = ($SpellCamp[1] * 2)
-		;Local $SpellSpace = $MaxSpell - $SpellCamp[0]
-		;Local $FillSpellIndex = $g_iCmbFillIncorrectSpellCombo
-		;Local $sSpellName = $g_sCmbFICSpells[$FillSpellIndex][1]
-		;Local $iSpellIndex = TroopIndexLookup($g_sCmbFICSpells[$FillSpellIndex][0])
-		;Local $SpellQuantToFill = Floor($SpellSpace/$g_sCmbFICSpells[$FillSpellIndex][2])
-		;
-		;If $SpellQuantToFill > 0 Then
-		;	SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
-		;	If Not DragIfNeeded($g_sCmbFICSpells[$FillSpellIndex][0]) Then Return False
-		;	SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
-		;	TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
-		;EndIf
 	EndIf
 	If _Sleep(250) Then Return
 
@@ -245,7 +217,7 @@ Func TrainFullTroop($bQueue = False)
 	If _Sleep(500) Then Return
 	
 	If Not OpenTroopsTab(False, "TrainFullTroop()") Then Return
-	Local $CampOCR = GetCurrentArmy(46, 131)
+	Local $CampOCR = GetCurrentArmy(123, 147)
 	If Not $g_bRunState Then Return
 	SetDebugLog("Checking troop tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
 	If $g_bIgnoreIncorrectTroopCombo And $g_bDoubleTrain Then

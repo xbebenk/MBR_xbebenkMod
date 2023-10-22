@@ -177,7 +177,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 						If $ExistingBuilding[$i][0] = "Gold" And StringInStr($ExistingBuilding[$i][3], "Town") Then
 							Click($ExistingBuilding[$i][1], $ExistingBuilding[$i][2])
 							If _Sleep(1000) Then Return
-							Local $Building = BuildingInfo(242, 494)
+							Local $Building = BuildingInfo(242, 472)
 							If $Building[0] = 2 And $Building[2] < $g_aiCmbRushTHOption[0] + 9 Then
 								SetLog("TownHall Level = " & $Building[2] & " < " &$g_aiCmbRushTHOption[0] + 9, $COLOR_ACTION)
 								setMinSaveWall($ExistingBuilding[$i][0], $ExistingBuilding[$i][5])
@@ -421,7 +421,7 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 	If $g_bUpgradeLowCost Then $iSpecialMode = 2
 
 	; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
-	$g_aUpgradeNameLevel = BuildingInfo(242, 494)
+	$g_aUpgradeNameLevel = BuildingInfo(242, 472)
 	If $g_aUpgradeNameLevel[0] = "" Then
 		SetLog("Error when trying to get upgrade name and level...", $COLOR_ERROR)
 		Return False
@@ -672,17 +672,12 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 480, 500, 550) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487) ; get cost
 			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(192, 307) ; get duration
-			; Don't upgrade when upgrade time is >24h for low upgrade
-			If $iSpecialMode = 2 And ConvertOCRTime("UpgradeLow", $g_aUpgradeResourceCostDuration[2], False) > 1440 Then
-				SetLog("[UpgradeLow] Wrong upgrade selected, time needed > 24h", $COLOR_INFO)
- 				Return False
-			EndIf
 	EndSwitch
 	
 	If $g_aUpgradeNameLevel[1] = "Clan Castle" And $g_aUpgradeNameLevel[2] = "Broken" Then 
 		$g_aUpgradeResourceCostDuration[0] = "Gold"
 		$g_aUpgradeResourceCostDuration[1] = "10000" ; get cost
-		$g_aUpgradeResourceCostDuration[2] = "Instant Upgrade"
+		$g_aUpgradeResourceCostDuration[2] = "Instance Upgrade"
 	EndIf
 		
 	; if one of the value is empty, there is an error, we must exit Auto Upgrade
@@ -802,7 +797,7 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 	Local $bRet = True
 
 	If $aUpgradeNameLevel = Default Then
-		$aUpgradeNameLevel = BuildingInfo(242, 494)
+		$aUpgradeNameLevel = BuildingInfo(242, 472)
 		If $aUpgradeNameLevel[0] = "" Then
 			SetLog("Error at AutoUpgradeLog() to get upgrade name and level", $COLOR_ERROR)
 			$aUpgradeNameLevel[1] = "Traps"
@@ -1028,7 +1023,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 								If $aResult[$y][0] = "Gold" And StringInStr($aResult[$y][3], "Town") Then
 									Click($aResult[$y][1], $aResult[$y][2])
 									If _Sleep(1000) Then Return
-									Local $Building = BuildingInfo(242, 494)
+									Local $Building = BuildingInfo(242, 472)
 									If $Building[0] = 2 And $Building[2] < $g_aiCmbRushTHOption[0] + 9 Then
 										SetLog("TownHall Level = " & $Building[2] & " < " &$g_aiCmbRushTHOption[0] + 9, $COLOR_ACTION)
 										setMinSaveWall($aResult[$y][0], $aResult[$y][5])
@@ -1566,7 +1561,7 @@ Func DoGearUp($x, $y)
 	SetLog("Do GearUp for OptimizeOTTO", $COLOR_INFO)
 	Click($x, $y)
 	If _Sleep(1000) Then Return
-	Local $g_aUpgradeNameLevel = BuildingInfo(242, 494)
+	Local $g_aUpgradeNameLevel = BuildingInfo(242, 472)
 	If $g_aUpgradeNameLevel[0] = "" Then
 		SetLog("Error when trying to get upgrade name and level...", $COLOR_ERROR)
 		Return False

@@ -13,6 +13,7 @@
 ; Example .......: ---
 ;================================================================================================================================
 Func _ClanGames($test = False, $OnlyPurge = False)
+	Return ;skip...broken
 	$g_bIsBBevent = False ;just to be sure, reset to false
 	$g_bIsCGEventRunning = False ;just to be sure, reset to false
 	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false

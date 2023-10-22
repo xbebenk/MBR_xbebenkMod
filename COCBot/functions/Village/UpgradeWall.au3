@@ -271,7 +271,7 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 			If QuickMIS("BC1", $g_sImgAUpgradeObstGear, $aWallCoord[$i][0] - 50, $aWallCoord[$i][1] - 10, $aWallCoord[$i][0] + 50, $aWallCoord[$i][1] + 10) Then ContinueLoop
 			Click($aWallCoord[$i][0], $aWallCoord[$i][1])
 			If _Sleep(1000) Then Return
-			Local $aWallLevel = BuildingInfo(242, 494)
+			Local $aWallLevel = BuildingInfo(242, 472)
 			If $aWallLevel[0] = "" Then
 				SetLog("Cannot read building Info, wrong click...", $COLOR_ERROR)
 				If IsFullScreenWindow() Then Click(825,45)

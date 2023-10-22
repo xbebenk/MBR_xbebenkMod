@@ -66,7 +66,8 @@ Func OpenTrainTab($sTab, $bSetLog = True, $sWhereFrom = "Undefined")
 			ClickP($aTabButton)
 			
 			If Not _WaitForCheckPixel($aIsTabOpen, True) Then
-				SetLog("Error in OpenTrainTab: Cannot open " & $sTab & ". Pixel to check did not appear", $COLOR_ERROR)
+				Local $color = _GetPixelColor($aIsTabOpen[0], $aIsTabOpen[1], True)
+				SetLog("Error in OpenTrainTab: Cannot open " & $sTab & ". Pixel to check did not appear : " & $color, $COLOR_ERROR)
 				SetError(1)
 				Return False
 			EndIf

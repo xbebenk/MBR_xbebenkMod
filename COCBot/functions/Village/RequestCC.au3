@@ -108,7 +108,7 @@ Func _makerequest($x, $y, $bTest)
 			EndIf
 		EndIf
 		If _Sleep(2000) Then Return ; wait time for text request to complete
-		Click($g_iQuickMISX + 95, $g_iQuickMISY)
+		Click($g_iQuickMISX + 115, $g_iQuickMISY)
 		If _Sleep(1000) Then Return ; wait time after clicking request window border
 		For $i = 1 To 5
 			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
