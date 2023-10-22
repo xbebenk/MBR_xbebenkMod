@@ -52,8 +52,8 @@ EndFunc   ;==>TrainSystem
 Func TrainPreviousArmy($bCloseWindow = False)
 	If Not OpenQuickTrainTab(False, "TrainPreviousArmy()") Then Return
 	If _Sleep(750) Then Return
-	If _ColorCheck(_GetPixelColor(777, 177, True), Hex(0xBDE98D, 6), 1) Then
-		PureClick(777,177)
+	If _ColorCheck(_GetPixelColor(777, 218, True), Hex(0x8BD43A, 6), 10) Then
+		PureClick(777, 200)
 	Else
 		SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
 	EndIf
