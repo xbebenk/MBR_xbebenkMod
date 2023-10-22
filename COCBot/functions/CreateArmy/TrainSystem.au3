@@ -816,14 +816,14 @@ Func WhatToTrain($ReturnExtraTroopsOnly = False, $bFullArmy = $g_bIsFullArmywith
 	Return $ToReturn
 EndFunc   ;==>WhatToTrain
 
-Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 839, $bQtyWSlot = False)
+Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 825, $bQtyWSlot = False)
 	Local $aResult[1] = [""]
 	If $bSetLog Then SetLog("Checking Troops Queue", $COLOR_INFO)
 
 	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\TroopsQueued"
 
-	Local $aSearchResult = SearchArmy($Dir, 18, 153, $x, 232, $bGetQuantity ? "Queue" : "")
-
+	Local $aSearchResult = SearchArmy($Dir, 31, 168, $x, 232, $bGetQuantity ? "Queue" : "")
+	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\TroopsQueued", 31, 168, 825, 232, "Queue")
 	ReDim $aResult[UBound($aSearchResult)]
 
 

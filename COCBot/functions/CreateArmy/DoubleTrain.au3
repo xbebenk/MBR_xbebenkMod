@@ -217,7 +217,7 @@ Func TrainFullTroop($bQueue = False)
 	If _Sleep(500) Then Return
 	
 	If Not OpenTroopsTab(False, "TrainFullTroop()") Then Return
-	Local $CampOCR = GetCurrentArmy(123, 147)
+	Local $CampOCR = GetCurrentArmy(60, 139)
 	If Not $g_bRunState Then Return
 	SetDebugLog("Checking troop tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
 	If $g_bIgnoreIncorrectTroopCombo And $g_bDoubleTrain Then
@@ -332,7 +332,7 @@ Func GetCurrentArmy($x_start, $y_start)
 		Local $aTempResult = StringSplit($iOCRResult, "#", $STR_NOCOUNT)
 		$aResult[0] = Number($aTempResult[0])
 		$aResult[1] = Number($aTempResult[1]) / 2
-		$aResult[2] = $aResult[1] - $aResult[0]
+		$aResult[2] = Abs($aResult[1] - $aResult[0])
 	Else
 		SetLog("DEBUG | ERROR on GetCurrentArmy", $COLOR_ERROR)
 	EndIf
@@ -349,7 +349,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 
 	Local $XQueueStart = 839
 	For $i = 0 To 10
-		If _ColorCheck(_GetPixelColor(825 - $i * 70, 157, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
+		If _ColorCheck(_GetPixelColor(825 - $i * 70, 165, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
 			$XQueueStart -= 70.5 * $i
 			ExitLoop
 		EndIf
