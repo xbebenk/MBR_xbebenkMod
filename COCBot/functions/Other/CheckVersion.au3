@@ -22,7 +22,7 @@ Func CheckVersion()
 	$aResult = StringRegExp($g_sXModversion, '\[#(\d+)\]', $STR_REGEXPARRAYMATCH)
 	If IsArray($aResult) And Ubound($aResult) > 0 Then $sCurrentVersion = $aResult[0]
 	
-	$sUrlFetchMod = BinaryToString(InetRead("https://raw.githubusercontent.com/xbebenk/MBR_xbebenkMod/dev_1.2.4/MyBot.run.version.au3"))
+	$sUrlFetchMod = BinaryToString(InetRead("https://raw.githubusercontent.com/xbebenk/MBR_xbebenkMod/dev_1.2.5/MyBot.run.version.au3"))
 	Local $aTmp = StringSplit($sUrlFetchMod, @CRLF, $STR_NOCOUNT)
 	;_ArrayDisplay($aTmp)
 	For $i = 0 To UBound($aTmp) - 1
