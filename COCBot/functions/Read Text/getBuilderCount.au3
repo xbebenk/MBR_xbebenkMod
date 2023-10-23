@@ -21,7 +21,7 @@ Func getBuilderCount($bSuppressLog = False, $bBuilderBase = False)
 	If Not $bBuilderBase Then
 		$bIsMainPage = IsMainPage()
 	Else
-		$bIsMainPage = IsMainPageBuilderBase()
+		$bIsMainPage = isOnBuilderBase()
 	EndIf
 
 	If $bIsMainPage Then ; check for proper window location

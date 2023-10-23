@@ -126,9 +126,14 @@ Func isOnBuilderBase()
 	Local $aPixelToCheck = $aIsOnBuilderBase
 	
 	$bRet = _checkMainScreenImage($aPixelToCheck)
+	
+	If Not $bRet Then ;check again, after attack builder icon shifted left :((
+		$bRet = _checkMainScreenImage($aIsOnBuilderBase1)
+	EndIf
+	
 	If Not $bRet Then
 		SetDebugLog("Using Image to Check if isOnBuilderBase")
-		If QuickMIS("BC1", $g_sImgInfo, 447, 3, 466, 15) Then $bRet = True
+		If QuickMIS("BC1", $g_sImgInfo, 435, 1, 462, 22) Then $bRet = True
 	EndIf
 	
 	Return $bRet

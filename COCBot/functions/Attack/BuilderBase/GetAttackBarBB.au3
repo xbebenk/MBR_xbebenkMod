@@ -24,7 +24,7 @@
 #comments-end	
 	
 Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
-	Local $iTroopBanners = 584 ; y location of where to find troop quantities
+	Local $iTroopBanners = 582 ; y location of where to find troop quantities
 	Local $iSelectTroopY = 620 ; y location to select troop on attackbar
 	Local $aBBAttackBar[0][5]
 	Local $aEmpty[0][2]
@@ -33,8 +33,8 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 		$g_aWBOnAttackBar = $aEmpty
 	EndIf
 	
-	Local $iMaxSlot = 9, $iSlotOffset = 71, $bMachineFound = False
-	Local $aSlotX[$iMaxSlot], $iStartSlot = 118
+	Local $iMaxSlot = 9, $iSlotOffset = 75, $bMachineFound = False
+	Local $aSlotX[$iMaxSlot], $iStartSlot = 102
 	
 	If $g_bChkDebugAttackBB Then SetLog("GetAttackBarBB Remaining=" & String($bRemaining) & ", SecondAttack=" & String($bSecondAttack), $COLOR_DEBUG)
 	

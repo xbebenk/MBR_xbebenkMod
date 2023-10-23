@@ -213,7 +213,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 
-	If $bBuilderBase Then CheckBB20Tutor()
+	;If $bBuilderBase Then CheckBB20Tutor()
 	If Not $bBuilderBase Then
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;handle for clan capital tutorial
 			SetLog("checkObstacles: Found Clan Capital Tutorial, Doing Tutorial", $COLOR_ACTION)
@@ -376,13 +376,15 @@ Func CheckBB20Tutor()
 		EndIf
 
 		If Not $g_bRunState Then Return
-		If _CheckPixel($aIsOnBuilderBase, True, Default, "CheckBB20Tutor") Then
+		If isOnBuilderBase() Then
 			If $g_bDebugSetlog Then Setlog("Found MainScreen of BuilderBase, exit CheckBB20Tutor", $COLOR_DEBUG2)
+			$bRet = False
 			ExitLoop
 		EndIf
 
-		If _CheckPixel($aIsMain, True, Default, "CheckBB20Tutor") Then
+		If isOnMainVillage() Then
 			If $g_bDebugSetlog Then Setlog("Found MainScreen of MainVillage, exit CheckBB20Tutor", $COLOR_DEBUG2)
+			$bRet = False
 			ExitLoop
 		EndIf
 

@@ -170,7 +170,7 @@ Func _AttackBB()
 	SetLog("Waiting for end of battle.", $COLOR_INFO)
 	If EndBattleBB() Then SetLog("Battle ended", $COLOR_INFO)
 	
-	If checkMainScreen(True, $g_bStayOnBuilderBase, "AttackBB") Then
+	If isOnBuilderBase() Then
 		If Not $g_bIsBBevent Then  ;disable collect cart if doing CG Challenges, too much time waste, bot need to check If CG Challenges is Completed
 			CollectBBCart()
 		EndIf
@@ -894,8 +894,8 @@ Func BBAttackReport()
 	Local $sGold = 0, $sElix = 0, $sDE = 0, $sTrophy = 0, $sStars = 0
 	Local $AtkLogTxt = ""
 	
-	$sGold = getOcrAndCapture("coc-Builders", 525, 400, 86, 18, True)
-	$sTrophy = getOcrAndCapture("coc-Builders", 550, 437, 38, 18, True)
+	$sGold = getOcrAndCapture("coc-bonus", 525, 400, 86, 18, True)
+	$sTrophy = getOcrAndCapture("coc-bonus", 550, 437, 38, 18, True)
 	$sDamage = getOcrBBDamageReport(365, 280)
 	
 	If Number($sDamage) = 200 Then 
