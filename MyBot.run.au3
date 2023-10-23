@@ -1228,9 +1228,9 @@ Func __RunFunction($action)
 		;Case "AutoUpgradeCC"
 		;	AutoUpgradeCC()
 		;	_Sleep($DELAYRUNBOT3)
-		;Case "CollectCCGold"
-		;	CollectCCGold()
-		;	_Sleep($DELAYRUNBOT3)
+		Case "CollectCCGold"
+			CollectCCGold()
+			_Sleep($DELAYRUNBOT3)
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
