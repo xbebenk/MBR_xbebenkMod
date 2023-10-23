@@ -5,10 +5,8 @@ Func CollectCCGold($bTest = False)
 	Local $aCollect, $iBuilderToUse = $g_iCmbForgeBuilder + 1
 	SetLog("Start Collecting Clan Capital Gold", $COLOR_INFO)
 	ClickAway("Right")
-	_Sleep(500)
-	ZoomOut(True) ;ZoomOut first
-	_Sleep(500)
-
+	ZoomOut() ;ZoomOut first
+	
 	;handle for turtorial
 	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 250, 520, 400, 670) Then
 		SetLog("Tutorial Arrow detected, click it!", $COLOR_ACTION)
@@ -33,7 +31,7 @@ Func CollectCCGold($bTest = False)
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
 		For $i = 1 To 5
 			SetDebugLog("Waiting for Forge Window #" & $i, $COLOR_ACTION)
-			If QuickMis("BC1", $g_sImgGeneralCloseButton, 710, 160, 760, 205) Then
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 768, 136, 812, 179) Then
 				$bWindowOpened = True
 				ExitLoop
 			EndIf
@@ -58,7 +56,7 @@ Func CollectCCGold($bTest = False)
 			If $iBuilderToUse > 3 Then
 				SetLog("Checking 4th Builder forge result", $COLOR_INFO)
 				ClickDrag(720, 315, 600, 315, 500)
-				$aCollect = QuickMIS("CNX", $g_sImgCCGoldCollect, 500, 340, 740, 410)
+				$aCollect = QuickMIS("CNX", $g_sImgCCGoldCollect, 500, 350, 780, 420)
 				If IsArray($aCollect) And UBound($aCollect) > 0 Then
 					SetLog("Collecting " & UBound($aCollect) & " Clan Capital Gold", $COLOR_INFO)
 					For $i = 0 To UBound($aCollect) - 1
@@ -87,7 +85,7 @@ EndFunc
 
 Func ReadCCGold()
 	Local $iRet = 0, $aRet
-	Local $sCCGold = getOcrAndCapture("coc-ccgold", 285, 456, 160, 25)
+	Local $sCCGold = getOcrAndCapture("coc-ccgold", 285, 472, 160, 25, True)
 	$aRet = StringSplit($sCCGold, "#", $STR_NOCOUNT)
 	If Ubound($aRet) = 2 Then
 		$iRet = $aRet[0]
