@@ -82,7 +82,7 @@ Global $aVillageHasDarkElixir[4] = [845, 138, 0x270D33, 10] ; Main Page, Base ha
 Global $aCheckTopProfile[4] = [200, 166, 0x868CAC, 5]
 Global $aCheckTopProfile2[4] = [220, 355, 0x4E4D79, 5]
 
-Global $aIsTabOpen[4] = [0, 126, 0xEAEAE3, 25];Check if specific Tab is opened, X Coordinate is a dummy
+Global $aIsTabOpen[4] = [0, 125, 0xEAEAE3, 25];Check if specific Tab is opened, X Coordinate is a dummy
 
 Global $aRecievedTroops[4] = [200 ,215 ,0xFFFFFF, 20] ; Y of You have recieved blabla from xx!
 
