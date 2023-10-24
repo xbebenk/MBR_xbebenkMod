@@ -95,7 +95,9 @@ Func checkChatTabPixel()
 	If _ColorCheck(_GetPixelColor(12, 342, True), Hex(0xC55115, 6), 20, Default, "checkChatTabPixel") Then
 		If $g_bDebugSetLog Then SetLog("checkChatTabPixel: Found ChatTab", $COLOR_ACTION)
 		$bRet = True
-	Else
+	EndIf
+	
+	If Not $bRet Then 
 		If _CheckPixel($aChatTab, True) Then
 			SetDebugLog("checkChatTabPixel: Found Chat Tab to close", $COLOR_ACTION)
 			PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab

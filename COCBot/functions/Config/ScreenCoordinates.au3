@@ -40,6 +40,7 @@ Global $aEndFightSceneAvl[4] = [241, 196, 0xFFF090, 20] ; Victory or defeat scen
 Global $aEndFightSceneReportGold = $aEndFightSceneAvl ; Missing... TripleM ???
 Global $aReturnHomeButton[4] = [425, 567, 0x6CBB1F, 20] ; Return Home Button, End Battle Screen
 Global $aChatTab[4] = [389, 342, 0xC55115, 20] ; Chat Window Open, Main Screen
+Global $aChatTabClosed[4] = [12, 342, 0xC55115, 20] ; Chat Window Closed
 Global $aArmyCampSize[2] = [123, 145] ; Training Window, Overview screen, Current Size/Total Size
 Global $aSiegeMachineSize[2] = [748, 145] ; Training Window, Overview screen, Current Number/Total Number
 Global $aArmySpellSize[2] = [112, 288] ; Training Window Overviewscreen, current number/total capacity
