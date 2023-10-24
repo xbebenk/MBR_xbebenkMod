@@ -289,10 +289,10 @@ EndFunc   ;==>_checkObstacles
 
 Func WelcomeBackCheck()
 	Local $bGreenButton = False, $bWhiteW = False, $bWhiteB = False, $bWhiteC = False
-	If _ColorCheck(_GetPixelColor(440, 497, True), Hex(0xCEE67C, 6), 10, Default, "checkObstacles") Then $bGreenButton = True
-	If _ColorCheck(_GetPixelColor(288, 150, True), Hex(0xEFEFEF, 6), 10, Default, "checkObstacles") Then $bWhiteW = True
-	If _ColorCheck(_GetPixelColor(425, 146, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteB = True
-	If _ColorCheck(_GetPixelColor(504, 146, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then $bWhiteC = True
+	If _ColorCheck(_GetPixelColor(440, 497, True), Hex(0xDCF584, 6), 20, Default, "checkObstacles") Then $bGreenButton = True
+	If _ColorCheck(_GetPixelColor(288, 150, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then $bWhiteW = True
+	If _ColorCheck(_GetPixelColor(425, 146, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then $bWhiteB = True
+	If _ColorCheck(_GetPixelColor(504, 146, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then $bWhiteC = True
 	
 	If $bGreenButton And $bWhiteW And $bWhiteB And $bWhiteC Then Return True
 EndFunc
