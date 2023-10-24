@@ -605,7 +605,7 @@ Func WaitUpgradeWindowCC()
 	For $i = 1 To 10
 		SetLog("Waiting for Upgrade Window #" & $i, $COLOR_ACTION)
 		_Sleep(1000)
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 680, 99, 730, 140) Then ;check if upgrade window opened
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 755, 44, 800, 90) Then ;check if upgrade window opened
 			If Not QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then	;also check if there is no tutorial
 				$bRet = True
 				Return $bRet
@@ -682,7 +682,7 @@ Func AutoUpgradeCC($bTest = False)
 						Return
 					EndIf
 					_Sleep(1000)
-					Local $cost = getOcrAndCapture("coc-ms", 590, 527, 160, 25)
+					Local $cost = getOcrAndCapture("coc-ccgold", 600, 574, 160, 25)
 					If Not $bTest Then
 						Click(640, 520) ;Click Contribute
 						AutoUpgradeCCLog($BuildingName, $cost)
