@@ -1110,46 +1110,46 @@ Func __RunFunction($action)
 		Case "NotifyReport"
 			NotifyReport()
 			_Sleep($DELAYRUNBOT3)
-		;Case "DonateCC"
-		;	If $g_iActiveDonate And $g_bChkDonate Then
-		;		If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
-		;	EndIf
-		;Case "DonateCC,Train"
-		;	If Not $g_bRunState Then Return
-		;	If $g_iActiveDonate And $g_bChkDonate Then
-		;		If $g_bFirstStart Then
-		;			PrepareDonateCC()
-		;			CheckArmyCamp(True, True)
-		;		EndIf
-		;		; if in "Halt/Donate" don't skip near full army
-		;		If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then
-		;			If DonateCC() Then
-		;				If $g_bTrainEnabled Then ; check for training enabled in halt mode
-		;					If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
-		;						TrainSystem()
-		;						_Sleep($DELAYRUNBOT1)
-		;					Else
-		;						SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $COLOR_INFO)
-		;						$g_iActualTrainSkip = $g_iActualTrainSkip + 1
-		;						If $g_iActualTrainSkip >= $g_iMaxTrainSkip Then
-		;							$g_iActualTrainSkip = 0
-		;						EndIf
-		;						CheckOverviewFullArmy(True, False) ; use true parameter to open train overview window
-		;						If _Sleep($DELAYRESPOND) Then Return
-		;						getArmySpells()
-		;						If _Sleep($DELAYRESPOND) Then Return
-		;						getArmyHeroCount(False, True)
-		;					EndIf
-		;				Else
-		;					If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
-		;				EndIf
-		;				$g_bDonated = False
-		;			EndIf
-		;		EndIf
-		;	EndIf
-		;	If Not $g_bRunState Then Return
-		;
-		;
+		Case "DonateCC"
+			If $g_iActiveDonate And $g_bChkDonate Then
+				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
+			EndIf
+		Case "DonateCC,Train"
+			If Not $g_bRunState Then Return
+			If $g_iActiveDonate And $g_bChkDonate Then
+				If $g_bFirstStart Then
+					PrepareDonateCC()
+					CheckArmyCamp(True, True)
+				EndIf
+				; if in "Halt/Donate" don't skip near full army
+				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then
+					If DonateCC() Then
+						If $g_bTrainEnabled Then ; check for training enabled in halt mode
+							If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
+								TrainSystem()
+								_Sleep($DELAYRUNBOT1)
+							Else
+								SetLog("Humanize bot, prevent to delete and recreate troops " & $g_iActualTrainSkip + 1 & "/" & $g_iMaxTrainSkip, $COLOR_INFO)
+								$g_iActualTrainSkip = $g_iActualTrainSkip + 1
+								If $g_iActualTrainSkip >= $g_iMaxTrainSkip Then
+									$g_iActualTrainSkip = 0
+								EndIf
+								CheckOverviewFullArmy(True, False) ; use true parameter to open train overview window
+								If _Sleep($DELAYRESPOND) Then Return
+								getArmySpells()
+								If _Sleep($DELAYRESPOND) Then Return
+								getArmyHeroCount(False, True)
+							EndIf
+						Else
+							If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
+						EndIf
+						$g_bDonated = False
+					EndIf
+				EndIf
+			EndIf
+			If Not $g_bRunState Then Return
+		
+		
 		;Case "BoostBarracks"
 		;	BoostBarracks()
 		;	_Sleep($DELAYRESPOND)
@@ -1225,9 +1225,9 @@ Func __RunFunction($action)
 		;Case "SaleMagicItem"
 		;	SaleMagicItem()
 		;	_Sleep($DELAYRUNBOT3)
-		;Case "AutoUpgradeCC"
-		;	AutoUpgradeCC()
-		;	_Sleep($DELAYRUNBOT3)
+		Case "AutoUpgradeCC"
+			AutoUpgradeCC()
+			_Sleep($DELAYRUNBOT3)
 		Case "CollectCCGold"
 			CollectCCGold()
 			_Sleep($DELAYRUNBOT3)
