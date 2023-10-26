@@ -992,22 +992,15 @@ Func DonateSiegeType(Const $iSiegeIndex, $bDonateAll = False)
 		SaveDebugImage("LiveDonateCC-r" & $donaterow & "-c" & $donateposinrow & "-" & $g_asSiegeMachineNames[$iSiegeIndex] & "_")
 	EndIf
 
-	If _ColorCheck(_GetPixelColor(350 + ($Slot * 68), $g_iDonationWindowY + 105 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-			_ColorCheck(_GetPixelColor(355 + ($Slot * 68), $g_iDonationWindowY + 106 + $YComp, True), Hex(0x306ca8, 6), 20) Or _
-			_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $g_iDonationWindowY + 107 + $YComp, True), Hex(0x306ca8, 6), 20) Then ; check for 'blue'
-
-		Click(397 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, 1, $DELAYDONATECC3, "#0175")
-		If $g_iCommandStop = 3 Then
-			$g_iCommandStop = 0
-			$g_bFullArmy = False
-		EndIf
-		SetLog("Donating 1 " & ($g_asSiegeMachineNames[$iSiegeIndex]) & ($bDonateAll ? " (to all requests)" : ""), $COLOR_GREEN)
-		$g_bDonated = True ;set To Return value
-		$g_aiDonateSiegeMachines[$iSiegeIndex] += 1
-		$g_aiDonateStatsSieges[$iSiegeIndex][0] += 1
-	Else
-		SetLog("No " & $g_asSiegeMachineNames[$iSiegeIndex] & " available to donate..", $COLOR_ERROR)
+	Click(397 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, 1, $DELAYDONATECC3, "#0175")
+	If $g_iCommandStop = 3 Then
+		$g_iCommandStop = 0
+		$g_bFullArmy = False
 	EndIf
+	SetLog("Donating 1 " & ($g_asSiegeMachineNames[$iSiegeIndex]) & ($bDonateAll ? " (to all requests)" : ""), $COLOR_GREEN)
+	$g_bDonated = True ;set To Return value
+	$g_aiDonateSiegeMachines[$iSiegeIndex] += 1
+	$g_aiDonateStatsSieges[$iSiegeIndex][0] += 1
 EndFunc   ;==>DonateSiegeType
 
 Func DonateWindow($aiDonateButton, $bOpen = True)
