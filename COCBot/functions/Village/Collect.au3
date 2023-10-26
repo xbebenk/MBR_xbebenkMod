@@ -70,14 +70,11 @@ Func Collect($bCheckTreasury = True)
 EndFunc   ;==>Collect
 
 Func CollectLootCart()
-	If Not $g_abNotNeedAllTime[0] Then 
-	    SetLog("Skipping loot cart check", $COLOR_INFO)
-	    Return
-	EndIf
+	ZoomOutHelper("CollectLootCart")
 
 	SetLog("Searching for a Loot Cart", $COLOR_INFO)
 	If Not IsMainPage() Then Return
-	If QuickMIS("BC1", $g_sImgCollectLootCart, 20, 200, 120, 290) Then 
+	If QuickMIS("BC1", $g_sImgCollectLootCart, 0, 180, 120, 300) Then 
 		Click($g_iQuickMISX + 10, $g_iQuickMISY)
 		If _Sleep(1000) Then Return
 		If ClickB("CollectLootCart") Then
@@ -88,6 +85,4 @@ Func CollectLootCart()
 	Else
 		SetLog("No Loot Cart found on your Village", $COLOR_SUCCESS)
 	EndIf
-	
-	$g_abNotNeedAllTime[0] = False
 EndFunc   ;==>CollectLootCart

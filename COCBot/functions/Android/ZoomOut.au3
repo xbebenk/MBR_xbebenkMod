@@ -104,6 +104,10 @@ Func ZoomOutHelper($caller = "Default")
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
 			$y = $g_iQuickMISY - $aOffset[2]
+			If $caller = "CollectLootCart" Then 
+				$x += 20
+				$y += 20
+			EndIf
 			SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
 			ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
