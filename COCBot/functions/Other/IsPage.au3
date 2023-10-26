@@ -262,6 +262,21 @@ Func IsFullScreenWindow()
 	Return False
 EndFunc
 
+Func IsProfileWindowOpen()
+	Local $result = False
+	$result = WaitforPixel(806, 98, 807, 99, "FFFFFF", 10, 2)
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 788, 83, 825, 117) Then $result = True
+	EndIf
+	
+	If $result Then
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found ProfileWindow", $COLOR_ACTION)
+		Return True
+	EndIf
+	Return False
+EndFunc
+
 Func IsPetHousePage()
 	Local $result
 	$result = WaitforPixel(530, 120, 531, 121, "006C5C", 10, 2) ;green pixel under title 'Pet House'

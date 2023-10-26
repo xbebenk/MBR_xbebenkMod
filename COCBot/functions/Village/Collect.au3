@@ -77,24 +77,17 @@ Func CollectLootCart()
 
 	SetLog("Searching for a Loot Cart", $COLOR_INFO)
 	If Not IsMainPage() Then Return
-	Local $aLootCart = decodeSingleCoord(findImage("LootCart", $g_sImgCollectLootCart, GetDiamondFromRect("20,220,120,290"), 1, True))
-	If UBound($aLootCart) > 1 Then
-		$aLootCart[1] += 15
-		ClickP($aLootCart, 1, 0, "#0330")
+	If QuickMIS("BC1", $g_sImgCollectLootCart, 20, 200, 120, 290) Then 
+		Click($g_iQuickMISX + 10, $g_iQuickMISY)
 		If _Sleep(1000) Then Return
-
-		Local $aiCollectButton = findButton("CollectLootCart", Default, 1, True)
-		If UBound($aiCollectButton) > 1 Then
+		If ClickB("CollectLootCart") Then
 			SetLog("Clicking to collect loot cart.", $COLOR_SUCCESS)
-			Click($aiCollectButton[0], $aiCollectButton[1])
 		Else
-			SetLog("Cannot find Collect Button", $COLOR_ERROR)
-			Return False
+			SetLog("Cannot find LootCart Collect Button", $COLOR_ERROR)
 		EndIf
-
 	Else
 		SetLog("No Loot Cart found on your Village", $COLOR_SUCCESS)
 	EndIf
-
+	
 	$g_abNotNeedAllTime[0] = False
 EndFunc   ;==>CollectLootCart
