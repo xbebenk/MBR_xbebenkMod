@@ -594,7 +594,7 @@ Func WaitUpgradeButtonCC()
 			$aRet[2] = $g_iQuickMISY
 			Return $aRet ;immediately return as we found upgrade button
 		EndIf
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		If $i > 3 Then SkipChat("UpgradeButton")
 	Next
 	Return $aRet
@@ -604,7 +604,7 @@ Func WaitUpgradeWindowCC()
 	Local $bRet = False
 	For $i = 1 To 10
 		SetLog("Waiting for Upgrade Window #" & $i, $COLOR_ACTION)
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		If QuickMis("BC1", $g_sImgGeneralCloseButton, 755, 44, 800, 90) Then ;check if upgrade window opened
 			If Not QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then	;also check if there is no tutorial
 				$bRet = True
@@ -625,9 +625,10 @@ Func AutoUpgradeCC($bTest = False)
 	EndIf
 	Local $aRet[3] = [False, 0, 0]
 	SetLog("Checking Clan Capital AutoUpgrade", $COLOR_INFO)
-	ZoomOut() ;ZoomOut first
+	ZoomOutHelper("CollectLootCart")
+	If _Sleep(1000) Then Return
 	If Not SwitchToClanCapital($bTest) Then Return
-	_Sleep(1000)
+	
 	If Number($g_iLootCCGold) = 0 And Not $bTest Then
 		SetLog("No Capital Gold to spend to Contribute", $COLOR_INFO)
 		SwitchToMainVillage("Cannot Contribute")
@@ -674,7 +675,7 @@ Func AutoUpgradeCC($bTest = False)
 						ClickCCBuilder() ;upgrade should be ignored, so open builder menu again for next upgrade
 						ContinueLoop
 					EndIf
-					Local $BuildingName = getOcrAndCapture("coc-build", 200, 494, 400, 30)
+					Local $BuildingName = getOcrAndCapture("coc-build", 200, 515, 400, 30)
 					Click($aRet[1], $aRet[2]) ;click upgrade Button
 					_Sleep(1000)
 					If Not WaitUpgradeWindowCC() Then
@@ -682,9 +683,9 @@ Func AutoUpgradeCC($bTest = False)
 						Return
 					EndIf
 					_Sleep(1000)
-					Local $cost = getOcrAndCapture("coc-ccgold", 600, 574, 160, 25)
+					Local $cost = getOcrAndCapture("coc-ccgold", 630, 574, 120, 25, True)
 					If Not $bTest Then
-						Click(640, 520) ;Click Contribute
+						Click(700, 585) ;Click Contribute
 						AutoUpgradeCCLog($BuildingName, $cost)
 						ClickAway("Right")
 					Else
