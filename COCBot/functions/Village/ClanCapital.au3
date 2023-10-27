@@ -121,7 +121,7 @@ Func ClanCapitalReport($SetLog = True)
 		;If Number($iAttack) > 0 Then NotifyPushToTelegram($g_sProfileCurrentName & " have " & $iAttack & " Available attack on Capital Raid Weekend")
 	EndIf
 
-	If $g_bChkStartWeekendRaid Then StartRaidWeekend()
+	;If $g_bChkStartWeekendRaid Then StartRaidWeekend()
 EndFunc
 
 Func StartRaidWeekend()
@@ -338,7 +338,7 @@ Func SwitchToClanCapital($bTest = False)
 		SetLog("Click AirShip at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_ACTION)
 		For $i = 1 To 10
 			SetDebugLog("Waiting for Travel to Clan Capital Map #" & $i, $COLOR_ACTION)
-			If QuickMis("BC1", $g_sImgGeneralCloseButton, 700, 120, 750, 160) Then ; check if we have window covering map, close it!
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 705, 230, 755, 300) Then ; check if we have window covering map, close it!
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				SetLog("Found Next Raid Window covering map, close it!", $COLOR_INFO)
 				_Sleep(5000)
@@ -349,7 +349,7 @@ Func SwitchToClanCapital($bTest = False)
 				SetLog("Success Travel to Clan Capital Map", $COLOR_INFO)
 				ExitLoop
 			EndIf
-			_Sleep(800)
+			If _Sleep(2000) Then Return
 		Next
 	EndIf
 	If Not $bRet Then
