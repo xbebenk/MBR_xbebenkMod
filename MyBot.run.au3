@@ -1219,9 +1219,9 @@ Func __RunFunction($action)
 		;Case "CollectAchievements"
 		;	CollectAchievements()
 		;	_Sleep($DELAYRUNBOT3)
-		;Case "CollectFreeMagicItems"
-		;	CollectFreeMagicItems()
-		;	_Sleep($DELAYRUNBOT3)
+		Case "CollectFreeMagicItems"
+			CollectFreeMagicItems()
+			_Sleep($DELAYRUNBOT3)
 		;Case "SaleMagicItem"
 		;	SaleMagicItem()
 		;	_Sleep($DELAYRUNBOT3)

@@ -81,12 +81,12 @@ Func CollectFreeMagicItems($bTest = False)
 EndFunc   ;==>CollectFreeMagicItems
 
 Func GetFreeMagic()
-	Local $aOcrPositions[3][2] = [[285, 322], [465, 322], [635, 322]]
+	Local $aOcrPositions[3][2] = [[270, 329], [470, 329], [660, 329]]
 	Local $aResults[0][5]
 	Local $bClaimed = False, $bFullStorage = False
 	For $i = 0 To UBound($aOcrPositions) - 1
-		Local $Read = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 200, 25, True)
-		Local $Capa = getOcrAndCapture("coc-buildermenu-name", $aOcrPositions[$i][0], 209, 100, 25, True)
+		Local $Read = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 120, 25, True)
+		Local $Capa = getOcrAndCapture("coc-buildermenu-name", $aOcrPositions[$i][0], 197, 70, 25, True)
 		SetDebugLog("Magic Item Capacity: " & $Capa)
 		$bClaimed = _ColorCheck(_GetPixelColor($aOcrPositions[$i][0], 297, True), Hex(0xAD5B0D, 6), 20)
 		$bFullStorage = _ColorCheck(_GetPixelColor($aOcrPositions[$i][0], $aOcrPositions[$i][1], True), Hex(0xA3A3A3, 6), 20)
@@ -129,14 +129,28 @@ Func IsTraderWindowOpen()
 	Local $bRet = False
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 110, 780, 150) Then
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 785, 90, 830, 130) Then
 			$bRet = True
 			ExitLoop
 		Else
 			SetDebugLog("Waiting for FreeMagicWindowOpen #" & $i, $COLOR_ACTION)
 		EndIf
-		_Sleep(500)
+		If _Sleep(500) Then Return
 	Next
+	
+	For $i = 1 To 8
+		If Not $g_bRunState Then Return
+		If QuickMis("BC1", $g_sImgTraderGems, 55, 233, 100, 250) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(800) Then Return
+			$bRet = True
+			ExitLoop
+		Else
+			SetDebugLog("Waiting for Gems Tab #" & $i, $COLOR_ACTION)
+		EndIf
+		If _Sleep(500) Then Return
+	Next
+	
 	Return $bRet
 EndFunc
 
