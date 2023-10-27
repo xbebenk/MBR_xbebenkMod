@@ -1174,10 +1174,10 @@ Func __RunFunction($action)
 		;Case "BoostEverything"
 		;	BoostEverything()
 		;	_Sleep($DELAYRESPOND)
-		;Case "DailyChallenge"
-		;	DailyChallenges()
-		;	_Sleep($DELAYRUNBOT3)
-		;	checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenge")
+		Case "DailyChallenge"
+			DailyChallenges()
+			_Sleep($DELAYRUNBOT3)
+			checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenge")
 		Case "RequestCC"
 			RequestCC()
 			ClickAway()

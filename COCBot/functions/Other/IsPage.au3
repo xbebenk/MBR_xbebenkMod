@@ -271,7 +271,22 @@ Func IsProfileWindowOpen()
 	EndIf
 	
 	If $result Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found ProfileWindow", $COLOR_ACTION)
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found Profile Window", $COLOR_ACTION)
+		Return True
+	EndIf
+	Return False
+EndFunc
+
+Func IsChallengeWindowOpen()
+	Local $result = False
+	$result = WaitforPixel(824, 85, 826, 86, "FFFFFF", 10, 2)
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 800, 64, 850, 112) Then $result = True
+	EndIf
+	
+	If $result Then
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found Challenge Window", $COLOR_ACTION)
 		Return True
 	EndIf
 	Return False
