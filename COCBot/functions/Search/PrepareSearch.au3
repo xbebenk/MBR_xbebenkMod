@@ -35,24 +35,26 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	ChkAttackCSVConfig()
 	If $Mode = $DT Then $g_bRestart = False
 	
-	If ClickB("AttackButton") Then
-		SetDebugLog("Opening Multiplayer Tab!", $COLOR_ACTION)
-		For $i = 1 To 5
-			If _Sleep(1000) Then Return
-			If IsMultiplayerTabOpen() Then 
-				SetDebugLog("Multiplayer Tab is Opened", $COLOR_DEBUG)
-				ExitLoop
-			Else
-				If $i = 5 Then 
-					SetLog("Couldn't Multiplayer Window after click attack button!", $COLOR_ERROR)
-					If $g_bDebugImageSave Then SaveDebugImage("AttackButtonNotFound")
-					Return False
-				EndIf
+	For $i = 1 To 5
+		If ClickB("AttackButton") Then
+			SetDebugLog("Opening Multiplayer Tab!", $COLOR_ACTION)
+		Else
+			SetLog("PrepareSearch Failed: MainPage Not Found!", $COLOR_ERROR)
+		EndIf
+		
+		If _Sleep(1000) Then Return
+		If IsMultiplayerTabOpen() Then 
+			SetDebugLog("Multiplayer Tab is Opened", $COLOR_DEBUG)
+			ExitLoop
+		Else
+			If $i = 5 Then 
+				SetLog("Couldn't Multiplayer Window after click attack button!", $COLOR_ERROR)
+				If $g_bDebugImageSave Then SaveDebugImage("AttackButtonNotFound")
+				Return False
 			EndIf
-		Next
-	Else
-		SetLog("PrepareSearch Failed: MainPage Not Found!", $COLOR_ERROR)
-	EndIf	
+		EndIf
+	Next
+		
 
 	Local $aButton
 	
@@ -153,12 +155,14 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	Local $Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
 
 	If isGemOpen(True) Then ; Check for gem window open)
-		SetLog(" Not enough gold to start searching!", $COLOR_ERROR)
-		Click(623, 231, 1, 0, "#0151") ; Click close gem window "X"
-		If _Sleep($DELAYPREPARESEARCH1) Then Return
-		Click(789, 117, 1, 0, "#0152") ; Click close attack window "X"
-		If _Sleep($DELAYPREPARESEARCH1) Then Return
-		$g_bOutOfGold = True ; Set flag for out of gold to search for attack
+		If Not IsAttackPage() Then 
+			SetLog(" Not enough gold to start searching!", $COLOR_ERROR)
+			Click(623, 231, 1, 0, "#0151") ; Click close gem window "X"
+			If _Sleep($DELAYPREPARESEARCH1) Then Return
+			Click(789, 117, 1, 0, "#0152") ; Click close attack window "X"
+			If _Sleep($DELAYPREPARESEARCH1) Then Return
+			$g_bOutOfGold = True ; Set flag for out of gold to search for attack
+		EndIf
 	EndIf
 
 	checkAttackDisable($g_iTaBChkAttack, $Result) ;See If TakeABreak msg on screen
