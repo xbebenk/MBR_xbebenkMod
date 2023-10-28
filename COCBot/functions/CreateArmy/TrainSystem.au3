@@ -1014,7 +1014,7 @@ Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = 
 		_ArraySort($aResult, 1, 0, 0, 1) ; reverse the queued slots from right to left
 		Local $xSlot
 		For $i = 0 To UBound($aResult) - 1
-			$xSlot = Int(Number($aResult[$i][1]) / 71) * 71 - 6
+			$xSlot = Int(Number($aResult[$i][1]) / 69) * 69 - 6
 			$aResult[$i][3] = Number(getQueueTroopsQuantity($xSlot, 168))
 			SetDebugLog($aResult[$i][0] & " (" & $xSlot & ") x" & $aResult[$i][3])
 		Next
@@ -1152,7 +1152,7 @@ Func MakingDonatedTroops($sType = "All")
 			If Not $g_bRunState Then Return
 			$Plural = 0
 			If $avDefaultTroopGroup[$i][4] > 0 Then
-				$RemainTrainSpace = GetOCRCurrent(42, 133)
+				$RemainTrainSpace = GetOCRCurrent(60, 140)
 				If $RemainTrainSpace[2] < 0 Then $RemainTrainSpace[2] = $RemainTrainSpace[1] * 2 - $RemainTrainSpace[0] ; remain train space to full double army
 				If $RemainTrainSpace[2] = 0 Then ExitLoop ; army camps full
 
@@ -1212,7 +1212,7 @@ Func MakingDonatedTroops($sType = "All")
 		Next
 		;Top Off any remianing space with archers
 		If $sType = "All" Then
-			$RemainTrainSpace = GetOCRCurrent(42, 133)
+			$RemainTrainSpace = GetOCRCurrent(60, 140)
 			If $RemainTrainSpace[0] < $RemainTrainSpace[1] Then ; army camps full
 				Local $howMuch = $RemainTrainSpace[2]
 				TrainIt($eTroopArcher, $howMuch, $g_iTrainClickDelay)
@@ -1240,7 +1240,7 @@ Func MakingDonatedTroops($sType = "All")
 				$g_aiDonateSpells[$i] -= $howMuch
 
 				If _Sleep(1000) Then Return
-				$RemainTrainSpace = GetOCRCurrent(42, 133)
+				$RemainTrainSpace = GetOCRCurrent(60, 140)
 				SetLog(" - Current Capacity: " & $RemainTrainSpace[0] & "/" & ($RemainTrainSpace[1]))
 			EndIf
 		Next
@@ -1276,7 +1276,7 @@ Func MakingDonatedTroops($sType = "All")
 			EndIf
 		Next
 		; Get Siege Capacities
-		Local $sSiegeInfo = getArmyCapacityOnTrainTroops(57, 133) ; OCR read Siege built and total
+		Local $sSiegeInfo = getArmyCapacityOnTrainTroops(60, 140) ; OCR read Siege built and total
 		If $g_bDebugSetlogTrain Then SetLog("OCR $sSiegeInfo = " & $sSiegeInfo, $COLOR_DEBUG)
 		Local $aGetSiegeCap = StringSplit($sSiegeInfo, "#", $STR_NOCOUNT) ; split the built Siege number from the total Siege number
 		SetLog("Total Siege Workshop Capacity: " & $aGetSiegeCap[0] & "/" & $aGetSiegeCap[1])
