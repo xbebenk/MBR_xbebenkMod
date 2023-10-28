@@ -190,7 +190,7 @@ Func IsMultiplayerTabOpen()
 	EndIf
 	
 	If $result Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found FullScreen Window", $COLOR_ACTION)
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found Multiplayer Window", $COLOR_ACTION)
 		Return True
 	EndIf
 	Return False

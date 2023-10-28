@@ -1216,9 +1216,9 @@ Func __RunFunction($action)
 				BuilderBase()
 			EndIf
 			_Sleep($DELAYRUNBOT3)
-		;Case "CollectAchievements"
-		;	CollectAchievements()
-		;	_Sleep($DELAYRUNBOT3)
+		Case "CollectAchievements"
+			CollectAchievements()
+			_Sleep($DELAYRUNBOT3)
 		Case "CollectFreeMagicItems"
 			CollectFreeMagicItems()
 			_Sleep($DELAYRUNBOT3)
