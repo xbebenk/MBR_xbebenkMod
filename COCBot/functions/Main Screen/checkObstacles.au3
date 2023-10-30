@@ -259,8 +259,8 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		EndIf
 	EndIf
 	
-	If QuickMIS("BFI", $g_sImgMaintenance, 360, 70, 420, 110) Then 
-		$Result = getOcrMaintenanceTime(300, 550, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
+	If QuickMIS("BFI", $g_sImgMaintenance, 300, 38, 566, 75) Then 
+		$Result = getOcrMaintenanceTime(286, 580, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
 		Local $iMaintenanceWaitTime = 0
 		Local $avTime = StringRegExp($Result, "([\d]+)[Mm]|(soon)|([\d]+[Hh])", $STR_REGEXPARRAYMATCH)
 		If UBound($avTime, 1) = 1 And Not @error Then
