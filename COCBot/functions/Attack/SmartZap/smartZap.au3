@@ -51,7 +51,7 @@ Func getDarkElixir()
 	;SetLog("Getting Dark Elixir Values.")
 	If _CheckPixel($aAtkHasDarkElixir, $g_bCapturePixel, Default, "HasDarkElixir") Or _ColorCheck(_GetPixelColor(31, 144, True), Hex(0x0F0617, 6), 5) Then ; check if the village have a Dark Elixir Storage
 		While $g_iSearchDark = ""
-			$g_iSearchDark = getDarkElixirVillageSearch(48, 126) ; Get updated Dark Elixir value
+			$g_iSearchDark = getDarkElixirVillageSearch(45, 132) ; Get updated Dark Elixir value
 			$iCount += 1
 			If $iCount > 15 Then ExitLoop ; Check a couple of times in case troops are blocking the image
 			If _Sleep($DELAYSMARTZAP1) Then Return
@@ -127,7 +127,7 @@ Func smartZap($minDE = -1)
 
 	If $bZapDrills Then
 		; Get Dark Elixir value, if no DE value exists, exit.
-		$g_iSearchDark = getDarkElixirVillageSearch(48, 126)
+		$g_iSearchDark = getDarkElixirVillageSearch(45, 132)
 		If Number($g_iSearchDark) = 0 Then
 			SetLog("No Dark Elixir!", $COLOR_INFO)
 			If $g_bDebugSmartZap Then SetLog("$g_iSearchDark|Current DE value: " & Number($g_iSearchDark), $COLOR_DEBUG)
