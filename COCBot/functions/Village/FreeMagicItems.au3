@@ -192,7 +192,7 @@ Func SaleFullMagicItem($MagicItem = "", $Amount = 0)
 					If _ColorCheck(_GetPixelColor(550, 505, True), Hex(0xF51D21, 6), 20) Then ;Check Red Sell Button
 						Click(550, 505) ;Click Sell Button
 						If _Sleep(1500) Then Return
-						If _ColorCheck(_GetPixelColor(510, 425, True), Hex(0x6DBC1F, 6), 20) Then
+						If IsOKCancelPage() Then
 							Click(510, 425) ;Click Okay Button
 						EndIf
 					EndIf
@@ -308,7 +308,7 @@ Func OpenMagicItemWindow()
 	If Not $g_bRunState Then Return
 	If $bLocateTH Then
 		If imglocTHSearch(False, True, True) Then ClickP($g_aiTownHallPos)
-		If _Sleep(500) Then Return
+		If _Sleep(1500) Then Return
 		If ClickB("MagicItem") Then
 			$bRet = True
 		EndIf
