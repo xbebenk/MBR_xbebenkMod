@@ -69,10 +69,10 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					SetDebugLog("Click " & $aButton[$i][0] & " Attack Button", $COLOR_ACTION)
 					Click($aButton[$i][1], $aButton[$i][2])
 					For $k = 1 To 10 
-						If _Sleep(500) Then Return
+						If _Sleep(1000) Then Return
 						If QuickMIS("BC1", $g_sImgPrepareLegendLeagueSearch, $aButton[$i][1] - 50, $aButton[$i][2] - 50, $aButton[$i][1] + 50, $aButton[$i][2] + 50) Then 
 							SetLog("Still see " & $aButton[$i][0], $COLOR_DEBUG)
-							ContinueLoop 2
+							If $k > 5 Then ContinueLoop 2
 						Else
 							SetDebugLog("Attack Button" & $aButton[$i][0] & " is Gone", $COLOR_DEBUG)
 							ExitLoop
@@ -84,14 +84,14 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					$g_bRestart = True
 					$g_bForceSwitch = True     ; set this switch accounts next check
 					CloseClangamesWindow()
-					_Sleep(1000)
+					If _Sleep(1000) Then Return
 					Return False
 				ElseIf StringInStr($aButton[$i][0], "Made") Then
 					SetLog("All Attacks already made! Returning home", $COLOR_INFO)
 					$g_bRestart = True
 					$g_bForceSwitch = True     ; set this switch accounts next check
 					CloseClangamesWindow()
-					_Sleep(1000)
+					If _Sleep(1000) Then Return
 					Return
 				ElseIf StringInStr($aButton[$i][0], "Legend") Then
 					Click($aButton[$i][1], $aButton[$i][2])
@@ -118,7 +118,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 						Else
 							SetLog("Wait for OK Button to SignUp Legend League #" & $i, $COLOR_ACTION)
 						EndIf
-						_Sleep(500)
+						If _Sleep(500) Then Return
 					Next
 					SetLog("Problem SignUp to Legend League", $COLOR_ERROR)
 					Return False
@@ -127,7 +127,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					If ProfileSwitchAccountEnabled() Then 
 						$g_bForceSwitch = True
 						CloseClangamesWindow()
-						_Sleep(1000)
+						If _Sleep(1000) Then Return
 						Return
 					EndIf
 					_SleepStatus(120000) ; Wait 2 mins before searching again
