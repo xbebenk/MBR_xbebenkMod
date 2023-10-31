@@ -92,7 +92,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			Case Else
 				;  Add check for game update and Rate CoC error messages
 				If $g_bDebugImageSave Then SaveDebugImage("ChkObstaclesReloadMsg_", False) ; debug only
-				;$Result = getOcrRateCoc(228, 390, "Check Obstacles getOCRRateCoC= ")
 				Local $sRegion = "220,380(60,25)"
 				If $g_iAndroidVersionAPI >= $g_iAndroidLollipop Then
 					$sRegion = "550,370(70,35)"
@@ -260,7 +259,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	EndIf
 	
 	If QuickMIS("BFI", $g_sImgMaintenance, 300, 38, 566, 75) Then 
-		$Result = getOcrMaintenanceTime(286, 580, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
+		$Result = getOcrMaintenanceTime(83, 580, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
 		Local $iMaintenanceWaitTime = 0
 		Local $avTime = StringRegExp($Result, "([\d]+)[Mm]|(soon)|([\d]+[Hh])", $STR_REGEXPARRAYMATCH)
 		If UBound($avTime, 1) = 1 And Not @error Then
