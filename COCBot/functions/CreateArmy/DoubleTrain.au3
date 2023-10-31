@@ -41,6 +41,11 @@ Func DoubleTrain()
 			ExitLoop
 		EndIf
 		
+		If $TroopCamp[0] = ($TroopCamp[1] * 2) Then
+			SetLog("Cur = Max")
+			ExitLoop
+		EndIf
+		
 		If $TroopCamp[1] <> $g_iTotalCampSpace Then
 			SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG1)
 		EndIf
@@ -106,7 +111,12 @@ Func DoubleTrain()
 			Local $SpellCamp = GetCurrentArmy(56, 140)
 			If IsProblemAffect(True) Then Return
 			If Not $g_bRunState Then Return
-			SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2)
+			SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2, $COLOR_DEBUG1)
+			
+			If $SpellCamp[0] = ($SpellCamp[1] * 2) Then
+				SetLog("Cur = Max")
+				ExitLoop
+			EndIf
 
 			If $SpellCamp[1] > $TotalSpell Then
 				SetLog("Unbalance Total spell setting vs actual spell capacity: " & $TotalSpell & "/" & $SpellCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG)
@@ -163,16 +173,18 @@ Func DoubleTrain()
 			SetLog("New troop Fill way", $COLOR_DEBUG1)
 			TrainUsingWhatToTrain($aWhatToTrain)
 			$CampOCR = GetCurrentArmy(60, 140)
-			FillIncorrectTroopCombo(False, $CampOCR)
+			FillIncorrectTroopCombo(False, $CampOCR, "DoubleTrain New")
 			TrainFullTroop(True)
 			SetLog("TrainFullTroop(True) done.", $COLOR_DEBUG1)
+			;$CampOCR = GetCurrentArmy(60, 140)
+			;FillIncorrectTroopCombo(False, $CampOCR, "DoubleTrain New")
 		EndIf
 		If DoWhatToTrainContainSpell($aWhatToTrain) Then
 			SetLog("New spell Fill way", $COLOR_DEBUG1)
 			BrewUsingWhatToTrain($aWhatToTrain)
 			$CampOCR = GetCurrentArmy(56, 140)
 			FillIncorrectSpellCombo(False, $CampOCR)
-			BrewFullSpell(True)
+			;BrewFullSpell(True)
 			If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
 			SetLog("BrewFullSpell(True) done.", $COLOR_DEBUG1)
 		EndIf
@@ -183,7 +195,7 @@ Func DoubleTrain()
 		If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
 		Local $TroopCamp = GetCurrentArmy(60, 140)
 		Local $bQueue = $TroopCamp[0] >= $TroopCamp[1]
-		FillIncorrectTroopCombo($bQueue, $TroopCamp)
+		FillIncorrectTroopCombo($bQueue, $TroopCamp, "DoubleTrain Old")
 	EndIf
 	
 	If $g_bIgnoreIncorrectSpellCombo Then
@@ -200,7 +212,7 @@ EndFunc   ;==>DoubleTrain
 
 Func TrainFullTroop($bQueue = False)
 	SetLog("Training " & ($bQueue ? "2nd Army..." : "1st Army..."))
-
+	If _Sleep(500) Then Return
 	Local $ToReturn[1][2] = [["Arch", 0]]
 	For $i = 0 To $eTroopCount - 1
 		Local $troopIndex = $g_aiTrainOrder[$i]
@@ -217,23 +229,27 @@ Func TrainFullTroop($bQueue = False)
 	If _Sleep(500) Then Return
 	
 	If Not OpenTroopsTab(False, "TrainFullTroop()") Then Return
-	Local $CampOCR = GetCurrentArmy(60, 139)
+	Local $CampOCR = GetCurrentArmy(60, 140)
 	If Not $g_bRunState Then Return
 	SetDebugLog("Checking troop tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
 	If $g_bIgnoreIncorrectTroopCombo And $g_bDoubleTrain Then
-		FillIncorrectTroopCombo($bQueue, $CampOCR)
+		FillIncorrectTroopCombo($bQueue, $CampOCR, "TrainFullTroop")
 	EndIf
 EndFunc   ;==>TrainFullTroop
 
-Func FillIncorrectTroopCombo($bQueue, $CampOCR)
+Func FillIncorrectTroopCombo($bQueue, $CampOCR, $caller = "Unknown")
 	If Not $g_bIgnoreIncorrectTroopCombo Then Return
-	Local $TroopSpace = $bQueue ? Number($CampOCR[1]) + Number($CampOCR[2]) : Number($CampOCR[2])
-	SetLog("TroopCamp = " & $CampOCR[0] & "/" & $CampOCR[1], $COLOR_DEBUG)
+	SetLog("bQueue = " & $bQueue)
+	SetLog("CampOCR:" & _ArrayToString($CampOCR) & " Called from : " & $caller)
+	Local $TroopSpace = $bQueue ? (Number($CampOCR[1]) * 2) - Number($CampOCR[0]) : Number($CampOCR[2])
+	If $TroopSpace < 0 Then Return
+	SetLog("TroopSpace = " & $TroopSpace, $COLOR_DEBUG)
 	
 	Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
 	Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
 	Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
 	Local $TroopQuantToFill = Floor($TroopSpace/$g_sCmbFICTroops[$FillTroopIndex][2])
+	SetLog("TroopQuantToFill = " & $TroopQuantToFill, $COLOR_DEBUG)
 	
 	If $TroopQuantToFill > 0 Then
 		SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
@@ -332,7 +348,7 @@ Func GetCurrentArmy($x_start, $y_start)
 		Local $aTempResult = StringSplit($iOCRResult, "#", $STR_NOCOUNT)
 		$aResult[0] = Number($aTempResult[0])
 		$aResult[1] = Number($aTempResult[1]) / 2
-		$aResult[2] = Abs($aResult[1] - $aResult[0])
+		$aResult[2] = $aResult[1] - $aResult[0]
 	Else
 		SetLog("DEBUG | ERROR on GetCurrentArmy", $COLOR_ERROR)
 	EndIf

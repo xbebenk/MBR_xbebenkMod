@@ -179,7 +179,7 @@ EndFunc   ;==>GetRNDName
 Func GetVariable(Const $asImageToUse, Const $iIndex)
 	Local $aTrainPos[5] = [-1, -1, -1, -1, $eBarb]
 	; Capture the screen for comparison
-	_CaptureRegion2(25, 350, 840, 548)
+	_CaptureRegion2(30, 350, 828, 515)
 
 	Local $iError = ""
 	For $i = 1 To $asImageToUse[0]

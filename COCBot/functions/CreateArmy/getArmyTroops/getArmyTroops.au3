@@ -35,9 +35,8 @@ Func getArmyTroops($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bCheckW
 
 	If _CheckPixel($aRecievedTroops, $bNeedCapture) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
 		If $bSetLog Then SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
-		_CaptureRegion2()
-		While _CheckPixel($aRecievedTroops, False)
-			If _Sleep($DELAYTRAIN1) Then Return
+		While _CheckPixel($aRecievedTroops, True)
+			If _Sleep(500) Then Return
 		WEnd
 	EndIf
 

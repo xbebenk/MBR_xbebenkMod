@@ -30,10 +30,6 @@ Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete valu
 	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True)
 EndFunc   ;==>getElixirVillageSearch
 
-Func getResourcesValueTrainPage($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 113, 18, True)
-EndFunc   ;==>getResourcesValueTrainPage
-
 Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
 	Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 18, True)
 EndFunc   ;==>getDarkElixirVillageSearch
@@ -123,8 +119,8 @@ Func getTroopsSpellsLevel($x_start, $y_start) ;  -> Gets spell level on Attack S
 	Return getOcrAndCapture("coc-spellslevel", $x_start, $y_start, 20, 18, True)
 EndFunc   ;==>getTroopsSpellsLevel
 
-Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 82, 17, True, False, $bNeedCapture)
+Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity on Army Tab (Troops:xx/xx)
+	Return getOcrAndCapture("coc-armytroops", $x_start, $y_start, 82, 17, True, False, $bNeedCapture)
 EndFunc   ;==>getArmyCampCap
 
 Func getArmySiegeCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
@@ -269,7 +265,7 @@ EndFunc   ;==>getOcrReloadMessage
 
 Func getOcrMaintenanceTime($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
 	;  -> Get the Text with time till maintenance is over from reload msg(171, 375)
-	Local $result = getOcrAndCapture("coc-maintenance", $x_start, $y_start, 100, 30, True)
+	Local $result = getOcrAndCapture("coc-maintenance", $x_start, $y_start, 300, 30, True)
 	Local $String = ""
 	If $sLogText = Default Then
 		$String = "getOcrMaintenanceTime: " & $result
@@ -296,23 +292,6 @@ Func getOcrEventTime($x_start, $y_start) ; -> Gets CheckValuesCost on Train Wind
 	Return getOcrAndCapture("coc-events", $x_start, $y_start, 60, 20, True)
 EndFunc   ;==>getOcrEventTime
 
-Func getOcrRateCoc($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
-	;  -> Get the Text with time till maintenance is over from reload msg(228, 402)
-	Local $result = getOcrAndCapture("coc-ratecoc", $x_start, $y_start, 42, 28, True)
-	Local $String = ""
-	If $sLogText = Default Then
-		$String = "getOcrRateCoc: " & $result
-	Else
-		$String = $sLogText & " " & $result
-	EndIf
-	If $g_bDebugSetlog Then ; if enabled generate debug log message
-		SetDebugLog($String, $LogTextColor, $bSilentSetLog)
-	ElseIf $result <> "" Then ;
-		SetDebugLog($String, $LogTextColor, True) ; if result found, add to log file
-	EndIf
-	Return $result
-EndFunc   ;==>getOcrRateCoc
-
 Func getRemainTLaboratory($x_start, $y_start) ; read actual time remaining in Lab for current upgrade (336,260), changed CoC v9.24 282,277
 	Return getOcrAndCapture("coc-RemainLaboratory", $x_start, $y_start, 194, 25)
 EndFunc   ;==>getRemainTLaboratory
@@ -329,34 +308,12 @@ Func getRequestRemainTime($x_start, $y_start, $bNeedCapture = True) ; Get Remain
 	Return getOcrAndCapture("coc-CCremainTime", $x_start, $y_start, 30, 14, False, False, $bNeedCapture)
 EndFunc   ;==>getRequestRemainTime
 
-Func getCloudTextShort($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
-	; Get 3 characters of yellow text in center of attack search window during extended cloud waiting (388,378)
-	; Full text length is 316 pixels, some is covered by chat window when open
-	Local $result = getOcrAndCapture("coc-cloudsearch", $x_start, $y_start, 51, 27)
-	If $g_bDebugSetlog And $sLogText <> Default And IsString($sLogText) Then ; if enabled generate debug log message
-		Local $String = $sLogText & $result
-		SetDebugLog($String, $LogTextColor, $bSilentSetLog)
-	EndIf
-	Return $result
-EndFunc   ;==>getCloudTextShort
-
-Func getCloudFailShort($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
-	; Get 6 characters of pink text in center of attack search window during failed attack search (271, 381)
-	; Full text length is 318 pixels, on checking for 1st 6 characters
-	Local $result = getOcrAndCapture("coc-cloudfail", $x_start, $y_start, 72, 24)
-	If $g_bDebugSetlog And $sLogText <> Default And IsString($sLogText) Then ; if enabled generate debug log message
-		Local $String = $sLogText & $result
-		SetDebugLog($String, $LogTextColor, $bSilentSetLog)
-	EndIf
-	Return $result
-EndFunc   ;==>getCloudFailShort
-
-Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  -> Gets quantity of troops in army Window
+Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  -> Gets quantity of troops in army Window (slot)
 	Return getOcrAndCapture("coc-newarmy", $x_start, $y_start, 55, 18, True, False, $bNeedCapture)
 EndFunc   ;==>getBarracksNewTroopQuantity
 
 Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of troops in army Window
-	Return getOcrAndCapture("coc-NewCapacity", $x_start, $y_start, 67, 14, True)
+	Return getOcrAndCapture("coc-NewCapacity", $x_start, $y_start, 70, 16, True)
 EndFunc   ;==>getArmyCapacityOnTrainTroops
 
 Func getQueueTroopsQuantity($x_start, $y_start) ;  -> Gets quantity of troops in Queue in Train Tab
@@ -414,10 +371,6 @@ Func getChatStringPersian($x_start, $y_start, $bConvert = True) ; -> Get string 
 	EndIf
 	Return $OCRString
 EndFunc   ;==>getChatStringPersian
-
-Func getArmyResourcesFromButtons($x_start, $y_start) ;  -> Gets cost of Troops/Spells from buttons
-	Return Number(getOcrAndCapture("coc-TrainResources", $x_start - 70, $y_start + 25, 89, 20, True))
-EndFunc   ;==>getArmyCapacityOnTrainTroops
 
 Func OcrForceCaptureRegion($bForce = Default)
 	If $bForce = Default Then Return $g_bOcrForceCaptureRegion
