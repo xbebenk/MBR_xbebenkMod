@@ -743,7 +743,7 @@ Func AutoUpgradeCC($bTest = False)
 								ClickCCBuilder() ;upgrade should be ignored, so open builder menu again for next upgrade
 								ContinueLoop
 							EndIf
-							Local $BuildingName = getOcrAndCapture("coc-build", 200, 494, 400, 30)
+							Local $BuildingName = getOcrAndCapture("coc-build", 200, 515, 400, 30)
 							Click($aRet[1], $aRet[2]) ;click upgrade Button
 							_Sleep(1000)
 							If Not WaitUpgradeWindowCC() Then
@@ -752,7 +752,7 @@ Func AutoUpgradeCC($bTest = False)
 							EndIf
 							Local $cost = getOcrAndCapture("coc-ms", 590, 527, 160, 25)
 							If Not $bTest Then
-								Click(640, 520) ;Click Contribute
+								Click(700, 585) ;Click Contribute
 								AutoUpgradeCCLog($BuildingName, $cost)
 								ClickAway("Right")
 							Else
