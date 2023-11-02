@@ -64,7 +64,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	If $bUpgradeLowCost And $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
-		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
+		If QuickMIS("BC1", $g_sImgAUpgradeHour, 480, 110, 555, 125) Then
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
 			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
 			If $mUpgradeTime > 0 And $mUpgradeTime <= 1440 Then
@@ -86,6 +86,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 				ZoomOut(True)
 				Return ;no builder, exit
 			EndIf
+			If Not $g_bRunState Then Return
 			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
 			_Sleep(5000)
 		EndIf
@@ -102,6 +103,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	EndIf
 	
 	If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing
+		If Not $g_bRunState Then Return
 		If AutoUpgradeCheckBuilder($bTest) Then AutoUpgradeSearchNewBuilding($bTest)
 	EndIf
 	
@@ -273,15 +275,15 @@ EndFunc
 
 Func FindExistingBuilding($bTest = False)
 	Local $ElixMultiply = 1, $GoldMultiply = 1 ;used for multiply score
-	Local $Gold = getResourcesMainScreen(695, 23)
-	Local $Elix = getResourcesMainScreen(695, 74)
+	Local $Gold = getResourcesMainScreen(690, 23)
+	Local $Elix = getResourcesMainScreen(690, 74)
 	If $Gold > $Elix Then $GoldMultiply += 1
 	If $Elix > $Gold Then $ElixMultiply += 1
 	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
 	Local $aRushTHPriority[8][2] = [["Castle", 15], ["Pet", 15], ["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10], ["Hut", 10]]
 	Local $aRushTH[7][2] = [["Barracks", 8], ["Spell", 9], ["Workshop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
 	Local $aHeroes[4] = ["King", "Queen", "Warden", "Champion"]
-	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 440, 80, 550, 408)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 250, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then 
@@ -293,7 +295,7 @@ Func FindExistingBuilding($bTest = False)
 				EndIf
 				ContinueLoop ;skip geared and new
 			EndIf
-			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
+			$UpgradeName = getBuildingName(280, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
 			If $g_bChkRushTH Then ;if rushth enabled, filter only rushth buildings
 				Local $bRusTHFound = False
 				For $x = 0 To UBound($aRushTH) - 1
@@ -664,14 +666,14 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 	Local $bHeroUpgrade = False
 	Switch $g_aUpgradeNameLevel[1]
 		Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion", "poyal Champion"
-			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 690, 500, 730, 580) ; get resource
-			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522) ; get cost
-			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(576, 473) ; get duration
+			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 660, 500, 710, 580) ; get resource
+			$g_aUpgradeResourceCostDuration[1] = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True) ; get cost
+			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(747, 546) ; get duration
 			$bHeroUpgrade = True
 		Case Else
-			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 480, 500, 550) ; get resource
-			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487) ; get cost
-			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(192, 307) ; get duration
+			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 660, 500, 710, 580) ; get resource
+			$g_aUpgradeResourceCostDuration[1] = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True) ; get cost
+			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(747, 546) ; get duration
 	EndSwitch
 	
 	If $g_aUpgradeNameLevel[1] = "Clan Castle" And $g_aUpgradeNameLevel[2] = "Broken" Then 
@@ -698,7 +700,7 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 			$bMustIgnoreResource = ($g_iChkResourcesToIgnore[0] = 1) ? True : False
 		Case "Elixir"
 			$bMustIgnoreResource = ($g_iChkResourcesToIgnore[1] = 1) ? True : False
-		Case "Dark Elixir"
+		Case "DarkElixir"
 			$bMustIgnoreResource = ($g_iChkResourcesToIgnore[2] = 1) ? True : False
 		Case Else
 			$bMustIgnoreResource = False
@@ -714,9 +716,9 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 	If Not $bTest Then
 		Switch $g_aUpgradeNameLevel[1]
 			Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion", "poyal Champion"
-				Click(660, 560)
+				Click(625, 545)
 			Case Else
-				Click(440, 500)
+				Click(625, 545)
 		EndSwitch
 		If $g_aUpgradeNameLevel[1] = "Clan Castle" And $g_aUpgradeNameLevel[2] = "Broken" Then Click(600, 460)
 	Else
@@ -1006,12 +1008,14 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			Local $aResult = FindExistingBuilding()
 			If isArray($aResult) And UBound($aResult) > 0 Then
 				For $y = 0 To UBound($aResult) - 1
+					If Not $g_bRunState Then Return
 					If $aResult[$y][7] = "Priority" Then
 						SetLog("RushTHPriority: " & $aResult[$y][3] & ", Cost: " & $aResult[$y][5], $COLOR_INFO)
 					EndIf
 				Next
-				If Not $g_bRunState Then Return
+				
 				For $y = 0 To UBound($aResult) - 1
+					If Not $g_bRunState Then Return
 					If $aResult[$y][7] = "Priority" Then
 						If CheckResourceForDoUpgrade($aResult[$y][3], $aResult[$y][5], $aResult[$y][0]) Then ;name, cost, type
 							Click($aResult[$y][1], $aResult[$y][2])
@@ -1102,11 +1106,11 @@ EndFunc
 Func FindEssentialBuilding()
 	Local $aTmpCoord, $aBuilding[0][6], $UpgradeCost, $UpgradeName
 	Local $aEssentialBuilding[8] = ["X Bow", "Inferno Tower", "Eagle Artillery", "Scattershot", "Wizard Tower", "Bomb Tower", "Air Defense", "Air Sweeper"]
-	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 440, 80, 520, 408)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
-			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
+			$UpgradeName = getBuildingName(280, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
 			For $j = 0 To UBound($g_aichkEssentialUpgrade) - 1
 				SetDebugLog($UpgradeName[0] & "|" & $aEssentialBuilding[$j])
 				If $g_aichkEssentialUpgrade[$j] > 0 And $UpgradeName[0] = $aEssentialBuilding[$j] Then
@@ -1127,7 +1131,7 @@ EndFunc
 Func FindOtherDefenses()
 	Local $aTmpCoord, $aBuilding[0][6], $UpgradeCost, $UpgradeName
 	Local $aEssentialBuilding[4] = ["Cannon", "Archer Tower", "Mortar", "Hidden Tesla"]
-	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 440, 80, 520, 408)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
@@ -1178,14 +1182,14 @@ Func SearchGreenZone()
 EndFunc
 
 Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
-	Local $x = 420, $yUp = 103, $yDown = 800, $Delay = 1000
+	Local $x = 400, $yUp = 120, $yDown = 800, $Delay = 1500
 	ClickMainBuilder()
 	If $YY = Default And $Direction = "up" Then 
-		Local $Tmp = QuickMIS("CNX", $g_sImgResourceIcon, 320, 80, 460, 360)
+		Local $Tmp = QuickMIS("CNX", $g_sImgResourceIcon, 440, 300, 520, 408)
 		If IsArray($Tmp) And UBound($Tmp) > 0 Then
 			$YY = _ArrayMax($Tmp, 1, 0, -1, 2)
 			SetDebugLog("DragUpY = " & $YY)
-			If Number($YY) < 300 Then 
+			If Number($YY) < 350 Then 
 				SetLog("No need to dragUp!", $COLOR_INFO)
 				Return
 			EndIf
@@ -1209,7 +1213,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 					If _Sleep(1000) Then Return
 				Case "Down"
 					ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
-					If WaitforPixel(430, 80, 450, 100, "FFFFFF", 10, 1) Then
+					If WaitforPixel(551, 90, 552, 91, "FFFFFF", 10, 1) Then
 						ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
 					EndIf
 					If _Sleep(5000) Then Return
@@ -1232,7 +1236,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 	If Not $g_bRunState Then Return
 	; open the builders menu
 	If Not IsBuilderMenuOpen() Then
-		Click(295, 20)
+		Click(400, 28)
 		If _Sleep(1000) Then Return
 	EndIf
 
@@ -1247,7 +1251,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 				Click(825,45)
 				If _Sleep(1000) Then Return
 			EndIf
-			Click(295, 20)
+			Click(400, 28)
 			If _Sleep(1000) Then Return
 			If IsBuilderMenuOpen() Then
 				$b_WindowOpened = True
@@ -1320,7 +1324,7 @@ EndFunc
 
 Func getMostBottomCost()
 	Local $TmpUpgradeCost, $ret
-	Local $Icon = QuickMIS("CNX", $g_sImgResourceIcon, 300, 300, 450, 360)
+	Local $Icon = QuickMIS("CNX", $g_sImgResourceIcon, 440, 340, 520, 408)
 	If IsArray($Icon) And UBound($Icon) > 0 Then
 		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord, descending
 		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 12, 120, 20, True) ;check most bottom upgrade cost
@@ -1537,8 +1541,8 @@ EndFunc
 
 Func IsBuilderMenuOpen()
 	Local $bRet = False
-	Local $aBorder[4] = [350, 73, 0xC7CCBF, 40]
-	Local $aBorder1[4] = [350, 73, 0xFFFFFF, 40]
+	Local $aBorder[4] = [470, 73, 0xC7CCBF, 40]
+	Local $aBorder1[4] = [470, 73, 0xFFFFFF, 40]
 	Local $sTriangle
 	If _CheckPixel($aBorder, True) Or _CheckPixel($aBorder1, True) Then 
 		;SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
@@ -1548,7 +1552,7 @@ Func IsBuilderMenuOpen()
 	EndIf
 	
 	If Not $bRet Then ;lets re check if border color check not success
-		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 320, 60, 40, 30)
+		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 425, 58, 40, 30)
 		SetDebugLog("$sTriangle: " & $sTriangle)
 		If $sTriangle = "^" Or $sTriangle = "~" Then $bRet = True
 	EndIf

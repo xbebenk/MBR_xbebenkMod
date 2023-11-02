@@ -1195,16 +1195,16 @@ Func __RunFunction($action)
 		;Case "UpgradeHeroes"
 		;	UpgradeHeroes()
 		;	_Sleep($DELAYRUNBOT3)
-		;Case "UpgradeBuilding"
+		Case "UpgradeBuilding"
 		;	UpgradeBuilding()
 		;	If _Sleep($DELAYRUNBOT3) Then Return
-		;	AutoUpgrade()
-		;	ZoomOut()
-		;	_Sleep($DELAYRUNBOT3)
-		;Case "UpgradeLow"
-		;	AutoUpgrade(False, True)
-		;	ZoomOut()
-		;	_Sleep($DELAYRUNBOT3)
+			AutoUpgrade()
+			ZoomOut()
+			_Sleep($DELAYRUNBOT3)
+		Case "UpgradeLow"
+			AutoUpgrade(False, True)
+			ZoomOut()
+			_Sleep($DELAYRUNBOT3)
 		;Case "UpgradeWall"
 		;	$g_iNbrOfWallsUpped = 0
 		;	ClickAway()
