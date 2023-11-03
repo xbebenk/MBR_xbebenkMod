@@ -579,7 +579,7 @@ EndFunc
 Func UpgradeWallGold($iWallCost = $g_iWallCost, $bTest = False)
 
 	;Check for Gold in right top button corner and click, if present
-	Local $FoundGold = decodeSingleCoord(findImage("UpgradeWallGold", $g_sImgUpgradeWallGold, GetDiamondFromRect("200, 530, 670, 600"), 1, True))
+	Local $FoundGold = decodeSingleCoord(findImage("UpgradeWallGold", $g_sImgUpgradeWallGold, GetDiamondFromRect("200, 505, 670, 532"), 1, True))
 	If UBound($FoundGold) > 1 Then
 		Click($FoundGold[0], $FoundGold[1])
 	Else
@@ -589,9 +589,9 @@ Func UpgradeWallGold($iWallCost = $g_iWallCost, $bTest = False)
 
 	If _Sleep($DELAYUPGRADEWALLGOLD2) Then Return
 
-	If WaitforPixel(670, 140, 690, 150, Hex(0xFFFFFF, 6), 6, 2) Then ; wall upgrade window red x
+	If WaitforPixel(805, 101, 807, 102, Hex(0xFFFFFF, 6), 6, 2) Then ; wall upgrade window red x
 		If Not $bTest Then
-			Click(440, 500, 1, 0, "#0317")
+			Click(625, 545, 1, 0, "Upgradewall Gold")
 		Else
 			SetLog("Testing Only!", $COLOR_ERROR)
 			Clickaway("Right")
@@ -619,7 +619,7 @@ EndFunc   ;==>UpgradeWallGold
 Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
 
 	;Check for elixircolor in right top button corner and click, if present
-	Local $FoundElixir = decodeSingleCoord(findImage("UpgradeWallElixir", $g_sImgUpgradeWallElix, GetDiamondFromRect("200, 530, 670, 600"), 1, True, Default))
+	Local $FoundElixir = decodeSingleCoord(findImage("UpgradeWallElixir", $g_sImgUpgradeWallElix, GetDiamondFromRect("200, 505, 670, 532"), 1, True, Default))
 	If UBound($FoundElixir) > 1 Then
 		Click($FoundElixir[0], $FoundElixir[1])
 	Else
@@ -629,9 +629,9 @@ Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
 
 	If _Sleep($DELAYUPGRADEWALLELIXIR2) Then Return
 
-	If WaitforPixel(670, 140, 690, 150, Hex(0xFFFFFF, 6), 6, 2) Then ; wall upgrade window red x
+	If WaitforPixel(805, 101, 807, 102, Hex(0xFFFFFF, 6), 6, 2) Then ; wall upgrade window red x
 		If Not $bTest Then
-			Click(440, 500, 1, 0, "#0318")
+			Click(625, 545, 1, 0, "UpgradeWall Elixir")
 		Else
 			SetLog("Testing Only!", $COLOR_ERROR)
 			Clickaway("Right")
