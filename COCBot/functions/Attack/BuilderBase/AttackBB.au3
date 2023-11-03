@@ -455,8 +455,8 @@ EndFunc ; DeployBM
 
 Func CheckBMLoop($aBMPos = $g_aMachinePos)
 	Local $count = 0, $loopcount = 0
-	Local $BMPosX = 66, $BMDeadX = 93, $BMDeadColor
-	Local $BMPosY = 562, $BMDeadY = 666
+	Local $BMDeadX = 67, $BMDeadColor
+	Local $BMDeadY = 667
 	Local $MachineName = ""
 	
 	If $aBMPos = 0 Then Return False
@@ -464,8 +464,6 @@ Func CheckBMLoop($aBMPos = $g_aMachinePos)
 
 	If StringInStr($aBMPos[2], "Copter") Then
 		$MachineName = "Battle Copter"
-		$BMPosX = 66
-		$BMPosY = 562
 	Else
 		$MachineName = "Battle Machine"
 	EndIf
@@ -487,7 +485,7 @@ Func CheckBMLoop($aBMPos = $g_aMachinePos)
 		EndIf
 
 		$BMDeadColor = _GetPixelColor($BMDeadX, $BMDeadY, True)
-		If _ColorCheck($BMDeadColor, Hex(0x484848, 6), 20, Default, $MachineName) Then
+		If _ColorCheck($BMDeadColor, Hex(0x444444, 6), 20, Default, $MachineName) Then
 			SetLog($MachineName & " is Dead", $COLOR_INFO)
 			Return False
 		EndIf
