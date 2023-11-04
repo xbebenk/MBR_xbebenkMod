@@ -62,7 +62,7 @@ Func StarLaboratory($bTestRun = False)
 	Local $bWindowOpened = False
 	For $i = 1 To 5
 		SetDebugLog("Waiting For Star Laboratory Window #" & $i)
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 770, 150, True) Then 
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 760, 40, 820, 80) Then 
 			$bWindowOpened = True
 			ExitLoop
 		EndIf
@@ -74,9 +74,9 @@ Func StarLaboratory($bTestRun = False)
 		Return 
 	EndIf
 	
-	If WaitForPixel(715, 152, 716, 153, "A2CB6C", 10, 1) Then
+	If WaitForPixel(795, 122, 796, 124, "A2CB6C", 10, 1) Then
 		SetLog("Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
-		Local $sLabTimeOCR = getRemainTLaboratory(264, 230)
+		Local $sLabTimeOCR = getRemainTLaboratory(225, 202)
 		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)
 		SetDebugLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
 		If $iLabFinishTime > 0 Then
@@ -222,11 +222,11 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 	Click($x, $y)
 	If _Sleep(1000) Then Return
 	
-	$Result = getLabUpgradeTime(555, 463) ; Try to read white text showing time for upgrade
+	$Result = getLabUpgradeTime(590, 493) ; Try to read white text showing time for upgrade
 	Local $iLabFinishTime = ConvertOCRTime("Lab Time", $Result, False)
 	SetLog($UpgradeName & " Upgrade OCR Time = " & $Result & ", $iLabFinishTime = " & $iLabFinishTime & " m", $COLOR_INFO)
 	
-	If Not $bTest Then Click(640, 530) ;click Upgrade
+	If Not $bTest Then Click(695, 585) ;click Upgrade
 	If _Sleep(1000) Then Return ;wait if Gem window open
 	
 	If isGemOpen(True) Then ; check for gem window
@@ -257,7 +257,7 @@ EndFunc
 
 Func FindSLabTroopsUpgrade()
 	Local $aResult[0][6], $UpgradeCost, $aTroop
-	Local $aTmp = QuickMIS("CNX", $g_sImgStarLabTroops, 100, 340, 710, 540, True)
+	Local $aTmp = QuickMIS("CNX", $g_sImgStarLabTroops, 100, 340, 710, 540)
 	If IsArray($aTmp) And UBound($aTmp) > 0 Then
 		For $i = 0 To UBound($aTmp) -1 
 			$aTroop = GetSLabTroopResPos($aTmp[$i][0])

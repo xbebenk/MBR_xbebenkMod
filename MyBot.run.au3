@@ -1630,12 +1630,12 @@ Func BuilderBase()
 		;	$g_bBBAttacked = False
 		;EndIf
 
-		;Local $bElixFull = isElixirFullBB()
-		;If $bElixFull Then
-		;	$StartLabON = StarLaboratory()
-		;	$g_bBBAttacked = False
-		;	checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-		;EndIf
+		Local $bElixFull = isElixirFullBB()
+		If $bElixFull Then
+			$StartLabON = StarLaboratory()
+			$g_bBBAttacked = False
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
 
 		BBDropTrophy()
 
@@ -1655,7 +1655,7 @@ Func BuilderBase()
 		;	checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		;EndIf
 
-		;If Not $bElixFull And $g_bBBAttacked Then $StartLabON = StarLaboratory()
+		If Not $bElixFull And $g_bBBAttacked Then $StartLabON = StarLaboratory()
 		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
 
 		If _Sleep($DELAYRUNBOT1) Then Return
