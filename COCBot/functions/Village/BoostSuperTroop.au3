@@ -23,9 +23,13 @@ Func BoostSuperTroop($bTest = False)
 			Return False
 		EndIf
 	EndIf
+	If Not $g_bRunState Then Return
 	ZoomOut()
+	If Not $g_bRunState Then Return
 	CheckMainScreen(False, $g_bStayOnBuilderBase, "BoostSuperTroop")
+	If Not $g_bRunState Then Return
 	VillageReport(True, True) ;update village resource
+	If Not $g_bRunState Then Return
 	If OpenBarrel() Then
 		For $i = 0 To 1
 			If Not $g_bRunState Then Return
@@ -183,6 +187,7 @@ Func OpenBarrel()
 	$g_bForceUseSuperTroopPotion = False
 	Local $bOpenBarrel = True
 	Local $xBarrel = 0, $yBarrel = 0
+	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 60, 120, 220, 260) Then
 		$xBarrel = $g_iQuickMISX
 		$yBarrel = $g_iQuickMISY
