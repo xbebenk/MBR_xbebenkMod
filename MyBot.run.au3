@@ -1621,14 +1621,14 @@ Func BuilderBase()
 		CleanBBYard()
 		BuilderBaseReport(True, True)
 
-		;If isGoldFullBB() Or isElixirFullBB() Then
-		;	If AutoUpgradeBB() Then
-		;		If _Sleep($DELAYRUNBOT1) Then Return
-		;		ZoomOut(True) ;directly zoom
-		;	EndIf
-		;	checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-		;	$g_bBBAttacked = False
-		;EndIf
+		If isGoldFullBB() Or isElixirFullBB() Then
+			If AutoUpgradeBB() Then
+				If _Sleep($DELAYRUNBOT1) Then Return
+				ZoomOut(True) ;directly zoom
+			EndIf
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+			$g_bBBAttacked = False
+		EndIf
 
 		Local $bElixFull = isElixirFullBB()
 		If $bElixFull Then
@@ -1647,13 +1647,13 @@ Func BuilderBase()
 			BuilderBaseReport(True, True)
 		EndIf
 
-		;If $g_bBBAttacked Then
-		;	If AutoUpgradeBB() Then
-		;		If _Sleep($DELAYRUNBOT1) Then Return
-		;		ZoomOut(True) ;directly zoom
-		;	EndIf
-		;	checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-		;EndIf
+		If $g_bBBAttacked Then
+			If AutoUpgradeBB() Then
+				If _Sleep($DELAYRUNBOT1) Then Return
+				ZoomOut(True) ;directly zoom
+			EndIf
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
 
 		If Not $bElixFull And $g_bBBAttacked Then $StartLabON = StarLaboratory()
 		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
