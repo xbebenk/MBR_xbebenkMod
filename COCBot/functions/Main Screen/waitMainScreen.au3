@@ -27,7 +27,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		If checkChatTabPixel() Then 
 			$g_iMainScreenTimeoutCount = 0
 			SetLog("waitMainScreen: MainScreen Located", $COLOR_SUCCESS)
-			Return
+			Return True
 		EndIf
 		
 		$bCheckObs = checkObstacles()

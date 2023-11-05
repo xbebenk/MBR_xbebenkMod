@@ -31,10 +31,10 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	
 	If Not CheckAndroidRunning(False) Then Return
 	
-	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated
+	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False
 	Local $aPixelToCheck = $aIsMain
 	If $bBuilderBase Then $aPixelToCheck = $aIsOnBuilderBase
-	While True
+	While Not $bLocated
 		$i += 1
 		If Not $g_bRunState Then Return
 		
@@ -59,7 +59,9 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 			$bContinue = True
 		EndIf
 		
-		If $bContinue Then waitMainScreen() ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
+		If $bContinue Then 
+			If waitMainScreen() Then ExitLoop ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
+		EndIf
 		If Not $g_bRunState Then Return
 		If _Sleep(1000) Then Return
 	WEnd
