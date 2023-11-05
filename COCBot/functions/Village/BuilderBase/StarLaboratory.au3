@@ -215,6 +215,7 @@ Func StarLaboratory($bTestRun = False)
 		If _Sleep(1000) Then Return ;wait window closed
 		Return False
 	EndIf
+	ClickAway("Left")
 	Return False
 EndFunc   ;==>Laboratory
 

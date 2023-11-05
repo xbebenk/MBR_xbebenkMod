@@ -447,6 +447,8 @@ Func DoUpgradeBB($CostType = "Gold", $bTest = False)
 					Else
 						SetLog($aBuildingName[1] & " Upgrading!", $COLOR_INFO)
 						BBAutoUpgradeLog($aBuildingName)
+						If _Sleep(500) Then Return
+						ClickAway("Left")
 						Return True
 					EndIf
 				EndIf
@@ -668,7 +670,7 @@ EndFunc
 
 Func FindBBNewBuilding()
 	Local $aTmpCoord, $aBuilding[0][7], $UpgradeCost, $aUpgradeName, $UpgradeType = ""
-	$aTmpCoord = QuickMIS("CNX", $g_sImgAUpgradeObstNew, 250, 73, 400, 370)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgAUpgradeObstNew, 350, 73, 500, 370)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1", $g_sImgBBResourceIcon, $aTmpCoord[$i][1] + 100 , $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 250, $aTmpCoord[$i][2] + 12) Then
@@ -709,12 +711,12 @@ Func FindBBExistingBuilding($bTest = False)
 	If $Elix > $Gold Then $ElixMultiply += 1
 
 	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundOptimizeOTTO = False
-	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 425, 73, 560, 370)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 520, 73, 620, 370)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			$bFoundOptimizeOTTO = False ;reset
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
-			$UpgradeName = getBuildingName($aTmpCoord[$i][1] - 220, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
+			$UpgradeName = getBuildingName($aTmpCoord[$i][1] - 180, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
 			If $g_bOptimizeOTTO Then ;if OptimizeOTTO enabled, filter only OptimizeOTTO buildings
 				For $x = 0 To UBound($g_aOptimizeOTTO) - 1
 					If StringInStr($UpgradeName[0], $g_aOptimizeOTTO[$x][0], 1) Then
@@ -795,7 +797,7 @@ Func ClickBBBuilder($Counter = 3)
 	If Not $g_bRunState Then Return
 	
 	If Not IsBBBuilderMenuOpen() Then
-		Click(380, 30)
+		Click(466, 30)
 		If _Sleep(1000) Then Return
 		For $i = 1 To $Counter
 			If Not $g_bRunState Then Return
@@ -804,7 +806,7 @@ Func ClickBBBuilder($Counter = 3)
 				ExitLoop
 			EndIf
 			SetLog("[" & $i & "] BB BuilderMenu didn't open, trying again!", $COLOR_DEBUG)
-			Click(380, 30)
+			Click(466, 30)
 			If _Sleep(1000) Then Return
 		Next
 	Else
@@ -819,8 +821,8 @@ EndFunc ;==>ClickBBBuilder
 
 Func IsBBBuilderMenuOpen()
 	Local $bRet = False
-	Local $aBorder[4] = [380, 73, 0xF4F4F5, 40]
-	Local $aBorder1[4] = [380, 73, 0xFFFFFF, 40]
+	Local $aBorder[4] = [560, 73, 0xF4F4F5, 40]
+	Local $aBorder1[4] = [560, 73, 0xFFFFFF, 40]
 	Local $sTriangle
 	If _CheckPixel($aBorder, True) Then
 		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
@@ -833,11 +835,10 @@ Func IsBBBuilderMenuOpen()
 			$bRet = True ;got correct color for border
 		EndIf
 	EndIf
-	;_PixelSearch(380, 72, 383, 74, Hex(0xBDC1BE, 6), 20, True, True, "Test")
-	; _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $bNeedCapture = True, $bReturnBool = False, $sMessage = "")
+	
 	If Not $bRet Then ;lets re check if border color check not success
 		SetDebugLog("Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
-		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 380, 60, 420, 30)
+		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 495, 60, 50, 17)
 		SetDebugLog("$sTriangle: " & $sTriangle)
 		If $sTriangle = "^" Or $sTriangle = "~" Then $bRet = True
 	EndIf
@@ -847,7 +848,7 @@ EndFunc ;IsBBBuilderMenuOpen
 
 Func getMostBottomCostBB()
 	Local $TmpUpgradeCost, $TmpName, $ret
-	Local $Icon = QuickMIS("CNX", $g_sImgBBResourceIcon, 400, 100, 500, 360)
+	Local $Icon = QuickMIS("CNX", $g_sImgBBResourceIcon, 500, 130, 600, 380)
 	If IsArray($Icon) And UBound($Icon) > 0 Then
 		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord
 		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 12, 120, 20, True) ;check most bottom upgrade cost
@@ -879,7 +880,7 @@ EndFunc
 
 Func FindBHInUpgradeProgress()
 	Local $bRet = False
-	Local $Progress = QuickMIS("CNX", $g_sImgAUpgradeHour, 450, 100, 525, 130)
+	Local $Progress = QuickMIS("CNX", $g_sImgAUpgradeHour, 540, 100, 625, 130)
 	If IsArray($Progress) And UBound($Progress) > 0 Then
 		For $i = 0 To UBound($Progress) - 1
 			Local $UpgradeName = getBuildingName(260, $Progress[$i][2] - 5) ;get upgrade name and amount
@@ -896,12 +897,12 @@ Func WaitBBUpgradeWindow()
 	Local $bRet = False
 	For $i = 1 To 5
 		SetLog("Waiting for Upgrade Window #" & $i, $COLOR_ACTION)
-		If _Sleep(1000) Then Return
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 600, 85, 770, 250) Then
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 80, 780, 130) Then
 			$bRet = True
 			SetLog("Upgrade Window OK", $COLOR_ACTION)
 			ExitLoop
 		EndIf
+		If _Sleep(1000) Then Return
 	Next
 	If Not $bRet Then SetLog("Upgrade Window Opened", $COLOR_ERROR)
 	Return $bRet
