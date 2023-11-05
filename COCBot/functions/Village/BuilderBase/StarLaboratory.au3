@@ -50,6 +50,7 @@ Func StarLaboratory($bTestRun = False)
 	$iAvailElixir = Number($sElixirCount)
 	If Not $g_bOptimizeOTTO Then isBattleMachineMaxed()
 	ZoomOutHelperBB("SwitchBetweenBases") ;go to BH LowerZone
+	If _Sleep(1000) Then Return
 	
 	If Not LocateStarLab() Then Return False
 	
@@ -257,12 +258,12 @@ EndFunc
 
 Func FindSLabTroopsUpgrade()
 	Local $aResult[0][6], $UpgradeCost, $aTroop
-	Local $aTmp = QuickMIS("CNX", $g_sImgStarLabTroops, 100, 340, 710, 540)
+	Local $aTmp = QuickMIS("CNX", $g_sImgStarLabTroops, 35, 350, 785, 560)
 	If IsArray($aTmp) And UBound($aTmp) > 0 Then
 		For $i = 0 To UBound($aTmp) -1 
 			$aTroop = GetSLabTroopResPos($aTmp[$i][0])
 			$UpgradeCost = getSLabCost($aTroop[1], $aTroop[2])
-			If $UpgradeCost = 111 Then $UpgradeCost = "MaxLevel"
+			If $UpgradeCost = "MaxL" Then $UpgradeCost = "MaxLevel"
 			If $UpgradeCost = "" Then 
 				If QuickMIS("BC1", $g_sImgStarLabNeedUp, $aTroop[1], $aTroop[2], $aTroop[1] + 100, $aTroop[2] + 20) Then
 					$UpgradeCost = "NeedUpgradeLab"
