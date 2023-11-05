@@ -1181,10 +1181,10 @@ Func __RunFunction($action)
 		Case "RequestCC"
 			RequestCC()
 			ClickAway()
-		;Case "Laboratory"
-		;	Laboratory()
-		;	_Sleep($DELAYRUNBOT3)
-		;	checkMainScreen(False, $g_bStayOnBuilderBase, "Laboratory")
+		Case "Laboratory"
+			Laboratory()
+			_Sleep($DELAYRUNBOT3)
+			checkMainScreen(False, $g_bStayOnBuilderBase, "Laboratory")
 		;Case "PetHouse"
 		;	PetHouse()
 		;Case "ForgeClanCapitalGold"

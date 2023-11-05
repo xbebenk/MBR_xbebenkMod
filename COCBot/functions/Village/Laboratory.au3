@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 Local $iSlotWidth = 107, $iDistBetweenSlots = 12, $iYMidPoint = 460; use for logic to upgrade troops.. good for generic-ness
 Local $iPicsPerPage = 12, $iPages = 4 ; use to know exactly which page the users choice is on
-Local $sLabWindow = "99,122,760,616", $sLabTroopsSection = "110,340,740,540"
+Local $sLabWindow = "99,122,760,616", $sLabTroopsSection = "70,340,790,566"
 Local $sLabWindowDiam = GetDiamondFromRect($sLabWindow), $sLabTroopsSectionDiam = GetDiamondFromRect($sLabTroopsSection) ; easy to change search areas
 
 Func TestLaboratory()
@@ -303,7 +303,7 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $bDebug = False)
 	
 	If $bDebug Then ; if debugging, do not actually click it
 		SetLog("[debug mode] - Start Upgrade, Click Back Button", $COLOR_ACTION)
-		Click(150, 115)
+		Click(805, 100)
 		Return True ; return true as if we really started an upgrade
 	Else
 		Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
@@ -315,6 +315,8 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $bDebug = False)
 			PushMsg("LabSuccess")
 			
 			If _Sleep($DELAYLABUPGRADE2) Then Return
+			ClickAway()
+			If _Sleep(1000) Then Return
 			ClickAway()
 			Return True ; upgrade started
 		Else
@@ -363,7 +365,7 @@ EndFunc
 Func ChkLabUpgradeInProgress($bDebug = False, $name = "")
 	; check for upgrade in process - look for green in finish upgrade with gems button
 	If _Sleep(500) Then Return
-	If _ColorCheck(_GetPixelColor(125, 160, True), Hex(0xBDE36B, 6), 20) Or _ColorCheck(_GetPixelColor(722, 278, True), Hex(0xA2CB6C, 6), 20) Then ; Look for light green in upper right corner of lab window.
+	If _ColorCheck(_GetPixelColor(415, 135, True), Hex(0xA1CA6B, 6), 20) Then ; Look for light green in upper right corner of lab window.
 		SetLog("Laboratory is Running", $COLOR_INFO)
 		;==========Hide Red  Show Green Hide Gray===
 		GUICtrlSetState($g_hPicLabGray, $GUI_HIDE)
@@ -371,7 +373,7 @@ Func ChkLabUpgradeInProgress($bDebug = False, $name = "")
 		GUICtrlSetState($g_hPicLabGreen, $GUI_SHOW)
 		;===========================================
 		If _Sleep($DELAYLABORATORY2) Then Return
-		Local $sLabTimeOCR = getRemainTLaboratory(268, 227)
+		Local $sLabTimeOCR = getRemainTLaboratory(210, 192)
 		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)
 		SetDebugLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
 		If $iLabFinishTime > 0 Then
@@ -499,16 +501,16 @@ EndFunc
 
 Func FindLabUpgrade()
 	Local $aResult[0][6]
-	Local $TmpResult = QuickMIS("CNX", $g_sImgResIcon, 110, 330, 740, 540)
+	Local $TmpResult = QuickMIS("CNX", $g_sImgResIcon, 70, 400, 795, 576)
 	Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD"]
 	If IsArray($TmpResult) And UBound($TmpResult) > 0 Then
 		For $i = 0 To UBound($TmpResult) - 1
 			_ArrayAdd($aResult, $TmpResult[$i][0] & "|" & $TmpResult[$i][1] & "|" & $TmpResult[$i][2])
 		Next
 		For $i = 0 To UBound($aResult) - 1
-			If QuickMIS("BC1", $g_sImgLabResearch, $aResult[$i][1] - 75, $aResult[$i][2] - 80, $aResult[$i][1], $aResult[$i][2]) Then
-				Local $cost = getLabCost($aResult[$i][1] - 75, $aResult[$i][2] - 10)
-				Local $level = getTroopsSpellsLevel($aResult[$i][1] - 75, $aResult[$i][2] - 30)
+			If QuickMIS("BC1", $g_sImgLabResearch, $aResult[$i][1] - 80, $aResult[$i][2] - 85, $aResult[$i][1], $aResult[$i][2]) Then
+				Local $cost = getLabCost($aResult[$i][1] - 88, $aResult[$i][2] - 10)
+				Local $level = getTroopsSpellsLevel($aResult[$i][1] - 79, $aResult[$i][2] - 32)
 				If $level = "" Then $level = 1
 				$aResult[$i][3] = Number($cost)
 				$aResult[$i][4] = $g_iQuickMISName
