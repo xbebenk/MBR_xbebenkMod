@@ -1205,10 +1205,10 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 					If $YY < 100 Then $YY = 150
 					If $DragCount > 1 Then
 						For $i = 1 To $DragCount
-							ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
+							ClickDrag($x, $YY-35, $x, $yUp-35, $Delay) ;drag up
 						Next
 					Else
-						ClickDrag($x, $YY, $x, $yUp, $Delay) ;drag up
+						ClickDrag($x, $YY-35, $x, $yUp-35, $Delay) ;drag up
 					EndIf
 					If _Sleep(1000) Then Return
 				Case "Down"
