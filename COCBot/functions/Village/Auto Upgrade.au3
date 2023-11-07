@@ -87,8 +87,8 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 				Return ;no builder, exit
 			EndIf
 			If Not $g_bRunState Then Return
-			;If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
-			;_Sleep(5000)
+			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
+			_Sleep(5000)
 		EndIf
 	Else
 		CheckBuilderPotion()
@@ -98,8 +98,8 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	If Not $g_bRunState Then Return
 	If AutoUpgradeCheckBuilder($bTest) Then
 		AutoUpgradeSearchExisting($bTest) ;search upgrade for existing building
-		;If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
-		;_Sleep(5000)
+		If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
+		_Sleep(5000)
 	EndIf
 	
 	If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing
