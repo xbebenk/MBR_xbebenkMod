@@ -324,19 +324,19 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 			_Sleep(800)
 			For $i = 1 To 10
 				SetDebugLog("Waiting for Wall Upgrade Page #" & $i)
-				If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 110, 720, 180) Then ExitLoop
+				If QuickMis("BC1", $g_sImgGeneralCloseButton, 770, 65, 840, 125) Then ExitLoop
 				_Sleep(50)
 			Next
 
 			If Not $bTest Then
-				If _ColorCheck(_GetPixelColor(370, 490, True), Hex(0xDBDBDB, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
+				If _ColorCheck(_GetPixelColor(590, 525, True), Hex(0xE3E3E3, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
 					SetLog("Need More Resource or Higher THLevel", $COLOR_ERROR)
 					Click($g_iQuickMISX, $g_iQuickMISY)
 					_Sleep(500)
 					Return False
 				EndIf
-				Local $CurrentCost = getResourcesBonus(370, 490)
-				Click(420, 500) ;Final Upgrade Button
+				Local $CurrentCost = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True)
+				Click(623, 540) ;Final Upgrade Button
 				Switch $aIsEnoughResource[1]
 					Case "Gold"
 						$g_aiCurrentLoot[$eLootGold] -= $CurrentCost
@@ -407,19 +407,19 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				_Sleep(800)
 				For $i = 1 To 10
 					SetDebugLog("Waiting for Wall Upgrade Page #" & $i)
-					If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 110, 720, 180) Then ExitLoop
+					If QuickMis("BC1", $g_sImgGeneralCloseButton, 770, 65, 840, 125) Then ExitLoop
 					_Sleep(50)
 				Next
 
 				If Not $bTest Then
-					If _ColorCheck(_GetPixelColor(370, 490, True), Hex(0xDBDBDB, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
+					If _ColorCheck(_GetPixelColor(590, 525, True), Hex(0xE3E3E3, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
 						SetLog("Need More Resource or Higher THLevel", $COLOR_ERROR)
 						Click($g_iQuickMISX, $g_iQuickMISY)
 						_Sleep(500)
 						Return False
 					EndIf
-					Local $CurrentCost = getResourcesBonus(370, 490)
-					Click(420, 500) ;Final Upgrade Button
+					Local $CurrentCost = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True)
+					Click(623, 540) ;Final Upgrade Button
 					Switch $aIsEnoughResource[1]
 						Case "Gold"
 							$g_aiCurrentLoot[$eLootGold] -= $CurrentCost
