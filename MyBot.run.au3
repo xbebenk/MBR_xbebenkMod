@@ -1222,9 +1222,9 @@ Func __RunFunction($action)
 		Case "CollectFreeMagicItems"
 			CollectFreeMagicItems()
 			_Sleep($DELAYRUNBOT3)
-		;Case "SaleMagicItem"
-		;	SaleMagicItem()
-		;	_Sleep($DELAYRUNBOT3)
+		Case "SaleMagicItem"
+			SaleMagicItem()
+			_Sleep($DELAYRUNBOT3)
 		Case "AutoUpgradeCC"
 			AutoUpgradeCC()
 			_Sleep($DELAYRUNBOT3)
