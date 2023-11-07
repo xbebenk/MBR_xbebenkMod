@@ -1202,7 +1202,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 		If IsBuilderMenuOpen() Then ;check upgrade window border
 			Switch $Direction
 				Case "Up"
-					If $YY < 100 Then $YY = 150
+					If $YY < 160 Then $YY = 160
 					If $DragCount > 1 Then
 						For $i = 1 To $DragCount
 							ClickDrag($x, $YY-35, $x, $yUp-35, $Delay) ;drag up
