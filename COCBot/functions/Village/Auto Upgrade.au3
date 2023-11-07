@@ -87,8 +87,8 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 				Return ;no builder, exit
 			EndIf
 			If Not $g_bRunState Then Return
-			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
-			_Sleep(5000)
+			;If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
+			;_Sleep(5000)
 		EndIf
 	Else
 		CheckBuilderPotion()
@@ -98,8 +98,8 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	If Not $g_bRunState Then Return
 	If AutoUpgradeCheckBuilder($bTest) Then
 		AutoUpgradeSearchExisting($bTest) ;search upgrade for existing building
-		If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
-		_Sleep(5000)
+		;If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
+		;_Sleep(5000)
 	EndIf
 	
 	If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing
@@ -172,6 +172,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 						$g_bSkipWallReserve = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
 						$g_bUpgradeLowCost = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
 						If Not AutoUpgradeCheckBuilder($bTest) Then Return
+						ExitLoop
 					Endif
 					ClickMainBuilder($bTest)
 				Else
@@ -1182,14 +1183,14 @@ Func SearchGreenZone()
 EndFunc
 
 Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
-	Local $x = 400, $yUp = 120, $yDown = 800, $Delay = 1500
+	Local $x = 400, $yUp = 120, $yDown = 800, $Delay = 500, $shitfedX = Random(20, 30, 1)
 	ClickMainBuilder()
 	If $YY = Default And $Direction = "up" Then 
 		Local $Tmp = QuickMIS("CNX", $g_sImgResourceIcon, 440, 300, 520, 408)
 		If IsArray($Tmp) And UBound($Tmp) > 0 Then
 			$YY = _ArrayMax($Tmp, 1, 0, -1, 2)
 			SetDebugLog("DragUpY = " & $YY)
-			If Number($YY) < 350 Then 
+			If Number($YY) < 300 Then 
 				SetLog("No need to dragUp!", $COLOR_INFO)
 				Return
 			EndIf
@@ -1205,16 +1206,16 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 					If $YY < 160 Then $YY = 160
 					If $DragCount > 1 Then
 						For $i = 1 To $DragCount
-							ClickDrag($x, $YY-35, $x, $yUp-35, $Delay) ;drag up
+							ClickDrag($x - $shitfedX, $YY, $x + $shitfedX, $yUp, $Delay, True) ;drag up
 						Next
 					Else
-						ClickDrag($x, $YY-35, $x, $yUp-35, $Delay) ;drag up
+						ClickDrag($x - $shitfedX, $YY, $x + $shitfedX, $yUp, $Delay, True) ;drag up
 					EndIf
 					If _Sleep(1000) Then Return
 				Case "Down"
-					ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
-					If WaitforPixel(551, 90, 552, 91, "FFFFFF", 10, 1) Then
-						ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
+					ClickDrag($x - $shitfedX, $yUp, $x + $shitfedX, $yDown, $Delay, True) ;drag to bottom
+					If WaitforPixel(510, 88, 552, 91, "FFFFFF", 10, 1) Then
+						ClickDrag($x - $shitfedX, $yUp, $x + $shitfedX, $yDown, $Delay, True) ;drag to bottom
 					EndIf
 					If _Sleep(5000) Then Return
 			EndSwitch

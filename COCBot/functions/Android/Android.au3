@@ -2970,7 +2970,7 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCI
 	Local $x_steps = ($x2 - $x1) / $loops
 	Local $y_steps = ($y2 - $y1) / $loops
 	Local $x = $x1, $y = $y1
-	$send = "d 0 " & $x & " " & $y & " 50" & @LF & "c" & @LF & "w " & $sleep & @LF
+	$send = "d 0 " & $x & " " & $y & " 500" & @LF & "c" & @LF & "w " & $sleep & @LF
 	$botSleep += $sleep
 	If $g_bDebugAndroid Then SetDebugLog("minitouch: " & StringReplace($send, @LF, ";"))
 	If $g_iAndroidAdbMinitouchMode = 0 Then
@@ -2979,7 +2979,7 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCI
 		AndroidAdbSendMinitouchShellCommand($send)
 	EndIf
 	If $bSCIDSwitch Then
-		$sleep = 50
+		$sleep = 30
 	Else
 		$sleep = $sleepMove
 	EndIf
@@ -2998,7 +2998,7 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCI
 			; keep touch down longer to avoid further moves
 			$sleep = $sleepEnd
 		EndIf
-		$send = "m 0 " & Int($x) & " " & Int($y) & " 50" & @LF & "c" & @LF & "w " & $sleep & @LF
+		$send = "m 0 " & Int($x) & " " & Int($y) & " 500" & @LF & "c" & @LF & "w " & $sleep & @LF
 		$botSleep += $sleep
 		If $g_bDebugAndroid Then SetDebugLog("minitouch: " & StringReplace($send, @LF, ";"))
 		If $g_iAndroidAdbMinitouchMode = 0 Then
