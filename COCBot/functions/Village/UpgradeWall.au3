@@ -314,9 +314,9 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 
 		Switch $aIsEnoughResource[1]
 			Case "Gold"
-				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 300, 520, 720, 580)
+				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 300, 510, 720, 580)
 			Case "Elix"
-				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 720, 580)
+				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 510, 720, 580)
 		EndSwitch
 
 		If $UpgradeButtonFound Then
@@ -389,14 +389,14 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				Case "Gold"
 					For $i = 1 To 10
 						SetDebugLog("Waiting Gold Button for Wall Upgrade #" & $i)
-						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 300, 520, 720, 580)
+						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 300, 510, 720, 580)
 						If $UpgradeButtonFound Then ExitLoop
 						_Sleep(50)
 					Next
 				Case "Elix"
 					For $i = 1 To 10
 						SetDebugLog("Waiting Elix Button for Wall Upgrade #" & $i)
-						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 720, 580)
+						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 510, 720, 580)
 						If $UpgradeButtonFound Then ExitLoop
 						_Sleep(50)
 					Next
