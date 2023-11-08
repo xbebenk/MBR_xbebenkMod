@@ -1189,6 +1189,7 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 		Local $Tmp = QuickMIS("CNX", $g_sImgResourceIcon, 440, 300, 520, 408)
 		If IsArray($Tmp) And UBound($Tmp) > 0 Then
 			$YY = _ArrayMax($Tmp, 1, 0, -1, 2)
+			If $YY > 350 Then $YY = 350 ;no over scroll
 			SetDebugLog("DragUpY = " & $YY)
 			If Number($YY) < 300 Then 
 				SetLog("No need to dragUp!", $COLOR_INFO)
