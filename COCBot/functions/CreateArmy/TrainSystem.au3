@@ -590,10 +590,10 @@ Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQ
 	If Not $g_bRunState Then Return
 
 	If $sType = "Troops" Then
-		$iArrowX = $aGreenArrowTrainTroops[0] ; aada82  170 218 130    | y + 3 = 6ab320 106 179 32
+		$iArrowX = $aGreenArrowTrainTroops[0] 
 		$iArrowY = $aGreenArrowTrainTroops[1]
 	ElseIf $sType = "Spells" Then
-		$iArrowX = $aGreenArrowBrewSpells[0] ; a0d077  160 208 119    | y + 3 = 74be2c 116 190 44
+		$iArrowX = $aGreenArrowBrewSpells[0]
 		$iArrowY = $aGreenArrowBrewSpells[1]
 	ElseIf $sType = "SiegeMachines" Then
 		$iArrowX = $aGreenArrowTrainSiegeMachines[0]
@@ -601,11 +601,18 @@ Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQ
 	Else
 		Return
 	EndIf
-
-	If Not _ColorCheck(_GetPixelColor($iArrowX, $iArrowY, True), Hex(0x9FCF76, 6), 30) And Not _ColorCheck(_GetPixelColor($iArrowX, $iArrowY + 4, True), Hex(0x6BB31F, 6), 30) Then
+	
+	If Not WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x81BF41, 6), 20) Then
+		If $g_bDebugSetlog Then SetLog("IsQueueEmpty : queue arrow Not Found", $COLOR_ACTION) 
 		Return True ; Check Green Arrows at top first, if not there -> Return
-	ElseIf _ColorCheck(_GetPixelColor($iArrowX, $iArrowY, True), Hex(0x9FCF76, 6), 30) And _ColorCheck(_GetPixelColor($iArrowX, $iArrowY + 4, True), Hex(0x6BB31F, 6), 30) And Not $removeExtraTroopsQueue Then
-		If Not WaitforPixel($iArrowX - 11, $iArrowY - 1, $iArrowX - 9, $iArrowY + 1, Hex(0x9FCF76, 6), 30, 2) Then Return False  ; check if boost arrow
+	ElseIf WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x81BF41, 6), 20) And Not $removeExtraTroopsQueue Then
+		If $g_bDebugSetlog Then SetLog("IsQueueEmpty : queue arrow Found, checking boost arrow", $COLOR_ACTION)
+		If Not WaitforPixel($iArrowX - 11, $iArrowY - 2, $iArrowX - 9, $iArrowY + 2, Hex(0x81BF41, 6), 20, 1) Then 
+			If $g_bDebugSetlog Then SetLog("IsQueueEmpty : queue arrow Found, boost arrow not Found", $COLOR_ACTION)
+			Return False  ; check if boost arrow
+		Else
+			If $g_bDebugSetlog Then SetLog("IsQueueEmpty : queue arrow Found, boost arrow Found", $COLOR_ACTION)
+		EndIf
 	EndIf
 
 	If Not $bSkipTabCheck Or $removeExtraTroopsQueue Then
@@ -620,14 +627,14 @@ Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQ
 
 	If Not $g_bIsFullArmywithHeroesAndSpells Then
 		If $removeExtraTroopsQueue Then
-			If Not _ColorCheck(_GetPixelColor(238, 190, True), Hex(0x677CB5, 6), 30) Then RemoveExtraTroopsQueue()
+			If Not _ColorCheck(_GetPixelColor(245, 198, True), Hex(0x677CB5, 6), 30) Then RemoveExtraTroopsQueue() ;check color of [i] Drag units to train or reorder
 		EndIf
 	EndIf
 
 	If $removeExtraTroopsQueue Then
-		If _ColorCheck(_GetPixelColor(238, 190, True), Hex(0x677CB5, 6), 20) Then Return True ; If No troops were in Queue Return True
+		If _ColorCheck(_GetPixelColor(245, 198, True), Hex(0x677CB5, 6), 30) Then Return True ; If No troops were in Queue Return True
 	Else
-		If _ColorCheck(_GetPixelColor(825, 190, True), Hex(0xCFCFC8, 6), 20) Then Return True ; check gray background at 1st training slot
+		If _ColorCheck(_GetPixelColor(810, 200, True), Hex(0xCFCFC8, 6), 20) Then Return True ; check gray background at 1st training slot
 	EndIf
 
 	Return False
@@ -901,69 +908,68 @@ EndFunc   ;==>CheckQueueSpells
 Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = "", $bSkipReceivedTroopsCheck = False)
 	; Setup arrays, including default return values for $return
 	Local $aResult[1][4], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
+	
+	If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
+		SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
+		While _CheckPixel($aRecievedTroops, True)
+			If _Sleep(1000) Then Return
+		WEnd
+	EndIf	
+	If Not $g_bRunState Then Return $aResult
+	
+	
+	; Perform the search
+	_CaptureRegion2($x, $y, $x1, $y1)
+	Local $res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 
-	For $iCount = 0 To 10  ;Why is this loop here?
-		If Not $g_bRunState Then Return $aResult
-		If Not getReceivedTroops(162, 200, $bSkipReceivedTroopsCheck) Then
-			; Perform the search
-			_CaptureRegion2($x, $y, $x1, $y1)
-			Local $res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
+	If $res[0] <> "" Then
+		; Get the keys for the dictionary item.
+		Local $aKeys = StringSplit($res[0], "|", $STR_NOCOUNT)
 
-			If $res[0] <> "" Then
-				; Get the keys for the dictionary item.
-				Local $aKeys = StringSplit($res[0], "|", $STR_NOCOUNT)
+		; Redimension the result array to allow for the new entries
+		ReDim $aResult[UBound($aKeys)][4]
+		Local $iResultAddDup = 0
 
-				; Redimension the result array to allow for the new entries
-				ReDim $aResult[UBound($aKeys)][4]
-				Local $iResultAddDup = 0
-
-				; Loop through the array
-				For $i = 0 To UBound($aKeys) - 1
-					; Get the property values
-					$aResult[$i + $iResultAddDup][0] = RetrieveImglocProperty($aKeys[$i], "objectname")
-					; Get the coords property
-					$aValue = RetrieveImglocProperty($aKeys[$i], "objectpoints")
-					$aCoords = decodeMultipleCoords($aValue, 50) ; dedup coords by x on 50 pixel
-					$aCoordsSplit = $aCoords[0]
-					If UBound($aCoordsSplit) = 2 Then
-						; Store the coords into a two dimensional array
-						$aCoordArray[0][0] = $aCoordsSplit[0] + $x ; X coord.
-						$aCoordArray[0][1] = $aCoordsSplit[1] + $y ; Y coord.
-					Else
-						$aCoordArray[0][0] = -1
-						$aCoordArray[0][1] = -1
-					EndIf
-					; Store the coords array as a sub-array
-					$aResult[$i + $iResultAddDup][1] = Number($aCoordArray[0][0])
-					$aResult[$i + $iResultAddDup][2] = Number($aCoordArray[0][1])
-					SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aCoordArray[0][0] & "-" & $aCoordArray[0][1])
-					; If 1 troop type appears at more than 1 slot
-					Local $iMultipleCoords = UBound($aCoords)
-					If $iMultipleCoords > 1 Then
-						SetDebugLog($aResult[$i + $iResultAddDup][0] & " detected " & $iMultipleCoords & " times!")
-						For $j = 1 To $iMultipleCoords - 1
-							Local $aCoordsSplit2 = $aCoords[$j]
-							If UBound($aCoordsSplit2) = 2 Then
-								; add slot
-								$iResultAddDup += 1
-								ReDim $aResult[UBound($aKeys) + $iResultAddDup][4]
-								$aResult[$i + $iResultAddDup][0] = $aResult[$i + $iResultAddDup - 1][0] ; same objectname
-								$aResult[$i + $iResultAddDup][1] = $aCoordsSplit2[0] + $x
-								$aResult[$i + $iResultAddDup][2] = $aCoordsSplit2[1]
-								SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aResult[$i + $iResultAddDup][1] & "-" & $aResult[$i + $iResultAddDup][2])
-							EndIf
-						Next
+		; Loop through the array
+		For $i = 0 To UBound($aKeys) - 1
+			; Get the property values
+			$aResult[$i + $iResultAddDup][0] = RetrieveImglocProperty($aKeys[$i], "objectname")
+			; Get the coords property
+			$aValue = RetrieveImglocProperty($aKeys[$i], "objectpoints")
+			$aCoords = decodeMultipleCoords($aValue, 50) ; dedup coords by x on 50 pixel
+			$aCoordsSplit = $aCoords[0]
+			If UBound($aCoordsSplit) = 2 Then
+				; Store the coords into a two dimensional array
+				$aCoordArray[0][0] = $aCoordsSplit[0] + $x ; X coord.
+				$aCoordArray[0][1] = $aCoordsSplit[1] + $y ; Y coord.
+			Else
+				$aCoordArray[0][0] = -1
+				$aCoordArray[0][1] = -1
+			EndIf
+			; Store the coords array as a sub-array
+			$aResult[$i + $iResultAddDup][1] = Number($aCoordArray[0][0])
+			$aResult[$i + $iResultAddDup][2] = Number($aCoordArray[0][1])
+			SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aCoordArray[0][0] & "-" & $aCoordArray[0][1])
+			; If 1 troop type appears at more than 1 slot
+			Local $iMultipleCoords = UBound($aCoords)
+			If $iMultipleCoords > 1 Then
+				SetDebugLog($aResult[$i + $iResultAddDup][0] & " detected " & $iMultipleCoords & " times!")
+				For $j = 1 To $iMultipleCoords - 1
+					Local $aCoordsSplit2 = $aCoords[$j]
+					If UBound($aCoordsSplit2) = 2 Then
+						; add slot
+						$iResultAddDup += 1
+						ReDim $aResult[UBound($aKeys) + $iResultAddDup][4]
+						$aResult[$i + $iResultAddDup][0] = $aResult[$i + $iResultAddDup - 1][0] ; same objectname
+						$aResult[$i + $iResultAddDup][1] = $aCoordsSplit2[0] + $x
+						$aResult[$i + $iResultAddDup][2] = $aCoordsSplit2[1]
+						SetDebugLog($aResult[$i + $iResultAddDup][0] & " | $aCoordArray: " & $aResult[$i + $iResultAddDup][1] & "-" & $aResult[$i + $iResultAddDup][2])
 					EndIf
 				Next
-				ExitLoop
 			EndIf
-			ExitLoop
-		Else
-			If $iCount = 1 Then SetLog("You have received castle troops! Wait 5's...")
-			If _Sleep($DELAYTRAIN8) Then Return $aResult
-		EndIf
-	Next
-
+		Next
+	EndIf
+	
 	_ArraySort($aResult, 0, 0, 0, 1) ; Sort By X position , will be the Slot 0 to $i
 
 	While 1
@@ -1177,7 +1183,7 @@ Func MakingDonatedTroops($sType = "All")
 					If _Sleep(500) Then Return ; Needed Delay, OCR was not picking up Troop Changes
 				Else
 					For $z = 0 To $RemainTrainSpace[2] - 1
-						$RemainTrainSpace = GetOCRCurrent(42, 133)
+						$RemainTrainSpace = GetOCRCurrent(60, 140)
 						If $RemainTrainSpace[0] = $RemainTrainSpace[1] Then ; army camps full
 							;Camps Full All Donate Counters should be zero!!!!
 							For $j = 0 To UBound($avDefaultTroopGroup, 1) - 1

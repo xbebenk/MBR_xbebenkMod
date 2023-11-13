@@ -79,12 +79,12 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 
 			If Not OpenTrainTab($i = 0 ? "Train Troops Tab" : "Brew Spells Tab", True, "IsDonateQueueOnly()") Then ContinueLoop
 
-			Local $xQueue = 829
+			Local $xQueue = 816
 			For $j = 0 To 10
-				$xQueue -= 70.5 * $j
-				If _ColorCheck(_GetPixelColor($xQueue, 156, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found at $xQueue
+				$xQueue -= 69 * $j
+				If _ColorCheck(_GetPixelColor($xQueue, 165, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found at $xQueue
 					ExitLoop
-				ElseIf _ColorCheck(_GetPixelColor($xQueue, 162, True), Hex(0xCFCFC8, 6), 20) Then ; Gray background
+				ElseIf _ColorCheck(_GetPixelColor($xQueue, 200, True), Hex(0xCFCFC8, 6), 20) Then ; Gray background
 					SetLog("Queue " & ($i = 0 ? "Troops" : "Spells") & " is not prepared, proceed donate!!")
 					$abDonateQueueOnly[$i] = False
 					ContinueLoop 2
@@ -100,7 +100,7 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 			For $j = 0 To (UBound($aSearchResult) - 1)
 				Local $TroopIndex = TroopIndexLookup($aSearchResult[$j][0], "IsDonateQueueOnly()")
 				If $TroopIndex < 0 Then ContinueLoop
-				If _ColorCheck(_GetPixelColor($xQueue - $j * 70.5, 209, True), Hex(0xB6B643, 6), 20) Then ; the green check symbol [185, 183, 71]
+				If _ColorCheck(_GetPixelColor($xQueue - $j * 69, 216, True), Hex(0xB7B645, 6), 20) Then ; the green check symbol [185, 183, 71]
 					If $i = 0 Then
 						If _ArrayIndexValid($g_aiAvailQueuedTroop, $TroopIndex) Then
 							$g_aiAvailQueuedTroop[$TroopIndex] += $aSearchResult[$j][1]
@@ -133,7 +133,7 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 		EndIf
 	Next
 	
-	checkChatTabPixel()
+	ClickAway()
 	If _Sleep($DELAYDONATECC2) Then Return
 
 EndFunc   ;==>IsDonateQueueOnly
@@ -1138,7 +1138,7 @@ Func RemainingCCcapacity($aiDonateButton)
 	SetDebugLog("$g_aiPrepDon[4]: " & $g_aiPrepDon[4] & ", $g_aiPrepDon[5]: " & $g_aiPrepDon[5] & ", $bDonateSiege: " & $bDonateSiege)
 
 	; Verify with OCR the Donation Clan Castle capacity
-	SetDebugLog("Start dual getOcrSpaceCastleDonate", $COLOR_DEBUG)
+	SetDebugLog("Start dual getOcrSpaceCastleDonate : " & _ArrayToString($aiDonateButton), $COLOR_DEBUG)
 
 	;Button Image is a little bit lower than the Capacity Numbers, adjusting for all here
 	$aiDonateButton[1] -= 6
@@ -1148,9 +1148,9 @@ Func RemainingCCcapacity($aiDonateButton)
 		$sCapSpells = $bDonateSpell ? getOcrSpaceCastleDonate(149, $aiDonateButton[1]) : -1
 		$sCapSiegeMachine = $bDonateSiege ? getOcrSpaceCastleDonate(213, $aiDonateButton[1]) : -1
 	Else
-		$sCapTroops = getOcrSpaceCastleDonate(60, $aiDonateButton[1])
+		$sCapTroops = getOcrSpaceCastleDonate(85, $aiDonateButton[1])
 		If StringRegExp($sCapTroops, "#([0-9]{2})") = 1 Then ; CC got Troops & Spells
-			$sCapSpells = $bDonateSpell ? getOcrSpaceCastleDonate(160, $aiDonateButton[1]) : -1
+			$sCapSpells = $bDonateSpell ? getOcrSpaceCastleDonate(211, $aiDonateButton[1]) : -1
 			$sCapSiegeMachine = -1
 		Else
 			$sCapTroops = getOcrSpaceCastleDonate(82, $aiDonateButton[1])

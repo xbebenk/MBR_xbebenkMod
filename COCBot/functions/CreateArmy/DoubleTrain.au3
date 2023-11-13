@@ -405,7 +405,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 		TrainUsingWhatToTrain($rWTT, True)
 
 		If _Sleep(1000) Then Return
-		$ArmyCamp = GetCurrentArmy(46, 130)
+		$ArmyCamp = GetCurrentArmy(46, 140)
 		SetLog("Checking troop tab: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2 & ($ArmyCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
 		If Not $g_bIgnoreIncorrectTroopCombo Then
 			If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then Return False
