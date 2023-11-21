@@ -134,6 +134,21 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Click(440, 526)
 		Return False
 	EndIf
+	
+	If QuickMIS("BC1", $g_sImgWelcomeBackReward, 396, 135, 500, 165) Then 
+		Local $aClaim = QuickMIS("CNX", $g_sImgWelcomeBackReward, 80, 260, 725, 480)
+		If IsArray($aClaim) And UBound($aClaim) > 0 Then
+			For $i = 0 To UBound($aClaim) - 1
+				Click($aClaim[$i][1], $aClaim[$i][2])
+				SetLog("Click Claim Button", $COLOR_ACTION)
+			Next
+		EndIf
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 735, 120, 780, 165) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+		EndIf
+		SetLog("checkObstacles: Found WelcomeBack Reward Window to close", $COLOR_ACTION)
+		Return False
+	EndIf
 
 	If _ColorCheck(_GetPixelColor(384, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(480, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 600, True), Hex(0x000000, 6), 10, Default, "checkObstacles")  Then
 		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
