@@ -13,7 +13,6 @@
 ; Example .......: ---
 ;================================================================================================================================
 Func _ClanGames($test = False, $OnlyPurge = False)
-	Return ;skip...broken
 	$g_bIsBBevent = False ;just to be sure, reset to false
 	$g_bIsCGEventRunning = False ;just to be sure, reset to false
 	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false
@@ -55,7 +54,7 @@ Func _ClanGames($test = False, $OnlyPurge = False)
 		;now we need to copy selected challenge before checking current running event is not wrong event selected
 
 		; Let's get some information , like Remain Timer, Score and limit
-		If Not _ColorCheck(_GetPixelColor(300, 236, True), Hex(0x52DF50, 6), 5) Then ;no greenbar = there is active event or completed event
+		If Not _ColorCheck(_GetPixelColor(300, 284, True), Hex(0x53E052, 6), 10) Then ;no greenbar = there is active event or completed event
 			_Sleep(3000) ; just wait few second, as completed event will need sometime to animate on score
 		EndIf
 
@@ -360,8 +359,8 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False)
 	Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
 	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
 	Local $aEvent, $aReturn[0][7]
-	Local $aX[4] = [299, 425, 551, 677]
-	Local $aY[3] = [130, 288, 448]
+	Local $aX[4] = [295, 427, 561, 696]
+	Local $aY[2] = [167, 336]
 
 	If Not $useBC1 Then
 		For $y = 0 To Ubound($aY) - 1
@@ -513,7 +512,7 @@ Func GetTimesAndScores()
 	Local $iRestScore = -1, $sYourGameScore = "", $aiScoreLimit, $sTimeRemain = 0
 
 	;Ocr for game time remaining
-	$sTimeRemain = StringReplace(getOcrTimeGameTime(55, 448), " ", "") ; read Clan Games waiting time
+	$sTimeRemain = StringReplace(getOcrTimeGameTime(55, 496), " ", "") ; read Clan Games waiting time
 
 	;Check if OCR returned a valid timer format
 	If Not StringRegExp($sTimeRemain, "([0-2]?[0-9]?[DdHhSs]+)", $STR_REGEXPMATCH, 1) Then
@@ -524,7 +523,7 @@ Func GetTimesAndScores()
 
 	; This Loop is just to check if the Score is changing , when you complete a previous events is necessary to take some time
 	For $i = 0 To 10
-		$sYourGameScore = getOcrYourScore(45, 500) ;  Read your Score
+		$sYourGameScore = getOcrYourScore(48, 560) ;  Read your Score
 		If $g_bChkClanGamesDebug Then SetLog("Your OCR score: " & $sYourGameScore)
 		$sYourGameScore = StringReplace($sYourGameScore, "#", "/")
 		$aiScoreLimit = StringSplit($sYourGameScore, "/", $STR_NOCOUNT)
@@ -560,8 +559,8 @@ Func CooldownTime($getCapture = True)
 EndFunc   ;==>CooldownTime
 
 Func IsEventRunning($bOpenWindow = False)
-	Local $aEventFailed[4] = [300, 222, 0xEA2B24, 20]
-	Local $aEventPurged[4] = [300, 235, 0x57C78F, 20]
+	Local $aEventFailed[4] = [300, 300, 0xEA2B26, 20]
+	Local $aEventPurged[4] = [542, 222, 0x4F85C5, 10]
 
 	If $bOpenWindow Then
 		CloseClangamesWindow()
@@ -569,7 +568,7 @@ Func IsEventRunning($bOpenWindow = False)
 		If Not IsClanGamesWindow() Then Return
 	EndIf
 	; Check if any event is running or not
-	If Not _ColorCheck(_GetPixelColor(300, 236, True), Hex(0x52DF50, 6), 5) Then ; Green Bar from First Position
+	If Not _ColorCheck(_GetPixelColor(300, 285, True), Hex(0x53E052, 6), 10) Then ; Green Bar from First Position
 		;Check if Event failed
 		If _CheckPixel($aEventFailed, True) Then
 			SetLog("Couldn't finish last event! Lets trash it and look for a new one", $COLOR_INFO)
@@ -590,15 +589,15 @@ Func IsEventRunning($bOpenWindow = False)
 			SetLog("An event is already in progress!", $COLOR_SUCCESS)
 			;check if its Enabled Challenge, if not = purge
 			Local $bNeedPurge = False
-			Local $aActiveEvent = QuickMIS("CNX", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 300, 130, 380, 210, True)
+			Local $aActiveEvent = QuickMIS("CNX", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 294, 166, 386, 257)
 			If IsArray($aActiveEvent) And UBound($aActiveEvent) > 0 Then
 				SetLog("Active Challenge " & $aActiveEvent[0][0] & " is Enabled on Setting, OK!!", $COLOR_DEBUG)
 				;check if Challenge is BB Challenge, enabling force BB attack
 				If $g_bChkForceBBAttackOnClanGames Then
-					Click(340,180) ; click first slot
+					Click(340, 215) ; click first slot
 					If _Sleep(2000) Then Return
 					SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
-					If QuickMIS("BC1", $g_sImgVersus, 425, 150, 700, 215) Then
+					If QuickMIS("BC1", $g_sImgVersus, 425, 195, 715, 255) Then
 						$g_bIsBBevent = True
 						$g_sCGCurrentEventName = $aActiveEvent[0][0]
 						$g_bIsCGEventRunning = True
@@ -612,7 +611,7 @@ Func IsEventRunning($bOpenWindow = False)
 						EndIf
 						If $g_bChkCGBBAttackOnly Or $bNeedPurge Then ;Purge main village event because we using BBCGOnly Mode
 							Setlog("We are running only BB events. Event started by mistake?", $COLOR_ERROR)
-							Click(340,180) ;unclick so ForcePurgeEvent can work
+							Click(340, 215) ;unclick so ForcePurgeEvent can work
 							ForcePurgeEvent(False, False)
 						EndIf
 						$g_bIsBBevent = False
@@ -620,7 +619,7 @@ Func IsEventRunning($bOpenWindow = False)
 				EndIf
 			Else
 				Setlog("Active Challenge Not Enabled on Setting! started by mistake?", $COLOR_ERROR)
-				_CaptureRegion2(300, 130, 384, 218)
+				_CaptureRegion2(294, 166, 386, 257)
 				SaveDebugImage("CG-FailVerifyChallenge", False)
 				ForcePurgeEvent(False, False)
 			EndIf
@@ -679,7 +678,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 			For $i = 1 To 5
 				If IsOKCancelPage() Then
 					SetLog("Click OK", $COLOR_INFO)
-					Click(500, 400)
+					Click(530, 420)
 					SetLog("StartsEvent and Purge job!", $COLOR_SUCCESS)
 					GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NoEventFound"), 1)
 					_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Purging : " & $sEventName & ($OnlyPurge ? ", PurgeBeforeSwitch" : ", NoEventFound"))
@@ -695,11 +694,11 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 
 		;check if Challenge is BB Challenge, enabling force BB attack
 		If $g_bChkForceBBAttackOnClanGames Then
-			Click(450,50) ;Click Clan Tab
+			Click(450, 99) ;Click Clan Tab
 			If _Sleep(3000) Then Return
-			Click(300,50) ;Click Challenge Tab
+			Click(310, 99) ;Click Challenge Tab
 			If _Sleep(500) Then Return
-			Click(340,180) ;Click Active Challenge
+			Click(340, 215) ;Click Active Challenge
 			If _Sleep(2000) Then Return
 
 			SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
@@ -724,7 +723,7 @@ EndFunc   ;==>StartsEvent
 Func ForcePurgeEvent($bTest = False, $startFirst = True)
 	Local $count1 = 0, $count2 = 0
 
-	Click(340,180) ;Most Top Challenge
+	Click(340, 215) ;Most Top Challenge
 
 	If _Sleep(1000) Then Return
 	If $startFirst Then
@@ -736,13 +735,13 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		EndIf
 	Else
 		SetLog("ForcePurgeEvent: Purge a Wrong Challenge", $COLOR_INFO)
-		While Not WaitforPixel(570, 285, 571, 286, "F51D20", 10, 1)
+		While Not WaitforPixel(580, 323, 582, 324, "F71E22", 10, 1)
 			SetDebugLog("Waiting for trash Button", $COLOR_DEBUG)
 			$count1 += 1
 			If _Sleep(500) Then Return
 			If $count1 > 10 Then ExitLoop
 		Wend
-		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
+		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			SetLog("Click Trash", $COLOR_INFO)
 			While Not IsOKCancelPage()
@@ -754,7 +753,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 			If IsOKCancelPage() Then
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
-				Click(500, 400)
+				Click(530, 420)
 				If _Sleep(1500) Then Return
 				CloseClangamesWindow()
 				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - ForcePurgeEvent: Purge a Wrong Challenge ", 1)
@@ -802,7 +801,7 @@ Func StartAndPurgeEvent($bTest = False)
 			If IsOKCancelPage() Then
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
-				Click(500, 400)
+				Click(530, 420)
 				SetLog("StartAndPurgeEvent event!", $COLOR_SUCCESS)
 				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - StartAndPurgeEvent: No event Found ", 1)
 				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - StartAndPurgeEvent: No event Found ")
@@ -822,8 +821,8 @@ EndFunc
 
 Func FindEventToPurge($sTempPath)
 	Local $aEvent
-	Local $aX[4] = [290, 410, 540, 660]
-	Local $aY[3] = [120, 280, 430]
+	Local $aX[4] = [295, 427, 561, 696]
+	Local $aY[2] = [167, 336]
 
 	For $y = 0 To Ubound($aY) - 1
 		For $x = 0 To Ubound($aX) - 1
@@ -856,7 +855,7 @@ EndFunc   ;==>TrashFailedEvent
 Func GetEventTimeScore($iXStartBtn, $iYStartBtn, $bIsStartBtn = True)
 	Local $aEventInfo[2]
 	Local $XAxis = $iXStartBtn - 164 ; Related to Start Button
-	Local $YAxis = $iYStartBtn + 9 ; Related to Start Button
+	Local $YAxis = $iYStartBtn + 7 ; Related to Start Button
 
 	If Not $bIsStartBtn Then
 		$XAxis = $iXStartBtn - 164 ; Related to Trash Button
@@ -873,13 +872,13 @@ Func GetEventTimeScore($iXStartBtn, $iYStartBtn, $bIsStartBtn = True)
 EndFunc   ;==>GetEventTimeScore
 
 Func GetEventInfo($x, $y)
-	Local $xRegion = 0, $yRegion = 250
+	Local $xRegion = 0, $yRegion = 300
 	
-	If $y > 270 Then $yRegion = 380
-	If $y > 430 Then $yRegion = 440
+	If $y > 270 Then $yRegion = 410
+	;If $y > 430 Then $yRegion = 440
 	
-	If $x < 410 Then $xRegion = 600
-	If $x > 410 Then $xRegion = 290
+	If $x < 405 Then $xRegion = 600
+	If $x > 405 Then $xRegion = 274
 	If $x > 530 Then $xRegion = 400
 	If $x > 660 Then $xRegion = 540
 	
@@ -894,8 +893,8 @@ EndFunc   ;==>GetEventInfo
 
 Func IsBBChallenge($i = Default, $j = Default)
 
-	Local $BorderX[4] = [292, 418, 546, 669]
-	Local $BorderY[3] = [205, 363, 520]
+	Local $BorderX[4] = [288, 422, 557, 690]
+	Local $BorderY[2] = [216, 385]
 	Local $iColumn, $iRow, $bReturn
 
 	Switch $i
@@ -912,11 +911,10 @@ Func IsBBChallenge($i = Default, $j = Default)
 	Switch $j
 		Case $BorderY[0]-50 To $BorderY[1]-50
 			$iRow = 1
-		Case $BorderY[1]-50 To $BorderY[2]-50
-			$iRow = 2
 		Case Else
-			$iRow = 3
+			$iRow = 2
 	EndSwitch
+	
 	If $g_bChkClanGamesDebug Then SetLog("Row: " & $iRow & ", Column : " & $iColumn, $COLOR_DEBUG)
 	For $y = 0 To 2
 		For $x = 0 To 3

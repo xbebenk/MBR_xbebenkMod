@@ -1655,7 +1655,7 @@ Func BuilderBase()
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
 
-		If Not $bElixFull And $g_bBBAttacked Then $StartLabON = StarLaboratory()
+		If Not $StartLabON Then StarLaboratory()
 		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
 
 		If _Sleep($DELAYRUNBOT1) Then Return

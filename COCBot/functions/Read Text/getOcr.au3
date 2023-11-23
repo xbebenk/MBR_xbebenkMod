@@ -285,11 +285,11 @@ Func getOcrTimeGameTime($x_start, $y_start) ;  -> Get the guard/shield time left
 EndFunc   ;==>getOcrTimeGameTime
 
 Func getOcrYourScore($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 120, 18, True)
+	Return getOcrAndCapture("coc-cgscores", $x_start, $y_start, 140, 18, True)
 EndFunc   ;==>getOcrYourScore
 
 Func getOcrEventTime($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
-	Return getOcrAndCapture("coc-events", $x_start, $y_start, 60, 20, True)
+	Return getOcrAndCapture("coc-cgevents", $x_start, $y_start, 60, 20, True)
 EndFunc   ;==>getOcrEventTime
 
 Func getRemainTLaboratory($x_start, $y_start) ; read actual time remaining in Lab for current upgrade (336,260), changed CoC v9.24 282,277
