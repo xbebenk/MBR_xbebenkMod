@@ -367,7 +367,7 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False)
 			For $x = 0 To Ubound($aX) - 1
 				If Not $g_bRunState Then Return
 				Local $hITimer = TimerInit()
-				$aEvent = QuickMIS("CNX", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 90, $aY[$y] + 70)
+				$aEvent = QuickMIS("CNX", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 90, $aY[$y] + 80)
 				If IsArray($aEvent) And UBound($aEvent) > 0 Then
 					If $g_bChkClanGamesDebug Then Setlog("Benchmark Search on Slot: (in " & Round(TimerDiff($hITimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 					Local $IsBBEvent = (IsBBChallenge($aEvent[0][1], $aEvent[0][2]) ? "CGBB" : "CGMain")
@@ -383,7 +383,7 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False)
 			For $x = 0 To Ubound($aX) - 1
 				If Not $g_bRunState Then Return
 				Local $hITimer = TimerInit()
-				If QuickMIS("BC1", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 90, $aY[$y] + 70) Then
+				If QuickMIS("BC1", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 90, $aY[$y] + 80) Then
 					If $g_bChkClanGamesDebug Then Setlog("Benchmark Search on Slot: (in " & Round(TimerDiff($hITimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 					Local $BC1x = $g_iQuickMISX, $BC1y = $g_iQuickMISY
 					Local $ChallengeEvent = $g_iQuickMISName
@@ -597,7 +597,7 @@ Func IsEventRunning($bOpenWindow = False)
 					Click(340, 215) ; click first slot
 					If _Sleep(2000) Then Return
 					SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
-					If QuickMIS("BC1", $g_sImgVersus, 425, 195, 715, 255) Then
+					If QuickMIS("BC1", $g_sImgVersus, 425, 190, 700, 250) Then
 						$g_bIsBBevent = True
 						$g_sCGCurrentEventName = $aActiveEvent[0][0]
 						$g_bIsCGEventRunning = True
@@ -702,7 +702,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 			If _Sleep(2000) Then Return
 
 			SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
-			If QuickMIS("BC1", $g_sImgVersus, 425, 150, 700, 215) Then
+			If QuickMIS("BC1", $g_sImgVersus, 425, 190, 700, 250) Then
 				$g_bIsBBevent = True
 				$g_sCGCurrentEventName = $sEventName
 				Setlog("Running Challenge is BB Challenge : " & $g_sCGCurrentEventName, $COLOR_INFO)
@@ -789,7 +789,7 @@ Func StartAndPurgeEvent($bTest = False)
 			If $count1 > 10 Then ExitLoop
 		Wend
 
-		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350, True, False) Then
+		If QuickMIS("BC1", $g_sImgTrashPurge, 400, 200, 700, 350) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			SetLog("Click Trash", $COLOR_INFO)
 			While Not IsOKCancelPage()
@@ -802,7 +802,7 @@ Func StartAndPurgeEvent($bTest = False)
 				SetLog("Click OK", $COLOR_INFO)
 				If $bTest Then Return
 				Click(530, 420)
-				SetLog("StartAndPurgeEvent event!", $COLOR_SUCCESS)
+				SetLog("StartAndPurgeEvent!", $COLOR_SUCCESS)
 				GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - StartAndPurgeEvent: No event Found ", 1)
 				_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - StartAndPurgeEvent: No event Found ")
 				CloseClangamesWindow()
