@@ -183,7 +183,7 @@ EndFunc
 
 Func EndBattleBB() ; Find if battle has ended and click okay
 	Local $bRet = False, $bBattleMachine = True, $bWallBreaker = True
-	Local $sDamage = 0, $sTmpDamage = 0, $bCountSameDamage = 1
+	Local $sDamage = 0, $sTmpDamage = 0, $bCountSameDamage = 1, $realDamage = 0
 	
 	For $i = 1 To 200
 		;SetLog("Waiting EndBattle Screen #" & $i, $COLOR_ACTION)
@@ -192,6 +192,7 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		If $bWallBreaker Then $bWallBreaker = CheckWBLoop()
 		$sDamage = getOcrOverAllDamage(776, 529)
 		SetLog("[" & $i & "] EndBattleBB LoopCheck, [" & $bCountSameDamage & "] Overall Damage : " & $sDamage & "%", $COLOR_DEBUG2)
+		If Number($sDamage) > 0 Then $realDamage = Number($sDamage)
 		If Number($sDamage) = Number($sTmpDamage) Then
 			$bCountSameDamage += 1
 		Else
@@ -230,7 +231,7 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 			$bRet = True
 			If $g_bChkBBAttackReport Then
 				If _SleepStatus(5000) Then Return
-				BBAttackReport()
+				BBAttackReport($realDamage)
 			EndIf
 			ExitLoop
 		EndIf
@@ -885,16 +886,15 @@ Func BBBarbarianHead($sLogText = "BBBarbarianHead")
 	EndIf
 EndFunc
 
-Func BBAttackReport()
+Func BBAttackReport($sDamage = "")
 
 	Local $sCurrentTrophy = $g_aiCurrentLootBB[$eLootTrophyBB]
-	Local $sSearch = 1, $sTH = "--", $sType = "BB", $sDamage = 0
+	Local $sSearch = 1, $sTH = "--", $sType = "BB"
 	Local $sGold = 0, $sElix = 0, $sDE = 0, $sTrophy = 0, $sStars = 0
 	Local $AtkLogTxt = ""
 	
 	$sGold = getOcrAndCapture("coc-bonus", 525, 400, 86, 18, True)
 	$sTrophy = getOcrAndCapture("coc-bonus", 550, 437, 38, 18, True)
-	$sDamage = getOcrBBDamageReport(365, 280)
 	
 	If Number($sDamage) = 200 Then 
 		$sStars = 6

@@ -147,10 +147,6 @@ Func getOcrOverAllDamage($x_start, $y_start) ;  -> Get the Overall Damage %
 	Return getOcrAndCapture("coc-overalldamage", $x_start, $y_start, 50, 20, True)
 EndFunc   ;==>getOcrOverAllDamage
 
-Func getOcrBBDamageReport($x_start, $y_start) ;  -> Get Damage % on AttackReportBB
-	Return getOcrAndCapture("coc-bbreportdamage", $x_start, $y_start, 135, 50, True)
-EndFunc   ;==>getOcrBBDamageReport
-
 Func getOcrGuardShield($x_start, $y_start) ;  -> Get the guard/shield time left, middle top of the screen
 	Return getOcrAndCapture("coc-guardshield", $x_start, $y_start, 68, 15)
 EndFunc   ;==>getOcrGuardShield
