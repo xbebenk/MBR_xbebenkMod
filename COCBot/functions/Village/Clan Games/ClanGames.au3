@@ -595,7 +595,16 @@ Func IsEventRunning($bOpenWindow = False)
 				;check if Challenge is BB Challenge, enabling force BB attack
 				If $g_bChkForceBBAttackOnClanGames Then
 					Click(340, 215) ; click first slot
-					If _Sleep(2000) Then Return
+					
+					For $i = 1 To 10
+						If QuickMIS("BC1", $g_sImgTrashPurge, 100, 100, 700, 550, True) Then
+							ExitLoop
+						Else
+							SetDebugLog("waiting for trash #" & $i)
+						EndIf
+						_Sleep(500)
+					Next
+					
 					SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
 					If QuickMIS("BC1", $g_sImgVersus, 425, 190, 700, 250) Then
 						$g_bIsBBevent = True
@@ -699,7 +708,15 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 			Click(310, 99) ;Click Challenge Tab
 			If _Sleep(500) Then Return
 			Click(340, 215) ;Click Active Challenge
-			If _Sleep(2000) Then Return
+			
+			For $i = 1 To 10
+				If QuickMIS("BC1", $g_sImgTrashPurge, 100, 100, 700, 550, True) Then
+					ExitLoop
+				Else
+					SetDebugLog("waiting for trash #" & $i)
+				EndIf
+				_Sleep(500)
+			Next
 
 			SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
 			If QuickMIS("BC1", $g_sImgVersus, 425, 190, 700, 250) Then
