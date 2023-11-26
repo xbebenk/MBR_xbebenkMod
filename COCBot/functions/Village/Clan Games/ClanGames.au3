@@ -606,7 +606,7 @@ Func IsEventRunning($bOpenWindow = False)
 					Next
 					
 					SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
-					If QuickMIS("BC1", $g_sImgVersus, 425, 190, 700, 250) Then
+					If QuickMIS("BC1", $g_sImgVersus, 425, 190, 730, 250) Then
 						$g_bIsBBevent = True
 						$g_sCGCurrentEventName = $aActiveEvent[0][0]
 						$g_bIsCGEventRunning = True
@@ -843,7 +843,7 @@ Func FindEventToPurge($sTempPath)
 
 	For $y = 0 To Ubound($aY) - 1
 		For $x = 0 To Ubound($aX) - 1
-			$aEvent = QuickMIS("CNX", $sTempPath & "Purge\", $aX[$x], $aY[$y], $aX[$x] + 100, $aY[$y] + 110)
+			$aEvent = QuickMIS("CNX", $sTempPath & "Purge\", $aX[$x], $aY[$y], $aX[$x] + 100, $aY[$y] + 100)
 			If IsArray($aEvent) And UBound($aEvent) > 0 Then ExitLoop 2
 		Next
 	Next
