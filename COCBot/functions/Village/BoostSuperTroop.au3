@@ -79,7 +79,7 @@ Func BoostSuperTroop($bTest = False)
 									SetLog("SuperTroop Potion on TH Storage is Full", $COLOR_INFO)
 									SetLog("Forcing use SuperTroop Potion", $COLOR_INFO)
 									Setlog("Let's try boosting " & $sTroopName & " with potion", $COLOR_INFO)
-									If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 505, 530, 530, 555) Then ;find image of Super Potion
+									If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 505, 530, 530, 565) Then ;find image of Super Potion
 										Click($g_iQuickMISX, $g_iQuickMISY)
 										If _Sleep(1500) Then Return
 										If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 450, 444, 485, 480) Then ;find image of Super Potion again (confirm upgrade)
@@ -91,6 +91,8 @@ Func BoostSuperTroop($bTest = False)
 												Click($g_iQuickMISX, $g_iQuickMISY)
 												Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
 												ClickAway()
+												$TroopBoosted = True
+												Return True
 											EndIf
 										Else
 											Setlog("Could not find Potion button for final upgrade " & $sTroopName, $COLOR_ERROR)
@@ -133,7 +135,7 @@ Func BoostSuperTroop($bTest = False)
 										;Let's try using potion
 										If $g_bSuperTroopsBoostUsePotion Then
 											Setlog("Let's try boosting " & $sTroopName & " with potion", $COLOR_INFO)
-											If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 505, 530, 530, 555) Then ;find image of Super Potion
+											If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 505, 530, 530, 565) Then ;find image of Super Potion
 												Click($g_iQuickMISX, $g_iQuickMISY)
 												If _Sleep(1500) Then Return
 												If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 450, 444, 485, 480) Then ;find image of Super Potion again (confirm upgrade)
