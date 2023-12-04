@@ -1392,9 +1392,9 @@ Func FirstCheckRoutine()
 		Next
 	Else
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
+			If Not $g_bRunState Then Return
 			SetLog("Check ClanGames Early", $COLOR_INFO)
 			_ClanGames(False)
-			If Not $g_bRunState Then Return
 			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 				GotoBBTodoCG()
@@ -1596,6 +1596,7 @@ Func CommonRoutine($RoutineType = Default)
 EndFunc
 
 Func BuilderBase()
+	If Not $g_bRunState Then Return
 	If Number($g_iTotalBuilderCount) = 6 Then
 		$g_bIs6thBuilderUnlocked = True
 		SetLog("Is6thBuilderUnlocked = " & String($g_bIs6thBuilderUnlocked), $COLOR_DEBUG1)
