@@ -669,12 +669,12 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 		Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion", "poyal Champion"
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 660, 500, 710, 580) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True) ; get cost
-			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(747, 546) ; get duration
+			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(730, 546) ; get duration
 			$bHeroUpgrade = True
 		Case Else
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 660, 500, 710, 580) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True) ; get cost
-			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(747, 546) ; get duration
+			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(730, 546) ; get duration
 	EndSwitch
 	
 	If $g_aUpgradeNameLevel[1] = "Clan Castle" And $g_aUpgradeNameLevel[2] = "Broken" Then 
@@ -721,9 +721,10 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 			Case Else
 				Click(625, 545)
 		EndSwitch
-		If $g_aUpgradeNameLevel[1] = "Clan Castle" And $g_aUpgradeNameLevel[2] = "Broken" Then Click(600, 460)
+		;If $g_aUpgradeNameLevel[1] = "Clan Castle" And $g_aUpgradeNameLevel[2] = "Broken" Then Click(600, 460)
 	Else
-		ClickAway("Right")
+		ClickAway()
+		Return False
 	Endif
 
 	;Check for 'End Boost?' pop-up
@@ -774,24 +775,28 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 		_Sleep(500)
 		Local $HeroUpgradeTime = ConvertOCRTime("UseHeroBooks", $g_aUpgradeResourceCostDuration[2], False)
 		If $HeroUpgradeTime >= ($g_iHeroMinUpgradeTime * 1440) Then
-			SetLog("Hero Upgrade Time minutes: " & $HeroUpgradeTime, $COLOR_DEBUG)
-			SetLog("MinUpgradeTime on Setting: " & ($g_iHeroMinUpgradeTime * 1440), $COLOR_DEBUG)
+			SetLog("Hero Upgrade Time minutes: [" & $HeroUpgradeTime & "] " & $HeroUpgradeTime & " minutes", $COLOR_DEBUG)
+			SetLog("MinUpgradeTime on Setting: [" & $g_iHeroMinUpgradeTime & "] " & ($g_iHeroMinUpgradeTime * 1440) & " minutes", $COLOR_DEBUG)
 			SetLog("Looking if Hero Books avail")
-			Local $HeroBooks = FindButton("HeroBooks")
-			If IsArray($HeroBooks) And UBound($HeroBooks) = 2 Then
-				SetLog("Use Hero Books to Complete Now this Hero Upgrade", $COLOR_INFO)
-				Click($HeroBooks[0], $HeroBooks[1])
-				_Sleep(1000)
-				If QuickMis("BC1", $g_sImgGeneralCloseButton, 560, 225, 610, 275) Then
-					Click(430, 400)
-				EndIf
-			Else
-				SetLog("No Books of Heroes Found", $COLOR_DEBUG)
-			EndIf
+			UseHeroBooks()
 		EndIf
 	EndIf
 
 	Return True
+EndFunc
+
+Func UseHeroBooks()
+	Local $HeroBooks = FindButton("HeroBooks")
+	If IsArray($HeroBooks) And UBound($HeroBooks) = 2 Then
+		SetLog("Use Hero Books to Complete Now this Hero Upgrade", $COLOR_INFO)
+		Click($HeroBooks[0], $HeroBooks[1])
+		_Sleep(1000)
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 600, 210, 650, 255) Then
+			Click(430, 410)
+		EndIf
+	Else
+		SetLog("No Books of Heroes Found", $COLOR_DEBUG)
+	EndIf
 EndFunc
 
 Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration = Default)

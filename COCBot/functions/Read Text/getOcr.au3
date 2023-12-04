@@ -92,7 +92,7 @@ Func getLabUpgradeTime($x_start, $y_start) ; -> Gets complete remain lab upgrade
 EndFunc   ;==>getLabUpgradeTime
 
 Func getHeroUpgradeTime($x_start, $y_start) ; -> Gets complete upgrade time for heroes 464, 527
-	Return getOcrAndCapture("coc-uptime2", $x_start, $y_start, 68, 20) ; 68 is required to days & hours for young hero
+	Return getOcrAndCapture("coc-uptime2", $x_start, $y_start, 78, 20) ; 78 is required to days & hours for young hero
 EndFunc   ;==>getHeroUpgradeTime
 
 Func getChatString($x_start, $y_start, $language) ; -> Get string chat request - Latin Alphabetic - EN "DonateCC.au3"
