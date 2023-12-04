@@ -104,9 +104,9 @@ Func Laboratory($bDebug = False)
 				For $z = 0 To UBound($g_aCmbLabUpgradeOrder) - 1 ;try labupgrade based on order
 					Local $iTmpCmbLaboratory = $g_aCmbLabUpgradeOrder[$z] + 1
 					If $iTmpCmbLaboratory > 0 Then
-						SetLog("Try Lab Upgrade: " & $g_avLabTroops[$iTmpCmbLaboratory][0], $COLOR_INFO)
+						SetLog("Try Lab Upgrade: " & $g_avLabTroops[$iTmpCmbLaboratory][0] & " [" & $iTmpCmbLaboratory & "]", $COLOR_INFO)
 						; Get coords of upgrade the user wants
-						If $iTmpCmbLaboratory < 46 Then ;all normal upgrade not AnySpell or AnySiege
+						If $iTmpCmbLaboratory < 47 Then ;all normal upgrade not AnySpell or AnySiege
 							$iPage = Ceiling($iTmpCmbLaboratory / $iPicsPerPage) ; page # of user choice
 							SetDebugLog("CurrentPage:" & $iCurPage & ", Go to Page:" & $iPage, $COLOR_INFO)
 							While ($iCurPage > $iPage)
@@ -128,8 +128,8 @@ Func Laboratory($bDebug = False)
 							Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD"]
 							If IsArray($aCoords) And UBound($aCoords) = 2 Then
 								If QuickMIS("BC1", $g_sImgResIcon, $aCoords[0], $aCoords[1], $aCoords[0] + 60, $aCoords[1] + 70) Then 
-									Local $sCostResult = getLabCost($g_iQuickMISX - 75, $g_iQuickMISY - 10)
-									Local $level = getTroopsSpellsLevel($g_iQuickMISX - 75, $g_iQuickMISY - 30)
+									Local $sCostResult = getLabCost($g_iQuickMISX - 92, $g_iQuickMISY - 10)
+									Local $level = getTroopsSpellsLevel($g_iQuickMISX - 79, $g_iQuickMISY - 32)
 									If $level = "" Then $level = 1
 									If $g_bUpgradeSiegeToLvl2 And $level >= 3 Then
 										For $x In $aSiege
@@ -152,7 +152,7 @@ Func Laboratory($bDebug = False)
 								SetDebugLog("Image " & $g_avLabTroops[$iTmpCmbLaboratory][2] & " not found")
 							EndIf
 						Else
-							If $iTmpCmbLaboratory = 46 Then ;Any Spell
+							If $iTmpCmbLaboratory = 47 Then ;Any Spell
 								$iPage = 2
 								$bUpgradeFound = False
 								SetDebugLog("CurrentPage:" & $iCurPage & ", Go to Page:" & $iPage, $COLOR_INFO)
@@ -174,8 +174,8 @@ Func Laboratory($bDebug = False)
 									If IsArray($aSpell) And UBound($aSpell) > 0 Then
 										For $i = 0 To UBound($aSpell) - 1
 											If QuickMIS("BC1", $g_sImgResIcon, $aSpell[$i][1], $aSpell[$i][2], $aSpell[$i][1] + 60, $aSpell[$i][2] + 70) Then 
-												Local $sCostResult = getLabCost($g_iQuickMISX - 75, $g_iQuickMISY - 10)
-												Local $level = getTroopsSpellsLevel($g_iQuickMISX - 75, $g_iQuickMISY - 30)
+												Local $sCostResult = getLabCost($g_iQuickMISX - 92, $g_iQuickMISY - 10)
+												Local $level = getTroopsSpellsLevel($g_iQuickMISX - 79, $g_iQuickMISY - 32)
 												If $level = "" Then $level = 1
 												If Not IsLabUpgradeResourceEnough($aSpell[$i][0], $sCostResult) Then
 													$tmpNoResources = True
@@ -198,7 +198,7 @@ Func Laboratory($bDebug = False)
 								Next
 							EndIf
 							
-							If $iTmpCmbLaboratory = 47 Then ;Any Siege
+							If $iTmpCmbLaboratory = 48 Then ;Any Siege
 								$iPage = 4
 								SetDebugLog("CurrentPage:" & $iCurPage & ", Go to Page:" & $iPage, $COLOR_INFO)
 								While ($iCurPage > $iPage)
@@ -219,8 +219,8 @@ Func Laboratory($bDebug = False)
 								If IsArray($aSiege) And UBound($aSiege) > 0 Then
 									For $i = 0 To UBound($aSiege) - 1
 										If QuickMIS("BC1", $g_sImgResIcon, $aSiege[$i][1], $aSiege[$i][2], $aSiege[$i][1] + 80, $aSiege[$i][2] + 80) Then 
-											Local $sCostResult = getLabCost($g_iQuickMISX - 75, $g_iQuickMISY - 10)
-											Local $level = getTroopsSpellsLevel($g_iQuickMISX - 75, $g_iQuickMISY - 30)
+											Local $sCostResult = getLabCost($g_iQuickMISX - 92, $g_iQuickMISY - 10)
+											Local $level = getTroopsSpellsLevel($g_iQuickMISX - 79, $g_iQuickMISY - 32)
 											If $level = "" Then $level = 1
 											If $g_bUpgradeSiegeToLvl2 And $level >= 3 Then
 												SetLog("Skip " & $aSiege[$i][0] & ", already Level " & $level)
@@ -509,7 +509,7 @@ Func FindLabUpgrade()
 		Next
 		For $i = 0 To UBound($aResult) - 1
 			If QuickMIS("BC1", $g_sImgLabResearch, $aResult[$i][1] - 80, $aResult[$i][2] - 85, $aResult[$i][1], $aResult[$i][2]) Then
-				Local $cost = getLabCost($aResult[$i][1] - 88, $aResult[$i][2] - 10)
+				Local $cost = getLabCost($aResult[$i][1] - 92, $aResult[$i][2] - 10)
 				Local $level = getTroopsSpellsLevel($aResult[$i][1] - 79, $aResult[$i][2] - 32)
 				If $level = "" Then $level = 1
 				$aResult[$i][3] = Number($cost)
