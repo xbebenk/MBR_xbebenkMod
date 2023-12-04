@@ -56,12 +56,15 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	Next
 		
 
-	Local $aButton
+	Local $aButton, $bAttackButtonFound
 	
 	For $s = 1 To 20
+		If Not $g_bRunState Then ExitLoop
+		If _Sleep(1500) Then Return
 		SetDebugLog("Search for attack Button #" & $s, $COLOR_ACTION)
 		$aButton = QuickMIS("CNX", $g_sImgPrepareLegendLeagueSearch, 275,190,835,545)
 		If IsArray($aButton) And UBound($aButton) > 0 Then
+			$bAttackButtonFound = True
 			For $i = 0 To UBound($aButton) - 1
 				SetDebugLog("Found Attack Button: " & $aButton[$i][0], $COLOR_DEBUG)
 				If StringInStr($aButton[$i][0], "Normal") Then
@@ -133,15 +136,15 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					_SleepStatus(120000) ; Wait 2 mins before searching again
 				EndIf
 			Next
-		Else
-			If $s = 5 Then 
-				SetLog("Cannot Find Attack Button on Multiplayer Window", $COLOR_ERROR)
-				SaveDebugImage("AttackButtonNotFound")
-				Return False
-			EndIf
 		EndIf
-		If _Sleep(1500) Then Return
 	Next
+	
+	If Not $bAttackButtonFound Then
+		SetLog("Cannot Find Attack Button on Multiplayer Window", $COLOR_ERROR)
+		SaveDebugImage("AttackButtonNotFound")
+		Return False
+	EndIf
+	
 	$g_bCloudsActive = True ; early set of clouds to ensure no android suspend occurs that might cause infinite waits
 	
 	If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
