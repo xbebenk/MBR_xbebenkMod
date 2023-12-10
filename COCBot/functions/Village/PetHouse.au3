@@ -73,16 +73,14 @@ Func PetHouse($test = False)
 		_Sleep(500)
 	EndIf
 	
-	Local $BuildingName = BuildingInfo(242, 498)
+	Local $BuildingName = BuildingInfo(242, 473)
 	If StringInStr($BuildingName[1], "Pet") Then
 		SetLog("Click on PetHouse, Level:" & $BuildingName[2])
 		$g_iPetHouseLevel = Number($BuildingName[2])
 	Else
 		SetDebugLog("Wrong Click on PetHouse, its a " & $BuildingName[1])
 		ClickAway()
-		If LocatePetHouse() Then
-			PureClickP($g_aiPetHousePos)
-		Else
+		If Not LocatePetHouse() Then
 			SetLog("Cannot Find PetHouse, please locate manually")
 			Return
 		EndIf
@@ -260,12 +258,12 @@ EndFunc
 ; check the Pet House to see if a Pet is upgrading already
 Func CheckPetUpgrade()
 	; check for upgrade in process - look for green in finish upgrade with gems button
-	If $g_bDebugSetlog Then SetLog("_GetPixelColor(730, 200): " & _GetPixelColor(730, 185, True) & ":A2CB6C", $COLOR_DEBUG)
-	If _ColorCheck(_GetPixelColor(730, 185, True), Hex(0xA2CB6C, 6), 20) Then
+	If $g_bDebugSetlog Then SetLog("_GetPixelColor(750, 150): " & _GetPixelColor(750, 150, True) & ":BED79B", $COLOR_DEBUG)
+	If _ColorCheck(_GetPixelColor(750, 150, True), Hex(0xBED79B, 6), 20) Then
 		SetLog("Pet House Upgrade in progress, waiting for completion", $COLOR_INFO)
 		If _Sleep($DELAYLABORATORY2) Then Return
 		; upgrade in process and time not recorded so update completion time!
-		Local $sPetTimeOCR = getRemainTPetHouse(274, 258)
+		Local $sPetTimeOCR = getRemainTPetHouse(240, 244)
 		Local $iPetFinishTime = ConvertOCRTime("Lab Time", $sPetTimeOCR, False)
 		SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
 		If $iPetFinishTime > 0 Then
@@ -317,10 +315,10 @@ Func FindPetsButton()
 EndFunc
 
 Func GetPetUpgradeList()
-	Local $iPetUnlockedxCoord[8] = [190, 345, 500, 655, 225, 375, 520, 670]
-	Local $iPetLevelxCoord[8] = [128, 274, 420, 566, 167, 313, 460, 606]
+	Local $iPetUnlockedxCoord[8] = [125, 315, 495, 677, 225, 375, 520, 670]
+	Local $iPetLevelxCoord[8] = [51, 234, 416, 600, 167, 313, 460, 606]
 	
-	Local $iDarkElixirReq = 0
+	Local $iDarkElixirReq = 0, $iYPetLevel = 545 
 	Local $aPet[0][8]
 	Local $bSecondPage = False
 	
@@ -331,10 +329,10 @@ Func GetPetUpgradeList()
 		EndIf
 		If $g_iPetHouseLevel < 5 And $i = $ePetFrosty Then ExitLoop
 		Local $Name = $g_asPetNames[$i]
-		Local $Unlocked = String(_ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 385, True), Hex(0xc3b6a5, 6), 20))
-		Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 503)
+		Local $Unlocked = String(_ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 400, True), Hex(0xc3b6a5, 6), 20))
+		Local $iPetLevel = getOcrAndCapture("coc-petslevel", $iPetLevelxCoord[$i], $iYPetLevel, 25, 18, True)
 		$iDarkElixirReq = 0 ;reset value
-		$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 20, 503, 100, 16, True)
+		$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 30, $iYPetLevel, 100, 18, True)
 		If Number($iPetLevel) = $g_ePetLevels[$i] Then 
 			$Unlocked = "MaxLevel"
 			$iDarkElixirReq = 0

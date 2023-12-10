@@ -294,7 +294,7 @@ EndFunc
 
 Func IsPetHousePage()
 	Local $result
-	$result = WaitforPixel(530, 120, 531, 121, "006C5C", 10, 2) ;green pixel under title 'Pet House'
+	$result = WaitforPixel(415, 95, 420, 96, "006F5F", 10, 2) ;green pixel under title 'Pet House'
 	
 	If $result Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found PetHousePage Window", $COLOR_ACTION)

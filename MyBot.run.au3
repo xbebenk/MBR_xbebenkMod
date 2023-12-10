@@ -1185,8 +1185,8 @@ Func __RunFunction($action)
 			Laboratory()
 			_Sleep($DELAYRUNBOT3)
 			checkMainScreen(False, $g_bStayOnBuilderBase, "Laboratory")
-		;Case "PetHouse"
-		;	PetHouse()
+		Case "PetHouse"
+			PetHouse()
 		;Case "ForgeClanCapitalGold"
 		;	ForgeClanCapitalGold()
 		Case "BoostSuperTroop"
