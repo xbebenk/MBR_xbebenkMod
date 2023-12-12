@@ -30,6 +30,8 @@ EndFunc
 Func StarLaboratory($bTestRun = False)
 
 	If Not $g_bAutoStarLabUpgradeEnable Then Return ; Lab upgrade not enabled.
+	Local $bElixirFull = False
+	If $g_bChkUpgradeAnyIfAllOrderMaxed Then $bElixirFull = isElixirFullBB()
 	
 	;Create local array to hold upgrade values
 	Local $iAvailElixir, $sElixirCount, $TimeDiff, $aArray, $Result
@@ -191,7 +193,8 @@ Func StarLaboratory($bTestRun = False)
 		EndIf
 		
 		;any upgrade if all on troops lab order is maxed
-		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bChkUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn And ($g_bisBattleMachineMaxed Or $g_bIs6thBuilderUnlocked) Then
+		If $g_bDebugSetLog Then SetLog("g_iCmbStarLaboratory=" & $g_iCmbStarLaboratory & " g_bSLabUpgradeOrderEnable=" & $g_bSLabUpgradeOrderEnable & " bAnyUpgradeOn=" & $bAnyUpgradeOn & " g_bisBattleMachineMaxed=" & $g_bisBattleMachineMaxed & " g_bIs6thBuilderUnlocked=" & $g_bIs6thBuilderUnlocked & " bElixirFull=" & $bElixirFull, $COLOR_DEBUG)
+		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bChkUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn And ($g_bisBattleMachineMaxed Or $g_bIs6thBuilderUnlocked Or $bElixirFull) Then
 			_ArraySort($aTroopUpgrade, 1, 0, 0, 5) ;sort by cost descending
 			For $i = 0 To UBound($aTroopUpgrade) - 1
 				If $aTroopUpgrade[$i][5] = "MaxLevel" Then ContinueLoop
@@ -264,7 +267,7 @@ Func FindSLabTroopsUpgrade()
 		For $i = 0 To UBound($aTmp) -1 
 			$aTroop = GetSLabTroopResPos($aTmp[$i][0])
 			$UpgradeCost = getSLabCost($aTroop[1], $aTroop[2])
-			If $UpgradeCost = "MaxL" Then $UpgradeCost = "MaxLevel"
+			If (StringInStr($UpgradeCost, "M") Or StringInStr($UpgradeCost, "L") Or StringInStr($UpgradeCost, "x")) Then $UpgradeCost = "MaxLevel"
 			If $UpgradeCost = "" Then 
 				If QuickMIS("BC1", $g_sImgStarLabNeedUp, $aTroop[1], $aTroop[2], $aTroop[1] + 100, $aTroop[2] + 20) Then
 					$UpgradeCost = "NeedUpgradeLab"
