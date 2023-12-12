@@ -192,55 +192,46 @@ Func PetHouse($test = False)
 				
 				Click($aPet[$i][5], 465)
 
-			   ; wait for ungrade window to open
+			    ;wait for ungrade window to open
 				If _Sleep(1500) Then Return
+				
+				; check if this just a test
+				If Not $test Then
+					Click(625, 545) ; click upgrade and window close
 
-			   ; use image search to find Upgrade Button
-				Local $aUpgradePetButton = findButton("UpgradePet", Default, 1, True)
-
-			   ; check button found
-			   If IsArray($aUpgradePetButton) And UBound($aUpgradePetButton, 1) = 2 Then
-					If $g_bDebugImageSave Then SaveDebugImage("PetHouse") ; Debug Only
-
-					; check if this just a test
-					If Not $test Then
-						ClickP($aUpgradePetButton) ; click upgrade and window close
-
-						If _Sleep($DELAYLABORATORY1) Then Return ; Wait for window to close
-
-						; Just incase the buy Gem Window pop up!
-						If isGemOpen(True) Then
-							SetDebugLog("Not enough DE for to upgrade: " & $g_asPetNames[$i], $COLOR_DEBUG)
-							ClickAway()
-							Return False
-						EndIf
-
-						; Update gui
-						;==========Hide Red  Show Green Hide Gray===
-						GUICtrlSetState($g_hPicPetGray, $GUI_HIDE)
-						GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
-						GUICtrlSetState($g_hPicPetGreen, $GUI_SHOW)
-						;===========================================
-						If _Sleep($DELAYLABORATORY2) Then Return
-						SetLog("Started upgrade for: " & $aPet[$i][1], $COLOR_SUCCESS)
-						Local $sPetTimeOCR = getRemainTLaboratory(274, 256)
-						Local $iPetFinishTime = ConvertOCRTime("Lab Time", $sPetTimeOCR, False)
-						SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
-						If $iPetFinishTime > 0 Then
-							$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())
-							SetLog("Pet House will finish in " & $sPetTimeOCR & " (" & $g_sPetUpgradeTime & ")", $COLOR_SUCCESS)
-						EndIf
-						ClickAway() ; close pet house window
-					Else
-						ClickAway() ; close pet upgrade window
+					If _Sleep(1000) Then Return ; Wait for window to close
+					
+					; Just incase the buy Gem Window pop up!
+					If isGemOpen(True) Then
+						SetDebugLog("Not enough DE for to upgrade: " & $g_asPetNames[$i], $COLOR_DEBUG)
+						ClickAway()
+						Return False
 					EndIf
-					Return True
+					
+					ClickAway() ; close upgrade window
+					
+					; Update gui
+					;==========Hide Red  Show Green Hide Gray===
+					GUICtrlSetState($g_hPicPetGray, $GUI_HIDE)
+					GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
+					GUICtrlSetState($g_hPicPetGreen, $GUI_SHOW)
+					;===========================================
+					
+					If _Sleep(1000) Then Return
+					SetLog("Started upgrade for: " & $aPet[$i][1], $COLOR_SUCCESS)
+					Local $sPetTimeOCR = getRemainTPetHouse(274, 244)
+					Local $iPetFinishTime = ConvertOCRTime("PetHouse Time", $sPetTimeOCR, False)
+					SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
+					If $iPetFinishTime > 0 Then
+						$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())
+						SetLog("Pet House will finish in " & $sPetTimeOCR & " (" & $g_sPetUpgradeTime & ")", $COLOR_SUCCESS)
+					EndIf
 				Else
-					SetLog("Failed to find the Pets button!", $COLOR_ERROR)
-					ClickAway()
-					Return False
+					ClickAway() ; close pet upgrade window
 				EndIf
-			   SetLog("Failed to find Upgrade button", $COLOR_ERROR)
+				;success close window
+				ClickAway()
+				Return True
 			Else
 				SetDebugLog("DE:" & $g_aiCurrentLoot[$eLootDarkElixir] & " - " & $iDarkElixirReq & " = " & $g_aiCurrentLoot[$eLootDarkElixir] - $iDarkElixirReq)
 				SetLog("Upgrade Failed - Not enough Dark Elixir", $COLOR_ERROR)
@@ -315,8 +306,8 @@ Func FindPetsButton()
 EndFunc
 
 Func GetPetUpgradeList()
-	Local $iPetUnlockedxCoord[8] = [125, 315, 495, 677, 225, 375, 520, 670]
-	Local $iPetLevelxCoord[8] = [51, 234, 416, 600, 167, 313, 460, 606]
+	Local $iPetUnlockedxCoord[8] = [125, 315, 495, 677, 180, 365, 545, 735]
+	Local $iPetLevelxCoord[8] = [51, 234, 416, 600, 108, 290, 472, 655]
 	
 	Local $iDarkElixirReq = 0, $iYPetLevel = 545 
 	Local $aPet[0][8]
@@ -333,7 +324,7 @@ Func GetPetUpgradeList()
 		Local $iPetLevel = getOcrAndCapture("coc-petslevel", $iPetLevelxCoord[$i], $iYPetLevel, 25, 18, True)
 		$iDarkElixirReq = 0 ;reset value
 		$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 30, $iYPetLevel, 100, 18, True)
-		If Number($iPetLevel) = $g_ePetLevels[$i] Then 
+		If Number($iPetLevel) = $g_ePetLevels[$i] Or StringInStr($iDarkElixirReq, "M") Or StringInStr($iDarkElixirReq, "l") Then 
 			$Unlocked = "MaxLevel"
 			$iDarkElixirReq = 0
 		EndIf

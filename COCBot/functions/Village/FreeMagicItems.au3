@@ -140,7 +140,7 @@ Func IsTraderWindowOpen()
 	
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
-		If QuickMis("BC1", $g_sImgTraderGems, 55, 233, 100, 250) Then
+		If QuickMis("BC1", $g_sImgTraderGems, 55, 173, 100, 250) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(800) Then Return
 			$bRet = True

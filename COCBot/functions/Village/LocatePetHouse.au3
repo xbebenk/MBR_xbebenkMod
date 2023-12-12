@@ -41,6 +41,7 @@ Func autoLocatePetHouse()
 				If StringInStr($BuildingName[1], "Pet") Then
 					$g_aiPetHousePos[0] = $aPetHouse[$i][1]
 					$g_aiPetHousePos[1] = $aPetHouse[$i][2]
+					$g_iPetHouseLevel = Number($BuildingName[2])
 					$bRet = True
 					ExitLoop
 				EndIf
@@ -54,14 +55,13 @@ Func autoLocatePetHouse()
 	Return $bRet
 EndFunc
 
-Func _LocatePetHouse($bCollect = True)
+Func _LocatePetHouse()
 	Local $stext, $MsgBox, $iStupid = 0, $iSilly = 0, $sErrorText = ""
 
 	SetLog("Locating Pet House", $COLOR_INFO)
 
 	WinGetAndroidHandle()
 	checkMainScreen()
-	If $bCollect Then Collect(False)
 
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
