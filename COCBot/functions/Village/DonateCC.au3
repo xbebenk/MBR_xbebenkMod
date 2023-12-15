@@ -181,7 +181,7 @@ Func getArmyRequest($aiDonateCoords, $bNeedCapture = True)
 	Return StringTrimLeft($sClanText, 2)
 EndFunc   ;==>getArmyRequest
 
-Func DonateCC($bCheckForNewMsg = False)
+Func DonateCC($bTest = False, $bCheckForNewMsg = False)
 
 	Local $bDonateTroop = ($g_aiPrepDon[0] = 1)
 	Local $bDonateAllTroop = ($g_aiPrepDon[1] = 1)
@@ -193,7 +193,8 @@ Func DonateCC($bCheckForNewMsg = False)
 	Local $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
 
 	Local $bDonate = ($g_iActiveDonate = 1)
-
+	If $bTest Then $bDonate = True
+	
 	Local $bOpen = True, $bClose = False
 
 	Local $ReturnT = ($g_CurrentCampUtilization >= ($g_iTotalCampSpace * $g_iTrainArmyFullTroopPct / 100) * .95) ? (True) : (False)
@@ -420,8 +421,9 @@ Func DonateCC($bCheckForNewMsg = False)
 				SetLog("Siege donation is not enabled, skip siege donation", $COLOR_ACTION)
 				$g_bSkipDonSiege = True
 			ElseIf $g_aiCurrentSiegeMachines[$eSiegeWallWrecker] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] = 0 And $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBarracks] = 0 And $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBattleDrill] = 0 Then
-				SetLog("No siege machines available, skip siege donation", $COLOR_ORANGE)
 				$g_bSkipDonSiege = True
+				If $bTest Then $g_bSkipDonSiege = False
+				If $g_bSkipDonSiege Then SetLog("No siege machines available, skip siege donation", $COLOR_ACTION)
 			ElseIf $g_iTotalDonateSiegeMachineCapacity = -1 Then
 				SetLog("This CC cannot accept Siege, skip Siege donation", $COLOR_ACTION)
 				$g_bSkipDonSiege = True

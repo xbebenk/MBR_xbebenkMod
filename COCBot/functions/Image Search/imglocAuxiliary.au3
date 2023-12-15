@@ -290,7 +290,7 @@ Func GetButtonDiamond($sButtonName)
 		Case "BoostBarrack", "BarrackBoosted"
 			$btnDiamond = GetDiamondFromRect("630,280,850,360")
 		Case "ArmyTab", "TrainTroopsTab", "BrewSpellsTab", "BuildSiegeMachinesTab", "QuickTrainTab"
-			$btnDiamond = GetDiamondFromRect("33,87,780,127")
+			$btnDiamond = GetDiamondFromRect("76,118,740,153")
 		Case "MessagesButton"
 			$btnDiamond = GetDiamondFromRect("0,0,250,250")
 		Case "AttackLogTab", "ShareReplayButton"
@@ -727,75 +727,71 @@ Func SearchRedLinesMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay = 30
 EndFunc   ;==>SearchRedLinesMultipleTimes
 
 Func Slot($iX, $iY) ; Return Slots for Quantity Reading on Army Window
-	If $iY < 490 Then
+	If $iY < 420 Then
 		Switch $iX ; Troops & Spells Slots
-			Case 0 To 100 ; Slot 1
-				If $iY < 315 Then Return 40 ; Troops
-				If $iY > 315 Then Return 40 ; Spells
+			Case 80 To 135 ; Slot 1
+				If $iY < 290 Then Return 85 ; Troops
+				If $iY > 290 Then Return 85 ; Spells
 
-			Case 100 To 175 ; Slot 2
-				If $iY < 315 Then Return 116 ; Troops
-				If $iY > 315 Then Return 120 ; Spell
+			Case 140 To 200 ; Slot 2
+				If $iY < 290 Then Return 145 ; Troops
+				If $iY > 290 Then Return 145 ; Spell
 
-			Case 171 To 247 ; Slot 3
-				If $iY < 315 Then Return 186 ; Troops
-				If $iY > 315 Then Return 195 ; Spell
+			Case 205 To 265 ; Slot 3
+				If $iY < 290 Then Return 210 ; Troops
+				If $iY > 290 Then Return 210 ; Spell
 
-			Case 244 To 319 ; Slot 4
-				If $iY < 315 Then Return 255 ; Troops
-				If $iY > 315 Then Return 272 ; Spell
+			Case 270 To 328 ; Slot 4
+				If $iY < 290 Then Return 275 ; Troops
+				If $iY > 290 Then Return 275 ; Spell
 
-			Case 315 To 387 ; Slot 5
-				If $iY < 315 Then Return 330 ; Troops
-				If $iY > 315 Then Return 341 ; Spell
+			Case 332 To 390 ; Slot 5
+				If $iY < 290 Then Return 335 ; Troops
+				If $iY > 290 Then Return 335 ; Spell
 
-			Case 388 To 460 ; Slot 6
-				If $iY < 315 Then Return 403 ; Troops
-				If $iY > 315 Then Return 415 ; Spell
+			Case 395 To 452 ; Slot 6
+				If $iY < 290 Then Return 400 ; Troops
+				If $iY > 290 Then Return 400 ; Spell
 
-			Case 461 To 533 ; Slot 7
-				If $iY < 315 Then Return 477 ; Troops
-				If $iY > 315 Then Return 485 ; Spell
+			Case 456 To 515 ; Slot 7
+				If $iY < 290 Then Return 460 ; Troops
+				If $iY > 315 Then Return 460 ; Spell
 ;~ 			Case 534 To 600 ; Slot 7.5 (8)
 ;~ 				Return 551 ; Troops
 
-			Case 602 To 670 ; Slot 8
-				Return 620 ; Siege Machines slot 1
+			Case 580 To 640 ; Slot 8
+				Return 610 ; Siege Machines slot 1
 
-			Case 672 To 741 ; Slot 9
-				Return 693 ; Siege Machines slot 2
+			Case 643 To 703 ; Slot 9
+				Return 673 ; Siege Machines slot 2
 
-			Case 743 To 810 ; Slot 10
-				Return 769 ; Siege Machines slot 2
+			Case 705 To 765 ; Slot 10
+				Return 735 ; Siege Machines slot 2
 		EndSwitch
 	Else ;CC Troops & Spells
 		Switch $iX
-			Case 0 To 94 ; CC Troops Slot 1
-				Return 35
+			Case 80 To 135 ; CC Troops Slot 1
+				Return 85
 
-			Case 95 To 170 ; CC Troops Slot 2
-				Return 111
+			Case 140 To 200 ; CC Troops Slot 2
+				Return 145
 
-			Case 171 To 243 ; CC Troops Slot 3
-				Return 184
+			Case 205 To 265 ; CC Troops Slot 3
+				Return 210
 
-			Case 244 To 307 ; CC Troops Slot 4
-				Return 255
+			Case 270 To 328 ; CC Troops Slot 4
+				Return 275
 
-			Case 308 To 392 ; CC Troops Slot 5
-				Return 330
+			Case 332 To 390 ; CC Troops Slot 5
+				Return 335
 
-			Case 393 To 435 ; CC Troops Slot 6
-				Return 403
-
-			Case 450 To 510 ; CC Spell Slot 1
-				Return 475
-			Case 511 To 535 ; CC Spell Middle ( Happens with Clan Castles with the max. Capacity of 1!)
-				Return 510
-			Case 536 To 605 ; CC Spell Slot 2
-				Return 555
-			Case 625 To 700 ; CC Siege Machines
-				Return 650
+			Case 449 To 510 ; CC Spell Slot 1
+				Return 455
+			Case 512 To 572 ; CC Spell Middle ( Happens with Clan Castles with the max. Capacity of 1!)
+				Return 515
+			
+			Case 599 To 659 ; CC Siege Machines
+				Return 605
 		EndSwitch
 	EndIf
 EndFunc   ;==>Slot

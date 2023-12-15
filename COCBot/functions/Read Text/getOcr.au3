@@ -120,16 +120,32 @@ Func getTroopsSpellsLevel($x_start, $y_start) ;  -> Gets spell level on Attack S
 EndFunc   ;==>getTroopsSpellsLevel
 
 Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity on Army Tab (Troops:xx/xx)
-	Return getOcrAndCapture("coc-armytroops", $x_start, $y_start, 82, 17, True, False, $bNeedCapture)
+	Return getOcrAndCapture("coc-armycap", $x_start, $y_start, 80, 16, True, False, $bNeedCapture)
 EndFunc   ;==>getArmyCampCap
 
 Func getArmySiegeCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 46, 17, True, False, $bNeedCapture)
-EndFunc   ;==>getArmyCampCap
+	Return getOcrAndCapture("coc-armytroops", $x_start, $y_start, 46, 17, True, False, $bNeedCapture)
+EndFunc   ;==>getArmySiegeCap
 
 Func getCastleDonateCap($x_start, $y_start) ;  -> Gets clan castle capacity,  --> donatecc.au3
 	Return getOcrAndCapture("coc-army", $x_start, $y_start, 30, 14, True)
 EndFunc   ;==>getCastleDonateCap
+
+Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  -> Gets quantity of troops in army Window (slot)
+	Return getOcrAndCapture("coc-newarmy", $x_start, $y_start, 55, 18, True, False, $bNeedCapture)
+EndFunc   ;==>getBarracksNewTroopQuantity
+
+Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of troops in army Window
+	Return getOcrAndCapture("coc-troopcap", $x_start, $y_start, 70, 16, True)
+EndFunc   ;==>getArmyCapacityOnTrainTroops
+
+Func getArmyCapacityOnTrainSpell($x_start, $y_start) ;  -> Gets quantity of troops in army Window
+	Return getOcrAndCapture("coc-spellcap", $x_start, $y_start, 50, 14, True)
+EndFunc   ;==>getArmyCapacityOnTrainSpell
+
+Func getQueueTroopsQuantity($x_start, $y_start) ;  -> Gets quantity of troops in Queue in Train Tab
+	Return StringReplace(getOcrAndCapture("coc-qqtroop", $x_start, $y_start, 71, 22, True), "b", "")
+EndFunc   ;==>getQueueTroopsQuantity
 
 Func getAttackDisable($x_start, $y_start) ;  -> 346, 182 - Gets red text disabled for early warning of Personal Break
 	Return getOcrAndCapture("coc-dis", $x_start, $y_start, 118, 24, True)
@@ -261,7 +277,7 @@ EndFunc   ;==>getOcrReloadMessage
 
 Func getOcrMaintenanceTime($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
 	;  -> Get the Text with time till maintenance is over from reload msg(171, 375)
-	Local $result = getOcrAndCapture("coc-maintenance", $x_start, $y_start, 300, 30, True)
+	Local $result = getOcrAndCapture("coc-maintenance", $x_start, $y_start, 70, 20, True)
 	Local $String = ""
 	If $sLogText = Default Then
 		$String = "getOcrMaintenanceTime: " & $result
@@ -303,18 +319,6 @@ EndFunc   ;==>getRemainTHero
 Func getRequestRemainTime($x_start, $y_start, $bNeedCapture = True) ; Get Remain Time To request Troops
 	Return getOcrAndCapture("coc-CCremainTime", $x_start, $y_start, 30, 14, False, False, $bNeedCapture)
 EndFunc   ;==>getRequestRemainTime
-
-Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  -> Gets quantity of troops in army Window (slot)
-	Return getOcrAndCapture("coc-newarmy", $x_start, $y_start, 55, 18, True, False, $bNeedCapture)
-EndFunc   ;==>getBarracksNewTroopQuantity
-
-Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of troops in army Window
-	Return getOcrAndCapture("coc-NewCapacity", $x_start, $y_start, 70, 16, True)
-EndFunc   ;==>getArmyCapacityOnTrainTroops
-
-Func getQueueTroopsQuantity($x_start, $y_start) ;  -> Gets quantity of troops in Queue in Train Tab
-	Return StringReplace(getOcrAndCapture("coc-qqtroop", $x_start, $y_start, 71, 22, True), "b", "")
-EndFunc   ;==>getQueueTroopsQuantity
 
 Func getChatStringChinese($x_start, $y_start) ; -> Get string chat request - Chinese - "DonateCC.au3"
 	Local $bUseOcrImgLoc = True

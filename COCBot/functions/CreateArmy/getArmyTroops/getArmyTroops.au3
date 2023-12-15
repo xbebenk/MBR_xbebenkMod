@@ -33,14 +33,14 @@ Func getArmyTroops($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bCheckW
 		If _Sleep($DELAYCHECKARMYCAMP5) Then Return
 	EndIf
 
-	If _CheckPixel($aRecievedTroops, $bNeedCapture) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
-		If $bSetLog Then SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
-		While _CheckPixel($aRecievedTroops, True)
-			If _Sleep(500) Then Return
-		WEnd
-	EndIf
+	;If _CheckPixel($aRecievedTroops, $bNeedCapture) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
+	;	If $bSetLog Then SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
+	;	While _CheckPixel($aRecievedTroops, True)
+	;		If _Sleep(500) Then Return
+	;	WEnd
+	;EndIf
 
-	Local $sTroopDiamond = GetDiamondFromRect("21,180,541,253") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
+	Local $sTroopDiamond = GetDiamondFromRect("80, 211, 515, 270") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
 	If $g_bDebugFuncTime Then StopWatchStart("findMultiple, \imgxml\ArmyOverview\Troops")
 	Local $aCurrentTroops = findMultiple(@ScriptDir & "\imgxml\ArmyOverview\Troops", $sTroopDiamond, $sTroopDiamond, 0, 1000, 0, "objectname,objectpoints", $bNeedCapture) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
 	If $g_bDebugFuncTime Then StopWatchStopLog()
@@ -60,12 +60,7 @@ Func getArmyTroops($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bCheckW
 			$iTroopIndex = TroopIndexLookup($aTempTroopArray[0], "getArmyTroops()") ; Get the Index of the Troop from the ShortName
 			$aTroopCoords = StringSplit($aTempTroopArray[1], ",", $STR_NOCOUNT) ; Split the Coordinates where the Troop got found into X and Y
 			If $iTroopIndex = -1 Then ContinueLoop
-			;Local $yHeader = 167
-			;If Not _ColorCheck(_GetPixelColor($aTroopCoords[0], $yHeader, True), Hex(0x86E0F9, 6), 20) Then 
-			;	SetDebugLog("Skip read troop " & $aTempTroopArray[0] & ", header is not blue, color:" & _GetPixelColor($aTroopCoords[0], $yHeader, True), $COLOR_DEBUG1)
-			;	ContinueLoop
-			;EndIf
-			$g_aiCurrentTroops[$iTroopIndex] = Number(getBarracksNewTroopQuantity(Slot($aTroopCoords[0], $aTroopCoords[1]), 175, $bNeedCapture)) ; Get The Quantity of the Troop, Slot() Does return the exact spot to read the Number from
+			$g_aiCurrentTroops[$iTroopIndex] = Number(getBarracksNewTroopQuantity(Slot($aTroopCoords[0], $aTroopCoords[1]), 195, $bNeedCapture)) ; Get The Quantity of the Troop, Slot() Does return the exact spot to read the Number from
 
 			$iDropTrophyIndex = _ArraySearch($g_avDTtroopsToBeUsed, $aTempTroopArray[0]) ; Search the Troops ShortName in the Drop Trophy Global to check if it is a Drop Trophy Troop
 			If $iDropTrophyIndex <> -1 Then $g_avDTtroopsToBeUsed[$iDropTrophyIndex][1] += $g_aiCurrentTroops[$iTroopIndex] ; If there was a Match in the Array then add the Troop Quantity to it

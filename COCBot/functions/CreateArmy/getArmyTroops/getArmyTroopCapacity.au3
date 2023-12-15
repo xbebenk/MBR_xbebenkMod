@@ -111,6 +111,7 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 			$g_iTotalCampSpace = Number($g_iTotalCampForcedValue)
 		EndIf
 	EndIf
+	
 	If _Sleep($DELAYCHECKARMYCAMP4) Then Return
 
 	If $g_bTotalCampForced = True Then $g_iTotalCampSpace = Number($g_iTotalCampForcedValue)

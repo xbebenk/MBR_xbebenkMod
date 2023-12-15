@@ -42,7 +42,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
 	If $bClickPAtEnd Then CheckCCArmy()
 
 	If Not $g_bRunState Then Return
-	Local $aRequestButton = QuickMIS("CNX", $g_sImgRequestCCButton, 710, 548, 840, 588)
+	Local $aRequestButton = QuickMIS("CNX", $g_sImgRequestCCButton, 675, 525, 750, 555)
 	If UBound($aRequestButton) < 1 Then
 		SetDebugLog("Error in RequestCC(): $aRequestButton is no Array")
 		If $g_bDebugImageSave Then SaveDebugImage("RequestButtonStateError")
@@ -135,14 +135,14 @@ Func _makerequest($x, $y, $bTest)
 EndFunc   ;==>_makerequest
 
 Func IsFullClanCastleType($CCType = 0) ; Troops = 0, Spells = 1, Siege Machine = 2
-	Local $aCheckCCNotFull[3] = [24, 455, 631], $sLog[3] = ["Troop", "Spell", "Siege Machine"]
+	Local $aCheckCCNotFull[3] = [89, 460, 612], $sLog[3] = ["Troop", "Spell", "Siege Machine"]
 	Local $aiRequestCountCC[3] = [Number($g_iRequestCountCCTroop), Number($g_iRequestCountCCSpell), 0]
 	Local $bIsCCRequestTypeNotUsed = Not ($g_abRequestType[0] Or $g_abRequestType[1] Or $g_abRequestType[2])
 	If $CCType <> 0 And $bIsCCRequestTypeNotUsed Then ; Continue reading CC status if all 3 items are unchecked, but only if not troop
 		If $g_bDebugSetlog Then SetLog($sLog[$CCType] & " not cared about, only checking troops.")
 		Return True
 	Else
-		If _ColorCheck(_GetPixelColor($aCheckCCNotFull[$CCType], 445, True), Hex(0xDC363A, 6), 30) Then ; red symbol
+		If _ColorCheck(_GetPixelColor($aCheckCCNotFull[$CCType], 440, True), Hex(0xE94D51, 6), 30) Then ; red symbol
 			If Not $g_abRequestType[$CCType] And Not $bIsCCRequestTypeNotUsed And $CCType <> 0 Then
 				; Don't care about the CC limit configured in setting
 				SetDebugLog("Found CC " & $sLog[$CCType] & " not full, but check is disabled")

@@ -20,12 +20,15 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 		EndIf
 	EndIf
 	
-	For $i = 1 To 3
-		ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
-		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
-		If _Sleep(1000) Then Return
-		If IsTrainPage(True, 3) Then Return True
-		If $i > 1 Then SetLog("[" & $i & "] Repeated Try to Open ArmyWindow", $COLOR_ERROR)
+	ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
+	If _Sleep(1000) Then Return
+	If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
+	
+	For $i = 1 To 5
+		If Not $g_bRunState Then Return
+		If IsTrainPage(True) Then Return True
+		If $i = 5 Then SetLog("[" & $i & "] Check Opening ArmyWindow", $COLOR_ERROR)
+		If _Sleep(500) Then Return
 	Next
 	Return False
 EndFunc   ;==>OpenArmyOverview

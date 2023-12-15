@@ -179,7 +179,7 @@ EndFunc   ;==>GetRNDName
 Func GetVariable(Const $asImageToUse, Const $iIndex)
 	Local $aTrainPos[5] = [-1, -1, -1, -1, $eBarb]
 	; Capture the screen for comparison
-	_CaptureRegion2(30, 350, 828, 515)
+	_CaptureRegion2(72, 350, 780, 520)
 
 	Local $iError = ""
 	For $i = 1 To $asImageToUse[0]
@@ -201,7 +201,7 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 				If UBound($aResult) > 1 Then
 					Local $aCoordinates = StringSplit($aResult[1], ",", $STR_NOCOUNT)
 					If UBound($aCoordinates) > 1 Then
-						Local $iButtonX = 25 + Int($aCoordinates[0])
+						Local $iButtonX = 72 + Int($aCoordinates[0])
 						Local $iButtonY = 350 + Int($aCoordinates[1])
 						Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
 						Local $iTolerance = 40
@@ -261,13 +261,13 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 		EndSwitch
 
 		Switch $iTrainPos[1]
-			Case 0 To 445
-				$iSlotV = 420 ; First ROW
-			Case 446 To 550 ; Second ROW
-				$iSlotV = 520
+			Case 350 To 430
+				$iSlotV = 400 ; First ROW
+			Case 430 To 500 ; Second ROW
+				$iSlotV = 485
 		EndSwitch
 
-		Local $aSlot[4] = [$iSlotH, $iSlotV, 0xB9B9B9, 20] ; Gray [i] icon
+		Local $aSlot[4] = [$iTrainPos[0], $iSlotV, 0xB9B9B9, 20] ; Gray [i] icon
 		If $g_bDebugSetlogTrain Then SetLog("GetFullNameSlot(): Spell Icon found on: " & $iSlotH & "," & $iSlotV, $COLOR_DEBUG)
 		Return $aSlot
 	EndIf
@@ -297,13 +297,13 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 		EndSwitch
 
 		Switch $iTrainPos[1]
-			Case 0 To 445
-				$iSlotV = 420 ; First ROW
-			Case 446 To 550 ; Second ROW
-				$iSlotV = 520
+			Case 350 To 430
+				$iSlotV = 400 ; First ROW
+			Case 430 To 500 ; Second ROW
+				$iSlotV = 485
 		EndSwitch
 
-		Local $aSlot[4] = [$iSlotH, $iSlotV, 0xB9B9B9, 20] ; Gray [i] icon
+		Local $aSlot[4] = [$iTrainPos[0], $iSlotV, 0xB9B9B9, 20] ; Gray [i] icon
 		If $g_bDebugSetlogTrain Then SetLog("GetFullNameSlot(): Elixir Troop Icon found on: " & $iSlotH & "," & $iSlotV, $COLOR_DEBUG)
 
 		Return $aSlot
@@ -330,13 +330,13 @@ Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
 		EndSwitch
 
 		Switch $iTrainPos[1]
-			Case 0 To 445
-				$iSlotV = 358 ; First ROW
-			Case 446 To 550 ; Second ROW
-				$iSlotV = 459
+			Case 350 To 430
+				$iSlotV = 400 ; First ROW
+			Case 430 To 500 ; Second ROW
+				$iSlotV = 485
 		EndSwitch
 
-		Local $aSlot[4] = [$iSlotH, $iSlotV, 0xB9B9B9, 20] ; Gray [i] icon
+		Local $aSlot[4] = [$iTrainPos[0], $iSlotV, 0xB9B9B9, 20] ; Gray [i] icon
 		If $g_bDebugSetlogTrain Then SetLog("GetFullNameSlot(): Dark Elixir Troop Icon found on: " & $iSlotH & "," & $iSlotV, $COLOR_DEBUG)
 		Return $aSlot
 	EndIf

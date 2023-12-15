@@ -50,7 +50,7 @@ Func getArmyCCStatus($bOpenArmyWindow = False, $bCloseArmyWindow = False, $Check
 		Local $iRemainTrainCCTimer = 0, $sResultCCMinutes = "", $aResult
 
 		Local $sResultCC = getRequestRemainTime($aArmyCCRemainTime[0], $aArmyCCRemainTime[1])
-		If $g_bDebugSetlogTrain Then SetLog("getArmyCampCap returned: " & $sResultCC, $COLOR_DEBUG)
+		If $g_bDebugSetlogTrain Then SetLog("getRequestRemainTime returned: " & $sResultCC, $COLOR_DEBUG)
 		$g_iCCRemainTime = ConvertOCRTime("CC request", $sResultCC, $bSetLog)
 	EndIf
 

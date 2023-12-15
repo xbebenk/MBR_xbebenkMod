@@ -32,7 +32,7 @@ Func getArmyCCSpells($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChec
 		If _Sleep($DELAYCHECKARMYCAMP5) Then Return
 	EndIf
 
-	Local $sCCSpellDiamond = GetDiamondFromRect("450,468,600,560")
+	Local $sCCSpellDiamond = GetDiamondFromRect("450,470,570,530")
 	Local $aCurrentCCSpells = findMultiple(@ScriptDir & "\imgxml\ArmyOverview\Spells", $sCCSpellDiamond, $sCCSpellDiamond, 0, 1000, 0,"objectname,objectpoints", $bNeedCapture) ; Returns $aCurrentSpells[index] = $aArray[2] = ["SpellShortName", CordX,CordY]
 
 	Local $aTempSpellArray, $aSpells, $aSpellCoords
@@ -55,7 +55,7 @@ Func getArmyCCSpells($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChec
 				For $i = 1 To $aSpells[0]
 					$aSpellCoords = StringSplit($aSpells[$i], ",", $STR_NOCOUNT) ; Split the Coordinates where the Spell got found into X and Y
 					If $i >= 1 And Abs($aSpellCoords[0] - $X_Coord) <= 50 Then ContinueLoop ; decode to avoid detecting 1 slot twice (haste)
-					Local $TempQty = Number(getBarracksNewTroopQuantity(Slot($aSpellCoords[0], $aSpellCoords[1]), 469)) ; Get The Quantity of the Spell, Slot() Does return the exact spot to read the Number from
+					Local $TempQty = Number(getBarracksNewTroopQuantity(Slot($aSpellCoords[0], $aSpellCoords[1]), 455)) ; Get The Quantity of the Spell, Slot() Does return the exact spot to read the Number from
 					$g_aiCurrentCCSpells[$iSpellIndex] += $TempQty
 					$aSpellWSlot[UBound($aSpellWSlot) - 1][0] = Slot($aSpellCoords[0], $aSpellCoords[1])
 					$aSpellWSlot[UBound($aSpellWSlot) - 1][1] = $iSpellIndex
@@ -65,7 +65,7 @@ Func getArmyCCSpells($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChec
 				Next
 			Else
 				$aSpellCoords = StringSplit($aTempSpellArray[1], ",", $STR_NOCOUNT) ; Split the Coordinates where the Spell got found into X and Y
-				$g_aiCurrentCCSpells[$iSpellIndex] = Number(getBarracksNewTroopQuantity(Slot($aSpellCoords[0], $aSpellCoords[1]), 469)) ; Get The Quantity of the Spell, Slot() Does return the exact spot to read the Number from
+				$g_aiCurrentCCSpells[$iSpellIndex] = Number(getBarracksNewTroopQuantity(Slot($aSpellCoords[0], $aSpellCoords[1]), 455)) ; Get The Quantity of the Spell, Slot() Does return the exact spot to read the Number from
 				$aSpellWSlot[UBound($aSpellWSlot) - 1][0] = Slot($aSpellCoords[0], $aSpellCoords[1])
 				$aSpellWSlot[UBound($aSpellWSlot) - 1][1] = $iSpellIndex
 				$aSpellWSlot[UBound($aSpellWSlot) - 1][2] = $g_aiCurrentCCSpells[$iSpellIndex]

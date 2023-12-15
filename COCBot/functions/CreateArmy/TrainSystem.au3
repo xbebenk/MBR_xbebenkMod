@@ -52,8 +52,8 @@ EndFunc   ;==>TrainSystem
 Func TrainPreviousArmy($bCloseWindow = False)
 	If Not OpenQuickTrainTab(False, "TrainPreviousArmy()") Then Return
 	If _Sleep(750) Then Return
-	If _ColorCheck(_GetPixelColor(777, 218, True), Hex(0x8BD43A, 6), 10) Then
-		PureClick(777, 200)
+	If _ColorCheck(_GetPixelColor(730, 232, True), Hex(0x8BD43A, 6), 10) Then
+		PureClick(730, 232)
 	Else
 		SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
 	EndIf
@@ -272,7 +272,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 				Local $NeededSpace = $g_aiTroopSpace[$iTroopIndex] * $rWTT[$i][1]
 			EndIf
 
-			Local $aLeftSpace = GetOCRCurrent(60, 139)
+			Local $aLeftSpace = GetOCRCurrent(95, 163)
 			Local $LeftSpace = $bQueue ? ($aLeftSpace[1] * 2) - $aLeftSpace[0] : $aLeftSpace[2]
 			If $g_bIgnoreIncorrectTroopCombo And $g_bDoubleTrain And $bQueue Then
 				$LeftSpace = $aLeftSpace[0]
@@ -317,7 +317,7 @@ Func BrewUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 			Local $iSpellIndex = TroopIndexLookup($rWTT[$i][0], "BrewUsingWhatToTrain")
 			Local $NeededSpace = $g_aiSpellSpace[$iSpellIndex - $eLSpell] * $rWTT[$i][1]
 
-			Local $aLeftSpace = GetOCRCurrent(58, 139)
+			Local $aLeftSpace = GetCurrentSpell(95, 163)
 			Local $LeftSpace = $bQueue ? ($aLeftSpace[1] * 2) - $aLeftSpace[0] : $aLeftSpace[2]
 
 			If $NeededSpace > $LeftSpace Then $rWTT[$i][1] = Int($LeftSpace / $g_aiSpellSpace[$iSpellIndex - $eLSpell])
@@ -352,25 +352,25 @@ Func DragIfNeeded($Troop)
 	If $iIndex > $eHunt Then $bDrag = False ; Not Drag if Troops is Event Troops
 
 	If $bDrag Then ;Drag if Troops is on Right side from miner
-		If _ColorCheck(_GetPixelColor(825, 393, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+		If _ColorCheck(_GetPixelColor(777, 350, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Dark Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
 				ClickDrag(750, 448, 20, 448)
 				If _Sleep(2000) Then Return
-				If _ColorCheck(_GetPixelColor(825, 393, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+				If _ColorCheck(_GetPixelColor(777, 350, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
 				Return True
 			EndIf
 		Next
 	Else
-		If _ColorCheck(_GetPixelColor(35, 393, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+		If _ColorCheck(_GetPixelColor(75, 350, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Normal Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
 				ClickDrag(100, 448, 850, 448)
 				If _Sleep(2000) Then Return
-				If _ColorCheck(_GetPixelColor(35, 393, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+				If _ColorCheck(_GetPixelColor(75, 350, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
 				Return True
 			EndIf
@@ -909,12 +909,12 @@ Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = 
 	; Setup arrays, including default return values for $return
 	Local $aResult[1][4], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
 	
-	If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
-		SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
-		While _CheckPixel($aRecievedTroops, True)
-			If _Sleep(1000) Then Return
-		WEnd
-	EndIf	
+	;If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
+	;	SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
+	;	While _CheckPixel($aRecievedTroops, True)
+	;		If _Sleep(1000) Then Return
+	;	WEnd
+	;EndIf	
 	If Not $g_bRunState Then Return $aResult
 	
 	
@@ -1158,7 +1158,7 @@ Func MakingDonatedTroops($sType = "All")
 			If Not $g_bRunState Then Return
 			$Plural = 0
 			If $avDefaultTroopGroup[$i][4] > 0 Then
-				$RemainTrainSpace = GetOCRCurrent(60, 140)
+				$RemainTrainSpace = GetOCRCurrent(95, 163)
 				If $RemainTrainSpace[2] < 0 Then $RemainTrainSpace[2] = $RemainTrainSpace[1] * 2 - $RemainTrainSpace[0] ; remain train space to full double army
 				If $RemainTrainSpace[2] = 0 Then ExitLoop ; army camps full
 
@@ -1183,7 +1183,7 @@ Func MakingDonatedTroops($sType = "All")
 					If _Sleep(500) Then Return ; Needed Delay, OCR was not picking up Troop Changes
 				Else
 					For $z = 0 To $RemainTrainSpace[2] - 1
-						$RemainTrainSpace = GetOCRCurrent(60, 140)
+						$RemainTrainSpace = GetOCRCurrent(95, 163)
 						If $RemainTrainSpace[0] = $RemainTrainSpace[1] Then ; army camps full
 							;Camps Full All Donate Counters should be zero!!!!
 							For $j = 0 To UBound($avDefaultTroopGroup, 1) - 1
@@ -1218,7 +1218,7 @@ Func MakingDonatedTroops($sType = "All")
 		Next
 		;Top Off any remianing space with archers
 		If $sType = "All" Then
-			$RemainTrainSpace = GetOCRCurrent(60, 140)
+			$RemainTrainSpace = GetOCRCurrent(95, 163)
 			If $RemainTrainSpace[0] < $RemainTrainSpace[1] Then ; army camps full
 				Local $howMuch = $RemainTrainSpace[2]
 				TrainIt($eTroopArcher, $howMuch, $g_iTrainClickDelay)
@@ -1246,7 +1246,7 @@ Func MakingDonatedTroops($sType = "All")
 				$g_aiDonateSpells[$i] -= $howMuch
 
 				If _Sleep(1000) Then Return
-				$RemainTrainSpace = GetOCRCurrent(60, 140)
+				$RemainTrainSpace = GetOCRCurrent(95, 163)
 				SetLog(" - Current Capacity: " & $RemainTrainSpace[0] & "/" & ($RemainTrainSpace[1]))
 			EndIf
 		Next

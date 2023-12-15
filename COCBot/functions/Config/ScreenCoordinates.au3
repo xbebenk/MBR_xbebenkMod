@@ -41,10 +41,10 @@ Global $aEndFightSceneReportGold = $aEndFightSceneAvl ; Missing... TripleM ???
 Global $aReturnHomeButton[4] = [425, 567, 0x6CBB1F, 20] ; Return Home Button, End Battle Screen
 Global $aChatTab[4] = [389, 342, 0xC55115, 20] ; Chat Window Open, Main Screen
 Global $aChatTabClosed[4] = [12, 342, 0xC55115, 20] ; Chat Window Closed
-Global $aArmyCampSize[2] = [123, 145] ; Training Window, Overview screen, Current Size/Total Size
-Global $aSiegeMachineSize[2] = [748, 145] ; Training Window, Overview screen, Current Number/Total Number
-Global $aArmySpellSize[2] = [112, 288] ; Training Window Overviewscreen, current number/total capacity
-Global $g_aArmyCCSpellSize[2] = [473, 438] ; Training Window, Overview Screen, Current CC Spell number/total cc spell capacity
+Global $aArmyCampSize[2] = [155, 170] ; Training Window, Overview screen, Current Size/Total Size
+Global $aSiegeMachineSize[2] = [710, 168] ; Training Window, Overview screen, Current Number/Total Number
+Global $aArmySpellSize[2] = [145, 295] ; Training Window Overviewscreen, current number/total capacity
+Global $g_aArmyCCSpellSize[2] = [463, 429] ; Training Window, Overview Screen, Current CC Spell number/total cc spell capacity
 Global $aArmyCCRemainTime[2] = [782, 552] ; Training Window Overviewscreen, Minutes & Seconds remaining till can request again
 Global $aIsCampFull[4] = [42, 154, 0xFFFFFF, 10] ; Training Window, Overview screen White pixel in check mark with camp IS full (can not test for Green, as it has trees under it!)
 Global $aBuildersDigits[2] = [426, 22] ; Main Screen, Free/Total Builders
@@ -66,8 +66,7 @@ Global $aIsGemWindow1[4] = [610, 236, 0xEC1115, 20] ; Main Screen, pixel left of
 Global $aIsGemWindow2[4] = [624, 214, 0xFF8D95, 20] ; Main Screen, pixel above Red X to close gem window
 Global $aIsGemWindow3[4] = [616, 249, 0xCE181E, 20] ; Main Screen, pixel below left Red X to close gem window
 Global $aIsGemWindow4[4] = [632, 249, 0xCE181E, 20] ; Main Screen, pixel below right Red X to close gem window
-Global $aIsTrainPgChk1[4] = [825, 107, 0xEC1115, 20] ; Main Screen, Train page open - bottom of x button
-Global $aIsTrainPgChk2[4] = [762, 328, 0xF18439, 10] ; Main Screen, Train page open - Dark Orange in left arrow
+Global $aIsTrainPgChk1[4] = [768, 143, 0xD1151B, 20] ; Main Screen, Train page open - below red x button
 Global $aRtnHomeCloud1[4] = [56, 592, 0x0A223F, 15] ; Cloud Screen, during search, blue pixel in left eye
 Global $aRtnHomeCloud2[4] = [72, 592, 0x103F7E, 15] ; Cloud Screen, during search, blue pixel in right eye
 Global $aDetectLang[2] = [20, 636] ; Detect Language, bottom left Attack button must read "Attack"
@@ -82,7 +81,7 @@ Global $aVillageHasDarkElixir[4] = [845, 138, 0x270D33, 10] ; Main Page, Base ha
 Global $aCheckTopProfile[4] = [200, 166, 0x868CAC, 5]
 Global $aCheckTopProfile2[4] = [220, 355, 0x4E4D79, 5]
 
-Global $aIsTabOpen[4] = [0, 125, 0xEAEAE3, 25];Check if specific Tab is opened, X Coordinate is a dummy
+Global $aIsTabOpen[4] = [0, 152, 0xEAEAE3, 25];Check if specific Tab is opened, X Coordinate is a dummy
 
 Global $aRecievedTroops[4] = [599, 175, 0xFFFFFF, 20] ; Y of You have recieved blabla from xx!
 
