@@ -1082,7 +1082,7 @@ Func FindNewBuilding()
 	Else
 		Return $aBuilding
 	EndIf
-	$aTmpCoord = QuickMIS("CNX", $g_sImgAUpgradeObstNew, 200, 73, 300, 390)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgAUpgradeObstNew, 300, 73, 400, 390)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1", $g_sImgResourceIcon, $aTmpCoord[$i][1] + 100 , $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 250, $aTmpCoord[$i][2] + 12) Then
