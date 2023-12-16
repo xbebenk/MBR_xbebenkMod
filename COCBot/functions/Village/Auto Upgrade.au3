@@ -1077,7 +1077,7 @@ EndFunc ;==>AutoUpgradeSearchNewBuilding
 
 Func FindNewBuilding()
 	Local $aTmpCoord, $aBuilding[0][7], $UpgradeCost, $aUpgradeName, $UpgradeType = ""
-	If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 200, 73, 300, 390) Then
+	If QuickMIS("BC1", $g_sImgAUpgradeObstNew, 300, 73, 400, 390) Then
 		_Sleep(1000); search for 1 'new' image first, if found, add more delay
 	Else
 		Return $aBuilding
