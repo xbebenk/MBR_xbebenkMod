@@ -54,6 +54,10 @@ Func TrainPreviousArmy($bCloseWindow = False)
 	If _Sleep(750) Then Return
 	If _ColorCheck(_GetPixelColor(730, 232, True), Hex(0x8BD43A, 6), 10) Then
 		PureClick(730, 232)
+		If _Sleep(1000) Then Return
+		If IsOKCancelPage() Then
+			Click(530, 420, 1, "Click Okay, Confirm Training")
+		EndIf
 	Else
 		SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
 	EndIf
