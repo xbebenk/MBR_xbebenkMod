@@ -385,30 +385,34 @@ Func GetCurrentSpell($x_start, $y_start)
 EndFunc   ;==>GetCurrentSpell
 
 
-Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
+Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug) ;GetCurrentArmy(95, 163)
 	If $ArmyCamp[0] = $ArmyCamp[1] * 2 And ((ProfileSwitchAccountEnabled() And $g_abAccountNo[$g_iCurAccount] And $g_abDonateOnly[$g_iCurAccount]) Or $g_iCommandStop = 0) Then Return True ; bypass Donate account when full queue
 
 	Local $iTotalQueue = 0
 	If $bDebug Then SetLog("Checking troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG)
 
-	Local $XQueueStart = 839
+	Local $XQueueStart = 777
 	For $i = 0 To 10
-		If _ColorCheck(_GetPixelColor(825 - $i * 70, 165, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
-			$XQueueStart -= 70.5 * $i
+		If _ColorCheck(_GetPixelColor(777 - $i * 60, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
+			$XQueueStart -= 60 * $i
 			ExitLoop
 		EndIf
 	Next
-
+	
+	If $bDebug Then SetLog("XQueueStart = " & $XQueueStart, $COLOR_DEBUG)
+	
 	Local $aiQueueTroops = CheckQueueTroops(True, $bDebug, $XQueueStart)
 	If Not IsArray($aiQueueTroops) Then Return False
 	For $i = 0 To UBound($aiQueueTroops) - 1
 		If $aiQueueTroops[$i] > 0 Then $iTotalQueue += $aiQueueTroops[$i] * $g_aiTroopSpace[$i]
 	Next
+	
 	; Check block troop
 	If $ArmyCamp[0] < $ArmyCamp[1] + $iTotalQueue Then
 		SetLog("A big guy blocks our camp")
 		Return False
 	EndIf
+	
 	; check wrong queue
 	For $i = 0 To UBound($aiQueueTroops) - 1
 		If $aiQueueTroops[$i] - $g_aiArmyCompTroops[$i] > 0 Then
@@ -416,6 +420,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug)
 			Return False
 		EndIf
 	Next
+	
 	If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then
 		; Train remain
 		SetLog("Checking troop queue:")
@@ -448,10 +453,10 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
 	Local $iTotalQueue = 0
 	If $bDebug Then SetLog("Checking spell queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG)
 
-	Local $XQueueStart = 839
+	Local $XQueueStart = 777
 	For $i = 0 To 10
-		If _ColorCheck(_GetPixelColor(825 - $i * 70, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
-			$XQueueStart -= 70.5 * $i
+		If _ColorCheck(_GetPixelColor(777 - $i * 60, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
+			$XQueueStart -= 60 * $i
 			ExitLoop
 		EndIf
 	Next

@@ -827,14 +827,14 @@ Func WhatToTrain($ReturnExtraTroopsOnly = False, $bFullArmy = $g_bIsFullArmywith
 	Return $ToReturn
 EndFunc   ;==>WhatToTrain
 
-Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 825, $bQtyWSlot = False)
+Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlot = False)
 	Local $aResult[1] = [""]
 	If $bSetLog Then SetLog("Checking Troops Queue", $COLOR_INFO)
 
 	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\TroopsQueued"
 
-	Local $aSearchResult = SearchArmy($Dir, 31, 168, $x, 232, $bGetQuantity ? "Queue" : "")
-	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\TroopsQueued", 31, 168, 825, 232, "Queue")
+	Local $aSearchResult = SearchArmy($Dir, 73, 205, $x, 243, $bGetQuantity ? "Queue" : "")
+	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\TroopsQueued", 73, 205, 777, 243, "Queue")
 	ReDim $aResult[UBound($aSearchResult)]
 
 
@@ -871,13 +871,13 @@ Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 825, $bQtyWSlo
 	Return $aResult
 EndFunc   ;==>CheckQueueTroops
 
-Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 827, $bQtyWSlot = False)
+Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlot = False)
 	Local $avResult[$eSpellCount]
 	Local $sImageDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued"
 	
 	If $bSetLog Then SetLog("Checking Spells Queue", $COLOR_INFO)
-	Local $avSearchResult = SearchArmy($sImageDir, 34, 161, $x, 230, $bGetQuantity ? "Queue" : "")
-	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\SpellsQueued", 34, 161, 827, 230, "Queue")
+	Local $avSearchResult = SearchArmy($sImageDir, 73, 205, $x, 243, $bGetQuantity ? "Queue" : "")
+	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\SpellsQueued", 73, 205, 777, 243, "Queue")
 	If $avSearchResult[0][0] = "" Then
 		Setlog("No Spells detected!", $COLOR_ERROR)
 		Return
@@ -1024,8 +1024,8 @@ Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = 
 		_ArraySort($aResult, 1, 0, 0, 1) ; reverse the queued slots from right to left
 		Local $xSlot
 		For $i = 0 To UBound($aResult) - 1
-			$xSlot = Int(Number($aResult[$i][1]) / 69) * 69 - 6
-			$aResult[$i][3] = Number(getQueueTroopsQuantity($xSlot, 168))
+			$xSlot = Int(Number($aResult[$i][1]) / 61) * 61 - 8
+			$aResult[$i][3] = Number(getQueueTroopsQuantity($xSlot, 190))
 			SetDebugLog($aResult[$i][0] & " (" & $xSlot & ") x" & $aResult[$i][3])
 		Next
 	EndIf

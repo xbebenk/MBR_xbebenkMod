@@ -136,15 +136,26 @@ Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  ->
 EndFunc   ;==>getBarracksNewTroopQuantity
 
 Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of troops in army Window
-	Return getOcrAndCapture("coc-troopcap", $x_start, $y_start, 70, 16, True)
-EndFunc   ;==>getArmyCapacityOnTrainTroops
+	Return StringReplace(getOcrAndCapture("coc-troopcap", $x_start, $y_start, 70, 16, True), "-", "")
+EndFunc   ;==>getArmyCapacityOnTrainTroops(95, 163)
 
-Func getArmyCapacityOnTrainSpell($x_start, $y_start) ;  -> Gets quantity of troops in army Window
+Func TestgetArmyCapacityOnTrainTroops()
+	Local $sRet = ""
+	For $i = 1 To 600
+		$sRet = StringReplace(getOcrAndCapture("coc-troopcap", 95, 163, 70, 16, True), "-", "")
+		SetLog($sRet)
+		Click(122,394)
+		If Not $g_bRunState Then Return
+		If _Sleep(1000) Then Return
+	Next
+EndFunc
+
+Func getArmyCapacityOnTrainSpell($x_start, $y_start) ;  -> Gets quantity of spell in army Window
 	Return getOcrAndCapture("coc-spellcap", $x_start, $y_start, 50, 14, True)
 EndFunc   ;==>getArmyCapacityOnTrainSpell
 
 Func getQueueTroopsQuantity($x_start, $y_start) ;  -> Gets quantity of troops in Queue in Train Tab
-	Return StringReplace(getOcrAndCapture("coc-qqtroop", $x_start, $y_start, 71, 22, True), "b", "")
+	Return StringReplace(getOcrAndCapture("coc-qqtroop", $x_start, $y_start, 58, 15, True), "b", "")
 EndFunc   ;==>getQueueTroopsQuantity
 
 Func getAttackDisable($x_start, $y_start) ;  -> 346, 182 - Gets red text disabled for early warning of Personal Break
