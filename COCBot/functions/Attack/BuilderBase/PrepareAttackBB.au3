@@ -142,7 +142,7 @@ Func CheckArmyReady()
 	local $i = 0
 	local $bReady = True, $bNeedTrain = False, $bTraining = False
 	
-	If _ColorCheck(_GetPixelColor(127, 256, True), Hex(0xE16A6B, 6), 20) Then 
+	If _ColorCheck(_GetPixelColor(133, 250, True), Hex(0xEA5054, 6), 20) Then 
 		SetLog("Army is not Ready", $COLOR_DEBUG)
 		$bNeedTrain = True ;need train, so will train cannon cart
 		$bReady = False
