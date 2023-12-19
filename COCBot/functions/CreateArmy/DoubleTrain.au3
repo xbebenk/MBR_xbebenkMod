@@ -391,16 +391,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug) ;GetCurrentArmy(95, 163)
 	Local $iTotalQueue = 0
 	If $bDebug Then SetLog("Checking troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG)
 
-	Local $XQueueStart = 777
-	For $i = 0 To 10
-		If _ColorCheck(_GetPixelColor(777 - $i * 60, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
-			$XQueueStart -= 60 * $i
-			ExitLoop
-		EndIf
-	Next
-	
-	If $bDebug Then SetLog("XQueueStart = " & $XQueueStart, $COLOR_DEBUG)
-	
+	Local $XQueueStart = FindxQueueStart()
 	Local $aiQueueTroops = CheckQueueTroops(True, $bDebug, $XQueueStart)
 	If Not IsArray($aiQueueTroops) Then Return False
 	For $i = 0 To UBound($aiQueueTroops) - 1
@@ -453,14 +444,7 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
 	Local $iTotalQueue = 0
 	If $bDebug Then SetLog("Checking spell queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG)
 
-	Local $XQueueStart = 777
-	For $i = 0 To 10
-		If _ColorCheck(_GetPixelColor(777 - $i * 60, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
-			$XQueueStart -= 60 * $i
-			ExitLoop
-		EndIf
-	Next
-
+	Local $XQueueStart = FindxQueueStart()
 	Local $aiQueueSpells = CheckQueueSpells(True, $bDebug, $XQueueStart)
 	If Not IsArray($aiQueueSpells) Then Return False
 	For $i = 0 To UBound($aiQueueSpells) - 1
@@ -508,3 +492,15 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp, $bDebug, $iUnbalancedSpell = 0)
 	EndIf
 	Return True
 EndFunc   ;==>CheckQueueSpellAndTrainRemain
+
+Func FindxQueueStart()
+	Local $xQueueStart = 777
+	For $i = 0 To 10
+		If _ColorCheck(_GetPixelColor(777 - $i * 60, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
+			$XQueueStart -= 60 * $i
+			ExitLoop
+		EndIf
+	Next
+	If $g_bDebugSetlog Then SetLog("xQueueStart = " & $xQueueStart, $COLOR_DEBUG)
+	Return $xQueueStart
+EndFunc
