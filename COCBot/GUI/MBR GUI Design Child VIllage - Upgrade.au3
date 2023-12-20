@@ -755,10 +755,10 @@ Func CreateRushTHOption()
 	Local $TxtRushTHOptionBarracks = "2 Unlock Archer|3 Unlock Giant|4 Unlock Goblin|5 Unlock Wall Breaker|" & _
 									"6 Unlock Balloon|7 Unlock Wizard|8 Unlock Healer|9 Unlock Dragon|" & _
 									"10 Unlock Pekka|11 Unlock Baby Dragon|12 Unlock Miner|13 Unlock Electro Dragon|" & _
-									"14 Unlock Yeti|15 Unlock Dragon Rider|16 Unlock Electro Titan|" &_
+									"14 Unlock Yeti|15 Unlock Dragon Rider|16 Unlock Electro Titan|" & _
 									"17 Unlock Root Rider"
 	Local $TxtRushTHOptionDarkBarracks = "2 Unlock Hog Rider|3 Unlock Valkyrie|4 Unlock Golem|5 Unlock Witch|" & _
-									"6 Unlock Lava Hound|7 Unlock Bowler|8 Unlock Ice Golem|9 Unlock Headhunter|" &_
+									"6 Unlock Lava Hound|7 Unlock Bowler|8 Unlock Ice Golem|9 Unlock Headhunter|" & _
 									"10 Unlock Appr Warden"
 	Local $TxtRushTHOptionSpellF = "2 Unlock Healing Spell|3 Unlock Rage Spell|4 Unlock Jump & Freeze Spell|5 Unlock Clone Spell|" & _
 									"6 Unlock Invisibility Spell|7 Unlock Recall Spell"
