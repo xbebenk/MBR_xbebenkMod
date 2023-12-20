@@ -16,8 +16,6 @@
 Func CollectFreeMagicItems($bTest = False)
 	If Not $g_bChkCollectFreeMagicItems Then Return
 	$g_aRemoveFreeMagicItems[0] = False ;reset first
-	Local Static $iLastTimeChecked[16] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-	If $iLastTimeChecked[$g_iCurAccount] = @MDAY And Not $bTest Then Return
 	SetLog("Collecting Free Magic Items", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	ClickAway()
@@ -140,7 +138,7 @@ Func IsTraderWindowOpen()
 	
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
-		If QuickMis("BC1", $g_sImgTraderGems, 55, 173, 100, 250) Then
+		If QuickMis("BC1", $g_sImgTraderGems, 50, 173, 100, 300) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(800) Then Return
 			$bRet = True
