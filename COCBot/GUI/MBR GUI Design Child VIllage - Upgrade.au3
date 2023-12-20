@@ -751,13 +751,15 @@ EndFunc   ;==>CreateAutoUpgradeGUI
 
 Func CreateRushTHOption()
 
-	Local $TxtRushTHOptionTH = "Level 9|Level 10|Level 11|Level 12|Level 13|Level 14|Rush to Max Level"
+	Local $TxtRushTHOptionTH = "Level 9|Level 10|Level 11|Level 12|Level 13|Level 14|Level 15|Rush to Max Level"
 	Local $TxtRushTHOptionBarracks = "2 Unlock Archer|3 Unlock Giant|4 Unlock Goblin|5 Unlock Wall Breaker|" & _
 									"6 Unlock Balloon|7 Unlock Wizard|8 Unlock Healer|9 Unlock Dragon|" & _
 									"10 Unlock Pekka|11 Unlock Baby Dragon|12 Unlock Miner|13 Unlock Electro Dragon|" & _
-									"14 Unlock Yeti|15 Unlock Dragon Rider|16 Unlock Electro Titan"
+									"14 Unlock Yeti|15 Unlock Dragon Rider|16 Unlock Electro Titan|" &_
+									"17 Unlock Root Rider"
 	Local $TxtRushTHOptionDarkBarracks = "2 Unlock Hog Rider|3 Unlock Valkyrie|4 Unlock Golem|5 Unlock Witch|" & _
-									"6 Unlock Lava Hound|7 Unlock Bowler|8 Unlock Ice Golem|9 Unlock Headhunter"
+									"6 Unlock Lava Hound|7 Unlock Bowler|8 Unlock Ice Golem|9 Unlock Headhunter|" &_
+									"10 Unlock Appr Warden"
 	Local $TxtRushTHOptionSpellF = "2 Unlock Healing Spell|3 Unlock Rage Spell|4 Unlock Jump & Freeze Spell|5 Unlock Clone Spell|" & _
 									"6 Unlock Invisibility Spell|7 Unlock Recall Spell"
 	Local $TxtRushTHOptionDSpellF = "2 Unlock EarthQuake Spell|3 Unlock Haste Spell|4 Unlock Skeleton Spell|5 Unlock Bat Spell"
@@ -774,9 +776,9 @@ Func CreateRushTHOption()
 				Case 0
 					GUICtrlSetData(-1,  $TxtRushTHOptionTH, "Rush to Max Level")
 				Case 1
-					GUICtrlSetData(-1,  $TxtRushTHOptionBarracks, "16 Unlock Electro Titan")
+					GUICtrlSetData(-1,  $TxtRushTHOptionBarracks, "17 Unlock Root Rider")
 				Case 2
-					GUICtrlSetData(-1,  $TxtRushTHOptionDarkBarracks, "9 Unlock Headhunter")
+					GUICtrlSetData(-1,  $TxtRushTHOptionDarkBarracks, "10 Unlock Appr Warden")
 				Case 3
 					GUICtrlSetData(-1,  $TxtRushTHOptionSpellF, "7 Unlock Recall Spell")
 				Case 4
