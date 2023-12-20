@@ -46,7 +46,6 @@ Func CollectFreeMagicItems($bTest = False)
 				If _ColorCheck(_GetPixelColor($aResults[$i][1], 297, True), Hex(0xAD5B0D, 6), 20) Then ;Check The SoldOut Stamp
 					$Collected = True
 					SetLog("Free Item: " & $aResults[$i][4] & " Collected", $COLOR_INFO)
-					$iLastTimeChecked[$g_iCurAccount] = @MDAY
 					ExitLoop
 				Else
 					If _ColorCheck(_GetPixelColor($aResults[$i][1] - 10, $aResults[$i][2], True), Hex(0x8DC529, 6), 10) Then ;Check if we still have Green Color
