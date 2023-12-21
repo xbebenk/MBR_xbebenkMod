@@ -37,6 +37,7 @@ Global Const $g_sImgUpdateCoC = @ScriptDir & "\imgxml\other\UpdateCoC*"
 #Region Main Village
 Global $g_sImgCollectResources = @ScriptDir & "\imgxml\Resources\Collect"
 Global $g_sImgCollectLootCart = @ScriptDir & "\imgxml\Resources\LootCart"
+Global $g_sImgCollectCookie = @ScriptDir & "\imgxml\Resources\Collect\Cookie"
 Global $g_sImgDailyReward = @ScriptDir & "\imgxml\Resources\DailyChallenge"
 Global $g_sImgTreasuryFull = @ScriptDir & "\imgxml\Resources\Treasury"
 Global $g_sImgShield = @ScriptDir & "\imgxml\Resources\Shield\"

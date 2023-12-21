@@ -21,7 +21,7 @@ Func Collect($bCheckTreasury = True)
 
 	StartGainCost()
 	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
-
+	
 	If $g_bChkCollectCartFirst And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
 
 	SetLog("Collecting Resources", $COLOR_INFO)
@@ -66,6 +66,8 @@ Func Collect($bCheckTreasury = True)
 	If _Sleep($DELAYCOLLECT3) Then Return
 	If Not $g_bChkCollectCartFirst And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
 	If $g_bChkTreasuryCollect And $bCheckTreasury Then TreasuryCollect()
+	If _Sleep(1500) Then Return
+	CollectCookieRumble()
 	EndGainCost("Collect")
 EndFunc   ;==>Collect
 
@@ -86,3 +88,111 @@ Func CollectLootCart()
 		SetLog("No Loot Cart found on your Village", $COLOR_SUCCESS)
 	EndIf
 EndFunc   ;==>CollectLootCart
+
+Func CollectCookie()
+	If QuickMIS("BC1", $g_sImgCollectCookie & "\Cookie", 245, 45, 360, 100) Then
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		SetLog("Collecting Cookie", $COLOR_ACTION)
+		If _Sleep(1000) Then Return
+	EndIf
+EndFunc
+
+Func CollectCookieRumble()
+	CollectCookie()
+	
+	Local $bWinOpen = False, $bIconCookie = False
+	SetLog("Opening Gingerbread Bakery", $COLOR_ACTION)
+	If QuickMIS("BC1", $g_sImgCollectCookie, 225, 45, 360, 200) Then
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(1000) Then Return
+		For $i = 1 To 5
+			If $g_bDebugSetLog Then SetLog("Waiting Gingerbread Bakery Button #" & $i, $COLOR_ACTION)
+			If QuickMIS("BC1", $g_sImgCollectCookie, 340, 500, 425, 570) Then 
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				$bIconCookie = True
+				ExitLoop
+			EndIf
+			If _Sleep(250) Then Return
+		Next
+	Else	
+		SetLog("CookieFactory Icon Not Found", $COLOR_ERROR)
+	EndIf
+	If Not $bIconCookie Then Return
+	
+	For $i = 1 To 10
+		If $g_bDebugSetLog Then SetLog("Waiting Cookie Rumble Window #" & $i, $COLOR_ACTION)
+		If IsCookieRumbleWindowOpen() Then 
+			$bWinOpen = True
+			ExitLoop
+		EndIf
+		If QuickMIS("BC1", $g_sImgCollectCookie, 390, 552, 475, 600) Then Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(500) Then Return
+		Click(570, 90, 1, "Click CookieRumble Window Header")
+	Next
+	
+	If Not $bWinOpen Then Return
+	ClaimCookieReward()
+
+EndFunc
+
+Func ClaimCookieReward($bGoldPass = False)
+	Local $iClaim = 0
+	Local $x1 = 10, $y1 = 525, $x2 = 840, $y2 = 580
+	If $bGoldPass Then $y1 = 190
+	
+	For $i = 1 To 5
+		If QuickMIS("BC1", $g_sImgCollectCookie, 45, 360, 100, 415) Then 
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			ExitLoop
+			If _Sleep(500) Then Return
+		EndIf
+	Next
+	
+	If _Sleep(1000) Then Return
+	
+	For $i = 1 To 10
+		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, $x1, $y1, $x2, $y2)
+		If Not $g_bRunState Then Return
+		If IsArray($aClaim) And UBound($aClaim) > 0 Then
+			For $j = 0 To UBound($aClaim) - 1
+				If Not $g_bRunState Then Return
+				Click($aClaim[$j][1], $aClaim[$j][2])
+				If _Sleep(1000) Then Return
+				If IsOKCancelPage() Then 
+					If $g_bChkSellRewards Then
+						Setlog("Selling extra reward for gems", $COLOR_SUCCESS)
+						Click($aConfirmSurrender[0], $aConfirmSurrender[1]) ; Click the Okay
+						$iClaim += 1
+					Else
+						SetLog("Cancel. Not selling extra rewards.", $COLOR_SUCCESS)
+						Click($aConfirmSurrender[0] - 100, $aConfirmSurrender[1]) ; Click Cancel
+					Endif
+					If _Sleep(1000) Then Return
+				Else
+					$iClaim += 1
+					If _Sleep(1000) Then Return
+				EndIf
+			Next
+		EndIf
+		If WaitforPixel(795, 398, 796, 400, "FFFE68", 10, 1) Then ExitLoop ;thropy color
+		If WaitforPixel(799, 390, 801, 394, "CD571E", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000) ;cookie color
+	Next
+	
+	SetLog($iClaim > 0 ? "Claimed " & $iClaim & " reward(s)!" : "Nothing to claim!", $COLOR_SUCCESS)
+	If _Sleep(500) Then Return
+	If IsCookieRumbleWindowOpen() Then ClickAway()
+EndFunc
+
+Func IsCookieRumbleWindowOpen()
+	Local $result = False
+	$result = WaitforPixel(824, 85, 826, 86, "FFFFFF", 10, 2)
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 800, 64, 850, 112) Then $result = True
+	EndIf
+	
+	If $result Then
+		If $g_bDebugSetlog Then SetLog("Found CookieRumble Window", $COLOR_ACTION)
+	EndIf
+	Return $result
+EndFunc
