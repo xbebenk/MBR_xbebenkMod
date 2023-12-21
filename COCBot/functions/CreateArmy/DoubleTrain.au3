@@ -33,68 +33,93 @@ Func DoubleTrain()
 		Local $TroopCamp = GetCurrentArmy(95, 163)
 		If IsProblemAffect(True) Then Return
 		If Not $g_bRunState Then Return
+		
 		If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($TroopCamp))
 		SetLog("[" & $Step & "] Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2 & " remain space:" & $TroopCamp[2], $COLOR_DEBUG1)
 		
-		If $TroopCamp[1] = 0 Then 
-			SetLog("$TroopCamp[1] = 0")
-			ExitLoop
-		EndIf
-		
-		If $TroopCamp[0] = ($TroopCamp[1] * 2) Then
-			SetLog("Cur = Max")
-			$bNeedReCheckTroopTab = False
-			ExitLoop
-		EndIf
-		
-		If $TroopCamp[1] <> $g_iTotalCampSpace Then
-			SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG1)
-		EndIf
-		
-		If $TroopCamp[0] < ($TroopCamp[1] * 2) And $g_bDoubleTrain Then
-			If $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then
-				If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Troops')", $COLOR_DEBUG1)
-				$Step += 1
-				If $Step = 6 Then ExitLoop
-				ContinueLoop
-			EndIf
-		EndIf
-		
-		If $TroopCamp[0] < $TroopCamp[1] Then ; <280/280
-			If $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then
-				If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Troops')", $COLOR_DEBUG1)
-				$Step += 1
-				If $Step = 6 Then ExitLoop
-				ContinueLoop
-			EndIf
-			If Not $g_bIgnoreIncorrectTroopCombo Then
-				If Not IsQueueEmpty("Troops", False, False) Then DeleteQueued("Troops")
-				SetLog($Step & ". DeleteQueued('Troops'). $bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab, $COLOR_DEBUG1)
-			EndIf
-			$bNeedReCheckTroopTab = True
-			ExitLoop
-
-		ElseIf $TroopCamp[0] = $TroopCamp[1] Then ; 280/280
-			TrainFullTroop(True)
-			SetLog($Step & ". TrainFullTroop(True) done!", $COLOR_DEBUG)
-			ContinueLoop
-
-		ElseIf $TroopCamp[0] <= $TroopCamp[1] * 2 Then ; 281-540/540
-			If CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) Then
-				If $bDebug Then SetLog($Step & ". CheckQueueAndTrainRemain() done!", $COLOR_DEBUG1)
-			Else
-				If Not $g_bIgnoreIncorrectTroopCombo Then
-					RemoveExtraTroopsQueue()
-					If _Sleep(500) Then Return
-					SetLog($Step & ". RemoveExtraTroopsQueue()", $COLOR_DEBUG1)
-					$Step += 1
-					If $Step > 7 Then ExitLoop
-					ContinueLoop
+		Select
+			Case $TroopCamp[1] = 0
+				SetLog("$TroopCamp[1] = 0")
+				ExitLoop
+			Case $TroopCamp[0] = ($TroopCamp[1] * 2)
+				SetLog("Cur = Max")
+				ExitLoop
+			Case $TroopCamp[0] = 0 ; 0/600 (empty troop camp)
+				TrainFullTroop() ;train 1st Army
+			Case $TroopCamp[2] > 0 ; 30/600 (1st army partially trained)
+				Local $aWhatToTrain = WhatToTrain(False, False)
+				If DoWhatToTrainContainTroop($aWhatToTrain) Then
+					SetLog("New troop Fill way", $COLOR_DEBUG1)
+					TrainUsingWhatToTrain($aWhatToTrain)
+					FillIncorrectTroopCombo("1st Army")
+					TrainFullTroop(True) ;train 2nd Army
 				EndIf
-			EndIf
-			$bNeedReCheckTroopTab = True
-			ExitLoop
-		EndIf
+			Case $TroopCamp[0] = $TroopCamp[1] ;300/600 (1st army fully trained)
+				TrainFullTroop(True) ;train 2nd Army
+			Case $TroopCamp[0] > $TroopCamp[1] ;350/600 (2nd army partially trained
+				CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) ;train to queue
+				FillIncorrectTroopCombo("2nd Army") 
+		EndSelect
+		
+		;If $TroopCamp[1] = 0 Then 
+		;	SetLog("$TroopCamp[1] = 0")
+		;	ExitLoop
+		;EndIf
+		;
+		;If $TroopCamp[0] = ($TroopCamp[1] * 2) Then
+		;	SetLog("Cur = Max")
+		;	$bNeedReCheckTroopTab = False
+		;	ExitLoop
+		;EndIf
+		
+		;If $TroopCamp[1] <> $g_iTotalCampSpace Then
+		;	SetLog("Incorrect Troop combo: " & $g_iTotalCampSpace & " vs Total camp: " & $TroopCamp[1] & @CRLF & @TAB & "Double train may not work well", $COLOR_DEBUG1)
+		;EndIf
+		
+		;If $TroopCamp[0] < ($TroopCamp[1] * 2) And $g_bDoubleTrain Then
+		;	If $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then
+		;		If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Troops')", $COLOR_DEBUG1)
+		;		$Step += 1
+		;		If $Step = 6 Then ExitLoop
+		;		ContinueLoop
+		;	EndIf
+		;EndIf
+		
+		;If $TroopCamp[0] < $TroopCamp[1] Then ; <280/280
+		;	If $g_bDonationEnabled And $g_bChkDonate And MakingDonatedTroops("Troops") Then
+		;		If $bDebug Then SetLog($Step & ". MakingDonatedTroops('Troops')", $COLOR_DEBUG1)
+		;		$Step += 1
+		;		If $Step = 6 Then ExitLoop
+		;		ContinueLoop
+		;	EndIf
+		;	If Not $g_bIgnoreIncorrectTroopCombo Then
+		;		If Not IsQueueEmpty("Troops", False, False) Then DeleteQueued("Troops")
+		;		SetLog($Step & ". DeleteQueued('Troops'). $bNeedReCheckTroopTab: " & $bNeedReCheckTroopTab, $COLOR_DEBUG1)
+		;	EndIf
+		;	$bNeedReCheckTroopTab = True
+		;	ExitLoop
+		;
+		;ElseIf $TroopCamp[0] = $TroopCamp[1] Then ; 280/280
+		;	TrainFullTroop(True)
+		;	SetLog($Step & ". TrainFullTroop(True) done!", $COLOR_DEBUG)
+		;	ContinueLoop
+		;
+		;ElseIf $TroopCamp[0] <= $TroopCamp[1] * 2 Then ; 281-540/540
+		;	If CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) Then
+		;		If $bDebug Then SetLog($Step & ". CheckQueueAndTrainRemain() done!", $COLOR_DEBUG1)
+		;	Else
+		;		If Not $g_bIgnoreIncorrectTroopCombo Then
+		;			RemoveExtraTroopsQueue()
+		;			If _Sleep(500) Then Return
+		;			SetLog($Step & ". RemoveExtraTroopsQueue()", $COLOR_DEBUG1)
+		;			$Step += 1
+		;			If $Step > 7 Then ExitLoop
+		;			ContinueLoop
+		;		EndIf
+		;	EndIf
+		;	$bNeedReCheckTroopTab = True
+		;	ExitLoop
+		;EndIf
 		ExitLoop
 	WEnd
 
@@ -167,48 +192,46 @@ Func DoubleTrain()
 	
 	Local $CampOCR = ""
 	If $bNeedReCheckTroopTab Or $bNeedReCheckSpellTab Then
-		Local $aWhatToRemove = WhatToTrain(True)
-		Local $rRemoveExtraTroops = RemoveExtraTroops($aWhatToRemove)
-		SetLog("RemoveExtraTroops(): " & $rRemoveExtraTroops, $COLOR_DEBUG1)
-
-		Local $aWhatToTrain = WhatToTrain(False, False)
-		If DoWhatToTrainContainTroop($aWhatToTrain) Then
-			SetLog("New troop Fill way", $COLOR_DEBUG1)
-			TrainUsingWhatToTrain($aWhatToTrain)
-			$CampOCR = GetCurrentArmy(95, 163)
-			FillIncorrectTroopCombo(False, $CampOCR, "DoubleTrain New")
-			TrainFullTroop(True)
-			SetLog("TrainFullTroop(True) done.", $COLOR_DEBUG1)
-			;$CampOCR = GetCurrentArmy(95, 163)
-			;FillIncorrectTroopCombo(False, $CampOCR, "DoubleTrain New")
-		EndIf
-		If DoWhatToTrainContainSpell($aWhatToTrain) Then
-			SetLog("New spell Fill way", $COLOR_DEBUG1)
-			BrewUsingWhatToTrain($aWhatToTrain)
-			$CampOCR = GetCurrentSpell(95, 163)
-			FillIncorrectSpellCombo(False, $CampOCR)
-			;BrewFullSpell(True)
-			If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
-			SetLog("BrewFullSpell(True) done.", $COLOR_DEBUG1)
-		EndIf
+		;FillIncorrectTroopCombo("DoubleTrain New")
+		;Local $aWhatToRemove = WhatToTrain(True)
+		;Local $rRemoveExtraTroops = RemoveExtraTroops($aWhatToRemove)
+		;SetLog("RemoveExtraTroops(): " & $rRemoveExtraTroops, $COLOR_DEBUG1)
+		;
+		;Local $aWhatToTrain = WhatToTrain(False, False)
+		;If DoWhatToTrainContainTroop($aWhatToTrain) Then
+		;	SetLog("New troop Fill way", $COLOR_DEBUG1)
+		;	TrainUsingWhatToTrain($aWhatToTrain)
+		;	$CampOCR = GetCurrentArmy(95, 163)
+		;	FillIncorrectTroopCombo("DoubleTrain New")
+		;	TrainFullTroop(True)
+		;	SetLog("TrainFullTroop(True) done.", $COLOR_DEBUG1)
+		;EndIf
+		;If DoWhatToTrainContainSpell($aWhatToTrain) Then
+		;	SetLog("New spell Fill way", $COLOR_DEBUG1)
+		;	BrewUsingWhatToTrain($aWhatToTrain)
+		;	$CampOCR = GetCurrentSpell(95, 163)
+		;	FillIncorrectSpellCombo(False, $CampOCR)
+		;	If $iUnbalancedSpell > 0 Then TopUpUnbalancedSpell($iUnbalancedSpell)
+		;	SetLog("BrewFullSpell(True) done.", $COLOR_DEBUG1)
+		;EndIf
 	EndIf
 	
-	If $g_bIgnoreIncorrectTroopCombo And Number(GUICtrlRead($g_hLblCountTotal)) = 0 Then
-		SetLog("Old troop Fill way", $COLOR_DEBUG1)
-		If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
-		Local $TroopCamp = GetCurrentArmy(95, 163)
-		Local $bQueue = $TroopCamp[0] >= $TroopCamp[1]
-		FillIncorrectTroopCombo($bQueue, $TroopCamp, "DoubleTrain Old")
-	EndIf
-	
-	If $g_bIgnoreIncorrectSpellCombo Then
-		SetLog("Old spell Fill way", $COLOR_DEBUG1)
-		If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
-		Local $SpellCamp = GetCurrentSpell(95, 163)
-		If Not $g_bRunState Then Return
-		Local $bQueue = $SpellCamp[0] >= $SpellCamp[1]
-		FillIncorrectSpellCombo($bQueue, $SpellCamp)
-	EndIf
+	;If $g_bIgnoreIncorrectTroopCombo And Number(GUICtrlRead($g_hLblCountTotal)) = 0 Then
+	;	SetLog("Old troop Fill way", $COLOR_DEBUG1)
+	;	If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
+	;	Local $TroopCamp = GetCurrentArmy(95, 163)
+	;	Local $bQueue = $TroopCamp[0] >= $TroopCamp[1]
+	;	FillIncorrectTroopCombo("DoubleTrain Old")
+	;EndIf
+	;
+	;If $g_bIgnoreIncorrectSpellCombo Then
+	;	SetLog("Old spell Fill way", $COLOR_DEBUG1)
+	;	If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
+	;	Local $SpellCamp = GetCurrentSpell(95, 163)
+	;	If Not $g_bRunState Then Return
+	;	Local $bQueue = $SpellCamp[0] >= $SpellCamp[1]
+	;	FillIncorrectSpellCombo($bQueue, $SpellCamp)
+	;EndIf
 	If _Sleep(250) Then Return
 
 EndFunc   ;==>DoubleTrain
@@ -231,19 +254,31 @@ Func TrainFullTroop($bQueue = False)
 	TrainUsingWhatToTrain($ToReturn, $bQueue)
 	If _Sleep(500) Then Return
 	
-	If Not OpenTroopsTab(False, "TrainFullTroop()") Then Return
-	Local $CampOCR = GetCurrentArmy(95, 163)
-	If Not $g_bRunState Then Return
-	SetDebugLog("Checking troop tab: " & $CampOCR[0] & "/" & $CampOCR[1] * 2)
-	If $g_bIgnoreIncorrectTroopCombo And $g_bDoubleTrain Then
-		FillIncorrectTroopCombo($bQueue, $CampOCR, "TrainFullTroop")
+	If $g_bIgnoreIncorrectTroopCombo Then
+		FillIncorrectTroopCombo("TrainFullTroop")
 	EndIf
 EndFunc   ;==>TrainFullTroop
 
-Func FillIncorrectTroopCombo($bQueue, $CampOCR, $caller = "Unknown")
+Func FillIncorrectTroopCombo($caller = "Unknown")
 	If Not $g_bIgnoreIncorrectTroopCombo Then Return
-	SetLog("bQueue = " & $bQueue)
+	SetLog("Train to Fill Incorrect Troop Combo", $COLOR_ACTION)
+	
+	If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
+	Local $CampOCR = GetCurrentArmy(95, 163)
+	If Not $g_bRunState Then Return
 	SetLog("CampOCR:" & _ArrayToString($CampOCR) & " Called from : " & $caller)
+	
+	If $CampOCR[0] = 0 Then ;no troop trained on 1st army 
+		SetLog("no troop trained on 1st army", $COLOR_DEBUG1)
+		Return
+	EndIf
+	
+	If $CampOCR[2] = 0 Or $CampOCR[0] = ($CampOCR[1] * 2) Then ;no troop trained on 2nd Army
+		SetLog("no troop trained on 2nd Army", $COLOR_DEBUG1)
+		Return
+	EndIf
+	
+	Local $bQueue = $CampOCR[2] < 0 ? True : False ;campOCR[2] read is remain space to train, negative value on 2nd army
 	Local $TroopSpace = $bQueue ? (Number($CampOCR[1]) * 2) - Number($CampOCR[0]) : Number($CampOCR[2])
 	If $TroopSpace < 0 Then Return
 	SetLog("TroopSpace = " & $TroopSpace, $COLOR_DEBUG)
@@ -252,10 +287,9 @@ Func FillIncorrectTroopCombo($bQueue, $CampOCR, $caller = "Unknown")
 	Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
 	Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
 	Local $TroopQuantToFill = Floor($TroopSpace/$g_sCmbFICTroops[$FillTroopIndex][2])
-	SetLog("TroopQuantToFill = " & $TroopQuantToFill, $COLOR_DEBUG)
+	SetLog("TroopQuantToFill = x" & $TroopQuantToFill & " " & $sTroopName, $COLOR_DEBUG)
 	
 	If $TroopQuantToFill > 0 Then
-		SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
 		If Not DragIfNeeded($g_sCmbFICTroops[$FillTroopIndex][0]) Then Return False
 		SetLog("Training " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_SUCCESS)
 		TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
@@ -291,7 +325,7 @@ EndFunc   ;==>BrewFullSpell
 
 Func FillIncorrectSpellCombo($bQueue, $CampOCR)
 	If Not $g_bIgnoreIncorrectSpellCombo Then Return
-
+	SetLog("Train to Fill Incorrect Spell Combo", $COLOR_ACTION)
 	If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
 	Local $SpellSpace = $bQueue ? Number($CampOCR[1]) + Number($CampOCR[2]) : Number($CampOCR[2])
 	SetLog("SpellQuantity = " & $CampOCR[0] & "/" & $CampOCR[1], $COLOR_DEBUG1)
@@ -302,7 +336,6 @@ Func FillIncorrectSpellCombo($bQueue, $CampOCR)
 	Local $SpellQuantToFill = Floor($SpellSpace/$g_sCmbFICSpells[$FillSpellIndex][2])
 	
 	If $SpellQuantToFill > 0 Then
-		SetLog("Train to Fill Incorrect Combo", $COLOR_ACTION)
 		If Not DragIfNeeded($g_sCmbFICSpells[$FillSpellIndex][0]) Then Return False
 		SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
 		TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
@@ -385,9 +418,12 @@ Func GetCurrentSpell($x_start, $y_start)
 EndFunc   ;==>GetCurrentSpell
 
 
-Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug) ;GetCurrentArmy(95, 163)
+Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCurrentArmy(95, 163)
+	If $ArmyCamp = Default Then $ArmyCamp = GetCurrentArmy(95, 163)
+	If Not $g_bRunState Then Return
 	If $ArmyCamp[0] = $ArmyCamp[1] * 2 And ((ProfileSwitchAccountEnabled() And $g_abAccountNo[$g_iCurAccount] And $g_abDonateOnly[$g_iCurAccount]) Or $g_iCommandStop = 0) Then Return True ; bypass Donate account when full queue
-
+	If Not OpenTroopsTab(True, "CheckQueueTroopAndTrainRemain()") Then Return
+	
 	Local $iTotalQueue = 0
 	If $bDebug Then SetLog("Checking troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG)
 
@@ -428,12 +464,12 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp, $bDebug) ;GetCurrentArmy(95, 163)
 		Next
 		TrainUsingWhatToTrain($rWTT, True)
 
-		If _Sleep(1000) Then Return
-		$ArmyCamp = GetCurrentArmy(95, 163)
-		SetLog("Checking troop tab: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2 & ($ArmyCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
-		If Not $g_bIgnoreIncorrectTroopCombo Then
-			If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then Return False
-		EndIf
+		;If _Sleep(1000) Then Return
+		;$ArmyCamp = GetCurrentArmy(95, 163)
+		;SetLog("Checking troop tab: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2 & ($ArmyCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
+		;If Not $g_bIgnoreIncorrectTroopCombo Then
+		;	If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then Return False
+		;EndIf
 	EndIf
 	Return True
 EndFunc   ;==>CheckQueueTroopAndTrainRemain

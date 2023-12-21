@@ -23,7 +23,7 @@ Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True) ;
 EndFunc   ;==>getRemainTrainTimer
 
 Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
-	Return getOcrAndCapture("coc-siegeremain", $x_start, $y_start, 50, 10, True, False, $bNeedCapture)
+	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 50, 10, True, False, $bNeedCapture)
 EndFunc   ;==>getRemainTrainTimer
 
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
