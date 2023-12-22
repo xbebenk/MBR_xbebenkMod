@@ -243,11 +243,11 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 	
 	For $i = 1 To 3
 		Select
-			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) = True
-				Click($g_iQuickMISX, $g_iQuickMISY)
+			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560)
+				Click($g_iQuickMISX, $g_iQuickMISY, 2, 100, "Click Return Home")
 				If $g_bChkDebugAttackBB Then SetLog("Click Return Home", $COLOR_ACTION)
 				If _Sleep(3000) Then Return
-			Case QuickMIS("BC1", $g_sImgBBAttackBonus, 410, 464, 454, 490) = True
+			Case QuickMIS("BC1", $g_sImgBBAttackBonus, 410, 464, 454, 490)
 				SetLog("Congrats Chief, Stars Bonus Awarded", $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(2000) Then Return
@@ -878,12 +878,17 @@ Func DebugAttackBBImage($aCoords, $g_BBDPSide = 1)
 EndFunc   ;==>DebugAttackBBImage
 
 Func BBBarbarianHead($sLogText = "BBBarbarianHead")
+	Local $bRet = False
 	If _CheckPixel($aBlackHead, True, Default, $sLogText) Then
 		SetLog("Battle Ended, Gold Icon Found", $COLOR_DEBUG2)
-		Return True
-	Else
-		Return False
+		$bRet = True
 	EndIf
+	
+	If Not $bRet Then 
+		If WaitforPixel($aBlackHead[0] - 2, $aBlackHead[1] - 2, $aBlackHead[0] + 2, $aBlackHead[1] + 2, 0xFFEF48, 10, 1) Then $bRet = True
+	EndIf
+	
+	Return $bRet
 EndFunc
 
 Func BBAttackReport($sDamage = "")
