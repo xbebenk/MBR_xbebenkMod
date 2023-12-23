@@ -442,7 +442,7 @@ Func SelectEvent(ByRef $aSelectChallenges)
 			ContinueLoop 
 		EndIf
 		Click($aTmp[$i][1], $aTmp[$i][2])
-		If _Sleep(250) Then Return
+		If _Sleep(1000) Then Return
 	Next
 	
 	$aSelectChallenges = $aTmp
