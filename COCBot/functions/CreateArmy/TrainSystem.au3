@@ -909,16 +909,16 @@ Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlo
 	Return $avResult
 EndFunc   ;==>CheckQueueSpells
 
-Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = "", $bSkipReceivedTroopsCheck = False)
+Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = "")
 	; Setup arrays, including default return values for $return
 	Local $aResult[1][4], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
 	
-	;If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
-	;	SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
-	;	While _CheckPixel($aRecievedTroops, True)
-	;		If _Sleep(1000) Then Return
-	;	WEnd
-	;EndIf	
+	If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
+		SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
+		While _CheckPixel($aRecievedTroops, True)
+			If _Sleep(500) Then Return
+		WEnd
+	EndIf	
 	If Not $g_bRunState Then Return $aResult
 	
 	

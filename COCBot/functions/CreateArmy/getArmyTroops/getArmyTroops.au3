@@ -33,12 +33,12 @@ Func getArmyTroops($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bCheckW
 		If _Sleep($DELAYCHECKARMYCAMP5) Then Return
 	EndIf
 
-	;If _CheckPixel($aRecievedTroops, $bNeedCapture) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
-	;	If $bSetLog Then SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
-	;	While _CheckPixel($aRecievedTroops, True)
-	;		If _Sleep(500) Then Return
-	;	WEnd
-	;EndIf
+	If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
+		SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
+		While _CheckPixel($aRecievedTroops, True)
+			If _Sleep(500) Then Return
+		WEnd
+	EndIf
 
 	Local $sTroopDiamond = GetDiamondFromRect("80, 211, 515, 270") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
 	If $g_bDebugFuncTime Then StopWatchStart("findMultiple, \imgxml\ArmyOverview\Troops")

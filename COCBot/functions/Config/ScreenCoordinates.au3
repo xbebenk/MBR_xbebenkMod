@@ -83,7 +83,7 @@ Global $aCheckTopProfile2[4] = [220, 355, 0x4E4D79, 5]
 
 Global $aIsTabOpen[4] = [0, 152, 0xEAEAE3, 10];Check if specific Tab is opened, X Coordinate is a dummy
 
-Global $aRecievedTroops[4] = [599, 175, 0xFFFFFF, 20] ; Y of You have recieved blabla from xx!
+Global $aRecievedTroops[4] = [585, 179, 0xFFFFFF, 20] ; Y of You have recieved blabla from xx!
 
 ; King Health Bar, check at the middle of the bar, index 4 is x-offset added to middle of health bar
 Global $aKingHealth = [-1, 569, 0x00D500, 15, 13]

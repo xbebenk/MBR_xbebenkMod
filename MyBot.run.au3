@@ -1358,7 +1358,8 @@ Func FirstCheck()
 		If Not $g_bSkipTrain Then TrainSystem()
 		If $g_bDonateEarly Then
 			SetLog("Donate Early Enabled", $COLOR_INFO)
-			_RunFunction("DonateCC,Train")
+			DonateCC()
+			TrainSystem()
 		EndIf
 		checkSwitchAcc()
 	Else
@@ -1410,7 +1411,8 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 And $bSwitch Then
 		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-		_RunFunction("DonateCC,Train")
+		DonateCC()
+		TrainSystem()
 		CommonRoutine("NoClanGamesEvent")
 		$g_bForceSwitchifNoCGEvent = True
 		checkSwitchAcc() ;switch to next account
@@ -1423,7 +1425,8 @@ Func FirstCheckRoutine()
 		If Not $g_bRunState Then Return
 		If $g_bDonateEarly Then
 			SetLog("Donate Early Enabled", $COLOR_INFO)
-			_RunFunction("DonateCC,Train")
+			DonateCC()
+			TrainSystem()
 		EndIf
 
 		CheckIfArmyIsReady()
@@ -1480,7 +1483,8 @@ Func FirstCheckRoutine()
 
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bForceSwitchifNoCGEvent) Then
-		_RunFunction("DonateCC,Train")
+		DonateCC()
+		TrainSystem()
 		CommonRoutine("Switch")
 		checkSwitchAcc() ;switch to next account
 	EndIf
