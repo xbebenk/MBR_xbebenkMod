@@ -203,7 +203,7 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 			_SleepStatus(15000)
 			
 			If ShouldStopAttackonCG() Then 
-				ReturnHomeDropTrophyBB(True)
+				ReturnHomeDropTrophyBB(True, True)
 				ExitLoop
 			EndIf
 			

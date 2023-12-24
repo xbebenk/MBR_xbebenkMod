@@ -367,7 +367,7 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False)
 			For $x = 0 To Ubound($aX) - 1
 				If Not $g_bRunState Then Return
 				Local $hITimer = TimerInit()
-				$aEvent = QuickMIS("CNX", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 90, $aY[$y] + 80)
+				$aEvent = QuickMIS("CNX", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 85, $aY[$y] + 75)
 				If IsArray($aEvent) And UBound($aEvent) > 0 Then
 					If $g_bChkClanGamesDebug Then Setlog("Benchmark Search on Slot: (in " & Round(TimerDiff($hITimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 					Local $IsBBEvent = (IsBBChallenge($aEvent[0][1], $aEvent[0][2]) ? "CGBB" : "CGMain")
@@ -383,7 +383,7 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False)
 			For $x = 0 To Ubound($aX) - 1
 				If Not $g_bRunState Then Return
 				Local $hITimer = TimerInit()
-				If QuickMIS("BC1", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 90, $aY[$y] + 80) Then
+				If QuickMIS("BC1", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 85, $aY[$y] + 75) Then
 					If $g_bChkClanGamesDebug Then Setlog("Benchmark Search on Slot: (in " & Round(TimerDiff($hITimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 					Local $BC1x = $g_iQuickMISX, $BC1y = $g_iQuickMISY
 					Local $ChallengeEvent = $g_iQuickMISName
@@ -436,7 +436,7 @@ Func SelectEvent(ByRef $aSelectChallenges)
 			$aTmp[$i][4] = Number($aEventInfo[1])
 			$aTmp[$i][6] = Number($aEventInfo[0])
 		Else
-			Click(210, 55)
+			Click(450, 95)
 			Setlog("Fail get event info", $COLOR_ERROR) ; fail get event info, mostly because lag
 			_ArrayDelete($aSelectChallenges, $i)
 			ContinueLoop 
@@ -449,9 +449,9 @@ Func SelectEvent(ByRef $aSelectChallenges)
 	
 	If $g_bChkClanGamesDebug Then Setlog("Benchmark SelectEvent: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 	; Drop to top again , because coordinates Xaxis and Yaxis
-	Click(450, 55)
+	Click(450, 95)
 	If _Sleep(1000) Then Return
-	Click(300, 55)
+	Click(320, 95)
 	If _Sleep(1000) Then Return
 EndFunc
 

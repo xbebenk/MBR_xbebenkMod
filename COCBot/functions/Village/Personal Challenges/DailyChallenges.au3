@@ -11,14 +11,7 @@
 ; ===============================================================================================================================
 #include-once
 
-;[11:11:58 AM] Collecting Daily Rewards...
-;[11:11:59 AM] Dragging back for more... [11:12:02 AM] Storage full. Cancelling to sell it
-;[11:12:03 AM] Storage full. Cancelling to sell it
-
-
 Func DailyChallenges()
-	Local Static $asLastTimeChecked[UBound($g_abAccountNo)]
-	If $g_bFirstStart Then $asLastTimeChecked[$g_iCurAccount] = ""
 	checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenges")
 	
 	Local $bGoldPass = _CheckPixel($aPersonalChallengeOpenButton2, $g_bCapturePixel) ; golden badge button at mainscreen
@@ -27,20 +20,12 @@ Func DailyChallenges()
 	If Not $g_bChkCollectRewards And Not $bCheckDiscount Then Return
 	Local $bRedSignal = _CheckPixel($aPersonalChallengeOpenButton3, $g_bCapturePixel)
 
-	If _DateIsValid($asLastTimeChecked[$g_iCurAccount]) Then
-		Local $iLastCheck = _DateDiff('n', $asLastTimeChecked[$g_iCurAccount], _NowCalc()) ; elapse time from last check (minutes)
-		SetDebugLog("LastCheck: " & $asLastTimeChecked[$g_iCurAccount] & ", Check DateCalc: " & $iLastCheck & ", $bRedSignal: " & $bRedSignal)
-		If ($iLastCheck <= $bRedSignal ? 180 : 360) Then Return ; A check each 3 hours or 6 hours [6*60 = 360]
-	EndIf
-
 	If OpenPersonalChallenges() Then
 		CollectDailyRewards($bGoldPass)
 		If $bCheckDiscount Then CheckDiscountPerks()
 
 		If _Sleep(1000) Then Return
 		ClosePersonalChallenges()
-
-		$asLastTimeChecked[$g_iCurAccount] = _NowCalc()
 	EndIf
 EndFunc   ;==>DailyChallenges
 
@@ -85,26 +70,29 @@ Func CollectDailyRewards($bGoldPass = False)
 	EndIf
 	
 	For $i = 1 To 10		
-		If QuickMIS("BC1", $g_sImgDailyReward, $x1, $y1, $x2, $y2) Then
-			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(1000) Then Return
-			If IsOKCancelPage() Then 
-				If $g_bChkSellRewards Then
-					Setlog("Selling extra reward for gems", $COLOR_SUCCESS)
-					Click($aConfirmSurrender[0], $aConfirmSurrender[1]) ; Click the Okay
-					$iClaim += 1
+		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, $x1, $y1, $x2, $y2)
+		If IsArray($aClaim) And UBound($aClaim) > 0 Then
+			For $j = 0 To UBound($aClaim) - 1
+				Click($aClaim[$j][1], $aClaim[$j][2])
+				If _Sleep(1000) Then Return
+				If IsOKCancelPage() Then 
+					If $g_bChkSellRewards Then
+						Setlog("Selling extra reward for gems", $COLOR_SUCCESS)
+						Click($aConfirmSurrender[0], $aConfirmSurrender[1]) ; Click the Okay
+						$iClaim += 1
+					Else
+						SetLog("Cancel. Not selling extra rewards.", $COLOR_SUCCESS)
+						Click($aConfirmSurrender[0] - 100, $aConfirmSurrender[1]) ; Click Cancel
+					Endif
+					If _Sleep(1000) Then ExitLoop
 				Else
-					SetLog("Cancel. Not selling extra rewards.", $COLOR_SUCCESS)
-					Click($aConfirmSurrender[0] - 100, $aConfirmSurrender[1]) ; Click Cancel
-				Endif
-				If _Sleep(1000) Then ExitLoop
-			Else
-				$iClaim += 1
-				If _Sleep(100) Then ExitLoop
-			EndIf
+					$iClaim += 1
+					If _Sleep(100) Then ExitLoop
+				EndIf
+			Next
 		EndIf
-		If _CheckPixel($aPersonalChallengeRewardsCheckMark1, True) Then ExitLoop
-		ClickDrag(750, 385, 100, 385, 1000)
+		If WaitforPixel(799, 396, 801, 397, "FDC04F", 10, 1) Then ExitLoop ;thropy color
+		If WaitforPixel(799, 396, 801, 397, "4BCD1C", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000)
 	Next
 	
 	SetLog($iClaim > 0 ? "Claimed " & $iClaim & " reward(s)!" : "Nothing to claim!", $COLOR_SUCCESS)

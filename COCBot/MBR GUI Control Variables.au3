@@ -173,7 +173,7 @@ Func InitializeControlVariables()
 
    ;TH Level
    $g_aGroupListTHLevels = $g_ahPicTHLevels[4]&"#"&$g_ahPicTHLevels[5]&"#"&$g_ahPicTHLevels[6]&"#"&$g_ahPicTHLevels[7]&"#"&$g_ahPicTHLevels[8]&"#"& _
-						$g_ahPicTHLevels[9]&"#"&$g_ahPicTHLevels[10]&"#"&$g_ahPicTHLevels[11]&"#"&$g_ahPicTHLevels[12]&"#"&$g_ahPicTHLevels[13]&"#"&$g_ahPicTHLevels[14]
+						$g_ahPicTHLevels[9]&"#"&$g_ahPicTHLevels[10]&"#"&$g_ahPicTHLevels[11]&"#"&$g_ahPicTHLevels[12]&"#"&$g_ahPicTHLevels[13]&"#"&$g_ahPicTHLevels[14]&"#"&$g_ahPicTHLevels[15]&"#"&$g_ahPicTHLevels[16]
 
    ;PicDBMaxTH
    $g_aGroupListPicDBMaxTH = $g_ahPicDBMaxTH[6]&"#"&$g_ahPicDBMaxTH[7]&"#"&$g_ahPicDBMaxTH[8]&"#"& _

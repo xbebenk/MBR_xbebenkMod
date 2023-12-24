@@ -24,7 +24,7 @@ Func GetTownHallLevel($bFirstTime = False)
 	EndIf
 
 	If $bFirstTime = True Then
-		BuildingClickP($g_aiTownHallPos, "#0349")
+		ClickP($g_aiTownHallPos, 1, "TownHall")
 		If _Sleep($DELAYGETTHLEVEL2) Then Return
 	EndIf
 

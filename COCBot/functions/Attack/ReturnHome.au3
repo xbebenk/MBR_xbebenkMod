@@ -182,7 +182,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for screen to close
 
 	For $counter = 1 To 5
-		SetDebugLog("Wait for Star Bonus window to appear #" & $counter)
+		If $g_bDebugSetLog Then SetDebugLog("Wait for Star Bonus window to appear #" & $counter)
 		If _Sleep($DELAYRETURNHOME4) Then Return
 		If StarBonus() Then SetLog("Star Bonus window closed chief!", $COLOR_INFO) ; Check for Star Bonus window to fill treasury (2016-01) update
 		$g_bFullArmy = False ; forcing check the army

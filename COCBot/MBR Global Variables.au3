@@ -838,7 +838,7 @@ Global $g_iTxtRestartGold = 10000
 Global $g_iTxtRestartElixir = 25000
 Global $g_iTxtRestartDark = 500
 Global $g_bChkCollect = True, $g_bChkTombstones = True, $g_bChkCleanYard = False, $g_bChkGemsBox = False
-Global $g_bChkCollectCartFirst = False, $g_iTxtCollectGold = 0, $g_iTxtCollectElixir = 0, $g_iTxtCollectDark = 0
+Global $g_iTxtCollectGold = 0, $g_iTxtCollectElixir = 0, $g_iTxtCollectDark = 0
 Global $g_bChkTreasuryCollect = False
 Global $g_iTxtTreasuryGold = 0
 Global $g_iTxtTreasuryElixir = 0
@@ -1507,9 +1507,9 @@ Global $g_bCloudsActive = False ;True when waiting for clouds
 Global $g_bAttackActive = False ;True when attacking Village
 
 ; Search
-Global Const $g_iMaxTHLevel = 15
-Global Const $g_asTHText[10] = ["4-6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]
-Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200, 1300, 1400]
+Global Const $g_iMaxTHLevel = 16
+Global Const $g_asTHText[11] = ["4-6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"]
+Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200, 1300, 1400, 1500]
 Global $g_bSearchMode = False
 Global $g_bIsSearchLimit = False
 Global $g_bIsClientSyncError = False ;If true means while searching Client Out Of Sync error occurred.

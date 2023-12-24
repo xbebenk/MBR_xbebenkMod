@@ -266,15 +266,16 @@ Func FillIncorrectTroopCombo($caller = "Unknown")
 	If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
 	Local $CampOCR = GetCurrentArmy(95, 163)
 	If Not $g_bRunState Then Return
+	
 	SetLog("CampOCR:" & _ArrayToString($CampOCR) & " Called from : " & $caller)
 	
 	If $CampOCR[0] = 0 Then ;no troop trained on 1st army 
-		SetLog("no troop trained on 1st army", $COLOR_DEBUG1)
+		SetLog("no need to fill troop on 1st army", $COLOR_DEBUG1)
 		Return
 	EndIf
 	
 	If $CampOCR[2] = 0 Or $CampOCR[0] = ($CampOCR[1] * 2) Then ;no troop trained on 2nd Army
-		SetLog("no troop trained on 2nd Army", $COLOR_DEBUG1)
+		SetLog("no need to fill troop on 2nd Army", $COLOR_DEBUG1)
 		Return
 	EndIf
 	

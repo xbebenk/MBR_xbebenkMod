@@ -22,7 +22,7 @@ Func Collect($bCheckTreasury = True)
 	StartGainCost()
 	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
 	
-	If $g_bChkCollectCartFirst And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
+	;If $g_bChkCollectCartFirst And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
 
 	SetLog("Collecting Resources", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
@@ -64,10 +64,9 @@ Func Collect($bCheckTreasury = True)
 	EndIf
 
 	If _Sleep($DELAYCOLLECT3) Then Return
-	If Not $g_bChkCollectCartFirst And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
-	If $g_bChkTreasuryCollect And $bCheckTreasury Then TreasuryCollect()
-	If _Sleep(1500) Then Return
 	CollectCookieRumble()
+	CollectLootCart()
+	If $g_bChkTreasuryCollect And $bCheckTreasury Then TreasuryCollect()
 	EndGainCost("Collect")
 EndFunc   ;==>Collect
 
@@ -108,9 +107,15 @@ Func CollectCookieRumble()
 		For $i = 1 To 5
 			If $g_bDebugSetLog Then SetLog("Waiting Gingerbread Bakery Button #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgCollectCookie, 340, 500, 425, 570) Then 
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				$bIconCookie = True
-				ExitLoop
+				If WaitforPixel($g_iQuickMISX + 30, $g_iQuickMISY - 20, $g_iQuickMISX + 32, $g_iQuickMISY - 18, "F61621", 10, 1) Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					$bIconCookie = True
+					ExitLoop
+				Else
+					SetLog("Nothing to Claim", $COLOR_INFO)
+					ClickAway()
+					Return
+				EndIf
 			EndIf
 			If _Sleep(250) Then Return
 		Next
@@ -132,7 +137,7 @@ Func CollectCookieRumble()
 	
 	If Not $bWinOpen Then Return
 	ClaimCookieReward()
-
+	ClickAway()
 EndFunc
 
 Func ClaimCookieReward($bGoldPass = False)

@@ -105,7 +105,7 @@ Func ZoomOutHelper($caller = "Default")
 			$x = $g_iQuickMISX - $aOffset[1]
 			$y = $g_iQuickMISY - $aOffset[2]
 			If $caller = "CollectLootCart" Then 
-				$x += 20
+				$x -= 20
 				$y += 20
 			EndIf
 			SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
@@ -249,7 +249,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 		
 		If IsArray($aPicture) Then
 			While IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0 and Not $tryCtrlWheelScroll
-
+				
 				AndroidShield("DefaultZoomOut") ; Update shield status
 				If $bAndroidZoomOut Then
 				   AndroidZoomOut($i, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out

@@ -255,7 +255,7 @@ Func BBDropTrophy()
 	Return False
 EndFunc
 
-Func ReturnHomeDropTrophyBB($bOnlySurender = False)
+Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False)
 	SetLog("Returning Home", $COLOR_SUCCESS)
 	
 	For $i = 1 To 15
@@ -267,6 +267,7 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False)
 			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 510, 470, 570) = True
 				If $bOnlySurender Then 
 					If $g_bChkDebugAttackBB Then SetLog("ExitLoop, bOnlySurender = " & String($bOnlySurender), $COLOR_ACTION)
+					If $bAttackReport THen BBAttackReport("100")
 					Return True
 				EndIf
 				Click($g_iQuickMISX, $g_iQuickMISY)
