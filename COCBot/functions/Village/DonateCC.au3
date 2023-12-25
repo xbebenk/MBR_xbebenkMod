@@ -1140,13 +1140,14 @@ Func RemainingCCcapacity($aiDonateButton)
 	SetDebugLog("$g_aiPrepDon[2]: " & $g_aiPrepDon[2] & ", $g_aiPrepDon[3]: " & $g_aiPrepDon[3] & ", $g_iCurrentSpells: " & $g_iCurrentSpells & ", $bDonateSpell: " & $bDonateSpell)
 	SetDebugLog("$g_aiPrepDon[4]: " & $g_aiPrepDon[4] & ", $g_aiPrepDon[5]: " & $g_aiPrepDon[5] & ", $bDonateSiege: " & $bDonateSiege)
 
-	; Verify with OCR the Donation Clan Castle capacity
 	SetDebugLog("Start dual getOcrSpaceCastleDonate : " & _ArrayToString($aiDonateButton), $COLOR_DEBUG)
+	Local $xTroop = 6
 	Local $aDonateType = QuickMIS("CNX", $g_sImgDonateType, $aiDonateButton[0] - 280, $aiDonateButton[1] - 10, $aiDonateButton[0] - 50, $aiDonateButton[1] + 20)
 	If IsArray($aDonateType) And UBound($aDonateType) > 0 Then
+		If UBound($aDonateType) < 3 Then $xTroop = 40 ;cc only cannot accept sieges
 		For $i = 0 To UBound($aDonateType) - 1
 			If $aDonateType[$i][0] = "Troop" Then 
-				$sCapTroops = getOcrSpaceCastleDonate($aDonateType[$i][1] + 6, $aiDonateButton[1] - 7)
+				$sCapTroops = getOcrSpaceCastleDonate($aDonateType[$i][1] + $xTroop, $aiDonateButton[1] - 7)
 			ElseIf $aDonateType[$i][0] = "Spell" Then 
 				$sCapSpells = getOcrSpaceCastleDonate($aDonateType[$i][1] + 10, $aiDonateButton[1] - 7)
 			ElseIf $aDonateType[$i][0] = "Siege" Then 
