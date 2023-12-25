@@ -421,10 +421,6 @@ Func DonateCC($bTest = False, $bCheckForNewMsg = False)
 			If Not $bDonateSiege And Not $bDonateAllSiege Then
 				SetLog("Siege donation is not enabled, skip siege donation", $COLOR_ACTION)
 				$g_bSkipDonSiege = True
-			ElseIf $g_aiCurrentSiegeMachines[$eSiegeWallWrecker] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] = 0 And $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBarracks] = 0 And $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] = 0 And $g_aiCurrentSiegeMachines[$eSiegeBattleDrill] = 0 Then
-				$g_bSkipDonSiege = True
-				If $bTest Then $g_bSkipDonSiege = False
-				If $g_bSkipDonSiege Then SetLog("No siege machines available, skip siege donation", $COLOR_ACTION)
 			ElseIf $g_iTotalDonateSiegeMachineCapacity = -1 Then
 				SetLog("This CC cannot accept Siege, skip Siege donation", $COLOR_ACTION)
 				$g_bSkipDonSiege = True
@@ -1135,10 +1131,8 @@ Func RemainingCCcapacity($aiDonateButton)
 
 	; Skip reading unnecessary items
 	Local $bDonateSpell = ($g_aiPrepDon[2] = 1 Or $g_aiPrepDon[3] = 1) And ($g_iCurrentSpells > 0 Or $g_iCurrentSpells = "")
-	;Local $bDonateSiege = ($g_aiPrepDon[4] = 1 Or $g_aiPrepDon[5] = 1) And ($g_aiCurrentSiegeMachines[$eSiegeWallWrecker] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBarracks] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] > 0)
-	Local $bDonateSiege = ($g_aiPrepDon[4] = 1 Or $g_aiPrepDon[5] = 1) And ($g_aiCurrentSiegeMachines[$eSiegeWallWrecker] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBattleBlimp] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeStoneSlammer] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBarracks] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeLogLauncher] > 0 Or $g_aiCurrentSiegeMachines[$eSiegeBattleDrill] > 0)
 	SetDebugLog("$g_aiPrepDon[2]: " & $g_aiPrepDon[2] & ", $g_aiPrepDon[3]: " & $g_aiPrepDon[3] & ", $g_iCurrentSpells: " & $g_iCurrentSpells & ", $bDonateSpell: " & $bDonateSpell)
-	SetDebugLog("$g_aiPrepDon[4]: " & $g_aiPrepDon[4] & ", $g_aiPrepDon[5]: " & $g_aiPrepDon[5] & ", $bDonateSiege: " & $bDonateSiege)
+	SetDebugLog("$g_aiPrepDon[4]: " & $g_aiPrepDon[4] & ", $g_aiPrepDon[5]: " & $g_aiPrepDon[5])
 
 	SetDebugLog("Start dual getOcrSpaceCastleDonate : " & _ArrayToString($aiDonateButton), $COLOR_DEBUG)
 	Local $xTroop = 6
