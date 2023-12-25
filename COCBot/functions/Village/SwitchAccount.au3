@@ -379,6 +379,10 @@ Func SwitchCOCAcc($NextAccount)
 		EndIf
 		If Not $g_bRunState Then Return
 	EndIf
+	
+	If IsSettingPage() Then Click($aIsSettingPage[0], $aIsSettingPage[1] - 15, 1, "Close Setting Windows")
+	If _Sleep(1000) Then Return
+	
 	waitMainScreen()
 	If Not $g_bRunState Then Return
 
