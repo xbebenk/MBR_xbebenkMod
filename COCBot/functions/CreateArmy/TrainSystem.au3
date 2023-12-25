@@ -55,9 +55,35 @@ Func TrainPreviousArmy($bCloseWindow = False)
 	If _ColorCheck(_GetPixelColor(730, 232, True), Hex(0x8BD43A, 6), 10) Then
 		PureClick(730, 232)
 		If _Sleep(1000) Then Return
-		If IsOKCancelPage() Then
-			Click(530, 420, 1, "Click Okay, Confirm Training")
-		EndIf
+		For $i = 1 To 2
+			If IsOKCancelPage() Then
+				If _ColorCheck(_GetPixelColor(642, 232, True), Hex(0xFFFFFF, 6), 1) Then
+					SetLog("[" & $i & "] SuperTroop Boost Needed", $COLOR_INFO)
+					Click(530, 420, 1, "Click Okay, Confirm Boost")
+					If _Sleep(1000) Then Return
+					If WaitforPixel(582, 555, 640, 556, "FF887F", 10, 1) Then
+						Click(465, 545, 1, "Click Boost with SuperTroop potion")
+						If _Sleep(1000) Then Return
+						If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 450, 444, 485, 480) Then
+							Click($g_iQuickMISX, $g_iQuickMISY)
+							SetLog("Successfully boost with potion", $COLOR_SUCCESS)
+						Else
+							SetLog("Cannot find potion boost button", $COLOR_ERROR)
+							ClickAway()
+							ClickAway()
+							Return
+						EndIf
+					Else
+						Click(630, 545, 1, "Click Boost with Dark Elixer")
+						SetLog("Successfully boost with potion", $COLOR_SUCCESS)
+					EndIf					
+				Else
+					SetLog("[" & $i & "] Not Enough room to train", $COLOR_INFO)
+					Click(530, 420, 1, "Click Okay, Confirm Training")
+					If _Sleep(500) Then Return
+				EndIf
+			EndIf
+		Next
 	Else
 		SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
 	EndIf

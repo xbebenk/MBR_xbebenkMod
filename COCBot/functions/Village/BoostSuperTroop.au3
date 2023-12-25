@@ -109,6 +109,7 @@ Func BoostSuperTroop($bTest = False)
 									;$BoostDuration = getHeroUpgradeTime(575, 464) ; get duration
 									$BoostCost = 25000 ; hardcoded for now
 									$BoostDuration = "3d" ; hardcoded for now
+									If WaitforPixel(582, 555, 640, 556, "FF887F", 10, 1) Then $BoostCost = "" ;Red font on DE Button
 									If Not $BoostCost = "" Then
 										Click($g_iQuickMISX, $g_iQuickMISY)
 										If _Sleep(1500) Then Return
@@ -119,9 +120,11 @@ Func BoostSuperTroop($bTest = False)
 											If $bTest Then
 												CancelBoost("Using Dark Elixir")
 												$TroopBoosted = True
+												Return True
 											Else
 												Click($g_iQuickMISX - 230, $g_iQuickMISY + 300) ;relative from close button image to boost button
 												ClickAway()
+												Return True
 											EndIf
 										Else
 											Setlog("Could not find dark elixir button for final upgrade " & $sTroopName, $COLOR_ERROR)
@@ -147,6 +150,7 @@ Func BoostSuperTroop($bTest = False)
 														Click($g_iQuickMISX, $g_iQuickMISY)
 														Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
 														ClickAway()
+														Return True
 													EndIf
 												Else
 													Setlog("Could not find Potion button for final upgrade " & $sTroopName, $COLOR_ERROR)
@@ -258,6 +262,12 @@ Func CheckSuperTroopPotion()
 		If Number($Count) = Number($MaxCount) Then $g_bForceUseSuperTroopPotion = True
 		SetLog("Super Troop Potion Count: " & $Count & "/" & $MaxCount, $COLOR_INFO)
 	EndIf
+	
+	If Number($g_aiCurrentLoot[$eLootDarkElixir]) < 25000 And Number($Count) > 0 Then
+		SetLog("Current DE < than 25000, force use potion", $COLOR_INFO)
+		$g_bForceUseSuperTroopPotion = True
+	EndIf
+	
 	ClickAway()
 	If _Sleep(1000) Then Return
 EndFunc

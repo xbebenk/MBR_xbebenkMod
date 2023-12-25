@@ -76,7 +76,7 @@ Global $aGreenArrowTrainSiegeMachines[2] = [622, 98]
 Global $aTreasuryWindow[4] = [700, 170, 0xCE333B, 20] ; Redish pixel below X to close treasury window
 Global $aAttackForTreasury[4] = [88, 619, 0xF0EBE8, 5] ; Red pixel below X to close treasury window
 Global $aAtkHasDarkElixir[4]  = [ 30, 150, 0x2A2124, 10] ; Attack Page, Check for DE icon
-Global $aVillageHasDarkElixir[4] = [845, 138, 0x270D33, 10] ; Main Page, Base has dark elixir storage
+Global $aVillageHasDarkElixir[4] = [826, 138, 0x3E313C, 10] ; Main Page, Base has dark elixir storage
 
 Global $aCheckTopProfile[4] = [200, 166, 0x868CAC, 5]
 Global $aCheckTopProfile2[4] = [220, 355, 0x4E4D79, 5]
