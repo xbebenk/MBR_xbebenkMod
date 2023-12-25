@@ -130,7 +130,7 @@ Global $NextBtnRND[4] = [710, 530, 830, 570] ;  Next Button
 Global $aLoginWithSupercellID[4] = [280, 630, 0xDCF684, 20] ; Upper green button section "Log in with Supercell ID" 0xB1E25A
 Global $aLoginWithSupercellID2[4] = [266, 653, 0xFFFFFF , 10] ; White Font "Log in with Supercell ID"
 Global $aButtonSetting[4] = [820, 530, 0xFFFFFF, 10] ; Setting button, Main Screen
-Global $aIsSettingPage[4] = [700, 90, 0x5E5451, 10] ; Main Screen, Setting page open - left upper corner of x button
+Global $aIsSettingPage[4] = [786, 97, 0xE91114, 10] ; Main Screen, Setting page open - red bottom lower of x button
 
 ;Google Play
 Global $aListAccount[4] = [635, 230, 0xFFFFFF, 20] ; Accounts list google, White
