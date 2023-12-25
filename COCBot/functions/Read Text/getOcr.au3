@@ -307,8 +307,8 @@ Func getOcrTimeGameTime($x_start, $y_start) ;  -> Get the guard/shield time left
 	Return getOcrAndCapture("coc-clangames", $x_start, $y_start, 116, 31, True)
 EndFunc   ;==>getOcrTimeGameTime
 
-Func getOcrYourScore($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
-	Return getOcrAndCapture("coc-cgscores", $x_start, $y_start, 140, 18, True)
+Func getOcrYourCGScore($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
+	Return StringReplace(getOcrAndCapture("coc-cgscores", $x_start, $y_start, 140, 18, True), "-", "")
 EndFunc   ;==>getOcrYourScore
 
 Func getOcrEventTime($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window
