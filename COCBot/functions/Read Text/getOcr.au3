@@ -186,6 +186,10 @@ Func getBuilderLeastUpgradeTime($x_start, $y_start) ;  -> Get least upgradetime 
 	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 100, 18, True)
 EndFunc   ;==>getBuilderLeastUpgradeTime
 
+Func getBuilderBuilderMenuCost($x_start, $y_start) ;  -> Get least upgradetime on builder menu
+	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 100, 18, True)
+EndFunc   ;==>getBuilderBuilderMenuCost
+
 Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
 	Local $BuildingName = "", $Count = 1
 	Local $Name = getOcrAndCapture("coc-buildermenu-name", $x_start, $y_start, 160, 20, False)

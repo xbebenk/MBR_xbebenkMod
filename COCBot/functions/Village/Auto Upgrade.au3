@@ -88,10 +88,12 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 			EndIf
 			If Not $g_bRunState Then Return
 			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
-			_Sleep(5000)
+			If _Sleep(5000) Then Return
 		EndIf
 	Else
 		CheckBuilderPotion()
+		Clickaway("Right")
+		If _Sleep(1000) Then Return
 		Return
 	EndIf
 
@@ -99,7 +101,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	If AutoUpgradeCheckBuilder($bTest) Then
 		AutoUpgradeSearchExisting($bTest) ;search upgrade for existing building
 		If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
-		_Sleep(5000)
+		If _Sleep(5000) Then Return
 	EndIf
 	
 	If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing
@@ -110,6 +112,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	CheckBuilderPotion()
 	If Not $g_bRunState Then Return
 	Clickaway("Right")
+	If _Sleep(1000) Then Return
 	ZoomOut()
 	Return False
 EndFunc
@@ -120,7 +123,7 @@ Func CheckBuilderPotion()
 		SetLog("Checking for Use Builder Potion", $COLOR_INFO)
 		ClickMainBuilder()
 		If _Sleep(500) Then Return
-		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
+		If QuickMIS("BC1", $g_sImgAUpgradeHour, 480, 105, 560, 140) Then
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
 			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
 			If $mUpgradeTime > 540 Then
@@ -283,7 +286,7 @@ Func FindExistingBuilding($bTest = False)
 	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
 	Local $aRushTHPriority[9][2] = [["Castle", 15], ["Pet", 15], ["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10], ["Hut", 10], ["Blacksmith", 15]]
 	Local $aRushTH[7][2] = [["Barracks", 8], ["Spell", 9], ["Workshop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
-	Local $aHeroes[4] = ["King", "Queen", "Warden", "Champion"]
+	Local $aHeroes[4] = ["Barbarian", "Queen", "Warden", "Champion"]
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 440, 80, 550, 408)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
@@ -316,7 +319,7 @@ Func FindExistingBuilding($bTest = False)
 					Next
 				EndIf
 				If $g_bUpgradeLowCost Then
-					Local $tmpcost = getOcrAndCapture("coc-buildermenu-cost", $aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10, 120, 30, True)
+					Local $tmpcost = getBuilderBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
 					If Number($tmpcost) = 0 Then ContinueLoop
 					If Number($tmpcost) > 500000 Or $aTmpCoord[$i][0] <> "Gold" Then ContinueLoop
 				EndIf
@@ -328,12 +331,13 @@ Func FindExistingBuilding($bTest = False)
 		Next
 
 		For $j = 0 To UBound($aBuilding) -1
-			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $aBuilding[$j][1], $aBuilding[$j][2] - 10, 120, 30, True)
+			$UpgradeCost = getBuilderBuilderMenuCost($aBuilding[$j][1], $aBuilding[$j][2] - 10)
 			$aBuilding[$j][5] = Number($UpgradeCost)
 			Local $BuildingName = $aBuilding[$j][3]
 			If $g_bChkRushTH Then ;set score for RushTHPriority Building
 				For $k = 0 To UBound($aRushTHPriority) - 1
 					If StringInStr($BuildingName, $aRushTHPriority[$k][0]) Then
+					If $g_bDebugSetLog Then SetLog("[RushTHPriority] BuildingName=" & $BuildingName & " : " & $aRushTHPriority[$k][0], $COLOR_DEBUG1)
 						Switch $aBuilding[$j][0]
 							Case "Gold"
 								$aBuilding[$j][6] = $aRushTHPriority[$k][1] * $GoldMultiply
@@ -347,6 +351,7 @@ Func FindExistingBuilding($bTest = False)
 				Next
 				For $k = 0 To UBound($aRushTH) - 1
 					If StringInStr($BuildingName, $aRushTH[$k][0]) Then
+						If $g_bDebugSetLog Then SetLog("[RushTH] BuildingName=" & $BuildingName & " : " & $aRushTH[$k][0], $COLOR_DEBUG1)
 						Switch $aBuilding[$j][0]
 							Case "Gold"
 								$aBuilding[$j][6] = $aRushTH[$k][1] * $GoldMultiply
@@ -362,18 +367,18 @@ Func FindExistingBuilding($bTest = False)
 			If $g_bHeroPriority Then ;set score = 20 for Heroes, so if there is heroes found for upgrade it will attempt first
 				For $l = 0 To UBound($aHeroes) - 1
 					If StringInStr($BuildingName, $aHeroes[$l]) Then
-						SetDebugLog("Enabled HeroPriority = " & String($g_bHeroPriority) & ", Set Hero High Priority")
+						If $g_bDebugSetLog Then SetLog("[HeroPriority] BuildingName=" & $BuildingName & " : " & $aHeroes[$l], $COLOR_DEBUG1)
 						$aBuilding[$j][6] = 20
 					EndIf
 				Next
 			EndIf
-			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & ", score=" & $aBuilding[$j][6] & ", Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
+			If $g_bDebugSetLog Then SetLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & ", score=" & $aBuilding[$j][6] & ", Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
 	Local $iIndex = _ArraySearch($aBuilding, "0", 0, 0, 0, 0, 0, 5)
 	If $iIndex > -1 Then 
-		SetDebugLog(_ArrayToString($aBuilding))
-		SetDebugLog("Found Building with Zero cost, remove it", $COLOR_INFO)
+		If $g_bDebugSetLog Then SetLog(_ArrayToString($aBuilding))
+		If $g_bDebugSetLog Then SetLog("Found Building with Zero cost, remove it", $COLOR_INFO)
 		_ArrayDelete($aBuilding, $iIndex)
 	EndIf
 	
