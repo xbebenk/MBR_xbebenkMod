@@ -45,7 +45,6 @@ Func getShieldInfo()
 		EndSelect
 	Else
 		SetLog("Sorry, Your monkey not code anymore", $COLOR_ERROR) 
-		SetError(1, "Monkey read Shield")
 		Return
 	EndIf
 	
