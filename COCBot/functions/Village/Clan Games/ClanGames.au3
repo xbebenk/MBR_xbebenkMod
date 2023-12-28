@@ -1000,6 +1000,7 @@ Func CollectCGReward($bTest = False)
 		SetLog("You reach Max Point! Congrats")
 		$g_bIsCGPointMaxed = True
 	EndIf
+	
 	Local $OnlyClaimMax = False
 	If QuickMIS("BC1", $g_sImgRewardText, 600, 445, 830, 495) Then
 		If $g_iQuickMISName = "Claim" Then
@@ -1166,7 +1167,7 @@ Func GetCGRewardList($X = 270, $OnlyClaimMax = False)
 					Switch $aTmp[$j][0]
 						Case "Books"
 							$Value = 5
-						Case "BBGoldRune", "DERune", "ElixRune", "Shovel", "SuperPot"
+						Case "BBGoldRune", "DERune", "ElixRune", "Shovel", "SuperPot", "GoldRune"
 							$Value = 4
 						Case "BuilderPot", "ClockTowerPot", "PowerPot", "ResearchPot", "TrainingPot", "HeroPot"
 							$Value = 3
