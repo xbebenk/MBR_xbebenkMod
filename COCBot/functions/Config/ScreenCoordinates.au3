@@ -15,7 +15,7 @@
 ;Global $aiClickAwayRegionRight = [605, 10, 645, 30]
 ;Let's tighten these up to avoid clicking on shields.
 Global $aiClickAwayRegionLeft = [229, 5, 242, 20]
-Global $aiClickAwayRegionRight = [633, 10, 650, 20]
+Global $aiClickAwayRegionRight = [635, 5, 650, 20]
 
 Global $aCenterEnemyVillageClickDrag = [65, 545] ; Scroll village using this location in the water
 Global $aVillageCenteringCoord = [[750, 370], [636, 500], [777, 235]] ; Scroll village using this location : upper from setting button
