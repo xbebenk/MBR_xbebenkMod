@@ -441,7 +441,11 @@ Func ApplyConfig_600_6($TypeReadSave)
 				GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
 				GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_ENABLE)
 				Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
-				If UBound($asBBDropOrder) <> $g_iBBTroopCount Then $asBBDropOrder = StringSplit($g_sBBDropOrderDefault, "|")
+				If UBound($asBBDropOrder) <> $g_iBBTroopCount + 1 Then 
+					$asBBDropOrder = StringSplit($g_sBBDropOrderDefault, "|")
+					Setlog("Update BBDropOrder List", $COLOR_DEBUG)
+					Setlog(_ArrayToString($asBBDropOrder), $COLOR_DEBUG)
+				EndIf
 				For $i=0 To $g_iBBTroopCount - 1
 					_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], _GUICtrlComboBox_SelectString($g_ahCmbBBDropOrder[$i], $asBBDropOrder[$i+1]))
 				Next
