@@ -599,6 +599,15 @@ Func minipinch($script = "minipinch")
 	Return AndroidAdbScript($script)
 EndFunc
 
+Func TestClickAway($count = 100, $region = "right")
+	Local $iCount = $count
+	While $iCount > 0
+		ClickAway($region)
+		$iCount -= 1
+	Wend
+EndFunc
+
+
 Func btnTestAttackBarBB()
 	Local $bCurrentOCR = $g_bDebugOcr, $bCurrentRunState = $g_bRunState, $bCurrentDebugImage = $g_bDebugImageSave
 
