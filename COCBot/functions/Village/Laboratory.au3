@@ -178,7 +178,7 @@ Func Laboratory($bDebug = False)
 												Local $level = getTroopsSpellsLevel($g_iQuickMISX - 79, $g_iQuickMISY - 32)
 												If $level = "" Then $level = 1
 												If Not IsLabUpgradeResourceEnough($aSpell[$i][0], $sCostResult) Then
-													$tmpNoResources = True
+													;$tmpNoResources = True
 													SetLog(GetUpgradeName($aSpell[$i][0]) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
 												Else
 													SetLog(GetUpgradeName($aSpell[$i][0]) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
@@ -227,7 +227,7 @@ Func Laboratory($bDebug = False)
 												ContinueLoop								
 											EndIf
 											If Not IsLabUpgradeResourceEnough($aSiege[$i][0], $sCostResult) Then
-												$tmpNoResources = True
+												;$tmpNoResources = True
 												SetLog($aSiege[$i][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
 											Else
 												SetLog($aSiege[$i][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
@@ -286,6 +286,7 @@ Func Laboratory($bDebug = False)
 			EndIf
 			; If We got to here without returning, then nothing available for upgrade
 			SetLog("Nothing available for upgrade at the moment, try again later.")
+			SetLog("g_bLabUpgradeOrderEnable=" & String($g_bLabUpgradeOrderEnable) & ", g_bUpgradeAnyTroops=" & String($g_bUpgradeAnyTroops) & ", tmpNoResources=" & String($tmpNoResources), $COLOR_DEBUG)
 			If $g_bLabUpgradeOrderEnable And $g_bUpgradeAnyTroops And Not $tmpNoResources Then 
 				Return UpgradeLabAny($bDebug)
 			EndIf
@@ -453,7 +454,7 @@ Func ChkLabUpgradeInProgress($bDebug = False, $name = "")
 		EndIf
 		
 		If $g_bUseLabPotion And $iLabFinishTime > 2880 And Not $bUseBooks Then ; only use potion if lab upgrade time is more than 2 day
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			Local $LabPotion = FindButton("LabPotion")
 			If IsArray($LabPotion) And UBound($LabPotion) = 2 Then
 				SetLog("Use Laboratory Potion", $COLOR_INFO)
@@ -463,11 +464,12 @@ Func ChkLabUpgradeInProgress($bDebug = False, $name = "")
 					Return True
 				EndIf
 				Click($LabPotion[0], $LabPotion[1])
-				_Sleep(1000)
-				If QuickMis("BC1", $g_sImgGeneralCloseButton, 560, 225, 610, 275) Then 
-					Click(430, 400)
+				If _Sleep(1000) Then Return
+				If ClickB("BoostConfirm") Then
+					SetLog("laboratory Research Boosted using potion", $COLOR_SUCCESS)
 					$g_sLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime - 1380), _NowCalc())
 					SetLog("Recalculate Research time, using potion (" & $g_sLabUpgradeTime & ")")
+					ClickAway("Right")
 				EndIf
 				ClickAway("Right")
 			Else
