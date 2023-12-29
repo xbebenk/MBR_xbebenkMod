@@ -125,6 +125,7 @@ Func BoostSuperTroop($bTest = False)
 												Click($g_iQuickMISX - 230, $g_iQuickMISY + 300) ;relative from close button image to boost button
 												If _Sleep(1000) Then Return
 												ClickAway()
+												If _Sleep(1000) Then Return
 												Return True
 											EndIf
 										Else
