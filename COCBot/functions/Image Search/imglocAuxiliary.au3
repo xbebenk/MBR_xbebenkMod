@@ -790,8 +790,8 @@ Func Slot($iX, $iY) ; Return Slots for Quantity Reading on Army Window
 			Case 512 To 572 ; CC Spell Middle ( Happens with Clan Castles with the max. Capacity of 1!)
 				Return 515
 			
-			Case 599 To 659 ; CC Siege Machines
-				Return 605
+			Case 599 To 660 ; CC Siege Machines
+				Return 630
 		EndSwitch
 	EndIf
 EndFunc   ;==>Slot

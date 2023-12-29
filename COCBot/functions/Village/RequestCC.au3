@@ -318,7 +318,7 @@ Func RemoveCastleArmy($aToRemove)
 	For $i = 0 To UBound($aToRemove) - 1
 		If $aToRemove[$i][1] > 0 Then
 			$aPos[0] = $aToRemove[$i][0] + 35
-			If $i = 7 Then $aPos[0] = 685 ; x-coordinate of Siege machine slot
+			If $i = 7 Then $aPos[0] = 650 ; x-coordinate of Siege machine slot
 			SetDebugLog(" - Click at slot " & $i & ". (" & $aPos[0] & ") x " & $aToRemove[$i][1])
 			ClickRemoveTroop($aPos, $aToRemove[$i][1], $g_iTrainClickDelay) ; Click on Remove button as much as needed
 		EndIf
