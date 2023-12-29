@@ -132,7 +132,7 @@ Func getCastleDonateCap($x_start, $y_start) ;  -> Gets clan castle capacity,  --
 EndFunc   ;==>getCastleDonateCap
 
 Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  -> Gets quantity of troops in army Window (slot)
-	Return getOcrAndCapture("coc-newarmy", $x_start, $y_start, 55, 18, True, False, $bNeedCapture)
+	Return StringReplace(getOcrAndCapture("coc-newarmy", $x_start, $y_start, 55, 18, True), "-", "")
 EndFunc   ;==>getBarracksNewTroopQuantity
 
 Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of troops in army Window
