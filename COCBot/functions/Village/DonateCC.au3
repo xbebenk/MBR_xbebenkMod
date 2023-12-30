@@ -1055,9 +1055,11 @@ EndFunc   ;==>DonateWindow
 
 Func DonateWindowCap(ByRef $g_bSkipDonTroops, ByRef $g_bSkipDonSpells)
 	SetDebugLog("DonateCapWindow Start", $COLOR_DEBUG)
+	Local $xTroop = 455, $xSpell = 447, $xOffset = 38 ; offset if donate window shifted 
 	;read troops capacity
 	If Not $g_bSkipDonTroops Then
-		Local $sReadCCTroopsCap = getCastleDonateCap(455, $g_iDonationWindowY + 15) ; use OCR to get donated/total capacity
+		Local $sReadCCTroopsCap = getCastleDonateCap($xTroop, $g_iDonationWindowY + 15) ; use OCR to get donated/total capacity
+		If Not StringInStr($sReadCCTroopsCap, "#") Then $sReadCCTroopsCap = getCastleDonateCap($xTroop + $xOffset, $g_iDonationWindowY + 15)
 		SetDebugLog("$sReadCCTroopsCap: " & $sReadCCTroopsCap, $COLOR_DEBUG)
 
 		Local $aTempReadCCTroopsCap = StringSplit($sReadCCTroopsCap, "#")
@@ -1077,7 +1079,8 @@ Func DonateWindowCap(ByRef $g_bSkipDonTroops, ByRef $g_bSkipDonSpells)
 	EndIf
 
 	If Not $g_bSkipDonSpells Then
-		Local $sReadCCSpellsCap = getCastleDonateCap(447, $g_iDonationWindowY + 220) ; use OCR to get donated/total capacity
+		Local $sReadCCSpellsCap = getCastleDonateCap($xSpell, $g_iDonationWindowY + 220) ; use OCR to get donated/total capacity
+		If Not StringInStr($sReadCCSpellsCap, "#") Then $sReadCCSpellsCap = getCastleDonateCap($xSpell + $xOffset, $g_iDonationWindowY + 220)
 		SetDebugLog("$sReadCCSpellsCap: " & $sReadCCSpellsCap, $COLOR_DEBUG)
 		Local $aTempReadCCSpellsCap = StringSplit($sReadCCSpellsCap, "#")
 		If $aTempReadCCSpellsCap[0] >= 2 Then
