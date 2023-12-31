@@ -91,6 +91,8 @@ Func BoostSuperTroop($bTest = False)
 												Click($g_iQuickMISX, $g_iQuickMISY)
 												Setlog("Using Potion, Successfully Boost " & $sTroopName, $COLOR_SUCCESS)
 												ClickAway()
+												If _Sleep(1000) Then Return
+												ClickAway()
 												$TroopBoosted = True
 												Return True
 											EndIf
