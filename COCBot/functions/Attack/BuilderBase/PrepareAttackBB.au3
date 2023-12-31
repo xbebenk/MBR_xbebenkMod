@@ -111,7 +111,6 @@ Func CheckStarsAvail()
 	Local $bRet = False, $iRemainStars = 0, $iMaxStars = 0
 	Local $sStars = getOcrAndCapture("coc-BBAttackAvail", 40, 572, 50, 20)
 	
-	If $g_bDebugSetLog Then SetLog("Stars: " & $sStars, $COLOR_DEBUG2)
 	If $sStars <> "" And StringInStr($sStars, "#") Then 
 		Local $aStars = StringSplit($sStars, "#", $STR_NOCOUNT)
 		If IsArray($aStars) Then 

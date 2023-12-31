@@ -52,10 +52,10 @@ EndFunc   ;==>TrainSystem
 Func TrainPreviousArmy($bCloseWindow = False)
 	If Not OpenQuickTrainTab(False, "TrainPreviousArmy()") Then Return
 	If _Sleep(750) Then Return
-	If _ColorCheck(_GetPixelColor(730, 232, True), Hex(0x8BD43A, 6), 10) Then
-		PureClick(730, 232)
-		If _Sleep(1000) Then Return
-		For $i = 1 To 2
+	For $i = 1 To 2
+		If _ColorCheck(_GetPixelColor(730, 232, True), Hex(0x8BD43A, 6), 10) Then
+			PureClick(730, 232)
+			If _Sleep(1000) Then Return
 			If IsOKCancelPage() Then
 				If _ColorCheck(_GetPixelColor(642, 232, True), Hex(0xFFFFFF, 6), 1) Then
 					SetLog("[" & $i & "] SuperTroop Boost Needed", $COLOR_INFO)
@@ -75,18 +75,26 @@ Func TrainPreviousArmy($bCloseWindow = False)
 						EndIf
 					Else
 						Click(630, 545, 1, "Click Boost with Dark Elixer")
-						SetLog("Successfully boost with potion", $COLOR_SUCCESS)
+						If _Sleep(1000) Then Return
+						If QuickMis("BC1", $g_sImgGeneralCloseButton, 624, 139, 678, 187) Then 
+							Click($g_iQuickMISX - 230, $g_iQuickMISY + 300)
+							SetLog("Successfully boost with Dark Elixer", $COLOR_SUCCESS)
+							If _Sleep(500) Then Return
+							If Not OpenArmyOverview(True, "TrainPreviousArmy") Then Return
+							If Not OpenQuickTrainTab(True, "TrainPreviousArmy") Then Return
+						EndIf
 					EndIf					
 				Else
 					SetLog("[" & $i & "] Not Enough room to train", $COLOR_INFO)
 					Click(530, 420, 1, "Click Okay, Confirm Training")
 					If _Sleep(500) Then Return
+					ExitLoop
 				EndIf
 			EndIf
-		Next
-	Else
-		SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
-	EndIf
+		Else
+			SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
+		EndIf
+	Next
 	If $bCloseWindow Then ClickAway()
 EndFunc ;==>TrainPreviousArmy
 
@@ -137,8 +145,8 @@ Func CheckIfArmyIsReady()
 	Local $bFullArmyHero = False
 	Local $bFullSiege = False
 	$g_bWaitForCCTroopSpell = False ; reset for waiting CC in SwitchAcc
-
-	If Not OpenArmyOverview(False, "CheckIfArmyIsReady()") Then Return
+	
+	If Not OpenArmyOverview(True, "CheckIfArmyIsReady()") Then Return
 	If _Sleep(250) Then Return
 
 	CheckArmyCamp(False, False, True, True)

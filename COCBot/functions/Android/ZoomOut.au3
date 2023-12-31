@@ -29,6 +29,7 @@ EndFunc   ;==>ZoomOut
 Func _ZoomOut() ;Zooms out
 	$g_aiSearchZoomOutCounter[0] = 0
 	$g_aiSearchZoomOutCounter[1] = 1
+	checkMainScreen()
     ResumeAndroid()
     WinGetAndroidHandle()
 	getBSPos() ; Update $g_hAndroidWindow and Android Window Positions

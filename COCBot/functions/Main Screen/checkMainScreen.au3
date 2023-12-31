@@ -88,11 +88,17 @@ EndFunc   ;==>_checkMainScreen
 Func _checkMainScreenImage($aPixelToCheck)
 	Local $bRet
 	$bRet = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage") And checkChatTabPixel()
+	If Not $bRet And $g_bStayOnBuilderBase Then
+		SetLog("checkMainScreen : Check if isOnBuilderBase")
+		If QuickMIS("BC1", $g_sImgInfo, 435, 1, 462, 22) And checkChatTabPixel() Then $bRet = True
+	EndIf
+	
 	If Not $bRet Then
 		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
 			SwitchToMainVillage()
 		EndIf
 	EndIf
+	
 	Return $bRet
 EndFunc
 

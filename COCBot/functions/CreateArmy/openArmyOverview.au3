@@ -14,10 +14,16 @@
 ; ===============================================================================================================================
 Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 	If $bCheckMain Then
-		If Not IsMainPage() Then ; check for main page, avoid random troop drop
-			SetLog("Cannot open Army Overview window", $COLOR_ERROR)
-			Return False
-		EndIf
+		For $i = 1 To 2
+			SetLog("Waiting MainScreen #" & $i, $COLOR_ACTION)
+			If isOnMainVillage() Then ; check for main page
+				SetLog("MainScreen located", $COLOR_ACTION)
+				ExitLoop
+			Else
+				SetLog("Cannot open Army Overview window ", $COLOR_ERROR)
+				checkObstacles()
+			EndIf
+		Next
 	EndIf
 	
 	ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview

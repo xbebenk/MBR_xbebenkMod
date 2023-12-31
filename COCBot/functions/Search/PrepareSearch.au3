@@ -154,6 +154,15 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	UpdateStats()
 
 	If _Sleep($DELAYPREPARESEARCH2) Then Return
+	
+	If IsAttackWhileShieldPage(False) Then ; check for shield window and then button to lose time due attack and click okay
+		If WaitforPixel(435, 480, 438, 484, Hex(0x6DBC1F, 6), 6, 1) Then
+			If $g_bDebugClick Or $g_bDebugSetlog Then
+				SetDebugLog("Shld Btn Pixel color found: " & _GetPixelColor(436, 482, True), $COLOR_DEBUG)
+			EndIf
+			Click(436, 482)
+		EndIf
+	EndIf
 
 	Local $Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
 
@@ -176,12 +185,5 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		$g_bIsClientSyncError = False ; reset fast restart flag to stop OOS mode, collecting resources etc.
 		Return
 	EndIf
-	If IsAttackWhileShieldPage(False) Then ; check for shield window and then button to lose time due attack and click okay
-		If WaitforPixel(435, 480, 438, 484, Hex(0x6DBC1F, 6), 6, 1) Then
-			If $g_bDebugClick Or $g_bDebugSetlog Then
-				SetDebugLog("Shld Btn Pixel color found: " & _GetPixelColor(436, 482, True), $COLOR_DEBUG)
-			EndIf
-			Click(436, 482)
-		EndIf
-	EndIf
+	
 EndFunc   ;==>PrepareSearch
