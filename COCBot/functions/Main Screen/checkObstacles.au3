@@ -129,6 +129,13 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
 	
+	If _ColorCheck(_GetPixelColor(770, 138, True), Hex(0xD1151A, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(770, 118, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then
+		SetLog("checkObstacles: Found Boost Supertroop Window", $COLOR_ACTION)
+		Click(770, 120)
+		If _Sleep(1000) Then Return
+		Return False
+	EndIf
+	
 	If WelcomeBackCheck() Then 
 		SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
 		Click(440, 526)
