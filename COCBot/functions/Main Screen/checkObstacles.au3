@@ -136,6 +136,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 	
+	If _ColorCheck(_GetPixelColor(395, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(464, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles") Then
+		SetLog("checkObstacles: Found Cookie Rumble Confirm Window", $COLOR_ACTION)
+		Click(430, 515)
+		If _Sleep(1000) Then Return
+		Return False
+	EndIf
+	
+	
 	If WelcomeBackCheck() Then 
 		SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
 		Click(440, 526)
