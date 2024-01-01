@@ -86,11 +86,15 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 EndFunc   ;==>_checkMainScreen
 
 Func _checkMainScreenImage($aPixelToCheck)
-	Local $bRet
-	$bRet = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage") And checkChatTabPixel()
-	If Not $bRet And $g_bStayOnBuilderBase Then
-		SetLog("checkMainScreen : Check if isOnBuilderBase")
-		If QuickMIS("BC1", $g_sImgInfo, 435, 1, 462, 22) And checkChatTabPixel() Then $bRet = True
+	Local $bRet = False, $bBuilderInfo = False, $bChatTab = False
+	$bChatTab = checkChatTabPixel()
+	$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage(1)")
+	
+	$bRet = $bChatTab And $bBuilderInfo
+	If Not $bRet And $bChatTab And $g_bStayOnBuilderBase Then
+		$aPixelToCheck[0] -= 10
+		$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage(2)")
+		If $bBuilderInfo Then $bRet = True
 	EndIf
 	
 	If Not $bRet Then

@@ -53,8 +53,9 @@ Func TrainPreviousArmy($bCloseWindow = False)
 	If Not OpenQuickTrainTab(False, "TrainPreviousArmy()") Then Return
 	If _Sleep(750) Then Return
 	For $i = 1 To 2
-		If _ColorCheck(_GetPixelColor(730, 232, True), Hex(0x8BD43A, 6), 10) Then
+		If _ColorCheck(_GetPixelColor(730, 232, True), Hex(0x8BD43A, 6), 10) Then ;check Train Previous Button
 			PureClick(730, 232)
+			SetLog("Training Previous Army", $COLOR_SUCCESS)
 			If _Sleep(1000) Then Return
 			If IsOKCancelPage() Then
 				If _ColorCheck(_GetPixelColor(642, 232, True), Hex(0xFFFFFF, 6), 1) Then
@@ -91,6 +92,7 @@ Func TrainPreviousArmy($bCloseWindow = False)
 					ExitLoop
 				EndIf
 			EndIf
+			If _ColorCheck(_GetPixelColor(730, 232, True), Hex(0xADADAD, 6), 10) Then ExitLoop ;check Greyed Train Previous Button
 		Else
 			SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
 		EndIf

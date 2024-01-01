@@ -15,9 +15,9 @@
 Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 	If $bCheckMain Then
 		For $i = 1 To 2
-			SetLog("Waiting MainScreen #" & $i, $COLOR_ACTION)
+			If $g_bDebugSetlogTrain Then SetLog("Waiting MainScreen #" & $i, $COLOR_ACTION)
 			If isOnMainVillage() Then ; check for main page
-				SetLog("MainScreen located", $COLOR_ACTION)
+				If $g_bDebugSetlogTrain Then SetLog("MainScreen located", $COLOR_ACTION)
 				ExitLoop
 			Else
 				SetLog("Cannot open Army Overview window ", $COLOR_ERROR)
