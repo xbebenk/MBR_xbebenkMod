@@ -885,11 +885,12 @@ Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlo
 	Next
 
 	If $bGetQuantity Then
-		Local $aQuantities[UBound($aResult)][2]
+		Local $aQuantities[UBound($aResult)][3]
 		Local $aQueueTroop[$eTroopCount]
 		For $i = 0 To (UBound($aQuantities) - 1)
 			$aQuantities[$i][0] = $aSearchResult[$i][0]
 			$aQuantities[$i][1] = $aSearchResult[$i][3]
+			$aQuantities[$i][2] = $aSearchResult[$i][1] ;x coord
 			Local $iTroopIndex = TroopIndexLookup($aQuantities[$i][0])
 			If $iTroopIndex >= 0 And $iTroopIndex < $eTroopCount Then
 				If $bSetLog Then SetLog("  - " & $g_asTroopNames[TroopIndexLookup($aQuantities[$i][0], "CheckQueueTroops")] & ": " & $aQuantities[$i][1] & "x", $COLOR_SUCCESS)

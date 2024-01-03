@@ -43,7 +43,11 @@ Func DoubleTrain()
 				ExitLoop
 			Case $TroopCamp[0] = ($TroopCamp[1] * 2)
 				SetLog("Cur = Max")
-				ExitLoop
+				If $g_bTrainPreviousArmy Then 
+					CheckQueueTroopAndTrainRemain()
+				Else
+					ExitLoop
+				EndIf
 			Case $TroopCamp[0] = 0 ; 0/600 (empty troop camp)
 				TrainFullTroop() ;train 1st Army
 			Case $TroopCamp[2] > 0 ; 30/600 (1st army partially trained)
@@ -437,17 +441,22 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 	
 	; Check block troop
 	If $ArmyCamp[0] < $ArmyCamp[1] + $iTotalQueue Then
+		SetLog("$ArmyCamp[0] = " & $ArmyCamp[0] & "$ArmyCamp[1] + $iTotalQueue = " & $ArmyCamp[1] + $iTotalQueue)
 		SetLog("A big guy blocks our camp")
 		Return False
 	EndIf
 	
 	; check wrong queue
+	Local $iExcessTroop = 0, $bExcessTroop = False
 	For $i = 0 To UBound($aiQueueTroops) - 1
-		If $aiQueueTroops[$i] - $g_aiArmyCompTroops[$i] > 0 Then
-			SetLog("Some wrong troops in queue")
-			Return False
+		$iExcessTroop = $aiQueueTroops[$i] - $g_aiArmyCompTroops[$i]
+		If $iExcessTroop > 0 Then
+			SetLog("  - " & $g_asTroopNames[$i] & " x" & $aiQueueTroops[$i] & ", excess queue [" & $iExcessTroop & "]", $COLOR_ACTION)
+			$bExcessTroop = True
+			RemoveQueueTroop($i, $iExcessTroop)
 		EndIf
 	Next
+	If $bExcessTroop Then Return False
 	
 	If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then
 		; Train remain
@@ -464,13 +473,6 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 			EndIf
 		Next
 		TrainUsingWhatToTrain($rWTT, True)
-
-		;If _Sleep(1000) Then Return
-		;$ArmyCamp = GetCurrentArmy(95, 163)
-		;SetLog("Checking troop tab: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2 & ($ArmyCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
-		;If Not $g_bIgnoreIncorrectTroopCombo Then
-		;	If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then Return False
-		;EndIf
 	EndIf
 	Return True
 EndFunc   ;==>CheckQueueTroopAndTrainRemain
@@ -533,11 +535,30 @@ EndFunc   ;==>CheckQueueSpellAndTrainRemain
 Func FindxQueueStart()
 	Local $xQueueStart = 777
 	For $i = 0 To 10
-		If _ColorCheck(_GetPixelColor(777 - $i * 60, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found
+		If _ColorCheck(_GetPixelColor(777 - $i * 60, 186, True), Hex(0xD7AFA9, 6), 20) Then ; first pink background from right to left
 			$XQueueStart -= 60 * $i
 			ExitLoop
 		EndIf
 	Next
 	If $g_bDebugSetlog Then SetLog("xQueueStart = " & $xQueueStart, $COLOR_DEBUG)
 	Return $xQueueStart
+EndFunc
+
+Func RemoveQueueTroop($iTroopIndex = 0, $Quantity = 1)
+	If $g_bDebugSetlog Then SetLog("RemoveQueueTroop TroopIndex = " & $iTroopIndex & ", Quantity = " & $Quantity, $COLOR_DEBUG1)
+	Local $YRemove = 200, $XOffset = 20
+	Local $XQueueStart = FindxQueueStart()
+	Local $aiQueueTroops = CheckQueueTroops(True, True, $XQueueStart, True)
+	If Not IsArray($aiQueueTroops) Then Return 
+	_ArraySort($aiQueueTroops, 0, 0, 0, 2)
+	If $g_bDebugSetlog Then SetLog(_ArrayToString($aiQueueTroops))
+	
+	For $i = 0 To UBound($aiQueueTroops) - 1
+		If TroopIndexLookup($aiQueueTroops[$i][0]) = $iTroopIndex And $aiQueueTroops[$i][1] >= $Quantity Then 
+			SetLog("Removing " & $aiQueueTroops[$i][0] & " x" & $Quantity, $COLOR_DEBUG1)
+			Click($aiQueueTroops[$i][2] + $XOffset, $YRemove, $Quantity, "Remove wrong queue")
+			ExitLoop
+		EndIf
+	Next
+
 EndFunc

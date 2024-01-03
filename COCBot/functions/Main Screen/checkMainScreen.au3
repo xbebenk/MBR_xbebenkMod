@@ -24,6 +24,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 
 	If $bSetLog = Default Then $bSetLog = True
 	Local $VillageType = "MainVillage"
+	If $bBuilderBase = Default Then $bBuilderBase = isOnBuilderBase()
 	If $bBuilderBase Then $VillageType = "BuilderBase"
 	If $bSetLog Then
 		SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
