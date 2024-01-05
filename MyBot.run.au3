@@ -1546,10 +1546,9 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
-		_RunFunction("DonateCC,Train")
+		DonateCC()
+		TrainSystem()
 		CommonRoutine("Switch")
-		;CheckIfArmyIsReady()
-		;ClickAway()
 		If _Sleep(1000) Then Return
 		_ClanGames(False, True) ; Do Only Purge
 		If Not $g_bIsFullArmywithHeroesAndSpells Or $g_bForceSwitch Then checkSwitchAcc() ;switch to next account
@@ -1586,9 +1585,6 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
-			;TrainSystem()
-			If _Sleep(1000) Then Return
-
 			Local $aRndFuncList = ['BuilderBase', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
