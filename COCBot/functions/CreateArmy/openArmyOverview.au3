@@ -60,7 +60,8 @@ Func OpenQuickTrainTab($bSetLog = True, $sWhereFrom = "Undefined")
 EndFunc   ;==>OpenQuickTrainTab
 
 Func OpenTrainTab($sTab, $bSetLog = True, $sWhereFrom = "Undefined")
-
+	
+	CheckReceivedTroops()
 	If Not IsTrainPage() Then
 		SetDebugLog("Error in OpenTrainTab: Cannot find the Army Overview Window", $COLOR_ERROR)
 		SetError(1)
@@ -90,3 +91,12 @@ Func OpenTrainTab($sTab, $bSetLog = True, $sWhereFrom = "Undefined")
 	If _Sleep(200) Then Return
 	Return True
 EndFunc   ;==>OpenTrainTab
+
+Func CheckReceivedTroops()
+	If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
+		SetLog("Clan Castle Message Blocking, Waiting until it's gone", $COLOR_INFO)
+		While _CheckPixel($aRecievedTroops, True)
+			If _Sleep(500) Then Return
+		WEnd
+	EndIf
+EndFunc

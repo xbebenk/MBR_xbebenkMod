@@ -34,7 +34,6 @@ Func TrainSystem()
 	CheckIfArmyIsReady()
 	
 	If Not $g_bRunState Then Return
-	If $g_bTrainPreviousArmy Then TrainPreviousArmy()
 	TrainCustomArmy()
 	If Not $g_bRunState Then Return
 	TrainSiege()
@@ -62,12 +61,15 @@ Func TrainPreviousArmy($bCloseWindow = False)
 					SetLog("[" & $i & "] SuperTroop Boost Needed", $COLOR_INFO)
 					Click(530, 420, 1, "Click Okay, Confirm Boost")
 					If _Sleep(1000) Then Return
-					If WaitforPixel(582, 555, 640, 556, "FF887F", 10, 1) Then
+					If WaitforPixel(582, 555, 640, 556, "FF887F", 10, 1) Then ;red color on DE cost
 						Click(465, 545, 1, "Click Boost with SuperTroop potion")
 						If _Sleep(1000) Then Return
 						If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 450, 444, 485, 480) Then
 							Click($g_iQuickMISX, $g_iQuickMISY)
 							SetLog("Successfully boost with potion", $COLOR_SUCCESS)
+							If _Sleep(1000) Then Return
+							If Not OpenArmyOverview(True, "TrainPreviousArmy") Then Return
+							If Not OpenQuickTrainTab(True, "TrainPreviousArmy") Then Return
 						Else
 							SetLog("Cannot find potion boost button", $COLOR_ERROR)
 							ClickAway()
@@ -80,7 +82,7 @@ Func TrainPreviousArmy($bCloseWindow = False)
 						If QuickMis("BC1", $g_sImgGeneralCloseButton, 624, 139, 678, 187) Then 
 							Click($g_iQuickMISX - 230, $g_iQuickMISY + 300)
 							SetLog("Successfully boost with Dark Elixer", $COLOR_SUCCESS)
-							If _Sleep(500) Then Return
+							If _Sleep(1000) Then Return
 							If Not OpenArmyOverview(True, "TrainPreviousArmy") Then Return
 							If Not OpenQuickTrainTab(True, "TrainPreviousArmy") Then Return
 						EndIf
@@ -105,9 +107,10 @@ Func TrainCustomArmy()
 	If isProblemAffect(True) Then Return
 	SetLog(" ====== CustomTrain ====== ", $COLOR_ACTION)
 
-	;If $bDonateTrain = -1 Then SetbDonateTrain()
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
-
+	
+	If $g_bTrainPreviousArmy Then TrainPreviousArmy()
+	
 	If $g_bDoubleTrain Then
 		DoubleTrain()
 		Return
@@ -949,13 +952,7 @@ EndFunc   ;==>CheckQueueSpells
 Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = "")
 	; Setup arrays, including default return values for $return
 	Local $aResult[1][4], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
-	
-	If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
-		SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
-		While _CheckPixel($aRecievedTroops, True)
-			If _Sleep(500) Then Return
-		WEnd
-	EndIf	
+		
 	If Not $g_bRunState Then Return $aResult
 	
 	

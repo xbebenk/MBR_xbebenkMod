@@ -32,12 +32,13 @@ Func getArmySiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 		If _Sleep($DELAYCHECKARMYCAMP5) Then Return
 	EndIf
 
-	If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
-		SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
-		While _CheckPixel($aRecievedTroops, True)
-			If _Sleep(500) Then Return
-		WEnd
-	EndIf
+	CheckReceivedTroops()
+	;If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
+	;	SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
+	;	While _CheckPixel($aRecievedTroops, True)
+	;		If _Sleep(500) Then Return
+	;	WEnd
+	;EndIf
 
 	Local $sSiegeDiamond = GetDiamondFromRect("579,211,766,270") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
 	If $g_bDebugFuncTime Then StopWatchStart("findMultiple, \imgxml\ArmyOverview\SiegeMachines")
