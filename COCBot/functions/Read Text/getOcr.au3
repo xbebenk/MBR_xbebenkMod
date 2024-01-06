@@ -76,7 +76,7 @@ Func getResourcesBonusPerc($x_start, $y_start) ; -> Gets complete value of Bonus
 EndFunc   ;==>getResourcesBonusPerc
 
 Func getLabCost($x_start, $y_start) ;normal lab
-	Return getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True)
+	Return StringReplace(getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True), "-", "")
 EndFunc 
 
 Func getSLabCost($x_start, $y_start) ;builderbase lab
