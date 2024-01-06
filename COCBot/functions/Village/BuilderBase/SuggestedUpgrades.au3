@@ -160,8 +160,8 @@ Func AutoUpgradeBB($bTest = False)
 EndFunc   ;==>MainSuggestedUpgradeCode
 
 Func SearchNewBuilding($bTest = False)
-	SetLog("SearchNewBuilding Disabled by Dev, Return", $COLOR_ERROR)
-	Return False
+	;SetLog("SearchNewBuilding Disabled by Dev, Return", $COLOR_ERROR)
+	;Return False
 	Local $NeedDrag = True, $ZoomedIn = False, $TmpUpgradeCost, $UpgradeCost, $sameCost
 	ClickBBBuilder()
 	
@@ -430,13 +430,13 @@ Func DoUpgradeBB($CostType = "Gold", $bTest = False)
 	Local $Dir = $g_sImgAutoUpgradeBtnDir & $CostType & "*"
 	;OptimizeOTTO enabled, BM not Maxed, And Upgrade Wall, Force use Gold
 	If $g_bOptimizeOTTO And Not $g_bisBattleMachineMaxed And StringInStr($aBuildingName[1], "Wall") Then $Dir = $g_sImgAutoUpgradeBtnDir & "\Gold*"
-	If QuickMIS("BFI", $Dir, 260, 520, 650, 620) Then
+	If QuickMIS("BFI", $Dir, 240, 480, 650, 580) Then
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If Not $bTest Then
 			If _Sleep(500) Then Return
 			If WaitBBUpgradeWindow() Then
-				If QuickMIS("BC1", $g_sImgBBUpgradeWindowButton, 300, 400, 770, 570) Then
-					Click($g_iQuickMISX - 50, $g_iQuickMISY + 20)
+				If QuickMIS("BC1", $g_sImgBBUpgradeWindowButton, 340, 500, 800, 600) Then
+					Click($g_iQuickMISX - 50, $g_iQuickMISY + 10)
 					If _Sleep(1000) Then Return
 					If isGemOpen(True) Then
 						SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
@@ -825,21 +825,21 @@ Func IsBBBuilderMenuOpen()
 	Local $aBorder1[4] = [560, 73, 0xFFFFFF, 40]
 	Local $sTriangle
 	If _CheckPixel($aBorder, True) Then
-		SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
+		If $g_bDebugSetLog Then SetLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
 		$bRet = True ;got correct color for border
 	EndIf
 	
 	If Not $bRet Then 
 		If _CheckPixel($aBorder1, True) Then
-			SetDebugLog("Found Border1 Color: " & _GetPixelColor($aBorder1[0], $aBorder1[1], True), $COLOR_ACTION)
+			If $g_bDebugSetLog Then SetLog("Found Border1 Color: " & _GetPixelColor($aBorder1[0], $aBorder1[1], True), $COLOR_ACTION)
 			$bRet = True ;got correct color for border
 		EndIf
 	EndIf
 	
 	If Not $bRet Then ;lets re check if border color check not success
-		SetDebugLog("Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
+		If $g_bDebugSetLog Then SetLog("Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
 		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 495, 60, 50, 17)
-		SetDebugLog("$sTriangle: " & $sTriangle)
+		If $g_bDebugSetLog Then SetLog("$sTriangle: " & $sTriangle)
 		If $sTriangle = "^" Or $sTriangle = "~" Then $bRet = True
 	EndIf
 
@@ -852,7 +852,7 @@ Func getMostBottomCostBB()
 	If IsArray($Icon) And UBound($Icon) > 0 Then
 		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord
 		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 12, 120, 20, True) ;check most bottom upgrade cost
-		$TmpName = getBuildingName($Icon[0][1] - 190, $Icon[0][2] - 8)
+		$TmpName = getBuildingName($Icon[0][1] - 180, $Icon[0][2] - 10)
 		$ret = $TmpName[0] & "|" & $TmpUpgradeCost
 	EndIf
 	Return $ret
@@ -883,7 +883,7 @@ Func FindBHInUpgradeProgress()
 	Local $Progress = QuickMIS("CNX", $g_sImgAUpgradeHour, 540, 100, 625, 130)
 	If IsArray($Progress) And UBound($Progress) > 0 Then
 		For $i = 0 To UBound($Progress) - 1
-			Local $UpgradeName = getBuildingName(260, $Progress[$i][2] - 5) ;get upgrade name and amount
+			Local $UpgradeName = getBuildingName($Progress[$i][1] - 180, $Progress[$i][2] - 5) ;get upgrade name and amount
 			If StringInStr($UpgradeName[0], "Hall", 1) Then
 				$bRet = True
 				ExitLoop
