@@ -1712,6 +1712,9 @@ EndFunc
 Func T420()
 	If IsDeclared("g_VariableTest123") = 1 Then
 		SetLog("Execute Test420()", $COLOR_INFO)
-		Return Execute("Test420()")
+		If Execute("Test420()") = 0 Then
+			SetLog("Executing Test420() again", $COLOR_INFO)
+			Return Execute("Test420()")
+		EndIf
 	EndIf
 EndFunc
