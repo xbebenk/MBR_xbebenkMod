@@ -119,7 +119,13 @@ Func SwitchTo($To = "BB")
 			
 			Local $sScode = "DS"
 			For $i = 1 To 5
-				$bRet = _CheckPixel($aPixelToCheck, True, Default, "SwitchBetweenBases")
+				Switch $To
+				Case "BB"
+					$bRet = isOnBuilderBase()
+				Case "Main"
+					$bRet = isOnMainVillage()
+				EndSwitch
+				
 				If $bRet Then 
 					SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
 					$FalseDetectionCount = 0

@@ -89,14 +89,11 @@ EndFunc   ;==>_checkMainScreen
 Func _checkMainScreenImage($aPixelToCheck)
 	Local $bRet = False, $bBuilderInfo = False, $bChatTab = False
 	$bChatTab = checkChatTabPixel()
-	$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage(1)")
+	$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage")
 	
 	$bRet = $bChatTab And $bBuilderInfo
-	If Not $bRet And $bChatTab And $g_bStayOnBuilderBase Then
-		$aPixelToCheck[0] -= 10
-		$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage(2)")
-		If $bBuilderInfo Then $bRet = True
-	EndIf
+	If $g_bDebugSetLog Then SetLog("PixelToCheck = " & _ArrayToString($aPixelToCheck), $COLOR_ACTION)
+	If $g_bDebugSetLog Then SetLog("PixelCheck result : " & ($bRet ? "succeed" : "failed"), $COLOR_ACTION)
 	
 	If Not $bRet Then
 		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
@@ -143,13 +140,12 @@ EndFunc
 
 Func isOnBuilderBase()
 	Local $bRet = False
-	Local $aPixelToCheck = $aIsOnBuilderBase
+	Local $aPixelToCheck[2] = [$aIsOnBuilderBase, $aIsOnBuilderBase1]
 	
-	$bRet = _checkMainScreenImage($aPixelToCheck)
-	
-	If Not $bRet Then ;check again, after attack builder icon shifted left :((
-		$bRet = _checkMainScreenImage($aIsOnBuilderBase1)
-	EndIf
+	For $i In $aPixelToCheck
+		$bRet = _checkMainScreenImage($i)
+		If $bRet Then ExitLoop
+	Next
 	
 	If Not $bRet Then
 		SetDebugLog("Using Image to Check if isOnBuilderBase")
