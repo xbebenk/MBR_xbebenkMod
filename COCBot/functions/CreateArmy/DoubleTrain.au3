@@ -32,6 +32,7 @@ Func DoubleTrain()
 	While 1
 		$TroopCamp = GetCurrentArmy(95, 163)
 		If IsProblemAffect(True) Then Return
+		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 		
 		If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($TroopCamp))
@@ -44,33 +45,38 @@ Func DoubleTrain()
 				ExitLoop
 			Case $TroopCamp[0] = ($TroopCamp[1] * 2)
 				SetLog("Cur = Max", $COLOR_DEBUG1)
-				If Not CheckQueueTroopAndTrainRemain() Then ExitLoop
-			Case $TroopCamp[2] = 0 
-				SetLog("TroopCamp[2] = 0", $COLOR_DEBUG1)
-				TrainFullTroop(True) ;train 2nd Army
+				If IsNormalTroopTrain() Then
+					If Not CheckQueueTroopAndTrainRemain() Then ExitLoop
+				EndIf
 			Case $TroopCamp[0] = 0 ; 0/600 (empty troop camp)
 				SetLog("TroopCamp[0] = 0", $COLOR_DEBUG1)
 				TrainFullTroop() ;train 1st Army
+			Case $TroopCamp[2] = 0 ;300/600 (empty troop queue)
+				SetLog("TroopCamp[2] = 0", $COLOR_DEBUG1)
+				TrainFullTroop(True) ;train 2nd Army
 			Case $TroopCamp[2] > 0 ; 30/600 (1st army partially trained)
 				SetLog("TroopCamp[2] > 0", $COLOR_DEBUG1)
-				RemoveTrainTroop()
-				Local $aWhatToTrain = WhatToTrain(False, False)
-				If DoWhatToTrainContainTroop($aWhatToTrain) Then
+				If IsNormalTroopTrain($TroopCamp) Then
+					RemoveTrainTroop()
+					Local $aWhatToTrain = WhatToTrain(False, False)
 					SetLog("New troop Fill way", $COLOR_DEBUG1)
 					TrainUsingWhatToTrain($aWhatToTrain)
 					FillIncorrectTroopCombo("1st Army")
 				Else
-					If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
-					If _Sleep(250) Then Return
-					If $TroopCamp[1] <> $g_iTotalCampSpace Then Return False
+					FillIncorrectTroopCombo("1st Army")
 				EndIf
 			Case $TroopCamp[0] = $TroopCamp[1] ;300/600 (1st army fully trained)
 				SetLog($TroopCamp[0] & " = " & $TroopCamp[1], $COLOR_DEBUG1)
 				TrainFullTroop(True) ;train 2nd Army
 			Case $TroopCamp[0] > $TroopCamp[1] ;350/600 (2nd army partially trained)
 				SetLog($TroopCamp[0] & " > " & $TroopCamp[1], $COLOR_DEBUG1)
-				CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) ;train to queue
-				FillIncorrectTroopCombo("2nd Army") 
+				If IsNormalTroopTrain($TroopCamp) Then
+					CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) ;train to queue
+					FillIncorrectTroopCombo("2nd Army")
+					ExitLoop
+				Else
+					FillIncorrectTroopCombo("2nd Army") 
+				EndIf
 		EndSelect
 		If _Sleep(500) Then Return
 	WEnd
@@ -473,11 +479,11 @@ Func RemoveQueueTroop($iTroopIndex = 0, $Quantity = 1)
 		If TroopIndexLookup($aiQueueTroops[$i][0]) = $iTroopIndex Then 
 			If $Quantity > $aiQueueTroops[$i][3] Then 
 				SetLog("  - Removing x" & $aiQueueTroops[$i][3] & " queued " & $g_asTroopNames[$iTroopIndex], $COLOR_ACTION)
-				Click($aiQueueTroops[$i][1] + $XOffset, $YRemove, $aiQueueTroops[$i][3], "Remove wrong queue")
+				Click($aiQueueTroops[$i][1] + $XOffset, $YRemove, $aiQueueTroops[$i][3], $g_iTrainClickDelay, "Remove wrong queue")
 				ContinueLoop ;trop quantity on slot less than what to remove
 			Else
 				SetLog("  - Removing x" & $Quantity & " queued " & $g_asTroopNames[$iTroopIndex], $COLOR_ACTION)
-				Click($aiQueueTroops[$i][1] + $XOffset, $YRemove, $Quantity, "Remove wrong queue")
+				Click($aiQueueTroops[$i][1] + $XOffset, $YRemove, $Quantity, $g_iTrainClickDelay, "Remove wrong queue")
 				ExitLoop ;trop quantity on slot same or more than what to remove
 			EndIf
 		EndIf
@@ -493,4 +499,24 @@ Func RemoveTrainTroop()
 			Click($aConfirmSurrender[0], $aConfirmSurrender[1])
 		EndIf
 	EndIf
+EndFunc
+
+;IsNormalTroopTrain() 
+;return true if forced army capacity = total army space on train config
+
+Func IsNormalTroopTrain($TroopCamp = Default)
+	Local $bRet = True
+	If $TroopCamp = Default Then $TroopCamp = GetCurrentArmy(95, 163)
+	
+	Local $iSpace = 0
+	For $i = 0 To $eTroopCount - 1
+		Local $troopIndex = $g_aiTrainOrder[$i]
+		If $g_aiArmyCompTroops[$troopIndex] > 0 Then
+			$iSpace += ($g_aiTroopSpace[$troopIndex] * $g_aiArmyCompTroops[$troopIndex])
+		EndIf
+	Next
+	
+	If $iSpace < $g_iTotalCampForcedValue Then $bRet = False
+	If $g_bDebugSetlog Then SetLog("Space = " & $iSpace & ", ConfigTroopSpace = " & $g_iTotalCampForcedValue & ", bRet = " & String($bRet))
+	Return $bRet
 EndFunc

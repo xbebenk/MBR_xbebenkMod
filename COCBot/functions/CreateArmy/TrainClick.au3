@@ -39,30 +39,18 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 				Local $sLogText = Default
 				If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
 			Else
-				; FastCaptureRegion = True when is set to use WinAPI+ BackgroundMode
-				If FastCaptureRegion() Then
-					; Will make a LOOP for each troop will check a color position ( gray[i] )
-					For $i = 0 To ($iTimes - 1)
-						If isProblemAffect(True) Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
-						Local $sLogText = Default
-						If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
-						PureClick($iX, $iY) ;Click once.
-						If _Sleep($iSpeed, False) Then ExitLoop
-					Next
-				Else
-					If isProblemAffect(True) Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
-					Local $sLogText = Default
-					If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
-					PureClick($iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
-					If _Sleep($iSpeed, False) Then Return
-				EndIf
+				If isProblemAffect(True) Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
+				Local $sLogText = Default
+				If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
+				PureClick($iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
+				If _Sleep($iSpeed, False) Then Return
 			EndIf
 			ReleaseClicks()
 		Else
 			Local $sLogText = Default
 			If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
 			If isProblemAffect(True) Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
-			If $g_bDebugSetlogTrain Then SetLog("Full Check=" & _GetPixelColor($aWatchSpot[0], $aWatchSpot[1], False), $COLOR_DEBUG)
+			;If $g_bDebugSetlogTrain Then SetLog("Full Check=" & _GetPixelColor($aWatchSpot[0], $aWatchSpot[1], False), $COLOR_DEBUG)
 			PureClick($iX, $iY)
 
 			If _Sleep($iSpeed, False) Then Return

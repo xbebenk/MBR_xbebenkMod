@@ -94,43 +94,6 @@ Func GetTrainPos(Const $iIndex)
 	Return 0
 EndFunc   ;==>GetTrainPos
 
-Func GetFullName(Const $iIndex, Const $aTrainPos)
-	If $g_bDebugSetlogTrain Then SetLog("GetFullName($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
-
-	If $iIndex >= $eBarb And $iIndex <= $eIWiza Then
-		Local $sTroopType = ($iIndex >= $eMini ? "Dark" : "Normal")
-		Return GetFullNameSlot($aTrainPos, $sTroopType)
-	EndIf
-
-	If $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then
-		Return GetFullNameSlot($aTrainPos, "Spell")
-	EndIf
-
-	SetLog("Don't know how to find the full name of troop with index " & $iIndex & " yet")
-
-	Local $aTempSlot[4] = [-1, -1, -1, -1]
-
-	Return $aTempSlot
-EndFunc   ;==>GetFullName
-
-
-Func GetRNDName(Const $iIndex, Const $aTrainPos)
-	If $g_bDebugSetlogTrain Then SetLog("GetRNDName($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
-	Local $aTrainPosRND[4]
-
-	If $iIndex <> -1 Then
-		Local $aTempCoord = $aTrainPos
-		$aTrainPosRND[0] = $aTempCoord[0] - 5
-		$aTrainPosRND[1] = $aTempCoord[1] - 5
-		$aTrainPosRND[2] = $aTempCoord[0] + 5
-		$aTrainPosRND[3] = $aTempCoord[1] + 5
-		Return $aTrainPosRND
-	EndIf
-
-	SetLog("Don't know how to find the RND name of troop with index " & $iIndex & " yet!", $COLOR_ERROR)
-	Return 0
-EndFunc   ;==>GetRNDName
-
 Func GetVariable(Const $asImageToUse, Const $iIndex)
 	Local $aTrainPos[5] = [-1, -1, -1, -1, $eBarb]
 	; Capture the screen for comparison
@@ -187,6 +150,43 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 
 	Return $aTrainPos
 EndFunc   ;==>GetVariable
+
+Func GetFullName(Const $iIndex, Const $aTrainPos)
+	If $g_bDebugSetlogTrain Then SetLog("GetFullName($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
+
+	If $iIndex >= $eBarb And $iIndex <= $eIWiza Then
+		Local $sTroopType = ($iIndex >= $eMini ? "Dark" : "Normal")
+		Return GetFullNameSlot($aTrainPos, $sTroopType)
+	EndIf
+
+	If $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then
+		Return GetFullNameSlot($aTrainPos, "Spell")
+	EndIf
+
+	SetLog("Don't know how to find the full name of troop with index " & $iIndex & " yet")
+
+	Local $aTempSlot[4] = [-1, -1, -1, -1]
+
+	Return $aTempSlot
+EndFunc   ;==>GetFullName
+
+
+Func GetRNDName(Const $iIndex, Const $aTrainPos)
+	If $g_bDebugSetlogTrain Then SetLog("GetRNDName($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
+	Local $aTrainPosRND[4]
+
+	If $iIndex <> -1 Then
+		Local $aTempCoord = $aTrainPos
+		$aTrainPosRND[0] = $aTempCoord[0] - 5
+		$aTrainPosRND[1] = $aTempCoord[1] - 5
+		$aTrainPosRND[2] = $aTempCoord[0] + 5
+		$aTrainPosRND[3] = $aTempCoord[1] + 5
+		Return $aTrainPosRND
+	EndIf
+
+	SetLog("Don't know how to find the RND name of troop with index " & $iIndex & " yet!", $COLOR_ERROR)
+	Return 0
+EndFunc   ;==>GetRNDName
 
 ; Function to use on GetFullName() , returns slot and correct [i] symbols position on train window
 Func GetFullNameSlot(Const $iTrainPos, Const $sTroopType)
