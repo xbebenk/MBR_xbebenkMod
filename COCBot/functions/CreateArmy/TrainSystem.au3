@@ -57,7 +57,7 @@ Func TrainPreviousArmy($bCloseWindow = False)
 			SetLog("Training Previous Army", $COLOR_SUCCESS)
 			If _Sleep(1000) Then Return
 			If IsOKCancelPage() Then
-				If _ColorCheck(_GetPixelColor(642, 232, True), Hex(0xFFFFFF, 6), 1) Then
+				If _ColorCheck(_GetPixelColor(642, 232, True), Hex(0xFFFFFF, 6), 1) Then ;check popup window (boost or not enough room)
 					SetLog("[" & $i & "] SuperTroop Boost Needed", $COLOR_INFO)
 					Click(530, 420, 1, "Click Okay, Confirm Boost")
 					If _Sleep(1000) Then Return
@@ -87,7 +87,7 @@ Func TrainPreviousArmy($bCloseWindow = False)
 							If Not OpenQuickTrainTab(True, "TrainPreviousArmy") Then Return
 						EndIf
 					EndIf					
-				Else
+				Else ;not a boost window
 					SetLog("[" & $i & "] Not Enough room to train", $COLOR_INFO)
 					Click(530, 420, 1, "Click Okay, Confirm Training")
 					If _Sleep(500) Then Return
@@ -628,33 +628,27 @@ Func RemoveExtraTroopsQueue()
 EndFunc   ;==>RemoveExtraTroopsQueue
 
 Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQueue = True)
-	Local $iArrowX, $iArrowY
-
+	Local $iArrowX, $iArrowY = 127
 	If Not $g_bRunState Then Return
-
+	
 	If $sType = "Troops" Then
-		$iArrowX = $aGreenArrowTrainTroops[0] 
-		$iArrowY = $aGreenArrowTrainTroops[1]
+		$iArrowX = 327
 	ElseIf $sType = "Spells" Then
-		$iArrowX = $aGreenArrowBrewSpells[0]
-		$iArrowY = $aGreenArrowBrewSpells[1]
+		$iArrowX = 463
 	ElseIf $sType = "SiegeMachines" Then
-		$iArrowX = $aGreenArrowTrainSiegeMachines[0]
-		$iArrowY = $aGreenArrowTrainSiegeMachines[1]
-	Else
-		Return
+		$iArrowX = 597
 	EndIf
 	
-	If Not WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x81BF41, 6), 20) Then
-		If $g_bDebugSetlog Then SetLog("IsQueueEmpty : queue arrow Not Found", $COLOR_ACTION) 
+	If Not WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x83BF44, 6), 20, 1) Then
+		If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": queue arrow Not Found", $COLOR_ACTION) 
 		Return True ; Check Green Arrows at top first, if not there -> Return
-	ElseIf WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x81BF41, 6), 20) And Not $removeExtraTroopsQueue Then
-		If $g_bDebugSetlog Then SetLog("IsQueueEmpty : queue arrow Found, checking boost arrow", $COLOR_ACTION)
-		If Not WaitforPixel($iArrowX - 11, $iArrowY - 2, $iArrowX - 9, $iArrowY + 2, Hex(0x81BF41, 6), 20, 1) Then 
-			If $g_bDebugSetlog Then SetLog("IsQueueEmpty : queue arrow Found, boost arrow not Found", $COLOR_ACTION)
+	ElseIf WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x83BF44, 6), 20, 1) And Not $removeExtraTroopsQueue Then
+		If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": queue arrow Found, checking boost arrow", $COLOR_ACTION)
+		If Not WaitforPixel($iArrowX - 11, $iArrowY - 2, $iArrowX - 9, $iArrowY + 2, Hex(0x83BF44, 6), 20, 1) Then 
+			If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": queue arrow Found, boost arrow not Found", $COLOR_ACTION)
 			Return False  ; check if boost arrow
 		Else
-			If $g_bDebugSetlog Then SetLog("IsQueueEmpty : queue arrow Found, boost arrow Found", $COLOR_ACTION)
+			If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": queue arrow Found, boost arrow Found", $COLOR_ACTION)
 		EndIf
 	EndIf
 

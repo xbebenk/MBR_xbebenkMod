@@ -96,11 +96,12 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 				Local $aSearchResult = CheckQueueSpells(True, False, $xQueue + 6, True)
 			EndIf
 			If Not IsArray($aSearchResult) Then ContinueLoop
-
+			
+			$xQueue -= 11 ; offset for checking green check mark
 			For $j = 0 To (UBound($aSearchResult) - 1)
 				Local $TroopIndex = TroopIndexLookup($aSearchResult[$j][0], "IsDonateQueueOnly()")
 				If $TroopIndex < 0 Then ContinueLoop
-				If _ColorCheck(_GetPixelColor($xQueue - $j * 61, 216, True), Hex(0xB7B645, 6), 20) Then ; the green check symbol [185, 183, 71]
+				If _ColorCheck(_GetPixelColor($xQueue - $j * 61, 235, True), Hex(0x98A826, 6), 20) Then ; the green check symbol [185, 183, 71]
 					If $i = 0 Then
 						If _ArrayIndexValid($g_aiAvailQueuedTroop, $TroopIndex) Then
 							$g_aiAvailQueuedTroop[$TroopIndex] += $aSearchResult[$j][1]
@@ -181,7 +182,7 @@ Func getArmyRequest($aiDonateCoords, $bNeedCapture = True)
 	Return StringTrimLeft($sClanText, 2)
 EndFunc   ;==>getArmyRequest
 
-Func DonateCC($bTest = False, $bCheckForNewMsg = False)
+Func DonateCC($bTest = False)
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
 
 	Local $bDonateTroop = ($g_aiPrepDon[0] = 1)
@@ -221,9 +222,9 @@ Func DonateCC($bTest = False, $bCheckForNewMsg = False)
 		Return ; exit func if no planned donate checkmarks
 	EndIf
 
-	;check for new chats first, Every fith time skip this to just check a little bit more frequent
-	If ($bCheckForNewMsg And Random(0, 3, 1) < 3) Then
-		If Not _ColorCheck(_GetPixelColor(26, 312, True), Hex(0xf00810, 6), 20) Then Return ;exit if no new chats
+	If Not _ColorCheck(_GetPixelColor(28, 266, True), Hex(0xFF0B0B, 6), 20) Then 
+		SetLog("No New requests (red icon), DonateCC Exits", $COLOR_DEBUG1)
+		If Not $bTest Then Return False ;exit if no new chats
 	EndIf
 
 	; check if donate queued troops & spells only

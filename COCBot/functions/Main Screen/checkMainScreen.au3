@@ -34,7 +34,8 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	
 	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False
 	Local $aPixelToCheck = $aIsMain
-	If $bBuilderBase Then $aPixelToCheck = $aIsOnBuilderBase
+	$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
+	
 	While Not $bLocated
 		$i += 1
 		If Not $g_bRunState Then Return
@@ -42,7 +43,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		If Mod($i, 10) = 0 Then RestartAndroidCoC() ; Force restart CoC we keep on restarting mainscreen
 		
 		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))
-		$bLocated = _checkMainScreenImage($aPixelToCheck)
+		$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
 		If $bLocated Then ExitLoop
 		
 		If Not $bLocated And GetAndroidProcessPID() = 0 Then OpenCoC()

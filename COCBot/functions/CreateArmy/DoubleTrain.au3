@@ -56,7 +56,7 @@ Func DoubleTrain()
 				TrainFullTroop(True) ;train 2nd Army
 			Case $TroopCamp[2] > 0 ; 30/600 (1st army partially trained)
 				SetLog("TroopCamp[2] > 0", $COLOR_DEBUG1)
-				If IsNormalTroopTrain($TroopCamp) Then
+				If IsNormalTroopTrain() Then
 					RemoveTrainTroop()
 					Local $aWhatToTrain = WhatToTrain(False, False)
 					SetLog("New troop Fill way", $COLOR_DEBUG1)
@@ -70,7 +70,7 @@ Func DoubleTrain()
 				TrainFullTroop(True) ;train 2nd Army
 			Case $TroopCamp[0] > $TroopCamp[1] ;350/600 (2nd army partially trained)
 				SetLog($TroopCamp[0] & " > " & $TroopCamp[1], $COLOR_DEBUG1)
-				If IsNormalTroopTrain($TroopCamp) Then
+				If IsNormalTroopTrain() Then
 					CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) ;train to queue
 					FillIncorrectTroopCombo("2nd Army")
 					ExitLoop
@@ -501,12 +501,9 @@ Func RemoveTrainTroop()
 	EndIf
 EndFunc
 
-;IsNormalTroopTrain() 
 ;return true if forced army capacity = total army space on train config
-
-Func IsNormalTroopTrain($TroopCamp = Default)
+Func IsNormalTroopTrain()
 	Local $bRet = True
-	If $TroopCamp = Default Then $TroopCamp = GetCurrentArmy(95, 163)
 	
 	Local $iSpace = 0
 	For $i = 0 To $eTroopCount - 1
@@ -517,6 +514,7 @@ Func IsNormalTroopTrain($TroopCamp = Default)
 	Next
 	
 	If $iSpace < $g_iTotalCampForcedValue Then $bRet = False
-	If $g_bDebugSetlog Then SetLog("Space = " & $iSpace & ", ConfigTroopSpace = " & $g_iTotalCampForcedValue & ", bRet = " & String($bRet))
+	If $g_bDebugSetlog Then SetLog("Space = " & $iSpace & ", ConfigTroopSpace = " & $g_iTotalCampForcedValue & ", bRet = " & String($bRet), $COLOR_DEBUG1)
+	SetLog("IsNormalTroopTrain = " & String($bRet), $COLOR_DEBUG1)
 	Return $bRet
 EndFunc

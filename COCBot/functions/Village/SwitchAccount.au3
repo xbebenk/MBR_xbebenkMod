@@ -348,19 +348,20 @@ Func SwitchCOCAcc($NextAccount)
 
 
 		If $g_bChkSharedPrefs Then
+			PullSharedPrefs()
 			; disconnect account again for saving shared_prefs
-			waitMainScreen()
-			If IsMainPage() Then
-				Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
-				If _Sleep(500) Then Return
-				If SwitchCOCAcc_DisconnectConnect($bResult, $g_bChkSharedPrefs) = -1 Then Return ;Return if Error happend
-
-				Switch SwitchCOCAcc_ClickAccount($bResult, $NextAccount, $g_bChkSharedPrefs, False)
-					Case "OK"
-						; all good
-						PullSharedPrefs()
-				EndSwitch
-			EndIf
+			;waitMainScreen()
+			;If IsMainPage() Then
+			;	Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
+			;	If _Sleep(500) Then Return
+			;	If SwitchCOCAcc_DisconnectConnect($bResult, $g_bChkSharedPrefs) = -1 Then Return ;Return if Error happend
+			;
+			;	Switch SwitchCOCAcc_ClickAccount($bResult, $NextAccount, $g_bChkSharedPrefs, False)
+			;		Case "OK"
+			;			; all good
+			;			PullSharedPrefs()
+			;	EndSwitch
+			;EndIf
 		EndIf
 		If Not $g_bRunState Then Return
 	Else
@@ -380,23 +381,23 @@ Func SwitchCOCAcc($NextAccount)
 		If Not $g_bRunState Then Return
 	EndIf
 	
-	If IsSettingPage() Then Click($aIsSettingPage[0], $aIsSettingPage[1] - 15, 1, "Close Setting Windows")
-	If _Sleep(1000) Then Return
+	;If IsSettingPage() Then Click($aIsSettingPage[0], $aIsSettingPage[1] - 15, 1, "Close Setting Windows")
+	;If _Sleep(1000) Then Return
 	
 	waitMainScreen()
 	If Not $g_bRunState Then Return
 
 	;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
-	If $g_bChkSuperCellID Then
-		SetDebugLog("Checkscidswitch: Send AndroidBackButton", $COLOR_DEBUG)
-		AndroidBackButton() ;Send back button to android
-		If _Sleep(1000) Then Return
-		If IsOKCancelPage() Then
-			AndroidBackButton()
-		EndIf
-	EndIf
+	;If $g_bChkSuperCellID Then
+	;	SetDebugLog("Checkscidswitch: Send AndroidBackButton", $COLOR_DEBUG)
+	;	AndroidBackButton() ;Send back button to android
+	;	If _Sleep(1000) Then Return
+	;	If IsOKCancelPage() Then
+	;		AndroidBackButton()
+	;	EndIf
+	;EndIf
 
-	CheckObstacles()
+	;CheckObstacles()
 	If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 	
 	If $g_bDeleteLogs Then DeleteFiles($g_sProfileLogsPath, "*.*", $g_iDeleteLogsDays, 0)

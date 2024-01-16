@@ -49,7 +49,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 						$g_iQuickMISX = $coord[0]
 						$g_iQuickMISY = $coord[1]
 						$g_iQuickMISName = $files[$i]
-						If $g_bDebugSetlog THen SetDebugLog("BFI Found : " & $g_iQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
+						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $g_iQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
 						Return True
 					EndIf
 				Else
@@ -57,10 +57,12 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 				EndIf
 			Next
 		EndIf
+		If $g_bDebugImageSave Then _CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
 	Else
 		If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
 		$Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 	EndIf
+	
 	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
 	If $error Then
