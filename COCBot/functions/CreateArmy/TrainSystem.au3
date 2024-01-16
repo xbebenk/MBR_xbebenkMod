@@ -627,7 +627,7 @@ Func RemoveExtraTroopsQueue()
 	Next
 EndFunc   ;==>RemoveExtraTroopsQueue
 
-Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQueue = True)
+Func IsQueueEmpty($sType = "Troops", $bCheckTab = False, $removeExtraTroopsQueue = True)
 	Local $iArrowX, $iArrowY = 127
 	If Not $g_bRunState Then Return
 	
@@ -639,41 +639,45 @@ Func IsQueueEmpty($sType = "Troops", $bSkipTabCheck = False, $removeExtraTroopsQ
 		$iArrowX = 597
 	EndIf
 	
-	If Not WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x83BF44, 6), 20, 1) Then
-		If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": queue arrow Not Found", $COLOR_ACTION) 
-		Return True ; Check Green Arrows at top first, if not there -> Return
-	ElseIf WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x83BF44, 6), 20, 1) And Not $removeExtraTroopsQueue Then
-		If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": queue arrow Found, checking boost arrow", $COLOR_ACTION)
-		If Not WaitforPixel($iArrowX - 11, $iArrowY - 2, $iArrowX - 9, $iArrowY + 2, Hex(0x83BF44, 6), 20, 1) Then 
-			If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": queue arrow Found, boost arrow not Found", $COLOR_ACTION)
-			Return False  ; check if boost arrow
-		Else
-			If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": queue arrow Found, boost arrow Found", $COLOR_ACTION)
-		EndIf
+	If WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x797362, 6), 20, 1) Then ;check if we have grey tab
+		If Not $bCheckTab Then Return True
+	ElseIf WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x83BF44, 6), 20, 1) Then ;check if we have green arrow
+		If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": queue arrow Found", $COLOR_ACTION) 
+		Return False
+	ElseIf WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x93CD5B, 6), 20, 1) Then ;chek if we have boosted green arrow
+		$bCheckTab = True ;we have boosted arrow, forced check inside tab
+		If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": boosted arrow Found", $COLOR_ACTION)
 	EndIf
-
-	If Not $bSkipTabCheck Or $removeExtraTroopsQueue Then
-		If $sType = "Troops" Then
-			If Not OpenTroopsTab(True, "IsQueueEmpty(Troops)") Then Return
-		ElseIf $sType = "Spells" Then
-			If Not OpenSpellsTab(True, "IsQueueEmpty(Spells)") Then Return
-		Else
-			If Not OpenSiegeMachinesTab(True, "IsQueueEmpty(SiegeMachines)") Then Return
-		EndIf
+	
+	If $bCheckTab Or $removeExtraTroopsQueue Then
+		Switch $sType
+			Case "Troops"
+				If Not OpenTroopsTab(True, "IsQueueEmpty") Then Return
+			Case "Spells"
+				If Not OpenSpellsTab(True, "IsQueueEmpty") Then Return
+			Case "SiegeMachines"
+				If Not OpenSiegeMachinesTab(True, "IsQueueEmpty") Then Return
+		EndSwitch
 	EndIf
-
-	If Not $g_bIsFullArmywithHeroesAndSpells Then
-		If $removeExtraTroopsQueue Then
-			If Not _ColorCheck(_GetPixelColor(245, 198, True), Hex(0x677CB5, 6), 30) Then RemoveExtraTroopsQueue() ;check color of [i] Drag units to train or reorder
-		EndIf
-	EndIf
-
+	
+	If _ColorCheck(_GetPixelColor(750, 216, True), Hex(0xBAC8A5, 6), 20) Then Return True ;check gray background at 1st training slot = queue is empty
+	
 	If $removeExtraTroopsQueue Then
-		If _ColorCheck(_GetPixelColor(245, 198, True), Hex(0x677CB5, 6), 30) Then Return True ; If No troops were in Queue Return True
+		If Not $g_bIsFullArmywithHeroesAndSpells Then
+			For $i = 1 To 3
+				If Not _ColorCheck(_GetPixelColor(750, 216, True), Hex(0xBAC8A5, 6), 20) Then 
+					If $g_bDebugSetlog Then SetLog("[" & $i & "] IsQueueEmpty : Trying to remove Extra " & $sType & " in Queue", $COLOR_ACTION)
+					RemoveExtraTroopsQueue()
+				Else
+					If $g_bDebugSetlog Then SetLog("[" & $i & "] IsQueueEmpty : Done Emptying " & $sType, $COLOR_ACTION)
+					ExitLoop
+				EndIf
+			Next
+		EndIf
 	Else
-		If _ColorCheck(_GetPixelColor(810, 200, True), Hex(0xCFCFC8, 6), 20) Then Return True ; check gray background at 1st training slot
+		If _ColorCheck(_GetPixelColor(750, 216, True), Hex(0xBAC8A5, 6), 20) Then Return True ; check gray background at 1st training slot
 	EndIf
-
+	
 	Return False
 EndFunc   ;==>IsQueueEmpty
 

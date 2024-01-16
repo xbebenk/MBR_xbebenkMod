@@ -340,7 +340,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 	
 	
 	Local $iTotalQueue = 0
-	If $bDebug Then SetLog("Checking troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG)
+	SetLog("Checking troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG1)
 	
 	If $g_bTrainPreviousArmy Then 
 		While _ColorCheck(_GetPixelColor(265, 197, True), Hex(0xFFFFFF, 6), 20, Default, "Army Added Message")
@@ -357,7 +357,14 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 	Next
 	
 	;check wrong camp utilization
-	If $ArmyCamp[1] <> $g_iTotalCampSpace Then Return False
+	If $ArmyCamp[1] <> $g_iTotalCampSpace Then 
+		SetLog("$ArmyCamp[1] <> $g_iTotalCampSpace", $COLOR_ERROR)
+		Local $countTroop = 0
+		For $i = 0 To UBound($g_aiArmyCompTroops) - 1
+			$countTroop += $g_aiArmyCompTroops[$i]
+		Next
+		If $countTroop = 1 Then Return False ;only 1 troop on train setting, user utilizing fill incorrect combo troops
+	EndIf
 	
 	; Check block troop
 	If $ArmyCamp[0] < $ArmyCamp[1] + $iTotalQueue Then

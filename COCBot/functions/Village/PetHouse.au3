@@ -67,7 +67,6 @@ Func PetHouse($test = False)
 			SetLog("Problem locating Pet House, re-locate Pet House position before proceeding", $COLOR_ERROR)
 			Return False
 		EndIf
-		If $bPetHouseLocated Then PureClickP($g_aiPetHousePos)
 	Else
 		PureClickP($g_aiPetHousePos)
 		_Sleep(500)

@@ -116,18 +116,18 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 				ElseIf $j = 0 Or ($j = 1 And $aSearchResult[1][0] = $aSearchResult[0][0]) Then
 					If $i = 0 Then
 						If _ArrayIndexValid($g_aiAvailQueuedTroop, $TroopIndex) Then
-							$g_aiAvailQueuedTroop[$TroopIndex] += $aSearchResult[$j][1]
+							;$g_aiAvailQueuedTroop[$TroopIndex] += $aSearchResult[$j][1]
 							SetLog("  - " & $g_asTroopNames[$TroopIndex] & " x" & $aSearchResult[$j][1] & " (training)")
 						EndIf
 					Else
 						If _ArrayIndexValid($g_aiAvailQueuedSpell, $TroopIndex - $eLSpell) Then
-							$g_aiAvailQueuedSpell[$TroopIndex - $eLSpell] += $aSearchResult[$j][1]
+							;$g_aiAvailQueuedSpell[$TroopIndex - $eLSpell] += $aSearchResult[$j][1]
 							SetLog("  - " & $g_asSpellNames[$TroopIndex - $eLSpell] & " x" & $aSearchResult[$j][1] & " (training)")
 						EndIf
 					EndIf
-					ExitLoop
-				ElseIf $j >= 2 Then
-					ExitLoop
+					;ExitLoop
+				;ElseIf $j >= 2 Then
+				;	ExitLoop
 				EndIf
 			Next
 			If _Sleep(250) Then ContinueLoop
@@ -216,12 +216,14 @@ Func DonateCC($bTest = False)
 	EndIf
 
 	Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
-
 	If Not $g_abDonateHours[$hour[0]] And $g_bDonateHoursEnable Then
 		SetDebugLog("Donate Clan Castle troops not planned, Skipped..", $COLOR_DEBUG)
 		Return ; exit func if no planned donate checkmarks
 	EndIf
-
+	
+	If Not BalanceDonRec(True) Then Return False
+	If SkipDonateNearFullTroops(True) Then Return False
+	
 	If Not _ColorCheck(_GetPixelColor(28, 266, True), Hex(0xFF0B0B, 6), 20) Then 
 		SetLog("No New requests (red icon), DonateCC Exits", $COLOR_DEBUG1)
 		If Not $bTest Then Return False ;exit if no new chats
@@ -667,7 +669,7 @@ Func DonateCC($bTest = False)
 
 		;;; Scroll Down
 		Local $iCount = 0
-		While WaitforPixel(356, 611, 359, 612, "60A518", 6, 2)
+		While WaitforPixel(356, 611, 359, 612, Hex(0x60A518, 6), 20, 1)
 			$iCount += 1
 			Click(356, 611, 1, 0, "Click Green Scroll Button")
 			If _Sleep(1000) Then Return
@@ -675,7 +677,7 @@ Func DonateCC($bTest = False)
 			If $iCount > 4 Then ExitLoop
 		Wend
 		
-		If $iCount < 5 And WaitforPixel(57, 593, 58, 595, "90DA38", 6, 1) Then
+		If $iCount < 5 And WaitforPixel(57, 593, 58, 595, Hex(0x90DA38, 6), 20, 1) Then
 			Click(40, 593, 1, 0, "Click Green Left Chat Button")
 		EndIf
 		
@@ -687,11 +689,9 @@ Func DonateCC($bTest = False)
 		$bDonate = False
 	WEnd
 
-	Click(320, 25, 1, 0, "Close Donate Window")
-	If _Sleep($DELAYDONATECC2) Then Return
 	checkChatTabPixel()
 	UpdateStats()
-	If _Sleep($DELAYDONATECC2) Then Return
+	If _Sleep(1000) Then Return
 	
 	Return $g_bDonated
 EndFunc   ;==>DonateCC
