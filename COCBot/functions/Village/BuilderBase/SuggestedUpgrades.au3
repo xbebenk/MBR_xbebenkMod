@@ -897,14 +897,14 @@ Func WaitBBUpgradeWindow()
 	Local $bRet = False
 	For $i = 1 To 5
 		SetLog("Waiting for Upgrade Window #" & $i, $COLOR_ACTION)
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 80, 780, 130) Then
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 50, 810, 130) Then
 			$bRet = True
 			SetLog("Upgrade Window OK", $COLOR_ACTION)
 			ExitLoop
 		EndIf
 		If _Sleep(1000) Then Return
 	Next
-	If Not $bRet Then SetLog("Upgrade Window Opened", $COLOR_ERROR)
+	If Not $bRet Then SetLog("Cannot verify Upgrade Window", $COLOR_ERROR)
 	Return $bRet
 EndFunc
 
