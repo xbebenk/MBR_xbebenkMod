@@ -344,6 +344,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 	
 	If $g_bTrainPreviousArmy Then 
 		While _ColorCheck(_GetPixelColor(265, 197, True), Hex(0xFFFFFF, 6), 20, Default, "Army Added Message")
+			If Not $g_bRunState Then Return
 			SetLog("Army Added Message Blocking, Waiting until it's gone", $COLOR_INFO)
 			If _Sleep(500) Then Return
 		WEnd
@@ -358,7 +359,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 	
 	;check wrong camp utilization
 	If $ArmyCamp[1] <> $g_iTotalCampSpace Then 
-		SetLog("$ArmyCamp[1] <> $g_iTotalCampSpace", $COLOR_ERROR)
+		;SetLog("$ArmyCamp[1] <> $g_iTotalCampSpace", $COLOR_ERROR)
 		Local $countTroop = 0
 		For $i = 0 To UBound($g_aiArmyCompTroops) - 1
 			$countTroop += $g_aiArmyCompTroops[$i]
@@ -368,7 +369,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 	
 	; Check block troop
 	If $ArmyCamp[0] < $ArmyCamp[1] + $iTotalQueue Then
-		SetLog("$ArmyCamp[0] = " & $ArmyCamp[0] & ", $ArmyCamp[1] + $iTotalQueue = " & $ArmyCamp[1] + $iTotalQueue)
+		SetLog("$ArmyCamp[0] = " & $ArmyCamp[0] & " < $ArmyCamp[1] + $iTotalQueue = " & $ArmyCamp[1] + $iTotalQueue)
 		SetLog("A big guy blocks our camp")
 		Return False
 	EndIf
@@ -376,6 +377,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 	; check wrong queue
 	Local $iExcessTroop = 0, $bExcessTroop = False
 	For $i = 0 To UBound($aiQueueTroops) - 1
+		If Not $g_bRunState Then Return
 		$iExcessTroop = $aiQueueTroops[$i] - $g_aiArmyCompTroops[$i]
 		If $iExcessTroop > 0 Then
 			SetLog("  - " & $g_asTroopNames[$i] & " x" & $aiQueueTroops[$i] & ", excess queue : " & $iExcessTroop, $COLOR_ACTION)
@@ -481,8 +483,9 @@ Func RemoveQueueTroop($iTroopIndex = 0, $Quantity = 1)
 	If Not IsArray($aiQueueTroops) Then Return 
 	_ArraySort($aiQueueTroops, 0, 0, 0, 1) ;sort by x coord
 	If $g_bDebugSetlog Then SetLog(_ArrayToString($aiQueueTroops))
-	
+	If Not $g_bRunState Then Return
 	For $i = 0 To UBound($aiQueueTroops) - 1
+		If Not $g_bRunState Then Return
 		If TroopIndexLookup($aiQueueTroops[$i][0]) = $iTroopIndex Then 
 			If $Quantity > $aiQueueTroops[$i][3] Then 
 				SetLog("  - Removing x" & $aiQueueTroops[$i][3] & " queued " & $g_asTroopNames[$iTroopIndex], $COLOR_ACTION)
@@ -499,6 +502,7 @@ EndFunc
 
 Func RemoveTrainTroop()
 	Local $aTrashCoord[2] = [525, 322]
+	If Not $g_bRunState Then Return
 	If _ColorCheck(_GetPixelColor($aTrashCoord[0], $aTrashCoord[1], True), Hex(0xCA1B1D, 6), 10) Then
 		ClickP($aTrashCoord)
 		If _Sleep(1000) Then Return
@@ -511,9 +515,10 @@ EndFunc
 ;return true if forced army capacity = total army space on train config
 Func IsNormalTroopTrain()
 	Local $bRet = True
-	
+	If Not $g_bRunState Then Return
 	Local $iSpace = 0
 	For $i = 0 To $eTroopCount - 1
+		If Not $g_bRunState Then Return
 		Local $troopIndex = $g_aiTrainOrder[$i]
 		If $g_aiArmyCompTroops[$troopIndex] > 0 Then
 			$iSpace += ($g_aiTroopSpace[$troopIndex] * $g_aiArmyCompTroops[$troopIndex])

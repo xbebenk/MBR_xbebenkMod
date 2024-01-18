@@ -541,7 +541,7 @@ Func CreateWallsSubTab()
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "Group_03", "Wall Level And Cost"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 120)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblSearchforWalls", "Walls Level:           Wall Cost:"), $x + 10, $y + 2, -1, -1)
 		$y += 20
-		Local $TxtComboWall = "4|5|6|7|8|9|10|11|12|13|14|15"
+		Local $TxtComboWall = "4|5|6|7|8|9|10|11|12|13|14|15|16"
 		For $z = 0 To 2
 			GUICtrlCreateLabel($z + 1 & ":", $x, $y + 2, -1, 18)
 			$g_hCmbWalls[$z] = GUICtrlCreateCombo("", $x + 15, $y, 50, 18, BitOR($CBS_DROPDOWNLIST, $SS_RIGHT, $CBS_AUTOHSCROLL))
