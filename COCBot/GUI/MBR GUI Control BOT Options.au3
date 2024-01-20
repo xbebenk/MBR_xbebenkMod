@@ -607,6 +607,74 @@ Func TestClickAway($count = 100, $region = "right")
 	Wend
 EndFunc
 
+;TestTrainCap, used for test ocr read on army capacity and troop capacity
+;will train barb/arch 1 by 1 and then read army/troop capacity
+;function will break if ocr read failed
+;iCol = TroopType [1 = Barb, 2 = Arch]
+
+Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
+	If Not OpenArmyOverview() Then Return
+	If Not OpenArmyTab() Then Return
+	Local $iX = ($iCol = 1) ? 120 : 200
+	Local $sTroopName =  ($iCol = 1) ? "Barbarian" : "Archer"
+	
+	$iSleep = ($iCol = 1) ? $iSleep : $iSleep + 1000
+	If $bBoost Then $iSleep = $iSleep * 0.2
+	
+	Local $ArmyCap = getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], True)
+	If StringInStr($ArmyCap, "#") Then 
+		Local $aArmyCap = StringSplit($ArmyCap, "#", $STR_NOCOUNT)
+		If IsArray($aArmyCap) And Ubound($aArmyCap) = 2 Then 
+			For $i = $aArmyCap[0] + 1 To $aArmyCap[1]
+				If Not $g_bRunState Then Return
+				SetLog("[" & $i & "] Train 1x " & $sTroopName, $COLOR_ACTION)
+				If Not OpenTroopsTab() Then Return
+				Click($iX, 400)
+				If Not $g_bRunState Then Return
+				If _Sleep($iSleep) Then Return
+				Local $aTmpTroop = StringSplit(getArmyCapacityOnTrainTroops(95, 163), "#", $STR_NOCOUNT)
+				If Not $g_bRunState Then Return
+				If IsArray($aTmpTroop) And UBound($aTmpTroop) = 2 Then
+					If $aTmpTroop[0] = $i Then
+						SetLog(" -- Troop Capacity = " & $aTmpTroop[0], $COLOR_DEBUG1)
+					Else
+						SetLog(" -- Expected:" & $i & ", Read:" & $aTmpTroop[0], $COLOR_ERROR)
+						SetLog(" -- Troop Capacity Not read properly", $COLOR_ERROR)
+						SetLog(" -- Check on your Profile/Temp/Debug/TestTrainTroop Folder", $COLOR_INFO)
+						_CaptureRegion2(95, 163, 95 + 70, 163 + 16)
+						SaveDebugImage("TestTrainTroop", False)
+						ExitLoop
+					EndIf
+				EndIf
+				
+				If Not $g_bRunState Then Return
+				If Not OpenArmyTab() Then Return
+				Local $aTmpCamp = StringSplit(getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], True), "#", $STR_NOCOUNT)
+				If IsArray($aTmpCamp) And UBound($aTmpCamp) = 2 Then 
+					If $aTmpCamp[0] = $i Then 
+						SetLog(" -- Army Capacity = " & $aTmpCamp[0], $COLOR_DEBUG1)
+					Else
+						SetLog(" -- Expected:" & $i & ", Read:" & $aTmpCamp[0], $COLOR_ERROR)
+						SetLog(" -- Army Capacity Not read properly", $COLOR_ERROR)
+						SetLog(" -- Check on your Profile/Temp/Debug/TestTrainCap Folder", $COLOR_INFO)
+						_CaptureRegion2($aArmyCampSize[0], $aArmyCampSize[1], $aArmyCampSize[0] + 80, $aArmyCampSize[1] + 16)
+						SaveDebugImage("TestTrainCap", False)
+						ExitLoop
+					EndIf
+				Else
+					SetLog("TmpCamp Not Array, return", $COLOR_ERROR)
+					Return
+				EndIf
+			Next
+		Else
+			SetLog("ArmyCap Not Array, return", $COLOR_ERROR)
+			Return
+		EndIf
+	Else
+		SetLog("ArmyCap read failed, return", $COLOR_ERROR)
+		Return
+	EndIf
+EndFunc
 
 Func btnTestAttackBarBB()
 	Local $bCurrentOCR = $g_bDebugOcr, $bCurrentRunState = $g_bRunState, $bCurrentDebugImage = $g_bDebugImageSave

@@ -152,8 +152,7 @@ Func CheckIfArmyIsReady()
 	$g_bWaitForCCTroopSpell = False ; reset for waiting CC in SwitchAcc
 	
 	If Not OpenArmyOverview(True, "CheckIfArmyIsReady()") Then Return
-	If _Sleep(250) Then Return
-
+	
 	CheckArmyCamp(False, False, True, True)
 	CheckCCArmy()
 	RequestCC(False, "IsFullClanCastle")

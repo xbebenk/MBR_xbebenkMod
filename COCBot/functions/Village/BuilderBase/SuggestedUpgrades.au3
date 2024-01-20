@@ -160,8 +160,8 @@ Func AutoUpgradeBB($bTest = False)
 EndFunc   ;==>MainSuggestedUpgradeCode
 
 Func SearchNewBuilding($bTest = False)
-	;SetLog("SearchNewBuilding Disabled by Dev, Return", $COLOR_ERROR)
-	;Return False
+	SetLog("SearchNewBuilding Disabled by Dev, Return", $COLOR_ERROR)
+	Return False
 	Local $NeedDrag = True, $ZoomedIn = False, $TmpUpgradeCost, $UpgradeCost, $sameCost
 	ClickBBBuilder()
 	
@@ -699,7 +699,7 @@ Func FindBBNewBuilding()
 	Return $aBuilding
 EndFunc
 
-Global $g_aOptimizeOTTO[15][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 13], ["Storage", 12], _
+Global $g_aOptimizeOTTO[16][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10], ["Mega Tesla", 11], ["Battle Machine", 13], ["Battle Copter", 13], ["Storage", 12], _
 									["Gold Mine", 8], ["Collector", 8], ["Laboratory", 14], ["Builder Hall", 12], ["Clock Tower", 6], ["Barracks", 12], _
 									["Army Camp", 12], ["Wall", 5], ["Gem Mine", 5]]
 
@@ -717,7 +717,7 @@ Func FindBBExistingBuilding($bTest = False)
 			$bFoundOptimizeOTTO = False ;reset
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 200, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
 			$UpgradeName = getBuildingName($aTmpCoord[$i][1] - 180, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
-			If $g_bOptimizeOTTO Then ;if OptimizeOTTO enabled, filter only OptimizeOTTO buildings
+			;If $g_bOptimizeOTTO Then ;if OptimizeOTTO enabled, filter only OptimizeOTTO buildings
 				For $x = 0 To UBound($g_aOptimizeOTTO) - 1
 					If StringInStr($UpgradeName[0], $g_aOptimizeOTTO[$x][0], 1) Then
 						$bFoundOptimizeOTTO = True ;used for add array
@@ -747,11 +747,11 @@ Func FindBBExistingBuilding($bTest = False)
 				
 				If $g_bisMegaTeslaMaxed And $aTmpCoord[$i][0] = "Gold" Then $bFoundOptimizeOTTO = True ;assign gold upgrade if mega tesla already maxed
 				
-				If Not $bFoundOptimizeOTTO Then
-					SetDebugLog("Building:" & $UpgradeName[0] & ", not OptimizeOTTO building")
-					ContinueLoop
-				EndIf
-			EndIf
+				;If Not $bFoundOptimizeOTTO Then
+				;	SetDebugLog("Building:" & $UpgradeName[0] & ", not OptimizeOTTO building")
+				;	ContinueLoop
+				;EndIf
+			;EndIf
 			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
 		Next
 
@@ -759,7 +759,7 @@ Func FindBBExistingBuilding($bTest = False)
 			$UpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $aBuilding[$j][1], $aBuilding[$j][2] - 10, 120, 30, True)
 			$aBuilding[$j][5] = Number($UpgradeCost)
 			Local $BuildingName = $aBuilding[$j][3]
-			If $g_bOptimizeOTTO Then ;set score for OptimizeOTTO Building
+			;If $g_bOptimizeOTTO Then ;set score for OptimizeOTTO Building
 				For $k = 0 To UBound($g_aOptimizeOTTO) - 1
 					If StringInStr($BuildingName, $g_aOptimizeOTTO[$k][0]) Then
 						Switch $aBuilding[$j][0]
@@ -771,7 +771,7 @@ Func FindBBExistingBuilding($bTest = False)
 						$aBuilding[$j][7] = "OptimizeOTTO"
 					EndIf
 				Next
-			EndIf
+			;EndIf
 			SetDebugLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
@@ -783,11 +783,11 @@ Func FindBBExistingBuilding($bTest = False)
 		_ArrayDelete($aBuilding, $iIndex)
 	EndIf
 	
-	If $g_bOptimizeOTTO Then
+	;If $g_bOptimizeOTTO Then
 		_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
-	Else
-		_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
-	EndIf
+	;Else
+	;	_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
+	;EndIf
 
 	Return $aBuilding
 EndFunc
