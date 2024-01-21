@@ -435,6 +435,10 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 				Sleep(3000)
 				; check if Android is running
 				WinGetAndroidHandle()
+				If $g_bBotLaunchOption_Restart Then 
+					Assign("g_PushedSharedPrefsProfile", $g_sProfileCurrentName)
+					SetLog("g_PushedSharedPrefsProfile = " & $g_PushedSharedPrefsProfile)
+				EndIf
 			EndIf
 		EndIf
 	EndIf
@@ -728,7 +732,6 @@ Func runBot() ;Bot that runs everything in order
 			If RestartBot(False) Then Return
 		EndIf
 
-		PrepareDonateCC()
 		If Not $g_bRunState Then Return
 		$g_bRestart = False
 		$g_bFullArmy = False
@@ -1308,8 +1311,6 @@ Func FirstCheck()
 		SetLog("Test420 Done!", $COLOR_SUCCESS)
 	EndIf
 	
-	If $g_bSkipFirstCheckRoutine Then Return
-
 	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 1) Then
 		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
@@ -1492,16 +1493,22 @@ Func FirstCheckRoutine()
 				EndIf
 			EndIf
 		EndIf
+	Else
+		Return ;exit firstcheck, going to main loop
 	EndIf
 
 	If Not $g_bRunState Then Return
-	If CheckNeedOpenTrain() Then TrainSystem()
+	;If CheckNeedOpenTrain() Then TrainSystem()
 
 	If Not $g_bRunState Then Return
+	
 	CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
 		If DonateCC() Then TrainSystem()
 		CommonRoutine("Switch")
+		If $g_bBBAttacked Or $g_bCheckDonateOften Then
+			If DonateCC() Then TrainSystem()
+		EndIf
 		If _Sleep(1000) Then Return
 		_ClanGames(False, True) ; Do Only Purge
 		If Not $g_bIsFullArmywithHeroesAndSpells Or $g_bForceSwitch Then checkSwitchAcc() ;switch to next account
