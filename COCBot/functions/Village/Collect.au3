@@ -76,7 +76,6 @@ Func CollectLootCart()
 	SetLog("Searching for a Loot Cart", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgCollectLootCart, 0, 180, 160, 300) Then 
 		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(1000) Then Return
 		If ClickB("CollectLootCart") Then
 			SetLog("LootCart Collected", $COLOR_SUCCESS)
 		Else
