@@ -246,12 +246,12 @@ Func DonateCC($bTest = False)
 	If Not $bDonate Then Return
 
 	;Opens clan tab and verbose in log
-	If _Sleep($DELAYDONATECC2) Then Return
+	If _Sleep(1000) Then Return
 	If checkChatTabPixel() Then
 		Click($aChatTabClosed[0], $aChatTabClosed[1]) ;Click ClanChatOpen
 	EndIf
 
-	If _Sleep($DELAYDONATECC4) Then Return
+	If _Sleep(1000) Then Return
 
 	; check for "I Understand" button
 	Local $aCoord = decodeSingleCoord(findImage("I Understand", $g_sImgChatIUnterstand, GetDiamondFromRect("50,400,280,550")))
