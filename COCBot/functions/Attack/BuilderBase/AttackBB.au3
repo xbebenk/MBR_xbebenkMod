@@ -37,7 +37,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 		While PrepareAttackBB()
 			If Not $g_bRunState Then Return
 			If IsProblemAffect(True) Then Return
-			SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
+			If $g_bDebugSetlog Then SetLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
 			_AttackBB()
 			If Not $g_bRunState Then Return
@@ -67,7 +67,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			If Not $g_bRunState Then Return
 			If IsProblemAffect(True) Then Return
 			If PrepareAttackBB() Then
-				SetDebugLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
+				If $g_bDebugSetlog Then SetLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 				SetLog("Attack #" & $i & "/" & $g_iBBAttackCount, $COLOR_INFO)
 				_AttackBB()
 				If Not $g_bRunState Then Return
