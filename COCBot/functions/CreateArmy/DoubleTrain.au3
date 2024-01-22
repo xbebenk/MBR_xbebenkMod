@@ -175,16 +175,16 @@ EndFunc   ;==>TrainFullTroop
 
 Func FillIncorrectTroopCombo($caller = "Unknown")
 	If Not $g_bIgnoreIncorrectTroopCombo Then Return
-	SetLog("Train to Fill Incorrect Troop Combo", $COLOR_ACTION)
+	If $g_bDebugSetlog Then SetLog("Train to Fill Incorrect Troop Combo", $COLOR_ACTION)
 	
 	If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
 	Local $CampOCR = GetCurrentArmy(95, 163)
 	If Not $g_bRunState Then Return
 	
-	SetLog("CampOCR:" & _ArrayToString($CampOCR) & " Called from : " & $caller)
+	If $g_bDebugSetlog Then SetLog("CampOCR:" & _ArrayToString($CampOCR) & " Called from : " & $caller)
 	
 	If $CampOCR[0] = 0 Then ;no troop trained on 1st army 
-		SetLog("no need to fill troop on 1st army", $COLOR_DEBUG1)
+		If $g_bDebugSetlog Then SetLog("no need to fill troop on 1st army", $COLOR_DEBUG1)
 		Return
 	EndIf
 	
