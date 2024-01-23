@@ -156,7 +156,7 @@ Global Const $iDelayTrainClick1 = 3000
 Global Const $DELAYWINDOWSARRANGE1 = 500
 
 ;BuildingInfo
-Global Const $DELAYBUILDINGINFO1 = 1500
+Global Const $DELAYBUILDINGINFO1 = 2500
 
 ;GetResources
 Global Const $DELAYGETRESOURCES1 = 250
