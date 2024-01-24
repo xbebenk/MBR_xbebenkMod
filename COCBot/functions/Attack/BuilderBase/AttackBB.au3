@@ -257,7 +257,7 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		EndSelect
 		If _Sleep(1000) Then Return
 	Next
-
+	CheckBB20LootCartTutor()
 	If Not $bRet Then SetLog("Could not find finish battle screen", $COLOR_ERROR)
 	Return $bRet
 EndFunc

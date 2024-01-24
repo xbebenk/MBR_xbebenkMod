@@ -244,6 +244,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	EndIf
 
 	;If $bBuilderBase Then CheckBB20Tutor()
+	If $bBuilderBase Then CheckBB20LootCartTutor()
 	If Not $bBuilderBase Then
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;handle for clan capital tutorial
 			SetLog("checkObstacles: Found Clan Capital Tutorial, Doing Tutorial", $COLOR_ACTION)
@@ -339,6 +340,54 @@ Func CheckSCLOGO()
 	Next
 	If $bPixelFoundSCLOGO Then SetDebugLog("SC Logo...", $COLOR_ACTION)
 	Return $bPixelFoundSCLOGO
+EndFunc
+
+Func CheckBB20LootCartTutor()
+	Local $bRet = False
+	For $i = 1 To 30
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 385, 480, 475) Then ;check arrow
+			If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", $g_iQuickMISX - 60, $g_iQuickMISY - 150, $g_iQuickMISX + 60, $g_iQuickMISY) Then ;check ElixCart Image
+				Setlog("Found Elix Cart", $COLOR_DEBUG2)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(4000) Then Return
+				ContinueLoop
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+		If _ColorCheck(_GetPixelColor(430, 362, True), Hex(0xFFFFFF, 6), 20) And _ColorCheck(_GetPixelColor(588, 362, True), Hex(0xFFFFFF, 6), 20) Then ;right balloon tips chat
+			If $g_bDebugSetlog Then Setlog("Found Right Chat Tutorial", $COLOR_DEBUG2)
+			ClickAway()
+			If _Sleep(5000) Then Return
+			$bRet = True
+			ContinueLoop
+		EndIf
+		If Not $g_bRunState Then Return
+		If _ColorCheck(_GetPixelColor(270, 402, True), Hex(0xFFFFFF, 6), 20) Or _ColorCheck(_GetPixelColor(435, 402, True), Hex(0xFFFFFF, 6), 20) Then ;left balloon tips chat
+			Setlog("Found Left Chat Tutorial", $COLOR_DEBUG2)
+			ClickAway()
+			If _Sleep(5000) Then Return
+			$bRet = True
+			ContinueLoop
+		EndIf
+		If Not $g_bRunState Then Return
+		If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", 625, 510, 710, 550) Then
+			Setlog("Collecting Elixir from BuilderBase Cart", $COLOR_ACTION)
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			ClickAway()
+			If _Sleep(5000) Then Return
+			$bRet = True
+			ContinueLoop
+		EndIf
+		If Not $g_bRunState Then Return
+		If isOnBuilderBase() Then
+			If $g_bDebugSetlog Then Setlog("Found MainScreen of BuilderBase, exit CheckBB20LootCartTutor", $COLOR_DEBUG2)
+			$bRet = False
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+	Next
+	If $i = 30 Then checkObstacles_ReloadCoC()
+	Return $bRet
 EndFunc
 
 Func CheckBB20Tutor()
