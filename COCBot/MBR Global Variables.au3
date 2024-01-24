@@ -665,7 +665,7 @@ Global Const $g_aiTroopDonateXP[$eTroopCount - 4] = [1, 5, 1, 12, 5, 10, 1, 3, 2
 
 ; Super Troops
 Global Const $iSuperTroopsCount = 15, $iMaxSupersTroop = 2
-Global $g_bForceUseSuperTroopPotion = False
+Global $g_bForceUseSuperTroopPotion = False, $g_bSuperTroopBoosted = False
 Global Const $g_asSuperTroopNames[$iSuperTroopsCount] = [ _
 		"Super Barbarian", "Super Archer", "Sneaky Goblin", "Super WallBreaker", "Super Giant", "Rocket Balloon", "Super Wizard", "Super Dragon", "Inferno Dragon", "Super Minion", "Super Valkyrie", "Super Witch", _
 		"Ice Hound", "Super Bowler", "Super Miner"]
@@ -859,7 +859,7 @@ Global $g_apTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 25
 Global $g_apTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123]]
 Global $g_BBDP[0][3]
 Global $g_BBDPSide = 0, $UseDefaultBBDP = False, $g_b1SideBBAttack = False, $g_i1SideBBAttack = 0
-Global $g_b2SideBBAttack = False, $g_bAllSideBBAttack = False
+Global $g_b2SideBBAttack = False, $g_bAllSideBBAttack = False, $g_bChkUseBuilderStarJar = True
 
 ;Builder Base
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base

@@ -15,15 +15,17 @@
 Global $FalseDetectionCount = 0
 
 Func SwitchBetweenBases($ForcedSwitchTo = Default)
-	Local $bIsOnBuilderBase = isOnBuilderBase()
 	Local $bIsOnMainVillage = isOnMainVillage()
+	Local $bIsOnBuilderBase = False
 	If $ForcedSwitchTo = Default Then
-		If $bIsOnBuilderBase Then 
-			$ForcedSwitchTo = "Main"
-		Else
+		If $bIsOnMainVillage Then 
 			$ForcedSwitchTo = "BB"
+		Else
+			$ForcedSwitchTo = "Main"
 		EndIf
 	EndIf
+	
+	If Not $bIsOnMainVillage Then $bIsOnBuilderBase = isOnBuilderBase()
 	
 	If $ForcedSwitchTo = "BB" And $bIsOnBuilderBase Then
 		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_INFO)
@@ -97,10 +99,13 @@ Func SwitchTo($To = "BB")
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
 		
 		Local $ZoomOutResult
-		If $To = "BB" Then 
-			$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases")
-			If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-				ZoomOut() 
+		If $To = "BB" Then
+			If Not QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
+				checkChatTabPixel()
+				$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases")
+				If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+					ZoomOut() 
+				EndIf
 			EndIf
 		EndIf
 		

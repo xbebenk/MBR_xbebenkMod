@@ -1498,10 +1498,8 @@ Func FirstCheckRoutine()
 	EndIf
 
 	If Not $g_bRunState Then Return
-	;If CheckNeedOpenTrain() Then TrainSystem()
+	TrainSystem()
 
-	If Not $g_bRunState Then Return
-	
 	CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
 		If DonateCC() Then TrainSystem()
@@ -1545,6 +1543,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
+			If $g_bForceSwitch Then $g_bForceSwitchifNoCGEvent = True ;force not doing bb attack even if stars available 
 			Local $aRndFuncList = ['BuilderBase', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return

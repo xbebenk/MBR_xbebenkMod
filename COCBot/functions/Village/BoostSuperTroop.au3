@@ -23,6 +23,11 @@ Func BoostSuperTroop($bTest = False)
 			Return False
 		EndIf
 	EndIf
+	If $g_bSuperTroopBoosted Then 
+		SetLog("Troop Already Boosted on last check..., skip boost SuperTroop", $COLOR_SUCCESS)
+		Return ;Troop already checked and boosted
+	EndIf
+	
 	If Not $g_bRunState Then Return
 	ZoomOut()
 	If Not $g_bRunState Then Return
@@ -214,6 +219,7 @@ Func OpenBarrel()
 			SetDebugLog("[" & $g_iQuickMISX - 9 &","& $g_iQuickMISY - 18 & "] Color:" & $Color)
 			If _ColorCheck($Color, Hex(0xEB7100, 6), 50) Or _ColorCheck($Color, Hex(0xF3C127, 6), 50) Or _ColorCheck($Color, Hex(0xC26B00, 6), 10) Then
 				SetLog("1 Boost Detected, troops already boosted", $COLOR_SUCCESS)
+				$g_bSuperTroopBoosted = True
 				$bOpenBarrel = False
 			Else
 				SetDebugLog("Pixel Color on [" & $g_iQuickMISX - 9 & "," & $g_iQuickMISY - 18 & "] are : " & _GetPixelColor($g_iQuickMISX - 9, $g_iQuickMISY - 18, True))

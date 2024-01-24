@@ -14,16 +14,21 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($Mode = Default)
-	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then 
+	SetDebugLog("g_bForceSwitchifNoCGEvent=" & String($g_bForceSwitchifNoCGEvent))
+	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then
 		SetLog("ForceSwitchifNoCGEvent Enabled, Skip Attack until we have BBEvent", $COLOR_SUCCESS)
 		Return False
 	EndIf
+	
+	Local $GoldIsFull = isGoldFullBB()
+	Local $ElixIsFull = isElixirFullBB()
 	
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 		SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
 		If _Sleep(1500) Then Return
+		If Not $GoldIsFull And Not $ElixIsFull Then UseBuilderJar()
 		CheckArmyReady()
 		Return True
 	EndIf
@@ -37,9 +42,6 @@ Func PrepareAttackBB($Mode = Default)
 		SetLog("Preparing Attack Clean Yard", $COLOR_ACTION)
 		Return True
 	EndIf
-	
-	Local $GoldIsFull = isGoldFullBB()
-	Local $ElixIsFull = isElixirFullBB()
 	
 	getBuilderCount(True, True)
 	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then
@@ -288,4 +290,17 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False)
 	Next
 	
 	Return True
+EndFunc
+
+Func UseBuilderJar()
+	If $g_bChkUseBuilderStarJar then 
+		If QuickMIS("BC1", $g_sImgDirUseJar, 120, 460, 210, 510) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(1000) Then Return
+			If QuickMIS("BC1", $g_sImgDirUseJar, 400, 380, 460, 450) Then 
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				SetLog("Succesfully use BuilderBase Jar", $COLOR_SUCCESS)
+			EndIf
+		EndIf
+	EndIf
 EndFunc

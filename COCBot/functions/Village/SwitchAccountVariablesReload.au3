@@ -328,6 +328,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$g_bIsCGCoolDownTime = False
 			$g_bIs6thBuilderUnlocked = False
 			$g_bskipBBroutine = False
+			$g_bSuperTroopBoosted = False
 
 		Case "UpdateStats"
 			For $i = 0 To 3

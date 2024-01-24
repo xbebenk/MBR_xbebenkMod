@@ -120,6 +120,7 @@ Global $g_sImgFillTrain = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttack
 Global $g_sImgFillCamp = @ScriptDir & "\imgxml\Attack\BuilderBase\PrepareAttackBB\TrainTroop\Camp\"
 Global $g_sImgBBAttackStart = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackStart\"
 Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBar\"
+Global $g_sImgDirUseJar = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\UseJar\"
 Global $g_sImgDirMachineAbility = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBar\MachineAbility\"
 Global $g_sImgDirWallBreakerAbility = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\AttackBar\WBAbility\"
 Global $g_sImgBBReturnHome = @ScriptDir & "\imgxml\Attack\BuilderBase\AttackBB\ReturnHome\"

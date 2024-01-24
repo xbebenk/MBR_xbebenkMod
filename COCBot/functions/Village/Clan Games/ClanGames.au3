@@ -481,6 +481,7 @@ Func IsClanGamesWindow()
 		SetLog("Caravan not available", $COLOR_WARNING)
 		$sState = "Not Running"
 		$bRet = False
+		$g_bForceSwitchifNoCGEvent = True
 	EndIf
 
 	SetLog("Clan Games State is : " & $sState, $COLOR_INFO)
