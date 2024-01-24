@@ -28,6 +28,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep(1000) Then Return
 		Return False
 	EndIf
+	checkObstacles_Network()
 	
 	_CaptureRegions()
 	If isProblemAffect() Then
