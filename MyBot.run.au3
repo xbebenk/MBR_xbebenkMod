@@ -1330,6 +1330,11 @@ Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
+	If $g_bDonateEarly Then
+		SetLog("Donate Early Enabled", $COLOR_INFO)
+		If DonateCC() Then TrainSystem()
+	EndIf
+	
 	If $g_bChkCGBBAttackOnly Then
 		SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)
 		For $count = 1 to 5
@@ -1380,11 +1385,6 @@ Func FirstCheckRoutine()
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
 		If Not $g_bRunState Then Return
-		If $g_bDonateEarly Then
-			SetLog("Donate Early Enabled", $COLOR_INFO)
-			If DonateCC() Then TrainSystem()
-		EndIf
-
 		CheckIfArmyIsReady()
 		ClickAway()
 		If $g_bIsFullArmywithHeroesAndSpells Then
@@ -1440,6 +1440,7 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bForceSwitchifNoCGEvent) Then
 		If DonateCC() Then TrainSystem()
+		If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
 		CommonRoutine("Switch")
 		checkSwitchAcc() ;switch to next account
 	EndIf
@@ -1508,7 +1509,7 @@ Func FirstCheckRoutine()
 			If DonateCC() Then TrainSystem()
 		EndIf
 		If _Sleep(1000) Then Return
-		_ClanGames(False, True) ; Do Only Purge
+		_ClanGames(False, True) ;Do Only Purge
 		If Not $g_bIsFullArmywithHeroesAndSpells Or $g_bForceSwitch Then checkSwitchAcc() ;switch to next account
 	EndIf
 EndFunc
@@ -1543,7 +1544,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
-			If $g_bForceSwitch Then $g_bForceSwitchifNoCGEvent = True ;force not doing bb attack even if stars available 
+			_ClanGames(False, True) ;Do Only Purge
 			Local $aRndFuncList = ['BuilderBase', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return

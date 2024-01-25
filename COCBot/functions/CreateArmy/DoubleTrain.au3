@@ -60,7 +60,8 @@ Func DoubleTrain()
 					RemoveTrainTroop()
 					Local $aWhatToTrain = WhatToTrain(False, False)
 					SetLog("New troop Fill way", $COLOR_DEBUG1)
-					TrainUsingWhatToTrain($aWhatToTrain)
+					TrainUsingWhatToTrain($aWhatToTrain) ;should only train 1st army
+					RemoveTrainTroop(True) ;recheck trained army, remove excess queued army (leave only 1st army)
 					FillIncorrectTroopCombo("1st Army")
 				Else
 					FillIncorrectTroopCombo("1st Army")
@@ -490,24 +491,48 @@ Func RemoveQueueTroop($iTroopIndex = 0, $Quantity = 1)
 			If $Quantity > $aiQueueTroops[$i][3] Then 
 				SetLog("  - Removing x" & $aiQueueTroops[$i][3] & " queued " & $g_asTroopNames[$iTroopIndex], $COLOR_ACTION)
 				Click($aiQueueTroops[$i][1] + $XOffset, $YRemove, $aiQueueTroops[$i][3], $g_iTrainClickDelay, "Remove wrong queue")
-				ContinueLoop ;trop quantity on slot less than what to remove
+				ContinueLoop ;troop quantity on slot less than what to remove
 			Else
 				SetLog("  - Removing x" & $Quantity & " queued " & $g_asTroopNames[$iTroopIndex], $COLOR_ACTION)
 				Click($aiQueueTroops[$i][1] + $XOffset, $YRemove, $Quantity, $g_iTrainClickDelay, "Remove wrong queue")
-				ExitLoop ;trop quantity on slot same or more than what to remove
+				ExitLoop ;troop quantity on slot same or more than what to remove
 			EndIf
 		EndIf
 	Next
 EndFunc
 
-Func RemoveTrainTroop()
+;RemoveTrainTroop
+;will remove troops that already trained (not on army camp yet)
+;using trash button (to empty troops and re train remaining)
+;bQueueOnly = True (will only remove excess troop)
+;bQueueOnly = False (will use trash button)
+Func RemoveTrainTroop($bQueueOnly = False)
 	Local $aTrashCoord[2] = [525, 322]
+	Local $YRemove = 200, $XOffset = 15, $XQueueStart
 	If Not $g_bRunState Then Return
-	If _ColorCheck(_GetPixelColor($aTrashCoord[0], $aTrashCoord[1], True), Hex(0xCA1B1D, 6), 10) Then
-		ClickP($aTrashCoord)
-		If _Sleep(1000) Then Return
-		If IsOKCancelPage() Then
-			Click($aConfirmSurrender[0], $aConfirmSurrender[1])
+	If $bQueueOnly Then 
+		$XQueueStart = FindxQueueStart()
+		If $XQueueStart = 777 Then Return ;if we got default value of queue start, just exit. there is no excess train on queue troop
+		Local $aiQueueTroops = CheckQueueTroops(True, True, $XQueueStart, True)
+		If Not IsArray($aiQueueTroops) Then Return 
+		_ArraySort($aiQueueTroops, 0, 0, 0, 2) ;sort by x coord
+		If $g_bDebugSetlog Then SetLog(_ArrayToString($aiQueueTroops))
+		If Not $g_bRunState Then Return
+		For $i = 0 To UBound($aiQueueTroops) - 1
+			If Not $g_bRunState Then Return	
+			Local $iIndex = TroopIndexLookup($aiQueueTroops[$i][0])
+			SetLog("  - Removing x" & $aiQueueTroops[$i][1] & " queued TrainTroop " & $g_asTroopNames[$iIndex], $COLOR_ACTION)
+			Click($aiQueueTroops[$i][2] + $XOffset, $YRemove, $aiQueueTroops[$i][1], $g_iTrainClickDelay, "Remove wrong queue")
+			If _Sleep(500) Then Return
+		Next
+	Else
+		If _ColorCheck(_GetPixelColor($aTrashCoord[0], $aTrashCoord[1], True), Hex(0xCA1B1D, 6), 10) Then
+			ClickP($aTrashCoord)
+			If _Sleep(1000) Then Return
+			If IsOKCancelPage() Then
+				Click($aConfirmSurrender[0], $aConfirmSurrender[1])
+			EndIf
+			If _Sleep(500) Then Return
 		EndIf
 	EndIf
 EndFunc

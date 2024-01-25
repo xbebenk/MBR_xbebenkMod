@@ -19,6 +19,7 @@ Func _ClanGames($test = False, $OnlyPurge = False)
 	$g_bIsCGPointAlmostMax = False ;just to be sure, reset to false
 	$g_bisCGPointMaxed = False ;just to be sure, reset to false
 	$g_sCGCurrentEventName = ""
+	If $OnlyPurge Then $g_bForceSwitchifNoCGEvent = True
 
 	Local $PurgeDayMinute = ($g_iCmbClanGamesPurgeDay + 1) * 1440
 	; Check If this Feature is Enable on GUI.
