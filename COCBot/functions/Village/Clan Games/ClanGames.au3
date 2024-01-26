@@ -37,7 +37,10 @@ Func _ClanGames($test = False, $OnlyPurge = False)
 	EndIf
 
 	If CloseClangamesWindow() Then _Sleep(1000)
-	If CheckMainScreen(False, $g_bStayOnBuilderBase, "ClanGames") Then ZoomOut()
+	If Not QuickMIS("BC1", $g_sImgCaravan, 200, 70, 330, 155) Then
+		ZoomOut()
+	EndIf
+	
 	If _Sleep(500) Then Return
 	SetLog("Entering Clan Games", $COLOR_INFO)
 	If Not $g_bRunState Then Return

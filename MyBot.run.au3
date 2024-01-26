@@ -1374,7 +1374,8 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 And $bSwitch Then
 		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-		If DonateCC() Then TrainSystem()
+		DonateCC()
+		TrainSystem()
 		CommonRoutine("NoClanGamesEvent")
 		$g_bForceSwitchifNoCGEvent = True
 		checkSwitchAcc() ;switch to next account
@@ -1431,16 +1432,17 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent Then ; forced switch after first attack if cg point is almost max
 		SetLog("ClanGames point almost max/maxed, Forced switch account!", $COLOR_SUCCESS)
-		If DonateCC() Then TrainSystem()
-		CommonRoutine("NoClanGamesEvent")
+		DonateCC()
+		TrainSystem()
 		$g_bForceSwitchifNoCGEvent = True
+		CommonRoutine("NoClanGamesEvent")
 		checkSwitchAcc() ;switch to next account
 	EndIf
 
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bForceSwitchifNoCGEvent) Then
-		If DonateCC() Then TrainSystem()
-		If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
+		DonateCC()
+		TrainSystem()
 		CommonRoutine("Switch")
 		checkSwitchAcc() ;switch to next account
 	EndIf
@@ -1503,7 +1505,8 @@ Func FirstCheckRoutine()
 
 	CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
-		If DonateCC() Then TrainSystem()
+		DonateCC()
+		TrainSystem()
 		CommonRoutine("Switch")
 		If $g_bBBAttacked Or $g_bCheckDonateOften Then
 			If DonateCC() Then TrainSystem()
