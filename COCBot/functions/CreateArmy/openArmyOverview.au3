@@ -12,36 +12,32 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
-	If $bCheckMain Then
-		If IsTrainPage(False, 1) Then Return True
-		If Not checkChatTabPixel() Then checkObstacles()
-	Else
-		If IsTrainPage(False, 1) Then Return True
-		;For $i = 1 To 2
-		;	If $g_bDebugSetlogTrain Then SetLog("Waiting MainScreen #" & $i, $COLOR_ACTION)
-		;	If isOnMainVillage() Then ; check for main page
-		;		If $g_bDebugSetlogTrain Then SetLog("MainScreen located", $COLOR_ACTION)
-		;		ExitLoop
-		;	Else
-		;		SetLog("Cannot open Army Overview window ", $COLOR_ERROR)
-		;		checkObstacles()
-		;	EndIf
-		;Next
-	EndIf
+Func OpenArmyOverview($sWhereFrom = "Undefined")
+	If IsProblemAffect(True) Then Return
+	If IsTrainPage(False, 1) Then Return True
+	If Not checkChatTabPixel() Then checkObstacles()
 	
+	If $g_bDebugSetlogTrain Then SetLog("OpenArmyOverview" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
 	If Not $g_bRunState Then Return
-	ClickP($aArmyTrainButton) ; Button Army Overview
-	If _Sleep(500) Then Return
-	If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
-	
 	For $i = 1 To 5
 		If Not $g_bRunState Then Return
-		If IsTrainPage() Then Return True
-		If $i = 5 Then SetLog("[" & $i & "] Check Opening ArmyWindow", $COLOR_ERROR)
+		SetLog("Try open ArmyWindow #" & $i, $COLOR_ACTION)
+		If WaitforPixel(30, 522, 31, 523, "FFFFE3", 20, 1) Then
+			ClickP($aArmyTrainButton) ; Button Army Overview
+			If _Sleep(3000) Then Return
+		ElseIf $i = 5 Then 
+			SetLog("Cannot Verify Army Button", $COLOR_ERROR)
+			SetError(1)
+			Return
+		EndIf
+		
+		If IsTrainPage(False, 1) Then 
+			SetLog("ArmyWindow OK", $COLOR_ACTION)
+			Return True
+		EndIf
+		
 		If _Sleep(500) Then Return
 	Next
-	
 	Return False
 EndFunc   ;==>OpenArmyOverview
 

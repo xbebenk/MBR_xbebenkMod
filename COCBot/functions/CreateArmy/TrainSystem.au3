@@ -31,7 +31,7 @@ Func TrainSystem()
 	;Add small delay after boost
 	If _Sleep(1000) Then Return
 	If Not $g_bRunState Then Return
-	CheckIfArmyIsReady()
+	If Not CheckIfArmyIsReady() Then Return
 	
 	If Not $g_bRunState Then Return
 	TrainCustomArmy()
@@ -68,7 +68,7 @@ Func TrainPreviousArmy($bCloseWindow = False)
 							Click($g_iQuickMISX, $g_iQuickMISY)
 							SetLog("Successfully boost with potion", $COLOR_SUCCESS)
 							If _Sleep(1000) Then Return
-							If Not OpenArmyOverview(True, "TrainPreviousArmy") Then Return
+							If Not OpenArmyOverview("TrainPreviousArmy") Then Return
 							If Not OpenQuickTrainTab(True, "TrainPreviousArmy") Then Return
 						Else
 							SetLog("Cannot find potion boost button", $COLOR_ERROR)
@@ -83,7 +83,7 @@ Func TrainPreviousArmy($bCloseWindow = False)
 							Click($g_iQuickMISX - 230, $g_iQuickMISY + 300)
 							SetLog("Successfully boost with Dark Elixer", $COLOR_SUCCESS)
 							If _Sleep(1000) Then Return
-							If Not OpenArmyOverview(True, "TrainPreviousArmy") Then Return
+							If Not OpenArmyOverview("TrainPreviousArmy") Then Return
 							If Not OpenQuickTrainTab(True, "TrainPreviousArmy") Then Return
 						EndIf
 					EndIf					
@@ -151,7 +151,7 @@ Func CheckIfArmyIsReady()
 	Local $bFullSiege = False
 	$g_bWaitForCCTroopSpell = False ; reset for waiting CC in SwitchAcc
 	
-	If Not OpenArmyOverview(True, "CheckIfArmyIsReady()") Then Return
+	If Not OpenArmyOverview("CheckIfArmyIsReady()") Then Return
 	
 	CheckArmyCamp(False, False, True, True)
 	CheckCCArmy()
@@ -556,7 +556,7 @@ Func RemoveExtraTroops($toRemove)
 		If Not _CheckPixel($aButtonRemoveTroopsOK1, True) Then ; If no 'Okay' button found in army tab to save changes
 			SetLog("Cannot find/verify 'Okay' Button in Army tab", $COLOR_WARNING)
 			ClickAway() ; Click Away, Necessary! due to possible errors/changes
-			If _Sleep(1000) Then OpenArmyOverview(True, "RemoveExtraTroops()") ; Open Army Window AGAIN
+			If _Sleep(1000) Then OpenArmyOverview("RemoveExtraTroops()") ; Open Army Window AGAIN
 			Return False ; Exit Function
 		EndIf
 

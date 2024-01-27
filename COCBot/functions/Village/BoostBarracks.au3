@@ -38,7 +38,7 @@ Func BoostTrainBuilding($sName, $iCmbBoost, $iCmbBoostCtrl)
 	Local $sIsAre = "are"
 	SetLog("Boosting " & $sName, $COLOR_INFO)
 
-	If OpenArmyOverview(True, "BoostTrainBuilding()") Then
+	If OpenArmyOverview("BoostTrainBuilding()") Then
 		If $sName = "Barracks" Then
 			OpenTroopsTab(True, "BoostTrainBuilding()")
 		ElseIf $sName = "Spell Factory" Then

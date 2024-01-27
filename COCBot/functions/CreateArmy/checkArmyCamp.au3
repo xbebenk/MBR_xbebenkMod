@@ -32,7 +32,7 @@ Func _checkArmyCamp($bOpenArmyWindow, $bCloseArmyWindow, $bGetHeroesTime, $bSetL
 	EndIf
 	
 	If $bOpenArmyWindow Then
-		If Not OpenArmyOverview(True, "_checkArmyCamp()") Then
+		If Not OpenArmyOverview("_checkArmyCamp()") Then
 			SetError(2)
 			Return; not open, requested to be open - error.
 		EndIf

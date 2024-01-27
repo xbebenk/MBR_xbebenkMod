@@ -25,7 +25,7 @@ Func getArmyCCSpells($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChec
 			Return ; not open, not requested to be open - error.
 		EndIf
 	ElseIf $bOpenArmyWindow Then
-		If Not OpenArmyOverview(True, "getArmyCCSpells()") Then
+		If Not OpenArmyOverview("getArmyCCSpells()") Then
 			SetError(2)
 			Return ; not open, requested to be open - error.
 		EndIf

@@ -367,7 +367,7 @@ Func aaaaaa()
 		EndIf
 		
 		ReturnfromDropTrophies(True)
-		If OpenArmyOverview(True, "DropTrophy") Then
+		If OpenArmyOverview("DropTrophy") Then
 			TrainPreviousArmy(True)
 			_Sleep(1000)
 		EndIf

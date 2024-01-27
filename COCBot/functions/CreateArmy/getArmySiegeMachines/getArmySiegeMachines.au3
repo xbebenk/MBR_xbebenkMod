@@ -25,7 +25,7 @@ Func getArmySiegeMachines($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 			Return ; not open, not requested to be open - error.
 		EndIf
 	ElseIf $bOpenArmyWindow Then
-		If Not OpenArmyOverview(True, "getArmySiegeMachines()") Then
+		If Not OpenArmyOverview("getArmySiegeMachines()") Then
 			SetError(2)
 			Return ; not open, requested to be open - error.
 		EndIf

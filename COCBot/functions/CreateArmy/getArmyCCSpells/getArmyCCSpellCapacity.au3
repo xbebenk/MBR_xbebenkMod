@@ -27,7 +27,7 @@ Func getArmyCCSpellCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False,
 			SetError(1)
 			Return ; not open, not requested to be open - error.
 		ElseIf $bOpenArmyWindow Then
-			If Not OpenArmyOverview(True, "getArmyCCSpellCapacity()") Then
+			If Not OpenArmyOverview("getArmyCCSpellCapacity()") Then
 				SetError(2)
 				Return ; not open, requested to be open - error.
 			EndIf

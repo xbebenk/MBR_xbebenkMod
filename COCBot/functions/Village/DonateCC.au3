@@ -60,11 +60,7 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 		If $i < $eSpellCount Then $g_aiAvailQueuedSpell[$i] = 0
 	Next
 	
-	OpenArmyOverview(False, "IsDonateQueueOnly()")
-	If _Sleep(500) Then Return
-	If Not IsTrainPage() Then
-		OpenArmyOverview(False, "IsDonateQueueOnly()")
-	EndIf
+	If Not OpenArmyOverview("IsDonateQueueOnly()") Then Return
 	
 	For $i = 0 To 1
 		If Not $g_aiPrepDon[$i * 2] And Not $g_aiPrepDon[$i * 2 + 1] Then $abDonateQueueOnly[$i] = False

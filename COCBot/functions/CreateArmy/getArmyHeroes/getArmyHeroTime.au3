@@ -35,7 +35,7 @@ Func getArmyHeroTime($iHeroType, $bOpenArmyWindow = False, $bCloseArmyWindow = F
 		SetError(2)
 		Return ; not open, not requested to be open - error.
 	ElseIf $bOpenArmyWindow Then
-		If Not OpenArmyOverview(True, "getArmyHeroTime()") Then
+		If Not OpenArmyOverview("getArmyHeroTime()") Then
 			SetError(3)
 			Return ; not open, requested to be open - error.
 		EndIf

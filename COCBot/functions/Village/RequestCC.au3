@@ -33,7 +33,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
 	If $sText = "IsFullClanCastle" Then 
 		If Not isTrainPage() Then Return
 	Else
-		If Not OpenArmyOverview(True, "RequestCC()") Then Return
+		If Not OpenArmyOverview("RequestCC()") Then Return
 	EndIf
 
 	If _Sleep($DELAYREQUESTCC1) Then Return
@@ -334,7 +334,7 @@ Func RemoveCastleArmy($aToRemove)
 		If $counter <= 5 Then ContinueLoop
 		SetLog("Cannot find/verify 'Okay' Button in Army tab", $COLOR_WARNING)
 		ClickAway()
-		If _Sleep(400) Then OpenArmyOverview(True, "RemoveCastleSpell()") ; Open Army Window AGAIN
+		If _Sleep(400) Then OpenArmyOverview("RemoveCastleSpell()") ; Open Army Window AGAIN
 		Return False ; Exit Function
 	WEnd
 
