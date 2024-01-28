@@ -486,8 +486,8 @@ Func RemoveQueueTroop($iTroopIndex = 0, $Quantity = 1)
 	Local $YRemove = 200, $XOffset = 15
 	Local $XQueueStart = FindxQueueStart()
 	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\TroopsQueued"
-	Local $aiQueueTroops = SearchArmy($Dir, 73, 205, $XQueueStart, 243, True)
-	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\TroopsQueued", 73, 205, FindxQueueStart(), 243, True)
+	Local $aiQueueTroops = SearchArmy($Dir, 73, 205, $XQueueStart, 243, "Queue")
+	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\TroopsQueued", 73, 205, FindxQueueStart(), 243, "Queue")
 	If Not IsArray($aiQueueTroops) Then Return 
 	_ArraySort($aiQueueTroops, 0, 0, 0, 1) ;sort by x coord
 	If $g_bDebugSetlog Then SetLog(_ArrayToString($aiQueueTroops))
