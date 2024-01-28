@@ -176,7 +176,7 @@ EndFunc   ;==>TrainFullTroop
 
 Func FillIncorrectTroopCombo($caller = "Unknown")
 	If Not $g_bIgnoreIncorrectTroopCombo Then Return
-	If $g_bDebugSetlog Then SetLog("Train to Fill Incorrect Troop Combo", $COLOR_ACTION)
+	SetLog("Train to Fill Incorrect Troop Combo", $COLOR_ACTION)
 	
 	If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
 	Local $CampOCR = GetCurrentArmy(95, 163)
@@ -185,7 +185,7 @@ Func FillIncorrectTroopCombo($caller = "Unknown")
 	If $g_bDebugSetlog Then SetLog("CampOCR:" & _ArrayToString($CampOCR) & " Called from : " & $caller)
 	
 	If $CampOCR[0] = 0 Then ;no troop trained on 1st army 
-		If $g_bDebugSetlog Then SetLog("no need to fill troop on 1st army", $COLOR_DEBUG1)
+		SetLog("no need to fill troop on 1st army", $COLOR_DEBUG1)
 		Return
 	EndIf
 	
@@ -482,7 +482,7 @@ Func FindxQueueStart()
 EndFunc
 
 Func RemoveQueueTroop($iTroopIndex = 0, $Quantity = 1)
-	If $g_bDebugSetlog Then SetLog("RemoveQueueTroop TroopIndex = " & $iTroopIndex & ", Quantity = " & $Quantity, $COLOR_DEBUG1)
+	SetLog("RemoveQueueTroop TroopIndex = " & $iTroopIndex & ", Quantity = " & $Quantity, $COLOR_DEBUG1)
 	Local $YRemove = 200, $XOffset = 15
 	Local $XQueueStart = FindxQueueStart()
 	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\TroopsQueued"
@@ -519,6 +519,7 @@ EndFunc
 ;bQueueOnly = True (will only remove excess troop)
 ;bQueueOnly = False (will use trash button)
 Func RemoveTrainTroop($bQueueOnly = False)
+	SetLog("RemoveTrainTroop, QueueOnly=" & String($bQueueOnly), $COLOR_DEBUG1)
 	Local $aTrashCoord[2] = [525, 322]
 	Local $YRemove = 200, $XOffset = 15, $XQueueStart
 	If Not $g_bRunState Then Return
