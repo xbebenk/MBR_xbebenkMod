@@ -56,8 +56,6 @@ Func _ClanGames($test = False, $OnlyPurge = False)
 		Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
 		;Remove All previous file (in case setting changed)
 		DirRemove($sTempPath, $DIR_REMOVE)
-		;now we need to copy selected challenge before checking current running event is not wrong event selected
-		PrepareChallengesImage()
 		
 		; Let's get some information , like Remain Timer, Score and limit
 		If Not _ColorCheck(_GetPixelColor(300, 284, True), Hex(0x53E052, 6), 10) Then ;no greenbar = there is active event or completed event
@@ -80,7 +78,11 @@ Func _ClanGames($test = False, $OnlyPurge = False)
 				$g_bIsCGPointMaxed = True
 				CloseClangamesWindow()
 				Return False
-			ElseIf $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Then
+			EndIf
+			
+			;now we need to copy selected challenge before checking current running event is not wrong event selected
+			PrepareChallengesImage()
+			If $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Then
 				SetLog("You almost reached max point")
 				$g_bIsCGPointAlmostMax = True
 				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > $PurgeDayMinute Then ; purge, but not purge on last day of clangames
