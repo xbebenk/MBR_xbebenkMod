@@ -339,10 +339,8 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 	If Not $g_bRunState Then Return
 	If $ArmyCamp[0] = $ArmyCamp[1] * 2 And ((ProfileSwitchAccountEnabled() And $g_abAccountNo[$g_iCurAccount] And $g_abDonateOnly[$g_iCurAccount]) Or $g_iCommandStop = 0) Then Return True ; bypass Donate account when full queue
 	
-	
 	Local $iTotalQueue = 0
 	SetLog("Checking troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG1)
-	
 	If $g_bTrainPreviousArmy Then 
 		While _ColorCheck(_GetPixelColor(265, 197, True), Hex(0xFFFFFF, 6), 20, Default, "Army Added Message")
 			If Not $g_bRunState Then Return
@@ -489,6 +487,7 @@ Func RemoveQueueTroop($iTroopIndex = 0, $Quantity = 1)
 	Local $XQueueStart = FindxQueueStart()
 	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\TroopsQueued"
 	Local $aiQueueTroops = SearchArmy($Dir, 73, 205, $XQueueStart, 243, True)
+	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\TroopsQueued", 73, 205, FindxQueueStart(), 243, True)
 	If Not IsArray($aiQueueTroops) Then Return 
 	_ArraySort($aiQueueTroops, 0, 0, 0, 1) ;sort by x coord
 	If $g_bDebugSetlog Then SetLog(_ArrayToString($aiQueueTroops))
@@ -496,15 +495,20 @@ Func RemoveQueueTroop($iTroopIndex = 0, $Quantity = 1)
 	For $i = 0 To UBound($aiQueueTroops) - 1
 		If Not $g_bRunState Then Return
 		If TroopIndexLookup($aiQueueTroops[$i][0]) = $iTroopIndex Then 
-			If $Quantity > $aiQueueTroops[$i][3] Then 
+			If $aiQueueTroops[$i][3] < $Quantity Then
+				SetLog("Found x" & $aiQueueTroops[$i][3] & " " & $g_asTroopNames[$iTroopIndex], $COLOR_DEBUG)
 				SetLog("  - Removing x" & $aiQueueTroops[$i][3] & " queued " & $g_asTroopNames[$iTroopIndex], $COLOR_ACTION)
 				Click($aiQueueTroops[$i][1] + $XOffset, $YRemove, $aiQueueTroops[$i][3], $g_iTrainClickDelay, "Remove wrong queue")
+				$Quantity -= $aiQueueTroops[$i][3]
+				If _Sleep(1000) Then Return
 				ContinueLoop ;troop quantity on slot less than what to remove
-			Else
+			Else ;troop quantity on slot same or more than what to remove
+				SetLog("Found x" & $aiQueueTroops[$i][3] & " " & $g_asTroopNames[$iTroopIndex], $COLOR_DEBUG)
 				SetLog("  - Removing x" & $Quantity & " queued " & $g_asTroopNames[$iTroopIndex], $COLOR_ACTION)
 				Click($aiQueueTroops[$i][1] + $XOffset, $YRemove, $Quantity, $g_iTrainClickDelay, "Remove wrong queue")
-				ExitLoop ;troop quantity on slot same or more than what to remove
+				$Quantity -= $Quantity
 			EndIf
+			If $Quantity = 0 Then ExitLoop
 		EndIf
 	Next
 EndFunc
