@@ -353,6 +353,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 	
 	Local $XQueueStart = FindxQueueStart()
 	Local $aiQueueTroops = CheckQueueTroops(True, $bDebug, $XQueueStart)
+	;CheckQueueTroops(True, True, FindxQueueStart())
 	If Not IsArray($aiQueueTroops) Then Return False
 	For $i = 0 To UBound($aiQueueTroops) - 1
 		If $aiQueueTroops[$i] > 0 Then $iTotalQueue += $aiQueueTroops[$i] * $g_aiTroopSpace[$i]
@@ -382,16 +383,23 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 		$iExcessTroop = $aiQueueTroops[$i] - $g_aiArmyCompTroops[$i]
 		If $iExcessTroop > 0 Then
 			SetLog("  - " & $g_asTroopNames[$i] & " x" & $aiQueueTroops[$i] & ", excess queue : " & $iExcessTroop, $COLOR_ACTION)
+			$aiQueueTroops[$i] -= $iExcessTroop
 			$bExcessTroop = True
 			RemoveQueueTroop($i, $iExcessTroop)
 			If _Sleep(500) Then Return
 		EndIf
 	Next
-	If $bExcessTroop Then Return True
+	
+	If $bExcessTroop Then 
+		If _Sleep(1500) Then Return
+		$ArmyCamp = GetCurrentArmy(95, 163)
+		SetLog("After excess troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG1)
+		;Return True
+	EndIf
 	
 	If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then
 		; Train remain
-		SetLog("Checking troop queue:")
+		SetLog("TrainRemain troop queue:")
 		Local $rWTT[1][2] = [["Arch", 0]] ; what to train
 		For $i = 0 To UBound($aiQueueTroops) - 1
 			Local $iIndex = $g_aiTrainOrder[$i]

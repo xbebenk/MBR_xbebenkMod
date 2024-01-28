@@ -31,7 +31,12 @@ Func TrainSystem()
 	;Add small delay after boost
 	If _Sleep(1000) Then Return
 	If Not $g_bRunState Then Return
-	If Not CheckIfArmyIsReady() Then Return
+	CheckIfArmyIsReady()
+	
+	If Not IsTrainPage(False, 1) Then 
+		SetLog("Cannot verify Army Window, exit train!", $COLOR_ERROR)
+		Return
+	EndIf
 	
 	If Not $g_bRunState Then Return
 	TrainCustomArmy()

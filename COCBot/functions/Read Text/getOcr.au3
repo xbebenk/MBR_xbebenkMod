@@ -155,7 +155,7 @@ Func getArmyCapacityOnTrainSpell($x_start, $y_start) ;  -> Gets quantity of spel
 EndFunc   ;==>getArmyCapacityOnTrainSpell
 
 Func getQueueTroopsQuantity($x_start, $y_start) ;  -> Gets quantity of troops in Queue in Train Tab
-	Return StringReplace(getOcrAndCapture("coc-qqtroop", $x_start, $y_start, 58, 15, True), "b", "")
+	Return StringReplace(getOcrAndCapture("coc-qqtroop", $x_start, $y_start, 58, 15, True), "-", "")
 EndFunc   ;==>getQueueTroopsQuantity
 
 Func getAttackDisable($x_start, $y_start) ;  -> 346, 182 - Gets red text disabled for early warning of Personal Break
