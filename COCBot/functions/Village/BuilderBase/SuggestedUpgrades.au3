@@ -451,6 +451,8 @@ Func DoUpgradeBB($CostType = "Gold", $bTest = False)
 						ClickAway("Left")
 						Return True
 					EndIf
+				Else
+					SetLog("Cannot Find Upgrade Button on Upgrade Window", $COLOR_ERROR)
 				EndIf
 			EndIf
 		Else
@@ -459,6 +461,8 @@ Func DoUpgradeBB($CostType = "Gold", $bTest = False)
 			ClickBBBuilder()
 			Return True
 		EndIf
+	Else
+		SetLog("Cannot Find " & $Dir & " Button", $COLOR_ERROR)
 	EndIf
 
 	Return False

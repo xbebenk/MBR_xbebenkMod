@@ -12,14 +12,14 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
-Func _ClanGames($test = False, $OnlyPurge = False)
+Func _ClanGames($test = False, $bOnlyPurge = False)
 	$g_bIsBBevent = False ;just to be sure, reset to false
 	$g_bIsCGEventRunning = False ;just to be sure, reset to false
 	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false
 	$g_bIsCGPointAlmostMax = False ;just to be sure, reset to false
 	$g_bisCGPointMaxed = False ;just to be sure, reset to false
 	$g_sCGCurrentEventName = ""
-	If $OnlyPurge Then $g_bForceSwitchifNoCGEvent = True
+	If $bOnlyPurge Then $g_bForceSwitchifNoCGEvent = True ;OnlyPurge will be called on CommonRoutine = Switch
 
 	Local $PurgeDayMinute = ($g_iCmbClanGamesPurgeDay + 1) * 1440
 	; Check If this Feature is Enable on GUI.
@@ -52,7 +52,7 @@ Func _ClanGames($test = False, $OnlyPurge = False)
 	Local $iWaitPurgeScore = 150
 
 	; Enter on Clan Games window
-	If IsClanGamesWindow() Then
+	If IsClanGamesWindow($bOnlyPurge) Then
 		Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
 		;Remove All previous file (in case setting changed)
 		DirRemove($sTempPath, $DIR_REMOVE)
@@ -484,7 +484,7 @@ Func SelectEvent(ByRef $aSelectChallenges)
 	If _Sleep(1000) Then Return
 EndFunc
 
-Func IsClanGamesWindow()
+Func IsClanGamesWindow($bOnlyPurge = False)
 	Local $sState, $bRet = False
 
 	If QuickMIS("BC1", $g_sImgCaravan, 200, 55, 330, 155) Then
@@ -510,7 +510,7 @@ Func IsClanGamesWindow()
 		SetLog("Caravan not available", $COLOR_WARNING)
 		$sState = "Not Running"
 		$bRet = False
-		$g_bForceSwitchifNoCGEvent = True
+		If $bOnlyPurge Then $g_bForceSwitchifNoCGEvent = False ;clan games not running, release forceswitch to allow bot attack on BB
 	EndIf
 
 	SetLog("Clan Games State is : " & $sState, $COLOR_INFO)

@@ -1332,7 +1332,8 @@ Func FirstCheckRoutine()
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
 	If $g_bDonateEarly Then
 		SetLog("Donate Early Enabled", $COLOR_INFO)
-		If DonateCC() Then TrainSystem()
+		DonateCC()
+		TrainSystem()
 	EndIf
 	
 	If $g_bChkCGBBAttackOnly Then
@@ -1377,7 +1378,6 @@ Func FirstCheckRoutine()
 		DonateCC()
 		TrainSystem()
 		CommonRoutine("NoClanGamesEvent")
-		$g_bForceSwitchifNoCGEvent = True
 		checkSwitchAcc() ;switch to next account
 	EndIf
 
@@ -1386,8 +1386,11 @@ Func FirstCheckRoutine()
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
 		If Not $g_bRunState Then Return
-		CheckIfArmyIsReady()
-		ClickAway()
+		If $g_bDonateEarly Then 
+			CheckIfArmyIsReady(True) ;check if Army Ready or no
+		Else
+			TrainSystem()
+		EndIf
 		If $g_bIsFullArmywithHeroesAndSpells Then
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
@@ -1424,17 +1427,15 @@ Func FirstCheckRoutine()
 				EndIf
 				If _Sleep($DELAYRUNBOT1) Then Return
 			EndIf
-		Else
-			If Not $g_bDonateEarly Then TrainSystem()
 		EndIf
 	EndIf
 
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent Then ; forced switch after first attack if cg point is almost max
+	;forced switch after first attack if cg point is almost max
+	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent And $g_bForceSwitchifNoCGEvent Then
 		SetLog("ClanGames point almost max/maxed, Forced switch account!", $COLOR_SUCCESS)
 		DonateCC()
 		TrainSystem()
-		$g_bForceSwitchifNoCGEvent = True
 		CommonRoutine("NoClanGamesEvent")
 		checkSwitchAcc() ;switch to next account
 	EndIf
@@ -1501,12 +1502,12 @@ Func FirstCheckRoutine()
 	EndIf
 
 	If Not $g_bRunState Then Return
-	TrainSystem()
+	If $b_SuccessAttack Then TrainSystem(True) ;skip CheckArmyReady
 
 	CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
 		DonateCC()
-		TrainSystem()
+		TrainSystem(True)
 		CommonRoutine("Switch")
 		If $g_bBBAttacked Or $g_bCheckDonateOften Then
 			If DonateCC() Then TrainSystem()

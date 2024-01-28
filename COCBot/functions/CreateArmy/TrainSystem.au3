@@ -16,7 +16,7 @@
 #include <Array.au3>
 #include <MsgBoxConstants.au3>
 
-Func TrainSystem()
+Func TrainSystem($bSkipCheckArmy = False)
 	If Not $g_bTrainEnabled Then ; check for training disabled in halt mode
 		If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 		Return
@@ -31,7 +31,11 @@ Func TrainSystem()
 	;Add small delay after boost
 	If _Sleep(1000) Then Return
 	If Not $g_bRunState Then Return
-	CheckIfArmyIsReady()
+	If Not $bSkipCheckArmy Then 
+		CheckIfArmyIsReady()
+	Else
+		OpenArmyOverview("TrainSystem")
+	EndIf
 	
 	If Not IsTrainPage(False, 1) Then 
 		SetLog("Cannot verify Army Window, exit train!", $COLOR_ERROR)
@@ -146,7 +150,7 @@ Func TrainCustomArmy()
 	If Not $g_bRunState Then Return
 EndFunc   ;==>TrainCustomArmy
 
-Func CheckIfArmyIsReady()
+Func CheckIfArmyIsReady($bCloseWindow = False)
 
 	If Not $g_bRunState Then Return
 
@@ -258,7 +262,11 @@ Func CheckIfArmyIsReady()
 		SetDebugLog(" $g_bIsFullArmywithHeroesAndSpells: " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_DEBUG)
 		SetDebugLog(" $g_iTownHallLevel: " & Number($g_iTownHallLevel), $COLOR_DEBUG)
 	EndIf
-
+	
+	If $bCloseWindow Then 
+		ClickAway()
+		If _Sleep(1000) Then Return
+	EndIf
 EndFunc   ;==>CheckIfArmyIsReady
 
 Func CheckSpells()
