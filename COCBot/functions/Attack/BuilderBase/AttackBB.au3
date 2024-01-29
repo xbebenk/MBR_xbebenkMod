@@ -221,7 +221,7 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 			$bWallBreaker = True
 		EndIf
 
-		If $bCountSameDamage > 20 Then
+		If $bCountSameDamage > 10 Then
 			If $g_bChkDebugAttackBB Then SetLog("EndBattleBB LoopCheck: No Change on Overall Damage, Exit!", $COLOR_ERROR)
 			If ReturnHomeDropTrophyBB(True) Then $bRet = True
 			ExitLoop
