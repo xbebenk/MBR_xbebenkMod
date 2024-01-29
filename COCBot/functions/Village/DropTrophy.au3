@@ -93,7 +93,6 @@ Func DropTrophy()
 				$g_iDropTrophyMaxNeedCheck = $g_iDropTrophyMin ; already checked above max trophy, so set target to min trophy value
 				SetLog("Dropping Trophies to " & $g_iDropTrophyMin, $COLOR_INFO)
 				If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
-				ZoomOut()
 				PrepareSearch($DT)
 				If $g_bOutOfGold Or $g_bRestart Then Return
 
