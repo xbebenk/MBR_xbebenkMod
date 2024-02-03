@@ -119,7 +119,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 	If Not $g_bRunState Then Return ;trap pause or stop bot
 	UpdateStats()
 	
-	If $OnlyPurge Then
+	If $bOnlyPurge Then
 		SetLog("OnlyPurge before switch Account", $COLOR_INFO)
 		Local $aEvent = FindEventToPurge($sTempPath)
 		If IsArray($aEvent) And UBound($aEvent) > 0 Then
