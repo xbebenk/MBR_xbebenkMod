@@ -1326,6 +1326,7 @@ Func FirstCheck()
 EndFunc   ;==>FirstCheck
 
 Func FirstCheckRoutine()
+	Local $FirstCheckRoutineTimer = TimerInit()
 	Local $b_SuccessAttack = False
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
@@ -1517,10 +1518,13 @@ Func FirstCheckRoutine()
 	If $b_SuccessAttack Then TrainSystem(True) ;skip CheckArmyReady
 
 	CommonRoutine("FirstCheckRoutine")
+	SetLogCentered("FirstCheck Routine Done (in " & Round(TimerDiff($FirstCheckRoutineTimer) / 1000 / 60, 2) & " minutes)", Default, $COLOR_SUCCESS)
+	
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
 		DropTrophy()
-		
+		Local $SwitchRoutine = TimerInit()
 		CommonRoutine("Switch")
+		SetLogCentered("Switch Routine Done (in " & Round(TimerDiff($SwitchRoutine) / 1000 / 60, 2) & " minutes)", Default, $COLOR_SUCCESS)
 		If $g_bBBAttacked Or $g_bCheckDonateOften Then
 			DonateCC(True, True)
 			ReTrainForSwitch()
