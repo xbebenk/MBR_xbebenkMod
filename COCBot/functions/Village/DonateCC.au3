@@ -1256,9 +1256,9 @@ Func DetectSlotTroop(Const $iTroopIndex)
 	Local $FullTemp
 
 	For $Slot = 0 To 6
-		Local $x = 365 + (68 * $Slot)
+		Local $x = 368 + (68 * $Slot)
 		Local $y = $g_iDonationWindowY + 37
-		Local $x1 = $x + 75
+		Local $x1 = $x + 73
 		Local $y1 = $y + 63
 		If $g_bDebugSetLog Then SetLog("$x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
 		
@@ -1283,9 +1283,9 @@ Func DetectSlotTroop(Const $iTroopIndex)
 	Next
 
 	For $Slot = 7 To 13
-		Local $x = 365 + (68 * ($Slot - 7))
+		Local $x = 368 + (68 * ($Slot - 7))
 		Local $y = $g_iDonationWindowY + 124
-		Local $x1 = $x + 75
+		Local $x1 = $x + 73
 		Local $y1 = $y + 63
 		If $g_bDebugSetLog Then SetLog("$x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
 		
@@ -1317,9 +1317,9 @@ Func DetectSlotSpell(Const $iSpellIndex)
 	Local $FullTemp
 
 	For $Slot = 14 To 20
-		Local $x = 365 + (68 * ($Slot - 14))
+		Local $x = 368 + (68 * ($Slot - 14))
 		Local $y = $g_iDonationWindowY + 241
-		Local $x1 = $x + 75
+		Local $x1 = $x + 73
 		Local $y1 = $y + 63
 		
 		If $g_bDebugSetLog Then SetLog($iSpellIndex & "-> $x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
@@ -1351,9 +1351,9 @@ Func DetectSlotSiege(Const $iSiegeIndex)
 	Local $FullTemp
 
 	For $Slot = 0 To 6
-		Local $x = 365 + (68 * $Slot)
+		Local $x = 368 + (68 * $Slot)
 		Local $y = $g_iDonationWindowY + 37
-		Local $x1 = $x + 75
+		Local $x1 = $x + 73
 		Local $y1 = $y + 63
 
 		If $g_bDebugSetLog Then SetLog($iSiegeIndex & "-> $x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
