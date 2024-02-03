@@ -57,7 +57,7 @@ Func TrainSystem($bSkipCheckArmy = False)
 	checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 EndFunc   ;==>TrainSystem
 
-Func TrainPreviousArmy($bCloseWindow = False)
+Func TrainPreviousArmy($bCloseWindow = False, $bOnlyBoost = False)
 	If Not OpenQuickTrainTab(False, "TrainPreviousArmy()") Then Return
 	If _Sleep(750) Then Return
 	For $i = 1 To 2
@@ -77,6 +77,7 @@ Func TrainPreviousArmy($bCloseWindow = False)
 							Click($g_iQuickMISX, $g_iQuickMISY)
 							SetLog("Successfully boost with potion", $COLOR_SUCCESS)
 							If _Sleep(1000) Then Return
+							If $bOnlyBoost Then ExitLoop
 							If Not OpenArmyOverview("TrainPreviousArmy") Then Return
 							If Not OpenQuickTrainTab(True, "TrainPreviousArmy") Then Return
 						Else
@@ -92,6 +93,7 @@ Func TrainPreviousArmy($bCloseWindow = False)
 							Click($g_iQuickMISX - 230, $g_iQuickMISY + 300)
 							SetLog("Successfully boost with Dark Elixer", $COLOR_SUCCESS)
 							If _Sleep(1000) Then Return
+							If $bOnlyBoost Then ExitLoop
 							If Not OpenArmyOverview("TrainPreviousArmy") Then Return
 							If Not OpenQuickTrainTab(True, "TrainPreviousArmy") Then Return
 						EndIf
@@ -108,6 +110,13 @@ Func TrainPreviousArmy($bCloseWindow = False)
 			SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
 		EndIf
 	Next
+	
+	If $bOnlyBoost Then 
+		If Not OpenArmyOverview("OnlyBoost") Then Return
+		If Not OpenTroopsTab(True, "OnlyBoost") Then Return
+		If _Sleep(500) Then Return
+	EndIf
+	
 	If $bCloseWindow Then ClickAway()
 EndFunc ;==>TrainPreviousArmy
 
