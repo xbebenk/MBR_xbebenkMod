@@ -568,3 +568,16 @@ Func IsNormalTroopTrain()
 	SetLog("IsNormalTroopTrain = " & String($bRet), $COLOR_DEBUG1)
 	Return $bRet
 EndFunc
+
+Func ReTrainForSwitch()
+	If Not OpenArmyOverview("ReTrainForSwitch") Then Return
+	If Not OpenTroopsTab(False, "ReTrainForSwitch") Then Return
+	If _Sleep(250) Then Return
+	RemoveTrainTroop()
+	If Not $g_bRunState Then Return
+	TrainCustomArmy()
+	If Not $g_bRunState Then Return
+	TrainSiege()
+	ClickAway()
+	If _Sleep(500) Then Return
+EndFunc
