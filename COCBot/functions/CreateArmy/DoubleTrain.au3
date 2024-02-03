@@ -524,18 +524,22 @@ Func RemoveTrainTroop($bQueueOnly = False)
 	Local $YRemove = 200, $XOffset = 15, $XQueueStart
 	If Not $g_bRunState Then Return
 	If $bQueueOnly Then 
-		$XQueueStart = FindxQueueStart()
-		If $XQueueStart = 777 Then Return ;if we got default value of queue start, just exit. there is no excess train on queue troop
-		Local $aiQueueTroops = CheckQueueTroops(True, True, $XQueueStart, True)
-		If Not IsArray($aiQueueTroops) Then Return 
-		_ArraySort($aiQueueTroops, 0, 0, 0, 2) ;sort by x coord
-		If $g_bDebugSetlog Then SetLog(_ArrayToString($aiQueueTroops))
-		If Not $g_bRunState Then Return
-		For $i = 0 To UBound($aiQueueTroops) - 1
-			If Not $g_bRunState Then Return	
-			Local $iIndex = TroopIndexLookup($aiQueueTroops[$i][0])
-			SetLog("  - Removing x" & $aiQueueTroops[$i][1] & " queued TrainTroop " & $g_asTroopNames[$iIndex], $COLOR_ACTION)
-			Click($aiQueueTroops[$i][2] + $XOffset, $YRemove, $aiQueueTroops[$i][1], $g_iTrainClickDelay, "Remove wrong queue")
+		For $i = 1 To 2
+			$XQueueStart = FindxQueueStart()
+			If $XQueueStart = 777 Then Return ;if we got default value of queue start, just exit. there is no excess train on queue troop
+			Local $aiQueueTroops = CheckQueueTroops(True, True, $XQueueStart, True)
+			If Not IsArray($aiQueueTroops) Then Return 
+			_ArraySort($aiQueueTroops, 0, 0, 0, 2) ;sort by x coord
+			If $g_bDebugSetlog Then SetLog(_ArrayToString($aiQueueTroops))
+			If Not $g_bRunState Then Return
+			For $i = 0 To UBound($aiQueueTroops) - 1
+				If Number($aiQueueTroops[$i][1]) = 0 Then ContinueLoop
+				If Not $g_bRunState Then Return	
+				Local $iIndex = TroopIndexLookup($aiQueueTroops[$i][0])
+				SetLog("  - Removing x" & $aiQueueTroops[$i][1] & " queued TrainTroop " & $g_asTroopNames[$iIndex], $COLOR_ACTION)
+				Click($aiQueueTroops[$i][2] + $XOffset, $YRemove, $aiQueueTroops[$i][1], $g_iTrainClickDelay, "Remove wrong queue")
+				If _Sleep(500) Then Return
+			Next
 			If _Sleep(500) Then Return
 		Next
 	Else
