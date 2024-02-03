@@ -14,6 +14,10 @@
 ; ===============================================================================================================================
 
 Func DropTrophy()
+	If Not $g_bDropTrophyEnable Then Return
+	If Not (Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax)) Then Return
+	Local $bDropTrophyDBZap = False
+	If $g_bDropTrophyZap And $g_bSmartZapEnable Then $bDropTrophyDBZap = True
 	
 	If $g_bDropTrophyEnable Then
 		SetDebugLog("Drop Trophy()", $COLOR_DEBUG)
@@ -138,8 +142,9 @@ Func DropTrophy()
 					EndIf
 				EndIf
 				
-				If $g_bDropTrophyZap And $g_bSmartZapEnable Then
+				If $bDropTrophyDBZap Then
 					If aaaaaa() Then ContinueLoop
+					$bDropTrophyDBZap = False
 				EndIf
 				
 				; Normal Drop Trophy, no check for Dead Base
