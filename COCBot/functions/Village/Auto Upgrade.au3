@@ -752,6 +752,12 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 
 	; update Logs and History file
 	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_iChkUpgradesToIgnore[35] = 0 Then
+		If _ColorCheck(_GetPixelColor(340, 510, True), Hex(0xFFCC7F, 6), 20, Default, "AutoUpgrade") And _ColorCheck(_GetPixelColor(510, 510, True), Hex(0xDDF685, 6), 20, Default, "AutoUpgrade") Then
+			SetLog("Detected Before you upgrade warning window", $COLOR_INFO)
+			Click(510, 525)
+			If _Sleep(1000) Then Return
+		EndIf
+		
 		Switch $g_aUpgradeNameLevel[2]
 			Case 12
 				$g_aUpgradeNameLevel[1] = "Giga Tesla"
