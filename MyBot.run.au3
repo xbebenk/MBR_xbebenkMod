@@ -1218,7 +1218,7 @@ Func FirstCheck()
 	SetLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
 	Collect(False) ;only collect from mine and collector
 	If $g_aiTownHallPos[0] > -1 Then
-		Click($g_aiTownHallPos[0], $g_aiTownHallPos[1])
+		ClickP($g_aiTownHallPos)
 		If _Sleep(800) Then Return
 		Local $BuildingInfo = BuildingInfo(245, 472)
 		If $BuildingInfo[1] = "Town Hall" Then
@@ -1386,11 +1386,11 @@ Func FirstCheckRoutine()
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
 		If Not $g_bRunState Then Return
-		If $g_bDonateEarly Then 
+				
+		If Not $g_bDonateEarly Or Not $g_bIsFullArmywithHeroesAndSpells Then 
 			CheckIfArmyIsReady(True) ;check if Army Ready or no
-		Else
-			TrainSystem()
 		EndIf
+		
 		If $g_bIsFullArmywithHeroesAndSpells Then
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
@@ -1406,11 +1406,15 @@ Func FirstCheckRoutine()
 					Else
 						If $g_bForceSwitch Then ExitLoop ;exit here
 						$loopcount += 1
-						If $loopcount > 5 Then
-							Setlog("1st Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
+						If $loopcount > 10 Then
+							Setlog("1st Attack Loop, Already Try 10 times... Exit", $COLOR_ERROR)
 							ExitLoop
 						Else
 							Setlog("[" & $loopcount & "] 1st Attack Loop, Failed", $COLOR_INFO)
+							If $g_bCheckDonateOften And ($loopcount = 3 Or $loopcount = 6 Or $loopcount = 9) Then
+								DonateCC(True, True)
+								TrainSystem(True)
+							EndIf
 						EndIf
 						If Not $g_bRunState Then Return
 					EndIf
@@ -1427,6 +1431,8 @@ Func FirstCheckRoutine()
 				EndIf
 				If _Sleep($DELAYRUNBOT1) Then Return
 			EndIf
+		Else
+			TrainSystem(True) ;skip check Army Ready, just train
 		EndIf
 	EndIf
 
@@ -1474,11 +1480,15 @@ Func FirstCheckRoutine()
 						Else
 							If $g_bForceSwitch Then ExitLoop ;exit here
 							$loopcount += 1
-							If $loopcount > 5 Then
-								Setlog("2nd Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
+							If $loopcount > 10 Then
+								Setlog("2nd Attack Loop, Already Try 10 times... Exit", $COLOR_ERROR)
 								ExitLoop
 							Else
 								Setlog("[" & $loopcount & "] 2nd Attack Loop, Failed", $COLOR_INFO)
+								If $g_bCheckDonateOften And ($loopcount = 3 Or $loopcount = 6 Or $loopcount = 9) Then
+									DonateCC(True, True)
+									TrainSystem(True)
+								EndIf
 							EndIf
 							If Not $g_bRunState Then Return
 						EndIf
@@ -1495,6 +1505,8 @@ Func FirstCheckRoutine()
 					EndIf
 					If _Sleep($DELAYRUNBOT1) Then Return
 				EndIf
+			Else
+				TrainSystem(True) ;skip check Army Ready, just train
 			EndIf
 		EndIf
 	Else
@@ -1506,12 +1518,14 @@ Func FirstCheckRoutine()
 
 	CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
-		DonateCC()
-		TrainSystem(True)
+		DropTrophy()
+		
 		CommonRoutine("Switch")
 		If $g_bBBAttacked Or $g_bCheckDonateOften Then
-			If DonateCC() Then TrainSystem()
+			DonateCC(True, True)
+			ReTrainForSwitch()
 		EndIf
+		
 		If _Sleep(1000) Then Return
 		_ClanGames(False, True) ;Do Only Purge
 		If Not $g_bIsFullArmywithHeroesAndSpells Or $g_bForceSwitch Then checkSwitchAcc() ;switch to next account
@@ -1538,18 +1552,18 @@ Func CommonRoutine($RoutineType = Default)
 				If $g_bRestart Then Return
 			Next
 
-		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'BuilderBase', 'CollectCCGold', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
+		Case "Switch"
+			_ClanGames(False, True) ;Do Only Purge
+			Local $aRndFuncList = ['BuilderBase', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
 				If _Sleep(50) Then Return
 				If $g_bRestart Then Return
 			Next
-
-		Case "Switch"
-			_ClanGames(False, True) ;Do Only Purge
-			Local $aRndFuncList = ['BuilderBase', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
+		
+		Case "NoClanGamesEvent"
+			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'BuilderBase', 'CollectCCGold', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

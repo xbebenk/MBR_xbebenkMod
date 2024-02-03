@@ -325,7 +325,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$g_iSaveGoldWall = 0 ;reset
 			$g_iSaveElixWall = 0 ;reset
 			$g_iLootCCGold = 0
-			$g_bIsCGCoolDownTime = False
+			$g_bIsCGPointMaxed = False
 			$g_bIs6thBuilderUnlocked = False
 			$g_bskipBBroutine = False
 			$g_bSuperTroopBoosted = False

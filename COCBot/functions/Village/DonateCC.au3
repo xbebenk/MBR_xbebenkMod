@@ -121,9 +121,6 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 							SetLog("  - " & $g_asSpellNames[$TroopIndex - $eLSpell] & " x" & $aSearchResult[$j][1] & " (training)")
 						EndIf
 					EndIf
-					;ExitLoop
-				;ElseIf $j >= 2 Then
-				;	ExitLoop
 				EndIf
 			Next
 			If _Sleep(250) Then ContinueLoop
@@ -178,7 +175,7 @@ Func getArmyRequest($aiDonateCoords, $bNeedCapture = True)
 	Return StringTrimLeft($sClanText, 2)
 EndFunc   ;==>getArmyRequest
 
-Func DonateCC($bTest = False)
+Func DonateCC($bTest = False, $bSwitch = False)
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
 
 	Local $bDonateTroop = ($g_aiPrepDon[0] = 1)
@@ -227,18 +224,26 @@ Func DonateCC($bTest = False)
 
 	; check if donate queued troops & spells only
 	Local $abDonateQueueOnly = $g_abChkDonateQueueOnly
-	IsDonateQueueOnly($abDonateQueueOnly)
-	If $abDonateQueueOnly[0] And _ArrayMax($g_aiAvailQueuedTroop) = 0 Then
-		SetLog("Failed to read queue, skip donating troops")
-		$bDonateTroop = False
-		$bDonateAllTroop = False
+	If $bSwitch Then ;bot will switch to next account, maximize donate
+		SetLog("Next account switch, maximize donate", $COLOR_DEBUG1)
+		$bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege)
+		$abDonateQueueOnly[0] = False
+		$abDonateQueueOnly[1] = False
+	Else
+		IsDonateQueueOnly($abDonateQueueOnly)
+		If $abDonateQueueOnly[0] And _ArrayMax($g_aiAvailQueuedTroop) = 0 Then
+			SetLog("No queued Troop for donate, skip donating troops", $COLOR_DEBUG1)
+			$bDonateTroop = False
+			$bDonateAllTroop = False
+		EndIf
+		If $abDonateQueueOnly[1] And _ArrayMax($g_aiAvailQueuedSpell) = 0 Then
+			SetLog("No queued Spell for donate, skip donating spells", $COLOR_DEBUG1)
+			$bDonateSpell = False
+			$bDonateAllSpell = False
+		EndIf
+		$bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege)
 	EndIf
-	If $abDonateQueueOnly[1] And _ArrayMax($g_aiAvailQueuedSpell) = 0 Then
-		SetLog("Failed to read queue, skip donating spells")
-		$bDonateSpell = False
-		$bDonateAllSpell = False
-	EndIf
-	$bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege)
+	
 	If Not $bDonate Then Return
 
 	;Opens clan tab and verbose in log
