@@ -28,7 +28,6 @@ Func UpgradeWall($bTest = False)
 	If Not $g_bAutoUpgradeWallsEnable Then Return
 
 	SetLog("Checking Upgrade Walls", $COLOR_INFO)
-	checkMainScreen(True, $g_bStayOnBuilderBase, "UpgradeWall")
 	VillageReport(True, True) ;update village resource capacity
 	SetLog("FreeBuilderCount: " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	If $bTest Then $g_iFreeBuilderCount = 1
@@ -44,7 +43,9 @@ Func UpgradeWall($bTest = False)
 		SetLog("Have more than 1 builder, Upgrade Walls skipped", $COLOR_DEBUG)
 		Return
 	EndIf
-
+	
+	checkMainScreen(True, $g_bStayOnBuilderBase, "UpgradeWall")
+	
 	If $g_bChkWallOnlyGEFull Then
 		Local $tmp_GoldFull = isGoldFull(), $tmp_ElixFull = isElixirFull()
 
