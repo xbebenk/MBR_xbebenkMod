@@ -647,7 +647,7 @@ Func DonateCC($bTest = False)
 			$aiSearchArray[1] = $aiDonateButton[1] + 20
 
 			Click(320, 25, 1, 0, "Close Donate Window")
-			If _Sleep(3000) Then Return
+			If _Sleep(4000) Then Return
 		EndIf
 
 		$sSearchArea = GetDiamondFromArray($aiSearchArray)
