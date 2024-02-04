@@ -621,7 +621,7 @@ Func FindResearchButton()
 
 	If $LabFound Then
 		ClickB("Research")
-		If _Sleep(1000) Then Return
+		If _Sleep(2000) Then Return
 		Return True
 	EndIf
 EndFunc
