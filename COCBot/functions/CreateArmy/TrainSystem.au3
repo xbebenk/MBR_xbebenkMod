@@ -35,6 +35,7 @@ Func TrainSystem($bSkipCheckArmy = False)
 		CheckIfArmyIsReady()
 	Else
 		OpenArmyOverview("TrainSystem")
+		RequestCC(False, "IsFullClanCastle")
 	EndIf
 	
 	If Not IsTrainPage(False, 1) Then 
