@@ -72,7 +72,8 @@ Func DoubleTrain()
 			Case $TroopCamp[0] > $TroopCamp[1] ;350/600 (2nd army partially trained)
 				SetLog($TroopCamp[0] & " > " & $TroopCamp[1], $COLOR_DEBUG1)
 				If IsNormalTroopTrain() Then
-					CheckQueueTroopAndTrainRemain($TroopCamp, $bDebug) ;train to queue
+					RemoveTrainTroop(True)
+					CheckQueueTroopAndTrainRemain() ;train to queue
 					FillIncorrectTroopCombo("2nd Army")
 					ExitLoop
 				Else
