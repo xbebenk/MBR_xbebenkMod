@@ -47,7 +47,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		$g_iFreeBuilderCount = 1
 		$bRet = True
 	EndIf
-	
+
 	SetDebugLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
 EndFunc
@@ -79,36 +79,36 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 		Return False
 	EndIf
 
-	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
-		If $g_bNewBuildingFirst And Not $g_bUpgradeLowCost And Not $g_bSkipWallReserve Then ;skip if will use for lowcost/use wall reserve builder for upgrade
-			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
-			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
-				ZoomOut(True)
-				Return ;no builder, exit
-			EndIf
-			If Not $g_bRunState Then Return
-			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
-			If _Sleep(5000) Then Return
-		EndIf
-	Else
-		CheckBuilderPotion()
-		Clickaway("Right")
-		If _Sleep(1000) Then Return
-		Return
-	EndIf
+	;If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
+	;	If Not $g_bUpgradeLowCost And Not $g_bSkipWallReserve Then ;skip if will use for lowcost/use wall reserve builder for upgrade
+	;		If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
+	;		If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
+	;			ZoomOut(True)
+	;			Return ;no builder, exit
+	;		EndIf
+	;		If Not $g_bRunState Then Return
+	;		If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
+	;		If _Sleep(5000) Then Return
+	;	EndIf
+	;Else
+	;	CheckBuilderPotion()
+	;	Clickaway("Right")
+	;	If _Sleep(1000) Then Return
+	;	Return
+	;EndIf
 
 	If Not $g_bRunState Then Return
 	If AutoUpgradeCheckBuilder($bTest) Then
 		AutoUpgradeSearchExisting($bTest) ;search upgrade for existing building
-		If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
+		;If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
 		If _Sleep(5000) Then Return
 	EndIf
-	
-	If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing
-		If Not $g_bRunState Then Return
-		If AutoUpgradeCheckBuilder($bTest) Then AutoUpgradeSearchNewBuilding($bTest)
-	EndIf
-	
+
+	;If Not $g_bNewBuildingFirst And $g_bPlaceNewBuilding Then ;check for new building after existing
+	;	If Not $g_bRunState Then Return
+	;	If AutoUpgradeCheckBuilder($bTest) Then AutoUpgradeSearchNewBuilding($bTest)
+	;EndIf
+
 	CheckBuilderPotion()
 	If Not $g_bRunState Then Return
 	Clickaway("Right")
@@ -119,7 +119,7 @@ EndFunc
 
 Func CheckBuilderPotion()
 	If Not $g_bRunState Then Return
-	If $g_bUseBuilderPotion And $g_iFreeBuilderCount = 0 Then 
+	If $g_bUseBuilderPotion And $g_iFreeBuilderCount = 0 Then
 		SetLog("Checking for Use Builder Potion", $COLOR_INFO)
 		ClickMainBuilder()
 		If _Sleep(500) Then Return
@@ -179,7 +179,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 					Endif
 					ClickMainBuilder($bTest)
 				Else
-					If $g_bChkRushTH Then 
+					If $g_bChkRushTH Then
 						If $ExistingBuilding[$i][0] = "Gold" And StringInStr($ExistingBuilding[$i][3], "Town") Then
 							Click($ExistingBuilding[$i][1], $ExistingBuilding[$i][2])
 							If _Sleep(1000) Then Return
@@ -229,7 +229,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 		Else
 			SetLog("Skip Search Essential Building", $COLOR_INFO)
 		EndIf
-		
+
 		If IsTHLevelAchieved() And Not $g_bUpgradeLowCost And $g_bUpgradeOtherDefenses Then
 			SetLog("Search Other Defenses Building on Builder Menu", $COLOR_INFO)
 			ClickMainBuilder()
@@ -290,7 +290,7 @@ Func FindExistingBuilding($bTest = False)
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 440, 80, 550, 408)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
-			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 250, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then 
+			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 250, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then
 				If $g_bOptimizeOTTO And $g_iQuickMISName = "Gear" Then
 					Local $bRet = DoGearUp($g_iQuickMISX + 20, $g_iQuickMISY)
 					SetLog("Do GearUp result : " & String($bRet), $COLOR_INFO)
@@ -376,20 +376,20 @@ Func FindExistingBuilding($bTest = False)
 		Next
 	EndIf
 	Local $iIndex = _ArraySearch($aBuilding, "0", 0, 0, 0, 0, 0, 5)
-	If $iIndex > -1 Then 
+	If $iIndex > -1 Then
 		If $g_bDebugSetLog Then SetLog(_ArrayToString($aBuilding))
 		If $g_bDebugSetLog Then SetLog("Found Building with Zero cost, remove it", $COLOR_INFO)
 		_ArrayDelete($aBuilding, $iIndex)
 	EndIf
-	
+
 	If ($g_bChkRushTH And $bFoundRusTH) Or $g_bHeroPriority Then
 		_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
 	Else
 		_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
 	EndIf
-	
+
 	If Not $g_bChkRushTH And Not $g_bHeroPriority Then _ArraySort($aBuilding, 1, 0, 0, 5) ;sort by cost
-	
+
 	If $g_bUpgradeLowCost Then _ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
 	Return $aBuilding
 EndFunc
@@ -425,7 +425,7 @@ EndFunc
 
 Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 	If Not $g_bRunState Then Return
-	
+
 	If $g_bUpgradeLowCost Then $iSpecialMode = 2
 
 	; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
@@ -607,7 +607,7 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 		Case Else
 			$bMustIgnoreUpgrade = False
 	EndSwitch
-	
+
 	;Bypass and overwrite everything else when we are doing special upgrades
 	;Special Mode:
 	;0: Special Mode Off
@@ -681,13 +681,13 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 			$g_aUpgradeResourceCostDuration[1] = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True) ; get cost
 			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(730, 546) ; get duration
 	EndSwitch
-	
-	If $g_aUpgradeNameLevel[1] = "Clan Castle" And $g_aUpgradeNameLevel[2] = "Broken" Then 
+
+	If $g_aUpgradeNameLevel[1] = "Clan Castle" And $g_aUpgradeNameLevel[2] = "Broken" Then
 		$g_aUpgradeResourceCostDuration[0] = "Gold"
 		$g_aUpgradeResourceCostDuration[1] = "10000" ; get cost
 		$g_aUpgradeResourceCostDuration[2] = "Instance Upgrade"
 	EndIf
-		
+
 	; if one of the value is empty, there is an error, we must exit Auto Upgrade
 	;For $i = 0 To 2
 	;	;SetLog($g_aUpgradeResourceCostDuration[$i])
@@ -822,12 +822,12 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 			$aUpgradeNameLevel[1] = "Traps"
 			$bRet = False
 		EndIf
-		
+
 		Switch $aUpgradeNameLevel[1]
 			Case "Cannon", "Elixir Collector", "Gold Mine"
 				_SleepStatus(12000)
 		EndSwitch
-		
+
 		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
 				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
 				" - Placing New Building: " & $aUpgradeNameLevel[1])
@@ -894,7 +894,7 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 			If QuickMIS("BC1", $g_sImgGreenCheck, 100, 80, 740, 560) Then
 				For $ProMac = 0 To 9
 					If Not $g_bRunState Then Return
-					If Not $bTest Then 
+					If Not $bTest Then
 						Click($g_iQuickMISX, $g_iQuickMISY + 3)
 						If _Sleep(500) Then Return
 						If IsGemOpen(True) Then
@@ -957,7 +957,6 @@ EndFunc ;==>AUNewBuildings
 
 Func AutoUpgradeSearchNewBuilding($bTest = False)
 	If Not $g_bRunState Then Return
-	If Not $g_bPlaceNewBuilding Then Return
 	SetLog("Search For Place New Building", $COLOR_DEBUG)
 
 	If Not ClickMainBuilder($bTest) Then Return False
@@ -974,7 +973,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	For $z = 0 To 10 ;for do scroll 8 times
 		If Not $g_bRunState Then Return
 		Local $New, $NewCoord, $aCoord[0][3]
-		
+
 		$NewCoord = FindNewBuilding() ;find New Building
 		If IsArray($NewCoord) And UBound($NewCoord) > 0 Then
 			SetLog("Found " & UBound($NewCoord) & " New Building", $COLOR_INFO)
@@ -1030,7 +1029,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 						SetLog("RushTHPriority: " & $aResult[$y][3] & ", Cost: " & $aResult[$y][5], $COLOR_INFO)
 					EndIf
 				Next
-				
+
 				For $y = 0 To UBound($aResult) - 1
 					If Not $g_bRunState Then Return
 					If $aResult[$y][7] = "Priority" Then
@@ -1040,7 +1039,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 							If DoUpgrade($bTest) Then ExitLoop ;exit this loop, because successfull upgrade will reset upgrade list on builder menu
 						Else
 							SetDebugLog("Skip this building, not enough resource", $COLOR_WARNING)
-							If $g_bChkRushTH Then 
+							If $g_bChkRushTH Then
 								If $aResult[$y][0] = "Gold" And StringInStr($aResult[$y][3], "Town") Then
 									Click($aResult[$y][1], $aResult[$y][2])
 									If _Sleep(1000) Then Return
@@ -1064,7 +1063,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			EndIf
 			If Not $g_bRunState Then Return
 		EndIf
-		
+
 		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
 		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
 		If $UpgradeCost = $TmpUpgradeCost Then $sameCost += 1
@@ -1112,7 +1111,7 @@ Func FindNewBuilding()
 		Next
 	EndIf
 	Local $iIndex = _ArraySearch($aBuilding, "0", 0, 0, 0, 0, 0, 6)
-	If $iIndex > -1 Then 
+	If $iIndex > -1 Then
 		SetDebugLog(_ArrayToString($aBuilding))
 		SetDebugLog("Found Building with Zero cost, remove it", $COLOR_INFO)
 		_ArrayDelete($aBuilding, $iIndex)
@@ -1201,13 +1200,13 @@ EndFunc
 Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 	Local $x = 400, $yUp = 120, $yDown = 800, $Delay = 500, $shitfedX = Random(20, 30, 1)
 	ClickMainBuilder()
-	If $YY = Default And $Direction = "up" Then 
+	If $YY = Default And $Direction = "up" Then
 		Local $Tmp = QuickMIS("CNX", $g_sImgResourceIcon, 440, 300, 520, 408)
 		If IsArray($Tmp) And UBound($Tmp) > 0 Then
 			$YY = _ArrayMax($Tmp, 1, 0, -1, 2)
 			If $YY > 350 Then $YY = 350 ;no over scroll
 			SetDebugLog("DragUpY = " & $YY)
-			If Number($YY) < 300 Then 
+			If Number($YY) < 300 Then
 				SetLog("No need to dragUp!", $COLOR_INFO)
 				Return
 			EndIf
@@ -1376,7 +1375,6 @@ EndFunc
 
 Func SearchBuilder($bTest = False)
 	If Not $g_bRunState Then Return
-	If Not $g_bPlaceNewBuilding Then Return
 	SetLog("Search For Place New Builder", $COLOR_DEBUG)
 
 	Local $ZoomedIn = False, $a_Builder = False
@@ -1562,19 +1560,19 @@ Func IsBuilderMenuOpen()
 	Local $aBorder[4] = [470, 73, 0xC7CCBF, 40]
 	Local $aBorder1[4] = [470, 73, 0xFFFFFF, 40]
 	Local $sTriangle
-	If _CheckPixel($aBorder, True) Or _CheckPixel($aBorder1, True) Then 
+	If _CheckPixel($aBorder, True) Or _CheckPixel($aBorder1, True) Then
 		;SetDebugLog("Found Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
-		$bRet = True ;got correct color for border 
+		$bRet = True ;got correct color for border
 	Else
 		SetDebugLog("Border Color Not Matched: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
 	EndIf
-	
+
 	If Not $bRet Then ;lets re check if border color check not success
 		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 425, 58, 40, 30)
 		SetDebugLog("$sTriangle: " & $sTriangle)
 		If $sTriangle = "^" Or $sTriangle = "~" Then $bRet = True
 	EndIf
-	
+
 	Return $bRet
 EndFunc
 
@@ -1588,7 +1586,7 @@ Func DoGearUp($x, $y)
 		SetLog("Error when trying to get upgrade name and level...", $COLOR_ERROR)
 		Return False
 	EndIf
-	
+
 	If ClickB("GearUp") Then
 		If _Sleep(1000) Then Return
 		If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then

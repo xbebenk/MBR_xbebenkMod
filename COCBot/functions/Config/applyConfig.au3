@@ -1105,8 +1105,6 @@ Func ApplyConfig_auto($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			GUICtrlSetState($g_hChkAutoUpgrade, $g_bAutoUpgradeEnabled ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkNewBuildingFirst, $g_bNewBuildingFirst ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_ChkPlaceNewBuilding, $g_bPlaceNewBuilding ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkRushTH, $g_bChkRushTH ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hUseWallReserveBuilder, $g_bUseWallReserveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hUseBuilderPotion, $g_bUseBuilderPotion ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1133,8 +1131,6 @@ Func ApplyConfig_auto($TypeReadSave)
 			chkAutoUpgrade()
 		Case "Save"
 			$g_bAutoUpgradeEnabled = (GUICtrlRead($g_hChkAutoUpgrade) = $GUI_CHECKED)
-			$g_bNewBuildingFirst = (GUICtrlRead($g_hChkNewBuildingFirst) = $GUI_CHECKED)
-			$g_bPlaceNewBuilding = (GUICtrlRead($g_ChkPlaceNewBuilding) = $GUI_CHECKED)
 			$g_bChkRushTH = (GUICtrlRead($g_hChkRushTH) = $GUI_CHECKED)
 			$g_bUseWallReserveBuilder = (GUICtrlRead($g_hUseWallReserveBuilder) = $GUI_CHECKED)
 			$g_bUseBuilderPotion = (GUICtrlRead($g_hUseBuilderPotion) = $GUI_CHECKED)

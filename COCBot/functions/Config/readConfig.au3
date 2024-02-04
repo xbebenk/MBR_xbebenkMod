@@ -1031,8 +1031,6 @@ EndFunc   ;==>ReadConfig_600_16
 Func ReadConfig_auto()
 	; Auto Upgrade
 	IniReadS($g_bAutoUpgradeEnabled, $g_sProfileConfigPath, "Auto Upgrade", "AutoUpgradeEnabled", False, "Bool")
-	IniReadS($g_bNewBuildingFirst, $g_sProfileConfigPath, "Auto Upgrade", "ChkNewBuildingFirst", True, "Bool")
-	IniReadS($g_bPlaceNewBuilding, $g_sProfileConfigPath, "Auto Upgrade", "AUpgradePlaceNew", True, "Bool")
 	IniReadS($g_bChkRushTH, $g_sProfileConfigPath, "Auto Upgrade", "ChkRushTH", True, "Bool")
 	IniReadS($g_bUseWallReserveBuilder, $g_sProfileConfigPath, "Auto Upgrade", "UseWallReserveBuilder", True, "Bool")
 	IniReadS($g_bUseBuilderPotion, $g_sProfileConfigPath, "Auto Upgrade", "UseBuilderPotion", False, "Bool")

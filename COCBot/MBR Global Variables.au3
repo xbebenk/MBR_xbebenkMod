@@ -976,7 +976,7 @@ Global $g_iWallCost = 0
 Global $g_WallGEFull = -1 ;-1 = unset, 0 = elixir, 1 = gold, 2 = both
 
 ; Auto Upgrade
-Global $g_bPlaceNewBuilding = False, $g_bChkRushTH = False, $g_bNewBuildingFirst = False, $g_bHeroPriority = False
+Global $g_bChkRushTH = False, $g_bHeroPriority = False
 Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False, $g_bUseHeroBooks = False, $g_iHeroMinUpgradeTime = 0, $g_bSkipWallReserve = False, $g_bUpgradeLowCost = False, $g_bUpgradeOtherDefenses = False
 Global $g_bUseBuilderPotion = False
 Global $g_iChkIgnoreTH = 0, $g_iChkIgnoreKing = 0, $g_iChkIgnoreQueen = 0, $g_iChkIgnoreWarden = 0, $g_iChkIgnoreChampion = 0, $g_iChkIgnoreCC = 0, $g_iChkIgnoreLab = 0

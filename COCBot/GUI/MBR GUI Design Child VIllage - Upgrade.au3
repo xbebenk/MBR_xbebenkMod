@@ -45,7 +45,7 @@ Global $g_hCmbWalls[3] = [0, 0, 0]
 Global $g_hLblWallCost[3] = [0, 0, 0]
 
 ; Auto Upgrade
-Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0, $g_hChkNewBuildingFirst = 0, $g_ChkPlaceNewBuilding = 0
+Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0
 Global $g_hTxtSmartMinGold = 0, $g_hTxtSmartMinElixir = 0, $g_hTxtSmartMinDark = 0
 Global $g_hChkResourcesToIgnore[3] = [0, 0, 0]
 Global $g_hChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -586,12 +586,6 @@ Func CreateAutoUpgradeSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade_Info_01", "Check box to enable automatically starting Upgrades from builders menu"))
 			GUICtrlSetOnEvent(-1, "chkAutoUpgrade")
 		$g_hLblAutoUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_01", "Save"), $x, $y + 27, -1, -1)
-		$g_hChkNewBuildingFirst = GUICtrlCreateCheckbox("NewBuildingFirst", $x + 85, $y, -1, -1)
-			_GUICtrlSetTip(-1, "Enable Priority for New Building")
-			GUICtrlSetOnEvent(-1, "chkChkNewBuildingFirst")
-		$g_ChkPlaceNewBuilding = GUICtrlCreateCheckbox("Place New Building", $x + 200, $y, -1, -1)
-			_GUICtrlSetTip(-1, "Enable Placing New Building")
-			GUICtrlSetOnEvent(-1, "ChkPlaceNew")
 		$g_hTxtSmartMinGold = GUICtrlCreateInput("150000", $x + 33, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
 			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 98, $y + 27, 16, 16)
 		$g_hTxtSmartMinElixir = GUICtrlCreateInput("150000", $x + 118, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))

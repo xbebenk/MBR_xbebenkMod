@@ -731,8 +731,6 @@ Func SaveConfig_auto()
 	ApplyConfig_auto(GetApplyConfigSaveAction())
 	; Auto Upgrade
 	_Ini_Add("Auto Upgrade", "AutoUpgradeEnabled", $g_bAutoUpgradeEnabled)
-	_Ini_Add("Auto Upgrade", "ChkNewBuildingFirst", $g_bNewBuildingFirst)
-	_Ini_Add("Auto Upgrade", "AUpgradePlaceNew", $g_bPlaceNewBuilding)
 	_Ini_Add("Auto Upgrade", "ChkRushTH", $g_bChkRushTH)
 	_Ini_Add("Auto Upgrade", "UseWallReserveBuilder", $g_bUseWallReserveBuilder)
 	_Ini_Add("Auto Upgrade", "UseBuilderPotion", $g_bUseBuilderPotion)

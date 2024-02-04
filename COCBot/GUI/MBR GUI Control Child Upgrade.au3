@@ -710,15 +710,6 @@ Func chkAutoUpgrade()
 	EndIf
 EndFunc   ;==>chkAutoUpgrade
 
-Func chkChkNewBuildingFirst()
-	If GUICtrlRead($g_hChkNewBuildingFirst) = $GUI_CHECKED Then
-		$g_bNewBuildingFirst = True
-	Else
-		$g_bNewBuildingFirst = False
-	EndIf
-EndFunc   ;==>chkChkNewBuildingFirst
-
-
 Func chkResourcesToIgnore()
 	For $i = 0 To 2
 		$g_iChkResourcesToIgnore[$i] = GUICtrlRead($g_hChkResourcesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
@@ -772,14 +763,10 @@ Func chkRushTH()
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 		GUICtrlSetState($g_hChkUpgradesToIgnore[32], $GUI_ENABLE)
-		GUICtrlSetState($g_hChkNewBuildingFirst, BitOR($GUI_DISABLE, $GUI_CHECKED))
-		GUICtrlSetState($g_ChkPlaceNewBuilding, BitOR($GUI_DISABLE, $GUI_CHECKED))
 	Else
 		For $i = $g_hChkUpgradesToIgnore[5] To $g_hChkUpgradesToIgnore[35]
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
-		GUICtrlSetState($g_hChkNewBuildingFirst, $GUI_ENABLE)
-		GUICtrlSetState($g_ChkPlaceNewBuilding, $GUI_ENABLE)
 	EndIf
 EndFunc   ;==>chkRushTH
 
@@ -822,16 +809,6 @@ Func SortPetUpgrade()
 	EndIf
 	$g_iCmbSortPetUpgrade = _GUICtrlComboBox_GetCurSel($g_hCmbSortPetUpgrade)
 EndFunc
-
-Func ChkPlaceNew()
-	If GUICtrlRead($g_ChkPlaceNewBuilding) = $GUI_CHECKED Then
-		$g_bPlaceNewBuilding = True
-		SetLog("Enabling Auto Upgrade Place New Building", $COLOR_DEBUG)
-		SetLog("This is experimental", $COLOR_ORANGE)
-	Else
-		$g_bPlaceNewBuilding = False
-	EndIf
-EndFunc ;==>ChkPlaceNew
 
 Func chkEssentialUpgrade()
 	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
