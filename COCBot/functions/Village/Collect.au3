@@ -64,7 +64,7 @@ Func Collect($bCheckTreasury = True)
 	EndIf
 
 	If _Sleep($DELAYCOLLECT3) Then Return
-	CollectCookieRumble()
+	;CollectCookieRumble()
 	CollectLootCart()
 	If $g_bChkTreasuryCollect And $bCheckTreasury Then TreasuryCollect()
 	EndGainCost("Collect")
@@ -76,12 +76,16 @@ Func CollectLootCart()
 	SetLog("Searching for a Loot Cart", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgCollectLootCart, 0, 180, 160, 300) Then 
 		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(1000) Then Return
-		If ClickB("CollectLootCart") Then
-			SetLog("LootCart Collected", $COLOR_SUCCESS)
-		Else
-			SetLog("Cannot find LootCart Collect Button", $COLOR_ERROR)
-		EndIf
+		If _Sleep(500) Then Return
+		For $i = 1 To 5
+			If _Sleep(500) Then Return
+			SetLog("Collecting LootCart #" & $i, $COLOR_ACTION)
+			If ClickB("CollectLootCart") Then
+				SetLog("LootCart Collected", $COLOR_SUCCESS)
+				Return
+			EndIf
+		Next
+		SetLog("Cannot find LootCart Collect Button", $COLOR_ERROR)
 	Else
 		SetLog("No Loot Cart found on your Village", $COLOR_SUCCESS)
 	EndIf
