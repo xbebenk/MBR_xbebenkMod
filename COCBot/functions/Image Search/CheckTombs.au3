@@ -136,7 +136,7 @@ Func RemoveGembox()
 		_Sleep(1000)
 		ClickRemoveObstacle()
 		ClickAway()
-		SetLog("GemBox removed!", $COLOR_SUCCESS)
+		SetLog("Removing GemBox", $COLOR_SUCCESS)
 		Return True
 	Else
 		SetLog("No GemBox Found!", $COLOR_DEBUG)
