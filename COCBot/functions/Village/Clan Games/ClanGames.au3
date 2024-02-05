@@ -19,8 +19,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 	$g_bIsCGPointAlmostMax = False ;just to be sure, reset to false
 	$g_bisCGPointMaxed = False ;just to be sure, reset to false
 	$g_sCGCurrentEventName = ""
-	If $bOnlyPurge Then $g_bForceSwitchifNoCGEvent = True ;OnlyPurge will be called on CommonRoutine = Switch
-
+	
 	Local $PurgeDayMinute = ($g_iCmbClanGamesPurgeDay + 1) * 1440
 	; Check If this Feature is Enable on GUI.
 	If Not $g_bChkClanGamesEnabled Then Return
@@ -50,6 +49,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 										[-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True]]
 
 	Local $iWaitPurgeScore = 150
+	If $bOnlyPurge Then $g_bForceSwitchifNoCGEvent = True ;OnlyPurge will be called on CommonRoutine = Switch
 
 	; Enter on Clan Games window
 	If IsClanGamesWindow($bOnlyPurge) Then
