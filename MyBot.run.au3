@@ -795,7 +795,7 @@ Func runBot() ;Bot that runs everything in order
 			EndIf
 			
 			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then 
-				SetLogCentered($RoutineType & " Done (in " & Round(TimerDiff($MainLoopTimer) / 1000 / 60, 2) & " minutes) ", "=", $COLOR_INFO)
+				SetLogCentered(" MainLoop Done (in " & Round(TimerDiff($MainLoopTimer) / 1000 / 60, 2) & " minutes) ", "=", $COLOR_INFO)
 				checkSwitchAcc() ;switch to next account
 			EndIf
 			
