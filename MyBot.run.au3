@@ -710,7 +710,7 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
-	Local $iWaitTime
+	Local $iWaitTime, $MainLoopTimer
 	
 	If $g_bIsHidden Then
 		HideAndroidWindow(True, Default, Default, "btnHide")
@@ -737,6 +737,7 @@ Func runBot() ;Bot that runs everything in order
 		If CheckAndroidReboot() Then ContinueLoop
 		If Not $g_bIsClientSyncError Then
 			If Not $g_bRunState Then Return
+			$MainLoopTimer = TimerInit()
 			SetLogCentered(" Top MainLoop ", "=", $COLOR_DEBUG)
 			If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
 			VillageReport()
@@ -820,7 +821,7 @@ Func runBot() ;Bot that runs everything in order
 					$g_iCommandStop = 2
 					DonateCC()
 					TrainSystem()
-					SetLogCentered($RoutineType & " Done (in " & Round(TimerDiff($MainLoopTimer) / 1000 / 60, 2) & " minutes) ", "=", $COLOR_INFO)
+					SetLogCentered(" MainLoop Done (in " & Round(TimerDiff($MainLoopTimer) / 1000 / 60, 2) & " minutes) ", "=", $COLOR_INFO)
 					checkSwitchAcc()
 				EndIf
 				$iWaitTime = Random($DELAYWAITATTACK1, $DELAYWAITATTACK2)
@@ -1293,11 +1294,12 @@ Func FirstCheck()
 		VillageReport()
 		ZoomOut(True)
 	EndIf
-
+	
 	If T420() Then
 		SetLog("Test420 Done!", $COLOR_SUCCESS)
 	EndIf
 	
+	waitMainScreen() ;check mainscreen and remove any obstacle window/popup
 	If BotCommand() Then btnStop()
 	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 1) Then
 		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
