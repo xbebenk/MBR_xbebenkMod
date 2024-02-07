@@ -843,25 +843,20 @@ Func btnTestVillageSize()
 
 	_CaptureRegion()
 	_CaptureRegion2Sync()
-
-	Local $a[2][2] = [["stone", "tree"], ["2stone", "2tree"]]
-	For $i = 0 To 1
-		SetLog("Testing GetVillageSize(True, """ & $a[$i][0] & """, """ & $a[$i][1] & """)", $COLOR_INFO)
-		Local $hTimer = __TimerInit()
-		Local $village = GetVillageSize(True, $a[$i][0], $a[$i][1])
-		Local $ms = __TimerDiff($hTimer)
-		If $village = 0 Then
-			SetLog("Village not found (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-		Else
-			SetLog("Village found (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-			SetLog("Village size: " & $village[0])
-			SetLog("Village zoom level: " & $village[1])
-			SetLog("Village offset x: " & $village[2])
-			SetLog("Village offset y: " & $village[3])
-			SetLog("Village stone " & $village[6] & ": " & $village[4] & ", " & $village[5])
-			SetLog("Village tree " & $village[9] & ": " & $village[7] & ", " & $village[8])
-		EndIf
-	Next
+	Local $hTimer = __TimerInit()
+	Local $village = GetVillageSize(True)
+	Local $ms = __TimerDiff($hTimer)
+	If $village = 0 Then
+		SetLog("Village not found (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	Else
+		SetLog("Village found (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+		SetLog("Village size: " & $village[0])
+		SetLog("Village zoom level: " & $village[1])
+		SetLog("Village offset x: " & $village[2])
+		SetLog("Village offset y: " & $village[3])
+		SetLog("Village stone " & $village[6] & ": " & $village[4] & ", " & $village[5])
+		SetLog("Village tree " & $village[9] & ": " & $village[7] & ", " & $village[8])
+	EndIf
 	EndImageTest()
 
 	$g_bRunState = $currentRunState
@@ -948,7 +943,7 @@ Func btnTestAttackCSV()
 	setVillageOffset(0, 0, 1)
 	ConvertInternalExternArea()
 	;SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
-	If CheckZoomOut("btnTestAttackCSV", True, False) = False Then
+	If Not CheckZoomOut("btnTestAttackCSV") Then
 		SetLog("CheckZoomOut failed", $COLOR_INFO)
 	EndIf
 	ResetTHsearch()
@@ -992,7 +987,7 @@ Func btnTestGetLocationBuilding()
 	setVillageOffset(0, 0, 1)
 	ConvertInternalExternArea()
 	;SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
-	If CheckZoomOut("btnTestGetLocationBuilding", True, False) = False Then
+	If Not CheckZoomOut("btnTestGetLocationBuilding") Then
 		SetLog("CheckZoomOut failed", $COLOR_INFO)
 	EndIf
 	ResetTHsearch()

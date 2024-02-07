@@ -396,19 +396,13 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 	WEnd ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop End ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-	; center village, also update global village coordinates (that overwrites home base data, but will reset when returning anyway)
-	; centering disabled and village measuring moved to top
-	;Local $aCenterVillage = SearchZoomOut($aCenterEnemyVillageClickDrag, True, "VillageSearch")
-	;updateGlobalVillageOffset($aCenterVillage[3], $aCenterVillage[4]) ; update red line and TH location
-	
 	; measure enemy village (only if search match)
-	Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
 	For $i = 0 To $g_iModeCount - 1
-		If $match[$i] Or $bAlwaysMeasure Then
+		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Then
 			; reset village measures
 			setVillageOffset(0, 0, 1)
 			ConvertInternalExternArea()
-			If $g_bDebugImageSave Then TestDropLine(True) ;g_bVillageSearchAlwaysMeasure must enabled manually by editing Global var
+			If $g_bDebugImageSave Then TestDropLine(True)
 			If Not CheckZoomOut("VillageSearch") Then
 				If isProblemAffect(True) Then 
 					$g_bRestart = True ; Restart Attack
@@ -416,17 +410,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				EndIf
 				SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
 				ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
-				; check two more times, only required for snow theme (snow fall can make it easily fail), but don't hurt to keep it
-				;$i = 0
-				;Local $bMeasured
-				;Do
-				;	$i += 1
-				;	If _Sleep($DELAYPREPARESEARCH2) Then Return ; wait 500 ms
-				;	ForceCaptureRegion()
-				;	_CaptureRegion2()
-				;	$bMeasured = CheckZoomOut("VillageSearch", $i < 2, False)
-				;Until $bMeasured = True Or $i >= 2
-				;If Not $bMeasured Then Return ; exit func
 			EndIf
 			ExitLoop
 		EndIf
@@ -531,10 +514,8 @@ Func WriteLogVillageSearch($x)
 
 EndFunc   ;==>WriteLogVillageSearch
 
-Func CheckZoomOut($sSource = "CheckZoomOut", $bCheckOnly = False, $bForecCapture = True)
-	If $bForecCapture = True Then _CaptureRegion2()
-	
-	Local $aVillageResult = SearchZoomOut(False, True, $sSource, False)
+Func CheckZoomOut($sSource = "CheckZoomOut")
+	Local $aVillageResult = SearchZoomOut(False, True, $sSource, True)
 	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
 		Return False
 	EndIf
