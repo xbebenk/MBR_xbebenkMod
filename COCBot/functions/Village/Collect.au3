@@ -64,9 +64,10 @@ Func Collect($bCheckTreasury = True)
 	EndIf
 
 	If _Sleep($DELAYCOLLECT3) Then Return
-	CollectCookieRumble()
 	CollectLootCart()
 	If $g_bChkTreasuryCollect And $bCheckTreasury Then TreasuryCollect()
+	If _Sleep(1000) Then Return
+	CollectCookieRumble()
 	EndGainCost("Collect")
 EndFunc   ;==>Collect
 
@@ -89,6 +90,9 @@ Func CollectLootCart()
 	Else
 		SetLog("No Loot Cart found on your Village", $COLOR_SUCCESS)
 	EndIf
+	ZoomOutHelper()
+	ClickAway()
+	If _Sleep(500) Then Return
 EndFunc   ;==>CollectLootCart
 
 Func CollectCookie()
@@ -105,6 +109,7 @@ Func CollectCookieRumble()
 	Local $bWinOpen = False, $bIconCookie = False
 	SetLog("Opening Event Window", $COLOR_ACTION)
 	If QuickMIS("BC1", $g_sImgCollectCookie, 225, 45, 360, 200) Then
+		If $g_iQuickMISName = "Calendar" Then $g_iQuickMISY += 25
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(1000) Then Return
 		For $i = 1 To 5
@@ -123,19 +128,19 @@ Func CollectCookieRumble()
 			If _Sleep(250) Then Return
 		Next
 	Else	
-		SetLog("CookieFactory Icon Not Found", $COLOR_ERROR)
+		SetLog("Event Icon Not Found", $COLOR_ERROR)
 	EndIf
 	If Not $bIconCookie Then Return
 	
 	For $i = 1 To 10
-		If $g_bDebugSetLog Then SetLog("Waiting Cookie Rumble Window #" & $i, $COLOR_ACTION)
+		If $g_bDebugSetLog Then SetLog("Waiting Event Window #" & $i, $COLOR_ACTION)
 		If IsCookieRumbleWindowOpen() Then 
 			$bWinOpen = True
 			ExitLoop
 		EndIf
 		If QuickMIS("BC1", $g_sImgCollectCookie, 390, 552, 475, 600) Then Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(500) Then Return
-		Click(570, 90, 1, "Click CookieRumble Window Header")
+		Click(570, 90, 1, "Click Event Window Header")
 	Next
 	
 	If Not $bWinOpen Then Return
@@ -192,6 +197,8 @@ Func ClaimCookieReward($bGoldPass = False)
 	SetLog($iClaim > 0 ? "Claimed " & $iClaim & " reward(s)!" : "Nothing to claim!", $COLOR_SUCCESS)
 	If _Sleep(500) Then Return
 	If IsCookieRumbleWindowOpen() Then ClickAway()
+	If _Sleep(500) Then Return
+	ClickAway()
 EndFunc
 
 Func IsCookieRumbleWindowOpen()
@@ -203,7 +210,7 @@ Func IsCookieRumbleWindowOpen()
 	EndIf
 	
 	If $result Then
-		If $g_bDebugSetlog Then SetLog("Found CookieRumble Window", $COLOR_ACTION)
+		If $g_bDebugSetlog Then SetLog("Found Event Window", $COLOR_ACTION)
 	EndIf
 	Return $result
 EndFunc
