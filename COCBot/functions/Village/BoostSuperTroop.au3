@@ -285,7 +285,7 @@ EndFunc
 Func IsBoostWindowOpened()
 	Local $aResult
 	For $i = 0 To 12 ;wait for about 3 seconds
-		$aResult = _PixelSearch(765, 113, 772, 114, Hex(0xFFFFFF, 6) , 6, True) ;check red button x
+		$aResult = _PixelSearch(765, 113, 772, 114, Hex(0xFFFFFF, 6), 20) ;check red button x
 		If IsArray($aResult) And UBound($aResult) > 1 Then
 			Return True
 		EndIf

@@ -1192,6 +1192,7 @@ Func FirstCheck()
 	SetLog("-- FirstCheck Loop --")
 	If _Sleep(50) Then Return
 	VillageReport(True, True)
+	If Not CheckZoomOut("FirstCheck") Then ZoomOut(True)
 	
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
@@ -1301,6 +1302,7 @@ Func FirstCheck()
 	
 	waitMainScreen() ;check mainscreen and remove any obstacle window/popup
 	If BotCommand() Then btnStop()
+	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 1) Then
 		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
@@ -1323,6 +1325,7 @@ Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
+	If Not $g_bRunState Then Return
 	If $g_bDonateEarly Then
 		SetLog("Donate Early Enabled", $COLOR_INFO)
 		DonateCC()

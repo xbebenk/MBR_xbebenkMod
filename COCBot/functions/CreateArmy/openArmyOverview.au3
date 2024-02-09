@@ -13,30 +13,34 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func OpenArmyOverview($sWhereFrom = "Undefined")
-	If IsProblemAffect(True) Then Return
-	If IsTrainPage(False, 1) Then Return True
-	If Not checkChatTabPixel() Then checkObstacles()
-	
-	If $g_bDebugSetlogTrain Then SetLog("OpenArmyOverview" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
 	If Not $g_bRunState Then Return
+	If $g_bDebugSetLog Then SetLog("OpenArmyOverview" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
 	For $i = 1 To 5
 		If Not $g_bRunState Then Return
 		SetLog("Try open ArmyWindow #" & $i, $COLOR_ACTION)
 		If WaitforPixel(30, 522, 31, 523, "FFFFE3", 20, 1) Then
 			ClickP($aArmyTrainButton) ; Button Army Overview
-			If _Sleep(3000) Then Return
+			If _Sleep(2000) Then Return
+		ElseIf IsTrainPage(True, 1) Then 
+			SetLog("Detected Train Window Open", $COLOR_ACTION)
+			Return True
+		ElseIf IsProblemAffect(True) Then 
+			SetLog("Detected Android popup error", $COLOR_ACTION)
+			Return False
+		ElseIf Not checkChatTabPixel() Then 
+			SetLog("MainScreen Not verified", $COLOR_ACTION)
+			checkObstacles()
 		ElseIf $i = 5 Then 
 			SetLog("Cannot Verify Army Button", $COLOR_ERROR)
 			SetError(1)
 			Return
 		EndIf
 		
-		If IsTrainPage(False, 1) Then 
-			SetLog("ArmyWindow OK", $COLOR_ACTION)
+		If IsTrainPage(True, 1) Then 
 			Return True
 		EndIf
 		
-		If _Sleep(500) Then Return
+		If _Sleep(250) Then Return
 	Next
 	Return False
 EndFunc   ;==>OpenArmyOverview

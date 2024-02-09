@@ -587,12 +587,12 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $
 	If StringInStr($sSource, "AttackBB") Then $bOnBuilderBase = True
 	If $g_aiSearchZoomOutCounter[0] = 10 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
 	If $g_aiSearchZoomOutCounter[0] < 10 Then
-		$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase)
+		$village = GetVillageSize($DebugLog, "stone", "tree", $bOnBuilderBase)
 	Else
 		; try secondary images
 		ClickAway()
 		ZoomOut()
-		$village = GetVillageSize($DebugLog, "2stone", "2tree", Default, $bOnBuilderBase)
+		$village = GetVillageSize($DebugLog, "2stone", "2tree", $bOnBuilderBase)
 	EndIf
 
 	Static $iCallCount = 0

@@ -19,31 +19,26 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $bNeedCapture = True, $bReturnBool = False, $sMessage = "")
-	Local $x1, $x2, $y1, $y2
-	If $bNeedCapture = True Then
-		_CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
-		$x1 = $iRight - $iLeft
-		$x2 = 0
-		$y1 = 0
-		$y2 = $iBottom - $iTop
-	Else
-		$x1 = $iRight
-		$x2 = $iLeft
-		$y1 = $iTop
-		$y2 = $iBottom
-	EndIf
+Func _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $bReturnBool = False, $sMessage = "_PixelSearch")
+	Local $x1, $y1, $x2, $y2, $retColor
+	_CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
+	$x2 = $iRight - $iLeft
+	$y2 = $iBottom - $iTop
+	$x1 = 0
+	$y1 = 0
 	
-	For $x = $x1 To $x2 Step -1
+	For $x = $x1 To $x2
 		For $y = $y1 To $y2
-			If _ColorCheck(_GetPixelColor($x, $y), $sColor, $iColorVariation) Then
-				Local $Pos[2] = [$iLeft + $x - $x2, $iTop + $y - $y1]
+			$retColor = _GetPixelColor($x, $y)
+			If _ColorCheck($retColor, $sColor, $iColorVariation) Then
+				Local $Pos[3] = [$x + $iLeft, $y + $iTop, $retColor]
 				If $bReturnBool Then 
-					SetLog("[" & $sMessage & "] pixel search found, exp:" & $sColor & " => got:" & _GetPixelColor($x, $y) & " x=" & $x & " y=" & $y, $COLOR_DEBUG2)
+					If $g_bDebugSetLog Then SetLog("[" & $sMessage & "] found, exp:" & $sColor & " => got:" & $retColor & " x=" & $x + $iLeft & " y=" & $y + $iTop, $COLOR_DEBUG2)
 					Return True
 				EndIf
 				Return $Pos
 			EndIf
+			If $g_bDebugSetLog Then SetLog("[" & $sMessage & "] exp:" & $sColor & " => got:" & $retColor & " x=" & $x + $iLeft & " y=" & $y + $iTop, $COLOR_DEBUG2)
 		Next
 	Next
 	

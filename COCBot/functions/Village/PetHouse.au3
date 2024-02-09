@@ -249,7 +249,7 @@ EndFunc
 Func CheckPetUpgrade()
 	; check for upgrade in process - look for green in finish upgrade with gems button
 	If $g_bDebugSetlog Then SetLog("_GetPixelColor(750, 150): " & _GetPixelColor(750, 150, True) & ":BED79B", $COLOR_DEBUG)
-	If _ColorCheck(_GetPixelColor(750, 150, True), Hex(0xBED79B, 6), 20) Then
+	If _ColorCheck(_GetPixelColor(815, 145, True), Hex(0xA2CB6C, 6), 20) Then
 		SetLog("Pet House Upgrade in progress, waiting for completion", $COLOR_INFO)
 		If _Sleep($DELAYLABORATORY2) Then Return
 		; upgrade in process and time not recorded so update completion time!

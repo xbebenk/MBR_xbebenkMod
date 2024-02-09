@@ -670,7 +670,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 
 		;;; Scroll Down
 		Local $iCount = 0
-		While WaitforPixel(356, 611, 359, 612, Hex(0x60A518, 6), 20, 1)
+		While WaitforPixel(356, 611, 357, 612, Hex(0x60A518, 6), 20, 1)
 			$iCount += 1
 			Click(356, 611, 1, 0, "Click Green Scroll Button")
 			If _Sleep(1000) Then Return
@@ -678,7 +678,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 			If $iCount > 4 Then ExitLoop
 		Wend
 		
-		If $iCount < 5 And WaitforPixel(57, 593, 58, 595, Hex(0x90DA38, 6), 20, 1) Then
+		If $iCount < 5 And WaitforPixel(57, 593, 58, 594, Hex(0x90DA38, 6), 20, 1) Then
 			Click(40, 593, 1, 0, "Click Green Left Chat Button")
 		EndIf
 		

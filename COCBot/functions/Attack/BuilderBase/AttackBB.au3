@@ -434,7 +434,7 @@ Func DeployBM($aBMPos, $iSide, $AltSide, $aDP)
 				Local $iPoint = Random(0, UBound($aDP) - 1, 1)
 				PureClick($aDP[$iPoint][1], $aDP[$iPoint][2])
 				If _Sleep(2000) Then Return
-				If _PixelSearch(33, 557, 35, 559, Hex(0xC224F8, 6), 10, True, True, "DeployBM") Then
+				If _PixelSearch(33, 557, 35, 559, Hex(0xC224F8, 6), 10, True, "DeployBM") Then
 					$bBMDeployed = True
 					If $g_bChkDebugAttackBB Then SetLog($MachineName & " Deployed", $COLOR_SUCCESS)
 					PureClickP($aBMPos)

@@ -31,16 +31,17 @@ Func TrainSystem($bSkipCheckArmy = False)
 	;Add small delay after boost
 	If _Sleep(1000) Then Return
 	If Not $g_bRunState Then Return
+	
+	OpenArmyOverview("TrainSystem")
+	If Not IsTrainPage(False) Then 
+		SetLog("Cannot verify Army Window, exit train!", $COLOR_ERROR)
+		Return
+	EndIf
+	
 	If Not $bSkipCheckArmy Then 
 		CheckIfArmyIsReady()
 	Else
-		OpenArmyOverview("TrainSystem")
 		RequestCC(False, "IsFullClanCastle")
-	EndIf
-	
-	If Not IsTrainPage(False, 1) Then 
-		SetLog("Cannot verify Army Window, exit train!", $COLOR_ERROR)
-		Return
 	EndIf
 	
 	If Not $g_bRunState Then Return
@@ -661,12 +662,12 @@ Func IsQueueEmpty($sType = "Troops", $bCheckTab = False, $removeExtraTroopsQueue
 		$iArrowX = 597
 	EndIf
 	
-	If WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x797362, 6), 20, 1) Then ;check if we have grey tab
+	If WaitforPixel($iArrowX - 1, $iArrowY - 1, $iArrowX, $iArrowY, Hex(0x797362, 6), 20, 1) Then ;check if we have grey tab
 		If Not $bCheckTab Then Return True
-	ElseIf WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x83BF44, 6), 20, 1) Then ;check if we have green arrow
+	ElseIf WaitforPixel($iArrowX - 1, $iArrowY - 1, $iArrowX, $iArrowY, Hex(0x83BF44, 6), 20, 1) Then ;check if we have green arrow
 		If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": queue arrow Found", $COLOR_ACTION) 
 		Return False
-	ElseIf WaitforPixel($iArrowX - 2, $iArrowY - 2, $iArrowX + 2, $iArrowY + 2, Hex(0x93CD5B, 6), 20, 1) Then ;chek if we have boosted green arrow
+	ElseIf WaitforPixel($iArrowX - 1, $iArrowY - 1, $iArrowX, $iArrowY, Hex(0x93CD5B, 6), 20, 1) Then ;chek if we have boosted green arrow
 		$bCheckTab = True ;we have boosted arrow, forced check inside tab
 		If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": boosted arrow Found", $COLOR_ACTION)
 	EndIf

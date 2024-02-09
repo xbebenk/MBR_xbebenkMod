@@ -52,11 +52,11 @@ EndFunc   ;==>IsSettingPage
 Func IsTrainPage($bSetLog = True, $iLoop = 5)
 	If Not $g_bRunState Then Return
 	If IsPageLoop($aIsTrainPgChk1, $iLoop) Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Army Window OK**", $COLOR_ACTION)
+		If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then SetLog("**Army Window OK**", $COLOR_ACTION)
 		Return True
 	EndIf
 	
-	If $g_bDebugSetlog Or $g_bDebugClick Then
+	If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then
 		Local $colorRead = _GetPixelColor($aIsTrainPgChk1[0], $aIsTrainPgChk1[1], True)
 		SetLog("**Army Window FAIL**", $COLOR_ACTION)
 		SetLog("expected in (" & $aIsTrainPgChk1[0] & "," & $aIsTrainPgChk1[1] & ")  = " & Hex($aIsTrainPgChk1[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)

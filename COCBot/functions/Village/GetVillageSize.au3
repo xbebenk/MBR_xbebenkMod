@@ -27,8 +27,8 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
-Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default)
+;GetVillageSize(True, "stone", "tree", False)
+Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $bOnBuilderBase = Default)
 	FuncEnter(GetVillageSize)
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""]
 	If $DebugLog = Default Then $DebugLog = False

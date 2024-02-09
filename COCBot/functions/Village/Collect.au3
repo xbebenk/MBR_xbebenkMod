@@ -64,7 +64,7 @@ Func Collect($bCheckTreasury = True)
 	EndIf
 
 	If _Sleep($DELAYCOLLECT3) Then Return
-	;CollectCookieRumble()
+	CollectCookieRumble()
 	CollectLootCart()
 	If $g_bChkTreasuryCollect And $bCheckTreasury Then TreasuryCollect()
 	EndGainCost("Collect")
@@ -94,7 +94,7 @@ EndFunc   ;==>CollectLootCart
 Func CollectCookie()
 	If QuickMIS("BC1", $g_sImgCollectCookie & "\Cookie", 245, 45, 360, 100) Then
 		Click($g_iQuickMISX, $g_iQuickMISY)
-		SetLog("Collecting Cookie", $COLOR_ACTION)
+		SetLog("Collecting " & $g_iQuickMISName, $COLOR_ACTION)
 		If _Sleep(1000) Then Return
 	EndIf
 EndFunc
@@ -103,12 +103,12 @@ Func CollectCookieRumble()
 	CollectCookie()
 	
 	Local $bWinOpen = False, $bIconCookie = False
-	SetLog("Opening Gingerbread Bakery", $COLOR_ACTION)
+	SetLog("Opening Event Window", $COLOR_ACTION)
 	If QuickMIS("BC1", $g_sImgCollectCookie, 225, 45, 360, 200) Then
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(1000) Then Return
 		For $i = 1 To 5
-			If $g_bDebugSetLog Then SetLog("Waiting Gingerbread Bakery Button #" & $i, $COLOR_ACTION)
+			If $g_bDebugSetLog Then SetLog("Waiting Event Button #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgCollectCookie, 340, 500, 425, 570) Then 
 				If WaitforPixel($g_iQuickMISX + 30, $g_iQuickMISY - 20, $g_iQuickMISX + 32, $g_iQuickMISY - 18, "F61621", 10, 1) Then
 					Click($g_iQuickMISX, $g_iQuickMISY)
@@ -157,13 +157,14 @@ Func ClaimCookieReward($bGoldPass = False)
 	Next
 	
 	If _Sleep(1000) Then Return
-	
+	Local $tmpxClaim = 0
 	For $i = 1 To 10
 		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, $x1, $y1, $x2, $y2)
 		If Not $g_bRunState Then Return
 		If IsArray($aClaim) And UBound($aClaim) > 0 Then
 			For $j = 0 To UBound($aClaim) - 1
 				If Not $g_bRunState Then Return
+				If Abs($tmpxClaim - $aClaim[$j][1]) < 10 Then ContinueLoop ;same Claim button 
 				Click($aClaim[$j][1], $aClaim[$j][2])
 				If _Sleep(1000) Then Return
 				If IsOKCancelPage() Then 
@@ -180,10 +181,12 @@ Func ClaimCookieReward($bGoldPass = False)
 					$iClaim += 1
 					If _Sleep(1000) Then Return
 				EndIf
+				$tmpxClaim = $aClaim[$j][1]
 			Next
 		EndIf
 		If WaitforPixel(795, 398, 796, 400, "FFFE68", 10, 1) Then ExitLoop ;thropy color
 		If WaitforPixel(799, 390, 801, 394, "CD571E", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000) ;cookie color
+		If WaitforPixel(797, 378, 798, 379, "DF3430", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000) ;cookie color
 	Next
 	
 	SetLog($iClaim > 0 ? "Claimed " & $iClaim & " reward(s)!" : "Nothing to claim!", $COLOR_SUCCESS)
