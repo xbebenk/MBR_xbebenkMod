@@ -69,6 +69,10 @@ Global $g_sImgBooks = @ScriptDir & "\imgxml\Research\Books\"
 Global $g_sImgUpgradeWallElix = @ScriptDir & "\imgxml\imglocbuttons\WallElix*.xml"
 Global $g_sImgUpgradeWallGold = @ScriptDir & "\imgxml\imglocbuttons\WallGold*.xml"
 Global $g_sImgInfo = @ScriptDir & "\imgxml\Resources\Info\"
+Global $g_sImgHeroEquipement = @ScriptDir & "\imgxml\Research\Blacksmith\"
+Global $g_sImgEquipmentResearch = @ScriptDir & "\imgxml\Research\Blacksmith\Equipment\"
+Global $g_sImgEquipmentNew = @ScriptDir & "\imgxml\Research\Blacksmith\New\New*"
+Global $g_sImgRedZero = @ScriptDir & "\imgxml\Research\Blacksmith\RedZero\RedZero*"
 #EndRegion
 
 #Region Clan Capital

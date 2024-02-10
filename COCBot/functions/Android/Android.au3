@@ -2979,7 +2979,7 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCI
 		AndroidAdbSendMinitouchShellCommand($send)
 	EndIf
 	If $bSCIDSwitch Then
-		$sleep = 30
+		$sleep = 50
 	Else
 		$sleep = $sleepMove
 	EndIf

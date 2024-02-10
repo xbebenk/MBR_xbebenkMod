@@ -69,10 +69,14 @@ Func CollectDailyRewards($bGoldPass = False)
 		If _Sleep(1000) Then Return
 	EndIf
 	
+	Local $tmpxClaim = 0
 	For $i = 1 To 10		
 		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, $x1, $y1, $x2, $y2)
 		If IsArray($aClaim) And UBound($aClaim) > 0 Then
+			_ArraySort($aClaim, 0, 0, 0, 1) ;sort x coord ascending
 			For $j = 0 To UBound($aClaim) - 1
+				If Not $g_bRunState Then Return
+				If Abs($tmpxClaim - $aClaim[$j][1]) < 10 Then ContinueLoop ;same Claim button 
 				Click($aClaim[$j][1], $aClaim[$j][2])
 				If _Sleep(1000) Then Return
 				If IsOKCancelPage() Then 
@@ -89,6 +93,7 @@ Func CollectDailyRewards($bGoldPass = False)
 					$iClaim += 1
 					If _Sleep(100) Then ExitLoop
 				EndIf
+				$tmpxClaim = $aClaim[$j][1]
 			Next
 		EndIf
 		If WaitforPixel(799, 396, 801, 397, "FDC04F", 10, 1) Then ExitLoop ;thropy color

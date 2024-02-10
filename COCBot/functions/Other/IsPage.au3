@@ -303,3 +303,18 @@ Func IsPetHousePage()
 	Return False
 EndFunc   ;==>IsPetHousePage
 
+Func IsBlacksmithPage($bSetLog = True, $iLoop = 5)
+	Local $aIsBlacksmithPage[4] = [811, 69, 0xD51217, 20] ; Pink red top of close button
+
+	If IsPageLoop($aIsBlacksmithPage, $iLoop) Then
+		If ($g_bDebugSetlog Or $g_bDebugClick) And $bSetLog Then SetLog("**Blacksmith Window OK**", $COLOR_ACTION)
+		SetDebugLog("**Blacksmith Window OK**", $COLOR_ACTION)
+		Return True
+	EndIf
+
+	If $bSetLog Then SetLog("Cannot find Blacksmith Window...", $COLOR_ERROR) ; in case of $i = 29 in while loop
+	If $g_bDebugImageSave Then SaveDebugImage("IsBlacksmithPage")
+	If $iLoop > 1 Then AndroidPageError("IsBlacksmithPage")
+	Return False
+EndFunc   ;==>IsBlacksmithPage
+

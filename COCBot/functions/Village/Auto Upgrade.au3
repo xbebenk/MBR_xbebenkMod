@@ -318,20 +318,30 @@ Func FindExistingBuilding($bTest = False)
 						EndIf
 					Next
 				EndIf
-				If $g_bUpgradeLowCost Then
-					Local $tmpcost = getBuilderBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
-					If Number($tmpcost) = 0 Then ContinueLoop
-					If Number($tmpcost) > 500000 Or $aTmpCoord[$i][0] <> "Gold" Then ContinueLoop
-				EndIf
-
 				If Not $bRusTHFound And Not $g_bUpgradeLowCost Then SetDebugLog("Building:" & $UpgradeName[0] & ", not rushTH or rushTH priority")
 				If Not $bRusTHFound And Not $g_bUpgradeLowCost Then ContinueLoop ;skip this building, RushTh enabled but this building is not RushTH building
+			EndIf
+			
+			Local $tmpcost = getBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
+			If $g_bUpgradeLowCost Then
+				If $aTmpCoord[$i][0] = "DE" Then ContinueLoop
+				If Number($tmpcost) = 0 Then ContinueLoop
+				If Number($tmpcost) > 500000 Then 
+					SetLog("UpgradeLowCost=" & String($g_bUpgradeLowCost) & ", " & $UpgradeName[0] & " : " & $tmpcost & " > 500000, skip", $COLOR_DEBUG1)
+					ContinueLoop
+				EndIf
+			ElseIf $g_bSkipWallReserve Then 
+				If Number($tmpcost) = 0 Then ContinueLoop
+				If Number($tmpcost) < 500000 Then  
+					SetLog("SkipWallReserve=" & String($g_bSkipWallReserve) & ", " & $UpgradeName[0] & " : " & $tmpcost & " < 500000, skip", $COLOR_DEBUG1)
+					ContinueLoop
+				EndIf
 			EndIf
 			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
 		Next
 
 		For $j = 0 To UBound($aBuilding) -1
-			$UpgradeCost = getBuilderBuilderMenuCost($aBuilding[$j][1], $aBuilding[$j][2] - 10)
+			$UpgradeCost = getBuilderMenuCost($aBuilding[$j][1], $aBuilding[$j][2] - 10)
 			$aBuilding[$j][5] = Number($UpgradeCost)
 			Local $BuildingName = $aBuilding[$j][3]
 			If $g_bChkRushTH Then ;set score for RushTHPriority Building
@@ -1198,14 +1208,15 @@ Func SearchGreenZone()
 EndFunc
 
 Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
-	Local $x = 400, $yUp = 120, $yDown = 800, $Delay = 500, $shitfedX = Random(20, 30, 1)
+	Local $x = 400, $yUp = 130, $yDown = 800, $Delay = 1500, $shitfedX = Random(0, 10, 1)
 	ClickMainBuilder()
 	If $YY = Default And $Direction = "up" Then
-		Local $Tmp = QuickMIS("CNX", $g_sImgResourceIcon, 440, 300, 520, 408)
+		Local $Tmp = QuickMIS("CNX", $g_sImgResourceIcon, 440, 300, 520, 410)
 		If IsArray($Tmp) And UBound($Tmp) > 0 Then
-			$YY = _ArrayMax($Tmp, 1, 0, -1, 2)
+			_ArraySort($Tmp, 1, 0, 0, 2)
+			$YY = $Tmp[0][1]
 			If $YY > 350 Then $YY = 350 ;no over scroll
-			SetDebugLog("DragUpY = " & $YY)
+			If $g_bDebugSetLog Then SetLog("DragUpY = " & $YY)
 			If Number($YY) < 300 Then
 				SetLog("No need to dragUp!", $COLOR_INFO)
 				Return
@@ -1235,12 +1246,13 @@ Func ClickDragAUpgrade($Direction = "up", $YY = Default, $DragCount = 1)
 					EndIf
 					If _Sleep(5000) Then Return
 			EndSwitch
+			SetLog("Buildermenu Drag " & $Direction = "Up" ? " Up" : " Down", $COLOR_ACTION) 
 		EndIf
 		If IsBuilderMenuOpen() Then ;check upgrade window border
-			SetLog("Upgrade Window Exist", $COLOR_INFO)
+			If $g_bDebugSetLog Then SetLog("Upgrade Window Exist", $COLOR_INFO)
 			Return True
 		Else
-			SetLog("Upgrade Window Gone!", $COLOR_DEBUG)
+			If $g_bDebugSetLog Then SetLog("Upgrade Window Gone!", $COLOR_DEBUG)
 			ClickMainBuilder()
 			If _Sleep(1000) Then Return
 		EndIf

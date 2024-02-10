@@ -20,8 +20,8 @@ Func OpenArmyOverview($sWhereFrom = "Undefined")
 		SetLog("Try open ArmyWindow #" & $i, $COLOR_ACTION)
 		If WaitforPixel(30, 522, 31, 523, "FFFFE3", 20, 1) Then
 			ClickP($aArmyTrainButton) ; Button Army Overview
-			If _Sleep(2000) Then Return
-		ElseIf IsTrainPage(True, 1) Then 
+			If _Sleep(3000) Then Return
+		ElseIf IsTrainPage(False, 1) Then 
 			SetLog("Detected Train Window Open", $COLOR_ACTION)
 			Return True
 		ElseIf IsProblemAffect(True) Then 
@@ -36,7 +36,8 @@ Func OpenArmyOverview($sWhereFrom = "Undefined")
 			Return
 		EndIf
 		
-		If IsTrainPage(True, 1) Then 
+		If IsTrainPage(False, 1) Then 
+			SetLog("Succesfully Open Train Window", $COLOR_SUCCESS)
 			Return True
 		EndIf
 		

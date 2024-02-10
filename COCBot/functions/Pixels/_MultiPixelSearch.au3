@@ -103,7 +103,7 @@ Func WaitforPixel($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariatio
 	For $i = 1 To $maxDelay * 2
 		Local $result = _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariation)
 		If IsArray($result) Then 
-			If $g_bDebugSetLog Then SetLog("WaitforPixel Result: True ["  & _ArrayToString($result) & "]")
+			If $g_bDebugSetLog Then SetLog("WaitforPixel Result: True ["  & _ArrayToString($result) & "]", $COLOR_DEBUG1)
 			Return True
 		EndIf
 		If _Sleep(200) Then Return

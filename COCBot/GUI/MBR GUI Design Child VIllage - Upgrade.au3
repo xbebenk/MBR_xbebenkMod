@@ -22,7 +22,8 @@ Global $g_hChkAutoLabUpgrades = 0, $g_hCmbLaboratory = 0, $g_hLblNextUpgrade = 0
 ; Heroes
 Global $g_hChkUpgradeKing = 0, $g_hChkUpgradeQueen = 0, $g_hChkUpgradeWarden = 0, $g_hPicChkKingSleepWait = 0, $g_hPicChkQueenSleepWait = 0, $g_hPicChkWardenSleepWait = 0
 Global $g_hCmbHeroReservedBuilder = 0, $g_hLblHeroReservedBuilderTop = 0, $g_hLblHeroReservedBuilderBottom = 0
-Global $g_hChkUpgradeChampion = 0, $g_hPicChkChampionSleepWait = 0
+Global $g_hChkUpgradeChampion = 0, $g_hPicChkChampionSleepWait = 0, $g_hBtnHeroEquipment = 0
+Global $g_hGUI_HeroEquipment = 0, $g_hBtnHeroEquipmentClose = 0
 Global $g_hChkUpgradePets[$ePetCount], $g_hChkSortPetUpgrade = 0, $g_hCmbSortPetUpgrade = 0, $g_hChkSyncSaveDE = 0
 
 ; Buildings
@@ -76,6 +77,7 @@ Func CreateVillageUpgrade()
 		CreateAutoUpgradeSubTab()
 	$g_hGUI_UPGRADE_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02_STab_03_STab_04", "Walls"))
 		CreateWallsSubTab()
+		CreateHeroEquipment()
 		CreateRushTHOption()
 	GUICtrlCreateTabItem("")
 
@@ -267,8 +269,12 @@ Func CreateHeroesSubTab()
 			GUICtrlSetData(-1, "|0|1|2|3", "0")
 			GUICtrlSetOnEvent(-1, "cmbHeroReservedBuilder")
 		$g_hLblHeroReservedBuilderBottom = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "LblHeroReservedBuilderBottom", "builder/s for hero upgrade"), $x + 95, $y + 15, -1, -1)
+	
+		$g_hBtnHeroEquipment = GUICtrlCreateButton("Hero Equipment", $x + 250, $y + 15, -1, -1)
+		GUICtrlSetOnEvent(-1, "BtnHeroEquipment")
+	
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
+	
 ; Pets
 	Local $x = 25, $y = 180
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "LblAutoUpgrading_02", "Pets Upgrade :"), $x - 20, $y -20, $g_iSizeWGrpTab3 - 2, 240)
@@ -353,6 +359,88 @@ Func CreateHeroesSubTab()
 		$g_hChkSyncSaveDE = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "ChkSortPetUpgrade", "Sync Save DE with AutoUpgrade"), $x, $y, -1, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc   ;==>CreateHeroesSubTab
+
+Func CreateHeroEquipment()
+	Local $x = 60, $y = 5
+	$g_hGUI_CGSettings = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGSettings", "ClanGames Challenge Settings"), $_GUI_MAIN_WIDTH - 4, $_GUI_MAIN_HEIGHT - 100, $g_iFrmBotPosX, $g_iFrmBotPosY + 80, $WS_DLGFRAME, -1, $g_hFrmBot)
+	$g_hGUI_HeroEquipment = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "GUI_Equipment", "Hero Equipment"), $_GUI_MAIN_WIDTH - 4, $_GUI_MAIN_HEIGHT - 100, $g_iFrmBotPosX, $g_iFrmBotPosY + 80, $WS_DLGFRAME, -1, $g_hFrmBot)
+	;$g_hGUI_HeroEquipment = _GUICreate("Hero Equipment", $_GUI_MAIN_WIDTH + 50, $_GUI_MAIN_HEIGHT - 80, $g_iFrmBotPosX, $g_iFrmBotPosY + 40, $WS_DLGFRAME, -1, $g_hFrmBot)
+
+	GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlacksmith, $x + 40, $y + 15, 48, 48)
+	$g_hChkCustomEquipmentOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "ChkCustomEquipmentEnable", "Auto Equipment Upgrades"), $x + 100, $y + 30, -1, -1)
+	GUICtrlSetState(-1, $GUI_UNCHECKED)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "ChkCustomEquipmentEnable_Info_01", "Enable to select a custom equipment upgrade order"))
+	GUICtrlSetOnEvent(-1, "chkEquipmentOrder")
+
+	Local $sComboData = ""
+	For $t = 0 To UBound($g_asEquipmentOrderList) - 1
+		$sComboData &= $g_asEquipmentOrderList[$t][0] & "|"
+	Next
+
+	Local $txtEquipmentOrder = GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "TxtEquipmentOrder", "Select Equipment To Upgrade In Position ")
+
+	; Create ComboBox(es) for selection of troop training order
+	$x = 10
+	$y = 90
+	For $z = 0 To UBound($g_ahCmbEquipmentOrder) - 1
+		If $z < 9 Then
+			$g_EquipmentOrderLabel[$z] = GUICtrlCreateLabel($z + 1 & ":", $x, $y + 3)
+			$g_hChkCustomEquipmentOrder[$z] = GUICtrlCreateCheckbox("", $x + 15, $y, -1, 20)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "ChkCustomEquipmentOrder_Info_01", "Enable or disable a custom equipment upgrade"))
+			$g_ahCmbEquipmentOrder[$z] = GUICtrlCreateCombo("", $x + 35, $y, 120, 25, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+			GUICtrlSetOnEvent(-1, "GUIRoyalEquipmentOrder")
+			GUICtrlSetData(-1, $sComboData, "")
+			_GUICtrlSetTip(-1, $txtEquipmentOrder & $z + 1)
+			$g_ahImgEquipmentOrder[$z] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnOptions, $x + 160, $y - 2, 24, 24)
+			$g_ahImgEquipmentOrder2[$z] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnOptions, $x + 190, $y - 2, 24, 24)
+			$y += 30 ; move down to next combobox location
+		EndIf
+		
+		If $z = 9 Then
+			$x = 240
+			$y = 90
+		EndIf
+		
+		If $z >= 9 Then
+			$g_EquipmentOrderLabel[$z] = GUICtrlCreateLabel($z + 1 & ":", $x, $y + 3)
+			$g_hChkCustomEquipmentOrder[$z] = GUICtrlCreateCheckbox("", $x + 15, $y, -1, 20)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "ChkCustomEquipmentOrder_Info_01", "Enable or disable a custom equipment upgrade"))
+			$g_ahCmbEquipmentOrder[$z] = GUICtrlCreateCombo("", $x + 35, $y, 120, 25, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+			GUICtrlSetOnEvent(-1, "GUIRoyalEquipmentOrder")
+			GUICtrlSetData(-1, $sComboData, "")
+			_GUICtrlSetTip(-1, $txtEquipmentOrder & $z + 1)
+			$g_ahImgEquipmentOrder[$z] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnOptions, $x + 160, $y - 2, 24, 24)
+			$g_ahImgEquipmentOrder2[$z] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnOptions, $x + 190, $y - 2, 24, 24)
+			$y += 30 ; move down to next combobox location
+		EndIf
+	Next
+
+	$x = 180
+	$y = 380
+	$g_hBtnRegularOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "BtnRegularOrder", "Sort in Original Order"), $x, $y, 130, 20)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "BtnRegularOrder_Info_01", "Push button to sort equipment in original order"))
+	GUICtrlSetOnEvent(-1, "btnRegularOrder")
+
+	$x = 125
+	$y = 470
+	$g_hBtnRemoveEquipment = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "BtnRemoveEquipment", "Empty Equipment List"), $x - 6, $y, 130, 20)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "BtnRemoveEquipment_Info_01", "Push button to remove all equipment from list and start over"))
+	GUICtrlSetOnEvent(-1, "btnRemoveEquipment")
+
+	$x += 165
+	$g_hBtnEquipmentOrderSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "BtnEquipmentOrderSet", "Apply New Order"), $x - 6, $y, 96, 20)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "BtnEquipmentOrderSet_Info_01", "Push button when finished selecting custom equipment upgrading order") & @CRLF & _
+			GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "BtnEquipmentOrderSet_Info_02", "Icon changes color based on status: Red= Not Set, Green = Order Set") & @CRLF & _
+			GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "BtnEquipmentOrderSet_Info_03", "When not all equipment slots are filled, will use random equipment order in empty slots!"))
+	GUICtrlSetOnEvent(-1, "btnEquipmentOrderSet")
+	$g_ahImgEquipmentOrderSet = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnSilverStar, $x + 119, $y, 18, 18)
+
+	$y = 510
+	$g_hBtnHeroEquipmentClose = GUICtrlCreateButton("Close", 370, $y, 85, 25)
+	GUICtrlSetOnEvent(-1, "CloseHeroEquipment")
+EndFunc   ;==>CreateHeroEquipment
 
 Func CreateBuildingsSubTab()
 	Local $sTxtShowType = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Buildings", "TxtShowType", "This shows type of upgrade, click to show location")

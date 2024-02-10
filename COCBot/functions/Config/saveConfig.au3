@@ -88,6 +88,9 @@ Func SaveBuildingConfig()
 	_Ini_Add("upgrade", "PetHousePosX", $g_aiPetHousePos[0])
 	_Ini_Add("upgrade", "PetHousePosY", $g_aiPetHousePos[1])
 
+	_Ini_Add("upgrade", "BlacksmithPosX", $g_aiBlacksmithPos[0])
+	_Ini_Add("upgrade", "BlacksmithPosY", $g_aiBlacksmithPos[1])
+	
 	_Ini_Add("upgrade", "StarLabPosX", $g_aiStarLaboratoryPos[0])
 	_Ini_Add("upgrade", "StarLabPosY", $g_aiStarLaboratoryPos[1])
 
@@ -704,6 +707,13 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradeWarden", $g_bUpgradeWardenEnable ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradeChampion", $g_bUpgradeChampionEnable ? 1 : 0)
 	_Ini_Add("upgrade", "HeroReservedBuilder", $g_iHeroReservedBuilder)
+	
+	; Equipment Order
+	_Ini_Add("upgrade", "ChkUpgradeEquipment", $g_bChkCustomEquipmentOrderEnable ? 1 : 0)
+	For $z = 0 To UBound($g_aiCmbCustomEquipmentOrder) - 1
+		_Ini_Add("upgrade", "ChkEquipment" & $z, $g_bChkCustomEquipmentOrder[$z] ? 1 : 0)
+		_Ini_Add("upgrade", "cmbEquipmentOrder" & $z, $g_aiCmbCustomEquipmentOrder[$z])
+	Next
 
 	_Ini_Add("upgrade", "ChkSortPetUpgrade", $g_bChkSortPetUpgrade ? 1 : 0)
 	_Ini_Add("upgrade", "CmbSortPetUpgrade", $g_iCmbSortPetUpgrade)

@@ -273,7 +273,8 @@
 #include "functions\Village\LocatePetHouse.au3"
 #include "functions\Village\PetHouse.au3"
 #include "functions\Village\ClanCapital.au3"
-
+#include "functions\Village\LocateBlacksmith.au3"
+#include "functions\Village\Blacksmith.au3"
 
 #include "functions\Village\BuilderBase\Collect.au3"
 #include "functions\Village\BuilderBase\StartClockTowerBoost.au3"

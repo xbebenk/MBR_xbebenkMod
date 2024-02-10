@@ -467,6 +467,15 @@ Func btnPet()
 	AndroidShield("btnPet") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnPet
 
+Func btnBsmith()
+	Local $wasRunState = $g_bRunState
+	$g_bRunState = True
+	ZoomOut()
+	LocateBlacksmith()
+	$g_bRunState = $wasRunState
+	AndroidShield("btnBsmith") ; Update shield status due to manual $g_bRunState
+EndFunc   ;==>btnBsmith
+
 Func chkTrophyAtkDead()
 	If GUICtrlRead($g_hChkTrophyAtkDead) = $GUI_CHECKED Then
 		$g_bDropTrophyAtkDead = True

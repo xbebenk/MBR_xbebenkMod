@@ -1085,6 +1085,9 @@ Func __RunFunction($action)
 		Case "Collect"
 			Collect()
 			_Sleep($DELAYRUNBOT1)
+		Case "BlackSmith"
+			BlackSmith()
+			_Sleep($DELAYRUNBOT1)
 		Case "CheckTombs"
 			CheckTombs()
 			_Sleep($DELAYRUNBOT3)
@@ -1549,7 +1552,7 @@ Func CommonRoutine($RoutineType = Default)
 				If $g_bRestart Then Return
 			Next
 			_ArrayConcatenate($aFuncList, $aRndFuncList)
-			Local $aRndFuncList = ['PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC']
+			Local $aRndFuncList = ['PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

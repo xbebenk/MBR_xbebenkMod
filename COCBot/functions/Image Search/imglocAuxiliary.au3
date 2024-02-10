@@ -576,6 +576,17 @@ Func GetDiamondFromRect($rect)
 	Return $returnvalue
 EndFunc   ;==>GetDiamondFromRect
 
+Func GetDiamondFromRect2($iX1 = -1, $iY1 = -1, $iX2 = -1, $iY2 = -1)
+	If $iX1 = -1 Or $iX2 = -1 Or $iY1 = -1 Or $iY2 = -1 Then
+		SetLog("GetDiamondFromRect2: One or more bad input coordinates!", $COLOR_ERROR)
+		Return ""
+	EndIf
+
+	Local $sReturnDiamond = ""
+	$sReturnDiamond = $iX1 & "," & $iY1 & "|" & $iX2 & "," & $iY1 & "|" & $iX2 & "," & $iY2 & "|" & $iX1 & "," & $iY2
+	Return $sReturnDiamond
+EndFunc   ;==>GetDiamondFromRect2
+
 Func GetDiamondFromArray($aRectArray)
 	;Recieves $aArray[0] = StartX
 	;		  $aArray[1] = StartY
@@ -623,6 +634,42 @@ Func FindImageInPlace($sImageName, $sImageTile, $place, $bForceCaptureRegion = T
 	SetDebugLog("FindImageInPlace : < " & $sImageName & " Found in " & $returnvalue, $COLOR_INFO)
 	Return $returnvalue
 EndFunc   ;==>FindImageInPlace
+
+; Same as FindImageInPlace but takes individual coords instead of a string
+Func FindImageInPlace2($sImageName, $sImageTile, $iX1 = -1, $iY1 = -1, $iX2 = -1, $iY2 = -1, $bForceCaptureRegion = True, $AndroidTag = Default)
+	;creates a reduced capture of the place area a finds the image in that area
+	;returns string with X,Y of ACTUALL FULL SCREEN coordinates or Empty if not found
+	If $g_bDebugSetlog Then SetDebugLog("FindImageInPlace2 : > " & $sImageName & " - " & $sImageTile, $COLOR_INFO)
+
+	If $iX1 = -1 Or $iX2 = -1 Or $iY1 = -1 Or $iY2 = -1 Then
+		SetLog("FindImageInPlace2 : One or more bad input coordinates!", $COLOR_ERROR)
+		Return ""
+	EndIf
+
+	Local $returnvalue = ""
+	;Local $aPlaces = GetRectArray($place)
+	Local $sImageArea = $iX1 & "," & $iY1 & "|" & $iX2 & "," & $iY1 & "|" & $iX2 & "," & $iY2 & "|" & $iX1 & "," & $iY2
+	If $bForceCaptureRegion = True Then
+		$sImageArea = "FV"
+		_CaptureRegion2(Number($iX1), Number($iY1), Number($iX2), Number($iY2))
+	EndIf
+	Local $coords = findImage($sImageName, $sImageTile, $sImageArea, 1, False, $AndroidTag) ; reduce capture full image
+	Local $aCoords = decodeSingleCoord($coords)
+	If UBound($aCoords) < 2 Then
+		If $g_bDebugSetlog Then SetDebugLog("FindImageInPlace : " & $sImageName & " NOT Found", $COLOR_INFO)
+		Return ""
+	EndIf
+	If $bForceCaptureRegion Then
+		$returnvalue = Number($aCoords[0]) + Number($iX1) & "," & Number($aCoords[1]) + Number($iY1)
+	Else
+		$returnvalue = Number($aCoords[0]) & "," & Number($aCoords[1])
+	EndIf
+	If $g_bDebugSetlog Then SetDebugLog("FindImageInPlace : < " & $sImageName & " Found in " & $returnvalue, $COLOR_INFO)
+
+	;	SetLog("FindImageInPlace : < " & $sImageName & " Found in " & $returnvalue, $COLOR_INFO)
+
+	Return $returnvalue
+EndFunc   ;==>FindImageInPlace2
 
 Func SearchRedLines($sCocDiamond = "ECD")
 	If $g_sImglocRedline <> "" Then Return $g_sImglocRedline
