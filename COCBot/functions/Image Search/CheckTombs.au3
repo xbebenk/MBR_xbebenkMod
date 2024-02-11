@@ -24,10 +24,10 @@ Func CheckTombs()
 		For $i = 0 To UBound($aTombs) - 1
 			If isInsideDiamondXY($aTombs[$i][1], $aTombs[$i][2]) Then 
 				Click($aTombs[$i][1], $aTombs[$i][2])
+				SetLog("Tombs removed! [" & $aTombs[$i][1] & "," & $aTombs[$i][2] & "]", $COLOR_SUCCESS)
 				ExitLoop
 			EndIf
 		Next
-		SetLog("Tombs removed! [" & $aTombs[$i][1] & "," & $aTombs[$i][2] & "]", $COLOR_SUCCESS)
 	Else
 		SetLog("No Tombs Found!", $COLOR_DEBUG1)
 	EndIf
