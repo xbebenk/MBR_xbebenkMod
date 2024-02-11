@@ -165,7 +165,7 @@ Func AutoUpgradeSearchExisting($bTest = False)
 			Next
 
 			For $i = 0 To UBound($ExistingBuilding) - 1
-				If $g_bUpgradeLowCost And (StringInStr($ExistingBuilding[$i][3], "Mine") Or StringInStr($ExistingBuilding[$i][3], "Collector") Or StringInStr($ExistingBuilding[$i][3], "Mortar")) Then ContinueLoop
+				;If $g_bUpgradeLowCost And (StringInStr($ExistingBuilding[$i][3], "Mine") Or StringInStr($ExistingBuilding[$i][3], "Collector") Or StringInStr($ExistingBuilding[$i][3], "Mortar")) Then ContinueLoop
 				If CheckResourceForDoUpgrade($ExistingBuilding[$i][3], $ExistingBuilding[$i][5], $ExistingBuilding[$i][0]) Then ;($BuildingName, $Cost, $CostType)
 					If Not $g_bRunState Then Return
 					Click($ExistingBuilding[$i][1], $ExistingBuilding[$i][2])
@@ -689,7 +689,7 @@ Func DoUpgrade($bTest = False, $iSpecialMode = 0)
 		Case Else
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 660, 500, 710, 580) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True) ; get cost
-			$g_aUpgradeResourceCostDuration[2] = getBldgUpgradeTime(730, 546) ; get duration
+			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(730, 546) ; get duration
 	EndSwitch
 
 	If $g_aUpgradeNameLevel[1] = "Clan Castle" And $g_aUpgradeNameLevel[2] = "Broken" Then
