@@ -362,10 +362,8 @@ EndFunc   ;==>CreateHeroesSubTab
 
 Func CreateHeroEquipment()
 	Local $x = 60, $y = 5
-	$g_hGUI_CGSettings = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_CGSettings", "ClanGames Challenge Settings"), $_GUI_MAIN_WIDTH - 4, $_GUI_MAIN_HEIGHT - 100, $g_iFrmBotPosX, $g_iFrmBotPosY + 80, $WS_DLGFRAME, -1, $g_hFrmBot)
 	$g_hGUI_HeroEquipment = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "GUI_Equipment", "Hero Equipment"), $_GUI_MAIN_WIDTH - 4, $_GUI_MAIN_HEIGHT - 100, $g_iFrmBotPosX, $g_iFrmBotPosY + 80, $WS_DLGFRAME, -1, $g_hFrmBot)
-	;$g_hGUI_HeroEquipment = _GUICreate("Hero Equipment", $_GUI_MAIN_WIDTH + 50, $_GUI_MAIN_HEIGHT - 80, $g_iFrmBotPosX, $g_iFrmBotPosY + 40, $WS_DLGFRAME, -1, $g_hFrmBot)
-
+	
 	GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlacksmith, $x + 40, $y + 15, 48, 48)
 	$g_hChkCustomEquipmentOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "ChkCustomEquipmentEnable", "Auto Equipment Upgrades"), $x + 100, $y + 30, -1, -1)
 	GUICtrlSetState(-1, $GUI_UNCHECKED)
