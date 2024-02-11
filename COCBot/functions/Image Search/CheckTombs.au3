@@ -14,6 +14,11 @@
 ; ===============================================================================================================================
 
 Func CheckTombs()
+	If Not $g_bRunState Then Return
+	SetLog("Checking Tombs", $COLOR_ACTION)
+	Collect(True)
+	If _Sleep(1000) Then Return
+	
 	Local $aTombs = QuickMIS("CNX", $g_sImgClearTombs, $InnerDiamondLeft, $InnerDiamondTop, $InnerDiamondRight, $InnerDiamondBottom)
 	If IsArray($aTombs) And UBound($aTombs) > 0 Then
 		For $i = 0 To UBound($aTombs) - 1
@@ -22,18 +27,10 @@ Func CheckTombs()
 				ExitLoop
 			EndIf
 		Next
-		SetLog("Tombs removed!", $COLOR_SUCCESS)
+		SetLog("Tombs removed! [" & $aTombs[$i][1] & "," & $aTombs[$i][2] & "]", $COLOR_SUCCESS)
 	Else
 		SetLog("No Tombs Found!", $COLOR_DEBUG1)
 	EndIf
-	;If QuickMIS("BC1", $g_sImgClearTombs, $InnerDiamondLeft, $InnerDiamondTop, $InnerDiamondRight, $InnerDiamondBottom) Then
-	;	If isInsideDiamondXY($g_iQuickMISX, $g_iQuickMISY) Then 
-	;		Click($g_iQuickMISX, $g_iQuickMISY)
-	;		SetLog("Tombs removed!", $COLOR_SUCCESS)
-	;	EndIf
-	;Else
-	;	SetLog("No Tombs Found!", $COLOR_DEBUG1)
-	;EndIf
 EndFunc   ;==>CheckTombs
 
 Func CleanYardCheckBuilder($bTest = False)
