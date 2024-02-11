@@ -22,7 +22,7 @@ Func LocateTownHall($bLocationOnly = False, $bCollect = True)
 
 	WinGetAndroidHandle()
 	checkMainScreen()
-	If $bCollect Then Collect(False)
+	If $bCollect Then Collect(True)
 
 
 	While 1

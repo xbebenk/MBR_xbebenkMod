@@ -14,16 +14,12 @@
 ; ===============================================================================================================================
 #include-once
 
-Func Collect($bCheckTreasury = True)
+Func Collect($bOnlyCollector = False)
 	If Not $g_bChkCollect Or Not $g_bRunState Then Return
 
 	ClickAway()
-
 	StartGainCost()
-	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
 	
-	;If $g_bChkCollectCartFirst And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark)) Then CollectLootCart()
-
 	SetLog("Collecting Resources", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
 
@@ -62,12 +58,19 @@ Func Collect($bCheckTreasury = True)
 			EndIf
 		Next
 	EndIf
-
-	If _Sleep($DELAYCOLLECT3) Then Return
+	
+	If $bOnlyCollector Then 
+		EndGainCost("Collect")
+		Return True
+	Endif
+	
+	If _Sleep(1000) Then Return
 	CollectLootCart()
-	If $g_bChkTreasuryCollect And $bCheckTreasury Then TreasuryCollect()
+	If _Sleep(1000) Then Return
+	TreasuryCollect()
 	If _Sleep(1000) Then Return
 	CollectCookieRumble()
+	If _Sleep(1000) Then Return
 	EndGainCost("Collect")
 EndFunc   ;==>Collect
 

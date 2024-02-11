@@ -1208,7 +1208,7 @@ Func FirstCheck()
 	Local $bLocateTH = False
 	SetLog("Detecting Town Hall level", $COLOR_INFO)
 	SetLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
-	Collect(False) ;only collect from mine and collector
+	Collect(True) ;only collect from mine and collector
 	If $g_aiTownHallPos[0] > -1 Then
 		ClickP($g_aiTownHallPos)
 		If _Sleep(800) Then Return

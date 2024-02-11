@@ -2,7 +2,7 @@
 ; Name ..........: Blacksmith
 ; Description ...: Equipment Upgrade V1
 ; Author ........: Moebius (2023-12)
-; Modified ......:
+; Modified ......: xbebenk (Feb 2024)
 ; Remarks .......: This file is part of MyBot Copyright 2015-2024
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......: Returns True or False
@@ -46,23 +46,23 @@ Func Blacksmith($bTest = False)
 		Return
 	EndIf
 
-	ZoomOut()
+	Collect(True)
 	
 	SetLog("Starting Equipment Auto Upgrade", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	
 	If $g_aiBlacksmithPos[0] <= 0 Or $g_aiBlacksmithPos[1] <= 0 Then
 		SetLog("Blacksmith Location unknown!", $COLOR_WARNING)
-		ImgLocateBlacksmith() ; Blacksmith location unknown, so find it.
+		ImgLocateBlacksmith(True) ; Blacksmith location unknown, so find it.
 		If $g_aiBlacksmithPos[0] = 0 Or $g_aiBlacksmithPos[1] = 0 Then
 			SetLog("Problem locating Blacksmith, re-locate Blacksmith position before proceeding", $COLOR_ERROR)
 			Return False
 		EndIf
+	Else
+		;Click Blacksmith
+		ClickP($g_aiBlacksmithPos)
+		If _Sleep(1000) Then Return
 	EndIf
-
-	;Click Blacksmith
-	ClickP($g_aiBlacksmithPos)
-	If _Sleep(1000) Then Return
 
 	Local $BuildingInfo = BuildingInfo(242, 472)
 	If StringInStr($BuildingInfo[1], "smith") Then
@@ -86,13 +86,13 @@ Func Blacksmith($bTest = False)
 		SetLog("Try to upgrade " & $g_asEquipmentOrderList[$g_aiCmbCustomEquipmentOrder[$i]][0], $COLOR_SUCCESS)
 		If _Sleep(500) Then Return
 
-		If $g_iBlacksmithLevel < 7 Then
-			Switch $g_aiCmbCustomEquipmentOrder[$i]
-				Case 0, 1, 5, 6, 9, 10, 13, 14
-					SetLog("BlackSmith level 7 needed, looking next", $COLOR_SUCCESS)
-					ContinueLoop
-			EndSwitch
-		EndIf
+		;If $g_iBlacksmithLevel < 7 Then
+		;	Switch $g_aiCmbCustomEquipmentOrder[$i]
+		;		Case 0, 1, 5, 6, 9, 10, 13, 14
+		;			SetLog("BlackSmith level 7 needed, looking next", $COLOR_SUCCESS)
+		;			ContinueLoop
+		;	EndSwitch
+		;EndIf
 
 		Local $ToClickOnHero = False
 		If $i = 0 Then

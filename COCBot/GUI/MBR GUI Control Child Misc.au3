@@ -360,7 +360,7 @@ Func btnLocateTownHall()
 	Local $iTownHallLevel = $g_iTownHallLevel
 	Local $bLocateTH = False, $bTHFound = False
 	SetLog("Locating Town Hall", $COLOR_ACTION)
-	Collect(False) ;only collect from mine and collector
+	Collect(True) ;only collect from mine and collector
 	For $i = 1 To 2
 		SetLog("Searching TH #" & $i, $COLOR_ACTION)
 		If $g_aiTownHallPos[0] > -1 Then

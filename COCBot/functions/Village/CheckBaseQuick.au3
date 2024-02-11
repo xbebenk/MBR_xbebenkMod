@@ -76,7 +76,7 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 			EndIf
 		EndIf
 
-		Collect() ; Empty Collectors
+		Collect(True) ; Empty Collectors
 		If _Sleep($DELAYRUNBOT1) Then Return
 
 	Else

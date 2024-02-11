@@ -5,14 +5,14 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: Moebius14 (Dec 2023)
-; Modified ......: 
+; Modified ......: xbebenk (Feb 2024)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2024
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func LocateBlacksmith($bCollect = True)
+Func LocateBlacksmith()
 	; reset position
 	$g_aiBlacksmithPos[0] = -1
 	$g_aiBlacksmithPos[1] = -1
@@ -25,20 +25,77 @@ Func LocateBlacksmith($bCollect = True)
 	; auto locate
 	Local $bLocated = ImgLocateBlacksmith()
 
-	SetLog("Blacksmith: (" & $g_aiBlacksmithPos[0] & "," & $g_aiBlacksmithPos[1] & ")", $COLOR_DEBUG)
-	If $bLocated Then Return
+	If $bLocated Then 
+		SetLog("Blacksmith: (Level " & $g_iBlacksmithLevel & ") ["  & $g_aiBlacksmithPos[0] & "," & $g_aiBlacksmithPos[1] & "]", $COLOR_SUCCESS)
+		Return
+	Else
+		_LocateBlacksmith() ; manual locate
+	EndIf
 	
-	If $g_aiBlacksmithPos[1] = "" Or $g_aiBlacksmithPos[1] = -1 Then _LocateBlacksmith($bCollect) ; manual locate
 EndFunc   ;==>LocateBlacksmith
 
-Func _LocateBlacksmith($bCollect = True)
+; Image Search for Blacksmith
+Func ImgLocateBlacksmith($bLeaveButton = False)
+	
+	If Not $g_bRunState Then Return
+	Local $bRet = False
+	SetLog("Auto Locating Blacksmith", $COLOR_ACTION)
+	
+	Collect(True)
+	If _Sleep(1000) Then Return
+	
+	Local $aBuilding
+	Local $aRet = QuickMIS("CNX", $g_sImgBlackSmith)
+	If IsArray($aRet) And UBound($aRet) > 0 Then
+		For $i = 0 To UBound($aRet) - 1
+			SetLog("[" & $i & "] Blacksmith Search found : " & $aRet[$i][0], $COLOR_SUCCESS)
+			Click($aRet[$i][1], $aRet[$i][2])
+			If _Sleep(1000) Then Return
+			
+			$aBuilding = BuildingInfo(242, 472)
+			If StringInStr($aBuilding[1], "smith") Then 
+				$g_aiBlacksmithPos[0] = $aRet[$i][1]
+				$g_aiBlacksmithPos[1] = $aRet[$i][2]
+				$g_iBlacksmithLevel = $aBuilding[2]
+				If Not $bLeaveButton Then ClickAway()
+				$bRet = True
+				ExitLoop
+			EndIf
+			
+			If _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "ImgLocateBlacksmith") Then
+				For $j = 1 To 10
+					If checkChatTabPixel() Then 
+						Click($aRet[$i][1], $aRet[$i][2])
+						If _Sleep(1000) Then Return
+						$aBuilding = BuildingInfo(242, 472)
+						If StringInStr($aBuilding[1], "smith") Then ExitLoop
+					EndIf
+					If _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "ImgLocateBlacksmith") Then 
+						SetLog("LocateBlacksmith found unlocked equipment info #" & $j, $COLOR_ACTION)
+						ClickAway()
+						If _Sleep(2000) Then Return
+					EndIf
+				Next
+			EndIf
+			
+		Next
+	Else
+		SetLog("Couldn't find Blacksmith on main village", $COLOR_ERROR)
+		If $g_bDebugImageSave Then SaveDebugImage("Blacksmith", False)
+		$bRet = False
+	EndIf
+	
+	Return $bRet
+EndFunc   ;==>ImgLocateBlacksmith
+
+Func _LocateBlacksmith()
 	Local $stext, $MsgBox, $iStupid = 0, $iSilly = 0, $sErrorText = ""
 
 	SetLog("Locating Blacksmith", $COLOR_INFO)
 
 	WinGetAndroidHandle()
 	checkMainScreen()
-	If $bCollect Then Collect(False)
+	Collect(True)
 
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
@@ -117,45 +174,3 @@ Func _LocateBlacksmith($bCollect = True)
 
 EndFunc   ;==>_LocateBlacksmith
 
-; Image Search for Blacksmith
-Func ImgLocateBlacksmith($bOpen = False)
-	Local $sImgDir = @ScriptDir & "\imgxml\Buildings\Blacksmith\"
-
-	Local $sSearchArea = "FV"
-	Local $avBlacksmith = findMultiple($sImgDir, $sSearchArea, $sSearchArea, 0, 1000, 1, "objectname,objectpoints", True)
-
-	If Not IsArray($avBlacksmith) Or UBound($avBlacksmith, $UBOUND_ROWS) <= 0 Then
-		SetLog("Couldn't find Blacksmith on main village", $COLOR_ERROR)
-		If $g_bDebugImageSave Then SaveDebugImage("Blacksmith", False)
-		Return False
-	EndIf
-
-	Local $avBlacksmithRes, $aiBlacksmithCoords
-
-	; active/inactive Blacksmith have different images
-	; loop thro the detected images
-	For $i = 0 To UBound($avBlacksmith, $UBOUND_ROWS) - 1
-		$avBlacksmithRes = $avBlacksmith[$i]
-		SetLog("Blacksmith Search find : " & $avBlacksmithRes[0])
-		$aiBlacksmithCoords = decodeSingleCoord($avBlacksmithRes[1])
-	Next
-	
-	If UBound($aiBlacksmithCoords) = 2 Then 
-		ClickP($aiBlacksmithCoords)
-		If _Sleep(1000) Then Return
-		Local $aBuilding = BuildingInfo(242, 472)
-		If StringInStr($aBuilding[1], "smith") Then 
-			$g_aiBlacksmithPos[0] = $aiBlacksmithCoords[0]
-			$g_aiBlacksmithPos[1] = $aiBlacksmithCoords[1]
-			$g_iBlacksmithLevel = $aBuilding[2]
-			If $bOpen Then 
-				OpenBlacksmithWindow()
-			Else
-				ClickAway()
-			EndIf
-			Return True
-		EndIf
-	EndIf
-	
-	Return False
-EndFunc   ;==>ImgLocateBlacksmith

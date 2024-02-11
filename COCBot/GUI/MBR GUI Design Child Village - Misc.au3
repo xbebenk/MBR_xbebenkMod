@@ -391,7 +391,7 @@ Func CreateMiscNormalVillageSubTab()
 		_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnLocateBlacksmith_Info_01", "Blacksmith"))
 		GUICtrlSetOnEvent(-1, "btnBsmith")
 		
-	$x += 119
+	$x += 85
 		GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnReset", "Reset."), $x, $y, 36, 36, $BS_ICON)
 			_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnBldgX)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnReset_Info_01", "Click here to reset all building locations,") & @CRLF & _

@@ -28,7 +28,7 @@ Func _LocateQueenAltar($bCollect = True)
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
-	If $bCollect Then Collect(False)
+	If $bCollect Then Collect(True)
 
 	SetLog("Locating Queen Altar", $COLOR_INFO)
 	While 1
@@ -157,7 +157,7 @@ Func _LocateKingAltar($bCollect = True)
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
-	If $bCollect Then Collect(False)
+	If $bCollect Then Collect(True)
 
 	SetLog("Locating King Altar", $COLOR_INFO)
 	While 1
@@ -289,7 +289,7 @@ Func _LocateWardenAltar($bCollect = True)
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
-	If $bCollect Then Collect(False)
+	If $bCollect Then Collect(True)
 
 	SetLog("Locating Grand Warden Altar", $COLOR_INFO)
 	While 1
@@ -422,7 +422,7 @@ Func _LocateChampionAltar($bCollect = True)
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
-	If $bCollect Then Collect(False)
+	If $bCollect Then Collect(True)
 
 	SetLog("Locating Royal Champion Altar", $COLOR_INFO)
 	While 1

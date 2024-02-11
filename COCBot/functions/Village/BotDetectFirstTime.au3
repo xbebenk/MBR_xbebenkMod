@@ -20,7 +20,7 @@ Func BotDetectFirstTime()
 	SetLog("Detecting your Buildings", $COLOR_INFO)
 	If Not isInsideDiamond($g_aiTownHallPos) Then
 	  checkMainScreen(True, $g_bStayOnBuilderBase, "BotDetectFirstTime")
-	  Collect(False)
+	  Collect(True)
 	  imglocTHSearch(False, True, True) ; search th on myvillage
 	  SetLog("Townhall: (" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_DEBUG)
 	EndIf

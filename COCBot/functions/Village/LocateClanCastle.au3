@@ -20,7 +20,7 @@ Func LocateClanCastle($bCollect = True)
 
 	WinGetAndroidHandle()
 	checkMainScreen(False, $g_bStayOnBuilderBase, "LocateClanCastle")
-	If $bCollect Then Collect(False)
+	If $bCollect Then Collect(True)
 
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
