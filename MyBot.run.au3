@@ -741,11 +741,11 @@ Func runBot() ;Bot that runs everything in order
 			SetLogCentered(" Top MainLoop ", "=", $COLOR_DEBUG)
 			If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
 			VillageReport()
-			If BotCommand() Then btnStop()
 			If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
 				$g_bOutOfGold = False ; reset out of gold flag
 				SetLog("Switching back to normal after no gold to search ...", $COLOR_SUCCESS)
 			EndIf
+			If BotCommand() Then btnStop()
 			If $g_bRestart Then ContinueLoop
 
 			checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop")
