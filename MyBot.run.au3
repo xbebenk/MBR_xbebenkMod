@@ -1257,6 +1257,10 @@ Func FirstCheck()
 
 	If Not $g_bRunState Then Return
 	VillageReport()
+	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
+		$g_bOutOfGold = False ; reset out of gold flag
+		SetLog("Switching back to normal after no gold to search ...", $COLOR_SUCCESS)
+	EndIf
 	If BotCommand() Then btnStop()
 	chkShieldStatus()
 	CheckTombs()
@@ -1296,6 +1300,10 @@ Func FirstCheck()
 			_RunFunction("UpgradeBuilding")
 		EndIf
 		VillageReport()
+		If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
+			$g_bOutOfGold = False ; reset out of gold flag
+			SetLog("Switching back to normal after no gold to search ...", $COLOR_SUCCESS)
+		EndIf
 		ZoomOut(True)
 	EndIf
 	
@@ -1455,6 +1463,10 @@ Func FirstCheckRoutine()
 
 	If Not $g_bRunState Then Return
 	VillageReport()
+	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
+		$g_bOutOfGold = False ; reset out of gold flag
+		SetLog("Switching back to normal after no gold to search ...", $COLOR_SUCCESS)
+	EndIf
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
 		If _Sleep($DELAYRUNBOT2) Then Return
 		If BotCommand() Then btnStop()
