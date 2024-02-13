@@ -401,10 +401,9 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Then
 			; reset village measures
 			setVillageOffset(0, 0, 1)
-			ConvertInternalExternArea()
-			If $g_bDebugImageSave Then TestDropLine(True)
+			If $g_bDebugImageSave Then TestDropLine()
 			If Not CheckZoomOut("VillageSearch") Then
-				If isProblemAffect(True) Then 
+				If isProblemAffect(True) Then
 					$g_bRestart = True ; Restart Attack
 					Return
 				EndIf
@@ -515,10 +514,10 @@ Func WriteLogVillageSearch($x)
 EndFunc   ;==>WriteLogVillageSearch
 
 Func CheckZoomOut($sSource = "CheckZoomOut")
-	Local $aVillageResult = SearchZoomOut(False, True, $sSource, True)
+	Local $aVillageResult = SearchZoomOut(False, True, $sSource, False, False)
 	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
 		Return False
 	EndIf
-	
+	ConvertInternalExternArea()
 	Return True
 EndFunc   ;==>CheckZoomOut
