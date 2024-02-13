@@ -679,6 +679,7 @@ EndFunc   ;==>chkTrophyHeroes
 Func ChkCollect()
 	If GUICtrlRead($g_hChkCollect) = $GUI_CHECKED Then
 		;GUICtrlSetState($g_hChkCollectCartFirst, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkCollectLootCart, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkTreasuryCollect, $GUI_ENABLE)
 		GUICtrlSetState($g_hTxtCollectGold, $GUI_ENABLE)
 		GUICtrlSetState($g_hTxtCollectElixir, $GUI_ENABLE)
@@ -686,6 +687,8 @@ Func ChkCollect()
 	Else
 		;GUICtrlSetState($g_hChkCollectCartFirst, $GUI_UNCHECKED)
 		;GUICtrlSetState($g_hChkCollectCartFirst, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkCollectLootCart, $GUI_UNCHECKED)
+		GUICtrlSetState($g_hChkCollectLootCart, $GUI_DISABLE)
 		GUICtrlSetState($g_hChkTreasuryCollect, $GUI_UNCHECKED)
 		GUICtrlSetState($g_hChkTreasuryCollect, $GUI_DISABLE)
 		GUICtrlSetState($g_hTxtCollectGold, $GUI_DISABLE)
