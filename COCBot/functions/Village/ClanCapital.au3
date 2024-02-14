@@ -94,8 +94,8 @@ Func ReadCCGold()
 EndFunc
 
 Func ClanCapitalReport($SetLog = True)
-	$g_iLootCCGold = getOcrAndCapture("coc-ms", 670, 17, 160, 25, True)
-	$g_iLootCCMedal = getOcrAndCapture("coc-ms", 670, 70, 160, 25, True)
+	$g_iLootCCGold = getOcrAndCapture("coc-ms", 710, 17, 100, 25, True)
+	$g_iLootCCMedal = getOcrAndCapture("coc-ms", 710, 70, 95, 25, True)
 	GUICtrlSetData($g_lblCapitalGold, $g_iLootCCGold)
 	GUICtrlSetData($g_lblCapitalMedal, $g_iLootCCMedal)
 

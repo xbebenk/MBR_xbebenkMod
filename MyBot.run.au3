@@ -773,33 +773,22 @@ Func runBot() ;Bot that runs everything in order
 				DonateCC()
 				TrainSystem()
 			EndIf
-			
-			If $g_bRestart Then ContinueLoop
-			If $g_bChkFastSwitchAcc Then
-				Local $aRndFuncList = ['UpgradeHeroes', 'PetHouse', 'BuilderBase']
-			Else
-				Local $aRndFuncList = ['Collect', 'CollectAchievements', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'BuilderBase']
-			EndIf
-			
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep($DELAYRUNBOT5) Then Return
-				If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-				If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
-			Next
 
 			If Not $g_bRunState Then Return
-			If $g_bFirstStart Then 
+			If $g_bFirstStart Then
+				CommonRoutine("FirstCheck")
 				SetLog("First loop completed!", $COLOR_DEBUG1)
 				$g_bFirstStart = False ; already finished first loop since bot started.
 			EndIf
-			
-			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then 
+
+			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then
+				CommonRoutine("Switch")
+				SetLog(" ")
 				SetLogCentered(" MainLoop Done (in " & Round(TimerDiff($MainLoopTimer) / 1000 / 60, 2) & " minutes) ", "=", $COLOR_INFO)
+				SetLog(" ")
 				checkSwitchAcc() ;switch to next account
 			EndIf
-			
+
 			If IsSearchAttackEnabled() Then ; If attack scheduled has attack disabled now, stop wall upgrades, and attack.
 				Idle()
 				;$g_bFullArmy1 = $g_bFullArmy
@@ -1318,6 +1307,7 @@ Func FirstCheck()
 		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
 		If Not $g_bSkipTrain Then TrainSystem()
+		If Not $g_bRunState Then Return
 		If $g_bDonateEarly Then
 			SetLog("Donate Early Enabled", $COLOR_INFO)
 			DonateCC()
@@ -1544,6 +1534,7 @@ Func FirstCheckRoutine()
 		SetLog(" ")
 		SetLogCentered(" [" & $g_iCurAccount + 1 & "] " & $g_asProfileName[$g_iCurAccount] & " Active (" & $sText & " minutes) ", "~", $COLOR_SUCCESS)
 		SetLog(" ")
+		$g_bForceSwitch = True ;forcing switch
 		checkSwitchAcc() ;switch to next account
 	EndIf
 EndFunc
@@ -1556,7 +1547,7 @@ Func CommonRoutine($RoutineType = Default)
 	Local $sText = "", $aFuncList[0]
 	Switch $RoutineType
 		Case "FirstCheck"
-			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', "SaleMagicItem", 'Laboratory', 'CollectFreeMagicItems']
+			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'SaleMagicItem', 'Laboratory', 'CollectFreeMagicItems']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

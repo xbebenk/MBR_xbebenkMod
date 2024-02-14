@@ -864,14 +864,13 @@ Func FindWallCSV(ByRef $aCSVExternalWall, ByRef $aCSVInternalWall)
 	Return $bResult
 EndFunc
 
-Func TestDropLine($SearchRedLine = False)
-	$g_iMatchMode = $DB ; define which script to use
+Func TestDropLine($SearchRedLine = True)
 	SetLog("TestDropLine()", $COLOR_INFO)
 	
 	SearchZoomOut(False, True, "TestDropLine", False, False)
 	ConvertInternalExternArea()
 	
-	If $SearchRedLine And IsAttackPage(True) Then 
+	If $SearchRedLine And IsAttackPage() Then 
 		Local $hTimer = __timerinit()
 
 		SetDebugLog("Redline mode: " & $g_aiAttackScrRedlineRoutine[$g_iMatchMode])
@@ -879,8 +878,7 @@ Func TestDropLine($SearchRedLine = False)
 
 		_CaptureRegion2()
 		_GetRedArea($g_aiAttackScrRedlineRoutine[$g_iMatchMode])
-		Local $htimerREDAREA = Round(__timerdiff($hTimer) / 1000, 2)
-		debugAttackCSV("Calculated  (in " & $htimerREDAREA & " seconds) :")
+		SetDebugLog("Calculated  (in " & Round(__timerdiff($hTimer) / 1000, 2) & " seconds) :")
 		debugAttackCSV("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")
 		debugAttackCSV("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
 		debugAttackCSV("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
@@ -892,9 +890,43 @@ Func TestDropLine($SearchRedLine = False)
 		$g_aiPixelBottomRight = 0
 	EndIf
 	
-	AttackCSVDEBUGIMAGE() ;make IMG debug
+	AttackCSVDEBUGIMAGE(True) ;make IMG debug
 
 EndFunc   ;==>TestDropLine
+
+Func TestDropLine1($bRedArea = True, $bCheckZoom = True)
+	SetLog("TestDropLine()", $COLOR_INFO)
+	;reset
+	resetEdge()
+	
+	If $bCheckZoom Then
+		If Not CheckZoomOut("TestDropLine1") Then 
+			Setlog("TestDropLine1 : CheckZoomOut Fail!", $COLOR_ERROR)
+			Return
+		EndIf
+	EndIf
+	If $bRedArea Then _GetRedArea()
+	AttackCSVDEBUGIMAGE(True) ;make IMG debug
+EndFunc   ;==>TestDropLine1
+
+Func TestDropLine2($bImage = False)
+	SetLog("TestDropLine2()", $COLOR_INFO)
+	setVillageOffset(0, 0, 1)
+	If Not CheckZoomOut("TestDropLine2") Then 
+		Setlog("TestDropLine2 : CheckZoomOut Fail!", $COLOR_ERROR)
+		Return
+	EndIf
+	
+	_GetRedArea()
+	AttackCSVDEBUGIMAGE($bImage) ;make IMG debug
+EndFunc   ;==>TestDropLine2
+
+Func resetEdge()
+	$g_aiPixelTopLeft = 0
+	$g_aiPixelTopRight = 0
+	$g_aiPixelBottomLeft = 0
+	$g_aiPixelBottomRight = 0
+EndFunc
 
 Func TestCSV($iMode = $LB)
 	PrepareAttack($iMode)

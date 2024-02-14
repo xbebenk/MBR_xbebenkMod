@@ -557,7 +557,7 @@ EndFunc   ;==>AndroidOnlyZoomOut
 ; 2 = Current Village Y Offset (after centering village)
 ; 3 = Difference of previous Village X Offset and current (after centering village)
 ; 4 = Difference of previous Village Y Offset and current (after centering village)
-
+;SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
 	FuncEnter(SearchZoomOut)
 	If $sSource <> "" Then $sSource = " (" & $sSource & ")"

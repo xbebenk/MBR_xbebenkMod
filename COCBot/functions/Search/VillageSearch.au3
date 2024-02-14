@@ -398,13 +398,9 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 	; measure enemy village (only if search match)
 	For $i = 0 To $g_iModeCount - 1
-		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Then
-			; reset village measures
-			setVillageOffset(0, 0, 1)
-			ConvertInternalExternArea()
-			If $g_bDebugImageSave Then TestDropLine(True)
+		If $match[$i] Then
 			If Not CheckZoomOut("VillageSearch") Then
-				If isProblemAffect(True) Then 
+				If isProblemAffect(True) Then
 					$g_bRestart = True ; Restart Attack
 					Return
 				EndIf
@@ -515,10 +511,15 @@ Func WriteLogVillageSearch($x)
 EndFunc   ;==>WriteLogVillageSearch
 
 Func CheckZoomOut($sSource = "CheckZoomOut")
-	Local $aVillageResult = SearchZoomOut(False, True, $sSource, True)
+	;SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, $sSource = "", $CaptureRegion, $DebugLog)
+	resetEdge()
+	Local $aVillageResult = SearchZoomOut(False, True, $sSource)
 	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
 		Return False
 	EndIf
-	
+	_GetRedArea()
+	If $g_bVillageSearchAlwaysMeasure And $sSource = "VillageSearch" Then
+		AttackCSVDEBUGIMAGE()
+	EndIf
 	Return True
 EndFunc   ;==>CheckZoomOut
