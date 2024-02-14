@@ -75,6 +75,7 @@ Func Collect($bOnlyCollector = False)
 EndFunc   ;==>Collect
 
 Func CollectLootCart()
+	If Not ($g_bChkCollectLootCart And ($g_iTxtCollectGold = 0 Or $g_aiCurrentLoot[$eLootGold] < Number($g_iTxtCollectGold) Or $g_iTxtCollectElixir = 0 Or $g_aiCurrentLoot[$eLootElixir] < Number($g_iTxtCollectElixir) Or $g_iTxtCollectDark = 0 Or $g_aiCurrentLoot[$eLootDarkElixir] < Number($g_iTxtCollectDark))) Then Return
 	ZoomOutHelper("CollectLootCart")
 	If _Sleep(500) Then Return
 	SetLog("Searching for a Loot Cart", $COLOR_INFO)
