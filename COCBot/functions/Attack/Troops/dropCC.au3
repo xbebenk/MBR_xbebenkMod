@@ -50,7 +50,7 @@ Func dropCC($iX, $iY, $iCCSlot) ;Drop clan castle
 				EndIf
 			EndIf
 		Else
-			SetLog("Dropping Siege/Clan Castle", $COLOR_INFO)
+			SetLog("Dropping Siege/Clan Castle [" & $iX & "," & $iY & "]", $COLOR_INFO)
 			SelectDropTroop($iCCSlot)
 			If _Sleep($DELAYDROPCC1) Then Return
 			AttackClick($iX, $iY, 1, 0, 0, "#0091")
