@@ -322,6 +322,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			$g_hLogFile = 0
 			
 			; xbebenk
+			$g_bForceSwitch = False
 			$g_iSaveGoldWall = 0 ;reset
 			$g_iSaveElixWall = 0 ;reset
 			$g_iLootCCGold = 0
