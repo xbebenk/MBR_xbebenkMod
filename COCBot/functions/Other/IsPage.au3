@@ -68,15 +68,15 @@ Func IsTrainPage($bSetLog = True, $iLoop = 5)
 	Return False
 EndFunc   ;==>IsTrainPage
 
-Func IsAttackPage($bCapturePixel = True)
-	If $bCapturePixel Then _CaptureRegions()
-	If IsPageLoop($aIsAttackPage, 1, $bCapturePixel) Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Attack Window OK**", $COLOR_ACTION)
+Func IsAttackPage($bSetLog = True, $iLoop = 5)
+	
+	If IsPageLoop($aIsAttackPage, $iLoop) Then
+		If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then SetLog("**Attack Window OK**", $COLOR_ACTION)
 		Return True
 	EndIf
 
-	If $g_bDebugSetlog Or $g_bDebugClick Then
-		Local $colorRead = _GetPixelColor($aIsAttackPage[0], $aIsAttackPage[1], $bCapturePixel)
+	If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then
+		Local $colorRead = _GetPixelColor($aIsAttackPage[0], $aIsAttackPage[1], True)
 		SetLog("**Attack Window FAIL**", $COLOR_ACTION)
 		SetLog("expected in (" & $aIsAttackPage[0] & "," & $aIsAttackPage[1] & ")  = " & Hex($aIsAttackPage[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
 	EndIf
@@ -214,6 +214,7 @@ Func IsOKCancelPage($bWriteLog = True)
 EndFunc   ;==>IsOKCancelPage
 
 Func IsReturnHomeBattlePage($useReturnValue = False, $makeDebugImageScreenshot = True)
+	If IsAttackPage(False, 1) Then Return False
 	If IsPageLoop($aReturnHomeButton, 1) Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Return Home Battle Window OK**", $COLOR_ACTION)
 		Return True

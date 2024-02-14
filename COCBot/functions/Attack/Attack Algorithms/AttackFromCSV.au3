@@ -870,7 +870,7 @@ Func TestDropLine($SearchRedLine = True)
 	SearchZoomOut(False, True, "TestDropLine", False, False)
 	ConvertInternalExternArea()
 	
-	If $SearchRedLine And IsAttackPage(True) Then 
+	If $SearchRedLine And IsAttackPage() Then 
 		Local $hTimer = __timerinit()
 
 		SetDebugLog("Redline mode: " & $g_aiAttackScrRedlineRoutine[$g_iMatchMode])
@@ -894,48 +894,39 @@ Func TestDropLine($SearchRedLine = True)
 
 EndFunc   ;==>TestDropLine
 
-Func TestDropLine1()
+Func TestDropLine1($bRedArea = True, $bCheckZoom = True)
 	SetLog("TestDropLine()", $COLOR_INFO)
+	;reset
+	resetEdge()
 	
-	setVillageOffset(0, 0, 1)
-	If Not CheckZoomOut("TestDropLine1") Then 
-		Setlog("TestDropLine1 : CheckZoomOut Fail!", $COLOR_ERROR)
-		Return
+	If $bCheckZoom Then
+		If Not CheckZoomOut("TestDropLine1") Then 
+			Setlog("TestDropLine1 : CheckZoomOut Fail!", $COLOR_ERROR)
+			Return
+		EndIf
 	EndIf
-	ConvertInternalExternArea()
-	
-	If IsAttackPage(True) Then 
-		Local $hTimer = __timerinit()
-
-		SetDebugLog("Redline mode: " & $g_aiAttackScrRedlineRoutine[$g_iMatchMode])
-		SetDebugLog("Dropline mode: " & $g_aiAttackScrDroplineEdge[$g_iMatchMode])
-
-		_CaptureRegion2()
-		_GetRedArea($g_aiAttackScrRedlineRoutine[$g_iMatchMode])
-		SetDebugLog("Calculated  (in " & Round(__timerdiff($hTimer) / 1000, 2) & " seconds) :")
-		debugAttackCSV("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")
-		debugAttackCSV("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
-		debugAttackCSV("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
-		debugAttackCSV("	[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight")
-	Else
-		$g_aiPixelTopLeft = 0
-		$g_aiPixelTopRight = 0
-		$g_aiPixelBottomLeft = 0
-		$g_aiPixelBottomRight = 0
-	EndIf
-	
+	If $bRedArea Then _GetRedArea()
 	AttackCSVDEBUGIMAGE(True) ;make IMG debug
 EndFunc   ;==>TestDropLine1
 
-Func TestDropLine2()
+Func TestDropLine2($bImage = False)
 	SetLog("TestDropLine2()", $COLOR_INFO)
 	setVillageOffset(0, 0, 1)
-	CheckZoomOut("TestDropLine2")
-	;SearchZoomOut(False, True, "TestDropLine2", False, False)
-	;ConvertInternalExternArea()
+	If Not CheckZoomOut("TestDropLine2") Then 
+		Setlog("TestDropLine2 : CheckZoomOut Fail!", $COLOR_ERROR)
+		Return
+	EndIf
+	
 	_GetRedArea()
-	AttackCSVDEBUGIMAGE(True) ;make IMG debug
+	AttackCSVDEBUGIMAGE($bImage) ;make IMG debug
 EndFunc   ;==>TestDropLine2
+
+Func resetEdge()
+	$g_aiPixelTopLeft = 0
+	$g_aiPixelTopRight = 0
+	$g_aiPixelBottomLeft = 0
+	$g_aiPixelBottomRight = 0
+EndFunc
 
 Func TestCSV($iMode = $LB)
 	PrepareAttack($iMode)
