@@ -218,6 +218,7 @@ Global $g_sImgSearchDrill = @ScriptDir & "\imgxml\Storages\Drills"
 Global $g_sImgSearchDrillLevel = @ScriptDir & "\imgxml\Storages\Drills\Level"
 Global $g_sImgEasyBuildings = @ScriptDir & "\imgxml\easybuildings"
 Global $g_sImgPrepareLegendLeagueSearch = @ScriptDir & "\imgxml\Attack\Search\LegendLeague"
+Global $g_sImgRedLineMod = @ScriptDir & "\imgxml\Attack\Search\RedLine\"
 #EndRegion
 
 #Region SwitchAcc

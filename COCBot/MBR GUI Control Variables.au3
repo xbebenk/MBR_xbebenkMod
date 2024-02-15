@@ -275,6 +275,7 @@ Func InitializeControlVariables()
 	$oAlwaysEnabledControls($g_hCmbLogDividerOption) = 1
 	$oAlwaysEnabledControls($g_hBtnAtkLogClear) = 1
 	$oAlwaysEnabledControls($g_hBtnAtkLogCopyClipboard) = 1
+	$oAlwaysEnabledControls($g_hBtnOpenFolder) = 1
 	$oAlwaysEnabledControls($g_hTxtAutoUpgradeLog) = 1
 	$oAlwaysEnabledControls($g_hTxtClanGamesLog) = 1
 	

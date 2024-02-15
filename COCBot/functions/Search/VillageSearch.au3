@@ -398,7 +398,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 	; measure enemy village (only if search match)
 	For $i = 0 To $g_iModeCount - 1
-		If $match[$i] Then
+		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Then
 			If Not CheckZoomOut("VillageSearch") Then
 				If isProblemAffect(True) Then
 					$g_bRestart = True ; Restart Attack
@@ -517,8 +517,9 @@ Func CheckZoomOut($sSource = "CheckZoomOut")
 	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
 		Return False
 	EndIf
-	_GetRedArea()
+	If $sSource = "VillageSearch" Then SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
 	If $g_bVillageSearchAlwaysMeasure And $sSource = "VillageSearch" Then
+		_GetRedArea()
 		AttackCSVDEBUGIMAGE()
 	EndIf
 	Return True

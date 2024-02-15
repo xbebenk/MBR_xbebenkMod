@@ -38,7 +38,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
 
 	If _Sleep($DELAYREQUESTCC1) Then Return
 	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
-	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+	;checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
 	If $bClickPAtEnd Then CheckCCArmy()
 
 	If Not $g_bRunState Then Return

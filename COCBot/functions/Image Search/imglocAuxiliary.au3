@@ -775,6 +775,124 @@ Func SearchRedLinesMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay = 30
 	Return $g_sImglocRedline
 EndFunc   ;==>SearchRedLinesMultipleTimes
 
+Func SearchRedLinesMod($sCocDiamond = "ECD")
+	Local $sImageDir = $g_sImgRedLineMod
+	If FileExists($g_sImgRedLineMod & $g_sSceneryCode) Then $sImageDir = $sImageDir & $g_sSceneryCode
+	Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", $sCocDiamond, "Int", 0, "str", $sCocDiamond, "Int", 0, "Int", 1000)
+	Local $error = @error ; Store error values as they reset at next function call
+	Local $extError = @extended
+	If $error Then
+		_logErrorDLLCall($g_sLibMyBotPath, $error)
+		SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
+		;SetError(2, $extError) ; Set external error code = 2 for DLL error
+		Return ""
+	EndIf
+	If checkImglocError($Res, "SearchRedLinesMod") = True Then
+		SetDebugLog("SearchRedLinesMod Returned Error or No values : ", $COLOR_DEBUG)
+		SetDebugLog("******** SearchRedLinesMod *** END ***", $COLOR_ORANGE)
+		Return ""
+	Else	
+		Local $sResult = ""
+		Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
+		For $i = 0 To UBound($KeyValue) - 1
+			Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+			If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $sResult &= $DLLRes[0] & "|"
+		Next
+		If StringRight($sResult, 1) = "|" Then $sResult = StringLeft($sResult, (StringLen($sResult) - 1))
+		SetDebugLog("SearchRedLinesMod found : " & $Res[0])
+		SetDebugLog("Result : " & $sResult)
+	EndIf
+	$g_sImglocRedline = $sResult
+	Return $g_sImglocRedline
+EndFunc   ;==>SearchRedLinesMod
+
+Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay = 300)
+	Local $bHBitmap_synced = ($g_hHBitmap = $g_hHBitmap2)
+	Local $g_hHBitmap2_old = $g_hHBitmap2
+	Local $g_sImglocRedline_old
+	Local $hRedlineTimer = TimerInit()
+	Local $sText = ""
+	
+	; ensure current $g_sImglocRedline has been generated
+	SearchRedLinesMod($sCocDiamond)
+	; count # of redline points
+	Local $iRedlinePoints = [UBound(StringSplit($g_sImglocRedline, "|", $STR_NOCOUNT)), 0]
+	
+	SetLog("Initial # of redline points: " & $iRedlinePoints[0], $COLOR_DEBUG1)
+	SetDebugLog($g_sImglocRedline)
+	
+	; clear $g_hHBitmap2, so it doesn't get deleted
+	$g_hHBitmap2 = 0
+
+	Local $iCaptureTime = 0
+	Local $iRedlineTime = 0
+	Local $aiTotals = [0, 0]
+	Local $iBest = 0
+
+	For $i = 1 To $iCount
+
+		$g_sImglocRedline_old = $g_sImglocRedline
+
+		Local $hTimer = __TimerInit()
+
+		; take new screenshot
+		ForceCaptureRegion()
+		_CaptureRegion2()
+
+		$iCaptureTime = __TimerDiff($hTimer)
+
+		; generate new redline based on new screenshot
+		$g_sImglocRedline = "" ; clear current redline
+		SearchRedLinesMod($sCocDiamond)
+
+		$iRedlineTime = __TimerDiff($hTimer) - $iCaptureTime
+
+		$aiTotals[0] += $iCaptureTime
+		$aiTotals[1] += $iRedlineTime
+
+		; count # of redline points
+		$iRedlinePoints[1] = UBound(StringSplit($g_sImglocRedline, "|", $STR_NOCOUNT))
+
+		SetLog($i & ". # of redline points: " & $iRedlinePoints[1], $COLOR_DEBUG1)
+		SetDebugLog($g_sImglocRedline)
+
+		If $iRedlinePoints[1] > $iRedlinePoints[0] Then
+			; new picture has more redline points
+			$iRedlinePoints[0] = $iRedlinePoints[1]
+			$iBest = $i
+		Else
+			; old picture has more redline points
+			$g_sImglocRedline = $g_sImglocRedline_old
+		EndIf
+
+		If $i < $iCount Then
+			Local $iDelayCompensated = $iDelay - __TimerDiff($hTimer)
+			If $iDelayCompensated >= 10 Then Sleep($iDelayCompensated)
+		EndIf
+
+	Next
+
+	If $iBest = 0 Then
+		SetLog("Using initial redline with " & $iRedlinePoints[0] & " points", $COLOR_DEBUG)
+	Else
+		SetLog("Using " & $iBest & ". redline with " & $iRedlinePoints[0] & " points (capture/redline avg. time: " & Int($aiTotals[0] / $iCount) & "/" & Int($aiTotals[1] / $iCount) & ")", $COLOR_DEBUG)
+	EndIf
+	
+	$sText = Round(TimerDiff($hRedlineTimer) / 1000, 2)
+	SetLog("SearchRedLinesMod finished, takes " & $sText & " seconds", $COLOR_ACTION)
+
+	; delete current $g_hHBitmap2
+	GdiDeleteHBitmap($g_hHBitmap2)
+
+	; restore previous captured image
+	If $bHBitmap_synced Then
+		_CaptureRegion2Sync()
+	Else
+		$g_hHBitmap2 = $g_hHBitmap2_old
+	EndIf
+	Return $g_sImglocRedline
+EndFunc   ;==>SearchRedLinesModMultipleTimes
+
 Func Slot($iX, $iY) ; Return Slots for Quantity Reading on Army Window
 	If $iY < 420 Then
 		Switch $iX ; Troops & Spells Slots

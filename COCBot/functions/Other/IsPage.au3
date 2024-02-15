@@ -68,7 +68,7 @@ Func IsTrainPage($bSetLog = True, $iLoop = 5)
 	Return False
 EndFunc   ;==>IsTrainPage
 
-Func IsAttackPage($bSetLog = True, $iLoop = 5)
+Func IsAttackPage($bSetLog = False, $iLoop = 5)
 	
 	If IsPageLoop($aIsAttackPage, $iLoop) Then
 		If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then SetLog("**Attack Window OK**", $COLOR_ACTION)
