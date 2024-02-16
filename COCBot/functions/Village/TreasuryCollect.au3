@@ -15,6 +15,7 @@
 #include-once
 
 Func TreasuryCollect()
+	If Not $g_bChkTreasuryCollect Then Return
 	SetLog("Begin CollectTreasury:", $COLOR_DEBUG)
 	If Not $g_bRunState Then Return 
 	ZoomOut()
