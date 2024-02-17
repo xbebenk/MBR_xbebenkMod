@@ -212,7 +212,7 @@ Func ChkSmartFarm($TypeResources = "All")
 			$redline[$i] = GetOffsetRedline($BestSideToAttack[$i], 5)
 		Next
 		DebugImageSmartFarm($THdetails, $aResourcesIN, $aResourcesOUT, Round(TimerDiff($hTimer) / 1000, 2) & "'s", _ArrayToString($BestSideToAttack), $redline)
-		TestDropLine()
+		;TestDropLine()
 	EndIf
 
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
@@ -263,7 +263,7 @@ Func SmartFarmDetection($txtBuildings = "All")
 				$sdirectory = @ScriptDir & "\imgxml\Storages\All"
 			EndIf
 			$iMaxReturnPoints = 21
-			$iMaxLevel = 14
+			$iMaxLevel = 15
 	EndSwitch
 
 	; Necessary Variables
@@ -368,7 +368,7 @@ Func SmartFarmDetection($txtBuildings = "All")
 			$tempObbjs = Null
 		Next
 		; End of building loop
-		SetDebugLog($txtBuildings & " Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+		SetLog("SmartFarmDetection " & $txtBuildings & " Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 		Return $aReturn
 	Else
 		SetLog("ERROR|NONE Building - Detection: " & $txtBuildings, $COLOR_INFO)

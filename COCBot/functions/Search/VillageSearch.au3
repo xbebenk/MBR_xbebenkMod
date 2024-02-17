@@ -515,6 +515,7 @@ Func CheckZoomOut($sSource = "CheckZoomOut")
 	resetEdge()
 	Local $aVillageResult = SearchZoomOut(False, True, $sSource)
 	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
+		SetLog("CheckZoomOut Failed", $COLOR_ERROR)
 		Return False
 	EndIf
 	If $sSource = "VillageSearch" Then SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 

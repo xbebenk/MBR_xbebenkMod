@@ -70,7 +70,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		Local $a = $tree[0] - $stone[0]
 		Local $b = $stone[1] - $tree[1]
 		Local $c = Sqrt($a * $a + $b * $b) ;measure distance from stone to tree
-		Local $ZoomOffset = 50, $checkZoomOffset = 0
+		Local $ZoomOffset = 70, $checkZoomOffset = 0
 			
 		Local $iRefSize = 600
 		Local $iIndex = _ArraySearch($g_aVillageRefSize, $stone[4])

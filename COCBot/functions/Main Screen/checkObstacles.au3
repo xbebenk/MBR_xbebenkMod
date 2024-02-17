@@ -34,15 +34,15 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	
 	_CaptureRegions()
 	If isProblemAffect() Then
-		;;;;;;;##### 1- Another device #####;;;;;;;
-		If UBound(decodeSingleCoord(FindImageInPlace("Device", $g_sImgAnotherDevice, "220,300(130,60)", False))) > 1 Then
-			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And Not $g_bChkSmartSwitch And $g_bChkSharedPrefs Then
-				SetLog("---- Forced Switch, Another device connected ----")
+		;1- Another device
+		If QuickMIS("BC1", $g_sImgAnotherDevice, 255, 315, 345, 335, False) Then 
+			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And $g_bChkSharedPrefs Then
+				SetLog("---- Forced Switch, Another device connected ----", $COLOR_ACTION)
 				SwitchForceAnotherDevice()
 				checkObstacles_ResetSearch()
 				Return True
 			EndIf
-
+			
 			If $g_iAnotherDeviceWaitTime > 3600 Then
 				SetLog("Another Device has connected, waiting " & Floor(Floor($g_iAnotherDeviceWaitTime / 60) / 60) & " hours " & Floor(Mod(Floor($g_iAnotherDeviceWaitTime / 60), 60)) & " minutes " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " seconds", $COLOR_ERROR)
 				PushMsg("AnotherDevice3600")
@@ -53,60 +53,56 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				SetLog("Another Device has connected, waiting " & Floor(Mod($g_iAnotherDeviceWaitTime, 60)) & " seconds", $COLOR_ERROR)
 				PushMsg("AnotherDevice")
 			EndIf
-
 			If _SleepStatus($g_iAnotherDeviceWaitTime * 1000) Then Return ; Wait as long as user setting in GUI, default 120 seconds
-			checkObstacles_ReloadCoC($aReloadButton, "#0127")
+			checkObstacles_ReloadCoC()
 			If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			checkObstacles_ResetSearch()
 			Return True
 		EndIf
 
-		;;;;;;;##### 2- Take a break #####;;;;;;;
-		If UBound(decodeSingleCoord(FindImageInPlace("Break", $g_sImgPersonalBreak, "165,257,335,315", False))) > 1 Then ; used for all 3 different break messages
-			SetLog("Village must take a break, wait", $COLOR_ERROR)
-			If TestCapture() Then Return "Village must take a break"
-			PushMsg("TakeBreak")
-			If ProfileSwitchAccountEnabled() Then
-				$g_iNextAccount = $g_iCurAccount + 1
-				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
-				$g_bRestart = True
+		;2- Take a break
+		If QuickMIS("BC1", $g_sImgPersonalBreak, 215, 345, 355, 360, False) Then 
+			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And $g_bChkSharedPrefs Then
+				SetLog("---- Forced Switch, Village must take a break ----", $COLOR_ACTION)
 				SwitchForceAnotherDevice()
+				checkObstacles_ResetSearch()
 				Return True
 			Else
-				If _SleepStatus($DELAYCHECKOBSTACLES4) Then Return ; 2 Minutes
+				PushMsg("TakeBreak")
+				SetLog("Village must take a break, wait", $COLOR_ERROR)
+				If _SleepStatus(120000) Then Return ; 2 Minutes
 			EndIf
-			checkObstacles_ReloadCoC($aReloadButton, "#0128") ;Click on reload button
+			checkObstacles_ReloadCoC()
 			If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 			checkObstacles_ResetSearch()
 			Return True
 		EndIf
 		
-		;;;;;;;##### Connection Lost & OoS & Inactive & Maintenance #####;;;;;;;
+		;3- AnyoneThere, Connection Lost, OoS, RateNe
 		Select
-			Case UBound(decodeSingleCoord(FindImageInPlace("AnyoneThere", $g_sImgAnyoneThere, "440,310,580,360", False))) > 1 ; Inactive only
+			Case QuickMIS("BC1", $g_sImgAnyoneThere, 220, 270, 440, 340, False) ;AnyoneThere
 				SetLog("Village was Inactive, Reloading CoC", $COLOR_ERROR)
 				If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
-			Case UBound(decodeSingleCoord(FindImageInPlace("ConnectionLost", $g_sImgConnectionLost, "160,270,700,420", False))) > 1 ; Connection Lost
+			Case QuickMIS("BC1", $g_sImgConnectionLost, 220, 270, 500, 340, False) ; Connection Lost
 				SetLog("Connection lost, Reloading CoC", $COLOR_ERROR)
-			Case UBound(decodeSingleCoord(FindImageInPlace("OOS", $g_sImgOutOfSync, "355,300,435,365", False, $g_iAndroidLollipop))) > 1 ; Check OoS
+			Case QuickMIS("BC1", $g_sImgOutOfSync, 220, 270, 500, 340, False) ; Out of Sync
 				SetLog("Out of Sync Error, Reloading CoC", $COLOR_ERROR)
+			Case QuickMIS("BC1", $g_sImgAppRateNever, 220, 270, 500, 340, False) ; RateNever
+				SetLog("Clash feedback window found, permanently closed!", $COLOR_ERROR)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(2000) Then Return
+				PullSharedPrefs()
+				Return True
+			Case QuickMIS("BC1", $g_sImgUpdateCoC, 250, 280, 300, 305, False) ; UpdateCoC
+				SetLog("Good News, Updates available!", $COLOR_INFO)
+				$msg = "Game Update is required, Bot must stop!"
+				Return checkObstacles_StopBot($msg) ; stop bot
+				
 			Case (UBound(decodeSingleCoord(FindImageInPlace("ImportantNotice", $G_sImgImportantNotice, "150,220,430,290", False))) > 1)
 				SetLog("Found the 'Important Notice' window, closing it", $COLOR_INFO)
 			Case Else
 				;  Add check for game update and Rate CoC error messages
 				If $g_bDebugImageSave Then SaveDebugImage("ChkObstaclesReloadMsg_", False) ; debug only
-				Local $sRegion = "220,380(60,25)"
-				If $g_iAndroidVersionAPI >= $g_iAndroidLollipop Then
-					$sRegion = "550,370(70,35)"
-				EndIf
-				$Result = decodeSingleCoord(FindImageInPlace("RateNever", $g_sImgAppRateNever, $sRegion, False, True))
-				If UBound($Result) > 1 Then
-					SetLog("Clash feedback window found, permanently closed!", $COLOR_ERROR)
-					PureClick($Result[0] + 5, $Result[1] + 5, 1, 0, "#9999") ; Click on never to close window and stop reappear. Never=248,408 & Later=429,408
-					PullSharedPrefs()
-					Return True
-				EndIf
-				
 				;  Add check for banned account :(
 				$Result = getOcrReloadMessage(171, 358, "Check Obstacles OCR 'policy at super'=") ; OCR text for "policy at super"
 				If StringInStr($Result, "policy", $STR_NOCASESENSEBASIC) Then
@@ -122,12 +118,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				EndIf
 				SetLog("Warning: Cannot find type of Reload error message", $COLOR_ERROR)
 		EndSelect
-		
-		If QuickMIS("BFI", $g_sImgUpdateCoC, 250, 280, 300, 305) Then 
-			SetLog("Good News, Updates available!", $COLOR_INFO)
-			$msg = "Game Update is required, Bot must stop!"
-			Return checkObstacles_StopBot($msg) ; stop bot
-		EndIf
 		
 		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
@@ -145,7 +135,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep(1000) Then Return
 		Return False
 	EndIf
-	
 	
 	If WelcomeBackCheck() Then 
 		SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)

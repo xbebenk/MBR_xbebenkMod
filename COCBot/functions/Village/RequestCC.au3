@@ -103,10 +103,22 @@ Func _makerequest($x, $y, $bTest)
 			Click($g_iQuickMISX - 50, $g_iQuickMISY - 60) ;click text box 
 			If _Sleep(1000) Then Return
 			If SendText($g_sRequestTroopsText) = 0 Then ;type the request
-				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
 				ClickAway()
 			EndIf
+		Else
+			SetLog("RequestTroopsText empty, lets just request", $COLOR_ACTION) 
+			If QuickMis("BC1", $g_sImgSendRequestButton, 515, 430, 575, 510) Then ;lets check again the send button position with taller height
+				If Not $bTest Then 
+					Click($g_iQuickMISX, $g_iQuickMISY)
+				Else
+					SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+				EndIf
+			EndIf
+			If _Sleep(1000) Then Return
+			$g_bCanRequestCC = False
+			Return
 		EndIf
+		
 		If _Sleep(2000) Then Return ; wait time for text request to complete
 		Click($g_iQuickMISX + 115, $g_iQuickMISY)
 		If _Sleep(1000) Then Return ; wait time after clicking request window border

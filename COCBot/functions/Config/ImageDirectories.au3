@@ -19,19 +19,17 @@ Global Const $g_sImgWelcomeBackReward = @ScriptDir & "\imgxml\Windows\WelcomeBac
 #EndRegion
 
 #Region Obstacles
-Global Const $g_sImgChatTabPixel = @ScriptDir & "\imgxml\other\ChatTabPixel*"
-Global Const $g_sImgAnyoneThere = @ScriptDir & "\imgxml\other\AnyoneThere[[Android]]*"
-Global Const $g_sImgPersonalBreak = @ScriptDir & "\imgxml\other\break*"
-Global Const $g_sImgAnotherDevice = @ScriptDir & "\imgxml\other\Device[[Android]]*"
-Global Const $g_sImgCocStopped = @ScriptDir & "\imgxml\other\CocStopped*"
+Global Const $g_sImgAnyoneThere = @ScriptDir & "\imgxml\other\AnyoneThere\"
+Global Const $g_sImgPersonalBreak = @ScriptDir & "\imgxml\other\Break\"
+Global Const $g_sImgAnotherDevice = @ScriptDir & "\imgxml\other\Device\"
 Global Const $g_sImgCocReconnecting = @ScriptDir & "\imgxml\other\CocReconnecting\"
-Global Const $g_sImgAppRateNever = @ScriptDir & "\imgxml\other\RateNever[[Android]]*"
-Global Const $g_sImgError = @ScriptDir & "\imgxml\other\Error[[Android]]*"
-Global Const $g_sImgOutOfSync = @ScriptDir & "\imgxml\other\Oos[[Android]]*"
-Global Const $g_sImgConnectionLost = @ScriptDir & "\imgxml\other\ConnectionLost[[Android]]*"
-Global Const $g_sImgMaintenance = @ScriptDir & "\imgxml\other\Maintenance*"
+Global Const $g_sImgAppRateNever = @ScriptDir & "\imgxml\other\RateNever\"
+Global Const $g_sImgOutOfSync = @ScriptDir & "\imgxml\other\Oos\"
+Global Const $g_sImgError = @ScriptDir & "\imgxml\other\Error\"
+Global Const $g_sImgConnectionLost = @ScriptDir & "\imgxml\other\ConnectionLost\"
+Global Const $g_sImgMaintenance = @ScriptDir & "\imgxml\other\Maintenance\"
+Global Const $g_sImgUpdateCoC = @ScriptDir & "\imgxml\other\UpdateCoC\"
 Global Const $G_sImgImportantNotice = @ScriptDir & "\imgxml\other\ImportantNotice[[Android]]*"
-Global Const $g_sImgUpdateCoC = @ScriptDir & "\imgxml\other\UpdateCoC*"
 #EndRegion
 
 #Region Main Village
