@@ -775,6 +775,88 @@ Func SearchRedLinesMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay = 30
 	Return $g_sImglocRedline
 EndFunc   ;==>SearchRedLinesMultipleTimes
 
+Func GetPixelSectionMod($aX, $aY)
+	Local $sRet = ""
+	Local $aDiamond = StringSplit($CocDiamondDCD, "|", $STR_NOCOUNT)
+	Local $aMidX = StringSplit($aDiamond[0], ",", $STR_NOCOUNT)
+	Local $aMidY = StringSplit($aDiamond[1], ",", $STR_NOCOUNT)
+	;If $g_bDebugSetlog Then SetLog("aMidX = " & _ArrayToString($aMidX))
+	;If $g_bDebugSetlog Then SetLog("aMidY = " & _ArrayToString($aMidY))
+	;If $g_bDebugSetlog Then SetLog("MidX=" & Int($aMidX[0]) & ", MidY=" & Int($aMidY[1]), $COLOR_DEBUG1)
+	Local $isLeft = $aX <= Int($aMidX[0]) ;middle X
+	Local $isTop = $aY <= Int($aMidY[1]) ;middle Y
+	
+	If $isLeft And $isTop Then $sRet = "TL"
+	If $isLeft And Not $isTop Then $sRet = "BL"
+	If Not $isLeft And $isTop Then $sRet = "TR"
+	If Not $isLeft And Not $isTop Then $sRet = "BR"
+	Return $sRet
+EndFunc   ;==>GetPixelSectionMod
+
+Func RedlineOffSetMod($sXY, $iOffset = 6, $iDistance = 10)
+	Local $sRet = "", $iXOffset = 0, $iYOffset = 0, $sArea = ""
+	Local $aTmpXYTL[2] = [0, 0], $aTmpXYBL[2] = [0, 0], $aTmpXYBR[2] = [0, 0], $aTmpXYTR[2] = [0, 0]
+	Local $aRet = StringSplit($sXY, "|", $STR_NOCOUNT)
+	;SetLog("aRet = " & _ArrayToString($aRet))
+	If IsArray($aRet) And Ubound($aRet) > 0 Then
+		_ArraySort($aRet, 0, 0, 0, 0) ;sort by x
+		For $i = 0 To UBound($aRet) - 1
+			Local $aXY = StringSplit($aRet[$i], ",", $STR_NOCOUNT)
+			;SetLog("aXY = " & _ArrayToString($aXY, ","))
+			If IsArray($aXY) And UBound($aXY) = 2 Then
+				$sArea = "->"
+				$sArea = GetPixelSectionMod($aXY[0], $aXY[1])
+				Switch $sArea
+					Case "TL"
+						$iXOffset = Int($aXY[0]) - $iOffset
+						$iYOffset = Int($aXY[1]) - $iOffset
+						If Abs(Int($aXY[0]) - Int($aTmpXYTL[0])) < $iDistance Then
+						;If GetPixelDistance($aXY, $aTmpXYTL) < $iDistance Then 
+							If $g_bDebugSetlog Then SetLog("=! " & $sArea & " [" & _ArrayToString($aXY, ",") & "] < " & $iDistance & " -> [" & _ArrayToString($aTmpXYTL) & "]", $COLOR_ACTION)
+							ContinueLoop
+						EndIf
+						$aTmpXYTL = $aXY
+					Case "BL"
+						$iXOffset = Int($aXY[0]) - $iOffset
+						$iYOffset = Int($aXY[1]) + $iOffset
+						If Abs(Int($aXY[0]) - Int($aTmpXYBL[0])) < $iDistance Then
+						;If GetPixelDistance($aXY, $aTmpXYBL) < $iDistance Then 
+							If $g_bDebugSetlog Then SetLog("=! " & $sArea & " [" & _ArrayToString($aXY, ",") & "] < " & $iDistance & " -> [" & _ArrayToString($aTmpXYBL) & "]", $COLOR_ACTION)
+							ContinueLoop
+						EndIf
+						$aTmpXYBL = $aXY
+					Case "BR"
+						$iXOffset = Int($aXY[0]) + $iOffset
+						$iYOffset = Int($aXY[1]) + $iOffset
+						If Abs(Int($aXY[0]) - Int($aTmpXYBR[0])) < $iDistance Then
+						;If GetPixelDistance($aXY, $aTmpXYBR) < $iDistance Then 
+							If $g_bDebugSetlog Then SetLog("=! " & $sArea & " [" & _ArrayToString($aXY, ",") & "] < " & $iDistance & " -> [" & _ArrayToString($aTmpXYBR) & "]", $COLOR_ACTION)
+							ContinueLoop
+						EndIf
+						$aTmpXYBR = $aXY
+					Case "TR"
+						$iXOffset = Int($aXY[0]) + $iOffset
+						$iYOffset = Int($aXY[1]) - $iOffset
+						If Abs(Int($aXY[0]) - Int($aTmpXYTR[0])) < $iDistance Then
+						;If GetPixelDistance($aXY, $aTmpXYTR) < $iDistance Then 
+							If $g_bDebugSetlog Then SetLog("=! " & $sArea & " [" & _ArrayToString($aXY, ",") & "] < " & $iDistance & " -> [" & _ArrayToString($aTmpXYTR) & "]", $COLOR_ACTION)
+							ContinueLoop
+						EndIf
+						$aTmpXYTR = $aXY
+				EndSwitch
+				If $g_bDebugSetlog Then SetLog("<< " & $sArea & " [" & $aXY[0] & "," & $aXY[1] & "]", $COLOR_DEBUG1)
+				If $g_bDebugSetlog Then SetLog(">> " & $sArea & " [" & $iXOffset & "," & $iYOffset & "]", $COLOR_DEBUG1)
+				$sRet &= $iXOffset & "," & $iYOffset & "|"
+				
+			EndIf
+		Next
+	EndIf
+	If StringRight($sRet, 1) = "|" Then $sRet = StringLeft($sRet, (StringLen($sRet) - 1))
+	If $g_bDebugSetlog Then SetLog("sXY = " & $sXY, $COLOR_ACTION)
+	If $g_bDebugSetlog Then SetLog("sRet = " & $sRet, $COLOR_ACTION)
+	Return $sRet
+EndFunc ;==>RedlineOffSetMod
+
 Func SearchRedLinesMod($sCocDiamond = "ECD")
 	Local $sImageDir = $g_sImgRedLineMod
 	If FileExists($g_sImgRedLineMod & $g_sSceneryCode) Then $sImageDir = $sImageDir & $g_sSceneryCode
@@ -890,6 +972,7 @@ Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay =
 	Else
 		$g_hHBitmap2 = $g_hHBitmap2_old
 	EndIf
+	$g_sImglocRedline = RedlineOffSetMod($g_sImglocRedline)
 	Return $g_sImglocRedline
 EndFunc   ;==>SearchRedLinesModMultipleTimes
 

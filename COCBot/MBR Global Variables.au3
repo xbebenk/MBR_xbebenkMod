@@ -2012,9 +2012,9 @@ Global $g_bChkStartWeekendRaid = True
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[29][7] = [["DS", "Default", 571.62, 82, 770, 58, 577], _ ;ok
-									["JS", "Jungle", 566.60, 69, 796, 64, 609], _ ;ok
-									["MS", "Magic", 524, 91, 778, 58, 578], _ ;ok
+Global $g_aVillageRefSize[35][7] = [["DS", "Default", 571.62, 82, 770, 58, 577], _ ;ok
+									["JS", "Jungle", 547, 99, 773, 58, 568], _ ;ok
+									["MS", "Magic", 619.82, 26, 820, 48, 643], _ ;ok
 									["BL", "BuilderBase Lower", 652.11, 131, 777, 102, 584], _ ;ok
 									["BH", "BuilderBase Higher", 563, 145, 764, 141, 600], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
@@ -2030,15 +2030,21 @@ Global $g_aVillageRefSize[29][7] = [["DS", "Default", 571.62, 82, 770, 58, 577],
 									["SH", "Shadow", 598.40, 81, 790, 61, 592], _ ;ok
 									["RY", "Royal", 610.20, 57, 799, 48, 603], _ ;ok
 									["SM", "Summer", 568, 85, 813, 56, 604], _ ;ok
-									["PS", "Pixel", 560.6, 90, 768, 54, 570], _ ;ok
+									["PS", "Pixel", 656.65, 39, 813, 27, 606], _ ;ok
 									["10", "10th Clasivery", 561, 92, 791, 47, 570], _ ;ok
 									["CF", "Clash Fest", 517.81, 119, 771, 112, 602], _ ;ok
-									["SP", "Spooky", 515.81, 103, 769, 61, 563], _ ;ok
+									["SP", "Spooky", 679.13, 65, 796, 53, 604], _ ;ok
 									["W1", "Scenery1", 553.3, 61, 813, 55, 619], _ ;ok
 									["W2", "Scenery2", 619.29, 61, 796, 64, 607], _ ;ok
 									["JL", "Jolly", 543.76, 86, 762, 93, 602], _
 									["MT", "Magic Theatre", 549.18, 78, 777, 103, 626], _ ;ok
 									["PT", "Painter", 504.06, 80, 774, 104, 625], _ 
 									["DA", "Dark Ages", 581.83, 78, 775, 109, 627], _ 
-									["BC", "Book of Clash", 532.42, 77, 773, 105, 626]] 
+									["BC", "Book of Clash", 532.42, 77, 773, 105, 626], _
+									["EM", "Epic Magic", 624.48, 41, 818, 34, 615], _
+									["FS", "Future", 604.51, 65, 793, 57, 604], _
+									["DP", "Dragon Palace", 626.14, 49, 797, 58, 614], _
+									["GH", "Ghost", 584.01, 59, 797, 55, 603], _
+									["GB", "GingerBread", 630.72, 53, 800, 54, 611], _
+									["CH", "Chess", 643.24, 63, 793, 49, 601]] 
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"

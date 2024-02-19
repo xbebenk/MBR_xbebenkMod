@@ -70,7 +70,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		Local $a = $tree[0] - $stone[0]
 		Local $b = $stone[1] - $tree[1]
 		Local $c = Sqrt($a * $a + $b * $b) ;measure distance from stone to tree
-		Local $ZoomOffset = 70, $checkZoomOffset = 0
+		Local $ZoomOffset = 100, $checkZoomOffset = 0
 			
 		Local $iRefSize = 600
 		Local $iIndex = _ArraySearch($g_aVillageRefSize, $stone[4])
@@ -85,6 +85,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			If $g_bDebugSetLog Then SetDebugLog("LRTB: " & $InnerDiamondLeft & "," & $InnerDiamondRight & "," & $InnerDiamondTop & "," & $InnerDiamondBottom)
 		Else
 			SetLog("Reference Size no match", $COLOR_ERROR)
+			SetLog("Stone2tree = " & $c, $COLOR_INFO)
 			Return FuncReturn($aResult)
 		EndIf
 		

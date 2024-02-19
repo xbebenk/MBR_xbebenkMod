@@ -61,7 +61,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		EndIf
 
 		;2- Take a break
-		If QuickMIS("BC1", $g_sImgPersonalBreak, 215, 345, 355, 360, False) Then 
+		If QuickMIS("BC1", $g_sImgPersonalBreak, 220, 270, 440, 380, False) Then 
 			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And $g_bChkSharedPrefs Then
 				SetLog("---- Forced Switch, Village must take a break ----", $COLOR_ACTION)
 				SwitchForceAnotherDevice()

@@ -130,7 +130,11 @@ Func ConvertInternalExternArea()
 			$InternalArea[1][0] & "," & $InternalArea[1][1] & "|" & _
 			$InternalArea[3][0] & "," & $InternalArea[3][1] & "|" & _
 			$InternalArea[0][0] & "," & $InternalArea[0][1]
-
+			
+	$CocDiamondECD = $ExternalArea[2][0] & "," & $ExternalArea[2][1] & "|" & _
+			$ExternalArea[1][0] & "," & $ExternalArea[1][1] & "|" & _
+			$ExternalArea[3][0] & "," & $ExternalArea[3][1] & "|" & _
+			$ExternalArea[0][0] & "," & $ExternalArea[0][1]
 EndFunc   ;==>ConvertInternalExternArea
 
 Func CheckAttackLocation(ByRef $iX, ByRef $iY)
