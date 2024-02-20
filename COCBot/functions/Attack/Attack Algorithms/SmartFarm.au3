@@ -667,18 +667,45 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	If IsProblemAffect(True) Then Return
 	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
 	SetLog("Dropping left over troops", $COLOR_INFO)
-	For $x = 0 To 1
+	
+	Local $aTempSides, $sLastSide
+	If StringInStr($SIDESNAMES, "|") Then
+		$aTempSides = StringSplit($SIDESNAMES, "|")
+		$sLastSide = $aTempSides[$aTempSides[0]]
+	Else
+		$sLastSide = $SIDESNAMES
+	EndIf
+	;Global Enum $eVectorLeftTop, $eVectorRightTop, $eVectorLeftBottom, $eVectorRightBottom
+	Local $iSide = $eVectorLeftTop
+	Switch $sLastSide
+		Case "TL"
+			$iSide = $eVectorLeftTop
+		Case "TR" 
+			$iSide = $eVectorLeftTop
+		Case "BL"
+			$iSide = $eVectorLeftBottom
+		Case "BR"
+			$iSide = $eVectorRightBottom
+	EndSwitch
+	Local $aLastDropPoint = _GetVectorOutZone($iSide)
+	
+	For $x = 1 To 2
+		SetLog("[" & $x & "] Checking left troops", $COLOR_DEBUG1) 
 		If PrepareAttack($g_iMatchMode, True) = 0 Then
 			SetDebugLog("No Wast time... exit, no troops usable left", $COLOR_DEBUG)
 			ExitLoop ;Check remaining quantities
 		EndIf
-		Local $aRandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3))]
-		Local $iRandomXY = Round(Random(0, 4))
+		Local $iRandomXY = Round(Random(1, UBound($aLastDropPoint) - 1))
+		SetDebugLog("sLastSide = " & $sLastSide & ", count DropPoint = " & UBound($aLastDropPoint) & " iRandomXY = " & $iRandomXY, $COLOR_DEBUG1)
+		
 		For $i = 0 To UBound($g_avAttackTroops) - 1
-			If $g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eIWiza Then
+			Local $aRandomCoord = $aLastDropPoint[$iRandomXY]
+			;SetLog("aCoord = " & _ArrayToString($aRandomCoord, ","), $COLOR_DEBUG1)
+			If $g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eIWiza And $g_avAttackTroops[$i][1] > 0 Then
 				; launch remaining troops
 				SelectDropTroop($i)
-				Click($aRandomEdge[$iRandomXY][0], $aRandomEdge[$iRandomXY][1], $g_avAttackTroops[$i][1]) ;Drop one troop
+				SetLog("Dropping left : x" & $g_avAttackTroops[$i][1] & " " & GetTroopName($g_avAttackTroops[$i][0], $g_avAttackTroops[$i][1]) & " on " & $sLastSide & " [" & $aRandomCoord[0] & "," & $aRandomCoord[1] & "]", $COLOR_DEBUG1)
+				Click($aRandomCoord[0], $aRandomCoord[1], $g_avAttackTroops[$i][1]) ;Drop troop
 				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 			EndIf
 		Next
