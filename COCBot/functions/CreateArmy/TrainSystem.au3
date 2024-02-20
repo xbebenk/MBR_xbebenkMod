@@ -423,7 +423,7 @@ Func DragIfNeeded($Troop)
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Dark Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
-				ClickDrag(750, 448, 20, 448)
+				ClickDrag(750, 435, 10, 435, 500)
 				If _Sleep(2000) Then Return
 				If _ColorCheck(_GetPixelColor(777, 350, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
@@ -435,7 +435,7 @@ Func DragIfNeeded($Troop)
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Normal Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
-				ClickDrag(100, 448, 850, 448)
+				ClickDrag(100, 435, 850, 435, 500)
 				If _Sleep(2000) Then Return
 				If _ColorCheck(_GetPixelColor(75, 350, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
