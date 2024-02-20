@@ -834,32 +834,50 @@ Func btnTestImage()
 
 EndFunc   ;==>btnTestImage
 
-Func btnTestVillageSize()
-
+Func btnTestVillageSize($bMeasureOnly = False)
+	Local $hTimer, $ms
 	BeginImageTest()
 	Local $currentRunState = $g_bRunState
+	Local $currentDebug = $g_bDebugSetlog
 	$g_bRunState = True
 	$g_bRestart = False
-
+	$g_bDebugSetlog = True
+	
 	_CaptureRegion()
 	_CaptureRegion2Sync()
-	Local $hTimer = __TimerInit()
-	Local $village = GetVillageSize(True)
-	Local $ms = __TimerDiff($hTimer)
-	If $village = 0 Then
-		SetLog("Village not found (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-	Else
-		SetLog("Village found (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-		SetLog("Village size: " & $village[0])
-		SetLog("Village zoom level: " & $village[1])
-		SetLog("Village offset x: " & $village[2])
-		SetLog("Village offset y: " & $village[3])
-		SetLog("Village stone " & $village[6] & ": " & $village[4] & ", " & $village[5])
-		SetLog("Village tree " & $village[9] & ": " & $village[7] & ", " & $village[8])
+	$hTimer = __TimerInit()
+	If Not CheckZoomOut() Then Return
+	
+	$ms = __TimerDiff($hTimer)
+	SetLog("TestVillageSize : CheckZoomOut (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	If $bMeasureOnly Then 
+		AttackCSVDEBUGIMAGE(true)
+		Return
 	EndIf
+	
+	$hTimer = __TimerInit()
+	ResetTHsearch()
+	FindTownhall(True)
+	$ms = __TimerDiff($hTimer)
+	SetLog("TestVillageSize : FindTownhall (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	
+	$hTimer = __TimerInit()
+	checkDeadBase()
+	$ms = __TimerDiff($hTimer)
+	SetLog("TestVillageSize : checkDeadBase (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	
+	$hTimer = __TimerInit()
+	Local $g_bDebugSF = $g_bDebugSmartFarm
+	$g_bDebugSmartFarm = True
+	ChkSmartFarm()
+	$ms = __TimerDiff($hTimer)
+	SetLog("TestVillageSize : ChkSmartFarm (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	$g_bDebugSmartFarm = $g_bDebugSF
+	
 	EndImageTest()
 
 	$g_bRunState = $currentRunState
+	$g_bDebugSetlog = $currentDebug
 EndFunc   ;==>btnTestVillageSize
 
 Func btnTestDeadBase()
