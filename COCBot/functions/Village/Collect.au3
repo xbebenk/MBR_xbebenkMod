@@ -177,7 +177,7 @@ Func ClaimCookieReward($bGoldPass = False)
 				Click($aClaim[$j][1], $aClaim[$j][2])
 				If _Sleep(1000) Then Return
 				If IsOKCancelPage() Then 
-					If $g_bChkSellRewards Then
+					If True Then
 						Setlog("Selling extra reward for gems", $COLOR_SUCCESS)
 						Click($aConfirmSurrender[0], $aConfirmSurrender[1]) ; Click the Okay
 						$iClaim += 1
