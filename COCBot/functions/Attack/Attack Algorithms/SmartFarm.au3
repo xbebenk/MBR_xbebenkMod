@@ -705,8 +705,8 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				; launch remaining troops
 				SelectDropTroop($i)
 				SetLog("Dropping left : x" & $g_avAttackTroops[$i][1] & " " & GetTroopName($g_avAttackTroops[$i][0], $g_avAttackTroops[$i][1]) & " on " & $sLastSide & " [" & $aRandomCoord[0] & "," & $aRandomCoord[1] & "]", $COLOR_DEBUG1)
-				Click($aRandomCoord[0], $aRandomCoord[1], $g_avAttackTroops[$i][1]) ;Drop troop
-				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+				Click($aRandomCoord[0], $aRandomCoord[1], $g_avAttackTroops[$i][1], 150) ;Drop troop
+				If _Sleep(500) Then Return
 			EndIf
 		Next
 	Next
