@@ -2002,6 +2002,15 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				SetDebugLog("Android Version 7.0")
 			Case $g_iAndroidpie
 				SetDebugLog("Android Version 9.0")
+				If $g_sAndroidEmulator = "Memu" Then
+					; minitouch binary is usually placed in the same shared folder as the screencap but Andriod Pie om Memu has this folder mounted with noexec flag
+					; will push minitounch binary to /data/local/tmp the same place as the minitouch README example
+					Local $cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " push """ & $g_sAdbScriptsPath & "\minitouch"" /data/local/tmp/" , $process_killed)
+					SetLog($cmdOutput, $COLOR_INFO)
+					If _Sleep(3000) Then Return
+					Local $cmdOutput = AndroidAdbSendShellCommand("chmod 555 /data/local/tmp/minitouch", $wasRunState, False)
+					SetLog($cmdOutput, $COLOR_INFO)
+				EndIf
 			Case Else
 				SetDebugLog("Android Version not detected!")
 		EndSwitch
@@ -2050,7 +2059,13 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				SetDebugLog($g_sAndroidEmulator & " initialize minitouch on port " & $g_bAndroidAdbMinitouchPort)
 				; launch minitouch
 				Local $androidPath = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/")
-				Local $output = AndroidAdbSendShellCommand($androidPath & "minitouch -d " & $g_sAndroidMouseDevice & " >/dev/null 2>&1 &", -1000, $wasRunState, False)
+				If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "Memu" Then
+					SetDebugLog("Pie")
+					Local $output = AndroidAdbSendShellCommand("/data/local/tmp/minitouch -d " & $g_sAndroidMouseDevice & " >/dev/null 2>&1 &", -1000, $wasRunState, False)
+					SetDebugLog("[1] : " & $output, $COLOR_RED)
+				Else
+					Local $output = AndroidAdbSendShellCommand($androidPath & "minitouch -d " & $g_sAndroidMouseDevice & " >/dev/null 2>&1 &", -1000, $wasRunState, False)
+				EndIf
 				; clear output
 				AndroidAdbSendShellCommand("", Default, $wasRunState, False)
 				; forward minitouch port
@@ -2232,9 +2247,19 @@ Func AndroidAdbLaunchMinitouchShellInstance($wasRunState = Default, $rebootAndro
 		; minitouch: Uses STDIN and doesn't start socket
 		SetDebugLog("------------> " & $g_sAndroidPicturesPath)
 		If $bUseMouseDevice Then
-			Local $cmdMinitouch = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/") & "minitouch -d " & $g_sAndroidMouseDevice & " -i"
+			If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "Memu" Then
+				SetDebugLog("Pie with Mouse")
+				Local $cmdMinitouch = "/data/local/tmp/minitouch -d " & $g_sAndroidMouseDevice & " -i"
+			Else
+				Local $cmdMinitouch = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/") & "minitouch -d " & $g_sAndroidMouseDevice & " -i"
+			EndIf
 		Else
-			Local $cmdMinitouch = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/") & "minitouch -i"
+			If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "Memu" Then
+				SetDebugLog("Pie")
+				Local $cmdMinitouch = "/data/local/tmp/minitouch -i"
+			Else
+				Local $cmdMinitouch = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/") & "minitouch -i"
+			EndIf
 		EndIf
 		Local $cmd = '"' & $g_sAndroidAdbPath & '"' & AddSpace($g_sAndroidAdbGlobalOptions, 1) & " -s " & $g_sAndroidAdbDevice & " shell" & $g_sAndroidAdbInstanceShellOptions & $g_sAndroidAdbShellOptions & " " & $cmdMinitouch
 		SetDebugLog("Run pipe ADB shell for minituch: " & $cmd)
