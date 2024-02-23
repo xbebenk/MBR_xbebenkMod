@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........: Cosote (12-2015)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2024
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -133,7 +133,7 @@ EndFunc   ;==>GetMEmuBackgroundMode
 
 Func InitMEmu($bCheckOnly = False)
 	Local $process_killed, $aRegExResult, $g_sAndroidAdbDeviceHost, $g_sAndroidAdbDevicePort, $oops = 0
-	
+	Local $MEmuVersion = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\MEmu\", "DisplayVersion")
 	SetError(0, 0, 0)
 	; Could also read MEmu paths from environment variables MEmu_Path and MEmuHyperv_Path
 	Local $MEmu_Path = GetMEmuPath()
@@ -174,10 +174,10 @@ Func InitMEmu($bCheckOnly = False)
 	If Not $bCheckOnly Then
 		;$g_iAndroidRecoverStrategy = 0
 		; newer MEmu doesn't support yet ADB mouse click/minitouch
-		local $memuCurr = GetVersionNormalized($__MEmu_Version)
+		Local $memuCurr = GetVersionNormalized($__MEmu_Version)
 		Local $memu6 = GetVersionNormalized("6.0")
 		If $memuCurr > $memu6 Then
-			;SetDebugLog("Disable ADB Mouse Click as not support for " & $g_sAndroidEmulator & " version " & $__MEmu_Version)
+			;SetDebugLog("Disable ADB Mouse Click as not support for " & $g_sAndroidEmulator & " version " & $MEmuVersion)
 			;AndroidSupportFeaturesRemove(4) ; disable ADB Mouse Click support
 		EndIf
 
@@ -217,7 +217,7 @@ Func InitMEmu($bCheckOnly = False)
 		EndIf
 
 		; get screencap paths: Name: 'picture', Host path: 'C:\Users\Administrator\Pictures\MEmu Photo' (machine mapping), writable
-		$g_sAndroidPicturesPath = "/data/media/0/Pictures/"
+		$g_sAndroidPicturesPath = "/mnt/shell/emulated/0/Pictures/"
 		$g_sAndroidSharedFolderName = "picture"
 		ConfigureSharedFolder(0) ; something like C:\Users\Administrator\Pictures\MEmu Photo\
 
