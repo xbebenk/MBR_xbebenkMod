@@ -2531,7 +2531,7 @@ Func AndroidAdbSendShellCommandScript($scriptFile, $variablesArray = Default, $c
 			FileSetTime($hostPath & $scriptFileSh, $scriptModifiedTime, $FT_MODIFIED) ; set modification date of source
 		EndIf
 		If $bIsMinitouch Then
-			If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "Memu" Then
+			If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu" Then
 				$s = AndroidAdbSendShellCommand("""" & $MemuMinitouchPath & "minitouch"" -v -d " & $g_sAndroidMouseDevice & " -f """ & $androidPath & $scriptFileSh & """", $timeout, $wasRunState, $EnsureShellInstance)
 				SetDebugLog("Pie : " & """" & $MemuMinitouchPath & "minitouch"" -v -d " & $g_sAndroidMouseDevice & " -f """ & $androidPath & $scriptFileSh & """")
 			Else
