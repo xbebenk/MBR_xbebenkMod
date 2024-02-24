@@ -281,7 +281,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		EndIf
 	EndIf
 	
-	If QuickMIS("BFI", $g_sImgMaintenance, 300, 38, 566, 75) Then 
+	If QuickMIS("BC1", $g_sImgEventConfirm, 310, 410, 560, 650) Then 
+		SetLog("checkObstacles: Found Event Confirm Button", $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
+		Return False
+	EndIf
+	
+	If QuickMIS("BC1", $g_sImgMaintenance, 300, 38, 566, 75) Then 
 		$Result = getOcrMaintenanceTime(285, 583, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
 		Local $iMaintenanceWaitTime = 0
 		Local $avTime = StringRegExp($Result, "([\d]+)[Mm]|(soon)|([\d]+[Hh])", $STR_REGEXPARRAYMATCH)
