@@ -1020,7 +1020,7 @@ Func SCIDScrollDown($iSCIDAccount)
 	If $iSCIDAccount < 4 Then Return
 	For $i = 0 To $iSCIDAccount - 4
 		Switch $g_sAndroidEmulator
-			Case "Memu", "nox"
+			Case "MEmu", "nox"
 				AndroidAdbScript("ScrollDownSCID")
 			Case "BlueStacks2"
 				AndroidAdbScript("ScrollDownSCID.Bluestacks")
@@ -1034,7 +1034,7 @@ Func SCIDScrollUp()
 	SetLog("Try to scroll up", $COLOR_DEBUG)
 	For $i = 0 To Ceiling($g_iTotalAcc/4) - 1
 		Switch $g_sAndroidEmulator
-			Case "Memu", "nox"
+			Case "MEmu", "nox"
 				AndroidAdbScript("ScrollUpSCID")
 			Case "BlueStacks2"
 				AndroidAdbScript("ScrollUpSCID.Bluestacks")

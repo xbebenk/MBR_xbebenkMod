@@ -84,7 +84,7 @@ EndFunc
 
 Func ZoomOutMEmu()
 	SetDebugLog("ZoomOutMEmu()")
-   Return DefaultZoomOut("{F3}", 0, ($g_iAndroidZoomoutMode <> 3))
+	Return DefaultZoomOut("{F3}", 0, ($g_iAndroidZoomoutMode <> 3))
 EndFunc
 
 Func ZoomOutNox()
@@ -727,7 +727,7 @@ EndFunc   ;==>SearchZoomOut
 
 Func ZoomIn($Region = "Top")
 	Switch $g_sAndroidEmulator
-		Case "Memu"
+		Case "MEmu"
 			SetDebugLog("ZoomInMEmu()")
 			If ZoomInMEmu($Region) Then Return True
 		Case "Nox"
@@ -745,7 +745,7 @@ Func ZoomInMEmu($Region = "Top")
 	For $i = 0 To 2
 		SetLog("[" & $i & "] Try ZoomIn", $COLOR_DEBUG)
 		Switch $g_sAndroidEmulator
-			Case "Memu", "Nox"
+			Case "MEmu", "Nox"
 				If Not AndroidAdbScript("ZoomIn") Then Return False
 			Case "BlueStacks2", "BlueStacks5"
 				If Not AndroidAdbScript("ZoomIn.BlueStacks") Then Return False
@@ -783,7 +783,7 @@ EndFunc
 
 Func ZoomInBB($Region = "Top")
 	Switch $g_sAndroidEmulator
-		Case "Memu"
+		Case "MEmu"
 			SetDebugLog("ZoomInBBMEmu()")
 			If ZoomInBBMEmu($Region) Then Return True
 		Case "Nox"
@@ -801,7 +801,7 @@ Func ZoomInBBMEmu($Region = "Top")
 	For $i = 0 To 2
 		SetLog("[" & $i & "] Try ZoomInBB", $COLOR_DEBUG)
 		Switch $g_sAndroidEmulator
-			Case "Memu", "Nox"
+			Case "MEmu", "Nox"
 				If Not AndroidAdbScript("ZoomInBB") Then Return False
 			Case "BlueStacks2", "BlueStacks5"
 				If Not AndroidAdbScript("ZoomInBB.BlueStacks") Then Return False
