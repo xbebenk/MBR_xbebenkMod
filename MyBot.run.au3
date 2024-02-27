@@ -1120,9 +1120,9 @@ Func __RunFunction($action)
 			DailyChallenges()
 			_Sleep($DELAYRUNBOT3)
 			checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenge")
-		;Case "RequestCC"
-		;	RequestCC()
-		;	ClickAway()
+		Case "RequestCC"
+			RequestCC()
+			ClickAway()
 		Case "Laboratory"
 			Laboratory()
 			_Sleep($DELAYRUNBOT3)
