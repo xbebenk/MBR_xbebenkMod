@@ -419,25 +419,25 @@ Func DragIfNeeded($Troop)
 	If $iIndex > $eHunt Then $bDrag = False ; Not Drag if Troops is Event Troops
 
 	If $bDrag Then ;Drag if Troops is on Right side from miner
-		If _ColorCheck(_GetPixelColor(777, 350, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+		If _ColorCheck(_GetPixelColor(777, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Dark Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
 				ClickDrag(750, 435, 10, 435, 500)
 				If _Sleep(2000) Then Return
-				If _ColorCheck(_GetPixelColor(777, 350, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+				If _ColorCheck(_GetPixelColor(777, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
 				Return True
 			EndIf
 		Next
 	Else
-		If _ColorCheck(_GetPixelColor(75, 350, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+		If _ColorCheck(_GetPixelColor(75, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Normal Troops: " & $bCheckPixel)
 		For $i = 1 To 3
 			If Not $bCheckPixel Then
 				ClickDrag(100, 435, 850, 435, 500)
 				If _Sleep(2000) Then Return
-				If _ColorCheck(_GetPixelColor(75, 350, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
+				If _ColorCheck(_GetPixelColor(75, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
 			Else
 				Return True
 			EndIf
