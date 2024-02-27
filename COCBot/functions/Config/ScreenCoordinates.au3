@@ -39,7 +39,7 @@ Global $aEndFightSceneBtn[4] = [429, 519, 0xCDF271, 20] ; Victory or defeat scen
 Global $aEndFightSceneAvl[4] = [241, 196, 0xFFF090, 20] ; Victory or defeat scene left side ribbon = light gold
 Global $aEndFightSceneReportGold = $aEndFightSceneAvl ; Missing... TripleM ???
 Global $aReturnHomeButton[4] = [425, 567, 0x6CBB1F, 20] ; Return Home Button, End Battle Screen
-Global $aChatTab[4] = [389, 342, 0xC55115, 20] ; Chat Window Open, Main Screen
+Global $aChatTab[4] = [400, 330, 0xEA8A3B, 20] ; Chat Window Open, Main Screen
 Global $aChatTabClosed[4] = [12, 342, 0xC55115, 20] ; Chat Window Closed
 Global $aArmyCampSize[2] = [155, 170] ; Training Window, Overview screen, Current Size/Total Size
 Global $aSiegeMachineSize[2] = [710, 168] ; Training Window, Overview screen, Current Number/Total Number
@@ -125,7 +125,7 @@ Global $NextBtnRND[4] = [710, 530, 830, 570] ;  Next Button
 Global $aLoginWithSupercellID[4] = [280, 630, 0xDCF684, 20] ; Upper green button section "Log in with Supercell ID" 0xB1E25A
 Global $aLoginWithSupercellID2[4] = [266, 653, 0xFFFFFF , 10] ; White Font "Log in with Supercell ID"
 Global $aButtonSetting[4] = [820, 530, 0xFFFFFF, 10] ; Setting button, Main Screen
-Global $aIsSettingPage[4] = [786, 97, 0xE91114, 10] ; Main Screen, Setting page open - red bottom lower of x button
+Global $aIsSettingPage[4] = [786, 97, 0xDA1013, 20] ; Main Screen, Setting page open - red bottom lower of x button
 
 ;Google Play
 Global $aListAccount[4] = [635, 230, 0xFFFFFF, 20] ; Accounts list google, White

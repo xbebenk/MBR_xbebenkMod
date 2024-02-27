@@ -32,10 +32,9 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	checkObstacles_Network()
 	CheckAndroidReboot()
 	
-	_CaptureRegions()
-	If isProblemAffect() Then
+	If isProblemAffect(True) Then
 		;1- Another device
-		If QuickMIS("BC1", $g_sImgAnotherDevice, 255, 315, 345, 335, False) Then 
+		If QuickMIS("BC1", $g_sImgAnotherDevice, 255, 315, 345, 335) Then 
 			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And $g_bChkSharedPrefs Then
 				SetLog("---- Forced Switch, Another device connected ----", $COLOR_ACTION)
 				SwitchForceAnotherDevice()
@@ -61,7 +60,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		EndIf
 
 		;2- Take a break
-		If QuickMIS("BC1", $g_sImgPersonalBreak, 220, 270, 440, 380, False) Then 
+		If QuickMIS("BC1", $g_sImgPersonalBreak, 220, 270, 440, 380) Then 
 			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And $g_bChkSharedPrefs Then
 				SetLog("---- Forced Switch, Village must take a break ----", $COLOR_ACTION)
 				SwitchForceAnotherDevice()
@@ -78,28 +77,30 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			Return True
 		EndIf
 		
-		;3- AnyoneThere, Connection Lost, OoS, RateNe
+		;3- AnyoneThere, Connection Lost, OoS, RateNever
 		Select
-			Case QuickMIS("BC1", $g_sImgAnyoneThere, 220, 270, 440, 340, False) ;AnyoneThere
+			Case QuickMIS("BC1", $g_sImgAnyoneThere, 220, 270, 440, 340) ;AnyoneThere
 				SetLog("Village was Inactive, Reloading CoC", $COLOR_ERROR)
 				If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
-			Case QuickMIS("BC1", $g_sImgConnectionLost, 220, 270, 500, 340, False) ; Connection Lost
+			Case QuickMIS("BC1", $g_sImgConnectionLost, 220, 270, 500, 340) ; Connection Lost
 				SetLog("Connection lost, Reloading CoC", $COLOR_ERROR)
-			Case QuickMIS("BC1", $g_sImgOutOfSync, 220, 270, 500, 340, False) ; Out of Sync
+			Case QuickMIS("BC1", $g_sImgOutOfSync, 220, 270, 500, 340) ; Out of Sync
 				SetLog("Out of Sync Error, Reloading CoC", $COLOR_ERROR)
-			Case QuickMIS("BC1", $g_sImgAppRateNever, 220, 270, 500, 340, False) ; RateNever
-				SetLog("Clash feedback window found, permanently closed!", $COLOR_ERROR)
+			Case QuickMIS("BC1", $g_sImgAppRateNever, 220, 270, 500, 340) ; RateNever
+				SetLog("Clash feedback window found, permanently closed!", $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(2000) Then Return
 				PullSharedPrefs()
 				Return True
-			Case QuickMIS("BC1", $g_sImgUpdateCoC, 250, 280, 300, 305, False) ; UpdateCoC
+			Case QuickMIS("BC1", $g_sImgImportantNotice, 220, 270, 440, 340) ; ImportantNotice
+				SetLog("Found the 'Important Notice' window, closing it", $COLOR_INFO)
+				Click(200, 400)
+				If _Sleep(2000) Then Return
+				Return True
+			Case QuickMIS("BC1", $g_sImgUpdateCoC, 250, 280, 300, 305) ; UpdateCoC
 				SetLog("Good News, Updates available!", $COLOR_INFO)
 				$msg = "Game Update is required, Bot must stop!"
 				Return checkObstacles_StopBot($msg) ; stop bot
-				
-			Case (UBound(decodeSingleCoord(FindImageInPlace("ImportantNotice", $G_sImgImportantNotice, "150,220,430,290", False))) > 1)
-				SetLog("Found the 'Important Notice' window, closing it", $COLOR_INFO)
 			Case Else
 				;  Add check for game update and Rate CoC error messages
 				If $g_bDebugImageSave Then SaveDebugImage("ChkObstaclesReloadMsg_", False) ; debug only

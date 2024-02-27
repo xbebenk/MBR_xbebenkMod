@@ -873,24 +873,26 @@ Func _Idle() ;Sequence that runs until Full Army
 		checkObstacles()
 
 		If $g_bRestart Then ExitLoop
-		If Random(0, $g_iCollectAtCount - 1, 1) = 0 Then ; This is prevent from collecting all the time which isn't needed anyway, chance to run is 1/$g_iCollectAtCount
-			If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then
-				Local $aRndFuncList = ['CheckTombs', 'CleanYard']
-			Else
-				Local $aRndFuncList = ['Collect', 'CheckTombs', 'RequestCC', 'DonateCC', 'CleanYard']
-			EndIf
-			_ArrayShuffle($aRndFuncList)
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If $g_bRestart Then ExitLoop
-				If CheckAndroidReboot() Then ContinueLoop 2
-			Next
-			If Not $g_bRunState Then Return
-			If $g_bRestart Then ExitLoop
-			If _Sleep($DELAYIDLE1) Or Not $g_bRunState Then ExitLoop
-		EndIf
-
+		;If Random(0, $g_iCollectAtCount - 1, 1) = 0 Then ; This is prevent from collecting all the time which isn't needed anyway, chance to run is 1/$g_iCollectAtCount
+		;	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then
+		;		Local $aRndFuncList = ['CheckTombs', 'CleanYard']
+		;	Else
+		;		Local $aRndFuncList = ['Collect', 'CheckTombs', 'RequestCC', 'DonateCC', 'CleanYard']
+		;	EndIf
+		;	_ArrayShuffle($aRndFuncList)
+		;	For $Index In $aRndFuncList
+		;		If Not $g_bRunState Then Return
+		;		_RunFunction($Index)
+		;		If $g_bRestart Then ExitLoop
+		;		If CheckAndroidReboot() Then ContinueLoop 2
+		;	Next
+		;	If Not $g_bRunState Then Return
+		;	If $g_bRestart Then ExitLoop
+		;	If _Sleep($DELAYIDLE1) Or Not $g_bRunState Then ExitLoop
+		;EndIf
+		
+		CommonRoutine("Idle")
+		
 		If $g_bRestart Then ExitLoop
 		
 		AddIdleTime()
@@ -1088,8 +1090,8 @@ Func __RunFunction($action)
 		Case "NotifyReport"
 			NotifyReport()
 			_Sleep($DELAYRUNBOT3)
-		Case "DonateCC"
-			DonateCC()
+		;Case "DonateCC"
+		;	DonateCC()
 		;Case "BoostBarracks"
 		;	BoostBarracks()
 		;	_Sleep($DELAYRESPOND)
@@ -1118,9 +1120,9 @@ Func __RunFunction($action)
 			DailyChallenges()
 			_Sleep($DELAYRUNBOT3)
 			checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenge")
-		Case "RequestCC"
-			RequestCC()
-			ClickAway()
+		;Case "RequestCC"
+		;	RequestCC()
+		;	ClickAway()
 		Case "Laboratory"
 			Laboratory()
 			_Sleep($DELAYRUNBOT3)
@@ -1567,6 +1569,16 @@ Func CommonRoutine($RoutineType = Default)
 		Case "Switch"
 			_ClanGames(False, True) ;Do Only Purge
 			Local $aRndFuncList = ['BuilderBase', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(50) Then Return
+				If $g_bRestart Then Return
+			Next
+			$aFuncList = $aRndFuncList
+			
+		Case "Idle"
+			Local $aRndFuncList = ['BuilderBase', 'Collect', 'RequestCC', 'DonateCC']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

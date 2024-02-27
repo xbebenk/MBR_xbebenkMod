@@ -108,7 +108,7 @@ EndFunc
 Func checkChatTabPixel()
 	Local $bRet = False
 	
-	If _ColorCheck(_GetPixelColor(12, 342, True), Hex(0xC55115, 6), 20, Default, "checkChatTabPixel") Then
+	If _ColorCheck(_GetPixelColor(20, 300, True), Hex(0xF3AA28, 6), 20, Default, "checkChatTabPixel") Then
 		If $g_bDebugSetLog Then SetLog("checkChatTabPixel: Found ChatTab", $COLOR_ACTION)
 		$bRet = True
 	EndIf
