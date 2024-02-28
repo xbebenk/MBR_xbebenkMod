@@ -16,15 +16,15 @@ Func StarBonus()
 	; Verify is Star bonus window open?
 	If Not _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "IsMainGrayed") Then Return ; Star bonus window opens on main base view, and grays page.
 
-	Local $aWindowChk1[4] = [480, 500, 0x6EBC1F, 15] ; Red X to close Window
-	Local $aWindowChk2[4] = [520, 500, 0xD7D7CF, 10] ; White pixel on top trees where it does not belong
+	Local $aWindowChk1[4] = [135, 90, 0x244864, 15] ; Black Balloon
+	Local $aWindowChk2[4] = [676, 90, 0x249CF9, 15] ; Blue header covering elixir bar
 
 	If _Sleep($DELAYSTARBONUS100) Then Return
 
 	; Verify actual star bonus window open
 	If _CheckPixel($aWindowChk1, $g_bCapturePixel, Default, "Starbonus1") And _CheckPixel($aWindowChk2, $g_bCapturePixel, Default, "Starbonus2") Then
 		; Find and Click Okay button
-		Click(430, 480, 2, 50, "StarBonus: Click Okay Button") ; Click Okay Button
+		Click(430, 530, 2, 50, "StarBonus: Click Okay Button") ; Click Okay Button
 		If _Sleep($DELAYSTARBONUS500) Then Return
 		Return True
 	EndIf
