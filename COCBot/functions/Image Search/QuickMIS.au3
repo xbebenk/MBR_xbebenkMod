@@ -209,7 +209,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 	EndIf
 EndFunc   ;==>QuickMIS
 
-Func DebugQuickMIS($x, $y, $DebugText)
+Func DebugQuickMIS($x, $y, $DebugText = "")
 
 	_CaptureRegion2()
 	Local $subDirectory = $g_sProfileTempDebugPath & "QuickMIS"
@@ -230,7 +230,7 @@ Func DebugQuickMIS($x, $y, $DebugText)
 
 EndFunc   ;==>DebugQuickMIS
 
-Func DebugQuickMISCNX($aResult, $DebugText)
+Func DebugQuickMISCNX($aResult = Default, $DebugText = "")
 
 	_CaptureRegion2()
 	Local $subDirectory = $g_sProfileTempDebugPath & "QuickMIS"
@@ -242,9 +242,11 @@ Func DebugQuickMISCNX($aResult, $DebugText)
 	Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($editedImage)
 	Local $hPenRED = _GDIPlus_PenCreate(0xFFFFD800, 3) ; Create a pencil Color FFFFD800/Yellow
 	
-	For $i = 0 To UBound($aResult) - 1
-		_GDIPlus_GraphicsDrawRect($hGraphic, $aResult[$i][1] - 3, $aResult[$i][2] - 3, 3, 3, $hPenRED)
-	Next
+	If IsArray($aResult) Then
+		For $i = 0 To UBound($aResult) - 1
+			_GDIPlus_GraphicsDrawRect($hGraphic, $aResult[$i][1] - 3, $aResult[$i][2] - 3, 10, 10, $hPenRED)
+		Next
+	EndIf
 
 	_GDIPlus_ImageSaveToFile($editedImage, $subDirectory & "\" & $filename)
 	_GDIPlus_PenDispose($hPenRED)

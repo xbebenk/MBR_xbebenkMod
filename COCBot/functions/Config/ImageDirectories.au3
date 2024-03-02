@@ -141,14 +141,15 @@ Global Const $g_sImgOpponentBuildingsBB = @ScriptDir & "\imgxml\Attack\BuilderBa
 #EndRegion
 
 #Region DonateCC
-Global $g_sImgDonateCC = @ScriptDir & "\imgxml\DonateCC\"
+Global $g_sImgDonateCC = @ScriptDir & "\imgxml\DonateCC\DonateButton\"
+Global $g_sImgDonateImageRequest = @ScriptDir & "\imgxml\DonateCC\Army\"
 Global $g_sImgDonateTroops = @ScriptDir & "\imgxml\DonateCC\Troops\"
 Global $g_sImgDonateSpells = @ScriptDir & "\imgxml\DonateCC\Spells\"
 Global $g_sImgDonateSiege = @ScriptDir & "\imgxml\DonateCC\SiegeMachines\"
 Global $g_sImgDonateType = @ScriptDir & "\imgxml\DonateCC\DonateIconType\"
+Global $g_sImgChatIUnterstand = @ScriptDir & "\imgxml\DonateCC\IUnderstand\"
 Global $g_sImgChatDivider = @ScriptDir & "\imgxml\DonateCC\donateccwbl\chatdivider_0_98.xml"
 Global $g_sImgChatDividerHidden = @ScriptDir & "\imgxml\DonateCC\donateccwbl\chatdividerhidden_0_98.xml"
-Global $g_sImgChatIUnterstand = @ScriptDir & "\imgxml\DonateCC\donateccwbl\iunderstand_0_95.xml"
 #EndRegion
 
 #Region Auto Upgrade Normal Village

@@ -233,6 +233,9 @@ Func SwitchCOCAcc($NextAccount)
 		$bSharedPrefs = False ; don't push again
 		SetLog("Profile shared_prefs already pushed")
 		If Not $g_bRunState Then Return
+	ElseIf $bSharedPrefs Then 
+		;CloseCoC(False)
+		$bResult = True
 	Else
 		If Not $g_bRunState Then Return
 		If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
@@ -240,7 +243,7 @@ Func SwitchCOCAcc($NextAccount)
 		While 1
 			If Not IsSettingPage() Then ExitLoop
 
-			If $g_bChkGooglePlay Or $g_bChkSharedPrefs Then
+			If $g_bChkGooglePlay Then
 				Switch SwitchCOCAcc_DisconnectConnect($bResult, $bSharedPrefs)
 					Case 0
 						Return

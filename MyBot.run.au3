@@ -1090,8 +1090,8 @@ Func __RunFunction($action)
 		Case "NotifyReport"
 			NotifyReport()
 			_Sleep($DELAYRUNBOT3)
-		;Case "DonateCC"
-		;	DonateCC()
+		Case "DonateCC"
+			DonateCC()
 		;Case "BoostBarracks"
 		;	BoostBarracks()
 		;	_Sleep($DELAYRESPOND)

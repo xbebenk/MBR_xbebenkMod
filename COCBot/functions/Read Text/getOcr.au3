@@ -167,7 +167,7 @@ Func getOcrLanguage($x_start, $y_start) ;  -> Get english language - main screen
 EndFunc   ;==>getOcrLanguage
 
 Func getOcrSpaceCastleDonate($x_start, $y_start) ;  -> Get the number of troops donated/capacity from a request
-	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 47, 12, True)
+	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 47, 13, True)
 EndFunc   ;==>getOcrSpaceCastleDonate
 
 Func getOcrOverAllDamage($x_start, $y_start) ;  -> Get the Overall Damage %
@@ -345,7 +345,7 @@ EndFunc   ;==>getRequestRemainTime
 
 Func getChatStringChinese($x_start, $y_start) ; -> Get string chat request - Chinese - "DonateCC.au3"
 	Local $bUseOcrImgLoc = True
-	Return getOcrAndCapture("chinese-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc)
+	Return getOcrAndCapture("chinese-bundle", $x_start, $y_start, 160, 15, Default, $bUseOcrImgLoc)
 EndFunc   ;==>getChatStringChinese
 
 Func getChatStringKorean($x_start, $y_start) ; -> Get string chat request - Korean - "DonateCC.au3"
