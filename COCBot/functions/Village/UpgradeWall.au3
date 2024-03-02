@@ -29,11 +29,8 @@ Func UpgradeWall($bTest = False)
 
 	SetLog("Checking Upgrade Walls", $COLOR_INFO)
 	VillageReport(True, True) ;update village resource capacity
-	SetLog("FreeBuilderCount: " & $g_iFreeBuilderCount, $COLOR_DEBUG)
-	If $bTest Then $g_iFreeBuilderCount = 1
-	If $g_iFreeBuilderCount < 1 Then Return
-
-	If $g_iFreeBuilderCount = 0 Then
+	
+	If Not WallUpgradeCheckBuilder() Then 
 		SetLog("No builder available, Upgrade Walls skipped", $COLOR_DEBUG)
 		Return
 	EndIf
@@ -192,7 +189,7 @@ Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = 
 	Return $aRet
 EndFunc
 
-Func WallUpgradeCheckBuilder($bTest)
+Func WallUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
 	getBuilderCount(True)
 	If $bTest Then
@@ -201,7 +198,12 @@ Func WallUpgradeCheckBuilder($bTest)
 		If $g_iFreeBuilderCount < 1 Then
 			$bRet = False
 		Else
-			$bRet = True
+			If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "AutoUpgradeCheckBuilder") Then 
+				SetLog("Goblin Builder Found!", $COLOR_DEBUG1)
+				$bRet = False
+			Else
+				$bRet = True
+			EndIf
 		EndIf
 	EndIf
 	Return $bRet

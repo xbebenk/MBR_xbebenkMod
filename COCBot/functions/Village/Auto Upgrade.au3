@@ -46,9 +46,16 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	If $bTest Then ;for testing, bypass
 		$g_iFreeBuilderCount = 1
 		$bRet = True
+	Else
+		If $g_iFreeBuilderCount = 1 Then 
+			If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "AutoUpgradeCheckBuilder") Then 
+				SetLog("Goblin Builder Found!", $COLOR_DEBUG1)
+				$bRet = False
+			EndIf
+		EndIf
 	EndIf
 
-	SetDebugLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
+	If $g_bDebugSetLog Then SetLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
 EndFunc
 
