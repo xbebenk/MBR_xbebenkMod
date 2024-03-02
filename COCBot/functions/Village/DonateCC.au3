@@ -167,7 +167,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	If Not BalanceDonRec(True) Then Return False
 	If SkipDonateNearFullTroops(True) Then Return False
 	
-	If Not _ColorCheck(_GetPixelColor(60, 285, True), Hex(0xD6081B, 6), 20) Then 
+	If Not WaitforPixel(60, 285, 61, 288, "D6081B", 6, 1) Then 
 		SetLog("No New requests (red icon), DonateCC Exits", $COLOR_DEBUG1)
 		If Not $bTest Then Return False ;exit if no new chats
 	EndIf
