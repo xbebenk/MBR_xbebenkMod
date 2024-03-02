@@ -2209,8 +2209,10 @@ Func ApplyConfig_600_33($TypeReadSave)
 					Next
 				EndIf
 			EndIf
+			GUICtrlSetState($g_hChkForceEdgeSmartfarm, $g_bChkForceEdgeSmartfarm ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			$g_bCustomDropOrderEnable = (GUICtrlRead($g_hChkCustomDropOrderEnable) = $GUI_CHECKED)
+			$g_bChkForceEdgeSmartfarm = (GUICtrlRead($g_hChkForceEdgeSmartfarm) = $GUI_CHECKED)
 			For $p = 0 To UBound($g_ahCmbDropOrder) - 1
 				$g_aiCmbCustomDropOrder[$p] = _GUICtrlComboBox_GetCurSel($g_ahCmbDropOrder[$p])
 			Next

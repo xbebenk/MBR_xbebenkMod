@@ -520,7 +520,14 @@ Func CheckZoomOut($sSource = "CheckZoomOut")
 	EndIf
 	If $sSource = "VillageSearch" Then SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
 	If $g_bVillageSearchAlwaysMeasure And $sSource = "VillageSearch" Then
-		_GetRedArea()
+		If $g_bChkForceEdgeSmartfarm Then 
+			$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
+			$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
+			$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
+			$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
+		Else
+			_GetRedArea()
+		EndIf
 		AttackCSVDEBUGIMAGE()
 	EndIf
 	Return True

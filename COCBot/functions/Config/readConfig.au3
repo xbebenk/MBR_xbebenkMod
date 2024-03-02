@@ -1504,6 +1504,7 @@ EndFunc   ;==>ReadConfig_600_32
 Func ReadConfig_600_33()
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>
 	IniReadS($g_bCustomDropOrderEnable, $g_sProfileConfigPath, "DropOrder", "chkDropOrder", False, "Bool")
+	IniReadS($g_bChkForceEdgeSmartfarm, $g_sProfileConfigPath, "Smartfarm", "ChkForceEdgeSmartfarm", False, "Bool")
 	For $p = 0 To UBound($g_aiCmbCustomDropOrder) - 1
 		IniReadS($g_aiCmbCustomDropOrder[$p], $g_sProfileConfigPath, "DropOrder", "cmbDropOrder" & $p, -1)
 	Next

@@ -526,7 +526,14 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	Local $GiantComp = 0
 
 	_CaptureRegion2() ; ensure full screen is captured (not ideal for debugging as clean image was already saved, but...)
-	_GetRedArea()
+	If $g_bChkForceEdgeSmartfarm Then 
+		$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
+		$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
+		$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
+		$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
+	Else
+		_GetRedArea()
+	EndIf
 
 	Switch $Nside
 		Case 1 ;Single sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
