@@ -933,6 +933,7 @@ Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlo
 	Return $aResult
 EndFunc   ;==>CheckQueueTroops
 
+;CheckQueueSpells(True, True, 721, True)
 Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlot = False)
 	Local $avResult[$eSpellCount]
 	Local $sImageDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued"
@@ -954,12 +955,13 @@ Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlo
 	ReDim $avResult[UBound($avSearchResult)][1]
 
 	If $bGetQuantity Then
-		Local $aiQuantities[UBound($avResult)][2]
+		Local $aiQuantities[UBound($avResult)][3]
 		Local $aQueueSpell[$eSpellCount]
 		For $i = 0 To (UBound($aiQuantities) - 1)
 			If Not $g_bRunState Then Return
 			$aiQuantities[$i][0] = $avSearchResult[$i][0]
 			$aiQuantities[$i][1] = $avSearchResult[$i][3]
+			$aiQuantities[$i][2] = $avSearchResult[$i][1] ;x coord
 			If $bSetLog Then SetLog("  - " & $g_asSpellNames[TroopIndexLookup($aiQuantities[$i][0], "CheckQueueSpells") - $eLSpell] & ": " & $aiQuantities[$i][1] & "x", $COLOR_SUCCESS)
 			$aQueueSpell[TroopIndexLookup($aiQuantities[$i][0]) - $eLSpell] += $aiQuantities[$i][1]
 		Next
