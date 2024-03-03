@@ -142,7 +142,7 @@ Global Const $g_sImgOpponentBuildingsBB = @ScriptDir & "\imgxml\Attack\BuilderBa
 
 #Region DonateCC
 Global $g_sImgDonateCC = @ScriptDir & "\imgxml\DonateCC\DonateButton\"
-Global $g_sImgDonateImageRequest = @ScriptDir & "\imgxml\DonateCC\Army\"
+Global $g_sImgDonateImageRequest = @ScriptDir & "\imgxml\DonateCC\RequestArmy\"
 Global $g_sImgDonateTroops = @ScriptDir & "\imgxml\DonateCC\Troops\"
 Global $g_sImgDonateSpells = @ScriptDir & "\imgxml\DonateCC\Spells\"
 Global $g_sImgDonateSiege = @ScriptDir & "\imgxml\DonateCC\SiegeMachines\"

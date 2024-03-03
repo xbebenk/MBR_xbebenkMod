@@ -39,7 +39,7 @@ Func getTrophyVillageSearch($x_start, $y_start) ;48, 69+99 or 69+69 -> Gets comp
 EndFunc   ;==>getTrophyVillageSearch
 
 Func getTrophyMainScreen($x_start, $y_start) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 16, True)
+	Return StringReplace(getOcrAndCapture("coc-ms", $x_start, $y_start, 50, 16, True), "-", "")
 EndFunc   ;==>getTrophyMainScreen
 
 Func getTrophyLossAttackScreen($x_start, $y_start) ; 48,214 or 48,184 WO/DE -> Gets red number of trophy loss from attack screen, top left
@@ -51,7 +51,7 @@ Func getUpgradeResource($x_start, $y_start) ; -> Gets complete value of Gold/Eli
 EndFunc   ;==>getUpgradeResource
 
 Func getResourcesMainScreen($x_start, $y_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
-	Return getOcrAndCapture("coc-ms", $x_start, $y_start, 120, 16, True)
+	Return StringReplace(getOcrAndCapture("coc-ms", $x_start, $y_start, 120, 16, True), "-", "")
 EndFunc   ;==>getResourcesMainScreen
 
 Func getResourcesLoot($x_start, $y_start) ; -> Gets complete value of Gold/Elixir after attack xxx,xxx "AttackReport"
