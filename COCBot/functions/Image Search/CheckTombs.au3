@@ -39,6 +39,12 @@ Func CleanYardCheckBuilder($bTest = False)
 	If $bTest Then $g_iFreeBuilderCount = 1
 	If $g_iFreeBuilderCount > 0 Then 
 		$bRet = True
+		If $g_iFreeBuilderCount = 1 Then 
+			If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "CleanYardCheckBuilder") Then 
+				SetLog("Goblin Builder Found!", $COLOR_DEBUG1)
+				$bRet = False
+			EndIf
+		EndIf
 	Else
 		SetDebugLog("No More Builders available")
 	EndIf
