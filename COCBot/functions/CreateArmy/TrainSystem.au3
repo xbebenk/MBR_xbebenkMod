@@ -173,7 +173,7 @@ Func CheckIfArmyIsReady($bCloseWindow = False)
 	
 	If Not OpenArmyOverview("CheckIfArmyIsReady()") Then Return
 	
-	CheckArmyCamp(False, False, True, True)
+	CheckArmyCamp(True, False, True, True)
 	CheckCCArmy()
 	RequestCC(False, "IsFullClanCastle")
 
@@ -495,6 +495,7 @@ Func IsSpellToBrew($sName)
 	Return False
 EndFunc   ;==>IsSpellToBrew
 
+;RemoveExtraTroops(WhatToTrain(True))
 Func RemoveExtraTroops($toRemove)
 	Local $CounterToRemove = 0, $iResult = 0
 	; Army Window should be open and should be in Tab 'Army tab'
@@ -561,7 +562,7 @@ Func RemoveExtraTroops($toRemove)
 			For $i = 0 To (UBound($rGetSlotNumber) - 1) ; Loop through All available slots
 				; $toRemove[$j][0] = Troop name, E.g: Barb, $toRemove[$j][1] = Quantity to remove
 				If $toRemove[$j][0] = $rGetSlotNumber[$i] Then ; If $toRemove Troop Was the same as The Slot Troop
-					Local $pos = GetSlotRemoveBtnPosition($i + 1) ; Get positions of - Button to remove troop
+					Local $pos = GetSlotRemoveBtnPosition($i) ; Get positions of - Button to remove troop
 					ClickRemoveTroop($pos, $toRemove[$j][1], $g_iTrainClickDelay) ; Click on Remove button as much as needed
 				EndIf
 			Next
@@ -571,7 +572,7 @@ Func RemoveExtraTroops($toRemove)
 			For $i = 0 To (UBound($rGetSlotNumberSpells) - 1) ; Loop through All available slots
 				; $toRemove[$j][0] = Troop name, E.g: Barb, $toRemove[$j][1] = Quantity to remove
 				If $toRemove[$j][0] = $rGetSlotNumberSpells[$i] Then ; If $toRemove Troop Was the same as The Slot Troop
-					Local $pos = GetSlotRemoveBtnPosition($i + 1, True) ; Get positions of - Button to remove troop
+					Local $pos = GetSlotRemoveBtnPosition($i, True) ; Get positions of - Button to remove troop
 					ClickRemoveTroop($pos, $toRemove[$j][1], $g_iTrainClickDelay) ; Click on Remove button as much as needed
 				EndIf
 			Next
@@ -728,8 +729,8 @@ Func ClickRemoveTroop($pos, $iTimes, $iSpeed)
 EndFunc   ;==>ClickRemoveTroop
 
 Func GetSlotRemoveBtnPosition($iSlot, $bSpells = False)
-	Local $iRemoveY = Not $bSpells ? 245 : 390
-	Local $iRemoveX = Number((74 * $iSlot) - 4)
+	Local $iRemoveY = Not $bSpells ? 260 : 385
+	Local $iRemoveX = 125 + Number(64 * $iSlot)
 
 	Local Const $aResult[2] = [$iRemoveX, $iRemoveY]
 	Return $aResult
@@ -922,7 +923,7 @@ Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlo
 				$aQueueTroop[$iTroopIndex] += $aQuantities[$i][1]
 			Else
 				; TODO check what to do with others
-				SetDebugLog("Unsupport troop index: " & $iTroopIndex)
+				SetDebugLog("Unsupport troop index: " & $iTroopIndex & " image: " & $aSearchResult[$i][0])
 			EndIf
 		Next
 		If $bQtyWSlot Then Return $aQuantities
@@ -933,7 +934,7 @@ Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlo
 	Return $aResult
 EndFunc   ;==>CheckQueueTroops
 
-;CheckQueueSpells(True, True, 721, True)
+;CheckQueueSpells(True, True, 777, True)
 Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlot = False)
 	Local $avResult[$eSpellCount]
 	Local $sImageDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued"
@@ -959,11 +960,18 @@ Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlo
 		Local $aQueueSpell[$eSpellCount]
 		For $i = 0 To (UBound($aiQuantities) - 1)
 			If Not $g_bRunState Then Return
-			$aiQuantities[$i][0] = $avSearchResult[$i][0]
-			$aiQuantities[$i][1] = $avSearchResult[$i][3]
+			$aiQuantities[$i][0] = $avSearchResult[$i][0] ;imageName
+			$aiQuantities[$i][1] = $avSearchResult[$i][3] ;Quantity
 			$aiQuantities[$i][2] = $avSearchResult[$i][1] ;x coord
-			If $bSetLog Then SetLog("  - " & $g_asSpellNames[TroopIndexLookup($aiQuantities[$i][0], "CheckQueueSpells") - $eLSpell] & ": " & $aiQuantities[$i][1] & "x", $COLOR_SUCCESS)
-			$aQueueSpell[TroopIndexLookup($aiQuantities[$i][0]) - $eLSpell] += $aiQuantities[$i][1]
+			
+			Local $iSpellIndex = TroopIndexLookup($aiQuantities[$i][0]) - $eLSpell
+			If $iSpellIndex >= 0 And $iSpellIndex < $eSpellCount Then
+				If $bSetLog Then SetLog("  - " & GetTroopName(TroopIndexLookup($aiQuantities[$i][0], "CheckQueueSpells"), $aiQuantities[$i][1] )& ": " & $aiQuantities[$i][1] & "x", $COLOR_SUCCESS)
+				$aQueueSpell[$iSpellIndex] += $aiQuantities[$i][1]
+			Else
+				; TODO check what to do with others
+				SetDebugLog("Unsupport Spell index: " & $iSpellIndex & " image: " & $avSearchResult[$i][0])
+			EndIf
 		Next
 		If $bQtyWSlot Then Return $aiQuantities
 		Return $aQueueSpell
@@ -1148,7 +1156,7 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 	If _Sleep(500) Then Return
 	
 	For $i = 1 To 50
-		If QuickMIS("BC1", $g_sImgDelQueue, 805, 150, 840, 200) Then
+		If QuickMIS("BC1", $g_sImgDelQueue, 755, 190, 780, 210) Then
 			If Not $g_bRunState Then Return
 			SetLog("Remove All Queued " & $sArmyTypeQueued & " #" & $i, $COLOR_ACTION)
 			Click($g_iQuickMISX, $g_iQuickMISY, 10, 50, "Remove Troops")
@@ -1386,24 +1394,6 @@ Func GetOCRCurrent($x_start, $y_start)
 	Return $aResult
 
 EndFunc   ;==>GetOCRCurrent
-
-Func getReceivedTroops($x_start, $y_start, $bSkipCheck = False) ; Check if 'you received Castle Troops from' , will proceed with a Sleep until the message disappear
-	;If $bSkipCheck Or Not $g_bRunState Then Return False
-	;Local $iOCRResult = ""
-	;
-	;$iOCRResult = getOcrAndCapture("coc-DonTroops", $x_start, $y_start, 120, 27, True) ; X = 162  Y = 200
-	;
-	;If IsString($iOCRResult) <> "" Or IsString($iOCRResult) <> " " Then
-	;	If StringInStr($iOCRResult, "you") Then ; If exist Minutes or only Seconds
-	;		Return True
-	;	Else
-	;		Return False
-	;	EndIf
-	;Else
-	;	Return False
-	;EndIf
-	Return False
-EndFunc   ;==>getReceivedTroops
 
 Func _ArryRemoveBlanks(ByRef $aArray)
 	Local $iCounter = 0

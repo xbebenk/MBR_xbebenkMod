@@ -27,15 +27,15 @@ DRPLN |0          |0          |0          |0          |0          |0          |0
 CCREQ |           |           |           |           |           |           |           |Loons/Rage |Loons/Rage |Loons/Rage |Loons/Rage |
       |                                                                                                                                   |
       |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|___________|___________|___________|
-SIDE  |0          |0          |0          |0          |0          |0          |13         |           |           |           |           |
+SIDE  |0          |0          |0          |0          |0          |0          |8          |           |           |           |           |
       |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |           |           |           |
 SIDEB |9          |5          |0          |0          |0          |0          |0          |           |           |           |           |
       |                                                                                                                                   |
       |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|___________|___________|___________|
 MAKE  |Q          |FRONT-LEFT |10         |1          |EXT-INT    |0          |0          |           |           |           |           |
 MAKE  |R          |FRONT-RIGHT|10         |1          |EXT-INT    |0          |0          |           |           |           |           |
-MAKE  |M          |FRONT-LEFT |10         |1          |INT-EXT    |0          |0          |           |           |           |           |
-MAKE  |N          |FRONT-RIGHT|10         |1          |INT-EXT    |0          |0          |           |           |           |           |
+MAKE  |M          |FRONT-LEFT |10         |1          |EXT-INT    |0          |0          |           |           |           |           |
+MAKE  |N          |FRONT-RIGHT|10         |1          |EXT-INT    |0          |0          |           |           |           |           |
 MAKE  |O          |FRONT-LEFT |10         |-10        |INT-EXT    |3          |2          |           |           |           |           |
 MAKE  |S          |FRONT-LEFT |10         |-9         |INT-EXT    |3          |2          |           |           |           |           |
 MAKE  |T          |FRONT-RIGHT|10         |-10        |INT-EXT    |2          |2          |           |           |           |           |
@@ -78,6 +78,7 @@ DROP  |M-N        |2-7        |6          |SDrag      |50-70      |27-50      |1
 DROP  |C          |3          |1          |SiegeB     |0          |50-70      |100        |           |           |           |           |
 DROP  |B          |1          |1          |FSpell     |0          |0          |100        |EAGLE      |           |           |           |
 DROP  |Q          |10         |1          |Warden     |50-70      |0          |1000       |           |           |           |           |
+WAIT  |5000       |           |           |           |           |           |           |           |           |           |           |
 DROP  |O          |5          |1          |RSpell     |0          |0          |0          |           |           |           |           |
 DROP  |S          |1          |1          |RSpell     |0          |0          |0          |           |           |           |           |
 DROP  |T          |4          |1          |RSpell     |0          |0          |1000-1500  |           |           |           |           |
@@ -97,3 +98,4 @@ DROP  |P          |1          |1          |FSpell     |0          |0          |1
 DROP  |J          |1          |1          |FSpell     |0          |0          |100-150    |AIRDEFENSE |           |           |           |
 DROP  |D          |9          |1          |Champion   |0          |0          |1000-1500  |           |           |      	  |      	  |
 DROP  |I          |1          |1          |FSpell     |0          |0          |100        |AIRDEFENSE |           |           |           |
+DROP  |D          |REMAIN     |           |           |           |           |           |           |           |           |           |

@@ -42,10 +42,9 @@ Func ParseAttackCSV($debug = False)
 		For $iLine = 0 To UBound($aLines) - 1
 			$line = $aLines[$iLine]
 			$sErrorText = "" ; empty error text each row
-			debugAttackCSV("line: " & $iLine + 1)
 			If @error = -1 Then ExitLoop
 			If $debug = True Then SetLog("parse line:<<" & $line & ">>")
-			debugAttackCSV("line content: " & $line)
+			debugAttackCSV("[" & $iLine + 1 & "] line content: " & $line)
 			$acommand = StringSplit($line, "|")
 			If $acommand[0] >= 8 Then
 				$command = StringStripWS(StringUpper($acommand[1]), $STR_STRIPTRAILING)
@@ -259,6 +258,7 @@ Func ParseAttackCSV($debug = False)
 								$sleepdrop2 = 1
 							EndIf
 						EndIf
+						
 						; check for targeted vectors and validate index numbers, need too many values for check logic to use CheckCSVValues()
 						Local $tmpVectorList = StringSplit($value1, "-", $STR_NOCOUNT) ; get array with all vector(s) used
 						For $v = 0 To UBound($tmpVectorList) - 1 ; loop thru each vector in target list
@@ -286,18 +286,19 @@ Func ParseAttackCSV($debug = False)
 								EndIf
 							EndIf
 						Next
+						
 						If $sErrorText <> "" Then
 							SetLog("Discard row, " & $sErrorText & ": row " & $iLine + 1)
 							debugAttackCSV("Discard row, " & $sErrorText & ": row " & $iLine + 1)
 						Else
+							;DropTroopFromINI($value1, $index1, $index2, $indexArray, $qty1, $qty2, $value4, $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $debug)
 							; REMAIN CMD from @chalicucu
 							If $value4 = "REMAIN" Then
 								ReleaseClicks()
 								SetLog("Drop|Remain:  Dropping left over troops", $COLOR_BLUE)
-								; Let's get the troops again and quantities
 								If PrepareAttack($g_iMatchMode, True) > 0 Then
 									; a Loop from all troops
-									For $ii = $eBarb To $eHunt ; launch all remaining troops
+									For $ii = $eBarb To $eIWiza ; launch all remaining troops
 										; Loop on all detected troops
 										For $x = 0 To UBound($g_avAttackTroops) - 1
 											; If the Name exist and haves more than zero is deploy it
@@ -306,7 +307,6 @@ Func ParseAttackCSV($debug = False)
 												Setlog("Name: " & $name, $COLOR_DEBUG)
 												Setlog("Qty: " & $g_avAttackTroops[$x][1], $COLOR_DEBUG)
 												DropTroopFromINI($value1, $index1, $index2, $indexArray, $g_avAttackTroops[$x][1], $g_avAttackTroops[$x][1], $g_asTroopShortNames[$ii], $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $debug)
-												CheckHeroesHealth()
 												If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
 											EndIf
 										Next

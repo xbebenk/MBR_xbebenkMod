@@ -77,7 +77,7 @@ EndFunc   ;==>MakeDropLine
 
 Func MakeDropLineOriginal($searchvect, $startpoint, $endpoint)
 
-	SetDebugLog("MakeDropLine for " & UBound($searchvect) & " points")
+	SetDebugLog("MakeDropLineOriginal for " & UBound($searchvect) & " points")
 
 	Local $startX = $startpoint[0]
 	Local $startY = $startpoint[1]
