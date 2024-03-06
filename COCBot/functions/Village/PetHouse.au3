@@ -48,13 +48,14 @@ Func PetHouse($test = False)
 	Next
 	If Not $bUpgradePets Then Return
 
+	ZoomOut() ;make sure village is zoomout
+	ClickAway()
+
 	$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(700, 123) ;get current DE
 	If Number($g_aiCurrentLoot[$eLootDarkElixir]) <= 90000 Then
 		SetLog("Current DE: " & $g_aiCurrentLoot[$eLootDarkElixir] & " < Mininum to upgrade Pet, exiting!", $COLOR_INFO)
 		If Not $test Then Return
 	EndIf
-	ZoomOut() ;make sure village is zoomout
-	ClickAway()
 
 	If Not $test Then
 		If PetUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the Pet House
