@@ -554,7 +554,8 @@ Func RemoveQueueSpell($iSpellIndex = 0, $Quantity = 1)
 	If Not $g_bRunState Then Return
 	For $i = 0 To UBound($aiQueueSpells) - 1
 		If Not $g_bRunState Then Return
-		If $g_asSpellShortNames[$aiQueueSpells[$i][0]] = $iSpellIndex Then 
+		Local $iIndex = TroopIndexLookup($aiQueueSpells[$i][0]) - $eLSPell
+		If $iIndex = $iSpellIndex Then 
 			If $aiQueueSpells[$i][3] < $Quantity Then
 				SetLog("Found x" & $aiQueueSpells[$i][3] & " " & $g_asSpellNames[$iSpellIndex], $COLOR_DEBUG)
 				SetLog("  - Removing x" & $aiQueueSpells[$i][3] & " queued " & $g_asSpellNames[$iSpellIndex], $COLOR_ACTION)
