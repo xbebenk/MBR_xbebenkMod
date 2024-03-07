@@ -31,7 +31,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	
 	checkObstacles_Network()
 	CheckAndroidReboot()
-	
+	If Not $g_bRunState Then Return
 	If isProblemAffect(True) Then
 		;1- Another device
 		If QuickMIS("BC1", $g_sImgAnotherDevice, 255, 315, 345, 335) Then 
@@ -129,7 +129,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep(1000) Then Return
 		Return False
 	EndIf
-	
+	If Not $g_bRunState Then Return
 	If _ColorCheck(_GetPixelColor(395, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(464, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles") Then
 		SetLog("checkObstacles: Found Cookie Rumble Confirm Window", $COLOR_ACTION)
 		Click(430, 515)
@@ -142,7 +142,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Click(440, 526)
 		Return False
 	EndIf
-	
+	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgWelcomeBackReward, 396, 135, 500, 165) Then 
 		Local $aClaim = QuickMIS("CNX", $g_sImgWelcomeBackReward, 80, 260, 725, 480)
 		If IsArray($aClaim) And UBound($aClaim) > 0 Then
@@ -164,7 +164,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep(3000) Then Return
 		Return False
 	EndIf
-	
+	If Not $g_bRunState Then Return
 	If BBBarbarianHead("checkObstacles") Then 
 		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
 		Click(430, 540)
@@ -185,7 +185,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
-
+	If Not $g_bRunState Then Return
 	If _CheckPixel($aChatTab, True) Then
 		SetLog("checkObstacles: Found Chat Tab to close", $COLOR_ACTION)
 		PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
@@ -199,7 +199,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
-
+	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then ;ads event popup window (usually covering 80% of coc screen)
 		SetLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY)
@@ -220,7 +220,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
-
+	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 730, 66, 790, 120) Then ;attack log page, usually because bot start and user left this page open
 		SetLog("checkObstacles: Found Attack/Defense Log Page", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY)
@@ -234,7 +234,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
-
+	If Not $g_bRunState Then Return
 	;If $bBuilderBase Then CheckBB20Tutor()
 	If $bBuilderBase Then CheckBB20LootCartTutor()
 	If Not $bBuilderBase Then
@@ -250,7 +250,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		SwitchToMainVillage("CheckObstacle")
 		Return False
 	EndIf
-
+	If Not $g_bRunState Then Return
 	If SearchUnplacedBuilding() Then ;check for unplaced building button, after several achievement/season account may rewarded special building and need to be placed on map
 		SetLog("checkObstacles: Found Unplaced Building Button, Try Place it on Map", $COLOR_ACTION)
 		PlaceUnplacedBuilding()
@@ -264,7 +264,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep(500) Then Return
 		Return
 	EndIf
-	
+	If Not $g_bRunState Then Return
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
 	If Not $bBuilderBase And $bIsOnBuilderIsland Then ;Check for MainVillage, but coc is on BB -> go to mainVillage
 		ZoomOut(True)
@@ -273,7 +273,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			Return False
 		EndIf
 	EndIf
-	
+	If Not $g_bRunState Then Return
 	Local $bIsOnMainVillage = isOnMainVillage()
 	If $bBuilderBase And $bIsOnMainVillage Then ;Check for BB, but in MainVillage -> go to BB
 		If SwitchBetweenBases("BB") Then
@@ -288,7 +288,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
-	
+	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgMaintenance, 300, 38, 566, 75) Then 
 		$Result = getOcrMaintenanceTime(285, 583, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
 		Local $iMaintenanceWaitTime = 0

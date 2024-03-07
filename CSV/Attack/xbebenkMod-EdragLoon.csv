@@ -94,5 +94,6 @@ DROP  |V          |4          |1          |RSpell     |0          |0          |2
 DROP  |P          |1          |1          |FSpell     |0          |0          |1000-1500  |EAGLE      |           |           |           |
 DROP  |J          |1          |1          |FSpell     |0          |0          |1000-1500  |TOWNHALL   |           |           |           |
 DROP  |D          |9          |1          |Champion   |0          |0          |1000-1500  |           |           |      	  |      	  |
-DROP  |I          |1          |1          |FSpell     |0          |0          |100        |AIRDEFENSE |           |           |           |
+DROP  |I          |1          |1          |FSpell     |0          |0          |5000       |AIRDEFENSE |           |           |           |
+DROP  |J          |1          |1          |FSpell     |0          |0          |           |TOWNHALL   |           |           |           |
 DROP  |D          |REMAIN     |           |           |           |           |           |           |           |           |           |

@@ -52,6 +52,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $aResult = 0, $stone, $tree, $x, $y
 	
 	$stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY)
+	If Not $g_bRunState Then Return 0
 	SetDebugLog("stone: " & _ArrayToString($stone))
 	If $stone[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
@@ -60,6 +61,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	EndIf
 	
 	$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4])
+	If Not $g_bRunState Then Return 0
 	SetDebugLog("tree: " & _ArrayToString($tree))
 	If $tree[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
@@ -184,8 +186,9 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAddit
 			Else
 				SetDebugLog("GetVillageSize ignore image " & $findImage & ", reason: " & UBound($a), $COLOR_WARNING)
 			EndIf
+			If Not $g_bRunState Then Return
 		Next
-		If Not $g_bRunState Then Return $stone
+		If Not $g_bRunState Then Return
 	Next
 	Return $stone
 EndFunc
@@ -235,7 +238,7 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAddition
 		Else
 			SetDebugLog("GetVillageSize ignore image " & $findImage & ", reason: " & UBound($a), $COLOR_WARNING)
 		EndIf
-		If Not $g_bRunState Then Return $tree
+		If Not $g_bRunState Then Return
 	Next
 	Return $tree
 EndFunc
