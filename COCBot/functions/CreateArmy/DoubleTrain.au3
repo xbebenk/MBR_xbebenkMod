@@ -21,125 +21,13 @@ Func DoubleTrain()
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
 
 	SetLog(" ====== Double Train ====== ", $COLOR_ACTION)
-
-	Local $bNeedReCheckTroopTab = False, $bNeedReCheckSpellTab = False
-
+	
 	; Troop
-	If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
-	If _Sleep(250) Then Return
-	
-	Local $tmpCamp = 999, $TroopCamp
-	While 1
-		$TroopCamp = GetCurrentArmy(95, 163)
-		If IsProblemAffect(True) Then Return
-		If _Sleep(50) Then Return
-		If Not $g_bRunState Then Return
-		
-		If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($TroopCamp))
-		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2 & " remain space:" & $TroopCamp[2], $COLOR_DEBUG1)
-		If $tmpCamp = $TroopCamp[2] Then ExitLoop
-		$tmpCamp = $TroopCamp[2]
-		Select
-			Case $TroopCamp[1] = 0
-				SetLog("$TroopCamp[1] = 0", $COLOR_DEBUG1)
-				ExitLoop
-			Case $TroopCamp[0] = ($TroopCamp[1] * 2)
-				SetLog("Cur = Max", $COLOR_DEBUG1)
-				If IsNormalTroopTrain() Then
-					If Not CheckQueueTroopAndTrainRemain() Then ExitLoop
-				EndIf
-			Case $TroopCamp[0] = 0 ; 0/600 (empty troop camp)
-				SetLog("TroopCamp[0] = 0", $COLOR_DEBUG1)
-				TrainFullTroop() ;train 1st Army
-			Case $TroopCamp[2] = 0 ;300/600 (empty troop queue)
-				SetLog("TroopCamp[2] = 0", $COLOR_DEBUG1)
-				TrainFullTroop(True) ;train 2nd Army
-			Case $TroopCamp[2] > 0 ; 30/600 (1st army partially trained)
-				SetLog("TroopCamp[2] > 0", $COLOR_DEBUG1)
-				If IsNormalTroopTrain() Then
-					RemoveTrainTroop()
-					Local $aWhatToTrain = WhatToTrain(False, False)
-					SetLog("New troop Fill way", $COLOR_DEBUG1)
-					TrainUsingWhatToTrain($aWhatToTrain) ;should only train 1st army
-					RemoveTrainTroop(True) ;recheck trained army, remove excess queued army (leave only 1st army)
-					FillIncorrectTroopCombo("1st Army")
-				Else
-					FillIncorrectTroopCombo("1st Army")
-				EndIf
-			Case $TroopCamp[0] = $TroopCamp[1] ;300/600 (1st army fully trained)
-				SetLog($TroopCamp[0] & " = " & $TroopCamp[1], $COLOR_DEBUG1)
-				TrainFullTroop(True) ;train 2nd Army
-			Case $TroopCamp[0] > $TroopCamp[1] ;350/600 (2nd army partially trained)
-				SetLog($TroopCamp[0] & " > " & $TroopCamp[1], $COLOR_DEBUG1)
-				If IsNormalTroopTrain() Then
-					RemoveTrainTroop(True)
-					CheckQueueTroopAndTrainRemain() ;train to queue
-					FillIncorrectTroopCombo("2nd Army")
-					ExitLoop
-				Else
-					FillIncorrectTroopCombo("2nd Army") 
-				EndIf
-		EndSelect
-		If _Sleep(500) Then Return
-	WEnd
-
+	DoubleTrainTroop($bDebug)
+	If isProblemAffect(True) Then Return
 	; Spell
-	Local $tmpSpell = 999, $SpellCamp
-	If Not OpenSpellsTab(False, "DoubleTrain()") Then Return
-	While 1
-		$SpellCamp = GetCurrentArmy(95, 163)
-		If IsProblemAffect(True) Then Return
-		If _Sleep(50) Then Return
-		If Not $g_bRunState Then Return
-		
-		If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($SpellCamp))
-		SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2 & " remain space:" & $SpellCamp[2], $COLOR_DEBUG1)
-		If $tmpSpell = $SpellCamp[2] Then ExitLoop
-		$tmpSpell = $SpellCamp[2]
-		Select
-			Case $SpellCamp[1] = 0
-				SetLog("$SpellCamp[1] = 0", $COLOR_DEBUG1)
-				ExitLoop
-			Case $SpellCamp[0] = ($SpellCamp[1] * 2)
-				SetLog("Cur = Max", $COLOR_DEBUG1)
-				If IsNormalSpellTrain() Then
-					If Not CheckQueueSpellAndTrainRemain() Then ExitLoop
-				EndIf
-			Case $SpellCamp[0] = 0 ; 0/22 (empty spell camp)
-				SetLog("SpellCamp[0] = 0", $COLOR_DEBUG1)
-				BrewFullSpell() ;train 1st Army
-			Case $SpellCamp[2] = 0 ;11/22 (empty spell queue)
-				SetLog("SpellCamp[2] = 0", $COLOR_DEBUG1)
-				BrewFullSpell(True) ;train 2nd Army
-			Case $SpellCamp[2] > 0 ; 5/22 (1st army partially trained)
-				SetLog("SpellCamp[2] > 0", $COLOR_DEBUG1)
-				If IsNormalSpellTrain() Then
-					RemoveTrainSpell()
-					Local $aWhatToTrain = WhatToTrain(False, False)
-					SetLog("New spell Fill way", $COLOR_DEBUG1)
-					BrewUsingWhatToTrain($aWhatToTrain) ;should only train 1st army
-					RemoveTrainSpell(True) ;recheck trained army, remove excess queued army (leave only 1st army)
-					FillIncorrectSpellCombo("1st Army")
-				Else
-					FillIncorrectSpellCombo("1st Army")
-				EndIf
-			Case $SpellCamp[0] = $SpellCamp[1] ;11/22 (1st army fully trained)
-				SetLog($SpellCamp[0] & " = " & $SpellCamp[1], $COLOR_DEBUG1)
-				BrewFullSpell(True) ;train 2nd Army
-			Case $SpellCamp[0] > $SpellCamp[1] ;15/22 (2nd army partially trained)
-				SetLog($SpellCamp[0] & " > " & $SpellCamp[1], $COLOR_DEBUG1)
-				If IsNormalSpellTrain() Then
-					RemoveTrainSpell(True)
-					CheckQueueSpellAndTrainRemain() ;train to queue
-					FillIncorrectSpellCombo("2nd Army")
-					ExitLoop
-				Else
-					FillIncorrectSpellCombo("2nd Army") 
-				EndIf
-		EndSelect
-		If _Sleep(500) Then Return
-	WEnd
-	
+	DoubleTrainSpell($bDebug)
+	If isProblemAffect(True) Then Return
 EndFunc   ;==>DoubleTrain
 
 Func TrainFullTroop($bQueue = False)
@@ -420,6 +308,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 EndFunc   ;==>CheckQueueTroopAndTrainRemain
 
 Func CheckQueueSpellAndTrainRemain($ArmyCamp = Default, $bDebug = False)
+	If Not OpenSpellsTab(True, "CheckQueueTroopAndTrainRemain()") Then Return
 	If $ArmyCamp = Default Then $ArmyCamp = GetCurrentArmy(95, 163)
 	If Not $g_bRunState Then Return
 	If $ArmyCamp[0] = $ArmyCamp[1] * 2 And ((ProfileSwitchAccountEnabled() And $g_abAccountNo[$g_iCurAccount] And $g_abDonateOnly[$g_iCurAccount]) Or $g_iCommandStop = 0) Then Return True ; bypass Donate account when full queue
@@ -471,6 +360,13 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp = Default, $bDebug = False)
 			If _Sleep(500) Then Return
 		EndIf
 	Next
+	
+	If $bExcessSpell Then 
+		If _Sleep(1500) Then Return
+		$ArmyCamp = GetCurrentArmy(95, 163)
+		SetLog("After excess troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG1)
+		;Return True
+	EndIf
 	
 	If $ArmyCamp[0] < $ArmyCamp[1] * 2 Then
 		; Train remain
@@ -653,6 +549,7 @@ Func RemoveTrainSpell($bQueueOnly = False)
 				Click($aConfirmSurrender[0], $aConfirmSurrender[1])
 			EndIf
 			If _Sleep(500) Then Return
+			SetLog("Successfully remove trained/queued spell", $COLOR_DEBUG1)
 		EndIf
 	EndIf
 EndFunc
@@ -706,4 +603,122 @@ Func ReTrainForSwitch()
 	TrainSiege()
 	ClickAway()
 	If _Sleep(500) Then Return
+EndFunc
+
+Func DoubleTrainTroop($bDebug = False)
+	If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
+	If _Sleep(250) Then Return
+	
+	Local $tmpCamp = 999, $TroopCamp
+	While 1
+		$TroopCamp = GetCurrentArmy(95, 163)
+		If IsProblemAffect(True) Then Return
+		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
+		If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($TroopCamp))
+		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2 & " remain space:" & $TroopCamp[2], $COLOR_DEBUG1)
+		If $tmpCamp = $TroopCamp[2] Then ExitLoop
+		$tmpCamp = $TroopCamp[2]
+		Select
+			Case $TroopCamp[1] = 0
+				SetLog("$TroopCamp[1] = 0", $COLOR_DEBUG1)
+				ExitLoop
+			Case $TroopCamp[0] = ($TroopCamp[1] * 2)
+				SetLog("Cur = Max", $COLOR_DEBUG1)
+				If IsNormalTroopTrain() Then
+					If Not CheckQueueTroopAndTrainRemain() Then ExitLoop
+				EndIf
+			Case $TroopCamp[0] = 0 ; 0/600 (empty troop camp)
+				SetLog("TroopCamp[0] = 0", $COLOR_DEBUG1)
+				TrainFullTroop() ;train 1st Army
+			Case $TroopCamp[2] = 0 ;300/600 (empty troop queue)
+				SetLog("TroopCamp[2] = 0", $COLOR_DEBUG1)
+				TrainFullTroop(True) ;train 2nd Army
+			Case $TroopCamp[2] > 0 ; 30/600 (1st army partially trained)
+				SetLog("TroopCamp[2] > 0", $COLOR_DEBUG1)
+				If IsNormalTroopTrain() Then
+					RemoveTrainTroop()
+					Local $aWhatToTrain = WhatToTrain(False, False)
+					SetLog("New troop Fill way", $COLOR_DEBUG1)
+					TrainUsingWhatToTrain($aWhatToTrain) ;should only train 1st army
+					RemoveTrainTroop(True) ;recheck trained army, remove excess queued army (leave only 1st army)
+					FillIncorrectTroopCombo("1st Army")
+				Else
+					FillIncorrectTroopCombo("1st Army")
+				EndIf
+			Case $TroopCamp[0] = $TroopCamp[1] ;300/600 (1st army fully trained)
+				SetLog($TroopCamp[0] & " = " & $TroopCamp[1], $COLOR_DEBUG1)
+				TrainFullTroop(True) ;train 2nd Army
+			Case $TroopCamp[0] > $TroopCamp[1] ;350/600 (2nd army partially trained)
+				SetLog($TroopCamp[0] & " > " & $TroopCamp[1], $COLOR_DEBUG1)
+				If IsNormalTroopTrain() Then
+					RemoveTrainTroop(True)
+					CheckQueueTroopAndTrainRemain() ;train to queue
+					FillIncorrectTroopCombo("2nd Army")
+					ExitLoop
+				Else
+					FillIncorrectTroopCombo("2nd Army") 
+				EndIf
+		EndSelect
+		If _Sleep(500) Then Return
+	WEnd
+EndFunc
+
+Func DoubleTrainSpell($bDebug = False)
+	Local $tmpSpell = 999, $SpellCamp
+	If Not OpenSpellsTab(False, "DoubleTrain()") Then Return
+	While 1
+		$SpellCamp = GetCurrentArmy(95, 163)
+		If IsProblemAffect(True) Then Return
+		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
+		If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($SpellCamp))
+		SetLog("Checking Spell tab: " & $SpellCamp[0] & "/" & $SpellCamp[1] * 2 & " remain space:" & $SpellCamp[2], $COLOR_DEBUG1)
+		If $tmpSpell = $SpellCamp[2] Then ExitLoop
+		$tmpSpell = $SpellCamp[2]
+		Select
+			Case $SpellCamp[1] = 0
+				SetLog("$SpellCamp[1] = 0", $COLOR_DEBUG1)
+				ExitLoop
+			Case $SpellCamp[0] = ($SpellCamp[1] * 2)
+				SetLog("Cur = Max", $COLOR_DEBUG1)
+				If IsNormalSpellTrain() Then
+					If Not CheckQueueSpellAndTrainRemain() Then ExitLoop
+				EndIf
+			Case $SpellCamp[0] = 0 ; 0/22 (empty spell camp)
+				SetLog("SpellCamp[0] = 0", $COLOR_DEBUG1)
+				BrewFullSpell() ;train 1st Army
+			Case $SpellCamp[2] = 0 ;11/22 (empty spell queue)
+				SetLog("SpellCamp[2] = 0", $COLOR_DEBUG1)
+				BrewFullSpell(True) ;train 2nd Army
+			Case $SpellCamp[2] > 0 ; 5/22 (1st army partially trained)
+				SetLog("SpellCamp[2] > 0", $COLOR_DEBUG1)
+				If IsNormalSpellTrain() Then
+					RemoveTrainSpell()
+					Local $aWhatToTrain = WhatToTrain(False, False)
+					SetLog("New spell Fill way", $COLOR_DEBUG1)
+					BrewUsingWhatToTrain($aWhatToTrain) ;should only train 1st army
+					RemoveTrainSpell(True) ;recheck trained army, remove excess queued army (leave only 1st army)
+					FillIncorrectSpellCombo("1st Army")
+				Else
+					FillIncorrectSpellCombo("1st Army")
+				EndIf
+			Case $SpellCamp[0] = $SpellCamp[1] ;11/22 (1st army fully trained)
+				SetLog($SpellCamp[0] & " = " & $SpellCamp[1], $COLOR_DEBUG1)
+				BrewFullSpell(True) ;train 2nd Army
+			Case $SpellCamp[0] > $SpellCamp[1] ;15/22 (2nd army partially trained)
+				SetLog($SpellCamp[0] & " > " & $SpellCamp[1], $COLOR_DEBUG1)
+				If IsNormalSpellTrain() Then
+					RemoveTrainSpell(True)
+					CheckQueueSpellAndTrainRemain() ;train to queue
+					FillIncorrectSpellCombo("2nd Army")
+					ExitLoop
+				Else
+					FillIncorrectSpellCombo("2nd Army") 
+				EndIf
+		EndSelect
+		If _Sleep(500) Then Return
+	WEnd
 EndFunc

@@ -2360,7 +2360,7 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			GUICtrlSetData($g_hTxtTotalCountSpell, $g_iTotalSpellValue)
 			; DoubleTrain - Demen
 			GUICtrlSetState($g_hChkDoubleTrain, $g_bDoubleTrain ? $GUI_CHECKED : $GUI_UNCHECKED)
-			If Not $g_bIgnoreIncorrectTroopCombo Then GUICtrlSetState($g_hChkPreciseArmy, $g_bPreciseArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
+			;If Not $g_bIgnoreIncorrectTroopCombo Then GUICtrlSetState($g_hChkPreciseArmy, $g_bPreciseArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			; troop/spell levels and counts
 			For $T = 0 To $eTroopCount - 1
@@ -2380,7 +2380,7 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			$g_iTotalSpellValue = GUICtrlRead($g_hTxtTotalCountSpell)
 			; DoubleTrain - Demen
 			$g_bDoubleTrain = (GUICtrlRead($g_hChkDoubleTrain) = $GUI_CHECKED)
-			If Not $g_bIgnoreIncorrectTroopCombo Then $g_bPreciseArmy = (GUICtrlRead($g_hChkPreciseArmy) = $GUI_CHECKED)
+			;If Not $g_bIgnoreIncorrectTroopCombo Then $g_bPreciseArmy = (GUICtrlRead($g_hChkPreciseArmy) = $GUI_CHECKED)
 			chkOnDoubleTrain()
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_52_2

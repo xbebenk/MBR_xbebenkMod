@@ -18,7 +18,7 @@ Func CheckCsvValues($instruction, $variablenumber, $variable)
 	Switch $instruction
 		Case "MAKE"
 			Switch $variablenumber
-				Case 1
+				Case 1 ;VECTOR_____
 					If $variable = "RANDOM" Then
 						Return True ;exit true if value=RANDOM
 					Else
@@ -45,7 +45,7 @@ Func CheckCsvValues($instruction, $variablenumber, $variable)
 							Return True ;all check passed
 						EndIf
 					EndIf
-				Case 2
+				Case 2 ;SIDE_______
 					Switch $variable
 						Case "FRONT-LEFT"
 							Return True
@@ -66,7 +66,7 @@ Func CheckCsvValues($instruction, $variablenumber, $variable)
 						Case "RANDOM"
 							Return True
 					EndSwitch
-				Case 5
+				Case 5 ;DROP_POINTS
 					Switch $variable
 						Case "EXT-INT"
 							Return True

@@ -53,6 +53,7 @@ Func ParseAttackCSV($debug = False)
 				; Set values
 				For $i = 2 To (UBound($acommand) - 1)
 					Assign("value" & Number($i - 1), StringStripWS(StringUpper($acommand[$i]), $STR_STRIPTRAILING))
+					If $g_bDebugSetlog Then SetLog("value" & Number($i - 1) & " = " & StringStripWS(StringUpper($acommand[$i]), $STR_STRIPTRAILING), $COLOR_DEBUG1)
 				Next
 
 				Switch $command
@@ -110,9 +111,9 @@ Func ParseAttackCSV($debug = False)
 							EndSwitch
 							If CheckCsvValues("MAKE", 1, $value1) And CheckCsvValues("MAKE", 5, $value5) Then
 								$sTargetVectors = StringReplace($sTargetVectors, $value3, "", Default, $STR_NOCASESENSEBASIC) ; if re-making a vector, must remove from target vector string
-								If CheckCsvValues("MAKE", 8, $value8) Then ; Vector is targeted towards building v7.2
+								If CheckCsvValues("MAKE", 8, $value8) Then ; Vector is targeted towards building
 									; new field definitions:
-									; $side = target side string
+									; value2 = $side = target side string
 									; value3 = Drop point count can be 1 or 5 value only
 									; value4 = addtiles Ignore if value3 = 5, only used when dropping in sigle point
 									; value5 = versus ignore direction
@@ -120,9 +121,10 @@ Func ParseAttackCSV($debug = False)
 									; value7 = randomY ignored as image find location will be "random" without need to add more variability
 									; value8 = Building target for drop points
 									If $value3 = 1 Or $value3 = 5 Then ; check for valid number of drop points
+										SetLog(Eval($sidex) & ", " & $value3 & ", " & $value4 & ", " & $value8)
 										Local $tmpArray = MakeTargetDropPoints(Eval($sidex), $value3, $value4, $value8)
 										If @error Then
-											$sErrorText = "MakeTargetDropPoints: " & @error ; set flag
+											$sErrorText = "MakeTargetDropPoints, err:" & @error ; set flag
 										Else
 											Assign("ATTACKVECTOR_" & $value1, $tmpArray) ; assing vector
 											$sTargetVectors &= $value1 ; add letter of every vector using building target to string to error check DROP command
@@ -140,8 +142,8 @@ Func ParseAttackCSV($debug = False)
 							$sErrorText = "value2"
 						EndIf
 						If $sErrorText <> "" Then ; log error message
-							SetLog("Discard row, bad " & $sErrorText & " parameter: row " & $iLine + 1)
-							debugAttackCSV("Discard row, bad " & $sErrorText & " parameter: row " & $iLine + 1)
+							SetLog("Discard row " & $iLine + 1 & ", bad parameter: " & $sErrorText)
+							debugAttackCSV("Discard row " & $iLine + 1 & ", bad parameter: " & $sErrorText)
 						Else ; debuglog vectors
 							For $i = 0 To UBound(Execute("$ATTACKVECTOR_" & $value1)) - 1
 								Local $pixel = Execute("$ATTACKVECTOR_" & $value1 & "[" & $i & "]")
@@ -291,7 +293,6 @@ Func ParseAttackCSV($debug = False)
 							SetLog("Discard row, " & $sErrorText & ": row " & $iLine + 1)
 							debugAttackCSV("Discard row, " & $sErrorText & ": row " & $iLine + 1)
 						Else
-							;DropTroopFromINI($value1, $index1, $index2, $indexArray, $qty1, $qty2, $value4, $delaypoints1, $delaypoints2, $delaydrop1, $delaydrop2, $sleepdrop1, $sleepdrop2, $debug)
 							; REMAIN CMD from @chalicucu
 							If $value4 = "REMAIN" Then
 								ReleaseClicks()
