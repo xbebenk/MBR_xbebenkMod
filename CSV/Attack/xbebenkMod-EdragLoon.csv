@@ -34,8 +34,8 @@ SIDEB |9          |5          |0          |0          |0          |0          |0
       |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|___________|___________|___________|
 MAKE  |Q          |FRONT-LEFT |10         |1          |EXT-INT    |0          |0          |           |           |           |           |
 MAKE  |R          |FRONT-RIGHT|10         |1          |EXT-INT    |0          |0          |           |           |           |           |
-MAKE  |M          |FRONT-LEFT |10         |1          |EXT-INT    |0          |0          |           |           |           |           |
-MAKE  |N          |FRONT-RIGHT|10         |1          |EXT-INT    |0          |0          |           |           |           |           |
+MAKE  |M          |FRONT-LEFT |10         |1          |INT-EXT    |0          |0          |           |           |           |           |
+MAKE  |N          |FRONT-RIGHT|10         |1          |INT-EXT    |0          |0          |           |           |           |           |
 MAKE  |O          |FRONT-LEFT |10         |-10        |INT-EXT    |3          |2          |           |           |           |           |
 MAKE  |S          |FRONT-LEFT |10         |-9         |INT-EXT    |3          |2          |           |           |           |           |
 MAKE  |T          |FRONT-RIGHT|10         |-10        |INT-EXT    |2          |2          |           |           |           |           |
@@ -77,7 +77,8 @@ DROP  |M-N        |2-7        |6          |EDrag      |50-70      |27-50      |1
 DROP  |M-N        |2-7        |6          |SDrag      |50-70      |27-50      |15-20      |           |           |           |           |
 DROP  |C          |3          |1          |SiegeB     |0          |50-70      |100        |           |           |           |           |
 DROP  |B          |1          |1          |FSpell     |0          |0          |100        |EAGLE      |           |           |           |
-DROP  |Q          |10         |1          |Warden     |50-70      |0          |8000-9000  |           |           |           |           |
+DROP  |Q          |10         |1          |Warden     |50-70      |0          |100        |           |           |           |           |
+WAIT  |8000-9000  |           |           |           |           |           |           |           |           |           |           |
 DROP  |O          |5          |1          |RSpell     |0          |0          |0          |           |           |           |           |
 DROP  |S          |1          |1          |RSpell     |0          |0          |0          |           |           |           |           |
 DROP  |T          |4          |1          |RSpell     |0          |0          |1000-1500  |           |           |           |           |
@@ -87,6 +88,7 @@ DROP  |D          |9          |1          |Champion   |0          |0          |1
 DROP  |Q          |10         |1          |BattleB    |0          |50-70      |100        |           |           |           |           |
 DROP  |K          |1          |1          |FSpell     |0          |0          |1000-1500  |INFERNO    |           |           |           |
 DROP  |P          |1          |1          |FSpell     |0          |0          |1000-1500  |TOWNHALL   |           |           |           |
+WAIT  |1000       |           |           |           |           |           |           |           |           |           |           |
 DROP  |Q          |10         |1          |King       |50-70      |0          |500        |           |           |           |           |
 DROP  |Q          |10         |1          |Warden     |50-70      |0          |0          |           |           |           |           |
 DROP  |U          |2          |1          |RSpell     |0          |0          |500        |           |           |           |           |
@@ -96,4 +98,4 @@ DROP  |J          |1          |1          |FSpell     |0          |0          |1
 DROP  |D          |9          |1          |Champion   |0          |0          |1000-1500  |           |           |      	  |      	  |
 DROP  |I          |1          |1          |FSpell     |0          |0          |5000       |AIRDEFENSE |           |           |           |
 DROP  |J          |1          |1          |FSpell     |0          |0          |           |TOWNHALL   |           |           |           |
-DROP  |D          |REMAIN     |           |           |           |           |           |           |           |           |           |
+DROP  |D          |9          |1          |REMAIN     |           |           |           |           |           |           |           |
