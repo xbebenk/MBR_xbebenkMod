@@ -1,0 +1,67 @@
+NOTE  |      SuberBarbarian - Quake
+NOTE  |      ==== TH 13/14/15 ====
+NOTE  |300-320 ArmyCamp Space
+NOTE  |SuberBarbarian
+NOTE  |TH13 ----- EarthQuack x11
+NOTE  |TH14/15 -- EarthQuack x9, Rage x1
+NOTE  |CC : TH13/14/15 : SuberBarbarian, EQ
+NOTE  |Siege : Log Launcher
+NOTE  |Redline: External edges
+
+      |_TROOPNAME_|__FLEXIBLE_|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|
+TRAIN |SBarb      |0          |0          |0          |0          |0          |0          |0          |0          |60         |
+TRAIN |ESpell     |0          |0          |0          |0          |0          |0          |0          |0          |11         |
+TRAIN |King       |0          |0          |0          |0          |0          |0          |0          |0          |1          |
+TRAIN |Queen      |0          |0          |0          |0          |0          |0          |0          |0          |1          |
+TRAIN |Warden     |0          |0          |0          |0          |0          |0          |0          |0          |1          |
+TRAIN |Champion   |0          |0          |0          |0          |0          |0          |0          |0          |1          |
+
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|
+REDLN |0          |0          |0          |0          |0          |0          |0          |0          |0          |4          |
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
+SIDE  |0          |0          |0          |0          |0          |0          |15         |           |
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |           |           |
+SIDEB |5          |0          |0          |0          |0          |0          |0          |           |           |           |
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|
+MAKE  |A          |FRONT-RIGHT|10         |0          |EXT-INT    |2          |2          |           |Troops
+MAKE  |B          |FRONT-LEFT |10         |0          |EXT-INT    |2          |2          |           |Troops
+MAKE  |C          |FRONT-LEFT |10         |-9         |EXT-INT    |0          |0          |           |ESpell
+MAKE  |D          |FRONT-RIGHT|10         |-9         |EXT-INT    |2          |2          |           |ESpell
+MAKE  |E          |FRONT-RIGHT|10         |-18        |EXT-INT    |0          |0          |           |ESpell
+MAKE  |F          |FRONT-RIGHT|10         |-16        |EXT-INT    |2          |0          |           |RSpell
+MAKE  |G          |FRONT-LEFT |1          |0          |IGNORE     |0          |0          |TOWNHALL   |ESpell   
+MAKE  |H          |LEFT-FRONT |10         |0          |EXT-INT    |5          |5          |           |Start
+MAKE  |I          |RIGHT-FRONT|10         |0          |EXT-INT    |5          |5          |           |Start
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|
+DROP  |H          |3          |2          |SBarb      |40         |27-50      |50-70      |           |
+DROP  |I          |3          |2          |SBarb      |40         |27-50      |550-690    |           |
+DROP  |H          |3          |3          |SBarb      |40         |27-50      |50-70      |           |
+DROP  |I          |3          |3          |SBarb      |40         |27-50      |550-690    |           |
+DROP  |C          |8          |4          |ESpell     |55-70      |25-70      |100-200    |           |
+WAIT  |500-600    |           |           |           |           |           |           |           |
+DROP  |D          |8          |4          |ESpell     |55-70      |25-70      |100-200    |           |
+WAIT  |500-600    |           |           |           |           |           |           |           |
+DROP  |E          |10         |4          |ESpell     |55-70      |25-70      |100-200    |           |
+WAIT  |500-600    |           |           |           |           |           |           |           |
+DROP  |G          |1          |2          |ESpell     |55-70      |25-70      |100-200    |           |
+WAIT  |7000-8000  |           |           |           |           |           |           |           |
+DROP  |A-B        |8,9,10     |3          |SBarb      |45-70      |26-50      |90-150     |           |
+DROP  |A          |10         |1          |LogL       |45-70      |26-50      |90-120     |           |
+DROP  |A          |10         |1          |WallW      |45-70      |26-50      |90-120     |           |
+DROP  |A          |10         |1          |StoneS     |45-70      |26-50      |90-120     |           |
+DROP  |A-B        |7,8,9,10   |4          |SBarb      |45-70      |26-50      |90-150     |           |
+DROP  |A-B        |4,5,6,7    |4          |SBarb      |45-70      |26-50      |90-150     |           |
+DROP  |A-B        |7,8,9,10   |4          |SBarb      |45-70      |26-50      |200-500    |           |
+DROP  |A-B        |9,10       |2          |SBarb      |45-70      |26-50      |90-150     |           |
+DROP  |B          |8          |1          |King       |45-70      |26-50      |90-120     |           |
+DROP  |A          |10         |1          |Warden     |45-70      |50         |90-120     |           |
+DROP  |A          |7          |1          |Queen      |45-70      |26-50      |90-120     |           |
+DROP  |A          |8          |1          |Champion   |45-70      |36-50      |90-120     |           |
+WAIT  |2500-3000  |           |           |           |           |           |           |           |
+DROP  |A          |10         |1          |Warden     |45-70      |90         |90-120     |           |
+DROP  |A-B        |9,10       |4          |REMAIN     |45-70      |26-50      |90-150     |           |
+WAIT  |2500-3000  |           |           |           |           |           |           |           |
+DROP  |F          |10         |1          |RSpell     |55-70      |25-70      |100-200    |           |

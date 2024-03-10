@@ -201,9 +201,9 @@ Func BBTutorial($x = 170, $y = 560)
 	Local $RebuildWindowOK = False
 	For $i = 1 To 5
 		SetDebugLog("Waiting for Rebuild Boat Window #" & $i, $COLOR_ACTION)
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 540, 140, 595, 190) Then
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 575, 100, 630, 155) Then
 			SetLog("Rebuild Boat Window Opened", $COLOR_INFO)
-			Click(430, 470) ;Click Rebuild Button
+			Click(430, 505) ;Click Rebuild Button
 			_Sleep(1000)
 			$RebuildWindowOK = True
 			ExitLoop
