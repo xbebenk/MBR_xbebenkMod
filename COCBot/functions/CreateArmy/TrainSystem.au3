@@ -525,7 +525,8 @@ Func RemoveExtraTroops($toRemove)
 			$iResult = 2
 		EndIf
 
-		If $iResult = 2 Then $toRemove = WhatToTrain(True) ; Check Everything Again...
+		;If $iResult = 2 Then 
+		$toRemove = WhatToTrain(True) ; Check Everything Again...
 
 		Local $rGetSlotNumber = GetSlotNumber() ; Get all available Slot numbers with troops assigned on them
 		Local $rGetSlotNumberSpells = GetSlotNumber(True)
@@ -578,7 +579,7 @@ Func RemoveExtraTroops($toRemove)
 			Next
 		Next
 
-		If _Sleep(500) Then Return
+		If _Sleep(1000) Then Return
 		If Not _CheckPixel($aButtonRemoveTroopsOK1, True) Then ; If no 'Okay' button found in army tab to save changes
 			SetLog("Cannot find/verify 'Okay' Button in Army tab", $COLOR_WARNING)
 			ClickAway() ; Click Away, Necessary! due to possible errors/changes
