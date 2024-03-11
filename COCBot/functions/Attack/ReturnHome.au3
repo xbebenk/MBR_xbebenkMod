@@ -125,7 +125,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					EndIf
 				EndIf
 			Else
-				If IsProblemAffect(True) Then Return
+				If IsProblemAffect() Then Return
 				SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
 			EndIf
 		EndIf
@@ -186,7 +186,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		If ReturnHomeMainPage() Then Return
 	Next
 
-	If isProblemAffect(True) Then
+	If IsProblemAffect() Then
 		SetLog("Cannot return home.", $COLOR_ERROR)
 		CheckMainScreen(False, $g_bStayOnBuilderBase, "ReturnHome-2")
 		Return

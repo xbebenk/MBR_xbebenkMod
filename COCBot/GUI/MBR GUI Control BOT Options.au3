@@ -805,7 +805,7 @@ Func btnTestImage()
 	For $i = 0 To 0
 
 		SetLog("Testing isProblemAffect...", $COLOR_SUCCESS)
-		$result = isProblemAffect(False)
+		$result = IsProblemAffect(False)
 		SetLog("Testing isProblemAffect DONE, $Result=" & $result, $COLOR_SUCCESS)
 
 		SetLog("Testing checkObstacles...", $COLOR_SUCCESS)

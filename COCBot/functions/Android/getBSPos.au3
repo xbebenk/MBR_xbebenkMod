@@ -128,7 +128,7 @@ Func getBSPos()
 		$tPoint = 0
 
 		$Changed = Not ($aOldValues[0] = $g_aiBSpos[0] And $aOldValues[1] = $g_aiBSpos[1] And $aOldValues[2] = $g_aiBSrpos[0] And $aOldValues[3] = $g_aiBSrpos[1])
-		If $g_bDebugClick Or $g_bDebugSetlog And $Changed Then SetLog("$g_aiBSpos X,Y = " & $g_aiBSpos[0] & "," & $g_aiBSpos[1] & "; $g_aiBSrpos X,Y = " & $g_aiBSrpos[0] & "," & $g_aiBSrpos[1], $COLOR_ERROR, "Verdana", "7.5", 0)
+		If $g_bDebugSetlog And $Changed Then SetLog("$g_aiBSpos X,Y = " & $g_aiBSpos[0] & "," & $g_aiBSpos[1] & "; $g_aiBSrpos X,Y = " & $g_aiBSrpos[0] & "," & $g_aiBSrpos[1], $COLOR_ERROR, "Verdana", "7.5", 0)
 	EndIf
 
 	SuspendAndroid($SuspendMode, False)

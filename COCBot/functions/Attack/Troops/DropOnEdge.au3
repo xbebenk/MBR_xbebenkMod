@@ -21,7 +21,7 @@
 
 Func DropOnEdge($troop, $edge, $number, $slotsPerEdge = 0, $edge2 = -1, $x = -1)
 
-	If isProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	If $number = 0 Then Return
 	If _SleepAttack($DELAYDROPONEDGE1) Then Return
 	SelectDropTroop($troop) ;Select Troop

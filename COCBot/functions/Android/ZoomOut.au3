@@ -280,7 +280,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				If $tryCtrlWheelScrollAfterCycles > 0 And $i > $tryCtrlWheelScrollAfterCycles Then $tryCtrlWheelScroll = True
 				If $i > $exitCount Then Return
 				If Not $g_bRunState Then Return $aPicture
-				If IsProblemAffect(True) Then  ; added to catch errors during Zoomout
+				If IsProblemAffect() Then  ; added to catch errors during Zoomout
 					SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_ERROR)
 					If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out", $COLOR_INFO)  ; call to clear normal errors
 				EndIf
@@ -398,7 +398,7 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 			EndIf
 			If $i > $exitCount Then ExitLoop
 			If Not $g_bRunState Then Return $aPicture
-			If IsProblemAffect(True) Then  ; added to catch errors during Zoomout
+			If IsProblemAffect() Then  ; added to catch errors during Zoomout
 				SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_ERROR)
 				If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out", $COLOR_INFO)  ; call to clear normal errors
 			EndIf
@@ -491,7 +491,7 @@ Func ZoomOutCtrlClick($CenterMouseWhileZooming = False, $AlwaysControlFocus = Fa
 			EndIf
 			If $i > $exitCount Then ExitLoop
 			If $g_bRunState = False Then ExitLoop
-			If IsProblemAffect(True) Then  ; added to catch errors during Zoomout
+			If IsProblemAffect() Then  ; added to catch errors during Zoomout
 				SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_RED)
 				If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out", $COLOR_BLUE)  ; call to clear normal errors
 			EndIf
@@ -533,7 +533,7 @@ Func AndroidOnlyZoomOut() ;Zooms out
 				AndroidZoomOut($i, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
 				If $i > $exitCount Then Return
 				If Not $g_bRunState Then ExitLoop
-				If IsProblemAffect(True) Then  ; added to catch errors during Zoomout
+				If IsProblemAffect() Then  ; added to catch errors during Zoomout
 					SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_ERROR)
 					If checkObstacles() Then SetLog("Error window cleared, continue Zoom out", $COLOR_INFO)  ; call to clear normal errors
 				EndIf

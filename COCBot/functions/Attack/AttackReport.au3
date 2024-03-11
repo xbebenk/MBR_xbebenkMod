@@ -22,7 +22,7 @@ Func AttackReport()
 	$iCount = 0 ; Reset loop counter
 	While _CheckPixel($aEndFightSceneAvl, True) = False ; check for light gold pixle in the Gold ribbon in End of Attack Scene before reading values
 		$iCount += 1
-		If isProblemAffect(True) Then Return
+		If IsProblemAffect() Then Return
 		If _Sleep($DELAYATTACKREPORT1) Then Return
 		SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
 		If $iCount > 30 Then ExitLoop ; wait 30*500ms = 15 seconds max for the window to render

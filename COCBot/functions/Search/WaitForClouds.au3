@@ -26,7 +26,7 @@ Func WaitForClouds()
 	
 	While Not _CheckPixel($aIsAttackPage, True) ; loop to wait for clouds to disappear
 		$iCount += 1
-		If isProblemAffect(True) Then ; check for reload error messages -> restart exitLoop, reset search
+		If IsProblemAffect() Then ; check for reload error messages -> restart exitLoop, reset search
 			resetAttackSearch()
 			ExitLoop
 		EndIf

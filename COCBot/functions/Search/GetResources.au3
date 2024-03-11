@@ -26,7 +26,7 @@ Func GetResources($bLog = True, $pMatchMode = -1) ;Reads resources
 	While (getGoldVillageSearch(48, 76) = "") Or (getElixirVillageSearch(48, 104) = "")
 		$iCount += 1
 		If _Sleep($DELAYGETRESOURCES3) Then Return
-		If $iCount >= 50 Or isProblemAffect(True) Then ExitLoop ; Wait 50*150ms=7.5 seconds max to read resources
+		If $iCount >= 50 Or IsProblemAffect() Then ExitLoop ; Wait 50*150ms=7.5 seconds max to read resources
 	WEnd
 
 	If _Sleep($DELAYRESPOND) Then Return
@@ -48,7 +48,7 @@ Func GetResources($bLog = True, $pMatchMode = -1) ;Reads resources
 	$iSearchGold2 = $g_iSearchGold
 	$iSearchElixir2 = $g_iSearchElixir
 
-	If $iStuck >= 5 Or isProblemAffect(True) Then
+	If $iStuck >= 5 Or IsProblemAffect() Then
 		$iStuck = 0
 		resetAttackSearch(True)
 		Return

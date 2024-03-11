@@ -95,7 +95,7 @@ Func checkAttackDisable($iSource, $Result = "")
 					If _Sleep($DELAYATTACKDISABLE500) Then Return
 					$iCount += 1
 					SetDebugLog("wait end battle button " & $iCount, $COLOR_DEBUG)
-					If $iCount > 40 Or isProblemAffect(True) Then ; wait 20 seconds and give up.
+					If $iCount > 40 Or IsProblemAffect() Then ; wait 20 seconds and give up.
 						checkObstacles()
 						ExitLoop
 					EndIf
@@ -115,7 +115,7 @@ Func checkAttackDisable($iSource, $Result = "")
 					ClickAway()
 					$iCount += 1
 					SetDebugLog("wait main page" & $iCount, $COLOR_DEBUG)
-					If $iCount > 5 Or isProblemAffect(True) Then ; wait 2.5 seconds, give up, let checkobstacles try to clear page
+					If $iCount > 5 Or IsProblemAffect() Then ; wait 2.5 seconds, give up, let checkobstacles try to clear page
 						checkObstacles()
 						ExitLoop
 					EndIf

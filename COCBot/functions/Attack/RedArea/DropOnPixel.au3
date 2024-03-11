@@ -23,7 +23,7 @@
 
 Func DropOnPixel($troop, $listArrPixel, $number, $slotsPerEdge = 0)
 
-	If isProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	If Not IsAttackPage() Then Return
 
 	Local $nameFunc = "[DropOnPixel]"

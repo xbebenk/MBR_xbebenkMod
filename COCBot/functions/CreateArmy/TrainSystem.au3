@@ -124,7 +124,7 @@ EndFunc ;==>TrainPreviousArmy
 
 Func TrainCustomArmy()
 	If Not $g_bRunState Then Return
-	If isProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	SetLog(" ====== CustomTrain ====== ", $COLOR_ACTION)
 
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
@@ -152,7 +152,7 @@ Func TrainCustomArmy()
 		If Not $g_bRunState Then Return
 		If Not OpenArmyTab(False, "TrainCustomArmy()") Then Return
 		Local $rWhatToTrain = WhatToTrain()
-		If IsProblemAffect(True) Then Return
+		If IsProblemAffect() Then Return
 		If $bEmptyTroopQueue And DoWhatToTrainContainTroop($rWhatToTrain) Then TrainUsingWhatToTrain($rWhatToTrain)
 		If $bEmptySpellQueue And DoWhatToTrainContainSpell($rWhatToTrain) Then BrewUsingWhatToTrain($rWhatToTrain)
 	EndIf
@@ -330,7 +330,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 	For $i = 0 To (UBound($rWTT) - 1)
 		If Not $g_bRunState Then Return
 		If $rWTT[$i][1] > 0 Then ; If Count to Train Was Higher Than ZERO
-			If IsProblemAffect(True) Then Return
+			If IsProblemAffect() Then Return
 			If IsSpellToBrew($rWTT[$i][0]) Then ContinueLoop
 			Local $iTroopIndex = TroopIndexLookup($rWTT[$i][0], "TrainUsingWhatToTrain()")
 
@@ -379,7 +379,7 @@ Func BrewUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 	For $i = 0 To (UBound($rWTT) - 1)
 		If Not $g_bRunState Then Return
 		If $rWTT[$i][1] > 0 Then ; If Count to Train Was Higher Than ZERO
-			If IsProblemAffect(True) Then Return
+			If IsProblemAffect() Then Return
 			If Not IsSpellToBrew($rWTT[$i][0]) Then ContinueLoop
 			Local $iSpellIndex = TroopIndexLookup($rWTT[$i][0], "BrewUsingWhatToTrain")
 			Local $NeededSpace = $g_aiSpellSpace[$iSpellIndex - $eLSpell] * $rWTT[$i][1]

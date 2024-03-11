@@ -17,17 +17,17 @@
 
 Func DoubleTrain()
 	If Not $g_bDoubleTrain Then Return
-	If isProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
 
 	SetLog(" ====== Double Train ====== ", $COLOR_ACTION)
 	
 	; Troop
 	DoubleTrainTroop($bDebug)
-	If isProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	; Spell
 	DoubleTrainSpell($bDebug)
-	If isProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 EndFunc   ;==>DoubleTrain
 
 Func TrainFullTroop($bQueue = False)
@@ -612,7 +612,7 @@ Func DoubleTrainTroop($bDebug = False)
 	Local $tmpCamp = 999, $TroopCamp
 	While 1
 		$TroopCamp = GetCurrentArmy(95, 163)
-		If IsProblemAffect(True) Then Return
+		If IsProblemAffect() Then Return
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 		
@@ -670,7 +670,7 @@ Func DoubleTrainSpell($bDebug = False)
 	If Not OpenSpellsTab(False, "DoubleTrain()") Then Return
 	While 1
 		$SpellCamp = GetCurrentArmy(95, 163)
-		If IsProblemAffect(True) Then Return
+		If IsProblemAffect() Then Return
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 		

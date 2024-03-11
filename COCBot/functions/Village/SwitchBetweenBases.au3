@@ -43,7 +43,7 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 		If $g_bStayOnBuilderBase Then $bIsOnBuilderBase = isOnBuilderBase() ;check again if we are on builderbases, after mainscreen located
 	EndIf
 	
-	If IsProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	If Not $g_bRunState Then Return
 	
 	If $g_bStayOnBuilderBase And Not $bIsOnBuilderBase Then
@@ -164,7 +164,7 @@ Func SwitchTo($To = "BB")
 		_Sleep(1000)
 	Next
 	
-	If IsProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	If Not $g_bRunState Then Return
 	Return $bRet
 EndFunc

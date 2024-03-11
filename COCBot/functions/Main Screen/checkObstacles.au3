@@ -32,7 +32,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	checkObstacles_Network()
 	CheckAndroidReboot()
 	If Not $g_bRunState Then Return
-	If isProblemAffect(True) Then
+	If IsProblemAffect() Then
 		;1- Another device
 		If QuickMIS("BC1", $g_sImgAnotherDevice, 255, 315, 345, 335) Then 
 			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And $g_bChkSharedPrefs Then

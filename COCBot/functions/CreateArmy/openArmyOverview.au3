@@ -24,7 +24,7 @@ Func OpenArmyOverview($sWhereFrom = "Undefined")
 		ElseIf IsTrainPage(False, 1) Then 
 			SetLog("Detected Train Window Open", $COLOR_ACTION)
 			Return True
-		ElseIf IsProblemAffect(True) Then 
+		ElseIf IsProblemAffect() Then 
 			SetLog("Detected Android popup error", $COLOR_ACTION)
 			Return False
 		ElseIf Not checkChatTabPixel() Then 

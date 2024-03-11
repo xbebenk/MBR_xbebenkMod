@@ -354,7 +354,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				SetLog("Wait to see Next Button #" & $i, $COLOR_ACTION)
 			EndIf
 			
-			If isProblemAffect(True) Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
+			If IsProblemAffect() Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
 				$g_bIsClientSyncError = True
 				checkMainScreen(True, $g_bStayOnBuilderBase, "VillageSearch")
 				If $g_bRestart Then
@@ -400,7 +400,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 	For $i = 0 To $g_iModeCount - 1
 		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Then
 			If Not CheckZoomOut("VillageSearch") Then
-				If isProblemAffect(True) Then
+				If IsProblemAffect() Then
 					$g_bRestart = True ; Restart Attack
 					Return
 				EndIf
@@ -440,7 +440,7 @@ Func SearchLimit($iSkipped, $bReturnToPickupHero = False)
 			If _Sleep($DELAYSEARCHLIMIT) Then Return
 			$Wcount += 1
 			SetDebugLog("wait surrender button " & $Wcount, $COLOR_DEBUG)
-			If $Wcount >= 50 Or isProblemAffect(True) Then
+			If $Wcount >= 50 Or IsProblemAffect() Then
 				checkMainScreen(True, $g_bStayOnBuilderBase, "SearchLimit")
 				$g_bIsClientSyncError = False ; reset OOS flag for long restart
 				$g_bRestart = True ; set force runbot restart flag

@@ -194,7 +194,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 
 			; Lets detect the CC & Sieges and click - search window is - X, 530, X + 390, 530 + 30
 			Local $aSearchResult = GetListSiege($iX - 50, 470, $iX + 500, 550)
-			If IsProblemAffect(True) Then Return
+			If IsProblemAffect() Then Return
 			If Not $g_bRunState Then Return
 			If IsArray($aSearchResult) And Ubound($aSearchResult) > 0 Then
 				Local $FinalCoordX = $iLastX, $FinalCoordY = $iLastY, $iFinalLevel = 1, $HigherLevelFound = False, $AnySiegeFound = False
@@ -306,7 +306,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 				EndIf
 			Else
 				If $g_bDebugImageSave Then SaveDebugImage("PrepareAttack_SwitchSiege")
-				If IsProblemAffect(True) Then Return
+				If IsProblemAffect() Then Return
 				If Not $g_bRunState Then Return
 				; If was not detectable lets click again on green icon to hide the window!
 				Setlog("Undetected " & ($bAnySiege ? "any siege machine " : GetTroopName($ToUse)) & " after click on switch btn!", $COLOR_DEBUG)
@@ -346,7 +346,7 @@ Func GetListSiege($x = 135, $y = 470, $x1 = 700, $y1 = 540)
 			If $SiegeLevel = "" Then $SiegeLevel = 1
 			Local $TroopIndex = TroopIndexLookup($aSiege[$i][0])
 			Local $OwnSiege = False
-			If IsProblemAffect(True) Then Return
+			If IsProblemAffect() Then Return
 			If Not $g_bRunState Then Return
 			If _ColorCheck(_GetPixelColor($aSiege[$i][1] - 30, 466, True), Hex(0x559CDD, 6), 10) Then $OwnSiege = String(True)
 			_ArrayAdd($aResult, $aSiege[$i][0] & "|" & $aSiege[$i][1] & "|" & $aSiege[$i][2] & "|" & $SiegeLevel & "|" & $OwnSiege & "|" & $TroopIndex)

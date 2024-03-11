@@ -669,9 +669,9 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $SIDESNAMES)
 	
 	If Not $g_bRunState Then Return
-	If IsProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	CheckHeroesHealth()
-	If IsProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
 	SetLog("Dropping left over troops", $COLOR_INFO)
 	
@@ -731,7 +731,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 	Local $troop, $troopNb, $name
 
 	For $i = 0 To UBound($listInfoDeploy) - 1
-		If IsProblemAffect(True) Then Return
+		If IsProblemAffect() Then Return
 		; Reset the variables
 		Local $troop = -1
 		Local $troopNb = 0
@@ -781,7 +781,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 
 	; Drop a full wave of all troops (e.g. giants, barbs and archers) on each side then switch sides.
 	For $numWave = 0 To UBound($listListInfoDeployTroopPixel) - 1
-		If IsProblemAffect(True) Then Return
+		If IsProblemAffect() Then Return
 		Local $listInfoDeployTroopPixel = $listListInfoDeployTroopPixel[$numWave]
 		If (UBound($listInfoDeployTroopPixel) > 0) Then
 			Local $infoTroopListArrPixel = $listInfoDeployTroopPixel[0]
@@ -854,7 +854,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 	Next
 
 	For $numWave = 0 To UBound($listListInfoDeployTroopPixel) - 1
-		If IsProblemAffect(True) Then Return
+		If IsProblemAffect() Then Return
 		Local $listInfoDeployTroopPixel = $listListInfoDeployTroopPixel[$numWave]
 		For $i = 0 To UBound($listInfoDeployTroopPixel) - 1
 			Local $infoPixelDropTroop = $listInfoDeployTroopPixel[$i]
