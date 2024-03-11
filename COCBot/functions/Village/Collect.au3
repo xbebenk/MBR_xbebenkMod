@@ -141,7 +141,7 @@ Func CollectCookieRumble()
 			$bWinOpen = True
 			ExitLoop
 		EndIf
-		If QuickMIS("BC1", $g_sImgCollectCookie, 390, 552, 475, 600) Then Click($g_iQuickMISX, $g_iQuickMISY)
+		If QuickMIS("BC1", $g_sImgCollectCookie, 390, 452, 475, 600) Then Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(500) Then Return
 		Click(570, 90, 1, "Click Event Window Header")
 	Next
