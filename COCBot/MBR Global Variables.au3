@@ -2046,5 +2046,7 @@ Global $g_aVillageRefSize[37][7] = [["DS", "Default", 571.62, 82, 770, 58, 577],
 									["DP", "Dragon Palace", 626.14, 49, 797, 58, 614], _
 									["GH", "Ghost", 584.01, 59, 797, 55, 603], _
 									["GB", "GingerBread", 630.72, 53, 800, 54, 611], _
+									["DO", "Deep Dark Ocean", 620.68, 84, 802, 57, 596], _
+									["HP", "Heavenly Place", 633.73, 59, 808, 63, 624], _
 									["CH", "Chess", 643.24, 63, 793, 49, 601]] 
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
