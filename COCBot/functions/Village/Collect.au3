@@ -99,7 +99,7 @@ Func CollectLootCart()
 EndFunc   ;==>CollectLootCart
 
 Func CollectCookie()
-	If QuickMIS("BC1", $g_sImgCollectCookie & "\Cookie", 245, 45, 360, 100) Then
+	If QuickMIS("BC1", $g_sImgCollectCookie & "\Cookie", 245, 45, 360, 120) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
 		SetLog("Collecting " & $g_iQuickMISName, $COLOR_ACTION)
 		If _Sleep(1000) Then Return
@@ -167,6 +167,10 @@ Func ClaimCookieReward($bGoldPass = False)
 	If _Sleep(1000) Then Return
 	Local $tmpxClaim = 0
 	For $i = 1 To 10
+		If $i = 1 And WaitforPixel(795, 398, 796, 400, "FFFE68", 10, 1) Then 
+			ClickDrag(400, 445, 700, 445, 500)
+			If _Sleep(1500) Then Return
+		EndIf
 		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, $x1, $y1, $x2, $y2)
 		If Not $g_bRunState Then Return
 		If IsArray($aClaim) And UBound($aClaim) > 0 Then
