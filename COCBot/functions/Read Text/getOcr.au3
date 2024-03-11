@@ -171,7 +171,7 @@ Func getOcrSpaceCastleDonate($x_start, $y_start) ;  -> Get the number of troops 
 EndFunc   ;==>getOcrSpaceCastleDonate
 
 Func getOcrOverAllDamage($x_start, $y_start) ;  -> Get the Overall Damage %
-	Return getOcrAndCapture("coc-overalldamage", $x_start, $y_start, 50, 20, True)
+	Return getOcrAndCapture("coc-overalldamage", $x_start, $y_start, 55, 25, True)
 EndFunc   ;==>getOcrOverAllDamage
 
 Func getOcrGuardShield($x_start, $y_start) ;  -> Get the guard/shield time left, middle top of the screen
