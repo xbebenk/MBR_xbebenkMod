@@ -181,21 +181,6 @@ Func IsLaunchAttackPage()
 
 EndFunc   ;==>IsLaunchAttackPage
 
-Func IsMultiplayerTabOpen()
-	Local $result = False
-	$result = WaitforPixel(785, 111, 798, 123, "FFFFFF", 10, 2)
-	
-	If Not $result Then 
-		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 97, 812, 136) Then $result = True
-	EndIf
-	
-	If $result Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found Multiplayer Window", $COLOR_ACTION)
-		Return True
-	EndIf
-	Return False
-EndFunc
-
 Func IsOKCancelPage($bWriteLog = True)
 
 	If IsPageLoop($aConfirmSurrender, 1) Then
@@ -248,9 +233,24 @@ Func IsPostDefenseSummaryPage($bCapture = True)
 
 EndFunc   ;==>IsPostDefenseSummaryPage
 
+Func IsMultiplayerTabOpen()
+	Local $result = False
+	$result = WaitforPixel(790, 114, 791, 115, "FFFFFF", 10, 2)
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 97, 812, 136) Then $result = True
+	EndIf
+	
+	If $result Then
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found Multiplayer Window", $COLOR_ACTION)
+		Return True
+	EndIf
+	Return False
+EndFunc ; IsMultiplayerTabOpen
+
 Func IsFullScreenWindow()
 	Local $result = False
-	$result = WaitforPixel(823,40,825,46, "FFFFFF", 10, 2)
+	$result = WaitforPixel(820, 37, 821, 38, "FFFFFF", 10, 2)
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 20, 860, 100) Then $result = True
