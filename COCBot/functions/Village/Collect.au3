@@ -102,7 +102,7 @@ Func CollectCookie()
 	If QuickMIS("BC1", $g_sImgCollectCookie & "\Cookie", 245, 45, 360, 120) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 20)
 		SetLog("Collecting " & $g_iQuickMISName, $COLOR_ACTION)
-		If _Sleep(1000) Then Return
+		If _Sleep(2000) Then Return
 	EndIf
 EndFunc
 
