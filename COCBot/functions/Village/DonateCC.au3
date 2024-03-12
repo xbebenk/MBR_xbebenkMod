@@ -229,7 +229,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	While $bDonate
 		If Not $g_bRunState Then Return
 		If $g_bDebugSetLog Then SetLog("aSearchArea : " & _ArrayToString($aSearchArea), $COLOR_DEBUG1)
-		$aDonateButton = QuickMIS("CNX", $g_sImgDonateCC, $aSearchArea[0], $aSearchArea[1], $aSearchArea[2], $aSearchArea[3])
+		$aDonateButton = QuickMIS("CNX", $g_sImgDonateButton, $aSearchArea[0], $aSearchArea[1], $aSearchArea[2], $aSearchArea[3])
 		If $g_bDebugSetLog Then SetLog("Donate Buttons: " & _ArrayToString($aDonateButton), $COLOR_DEBUG1)
 		If IsArray($aDonateButton) And UBound($aDonateButton) > 0 Then 
 			_ArraySort($aDonateButton, 0, 0, 0, 2)
@@ -851,7 +851,7 @@ Func DonateWindow($aiDonateButton, $bOpen = True)
 		Return
 	EndIf
 	
-	If QuickMIS("BC1", $g_sImgDonateCC, $aiDonateButton[0] - 20, $aiDonateButton[1] - 20, $aiDonateButton[0] + 20, $aiDonateButton[1] + 20) Then 
+	If QuickMIS("BC1", $g_sImgDonateButton, $aiDonateButton[0] - 20, $aiDonateButton[1] - 20, $aiDonateButton[0] + 20, $aiDonateButton[1] + 20) Then 
 		Click($g_iQuickMISX, $g_iQuickMISY)
 	Else
 		SetDebugLog("Could not find the Donate Button!", $COLOR_DEBUG)
@@ -1221,7 +1221,7 @@ Func getRemainingCCcapacity($DonateButton = -1)
 	
 	Local $aiDonateButton[2] = [0, 0]
 	If $DonateButton = -1 Then
-		Local $aDonateButton = QuickMIS("CNX", $g_sImgDonateCC, 250, 130, 340, 600)
+		Local $aDonateButton = QuickMIS("CNX", $g_sImgDonateButton, 250, 130, 340, 600)
 		If IsArray($aDonateButton) And UBound($aDonateButton) > 0 Then 
 			_ArraySort($aDonateButton, 0, 0, 0, 2)
 			If $g_bDebugSetLog Then SetLog("aDonateButton : " & _ArrayToString($aDonateButton), $COLOR_DEBUG1)
@@ -1250,7 +1250,7 @@ Func getRemainingCCcapacity($DonateButton = -1)
 	SetDebugLog("Start getRemainingCCcapacity : " & _ArrayToString($aiDonateButton), $COLOR_DEBUG)
 	Local $xTroop = 6
 	
-	If QuickMIS("BC1", $g_sImgDonateCC, $aiDonateButton[0] - 20, $aiDonateButton[1] - 20, $aiDonateButton[0] + 20, $aiDonateButton[1] + 20) Then 
+	If QuickMIS("BC1", $g_sImgDonateButton, $aiDonateButton[0] - 20, $aiDonateButton[1] - 20, $aiDonateButton[0] + 20, $aiDonateButton[1] + 20) Then 
 		$aiDonateButton[0] = $g_iQuickMISX
 		$aiDonateButton[1] = $g_iQuickMISY
 	EndIf
@@ -1377,7 +1377,7 @@ Func getArmyRequest($DonateButton = -1)
 	$g_aiDonQuant = $g_aiZero52 ;reset array
 	Local $aiDonateCoords[2] = [0, 0]
 	If $DonateButton = -1 Then
-		Local $aDonateButton = QuickMIS("CNX", $g_sImgDonateCC, 250, 130, 340, 260)
+		Local $aDonateButton = QuickMIS("CNX", $g_sImgDonateButton, 250, 130, 350, 260)
 		If IsArray($aDonateButton) And UBound($aDonateButton) > 0 Then 
 			_ArraySort($aDonateButton, 0, 0, 0, 2)
 			If $g_bDebugSetLog Then SetLog("aDonateButton : " & _ArrayToString($aDonateButton), $COLOR_DEBUG1)
@@ -1406,7 +1406,7 @@ Func getArmyRequest($DonateButton = -1)
 				If Number($aQuick[$i][1]) < $axCoord[$j] Then ExitLoop
 			Next
 			
-			Local $sQuant = getOcrAndCapture("coc-singlereq", $axCoord[$iPos], $aiDonateCoords[1] - 92, 50, 20, True)
+			Local $sQuant = getOcrAndCapture("coc-singlereq", $axCoord[$iPos], $aiDonateCoords[1] - 92, 20, 15, True)
 			$iArmyIndex = TroopIndexLookup($aQuick[$i][0])
 			; Troops
 			If $iArmyIndex >= $eBarb And $iArmyIndex <= $eHunt Then
@@ -1437,7 +1437,7 @@ EndFunc   ;==>getArmyRequest
 Func ReadRequestString($DonateButton = -1)
 	Local $aiDonateButton[2] = [0, 0]
 	If $DonateButton = -1 Then
-		Local $aDonateButton = QuickMIS("CNX", $g_sImgDonateCC, 250, 130, 340, 600)
+		Local $aDonateButton = QuickMIS("CNX", $g_sImgDonateButton, 250, 130, 340, 600)
 		If IsArray($aDonateButton) And UBound($aDonateButton) > 0 Then 
 			_ArraySort($aDonateButton, 0, 0, 0, 2)
 			If $g_bDebugSetLog Then SetLog("aDonateButton : " & _ArrayToString($aDonateButton), $COLOR_DEBUG1)
