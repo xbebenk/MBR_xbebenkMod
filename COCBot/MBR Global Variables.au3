@@ -2012,7 +2012,7 @@ Global $g_bChkStartWeekendRaid = True
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[37][7] = [["DS", "Default", 571.62, 82, 770, 58, 577], _ ;ok
+Global $g_aVillageRefSize[38][7] = [["DS", "Default", 571.62, 82, 770, 58, 577], _ ;ok
 									["JS", "Jungle", 547, 99, 773, 58, 568], _ ;ok
 									["MS", "Magic", 619.82, 26, 820, 48, 643], _ ;ok
 									["BL", "BuilderBase Lower", 652.11, 131, 777, 102, 584], _ ;ok
@@ -2048,5 +2048,6 @@ Global $g_aVillageRefSize[37][7] = [["DS", "Default", 571.62, 82, 770, 58, 577],
 									["GB", "GingerBread", 630.72, 53, 800, 54, 611], _
 									["DO", "Deep Dark Ocean", 620.68, 84, 802, 57, 596], _
 									["HP", "Heavenly Place", 633.73, 59, 808, 63, 624], _
+									["SC", "Space", 571.85, 73, 778, 61, 588], _
 									["CH", "Chess", 643.24, 63, 793, 49, 601]] 
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
