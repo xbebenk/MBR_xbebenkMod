@@ -171,6 +171,11 @@ Global $g_sImgRedX = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RedX\"
 Global $g_sImgAUpgradeRushTH = @ScriptDir & "\imgxml\Resources\Auto Upgrade\RushTH\"
 Global $g_sImgAUpgradeHour = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Hour\"
 Global $g_sImgResourceIcon = @ScriptDir & "\imgxml\Resources\Auto Upgrade\ResourceIcon\"
+Global $g_sImgBuildingAndTraps = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Shop\BuildingAndTraps\"
+Global $g_sImgShopArmy = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Shop\Army\"
+Global $g_sImgShopResources = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Shop\Resources\"
+Global $g_sImgShopDefenses = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Shop\Defenses\"
+Global $g_sImgShopTraps = @ScriptDir & "\imgxml\Resources\Auto Upgrade\Shop\Traps\"
 #EndRegion
 
 #Region Auto Upgrade Builder Base

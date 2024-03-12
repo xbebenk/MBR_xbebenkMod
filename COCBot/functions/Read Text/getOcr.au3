@@ -200,7 +200,7 @@ EndFunc   ;==>getOresValues2
 
 Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
 	Local $BuildingName = "", $Count = 1
-	Local $Name = getOcrAndCapture("coc-buildermenu-name", $x_start, $y_start, 160, 20, False)
+	Local $Name = StringReplace(getOcrAndCapture("coc-buildermenu-name", $x_start, $y_start, 180, 20, False), "-", "")
 	If StringRegExp($Name, "x\d{1,}") Then
 		Local $aCount = StringRegExp($Name, "\d{1,}", 1) ;check if we found count of building
 		If IsArray($aCount) Then $Count = $aCount[0]
@@ -214,6 +214,13 @@ Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
 	
 	If StringRegExp($BuildingName, "x\d{1,}") Then
 		Local $aReplace = StringRegExp($BuildingName, "( x\d{1,})", 1)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
+			$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
+	EndIf
+	If StringRegExp($BuildingName, " x") Then
+		Local $aReplace = StringRegExp($BuildingName, "( x)", 1)
 		If Ubound($aReplace) > 0 Then 
 			Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
 			$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)

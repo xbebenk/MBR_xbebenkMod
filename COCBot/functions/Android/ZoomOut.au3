@@ -726,58 +726,44 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $
 EndFunc   ;==>SearchZoomOut
 
 Func ZoomIn($Region = "Top")
-	Switch $g_sAndroidEmulator
-		Case "MEmu"
-			SetDebugLog("ZoomInMEmu()")
-			If ZoomInMEmu($Region) Then Return True
-		Case "Nox"
-			SetDebugLog("ZoomInNox()")
-			If ZoomInMEmu($Region) Then Return True
-		Case "BlueStacks2", "BlueStacks5"
-			SetDebugLog("ZoomInBlueStacks2()")
-			If ZoomInMEmu($Region) Then Return True
-	EndSwitch
-	Return False
-EndFunc
-
-Func ZoomInMEmu($Region = "Top")
 	Local $bSuccessZoomIn = False
-	For $i = 0 To 2
-		SetLog("[" & $i & "] Try ZoomIn", $COLOR_DEBUG)
-		Switch $g_sAndroidEmulator
-			Case "MEmu", "Nox"
-				If Not AndroidAdbScript("ZoomIn") Then Return False
-			Case "BlueStacks2", "BlueStacks5"
-				If Not AndroidAdbScript("ZoomIn.BlueStacks") Then Return False
-		EndSwitch
-		If _Sleep(1500) Then Return
-		Local $ZoomInResult = SearchZoomOut(False, True, "", True)
-		If IsArray($ZoomInResult) Then
-			If $ZoomInResult[0] = "" Then
-				SetLog("[" & $i & "] ZoomIn Succeed", $COLOR_SUCCESS)
-				$bSuccessZoomIn = True
-				ExitLoop
-			Else
-				SetLog("[" & $i & "] ZoomIn Not Succeed", $COLOR_DEBUG)
-			EndIf
-		EndIf
-	Next
-	If Not $bSuccessZoomIn Then Return False
+	Local $sScript = "ZoomIn"
 	Switch $Region
 		Case "Top"
-			ClickDrag(400, 100, 400, 600, 200)
-			If _Sleep(500) Then Return
-			ClickDrag(400, 100, 400, 250, 200)
+			$sScript &= ".Top"
 		Case "Left"
-			ClickDrag(100, 400, 800, 400, 200)
-			If _Sleep(500) Then Return
+			$sScript &= ".Left"
 		Case "Bottom"
-			ClickDrag(400, 500, 400, 100, 200)
-			If _Sleep(500) Then Return
-			ClickDrag(400, 500, 400, 350, 200)
+			$sScript &= ".Bottom"
 		Case "Right"
-			ClickDrag(800, 400, 100, 400, 200)
+			$sScript &= ".Right"
 	EndSwitch
+	
+	Switch $g_sAndroidEmulator
+		Case "MEmu", "Nox"
+			$sScript &= ".Memu"
+		Case "BlueStacks5"
+			$sScript &= ".BlueStacks5"
+	EndSwitch
+	
+	SetLog("minitouch script = " & $sScript, $COLOR_DEBUG)
+	
+	For $i = 1 To 3
+		SetLog("[" & $i & "] Try ZoomIn", $COLOR_DEBUG)
+		If Not AndroidAdbScript($sScript) Then Return False
+		If _Sleep(1500) Then Return
+		Local $sSceneryCode[3] = ["DS", "JS", "MS"]
+		For $sCode In $sSceneryCode
+			Local $iRes = GetVillageSize(False, "stone" & $sCode, "tree" & $sCode, False)
+			If IsArray($iRes) Then ExitLoop
+			If $iRes = 0 Then ContinueLoop
+			SetLog("[" & $i & "] ZoomIn Not Succeed", $COLOR_DEBUG)
+		Next
+		SetLog("[" & $i & "] ZoomIn Succeed", $COLOR_SUCCESS)
+		$bSuccessZoomIn = True
+		ExitLoop
+	Next
+	If Not $bSuccessZoomIn Then Return False
 	Return True
 EndFunc
 
