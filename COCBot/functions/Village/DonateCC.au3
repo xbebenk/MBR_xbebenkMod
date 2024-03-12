@@ -1377,7 +1377,7 @@ Func getArmyRequest($DonateButton = -1)
 	$g_aiDonQuant = $g_aiZero52 ;reset array
 	Local $aiDonateCoords[2] = [0, 0]
 	If $DonateButton = -1 Then
-		Local $aDonateButton = QuickMIS("CNX", $g_sImgDonateButton, 250, 130, 350, 260)
+		Local $aDonateButton = QuickMIS("CNX", $g_sImgDonateButton, 250, 130, 340, 260)
 		If IsArray($aDonateButton) And UBound($aDonateButton) > 0 Then 
 			_ArraySort($aDonateButton, 0, 0, 0, 2)
 			If $g_bDebugSetLog Then SetLog("aDonateButton : " & _ArrayToString($aDonateButton), $COLOR_DEBUG1)
