@@ -53,7 +53,7 @@ Global $g_hChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 Global $g_hChkRushTH = 0, $g_hBtnRushTHOption = 0, $g_hUseWallReserveBuilder = 0, $g_hUseBuilderPotion = 0, $g_hUpgradeOtherDefenses = 0
 Global $g_hGUI_RushTHOption = 0, $g_hBtnRushTHOptionClose = 0, $g_ahCmbRushTHOption[5] = [0, 0, 0, 0, 0]
 Global $RushTHOption[5] = ["TownHall", "Barracks", "Dark Barracks", "Spell Factory", "Dark Spell Factory"]
-Global $g_hchkEssentialUpgrade[8] = [0,0,0,0,0,0,0,0]
+Global $g_hchkEssentialUpgrade[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hUpgradeOnlyTHLevelAchieve = 0, $g_hHeroPriority = 0
 Global $g_hUseHeroBooks = 0, $g_hHeroMinUpgradeTime = 0
 
@@ -842,7 +842,7 @@ Func CreateRushTHOption()
 									"10 Unlock Appr Warden"
 	Local $TxtRushTHOptionSpellF = "2 Unlock Healing Spell|3 Unlock Rage Spell|4 Unlock Jump & Freeze Spell|5 Unlock Clone Spell|" & _
 									"6 Unlock Invisibility Spell|7 Unlock Recall Spell"
-	Local $TxtRushTHOptionDSpellF = "2 Unlock EarthQuake Spell|3 Unlock Haste Spell|4 Unlock Skeleton Spell|5 Unlock Bat Spell"
+	Local $TxtRushTHOptionDSpellF = "2 Unlock EarthQuake Spell|3 Unlock Haste Spell|4 Unlock Skeleton Spell|5 Unlock Bat Spell|6 Unlock Overgrowth Spell"
 
 	$g_hGUI_RushTHOption = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - AutoUpgrade", "GUI_RushTHOption", "Optional Settings: Set Max Level to Upgrade"), 330, 430, $g_iFrmBotPosX, $g_iFrmBotPosY + 200, $WS_DLGFRAME, $WS_EX_TOPMOST)
 	Local $x = 25, $y = 25
@@ -862,7 +862,7 @@ Func CreateRushTHOption()
 				Case 3
 					GUICtrlSetData(-1,  $TxtRushTHOptionSpellF, "7 Unlock Recall Spell")
 				Case 4
-					GUICtrlSetData(-1,  $TxtRushTHOptionDSpellF, "5 Unlock Bat Spell")
+					GUICtrlSetData(-1,  $TxtRushTHOptionDSpellF, "6 Unlock Overgrowth Spell")
 			EndSwitch
 	Next
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
