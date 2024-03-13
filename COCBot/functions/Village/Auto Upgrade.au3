@@ -24,8 +24,8 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
 
 	PlaceBuilder()
-
-	getBuilderCount(True) ;check if we have available builder
+	VillageReport(False, True) ;check if we have available builder
+	
 	;Check if there is a free builder for Auto Upgrade
 	If $g_iFreeBuilderCount > 0 Then $bRet = True;builder available
 
@@ -111,7 +111,7 @@ Func _SearchUpgrade($bTest = False)
 		SetLog("Search For Upgrade #" & $z, $COLOR_ACTION)
 		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
 		If $z = 1 Then 
-			SetLog("Searching for NewUpgrade", $COLOR_DEBUG1)
+			SetLog("Searching for NewUpgrade", $COLOR_INFO)
 			If FindTHInUpgradeProgress() Then
 				SetLog("TownHall Upgrade in progress, skip search new building!", $COLOR_SUCCESS)
 				ContinueLoop
@@ -165,12 +165,14 @@ Func _SearchUpgrade($bTest = False)
 		
 		If Not $g_bRunState Then Return
 		$bNew = False ;reset
-		SetLog("Searching for ExistingUpgrade", $COLOR_DEBUG1)
+		SetLog("Searching for ExistingUpgrade", $COLOR_INFO)
 		$Upgrades = FindUpgrade()
+		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
 		If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
 			If $g_bUpgradeLowCost Then _ArraySort($Upgrades, 0, 0, 0, 5)
+			SetLog("UpgradeList scoring:", $COLOR_INFO)
 			For $i = 0 To UBound($Upgrades) - 1
-				SetLog("Building: " & $Upgrades[$i][3] & ", Cost:" & $Upgrades[$i][5] & " " & $Upgrades[$i][0], $COLOR_DEBUG1)
+				SetLog("Building: " & $Upgrades[$i][3] & ", Cost:" & $Upgrades[$i][5] & " " & $Upgrades[$i][0] & ", Score: [" & ($Upgrades[$i][4] = "New" ? $Upgrades[$i][4] : $Upgrades[$i][6]) & "]", $COLOR_DEBUG1)
 			Next
 			For $i = 0 To UBound($Upgrades) - 1
 				If $Upgrades[$i][4] = "New" Then ;new building					
@@ -233,6 +235,9 @@ EndFunc
 
 Func FindUpgrade($bTest = False)
 	If Not $g_bRunState Then Return
+	SetLog("[FindUpgrade] RushTH:" & String($g_bChkRushTH) & ", UpLowCost:" & String($g_bUpgradeLowCost) & ", OtherDef:" & String($g_bUpgradeOtherDefenses), $COLOR_INFO)
+	If $g_bChkRushTH Then SetLog("[FindUpgrade] Only Search for RushTH Building", $COLOR_INFO)
+	
 	If Not ClickMainBuilder($bTest) Then Return
 	Local $ElixMultiply = 1, $GoldMultiply = 1 ;used for multiply score
 	Local $Gold = getResourcesMainScreen(690, 23)
@@ -410,7 +415,8 @@ Func FindUpgrade($bTest = False)
 				Next
 			EndIf
 			
-			SetLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & ", score=" & $aBuilding[$j][6] & ", Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG1)
+			;SetLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & ", score=" & $aBuilding[$j][6] & ", Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG1)
+			SetLog("Building: " & $BuildingName & ", Cost=" & $UpgradeCost & ", score=" & $aBuilding[$j][6], $COLOR_DEBUG1)
 		Next
 	EndIf
 	
@@ -991,11 +997,10 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False)
 	If Not $g_bRunState Then Return
 	ClickAway("Right")
 	If _Sleep(1000) Then Return
-	SetLog("Place NewBuilding : " & $sUpgrade & ", Opening Shop", $COLOR_ACTION)
+	SetLog("Place NewBuilding : " & $sUpgrade & "", $COLOR_INFO)
 	Local $bRet = False, $sUpgradeType = "", $ImageDir = ""
 	$sUpgradeType = GetBuildingType($sUpgrade)
-	SetLog("UpgradeType = " & $sUpgradeType, $COLOR_DEBUG1)
-	
+	SetLog("Opening Shop, UpgradeType : " & $sUpgradeType, $COLOR_DEBUG1)
 	;search area to place new building
 	If Not $bZoomedIn Then 
 		If Not SearchGreenZone() Then Return $bRet
@@ -1019,7 +1024,7 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False)
 	SetLog("ImgUpgrade : " & $sUpgrade & "=" & $sImgUpgrade & "*", $COLOR_INFO)
 	
 	If QuickMIS("BFI", $ImageDir & $sImgUpgrade & "*", 20, 225, 830, 535) Then
-		SetLog("Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
+		If $g_bDebugSetLog Then SetLog("Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(2500) Then Return
 	Else
@@ -1199,7 +1204,7 @@ Func GetBuildingType($sUpgrades = "")
 	If $sUpgrades = "Bomb Tower" Then $sUpgradeType = "Defenses"
 	If $sUpgrades = "Dark Elixir Drill" Then $sUpgradeType = "Resources"
 	
-	SetLog("Found UpgradeType : " & $sUpgradeType, $COLOR_DEBUG1)
+	If $g_bDebugSetLog Then SetLog("Found UpgradeType : " & $sUpgradeType, $COLOR_DEBUG1)
 	Return $sUpgradeType
 EndFunc ;_GetBuildingType
 
@@ -1217,7 +1222,8 @@ Func SearchGreenZone()
 		EndIf
 	Next
 	
-	If Not $bSupportedScenery Then 
+	If Not $bSupportedScenery Then
+		SetLog("Detected Scenery : [" & $g_sSceneryCode & " : " & $g_sCurrentScenery & "]", $COLOR_ERROR)
 		SetLog("Place New Building Only Supported for Default/Jungle/Magic Scenery", $COLOR_ERROR)
 		Return False
 	EndIf
@@ -1323,7 +1329,7 @@ Func ClickDragAUpgrade($Direction = "Up", $DragCount = 1)
 					EndIf
 					If _Sleep(5000) Then Return
 			EndSwitch
-			SetLog("Buildermenu Drag " & ($Direction = "Up" ? "Up" : "Down"), $COLOR_ACTION) 
+			If $g_bDebugSetLog Then SetLog("Buildermenu Drag " & ($Direction = "Up" ? "Up" : "Down"), $COLOR_ACTION) 
 		EndIf
 		If IsBuilderMenuOpen() Then ;check upgrade window border
 			If $g_bDebugSetLog Then SetLog("Upgrade Window Exist", $COLOR_INFO)
@@ -1348,12 +1354,12 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 	EndIf
 
 	If IsBuilderMenuOpen() Then
-		SetLog("BuilderMenu Open, Success", $COLOR_SUCCESS)
+		SetLog("Check BuilderMenu, Opened", $COLOR_SUCCESS)
 		$b_WindowOpened = True
 	Else
 		For $i = 1 To $Counter
 			If Not $g_bRunState Then Return
-			SetLog("Upgrade Window didn't open, trying again!", $COLOR_DEBUG)
+			SetLog("BuilderMenu Closed, trying again!", $COLOR_DEBUG)
 			If IsFullScreenWindow() Then
 				Click(825,45)
 				If _Sleep(1000) Then Return
