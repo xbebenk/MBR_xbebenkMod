@@ -176,7 +176,7 @@ Func ZoomOutHelperBB($caller = "Default")
 			$sImage = $aOffset[0]
 			
 			If $sImage = "BH" Then 
-				If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 600, 400, 760, 676) Then
+				If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 300, 400, 660, 676) Then
 					SetLog("Detected on BuilderBase HighZone, switch to LowerZone", $COLOR_INFO)
 					Click($g_iQuickMISX, $g_iQuickMISY)
 					If _Sleep(3000) Then Return
