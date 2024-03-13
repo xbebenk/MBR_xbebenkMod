@@ -15,9 +15,8 @@
 ; ===============================================================================================================================
 
 Func VillageReport($bBypass = False, $bSuppressLog = False)
-	ClickAway()
 	If _Sleep($DELAYVILLAGEREPORT1) Then Return
-
+	If _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "VillageReport") Then ClickAway()
 	Switch $bBypass
 		Case False
 			If Not $bSuppressLog Then SetLog("Village Report", $COLOR_INFO)
