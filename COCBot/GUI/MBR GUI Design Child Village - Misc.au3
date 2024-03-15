@@ -22,6 +22,7 @@ Global $g_LblResumeAttack = 0, $g_ahTxtResumeAttackLoot[$eLootCount] = [0, 0, 0,
 Global $g_hChkCollectStarBonus = 0
 Global $g_hTxtRestartGold = 0, $g_hTxtRestartElixir = 0, $g_hTxtRestartDark = 0
 Global $g_hChkTrap = 1, $g_hChkCollect = 1, $g_hChkTombstones = 1, $g_hChkCleanYard = 0, $g_hChkGemsBox = 0
+Global $g_hChkCollectLootCart = 1
 Global $g_hGUI_SaleMagicItems, $g_hBtnSellPot = 0, $g_hChkEnableSaleMagicItem = 0
 Global $g_hChkSaleBOF = 0, $g_hChkSaleBOB = 0, $g_hChkSaleBOS = 0, $g_hChkSaleBOH = 0, $g_hChkSaleBOE = 0, $g_hChkSaleShovel = 0, $g_hChkSaleWallRing = 0
 Global $g_hChkSalePowerPot = 0, $g_hChkSaleResourcePot = 0, $g_hChkSaleTrainingPot = 0, $g_hChkSaleBuilderPot = 0, $g_hChkSaleCTPot = 0
@@ -209,11 +210,15 @@ Func CreateMiscNormalVillageSubTab()
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCollector, $x + 20, $y, 24, 24)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDrill, $x + 45, $y, 24, 24)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnLootCart, $x + 70, $y, 24, 24)
-		$g_hChkCollect = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollect", "Collect Resources && Loot Cart"), $x + 100, $y - 6, -1, -1, -1)
+		$g_hChkCollect = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollect", "Collect Resources"), $x + 100, $y - 6, -1, -1, -1)
 			GUICtrlSetOnEvent(-1, "ChkCollect")
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollect_Info_01", "Check this to automatically collect the Villages Resources") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollect_Info_02", "from Gold Mines, Elixir Collectors and Dark Elixir Drills.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollect_Info_03", "This will also search for a Loot Cart in your village and collect it."))
+			GUICtrlSetState(-1, $GUI_CHECKED)
+	
+		$g_hChkCollectLootCart = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectLootCart", "Collect Loot Cart"), $x + 300, $y - 6, -1, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectLootCart_Info_01", "Check this to automatically collect the loot cart"))
 			GUICtrlSetState(-1, $GUI_CHECKED)
 
 	$x += 179
