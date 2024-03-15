@@ -102,13 +102,15 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	Return False
 EndFunc
 
-Func _SearchUpgrade($bTest = False)
+Func _SearchUpgrade($bTest = False, $bSkip1st = False)
 	If Not $g_bRunState Then Return
 	SetLog("Search For Upgrade", $COLOR_DEBUG)
 	If Not ClickMainBuilder($bTest) Then Return
 	Local $Upgrades, $ZoomedIn = False, $isWall = False, $bDoScroll = True, $bNew = False, $bSkipNew = False, $bReadResource = False
 	Local $b_BuildingFound = False, $TmpUpgradeCost, $UpgradeCost, $sameCost = 0
-	For $z = 1 To 15 ;for do scroll 15 times
+	Local $iZ = 1
+	If $bSkip1st Then $iZ = 2
+	For $z = $iZ To 15 ;for do scroll 15 times
 		If Not $g_bRunState Then Return
 		SetLog("Search For Upgrade #" & $z, $COLOR_ACTION)
 		$TmpUpgradeCost = getMostBottomCost() ;check most bottom upgrade cost
