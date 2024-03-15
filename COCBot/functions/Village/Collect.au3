@@ -199,7 +199,8 @@ Func ClaimCookieReward($bGoldPass = False)
 		EndIf
 		If WaitforPixel(795, 398, 796, 400, "FFFE68", 10, 1) Then ExitLoop ;thropy color
 		If WaitforPixel(799, 390, 801, 394, "CD571E", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000) ;cookie color
-		If WaitforPixel(797, 378, 798, 379, "DF3430", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000) ;cookie color
+		If WaitforPixel(797, 378, 798, 379, "DF3430", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000) ;Dragon Pinata color
+		If WaitforPixel(796, 392, 797, 393, "83E9EE", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000) ;Ice Cubes color
 	Next
 	
 	SetLog($iClaim > 0 ? "Claimed " & $iClaim & " reward(s)!" : "Nothing to claim!", $COLOR_SUCCESS)
