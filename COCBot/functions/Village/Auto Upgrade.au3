@@ -511,12 +511,50 @@ EndFunc
 Func CheckIgnoreUpgrade($sUpgradeName = "")
 	Local $bMustIgnoreUpgrade = False
 	Switch $sUpgradeName
+		Case "Barbarian King"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1) ? True : False
+		Case "Archer Queen"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1) ? True : False
+		Case "Grand Warden"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[3] = 1) ? True : False
+		Case "Royal Champion"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[4] = 1) ? True : False
+		Case "Clan Castle"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[5] = 1) ? True : False
+		Case "Laboratory"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[6] = 1) ? True : False
+		Case "Wall"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[7] = 1) ? True : False
 		Case "Gold Mine"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[12] = 1) ? True : False
 		Case "Elixir Collector"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[13] = 1) ? True : False
 		Case "Dark Elixir Drill"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[14] = 1) ? True : False
+		Case "Cannon"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[15] = 1) ? True : False
+		Case "Archer Tower"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[16] = 1) ? True : False
+		Case "Mortar"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[17] = 1) ? True : False
+		Case "Hidden Tesla"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[18] = 1) ? True : False
+		Case "Bomb", "Spring Trap", "Giant Bomb", "Air Bomb", "Seeking Air Mine", "Skeleton Trap", "Tornado Trap"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[19] = 1) ? True : False
+		Case "Army Camp"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[28] = 1) ? True : False
+		Case "Gold Storage"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[29] = 1) ? True : False
+		Case "Elixir Storage"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[30] = 1) ? True : False
+		Case "Dark Elixir Storage"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[31] = 1) ? True : False
+		Case "Workshop"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[32] = 1) ? True : False
+		Case "Pet House"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1) ? True : False
+		Case "Builder's Hut"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1) ? True : False
 	EndSwitch
 	
 	If $g_bDebugSetLog Then SetLog("CheckIgnoreUpgrade: " & $sUpgradeName & ", result=" & String($bMustIgnoreUpgrade), $COLOR_DEBUG)
