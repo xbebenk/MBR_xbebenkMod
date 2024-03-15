@@ -49,7 +49,11 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 						$g_iQuickMISX = $coord[0]
 						$g_iQuickMISY = $coord[1]
 						$g_iQuickMISName = $files[$i]
-						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $g_iQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
+						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $pat & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
+						If $g_bDebugImageSave Then 
+							_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
+							SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+						EndIf
 						Return True
 					EndIf
 				Else
@@ -57,7 +61,6 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 				EndIf
 			Next
 		EndIf
-		If $g_bDebugImageSave Then _CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
 	Else
 		If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
 		$Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
@@ -128,7 +131,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 
 					If $g_bDebugSetlog Or $Debug Then
 						SetDebugLog($ValueReturned & " Found: " & $Name & " Level:" & $Level & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
-						If $g_bDebugImageSave Then DebugQuickMIS($Left, $Top, "BC1_detected[" & $Name & "_" & $g_iQuickMISX & "x" & $g_iQuickMISY & "]")
+						If $g_bDebugImageSave Then DebugQuickMIS($aCords[0], $aCords[1], "BC1_detected[" & $Name & "_" & $g_iQuickMISX & "x" & $g_iQuickMISY & "]")
 					EndIf
 
 					Return True
@@ -211,7 +214,7 @@ EndFunc   ;==>QuickMIS
 
 Func DebugQuickMIS($x, $y, $DebugText = "")
 
-	_CaptureRegion2()
+	;_CaptureRegion2()
 	Local $subDirectory = $g_sProfileTempDebugPath & "QuickMIS"
 	DirCreate($subDirectory)
 	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
@@ -219,9 +222,9 @@ Func DebugQuickMIS($x, $y, $DebugText = "")
 	Local $filename = String($Date & "_" & $Time & "_" & $DebugText & "_.png")
 	Local $editedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
 	Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($editedImage)
-	Local $hPenRED = _GDIPlus_PenCreate(0xFFFFD800, 3) ; Create a pencil Color FFFFD800/Yellow
+	Local $hPenRED = _GDIPlus_PenCreate(0xFFFF00F6, 2) ; Create a pencil Color FFFFD800/Yellow
 
-	_GDIPlus_GraphicsDrawRect($hGraphic, $g_iQuickMISX - 5, $g_iQuickMISY - 5, 10, 10, $hPenRED)
+	_GDIPlus_GraphicsDrawRect($hGraphic, $x - 3, $y - 3, 3, 3, $hPenRED)
 
 	_GDIPlus_ImageSaveToFile($editedImage, $subDirectory & "\" & $filename)
 	_GDIPlus_PenDispose($hPenRED)
@@ -240,11 +243,11 @@ Func DebugQuickMISCNX($aResult = Default, $DebugText = "")
 	Local $filename = String($Date & "_" & $Time & "_" & $DebugText & "_.png")
 	Local $editedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
 	Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($editedImage)
-	Local $hPenRED = _GDIPlus_PenCreate(0xFFFFD800, 3) ; Create a pencil Color FFFFD800/Yellow
+	Local $hPenRED = _GDIPlus_PenCreate(0xFFFF00F6, 2) ; Create a pencil Color FFFFD800/Yellow
 	
 	If IsArray($aResult) Then
 		For $i = 0 To UBound($aResult) - 1
-			_GDIPlus_GraphicsDrawRect($hGraphic, $aResult[$i][1] - 3, $aResult[$i][2] - 3, 10, 10, $hPenRED)
+			_GDIPlus_GraphicsDrawRect($hGraphic, $aResult[$i][1] - 3, $aResult[$i][2] - 3, 5, 5, $hPenRED)
 		Next
 	EndIf
 

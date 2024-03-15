@@ -94,8 +94,8 @@ Func ReadCCGold()
 EndFunc
 
 Func ClanCapitalReport($SetLog = True)
-	$g_iLootCCGold = getOcrAndCapture("coc-ms", 710, 17, 100, 25, True)
-	$g_iLootCCMedal = getOcrAndCapture("coc-ms", 710, 70, 95, 25, True)
+	$g_iLootCCGold = StringReplace(getOcrAndCapture("coc-ms", 710, 17, 100, 25, True), "-", "")
+	$g_iLootCCMedal = StringReplace(getOcrAndCapture("coc-ms", 710, 70, 95, 25, True), "-", "")
 	GUICtrlSetData($g_lblCapitalGold, $g_iLootCCGold)
 	GUICtrlSetData($g_lblCapitalMedal, $g_iLootCCMedal)
 
@@ -743,14 +743,14 @@ Func AutoUpgradeCC($bTest = False)
 								ClickCCBuilder() ;upgrade should be ignored, so open builder menu again for next upgrade
 								ContinueLoop
 							EndIf
-							Local $BuildingName = getOcrAndCapture("coc-build", 200, 515, 400, 30)
+							Local $BuildingName = StringReplace(getOcrAndCapture("coc-build", 200, 515, 400, 30, True), "-", "")
 							Click($aRet[1], $aRet[2]) ;click upgrade Button
 							_Sleep(1000)
 							If Not WaitUpgradeWindowCC() Then
 								SwitchToMainVillage("No Upgrade Window")
 								Return
 							EndIf
-							Local $cost = getOcrAndCapture("coc-ms", 590, 527, 160, 25)
+							Local $cost = StringReplace(getOcrAndCapture("coc-ms", 590, 527, 160, 25, True), "-", "")
 							If Not $bTest Then
 								Click(700, 585) ;Click Contribute
 								AutoUpgradeCCLog($BuildingName, $cost)

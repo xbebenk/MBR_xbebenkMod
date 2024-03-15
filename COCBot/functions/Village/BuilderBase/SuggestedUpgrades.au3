@@ -840,13 +840,6 @@ Func IsBBBuilderMenuOpen()
 		EndIf
 	EndIf
 	
-	If Not $bRet Then ;lets re check if border color check not success
-		If $g_bDebugSetLog Then SetLog("Border Color: " & _GetPixelColor($aBorder[0], $aBorder[1], True), $COLOR_ACTION)
-		$sTriangle = getOcrAndCapture("coc-buildermenu-main", 495, 60, 50, 17)
-		If $g_bDebugSetLog Then SetLog("$sTriangle: " & $sTriangle)
-		If $sTriangle = "^" Or $sTriangle = "~" Then $bRet = True
-	EndIf
-
 	Return $bRet
 EndFunc ;IsBBBuilderMenuOpen
 

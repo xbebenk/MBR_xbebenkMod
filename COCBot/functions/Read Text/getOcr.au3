@@ -198,9 +198,9 @@ Func getOresValues2($x_start, $y_start, $bNeedCapture = True) ;  -> Get least up
 	Return getOcrAndCapture("coc-ores2", $x_start, $y_start, 149, 16, $bNeedCapture)
 EndFunc   ;==>getOresValues2
 
-Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
+Func getBuildingName($x_start, $y_start, $length = 180, $height = 20) ;  -> Get BuildingName on builder menu
 	Local $BuildingName = "", $Count = 1
-	Local $Name = StringReplace(getOcrAndCapture("coc-buildermenu-name", $x_start, $y_start, 180, 20, False), "-", "")
+	Local $Name = StringReplace(getOcrAndCapture("coc-buildermenu-name", $x_start, $y_start, $length, $height, False), "-", "")
 	If StringRegExp($Name, "x\d{1,}") Then
 		Local $aCount = StringRegExp($Name, "\d{1,}", 1) ;check if we found count of building
 		If IsArray($aCount) Then $Count = $aCount[0]
@@ -211,27 +211,49 @@ Func getBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
 	Else
 		$BuildingName = $Name
 	EndIf
-	
-	If StringRegExp($BuildingName, "x\d{1,}") Then
-		Local $aReplace = StringRegExp($BuildingName, "( x\d{1,})", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
-			$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
-	If StringRegExp($BuildingName, " x") Then
-		Local $aReplace = StringRegExp($BuildingName, "( x)", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($BuildingName, $aReplace[0], "")
-			$BuildingName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
+	ReplaceQuantityX($BuildingName)
 	
 	Local $aResult[2]
 	$aResult[0] = $BuildingName
 	$aResult[1] = Number($Count)
 	Return $aResult
 EndFunc   ;==>getBuildingName
+
+Func ReplaceQuantityX(ByRef $UpgradeName)
+	;If $g_bDebugSetLog Then SetLog("ReplaceQuantityX Before :" & $UpgradeName, $COLOR_INFO)
+	If StringRegExp($UpgradeName, "x\d{1,}") = 1 Then
+		Local $aReplace = StringRegExp($UpgradeName, "( x\d{1,})", 1)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
+			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
+	EndIf
+	If StringRegExp($UpgradeName, " x") = 1 Then
+		Local $aReplace = StringRegExp($UpgradeName, "( x)", 1)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
+			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
+	EndIf
+	
+	If StringRegExp($UpgradeName, " l.+") = 1 Then
+		Local $aReplace = StringRegExp($UpgradeName, "( l.+)", 1)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
+			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
+	EndIf
+	
+	If StringRegExp($UpgradeName, " \d+.+") = 1 Then
+		Local $aReplace = StringRegExp($UpgradeName, "( \d+.+)", 1)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
+			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
+	EndIf
+	
+	;If $g_bDebugSetLog Then SetLog("ReplaceQuantityX After :" & $UpgradeName, $COLOR_SUCCESS)
+EndFunc
 
 Func getCCBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
 	Local $BuildingName = "", $Count = 1
