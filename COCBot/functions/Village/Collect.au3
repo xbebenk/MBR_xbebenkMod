@@ -118,7 +118,7 @@ Func CollectCookieRumble()
 		For $i = 1 To 5
 			If $g_bDebugSetLog Then SetLog("Waiting Event Button #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgCollectCookie, 340, 500, 425, 570) Then 
-				If WaitforPixel($g_iQuickMISX + 30, $g_iQuickMISY - 20, $g_iQuickMISX + 32, $g_iQuickMISY - 18, "F61621", 10, 1) Then
+				If WaitforPixel($g_iQuickMISX + 30, $g_iQuickMISY - 20, $g_iQuickMISX + 40, $g_iQuickMISY - 10, "F61621", 40, 1) Then
 					Click($g_iQuickMISX, $g_iQuickMISY)
 					$bIconCookie = True
 					ExitLoop
