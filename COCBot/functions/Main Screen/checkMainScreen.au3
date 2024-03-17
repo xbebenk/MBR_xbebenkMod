@@ -31,7 +31,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	EndIf
 	
 	If Not CheckAndroidRunning(False) Then Return
-	
+	PlaceUnplacedBuilding()
 	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False
 	Local $aPixelToCheck = $aIsMain
 	$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
