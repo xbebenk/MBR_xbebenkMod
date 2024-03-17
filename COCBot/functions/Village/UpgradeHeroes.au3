@@ -118,11 +118,11 @@ Func QueenUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Queen info and Level
-	Local $sInfo = BuildingInfo(242, 494) ; 860x780
+	Local $sInfo = BuildingInfo(242, 472) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 494) ; 860x780
+		$sInfo = BuildingInfo(242, 472) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		Sleep(100)
 		$CountGetInfo += 1
@@ -222,11 +222,11 @@ Func KingUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get King info
-	Local $sInfo = BuildingInfo(242, 494) ; 860x780
+	Local $sInfo = BuildingInfo(242, 472) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 494) ; 860x780
+		$sInfo = BuildingInfo(242, 472) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		If _Sleep(100) Then Return
 		$CountGetInfo += 1
@@ -333,11 +333,11 @@ Func WardenUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Warden info
-	Local $sInfo = BuildingInfo(242, 494) ; 860x780
+	Local $sInfo = BuildingInfo(242, 472) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 494) ; 860x780
+		$sInfo = BuildingInfo(242, 472) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		If _Sleep(100) Then Return
 		$CountGetInfo += 1
@@ -446,11 +446,11 @@ Func ChampionUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Champion info and Level
-	Local $sInfo = BuildingInfo(242, 494) ; 860x780
+	Local $sInfo = BuildingInfo(242, 472) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 494) ; 860x780
+		$sInfo = BuildingInfo(242, 472) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		Sleep(100)
 		$CountGetInfo += 1
@@ -541,16 +541,16 @@ EndFunc   ;==>ChampionUpgrade
 Func ReservedBuildersForHeroes()
 	Local $iUsedBuildersForHeroes = Number(BitAND($g_iHeroUpgradingBit, $eHeroKing) = $eHeroKing ? 1 : 0) + Number(BitAND($g_iHeroUpgradingBit, $eHeroQueen) = $eHeroQueen ? 1 : 0) + Number(BitAND($g_iHeroUpgradingBit, $eHeroWarden) = $eHeroWarden ? 1 : 0) + Number(BitAND($g_iHeroUpgradingBit, $eHeroChampion) = $eHeroChampion ? 1 : 0)
 	If $iUsedBuildersForHeroes = 1 Then
-		SetLog($iUsedBuildersForHeroes & " builder is upgrading your heroes.", $COLOR_INFO)
+		If $g_bDebugSetlog Then SetLog($iUsedBuildersForHeroes & " builder is upgrading your heroes.", $COLOR_INFO)
 	Else
-		SetLog($iUsedBuildersForHeroes & " builders are upgrading your heroes.", $COLOR_INFO)
+		If $g_bDebugSetlog Then SetLog($iUsedBuildersForHeroes & " builders are upgrading your heroes.", $COLOR_INFO)
 	EndIf
 
 	Local $iFreeBuildersReservedForHeroes = _Max(Number($g_iHeroReservedBuilder) - $iUsedBuildersForHeroes, 0)
 	If $iFreeBuildersReservedForHeroes = 1 Then
-		SetLog($iFreeBuildersReservedForHeroes & " free builder is reserved for heroes.", $COLOR_INFO)
+		If $g_bDebugSetlog Then SetLog($iFreeBuildersReservedForHeroes & " free builder is reserved for heroes.", $COLOR_INFO)
 	Else
-		SetLog($iFreeBuildersReservedForHeroes & " free builders are reserved for heroes.", $COLOR_INFO)
+		If $g_bDebugSetlog Then SetLog($iFreeBuildersReservedForHeroes & " free builders are reserved for heroes.", $COLOR_INFO)
 	EndIf
 
 	If $g_bDebugSetlog Then SetLog("HeroBuilders R|Rn|W|F: " & $g_iHeroReservedBuilder & "|" & Number($g_iHeroReservedBuilder) & "|" & $iUsedBuildersForHeroes & "|" & $iFreeBuildersReservedForHeroes, $COLOR_DEBUG)

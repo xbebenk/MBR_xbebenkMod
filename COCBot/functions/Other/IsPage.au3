@@ -30,11 +30,17 @@ Func IsPageLoop($aCheckPixel, $iLoop = 30, $bCapturePixel = $g_bCapturePixel)
 	Return $IsPage
 EndFunc   ;==>IsPageLoop
 
-Func IsSettingPage($bSetLog = True, $iLoop = 30)
+Func IsSettingPage($bSetLog = True, $iLoop = 5)
 
 	If IsPageLoop($aIsSettingPage, $iLoop) Then
 		If ($g_bDebugSetlog Or $g_bDebugClick) And $bSetLog Then SetLog("**Setting Window OK**", $COLOR_ACTION)
 		Return True
+	EndIf
+	
+	If $g_bDebugSetlog Or $g_bDebugClick Then
+		Local $colorRead = _GetPixelColor($aIsSettingPage[0], $aIsSettingPage[1], True)
+		SetLog("**IsSettingPage Window FAIL**", $COLOR_ACTION)
+		SetLog("expected in (" & $aIsSettingPage[0] & "," & $aIsSettingPage[1] & ")  = " & Hex($aIsSettingPage[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
 	EndIf
 
 	If $bSetLog Then SetLog("Cannot find Setting Window...", $COLOR_ERROR) ; in case of $i = 29 in while loop
@@ -46,11 +52,11 @@ EndFunc   ;==>IsSettingPage
 Func IsTrainPage($bSetLog = True, $iLoop = 5)
 	If Not $g_bRunState Then Return
 	If IsPageLoop($aIsTrainPgChk1, $iLoop) Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Army Window OK**", $COLOR_ACTION)
+		If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then SetLog("**Army Window OK**", $COLOR_ACTION)
 		Return True
 	EndIf
 	
-	If $g_bDebugSetlog Or $g_bDebugClick Then
+	If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then
 		Local $colorRead = _GetPixelColor($aIsTrainPgChk1[0], $aIsTrainPgChk1[1], True)
 		SetLog("**Army Window FAIL**", $COLOR_ACTION)
 		SetLog("expected in (" & $aIsTrainPgChk1[0] & "," & $aIsTrainPgChk1[1] & ")  = " & Hex($aIsTrainPgChk1[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
@@ -62,15 +68,15 @@ Func IsTrainPage($bSetLog = True, $iLoop = 5)
 	Return False
 EndFunc   ;==>IsTrainPage
 
-Func IsAttackPage($bCapturePixel = True)
-	If $bCapturePixel Then _CaptureRegions()
-	If IsPageLoop($aIsAttackPage, 1, $bCapturePixel) Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Attack Window OK**", $COLOR_ACTION)
+Func IsAttackPage($bSetLog = False, $iLoop = 5)
+	
+	If IsPageLoop($aIsAttackPage, $iLoop) Then
+		If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then SetLog("**Attack Window OK**", $COLOR_ACTION)
 		Return True
 	EndIf
 
-	If $g_bDebugSetlog Or $g_bDebugClick Then
-		Local $colorRead = _GetPixelColor($aIsAttackPage[0], $aIsAttackPage[1], $bCapturePixel)
+	If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then
+		Local $colorRead = _GetPixelColor($aIsAttackPage[0], $aIsAttackPage[1], True)
 		SetLog("**Attack Window FAIL**", $COLOR_ACTION)
 		SetLog("expected in (" & $aIsAttackPage[0] & "," & $aIsAttackPage[1] & ")  = " & Hex($aIsAttackPage[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
 	EndIf
@@ -175,21 +181,6 @@ Func IsLaunchAttackPage()
 
 EndFunc   ;==>IsLaunchAttackPage
 
-Func IsMultiplayerTabOpen()
-	Local $result = False
-	$result = WaitforPixel(823,40,825,46, "FFFFFF", 10, 2)
-	
-	If Not $result Then 
-		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 20, 860, 100) Then $result = True
-	EndIf
-	
-	If $result Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found FullScreen Window", $COLOR_ACTION)
-		Return True
-	EndIf
-	Return False
-EndFunc
-
 Func IsOKCancelPage($bWriteLog = True)
 
 	If IsPageLoop($aConfirmSurrender, 1) Then
@@ -208,6 +199,7 @@ Func IsOKCancelPage($bWriteLog = True)
 EndFunc   ;==>IsOKCancelPage
 
 Func IsReturnHomeBattlePage($useReturnValue = False, $makeDebugImageScreenshot = True)
+	If IsAttackPage(False, 1) Then Return False
 	If IsPageLoop($aReturnHomeButton, 1) Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Return Home Battle Window OK**", $COLOR_ACTION)
 		Return True
@@ -241,9 +233,24 @@ Func IsPostDefenseSummaryPage($bCapture = True)
 
 EndFunc   ;==>IsPostDefenseSummaryPage
 
+Func IsMultiplayerTabOpen()
+	Local $result = False
+	$result = WaitforPixel(790, 114, 791, 115, "FFFFFF", 10, 2)
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 97, 812, 136) Then $result = True
+	EndIf
+	
+	If $result Then
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found Multiplayer Window", $COLOR_ACTION)
+		Return True
+	EndIf
+	Return False
+EndFunc ; IsMultiplayerTabOpen
+
 Func IsFullScreenWindow()
 	Local $result = False
-	$result = WaitforPixel(823,40,825,46, "FFFFFF", 10, 2)
+	$result = WaitforPixel(820, 37, 821, 38, "FFFFFF", 10, 2)
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 20, 860, 100) Then $result = True
@@ -256,9 +263,39 @@ Func IsFullScreenWindow()
 	Return False
 EndFunc
 
+Func IsProfileWindowOpen()
+	Local $result = False
+	$result = WaitforPixel(806, 98, 807, 99, "FFFFFF", 10, 2)
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 788, 83, 825, 117) Then $result = True
+	EndIf
+	
+	If $result Then
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found Profile Window", $COLOR_ACTION)
+		Return True
+	EndIf
+	Return False
+EndFunc
+
+Func IsChallengeWindowOpen()
+	Local $result = False
+	$result = WaitforPixel(824, 85, 826, 86, "FFFFFF", 10, 2)
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 800, 64, 850, 112) Then $result = True
+	EndIf
+	
+	If $result Then
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found Challenge Window", $COLOR_ACTION)
+		Return True
+	EndIf
+	Return False
+EndFunc
+
 Func IsPetHousePage()
 	Local $result
-	$result = WaitforPixel(530, 120, 531, 121, "006C5C", 10, 2) ;green pixel under title 'Pet House'
+	$result = WaitforPixel(415, 95, 420, 96, "006F5F", 10, 2) ;green pixel under title 'Pet House'
 	
 	If $result Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found PetHousePage Window", $COLOR_ACTION)
@@ -266,4 +303,19 @@ Func IsPetHousePage()
 	EndIf
 	Return False
 EndFunc   ;==>IsPetHousePage
+
+Func IsBlacksmithPage($bSetLog = True, $iLoop = 5)
+	Local $aIsBlacksmithPage[4] = [811, 69, 0xD51217, 20] ; Pink red top of close button
+
+	If IsPageLoop($aIsBlacksmithPage, $iLoop) Then
+		If ($g_bDebugSetlog Or $g_bDebugClick) And $bSetLog Then SetLog("**Blacksmith Window OK**", $COLOR_ACTION)
+		SetDebugLog("**Blacksmith Window OK**", $COLOR_ACTION)
+		Return True
+	EndIf
+
+	If $bSetLog Then SetLog("Cannot find Blacksmith Window...", $COLOR_ERROR) ; in case of $i = 29 in while loop
+	If $g_bDebugImageSave Then SaveDebugImage("IsBlacksmithPage")
+	If $iLoop > 1 Then AndroidPageError("IsBlacksmithPage")
+	Return False
+EndFunc   ;==>IsBlacksmithPage
 

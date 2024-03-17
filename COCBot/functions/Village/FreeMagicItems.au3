@@ -16,8 +16,6 @@
 Func CollectFreeMagicItems($bTest = False)
 	If Not $g_bChkCollectFreeMagicItems Then Return
 	$g_aRemoveFreeMagicItems[0] = False ;reset first
-	Local Static $iLastTimeChecked[16] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-	If $iLastTimeChecked[$g_iCurAccount] = @MDAY And Not $bTest Then Return
 	SetLog("Collecting Free Magic Items", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	ClickAway()
@@ -48,7 +46,6 @@ Func CollectFreeMagicItems($bTest = False)
 				If _ColorCheck(_GetPixelColor($aResults[$i][1], 297, True), Hex(0xAD5B0D, 6), 20) Then ;Check The SoldOut Stamp
 					$Collected = True
 					SetLog("Free Item: " & $aResults[$i][4] & " Collected", $COLOR_INFO)
-					$iLastTimeChecked[$g_iCurAccount] = @MDAY
 					ExitLoop
 				Else
 					If _ColorCheck(_GetPixelColor($aResults[$i][1] - 10, $aResults[$i][2], True), Hex(0x8DC529, 6), 10) Then ;Check if we still have Green Color
@@ -81,12 +78,12 @@ Func CollectFreeMagicItems($bTest = False)
 EndFunc   ;==>CollectFreeMagicItems
 
 Func GetFreeMagic()
-	Local $aOcrPositions[3][2] = [[285, 322], [465, 322], [635, 322]]
+	Local $aOcrPositions[3][2] = [[270, 329], [470, 329], [660, 329]]
 	Local $aResults[0][5]
 	Local $bClaimed = False, $bFullStorage = False
 	For $i = 0 To UBound($aOcrPositions) - 1
-		Local $Read = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 200, 25, True)
-		Local $Capa = getOcrAndCapture("coc-buildermenu-name", $aOcrPositions[$i][0], 209, 100, 25, True)
+		Local $Read = getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$i][0], $aOcrPositions[$i][1], 120, 25, True)
+		Local $Capa = getOcrAndCapture("coc-buildermenu-name", $aOcrPositions[$i][0], 197, 70, 25, True)
 		SetDebugLog("Magic Item Capacity: " & $Capa)
 		$bClaimed = _ColorCheck(_GetPixelColor($aOcrPositions[$i][0], 297, True), Hex(0xAD5B0D, 6), 20)
 		$bFullStorage = _ColorCheck(_GetPixelColor($aOcrPositions[$i][0], $aOcrPositions[$i][1], True), Hex(0xA3A3A3, 6), 20)
@@ -107,15 +104,24 @@ Func GetFreeMagic()
 EndFunc
 
 Func OpenTraderWindow()
-	Local $bRet = False
+	Local $bRet = False, $bTraderIconFound = False
 	If Not IsMainPage() Then Return
 	; Check Trader Icon on Main Village
-	If QuickMIS("BC1", $g_sImgTrader, 120,130,230,220) Then
-		Click($g_iQuickMISX, $g_iQuickMISY)
-	Else
+	For $i = 1 To 20
+		If $g_bDebugSetlog Then SetLog("Waiting Trader Icon #" & $i, $COLOR_ACTION)
+		If QuickMIS("BC1", $g_sImgTrader, 120,130,230,220) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			$bTraderIconFound = True
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+	Next
+	
+	If Not $bTraderIconFound Then 
 		SetLog("Trader Icon Not Found", $COLOR_INFO)
 		Return False
 	EndIf
+	
 	If Not IsTraderWindowOpen() Then 
 		SetLog("Free Magic Items Windows not Opened", $COLOR_ERROR)
 		ClickAway()
@@ -129,14 +135,36 @@ Func IsTraderWindowOpen()
 	Local $bRet = False
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 110, 780, 150) Then
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 785, 90, 830, 130) Then
 			$bRet = True
 			ExitLoop
 		Else
 			SetDebugLog("Waiting for FreeMagicWindowOpen #" & $i, $COLOR_ACTION)
 		EndIf
-		_Sleep(500)
+		If _Sleep(500) Then Return
 	Next
+	
+	;quick collect giant gauntlet
+	If QuickMis("BC1", $g_sImgTraderGems, 270, 325, 340, 350) Then
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(1000) Then Return
+		If QuickMis("BC1", $g_sImgTraderGems, 390, 370, 450, 430) Then Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(800) Then Return
+	EndIf
+	
+	For $i = 1 To 8
+		If Not $g_bRunState Then Return
+		If QuickMis("BC1", $g_sImgTraderGems, 50, 173, 100, 300) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(800) Then Return
+			$bRet = True
+			ExitLoop
+		Else
+			SetDebugLog("Waiting for Gems Tab #" & $i, $COLOR_ACTION)
+		EndIf
+		If _Sleep(500) Then Return
+	Next
+	
 	Return $bRet
 EndFunc
 
@@ -178,7 +206,7 @@ Func SaleFullMagicItem($MagicItem = "", $Amount = 0)
 					If _ColorCheck(_GetPixelColor(550, 505, True), Hex(0xF51D21, 6), 20) Then ;Check Red Sell Button
 						Click(550, 505) ;Click Sell Button
 						If _Sleep(1500) Then Return
-						If _ColorCheck(_GetPixelColor(510, 425, True), Hex(0x6DBC1F, 6), 20) Then
+						If IsOKCancelPage() Then
 							Click(510, 425) ;Click Okay Button
 						EndIf
 					EndIf
@@ -241,12 +269,12 @@ Func SaleMagicItem($bTest = False)
 					For $j = 1 To $Count
 						Click($aSearch[0], $aSearch[1])
 						If _Sleep(1000) Then Return
-						If _ColorCheck(_GetPixelColor(550, 505, True), Hex(0xF51D21, 6), 20) Then ;Check Red Sell Button
-							Click(550, 505) ;Click Sell Button
+						If _ColorCheck(_GetPixelColor(595, 525, True), Hex(0xF71E22, 6), 20) Then ;Check Red Sell Button
+							Click(595, 525) ;Click Sell Button
 							If _Sleep(1000) Then Return
-							If _ColorCheck(_GetPixelColor(510, 425, True), Hex(0x6DBC1F, 6), 20) Then
+							If IsOKCancelPage() Then
 								If Not $bTest Then 
-									Click(510, 425) ;Click Okay Button
+									Click(530, 425) ;Click Okay Button
 								Else
 									ClickAway()
 								EndIf
@@ -278,10 +306,10 @@ Func OpenMagicItemWindow()
 	Local $bRet = False
 	Local $bLocateTH = False
 	Click($g_aiTownHallPos[0], $g_aiTownHallPos[1])
-	If _Sleep(1000) Then Return
+	If _Sleep(500) Then Return
 	
 	If Not $g_bRunState Then Return
-	Local $BuildingInfo = BuildingInfo(245, 494)
+	Local $BuildingInfo = BuildingInfo(245, 472)
 	If $BuildingInfo[1] = "Town Hall" Then
 		SetDebugLog("Opening Magic Item Window")
 		If ClickB("MagicItem") Then
@@ -294,7 +322,7 @@ Func OpenMagicItemWindow()
 	If Not $g_bRunState Then Return
 	If $bLocateTH Then
 		If imglocTHSearch(False, True, True) Then ClickP($g_aiTownHallPos)
-		If _Sleep(1000) Then Return
+		If _Sleep(1500) Then Return
 		If ClickB("MagicItem") Then
 			$bRet = True
 		EndIf
@@ -312,9 +340,9 @@ Func IsMagicItemWindowOpen()
 		Else
 			SetDebugLog("Waiting for FreeMagicWindowOpen #" & $i, $COLOR_ACTION)
 		EndIf
-		_Sleep(500)
+		If _Sleep(250) Then Return
 	Next
-	_Sleep(1000)
+	If _Sleep(200) Then Return
 	Return $bRet
 EndFunc
 

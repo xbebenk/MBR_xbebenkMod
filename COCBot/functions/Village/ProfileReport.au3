@@ -15,7 +15,7 @@
 #include-once
 Func ProfileReport()
 
-	Local $iAttacksWon = 0, $iDefensesWon = 0
+	Local $iAttacksWon = 0, $iDefensesWon = 0, $bProfileWinOpen = False
 
 	Local $iCount = 0
 	ClickAway()
@@ -26,69 +26,54 @@ Func ProfileReport()
 	Click(49, 30, 1, 0, "#0222") ; Click Info Profile Button
 	If _Sleep($DELAYPROFILEREPORT2) Then Return
 
-	While Not IsFullScreenWindow() ; wait for Info Profile to open
-		$iCount += 1
+	For $i = 1 To 12 ; wait for Info Profile to open
+		If $g_bDebugSetlog Then SetLog("[" & $iCount & "] Waiting Profile window open", $COLOR_ACTION)
 		If _Sleep(250) Then Return
-		SetDebugLog("[" & $iCount & "] Waiting Profile window open", $COLOR_ACTION)
-		If $iCount >= 20 Then 
-			SetLog("Profile window doesnt exist, exiting...", $COLOR_ERROR)
-			ClickAway()
-			Return
-		EndIF
-	WEnd
+		If IsProfileWindowOpen() Then 
+			$bProfileWinOpen = True
+			ExitLoop
+		EndIf
+	Next
 	
-	If _Sleep(1000) Then Return
-	$iCount = 0
-	While Not WaitforPixel(825, 382, 826, 383, "2E2C62", 6, 1)
-		$iCount += 1
-		ClickDrag(431, 185, 431, 610)
-		_Sleep(1500)
-		If Not IsFullScreenWindow() Then ExitLoop
-		If $iCount > 15 Then ExitLoop
-	Wend
-	
-	If Not IsFullScreenWindow() Then
+	If Not $bProfileWinOpen Then 
 		SetLog("Profile window doesnt exist, exiting...", $COLOR_ERROR)
 		ClickAway()
 		Return
 	EndIf
 	
-	If $iCount = 15 Then
-		SetLog("Cannot verify if Profile window exist, exiting...", $COLOR_ERROR)
-		ClickAway()
-		Return
-	EndIf
-	
+	Click(180, 100) ;click Profile Tab (in case opening profile page on social tab) so just do it
 	If _Sleep(1000) Then Return
+	
 	$iAttacksWon = ""
+	Local $aProfileReport[4] = [590, 458, 0x4E4D79, 10] ; Dark Purple of Profile Page when no Attacks were made
 
 	If _ColorCheck(_GetPixelColor($aProfileReport[0], $aProfileReport[1], True), Hex($aProfileReport[2], 6), $aProfileReport[3]) Then
 		SetDebugLog("Profile seems to be currently unranked", $COLOR_DEBUG)
 		$iAttacksWon = 0
 		$iDefensesWon = 0
 	Else
-		$iAttacksWon = getProfile(562, 377)
+		$iAttacksWon = getProfile(548, 453)
 		SetDebugLog("$iAttacksWon: " & $iAttacksWon, $COLOR_DEBUG)
 		$iCount = 0
 		While $iAttacksWon = "" ; Wait for $attacksWon to be readable in case of slow PC
 			If _Sleep($DELAYPROFILEREPORT1) Then Return
-			$iAttacksWon = getProfile(562, 377)
+			$iAttacksWon = getProfile(548, 453)
 			SetDebugLog("Read Loop $iAttacksWon: " & $iAttacksWon & ", Count: " & $iCount, $COLOR_DEBUG)
 			$iCount += 1
 			If $iCount >= 20 Then ExitLoop
 		WEnd
-		If $g_bDebugSetlog And $iCount >= 20 Then SetLog("Excess wait time for reading $AttacksWon: " & getProfile(564, 403), $COLOR_DEBUG)
-		$iDefensesWon = getProfile(795, 377)
+		If $g_bDebugSetlog And $iCount >= 20 Then SetLog("Excess wait time for reading $AttacksWon: " & getProfile(548, 453), $COLOR_DEBUG)
+		$iDefensesWon = getProfile(762, 453)
 	EndIf
-	$g_iTroopsDonated = getProfile(155, 377)
-	$g_iTroopsReceived = getProfile(358, 377)
+	$g_iTroopsDonated = getProfile(180, 453)
+	$g_iTroopsReceived = getProfile(366, 453)
 
 	SetLog(" [ATKW]: " & _NumberFormat($iAttacksWon) & " [DEFW]: " & _NumberFormat($iDefensesWon) & " [TDON]: " & _NumberFormat($g_iTroopsDonated) & " [TREC]: " & _NumberFormat($g_iTroopsReceived), $COLOR_SUCCESS)
 	
 	$iCount = 0
-	While IsFullScreenWindow()
+	While IsProfileWindowOpen()
 		$iCount += 1
-		Click(825, 45, 1, 0, "#0223") ; Close Profile page
+		Click(805, 100) ; Close Profile page
 		_Sleep(1000)
 		If IsMainPage() Then ExitLoop
 		If $iCount > 5 Then ExitLoop

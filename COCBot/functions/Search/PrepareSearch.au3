@@ -35,31 +35,36 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	ChkAttackCSVConfig()
 	If $Mode = $DT Then $g_bRestart = False
 	
-	If ClickB("AttackButton") Then
-		SetDebugLog("Opening Multiplayer Tab!", $COLOR_ACTION)
-		For $i = 1 To 5
-			If _Sleep(1000) Then Return
-			If IsMultiplayerTabOpen() Then 
-				SetDebugLog("Multiplayer Tab is Opened", $COLOR_DEBUG)
-				ExitLoop
-			Else
-				If $i = 5 Then 
-					SetLog("Couldn't Multiplayer Window after click attack button!", $COLOR_ERROR)
-					If $g_bDebugImageSave Then SaveDebugImage("AttackButtonNotFound")
-					Return False
-				EndIf
+	For $i = 1 To 5
+		If ClickB("AttackButton") Then
+			SetDebugLog("Opening Multiplayer Tab!", $COLOR_ACTION)
+		Else
+			SetLog("PrepareSearch Failed: MainPage Not Found!", $COLOR_ERROR)
+		EndIf
+		
+		If _Sleep(1000) Then Return
+		If IsMultiplayerTabOpen() Then 
+			SetDebugLog("Multiplayer Tab is Opened", $COLOR_DEBUG)
+			ExitLoop
+		Else
+			If $i = 5 Then 
+				SetLog("Couldn't Multiplayer Window after click attack button!", $COLOR_ERROR)
+				If $g_bDebugImageSave Then SaveDebugImage("AttackButtonNotFound")
+				Return False
 			EndIf
-		Next
-	Else
-		SetLog("PrepareSearch Failed: MainPage Not Found!", $COLOR_ERROR)
-	EndIf	
+		EndIf
+	Next
+		
 
-	Local $aButton
+	Local $aButton, $bAttackButtonFound
 	
 	For $s = 1 To 20
+		If Not $g_bRunState Then ExitLoop
+		If _Sleep(1500) Then Return
 		SetDebugLog("Search for attack Button #" & $s, $COLOR_ACTION)
 		$aButton = QuickMIS("CNX", $g_sImgPrepareLegendLeagueSearch, 275,190,835,545)
 		If IsArray($aButton) And UBound($aButton) > 0 Then
+			$bAttackButtonFound = True
 			For $i = 0 To UBound($aButton) - 1
 				SetDebugLog("Found Attack Button: " & $aButton[$i][0], $COLOR_DEBUG)
 				If StringInStr($aButton[$i][0], "Normal") Then
@@ -67,10 +72,10 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					SetDebugLog("Click " & $aButton[$i][0] & " Attack Button", $COLOR_ACTION)
 					Click($aButton[$i][1], $aButton[$i][2])
 					For $k = 1 To 10 
-						If _Sleep(500) Then Return
+						If _Sleep(1000) Then Return
 						If QuickMIS("BC1", $g_sImgPrepareLegendLeagueSearch, $aButton[$i][1] - 50, $aButton[$i][2] - 50, $aButton[$i][1] + 50, $aButton[$i][2] + 50) Then 
 							SetLog("Still see " & $aButton[$i][0], $COLOR_DEBUG)
-							ContinueLoop 2
+							If $k > 5 Then ContinueLoop 2
 						Else
 							SetDebugLog("Attack Button" & $aButton[$i][0] & " is Gone", $COLOR_DEBUG)
 							ExitLoop
@@ -82,14 +87,14 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					$g_bRestart = True
 					$g_bForceSwitch = True     ; set this switch accounts next check
 					CloseClangamesWindow()
-					_Sleep(1000)
+					If _Sleep(1000) Then Return
 					Return False
 				ElseIf StringInStr($aButton[$i][0], "Made") Then
 					SetLog("All Attacks already made! Returning home", $COLOR_INFO)
 					$g_bRestart = True
 					$g_bForceSwitch = True     ; set this switch accounts next check
 					CloseClangamesWindow()
-					_Sleep(1000)
+					If _Sleep(1000) Then Return
 					Return
 				ElseIf StringInStr($aButton[$i][0], "Legend") Then
 					Click($aButton[$i][1], $aButton[$i][2])
@@ -116,7 +121,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 						Else
 							SetLog("Wait for OK Button to SignUp Legend League #" & $i, $COLOR_ACTION)
 						EndIf
-						_Sleep(500)
+						If _Sleep(500) Then Return
 					Next
 					SetLog("Problem SignUp to Legend League", $COLOR_ERROR)
 					Return False
@@ -125,21 +130,21 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					If ProfileSwitchAccountEnabled() Then 
 						$g_bForceSwitch = True
 						CloseClangamesWindow()
-						_Sleep(1000)
+						If _Sleep(1000) Then Return
 						Return
 					EndIf
 					_SleepStatus(120000) ; Wait 2 mins before searching again
 				EndIf
 			Next
-		Else
-			If $s = 5 Then 
-				SetLog("Cannot Find Attack Button on Multiplayer Window", $COLOR_ERROR)
-				SaveDebugImage("AttackButtonNotFound")
-				Return False
-			EndIf
 		EndIf
-		If _Sleep(1500) Then Return
 	Next
+	
+	If Not $bAttackButtonFound Then
+		SetLog("Cannot Find Attack Button on Multiplayer Window", $COLOR_ERROR)
+		SaveDebugImage("AttackButtonNotFound")
+		Return False
+	EndIf
+	
 	$g_bCloudsActive = True ; early set of clouds to ensure no android suspend occurs that might cause infinite waits
 	
 	If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
@@ -149,16 +154,27 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	UpdateStats()
 
 	If _Sleep($DELAYPREPARESEARCH2) Then Return
+	
+	If IsAttackWhileShieldPage(False) Then ; check for shield window and then button to lose time due attack and click okay
+		If WaitforPixel(435, 480, 438, 484, Hex(0x6DBC1F, 6), 6, 1) Then
+			If $g_bDebugClick Or $g_bDebugSetlog Then
+				SetDebugLog("Shld Btn Pixel color found: " & _GetPixelColor(436, 482, True), $COLOR_DEBUG)
+			EndIf
+			Click(436, 482)
+		EndIf
+	EndIf
 
 	Local $Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
 
 	If isGemOpen(True) Then ; Check for gem window open)
-		SetLog(" Not enough gold to start searching!", $COLOR_ERROR)
-		Click(585, 252, 1, 0, "#0151") ; Click close gem window "X"
-		If _Sleep($DELAYPREPARESEARCH1) Then Return
-		Click(822, 32, 1, 0, "#0152") ; Click close attack window "X"
-		If _Sleep($DELAYPREPARESEARCH1) Then Return
-		$g_bOutOfGold = True ; Set flag for out of gold to search for attack
+		If Not IsAttackPage() Then 
+			SetLog(" Not enough gold to start searching!", $COLOR_ERROR)
+			Click(623, 231, 1, 0, "#0151") ; Click close gem window "X"
+			If _Sleep($DELAYPREPARESEARCH1) Then Return
+			Click(789, 117, 1, 0, "#0152") ; Click close attack window "X"
+			If _Sleep($DELAYPREPARESEARCH1) Then Return
+			$g_bOutOfGold = True ; Set flag for out of gold to search for attack
+		EndIf
 	EndIf
 
 	checkAttackDisable($g_iTaBChkAttack, $Result) ;See If TakeABreak msg on screen
@@ -169,12 +185,5 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		$g_bIsClientSyncError = False ; reset fast restart flag to stop OOS mode, collecting resources etc.
 		Return
 	EndIf
-	If IsAttackWhileShieldPage(False) Then ; check for shield window and then button to lose time due attack and click okay
-		If WaitforPixel(430, 455, 431, 456, Hex(0x6FBD1F, 6), 6, 1) Then
-			If $g_bDebugClick Or $g_bDebugSetlog Then
-				SetDebugLog("Shld Btn Pixel color found: " & _GetPixelColor(430, 455, True), $COLOR_DEBUG)
-			EndIf
-			Click(430,455)
-		EndIf
-	EndIf
+	
 EndFunc   ;==>PrepareSearch

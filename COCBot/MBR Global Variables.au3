@@ -556,13 +556,15 @@ Global Enum $eIcnArcher = 1, $eIcnDonArcher, $eIcnBalloon, $eIcnDonBalloon, $eIc
 		$eIcnSuperBarbarian, $eIcnSuperArcher, $eIcnSuperGiant, $eIcnSneakyGoblin, $eIcnSuperWallBreaker, $eIcnSuperWizard, $eIcnInfernoDragon, $eIcnSuperMinion, $eIcnSuperValkyrie, $eIcnSuperWitch, $eIcnIceHound, _
 		$eIcnPetLassi, $eIcnPetElectroOwl, $eIcnPetMightyYak, $eIcnPetUnicorn, $eIcnTH14, $eWall15, $eIcnPetHouse, $eIcnRocketBalloon, $eIcnDragonRider, $eHdV14, $eIcnSuperBowler, $eIcnSuperDragon, $eIcnFlameF, _
 		$eIcnClanCapital, $eIcnCapitalGold, $eIcnCapitalMedal, $eHdV15, $eWall16, $eIcnElectroTitan, $eIcnRecallSpell, $eIcnBattleD, $eIcnTH15, $eIcnPetFrosty, $eIcnPetDiggy, $eIcnPetPoisonLizard, $eIcnPetPhoenix, _
-		$eIconTH15Weapon, $eIcnGiantSkeleton, $eIcnRoyalGhost, $eIcnPartyWizard, $eIcnIceWizard, $eIcnSuperMiner
+		$eIconTH15Weapon, $eIcnGiantSkeleton, $eIcnRoyalGhost, $eIcnPartyWizard, $eIcnIceWizard, $eIcnSuperMiner, $eIcnCapitalTrophy, $eLigue1, $eLigue2, $eLigue3, $eIcnMonolith, $eIcnEFWizard, $eWood, $eClay, $eStone, $eCopper, $eBrass, $eIron, $eSteel, $eTitanium, $ePlatinum, $eEmerald, _
+		$eRuby, $eDiamond, $eLigue4, $eLigue5, $eIcnSuperHogRider, $eIcnAppWard, $eIcnSleepingChampion, $eIcnBattleCopter, $eWall17, $eHdV16, $eIcnTH16, $eIcnSpiritFox, $eIcnRootRider, $eIcnBlacksmithgreen, $eIcnBarbarianPuppet, _
+		$eIcnRageVial, $eIcnEQBoots, $eIcnVampstache, $eIcnArcherPuppet, $eIcnInvisibilityVial, $eIcnGiantArrow, $eIcnHealerPuppet, $eIcnEternalTome, $eIcnLifeGem, $eIcnHealingTome, $eIcnRageGem, $eIcnRoyalGem, _
+		$eIcnSeekingShield, $eIcnGauntlet, $eIcnBlacksmith
 
 Global $eIcnDonBlank = $eIcnDonBlacklist
 Global $eIcnOptions = $eIcnDonBlacklist
 Global $eIcnAchievements = $eIcnMain
 Global $eIcnStrategies = $eIcnBlank
-Global $eIcnSleepingChampion = $eIcnSleepingWarden
 
 ; Controls bot startup and ongoing operation
 Global Const $g_iCollectAtCount = 10 ; Run Collect() after this amount of times before actually collect
@@ -611,12 +613,13 @@ Global Const $DROPLINE_DROPPOINTS_ONLY = 4
 ; Standard Enums and Consts - Attacks, Troops, Spells, Leagues, Loot Types
 ;--------------------------------------------------------------------------
 ; Complete list of all deployable/trainable objects
-Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, _
-		$eDrag, $eSDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, $eYeti, $eRDrag, $eETitan, _
-		$eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt, $eGSkel, $eRGhost, $ePWiza, $eIWiza, _
-		$eKing, $eQueen, $eWarden, $eChampion, $eCastle, _
-		$eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $eISpell, $eReSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell, _
-		$eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD, $eArmyCount
+Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, _ 
+			$eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eSDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eSMine, _ 
+			$eEDrag, $eYeti, $eRDrag, $eETitan, $eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, _ 
+			$eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt, $eGSkel, $eRGhost, _ 
+			$ePWiza, $eIWiza, $eKing, $eQueen, $eWarden, $eChampion, $eCastle, $eLSpell, $eHSpell, $eRSpell, _ 
+			$eJSpell, $eFSpell, $eCSpell, $eISpell, $eReSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell, _ 
+			$eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD, $eArmyCount
 
 ; Attack types
 Global Enum $DB, $LB, $TB, $DT ; DeadBase, ActiveBase, TownhallBully, DropTrophy
@@ -625,33 +628,38 @@ Global $g_iMatchMode = 0 ; 0 Dead / 1 Live / 2 TH Bully / 3 Drop Trophy
 Global Const $g_asModeText[4] = ["Dead Base", "Live Base", "TH Bully", "Drop Trophy"]
 
 ; Troops
-Global Enum $eTroopBarbarian, $eTroopSuperBarbarian, $eTroopArcher, $eTroopSuperArcher, $eTroopGiant, $eTroopSuperGiant, $eTroopGoblin, $eTroopSneakyGoblin, $eTroopWallBreaker, _
-		$eTroopSuperWallBreaker, $eTroopBalloon, $eTroopRocketBalloon, $eTroopWizard, $eTroopSuperWizard, $eTroopHealer, $eTroopDragon, $eTroopSuperDragon, _
-		$eTroopPekka, $eTroopBabyDragon, $eTroopInfernoDragon, $eTroopMiner, $eTroopSuperMiner, _
-		$eTroopElectroDragon, $eTroopYeti, $eTroopDragonRider, $eTroopElectroTitan, _
-		$eTroopMinion, $eTroopSuperMinion, $eTroopHogRider, $eTroopValkyrie, $eTroopSuperValkyrie, $eTroopGolem, $eTroopWitch, $eTroopSuperWitch, _
-		$eTroopLavaHound, $eTroopIceHound, $eTroopBowler, $eTroopSuperBowler, $eTroopIceGolem, $eTroopHeadhunter, _ 
-		$eTroopGiantSkeleton, $eTroopRoyalGhost, $eTroopPartyWizard, $eTroopIceWizard, $eTroopCount
+Global Enum $eTroopBarbarian, $eTroopSuperBarbarian, $eTroopArcher, $eTroopSuperArcher, $eTroopGiant, $eTroopSuperGiant, $eTroopGoblin, $eTroopSneakyGoblin, $eTroopWallBreaker, $eTroopSuperWallBreaker, $eTroopBalloon, _
+			$eTroopRocketBalloon, $eTroopWizard, $eTroopSuperWizard, $eTroopHealer, $eTroopDragon, $eTroopSuperDragon, $eTroopPekka, $eTroopBabyDragon, $eTroopInfernoDragon, $eTroopMiner, $eTroopSuperMiner, _
+			$eTroopElectroDragon, $eTroopYeti, $eTroopDragonRider, $eTroopElectroTitan, $eTroopMinion, $eTroopSuperMinion, $eTroopHogRider, $eTroopValkyrie, $eTroopSuperValkyrie, $eTroopGolem, _
+			$eTroopWitch, $eTroopSuperWitch, $eTroopLavaHound, $eTroopIceHound, $eTroopBowler, $eTroopSuperBowler, $eTroopIceGolem, $eTroopHeadhunter, $eTroopGiantSkeleton, $eTroopRoyalGhost, _ 
+			$eTroopPartyWizard, $eTroopIceWizard, $eTroopCount
 
 ; TroopsIcons
-Global Const $g_aTroopsIcon[$eTroopCount] = [$eIcnBarbarian, $eIcnSuperBarbarian, $eIcnArcher, $eIcnSuperArcher, $eIcnGiant, $eIcnSuperGiant, $eIcnGoblin, _
-		$eIcnSneakyGoblin, $eIcnWallBreaker, $eIcnSuperWallBreaker, $eIcnBalloon, $eIcnRocketBalloon, $eIcnWizard, $eIcnSuperWizard, $eIcnHealer, $eIcnDragon, _ 
-		$eIcnSuperDragon, $eIcnPekka, $eIcnBabyDragon, $eIcnInfernoDragon, $eIcnMiner,$eIcnSuperMiner, $eIcnElectroDragon, $eIcnYeti, $eIcnDragonRider, _ 
-		$eIcnElectroTitan, $eIcnMinion, $eIcnSuperMinion, $eIcnHogRider, $eIcnValkyrie, $eIcnSuperValkyrie, $eIcnGolem, $eIcnWitch, $eIcnSuperWitch, _
-		$eIcnLavaHound, $eIcnIceHound, $eIcnBowler, $eIcnSuperBowler, $eIcnIceGolem, $eIcnHeadhunter, $eIcnGiantSkeleton, $eIcnRoyalGhost, $eIcnPartyWizard, $eIcnIceWizard]
+Global Const $g_aTroopsIcon[$eTroopCount] = [ _ 
+		$eIcnBarbarian, $eIcnSuperBarbarian, $eIcnArcher, $eIcnSuperArcher, $eIcnGiant, $eIcnSuperGiant, $eIcnGoblin, $eIcnSneakyGoblin, $eIcnWallBreaker, $eIcnSuperWallBreaker, $eIcnBalloon, _
+		$eIcnRocketBalloon, $eIcnWizard, $eIcnSuperWizard, $eIcnHealer, $eIcnDragon, $eIcnSuperDragon, $eIcnPekka, $eIcnBabyDragon, $eIcnInfernoDragon, $eIcnMiner, $eIcnSuperMiner, _ 
+		$eIcnElectroDragon, $eIcnYeti, $eIcnDragonRider, $eIcnElectroTitan, $eIcnMinion, $eIcnSuperMinion, $eIcnHogRider, $eIcnValkyrie, $eIcnSuperValkyrie, $eIcnGolem, _ 
+		$eIcnWitch, $eIcnSuperWitch, $eIcnLavaHound, $eIcnIceHound, $eIcnBowler, $eIcnSuperBowler, $eIcnIceGolem, $eIcnHeadhunter, $eIcnGiantSkeleton, $eIcnRoyalGhost, _
+		$eIcnPartyWizard, $eIcnIceWizard]
 
 Global Const $g_asTroopNames[$eTroopCount] = [ _
-		"Barbarian", "Super Barbarian", "Archer", "Super Archer", "Giant", "Super Giant", "Goblin", "Sneaky Goblin", "Wall Breaker", "Super WallBreaker", "Balloon", "Rocket Balloon", "Wizard", "Super Wizard", "Healer", "Dragon", "Super Dragon", _
-		"Pekka", "Baby Dragon", "Inferno Dragon", "Miner", "Super Miner", "Electro Dragon", "Yeti", "Dragon Rider", "Electro Titan", "Minion", "Super Minion", "Hog Rider", "Valkyrie", "Super Valkyrie", "Golem", "Witch", "Super Witch", _
-		"Lava Hound", "Ice Hound", "Bowler", "Super Bowler", "Ice Golem", "Headhunter", "Giant Skeleton", "Royal Ghost", "Party Wizard", "Ice Wizard"]
+		"Barbarian", "Super Barbarian", "Archer", "Super Archer", "Giant", "Super Giant", "Goblin", "Sneaky Goblin", "Wall Breaker", "Super WallBreaker", "Balloon", _ 
+		"Rocket Balloon", "Wizard", "Super Wizard", "Healer", "Dragon", "Super Dragon", "Pekka", "Baby Dragon", "Inferno Dragon", "Miner", "Super Miner", _
+		"Electro Dragon", "Yeti", "Dragon Rider", "Electro Titan", "Minion", "Super Minion", "Hog Rider", "Valkyrie", "Super Valkyrie", "Golem", _ 
+		"Witch", "Super Witch", "Lava Hound", "Ice Hound", "Bowler", "Super Bowler", "Ice Golem", "Headhunter", "Giant Skeleton", "Royal Ghost", _
+		"Party Wizard", "Ice Wizard"]
 Global Const $g_asTroopNamesPlural[$eTroopCount] = [ _
-		"Barbarians", "Super Barbarians", "Archers", "Super Archers", "Giants", "Super Giants", "Goblins", "Sneaky Goblins", "Wall Breakers", "Super Wall Breakers", "Balloons", "Rocket Balloons", "Wizards", "Super Wizards", "Healers", _
-		"Dragons", "Super Dragons", "Pekkas", "Baby Dragons", "Inferno Dragons", "Miners", "Super Miners", "Electro Dragons", "Yetis", "Dragon Riders", "Electro Titans", "Minions", "Super Minions", "Hog Riders", "Valkyries", "Super Valkyries", "Golems", "Witches", "Super Witchs", _
-		"Lava Hounds", "Ice Hounds", "Bowlers", "Super Bowlers", "Ice Golems", "Headhunters", "Giant Skeletons", "Royal Ghosts", "Party Wizards", "Ice Wizards"]
+		"Barbarians", "Super Barbarians", "Archers", "Super Archers", "Giants", "Super Giants", "Goblins", "Sneaky Goblins", "Wall Breakers", "Super WallBreakers", "Balloons", _ 
+		"Rocket Balloons", "Wizards", "Super Wizards", "Healers", "Dragons", "Super Dragons", "Pekkas", "Baby Dragons", "Inferno Dragons", "Miners", "Super Miners", _
+		"Electro Dragons", "Yetis", "Dragon Riders", "Electro Titans", "Minions", "Super Minions", "Hog Riders", "Valkyries", "Super Valkyries", "Golems", _ 
+		"Witchs", "Super Witchs", "Lava Hounds", "Ice Hounds", "Bowlers", "Super Bowlers", "Ice Golems", "Headhunters", "Giant Skeletons", "Royal Ghosts", _
+		"Party Wizards", "Ice Wizard"]
 Global Const $g_asTroopShortNames[$eTroopCount] = [ _
-		"Barb", "SBarb", "Arch", "SArch", "Giant", "SGiant", "Gobl", "SGobl", "Wall", "SWall", "Ball", "RBall", "Wiza", "SWiza", "Heal", "Drag", _
-		"SDrag", "Pekk", "BabyD", "InfernoD", "Mine", "SMine", "EDrag", "Yeti", "RDrag", "ETitan", _
-		"Mini", "SMini", "Hogs", "Valk", "SValk", "Gole", "Witc", "SWitc", "Lava", "IceH", "Bowl", "SBowl", "IceG", "Hunt", "GSkel", "RGhost", "PWiza", "IWiza"]
+		"Barb", "SBarb", "Arch", "SArch", "Giant", "SGiant", "Gobl", "SGobl", "Wall", "SWall", "Ball", _ 
+		"RBall", "Wiza", "SWiza", "Heal", "Drag", "SDrag", "Pekk", "BabyD", "InfernoD", "Mine", "SMine", _ 
+		"EDrag", "Yeti", "RDrag", "ETitan", "Mini", "SMini", "Hogs", "Valk", "SValk", "Gole", _ 
+		"Witc", "SWitc", "Lava", "IceH", "Bowl", "SBowl", "IceG", "Hunt", "GSkel", "RGhost", _ 
+		"PWiza", "IWiza"]
 
 Global Const $g_aiTroopSpace[$eTroopCount] = [1, 5, 1, 12, 5, 10, 1, 3, 2, 8, 5, 8, 4, 10, 14, 20, 40, 25, 10, 15, 6, 24, 30, 18, 25, 32, 2, 12, 5, 8, 20, 30, 12, 40, 30, 40, 6, 30, 15, 6, 20, 8, 4, 4]
 Global Const $g_aiTroopTrainTime[$eTroopCount] = [20, 100, 24, 288, 120, 240, 28, 84, 60, 240, 120, 192, 120, 300, 480, 720, 1440, 720, 360, 540, 120, 480, 1440, 720, 250, 1480, 36, 216, 90, 180, 450, 600, 360, 1200, 600, 800, 120, 0, 360, 120, 30, 37, 30, 30]
@@ -659,7 +667,7 @@ Global Const $g_aiTroopDonateXP[$eTroopCount - 4] = [1, 5, 1, 12, 5, 10, 1, 3, 2
 
 ; Super Troops
 Global Const $iSuperTroopsCount = 15, $iMaxSupersTroop = 2
-Global $g_bForceUseSuperTroopPotion = False
+Global $g_bForceUseSuperTroopPotion = False, $g_bSuperTroopBoosted = False
 Global Const $g_asSuperTroopNames[$iSuperTroopsCount] = [ _
 		"Super Barbarian", "Super Archer", "Sneaky Goblin", "Super WallBreaker", "Super Giant", "Rocket Balloon", "Super Wizard", "Super Dragon", "Inferno Dragon", "Super Minion", "Super Valkyrie", "Super Witch", _
 		"Ice Hound", "Super Bowler", "Super Miner"]
@@ -832,7 +840,7 @@ Global $g_iTxtRestartGold = 10000
 Global $g_iTxtRestartElixir = 25000
 Global $g_iTxtRestartDark = 500
 Global $g_bChkCollect = True, $g_bChkTombstones = True, $g_bChkCleanYard = False, $g_bChkGemsBox = False
-Global $g_bChkCollectCartFirst = False, $g_iTxtCollectGold = 0, $g_iTxtCollectElixir = 0, $g_iTxtCollectDark = 0
+Global $g_iTxtCollectGold = 0, $g_iTxtCollectElixir = 0, $g_iTxtCollectDark = 0
 Global $g_bChkTreasuryCollect = False
 Global $g_iTxtTreasuryGold = 0
 Global $g_iTxtTreasuryElixir = 0
@@ -853,7 +861,7 @@ Global $g_apTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 25
 Global $g_apTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123]]
 Global $g_BBDP[0][3]
 Global $g_BBDPSide = 0, $UseDefaultBBDP = False, $g_b1SideBBAttack = False, $g_i1SideBBAttack = 0
-Global $g_b2SideBBAttack = False, $g_bAllSideBBAttack = False
+Global $g_b2SideBBAttack = False, $g_bAllSideBBAttack = False, $g_bChkUseBuilderStarJar = True
 
 ;Builder Base
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
@@ -870,10 +878,10 @@ Global $g_hGUI_BBDropOrder = 0
 Global $g_hChkBBCustomDropOrderEnable = 0
 Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
 Global $g_bBBDropOrderSet = False
-Global Const $g_iBBTroopCount = 11
-Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
+Global Const $g_iBBTroopCount = 12
+Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion|ElectroWizard"
 Global $g_sBBDropOrder = $g_sBBDropOrderDefault
-Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; <><><><> Village / Donate - Request <><><><>
 Global $g_bRequestTroopsEnable = False
@@ -960,19 +968,19 @@ Global $g_iUpgradeWallMinGold = 0, $g_iUpgradeWallMinElixir = 0, $g_bUpgradeWall
 Global $g_iUpgradeWallLootType = 0, $g_bUpgradeWallSaveBuilder = False, $g_bChkOnly1Builder = False, $g_bChkWallOnlyGEFull = False
 Global $g_iUpgradedWallLevel = 0, $g_bUpgradeLowWall = False, $g_iLowLevelWall = 4, $g_bUpgradeAnyWallLevel = False
 Global $g_iSaveGoldWall = 0, $g_iSaveElixWall = 0
-;Global $g_aiWallsCurrentCount[17] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 to 3 are not referenced
 Global $g_aiLastGoodWallPos[2] = [0, 0] ;0 = x, 1 = y, 2 = wall level
 Global $g_aUpgradeWall[3] = [0, 0, 0] ;wall level
 ; Upgrading - Wall
 ;First cost is for walls level 5.  MBR doesn't support walls until level 4.
-Global Const $g_aiWallCost[12] = [20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 2000000, 4000000, 7000000, 8000000]
+Global Const $g_aiWallCost[13] = [20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 2000000, 3000000, 5000000, 8000000, 9000000]
 Global $g_iWallCost = 0
 ; xbebenkmod - Wall Upgrade
 Global $g_WallGEFull = -1 ;-1 = unset, 0 = elixir, 1 = gold, 2 = both
 
 ; Auto Upgrade
-Global $g_bPlaceNewBuilding = False, $g_bChkRushTH = False, $g_bNewBuildingFirst = False, $g_bHeroPriority = False
-Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False, $g_bUseHeroBooks = False, $g_iHeroMinUpgradeTime = 0, $g_bSkipWallReserve = False, $g_bUpgradeLowCost = False
+Global $g_bChkRushTH = False, $g_bHeroPriority = False
+Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False, $g_bUseHeroBooks = False, $g_iHeroMinUpgradeTime = 0
+Global $g_bSkipWallReserve = False, $g_bUpgradeLowCost = False, $g_bUpgradeOtherDefenses = False
 Global $g_bUseBuilderPotion = False
 Global $g_iChkIgnoreTH = 0, $g_iChkIgnoreKing = 0, $g_iChkIgnoreQueen = 0, $g_iChkIgnoreWarden = 0, $g_iChkIgnoreChampion = 0, $g_iChkIgnoreCC = 0, $g_iChkIgnoreLab = 0
 Global $g_iChkIgnoreBarrack = 0, $g_iChkIgnoreDBarrack = 0, $g_iChkIgnoreFactory = 0, $g_iChkIgnoreDFactory = 0
@@ -982,6 +990,8 @@ Global $g_iChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 Global $g_iChkResourcesToIgnore[3] = [0, 0, 0]
 Global $g_aiCmbRushTHOption[5] = [0, 0, 0, 0, 0]
 Global $g_aichkEssentialUpgrade[8] = [0,0,0,0,0,0,0,0]
+Global $g_aEssential[8] = ["X Bow", "Inferno", "Eagle", "Scattershot", "Wizard Tower", "Bomb Tower", "Air Defense", "Air Sweeper"]
+Global $g_aOtherDefense[5] = ["Cannon", "Archer Tower", "Mortar", "Hidden Tesla", "Hut"]
 Global $g_bUpgradeOnlyTHLevelAchieve = False
 Global $g_iCurrentLineOffset = 0, $g_iNextLineOffset = 0
 Global $g_aUpgradeNameLevel ; [Nb of elements in Array, Name, Level]
@@ -1114,7 +1124,7 @@ Global $g_aiDropOrder[$eDropOrderCount] = [ _
 ; <><><><> Attack Plan / Train Army / Options <><><><>
 Global $g_bCloseWhileTrainingEnable = True, $g_bCloseWithoutShield = False, $g_bCloseEmulator = False, $g_bSuspendComputer = False, $g_bCloseRandom = False, _
 		$g_bCloseExactTime = False, $g_bCloseRandomTime = True, $g_iCloseRandomTimePercent = 10, $g_iCloseMinimumTime = 2
-Global $g_iTrainClickDelay = 40
+Global $g_iTrainClickDelay = 100
 Global $g_bTrainAddRandomDelayEnable = False, $g_iTrainAddRandomDelayMin = 5, $g_iTrainAddRandomDelayMax = 60
 
 ; <><><><> Attack Plan / Search & Attack / {Common Across DeadBase, ActiveBase, Bully} <><><><>
@@ -1185,7 +1195,7 @@ Global $g_abStopAtkPctNoChangeEnable[$g_iModeCount] = [False, False, False], $g_
 ; <<< nothing here - all in common Search & Attack grouping >>>
 
 ; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / SmartFarm <><><><>
-Global $g_iTxtInsidePercentage = 0 , $g_iTxtOutsidePercentage = 0 , $g_bDebugSmartFarm = False, $g_bSmartFarmDropCCFirst = True
+Global $g_iTxtInsidePercentage = 0 , $g_iTxtOutsidePercentage = 0 , $g_bDebugSmartFarm = False, $g_bSmartFarmDropCCFirst = True, $g_bChkForceEdgeSmartfarm = False
 Global $g_iSidesAttack = 0
 Global $g_iPercentageDamage = 0
 Global $g_iCmbMaxAttackSide = 0
@@ -1260,7 +1270,6 @@ Global $g_bMyBotDance = False  ; Dancing MyBot splash screen
 Global $g_bCheckVersion = True
 Global $g_bDeleteLogs = True, $g_iDeleteLogsDays = 2, $g_bDeleteTemp = True, $g_iDeleteTempDays = 2, $g_bDeleteLoots = True, $g_iDeleteLootsDays = 2
 Global $g_bAutoStart = False, $g_iAutoStartDelay = 10
-Global $b_iAutoRestartDelay = 0 ; Automatically restart bot after so many Seconds, 0 = disabled
 Global $g_bCheckGameLanguage = True
 Global $g_bAutoUpdateGame = False
 Global $g_bAutoAlignEnable = False, $g_iAutoAlignPosition = "EMBED", $g_iAutoAlignOffsetX = "", $g_iAutoAlignOffsetY = ""
@@ -1382,7 +1391,7 @@ Global $g_avStarLabTroops[12][6]
 
 ; [0] Name, [1] Icon [2] ShortName
 Func TranslateTroopNames()
-	Dim $g_avLabTroops[48][3] = [ _
+	Dim $g_avLabTroops[49][3] = [ _
 			[GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"), $eIcnBlank], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBarbarians", "Barbarians"), $eIcnBarbarian, "Barb"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtArchers", "Archers"), $eIcnArcher, "Arch"], _
@@ -1422,6 +1431,7 @@ Func TranslateTroopNames()
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBowlers", "Bowlers"), $eIcnBowler, "Bowl"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtIceGolems", "Ice Golems"), $eIcnIceGolem, "IceG"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHeadhunters", "Headhunters"), $eIcnHeadhunter, "Hunt"], _
+			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtAppWarden", "Apprentice Warden"), $eIcnBlank, "AppW"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtWallWreckers", "Wall Wreckers"), $eIcnWallW, "WallW"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBattleBlimps", "Battle Blimps"), $eIcnBattleB, "BattleB"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtStoneSlammers", "Stone Slammer"), $eIcnStoneS, "StoneS"], _
@@ -1432,19 +1442,20 @@ Func TranslateTroopNames()
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtAnySiege", "Any Spell"), $eIcnBlank, "AnySpell"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtAnySiege", "Any Siege"), $eIcnBlank, "AnySiege"]]
 
-	Dim $g_avStarLabTroops[12][6] = [ _
+	Dim $g_avStarLabTroops[13][6] = [ _
 			[-1, -1, -1, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"), $eIcnBlank, "Any"], _
-			[112, 416, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtRagedBarbarian", "Raged Barbarian"), $eIcnRagedBarbarian, "RagedBarbarian"], _
-			[112, 517, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSneakyArcher", "SneakyArcher"), $eIcnSneakyArcher, "SneakyArcher"], _
-			[211, 416, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBoxerGiant", "Boxer Giants"), $eIcnBoxerGiant, "BoxerGiant"], _
-			[211, 517, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBetaMinion", "Beta Minion"), $eIcnBetaMinion, "BetaMinion"], _
-			[314, 416, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBomber", "Bomber"), $eIcnBomber, "Bomber"], _
-			[314, 517, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBabyDragon", "Baby Dragon"), $eIcnBBBabyDragon, "BBBabyDragon"], _
-			[415, 416, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtCannonCart", "Cannon Cart"), $eIcnCannonCart, "CannonCart"], _
-			[415, 517, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtNightWitch", "Night Witch"), $eIcnNightWitch, "NightWitch"], _
-			[516, 416, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtDropShip", "Drop Ship"), $eIcnDropShip, "DropShip"], _
-			[516, 517, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSuperPekka", "Super Pekka"), $eIcnSuperPekka, "SuperPekka"], _
-			[620, 416, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider"), $eIcnHogGlider, "HogGlider"]]
+			[33, 440, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtRagedBarbarian", "Raged Barbarian"), $eIcnRagedBarbarian, "RagedBarbarian"], _
+			[33, 565, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSneakyArcher", "SneakyArcher"), $eIcnSneakyArcher, "SneakyArcher"], _
+			[160, 440, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBoxerGiant", "Boxer Giants"), $eIcnBoxerGiant, "BoxerGiant"], _
+			[160, 565, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBetaMinion", "Beta Minion"), $eIcnBetaMinion, "BetaMinion"], _
+			[288, 440, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBomber", "Bomber"), $eIcnBomber, "Bomber"], _
+			[288, 565, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtBabyDragon", "Baby Dragon"), $eIcnBBBabyDragon, "BBBabyDragon"], _
+			[414, 440, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtCannonCart", "Cannon Cart"), $eIcnCannonCart, "CannonCart"], _
+			[414, 565, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtNightWitch", "Night Witch"), $eIcnNightWitch, "NightWitch"], _
+			[542, 440, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtDropShip", "Drop Ship"), $eIcnDropShip, "DropShip"], _
+			[542, 565, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtSuperPekka", "Super Pekka"), $eIcnSuperPekka, "SuperPekka"], _
+			[668, 440, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtHogGlider", "Hog Glider"), $eIcnHogGlider, "HogGlider"], _
+			[668, 565, 0, GetTranslatedFileIni("MBR Global GUI Design Names Builderbase Troops", "TxtElectroWizard", "Electro Wizard"), $eIcnHogGlider, "ElectroWizard"]]
 EndFunc   ;==>TranslateTroopNames
 
 
@@ -1499,9 +1510,9 @@ Global $g_bCloudsActive = False ;True when waiting for clouds
 Global $g_bAttackActive = False ;True when attacking Village
 
 ; Search
-Global Const $g_iMaxTHLevel = 15
-Global Const $g_asTHText[10] = ["4-6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]
-Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200, 1300, 1400]
+Global Const $g_iMaxTHLevel = 16
+Global Const $g_asTHText[11] = ["4-6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"]
+Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200, 1300, 1400, 1500]
 Global $g_bSearchMode = False
 Global $g_bIsSearchLimit = False
 Global $g_bIsClientSyncError = False ;If true means while searching Client Out Of Sync error occurred.
@@ -1840,7 +1851,7 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 ;ClanGames Challenges
 Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
 Global $g_bChkClanGamesPurgeAny = 0, $g_bChkClanGamesZapChallenge = False, $g_bIsZapEvent = False, $g_sZapEventName = ""
-Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False, $g_bIsCGCoolDownTime = False
+Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDay = 0
 Global $g_bCollectCGReward = False, $g_sCGCurrentEventName = ""
 
@@ -1913,8 +1924,53 @@ Global $ExternalArea[8][3]
 Global $g_aVillageSize[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-; Pet House Alpha
-Global $g_aiPetHousePos[2] = [-1, -1] ; Position of Pet House
+; Blacksmith
+Global $g_aiBlacksmithPos[2] = [-1, -1] ; Position of Pet House
+Global $g_iBlacksmithLevel = 0
+Global $g_asEquipmentOrderList[15][4] = [ _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtBarbarianPuppet", "Barbarian Puppet"), "BarbarianPuppet", "King", 132], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtRageVial", "Rage Vial"), "RageVial", "King", 132], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtEQBoots", "Earth Quake Boots"), "Boots", "King", 132], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtVampstache", "Vampstache"), "Vampstache", "King", 132], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtGauntlet", "Giant Gauntlet"), "Gauntlet", "King", 132], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtArcherPuppet", "Archer Puppet"), "ArcherPuppet", "Queen", 172], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtInvisibilityVial", "Invisibility Vial"), "InvisibilityVial", "Queen", 172], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtGiantArrow", "Giant Arrow"), "GiantArrow", "Queen", 172], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtHealerPuppet", "Healer Puppet"), "HealerPuppet", "Queen", 172], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtEternalTome", "Eternal Tome"), "EternalTome", "Warden", 210], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtLifeGem", "Life Gem"), "LifeGem", "Warden", 210], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtRageGem", "Rage Gem"), "RageGem", "Warden", 210], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtHealingTome", "Healing Tome"), "HealingTome", "Warden", 210], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtRoyalGem", "Royal Gem"), "RoyalGem", "Champion", 245], _
+			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtSeekingShield", "Seeking Shield"), "SeekingShield", "Champion", 245]]
+
+Global Enum $eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGiantGauntlet, $eArcherPuppet, $eInvisibilityVial, $eGiantArrow, $eHealerPuppet, _
+		$eEternalTome, $eLifeGem, $eRageGem, $eHealingTome, $eRoyalGem, $eSeekingShield, $eEquipmentCount
+Global $g_hChkCustomEquipmentOrderEnable = 0, $g_bChkCustomEquipmentOrderEnable = False
+Global $g_hBtnEquipmentOrderSet = 0, $g_ahImgEquipmentOrderSet = 0,$g_hBtnRemoveEquipment = 0, $g_hBtnRegularOrder = 0
+Global $g_EquipmentOrderLabel[$eEquipmentCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbEquipmentOrder[$eEquipmentCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahImgEquipmentOrder[$eEquipmentCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahImgEquipmentOrder2[$eEquipmentCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_aiEquipmentOrder[$eEquipmentCount] = [ _
+		$eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGiantGauntlet, $eArcherPuppet, $eInvisibilityVial, $eGiantArrow, $eHealerPuppet, _
+		$eEternalTome, $eLifeGem, $eRageGem, $eHealingTome, $eRoyalGem, $eSeekingShield]
+Global Const $g_aiEquipmentOrderIcon[$eEquipmentCount + 1] = [ _
+		$eIcnOptions, $eIcnBarbarianPuppet, $eIcnRageVial, $eIcnEQBoots, $eIcnVampstache, $eIcnGauntlet, $eIcnArcherPuppet, $eIcnInvisibilityVial, $eIcnGiantArrow, $eIcnHealerPuppet, _
+		$eIcnEternalTome, $eIcnLifeGem, $eIcnRageGem, $eIcnHealingTome, $eIcnRoyalGem, $eIcnSeekingShield]
+Global Const $g_aiEquipmentOrderIcon2[$eEquipmentCount + 1] = [ _
+		$eIcnOptions, $eIcnKing, $eIcnKing, $eIcnKing, $eIcnKing, $eIcnKing, $eIcnQueen, $eIcnQueen, $eIcnQueen, $eIcnQueen, _
+		$eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnChampion, $eIcnChampion]
+
+Global $g_hChkCustomEquipmentOrder[$eEquipmentCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_bChkCustomEquipmentOrder[$eEquipmentCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_aiCmbCustomEquipmentOrder[$eEquipmentCount] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+
+Global Const $g_asEquipmenthortNames[$eEquipmentCount] = ["BarbPuppet", "RageVial", "Boots", "Stache", "Gauntlet", "ArchPuppet", _
+"InvVial", "GArrow", "HealPuppet", "Eternal", "Life", "RageGem", "HealTome", "RoyalGem", "Shield"]
+
+; PetHouse
+Global $g_aiPetHousePos[2] = [-1, -1]
 Global $g_sPetUpgradeTime = "", $g_iPetHouseLevel = 0
 Global $g_bChkSyncSaveDE = True, $g_bChkSortPetUpgrade = False, $g_iCmbSortPetUpgrade = 0
 
@@ -1959,9 +2015,9 @@ Global $g_bChkStartWeekendRaid = True
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[29][7] = [["DS", "Default", 571.62, 82, 770, 58, 577], _ ;ok
-									["JS", "Jungle", 566.60, 69, 796, 64, 609], _ ;ok
-									["MS", "Magic", 524, 91, 778, 58, 578], _ ;ok
+Global $g_aVillageRefSize[39][7] = [["DS", "Default", 571.62, 82, 770, 58, 577], _ ;ok
+									["JS", "Jungle", 547, 99, 773, 58, 568], _ ;ok
+									["MS", "Magic", 619.82, 26, 820, 48, 643], _ ;ok
 									["BL", "BuilderBase Lower", 652.11, 131, 777, 102, 584], _ ;ok
 									["BH", "BuilderBase Higher", 563, 145, 764, 141, 600], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
@@ -1977,15 +2033,25 @@ Global $g_aVillageRefSize[29][7] = [["DS", "Default", 571.62, 82, 770, 58, 577],
 									["SH", "Shadow", 598.40, 81, 790, 61, 592], _ ;ok
 									["RY", "Royal", 610.20, 57, 799, 48, 603], _ ;ok
 									["SM", "Summer", 568, 85, 813, 56, 604], _ ;ok
-									["PS", "Pixel", 560.6, 90, 768, 54, 570], _ ;ok
+									["PS", "Pixel", 656.65, 39, 813, 27, 606], _ ;ok
 									["10", "10th Clasivery", 561, 92, 791, 47, 570], _ ;ok
 									["CF", "Clash Fest", 517.81, 119, 771, 112, 602], _ ;ok
-									["SP", "Spooky", 515.81, 103, 769, 61, 563], _ ;ok
+									["SP", "Spooky", 679.13, 65, 796, 53, 604], _ ;ok
 									["W1", "Scenery1", 553.3, 61, 813, 55, 619], _ ;ok
 									["W2", "Scenery2", 619.29, 61, 796, 64, 607], _ ;ok
 									["JL", "Jolly", 543.76, 86, 762, 93, 602], _
 									["MT", "Magic Theatre", 549.18, 78, 777, 103, 626], _ ;ok
 									["PT", "Painter", 504.06, 80, 774, 104, 625], _ 
 									["DA", "Dark Ages", 581.83, 78, 775, 109, 627], _ 
-									["BC", "Book of Clash", 532.42, 77, 773, 105, 626]] 
+									["BC", "Book of Clash", 532.42, 77, 773, 105, 626], _
+									["EM", "Epic Magic", 624.48, 41, 818, 34, 615], _
+									["FS", "Future", 604.51, 65, 793, 57, 604], _
+									["DP", "Dragon Palace", 626.14, 49, 797, 58, 614], _
+									["GH", "Ghost", 584.01, 59, 797, 55, 603], _
+									["GB", "GingerBread", 630.72, 53, 800, 54, 611], _
+									["DO", "Deep Dark Ocean", 620.68, 84, 802, 57, 596], _
+									["HP", "Heavenly Place", 633.73, 59, 808, 63, 624], _
+									["SC", "Space", 571.85, 73, 778, 61, 588], _
+									["TD", "Tang Dynasty", 579.24, 69, 778, 57, 588], _
+									["CH", "Chess", 643.24, 63, 793, 49, 601]] 
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"

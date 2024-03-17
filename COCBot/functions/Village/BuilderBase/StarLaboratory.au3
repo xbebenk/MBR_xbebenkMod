@@ -30,6 +30,8 @@ EndFunc
 Func StarLaboratory($bTestRun = False)
 
 	If Not $g_bAutoStarLabUpgradeEnable Then Return ; Lab upgrade not enabled.
+	Local $bElixirFull = False
+	If $g_bChkUpgradeAnyIfAllOrderMaxed Then $bElixirFull = isElixirFullBB()
 	
 	;Create local array to hold upgrade values
 	Local $iAvailElixir, $sElixirCount, $TimeDiff, $aArray, $Result
@@ -50,6 +52,7 @@ Func StarLaboratory($bTestRun = False)
 	$iAvailElixir = Number($sElixirCount)
 	If Not $g_bOptimizeOTTO Then isBattleMachineMaxed()
 	ZoomOutHelperBB("SwitchBetweenBases") ;go to BH LowerZone
+	If _Sleep(1000) Then Return
 	
 	If Not LocateStarLab() Then Return False
 	
@@ -62,7 +65,7 @@ Func StarLaboratory($bTestRun = False)
 	Local $bWindowOpened = False
 	For $i = 1 To 5
 		SetDebugLog("Waiting For Star Laboratory Window #" & $i)
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 80, 770, 150, True) Then 
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 760, 40, 820, 80) Then 
 			$bWindowOpened = True
 			ExitLoop
 		EndIf
@@ -74,9 +77,9 @@ Func StarLaboratory($bTestRun = False)
 		Return 
 	EndIf
 	
-	If WaitForPixel(715, 152, 716, 153, "A2CB6C", 10, 1) Then
+	If WaitForPixel(795, 122, 796, 124, "A2CB6C", 10, 1) Then
 		SetLog("Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
-		Local $sLabTimeOCR = getRemainTLaboratory(264, 230)
+		Local $sLabTimeOCR = getRemainTLaboratory(225, 202)
 		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)
 		SetDebugLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
 		If $iLabFinishTime > 0 Then
@@ -190,7 +193,8 @@ Func StarLaboratory($bTestRun = False)
 		EndIf
 		
 		;any upgrade if all on troops lab order is maxed
-		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bChkUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn And ($g_bisBattleMachineMaxed Or $g_bIs6thBuilderUnlocked) Then
+		If $g_bDebugSetLog Then SetLog("g_iCmbStarLaboratory=" & $g_iCmbStarLaboratory & " g_bSLabUpgradeOrderEnable=" & $g_bSLabUpgradeOrderEnable & " bAnyUpgradeOn=" & $bAnyUpgradeOn & " g_bisBattleMachineMaxed=" & $g_bisBattleMachineMaxed & " g_bIs6thBuilderUnlocked=" & $g_bIs6thBuilderUnlocked & " bElixirFull=" & $bElixirFull, $COLOR_DEBUG)
+		If $g_iCmbStarLaboratory = 0 And $g_bSLabUpgradeOrderEnable And $g_bChkUpgradeAnyIfAllOrderMaxed And $bAnyUpgradeOn And ($g_bisBattleMachineMaxed Or $g_bIs6thBuilderUnlocked Or $bElixirFull) Then
 			_ArraySort($aTroopUpgrade, 1, 0, 0, 5) ;sort by cost descending
 			For $i = 0 To UBound($aTroopUpgrade) - 1
 				If $aTroopUpgrade[$i][5] = "MaxLevel" Then ContinueLoop
@@ -214,6 +218,7 @@ Func StarLaboratory($bTestRun = False)
 		If _Sleep(1000) Then Return ;wait window closed
 		Return False
 	EndIf
+	ClickAway("Left")
 	Return False
 EndFunc   ;==>Laboratory
 
@@ -222,11 +227,11 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 	Click($x, $y)
 	If _Sleep(1000) Then Return
 	
-	$Result = getLabUpgradeTime(555, 463) ; Try to read white text showing time for upgrade
+	$Result = getLabUpgradeTime(590, 493) ; Try to read white text showing time for upgrade
 	Local $iLabFinishTime = ConvertOCRTime("Lab Time", $Result, False)
 	SetLog($UpgradeName & " Upgrade OCR Time = " & $Result & ", $iLabFinishTime = " & $iLabFinishTime & " m", $COLOR_INFO)
 	
-	If Not $bTest Then Click(640, 530) ;click Upgrade
+	If Not $bTest Then Click(695, 585) ;click Upgrade
 	If _Sleep(1000) Then Return ;wait if Gem window open
 	
 	If isGemOpen(True) Then ; check for gem window
@@ -257,12 +262,12 @@ EndFunc
 
 Func FindSLabTroopsUpgrade()
 	Local $aResult[0][6], $UpgradeCost, $aTroop
-	Local $aTmp = QuickMIS("CNX", $g_sImgStarLabTroops, 100, 340, 710, 540, True)
+	Local $aTmp = QuickMIS("CNX", $g_sImgStarLabTroops, 35, 350, 785, 560)
 	If IsArray($aTmp) And UBound($aTmp) > 0 Then
 		For $i = 0 To UBound($aTmp) -1 
 			$aTroop = GetSLabTroopResPos($aTmp[$i][0])
 			$UpgradeCost = getSLabCost($aTroop[1], $aTroop[2])
-			If $UpgradeCost = 111 Then $UpgradeCost = "MaxLevel"
+			If (StringInStr($UpgradeCost, "M") Or StringInStr($UpgradeCost, "L") Or StringInStr($UpgradeCost, "x")) Then $UpgradeCost = "MaxLevel"
 			If $UpgradeCost = "" Then 
 				If QuickMIS("BC1", $g_sImgStarLabNeedUp, $aTroop[1], $aTroop[2], $aTroop[1] + 100, $aTroop[2] + 20) Then
 					$UpgradeCost = "NeedUpgradeLab"
@@ -294,7 +299,7 @@ Func LocateStarLab()
 		ClickP($g_aiStarLaboratoryPos)
 		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for description to popup
 
-		Local $aResult = BuildingInfo(245, 494) ; Get building name and level with OCR
+		Local $aResult = BuildingInfo(245, 472) ; Get building name and level with OCR
 		If $aResult[0] = 2 Then ; We found a valid building name
 			If StringInStr($aResult[1], "Lab") = True Then ; we found the Star Laboratory
 				SetLog("Star Laboratory located.", $COLOR_INFO)
@@ -316,7 +321,7 @@ Func LocateStarLab()
 		$g_aiStarLaboratoryPos[0] = $g_iQuickMISX + 10
 		$g_aiStarLaboratoryPos[1] = $g_iQuickMISY + 20
 		If _Sleep(1000) Then Return
-		Local $aResult = BuildingInfo(245, 494) ; Get building name and level with OCR
+		Local $aResult = BuildingInfo(245, 472) ; Get building name and level with OCR
 		If $aResult[0] = 2 Then ; We found a valid building name
 			If StringInStr($aResult[1], "Lab") Then ; we found the Star Laboratory
 				SetLog("Star Laboratory located.", $COLOR_INFO)

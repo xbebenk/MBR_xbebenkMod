@@ -47,10 +47,12 @@ Func _GetVectorOutZone($eVectorType)
 
 	For $i = 0 To $iSteps
 		Local $pixel = [Round($xMin + (($xMax - $xMin) * $i) / $iSteps), Round($yMin + (($yMax - $yMin) * $i) / $iSteps)]
-		ReDim $vectorOutZone[UBound($vectorOutZone) + 1]
 		If $pixel[1] > 555 Then
-			$pixel[1] = 555
+			;If $g_bDebugSetLog Then SetDebugLog("Skip vector out of zone [" & $pixel[0] & "," & $pixel[1] & "]")
+			ContinueLoop
+			;$pixel[1] = 555
 		EndIf
+		ReDim $vectorOutZone[UBound($vectorOutZone) + 1]
 		$vectorOutZone[UBound($vectorOutZone) - 1] = $pixel
 
 		; CS69 - $x and $y are never referenced in this function

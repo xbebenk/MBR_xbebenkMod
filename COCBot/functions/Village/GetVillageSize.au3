@@ -27,8 +27,8 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
-Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $sFixedPrefix = Default, $bOnBuilderBase = Default)
+;GetVillageSize(True, "stone", "tree", False)
+Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $bOnBuilderBase = Default)
 	FuncEnter(GetVillageSize)
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""]
 	If $DebugLog = Default Then $DebugLog = False
@@ -52,6 +52,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $aResult = 0, $stone, $tree, $x, $y
 	
 	$stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY)
+	If Not $g_bRunState Then Return 0
 	SetDebugLog("stone: " & _ArrayToString($stone))
 	If $stone[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
@@ -60,6 +61,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	EndIf
 	
 	$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4])
+	If Not $g_bRunState Then Return 0
 	SetDebugLog("tree: " & _ArrayToString($tree))
 	If $tree[0] = 0 Then
 		SetDebugLog("GetVillageSize cannot find tree", $COLOR_ACTION)
@@ -70,7 +72,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		Local $a = $tree[0] - $stone[0]
 		Local $b = $stone[1] - $tree[1]
 		Local $c = Sqrt($a * $a + $b * $b) ;measure distance from stone to tree
-		Local $ZoomOffset = 35, $checkZoomOffset = 0
+		Local $ZoomOffset = 100, $checkZoomOffset = 0
 			
 		Local $iRefSize = 600
 		Local $iIndex = _ArraySearch($g_aVillageRefSize, $stone[4])
@@ -85,6 +87,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			If $g_bDebugSetLog Then SetDebugLog("LRTB: " & $InnerDiamondLeft & "," & $InnerDiamondRight & "," & $InnerDiamondTop & "," & $InnerDiamondBottom)
 		Else
 			SetLog("Reference Size no match", $COLOR_ERROR)
+			SetLog("Stone2tree = " & $c, $COLOR_INFO)
 			Return FuncReturn($aResult)
 		EndIf
 		
@@ -183,12 +186,14 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAddit
 			Else
 				SetDebugLog("GetVillageSize ignore image " & $findImage & ", reason: " & UBound($a), $COLOR_WARNING)
 			EndIf
+			If Not $g_bRunState Then Return
 		Next
+		If Not $g_bRunState Then Return
 	Next
 	Return $stone
 EndFunc
 
-Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAdditionalX = 100, $iAdditionalY = 100, $sStoneName = "DS")
+Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAdditionalX = 150, $iAdditionalY = 100, $sStoneName = "DS")
 	Local $tree = [0, 0, 0, 0, 0, ""]
 	Local $x0, $y0, $d0, $x, $y, $x1, $y1, $right, $bottom, $a, $b, $i, $findImage, $sArea
 	Local $aTreeFiles = _FileListToArray($sDirectory & "tree\", $sTreePrefix & "*.*", $FLTA_FILES)
@@ -230,10 +235,10 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAddition
 				$tree[5] = $findImage
 				ExitLoop
 			EndIf
-
 		Else
 			SetDebugLog("GetVillageSize ignore image " & $findImage & ", reason: " & UBound($a), $COLOR_WARNING)
 		EndIf
+		If Not $g_bRunState Then Return
 	Next
 	Return $tree
 EndFunc

@@ -16,7 +16,8 @@
 
 Global $g_hGUI_LOG = 0
 Global $g_hTxtLog = 0, $g_hDivider = 0, $g_hTxtAtkLog = 0, $lbl_LogStyle = 0
-Global $g_hCmbLogDividerOption, $g_hBtnAtkLogClear, $g_hBtnAtkLogCopyClipboard, $g_hBtnControl, $g_hBtnRunDebug
+Global $g_hCmbLogDividerOption = 0, $g_hBtnAtkLogClear = 0, $g_hBtnAtkLogCopyClipboard = 0, $g_hBtnOpenFolder = 0
+Global $g_hBtnControl = 0, $g_hBtnRunDebug = 0
 
 Func CreateLogTab($hWHndLogsOnly = False)
 	Local $i
@@ -63,7 +64,7 @@ Func CreateLogTab($hWHndLogsOnly = False)
 
 	WinActivate($activeHWnD) ; restore current active window
 
-	$y = 410
+	$y = 412
 	$lbl_LogStyle = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Log", "LblLog_Style", "Log Style") & ":", $x, $y + 5, -1, -1)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
@@ -84,16 +85,22 @@ Func CreateLogTab($hWHndLogsOnly = False)
 	_GUICtrlSetTip(-1, "Run Function")
 	GUICtrlSetState(-1, $GUI_HIDE)
 	
-	$g_hBtnAtkLogClear = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogClear", "Clear Atk. Log"), $x + 270, $y - 1, 80, 23)
+	$x = 380
+	$g_hBtnAtkLogClear = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnReload, $x, $y + 1, 22, 22)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogClear_Info_01", "Use this to clear the Attack Log."))
 	GUICtrlSetOnEvent(-1, "btnAtkLogClear")
-	If $g_bBtnColor Then GUICtrlSetBkColor(-1, 0x22C4F5)
 	
-	$g_hBtnAtkLogCopyClipboard = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogCopyClipboard", "Copy to Clipboard"), $x + 350, $y - 1, 100, 23)
+	$x = 405
+	$g_hBtnAtkLogCopyClipboard = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnCopy, $x, $y + 1, 22, 22)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogCopyClipboard_Info_01", "Use this to copy the Attack Log to the Clipboard (CTRL+C)"))
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogCopyClipboard_Info_01", "Use this to Copy the Attack Log to the Clipboard"))
 	GUICtrlSetOnEvent(-1, "btnAtkLogCopyClipboard")
-	If $g_bBtnColor Then GUICtrlSetBkColor(-1, 0x22C4F5)
-
+	
+	$x = 430
+	$g_hBtnOpenFolder = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnEdit, $x, $y + 1, 22, 22)
+	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Log", "BtnOpenProfileFolder_Info_01", "Use this to Open Profile Folder"))
+	GUICtrlSetOnEvent(-1, "btnOpenProfileFolder")
+	
 EndFunc   ;==>CreateLogTab

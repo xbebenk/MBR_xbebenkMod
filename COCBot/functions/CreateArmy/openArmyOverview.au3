@@ -12,20 +12,36 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
-	If $bCheckMain Then
-		If Not IsMainPage() Then ; check for main page, avoid random troop drop
-			SetLog("Cannot open Army Overview window", $COLOR_ERROR)
+Func OpenArmyOverview($sWhereFrom = "Undefined")
+	If Not $g_bRunState Then Return
+	If $g_bDebugSetLog Then SetLog("OpenArmyOverview" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
+	For $i = 1 To 5
+		If Not $g_bRunState Then Return
+		SetLog("Try open ArmyWindow #" & $i, $COLOR_ACTION)
+		If WaitforPixel(30, 522, 31, 523, "FFFFE3", 20, 1) Then
+			ClickP($aArmyTrainButton) ; Button Army Overview
+			If _Sleep(3000) Then Return
+		ElseIf IsTrainPage(False, 1) Then 
+			SetLog("Detected Train Window Open", $COLOR_ACTION)
+			Return True
+		ElseIf IsProblemAffect() Then 
+			SetLog("Detected Android popup error", $COLOR_ACTION)
 			Return False
+		ElseIf Not checkChatTabPixel() Then 
+			SetLog("MainScreen Not verified", $COLOR_ACTION)
+			checkObstacles()
+		ElseIf $i = 5 Then 
+			SetLog("Cannot Verify Army Button", $COLOR_ERROR)
+			SetError(1)
+			Return
 		EndIf
-	EndIf
-	
-	For $i = 1 To 3
-		ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
-		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
-		If _Sleep(1000) Then Return
-		If IsTrainPage(True, 3) Then Return True
-		If $i > 1 Then SetLog("[" & $i & "] Repeated Try to Open ArmyWindow", $COLOR_ERROR)
+		
+		If IsTrainPage(False, 1) Then 
+			SetLog("Succesfully Open Train Window", $COLOR_SUCCESS)
+			Return True
+		EndIf
+		
+		If _Sleep(250) Then Return
 	Next
 	Return False
 EndFunc   ;==>OpenArmyOverview
@@ -51,8 +67,9 @@ Func OpenQuickTrainTab($bSetLog = True, $sWhereFrom = "Undefined")
 EndFunc   ;==>OpenQuickTrainTab
 
 Func OpenTrainTab($sTab, $bSetLog = True, $sWhereFrom = "Undefined")
-
-	If Not IsTrainPage() Then
+	
+	CheckReceivedTroops()
+	If Not IsTrainPage($bSetLog) Then
 		SetDebugLog("Error in OpenTrainTab: Cannot find the Army Overview Window", $COLOR_ERROR)
 		SetError(1)
 		Return False
@@ -66,7 +83,8 @@ Func OpenTrainTab($sTab, $bSetLog = True, $sWhereFrom = "Undefined")
 			ClickP($aTabButton)
 			
 			If Not _WaitForCheckPixel($aIsTabOpen, True) Then
-				SetLog("Error in OpenTrainTab: Cannot open " & $sTab & ". Pixel to check did not appear", $COLOR_ERROR)
+				Local $color = _GetPixelColor($aIsTabOpen[0], $aIsTabOpen[1], True)
+				SetLog("Error in OpenTrainTab: Cannot open " & $sTab & ". Pixel to check did not appear : " & $color, $COLOR_ERROR)
 				SetError(1)
 				Return False
 			EndIf
@@ -80,3 +98,12 @@ Func OpenTrainTab($sTab, $bSetLog = True, $sWhereFrom = "Undefined")
 	If _Sleep(200) Then Return
 	Return True
 EndFunc   ;==>OpenTrainTab
+
+Func CheckReceivedTroops()
+	If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
+		SetLog("Clan Castle Message Blocking, Waiting until it's gone", $COLOR_INFO)
+		While _CheckPixel($aRecievedTroops, True)
+			If _Sleep(500) Then Return
+		WEnd
+	EndIf
+EndFunc

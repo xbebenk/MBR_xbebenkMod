@@ -12,7 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func AttackCSVDEBUGIMAGE()
+Func AttackCSVDEBUGIMAGE($bOpenImage = False)
 
 	Local $iTimer = __TimerInit()
 
@@ -381,7 +381,7 @@ Func AttackCSVDEBUGIMAGE()
 	_GDIPlus_BitmapDispose($EditedImage)
 
 	; open image
-	If TestCapture() = True Then
+	If TestCapture() = True Or $bOpenImage Then
 		ShellExecute($filename)
 	EndIf
 

@@ -94,7 +94,7 @@ Func _ControlClick($x, $y)
 EndFunc   ;==>_ControlClick
 
 Func isProblemAffectBeforeClick($iCount = 0)
-	If NeedCaptureRegion($iCount) = True Then Return isProblemAffect(True)
+	If NeedCaptureRegion($iCount) = True Then Return IsProblemAffect()
 	Return False
 EndFunc   ;==>isProblemAffectBeforeClick
 

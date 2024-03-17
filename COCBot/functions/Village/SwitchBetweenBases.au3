@@ -15,15 +15,17 @@
 Global $FalseDetectionCount = 0
 
 Func SwitchBetweenBases($ForcedSwitchTo = Default)
-	Local $bIsOnBuilderBase = isOnBuilderBase()
 	Local $bIsOnMainVillage = isOnMainVillage()
+	Local $bIsOnBuilderBase = False
 	If $ForcedSwitchTo = Default Then
-		If $bIsOnBuilderBase Then 
-			$ForcedSwitchTo = "Main"
-		Else
+		If $bIsOnMainVillage Then 
 			$ForcedSwitchTo = "BB"
+		Else
+			$ForcedSwitchTo = "Main"
 		EndIf
 	EndIf
+	
+	If Not $bIsOnMainVillage Then $bIsOnBuilderBase = isOnBuilderBase()
 	
 	If $ForcedSwitchTo = "BB" And $bIsOnBuilderBase Then
 		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_INFO)
@@ -41,7 +43,7 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 		If $g_bStayOnBuilderBase Then $bIsOnBuilderBase = isOnBuilderBase() ;check again if we are on builderbases, after mainscreen located
 	EndIf
 	
-	If IsProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	If Not $g_bRunState Then Return
 	
 	If $g_bStayOnBuilderBase And Not $bIsOnBuilderBase Then
@@ -97,10 +99,13 @@ Func SwitchTo($To = "BB")
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
 		
 		Local $ZoomOutResult
-		If $To = "BB" Then 
-			$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases")
-			If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-				ZoomOut() 
+		If $To = "BB" Then
+			If Not QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
+				checkChatTabPixel()
+				$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases")
+				If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+					ZoomOut() 
+				EndIf
 			EndIf
 		EndIf
 		
@@ -119,7 +124,13 @@ Func SwitchTo($To = "BB")
 			
 			Local $sScode = "DS"
 			For $i = 1 To 5
-				$bRet = _CheckPixel($aPixelToCheck, True, Default, "SwitchBetweenBases")
+				Switch $To
+				Case "BB"
+					$bRet = isOnBuilderBase()
+				Case "Main"
+					$bRet = isOnMainVillage()
+				EndSwitch
+				
 				If $bRet Then 
 					SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
 					$FalseDetectionCount = 0
@@ -139,12 +150,21 @@ Func SwitchTo($To = "BB")
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
 			If $To = "Main" Then CheckBB20Tutor()
-			If $i = 3 Then AndroidPageError("SwitchBetweenBases")
+			
+			If $i = 3 Then 
+				$g_iGfxErrorCount += 1
+				If $g_iGfxErrorCount > $g_iGfxErrorMax Then 
+					SetLog("SwitchBetweenBases stuck, set to Reboot Android Instance", $COLOR_INFO)
+					$g_bGfxError = True
+					CheckAndroidReboot()
+				EndIf
+			EndIf
+			
 		EndIf
 		_Sleep(1000)
 	Next
 	
-	If IsProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	If Not $g_bRunState Then Return
 	Return $bRet
 EndFunc
@@ -181,9 +201,9 @@ Func BBTutorial($x = 170, $y = 560)
 	Local $RebuildWindowOK = False
 	For $i = 1 To 5
 		SetDebugLog("Waiting for Rebuild Boat Window #" & $i, $COLOR_ACTION)
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 540, 140, 595, 190) Then
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 575, 100, 630, 155) Then
 			SetLog("Rebuild Boat Window Opened", $COLOR_INFO)
-			Click(430, 470) ;Click Rebuild Button
+			Click(430, 505) ;Click Rebuild Button
 			_Sleep(1000)
 			$RebuildWindowOK = True
 			ExitLoop

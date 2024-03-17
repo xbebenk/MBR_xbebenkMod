@@ -26,45 +26,41 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	EndIf
 
 	If $GoldChangeCheck Then
-		If Not (IsReturnHomeBattlePage(True, False)) Then ; if already in return home battle page do not wait and try to activate Hero Ability and close battle
-			SetLog("Checking if the battle has finished", $COLOR_INFO)
-			$g_Zapped = False ;xbebenk mod - Reset var Early Zap, zap early will called on EBO
-			While GoldElixirChangeEBO()
-				If _Sleep($DELAYRETURNHOME1) Then Return
-			WEnd
-			If $g_bRestart Then Return
-			If $g_Zapped Then ;Skip Zap if EarlyZap is successful
-				SetLog("Zapped Early, Skipping SmartZap")
-			Else
-				If IsAttackPage() Then smartZap() ; Check to see if we should zap the DE Drills
-			EndIf
-			#comments-start
-			;If Heroes were not activated: Hero Ability activation before End of Battle to restore health
-			If ($g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower Or $g_bCheckChampionPower) Then
-				;_CaptureRegion()
-				If _ColorCheck(_GetPixelColor($aRtnHomeCheck1[0], $aRtnHomeCheck1[1], True), Hex($aRtnHomeCheck1[2], 6), $aRtnHomeCheck1[3]) = False And _ColorCheck(_GetPixelColor($aRtnHomeCheck2[0], $aRtnHomeCheck2[1], True), Hex($aRtnHomeCheck2[2], 6), $aRtnHomeCheck2[3]) = False Then ; If not already at Return Homescreen
-					If $g_bCheckKingPower Then
-						SetLog("Activating King's power to restore some health before EndBattle", $COLOR_INFO)
-						If IsAttackPage() Then SelectDropTroop($g_iKingSlot) ;If King was not activated: Boost King before EndBattle to restore some health
-					EndIf
-					If $g_bCheckQueenPower Then
-						SetLog("Activating Queen's power to restore some health before EndBattle", $COLOR_INFO)
-						If IsAttackPage() Then SelectDropTroop($g_iQueenSlot) ;If Queen was not activated: Boost Queen before EndBattle to restore some health
-					EndIf
-					If $g_bCheckWardenPower Then
-						SetLog("Activating Warden's power to restore some health before EndBattle", $COLOR_INFO)
-						If IsAttackPage() Then SelectDropTroop($g_iWardenSlot) ;If Queen was not activated: Boost Queen before EndBattle to restore some health
-					EndIf
-					If $g_bCheckChampionPower Then
-						SetLog("Activating Royal Champion's power to restore some health before EndBattle", $COLOR_INFO)
-						If IsAttackPage() Then SelectDropTroop($g_iChampionSlot) ;If Champion was not activated: Boost Champion before EndBattle to restore some health
-					EndIf
+		SetLog("Checking if the battle has finished", $COLOR_INFO)
+		$g_Zapped = False ;xbebenk mod - Reset var Early Zap, zap early will called on EBO
+		While GoldElixirChangeEBO()
+			If _Sleep($DELAYRETURNHOME1) Then Return
+		WEnd
+		If $g_bRestart Then Return
+		If $g_Zapped Then ;Skip Zap if EarlyZap is successful
+			SetLog("Zapped Early, Skipping SmartZap")
+		Else
+			If IsAttackPage() Then smartZap() ; Check to see if we should zap the DE Drills
+		EndIf
+		#comments-start
+		;If Heroes were not activated: Hero Ability activation before End of Battle to restore health
+		If ($g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower Or $g_bCheckChampionPower) Then
+			;_CaptureRegion()
+			If _ColorCheck(_GetPixelColor($aRtnHomeCheck1[0], $aRtnHomeCheck1[1], True), Hex($aRtnHomeCheck1[2], 6), $aRtnHomeCheck1[3]) = False And _ColorCheck(_GetPixelColor($aRtnHomeCheck2[0], $aRtnHomeCheck2[1], True), Hex($aRtnHomeCheck2[2], 6), $aRtnHomeCheck2[3]) = False Then ; If not already at Return Homescreen
+				If $g_bCheckKingPower Then
+					SetLog("Activating King's power to restore some health before EndBattle", $COLOR_INFO)
+					If IsAttackPage() Then SelectDropTroop($g_iKingSlot) ;If King was not activated: Boost King before EndBattle to restore some health
+				EndIf
+				If $g_bCheckQueenPower Then
+					SetLog("Activating Queen's power to restore some health before EndBattle", $COLOR_INFO)
+					If IsAttackPage() Then SelectDropTroop($g_iQueenSlot) ;If Queen was not activated: Boost Queen before EndBattle to restore some health
+				EndIf
+				If $g_bCheckWardenPower Then
+					SetLog("Activating Warden's power to restore some health before EndBattle", $COLOR_INFO)
+					If IsAttackPage() Then SelectDropTroop($g_iWardenSlot) ;If Queen was not activated: Boost Queen before EndBattle to restore some health
+				EndIf
+				If $g_bCheckChampionPower Then
+					SetLog("Activating Royal Champion's power to restore some health before EndBattle", $COLOR_INFO)
+					If IsAttackPage() Then SelectDropTroop($g_iChampionSlot) ;If Champion was not activated: Boost Champion before EndBattle to restore some health
 				EndIf
 			EndIf
-			#comments-end
-		Else
-			SetDebugLog("Battle already over", $COLOR_DEBUG)
 		EndIf
+		#comments-end
 	EndIf
 
 	If $g_bDESideDisableOther And $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable And ($g_bDropQueen Or $g_bDropKing) Then
@@ -129,7 +125,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 					EndIf
 				EndIf
 			Else
-				If IsProblemAffect(True) Then Return
+				If IsProblemAffect() Then Return
 				SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
 			EndIf
 		EndIf
@@ -182,7 +178,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	If _Sleep($DELAYRETURNHOME2) Then Return ; short wait for screen to close
 
 	For $counter = 1 To 5
-		SetDebugLog("Wait for Star Bonus window to appear #" & $counter)
+		If $g_bDebugSetLog Then SetDebugLog("Wait for Star Bonus window to appear #" & $counter)
 		If _Sleep($DELAYRETURNHOME4) Then Return
 		If StarBonus() Then SetLog("Star Bonus window closed chief!", $COLOR_INFO) ; Check for Star Bonus window to fill treasury (2016-01) update
 		$g_bFullArmy = False ; forcing check the army
@@ -190,7 +186,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 		If ReturnHomeMainPage() Then Return
 	Next
 
-	If isProblemAffect(True) Then
+	If IsProblemAffect() Then
 		SetLog("Cannot return home.", $COLOR_ERROR)
 		CheckMainScreen(False, $g_bStayOnBuilderBase, "ReturnHome-2")
 		Return

@@ -24,7 +24,8 @@
 #comments-end	
 	
 Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
-	Local $iTroopBanners = 584 ; y location of where to find troop quantities
+	Local $iTroopBanners = 582 ; y location of where to find troop quantities
+	Local $iTroopAreaY = 600 ; y location of where to find troop quantities
 	Local $iSelectTroopY = 620 ; y location to select troop on attackbar
 	Local $aBBAttackBar[0][5]
 	Local $aEmpty[0][2]
@@ -33,13 +34,13 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 		$g_aWBOnAttackBar = $aEmpty
 	EndIf
 	
-	Local $iMaxSlot = 9, $iSlotOffset = 71, $bMachineFound = False
-	Local $aSlotX[$iMaxSlot], $iStartSlot = 118
+	Local $iMaxSlot = 9, $iSlotOffset = 75, $bMachineFound = False
+	Local $aSlotX[$iMaxSlot], $iStartSlot = 100
 	
 	If $g_bChkDebugAttackBB Then SetLog("GetAttackBarBB Remaining=" & String($bRemaining) & ", SecondAttack=" & String($bSecondAttack), $COLOR_DEBUG)
 	
 	If GetMachinePos() = 0 Then
-		$iStartSlot = 35
+		$iStartSlot = 23
 		For $i = 0 To UBound($aSlotX) - 1
 			$aSlotX[$i] = $iStartSlot + ($i * $iSlotOffset)
 		Next
@@ -65,7 +66,7 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 		$ColorPickBannerX = $aSlotX[$k] + 35 ; location to pick color from TroopSlot banner
 			
 		If $bRemaining Then 
-			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopBanners, $Troopx + 73, 670) Then 
+			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopAreaY, $Troopx + $iSlotOffset, 670) Then 
 				If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
 				$isDarkGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x282828, 6), 20, Default, "isDarkGreyBanner") ; DartkGrey Banner on TroopSlot = Troop Already Deployed
 				$isGreyBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x707070, 6), 10, Default, "isGreyBanner") ;Grey Banner on TroopSlot = Troop Die
@@ -86,7 +87,7 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 				EndIf
 			EndIf
 		Else
-			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopBanners, $Troopx + 73, 670) Then 
+			If QuickMIS("BC1", $g_sImgDirBBTroops, $Troopx, $iTroopAreaY, $Troopx + $iSlotOffset, 670) Then 
 				If $g_bDebugSetLog Then SetLog("Slot [" & $k & "]: TroopBanner ColorpickX=" & $ColorPickBannerX, $COLOR_DEBUG2)
 				$isVioletBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0xC434FC, 6), 30, Default, "isVioletBanner") ; Violet Banner on TroopSlot = TroopSlot Quantity = 1 
 				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30, Default, "isBlueBanner") ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
@@ -121,9 +122,9 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 	Return $aBBAttackBar
 EndFunc
 
-Global Const $g_asAttackBarBB2[$g_iBBTroopCount + 1] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "Machine"]
-Global Const $g_asBBTroopShortNames[$g_iBBTroopCount + 1] = ["Barb", "Arch", "Giant", "Minion", "Breaker", "BabyD", "Cannon", "Witch", "Drop", "Pekka", "HogG", "Machine"]
-Global Const $g_sTroopsBBAtk[$g_iBBTroopCount + 1] = ["Raged Barbarian", "Sneaky Archer", "Boxer Giant", "Beta Minion", "Bomber Breaker", "Baby Dragon", "Cannon Cart", "Night Witch", "Drop Ship", "Super Pekka", "Hog Glider", "Battle Machine"]
+Global Const $g_asAttackBarBB2[$g_iBBTroopCount + 1] = ["Barbarian", "Archer", "BoxerGiant", "Minion", "WallBreaker", "BabyDrag", "CannonCart", "Witch", "DropShip", "SuperPekka", "HogGlider", "ElectroWizard", "Machine"]
+Global Const $g_asBBTroopShortNames[$g_iBBTroopCount + 1] = ["Barb", "Arch", "Giant", "Minion", "Breaker", "BabyD", "Cannon", "Witch", "Drop", "Pekka", "HogG", "EWiza", "Machine"]
+Global Const $g_sTroopsBBAtk[$g_iBBTroopCount + 1] = ["Raged Barbarian", "Sneaky Archer", "Boxer Giant", "Beta Minion", "Bomber Breaker", "Baby Dragon", "Cannon Cart", "Night Witch", "Drop Ship", "Super Pekka", "Hog Glider", "Electro Wizard", "Battle Machine"]
 
 Func TestCorrectAttackBarBB()
 	Local $aAvailableTroops = GetAttackBarBB()
@@ -175,12 +176,12 @@ Func ChangeBBTroopTo($sTroopName, $x, $sChangeTo)
 	Local $bRet = False
 	
 	Local $TmpX = 0, $TmpY = 0
-	If QuickMIS("BC1", $g_sImgChangeTroops, $x, 580, $x + 70, 676) Then
-		Click($g_iQuickMISX, $g_iQuickMISY)
+	If QuickMIS("BC1", $g_sImgChangeTroops, $x, 635, $x + 70, 665) Then
+		Click($g_iQuickMISX + 2, $g_iQuickMISY)
 		$TmpX = $g_iQuickMISX
 		$TmpY = $g_iQuickMISY
 		If _Sleep(1000) Then Return
-		If QuickMIS("BFI", $g_sImgDirBBTroops & $sChangeTo & "*", 0, 480, 860, 546) Then
+		If QuickMIS("BFI", $g_sImgDirBBTroops & $sChangeTo & "*", 0, 470, 860, 536) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1000) Then Return
 			$bRet = True

@@ -212,7 +212,7 @@ Func ChkSmartFarm($TypeResources = "All")
 			$redline[$i] = GetOffsetRedline($BestSideToAttack[$i], 5)
 		Next
 		DebugImageSmartFarm($THdetails, $aResourcesIN, $aResourcesOUT, Round(TimerDiff($hTimer) / 1000, 2) & "'s", _ArrayToString($BestSideToAttack), $redline)
-		TestDropLine(True)
+		;TestDropLine()
 	EndIf
 
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
@@ -263,7 +263,7 @@ Func SmartFarmDetection($txtBuildings = "All")
 				$sdirectory = @ScriptDir & "\imgxml\Storages\All"
 			EndIf
 			$iMaxReturnPoints = 21
-			$iMaxLevel = 14
+			$iMaxLevel = 15
 	EndSwitch
 
 	; Necessary Variables
@@ -368,7 +368,7 @@ Func SmartFarmDetection($txtBuildings = "All")
 			$tempObbjs = Null
 		Next
 		; End of building loop
-		SetDebugLog($txtBuildings & " Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+		SetLog("SmartFarmDetection " & $txtBuildings & " Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 		Return $aReturn
 	Else
 		SetLog("ERROR|NONE Building - Detection: " & $txtBuildings, $COLOR_INFO)
@@ -463,8 +463,10 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $re
 				If UBound($tempObbjs) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbjs[0], $tempObbjs[1], 5, 5, $hPenBlack)
 			Next
 		Else
-			$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT)
-			If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPenBlack)
+			If $aOut[$i][5] <> "" Then 
+				$tempObbj = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT)
+				If UBound($tempObbj) > 1 Then _GDIPlus_GraphicsDrawRect($hGraphic, $tempObbj[0], $tempObbj[1], 5, 5, $hPenBlack)
+			EndIf
 		EndIf
 		$tempObbj = Null
 		$tempObbjs = Null
@@ -524,7 +526,14 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	Local $GiantComp = 0
 
 	_CaptureRegion2() ; ensure full screen is captured (not ideal for debugging as clean image was already saved, but...)
-	_GetRedArea()
+	If $g_bChkForceEdgeSmartfarm Then 
+		$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
+		$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
+		$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
+		$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
+	Else
+		_GetRedArea()
+	EndIf
 
 	Switch $Nside
 		Case 1 ;Single sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -616,7 +625,6 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, ["CC", 1, 1, 1, 1] _
 				, ["HEROES", 1, 2, 1, 1]]
 	If $g_bCustomDropOrderEnable Then
-		Local $aTmpDelete
 		Local $aTmpListInfoDeploy = $listInfoDeploy
 		;AttackSmartFarm(4, "TL|BR|BL|TR")
 		;_ArrayDisplay($aTmpListInfoDeploy, "aTmpListInfoDeploy1")
@@ -625,24 +633,26 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 			If $g_bDebugSmartFarm Then SetLog("iValue : " & $iValue & " [" & GetTroopName($iValue) & "]")
 			If $iValue <> -1 And $iValue < $eKing Then
 				Local $iDelete = _ArraySearch($aTmpListInfoDeploy, $iValue, 0, 0, 0, 0, 1, 0)
-				If $g_bDebugSmartFarm Then SetLog("iDelete : " & $iDelete)
-				Local $troop = $aTmpListInfoDeploy[$i][0]
-				Local $nside1 = $aTmpListInfoDeploy[$i][1]
-				Local $wave = $aTmpListInfoDeploy[$i][2]
-				Local $x = $aTmpListInfoDeploy[$i][3]
-				Local $slotedge = $aTmpListInfoDeploy[$i][4]
-				
-				$aTmpListInfoDeploy[$i][0] = $aTmpListInfoDeploy[$iDelete][0]
-				$aTmpListInfoDeploy[$i][1] = $aTmpListInfoDeploy[$iDelete][1]
-				$aTmpListInfoDeploy[$i][2] = $aTmpListInfoDeploy[$iDelete][2]
-				$aTmpListInfoDeploy[$i][3] = $aTmpListInfoDeploy[$iDelete][3]
-				$aTmpListInfoDeploy[$i][4] = $aTmpListInfoDeploy[$iDelete][4]
-				
-				$aTmpListInfoDeploy[$iDelete][0] = $troop
-				$aTmpListInfoDeploy[$iDelete][1] = $nside1
-				$aTmpListInfoDeploy[$iDelete][2] = $wave
-				$aTmpListInfoDeploy[$iDelete][3] = $x
-				$aTmpListInfoDeploy[$iDelete][4] = $slotedge
+				If $iDelete <> -1 Then
+					If $g_bDebugSmartFarm Then SetLog("iDelete : " & $iDelete)
+					Local $troop = $aTmpListInfoDeploy[$i][0]
+					Local $nside1 = $aTmpListInfoDeploy[$i][1]
+					Local $wave = $aTmpListInfoDeploy[$i][2]
+					Local $x = $aTmpListInfoDeploy[$i][3]
+					Local $slotedge = $aTmpListInfoDeploy[$i][4]
+					
+					$aTmpListInfoDeploy[$i][0] = $aTmpListInfoDeploy[$iDelete][0]
+					$aTmpListInfoDeploy[$i][1] = $aTmpListInfoDeploy[$iDelete][1]
+					$aTmpListInfoDeploy[$i][2] = $aTmpListInfoDeploy[$iDelete][2]
+					$aTmpListInfoDeploy[$i][3] = $aTmpListInfoDeploy[$iDelete][3]
+					$aTmpListInfoDeploy[$i][4] = $aTmpListInfoDeploy[$iDelete][4]
+					
+					$aTmpListInfoDeploy[$iDelete][0] = $troop
+					$aTmpListInfoDeploy[$iDelete][1] = $nside1
+					$aTmpListInfoDeploy[$iDelete][2] = $wave
+					$aTmpListInfoDeploy[$iDelete][3] = $x
+					$aTmpListInfoDeploy[$iDelete][4] = $slotedge
+				EndIf
 			EndIf
 		Next
 		$listInfoDeploy = $aTmpListInfoDeploy
@@ -659,24 +669,51 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $SIDESNAMES)
 	
 	If Not $g_bRunState Then Return
-	If IsProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	CheckHeroesHealth()
-	If IsProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
 	SetLog("Dropping left over troops", $COLOR_INFO)
-	For $x = 0 To 1
+	
+	Local $aTempSides, $sLastSide
+	If StringInStr($SIDESNAMES, "|") Then
+		$aTempSides = StringSplit($SIDESNAMES, "|")
+		$sLastSide = $aTempSides[$aTempSides[0]]
+	Else
+		$sLastSide = $SIDESNAMES
+	EndIf
+	;Global Enum $eVectorLeftTop, $eVectorRightTop, $eVectorLeftBottom, $eVectorRightBottom
+	Local $iSide = $eVectorLeftTop
+	Switch $sLastSide
+		Case "TL"
+			$iSide = $eVectorLeftTop
+		Case "TR" 
+			$iSide = $eVectorLeftTop
+		Case "BL"
+			$iSide = $eVectorLeftBottom
+		Case "BR"
+			$iSide = $eVectorRightBottom
+	EndSwitch
+	Local $aLastDropPoint = _GetVectorOutZone($iSide)
+	
+	For $x = 1 To 2
+		SetLog("[" & $x & "] Checking left troops", $COLOR_DEBUG1) 
 		If PrepareAttack($g_iMatchMode, True) = 0 Then
 			SetDebugLog("No Wast time... exit, no troops usable left", $COLOR_DEBUG)
 			ExitLoop ;Check remaining quantities
 		EndIf
-		Local $aRandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3))]
-		Local $iRandomXY = Round(Random(0, 4))
+		Local $iRandomXY = Round(Random(1, UBound($aLastDropPoint) - 1))
+		SetDebugLog("sLastSide = " & $sLastSide & ", count DropPoint = " & UBound($aLastDropPoint) & " iRandomXY = " & $iRandomXY, $COLOR_DEBUG1)
+		
 		For $i = 0 To UBound($g_avAttackTroops) - 1
-			If $g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eIWiza Then
+			Local $aRandomCoord = $aLastDropPoint[$iRandomXY]
+			;SetLog("aCoord = " & _ArrayToString($aRandomCoord, ","), $COLOR_DEBUG1)
+			If $g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eIWiza And $g_avAttackTroops[$i][1] > 0 Then
 				; launch remaining troops
 				SelectDropTroop($i)
-				Click($aRandomEdge[$iRandomXY][0], $aRandomEdge[$iRandomXY][1], $g_avAttackTroops[$i][1]) ;Drop one troop
-				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
+				SetLog("Dropping left : x" & $g_avAttackTroops[$i][1] & " " & GetTroopName($g_avAttackTroops[$i][0], $g_avAttackTroops[$i][1]) & " on " & $sLastSide & " [" & $aRandomCoord[0] & "," & $aRandomCoord[1] & "]", $COLOR_DEBUG1)
+				Click($aRandomCoord[0], $aRandomCoord[1], $g_avAttackTroops[$i][1], 150) ;Drop troop
+				If _Sleep(500) Then Return
 			EndIf
 		Next
 	Next
@@ -694,7 +731,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 	Local $troop, $troopNb, $name
 
 	For $i = 0 To UBound($listInfoDeploy) - 1
-		If IsProblemAffect(True) Then Return
+		If IsProblemAffect() Then Return
 		; Reset the variables
 		Local $troop = -1
 		Local $troopNb = 0
@@ -744,7 +781,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 
 	; Drop a full wave of all troops (e.g. giants, barbs and archers) on each side then switch sides.
 	For $numWave = 0 To UBound($listListInfoDeployTroopPixel) - 1
-		If IsProblemAffect(True) Then Return
+		If IsProblemAffect() Then Return
 		Local $listInfoDeployTroopPixel = $listListInfoDeployTroopPixel[$numWave]
 		If (UBound($listInfoDeployTroopPixel) > 0) Then
 			Local $infoTroopListArrPixel = $listInfoDeployTroopPixel[0]
@@ -817,7 +854,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 	Next
 
 	For $numWave = 0 To UBound($listListInfoDeployTroopPixel) - 1
-		If IsProblemAffect(True) Then Return
+		If IsProblemAffect() Then Return
 		Local $listInfoDeployTroopPixel = $listListInfoDeployTroopPixel[$numWave]
 		For $i = 0 To UBound($listInfoDeployTroopPixel) - 1
 			Local $infoPixelDropTroop = $listInfoDeployTroopPixel[$i]
@@ -905,6 +942,7 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 EndFunc   ;==>DropTroopSmartFarm
 
 Func TestSF()
+	CheckZoomOut("VillageSearch")
 	PrepareAttack($DB)
 	Local $Nside = ChkSmartFarm()
 	AttackSmartFarm($Nside[1], $Nside[2])

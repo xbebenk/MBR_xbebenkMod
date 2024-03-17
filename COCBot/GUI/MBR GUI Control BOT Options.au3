@@ -599,6 +599,83 @@ Func minipinch($script = "minipinch")
 	Return AndroidAdbScript($script)
 EndFunc
 
+Func TestClickAway($count = 100, $region = "right")
+	Local $iCount = $count
+	While $iCount > 0
+		ClickAway($region)
+		$iCount -= 1
+	Wend
+EndFunc
+
+;TestTrainCap, used for test ocr read on army capacity and troop capacity
+;will train barb/arch 1 by 1 and then read army/troop capacity
+;function will break if ocr read failed
+;iCol = TroopType [1 = Barb, 2 = Arch]
+
+Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
+	If Not OpenArmyOverview() Then Return
+	If Not OpenArmyTab() Then Return
+	Local $iX = ($iCol = 1) ? 120 : 200
+	Local $sTroopName =  ($iCol = 1) ? "Barbarian" : "Archer"
+	
+	$iSleep = ($iCol = 1) ? $iSleep : $iSleep + 1000
+	If $bBoost Then $iSleep = $iSleep * 0.2
+	
+	Local $ArmyCap = getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], True)
+	If StringInStr($ArmyCap, "#") Then 
+		Local $aArmyCap = StringSplit($ArmyCap, "#", $STR_NOCOUNT)
+		If IsArray($aArmyCap) And Ubound($aArmyCap) = 2 Then 
+			For $i = $aArmyCap[0] + 1 To $aArmyCap[1]
+				If Not $g_bRunState Then Return
+				SetLog("[" & $i & "] Train 1x " & $sTroopName, $COLOR_ACTION)
+				If Not OpenTroopsTab() Then Return
+				Click($iX, 400)
+				If Not $g_bRunState Then Return
+				If _Sleep($iSleep) Then Return
+				Local $aTmpTroop = StringSplit(getArmyCapacityOnTrainTroops(95, 163), "#", $STR_NOCOUNT)
+				If Not $g_bRunState Then Return
+				If IsArray($aTmpTroop) And UBound($aTmpTroop) = 2 Then
+					If $aTmpTroop[0] = $i Then
+						SetLog(" -- Troop Capacity = " & $aTmpTroop[0], $COLOR_DEBUG1)
+					Else
+						SetLog(" -- Expected:" & $i & ", Read:" & $aTmpTroop[0], $COLOR_ERROR)
+						SetLog(" -- Troop Capacity Not read properly", $COLOR_ERROR)
+						SetLog(" -- Check on your Profile/Temp/Debug/TestTrainTroop Folder", $COLOR_INFO)
+						_CaptureRegion2(95, 163, 95 + 70, 163 + 16)
+						SaveDebugImage("TestTrainTroop", False)
+						ExitLoop
+					EndIf
+				EndIf
+				
+				If Not $g_bRunState Then Return
+				If Not OpenArmyTab() Then Return
+				Local $aTmpCamp = StringSplit(getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], True), "#", $STR_NOCOUNT)
+				If IsArray($aTmpCamp) And UBound($aTmpCamp) = 2 Then 
+					If $aTmpCamp[0] = $i Then 
+						SetLog(" -- Army Capacity = " & $aTmpCamp[0], $COLOR_DEBUG1)
+					Else
+						SetLog(" -- Expected:" & $i & ", Read:" & $aTmpCamp[0], $COLOR_ERROR)
+						SetLog(" -- Army Capacity Not read properly", $COLOR_ERROR)
+						SetLog(" -- Check on your Profile/Temp/Debug/TestTrainCap Folder", $COLOR_INFO)
+						_CaptureRegion2($aArmyCampSize[0], $aArmyCampSize[1], $aArmyCampSize[0] + 80, $aArmyCampSize[1] + 16)
+						SaveDebugImage("TestTrainCap", False)
+						ExitLoop
+					EndIf
+				Else
+					SetLog("TmpCamp Not Array, return", $COLOR_ERROR)
+					Return
+				EndIf
+			Next
+		Else
+			SetLog("ArmyCap Not Array, return", $COLOR_ERROR)
+			Return
+		EndIf
+	Else
+		SetLog("ArmyCap read failed, return", $COLOR_ERROR)
+		Return
+	EndIf
+EndFunc
+
 Func btnTestAttackBarBB()
 	Local $bCurrentOCR = $g_bDebugOcr, $bCurrentRunState = $g_bRunState, $bCurrentDebugImage = $g_bDebugImageSave
 
@@ -728,7 +805,7 @@ Func btnTestImage()
 	For $i = 0 To 0
 
 		SetLog("Testing isProblemAffect...", $COLOR_SUCCESS)
-		$result = isProblemAffect(False)
+		$result = IsProblemAffect(False)
 		SetLog("Testing isProblemAffect DONE, $Result=" & $result, $COLOR_SUCCESS)
 
 		SetLog("Testing checkObstacles...", $COLOR_SUCCESS)
@@ -757,37 +834,50 @@ Func btnTestImage()
 
 EndFunc   ;==>btnTestImage
 
-Func btnTestVillageSize()
-
+Func btnTestVillageSize($bMeasureOnly = False)
+	Local $hTimer, $ms
 	BeginImageTest()
 	Local $currentRunState = $g_bRunState
+	Local $currentDebug = $g_bDebugSetlog
 	$g_bRunState = True
 	$g_bRestart = False
-
+	$g_bDebugSetlog = True
+	
 	_CaptureRegion()
 	_CaptureRegion2Sync()
-
-	Local $a[2][2] = [["stone", "tree"], ["2stone", "2tree"]]
-	For $i = 0 To 1
-		SetLog("Testing GetVillageSize(True, """ & $a[$i][0] & """, """ & $a[$i][1] & """)", $COLOR_INFO)
-		Local $hTimer = __TimerInit()
-		Local $village = GetVillageSize(True, $a[$i][0], $a[$i][1])
-		Local $ms = __TimerDiff($hTimer)
-		If $village = 0 Then
-			SetLog("Village not found (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-		Else
-			SetLog("Village found (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-			SetLog("Village size: " & $village[0])
-			SetLog("Village zoom level: " & $village[1])
-			SetLog("Village offset x: " & $village[2])
-			SetLog("Village offset y: " & $village[3])
-			SetLog("Village stone " & $village[6] & ": " & $village[4] & ", " & $village[5])
-			SetLog("Village tree " & $village[9] & ": " & $village[7] & ", " & $village[8])
-		EndIf
-	Next
+	$hTimer = __TimerInit()
+	If Not CheckZoomOut() Then Return
+	
+	$ms = __TimerDiff($hTimer)
+	SetLog("TestVillageSize : CheckZoomOut (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	If $bMeasureOnly Then 
+		AttackCSVDEBUGIMAGE(true)
+		Return
+	EndIf
+	
+	$hTimer = __TimerInit()
+	ResetTHsearch()
+	FindTownhall(True)
+	$ms = __TimerDiff($hTimer)
+	SetLog("TestVillageSize : FindTownhall (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	
+	$hTimer = __TimerInit()
+	checkDeadBase()
+	$ms = __TimerDiff($hTimer)
+	SetLog("TestVillageSize : checkDeadBase (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	
+	$hTimer = __TimerInit()
+	Local $g_bDebugSF = $g_bDebugSmartFarm
+	$g_bDebugSmartFarm = True
+	ChkSmartFarm()
+	$ms = __TimerDiff($hTimer)
+	SetLog("TestVillageSize : ChkSmartFarm (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	$g_bDebugSmartFarm = $g_bDebugSF
+	
 	EndImageTest()
 
 	$g_bRunState = $currentRunState
+	$g_bDebugSetlog = $currentDebug
 EndFunc   ;==>btnTestVillageSize
 
 Func btnTestDeadBase()
@@ -871,7 +961,7 @@ Func btnTestAttackCSV()
 	setVillageOffset(0, 0, 1)
 	ConvertInternalExternArea()
 	;SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
-	If CheckZoomOut("btnTestAttackCSV", True, False) = False Then
+	If Not CheckZoomOut("btnTestAttackCSV") Then
 		SetLog("CheckZoomOut failed", $COLOR_INFO)
 	EndIf
 	ResetTHsearch()
@@ -915,7 +1005,7 @@ Func btnTestGetLocationBuilding()
 	setVillageOffset(0, 0, 1)
 	ConvertInternalExternArea()
 	;SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
-	If CheckZoomOut("btnTestGetLocationBuilding", True, False) = False Then
+	If Not CheckZoomOut("btnTestGetLocationBuilding") Then
 		SetLog("CheckZoomOut failed", $COLOR_INFO)
 	EndIf
 	ResetTHsearch()

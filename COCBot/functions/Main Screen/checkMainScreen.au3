@@ -24,6 +24,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 
 	If $bSetLog = Default Then $bSetLog = True
 	Local $VillageType = "MainVillage"
+	If $bBuilderBase = Default Then $bBuilderBase = isOnBuilderBase()
 	If $bBuilderBase Then $VillageType = "BuilderBase"
 	If $bSetLog Then
 		SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
@@ -31,14 +32,18 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	
 	If Not CheckAndroidRunning(False) Then Return
 	
-	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated
+	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False
 	Local $aPixelToCheck = $aIsMain
-	If $bBuilderBase Then $aPixelToCheck = $aIsOnBuilderBase
-	While True
+	$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
+	
+	While Not $bLocated
 		$i += 1
 		If Not $g_bRunState Then Return
+		
+		If Mod($i, 10) = 0 Then RestartAndroidCoC() ; Force restart CoC we keep on restarting mainscreen
+		
 		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))
-		$bLocated = _checkMainScreenImage($aPixelToCheck)
+		$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
 		If $bLocated Then ExitLoop
 		
 		If Not $bLocated And GetAndroidProcessPID() = 0 Then OpenCoC()
@@ -56,7 +61,10 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 			$bContinue = True
 		EndIf
 		
-		If $bContinue Then waitMainScreen() ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
+		If $bContinue Then 
+			If waitMainScreen() Then ExitLoop ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
+		EndIf
+		If Not $g_bRunState Then Return
 		If _Sleep(1000) Then Return
 	WEnd
 	
@@ -80,18 +88,32 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 EndFunc   ;==>_checkMainScreen
 
 Func _checkMainScreenImage($aPixelToCheck)
-	Local $bRet
-	$bRet = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage") And checkChatTabPixel()
+	Local $bRet = False, $bBuilderInfo = False, $bChatTab = False
+	$bChatTab = checkChatTabPixel()
+	$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage")
+	
+	$bRet = $bChatTab And $bBuilderInfo
+	If $g_bDebugSetLog Then SetLog("PixelToCheck = " & _ArrayToString($aPixelToCheck), $COLOR_ACTION)
+	If $g_bDebugSetLog Then SetLog("PixelCheck result : " & ($bRet ? "succeed" : "failed"), $COLOR_ACTION)
+	
+	If Not $bRet Then
+		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
+			SwitchToMainVillage()
+		EndIf
+	EndIf
+	
 	Return $bRet
 EndFunc
 
 Func checkChatTabPixel()
 	Local $bRet = False
 	
-	If _ColorCheck(_GetPixelColor(19, 376, True), Hex(0xC85415, 6), 20, Default, "checkChatTabPixel") Then
+	If _ColorCheck(_GetPixelColor(20, 300, True), Hex(0xF3AA28, 6), 20, Default, "checkChatTabPixel") Then
 		If $g_bDebugSetLog Then SetLog("checkChatTabPixel: Found ChatTab", $COLOR_ACTION)
 		$bRet = True
-	Else
+	EndIf
+	
+	If Not $bRet Then 
 		If _CheckPixel($aChatTab, True) Then
 			SetDebugLog("checkChatTabPixel: Found Chat Tab to close", $COLOR_ACTION)
 			PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
@@ -112,19 +134,23 @@ Func isOnMainVillage()
 	$bRet = _checkMainScreenImage($aPixelToCheck)
 	If Not $bRet Then
 		SetDebugLog("Using Image to Check if isOnMainVillage")
-		If QuickMIS("BC1", $g_sImgInfo, 269, 3, 282, 15) Then $bRet = True
+		If QuickMIS("BC1", $g_sImgInfo, 369, 3, 392, 15) Then $bRet = True
 	EndIf
 	Return $bRet
 EndFunc
 
 Func isOnBuilderBase()
 	Local $bRet = False
-	Local $aPixelToCheck = $aIsOnBuilderBase
+	Local $aPixelToCheck[2] = [$aIsOnBuilderBase, $aIsOnBuilderBase1]
 	
-	$bRet = _checkMainScreenImage($aPixelToCheck)
+	For $i In $aPixelToCheck
+		$bRet = _checkMainScreenImage($i)
+		If $bRet Then ExitLoop
+	Next
+	
 	If Not $bRet Then
 		SetDebugLog("Using Image to Check if isOnBuilderBase")
-		If QuickMIS("BC1", $g_sImgInfo, 340, 3, 370, 13) Then $bRet = True
+		If QuickMIS("BC1", $g_sImgInfo, 435, 1, 462, 22) Then $bRet = True
 	EndIf
 	
 	Return $bRet

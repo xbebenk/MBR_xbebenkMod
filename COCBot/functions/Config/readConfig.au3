@@ -117,6 +117,9 @@ Func ReadBuildingConfig()
 
 		IniReadS($g_aiPetHousePos[0], $g_sProfileBuildingPath, "upgrade", "PetHousePosX", -1, "int")
 		IniReadS($g_aiPetHousePos[1], $g_sProfileBuildingPath, "upgrade", "PetHousePosY", -1, "int")
+		
+		IniReadS($g_aiBlacksmithPos[0], $g_sProfileBuildingPath, "upgrade", "BlacksmithPosX", -1, "int")
+		IniReadS($g_aiBlacksmithPos[1], $g_sProfileBuildingPath, "upgrade", "BlacksmithPosY", -1, "int")
 	EndIf
 
 	IniReadS($g_aiStarLaboratoryPos[0], $g_sProfileBuildingPath, "upgrade", "StarLabPosX", -1, "int")
@@ -397,7 +400,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_iTxtRestartElixir, $g_sProfileConfigPath, "other", "minrestartelixir", 50000, "int")
 	IniReadS($g_iTxtRestartDark, $g_sProfileConfigPath, "other", "minrestartdark", 500, "int")
 	IniReadS($g_bChkCollect, $g_sProfileConfigPath, "other", "chkCollect", True, "Bool")
-	IniReadS($g_bChkCollectCartFirst, $g_sProfileConfigPath, "other", "chkCollectCartFirst", False, "Bool")
+	;IniReadS($g_bChkCollectCartFirst, $g_sProfileConfigPath, "other", "chkCollectCartFirst", False, "Bool")
 	IniReadS($g_iTxtCollectGold, $g_sProfileConfigPath, "other", "minCollectgold", 0, "int")
 	IniReadS($g_iTxtCollectElixir, $g_sProfileConfigPath, "other", "minCollectelixir", 0, "int")
 	IniReadS($g_iTxtCollectDark, $g_sProfileConfigPath, "other", "minCollectdark", 0, "int")
@@ -1004,7 +1007,14 @@ Func ReadConfig_600_15()
 	IniReadS($g_bUpgradeWardenEnable, $g_sProfileConfigPath, "upgrade", "UpgradeWarden", False, "Bool")
 	IniReadS($g_bUpgradeChampionEnable, $g_sProfileConfigPath, "upgrade", "UpgradeChampion", False, "Bool")
 	IniReadS($g_iHeroReservedBuilder, $g_sProfileConfigPath, "upgrade", "HeroReservedBuilder", 0, "int")
-
+	
+	; Equipment Order
+	IniReadS($g_bChkCustomEquipmentOrderEnable, $g_sProfileConfigPath, "upgrade", "ChkUpgradeEquipment", False, "Bool")
+	For $z = 0 To UBound($g_aiCmbCustomEquipmentOrder) - 1
+		IniReadS($g_bChkCustomEquipmentOrder[$z], $g_sProfileConfigPath, "upgrade", "ChkEquipment" & $z, False, "Bool")
+		IniReadS($g_aiCmbCustomEquipmentOrder[$z], $g_sProfileConfigPath, "upgrade", "cmbEquipmentOrder" & $z, -1)
+	Next
+	
 	IniReadS($g_bChkSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "ChkSortPetUpgrade", False, "Bool")
 	IniReadS($g_iCmbSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "CmbSortPetUpgrade", 0, "int")
 	IniReadS($g_bChkSyncSaveDE, $g_sProfileConfigPath, "upgrade", "ChkSyncSaveDE", False, "Bool")
@@ -1031,8 +1041,6 @@ EndFunc   ;==>ReadConfig_600_16
 Func ReadConfig_auto()
 	; Auto Upgrade
 	IniReadS($g_bAutoUpgradeEnabled, $g_sProfileConfigPath, "Auto Upgrade", "AutoUpgradeEnabled", False, "Bool")
-	IniReadS($g_bNewBuildingFirst, $g_sProfileConfigPath, "Auto Upgrade", "ChkNewBuildingFirst", True, "Bool")
-	IniReadS($g_bPlaceNewBuilding, $g_sProfileConfigPath, "Auto Upgrade", "AUpgradePlaceNew", True, "Bool")
 	IniReadS($g_bChkRushTH, $g_sProfileConfigPath, "Auto Upgrade", "ChkRushTH", True, "Bool")
 	IniReadS($g_bUseWallReserveBuilder, $g_sProfileConfigPath, "Auto Upgrade", "UseWallReserveBuilder", True, "Bool")
 	IniReadS($g_bUseBuilderPotion, $g_sProfileConfigPath, "Auto Upgrade", "UseBuilderPotion", False, "Bool")
@@ -1046,6 +1054,7 @@ Func ReadConfig_auto()
 	IniReadS($g_bHeroPriority, $g_sProfileConfigPath, "Auto Upgrade", "HeroPriority", False, "Bool")
 	IniReadS($g_bUseHeroBooks, $g_sProfileConfigPath, "Auto Upgrade", "UseHeroBooks", True, "Bool")
 	IniReadS($g_iHeroMinUpgradeTime, $g_sProfileConfigPath, "Auto Upgrade", "HeroMinUpgradeTime", 5, "int")
+	IniReadS($g_bUpgradeOtherDefenses, $g_sProfileConfigPath, "Auto Upgrade", "UpgradeOtherDefenses", False, "Bool")
 	$str = StringSplit(IniRead($g_sProfileConfigPath, "Auto Upgrade", "EssentialBuildings", "1|1|1|1|0|0|0|0"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
 		$g_aichkEssentialUpgrade[$i] = $str[$i]
@@ -1495,6 +1504,7 @@ EndFunc   ;==>ReadConfig_600_32
 Func ReadConfig_600_33()
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>
 	IniReadS($g_bCustomDropOrderEnable, $g_sProfileConfigPath, "DropOrder", "chkDropOrder", False, "Bool")
+	IniReadS($g_bChkForceEdgeSmartfarm, $g_sProfileConfigPath, "Smartfarm", "ChkForceEdgeSmartfarm", False, "Bool")
 	For $p = 0 To UBound($g_aiCmbCustomDropOrder) - 1
 		IniReadS($g_aiCmbCustomDropOrder[$p], $g_sProfileConfigPath, "DropOrder", "cmbDropOrder" & $p, -1)
 	Next

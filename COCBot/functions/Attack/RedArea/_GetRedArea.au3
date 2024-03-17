@@ -48,9 +48,11 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 				$listPixelBySide = getRedAreaSideBuilding()
 			Case $REDLINE_IMGLOC ; New ImgLoc based deployable red line routine
 				; ensure redline exists
-				SearchRedLinesMultipleTimes()
-				Local $dropPoints = GetOffSetRedline("TL") & "|" & GetOffSetRedline("BL") & "|" & GetOffSetRedline("BR") & "|" & GetOffSetRedline("TR")
-				$listPixelBySide = getRedAreaSideBuilding($dropPoints)
+				SearchRedLinesModMultipleTimes()
+				$listPixelBySide = getRedAreaSideBuilding()
+				SetDebugLog("listPixelBySide after getRedAreaSideBuilding : " & @CRLF & _ArrayToString($listPixelBySide))
+				;Local $dropPoints = GetOffSetRedline("TL") & "|" & GetOffSetRedline("BL") & "|" & GetOffSetRedline("BR") & "|" & GetOffSetRedline("TR")
+				;$listPixelBySide = getRedAreaSideBuilding($dropPoints)
 				#cs
 					$g_aiPixelTopLeft = _SortRedline(GetOffSetRedline("TL"))
 					$g_aiPixelBottomLeft =  _SortRedline(GetOffSetRedline("BL"))
@@ -60,28 +62,28 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 				#ce
 			Case $REDLINE_ORIGINAL ; Original red line routine
 				Local $result = DllCallMyBot("getRedArea", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation)
+				If IsArray($result) Then
+					$listPixelBySide = StringSplit($result[0], "#")
+				EndIf
 		EndSwitch
 		SetDebugLog("Debug: Redline chosen")
 	EndIf
 
-	If IsArray($result) Then
-		$listPixelBySide = StringSplit($result[0], "#")
-	EndIf
 	$g_aiPixelTopLeft = GetPixelSide($listPixelBySide, 1)
 	$g_aiPixelBottomLeft = GetPixelSide($listPixelBySide, 2)
 	$g_aiPixelBottomRight = GetPixelSide($listPixelBySide, 3)
 	$g_aiPixelTopRight = GetPixelSide($listPixelBySide, 4)
-
+	
 	;02.02  - CLEAN REDAREA BAD POINTS -----------------------------------------------------------------------------------------------------------------------
 	CleanRedArea($g_aiPixelTopLeft)
 	CleanRedArea($g_aiPixelTopRight)
 	CleanRedArea($g_aiPixelBottomLeft)
 	CleanRedArea($g_aiPixelBottomRight)
-	debugAttackCSV("RedArea cleaned")
-	debugAttackCSV("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")
-	debugAttackCSV("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
-	debugAttackCSV("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
-	debugAttackCSV("	[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight")
+	If $g_bDebugSetlog Then SetLog("RedArea cleaned")
+	SetLog("[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft", $COLOR_DEBUG)
+	SetLog("[" & UBound($g_aiPixelTopRight) & "] pixels TopRight", $COLOR_DEBUG)
+	SetLog("[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft", $COLOR_DEBUG)
+	SetLog("[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight", $COLOR_DEBUG)
 	If _Sleep($DELAYRESPOND) Then Return
 
 	;02.03 - MAKE FULL DROP LINE EDGE--------------------------------------------------------------------------------------------------------------------------
@@ -123,10 +125,10 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 	Local $StartEndBottomLeft = [$coordLeft, $coordBottom]
 	Local $StartEndBottomRight = [$coordBottom, $coordRight]
 
-	SetDebugLog("_GetRedArea, StartEndTopLeft     = " & PixelArrayToString($StartEndTopLeft, ","))
-	SetDebugLog("_GetRedArea, StartEndTopRight    = " & PixelArrayToString($StartEndTopRight, ","))
-	SetDebugLog("_GetRedArea, StartEndBottomLeft  = " & PixelArrayToString($StartEndBottomLeft, ","))
-	SetDebugLog("_GetRedArea, StartEndBottomRight = " & PixelArrayToString($StartEndBottomRight, ","))
+	If $g_bDebugSetlog Then SetLog("StartEndTopLeft = " & PixelArrayToString($StartEndTopLeft, ","), $COLOR_DEBUG)
+	If $g_bDebugSetlog Then SetLog("StartEndTopRight = " & PixelArrayToString($StartEndTopRight, ","), $COLOR_DEBUG)
+	If $g_bDebugSetlog Then SetLog("StartEndBottomLeft = " & PixelArrayToString($StartEndBottomLeft, ","), $COLOR_DEBUG)
+	If $g_bDebugSetlog Then SetLog("StartEndBottomRight = " & PixelArrayToString($StartEndBottomRight, ","), $COLOR_DEBUG)
 
 	Local $startPoint, $endPoint, $invalid1, $invalid2
 	Local $totalInvalid = 0
@@ -215,35 +217,35 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 		If $aSideLength[$i] > 0 Then $iAvgSideCount += 1
 	Next
 	$iAvgSideLength = Round($iAvgSideLength / $iAvgSideCount, 0)
-	SetDebugLog("Average side length: " & $iAvgSideLength)
+	If $g_bDebugSetlog Then SetLog("Average side length: " & $iAvgSideLength, $COLOR_DEBUG)
 
 	; validate if read line side have enough points and red line is long enough (covers enough space for attack)... otherwise fall back to outer green side
 	Local $bNotEnoughPoints, $iSideLength
 	$bNotEnoughPoints = UBound($g_aiPixelTopLeft) < 10
 	$iSideLength = Round(GetPixelListDistance($g_aiPixelTopLeft, $iMaxAllowedPixelDistance), 0)
 	If $bNotEnoughPoints Or $iSideLength / $fMinSideLengthFactor < $iAvgSideLength Then ; * 2 < GetPixelDistance($coordTop, $coordLeft) Then
-		SetDebugLog("Attack side top-left: fall back to outer green (" & (($bNotEnoughPoints) ? ("not enougth points") : ("side length " & $iSideLength & " / " & $fMinSideLengthFactor & " < " & $iAvgSideLength)) & ")")
+		SetLog("Attack side top-left: fall back to outer green (" & (($bNotEnoughPoints) ? ("not enougth points") : ("side length " & $iSideLength & " / " & $fMinSideLengthFactor & " < " & $iAvgSideLength)) & ")", $COLOR_DEBUG)
 		$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
 		$g_aiPixelTopLeftFurther = $g_aiPixelTopLeft
 	EndIf
 	$bNotEnoughPoints = UBound($g_aiPixelBottomLeft) < 10
 	$iSideLength = Round(GetPixelListDistance($g_aiPixelBottomLeft, $iMaxAllowedPixelDistance), 0)
 	If $bNotEnoughPoints Or $iSideLength / $fMinSideLengthFactor < $iAvgSideLength Then ; * 2 < GetPixelDistance($coordBottom, $coordLeft) Then
-		SetDebugLog("Attack side bottom-left: fall back to outer green (" & (($bNotEnoughPoints) ? ("not enougth points") : ("side length " & $iSideLength & " / " & $fMinSideLengthFactor & " < " & $iAvgSideLength)) & ")")
+		SetLog("Attack side bottom-left: fall back to outer green (" & (($bNotEnoughPoints) ? ("not enougth points") : ("side length " & $iSideLength & " / " & $fMinSideLengthFactor & " < " & $iAvgSideLength)) & ")", $COLOR_DEBUG)
 		$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
 		$g_aiPixelBottomLeftFurther = $g_aiPixelBottomLeft
 	EndIf
 	$bNotEnoughPoints = UBound($g_aiPixelTopRight) < 10
 	$iSideLength = Round(GetPixelListDistance($g_aiPixelTopRight, $iMaxAllowedPixelDistance), 0)
 	If $bNotEnoughPoints Or $iSideLength / $fMinSideLengthFactor < $iAvgSideLength Then ; * 2 < GetPixelDistance($coordTop, $coordRight) Then
-		SetDebugLog("Attack side top-right: fall back to outer green (" & (($bNotEnoughPoints) ? ("not enougth points") : ("side length " & $iSideLength & " / " & $fMinSideLengthFactor & " < " & $iAvgSideLength)) & ")")
+		SetLog("Attack side top-right: fall back to outer green (" & (($bNotEnoughPoints) ? ("not enougth points") : ("side length " & $iSideLength & " / " & $fMinSideLengthFactor & " < " & $iAvgSideLength)) & ")", $COLOR_DEBUG)
 		$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
 		$g_aiPixelTopRightFurther = $g_aiPixelTopRight
 	EndIf
 	$bNotEnoughPoints = UBound($g_aiPixelBottomRight) < 10
 	$iSideLength = Round(GetPixelListDistance($g_aiPixelBottomRight, $iMaxAllowedPixelDistance), 0)
 	If $bNotEnoughPoints Or $iSideLength / $fMinSideLengthFactor < $iAvgSideLength Then ; * 2 < GetPixelDistance($coordBottom, $coordRight) Then
-		SetDebugLog("Attack side bottom-right: fall back to outer green (" & (($bNotEnoughPoints) ? ("not enougth points") : ("side length " & $iSideLength & " / " & $fMinSideLengthFactor & " < " & $iAvgSideLength)) & ")")
+		SetLog("Attack side bottom-right: fall back to outer green (" & (($bNotEnoughPoints) ? ("not enougth points") : ("side length " & $iSideLength & " / " & $fMinSideLengthFactor & " < " & $iAvgSideLength)) & ")", $COLOR_DEBUG)
 		$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
 		$g_aiPixelBottomRightFurther = $g_aiPixelBottomRight
 	EndIf

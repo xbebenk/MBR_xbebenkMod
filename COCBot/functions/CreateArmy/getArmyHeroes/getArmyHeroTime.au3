@@ -35,7 +35,7 @@ Func getArmyHeroTime($iHeroType, $bOpenArmyWindow = False, $bCloseArmyWindow = F
 		SetError(2)
 		Return ; not open, not requested to be open - error.
 	ElseIf $bOpenArmyWindow Then
-		If Not OpenArmyOverview(True, "getArmyHeroTime()") Then
+		If Not OpenArmyOverview("getArmyHeroTime()") Then
 			SetError(3)
 			Return ; not open, requested to be open - error.
 		EndIf
@@ -48,7 +48,7 @@ Func getArmyHeroTime($iHeroType, $bOpenArmyWindow = False, $bCloseArmyWindow = F
 	;Local Const $aHeroStatusSlots[3][2] = [[658, 347], [732, 347], [805, 347]] ; Location of hero status check tile
 
 	; Constant Array with OCR find location: [X pos, Y Pos, Text Name, Global enum value]
-	Local Const $aHeroRemainData[$eHeroCount][4] = [[555, 384, "King", $eHeroKing], [627, 384, "Queen", $eHeroQueen], [700, 384, "Warden", $eHeroWarden], [772, 384, "Champion", $eHeroChampion]]
+	Local Const $aHeroRemainData[$eHeroCount][4] = [[528, 383, "King", $eHeroKing], [592, 383, "Queen", $eHeroQueen], [655, 383, "Warden", $eHeroWarden], [718, 383, "Champion", $eHeroChampion]]
 
 	For $index = 0 To UBound($aHeroRemainData) - 1 ;cycle through all 3 slots and hero types
 

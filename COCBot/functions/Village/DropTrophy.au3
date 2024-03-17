@@ -14,6 +14,10 @@
 ; ===============================================================================================================================
 
 Func DropTrophy()
+	If Not $g_bDropTrophyEnable Then Return
+	If Not (Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax)) Then Return
+	Local $bDropTrophyDBZap = False
+	If $g_bDropTrophyZap And $g_bSmartZapEnable Then $bDropTrophyDBZap = True
 	
 	If $g_bDropTrophyEnable Then
 		SetDebugLog("Drop Trophy()", $COLOR_DEBUG)
@@ -93,7 +97,6 @@ Func DropTrophy()
 				$g_iDropTrophyMaxNeedCheck = $g_iDropTrophyMin ; already checked above max trophy, so set target to min trophy value
 				SetLog("Dropping Trophies to " & $g_iDropTrophyMin, $COLOR_INFO)
 				If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
-				ZoomOut()
 				PrepareSearch($DT)
 				If $g_bOutOfGold Or $g_bRestart Then Return
 
@@ -139,8 +142,9 @@ Func DropTrophy()
 					EndIf
 				EndIf
 				
-				If $g_bDropTrophyZap And $g_bSmartZapEnable Then
+				If $bDropTrophyDBZap Then
 					If aaaaaa() Then ContinueLoop
+					$bDropTrophyDBZap = False
 				EndIf
 				
 				; Normal Drop Trophy, no check for Dead Base
@@ -281,7 +285,6 @@ Func DropTrophy()
 			EndIf
 		WEnd
 		SetDebugLog("DropTrophy(): End", $COLOR_DEBUG)
-		TrainSystem()
 	Else
 		SetDebugLog("Drop Trophy SKIP", $COLOR_DEBUG)
 	EndIf
@@ -367,9 +370,9 @@ Func aaaaaa()
 		EndIf
 		
 		ReturnfromDropTrophies(True)
-		If OpenArmyOverview() Then
+		If OpenArmyOverview("DropTrophy") Then
 			TrainPreviousArmy(True)
-			_Sleep(500)
+			_Sleep(1000)
 		EndIf
 		Return True
 	EndIf

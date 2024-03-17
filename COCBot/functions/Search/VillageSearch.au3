@@ -120,7 +120,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		If $g_bRestart Then Return ; exit func
 		$g_bCloudsActive = False
 		
-		If _Sleep(1000) Then Return ;add small delay before check resource
+		;If _Sleep(1000) Then Return ;add small delay before check resource
 		GetResources(False) ;Reads Resource Values
 		If $g_bRestart Then Return ; exit func
 
@@ -354,7 +354,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				SetLog("Wait to see Next Button #" & $i, $COLOR_ACTION)
 			EndIf
 			
-			If isProblemAffect(True) Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
+			If IsProblemAffect() Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
 				$g_bIsClientSyncError = True
 				checkMainScreen(True, $g_bStayOnBuilderBase, "VillageSearch")
 				If $g_bRestart Then
@@ -396,37 +396,16 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 	WEnd ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop End ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-	; center village, also update global village coordinates (that overwrites home base data, but will reset when returning anyway)
-	; centering disabled and village measuring moved to top
-	;Local $aCenterVillage = SearchZoomOut($aCenterEnemyVillageClickDrag, True, "VillageSearch")
-	;updateGlobalVillageOffset($aCenterVillage[3], $aCenterVillage[4]) ; update red line and TH location
-	
 	; measure enemy village (only if search match)
-	Local $bAlwaysMeasure = $g_bVillageSearchAlwaysMeasure
 	For $i = 0 To $g_iModeCount - 1
-		If $match[$i] Or $bAlwaysMeasure Then
-			; reset village measures
-			setVillageOffset(0, 0, 1)
-			ConvertInternalExternArea()
-			If $g_bDebugImageSave Then TestDropLine(True) ;g_bVillageSearchAlwaysMeasure must enabled manually by editing Global var
+		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Then
 			If Not CheckZoomOut("VillageSearch") Then
-				If isProblemAffect(True) Then 
+				If IsProblemAffect() Then
 					$g_bRestart = True ; Restart Attack
 					Return
 				EndIf
 				SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
 				ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
-				; check two more times, only required for snow theme (snow fall can make it easily fail), but don't hurt to keep it
-				;$i = 0
-				;Local $bMeasured
-				;Do
-				;	$i += 1
-				;	If _Sleep($DELAYPREPARESEARCH2) Then Return ; wait 500 ms
-				;	ForceCaptureRegion()
-				;	_CaptureRegion2()
-				;	$bMeasured = CheckZoomOut("VillageSearch", $i < 2, False)
-				;Until $bMeasured = True Or $i >= 2
-				;If Not $bMeasured Then Return ; exit func
 			EndIf
 			ExitLoop
 		EndIf
@@ -461,7 +440,7 @@ Func SearchLimit($iSkipped, $bReturnToPickupHero = False)
 			If _Sleep($DELAYSEARCHLIMIT) Then Return
 			$Wcount += 1
 			SetDebugLog("wait surrender button " & $Wcount, $COLOR_DEBUG)
-			If $Wcount >= 50 Or isProblemAffect(True) Then
+			If $Wcount >= 50 Or IsProblemAffect() Then
 				checkMainScreen(True, $g_bStayOnBuilderBase, "SearchLimit")
 				$g_bIsClientSyncError = False ; reset OOS flag for long restart
 				$g_bRestart = True ; set force runbot restart flag
@@ -531,13 +510,25 @@ Func WriteLogVillageSearch($x)
 
 EndFunc   ;==>WriteLogVillageSearch
 
-Func CheckZoomOut($sSource = "CheckZoomOut", $bCheckOnly = False, $bForecCapture = True)
-	If $bForecCapture = True Then _CaptureRegion2()
-	
-	Local $aVillageResult = SearchZoomOut(False, True, $sSource, False)
+Func CheckZoomOut($sSource = "CheckZoomOut")
+	;SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, $sSource = "", $CaptureRegion, $DebugLog)
+	resetEdge()
+	Local $aVillageResult = SearchZoomOut(False, True, $sSource)
 	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
+		SetLog("CheckZoomOut Failed", $COLOR_ERROR)
 		Return False
 	EndIf
-	
+	If $sSource = "VillageSearch" Then SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
+	If $g_bVillageSearchAlwaysMeasure And $sSource = "VillageSearch" Then
+		If $g_bChkForceEdgeSmartfarm Then 
+			$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
+			$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
+			$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
+			$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
+		Else
+			_GetRedArea()
+		EndIf
+		AttackCSVDEBUGIMAGE()
+	EndIf
 	Return True
 EndFunc   ;==>CheckZoomOut

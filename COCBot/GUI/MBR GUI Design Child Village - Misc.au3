@@ -27,9 +27,9 @@ Global $g_hChkSaleBOF = 0, $g_hChkSaleBOB = 0, $g_hChkSaleBOS = 0, $g_hChkSaleBO
 Global $g_hChkSalePowerPot = 0, $g_hChkSaleResourcePot = 0, $g_hChkSaleTrainingPot = 0, $g_hChkSaleBuilderPot = 0, $g_hChkSaleCTPot = 0
 Global $g_hChkSaleHeroPot = 0, $g_hChkSaleResearchPot = 0, $g_hChkSaleSuperPot = 0
 Global $g_hChkSaleROG = 0, $g_hChkSaleROE = 0, $g_hChkSaleRODE = 0, $g_hChkSaleROBG = 0, $g_hChkSaleROBE = 0
-Global $g_hChkCollectCartFirst = 0, $g_hTxtCollectGold = 0, $g_hTxtCollectElixir = 0, $g_hTxtCollectDark = 0
+Global $g_hTxtCollectGold = 0, $g_hTxtCollectElixir = 0, $g_hTxtCollectDark = 0
 Global $g_hBtnLocateSpellfactory = 0, $g_hBtnLocateDarkSpellFactory = 0
-Global $g_hBtnLocateKingAltar = 0, $g_hBtnLocateQueenAltar = 0, $g_hBtnLocateWardenAltar = 0, $g_hBtnLocateChampionAltar = 0, $g_hBtnLocateLaboratory = 0, $g_hBtnLocatePetHouse = 0, $g_hBtnResetBuilding = 0
+Global $g_hBtnLocateKingAltar = 0, $g_hBtnLocateQueenAltar = 0, $g_hBtnLocateWardenAltar = 0, $g_hBtnLocateChampionAltar = 0, $g_hBtnLocateLaboratory = 0, $g_hBtnLocatePetHouse = 0, $g_hBtnLocateBlacksmith = 0, $g_hBtnResetBuilding = 0
 Global $g_hChkTreasuryCollect = 0, $g_hTxtTreasuryGold = 0, $g_hTxtTreasuryElixir = 0, $g_hTxtTreasuryDark = 0 , $g_hChkCollectAchievements = 0, $g_hChkFreeMagicItems = 0, $g_hChkCollectRewards = 0, $g_hChkSellRewards = 0
 
 ;ClanGames Challenges
@@ -215,9 +215,6 @@ Func CreateMiscNormalVillageSubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollect_Info_02", "from Gold Mines, Elixir Collectors and Dark Elixir Drills.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollect_Info_03", "This will also search for a Loot Cart in your village and collect it."))
 			GUICtrlSetState(-1, $GUI_CHECKED)
-		$g_hChkCollectCartFirst = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectCartFirst", "Loot Cart first"), $x + 280, $y - 6, -1, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectCartFirst_Info_01", "Check this to collect the Loot Cart before Villages Resources."))
-			GUICtrlSetState(-1, $GUI_CHECKED)
 
 	$x += 179
 	$y += 15
@@ -388,8 +385,13 @@ Func CreateMiscNormalVillageSubTab()
 			_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnPetHouse)
 			_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnLocatePetHouse_Info_01", "PetHouse"))
 			GUICtrlSetOnEvent(-1, "btnPet")
-
-	$x += 119
+	$x += 38
+		$g_hBtnLocateBlacksmith = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnLocateBlacksmith", "Blacksmith"), $x, $y, 36, 36, $BS_ICON)
+		_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnBlacksmithgreen)
+		_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnLocateBlacksmith_Info_01", "Blacksmith"))
+		GUICtrlSetOnEvent(-1, "btnBsmith")
+		
+	$x += 85
 		GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnReset", "Reset."), $x, $y, 36, 36, $BS_ICON)
 			_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnBldgX)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnReset_Info_01", "Click here to reset all building locations,") & @CRLF & _

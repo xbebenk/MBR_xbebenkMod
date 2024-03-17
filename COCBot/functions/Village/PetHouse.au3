@@ -48,13 +48,14 @@ Func PetHouse($test = False)
 	Next
 	If Not $bUpgradePets Then Return
 
+	ZoomOut() ;make sure village is zoomout
+	ClickAway()
+
 	$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(700, 123) ;get current DE
 	If Number($g_aiCurrentLoot[$eLootDarkElixir]) <= 90000 Then
 		SetLog("Current DE: " & $g_aiCurrentLoot[$eLootDarkElixir] & " < Mininum to upgrade Pet, exiting!", $COLOR_INFO)
 		If Not $test Then Return
 	EndIf
-	ZoomOut() ;make sure village is zoomout
-	ClickAway()
 
 	If Not $test Then
 		If PetUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the Pet House
@@ -67,22 +68,19 @@ Func PetHouse($test = False)
 			SetLog("Problem locating Pet House, re-locate Pet House position before proceeding", $COLOR_ERROR)
 			Return False
 		EndIf
-		If $bPetHouseLocated Then PureClickP($g_aiPetHousePos)
 	Else
 		PureClickP($g_aiPetHousePos)
 		_Sleep(500)
 	EndIf
 	
-	Local $BuildingName = BuildingInfo(242, 498)
+	Local $BuildingName = BuildingInfo(242, 473)
 	If StringInStr($BuildingName[1], "Pet") Then
 		SetLog("Click on PetHouse, Level:" & $BuildingName[2])
 		$g_iPetHouseLevel = Number($BuildingName[2])
 	Else
 		SetDebugLog("Wrong Click on PetHouse, its a " & $BuildingName[1])
 		ClickAway()
-		If LocatePetHouse() Then
-			PureClickP($g_aiPetHousePos)
-		Else
+		If Not LocatePetHouse() Then
 			SetLog("Cannot Find PetHouse, please locate manually")
 			Return
 		EndIf
@@ -194,55 +192,46 @@ Func PetHouse($test = False)
 				
 				Click($aPet[$i][5], 465)
 
-			   ; wait for ungrade window to open
+			    ;wait for ungrade window to open
 				If _Sleep(1500) Then Return
+				
+				; check if this just a test
+				If Not $test Then
+					Click(625, 545) ; click upgrade and window close
 
-			   ; use image search to find Upgrade Button
-				Local $aUpgradePetButton = findButton("UpgradePet", Default, 1, True)
-
-			   ; check button found
-			   If IsArray($aUpgradePetButton) And UBound($aUpgradePetButton, 1) = 2 Then
-					If $g_bDebugImageSave Then SaveDebugImage("PetHouse") ; Debug Only
-
-					; check if this just a test
-					If Not $test Then
-						ClickP($aUpgradePetButton) ; click upgrade and window close
-
-						If _Sleep($DELAYLABORATORY1) Then Return ; Wait for window to close
-
-						; Just incase the buy Gem Window pop up!
-						If isGemOpen(True) Then
-							SetDebugLog("Not enough DE for to upgrade: " & $g_asPetNames[$i], $COLOR_DEBUG)
-							ClickAway()
-							Return False
-						EndIf
-
-						; Update gui
-						;==========Hide Red  Show Green Hide Gray===
-						GUICtrlSetState($g_hPicPetGray, $GUI_HIDE)
-						GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
-						GUICtrlSetState($g_hPicPetGreen, $GUI_SHOW)
-						;===========================================
-						If _Sleep($DELAYLABORATORY2) Then Return
-						SetLog("Started upgrade for: " & $aPet[$i][1], $COLOR_SUCCESS)
-						Local $sPetTimeOCR = getRemainTLaboratory(274, 256)
-						Local $iPetFinishTime = ConvertOCRTime("Lab Time", $sPetTimeOCR, False)
-						SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
-						If $iPetFinishTime > 0 Then
-							$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())
-							SetLog("Pet House will finish in " & $sPetTimeOCR & " (" & $g_sPetUpgradeTime & ")", $COLOR_SUCCESS)
-						EndIf
-						ClickAway() ; close pet house window
-					Else
-						ClickAway() ; close pet upgrade window
+					If _Sleep(1000) Then Return ; Wait for window to close
+					
+					; Just incase the buy Gem Window pop up!
+					If isGemOpen(True) Then
+						SetDebugLog("Not enough DE for to upgrade: " & $g_asPetNames[$i], $COLOR_DEBUG)
+						ClickAway()
+						Return False
 					EndIf
-					Return True
+					
+					ClickAway() ; close upgrade window
+					
+					; Update gui
+					;==========Hide Red  Show Green Hide Gray===
+					GUICtrlSetState($g_hPicPetGray, $GUI_HIDE)
+					GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
+					GUICtrlSetState($g_hPicPetGreen, $GUI_SHOW)
+					;===========================================
+					
+					If _Sleep(1000) Then Return
+					SetLog("Started upgrade for: " & $aPet[$i][1], $COLOR_SUCCESS)
+					Local $sPetTimeOCR = getRemainTPetHouse(274, 244)
+					Local $iPetFinishTime = ConvertOCRTime("PetHouse Time", $sPetTimeOCR, False)
+					SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
+					If $iPetFinishTime > 0 Then
+						$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())
+						SetLog("Pet House will finish in " & $sPetTimeOCR & " (" & $g_sPetUpgradeTime & ")", $COLOR_SUCCESS)
+					EndIf
 				Else
-					SetLog("Failed to find the Pets button!", $COLOR_ERROR)
-					ClickAway()
-					Return False
+					ClickAway() ; close pet upgrade window
 				EndIf
-			   SetLog("Failed to find Upgrade button", $COLOR_ERROR)
+				;success close window
+				ClickAway()
+				Return True
 			Else
 				SetDebugLog("DE:" & $g_aiCurrentLoot[$eLootDarkElixir] & " - " & $iDarkElixirReq & " = " & $g_aiCurrentLoot[$eLootDarkElixir] - $iDarkElixirReq)
 				SetLog("Upgrade Failed - Not enough Dark Elixir", $COLOR_ERROR)
@@ -260,12 +249,12 @@ EndFunc
 ; check the Pet House to see if a Pet is upgrading already
 Func CheckPetUpgrade()
 	; check for upgrade in process - look for green in finish upgrade with gems button
-	If $g_bDebugSetlog Then SetLog("_GetPixelColor(730, 200): " & _GetPixelColor(730, 185, True) & ":A2CB6C", $COLOR_DEBUG)
-	If _ColorCheck(_GetPixelColor(730, 185, True), Hex(0xA2CB6C, 6), 20) Then
+	If $g_bDebugSetlog Then SetLog("_GetPixelColor(750, 150): " & _GetPixelColor(750, 150, True) & ":BED79B", $COLOR_DEBUG)
+	If _ColorCheck(_GetPixelColor(815, 145, True), Hex(0xA2CB6C, 6), 20) Then
 		SetLog("Pet House Upgrade in progress, waiting for completion", $COLOR_INFO)
 		If _Sleep($DELAYLABORATORY2) Then Return
 		; upgrade in process and time not recorded so update completion time!
-		Local $sPetTimeOCR = getRemainTPetHouse(274, 258)
+		Local $sPetTimeOCR = getRemainTPetHouse(240, 244)
 		Local $iPetFinishTime = ConvertOCRTime("Lab Time", $sPetTimeOCR, False)
 		SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
 		If $iPetFinishTime > 0 Then
@@ -317,10 +306,10 @@ Func FindPetsButton()
 EndFunc
 
 Func GetPetUpgradeList()
-	Local $iPetUnlockedxCoord[8] = [190, 345, 500, 655, 225, 375, 520, 670]
-	Local $iPetLevelxCoord[8] = [128, 274, 420, 566, 167, 313, 460, 606]
+	Local $iPetUnlockedxCoord[8] = [125, 315, 495, 677, 180, 365, 545, 735]
+	Local $iPetLevelxCoord[8] = [51, 234, 416, 600, 108, 290, 472, 655]
 	
-	Local $iDarkElixirReq = 0
+	Local $iDarkElixirReq = 0, $iYPetLevel = 545 
 	Local $aPet[0][8]
 	Local $bSecondPage = False
 	
@@ -331,11 +320,11 @@ Func GetPetUpgradeList()
 		EndIf
 		If $g_iPetHouseLevel < 5 And $i = $ePetFrosty Then ExitLoop
 		Local $Name = $g_asPetNames[$i]
-		Local $Unlocked = String(_ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 385, True), Hex(0xc3b6a5, 6), 20))
-		Local $iPetLevel = getTroopsSpellsLevel($iPetLevelxCoord[$i], 503)
+		Local $Unlocked = String(_ColorCheck(_GetPixelColor($iPetUnlockedxCoord[$i], 400, True), Hex(0xc3b6a5, 6), 20))
+		Local $iPetLevel = getOcrAndCapture("coc-petslevel", $iPetLevelxCoord[$i], $iYPetLevel, 25, 18, True)
 		$iDarkElixirReq = 0 ;reset value
-		$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 20, 503, 100, 16, True)
-		If Number($iPetLevel) = $g_ePetLevels[$i] Then 
+		$iDarkElixirReq = getOcrAndCapture("coc-pethouse", $iPetLevelxCoord[$i] + 30, $iYPetLevel, 100, 18, True)
+		If Number($iPetLevel) = $g_ePetLevels[$i] Or StringInStr($iDarkElixirReq, "M") Or StringInStr($iDarkElixirReq, "l") Then 
 			$Unlocked = "MaxLevel"
 			$iDarkElixirReq = 0
 		EndIf

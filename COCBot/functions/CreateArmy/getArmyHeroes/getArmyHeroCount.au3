@@ -23,7 +23,7 @@ Func getArmyHeroCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $Chec
 			SetError(1)
 			Return ; not open, not requested to be open - error.
 		ElseIf $bOpenArmyWindow Then
-			If Not OpenArmyOverview(True, "getArmyHeroCount()") Then
+			If Not OpenArmyOverview("getArmyHeroCount()") Then
 				SetError(2)
 				Return ; not open, requested to be open - error.
 			EndIf
@@ -193,7 +193,7 @@ EndFunc   ;==>getArmyHeroCount
 
 Func ArmyHeroStatus($i)
 	Local $sResult = ""
-	Local Const $aHeroesRect[$eHeroCount][4] = [[540, 310, 615, 380], [618, 310, 690, 380], [695, 310, 763, 380], [765, 310, 840, 380]] ; Review
+	Local Const $aHeroesRect[$eHeroCount][4] = [[525, 322, 586, 395], [590, 322, 650, 395], [654, 322, 715, 395], [717, 322, 777, 395]] ; Review
 
 	; Perform the search
 	If QuickMIS("BC1", $g_sImgArmyOverviewHeroes, $aHeroesRect[$i][0], $aHeroesRect[$i][1], $aHeroesRect[$i][2], $aHeroesRect[$i][3]) Then

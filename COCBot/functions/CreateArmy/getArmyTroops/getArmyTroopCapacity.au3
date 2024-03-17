@@ -23,7 +23,7 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 			SetError(1)
 			Return ; not open, not requested to be open - error.
 		ElseIf $bOpenArmyWindow Then
-			If Not OpenArmyOverview(True, "getArmyTroopCapacity()") Then
+			If Not OpenArmyOverview("getArmyTroopCapacity()") Then
 				SetError(2)
 				Return ; not open, requested to be open - error.
 			EndIf
@@ -111,6 +111,7 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 			$g_iTotalCampSpace = Number($g_iTotalCampForcedValue)
 		EndIf
 	EndIf
+	
 	If _Sleep($DELAYCHECKARMYCAMP4) Then Return
 
 	If $g_bTotalCampForced = True Then $g_iTotalCampSpace = Number($g_iTotalCampForcedValue)

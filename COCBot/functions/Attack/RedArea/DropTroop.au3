@@ -19,7 +19,7 @@
 ; ===============================================================================================================================
 Func DropTroop($troop, $nbSides, $number, $slotsPerEdge = 0, $indexToAttack = -1)
 
-	If isProblemAffect(True) Then Return
+	If IsProblemAffect() Then Return
 	Local $nameFunc = "[DropTroop]"
 	debugRedArea($nameFunc & " IN ")
 	debugRedArea("troop : [" & $troop & "] / nbSides : [" & $nbSides & "] / number : [" & $number & "] / slotsPerEdge [" & $slotsPerEdge & "]")

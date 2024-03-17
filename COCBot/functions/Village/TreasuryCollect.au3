@@ -15,6 +15,7 @@
 #include-once
 
 Func TreasuryCollect()
+	If Not $g_bChkTreasuryCollect Then Return
 	SetLog("Begin CollectTreasury:", $COLOR_DEBUG)
 	If Not $g_bRunState Then Return 
 	ZoomOut()
@@ -25,7 +26,7 @@ Func TreasuryCollect()
 	Else
 		Click($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
 		If _Sleep(1000) Then Return
-		Local $BuildingInfo = BuildingInfo(290, 494)
+		Local $BuildingInfo = BuildingInfo(290, 472)
 		If $BuildingInfo[1] = "Clan Castle" Then 
 			$TryCCAutoLocate = False
 		Else
@@ -57,7 +58,7 @@ Func TreasuryCollect()
 	EndIf
 
 	Local $bForceCollect = False
-	Local $aResult = _PixelSearch(689, 220, 691, 300, Hex(0x50BD10, 6), 20) ; search for green pixels showing treasury bars are full
+	Local $aResult = _PixelSearch(690, 200, 691, 310, Hex(0x50BD10, 6), 20) ; search for green pixels showing treasury bars are full
 	If IsArray($aResult) Then
 		SetLog("Found full Treasury, collecting loot...", $COLOR_SUCCESS)
 		$bForceCollect = True
@@ -78,7 +79,8 @@ Func TreasuryCollect()
 		If IsArray($aCollectButton) And UBound($aCollectButton, 1) = 2 Then
 			ClickP($aCollectButton, 1, 0, "#0330")
 			If _Sleep($DELAYTREASURY2) Then Return
-			If ClickOkay("ConfirmCollectTreasury") Then ; Click Okay to confirm collect treasury loot
+			If IsOKCancelPage(True) Then ; Click Okay to confirm collect treasury loot
+				Click($aConfirmSurrender[0], $aConfirmSurrender[1])
 				SetLog("Treasury collected successfully.", $COLOR_SUCCESS)
 			Else
 				SetLog("Cannot Click Okay Button on Treasury Collect screen", $COLOR_ERROR)
@@ -110,7 +112,7 @@ Func AutoLocateCC()
 					Click($ClanCastleCoord[$i][1] + 10, $ClanCastleCoord[$i][2] + 10)
 				EndIf
 				If _Sleep(500) Then Return
-				Local $BuildingInfo = BuildingInfo(290, 494)
+				Local $BuildingInfo = BuildingInfo(290, 472)
 				If $BuildingInfo[1] = "Clan Castle" Then 
 					$g_aiClanCastlePos[0] = $ClanCastleCoord[$i][1] + 10
 					$g_aiClanCastlePos[1] = $ClanCastleCoord[$i][2] + 10

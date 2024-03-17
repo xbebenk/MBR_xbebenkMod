@@ -24,7 +24,7 @@ Func getArmyCCStatus($bOpenArmyWindow = False, $bCloseArmyWindow = False, $Check
 			SetError(1)
 			Return ; not open, not requested to be open - error.
 		ElseIf $bOpenArmyWindow Then
-			If Not OpenArmyOverview(True, "getArmyCCStatus()") Then
+			If Not OpenArmyOverview("getArmyCCStatus()") Then
 				SetError(2)
 				Return ; not open, requested to be open - error.
 			EndIf
@@ -50,7 +50,7 @@ Func getArmyCCStatus($bOpenArmyWindow = False, $bCloseArmyWindow = False, $Check
 		Local $iRemainTrainCCTimer = 0, $sResultCCMinutes = "", $aResult
 
 		Local $sResultCC = getRequestRemainTime($aArmyCCRemainTime[0], $aArmyCCRemainTime[1])
-		If $g_bDebugSetlogTrain Then SetLog("getArmyCampCap returned: " & $sResultCC, $COLOR_DEBUG)
+		If $g_bDebugSetlogTrain Then SetLog("getRequestRemainTime returned: " & $sResultCC, $COLOR_DEBUG)
 		$g_iCCRemainTime = ConvertOCRTime("CC request", $sResultCC, $bSetLog)
 	EndIf
 

@@ -29,6 +29,7 @@ EndFunc   ;==>ZoomOut
 Func _ZoomOut() ;Zooms out
 	$g_aiSearchZoomOutCounter[0] = 0
 	$g_aiSearchZoomOutCounter[1] = 1
+	If Not checkChatTabPixel() Then checkObstacles()
     ResumeAndroid()
     WinGetAndroidHandle()
 	getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
@@ -83,7 +84,7 @@ EndFunc
 
 Func ZoomOutMEmu()
 	SetDebugLog("ZoomOutMEmu()")
-   Return DefaultZoomOut("{F3}", 0, ($g_iAndroidZoomoutMode <> 3))
+	Return DefaultZoomOut("{F3}", 0, ($g_iAndroidZoomoutMode <> 3))
 EndFunc
 
 Func ZoomOutNox()
@@ -104,6 +105,10 @@ Func ZoomOutHelper($caller = "Default")
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
 			$y = $g_iQuickMISY - $aOffset[2]
+			If $caller = "CollectLootCart" Then 
+				$x -= 20
+				$y += 20
+			EndIf
 			SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
 			ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
@@ -171,7 +176,7 @@ Func ZoomOutHelperBB($caller = "Default")
 			$sImage = $aOffset[0]
 			
 			If $sImage = "BH" Then 
-				If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 600, 400, 760, 676) Then
+				If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 300, 400, 660, 676) Then
 					SetLog("Detected on BuilderBase HighZone, switch to LowerZone", $COLOR_INFO)
 					Click($g_iQuickMISX, $g_iQuickMISY)
 					If _Sleep(3000) Then Return
@@ -245,7 +250,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 		
 		If IsArray($aPicture) Then
 			While IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0 and Not $tryCtrlWheelScroll
-
+				
 				AndroidShield("DefaultZoomOut") ; Update shield status
 				If $bAndroidZoomOut Then
 				   AndroidZoomOut($i, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
@@ -275,7 +280,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				If $tryCtrlWheelScrollAfterCycles > 0 And $i > $tryCtrlWheelScrollAfterCycles Then $tryCtrlWheelScroll = True
 				If $i > $exitCount Then Return
 				If Not $g_bRunState Then Return $aPicture
-				If IsProblemAffect(True) Then  ; added to catch errors during Zoomout
+				If IsProblemAffect() Then  ; added to catch errors during Zoomout
 					SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_ERROR)
 					If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out", $COLOR_INFO)  ; call to clear normal errors
 				EndIf
@@ -393,7 +398,7 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 			EndIf
 			If $i > $exitCount Then ExitLoop
 			If Not $g_bRunState Then Return $aPicture
-			If IsProblemAffect(True) Then  ; added to catch errors during Zoomout
+			If IsProblemAffect() Then  ; added to catch errors during Zoomout
 				SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_ERROR)
 				If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out", $COLOR_INFO)  ; call to clear normal errors
 			EndIf
@@ -486,7 +491,7 @@ Func ZoomOutCtrlClick($CenterMouseWhileZooming = False, $AlwaysControlFocus = Fa
 			EndIf
 			If $i > $exitCount Then ExitLoop
 			If $g_bRunState = False Then ExitLoop
-			If IsProblemAffect(True) Then  ; added to catch errors during Zoomout
+			If IsProblemAffect() Then  ; added to catch errors during Zoomout
 				SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_RED)
 				If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out", $COLOR_BLUE)  ; call to clear normal errors
 			EndIf
@@ -528,7 +533,7 @@ Func AndroidOnlyZoomOut() ;Zooms out
 				AndroidZoomOut($i, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
 				If $i > $exitCount Then Return
 				If Not $g_bRunState Then ExitLoop
-				If IsProblemAffect(True) Then  ; added to catch errors during Zoomout
+				If IsProblemAffect() Then  ; added to catch errors during Zoomout
 					SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_ERROR)
 					If checkObstacles() Then SetLog("Error window cleared, continue Zoom out", $COLOR_INFO)  ; call to clear normal errors
 				EndIf
@@ -552,7 +557,7 @@ EndFunc   ;==>AndroidOnlyZoomOut
 ; 2 = Current Village Y Offset (after centering village)
 ; 3 = Difference of previous Village X Offset and current (after centering village)
 ; 4 = Difference of previous Village Y Offset and current (after centering village)
-
+;SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $UpdateMyVillage = True, $sSource = "", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
 	FuncEnter(SearchZoomOut)
 	If $sSource <> "" Then $sSource = " (" & $sSource & ")"
@@ -576,17 +581,18 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $
 	Local $bUpdateSharedPrefs = $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4
 
 	Local $village
-	Local $bOnBuilderBase = isOnBuilderBase()
+	Local $bOnBuilderBase = False
+	;If $sSource <> "VillageSearch" Then $bOnBuilderBase = isOnBuilderBase()
 	
 	If StringInStr($sSource, "AttackBB") Then $bOnBuilderBase = True
 	If $g_aiSearchZoomOutCounter[0] = 10 Then SetLog("Try secondary village measuring...", $COLOR_INFO)
 	If $g_aiSearchZoomOutCounter[0] < 10 Then
-		$village = GetVillageSize($DebugLog, "stone", "tree", Default, $bOnBuilderBase)
+		$village = GetVillageSize($DebugLog, "stone", "tree", $bOnBuilderBase)
 	Else
 		; try secondary images
 		ClickAway()
 		ZoomOut()
-		$village = GetVillageSize($DebugLog, "2stone", "2tree", Default, $bOnBuilderBase)
+		$village = GetVillageSize($DebugLog, "2stone", "2tree", $bOnBuilderBase)
 	EndIf
 
 	Static $iCallCount = 0
@@ -720,64 +726,50 @@ Func SearchZoomOut($CenterVillageBoolOrScrollPos = getVillageCenteringCoord(), $
 EndFunc   ;==>SearchZoomOut
 
 Func ZoomIn($Region = "Top")
-	Switch $g_sAndroidEmulator
-		Case "Memu"
-			SetDebugLog("ZoomInMEmu()")
-			If ZoomInMEmu($Region) Then Return True
-		Case "Nox"
-			SetDebugLog("ZoomInNox()")
-			If ZoomInMEmu($Region) Then Return True
-		Case "BlueStacks2", "BlueStacks5"
-			SetDebugLog("ZoomInBlueStacks2()")
-			If ZoomInMEmu($Region) Then Return True
-	EndSwitch
-	Return False
-EndFunc
-
-Func ZoomInMEmu($Region = "Top")
 	Local $bSuccessZoomIn = False
-	For $i = 0 To 2
-		SetLog("[" & $i & "] Try ZoomIn", $COLOR_DEBUG)
-		Switch $g_sAndroidEmulator
-			Case "Memu", "Nox"
-				If Not AndroidAdbScript("ZoomIn") Then Return False
-			Case "BlueStacks2", "BlueStacks5"
-				If Not AndroidAdbScript("ZoomIn.BlueStacks") Then Return False
-		EndSwitch
-		If _Sleep(1500) Then Return
-		Local $ZoomInResult = SearchZoomOut(False, True, "", True)
-		If IsArray($ZoomInResult) Then
-			If $ZoomInResult[0] = "" Then
-				SetLog("[" & $i & "] ZoomIn Succeed", $COLOR_SUCCESS)
-				$bSuccessZoomIn = True
-				ExitLoop
-			Else
-				SetLog("[" & $i & "] ZoomIn Not Succeed", $COLOR_DEBUG)
-			EndIf
-		EndIf
-	Next
-	If Not $bSuccessZoomIn Then Return False
+	Local $sScript = "ZoomIn"
 	Switch $Region
 		Case "Top"
-			ClickDrag(400, 100, 400, 600, 200)
-			If _Sleep(500) Then Return
-			ClickDrag(400, 100, 400, 250, 200)
+			$sScript &= ".Top"
 		Case "Left"
-			ClickDrag(100, 400, 800, 400, 200)
-			If _Sleep(500) Then Return
+			$sScript &= ".Left"
 		Case "Bottom"
-			ClickDrag(400, 500, 400, 100, 200)
-			If _Sleep(500) Then Return
-			ClickDrag(400, 500, 400, 350, 200)
+			$sScript &= ".Bottom"
 		Case "Right"
-			ClickDrag(800, 400, 100, 400, 200)
+			$sScript &= ".Right"
 	EndSwitch
+	
+	Switch $g_sAndroidEmulator
+		Case "MEmu", "Nox"
+			$sScript &= ".Memu"
+		Case "BlueStacks5"
+			$sScript &= ".BlueStacks5"
+	EndSwitch
+	
+	SetLog("minitouch script = " & $sScript, $COLOR_DEBUG)
+	
+	For $i = 1 To 3
+		SetLog("[" & $i & "] Try ZoomIn", $COLOR_DEBUG)
+		If Not AndroidAdbScript($sScript) Then Return False
+		If _Sleep(1500) Then Return
+		Local $sSceneryCode[3] = ["DS", "JS", "MS"]
+		For $sCode In $sSceneryCode
+			Local $iRes = GetVillageSize(False, "stone" & $sCode, "tree" & $sCode, False)
+			If IsArray($iRes) Then ExitLoop
+			If $iRes = 0 Then ContinueLoop
+			SetLog("[" & $i & "] ZoomIn Not Succeed", $COLOR_DEBUG)
+		Next
+		SetLog("[" & $i & "] ZoomIn Succeed", $COLOR_SUCCESS)
+		$bSuccessZoomIn = True
+		ExitLoop
+	Next
+	If Not $bSuccessZoomIn Then Return False
 	Return True
 EndFunc
 
 Func ZoomInBB($Region = "Top")
 	Switch $g_sAndroidEmulator
-		Case "Memu"
+		Case "MEmu"
 			SetDebugLog("ZoomInBBMEmu()")
 			If ZoomInBBMEmu($Region) Then Return True
 		Case "Nox"
@@ -795,7 +787,7 @@ Func ZoomInBBMEmu($Region = "Top")
 	For $i = 0 To 2
 		SetLog("[" & $i & "] Try ZoomInBB", $COLOR_DEBUG)
 		Switch $g_sAndroidEmulator
-			Case "Memu", "Nox"
+			Case "MEmu", "Nox"
 				If Not AndroidAdbScript("ZoomInBB") Then Return False
 			Case "BlueStacks2", "BlueStacks5"
 				If Not AndroidAdbScript("ZoomInBB.BlueStacks") Then Return False

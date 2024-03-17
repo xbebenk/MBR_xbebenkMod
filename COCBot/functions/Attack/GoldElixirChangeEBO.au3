@@ -25,17 +25,17 @@ Func GoldElixirChangeEBO()
 	Local $Damage, $CurDamage
 	$g_iDarkLow = 0
 	;READ RESOURCES n.1
-	$Gold1 = getGoldVillageSearch(48, 69)
-	$Elixir1 = getElixirVillageSearch(48, 69 + 29)
-	$Trophies = getTrophyVillageSearch(48, 69 + 99)
+	$Gold1 = getGoldVillageSearch(48, 76)
+	$Elixir1 = getElixirVillageSearch(48, 104)
+	$Trophies = getTrophyVillageSearch(45, 174)
 	$Damage = getOcrOverAllDamage(780, 529)
 	If Number($Damage) > Number($g_iPercentageDamage) Then $g_iPercentageDamage = Number($Damage)
 	If $Trophies <> "" Then ; If trophy value found, then base has Dark Elixir
 		If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
-		$DarkElixir1 = getDarkElixirVillageSearch(48, 69 + 57)
+		$DarkElixir1 = getDarkElixirVillageSearch(48, 132)
 	Else
 		$DarkElixir1 = ""
-		$Trophies = getTrophyVillageSearch(48, 69 + 69)
+		$Trophies = getTrophyVillageSearch(48, 76 + 68)
 	EndIf
 
 	;CALCULATE WHICH TIMER TO USE
@@ -108,19 +108,19 @@ Func GoldElixirChangeEBO()
 		Else
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
 		EndIf
-
+		
 		;--> Read Resources #2
-		$Gold2 = getGoldVillageSearch(48, 69)
+		$Gold2 = getGoldVillageSearch(48, 76)
 		If $Gold2 = "" Then
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
-			$Gold2 = getGoldVillageSearch(48, 69)
+			$Gold2 = getGoldVillageSearch(48, 76)
 		EndIf
-		$Elixir2 = getElixirVillageSearch(48, 69 + 29)
-		$Trophies = getTrophyVillageSearch(48, 69 + 99)
+		$Elixir2 = getElixirVillageSearch(48, 104)
+		$Trophies = getTrophyVillageSearch(45, 174)
 		CheckHeroesHealth()
 		If $Trophies <> "" Then ; If trophy value found, then base has Dark Elixir
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
-			$DarkElixir2 = getDarkElixirVillageSearch(48, 69 + 57)
+			$DarkElixir2 = getDarkElixirVillageSearch(48, 132)
 		Else
 			$DarkElixir2 = ""
 			$Trophies = getTrophyVillageSearch(48, 69 + 69)

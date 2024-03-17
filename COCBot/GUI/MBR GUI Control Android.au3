@@ -207,11 +207,11 @@ Func getAllEmulators()
 		Setlog("No Emulator found in your machine")
 		Return
 	EndIf
+	
 	GUICtrlSetData($g_hCmbAndroidEmulator, $sEmulatorString)
-
 	; $g_sAndroidEmulator Cosote Var to store the Emulator
 	_GUICtrlComboBox_SelectString($g_hCmbAndroidEmulator, $g_sAndroidEmulator)
-
+	$g_sAndroidVersion = $emuVer
 	; Lets get all Instances
 	getAllEmulatorsInstances()
 EndFunc   ;==>getAllEmulators

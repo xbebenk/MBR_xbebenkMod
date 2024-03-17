@@ -14,11 +14,20 @@
 ; ===============================================================================================================================
 
 Func CheckTombs()
-	If QuickMIS("BC1", $g_sImgClearTombs, $InnerDiamondLeft, $InnerDiamondTop, $InnerDiamondRight, $InnerDiamondBottom) Then
-		If isInsideDiamondXY($g_iQuickMISX, $g_iQuickMISY) Then 
-			Click($g_iQuickMISX, $g_iQuickMISY)
-			SetLog("Tombs removed!", $COLOR_SUCCESS)
-		EndIf
+	If Not $g_bRunState Then Return
+	SetLog("Checking Tombs", $COLOR_ACTION)
+	Collect(True)
+	If _Sleep(1000) Then Return
+	
+	Local $aTombs = QuickMIS("CNX", $g_sImgClearTombs, $InnerDiamondLeft, $InnerDiamondTop, $InnerDiamondRight, $InnerDiamondBottom)
+	If IsArray($aTombs) And UBound($aTombs) > 0 Then
+		For $i = 0 To UBound($aTombs) - 1
+			If isInsideDiamondXY($aTombs[$i][1], $aTombs[$i][2]) Then 
+				Click($aTombs[$i][1], $aTombs[$i][2])
+				SetLog("Tombs removed! [" & $aTombs[$i][1] & "," & $aTombs[$i][2] & "]", $COLOR_SUCCESS)
+				ExitLoop
+			EndIf
+		Next
 	Else
 		SetLog("No Tombs Found!", $COLOR_DEBUG1)
 	EndIf
@@ -30,6 +39,12 @@ Func CleanYardCheckBuilder($bTest = False)
 	If $bTest Then $g_iFreeBuilderCount = 1
 	If $g_iFreeBuilderCount > 0 Then 
 		$bRet = True
+		If $g_iFreeBuilderCount = 1 Then 
+			If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "CleanYardCheckBuilder") Then 
+				SetLog("Goblin Builder Found!", $COLOR_DEBUG1)
+				$bRet = False
+			EndIf
+		EndIf
 	Else
 		SetDebugLog("No More Builders available")
 	EndIf
@@ -124,7 +139,7 @@ Func RemoveGembox()
 		_Sleep(1000)
 		ClickRemoveObstacle()
 		ClickAway()
-		SetLog("GemBox removed!", $COLOR_SUCCESS)
+		SetLog("Removing GemBox", $COLOR_SUCCESS)
 		Return True
 	Else
 		SetLog("No GemBox Found!", $COLOR_DEBUG)

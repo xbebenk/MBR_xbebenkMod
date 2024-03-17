@@ -28,7 +28,7 @@ Func _LocateQueenAltar($bCollect = True)
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
-	If $bCollect Then Collect(False)
+	If $bCollect Then Collect(True)
 
 	SetLog("Locating Queen Altar", $COLOR_INFO)
 	While 1
@@ -79,11 +79,11 @@ Func _LocateQueenAltar($bCollect = True)
 		EndIf
 
 		;get Queen info
-		$sInfo = BuildingInfo(242, 494); 860x780
+		$sInfo = BuildingInfo(242, 472); 860x780
 		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
 		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo(242, 494); 860x780
+			$sInfo = BuildingInfo(242, 472); 860x780
 			If @error Then SetError(0, 0, 0)
 			Sleep(100)
 			$CountGetInfo += 1
@@ -157,7 +157,7 @@ Func _LocateKingAltar($bCollect = True)
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
-	If $bCollect Then Collect(False)
+	If $bCollect Then Collect(True)
 
 	SetLog("Locating King Altar", $COLOR_INFO)
 	While 1
@@ -208,11 +208,11 @@ Func _LocateKingAltar($bCollect = True)
 		EndIf
 
 		;Get King info
-		$sInfo = BuildingInfo(242, 494); 860x780
+		$sInfo = BuildingInfo(242, 472); 860x780
 		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
 		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo(242, 494); 860x780
+			$sInfo = BuildingInfo(242, 472); 860x780
 			If @error Then SetError(0, 0, 0)
 			Sleep(100)
 			$CountGetInfo += 1
@@ -289,7 +289,7 @@ Func _LocateWardenAltar($bCollect = True)
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
-	If $bCollect Then Collect(False)
+	If $bCollect Then Collect(True)
 
 	SetLog("Locating Grand Warden Altar", $COLOR_INFO)
 	While 1
@@ -340,11 +340,11 @@ Func _LocateWardenAltar($bCollect = True)
 		EndIf
 
 		;get GrandWarden info
-		$sInfo = BuildingInfo(242, 494) ;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< need to work
+		$sInfo = BuildingInfo(242, 472) ;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< need to work
 		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
 		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo(242, 494)
+			$sInfo = BuildingInfo(242, 472)
 			If @error Then SetError(0, 0, 0)
 			Sleep(100)
 			$CountGetInfo += 1
@@ -422,7 +422,7 @@ Func _LocateChampionAltar($bCollect = True)
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
-	If $bCollect Then Collect(False)
+	If $bCollect Then Collect(True)
 
 	SetLog("Locating Royal Champion Altar", $COLOR_INFO)
 	While 1
@@ -473,11 +473,11 @@ Func _LocateChampionAltar($bCollect = True)
 		EndIf
 
 		;get RoyalChampion info
-		$sInfo = BuildingInfo(242, 494) ;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< need to work
+		$sInfo = BuildingInfo(242, 472) ;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< need to work
 		If @error Then SetError(0, 0, 0)
 		Local $CountGetInfo = 0
 		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo(242, 494)
+			$sInfo = BuildingInfo(242, 472)
 			If @error Then SetError(0, 0, 0)
 			Sleep(100)
 			$CountGetInfo += 1

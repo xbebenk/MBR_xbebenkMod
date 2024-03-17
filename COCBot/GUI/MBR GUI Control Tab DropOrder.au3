@@ -28,6 +28,14 @@ Func CloseCustomDropOrder()
 	GUICtrlSetState($g_hBtnCustomDropOrderAB, $GUI_ENABLE)
 EndFunc   ;==>CloseCustomDropOrder
 
+Func ChkForceEdgeSmartfarm()
+	If GUICtrlRead($g_hChkForceEdgeSmartfarm) = $GUI_CHECKED Then
+		$g_bChkForceEdgeSmartfarm = True
+	Else
+		$g_bChkForceEdgeSmartfarm = False
+	EndIf
+EndFunc   ;==>ChkForceEdgeSmartfarm
+
 Func chkDropOrder()
 	If GUICtrlRead($g_hChkCustomDropOrderEnable) = $GUI_CHECKED Then
 		$g_bCustomDropOrderEnable = True

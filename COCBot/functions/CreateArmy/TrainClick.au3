@@ -35,52 +35,22 @@ Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops
 				For $i = 0 To ($iTimes - 1)
 					PureClick($iX, $iY) ;Click once.
 				Next
-				If isProblemAffect(True) Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
+				If IsProblemAffect() Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
 				Local $sLogText = Default
 				If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
-				If _CheckPixel($aWatchSpot, True, Default, $sLogText) = True Then ; Check to see if barrack full
-					If $g_bDebugClick Or $g_bDebugSetlogTrain Then SetLog("Camp is FULL", $COLOR_DEBUG)
-					; Detected the gray [i] and will exit and return
-					ClearClicks()
-				EndIf
 			Else
-				; FastCaptureRegion = True when is set to use WinAPI+ BackgroundMode
-				If FastCaptureRegion() Then
-					; Will make a LOOP for each troop will check a color position ( gray[i] )
-					For $i = 0 To ($iTimes - 1)
-						If isProblemAffect(True) Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
-						Local $sLogText = Default
-						If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
-						If _CheckPixel($aWatchSpot, True, Default, $sLogText) = True Then ; Check to see if barrack full
-							If $g_bDebugClick Or $g_bDebugSetlogTrain Then SetLog("Camp is FULL after " & $i & " clicks", $COLOR_DEBUG)
-							; Detected the gray [i] and will exit and return
-							ExitLoop
-						EndIf
-						PureClick($iX, $iY) ;Click once.
-						If _Sleep($iSpeed, False) Then ExitLoop
-					Next
-				Else
-					If isProblemAffect(True) Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
-					Local $sLogText = Default
-					If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
-					If _CheckPixel($aWatchSpot, True, Default, $sLogText) = True Then ; Check to see if barrack full
-						If $g_bDebugClick Or $g_bDebugSetlogTrain Then SetLog("Camp is full", $COLOR_DEBUG)
-						Return ; Check to see if barrack full
-					EndIf
-					PureClick($iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
-					If _Sleep($iSpeed, False) Then Return
-				EndIf
+				If IsProblemAffect() Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
+				Local $sLogText = Default
+				If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
+				PureClick($iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
+				If _Sleep($iSpeed, False) Then Return
 			EndIf
 			ReleaseClicks()
 		Else
 			Local $sLogText = Default
 			If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
-			If isProblemAffect(True) Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
-			If $g_bDebugSetlogTrain Then SetLog("Full Check=" & _GetPixelColor($aWatchSpot[0], $aWatchSpot[1], False), $COLOR_DEBUG)
-			If _CheckPixel($aWatchSpot, True, Default, $sLogText) = True Then
-				If $g_bDebugClick Or $g_bDebugSetlogTrain Then SetLog("Camp is FULL", $COLOR_DEBUG)
-				Return ; Check to see if barrack full
-			EndIf
+			If IsProblemAffect() Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
+			;If $g_bDebugSetlogTrain Then SetLog("Full Check=" & _GetPixelColor($aWatchSpot[0], $aWatchSpot[1], False), $COLOR_DEBUG)
 			PureClick($iX, $iY)
 
 			If _Sleep($iSpeed, False) Then Return

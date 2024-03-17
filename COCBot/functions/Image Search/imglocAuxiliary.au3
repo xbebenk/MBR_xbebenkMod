@@ -242,7 +242,7 @@ Func GetButtonDiamond($sButtonName)
 		Case "UpgradePets"
 			$btnDiamond = GetDiamondFromRect("590,500,735,565")
 		Case "ReloadButton"
-			$btnDiamond = GetDiamondFromRect("550,450,850,700")
+			$btnDiamond = GetDiamondFromRect("670,570,815,615")
 		Case "CloseFindMatch" ;Find Match Screen
 			$btnDiamond = "780,15|830,15|830,60|780,60"
 		Case "CloseFindMatch" ;Find Match Screen
@@ -253,6 +253,8 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = "15,560|65,560|65,610|15,610"
 		Case "TrashEvent"
 			$btnDiamond = GetDiamondFromRect("100,200,840,540")
+		Case "ConfirmAttack"
+			$btnDiamond = GetDiamondFromRect("699,424,810,480")
 		Case "EventFailed"
 			$btnDiamond = GetDiamondFromRect("230,130,777,560")
 		Case "OK"
@@ -262,9 +264,9 @@ Func GetButtonDiamond($sButtonName)
 		Case "Next" ; attackpage attackwindow
 			$btnDiamond = "697,542|850,542|850,610|697,610"
 		Case "ObjectButtons", "BoostOne", "BoostCT", "ClockTowerPot", "Upgrade", "Research", "Treasury", "RemoveObstacle", "CollectLootCart", "Pets", "Cancel", "MagicItem", "HeroBooks", "LabPotion", "LabBoosted", "CCGuard", "CCSleep", "BuilderPot" ; Full size of object buttons at the bottom
-			$btnDiamond = GetDiamondFromRect("120,520,750,620")
+			$btnDiamond = GetDiamondFromRect("120,516,750,620")
 		Case "GEM", "BOOSTBtn" , "BoostConfirm"; Boost window button (full button size)
-			$btnDiamond = GetDiamondFromRect("359,385(148,66)")
+			$btnDiamond = GetDiamondFromRect("340,345,520,450")
 		Case "EnterShop"
 			$btnDiamond = GetDiamondFromRect("359,392(148,66)")
 		Case "EndBattleSurrender" ;surrender - attackwindow
@@ -290,7 +292,7 @@ Func GetButtonDiamond($sButtonName)
 		Case "BoostBarrack", "BarrackBoosted"
 			$btnDiamond = GetDiamondFromRect("630,280,850,360")
 		Case "ArmyTab", "TrainTroopsTab", "BrewSpellsTab", "BuildSiegeMachinesTab", "QuickTrainTab"
-			$btnDiamond = GetDiamondFromRect("18,75,800,115")
+			$btnDiamond = GetDiamondFromRect("76,118,740,153")
 		Case "MessagesButton"
 			$btnDiamond = GetDiamondFromRect("0,0,250,250")
 		Case "AttackLogTab", "ShareReplayButton"
@@ -576,6 +578,17 @@ Func GetDiamondFromRect($rect)
 	Return $returnvalue
 EndFunc   ;==>GetDiamondFromRect
 
+Func GetDiamondFromRect2($iX1 = -1, $iY1 = -1, $iX2 = -1, $iY2 = -1)
+	If $iX1 = -1 Or $iX2 = -1 Or $iY1 = -1 Or $iY2 = -1 Then
+		SetLog("GetDiamondFromRect2: One or more bad input coordinates!", $COLOR_ERROR)
+		Return ""
+	EndIf
+
+	Local $sReturnDiamond = ""
+	$sReturnDiamond = $iX1 & "," & $iY1 & "|" & $iX2 & "," & $iY1 & "|" & $iX2 & "," & $iY2 & "|" & $iX1 & "," & $iY2
+	Return $sReturnDiamond
+EndFunc   ;==>GetDiamondFromRect2
+
 Func GetDiamondFromArray($aRectArray)
 	;Recieves $aArray[0] = StartX
 	;		  $aArray[1] = StartY
@@ -623,6 +636,42 @@ Func FindImageInPlace($sImageName, $sImageTile, $place, $bForceCaptureRegion = T
 	SetDebugLog("FindImageInPlace : < " & $sImageName & " Found in " & $returnvalue, $COLOR_INFO)
 	Return $returnvalue
 EndFunc   ;==>FindImageInPlace
+
+; Same as FindImageInPlace but takes individual coords instead of a string
+Func FindImageInPlace2($sImageName, $sImageTile, $iX1 = -1, $iY1 = -1, $iX2 = -1, $iY2 = -1, $bForceCaptureRegion = True, $AndroidTag = Default)
+	;creates a reduced capture of the place area a finds the image in that area
+	;returns string with X,Y of ACTUALL FULL SCREEN coordinates or Empty if not found
+	If $g_bDebugSetlog Then SetDebugLog("FindImageInPlace2 : > " & $sImageName & " - " & $sImageTile, $COLOR_INFO)
+
+	If $iX1 = -1 Or $iX2 = -1 Or $iY1 = -1 Or $iY2 = -1 Then
+		SetLog("FindImageInPlace2 : One or more bad input coordinates!", $COLOR_ERROR)
+		Return ""
+	EndIf
+
+	Local $returnvalue = ""
+	;Local $aPlaces = GetRectArray($place)
+	Local $sImageArea = $iX1 & "," & $iY1 & "|" & $iX2 & "," & $iY1 & "|" & $iX2 & "," & $iY2 & "|" & $iX1 & "," & $iY2
+	If $bForceCaptureRegion = True Then
+		$sImageArea = "FV"
+		_CaptureRegion2(Number($iX1), Number($iY1), Number($iX2), Number($iY2))
+	EndIf
+	Local $coords = findImage($sImageName, $sImageTile, $sImageArea, 1, False, $AndroidTag) ; reduce capture full image
+	Local $aCoords = decodeSingleCoord($coords)
+	If UBound($aCoords) < 2 Then
+		If $g_bDebugSetlog Then SetDebugLog("FindImageInPlace : " & $sImageName & " NOT Found", $COLOR_INFO)
+		Return ""
+	EndIf
+	If $bForceCaptureRegion Then
+		$returnvalue = Number($aCoords[0]) + Number($iX1) & "," & Number($aCoords[1]) + Number($iY1)
+	Else
+		$returnvalue = Number($aCoords[0]) & "," & Number($aCoords[1])
+	EndIf
+	If $g_bDebugSetlog Then SetDebugLog("FindImageInPlace : < " & $sImageName & " Found in " & $returnvalue, $COLOR_INFO)
+
+	;	SetLog("FindImageInPlace : < " & $sImageName & " Found in " & $returnvalue, $COLOR_INFO)
+
+	Return $returnvalue
+EndFunc   ;==>FindImageInPlace2
 
 Func SearchRedLines($sCocDiamond = "ECD")
 	If $g_sImglocRedline <> "" Then Return $g_sImglocRedline
@@ -726,76 +775,273 @@ Func SearchRedLinesMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay = 30
 	Return $g_sImglocRedline
 EndFunc   ;==>SearchRedLinesMultipleTimes
 
+Func GetPixelSectionMod($aX, $aY)
+	Local $sRet = ""
+	Local $aDiamond = StringSplit($CocDiamondDCD, "|", $STR_NOCOUNT)
+	Local $aMidX = StringSplit($aDiamond[0], ",", $STR_NOCOUNT)
+	Local $aMidY = StringSplit($aDiamond[1], ",", $STR_NOCOUNT)
+	;If $g_bDebugSetlog Then SetLog("aMidX = " & _ArrayToString($aMidX))
+	;If $g_bDebugSetlog Then SetLog("aMidY = " & _ArrayToString($aMidY))
+	;If $g_bDebugSetlog Then SetLog("MidX=" & Int($aMidX[0]) & ", MidY=" & Int($aMidY[1]), $COLOR_DEBUG1)
+	Local $isLeft = $aX <= Int($aMidX[0]) ;middle X
+	Local $isTop = $aY <= Int($aMidY[1]) ;middle Y
+	
+	If $isLeft And $isTop Then $sRet = "TL"
+	If $isLeft And Not $isTop Then $sRet = "BL"
+	If Not $isLeft And $isTop Then $sRet = "TR"
+	If Not $isLeft And Not $isTop Then $sRet = "BR"
+	Return $sRet
+EndFunc   ;==>GetPixelSectionMod
+
+Func RedlineOffSetMod($sXY, $iOffset = 6, $iDistance = 10)
+	Local $sRet = "", $iXOffset = 0, $iYOffset = 0, $sArea = ""
+	Local $aTmpXYTL[2] = [0, 0], $aTmpXYBL[2] = [0, 0], $aTmpXYBR[2] = [0, 0], $aTmpXYTR[2] = [0, 0]
+	Local $aRet = StringSplit($sXY, "|", $STR_NOCOUNT)
+	;SetLog("aRet = " & _ArrayToString($aRet))
+	If IsArray($aRet) And Ubound($aRet) > 0 Then
+		_ArraySort($aRet, 0, 0, 0, 0) ;sort by x
+		For $i = 0 To UBound($aRet) - 1
+			Local $aXY = StringSplit($aRet[$i], ",", $STR_NOCOUNT)
+			;SetLog("aXY = " & _ArrayToString($aXY, ","))
+			If IsArray($aXY) And UBound($aXY) = 2 Then
+				$sArea = "->"
+				$sArea = GetPixelSectionMod($aXY[0], $aXY[1])
+				Switch $sArea
+					Case "TL"
+						$iXOffset = Int($aXY[0]) - $iOffset
+						$iYOffset = Int($aXY[1]) - $iOffset
+						If Abs(Int($aXY[0]) - Int($aTmpXYTL[0])) < $iDistance Then
+						;If GetPixelDistance($aXY, $aTmpXYTL) < $iDistance Then 
+							If $g_bDebugSetlog Then SetLog("=! " & $sArea & " [" & _ArrayToString($aXY, ",") & "] < " & $iDistance & " -> [" & _ArrayToString($aTmpXYTL) & "]", $COLOR_ACTION)
+							ContinueLoop
+						EndIf
+						$aTmpXYTL = $aXY
+					Case "BL"
+						$iXOffset = Int($aXY[0]) - $iOffset
+						$iYOffset = Int($aXY[1]) + $iOffset
+						If Abs(Int($aXY[0]) - Int($aTmpXYBL[0])) < $iDistance Then
+						;If GetPixelDistance($aXY, $aTmpXYBL) < $iDistance Then 
+							If $g_bDebugSetlog Then SetLog("=! " & $sArea & " [" & _ArrayToString($aXY, ",") & "] < " & $iDistance & " -> [" & _ArrayToString($aTmpXYBL) & "]", $COLOR_ACTION)
+							ContinueLoop
+						EndIf
+						$aTmpXYBL = $aXY
+					Case "BR"
+						$iXOffset = Int($aXY[0]) + $iOffset
+						$iYOffset = Int($aXY[1]) + $iOffset
+						If Abs(Int($aXY[0]) - Int($aTmpXYBR[0])) < $iDistance Then
+						;If GetPixelDistance($aXY, $aTmpXYBR) < $iDistance Then 
+							If $g_bDebugSetlog Then SetLog("=! " & $sArea & " [" & _ArrayToString($aXY, ",") & "] < " & $iDistance & " -> [" & _ArrayToString($aTmpXYBR) & "]", $COLOR_ACTION)
+							ContinueLoop
+						EndIf
+						$aTmpXYBR = $aXY
+					Case "TR"
+						$iXOffset = Int($aXY[0]) + $iOffset
+						$iYOffset = Int($aXY[1]) - $iOffset
+						If Abs(Int($aXY[0]) - Int($aTmpXYTR[0])) < $iDistance Then
+						;If GetPixelDistance($aXY, $aTmpXYTR) < $iDistance Then 
+							If $g_bDebugSetlog Then SetLog("=! " & $sArea & " [" & _ArrayToString($aXY, ",") & "] < " & $iDistance & " -> [" & _ArrayToString($aTmpXYTR) & "]", $COLOR_ACTION)
+							ContinueLoop
+						EndIf
+						$aTmpXYTR = $aXY
+				EndSwitch
+				If $g_bDebugSetlog Then SetLog("<< " & $sArea & " [" & $aXY[0] & "," & $aXY[1] & "]", $COLOR_DEBUG1)
+				If $g_bDebugSetlog Then SetLog(">> " & $sArea & " [" & $iXOffset & "," & $iYOffset & "]", $COLOR_DEBUG1)
+				$sRet &= $iXOffset & "," & $iYOffset & "|"
+				
+			EndIf
+		Next
+	EndIf
+	If StringRight($sRet, 1) = "|" Then $sRet = StringLeft($sRet, (StringLen($sRet) - 1))
+	If $g_bDebugSetlog Then SetLog("sXY = " & $sXY, $COLOR_ACTION)
+	If $g_bDebugSetlog Then SetLog("sRet = " & $sRet, $COLOR_ACTION)
+	Return $sRet
+EndFunc ;==>RedlineOffSetMod
+
+Func SearchRedLinesMod($sCocDiamond = "ECD")
+	Local $sImageDir = $g_sImgRedLineMod
+	If FileExists($g_sImgRedLineMod & $g_sSceneryCode) Then $sImageDir = $sImageDir & $g_sSceneryCode
+	Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", $sCocDiamond, "Int", 0, "str", $sCocDiamond, "Int", 0, "Int", 1000)
+	Local $error = @error ; Store error values as they reset at next function call
+	Local $extError = @extended
+	If $error Then
+		_logErrorDLLCall($g_sLibMyBotPath, $error)
+		SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
+		;SetError(2, $extError) ; Set external error code = 2 for DLL error
+		Return ""
+	EndIf
+	If checkImglocError($Res, "SearchRedLinesMod") = True Then
+		SetDebugLog("SearchRedLinesMod Returned Error or No values : ", $COLOR_DEBUG)
+		SetDebugLog("******** SearchRedLinesMod *** END ***", $COLOR_ORANGE)
+		Return ""
+	Else	
+		Local $sResult = ""
+		Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
+		For $i = 0 To UBound($KeyValue) - 1
+			Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
+			If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $sResult &= $DLLRes[0] & "|"
+		Next
+		If StringRight($sResult, 1) = "|" Then $sResult = StringLeft($sResult, (StringLen($sResult) - 1))
+		SetDebugLog("SearchRedLinesMod found : " & $Res[0])
+		SetDebugLog("Result : " & $sResult)
+	EndIf
+	$g_sImglocRedline = $sResult
+	Return $g_sImglocRedline
+EndFunc   ;==>SearchRedLinesMod
+
+Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay = 300)
+	Local $bHBitmap_synced = ($g_hHBitmap = $g_hHBitmap2)
+	Local $g_hHBitmap2_old = $g_hHBitmap2
+	Local $g_sImglocRedline_old
+	Local $hRedlineTimer = TimerInit()
+	Local $sText = ""
+	
+	; ensure current $g_sImglocRedline has been generated
+	SearchRedLinesMod($sCocDiamond)
+	; count # of redline points
+	Local $iRedlinePoints = [UBound(StringSplit($g_sImglocRedline, "|", $STR_NOCOUNT)), 0]
+	
+	SetLog("Initial # of redline points: " & $iRedlinePoints[0], $COLOR_DEBUG1)
+	SetDebugLog($g_sImglocRedline)
+	
+	; clear $g_hHBitmap2, so it doesn't get deleted
+	$g_hHBitmap2 = 0
+
+	Local $iCaptureTime = 0
+	Local $iRedlineTime = 0
+	Local $aiTotals = [0, 0]
+	Local $iBest = 0
+
+	For $i = 1 To $iCount
+
+		$g_sImglocRedline_old = $g_sImglocRedline
+
+		Local $hTimer = __TimerInit()
+
+		; take new screenshot
+		ForceCaptureRegion()
+		_CaptureRegion2()
+
+		$iCaptureTime = __TimerDiff($hTimer)
+
+		; generate new redline based on new screenshot
+		$g_sImglocRedline = "" ; clear current redline
+		SearchRedLinesMod($sCocDiamond)
+
+		$iRedlineTime = __TimerDiff($hTimer) - $iCaptureTime
+
+		$aiTotals[0] += $iCaptureTime
+		$aiTotals[1] += $iRedlineTime
+
+		; count # of redline points
+		$iRedlinePoints[1] = UBound(StringSplit($g_sImglocRedline, "|", $STR_NOCOUNT))
+
+		SetLog($i & ". # of redline points: " & $iRedlinePoints[1], $COLOR_DEBUG1)
+		SetDebugLog($g_sImglocRedline)
+
+		If $iRedlinePoints[1] > $iRedlinePoints[0] Then
+			; new picture has more redline points
+			$iRedlinePoints[0] = $iRedlinePoints[1]
+			$iBest = $i
+		Else
+			; old picture has more redline points
+			$g_sImglocRedline = $g_sImglocRedline_old
+		EndIf
+
+		If $i < $iCount Then
+			Local $iDelayCompensated = $iDelay - __TimerDiff($hTimer)
+			If $iDelayCompensated >= 10 Then Sleep($iDelayCompensated)
+		EndIf
+
+	Next
+
+	If $iBest = 0 Then
+		SetLog("Using initial redline with " & $iRedlinePoints[0] & " points", $COLOR_DEBUG)
+	Else
+		SetLog("Using " & $iBest & ". redline with " & $iRedlinePoints[0] & " points (capture/redline avg. time: " & Int($aiTotals[0] / $iCount) & "/" & Int($aiTotals[1] / $iCount) & ")", $COLOR_DEBUG)
+	EndIf
+	
+	$sText = Round(TimerDiff($hRedlineTimer) / 1000, 2)
+	SetLog("SearchRedLinesMod finished, takes " & $sText & " seconds", $COLOR_ACTION)
+
+	; delete current $g_hHBitmap2
+	GdiDeleteHBitmap($g_hHBitmap2)
+
+	; restore previous captured image
+	If $bHBitmap_synced Then
+		_CaptureRegion2Sync()
+	Else
+		$g_hHBitmap2 = $g_hHBitmap2_old
+	EndIf
+	$g_sImglocRedline = RedlineOffSetMod($g_sImglocRedline)
+	Return $g_sImglocRedline
+EndFunc   ;==>SearchRedLinesModMultipleTimes
+
 Func Slot($iX, $iY) ; Return Slots for Quantity Reading on Army Window
-	If $iY < 490 Then
+	If $iY < 420 Then
 		Switch $iX ; Troops & Spells Slots
-			Case 0 To 94 ; Slot 1
-				If $iY < 315 Then Return 35 ; Troops
-				If $iY > 315 Then Return 40 ; Spells
+			Case 80 To 135 ; Slot 1
+				If $iY < 290 Then Return 85 ; Troops
+				If $iY > 290 Then Return 85 ; Spells
 
-			Case 95 To 170 ; Slot 2
-				If $iY < 315 Then Return 111 ; Troops
-				If $iY > 315 Then Return 120 ; Spell
+			Case 140 To 200 ; Slot 2
+				If $iY < 290 Then Return 145 ; Troops
+				If $iY > 290 Then Return 145 ; Spell
 
-			Case 171 To 243 ; Slot 3
-				If $iY < 315 Then Return 184 ; Troops
-				If $iY > 315 Then Return 195 ; Spell
+			Case 205 To 265 ; Slot 3
+				If $iY < 290 Then Return 210 ; Troops
+				If $iY > 290 Then Return 210 ; Spell
 
-			Case 244 To 314 ; Slot 4
-				If $iY < 315 Then Return 255 ; Troops
-				If $iY > 315 Then Return 272 ; Spell
+			Case 270 To 328 ; Slot 4
+				If $iY < 290 Then Return 275 ; Troops
+				If $iY > 290 Then Return 275 ; Spell
 
-			Case 315 To 387 ; Slot 5
-				If $iY < 315 Then Return 330 ; Troops
-				If $iY > 315 Then Return 341 ; Spell
+			Case 332 To 390 ; Slot 5
+				If $iY < 290 Then Return 335 ; Troops
+				If $iY > 290 Then Return 335 ; Spell
 
-			Case 388 To 460 ; Slot 6
-				If $iY < 315 Then Return 403 ; Troops
-				If $iY > 315 Then Return 415 ; Spell
+			Case 395 To 452 ; Slot 6
+				If $iY < 290 Then Return 400 ; Troops
+				If $iY > 290 Then Return 400 ; Spell
 
-			Case 461 To 533 ; Slot 7
-				If $iY < 315 Then Return 477 ; Troops
-				If $iY > 315 Then Return 485 ; Spell
+			Case 456 To 515 ; Slot 7
+				If $iY < 290 Then Return 460 ; Troops
+				If $iY > 315 Then Return 460 ; Spell
 ;~ 			Case 534 To 600 ; Slot 7.5 (8)
 ;~ 				Return 551 ; Troops
 
-			Case 605 To 677 ; Slot 8
-				Return 620 ; Siege Machines slot 1
+			Case 580 To 640 ; Slot 8
+				Return 610 ; Siege Machines slot 1
 
-			Case 678 To 752 ; Slot 9
-				Return 693 ; Siege Machines slot 2
+			Case 643 To 703 ; Slot 9
+				Return 673 ; Siege Machines slot 2
 
-			Case 754 To 826 ; Slot 10
-				Return 769 ; Siege Machines slot 2
+			Case 705 To 765 ; Slot 10
+				Return 735 ; Siege Machines slot 2
 		EndSwitch
 	Else ;CC Troops & Spells
 		Switch $iX
-			Case 0 To 94 ; CC Troops Slot 1
-				Return 35
+			Case 80 To 135 ; CC Troops Slot 1
+				Return 85
 
-			Case 95 To 170 ; CC Troops Slot 2
-				Return 111
+			Case 140 To 200 ; CC Troops Slot 2
+				Return 145
 
-			Case 171 To 243 ; CC Troops Slot 3
-				Return 184
+			Case 205 To 265 ; CC Troops Slot 3
+				Return 210
 
-			Case 244 To 307 ; CC Troops Slot 4
-				Return 255
+			Case 270 To 328 ; CC Troops Slot 4
+				Return 275
 
-			Case 308 To 392 ; CC Troops Slot 5
-				Return 330
+			Case 332 To 390 ; CC Troops Slot 5
+				Return 335
 
-			Case 393 To 435 ; CC Troops Slot 6
-				Return 403
-
-			Case 450 To 510 ; CC Spell Slot 1
-				Return 475
-			Case 511 To 535 ; CC Spell Middle ( Happens with Clan Castles with the max. Capacity of 1!)
-				Return 510
-			Case 536 To 605 ; CC Spell Slot 2
-				Return 555
-			Case 625 To 700 ; CC Siege Machines
-				Return 650
+			Case 449 To 510 ; CC Spell Slot 1
+				Return 455
+			Case 512 To 572 ; CC Spell Middle ( Happens with Clan Castles with the max. Capacity of 1!)
+				Return 515
+			
+			Case 599 To 660 ; CC Siege Machines
+				Return 630
 		EndSwitch
 	EndIf
 EndFunc   ;==>Slot

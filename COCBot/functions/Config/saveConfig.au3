@@ -88,6 +88,9 @@ Func SaveBuildingConfig()
 	_Ini_Add("upgrade", "PetHousePosX", $g_aiPetHousePos[0])
 	_Ini_Add("upgrade", "PetHousePosY", $g_aiPetHousePos[1])
 
+	_Ini_Add("upgrade", "BlacksmithPosX", $g_aiBlacksmithPos[0])
+	_Ini_Add("upgrade", "BlacksmithPosY", $g_aiBlacksmithPos[1])
+	
 	_Ini_Add("upgrade", "StarLabPosX", $g_aiStarLaboratoryPos[0])
 	_Ini_Add("upgrade", "StarLabPosY", $g_aiStarLaboratoryPos[1])
 
@@ -371,7 +374,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "minrestartelixir", $g_iTxtRestartElixir)
 	_Ini_Add("other", "minrestartdark", $g_iTxtRestartDark)
 	_Ini_Add("other", "chkCollect", $g_bChkCollect ? 1 : 0)
-	_Ini_Add("other", "chkCollectCartFirst", $g_bChkCollectCartFirst ? 1 : 0)
+	;_Ini_Add("other", "chkCollectCartFirst", $g_bChkCollectCartFirst ? 1 : 0)
 	_Ini_Add("other", "minCollectgold", $g_iTxtCollectGold)
 	_Ini_Add("other", "minCollectelixir", $g_iTxtCollectElixir)
 	_Ini_Add("other", "minCollectdark", $g_iTxtCollectDark)
@@ -704,6 +707,13 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradeWarden", $g_bUpgradeWardenEnable ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradeChampion", $g_bUpgradeChampionEnable ? 1 : 0)
 	_Ini_Add("upgrade", "HeroReservedBuilder", $g_iHeroReservedBuilder)
+	
+	; Equipment Order
+	_Ini_Add("upgrade", "ChkUpgradeEquipment", $g_bChkCustomEquipmentOrderEnable ? 1 : 0)
+	For $z = 0 To UBound($g_aiCmbCustomEquipmentOrder) - 1
+		_Ini_Add("upgrade", "ChkEquipment" & $z, $g_bChkCustomEquipmentOrder[$z] ? 1 : 0)
+		_Ini_Add("upgrade", "cmbEquipmentOrder" & $z, $g_aiCmbCustomEquipmentOrder[$z])
+	Next
 
 	_Ini_Add("upgrade", "ChkSortPetUpgrade", $g_bChkSortPetUpgrade ? 1 : 0)
 	_Ini_Add("upgrade", "CmbSortPetUpgrade", $g_iCmbSortPetUpgrade)
@@ -731,8 +741,6 @@ Func SaveConfig_auto()
 	ApplyConfig_auto(GetApplyConfigSaveAction())
 	; Auto Upgrade
 	_Ini_Add("Auto Upgrade", "AutoUpgradeEnabled", $g_bAutoUpgradeEnabled)
-	_Ini_Add("Auto Upgrade", "ChkNewBuildingFirst", $g_bNewBuildingFirst)
-	_Ini_Add("Auto Upgrade", "AUpgradePlaceNew", $g_bPlaceNewBuilding)
 	_Ini_Add("Auto Upgrade", "ChkRushTH", $g_bChkRushTH)
 	_Ini_Add("Auto Upgrade", "UseWallReserveBuilder", $g_bUseWallReserveBuilder)
 	_Ini_Add("Auto Upgrade", "UseBuilderPotion", $g_bUseBuilderPotion)
@@ -751,6 +759,7 @@ Func SaveConfig_auto()
 	_Ini_Add("Auto Upgrade", "HeroPriority", $g_bHeroPriority)
 	_Ini_Add("Auto Upgrade", "UseHeroBooks", $g_bUseHeroBooks)
 	_Ini_Add("Auto Upgrade", "HeroMinUpgradeTime", $g_iHeroMinUpgradeTime)
+	_Ini_Add("Auto Upgrade", "UpgradeOtherDefenses", $g_bUpgradeOtherDefenses)
 	For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 		_Ini_Add("Auto Upgrade", "ChkUpgradesToIgnore[" & $i & "]", $g_iChkUpgradesToIgnore[$i])
 	Next
@@ -1218,6 +1227,7 @@ EndFunc   ;==>SaveConfig_600_32
 Func SaveConfig_600_33()
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>
 	_Ini_Add("DropOrder", "chkDropOrder", $g_bCustomDropOrderEnable ? 1 : 0)
+	_Ini_Add("Smartfarm", "ChkForceEdgeSmartfarm", $g_bChkForceEdgeSmartfarm ? 1 : 0)
 	For $p = 0 To UBound($g_aiCmbCustomDropOrder) - 1
 		_Ini_Add("DropOrder", "cmbDropOrder" & $p, $g_aiCmbCustomDropOrder[$p])
 	Next

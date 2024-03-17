@@ -298,7 +298,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetData($g_hTxtRestartDark, $g_iTxtRestartDark)
 			GUICtrlSetState($g_hChkCollect, $g_bChkCollect ? $GUI_CHECKED : $GUI_UNCHECKED)
 			ChkCollect()
-			GUICtrlSetState($g_hChkCollectCartFirst, $g_bChkCollectCartFirst ? $GUI_CHECKED : $GUI_UNCHECKED)
+			;GUICtrlSetState($g_hChkCollectCartFirst, $g_bChkCollectCartFirst ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtCollectGold, $g_iTxtCollectGold)
 			GUICtrlSetData($g_hTxtCollectElixir, $g_iTxtCollectElixir)
 			GUICtrlSetData($g_hTxtCollectDark, $g_iTxtCollectDark)
@@ -441,6 +441,12 @@ Func ApplyConfig_600_6($TypeReadSave)
 				GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
 				GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_ENABLE)
 				Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
+				If UBound($asBBDropOrder) <> $g_iBBTroopCount + 1 Then 
+					$g_sBBDropOrder = $g_sBBDropOrderDefault
+					$asBBDropOrder = StringSplit($g_sBBDropOrderDefault, "|")
+					Setlog("Update BBDropOrder List", $COLOR_DEBUG)
+					Setlog(_ArrayToString($asBBDropOrder), $COLOR_DEBUG)
+				EndIf
 				For $i=0 To $g_iBBTroopCount - 1
 					_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], _GUICtrlComboBox_SelectString($g_ahCmbBBDropOrder[$i], $asBBDropOrder[$i+1]))
 				Next
@@ -496,7 +502,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iTxtRestartElixir = GUICtrlRead($g_hTxtRestartElixir)
 			$g_iTxtRestartDark = GUICtrlRead($g_hTxtRestartDark)
 			$g_bChkCollect = (GUICtrlRead($g_hChkCollect) = $GUI_CHECKED)
-			$g_bChkCollectCartFirst = (GUICtrlRead($g_hChkCollectCartFirst) = $GUI_CHECKED)
+			;$g_bChkCollectCartFirst = (GUICtrlRead($g_hChkCollectCartFirst) = $GUI_CHECKED)
 			$g_iTxtCollectGold = GUICtrlRead($g_hTxtCollectGold)
 			$g_iTxtCollectElixir = GUICtrlRead($g_hTxtCollectElixir)
 			$g_iTxtCollectDark = GUICtrlRead($g_hTxtCollectDark)
@@ -1018,7 +1024,34 @@ Func ApplyConfig_600_15($TypeReadSave)
 			chkABChampionWait()
 			_GUICtrlComboBox_SetCurSel($g_hCmbHeroReservedBuilder, $g_iHeroReservedBuilder)
 			cmbHeroReservedBuilder()
+			
+			GUICtrlSetState($g_hChkCustomEquipmentOrderEnable, $g_bChkCustomEquipmentOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
+			For $z = 0 To UBound($g_ahCmbEquipmentOrder) - 1
+				GUICtrlSetState($g_hChkCustomEquipmentOrder[$z], $g_bChkCustomEquipmentOrder[$z] ? $GUI_CHECKED : $GUI_UNCHECKED)
+				_GUICtrlComboBox_SetCurSel($g_ahCmbEquipmentOrder[$z], $g_aiCmbCustomEquipmentOrder[$z])
+				_GUICtrlSetImage($g_ahImgEquipmentOrder[$z], $g_sLibIconPath, $g_aiEquipmentOrderIcon[$g_aiCmbCustomEquipmentOrder[$z] + 1])
+				_GUICtrlSetImage($g_ahImgEquipmentOrder2[$z], $g_sLibIconPath, $g_aiEquipmentOrderIcon2[$g_aiCmbCustomEquipmentOrder[$z] + 1])
+			Next
 
+			Local $iValueSet = 0
+			For $i = 0 To UBound($g_ahCmbEquipmentOrder) - 1
+				Local $iValue = _GUICtrlComboBox_GetCurSel($g_ahCmbEquipmentOrder[$i])
+				If $iValue <> -1 Then
+					$iValueSet += 1
+				EndIf
+			Next
+			If $iValueSet > 0 And $iValueSet < $eEquipmentCount Then
+				SetLog("Set your Equipment Upgrade Order!")
+				btnRegularOrder()
+			EndIf
+			If Not ChangeEquipmentOrder() Then SetDefaultEquipmentGroup()
+			If $iValueSet = 0 And $g_bChkCustomEquipmentOrderEnable Then
+				SetLog("Set your Equipment Upgrade Order!")
+				btnRegularOrder()
+			EndIf
+			EnableUpgradeEquipment()
+			chkEquipmentOrder()
+			
 			For $i = 0 to $ePetCount - 1
 				GUICtrlSetState($g_hChkUpgradePets[$i], $g_bUpgradePetsEnable[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
@@ -1031,6 +1064,12 @@ Func ApplyConfig_600_15($TypeReadSave)
 			$g_bUpgradeWardenEnable = (GUICtrlRead($g_hChkUpgradeWarden) = $GUI_CHECKED)
 			$g_bUpgradeChampionEnable = (GUICtrlRead($g_hChkUpgradeChampion) = $GUI_CHECKED)
 			$g_iHeroReservedBuilder = _GUICtrlComboBox_GetCurSel($g_hCmbHeroReservedBuilder)
+			
+			$g_bChkCustomEquipmentOrderEnable = (GUICtrlRead($g_hChkCustomEquipmentOrderEnable) = $GUI_CHECKED)
+			For $z = 0 To UBound($g_ahCmbEquipmentOrder) - 1
+				$g_bChkCustomEquipmentOrder[$z] = (GUICtrlRead($g_hChkCustomEquipmentOrder[$z]) = $GUI_CHECKED)
+				$g_aiCmbCustomEquipmentOrder[$z] = _GUICtrlComboBox_GetCurSel($g_ahCmbEquipmentOrder[$z])
+			Next
 
 			For $i = 0 to $ePetCount - 1
 				$g_bUpgradePetsEnable[$i] = (GUICtrlRead($g_hChkUpgradePets[$i]) = $GUI_CHECKED)
@@ -1099,8 +1138,6 @@ Func ApplyConfig_auto($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			GUICtrlSetState($g_hChkAutoUpgrade, $g_bAutoUpgradeEnabled ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkNewBuildingFirst, $g_bNewBuildingFirst ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_ChkPlaceNewBuilding, $g_bPlaceNewBuilding ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkRushTH, $g_bChkRushTH ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hUseWallReserveBuilder, $g_bUseWallReserveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hUseBuilderPotion, $g_bUseBuilderPotion ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1114,6 +1151,7 @@ Func ApplyConfig_auto($TypeReadSave)
 			GUICtrlSetState($g_hHeroPriority, $g_bHeroPriority ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hUseHeroBooks, $g_bUseHeroBooks ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hHeroMinUpgradeTime, $g_iHeroMinUpgradeTime)
+			GUICtrlSetState($g_hUpgradeOtherDefenses, $g_bUpgradeOtherDefenses ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				GUICtrlSetState($g_hChkUpgradesToIgnore[$i], $g_iChkUpgradesToIgnore[$i] = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
@@ -1126,8 +1164,6 @@ Func ApplyConfig_auto($TypeReadSave)
 			chkAutoUpgrade()
 		Case "Save"
 			$g_bAutoUpgradeEnabled = (GUICtrlRead($g_hChkAutoUpgrade) = $GUI_CHECKED)
-			$g_bNewBuildingFirst = (GUICtrlRead($g_hChkNewBuildingFirst) = $GUI_CHECKED)
-			$g_bPlaceNewBuilding = (GUICtrlRead($g_ChkPlaceNewBuilding) = $GUI_CHECKED)
 			$g_bChkRushTH = (GUICtrlRead($g_hChkRushTH) = $GUI_CHECKED)
 			$g_bUseWallReserveBuilder = (GUICtrlRead($g_hUseWallReserveBuilder) = $GUI_CHECKED)
 			$g_bUseBuilderPotion = (GUICtrlRead($g_hUseBuilderPotion) = $GUI_CHECKED)
@@ -1141,6 +1177,7 @@ Func ApplyConfig_auto($TypeReadSave)
 			$g_bHeroPriority = (GUICtrlRead($g_hHeroPriority) = $GUI_CHECKED)
 			$g_bUseHeroBooks = (GUICtrlRead($g_hUseHeroBooks) = $GUI_CHECKED)
 			$g_iHeroMinUpgradeTime =  GUICtrlRead($g_hHeroMinUpgradeTime)
+			$g_bUpgradeOtherDefenses = (GUICtrlRead($g_hUpgradeOtherDefenses) = $GUI_CHECKED)
 			For $i = 0 To UBound($g_iChkUpgradesToIgnore) - 1
 				$g_iChkUpgradesToIgnore[$i] = GUICtrlRead($g_hChkUpgradesToIgnore[$i]) = $GUI_CHECKED ? 1 : 0
 			Next
@@ -2172,8 +2209,10 @@ Func ApplyConfig_600_33($TypeReadSave)
 					Next
 				EndIf
 			EndIf
+			GUICtrlSetState($g_hChkForceEdgeSmartfarm, $g_bChkForceEdgeSmartfarm ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			$g_bCustomDropOrderEnable = (GUICtrlRead($g_hChkCustomDropOrderEnable) = $GUI_CHECKED)
+			$g_bChkForceEdgeSmartfarm = (GUICtrlRead($g_hChkForceEdgeSmartfarm) = $GUI_CHECKED)
 			For $p = 0 To UBound($g_ahCmbDropOrder) - 1
 				$g_aiCmbCustomDropOrder[$p] = _GUICtrlComboBox_GetCurSel($g_ahCmbDropOrder[$p])
 			Next
@@ -2321,7 +2360,7 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			GUICtrlSetData($g_hTxtTotalCountSpell, $g_iTotalSpellValue)
 			; DoubleTrain - Demen
 			GUICtrlSetState($g_hChkDoubleTrain, $g_bDoubleTrain ? $GUI_CHECKED : $GUI_UNCHECKED)
-			If Not $g_bIgnoreIncorrectTroopCombo Then GUICtrlSetState($g_hChkPreciseArmy, $g_bPreciseArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
+			;If Not $g_bIgnoreIncorrectTroopCombo Then GUICtrlSetState($g_hChkPreciseArmy, $g_bPreciseArmy ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			; troop/spell levels and counts
 			For $T = 0 To $eTroopCount - 1
@@ -2341,7 +2380,7 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 			$g_iTotalSpellValue = GUICtrlRead($g_hTxtTotalCountSpell)
 			; DoubleTrain - Demen
 			$g_bDoubleTrain = (GUICtrlRead($g_hChkDoubleTrain) = $GUI_CHECKED)
-			If Not $g_bIgnoreIncorrectTroopCombo Then $g_bPreciseArmy = (GUICtrlRead($g_hChkPreciseArmy) = $GUI_CHECKED)
+			;If Not $g_bIgnoreIncorrectTroopCombo Then $g_bPreciseArmy = (GUICtrlRead($g_hChkPreciseArmy) = $GUI_CHECKED)
 			chkOnDoubleTrain()
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_52_2

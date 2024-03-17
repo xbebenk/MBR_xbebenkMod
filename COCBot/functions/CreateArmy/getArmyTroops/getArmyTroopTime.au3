@@ -24,7 +24,7 @@ Func getArmyTroopTime($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChe
 			SetError(1)
 			Return ; not open, not requested to be open - error.
 		ElseIf $bOpenArmyWindow Then
-			If Not OpenArmyOverview(True, "getArmyTroopTime()") Then
+			If Not OpenArmyOverview("getArmyTroopTime()") Then
 				SetError(2)
 				Return ; not open, requested to be open - error.
 			EndIf
@@ -33,7 +33,7 @@ Func getArmyTroopTime($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChe
 	EndIf
 
 
-	Local $sResultTroops = getRemainTrainTimer(468, 141, $bNeedCapture) ;Get time via OCR.
+	Local $sResultTroops = getRemainTrainTimer(448, 171, $bNeedCapture) ;Get time via OCR.
 	$g_aiTimeTrain[0] = ConvertOCRTime("Troops", $sResultTroops, $bSetLog) ; update global array
 
 	If $bCloseArmyWindow Then

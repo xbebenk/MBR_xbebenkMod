@@ -24,7 +24,7 @@ Func getArmySpellTime($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChe
 			SetError(1)
 			Return ; not open, not requested to be open - error.
 		ElseIf $bOpenArmyWindow Then
-			If Not openArmyOverview(True, "getArmySpellTime()") Then
+			If Not OpenArmyOverview("getArmySpellTime()") Then
 				SetError(2)
 				Return ; not open, requested to be open - error.
 			EndIf
@@ -32,7 +32,7 @@ Func getArmySpellTime($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bChe
 		EndIf
 	EndIf
 
-	Local $sResultSpells = getRemainTrainTimer(405, 287, $bNeedCapture) ;Get time via OCR.
+	Local $sResultSpells = getRemainTrainTimer(410, 296, $bNeedCapture) ;Get time via OCR.
 	$g_aiTimeTrain[1] = ConvertOCRTime("Spells", $sResultSpells, $bSetLog) ; update global array
 
 	If $bCloseArmyWindow Then

@@ -48,7 +48,8 @@ Func _WaitForCheckPixel($aScreenCode, $bNeedCapture = Default, $Ignore = Default
 	If $iWaitLoop = Default Then $iWaitLoop = 250  ; if default wait time per loop, then wait 250ms
 	Local $wCount = 0
 	While _CheckPixel($aScreenCode, $bNeedCapture, $Ignore, $sLogText, $LogTextColor, $bSilentSetLog) = False
-		If _Sleep($iWaitLoop ) Then Return
+		If _Sleep($iWaitLoop) Then Return
+		If Not $g_bRunState Then Return
 		$wCount += 1
 		If $wCount > 20 Then ; wait for 20*250ms=5 seconds for pixel to appear
 			SetLog($sLogText & " not found!", $COLOR_ERROR)

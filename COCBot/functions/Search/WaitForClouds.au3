@@ -26,7 +26,7 @@ Func WaitForClouds()
 	
 	While Not _CheckPixel($aIsAttackPage, True) ; loop to wait for clouds to disappear
 		$iCount += 1
-		If isProblemAffect(True) Then ; check for reload error messages -> restart exitLoop, reset search
+		If IsProblemAffect() Then ; check for reload error messages -> restart exitLoop, reset search
 			resetAttackSearch()
 			ExitLoop
 		EndIf
@@ -35,6 +35,11 @@ Func WaitForClouds()
 			$g_bIsClientSyncError = True
 			$g_bRestart = True
 			CloseCoC(True)
+			ExitLoop
+		EndIf
+		
+		If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then 
+			SetDebugLog("Found Next Button, exitLoop")
 			ExitLoop
 		EndIf
 		
@@ -60,7 +65,7 @@ Func WaitForClouds()
 			EndIf
 		EndIf
 		If Not $g_bRunState Then ExitLoop
-		If _Sleep(1000) Then Return
+		If _Sleep(500) Then Return
 	WEnd
 
 	SetDebugLog("End WaitForClouds", $COLOR_DEBUG1)

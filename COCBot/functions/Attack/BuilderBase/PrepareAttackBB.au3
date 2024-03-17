@@ -14,16 +14,21 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($Mode = Default)
+	SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
 	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then 
 		SetLog("ForceSwitchifNoCGEvent Enabled, Skip Attack until we have BBEvent", $COLOR_SUCCESS)
 		Return False
 	EndIf
+	
+	Local $GoldIsFull = isGoldFullBB()
+	Local $ElixIsFull = isElixirFullBB()
 	
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 		SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
 		If _Sleep(1500) Then Return
+		If Not $GoldIsFull And Not $ElixIsFull Then UseBuilderJar()
 		CheckArmyReady()
 		Return True
 	EndIf
@@ -37,9 +42,6 @@ Func PrepareAttackBB($Mode = Default)
 		SetLog("Preparing Attack Clean Yard", $COLOR_ACTION)
 		Return True
 	EndIf
-	
-	Local $GoldIsFull = isGoldFullBB()
-	Local $ElixIsFull = isElixirFullBB()
 	
 	getBuilderCount(True, True)
 	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then
@@ -111,7 +113,6 @@ Func CheckStarsAvail()
 	Local $bRet = False, $iRemainStars = 0, $iMaxStars = 0
 	Local $sStars = getOcrAndCapture("coc-BBAttackAvail", 40, 572, 50, 20)
 	
-	If $g_bDebugSetLog Then SetLog("Stars: " & $sStars, $COLOR_DEBUG2)
 	If $sStars <> "" And StringInStr($sStars, "#") Then 
 		Local $aStars = StringSplit($sStars, "#", $STR_NOCOUNT)
 		If IsArray($aStars) Then 
@@ -142,7 +143,7 @@ Func CheckArmyReady()
 	local $i = 0
 	local $bReady = True, $bNeedTrain = False, $bTraining = False
 	
-	If _ColorCheck(_GetPixelColor(126, 246, True), Hex(0xE24044, 6), 20) Then 
+	If _ColorCheck(_GetPixelColor(133, 250, True), Hex(0xEA5054, 6), 20) Then 
 		SetLog("Army is not Ready", $COLOR_DEBUG)
 		$bNeedTrain = True ;need train, so will train cannon cart
 		$bReady = False
@@ -158,19 +159,19 @@ Func CheckArmyReady()
 		For $i = 1 To 5
 			SetLog("Waiting for Army Window #" & $i, $COLOR_ACTION)
 			If _Sleep(500) Then Return
-			If QuickMis("BC1", $g_sImgGeneralCloseButton, 750, 130, 800, 190) Then ExitLoop
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 790, 130, 840, 170) Then ExitLoop
 		Next
 		
-		Local $Camp = QuickMIS("CNX", $g_sImgFillCamp, 70, 225, 800, 250)
+		Local $Camp = QuickMIS("CNX", $g_sImgFillCamp, 40, 200, 820, 250)
 		For $i = 1 To UBound($Camp)
-			If QuickMIS("BC1", $g_sImgFillTrain, 75, 390, 800, 530) Then
+			If QuickMIS("BC1", $g_sImgFillTrain, 40, 400, 750, 550) Then
 				Setlog("Fill ArmyCamp with : " & $g_iQuickMISName, $COLOR_DEBUG)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(500) Then Return
 			EndIf
 		Next
 		
-		$Camp = QuickMIS("CNX", $g_sImgFillCamp, 70, 225, 800, 250)
+		$Camp = QuickMIS("CNX", $g_sImgFillCamp, 40, 200, 820, 250)
 		If UBound($Camp) > 0 Then 
 			$bReady = False
 		Else
@@ -193,6 +194,13 @@ EndFunc
 Func BBDropTrophy()
 	If Not $g_bChkBBDropTrophy Then Return
 	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
+	SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
+	
+	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then 
+		SetLog("ForceSwitchifNoCGEvent Enabled, Skip BBDropTrophy", $COLOR_SUCCESS)
+		Return False
+	EndIf
+	
 	SetLog("Prepare BB Drop Trophy", $COLOR_INFO)
 	
 	If CheckStarsAvail() Then 
@@ -255,7 +263,7 @@ Func BBDropTrophy()
 	Return False
 EndFunc
 
-Func ReturnHomeDropTrophyBB($bOnlySurender = False)
+Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False)
 	SetLog("Returning Home", $COLOR_SUCCESS)
 	
 	For $i = 1 To 15
@@ -264,15 +272,16 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False)
 				Click(65, 520) ;click surrender
 				If $g_bChkDebugAttackBB Then SetLog("Click Surrender/EndBattle", $COLOR_ACTION)
 				If _Sleep(1000) Then Return
-			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560) = True
+			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 510, 470, 570) = True
 				If $bOnlySurender Then 
 					If $g_bChkDebugAttackBB Then SetLog("ExitLoop, bOnlySurender = " & String($bOnlySurender), $COLOR_ACTION)
+					If $bAttackReport THen BBAttackReport("100")
 					Return True
 				EndIf
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If $g_bChkDebugAttackBB Then SetLog("Click Return Home", $COLOR_ACTION)
 				If _Sleep(3000) Then Return
-			Case QuickMIS("BC1", $g_sImgBBAttackBonus, 410, 464, 454, 490) = True
+			Case QuickMIS("BC1", $g_sImgBBAttackBonus, 395, 460, 468, 500) = True
 				SetLog("Congrats Chief, Stars Bonus Awarded", $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(2000) Then Return
@@ -280,7 +289,7 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False)
 			Case isOnBuilderBase() = True
 				Return True
 			Case IsOKCancelPage() = True
-				ClickOkay("BB Attack Surrender"); Click Okay to Confirm surrender
+				Click($aConfirmSurrender[0], $aConfirmSurrender[1]); Click Okay to Confirm surrender
 				If $g_bChkDebugAttackBB Then SetLog("Click OK", $COLOR_ACTION)
 				If _Sleep(1000) Then Return
 		EndSelect
@@ -288,4 +297,17 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False)
 	Next
 	
 	Return True
+EndFunc
+
+Func UseBuilderJar()
+	If $g_bChkUseBuilderStarJar then 
+		If QuickMIS("BC1", $g_sImgDirUseJar, 120, 460, 210, 510) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(1000) Then Return
+			If QuickMIS("BC1", $g_sImgDirUseJar, 400, 380, 460, 450) Then 
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				SetLog("Succesfully use BuilderBase Jar", $COLOR_SUCCESS)
+			EndIf
+		EndIf
+	EndIf
 EndFunc

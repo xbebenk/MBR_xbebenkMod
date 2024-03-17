@@ -191,7 +191,7 @@ Func GetLocationBuilding($iBuildingType, $iAttackingTH = 14, $bForceCaptureRegio
 	Local $tempNewLevel, $tempExistingLevel, $sLocCoord, $sNearCoord, $sFarCoord, $directory, $iCountUpdate
 
 	; error proof TH level
-	If $iAttackingTH = "-" Then $iAttackingTH = 14
+	If $iAttackingTH = "-" Then $iAttackingTH = 16
 
 	; Get path to image file
 	If _ObjSearch($g_oBldgImages, $iBuildingType & "_" & $g_iDetectedImageType) = True Then ; check if image exists to prevent error when snow images are not avialable for building type

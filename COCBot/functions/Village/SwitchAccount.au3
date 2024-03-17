@@ -233,6 +233,9 @@ Func SwitchCOCAcc($NextAccount)
 		$bSharedPrefs = False ; don't push again
 		SetLog("Profile shared_prefs already pushed")
 		If Not $g_bRunState Then Return
+	ElseIf $bSharedPrefs Then 
+		;CloseCoC(False)
+		$bResult = True
 	Else
 		If Not $g_bRunState Then Return
 		If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
@@ -240,7 +243,7 @@ Func SwitchCOCAcc($NextAccount)
 		While 1
 			If Not IsSettingPage() Then ExitLoop
 
-			If $g_bChkGooglePlay Or $g_bChkSharedPrefs Then
+			If $g_bChkGooglePlay Then
 				Switch SwitchCOCAcc_DisconnectConnect($bResult, $bSharedPrefs)
 					Case 0
 						Return
@@ -348,19 +351,7 @@ Func SwitchCOCAcc($NextAccount)
 
 
 		If $g_bChkSharedPrefs Then
-			; disconnect account again for saving shared_prefs
-			waitMainScreen()
-			If IsMainPage() Then
-				Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
-				If _Sleep(500) Then Return
-				If SwitchCOCAcc_DisconnectConnect($bResult, $g_bChkSharedPrefs) = -1 Then Return ;Return if Error happend
-
-				Switch SwitchCOCAcc_ClickAccount($bResult, $NextAccount, $g_bChkSharedPrefs, False)
-					Case "OK"
-						; all good
-						PullSharedPrefs()
-				EndSwitch
-			EndIf
+			PullSharedPrefs()
 		EndIf
 		If Not $g_bRunState Then Return
 	Else
@@ -379,20 +370,10 @@ Func SwitchCOCAcc($NextAccount)
 		EndIf
 		If Not $g_bRunState Then Return
 	EndIf
+	
 	waitMainScreen()
 	If Not $g_bRunState Then Return
 
-	;switch using scid sometime makes emulator seem freeze but not, need to send back button first for click work again
-	If $g_bChkSuperCellID Then
-		SetDebugLog("Checkscidswitch: Send AndroidBackButton", $COLOR_DEBUG)
-		AndroidBackButton() ;Send back button to android
-		If _Sleep(1000) Then Return
-		If IsOKCancelPage() Then
-			AndroidBackButton()
-		EndIf
-	EndIf
-
-	CheckObstacles()
 	If $g_bForceSinglePBLogoff Then $g_bGForcePBTUpdate = True
 	
 	If $g_bDeleteLogs Then DeleteFiles($g_sProfileLogsPath, "*.*", $g_iDeleteLogsDays, 0)
@@ -1042,7 +1023,7 @@ Func SCIDScrollDown($iSCIDAccount)
 	If $iSCIDAccount < 4 Then Return
 	For $i = 0 To $iSCIDAccount - 4
 		Switch $g_sAndroidEmulator
-			Case "Memu", "nox"
+			Case "MEmu", "nox"
 				AndroidAdbScript("ScrollDownSCID")
 			Case "BlueStacks2"
 				AndroidAdbScript("ScrollDownSCID.Bluestacks")
@@ -1056,7 +1037,7 @@ Func SCIDScrollUp()
 	SetLog("Try to scroll up", $COLOR_DEBUG)
 	For $i = 0 To Ceiling($g_iTotalAcc/4) - 1
 		Switch $g_sAndroidEmulator
-			Case "Memu", "nox"
+			Case "MEmu", "nox"
 				AndroidAdbScript("ScrollUpSCID")
 			Case "BlueStacks2"
 				AndroidAdbScript("ScrollUpSCID.Bluestacks")

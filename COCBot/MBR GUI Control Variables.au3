@@ -173,7 +173,7 @@ Func InitializeControlVariables()
 
    ;TH Level
    $g_aGroupListTHLevels = $g_ahPicTHLevels[4]&"#"&$g_ahPicTHLevels[5]&"#"&$g_ahPicTHLevels[6]&"#"&$g_ahPicTHLevels[7]&"#"&$g_ahPicTHLevels[8]&"#"& _
-						$g_ahPicTHLevels[9]&"#"&$g_ahPicTHLevels[10]&"#"&$g_ahPicTHLevels[11]&"#"&$g_ahPicTHLevels[12]&"#"&$g_ahPicTHLevels[13]&"#"&$g_ahPicTHLevels[14]
+						$g_ahPicTHLevels[9]&"#"&$g_ahPicTHLevels[10]&"#"&$g_ahPicTHLevels[11]&"#"&$g_ahPicTHLevels[12]&"#"&$g_ahPicTHLevels[13]&"#"&$g_ahPicTHLevels[14]&"#"&$g_ahPicTHLevels[15]&"#"&$g_ahPicTHLevels[16]
 
    ;PicDBMaxTH
    $g_aGroupListPicDBMaxTH = $g_ahPicDBMaxTH[6]&"#"&$g_ahPicDBMaxTH[7]&"#"&$g_ahPicDBMaxTH[8]&"#"& _
@@ -275,6 +275,7 @@ Func InitializeControlVariables()
 	$oAlwaysEnabledControls($g_hCmbLogDividerOption) = 1
 	$oAlwaysEnabledControls($g_hBtnAtkLogClear) = 1
 	$oAlwaysEnabledControls($g_hBtnAtkLogCopyClipboard) = 1
+	$oAlwaysEnabledControls($g_hBtnOpenFolder) = 1
 	$oAlwaysEnabledControls($g_hTxtAutoUpgradeLog) = 1
 	$oAlwaysEnabledControls($g_hTxtClanGamesLog) = 1
 	

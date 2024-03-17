@@ -45,7 +45,7 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 		EndIf
 		
 		;Check if MyProfile window Opened correctly
-		Local $aImgAchievementsMyProfile = decodeSingleCoord(findImage("MyProfile", $g_sImgAchievementsMyProfile, GetDiamondFromRect("100, 110, 275, 55"), 1, True))
+		Local $aImgAchievementsMyProfile = decodeSingleCoord(findImage("MyProfile", $g_sImgAchievementsMyProfile, GetDiamondFromRect("100, 79, 266, 128"), 1, True))
 		If UBound($aImgAchievementsMainScreen) > 1 Then
 			SetDebugLog("My Profile window opened successfully", $COLOR_SUCCESS)
 			If _Sleep(2500) Then Return
@@ -57,21 +57,21 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 
 		If Not CollectAchievementsClaimReward() Then
 			SetLog("There are no achievement rewards to collect", $COLOR_INFO)
-			Click(700,50) ;Friend Request Tab
+			Click(700,100) ;Friend Request Tab
 			If _Sleep(1000) Then Return
 			ExitLoop
 		Else
 			$RewardCollected = True
-			If IsFullScreenWindow() Then
-				Click(825,45)
+			If IsProfileWindowOpen() Then
+				Click(800, 99)
 			EndIf
 		EndIf
 		If _Sleep(1500) Then Return
 		If Not IsMainPage() Then ExitLoop
 	WEnd
 	
-	If IsFullScreenWindow() Then
-		Click(825,45)
+	If IsProfileWindowOpen() Then
+		Click(800, 99)
 	EndIf
 	Return
 EndFunc   ;==>CollectAchievements

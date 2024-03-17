@@ -28,13 +28,9 @@ Func UpgradeWall($bTest = False)
 	If Not $g_bAutoUpgradeWallsEnable Then Return
 
 	SetLog("Checking Upgrade Walls", $COLOR_INFO)
-	checkMainScreen(True, $g_bStayOnBuilderBase, "UpgradeWall")
 	VillageReport(True, True) ;update village resource capacity
-	SetLog("FreeBuilderCount: " & $g_iFreeBuilderCount, $COLOR_DEBUG)
-	If $bTest Then $g_iFreeBuilderCount = 1
-	If $g_iFreeBuilderCount < 1 Then Return
-
-	If $g_iFreeBuilderCount = 0 Then
+	
+	If Not WallUpgradeCheckBuilder() Then 
 		SetLog("No builder available, Upgrade Walls skipped", $COLOR_DEBUG)
 		Return
 	EndIf
@@ -44,7 +40,9 @@ Func UpgradeWall($bTest = False)
 		SetLog("Have more than 1 builder, Upgrade Walls skipped", $COLOR_DEBUG)
 		Return
 	EndIf
-
+	
+	checkMainScreen(True, $g_bStayOnBuilderBase, "UpgradeWall")
+	
 	If $g_bChkWallOnlyGEFull Then
 		Local $tmp_GoldFull = isGoldFull(), $tmp_ElixFull = isElixirFull()
 
@@ -191,7 +189,7 @@ Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = 
 	Return $aRet
 EndFunc
 
-Func WallUpgradeCheckBuilder($bTest)
+Func WallUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
 	getBuilderCount(True)
 	If $bTest Then
@@ -200,7 +198,12 @@ Func WallUpgradeCheckBuilder($bTest)
 		If $g_iFreeBuilderCount < 1 Then
 			$bRet = False
 		Else
-			$bRet = True
+			If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "AutoUpgradeCheckBuilder") Then 
+				SetLog("Goblin Builder Found!", $COLOR_DEBUG1)
+				$bRet = False
+			Else
+				$bRet = True
+			EndIf
 		EndIf
 	EndIf
 	Return $bRet
@@ -271,7 +274,7 @@ Func TryUpgradeWall($aWallCoord, $bTest = False)
 			If QuickMIS("BC1", $g_sImgAUpgradeObstGear, $aWallCoord[$i][0] - 50, $aWallCoord[$i][1] - 10, $aWallCoord[$i][0] + 50, $aWallCoord[$i][1] + 10) Then ContinueLoop
 			Click($aWallCoord[$i][0], $aWallCoord[$i][1])
 			If _Sleep(1000) Then Return
-			Local $aWallLevel = BuildingInfo(242, 494)
+			Local $aWallLevel = BuildingInfo(242, 472)
 			If $aWallLevel[0] = "" Then
 				SetLog("Cannot read building Info, wrong click...", $COLOR_ERROR)
 				If IsFullScreenWindow() Then Click(825,45)
@@ -314,9 +317,9 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 
 		Switch $aIsEnoughResource[1]
 			Case "Gold"
-				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 395, 520, 720, 580)
+				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 300, 510, 720, 580)
 			Case "Elix"
-				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 395, 520, 720, 580)
+				$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 510, 720, 580)
 		EndSwitch
 
 		If $UpgradeButtonFound Then
@@ -324,19 +327,19 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 			_Sleep(800)
 			For $i = 1 To 10
 				SetDebugLog("Waiting for Wall Upgrade Page #" & $i)
-				If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 110, 720, 180) Then ExitLoop
+				If QuickMis("BC1", $g_sImgGeneralCloseButton, 770, 65, 840, 125) Then ExitLoop
 				_Sleep(50)
 			Next
 
 			If Not $bTest Then
-				If _ColorCheck(_GetPixelColor(370, 490, True), Hex(0xDBDBDB, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
+				If _ColorCheck(_GetPixelColor(590, 525, True), Hex(0xE3E3E3, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
 					SetLog("Need More Resource or Higher THLevel", $COLOR_ERROR)
 					Click($g_iQuickMISX, $g_iQuickMISY)
 					_Sleep(500)
 					Return False
 				EndIf
-				Local $CurrentCost = getResourcesBonus(370, 490)
-				Click(420, 500) ;Final Upgrade Button
+				Local $CurrentCost = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True)
+				Click(623, 540) ;Final Upgrade Button
 				Switch $aIsEnoughResource[1]
 					Case "Gold"
 						$g_aiCurrentLoot[$eLootGold] -= $CurrentCost
@@ -389,14 +392,14 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				Case "Gold"
 					For $i = 1 To 10
 						SetDebugLog("Waiting Gold Button for Wall Upgrade #" & $i)
-						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 300, 520, 720, 580)
+						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 300, 510, 720, 580)
 						If $UpgradeButtonFound Then ExitLoop
 						_Sleep(50)
 					Next
 				Case "Elix"
 					For $i = 1 To 10
 						SetDebugLog("Waiting Elix Button for Wall Upgrade #" & $i)
-						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 520, 720, 580)
+						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 510, 720, 580)
 						If $UpgradeButtonFound Then ExitLoop
 						_Sleep(50)
 					Next
@@ -407,19 +410,19 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 				_Sleep(800)
 				For $i = 1 To 10
 					SetDebugLog("Waiting for Wall Upgrade Page #" & $i)
-					If QuickMis("BC1", $g_sImgGeneralCloseButton, 660, 110, 720, 180) Then ExitLoop
+					If QuickMis("BC1", $g_sImgGeneralCloseButton, 770, 65, 840, 125) Then ExitLoop
 					_Sleep(50)
 				Next
 
 				If Not $bTest Then
-					If _ColorCheck(_GetPixelColor(370, 490, True), Hex(0xDBDBDB, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
+					If _ColorCheck(_GetPixelColor(590, 525, True), Hex(0xE3E3E3, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
 						SetLog("Need More Resource or Higher THLevel", $COLOR_ERROR)
 						Click($g_iQuickMISX, $g_iQuickMISY)
 						_Sleep(500)
 						Return False
 					EndIf
-					Local $CurrentCost = getResourcesBonus(370, 490)
-					Click(420, 500) ;Final Upgrade Button
+					Local $CurrentCost = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True)
+					Click(623, 540) ;Final Upgrade Button
 					Switch $aIsEnoughResource[1]
 						Case "Gold"
 							$g_aiCurrentLoot[$eLootGold] -= $CurrentCost
@@ -508,11 +511,11 @@ Func FindWallOnBuilderMenu()
 	Local $aTmpCoord, $aBuilding[0][8], $UpgradeCost, $UpgradeName, $bFoundRusTH = False
 	Local $aRushTHPriority[7][2] = [["Castle", 15], ["Pet", 15], ["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10]]
 	Local $aHeroes[4] = ["King", "Queen", "Warden", "Champion"]
-	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 80, 450, 390)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 440, 80, 550, 408)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $aTmpCoord[$i][1] - 250, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip geared and new
-			$UpgradeName = getBuildingName(200, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
+			$UpgradeName = getBuildingName(280, $aTmpCoord[$i][2] - 12) ;get upgrade name and amount
 			_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($UpgradeName[0]) & "|" & Number($UpgradeName[1])) ;compose the array
 		Next
 
@@ -579,7 +582,7 @@ EndFunc
 Func UpgradeWallGold($iWallCost = $g_iWallCost, $bTest = False)
 
 	;Check for Gold in right top button corner and click, if present
-	Local $FoundGold = decodeSingleCoord(findImage("UpgradeWallGold", $g_sImgUpgradeWallGold, GetDiamondFromRect("200, 530, 670, 600"), 1, True))
+	Local $FoundGold = decodeSingleCoord(findImage("UpgradeWallGold", $g_sImgUpgradeWallGold, GetDiamondFromRect("200, 505, 670, 532"), 1, True))
 	If UBound($FoundGold) > 1 Then
 		Click($FoundGold[0], $FoundGold[1])
 	Else
@@ -589,9 +592,9 @@ Func UpgradeWallGold($iWallCost = $g_iWallCost, $bTest = False)
 
 	If _Sleep($DELAYUPGRADEWALLGOLD2) Then Return
 
-	If WaitforPixel(670, 140, 690, 150, Hex(0xFFFFFF, 6), 6, 2) Then ; wall upgrade window red x
+	If WaitforPixel(805, 101, 807, 102, Hex(0xFFFFFF, 6), 6, 2) Then ; wall upgrade window red x
 		If Not $bTest Then
-			Click(440, 500, 1, 0, "#0317")
+			Click(625, 545, 1, 0, "Upgradewall Gold")
 		Else
 			SetLog("Testing Only!", $COLOR_ERROR)
 			Clickaway("Right")
@@ -619,7 +622,7 @@ EndFunc   ;==>UpgradeWallGold
 Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
 
 	;Check for elixircolor in right top button corner and click, if present
-	Local $FoundElixir = decodeSingleCoord(findImage("UpgradeWallElixir", $g_sImgUpgradeWallElix, GetDiamondFromRect("200, 530, 670, 600"), 1, True, Default))
+	Local $FoundElixir = decodeSingleCoord(findImage("UpgradeWallElixir", $g_sImgUpgradeWallElix, GetDiamondFromRect("200, 505, 670, 532"), 1, True, Default))
 	If UBound($FoundElixir) > 1 Then
 		Click($FoundElixir[0], $FoundElixir[1])
 	Else
@@ -629,9 +632,9 @@ Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
 
 	If _Sleep($DELAYUPGRADEWALLELIXIR2) Then Return
 
-	If WaitforPixel(670, 140, 690, 150, Hex(0xFFFFFF, 6), 6, 2) Then ; wall upgrade window red x
+	If WaitforPixel(805, 101, 807, 102, Hex(0xFFFFFF, 6), 6, 2) Then ; wall upgrade window red x
 		If Not $bTest Then
-			Click(440, 500, 1, 0, "#0318")
+			Click(625, 545, 1, 0, "UpgradeWall Elixir")
 		Else
 			SetLog("Testing Only!", $COLOR_ERROR)
 			Clickaway("Right")

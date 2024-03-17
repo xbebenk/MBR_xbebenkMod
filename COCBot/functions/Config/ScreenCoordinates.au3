@@ -10,19 +10,20 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-; 	   $aiSomeVar = [StartX, StartY, EndX, EndY]
+;$aiSomeVar = [StartX, StartY, EndX, EndY]
 ;Global $aiClickAwayRegionLeft = [225, 10, 255, 30]
 ;Global $aiClickAwayRegionRight = [605, 10, 645, 30]
 ;Let's tighten these up to avoid clicking on shields.
-Global $aiClickAwayRegionLeft = [235, 10, 245, 20]
-Global $aiClickAwayRegionRight = [625, 10, 635, 20]
+Global $aiClickAwayRegionLeft = [229, 5, 242, 20]
+Global $aiClickAwayRegionRight = [635, 5, 650, 20]
 
 Global $aCenterEnemyVillageClickDrag = [65, 545] ; Scroll village using this location in the water
 Global $aVillageCenteringCoord = [[750, 370], [636, 500], [777, 235]] ; Scroll village using this location : upper from setting button
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
-Global $aIsMain[4] = [279, 9, 0x7ABDE0, 20] ; Main Screen, Builder Info Icon
-Global $aIsMainGrayed[4] = [278, 9, 0x3C5F70, 15] ; Main Screen, Builder Info Icon grayed
-Global $aIsOnBuilderBase[4] = [356, 12, 0x9DD2EE, 20] ; BuilderBase, Builder Info Icon
+Global $aIsMain[4] = [382, 5, 0xA7D7F1, 20] ; Main Screen, Builder Info Icon
+Global $aIsMainGrayed[4] = [382, 5, 0x546C79, 15] ; Main Screen, Builder Info Icon grayed
+Global $aIsOnBuilderBase[4] = [476, 17, 0xFEE4B9, 20] ; BuilderBase, Builder Info Icon
+Global $aIsOnBuilderBase1[4] = [466, 17, 0xFEE4B9, 20] ; BuilderBase, Builder Info Icon after attack (sc why ???) :((
 
 Global $aReloadButton[4] = [210, 385, 0x282828, 10] ; Reload Coc Button after Out of Sync, 860x780
 Global $aAttackButton[2] = [60, 620] ; Attack Button, Main Screen, 860x676
@@ -33,21 +34,22 @@ Global $aAway2[2] = [235, 10] ; Second Away Position for Windows like Donate Win
 Global $aShieldInfoButton[4] = [431, 10, 0x75BDE4, 15] ; Main Screen, Blue pixel upper part of "i"
 Global $aIsShieldInfo[4] = [645, 165, 0xEA1115, 20] ; Main Screen, Shield Info window, red pixel right of X
 Global $aSurrenderButton[4] = [18, 548, 0xCD0D0D, 40] ; Surrender Button, Attack Screen
-Global $aConfirmSurrender[4] = [515, 415, 0x6DBC1F, 30] ; Confirm Surrender Button, Attack Screen, green color on button?
+Global $aConfirmSurrender[4] = [531, 438, 0x6DBC1F, 30] ; Confirm Surrender Button, Attack Screen, green color on button?
 Global $aEndFightSceneBtn[4] = [429, 519, 0xCDF271, 20] ; Victory or defeat scene buton = green edge
 Global $aEndFightSceneAvl[4] = [241, 196, 0xFFF090, 20] ; Victory or defeat scene left side ribbon = light gold
 Global $aEndFightSceneReportGold = $aEndFightSceneAvl ; Missing... TripleM ???
-Global $aReturnHomeButton[4] = [376, 567, 0x60AC10, 20] ; Return Home Button, End Battle Screen
-Global $aChatTab[4] = [331, 380, 0xC55115, 20] ; Chat Window Open, Main Screen
-Global $aArmyCampSize[2] = [111, 137] ; Training Window, Overview screen, Current Size/Total Size
-Global $aSiegeMachineSize[2] = [755, 136] ; Training Window, Overview screen, Current Number/Total Number
-Global $aArmySpellSize[2] = [99, 284] ; Training Window Overviewscreen, current number/total capacity
-Global $g_aArmyCCSpellSize[2] = [473, 438] ; Training Window, Overview Screen, Current CC Spell number/total cc spell capacity
+Global $aReturnHomeButton[4] = [425, 567, 0x6CBB1F, 20] ; Return Home Button, End Battle Screen
+Global $aChatTab[4] = [400, 330, 0xEA8A3B, 20] ; Chat Window Open, Main Screen
+Global $aChatTabClosed[4] = [40, 330, 0xEA8A3B, 20] ; Chat Window Closed
+Global $aArmyCampSize[2] = [155, 170] ; Training Window, Overview screen, Current Size/Total Size
+Global $aSiegeMachineSize[2] = [710, 168] ; Training Window, Overview screen, Current Number/Total Number
+Global $aArmySpellSize[2] = [145, 295] ; Training Window Overviewscreen, current number/total capacity
+Global $g_aArmyCCSpellSize[2] = [463, 429] ; Training Window, Overview Screen, Current CC Spell number/total cc spell capacity
 Global $aArmyCCRemainTime[2] = [782, 552] ; Training Window Overviewscreen, Minutes & Seconds remaining till can request again
-Global $aIsCampFull[4] = [128, 151, 0xFFFFFF, 10] ; Training Window, Overview screen White pixel in check mark with camp IS full (can not test for Green, as it has trees under it!)
-Global $aBuildersDigits[2] = [324, 21] ; Main Screen, Free/Total Builders
-Global $aBuildersDigitsBuilderBase[2] = [414, 21] ; Main Screen on Builders Base Free/Total Builders
-Global $aTrophies[2] = [69, 84] ; Main Screen, Trophies
+Global $aIsCampFull[4] = [42, 154, 0xFFFFFF, 10] ; Training Window, Overview screen White pixel in check mark with camp IS full (can not test for Green, as it has trees under it!)
+Global $aBuildersDigits[2] = [426, 22] ; Main Screen, Free/Total Builders
+Global $aBuildersDigitsBuilderBase[2] = [502, 22] ; Main Screen on Builders Base Free/Total Builders
+Global $aTrophies[2] = [68, 84] ; Main Screen, Trophies
 Global $aNoCloudsAttack[4] = [25, 606, 0xCD0D0D, 15] ; Attack Screen: No More Clouds
 Global $aArmyTrainButton[2] = [40, 525] ; Main Screen, Army Train Button
 Global $aWonOneStar[4] = [714, 540, 0xC0C8C0, 20] ; Center of 1st Star for winning attack on enemy
@@ -60,30 +62,25 @@ Global $aIsGoldLow[4] = [775, 41, 0xE7C00D, 10] ; Main Screen Gold Resource bar 
 Global $aIsElixirFull[4] = [666, 86, 0xC027C0, 10] ; Main Screen Elixir Resource bar is Full
 Global $aIsElixirLow[4] = [775, 92, 0xC027C0, 10] ; Main Screen Elixir Resource bar is Low
 Global $aPerkBtn[4] = [95, 243, 0x7cd8e8, 10] ; Clan Info Page, Perk Button (blue); 800x780
-Global $aIsGemWindow1[4] = [573, 239, 0xFF8D95, 20] ; Main Screen, pixel left of Red X to close gem window
-Global $aIsGemWindow2[4] = [577, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
-Global $aIsGemWindow3[4] = [586, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
-Global $aIsGemWindow4[4] = [595, 266, 0xCD151D, 20] ; Main Screen, pixel below Red X to close gem window
-Global $aIsTrainPgChk1[4] = [825, 107, 0xD51115, 20] ; Main Screen, Train page open - bottom of x button
-Global $aIsTrainPgChk2[4] = [762, 328, 0xF18439, 10] ; Main Screen, Train page open - Dark Orange in left arrow
+Global $aIsGemWindow1[4] = [610, 236, 0xEC1115, 20] ; Main Screen, pixel left of Red X to close gem window
+Global $aIsGemWindow2[4] = [624, 214, 0xFF8D95, 20] ; Main Screen, pixel above Red X to close gem window
+Global $aIsGemWindow3[4] = [616, 249, 0xCE181E, 20] ; Main Screen, pixel below left Red X to close gem window
+Global $aIsGemWindow4[4] = [632, 249, 0xCE181E, 20] ; Main Screen, pixel below right Red X to close gem window
+Global $aIsTrainPgChk1[4] = [768, 143, 0xD1151B, 20] ; Main Screen, Train page open - below red x button
 Global $aRtnHomeCloud1[4] = [56, 592, 0x0A223F, 15] ; Cloud Screen, during search, blue pixel in left eye
 Global $aRtnHomeCloud2[4] = [72, 592, 0x103F7E, 15] ; Cloud Screen, during search, blue pixel in right eye
 Global $aDetectLang[2] = [20, 636] ; Detect Language, bottom left Attack button must read "Attack"
-Global $aGreenArrowTrainTroops[2] = [308, 98]
-Global $aGreenArrowBrewSpells[2] = [467, 98]
-Global $aGreenArrowTrainSiegeMachines[2] = [622, 98]
-Global $g_aShopWindowOpen[4] = [804, 54, 0xC00508, 15] ; Red pixel in lower right corner of RED X to close shop window
-Global $aTreasuryWindow[4] = [688, 165, 0xD51115, 20] ; Redish pixel above X to close treasury window
+Global $aTreasuryWindow[4] = [700, 170, 0xCE333B, 20] ; Redish pixel below X to close treasury window
 Global $aAttackForTreasury[4] = [88, 619, 0xF0EBE8, 5] ; Red pixel below X to close treasury window
-Global $aAtkHasDarkElixir[4]  = [ 31, 144, 0x282020, 10] ; Attack Page, Check for DE icon
-Global $aVillageHasDarkElixir[4] = [845, 138, 0x270D33, 10] ; Main Page, Base has dark elixir storage
+Global $aAtkHasDarkElixir[4]  = [ 30, 150, 0x2A2124, 10] ; Attack Page, Check for DE icon
+Global $aVillageHasDarkElixir[4] = [826, 138, 0x3E313C, 10] ; Main Page, Base has dark elixir storage
 
 Global $aCheckTopProfile[4] = [200, 166, 0x868CAC, 5]
 Global $aCheckTopProfile2[4] = [220, 355, 0x4E4D79, 5]
 
-Global $aIsTabOpen[4] = [0, 80, 0xF4F4F0, 25];Check if specific Tab is opened, X Coordinate is a dummy
+Global $aIsTabOpen[4] = [0, 152, 0xEAEAE3, 10];Check if specific Tab is opened, X Coordinate is a dummy
 
-Global $aRecievedTroops[4] = [200 ,215 ,0xFFFFFF, 20] ; Y of You have recieved blabla from xx!
+Global $aRecievedTroops[4] = [585, 179, 0xFFFFFF, 20] ; Y of You have recieved blabla from xx!
 
 ; King Health Bar, check at the middle of the bar, index 4 is x-offset added to middle of health bar
 Global $aKingHealth = [-1, 569, 0x00D500, 15, 13]
@@ -110,16 +107,14 @@ Global Const $aIsAttackPage[4] = [18, 548, 0xCD0D0D, 20] ; red button "end battl
 Global $aRequestTroopsAO[6] = [761, 592, 0x565656, 0x71BA2F, 0xFFFFFE, 25] ; Button Request Troops in Army Overview  (x,y, Gray - Full/No Castle, Green - Available or Already, White - Available or Full)
 
 ;attackreport
-Global Const $aAtkRprtDECheck[4] = [459, 372, 0x2F2038, 20]
-Global Const $aAtkRprtTrophyCheck[4] = [327, 189, 0x3B321C, 30]
+Global Const $aAtkRprtDECheck[4] = [468, 371, 0x2F1D37, 20]
+Global Const $aAtkRprtTrophyCheck[4] = [423, 223, 0xFF6133, 30]
 Global Const $aAtkRprtDECheck2[4] = [678, 418, 0x030000, 30]
 
 ;returnhome
 Global Const $aRtnHomeCheck1[4] = [363, 548, 0x78C11C, 20]
 Global Const $aRtnHomeCheck2[4] = [497, 548, 0x79C326, 20]
 ;Global Const $aRtnHomeCheck3[4]      = [ 284,  28, 0x41B1CD, 20]
-
-Global Const $aProfileReport[4] = [619, 344, 0x4E4D79, 20] ; Dark Purple of Profile Page when no Attacks were made
 
 Global $aArmyTrainButtonRND[4] = [20, 500, 55, 550] ; Main Screen, Army Train Button, RND  Screen 860x732
 Global $aAttackButtonRND[4] = [20, 625, 100, 655] ; Attack Button, Main Screen, RND  Screen 860x676
@@ -130,7 +125,7 @@ Global $NextBtnRND[4] = [710, 530, 830, 570] ;  Next Button
 Global $aLoginWithSupercellID[4] = [280, 630, 0xDCF684, 20] ; Upper green button section "Log in with Supercell ID" 0xB1E25A
 Global $aLoginWithSupercellID2[4] = [266, 653, 0xFFFFFF , 10] ; White Font "Log in with Supercell ID"
 Global $aButtonSetting[4] = [820, 530, 0xFFFFFF, 10] ; Setting button, Main Screen
-Global $aIsSettingPage[4] = [764, 95, 0xFFFFFF, 10] ; Main Screen, Setting page open - left upper corner of x button
+Global $aIsSettingPage[4] = [786, 97, 0xDA1013, 20] ; Main Screen, Setting page open - red bottom lower of x button
 
 ;Google Play
 Global $aListAccount[4] = [635, 230, 0xFFFFFF, 20] ; Accounts list google, White
@@ -143,9 +138,9 @@ Global $aButtonConnectedSCID[4] = [640, 160, 0x2D89FD, 20] ; Setting screen, Sup
 Global $aCloseTabSCID[4] = [831, 57] ; Button Close Supercell ID tab
 
 ;Train
-Global $aButtonEditArmy[4] = [750, 530, 0x82CC2C, 25] ; 860x676
-Global $aButtonRemoveTroopsOK1[4] = [745, 551, 0x83CC2C, 20] ; 860x676
-Global $aButtonRemoveTroopsOK2[4] = [515, 415, 0x6DBC1F, 20] ; 860x676
+Global $aButtonEditArmy[4] = [725, 492, 0xDDF685, 20] ; 860x676
+Global $aButtonRemoveTroopsOK1[4] = [724, 527, 0x7AC32E, 20] ; 860x676
+Global $aButtonRemoveTroopsOK2[4] = [531, 431, 0x6FBE20, 20] ; 860x676
 
 ;Change Language To English
 Global $aButtonLanguage[4] = [620, 275, 0xDDF685, 20]
@@ -159,9 +154,10 @@ Global Const $aPersonalChallengeOpenButton1[4] = [130, 618, 0xEDAF44, 20] ; Pers
 Global Const $aPersonalChallengeOpenButton2[4] = [130, 618, 0xFDE575, 20] ; Personal Challenge Button with Gold Pass
 Global Const $aPersonalChallengeOpenButton3[4] = [176, 615, 0xF5151D, 20] ; Personal Challenge Button with red symbol
 Global Const $aPersonalChallengeCloseButton[4] = [825, 42, 0xFFFFFF, 20] ; Personal Challenge Window Close Button
-Global Const $aPersonalChallengeRewardsAvail[4] = [450, 20, 0xFF6462, 20] ; Personal Challenge - Red symbol showing available rewards
-Global Const $aPersonalChallengeRewardsCheckMark[4] = [50, 365, 0xEDEDED, 20] ; Personal Challenge - CheckMark available reward to drag more
-Global Const $aPersonalChallengeRewardsTab[4] = [450, 44, 0x988510, 20] ; Personal Challenge - Rewards tab unchecked with Gold Pass
+Global Const $aPersonalChallengeRewardsAvail[4] = [451, 62, 0xFF0B0B, 20] ; Personal Challenge - Red symbol showing available rewards
+Global Const $aPersonalChallengeRewardsCheckMark[4] = [80, 400, 0xFFFFFF, 20] ; Personal Challenge - CheckMark available reward to drag more
+Global Const $aPersonalChallengeRewardsCheckMark1[4] = [797, 400, 0xFFFFB3, 20] ; Personal Challenge - CheckMark available reward to drag more
+Global Const $aPersonalChallengeRewardsTab[4] = [380, 90, 0x988510, 20] ; Personal Challenge - Rewards tab unchecked with Gold Pass
 Global Const $aPersonalChallengePerksTab[4] = [660, 44, 0xEFE079, 20] ; Personal Challenge - Perks tab Checked
 Global Const $aPersonalChallengeLeftEdge[4] = [30, 385, 0x28221E, 20] ; Personal Challenge Window - Rewards tab - Black left edge
 Global Const $aPersonalChallengeCancelBtn[4] = [345, 400, 0xFDC875, 20] ; Personal Challenge Window - Cancel button at Storage Full msg

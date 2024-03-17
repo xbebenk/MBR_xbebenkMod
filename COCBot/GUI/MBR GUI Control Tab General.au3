@@ -23,7 +23,13 @@ Func btnAtkLogCopyClipboard()
 	Local $text = _GUICtrlRichEdit_GetText($g_hTxtAtkLog)
 	$text = StringReplace($text, @CR, @CRLF)
 	ClipPut($text)
+	SetLog("Attack Log Copied to Clipboard", $COLOR_SUCCESS)
 EndFunc   ;==>btnAtkLogCopyClipboard
+
+Func btnOpenProfileFolder()
+	Local $path = $g_sProfilePath & "\" & $g_sProfileCurrentName
+	ShellExecute($path)
+EndFunc   ;==>btnOpenProfileFolder
 
 Func cmbLog()
 	If $g_iGuiMode <> 1 Then Return

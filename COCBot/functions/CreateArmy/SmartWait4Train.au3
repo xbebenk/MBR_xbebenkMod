@@ -84,7 +84,7 @@ Func SmartWait4Train($iTestSeconds = Default)
 	EndIf
 	If $g_bDebugSetlogTrain Or $g_bDebugSetlog And IsArray($g_asShieldStatus) Then SetLog("Shield Status:" & $g_asShieldStatus[0] & ", till " & $g_asShieldStatus[2], $COLOR_DEBUG)
 
-	Local $result = OpenArmyOverview(True, "SmartWait4Train()") ; Open train overview
+	Local $result = OpenArmyOverview("SmartWait4Train()") ; Open train overview
 	If Not $result Then
 		If $g_bDebugImageSave Or $g_bDebugSetlogTrain Then SaveDebugImage("SmartWait4Troop2_")
 	EndIf

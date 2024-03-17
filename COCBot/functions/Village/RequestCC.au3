@@ -33,16 +33,16 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
 	If $sText = "IsFullClanCastle" Then 
 		If Not isTrainPage() Then Return
 	Else
-		If Not OpenArmyOverview(True, "RequestCC()") Then Return
+		If Not OpenArmyOverview("RequestCC()") Then Return
 	EndIf
 
 	If _Sleep($DELAYREQUESTCC1) Then Return
 	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
-	checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
+	;checkAttackDisable($g_iTaBChkIdle) ; Early Take-A-Break detection
 	If $bClickPAtEnd Then CheckCCArmy()
 
 	If Not $g_bRunState Then Return
-	Local $aRequestButton = QuickMIS("CNX", $g_sImgRequestCCButton, 710, 548, 840, 588)
+	Local $aRequestButton = QuickMIS("CNX", $g_sImgRequestCCButton, 700, 525, 780, 560)
 	If UBound($aRequestButton) < 1 Then
 		SetDebugLog("Error in RequestCC(): $aRequestButton is no Array")
 		If $g_bDebugImageSave Then SaveDebugImage("RequestButtonStateError")
@@ -89,7 +89,7 @@ Func _makerequest($x, $y, $bTest)
 	Local $RequestWindowOpen = False
 	For $i = 1 To 10
 		SetDebugLog("Wait for Send Request Window #" & $i, $COLOR_ACTION)
-		If QuickMis("BC1", $g_sImgSendRequestButton, 440, 410, 600, 550) Then 
+		If QuickMis("BC1", $g_sImgSendRequestButton, 515, 480, 575, 495) Then 
 			SetDebugLog("_makerequest: Request window open", $COLOR_ACTION)
 			$RequestWindowOpen = True
 			ExitLoop
@@ -103,16 +103,28 @@ Func _makerequest($x, $y, $bTest)
 			Click($g_iQuickMISX - 50, $g_iQuickMISY - 60) ;click text box 
 			If _Sleep(1000) Then Return
 			If SendText($g_sRequestTroopsText) = 0 Then ;type the request
-				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
 				ClickAway()
 			EndIf
+		Else
+			SetLog("RequestTroopsText empty, lets just request", $COLOR_ACTION) 
+			If QuickMis("BC1", $g_sImgSendRequestButton, 515, 430, 575, 510) Then ;lets check again the send button position with taller height
+				If Not $bTest Then 
+					Click($g_iQuickMISX, $g_iQuickMISY)
+				Else
+					SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+				EndIf
+			EndIf
+			If _Sleep(1000) Then Return
+			$g_bCanRequestCC = False
+			Return
 		EndIf
+		
 		If _Sleep(2000) Then Return ; wait time for text request to complete
-		Click($g_iQuickMISX + 95, $g_iQuickMISY)
+		Click($g_iQuickMISX + 115, $g_iQuickMISY)
 		If _Sleep(1000) Then Return ; wait time after clicking request window border
 		For $i = 1 To 5
 			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
-			If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
+			If QuickMis("BC1", $g_sImgSendRequestButton, 515, 430, 575, 510) Then ;lets check again the send button position with taller height
 				SetDebugLog("Make final request", $COLOR_ACTION)
 				If Not $bTest Then 
 					Click($g_iQuickMISX, $g_iQuickMISY)
@@ -135,14 +147,14 @@ Func _makerequest($x, $y, $bTest)
 EndFunc   ;==>_makerequest
 
 Func IsFullClanCastleType($CCType = 0) ; Troops = 0, Spells = 1, Siege Machine = 2
-	Local $aCheckCCNotFull[3] = [24, 455, 631], $sLog[3] = ["Troop", "Spell", "Siege Machine"]
+	Local $aCheckCCNotFull[3] = [89, 460, 612], $sLog[3] = ["Troop", "Spell", "Siege Machine"]
 	Local $aiRequestCountCC[3] = [Number($g_iRequestCountCCTroop), Number($g_iRequestCountCCSpell), 0]
 	Local $bIsCCRequestTypeNotUsed = Not ($g_abRequestType[0] Or $g_abRequestType[1] Or $g_abRequestType[2])
 	If $CCType <> 0 And $bIsCCRequestTypeNotUsed Then ; Continue reading CC status if all 3 items are unchecked, but only if not troop
 		If $g_bDebugSetlog Then SetLog($sLog[$CCType] & " not cared about, only checking troops.")
 		Return True
 	Else
-		If _ColorCheck(_GetPixelColor($aCheckCCNotFull[$CCType], 445, True), Hex(0xDC363A, 6), 30) Then ; red symbol
+		If _ColorCheck(_GetPixelColor($aCheckCCNotFull[$CCType], 440, True), Hex(0xE94D51, 6), 30) Then ; red symbol
 			If Not $g_abRequestType[$CCType] And Not $bIsCCRequestTypeNotUsed And $CCType <> 0 Then
 				; Don't care about the CC limit configured in setting
 				SetDebugLog("Found CC " & $sLog[$CCType] & " not full, but check is disabled")
@@ -318,7 +330,7 @@ Func RemoveCastleArmy($aToRemove)
 	For $i = 0 To UBound($aToRemove) - 1
 		If $aToRemove[$i][1] > 0 Then
 			$aPos[0] = $aToRemove[$i][0] + 35
-			If $i = 7 Then $aPos[0] = 685 ; x-coordinate of Siege machine slot
+			If $i = 7 Then $aPos[0] = 650 ; x-coordinate of Siege machine slot
 			SetDebugLog(" - Click at slot " & $i & ". (" & $aPos[0] & ") x " & $aToRemove[$i][1])
 			ClickRemoveTroop($aPos, $aToRemove[$i][1], $g_iTrainClickDelay) ; Click on Remove button as much as needed
 		EndIf
@@ -334,7 +346,7 @@ Func RemoveCastleArmy($aToRemove)
 		If $counter <= 5 Then ContinueLoop
 		SetLog("Cannot find/verify 'Okay' Button in Army tab", $COLOR_WARNING)
 		ClickAway()
-		If _Sleep(400) Then OpenArmyOverview(True, "RemoveCastleSpell()") ; Open Army Window AGAIN
+		If _Sleep(400) Then OpenArmyOverview("RemoveCastleSpell()") ; Open Army Window AGAIN
 		Return False ; Exit Function
 	WEnd
 

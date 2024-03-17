@@ -50,11 +50,11 @@ Func LocateUpgrades()
 		If _GetPixelColor(1, 1) <> Hex(0x000000, 6) Or _GetPixelColor(850, 1) <> Hex(0x000000, 6) Then ; Check for zoomout in case user tried to zoom in.
 			ZoomOut()
 			$g_bDisableBreakCheck = True ; stop early PB log off when locating upgrades
-			Collect(False) ;only collect from mine and collector
+			Collect(True) ;only collect from mine and collector
 			$g_bDisableBreakCheck = False ; restore flag
 		EndIf
 		$g_bDisableBreakCheck = True ; stop early PB log off when locating upgrades
-		Collect(False) ; must collect or clicking on collectors will fail 1st time
+		Collect(True) ; must collect or clicking on collectors will fail 1st time
 		$g_bDisableBreakCheck = False ; restore flag
 
 		If $bInitGraphics Then
@@ -241,7 +241,7 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 
 	If $bOopsFlag And $g_bDebugImageSave Then SaveDebugImage("ButtonView")
 
-	$aResult = BuildingInfo(242, 494)
+	$aResult = BuildingInfo(242, 472)
 	If $aResult[0] > 0 Then
 		$g_avBuildingUpgrades[$inum][4] = $aResult[1] ; Store bldg name
 		GUICtrlSetData($g_hTxtUpgradeName[$inum], $g_avBuildingUpgrades[$inum][4]) ; Set GUI name to match $g_avBuildingUpgrades variable

@@ -20,7 +20,7 @@ Func LocateClanCastle($bCollect = True)
 
 	WinGetAndroidHandle()
 	checkMainScreen(False, $g_bStayOnBuilderBase, "LocateClanCastle")
-	If $bCollect Then Collect(False)
+	If $bCollect Then Collect(True)
 
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
@@ -67,7 +67,7 @@ Func LocateClanCastle($bCollect = True)
 			ClickAway()
 			Return
 		EndIf
-		$sInfo = BuildingInfo(242, 494) ; 860x780
+		$sInfo = BuildingInfo(242, 472) ; 860x780
 		If IsArray($sInfo) and ($sInfo[0] > 1 Or $sInfo[0] = "") Then
 			If StringInStr($sInfo[1], "clan") = 0 Then
 				Local $sLocMsg = ($sInfo[0] = "" ? "Nothing" : $sInfo[1])

@@ -19,9 +19,10 @@ Func Unbreakable()
 	; Need to set max/min trophy on Misc tab to range where base can win defenses
 	; Enable mode with checkbox, and set desired time to be offline getting defense wins before base is reset.
 	; Set absolute minimum loot required to still farm for more loot in Farm Minimum setting, and Save Minimum setting loot that will atttact enemy attackers
-	;
+	
+	If $g_iUnbrkMode < 1 Then Return False
 	Local $x, $y, $i, $iTime, $iCount
-
+	
 	Switch $g_iUnbrkMode
 		Case 2
 			If (Number($g_aiCurrentLoot[$eLootGold]) > Number($g_iUnbrkMaxGold)) And (Number($g_aiCurrentLoot[$eLootElixir]) > Number($g_iUnbrkMaxElixir)) And (Number($g_aiCurrentLoot[$eLootDarkElixir]) > Number($g_iUnbrkMaxDark)) Then

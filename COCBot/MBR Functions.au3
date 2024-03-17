@@ -233,7 +233,6 @@
 #include "functions\Village\CollectAchievements.au3"
 #include "functions\Village\TreasuryCollect.au3"
 #include "functions\Village\DonateCC.au3"
-#include "functions\Village\DonateCCWBL.au3"
 #include "functions\Village\DropTrophy.au3"
 #include "functions\Village\GetTownHallLevel.au3"
 #include "functions\Village\isAtkDarkElixirFull.au3"
@@ -273,7 +272,8 @@
 #include "functions\Village\LocatePetHouse.au3"
 #include "functions\Village\PetHouse.au3"
 #include "functions\Village\ClanCapital.au3"
-
+#include "functions\Village\LocateBlacksmith.au3"
+#include "functions\Village\Blacksmith.au3"
 
 #include "functions\Village\BuilderBase\Collect.au3"
 #include "functions\Village\BuilderBase\StartClockTowerBoost.au3"
