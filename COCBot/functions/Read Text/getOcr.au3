@@ -244,6 +244,14 @@ Func ReplaceQuantityX(ByRef $UpgradeName)
 		EndIf
 	EndIf
 	
+	If StringRegExp($UpgradeName, " l") = 1 Then
+		Local $aReplace = StringRegExp($UpgradeName, "( l)", 1)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
+			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
+	EndIf
+	
 	If StringRegExp($UpgradeName, " \d+.+") = 1 Then
 		Local $aReplace = StringRegExp($UpgradeName, "( \d+.+)", 1)
 		If Ubound($aReplace) > 0 Then 

@@ -932,8 +932,11 @@ Func resetEdge()
 	$g_aiPixelBottomRight = 0
 EndFunc
 
-Func TestCSV($iMode = $LB)
-	PrepareAttack($iMode)
+Func TestCSV($iMatchMode = $LB)
+	Local $filename = $g_sAttackScrScriptName[$iMatchMode]
+	$g_iMatchMode = $iMatchMode
+	SetLog("will use script : " & $filename, $COLOR_INFO)
+	PrepareAttack($iMatchMode)
 	CheckZoomOut("TestCSV")
 	Algorithm_AttackCSV()
 EndFunc
