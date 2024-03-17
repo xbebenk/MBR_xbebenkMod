@@ -20,9 +20,9 @@ TRAIN |Champion   |0          |0          |0          |0          |0          |0
 REDLN |0          |0          |0          |0          |0          |0          |0          |0          |0          |4          |
 
       |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
-SIDE  |0          |0          |0          |0          |0          |0          |15         |           |
+SIDE  |0          |0          |0          |0          |0          |8          |-15         |           |
       |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |           |           |
-SIDEB |5          |0          |0          |0          |0          |0          |0          |           |           |           |
+SIDEB |5          |0          |0          |0          |0          |8          |0          |           |           |           |
 
       |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|
 MAKE  |A          |FRONT-RIGHT|10         |0          |EXT-INT    |2          |2          |           |Troops
