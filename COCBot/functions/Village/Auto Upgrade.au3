@@ -70,7 +70,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	$g_bUpgradeLowCost = False ;reset first
 	If _Sleep(50) Then Return
 	VillageReport(False, True)
-	If Not PlaceUnplacedBuilding() Then Return
+	PlaceUnplacedBuilding()
 	If $bUpgradeLowCost And $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
