@@ -70,6 +70,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	$g_bUpgradeLowCost = False ;reset first
 	If _Sleep(50) Then Return
 	VillageReport(False, True)
+	If Not PlaceUnplacedBuilding() Then Return
 	If $bUpgradeLowCost And $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
@@ -1645,51 +1646,23 @@ EndFunc
 Func PlaceUnplacedBuilding($bTest = False)
 	If Not $g_bRunState Then Return
 	If SearchUnplacedBuilding() Then
-		SetLog("Unplaced Building Found!", $COLOR_SUCCESS)
+		SetLog("Found Unplaced Building!", $COLOR_SUCCESS)
 		If SearchGreenZone() Then
-			If SearchUnplacedBuilding() Then
-				SetLog("Trying to place Unplaced Bulding!", $COLOR_INFO)
-
-				Click(431,571)
-				If _Sleep(1500) Then Return False
-
-				Local $GreenCheckCoords = decodeSingleCoord(findImage("FindGreenCheck", $g_sImgGreenCheck & "\GreenCheck*", "FV", 1, True))
-				SetDebugLog("Looking for GreenCheck Button", $COLOR_INFO)
-				If IsArray($GreenCheckCoords) And UBound($GreenCheckCoords) = 2 Then
-					SetDebugLog("GreenCheck Button Found in [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_INFO)
-					If Not $g_bRunState Then Return
-					If Not $bTest Then
-						Click($GreenCheckCoords[0], $GreenCheckCoords[1])
-					Else
-						SetDebugLog("ONLY for TESTING!!!", $COLOR_ERROR)
-						Click($GreenCheckCoords[0] - 75, $GreenCheckCoords[1])
-						Return True
-					EndIf
-					SetLog("Placed a new Building on Main Village! [" & $GreenCheckCoords[0] & "," & $GreenCheckCoords[1] & "]", $COLOR_SUCCESS)
-					If _Sleep(500) Then Return
-					ZoomOut()
-					Return True
-				Else
-					SetDebugLog("GreenCheck Button NOT Found", $COLOR_ERROR)
-					NotifyPushToTelegram($g_sProfileCurrentName & ": Failed to place new building in Main Village.")
-					If Not $g_bRunState Then Return
-					;Lets check if exist the [x], it should not exist, but to be safe
-					Local $RedXCoords = decodeSingleCoord(findImage("FindRedX", $g_sImgRedX & "\RedX*", "FV", 1, True))
-					If IsArray($RedXCoords) And UBound($RedXCoords) = 2 Then
-						Click($RedXCoords[0], $RedXCoords[1])
-						SetLog("Sorry! Wrong place to deploy a new building on Main Village!", $COLOR_ERROR)
-						If _Sleep(500) Then Return
-						Return False
-					Else
-						GoGoblinMap()
-						ZoomOut()
-						Return False
-					EndIf
-				EndIf
+			SetLog("Trying to place Unplaced Bulding!", $COLOR_INFO)
+			Click(431,571)
+			If _Sleep(1500) Then Return
+			If QuickMIS("BC1", $g_sImgGreenCheck) Then 
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				SetLog("Unplaced Bulding, Succeed", $COLOR_SUCCESS)
 			Else
-				SetLog("Unplaced Building Window Lost!", $COLOR_ERROR)
 				ZoomOut()
+				GoGoblinMap()
 			EndIf
+			If _Sleep(1000) Then Return
+			ZoomOut()
+		Else
+			SetLog("Trying to place Unplaced Bulding, Failed", $COLOR_ERROR)
+			Return False
 		EndIf
 	EndIf
 EndFunc
