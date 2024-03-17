@@ -979,7 +979,8 @@ Global $g_WallGEFull = -1 ;-1 = unset, 0 = elixir, 1 = gold, 2 = both
 
 ; Auto Upgrade
 Global $g_bChkRushTH = False, $g_bHeroPriority = False
-Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False, $g_bUseHeroBooks = False, $g_iHeroMinUpgradeTime = 0, $g_bSkipWallReserve = False, $g_bUpgradeLowCost = False, $g_bUpgradeOtherDefenses = False
+Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False, $g_bUseHeroBooks = False, $g_iHeroMinUpgradeTime = 0
+Global $g_bSkipWallReserve = False, $g_bUpgradeLowCost = False, $g_bUpgradeOtherDefenses = False
 Global $g_bUseBuilderPotion = False
 Global $g_iChkIgnoreTH = 0, $g_iChkIgnoreKing = 0, $g_iChkIgnoreQueen = 0, $g_iChkIgnoreWarden = 0, $g_iChkIgnoreChampion = 0, $g_iChkIgnoreCC = 0, $g_iChkIgnoreLab = 0
 Global $g_iChkIgnoreBarrack = 0, $g_iChkIgnoreDBarrack = 0, $g_iChkIgnoreFactory = 0, $g_iChkIgnoreDFactory = 0
@@ -989,6 +990,8 @@ Global $g_iChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 Global $g_iChkResourcesToIgnore[3] = [0, 0, 0]
 Global $g_aiCmbRushTHOption[5] = [0, 0, 0, 0, 0]
 Global $g_aichkEssentialUpgrade[8] = [0,0,0,0,0,0,0,0]
+Global $g_aEssential[8] = ["X Bow", "Inferno", "Eagle", "Scattershot", "Wizard Tower", "Bomb Tower", "Air Defense", "Air Sweeper"]
+Global $g_aOtherDefense[5] = ["Cannon", "Archer Tower", "Mortar", "Hidden Tesla", "Hut"]
 Global $g_bUpgradeOnlyTHLevelAchieve = False
 Global $g_iCurrentLineOffset = 0, $g_iNextLineOffset = 0
 Global $g_aUpgradeNameLevel ; [Nb of elements in Array, Name, Level]

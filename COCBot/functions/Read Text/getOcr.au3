@@ -252,6 +252,39 @@ Func ReplaceQuantityX(ByRef $UpgradeName)
 		EndIf
 	EndIf
 	
+	If StringRegExp($UpgradeName, " \'") = 1 Then
+		Local $aReplace = StringRegExp($UpgradeName, "( \')", 1)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
+			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
+	EndIf
+	
+	If StringRegExp($UpgradeName, " T$") = 1 Then
+		Local $aReplace = StringRegExp($UpgradeName, "( T$)", 1)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
+			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
+	EndIf
+	
+	If StringRegExp($UpgradeName, " 1$") = 1 Then
+		Local $aReplace = StringRegExp($UpgradeName, "( 1$)", 1)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
+			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
+	EndIf
+	
+	If StringRegExp($UpgradeName, "^' ") = 1 Then
+		Local $aReplace = StringRegExp($UpgradeName, "(^' )", 1)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
+			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
+	EndIf
+	
+	
 	;If $g_bDebugSetLog Then SetLog("ReplaceQuantityX After :" & $UpgradeName, $COLOR_SUCCESS)
 EndFunc
 
