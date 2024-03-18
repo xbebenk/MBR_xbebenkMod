@@ -1980,7 +1980,7 @@ Global Const $g_asPetShortNames[$ePetCount] = ["Lassi", "Owl", "Yak", "Unicorn",
 Global $g_bUpgradePetsEnable[$ePetCount] = [False, False, False, False]
 Global $g_aiPetLevel[$ePetCount] = [0, 0, 0, 0, 0, 0, 0, 0]
 
-Global $g_ePetLevels[$ePetCount] = [15, 10, 15, 10, 10, 10, 10, 10]
+Global $g_ePetLevels[$ePetCount] = [10, 10, 10, 10, 10, 10, 10, 10]
 
 #cs
 Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
