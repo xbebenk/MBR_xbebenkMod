@@ -248,9 +248,9 @@ Func IsMultiplayerTabOpen()
 	Return False
 EndFunc ; IsMultiplayerTabOpen
 
-Func IsFullScreenWindow()
+Func IsFullScreenWindow($sSource = "default")
 	Local $result = False
-	$result = WaitforPixel(820, 37, 821, 38, "FFFFFF", 10, 2)
+	$result = WaitforPixel(820, 37, 821, 38, "FFFFFF", 10, 1, $sSource)
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 20, 860, 100) Then $result = True
@@ -263,9 +263,9 @@ Func IsFullScreenWindow()
 	Return False
 EndFunc
 
-Func IsProfileWindowOpen()
+Func IsProfileWindowOpen($sSource = "default")
 	Local $result = False
-	$result = WaitforPixel(806, 98, 807, 99, "FFFFFF", 10, 2)
+	$result = WaitforPixel(806, 98, 807, 99, "FFFFFF", 10, 1, $sSource)
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 788, 83, 825, 117) Then $result = True

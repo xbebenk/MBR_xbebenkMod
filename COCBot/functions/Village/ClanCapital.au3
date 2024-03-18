@@ -338,9 +338,9 @@ Func SwitchToClanCapital($bTest = False)
 		SetLog("Click AirShip at " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_ACTION)
 		For $i = 1 To 10
 			SetDebugLog("Waiting for Travel to Clan Capital Map #" & $i, $COLOR_ACTION)
-			If QuickMis("BC1", $g_sImgGeneralCloseButton, 705, 230, 755, 300) Then ; check if we have window covering map, close it!
-				Click($g_iQuickMISX, $g_iQuickMISY)
+			If IsProfileWindowOpen("SwitchToClanCapital") Then ;Next Raid Window
 				SetLog("Found Next Raid Window covering map, close it!", $COLOR_INFO)
+				Click(806, 98) ;Close Button
 				_Sleep(5000)
 				SwitchToCapitalMain()
 			EndIf

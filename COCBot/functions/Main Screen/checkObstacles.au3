@@ -228,7 +228,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 
-	If IsFullScreenWindow() Then ; all pages that covering coc screen and have red close button on right upper corner
+	If IsFullScreenWindow("checkObstacles") Then ; all pages that covering coc screen and have red close button on right upper corner
 		SetLog("checkObstacles: Found FullScreenWindow to close", $COLOR_ACTION)
 		Click(825,45)
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return

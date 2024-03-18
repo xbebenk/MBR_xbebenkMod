@@ -120,7 +120,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		If $g_bRestart Then Return ; exit func
 		$g_bCloudsActive = False
 		
-		;If _Sleep(1000) Then Return ;add small delay before check resource
+		If _Sleep(1500) Then Return ;add small delay before check resource
 		GetResources(False) ;Reads Resource Values
 		If $g_bRestart Then Return ; exit func
 
