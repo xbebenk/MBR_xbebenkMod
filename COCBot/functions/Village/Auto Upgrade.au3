@@ -884,7 +884,11 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 		Return True
 	EndIf
 	
-	; Lets search for the Correct Symbol on field
+	Local $a10sDuration[5] = ["Cannon", "Gold Mine", "Elixir Collector", "Gold Storage", "Elixir Storage"], $bWait10s = False
+	For $sName In $a10sDuration
+		If $sUpgrade = $sName Then $bWait10s = True
+	Next
+	
 	SetLog("Looking for GreenCheck Button", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgGreenCheck) Then
 		SetLog($g_iQuickMISName & " Button Found in [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
@@ -896,8 +900,9 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 		EndIf
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If $sUpgradeType = "Traps" Then Click($g_iQuickMISX, $g_iQuickMISY)
-		SetLog("Placed " & ($sUpgrade = "" ? "a new Building" : $sUpgrade) & " on Main Village! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
+		SetLog("Placed " & $sUpgrade & " on Main Village! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
 		If _Sleep(1000) Then Return
+		If $bWait10s Then _SleepStatus(10000)
 		If AutoUpgradeLog(True, $sUpgrade, 1, $iCost, "New") Then
 			Click($g_iQuickMISX - 60, $g_iQuickMISY) ; Just click RedX position, in case its still there
 		EndIf
@@ -979,7 +984,7 @@ EndFunc ;OpenShop
 Func GetBuildingType($sUpgrades = "")
 	If Not $g_bRunState Then Return
 	Local $aArmy[11] = ["Barbarian", "Queen", "Warden", "Champion", "Camp", "Laboratory", "Barracks", "Factory", "Blacksmith", "Workshop", "Pet"]
-	Local $aResource[4] = ["Collector", "Storage", "Mine", "Drill"]
+	Local $aResource[5] = ["Collector", "Storage", "Mine", "Drill", "Hut"]
 	Local $aDefense[12] = ["Wall", "Cannon", "Tower", "Mortar", "Sweeper", "Defense", "Tesla", "Bow", "ferno", "Eagle", "Scatter", "Monol"]
 	Local $aTrap[5] = ["Bomb", "Trap", "Mine", "Drill", "Seeking"]
 	Local $sUpgradeType = ""
