@@ -168,11 +168,12 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False)
 							If IsFullScreenWindow() Then Click(820, 37) ;close shop window
 							If _Sleep(2000) Then Return
 							If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
-						Else
-							$ZoomedIn = False
-							If IsFullScreenWindow("PlaceNewBuildingFromShop") Then Click(820, 37)
-							GoGoblinMap()
-							ExitLoop
+						;Else
+						;	$ZoomedIn = False
+						;	If IsFullScreenWindow("PlaceNewBuildingFromShop") Then Click(820, 37)
+						;	GoGoblinMap()
+						;	ZoomOut(True)
+						;	ContinueLoop 2
 						EndIf
 					EndIf
 				EndIf
@@ -865,10 +866,14 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 			If QuickMIS("BC1", $g_sImgGreenCheck, $tmpX - 40, $tmpY - 40, $tmpX + 40, $tmpY + 40) Then
 				SetLog("Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
 				Click($g_iQuickMISX, $g_iQuickMISY)
+				
 				If $g_iQuickMISName = "GreyCheck" Then 
 					$iCount += 1
 					SetLog("GreyCheck count : " & $iCount, $COLOR_DEBUG1)
+				Else
+					$iCount = 0
 				EndIf
+				
 				SetLog("Placing Wall #" & $ProMac, $COLOR_ACTION)
 				If _Sleep(1000) Then Return
 				If $g_aiCurrentLoot[$eLootGold] < 1000 Then
@@ -903,19 +908,39 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 			Click($g_iQuickMISX - 60, $g_iQuickMISY)
 			Return False
 		EndIf
+		
+		If Not GreenCheckLocate($g_iQuickMISX, $g_iQuickMISY) Then Return False
+		If $g_iQuickMISName = "RedX" Then $g_iQuickMISX += 80
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If $sUpgradeType = "Traps" Then Click($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Placed " & $sUpgrade & " on Main Village! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
 		If _Sleep(1000) Then Return
 		If $bWait10s Then _SleepStatus(10000)
-		If AutoUpgradeLog(True, $sUpgrade, 1, $iCost, "New") Then
-			Click($g_iQuickMISX - 60, $g_iQuickMISY) ; Just click RedX position, in case its still there
-		EndIf
+		AutoUpgradeLog(True, $sUpgrade, 1, $iCost, "New")
 		Return True
 	EndIf
 	
 	Return $bRet
 EndFunc ;_PlaceNewBuildingFromShop
+
+Func GreenCheckLocate($x, $y)
+	
+	If $g_iQuickMISName = "GreenCheck" And $x > 120 And $x < 600 And $y > 150 Then Return True
+	If $g_iQuickMISName = "RedX" And $x > 50 And $x < 500 And $y > 150 Then Return True
+	Local $xDragStart = 430, $yDragStart = 330
+	Local $xDrag = $xDragStart, $yDrag = $yDragStart
+	
+	If Number($g_iQuickMISX) > $xDragStart Then $xDrag = $xDragStart - Abs($g_iQuickMISX - $xDragStart)
+	If Number($g_iQuickMISX) < $xDragStart Then $xDrag = $xDragStart + Abs($g_iQuickMISX - $xDragStart)
+	If Number($g_iQuickMISY) > $yDragStart Then $yDrag = $yDragStart - Abs($g_iQuickMISY - $yDragStart)
+	If Number($g_iQuickMISY) < $yDragStart Then $yDrag = $yDragStart + Abs($g_iQuickMISY - $yDragStart)
+	
+	SetLog("Set GreenCheck position for safer click", $COLOR_ACTION)
+	If $g_bDebugSetLog Then SetLog("ClickDrag(" & $xDragStart & "," & $yDragStart & "," & $xDrag & "," & $yDrag & ")")
+	ClickDrag($xDragStart, $yDragStart, $xDrag, $yDrag)
+	If QuickMIS("BFI", $g_sImgGreenCheck & "GreenCheck*") Then Return True
+	Return False
+EndFunc
 
 Func OpenShop($sUpgradeType = "Traps", $bCheckRedCounter = True)
 	If Not $g_bRunState Then Return

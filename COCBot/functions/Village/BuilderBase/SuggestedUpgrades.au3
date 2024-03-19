@@ -137,6 +137,7 @@ EndFunc   ;==>chkPlacingNewBuildings
 ; MAIN CODE
 Func AutoUpgradeBB($bTest = False)
 	If $g_iChkBBSuggestedUpgrades = 0 Then Return
+	$g_bStayOnBuilderBase = True
 	If Not isOnBuilderBase() Then Return
 	If Not AutoUpgradeBBCheckBuilder($bTest) Then Return ;check if we have masterBuilder
 	ZoomOut()
