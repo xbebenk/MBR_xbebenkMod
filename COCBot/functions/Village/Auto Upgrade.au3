@@ -104,7 +104,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	
 	If IsBuilderMenuOpen() Then 
 		Click(400, 28)
-		If _Sleep(500) Then Return)
+		If _Sleep(500) Then Return
 	EndIf
 	
 	ZoomOut(True)
