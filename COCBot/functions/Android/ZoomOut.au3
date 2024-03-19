@@ -221,8 +221,11 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $exitCount = 80
 	Local $delayCount = 20
 	Local $aPicture = ["", 0, 0, 0, 0]
-	ForceCaptureRegion()
 	
+	If Not $g_bStayOnBuilderBase Then  ZoomOutHelper($sFunc)
+	If $g_bStayOnBuilderBase Then  ZoomOutHelperBB($sFunc)
+	
+	ForceCaptureRegion()
 	$aPicture = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 

@@ -101,8 +101,12 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 
 	CheckBuilderPotion()
 	If Not $g_bRunState Then Return
-	Clickaway("Right")
-	If _Sleep(1000) Then Return
+	
+	If IsBuilderMenuOpen() Then 
+		Click(400, 28)
+		If _Sleep(500) Then Return)
+	EndIf
+	
 	ZoomOut(True)
 	Return False
 EndFunc
@@ -166,6 +170,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False)
 							If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
 						Else
 							$ZoomedIn = False
+							If IsFullScreenWindow("PlaceNewBuildingFromShop") Then Click(820, 37)
 							GoGoblinMap()
 							ExitLoop
 						EndIf
