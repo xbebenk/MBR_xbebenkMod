@@ -319,28 +319,6 @@ Func DonateCC($bTest = False, $bSwitch = False)
 				If $bDonateTroop And Not $g_bSkipDonTroops Then
 					SetDebugLog("Troop checkpoint.", $COLOR_DEBUG)
 	
-					;;;  Custom Combination Troops
-					;For $x = 0 To UBound($eDonateCustom) - 1
-					;	If $g_abChkDonateTroop[$eCustom[$x]] And CheckDonateTroop(99, $g_asTxtDonateTroop[$eCustom[$x]], $g_asTxtBlacklistTroop[$eCustom[$x]], $ClanString, $g_bNewSystemToDonate) Then
-					;		Local $CorrectDonateCustom = $eDonateCustom[$x]
-					;
-					;		For $i = 0 To 2
-					;			If $CorrectDonateCustom[$i][0] < $eBarb Then
-					;				$CorrectDonateCustom[$i][0] = $eArch ; Change strange small numbers to archer
-					;			ElseIf $CorrectDonateCustom[$i][0] > $eHunt Then
-					;				ContinueLoop ; If "Nothing" is selected then continue
-					;			EndIf
-					;			If $CorrectDonateCustom[$i][1] < 1 Then
-					;				ContinueLoop ; If donate number is smaller than 1 then continue
-					;			ElseIf $CorrectDonateCustom[$i][1] > 8 Then
-					;				$CorrectDonateCustom[$i][1] = 8 ; Number larger than 8 is unnecessary
-					;			EndIf
-					;			DonateTroopType($CorrectDonateCustom[$i][0], $CorrectDonateCustom[$i][1], $abDonateQueueOnly[0])
-					;			If _Sleep($DELAYDONATECC3) Then ExitLoop
-					;		Next
-					;	EndIf
-					;Next
-	
 					;;;  Typical Donate troops
 					If Not $g_bSkipDonTroops Then
 						For $i = 0 To UBound($g_aiDonateTroopPriority) - 1
@@ -599,14 +577,14 @@ Func CheckDonateString($String, $ClanString) ;Checks if exact
 	EndIf
 EndFunc   ;==>CheckDonateString
 
-Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = False, Const $bDonateAll = False)
-	Local $Slot = -1, $detectedSlot = -1
+Func DonateTroopType($iTroopIndex, $Quant = 0, $bDonateQueueOnly = False, $bDonateAll = False)
+	Local $Slot = -1, $aSlot = -1
 	Local $YComp = 0, $donaterow = -1
 	Local $donateposinrow = -1
 	Local $sTextToAll = ""
 
 	If $g_iTotalDonateTroopCapacity = 0 Then Return
-	SetDebugLog("$DonateTroopType Start: " & $g_asTroopNames[$iTroopIndex] & " Quant:" & $Quant, $COLOR_DEBUG)
+	SetDebugLog("DonateTroopType Start: " & $g_asTroopNames[$iTroopIndex] & ", Quant:" & $Quant, $COLOR_DEBUG)
 
 	; Space to donate troop?
 	$g_iDonTroopsQuantityAv = Floor($g_iTotalDonateTroopCapacity / $g_aiTroopSpace[$iTroopIndex])
@@ -631,47 +609,34 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 		Local $oldDebugOcr = $g_bDebugOcr
 		$g_bDebugOcr = True
 	EndIf
-
-	$Slot = DetectSlotTroop($iTroopIndex)
-	$detectedSlot = $Slot
-	If $g_bDebugOCRdonate Then $g_bDebugOcr = $oldDebugOcr
-
-	; figure out row/position
-	If $Slot < 0 Or $Slot > 13 Then
-		SetLog("Invalid slot # found = " & $Slot & " for " & $g_asTroopNames[$iTroopIndex], $COLOR_ERROR)
+	
+	$aSlot = DetectSlotTroop($iTroopIndex)
+	If $aSlot = -1 Then 
+		If $g_bDebugSetLog Then SetLog("Invalid slot # found for " & $g_asTroopNames[$iTroopIndex], $COLOR_ERROR)
 		Return
 	EndIf
-	SetDebugLog("slot found = " & $Slot & ", " & $g_asTroopNames[$iTroopIndex], $COLOR_DEBUG)
-	$donaterow = 1 ;first row of troops
-	$donateposinrow = $Slot
-	If $Slot >= 7 And $Slot <= 13 Then
-		$donaterow = 2 ;second row of troops
-		$Slot = $Slot - 7
-		$donateposinrow = $Slot
-		$YComp = 76 ; correct 860x780
-	EndIf
-
+	
 	; Verify if the type of troop to donate exists
 	SetLog("Troops Condition Matched", $COLOR_ORANGE)
-	
 	If $bDonateAll Then $sTextToAll = " (to all requests)"
 	SetLog("Donating " & $Quant & " " & ($Quant > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]) & $sTextToAll, $COLOR_SUCCESS)
 	$g_bDonated = True ;set To Return value
 	
 	If $g_bDebugOCRdonate Then
-		SetLog("donate", $COLOR_ERROR)
-		SetLog("row: " & $donaterow, $COLOR_ERROR)
-		SetLog("pos in row: " & $donateposinrow, $COLOR_ERROR)
-		SetLog("coordinate: " & 397 + ($Slot * 68) & "," & $g_iDonationWindowY + 100 + $YComp, $COLOR_ERROR)
+		SetLog("donate" & $g_asTroopNames[$iTroopIndex], $COLOR_ERROR)
+		;SetLog("row: " & $donaterow, $COLOR_ERROR)
+		;SetLog("pos in row: " & $donateposinrow, $COLOR_ERROR)
+		SetLog("coordinate: " & _ArrayToString($aSLot), $COLOR_ERROR)
 		SaveDebugImage("LiveDonateCC-r" & $donaterow & "-c" & $donateposinrow & "-" & $g_asTroopNames[$iTroopIndex] & "_")
 	EndIf
 	
-	Local $QuantHalf = Floor($Quant/2)
+	ClickP($aSlot, $Quant, 200, "Donate " & $g_asTroopNames[$iTroopIndex])
 	
-	If $QuantHalf >= 1 Then Click(397 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
-	If _Sleep(1000) Then Return
-	If Mod($Quant, 2) = 1 Then $QuantHalf += 1 ;Compensate for odd numbers
-	Click(397 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
+	;Local $QuantHalf = Floor($Quant/2)
+	;If $QuantHalf >= 1 Then Click(397 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
+	;If _Sleep(1000) Then Return
+	;If Mod($Quant, 2) = 1 Then $QuantHalf += 1 ;Compensate for odd numbers
+	;Click(397 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
 	
 	$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
 	If $g_iCommandStop = 3 Then
@@ -680,7 +645,7 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 	EndIf
 	
 	; Adjust Values for donated troops to prevent a Double ghost donate to stats and train
-	If $iTroopIndex >= $eTroopBarbarian And $iTroopIndex <= $eTroopHeadhunter Then
+	If $iTroopIndex >= $eTroopBarbarian And $iTroopIndex < $eTroopCount Then
 		;Reduce iTotalDonateCapacity by troops donated
 		$g_iTotalDonateTroopCapacity -= ($Quant * $g_aiTroopSpace[$iTroopIndex])
 		;If donated max allowed troop qty set $g_bSkipDonTroops = True
@@ -693,11 +658,73 @@ Func DonateTroopType(Const $iTroopIndex, $Quant = 0, Const $bDonateQueueOnly = F
 	$g_aiDonateTroops[$iTroopIndex] += $Quant
 	If $bDonateQueueOnly Then $g_aiAvailQueuedTroop[$iTroopIndex] -= $Quant
 	
+	
+	
+	;$Slot = DetectSlotTroop($iTroopIndex)
+	;If $g_bDebugOCRdonate Then $g_bDebugOcr = $oldDebugOcr
+	;
+	;; figure out row/position
+	;If $Slot < 0 Or $Slot > 13 Then
+	;	SetLog("Invalid slot # found = " & $Slot & " for " & $g_asTroopNames[$iTroopIndex], $COLOR_ERROR)
+	;	Return
+	;EndIf
+	;SetDebugLog("slot found = " & $Slot & ", " & $g_asTroopNames[$iTroopIndex], $COLOR_DEBUG)
+	;$donaterow = 1 ;first row of troops
+	;$donateposinrow = $Slot
+	;If $Slot >= 7 And $Slot <= 13 Then
+	;	$donaterow = 2 ;second row of troops
+	;	$Slot = $Slot - 7
+	;	$donateposinrow = $Slot
+	;	$YComp = 76 ; correct 860x780
+	;EndIf
+	;
+	;; Verify if the type of troop to donate exists
+	;SetLog("Troops Condition Matched", $COLOR_ORANGE)
+	;
+	;If $bDonateAll Then $sTextToAll = " (to all requests)"
+	;SetLog("Donating " & $Quant & " " & ($Quant > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]) & $sTextToAll, $COLOR_SUCCESS)
+	;$g_bDonated = True ;set To Return value
+	;
+	;If $g_bDebugOCRdonate Then
+	;	SetLog("donate", $COLOR_ERROR)
+	;	SetLog("row: " & $donaterow, $COLOR_ERROR)
+	;	SetLog("pos in row: " & $donateposinrow, $COLOR_ERROR)
+	;	SetLog("coordinate: " & 397 + ($Slot * 68) & "," & $g_iDonationWindowY + 100 + $YComp, $COLOR_ERROR)
+	;	SaveDebugImage("LiveDonateCC-r" & $donaterow & "-c" & $donateposinrow & "-" & $g_asTroopNames[$iTroopIndex] & "_")
+	;EndIf
+	;
+	;Local $QuantHalf = Floor($Quant/2)
+	;
+	;If $QuantHalf >= 1 Then Click(397 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
+	;If _Sleep(1000) Then Return
+	;If Mod($Quant, 2) = 1 Then $QuantHalf += 1 ;Compensate for odd numbers
+	;Click(397 + ($Slot * 68), $g_iDonationWindowY + 100 + $YComp, $QuantHalf, $DELAYDONATECC3, "#0175")
+	;
+	;$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
+	;If $g_iCommandStop = 3 Then
+	;	$g_iCommandStop = 0
+	;	$g_bFullArmy = False
+	;EndIf
+	;
+	;; Adjust Values for donated troops to prevent a Double ghost donate to stats and train
+	;If $iTroopIndex >= $eTroopBarbarian And $iTroopIndex <= $eTroopHeadhunter Then
+	;	;Reduce iTotalDonateCapacity by troops donated
+	;	$g_iTotalDonateTroopCapacity -= ($Quant * $g_aiTroopSpace[$iTroopIndex])
+	;	;If donated max allowed troop qty set $g_bSkipDonTroops = True
+	;	If $g_iDonTroopsLimit = $Quant Then
+	;		$g_bSkipDonTroops = True
+	;	EndIf
+	;EndIf
+	;
+	;; Assign the donated quantity troops to train : $Don $g_asTroopName
+	;$g_aiDonateTroops[$iTroopIndex] += $Quant
+	;If $bDonateQueueOnly Then $g_aiAvailQueuedTroop[$iTroopIndex] -= $Quant
+	
 
 EndFunc   ;==>DonateTroopType
 
 Func DonateSpellType(Const $iSpellIndex, Const $bDonateQueueOnly = False, Const $bDonateAll = False)
-	Local $Slot = -1, $detectedSlot = -1
+	Local $Slot = -1
 	Local $YComp = 0, $donaterow = -1
 	Local $donateposinrow = -1
 	;Local $sTextToAll = ""
@@ -730,7 +757,6 @@ Func DonateSpellType(Const $iSpellIndex, Const $bDonateQueueOnly = False, Const 
 	EndIf
 
 	$Slot = DetectSlotSpell($iSpellIndex)
-	$detectedSlot = $Slot
 	SetDebugLog("slot found = " & $Slot, $COLOR_DEBUG)
 	If $g_bDebugOCRdonate Then $g_bDebugOcr = $oldDebugOcr
 
@@ -790,7 +816,7 @@ EndFunc   ;==>DonateSpellType
 
 Func DonateSiegeType(Const $iSiegeIndex, $bDonateAll = False)
 
-	Local $Slot = -1, $detectedSlot = -1
+	Local $Slot = -1
 	Local $YComp = 0, $donaterow = -1
 	Local $donateposinrow = -1
 	Local $sTextToAll = ""
@@ -877,10 +903,10 @@ Func DonateWindow($aiDonateButton, $bOpen = True)
 	Return True
 EndFunc   ;==>DonateWindow
 
-;DonateWindowCap($g_bSkipDonTroops, $g_bSkipDonSpells)
+;DonateWindowCap(False, False)
 Func DonateWindowCap(ByRef $g_bSkipDonTroops, ByRef $g_bSkipDonSpells)
 	SetDebugLog("DonateCapWindow Start", $COLOR_DEBUG)
-	Local $xTroop = 455, $xSpell = 447, $xOffset = 38 ; offset if donate window shifted 
+	Local $xTroop = 455, $xSpell = 447, $xOffset = 25 ; offset if donate window shifted 
 	;read troops capacity
 	If Not $g_bSkipDonTroops Then
 		Local $sReadCCTroopsCap = getCastleDonateCap($xTroop, $g_iDonationWindowY + 15) ; use OCR to get donated/total capacity
@@ -945,62 +971,94 @@ Func DonateWindowCap(ByRef $g_bSkipDonTroops, ByRef $g_bSkipDonSpells)
 
 EndFunc   ;==>DonateWindowCap
 
-Func DetectSlotTroop(Const $iTroopIndex)
-	Local $FullTemp
-
-	For $Slot = 0 To 6
-		Local $x = 368 + (68 * $Slot)
-		Local $y = $g_iDonationWindowY + 37
-		Local $x1 = $x + 73
-		Local $y1 = $y + 63
-		If $g_bDebugSetLog Then SetLog("$x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
-		
-		$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1)
-		SetDebugLog("Troop Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
-
-		If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
-
-		If $FullTemp[0] <> "" Then
-			Local $iFoundTroopIndex = TroopIndexLookup($FullTemp[0])
-			For $i = $eTroopBarbarian To $eTroopCount - 1
-				If $iFoundTroopIndex = $i Then
-					SetDebugLog("Detected " & $g_asTroopNames[$i], $COLOR_DEBUG)
-					If $iTroopIndex = $i Then Return $Slot
-					ExitLoop
-				EndIf
-				If $i = $eTroopCount - 1 Then ; detection failed
-					SetDebugLog("Slot: " & $Slot & "Troop Detection Failed", $COLOR_DEBUG)
-				EndIf
-			Next
-		EndIf
-	Next
-
-	For $Slot = 7 To 13
-		Local $x = 368 + (68 * ($Slot - 7))
-		Local $y = $g_iDonationWindowY + 124
-		Local $x1 = $x + 73
-		Local $y1 = $y + 63
-		If $g_bDebugSetLog Then SetLog("$x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
-		
-		$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1)
-		SetDebugLog("Troop Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
-
-		If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
-
-		If $FullTemp[0] <> "" Then
-			For $i = $eTroopBarbarian To $eTroopCount - 1
-				Local $iFoundTroopIndex = TroopIndexLookup($FullTemp[0])
-				If $iFoundTroopIndex = $i Then
-					SetDebugLog("Detected " & $g_asTroopNames[$i], $COLOR_DEBUG)
-					If $iTroopIndex = $i Then Return $Slot
-					ExitLoop
-				EndIf
-				If $i = $eTroopCount - 1 Then ; detection failed
-					SetDebugLog("Slot: " & $Slot & " Troop Detection Failed", $COLOR_DEBUG)
-				EndIf
-			Next
-		EndIf
-	Next
+Func DetectSlotTroop($iTroopIndex = 0)
+	Local $aSlot[2] = [0, 0]
+	Local $sShort = "", $sName = ""
+	Local $x = 365, $x1 = 846
+	Local $y = 40, $y1 = 185
+	
+	If $iTroopIndex > UBound($g_asTroopShortNames) Then Return -1
+	$sShort = $g_asTroopShortNames[$iTroopIndex]
+	$sName = $g_asTroopNames[$iTroopIndex]
+	
+	If QuickMIS("BC1", $g_sImgCloseDonateWindow, 780, 0, 860, 360) Then
+		$x = $g_iQuickMISX - ($g_iQuickMISX < 810 ? 415 : 465)
+		$y = $g_iQuickMISY + 21
+		$x1 = $g_iQuickMISX + 15
+		$y1 = $g_iQuickMISY + 165
+	Else
+		SetLog("Donate Window close button not found", $COLOR_ERROR)
+		Return -1
+	EndIf
+	
+	SetLog("DetectSlotTroop : [" & $iTroopIndex & "] " & $sName, $COLOR_DEBUG1)
+	If $g_bDebugSetLog Then SetLog("$x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
+	If QuickMIS("BFI", $g_sImgDonateTroops & $sShort & "*", $x, $y, $x1, $y1) Then
+		$aSlot[0] = $g_iQuickMISX
+		$aSlot[1] = $g_iQuickMISY
+		SetLog("Detected " & $sName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG)
+		Return $aSlot
+	Else
+		If $g_bDebugSetLog Then SetLog("Troop Detection Failed: " & $sName, $COLOR_DEBUG)
+		Return -1
+	EndIf
+	
+	;
+	;
+	;Local $FullTemp
+	;For $Slot = 0 To 6
+	;	Local $x = 368 + (68 * $Slot)
+	;	Local $y = $g_iDonationWindowY + 37
+	;	Local $x1 = $x + 73
+	;	Local $y1 = $y + 63
+	;	If $g_bDebugSetLog Then SetLog("$x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
+	;	
+	;	$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1)
+	;	SetDebugLog("Troop Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
+	;
+	;	If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
+	;
+	;	If $FullTemp[0] <> "" Then
+	;		Local $iFoundTroopIndex = TroopIndexLookup($FullTemp[0])
+	;		For $i = $eTroopBarbarian To $eTroopCount - 1
+	;			If $iFoundTroopIndex = $i Then
+	;				SetDebugLog("Detected " & $g_asTroopNames[$i], $COLOR_DEBUG)
+	;				If $iTroopIndex = $i Then Return $Slot
+	;				ExitLoop
+	;			EndIf
+	;			If $i = $eTroopCount - 1 Then ; detection failed
+	;				SetDebugLog("Slot: " & $Slot & "Troop Detection Failed", $COLOR_DEBUG)
+	;			EndIf
+	;		Next
+	;	EndIf
+	;Next
+	;
+	;For $Slot = 7 To 13
+	;	Local $x = 368 + (68 * ($Slot - 7))
+	;	Local $y = $g_iDonationWindowY + 124
+	;	Local $x1 = $x + 73
+	;	Local $y1 = $y + 63
+	;	If $g_bDebugSetLog Then SetLog("$x, $y, $x1, $y1 : " & $x & "," & $y & "," & $x1 & "," & $y1, $COLOR_ERROR)
+	;	
+	;	$FullTemp = SearchImgloc($g_sImgDonateTroops, $x, $y, $x1, $y1)
+	;	SetDebugLog("Troop Slot: " & $Slot & " SearchImgloc returned:" & $FullTemp[0] & ".", $COLOR_DEBUG)
+	;
+	;	If StringInStr($FullTemp[0] & " ", "empty") > 0 Then ExitLoop
+	;
+	;	If $FullTemp[0] <> "" Then
+	;		For $i = $eTroopBarbarian To $eTroopCount - 1
+	;			Local $iFoundTroopIndex = TroopIndexLookup($FullTemp[0])
+	;			If $iFoundTroopIndex = $i Then
+	;				SetDebugLog("Detected " & $g_asTroopNames[$i], $COLOR_DEBUG)
+	;				If $iTroopIndex = $i Then Return $Slot
+	;				ExitLoop
+	;			EndIf
+	;			If $i = $eTroopCount - 1 Then ; detection failed
+	;				SetDebugLog("Slot: " & $Slot & " Troop Detection Failed", $COLOR_DEBUG)
+	;			EndIf
+	;		Next
+	;	EndIf
+	;Next
 
 	Return -1
 
@@ -1377,7 +1435,7 @@ Func getArmyRequest($DonateButton = -1)
 	$g_aiDonQuant = $g_aiZero52 ;reset array
 	Local $aiDonateCoords[2] = [0, 0]
 	If $DonateButton = -1 Then
-		Local $aDonateButton = QuickMIS("CNX", $g_sImgDonateButton, 250, 130, 340, 260)
+		Local $aDonateButton = QuickMIS("CNX", $g_sImgDonateButton, 250, 130, 340, 600)
 		If IsArray($aDonateButton) And UBound($aDonateButton) > 0 Then 
 			_ArraySort($aDonateButton, 0, 0, 0, 2)
 			If $g_bDebugSetLog Then SetLog("aDonateButton : " & _ArrayToString($aDonateButton), $COLOR_DEBUG1)
@@ -1390,8 +1448,8 @@ Func getArmyRequest($DonateButton = -1)
 		$aiDonateCoords = $DonateButton
 	EndIf
 	
-	If $g_bDebugSetLog Then SetLog("QuickMIS('CNX', $g_sImgDonateImageRequest, 40, " & $aiDonateCoords[1] - 92 & ", " & $aiDonateCoords[0] & ", " & $aiDonateCoords[1] - 40 & ")", $COLOR_DEBUG1)
-	Local $aQuick = QuickMIS("CNX", $g_sImgDonateImageRequest, 40, $aiDonateCoords[1] - 92, $aiDonateCoords[0], $aiDonateCoords[1] - 40)
+	If $g_bDebugSetLog Then SetLog("QuickMIS('CNX', $g_sImgDonateImageRequest, 40, " & $aiDonateCoords[1] - 92 & ", " & 343 & ", " & $aiDonateCoords[1] - 40 & ")", $COLOR_DEBUG1)
+	Local $aQuick = QuickMIS("CNX", $g_sImgDonateImageRequest, 40, $aiDonateCoords[1] - 92, 343, $aiDonateCoords[1] - 40)
 	;_ArrayDisplay($aQuick)
 	Local $axCoord[5] = [57, 110, 163, 216, 269]
 	If Ubound($aQuick) > 0 Then
@@ -1453,8 +1511,9 @@ Func ReadRequestString($DonateButton = -1)
 	Local $sString = ""
 	$g_bNewSystemToDonate = False
 	$sString = getArmyRequest($aiDonateButton)
-
+	
 	If $sString <> "" Then
+		SetLog("Request: " & $sString, $COLOR_INFO)
 		$g_bNewSystemToDonate = True
 		Return $sString
 	Else
