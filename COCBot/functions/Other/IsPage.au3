@@ -98,7 +98,7 @@ Func IsAttackWhileShieldPage($bSaveDebugImage = True)
 
 EndFunc   ;==>IsAttackWhileShieldPage
 
-Func IsMainPage($iLoop = 30)
+Func IsMainPage($iLoop = 10)
 
 	If IsPageLoop($aIsMain, $iLoop) Then
 		$g_bMainWindowOk = True
@@ -114,7 +114,7 @@ Func IsMainPage($iLoop = 30)
 
 EndFunc   ;==>IsMainPage
 
-Func IsMainPageBuilderBase($iLoop = 30)
+Func IsMainPageBuilderBase($iLoop = 10)
 
 	If IsPageLoop($aIsOnBuilderBase, $iLoop) Then
 		$g_bMainWindowOk = True
