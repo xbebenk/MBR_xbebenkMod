@@ -164,7 +164,6 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 								Local $tmparray[1][4] = [[String($objName[0]), Number($Tmpxy[0] + $Left), Number($Tmpxy[1] + $Top), String($objName[1])]]
 								_ArrayAdd($Result, $tmparray)
 								If @error Then SetLog("QuickMIS-CNX ComposeArray Err : " & @error, $COLOR_ERROR)
-								;_ArrayAdd($Result, $objName[0] & "|" & $Tmpxy[0] + $Left & "|" & $Tmpxy[1] + $Top & "|" & $objName[1])
 								$sResult &= "|" & $objName[0] & "," & $Tmpxy[0] + $Left & "," & $Tmpxy[1] + $Top & "," & $objName[1]
 							EndIf
 						Next
