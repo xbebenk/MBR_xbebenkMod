@@ -14,7 +14,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom = "Default") ;Checks if in main screen
+Func checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase, $CalledFrom = "Default") ;Checks if in main screen
 	If Not $g_bRunState Then Return
 	FuncEnter(checkMainScreen)
 	Return FuncReturn(_checkMainScreen($bSetLog, $bBuilderBase, $CalledFrom))
@@ -24,11 +24,8 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 
 	If $bSetLog = Default Then $bSetLog = True
 	Local $VillageType = "MainVillage"
-	If $bBuilderBase = Default Then $bBuilderBase = isOnBuilderBase()
 	If $bBuilderBase Then $VillageType = "BuilderBase"
-	If $bSetLog Then
-		SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
-	EndIf
+	If $bSetLog Then SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
 	
 	If Not CheckAndroidRunning(False) Then Return
 	PlaceUnplacedBuilding()

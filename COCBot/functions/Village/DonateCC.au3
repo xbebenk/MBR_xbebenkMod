@@ -677,7 +677,7 @@ Func DonateSiegeType($iSiegeIndex, $bDonateAll = False)
 	Local $aSlot = -1
 
 	If $g_iTotalDonateSiegeMachineCapacity < 1 Then Return
-	If $g_bDebugSetLog Then ("DonateSiegeType : " & $g_asSiegeMachineNames[$iSiegeIndex], $COLOR_DEBUG)
+	If $g_bDebugSetLog Then SetLog("DonateSiegeType : " & $g_asSiegeMachineNames[$iSiegeIndex], $COLOR_DEBUG)
 	
 	$aSlot = DetectSlotSiege($iSiegeIndex)
 	If $aSlot = -1 Then Return
