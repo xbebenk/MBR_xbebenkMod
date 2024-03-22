@@ -177,7 +177,7 @@ EndFunc   ;==>GetLocationDarkElixirWithLevel
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func GetLocationBuilding($iBuildingType, $iAttackingTH = 14, $bForceCaptureRegion = True)
+Func GetLocationBuilding($iBuildingType, $iAttackingTH = 16, $bForceCaptureRegion = True)
 
 	SetDebugLog("Begin GetLocationBuilding: " & $g_sBldgNames[$iBuildingType], $COLOR_DEBUG1)
 	Local $hTimer = __TimerInit() ; timer to track image detection time
