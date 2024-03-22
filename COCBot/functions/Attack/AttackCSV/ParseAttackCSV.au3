@@ -679,11 +679,15 @@ Func ParseAttackCSV_MainSide($debug = False)
 						Local $heightTopLeft = 0, $heightTopRight = 0, $heightBottomLeft = 0, $heightBottomRight = 0
 						If StringUpper($value8) = "TOP-LEFT" Or StringUpper($value8) = "TOP-RIGHT" Or StringUpper($value8) = "BOTTOM-LEFT" Or StringUpper($value8) = "BOTTOM-RIGHT" Then
 							$MAINSIDE = StringUpper($value8)
-							SetLog("Forced side: " & StringUpper($value8), $COLOR_INFO)
+							SetLog("Forced side: " & $MAINSIDE, $COLOR_INFO)
+							$bForceSideExist = True
+						ElseIf StringUpper($value8) = "TOP-RAND" Then
+							Local $iRand = Random(0, 1, 1), $aSide[2] = ["LEFT", "RIGHT"]
+							Local $side = StringUpper($value8)
+							$MAINSIDE = StringReplace($side, "RAND", $aSide[$iRand])
+							SetLog("Random Forced side: " & $MAINSIDE, $COLOR_INFO)
 							$bForceSideExist = True
 						Else
-
-
 							For $i = 0 To UBound($g_aiPixelMine) - 1
 								Local $str = ""
 								Local $pixel = $g_aiPixelMine[$i]
