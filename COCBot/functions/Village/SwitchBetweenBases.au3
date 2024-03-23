@@ -120,10 +120,10 @@ Func SwitchTo($To = "BB")
 			EndIf
 			
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(1000) Then Return
+			If _Sleep(3000) Then Return
 			
 			Local $sScode = "DS"
-			For $i = 1 To 5
+			For $j = 1 To 5
 				Switch $To
 				Case "BB"
 					$bRet = isOnBuilderBase()
@@ -132,7 +132,7 @@ Func SwitchTo($To = "BB")
 				EndSwitch
 				
 				If $bRet Then 
-					SetLog("Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
+					SetLog("[" & $i & "] Switch From " & $sSwitchFrom & " To " & $sSwitchTo & " Success", $COLOR_SUCCESS)
 					$FalseDetectionCount = 0
 					If $To = "BB" Then
 						$sScode = $g_sSceneryCode
@@ -148,7 +148,7 @@ Func SwitchTo($To = "BB")
 				If _Sleep(2000) Then Return
 			Next
 		Else
-			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
+			SetLog("[" & $i & "] " & $sTile & " Not Found, try again...", $COLOR_ERROR)
 			If $To = "Main" Then CheckBB20Tutor()
 			
 			If $i = 3 Then 
