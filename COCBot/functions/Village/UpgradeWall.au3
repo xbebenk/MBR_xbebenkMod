@@ -324,18 +324,18 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 
 		If $UpgradeButtonFound Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			_Sleep(800)
+			If _Sleep(800) Then Return
 			For $i = 1 To 10
 				SetDebugLog("Waiting for Wall Upgrade Page #" & $i)
 				If QuickMis("BC1", $g_sImgGeneralCloseButton, 770, 65, 840, 125) Then ExitLoop
-				_Sleep(50)
+				If _Sleep(50) Then Return
 			Next
 
 			If Not $bTest Then
 				If _ColorCheck(_GetPixelColor(590, 525, True), Hex(0xE3E3E3, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
 					SetLog("Need More Resource or Higher THLevel", $COLOR_ERROR)
 					Click($g_iQuickMISX, $g_iQuickMISY)
-					_Sleep(500)
+					If _Sleep(500) Then Return
 					Return False
 				EndIf
 				Local $CurrentCost = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True)
@@ -394,31 +394,31 @@ Func DoLowLevelWallUpgrade($WallLevel = 1, $bTest = False, $iWallCost = 1000)
 						SetDebugLog("Waiting Gold Button for Wall Upgrade #" & $i)
 						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeGold, 300, 510, 720, 580)
 						If $UpgradeButtonFound Then ExitLoop
-						_Sleep(50)
+						If _Sleep(50) Then Return
 					Next
 				Case "Elix"
 					For $i = 1 To 10
 						SetDebugLog("Waiting Elix Button for Wall Upgrade #" & $i)
 						$UpgradeButtonFound = QuickMIS("BC1", $g_sImgWallUpgradeElix, 400, 510, 720, 580)
 						If $UpgradeButtonFound Then ExitLoop
-						_Sleep(50)
+						If _Sleep(50) Then Return
 					Next
 			EndSwitch
 
 			If $UpgradeButtonFound Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
-				_Sleep(800)
+				If _Sleep(800) Then Return
 				For $i = 1 To 10
 					SetDebugLog("Waiting for Wall Upgrade Page #" & $i)
 					If QuickMis("BC1", $g_sImgGeneralCloseButton, 770, 65, 840, 125) Then ExitLoop
-					_Sleep(50)
+					If _Sleep(50) Then Return
 				Next
 
 				If Not $bTest Then
 					If _ColorCheck(_GetPixelColor(590, 525, True), Hex(0xE3E3E3, 6), 5) Then ;we got gray button, means upgrade need resource or Higher TH Level
 						SetLog("Need More Resource or Higher THLevel", $COLOR_ERROR)
 						Click($g_iQuickMISX, $g_iQuickMISY)
-						_Sleep(500)
+						If _Sleep(500) Then Return
 						Return False
 					EndIf
 					Local $CurrentCost = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True)
