@@ -204,7 +204,7 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 			_SleepStatus(15000)
 			
 			If ShouldStopAttackonCG() Then 
-				ReturnHomeDropTrophyBB(True, True)
+				ReturnHomeDropTrophyBB(True, True, $realDamage)
 				ExitLoop
 			EndIf
 			
@@ -905,7 +905,7 @@ Func BBAttackReport($sDamage = "")
 	
 	If Number($sDamage) = 200 Then 
 		$sStars = 6
-	ElseIf Number($sDamage) > 100 Then 
+	ElseIf Number($sDamage) >= 100 Then 
 		If $g_bChkDebugAttackBB Then SetLog("Damage % more than 100, Adding delay for animation", $COLOR_ACTION)
 		If _Sleep(3000) Then Return
 		$sStars = 3

@@ -14,9 +14,9 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($Mode = Default)
-	SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
+	If $g_bChkDebugAttackBB Then SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
 	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then 
-		SetLog("ForceSwitchifNoCGEvent Enabled, Skip Attack until we have BBEvent", $COLOR_SUCCESS)
+		If $g_bChkDebugAttackBB Then SetLog("ForceSwitchifNoCGEvent Enabled, Skip Attack until we have BBEvent", $COLOR_SUCCESS)
 		Return False
 	EndIf
 	
@@ -24,8 +24,8 @@ Func PrepareAttackBB($Mode = Default)
 	Local $ElixIsFull = isElixirFullBB()
 	
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-		SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
-		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
+		If $g_bChkDebugAttackBB Then SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
+		If $g_bChkDebugAttackBB Then SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
 		If _Sleep(1500) Then Return
 		If Not $GoldIsFull And Not $ElixIsFull Then UseBuilderJar()
@@ -263,7 +263,7 @@ Func BBDropTrophy()
 	Return False
 EndFunc
 
-Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False)
+Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False, $realDamage = "100")
 	SetLog("Returning Home", $COLOR_SUCCESS)
 	
 	For $i = 1 To 15
@@ -275,7 +275,7 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False)
 			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 510, 470, 570) = True
 				If $bOnlySurender Then 
 					If $g_bChkDebugAttackBB Then SetLog("ExitLoop, bOnlySurender = " & String($bOnlySurender), $COLOR_ACTION)
-					If $bAttackReport THen BBAttackReport("100")
+					If $bAttackReport THen BBAttackReport($realDamage)
 					Return True
 				EndIf
 				Click($g_iQuickMISX, $g_iQuickMISY)
