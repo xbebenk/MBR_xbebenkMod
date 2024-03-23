@@ -59,7 +59,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 		
 		; Let's get some information , like Remain Timer, Score and limit
 		If Not _ColorCheck(_GetPixelColor(300, 284, True), Hex(0x53E052, 6), 10) Then ;no greenbar = there is active event or completed event
-			_Sleep(3000) ; just wait few second, as completed event will need sometime to animate on score
+			If _Sleep(3000) Then Return ; just wait few second, as completed event will need sometime to animate on score
 		EndIf
 
 		Local $aiScoreLimit = GetTimesAndScores()
@@ -195,13 +195,13 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			If $g_bChkClanGamesDebug Then SaveDebugImage("ClanGames_Challenges", True)
 			ForcePurgeEvent(False, True)
 			CloseClangamesWindow()
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			Return False
 		EndIf
 	Else
 		SetLog("No Event found, Check your settings", $COLOR_WARNING)
 		CloseClangamesWindow()
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		Return False
 	EndIf
 EndFunc ;==>_ClanGames
@@ -703,7 +703,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 
 		If $g_bPurgeJob Then
 			For $i = 1 To 10
-				_Sleep(500)
+				If _Sleep(500) Then Return
 				SetLog("waiting for trash #" & $i, $COLOR_ACTION)
 				If QuickMIS("BC1", $g_sImgTrashPurge, 100, 250, 800, 470) Then
 					Click($g_iQuickMISX, $g_iQuickMISY)
@@ -737,7 +737,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 			Click(340, 215) ;Click Active Challenge
 
 			For $i = 1 To 10
-				_Sleep(500)
+				If _Sleep(500) Then Return
 				SetLog("waiting for trash #" & $i, $COLOR_ACTION)
 				If QuickMIS("BC1", $g_sImgTrashPurge, 560, 280, 700, 360) Then
 					ExitLoop
@@ -784,7 +784,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 	Else
 		SetLog("ForcePurgeEvent: Purge a Wrong Challenge", $COLOR_INFO)
 		For $i = 1 To 10
-			_Sleep(500)
+			If _Sleep(500) Then Return
 			SetLog("waiting for trash #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgTrashPurge, 100, 250, 800, 470) Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
@@ -794,7 +794,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		Next
 		
 		For $i = 1 To 10
-			_Sleep(500)
+			If _Sleep(500) Then Return
 			SetLog("Waiting for trash Confirm OK #" & $i, $COLOR_ACTION)
 			If IsOKCancelPage() Then ExitLoop
 		Next
@@ -823,7 +823,7 @@ Func StartAndPurgeEvent($bTest = False)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting Purge [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]")
 
 		For $i = 1 To 10
-			_Sleep(500)
+			If _Sleep(500) Then Return
 			If $g_bChkClanGamesDebug Then SetLog("waiting for trash #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgTrashPurge, 100, 250, 800, 470) Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
@@ -836,7 +836,7 @@ Func StartAndPurgeEvent($bTest = False)
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If $g_bChkClanGamesDebug Then SetLog("Click Trash", $COLOR_INFO)
 			For $i = 1 To 10
-				_Sleep(500)
+				If _Sleep(500) Then Return
 				If IsOKCancelPage() Then ExitLoop
 				If $g_bChkClanGamesDebug Then SetLog("Waiting for trash Confirm OK", $COLOR_ACTION)
 			Next
