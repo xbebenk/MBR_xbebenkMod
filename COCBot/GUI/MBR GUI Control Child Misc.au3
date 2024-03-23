@@ -1111,13 +1111,6 @@ Func chkOnDoubleTrain()
 		GUICtrlSetState($g_hLblFillIncorrectSpellCombo, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbFillIncorrectSpellCombo, $GUI_DISABLE)
 	EndIf
-	
-	;If GUICtrlRead($g_hChkMMIgnoreIncorrectTroopCombo) = $GUI_CHECKED Then
-	;	$g_bPreciseArmy = False
-	;	GUICtrlSetState($g_hChkPreciseArmy, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
-	;Else
-	;	GUICtrlSetState($g_hChkPreciseArmy, $GUI_ENABLE)
-	;EndIf
 EndFunc ;==> chkOnDoubleTrain
 
 Func chkTrainPrev()
