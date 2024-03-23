@@ -463,11 +463,6 @@ Func chkDebugDisableZoomout()
 	SetDebugLog("DebugDisableZoomout " & ($g_bDebugDisableZoomout ? "enabled" : "disabled"))
 EndFunc   ;==>chkDebugDisableZoomout
 
-Func chkDebugDisableVillageCentering()
-	$g_bDebugDisableVillageCentering = (GUICtrlRead($g_hChkDebugDisableVillageCentering) = $GUI_CHECKED)
-	SetDebugLog("DebugDisableVillageCentering " & ($g_bDebugDisableVillageCentering ? "enabled" : "disabled"))
-EndFunc   ;==>chkDebugDisableVillageCentering
-
 Func chkDebugDeadbaseImage()
 	$g_bDebugDeadBaseImage = (GUICtrlRead($g_hChkDebugDeadbaseImage) = $GUI_CHECKED)
 	SetDebugLog("DebugDeadbaseImage " & ($g_bDebugDeadBaseImage ? "enabled" : "disabled"))
@@ -901,7 +896,7 @@ Func btnTestDeadBase()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
 
-	SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestDeadBase")
+	SearchZoomOut(False, True, "btnTestDeadBase")
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
 	SetLog("FindTownhall() = " & FindTownhall(True), $COLOR_INFO)
@@ -960,7 +955,7 @@ Func btnTestAttackCSV()
 	; reset village measures
 	setVillageOffset(0, 0, 1)
 	ConvertInternalExternArea()
-	;SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
+	
 	If Not CheckZoomOut("btnTestAttackCSV") Then
 		SetLog("CheckZoomOut failed", $COLOR_INFO)
 	EndIf
@@ -1001,10 +996,6 @@ Func btnTestGetLocationBuilding()
 	$g_bDebugBuildingPos = True
 	$g_bDebugSetlog = True
 
-	; reset village measures
-	setVillageOffset(0, 0, 1)
-	ConvertInternalExternArea()
-	;SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
 	If Not CheckZoomOut("btnTestGetLocationBuilding") Then
 		SetLog("CheckZoomOut failed", $COLOR_INFO)
 	EndIf
@@ -1245,7 +1236,7 @@ Func btnTestCleanYard()
 	BeginImageTest()
 	Local $result
 	SetLog("Testing CleanYard", $COLOR_INFO)
-	SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestCleanYard")
+	SearchZoomOut(False, True, "btnTestCleanYard")
 	$result = CleanYard()
 	$result = ((IsArray($result)) ? (_ArrayToString($result, ",")) : ($result))
 	If @error Then $result = "Error " & @error & ", " & @extended & ", "

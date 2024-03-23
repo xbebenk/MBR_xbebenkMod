@@ -307,6 +307,6 @@ Func getVillageCenteringCoord()
 	$aValue[0] = $aVillageCenteringCoord[$iRan][0]
 	$aValue[1] = $aVillageCenteringCoord[$iRan][1]
 	
-	If $g_bDebugSetLog Then SetDebugLog("aVillageCenteringCoord : [" & $aValue[0] & "," & $aValue[1] & "]")
+	If $g_bDebugSetLog Then SetLog("Village Centering Coord : [" & $aValue[0] & "," & $aValue[1] & "]")
 	Return $aValue
 EndFunc

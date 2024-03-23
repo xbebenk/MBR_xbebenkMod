@@ -219,7 +219,6 @@ Func InitializeControlVariables()
 	$oAlwaysEnabledControls($g_hChkDebugClick) = 1
 	$oAlwaysEnabledControls($g_hChkDebugFunc) = 1
 	$oAlwaysEnabledControls($g_hChkDebugDisableZoomout) = 1
-	$oAlwaysEnabledControls($g_hChkDebugDisableVillageCentering) = 1
 	$oAlwaysEnabledControls($g_hChkDebugDeadbaseImage) = 1
 	$oAlwaysEnabledControls($g_hChkDebugOCR) = 1
 	$oAlwaysEnabledControls($g_hChkDebugImageSave) = 1

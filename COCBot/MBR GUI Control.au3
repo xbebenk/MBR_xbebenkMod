@@ -82,7 +82,6 @@ Func InitializeMainGUI($bGuiModeUpdate = False)
 	If $g_bDevMode Then
 		GUICtrlSetState($g_hChkDebugFunc, $GUI_SHOW + $GUI_ENABLE)
 		GUICtrlSetState($g_hChkDebugDisableZoomout, $GUI_SHOW + $GUI_ENABLE)
-		GUICtrlSetState($g_hChkDebugDisableVillageCentering, $GUI_SHOW + $GUI_ENABLE)
 		GUICtrlSetState($g_hChkDebugDeadbaseImage, $GUI_SHOW + $GUI_ENABLE)
 		GUICtrlSetState($g_hChkDebugOCR, $GUI_SHOW + $GUI_ENABLE)
 		GUICtrlSetState($g_hChkDebugImageSave, $GUI_SHOW + $GUI_ENABLE)
@@ -541,8 +540,6 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			chkDebugFunc()
 		Case $g_hChkDebugDisableZoomout
 			chkDebugDisableZoomout()
-		Case $g_hChkDebugDisableVillageCentering
-			chkDebugDisableVillageCentering()
 		Case $g_hChkDebugDeadbaseImage
 			chkDebugDeadbaseImage()
 		Case $g_hChkDebugOCR
