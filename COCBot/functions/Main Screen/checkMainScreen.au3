@@ -126,30 +126,13 @@ EndFunc   ;==>checkChatTabPixel
 
 Func isOnMainVillage()
 	Local $bRet = False
-	Local $aPixelToCheck = $aIsMain
-	
-	$bRet = _checkMainScreenImage($aPixelToCheck)
-	If Not $bRet Then
-		SetDebugLog("Using Image to Check if isOnMainVillage")
-		If QuickMIS("BC1", $g_sImgInfo, 369, 3, 392, 15) Then $bRet = True
-	EndIf
+	$bRet = _checkMainScreenImage($aIsMain)
 	Return $bRet
 EndFunc
 
 Func isOnBuilderBase()
 	Local $bRet = False
-	Local $aPixelToCheck[2] = [$aIsOnBuilderBase, $aIsOnBuilderBase1]
-	
-	For $i In $aPixelToCheck
-		$bRet = _checkMainScreenImage($i)
-		If $bRet Then ExitLoop
-	Next
-	
-	If Not $bRet Then
-		SetDebugLog("Using Image to Check if isOnBuilderBase")
-		If QuickMIS("BC1", $g_sImgInfo, 435, 1, 462, 22) Then $bRet = True
-	EndIf
-	
+	$bRet = _checkMainScreenImage($aIsOnBuilderBase)
 	Return $bRet
 EndFunc
 

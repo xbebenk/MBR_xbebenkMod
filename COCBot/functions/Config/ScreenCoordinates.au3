@@ -20,10 +20,9 @@ Global $aiClickAwayRegionRight = [635, 5, 650, 20]
 Global $aCenterEnemyVillageClickDrag = [65, 545] ; Scroll village using this location in the water
 Global $aVillageCenteringCoord = [[750, 370], [636, 500], [777, 235]] ; Scroll village using this location : upper from setting button
 Global $aIsReloadError[4] = [457, 301, 0x33B5E5, 10] ; Pixel Search Check point For All Reload Button errors, except break ending
-Global $aIsMain[4] = [382, 5, 0xA7D7F1, 20] ; Main Screen, Builder Info Icon
-Global $aIsMainGrayed[4] = [382, 5, 0x546C79, 15] ; Main Screen, Builder Info Icon grayed
-Global $aIsOnBuilderBase[4] = [476, 17, 0xFEE4B9, 20] ; BuilderBase, Builder Info Icon
-Global $aIsOnBuilderBase1[4] = [466, 17, 0xFEE4B9, 20] ; BuilderBase, Builder Info Icon after attack (sc why ???) :((
+Global $aIsMain[4] = [824, 12, 0xDBDB4D, 20] ; Main Screen, Yellow Gold Resource Icon
+Global $aIsMainGrayed[4] = [824, 14, 0x80802D, 15] ; Main Screen, Yellow Grayed Gold Resource Icon
+Global $aIsOnBuilderBase[4] = [824, 12, 0x0D0D0D, 20] ; BuilderBase, Yellow Gold Resource Icon
 
 Global $aReloadButton[4] = [210, 385, 0x282828, 10] ; Reload Coc Button after Out of Sync, 860x780
 Global $aAttackButton[2] = [60, 620] ; Attack Button, Main Screen, 860x676
