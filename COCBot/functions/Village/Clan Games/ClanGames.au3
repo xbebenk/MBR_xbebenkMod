@@ -555,7 +555,6 @@ Func GetTimesAndScores()
 	; This Loop is just to check if the Score is changing , when you complete a previous events is necessary to take some time
 	For $i = 0 To 10
 		$sYourGameScore = getOcrYourCGScore(48, 560) ;  Read your Score
-		If $g_bChkClanGamesDebug Then SetLog("Your OCR score: " & $sYourGameScore)
 		$sYourGameScore = StringReplace($sYourGameScore, "#", "/")
 		$aiScoreLimit = StringSplit($sYourGameScore, "/", $STR_NOCOUNT)
 		If UBound($aiScoreLimit, 1) > 1 Then
