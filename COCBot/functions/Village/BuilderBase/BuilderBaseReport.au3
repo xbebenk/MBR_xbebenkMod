@@ -69,10 +69,10 @@ Func isBHMaxed()
 	
 	Local $aBuildingName, $bRet = False
 	ClickAway("Left")
-	_Sleep(1000)
+	If _Sleep(1000) Then Return
 	If QuickMIS("BC1", $g_sImgBuilderHall) Then ; Search for Builder Hall
 		Click($g_iQuickMISX, $g_iQuickMISY)
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		Local $aBuildingName = BuildingInfo(242, 472)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Builder Hall and max level
@@ -92,7 +92,7 @@ Func isBHMaxed()
 		; If Builder Hall cannot be found, try search for lab
 		If QuickMIS("BC1", $g_sImgStarLaboratory) Then 
 			Click($g_iQuickMISX + 5, $g_iQuickMISY + 5)
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			Local $aBuildingName = BuildingInfo(242, 472)
 			If $aBuildingName[0] = 2 Then
 				; Verify if is Star Laboratory and max level
@@ -122,11 +122,11 @@ Func isMegaTeslaMaxed()
 	
 	ClickAway("Left")
 	If $g_bisMegaTeslaMaxed = True Then Return True
-	_Sleep(1000)
+	If _Sleep(1000) Then Return
 	
 	If QuickMIS("BC1", $g_sImgMegaTesla) Then ;Search for Mega Tesla
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		Local $aBuildingName = BuildingInfo(242, 472)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Mega Tesla is MaxLevel
@@ -155,12 +155,12 @@ Func isBattleMachineMaxed()
 
 	ClickAway("Left")
 	If $g_bisBattleMachineMaxed = True Then Return True
-	_Sleep(1000)
+	If _Sleep(1000) Then Return
 	
 	If QuickMIS("BC1", $g_sImgBattleMachine) Then ;Search for Battle Machine
 		If $g_iQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 30
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		Local $aBuildingName = BuildingInfo(242, 472)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Mega Tesla is MaxLevel

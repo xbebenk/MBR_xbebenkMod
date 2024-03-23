@@ -200,7 +200,7 @@ Func SearchNewBuilding($bTest = False)
 				If StringInStr($New[$i][4], "Wall", 1) Then $Region = 1
 				If Not $ZoomedIn Then
 					ClickAway("Left") ;close builder menu
-					_Sleep(1000)
+					If _Sleep(1000) Then Return
 					If SearchGreenZoneBB($Region) Then
 						$ZoomedIn = True
 					Else
@@ -917,7 +917,7 @@ Func TPW($region = $greenZoneBB)
 			For $j = 1 To 4
 				SetLog("Try Placing Wall #" & $j, $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
-				_Sleep(1000)
+				If _Sleep(1000) Then Return
 				If IsGemOpen(True) Then
 					SetLog("Need Gem!", $COLOR_ERROR)
 					If QuickMIS("BC1", $g_sImgAutoUpgradeRedX, 80, 80, 780, 600) Then Click($g_iQuickMISX, $g_iQuickMISY)
@@ -948,7 +948,7 @@ Func TPW($region = $greenZoneBB)
 				$xstart = $g_iQuickMISX + 30
 				$ystart = $g_iQuickMISY + 50
 				ClickDrag($xstart, $ystart, $xstart + $DragX, $ystart + $DragY)
-				_Sleep(1500)
+				If _Sleep(1500) Then Return
 				Switch $region
 					Case "Left"
 						$xstart += 120

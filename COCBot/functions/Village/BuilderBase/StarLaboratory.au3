@@ -69,7 +69,7 @@ Func StarLaboratory($bTestRun = False)
 			$bWindowOpened = True
 			ExitLoop
 		EndIf
-		_Sleep(1000) ;add delay to wait lab window opened
+		If _Sleep(1000) Then Return ;add delay to wait lab window opened
 	Next	
 	
 	If Not $bWindowOpened Then 
