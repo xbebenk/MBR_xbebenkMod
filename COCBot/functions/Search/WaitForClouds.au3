@@ -14,7 +14,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func WaitForClouds()
-
+	If _Sleep(1000) Then Return
 	SetDebugLog("Begin WaitForClouds", $COLOR_DEBUG1)
 	$g_bCloudsActive = True
 	
@@ -25,6 +25,8 @@ Func WaitForClouds()
 	Local $hMinuteTimer = __TimerInit() ; initialize timer for tracking search time
 	
 	While Not _CheckPixel($aIsAttackPage, True) ; loop to wait for clouds to disappear
+		If Not $g_bRunState Then Return
+		
 		$iCount += 1
 		If IsProblemAffect() Then ; check for reload error messages -> restart exitLoop, reset search
 			resetAttackSearch()
@@ -64,7 +66,6 @@ Func WaitForClouds()
 				ExitLoop
 			EndIf
 		EndIf
-		If Not $g_bRunState Then ExitLoop
 		If _Sleep(500) Then Return
 	WEnd
 

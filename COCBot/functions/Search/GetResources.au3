@@ -23,10 +23,10 @@ Func GetResources($bLog = True, $pMatchMode = -1) ;Reads resources
 	SuspendAndroid()
 
 	Local $iCount = 0
-	While (getGoldVillageSearch(48, 76) = "") Or (getElixirVillageSearch(48, 104) = "")
+	While (getTrophyVillageSearch(48, 175) = "")
 		$iCount += 1
-		If _Sleep($DELAYGETRESOURCES3) Then Return
-		If $iCount >= 50 Or IsProblemAffect() Then ExitLoop ; Wait 50*150ms=7.5 seconds max to read resources
+		If _Sleep(200) Then Return
+		If $iCount >= 50 Or IsProblemAffect() Then ExitLoop ;10sec
 	WEnd
 
 	If _Sleep($DELAYRESPOND) Then Return
@@ -39,7 +39,7 @@ Func GetResources($bLog = True, $pMatchMode = -1) ;Reads resources
 		$g_iSearchTrophy = getTrophyVillageSearch(45, 174)
 	Else
 		$g_iSearchDark = "N/A"
-		$g_iSearchTrophy = getTrophyVillageSearch(48, 76 + 68)
+		$g_iSearchTrophy = getTrophyVillageSearch(48, 175)
 	EndIf
 
 	If $g_iSearchGold = $iSearchGold2 And $g_iSearchElixir = $iSearchElixir2 Then $iStuck += 1

@@ -65,8 +65,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 	EndIf
 
 	If _Sleep($DELAYVILLAGESEARCH1) Then Return
-	$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
-	checkAttackDisable($g_iTaBChkAttack, $Result) ;last check to see If TakeABreak msg on screen for fast PC from PrepareSearch click
+	;$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
+	;checkAttackDisable($g_iTaBChkAttack, $Result) ;last check to see If TakeABreak msg on screen for fast PC from PrepareSearch click
 	If $g_bRestart = True Then Return ; exit func
 	If Not ($g_bIsSearchLimit) Then
 		SetLogCentered("=", "=", $COLOR_INFO)
@@ -352,6 +352,9 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				ExitLoop
 			Else
 				SetLog("Wait to see Next Button #" & $i, $COLOR_ACTION)
+				If $i > 10 Then 
+					AndroidPageError("Village Search")
+				EndIf
 			EndIf
 			
 			If IsProblemAffect() Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
@@ -373,8 +376,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		Next
 
 		If _Sleep($DELAYRESPOND) Then Return
-		$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
-		checkAttackDisable($g_iTaBChkAttack, $Result) ; check to see If TakeABreak msg on screen after next click
+		;$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
+		;checkAttackDisable($g_iTaBChkAttack, $Result) ; check to see If TakeABreak msg on screen after next click
 		If $g_bRestart = True Then Return ; exit func
 
 		If isGemOpen(True) = True Then

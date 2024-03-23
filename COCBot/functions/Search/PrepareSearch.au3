@@ -177,7 +177,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		EndIf
 	EndIf
 
-	checkAttackDisable($g_iTaBChkAttack, $Result) ;See If TakeABreak msg on screen
+	;checkAttackDisable($g_iTaBChkAttack, $Result) ;See If TakeABreak msg on screen
 
 	SetDebugLog("PrepareSearch exit check $g_bRestart= " & $g_bRestart & ", $g_bOutOfGold= " & $g_bOutOfGold, $COLOR_DEBUG)
 
