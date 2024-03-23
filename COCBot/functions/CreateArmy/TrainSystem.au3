@@ -56,7 +56,7 @@ Func TrainSystem($bSkipCheckArmy = False)
 
 	EndGainCost("Train")
 
-	checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
+	;checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 EndFunc   ;==>TrainSystem
 
 Func TrainPreviousArmy($bCloseWindow = False, $bOnlyBoost = False)
@@ -499,7 +499,6 @@ EndFunc   ;==>IsSpellToBrew
 Func RemoveExtraTroops($toRemove)
 	Local $CounterToRemove = 0, $iResult = 0
 	; Army Window should be open and should be in Tab 'Army tab'
-
 	; 1 Means Removed Troops without Deleting Troops Queued
 	; 2 Means Removed Troops And Also Deleted Troops Queued
 	; 3 Means Didn't removed troop... Everything was well
@@ -511,21 +510,18 @@ Func RemoveExtraTroops($toRemove)
 	If ($g_bIgnoreIncorrectTroopCombo Or $g_bIgnoreIncorrectSpellCombo) And Not $g_bPreciseArmy Then Return 3
 	
 	If UBound($toRemove) > 0 Then ; If needed to remove troops
-
+		
 		; Check if Troops to remove are already in Train Tab Queue!! If was, Will Delete All Troops Queued Then Check Everything Again...
 		If DoWhatToTrainContainTroop($toRemove) And Not IsQueueEmpty("Troops", True, False) Then
 			SetLog("Clear troop queue before removing unexpected troops in army", $COLOR_INFO)
 			DeleteQueued("Troops")
-			$iResult = 2
 		EndIf
 
 		If DoWhatToTrainContainSpell($toRemove) And Not IsQueueEmpty("Spells", True, False) Then
 			SetLog("Clear spell queue before removing unexpected spells in army", $COLOR_INFO)
 			DeleteQueued("Spells")
-			$iResult = 2
 		EndIf
 
-		;If $iResult = 2 Then 
 		$toRemove = WhatToTrain(True) ; Check Everything Again...
 
 		Local $rGetSlotNumber = GetSlotNumber() ; Get all available Slot numbers with troops assigned on them
