@@ -210,10 +210,10 @@ Func ReturnfromDropTrophies($AttackLog = False)
 		SetDebugLog("Waiting Surrender button #" & $i, $COLOR_ACTION)
 		If IsAttackPage() Then
 			Click(65, 540) ;click surrender
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			ExitLoop
 		EndIf
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 	Next
 	Local $OKCancel = False
 	For $i = 1 To 10
@@ -244,7 +244,7 @@ Func ReturnfromDropTrophies($AttackLog = False)
 			EndIf
 			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			; sometimes 1st click is not closing, so try again
-			_Sleep(2000)
+			If _Sleep(2000) Then Return
 		Else 
 			ExitLoop
 		EndIf

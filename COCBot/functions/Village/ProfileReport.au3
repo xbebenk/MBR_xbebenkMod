@@ -74,7 +74,7 @@ Func ProfileReport()
 	While IsProfileWindowOpen()
 		$iCount += 1
 		Click(805, 100) ; Close Profile page
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		If IsMainPage() Then ExitLoop
 		If $iCount > 5 Then ExitLoop
 	Wend

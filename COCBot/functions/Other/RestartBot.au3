@@ -33,7 +33,7 @@ Func RestartBot($bCloseAndroid = True, $bAutostart = True)
 
 	If $bCloseAndroid Then
 		CloseAndroid("RestartBot")
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 	EndIf
 	
 	Local $sCurrentAccountName = $g_sProfileCurrentName

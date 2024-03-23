@@ -783,7 +783,7 @@ Func DoUpgrade($bTest = False)
 	EndIf
 
 	If $bHeroUpgrade And $g_bUseHeroBooks Then
-		_Sleep(500)
+		If _Sleep(500) Then Return
 		Local $HeroUpgradeTime = ConvertOCRTime("UseHeroBooks", $g_aUpgradeResourceCostDuration[2], False)
 		If $HeroUpgradeTime >= ($g_iHeroMinUpgradeTime * 1440) Then
 			SetLog("Hero Upgrade Time minutes: [" & $HeroUpgradeTime & "] " & $HeroUpgradeTime & " minutes", $COLOR_DEBUG)
@@ -1320,11 +1320,11 @@ Func CCTutorial()
 	For $i = 1 To 6
 		SetLog("Wait for Arrow For Travel to Clan Capital #" & $i, $COLOR_INFO)
 		ClickAway("Right")
-		_Sleep(3000)
+		If _Sleep(3000) Then Return
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 330, 320, 450, 400) Then
 			Click(400, 450)
 			SetLog("Going to Clan Capital", $COLOR_SUCCESS)
-			_Sleep(5000)
+			If _Sleep(5000) Then Return
 			ExitLoop ;arrow clicked now go to next step
 		EndIf
 		If $i > 1 And Not QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then Return
@@ -1335,11 +1335,11 @@ Func CCTutorial()
 		For $i = 1 To 5
 			SetLog("Wait for Arrow on CC Peak #" & $i, $COLOR_INFO)
 			ClickAway("Right")
-			_Sleep(3000)
+			If _Sleep(3000) Then Return
 			If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 330, 100, 450, 200) Then ;check clan capital map
 				Click($g_iQuickMISX, $g_iQuickMISY) ;click capital peak arrow
 				SetLog("Going to Capital Peak", $COLOR_SUCCESS)
-				_Sleep(10000)
+				If _Sleep(10000) Then Return
 				ExitLoop ;arrow clicked now go to next step
 			EndIf
 		Next
@@ -1350,14 +1350,14 @@ Func CCTutorial()
 		For $i = 1 To 5
 			SetLog("Wait for Map Button #" & $i, $COLOR_INFO)
 			ClickAway("Right")
-			_Sleep(3000)
+			If _Sleep(3000) Then Return
 			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 20, 620, 90, 660) Then
 				Click($g_iQuickMISX, $g_iQuickMISY) ;click map
 				SetLog("Going back to Clan Capital", $COLOR_SUCCESS)
-				_Sleep(5000)
+				If _Sleep(5000) Then Return
 				Click($g_iQuickMISX, $g_iQuickMISY) ;click return home
 				SetLog("Return Home", $COLOR_SUCCESS)
-				_Sleep(5000)
+				If _Sleep(5000) Then Return
 				ExitLoop ;map button clicked now go to next step
 			EndIf
 		Next
@@ -1367,10 +1367,10 @@ Func CCTutorial()
 	For $i = 1 To 8
 		SetLog("Wait for Arrow on CC Forge #" & $i, $COLOR_INFO)
 		ClickAway("Right")
-		_Sleep(3000)
+		If _Sleep(3000) Then Return
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then ;check arrow on Clan Capital forge
 			Click(420, 490) ;click CC Forge
-			_Sleep(3000)
+			If _Sleep(3000) Then Return
 			ExitLoop
 		EndIf
 	Next
@@ -1379,14 +1379,14 @@ Func CCTutorial()
 	For $i = 1 To 12
 		SetLog("Wait for Arrow on CC Forge Window #" & $i, $COLOR_INFO)
 		ClickAway("Right")
-		_Sleep(3000)
+		If _Sleep(3000) Then Return
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then
 			Click(420, 490) ;click CC Forge
-			_Sleep(3000)
+			If _Sleep(3000) Then Return
 		EndIf
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 125, 270, 225, 360) Then
 			Click(180, 375) ;click collect
-			_Sleep(3000)
+			If _Sleep(3000) Then Return
 			ExitLoop
 		EndIf
 	Next
@@ -1396,7 +1396,7 @@ Func CCTutorial()
 		SetLog("Wait for MainScreen #" & $i, $COLOR_INFO)
 		ClickAway("Right")
 		If _checkMainScreenImage($aIsMain) Then ExitLoop
-		_Sleep(3000)
+		If _Sleep(3000) Then Return
 	Next
 	ClickDrag(800, 420, 500, 420, 500)
 	ZoomOut()
@@ -1560,7 +1560,7 @@ Func UseHeroBooks()
 	If IsArray($HeroBooks) And UBound($HeroBooks) = 2 Then
 		SetLog("Use Hero Books to Complete Now this Hero Upgrade", $COLOR_INFO)
 		Click($HeroBooks[0], $HeroBooks[1])
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		If QuickMis("BC1", $g_sImgGeneralCloseButton, 600, 210, 650, 255) Then
 			Click(430, 410)
 		EndIf
@@ -1600,7 +1600,7 @@ Func PlaceNewBuilding($x, $y, $bTest = False, $isWall = False, $BuildingName = "
 	Click($x, $y); click on upgrade window
 	For $i = 1 To 5
 		If IsFullScreenWindow() Then
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			ExitLoop
 		EndIf
 	Next

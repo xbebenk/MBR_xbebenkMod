@@ -82,7 +82,7 @@ Func CleanYard($bTest = False)
 				If Not isInsideDiamondXY($x, $y, True) Then ContinueLoop
 				SetLog($Filename & " found [" & $x & "," & $y & "]", $COLOR_SUCCESS)
 				Click($x, $y, 1, 0, "CleanYard") ;click CleanYard
-				_Sleep(1000)
+				If _Sleep(1000) Then Return
 				If Not ClickRemoveObstacle($bTest) Then ContinueLoop
 				CleanYardCheckBuilder($bTest)
 				If $g_iFreeBuilderCount = 0 Then _SleepStatus(12000)
@@ -136,7 +136,7 @@ Func RemoveGembox()
 			Return False
 		EndIf
 		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "#0430")
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		ClickRemoveObstacle()
 		ClickAway()
 		SetLog("Removing GemBox", $COLOR_SUCCESS)

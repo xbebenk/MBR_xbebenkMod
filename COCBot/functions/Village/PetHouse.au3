@@ -70,7 +70,7 @@ Func PetHouse($test = False)
 		EndIf
 	Else
 		PureClickP($g_aiPetHousePos)
-		_Sleep(500)
+		If _Sleep(500) Then Return
 	EndIf
 	
 	Local $BuildingName = BuildingInfo(242, 473)
@@ -103,7 +103,7 @@ Func PetHouse($test = False)
 	
 	Local $PawFound = False
 	For $i = 1 To 5
-		_Sleep(500)
+		If _Sleep(500) Then Return
 		If FindPetsButton() Then
 			$PawFound = True
 			ExitLoop
@@ -113,7 +113,7 @@ Func PetHouse($test = False)
 	If Not $PawFound Then Return
 
 	For $i = 1 To 5
-		_Sleep(500)
+		If _Sleep(500) Then Return
 		If IsPetHousePage() Then
 			ExitLoop
 		Else

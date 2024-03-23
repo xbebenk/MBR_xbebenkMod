@@ -345,10 +345,10 @@ Func aaaaaa()
 				If $iSBarbCount < 1 Then ExitLoop
 				Click($aDP[$j][1], $aDP[$j][2], 2, 0, "#0181") ;Drop SBarb
 				SetLog("Deploying 2 " & $g_asTroopNames[$g_avAttackTroops[$iIndex][0]] & " on " & $aDP[$j][0] & " [" & $aDP[$j][1] & "," & $aDP[$j][2] & "]", $COLOR_SUCCESS)
-				_Sleep(500) ;add small delay
+				If _Sleep(500) Then Return ;add small delay
 				$iSBarbCount -= 2
 			Next
-			_Sleep(15000) ;just add delay after deploy SBarb
+			If _Sleep(15000) Then Return ;just add delay after deploy SBarb
 		Else
 			SetLog("No Super Barbarian found", $COLOR_ERROR)
 			SetLog("Fallback to normal DropTrophy", $COLOR_SUCCESS)
@@ -372,7 +372,7 @@ Func aaaaaa()
 		ReturnfromDropTrophies(True)
 		If OpenArmyOverview("DropTrophy") Then
 			TrainPreviousArmy(True)
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 		EndIf
 		Return True
 	EndIf

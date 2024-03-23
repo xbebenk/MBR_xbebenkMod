@@ -1405,7 +1405,7 @@ Func WaitForRunningVMS($WaitInSec = 120, $hTimer = 0)
 		$running = StringInStr($cmdOutput, """" & $g_sAndroidInstance & """") > 0
 		If $running = True Then ExitLoop
 		If $hTimer <> 0 Then _StatusUpdateTime($hTimer)
-		_Sleep(3000) ; Sleep 3 Seconds
+		If _Sleep(3000) Then Return ; Sleep 3 Seconds
 		If __TimerDiff($hMyTimer) > $WaitInSec * 1000 Then ; if no device available in 4 minutes, Android/PC has major issue so exit
 			SetLog("Serious error has occurred, please restart PC and try again", $COLOR_ERROR)
 			SetLog($g_sAndroidEmulator & " refuses to load, waited " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds for boot completed", $COLOR_ERROR)
@@ -2775,7 +2775,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			EndIf
 			If $iRetryCount < 10 Then
 				SetDebugLog("ADB retry screencap in 1000 ms. (restarting ADB session)", $COLOR_ACTION)
-				_Sleep(1000)
+				If _Sleep(1000) Then Return
 				AndroidAdbTerminateShellInstance()
 				AndroidAdbLaunchShellInstance($wasRunState)
 				Return AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount + 1)
@@ -2850,7 +2850,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			; problem creating Bitmap
 			If $iRetryCount < 10 Then
 				SetDebugLog("ADB retry screencap in 1000 ms. (restarting ADB session)", $COLOR_ACTION)
-				_Sleep(1000)
+				If _Sleep(1000) Then Return
 				AndroidAdbTerminateShellInstance()
 				AndroidAdbLaunchShellInstance($wasRunState)
 				Return AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount + 1)
@@ -3420,7 +3420,7 @@ Func _AndroidFastClick($x, $y, $times = 1, $speed = 0, $checkProblemAffect = Tru
 		If $iRetryCount < 10 Then
 			SetError(0, 0, 0)
 			SetDebugLog("ADB retry sending mouse click in 1000 ms. (restarting ADB session)", $COLOR_ACTION)
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			AndroidAdbTerminateShellInstance()
 			AndroidAdbLaunchShellInstance($wasRunState)
 			Return AndroidFastClick($x, $y, $times, $speed, $checkProblemAffect, $iRetryCount + 1)
@@ -4713,7 +4713,7 @@ Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = 
 	Local $iFiles = UBound($aNewFiles) - 1
 	Local $iFilesPushed = 0
 
-	_Sleep(1000)
+	If _Sleep(1000) Then Return
 	; use ADB push to transfer files
 	If $g_bPullPushSharedPrefsAbdCommand Then
 		$cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " push """ & $g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs"" /data/data/" & $g_sAndroidGamePackage & "/shared_prefs", $process_killed)
@@ -4827,7 +4827,7 @@ Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = 
 		$g_PushedSharedPrefsProfile = $sProfile
 		$g_PushedSharedPrefsProfile_Timer = __TimerInit()
 		If $g_bUpdateSharedPrefs And $g_iAndroidZoomoutMode = 4 Then $g_bAndroidZoomoutModeFallback = True
-		_Sleep(3000)
+		If _Sleep(3000) Then Return
 	Else
 		; something went wrong
 		SetLog("Error pushing shared_prefs of profile " & $sProfile, $COLOR_ERROR)

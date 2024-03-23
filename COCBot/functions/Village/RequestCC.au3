@@ -94,7 +94,7 @@ Func _makerequest($x, $y, $bTest)
 			$RequestWindowOpen = True
 			ExitLoop
 		EndIf
-		_Sleep(250)
+		If _Sleep(250) Then Return
 	Next
 	
 	If $RequestWindowOpen Then 
@@ -135,7 +135,7 @@ Func _makerequest($x, $y, $bTest)
 				SetDebugLog("Send Button Is gone!!!", $COLOR_SUCCESS)
 				ExitLoop
 			EndIf
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 		Next
 		$g_bCanRequestCC = False
 	Else

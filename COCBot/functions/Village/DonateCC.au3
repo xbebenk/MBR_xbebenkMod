@@ -212,7 +212,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	;Scroll Up
 	While WaitforPixel(354, 77, 355, 78, "60A618", 6, 1)
 		Click(355, 77, 1, 0, "Click Green Scroll Button")
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		$bDonate = True
 	Wend
 	

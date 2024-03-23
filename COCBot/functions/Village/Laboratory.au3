@@ -308,7 +308,7 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $bDebug = False)
 		Return True ; return true as if we really started an upgrade
 	Else
 		Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		If Not isGemOpen(True) Then ; check for gem window
 			ChkLabUpgradeInProgress($bDebug, $name)
 			; success
@@ -636,7 +636,7 @@ Func AutoLocateLab()
 		Else
 			Click($g_iQuickMISX, $g_iQuickMISY)
 		EndIf
-		_Sleep(500)
+		If _Sleep(500) Then Return
 		Local $BuildingInfo = BuildingInfo(240, 472)
 		If StringInStr($BuildingInfo[1], "Lab") Then
 			If $g_iQuickMISName = "Research" Then

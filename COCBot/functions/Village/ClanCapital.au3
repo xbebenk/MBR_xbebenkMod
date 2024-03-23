@@ -11,16 +11,16 @@ Func CollectCCGold($bTest = False)
 	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 250, 520, 400, 670) Then
 		SetLog("Tutorial Arrow detected, click it!", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY + 10)
-		_Sleep(8000)
+		If _Sleep(8000) Then Return
 		For $i = 1 To 3
 			SetLog("Waiting Tutorial and Forge window open #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
 			EndIf
-			_Sleep(3000)
+			If _Sleep(3000) Then Return
 			If QuickMis("BC1", $g_sImgGeneralCloseButton, 710, 160, 760, 205) Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
-				_Sleep(2000)
+				If _Sleep(2000) Then Return
 				ExitLoop
 			EndIf
 		Next
@@ -35,7 +35,7 @@ Func CollectCCGold($bTest = False)
 				$bWindowOpened = True
 				ExitLoop
 			EndIf
-			_Sleep(500)
+			If _Sleep(500) Then Return
 		Next
 
 		If $bWindowOpened Then
@@ -48,10 +48,10 @@ Func CollectCCGold($bTest = False)
 					Else
 						SetLog("Test Only, Should Click on [" & $aCollect[$i][1] & "," & $aCollect[$i][2] & "]")
 					EndIf
-					_Sleep(500)
+					If _Sleep(500) Then Return
 				Next
 			EndIf
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 
 			If $iBuilderToUse > 3 Then
 				SetLog("Checking 4th Builder forge result", $COLOR_INFO)
@@ -65,7 +65,7 @@ Func CollectCCGold($bTest = False)
 						Else
 							SetLog("Test Only, Should Click on [" & $aCollect[$i][1] & "," & $aCollect[$i][2] & "]")
 						EndIf
-						_Sleep(500)
+						If _Sleep(500) Then Return
 					Next
 				EndIf
 			EndIf
@@ -130,7 +130,7 @@ Func StartRaidWeekend()
 		Click(800, 620) ;Click start Raid Button
 		Local $bWindowOpened = False
 		For $i = 1 To 5
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			SetDebugLog("Waiting for Start Raid Window #" & $i, $COLOR_ACTION)
 			If QuickMis("BC1", $g_sImgGeneralCloseButton, 645, 255, 700, 310 ) Then
 				$bWindowOpened = True
@@ -145,7 +145,7 @@ Func StartRaidWeekend()
 			If _ColorCheck(_GetPixelColor(433, 543, True), Hex(0xFF8D29, 6), 20) Then ;Check Orange button on StartRaid Window
 				SetLog("Starting Raid Weekend", $COLOR_INFO)
 				Click(430, 520) ;Click Start Raid Button
-				_Sleep(1000)
+				If _Sleep(1000) Then Return
 				ClickAway("Right")
 				SwitchToMainVillage("Start Weekend Raid")
 				SwitchToClanCapital()
@@ -168,7 +168,7 @@ Func OpenForgeWindow()
 				$bRet = True
 				ExitLoop
 			EndIf
-			_Sleep(600)
+			If _Sleep(600) Then Return
 		Next
 	EndIf
 	Return $bRet
@@ -182,7 +182,7 @@ Func WaitStartCraftWindow()
 			$bRet = True
 			ExitLoop
 		EndIf
-		_Sleep(600)
+		If _Sleep(600) Then Return
 	Next
 	If Not $bRet Then SetLog("StartCraft Window does not open", $COLOR_ERROR)
 	Return $bRet
@@ -281,7 +281,7 @@ Func ForgeClanCapitalGold($bTest = False)
 		For $j = 1 To $iBuilderToAssign
 			SetDebugLog("Proceed with builder #" & $j)
 			Click($aCraft[$j-1][1], $aCraft[$j-1][2])
-			_Sleep(500)
+			If _Sleep(500) Then Return
 			If Not WaitStartCraftWindow() Then
 				ClickAway("Right")
 				Return
@@ -290,7 +290,7 @@ Func ForgeClanCapitalGold($bTest = False)
 				If $aForgeType[$i] = True Then ;check if ForgeType Enabled
 					SetLog("Try Forge using " & $aResource[$i][0], $COLOR_INFO)
 					Click($aResource[$i][1], 275)
-					_Sleep(1000)
+					If _Sleep(1000) Then Return
 					Local $cost = getOcrAndCapture("coc-forge", 240, 350, 160, 25, True)
 					Local $gain = getOcrAndCapture("coc-forge", 528, 365, 100, 25, True)
 					If $cost = "" Then
@@ -315,19 +315,19 @@ Func ForgeClanCapitalGold($bTest = False)
 					If Not $bTest Then
 						Click(430, 450)
 						SetLog("Succes Forge with " & $aResource[$i][0] & ", will gain " & $gain & " Capital Gold", $COLOR_SUCCESS)
-						_Sleep(1000)
+						If _Sleep(1000) Then Return
 						ExitLoop
 					Else
 						SetLog("Only Test, should click on [430,450]", $COLOR_INFO)
 						ClickAway("Right")
 					EndIf
 				EndIf
-				_Sleep(1000)
+				If _Sleep(1000) Then Return
 				If Not $g_bRunState Then Return
 			Next
 		Next
 	EndIf
-	_Sleep(1000)
+	If _Sleep(1000) Then Return
 	ClickAway("Right")
 EndFunc
 
@@ -341,7 +341,7 @@ Func SwitchToClanCapital($bTest = False)
 			If IsProfileWindowOpen("SwitchToClanCapital") Then ;Next Raid Window
 				SetLog("Found Next Raid Window covering map, close it!", $COLOR_INFO)
 				Click(806, 98) ;Close Button
-				_Sleep(5000)
+				If _Sleep(5000) Then Return
 				SwitchToCapitalMain()
 			EndIf
 			If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
@@ -367,7 +367,7 @@ Func SwitchToCapitalMain()
 		If QuickMIS("BC1", $g_sImgCCMap, 15, 610, 115, 670) Then
 			If $g_iQuickMISName = "MapButton" Then
 				Click(60, 610) ;Click Map
-				_Sleep(3000)
+				If _Sleep(3000) Then Return
 			EndIf
 		EndIf
 		If QuickMIS("BC1", $g_sImgCCMap, 15, 610, 115, 670) Then
@@ -388,15 +388,15 @@ Func SwitchToMainVillage($caller = "Default")
 	For $i = 1 To 10
 		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
 			Click(60, 610) ;Click ReturnHome/Map
-			_Sleep(2000)
+			If _Sleep(2000) Then Return
 		EndIf
 		If QuickMis("BC1", $g_sImgGeneralCloseButton, 700, 120, 750, 160) Then ; check if we have window covering map, close it!
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			SetLog("Found a window covering map, close it!", $COLOR_INFO)
-			_Sleep(2000)
+			If _Sleep(2000) Then Return
 			SwitchToCapitalMain()
 		EndIf
-		_Sleep(800)
+		If _Sleep(800) Then Return
 		If isOnMainVillage() Then
 			$bRet = True
 			ExitLoop
@@ -410,7 +410,7 @@ Func WaitForMap($sMapName = "Capital Peak")
 	Local $bRet
 	For $i = 1 To 10
 		SetDebugLog("Waiting for " & $sMapName & "#" & $i, $COLOR_ACTION)
-		_Sleep(2000)
+		If _Sleep(2000) Then Return
 		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ExitLoop
 	Next
 	Local $aMapName = StringSplit($sMapName, " ", $STR_NOCOUNT)
@@ -475,7 +475,7 @@ Func ClickCCBuilder()
 	If Not $bRet Then
 		If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 			If IsCCBuilderMenuOpen() Then $bRet = True
 		EndIf
 	EndIf
@@ -567,19 +567,19 @@ Func SkipChat($WaitFor = "UpgradeButton")
 			EndSwitch
 			Click($g_iQuickMISX + 100, $g_iQuickMISY)
 			SetLog("Skip chat #" & $y, $COLOR_INFO)
-			_Sleep(5000)
+			If _Sleep(5000) Then Return
 		Else
 			If _GetPixelColor(340, 484, 1) = "FFFFFF" Then
 				Click(340, 484) ;check if we have white chat balloon tips, click it
 				SetLog("Skip chat #" & $y, $COLOR_INFO)
-				_Sleep(5000)
+				If _Sleep(5000) Then Return
 			EndIf
 			If $y > 5 Then
 				SetLog("Seem's there is no tutorial chat, continue", $COLOR_INFO)
 				ExitLoop
 			EndIf
 		EndIf
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 	Next
 EndFunc
 
@@ -644,7 +644,7 @@ Func AutoUpgradeCC($bTest = False)
 	If Not $g_bRunState Then Return
 	Local $bUpgradeFound = True ;lets assume there is upgrade in progress exists
 	If ClickCCBuilder() Then
-		_Sleep(1000)
+		If _Sleep(1000) Then Return
 		Local $Text = getOcrAndCapture("coc-buildermenu-capital", 345, 81, 100, 25)
 		If StringInStr($Text, "No") Then
 			SetLog("No Upgrades in progress", $COLOR_INFO)
@@ -655,7 +655,7 @@ Func AutoUpgradeCC($bTest = False)
 		SwitchToMainVillage("Failed Open Builder Menu")
 		Return
 	EndIf
-	_Sleep(500)
+	If _Sleep(500) Then Return
 	If $bUpgradeFound Then
 		SetLog("Checking Upgrade From Capital Map", $COLOR_INFO)
 		Local $aUpgrade = FindCCExistingUpgrade() ;Find on Capital Map, should only find currently on progress building
@@ -663,7 +663,7 @@ Func AutoUpgradeCC($bTest = False)
 			For $i = 0 To UBound($aUpgrade) - 1
 				SetDebugLog("CCExistingUpgrade: " & $aUpgrade[$i][0])
 				Click($aUpgrade[$i][1], $aUpgrade[$i][2]) ;click building on builder menu list
-				_Sleep(2000)
+				If _Sleep(2000) Then Return
 				$aRet = WaitUpgradeButtonCC()
 				If Not $aRet[0] Then
 					SetLog("Upgrade Button Not Found", $COLOR_ERROR)
@@ -677,12 +677,12 @@ Func AutoUpgradeCC($bTest = False)
 					EndIf
 					Local $BuildingName = getOcrAndCapture("coc-build", 200, 515, 400, 30)
 					Click($aRet[1], $aRet[2]) ;click upgrade Button
-					_Sleep(1000)
+					If _Sleep(1000) Then Return
 					If Not WaitUpgradeWindowCC() Then
 						SwitchToMainVillage("No Upgrade Window")
 						Return
 					EndIf
-					_Sleep(1000)
+					If _Sleep(1000) Then Return
 					Local $cost = getOcrAndCapture("coc-ccgold", 630, 574, 120, 25, True)
 					If Not $bTest Then
 						Click(700, 585) ;Click Contribute
@@ -695,7 +695,7 @@ Func AutoUpgradeCC($bTest = False)
 						SwitchToMainVillage("Only Test")
 						Return
 					EndIf
-					_Sleep(500)
+					If _Sleep(500) Then Return
 				EndIf
 				ExitLoop ;just do 1 upgrade, next upgrade will do on next attempt (cycle)
 			Next
@@ -745,7 +745,7 @@ Func AutoUpgradeCC($bTest = False)
 							EndIf
 							Local $BuildingName = StringReplace(getOcrAndCapture("coc-build", 200, 515, 400, 30, True), "-", "")
 							Click($aRet[1], $aRet[2]) ;click upgrade Button
-							_Sleep(1000)
+							If _Sleep(1000) Then Return
 							If Not WaitUpgradeWindowCC() Then
 								SwitchToMainVillage("No Upgrade Window")
 								Return
@@ -760,9 +760,9 @@ Func AutoUpgradeCC($bTest = False)
 								AutoUpgradeCCLog($BuildingName, $cost)
 								ClickAway("Right")
 							EndIf
-							_Sleep(500)
+							If _Sleep(500) Then Return
 							ClickAway("Right")
-							_Sleep(1000)
+							If _Sleep(1000) Then Return
 						EndIf
 						ClanCapitalReport(False)
 						If Number($g_iLootCCGold) = 0 Then
