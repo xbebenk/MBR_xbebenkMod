@@ -215,17 +215,17 @@ Func GetBlueStacks5BackgroundMode()
 	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
 	Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
 	Local $iLineCount = @extended
-	Local $GlRenderMode = "dx"
+	Local $GLRenderMode = "dx"
 	For $i = 0 To $iLineCount - 1
 		If StringInStr($__Bluestacks5Conf[$i], "bst.instance." & $g_sAndroidInstance & ".graphics_renderer") Then
-			$GlRenderMode = StringRegExp($__Bluestacks5Conf[$i], '=\"(.+)\"', $STR_REGEXPARRAYMATCH)
+			$GLRenderMode = StringRegExp($__Bluestacks5Conf[$i], '=\"(.+)\"', $STR_REGEXPARRAYMATCH)
 			ExitLoop
 		EndIf
 	Next
 	
-	If IsArray($GlRenderMode) Then
-		SetDebugLog("GlRenderMode = " & $GlRenderMode[0])
-		Switch $GlRenderMode[0]
+	If IsArray($GLRenderMode) Then
+		SetDebugLog("GLRenderMode = " & $GLRenderMode[0])
+		Switch $GLRenderMode[0]
 			Case "dx"
 				; DirectX
 				Return $g_iAndroidBackgroundModeDirectX
@@ -233,7 +233,7 @@ Func GetBlueStacks5BackgroundMode()
 				; OpenGL
 				Return $g_iAndroidBackgroundModeOpenGL
 			Case Else
-				SetLog($g_sAndroidEmulator & " unsupported render mode " & $GlRenderMode, $COLOR_WARNING)
+				SetLog($g_sAndroidEmulator & " unsupported render mode " & $GLRenderMode, $COLOR_WARNING)
 				Return 0
 		EndSwitch
 	EndIf

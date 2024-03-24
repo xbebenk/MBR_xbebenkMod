@@ -450,8 +450,8 @@ EndFunc   ;==>GetBlueStacksBackgroundMode
 
 Func GetBlueStacks2BackgroundMode()
 	; check if BlueStacks 2 is running in OpenGL mode
-	Local $GlRenderMode = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\Guests\" & $g_sAndroidInstance & "\Config\", "GlRenderMode")
-	Switch $GlRenderMode
+	Local $GLRenderMode = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks\Guests\" & $g_sAndroidInstance & "\Config\", "GlRenderMode")
+	Switch $GLRenderMode
 		Case 4
 			; DirectX
 			Return $g_iAndroidBackgroundModeDirectX
@@ -459,7 +459,7 @@ Func GetBlueStacks2BackgroundMode()
 			; OpenGL
 			Return $g_iAndroidBackgroundModeOpenGL
 		Case Else
-			SetLog($g_sAndroidEmulator & " unsupported render mode " & $GlRenderMode, $COLOR_WARNING)
+			SetLog($g_sAndroidEmulator & " unsupported render mode " & $GLRenderMode, $COLOR_WARNING)
 			Return 0
 	EndSwitch
 EndFunc   ;==>GetBlueStacks2BackgroundMode

@@ -86,11 +86,12 @@ EndFunc   ;==>_checkMainScreen
 
 Func _checkMainScreenImage($aPixelToCheck)
 	Local $bRet = False, $bBuilderInfo = False, $bChatTab = False
+	If Execute("Get" & $g_sAndroidEmulator & "BackgroundMode()") = 2 Then $aPixelToCheck[0] += 1
 	$bChatTab = checkChatTabPixel()
-	$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage")
+	$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreen")
 	
 	$bRet = $bChatTab And $bBuilderInfo
-	If $g_bDebugSetLog Then SetLog("PixelToCheck = " & _ArrayToString($aPixelToCheck), $COLOR_ACTION)
+	If $g_bDebugSetLog Then SetLog("PixelToCheck = " & $aPixelToCheck[0] & "," & $aPixelToCheck[1] & " exp:" & Hex($aPixelToCheck[2], 6) & ", tolerance:" & $aPixelToCheck[3] , $COLOR_ACTION)
 	If $g_bDebugSetLog Then SetLog("PixelCheck result : " & ($bRet ? "succeed" : "failed"), $COLOR_ACTION)
 	
 	If Not $bRet Then

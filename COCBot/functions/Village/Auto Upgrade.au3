@@ -1395,7 +1395,7 @@ Func CCTutorial()
 	For $i = 1 To 10
 		SetLog("Wait for MainScreen #" & $i, $COLOR_INFO)
 		ClickAway("Right")
-		If _checkMainScreenImage($aIsMain) Then ExitLoop
+		If isOnMainVillage() Then ExitLoop
 		If _Sleep(3000) Then Return
 	Next
 	ClickDrag(800, 420, 500, 420, 500)
