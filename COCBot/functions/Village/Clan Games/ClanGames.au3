@@ -168,7 +168,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			
 			; Select and Start EVENT
 			$sEventName = $aAllEvent[$i][0]
-			If Not QuickMIS("BC1", $sTempPath & "Selected\", $aAllEvent[$i][1] - 60, $aAllEvent[$i][2] - 60, $aAllEvent[$i][1] + 60, $aAllEvent[$i][2] + 60, True) Then
+			If Not QuickMIS("BFI", $sTempPath & "Selected\" & $aAllEvent[$i][0] & "*", $aAllEvent[$i][1] - 60, $aAllEvent[$i][2] - 60, $aAllEvent[$i][1] + 70, $aAllEvent[$i][2] + 70) Then
 				SetLog($sEventName & " not found on previous location detected", $COLOR_ERROR)
 				SetLog("Maybe event tile changed, Looking Next Event...", $COLOR_INFO)
 				ContinueLoop
@@ -326,6 +326,7 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 	EndIf
 EndFunc ;==>ClanGameImageCopy
 
+;Get Difficulty
 Func GetCGDiff($sEventName)
 	If $sEventName = "" Then Return 0
 	Local $aEvent = StringSplit($sEventName, "-", $STR_NOCOUNT)
@@ -390,43 +391,53 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False)
 	Local $aEvent, $aReturn[0][7]
 	Local $aX[4] = [295, 427, 561, 696]
 	Local $aY[2] = [167, 336]
-
-	If Not $useBC1 Then
-		For $y = 0 To Ubound($aY) - 1
-			For $x = 0 To Ubound($aX) - 1
-				If Not $g_bRunState Then Return
-				Local $hITimer = TimerInit()
-				$aEvent = QuickMIS("CNX", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 85, $aY[$y] + 75)
-				If IsArray($aEvent) And UBound($aEvent) > 0 Then
-					If $g_bChkClanGamesDebug Then Setlog("Benchmark Search on Slot: (in " & Round(TimerDiff($hITimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
-					Local $IsBBEvent = (IsBBChallenge($aEvent[0][1], $aEvent[0][2]) ? "CGBB" : "CGMain")
-					If checkEventWithShareImage($IsBBEvent, $aEvent[0][0]) Then ContinueLoop
-					ClanGameImageCopy($sImagePath, $sTempPath, "Selected", $aEvent[0][0])
-					Local $iDiff = GetCGDiff($aEvent[0][0])
-					_ArrayAdd($aReturn, $aEvent[0][0] & "|" & $aEvent[0][1] & "|" & $aEvent[0][2] & "|" & $iDiff & "|" & 0 & "|" & $IsBBEvent)
-				EndIf
+	
+	For $i = 1 To 2
+		If Not $useBC1 Then
+			For $y = 0 To Ubound($aY) - 1
+				For $x = 0 To Ubound($aX) - 1
+					If Not $g_bRunState Then Return
+					Local $hITimer = TimerInit()
+					$aEvent = QuickMIS("CNX", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 95, $aY[$y] + 95)
+					If IsArray($aEvent) And UBound($aEvent) > 0 Then
+						If $g_bChkClanGamesDebug Then Setlog("Benchmark Search on Slot: (in " & Round(TimerDiff($hITimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
+						Local $IsBBEvent = (IsBBChallenge($aEvent[0][1], $aEvent[0][2]) ? "CGBB" : "CGMain")
+						If checkEventWithShareImage($IsBBEvent, $aEvent[0][0]) Then ContinueLoop
+						ClanGameImageCopy($sImagePath, $sTempPath, "Selected", $aEvent[0][0])
+						Local $iDiff = GetCGDiff($aEvent[0][0])
+						_ArrayAdd($aReturn, $aEvent[0][0] & "|" & $aEvent[0][1] & "|" & $aEvent[0][2] & "|" & $iDiff & "|" & 0 & "|" & $IsBBEvent)
+					EndIf
+				Next
 			Next
-		Next
-	Else
-		For $y = 0 To Ubound($aY) - 1
-			For $x = 0 To Ubound($aX) - 1
-				If Not $g_bRunState Then Return
-				Local $hITimer = TimerInit()
-				If QuickMIS("BC1", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 85, $aY[$y] + 75) Then
-					If $g_bChkClanGamesDebug Then Setlog("Benchmark Search on Slot: (in " & Round(TimerDiff($hITimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
-					Local $BC1x = $g_iQuickMISX, $BC1y = $g_iQuickMISY
-					Local $ChallengeEvent = $g_iQuickMISName
-					Local $IsBBEvent = (IsBBChallenge($g_iQuickMISX, $g_iQuickMISY) ? "CGBB" : "CGMain")
-					If checkEventWithShareImage($IsBBEvent, $ChallengeEvent) Then ContinueLoop
-					ClanGameImageCopy($sImagePath, $sTempPath, "Selected", $ChallengeEvent)
-					Local $iDiff = GetCGDiff($ChallengeEvent)
-					_ArrayAdd($aReturn, $ChallengeEvent & "|" & $BC1x & "|" & $BC1y & "|" & $iDiff & "|" & 0 & "|" & $IsBBEvent)
-				EndIf
+		Else
+			For $y = 0 To Ubound($aY) - 1
+				For $x = 0 To Ubound($aX) - 1
+					If Not $g_bRunState Then Return
+					Local $hITimer = TimerInit()
+					If QuickMIS("BC1", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 95, $aY[$y] + 95) Then
+						If $g_bChkClanGamesDebug Then Setlog("Benchmark Search on Slot: (in " & Round(TimerDiff($hITimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
+						Local $BC1x = $g_iQuickMISX, $BC1y = $g_iQuickMISY
+						Local $ChallengeEvent = $g_iQuickMISName
+						Local $IsBBEvent = (IsBBChallenge($g_iQuickMISX, $g_iQuickMISY) ? "CGBB" : "CGMain")
+						If checkEventWithShareImage($IsBBEvent, $ChallengeEvent) Then ContinueLoop
+						ClanGameImageCopy($sImagePath, $sTempPath, "Selected", $ChallengeEvent)
+						Local $iDiff = GetCGDiff($ChallengeEvent)
+						_ArrayAdd($aReturn, $ChallengeEvent & "|" & $BC1x & "|" & $BC1y & "|" & $iDiff & "|" & 0 & "|" & $IsBBEvent)
+					EndIf
+				Next
 			Next
-		Next
-	EndIf
-	If $g_bChkClanGamesDebug Then Setlog("AllEvents: " & @CRLF & _ArrayToString($aReturn), $COLOR_DEBUG2)
-	If $g_bChkClanGamesDebug Then Setlog("Benchmark Search Event: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
+		EndIf
+		If $g_bChkClanGamesDebug Then Setlog("AllEvents: " & @CRLF & _ArrayToString($aReturn), $COLOR_DEBUG2)
+		If $g_bChkClanGamesDebug Then Setlog("Benchmark Search Event: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
+	
+		If UBound($aReturn) = 0 And $i = 1 Then 
+			ClickDrag(810, 320, 810, 165, 500)
+			If _Sleep(1000) Then Return
+			ContinueLoop
+		Else
+			ExitLoop
+		EndIf
+	Next
 	
 	SelectEvent($aReturn)
 	Return $aReturn
@@ -477,11 +488,11 @@ Func SelectEvent(ByRef $aSelectChallenges)
 	$aSelectChallenges = $aTmp
 	
 	If $g_bChkClanGamesDebug Then Setlog("Benchmark SelectEvent: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
-	; Drop to top again , because coordinates Xaxis and Yaxis
-	Click(450, 95)
-	If _Sleep(1000) Then Return
-	Click(320, 95)
-	If _Sleep(1000) Then Return
+	;; Drop to top again , because coordinates Xaxis and Yaxis
+	;Click(450, 95)
+	;If _Sleep(1000) Then Return
+	;Click(320, 95)
+	;If _Sleep(1000) Then Return
 EndFunc
 
 Func IsClanGamesWindow($bOnlyPurge = False)
@@ -697,6 +708,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 		Local $aTimer = GetEventTimeScore($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Starting Event " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", $COLOR_SUCCESS)
 		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(1500) Then Return
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting : " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting : " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]")
 
