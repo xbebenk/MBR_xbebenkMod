@@ -99,8 +99,10 @@ Func IsAttackWhileShieldPage($bSaveDebugImage = True)
 EndFunc   ;==>IsAttackWhileShieldPage
 
 Func IsMainPage($iLoop = 10)
-
-	If IsPageLoop($aIsMain, $iLoop) Then
+	Local $aPixel = $aIsMain
+	If Execute("Get" & $g_sAndroidEmulator & "BackgroundMode()") = 2 Then $aPixel[0] += 1
+	
+	If IsPageLoop($aPixel, $iLoop) Then
 		$g_bMainWindowOk = True
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Main Window OK**", $COLOR_ACTION)
 		Return True
