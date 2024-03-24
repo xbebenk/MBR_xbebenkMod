@@ -33,12 +33,12 @@ Func _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $
 			If _ColorCheck($retColor, $sColor, $iColorVariation) Then
 				Local $Pos[3] = [$x + $iLeft, $y + $iTop, $retColor]
 				If $bReturnBool Then 
-					If $g_bDebugSetLog Then SetLog("[" & $sMessage & "] found, exp:" & $sColor & " => got:" & $retColor & " x=" & $x + $iLeft & " y=" & $y + $iTop, $COLOR_DEBUG2)
+					If $g_bDebugSetLog Then SetLog("[" & $sMessage & "] found, exp:" & Hex($sColor,6) & " => got:" & $retColor & " x=" & $x + $iLeft & " y=" & $y + $iTop, $COLOR_DEBUG2)
 					Return True
 				EndIf
 				Return $Pos
 			EndIf
-			If $g_bDebugSetLog Then SetLog("[" & $sMessage & "] exp:" & $sColor & " => got:" & $retColor & " x=" & $x + $iLeft & " y=" & $y + $iTop, $COLOR_DEBUG2)
+			If $g_bDebugSetLog Then SetLog("[" & $sMessage & "] exp:" & Hex($sColor,6) & " => got:" & $retColor & " x=" & $x + $iLeft & " y=" & $y + $iTop, $COLOR_DEBUG2)
 		Next
 	Next
 	
