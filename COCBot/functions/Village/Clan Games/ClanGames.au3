@@ -1268,7 +1268,7 @@ Func ClanGamesChallenges($sReturnArray)
 			["InfernoD",				"Inferno Dragon", 				12, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Inferno Dragon"], _ 
 			["IceH", 					"Ice Hound", 					13, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Ice Hound"], _ 
 			["BattleB", 				"Battle Blimp", 				10, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a of Battle Blimp"], _ 
-			["StoneS",	 				"Stone Slammer", 				10, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a of Stone Slammer"]
+			["StoneS",	 				"Stone Slammer", 				10, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a of Stone Slammer"], _
 			["RDrag",	 				"Drag Racing", 					13, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a of Dragon Rider"]] 
 
 	Global $GroundTroopChallenges[27][6] = [ _
