@@ -1854,9 +1854,9 @@ Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDa
 Global $g_bCollectCGReward = False, $g_sCGCurrentEventName = ""
 
 Global $g_abCGMainLootItem[6]
-Global $g_abCGMainBattleItem[21]
+Global $g_abCGMainBattleItem[22]
 Global $g_abCGMainDestructionItem[34]
-Global $g_abCGMainAirItem[14]
+Global $g_abCGMainAirItem[15]
 Global $g_abCGMainGroundItem[27]
 Global $g_abCGMainMiscItem[3]
 Global $g_abCGMainSpellItem[12]
