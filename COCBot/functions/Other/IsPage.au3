@@ -100,7 +100,7 @@ EndFunc   ;==>IsAttackWhileShieldPage
 
 Func IsMainPage($iLoop = 10)
 	Local $aPixel = $aIsMain
-	If Execute("Get" & $g_sAndroidEmulator & "BackgroundMode()") = 2 Then $aPixel[0] += 1
+	If $g_iAndroidBackgroundMode = 2 Then $aPixel[0] += 1
 	
 	If IsPageLoop($aPixel, $iLoop) Then
 		$g_bMainWindowOk = True
