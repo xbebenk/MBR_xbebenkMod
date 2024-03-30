@@ -1,5 +1,9 @@
 * **v.7.9.9 Mod_v1.2.5#115**
 * Fix OCR Queue read 1 as 11 on freeze
+* ClanGames : Challenges image collection by @flacha
+* ClanGames : Also search challenges on 3rd row
+* ClanGames : Fix ocr score read 0 and 4
+* Fix GL shifted pixel on check main screen
 
 * **v.7.9.6**
 * Fix attack log in all languages reported by Boldina
