@@ -70,7 +70,6 @@
 #include "functions\Attack\Troops\dropHeroes.au3"
 #include "functions\Attack\Troops\DropOnEdge.au3"
 #include "functions\Attack\Troops\DropOnEdges.au3"
-#include "functions\Attack\Troops\DropOrderTroops.au3"
 #include "functions\Attack\Troops\GetSlotIndexFromXPos.au3"
 #include "functions\Attack\Troops\LaunchTroop.au3"
 #include "functions\Attack\Troops\OldDropTroop.au3"
