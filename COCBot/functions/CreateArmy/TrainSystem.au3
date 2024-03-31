@@ -440,37 +440,18 @@ Func DragIfNeeded($Troop)
 	
 	If Not $bDragLeft And Not $bDragRight Then
 		For $i = 1 To 4
-			SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Left", $COLOR_ACTION)
-			ClickDrag(100, 435, 850, 435)
-			$bDragLeft = True
+			If $i < 3 Then 
+				SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Left", $COLOR_ACTION)
+				ClickDrag(100, 435, 850, 435)
+			Else
+				SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Right", $COLOR_ACTION)
+				ClickDrag(750, 435, 50, 435)
+			EndIf
 			If _Sleep(1500) Then Return
 			If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
 		Next
 	EndIf
 	
-	;If $bDrag Then ;Drag if Troops is on Right side from miner
-	;	If _ColorCheck(_GetPixelColor(777, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-	;	For $i = 1 To 3
-	;		If Not $bCheckPixel Then
-	;			ClickDrag(750, 435, 400, 435)
-	;			If _Sleep(2000) Then Return
-	;			If _ColorCheck(_GetPixelColor(777, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-	;		Else
-	;			Return True
-	;		EndIf
-	;	Next
-	;Else
-	;	If _ColorCheck(_GetPixelColor(75, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-	;	For $i = 1 To 3
-	;		If Not $bCheckPixel Then
-	;			ClickDrag(100, 435, 850, 435)
-	;			If _Sleep(2000) Then Return
-	;			If _ColorCheck(_GetPixelColor(75, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-	;		Else
-	;			Return True
-	;		EndIf
-	;	Next
-	;EndIf
 	SetLog("Failed to Verify Troop " & $g_asTroopNames[TroopIndexLookup($Troop, "DragIfNeeded")] & " Position or Failed to Drag Successfully", $COLOR_ERROR)
 	Return False
 EndFunc   ;==>DragIfNeeded
