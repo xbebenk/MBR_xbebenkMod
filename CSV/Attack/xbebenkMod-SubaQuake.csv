@@ -25,19 +25,22 @@ SIDE  |0          |0          |0          |0          |0          |8          |-
 SIDEB |5          |0          |0          |0          |0          |8          |0          |           |           |           |
 
       |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|
-MAKE  |A          |FRONT-RIGHT|10         |0          |EXT-INT    |2          |2          |           |Troops
-MAKE  |B          |FRONT-LEFT |10         |0          |EXT-INT    |2          |2          |           |Troops
+MAKE  |A          |FRONT-RIGHT|10         |0          |EXT-INT    |0          |0          |           |Troops
+MAKE  |B          |FRONT-LEFT |10         |0          |EXT-INT    |0          |0          |           |Troops
 MAKE  |C          |FRONT-LEFT |10         |-9         |EXT-INT    |0          |0          |           |ESpell
-MAKE  |D          |FRONT-RIGHT|10         |-9         |EXT-INT    |2          |2          |           |ESpell
+MAKE  |D          |FRONT-RIGHT|10         |-9         |EXT-INT    |0          |0          |           |ESpell
 MAKE  |E          |FRONT-RIGHT|10         |-18        |EXT-INT    |0          |0          |           |ESpell
-MAKE  |F          |FRONT-RIGHT|10         |-15        |EXT-INT    |2          |0          |           |RSpell
+MAKE  |F          |FRONT-RIGHT|10         |-15        |EXT-INT    |0          |0          |           |RSpell
 MAKE  |G          |FRONT-LEFT |1          |0          |IGNORE     |0          |0          |TOWNHALL   |ESpell   
-MAKE  |H          |LEFT-FRONT |10         |0          |EXT-INT    |5          |5          |           |Start
-MAKE  |I          |RIGHT-FRONT|10         |0          |EXT-INT    |5          |5          |           |Start
+MAKE  |H          |LEFT-FRONT |10         |0          |EXT-INT    |0          |0          |           |Start
+MAKE  |I          |RIGHT-FRONT|10         |0          |EXT-INT    |0          |0          |           |Start
 
       |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|
 DROP  |H          |2          |3          |SBarb      |40         |27-50      |90-200     |           |
-DROP  |I          |2          |3          |SBarb      |40         |27-50      |3500-4000  |           |
+DROP  |I          |2          |3          |SBarb      |40         |27-50      |2500-3000  |           |
+DROP  |C          |8          |4          |ESpell     |40         |27-50      |90-200     |           |
+DROP  |D          |8          |4          |ESpell     |40         |27-50      |90-200     |           |
+DROP  |E          |10         |4          |ESpell     |40         |27-50      |90-200     |           |
 DROP  |A-B        |3,4        |2          |SBarb      |45-70      |25-50      |7000-8000  |           |
 DROP  |A-B        |8,9,10     |3          |SBarb      |45-70      |25-50      |90-200     |           |
 DROP  |A          |10         |1          |LogL       |45-70      |25-50      |90-200     |           |
