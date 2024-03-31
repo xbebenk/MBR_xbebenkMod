@@ -199,5 +199,4 @@ Func CloseMultiPlayerWindow()
 		Click(790, 114)
 		Return True
 	EndIf
-	Return Flase
 EndFunc
