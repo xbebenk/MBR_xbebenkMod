@@ -501,7 +501,7 @@ Func ClickDragAutoUpgradeBB($Direction = "up", $YY = Default, $DragCount = 1)
 					If _Sleep(3000) Then Return
 				Case "Down"
 					ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
-					If WaitforPixel(510, 90, 515, 95, "FFFFFF", 10, 2) Then
+					If WaitforPixel(510, 90, 515, 95, "FFFFFF", 10, 2, "ClickDragAutoUpgradeBB") Then
 						ClickDrag($x, $yUp, $x, $yDown, $Delay) ;drag to bottom
 					EndIf
 					If _Sleep(3000) Then Return

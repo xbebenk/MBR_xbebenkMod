@@ -69,7 +69,7 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 EndFunc
 
 Func SwitchTo($To = "BB")
-	Local $sSwitchFrom, $sSwitchTo, $aPixelToCheck
+	Local $sSwitchFrom, $sSwitchTo
 	Local $sTile, $x, $y, $x1, $y1, $Dir
 	Local $bRet = False
 	
@@ -77,7 +77,6 @@ Func SwitchTo($To = "BB")
 		$sSwitchFrom = "Builder Base"
 		$sSwitchTo = "Normal Village"
 		$sTile = "BoatBuilderBase"
-		$aPixelToCheck = $aIsMain
 		$x = 500
 		$y = 0
 		$x1 = 700
@@ -87,7 +86,6 @@ Func SwitchTo($To = "BB")
 		$sSwitchFrom = "Normal Village"
 		$sSwitchTo = "Builder Base"
 		$sTile = "BoatNormalVillage"
-		$aPixelToCheck = $aIsOnBuilderBase
 		$x = 70
 		$y = 400
 		$x1 = 350

@@ -1,19 +1,19 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: ReturnHome
 ; Description ...: Returns home when in battle, will take screenshot and check for gold/elixir change unless specified not to.
-; Syntax ........: ReturnHome([$TakeSS = 1[, $GoldChangeCheck = True]])
-; Parameters ....: $TakeSS              - [optional] flag for saving a snapshot of the winning loot. Default is 1.
+; Syntax ........: ReturnHome([$bTakeSS = 1[, $GoldChangeCheck = True]])
+; Parameters ....: $bTakeSS              - [optional] flag for saving a snapshot of the winning loot. Default is 1.
 ;                  $GoldChangeCheck     - [optional] an unknown value. Default is True.
 ; Return values .: None
 ; Author ........:
-; Modified ......: KnowJack (07-2015), MonkeyHunter (01-2016), CodeSlinger69 (01-2017), MonkeyHunter (03-2017)
+; Modified ......: KnowJack (07-2015), MonkeyHunter (01-2016), CodeSlinger69 (01-2017), MonkeyHunter (03-2017), xbebenk(03-2024)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
+Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 	SetDebugLog("ReturnHome function... (from matchmode=" & $g_iMatchMode & " - " & $g_asModeText[$g_iMatchMode] & ")", $COLOR_DEBUG)
 	Local $counter = 0
 	Local $hBitmap_Scaled
@@ -96,39 +96,41 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 			If _Sleep(500) Then Return
 			ExitLoop ;exit Battle already ended
 		EndIf
-
+		
+		SetLog("Wait For EndBattle #" & $i, $COLOR_ACTION)
 		If $g_bRestart Then Return
-		If Not $BattleEnded Then
-			If WaitforPixel(18, 548, 19, 549, "CD0D0D", 10, 1) Then
-				Click(65, 540, 1, 0, "#0099")
-				If _Sleep(500) Then Return
-				Local $j = 0
-				Local $OKCancel = False
-				While 1 ; dynamic wait for Okay button
-					SetDebugLog("Wait for OK button to appear #" & $j)
-					If IsOKCancelPage(True) Then
-						Click(510, 400); Click Okay to Confirm surrender
-						If _Sleep(1000) Then Return
-						$OKCancel = True
-						ExitLoop
-					Else
-						$j += 1
-					EndIf
-					If $j > 5 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
-					If _Sleep(500) Then Return
-				WEnd
-				If Not $OKCancel Then
+
+		If WaitforPixel(18, 548, 19, 549, "CF0D0E", 10, 1, "ReturnHome-EndBattle") Then
+			Click(65, 540, 1, 0, "#0099")
+			If _Sleep(500) Then Return
+			Local $j = 0
+			Local $OKCancel = False
+			While 1 ; dynamic wait for Okay button
+				SetDebugLog("Wait for OK button to appear #" & $j)
+				If IsOKCancelPage(True) Then
+					Click(510, 400, 2, 1000); Click Okay to Confirm surrender
 					If _Sleep(1000) Then Return
-					If CheckMainScreen(False, $g_bStayOnBuilderBase, "ReturnHome") Then
-						SetLog("Success Return Home", $COLOR_INFO)
-						Return
-					EndIf
+					$OKCancel = True
+					ExitLoop
 				EndIf
-			Else
-				If IsProblemAffect() Then Return
-				SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
+				
+				$j += 1
+				If $j > 5 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
+				If _Sleep(500) Then Return
+			WEnd
+			
+			If Not $OKCancel Then
+				If _Sleep(1000) Then Return
+				If WaitMainScreen() Then
+					SetLog("Success Return Home", $COLOR_INFO)
+					Return
+				EndIf
 			EndIf
+		Else
+			If IsProblemAffect() Then Return
+			SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
 		EndIf
+		
 		If _Sleep(1000) Then Return ;set sleep for wait page changes
 	Next
 
@@ -143,7 +145,7 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ;Return main screen
 	EndIf
 
 	If $g_bRestart Then Return
-	If $TakeSS = 1 And $GoldChangeCheck Then
+	If $bTakeSS And $GoldChangeCheck Then
 		SetLog("Taking snapshot of your loot", $COLOR_SUCCESS)
 		Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
 		Local $Time = @HOUR & "." & @MIN

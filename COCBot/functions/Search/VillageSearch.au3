@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........: Code Monkey #6
 ; Modified ......: kaganus (Jun/Aug 2015), Sardo 2015-07, KnowJack(Aug 2015) , The Master (2015), MonkeyHunter (02/08-2016),
-;				   CodeSlinger69 (2017)
+;				   CodeSlinger69 (2017), xbebenk(03-2024)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -241,6 +241,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		ResumeAndroid()
 
 		If $g_bLeagueAttack Then
+			SetLog("Legend League Mode", $COLOR_SUCCESS)
 			If $dbBase And Not $match[$DB] Then
 				SetLog("Force attacking League Dead Base")
 				$match[$DB] = True

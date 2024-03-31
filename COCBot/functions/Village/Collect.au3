@@ -118,7 +118,7 @@ Func CollectCookieRumble()
 		For $i = 1 To 5
 			If $g_bDebugSetLog Then SetLog("Waiting Event Button #" & $i, $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgCollectCookie, 340, 500, 425, 570) Then 
-				If WaitforPixel($g_iQuickMISX + 30, $g_iQuickMISY - 20, $g_iQuickMISX + 40, $g_iQuickMISY - 10, "F61621", 40, 1) Then
+				If WaitforPixel($g_iQuickMISX + 30, $g_iQuickMISY - 20, $g_iQuickMISX + 40, $g_iQuickMISY - 10, "F61621", 40, 1, "CollectCookie") Then
 					Click($g_iQuickMISX, $g_iQuickMISY)
 					$bIconCookie = True
 					ExitLoop
@@ -167,7 +167,7 @@ Func ClaimCookieReward($bGoldPass = False)
 	If _Sleep(1000) Then Return
 	Local $tmpxClaim = 0
 	For $i = 1 To 10
-		If $i = 1 And WaitforPixel(795, 398, 796, 400, "FFFE68", 10, 1) Then 
+		If $i = 1 And WaitforPixel(795, 398, 796, 400, "FFFE68", 10, 1, "ClaimCookieReward") Then 
 			ClickDrag(400, 445, 700, 445, 500)
 			If _Sleep(1500) Then Return
 		EndIf
@@ -197,10 +197,10 @@ Func ClaimCookieReward($bGoldPass = False)
 				$tmpxClaim = $aClaim[$j][1]
 			Next
 		EndIf
-		If WaitforPixel(795, 398, 796, 400, "FFFE68", 10, 1) Then ExitLoop ;thropy color
-		If WaitforPixel(799, 390, 801, 394, "CD571E", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000) ;cookie color
-		If WaitforPixel(797, 378, 798, 379, "DF3430", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000) ;Dragon Pinata color
-		If WaitforPixel(796, 392, 797, 393, "83E9EE", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000) ;Ice Cubes color
+		If WaitforPixel(795, 398, 796, 400, "FFFE68", 10, 1, "Trophy Color") Then ExitLoop ;thropy color
+		If WaitforPixel(799, 390, 801, 394, "CD571E", 10, 1, "Cookie Color") Then ClickDrag(750, 445, 100, 445, 1000) ;cookie color
+		If WaitforPixel(797, 378, 798, 379, "DF3430", 10, 1, "Dragon Pinata Color") Then ClickDrag(750, 445, 100, 445, 1000) ;Dragon Pinata color
+		If WaitforPixel(796, 392, 797, 393, "83E9EE", 10, 1, "Ice Cubes Color") Then ClickDrag(750, 445, 100, 445, 1000) ;Ice Cubes color
 	Next
 	
 	SetLog($iClaim > 0 ? "Claimed " & $iClaim & " reward(s)!" : "Nothing to claim!", $COLOR_SUCCESS)
@@ -212,7 +212,7 @@ EndFunc
 
 Func IsCookieRumbleWindowOpen()
 	Local $result = False
-	$result = WaitforPixel(824, 85, 826, 86, "FFFFFF", 10, 2)
+	$result = WaitforPixel(824, 85, 826, 86, "FFFFFF", 10, 2, "IsCookieRumbleWindowOpen")
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 800, 64, 850, 112) Then $result = True

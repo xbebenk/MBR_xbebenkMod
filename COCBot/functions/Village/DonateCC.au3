@@ -39,7 +39,7 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 		If $abDonateQueueOnly[$i] Then
 			SetLog("Checking queued " & ($i = 0 ? "troops" : "spells") & " for donation", $COLOR_ACTION)
 
-			If IsQueueEmpty($i = 0 ? "Troops" : "Spells", False, False) Then
+			If IsQueueEmpty($i = 0 ? "Troops" : "Spells") Then
 				SetLog("Queue " & ($i = 0 ? "Troops" : "Spells") & " is not prepared, proceed donate")
 				$abDonateQueueOnly[$i] = False
 				ContinueLoop
@@ -47,17 +47,19 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 
 			If Not OpenTrainTab($i = 0 ? "Train Troops Tab" : "Brew Spells Tab", True, "IsDonateQueueOnly()") Then ContinueLoop
 
+			;Local $xQueue = FindxQueueStart()
+			;For $j = 0 To 10
+			;	$xQueue -= 61 * $j
+			;	If _ColorCheck(_GetPixelColor($xQueue, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found at $xQueue
+			;		ExitLoop
+			;	ElseIf _ColorCheck(_GetPixelColor($xQueue, 200, True), Hex(0xCFCFC8, 6), 20) Then ; Gray background
+			;		SetLog("Queue " & ($i = 0 ? "Troops" : "Spells") & " is not prepared, proceed donate!!")
+			;		$abDonateQueueOnly[$i] = False
+			;		ContinueLoop 2
+			;	EndIf
+			;Next
+			
 			Local $xQueue = FindxQueueStart()
-			For $j = 0 To 10
-				$xQueue -= 61 * $j
-				If _ColorCheck(_GetPixelColor($xQueue, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found at $xQueue
-					ExitLoop
-				ElseIf _ColorCheck(_GetPixelColor($xQueue, 200, True), Hex(0xCFCFC8, 6), 20) Then ; Gray background
-					SetLog("Queue " & ($i = 0 ? "Troops" : "Spells") & " is not prepared, proceed donate!!")
-					$abDonateQueueOnly[$i] = False
-					ContinueLoop 2
-				EndIf
-			Next
 			If $i = 0 Then
 				Local $aSearchResult = CheckQueueTroops(True, False, $xQueue + 10, True) ; $aResult[$Slots][2]: [0] = Name, [1] = Qty
 			Else
@@ -164,7 +166,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	If Not BalanceDonRec(True) Then Return False
 	If SkipDonateNearFullTroops(True) Then Return False
 	
-	If Not WaitforPixel(60, 285, 61, 288, "D6081B", 10, 1) Then 
+	If Not WaitforPixel(60, 285, 61, 288, "D6081B", 10, 1, "DonateCC-NewRequest") Then 
 		SetLog("No New requests (red icon), DonateCC Exits", $COLOR_DEBUG1)
 		If Not $bTest Then Return False ;exit if no new chats
 	EndIf
@@ -210,7 +212,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	If Not $g_bRunState Then Return
 	
 	;Scroll Up
-	While WaitforPixel(354, 77, 355, 78, "60A618", 6, 1)
+	While WaitforPixel(354, 77, 355, 78, "60A618", 6, 1, "DonateCC-ScrollUp")
 		Click(355, 77, 1, 0, "Click Green Scroll Button")
 		If _Sleep(1000) Then Return
 		$bDonate = True
@@ -471,7 +473,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 		
 		$bDonate = False ;reset after a page
 		For $i = 1 To 3
-			If WaitforPixel(354, 601, 355, 602, Hex(0x61A719, 6), 20, 1) Then
+			If WaitforPixel(354, 601, 355, 602, Hex(0x61A719, 6), 20, 1, "DonateCC-ScrollDown") Then
 				SetLog("Scroll chat Request #" & $i, $COLOR_ACTION)
 				Click(350, 595, 1, 0, "Click Green Scroll Button")
 				If _Sleep(1000) Then Return
@@ -1185,11 +1187,11 @@ Func getArmyRequest($DonateButton = -1)
 			Local $sQuant = getOcrAndCapture("coc-singlereq", $axCoord[$iPos], $aiDonateCoords[1] - 92, 20, 15, True)
 			$iArmyIndex = TroopIndexLookup($aQuick[$i][0])
 			; Troops
-			If $iArmyIndex >= $eBarb And $iArmyIndex <= $eHunt Then
+			If $iArmyIndex >= $eBarb And $iArmyIndex <= $eAppWard Then
 				$sClanText &= ", " & $g_asTroopNames[$iArmyIndex]
 				$sDebugText &= ", " & $g_asTroopNames[$iArmyIndex] & ":" & $sQuant
 			; Spells
-			ElseIf $iArmyIndex >= $eLSpell And $iArmyIndex <= $eBtSpell Then
+			ElseIf $iArmyIndex >= $eLSpell And $iArmyIndex <= $eOgSpell Then
 				$sClanText &= ", " & $g_asSpellNames[$iArmyIndex - $eLSpell]
 			    $sDebugText &= ", " & $g_asSpellNames[$iArmyIndex - $eLSpell] & ":" & $sQuant
 			; Sieges

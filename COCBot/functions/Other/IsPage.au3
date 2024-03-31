@@ -3,7 +3,7 @@
 ;                  IsOKCancelPage & IsReturnHomeBattlePage
 ; Description ...: Verify if you are in the correct window...
 ; Author ........: Sardo (2015)
-; Modified ......: ProMac (2015), MonkeyHunter (12-2015)
+; Modified ......: ProMac (2015), MonkeyHunter (12-2015), xbebenk(03-2024)
 ; Remarks .......: This file is part of MyBot Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......: Returns True or False
@@ -49,7 +49,7 @@ Func IsSettingPage($bSetLog = True, $iLoop = 5)
 	Return False
 EndFunc   ;==>IsSettingPage
 
-Func IsTrainPage($bSetLog = True, $iLoop = 5)
+Func IsTrainPage($bSetLog = False, $iLoop = 5)
 	If Not $g_bRunState Then Return
 	If IsPageLoop($aIsTrainPgChk1, $iLoop) Then
 		If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then SetLog("**Army Window OK**", $COLOR_ACTION)
@@ -237,70 +237,70 @@ EndFunc   ;==>IsPostDefenseSummaryPage
 
 Func IsMultiplayerTabOpen()
 	Local $result = False
-	$result = WaitforPixel(790, 114, 791, 115, "FFFFFF", 10, 2)
 	
+	$result = WaitforPixel(790, 114, 791, 115, "FFFFFF", 10, 2, "IsMultiplayerTabOpen")
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 97, 812, 136) Then $result = True
 	EndIf
 	
 	If $result Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found Multiplayer Window", $COLOR_ACTION)
+		If $g_bDebugSetlog Then SetLog("Found Multiplayer Window", $COLOR_ACTION)
 		Return True
 	EndIf
 	Return False
 EndFunc ; IsMultiplayerTabOpen
 
-Func IsFullScreenWindow($sSource = "default")
+Func IsFullScreenWindow($sSource = "IsFullScreenWindow")
 	Local $result = False
-	$result = WaitforPixel(820, 37, 821, 38, "FFFFFF", 10, 1, $sSource)
+	$result = WaitforPixel(820, 37, 821, 38, "FFFFFF", 10, 2, $sSource)
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 20, 860, 100) Then $result = True
 	EndIf
 	
 	If $result Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found FullScreen Window", $COLOR_ACTION)
+		If $g_bDebugSetlog Then SetLog("Found FullScreen Window", $COLOR_ACTION)
 		Return True
 	EndIf
 	Return False
 EndFunc
 
-Func IsProfileWindowOpen($sSource = "default")
+Func IsProfileWindowOpen($sSource = "IsProfileWindowOpen")
 	Local $result = False
-	$result = WaitforPixel(806, 98, 807, 99, "FFFFFF", 10, 1, $sSource)
+	$result = WaitforPixel(806, 98, 807, 99, "FFFFFF", 10, 2, $sSource)
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 788, 83, 825, 117) Then $result = True
 	EndIf
 	
 	If $result Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found Profile Window", $COLOR_ACTION)
+		If $g_bDebugSetlog Then SetLog("Found Profile Window", $COLOR_ACTION)
 		Return True
 	EndIf
 	Return False
 EndFunc
 
-Func IsChallengeWindowOpen()
+Func IsChallengeWindowOpen($sSource = "IsChallengeWindowOpen")
 	Local $result = False
-	$result = WaitforPixel(824, 85, 826, 86, "FFFFFF", 10, 2)
+	$result = WaitforPixel(824, 85, 825, 86, "FFFFFF", 10, 2, $sSource)
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 800, 64, 850, 112) Then $result = True
 	EndIf
 	
 	If $result Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found Challenge Window", $COLOR_ACTION)
+		If $g_bDebugSetlog Then SetLog("Found Challenge Window", $COLOR_ACTION)
 		Return True
 	EndIf
 	Return False
 EndFunc
 
-Func IsPetHousePage()
+Func IsPetHousePage($sSource = "IsPetHousePage")
 	Local $result
-	$result = WaitforPixel(415, 95, 420, 96, "006F5F", 10, 2) ;green pixel under title 'Pet House'
+	$result = WaitforPixel(415, 95, 416, 96, "006F5F", 10, 2, $sSource) ;green pixel under title 'Pet House'
 	
 	If $result Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("Found PetHousePage Window", $COLOR_ACTION)
+		If $g_bDebugSetlog Then SetLog("Found PetHousePage Window", $COLOR_ACTION)
 		Return True
 	EndIf
 	Return False

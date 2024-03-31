@@ -2,7 +2,7 @@
 ; Name ..........: MBR Bot
 ; Description ...: Uses the ColorCheck until the screen is clear from Clouds to Get Resources values.
 ; Author ........: HungLe (2015)
-; Modified ......: ProMac (2015), Hervidero (2015), MonkeyHunter (08-2016)(05-2017)
+; Modified ......: ProMac (2015), Hervidero (2015), MonkeyHunter (08-2016)(05-2017), xbebenk(03-2024)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -22,10 +22,11 @@ Func GetResources($bLog = True, $pMatchMode = -1) ;Reads resources
 
 	SuspendAndroid()
 
-	Local $iCount = 0
-	While (getTrophyVillageSearch(48, 175) = "")
+	Local $iCount = 0, $x = 48, $y = 147
+	While (getTrophyVillageSearch($x, $y) = "")
 		$iCount += 1
 		If _Sleep(200) Then Return
+		If _PixelSearch($aAtkHasDarkElixir[0], $aAtkHasDarkElixir[1], $aAtkHasDarkElixir[0] + 2, $aAtkHasDarkElixir[1] + 1, Hex($aAtkHasDarkElixir[2], 6), $aAtkHasDarkElixir[3], True, "GetResources") Then $y = 175		
 		If $iCount >= 50 Or IsProblemAffect() Then ExitLoop ;10sec
 	WEnd
 

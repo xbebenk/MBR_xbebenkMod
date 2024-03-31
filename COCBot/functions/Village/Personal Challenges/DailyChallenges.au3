@@ -96,7 +96,7 @@ Func CollectDailyRewards($bGoldPass = False)
 				$tmpxClaim = $aClaim[$j][1]
 			Next
 		EndIf
-		If WaitforPixel(799, 396, 801, 397, "FDC04F", 10, 1) Then ExitLoop ;thropy color
+		If WaitforPixel(799, 396, 801, 397, "FDC04F", 10, 1, "TrophyColor") Then ExitLoop ;thropy color
 		If WaitforPixel(799, 396, 801, 397, "4BCD1C", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000)
 	Next
 	

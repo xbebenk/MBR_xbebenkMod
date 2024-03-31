@@ -245,12 +245,14 @@ Func GoldElixirChangeEBO()
 	;FIRST CHECK... EXIT FOR ONE STAR REACH
 	If $g_abStopAtkOneStar[$g_iMatchMode] And $exitOneStar = 1 Then
 		If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
+		SetLog("Returning Now -OneStar-", $COLOR_SUCCESS)
 		Return False
 	EndIf
 
 	;SECOND CHECK... EXIT FOR TWO STARS REACH
 	If $g_abStopAtkTwoStars[$g_iMatchMode] And $exitTwoStars = 1 Then
 		If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
+		SetLog("Returning Now -TwoStars-", $COLOR_SUCCESS)
 		Return False
 	EndIf
 

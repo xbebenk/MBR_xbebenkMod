@@ -1156,7 +1156,7 @@ Func CollectCGReward($bTest = False)
 		For $i = 1 To 10
 			If Not $g_bRunState Then Return
 			SetLog("Waiting Max Point Reward #" & $i, $COLOR_ACTION)
-			If WaitforPixel(780, 490, 781,491, "D1D1D1", 10, 1) Then ExitLoop
+			If WaitforPixel(780, 490, 781,491, "D1D1D1", 10, 1, "ClanGames-MaxPoint") Then ExitLoop
 			If _Sleep(500) Then Return
 		Next
 

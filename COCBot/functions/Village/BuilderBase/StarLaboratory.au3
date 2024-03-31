@@ -77,7 +77,7 @@ Func StarLaboratory($bTestRun = False)
 		Return 
 	EndIf
 	
-	If WaitForPixel(795, 122, 796, 124, "A2CB6C", 10, 1) Then
+	If WaitForPixel(795, 122, 796, 124, "A2CB6C", 10, 1, "StarLab") Then
 		SetLog("Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
 		Local $sLabTimeOCR = getRemainTLaboratory(225, 202)
 		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)

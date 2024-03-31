@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: Code Monkey #4
-; Modified ......: KnowJack (Aug 2015), MonkeyHunter(2015-12)
+; Modified ......: KnowJack (Aug 2015), MonkeyHunter(2015-12), xbebenk(03-2024)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -35,11 +35,15 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	ChkAttackCSVConfig()
 	If $Mode = $DT Then $g_bRestart = False
 	
+	checkChatTabPixel()
 	For $i = 1 To 5
+		
 		If ClickB("AttackButton") Then
-			SetDebugLog("Opening Multiplayer Tab!", $COLOR_ACTION)
+			If $g_bDebugSetLog Then SetLog("Opening Multiplayer Tab!", $COLOR_ACTION)
 		Else
-			SetLog("PrepareSearch Failed: MainPage Not Found!", $COLOR_ERROR)
+			SetLog("AttackButton Not Found!", $COLOR_ERROR)
+			$g_bRestart = True
+			Return
 		EndIf
 		
 		If _Sleep(1000) Then Return
@@ -49,8 +53,9 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		Else
 			If $i = 5 Then 
 				SetLog("Couldn't Multiplayer Window after click attack button!", $COLOR_ERROR)
-				If $g_bDebugImageSave Then SaveDebugImage("AttackButtonNotFound")
-				Return False
+				AndroidPageError("IsMultiplayerTab")
+				$g_bRestart = True
+				Return
 			EndIf
 		EndIf
 	Next
@@ -86,18 +91,19 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 					SetLog("League Day ended already! Trying again later", $COLOR_INFO)
 					$g_bRestart = True
 					$g_bForceSwitch = True     ; set this switch accounts next check
-					CloseClangamesWindow()
+					CloseMultiPlayerWindow()
 					If _Sleep(1000) Then Return
 					Return False
 				ElseIf StringInStr($aButton[$i][0], "Made") Then
 					SetLog("All Attacks already made! Returning home", $COLOR_INFO)
 					$g_bRestart = True
 					$g_bForceSwitch = True     ; set this switch accounts next check
-					CloseClangamesWindow()
+					CloseMultiPlayerWindow()
 					If _Sleep(1000) Then Return
 					Return
 				ElseIf StringInStr($aButton[$i][0], "Legend") Then
 					Click($aButton[$i][1], $aButton[$i][2])
+					$g_bLeagueAttack = True
 					For $j = 0 To 10
 						If _Sleep(500) Then Return
 						If ClickB("ConfirmAttack") Then 
@@ -109,9 +115,10 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 							EndIf
 						EndIf
 					Next
-				ElseIf StringInStr($aButton[$i][0], "Sign") Then
+				ElseIf StringInStr($aButton[$i][0], "SignUp") Then
 					SetLog("Sign-up to Legend League", $COLOR_INFO)
 					Click($aButton[$i][1], $aButton[$i][2])
+					If _Sleep(1000) Then Return
 					For $i = 1 To 3
 						If IsOKCancelPage() Then
 							ClickP($aConfirmSurrender)
@@ -120,16 +127,16 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 							ExitLoop 2
 						Else
 							SetLog("Wait for OK Button to SignUp Legend League #" & $i, $COLOR_ACTION)
+							If $i = 3 Then SetLog("Problem SignUp to Legend League", $COLOR_ERROR)
 						EndIf
 						If _Sleep(500) Then Return
 					Next
-					SetLog("Problem SignUp to Legend League", $COLOR_ERROR)
-					Return False
+					
 				ElseIf StringInStr($aButton[$i][0], "Oppo", 0) Then
 					SetLog("Finding opponents! Waiting 2 minutes and then try again to find a match", $COLOR_INFO)
 					If ProfileSwitchAccountEnabled() Then 
 						$g_bForceSwitch = True
-						CloseClangamesWindow()
+						CloseMultiPlayerWindow()
 						If _Sleep(1000) Then Return
 						Return
 					EndIf
@@ -142,7 +149,8 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	If Not $bAttackButtonFound Then
 		SetLog("Cannot Find Attack Button on Multiplayer Window", $COLOR_ERROR)
 		SaveDebugImage("AttackButtonNotFound")
-		Return False
+		$g_bRestart = True
+		Return
 	EndIf
 	
 	$g_bCloudsActive = True ; early set of clouds to ensure no android suspend occurs that might cause infinite waits
@@ -156,10 +164,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	If _Sleep($DELAYPREPARESEARCH2) Then Return
 	
 	If IsAttackWhileShieldPage(False) Then ; check for shield window and then button to lose time due attack and click okay
-		If WaitforPixel(435, 480, 438, 484, Hex(0x6DBC1F, 6), 6, 1) Then
-			If $g_bDebugClick Or $g_bDebugSetlog Then
-				SetDebugLog("Shld Btn Pixel color found: " & _GetPixelColor(436, 482, True), $COLOR_DEBUG)
-			EndIf
+		If WaitforPixel(435, 480, 438, 484, "6DBC1F", 10, 1, "PrepareSearch-Shield") Then
 			Click(436, 482)
 		EndIf
 	EndIf
@@ -187,3 +192,12 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	EndIf
 	
 EndFunc   ;==>PrepareSearch
+
+Func CloseMultiPlayerWindow()
+	If IsMultiplayerTabOpen() Then 
+		SetLog("Close Multiplayer Window", $COLOR_ACTION)
+		Click(790, 114)
+		Return True
+	EndIf
+	Return Flase
+EndFunc
