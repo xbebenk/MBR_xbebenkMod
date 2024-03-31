@@ -579,7 +579,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 
 	SetDebugLog("Giants : " & $GiantComp & "  , per side: " & ($GiantComp / $nbSides) & " / deploy points per side: " & $g_iSlotsGiants)
 
-	Local $listInfoDeploy[45][5] = [[$eGole, $nbSides, 1, 1, 2] _
+	Local $listInfoDeploy[48][5] = [[$eGole, $nbSides, 1, 1, 2] _
 				, [$eLava, $nbSides, 1, 1, 2] _
 				, [$eIceH, $nbSides, 1, 1, 2] _
 				, [$eIceG, $nbSides, 1, 1, 2] _
@@ -587,6 +587,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
 				, [$eSGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
 				, [$eGSkel, $nbSides, 1, 1, 0] _
+				, [$eRootR, $nbSides, 1, 1, 0] _
 				, [$eRGhost, $nbSides, 1, 1, 0] _
 				, [$eDrag, $nbSides, 1, 1, 0] _
 				, [$eSDrag, $nbSides, 1, 1, 0] _
@@ -595,6 +596,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, [$eBabyD, $nbSides, 1, 1, 0] _
 				, [$eInfernoD, $nbSides, 1, 1, 0] _
 				, [$eHogs, $nbSides, 1, 1, 1] _
+				, [$eSHogs, $nbSides, 1, 1, 0] _
 				, [$eValk, $nbSides, 1, 1, 0] _
 				, [$eSValk, $nbSides, 1, 1, 0] _
 				, [$eBowl, $nbSides, 1, 1, 0] _
@@ -622,12 +624,11 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, [$eHeal, $nbSides, 1, 1, 1] _
 				, [$ePekk, $nbSides, 1, 1, 1] _
 				, [$eHunt, $nbSides, 1, 1, 0] _
+				, [$eAppWard, $nbSides, 1, 1, 0] _
 				, ["CC", 1, 1, 1, 1] _
 				, ["HEROES", 1, 2, 1, 1]]
 	If $g_bCustomDropOrderEnable Then
 		Local $aTmpListInfoDeploy = $listInfoDeploy
-		;AttackSmartFarm(4, "TL|BR|BL|TR")
-		;_ArrayDisplay($aTmpListInfoDeploy, "aTmpListInfoDeploy1")
 		For $i = 0 To UBound($g_ahCmbDropOrder) - 1
 			Local $iValue = $g_aiCmbCustomDropOrder[$i]
 			If $g_bDebugSmartFarm Then SetLog("iValue : " & $iValue & " [" & GetTroopName($iValue) & "]")

@@ -608,8 +608,8 @@ EndFunc
 ;iCol = TroopType [1 = Barb, 2 = Arch]
 
 Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
-	If Not OpenArmyOverview() Then Return
-	If Not OpenArmyTab() Then Return
+	If Not OpenArmyOverview(False) Then Return
+	If Not OpenArmyTab(False) Then Return
 	Local $iX = ($iCol = 1) ? 120 : 200
 	Local $sTroopName =  ($iCol = 1) ? "Barbarian" : "Archer"
 	
@@ -623,7 +623,7 @@ Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
 			For $i = $aArmyCap[0] + 1 To $aArmyCap[1]
 				If Not $g_bRunState Then Return
 				SetLog("[" & $i & "] Train 1x " & $sTroopName, $COLOR_ACTION)
-				If Not OpenTroopsTab() Then Return
+				If Not OpenTroopsTab(False) Then Return
 				Click($iX, 400)
 				If Not $g_bRunState Then Return
 				If _Sleep($iSleep) Then Return
@@ -643,7 +643,7 @@ Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
 				EndIf
 				
 				If Not $g_bRunState Then Return
-				If Not OpenArmyTab() Then Return
+				If Not OpenArmyTab(False) Then Return
 				Local $aTmpCamp = StringSplit(getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], True), "#", $STR_NOCOUNT)
 				If IsArray($aTmpCamp) And UBound($aTmpCamp) = 2 Then 
 					If $aTmpCamp[0] = $i Then 

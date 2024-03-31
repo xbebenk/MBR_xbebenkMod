@@ -21,42 +21,15 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 	
 	For $i = 1 To 5 ; Do
 		If Not $g_bRunState Then Return
-		Local $aTrainPos = GetTrainPos($iIndex)
+		Local $aTrainPos = GetImageToUse($iIndex)
 		If IsArray($aTrainPos) And $aTrainPos[0] <> -1 Then
-			If _ColorCheck(_GetPixelColor($aTrainPos[0], $aTrainPos[1], $g_bCapturePixel), Hex($aTrainPos[2], 6), $aTrainPos[3]) Then
-				Local $FullName = GetFullName($iIndex, $aTrainPos)
-				If IsArray($FullName) Then
-					Local $RNDName = GetRNDName($iIndex, $aTrainPos)
-					If IsArray($RNDName) Then
-						TrainClickP($aTrainPos, $iQuantity, $g_iTrainClickDelay, $FullName, "#0266", $RNDName)
-						If _Sleep($iSleep) Then Return
-						Return True
-					Else
-						SetLog("TrainIt position " & GetTroopName($iIndex) & " - RNDName did not return array?", $COLOR_ERROR)
-						Return False
-					EndIf
-				Else
-					SetLog("TrainIt " & GetTroopName($iIndex) & " - FullName did not return array?", $COLOR_ERROR)
-					Return False
-				EndIf
-			Else
-				ForceCaptureRegion()
-				Local $sBadPixelColor = _GetPixelColor($aTrainPos[0], $aTrainPos[1], $g_bCapturePixel)
-				If $g_bDebugSetlogTrain Then SetLog("Positon X: " & $aTrainPos[0] & "| Y : " & $aTrainPos[1] & " |Color get: " & $sBadPixelColor & " | Need: " & $aTrainPos[2])
-				If StringMid($sBadPixelColor, 1, 2) = StringMid($sBadPixelColor, 3, 2) And StringMid($sBadPixelColor, 1, 2) = StringMid($sBadPixelColor, 5, 2) Then
-					; Pixel is gray, so queue is full -> nothing to inform the user about
-					SetLog("Troop " & GetTroopName($iIndex) & " is not available due to full queue", $COLOR_DEBUG)
-				Else
-					If Mod($i, 2) = 0 Then ; executed on $i = 2 or 4
-						If $g_bDebugSetlogTrain Then SaveDebugImage("BadPixelCheck_" & GetTroopName($iIndex))
-						SetLog("Bad pixel check on troop position " & GetTroopName($iIndex), $COLOR_ERROR)
-						If $g_bDebugSetlogTrain Then SetLog("Train Pixel Color: " & $sBadPixelColor, $COLOR_DEBUG)
-					EndIf
-				EndIf
-			EndIf
+			CorrectYCoord($aTrainPos)
+			;SetLog(_ArrayToString($aTrainPos))
+			TrainClickP($aTrainPos, $iQuantity, GetTroopName($iIndex))
+			If _Sleep($iSleep) Then Return
+			Return True
 		Else
 			If UBound($aTrainPos) > 0 And $aTrainPos[0] = -1 Then
-				If $g_bDebugSetlogTrain Then SaveDebugImage("TroopIconNotFound_" & GetTroopName($iIndex))
 				If $i > 1 Then 
 					SetLog("TrainIt troop position " & GetTroopName($iIndex) & " did not find icon", $COLOR_ERROR)
 					For $x In $g_iCmbSuperTroops
@@ -73,8 +46,13 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 	Next ; Until $iErrors = 0
 EndFunc   ;==>TrainIt
 
-Func GetTrainPos(Const $iIndex)
-	If $g_bDebugSetlogTrain Then SetLog("GetTrainPos($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
+Func CorrectYCoord(ByRef $aTrainPos)
+	If $aTrainPos[1] > 433 Then $aTrainPos[1] = 488
+	If $aTrainPos[1] < 433 Then $aTrainPos[1] = 400
+EndFunc
+
+Func GetImageToUse(Const $iIndex)
+	If $g_bDebugSetlogTrain Then SetLog("GetImageToUse($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
 
 	; Get the Image path to search
 	If ($iIndex >= $eBarb And $iIndex <= $eIWiza) Then
@@ -82,18 +60,18 @@ Func GetTrainPos(Const $iIndex)
 		Local $asImageToUse = _FileListToArray($g_sImgTrainTroops, $sFilter, $FLTA_FILES, True)
 		If Not @error Then
 			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Troops: " & _ArrayToString($asImageToUse, "|"))
-			Return GetVariable($asImageToUse, $iIndex)
+			Return GetCoordToUse($asImageToUse, $iIndex)
 		Else
 			Return 0
 		EndIf
 	EndIf
 
-	If $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then
+	If $iIndex >= $eLSpell And $iIndex <= $eOgSpell Then
 		Local $sFilter = String($g_asSpellShortNames[$iIndex - $eLSpell]) & "*"
 		Local $asImageToUse = _FileListToArray($g_sImgTrainSpells, $sFilter, $FLTA_FILES, True)
 		If Not @error Then
 			If $g_bDebugSetlogTrain Then SetLog("$asImageToUse Spell: " & $asImageToUse[1])
-			Return GetVariable($asImageToUse, $iIndex)
+			Return GetCoordToUse($asImageToUse, $iIndex)
 		Else
 			Return 0
 		EndIf
@@ -102,7 +80,7 @@ Func GetTrainPos(Const $iIndex)
 	Return 0
 EndFunc   ;==>GetTrainPos
 
-Func GetVariable(Const $asImageToUse, Const $iIndex)
+Func GetCoordToUse(Const $asImageToUse, Const $iIndex)
 	Local $aTrainPos[5] = [-1, -1, -1, -1, $eBarb]
 	; Capture the screen for comparison
 	_CaptureRegion2(72, 350, 780, 520)
@@ -111,8 +89,6 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 	For $i = 1 To $asImageToUse[0]
 
 		Local $asResult = DllCallMyBot("FindTile", "handle", $g_hHBitmap2, "str", $asImageToUse[$i], "str", "FV", "int", 1)
-
-		If @error Then _logErrorDLLCall($g_sLibMyBotPath, @error)
 
 		If IsArray($asResult) Then
 			If $asResult[0] = "0" Then
@@ -129,12 +105,7 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 					If UBound($aCoordinates) > 1 Then
 						Local $iButtonX = 72 + Int($aCoordinates[0])
 						Local $iButtonY = 350 + Int($aCoordinates[1])
-						Local $sColorToCheck = "0x" & _GetPixelColor($iButtonX, $iButtonY, $g_bCapturePixel)
-						Local $iTolerance = 40
-						Local $aTrainPos[5] = [$iButtonX, $iButtonY, $sColorToCheck, $iTolerance, $eBarb]
-						If $g_bDebugSetlogTrain Then SetLog("Found: [" & $iButtonX & "," & $iButtonY & "]", $COLOR_SUCCESS)
-						If $g_bDebugSetlogTrain Then SetLog("$sColorToCheck: " & $sColorToCheck, $COLOR_SUCCESS)
-						If $g_bDebugSetlogTrain Then SetLog("$iTolerance: " & $iTolerance, $COLOR_SUCCESS)
+						Local $aTrainPos[2] = [$iButtonX, $iButtonY]
 						Return $aTrainPos
 					Else
 						SetLog("Don't know how to train the troop with index " & $iIndex & " yet.")
@@ -151,9 +122,9 @@ Func GetVariable(Const $asImageToUse, Const $iIndex)
 	If $iError = 0 Then
 		SetLog("No " & GetTroopName($iIndex) & " Icon found!", $COLOR_ERROR)
 	ElseIf $iError = -1 Then
-		SetLog("TrainIt.au3 GetVariable(): ImgLoc DLL Error Occured!", $COLOR_ERROR)
+		SetLog("TrainIt.au3 GetCoordToUse(): ImgLoc DLL Error Occured!", $COLOR_ERROR)
 	ElseIf $iError = -2 Then
-		SetLog("TrainIt.au3 GetVariable(): Wrong Resolution used for ImgLoc Search!", $COLOR_ERROR)
+		SetLog("TrainIt.au3 GetCoordToUse(): Wrong Resolution used for ImgLoc Search!", $COLOR_ERROR)
 	EndIf
 
 	Return $aTrainPos
@@ -167,7 +138,7 @@ Func GetFullName(Const $iIndex, Const $aTrainPos)
 		Return GetFullNameSlot($aTrainPos, $sTroopType)
 	EndIf
 
-	If $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then
+	If $iIndex >= $eLSpell And $iIndex <= $eOgSpell Then
 		Return GetFullNameSlot($aTrainPos, "Spell")
 	EndIf
 
@@ -180,7 +151,6 @@ EndFunc   ;==>GetFullName
 
 
 Func GetRNDName(Const $iIndex, Const $aTrainPos)
-	If $g_bDebugSetlogTrain Then SetLog("GetRNDName($iIndex=" & $iIndex & ")", $COLOR_DEBUG)
 	Local $aTrainPosRND[4]
 
 	If $iIndex <> -1 Then
@@ -192,7 +162,6 @@ Func GetRNDName(Const $iIndex, Const $aTrainPos)
 		Return $aTrainPosRND
 	EndIf
 
-	SetLog("Don't know how to find the RND name of troop with index " & $iIndex & " yet!", $COLOR_ERROR)
 	Return 0
 EndFunc   ;==>GetRNDName
 

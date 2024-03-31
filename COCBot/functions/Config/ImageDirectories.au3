@@ -193,7 +193,10 @@ Global $g_sImgBBGoldButton = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUp
 #Region Train
 Global $g_sImgTrainTroops = @ScriptDir & "\imgxml\Train\Train_Train\"
 Global $g_sImgTrainSpells = @ScriptDir & "\imgxml\Train\Spell_Train\"
-Global $g_sImgArmyOverviewSpells = @ScriptDir & "\imgxml\ArmyOverview\Spells" ; @ScriptDir & "\imgxml\ArmySpells"
+Global $g_sImgArmyOverviewTroops = @ScriptDir & "\imgxml\ArmyOverview\Troops\"
+Global $g_sImgArmyOverviewSpells = @ScriptDir & "\imgxml\ArmyOverview\Spells\"
+Global $g_sImgArmyOverviewTroopsQueued = @ScriptDir & "\imgxml\ArmyOverview\TroopsQueued\"
+Global $g_sImgArmyOverviewSpellsQueued = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued\"
 Global $g_sImgRequestCCButton = @ScriptDir & "\imgxml\ArmyOverview\RequestCC"
 Global $g_sImgSendRequestButton = @ScriptDir & "\imgxml\ArmyOverview\RequestCC\SendRequest"
 Global $g_sImgArmyOverviewHeroes = @ScriptDir & "\imgxml\ArmyOverview\Heroes"

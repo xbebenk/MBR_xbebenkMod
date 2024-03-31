@@ -90,11 +90,11 @@ DROP  |K          |1          |1          |FSpell     |0          |0          |1
 DROP  |P          |1          |1          |FSpell     |0          |0          |1000-1500  |TOWNHALL   |           |           |           |
 WAIT  |1000       |           |           |           |           |           |           |           |           |           |           |
 DROP  |Q          |10         |1          |King       |50-70      |0          |500        |           |           |           |           |
-DROP  |Q          |10         |1          |Warden     |50-70      |0          |0          |           |           |           |           |
 DROP  |U          |2          |1          |RSpell     |0          |0          |500        |           |           |           |           |
 DROP  |V          |4          |1          |RSpell     |0          |0          |2000       |           |           |           |           |
 DROP  |P          |1          |1          |FSpell     |0          |0          |1000-1500  |EAGLE      |           |           |           |
 DROP  |J          |1          |1          |FSpell     |0          |0          |1000-1500  |TOWNHALL   |           |           |           |
+DROP  |Q          |10         |1          |Warden     |50-70      |0          |0          |           |           |           |           |
 DROP  |D          |9          |1          |Champion   |0          |0          |1000-1500  |           |           |      	  |      	  |
 DROP  |I          |1          |1          |FSpell     |0          |0          |5000       |AIRDEFENSE |           |           |           |
 DROP  |J          |1          |1          |FSpell     |0          |0          |           |TOWNHALL   |           |           |           |

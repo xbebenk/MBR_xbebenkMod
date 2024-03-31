@@ -107,13 +107,9 @@ Func getProfile($x_start, $y_start) ;  -> Gets Attack Win/Defense Win/Donated/Re
 	Return getOcrAndCapture("coc-profile", $x_start, $y_start, 55, 13, True)
 EndFunc   ;==>getProfile
 
-Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
-	Return getOcrAndCapture("coc-t-s", $x_start, $y_start, 57, 16, True, Default, $bNeedNewCapture)
+Func getTroopCount($x_start, $y_start, $width = 60, $height = 20) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
+	Return StringReplace(getOcrAndCapture("coc-troopcount", $x_start, $y_start, $width, $height, True), "-", "")
 EndFunc   ;==>getTroopCountSmall
-
-Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
-	Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
-EndFunc   ;==>getTroopCountBig
 
 Func getTroopsSpellsLevel($x_start, $y_start) ;  -> Gets spell level on Attack Screen for selected spell kind (could be used for troops too)
 	Return getOcrAndCapture("coc-spellslevel", $x_start, $y_start, 20, 18, True)
@@ -124,7 +120,7 @@ Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army ca
 EndFunc   ;==>getArmyCampCap
 
 Func getArmySiegeCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
-	Return getOcrAndCapture("coc-armytroops", $x_start, $y_start, 46, 17, True, False, $bNeedCapture)
+	Return StringReplace(getOcrAndCapture("coc-armycap", $x_start, $y_start, 46, 17, True), "-", "")
 EndFunc   ;==>getArmySiegeCap
 
 Func getCastleDonateCap($x_start, $y_start) ;  -> Gets clan castle capacity,  --> donatecc.au3
@@ -136,17 +132,54 @@ Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  ->
 EndFunc   ;==>getBarracksNewTroopQuantity
 
 Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of troops in army Window
-	Return StringReplace(getOcrAndCapture("coc-troopcap", $x_start, $y_start, 70, 16, True), "-", "")
+	Return StringRegExpReplace(getOcrAndCapture("coc-troopcap", $x_start, $y_start, 70, 16, True), "[-x]", "")
 EndFunc   ;==>getArmyCapacityOnTrainTroops(95, 163)
 
-Func TestgetArmyCapacityOnTrainTroops()
-	Local $sRet = ""
-	For $i = 1 To 600
-		$sRet = StringReplace(getOcrAndCapture("coc-troopcap", 95, 163, 70, 16, True), "-", "")
-		SetLog($sRet)
-		Click(122,394)
+;TestOCRTroopCap(0, 320, 500)
+Func TestOCRTroopCap($iStart = 1, $iCount = 10, $bSaveOCRCap = True, $bSaveOCRTroop = False, $bSaveOCRQueue = False, $iSleep = 800, $path = "D:\OCRTool\TestImages\DebugOCR\")
+	Local $sRet = "", $sRet1 = "", $aString, $s1 = ""
+	For $i = $iStart To $iCount
 		If Not $g_bRunState Then Return
-		If _Sleep(1000) Then Return
+		
+		If $bSaveOCRCap Then
+			$sRet = getOcrAndCapture("coc-troopcap", 94, 163, 70, 16, True)
+			$sRet1 = StringRegExpReplace($sRet, "[-x]", "")
+			$aString = StringSplit($sRet1, "#", $STR_NOCOUNT)
+			If UBound($aString) = 2 Then 
+				$s1 = $aString[0]
+			EndIf
+			SetLog($sRet & " = " & $sRet1)
+			_CaptureRegion2(94, 163, 94 + 70, 163 + 16)
+			SaveDebugImageOCR($i & "_" & $s1, $path)
+		EndIf
+		
+		;If $bSaveOCRTroop Then 	
+		;	$sRet = getOcrAndCapture("coc-armycap", 722, 191, 35, 14, True)
+		;	$sRet1 = StringRegExpReplace($sRet, "[-x]", "")
+		;	$aString = StringSplit($sRet1, "#", $STR_NOCOUNT)
+		;	If UBound($aString) = 2 Then 
+		;		$s1 = $aString[0]
+		;	EndIf
+		;	SetLog("OCRTroop : " & $sRet & " = " & $sRet1)
+		;	_CaptureRegion2(722, 191, 722 + 35, 191 + 14)
+		;	SaveDebugImageOCR("OCRTroop_" & $sRet & "_" & $s1, $path)
+		;EndIf
+		;
+		;If $bSaveOCRQueue And $i > 320 Then 
+		;	$sRet = getOcrAndCapture("coc-qqtroop", 662, 191, 32, 14, True)
+		;	$sRet1 = StringRegExpReplace($sRet, "[-x]", "")
+		;	$aString = StringSplit($sRet1, "#", $STR_NOCOUNT)
+		;	If UBound($aString) = 2 Then 
+		;		$s1 = $aString[0]
+		;	EndIf
+		;	SetLog("OCRQueue : " & $sRet & " = " & $sRet1)
+		;	_CaptureRegion2(662, 191, 622 + 32, 191 + 14)
+		;	SaveDebugImageOCR("OCRQueue_" & $sRet & "_" & $s1, $path)
+		;EndIf
+		
+		Click(122, 394)
+		If Not $g_bRunState Then Return
+		If _Sleep($iSleep) Then Return
 	Next
 EndFunc
 

@@ -315,7 +315,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 			If $g_bUpgradeLowCost Then
 				If $aTmpCoord[$i][0] = "DE" Then ContinueLoop
 				If Number($tmpcost) > 500000 Then 
-					SetLog("UpgradeLowCost=" & String($g_bUpgradeLowCost) & ", " & $aUpgradeName[0] & " : " & $tmpcost & " > 500000, skip", $COLOR_DEBUG1)
+					SetLog("UpLowCost=" & String($g_bUpgradeLowCost) & ", " & $aUpgradeName[0] & " : " & $tmpcost & " > 500000, skip", $COLOR_DEBUG1)
 					ContinueLoop
 				EndIf
 			EndIf
@@ -326,7 +326,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 				EndIf
 			EndIf
 			If CheckIgnoreUpgrade($aUpgradeName[0], $g_bUpgradeLowCost) Then 
-				SetLog("UpgradeLowCost=" & String($g_bUpgradeLowCost) & ", " & $aUpgradeName[0] & " : " & $tmpcost & ", Ignored!", $COLOR_DEBUG1)
+				SetLog("UpLowCost=" & String($g_bUpgradeLowCost) & ", " & $aUpgradeName[0] & " : " & $tmpcost & ", Ignored!", $COLOR_DEBUG1)
 				ContinueLoop
 			EndIf
 			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), Number($aUpgradeName[1]), Number($tmpcost), 0, 0]]
@@ -884,9 +884,11 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 	EndIf
 	
 	Local $a10sDuration[5] = ["Cannon", "Gold Mine", "Elixir Collector", "Gold Storage", "Elixir Storage"], $bWait10s = False
-	For $sName In $a10sDuration
-		If $sUpgrade = $sName Then $bWait10s = True
-	Next
+	If $g_iFreeBuilderCount = 1 Then
+		For $sName In $a10sDuration
+			If $sUpgrade = $sName Then $bWait10s = True
+		Next
+	EndIf
 	
 	SetLog("Looking for GreenCheck Button", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgGreenCheck) Then
@@ -934,7 +936,7 @@ EndFunc
 Func OpenShop($sUpgradeType = "Traps", $bCheckRedCounter = True)
 	If Not $g_bRunState Then Return
 	Local $bRet = False
-	If WaitforPixel(815, 590, 816, 591, "E6F3ED", 10, 1) Then 
+	If WaitforPixel(815, 590, 816, 591, "E6F3ED", 10, 1, "OpenShop") Then 
 		Click(815, 590) ;Click Shop Button
 		If _Sleep(1000) Then Return
 	EndIf
@@ -961,35 +963,35 @@ Func OpenShop($sUpgradeType = "Traps", $bCheckRedCounter = True)
 	If $bCheckRedCounter Then 
 		Switch $sUpgradeType
 			Case "Army"
-				If WaitforPixel($aRedPos[0], $iRedPosY, $aRedPos[0] + 1, $iRedPosY + 1, "D7081B", 10, 1) Then 
+				If WaitforPixel($aRedPos[0], $iRedPosY, $aRedPos[0] + 1, $iRedPosY + 1, "D7081B", 10, 1, "OpenShop-Army") Then 
 					Click($aRedPos[0], $iRedPosY)
 					$bRet = True
 				EndIf
-				If WaitforPixel($aRedPos[0], $iRedPosY, $aRedPos[0] + 1, $iRedPosY + 1, "BBDC9D", 10, 1) Then 
+				If WaitforPixel($aRedPos[0], $iRedPosY, $aRedPos[0] + 1, $iRedPosY + 1, "BBDC9D", 10, 1, "OpenShop-Army") Then 
 					$bRet = True
 				EndIf
 			Case "Resources"
-				If WaitforPixel($aRedPos[1], $iRedPosY, $aRedPos[1] + 1, $iRedPosY + 1, "D7081B", 10, 1) Then 
+				If WaitforPixel($aRedPos[1], $iRedPosY, $aRedPos[1] + 1, $iRedPosY + 1, "D7081B", 10, 1, "OpenShop-Resources") Then 
 					Click($aRedPos[1], $iRedPosY)
 					$bRet = True
 				EndIf
-				If WaitforPixel($aRedPos[1], $iRedPosY, $aRedPos[1] + 1, $iRedPosY + 1, "BBDC9D", 10, 1) Then 
+				If WaitforPixel($aRedPos[1], $iRedPosY, $aRedPos[1] + 1, $iRedPosY + 1, "BBDC9D", 10, 1, "OpenShop-Resources") Then 
 					$bRet = True
 				EndIf
 			Case "Defenses"
-				If WaitforPixel($aRedPos[2], $iRedPosY, $aRedPos[2] + 1, $iRedPosY + 1, "D7081B", 10, 1) Then 
+				If WaitforPixel($aRedPos[2], $iRedPosY, $aRedPos[2] + 1, $iRedPosY + 1, "D7081B", 10, 1, "OpenShop-Defenses") Then 
 					Click($aRedPos[2], $iRedPosY)
 					$bRet = True
 				EndIf
-				If WaitforPixel($aRedPos[2], $iRedPosY, $aRedPos[2] + 1, $iRedPosY + 1, "BBDC9D", 10, 1) Then 
+				If WaitforPixel($aRedPos[2], $iRedPosY, $aRedPos[2] + 1, $iRedPosY + 1, "BBDC9D", 10, 1, "OpenShop-Defenses") Then 
 					$bRet = True
 				EndIf
 			Case "Traps"
-				If WaitforPixel($aRedPos[3], $iRedPosY, $aRedPos[3] + 1, $iRedPosY + 1, "D7081B", 10, 1) Then 
+				If WaitforPixel($aRedPos[3], $iRedPosY, $aRedPos[3] + 1, $iRedPosY + 1, "D7081B", 10, 1, "OpenShop-Traps") Then 
 					Click($aRedPos[3], $iRedPosY)
 					$bRet = True
 				EndIf
-				If WaitforPixel($aRedPos[3], $iRedPosY, $aRedPos[3] + 1, $iRedPosY + 1, "BBDC9D", 10, 1) Then 
+				If WaitforPixel($aRedPos[3], $iRedPosY, $aRedPos[3] + 1, $iRedPosY + 1, "BBDC9D", 10, 1, "OpenShop-Traps") Then 
 					$bRet = True
 				EndIf
 		EndSwitch
@@ -1156,7 +1158,7 @@ Func ClickDragAUpgrade($Direction = "Up", $DragCount = 1)
 					If _Sleep(1000) Then Return
 				Case "Down"
 					ClickDrag($x, $yUp, $x, $yDown, $Delay, True) ;drag to bottom
-					If WaitforPixel(510, 88, 552, 91, "FFFFFF", 10, 1) Then
+					If WaitforPixel(510, 88, 552, 91, "FFFFFF", 10, 1, "ClickDragAUpgrade") Then
 						ClickDrag($x, $yUp, $x, $yDown, $Delay, True) ;drag to bottom
 					EndIf
 					If _Sleep(5000) Then Return

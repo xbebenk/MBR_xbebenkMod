@@ -86,7 +86,7 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 			For $j = 0 To UBound($avAttackBar, 1) - 1
 				If $avAttackBar[$j][1] = $i Then
 					; troop slot found
-					If IsUnitUsed($pMatchMode, $avAttackBar[$j][0]) Then
+					;If IsUnitUsed($pMatchMode, $avAttackBar[$j][0]) Then
 						$bClearSlot = False
 						Local $sLogExtension = ""
 						If Not $bRemaining Then
@@ -130,9 +130,9 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 
 						Local $sDebugText = $g_bDebugSetlog ? " (X:" & $avAttackBar[$j][3] & "|Y:" & $avAttackBar[$j][4] & "|OCR-X:" & $avAttackBar[$j][5] & "|OCR-Y:" & $avAttackBar[$j][6] & ")" : ""
 						SetLog($avAttackBar[$j][1] & ": " & $avAttackBar[$j][2] & " " & GetTroopName($avAttackBar[$j][0], $avAttackBar[$j][2]) & $sLogExtension & $sDebugText, $COLOR_SUCCESS)
-					Else
-						SetDebugLog("Discard use of " & GetTroopName($avAttackBar[$j][0]) & " (" & $avAttackBar[$j][0] & ")", $COLOR_ERROR)
-					EndIf
+					;Else
+					;	SetDebugLog("Discard use of " & GetTroopName($avAttackBar[$j][0]) & " (" & $avAttackBar[$j][0] & ")", $COLOR_ERROR)
+					;EndIf
 					ExitLoop
 				EndIf
 			Next
@@ -426,32 +426,34 @@ Func IsUnitUsed($iMatchMode, $iTroopIndex)
 					If (BitAND($g_aiAttackUseHeroes[$iMatchMode], $eHeroChampion) = $eHeroChampion) Then Return True
 				Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD
 					If $g_abAttackDropCC[$iMatchMode] Then Return True
-				Case $eLSpell
-					If $g_abAttackUseLightSpell[$iMatchMode] Or $g_bSmartZapEnable Then Return True
-				Case $eHSpell
-					If $g_abAttackUseHealSpell[$iMatchMode] Then Return True
-				Case $eRSpell
-					If $g_abAttackUseRageSpell[$iMatchMode] Then Return True
-				Case $eJSpell
-					If $g_abAttackUseJumpSpell[$iMatchMode] Then Return True
-				Case $eFSpell
-					If $g_abAttackUseFreezeSpell[$iMatchMode] Then Return True
-				Case $ePSpell
-					If $g_abAttackUsePoisonSpell[$iMatchMode] Then Return True
-				Case $eESpell
-					If $g_abAttackUseEarthquakeSpell[$iMatchMode] = 1 Or $g_bSmartZapEnable Then Return True
-				Case $eHaSpell
-					If $g_abAttackUseHasteSpell[$iMatchMode] Then Return True
-				Case $eCSpell
-					If $g_abAttackUseCloneSpell[$iMatchMode] Then Return True
-				Case $eISpell
-					If $g_abAttackUseInvisibilitySpell[$iMatchMode] Then Return True
-				Case $eReSpell
-					If $g_abAttackUseRecallSpell[$iMatchMode] Then Return True
-				Case $eSkSpell
-					If $g_abAttackUseSkeletonSpell[$iMatchMode] Then Return True
-				Case $eBtSpell
-					If $g_abAttackUseBatSpell[$iMatchMode] Then Return True
+				;Case $eLSpell
+				;	If $g_abAttackUseLightSpell[$iMatchMode] Or $g_bSmartZapEnable Then Return True
+				;Case $eHSpell
+				;	If $g_abAttackUseHealSpell[$iMatchMode] Then Return True
+				;Case $eRSpell
+				;	If $g_abAttackUseRageSpell[$iMatchMode] Then Return True
+				;Case $eJSpell
+				;	If $g_abAttackUseJumpSpell[$iMatchMode] Then Return True
+				;Case $eFSpell
+				;	If $g_abAttackUseFreezeSpell[$iMatchMode] Then Return True
+				;Case $ePSpell
+				;	If $g_abAttackUsePoisonSpell[$iMatchMode] Then Return True
+				;Case $eESpell
+				;	If $g_abAttackUseEarthquakeSpell[$iMatchMode] = 1 Or $g_bSmartZapEnable Then Return True
+				;Case $eHaSpell
+				;	If $g_abAttackUseHasteSpell[$iMatchMode] Then Return True
+				;Case $eCSpell
+				;	If $g_abAttackUseCloneSpell[$iMatchMode] Then Return True
+				;Case $eISpell
+				;	If $g_abAttackUseInvisibilitySpell[$iMatchMode] Then Return True
+				;Case $eReSpell
+				;	If $g_abAttackUseRecallSpell[$iMatchMode] Then Return True
+				;Case $eSkSpell
+				;	If $g_abAttackUseSkeletonSpell[$iMatchMode] Then Return True
+				;Case $eBtSpell
+				;	If $g_abAttackUseBatSpell[$iMatchMode] Then Return True
+				;Case $eOgSpell
+				;	If $g_abAttackUseOverGrowthSpell[$iMatchMode] Then Return True
 				Case Else
 					Return False
 			EndSwitch

@@ -17,16 +17,11 @@ Func ReadTroopQuantity($iSlotNumber, $bCheckSelectedSlot = False, $bNeedNewCaptu
 	Local $iAmount, $aSlotPosition = GetSlotPosition($iSlotNumber)
 	Switch $bCheckSelectedSlot
 		Case False
-			$iAmount = getTroopCountSmall($aSlotPosition[0], $aSlotPosition[1])
-			If $iAmount = "" Then
-				$iAmount = getTroopCountBig($aSlotPosition[0], $aSlotPosition[1] - 3)
-			EndIf
+			$iAmount = getTroopCount($aSlotPosition[0], $aSlotPosition[1])
 		Case Else
 			Local $isTheSlotSelected = IsSlotSelected($iSlotNumber, $bNeedNewCapture)
 			If Not $isTheSlotSelected Then
-				$iAmount = Number(getTroopCountSmall($aSlotPosition[0], $aSlotPosition[1]))
-			Else
-				$iAmount = Number(getTroopCountBig($aSlotPosition[0], $aSlotPosition[1] - 3))
+				$iAmount = Number(getTroopCount($aSlotPosition[0], $aSlotPosition[1]))
 			EndIf
 	EndSwitch
 	Return Number($iAmount)

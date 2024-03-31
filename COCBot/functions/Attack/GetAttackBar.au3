@@ -15,7 +15,7 @@
 Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	Local Static $aAttackBar[0][8]
 	Local Static $bDoubleRow = False, $bCheckSlot12 = False
-	Local $sSearchDiamond = GetDiamondFromRect("0,575,835,670")
+	Local $sSearchDiamond = GetDiamondFromRect("0, 580, 860, 660")
 	Local $iYBelowRowOne = 630, $aiOCRLocation[2] = [-1, -1], $aSlotAmountX[0][3]
 
 	If $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, True)
@@ -33,7 +33,7 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 		;Check if Double Row is enabled aswell as has 12+ Slots
 		If _CheckPixel($aDoubRowAttackBar, True) Then
 			$bDoubleRow = True
-			$sSearchDiamond = GetDiamondFromRect("0,495,835,670")
+			$sSearchDiamond = GetDiamondFromRect("0, 495, 860, 660")
 		ElseIf _CheckPixel($a12OrMoreSlots, True) Then
 			$bCheckSlot12 = True
 			SetDeBugLog("Found 12th slot for Normal Troops")
@@ -46,7 +46,7 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	If UBound($aAttackBar) = 0 Or Not $bRemaining Then
 		Local $iAttackbarStart = __TimerInit()
 		Local $aTempArray, $aTempCoords, $aTempMultiCoords, $iRow = 1
-
+		;findMultiple($g_sImgAttackBarDir, GetDiamondFromRect("0, 600, 860, 660"), GetDiamondFromRect("0, 600, 860, 660"), 0, 1000, 0, "objectname,objectpoints", True)
 		Local $aAttackBarResult = findMultiple($g_sImgAttackBarDir, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
 
 		If UBound($aAttackBarResult) = 0 Then
@@ -138,14 +138,14 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 			If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)|(Castle)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)", 0) Then
 				If Not $bRemoved Then $aAttackBar[$i][4] = 1
 				If ($pMatchMode = $DB Or $pMatchMode = $LB) And StringRegExp($aAttackBar[$i][0], "(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)", 0) And $g_abAttackDropCC[$pMatchMode] And $g_aiAttackUseSiege[$pMatchMode] > 0 And $g_aiAttackUseSiege[$pMatchMode] <= 6 Then
-					$g_iSiegeLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 35, 645))
+					$g_iSiegeLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 30, 645))
 					If $g_iSiegeLevel = "" Then $g_iSiegeLevel = 1
 					SetDebugLog($aAttackBar[$i][0] & " level: " & $g_iSiegeLevel)
 				EndIf
 			Else
 				If Not $bRemoved Then
-					$aAttackBar[$i][4] = Number(getTroopCountSmall(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6])))
-					If $aAttackBar[$i][4] = 0 Then $aAttackBar[$i][4] = Number(getTroopCountBig(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6] - 2)))
+					;getTroopCount(30, 580)
+					$aAttackBar[$i][4] = Number(getTroopCount(Number($aAttackBar[$i][5]), 580))
 				EndIf
 				If StringRegExp($aAttackBar[$i][0], "(LSpell)", 0) And $g_bSmartZapEnable Then
 					Local $iLSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 30, 645))
@@ -293,8 +293,7 @@ Func ExtendedAttackBarCheck($aAttackBarFirstSearch, $bRemaining, $sSearchDiamond
 				If Not $bRemoved Then $aAttackBar[$i][4] = 1
 			Else
 				If Not $bRemoved Then
-					$aAttackBar[$i][4] = Number(getTroopCountSmall(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6])))
-					If $aAttackBar[$i][4] = 0 Then $aAttackBar[$i][4] = Number(getTroopCountBig(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6] - 2)))
+					$aAttackBar[$i][4] = Number(getTroopCount(Number($aAttackBar[$i][5]), 580))
 				EndIf
 				If StringRegExp($aAttackBar[$i][0], "(LSpell)", 0) And $g_bSmartZapEnable Then
 					Local $iLSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 30, 645))

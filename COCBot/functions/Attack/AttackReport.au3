@@ -24,6 +24,7 @@ Func AttackReport()
 		$iCount += 1
 		If IsProblemAffect() Then Return
 		If _Sleep($DELAYATTACKREPORT1) Then Return
+		If Not $g_bRunState Then Return
 		SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
 		If $iCount > 30 Then ExitLoop ; wait 30*500ms = 15 seconds max for the window to render
 	WEnd
@@ -33,6 +34,7 @@ Func AttackReport()
 	While getResourcesLoot(290, 289) = "" ; check for gold value to be non-zero before reading other values as a secondary timer to make sure all values are available
 		$iCount += 1
 		If _Sleep($DELAYATTACKREPORT1) Then Return
+		If Not $g_bRunState Then Return
 		SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
 		If $iCount > 20 Then ExitLoop ; wait 20*500ms = 10 seconds max before we have call the OCR read an error
 	WEnd

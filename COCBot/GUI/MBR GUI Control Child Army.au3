@@ -425,20 +425,25 @@ Func GUISpellsOrder()
 EndFunc   ;==>GUISpellsOrder
 
 Func BtnRemoveSpells()
-	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "BtnRemoveSpells")
 	Local $sComboData = ""
 	For $j = 0 To UBound($g_asSpellsOrderList) - 1
 		$sComboData &= $g_asSpellsOrderList[$j] & "|"
 	Next
-	For $i = 0 To $eSpellCount - 1
-		$g_aiCmbCustomBrewOrder[$i] = -1
+	
+	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
 		_GUICtrlComboBox_ResetContent($g_ahCmbSpellsOrder[$i])
 		GUICtrlSetData($g_ahCmbSpellsOrder[$i], $sComboData, "")
 		_GUICtrlSetImage($g_ahImgSpellsOrder[$i], $g_sLibIconPath, $eIcnOptions)
 	Next
+	
+	For $i = 0 To UBound($g_aiCmbCustomBrewOrder) -1
+		$g_aiCmbCustomBrewOrder[$i] = -1
+	Next
+	
 	_GUICtrlSetImage($g_ahImgSpellsOrderSet, $g_sLibIconPath, $eIcnSilverStar)
 	SetDefaultSpellsGroup(False)
-	SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "BtnRemoveSpells")
+	
+	;SetLog("BtnRemoveSpells : " & @CRLF & _ArrayToString($g_aiCmbCustomBrewOrder), $COLOR_DEBUG1)
 EndFunc   ;==>BtnRemoveSpells
 
 Func GUITrainOrder()
@@ -468,19 +473,26 @@ Func GUITrainOrder()
 EndFunc   ;==>GUITrainOrder
 
 Func BtnRemoveTroops()
+	
 	Local $sComboData = ""
 	For $j = 0 To UBound($g_asTroopOrderList) - 1
 		$sComboData &= $g_asTroopOrderList[$j] & "|"
 	Next
-	SetLog("BtnRemoveTroops", $COLOR_INFO)
+	
 	For $i = 0 To Ubound($g_ahCmbTroopOrder) - 1
-		$g_aiCmbCustomTrainOrder[$i] = -1
-		_GUICtrlComboBox_ResetContent($g_ahCmbTroopOrder[$i])
-		GUICtrlSetData($g_ahCmbTroopOrder[$i], $sComboData, "")
+		_GUICtrlComboBox_SetCurSel($g_ahCmbTroopOrder[$i], -1)
+		;GUICtrlSetData($g_ahCmbTroopOrder[$i], $sComboData, "")
 		_GUICtrlSetImage($g_ahImgTroopOrder[$i], $g_sLibIconPath, $eIcnOptions)
 	Next
+	
+	For $i = 0 To UBound($g_aiCmbCustomTrainOrder) -1
+		$g_aiCmbCustomTrainOrder[$i] = -1
+	Next
+	
 	_GUICtrlSetImage($g_ahImgTroopOrderSet, $g_sLibIconPath, $eIcnSilverStar)
 	SetDefaultTroopGroup(False)
+	
+	;SetLog("BtnRemoveTroops : " & @CRLF & _ArrayToString($g_aiCmbCustomTrainOrder), $COLOR_DEBUG1)
 EndFunc   ;==>BtnRemoveTroops
 
 Func BtnTroopOrderSet()
@@ -536,8 +548,8 @@ Func BtnTroopOrderSet()
 		Else
 			SetLog("Troop training order changed successfully!", $COLOR_SUCCESS)
 			For $i = 0 To $eTroopCount - 1
-				If $g_bDebugSetlogTrain Then SetLog("i = " & $i & " g_aiTrainOrder = " & $aiUsedTroop[$i])
 				$sNewTrainList &= $g_asTroopShortNames[$aiUsedTroop[$i]] & ", "
+				;If $g_bDebugSetLog Then SetLog("$g_aiTrainOrder[" & $i & "] = " & $aiUsedTroop[$i], $COLOR_DEBUG1)
 			Next
 			$sNewTrainList = StringTrimRight($sNewTrainList, 2)
 			SetLog("Troop train order= " & $sNewTrainList, $COLOR_INFO)
@@ -549,7 +561,6 @@ Func BtnTroopOrderSet()
 EndFunc   ;==>BtnTroopOrderSet
 
 Func ChangeTroopTrainOrder()
-	If $g_bDebugSetlog Or $g_bDebugSetlogTrain Then SetLog("Begin Func ChangeTroopTrainOrder()", $COLOR_DEBUG) ;Debug
 	Local $iUpdateCount = 0, $aUnique
 
 	If Not IsUseCustomTroopOrder() Then ; check if no custom troop values saved yet.
@@ -573,61 +584,43 @@ Func ChangeTroopTrainOrder()
 EndFunc   ;==>ChangeTroopTrainOrder
 
 Func BtnSpellsOrderSet()
-
-	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "BtnSpellsOrderSet")
 	Local $bReady = True ; Initialize ready to record troop order flag
 	Local $sNewTrainList = ""
-
-	Local $bMissingTroop = False ; flag for when troops are not assigned by user
-	Local $aiBrewOrder[$eSpellCount] = [ _
-			$eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFreeze, $eSpellClone, _
-			$eSpellInvisibility, $eSpellRecall, $eSpellPoison, $eSpellEarthquake, $eSpellHaste, $eSpellSkeleton, $eSpellBat]
-
-	; check for duplicate combobox index and take action
+	
+	Local $aiUsedSpell = $g_aiBrewOrder
+	Local $aTmpBrewOrder[0], $iStartShuffle = 0
+	
 	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
-		For $j = 0 To UBound($g_ahCmbSpellsOrder) - 1
-			If $i = $j Then ContinueLoop ; skip if index are same
-			If _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i]) <> -1 And _
-					_GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i]) = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$j]) Then
-				_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$j], -1)
-				_GUICtrlSetImage($g_ahImgSpellsOrder[$j], $g_sLibIconPath, $eIcnOptions)
-				$bReady = False
-			Else
-				GUICtrlSetColor($g_ahCmbSpellsOrder[$j], $COLOR_BLACK)
-			EndIf
-		Next
-		; update combo array variable with new value
-		$g_aiCmbCustomBrewOrder[$i] = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i])
-		If $g_aiCmbCustomBrewOrder[$i] = -1 Then $bMissingTroop = True ; check if combo box slot that is not assigned a troop
+		Local $iValue = _GUICtrlComboBox_GetCurSel($g_ahCmbSpellsOrder[$i])
+		If $iValue <> -1 Then
+			_ArrayAdd($aTmpBrewOrder, $iValue)
+			Local $iEmpty = _ArraySearch($aiUsedSpell, $iValue)
+			If $iEmpty > -1 Then $aiUsedSpell[$iEmpty] = -1
+		EndIf
 	Next
-
-	; Automatic random fill missing troops
-	If $bReady And $bMissingTroop Then
-		; 1st update $aiUsedTroop array with troops not used in $g_aiCmbCustomTrainOrder
-		For $i = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
-			For $j = 0 To UBound($aiBrewOrder) - 1
-				If $g_aiCmbCustomBrewOrder[$i] = $j Then
-					$aiBrewOrder[$j] = -1 ; if troop is used, replace enum value with -1
-					ExitLoop
-				EndIf
-			Next
-		Next
-		_ArrayShuffle($aiBrewOrder) ; make missing training order assignment random
-		For $i = 0 To UBound($g_aiCmbCustomBrewOrder) - 1
-			If $g_aiCmbCustomBrewOrder[$i] = -1 Then ; check if custom order index is not set
-				For $j = 0 To UBound($aiBrewOrder) - 1
-					If $aiBrewOrder[$j] <> -1 Then ; loop till find a valid troop enum
-						$g_aiCmbCustomBrewOrder[$i] = $aiBrewOrder[$j] ; assign unused troop
-						_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$i], $aiBrewOrder[$j])
-						_GUICtrlSetImage($g_ahImgSpellsOrder[$i], $g_sLibIconPath, $g_aiSpellsOrderIcon[$g_aiCmbCustomBrewOrder[$i] + 1])
-						$aiBrewOrder[$j] = -1 ; remove unused troop from array
-						ExitLoop
-					EndIf
-				Next
-			EndIf
-		Next
-	EndIf
-
+	
+	;_ArrayDisplay($aTmpBrewOrder, "aTmpBrewOrder")
+	$iStartShuffle = Ubound($aTmpBrewOrder)
+	
+	_ArraySort($aiUsedSpell)
+	;_ArrayDisplay($aiUsedSpell, "aiUsedSpell")
+	
+	For $i = 0 To UBound($aTmpBrewOrder) - 1
+		If $aiUsedSpell[$i] = -1 Then $aiUsedSpell[$i] = $aTmpBrewOrder[$i]
+	Next
+	;_ArrayDisplay($aiUsedSpell, "Updated aiUsedSpell")
+	
+	
+	_ArrayShuffle($aiUsedSpell, $iStartShuffle)
+	;_ArrayDisplay($aiUsedSpell, "aiUsedSpell")
+	
+	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
+		_GUICtrlComboBox_SetCurSel($g_ahCmbSpellsOrder[$i], $aiUsedSpell[$i])
+		_GUICtrlSetImage($g_ahImgSpellsOrder[$i], $g_sLibIconPath, $g_aiSpellsOrderIcon[$aiUsedSpell[$i] + 1])
+	Next
+	
+	$g_aiCmbCustomBrewOrder = $aiUsedSpell
+	
 	If $bReady Then
 		ChangeSpellsBrewOrder() ; code function to record new training order
 		If @error Then
@@ -646,46 +639,31 @@ Func BtnSpellsOrderSet()
 			SetLog("Spells Brew order changed successfully!", $COLOR_SUCCESS)
 			For $i = 0 To $eSpellCount - 1
 				$sNewTrainList &= $g_asSpellShortNames[$g_aiBrewOrder[$i]] & ", "
+				;If $g_bDebugSetLog Then SetLog("$g_aiBrewOrder[" & $i & "] = " & $aiUsedSpell[$i], $COLOR_DEBUG1)
 			Next
 			$sNewTrainList = StringTrimRight($sNewTrainList, 2)
 			SetLog("Spells Brew order= " & $sNewTrainList, $COLOR_INFO)
 		EndIf
 	Else
-		SetLog("Must use all Spells and No duplicate troop names!", $COLOR_ERROR)
+		SetLog("Must use all Spells and No duplicate spell names!", $COLOR_ERROR)
 		_GUICtrlSetImage($g_ahImgSpellsOrderSet, $g_sLibIconPath, $eIcnRedLight)
 	EndIf
-	;	GUICtrlSetState($g_hBtnTroopOrderSet, $GUI_DISABLE)
-	SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "BtnSpellsOrderSet")
-
+	
 EndFunc   ;==>BtnSpellsOrderSet
 
 Func ChangeSpellsBrewOrder()
-	If $g_bDebugSetlog Or $g_bDebugSetlogTrain Then SetLog("Begin Func ChangeSpellsBrewOrder()", $COLOR_DEBUG) ;Debug
-
-	Local $NewTroopOrder[$eSpellCount]
-	Local $iUpdateCount = 0
+	Local $iUpdateCount = 0, $aUnique
 
 	If Not IsUseCustomSpellsOrder() Then ; check if no custom troop values saved yet.
 		SetError(2, 0, False)
 		Return
 	EndIf
-
-	; Look for match of combobox text to troopgroup and create new train order
-	For $i = 0 To UBound($g_ahCmbSpellsOrder) - 1
-		Local $sComboText = GUICtrlRead($g_ahCmbSpellsOrder[$i])
-		For $j = 0 To UBound($g_asSpellsOrderList) - 1
-			If $sComboText = $g_asSpellsOrderList[$j] Then
-				$NewTroopOrder[$i] = $j - 1
-				$iUpdateCount += 1
-				ExitLoop
-			EndIf
-		Next
-	Next
-
+	
+	$aUnique = _ArrayUnique($g_aiCmbCustomBrewOrder, 0, 0, 0, 0)
+	$iUpdateCount = UBound($aUnique)
+	
 	If $iUpdateCount = $eSpellCount Then ; safety check that all troops properly assigned to new array.
-		For $i = 0 To $eSpellCount - 1
-			$g_aiBrewOrder[$i] = $NewTroopOrder[$i]
-		Next
+		$g_aiBrewOrder = $aUnique
 		_GUICtrlSetImage($g_ahImgSpellsOrderSet, $g_sLibIconPath, $eIcnGreenLight)
 	Else
 		SetLog($iUpdateCount & "|" & $eSpellCount & " - Error - Bad Spells assignment in ChangeSpellsBrewOrder()", $COLOR_ERROR)
@@ -694,7 +672,6 @@ Func ChangeSpellsBrewOrder()
 	EndIf
 
 	Return True
-
 EndFunc   ;==>ChangeSpellsBrewOrder
 
 Func SetDefaultTroopGroup($bSetLog = True)
@@ -906,28 +883,28 @@ Func RemoveAllTmpTrain($sWhat = "All")
 EndFunc
 
 Func HideAllTroops()
-	For $i = $g_ahPicTrainArmyTroop[$eTroopMinion] To $g_ahPicTrainArmyTroop[$eTroopHeadhunter]
+	For $i = $g_ahPicTrainArmyTroop[$eTroopMinion] To $g_ahPicTrainArmyTroop[$eTroopAppWard]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
-	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopMinion] To $g_ahTxtTrainArmyTroopCount[$eTroopHeadhunter]
+	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopMinion] To $g_ahTxtTrainArmyTroopCount[$eTroopAppWard]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
-	For $i = $g_ahPicTrainArmyTroop[$eTroopBarbarian] To $g_ahPicTrainArmyTroop[$eTroopElectroTitan]
+	For $i = $g_ahPicTrainArmyTroop[$eTroopBarbarian] To $g_ahPicTrainArmyTroop[$eTroopRootRider]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
-	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopElectroTitan]
+	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopRootRider]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
-	For $i = $g_ahPicTrainArmyTroop[$eTroopSuperBarbarian] To $g_ahPicTrainArmyTroop[$eTroopSuperMiner]
+	For $i = $g_ahPicTrainArmyTroop[$eTroopSuperBarbarian] To $g_ahPicTrainArmyTroop[$eTroopSuperHogRider]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
-	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopSuperBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopSuperMiner]
+	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopSuperBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopSuperHogRider]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
-	For $i = $g_ahPicTrainArmySpell[$eSpellLightning] To $g_ahPicTrainArmySpell[$eSpellBat]
+	For $i = $g_ahPicTrainArmySpell[$eSpellLightning] To $g_ahPicTrainArmySpell[$eSpellOverGrowth]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
-	For $i = $g_ahTxtTrainArmySpellCount[$eSpellLightning] To $g_ahTxtTrainArmySpellCount[$eSpellBat]
+	For $i = $g_ahTxtTrainArmySpellCount[$eSpellLightning] To $g_ahTxtTrainArmySpellCount[$eSpellOverGrowth]
 		GUICtrlSetState($i, $GUI_HIDE)
 	Next
 	For $i = $g_ahPicTrainArmySiege[$eSiegeWallWrecker] To $g_ahPicTrainArmySiege[$eSiegeBattleDrill]
@@ -967,10 +944,10 @@ EndFunc
 
 Func BtnElixirTroops()
 	HideAllTroops()
-	For $i = $g_ahPicTrainArmyTroop[$eTroopBarbarian] To $g_ahPicTrainArmyTroop[$eTroopElectroTitan]
+	For $i = $g_ahPicTrainArmyTroop[$eTroopBarbarian] To $g_ahPicTrainArmyTroop[$eTroopRootRider]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
-	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopElectroTitan]
+	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopRootRider]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
 	SetBtnSelector("ElixirTroops")
@@ -978,10 +955,10 @@ EndFunc
 
 Func BtnDarkElixirTroops()
 	HideAllTroops()
-	For $i = $g_ahPicTrainArmyTroop[$eTroopMinion] To $g_ahPicTrainArmyTroop[$eTroopHeadhunter]
+	For $i = $g_ahPicTrainArmyTroop[$eTroopMinion] To $g_ahPicTrainArmyTroop[$eTroopAppWard]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
-	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopMinion] To $g_ahTxtTrainArmyTroopCount[$eTroopHeadhunter]
+	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopMinion] To $g_ahTxtTrainArmyTroopCount[$eTroopAppWard]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
 	SetBtnSelector("DarkElixirTroops")
@@ -989,10 +966,10 @@ EndFunc
 
 Func BtnSuperTroops()
 	HideAllTroops()
-	For $i = $g_ahPicTrainArmyTroop[$eTroopSuperBarbarian] To $g_ahPicTrainArmyTroop[$eTroopSuperMiner]
+	For $i = $g_ahPicTrainArmyTroop[$eTroopSuperBarbarian] To $g_ahPicTrainArmyTroop[$eTroopSuperHogRider]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
-	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopSuperBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopSuperMiner]
+	For $i = $g_ahTxtTrainArmyTroopCount[$eTroopSuperBarbarian] To $g_ahTxtTrainArmyTroopCount[$eTroopSuperHogRider]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
 	SetBtnSelector("SuperTroops")
@@ -1000,10 +977,10 @@ EndFunc
 
 Func BtnSpells()
 	HideAllTroops()
-	For $i = $g_ahPicTrainArmySpell[$eSpellLightning] To $g_ahPicTrainArmySpell[$eSpellBat]
+	For $i = $g_ahPicTrainArmySpell[$eSpellLightning] To $g_ahPicTrainArmySpell[$eSpellOverGrowth]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
-	For $i = $g_ahTxtTrainArmySpellCount[$eSpellLightning] To $g_ahTxtTrainArmySpellCount[$eSpellBat]
+	For $i = $g_ahTxtTrainArmySpellCount[$eSpellLightning] To $g_ahTxtTrainArmySpellCount[$eSpellOverGrowth]
 		GUICtrlSetState($i, $GUI_SHOW)
 	Next
 	SetBtnSelector("Spells")
