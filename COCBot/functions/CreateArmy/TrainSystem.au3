@@ -416,6 +416,7 @@ Func DragIfNeeded($Troop)
 	Local $iIndex = TroopIndexLookup($Troop, "DragIfNeeded")
 	Local $bDragLeft = False, $bDragRight = False
 	
+	If $iIndex >= $eLSpell And $iIndex <= $eOgSpell Then Return True ;skip drag on spell
 	If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True ; Troop image found in current page (no need to drag)
 	
 	If _PixelSearch(777, 354, 778, 355, Hex(0xD3D3CB, 6), 10, True, "DragIfNeeded") Then
@@ -439,8 +440,8 @@ Func DragIfNeeded($Troop)
 	EndIf
 	
 	If Not $bDragLeft And Not $bDragRight Then
-		For $i = 1 To 4
-			If $i < 3 Then 
+		For $i = 1 To 2
+			If $i < 2 Then 
 				SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Left", $COLOR_ACTION)
 				ClickDrag(100, 435, 850, 435)
 			Else

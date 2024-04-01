@@ -123,7 +123,7 @@ Func FillIncorrectSpellCombo($caller = "Unknown")
 	SetLog("Train to Fill Incorrect Spell Combo", $COLOR_ACTION)
 	
 	If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
-	Local $SpellOCR = GetCurrentTroop(95, 163)
+	Local $SpellOCR = GetCurrentSpell(95, 163)
 	If Not $g_bRunState Then Return
 	
 	If $g_bDebugSetlog Then SetLog("SpellOCR:" & _ArrayToString($SpellOCR) & " Called from : " & $caller)
@@ -149,7 +149,6 @@ Func FillIncorrectSpellCombo($caller = "Unknown")
 	Local $SpellQuantToFill = Floor($SpellSpace/$g_sCmbFICSpells[$FillSpellIndex][2])
 	
 	If $SpellQuantToFill > 0 Then
-		If Not DragIfNeeded($g_sCmbFICSpells[$FillSpellIndex][0]) Then Return False
 		SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
 		TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
 	EndIf
