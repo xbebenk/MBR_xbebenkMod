@@ -166,10 +166,10 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	If Not BalanceDonRec(True) Then Return False
 	If SkipDonateNearFullTroops(True) Then Return False
 	
-	If Not WaitforPixel(60, 285, 61, 288, "D6081B", 10, 1, "DonateCC-NewRequest") Then 
-		SetLog("No New requests (red icon), DonateCC Exits", $COLOR_DEBUG1)
-		If Not $bTest Then Return False ;exit if no new chats
-	EndIf
+	;If Not WaitforPixel(60, 285, 61, 288, "D6081B", 10, 1, "DonateCC-NewRequest") Then 
+	;	SetLog("No New requests (red icon), DonateCC Exits", $COLOR_DEBUG1)
+	;	If Not $bTest Then Return False ;exit if no new chats
+	;EndIf
 
 	; check if donate queued troops & spells only
 	Local $abDonateQueueOnly = $g_abChkDonateQueueOnly
