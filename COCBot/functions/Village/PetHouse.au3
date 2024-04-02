@@ -89,7 +89,7 @@ Func PetHouse($test = False)
 	;Setup Max Pet Levels according to PetHouse Level
 	
 	;Reset First
-	$g_ePetLevels[$ePetCount] = [10, 10, 10, 10, 10, 10, 10, 10]
+	Global $g_ePetLevels[$ePetCount] = [10, 10, 10, 10, 10, 10, 10, 10]
 	If Number($BuildingName[2]) >= 5  Then
 		$g_ePetLevels[$ePetLassi] = 15
 	EndIf
