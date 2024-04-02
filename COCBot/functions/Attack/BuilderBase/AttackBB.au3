@@ -887,7 +887,7 @@ Func BBBarbarianHead($sLogText = "BBBarbarianHead")
 	EndIf
 	
 	If Not $bRet Then 
-		If WaitforPixel($aBlackHead[0] - 2, $aBlackHead[1] - 2, $aBlackHead[0] + 2, $aBlackHead[1] + 2, Hex(0xFFEF48, 6), 10, 1, "BBBarbarianHead") Then $bRet = True
+		If WaitforPixel($aBlackHead[0], $aBlackHead[1], $aBlackHead[0] + 1, $aBlackHead[1] + 1, Hex(0xFFEF48, 6), 10, 1, $sLogText) Then $bRet = True
 	EndIf
 	
 	Return $bRet
