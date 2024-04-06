@@ -165,7 +165,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False)
 							$ZoomedIn = True
 							$sameCost = 0
 							$bNew = True
-							If IsFullScreenWindow() Then Click(820, 37) ;close shop window
+							
 							If _Sleep(2000) Then Return
 							If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
 						;Else
@@ -174,6 +174,9 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False)
 						;	GoGoblinMap()
 						;	ZoomOut(True)
 						;	ContinueLoop 2
+						Else
+							If IsFullScreenWindow() Then Click(820, 37) ;close shop window
+							ExitLoop
 						EndIf
 					EndIf
 				EndIf
@@ -226,8 +229,8 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 	If $Gold > $Elix Then $GoldMultiply += 1
 	If $Elix > $Gold Then $ElixMultiply += 1
 	Local $aTmpCoord, $aBuilding[0][8], $BuildingName, $UpgradeCost, $aUpgradeName, $tmpcost, $bFoundRushTH = False, $lenght = 0
-	Local $aPriority[8][2] = [["Castle", 15], ["Pet", 13], ["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10], ["Blacksmith", 12]]
-	Local $aRushTH[7][2] = [["Barracks", 8], ["Spell", 9], ["Workshop", 10], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
+	Local $aPriority[7][2] = [["Castle", 15], ["Pet", 13], ["Laboratory", 15], ["Storage", 14], ["Army", 13], ["Giga", 12], ["Town", 10]]
+	Local $aRushTH[8][2] = [["Barracks", 8], ["Spell", 9], ["Workshop", 10], ["Blacksmith", 8], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
 	Local $aHeroes[4] = ["Barbarian", "Queen", "Warden", "Champion"]
 	
 	;check if we found new building
@@ -241,16 +244,13 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 				$sCostType = $g_iQuickMISName
 				$lenght = Number($g_iQuickMISX) - $aTmpCoord[$i][1]
 			EndIf
-			;SetLog("length = " & $lenght)
-			;SetLog("getBuildingName(" & $aTmpCoord[$i][1] + 10 & "," & $aTmpCoord[$i][2] - 12 & "," & $lenght & ")")
+			
 			$aUpgradeName = getBuildingName($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
-			;SetLog(_ArrayToString($aUpgradeName))
 			$tmpcost = getBuilderMenuCost($g_iQuickMISX + 5, $g_iQuickMISY - 10)
 			If $sCostType = "Gem" And Number($tmpcost) = 0 Then ContinueLoop
 			Local $tmparray[1][8] = [[String($sCostType), $aTmpCoord[$i][1], Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), "New", Number($tmpcost), "New", 0]]
 			_ArrayAdd($aBuilding, $tmparray)
 			If @error Then SetLog("FindUpgrade ComposeArray[New] Err : " & @error, $COLOR_ERROR)
-			;_ArrayAdd($aBuilding, String($sCostType) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($aUpgradeName[0]) & "|New|" & $tmpcost) ;compose the array
 		Next
 		Local $aMultiBuilding[2] = ["Ricochet.+", "Multi.+"]
 		For $sName In $aMultiBuilding
@@ -331,7 +331,6 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 				ContinueLoop
 			EndIf
 			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), Number($aUpgradeName[1]), Number($tmpcost), 0, 0]]
-			;_ArrayAdd($aBuilding, String($aTmpCoord[$i][0]) & "|" & $aTmpCoord[$i][1] & "|" & Number($aTmpCoord[$i][2]) & "|" & String($aUpgradeName[0]) & "|" & Number($aUpgradeName[1]) & "|" & Number($tmpcost)) ;compose the array
 			_ArrayAdd($aBuilding, $tmparray)
 			If @error Then SetLog("FindUpgrade ComposeArray Err : " & @error, $COLOR_ERROR)
 		Next
@@ -406,8 +405,6 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 					EndIf
 				Next
 			EndIf
-			
-			;SetLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $UpgradeCost & ", score=" & $aBuilding[$j][6] & ", Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG1)
 			If $g_bDebugSetLog Then SetLog("Scoring: " & $BuildingName & ", Cost=" & $UpgradeCost & ", Score=" & $aBuilding[$j][6], $COLOR_DEBUG1)
 		Next
 	EndIf
@@ -418,16 +415,6 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 		SetLog("Found Building " & $aBuilding[$iIndex][3] & " with Zero cost, skip!!", $COLOR_ACTION)
 		_ArrayDelete($aBuilding, $iIndex)
 	EndIf
-	
-	;If ($g_bChkRushTH And $bFoundRushTH) Or $g_bHeroPriority Then
-	;	_ArraySort($aBuilding, 1, 0, 0, 6) ;sort by score
-	;Else
-	;	_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
-	;EndIf
-	;
-	;If Not $g_bChkRushTH And Not $g_bHeroPriority Then _ArraySort($aBuilding, 1, 0, 0, 5) ;sort by cost
-	;
-	;If $g_bUpgradeLowCost Then _ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
 	Return $aBuilding
 EndFunc
 
@@ -442,17 +429,28 @@ Func CheckResourceForDoUpgrade($BuildingName, $Cost, $CostType)
 		Case "Gold"
 			If $g_aiCurrentLoot[$eLootGold] >= ($Cost + $g_iTxtSmartMinGold) Then $bSufficentResourceToUpgrade = True
 			If (StringInStr($BuildingName, "Giga") Or StringInStr($BuildingName, "Town")) And $g_aiCurrentLoot[$eLootGold] >= $Cost Then ;bypass save resource for TH and TH weapon
+				SetLog("Bypass autoupgrade save Min Gold", $COLOR_DEBUG1)
 				$bSufficentResourceToUpgrade = True
 			EndIf
+			If Not $bSufficentResourceToUpgrade Then SetLog($g_aiCurrentLoot[$eLootGold] & "-" & $Cost & " < " & $g_iTxtSmartMinGold, $COLOR_DEBUG1)
 		Case "Elix"
-			If $g_aiCurrentLoot[$eLootElixir] >= ($Cost + $g_iTxtSmartMinElixir) Then $bSufficentResourceToUpgrade = True
+			If $g_aiCurrentLoot[$eLootElixir] >= ($Cost + $g_iTxtSmartMinElixir) Then 
+				$bSufficentResourceToUpgrade = True
+			Else
+				SetLog($g_aiCurrentLoot[$eLootElixir] & "-" & $Cost & " < " & $g_iTxtSmartMinElixir, $COLOR_DEBUG1)
+			EndIf
 		Case "DE"
-			If $g_aiCurrentLoot[$eLootDarkElixir] >= ($Cost + $g_iTxtSmartMinDark) Then $bSufficentResourceToUpgrade = True
+			If $g_aiCurrentLoot[$eLootDarkElixir] >= ($Cost + $g_iTxtSmartMinDark) Then 
+				$bSufficentResourceToUpgrade = True
+			Else
+				SetLog($g_aiCurrentLoot[$eLootDarkElixir] & "-" & $Cost & " < " & $g_iTxtSmartMinDark, $COLOR_DEBUG1)
+			EndIf
 		Case "Gem"
 			If CheckPlaceBuilder() Then $bSufficentResourceToUpgrade = True
 	EndSwitch
 	SetLog("Checking: " & $BuildingName & ", Cost: " & $Cost & " " & $CostType, $COLOR_INFO)
 	SetLog("Is Enough " & $CostType & " ? " & String($bSufficentResourceToUpgrade), $bSufficentResourceToUpgrade ? $COLOR_SUCCESS : $COLOR_ERROR)
+	
 	Return $bSufficentResourceToUpgrade
 EndFunc
 
@@ -534,18 +532,12 @@ Func DoUpgrade($bTest = False)
 		Return False
 	EndIf
 
-	Local $THLevelAchieved = False
-	If $g_bUpgradeOnlyTHLevelAchieve Then
-		If $g_iTownHallLevel >= $g_aiCmbRushTHOption[0] + 9 Then ;if option to only upgrade after TH level achieved enabled
-			$THLevelAchieved = True
-		Else
-			$THLevelAchieved = False
-		EndIf
-	Else ;if option to only upgrade after TH level achieved disabled
-		$THLevelAchieved = True ;set true to bypass
-	EndIf
-
+	Local $THLevelAchieved = IsTHLevelAchieved()
 	Local $bMustIgnoreUpgrade = False, $bUpgradeTHWeapon = False
+	
+	; Double check if wrong click happen
+	If CheckIgnoreUpgrade($g_aUpgradeNameLevel[1]) Then $bMustIgnoreUpgrade = True
+	
 	; matchmaking between building name and the ignore list
 	Switch $g_aUpgradeNameLevel[1]
 		Case "Town Hall"
@@ -647,8 +639,6 @@ Func DoUpgrade($bTest = False)
 				$bMustIgnoreUpgrade = True
 				SetLog("Essential Building: Scattershot Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
 			EndIf
-		Case Else
-			$bMustIgnoreUpgrade = False
 	EndSwitch
 
 	Local $aUpgradeButton, $aTmpUpgradeButton
@@ -666,7 +656,7 @@ Func DoUpgrade($bTest = False)
 		SetLog("No upgrade here... Wrong click, looking next...", $COLOR_WARNING)
 		Return False
 	EndIf
-
+	
 	; check if the upgrade name is on the list of upgrades that must be ignored
 	If $bMustIgnoreUpgrade Then
 		SetLog($g_aUpgradeNameLevel[1] & " : This upgrade must be ignored, looking next...", $COLOR_WARNING)
@@ -829,7 +819,7 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 	SetLog("ImgUpgrade : " & $sUpgrade & "=" & $sImgUpgrade & "*", $COLOR_INFO)
 	
 	If QuickMIS("BFI", $ImageDir & $sImgUpgrade & "*", 20, 225, 830, 535) Then
-		If $g_bDebugSetLog Then SetLog("Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
+		SetLog("Found " & $sImgUpgrade & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(2500) Then Return
 	Else
@@ -840,7 +830,7 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 		Local $aWall[3] = ["2","Wall",1]
 		Local $aCostWall[3] = ["Gold", 50, 0]
 		Local $tmpX = 0, $tmpY = 0, $iCount = 0
-		If QuickMIS("BC1", $g_sImgGreenCheck) Then
+		If QuickMIS("BFI", $g_sImgGreenCheck & "GreenCheck*") Then
 			$tmpX = $g_iQuickMISX
 			$tmpY = $g_iQuickMISY
 		Else
@@ -853,17 +843,10 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 			If Not $g_bRunState Then Return
 			If $ProMac > 5 And $iCount > 2 Then ExitLoop
 			If Not $g_bRunState Then Return
-			If QuickMIS("BC1", $g_sImgGreenCheck, $tmpX - 40, $tmpY - 40, $tmpX + 40, $tmpY + 40) Then
-				SetLog("Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
+			If QuickMIS("BFI", $g_sImgGreenCheck & "GreenCheck*", $tmpX - 40, $tmpY - 40, $tmpX + 40, $tmpY + 40) Then
+				SetLog("Found GreenCheck on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
 				Click($g_iQuickMISX, $g_iQuickMISY)
-				
-				If $g_iQuickMISName = "GreyCheck" Then 
-					$iCount += 1
-					SetLog("GreyCheck count : " & $iCount, $COLOR_DEBUG1)
-				Else
-					$iCount = 0
-				EndIf
-				
+				$bRet = True
 				SetLog("Placing Wall #" & $ProMac, $COLOR_ACTION)
 				If _Sleep(1000) Then Return
 				If $g_aiCurrentLoot[$eLootGold] < 1000 Then
@@ -874,14 +857,24 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 				EndIf
 				If _Sleep(500) Then Return
 				AutoUpgradeLog(True, "Wall")
+				$iCount = 0
+				ContinueLoop
+			EndIf
+			If QuickMIS("BFI", $g_sImgGreenCheck & "GreyCheck*", $tmpX - 80, $tmpY - 80, $tmpX + 80, $tmpY + 80) Then
+				$iCount += 1
+				If $iCount > 2 Then ExitLoop
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				SetLog("GreyCheck count : " & $iCount, $COLOR_DEBUG1)
 			EndIf
 		Next
-		Click($g_iQuickMISX - 60, $g_iQuickMISY)
+		
+		Click($g_iQuickMISX - 60, $g_iQuickMISY) ;click redX
 		If $iCount > 2 Then 
 			$iCount = 0
+			GreenCheckLocate($g_iQuickMISX, $g_iQuickMISY) ; re-positioning last checkmark to center
 			Return PlaceNewBuildingFromShop("Wall", True)
 		EndIf
-		Return True
+		Return $bRet
 	EndIf
 	
 	Local $a10sDuration[5] = ["Cannon", "Gold Mine", "Elixir Collector", "Gold Storage", "Elixir Storage"], $bWait10s = False
@@ -892,17 +885,11 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 	EndIf
 	
 	SetLog("Looking for GreenCheck Button", $COLOR_INFO)
-	If QuickMIS("BC1", $g_sImgGreenCheck) Then
-		SetLog($g_iQuickMISName & " Button Found in [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
-		If Not $g_bRunState Then Return
-		If $g_iQuickMISName = "GreyCheck" Then 
-			SetLog("GreenCheck Not Found", $COLOR_ERROR)
-			Click($g_iQuickMISX - 60, $g_iQuickMISY)
-			Return False
-		EndIf
+	If Not $g_bRunState Then Return
+	If QuickMIS("BFI", $g_sImgGreenCheck & "GreenCheck*") Then
+		SetLog("GreenCheck Found in [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
 		
 		If Not GreenCheckLocate($g_iQuickMISX, $g_iQuickMISY) Then Return False
-		If $g_iQuickMISName = "RedX" Then $g_iQuickMISX += 80
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If $sUpgradeType = "Traps" Then Click($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Placed " & $sUpgrade & " on Main Village! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
@@ -910,6 +897,15 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 		If $bWait10s Then _SleepStatus(10000)
 		AutoUpgradeLog(True, $sUpgrade, 1, $iCost, "New")
 		Return True
+	ElseIf QuickMIS("BFI", $g_sImgGreenCheck & "GreyCheck*") Then
+		SetLog("No GreenCheck Found, but Grey", $COLOR_ERROR)
+		Click($g_iQuickMISX - 80, $g_iQuickMISY)
+		Return False
+	ElseIf QuickMIS("BFI", $g_sImgGreenCheck & "RedX*") Then
+		SetLog("No GreenCheck Found, but RedX", $COLOR_ERROR)
+		Click($g_iQuickMISX + 80, $g_iQuickMISY)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		Return False
 	EndIf
 	
 	Return $bRet
@@ -917,9 +913,9 @@ EndFunc ;_PlaceNewBuildingFromShop
 
 Func GreenCheckLocate($x, $y)
 	
-	If $g_iQuickMISName = "GreenCheck" And $x > 120 And $x < 600 And $y > 150 Then Return True
-	If $g_iQuickMISName = "RedX" And $x > 50 And $x < 500 And $y > 150 Then Return True
-	Local $xDragStart = 430, $yDragStart = 330
+	If $x > 120 And $x < 600 And $y > 150 Then Return True
+	
+	Local $xDragStart = 430, $yDragStart = 430
 	Local $xDrag = $xDragStart, $yDrag = $yDragStart
 	
 	If Number($g_iQuickMISX) > $xDragStart Then $xDrag = $xDragStart - Abs($g_iQuickMISX - $xDragStart)
@@ -930,6 +926,7 @@ Func GreenCheckLocate($x, $y)
 	SetLog("Set GreenCheck position for safer click", $COLOR_ACTION)
 	If $g_bDebugSetLog Then SetLog("ClickDrag(" & $xDragStart & "," & $yDragStart & "," & $xDrag & "," & $yDrag & ")")
 	ClickDrag($xDragStart, $yDragStart, $xDrag, $yDrag)
+	If _Sleep(1000) Then Return
 	If QuickMIS("BFI", $g_sImgGreenCheck & "GreenCheck*") Then Return True
 	Return False
 EndFunc
@@ -1159,7 +1156,7 @@ Func ClickDragAUpgrade($Direction = "Up", $DragCount = 1)
 					If _Sleep(1000) Then Return
 				Case "Down"
 					ClickDrag($x, $yUp, $x, $yDown, $Delay, True) ;drag to bottom
-					If WaitforPixel(510, 88, 552, 91, "FFFFFF", 10, 1, "ClickDragAUpgrade") Then
+					If WaitforPixel(510, 90, 512, 91, "FFFFFF", 10, 1, "ClickDragAUpgrade") Then
 						ClickDrag($x, $yUp, $x, $yDown, $Delay, True) ;drag to bottom
 					EndIf
 					If _Sleep(5000) Then Return
@@ -1260,7 +1257,7 @@ Func GoGoblinMap()
 EndFunc
 
 Func IsTHLevelAchieved()
-	Local $THLevelAchieved = True
+	Local $THLevelAchieved = False
 	If $g_bUpgradeOnlyTHLevelAchieve Then
 		If $g_iTownHallLevel >= $g_aiCmbRushTHOption[0] + 9 Then ;if option to only upgrade after TH level achieved enabled
 			$THLevelAchieved = True
@@ -1484,8 +1481,8 @@ EndFunc
 Func IsBuilderMenuOpen()
 	If Not $g_bRunState Then Return
 	Local $bRet = False
-	Local $aBorder0[4] = [427, 73, 0xFFFFFF, 20]
-	Local $aBorder1[4] = [456, 73, 0xFFFFFF, 20]
+	Local $aBorder0[4] = [370, 73, 0xFFFFFF, 20]
+	Local $aBorder1[4] = [500, 73, 0xFFFFFF, 20]
 	Local $sTriangle
 	If _CheckPixel($aBorder0, True) And _CheckPixel($aBorder1, True) Then
 		$bRet = True ;got correct color for border

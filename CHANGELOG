@@ -7,11 +7,12 @@
 * Fix Search Legend League Search
 * Fix SuperTroops boost (recoded)
 * Fix AutoUpgrade : Ignore UpgradeType Gem if read value = 0
+* Fix autoupgrade : Place new wall
 * Fix Training : Drag Left/Right on troops list
 * Fix Training : OCR Troops Capacity on Army Train Tab
 * Fix Training : OCR ArmyOverview read 18
 * Fix Training : OCR Queue Troops read 6
-* Fix Training : corect right coord check location to determine drag left/right
+* Fix Training : correct right coord check location to determine drag left/right
 * Fix Training : TrainSiege (recoded)
 * Fix BuilderBase : Open BuilderBase Tutorial
 * Fix Donate : disable red icon check before donating
