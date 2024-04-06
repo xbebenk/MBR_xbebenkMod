@@ -14,6 +14,7 @@
 * Fix Training : OCR Queue Troops read 6
 * Fix Training : correct right coord check location to determine drag left/right
 * Fix Training : TrainSiege (recoded)
+* Fix AttackBar : Read Siege Level
 * Fix BuilderBase : Open BuilderBase Tutorial
 * Fix Donate : disable red icon check before donating
 * Fix Typo : wrong shortname apprentice warden
