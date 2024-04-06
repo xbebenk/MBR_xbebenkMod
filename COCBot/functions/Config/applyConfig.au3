@@ -2347,7 +2347,7 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 				GUICtrlSetData($g_ahTxtTrainArmySpellCount[$S], $g_aiArmyCustomSpells[$S])
 			Next
 			For $S = 0 To $eSiegeMachineCount - 1
-				GUICtrlSetData($g_ahTxtTrainArmySiegeCount[$S], $g_aiArmyCompSiegeMachines[$S])
+				GUICtrlSetData($g_ahTxtTrainArmySiegeCount[$S], $g_aiArmyCustomSiegeMachines[$S])
 			Next
 			; full & forced Total Camp values
 			GUICtrlSetData($g_hTxtFullTroop, $g_iTrainArmyFullTroopPct)
@@ -2367,7 +2367,7 @@ Func ApplyConfig_600_52_2($TypeReadSave)
 				$g_aiArmyCustomSpells[$S] = GUICtrlRead($g_ahTxtTrainArmySpellCount[$S])
 			Next
 			For $S = 0 To $eSiegeMachineCount - 1
-				$g_aiArmyCompSiegeMachines[$S] = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$S])
+				$g_aiArmyCustomSiegeMachines[$S] = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$S])
 			Next
 			; full & forced Total Camp values
 			$g_iTrainArmyFullTroopPct = Int(GUICtrlRead($g_hTxtFullTroop))

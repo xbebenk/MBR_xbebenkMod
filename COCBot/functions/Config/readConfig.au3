@@ -1625,8 +1625,10 @@ Func ReadConfig_600_52_2()
 	$g_aiArmyCompSpells = $g_aiArmyCustomSpells
 	
 	For $S = 0 To $eSiegeMachineCount - 1
-		IniReadS($g_aiArmyCompSiegeMachines[$S], $g_sProfileConfigPath, "Siege", $g_asSiegeMachineShortNames[$S], 0, "int")
+		IniReadS($g_aiArmyCustomSiegeMachines[$S], $g_sProfileConfigPath, "Siege", $g_asSiegeMachineShortNames[$S], 0, "int")
 	Next
+	$g_aiArmyCompSiegeMachines = $g_aiArmyCustomSiegeMachines
+	
 	IniReadS($g_iTrainArmyFullTroopPct, $g_sProfileConfigPath, "troop", "fullTroop", 100, "int")
 	$g_bTotalCampForced = (IniRead($g_sProfileConfigPath, "other", "ChkTotalCampForced", "1") = "1")
 	$g_iTotalCampForcedValue = Int(IniRead($g_sProfileConfigPath, "other", "ValueTotalCampForced", 220))

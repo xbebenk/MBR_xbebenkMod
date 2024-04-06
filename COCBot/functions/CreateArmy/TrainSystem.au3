@@ -816,6 +816,7 @@ Func WhatToTrain($ReturnExtraTroopsOnly = False, $bFullArmy = $g_bIsFullArmywith
 					ReDim $ToReturn[UBound($ToReturn) + 1][2]
 				EndIf
 			Next
+			TrainSiege(True)
 		Else
 			If $g_iCommandStop = 3 Or $g_iCommandStop = 0 Then
 				SetLog("You are in halt attack mode and your Army is prepared!", $COLOR_INFO)

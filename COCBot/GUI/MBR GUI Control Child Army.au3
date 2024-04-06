@@ -153,7 +153,7 @@ Func lblTotalCountSiege()
 
 		Local $iCount = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$i])
 		If $iCount > 0 Then
-			$g_iTotalTrainSpaceSiege += $g_aiArmyCompSiegeMachines[$i] * $g_aiSiegeMachineSpace[$i]
+			$g_iTotalTrainSpaceSiege += $g_aiArmyCustomSiegeMachines[$i] * $g_aiSiegeMachineSpace[$i]
 
 			;Set Siege Train Info
 			If $iTmpSieges > UBound($g_ahPicTrainArmySiegeTmp) - 1 Then ContinueLoop
@@ -743,8 +743,8 @@ Func Removecamp()
 		GUICtrlSetBkColor($g_ahTxtTrainArmyTroopCount[$S], $COLOR_WHITE)
 	Next
 	For $S = 0 To $eSiegeMachineCount - 1
-		$g_aiArmyCompSiegeMachines[$S] = 0
-		GUICtrlSetData($g_ahTxtTrainArmySiegeCount[$S], $g_aiArmyCompSiegeMachines[$S])
+		$g_aiArmyCustomSiegeMachines[$S] = 0
+		GUICtrlSetData($g_ahTxtTrainArmySiegeCount[$S], $g_aiArmyCustomSiegeMachines[$S])
 		GUICtrlSetBkColor($g_ahTxtTrainArmySiegeCount[$S], $COLOR_WHITE)
 	Next
 
@@ -789,7 +789,7 @@ EndFunc   ;==>TrainSpellCountEdit
 Func TrainSiegeCountEdit()
 	For $i = 0 To $eSiegeMachineCount - 1
 		If @GUI_CtrlId = $g_ahTxtTrainArmySiegeCount[$i] Then
-			$g_aiArmyCompSiegeMachines[$i] = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$i])
+			$g_aiArmyCustomSiegeMachines[$i] = GUICtrlRead($g_ahTxtTrainArmySiegeCount[$i])
 			lblTotalCountSiege()
 			Return
 		EndIf

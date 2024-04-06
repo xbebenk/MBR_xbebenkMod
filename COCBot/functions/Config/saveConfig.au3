@@ -1326,7 +1326,7 @@ Func SaveConfig_600_52_2()
 		_Ini_Add("Spells", $g_asSpellShortNames[$s], $g_aiArmyCustomSpells[$s])
 	Next
 	For $s = 0 To $eSiegeMachineCount - 1
-		_Ini_Add("Siege", $g_asSiegeMachineShortNames[$s], $g_aiArmyCompSiegeMachines[$s])
+		_Ini_Add("Siege", $g_asSiegeMachineShortNames[$s], $g_aiArmyCustomSiegeMachines[$s])
 	Next
 	; full & forced Total Camp values
 	_Ini_Add("troop", "fulltroop", $g_iTrainArmyFullTroopPct)
