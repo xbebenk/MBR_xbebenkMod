@@ -246,6 +246,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 			$aUpgradeName = getBuildingName($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			;SetLog(_ArrayToString($aUpgradeName))
 			$tmpcost = getBuilderMenuCost($g_iQuickMISX + 5, $g_iQuickMISY - 10)
+			If $sCostType = "Gem" And Number($tmpcost) = 0 Then ContinueLoop
 			Local $tmparray[1][8] = [[String($sCostType), $aTmpCoord[$i][1], Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), "New", Number($tmpcost), "New", 0]]
 			_ArrayAdd($aBuilding, $tmparray)
 			If @error Then SetLog("FindUpgrade ComposeArray[New] Err : " & @error, $COLOR_ERROR)

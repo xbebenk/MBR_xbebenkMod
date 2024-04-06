@@ -6,6 +6,7 @@
 * Add RootRider AttackCSV
 * Fix Search Legend League Search
 * Fix SuperTroops boost (recoded)
+* Fix AutoUpgrade : Ignore UpgradeType Gem if read value = 0
 * Fix Training : Drag Left/Right on troops list
 * Fix Training : OCR Troops Capacity on Army Train Tab
 * Fix Training : OCR ArmyOverview read 18
