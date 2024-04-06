@@ -4,6 +4,7 @@
 * Add Super Hog Rider
 * Add OverGrowth Spell
 * Add RootRider AttackCSV
+* Add RootRider AttackCSV by Venux771
 * Fix Search Legend League Search
 * Fix SuperTroops boost (recoded)
 * Fix AutoUpgrade : Ignore UpgradeType Gem if read value = 0
@@ -14,11 +15,13 @@
 * Fix Training : OCR Queue Troops read 6
 * Fix Training : correct right coord check location to determine drag left/right
 * Fix Training : TrainSiege (recoded)
+* Fix Laboratory Upgrade (recoded)
 * Fix AttackBar : Read Siege Level
 * Fix AttackBar : SiegeSwitch
 * Fix BuilderBase : Open BuilderBase Tutorial
 * Fix Donate : disable red icon check before donating
 * Fix Typo : wrong shortname apprentice warden
+* Fix CSV apply setting
 * Improve : Black Barbarian Head (determine end battle BB)
 * Improve : Autolocate Clan Castle
 * Improve : Autolocate Laboratory
