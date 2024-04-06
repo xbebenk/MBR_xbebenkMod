@@ -101,30 +101,30 @@ Func AutoLocateCC()
 	SetLog("Try to Auto Locate Clan Castle", $COLOR_INFO)
 	ClickAway()
 	
-	If Not $CCFound Then 
-		Local $ClanCastleCoord = QuickMIS("CNX", $g_sImgClanCastle, 77,70,800,580)
-		If IsArray($ClanCastleCoord) And UBound($ClanCastleCoord) > 0 Then
-			For $i = 0 To UBound($ClanCastleCoord) - 1
-				If $ClanCastleCoord[$i][0] = "TreasuryFull" Or $ClanCastleCoord[$i][0] = "Full" Then 
-					Click($ClanCastleCoord[$i][1], $ClanCastleCoord[$i][2] + 30)
-				Else
-					Click($ClanCastleCoord[$i][1] + 10, $ClanCastleCoord[$i][2] + 10)
-				EndIf
-				If _Sleep(500) Then Return
-				Local $BuildingInfo = BuildingInfo(290, 472)
-				If $BuildingInfo[1] = "Clan Castle" Then 
-					$g_aiClanCastlePos[0] = $ClanCastleCoord[$i][1] + 10
-					$g_aiClanCastlePos[1] = $ClanCastleCoord[$i][2] + 10
-					SetLog("Found Clan Castle Lvl " & $BuildingInfo[2] & ", save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
-					$CCFound = True
-					ExitLoop
-				Else
-					SetLog("Not ClanCastle, its a " & $BuildingInfo[1])
-					ClickAway()
-				EndIf
-				If _Sleep(500) Then Return
-			Next
-		EndIf
+	Local $ClanCastleCoord = QuickMIS("CNX", $g_sImgClanCastle)
+	If IsArray($ClanCastleCoord) And UBound($ClanCastleCoord) > 0 Then
+		_ArraySort($ClanCastleCoord, 1, 0, 0, 3)
+		For $i = 0 To UBound($ClanCastleCoord) - 1
+			If StringInStr($ClanCastleCoord[$i][0], "Full") Then 
+				Click($ClanCastleCoord[$i][1], $ClanCastleCoord[$i][2] + 30)
+			Else
+				Click($ClanCastleCoord[$i][1] + 10, $ClanCastleCoord[$i][2] + 10)
+			EndIf
+			
+			If _Sleep(1000) Then Return
+			Local $BuildingInfo = BuildingInfo(290, 472)
+			If $BuildingInfo[1] = "Clan Castle" Then 
+				$g_aiClanCastlePos[0] = $ClanCastleCoord[$i][1] + 10
+				$g_aiClanCastlePos[1] = $ClanCastleCoord[$i][2] + 10
+				SetLog("Found Clan Castle Lvl " & $BuildingInfo[2] & ", save as CC Coords : " & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1], $COLOR_INFO)
+				$CCFound = True
+				ExitLoop
+			Else
+				SetLog("Not ClanCastle, its a " & $BuildingInfo[1], $COLOR_DEBUG1)
+				ClickAway()
+			EndIf
+			If _Sleep(500) Then Return
+		Next
 	EndIf
 	Return $CCFound
 EndFunc
