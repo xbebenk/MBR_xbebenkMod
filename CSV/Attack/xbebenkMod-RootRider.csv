@@ -8,24 +8,30 @@ NOTE  |CC    : Yeti 1x, Titan x1, Skeleton x3
 NOTE  |Siege : Log Launcher
 NOTE  |Redline: External edges
 
-      |_TROOPNAME_|__FLEXIBLE_|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|____TH14___|____TH15___|____TH16___|
-TRAIN |ETitan     |0          |0          |0          |0          |0          |0          |0          |0          |           |           |2          |2          |
-TRAIN |RootR      |0          |0          |0          |0          |0          |0          |0          |0          |           |           |8          |8          |
-TRAIN |Yeti       |0          |0          |0          |0          |0          |0          |0          |0          |           |           |4          |4          |
-TRAIN |Witc       |0          |0          |0          |0          |0          |0          |0          |0          |           |           |2          |2          |
-TRAIN |SkSpell    |0          |0          |0          |0          |0          |0          |0          |0          |           |           |11         |11         |
-TRAIN |King       |0          |0          |0          |0          |0          |0          |0          |0          |           |           |1          |1          |
-TRAIN |Queen      |0          |0          |0          |0          |0          |0          |0          |0          |           |           |1          |1          |
-TRAIN |Warden     |0          |0          |0          |0          |0          |0          |0          |0          |           |           |1          |1          |
-TRAIN |Champion   |0          |0          |0          |0          |0          |0          |0          |0          |           |           |1          |1          |
+      |_TROOPNAME_|__FLEXIBLE_|__TH06__|__TH07__|__TH08__|__TH09__|__TH10__|__TH11__|__TH12__|__TH13-14__|__TH15-16__|
+TRAIN |ETitan     |0          |0       |0       |0       |0       |0       |0       |0       |2          |2          |
+TRAIN |RootR      |0          |0       |0       |0       |0       |0       |0       |0       |8          |8          |
+TRAIN |Yeti       |0          |0       |0       |0       |0       |0       |0       |0       |4          |4          |
+TRAIN |Witc       |0          |0       |0       |0       |0       |0       |0       |0       |2          |2          |
+TRAIN |SkSpell    |0          |0       |0       |0       |0       |0       |0       |0       |11         |11         |
 
-      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11___|____TH12___|____TH13___|____TH14___|____TH15___|____TH16___|
-REDLN |0          |0          |0          |0          |0          |0          |0          |0          |0          |           |           |4          |4          |
+      |_TROOPNAME_|___________|__TH06__|__TH07__|__TH08__|__TH09__|__TH10__|__TH11__|__TH12__|__TH13-14__|__TH15-16__| ; Train Heroes: 1=autoactivate, 2=timed, 3=checkboth
+TRAIN |King       |0          |0       |0       |0       |0       |0       |0       |0       |0          |127        | ; Find on Search&Attack/Options/Attack
+TRAIN |Queen      |0          |0       |0       |0       |0       |0       |0       |0       |0          |240        | ; Format: [1-3][0-100]
+TRAIN |Warden     |0          |0       |0       |0       |0       |0       |0       |0       |0          |330        |
+TRAIN |Champion   |0          |0       |0       |0       |0       |0       |0       |0       |0          |335        |
 
-      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
-SIDE  |0          |0          |0          |0          |0          |0          |           |TOP-RAND   |
-      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |           |           |
-SIDEB |           |0          |0          |0          |0          |0          |0          |           |           |           |
+      |___________|___________|__TH06__|__TH07__|__TH08__|__TH09__|__TH10__|__TH11__|__TH12__|__TH13-14__|__TH15-16__|
+REDLN |0          |0          |1       |1       |1       |1       |1       |4       |4       |4          |4          |
+DRPLN |0          |0          |2       |2       |2       |2       |2       |4       |4       |4          |4          |
+
+      |___________|___________|__TH06__|__TH07__|__TH08__|__TH09__|__TH10__|__TH11__|__TH12__|__TH13__|__TH14__|_____________TH15_______________|_____________TH16_______________|
+CCREQ |           |           |        |        |        |        |        |        |        |        |        |Yeti/Titan/suba/giant/skell/LogL|Yeti/Titan/suba/giant/skell/LogL|
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE| ; Forced side: TOP-LEFT, TOP-RIGHT, BOTTOM-LEFT, BOTTOM-RIGHT
+SIDE  |0          |0          |0          |0          |0          |8          |-15        |TOP-RAND   |	; TOP-RAND = will forcing attack from TOP (random left/right)
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |
+SIDEB |5          |0          |0          |0          |0          |8          |0          |           |
 
       |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|
 MAKE  |A          |FRONT-RIGHT|10         |0          |EXT-INT    |0          |0          |           |Troops
