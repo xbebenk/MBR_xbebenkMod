@@ -69,7 +69,7 @@ EndFunc   ;==>OpenQuickTrainTab
 Func OpenTrainTab($sTab, $bSetLog = True, $sWhereFrom = "Undefined")
 	
 	CheckReceivedTroops()
-	If Not IsTrainPage($bSetLog) Then
+	If Not IsTrainPage() Then
 		SetDebugLog("Error in OpenTrainTab: Cannot find the Army Overview Window", $COLOR_ERROR)
 		SetError(1)
 		Return False

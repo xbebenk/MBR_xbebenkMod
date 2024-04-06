@@ -193,12 +193,13 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 
-	If _CheckPixel($aIsTrainPgChk1, True) Then
+	If _PixelSearch($aIsTrainPage[0], $aIsTrainPage[1], $aIsTrainPage[0] + 1, $aIsTrainPage[1] + 1, Hex($aIsTrainPage[2], 6), $aIsTrainPage[3], True, "checkObstacles") Then
 		SetLog("checkObstacles: Found Army Window to close", $COLOR_ACTION)
 		ClickAway(Default, True)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
+	
 	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then ;ads event popup window (usually covering 80% of coc screen)
 		SetLog("checkObstacles: Found Event Ads", $COLOR_ACTION)

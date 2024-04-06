@@ -409,17 +409,27 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 	; must be called after language is detected
 	TranslateTroopNames()
 	InitializeCOCDistributors()
-
+	
 	; check for compiled x64 version
-	Local $sMsg = GetTranslatedFileIni("MBR GUI Design - Loading", "Compile_Script", "Don't Run/Compile the Script as (x64)! Try to Run/Compile the Script as (x86) to get the bot to work.\r\n" & _
-			"If this message still appears, try to re-install AutoIt.")
+	Local $sMsg = GetTranslatedFileIni("MBR GUI Design - Loading", "Compile_Script", "Don't Run/Compile the Script as (x64)! Try to Run/Compile the Script as (x86) to get the bot to work.\r\n\r\n" & _
+			"If this message still appears, try to re-install AutoIt.\r\n")
 	If @AutoItX64 = 1 Then
 		DestroySplashScreen()
 		MsgBox(0, "", $sMsg)
 		__GDIPlus_Shutdown()
 		Exit
 	EndIf
-
+	
+	Local $cmdLineHelp = GetTranslatedFileIni("MBR GUI Design - Loading", "Commandline_multiple_Bots","You can start multiple Bots by using the commandline (or a shortcut) :\r\n\r\n" & _
+			"MyBot.run.exe [ProfileName] [EmulatorName] [InstanceName]\r\n\r\n" & _
+			"If a profilename contains a {space}, then enclose the profilename in double quotes).\r\n\r\n" & _
+			"For second instance of Bot, specify the Emulator and Instance name\r\n\r\n" & _
+			"Supported Emulators are MEmu, Nox, BlueStacks5\r\n" & _
+			"Examples of command line:\r\n" & _
+			"     MyBot.run.exe MyVillage\r\n" & _
+			"     MyBot.run.exe MyVillage1 BlueStacks5 Pie64_1\r\n" & _
+			"     MyBot.run.au3 ""My Village 2"" BlueStacks5 Pie64_2")
+	
 	; Initialize Android emulator
 	InitializeAndroid($bConfigRead)
 
@@ -443,16 +453,6 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 		EndIf
 	EndIf
 
-	Local $cmdLineHelp = GetTranslatedFileIni("MBR GUI Design - Loading", "Commandline_multiple_Bots", "By using the commandline (or a shortcut) you can start multiple Bots:\r\n" & _
-			"     MyBot.run.exe [ProfileName] [EmulatorName] [InstanceName]\r\n\r\n" & _
-			"With the first command line parameter, specify the Profilename (you can create profiles on the Bot/Profiles tab, if a " & _
-			"profilename contains a {space}, then enclose the profilename in double quotes). " & _
-			"With the second, specify the name of the Emulator and with the third, an Android Instance (not for BlueStacks). \r\n" & _
-			"Supported Emulators are MEmu, Nox, BlueStacks2, BlueStacks and iTools.\r\n\r\n" & _
-			"Examples:\r\n" & _
-			"     MyBot.run.exe MyVillage BlueStacks2\r\n" & _
-			"     MyBot.run.exe ""My Second Village"" MEmu MEmu_1")
-
 	$g_hMutex_BotTitle = CreateMutex($g_sBotTitle)
 	$sAI = GetTranslatedFileIni("MBR GUI Design - Loading", "Android_instance_01", "%s", $g_sAndroidEmulator)
 	Local $sAndroidInfo2 = GetTranslatedFileIni("MBR GUI Design - Loading", "Android_instance_02", "%s (instance %s)", $g_sAndroidEmulator, $g_sAndroidInstance)
@@ -463,8 +463,11 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 	; Check if we are already running for this instance
 	$sMsg = GetTranslatedFileIni("MBR GUI Design - Loading", "Msg_Android_instance_01", "My Bot for %s is already running.\r\n\r\n", $sAI)
 	If $g_hMutex_BotTitle = 0 Then
-		SetDebugLog($g_sBotTitle & " is already running, exit now")
 		DestroySplashScreen()
+		SetDebugLog($g_sBotTitle & " is already running, exit now")
+		;SplashTextOn($g_sBotTitle,  $sMsg & $cmdLineHelp, $g_iSizeWGrpTab1 + 200, $g_iSizeHGrpTab1, Default, Default, BitOR($DLG_TEXTLEFT, $DLG_MOVEABLE), "Lucida Console", 10)
+		;Sleep(10000)
+		;SplashOff()
 		MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST), $g_sBotTitle, $sMsg & $cmdLineHelp)
 		__GDIPlus_Shutdown()
 		Exit

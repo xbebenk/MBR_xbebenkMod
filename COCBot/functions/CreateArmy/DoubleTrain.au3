@@ -629,8 +629,7 @@ Func IsNormalTroopTrain()
 		Local $troopIndex = $g_aiTrainOrder[$i]
 		If $g_aiArmyCompTroops[$troopIndex] > 0 Then
 			$iSpace += ($g_aiTroopSpace[$troopIndex] * $g_aiArmyCompTroops[$troopIndex])
-			;If $g_bDebugSetlog Then 
-			SetLog($g_asTroopNames[$troopIndex] & " : space:" & $g_aiTroopSpace[$troopIndex] & " x compo:" & $g_aiArmyCompTroops[$troopIndex] & " spacetotal = " & $iSpace, $COLOR_DEBUG1)
+			If $g_bDebugSetlog Then SetLog($g_asTroopNames[$troopIndex] & " : space:" & $g_aiTroopSpace[$troopIndex] & " x compo:" & $g_aiArmyCompTroops[$troopIndex] & " spacetotal = " & $iSpace, $COLOR_DEBUG1)
 		EndIf
 	Next
 	
@@ -650,8 +649,7 @@ Func IsNormalSpellTrain()
 		Local $spellIndex = $g_aiBrewOrder[$i]
 		If $g_aiArmyCompSpells[$spellIndex] > 0 Then
 			$iSpace += ($g_aiSpellSpace[$spellIndex] * $g_aiArmyCompSpells[$spellIndex])
-			;If $g_bDebugSetlog Then 
-			SetLog($g_asSpellNames[$spellIndex] & " : space:" & $g_aiSpellSpace[$spellIndex] & " x compo:" & $g_aiArmyCompSpells[$spellIndex] & " spacetotal = " & $iSpace, $COLOR_DEBUG1)
+			If $g_bDebugSetlog Then SetLog($g_asSpellNames[$spellIndex] & " : space:" & $g_aiSpellSpace[$spellIndex] & " x compo:" & $g_aiArmyCompSpells[$spellIndex] & " spacetotal = " & $iSpace, $COLOR_DEBUG1)
 		EndIf
 	Next
 	
@@ -702,9 +700,9 @@ Func DoubleTrainTroop($bDebug = False)
 				ExitLoop
 			Case $TroopCamp[0] = ($TroopCamp[1] * 2)
 				SetLog("Cur = Max", $COLOR_DEBUG1)
-				If IsNormalTroopTrain() Then
-					If Not CheckQueueTroopAndTrainRemain() Then ExitLoop
-				EndIf
+				;If IsNormalTroopTrain() Then
+				;	If Not CheckQueueTroopAndTrainRemain() Then ExitLoop
+				;EndIf
 			Case $TroopCamp[0] = 0 ; 0/600 (empty troop camp)
 				SetLog("TroopCamp[0] = 0", $COLOR_DEBUG1)
 				TrainFullTroop() ;train 1st Army

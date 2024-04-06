@@ -107,7 +107,7 @@ Func getProfile($x_start, $y_start) ;  -> Gets Attack Win/Defense Win/Donated/Re
 	Return getOcrAndCapture("coc-profile", $x_start, $y_start, 55, 13, True)
 EndFunc   ;==>getProfile
 
-Func getTroopCount($x_start, $y_start, $width = 60, $height = 20) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
+Func getTroopCount($x_start, $y_start, $width = 60, $height = 22) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
 	Return StringReplace(getOcrAndCapture("coc-troopcount", $x_start, $y_start, $width, $height, True), "-", "")
 EndFunc   ;==>getTroopCountSmall
 
@@ -135,10 +135,10 @@ Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of tro
 	Return StringRegExpReplace(getOcrAndCapture("coc-troopcap", $x_start, $y_start, 70, 16, True), "[-x]", "")
 EndFunc   ;==>getArmyCapacityOnTrainTroops(95, 163)
 
-;TestOCRTroopCap(0, 320, 500)
-Func TestOCRTroopCap($iStart = 1, $iCount = 10, $bSaveOCRCap = True, $bSaveOCRTroop = False, $bSaveOCRQueue = False, $iSleep = 800, $path = "D:\OCRTool\TestImages\DebugOCR\")
+;TestOCRTroopCap(0, 320)
+Func TestOCRTroopCap($iStart = 0, $iCount = 10, $bSaveOCRCap = True, $bSaveOCRTroop = False, $bSaveOCRQueue = False, $iSleep = 800, $path = "D:\OCRTool\TestImages\DebugOCR\")
 	Local $sRet = "", $sRet1 = "", $aString, $s1 = ""
-	For $i = $iStart To $iCount
+	For $i = $iStart To $iCount - 1
 		If Not $g_bRunState Then Return
 		
 		If $bSaveOCRCap Then

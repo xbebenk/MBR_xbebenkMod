@@ -35,7 +35,7 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
 		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(690, 23)
 		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 74)
-		$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(728, 123)
+		$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(690, 123)
 		$g_iGemAmount = getResourcesMainScreen(740, 171)
 		If Not $bSuppressLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [D]: " & _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir]) & " [GEM]: " & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
 	Else

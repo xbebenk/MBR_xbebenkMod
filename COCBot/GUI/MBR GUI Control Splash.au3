@@ -16,9 +16,9 @@
 
 Func SplashStep($status, $bIncreaseStep = True)
 	If $bIncreaseStep = True Then $g_iSplashCurrentStep += 1
-
-	SetDebugLog("SplashStep " & $g_iSplashCurrentStep & " of " & $g_iSplashTotalSteps & ": " & $status & "(" & Round(__TimerDiff($g_hSplashTimer) / 1000, 2) & " sec)")
-
+	$status &= " (" & Round(__TimerDiff($g_hSplashTimer) / 1000, 2) & " sec)"
+	SetDebugLog("SplashStep " & $g_iSplashCurrentStep & " of " & $g_iSplashTotalSteps & ": " & $status)
+	
 	If $g_bDisableSplash Then Return
 
 	GUICtrlSetData($g_hSplashProgress, ($g_iSplashCurrentStep / $g_iSplashTotalSteps) * 100)

@@ -21,7 +21,7 @@
 ; ===============================================================================================================================
 Func _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $sColor, $iColorVariation, $bReturnBool = False, $sMessage = "_PixelSearch")
 	Local $x1, $y1, $x2, $y2, $retColor
-	_CaptureRegion($iLeft, $iTop, $iRight, $iBottom)
+	_CaptureRegion($iLeft, $iTop, $iRight+1, $iBottom+1)
 	$x2 = $iRight - $iLeft
 	$y2 = $iBottom - $iTop
 	$x1 = 0

@@ -51,15 +51,15 @@ EndFunc   ;==>IsSettingPage
 
 Func IsTrainPage($bSetLog = False, $iLoop = 5)
 	If Not $g_bRunState Then Return
-	If IsPageLoop($aIsTrainPgChk1, $iLoop) Then
+	If _PixelSearch($aIsTrainPage[0], $aIsTrainPage[1], $aIsTrainPage[0] + 1, $aIsTrainPage[1] + 1, Hex($aIsTrainPage[2], 6), $aIsTrainPage[3], True, "IsTrainPage") Then
 		If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then SetLog("**Army Window OK**", $COLOR_ACTION)
 		Return True
 	EndIf
 	
 	If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then
-		Local $colorRead = _GetPixelColor($aIsTrainPgChk1[0], $aIsTrainPgChk1[1], True)
+		Local $colorRead = _GetPixelColor($aIsTrainPage[0], $aIsTrainPage[1], True)
 		SetLog("**Army Window FAIL**", $COLOR_ACTION)
-		SetLog("expected in (" & $aIsTrainPgChk1[0] & "," & $aIsTrainPgChk1[1] & ")  = " & Hex($aIsTrainPgChk1[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
+		SetLog("expected in (" & $aIsTrainPage[0] & "," & $aIsTrainPage[1] & ")  = " & Hex($aIsTrainPage[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
 	EndIf
 	
 	If $bSetLog Then SetLog("Cannot find Army Window...", $COLOR_ERROR) ; in case of $i = 29 in while loop

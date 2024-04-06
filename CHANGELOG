@@ -19,8 +19,10 @@
 * Fix BuilderBase : Open BuilderBase Tutorial
 * Fix Donate : disable red icon check before donating
 * Fix Typo : wrong shortname apprentice warden
+* Improve : Black Barbarian Head (determine end battle BB)
 * Improve : Autolocate Clan Castle
 * Improve : Autolocate Laboratory
+* Improve : Mix OCR read pos, CheckPixel pos, debug log, splash timer
 * ** NEW TROOPS ADDED, PLEASE USE CLEAN PROFILE **
 
 * **v.7.9.9 Mod_v1.2.5#115**
