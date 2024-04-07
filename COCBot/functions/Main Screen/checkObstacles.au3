@@ -645,13 +645,16 @@ Func CheckPetHouseTutorial()
 	Local $TmpX = 0, $TmpY = 0, $aPetHouse
 	If $g_iTownHallLevel < 14 Then Return
 	
-	If QuickMIS("BC1", $g_sImgArrowNewBuilding) Then
+	If QuickMIS("BC1", $g_sImgArrowNewBuilding, 60, 60, 800, 530) Then
 		$TmpX = $g_iQuickMISX
 		$TmpY = $g_iQuickMISY
-		If QuickMIS("BC1", $g_sImgPetHouse, $TmpX - 80, $TmpY - 80, $TmpX + 80, $TmpY + 80) Then
+		If $TmpX < 70 Or $TmpY < 70 Or $TmpX > 770 Or $TmpY > 500 Then Return
+		If QuickMIS("BC1", $g_sImgPetHouse, $TmpX - 40, $TmpY, $TmpX + 40, $TmpY + 60) Then
 			SetLog("Found PetHouse Tutorial Arrow", $COLOR_SUCCESS)
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(1000) Then Return
+			If _Sleep(3000) Then Return
+			If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then Click(115, 540)
+			
 			For $i = 1 To 10
 				SetLog("Handling Tutorial chat1 : #" & $i, $COLOR_ACTION)
 				If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then

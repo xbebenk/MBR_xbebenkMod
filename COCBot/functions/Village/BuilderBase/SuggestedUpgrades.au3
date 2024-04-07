@@ -710,8 +710,8 @@ Global $g_aOptimizeOTTO[16][2] = [["Double Cannon", 10], ["Archer Tower", 10], [
 
 Func FindBBExistingBuilding($bTest = False)
 	Local $ElixMultiply = 1, $GoldMultiply = 1 ;used for multiply score
-	Local $Gold = getResourcesMainScreen(695, 23)
-	Local $Elix = getResourcesMainScreen(695, 74)
+	Local $Gold = getResourcesMainScreen(690, 23)
+	Local $Elix = getResourcesMainScreen(690, 74)
 	If $Gold > $Elix Then $GoldMultiply += 1
 	If $Elix > $Gold Then $ElixMultiply += 1
 
@@ -859,8 +859,8 @@ EndFunc
 Func CheckResourceForDoUpgradeBB($BuildingName, $Cost, $CostType)
 	If Not $g_bRunState Then Return
 
-	Local $Gold = getResourcesMainScreen(695, 23)
-	Local $Elix = getResourcesMainScreen(695, 72)
+	Local $Gold = getResourcesMainScreen(690, 23)
+	Local $Elix = getResourcesMainScreen(690, 72)
 	SetDebugLog("Gold:" & $Gold & " Elix:" & $Elix)
 
 	; initiate a False boolean, that firstly says that there is no sufficent resource to launch upgrade

@@ -159,7 +159,7 @@ Func QueenUpgrade()
 
 	;##### Get updated village elixir and dark elixir values
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
+		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(690, 123))
 		SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
 	Else
 		SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)
@@ -262,7 +262,7 @@ Func KingUpgrade()
 
 	;##### Get updated village elixir and dark elixir values
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
+		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(690, 123))
 		SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
 	Else
 		SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)
@@ -373,10 +373,10 @@ Func WardenUpgrade()
 
 	;##### Get updated village elixir values
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(705, 74)
+		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 74)
 		SetDebugLog("Updating village values [E]: " & $g_aiCurrentLoot[$eLootElixir], $COLOR_DEBUG)
 	Else
-		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(710, 74)
+		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 74)
 	EndIf
 
 	If _Sleep(100) Then Return
@@ -487,7 +487,7 @@ Func ChampionUpgrade()
 
 	;##### Get updated village elixir and dark elixir values
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
+		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(690, 123))
 		SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
 	Else
 		SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)

@@ -231,9 +231,9 @@ Func ForgeClanCapitalGold($bTest = False)
 		Return
 	EndIf
 
-	Local $iCurrentGold = getResourcesMainScreen(695, 23) ;get current Gold
-	Local $iCurrentElix = getResourcesMainScreen(695, 74) ;get current Elixir
-	Local $iCurrentDE = getResourcesMainScreen(720, 120) ;get current Dark Elixir
+	Local $iCurrentGold = getResourcesMainScreen(690, 23) ;get current Gold
+	Local $iCurrentElix = getResourcesMainScreen(690, 74) ;get current Elixir
+	Local $iCurrentDE = getResourcesMainScreen(690, 120) ;get current Dark Elixir
 	If Not $g_bRunState Then Return
 	If Not OpenForgeWindow() Then
 		SetLog("Forge Window not Opened, exiting", $COLOR_ACTION)

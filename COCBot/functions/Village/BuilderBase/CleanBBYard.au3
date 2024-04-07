@@ -5,7 +5,7 @@ Func CleanBBYard($bTest = False)
 	; Timer
 	Local $hObstaclesTimer = __TimerInit()
 	getBuilderCount(False, True)
-	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
+	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(690, 72)
 	SetLog("CleanBBYard: Try removing obstacles", $COLOR_DEBUG)
 	; Obstacles function to Parallel Search , will run all pictures inside the directory
 	If $g_iFreeBuilderCountBB = 0 And Not $bTest Then 
@@ -39,7 +39,7 @@ Func CleanBBYard($bTest = False)
 						ContinueLoop
 					EndIf
 					
-					$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(705, 72)
+					$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(690, 72)
 					If $g_aiCurrentLootBB[$eLootElixirBB] < 20000 Then
 						SetLog("Current BB Elixir Below 20000, skip CleanBBYard", $COLOR_DEBUG)
 						ExitLoop

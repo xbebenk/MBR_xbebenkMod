@@ -146,8 +146,8 @@ Func UpgradeWall($bTest = False)
 EndFunc   ;==>UpgradeWall
 
 Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = $g_aUpgradeWall[0]+4)
-	If $g_aiCurrentLoot[$eLootGold] < 0 Then $g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(695, 23) ;get current Gold
-	If $g_aiCurrentLoot[$eLootElixir] < 0 Then $g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(695, 74) ;get current Elixir
+	If $g_aiCurrentLoot[$eLootGold] < 0 Then $g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(690, 23) ;get current Gold
+	If $g_aiCurrentLoot[$eLootElixir] < 0 Then $g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 74) ;get current Elixir
 	SetDebugLog("Current Resource, Gold: " & $g_aiCurrentLoot[$eLootGold] & " Elix: " & $g_aiCurrentLoot[$eLootElixir], $COLOR_INFO)
 	Local $HaveResource = True
 	Local $UpgradeType = "Gold"
@@ -217,8 +217,8 @@ Func UpgradeLowLevelWall($bTest = False)
 	While True
 		If Not $g_bRunState Then Return
 		If Not WallUpgradeCheckBuilder($bTest) Then Return
-		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(695, 23) ;get current Gold
-		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(695, 74) ;get current Elixir
+		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(690, 23) ;get current Gold
+		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 74) ;get current Elixir
 		If $Try > 4 Then ExitLoop
 		If $Try > 2 And $WallNotFound Then ExitLoop ; jump to exit
 		SetLog("[" & $Try & "] Search Wall on Builder Menu", $COLOR_INFO)
@@ -228,7 +228,6 @@ Func UpgradeLowLevelWall($bTest = False)
 
 		If $g_iSaveGoldWall > $g_aiCurrentLoot[$eLootGold] And $g_iSaveElixWall > $g_aiCurrentLoot[$eLootElixir] Then
 			SetLog("Upgrade Wall skipped, need to save for RushTH Priority Building", $COLOR_ACTION)
-			ClickDragAUpgrade("down")
 			Return
 		EndIf
 
