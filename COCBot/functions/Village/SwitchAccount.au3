@@ -383,6 +383,7 @@ Func SwitchCOCAcc($NextAccount)
 		DeleteFiles($g_sProfileTempDebugPath, "*.*", $g_iDeleteTempDays, 0, $FLTAR_RECUR)
 	EndIf
 	
+	checkversion()
 	runBot()
 
 EndFunc   ;==>SwitchCOCAcc
