@@ -1259,7 +1259,7 @@ EndFunc
 Func IsTHLevelAchieved()
 	Local $THLevelAchieved = False
 	If $g_bUpgradeOnlyTHLevelAchieve Then
-		If $g_iTownHallLevel >= $g_aiCmbRushTHOption[0] + 9 Then ;if option to only upgrade after TH level achieved enabled
+		If Number($g_iTownHallLevel) >= Number($g_aiCmbRushTHOption[0]) + 9 Then ;if option to only upgrade after TH level achieved enabled
 			$THLevelAchieved = True
 		Else
 			$THLevelAchieved = False
