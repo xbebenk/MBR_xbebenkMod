@@ -1264,6 +1264,8 @@ Func IsTHLevelAchieved()
 		Else
 			$THLevelAchieved = False
 		EndIf
+	Else
+		$THLevelAchieved = True
 	EndIf
 	Return $THLevelAchieved
 EndFunc
