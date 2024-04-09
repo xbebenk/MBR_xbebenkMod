@@ -18,7 +18,7 @@ Global $g_hGUI_DONATE = 0, $g_hGUI_DONATE_TAB = 0, $g_hGUI_DONATE_TAB_ITEM1 = 0,
 
 ; Request
 Global $g_hChkRequestTroopsEnable = 0, $g_hTxtRequestCC = 0, $g_ahChkRequestCCHours[24] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_hChkRequestCCHoursE1 = 0, $g_hChkRequestCCHoursE2 = 0
+Global $g_hChkRequestCCHoursE1 = 0, $g_hChkRequestCCHoursE2 = 0, $g_hChkRequestRemoveImage = 0
 Global $g_hGrpRequestCC = 0, $g_hLblRequestCCHoursAM = 0, $g_hLblRequestCCHoursPM = 0
 Global $g_hLblRequestCChour = 0, $g_ahLblRequestCChoursE = 0
 Global $g_hLblRequestCChours[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -118,6 +118,11 @@ Func CreateRequestSubTab()
 		$g_hTxtRequestCC = GUICtrlCreateInput(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC", "Anything please"), $x + 40 + 30, $y + 15, 214, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC_Info_01", "This text is used on your request for troops in the Clan chat."))
+		
+		$g_hChkRequestRemoveImage = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRemoveImage", "Remove Image Request"), $x + 100, $y + 35)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRemoveImage_Info_01", "Remove Image Request if any"))
+			GUICtrlSetState(-1, $GUI_CHECKED)
+			GUICtrlSetOnEvent(-1, "chkRequestRemoveImage")
 
 	; Request Type (Demen)
 	$y += 60

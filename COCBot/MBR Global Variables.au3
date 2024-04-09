@@ -890,7 +890,7 @@ Global $g_sBBDropOrder = $g_sBBDropOrderDefault
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; <><><><> Village / Donate - Request <><><><>
-Global $g_bRequestTroopsEnable = False
+Global $g_bRequestTroopsEnable = False, $g_bRequestRemoveImage = False
 Global $g_sRequestTroopsText = ""
 Global $g_abRequestCCHours[24] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
 Global $g_abRequestType[3] = [True, True, False] ; (0 = Troop, 1 = Spell, 2 = Siege Machine)

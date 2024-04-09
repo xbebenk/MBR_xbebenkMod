@@ -594,6 +594,7 @@ Func SaveConfig_600_11()
 	ApplyConfig_600_11(GetApplyConfigSaveAction())
 	; <><><><> Village / Donate - Request <><><><>
 	_Ini_Add("planned", "RequestHoursEnable", $g_bRequestTroopsEnable ? 1 : 0)
+	_Ini_Add("planned", "RequestRemoveImage", $g_bRequestRemoveImage ? 1 : 0)
 	_Ini_Add("donate", "txtRequest", $g_sRequestTroopsText)
 	; Request Type - Demen
 	_Ini_Add("donate", "RequestType_Troop", $g_abRequestType[0] ? 1 : 0)

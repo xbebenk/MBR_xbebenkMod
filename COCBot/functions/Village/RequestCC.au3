@@ -83,13 +83,16 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
 
 EndFunc   ;==>RequestCC
 
-Func _makerequest($x, $y, $bTest)
+Func _makerequest($x = 730, $y = 540, $bTest = False)
 	
+	Local $iCount = 0, $TmpX = 0, $TmpY = 0
 	Click($x, $y, 1, 0, "0336") ;click button request troops	
 	Local $RequestWindowOpen = False
 	For $i = 1 To 10
 		SetDebugLog("Wait for Send Request Window #" & $i, $COLOR_ACTION)
 		If QuickMis("BC1", $g_sImgSendRequestButton, 515, 480, 575, 495) Then 
+			$TmpX = $g_iQuickMISX
+			$TmpY = $g_iQuickMISY
 			SetDebugLog("_makerequest: Request window open", $COLOR_ACTION)
 			$RequestWindowOpen = True
 			ExitLoop
@@ -98,9 +101,36 @@ Func _makerequest($x, $y, $bTest)
 	Next
 	
 	If $RequestWindowOpen Then 
+		If $g_bRequestRemoveImage Then
+			SetLog("Check RequestCC Remove Image", $COLOR_INFO)
+			If QuickMIS("BC1", $g_sImgRequestRemoveImage, 270, 220, 325, 260) Then 
+				SetLog("RequestCC Image is empty", $COLOR_SUCCESS)
+			Else
+				If QuickMIS("BFI", $g_sImgRequestRemoveImage & "Edit*", 600, 180, 650, 220) Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					If _Sleep(1000) Then Return
+					While WaitForPixel(180, 230, 181, 231, Hex(0xE21012, 6), 10, 1) 
+						$iCount += 1
+						Click(180, 225, 5, 100) ;Click Remove Button
+						If _Sleep(1000) Then Return
+						SetLog("Removing RequestCC with Image #" & $iCount, $COLOR_ACTION)
+					Wend
+					If QuickMIS("BFI", $g_sImgRequestRemoveImage & "Requested*", 210, 145, 270, 170) Then
+						SetLog("RequestCC Image Removal Success", $COLOR_SUCCESS)
+						Click(640, 530) ;Click Confirm Button
+						If _Sleep(2000) Then Return
+					Else
+						SetLog("RequestCC Image Removal Failed", $COLOR_SUCCESS)
+						Click(640, 530) ;Click Confirm Button
+						If _Sleep(2000) Then Return
+					EndIf
+				EndIf
+			EndIf
+		EndIf
+		
 		If $g_sRequestTroopsText <> "" Then
 			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-			Click($g_iQuickMISX - 50, $g_iQuickMISY - 60) ;click text box 
+			Click($TmpX - 50, $TmpY - 60) ;click text box 
 			If _Sleep(1000) Then Return
 			If SendText($g_sRequestTroopsText) = 0 Then ;type the request
 				ClickAway()
@@ -120,7 +150,7 @@ Func _makerequest($x, $y, $bTest)
 		EndIf
 		
 		If _Sleep(2000) Then Return ; wait time for text request to complete
-		Click($g_iQuickMISX + 115, $g_iQuickMISY)
+		Click($TmpX + 115, $TmpY)
 		If _Sleep(1000) Then Return ; wait time after clicking request window border
 		For $i = 1 To 5
 			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)

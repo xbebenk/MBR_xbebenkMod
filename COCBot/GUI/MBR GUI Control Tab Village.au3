@@ -33,6 +33,14 @@ Func chkRequestCCHours()
 	SetRedrawBotWindowControls($bWasRedraw, $g_hGrpRequestCC, "chkRequestCCHours")
 EndFunc   ;==>chkRequestCCHours
 
+Func chkRequestRemoveImage()
+	If GUICtrlRead($g_hChkRequestRemoveImage) = $GUI_CHECKED Then
+		$g_bRequestRemoveImage = True
+	Else
+		$g_bRequestRemoveImage = False
+	EndIf
+EndFunc
+
 Func chkRequestCountCC()
 	If GUICtrlRead($g_hChkRequestType_Troops) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hTxtRequestCountCCTroop, $GUI_ENABLE)
