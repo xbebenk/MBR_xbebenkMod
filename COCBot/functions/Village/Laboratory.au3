@@ -159,15 +159,15 @@ Func Laboratory($bDebug = False)
 										If QuickMIS("BC1", $g_sImgResIcon, $aSpell[$i][1], $aSpell[$i][2], $aSpell[$i][1] + 60, $aSpell[$i][2] + 70) Then 
 											Local $sCostResult = getLabCost($g_iQuickMISX - 92, $g_iQuickMISY - 10)
 											Local $level = getTroopsSpellsLevel($g_iQuickMISX - 79, $g_iQuickMISY - 32)
+											Local $sSpellName = GetTroopName(TroopIndexLookup($aSpell[$i][0]))
 											If $level = "" Then $level = 1
-											If Not IsLabUpgradeResourceEnough($aSpell[$i][0], $sCostResult) Then
-												SetLog(GetUpgradeName($aSpell[$i][0]) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
+											If Not IsLabUpgradeResourceEnough($sSpellName, $sCostResult) Then
+												SetLog(GetUpgradeName($sSpellName) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
 											Else
-												SetLog(GetUpgradeName($aSpell[$i][0]) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
+												SetLog(GetUpgradeName($sSpellName) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
 												$bUpgradeFound = True
-												ExitLoop
-												;Local $aCoords[2] = [$aSpell[$i][1], $aSpell[$i][2]]
-												;If Not $bDebug Then Return LaboratoryUpgrade($aSpell[$i][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
+												Local $aCoords[2] = [$aSpell[$i][1], $aSpell[$i][2]]
+												If Not $bDebug Then Return LaboratoryUpgrade($aSpell[$i][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 											EndIf
 										Else
 											SetLog("Any Spell - ResIcon Not Found", $COLOR_ERROR)
@@ -193,19 +193,19 @@ Func Laboratory($bDebug = False)
 									If QuickMIS("BC1", $g_sImgResIcon, $aSiege[$i][1], $aSiege[$i][2], $aSiege[$i][1] + 80, $aSiege[$i][2] + 80) Then 
 										Local $sCostResult = getLabCost($g_iQuickMISX - 92, $g_iQuickMISY - 10)
 										Local $level = getTroopsSpellsLevel($g_iQuickMISX - 79, $g_iQuickMISY - 32)
+										Local $sSiegeName = GetTroopName(TroopIndexLookup($aSiege[$i][0]))
 										If $level = "" Then $level = 1
 										If $g_bUpgradeSiegeToLvl2 And $level >= 3 Then
-											SetLog("Skip " & $aSiege[$i][0] & ", already Level " & $level)
+											SetLog("Skip " & $sSiegeName & ", already Level " & $level)
 											ContinueLoop								
 										EndIf
-										If Not IsLabUpgradeResourceEnough($aSiege[$i][0], $sCostResult) Then
-											SetLog($aSiege[$i][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
+										If Not IsLabUpgradeResourceEnough($sSiegeName, $sCostResult) Then
+											SetLog($sSiegeName & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
 										Else
-											SetLog($aSiege[$i][0] & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
+											SetLog($sSiegeName & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
 											$bUpgradeFound = True
-											ExitLoop
-											;Local $aCoords[2] = [$aSiege[$i][1], $aSiege[$i][2]]
-											;If Not $bDebug Then Return LaboratoryUpgrade($aSiege[$i][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
+											Local $aCoords[2] = [$aSiege[$i][1], $aSiege[$i][2]]
+											If Not $bDebug Then Return LaboratoryUpgrade($aSiege[$i][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
 										EndIf
 									Else
 										SetLog("Any Siege - ResIcon Not Found", $COLOR_ERROR)
@@ -231,7 +231,7 @@ Func Laboratory($bDebug = False)
 				If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
 					For $i = 0 To UBound($Upgrades) - 1
 						If $Upgrades[$i][0] = "SKIP" Then ContinueLoop
-						SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Cost:" & $Upgrades[$i][3], $COLOR_INFO)	
+						SetDebugLog("LabUpgrade: " & $Upgrades[$i][4] & " Cost: " & $Upgrades[$i][3], $COLOR_INFO)	
 						If Not IsLabUpgradeResourceEnough($Upgrades[$i][4], $Upgrades[$i][3]) Then
 							SetDebugLog($Upgrades[$i][4] & " Skip, Not Enough Resource", $COLOR_INFO)
 						Else
@@ -270,7 +270,9 @@ EndFunc
 
 ; start a given upgrade
 Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $bDebug = False)
-	SetLog("Selected upgrade: " & GetUpgradeName($name) & " Cost: " & $sCostResult, $COLOR_INFO)
+	Local $sUpgradeName = GetUpgradeName($name)
+	If $sUpgradeName = "" Then $sUpgradeName = $name
+	SetLog("Selected upgrade: " & $sUpgradeName & " Cost: " & $sCostResult, $COLOR_INFO)
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
 	
@@ -282,9 +284,8 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $bDebug = False)
 		Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
 		If _Sleep(1000) Then Return
 		If Not isGemOpen(True) Then ; check for gem window
-			ChkLabUpgradeInProgress($bDebug, $name)
 			; success
-			SetLog("Upgrade " & GetUpgradeName($name) & " in your laboratory started with success...", $COLOR_SUCCESS)
+			SetLog("Upgrade " & $sUpgradeName & " in your laboratory started with success...", $COLOR_SUCCESS)
 			PushMsg("LabSuccess")
 			
 			If _Sleep($DELAYLABUPGRADE2) Then Return
@@ -293,7 +294,7 @@ Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $bDebug = False)
 			ClickAway()
 			Return True ; upgrade started
 		Else
-			SetLog("Oops, Gems required for " & GetUpgradeName($name) & " Upgrade, try again.", $COLOR_ERROR)
+			SetLog("Oops, Gems required for " & $sUpgradeName & " Upgrade, try again.", $COLOR_ERROR)
 			Return False
 		EndIf
 	EndIf
@@ -325,14 +326,14 @@ Func LabGoToPage($iFrom = 1, $iTo = 2, $iLabMaxPages = 4)
 				ClickDrag(720, 500, 80, 500)
 				If _Sleep(1000) Then Return
 				$iCurPage += 1
-				If $g_bDebugSetLog Then SetLog("CurPage:" & $iCurPage, $COLOR_DEBUG)
+				SetLog("LabGoToPage : CurPage=" & $iCurPage, $COLOR_DEBUG1)
 			Next
 		Case $iTo < $iFrom
 			For $i = $iFrom To $iTo + 1 Step - 1
 				ClickDrag(130, 500, 766, 500)
 				If _Sleep(1000) Then Return
 				$iCurPage -= 1
-				If $g_bDebugSetLog Then SetLog("CurPage:" & $iCurPage, $COLOR_DEBUG)
+				SetLog("LabGoToPage : CurPage=" & $iCurPage, $COLOR_DEBUG1)
 			Next
 		Case $iTo = $iFrom
 	EndSelect
@@ -341,15 +342,14 @@ Func LabGoToPage($iFrom = 1, $iTo = 2, $iLabMaxPages = 4)
 		If _Sleep(3000) Then Return
 	EndIf
 	
-	SetLog("LabGoToPage : CurPage=" & $iCurPage, $COLOR_ACTION)
 	Return $iCurPage
 EndFunc
 
 ; check the lab to see if something is upgrading in the lab already
 Func ChkLabUpgradeInProgress($bDebug = False, $name = "")
 	; check for upgrade in process - look for green in finish upgrade with gems button
-	If _Sleep(500) Then Return
-	If _ColorCheck(_GetPixelColor(415, 135, True), Hex(0xA1CA6B, 6), 20) Then ; Look for light green in upper right corner of lab window.
+	If _Sleep(1000) Then Return
+	If WaitForPixel(415, 135, 416, 136, Hex(0xA1CA6B, 6), 20, 1, "ChkLabUpgradeInProgress") Then ; Look for light green in upper right corner of lab window.
 		SetLog("Laboratory is Running", $COLOR_INFO)
 		;==========Hide Red  Show Green Hide Gray===
 		GUICtrlSetState($g_hPicLabGray, $GUI_HIDE)
@@ -497,7 +497,7 @@ Func FindLabUpgrade()
 		For $i = 0 To UBound($aResult) - 1
 			If QuickMIS("BC1", $g_sImgLabResearch, $aResult[$i][1] - 92, $aResult[$i][2] - 93, $aResult[$i][1] + 17, $aResult[$i][2]) Then
 				Local $cost = getLabCost($aResult[$i][1] - 92, $aResult[$i][2] - 10)
-				Local $level = getTroopsSpellsLevel($aResult[$i][1] - 79, $aResult[$i][2] - 32)
+				Local $level = getTroopsSpellsLevel($aResult[$i][1] - 81, $aResult[$i][2] - 32)
 				$sUpgradeName = GetTroopName(TroopIndexLookup($g_iQuickMISName))
 				If $level = "" Then $level = 1
 				$aResult[$i][3] = Number($cost)
@@ -522,6 +522,7 @@ Func GetUpgradeName($shortName)
 	For $i = 0 To UBound($g_avLabTroops) -1
 		If $shortName = $g_avLabTroops[$i][2] Then Return $g_avLabTroops[$i][0]
 	Next
+	Return ""
 EndFunc
 
 Func IsLabUpgradeResourceEnough($TroopOrSpell, $Cost)
