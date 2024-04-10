@@ -536,7 +536,9 @@ Func DoUpgrade($bTest = False)
 	Local $bMustIgnoreUpgrade = False, $bUpgradeTHWeapon = False
 	
 	; Double check if wrong click happen
-	If CheckIgnoreUpgrade($g_aUpgradeNameLevel[1]) Then $bMustIgnoreUpgrade = True
+	If Not $g_bUpgradeLowCost Then
+		If CheckIgnoreUpgrade($g_aUpgradeNameLevel[1]) Then $bMustIgnoreUpgrade = True
+	EndIf
 	
 	; matchmaking between building name and the ignore list
 	Switch $g_aUpgradeNameLevel[1]
