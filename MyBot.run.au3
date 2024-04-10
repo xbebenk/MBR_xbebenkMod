@@ -1413,6 +1413,7 @@ Func FirstCheckRoutine()
 							ExitLoop
 						Else
 							Setlog("[" & $loopcount & "] 1st Attack Loop, Failed", $COLOR_INFO)
+							If $g_bForceSwitch Then ExitLoop
 							If $g_bCheckDonateOften And $loopcount = 5 Then
 								DonateCC(True, True)
 								TrainSystem(True)
@@ -1491,6 +1492,7 @@ Func FirstCheckRoutine()
 									ExitLoop
 								Else
 									Setlog("[" & $loopcount & "] 2nd Attack Loop, Failed", $COLOR_INFO)
+									If $g_bForceSwitch Then ExitLoop
 									If $g_bCheckDonateOften And $loopcount = 5 Then
 										DonateCC(True, True)
 										TrainSystem(True)
