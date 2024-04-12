@@ -420,7 +420,7 @@ EndFunc
 
 Func CheckResourceForDoUpgrade($BuildingName, $Cost, $CostType)
 	If Not $g_bRunState Then Return
-	If $g_bDebugSetLog Then SetLog("Gold:" & $g_aiCurrentLoot[$eLootGold] & " Elix:" & $g_aiCurrentLoot[$eLootElixir] & " DE:" & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG1)
+	If $g_bDebugSetLog Then SetLog("Gold:" & $g_aiCurrentLoot[$eLootGold] & " Elix:" & $g_aiCurrentLoot[$eLootElixir] & " DE:" & $g_aiCurrentLoot[$eLootDarkElixir] & " GEM:" & $g_iGemAmount, $COLOR_DEBUG1)
 
 	; initiate a False boolean, that firstly says that there is no sufficent resource to launch upgrade
 	Local $bSufficentResourceToUpgrade = False
@@ -505,20 +505,20 @@ Func CheckIgnoreUpgrade($sUpgradeName = "", $bUpgradeLowCost = False)
 	
 	If $bUpgradeLowCost Then
 		$bMustIgnoreUpgrade = False
-		SetLog("[UpgradeLowCost] " & $sUpgradeName & ", CheckIgnoreUpgrade: " & String($bMustIgnoreUpgrade), $COLOR_DEBUG)
+		SetLog("[UpgradeLowCost] " & $sUpgradeName & ", CheckIgnoreUpgrade: " & String($bMustIgnoreUpgrade), $COLOR_DEBUG1)
 	EndIf
 	
 	If $g_bUpgradeOtherDefenses Then ;bypass for other defense building
 		For $sName In $g_aOtherDefense
 			If StringInStr($sUpgradeName, $sName) Then
 				$bMustIgnoreUpgrade = False
-				SetLog("[OtherDefense] " & $sUpgradeName & ", CheckIgnoreUpgrade: " & String($bMustIgnoreUpgrade), $COLOR_DEBUG)
+				SetLog("[OtherDefense] " & $sUpgradeName & ", CheckIgnoreUpgrade: " & String($bMustIgnoreUpgrade), $COLOR_DEBUG1)
 				ExitLoop
 			EndIf
 		Next
 	EndIf
 	
-	If $g_bDebugSetLog Then SetLog("CheckIgnoreUpgrade: " & $sUpgradeName & ", result=" & String($bMustIgnoreUpgrade), $COLOR_DEBUG)
+	If $g_bDebugSetLog Then SetLog("CheckIgnoreUpgrade: " & $sUpgradeName & ", result=" & String($bMustIgnoreUpgrade), $COLOR_DEBUG1)
 	Return $bMustIgnoreUpgrade
 EndFunc
 
@@ -536,9 +536,7 @@ Func DoUpgrade($bTest = False)
 	Local $bMustIgnoreUpgrade = False, $bUpgradeTHWeapon = False
 	
 	; Double check if wrong click happen
-	If Not $g_bUpgradeLowCost Then
-		If CheckIgnoreUpgrade($g_aUpgradeNameLevel[1]) Then $bMustIgnoreUpgrade = True
-	EndIf
+	If CheckIgnoreUpgrade($g_aUpgradeNameLevel[1], $g_bUpgradeLowCost) Then $bMustIgnoreUpgrade = True
 	
 	; matchmaking between building name and the ignore list
 	Switch $g_aUpgradeNameLevel[1]
@@ -1311,10 +1309,10 @@ EndFunc
 Func CheckPlaceBuilder($bTest = False)
 	If Not $g_bRunState Then Return
 	Local $bRet = False
-	Local $a_Gem = Number($g_iGemAmount)
-	Local $a_Builder = Number($g_iTotalBuilderCount)
-	If $a_Builder < 5 Then
-		If ($a_Builder = 2 And $a_Gem > 499) Or  ($a_Builder = 3 And $a_Gem > 999) Or ($a_Builder = 4 And $a_Gem > 1999 ) Then $bRet = True
+	Local $iGem = Number($g_iGemAmount)
+	Local $iBuilder = Number($g_iTotalBuilderCount)
+	If $iBuilder < 5 Then
+		If ($iBuilder = 2 And $iGem > 499) Or  ($iBuilder = 3 And $iGem > 999) Or ($iBuilder = 4 And $iGem > 1999 ) Then $bRet = True
 	EndIf
 	Return $bRet
 EndFunc
