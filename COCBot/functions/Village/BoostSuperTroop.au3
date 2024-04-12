@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func BoostSuperTroop($bTest = False)
+Func BoostSuperTroop($bTest = False, $bForced = False)
 	If Not $g_bSuperTroopsEnable Then Return False
 	If Not $g_bRunState Then Return
 	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
@@ -24,7 +24,7 @@ Func BoostSuperTroop($bTest = False)
 	EndIf
 	
 	;assign("g_bSuperTroopBoosted", False)
-	If $g_bSuperTroopBoosted Then 
+	If $g_bSuperTroopBoosted And Not $bForced Then 
 		SetLog("Troop Already Boosted on last check..., skip boost SuperTroop", $COLOR_SUCCESS)
 		Return ;Troop already checked and boosted
 	EndIf
@@ -35,7 +35,7 @@ Func BoostSuperTroop($bTest = False)
 	VillageReport(True, True)
 	If Not $g_bRunState Then Return
 	
-	If Not OpenBarrel() Then Return False
+	If Not OpenBarrel($bForced) Then Return False
 	
 	Local $iPicsPerRow = 4, $picswidth = 160, $picspad = 19
 	Local $curRow = 1, $columnStart = 78, $iY = 307, $iY1 = 465
@@ -146,7 +146,7 @@ Func BoostSuperTroop($bTest = False)
 	Return $g_bSuperTroopBoosted
 EndFunc   ;==>BoostSuperTroop
 
-Func OpenBarrel()
+Func OpenBarrel($bForced = False)
 	$g_bForceUseSuperTroopPotion = False
 	Local $bOpenBarrel = True
 	Local $xBarrel = 0, $yBarrel = 0, $sColorCheckText = ""
@@ -154,6 +154,7 @@ Func OpenBarrel()
 	Local $Color1 = "", $Color2 = "", $bBar1Found = False, $bBar2Found = False
 	
 	If Not $g_bRunState Then Return
+	
 	If QuickMIS("BC1", $g_sImgBoostTroopsBarrel, 60, 120, 220, 260) Then
 		$xBarrel = $g_iQuickMISX
 		$yBarrel = $g_iQuickMISY
@@ -207,6 +208,11 @@ Func OpenBarrel()
 			$bOpenBarrel = False
 			$g_bSuperTroopBoosted = True
 		EndIf
+		
+		If $bForced Then
+			SetLog("Forced To Open Barrel", $COLOR_INFO)
+			$bOpenBarrel = True
+		EndIf		
 		
 		If $bOpenBarrel Then
 			CheckSuperTroopPotion()

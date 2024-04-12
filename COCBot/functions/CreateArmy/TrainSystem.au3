@@ -454,6 +454,14 @@ Func DragIfNeeded($Troop)
 	EndIf
 	
 	SetLog("Failed to Verify Troop " & $g_asTroopNames[TroopIndexLookup($Troop, "DragIfNeeded")] & " Position or Failed to Drag Successfully", $COLOR_ERROR)
+	If $g_bSuperTroopsEnable Then
+		SetLog("Re-Check If SuperTroop Boost needed", $COLOR_INFO)
+		ClickAway()
+		BoostSuperTroop(False, True)
+		OpenArmyOverview()
+		OpenTroopsTab()
+		TrainUsingWhatToTrain(WhatToTrain())
+	EndIf
 	Return False
 EndFunc   ;==>DragIfNeeded
 
