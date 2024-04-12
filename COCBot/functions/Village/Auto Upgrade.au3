@@ -168,16 +168,12 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False)
 							
 							If _Sleep(2000) Then Return
 							If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
-						;Else
-						;	$ZoomedIn = False
-						;	If IsFullScreenWindow("PlaceNewBuildingFromShop") Then Click(820, 37)
-						;	GoGoblinMap()
-						;	ZoomOut(True)
-						;	ContinueLoop 2
 						Else
 							If IsFullScreenWindow() Then Click(820, 37) ;close shop window
 							ExitLoop
 						EndIf
+					Else
+						$bSkipNew = True
 					EndIf
 				EndIf
 			Next
