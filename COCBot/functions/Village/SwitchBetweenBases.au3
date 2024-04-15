@@ -98,7 +98,6 @@ Func SwitchTo($To = "BB")
 		
 		Local $ZoomOutResult
 		If $To = "BB" Then
-			CheckPetHouseTutorial()
 			If Not QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
 				checkChatTabPixel()
 				$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases")
@@ -117,6 +116,8 @@ Func SwitchTo($To = "BB")
 				$g_iQuickMISX += 10
 				$g_iQuickMISY -= 10
 			EndIf
+			
+			If $To = "BB" Then CheckPetHouseTutorial()
 			
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(3000) Then Return
