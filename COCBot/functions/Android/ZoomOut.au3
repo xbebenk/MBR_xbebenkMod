@@ -741,8 +741,6 @@ Func ZoomIn($Region = "Top")
 	EndSwitch
 	
 	Switch $g_sAndroidEmulator
-		Case "MEmu", "Nox"
-			$sScript &= ".Memu"
 		Case "BlueStacks5"
 			$sScript &= ".BlueStacks5"
 	EndSwitch
