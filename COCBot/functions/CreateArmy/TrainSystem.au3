@@ -338,7 +338,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 				Local $NeededSpace = $g_aiTroopSpace[$iTroopIndex] * $rWTT[$i][1]
 			EndIf
 
-			Local $aLeftSpace = GetOCRCurrent(95, 163)
+			Local $aLeftSpace = GetCurrentTroop(96, 165)
 			Local $LeftSpace = $bQueue ? ($aLeftSpace[1] * 2) - $aLeftSpace[0] : $aLeftSpace[2]
 			If $g_bIgnoreIncorrectTroopCombo And $g_bDoubleTrain And $bQueue Then
 				$LeftSpace = $aLeftSpace[0]
@@ -545,29 +545,13 @@ Func RemoveExtraTroops($toRemove)
 		$toRemove = WhatToTrain(True) ; Check Everything Again...
 		If UBound($toRemove) = 1 And $toRemove[0][0] = "Arch" And $toRemove[0][1] = 0 Then Return 2
 		
-		;SetLog("Troops To Remove: ", $COLOR_INFO)
-		;$CounterToRemove = 0
-		;; Loop through Troops needed to get removed Just to write some Logs
-		;For $i = 0 To (UBound($toRemove) - 1)
-		;	If IsSpellToBrew($toRemove[$i][0]) Then ExitLoop
-		;	$CounterToRemove += 1
-		;	SetLog(" - " & $g_asTroopNames[TroopIndexLookup($toRemove[$i][0])] & ": " & $toRemove[$i][1] & "x", $COLOR_SUCCESS)
-		;Next
-		;
-		;If $CounterToRemove <= UBound($toRemove) Then
-		;	SetLog("Spells To Remove: ", $COLOR_INFO)
-		;	For $i = $CounterToRemove To (UBound($toRemove) - 1)
-		;		SetLog(" - " & $g_asSpellNames[TroopIndexLookup($toRemove[$i][0]) - $eLSpell] & ": " & $toRemove[$i][1] & "x", $COLOR_SUCCESS)
-		;	Next
-		;EndIf
-
-		If Not _CheckPixel($aButtonEditArmy, True) Then ; If no 'Edit Army' Button found in army tab to edit troops
+		If WaitforPixel($aBtnEditArmy[0], $aBtnEditArmy[1], $aBtnEditArmy[0] + 1, $aBtnEditArmy[1] + 1, Hex($aBtnEditArmy[2], 6), $aBtnEditArmy[3], 1, "BtnEditArmy") Then
+			ClickP($aBtnEditArmy) ; Click Edit Army Button
+			If _Sleep(1000) Then Return
+		Else
 			SetLog("Cannot find/verify 'Edit Army' Button in Army tab", $COLOR_WARNING)
 			Return False ; Exit function
 		EndIf
-
-		ClickP($aButtonEditArmy) ; Click Edit Army Button
-		If _Sleep(500) Then Return
 		
 		SetLog("To Remove:", $COLOR_INFO)
 		For $i = 0 To (UBound($toRemove) - 1)
@@ -588,55 +572,31 @@ Func RemoveExtraTroops($toRemove)
 			EndIf
 		Next
 		
-		;Local $rGetSlotNumber = GetSlotNumber() ; Get all available Slot numbers with troops assigned on them
-		;Local $rGetSlotNumberSpells = GetSlotNumber(True)
-		;
-		;; Loop through troops needed to get removed
-		;$CounterToRemove = 0
-		;For $j = 0 To (UBound($toRemove) - 1)
-		;	If IsSpellToBrew($toRemove[$j][0]) Then ExitLoop
-		;	$CounterToRemove += 1
-		;	For $i = 0 To (UBound($rGetSlotNumber) - 1) ; Loop through All available slots
-		;		; $toRemove[$j][0] = Troop name, E.g: Barb, $toRemove[$j][1] = Quantity to remove
-		;		If $toRemove[$j][0] = $rGetSlotNumber[$i] Then ; If $toRemove Troop Was the same as The Slot Troop
-		;			Local $pos = GetSlotRemoveBtnPosition($i) ; Get positions of - Button to remove troop
-		;			ClickRemoveTroop($pos, $toRemove[$j][1], $g_iTrainClickDelay) ; Click on Remove button as much as needed
-		;		EndIf
-		;	Next
-		;Next
-		;
-		;For $j = $CounterToRemove To (UBound($toRemove) - 1)
-		;	For $i = 0 To (UBound($rGetSlotNumberSpells) - 1) ; Loop through All available slots
-		;		; $toRemove[$j][0] = Troop name, E.g: Barb, $toRemove[$j][1] = Quantity to remove
-		;		If $toRemove[$j][0] = $rGetSlotNumberSpells[$i] Then ; If $toRemove Troop Was the same as The Slot Troop
-		;			Local $pos = GetSlotRemoveBtnPosition($i, True) ; Get positions of - Button to remove troop
-		;			ClickRemoveTroop($pos, $toRemove[$j][1], $g_iTrainClickDelay) ; Click on Remove button as much as needed
-		;		EndIf
-		;	Next
-		;Next
-
-		If _Sleep(1000) Then Return
-		If Not _CheckPixel($aButtonRemoveTroopsOK1, True) Then ; If no 'Okay' button found in army tab to save changes
-			SetLog("Cannot find/verify 'Okay' Button in Army tab", $COLOR_WARNING)
+		If WaitforPixel($aBtnRemOK1[0], $aBtnRemOK1[1], $aBtnRemOK1[0] + 1, $aBtnRemOK1[1] + 1, Hex($aBtnRemOK1[2], 6), $aBtnRemOK1[3], 1, "BtnRemOK1") Then
+			ClickP($aBtnRemOK1) ; Click on 'Okay' button to save changes
+			If _Sleep(1000) Then Return
+		Else
+			SetLog("Cannot find/verify 'OK1' Button in Army tab", $COLOR_WARNING)
 			ClickAway() ; Click Away, Necessary! due to possible errors/changes
 			If _Sleep(1000) Then Return
-			OpenArmyOverview("RemoveExtraTroops()") ; Open Army Window AGAIN
-			Return False ; Exit Function
+			OpenArmyOverview("BtnRemOK1") ;open army window
+			Return False
 		EndIf
 
 		If Not $g_bRunState Then Return
-		ClickP($aButtonRemoveTroopsOK1, 1) ; Click on 'Okay' button to save changes
-		If _Sleep(1200) Then Return
-		If Not _CheckPixel($aButtonRemoveTroopsOK2, True) Then ; If no 'Okay' button found to verify that we accept the changes
-			SetLog("Cannot find/verify 'Okay #2' Button in Army tab", $COLOR_WARNING)
-			ClickAway()
-			Return False ; Exit function
+		
+		If WaitforPixel($aBtnRemOK2[0], $aBtnRemOK2[1], $aBtnRemOK2[0] + 1, $aBtnRemOK2[1] + 1, Hex($aBtnRemOK2[2], 6), $aBtnRemOK2[3], 1, "BtnRemOK2") Then
+			ClickP($aBtnRemOK2) ; Click on 'Okay' button to Save changes... Last button
+			If _Sleep(1000) Then Return
+		Else
+			SetLog("Cannot find/verify 'OK2' Button in Army tab", $COLOR_WARNING)
+			If _Sleep(1000) Then Return
+			OpenArmyOverview("BtnRemOK1") ;open army window
+			Return False
 		EndIf
 
-		ClickP($aButtonRemoveTroopsOK2, 1) ; Click on 'Okay' button to Save changes... Last button
-
 		SetLog("All Extra troops removed", $COLOR_SUCCESS)
-		If _Sleep(200) Then Return
+		If _Sleep(1000) Then Return
 		If $iResult = 0 Then $iResult = 1
 	Else ; If No extra troop found
 		SetLog("No extra troop to remove, great", $COLOR_SUCCESS)
@@ -691,19 +651,19 @@ Func RemoveExtraTroopsQueue()
 EndFunc   ;==>RemoveExtraTroopsQueue
 
 Func IsQueueEmpty($sType = "Troops")
-	Local $iArrowX, $iArrowY = 127
+	Local $iArrowX, $iArrowY = 125
 	If Not $g_bRunState Then Return
 	
 	If $sType = "Troops" Then
-		$iArrowX = 327
+		$iArrowX = 324
 	ElseIf $sType = "Spells" Then
-		$iArrowX = 463
+		$iArrowX = 460
 	EndIf
 	
-	If WaitforPixel($iArrowX - 1, $iArrowY - 1, $iArrowX, $iArrowY, Hex(0x797362, 6), 20, 1, "IsQueueEmpty") Then ;check if we have grey tab
+	If WaitforPixel($iArrowX, $iArrowY, $iArrowX + 1, $iArrowY + 1, Hex(0x7C7866, 6), 20, 1, "IsQueueEmpty") Then ;check if we have grey tab
 		SetLog("IsQueueEmpty " & $sType & ": No queue arrow", $COLOR_ACTION)
 		Return True
-	ElseIf WaitforPixel($iArrowX - 1, $iArrowY - 1, $iArrowX, $iArrowY, Hex(0x83BF44, 6), 20, 1, "IsQueueEmpty") Then ;check if we have green arrow
+	ElseIf WaitforPixel($iArrowX, $iArrowY, $iArrowX + 1, $iArrowY + 1, Hex(0xA5D27B, 6), 20, 1, "IsQueueEmpty") Then ;check if we have green arrow
 		SetLog("IsQueueEmpty " & $sType & ": Found queue arrow", $COLOR_ACTION) 
 		Return False
 	EndIf
@@ -1236,7 +1196,7 @@ Func MakingDonatedTroops($sType = "All")
 			If Not $g_bRunState Then Return
 			$Plural = 0
 			If $avDefaultTroopGroup[$i][4] > 0 Then
-				$RemainTrainSpace = GetOCRCurrent(95, 163)
+				$RemainTrainSpace = GetCurrentTroop(96, 165)
 				If $RemainTrainSpace[2] < 0 Then $RemainTrainSpace[2] = $RemainTrainSpace[1] * 2 - $RemainTrainSpace[0] ; remain train space to full double army
 				If $RemainTrainSpace[2] = 0 Then ExitLoop ; army camps full
 
@@ -1261,7 +1221,7 @@ Func MakingDonatedTroops($sType = "All")
 					If _Sleep(500) Then Return ; Needed Delay, OCR was not picking up Troop Changes
 				Else
 					For $z = 0 To $RemainTrainSpace[2] - 1
-						$RemainTrainSpace = GetOCRCurrent(95, 163)
+						$RemainTrainSpace = GetCurrentTroop(96, 165)
 						If $RemainTrainSpace[0] = $RemainTrainSpace[1] Then ; army camps full
 							;Camps Full All Donate Counters should be zero!!!!
 							For $j = 0 To UBound($avDefaultTroopGroup, 1) - 1
@@ -1296,7 +1256,7 @@ Func MakingDonatedTroops($sType = "All")
 		Next
 		;Top Off any remianing space with archers
 		If $sType = "All" Then
-			$RemainTrainSpace = GetOCRCurrent(95, 163)
+			$RemainTrainSpace = GetCurrentTroop(96, 165)
 			If $RemainTrainSpace[0] < $RemainTrainSpace[1] Then ; army camps full
 				Local $howMuch = $RemainTrainSpace[2]
 				TrainIt($eTroopArcher, $howMuch, $g_iTrainClickDelay)
@@ -1324,7 +1284,7 @@ Func MakingDonatedTroops($sType = "All")
 				$g_aiDonateSpells[$i] -= $howMuch
 
 				If _Sleep(1000) Then Return
-				$RemainTrainSpace = GetOCRCurrent(95, 163)
+				$RemainTrainSpace = GetCurrentSpell(96, 165)
 				SetLog(" - Current Capacity: " & $RemainTrainSpace[0] & "/" & ($RemainTrainSpace[1]))
 			EndIf
 		Next
@@ -1360,9 +1320,7 @@ Func MakingDonatedTroops($sType = "All")
 			EndIf
 		Next
 		; Get Siege Capacities
-		Local $sSiegeInfo = getArmyCapacityOnTrainTroops(60, 140) ; OCR read Siege built and total
-		If $g_bDebugSetlogTrain Then SetLog("OCR $sSiegeInfo = " & $sSiegeInfo, $COLOR_DEBUG)
-		Local $aGetSiegeCap = StringSplit($sSiegeInfo, "#", $STR_NOCOUNT) ; split the built Siege number from the total Siege number
+		Local $aGetSiegeCap = GetCurrentSiege() ; OCR read Siege built and total
 		SetLog("Total Siege Workshop Capacity: " & $aGetSiegeCap[0] & "/" & $aGetSiegeCap[1])
 		If Number($aGetSiegeCap[0]) = 0 Then Return
 	EndIf
@@ -1370,38 +1328,6 @@ Func MakingDonatedTroops($sType = "All")
 	Return True
 
 EndFunc   ;==>MakingDonatedTroops
-
-Func GetOCRCurrent($x_start, $y_start)
-
-	Local $aResult[3] = [0, 0, 0]
-	If Not $g_bRunState Then Return $aResult
-
-	; [0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
-	Local $iOCRResult = getArmyCapacityOnTrainTroops($x_start, $y_start)
-
-	If StringInStr($iOCRResult, "#") Then
-		Local $aTempResult = StringSplit($iOCRResult, "#", $STR_NOCOUNT)
-		$aResult[0] = Number($aTempResult[0])
-		$aResult[1] = Number($aTempResult[1])
-		; Case to use this function os Spells will be <= 22 , 11*2
-		If $aResult[1] <= 22 Then
-			If $g_bDebugSetlogTrain Then SetLog("$g_iTotalSpellValue: " & $g_iTotalSpellValue, $COLOR_DEBUG)
-			$aResult[1] = $g_iTotalSpellValue
-			$aResult[2] = $g_iTotalSpellValue - $aResult[0]
-			; May 2018 Update the Army Camp Value on Train page is DOUBLE Value
-		ElseIf $aResult[1] <> $g_iTotalCampSpace Then
-			If $g_bDebugSetlogTrain Then SetLog("$g_iTotalCampSpace: " & $g_iTotalCampSpace, $COLOR_DEBUG)
-			$aResult[1] = $g_iTotalCampSpace
-			$aResult[2] = $g_iTotalCampSpace - $aResult[0]
-		EndIf
-		$aResult[2] = $aResult[1] - $aResult[0]
-	Else
-		SetLog("DEBUG | ERROR on GetOCRCurrent", $COLOR_ERROR)
-	EndIf
-
-	Return $aResult
-
-EndFunc   ;==>GetOCRCurrent
 
 Func _ArryRemoveBlanks(ByRef $aArray)
 	Local $iCounter = 0

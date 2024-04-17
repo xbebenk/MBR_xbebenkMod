@@ -136,7 +136,6 @@ Func SaveBuildingConfig()
 
 	;xbenk
 	_Ini_Add("upgrade", "upgradeorder", $g_bLabUpgradeOrderEnable ? 1 : 0)
-	_Ini_Add("upgrade", "limitsiegelevel", $g_bUpgradeSiegeToLvl2 ? 1 : 0)
 	_Ini_Add("upgrade", "upgradeanytroops", $g_bUpgradeAnyTroops ? 1 : 0)
 	_Ini_Add("upgrade", "usebookfighting", $g_bUseBOF ? 1 : 0)
 	_Ini_Add("upgrade", "usebookfightingMinTime", $g_iUseBOFTime)

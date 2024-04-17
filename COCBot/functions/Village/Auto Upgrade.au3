@@ -841,7 +841,7 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 			If Not $g_bRunState Then Return
 			If QuickMIS("BFI", $g_sImgGreenCheck & "GreenCheck*", $tmpX - 40, $tmpY - 40, $tmpX + 40, $tmpY + 40) Then
 				SetLog("Found GreenCheck on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
-				Click($g_iQuickMISX, $g_iQuickMISY)
+				Click($g_iQuickMISX, $g_iQuickMISY, 2, 200)
 				$bRet = True
 				SetLog("Placing Wall #" & $ProMac, $COLOR_ACTION)
 				If _Sleep(1000) Then Return

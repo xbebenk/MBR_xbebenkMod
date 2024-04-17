@@ -627,7 +627,7 @@ Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
 				Click($iX, 400)
 				If Not $g_bRunState Then Return
 				If _Sleep($iSleep) Then Return
-				Local $aTmpTroop = StringSplit(getArmyCapacityOnTrainTroops(95, 163), "#", $STR_NOCOUNT)
+				Local $aTmpTroop = StringSplit(getArmyCapacityOnTrainTroops(96, 165), "#", $STR_NOCOUNT)
 				If Not $g_bRunState Then Return
 				If IsArray($aTmpTroop) And UBound($aTmpTroop) = 2 Then
 					If $aTmpTroop[0] = $i Then

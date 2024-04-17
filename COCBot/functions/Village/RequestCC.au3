@@ -345,12 +345,12 @@ Func RemoveCastleArmy($aToRemove)
 	If _ArrayMax($aToRemove, 0, -1, -1, 1) = 0 Then Return
 
 	; Click 'Edit Army'
-	If Not _CheckPixel($aButtonEditArmy, True) Then ; If no 'Edit Army' Button found in army tab to edit troops
+	If Not _CheckPixel($aBtnEditArmy, True) Then ; If no 'Edit Army' Button found in army tab to edit troops
 		SetLog("Cannot find/verify 'Edit Army' Button in Army tab", $COLOR_WARNING)
 		Return False ; Exit function
 	EndIf
 
-	ClickP($aButtonEditArmy, 1) ; Click Edit Army Button
+	ClickP($aBtnEditArmy, 1) ; Click Edit Army Button
 	If Not $g_bRunState Then Return
 
 	If _Sleep(500) Then Return
@@ -370,7 +370,7 @@ Func RemoveCastleArmy($aToRemove)
 
 	; Click Okay & confirm
 	Local $counter = 0
-	While Not _CheckPixel($aButtonRemoveTroopsOK1, True) ; If no 'Okay' button found in army tab to save changes
+	While Not _CheckPixel($aBtnRemOK1, True) ; If no 'Okay' button found in army tab to save changes
 		If _Sleep(200) Then Return
 		$counter += 1
 		If $counter <= 5 Then ContinueLoop
@@ -380,12 +380,12 @@ Func RemoveCastleArmy($aToRemove)
 		Return False ; Exit Function
 	WEnd
 
-	ClickP($aButtonRemoveTroopsOK1, 1) ; Click on 'Okay' button to save changes
+	ClickP($aBtnRemOK1, 1) ; Click on 'Okay' button to save changes
 
 	If _Sleep(400) Then Return
 
 	$counter = 0
-	While Not _CheckPixel($aButtonRemoveTroopsOK2, True) ; If no 'Okay' button found to verify that we accept the changes
+	While Not _CheckPixel($aBtnRemOK2, True) ; If no 'Okay' button found to verify that we accept the changes
 		If _Sleep(200) Then Return
 		$counter += 1
 		If $counter <= 5 Then ContinueLoop
@@ -394,7 +394,7 @@ Func RemoveCastleArmy($aToRemove)
 		Return False ; Exit function
 	WEnd
 
-	ClickP($aButtonRemoveTroopsOK2, 1) ; Click on 'Okay' button to Save changes... Last button
+	ClickP($aBtnRemOK2, 1) ; Click on 'Okay' button to Save changes... Last button
 
 	SetLog("Clan Castle army removed", $COLOR_SUCCESS)
 	If _Sleep(200) Then Return

@@ -979,7 +979,6 @@ Func ReadConfig_600_14()
 
 	;xbenk
 	IniReadS($g_bLabUpgradeOrderEnable, $g_sProfileBuildingPath, "upgrade", "upgradeorder", False, "Bool")
-	IniReadS($g_bUpgradeSiegeToLvl2, $g_sProfileBuildingPath, "upgrade", "limitsiegelevel", False, "Bool")
 	IniReadS($g_bUpgradeAnyTroops, $g_sProfileBuildingPath, "upgrade", "upgradeanytroops", False, "Bool")
 	IniReadS($g_bUseBOF, $g_sProfileBuildingPath, "upgrade", "usebookfighting", False, "Bool")
 	IniReadS($g_iUseBOFTime, $g_sProfileBuildingPath, "upgrade", "usebookfightingMinTime", 7, "int")

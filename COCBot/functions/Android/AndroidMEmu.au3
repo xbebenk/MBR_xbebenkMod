@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........: Cosote (12-2015)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2024
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -133,15 +133,11 @@ EndFunc   ;==>GetMEmuBackgroundMode
 
 Func InitMEmu($bCheckOnly = False)
 	Local $process_killed, $aRegExResult, $g_sAndroidAdbDeviceHost, $g_sAndroidAdbDevicePort, $oops = 0
-	
 	SetError(0, 0, 0)
-	; Could also read MEmu paths from environment variables MEmu_Path and MEmuHyperv_Path
+	
 	Local $MEmu_Path = GetMEmuPath()
-	Local $MEmu_Manage_Path = EnvGet("MEmuHyperv_Path") & "\MEmuManage.exe"
-	If FileExists($MEmu_Manage_Path) = 0 Then
-		$MEmu_Manage_Path = $MEmu_Path & "..\MEmuHyperv\MEmuManage.exe"
-	EndIf
-
+	Local $MEmu_Manage_Path = $MEmu_Path & "..\MEmuHyperv\MEmuManage.exe"
+	
 	If FileExists($MEmu_Path & "MEmu.exe") = 0 Then
 		If Not $bCheckOnly Then
 			SetLog("Serious error has occurred: Cannot find " & $g_sAndroidEmulator & ":", $COLOR_ERROR)
@@ -172,15 +168,7 @@ Func InitMEmu($bCheckOnly = False)
 
 	; Read ADB host and Port
 	If Not $bCheckOnly Then
-		;$g_iAndroidRecoverStrategy = 0
-		; newer MEmu doesn't support yet ADB mouse click/minitouch
-		local $memuCurr = GetVersionNormalized($__MEmu_Version)
-		Local $memu6 = GetVersionNormalized("6.0")
-		If $memuCurr > $memu6 Then
-			;SetDebugLog("Disable ADB Mouse Click as not support for " & $g_sAndroidEmulator & " version " & $__MEmu_Version)
-			;AndroidSupportFeaturesRemove(4) ; disable ADB Mouse Click support
-		EndIf
-
+		
 		InitAndroidConfig(True) ; Restore default config
 		If Not GetAndroidVMinfo($__VBoxVMinfo, $MEmu_Manage_Path) Then Return False
 

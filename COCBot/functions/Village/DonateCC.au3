@@ -212,8 +212,8 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	If Not $g_bRunState Then Return
 	
 	;Scroll Up
-	While WaitforPixel(354, 77, 355, 78, "60A618", 6, 1, "DonateCC-ScrollUp")
-		Click(355, 77, 1, 0, "Click Green Scroll Button")
+	While WaitforPixel(344, 77, 345, 78, "60A618", 6, 1, "DonateCC-ScrollUp")
+		Click(345, 77, 1, 0, "Click Green Scroll Button")
 		If _Sleep(1000) Then Return
 		$bDonate = True
 	Wend
@@ -473,9 +473,9 @@ Func DonateCC($bTest = False, $bSwitch = False)
 		
 		$bDonate = False ;reset after a page
 		For $i = 1 To 3
-			If WaitforPixel(354, 601, 355, 602, Hex(0x61A719, 6), 20, 1, "DonateCC-ScrollDown") Then
+			If WaitforPixel(344, 601, 345, 602, Hex(0x61A719, 6), 20, 1, "DonateCC-ScrollDown") Then
 				SetLog("Scroll chat Request #" & $i, $COLOR_ACTION)
-				Click(350, 595, 1, 0, "Click Green Scroll Button")
+				Click(335, 595, 1, 0, "Click Green Scroll Button")
 				If _Sleep(1000) Then Return
 				$bDonate = True
 			Else
@@ -1168,10 +1168,10 @@ Func getArmyRequest($DonateButton = -1)
 		$aiDonateCoords = $DonateButton
 	EndIf
 	
-	If $g_bDebugSetLog Then SetLog("QuickMIS('CNX', $g_sImgDonateImageRequest, 40, " & $aiDonateCoords[1] - 92 & ", " & 343 & ", " & $aiDonateCoords[1] - 40 & ")", $COLOR_DEBUG1)
-	Local $aQuick = QuickMIS("CNX", $g_sImgDonateImageRequest, 40, $aiDonateCoords[1] - 92, 343, $aiDonateCoords[1] - 40)
+	If $g_bDebugSetLog Then SetLog("QuickMIS('CNX', $g_sImgDonateImageRequest, 28, " & $aiDonateCoords[1] - 92 & ", " & 343 & ", " & $aiDonateCoords[1] - 40 & ")", $COLOR_DEBUG1)
+	Local $aQuick = QuickMIS("CNX", $g_sImgDonateImageRequest, 28, $aiDonateCoords[1] - 92, 343, $aiDonateCoords[1] - 40)
 	;_ArrayDisplay($aQuick)
-	Local $axCoord[5] = [57, 110, 163, 216, 269]
+	Local $axCoord[5] = [47, 100, 153, 206, 259]
 	If Ubound($aQuick) > 0 Then
 		For $i = 0 To UBound($aQuick) - 1
 			If $i > 4 Then ExitLoop
@@ -1244,14 +1244,14 @@ Func ReadRequestString($DonateButton = -1)
 		For $i = 0 To UBound($Alphabets) - 1
 			If $i = 0 Then
 				; Line 3 to 1
-				Local $aCoordinates[3] = [80, 60, 42] ; Extra coordinates for Latin (3 Lines)
+				Local $aCoordinates[3] = [80, 55, 38] ; Extra coordinates for Latin (3 Lines)
 				Local $OcrName = ($Alphabets[$i] = True) ? ("coc-latin-cyr") : ("coc-latinA")
 				Local $log = "Latin"
 				If $Alphabets[$i] Then $log = $TextAlphabetsNames[$i]
 				$sString = ""
 				SetLog("Using OCR to read " & $log & " derived alphabets.", $COLOR_ACTION)
 				For $j = 1 To 2 ;only read 2 line
-					$sString &= $BlankSpaces & getChatString(33, $aiDonateButton[1] - $aCoordinates[$j], $OcrName)
+					$sString &= $BlankSpaces & getChatString(24, $aiDonateButton[1] - $aCoordinates[$j], $OcrName)
 					SetDebugLog("$OcrName: " & $OcrName)
 					SetDebugLog("$aCoordinates: " & $aCoordinates[$j])
 					SetDebugLog("$sString: " & $sString)
@@ -1264,7 +1264,7 @@ Func ReadRequestString($DonateButton = -1)
 						SetLog("Using OCR to read " & $TextAlphabetsNames[$i] & " alphabets.", $COLOR_ACTION)
 						; Ensure used functions are references in "MBR References.au3"
 						#Au3Stripper_Off
-						$sString &= $BlankSpaces & Call($AlphabetFunctions[$i], 30, $aiDonateButton[1] - $Yaxis[$i - 1])
+						$sString &= $BlankSpaces & Call($AlphabetFunctions[$i], 24, $aiDonateButton[1] - $Yaxis[$i - 1])
 						#Au3Stripper_On
 						If @error = 0xDEAD And @extended = 0xBEEF Then SetLog("[DonatCC] Function " & $AlphabetFunctions[$i] & "() had a problem.")
 						SetDebugLog("$OcrName: " & $OcrName)

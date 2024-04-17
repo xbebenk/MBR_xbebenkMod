@@ -49,10 +49,8 @@ Func Laboratory($bDebug = False)
 
 	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
 	Local $iCurPage = 1, $iLabPicsPerPage = 12, $iLabMaxPages = 5, $iPage = 0
-	Local $sCostResult, $bUpgradeFound = False, $sReseachName = "", $sReseachImage = ""
-	Local $tmpNoResources = False
-	Local $sLabTroopsSection = "70,340,790,566"
-	Local $sLabTroopsSectionDiam = GetDiamondFromRect($sLabTroopsSection) ; easy to change search areas
+	Local $sCost, $sCostType, $bUpgradeFound = False, $sReseachName = "", $sReseachImage = "", $aUpgrade
+	Local $bNoResources = False
 	Local $iLab = $g_iCmbLaboratory, $aCoords[2]
 	
 	If $iLab <> 0 Then ;user selected upgrade
@@ -63,30 +61,28 @@ Func Laboratory($bDebug = False)
 		
 		$iCurPage = LabGoToPage($iCurPage, $iPage)
 		
-		SetLog("FindImage : " & $sReseachName, $COLOR_DEBUG1)
-		If QuickMIS("BFI", $g_sImgLabResearch & $sReseachImage & "*", 70, 340, 790, 566) Then ; Get coords of upgrade the user wants
-			$aCoords[0] = $g_iQuickMISX
-			$aCoords[1] = $g_iQuickMISY
-			If QuickMIS("BC1", $g_sImgResIcon, $aCoords[0], $aCoords[1], $aCoords[0] + 60, $aCoords[1] + 70) Then 
-				Local $sCostResult = getLabCost($g_iQuickMISX - 75, $g_iQuickMISY - 10)
-				Local $level = getTroopsSpellsLevel($g_iQuickMISX - 75, $g_iQuickMISY - 30)
-				If $level = "" Then $level = 1
-				If Not IsLabUpgradeResourceEnough($sReseachName, $sCostResult) Then
-					SetLog($sReseachName & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
-				Else
-					SetLog($sReseachName & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
-					$bUpgradeFound = True
+		SetLog("FindImage : " & $sReseachName, $COLOR_INFO)
+		$aUpgrade = FindLabUpgrade($sReseachImage)
+		If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
+			For $i = 0 To UBound($aUpgrade) - 1
+				If $aUpgrade[$i][5] = $sReseachImage Then
+					$aCoords[0] = $aUpgrade[$i][1] - 40
+					$aCoords[1] = $aUpgrade[$i][2] - 40 
+					$sCost = $aUpgrade[$i][3]
+					$sCostType = $aUpgrade[$i][0]
+					$sReseachName = $aUpgrade[$i][4]
+					If Not IsLabUpgradeResourceEnough($sCost, $sCostType) Then
+						$bNoResources = True
+						SetLog($sReseachName & " Cost:" & $sCost & " " & $sCostType & ", Not Enough Resource", $COLOR_INFO)
+					Else
+						SetLog($sReseachName & " Cost:" & $sCost & " " & $sCostType, $COLOR_INFO)
+						Return LaboratoryUpgrade($sReseachName, $aCoords, $sCost, $bDebug)
+					EndIf
 				EndIf
-			EndIf
-		EndIf
-
-		If Not $bUpgradeFound Then
-			SetLog("Lab Upgrade " & $sReseachName & " - Not available.", $COLOR_DEBUG1)
-		EndIf
-
-		If $bUpgradeFound Then
-			Return LaboratoryUpgrade($sReseachName, $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
-		EndIf
+			Next
+		Else
+			SetLog("FindImage : No Image " & $sReseachName & " Found!", $COLOR_DEBUG1)
+		EndIf 
 	EndIf
 	
 	If $iLab = 0 Then
@@ -108,38 +104,31 @@ Func Laboratory($bDebug = False)
 				If $iIndex > 0 Then
 					Select 
 						Case $iIndex < 49 ;Any Normal
-							Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD"]
 							$sReseachName = $g_avLabTroops[$iIndex][0]
 							$sReseachImage = $g_avLabTroops[$iIndex][2]
 							$iPage = Ceiling($iIndex / $iLabPicsPerPage) ; page # of user choice
-							SetLog("Try Lab Upgrade: " & $sReseachName & ", Page:" & $iPage, $COLOR_DEBUG1)
+							SetLog("Try Lab Upgrade: " & $sReseachName & ", Page:" & $iPage, $COLOR_INFO)
 							$iCurPage = LabGoToPage($iCurPage, $iPage)
 							
 							SetLog("FindImage : " & $sReseachName, $COLOR_DEBUG1)
-							If QuickMIS("BFI", $g_sImgLabResearch & $sReseachImage & "*", 70, 340, 790, 566) Then
-								$aCoords[0] = $g_iQuickMISX
-								$aCoords[1] = $g_iQuickMISY 
-								If QuickMIS("BC1", $g_sImgResIcon, $aCoords[0], $aCoords[1], $aCoords[0] + 60, $aCoords[1] + 70) Then 
-									Local $sCostResult = getLabCost($g_iQuickMISX - 92, $g_iQuickMISY - 10)
-									Local $level = getTroopsSpellsLevel($g_iQuickMISX - 79, $g_iQuickMISY - 32)
-									If $level = "" Then $level = 1
-									If $g_bUpgradeSiegeToLvl2 And $level >= 3 Then
-										For $x In $aSiege
-											If $g_avLabTroops[$iIndex][2] = $x Then
-												SetLog("Skip " & $g_avLabTroops[$iIndex][0] & ", already Level " & $level)
-												ContinueLoop 2									
-											EndIf
-										Next
+							$aUpgrade = FindLabUpgrade($sReseachImage)
+							If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
+								For $i = 0 To UBound($aUpgrade) - 1
+									SetLog($aUpgrade[$i][4] & ", Cost:" & $aUpgrade[$i][3] & $aUpgrade[$i][0], $COLOR_INFO)
+								Next
+								For $i = 0 To UBound($aUpgrade) - 1
+									If $aUpgrade[$i][5] = $sReseachImage Then
+										$aCoords[0] = $aUpgrade[$i][1] - 40
+										$aCoords[1] = $aUpgrade[$i][2] - 40 
+										$sCost = $aUpgrade[$i][3]
+										If Not IsLabUpgradeResourceEnough($sCost, $aUpgrade[$i][0]) Then
+											$bNoResources = True
+											SetLog($aUpgrade[$i][4] & " Cost:" & $sCost & " " & $aUpgrade[$i][0] & ", Not Enough Resource", $COLOR_INFO)
+										Else
+											Return LaboratoryUpgrade($sReseachName, $aCoords, $sCost, $bDebug)
+										EndIf
 									EndIf
-									If Not IsLabUpgradeResourceEnough($g_avLabTroops[$iIndex][2], $sCostResult) Then
-										$tmpNoResources = True
-										SetLog(GetUpgradeName($g_avLabTroops[$iIndex][0]) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
-									Else
-										SetLog(GetUpgradeName($g_avLabTroops[$iIndex][0]) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
-										$bUpgradeFound = True
-										ExitLoop
-									EndIf
-								EndIf
+								Next
 							Else
 								SetLog("FindImage : No Image " & $sReseachName & " Found!", $COLOR_DEBUG1)
 							EndIf
@@ -148,78 +137,73 @@ Func Laboratory($bDebug = False)
 							$sReseachName = $g_avLabTroops[$iIndex][0]
 							$sReseachImage = $g_avLabTroops[$iIndex][2]
 							$iPage = 2
-							SetLog("Try Lab Upgrade: " & $sReseachName & ", Page:" & $iPage, $COLOR_DEBUG1)
+							SetLog("Try Lab Upgrade: " & $sReseachName & ", Page:" & $iPage, $COLOR_INFO)
 							$iCurPage = LabGoToPage($iCurPage, $iPage)
 							
 							$bUpgradeFound = False
+							
 							For $page = 1 To 2
-								Local $aSpell = QuickMIS("CNX", $g_sImgAnySpell, 110,340,740,540)
-								If IsArray($aSpell) And UBound($aSpell) > 0 Then
-									For $i = 0 To UBound($aSpell) - 1
-										If QuickMIS("BC1", $g_sImgResIcon, $aSpell[$i][1], $aSpell[$i][2], $aSpell[$i][1] + 60, $aSpell[$i][2] + 70) Then 
-											Local $sCostResult = getLabCost($g_iQuickMISX - 92, $g_iQuickMISY - 10)
-											Local $level = getTroopsSpellsLevel($g_iQuickMISX - 79, $g_iQuickMISY - 32)
-											Local $sSpellName = GetTroopName(TroopIndexLookup($aSpell[$i][0]))
-											If $level = "" Then $level = 1
-											If Not IsLabUpgradeResourceEnough($sSpellName, $sCostResult) Then
-												SetLog(GetUpgradeName($sSpellName) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
-											Else
-												SetLog(GetUpgradeName($sSpellName) & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
-												$bUpgradeFound = True
-												Local $aCoords[2] = [$aSpell[$i][1], $aSpell[$i][2]]
-												If Not $bDebug Then Return LaboratoryUpgrade($aSpell[$i][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
-											EndIf
+								$aUpgrade = FindLabUpgrade($sReseachImage)
+								If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
+									For $i = 0 To UBound($aUpgrade) - 1
+										SetLog($aUpgrade[$i][4] & ", Cost:" & $aUpgrade[$i][3] & $aUpgrade[$i][0], $COLOR_INFO)
+									Next
+									For $i = 0 To UBound($aUpgrade) - 1
+										$aCoords[0] = $aUpgrade[$i][1] - 40
+										$aCoords[1] = $aUpgrade[$i][2] - 40 
+										$sCost = $aUpgrade[$i][3]
+										$sReseachName = $aUpgrade[$i][4]
+										If Not IsLabUpgradeResourceEnough($sCost, $aUpgrade[$i][0]) Then
+											$bNoResources = True
+											SetLog($sReseachName & " Cost:" & $sCost & " " & $aUpgrade[$i][0] & ", Not Enough Resource", $COLOR_INFO)
 										Else
-											SetLog("Any Spell - ResIcon Not Found", $COLOR_ERROR)
+											;SetLog($sReseachName & " Cost:" & $sCost & " " & $aUpgrade[$i][0], $COLOR_INFO)
+											Return LaboratoryUpgrade($sReseachName, $aCoords, $sCost, $bDebug)
 										EndIf
 									Next
-								EndIf
-								If Not $bUpgradeFound Then 
+								Else
+									SetLog("FindImage : No Image " & $sReseachName & " Found!", $COLOR_DEBUG1)
 									$iCurPage = LabGoToPage($iCurPage, 3)
 								EndIf
 							Next
+							
 							If Not $bUpgradeFound Then SetLog("FindImage : " & $sReseachName & " Not Found!", $COLOR_DEBUG1)
 												
 						Case $iIndex = 50 ;Any Siege
 							$sReseachName = $g_avLabTroops[$iIndex][0]
 							$sReseachImage = $g_avLabTroops[$iIndex][2]
 							$iPage = 4
-							SetLog("Try Lab Upgrade: " & $sReseachName & ", Page:" & $iPage, $COLOR_DEBUG1)
+							SetLog("Try Lab Upgrade: " & $sReseachName & ", Page:" & $iPage, $COLOR_INFO)
 							$iCurPage = LabGoToPage($iCurPage, $iPage)
 							
-							Local $aSiege = QuickMIS("CNX", $g_sImgAnySiege, 110,340,740,540)
-							If IsArray($aSiege) And UBound($aSiege) > 0 Then
-								For $i = 0 To UBound($aSiege) - 1
-									If QuickMIS("BC1", $g_sImgResIcon, $aSiege[$i][1], $aSiege[$i][2], $aSiege[$i][1] + 80, $aSiege[$i][2] + 80) Then 
-										Local $sCostResult = getLabCost($g_iQuickMISX - 92, $g_iQuickMISY - 10)
-										Local $level = getTroopsSpellsLevel($g_iQuickMISX - 79, $g_iQuickMISY - 32)
-										Local $sSiegeName = GetTroopName(TroopIndexLookup($aSiege[$i][0]))
-										If $level = "" Then $level = 1
-										If $g_bUpgradeSiegeToLvl2 And $level >= 3 Then
-											SetLog("Skip " & $sSiegeName & ", already Level " & $level)
-											ContinueLoop								
-										EndIf
-										If Not IsLabUpgradeResourceEnough($sSiegeName, $sCostResult) Then
-											SetLog($sSiegeName & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName & ", Not Enough Resource", $COLOR_INFO)
-										Else
-											SetLog($sSiegeName & " Level[" & $level & "] Cost:" & $sCostResult & " " & $g_iQuickMISName, $COLOR_INFO)
-											$bUpgradeFound = True
-											Local $aCoords[2] = [$aSiege[$i][1], $aSiege[$i][2]]
-											If Not $bDebug Then Return LaboratoryUpgrade($aSiege[$i][0], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
-										EndIf
+							$aUpgrade = FindLabUpgrade($sReseachImage)
+							If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
+								For $i = 0 To UBound($aUpgrade) - 1
+									SetLog($aUpgrade[$i][4] & ", Cost:" & $aUpgrade[$i][3] & $aUpgrade[$i][0], $COLOR_INFO)
+								Next
+								For $i = 0 To UBound($aUpgrade) - 1
+									$aCoords[0] = $aUpgrade[$i][1] - 40
+									$aCoords[1] = $aUpgrade[$i][2] - 40 
+									$sCost = $aUpgrade[$i][3]
+									$sReseachName = $aUpgrade[$i][4]
+									If Not IsLabUpgradeResourceEnough($sCost, $aUpgrade[$i][0]) Then
+										$bNoResources = True
+										SetLog($sReseachName & " Cost:" & $sCost & " " & $aUpgrade[$i][0] & ", Not Enough Resource", $COLOR_INFO)
 									Else
-										SetLog("Any Siege - ResIcon Not Found", $COLOR_ERROR)
+										;SetLog($sReseachName & " Cost:" & $sCost & " " & $aUpgrade[$i][0], $COLOR_INFO)
+										Return LaboratoryUpgrade($sReseachName, $aCoords, $sCost, $bDebug)
 									EndIf
 								Next
 							Else
-								If Not $bUpgradeFound Then SetLog("FindImage : " & $sReseachName & " Not Found!", $COLOR_DEBUG1)
+								SetLog("FindImage : No Image " & $sReseachName & " Found!", $COLOR_DEBUG1)
 							EndIf
+							
 					EndSelect
 				EndIf
 			Next
 			
 			If $bUpgradeFound Then
-				Return LaboratoryUpgrade($g_avLabTroops[$iIndex][2], $aCoords, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
+				Return LaboratoryUpgrade($g_avLabTroops[$iIndex][2], $aCoords, $sCost, $bDebug) ; return whether or not we successfully upgraded
 			Else
 				SetLog("Lab Upgrade " & $g_avLabTroops[$iIndex][0] & " - Not available.", $COLOR_INFO)
 			EndIf
@@ -227,20 +211,19 @@ Func Laboratory($bDebug = False)
 		Else ; no LabUpgradeOrder
 			While($iCurPage <= $iLabMaxPages)
 				Local $Upgrades = FindLabUpgrade()
-				Local $aUpgradeCoord[2], $sUpgrade
+				Local $aCoord[2], $sUpgrade
 				If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
 					For $i = 0 To UBound($Upgrades) - 1
-						If $Upgrades[$i][0] = "SKIP" Then ContinueLoop
-						SetDebugLog("LabUpgrade: " & $Upgrades[$i][4] & " Cost: " & $Upgrades[$i][3], $COLOR_INFO)	
-						If Not IsLabUpgradeResourceEnough($Upgrades[$i][4], $Upgrades[$i][3]) Then
-							SetDebugLog($Upgrades[$i][4] & " Skip, Not Enough Resource", $COLOR_INFO)
+						$sUpgrade = $Upgrades[$i][4]
+						$aCoord[0] = $Upgrades[$i][1] - 35
+						$aCoord[1] = $Upgrades[$i][2] - 35
+						$sCost = $Upgrades[$i][3]
+						If $g_bDebugSetLog Then SetLog("LabUpgrade: " & $sUpgrade & " Cost: " & $sCost, $COLOR_INFO)	
+						If Not IsLabUpgradeResourceEnough($sCost, $Upgrades[$i][0]) Then
+							SetLog($sUpgrade & " Skip, Not Enough Resource", $COLOR_INFO)
 						Else
-							SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Cost:" & $Upgrades[$i][3], $COLOR_SUCCESS)
+							SetLog("LabUpgrade:" & $sUpgrade & " Cost:" & $sCost, $COLOR_SUCCESS)
 							$bUpgradeFound = True
-							$sUpgrade = $Upgrades[$i][4]
-							$aUpgradeCoord[0] = $Upgrades[$i][1] - 35
-							$aUpgradeCoord[1] = $Upgrades[$i][2] - 35
-							$sCostResult = $Upgrades[$i][3]
 							ExitLoop
 						EndIf
 					Next
@@ -249,7 +232,7 @@ Func Laboratory($bDebug = False)
 				EndIf
 
 				If $bUpgradeFound Then
-					Return LaboratoryUpgrade($sUpgrade, $aUpgradeCoord, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
+					Return LaboratoryUpgrade($sUpgrade, $aCoord, $sCost, $bDebug) ; return whether or not we successfully upgraded
 				EndIf
 				
 				$iCurPage = LabGoToPage($iCurPage, $iCurPage + 1) ; go to next page of upgrades
@@ -258,8 +241,8 @@ Func Laboratory($bDebug = False)
 		EndIf
 		; If We got to here without returning, then nothing available for upgrade
 		SetLog("Nothing available for upgrade at the moment, try again later.")
-		SetLog("LabUpgradeOrderEnable=" & String($g_bLabUpgradeOrderEnable) & ", UpgradeAnyTroops=" & String($g_bUpgradeAnyTroops) & ", tmpNoResources=" & String($tmpNoResources), $COLOR_DEBUG)
-		If $g_bLabUpgradeOrderEnable And $g_bUpgradeAnyTroops And Not $tmpNoResources Then 
+		SetLog("LabUpgradeOrderEnable=" & String($g_bLabUpgradeOrderEnable) & ", UpgradeAnyTroops=" & String($g_bUpgradeAnyTroops) & ", tmpNoResources=" & String($bNoResources), $COLOR_DEBUG)
+		If $g_bLabUpgradeOrderEnable And $g_bUpgradeAnyTroops And Not $bNoResources Then 
 			Return UpgradeLabAny($bDebug)
 		EndIf
 		ClickAway()
@@ -269,10 +252,10 @@ Func Laboratory($bDebug = False)
 EndFunc
 
 ; start a given upgrade
-Func LaboratoryUpgrade($name, $aCoords, $sCostResult, $bDebug = False)
+Func LaboratoryUpgrade($name, $aCoords, $sCost, $bDebug = False)
 	Local $sUpgradeName = GetUpgradeName($name)
 	If $sUpgradeName = "" Then $sUpgradeName = $name
-	SetLog("Selected upgrade: " & $sUpgradeName & " Cost: " & $sCostResult, $COLOR_INFO)
+	SetLog("Selected upgrade: " & $sUpgradeName & " Cost: " & $sCost, $COLOR_INFO)
 	ClickP($aCoords) ; click troop
 	If _Sleep(2000) Then Return
 	
@@ -319,6 +302,7 @@ EndFunc
 
 Func LabGoToPage($iFrom = 1, $iTo = 2, $iLabMaxPages = 4)
 	Local $iCurPage = $iFrom
+	If $iFrom = $iTo Then Return $iCurPage
 	SetLog("LabGoToPage : From " & $iFrom & " To " & $iTo, $COLOR_ACTION)
 	Select
 		Case $iTo > $iFrom
@@ -326,14 +310,14 @@ Func LabGoToPage($iFrom = 1, $iTo = 2, $iLabMaxPages = 4)
 				ClickDrag(720, 500, 80, 500)
 				If _Sleep(1000) Then Return
 				$iCurPage += 1
-				SetLog("LabGoToPage : CurPage=" & $iCurPage, $COLOR_DEBUG1)
+				SetLog("LabGoToPage : CurPage=" & $iCurPage, $COLOR_DEBUG2)
 			Next
 		Case $iTo < $iFrom
 			For $i = $iFrom To $iTo + 1 Step - 1
 				ClickDrag(130, 500, 766, 500)
 				If _Sleep(1000) Then Return
 				$iCurPage -= 1
-				SetLog("LabGoToPage : CurPage=" & $iCurPage, $COLOR_DEBUG1)
+				SetLog("LabGoToPage : CurPage=" & $iCurPage, $COLOR_DEBUG2)
 			Next
 		Case $iTo = $iFrom
 	EndSelect
@@ -484,37 +468,55 @@ Func ChkUpgradeInProgress($bDebug = False)
 	Return False ; we currently do not know of any upgrades in progress
 EndFunc
 
-Func FindLabUpgrade()
-	Local $aResult[0][6], $sUpgradeName = ""
+; $sUpgrade = Any, will search all image 
+; $sUpgrade = AnySpell, will search all within AnySpell image dir
+; $sUpgrade = AnySiege, will search all within AnySiege image dir
+; $sUpgrade = sShortName, will search only shortName image
+Func FindLabUpgrade($sUpgrade = "Any")
+	If $g_bDebugSetLog Then SetLog("FindLabUpgrade : " & $sUpgrade)
+	Local $aResult[0][6], $sUpgradeName = "", $sDir = "", $sSearchWay = "BC1", $iSortBy = 0, $iSortDirection = 0
 	Local $TmpResult = QuickMIS("CNX", $g_sImgResIcon, 70, 415, 790, 564)
-	Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD"]
 	If IsArray($TmpResult) And UBound($TmpResult) > 0 Then
 		For $i = 0 To UBound($TmpResult) - 1
-			Local $aTmp[1][6] = [[$TmpResult[$i][0], $TmpResult[$i][1], $TmpResult[$i][2], 0, 0, 0]]
+			Local $aTmp[1][6] = [[$TmpResult[$i][0], $TmpResult[$i][1], $TmpResult[$i][2], 0, "", ""]]
 			_ArrayAdd($aResult, $aTmp)
 		Next
 		
 		For $i = 0 To UBound($aResult) - 1
-			If QuickMIS("BC1", $g_sImgLabResearch, $aResult[$i][1] - 92, $aResult[$i][2] - 93, $aResult[$i][1] + 17, $aResult[$i][2]) Then
+			Switch $sUpgrade
+				Case "Any"
+					$sSearchWay = "BC1"
+					$sDir = $g_sImgLabResearch
+					$iSortBy = 3
+					$iSortDirection = 1
+				Case "AnySpell"
+					$sSearchWay = "BC1"
+					$sDir = $g_sImgAnySpell
+				Case "AnySiege"
+					$sSearchWay = "BC1"
+					$sDir = $g_sImgAnySiege
+					$iSortBy = 3
+				Case Else
+					$sSearchWay = "BFI"
+					$sDir = $g_sImgLabResearch & $sUpgrade & "*"
+			EndSwitch
+				
+			If QuickMIS($sSearchWay, $sDir, $aResult[$i][1] - 92, $aResult[$i][2] - 93, $aResult[$i][1] + 17, $aResult[$i][2]) Then
 				Local $cost = getLabCost($aResult[$i][1] - 92, $aResult[$i][2] - 10)
-				Local $level = getTroopsSpellsLevel($aResult[$i][1] - 81, $aResult[$i][2] - 32)
-				$sUpgradeName = GetTroopName(TroopIndexLookup($g_iQuickMISName))
-				If $level = "" Then $level = 1
+				$sUpgradeName = GetTroopName(TroopIndexLookup($sSearchWay = "BC1" ? $g_iQuickMISName : $sUpgrade))
 				$aResult[$i][3] = Number($cost)
 				$aResult[$i][4] = $sUpgradeName
-				$aResult[$i][5] = Number($level)
-			EndIf
-			If $g_bUpgradeSiegeToLvl2 And $aResult[$i][5] >= 2 Then
-				For $x In $aSiege
-					If $aResult[$i][4] = $x Then
-						SetLog("Skip " & $aResult[$i][4] & ", already Level " & $aResult[$i][5])
-						$aResult[$i][0] = "SKIP"
-					EndIf
-				Next
+				$aResult[$i][5] = $sSearchWay = "BC1" ? $g_iQuickMISName : $sUpgrade
 			EndIf
 		Next
 	EndIf
-	_ArraySort($aResult, 0, 0, 0, 3)
+	
+	For $i = 0 To UBound($aResult) - 1 
+		Local $iIndex = _ArraySearch($aResult, "", 0, 0, 0, 0, 1, 4)
+		If $iIndex <> -1 Then _ArrayDelete($aResult, $iIndex)
+	Next
+	
+	_ArraySort($aResult, $iSortDirection, 0, 0, $iSortBy)
 	Return $aResult
 EndFunc
 
@@ -525,49 +527,24 @@ Func GetUpgradeName($shortName)
 	Return ""
 EndFunc
 
-Func IsLabUpgradeResourceEnough($TroopOrSpell, $Cost)
+Func IsLabUpgradeResourceEnough($Cost, $CostType)
 	Local $bRet = False
-	Local $aSiege = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD", "BattleD"]
-	For $j = 0 To UBound($aSiege) - 1
-		If StringInStr($TroopOrSpell, $aSiege[$j]) Then
+	
+	Switch $CostType
+		Case "Elix"
 			If $g_aiCurrentLoot[$eLootElixir] > ($g_iTxtSmartMinElixir + $Cost) Then
-				SetDebugLog($g_iTxtSmartMinElixir & " + " & $Cost & " = " & $g_iTxtSmartMinElixir + $Cost)
-				SetDebugLog("Elixir = " & $g_aiCurrentLoot[$eLootElixir])
-				Return True
-			Else
-				Return False
+				If $g_bDebugSetLog Then SetLog($g_iTxtSmartMinElixir & " + " & $Cost & " = " & $g_iTxtSmartMinElixir + $Cost)
+				If $g_bDebugSetLog Then SetLog("Elixir = " & $g_aiCurrentLoot[$eLootElixir])
+				$bRet = True
 			EndIf
-		EndIf
-	Next
-	If StringInStr($TroopOrSpell, "Spell") Then
-		If IsDarkSpell($TroopOrSpell) Then ;DE Spell
+		Case "DE"
 			If $g_aiCurrentLoot[$eLootDarkElixir] > ($g_iTxtSmartMinDark + $Cost) Then
-				SetDebugLog($g_iTxtSmartMinDark & " + " & $Cost & " = " & $g_iTxtSmartMinDark + $Cost)
-				SetDebugLog("DE = " & $g_aiCurrentLoot[$eLootDarkElixir])
+				If $g_bDebugSetLog Then SetLog($g_iTxtSmartMinDark & " + " & $Cost & " = " & $g_iTxtSmartMinDark + $Cost)
+				If $g_bDebugSetLog Then SetLog("DE = " & $g_aiCurrentLoot[$eLootDarkElixir])
 				$bRet = True
 			EndIf
-		Else ;Elixir Spell
-			If $g_aiCurrentLoot[$eLootElixir] > ($g_iTxtSmartMinElixir + $Cost) Then
-				SetDebugLog($g_iTxtSmartMinElixir & " + " & $Cost & " = " & $g_iTxtSmartMinElixir + $Cost)
-				SetDebugLog("Elixir = " & $g_aiCurrentLoot[$eLootElixir])
-				$bRet = True
-			EndIf
-		EndIf
-	Else
-		If IsDarkTroop($TroopOrSpell) Then ;DE Troop
-			If $g_aiCurrentLoot[$eLootDarkElixir] > ($g_iTxtSmartMinDark + $Cost) Then
-				SetDebugLog($g_iTxtSmartMinDark & " + " & $Cost & " = " & $g_iTxtSmartMinDark + $Cost)
-				SetDebugLog("DE = " & $g_aiCurrentLoot[$eLootDarkElixir])
-				$bRet = True
-			EndIf
-		Else ;Elixir Troop
-			If $g_aiCurrentLoot[$eLootElixir] > ($g_iTxtSmartMinElixir + $Cost) Then
-				SetDebugLog($g_iTxtSmartMinElixir & " + " & $Cost & " = " & $g_iTxtSmartMinElixir + $Cost)
-				SetDebugLog("Elixir = " & $g_aiCurrentLoot[$eLootElixir])
-				$bRet = True
-			EndIf
-		EndIf
-	EndIf
+	EndSwitch
+	
 	Return $bRet
 EndFunc
 
@@ -648,23 +625,22 @@ Func UpgradeLabAny($bDebug = False)
 	If _Sleep(1000) Then Return
 	If Not ClickB("Research") Then Return
 	If _Sleep(1000) Then Return
-	Local $iCurPage = 1, $bUpgradeFound = False, $sCostResult = 0, $iLabMaxPages = 4
+	Local $iCurPage = 1, $bUpgradeFound = False, $sCost = 0, $iLabMaxPages = 4
 	While($iCurPage <= $iLabMaxPages)
 		Local $Upgrades = FindLabUpgrade()
-		Local $aUpgradeCoord[2], $sUpgrade
+		Local $aCoord[2], $sUpgrade
 		If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
 			For $i = 0 To UBound($Upgrades) - 1
-				If $Upgrades[$i][0] = "SKIP" Then ContinueLoop
-				SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Cost:" & $Upgrades[$i][3] & " " & $Upgrades[$i][0], $COLOR_INFO)
-				If Not IsLabUpgradeResourceEnough($Upgrades[$i][4], $Upgrades[$i][3]) Then
-					SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Skip, Not Enough Resource", $COLOR_INFO)
+				If $g_bDebugSetLog Then SetLog("LabUpgrade:" & $Upgrades[$i][4] & " Cost:" & $Upgrades[$i][3] & " " & $Upgrades[$i][0], $COLOR_DEBUG1)
+				$aCoord[0] = $Upgrades[$i][1] - 40 
+				$aCoord[1] = $Upgrades[$i][2] - 40
+				$sCost = $Upgrades[$i][3]
+				$sUpgrade = $Upgrades[$i][4]
+				If Not IsLabUpgradeResourceEnough($sCost, $Upgrades[$i][0]) Then
+					SetLog("LabUpgrade:" & $sUpgrade & " Skip, Not Enough Resource", $COLOR_INFO)
 				Else
-					SetDebugLog("LabUpgrade:" & $Upgrades[$i][4] & " Cost:" & $Upgrades[$i][3], $COLOR_SUCCESS)
+					SetLog("LabUpgrade:" & $sUpgrade & " Cost:" & $sCost, $COLOR_SUCCESS)
 					$bUpgradeFound = True
-					$sUpgrade = $Upgrades[$i][4]
-					$aUpgradeCoord[0] = $Upgrades[$i][1] - 35 
-					$aUpgradeCoord[1] = $Upgrades[$i][2] - 35
-					$sCostResult = $Upgrades[$i][3]
 					ExitLoop
 				EndIf
 			Next
@@ -673,7 +649,7 @@ Func UpgradeLabAny($bDebug = False)
 		EndIf
 		
 		If $bUpgradeFound Then
-			Return LaboratoryUpgrade($sUpgrade, $aUpgradeCoord, $sCostResult, $bDebug) ; return whether or not we successfully upgraded
+			Return LaboratoryUpgrade($sUpgrade, $aCoord, $sCost, $bDebug) ; return whether or not we successfully upgraded
 		EndIf
 		
 		$iCurPage = LabGoToPage($iCurPage, $iCurPage + 1) ; go to next page of upgrades

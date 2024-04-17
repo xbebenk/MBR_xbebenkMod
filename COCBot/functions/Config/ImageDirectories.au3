@@ -205,13 +205,15 @@ Global $g_sImgRequestRemoveImage = @ScriptDir & "\imgxml\ArmyOverview\RequestCC\
 Global $g_sImgSendRequestButton = @ScriptDir & "\imgxml\ArmyOverview\RequestCC\SendRequest"
 Global $g_sImgArmyOverviewHeroes = @ScriptDir & "\imgxml\ArmyOverview\Heroes"
 Global $g_sImgDelQueue = @ScriptDir & "\imgxml\Train\Delete\"
+Global $g_sImgSlash = @ScriptDir & "\imgxml\Train\Slash\"
 #EndRegion
 
 #Region Attack
 Global $g_sImgAttackBarDir = @ScriptDir & "\imgxml\AttackBar"
 Global $g_sImgNextButton = @ScriptDir & "\imgxml\Attack\Search\NextButton\"
-Global $g_sImgSwitchSiegeMachine = @ScriptDir & "\imgxml\SwitchSiegeMachines\"
-Global $g_sImgSwitchWardenMode = @ScriptDir & "\imgxml\SwitchWardenMode"
+Global $g_sImgSwitchSiegeMachine = @ScriptDir & "\imgxml\Switch\SiegeMachines\"
+Global $g_sImgSwitchSiegeButton = @ScriptDir & "\imgxml\Switch\SiegeButton\"
+Global $g_sImgSwitchWardenMode = @ScriptDir & "\imgxml\Switch\WardenMode\"
 #EndRegion
 
 #Region Search

@@ -181,52 +181,108 @@ Func TopUpUnbalancedSpell($iUnbalancedSpell = 0)
 
 EndFunc   ;==>IsBrewOnlyOneType
 
-Func GetCurrentTroop($x_start, $y_start)
+Func GetCurrentTroop($x_start = 96, $y_start = 165)
 
-	Local $aResult[3] = [0, 0, 0]
+	Local $aResult[4] = [0, 0, 0, 0]
+	Local $iLenght, $x1, $iTroopCap = 0, $iTroopQuant = 0
 	If Not $g_bRunState Then Return $aResult
-
-	; [0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
 	
-	If _Sleep(500) Then Return ; wait until number stop changing
-	
-	Local $iOCRResult = getArmyCapacityOnTrainTroops($x_start, $y_start)
-
-	If StringInStr($iOCRResult, "#") Then
-		Local $aTempResult = StringSplit($iOCRResult, "#", $STR_NOCOUNT)
-		$aResult[0] = Number($aTempResult[0])
-		$aResult[1] = Number($aTempResult[1]) / 2
-		$aResult[2] = $aResult[1] - $aResult[0]
+	If $g_iTroopSlashX = 0 Then
+		If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 70, $y_start + 15) Then
+			$iLenght = $g_iQuickMISX - $x_start
+			$x1 = $g_iQuickMISX
+			$g_iTroopSlashX = $g_iQuickMISX
+		Else
+			SetLog("DEBUG | ERROR on GetCurrentTroop Find Slash", $COLOR_ERROR)
+			Return $aResult
+		EndIf
 	Else
-		If $g_bDebugSetlog Then SetLog("DEBUG | ERROR on GetCurrentArmy", $COLOR_ERROR)
+		$iLenght = $g_iTroopSlashX - $x_start
+		$x1 = $g_iTroopSlashX
 	EndIf
-
+	
+	Local $iTroopCap = getArmyCapacityOnTrainTroops($x1, $y_start)
+	
+	Local $iTroopQuant = getArmyCapacityOnTrainTroops($x_start, $y_start, $iLenght)
+	
+	$iTroopQuant = StringReplace($iTroopQuant, "#", "")
+	$iTroopCap = StringReplace($iTroopCap, "#", "")
+	
+	$aResult[0] = Number($iTroopQuant)
+	$aResult[1] = Number($iTroopCap) / 2
+	$aResult[2] = $aResult[1] - $aResult[0]
+	$aResult[3] = Number($iTroopCap)
+	
 	Return $aResult
 
 EndFunc   ;==>GetCurrentArmy
 
-Func GetCurrentSpell($x_start, $y_start)
+Func GetCurrentSpell($x_start = 96, $y_start = 165)
 
-	Local $aResult[3] = [0, 0, 0]
+	Local $aResult[4] = [0, 0, 0, 0]
+	Local $iLenght, $x1, $iSpellCap = 0, $iSpellQuant = 0
 	If Not $g_bRunState Then Return $aResult
-
-	; [0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
 	
-	If _Sleep(500) Then Return ; wait until number stop changing
-	
-	Local $iOCRResult = getArmyCapacityOnTrainSpell($x_start, $y_start)
-
-	If StringInStr($iOCRResult, "#") Then
-		Local $aTempResult = StringSplit($iOCRResult, "#", $STR_NOCOUNT)
-		$aResult[0] = Number($aTempResult[0])
-		$aResult[1] = Number($aTempResult[1]) / 2
-		$aResult[2] = $aResult[1] - $aResult[0]
+	If $g_iSpellSlashX = 0 Then
+		If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 40, $y_start + 15) Then
+			$iLenght = $g_iQuickMISX - $x_start
+			$x1 = $g_iQuickMISX
+			$g_iSpellSlashX = $g_iQuickMISX
+		Else
+			SetLog("DEBUG | ERROR on GetCurrentSpell Find Slash", $COLOR_ERROR)
+			Return $aResult
+		EndIf
 	Else
-		If $g_bDebugSetlog Then SetLog("DEBUG | ERROR on GetCurrentSpell", $COLOR_ERROR)
+		$iLenght = $g_iSpellSlashX - $x_start
+		$x1 = $g_iSpellSlashX
 	EndIf
-
+	
+	Local $iSpellCap = getArmyCapacityOnTrainSpell($x1, $y_start)
+	Local $iSpellQuant = getArmyCapacityOnTrainSpell($x_start, $y_start, $iLenght)
+	
+	$iSpellQuant = StringReplace($iSpellQuant, "#", "")
+	$iSpellCap = StringReplace($iSpellCap, "#", "")
+	
+	$aResult[0] = Number($iSpellQuant)
+	$aResult[1] = Number($iSpellCap) / 2
+	$aResult[2] = $aResult[1] - $aResult[0]
+	$aResult[3] = Number($iSpellCap)
+	
 	Return $aResult
+EndFunc   ;==>GetCurrentSpell
 
+Func GetCurrentSiege($x_start = 105, $y_start = 165)
+
+	Local $aResult[4] = [0, 0, 0, 0]
+	Local $iLenght, $x1, $iSiegeCap = 0, $iSiegeQuant = 0
+	If Not $g_bRunState Then Return $aResult
+	
+	If $g_iSiegeSlashX = 0 Then
+		If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 40, $y_start + 15) Then
+			$iLenght = $g_iQuickMISX - $x_start
+			$x1 = $g_iQuickMISX
+			$g_iSiegeSlashX = $g_iQuickMISX
+		Else
+			SetLog("DEBUG | ERROR on GetCurrentSiege Find Slash", $COLOR_ERROR)
+			Return $aResult
+		EndIf
+	Else
+		$iLenght = $g_iSiegeSlashX - $x_start
+		$x1 = $g_iSiegeSlashX
+	EndIf
+	
+	Local $iSiegeCap = getArmyCapacityOnTrainTroops($x1, $y_start)
+	Local $iSiegeQuant = getArmyCapacityOnTrainTroops($x_start, $y_start, $iLenght)
+	
+	$iSiegeQuant = StringReplace($iSiegeQuant, "#", "")
+	$iSiegeCap = StringReplace($iSiegeCap, "#", "")
+	
+	$aResult[0] = Number($iSiegeQuant)
+	$aResult[1] = Number($iSiegeCap) / 2
+	$aResult[2] = $aResult[1] - $aResult[0]
+	$aResult[3] = Number($iSiegeCap)
+	
+	Return $aResult
 EndFunc   ;==>GetCurrentSpell
 
 Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default) ;GetCurrentTroop(95, 163)

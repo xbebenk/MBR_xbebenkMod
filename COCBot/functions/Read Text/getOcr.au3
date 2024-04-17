@@ -76,11 +76,13 @@ Func getResourcesBonusPerc($x_start, $y_start) ; -> Gets complete value of Bonus
 EndFunc   ;==>getResourcesBonusPerc
 
 Func getLabCost($x_start, $y_start) ;normal lab
-	Return StringReplace(getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True), "-", "")
+	Return StringRegExpReplace(getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True), "[-x]", "")
+	;Return StringReplace(getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True), "-", "")
 EndFunc 
 
 Func getSLabCost($x_start, $y_start) ;builderbase lab
-	Return getOcrAndCapture("coc-slabcost", $x_start, $y_start, 100, 18, True)
+	Return StringRegExpReplace(getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True), "[-x]", "")
+	;Return getOcrAndCapture("coc-slabcost", $x_start, $y_start, 100, 18, True)
 EndFunc 
 
 Func getBldgUpgradeTime($x_start, $y_start) ; -> Gets complete remain building upgrade time
@@ -123,59 +125,32 @@ Func getArmySiegeCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army c
 	Return StringReplace(getOcrAndCapture("coc-armycap", $x_start, $y_start, 46, 17, True), "-", "")
 EndFunc   ;==>getArmySiegeCap
 
-Func getCastleDonateCap($x_start, $y_start) ;  -> Gets clan castle capacity,  --> donatecc.au3
-	Return getOcrAndCapture("coc-army", $x_start, $y_start, 30, 14, True)
+Func getCastleDonateCap($x_start, $y_start, $x1 = 35) ;  -> Gets clan castle capacity,  --> donatecc.au3
+	Return getOcrAndCapture("coc-army", $x_start, $y_start, $x1, 14, True)
 EndFunc   ;==>getCastleDonateCap
 
 Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  -> Gets quantity of troops in army Window (slot)
 	Return StringReplace(getOcrAndCapture("coc-newarmy", $x_start, $y_start, 55, 18, True), "-", "")
 EndFunc   ;==>getBarracksNewTroopQuantity
 
-Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of troops in army Window
-	Return StringRegExpReplace(getOcrAndCapture("coc-troopcap", $x_start, $y_start, 70, 16, True), "[-x]", "")
-EndFunc   ;==>getArmyCapacityOnTrainTroops(95, 163)
+Func getArmyCapacityOnTrainTroops($x_start, $y_start, $x1 = 63) ;  -> Gets quantity of troops in army Window
+	Return StringRegExpReplace(getOcrAndCapture("coc-troopcap", $x_start, $y_start, $x1, 14, True), "[-x]", "")
+EndFunc   ;==>getArmyCapacityOnTrainTroops
 
 ;TestOCRTroopCap(0, 320)
-Func TestOCRTroopCap($iStart = 0, $iCount = 10, $bSaveOCRCap = True, $bSaveOCRTroop = False, $bSaveOCRQueue = False, $iSleep = 800, $path = "D:\OCRTool\TestImages\DebugOCR\")
-	Local $sRet = "", $sRet1 = "", $aString, $s1 = ""
-	For $i = $iStart To $iCount - 1
+Func TestOCRTroopCap($iStart = 0, $iCount = 10, $path = "D:\OCRTool\TestImages\DebugOCR\", $iSleep = 800)
+	Local $sRet = "", $sRet1 = "", $sRet2 = "", $aRet, $s1 = ""
+	If Not OpenTroopsTab() Then Return
+	For $i = $iStart To $iCount
 		If Not $g_bRunState Then Return
+		$aRet = GetCurrentTroop()
+		$sRet = $aRet[0]
+		$sRet1 = $aRet[3]
+		$sRet2 = StringRegExpReplace(getOcrAndCapture("coc-troopcap", 96, 165, 63, 14)," \d+", "")
 		
-		If $bSaveOCRCap Then
-			$sRet = getOcrAndCapture("coc-troopcap", 94, 163, 70, 16, True)
-			$sRet1 = StringRegExpReplace($sRet, "[-x]", "")
-			$aString = StringSplit($sRet1, "#", $STR_NOCOUNT)
-			If UBound($aString) = 2 Then 
-				$s1 = $aString[0]
-			EndIf
-			SetLog($sRet & " = " & $sRet1)
-			_CaptureRegion2(94, 163, 94 + 70, 163 + 16)
-			SaveDebugImageOCR($i & "_" & $s1, $path)
-		EndIf
-		
-		;If $bSaveOCRTroop Then 	
-		;	$sRet = getOcrAndCapture("coc-armycap", 722, 191, 35, 14, True)
-		;	$sRet1 = StringRegExpReplace($sRet, "[-x]", "")
-		;	$aString = StringSplit($sRet1, "#", $STR_NOCOUNT)
-		;	If UBound($aString) = 2 Then 
-		;		$s1 = $aString[0]
-		;	EndIf
-		;	SetLog("OCRTroop : " & $sRet & " = " & $sRet1)
-		;	_CaptureRegion2(722, 191, 722 + 35, 191 + 14)
-		;	SaveDebugImageOCR("OCRTroop_" & $sRet & "_" & $s1, $path)
-		;EndIf
-		;
-		;If $bSaveOCRQueue And $i > 320 Then 
-		;	$sRet = getOcrAndCapture("coc-qqtroop", 662, 191, 32, 14, True)
-		;	$sRet1 = StringRegExpReplace($sRet, "[-x]", "")
-		;	$aString = StringSplit($sRet1, "#", $STR_NOCOUNT)
-		;	If UBound($aString) = 2 Then 
-		;		$s1 = $aString[0]
-		;	EndIf
-		;	SetLog("OCRQueue : " & $sRet & " = " & $sRet1)
-		;	_CaptureRegion2(662, 191, 622 + 32, 191 + 14)
-		;	SaveDebugImageOCR("OCRQueue_" & $sRet & "_" & $s1, $path)
-		;EndIf
+		SetLog($sRet & "/" & $sRet1 & " = " & $sRet2)
+		_CaptureRegion2(96, 165, 96 + 63, 165 + 14)
+		SaveDebugImageOCR($i & "_" & $sRet, $path)
 		
 		Click(122, 394)
 		If Not $g_bRunState Then Return
@@ -183,8 +158,8 @@ Func TestOCRTroopCap($iStart = 0, $iCount = 10, $bSaveOCRCap = True, $bSaveOCRTr
 	Next
 EndFunc
 
-Func getArmyCapacityOnTrainSpell($x_start, $y_start) ;  -> Gets quantity of spell in army Window
-	Return getOcrAndCapture("coc-spellcap", $x_start, $y_start, 50, 14, True)
+Func getArmyCapacityOnTrainSpell($x_start, $y_start, $x1 = 40) ;  -> Gets quantity of spell in army Window
+	Return StringRegExpReplace(getOcrAndCapture("coc-spellcap", $x_start, $y_start, $x1, 13, True), "[-x]", "")
 EndFunc   ;==>getArmyCapacityOnTrainSpell
 
 Func getQueueTroopsQuantity($x_start, $y_start) ;  -> Gets quantity of troops in Queue in Train Tab

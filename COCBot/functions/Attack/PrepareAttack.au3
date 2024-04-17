@@ -185,7 +185,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 
 	If $bNeedSwitch Then
 		Local $x1 = $iX - 20, $x2 = $iX + 40
-		If QuickMIS("BFI", $g_sImgSwitchSiegeMachine & "SiegeSwitch*", $x1, 630, $x2, 676) Then
+		If QuickMIS("BC1", $g_sImgSwitchSiegeButton, $x1, 630, $x2, 676) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			Local $iLastX = $g_iQuickMISX - 30, $iLastY = $g_iQuickMISY
 			

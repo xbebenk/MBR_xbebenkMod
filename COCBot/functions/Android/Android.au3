@@ -2000,15 +2000,16 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				SetDebugLog("Android Version 5.1")
 			Case $g_iAndroidNougat
 				SetDebugLog("Android Version 7.0")
-			Case $g_iAndroidpie
+			Case $g_iAndroidPie
 				SetDebugLog("Android Version 9.0")
-				If $g_sAndroidEmulator = "MEmu" Then
-					; minitouch binary is usually placed in the same shared folder as the screencap but Andriod Pie om MEmu has this folder mounted with noexec flag
+				If $g_sAndroidEmulator = "Memu" Then
+					; minitouch binary is usually placed in the same shared folder as the screencap but Andriod Pie om Memu has this folder mounted with noexec flag
 					; will push minitounch binary to /data/local/tmp the same place as the minitouch README example
 					Local $cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " push """ & $g_sAdbScriptsPath & "\minitouch"" /data/local/tmp/" , $process_killed)
 					SetLog($cmdOutput, $COLOR_INFO)
-					If _Sleep(3000) Then Return
-					Local $cmdOutput = AndroidAdbSendShellCommand("chmod 555 /data/local/tmp/minitouch", $wasRunState, False)
+					_Sleep(2000)
+					$cmdOutput = AndroidAdbSendShellCommand("chmod 777 /data/local/tmp/minitouch", Default, $wasRunState, False)
+					$cmdOutput = AndroidAdbSendShellCommand("ls -l /data/local/tmp/minitouch")
 					SetLog($cmdOutput, $COLOR_INFO)
 				EndIf
 			Case Else
