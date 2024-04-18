@@ -62,7 +62,7 @@ Func Collect($bOnlyCollector = False)
 	If $bOnlyCollector Then 
 		EndGainCost("Collect")
 		Return True
-	Endif
+	EndIf
 	
 	If _Sleep(1000) Then Return
 	CollectLootCart()
@@ -152,15 +152,15 @@ Func CollectCookieRumble()
 EndFunc
 
 Func ClaimCookieReward($bGoldPass = False)
-	Local $iClaim = 0
+	Local $iClaim = 0, $aClaim
 	Local $x1 = 10, $y1 = 525, $x2 = 840, $y2 = 580
 	If $bGoldPass Then $y1 = 190
 	
 	For $i = 1 To 5
 		If QuickMIS("BC1", $g_sImgCollectCookie, 45, 360, 100, 415) Then 
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			ExitLoop
 			If _Sleep(500) Then Return
+			ExitLoop
 		EndIf
 	Next
 	
@@ -171,7 +171,14 @@ Func ClaimCookieReward($bGoldPass = False)
 			ClickDrag(400, 445, 700, 445, 500)
 			If _Sleep(1500) Then Return
 		EndIf
-		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, $x1, $y1, $x2, $y2)
+		
+		If QuickMIS("BC1", $g_sImgDailyReward, 380, 380, 550, 450) Then 
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			SetLog("[" & $i & "] Claiming Bonus Track Reward", $COLOR_SUCCESS)
+			$iClaim += 1
+		EndIf
+		
+		$aClaim = QuickMIS("CNX", $g_sImgDailyReward, $x1, $y1, $x2, $y2)
 		If Not $g_bRunState Then Return
 		If IsArray($aClaim) And UBound($aClaim) > 0 Then
 			_ArraySort($aClaim, 0, 0, 0, 1) ;sort x coord ascending
@@ -188,7 +195,7 @@ Func ClaimCookieReward($bGoldPass = False)
 					Else
 						SetLog("Cancel. Not selling extra rewards.", $COLOR_SUCCESS)
 						Click($aConfirmSurrender[0] - 100, $aConfirmSurrender[1]) ; Click Cancel
-					Endif
+					EndIf
 					If _Sleep(1000) Then Return
 				Else
 					$iClaim += 1
@@ -198,9 +205,20 @@ Func ClaimCookieReward($bGoldPass = False)
 			Next
 		EndIf
 		If WaitforPixel(795, 398, 796, 400, "FFFE68", 10, 1, "Trophy Color") Then ExitLoop ;thropy color
-		If WaitforPixel(799, 390, 801, 394, "CD571E", 10, 1, "Cookie Color") Then ClickDrag(750, 445, 100, 445, 1000) ;cookie color
-		If WaitforPixel(797, 378, 798, 379, "DF3430", 10, 1, "Dragon Pinata Color") Then ClickDrag(750, 445, 100, 445, 1000) ;Dragon Pinata color
-		If WaitforPixel(796, 392, 797, 393, "83E9EE", 10, 1, "Ice Cubes Color") Then ClickDrag(750, 445, 100, 445, 1000) ;Ice Cubes color
+		If WaitforPixel(795, 398, 796, 400, "29231F", 10, 1, "End Window Color") Then ExitLoop ;End Window Color
+		If WaitforPixel(799, 390, 801, 394, "CD571E", 10, 1, "Cookie Color") Then 
+			ClickDrag(750, 445, 100, 445, 1000) ;cookie color
+			ContinueLoop
+		EndIf
+		If WaitforPixel(797, 378, 798, 379, "DF3430", 10, 1, "Dragon Pinata Color") Then 
+			ClickDrag(750, 445, 100, 445, 1000) ;Dragon Pinata color
+			ContinueLoop
+		EndIf
+		If WaitforPixel(796, 392, 797, 393, "83E9EE", 10, 1, "Ice Cubes Color") Then 
+			ClickDrag(750, 445, 100, 445, 1000) ;Ice Cubes color
+			ContinueLoop
+		EndIf
+		ClickDrag(750, 445, 100, 445, 1000) ;just swipe to right
 	Next
 	
 	SetLog($iClaim > 0 ? "Claimed " & $iClaim & " reward(s)!" : "Nothing to claim!", $COLOR_SUCCESS)
