@@ -473,7 +473,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 		
 		$bDonate = False ;reset after a page
 		For $i = 1 To 3
-			If WaitforPixel(344, 601, 345, 602, Hex(0x61A719, 6), 20, 1, "DonateCC-ScrollDown") Then
+			If WaitforPixel(339, 592, 340, 593, Hex(0xFFFFFF, 6), 10, 1, "DonateCC-ScrollDown") Then
 				SetLog("Scroll chat Request #" & $i, $COLOR_ACTION)
 				Click(335, 595, 1, 0, "Click Green Scroll Button")
 				If _Sleep(1000) Then Return
