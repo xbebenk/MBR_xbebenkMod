@@ -87,6 +87,7 @@ Func FillIncorrectTroopCombo($caller = "Unknown")
 	SetLog("TroopQuantToFill = x" & $TroopQuantToFill & " " & $sTroopName, $COLOR_DEBUG)
 	
 	If $TroopQuantToFill > 0 Then
+		If _Sleep(500) Then Return
 		If Not DragIfNeeded($g_sCmbFICTroops[$FillTroopIndex][0]) Then Return False
 		SetLog("Training " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_SUCCESS)
 		TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
@@ -149,6 +150,7 @@ Func FillIncorrectSpellCombo($caller = "Unknown")
 	Local $SpellQuantToFill = Floor($SpellSpace/$g_sCmbFICSpells[$FillSpellIndex][2])
 	
 	If $SpellQuantToFill > 0 Then
+		If _Sleep(500) Then Return
 		SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
 		TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
 	EndIf
@@ -187,18 +189,12 @@ Func GetCurrentTroop($x_start = 96, $y_start = 165)
 	Local $iLenght, $x1, $iTroopCap = 0, $iTroopQuant = 0
 	If Not $g_bRunState Then Return $aResult
 	
-	If $g_iTroopSlashX = 0 Then
-		If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 70, $y_start + 15) Then
-			$iLenght = $g_iQuickMISX - $x_start
-			$x1 = $g_iQuickMISX
-			$g_iTroopSlashX = $g_iQuickMISX
-		Else
-			SetLog("DEBUG | ERROR on GetCurrentTroop Find Slash", $COLOR_ERROR)
-			Return $aResult
-		EndIf
+	If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 70, $y_start + 15) Then
+		$iLenght = $g_iQuickMISX - $x_start
+		$x1 = $g_iQuickMISX
 	Else
-		$iLenght = $g_iTroopSlashX - $x_start
-		$x1 = $g_iTroopSlashX
+		SetLog("DEBUG | ERROR on GetCurrentTroop Find Slash", $COLOR_ERROR)
+		Return $aResult
 	EndIf
 	
 	Local $iTroopCap = getArmyCapacityOnTrainTroops($x1, $y_start)
@@ -223,18 +219,12 @@ Func GetCurrentSpell($x_start = 96, $y_start = 165)
 	Local $iLenght, $x1, $iSpellCap = 0, $iSpellQuant = 0
 	If Not $g_bRunState Then Return $aResult
 	
-	If $g_iSpellSlashX = 0 Then
-		If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 40, $y_start + 15) Then
-			$iLenght = $g_iQuickMISX - $x_start
-			$x1 = $g_iQuickMISX
-			$g_iSpellSlashX = $g_iQuickMISX
-		Else
-			SetLog("DEBUG | ERROR on GetCurrentSpell Find Slash", $COLOR_ERROR)
-			Return $aResult
-		EndIf
+	If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 40, $y_start + 15) Then
+		$iLenght = $g_iQuickMISX - $x_start
+		$x1 = $g_iQuickMISX
 	Else
-		$iLenght = $g_iSpellSlashX - $x_start
-		$x1 = $g_iSpellSlashX
+		SetLog("DEBUG | ERROR on GetCurrentSpell Find Slash", $COLOR_ERROR)
+		Return $aResult
 	EndIf
 	
 	Local $iSpellCap = getArmyCapacityOnTrainSpell($x1, $y_start)
@@ -257,18 +247,12 @@ Func GetCurrentSiege($x_start = 105, $y_start = 165)
 	Local $iLenght, $x1, $iSiegeCap = 0, $iSiegeQuant = 0
 	If Not $g_bRunState Then Return $aResult
 	
-	If $g_iSiegeSlashX = 0 Then
-		If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 40, $y_start + 15) Then
-			$iLenght = $g_iQuickMISX - $x_start
-			$x1 = $g_iQuickMISX
-			$g_iSiegeSlashX = $g_iQuickMISX
-		Else
-			SetLog("DEBUG | ERROR on GetCurrentSiege Find Slash", $COLOR_ERROR)
-			Return $aResult
-		EndIf
+	If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 40, $y_start + 15) Then
+		$iLenght = $g_iQuickMISX - $x_start
+		$x1 = $g_iQuickMISX
 	Else
-		$iLenght = $g_iSiegeSlashX - $x_start
-		$x1 = $g_iSiegeSlashX
+		SetLog("DEBUG | ERROR on GetCurrentSiege Find Slash", $COLOR_ERROR)
+		Return $aResult
 	EndIf
 	
 	Local $iSiegeCap = getArmyCapacityOnTrainTroops($x1, $y_start)
@@ -740,7 +724,7 @@ Func DoubleTrainTroop($bDebug = False)
 	Local $tmpCamp = 999, $TroopCamp
 	
 	While 1
-		If _Sleep(500) Then Return
+		If _Sleep(800) Then Return
 		$TroopCamp = GetCurrentTroop(95, 163)
 		If IsProblemAffect() Then Return
 		If _Sleep(50) Then Return

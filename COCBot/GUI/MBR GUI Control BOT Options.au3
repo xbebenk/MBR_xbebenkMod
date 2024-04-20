@@ -612,11 +612,11 @@ Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
 	If Not OpenArmyTab(False) Then Return
 	Local $iX = ($iCol = 1) ? 120 : 200
 	Local $sTroopName =  ($iCol = 1) ? "Barbarian" : "Archer"
-	
+	Local $aCamp[2] = [155, 170]
 	$iSleep = ($iCol = 1) ? $iSleep : $iSleep + 1000
 	If $bBoost Then $iSleep = $iSleep * 0.2
 	
-	Local $ArmyCap = getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], True)
+	Local $ArmyCap = getArmyCampCap($aCamp[0], $aCamp[1])
 	If StringInStr($ArmyCap, "#") Then 
 		Local $aArmyCap = StringSplit($ArmyCap, "#", $STR_NOCOUNT)
 		If IsArray($aArmyCap) And Ubound($aArmyCap) = 2 Then 
@@ -644,7 +644,7 @@ Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
 				
 				If Not $g_bRunState Then Return
 				If Not OpenArmyTab(False) Then Return
-				Local $aTmpCamp = StringSplit(getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], True), "#", $STR_NOCOUNT)
+				Local $aTmpCamp = StringSplit(getArmyCampCap($aCamp[0], $aCamp[1]), "#", $STR_NOCOUNT)
 				If IsArray($aTmpCamp) And UBound($aTmpCamp) = 2 Then 
 					If $aTmpCamp[0] = $i Then 
 						SetLog(" -- Army Capacity = " & $aTmpCamp[0], $COLOR_DEBUG1)
@@ -652,7 +652,7 @@ Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
 						SetLog(" -- Expected:" & $i & ", Read:" & $aTmpCamp[0], $COLOR_ERROR)
 						SetLog(" -- Army Capacity Not read properly", $COLOR_ERROR)
 						SetLog(" -- Check on your Profile/Temp/Debug/TestTrainCap Folder", $COLOR_INFO)
-						_CaptureRegion2($aArmyCampSize[0], $aArmyCampSize[1], $aArmyCampSize[0] + 80, $aArmyCampSize[1] + 16)
+						_CaptureRegion2($aCamp[0], $aCamp[1], $aCamp[0] + 80, $aCamp[1] + 16)
 						SaveDebugImage("TestTrainCap", False)
 						ExitLoop
 					EndIf

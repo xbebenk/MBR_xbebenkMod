@@ -708,7 +708,7 @@ Func CheckBuilderHutTutorial()
 	Local $TmpX = 0, $TmpY = 0, $aUpgradeButton
 	If $g_iTownHallLevel < 14 Then Return
 	
-	If QuickMIS("BC1", $g_sImgArrowNewBuilding) Then
+	If QuickMIS("BC1", $g_sImgArrowNewBuilding, 70, 100, 780, 570) Then
 		$TmpX = $g_iQuickMISX
 		$TmpY = $g_iQuickMISY
 		If QuickMIS("BC1", $g_sImgBuilderHut, $TmpX - 80, $TmpY - 80, $TmpX + 80, $TmpY + 80) Then

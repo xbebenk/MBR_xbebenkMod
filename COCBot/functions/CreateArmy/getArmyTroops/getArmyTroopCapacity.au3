@@ -38,9 +38,6 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 	Local $tmpTotalCamp = 0
 	Local $tmpCurCamp = 0
 
-	; Verify troop current and full capacity
-	$sArmyInfo = getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], $bNeedCapture) ; OCR read army trained and total
-
 	While $iCount < 100 ; 30 - 40 sec
 
 		$iCount += 1

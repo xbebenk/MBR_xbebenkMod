@@ -1390,7 +1390,6 @@ Global $g_iCurrentSpells ; Current Spells
 Global $g_iCurrentCCSpells = 0, $g_iTotalCCSpells = 0
 Global $g_bFullArmySpells = False ; true when $g_iTotalTrainSpaceSpell = $iTotalSpellSpace in getArmySpellCount
 Global $g_CurrentCampUtilization = 0, $g_iTotalCampSpace = 0
-Global $g_iTroopSlashX = 0, $g_iSpellSlashX = 0, $g_iSiegeSlashX = 0
 
 ; Upgrading - Lab
 Global $g_iLaboratoryElixirCost = 0, $g_iLaboratoryDElixirCost = 0, $g_bUseLabPotion = False, $g_bUpgradeAnyTroops = False

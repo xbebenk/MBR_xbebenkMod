@@ -58,7 +58,7 @@ Func CheckVersion()
 		Else
 			SetLog(" ")
 			$iCount += 1
-			If $iCount = 3 Then ExitLoop
+			If $iCount = 2 Then ExitLoop
 		EndIf
 	Next
 	
