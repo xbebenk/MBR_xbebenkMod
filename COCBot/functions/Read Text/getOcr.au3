@@ -118,7 +118,7 @@ Func getTroopsSpellsLevel($x_start, $y_start) ;  -> Gets spell level on Attack S
 EndFunc   ;==>getTroopsSpellsLevel
 
 Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity on Army Tab (Troops:xx/xx)
-	Return StringReplace(getOcrAndCapture("coc-armycap", $x_start, $y_start, 60, 14, True), "-", "")
+	Return StringReplace(getOcrAndCapture("coc-armycap", $x_start, $y_start, 70, 14, True), "-", "")
 EndFunc   ;==>getArmyCampCap
 
 Func getArmySiegeCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
@@ -153,6 +153,7 @@ Func TestOCRTroopCap($iStart = 0, $iCount = 10, $path = "D:\OCRTool\TestImages\D
 		_CaptureRegion2(96, 165, 96 + 63, 165 + 14)
 		SaveDebugImageOCR($i & "_" & $sRet, $path)
 		
+		If $i = $iCount Then ExitLoop
 		Click(122, 394)
 		If Not $g_bRunState Then Return
 		If _Sleep($iSleep) Then Return
