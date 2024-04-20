@@ -1035,7 +1035,8 @@ Func getRemainingCCcapacity($DonateButton = -1)
 	
 	Local $aDonateType = QuickMIS("CNX", $g_sImgDonateType, $aiDonateButton[0] - 250, $aiDonateButton[1] - 15, $aiDonateButton[0] - 50, $aiDonateButton[1] + 20)
 	If IsArray($aDonateType) And UBound($aDonateType) > 0 Then
-		If UBound($aDonateType) < 3 Then $xTroop = 40 ;cc only cannot accept sieges
+		If UBound($aDonateType) < 3 Then $xTroop = 30 ;cc cannot accept sieges
+		If UBound($aDonateType) < 2 Then $xTroop = 35 ;cc cannot accept spell and sieges
 		For $i = 0 To UBound($aDonateType) - 1
 			If $aDonateType[$i][0] = "Troop" Then 
 				$sCapTroops = getOcrSpaceCastleDonate($aDonateType[$i][1] + $xTroop, $aiDonateButton[1] - 7)
