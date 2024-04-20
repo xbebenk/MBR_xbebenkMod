@@ -1,6 +1,13 @@
 * **v.7.9.9 Mod_v1.2.5#117**
+* Add Claim Bonus Track
+* Add Goblin Cave Scenery Support
+* Add Egypt Scenery Support
 * Fix Memu
 * Fix Donate
+* Fix Donate readRequest Capacity
+* Fix Memu/Nox ZoomIn
+* Fix getArmyCampCap
+* Improved OCR on Train Troop Tab
 
 * **v.7.9.9 Mod_v1.2.5#116**
 * Add Root Rider
