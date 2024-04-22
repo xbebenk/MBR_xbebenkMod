@@ -326,33 +326,25 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 	EndIf
 EndFunc   ;==>SelectCastleOrSiege
 
-Func GetListSiege($x = 135, $y = 470, $x1 = 700, $y1 = 540)
-	Local $aResult[0][6], $CheckLvlY = 524
-	Local $aSiege[0][3]
-	$x += 22
-	For $i = 1 To 5
-		If QuickMIS("BC1", $g_sImgSwitchSiegeMachine, $x, $y, $x+70, $y1) Then
-			_ArrayAdd($aSiege, $g_iQuickMISName & "|" & $g_iQuickMISX & "|" & $g_iQuickMISY)
-		EndIf
-		$x += 72
-	Next
-
+Func GetListSiege($x = 50, $y = 483, $x1 = 830, $y1 = 540)
+	Local $aResult[0][6], $CheckLvlY = 528
+	
+	Local $aSiege = QuickMIS("CNX", $g_sImgSwitchSiegeMachine, $x, $y, $x1, $y1)
+	If Not $g_bRunState Then Return
 	If IsArray($aSiege) And UBound($aSiege) > 0 Then
 		For $i = 0 To UBound($aSiege) - 1
-			SetDebugLog("[" & $i & "] Siege: " & $aSiege[$i][0] & ", Coord[" & $aSiege[$i][1] & "," & $aSiege[$i][2] & "]")
-			SetDebugLog("getTroopsSpellsLevel(" & $aSiege[$i][1] - 30 & "," & $CheckLvlY & ")", $COLOR_ACTION)
+			If $g_bDebugSetlog Then SetLog("[" & $i & "] Siege: " & $aSiege[$i][0] & ", Coord[" & $aSiege[$i][1] & "," & $aSiege[$i][2] & "]")
+			If $g_bDebugSetlog Then SetLog("getTroopsSpellsLevel(" & $aSiege[$i][1] - 30 & "," & $CheckLvlY & ")", $COLOR_ACTION)
 			Local $SiegeLevel = getOcrAndCapture("coc-spellslevel", $aSiege[$i][1] - 30, $CheckLvlY, 20, 20, True); getTroopsSpellsLevel($aTmp[$i][1] - 30, $CheckLvlY)
-			SetDebugLog("SiegeLevel=" & $SiegeLevel)
 			If $SiegeLevel = "" Then $SiegeLevel = 1
+			If $g_bDebugSetlog Then SetLog("SiegeLevel=" & $SiegeLevel)
 			Local $TroopIndex = TroopIndexLookup($aSiege[$i][0])
 			Local $OwnSiege = False
-			If IsProblemAffect() Then Return
-			If Not $g_bRunState Then Return
-			If _ColorCheck(_GetPixelColor($aSiege[$i][1] - 30, 466, True), Hex(0x559CDD, 6), 10) Then $OwnSiege = String(True)
+			If _ColorCheck(_GetPixelColor($aSiege[$i][1] - 30, 474, True), Hex(0x589ADB, 6), 20) Then $OwnSiege = String(True)
 			_ArrayAdd($aResult, $aSiege[$i][0] & "|" & $aSiege[$i][1] & "|" & $aSiege[$i][2] & "|" & $SiegeLevel & "|" & $OwnSiege & "|" & $TroopIndex)
 		Next
 	Else
-		SetDebugLog("GetListSiege: ERR", $COLOR_ERROR)
+		If $g_bDebugSetlog Then SetLog("GetListSiege: ERR", $COLOR_ERROR)
 	EndIf
 	_ArraySort($aResult, 1, 0, 0, 3)
 	Return $aResult

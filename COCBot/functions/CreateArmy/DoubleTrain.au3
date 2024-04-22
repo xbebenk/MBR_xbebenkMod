@@ -18,15 +18,14 @@
 Func DoubleTrain()
 	If Not $g_bDoubleTrain Then Return
 	If IsProblemAffect() Then Return
-	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
-
+	
 	SetLog(" ====== Double Train ====== ", $COLOR_ACTION)
 	
 	; Troop
-	DoubleTrainTroop($bDebug)
+	DoubleTrainTroop()
 	If IsProblemAffect() Then Return
 	; Spell
-	DoubleTrainSpell($bDebug)
+	DoubleTrainSpell()
 	If IsProblemAffect() Then Return
 EndFunc   ;==>DoubleTrain
 
@@ -593,7 +592,7 @@ Func RemoveTrainTroop($bQueueOnly = False)
 			Click(525, 320, 1, 0, "RemoveTrainTroop : Trash")
 			If _Sleep(1000) Then Return
 			If IsOKCancelPage() Then
-				Click($aConfirmSurrender[0], $aConfirmSurrender[1])
+				Click($aConfirmSurrender[0], $aConfirmSurrender[1], 2, 250)
 			EndIf
 			If _Sleep(500) Then Return
 		EndIf
@@ -602,7 +601,7 @@ Func RemoveTrainTroop($bQueueOnly = False)
 			Click(638, 320, 1, 0, "RemoveTrainTroop : Trash")
 			If _Sleep(1000) Then Return
 			If IsOKCancelPage() Then
-				Click($aConfirmSurrender[0], $aConfirmSurrender[1])
+				Click($aConfirmSurrender[0], $aConfirmSurrender[1], 2, 250)
 			EndIf
 			If _Sleep(500) Then Return
 		EndIf
@@ -643,7 +642,7 @@ Func RemoveTrainSpell($bQueueOnly = False)
 			Click(525, 320, 1, 0, "RemoveTrainSpell : Trash")
 			If _Sleep(1000) Then Return
 			If IsOKCancelPage() Then
-				Click($aConfirmSurrender[0], $aConfirmSurrender[1])
+				Click($aConfirmSurrender[0], $aConfirmSurrender[1], 2, 250)
 			EndIf
 			If _Sleep(500) Then Return
 		EndIf
@@ -652,7 +651,7 @@ Func RemoveTrainSpell($bQueueOnly = False)
 			Click(638, 320, 1, 0, "RemoveTrainSpell : Trash")
 			If _Sleep(1000) Then Return
 			If IsOKCancelPage() Then
-				Click($aConfirmSurrender[0], $aConfirmSurrender[1])
+				Click($aConfirmSurrender[0], $aConfirmSurrender[1], 2, 250)
 			EndIf
 			If _Sleep(500) Then Return
 		EndIf
@@ -702,12 +701,12 @@ EndFunc
 Func ReTrainForSwitch()
 	If Not OpenArmyOverview("ReTrainForSwitch") Then Return
 	If Not OpenTroopsTab(False, "ReTrainForSwitch") Then Return
-	If _Sleep(250) Then Return
 	RemoveTrainTroop()
+	If _Sleep(500) Then Return
 	If Not $g_bRunState Then Return
 	If Not OpenSpellsTab(False, "ReTrainForSwitch") Then Return
-	If _Sleep(250) Then Return
 	RemoveTrainSpell()
+	If _Sleep(500) Then Return
 	If Not $g_bRunState Then Return
 	TrainCustomArmy()
 	If Not $g_bRunState Then Return
@@ -716,7 +715,7 @@ Func ReTrainForSwitch()
 	If _Sleep(500) Then Return
 EndFunc
 
-Func DoubleTrainTroop($bDebug = False)
+Func DoubleTrainTroop($bTest = False)
 	
 	If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
 	If _Sleep(250) Then Return
@@ -737,20 +736,25 @@ Func DoubleTrainTroop($bDebug = False)
 		Select
 			Case $TroopCamp[1] = 0
 				SetLog("$TroopCamp[1] = 0", $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				ExitLoop
-			Case $TroopCamp[0] = ($TroopCamp[1] * 2)
-				SetLog("Cur = Max", $COLOR_DEBUG1)
+			Case $TroopCamp[0] = $TroopCamp[3]
+				SetLog("Cur = Max, Skip", $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				;If IsNormalTroopTrain() Then
 				;	If Not CheckQueueTroopAndTrainRemain() Then ExitLoop
 				;EndIf
-			Case $TroopCamp[0] = 0 ; 0/600 (empty troop camp)
-				SetLog("TroopCamp[0] = 0", $COLOR_DEBUG1)
+			Case $TroopCamp[0] = 0 And $TroopCamp[1] = $TroopCamp[2]; 0/600 (empty troop camp)
+				SetLog("TroopCamp[0] = 0, TrainFullTroop()", $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				TrainFullTroop() ;train 1st Army
 			Case $TroopCamp[2] = 0 ;300/600 (empty troop queue)
-				SetLog("TroopCamp[2] = 0", $COLOR_DEBUG1)
+				SetLog("TroopCamp[2] = 0, TrainFullTroop(True)", $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				TrainFullTroop(True) ;train 2nd Army
 			Case $TroopCamp[2] > 0 ; 30/600 (1st army partially trained)
 				SetLog("TroopCamp[2] > 0", $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				If IsNormalTroopTrain() Then
 					RemoveTrainTroop()
 					Local $aWhatToTrain = WhatToTrain(False, False)
@@ -763,9 +767,11 @@ Func DoubleTrainTroop($bDebug = False)
 				EndIf
 			Case $TroopCamp[0] = $TroopCamp[1] ;300/600 (1st army fully trained)
 				SetLog($TroopCamp[0] & " = " & $TroopCamp[1], $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				TrainFullTroop(True) ;train 2nd Army
 			Case $TroopCamp[0] > $TroopCamp[1] ;350/600 (2nd army partially trained)
 				SetLog($TroopCamp[0] & " > " & $TroopCamp[1], $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				If IsNormalTroopTrain() Then
 					RemoveTrainTroop(True) ;remove queue army
 					If Not CheckQueueTroopAndTrainRemain() Then ContinueLoop ;train 2nd Army
