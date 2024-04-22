@@ -15,45 +15,25 @@
 #include-once
 
 Func SetComboTroopComp()
-	Local $bWasRedraw = SetRedrawBotWindow(False, Default, Default, Default, "SetComboTroopComp")
-	Local $ArmyCampTemp = 0
-
-	If GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED Then
-		$ArmyCampTemp = Floor(GUICtrlRead($g_hTxtTotalCampForced) * GUICtrlRead($g_hTxtFullTroop) / 100)
-	Else
-		$ArmyCampTemp = Floor($g_iTotalCampSpace * GUICtrlRead($g_hTxtFullTroop) / 100)
-	EndIf
-
-	Local $TotalTroopsToTrain = 0
-
 	lblTotalCountTroop1()
 	lblTotalCountSpell2()
 	lblTotalCountSiege()
-	SetRedrawBotWindow($bWasRedraw, Default, Default, Default, "SetComboTroopComp")
 EndFunc   ;==>SetComboTroopComp
-
-Func chkTotalCampForced()
-	GUICtrlSetState($g_hTxtTotalCampForced, GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED ? $GUI_ENABLE : $GUI_DISABLE)
-EndFunc   ;==>chkTotalCampForced
 
 Func lblTotalCountTroop1()
 	; Calculate count of troops, set progress bars, colors
 	Local $TotalTroopsToTrain = 0
 	Local $ArmyCampTemp = 0
 
-	If GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED Then
-		$ArmyCampTemp = Floor(GUICtrlRead($g_hTxtTotalCampForced) * GUICtrlRead($g_hTxtFullTroop) / 100)
-	Else
-		$ArmyCampTemp = Floor($g_iTotalCampSpace * GUICtrlRead($g_hTxtFullTroop) / 100)
-	EndIf
-
+	$ArmyCampTemp = Floor(GUICtrlRead($g_hTxtTotalCampForced) * GUICtrlRead($g_hTxtFullTroop) / 100)
+	
 	RemoveAllTmpTrain("Troop")
 	Local $iTmpTroops = 0
 	For $i = 0 To $eTroopCount - 1
 		Local $iCount = GUICtrlRead($g_ahTxtTrainArmyTroopCount[$i])
 		If $iCount > 0 Then
 			$TotalTroopsToTrain += $iCount * $g_aiTroopSpace[$i]
-			;Set Troop Train Info
+			;;Set Troop Train Info
 			If $iTmpTroops > UBound($g_ahPicTrainArmyTroopTmp) - 1 Then ContinueLoop
 			_GUICtrlSetImage($g_ahPicTrainArmyTroopTmp[$iTmpTroops], $g_sLibIconPath, $g_aTroopsIcon[$i])
 			GUICtrlSetState($g_ahPicTrainArmyTroopTmp[$iTmpTroops], $GUI_SHOW)
@@ -69,9 +49,9 @@ Func lblTotalCountTroop1()
 		GUICtrlSetBkColor($g_ahTxtTrainArmyTroopCount[$i], $TotalTroopsToTrain <= GUICtrlRead($g_hTxtTotalCampForced) ? $COLOR_WHITE : $COLOR_RED)
 	Next
 
-	If GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED And GUICtrlRead($g_hLblCountTotal) = GUICtrlRead($g_hTxtTotalCampForced) Then
+	If GUICtrlRead($g_hLblCountTotal) = GUICtrlRead($g_hTxtTotalCampForced) Then
 		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
-	ElseIf GUICtrlRead($g_hLblCountTotal) = $ArmyCampTemp Then
+	ElseIf GUICtrlRead($g_hLblCountTotal) >= $ArmyCampTemp Then
 		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
 	ElseIf GUICtrlRead($g_hLblCountTotal) > $ArmyCampTemp / 2 And GUICtrlRead($g_hLblCountTotal) < $ArmyCampTemp Then
 		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_ORANGE)
@@ -81,26 +61,7 @@ Func lblTotalCountTroop1()
 
 	Local $fPctOfForced = Floor((GUICtrlRead($g_hLblCountTotal) / GUICtrlRead($g_hTxtTotalCampForced)) * 100)
 	Local $fPctOfCalculated = Floor((GUICtrlRead($g_hLblCountTotal) / $ArmyCampTemp) * 100)
-
-	If GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED Then
-		GUICtrlSetData($g_hCalTotalTroops, $fPctOfForced < 1 ? (GUICtrlRead($g_hLblCountTotal) > 0 ? 1 : 0) : $fPctOfForced)
-	Else
-		GUICtrlSetData($g_hCalTotalTroops, $fPctOfCalculated < 1 ? (GUICtrlRead($g_hLblCountTotal) > 0 ? 1 : 0) : $fPctOfCalculated)
-	EndIf
-
-	If GUICtrlRead($g_hChkTotalCampForced) = $GUI_CHECKED Then
-		If Number(GUICtrlRead($g_hLblCountTotal)) <= Number(GUICtrlRead($g_hTxtTotalCampForced)) Then
-			GUICtrlSetState($g_hCalTotalTroops, $GUI_SHOW)
-		Else
-			GUICtrlSetState($g_hCalTotalTroops, $GUI_HIDE)
-		EndIf
-	Else
-		If Number(GUICtrlRead($g_hLblCountTotal)) >= $ArmyCampTemp Then
-			GUICtrlSetState($g_hCalTotalTroops, $GUI_SHOW)
-		Else
-			GUICtrlSetState($g_hCalTotalTroops, $GUI_HIDE)
-		EndIf
-	EndIf
+	GUICtrlSetData($g_hCalTotalTroops, $fPctOfCalculated < 1 ? (GUICtrlRead($g_hLblCountTotal) > 0 ? 1 : 0) : $fPctOfCalculated)
 EndFunc   ;==>lblTotalCountTroop1
 
 Func lblTotalCountSpell2()

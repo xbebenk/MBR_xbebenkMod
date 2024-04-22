@@ -1129,14 +1129,6 @@ Func chkSkipWallPlacingOnBB()
 	EndIf
 EndFunc ;==> chkSkipWallPlacingOnBB
 
-Func chkCheckCGEarly()
-	If GUICtrlRead($g_hChkMMCheckCGEarly) = $GUI_CHECKED Then
-		$g_bCheckCGEarly = True
-	Else
-		$g_bCheckCGEarly = False
-	EndIf
-EndFunc ;==> chkCheckCGEarly
-
 Func chkCheckDonateEarly()
 	If GUICtrlRead($g_hDonateEarly) = $GUI_CHECKED Then
 		$g_bDonateEarly = True

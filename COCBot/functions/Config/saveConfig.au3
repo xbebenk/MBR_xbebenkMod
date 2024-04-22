@@ -556,7 +556,6 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "CheckDonateEarly", $g_bDonateEarly)
 	_Ini_Add("other", "CheckUpgradeWallEarly", $g_bUpgradeWallEarly)
 	_Ini_Add("other", "CheckAutoUpgradeEarly", $g_bAutoUpgradeEarly)
-	_Ini_Add("other", "CheckCGEarly", $g_bCheckCGEarly)
 	_Ini_Add("other", "ForceSwitchifNoCGEvent", $g_bChkForceSwitchifNoCGEvent)
 	_Ini_Add("other", "EnableCCSleep", $g_bEnableCCSleep)
 	_Ini_Add("other", "SkipDT", $g_bSkipDT)
@@ -1330,7 +1329,6 @@ Func SaveConfig_600_52_2()
 	Next
 	; full & forced Total Camp values
 	_Ini_Add("troop", "fulltroop", $g_iTrainArmyFullTroopPct)
-	_Ini_Add("other", "ChkTotalCampForced", $g_bTotalCampForced ? 1 : 0)
 	_Ini_Add("other", "ValueTotalCampForced", $g_iTotalCampForcedValue)
 	; spell capacity and forced flag
 	_Ini_Add("Spells", "SpellFactory", $g_iTotalSpellValue)

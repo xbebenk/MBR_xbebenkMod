@@ -647,11 +647,6 @@ Func CreateMiscModSubTab()
 		GUICtrlSetOnEvent(-1, "chkCheckAutoUpgradeEarly")
 
 	$y += 22
-	$g_hChkMMCheckCGEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckCGEarly", "Check ClanGames Early"), $x, $y, -1, -1)
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnFirstCheckClanGames", "Enable Check ClanGames on First Start"))
-		GUICtrlSetOnEvent(-1, "chkCheckCGEarly")
-
-	$y += 22
 		$g_hChkForceSwitchifNoCGEvent = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ForcedSwitchIfNoCG", "Forced switch If No Active CG Event"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnFirstCheckNoCG", "Enable Forced switch If No Active CG Event"))
 		GUICtrlSetOnEvent(-1, "chkForcedSwitchIfNoCG")
