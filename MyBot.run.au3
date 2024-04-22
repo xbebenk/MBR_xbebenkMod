@@ -735,25 +735,21 @@ Func runBot() ;Bot that runs everything in order
 		$g_bFullArmy = False
 		$g_bIsFullArmywithHeroesAndSpells = False
 		$g_iCommandStop = -1
+		
+		If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
+		
 		chkShieldStatus()
-
 		If CheckAndroidReboot() Then ContinueLoop
 		If Not $g_bIsClientSyncError Then
 			If Not $g_bRunState Then Return
 			$MainLoopTimer = TimerInit()
 			SetLogCentered(" Top MainLoop ", "=", $COLOR_DEBUG)
-			If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
-			VillageReport()
-			If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
-				$g_bOutOfGold = False ; reset out of gold flag
-				SetLog("Switching back to normal after no gold to search ...", $COLOR_SUCCESS)
-			EndIf
-			If BotCommand() Then btnStop()
-			If $g_bRestart Then ContinueLoop
-
 			checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop")
-			AddIdleTime()
+			VillageReport()
+			
+			If BotCommand() Then btnStop()
 			If Not $g_bRunState Then Return
+			
 			If IsSearchAttackEnabled() Then ;if attack is disabled skip reporting, requesting, donating, training, and boosting
 				TrainSystem()
 				BoostEverything() ; 1st Check if is to use Training Potion
@@ -771,27 +767,34 @@ Func runBot() ;Bot that runs everything in order
 				If $g_bRestart Then ContinueLoop
 			EndIf
 			
+			If $g_bChkCGBBAttackOnly And Not ProfileSwitchAccountEnabled() Then
+				SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)
+				For $count = 1 to 5
+					If Not $g_bRunState Then Return
+					If _ClanGames() Then
+						If $g_bIsBBevent Then
+							SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+							SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_ACTION)
+							GotoBBTodoCG()
+						Else
+							ExitLoop ;should be will never get here, but
+						EndIf
+					Else
+						If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
+						If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
+						If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
+					EndIf
+					If isOnMainVillage() Then ZoomOut(True)	; Verify is on main village and zoom out
+				Next
+			EndIf
+			
+			AddIdleTime()
+			
 			; Train Donate only - force a donate cc every time
 			If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) Then 
-				DonateCC()
-				TrainSystem()
+				If DonateCC(True, True) Then TrainSystem()
 			EndIf
-
-			If Not $g_bRunState Then Return
-			If $g_bFirstStart Then
-				CommonRoutine("FirstCheck")
-				SetLog("First loop completed!", $COLOR_DEBUG1)
-				$g_bFirstStart = False ; already finished first loop since bot started.
-			EndIf
-
-			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then
-				CommonRoutine("Switch")
-				SetLog(" ")
-				SetLogCentered(" MainLoop Done (in " & Round(TimerDiff($MainLoopTimer) / 1000 / 60, 2) & " minutes) ", "=", $COLOR_INFO)
-				SetLog(" ")
-				checkSwitchAcc() ;switch to next account
-			EndIf
-
+			
 			If IsSearchAttackEnabled() Then ; If attack scheduled has attack disabled now, stop wall upgrades, and attack.
 				Idle()
 				;$g_bFullArmy1 = $g_bFullArmy
@@ -800,25 +803,29 @@ Func runBot() ;Bot that runs everything in order
 
 				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 					AttackMain()
-					$g_bSkipFirstZoomout = False
-					If $g_bOutOfGold Then
-						SetLog("Switching to Halt Attack, Stay Online/Collect mode ...", $COLOR_ERROR)
-						ContinueLoop
-					EndIf
-					If _Sleep($DELAYRUNBOT1) Then Return
-					If $g_bRestart = True Then ContinueLoop
+					TrainSystem()
 				EndIf
 			Else
-				If ProfileSwitchAccountEnabled() Then
-					$g_iCommandStop = 2
-					DonateCC()
-					TrainSystem()
-					SetLogCentered(" MainLoop Done (in " & Round(TimerDiff($MainLoopTimer) / 1000 / 60, 2) & " minutes) ", "=", $COLOR_INFO)
-					checkSwitchAcc()
-				EndIf
 				$iWaitTime = Random($DELAYWAITATTACK1, $DELAYWAITATTACK2)
 				SetLog("Attacking Not Planned and Skipped, Waiting random " & StringFormat("%0.1f", $iWaitTime / 1000) & " Seconds", $COLOR_WARNING)
 				If _SleepStatus($iWaitTime) Then Return False
+			EndIf
+			
+			If Not $g_bRunState Then Return
+			CommonRoutine("FirstCheck")
+				
+			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then
+				CommonRoutine("Switch")
+				SetLog(" ")
+				SetLogCentered(" MainLoop Done (in " & Round(TimerDiff($MainLoopTimer) / 1000 / 60, 2) & " minutes) ", "=", $COLOR_INFO)
+				SetLog(" ")
+				checkSwitchAcc() ;switch to next account
+			EndIf
+
+			CommonRoutine("Idle")
+			If $g_bFirstStart Then
+				SetLog("First loop completed!", $COLOR_DEBUG1)
+				$g_bFirstStart = False ; already finished first loop since bot started.
 			EndIf
 		Else ;When error occurs directly goes to attack
 			Local $sRestartText = $g_bIsSearchLimit ? " due search limit" : " after Out of Sync Error: Attack Now"
@@ -845,8 +852,6 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			If $g_bRestart = True Then ContinueLoop
 		EndIf
-		If _Sleep($DELAYRUNBOT1) Then Return
-		If $g_bRestart = True Then ContinueLoop
 	WEnd
 EndFunc   ;==>runBot
 
@@ -1338,7 +1343,7 @@ Func FirstCheckRoutine()
 		TrainSystem()
 	EndIf
 	
-	If $g_bChkCGBBAttackOnly Then
+	If $g_bChkCGBBAttackOnly And ProfileSwitchAccountEnabled() Then
 		SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)
 		For $count = 1 to 5
 			If Not $g_bRunState Then Return
@@ -1357,16 +1362,6 @@ Func FirstCheckRoutine()
 			EndIf
 			If isOnMainVillage() Then ZoomOut(True)	; Verify is on main village and zoom out
 		Next
-	Else
-		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
-			If Not $g_bRunState Then Return
-			SetLog("Check ClanGames Early", $COLOR_INFO)
-			_ClanGames(False)
-			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-				GotoBBTodoCG()
-			EndIf
-		EndIf
 	EndIf
 
 	;Skip switch if Free Builder > 0 Or Storage Fill is Low, when clangames
@@ -1427,12 +1422,6 @@ Func FirstCheckRoutine()
 					SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
 					GotoBBTodoCG() ;force go to bb todo event
 				EndIf
-				If $g_bOutOfGold Then
-					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
-					$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
-					Return
-				EndIf
-				If _Sleep($DELAYRUNBOT1) Then Return
 			EndIf
 		Else
 			TrainSystem(True) ;skip check Army Ready, just train
@@ -1459,13 +1448,15 @@ Func FirstCheckRoutine()
 
 	If Not $g_bRunState Then Return
 	Local $bSecondAttackDelayed = False
-	VillageReport()
+	
 	If $g_bOutOfGold And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
 		$g_bOutOfGold = False ; reset out of gold flag
 		SetLog("Switching back to normal after no gold to search ...", $COLOR_SUCCESS)
 	EndIf
+	
 	For $x = 1 To 2
 		If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
+			VillageReport()
 			SetLog("Check Second Attack #" & $x, $COLOR_ACTION)
 			If BotCommand() Then btnStop()
 			If Not $g_bRunState Then Return
@@ -1501,21 +1492,20 @@ Func FirstCheckRoutine()
 								If Not $g_bRunState Then Return
 							EndIf
 						Wend
+						
 						If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 							SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
 							SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
 							GotoBBTodoCG() ;force go to bb todo event
 						EndIf
-						If $g_bOutOfGold Then
-							SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
-							$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
-							Return
-						EndIf
-						If _Sleep($DELAYRUNBOT1) Then Return
 					EndIf
 				EndIf
 			EndIf
 		Else
+			$sText = Round(TimerDiff($FirstCheckRoutineTimer) / 1000 / 60, 2)
+			SetLog(" ")
+			SetLogCentered(" FirstCheckRoutine done (" & $sText & " minutes) ", "~", $COLOR_SUCCESS)
+			SetLog(" ")
 			Return ;exit firstcheck, going to main loop
 		EndIf
 		
@@ -1527,7 +1517,7 @@ Func FirstCheckRoutine()
 	Next
 	
 	If Not $g_bRunState Then Return
-	If $b_SuccessAttack Then TrainSystem(True) ;skip CheckArmyReady
+	If Not $bSecondAttackDelayed And $b_SuccessAttack Then TrainSystem(True) ;skip CheckArmyReady
 	
 	$sText = Round(TimerDiff($FirstCheckRoutineTimer) / 1000 / 60, 2)
 	SetLog(" ")
@@ -1540,9 +1530,11 @@ Func FirstCheckRoutine()
 		DropTrophy()
 		If Not $bSecondAttackDelayed Then CommonRoutine("Switch")
 		If Not $g_bRunState Then Return
+		
 		If $g_bBBAttacked Or $g_bCheckDonateOften Then
-			DonateCC(True, True)
-			ReTrainForSwitch()
+			If DonateCC(True, True) Then ReTrainForSwitch() ; if donating here, will remove and re-train, because donate here are will donate all (not queue only)
+		Else
+			If $bSecondAttackDelayed Then TrainSystem(True)
 		EndIf
 		
 		$sText = Round(__TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount]) / 1000 / 60, 2)
@@ -1591,7 +1583,7 @@ Func CommonRoutine($RoutineType = Default)
 			$aFuncList = $aRndFuncList
 			
 		Case "Idle"
-			Local $aRndFuncList = ['BuilderBase', 'Collect', 'RequestCC', 'DonateCC']
+			Local $aRndFuncList = ['BuilderBase', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'Collect']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

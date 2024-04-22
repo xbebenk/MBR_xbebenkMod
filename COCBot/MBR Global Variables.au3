@@ -1059,7 +1059,7 @@ Global $g_aiArmyCompSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 Global $g_aiArmyCompSiegeMachines[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0, 0]
 
 Global $g_iTrainArmyFullTroopPct = 100
-Global $g_bTotalCampForced = False, $g_iTotalCampForcedValue = 220
+Global $g_iTotalCampForcedValue = 220
 Global $g_iTotalSpellValue = 0
 Global $g_bDoubleTrain, $g_bPreciseArmy
 
@@ -1840,7 +1840,7 @@ $g_oBldgImages.add($eBldgScatter & "_" & "0", @ScriptDir & "\imgxml\Buildings\Sc
 
 ;FirstCheck
 Global $g_bUpgradeWallEarly = False, $g_bAutoUpgradeEarly = False, $g_bDonateEarly = False
-Global $g_bCheckCGEarly = False, $g_bChkForceSwitchifNoCGEvent = False, $g_bForceSwitchifNoCGEvent = False, $g_bIsCGPointAlmostMax = False
+Global $g_bChkForceSwitchifNoCGEvent = False, $g_bForceSwitchifNoCGEvent = False, $g_bIsCGPointAlmostMax = False
 
 ; Clan Games v3
 Global $g_bChkClanGamesAir = 0, $g_bChkClanGamesGround = 0, $g_bChkClanGamesMisc = 0
