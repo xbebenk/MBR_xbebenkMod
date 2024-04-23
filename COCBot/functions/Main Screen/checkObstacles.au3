@@ -88,7 +88,8 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				SetLog("Out of Sync Error, Reloading CoC", $COLOR_ERROR)
 			Case QuickMIS("BC1", $g_sImgAppRateNever, 220, 270, 500, 340) ; RateNever
 				SetLog("Clash feedback window found, permanently closed!", $COLOR_INFO)
-				Click(580, 390)
+				MoveMouseOutBS()
+				_ControlClick(580, 390)
 				If _Sleep(2000) Then Return
 				PullSharedPrefs()
 				Return True
