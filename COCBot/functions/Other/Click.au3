@@ -94,6 +94,10 @@ Func _ControlClick($x, $y)
 EndFunc   ;==>_ControlClick
 
 Func isProblemAffectBeforeClick($iCount = 0)
+	; Force no problem Affect if we see rate app screen
+	If QuickMIS("BC1", $g_sImgAppRateNever, 220, 270, 500, 340) Then
+		Return False
+	EndIf
 	If NeedCaptureRegion($iCount) = True Then Return IsProblemAffect()
 	Return False
 EndFunc   ;==>isProblemAffectBeforeClick
