@@ -53,7 +53,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 			If _Sleep($speed, False) Then ExitLoop
 		Next
 	Else
-		If isProblemAffectBeforeClick() And (Not QuickMIS("BC1", $g_sImgAppRateNever, 220, 270, 500, 340)) Then
+		If isProblemAffectBeforeClick() Then
 			If $g_bDebugClick Then SetLog("VOIDED Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ERROR, "Verdana", "7.5", 0)
 			checkMainScreen(False, $g_bStayOnBuilderBase, "Click")
 			SuspendAndroid($SuspendMode)
@@ -94,6 +94,10 @@ Func _ControlClick($x, $y)
 EndFunc   ;==>_ControlClick
 
 Func isProblemAffectBeforeClick($iCount = 0)
+	; Force no problem Affect if we see rate app screen
+	If QuickMIS("BC1", $g_sImgAppRateNever, 220, 270, 500, 340) Then
+		Return False
+	EndIf
 	If NeedCaptureRegion($iCount) = True Then Return IsProblemAffect()
 	Return False
 EndFunc   ;==>isProblemAffectBeforeClick
