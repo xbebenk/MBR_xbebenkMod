@@ -754,12 +754,13 @@ Func runBot() ;Bot that runs everything in order
 				TrainSystem()
 				BoostEverything() ; 1st Check if is to use Training Potion
 				
-				Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'RequestCC', 'BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
+				Local $aRndFuncList = ['ReplayShare', 'NotifyReport', 'RequestCC', 'DonateCC', 'BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
 					_RunFunction($Index)
 					If $g_bRestart Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 					If CheckAndroidReboot() Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
+					If _Sleep(1000) Then Return
 				Next
 
 				If Not $g_bRunState Then Return
@@ -803,6 +804,7 @@ Func runBot() ;Bot that runs everything in order
 
 				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 					AttackMain()
+					DonateCC()
 					TrainSystem()
 				EndIf
 			Else
@@ -1343,41 +1345,6 @@ Func FirstCheckRoutine()
 		TrainSystem()
 	EndIf
 	
-	If $g_bChkCGBBAttackOnly And ProfileSwitchAccountEnabled() Then
-		SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)
-		For $count = 1 to 5
-			If Not $g_bRunState Then Return
-			If _ClanGames() Then
-				If $g_bIsBBevent Then
-					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-					SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_ACTION)
-					GotoBBTodoCG()
-				Else
-					ExitLoop ;should be will never get here, but
-				EndIf
-			Else
-				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
-				If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
-				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
-			EndIf
-			If isOnMainVillage() Then ZoomOut(True)	; Verify is on main village and zoom out
-		Next
-	EndIf
-
-	;Skip switch if Free Builder > 0 Or Storage Fill is Low, when clangames
-	Local $bSwitch = True
-	If $g_iFreeBuilderCount - ($g_bUpgradeWallSaveBuilder ? 1 : 0) > 0 Then $bSwitch = False
-	If $g_abLowStorage[$eLootElixir] Or $g_abLowStorage[$eLootGold] Then $bSwitch = False
-
-	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 And $bSwitch Then
-		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-		DonateCC()
-		TrainSystem()
-		CommonRoutine("NoClanGamesEvent")
-		checkSwitchAcc() ;switch to next account
-	EndIf
-
 	If Not $g_bRunState Then Return
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
@@ -1426,6 +1393,49 @@ Func FirstCheckRoutine()
 		Else
 			TrainSystem(True) ;skip check Army Ready, just train
 		EndIf
+	EndIf
+	
+	If $g_bCheckDonateOften Then 
+		If DonateCC() Then TrainSystem()
+	EndIf
+	If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
+	
+	If $g_bChkCGBBAttackOnly And ProfileSwitchAccountEnabled() Then
+		SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)
+		For $count = 1 to 5
+			If Not $g_bRunState Then Return
+			If _ClanGames() Then
+				If $g_bIsBBevent Then
+					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+					SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_ACTION)
+					GotoBBTodoCG()
+				Else
+					ExitLoop ;should be will never get here, but
+				EndIf
+			Else
+				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
+				If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
+				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
+			EndIf
+			If isOnMainVillage() Then ZoomOut(True)	; Verify is on main village and zoom out
+			If $g_bCheckDonateOften Then 
+				If DonateCC() Then TrainSystem()
+			EndIf
+		Next
+	EndIf
+
+	;Skip switch if Free Builder > 0 Or Storage Fill is Low, when clangames
+	Local $bSwitch = True
+	If $g_iFreeBuilderCount - ($g_bUpgradeWallSaveBuilder ? 1 : 0) > 0 Then $bSwitch = False
+	If $g_abLowStorage[$eLootElixir] Or $g_abLowStorage[$eLootGold] Then $bSwitch = False
+
+	If Not $g_bRunState Then Return
+	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 And $bSwitch Then
+		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
+		DonateCC()
+		TrainSystem()
+		CommonRoutine("NoClanGamesEvent")
+		checkSwitchAcc() ;switch to next account
 	EndIf
 
 	If Not $g_bRunState Then Return

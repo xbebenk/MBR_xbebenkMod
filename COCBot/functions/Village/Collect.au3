@@ -71,6 +71,8 @@ Func Collect($bOnlyCollector = False)
 	If _Sleep(1000) Then Return
 	CollectCookieRumble()
 	If _Sleep(1000) Then Return
+	CheckEventStreak($g_bFirstStart)
+	If _Sleep(1000) Then Return
 	EndGainCost("Collect")
 EndFunc   ;==>Collect
 
@@ -117,7 +119,7 @@ Func CollectCookieRumble()
 		If _Sleep(1000) Then Return
 		For $i = 1 To 5
 			If $g_bDebugSetLog Then SetLog("Waiting Event Button #" & $i, $COLOR_ACTION)
-			If QuickMIS("BC1", $g_sImgCollectCookie, 340, 500, 425, 570) Then 
+			If QuickMIS("BC1", $g_sImgCollectCookie, 340, 500, 500, 570) Then 
 				If WaitforPixel($g_iQuickMISX + 30, $g_iQuickMISY - 20, $g_iQuickMISX + 40, $g_iQuickMISY - 10, "F61621", 40, 1, "CollectCookie") Then
 					Click($g_iQuickMISX, $g_iQuickMISY)
 					$bIconCookie = True
@@ -230,7 +232,7 @@ EndFunc
 
 Func IsCookieRumbleWindowOpen()
 	Local $result = False
-	$result = WaitforPixel(824, 85, 826, 86, "FFFFFF", 10, 2, "IsCookieRumbleWindowOpen")
+	$result = WaitforPixel(824, 85, 826, 86, Hex(0xFFFFFF, 6), 10, 2, "IsCookieRumbleWindowOpen")
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 800, 64, 850, 112) Then $result = True
@@ -238,6 +240,101 @@ Func IsCookieRumbleWindowOpen()
 	
 	If $result Then
 		If $g_bDebugSetlog Then SetLog("Found Event Window", $COLOR_ACTION)
+	EndIf
+	Return $result
+EndFunc
+
+Func CheckEventStreak($bForced = False)
+	SetLog("Checking Event Streak", $COLOR_INFO)
+	If QuickMIS("BC1", $g_sImgEventStreak, 185, 615, 235, 655) Then
+		If WaitforPixel($g_iQuickMISX + 17, $g_iQuickMISY - 9, $g_iQuickMISX + 18, $g_iQuickMISY - 8, Hex(0xE41528, 6), 20, 1, "CheckEventStreak") Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+		Else
+			SetLog("No Event to Check", $COLOR_INFO)
+			If Not $bForced Then Return
+			Click($g_iQuickMISX, $g_iQuickMISY)
+		EndIf
+		If _Sleep(1000) Then Return
+	EndIf
+	
+	Local $bEventStreakFound = False
+	For $i = 1 To 5
+		If _Sleep(500) Then Return
+		If Not IsEventWindowOpen() Then 
+			SetLog("Waiting Event Window #" & $i, $COLOR_ACTION)
+			ContinueLoop
+		EndIf
+		If QuickMIS("BC1", $g_sImgEventStreak, 70, 130, 125, 155) Then
+			$bEventStreakFound = True
+			ExitLoop
+		EndIf
+	Next
+	
+	If Not $bEventStreakFound Then Return ;no event Streak active, return
+	
+	If QuickMIS("BC1", $g_sImgEventStreak, 690, 325, 730, 350) Then 
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(1000) Then Return
+	EndIf
+	
+	For $i = 1 To 10
+		SetLog("Waiting Event Streak Window #" & $i, $COLOR_ACTION)
+		If IsEventStreakWindowOpen() Then ExitLoop ; Event Streak Window Cleared, exit loop
+		If QuickMIS("BC1", $g_sImgEventStreak, 385, 495, 477, 523) Then Click($g_iQuickMISX, $g_iQuickMISY) ; Click Continue Button
+		Click(410, 150, 1, 50, "EventStreakWindowHeader") ;Click Event Streak Window Header
+		If _Sleep(1000) Then Return
+	Next
+	
+	Local $aClaim = QuickMIS("CNX", $g_sImgEventStreakClaim, 20, 280, 850, 500)
+	If IsArray($aClaim) And UBound($aClaim) > 0 Then
+		For $i = 0 To UBound($aClaim) - 1
+			If $aClaim[$i][0] = "BrokenStreak" Then
+				Click($aClaim[$i][1], $aClaim[$i][2])
+				If WaitforPixel(280, 435, 281, 436, Hex(0xD94343, 6), 20, 2, "StartOverButton") Then
+					Click(280, 435, 1, 50, "BrokenStreak-StartOver")
+					SetLog("We Found a Broken Streak, StartOver.", $COLOR_SUCCESS)
+					ClickAway()
+				Else
+					ClickAway()
+					ClickAway()
+					SetLog("Cannot Find StartOver Button, exit!", $COLOR_ERROR)
+					Return
+				EndIf
+			EndIf
+			If $aClaim[$i][0] = "Claim" Then
+				Click($aClaim[$i][1], $aClaim[$i][2])
+				Setlog("Succesfully Claimed Event Streak Tier", $COLOR_SUCCESS)
+				ClickAway()
+			EndIf
+		Next
+	EndIf
+	Return True
+EndFunc
+
+Func IsEventWindowOpen()
+	Local $result = False
+	$result = WaitforPixel(809, 72, 810, 72, Hex(0xE91114, 6), 10, 2, "IsEventWindowOpen")
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 786, 36, 828, 77) Then $result = True
+	EndIf
+	
+	If $result Then
+		If $g_bDebugSetlog Then SetLog("Found EventWindow Open", $COLOR_ACTION)
+	EndIf
+	Return $result
+EndFunc
+
+Func IsEventStreakWindowOpen()
+	Local $result = False
+	$result = WaitforPixel(330, 150, 330, 151, Hex(0x9B071A, 6), 10, 1, "IsEventStreakWindowOpen")
+	
+	If Not $result Then 
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 815, 135, 845, 160) Then $result = True
+	EndIf
+	
+	If $result Then
+		If $g_bDebugSetlog Then SetLog("Found EventStreakWindowOpen Window", $COLOR_ACTION)
 	EndIf
 	Return $result
 EndFunc

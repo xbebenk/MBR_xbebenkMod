@@ -45,26 +45,24 @@ Func TrainSiege($bTrainFullSiege = False)
 		EndIf
 	EndIf
 
-	If $g_bDebugSetlogTrain Or $g_bDebugSetLog Then
-		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
-			SetLog("-- " & $g_asSiegeMachineNames[$iSiegeIndex] & " --", $COLOR_DEBUG)
-			SetLog(@TAB & "To Build: " & $g_aiArmyCompSiegeMachines[$iSiegeIndex], $COLOR_DEBUG)
-			SetLog(@TAB & "Current Army: " & $g_aiCurrentSiegeMachines[$iSiegeIndex], $COLOR_DEBUG)
-			SetLog(@TAB & "In queue: " & $aiQueueSiegeMachine[$iSiegeIndex], $COLOR_DEBUG)
-		Next
-	EndIf
-
+	For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
+		If $g_aiArmyCompSiegeMachines[$iSiegeIndex] > 0 Then
+			SetLog("[" & $g_asSiegeMachineNames[$iSiegeIndex] & "] " & " SetTrain:" & $g_aiArmyCompSiegeMachines[$iSiegeIndex] & _ 
+			", Trained:" & $g_aiCurrentSiegeMachines[$iSiegeIndex] & ", InQueue:" & $aiQueueSiegeMachine[$iSiegeIndex], $COLOR_DEBUG)
+		EndIf
+	Next
+	
 	; Refill
 	For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 		Local $HowMany = $g_aiArmyCompSiegeMachines[$iSiegeIndex] - $g_aiCurrentSiegeMachines[$iSiegeIndex] - $aiQueueSiegeMachine[$iSiegeIndex]
 		
 		If $HowMany > 0 Then
+			Local $sSiegeName = $HowMany >= 2 ? $g_asSiegeMachineNames[$iSiegeIndex] & "s" : $g_asSiegeMachineNames[$iSiegeIndex] & ""
+			Setlog("Build " & $HowMany & " " & $sSiegeName, $COLOR_SUCCESS)
 			$aCoord = DragIfNeededSiege($iSiegeIndex)
 			If Not $g_bRunState Then Return
 			If $aCoord[0] > 0 Then
 				ClickP($aCoord, $HowMany)
-				Local $sSiegeName = $HowMany >= 2 ? $g_asSiegeMachineNames[$iSiegeIndex] & "s" : $g_asSiegeMachineNames[$iSiegeIndex] & ""
-				Setlog("Build " & $HowMany & " " & $sSiegeName, $COLOR_SUCCESS)
 				$aiTotalSiegeMachine[$iSiegeIndex] += $HowMany
 			EndIf
 		EndIf
@@ -82,13 +80,12 @@ Func TrainSiege($bTrainFullSiege = False)
 			Local $HowMany = $g_aiArmyCompSiegeMachines[$iSiegeIndex] * 2 - $aiTotalSiegeMachine[$iSiegeIndex]
 			
 			If $HowMany > 0 Then
+				Local $sSiegeName = $HowMany >= 2 ? $g_asSiegeMachineNames[$iSiegeIndex] & "s" : $g_asSiegeMachineNames[$iSiegeIndex] & ""
+				Setlog("Build " & $HowMany & " " & $sSiegeName, $COLOR_SUCCESS)
 				$aCoord = DragIfNeededSiege($iSiegeIndex)
 				If Not $g_bRunState Then Return
 				If $aCoord[0] > 0 Then
 					ClickP($aCoord, $HowMany)
-					Local $sSiegeName = $HowMany >= 2 ? $g_asSiegeMachineNames[$iSiegeIndex] & "s" : $g_asSiegeMachineNames[$iSiegeIndex] & ""
-					Setlog("Build " & $HowMany & " " & $sSiegeName, $COLOR_SUCCESS)
-					$aiTotalSiegeMachine[$iSiegeIndex] += $HowMany
 				EndIf
 			EndIf
 			If _Sleep(250) Then Return
