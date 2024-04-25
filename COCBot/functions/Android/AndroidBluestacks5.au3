@@ -19,39 +19,33 @@ EndFunc   ;==>GetBlueStacks2ProgramParameter
 
 
 Func OpenBlueStacks5($bRestart = False)
-	SetLog("Starting BlueStacks and Clash Of Clans", $COLOR_SUCCESS)
+	SetLog("Starting BlueStacks5", $COLOR_SUCCESS)
 	If Not InitAndroid() Then Return False
 	; open newer BlueStacks versions 5
 	Return _OpenBlueStacks5($bRestart)
 EndFunc   ;==>OpenBlueStacksX
 
 Func _OpenBlueStacks5($bRestart = False)
-
 	Local $hTimer, $iCount = 0, $cmdPar
 	Local $PID, $ErrorResult, $connected_to, $process_killed
 
 	; always start ADB first to avoid ADB connection problems
 	LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "start-server", $process_killed)
 
-	;$PID = ShellExecute($__BlueStacks_Path & "HD-RunApp.exe", "-p " & $g_sAndroidGamePackage & " -a " & $g_sAndroidGamePackage & $g_sAndroidGameClass)  ;Start BS and CoC with command line
-	;$PID = ShellExecute($__BlueStacks_Path & "HD-Frontend.exe", $g_sAndroidInstance) ;Start BS and CoC with command line
 	$cmdPar = GetAndroidProgramParameter()
-	$PID = LaunchAndroid($g_sAndroidProgramPath, $cmdPar, $g_sAndroidPath)
-	;$ErrorResult = ControlGetHandle("BlueStacks Error", "", "") ; Check for BS error window handle if it opens
-	;If $g_bDebugAndroid Then SetDebugLog("$PID= " & $PID & ", $ErrorResult = " & $ErrorResult, $COLOR_DEBUG)
-	;If $PID = 0 Or $ErrorResult <> 0 Then ; IF ShellExecute failed or BS opens error window = STOP
-	;	SetScreenBlueStacks()
-	;	SetError(1, 1, -1)
-	;	Return False
-	;EndIf
-
-	WinGetAndroidHandle()
+	If WinGetAndroidHandle() = 0 Then 
+		$PID = LaunchAndroid($g_sAndroidProgramPath, $cmdPar, $g_sAndroidPath)
+		;LaunchAndroid($g_sAndroidProgramPath, GetAndroidProgramParameter(), $g_sAndroidPath)
+	Else
+		SetLog("BlueStacks5 Already Loaded")
+		Return True
+	EndIf
+	
+	
 	$hTimer = __TimerInit() ; start a timer for tracking BS start up time
 	While $g_hAndroidControl = 0
-		If _Sleep(3000) Then ExitLoop
 		_StatusUpdateTime($hTimer, $g_sAndroidEmulator & " Starting")
 		If __TimerDiff($hTimer) > $g_iAndroidLaunchWaitSec * 1000 Then ; if no BS position returned in 4 minutes, BS/PC has major issue so exit
-			;xbebenk SetScreenBlueStacks()
 			SetLog("Serious error has occurred, please restart PC and try again", $COLOR_ERROR)
 			SetLog("BlueStacks refuses to load, waited " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_ERROR)
 			SetLog("Unable to continue........", $COLOR_WARNING)
@@ -64,18 +58,12 @@ Func _OpenBlueStacks5($bRestart = False)
 
 	If $g_hAndroidControl Then
 		$connected_to = ConnectAndroidAdb(False, 3000) ; small time-out as ADB connection must be available now
-
 		If WaitForAndroidBootCompleted($g_iAndroidLaunchWaitSec - __TimerDiff($hTimer) / 1000, $hTimer) Then Return
-		If Not $g_bRunState Then Return False
-
+		If Not $g_bRunState Then Return
 		SetLog("BlueStacks Loaded, took " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds to begin.", $COLOR_SUCCESS)
-
 		Return True
-
 	EndIf
-
 	Return False
-
 EndFunc   ;==>_OpenBlueStacks
 
 Func GetBlueStacks5AdbPath()
@@ -88,10 +76,6 @@ Func InitBlueStacks5X($bCheckOnly = False, $bAdjustResolution = False, $bLegacyM
 	;Bluestacks5 doesn't have registry tree for engine, only installation dir info available on registry
 	$__BlueStacks5_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
 	$__BlueStacks_Path = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "InstallDir")
-	If @error <> 0 Then
-		$__BlueStacks_Path = @ProgramFilesDir & "\BlueStacks_nxt\"
-		SetError(0, 0, 0)
-	EndIf
 	$__BlueStacks_Path = StringReplace($__BlueStacks_Path, "\\", "\")
 	
 	Local $frontend_exe = ["HD-Frontend.exe", "HD-Player.exe"]
@@ -142,6 +126,7 @@ Func ConfigureSharedFolderBlueStacks5($iMode = 0, $bSetLog = Default)
 	Local $__BlueStacks5_InstanceConf = FileReadToArray($__BlueStacks5_ProgramData & "\Engine\" & $g_sAndroidInstance & "\" & $g_sAndroidInstance & ".bstk")
 	Local $iLineCount = @extended
 	
+	;FileReadToArray(RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir") & "\Engine\" & $g_sAndroidInstance & "\" & $g_sAndroidInstance & ".bstk")
 	Switch $iMode
 		Case 0 ; check that shared folder is configured in VM
 			For $i = 0 To $iLineCount - 1
@@ -154,13 +139,20 @@ Func ConfigureSharedFolderBlueStacks5($iMode = 0, $bSetLog = Default)
 						$bResult = True
 						$g_bAndroidSharedFolderAvailable = True
 						$g_sAndroidPicturesPath = "/mnt/windows/BstSharedFolder/"
-						SetDebugLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
-						SetDebugLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
+						SetLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
+						SetLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
 					EndIf
 				EndIf
 			Next
+			If Not $bResult Then
+				$g_sAndroidPicturesHostPath = "C:\ProgramData\BlueStacks_nxt\Engine\UserData\SharedFolder\"
+				SetLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
+				SetLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
+				$bResult = True
+			EndIf
 		Case 1 ; create missing shared folder
 		Case 2 ; Configure VM and add missing shared folder
+			
 	EndSwitch
 
 	Return SetError(0, 0, $bResult)
