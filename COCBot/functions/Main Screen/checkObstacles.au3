@@ -94,7 +94,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				Return True
 			Case QuickMIS("BC1", $g_sImgImportantNotice, 220, 270, 440, 340) ; ImportantNotice
 				SetLog("Found the 'Important Notice' window, closing it", $COLOR_INFO)
-				Click(200, 400)
+				PureClick(200, 400)
 				If _Sleep(2000) Then Return
 				Return True
 			Case QuickMIS("BC1", $g_sImgUpdateCoC, 250, 280, 300, 305) ; UpdateCoC
