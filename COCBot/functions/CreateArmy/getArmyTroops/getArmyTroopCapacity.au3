@@ -64,7 +64,8 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 
 	If $iCount <= 50 Then
 		$g_CurrentCampUtilization = $tmpCurCamp
-		If $g_iTotalCampSpace = 0 Then $g_iTotalCampSpace = $tmpTotalCamp
+		If $g_iTotalCampSpace <> $tmpTotalCamp Then $g_iTotalCampSpace = $tmpTotalCamp
+		
 		If $g_bDebugSetlog Then SetLog("$g_CurrentCampUtilization = " & $g_CurrentCampUtilization & ", $g_iTotalCampSpace = " & $g_iTotalCampSpace, $COLOR_DEBUG)
 	Else
 		SetLog("Army size read error, Troop numbers may not train correctly", $COLOR_ERROR) ; log if there is read error
@@ -72,13 +73,6 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 		CheckOverviewFullArmy()
 	EndIf
 
-	If $g_iTotalCampSpace = 0 Then
-		SetLog("Please set your army camp size on Train Setting", $COLOR_INFO)
-		$g_bRunState = False
-		BotStop()
-		Return
-	EndIf
-	
 	If $g_iTotalCampForcedValue < $g_CurrentCampUtilization Then ; if Total camp size is still not set or value not same as read use forced value
 		Local $iTmpIndex = 0, $iTroopSpace = 0, $iTrainBefore = 0
 		SetLog("ArmyCamp Size Setting = " & $g_iTotalCampForcedValue & ", CurrentCamp = " & $g_CurrentCampUtilization, $COLOR_DEBUG)
@@ -125,6 +119,7 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 		$g_iTotalCampForcedValue = Number($g_CurrentCampUtilization) ;set new value
 		GUICtrlSetData($g_hTxtTotalCampForced, $g_iTotalCampForcedValue) ;update new value to gui
 		$g_aiArmyCompTroops = $g_aiArmyCustomTroops ;copy new train value
+		$g_iTotalCampSpace = $g_CurrentCampUtilization
 		
 		ApplyConfig_600_52_2("Read")
 		SetComboTroopComp() ; GUI refresh
