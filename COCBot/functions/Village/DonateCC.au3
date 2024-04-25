@@ -47,18 +47,6 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 
 			If Not OpenTrainTab($i = 0 ? "Train Troops Tab" : "Brew Spells Tab", True, "IsDonateQueueOnly()") Then ContinueLoop
 
-			;Local $xQueue = FindxQueueStart()
-			;For $j = 0 To 10
-			;	$xQueue -= 61 * $j
-			;	If _ColorCheck(_GetPixelColor($xQueue, 186, True), Hex(0xD7AFA9, 6), 20) Then ; Pink background found at $xQueue
-			;		ExitLoop
-			;	ElseIf _ColorCheck(_GetPixelColor($xQueue, 200, True), Hex(0xCFCFC8, 6), 20) Then ; Gray background
-			;		SetLog("Queue " & ($i = 0 ? "Troops" : "Spells") & " is not prepared, proceed donate!!")
-			;		$abDonateQueueOnly[$i] = False
-			;		ContinueLoop 2
-			;	EndIf
-			;Next
-			
 			Local $xQueue = FindxQueueStart()
 			If $i = 0 Then
 				Local $aSearchResult = CheckQueueTroops(True, False, $xQueue + 10, True) ; $aResult[$Slots][2]: [0] = Name, [1] = Qty
