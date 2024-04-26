@@ -150,7 +150,7 @@ Global $g_sImgDonateTroops = @ScriptDir & "\imgxml\DonateCC\Troops\"
 Global $g_sImgDonateSpells = @ScriptDir & "\imgxml\DonateCC\Spells\"
 Global $g_sImgDonateSiege = @ScriptDir & "\imgxml\DonateCC\SiegeMachines\"
 Global $g_sImgDonateType = @ScriptDir & "\imgxml\DonateCC\DonateIconType\"
-Global $g_sImgChatIUnterstand = @ScriptDir & "\imgxml\DonateCC\IUnderstand\"
+Global $g_sImgChatIUnderstand = @ScriptDir & "\imgxml\DonateCC\IUnderstand\"
 Global $g_sImgChatDivider = @ScriptDir & "\imgxml\DonateCC\donateccwbl\chatdivider_0_98.xml"
 Global $g_sImgChatDividerHidden = @ScriptDir & "\imgxml\DonateCC\donateccwbl\chatdividerhidden_0_98.xml"
 #EndRegion

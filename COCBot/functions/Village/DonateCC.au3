@@ -154,11 +154,6 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	If Not BalanceDonRec(True) Then Return False
 	If SkipDonateNearFullTroops(True) Then Return False
 	
-	;If Not WaitforPixel(60, 285, 61, 288, "D6081B", 10, 1, "DonateCC-NewRequest") Then 
-	;	SetLog("No New requests (red icon), DonateCC Exits", $COLOR_DEBUG1)
-	;	If Not $bTest Then Return False ;exit if no new chats
-	;EndIf
-
 	; check if donate queued troops & spells only
 	Local $abDonateQueueOnly = $g_abChkDonateQueueOnly
 	If $bSwitch Then ;bot will switch to next account, maximize donate
@@ -191,7 +186,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	If _Sleep(1000) Then Return
 
 	; check for "I Understand" button
-	If QuickMIS("BC1", $g_sImgChatIUnterstand, 50, 400, 320, 550) Then
+	If QuickMIS("BC1", $g_sImgChatIUnderstand, 50, 400, 320, 550) Then
 		SetLog('Clicking "I Understand" button', $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(1000) Then Return
