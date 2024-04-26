@@ -417,6 +417,7 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False, $bTestImage = False)
 						Local $iDiff = GetCGDiff($ChallengeEvent)
 						_ArrayAdd($aReturn, $ChallengeEvent & "|" & $BC1x & "|" & $BC1y & "|" & $iDiff & "|" & 0 & "|" & $IsBBEvent)
 					EndIf
+					
 					If $bTestImage Then 
 						_CaptureRegion2($aX[$x], $aY[$y], $aX[$x] + 95, $aY[$y] + 95)
 						SaveDebugImage("CGImageBC1", False)
@@ -424,8 +425,8 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False, $bTestImage = False)
 				Next
 			Next
 		EndIf
-		If $g_bChkClanGamesDebug Then Setlog("AllEvents: " & @CRLF & _ArrayToString($aReturn), $COLOR_DEBUG2)
-		If $g_bChkClanGamesDebug Then Setlog("Benchmark Search Event: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
+		If $g_bChkClanGamesDebug Then Setlog("[" & $i & "] AllEvents: " & @CRLF & _ArrayToString($aReturn), $COLOR_DEBUG2)
+		If $g_bChkClanGamesDebug Then Setlog("[" & $i & "] Benchmark Search Event: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 	
 		If UBound($aReturn) = 0 And $i = 1 Then 
 			ClickDrag(810, 320, 810, 165, 500)
@@ -466,6 +467,7 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False, $bTestImage = False)
 	EndIf
 	
 	SelectEvent($aReturn)
+	If _Sleep(1000) Then Return
 	Return $aReturn
 EndFunc
 
@@ -501,11 +503,6 @@ Func SelectEvent(ByRef $aSelectChallenges)
 			EndIf
 			$aTmp[$i][4] = Number($aEventInfo[1])
 			$aTmp[$i][6] = Number($aEventInfo[0])
-		Else
-			Click(450, 95)
-			Setlog("Fail get event info", $COLOR_ERROR) ; fail get event info, mostly because lag
-			_ArrayDelete($aSelectChallenges, $i)
-			ContinueLoop 
 		EndIf
 		Click($aTmp[$i][1], $aTmp[$i][2])
 		If _Sleep(1000) Then Return
@@ -514,11 +511,6 @@ Func SelectEvent(ByRef $aSelectChallenges)
 	$aSelectChallenges = $aTmp
 	
 	If $g_bChkClanGamesDebug Then Setlog("Benchmark SelectEvent: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
-	;; Drop to top again , because coordinates Xaxis and Yaxis
-	;Click(450, 95)
-	;If _Sleep(1000) Then Return
-	;Click(320, 95)
-	;If _Sleep(1000) Then Return
 EndFunc
 
 Func IsClanGamesWindow($bOnlyPurge = False)
