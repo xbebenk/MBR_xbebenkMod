@@ -436,7 +436,7 @@ Func DoUpgradeBB($CostType = "Gold", $bTest = False)
 		If Not $bTest Then
 			If _Sleep(500) Then Return
 			If WaitBBUpgradeWindow() Then
-				If QuickMIS("BC1", $g_sImgBBUpgradeWindowButton, 340, 500, 800, 600) Then
+				If QuickMIS("BC1", $g_sImgBBUpgradeWindowButton, 330, 470, 600, 570) Then
 					Click($g_iQuickMISX - 50, $g_iQuickMISY + 10)
 					If _Sleep(1000) Then Return
 					If isGemOpen(True) Then
@@ -895,7 +895,7 @@ Func WaitBBUpgradeWindow()
 	Local $bRet = False
 	For $i = 1 To 5
 		SetLog("Waiting for Upgrade Window #" & $i, $COLOR_ACTION)
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 50, 810, 130) Then
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 730, 50, 810, 200) Then
 			$bRet = True
 			SetLog("Upgrade Window OK", $COLOR_ACTION)
 			ExitLoop
