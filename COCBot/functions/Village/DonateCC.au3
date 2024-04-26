@@ -357,6 +357,15 @@ Func DonateCC($bTest = False, $bSwitch = False)
 			;;; Donate to All Zone
 			If $bDonateAllTroop Or $bDonateAllSpell Or $bDonateAllSiege Then
 				SetDebugLog("Troop/Spell/Siege All checkpoint.", $COLOR_DEBUG) ;Debug
+				
+				For $i = 1 To 20
+					SetLog("SORRY, DONATE TO ALL DISABLED ON MOD!!", $COLOR_ERROR)
+				Next
+				DonateWindow($aiDonateButton, $bClose)
+				If _Sleep(1000) Then Return
+				$aSearchArea[1] = $aiDonateButton[1] + 20
+				ContinueLoop
+				
 				$g_bDonateAllRespectBlk = True
 	
 				If $bDonateAllTroop And Not $g_bSkipDonTroops Then
