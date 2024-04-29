@@ -285,29 +285,33 @@ Func CheckEventStreak($bForced = False)
 		If _Sleep(1000) Then Return
 	Next
 	
+	If _Sleep(1500) Then Return
 	Local $aClaim = QuickMIS("CNX", $g_sImgEventStreakClaim, 20, 280, 850, 500)
 	If IsArray($aClaim) And UBound($aClaim) > 0 Then
 		For $i = 0 To UBound($aClaim) - 1
 			If $aClaim[$i][0] = "BrokenStreak" Then
 				Click($aClaim[$i][1], $aClaim[$i][2])
+				If _Sleep(500) Then Return
 				If WaitforPixel(280, 435, 281, 436, Hex(0xD94343, 6), 20, 2, "StartOverButton") Then
 					Click(280, 435, 1, 50, "BrokenStreak-StartOver")
-					SetLog("We Found a Broken Streak, StartOver.", $COLOR_SUCCESS)
+					SetLog("Found a Broken Streak, StartOver!", $COLOR_SUCCESS)
 					ClickAway()
-				Else
-					ClickAway()
-					ClickAway()
-					SetLog("Cannot Find StartOver Button, exit!", $COLOR_ERROR)
-					Return
 				EndIf
+				ClickAway()
+				ClickAway()
+				SetLog("Cannot Find StartOver Button, exit!", $COLOR_ERROR)
+				Return				
 			EndIf
 			If $aClaim[$i][0] = "Claim" Then
 				Click($aClaim[$i][1], $aClaim[$i][2])
+				If _Sleep(500) Then Return
 				Setlog("Succesfully Claimed Event Streak Tier", $COLOR_SUCCESS)
+				If _Sleep(1000) Then Return
 				ClickAway()
 			EndIf
 		Next
 	EndIf
+	ClickAway()
 	Return True
 EndFunc
 
