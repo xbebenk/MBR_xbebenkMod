@@ -751,8 +751,8 @@ Func ZoomIn($Region = "Top")
 		Local $sSceneryCode[3] = ["DS", "JS", "MS"]
 		For $sCode In $sSceneryCode
 			Local $iRes = GetVillageSize(False, "stone" & $sCode, "tree" & $sCode, False)
-			If IsArray($iRes) Then ExitLoop
-			If $iRes = 0 Then ContinueLoop
+			If IsArray($iRes) Then ContinueLoop
+			If $iRes = 0 Then ExitLoop
 			SetLog("[" & $i & "] ZoomIn Not Succeed", $COLOR_DEBUG)
 		Next
 		SetLog("[" & $i & "] ZoomIn Succeed", $COLOR_SUCCESS)
@@ -764,18 +764,46 @@ Func ZoomIn($Region = "Top")
 EndFunc
 
 Func ZoomInBB($Region = "Top")
-	Switch $g_sAndroidEmulator
-		Case "MEmu"
-			SetDebugLog("ZoomInBBMEmu()")
-			If ZoomInBBMEmu($Region) Then Return True
-		Case "Nox"
-			SetDebugLog("ZoomInBBNox()")
-			If ZoomInBBMEmu($Region) Then Return True
-		Case "BlueStacks2", "BlueStacks5"
-			SetDebugLog("ZoomInBBBluestacks()")
-			If ZoomInBBMEmu($Region) Then Return True
+	Local $bSuccessZoomIn = False
+	Local $sScript = "ZoomIn"
+	Switch $Region
+		Case "Top"
+			$sScript &= ".Top"
+		Case "Left"
+			$sScript &= ".Left"
+		Case "Bottom"
+			$sScript &= ".Bottom"
+		Case "Right"
+			$sScript &= ".Right"
 	EndSwitch
-	Return False
+	
+	Switch $g_sAndroidEmulator
+		Case "BlueStacks5"
+			$sScript &= ".BlueStacks5"
+	EndSwitch
+	
+	SetLog("minitouch script = " & $sScript, $COLOR_DEBUG)
+	
+	For $i = 1 To 3
+		SetLog("[" & $i & "] Try ZoomInBB", $COLOR_DEBUG)
+		If Not AndroidAdbScript($sScript) Then Return False
+		If _Sleep(1500) Then Return
+		
+		Local $sSceneryCode[2] = ["BL", "BH"]
+		For $sCode In $sSceneryCode
+			;GetVillageSize(False, "stoneBL", "treeBL", True)
+			Local $iRes = GetVillageSize(False, "stone" & $sCode, "tree" & $sCode, True)
+			If IsArray($iRes) Then ContinueLoop
+			If $iRes = 0 Then ExitLoop
+			SetLog("[" & $i & "] ZoomInBB Not Succeed", $COLOR_DEBUG)			
+		Next
+		
+		SetLog("[" & $i & "] ZoomInBB Succeed", $COLOR_SUCCESS)
+		$bSuccessZoomIn = True
+		ExitLoop
+	Next
+	If Not $bSuccessZoomIn Then Return False
+	Return True
 EndFunc
 
 Func ZoomInBBMEmu($Region = "Top")
