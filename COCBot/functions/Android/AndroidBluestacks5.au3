@@ -144,8 +144,9 @@ Func ConfigureSharedFolderBlueStacks5($iMode = 0, $bSetLog = Default)
 					EndIf
 				EndIf
 			Next
-			If Not $bResult Then
+			If Not $bResult Then ;set default value
 				$g_sAndroidPicturesHostPath = "C:\ProgramData\BlueStacks_nxt\Engine\UserData\SharedFolder\"
+				$g_sAndroidPicturesPath = "/mnt/windows/BstSharedFolder/"
 				SetLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
 				SetLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
 				$bResult = True
