@@ -28,6 +28,7 @@ Func TestStarLaboratory()
 EndFunc
 
 Func StarLaboratory($bTestRun = False)
+	Return False
 
 	If Not $g_bAutoStarLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 	Local $bElixirFull = False
