@@ -470,7 +470,7 @@ Func DoUpgradeBB($CostType = "Gold", $bTest = False)
 EndFunc   ;==>DoUpgradeBB
 
 Func ClickDragAutoUpgradeBB($Direction = "up", $YY = Default, $DragCount = 1)
-	Local $x = 450, $yUp = 125, $yDown = 800, $Delay = 500
+	Local $x = 450, $yUp = 50, $yDown = 800, $Delay = 500
 	ClickBBBuilder()
 	If $YY = Default And $Direction = "up" Then
 		Local $Tmp = QuickMIS("CNX", $g_sImgBBResourceIcon, 400, 73, 500, 370)
