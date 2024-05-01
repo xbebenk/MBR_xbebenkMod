@@ -72,6 +72,18 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 		$g_CurrentCampUtilization = 0
 		CheckOverviewFullArmy()
 	EndIf
+	
+	Local $iTrainCount1 = 0, $iTrainCount2 = 0
+	For $i = 0 To UBound($g_aiArmyCustomTroops) - 1
+		$iTrainCount1 += $g_aiArmyCustomTroops[$i]
+		$iTrainCount2 += $g_aiArmyCompTroops[$i]
+	Next
+	
+	If $iTrainCount1 = 0 Or $iTrainCount2 = 0 Then 
+		SetLog("Impossible!! Your train settings got reset!", $COLOR_ERROR)
+		If _Sleep(50) Then Return
+		Btnstop()
+	EndIf
 
 	If $g_iTotalCampForcedValue < $g_CurrentCampUtilization Then ; if Total camp size is still not set or value not same as read use forced value
 		Local $iTmpIndex = 0, $iTroopSpace = 0, $iTrainBefore = 0
