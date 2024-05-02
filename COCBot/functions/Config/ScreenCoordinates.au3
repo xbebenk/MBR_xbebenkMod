@@ -10,10 +10,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-;$aiSomeVar = [StartX, StartY, EndX, EndY]
-;Global $aiClickAwayRegionLeft = [225, 10, 255, 30]
-;Global $aiClickAwayRegionRight = [605, 10, 645, 30]
-;Let's tighten these up to avoid clicking on shields.
+
 Global $aiClickAwayRegionLeft = [229, 5, 242, 20]
 Global $aiClickAwayRegionRight = [635, 5, 650, 20]
 

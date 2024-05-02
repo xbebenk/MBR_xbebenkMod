@@ -366,9 +366,6 @@ Func SetupProfileFolder()
 	$g_sProfileLootsPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\Loots\"
 	$g_sProfileTempPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\Temp\"
 	$g_sProfileTempDebugPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & "\Temp\Debug\"
-	$g_sProfileDonateCapturePath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\'
-	$g_sProfileDonateCaptureWhitelistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\White List\'
-	$g_sProfileDonateCaptureBlacklistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\Black List\'
 EndFunc   ;==>SetupProfileFolder
 
 ; #FUNCTION# ====================================================================================================================
@@ -1164,7 +1161,7 @@ Func __RunFunction($action)
 			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
-			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
+			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_bAutoUpgradeBBEnabled Or $g_bChkEnableBBAttack Then
 				BuilderBase()
 			EndIf
 			_Sleep($DELAYRUNBOT3)
@@ -1520,9 +1517,10 @@ Func FirstCheckRoutine()
 		EndIf
 		
 		If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc And Not $b_SuccessAttack And $x = 1 Then
+			SetLog("SecondAttackDelayed = True", $COLOR_INFO)
+			$bSecondAttackDelayed = True
 			CommonRoutine("FirstCheck")
 			CommonRoutine("Switch")
-			$bSecondAttackDelayed = True
 		EndIf
 	Next
 	
@@ -1644,7 +1642,7 @@ Func BuilderBase()
 
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		CollectBuilderBase()
-		BuilderBaseReport(False, True, False)
+		BuilderBaseReport(False, True)
 
 		CleanBBYard()
 		BuilderBaseReport(True, True)
@@ -1660,7 +1658,7 @@ Func BuilderBase()
 
 		Local $bElixFull = isElixirFullBB()
 		If $bElixFull Then
-			$StartLabON = StarLaboratory()
+			$StartLabON = StarLab()
 			$g_bBBAttacked = False
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
@@ -1683,14 +1681,14 @@ Func BuilderBase()
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
 
-		If Not $StartLabON Then StarLaboratory()
+		If Not $StartLabON Then StarLab()
 		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
 
 		If _Sleep($DELAYRUNBOT1) Then Return
 		StartClockTowerBoost(False, False, $bUseCTPot)
 
 		If _Sleep($DELAYRUNBOT1) Then Return
-		BuilderBaseReport(False, True, False)
+		BuilderBaseReport(False, True)
 
 		$g_bStayOnBuilderBase = False
 		SwitchBetweenBases("Main")

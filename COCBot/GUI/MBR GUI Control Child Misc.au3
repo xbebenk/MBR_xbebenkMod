@@ -743,14 +743,6 @@ Func chkEnableSaleMagicItem()
 	EndIf
 EndFunc
 
-Func chkStartClockTowerBoost()
-	If GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hChkCTBoostBlderBz, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkStartClockTowerBoost
-
 Func chkActivateClangames()
 	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hBtnCGSettingsOpen, $GUI_ENABLE)

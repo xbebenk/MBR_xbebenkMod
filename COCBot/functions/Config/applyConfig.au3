@@ -336,25 +336,17 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkSaleROBG, $g_bChkSaleROBG ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSaleROBE, $g_bChkSaleROBE ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkEnableSaleMagicItem()
-
+			
+			;BBPlay > Collect
 			GUICtrlSetState($g_hChkCollectBuilderBase, $g_bChkCollectBuilderBase ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCleanBBYard, $g_bChkCleanBBYard ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkStartClockTowerBoost, $g_bChkStartClockTowerBoost ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkCTBoostBlderBz, $g_bChkCTBoostBlderBz ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkStartClockTowerBoost()
-			GUICtrlSetState($g_hChkBBSuggestedUpgrades, $g_iChkBBSuggestedUpgrades = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, $g_iChkBBSuggestedUpgradesIgnoreGold = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $g_iChkBBSuggestedUpgradesIgnoreElixir = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $g_iChkBBSuggestedUpgradesIgnoreHall = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreWall, $g_iChkBBSuggestedUpgradesIgnoreWall = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-
-			GUICtrlSetState($g_hChkPlacingNewBuildings, $g_iChkPlacingNewBuildings = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkBBSuggestedUpgradesOTTO, $g_bOptimizeOTTO = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-
+			;BBPlay > AutoUpgrade
+			GUICtrlSetState($g_hChkAutoUpgradeBB, $g_bAutoUpgradeBBEnabled? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreHall, $g_bChkAutoUpgradeBBIgnoreHall ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreWall, $g_bChkAutoUpgradeBBIgnoreWall ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBOBControl, $g_bChkBOBControl ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkActivateBBSuggestedUpgrades()
-			chkActivateBBSuggestedUpgradesGold()
-			chkActivateBBSuggestedUpgradesElixir()
-			chkPlacingNewBuildings()
 
 			#NEW CLANGAMES GUI
 			GUICtrlSetState($g_hChkClanGamesEnabled, $g_bChkClanGamesEnabled ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -498,7 +490,6 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iTxtRestartElixir = GUICtrlRead($g_hTxtRestartElixir)
 			$g_iTxtRestartDark = GUICtrlRead($g_hTxtRestartDark)
 			$g_bChkCollect = (GUICtrlRead($g_hChkCollect) = $GUI_CHECKED)
-			;$g_bChkCollectCartFirst = (GUICtrlRead($g_hChkCollectCartFirst) = $GUI_CHECKED)
 			$g_iTxtCollectGold = GUICtrlRead($g_hTxtCollectGold)
 			$g_iTxtCollectElixir = GUICtrlRead($g_hTxtCollectElixir)
 			$g_iTxtCollectDark = GUICtrlRead($g_hTxtCollectDark)
@@ -541,15 +532,10 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkCollectBuilderBase = (GUICtrlRead($g_hChkCollectBuilderBase) = $GUI_CHECKED)
 			$g_bChkCleanBBYard = (GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED)
 			$g_bChkStartClockTowerBoost = (GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED)
-			$g_bChkCTBoostBlderBz = (GUICtrlRead($g_hChkCTBoostBlderBz) = $GUI_CHECKED)
-			$g_iChkBBSuggestedUpgrades = (GUICtrlRead($g_hChkBBSuggestedUpgrades) = $GUI_CHECKED) ? 1 : 0
-			$g_iChkBBSuggestedUpgradesIgnoreGold = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreGold) = $GUI_CHECKED) ? 1 : 0
-			$g_iChkBBSuggestedUpgradesIgnoreElixir = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreElixir) = $GUI_CHECKED) ? 1 : 0
-			$g_iChkBBSuggestedUpgradesIgnoreHall = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreHall) = $GUI_CHECKED) ? 1 : 0
-			$g_iChkBBSuggestedUpgradesIgnoreWall = (GUICtrlRead($g_hChkBBSuggestedUpgradesIgnoreWall) = $GUI_CHECKED) ? 1 : 0
-
-			$g_iChkPlacingNewBuildings = (GUICtrlRead($g_hChkPlacingNewBuildings) = $GUI_CHECKED) ? 1 : 0
-			$g_bOptimizeOTTO = (GUICtrlRead($g_hChkBBSuggestedUpgradesOTTO) = $GUI_CHECKED) ? 1 : 0
+			$g_bAutoUpgradeBBEnabled= (GUICtrlRead($g_hChkAutoUpgradeBB) = $GUI_CHECKED)
+			$g_bChkAutoUpgradeBBIgnoreHall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreHall) = $GUI_CHECKED)
+			$g_bChkAutoUpgradeBBIgnoreWall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreWall) = $GUI_CHECKED)
+			$g_bChkBOBControl = (GUICtrlRead($g_hChkBOBControl) = $GUI_CHECKED)
 
 			#NEW CLANGAMES GUI
 			$g_bChkClanGamesEnabled = (GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED) ? 1 : 0
@@ -766,7 +752,7 @@ Func ApplyConfig_600_12($TypeReadSave)
 			GUICtrlSetState($g_hChkDonateQueueTroopOnly, $g_abChkDonateQueueOnly[0] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkDonateQueueSpellOnly, $g_abChkDonateQueueOnly[1] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Doncheck()
-			For $i = 0 To $eTroopCount - 1 + $g_iCustomDonateConfigs
+			For $i = 0 To $eTroopCount - 1
 				GUICtrlSetState($g_ahChkDonateTroop[$i], $g_abChkDonateTroop[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 				If $g_abChkDonateTroop[$i] Then
 					_DonateControls($i)
@@ -774,15 +760,7 @@ Func ApplyConfig_600_12($TypeReadSave)
 					GUICtrlSetBkColor($g_ahLblDonateTroop[$i], $GUI_BKCOLOR_TRANSPARENT)
 				EndIf
 
-				If $g_abChkDonateAllTroop[$i] Then
-					GUICtrlSetState($g_ahChkDonateAllTroop[$i], $GUI_CHECKED)
-					_DonateAllControls($i, True)
-				Else
-					GUICtrlSetState($g_ahChkDonateAllTroop[$i], $GUI_UNCHECKED)
-				EndIf
-
 				GUICtrlSetData($g_ahTxtDonateTroop[$i], $g_asTxtDonateTroop[$i])
-				GUICtrlSetData($g_ahTxtBlacklistTroop[$i], $g_asTxtBlacklistTroop[$i])
 			Next
 
 			For $i = 0 To $eSpellCount - 1
@@ -793,19 +771,11 @@ Func ApplyConfig_600_12($TypeReadSave)
 					GUICtrlSetBkColor($g_ahLblDonateSpell[$i], $GUI_BKCOLOR_TRANSPARENT)
 				EndIf
 
-				If $g_abChkDonateAllSpell[$i] Then
-					GUICtrlSetState($g_ahChkDonateAllSpell[$i], $GUI_CHECKED)
-					_DonateAllControlsSpell($i, True)
-				Else
-					GUICtrlSetState($g_ahChkDonateAllSpell[$i], $GUI_UNCHECKED)
-				EndIf
-
 				GUICtrlSetData($g_ahTxtDonateSpell[$i], $g_asTxtDonateSpell[$i])
-				GUICtrlSetData($g_ahTxtBlacklistSpell[$i], $g_asTxtBlacklistSpell[$i])
 			Next
 
 			For $i = $eSiegeWallWrecker to $eSiegeMachineCount - 1
-				Local $index = $eTroopCount + $g_iCustomDonateConfigs
+				Local $index = $eTroopCount
 				GUICtrlSetState($g_ahChkDonateTroop[$index + $i], $g_abChkDonateTroop[$index + $i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 				If $g_abChkDonateTroop[$index + $i] Then
 					_DonateControls($index + $i)
@@ -813,83 +783,32 @@ Func ApplyConfig_600_12($TypeReadSave)
 					GUICtrlSetBkColor($g_ahLblDonateTroop[$index + $i], $GUI_BKCOLOR_TRANSPARENT)
 				EndIf
 
-				If $g_abChkDonateAllTroop[$index + $i] Then
-					GUICtrlSetState($g_ahChkDonateAllTroop[$index + $i], $GUI_CHECKED)
-					_DonateAllControls($index + $i, True)
-				Else
-					GUICtrlSetState($g_ahChkDonateAllTroop[$index + $i], $GUI_UNCHECKED)
-				EndIf
-
 				GUICtrlSetData($g_ahTxtDonateTroop[$index + $i], $g_asTxtDonateTroop[$index + $i])
-				GUICtrlSetData($g_ahTxtBlacklistTroop[$index + $i], $g_asTxtBlacklistTroop[$index + $i])
 			Next
-
-			For $i = 0 To 2
-				_GUICtrlComboBox_SetCurSel($g_ahCmbDonateCustomA[$i], $g_aiDonateCustomTrpNumA[$i][0])
-				GUICtrlSetData($g_ahTxtDonateCustomA[$i], $g_aiDonateCustomTrpNumA[$i][1])
-			Next
-			cmbDonateCustomA()
-
-			For $i = 0 To 2
-				_GUICtrlComboBox_SetCurSel($g_ahCmbDonateCustomB[$i], $g_aiDonateCustomTrpNumB[$i][0])
-				GUICtrlSetData($g_ahTxtDonateCustomB[$i], $g_aiDonateCustomTrpNumB[$i][1])
-			Next
-			cmbDonateCustomB()
-
-			For $i = 0 To 2
-				_GUICtrlComboBox_SetCurSel($g_ahCmbDonateCustomC[$i], $g_aiDonateCustomTrpNumC[$i][0])
-				GUICtrlSetData($g_ahTxtDonateCustomC[$i], $g_aiDonateCustomTrpNumC[$i][1])
-			Next
-			cmbDonateCustomC()
-
-			For $i = 0 To 2
-				_GUICtrlComboBox_SetCurSel($g_ahCmbDonateCustomD[$i], $g_aiDonateCustomTrpNumD[$i][0])
-				GUICtrlSetData($g_ahTxtDonateCustomD[$i], $g_aiDonateCustomTrpNumD[$i][1])
-			Next
-			cmbDonateCustomD()
 
 			GUICtrlSetState($g_hChkExtraAlphabets, $g_bChkExtraAlphabets ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkExtraChinese, $g_bChkExtraChinese ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkExtraKorean, $g_bChkExtraKorean ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkExtraPersian, $g_bChkExtraPersian ? $GUI_CHECKED : $GUI_UNCHECKED)
 
-			GUICtrlSetData($g_hTxtGeneralBlacklist, $g_sTxtGeneralBlacklist)
-
 		Case "Save"
 			$g_bChkDonate = (GUICtrlRead($g_hChkDonate) = $GUI_CHECKED)
 			$g_abChkDonateQueueOnly[0] = (GUICtrlRead($g_hChkDonateQueueTroopOnly) = $GUI_CHECKED)
 			$g_abChkDonateQueueOnly[1] = (GUICtrlRead($g_hChkDonateQueueSpellOnly) = $GUI_CHECKED)
-			For $i = 0 To $eTroopCount - 1 + $g_iCustomDonateConfigs
+			For $i = 0 To $eTroopCount - 1
 				$g_abChkDonateTroop[$i] = (GUICtrlRead($g_ahChkDonateTroop[$i]) = $GUI_CHECKED)
-				$g_abChkDonateAllTroop[$i] = (GUICtrlRead($g_ahChkDonateAllTroop[$i]) = $GUI_CHECKED)
 				$g_asTxtDonateTroop[$i] = GUICtrlRead($g_ahTxtDonateTroop[$i])
-				$g_asTxtBlacklistTroop[$i] = GUICtrlRead($g_ahTxtBlacklistTroop[$i])
 			Next
 
 			For $i = 0 To $eSpellCount - 1
 				$g_abChkDonateSpell[$i] = (GUICtrlRead($g_ahChkDonateSpell[$i]) = $GUI_CHECKED)
-				$g_abChkDonateAllSpell[$i] = (GUICtrlRead($g_ahChkDonateAllSpell[$i]) = $GUI_CHECKED)
 				$g_asTxtDonateSpell[$i] = GUICtrlRead($g_ahTxtDonateSpell[$i])
-				$g_asTxtBlacklistSpell[$i] = GUICtrlRead($g_ahTxtBlacklistSpell[$i])
 			Next
 
 			For $i = $eSiegeWallWrecker to $eSiegeMachineCount - 1
-				Local $index = $eTroopCount + $g_iCustomDonateConfigs
+				Local $index = $eTroopCount
 				$g_abChkDonateTroop[$index + $i] = (GUICtrlRead($g_ahChkDonateTroop[$index + $i]) = $GUI_CHECKED)
-				$g_abChkDonateAllTroop[$index + $i] = (GUICtrlRead($g_ahChkDonateAllTroop[$index + $i]) = $GUI_CHECKED)
 				$g_asTxtDonateTroop[$index + $i] = GUICtrlRead($g_ahTxtDonateTroop[$index + $i])
-				$g_asTxtBlacklistTroop[$index + $i] = GUICtrlRead($g_ahTxtBlacklistTroop[$index + $i])
-			Next
-
-			For $i = 0 To 2
-				$g_aiDonateCustomTrpNumA[$i][0] = _GUICtrlComboBox_GetCurSel($g_ahCmbDonateCustomA[$i])
-				$g_aiDonateCustomTrpNumA[$i][1] = GUICtrlRead($g_ahTxtDonateCustomA[$i])
-				$g_aiDonateCustomTrpNumB[$i][0] = _GUICtrlComboBox_GetCurSel($g_ahCmbDonateCustomB[$i])
-				$g_aiDonateCustomTrpNumB[$i][1] = GUICtrlRead($g_ahTxtDonateCustomB[$i])
-				$g_aiDonateCustomTrpNumC[$i][0] = _GUICtrlComboBox_GetCurSel($g_ahCmbDonateCustomC[$i])
-				$g_aiDonateCustomTrpNumC[$i][1] = GUICtrlRead($g_ahTxtDonateCustomC[$i])
-				$g_aiDonateCustomTrpNumD[$i][0] = _GUICtrlComboBox_GetCurSel($g_ahCmbDonateCustomD[$i])
-				$g_aiDonateCustomTrpNumD[$i][1] = GUICtrlRead($g_ahTxtDonateCustomD[$i])
 			Next
 
 			$g_bChkExtraAlphabets = (GUICtrlRead($g_hChkExtraAlphabets) = $GUI_CHECKED)
@@ -897,7 +816,6 @@ Func ApplyConfig_600_12($TypeReadSave)
 			$g_bChkExtraKorean = (GUICtrlRead($g_hChkExtraKorean) = $GUI_CHECKED)
 			$g_bChkExtraPersian = (GUICtrlRead($g_hChkExtraPersian) = $GUI_CHECKED)
 
-			$g_sTxtGeneralBlacklist = GUICtrlRead($g_hTxtGeneralBlacklist)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_12
 
@@ -910,7 +828,6 @@ Func ApplyConfig_600_13($TypeReadSave)
 			For $i = 0 To 23
 				GUICtrlSetState($g_ahChkDonateHours[$i], $g_abDonateHours[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			Next
-			_GUICtrlComboBox_SetCurSel($g_hCmbFilterDonationsCC, $g_iCmbDonateFilter)
 			GUICtrlSetState($g_hChkSkipDonateNearFullTroopsEnable, $g_bDonateSkipNearFullEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtSkipDonateNearFullTroopsPercentage, $g_iDonateSkipNearFullPercent)
 			chkskipDonateNearFulLTroopsEnable()
@@ -926,7 +843,6 @@ Func ApplyConfig_600_13($TypeReadSave)
 			For $i = 0 To 23
 				$g_abDonateHours[$i] = (GUICtrlRead($g_ahChkDonateHours[$i]) = $GUI_CHECKED)
 			Next
-			$g_iCmbDonateFilter = _GUICtrlComboBox_GetCurSel($g_hCmbFilterDonationsCC)
 			$g_bDonateSkipNearFullEnable = (GUICtrlRead($g_hChkSkipDonateNearFullTroopsEnable) = $GUI_CHECKED)
 			$g_iDonateSkipNearFullPercent = Number(GUICtrlRead($g_hTxtSkipDonateNearFullTroopsPercentage))
 			$g_bUseCCBalanced = (GUICtrlRead($g_hChkUseCCBalanced) = $GUI_CHECKED)

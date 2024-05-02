@@ -1,11 +1,14 @@
 Func CleanBBYard($bTest = False)
-	; Early exist if noting to do
-	If Not $g_bChkCleanBBYard Then Return	
-	
+	If Not $g_bChkCleanBBYard Then Return
+	$g_bStayOnBuilderBase = True
+	BuilderBaseReport(True)
+	ZoomOut()
+	If $g_sSceneryCode <> "BL" Then 
+		SetLog("Builder Base Lower Zone Not detected, exit!", $COLOR_ERROR)
+		Return
+	EndIf
 	; Timer
 	Local $hObstaclesTimer = __TimerInit()
-	getBuilderCount(False, True)
-	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(690, 72)
 	SetLog("CleanBBYard: Try removing obstacles", $COLOR_DEBUG)
 	; Obstacles function to Parallel Search , will run all pictures inside the directory
 	If $g_iFreeBuilderCountBB = 0 And Not $bTest Then 
@@ -19,27 +22,25 @@ Func CleanBBYard($bTest = False)
 	
 	Local $Locate = 0
 	If $g_iFreeBuilderCountBB > 0 Then
-		;Local $Result = QuickMIS("CNX", $g_sImgCleanBBYard, 90, 90, 830, 620)
 		Local $Result = QuickMIS("CNX", $g_sImgCleanBBYard, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
 		If IsArray($Result) And UBound($Result) > 0 Then
 			For $i = 0 To UBound($Result) - 1
 				If isInsideDiamondXY($Result[$i][1], $Result[$i][2], True) Then
-					getBuilderCount(False, True)
-					If $g_iFreeBuilderCountBB = 0 Then ExitLoop
 					Click($Result[$i][1], $Result[$i][2])
-					If _Sleep(1000) Then Return
+					If _Sleep(2500) Then Return
 					If ClickRemoveObstacleBB($bTest) Then
 						$Locate += 1
 						SetLog($Result[$i][0] & " found (" & $Result[$i][1] & "," & $Result[$i][2] & ")", $COLOR_SUCCESS)
-						Click(800, 330) ;clickaway
-						If _Sleep(500) Then Return
+						Click(800, 300) ;clickaway
+						If _Sleep(1500) Then Return
 						getBuilderCount(False, True)
 						If $g_iFreeBuilderCountBB > 0 Then ContinueLoop
 					Else
+						If _Sleep(500) Then Return
 						ContinueLoop
 					EndIf
 					
-					$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(690, 72)
+					BuilderBaseReport(True, False)
 					If $g_aiCurrentLootBB[$eLootElixirBB] < 20000 Then
 						SetLog("Current BB Elixir Below 20000, skip CleanBBYard", $COLOR_DEBUG)
 						ExitLoop

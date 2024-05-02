@@ -34,6 +34,8 @@ Func IsDonateQueueOnly(ByRef $abDonateQueueOnly)
 	
 	If Not OpenArmyOverview("IsDonateQueueOnly()") Then Return
 	
+	getArmyTroopCapacity()
+	
 	For $i = 0 To 1
 		If Not $g_aiPrepDon[$i * 2] And Not $g_aiPrepDon[$i * 2 + 1] Then $abDonateQueueOnly[$i] = False
 		If $abDonateQueueOnly[$i] Then
@@ -100,7 +102,6 @@ Func PrepareDonateCC()
 	$g_aiPrepDon[1] = 0
 	For $i = 0 To UBound($g_abChkDonateTroop) - 1
 		$g_aiPrepDon[0] = BitOR($g_aiPrepDon[0], ($g_abChkDonateTroop[$i] ? 1 : 0))
-		$g_aiPrepDon[1] = BitOR($g_aiPrepDon[1], ($g_abChkDonateAllTroop[$i] ? 1 : 0))
 	Next
 
 	; Spells
@@ -108,15 +109,13 @@ Func PrepareDonateCC()
 	$g_aiPrepDon[3] = 0
 	For $i = 0 To UBound($g_abChkDonateSpell) - 1
 		$g_aiPrepDon[2] = BitOR($g_aiPrepDon[2], ($g_abChkDonateSpell[$i] ? 1 : 0))
-		$g_aiPrepDon[3] = BitOR($g_aiPrepDon[3], ($g_abChkDonateAllSpell[$i] ? 1 : 0))
 	Next
 
 	; Siege
 	$g_aiPrepDon[4] = 0
 	$g_aiPrepDon[5] = 0
 	For $i = $eSiegeWallWrecker To $eSiegeMachineCount - 1
-		$g_aiPrepDon[4] = BitOR($g_aiPrepDon[4], ($g_abChkDonateTroop[$eTroopCount + $g_iCustomDonateConfigs + $i] ? 1 : 0))
-		$g_aiPrepDon[5] = BitOR($g_aiPrepDon[5], ($g_abChkDonateAllTroop[$eTroopCount + $g_iCustomDonateConfigs + $i] ? 1 : 0))
+		$g_aiPrepDon[4] = BitOR($g_aiPrepDon[4], ($g_abChkDonateTroop[$eTroopCount + $i] ? 1 : 0))
 	Next
 
 	$g_iActiveDonate = BitOR($g_aiPrepDon[0], $g_aiPrepDon[1], $g_aiPrepDon[2], $g_aiPrepDon[3], $g_aiPrepDon[4], $g_aiPrepDon[5])
@@ -126,12 +125,9 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
 
 	Local $bDonateTroop = ($g_aiPrepDon[0] = 1)
-	Local $bDonateAllTroop = ($g_aiPrepDon[1] = 1)
 	Local $bDonateSpell = ($g_aiPrepDon[2] = 1)
-	Local $bDonateAllSpell = ($g_aiPrepDon[3] = 1)
 	Local $bDonateSiege = ($g_aiPrepDon[4] = 1)
-	Local $bDonateAllSiege = ($g_aiPrepDon[5] = 1)
-
+	
 	Local $bDonate = ($g_iActiveDonate = 1)
 	If $bTest Then $bDonate = True
 	
@@ -158,7 +154,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	Local $abDonateQueueOnly = $g_abChkDonateQueueOnly
 	If $bSwitch Then ;bot will switch to next account, maximize donate
 		SetLog("Next account switch, maximize donate", $COLOR_DEBUG1)
-		$bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege)
+		$bDonate = BitOR($bDonateTroop, $bDonateSpell, $bDonateSiege)
 		$abDonateQueueOnly[0] = False
 		$abDonateQueueOnly[1] = False
 	Else
@@ -166,14 +162,14 @@ Func DonateCC($bTest = False, $bSwitch = False)
 		If $abDonateQueueOnly[0] And _ArrayMax($g_aiAvailQueuedTroop) = 0 Then
 			SetLog("No queued Troop for donate, skip donating troops", $COLOR_DEBUG1)
 			$bDonateTroop = False
-			$bDonateAllTroop = False
+			;$bDonateAllTroop = False
 		EndIf
 		If $abDonateQueueOnly[1] And _ArrayMax($g_aiAvailQueuedSpell) = 0 Then
 			SetLog("No queued Spell for donate, skip donating spells", $COLOR_DEBUG1)
 			$bDonateSpell = False
-			$bDonateAllSpell = False
+			;$bDonateAllSpell = False
 		EndIf
-		$bDonate = BitOR($bDonateTroop, $bDonateAllTroop, $bDonateSpell, $bDonateAllSpell, $bDonateSiege, $bDonateAllSiege)
+		$bDonate = BitOR($bDonateTroop, $bDonateSpell, $bDonateSiege)
 	EndIf
 	
 	If Not $bDonate Then Return
@@ -224,21 +220,12 @@ Func DonateCC($bTest = False, $bSwitch = False)
 		EndIf
 		
 		If $aiDonateButton[1] > 1 And $bDonate Then		
-			; Collect Donate users images
-			If Not donateCCWBLUserImageCollect($aiDonateButton[0], $aiDonateButton[1]) Then
-				SetLog("Skip Donation for this Clan Mate", $COLOR_ACTION)
-				$aSearchArea[1] = $aiDonateButton[1] + 20
-				ContinueLoop ; go to next button
-			EndIf
-			
 			$g_bSkipDonTroops = False
 			$g_bSkipDonSpells = False
 			$g_bSkipDonSiege = False
 			
 			If $bDonateTroop Or $bDonateSpell Or $bDonateSiege Then
 				$ClanString = ReadRequestString($aiDonateButton)
-			ElseIf $bDonateAllTroop Or $bDonateAllSpell Or $bDonateAllSiege Then
-				SetLog("Skip reading chat requests. Donate all is enabled!", $COLOR_ACTION)
 			EndIf
 			
 			getRemainingCCcapacity($aiDonateButton) ;Get remaining CC capacity of requested troops from your ClanMates
@@ -257,7 +244,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 				Case $g_iTotalDonateSpellCapacity = -1
 					SetDebugLog("This CC cannot accept spells, skip spell donation", $COLOR_DEBUG)
 					$g_bSkipDonSpells = True
-				Case Not $bDonateSiege And Not $bDonateAllSiege
+				Case Not $bDonateSiege
 					SetLog("Siege donation is not enabled, skip siege donation", $COLOR_ACTION)
 					$g_bSkipDonSiege = True
 				Case $g_iTotalDonateSiegeMachineCapacity = -1
@@ -306,7 +293,7 @@ Func DonateCC($bTest = False, $bSwitch = False)
 						For $i = 0 To UBound($g_aiDonateTroopPriority) - 1
 							Local $iTroopIndex = $g_aiDonateTroopPriority[$i]
 							If $g_abChkDonateTroop[$iTroopIndex] Then
-								If CheckDonateTroop($iTroopIndex, $g_asTxtDonateTroop[$iTroopIndex], $g_asTxtBlacklistTroop[$iTroopIndex], $ClanString, $g_bNewSystemToDonate) Then
+								If CheckDonateTroop($iTroopIndex, $g_asTxtDonateTroop[$iTroopIndex], $ClanString, $g_bNewSystemToDonate) Then
 									Local $iQuant = -1, $Quant = 0
 									$iQuant = _ArraySearch($g_aiDonQuant, $iTroopIndex, 0, 0, 0, 0, 1, 0)
 									If $iQuant <> -1 Then $Quant = $g_aiDonQuant[$iQuant][1]
@@ -322,10 +309,9 @@ Func DonateCC($bTest = False, $bSwitch = False)
 				If Not $g_bSkipDonSiege And $bDonateSiege Then
 					SetDebugLog("Siege checkpoint.", $COLOR_DEBUG)
 					For $SiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
-						; $eTroopCount - 1 + $g_iCustomDonateConfigs + $i
-						Local $index = $eTroopCount + $g_iCustomDonateConfigs + $SiegeIndex
+						Local $index = $eTroopCount + $SiegeIndex
 						If $g_abChkDonateTroop[$index] Then
-							If CheckDonateSiege($SiegeIndex, $g_asTxtDonateTroop[$index], $g_asTxtBlacklistTroop[$index], $ClanString, $g_bNewSystemToDonate) Then
+							If CheckDonateSiege($SiegeIndex, $g_asTxtDonateTroop[$index], $ClanString, $g_bNewSystemToDonate) Then
 								DonateSiegeType($SiegeIndex)
 							EndIf
 						EndIf
@@ -336,125 +322,16 @@ Func DonateCC($bTest = False, $bSwitch = False)
 				;;; DONATION SPELLS
 				If $bDonateSpell And Not $g_bSkipDonSpells Then
 					SetDebugLog("Spell checkpoint.", $COLOR_DEBUG)
-	
 					For $i = 0 To UBound($g_aiDonateSpellPriority) - 1
 						Local $iSpellIndex = $g_aiDonateSpellPriority[$i]
 						If $g_abChkDonateSpell[$iSpellIndex] Then
-							If CheckDonateSpell($iSpellIndex, $g_asTxtDonateSpell[$iSpellIndex], $g_asTxtBlacklistSpell[$iSpellIndex], $ClanString, $g_bNewSystemToDonate) Then
+							If CheckDonateSpell($iSpellIndex, $g_asTxtDonateSpell[$iSpellIndex], $ClanString, $g_bNewSystemToDonate) Then
 								DonateSpellType($iSpellIndex, $abDonateQueueOnly[1])
 								If _Sleep($DELAYDONATECC3) Then ExitLoop
 							EndIf
 						EndIf
 					Next
 				EndIf
-			EndIf
-	
-			;;; Donate to All Zone
-			If $bDonateAllTroop Or $bDonateAllSpell Or $bDonateAllSiege Then
-				SetDebugLog("Troop/Spell/Siege All checkpoint.", $COLOR_DEBUG) ;Debug
-				
-				For $i = 1 To 20
-					SetLog("SORRY, DONATE TO ALL DISABLED ON MOD!!", $COLOR_ERROR)
-				Next
-				DonateWindow($aiDonateButton, $bClose)
-				If _Sleep(1000) Then Return
-				$aSearchArea[1] = $aiDonateButton[1] + 20
-				ContinueLoop
-				
-				$g_bDonateAllRespectBlk = True
-	
-				If $bDonateAllTroop And Not $g_bSkipDonTroops Then
-					; read available donate cap, and ByRef set the $g_bSkipDonTroops and $g_bSkipDonSpells flags
-					DonateWindowCap($g_bSkipDonTroops, $g_bSkipDonSpells)
-					;Setlog("Get available donate cap (to all) in " & StringFormat("%.2f", TimerDiff($iTimer)) & "'ms", $COLOR_DEBUG)
-					;$iTimer = TimerInit()
-					If $g_bSkipDonTroops And $g_bSkipDonSpells Then
-						DonateWindow($aiDonateButton, $bClose)
-						$bDonate = True
-						$aiSearchArray[1] = $aiDonateButton[1] + 20
-						If _Sleep($DELAYDONATECC2) Then ExitLoop
-						ContinueLoop ; go to next button if already donated, maybe this is an impossible case..
-					EndIf
-					SetDebugLog("Troop All checkpoint.", $COLOR_DEBUG)
-	
-					;;; DONATE TO ALL for Custom And Typical Donation
-					; 0 to 3 is Custom [A to D] and the 4 is the 'Typical'
-					For $x = 0 To 4
-						If $x <> 4 Then
-							;If $g_abChkDonateAllTroop[$eCustom[$x]] Then
-							;	Local $CorrectDonateCustom = $eDonateCustom[$x]
-							;	For $i = 0 To 2
-							;		If $CorrectDonateCustom[$i][0] < $eBarb Then
-							;			$CorrectDonateCustom[$i][0] = $eArch ; Change strange small numbers to archer
-							;		ElseIf $CorrectDonateCustom[$i][0] > $eHunt Then
-							;			DonateWindow($aiDonateButton, $bClose)
-							;			$bDonate = True
-							;			$aiSearchArray[1] = $aiDonateButton[1] + 20
-							;			If _Sleep($DELAYDONATECC2) Then ExitLoop
-							;			ContinueLoop ; If "Nothing" is selected then continue
-							;		EndIf
-							;		If $CorrectDonateCustom[$i][1] < 1 Then
-							;			DonateWindow($aiDonateButton, $bClose)
-							;			$bDonate = True
-							;			$aiSearchArray[1] = $aiDonateButton[1] + 20
-							;			If _Sleep($DELAYDONATECC2) Then ExitLoop
-							;			ContinueLoop ; If donate number is smaller than 1 then continue
-							;		ElseIf $CorrectDonateCustom[$i][1] > 8 Then
-							;			$CorrectDonateCustom[$i][1] = 8 ; Number larger than 8 is unnecessary
-							;		EndIf
-							;		DonateTroopType($CorrectDonateCustom[$i][0], $CorrectDonateCustom[$i][1], $abDonateQueueOnly[0], $bDonateAllTroop) ;;; Donate Custom Troop using DonateTroopType2
-							;	Next
-							;EndIf
-						Else ; this is the $x = 4 [Typical Donation]
-							For $i = 0 To UBound($g_aiDonateTroopPriority) - 1
-								Local $iTroopIndex = $g_aiDonateTroopPriority[$i]
-								If $g_abChkDonateAllTroop[$iTroopIndex] Then
-									If CheckDonateTroop($iTroopIndex, $g_asTxtDonateTroop[$iTroopIndex], $g_asTxtBlacklistTroop[$iTroopIndex], $ClanString, $g_bNewSystemToDonate) Then
-										DonateTroopType($iTroopIndex, 0, $abDonateQueueOnly[0], $bDonateAllTroop)
-									EndIf
-									ExitLoop
-								EndIf
-							Next
-						EndIf
-					Next
-					;SetDebugLog("Get Donated troops (to all) in " & StringFormat("%.2f", TimerDiff($iTimer)) & "'ms", $COLOR_DEBUG)
-					;$iTimer = TimerInit()
-				EndIf
-	
-				If $bDonateAllSpell And Not $g_bSkipDonSpells Then
-					SetDebugLog("Spell All checkpoint.", $COLOR_DEBUG)
-	
-					For $i = 0 To UBound($g_aiDonateSpellPriority) - 1
-						Local $iSpellIndex = $g_aiDonateSpellPriority[$i]
-						If $g_abChkDonateAllSpell[$iSpellIndex] Then
-							If CheckDonateSpell($iSpellIndex, $g_asTxtDonateSpell[$iSpellIndex], $g_asTxtBlacklistSpell[$iSpellIndex], $ClanString, $g_bNewSystemToDonate) Then
-								DonateSpellType($iSpellIndex, $abDonateQueueOnly[1], $bDonateAllSpell)
-							EndIf
-							ExitLoop
-						EndIf
-					Next
-					;SetDebugLog("Get Donated Spells (to all)  in " & StringFormat("%.2f", TimerDiff($iTimer)) & "'ms", $COLOR_DEBUG)
-					;$iTimer = TimerInit()
-				EndIf
-	
-				;Siege
-				If $bDonateAllSiege And Not $g_bSkipDonSiege Then
-					SetDebugLog("Siege All checkpoint.", $COLOR_DEBUG)
-	
-					For $SiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
-						Local $Index = $eTroopCount + $g_iCustomDonateConfigs + $SiegeIndex
-						If $g_abChkDonateAllTroop[$Index] Then
-							If CheckDonateSiege($SiegeIndex, $g_asTxtDonateTroop[$Index], $g_asTxtBlacklistTroop[$Index], $ClanString, $g_bNewSystemToDonate) Then
-								DonateSiegeType($SiegeIndex, True)
-							EndIf
-							ExitLoop
-						EndIf
-					Next
-					;SetDebugLog("Get Donated Sieges (to all)  in " & StringFormat("%.2f", TimerDiff($iTimer)) & "'ms", $COLOR_DEBUG)
-					;$iTimer = TimerInit()
-				EndIf
-	
-				$g_bDonateAllRespectBlk = False
 			EndIf
 	
 			DonateWindow($aiDonateButton, $bClose)
@@ -500,51 +377,31 @@ Func DonateCC($bTest = False, $bSwitch = False)
 	Return $g_bDonated
 EndFunc   ;==>DonateCC
 
-Func CheckDonateTroop(Const $iTroopIndex, Const $sDonateTroopString, Const $sBlacklistTroopString, Const $sClanString, $bNewSystemDonate = False)
+Func CheckDonateTroop(Const $iTroopIndex, Const $sDonateTroopString, Const $sClanString, $bNewSystemDonate = False)
 	Local $sName = ($iTroopIndex = 99 ? "Custom" : $g_asTroopNames[$iTroopIndex])
-	Return CheckDonate($sName, $bNewSystemDonate = True ? $sName : $sDonateTroopString, $sBlacklistTroopString, $sClanString)
+	Return CheckDonate($sName, $bNewSystemDonate = True ? $sName : $sDonateTroopString, $sClanString)
 EndFunc   ;==>CheckDonateTroop
 
-Func CheckDonateSpell(Const $iSpellIndex, Const $sDonateSpellString, Const $sBlacklistSpellString, Const $sClanString, $bNewSystemDonate = False)
+Func CheckDonateSpell(Const $iSpellIndex, Const $sDonateSpellString, Const $sClanString, $bNewSystemDonate = False)
 	Local $sName = $g_asSpellNames[$iSpellIndex]
-	Return CheckDonate($sName, $bNewSystemDonate = True ? $sName : $sDonateSpellString, $sBlacklistSpellString, $sClanString)
+	Return CheckDonate($sName, $bNewSystemDonate = True ? $sName : $sDonateSpellString, $sClanString)
 EndFunc   ;==>CheckDonateSpell
 
-Func CheckDonateSiege(Const $iSiegeIndex, Const $sDonateSpellString, Const $sBlacklistSpellString, Const $sClanString, $bNewSystemDonate = False)
+Func CheckDonateSiege(Const $iSiegeIndex, Const $sDonateSpellString, Const $sClanString, $bNewSystemDonate = False)
 	Local $sName = $g_asSiegeMachineNames[$iSiegeIndex]
-	Return CheckDonate($sName, $bNewSystemDonate = True ? $sName : $sDonateSpellString, $sBlacklistSpellString, $sClanString)
+	Return CheckDonate($sName, $bNewSystemDonate = True ? $sName : $sDonateSpellString, $sClanString)
 EndFunc   ;==>CheckDonateSiege
 
-Func CheckDonate(Const $sName, Const $sDonateString, Const $sBlacklistString, Const $sClanString)
+Func CheckDonate(Const $sName, Const $sDonateString, Const $sClanString)
 	Local $asSplitDonate = StringSplit($sDonateString, @CRLF, $STR_ENTIRESPLIT)
-	Local $asSplitBlacklist = StringSplit($sBlacklistString, @CRLF, $STR_ENTIRESPLIT)
-	Local $asSplitGeneralBlacklist = StringSplit($g_sTxtGeneralBlacklist, @CRLF, $STR_ENTIRESPLIT)
-
-	For $i = 1 To UBound($asSplitGeneralBlacklist) - 1
-		If CheckDonateString($asSplitGeneralBlacklist[$i], $sClanString) Then
-			SetLog("General Blacklist Keyword found: " & $asSplitGeneralBlacklist[$i], $COLOR_ERROR)
-			Return False
+	
+	For $i = 1 To UBound($asSplitDonate) - 1
+		If CheckDonateString($asSplitDonate[$i], $sClanString) Then
+			SetLog($sName & " Keyword found: " & $asSplitDonate[$i], $COLOR_SUCCESS)
+			Return True
 		EndIf
 	Next
-
-	For $i = 1 To UBound($asSplitBlacklist) - 1
-		If CheckDonateString($asSplitBlacklist[$i], $sClanString) Then
-			SetLog($sName & " Blacklist Keyword found: " & $asSplitBlacklist[$i], $COLOR_ERROR)
-			Return False
-		EndIf
-	Next
-
-	If Not $g_bDonateAllRespectBlk Then
-		For $i = 1 To UBound($asSplitDonate) - 1
-			If CheckDonateString($asSplitDonate[$i], $sClanString) Then
-				SetLog($sName & " Keyword found: " & $asSplitDonate[$i], $COLOR_SUCCESS)
-				Return True
-			EndIf
-		Next
-	EndIf
-
-	If $g_bDonateAllRespectBlk Then Return True
-
+	
 	SetDebugLog("Bad call of CheckDonateTroop: " & $sName, $COLOR_DEBUG)
 	Return False
 EndFunc   ;==>CheckDonate
@@ -1273,152 +1130,3 @@ Func ReadRequestString($DonateButton = -1)
 		Return $sString
 	EndIf
 EndFunc
-
-
-; #FUNCTION# ====================================================================================================================
-; Name ..........: donateCCWBL
-; Description ...: This file includes functions to Donate troops
-; Syntax ........:
-; Parameters ....: None
-; Return values .: None
-; Author ........: Sardo (2016-09)
-; Modified ......: MR.ViPER (27-12-2016)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
-; ===============================================================================================================================
-
-;collect donation request users images
-Func donateCCWBLUserImageCollect($x, $y)
-
-	Local $imagematch = False
-
-	;capture donate request image
-	;_CaptureRegion2(0, $y - 90, $x - 30, $y)
-	_CaptureRegion2()
-
-	;if OnlyWhiteList enable check and donate TO COMPLETE
-	SetDebugLog("Search into whitelist...", $color_purple)
-	Local $xyz = _FileListToArrayRec($g_sProfileDonateCaptureWhitelistPath, "*.png", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_SORT, $FLTAR_NOPATH)
-	If UBound($xyz) > 1 Then
-		;_CaptureRegion2()
-		For $i = 1 To UBound($xyz) - 1
-			Local $result = FindImageInPlace("DCCWBL", $g_sProfileDonateCaptureWhitelistPath & $xyz[$i], "0," & $y - 90 & "," & $x - 30 & "," & $y, False)
-			If StringInStr($result, ",") > 0 Then
-				If $g_iCmbDonateFilter = 2 Then SetLog("WHITE LIST: image match! " & $xyz[$i], $COLOR_SUCCESS)
-				$imagematch = True
-				If $g_iCmbDonateFilter = 2 Then Return True ; <=== return DONATE if name found in white list
-				ExitLoop
-			EndIf
-		Next
-	EndIf
-
-	;if OnlyBlackList enable check and donate
-	SetDebugLog("Search into blacklist...", $color_purple)
-	Local $xyz1 = _FileListToArrayRec($g_sProfileDonateCaptureBlacklistPath, "*.png", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_SORT, $FLTAR_NOPATH)
-	If UBound($xyz1) > 1 Then
-		;_CaptureRegion2()
-		For $i = 1 To UBound($xyz1) - 1
-			Local $result1 = FindImageInPlace("DCCWBL", $g_sProfileDonateCaptureBlacklistPath & $xyz1[$i], "0," & $y - 90 & "," & $x - 30 & "," & $y, False)
-			If StringInStr($result1, ",") > 0 Then
-				If $g_iCmbDonateFilter = 3 Then SetLog("BLACK LIST: image match! " & $xyz1[$i], $COLOR_SUCCESS)
-				$imagematch = True
-				If $g_iCmbDonateFilter = 3 Then Return False ; <=== return NO DONATE if name found in black list
-				ExitLoop
-			Else
-				SetDebugLog("Image not found", $COLOR_ERROR)
-			EndIf
-		Next
-	EndIf
-
-	If $imagematch = False And $g_iCmbDonateFilter > 0 Then
-		SetDebugLog("Search into images to assign...", $color_purple)
-		;try to search into images to Assign
-		Local $xyzw = _FileListToArrayRec($g_sProfileDonateCapturePath, "*.png", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_SORT, $FLTAR_NOPATH)
-		If UBound($xyzw) > 1 Then
-			;_CaptureRegion2()
-			For $i = 1 To UBound($xyzw) - 1
-				Local $resultxyzw = FindImageInPlace("DCCWBL", $g_sProfileDonateCapturePath & $xyzw[$i], "0," & $y - 90 & "," & $x - 30 & "," & $y, False)
-				If StringInStr($resultxyzw, ",") > 0 Then
-					If $g_iCmbDonateFilter = 1 Or $g_bDebugSetlog Then SetLog("IMAGES TO ASSIGN: image match! " & $xyzw[$i], $COLOR_SUCCESS)
-					$imagematch = True
-					ExitLoop
-				EndIf
-			Next
-		EndIf
-
-		;save image (search divider chat line to know position of village name)
-		If $imagematch = False Then
-			SetDebugLog("save image in images to assign...", $color_purple)
-
-			;search chat divider line
-			Local $founddivider
-
-			Local $iAllFilesCount = 0
-			Local $res = FindImageInPlace("DCCWBL", $g_sImgChatDivider, "0," & $y - 90 & "," & $x - 30 & "," & $y, False)
-			If $res = "" Then
-				;SetLog("No Chat divider found, try to found hidden chat divider", $COLOR_ERROR)
-				;search chat divider hidden
-				Local $reshidden = FindImageInPlace("DCCWBL", $g_sImgChatDividerHidden, "0," & $y - 90 & "," & $x - 30 & "," & $y, False)
-				If $reshidden = "" Then
-					SetDebugLog("No Chat divider hidden found", $COLOR_ERROR)
-				Else
-					Local $xfound = Int(StringSplit($reshidden, ",", 2)[0])
-					Local $yfound = Int(StringSplit($reshidden, ",", 2)[1])
-					SetDebugLog("ChatDivider hidden found (" & $xfound & "," & $yfound & ")", $COLOR_SUCCESS)
-
-					; now crop image to have only request village name and put in $hClone
-					Local $oBitmap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-					Local $hClone = _GDIPlus_BitmapCloneArea($oBitmap, 31, $yfound + 14, 100, 11, $GDIP_PXF24RGB)
-					;save image
-					Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
-					Local $Time = @HOUR & "." & @MIN & "." & @SEC
-					$iAllFilesCount = _FileListToArrayRec($g_sProfileDonateCapturePath, "*", 1, 0, 0, 0)
-					If IsArray($iAllFilesCount) Then
-						$iAllFilesCount = $iAllFilesCount[0]
-					Else
-						$iAllFilesCount = 0
-					EndIf
-					Local $filename = String("ClanMate-" & $Date & "_" & Number($iAllFilesCount) + 1 & "_98.png")
-					_GDIPlus_ImageSaveToFile($hClone, $g_sProfileDonateCapturePath & $filename)
-					If $g_iCmbDonateFilter = 1 Then SetLog("Clan Mate image Stored: " & $filename, $COLOR_SUCCESS)
-					_GDIPlus_BitmapDispose($hClone)
-					_GDIPlus_BitmapDispose($oBitmap)
-				EndIf
-			Else
-				Local $xfound = Int(StringSplit($res, ",", 2)[0])
-				Local $yfound = Int(StringSplit($res, ",", 2)[1])
-				SetDebugLog("ChatDivider found (" & $xfound & "," & $yfound & ")", $COLOR_SUCCESS)
-
-				; now crop image to have only request village name and put in $hClone
-				Local $oBitmap = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-				Local $hClone = _GDIPlus_BitmapCloneArea($oBitmap, 31, $yfound + 14, 100, 11, $GDIP_PXF24RGB)
-				;save image
-				Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
-				Local $Time = @HOUR & "." & @MIN & "." & @SEC
-				$iAllFilesCount = _FileListToArrayRec($g_sProfileDonateCapturePath, "*", 1, 0, 0, 0)
-				If IsArray($iAllFilesCount) Then
-					$iAllFilesCount = $iAllFilesCount[0]
-				Else
-					$iAllFilesCount = 0
-				EndIf
-				Local $filename = String("ClanMate--" & $Date & "_" & Number($iAllFilesCount) + 1 & "_98.png")
-				_GDIPlus_ImageSaveToFile($hClone, $g_sProfileDonateCapturePath & $filename)
-				_GDIPlus_BitmapDispose($hClone)
-				_GDIPlus_BitmapDispose($oBitmap)
-				If $g_iCmbDonateFilter = 1 Then SetLog("IMAGES TO ASSIGN: stored!", $COLOR_SUCCESS)
-				;remove old files into folder images to assign if are older than 2 days
-				Deletefiles($g_sProfileDonateCapturePath, "*.png", 2, 0)
-			EndIf
-		EndIf
-	EndIf
-	If $g_iCmbDonateFilter <= 1 Then
-		Return True ; <=== return DONATE if no white or black list set
-	ElseIf $g_iCmbDonateFilter = 3 Then
-		Return True ; <=== return DONATE if name not found in black list
-	Else
-		Return False ; <=== return NO DONATE
-	EndIf
-EndFunc   ;==>donateCCWBLUserImageCollect

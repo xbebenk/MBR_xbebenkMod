@@ -1,3 +1,18 @@
+* **v.7.9.9 Mod_v1.2.5#118**
+* Add : Autoset ArmyCamp Size
+* Add : Claim StreakEvent 
+* Fix : AutoUpgrade on BuilderBase
+* Fix : Giant detected as Archer on Laboratory Upgrade
+* Fix : read 280 as 210 on DoubleTrain
+* Fix : IsFullClanCastleType Checker
+* Improve : Zoomout on BuilderBase
+* Improve : SelectSiege
+* Improve : CheckFullArmy
+* Improve : Double Train
+* Improve : Terasury Collect
+* Improve : SubaQuake CSV
+* Remove : DonateToAll
+
 * **v.7.9.9 Mod_v1.2.5#117**
 * Add Claim Bonus Track
 * Add Goblin Cave Scenery Support

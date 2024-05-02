@@ -200,45 +200,45 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 
 	Local $aResult = BuildingInfo(242, 472) ; read building name/level to check we have right bldg or if collector was not full
 	If UBound($aResult) < 2 Then Return False
-	If $g_bOptimizeOTTO Then
-		Local $aGearUp[3][2] = [["Mortar", 8], ["Archer T", 10], ["Cannon", 7]]
-		For $i = 0 To UBound($aGearUp) - 1 
-			If StringInStr($aResult[1], $aGearUp[$i][0]) Then
-				SetDebugLog("Matched with : " & $i)
-				If Number($aResult[2]) >= $aGearUp[$i][1] Then
-					SetLog("Building : " & $aResult[1] & " Level: " & $aResult[2] & " >= " & $aGearUp[$i][1], $COLOR_INFO)
-					SetLog("OptimizeOTTO enabled, should skip this Building", $COLOR_INFO)
-					SetLog("Now, trying to gear up building!", $COLOR_INFO)
-					
-					If ClickB("GearUp") Then
-						If _Sleep(1000) Then Return
-						If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
-							Click($g_iQuickMISX, $g_iQuickMISY)
-							If _Sleep(1000) Then Return
-							If IsGemOpen(True) Then
-								ClickAway()
-								SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
-								Return False
-							Else
-								If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
-									ClickAway()
-									SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
-									Return False
-								Else
-									SetLog(" - GearUp : " & $aResult[1], $COLOR_SUCCESS)
-									Return True
-								EndIf
-							EndIf
-						EndIf
-					Else
-						SetLog("GearUp button not found!", $COLOR_ERROR)
-					EndIf
-					
-					Return False
-				EndIf
-			EndIf
-		Next
-	EndIf
+	;If $g_bOptimizeOTTO Then
+	;	Local $aGearUp[3][2] = [["Mortar", 8], ["Archer T", 10], ["Cannon", 7]]
+	;	For $i = 0 To UBound($aGearUp) - 1 
+	;		If StringInStr($aResult[1], $aGearUp[$i][0]) Then
+	;			SetDebugLog("Matched with : " & $i)
+	;			If Number($aResult[2]) >= $aGearUp[$i][1] Then
+	;				SetLog("Building : " & $aResult[1] & " Level: " & $aResult[2] & " >= " & $aGearUp[$i][1], $COLOR_INFO)
+	;				SetLog("OptimizeOTTO enabled, should skip this Building", $COLOR_INFO)
+	;				SetLog("Now, trying to gear up building!", $COLOR_INFO)
+	;				
+	;				If ClickB("GearUp") Then
+	;					If _Sleep(1000) Then Return
+	;					If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+	;						Click($g_iQuickMISX, $g_iQuickMISY)
+	;						If _Sleep(1000) Then Return
+	;						If IsGemOpen(True) Then
+	;							ClickAway()
+	;							SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
+	;							Return False
+	;						Else
+	;							If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+	;								ClickAway()
+	;								SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
+	;								Return False
+	;							Else
+	;								SetLog(" - GearUp : " & $aResult[1], $COLOR_SUCCESS)
+	;								Return True
+	;							EndIf
+	;						EndIf
+	;					EndIf
+	;				Else
+	;					SetLog("GearUp button not found!", $COLOR_ERROR)
+	;				EndIf
+	;				
+	;				Return False
+	;			EndIf
+	;		EndIf
+	;	Next
+	;EndIf
 		
 	
 	If StringStripWS($aResult[1], BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING)) <> StringStripWS($g_avBuildingUpgrades[$iUpgradeNumber][4], BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING)) Then ; check bldg names
@@ -255,45 +255,45 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 				Return False
 			EndIf
 			
-			If $g_bOptimizeOTTO Then
-				Local $aGearUp[3][2] = [["Mortar", 8], ["Archer T", 10], ["Cannon", 7]]
-				For $i = 0 To UBound($aGearUp) - 1 
-					If StringInStr($aResult[1], $aGearUp[$i][0]) Then
-						SetDebugLog("Matched with : " & $i)
-						If Number($aResult[2]) >= $aGearUp[$i][1] Then
-							SetLog("Building : " & $aResult[1] & " Level: " & $aResult[2] & " >= " & $aGearUp[$i][1], $COLOR_INFO)
-							SetLog("OptimizeOTTO enabled, should skip this Building", $COLOR_INFO)
-							SetLog("Now, trying to gear up building!", $COLOR_INFO)
-							
-							If ClickB("GearUp") Then
-								If _Sleep(1000) Then Return
-								If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
-									Click($g_iQuickMISX, $g_iQuickMISY)
-									If _Sleep(1000) Then Return
-									If IsGemOpen(True) Then
-										ClickAway()
-										SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
-										Return False
-									Else
-										If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
-											ClickAway()
-											SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
-											Return False
-										Else
-											SetLog(" - GearUp : " & $aResult[1], $COLOR_SUCCESS)
-											Return True
-										EndIf
-									EndIf
-								EndIf
-							Else
-								SetLog("GearUp button not found!", $COLOR_ERROR)
-							EndIf
-							
-							Return False
-						EndIf
-					EndIf
-				Next
-			EndIf
+			;If $g_bOptimizeOTTO Then
+			;	Local $aGearUp[3][2] = [["Mortar", 8], ["Archer T", 10], ["Cannon", 7]]
+			;	For $i = 0 To UBound($aGearUp) - 1 
+			;		If StringInStr($aResult[1], $aGearUp[$i][0]) Then
+			;			SetDebugLog("Matched with : " & $i)
+			;			If Number($aResult[2]) >= $aGearUp[$i][1] Then
+			;				SetLog("Building : " & $aResult[1] & " Level: " & $aResult[2] & " >= " & $aGearUp[$i][1], $COLOR_INFO)
+			;				SetLog("OptimizeOTTO enabled, should skip this Building", $COLOR_INFO)
+			;				SetLog("Now, trying to gear up building!", $COLOR_INFO)
+			;				
+			;				If ClickB("GearUp") Then
+			;					If _Sleep(1000) Then Return
+			;					If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+			;						Click($g_iQuickMISX, $g_iQuickMISY)
+			;						If _Sleep(1000) Then Return
+			;						If IsGemOpen(True) Then
+			;							ClickAway()
+			;							SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
+			;							Return False
+			;						Else
+			;							If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+			;								ClickAway()
+			;								SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
+			;								Return False
+			;							Else
+			;								SetLog(" - GearUp : " & $aResult[1], $COLOR_SUCCESS)
+			;								Return True
+			;							EndIf
+			;						EndIf
+			;					EndIf
+			;				Else
+			;					SetLog("GearUp button not found!", $COLOR_ERROR)
+			;				EndIf
+			;				
+			;				Return False
+			;			EndIf
+			;		EndIf
+			;	Next
+			;EndIf
 		EndIf
 	EndIf
 	

@@ -1,7 +1,7 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: StarLaboratory
 ; Description ...:
-; Syntax ........: StarLaboratory()
+; Syntax ........: StarLab()
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: TripleM
@@ -13,26 +13,26 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func TestStarLaboratory()
+Func TestStarLab()
 	Local $bWasRunState = $g_bRunState
 	Local $sWasStarLabUpgradeTime = $g_sStarLabUpgradeTime
 	Local $bWasStarLabUpgradeEnable = $g_bAutoStarLabUpgradeEnable
 	$g_bRunState = True
 	$g_bAutoStarLabUpgradeEnable = True
 	$g_sStarLabUpgradeTime = ""
-	Local $Result = StarLaboratory(True)
+	Local $Result = StarLab(True)
 	$g_bRunState = $bWasRunState
 	$g_sStarLabUpgradeTime = $sWasStarLabUpgradeTime
 	$g_bAutoStarLabUpgradeEnable = $bWasStarLabUpgradeEnable
 	Return $Result
 EndFunc
 
-Func StarLaboratory($bTestRun = False)
+Func StarLab($bTest = False)
 	Return False
-
 	If Not $g_bAutoStarLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 	Local $bElixirFull = False
 	If $g_bChkUpgradeAnyIfAllOrderMaxed Then $bElixirFull = isElixirFullBB()
+	BuilderBaseReport(True, True)
 	
 	;Create local array to hold upgrade values
 	Local $iAvailElixir, $sElixirCount, $TimeDiff, $aArray, $Result
@@ -45,13 +45,11 @@ Func StarLaboratory($bTestRun = False)
 		SetLog("Checking Troop Upgrade in Star Laboratory", $COLOR_INFO)
 	Else
 		SetLog("Star Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
-		If Not $bTestRun Then Return True
+		If Not $bTest Then Return True
 	EndIf
 
-	$sElixirCount = getResourcesMainScreen(690, 74)
-	SetLog("Updating village values [E]: " & $sElixirCount, $COLOR_SUCCESS)
-	$iAvailElixir = Number($sElixirCount)
-	If Not $g_bOptimizeOTTO Then isBattleMachineMaxed()
+	$iAvailElixir = Number($g_aiCurrentLootBB[$eLootElixirBB])
+	
 	ZoomOutHelperBB("SwitchBetweenBases") ;go to BH LowerZone
 	If _Sleep(1000) Then Return
 	
@@ -65,7 +63,7 @@ Func StarLaboratory($bTestRun = False)
 	
 	Local $bWindowOpened = False
 	For $i = 1 To 5
-		SetDebugLog("Waiting For Star Laboratory Window #" & $i)
+		If $g_bDebugSetLog Then SetLog("Waiting For Star Laboratory Window #" & $i, $COLOR_ACTION)
 		If QuickMis("BC1", $g_sImgGeneralCloseButton, 760, 40, 820, 80) Then 
 			$bWindowOpened = True
 			ExitLoop
@@ -82,20 +80,15 @@ Func StarLaboratory($bTestRun = False)
 		SetLog("Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
 		Local $sLabTimeOCR = getRemainTLaboratory(225, 202)
 		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)
-		SetDebugLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
+		If $g_bDebugSetLog Then SetLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
 		If $iLabFinishTime > 0 Then
 			$g_sStarLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), _NowCalc())
 			If @error Then _logErrorDateAdd(@error)
 			SetLog("Research will finish in " & $sLabTimeOCR & " (" & $g_sStarLabUpgradeTime & ")")
 			ClickAway("Left")
 			Return True
-		Else
-			SetDebugLog("Invalid getRemainTLaboratory OCR", $COLOR_DEBUG)
 		EndIf
-		If Not $bTestRun Then
-			ClickAway("Left")
-			Return False
-		EndIf
+		If Not $bTest Then Return False
 	EndIf
 	
 	Local $bAnyUpgradeOn = True
@@ -132,7 +125,7 @@ Func StarLaboratory($bTestRun = False)
 						$bAnyUpgradeOn = False
 						ContinueLoop
 					EndIf
-					If SLabUpgrade($aTroopUpgrade[$Index][2], $aTroopUpgrade[$Index][3], $aTroopUpgrade[$Index][4], $bTestRun) Then
+					If SLabUpgrade($aTroopUpgrade[$Index][2], $aTroopUpgrade[$Index][3], $aTroopUpgrade[$Index][4], $bTest) Then
 						SetLog("Elixir used = " & $aTroopUpgrade[$Index][5], $COLOR_INFO)
 						ClickAway("Left")
 						Return True
@@ -154,7 +147,7 @@ Func StarLaboratory($bTestRun = False)
 					ContinueLoop
 				EndIf
 				SetLog("Try Upgrade " & $aTroopUpgrade[$i][2] & " Cost=" & $aTroopUpgrade[$i][5], $COLOR_ACTION)
-				If SLabUpgrade($aTroopUpgrade[$i][2], $aTroopUpgrade[$i][3], $aTroopUpgrade[$i][4], $bTestRun) Then
+				If SLabUpgrade($aTroopUpgrade[$i][2], $aTroopUpgrade[$i][3], $aTroopUpgrade[$i][4], $bTest) Then
 					SetLog("Elixir used = " & $aTroopUpgrade[$i][5], $COLOR_INFO)
 					ClickAway("Left")
 					Return True
@@ -183,7 +176,7 @@ Func StarLaboratory($bTestRun = False)
 					ClickAway("Left")
 					Return False
 				EndIf
-				If SLabUpgrade($aTroopUpgrade[$Index][2], $aTroopUpgrade[$Index][3], $aTroopUpgrade[$Index][4], $bTestRun) Then
+				If SLabUpgrade($aTroopUpgrade[$Index][2], $aTroopUpgrade[$Index][3], $aTroopUpgrade[$Index][4], $bTest) Then
 					SetLog("Elixir used = " & $aTroopUpgrade[$Index][5], $COLOR_INFO)
 					ClickAway("Left")
 					Return True
@@ -206,7 +199,7 @@ Func StarLaboratory($bTestRun = False)
 					ContinueLoop
 				EndIf
 				SetLog("Try Upgrade " & $aTroopUpgrade[$i][2] & " Cost=" & $aTroopUpgrade[$i][5], $COLOR_ACTION)
-				If SLabUpgrade($aTroopUpgrade[$i][2], $aTroopUpgrade[$i][3], $aTroopUpgrade[$i][4], $bTestRun) Then
+				If SLabUpgrade($aTroopUpgrade[$i][2], $aTroopUpgrade[$i][3], $aTroopUpgrade[$i][4], $bTest) Then
 					SetLog("Elixir used = " & $aTroopUpgrade[$i][5], $COLOR_INFO)
 					ClickAway("Left")
 					Return True

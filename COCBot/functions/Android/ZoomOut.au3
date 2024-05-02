@@ -156,6 +156,7 @@ Func ZoomOutHelper($caller = "Default")
 	If Not $bRet Then
 		ClickDrag(800, 350, 800, 400, 500) ;just drag
 	EndIf
+	If _Sleep(1500) Then Return
 	Return $bRet
 EndFunc
 
@@ -183,7 +184,7 @@ Func ZoomOutHelperBB($caller = "Default")
 					Return True
 				EndIf
 			EndIf
-			
+			If $sImage = "BL" Then $g_sSceneryCode = "BL"
 			SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_INFO)
 			ClickDrag(800, 350, 800 - $x + $xyOffsetSwitchBases, 350 - $y - $xyOffsetSwitchBases, 500)
@@ -210,7 +211,7 @@ Func ZoomOutHelperBB($caller = "Default")
 			EndIf
 		EndIf
 	EndIf
-	
+	If _Sleep(1500) Then Return
 	Return $bRet
 EndFunc
 

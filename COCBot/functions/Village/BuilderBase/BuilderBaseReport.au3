@@ -13,17 +13,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
-	ClickAway("Left")
-	If _Sleep($DELAYVILLAGEREPORT1) Then Return
-
+Func BuilderBaseReport($bBypass = False, $bSetLog = True); $CheckBH = True)
 	Switch $bBypass
 		Case False
 			If $bSetLog Then SetLog("Builder Base Report", $COLOR_INFO)
 		Case True
 			If $bSetLog Then SetLog("Updating Builder Base Resource Values", $COLOR_INFO)
-		Case Else
-			If $bSetLog Then SetLog("Builder Base Village Report Error, You have been a BAD programmer!", $COLOR_ERROR)
 	EndSwitch
 
 	getBuilderCount($bSetLog, True) ; update builder data
@@ -38,27 +33,6 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
 		UpdateStats()
 	EndIf
 	
-	If Not $CheckBH Then Return
-	
-	$g_bisBHMaxed = False
-	$g_bisMegaTeslaMaxed = False
-	$g_bisBattleMachineMaxed = False
-	If $g_bOptimizeOTTO Then
-		isGoldFullBB()
-		isElixirFullBB()
-		If $g_iFreeBuilderCountBB > 0 Or $g_bElixirStorageFullBB Then
-			If $g_bIs6thBuilderUnlocked Then
-				$g_bisBHMaxed = True
-				$g_bisMegaTeslaMaxed = True
-				$g_bisBattleMachineMaxed = True
-				$g_bOptimizeOTTO = False
-			ElseIf isBHMaxed() Then 
-				isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
-				isBattleMachineMaxed()
-			EndIf
-		EndIf
-	EndIf
-	ClickAway("Left")
 EndFunc   ;==>BuilderBaseReport
 
 Func isBHMaxed()

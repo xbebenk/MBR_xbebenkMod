@@ -413,15 +413,10 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkCollectBuildersBase", $g_bChkCollectBuilderBase ? 1 : 0)
 	_Ini_Add("other", "ChkCleanBBYard", $g_bChkCleanBBYard ? 1 : 0)
 	_Ini_Add("other", "ChkStartClockTowerBoost", $g_bChkStartClockTowerBoost ? 1 : 0)
-	_Ini_Add("other", "ChkCTBoostBlderBz", $g_bChkCTBoostBlderBz ? 1 : 0)
-	_Ini_Add("other", "ChkBBSuggestedUpgrades", $g_iChkBBSuggestedUpgrades)
-	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreGold", $g_iChkBBSuggestedUpgradesIgnoreGold)
-	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreElixir", $g_iChkBBSuggestedUpgradesIgnoreElixir)
-	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreHall", $g_iChkBBSuggestedUpgradesIgnoreHall)
-	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_iChkBBSuggestedUpgradesIgnoreWall)
-
-	_Ini_Add("other", "ChkPlacingNewBuildings", $g_iChkPlacingNewBuildings)
-	_Ini_Add("other", "ChkOptimizeOTTO", $g_bOptimizeOTTO)
+	_Ini_Add("other", "ChkBBSuggestedUpgrades", $g_bAutoUpgradeBBEnabled)
+	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreHall", $g_bChkAutoUpgradeBBIgnoreHall)
+	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_bChkAutoUpgradeBBIgnoreWall)
+	_Ini_Add("other", "ChkBOBControl", $g_bChkBOBControl)
 
 	# NEW CLANGAMES GUI
 	_Ini_Add("other", "ChkClanGamesEnabled", $g_bChkClanGamesEnabled ? 1 : 0)
@@ -623,60 +618,33 @@ Func SaveConfig_600_12()
 	_Ini_Add("donate", "chkDonateQueueOnly[0]", $g_abChkDonateQueueOnly[0] ? 1 : 0)
 	_Ini_Add("donate", "chkDonateQueueOnly[1]", $g_abChkDonateQueueOnly[1] ? 1 : 0)
 
-	For $i = 0 To $eTroopCount - 1 + $g_iCustomDonateConfigs
+	For $i = 0 To $eTroopCount - 1
 		Local $sIniName = ""
 		If $i >= $eTroopBarbarian And $i <= $eTroopHeadhunter Then
 			$sIniName = StringReplace($g_asTroopNamesPlural[$i], " ", "")
-		ElseIf $i = $eCustomA Then
-			$sIniName = "CustomA"
-		ElseIf $i = $eCustomB Then
-			$sIniName = "CustomB"
-		ElseIf $i = $eCustomC Then
-			$sIniName = "CustomC"
-		ElseIf $i = $eCustomD Then
-			$sIniName = "CustomD"
 		EndIf
 
 		_Ini_Add("donate", "chkDonate" & $sIniName, $g_abChkDonateTroop[$i] ? 1 : 0)
-		_Ini_Add("donate", "chkDonateAll" & $sIniName, $g_abChkDonateAllTroop[$i] ? 1 : 0)
 		_Ini_Add("donate", "txtDonate" & $sIniName, StringReplace($g_asTxtDonateTroop[$i], @CRLF, "|"))
-		_Ini_Add("donate", "txtBlacklist" & $sIniName, StringReplace($g_asTxtBlacklistTroop[$i], @CRLF, "|"))
 	Next
 
 	For $i = 0 To $eSpellCount - 1
 		Local $sIniName = $g_asSpellNames[$i] & "Spells"
 		_Ini_Add("donate", "chkDonate" & $sIniName, $g_abChkDonateSpell[$i] ? 1 : 0)
-		_Ini_Add("donate", "chkDonateAll" & $sIniName, $g_abChkDonateAllSpell[$i] ? 1 : 0)
 		_Ini_Add("donate", "txtDonate" & $sIniName, StringReplace($g_asTxtDonateSpell[$i], @CRLF, "|"))
-		_Ini_Add("donate", "txtBlacklist" & $sIniName, StringReplace($g_asTxtBlacklistSpell[$i], @CRLF, "|"))
 	Next
 
 	For $i = $eSiegeWallWrecker to $eSiegeMachineCount - 1
-		Local $index = $eTroopCount + $g_iCustomDonateConfigs
+		Local $index = $eTroopCount
 		Local $sIniName = $g_asSiegeMachineShortNames[$i]
 		_Ini_Add("donate", "chkDonate" & $sIniName, $g_abChkDonateTroop[$index + $i] ? 1 : 0)
-		_Ini_Add("donate", "chkDonateAll" & $sIniName, $g_abChkDonateAllTroop[$index + $i] ? 1 : 0)
 		_Ini_Add("donate", "txtDonate" & $sIniName, StringReplace($g_asTxtDonateTroop[$index + $i], @CRLF, "|"))
-		_Ini_Add("donate", "txtBlacklist" & $sIniName, StringReplace($g_asTxtBlacklistTroop[$index + $i], @CRLF, "|"))
-	NExt
-
-	For $i = 0 To 2
-		_Ini_Add("donate", "cmbDonateCustomA" & $i + 1, $g_aiDonateCustomTrpNumA[$i][0])
-		_Ini_Add("donate", "txtDonateCustomA" & $i + 1, $g_aiDonateCustomTrpNumA[$i][1])
-		_Ini_Add("donate", "cmbDonateCustomB" & $i + 1, $g_aiDonateCustomTrpNumB[$i][0])
-		_Ini_Add("donate", "txtDonateCustomB" & $i + 1, $g_aiDonateCustomTrpNumB[$i][1])
-		_Ini_Add("donate", "cmbDonateCustomC" & $i + 1, $g_aiDonateCustomTrpNumC[$i][0])
-		_Ini_Add("donate", "txtDonateCustomC" & $i + 1, $g_aiDonateCustomTrpNumC[$i][1])
-		_Ini_Add("donate", "cmbDonateCustomD" & $i + 1, $g_aiDonateCustomTrpNumD[$i][0])
-		_Ini_Add("donate", "txtDonateCustomD" & $i + 1, $g_aiDonateCustomTrpNumD[$i][1])
 	Next
 
 	_Ini_Add("donate", "chkExtraAlphabets", $g_bChkExtraAlphabets ? 1 : 0)
 	_Ini_Add("donate", "chkExtraChinese", $g_bChkExtraChinese ? 1 : 0)
 	_Ini_Add("donate", "chkExtraKorean", $g_bChkExtraKorean ? 1 : 0)
 	_Ini_Add("donate", "chkExtraPersian", $g_bChkExtraPersian ? 1 : 0)
-
-	_Ini_Add("donate", "txtBlacklist", StringReplace($g_sTxtGeneralBlacklist, @CRLF, "|"))
 EndFunc   ;==>SaveConfig_600_12
 
 Func SaveConfig_600_13()

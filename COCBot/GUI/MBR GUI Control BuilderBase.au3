@@ -13,6 +13,37 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+Func chkActivateBBSuggestedUpgrades()
+	; CheckBox Enable Suggested Upgrades [Update values][Update GUI State]
+	If GUICtrlRead($g_hChkAutoUpgradeBB) = $GUI_CHECKED Then
+		$g_bAutoUpgradeBBEnabled= True
+		GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreHall, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreWall, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBOBControl, $GUI_ENABLE)
+	Else
+		$g_bAutoUpgradeBBEnabled= False
+		GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreHall, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreWall, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBOBControl, $GUI_DISABLE)
+	EndIf
+EndFunc   ;==>chkActivateBBSuggestedUpgrades
+
+Func chkStartClockTowerBoost()
+	$g_bChkStartClockTowerBoost = (GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED)
+EndFunc
+
+Func ChkBBSuggestedUpgradesIgnoreHall()
+	$g_bChkAutoUpgradeBBIgnoreHall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreHall) = $GUI_CHECKED)
+EndFunc   ;==>ChkBBSuggestedUpgradesIgnoreHall
+
+Func ChkBBSuggestedUpgradesIgnoreWall()
+	$g_bChkAutoUpgradeBBIgnoreWall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreWall) = $GUI_CHECKED)
+EndFunc   ;==>ChkBBSuggestedUpgradesIgnoreHall
+
+Func ChkBOBControl()
+	$g_bChkBOBControl = (GUICtrlRead($g_hChkBOBControl) = $GUI_CHECKED)
+EndFunc
+
 Func chkEnableBBAttack()
 	If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hChkBBDropTrophy, $GUI_ENABLE)

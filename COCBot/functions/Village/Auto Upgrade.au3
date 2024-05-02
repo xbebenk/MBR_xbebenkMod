@@ -200,7 +200,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False)
 				EndIf
 			Next
 		Else
-			SetLog("No ExistingUpgrade Upgrade found!", $COLOR_INFO)
+			SetLog("No Upgrade found!", $COLOR_INFO)
 		EndIf
 		
 		If Not $g_bRunState Then Return
@@ -848,6 +848,7 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 				If $g_aiCurrentLoot[$eLootGold] < 1000 Then
 					If IsGemOpen(True) Then
 						SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
+						If _Sleep(1000) Then Return
 						ExitLoop
 					EndIf
 				EndIf
@@ -990,7 +991,11 @@ Func OpenShop($sUpgradeType = "Traps", $bCheckRedCounter = True)
 				EndIf
 		EndSwitch
 	
-		If Not $bRet Then SetLog("Fail Verify " & $sUpgradeType & " Tab, exit!", $COLOR_ERROR)
+		If Not $bRet Then 
+			SetLog("Fail Verify " & $sUpgradeType & " Tab, exit!", $COLOR_ERROR)
+			Click(820, 37) ;close shop window
+			Return $bRet
+		EndIf
 	EndIf
 	SetLog("Opening " & $sUpgradeType & " Tab", $COLOR_ACTION)
 	Return $bRet
