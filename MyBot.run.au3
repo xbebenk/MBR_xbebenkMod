@@ -739,6 +739,7 @@ Func runBot() ;Bot that runs everything in order
 		If CheckAndroidReboot() Then ContinueLoop
 		If Not $g_bIsClientSyncError Then
 			If Not $g_bRunState Then Return
+			If $g_bOutOfGold THen $g_bOutOfGold = False
 			$MainLoopTimer = TimerInit()
 			SetLogCentered(" Top MainLoop ", "=", $COLOR_DEBUG)
 			checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop")
@@ -1591,7 +1592,7 @@ Func CommonRoutine($RoutineType = Default)
 			$aFuncList = $aRndFuncList
 			
 		Case "Idle"
-			Local $aRndFuncList = ['BuilderBase', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'Collect']
+			Local $aRndFuncList = ['Collect', 'CleanYard', 'BuilderBase', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

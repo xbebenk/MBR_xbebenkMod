@@ -29,6 +29,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	;PlaceBuilder()
 	VillageReport(False, True) ;check available builder and resource (Gold,Elix,DE)
 	
+	If $g_aiCurrentLoot[$eLootGold] < 1000 Then Return False
 	;Check if there is a free builder for Auto Upgrade
 	If $g_iFreeBuilderCount > 0 Then $bRet = True;builder available
 
@@ -71,7 +72,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	If _Sleep(50) Then Return
 	VillageReport(False, True)
 	PlaceUnplacedBuilding()
-	If $bUpgradeLowCost And $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 Then
+	If $bUpgradeLowCost And $g_iFreeBuilderCount = 1 Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 480, 110, 555, 125) Then
@@ -839,20 +840,18 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 			If Not $g_bRunState Then Return
 			If $ProMac > 5 And $iCount > 2 Then ExitLoop
 			If Not $g_bRunState Then Return
+			If Not AutoUpgradeCheckBuilder() Then ExitLoop
 			If QuickMIS("BFI", $g_sImgGreenCheck & "GreenCheck*", $tmpX - 40, $tmpY - 40, $tmpX + 40, $tmpY + 40) Then
 				SetLog("Found GreenCheck on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
 				Click($g_iQuickMISX, $g_iQuickMISY, 2, 200)
 				$bRet = True
 				SetLog("Placing Wall #" & $ProMac, $COLOR_ACTION)
 				If _Sleep(1000) Then Return
-				If $g_aiCurrentLoot[$eLootGold] < 1000 Then
-					If IsGemOpen(True) Then
-						SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
-						If _Sleep(1000) Then Return
-						ExitLoop
-					EndIf
+				If IsGemOpen(True) Then
+					SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
+					If _Sleep(1000) Then Return
+					ExitLoop
 				EndIf
-				If _Sleep(500) Then Return
 				AutoUpgradeLog(True, "Wall")
 				$iCount = 0
 				ContinueLoop
@@ -912,7 +911,7 @@ Func GreenCheckLocate($x, $y)
 	
 	If $x > 120 And $x < 600 And $y > 150 Then Return True
 	
-	Local $xDragStart = 430, $yDragStart = 430
+	Local $xDragStart = 50, $yDragStart = 380
 	Local $xDrag = $xDragStart, $yDrag = $yDragStart
 	
 	If Number($g_iQuickMISX) > $xDragStart Then $xDrag = $xDragStart - Abs($g_iQuickMISX - $xDragStart)

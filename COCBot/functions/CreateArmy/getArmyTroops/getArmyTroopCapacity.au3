@@ -81,13 +81,14 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 	
 	If $iTrainCount1 = 0 Or $iTrainCount2 = 0 Then 
 		SetLog("Impossible!! Your train settings got reset!", $COLOR_ERROR)
+		$g_bRunState = False
 		If _Sleep(50) Then Return
 		Btnstop()
 	EndIf
 
-	If $g_iTotalCampForcedValue < $g_CurrentCampUtilization Then ; if Total camp size is still not set or value not same as read use forced value
+	If $g_iTotalCampForcedValue < $g_iTotalCampSpace Then ; if Total camp size is still not set or value not same as read use forced value
 		Local $iTmpIndex = 0, $iTroopSpace = 0, $iTrainBefore = 0
-		SetLog("ArmyCamp Size Setting = " & $g_iTotalCampForcedValue & ", CurrentCamp = " & $g_CurrentCampUtilization, $COLOR_DEBUG)
+		SetLog("ArmyCamp Size Setting = " & $g_iTotalCampForcedValue & ", CurrentCamp = " & $g_iTotalCampSpace, $COLOR_DEBUG)
 		SetLog("Searching enabled train Troop with trainspace = 1 or 5", $COLOR_ACTION)
 		
 		For $i = 0 To UBound($g_aiArmyCustomTroops) - 1
@@ -102,36 +103,35 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 		Next
 		
 		If $g_bIgnoreIncorrectTroopCombo Then 
-			Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
-			Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
-			$iTroopSpace = $g_sCmbFICTroops[$FillTroopIndex][2]
+			$iTmpIndex = TroopIndexLookup($g_sCmbFICTroops[$g_iCmbFillIncorrectTroopCombo][0])
+			$iTroopSpace = $g_sCmbFICTroops[$g_iCmbFillIncorrectTroopCombo][2]
+			$iTrainBefore = $g_aiArmyCustomTroops[$iTmpIndex]
 			SetLog("IgnoreIncorrectTroopCombo Enabled")
-			SetLog("Forced Fill with [" & GetTroopName($iTroopIndex) & "] space = " & $iTroopSpace, $COLOR_DEBUG1)
+			SetLog("Forced Fill with [" & GetTroopName($iTmpIndex) & "] space = " & $iTroopSpace, $COLOR_DEBUG1)
 		Else
 			SetLog("Set Troop Train Setting Fill with " & GetTroopName($iTmpIndex), $COLOR_DEBUG1)
 			SetLog("[" & GetTroopName($iTmpIndex) & "] space = " & $iTroopSpace, $COLOR_INFO)
 		EndIf
 		
 		If $iTroopSpace = 1 Then 
-			For $i = $g_iTotalCampForcedValue To $g_CurrentCampUtilization
+			For $i = $g_iTotalCampForcedValue To $g_iTotalCampSpace - 1
 				$g_aiArmyCustomTroops[$iTmpIndex] += 1
 			Next
 		EndIf
 		
 		If $iTroopSpace = 5 Then 
-			Local $iloop = ($g_CurrentCampUtilization - $g_iTotalCampForcedValue) / 5
+			Local $iloop = ($g_iTotalCampSpace - $g_iTotalCampForcedValue) / 5
 			For $i = 1 To $iloop
 				$g_aiArmyCustomTroops[$iTmpIndex] += 1
 			Next
 		EndIf
 		
 		SetLog("[" & GetTroopName($iTmpIndex) & "] Train = " & $iTrainBefore & ", Change To = " & $g_aiArmyCustomTroops[$iTmpIndex], $COLOR_SUCCESS)
-		SetLog("Set ArmyCamp Size, Before : " & $g_iTotalCampForcedValue & ", Change To : " & $g_CurrentCampUtilization, $COLOR_SUCCESS)
+		SetLog("Set ArmyCamp Size, Before : " & $g_iTotalCampForcedValue & ", Change To : " & $g_iTotalCampSpace, $COLOR_SUCCESS)
 		
-		$g_iTotalCampForcedValue = Number($g_CurrentCampUtilization) ;set new value
+		$g_iTotalCampForcedValue = Number($g_iTotalCampSpace) ;set new value
 		GUICtrlSetData($g_hTxtTotalCampForced, $g_iTotalCampForcedValue) ;update new value to gui
 		$g_aiArmyCompTroops = $g_aiArmyCustomTroops ;copy new train value
-		$g_iTotalCampSpace = $g_CurrentCampUtilization
 		
 		ApplyConfig_600_52_2("Read")
 		SetComboTroopComp() ; GUI refresh

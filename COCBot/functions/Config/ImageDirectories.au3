@@ -236,7 +236,7 @@ Global $g_sImgWeakBaseBuildingsMortarsDir = @ScriptDir & "\imgxml\Buildings\Mort
 Global $g_sImgWeakBaseBuildingsAirDefenseDir = @ScriptDir & "\imgxml\Buildings\ADefense"
 Global $g_sImgSearchDrill = @ScriptDir & "\imgxml\Storages\Drills"
 Global $g_sImgSearchDrillLevel = @ScriptDir & "\imgxml\Storages\Drills\Level"
-Global $g_sImgEasyBuildings = @ScriptDir & "\imgxml\easybuildings"
+Global $g_sImgEasyBuildings = @ScriptDir & "\imgxml\Attack\easybuildings"
 Global $g_sImgPrepareLegendLeagueSearch = @ScriptDir & "\imgxml\Attack\Search\LegendLeague"
 Global $g_sImgRedLineMod = @ScriptDir & "\imgxml\Attack\Search\RedLine\"
 #EndRegion

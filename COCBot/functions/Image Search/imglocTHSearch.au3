@@ -25,8 +25,8 @@ Func imglocTHSearch($bReTest = False, $myVillage = False, $bForceCapture = True)
 	Local $xdirectory
 	Local $sCocDiamond = "ECD"
 	Local $redLines = ""
-	Local $minLevel = 6 ; We only support TH6+
-	Local $maxLevel = 100
+	Local $minLevel = 2 ; We only support TH6+
+	Local $maxLevel = 20
 	Local $maxReturnPoints = 1
 	Local $returnProps = "objectname,objectlevel,objectpoints,nearpoints,farpoints,redlinedistance"
 	Local $iFindTime = 0
