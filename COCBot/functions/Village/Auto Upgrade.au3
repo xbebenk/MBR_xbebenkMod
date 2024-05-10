@@ -1521,7 +1521,7 @@ Func PlaceNewBuilding($x, $y, $bTest = False, $isWall = False, $BuildingName = "
 	Next
 	If Not $g_bRunState Then Return
 	;Search the arrow
-	If QuickMIS("BC1", $g_sImgArrowNewBuilding, 10, 130, 840, 560) Then
+	If QuickMIS("BC1", $g_sImgOrangeBuilding, 10, 130, 840, 560) Then
 		Click($g_iQuickMISX - 50, $g_iQuickMISY + 50)
 		If _Sleep(2500) Then Return
 		If Not $g_bRunState Then Return

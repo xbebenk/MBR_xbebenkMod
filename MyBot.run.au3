@@ -1146,8 +1146,8 @@ Func __RunFunction($action)
 		;	UpgradeHeroes()
 		;	_Sleep($DELAYRUNBOT3)
 		Case "UpgradeBuilding"
-		;	UpgradeBuilding()
-		;	If _Sleep($DELAYRUNBOT3) Then Return
+			UpgradeBuilding()
+			If _Sleep($DELAYRUNBOT3) Then Return
 			AutoUpgrade()
 			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
@@ -1396,7 +1396,10 @@ Func FirstCheckRoutine()
 	If $g_bCheckDonateOften Then 
 		If DonateCC() Then TrainSystem()
 	EndIf
-	If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
+	
+	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
+		If Not $g_bIsFullArmywithHeroesAndSpells Then TrainSystem()
+	EndIf
 	
 	If $g_bChkCGBBAttackOnly And ProfileSwitchAccountEnabled() Then
 		SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)

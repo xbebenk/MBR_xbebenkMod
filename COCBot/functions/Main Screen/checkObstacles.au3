@@ -645,7 +645,7 @@ Func CheckPetHouseTutorial()
 	Local $TmpX = 0, $TmpY = 0, $aPetHouse
 	If $g_iTownHallLevel < 14 Then Return
 	
-	If QuickMIS("BC1", $g_sImgArrowNewBuilding, 60, 60, 800, 530) Then
+	If QuickMIS("BC1", $g_sImgOrangeBuilding, 60, 60, 800, 530) Then
 		$TmpX = $g_iQuickMISX
 		$TmpY = $g_iQuickMISY
 		If $TmpX < 70 Or $TmpY < 70 Or $TmpX > 770 Or $TmpY > 500 Then Return
@@ -672,7 +672,7 @@ Func CheckPetHouseTutorial()
 			
 			For $i = 1 To 10
 				SetLog("Handling Tutorial chat2 : #" & $i, $COLOR_ACTION)
-				If QuickMIS("BC1", $g_sImgArrowNewBuilding, 30, 330, 150, 450) Then
+				If QuickMIS("BC1", $g_sImgOrangeBuilding, 30, 330, 150, 450) Then
 					If QuickMIS("BFI", $g_sImgPetHouse & "PlusSign*", 50, 410, 110, 470) Then
 						SetLog("Found Lassi assign button", $COLOR_SUCCESS)
 						Click($g_iQuickMISX, $g_iQuickMISY)
@@ -708,7 +708,7 @@ Func CheckBuilderHutTutorial()
 	Local $TmpX = 0, $TmpY = 0, $aUpgradeButton
 	If $g_iTownHallLevel < 14 Then Return
 	
-	If QuickMIS("BC1", $g_sImgArrowNewBuilding, 70, 100, 780, 570) Then
+	If QuickMIS("BC1", $g_sImgOrangeBuilding, 70, 100, 780, 570) Then
 		$TmpX = $g_iQuickMISX
 		$TmpY = $g_iQuickMISY
 		If QuickMIS("BC1", $g_sImgBuilderHut, $TmpX - 80, $TmpY - 80, $TmpX + 80, $TmpY + 80) Then
@@ -821,7 +821,7 @@ EndFunc
 
 Func BBTutorial($x = 170, $y = 560)
 	If _Sleep(1000) Then Return
-	If QuickMIS("BC1", $g_sImgArrowNewBuilding, 145, 480, 210, 540) Then 
+	If QuickMIS("BC1", $g_sImgOrangeBuilding, 145, 480, 210, 540) Then 
 		Click($x, $y)
 		If _Sleep(2000) Then Return
 	Else
@@ -892,7 +892,7 @@ Func BBTutorial($x = 170, $y = 560)
 	Next
 	
 	For $i = 1 To 5
-		If QuickMIS("BC1", $g_sImgArrowNewBuilding, 475, 110, 665, 250) Then 
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 475, 110, 665, 250) Then 
 			Click(595, 250) ;Click Broken Builder Hall
 			If _Sleep(2000) Then Return
 			Local $RebuildButton = findButton("Upgrade", Default, 1, True)
@@ -944,7 +944,7 @@ Func BBTutorial($x = 170, $y = 560)
 			_SleepStatus(10000)
 		EndIf
 		
-		If QuickMIS("BC1", $g_sImgArrowNewBuilding, 430, 100, 550, 230) Then 
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 430, 100, 550, 230) Then 
 			Click(430, 240) ;Click Star Laboratory
 			If _Sleep(2000) Then Return
 			ExitLoop
@@ -954,7 +954,7 @@ Func BBTutorial($x = 170, $y = 560)
 		
 	For $i = 1 To 5
 		SetLog("Wait Research Button Tutorial on Star Laboratory #" & $i, $COLOR_INFO)
-		If QuickMIS("BC1", $g_sImgArrowNewBuilding, 480, 460, 570, 570) Then 
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 480, 460, 570, 570) Then 
 			Click(470, 570) ;Click Research Button
 			If _Sleep(2000) Then Return
 			ExitLoop
@@ -964,7 +964,7 @@ Func BBTutorial($x = 170, $y = 560)
 	
 	For $i = 1 To 5
 		SetLog("Wait Arrow Tutorial on Raged Barbarian #" & $i, $COLOR_INFO)
-		If QuickMIS("BC1", $g_sImgArrowNewBuilding, 160, 250, 270, 380) Then 
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 160, 250, 270, 380) Then 
 			Click(110, 390) ;Click Raged Barbarian
 			If _Sleep(2000) Then Return
 			ExitLoop
@@ -974,7 +974,7 @@ Func BBTutorial($x = 170, $y = 560)
 	
 	For $i = 1 To 5
 		SetLog("Wait Arrow Tutorial on Upgrade Button #" & $i, $COLOR_INFO)
-		If QuickMIS("BC1", $g_sImgArrowNewBuilding, 650, 400, 770, 520) Then 
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 650, 400, 770, 520) Then 
 			Click(645, 570) ;Click Upgrade Button
 			If _Sleep(2000) Then Return
 			ExitLoop
@@ -992,7 +992,7 @@ Func BBTutorial($x = 170, $y = 560)
 	SetLog("Going Attack For Tutorial", $COLOR_INFO)
 	For $i = 1 To 10
 		SetLog("Wait Arrow Tutorial on Attack Button #" & $i, $COLOR_INFO)
-		If QuickMIS("BC1", $g_sImgArrowNewBuilding, 6, 460, 110, 590) Then 
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 6, 460, 110, 590) Then 
 			Click(60, 610) ;Click Attack Button
 			If _Sleep(3000) Then Return
 			ExitLoop
@@ -1040,7 +1040,7 @@ Func BBTutorial($x = 170, $y = 560)
 			Click(150, 534) 
 			_SleepStatus(10000)
 		EndIf
-		If QuickMIS("BC1", $g_sImgArrowNewBuilding, 75, 480, 200, 600) Then 
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 75, 480, 200, 600) Then 
 			Click(65, 620) ;Click Return Home
 			_SleepStatus(5000)
 			ExitLoop
@@ -1056,7 +1056,7 @@ Func BBTutorial($x = 170, $y = 560)
 	For $i = 1 To 10
 		SetLog("Wait Arrow Tutorial on Builder Menu #" & $i, $COLOR_INFO)
 		ClickAway()
-		If QuickMIS("BC1", $g_sImgArrowNewBuilding, 360, 30, 480, 150) Then 
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 360, 30, 480, 150) Then 
 			Click(470, 30) ;Click Builder Menu
 			_SleepStatus(10000)
 			ExitLoop

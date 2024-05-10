@@ -181,14 +181,12 @@ Global $g_sImgBuilderMenu = @ScriptDir & "\imgxml\Resources\AutoUpgrade\BuilderM
 #EndRegion
 
 #Region Auto Upgrade Builder Base
+Global $g_sImgOrangeBuilding = @ScriptDir & "\imgxml\Resources\OrangeArrow\"
 Global $g_sImgAutoUpgradeBtnBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Upgrade\"
 Global $g_sImgAUpgradeGreenZoneBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\GreenZoneBB\"
 Global $g_sImgGreenCheckBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\GreenCheck\"
-Global $g_sImgAutoUpgradeRedX = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\RedX\"
-Global $g_sImgArrowNewBuilding = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\NewBuildings\Arrow\"
 Global $g_sImgBBResourceIcon = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\BBResourceIcon\"
 Global $g_sImgBBUpgradeWindowButton = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Upgrade\UpgradeWindowButton\"
-Global $g_sImgBBGoldButton = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Upgrade\Gold\"
 Global $g_sImgShopArmyBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\ShopBB\Army\"
 Global $g_sImgShopResourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\ShopBB\Resources\"
 Global $g_sImgShopDefensesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\ShopBB\Defenses\"
