@@ -48,10 +48,6 @@ Func TrainFullTroop($bQueue = False)
 	If _Sleep(500) Then Return
 	
 	If Not $bQueue Then RemoveTrainTroop(True) ;remove excess queue troops 
-	
-	If $g_bIgnoreIncorrectTroopCombo Then
-		FillIncorrectTroopCombo("TrainFullTroop")
-	EndIf
 EndFunc   ;==>TrainFullTroop
 
 Func FillIncorrectTroopCombo($caller = "Unknown")
@@ -113,9 +109,6 @@ Func BrewFullSpell($bQueue = False)
 
 	If Not $bQueue Then RemoveTrainSpell(True) ;remove excess queue Spells 
 	
-	If $g_bIgnoreIncorrectSpellCombo Then
-		FillIncorrectSpellCombo("BrewFullSpell")
-	EndIf
 EndFunc   ;==>BrewFullSpell
 
 Func FillIncorrectSpellCombo($caller = "Unknown")
