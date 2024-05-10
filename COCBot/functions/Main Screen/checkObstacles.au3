@@ -1087,6 +1087,7 @@ Func BBTutorial($x = 170, $y = 560)
 		ClickAway()
 		If _Sleep(2000) Then Return
 		SetLog("CONGRATULATIONS!, Successfully Open BuilderBase", $COLOR_SUCCESS)
+		ZoomOut()
 		Return True
 	EndIf
 EndFunc
