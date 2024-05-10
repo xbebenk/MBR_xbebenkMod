@@ -271,58 +271,34 @@ Func UpgradeValue($inum, $bRepeat = False) ;function to find the value and type 
 		If _Sleep($DELAYUPGRADEVALUE5) Then Return
 		If $bOopsFlag And $g_bDebugImageSave Then SaveDebugImage("UpgradeView")
 
-		_CaptureRegion()
-		Select ;Ensure the right upgrade window is open!
-			Case WaitforPixel(807, 117, 807, 118, Hex(0xE32126, 6), 20, 1) ; Check if the building Upgrade window is open red bottom of white X to close
-				If WaitforPixel(824, 472, 824, 473, Hex(0xD62F47, 6), 20, 1) Then ; Check if upgrade requires upgrade to TH and can not be completed
-					If $g_abUpgradeRepeatEnable[$inum] = True Then
-						SetLog("Selection #" & $inum + 1 & " can not repeat upgrade, need TH upgrade - Skipped!", $COLOR_ERROR)
-						ClearUpgradeInfo($inum) ; clear upgrade information
-					Else
-						SetLog("Selection #" & $inum + 1 & " upgrade not available, need TH upgrade - Skipped!", $COLOR_ERROR)
-					EndIf
-					Click(807, 100) ;Close window
-					Return False
+		If WaitforPixel(807, 117, 807, 118, Hex(0xE32126, 6), 20, 1) Then ; Check if the building Upgrade window is open red bottom of white X to close
+			If _PixelSearch(824, 472, 824, 473, Hex(0xD62F47, 6), 20, True, "UpgradeValue") Then ; Check if upgrade requires upgrade to TH and can not be completed
+				If $g_abUpgradeRepeatEnable[$inum] = True Then
+					SetLog("Selection #" & $inum + 1 & " can not repeat upgrade, need TH upgrade - Skipped!", $COLOR_ERROR)
+					ClearUpgradeInfo($inum) ; clear upgrade information
+				Else
+					SetLog("Selection #" & $inum + 1 & " upgrade not available, need TH upgrade - Skipped!", $COLOR_ERROR)
 				EndIf
-				
-				If WaitforPixel(684, 549, 685, 550, Hex(0xFFFA57, 6), 20, 1) Then $g_avBuildingUpgrades[$inum][3] = "Gold" ;Check if Gold required and update type
-				If WaitforPixel(684, 549, 685, 550, Hex(0xFE39FF, 6), 20, 1) Then $g_avBuildingUpgrades[$inum][3] = "Elixir" ;Check if Gold required and update type
-				
-				$g_avBuildingUpgrades[$inum][2] = Number(getResourcesBonus(545, 544)) ; Try to read white text.
-				If $g_avBuildingUpgrades[$inum][2] = "" Then $g_avBuildingUpgrades[$inum][2] = Number(getResourcesBonus(545, 544)) ;read RED upgrade text
-				If $g_avBuildingUpgrades[$inum][2] = "" And $g_abUpgradeRepeatEnable[$inum] = False Then $bOopsFlag = True ; set error flag for user to set value if not repeat upgrade
-
-				;HArchH X value was 195
-				$g_avBuildingUpgrades[$inum][6] = getHeroUpgradeTime(740, 546) ; Try to read white text showing time for upgrade
-				SetLog("Upgrade #" & $inum + 1 & " Time = " & $g_avBuildingUpgrades[$inum][6], $COLOR_INFO)
-				If $g_avBuildingUpgrades[$inum][6] <> "" Then $g_avBuildingUpgrades[$inum][7] = "" ; Clear old upgrade end time
-
-			Case WaitforPixel(807, 117, 807, 118, Hex(0xE32126, 6), 20, 1) ; Check if the Hero Upgrade window is open
-				If WaitforPixel(824, 472, 824, 473, Hex(0xD62F47, 6), 20, 1) Then ; Check if upgrade requires upgrade to TH and can not be completed
-					If $g_abUpgradeRepeatEnable[$inum] = True Then
-						SetLog("Selection #" & $inum + 1 & " can not repeat upgrade, need TH upgrade - Skipped!", $COLOR_ERROR)
-						ClearUpgradeInfo($inum) ; clear upgrade information
-					Else
-						SetLog("Selection #" & $inum + 1 & " upgrade not available, need TH upgrade - Skipped!", $COLOR_ERROR)
-					EndIf
-					Click(807, 100) ;Close window
-					Return False
-				EndIf
-				
-				If _ColorCheck(_GetPixelColor(710, 535), Hex(0x3C3035, 6), 20) Then $g_avBuildingUpgrades[$inum][3] = "Dark" ; Check if DE required and update type
-				$g_avBuildingUpgrades[$inum][2] = Number(getResourcesBonus(545, 544)) ; Try to read white text.
-				If $g_avBuildingUpgrades[$inum][2] = "" Then $g_avBuildingUpgrades[$inum][2] = Number(getResourcesBonus(545, 544)) ;read RED upgrade text
-				If $g_avBuildingUpgrades[$inum][2] = "" And $g_abUpgradeRepeatEnable[$inum] = False Then $bOopsFlag = True ; set error flag for user to set value
-				$g_avBuildingUpgrades[$inum][6] = getHeroUpgradeTime(740, 546) ; Try to read white text showing time for upgrade
-				SetLog("Upgrade #" & $inum + 1 & " Time = " & $g_avBuildingUpgrades[$inum][6], $COLOR_INFO)
-				If $g_avBuildingUpgrades[$inum][6] <> "" Then $g_avBuildingUpgrades[$inum][7] = "" ; Clear old upgrade end time
-
-			Case Else
-				If isGemOpen(True) Then Click(807, 100) ;Close window
-				SetLog("Selected Upgrade Window Opening Error, try again", $COLOR_ERROR)
-				ClearUpgradeInfo($inum) ; clear upgrade information
+				Click(807, 100) ;Close window
 				Return False
-		EndSelect
+			EndIf
+			
+			If WaitforPixel(684, 549, 685, 550, Hex(0xFFFA57, 6), 20, 1) Then $g_avBuildingUpgrades[$inum][3] = "Gold" ;Check if Gold required and update type
+			If WaitforPixel(684, 549, 685, 550, Hex(0xFE39FF, 6), 20, 1) Then $g_avBuildingUpgrades[$inum][3] = "Elixir" ;Check if Gold required and update type
+			
+			$g_avBuildingUpgrades[$inum][2] = Number(getResourcesBonus(545, 544)) ; Try to read white text.
+			If $g_avBuildingUpgrades[$inum][2] = "" Then $g_avBuildingUpgrades[$inum][2] = Number(getResourcesBonus(545, 544)) ;read RED upgrade text
+			If $g_avBuildingUpgrades[$inum][2] = "" And $g_abUpgradeRepeatEnable[$inum] = False Then $bOopsFlag = True ; set error flag for user to set value if not repeat upgrade
+
+			;HArchH X value was 195
+			$g_avBuildingUpgrades[$inum][6] = getHeroUpgradeTime(740, 546) ; Try to read white text showing time for upgrade
+			SetLog("Upgrade #" & $inum + 1 & " Time = " & $g_avBuildingUpgrades[$inum][6], $COLOR_INFO)
+			If $g_avBuildingUpgrades[$inum][6] <> "" Then $g_avBuildingUpgrades[$inum][7] = "" ; Clear old upgrade end time
+		Else
+			SetLog("Selected Upgrade Window Opening Error, try again", $COLOR_ERROR)
+			ClearUpgradeInfo($inum) ; clear upgrade information
+			Return False
+		EndIf
 
 		If StringInStr($g_avBuildingUpgrades[$inum][4], "Warden") > 0 Then $g_avBuildingUpgrades[$inum][3] = "Elixir"
 
