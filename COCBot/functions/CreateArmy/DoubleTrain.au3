@@ -58,7 +58,13 @@ Func FillIncorrectTroopCombo($caller = "Unknown")
 	Local $CampOCR = GetCurrentTroop(95, 163)
 	If Not $g_bRunState Then Return
 	
-	If $g_bDebugSetlog Then SetLog("CampOCR:" & _ArrayToString($CampOCR) & " Called from : " & $caller)
+	;If $g_bDebugSetlog Then 
+	SetLog("CampOCR:" & _ArrayToString($CampOCR) & " Called from : " & $caller)
+	
+	If $CampOCR[3] > 640 Then 
+		SetLog("Impossible! wrong troop capacity OCRread", $COLOR_DEBUG1)
+		Return
+	EndIf
 	
 	If $CampOCR[0] = 0 Then ;no troop trained on 1st army 
 		SetLog("no need to fill troop on 1st army", $COLOR_DEBUG1)
@@ -189,9 +195,16 @@ Func GetCurrentTroop($x_start = 96, $y_start = 165)
 		Return $aResult
 	EndIf
 	
-	Local $iTroopCap = getArmyCapacityOnTrainTroops($x1, $y_start)
+	$iTroopCap = getArmyCapacityOnTrainTroops($x1, $y_start)
 	
-	Local $iTroopQuant = getArmyCapacityOnTrainTroops($x_start, $y_start, $iLenght)
+	Select 
+		Case $iTroopCap > 0 And $iTroopCap < 241
+			$iTroopQuant = getArmyCapacityOnTrainTroops($x_start, $y_start, $iLenght)
+		Case $iTroopCap > 239 And $iTroopCap < 281
+			$iTroopQuant = getArmyCapacityOnTrainTroops240($x_start, $y_start, $iLenght)
+		Case Else
+			$iTroopQuant = getArmyCapacityOnTrainTroops($x_start, $y_start, $iLenght)
+	EndSelect
 	
 	$iTroopQuant = StringReplace($iTroopQuant, "#", "")
 	$iTroopCap = StringReplace($iTroopCap, "#", "")
@@ -722,7 +735,8 @@ Func DoubleTrainTroop($bTest = False)
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 		
-		If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($TroopCamp))
+		;If $g_bDebugSetlog Then 
+		SetLog(_ArrayToString($TroopCamp), $COLOR_DEBUG1)
 		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2 & " remain space:" & $TroopCamp[2], $COLOR_DEBUG1)
 		If $tmpCamp = $TroopCamp[2] Then ExitLoop
 		$tmpCamp = $TroopCamp[2]

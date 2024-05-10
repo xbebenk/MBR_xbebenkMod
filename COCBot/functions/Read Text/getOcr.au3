@@ -137,6 +137,10 @@ Func getArmyCapacityOnTrainTroops($x_start, $y_start, $x1 = 63) ;  -> Gets quant
 	Return StringRegExpReplace(getOcrAndCapture("coc-troopcap", $x_start, $y_start, $x1, 14, True), "[-x]", "")
 EndFunc   ;==>getArmyCapacityOnTrainTroops
 
+Func getArmyCapacityOnTrainTroops240($x_start, $y_start, $x1 = 63) ;  -> Gets quantity of troops in army Window
+	Return StringRegExpReplace(getOcrAndCapture("coc-troopcap240", $x_start, $y_start, $x1, 14, True), "[-x]", "")
+EndFunc   ;==>getArmyCapacityOnTrainTroops
+
 ;TestOCRTroopCap(0, 320)
 Func TestOCRTroopCap($iStart = 0, $iCount = 10, $path = "D:\OCRTool\TestImages\DebugOCR\", $iSleep = 800)
 	

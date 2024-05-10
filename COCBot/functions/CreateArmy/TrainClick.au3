@@ -28,6 +28,7 @@ Func TrainClick($iX, $iY, $iTimes, $TypeTroops)
 
 		If $iTimes <> 1 Then
 			For $i = 1 To $iTimes
+				If Not $g_bRunState Then ExitLoop
 				If IsProblemAffect() Then checkMainScreen()
 				PureClick($iX, $iY, 1, $g_iTrainClickDelay, "Train " & $TypeTroops) ;Click $iTimes.
 			Next
