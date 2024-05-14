@@ -737,7 +737,7 @@ Func DoubleTrainTroop($bTest = False)
 		
 		;If $g_bDebugSetlog Then 
 		SetLog(_ArrayToString($TroopCamp), $COLOR_DEBUG1)
-		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2 & " remain space:" & $TroopCamp[2], $COLOR_DEBUG1)
+		SetLog("DoubleTrainTroop: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2 & " remain space:" & $TroopCamp[2], $COLOR_DEBUG1)
 		If $tmpCamp = $TroopCamp[2] Then ExitLoop
 		$tmpCamp = $TroopCamp[2]
 		Select
@@ -759,6 +759,7 @@ Func DoubleTrainTroop($bTest = False)
 				SetLog("TroopCamp[2] = 0, TrainFullTroop(True)", $COLOR_DEBUG1)
 				If $bTest Then ContinueLoop
 				TrainFullTroop(True) ;train 2nd Army
+				ExitLoop
 			Case $TroopCamp[2] > 0 ; 30/600 (1st army partially trained)
 				SetLog("TroopCamp[2] > 0", $COLOR_DEBUG1)
 				If $bTest Then ContinueLoop
