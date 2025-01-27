@@ -228,7 +228,7 @@ Func getBuildingName($x_start, $y_start, $length = 180, $height = 20) ;  -> Get 
 	ReplaceQuantityX($BuildingName)
 	
 	Local $aResult[2]
-	$aResult[0] = $BuildingName
+	$aResult[0] = _ReplaceWords($BuildingName)
 	$aResult[1] = Number($Count)
 	Return $aResult
 EndFunc   ;==>getBuildingName
@@ -559,3 +559,85 @@ Func getOcrImgLoc(ByRef Const $_hHBitmap, $sLanguage)
 		Return ""
 	EndIf
 EndFunc   ;==>getOcrImgLoc
+
+Func _ReplaceWords($sInput)
+	Local $aFind = [ _
+			[0, "Elir ", "LEFT", " "], _
+			[0, "Eli r ", "LEFT", " "], _
+			[0, "Elix r ", "LEFT", " "], _
+			[0, "El r ", "LEFT", " "], _
+			[0, "Eli ir ", "LEFT", " "], _
+			[1, " El r ", " ", " "], _
+			[1, " Eli ir ", " ", " "], _
+			[1, " Elir ", " ", " "], _
+			[1, " Eli r ", " ", " "], _
+			[1, " Elix r ", " ", " "], _
+			[2, " M ne", "RIGHT", " "], _
+			[3, " Dr", "RIGHT", "i| |l"], _
+			[4, "A r ", "LEFT", " "], _
+			[5, " Pr nce", "RIGHT", " "], _
+			[6, "Wiard ", "LEFT", " "], _
+			[6, "Ward ", "LEFT", " "], _
+			[7, " K ng", "RIGHT", " "], _
+			[8, "lidden ", "LEFT", " "], _
+			[8, "H dden ", "LEFT", " "], _
+			[9, "Spr ng ", "LEFT", " "], _
+			[10, "nferno ", "LEFT", " |I"], _
+			[10, "In erno ", "LEFT", " "], _
+			[11, " nferno", "RIGHT", " "], _
+			[11, " In erno", "RIGHT", " "], _
+			[12, " Art", "RIGHT", " |i"], _
+			[13, " De ense", "RIGHT", " "], _
+			[14, "G ant ", "LEFT", " "], _
+			[15, "M nion ", "LEFT", " "], _
+			[15, "Min on ", "LEFT", " "], _
+			[16, "Blacksm th", " ", " "], _
+			[17, " Champ on", "RIGHT", " "] _
+			]
+	Local $aReplace = [ _
+			"Elixir ", _ ;0
+			" Elixir ", _ ;1
+			" Mine", _ ;2
+			" Drill", _ ;3
+			"Air ", _ ;4
+			" Prince", _ ;5
+			"Wizard ", _ ;6
+			" King", _ ;7
+			"Hidden ", _ ;8
+			"Spring ", _ ;9
+			"Inferno ", _ ;10
+			" Inferno", _ ;11
+			" Artillery", _ ;12
+			" Defense", _ ;13
+			"Giant ", _ ;14
+			"Minion ", _ ;15
+			"Blacksmith", _ ;16
+			" Champion", _ ;17
+			"bbbbbbbb" _ ;14
+			]
+	Local $iIdx, $sFind, $sCond, $sCondVal[0]
+	For $i = 0 To UBound($aFind) - 1
+		$iIdx = $aFind[$i][0]
+		$sFind = $aFind[$i][1]
+		$sCond = $aFind[$i][2]
+		ReDim $sCondVal[0]
+		_ArrayAdd($sCondVal, $aFind[$i][3])
+		
+		If $sCond = "LEFT" And StringInStr($sInput, $sFind) > 1 Then
+			For $j = 0 To UBound($sCondVal) - 1
+				If StringMid($sInput, StringInStr($sInput, $sFind) - StringLen($sCondVal[$j]), StringLen($sCondVal[$j])) = $sCondVal[$j] Then
+					ContinueLoop 2
+				EndIf
+			Next
+		ElseIf $sCond = "RIGHT" And StringInStr($sInput, $sFind) > 0 Then
+			For $j = 0 To UBound($sCondVal) - 1
+				If StringMid($sInput, StringInStr($sInput, $sFind) + StringLen($sFind), StringLen($sCondVal[$j])) = $sCondVal[$j] Then
+					ContinueLoop 2
+				EndIf
+			next
+		EndIf
+
+		If $iIdx >= 0 And $iIdx < UBound($aReplace) Then $sInput = StringReplace($sInput, $sFind, $aReplace[$iIdx])
+	Next
+	Return $sInput
+EndFunc   ;==>_ReplaceWords
