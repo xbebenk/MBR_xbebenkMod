@@ -1501,11 +1501,12 @@ Func FillArmyCamp()
 				FillIncorrectTroopCombo()
 				ClickAway()
 			EndIf
-			;If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 325, 336, 336) Then ;check on spells
-			;	SetLog("Your troop need to fill", $COLOR_DEBUG)
-			;	FillIncorrectSpellCombo()
-			;	ClickAway()
-			;EndIf
+			If _Sleep(500) Then Return
+			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 325, 336, 336) Then ;check on spells
+				SetLog("Your troop need to fill", $COLOR_DEBUG)
+				FillIncorrectSpellCombo()
+				ClickAway()
+			EndIf
 			ClickAway()
 			If _Sleep(500) Then Return
 		EndIf

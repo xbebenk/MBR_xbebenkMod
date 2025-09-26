@@ -695,6 +695,18 @@ Func NewUpgradeWall($iLoop = 2)
 	Local $bCanUseElix = False, $bCanUseGold = False
 	Local $aBtnCoord[4] = [190, 500, 750, 600]
 	
+	If $g_bChkRushTH Then
+		If $g_iUpgradeWallMinGold < $g_aiTHCost[$g_iTownHallLevel] Then
+			SetLog("RushTH Enabled", $COLOR_INFO)
+			SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
+			SetLog("You Current MinGoldSave : " & _NumberFormat($g_iUpgradeWallMinGold), $COLOR_INFO)
+			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($g_aiTHCost[$g_iTownHallLevel]), $COLOR_INFO)
+			$g_iUpgradeWallMinGold = $g_aiTHCost[$g_iTownHallLevel]
+			applyConfig()
+			saveConfig()
+		EndIf
+	EndIf
+	
 	VillageReport(True, True)
 	Local $iCanUseGold = $g_aiCurrentLoot[$eLootGold] - $g_iUpgradeWallMinGold
 	Local $iCanUseElix = $g_aiCurrentLoot[$eLootElixir] - $g_iUpgradeWallMinElixir
@@ -1013,7 +1025,7 @@ Func NewUpgradeWall($iLoop = 2)
 									SetLog("Upgraded wall with Elixir: " & $iCountWallUpgrade, $COLOR_SUCCESS)
 									SetLog("Cost : " & _NumberFormat($g_iCostElixirWall), $COLOR_SUCCESS)
 								EndIf
-							Case 2 ;Elix then Gold
+							Case 2 ;Elix Then Gold
 								If $bCanUseElix = True And $iPlus1Elix > 0 Then
 									SetLog("Try +1 for Elix upgrade", $COLOR_ACTION)
 									For $i = 1 To $iPlus1Elix
@@ -1191,7 +1203,7 @@ Func GoUpgradeWall($sType = "Single", $iPlusCount = 1)
 				$g_iNbrOfWallsUpped += $iCountWallUpgrade
 				$g_iCostElixirWall += $iCountWallUpgrade * $g_aiWallCost[$aWallLevel[2]]
 			EndIf
-		Case 2 ;Elix then Gold
+		Case 2 ;Elix Then Gold
 			Select 
 				Case $bCanUseElix = True And $iPlus1Elix > 0
 					SetLog("Try " & $sType & ", for Gold upgrade", $COLOR_ACTION)

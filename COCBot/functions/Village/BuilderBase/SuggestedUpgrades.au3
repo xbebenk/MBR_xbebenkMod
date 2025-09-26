@@ -55,8 +55,8 @@ Func _SearchUpgradeBB($bTest = False)
 		EndIf
 		SetLog("[" & $z & "] SameCost=" & $sameCost & " [" & $TmpUpgradeCost & "]", $COLOR_DEBUG1)
 		
-		If $sameCost > 3 Then
-			SetLog("Detected SameCost more than 3 times, exit!", $COLOR_DEBUG)
+		If $sameCost > 2 Then
+			SetLog("Detected SameCost, exit!", $COLOR_DEBUG)
 			If IsBBBuilderMenuOpen() Then Click(466, 30)
 			ExitLoop
 		EndIf
