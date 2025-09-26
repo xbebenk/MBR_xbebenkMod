@@ -16,40 +16,31 @@
 #include <Array.au3>
 #include <MsgBoxConstants.au3>
 
-Func TrainSystem($bSkipCheckArmy = False)
+Func TrainSystem()
 	If Not $g_bTrainEnabled Then ; check for training disabled in halt mode
 		If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 		Return
 	EndIf
 	
-	If Not $g_bRunState Then Return
-	$g_sTimeBeforeTrain = _NowCalc()
-	StartGainCost()
 	SetLog("====== TrainSystem =====", $COLOR_ACTION)
+	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
 	BoostSuperTroop()
-	;Add small delay after boost
-	If _Sleep(1000) Then Return
-	If Not $g_bRunState Then Return
 	
-	OpenArmyOverview("TrainSystem")
-	If Not IsTrainPage(False) Then 
+	
+	If Not OpenArmyOverview("TrainSystem") Then 
 		SetLog("Cannot verify Army Window, exit train!", $COLOR_ERROR)
 		Return
 	EndIf
 	
-	If Not $bSkipCheckArmy Then 
-		CheckIfArmyIsReady()
-	Else
-		RequestCC(False, "IsFullClanCastle")
-	EndIf
+	CheckIfArmyIsReady()
 	
 	If Not $g_bRunState Then Return
 	TrainCustomArmy()
 	If Not $g_bRunState Then Return
 	TrainSiege()
 
-	If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
+	If $g_bChkDonate Then ResetVariables("donated")
 
 	ClickAway()
 	If _Sleep(1000) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts

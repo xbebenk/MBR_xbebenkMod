@@ -19,7 +19,7 @@ Global $g_alblBldBaseStats[4] = ["", "", ""]
 Global $g_hChkCollectBuilderBase = 0, $g_hChkStartClockTowerBoost = 0, $g_hChkCleanBBYard = 0
 Global $g_hChkCollectBldGE = 0, $g_hChkCollectBldGems = 0, $g_hChkActivateClockTower = 0
 Global $g_hChkAutoUpgradeBB = 0, $g_hChkAutoUpgradeBBIgnoreHall = 0, $g_hChkAutoUpgradeBBIgnoreWall = 0, $g_hChkBOBControl = 0
-Global $g_hChkAutoStarLabUpgrades = 0, $g_hCmbStarLaboratory = 0, $g_hLblNextSLUpgrade = 0, $g_hBtnResetStarLabUpgradeTime = 0, $g_hPicStarLabUpgrade = 0
+Global $g_hChkAutoStarLabUpgrades = 0, $g_hCmbStarLaboratory = 0, $g_hLblNextSLUpgrade = 0
 Global $g_hChkEnableBBAttack = 0, $g_hChkBBDropTrophy = 0, $g_hChkBBAttIfStarsAvail = 0, $g_hChkSkipBBAttIfStorageFull = 0, $g_hChkBBWaitForMachine = 0, $g_hChkBBDropBMFirst = 0, $g_hChkStopAttackBB6thBuilder = 0
 Global $g_hChkDebugAttackBB = 0, $g_hChkBBAttackReport = 0
 
@@ -110,31 +110,16 @@ Func CreateBBPlaySubTab()
 	$y += 90
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "Group_02", "Star Laboratory"), $x - 10, $y - 20, $g_iSizeWGrpTab2, 198)
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnStarLaboratory, $x, $y, 64, 64)
-		$g_hChkAutoStarLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades", "Auto Star Laboratory Upgrades"), $x + 80, $y, -1, -1)
+		$g_hChkAutoStarLabUpgrades = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades", "Enable Star Laboratory Upgrades"), $x + 80, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkAutoStarLabUpgrades_Info_01", "Check box to enable automatically starting Upgrades in star laboratory"))
 			GUICtrlSetOnEvent(-1, "chkStarLab")
 		$g_hLblNextSLUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "LblNextUpgrade", "Next one") & ":", $x + 80, $y + 25, 50, -1)
-			GUICtrlSetState(-1, $GUI_DISABLE)
 		$g_hCmbStarLaboratory = GUICtrlCreateCombo("", $x + 135, $y + 23, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 			GUICtrlSetData(-1, $sTxtSLNames, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_01", "Select the troop type to upgrade with this pull down menu") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_02", "The troop icon will appear on the right."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "cmbStarLab")
-		; Red button, will show on upgrade in progress. Temp unhide here and in Func ChkLab() if GUI needs editing.
-		$g_hBtnResetStarLabUpgradeTime = GUICtrlCreateButton("", $x + 120 + 172, $y + 36, 18, 18, BitOR($BS_PUSHLIKE,$BS_DEFPUSHBUTTON))
-			GUICtrlSetBkColor(-1, $COLOR_ERROR)
-			;_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnRedLight)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status"))
-			GUICtrlSetState(-1, $GUI_DISABLE)
-			GUICtrlSetState(-1, $GUI_HIDE) ; comment this line out to edit GUI
-			GUICtrlSetOnEvent(-1, "ResetStarLabUpgradeTime")
-		$g_hPicStarLabUpgrade = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, $x + 330, $y, 64, 64)
-			GUICtrlSetState(-1, $GUI_HIDE)
 		
 		;Enable StarLab Upgrade Order
 		$g_hChkSLabUpgradeOrder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkSLabUpgradeOrder", "Enable StarLab Upgrades Order"), $x + 80, $y + 50, -1, -1)
@@ -313,8 +298,8 @@ Func CreateBBAttackSubTab()
 			GUICtrlSetOnEvent(-1, "ChkBBAttIfStarsAvail")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$y += 23
-		$g_hChkSkipBBAttIfStorageFull = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSkipBBAttIfStorageFull", "Skip attack If storage Full"), $x, $y)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSkipBBAttIfStorageFull_Info_01", "Skip attack If storage Full."))
+		$g_hChkSkipBBAttIfStorageFull = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSkipBBAttIfStorageFull", "No Attack If Storages Full"), $x, $y)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSkipBBAttIfStorageFull_Info_01", "No Attack If Storage Full and Builder Busy"))
 			GUICtrlSetOnEvent(-1, "ChkSkipBBAttIfStorageFull")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$y += 23
@@ -348,14 +333,6 @@ Func CreateBBAttackSubTab()
 				$sTroops &= $g_avStarLabTroops[$i][3] & "|"
 			Next
 		EndIf
-		
-		;$y += 20
-		;GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp1", "Army 1"), $x + 5, $y)
-		;GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp2", "Army 2"), $x + 75, $y)
-		;GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp3", "Army 3"), $x + 145, $y)
-		;GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp4", "Army 4"), $x + 215, $y)
-		;GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp5", "Army 5"), $x + 285, $y)
-		;GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Builder Base - Attack", "lblBBArmyCamp7", "Army 6"), $x + 355, $y)
 		
 		$y += 22
 		$g_hLblGUIBBCustomArmy = GUICtrlCreateLabel("", $x, $y)
@@ -421,14 +398,14 @@ Func CreateBBAttackSubTab()
 		$g_hChk1SideAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Chk2SideAttack", "1 Side Attack"), $x, $y + 13, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Chk2SideAttack", "Use 2 Side Attack"))
 			GUICtrlSetOnEvent(-1, "Chk1SideAttack")
-		$g_hCmbSideAttack = GUICtrlCreateCombo("", $x, $y + 35, 100, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
-			GUICtrlSetData(-1, "Lava Launcher|Air Bomb|Mega Tesla|Guard Post", "Lava Launcher")
-			GUICtrlSetOnEvent(-1, "Chk1SideAttack")
 		$g_hChk2SideAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Chk2SideAttack", "2 Side Attack"), $x + 165, $y + 13, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Chk2SideAttack", "Use 2 Side Attack"))
 			GUICtrlSetOnEvent(-1, "Chk2SideAttack")
 		$g_hChkAllSideBBAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAllSideBBAttack", "All Side Attack"), $x + 285, $y + 13, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAllSideBBAttack", "Use All Side Attack"))
 			GUICtrlSetOnEvent(-1, "ChkAllSideBBAttack")
+		$g_hCmbSideAttack = GUICtrlCreateCombo("", $x, $y + 35, 100, -1, $CBS_DROPDOWNLIST + $WS_VSCROLL + $CBS_AUTOHSCROLL)
+			GUICtrlSetData(-1, "Lava Launcher|Air Bomb|Mega Tesla|Guard Post", "Lava Launcher")
+			GUICtrlSetOnEvent(-1, "Chk1SideAttack")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc

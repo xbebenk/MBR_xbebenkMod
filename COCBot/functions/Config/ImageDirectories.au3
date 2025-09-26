@@ -51,6 +51,7 @@ Global $g_sImgBoat = @ScriptDir & "\imgxml\Boat\Main\"
 Global $g_sImgZoomOutDir = @ScriptDir & "\imgxml\village\NormalVillage\"
 Global $g_sImgZoomOutHelper = @ScriptDir & "\imgxml\village\NormalVillage\ZoomOutHelper\"
 Global $g_sImgCheckWallDir = @ScriptDir & "\imgxml\Walls"
+Global $g_sImgCheckWallDirUpgradeButton = @ScriptDir & "\imgxml\Walls\upgradebutton"
 Global $g_sImgClearTombs = @ScriptDir & "\imgxml\Resources\Tombs"
 Global $g_sImgCleanYard = @ScriptDir & "\imgxml\Resources\Obstacles"
 Global $g_sImgGemBox = @ScriptDir & "\imgxml\Resources\GemBox"
@@ -178,6 +179,7 @@ Global $g_sImgShopResources = @ScriptDir & "\imgxml\Resources\AutoUpgrade\Shop\R
 Global $g_sImgShopDefenses = @ScriptDir & "\imgxml\Resources\AutoUpgrade\Shop\Defenses\"
 Global $g_sImgShopTraps = @ScriptDir & "\imgxml\Resources\AutoUpgrade\Shop\Traps\"
 Global $g_sImgBuilderMenu = @ScriptDir & "\imgxml\Resources\AutoUpgrade\BuilderMenu\"
+Global $g_sImgHeroHall = @ScriptDir & "\imgxml\Resources\AutoUpgrade\HeroHall\"
 #EndRegion
 
 #Region Auto Upgrade Builder Base
@@ -204,9 +206,9 @@ Global $g_sImgArmyOverviewTroopsQueued = @ScriptDir & "\imgxml\ArmyOverview\Troo
 Global $g_sImgArmyOverviewSpellsQueued = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued\"
 Global $g_sImgArmyOverviewSiegesQueued = @ScriptDir & "\imgxml\ArmyOverview\SiegeMachinesQueued\"
 Global $g_sImgRequestCCButton = @ScriptDir & "\imgxml\ArmyOverview\RequestCC\"
-Global $g_sImgRequestRemoveImage = @ScriptDir & "\imgxml\ArmyOverview\RequestCC\RemoveImage\"
 Global $g_sImgSendRequestButton = @ScriptDir & "\imgxml\ArmyOverview\RequestCC\SendRequest"
 Global $g_sImgArmyOverviewHeroes = @ScriptDir & "\imgxml\ArmyOverview\Heroes"
+Global $g_sImgArmyOverviewExclam = @ScriptDir & "\imgxml\ArmyOverview\Exclam"
 Global $g_sImgDelQueue = @ScriptDir & "\imgxml\Train\Delete\"
 Global $g_sImgSlash = @ScriptDir & "\imgxml\Train\Slash\"
 #EndRegion

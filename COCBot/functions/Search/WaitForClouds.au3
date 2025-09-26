@@ -14,7 +14,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func WaitForClouds()
-	If _Sleep(1000) Then Return
 	SetDebugLog("Begin WaitForClouds", $COLOR_DEBUG1)
 	$g_bCloudsActive = True
 	

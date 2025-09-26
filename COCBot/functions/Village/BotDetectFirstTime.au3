@@ -30,11 +30,6 @@ Func BotDetectFirstTime()
 		If IsArray($aTownHallLevel) Then $g_iTownHallLevel = 0 ; Check for error finding TH level, and reset to zero if yes
 	EndIf
 
-	If Number($g_iTownHallLevel) > 1 And Number($g_iTownHallLevel) < 6 Then
-		SetLog("Warning: TownHall level below 6 NOT RECOMMENDED!", $COLOR_ERROR)
-		SetLog("Proceed with caution as errors may occur.", $COLOR_ERROR)
-	EndIf
-
 	If $g_iTownHallLevel > 2 Then 
 		saveConfig()
 	EndIf

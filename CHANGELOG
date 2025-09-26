@@ -1,64 +1,23 @@
-* **v.7.9.9 Mod_v1.2.5#118**
-* Add : Autoset ArmyCamp Size
-* Add : Claim StreakEvent 
-* Fix : AutoUpgrade on BuilderBase
-* Fix : Giant detected as Archer on Laboratory Upgrade
-* Fix : read 280 as 210 on DoubleTrain
-* Fix : IsFullClanCastleType Checker
-* Improve : Zoomout on BuilderBase
-* Improve : SelectSiege
-* Improve : CheckFullArmy
-* Improve : Double Train
-* Improve : Terasury Collect
-* Improve : SubaQuake CSV
-* Remove : DonateToAll
+* **v.7.9.9 Mod_v1.2.6#119**
+* Just bring up Mod up again
+* Many bugs
+* Many feature not work 
 
-* **v.7.9.9 Mod_v1.2.5#117**
-* Add Claim Bonus Track
-* Add Goblin Cave Scenery Support
-* Add Egypt Scenery Support
-* Fix Memu
-* Fix Donate
-* Fix Donate readRequest Capacity
-* Fix Memu/Nox ZoomIn
-* Fix getArmyCampCap
-* Improved OCR on Train Troop Tab
+*** What Work ***
+* Request CC
+* Donate CC
+* Attack DeadBase/LiveBase
+* Laboratory Upgrade
+* Auto Upgrade 
+* Wall Upgrade
+* BuilderBase Attack
+* ClanGames
+* Switch Account (with shared_prefs)
 
-* **v.7.9.9 Mod_v1.2.5#116**
-* Add Root Rider
-* Add Apprentice Warden
-* Add Super Hog Rider
-* Add OverGrowth Spell
-* Add Handle PetHouse Tutorial
-* Add Handle BuilderHut Tutorial
-* Add RootRider AttackCSV
-* Add RootRider AttackCSV by Venux771
-* Fix Search Legend League Search
-* Fix SuperTroops boost (recoded)
-* Fix AutoUpgrade : Ignore UpgradeType Gem if read value = 0
-* Fix autoupgrade : Place new wall
-* Fix Training : Drag Left/Right on troops list
-* Fix Training : OCR Troops Capacity on Army Train Tab
-* Fix Training : OCR ArmyOverview read 18
-* Fix Training : OCR Queue Troops read 6
-* Fix Training : correct right coord check location to determine drag left/right
-* Fix Training : TrainSiege (recoded)
-* Fix Laboratory Upgrade (recoded)
-* Fix AttackBar : Read Siege Level
-* Fix AttackBar : SiegeSwitch
-* Fix BuilderBase : Open BuilderBase Tutorial
-* Fix Donate : disable red icon check before donating
-* Fix Typo : wrong shortname apprentice warden
-* Fix CSV apply setting
-* Improve : Black Barbarian Head (determine end battle BB)
-* Improve : Autolocate Clan Castle
-* Improve : Autolocate Laboratory
-* Improve : Mix OCR read pos, CheckPixel pos, debug log, splash timer
-* ** NEW TROOPS ADDED, PLEASE USE CLEAN PROFILE **
+*** What didn't work ***
+* Army Training
+* Place New Wall on village
+* Hero Upgrade
+* Building Upgrade
+* Switch Account (with SCID)
 
-* **v.7.9.9 Mod_v1.2.5#115**
-* Fix OCR Queue read 1 as 11 on freeze
-* ClanGames : Challenges image collection by @flacha
-* ClanGames : Also search challenges on 3rd row
-* ClanGames : Fix ocr score read 0 and 4
-* Fix GL shifted pixel on check main screen

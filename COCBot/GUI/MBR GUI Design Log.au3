@@ -79,22 +79,28 @@ Func CreateLogTab($hWHndLogsOnly = False)
 			GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_06", "Hide Bot Log, Full Attack Log"), GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_02", -1))
 	GUICtrlSetOnEvent(-1, "cmbLog")
 
-	$g_hBtnRunDebug = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Log", "Run", "Run"), $x + 235, $y - 1, 33, 23)
+	$g_hBtnRunDebug = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Log", "Run", "Run"), $x + 233, $y - 1, 33, 23)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	GUICtrlSetOnEvent(-1, "btnRunFunction")
 	_GUICtrlSetTip(-1, "Run Function")
 	GUICtrlSetState(-1, $GUI_HIDE)
 	
+	$x = 268
+	$g_hBtnAttackNowDB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowDB", "DB Atck!"), $x, $y - 1, 53, 23)
+		GUICtrlSetState(-1, $GUI_HIDE)
+	$g_hBtnAttackNowLB = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Bottom", "BtnAttackNowLB", "LB Atck!"), $x + 55, $y - 1, 53, 23)
+		GUICtrlSetState(-1, $GUI_HIDE)
+	
 	$x = 380
 	$g_hBtnAtkLogClear = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnReload, $x, $y + 1, 22, 22)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogClear_Info_01", "Use this to clear the Attack Log."))
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogClear_Info_01", "Use this to clear Attack Log."))
 	GUICtrlSetOnEvent(-1, "btnAtkLogClear")
 	
 	$x = 405
 	$g_hBtnAtkLogCopyClipboard = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnCopy, $x, $y + 1, 22, 22)
 	GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogCopyClipboard_Info_01", "Use this to Copy the Attack Log to the Clipboard"))
+	_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Log", "BtnAtkLogCopyClipboard_Info_01", "Use this to Copy  Attack Log to Clipboard"))
 	GUICtrlSetOnEvent(-1, "btnAtkLogCopyClipboard")
 	
 	$x = 430

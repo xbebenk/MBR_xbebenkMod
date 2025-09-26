@@ -37,7 +37,8 @@ Func GoldElixirChangeEBO()
 		$DarkElixir1 = ""
 		$Trophies = getTrophyVillageSearch(48, 76 + 68)
 	EndIf
-
+	
+	;SetLog("[G]: " & $Gold1 & " [E]: " & $Elixir1 & " [DE]: " & $DarkElixir1 & " [%]: " & $Damage, $COLOR_INFO)
 	;CALCULATE WHICH TIMER TO USE
 	Local $x = $g_aiStopAtkNoLoot1Time[$g_iMatchMode] * 1000, $y = $g_aiStopAtkNoLoot2Time[$g_iMatchMode] * 1000, $z, $w = $g_aiStopAtkPctNoChangeTime[$g_iMatchMode] * 1000
 	If Number($Gold1) < $g_aiStopAtkNoLoot2MinGold[$g_iMatchMode] And _
@@ -101,7 +102,10 @@ Func GoldElixirChangeEBO()
 		;DE SPECIAL END EARLY
 		If $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable Then
 			If $g_bDropQueen Or $g_bDropKing Then DELow()
-			If $g_iDarkLow = 1 Then ExitLoop
+			If $g_iDarkLow = 1 Then 
+				SetLog("EXIT BECAUSE : g_iDarkLow")
+				ExitLoop
+			EndIf
 		EndIf
 		If $g_bCheckKingPower Or $g_bCheckQueenPower Or $g_iDarkLow = 2 Then
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
@@ -111,21 +115,16 @@ Func GoldElixirChangeEBO()
 		
 		;--> Read Resources #2
 		$Gold2 = getGoldVillageSearch(48, 76)
-		If $Gold2 = "" Then
-			If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
-			$Gold2 = getGoldVillageSearch(48, 76)
-		EndIf
 		$Elixir2 = getElixirVillageSearch(48, 104)
 		$Trophies = getTrophyVillageSearch(45, 174)
-		CheckHeroesHealth()
+		$CurDamage = getOcrOverAllDamage(780, 529)
 		If $Trophies <> "" Then ; If trophy value found, then base has Dark Elixir
 			If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
 			$DarkElixir2 = getDarkElixirVillageSearch(48, 132)
 		Else
 			$DarkElixir2 = ""
-			$Trophies = getTrophyVillageSearch(48, 69 + 69)
+			$Trophies = getTrophyVillageSearch(48, 76 + 68)
 		EndIf
-		$CurDamage = getOcrOverAllDamage(780, 529)
 		;--> Read Ressources #2
 
 		CheckHeroesHealth()
@@ -141,9 +140,11 @@ Func GoldElixirChangeEBO()
 			If $m > 0 Then $txtDiff = $m & "m "
 			$txtDiff &= $s & "s"
 		EndIf
+		
 		$NoResourceOCR = StringLen($Gold2) = 0 And StringLen($Elixir2) = 0 And StringLen($DarkElixir2) = 0
 		If $NoResourceOCR Then
 			SetLog("Exit now, [G]: " & $Gold2 & " [E]: " & $Elixir2 & " [DE]: " & $DarkElixir2 & " [%]: " & $CurDamage, $COLOR_INFO)
+			If IsReturnHomeBattlePage() Then ExitLoop
 		Else
 			If $g_bDebugSetlog Then
 				SetDebugLog("Exit in " & $txtDiff & ", [G]: " & $Gold2 & " [E]: " & $Elixir2 & " [DE]: " & $DarkElixir2 & " [%]: " & $CurDamage & ", Suspend-Time: " & $g_iSuspendAndroidTime & ", Suspend-Count: " & $g_iSuspendAndroidTimeCount &  ", Offset: " & $iSuspendAndroidTimeOffset, $COLOR_INFO)
@@ -153,34 +154,7 @@ Func GoldElixirChangeEBO()
 		EndIf
 
 		If Number($CurDamage) > Number($g_iPercentageDamage) Then $g_iPercentageDamage = Number($CurDamage)
-		#comments-start
-		If Number($CurDamage) >= 92 Then
-			If ($g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower Or $g_bCheckChampionPower) Then
-				If $g_bCheckKingPower And $g_iActivateKing = 0 Then
-					SetLog("Activating King's ability to restore some health before leaving with a 3 Star", $COLOR_INFO)
-					If IsAttackPage() Then SelectDropTroop($g_iKingSlot) ;If King was not activated: Boost King before Battle ends with a 3 Star
-					$g_bCheckKingPower = False
-				EndIf
-				If $g_bCheckQueenPower And $g_iActivateQueen = 0 Then
-					SetLog("Activating Queen's ability to restore some health before leaving with a 3 Star", $COLOR_INFO)
-					If IsAttackPage() Then SelectDropTroop($g_iQueenSlot) ;If Queen was not activated: Boost Queen before Battle ends with a 3 Star
-					$g_bCheckQueenPower = False
-				EndIf
-				If $g_bCheckWardenPower And $g_iActivateWarden = 0 Then
-					SetLog("Activating Warden's ability to restore some health before leaving with a 3 Star", $COLOR_INFO)
-					If IsAttackPage() Then SelectDropTroop($g_iWardenSlot) ;If Queen was not activated: Boost Queen before Battle ends with a 3 Star
-					$g_bCheckWardenPower = False
-				EndIf
-				If $g_bCheckChampionPower And $g_iActivateChampion = 0 Then
-					SetLog("Activating Royal Champion's ability to restore some health before leaving with a 3 Star", $COLOR_INFO)
-					If IsAttackPage() Then SelectDropTroop($g_iChampionSlot) ;If Champion was not activated: Boost Champion before Battle ends with a 3 Star
-					$g_bCheckChampionPower = False
-				EndIf
-			EndIf
-		EndIf
-		#comments-end
-
-
+	
 		;CALCULATE RESOURCE CHANGES
 		If $Gold2 <> "" Or $Elixir2 <> "" Or $DarkElixir2 <> "" Then
 			$GoldChange = $Gold2
@@ -207,12 +181,7 @@ Func GoldElixirChangeEBO()
 			SetLog("One Star Reach, exit", $COLOR_SUCCESS)
 			$exitOneStar = 1
 			ExitLoop
-		EndIf
-
-		;EXIT LOOP IF RESOURCES = "" ... battle end
-		If getGoldVillageSearch(48, 69) = "" And getElixirVillageSearch(48, 69 + 29) = "" And $DarkElixir2 = "" Then
-			ExitLoop
-		EndIf
+		EndIf		
 
 		If $g_abStopAtkPctHigherEnable[$g_iMatchMode] And Number(getOcrOverAllDamage(780, 529)) > Number($g_aiStopAtkPctHigherAmt[$g_iMatchMode]) Then
 			SetLog("Overall Damage above " & Number($g_aiStopAtkPctHigherAmt[$g_iMatchMode]) & ", exit", $COLOR_SUCCESS)

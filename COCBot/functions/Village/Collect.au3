@@ -69,17 +69,17 @@ Func Collect($bOnlyCollector = False)
 	If _Sleep(1000) Then Return
 	TreasuryCollect()
 	If _Sleep(1000) Then Return
-	CollectCookieRumble()
-	If _Sleep(1000) Then Return
-	CheckEventStreak($g_bFirstStart)
-	If _Sleep(1000) Then Return
+	;CollectCookieRumble()
+	;If _Sleep(1000) Then Return
+	;CheckEventStreak($g_bFirstStart)
+	;If _Sleep(1000) Then Return
 	EndGainCost("Collect")
 EndFunc   ;==>Collect
 
 Func CollectLootCart()
-	ZoomOutHelper("CollectLootCart")
-	If _Sleep(500) Then Return
 	SetLog("Searching for a Loot Cart", $COLOR_INFO)
+	If isGoldFull(False) And IsElixirFull(False) Then Return
+	ZoomOutHelper("CollectLootCart")
 	If QuickMIS("BC1", $g_sImgCollectLootCart, 0, 180, 160, 300) Then 
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(500) Then Return
@@ -134,8 +134,8 @@ Func CollectCookieRumble()
 		Next
 	Else	
 		SetLog("Event Icon Not Found", $COLOR_ERROR)
+		Return
 	EndIf
-	If Not $bIconCookie Then Return
 	
 	For $i = 1 To 10
 		If $g_bDebugSetLog Then SetLog("Waiting Event Window #" & $i, $COLOR_ACTION)

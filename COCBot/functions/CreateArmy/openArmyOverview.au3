@@ -13,37 +13,27 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func OpenArmyOverview($sWhereFrom = "Undefined")
+	Local $bRet
+	
 	If Not $g_bRunState Then Return
 	If $g_bDebugSetLog Then SetLog("OpenArmyOverview" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
-	For $i = 1 To 5
-		If Not $g_bRunState Then Return
-		SetLog("Try open ArmyWindow #" & $i, $COLOR_ACTION)
-		If IsTrainPage(False, 1) Then
-			SetLog("Detected Train Window Open", $COLOR_ACTION)
-			Return True
-		ElseIf WaitforPixel(30, 522, 31, 523, "FFFFE3", 20, 1) Then 
-			ClickP($aArmyTrainButton) ; Button Army Overview
-			If _Sleep(3000) Then Return
-		ElseIf IsProblemAffect() Then 
-			SetLog("Detected Android popup error", $COLOR_ACTION)
-			Return False
-		ElseIf Not checkChatTabPixel() Then 
-			SetLog("MainScreen Not verified", $COLOR_ACTION)
-			checkObstacles()
-		ElseIf $i = 5 Then 
-			SetLog("Cannot Verify Army Button", $COLOR_ERROR)
-			SetError(1)
-			Return
-		EndIf
-		
-		If IsTrainPage(False, 1) Then 
-			SetLog("Succesfully Open Train Window", $COLOR_SUCCESS)
-			Return True
-		EndIf
-		
-		If _Sleep(250) Then Return
-	Next
-	Return False
+	If IsTrainPage(False, 1) Then Return True
+	
+	If Not checkMainScreen() Then checkObstacles()
+	
+	If checkChatTabPixel() Then
+		ClickP($aArmyTrainButton) ; Button Army Overview
+		If _Sleep(1000) Then Return
+		For $i = 1 To 3
+			If IsTrainPage(False, 1) Then 
+				$bRet = True
+				ExitLoop
+			EndIf
+			Setlog("Verify Army Overview Window #" & $i, $COLOR_ACTION)
+			If _Sleep(500) Then Return
+		Next
+	EndIf
+	Return $bRet
 EndFunc   ;==>OpenArmyOverview
 
 Func OpenArmyTab($bSetLog = True, $sWhereFrom = "Undefined")

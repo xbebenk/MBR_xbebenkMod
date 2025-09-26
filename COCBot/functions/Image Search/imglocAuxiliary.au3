@@ -228,7 +228,6 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 				Return $aReturnResult ; return 2D array
 			EndIf
 		EndIf
-
 	Next
 
 	SetDebugLog($sButtonName & " Button Image(s) NOT FOUND : " & $sButtons, $COLOR_ERROR)
@@ -264,7 +263,7 @@ Func GetButtonDiamond($sButtonName)
 		Case "Next" ; attackpage attackwindow
 			$btnDiamond = "697,542|850,542|850,610|697,610"
 		Case "ObjectButtons", "BoostOne", "BoostCT", "ClockTowerPot", "Upgrade", "Research", "Treasury", "RemoveObstacle", "CollectLootCart", "Pets", "Cancel", "MagicItem", "HeroBooks", "LabPotion", "LabBoosted", "CCGuard", "CCSleep", "BuilderPot" ; Full size of object buttons at the bottom
-			$btnDiamond = GetDiamondFromRect("120,516,750,620")
+			$btnDiamond = GetDiamondFromRect("120,516,800,620")
 		Case "GEM", "BOOSTBtn" , "BoostConfirm"; Boost window button (full button size)
 			$btnDiamond = GetDiamondFromRect("340,345,520,450")
 		Case "EnterShop"

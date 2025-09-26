@@ -28,7 +28,7 @@ Func TestStarLab()
 EndFunc
 
 Func StarLab($bTest = False)
-	Return False
+	;Return False
 	If Not $g_bAutoStarLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 	Local $bElixirFull = False
 	If $g_bChkUpgradeAnyIfAllOrderMaxed Then $bElixirFull = isElixirFullBB()
@@ -235,7 +235,6 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 		$bRet = False
 	Else
 		SetLog("Upgrade " & $UpgradeName & " in your star laboratory started with success...", $COLOR_SUCCESS)
-		StarLabStatusGUIUpdate()
 		PushMsg("StarLabSuccess")
 		ClickAway("Left")
 		If _Sleep($DELAYLABUPGRADE2) Then Return
@@ -261,7 +260,7 @@ Func FindSLabTroopsUpgrade()
 		For $i = 0 To UBound($aTmp) -1 
 			$aTroop = GetSLabTroopResPos($aTmp[$i][0])
 			$UpgradeCost = getSLabCost($aTroop[1], $aTroop[2])
-			If (StringInStr($UpgradeCost, "M") Or StringInStr($UpgradeCost, "L") Or StringInStr($UpgradeCost, "x")) Then $UpgradeCost = "MaxLevel"
+			If (StringInStr($UpgradeCost, "M") Or StringInStr($UpgradeCost, "L") Or $UpgradeCost = "1" Or StringInStr($UpgradeCost, "x")) Then $UpgradeCost = "MaxLevel"
 			If $UpgradeCost = "" Then 
 				If QuickMIS("BC1", $g_sImgStarLabNeedUp, $aTroop[1], $aTroop[2], $aTroop[1] + 100, $aTroop[2] + 20) Then
 					$UpgradeCost = "NeedUpgradeLab"
@@ -293,7 +292,7 @@ Func LocateStarLab()
 		ClickP($g_aiStarLaboratoryPos)
 		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for description to popup
 
-		Local $aResult = BuildingInfo(245, 472) ; Get building name and level with OCR
+		Local $aResult = BuildingInfo(242, 477) ; Get building name and level with OCR
 		If $aResult[0] = 2 Then ; We found a valid building name
 			If StringInStr($aResult[1], "Lab") = True Then ; we found the Star Laboratory
 				SetLog("Star Laboratory located.", $COLOR_INFO)
@@ -315,7 +314,7 @@ Func LocateStarLab()
 		$g_aiStarLaboratoryPos[0] = $g_iQuickMISX + 10
 		$g_aiStarLaboratoryPos[1] = $g_iQuickMISY + 20
 		If _Sleep(1000) Then Return
-		Local $aResult = BuildingInfo(245, 472) ; Get building name and level with OCR
+		Local $aResult = BuildingInfo(242, 477) ; Get building name and level with OCR
 		If $aResult[0] = 2 Then ; We found a valid building name
 			If StringInStr($aResult[1], "Lab") Then ; we found the Star Laboratory
 				SetLog("Star Laboratory located.", $COLOR_INFO)

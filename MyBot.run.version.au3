@@ -1,7 +1,7 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: MBR Bot Version
 ; Description ...: This file contains the initialization and main loop sequences f0r the MBR Bot
-; Author ........:  (2014)
+; Author ........: 
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -20,5 +20,5 @@
 #Au3Stripper_On
 
 Global $g_sBotVersion = "v7.9.9" ;~ Don't add more here, but below. Version can't be longer than vX.y.z because it is also used in Checkversion()
-Global $g_sXModversion = "v1.2.5[#118]" ; mod version [Last merge commitId]
-Global $g_sXModSupportUrl = "https://github.com/xbebenk/MBR_xbebenkMod/tree/dev_1.2.5" ;<== Our Website Link Download
+Global $g_sXModversion = "v1.2.6[#119]" ; mod version [Last merge commitId]
+Global $g_sXModSupportUrl = "https://github.com/xbebenk/MBR_xbebenkMod/tree/dev_1.2.6" ;<== Our Website Link Download

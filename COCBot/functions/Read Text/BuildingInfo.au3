@@ -13,7 +13,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func BuildingInfo($iXstart = 220, $iYstart = 495)
+Func BuildingInfo($iXstart = 242, $iYstart = 477)
 
 	Local $sBldgText, $sBldgLevel, $aString
 	Local $aResult[3] = ["", "", ""]
@@ -32,6 +32,7 @@ Func BuildingInfo($iXstart = 220, $iYstart = 495)
 	If StringInStr($sBldgText, "Bark") Then $sBldgText &= " (FakeLevel 95)"
 	If StringInStr($sBldgText, "Gem") Then $sBldgText &= " (FakeLevel 94)"
 	If StringInStr($sBldgText, "Gem Mine") Then $sBldgText = "Gem Mine (FakeLevel 93)"
+	If StringInStr($sBldgText, "( lixir Storage") Then $sBldgText = StringReplace($sBldgText, "( lixir", "Elixir")
 	If StringInStr($sBldgText, "Battle Machine (Broken)") Then $sBldgText = "Battle Machine (FakeLevel 92)"
 	$aString = StringSplit($sBldgText, "(") ; Spilt the name and building level
 	If $aString[0] = 2 Then ; If we have name and level then use it

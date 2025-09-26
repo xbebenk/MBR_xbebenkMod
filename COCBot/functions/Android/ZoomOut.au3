@@ -95,8 +95,14 @@ EndFunc
 
 Func ZoomOutHelper($caller = "Default")
 	Local $x = 0, $y = 0
-	Local $bIsMain = isOnMainVillage()
+	Local $bIsMain = False
 	Local $Dir = "", $aOffset, $bRet = False
+	
+	If $caller = "VillageSearch" Then 
+		$bIsMain = True
+	Else
+		$bIsMain = isOnMainVillage()
+	EndIf
 	
 	If Not $bIsMain Then Return ;leave if not in mainvillage
 	
@@ -111,7 +117,8 @@ Func ZoomOutHelper($caller = "Default")
 			EndIf
 			SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
-			ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+			ClickAway()
+			ClickDrag(800, 350, 800 - $x, 350 - $y)
 			$bRet = True
 		Else
 			SetDebugLog("[" & $caller & "] Bad Tree ImageName!")
@@ -127,7 +134,8 @@ Func ZoomOutHelper($caller = "Default")
 				$y = $g_iQuickMISY - $aOffset[1]
 				SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
-				ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+				ClickAway()
+				ClickDrag(800, 350, 800 - $x, 350 - $y)
 				$bRet = True
 			Else
 				SetDebugLog("[" & $caller & "] Bad CGHelper ImageName!")
@@ -144,7 +152,8 @@ Func ZoomOutHelper($caller = "Default")
 				$y = $g_iQuickMISY - $aOffset[2]
 				SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_INFO)
-				ClickDrag(800, 350, 800 - $x, 350 - $y, 500)
+				ClickAway()
+				ClickDrag(800, 350, 800 - $x, 350 - $y)
 				$bRet = True
 			Else
 				SetDebugLog("[" & $caller & "] Bad Stone ImageName!")
@@ -154,7 +163,7 @@ Func ZoomOutHelper($caller = "Default")
 	EndIf
 	
 	If Not $bRet Then
-		ClickDrag(800, 350, 800, 400, 500) ;just drag
+		ClickDrag(800, 350, 800, 400) ;just drag
 	EndIf
 	If _Sleep(1500) Then Return
 	Return $bRet
@@ -225,7 +234,8 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	
 	;If Not $g_bStayOnBuilderBase Then ZoomOutHelper($sFunc)
 	;If $g_bStayOnBuilderBase Then ZoomOutHelperBB($sFunc)
-	
+	ZoomoutHelper()
+	If _Sleep(500) Then Return
 	ForceCaptureRegion()
 	$aPicture = SearchZoomOut(True, True, "", True)
 	
@@ -254,7 +264,6 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 		
 		If IsArray($aPicture) Then
 			While IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0 and Not $tryCtrlWheelScroll
-				
 				AndroidShield("DefaultZoomOut") ; Update shield status
 				If $bAndroidZoomOut Then
 				   AndroidZoomOut($i, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
@@ -553,8 +562,8 @@ Func AndroidOnlyZoomOut() ;Zooms out
 	Return False
 EndFunc   ;==>AndroidOnlyZoomOut
 
-; SearchZoomOut returns always an Array.
-; If village can be measured and villages size < 500 pixel then it returns in idx 0 a String starting with "zoomout:" and tries to center base
+; SearchZoomOut Returns always an Array.
+; If village can be measured and villages size < 500 pixel then it Returns in idx 0 a String starting with "zoomout:" and tries to center base
 ; Return Array:
 ; 0 = Empty string if village cannot be measured (e.g. window blocks village or not zoomed out)
 ; 1 = Current Village X Offset (after centering village)
@@ -572,7 +581,7 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 		$aScrollPos[1] = $bCenterVillage[1]
 	EndIf
 
-	; Setup arrays, including default return values for $return
+	; Setup arrays, including default Return values for $Return
 	Local $x, $y, $z, $stone[2]
 	Local $villageSize = 0
 

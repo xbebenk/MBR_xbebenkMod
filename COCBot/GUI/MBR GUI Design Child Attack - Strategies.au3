@@ -75,7 +75,5 @@ Func CreateAttackStrategies()
 	$y += 235
 		$g_hBtnGUIPresetSaveConf = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Attack - Strategies", "BtnGUIPresetSaveConf", "Save Configuration"), $x + 13, $y, 200, 20)
 			GUICtrlSetOnEvent(-1, "PresetSaveConf")
-
 	GUICtrlCreateTabItem("")
-
 EndFunc   ;==>CreateAttackStrategies

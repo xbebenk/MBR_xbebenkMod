@@ -161,7 +161,7 @@ Func txtSinglePBTimeForced()
 		Case 16
 			GUICtrlSetBkColor($g_hTxtSinglePBTimeForced, $COLOR_YELLOW)
 		Case 17 To 999
-			GUICtrlSetBkColor($g_hTxtSinglePBTimeForced, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($g_hTxtSinglePBTimeForced, $COLOR_LIGHTGREEN)
 	EndSwitch
 	Switch Int(GUICtrlRead($g_hTxtPBTimeForcedExit))
 		Case 0 To 11
@@ -169,7 +169,7 @@ Func txtSinglePBTimeForced()
 		Case 12 To 14
 			GUICtrlSetBkColor($g_hTxtPBTimeForcedExit, $COLOR_YELLOW)
 		Case 15 To 999
-			GUICtrlSetBkColor($g_hTxtPBTimeForcedExit, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($g_hTxtPBTimeForcedExit, $COLOR_LIGHTGREEN)
 	EndSwitch
 EndFunc   ;==>txtSinglePBTimeForced
 

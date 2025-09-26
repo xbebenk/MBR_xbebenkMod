@@ -195,7 +195,7 @@ Func InitializeControlVariables()
    ; Groups of controls
    Dim $aTabControlsVillage = [$g_hGUI_VILLAGE_TAB, $g_hGUI_VILLAGE_TAB_ITEM1, $g_hGUI_VILLAGE_TAB_ITEM2, $g_hGUI_VILLAGE_TAB_ITEM3, $g_hGUI_VILLAGE_TAB_ITEM4, $g_hGUI_VILLAGE_TAB_ITEM5]
    Dim $aTabControlsMisc = [$g_hGUI_MISC_TAB, $g_hGUI_MISC_TAB_ITEM1, $g_hGUI_MISC_TAB_ITEM2, $g_hGUI_MISC_TAB_ITEM3, $g_hGUI_MISC_TAB_ITEM4]
-   Dim $aTabControlsDonate = [$g_hGUI_DONATE_TAB, $g_hGUI_DONATE_TAB_ITEM1, $g_hGUI_DONATE_TAB_ITEM2, $g_hGUI_DONATE_TAB_ITEM3]
+   Dim $aTabControlsDonate = [$g_hGUI_DONATE_TAB, $g_hGUI_DONATE_TAB_ITEM1, $g_hGUI_DONATE_TAB_ITEM2]
    Dim $aTabControlsUpgrade = [$g_hGUI_UPGRADE_TAB, $g_hGUI_UPGRADE_TAB_ITEM1, $g_hGUI_UPGRADE_TAB_ITEM2, $g_hGUI_UPGRADE_TAB_ITEM3, $g_hGUI_UPGRADE_TAB_ITEM4, $g_hGUI_UPGRADE_TAB_ITEM5]
    Dim $aTabControlsNotify = [$g_hGUI_NOTIFY_TAB, $g_hGUI_NOTIFY_TAB_ITEM2]
    Dim $aTabControlsAttack = [$g_hGUI_ATTACK_TAB, $g_hGUI_ATTACK_TAB_ITEM1, $g_hGUI_ATTACK_TAB_ITEM2, $g_hGUI_ATTACK_TAB_ITEM3]
@@ -261,6 +261,9 @@ Func InitializeControlVariables()
 
 	$oAlwaysEnabledControls($g_hBtnMakeScreenshot) = 1
 	$oAlwaysEnabledControls($g_hDivider) = 1
+	$oAlwaysEnabledControls($lbl_LogStyle) = 1
+	$oAlwaysEnabledControls($g_hBtnAttackNowDB) = 1
+	$oAlwaysEnabledControls($g_hBtnAttackNowLB) = 1
 
 	$oAlwaysEnabledControls($g_hTabMain) = 1
 	$oAlwaysEnabledControls($g_hTabLog) = 1
@@ -269,15 +272,14 @@ Func InitializeControlVariables()
 	$oAlwaysEnabledControls($g_hTabBuilderBase) = 1
 	$oAlwaysEnabledControls($g_hTabBot) = 1
 	$oAlwaysEnabledControls($g_hTabAbout) = 1
-	
-	$oAlwaysEnabledControls($lbl_LogStyle) = 1
+
 	$oAlwaysEnabledControls($g_hCmbLogDividerOption) = 1
 	$oAlwaysEnabledControls($g_hBtnAtkLogClear) = 1
 	$oAlwaysEnabledControls($g_hBtnAtkLogCopyClipboard) = 1
 	$oAlwaysEnabledControls($g_hBtnOpenFolder) = 1
 	$oAlwaysEnabledControls($g_hTxtAutoUpgradeLog) = 1
 	$oAlwaysEnabledControls($g_hTxtClanGamesLog) = 1
-	
+
 	For $i in $aTabControlsVillage
 		$oAlwaysEnabledControls($i) = 1
 	Next

@@ -667,7 +667,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 
-	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $SIDESNAMES)
+	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $g_iMinionPSlot, $SIDESNAMES)
 	
 	If Not $g_bRunState Then Return
 	If IsProblemAffect() Then Return
@@ -722,9 +722,9 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	SetLog("Finished Attacking, waiting for the battle to end")
 EndFunc   ;==>AttackSmartFarm
 
-Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion, $SIDESNAMES = "TR|TL|BR|BL")
+Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion, $iMinion, $SIDESNAMES = "TR|TL|BR|BL")
 
-	SetDebugLog("LaunchTroopSmartFarm with CC " & $iCC & ", K " & $iKing & ", Q " & $iQueen & ", W " & $iWarden & ", C " & $iChampion, $COLOR_DEBUG)
+	SetDebugLog("LaunchTroopSmartFarm with CC " & $iCC & ", K " & $iKing & ", Q " & $iQueen & ", W " & $iWarden & ", C " & $iChampion & ", M " & $iMinion, $COLOR_DEBUG)
 	; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
 	Local $listListInfoDeployTroopPixel[0]
 	Local $pixelRandomDrop[2]
@@ -755,8 +755,9 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 				EndIf
 			Next
 		EndIf
-
-		If ($troop <> -1 And $troopNb > 0) Or IsString($troopKind) Then
+		
+		;here drop cc/heroes
+		If ($troop <> -1 And $troopNb > 0) Or IsString($troopKind) Then 
 			Local $listInfoDeployTroopPixel
 			If (UBound($listListInfoDeployTroopPixel) < $waveNb) Then
 				ReDim $listListInfoDeployTroopPixel[$waveNb]
@@ -825,7 +826,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 								dropCC($pixelRandomDropcc[0], $pixelRandomDropcc[1], $iCC)
 								$g_bIsCCDropped = True
 							ElseIf ($g_bIsHeroesDropped = False And $infoTroopListArrPixel[0] = "HEROES" And $i = $numberSidesDropTroop - 1) Then
-								dropHeroes($pixelRandomDrop[0], $pixelRandomDrop[1], $iKing, $iQueen, $iWarden, $iChampion)
+								dropHeroes($pixelRandomDrop[0], $pixelRandomDrop[1], $iKing, $iQueen, $iWarden, $iChampion, $iMinion)
 								$g_bIsHeroesDropped = True
 							EndIf
 						Else
@@ -950,3 +951,26 @@ Func TestSF()
 	ReturnHome()
 EndFunc
 
+Func SFLoop($iCountLoop = 1, $bStopWhenResourceFull = False)
+	If isGoldFull() And isElixirFull() And $bStopWhenResourceFull Then Return
+	For $i = 1 To $iCountLoop
+		ZoomOut()
+		PrepareSearch()
+		If Not $g_bRunState Then Return
+		VillageSearch()
+		If Not $g_bRunState Then Return
+		CheckZoomOut("VillageSearch")
+		PrepareAttack($DB)
+		If Not $g_bRunState Then Return
+		Local $Nside = ChkSmartFarm()
+		AttackSmartFarm($Nside[1], $Nside[2])
+		If Not $g_bRunState Then Return
+		ReturnHome()
+		If Not $g_bRunState Then Return
+		VillageReport()
+		If Not $g_bRunState Then Return
+		RequestCC()
+		Setlog("SF Loop [" & $i & "/" & $iCountLoop & "]", $COLOR_ACTION) 
+		If isGoldFull() And isElixirFull() And $bStopWhenResourceFull Then Return
+	Next
+EndFunc

@@ -47,8 +47,8 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 EndFunc   ;==>TrainIt
 
 Func CorrectYCoord(ByRef $aTrainPos)
-	If $aTrainPos[1] > 433 Then $aTrainPos[1] = 488
-	If $aTrainPos[1] < 433 Then $aTrainPos[1] = 400
+	If $aTrainPos[1] > 570 Then $aTrainPos[1] = 615
+	If $aTrainPos[1] < 570 Then $aTrainPos[1] = 520
 EndFunc
 
 Func GetImageToUse(Const $iIndex)
@@ -83,7 +83,7 @@ EndFunc   ;==>GetTrainPos
 Func GetCoordToUse(Const $asImageToUse, Const $iIndex)
 	Local $aTrainPos[5] = [-1, -1, -1, -1, $eBarb]
 	; Capture the screen for comparison
-	_CaptureRegion2(72, 350, 780, 520)
+	_CaptureRegion2(20, 485, 810, 645)
 
 	Local $iError = ""
 	For $i = 1 To $asImageToUse[0]
@@ -103,8 +103,8 @@ Func GetCoordToUse(Const $asImageToUse, Const $iIndex)
 				If UBound($aResult) > 1 Then
 					Local $aCoordinates = StringSplit($aResult[1], ",", $STR_NOCOUNT)
 					If UBound($aCoordinates) > 1 Then
-						Local $iButtonX = 72 + Int($aCoordinates[0])
-						Local $iButtonY = 350 + Int($aCoordinates[1])
+						Local $iButtonX = 20 + Int($aCoordinates[0])
+						Local $iButtonY = 485 + Int($aCoordinates[1])
 						Local $aTrainPos[2] = [$iButtonX, $iButtonY]
 						Return $aTrainPos
 					Else

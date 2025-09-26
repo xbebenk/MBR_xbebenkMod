@@ -345,7 +345,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 
-	LaunchTroop2($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot)
+	LaunchTroop2($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $g_iMinionPSlot)
 
 	CheckHeroesHealth()
 
@@ -374,7 +374,8 @@ Func SetSlotSpecialTroops()
 	$g_iWardenSlot = -1
 	$g_iChampionSlot = -1
 	$g_iClanCastleSlot = -1
-
+	$g_iMinionPSlot = -1
+	
 	For $i = 0 To UBound($g_avAttackTroops) - 1
 		If $g_avAttackTroops[$i][0] = $eCastle Or $g_avAttackTroops[$i][0] = $eWallW Or $g_avAttackTroops[$i][0] = $eBattleB Or $g_avAttackTroops[$i][0] = $eStoneS _ 
 								Or $g_avAttackTroops[$i][0] = $eSiegeB Or $g_avAttackTroops[$i][0] = $eLogL Or $g_avAttackTroops[$i][0] = $eFlameF Or $g_avAttackTroops[$i][0] = $eBattleD Then
@@ -387,6 +388,8 @@ Func SetSlotSpecialTroops()
 			$g_iWardenSlot = $i
 		ElseIf $g_avAttackTroops[$i][0] = $eChampion Then
 			$g_iChampionSlot = $i
+		ElseIf $g_avAttackTroops[$i][0] = $eMinionP Then
+			$g_iMinionPSlot = $i
 		EndIf
 	Next
 
@@ -395,6 +398,7 @@ Func SetSlotSpecialTroops()
 		SetDebugLog("SetSlotSpecialTroops() Queen Slot: " & $g_iQueenSlot, $COLOR_DEBUG)
 		SetDebugLog("SetSlotSpecialTroops() Warden Slot: " & $g_iWardenSlot, $COLOR_DEBUG)
 		SetDebugLog("SetSlotSpecialTroops() Champion Slot: " & $g_iChampionSlot, $COLOR_DEBUG)
+		SetDebugLog("SetSlotSpecialTroops() Minion Prince Slot: " & $g_iMinionPSlot, $COLOR_DEBUG)
 		SetDebugLog("SetSlotSpecialTroops() Clan Castle Slot: " & $g_iClanCastleSlot, $COLOR_DEBUG)
 	EndIf
 

@@ -52,7 +52,7 @@ Func ImgLocateBlacksmith($bLeaveButton = False)
 			Click($aRet[$i][1], $aRet[$i][2])
 			If _Sleep(1000) Then Return
 			
-			$aBuilding = BuildingInfo(242, 472)
+			$aBuilding = BuildingInfo(242, 477)
 			If StringInStr($aBuilding[1], "smith") Then 
 				$g_aiBlacksmithPos[0] = $aRet[$i][1]
 				$g_aiBlacksmithPos[1] = $aRet[$i][2]
@@ -67,7 +67,7 @@ Func ImgLocateBlacksmith($bLeaveButton = False)
 					If checkChatTabPixel() Then 
 						Click($aRet[$i][1], $aRet[$i][2])
 						If _Sleep(1000) Then Return
-						$aBuilding = BuildingInfo(242, 472)
+						$aBuilding = BuildingInfo(242, 477)
 						If StringInStr($aBuilding[1], "smith") Then ExitLoop
 					EndIf
 					If _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "ImgLocateBlacksmith") Then 
@@ -135,7 +135,7 @@ Func _LocateBlacksmith()
 			ClickAway()
 			Return
 		EndIf
-		Local $sBlacksmithInfo = BuildingInfo(242, 472)
+		Local $sBlacksmithInfo = BuildingInfo(242, 477)
 		If $sBlacksmithInfo[0] > 1 Or $sBlacksmithInfo[0] = "" Then
 			If StringInStr($sBlacksmithInfo[1], "smith") = 0 Then
 				Local $sLocMsg = ($sBlacksmithInfo[0] = "" ? "Nothing" : $sBlacksmithInfo[1])

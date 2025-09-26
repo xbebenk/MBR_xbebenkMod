@@ -60,7 +60,8 @@ Global $aIsGemWindow1[4] = [610, 236, 0xEC1115, 20] ; Main Screen, pixel left of
 Global $aIsGemWindow2[4] = [624, 214, 0xFF8D95, 20] ; Main Screen, pixel above Red X to close gem window
 Global $aIsGemWindow3[4] = [616, 249, 0xCE181E, 20] ; Main Screen, pixel below left Red X to close gem window
 Global $aIsGemWindow4[4] = [632, 249, 0xCE181E, 20] ; Main Screen, pixel below right Red X to close gem window
-Global $aIsTrainPage[4] = [765, 144, 0xD1151B, 20] ; Main Screen, Train page open - below red x button
+Global $aIsTrainPage[4] = [793, 168, 0xCE191F, 20] ; Main Screen, Train page open - below red x button
+Global $aIsTrainItPage[4] = [8, 472, 0x73695F, 20] ; Main Screen, TrainIt page open
 Global $aRtnHomeCloud1[4] = [56, 592, 0x0A223F, 15] ; Cloud Screen, during search, blue pixel in left eye
 Global $aRtnHomeCloud2[4] = [72, 592, 0x103F7E, 15] ; Cloud Screen, during search, blue pixel in right eye
 Global $aDetectLang[2] = [20, 636] ; Detect Language, bottom left Attack button must read "Attack"
@@ -158,9 +159,10 @@ Global Const $aPersonalChallengeCancelBtn[4] = [345, 400, 0xFDC875, 20] ; Person
 Global Const $aPersonalChallengeOkBtn[4] = [510, 400, 0xDFF887, 20] ; Personal Challenge Window - Okay button at Storage Full msg
 
 ;xbebenkmod
-Global $aBlackHead[4] = [629, 405, 0xFFEF48, 20] ; Black Barbarian Head
+Global $aBlackHead[4] = [629, 405, 0xFFEE49, 20] ; Black Barbarian Head
 Global $aOkayButton[2] = [430, 540]	; Okay button after BB attack, Screen 860x676
 Global $aOkayButtonRND[4] = [372, 530, 484, 565]	; Okay button after BB attack, RND Screen 860x676
+Global $aHeroHall[4] = [810, 190, 0x4D311D, 20]
 
 ;notif bar detection for BS5
 Global $aNotifBarBS5_a[4] = [266, 34, 0xFFFFFF, 0]

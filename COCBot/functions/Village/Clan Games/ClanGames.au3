@@ -175,8 +175,8 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 				ContinueLoop
 			EndIf
 
-			Click($aAllEvent[$i][1], $aAllEvent[$i][2])
-			If _Sleep(1750) Then Return
+			Click($aAllEvent[$i][1], $aAllEvent[$i][2], 1, 100, "Click Event to Start")
+			If _Sleep(1050) Then Return
 			;_ArrayDisplay($aAllEvent)
 			Return ClickOnEvent($YourAccScore, $aiScoreLimit, $sEventName, $getCapture)
 		Next
@@ -504,10 +504,8 @@ Func SelectEvent(ByRef $aSelectChallenges)
 			$aTmp[$i][4] = Number($aEventInfo[1])
 			$aTmp[$i][6] = Number($aEventInfo[0])
 		EndIf
-		Click($aTmp[$i][1], $aTmp[$i][2])
 		If _Sleep(1000) Then Return
 	Next
-	
 	$aSelectChallenges = $aTmp
 	
 	If $g_bChkClanGamesDebug Then Setlog("Benchmark SelectEvent: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
@@ -725,7 +723,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580) Then
 		Local $aTimer = GetEventTimeScore($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Starting Event " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", $COLOR_SUCCESS)
-		Click($g_iQuickMISX, $g_iQuickMISY)
+		Click($g_iQuickMISX, $g_iQuickMISY, 1, 100, "Click Start Event")
 		If _Sleep(1500) Then Return
 		GUICtrlSetData($g_hTxtClanGamesLog, @CRLF & _NowDate() & " " & _NowTime() & " [" & $g_sProfileCurrentName & "] - Starting : " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", 1)
 		_FileWriteLog($g_sProfileLogsPath & "\ClanGames.log", " [" & $g_sProfileCurrentName & "] - Starting : " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]")
@@ -759,11 +757,11 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 
 		;check if Challenge is BB Challenge, enabling force BB attack
 		If $g_bChkForceBBAttackOnClanGames Then
-			Click(450, 99) ;Click Clan Tab
+			Click(450, 99, 1, 100, "Click Clan Tab")
 			If _Sleep(3000) Then Return
-			Click(310, 99) ;Click Challenge Tab
+			Click(310, 99, 1, 100, "Click Challenge Tab")
 			If _Sleep(500) Then Return
-			Click(340, 215) ;Click Active Challenge
+			Click(340, 215, 1, 100, "Click Active Challenge")
 
 			For $i = 1 To 10
 				If _Sleep(500) Then Return
@@ -941,6 +939,7 @@ EndFunc   ;==>GetEventTimeScore
 
 Func GetEventInfo($x, $y)
 	Local $xRegion = 0, $yRegion = 300
+	Local $Ret
 	
 	If $y > 270 Then $yRegion = 410
 	;If $y > 430 Then $yRegion = 440
@@ -950,13 +949,15 @@ Func GetEventInfo($x, $y)
 	If $x > 530 Then $xRegion = 400
 	If $x > 660 Then $xRegion = 540
 	
-	Click($x, $y)
+	Click($x, $y, 1, 200, "Open CG Event Description")
 	If _Sleep(1000) Then Return
 	
 	If QuickMIS("BC1", $g_sImgStart, $xRegion, $yRegion, $xRegion + 60, $yRegion + 40) Then
-		Return GetEventTimeScore($g_iQuickMISX, $g_iQuickMISY)
+		$Ret = GetEventTimeScore($g_iQuickMISX, $g_iQuickMISY)
 	EndIf
+	Click(60, 90, 1, 200, "Close CG Event Description")
 	
+	Return $Ret
 EndFunc   ;==>GetEventInfo
 
 Func IsBBChallenge($i = Default, $j = Default)

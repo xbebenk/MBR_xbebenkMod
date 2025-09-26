@@ -168,12 +168,12 @@ Func getAllEmulators()
 		If GetVersionNormalized($__BlueStacks_Version) < GetVersionNormalized("0.10") Then $sEmulatorString &= "BlueStacks|"
 		If GetVersionNormalized($__BlueStacks_Version) > GetVersionNormalized("1.0") Then $sEmulatorString &= "BlueStacks2|"
 	EndIf
-	
+
 	$__BlueStacks5_Version = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "Version")
 	If Not @error Then
 		If GetVersionNormalized($__BlueStacks5_Version) > GetVersionNormalized("5.0") Then $sEmulatorString &= "BlueStacks5|"
 	EndIf
-	
+
 	; Nox :
 	Local $NoxEmulator = GetNoxPath()
 	If FileExists($NoxEmulator) Then $sEmulatorString &= "Nox|"
@@ -181,10 +181,6 @@ Func getAllEmulators()
 	; Memu :
 	Local $MEmuEmulator = GetMEmuPath()
 	If FileExists($MEmuEmulator) Then $sEmulatorString &= "MEmu|"
-
-	; iTools
-	Local $iToolsEmulator = GetiToolsPath()
-	If FileExists($iToolsEmulator) Then $sEmulatorString &= "iTools|"
 
 	Local $sResult = StringRight($sEmulatorString, 1)
 	If $sResult == "|" Then $sEmulatorString = StringTrimRight($sEmulatorString, 1)
@@ -198,7 +194,7 @@ Func getAllEmulators()
 			If StringInStr($aEmulator[$i], "Memu") Then $emuVer = $__MEmu_Version
 			If StringInStr($aEmulator[$i], "nox") Then $emuVer = $__Nox_Version
 			SetLog("  - " & $aEmulator[$i] & " version: " & $emuVer, $COLOR_SUCCESS)
-			If StringInStr($aEmulator[$i], "Memu") And GetVersionNormalized($__MEmu_Version) > GetVersionNormalized("5.2") And GetVersionNormalized($__MEmu_Version) < GetVersionNormalized("7.2") Then 
+			If StringInStr($aEmulator[$i], "Memu") And GetVersionNormalized($__MEmu_Version) > GetVersionNormalized("5.2") And GetVersionNormalized($__MEmu_Version) < GetVersionNormalized("7.2") Then
 				Setlog("Memu v" & $__MEmu_Version & " not fully supported on this Mod", $COLOR_WARNING)
 				Setlog("Please upgrade to Memu version 7.2.9 or later", $COLOR_WARNING)
 			EndIf
@@ -207,7 +203,7 @@ Func getAllEmulators()
 		Setlog("No Emulator found in your machine")
 		Return
 	EndIf
-	
+
 	GUICtrlSetData($g_hCmbAndroidEmulator, $sEmulatorString)
 	; $g_sAndroidEmulator Cosote Var to store the Emulator
 	_GUICtrlComboBox_SelectString($g_hCmbAndroidEmulator, $g_sAndroidEmulator)
@@ -239,8 +235,6 @@ Func getAllEmulatorsInstances()
 			$sEmulatorPath = GetNoxPath() & "\BignoxVMS"  ; C:\Program Files\Nox\bin\BignoxVMS
 		Case "MEmu"
 			$sEmulatorPath = GetMEmuPath() & "\MemuHyperv VMs"  ; C:\Program Files\Microvirt\MEmu\MemuHyperv VMs
-		Case "iTools"
-			$sEmulatorPath = GetiToolsPath() & "\Repos\VMs"  ; C:\Program Files (x86)\ThinkSky\iToolsAVM\Repos\VMs
 	EndSwitch
 
 	; Just in case

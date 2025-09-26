@@ -275,7 +275,7 @@ Func CreateMainGUIControls()
 		$g_hFrmBotLogoUrlSmall = GUICreate("My Bot URL", 290, 13, 0, 0, BitOR($WS_CHILD, $WS_TABSTOP), BitOR($WS_EX_TOOLWINDOW, $WS_EX_NOACTIVATE, ($g_bAndroidShieldPreWin8 ? 0 : $WS_EX_LAYERED)), $g_hFrmBot)
 		;WinSetTrans($g_hFrmBotLogoUrlSmall, "", 254) ; trick to hide buttons from Android Screen that is not always refreshing
 		$g_hFrmBot_URL_PIC2 = _GUICtrlCreatePic($g_sLogoUrlSmallPath, 0, 0, 290, 13)
-		GUICtrlSetCursor(-1, 0)
+		;GUICtrlSetCursor(-1, 0)
 
 		GUISwitch($g_hFrmBotEx)
 		; fill button space
@@ -288,14 +288,14 @@ Func CreateMainGUIControls()
 	GUICtrlSetOnEvent(-1, "BotMoveRequest")
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	
-	$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel("xbebenkMod_" & $g_sXModversion & " ", $_GUI_MAIN_WIDTH - 200, 15, 200 , 20 ,$SS_RIGHT)
+	$g_hFrmBot_lbl_Mod = GUICtrlCreateLabel($g_sXModversion & " ", $_GUI_MAIN_WIDTH - 200, 15, 200 , 20 ,$SS_RIGHT)
 	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-	GUICtrlSetColor(-1, $COLOR_INFO)
-	GUICtrlSetFont (-1,9, 800)
+	GUICtrlSetColor(-1, $COLOR_ERROR)
+	GUICtrlSetFont (-1,9, 900)
 	GUICtrlSetState($g_hFrmBot_MAIN_PIC, $GUI_ENABLE)
 
 	$g_hFrmBot_URL_PIC = _GUICtrlCreatePic($g_sLogoUrlPath, 0, $_GUI_MAIN_TOP + 45, $_GUI_MAIN_WIDTH, 13)
-	GUICtrlSetCursor(-1, 0)
+	;GUICtrlSetCursor(-1, 0)
 	
 	GUISwitch($g_hFrmBot)
 	$g_hFrmBotEmbeddedShieldInput = GUICtrlCreateInput("", 0, 0, -1, -1, $WS_TABSTOP)

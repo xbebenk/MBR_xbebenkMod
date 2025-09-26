@@ -302,7 +302,7 @@ Func WinGetAndroidHandle($bInitAndroid = Default, $bTestPid = False)
 	$g_bWinGetAndroidHandleActive = True
 	Local $currHWnD = $g_hAndroidWindow
 
-	If $g_hAndroidWindow = 0 Or $g_bAndroidBackgroundLaunched = False Then _WinGetAndroidHandle()
+	If $g_hAndroidWindow = 0 Or $g_bAndroidBackgroundLaunched = False Then _WinGetAndroidHandle(True)
 	If IsHWnd($g_hAndroidWindow) = 1 Then
 		; Android Window found
 		Local $aPos = WinGetPos($g_hAndroidWindow)
@@ -347,6 +347,8 @@ Func WinGetAndroidHandle($bInitAndroid = Default, $bTestPid = False)
 				; rehide Android
 				If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
 					HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
+				ElseIf @OSVersion = "WIN_11" And $g_iAndroidBackgroundMode = 1 Then
+					_MoveAndroidWinToDesktop(1)
 				EndIf
 			EndIf
 		EndIf
@@ -445,7 +447,7 @@ EndFunc   ;==>GetAndroidPid
 ; Find Android Window defined by $g_sAndroidTitle in WinTitleMatchMode -1 and updates $g_hAndroidWindow and $g_sAndroidTitle when found.
 ; Uses different strategies to find best matching Window.
 ; Returns Android Window Handle or 0 if Window not found
-Func _WinGetAndroidHandle($bFindByTitle = False)
+Func _WinGetAndroidHandle($bFindByTitle = True)
 	; Default WinTitleMatchMode should be 3 (exact match)
 	Local $hWin = WinGetHandle($g_hAndroidWindow)
 	If $hWin > 0 And $hWin = $g_hAndroidWindow Then Return $g_hAndroidWindow
@@ -1006,17 +1008,6 @@ Func InitAndroid($bCheckOnly = False, $bLogChangesOnly = True)
 			If ($g_sAndroidPicturesHostFolder <> "" Or BitAND($g_iAndroidSecureFlags, 1) = 1) Then
 				DirCreate($g_sAndroidPicturesHostPath & $g_sAndroidPicturesHostFolder)
 			EndIf
-		ElseIf $g_sAndroidPicturesHostPath <> "" Then
-			#cs
-			If DirCreate($g_sAndroidPicturesHostPath) Then
-				SetLog("Shared Folder doesn't exist and was now created:", $COLOR_ERROR)
-				SetLog($g_sAndroidPicturesHostPath, $COLOR_ERROR)
-				SetLog("Please restart " & $g_sAndroidEmulator & " instance " & $g_sAndroidInstance, $COLOR_ERROR)
-			Else
-				SetLog("Shared Folder doesn't exist, please fix:", $COLOR_ERROR)
-				SetLog($g_sAndroidPicturesHostPath, $COLOR_ERROR)
-			EndIf
-			#ce
 		EndIf
 		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesHostPath) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Shared Folder on Host: " & $g_sAndroidPicturesHostPath)
 		If CompareAndUpdate($aPriorValues[IncrUpdate($i)], $g_sAndroidPicturesHostFolder) Or $bLogChangesOnly = False Then SetDebugLog("Android ADB Shared SubFolder: " & $g_sAndroidPicturesHostFolder)
@@ -1049,7 +1040,7 @@ EndFunc   ;==>GetAndroidProgramParameter
 
 Func AndroidBotStartEvent()
 	; restore Android Window hidden state
-	reHide()
+	;reHide()
 
 	CheckAndroidRebootCondition(True, True) ; Log when Android gets automatically rebooted
 
@@ -1365,7 +1356,7 @@ Func SetScreenAndroid()
 	ResumeAndroid()
 	If Not $g_bRunState Then Return False
 	; Set Android screen size and dpi
-	SetLog("Set " & $g_sAndroidEmulator & " screen resolution to " & $g_iAndroidClientWidth & " x " & $g_iAndroidClientHeight, $COLOR_INFO)
+	SetDebugLog("Set " & $g_sAndroidEmulator & " screen resolution to " & $g_iAndroidClientWidth & " x " & $g_iAndroidClientHeight, $COLOR_INFO)
 	Local $Result = Execute("SetScreen" & $g_sAndroidEmulator & "()")
 	If $Result Then
 		SetLog("A restart of your computer might be required", $COLOR_ACTION)
@@ -1776,14 +1767,14 @@ Func AndroidInitPrompt()
 	Local $bIdentified = False
 	Local $s
 	Sleep(250)
-	AndroidAdbSendShellCommand("", -250, Default, False, False) ; just send enter to clear any incomplete entered command (required for BlueStacks N)
-	AndroidAdbSendShellCommand("", -250, Default, False, False) ; just send enter again to clear any incomplete entered command (required for BlueStacks N)
+	;AndroidAdbSendShellCommand("", -250, Default, False, False) ; just send enter to clear any incomplete entered command (required for BlueStacks N)
+	;AndroidAdbSendShellCommand("", -250, Default, False, False) ; just send enter again to clear any incomplete entered command (required for BlueStacks N)
 	If $g_bAndroidAdbPromptUseGiven Then
 		$s = AndroidAdbSendShellCommand("", -500, Default, False, False)
 		If $s Then
 			; assume this is the prompt
 			$g_sAndroidAdbPrompt = StringStripWS($s, $STR_STRIPLEADING)
-			SetDebugLog("Initialize shell prompt with '" & $g_sAndroidAdbPrompt & "'")
+			SetDebugLog("[1] Initialize shell prompt with '" & $g_sAndroidAdbPrompt & "'")
 			$bIdentified = True
 		Else
 			SetDebugLog("ADB Prompt not identified!", $COLOR_ERROR)
@@ -1791,7 +1782,7 @@ Func AndroidInitPrompt()
 		EndIf
 	EndIf
 	If Not $bIdentified Then
-		SetDebugLog("Initialize shell prompt with '" & $g_sAndroidAdbPrompt & "'")
+		SetDebugLog("[2] Initialize shell prompt with '" & $g_sAndroidAdbPrompt & "'")
 		$s = AndroidAdbSendShellCommand("export PS1=" & $g_sAndroidAdbPrompt, -500, Default, False) ; set prompt to unique string $g_sAndroidAdbPrompt
 	EndIf
 	Return $s
@@ -1958,23 +1949,14 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				If BitAND($g_iAndroidSupportFeature, 1) = 0 Then $g_bChkBackgroundMode = False ; disable also background mode the hard way
 				Return SetError(1, 0)
 			Else
-				AndroidInitPrompt()
+				;SetDebugLog("$g_iAndroidAdbProcess[0] <> 0")
+				;AndroidInitPrompt()
 			EndIf
 		EndIf
 
 		; call init script
 		If $g_bAndroidAdbInstance = True Then
 			$s = ""
-			; increase shell priority
-			#cs 2016-04-08 cosote Replaced by shell.init.script
-				Local $renice = "/system/xbin/renice -20 "
-				$s = AndroidAdbSendShellCommand($renice & "$$", Default, $wasRunState, False) ; increase shell priority to maximum
-				If StringInStr($s, "not found") > 0 Then
-				$renice = "renice -- -20 "
-				$s = AndroidAdbSendShellCommand($renice & "$$", Default, $wasRunState, False) ; increase shell priority to maximum
-				EndIf
-				$s &= AndroidAdbSendShellCommand("stop media", Default, $wasRunState, False) ; stop media service as it can consume up to 30% Android CPU
-			#ce
 			Local $scriptFile = ""
 			If $scriptFile = "" And FileExists($g_sAdbScriptsPath & "\shell.init." & $g_sAndroidEmulator & ".script") = 1 Then $scriptFile = "shell.init." & $g_sAndroidEmulator & ".script"
 			If $scriptFile = "" Then $scriptFile = "shell.init.script"
@@ -4172,10 +4154,15 @@ Func ShowAndroidWindow($hHWndAfter = Default, $bRestorePosAndActivateWindow = De
 	Return HideAndroidWindow(False, $bRestorePosAndActivateWindow, $bFastCheck, $sSource & "->ShowAndroidWindow", $hHWndAfter)
 EndFunc   ;==>ShowAndroidWindow
 
+Func _MoveAndroidWinToDesktop($iDesktopNumber = 0)
+	Local $iAndroidPid = GetAndroidPid()
+	Return Run(@ScriptDir & "\lib\VirtualDesktop11-24H2.exe /anim:0 /gd:" & $iDesktopNumber & " /mw:" & $iAndroidPid, "", @SW_HIDE)
+EndFunc
+
 Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default, $bFastCheck = Default, $sSource = "Unknown", $hHWndAfter = Default)
 	If $bFastCheck = Default Then $bFastCheck = True
 	If $hHWndAfter = Default Then $hHWndAfter = $HWND_TOPMOST
-	;SetDebugLog("HideAndroidWindow: " & $bHide & ", " & $bRestorePosAndActivateWhenShow & ", " & $bFastCheck & ", " & $sSource)
+	SetDebugLog("HideAndroidWindow: " & $bHide & ", " & $bRestorePosAndActivateWhenShow & ", " & $bFastCheck & ", " & $sSource)
 	ResumeAndroid()
 	SetError(0)
 	If $bFastCheck Then
@@ -4189,6 +4176,8 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 	If $bHide = True Then
 		If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
 			_MoveAppToSpecificDesktop($g_hAndroidWindow, 2)
+		ElseIf @OSVersion = "WIN_11" And $g_iAndroidBackgroundMode = 1 Then
+			_MoveAndroidWinToDesktop(1)
 		Else
 			WinMove($g_hAndroidWindow, "", -32000, -32000)
 		EndIf
@@ -4208,6 +4197,8 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 					Else
 						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX - 870, $g_iFrmBotPosY)
 					EndIf
+				ElseIf @OSVersion = "WIN_11" And $g_iAndroidBackgroundMode = 1 Then
+					_MoveAndroidWinToDesktop(0)
 				Else
 					WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
 					WinActivate($g_hAndroidWindow)
@@ -4217,6 +4208,8 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 				If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
 					_MoveAppToSpecificDesktop($g_hAndroidWindow, 1)
 					_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
+				ElseIf @OSVersion = "WIN_11" And $g_iAndroidBackgroundMode = 1 Then
+					_MoveAndroidWinToDesktop(0)
 				Else
 					Local $a = WinGetPos($g_hAndroidWindow)
 					If UBound($a) > 1 And ($a[0] < -30000 Or $a[1] < -30000) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
@@ -4232,6 +4225,8 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 						WinMove($g_hAndroidWindow, "", $g_iFrmBotPosX - 870, $g_iFrmBotPosY)
 					EndIf
 					WinActivate($g_hAndroidWindow)
+				ElseIf @OSVersion = "WIN_11" And $g_iAndroidBackgroundMode = 1 Then
+					_MoveAndroidWinToDesktop(0)
 				Else
 					Local $a = WinGetPos($g_hAndroidWindow)
 					If UBound($a) > 1 And ($a[0] <> $g_iAndroidPosX Or $a[1] <> $g_iAndroidPosY) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
@@ -4418,10 +4413,9 @@ Func LaunchAndroid($sProgramPath, $sCmdParam, $sPath, $iWaitInSecAfterLaunch = D
 	If $sCmdParam And StringLeft($sCmdParam, 1) <> " " Then
 		$sCmdParam = " " & $sCmdParam
 	EndIf
-		; if shared folder is not available, configure it
-		If Not $g_sAndroidPicturesHostPath Then
-			SetScreenAndroid()
-		EndIf
+	
+	SetScreenAndroid()
+	
 	SetLog("Please wait while " & $g_sAndroidEmulator & " and CoC start...", $COLOR_SUCCESS)
 	Local $pid = 0
 	;$PID = ShellExecute($g_sAndroidProgramPath, $cmdPar, $__MEmu_Path)
@@ -4657,6 +4651,7 @@ Func PullSharedPrefs($sProfile = $g_sProfileCurrentName)
 		Next
 		SetDebugLog(_ArrayToString($a, ","))
 		SetLog("Pulled shared_prefs of profile " & $sProfile & " (" & $iFilesPulled & " files)")
+		If _Sleep(2000) Then Return
 	Else
 		; something went wrong
 		DirRemove($g_sPrivateProfilePath & "\" & $sProfile & "\shared_prefs", 1)

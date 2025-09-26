@@ -81,10 +81,6 @@ Func Initiate()
 		If Not $g_bSearchMode Then
 			BotDetectFirstTime()
 			If Not $g_bRunState Then Return
-
-			If $g_bCheckGameLanguage Then TestLanguage()
-			If Not $g_bRunState Then Return
-
 			runBot()
 		EndIf
 	Else
@@ -110,12 +106,6 @@ Func InitiateLayout()
 		If Not CheckScreenAndroid($BSx, $BSy) Then ; Is Client size now correct?
 			If $AdjustScreenIfNecessarry = True Then
 				Local $MsgRet = $IDOK
-				;If _Sleep(3000) Then Return False
-				;Local $MsgRet = MsgBox(BitOR($MB_OKCANCEL, $MB_SYSTEMMODAL), "Change the resolution and restart " & $g_sAndroidEmulator & "?", _
-				;	"Click OK to adjust the screen size of " & $g_sAndroidEmulator & " and restart the emulator." & @CRLF & _
-				;	"If your " & $g_sAndroidEmulator & " really has the correct size (" & $g_iDEFAULT_WIDTH & " x " & $g_iDEFAULT_HEIGHT & "), click CANCEL." & @CRLF & _
-				;	"(Automatically Cancel in 15 Seconds)", 15)
-
 				If $MsgRet = $IDOK Then
 					Return RebootAndroidSetScreen() ; recursive call!
 					;Return "RebootAndroidSetScreen()"

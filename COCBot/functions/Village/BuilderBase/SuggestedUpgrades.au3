@@ -131,7 +131,7 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 	If $Elix > $Gold Then $ElixMultiply += 1
 	
 	Local $aBOBControl[3][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10]]
-	Local $aPriority[9][2] = [["Storage", 13], ["Army", 13], ["Barracks", 10], ["Star Lab", 12], ["Machine", 11], ["Copter", 11], ["Hall", 12], ["Gem", 9], ["Clock", 9]]
+	Local $aPriority[9][2] = [["Storage", 13], ["Army", 13], ["Barracks", 10], ["Star Lab", 14], ["Machine", 11], ["Copter", 11], ["Hall", 12], ["Gem", 9], ["Clock", 9]]
 	
 	Local $aTmpCoord, $aBuilding[0][8], $BuildingName, $UpgradeCost, $aUpgradeName, $tmpcost, $lenght = 0, $skipType = 0, $sCostType = ""
 	
@@ -247,7 +247,7 @@ EndFunc
 Func DoUpgradeBB($CostType = "Gold", $Cost = 0, $bTest = False)
 	If _Sleep(1000) Then Return
 	For $i = 1 To 3
-		Local $aBuildingName = BuildingInfo(242, 472)
+		Local $aBuildingName = BuildingInfo(242, 479)
 		If $aBuildingName[0] = "" Then
 			SetLog("[" & $i & "] Trying to get upgrade name and level...", $COLOR_ACTION)
 			If _Sleep(1000) Then Return

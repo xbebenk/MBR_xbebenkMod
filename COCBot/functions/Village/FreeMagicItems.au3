@@ -139,7 +139,7 @@ Func IsTraderWindowOpen()
 			$bRet = True
 			ExitLoop
 		Else
-			SetDebugLog("Waiting for FreeMagicWindowOpen #" & $i, $COLOR_ACTION)
+			SetDebugLog("Waiting for TraderWindowOpen #" & $i, $COLOR_ACTION)
 		EndIf
 		If _Sleep(500) Then Return
 	Next
@@ -309,7 +309,7 @@ Func OpenMagicItemWindow()
 	If _Sleep(500) Then Return
 	
 	If Not $g_bRunState Then Return
-	Local $BuildingInfo = BuildingInfo(245, 472)
+	Local $BuildingInfo = BuildingInfo(242, 477)
 	If $BuildingInfo[1] = "Town Hall" Then
 		SetDebugLog("Opening Magic Item Window")
 		If ClickB("MagicItem") Then

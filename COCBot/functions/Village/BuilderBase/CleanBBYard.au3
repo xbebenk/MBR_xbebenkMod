@@ -21,41 +21,32 @@ Func CleanBBYard($bTest = False)
 	EndIf
 	
 	Local $Locate = 0
-	If $g_iFreeBuilderCountBB > 0 Then
-		Local $Result = QuickMIS("CNX", $g_sImgCleanBBYard, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
-		If IsArray($Result) And UBound($Result) > 0 Then
-			For $i = 0 To UBound($Result) - 1
-				If isInsideDiamondXY($Result[$i][1], $Result[$i][2], True) Then
-					Click($Result[$i][1], $Result[$i][2])
-					If _Sleep(2500) Then Return
-					If ClickRemoveObstacleBB($bTest) Then
-						$Locate += 1
-						SetLog($Result[$i][0] & " found (" & $Result[$i][1] & "," & $Result[$i][2] & ")", $COLOR_SUCCESS)
-						Click(800, 300) ;clickaway
-						If _Sleep(1500) Then Return
-						getBuilderCount(False, True)
-						If $g_iFreeBuilderCountBB > 0 Then ContinueLoop
-					Else
-						If _Sleep(500) Then Return
-						ContinueLoop
-					EndIf
-					
-					BuilderBaseReport(True, False)
-					If $g_aiCurrentLootBB[$eLootElixirBB] < 20000 Then
-						SetLog("Current BB Elixir Below 20000, skip CleanBBYard", $COLOR_DEBUG)
-						ExitLoop
-					EndIf
-					
-					If StringInStr($Result[$i][0], "Groove") Then
-						_SleepStatus(72000)
-					Else
-						_SleepStatus(12000)
-					EndIf
-				Else 
-					SetLog("[" & $Result[$i][0] & "] Coord Outside Village [" & $Result[$i][1] & ", " & $Result[$i][2] & "]", $COLOR_DEBUG)
+	
+	Local $Result = QuickMIS("CNX", $g_sImgCleanBBYard, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+	If IsArray($Result) And UBound($Result) > 0 Then
+		For $i = 0 To UBound($Result) - 1
+			If isInsideDiamondXY($Result[$i][1], $Result[$i][2], True) Then
+				Click($Result[$i][1], $Result[$i][2])
+				If _Sleep(2500) Then Return
+				If ClickRemoveObstacleBB($bTest) Then
+					$Locate += 1
+					SetLog($Result[$i][0] & " found (" & $Result[$i][1] & "," & $Result[$i][2] & ")", $COLOR_SUCCESS)
+					Click(800, 300) ;clickaway
+					If _Sleep(1500) Then Return
+				Else
+					If _Sleep(500) Then Return
+					ContinueLoop
 				EndIf
-			Next
-		EndIf
+				
+				BuilderBaseReport(True, False)
+				If $g_aiCurrentLootBB[$eLootElixirBB] < 20000 Then
+					SetLog("Current BB Elixir Below 20000, skip CleanBBYard", $COLOR_DEBUG)
+					ExitLoop
+				EndIf
+			Else 
+				SetLog("[" & $Result[$i][0] & "] Coord Outside Village [" & $Result[$i][1] & ", " & $Result[$i][2] & "]", $COLOR_DEBUG)
+			EndIf
+		Next
 	EndIf
 	
 	If $Locate = 0 Then 

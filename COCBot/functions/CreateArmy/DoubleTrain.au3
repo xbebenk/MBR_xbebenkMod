@@ -53,46 +53,17 @@ EndFunc   ;==>TrainFullTroop
 Func FillIncorrectTroopCombo($caller = "Unknown")
 	If Not $g_bIgnoreIncorrectTroopCombo Then Return
 	SetLog("Train to Fill Incorrect Troop Combo", $COLOR_ACTION)
-	
-	If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
-	Local $CampOCR = GetCurrentTroop(95, 163)
-	If Not $g_bRunState Then Return
-	
-	;If $g_bDebugSetlog Then 
-	SetLog("CampOCR:" & _ArrayToString($CampOCR) & " Called from : " & $caller)
-	
-	If $CampOCR[3] > 640 Then 
-		SetLog("Impossible! wrong troop capacity OCRread", $COLOR_DEBUG1)
-		Return
-	EndIf
-	
-	If $CampOCR[0] = 0 Then ;no troop trained on 1st army 
-		SetLog("no need to fill troop on 1st army", $COLOR_DEBUG1)
-		Return
-	EndIf
-	
-	If $CampOCR[2] = 0 Or $CampOCR[0] = ($CampOCR[1] * 2) Then ;no troop trained on 2nd Army
-		SetLog("no need to fill troop on 2nd Army", $COLOR_DEBUG1)
-		Return
-	EndIf
-	
-	Local $bQueue = $CampOCR[2] < 0 ? True : False ;campOCR[2] read is remain space to train, negative value on 2nd army
-	Local $TroopSpace = $bQueue ? (Number($CampOCR[1]) * 2) - Number($CampOCR[0]) : Number($CampOCR[2])
-	If $TroopSpace < 0 Then Return
-	SetLog("TroopSpace = " & $TroopSpace, $COLOR_DEBUG)
-	
+	Click(500, 260, 1, 100, "Click Train Troops")
+	If _Sleep(1000) Then Return
 	Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
 	Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
 	Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
-	Local $TroopQuantToFill = Floor($TroopSpace/$g_sCmbFICTroops[$FillTroopIndex][2])
-	SetLog("TroopQuantToFill = x" & $TroopQuantToFill & " " & $sTroopName, $COLOR_DEBUG)
+	Local $TroopQuantToFill = 5
+	SetLog("Troop To Fill = " & $sTroopName, $COLOR_DEBUG)
 	
-	If $TroopQuantToFill > 0 Then
-		If _Sleep(500) Then Return
-		If Not DragIfNeeded($g_sCmbFICTroops[$FillTroopIndex][0]) Then Return False
-		SetLog("Training " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_SUCCESS)
-		TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
-	EndIf
+	TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
+	ClickAway()
+	If _Sleep(500) Then Return
 EndFunc
 
 Func BrewFullSpell($bQueue = False)
@@ -118,40 +89,21 @@ Func BrewFullSpell($bQueue = False)
 EndFunc   ;==>BrewFullSpell
 
 Func FillIncorrectSpellCombo($caller = "Unknown")
+
 	If Not $g_bIgnoreIncorrectSpellCombo Then Return
 	SetLog("Train to Fill Incorrect Spell Combo", $COLOR_ACTION)
-	
-	If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
-	Local $SpellOCR = GetCurrentSpell(95, 163)
-	If Not $g_bRunState Then Return
-	
-	If $g_bDebugSetlog Then SetLog("SpellOCR:" & _ArrayToString($SpellOCR) & " Called from : " & $caller)
-	
-	If $SpellOCR[0] = 0 Then ;no troop trained on 1st army 
-		SetLog("no need to fill troop on 1st army", $COLOR_DEBUG1)
-		Return
-	EndIf
-	
-	If $SpellOCR[2] = 0 Or $SpellOCR[0] = ($SpellOCR[1] * 2) Then ;no troop trained on 2nd Army
-		SetLog("no need to fill troop on 2nd Army", $COLOR_DEBUG1)
-		Return
-	EndIf
-	
-	Local $bQueue = $SpellOCR[2] < 0 ? True : False ;SpellOCR[2] read is remain space to train, negative value on 2nd army
-	Local $SpellSpace = $bQueue ? (Number($SpellOCR[1]) * 2) - Number($SpellOCR[0]) : Number($SpellOCR[2])
-	If $SpellSpace < 0 Then Return
-	SetLog("SpellSpace = " & $SpellSpace, $COLOR_DEBUG)
-	
+	Click(500, 370, 1, 100, "Click Train Spells")
+	If _Sleep(1000) Then Return
 	Local $FillSpellIndex = $g_iCmbFillIncorrectSpellCombo
 	Local $sSpellName = $g_sCmbFICSpells[$FillSpellIndex][1]
 	Local $iSpellIndex = TroopIndexLookup($g_sCmbFICSpells[$FillSpellIndex][0])
-	Local $SpellQuantToFill = Floor($SpellSpace/$g_sCmbFICSpells[$FillSpellIndex][2])
+	Local $SpellQuantToFill = 1
 	
-	If $SpellQuantToFill > 0 Then
-		If _Sleep(500) Then Return
-		SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
-		TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
-	EndIf
+	SetLog("Spell To Fill = " & $sSpellName, $COLOR_DEBUG)
+	TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
+	ClickAway()
+	If _Sleep(500) Then Return
+	
 EndFunc
 
 Func TopUpUnbalancedSpell($iUnbalancedSpell = 0)

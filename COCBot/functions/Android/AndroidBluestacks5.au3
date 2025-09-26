@@ -139,16 +139,16 @@ Func ConfigureSharedFolderBlueStacks5($iMode = 0, $bSetLog = Default)
 						$bResult = True
 						$g_bAndroidSharedFolderAvailable = True
 						$g_sAndroidPicturesPath = "/mnt/windows/BstSharedFolder/"
-						SetLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
-						SetLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
+						SetDebugLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
+						SetDebugLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
 					EndIf
 				EndIf
 			Next
 			If Not $bResult Then ;set default value
 				$g_sAndroidPicturesHostPath = "C:\ProgramData\BlueStacks_nxt\Engine\UserData\SharedFolder\"
 				$g_sAndroidPicturesPath = "/mnt/windows/BstSharedFolder/"
-				SetLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
-				SetLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
+				SetDebugLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
+				SetDebugLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
 				$bResult = True
 			EndIf
 		Case 1 ; create missing shared folder
@@ -189,15 +189,10 @@ Func InitBlueStacks5($bCheckOnly = False)
 		$__VBoxManage_Path = $__BlueStacks_Path & "BstkVMMgr.exe"
 		Local $bsNow = GetVersionNormalized($__BlueStacks5_Version)
 		If $bsNow > GetVersionNormalized("5.0") Then
-			; only Version 4 requires new options
-			;$g_sAndroidAdbInstanceShellOptions = " -t -t" ; Additional shell options, only used by BlueStacks2 " -t -t"
-			$g_sAndroidAdbShellOptions = " /data/anr/../../system/xbin/bstk/su root" ; Additional shell options when launch shell with command, only used by BlueStacks2 " /data/anr/../../system/xbin/bstk/su root"
-		
-			; tcp forward not working in BS4
+			$g_sAndroidAdbShellOptions = " /data/anr/../../system/xbin/bstk/su root" 
 			$g_iAndroidAdbMinitouchMode = 1
 		EndIf
-
-		CheckBlueStacksVersionMod()
+		GetBlueStacks5BackgroundMode()
 	EndIf
 
 	Return $bInstalled
@@ -219,11 +214,13 @@ Func GetBlueStacks5BackgroundMode()
 	If IsArray($GLRenderMode) Then
 		SetDebugLog("GLRenderMode = " & $GLRenderMode[0])
 		Switch $GLRenderMode[0]
-			Case "dx"
+			Case "dx", "vlcn"
 				; DirectX
+				$g_iAndroidBackgroundMode = $g_iAndroidBackgroundModeDirectX
 				Return $g_iAndroidBackgroundModeDirectX
 			Case "gl"
 				; OpenGL
+				$g_iAndroidBackgroundMode = $g_iAndroidBackgroundModeOpenGL
 				Return $g_iAndroidBackgroundModeOpenGL
 			Case Else
 				SetLog($g_sAndroidEmulator & " unsupported render mode " & $GLRenderMode, $COLOR_WARNING)
@@ -231,10 +228,6 @@ Func GetBlueStacks5BackgroundMode()
 		EndSwitch
 	EndIf
 EndFunc   ;==>GetBlueStacksBackgroundMode
-
-Func RestartBlueStacks5CoC()
-	Return RestartBlueStacksXCoC()
-EndFunc   ;==>RestartBlueStacks2CoC
 
 Func CheckScreenBlueStacks5($bSetLog = True)
 	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
@@ -304,9 +297,6 @@ EndFunc   ;==>SetScreenBlueStacks2
 Func ConfigBlueStacks5WindowManager()
 	If Not $g_bRunState Then Return
 	Local $cmdOutput
-	; shell wm density 160
-	; shell wm size 860x672
-	; shell reboot
 
 	; Reset Window Manager size
 	$cmdOutput = AndroidAdbSendShellCommand("wm size reset", Default, Default, False)
@@ -363,51 +353,30 @@ Func GetBlueStacks5SvcPid()
 EndFunc   ;==>GetBlueStacksSvcPid
 
 Func CloseBlueStacks5()
-
-	Local $bOops = False
-
 	If Not InitAndroid() Then Return
 
-	If Not CloseUnsupportedBlueStacksX(False) And GetVersionNormalized($g_sAndroidVersion) > GetVersionNormalized("2.10") Then
+	If GetVersionNormalized($g_sAndroidVersion) > GetVersionNormalized("5.0") Then
 		; BlueStacks 3 supports multiple instance
-		Local $aFiles = ["HD-Frontend.exe", "HD-Plus-Service.exe", "HD-Service.exe"]
-
+		Local $sFile = "HD-Player.exe"
 		Local $bError = False
-		For $sFile In $aFiles
-			Local $PID
-			$PID = ProcessExists2($sFile, $g_sAndroidInstance)
-			If $PID Then
-				ShellExecute(@WindowsDir & "\System32\taskkill.exe", " -f -t -pid " & $PID, "", Default, @SW_HIDE)
-				If _Sleep(1000) Then Return ; Give OS time to work
-			EndIf
-		Next
-		If _Sleep(1000) Then Return ; Give OS time to work
-		For $sFile In $aFiles
-			Local $PID
-			$PID = ProcessExists2($sFile, $g_sAndroidInstance)
-			If $PID Then
-				SetLog($g_sAndroidEmulator & " failed to kill " & $sFile, $COLOR_ERROR)
-			EndIf
-		Next
+		Local $PID
 
+		$PID = ProcessExists2($sFile, $g_sAndroidInstance)
+		If $PID Then
+			ShellExecute(@WindowsDir & "\System32\taskkill.exe", " -f -t -pid " & $PID, "", Default, @SW_HIDE)
+			If _Sleep(1000) Then Return ; Give OS time to work
+		EndIf
+			
+		$PID = ProcessExists2($sFile, $g_sAndroidInstance)
+		If $PID Then
+			SetLog($g_sAndroidEmulator & " failed to kill " & $sFile, $COLOR_ERROR)
+		EndIf
+	
 		; also close vm
 		CloseVboxAndroidSvc()
-	Else
-		SetDebugLog("Closing BlueStacks: " & $__BlueStacks_Path & "HD-Quit.exe")
-		RunWait($__BlueStacks_Path & "HD-Quit.exe")
-		If @error <> 0 Then
-			SetLog($g_sAndroidEmulator & " failed to quit", $COLOR_ERROR)
-			;SetError(1, @extended, -1)
-			;Return False
-		EndIf
 	EndIf
 
 	If _Sleep(2000) Then Return ; wait a bit
-
-	If $bOops Then
-		SetError(1, @extended, -1)
-	EndIf
-
 EndFunc   ;==>CloseBlueStacks2
 
 Func CloseUnsupportedBlueStacks5()
@@ -418,7 +387,7 @@ Func CloseUnsupportedBlueStacks5()
 		; Offical "Bluestacks App Player" v2.0 not supported because it changes the Android Screen!!!		
 		SetLog("MyBot doesn't work with " & $g_sAndroidEmulator & " App Player", $COLOR_ERROR)
 		SetLog("Please let MyBot start " & $g_sAndroidEmulator & " automatically", $COLOR_INFO)
-		RebootBlueStacks2SetScreen(False)
+		RebootBlueStacks5SetScreen(False)
 		Return True
 	EndIf
 	Opt("WinTitleMatchMode", $WinTitleMatchMode)

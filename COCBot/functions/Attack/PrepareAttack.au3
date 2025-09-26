@@ -29,10 +29,12 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 		$g_bDropQueen = False
 		$g_bDropWarden = False
 		$g_bDropChampion = False
+		$g_bDropMinionP = False
 		If $g_iActivateKing = 1 Or $g_iActivateKing = 2 Then $g_aHeroesTimerActivation[$eHeroBarbarianKing] = 0
 		If $g_iActivateQueen = 1 Or $g_iActivateQueen = 2 Then $g_aHeroesTimerActivation[$eHeroArcherQueen] = 0
 		If $g_iActivateWarden = 1 Or $g_iActivateWarden = 2 Then $g_aHeroesTimerActivation[$eHeroGrandWarden] = 0
 		If $g_iActivateChampion = 1 Or $g_iActivateChampion = 2 Then $g_aHeroesTimerActivation[$eHeroRoyalChampion] = 0
+		If $g_iActivateMinionP = 1 Or $g_iActivateMinionP = 2 Then $g_aHeroesTimerActivation[$eHeroMinionPrince] = 0
 
 		$g_iTotalAttackSlot = 10 ; reset flag - Slot11+
 		$g_bDraggedAttackBar = False
@@ -390,64 +392,65 @@ Func SelectWardenMode($iMode, $XCoord)
 EndFunc   ;==>SelectWardenMode
 
 Func IsUnitUsed($iMatchMode, $iTroopIndex)
-	If $iTroopIndex < $eKing Then ;Index is a Troop
-		If $iMatchMode = $DT Or $iMatchMode = $TB Then Return True
-		Local $aTempArray = $g_aaiTroopsToBeUsed[$g_aiAttackTroopSelection[$iMatchMode]]
-		Local $iFoundAt = _ArraySearch($aTempArray, $iTroopIndex)
-		If $iFoundAt <> -1 Then	Return True
-		Return False
-	Else ; Index is a Hero/Siege/Castle/Spell
-		If $iMatchMode <> $DB And $iMatchMode <> $LB Then
-			Return True
-		Else
-			Switch $iTroopIndex
-				Case $eKing
-					If (BitAND($g_aiAttackUseHeroes[$iMatchMode], $eHeroKing) = $eHeroKing) Then Return True
-				Case $eQueen
-					If (BitAND($g_aiAttackUseHeroes[$iMatchMode], $eHeroQueen) = $eHeroQueen) Then Return True
-				Case $eWarden
-					If (BitAND($g_aiAttackUseHeroes[$iMatchMode], $eHeroWarden) = $eHeroWarden) Then Return True
-				Case $eChampion
-					If (BitAND($g_aiAttackUseHeroes[$iMatchMode], $eHeroChampion) = $eHeroChampion) Then Return True
-				Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD
-					If $g_abAttackDropCC[$iMatchMode] Then Return True
-				;Case $eLSpell
-				;	If $g_abAttackUseLightSpell[$iMatchMode] Or $g_bSmartZapEnable Then Return True
-				;Case $eHSpell
-				;	If $g_abAttackUseHealSpell[$iMatchMode] Then Return True
-				;Case $eRSpell
-				;	If $g_abAttackUseRageSpell[$iMatchMode] Then Return True
-				;Case $eJSpell
-				;	If $g_abAttackUseJumpSpell[$iMatchMode] Then Return True
-				;Case $eFSpell
-				;	If $g_abAttackUseFreezeSpell[$iMatchMode] Then Return True
-				;Case $ePSpell
-				;	If $g_abAttackUsePoisonSpell[$iMatchMode] Then Return True
-				;Case $eESpell
-				;	If $g_abAttackUseEarthquakeSpell[$iMatchMode] = 1 Or $g_bSmartZapEnable Then Return True
-				;Case $eHaSpell
-				;	If $g_abAttackUseHasteSpell[$iMatchMode] Then Return True
-				;Case $eCSpell
-				;	If $g_abAttackUseCloneSpell[$iMatchMode] Then Return True
-				;Case $eISpell
-				;	If $g_abAttackUseInvisibilitySpell[$iMatchMode] Then Return True
-				;Case $eReSpell
-				;	If $g_abAttackUseRecallSpell[$iMatchMode] Then Return True
-				;Case $eSkSpell
-				;	If $g_abAttackUseSkeletonSpell[$iMatchMode] Then Return True
-				;Case $eBtSpell
-				;	If $g_abAttackUseBatSpell[$iMatchMode] Then Return True
-				;Case $eOgSpell
-				;	If $g_abAttackUseOverGrowthSpell[$iMatchMode] Then Return True
-				Case Else
-					Return False
-			EndSwitch
-			Return False
-		EndIf
-
-		Return False
-	EndIf
-	Return False
+	Return True
+	;If $iTroopIndex < $eKing Then ;Index is a Troop
+	;	If $iMatchMode = $DT Or $iMatchMode = $TB Then Return True
+	;	Local $aTempArray = $g_aaiTroopsToBeUsed[$g_aiAttackTroopSelection[$iMatchMode]]
+	;	Local $iFoundAt = _ArraySearch($aTempArray, $iTroopIndex)
+	;	If $iFoundAt <> -1 Then	Return True
+	;	Return False
+	;Else ; Index is a Hero/Siege/Castle/Spell
+	;	If $iMatchMode <> $DB And $iMatchMode <> $LB Then
+	;		Return True
+	;	Else
+	;		Switch $iTroopIndex
+	;			Case $eKing
+	;				If (BitAND($g_aiAttackUseHeroes[$iMatchMode], $eHeroKing) = $eHeroKing) Then Return True
+	;			Case $eQueen
+	;				If (BitAND($g_aiAttackUseHeroes[$iMatchMode], $eHeroQueen) = $eHeroQueen) Then Return True
+	;			Case $eWarden
+	;				If (BitAND($g_aiAttackUseHeroes[$iMatchMode], $eHeroWarden) = $eHeroWarden) Then Return True
+	;			Case $eChampion
+	;				If (BitAND($g_aiAttackUseHeroes[$iMatchMode], $eHeroChampion) = $eHeroChampion) Then Return True
+	;			Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD
+	;				If $g_abAttackDropCC[$iMatchMode] Then Return True
+	;			;Case $eLSpell
+	;			;	If $g_abAttackUseLightSpell[$iMatchMode] Or $g_bSmartZapEnable Then Return True
+	;			;Case $eHSpell
+	;			;	If $g_abAttackUseHealSpell[$iMatchMode] Then Return True
+	;			;Case $eRSpell
+	;			;	If $g_abAttackUseRageSpell[$iMatchMode] Then Return True
+	;			;Case $eJSpell
+	;			;	If $g_abAttackUseJumpSpell[$iMatchMode] Then Return True
+	;			;Case $eFSpell
+	;			;	If $g_abAttackUseFreezeSpell[$iMatchMode] Then Return True
+	;			;Case $ePSpell
+	;			;	If $g_abAttackUsePoisonSpell[$iMatchMode] Then Return True
+	;			;Case $eESpell
+	;			;	If $g_abAttackUseEarthquakeSpell[$iMatchMode] = 1 Or $g_bSmartZapEnable Then Return True
+	;			;Case $eHaSpell
+	;			;	If $g_abAttackUseHasteSpell[$iMatchMode] Then Return True
+	;			;Case $eCSpell
+	;			;	If $g_abAttackUseCloneSpell[$iMatchMode] Then Return True
+	;			;Case $eISpell
+	;			;	If $g_abAttackUseInvisibilitySpell[$iMatchMode] Then Return True
+	;			;Case $eReSpell
+	;			;	If $g_abAttackUseRecallSpell[$iMatchMode] Then Return True
+	;			;Case $eSkSpell
+	;			;	If $g_abAttackUseSkeletonSpell[$iMatchMode] Then Return True
+	;			;Case $eBtSpell
+	;			;	If $g_abAttackUseBatSpell[$iMatchMode] Then Return True
+	;			;Case $eOgSpell
+	;			;	If $g_abAttackUseOverGrowthSpell[$iMatchMode] Then Return True
+	;			Case Else
+	;				Return False
+	;		EndSwitch
+	;		Return False
+	;	EndIf
+	;
+	;	Return False
+	;EndIf
+	;Return False
 EndFunc   ;==>IsUnitUsed
 
 Func AttackRemainingTime($bInitialze = Default)

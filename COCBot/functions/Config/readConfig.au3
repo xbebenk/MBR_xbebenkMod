@@ -117,7 +117,7 @@ Func ReadBuildingConfig()
 
 		IniReadS($g_aiPetHousePos[0], $g_sProfileBuildingPath, "upgrade", "PetHousePosX", -1, "int")
 		IniReadS($g_aiPetHousePos[1], $g_sProfileBuildingPath, "upgrade", "PetHousePosY", -1, "int")
-		
+
 		IniReadS($g_aiBlacksmithPos[0], $g_sProfileBuildingPath, "upgrade", "BlacksmithPosX", -1, "int")
 		IniReadS($g_aiBlacksmithPos[1], $g_sProfileBuildingPath, "upgrade", "BlacksmithPosY", -1, "int")
 	EndIf
@@ -203,8 +203,6 @@ Func ReadRegularConfig()
 	ReadConfig_600_11()
 	; <><><><> Village / Donate - Donate <><><><>
 	ReadConfig_600_12()
-	; <><><><> Village / Donate - Schedule <><><><>
-	ReadConfig_600_13()
 	; <><><><> Village / Upgrade - Lab <><><><>
 	ReadConfig_600_14()
 	; <><><><> Village / Upgrade - Heroes <><><><>
@@ -376,7 +374,7 @@ Func ReadConfig_600_1()
 	; GUI Settings
 	; <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 	; <><><><> Log window <><><><>
-	IniReadS($g_iCmbLogDividerOption, $g_sProfileConfigPath, "general", "logstyle", 0, "int")
+	IniReadS($g_iCmbLogDividerOption, $g_sProfileConfigPath, "general", "logstyle", 2, "int")
 	IniReadS($g_iLogDividerY, $g_sProfileConfigPath, "general", "LogDividerY", 243, "int")
 	; <><><><> Bottom panel <><><><>
 	IniReadS($g_bChkBackgroundMode, $g_sProfileConfigPath, "general", "Background", True, "Bool")
@@ -439,8 +437,8 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkSaleROBE, $g_sProfileConfigPath, "MagicItems", "ChkSaleROBE", False, "Bool")
 	Local $aSaleChk[20] = [$g_bChkSaleBOF, $g_bChkSaleBOB, $g_bChkSaleBOS, $g_bChkSaleBOH, $g_bChkSaleBOE, $g_bChkSaleShovel, $g_bChkSaleWallRing, $g_bChkSalePowerPot, $g_bChkSaleResourcePot, $g_bChkSaleTrainingPot, $g_bChkSaleBuilderPot, $g_bChkSaleCTPot, $g_bChkSaleHeroPot, $g_bChkSaleResearchPot, $g_bChkSaleSuperPot, $g_bChkSaleROG, $g_bChkSaleROE, $g_bChkSaleRODE, $g_bChkSaleROBG, $g_bChkSaleROBE]
 	$g_aSaleMagicItem = $aSaleChk
-	
-	
+
+
 	IniReadS($g_bChkCollectBuilderBase, $g_sProfileConfigPath, "other", "ChkCollectBuildersBase", False, "Bool")
 	IniReadS($g_bChkCleanBBYard, $g_sProfileConfigPath, "other", "ChkCleanBBYard", False, "Bool")
 	IniReadS($g_bChkStartClockTowerBoost, $g_sProfileConfigPath, "other", "ChkStartClockTowerBoost", False, "Bool")
@@ -578,8 +576,8 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkBBWaitForMachine, $g_sProfileConfigPath, "other", "ChkBBWaitForMachine", False, "Bool")
 	IniReadS($g_bChkBBDropBMFirst, $g_sProfileConfigPath, "other", "ChkBBDropBMFirst", False, "Bool")
 	IniReadS($g_bChkDebugAttackBB, $g_sProfileConfigPath, "other", "ChkDebugAttackBB", False, "Bool")
-	IniReadS($g_iBBNextTroopDelay, $g_sProfileConfigPath, "other", "iBBNextTroopDelay", $g_iBBNextTroopDelayDefault, "int")
-	IniReadS($g_iBBSameTroopDelay, $g_sProfileConfigPath, "other", "iBBSameTroopDelay", $g_iBBSameTroopDelayDefault, "int")
+	IniReadS($g_iBBSameTroopDelay, $g_sProfileConfigPath, "other", "iBBSameTroopDelay", $g_iBBSameTroopDelay, "int")
+	IniReadS($g_iBBNextTroopDelay, $g_sProfileConfigPath, "other", "iBBNextTroopDelay", $g_iBBNextTroopDelay, "int")
 	IniReadS($g_iBBAttackCount, $g_sProfileConfigPath, "other", "iBBAttackCount", 6, "int")
 
 	; Builder Base Drop Order
@@ -604,15 +602,13 @@ Func ReadConfig_600_6()
 	;Misc Mod
 	IniReadS($g_bSkipFirstCheckRoutine, $g_sProfileConfigPath, "other", "SkipFirstCheckRoutine", False, "Bool")
 	IniReadS($g_bSkipBB, $g_sProfileConfigPath, "other", "SkipBB", False, "Bool")
-	IniReadS($g_bSkipTrain, $g_sProfileConfigPath, "other", "SkipTrain", False, "Bool")
-	IniReadS($g_bIgnoreIncorrectTroopCombo, $g_sProfileConfigPath, "other", "IgnoreIncorrectTroopCombo", False, "Bool")
+	IniReadS($g_bIgnoreIncorrectTroopCombo, $g_sProfileConfigPath, "other", "IgnoreIncorrectTroopCombo", True, "Bool")
 	IniReadS($g_iCmbFillIncorrectTroopCombo, $g_sProfileConfigPath, "other", "FillIncorrectTroopCombo", 0, "int")
-	IniReadS($g_bIgnoreIncorrectSpellCombo, $g_sProfileConfigPath, "other", "IgnoreIncorrectSpellCombo", False, "Bool")
+	IniReadS($g_bIgnoreIncorrectSpellCombo, $g_sProfileConfigPath, "other", "IgnoreIncorrectSpellCombo", True, "Bool")
 	IniReadS($g_iCmbFillIncorrectSpellCombo, $g_sProfileConfigPath, "other", "FillIncorrectSpellCombo", 0, "int")
 	IniReadS($g_bTrainPreviousArmy, $g_sProfileConfigPath, "other", "TrainPreviousArmy", False, "Bool")
 	IniReadS($g_bSkipWallPlacingOnBB, $g_sProfileConfigPath, "other", "SkipWallPlacingOnBB", True, "Bool")
 	IniReadS($g_bDonateEarly, $g_sProfileConfigPath, "other", "CheckDonateEarly", True, "Bool")
-	IniReadS($g_bUpgradeWallEarly, $g_sProfileConfigPath, "other", "CheckUpgradeWallEarly", True, "Bool")
 	IniReadS($g_bAutoUpgradeEarly, $g_sProfileConfigPath, "other", "CheckAutoUpgradeEarly", True, "Bool")
 	IniReadS($g_bChkForceSwitchifNoCGEvent, $g_sProfileConfigPath, "other", "ForceSwitchifNoCGEvent", True, "Bool")
 	IniReadS($g_bEnableCCSleep, $g_sProfileConfigPath, "other", "EnableCCSleep", False, "Bool")
@@ -647,41 +643,8 @@ EndFunc   ;==>ReadConfig_600_9
 
 Func ReadConfig_600_11()
 	; <><><><> Village / Donate - Request <><><><>
-	$g_bRequestTroopsEnable = (IniRead($g_sProfileConfigPath, "planned", "RequestHoursEnable", "0") = "1")
-	$g_bRequestRemoveImage = (IniRead($g_sProfileConfigPath, "planned", "RequestRemoveImage", "0") = "1")
+	IniReadS($g_bRequestTroopsEnable, $g_sProfileConfigPath, "donate", "chkRequest", True, "Bool")
 	$g_sRequestTroopsText = IniRead($g_sProfileConfigPath, "donate", "txtRequest", "")
-	; Request Type - Demen
-	$g_abRequestType[0] = (IniRead($g_sProfileConfigPath, "donate", "RequestType_Troop", "0") = "1")
-	$g_abRequestType[1] = (IniRead($g_sProfileConfigPath, "donate", "RequestType_Spell", "0") = "1")
-	$g_abRequestType[2] = (IniRead($g_sProfileConfigPath, "donate", "RequestType_Siege", "0") = "1")
-	$g_iRequestCountCCTroop = Int(IniRead($g_sProfileConfigPath, "donate", "RequestCountCC_Troop", "0"))
-	$g_iRequestCountCCSpell = Int(IniRead($g_sProfileConfigPath, "donate", "RequestCountCC_Spell", "0"))
-	For $i = 0 To $eTroopCount - 1
-		$g_aiCCTroopsExpected[$i] = 0
-		If $i < $eSpellCount Then $g_aiCCSpellsExpected[$i] = 0
-		If $i < $eSiegeMachineCount Then $g_aiCCSiegeExpected[$i] = 0
-	Next
-	For $i = 0 To 2
-		$g_aiClanCastleTroopWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleTroop" & $i, "0"))
-		$g_aiClanCastleTroopWaitQty[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "txtClanCastleTroop" & $i, "0"))
-		If $g_aiClanCastleTroopWaitType[$i] > 0 Then ; Barb - Hunt
-			$g_aiCCTroopsExpected[$g_aiClanCastleTroopWaitType[$i] - 1] += $g_aiClanCastleTroopWaitQty[$i]
-		EndIf
-
-		$g_aiClanCastleSpellWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleSpell" & $i, "0"))
-		If $g_aiClanCastleSpellWaitType[$i] > 0 Then ; LSpell - BtSpell
-			$g_aiCCSpellsExpected[$g_aiClanCastleSpellWaitType[$i] - 1] += 1
-		EndIf
-
-		If $i > 1 Then ContinueLoop ; Siege has only 2 combobox
-		$g_aiClanCastleSiegeWaitType[$i] = Int(IniRead($g_sProfileConfigPath, "donate", "cmbClanCastleSiege" & $i, "0"))
-		If $g_aiClanCastleSiegeWaitType[$i] > 0 Then $g_aiCCSiegeExpected[$g_aiClanCastleSiegeWaitType[$i] - 1] = 1 ; WallW - StoneS
-	Next
-
-	$g_abRequestCCHours = StringSplit(IniRead($g_sProfileConfigPath, "planned", "RequestHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
-	For $i = 0 To 23
-		$g_abRequestCCHours[$i] = ($g_abRequestCCHours[$i] = "1")
-	Next
 EndFunc   ;==>ReadConfig_600_11
 
 Func ReadConfig_600_12()
@@ -699,7 +662,7 @@ Func ReadConfig_600_12()
 	Next
 
 	$g_asTxtDonateTroop[$eTroopBarbarian] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateBarbarians", "barbarians|barbarian|barb"), "|", @CRLF)
-	$g_asTxtDonateTroop[$eTroopSuperBarbarian] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateSuperBarbarians", "Super barbarians|Super barbarian|Super barb"), "|", @CRLF)	
+	$g_asTxtDonateTroop[$eTroopSuperBarbarian] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateSuperBarbarians", "Super barbarians|Super barbarian|Super barb"), "|", @CRLF)
 	$g_asTxtDonateTroop[$eTroopArcher] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateArchers", "archers|archer|arch"), "|", @CRLF)
 	$g_asTxtDonateTroop[$eTroopSuperArcher] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateSuperArchers", "Super archers|Super archer|Super arch"), "|", @CRLF)
 	$g_asTxtDonateTroop[$eTroopGiant] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateGiants", "giants|giant|any"), "|", @CRLF)
@@ -738,7 +701,7 @@ Func ReadConfig_600_12()
 	$g_asTxtDonateTroop[$eTroopSuperBowler] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateSuperBowlers", "Super Bowler|SBowl"), "|", @CRLF)
 	$g_asTxtDonateTroop[$eTroopIceGolem] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateIceGolems", "ice golem|ice golems"), "|", @CRLF)
 	$g_asTxtDonateTroop[$eTroopHeadhunter] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateHeadhunters", "headhunter|hunt"), "|", @CRLF)
-	
+
 	For $i = 0 To $eSpellCount - 1
 		Local $sIniName = $g_asSpellNames[$i] & "Spells"
 		$g_abChkDonateSpell[$i] = (IniRead($g_sProfileConfigPath, "donate", "chkDonate" & $sIniName, "0") = "1")
@@ -757,7 +720,7 @@ Func ReadConfig_600_12()
 	$g_asTxtDonateSpell[$eSpellHaste] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateHasteSpells", "haste"), "|", @CRLF)
 	$g_asTxtDonateSpell[$eSpellSkeleton] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateSkeletonSpells", "skeleton"), "|", @CRLF)
 	$g_asTxtDonateSpell[$eSpellBat] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateBatSpells", "bat"), "|", @CRLF)
-	
+
 	For $i = $eSiegeWallWrecker to $eSiegeMachineCount - 1
 		Local $index = $eTroopCount
 		Local $sIniName = $g_asSiegeMachineShortNames[$i]
@@ -771,29 +734,13 @@ Func ReadConfig_600_12()
 	$g_asTxtDonateTroop[$eTroopCount + $eSiegeLogLauncher] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateLogL", "Log Launcher"), "|", @CRLF)
 	$g_asTxtDonateTroop[$eTroopCount + $eSiegeFlameFlinger] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateFlameF", "Flame Flinger"), "|", @CRLF)
 	$g_asTxtDonateTroop[$eTroopCount + $eSiegeBattleDrill] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateBattleD", "Battle Drill"), "|", @CRLF)
-	
+
 	$g_bChkExtraAlphabets = (IniRead($g_sProfileConfigPath, "donate", "chkExtraAlphabets", "0") = "1")
 	$g_bChkExtraChinese = (IniRead($g_sProfileConfigPath, "donate", "chkExtraChinese", "0") = "1")
 	$g_bChkExtraKorean = (IniRead($g_sProfileConfigPath, "donate", "chkExtraKorean", "0") = "1")
 	$g_bChkExtraPersian = (IniRead($g_sProfileConfigPath, "donate", "chkExtraPersian", "0") = "1")
 
 EndFunc   ;==>ReadConfig_600_12
-
-Func ReadConfig_600_13()
-	; <><><><> Village / Donate - Schedule <><><><>
-	$g_bDonateHoursEnable = (IniRead($g_sProfileConfigPath, "planned", "DonateHoursEnable", "0") = "1")
-	$g_abDonateHours = StringSplit(IniRead($g_sProfileConfigPath, "planned", "DonateHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
-	For $i = 0 To 23
-		$g_abDonateHours[$i] = ($g_abDonateHours[$i] = "1")
-	Next
-	$g_iCmbDonateFilter = Int(IniRead($g_sProfileConfigPath, "donate", "cmbFilterDonationsCC", 0))
-	$g_iDonateSkipNearFullPercent = Int(IniRead($g_sProfileConfigPath, "donate", "SkipDonateNearFulLTroopsPercentual", 90))
-	$g_bDonateSkipNearFullEnable = (IniRead($g_sProfileConfigPath, "donate", "SkipDonateNearFulLTroopsEnable", "1") = "1")
-	IniReadS($g_bUseCCBalanced, $g_sProfileConfigPath, "donate", "BalanceCC", False, "Bool")
-	IniReadS($g_iCCDonated, $g_sProfileConfigPath, "donate", "BalanceCCDonated", 1, "int")
-	IniReadS($g_iCCReceived, $g_sProfileConfigPath, "donate", "BalanceCCReceived", 1, "int")
-	IniReadS($g_bCheckDonateOften, $g_sProfileConfigPath, "donate", "CheckDonateOften", False, "Bool")
-EndFunc   ;==>ReadConfig_600_13
 
 Func ReadConfig_600_14()
 	IniReadS($g_bAutoLabUpgradeEnable, $g_sProfileBuildingPath, "upgrade", "upgradetroops", False, "Bool")
@@ -813,7 +760,7 @@ Func ReadConfig_600_14()
 	IniReadS($g_iUseBOSTime, $g_sProfileBuildingPath, "upgrade", "usebookspellMinTime", 7, "int")
 	IniReadS($g_bUseBOE, $g_sProfileBuildingPath, "upgrade", "usebookeverything", False, "Bool")
 	IniReadS($g_iUseBOETime, $g_sProfileBuildingPath, "upgrade", "usebookeverythingMinTime", 14, "int")
-	
+
 	Local $str = StringSplit(IniRead($g_sProfileBuildingPath, "upgrade", "upgradeorderlist", "-1| -1| -1| -1| -1| -1| -1| -1| -1| -1"), "|", $STR_NOCOUNT)
 	For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 		$g_aCmbLabUpgradeOrder[$i] = $str[$i]
@@ -833,14 +780,14 @@ Func ReadConfig_600_15()
 	IniReadS($g_bUpgradeWardenEnable, $g_sProfileConfigPath, "upgrade", "UpgradeWarden", False, "Bool")
 	IniReadS($g_bUpgradeChampionEnable, $g_sProfileConfigPath, "upgrade", "UpgradeChampion", False, "Bool")
 	IniReadS($g_iHeroReservedBuilder, $g_sProfileConfigPath, "upgrade", "HeroReservedBuilder", 0, "int")
-	
+
 	; Equipment Order
 	IniReadS($g_bChkCustomEquipmentOrderEnable, $g_sProfileConfigPath, "upgrade", "ChkUpgradeEquipment", False, "Bool")
 	For $z = 0 To UBound($g_aiCmbCustomEquipmentOrder) - 1
 		IniReadS($g_bChkCustomEquipmentOrder[$z], $g_sProfileConfigPath, "upgrade", "ChkEquipment" & $z, False, "Bool")
 		IniReadS($g_aiCmbCustomEquipmentOrder[$z], $g_sProfileConfigPath, "upgrade", "cmbEquipmentOrder" & $z, -1)
 	Next
-	
+
 	IniReadS($g_bChkSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "ChkSortPetUpgrade", False, "Bool")
 	IniReadS($g_iCmbSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "CmbSortPetUpgrade", 0, "int")
 	IniReadS($g_bChkSyncSaveDE, $g_sProfileConfigPath, "upgrade", "ChkSyncSaveDE", False, "Bool")
@@ -849,7 +796,7 @@ Func ReadConfig_600_15()
 	IniReadS($g_bUpgradePetsEnable[$ePetElectroOwl], $g_sProfileConfigPath, "upgrade", "UpgradePetElectroOwl", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetMightyYak], $g_sProfileConfigPath, "upgrade", "UpgradePetMightyYak", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetUnicorn], $g_sProfileConfigPath, "upgrade", "UpgradePetUnicorn", False, "Bool")
-	
+
 	IniReadS($g_bUpgradePetsEnable[$ePetFrosty], $g_sProfileConfigPath, "upgrade", "UpgradePetFrosty", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetDiggy], $g_sProfileConfigPath, "upgrade", "UpgradePetDiggy", False, "Bool")
 	IniReadS($g_bUpgradePetsEnable[$ePetPoisonLizard], $g_sProfileConfigPath, "upgrade", "UpgradePetPoisonLizard", False, "Bool")
@@ -1002,7 +949,6 @@ Func ReadConfig_600_28()
 	IniReadS($g_iSearchAttackNowDelay, $g_sProfileConfigPath, "general", "attacknowdelay", 3, "int")
 	IniReadS($g_bSearchRestartEnable, $g_sProfileConfigPath, "search", "ChkRestartSearchLimit", True, "Bool")
 	IniReadS($g_iSearchRestartLimit, $g_sProfileConfigPath, "search", "RestartSearchLimit", 50, "int")
-	IniReadS($g_bSearchRestartPickupHero, $g_sProfileConfigPath, "search", "RestartSearchPickupHero", False, "Bool")
 	IniReadS($g_bSearchAlertMe, $g_sProfileConfigPath, "general", "AlertSearch", False, "Bool")
 EndFunc   ;==>ReadConfig_600_28
 
@@ -1147,11 +1093,6 @@ Func ReadConfig_600_29()
 	$g_abPlannedattackHours = StringSplit(IniRead($g_sProfileConfigPath, "planned", "attackHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
 	For $i = 0 To 23
 		$g_abPlannedattackHours[$i] = ($g_abPlannedattackHours[$i] = "1")
-	Next
-	$g_bPlannedDropCCHoursEnable = (IniRead($g_sProfileConfigPath, "planned", "DropCCEnable", "0") = "1")
-	$g_abPlannedDropCCHours = StringSplit(IniRead($g_sProfileConfigPath, "planned", "DropCCHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
-	For $i = 0 To 23
-		$g_abPlannedDropCCHours[$i] = ($g_abPlannedDropCCHours[$i] = "1")
 	Next
 EndFunc   ;==>ReadConfig_600_29
 
@@ -1350,7 +1291,6 @@ Func ReadConfig_600_35_1()
 	IniReadS($g_iAutoStartDelay, $g_sProfileConfigPath, "general", "AutoStartDelay", 10, "int")
 	IniReadS($g_bRestarted, $g_sProfileConfigPath, "general", "Restarted", $g_bRestarted, "int")
 	If $g_bBotLaunchOption_Autostart = True Then $g_bRestarted = True
-	$g_bCheckGameLanguage = (IniRead($g_sProfileConfigPath, "General", "ChkLanguage", "1") = "1")
 	IniReadS($g_bAutoAlignEnable, $g_sProfileConfigPath, "general", "DisposeWindows", False, "Bool")
 	IniReadS($g_iAutoAlignPosition, $g_sProfileConfigPath, "general", "DisposeWindowsPos", "EMBED")
 	IniReadS($g_iAutoAlignOffsetX, $g_sProfileConfigPath, "other", "WAOffsetX", "")
@@ -1447,15 +1387,15 @@ Func ReadConfig_600_52_2()
 	For $S = 0 To $eSpellCount - 1
 		IniReadS($g_aiArmyCustomSpells[$S], $g_sProfileConfigPath, "Spells", $g_asSpellShortNames[$S], 0, "int")
 	Next
-	
+
 	$g_aiArmyCompTroops = $g_aiArmyCustomTroops
 	$g_aiArmyCompSpells = $g_aiArmyCustomSpells
-	
+
 	For $S = 0 To $eSiegeMachineCount - 1
 		IniReadS($g_aiArmyCustomSiegeMachines[$S], $g_sProfileConfigPath, "Siege", $g_asSiegeMachineShortNames[$S], 0, "int")
 	Next
 	$g_aiArmyCompSiegeMachines = $g_aiArmyCustomSiegeMachines
-	
+
 	IniReadS($g_iTrainArmyFullTroopPct, $g_sProfileConfigPath, "troop", "fullTroop", 100, "int")
 	$g_iTotalCampForcedValue = Int(IniRead($g_sProfileConfigPath, "other", "ValueTotalCampForced", 220))
 	IniReadS($g_iTotalSpellValue, $g_sProfileConfigPath, "Spells", "SpellFactory", 0, "int")

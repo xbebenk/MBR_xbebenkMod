@@ -19,42 +19,11 @@ Func dropCC($iX, $iY, $iCCSlot) ;Drop clan castle
 	Local $test = ($g_iMatchMode <> $DB And $g_iMatchMode <> $LB) Or $g_abAttackDropCC[$g_iMatchMode]
 
 	If $iCCSlot <> -1 And $test Then
-		If $g_bPlannedDropCCHoursEnable = True Then
-			Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
-			If $g_abPlannedDropCCHours[$hour[0]] = False Then
-				SetLog("Drop CC not Planned, Skipped..", $COLOR_SUCCESS)
-				Return ; exit func if no planned donate checkmarks
-			EndIf
-		EndIf
-
-
 		;standard attack
-		If $g_bUseCCBalanced = True Then
-			If Number($g_iTroopsReceived) <> 0 Then
-				If Number(Number($g_iTroopsDonated) / Number($g_iTroopsReceived)) >= (Number($g_iCCDonated) / Number($g_iCCReceived)) Then
-					SetLog("Dropping Siege/Clan Castle, donated (" & $g_iTroopsDonated & ") / received (" & $g_iTroopsReceived & ") >= " & $g_iCCDonated & "/" & $g_iCCReceived, $COLOR_INFO)
-					SelectDropTroop($iCCSlot)
-					If _Sleep($DELAYDROPCC1) Then Return
-					AttackClick($iX, $iY, 1, 0, 0, "#0087")
-				Else
-					SetLog("No Dropping Siege/Clan Castle, donated  (" & $g_iTroopsDonated & ") / received (" & $g_iTroopsReceived & ") < " & $g_iCCDonated & "/" & $g_iCCReceived, $COLOR_INFO)
-				EndIf
-			Else
-				If Number(Number($g_iTroopsDonated) / 1) >= (Number($g_iCCDonated) / Number($g_iCCReceived)) Then
-					SetLog("Dropping Siege/Clan Castle, donated (" & $g_iTroopsDonated & ") / received (" & $g_iTroopsReceived & ") >= " & $g_iCCDonated & "/" & $g_iCCReceived, $COLOR_INFO)
-					SelectDropTroop($iCCSlot)
-					If _Sleep($DELAYDROPCC1) Then Return
-					AttackClick($iX, $iY, 1, 0, 0, "#0089")
-				Else
-					SetLog("No Dropping Siege/Clan Castle, donated  (" & $g_iTroopsDonated & ") / received (" & $g_iTroopsReceived & ") < " & $g_iCCDonated & "/" & $g_iCCReceived, $COLOR_INFO)
-				EndIf
-			EndIf
-		Else
-			SetLog("Dropping Siege/Clan Castle [" & $iX & "," & $iY & "]", $COLOR_INFO)
-			SelectDropTroop($iCCSlot)
-			If _Sleep($DELAYDROPCC1) Then Return
-			AttackClick($iX, $iY, 1, 0, 0, "#0091")
-		EndIf
+		SetLog("Dropping Siege/Clan Castle [" & $iX & "," & $iY & "]", $COLOR_INFO)
+		SelectDropTroop($iCCSlot)
+		If _Sleep($DELAYDROPCC1) Then Return
+		AttackClick($iX, $iY, 1, 0, 0, "#0091")
 	EndIf
 
 EndFunc   ;==>dropCC

@@ -68,6 +68,25 @@ Func IsTrainPage($bSetLog = False, $iLoop = 5)
 	Return False
 EndFunc   ;==>IsTrainPage
 
+Func IsTrainItPage($bSetLog = False, $iLoop = 5)
+	If Not $g_bRunState Then Return
+	If _PixelSearch($aIsTrainItPage[0], $aIsTrainItPage[1], $aIsTrainItPage[0] + 1, $aIsTrainItPage[1] + 1, Hex($aIsTrainItPage[2], 6), $aIsTrainItPage[3], True, "IsTrainItPage") Then
+		If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then SetLog("**Army Window OK**", $COLOR_ACTION)
+		Return True
+	EndIf
+	
+	If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then
+		Local $colorRead = _GetPixelColor($aIsTrainItPage[0], $aIsTrainItPage[1], True)
+		SetLog("**Army Window FAIL**", $COLOR_ACTION)
+		SetLog("expected in (" & $aIsTrainItPage[0] & "," & $aIsTrainItPage[1] & ")  = " & Hex($aIsTrainItPage[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
+	EndIf
+	
+	If $bSetLog Then SetLog("Cannot find Army Window...", $COLOR_ERROR) ; in case of $i = 29 in while loop
+	If $g_bDebugImageSave Then SaveDebugImage("IsTrainItPage")
+	If $iLoop > 1 Then AndroidPageError("IsTrainItPage")
+	Return False
+EndFunc   ;==>IsTrainItPage
+
 Func IsAttackPage($bSetLog = False, $iLoop = 5)
 	
 	If IsPageLoop($aIsAttackPage, $iLoop) Then
@@ -84,6 +103,23 @@ Func IsAttackPage($bSetLog = False, $iLoop = 5)
 	Return False
 
 EndFunc   ;==>IsAttackPage
+
+Func IsHeroHallWindow($bSetLog = False, $iLoop = 5)
+	
+	If IsPageLoop($aHeroHall, $iLoop) Then
+		If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then SetLog("**Hero Hall Window OK**", $COLOR_ACTION)
+		Return True
+	EndIf
+
+	If $g_bDebugSetlog Or $g_bDebugClick Or $bSetLog Then
+		Local $colorRead = _GetPixelColor($aHeroHall[0], $aHeroHall[1], True)
+		SetLog("**Hero Hall Window FAIL**", $COLOR_ACTION)
+		SetLog("expected in (" & $aHeroHall[0] & "," & $aHeroHall[1] & ")  = " & Hex($aHeroHall[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
+	EndIf
+	If $g_bDebugImageSave Then SaveDebugImage("IsHeroHallWindow")
+	Return False
+
+EndFunc   ;==>IsHeroHallWindow
 
 Func IsAttackWhileShieldPage($bSaveDebugImage = True)
 

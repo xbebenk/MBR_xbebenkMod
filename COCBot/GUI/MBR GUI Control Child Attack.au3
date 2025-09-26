@@ -347,7 +347,7 @@ EndFunc   ;==>cmbAttackPlannerDayMax
 Func _cmbAttackPlannerDayLimit()
 	Switch Int(GUICtrlRead($g_hCmbAttackPlannerDayMin))
 		Case 0 To 15
-			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMin, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMin, $COLOR_LIGHTGREEN)
 		Case 16 To 20
 			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMin, $COLOR_YELLOW)
 		Case 21 To 999
@@ -355,44 +355,13 @@ Func _cmbAttackPlannerDayLimit()
 	EndSwitch
 	Switch Int(GUICtrlRead($g_hCmbAttackPlannerDayMax))
 		Case 0 To 15
-			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMax, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMax, $COLOR_LIGHTGREEN)
 		Case 16 To 25
 			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMax, $COLOR_YELLOW)
 		Case 26 To 999
 			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMax, $COLOR_RED)
 	EndSwitch
 EndFunc   ;==>_cmbAttackPlannerDayLimit
-
-Func chkDropCCHoursEnable()
-	Local $bChk = GUICtrlRead($g_hChkDropCCHoursEnable) = $GUI_CHECKED
-
-	$g_bPlannedDropCCHoursEnable = ($bChk ? 1 : 0)
-	For $i = 0 To 23
-		GUICtrlSetState($g_ahChkDropCCHours[$i], $bChk ? $GUI_ENABLE : $GUI_DISABLE)
-	Next
-	GUICtrlSetState($g_ahChkDropCCHoursE1, $bChk ? $GUI_ENABLE : $GUI_DISABLE)
-	GUICtrlSetState($g_ahChkDropCCHoursE2, $bChk ? $GUI_ENABLE : $GUI_DISABLE)
-EndFunc   ;==>chkDropCCHoursEnable
-
-Func chkDropCCHoursE1()
-	Local $bChk = GUICtrlRead($g_ahChkDropCCHoursE1) = $GUI_CHECKED And GUICtrlRead($g_ahChkDropCCHours[0]) = $GUI_CHECKED
-
-	For $i = 0 To 11
-		GUICtrlSetState($g_ahChkDropCCHours[$i], $bChk ? $GUI_UNCHECKED : $GUI_CHECKED)
-	Next
-	Sleep(300)
-	GUICtrlSetState($g_ahChkDropCCHoursE1, $GUI_UNCHECKED)
-EndFunc   ;==>chkDropCCHoursE1
-
-Func chkDropCCHoursE2()
-	Local $bChk = GUICtrlRead($g_ahChkDropCCHoursE2) = $GUI_CHECKED And GUICtrlRead($g_ahChkDropCCHours[12]) = $GUI_CHECKED
-
-	For $i = 12 To 23
-		GUICtrlSetState($g_ahChkDropCCHours[$i], $bChk ? $GUI_UNCHECKED : $GUI_CHECKED)
-	Next
-	Sleep(300)
-	GUICtrlSetState($g_ahChkDropCCHoursE2, $GUI_UNCHECKED)
-EndFunc   ;==>chkDropCCHoursE2
 
 Func chkShareAttack()
 	If GUICtrlRead($g_hChkShareAttack) = $GUI_CHECKED Then

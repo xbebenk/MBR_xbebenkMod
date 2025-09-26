@@ -13,15 +13,15 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func isGoldFull()
+Func isGoldFull($bSetLog = True)
 	If _CheckPixel($aIsGoldFull, $g_bCapturePixel) Then ;Hex if color of gold (orange)
-		SetLog("Gold Storages are full!", $COLOR_SUCCESS)
+		If $bSetLog Then SetLog("Gold Storages are full!", $COLOR_SUCCESS)
 		$g_abFullStorage[$eLootGold] = True
 	Else
 		$g_abFullStorage[$eLootGold] = False
 	EndIf
 	If Not _CheckPixel($aIsGoldlow, $g_bCapturePixel) Then ;Hex if color of gold (orange)
-		SetLog("Gold Storages are Low!", $COLOR_DEBUG)
+		If $bSetLog Then SetLog("Gold Storages are Low!", $COLOR_DEBUG)
 		$g_abLowStorage[$eLootGold] = True
 	Else
 		$g_abLowStorage[$eLootGold] = False

@@ -90,7 +90,7 @@ Func SaveBuildingConfig()
 
 	_Ini_Add("upgrade", "BlacksmithPosX", $g_aiBlacksmithPos[0])
 	_Ini_Add("upgrade", "BlacksmithPosY", $g_aiBlacksmithPos[1])
-	
+
 	_Ini_Add("upgrade", "StarLabPosX", $g_aiStarLaboratoryPos[0])
 	_Ini_Add("upgrade", "StarLabPosY", $g_aiStarLaboratoryPos[1])
 
@@ -143,7 +143,7 @@ Func SaveBuildingConfig()
 	_Ini_Add("upgrade", "usebookspellMinTime", $g_iUseBOSTime)
 	_Ini_Add("upgrade", "usebookeverything", $g_bUseBOE ? 1 : 0)
 	_Ini_Add("upgrade", "usebookeverythingMinTime", $g_iUseBOETime)
-	
+
 	Local $string = ""
 	For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 		$string &= $g_aCmbLabUpgradeOrder[$i] & "|"
@@ -213,8 +213,6 @@ Func SaveRegularConfig()
 	SaveConfig_600_11()
 	; <><><><> Village / Donate - Donate <><><><>
 	SaveConfig_600_12()
-	; <><><><> Village / Donate - Schedule <><><><>
-	SaveConfig_600_13()
 	; <><><><> Village / Upgrade - Heroes <><><><>
 	SaveConfig_600_15()
 	; <><><><> Village / Upgrade - Buildings <><><><>
@@ -515,8 +513,8 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
 	_Ini_Add("other", "ChkBBDropBMFirst", $g_bChkBBDropBMFirst)
 	_Ini_Add("other", "ChkDebugAttackBB", $g_bChkDebugAttackBB)
-	_Ini_Add("other", "iBBNextTroopDelay", $g_iBBNextTroopDelay)
 	_Ini_Add("other", "iBBSameTroopDelay", $g_iBBSameTroopDelay)
+	_Ini_Add("other", "iBBNextTroopDelay", $g_iBBNextTroopDelay)
 	_Ini_Add("other", "iBBAttackCount", $g_iBBAttackCount)
 
 	; Builder Base Drop Order
@@ -541,7 +539,6 @@ Func SaveConfig_600_6()
 	;Misc Mod
 	_Ini_Add("other", "SkipFirstCheckRoutine", $g_bSkipFirstCheckRoutine)
 	_Ini_Add("other", "SkipBB", $g_bSkipBB)
-	_Ini_Add("other", "SkipTrain", $g_bSkipTrain)
 	_Ini_Add("other", "IgnoreIncorrectTroopCombo", $g_bIgnoreIncorrectTroopCombo)
 	_Ini_Add("other", "FillIncorrectTroopCombo", $g_iCmbFillIncorrectTroopCombo)
 	_Ini_Add("other", "IgnoreIncorrectSpellCombo", $g_bIgnoreIncorrectSpellCombo)
@@ -549,7 +546,6 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "TrainPreviousArmy", $g_bTrainPreviousArmy)
 	_Ini_Add("other", "SkipWallPlacingOnBB", $g_bSkipWallPlacingOnBB)
 	_Ini_Add("other", "CheckDonateEarly", $g_bDonateEarly)
-	_Ini_Add("other", "CheckUpgradeWallEarly", $g_bUpgradeWallEarly)
 	_Ini_Add("other", "CheckAutoUpgradeEarly", $g_bAutoUpgradeEarly)
 	_Ini_Add("other", "ForceSwitchifNoCGEvent", $g_bChkForceSwitchifNoCGEvent)
 	_Ini_Add("other", "EnableCCSleep", $g_bEnableCCSleep)
@@ -586,26 +582,8 @@ EndFunc   ;==>SaveConfig_600_9
 Func SaveConfig_600_11()
 	ApplyConfig_600_11(GetApplyConfigSaveAction())
 	; <><><><> Village / Donate - Request <><><><>
-	_Ini_Add("planned", "RequestHoursEnable", $g_bRequestTroopsEnable ? 1 : 0)
-	_Ini_Add("planned", "RequestRemoveImage", $g_bRequestRemoveImage ? 1 : 0)
 	_Ini_Add("donate", "txtRequest", $g_sRequestTroopsText)
-	; Request Type - Demen
-	_Ini_Add("donate", "RequestType_Troop", $g_abRequestType[0] ? 1 : 0)
-	_Ini_Add("donate", "RequestType_Spell", $g_abRequestType[1] ? 1 : 0)
-	_Ini_Add("donate", "RequestType_Siege", $g_abRequestType[2] ? 1 : 0)
-	_Ini_Add("donate", "RequestCountCC_Troop", $g_iRequestCountCCTroop)
-	_Ini_Add("donate", "RequestCountCC_Spell", $g_iRequestCountCCSpell)
-	For $i = 0 To 2
-		_Ini_Add("donate", "cmbClanCastleTroop" & $i, $g_aiClanCastleTroopWaitType[$i])
-		_Ini_Add("donate", "txtClanCastleTroop" & $i, $g_aiClanCastleTroopWaitQty[$i])
-		_Ini_Add("donate", "cmbClanCastleSpell" & $i, $g_aiClanCastleSpellWaitType[$i])
-		If $i <= 1 Then _Ini_Add("donate", "cmbClanCastleSiege" & $i, $g_aiClanCastleSiegeWaitType[$i])
-	Next
-	Local $string = ""
-	For $i = 0 To 23
-		$string &= ($g_abRequestCCHours[$i] ? "1" : "0") & "|"
-	Next
-	_Ini_Add("planned", "RequestHours", $string)
+	_Ini_Add("donate", "chkRequest", $g_bRequestTroopsEnable ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_11
 
 Func SaveConfig_600_12()
@@ -615,9 +593,7 @@ Func SaveConfig_600_12()
 	ApplyConfig_600_12(GetApplyConfigSaveAction())
 
 	_Ini_Add("donate", "Doncheck", $g_bChkDonate ? 1 : 0)
-	_Ini_Add("donate", "chkDonateQueueOnly[0]", $g_abChkDonateQueueOnly[0] ? 1 : 0)
-	_Ini_Add("donate", "chkDonateQueueOnly[1]", $g_abChkDonateQueueOnly[1] ? 1 : 0)
-
+	
 	For $i = 0 To $eTroopCount - 1
 		Local $sIniName = ""
 		If $i >= $eTroopBarbarian And $i <= $eTroopHeadhunter Then
@@ -647,24 +623,6 @@ Func SaveConfig_600_12()
 	_Ini_Add("donate", "chkExtraPersian", $g_bChkExtraPersian ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_12
 
-Func SaveConfig_600_13()
-	; <><><><> Village / Donate - Schedule <><><><>
-	ApplyConfig_600_13(GetApplyConfigSaveAction())
-	_Ini_Add("planned", "DonateHoursEnable", $g_bDonateHoursEnable ? 1 : 0)
-	Local $string = ""
-	For $i = 0 To 23
-		$string &= ($g_abDonateHours[$i] ? "1" : "0") & "|"
-	Next
-	_Ini_Add("planned", "DonateHours", $string)
-	_Ini_Add("donate", "cmbFilterDonationsCC", $g_iCmbDonateFilter)
-	_Ini_Add("donate", "SkipDonateNearFulLTroopsEnable", $g_bDonateSkipNearFullEnable ? 1 : 0)
-	_Ini_Add("donate", "SkipDonateNearFulLTroopsPercentual", $g_iDonateSkipNearFullPercent)
-	_Ini_Add("donate", "BalanceCC", $g_bUseCCBalanced ? 1 : 0)
-	_Ini_Add("donate", "BalanceCCDonated", $g_iCCDonated)
-	_Ini_Add("donate", "BalanceCCReceived", $g_iCCReceived)
-	_Ini_Add("donate", "CheckDonateOften", $g_bCheckDonateOften ? 1 : 0)
-EndFunc   ;==>SaveConfig_600_13
-
 Func SaveConfig_600_15()
 	; <><><><> Village / Upgrade - Heroes <><><><>
 	ApplyConfig_600_15(GetApplyConfigSaveAction())
@@ -673,7 +631,7 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradeWarden", $g_bUpgradeWardenEnable ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradeChampion", $g_bUpgradeChampionEnable ? 1 : 0)
 	_Ini_Add("upgrade", "HeroReservedBuilder", $g_iHeroReservedBuilder)
-	
+
 	; Equipment Order
 	_Ini_Add("upgrade", "ChkUpgradeEquipment", $g_bChkCustomEquipmentOrderEnable ? 1 : 0)
 	For $z = 0 To UBound($g_aiCmbCustomEquipmentOrder) - 1
@@ -689,7 +647,7 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradePetElectroOwl", $g_bUpgradePetsEnable[$ePetElectroOwl] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetMightyYak", $g_bUpgradePetsEnable[$ePetMightyYak] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetUnicorn", $g_bUpgradePetsEnable[$ePetUnicorn] ? 1 : 0)
-	
+
 	_Ini_Add("upgrade", "UpgradePetFrosty", $g_bUpgradePetsEnable[$ePetFrosty] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetDiggy", $g_bUpgradePetsEnable[$ePetDiggy] ? 1 : 0)
 	_Ini_Add("upgrade", "UpgradePetPoisonLizard", $g_bUpgradePetsEnable[$ePetPoisonLizard] ? 1 : 0)
@@ -847,7 +805,6 @@ Func SaveConfig_600_28()
 	_Ini_Add("general", "attacknowdelay", $g_iSearchAttackNowDelay)
 	_Ini_Add("search", "ChkRestartSearchLimit", $g_bSearchRestartEnable ? 1 : 0)
 	_Ini_Add("search", "RestartSearchLimit", $g_iSearchRestartLimit)
-	_Ini_Add("search", "RestartSearchPickupHero", $g_bSearchRestartPickupHero ? 1 : 0)
 	_Ini_Add("general", "AlertSearch", $g_bSearchAlertMe ? 1 : 0)
 EndFunc   ;==>SaveConfig_600_28
 
@@ -985,12 +942,6 @@ Func SaveConfig_600_29()
 		$string &= ($g_abPlannedattackHours[$i] ? 1 : 0) & "|"
 	Next
 	_Ini_Add("planned", "attackHours", $string)
-	_Ini_Add("planned", "DropCCEnable", $g_bPlannedDropCCHoursEnable ? 1 : 0)
-	Local $string = ""
-	For $i = 0 To 23
-		$string &= ($g_abPlannedDropCCHours[$i] ? 1 : 0) & "|"
-	Next
-	_Ini_Add("planned", "DropCCHours", $string)
 EndFunc   ;==>SaveConfig_600_29
 
 Func SaveConfig_600_29_DB()
@@ -1213,7 +1164,6 @@ Func SaveConfig_600_35_1()
 	_Ini_Add("deletefiles", "DeleteLootsDays", $g_iDeleteLootsDays)
 	_Ini_Add("general", "AutoStart", $g_bAutoStart ? 1 : 0)
 	_Ini_Add("general", "AutoStartDelay", $g_iAutoStartDelay)
-	_Ini_Add("General", "ChkLanguage", $g_bCheckGameLanguage ? 1 : 0)
 	_Ini_Add("general", "DisposeWindows", $g_bAutoAlignEnable ? 1 : 0)
 	_Ini_Add("general", "DisposeWindowsPos", $g_iAutoAlignPosition)
 	_Ini_Add("other", "WAOffsetX", $g_iAutoAlignOffsetX)

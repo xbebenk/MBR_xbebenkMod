@@ -584,13 +584,11 @@ Func CreateMiscModSubTab()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Double Train"), $x - 10, $y - 15, 210, 115)
-		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo", "Ignore Bad Troop Combo"), $x, $y, -1, -1)
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_01", "If Enabled DoubleTrain, Wont Empty Queued Troop, will Disable Precise Army"))
-		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Train"), $x - 10, $y - 15, 210, 115)
+		$g_hChkMMIgnoreIncorrectTroopCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadTroopCombo", "Fill Empty ArmyCamp slot"), $x, $y, -1, -1)
+			GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 	$y += 22
 		$g_hLblFillIncorrectTroopCombo = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - FillIncorrectTroopCombo", "Label_01", "Fill With :"), $x, $y+3, -1, -1)
-		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 		$g_hCmbFillIncorrectTroopCombo = GUICtrlCreateCombo("", $x + 50, $y, 110, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		Local $sCmbTxt
 		For $z = 0 To UBound($g_sCmbFICTroops) - 1
@@ -599,12 +597,10 @@ Func CreateMiscModSubTab()
 		GUICtrlSetData(-1, $sCmbTxt, "Barbarians")
 		GUICtrlSetState(-1, $GUI_DISABLE)
 	$y += 23
-		$g_hChkMMIgnoreIncorrectSpellCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadSpellCombo", "Ignore Bad Spell Combo"), $x, $y, -1, -1)
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnDoubleTrain_Info_02", "If Enabled DoubleTrain, Wont Empty Queued Spell, will Disable Precise Army"))
+		$g_hChkMMIgnoreIncorrectSpellCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadSpellCombo", "Fill Empty Spell slot"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 	$y += 22
 		$g_hLblFillIncorrectSpellCombo = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - FillIncorrectSpellCombo", "Label_01", "Fill With :"), $x, $y+3, -1, -1)
-		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
 		$g_hCmbFillIncorrectSpellCombo = GUICtrlCreateCombo("", $x + 50, $y, 110, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		$sCmbTxt = ""
 		For $z = 0 To UBound($g_sCmbFICSpells) - 1
@@ -635,11 +631,6 @@ Func CreateMiscModSubTab()
 	$g_hDonateEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckDonateEarly", "Check Donate Early"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnFirstCheckDonateEarly", "Enable Check Donate on First Start"))
 		GUICtrlSetOnEvent(-1, "chkCheckDonateEarly")
-
-	$y += 22
-		$g_hUpgradeWallEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckUpgradeWallEarly", "Check UpgradeWall Early"), $x, $y, -1, -1)
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnFirstCheckUpgradeWall", "Enable Check UpgradeWall on First Start"))
-		GUICtrlSetOnEvent(-1, "chkCheckUpgradeWallEarly")
 
 	$y += 22
 		$g_hAutoUpgradeEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckAutoUpgradeEarly", "Check AutoUpgrade Early"), $x, $y, -1, -1)

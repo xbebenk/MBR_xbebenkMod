@@ -16,6 +16,7 @@
 
 Func TreasuryCollect()
 	If Not $g_bChkTreasuryCollect Then Return
+	If isGoldFull(False) And IsElixirFull(False) Then Return
 	SetLog("Begin CollectTreasury:", $COLOR_DEBUG)
 	If Not $g_bRunState Then Return 
 	ZoomOut()
@@ -26,7 +27,7 @@ Func TreasuryCollect()
 	Else
 		Click($g_aiClanCastlePos[0], $g_aiClanCastlePos[1])
 		If _Sleep(1000) Then Return
-		Local $BuildingInfo = BuildingInfo(290, 472)
+		Local $BuildingInfo = BuildingInfo(290, 477)
 		If $BuildingInfo[1] = "Clan Castle" Then 
 			$TryCCAutoLocate = False
 		Else
@@ -112,7 +113,7 @@ Func AutoLocateCC()
 			EndIf
 			
 			If _Sleep(1000) Then Return
-			Local $BuildingInfo = BuildingInfo(290, 472)
+			Local $BuildingInfo = BuildingInfo(290, 477)
 			If $BuildingInfo[1] = "Clan Castle" Then 
 				$g_aiClanCastlePos[0] = $ClanCastleCoord[$i][1] + 10
 				$g_aiClanCastlePos[1] = $ClanCastleCoord[$i][2] + 10

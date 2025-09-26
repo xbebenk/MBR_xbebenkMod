@@ -120,26 +120,3 @@ Func _checkArmyCamp($bOpenArmyWindow, $bCloseArmyWindow, $bGetHeroesTime, $bSetL
 	Return $HeroesRegenTime
 
 EndFunc   ;==>checkArmyCamp
-
-Func IsTroopToDonateOnly($pTroopType)
-
-	If $g_abAttackTypeEnable[$DB] Then
-		Local $tempArr = $g_aaiTroopsToBeUsed[$g_aiAttackTroopSelection[$DB]]
-		For $x = 0 To UBound($tempArr) - 1
-			If $tempArr[$x] = $pTroopType Then
-				Return False
-			EndIf
-		Next
-	EndIf
-	If $g_abAttackTypeEnable[$LB] Then
-		Local $tempArr = $g_aaiTroopsToBeUsed[$g_aiAttackTroopSelection[$LB]]
-		For $x = 0 To UBound($tempArr) - 1
-			If $tempArr[$x] = $pTroopType Then
-				Return False
-			EndIf
-		Next
-	EndIf
-
-	Return True
-
-EndFunc   ;==>IsTroopToDonateOnly

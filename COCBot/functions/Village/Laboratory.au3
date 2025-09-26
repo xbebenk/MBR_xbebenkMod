@@ -11,42 +11,22 @@
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
-; ===============================================================================================================================
+; ==============================================================================================================================
 
-Func TestLaboratory()
-	Local $bWasRunState = $g_bRunState
-	Local $sWasLabUpgradeTime = $g_sLabUpgradeTime
-	Local $sWasLabUpgradeEnable = $g_bAutoLabUpgradeEnable
-	$g_bRunState = True
-	$g_bAutoLabUpgradeEnable = True
-	$g_sLabUpgradeTime = ""
-	Local $Result = Laboratory(True)
-	$g_bRunState = $bWasRunState
-	$g_sLabUpgradeTime = $sWasLabUpgradeTime
-	$g_bAutoLabUpgradeEnable = $sWasLabUpgradeEnable
-	Return $Result
-EndFunc
+Global $aLabMenu[2] = [265, 15]
+Global $g_iXFindLabUpgrade = 300
 
 Func Laboratory($bDebug = False)
 	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 	If $bDebug Then $g_sLabUpgradeTime = ""
-	If ChkUpgradeInProgress($bDebug) Then Return
-	If $g_aiLaboratoryPos[0] < 70 Or $g_aiLaboratoryPos[1] = 0 Then
-		SetLog("Laboratory Location unknown!", $COLOR_WARNING)
-		LocateLab() ; Lab location unknown, so find it.
-		If $g_aiLaboratoryPos[0] = 0 Or $g_aiLaboratoryPos[1] = 0 Then
-			SetLog("Problem locating Laboratory, re-locate laboratory position before proceeding", $COLOR_ERROR)
-			Return False
-		EndIf
-	EndIf
-
+	If Not CheckIfLabIdle($bDebug) Then Return
+	
  	; Get updated village elixir and dark elixir values
 	VillageReport(True, True)
 
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 	If _Sleep(1500) Then Return
-	If ChkLabUpgradeInProgress($bDebug) Then Return False ; Lab currently running skip going further
-
+	
 	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
 	Local $iCurPage = 1, $iLabPicsPerPage = 12, $iLabMaxPages = 5, $iPage = 0
 	Local $sCost, $sCostType, $bUpgradeFound = False, $sReseachName = "", $sReseachImage = "", $aUpgrade
@@ -203,7 +183,7 @@ Func Laboratory($bDebug = False)
 			Next
 			
 			If $bUpgradeFound Then
-				Return LaboratoryUpgrade($g_avLabTroops[$iIndex][2], $aCoords, $sCost, $bDebug) ; return whether or not we successfully upgraded
+				Return LaboratoryUpgrade($g_avLabTroops[$iIndex][2], $aCoords, $sCost, $bDebug) ; Return whether or not we successfully upgraded
 			Else
 				SetLog("Lab Upgrade " & $g_avLabTroops[$iIndex][0] & " - Not available.", $COLOR_INFO)
 			EndIf
@@ -232,14 +212,14 @@ Func Laboratory($bDebug = False)
 				EndIf
 
 				If $bUpgradeFound Then
-					Return LaboratoryUpgrade($sUpgrade, $aCoord, $sCost, $bDebug) ; return whether or not we successfully upgraded
+					Return LaboratoryUpgrade($sUpgrade, $aCoord, $sCost, $bDebug) ; Return whether or not we successfully upgraded
 				EndIf
 				
 				$iCurPage = LabGoToPage($iCurPage, $iCurPage + 1) ; go to next page of upgrades
 				If _Sleep($DELAYLABORATORY2) Then Return
 			WEnd
 		EndIf
-		; If We got to here without returning, then nothing available for upgrade
+		; If We got to here without Returning, Then nothing available for upgrade
 		SetLog("Nothing available for upgrade at the moment, try again later.")
 		SetLog("LabUpgradeOrderEnable=" & String($g_bLabUpgradeOrderEnable) & ", UpgradeAnyTroops=" & String($g_bUpgradeAnyTroops) & ", tmpNoResources=" & String($bNoResources), $COLOR_DEBUG)
 		If $g_bLabUpgradeOrderEnable And $g_bUpgradeAnyTroops And Not $bNoResources Then 
@@ -262,7 +242,7 @@ Func LaboratoryUpgrade($name, $aCoords, $sCost, $bDebug = False)
 	If $bDebug Then ; if debugging, do not actually click it
 		SetLog("[debug mode] - Start Upgrade, Click Back Button", $COLOR_ACTION)
 		Click(805, 100)
-		Return True ; return true as if we really started an upgrade
+		Return True ; Return True as if we really started an upgrade
 	Else
 		Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
 		If _Sleep(1000) Then Return
@@ -340,9 +320,10 @@ Func ChkLabUpgradeInProgress($bDebug = False, $name = "")
 		GUICtrlSetState($g_hPicLabRed, $GUI_HIDE)
 		GUICtrlSetState($g_hPicLabGreen, $GUI_SHOW)
 		;===========================================
-		If _Sleep($DELAYLABORATORY2) Then Return
+		
 		Local $sLabTimeOCR = getRemainTLaboratory(258, 211)
 		Local $iLabFinishTime = ConvertOCRTime("Lab Time", $sLabTimeOCR, False)
+		If _PixelSearch(785, 140, 786, 141, Hex(0x4A6A0D, 6), 10, 1, "Check Goblin") Then $iLabFinishTime = 60 ;force 1 hour complete time 
 		SetDebugLog("$sLabTimeOCR: " & $sLabTimeOCR & ", $iLabFinishTime = " & $iLabFinishTime & " m")
 		If $iLabFinishTime > 0 Then
 			$g_sLabUpgradeTime = _DateAdd('n', Ceiling($iLabFinishTime), _NowCalc())
@@ -450,22 +431,50 @@ Func ChkLabUpgradeInProgress($bDebug = False, $name = "")
 	Return False
 EndFunc
 
-; checks our global variable to see if we know of something already upgrading
-Func ChkUpgradeInProgress($bDebug = False)
-	If $bDebug Then Return False
-	Local $TimeDiff ; time remaining on lab upgrade
-	If $g_sLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sLabUpgradeTime) ; what is difference between end time and now in minutes?
-	If @error Then _logErrorDateDiff(@error)
-	SetDebugLog("Lab Endtime: " & $g_sLabUpgradeTime, $COLOR_DEBUG)
-
-	If Not $g_bRunState Then Return
-	If $TimeDiff <= 0 Then
-		SetLog("Checking Troop Upgrade in Laboratory ...", $COLOR_INFO)
-	Else
-		SetLog("Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
-		Return True
+Func CheckIfLabIdle($bDebug = False)
+	Local $aLabInfo, $aGetLab, $bRet = True
+	If $bDebug Then Return $bRet
+	
+	$aLabInfo = getBuilders(309, 23)
+	If StringInStr($aLabInfo, "#") > 0 Then
+		$aGetLab = StringSplit($aLabInfo, "#", $STR_NOCOUNT)
+		Local $iLab = Number($aGetLab[0]), $iLabMax = Number($aGetLab[1])
+		Select 
+			Case $iLab = 0 And $iLabMax = 1
+				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_DEBUG)
+				$bRet = False
+			Case $iLab = 1 And $iLabMax = 2
+				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_DEBUG)
+				$bRet = False
+			Case $iLab = 1 And $iLabMax >= 1
+				SetLog("CheckIfLabIdle: Lab is Idle", $COLOR_DEBUG)
+				$bRet = True
+		EndSelect
 	EndIf
-	Return False ; we currently do not know of any upgrades in progress
+	
+	If $bRet Then ;if Lab is idle, check resource is enough to upgrade
+		ClickP($aLabMenu)
+		If _Sleep(500) Then Return
+		Local $aUpgradeName
+		Local $aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 70, 460, 280)
+		If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+			_ArraySort($aTmpCoord, 0, 0, 0, 2)
+			For $i = 0 To UBound($aTmpCoord) - 1
+				If _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFF887F, 6), 10, 1, "Check Red Resource cost") Then
+					SetLog("Detected Not Enough Resource for LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
+					$bRet = False
+				ElseIf _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFFFFFF, 6), 10, 1, "Check White Resource cost") Then
+					SetLog("Detected possible LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
+					$bRet = True
+				EndIf
+				If $aTmpCoord[$i][0] = "Complete" Then
+					SetLog("All Upgrade Complete", $COLOR_DEBUG)
+					$bRet = False
+				Endif
+			Next
+		Endif
+	Endif
+	Return $bRet
 EndFunc
 
 ; $sUpgrade = Any, will search all image 
@@ -554,14 +563,19 @@ Func FindResearchButton()
 	Local $LabFound = False
 	ClickAway()
 	CheckMainScreen(False, $g_bStayOnBuilderBase, "FindResearchButton")
-
+	
+	If _ColorCheck(_GetPixelColor(288, 36, True), Hex(0xFFFF5E, 6), 20, Default, "Laboratory") Then
+		SetLog("Laboratory: Found Goblin Lab!, Return False", $COLOR_DEBUG1)
+		Return False
+	EndIf
+	
 	;Click Laboratory
 	If Int($g_aiLaboratoryPos[0]) < 1 Or Int($g_aiLaboratoryPos[1]) < 1 Then
 		$TryLabAutoLocate = True
 	Else
 		Click($g_aiLaboratoryPos[0], $g_aiLaboratoryPos[1])
 		If _Sleep(1000) Then Return
-		Local $BuildingInfo = BuildingInfo(260, 472)
+		Local $BuildingInfo = BuildingInfo(260, 477)
 		If StringInStr($BuildingInfo[1], "Lab") Then
 			$TryLabAutoLocate = False
 			$LabFound = True
@@ -582,7 +596,7 @@ Func FindResearchButton()
 	EndIf
 
 	If $LabFound Then
-		ClickB("Research")
+		If Not ClickB("Research") Then Return
 		If _Sleep(2000) Then Return
 		Return True
 	EndIf
@@ -602,7 +616,7 @@ Func AutoLocateLab()
 			Click($aLabCoord[$i][1], $aLabCoord[$i][2])
 		
 			If _Sleep(1000) Then Return
-			Local $BuildingInfo = BuildingInfo(240, 472)
+			Local $BuildingInfo = BuildingInfo(242, 477)
 			If StringInStr($BuildingInfo[1], "Lab") Then	
 				$g_aiLaboratoryPos[0] = $aLabCoord[$i][1]
 				$g_aiLaboratoryPos[1] = $aLabCoord[$i][2]
@@ -649,7 +663,7 @@ Func UpgradeLabAny($bDebug = False)
 		EndIf
 		
 		If $bUpgradeFound Then
-			Return LaboratoryUpgrade($sUpgrade, $aCoord, $sCost, $bDebug) ; return whether or not we successfully upgraded
+			Return LaboratoryUpgrade($sUpgrade, $aCoord, $sCost, $bDebug) ; Return whether or not we successfully upgraded
 		EndIf
 		
 		$iCurPage = LabGoToPage($iCurPage, $iCurPage + 1) ; go to next page of upgrades

@@ -214,7 +214,7 @@ Func GUIControl_WM_ACTIVATEAPP($hWin, $iMsg, $wParam, $lParam)
 		; bot activated
 		;If BitAND($g_iBotDesignFlags, 2) And $g_bAndroidEmbedded And $g_bBotDockedShrinked Then BotShrinkExpandToggle() ; auto expand bot again
 		; show Android behind bot without activating it
-		If Not $g_bFlushGuiLogActive And Not $g_bIsHidden And Not AndroidEmbedded() And $g_bChkBackgroundMode Then ShowAndroidWindow($g_hFrmBot, False, Default, "GUIControl_WM_ACTIVATEAPP")
+		;If Not $g_bFlushGuiLogActive And Not $g_bIsHidden And Not AndroidEmbedded() And $g_bChkBackgroundMode Then ShowAndroidWindow($g_hFrmBot, False, Default, "GUIControl_WM_ACTIVATEAPP")
 	Else
 		; bot deactivated
 		If BitAND($g_iBotDesignFlags, 2) And $g_bAndroidEmbedded And Not $g_bBotDockedShrinked Then BotShrinkExpandToggle() ; auto shrink bot again ;
@@ -492,12 +492,10 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			EndIf
 		Case $g_hLblMyBotURL, $g_hLblForumURL, $g_hLblUnbreakableLink
 			; Handle open URL when label fires the event normally
-			OpenURL_Label($nID)
-		Case $g_hFrmBot_URL_PIC, $g_hFrmBot_URL_PIC2
-			OpenURL_Label($g_hLblMyBotURL)
+			OpenURL_Label($nID)		
 		Case $g_hLblDonate
 			; Donate URL is not in text nor tooltip
-			ShellExecute("https://mybot.run/forums/index.php?/donate/make-donation/")
+			ShellExecute("https://paypal.me/xbebenk")
 		Case $g_hBtnStart, $g_hTblStart
 			btnStart()
 		Case $g_hBtnStop, $g_hTblStop
@@ -1938,12 +1936,10 @@ Func tabDONATE()
 		Case $tabidx = 0 ; RequestCC
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_RequestCC)
 			GUISetState(@SW_HIDE, $g_hGUI_DONATECC)
-			GUISetState(@SW_HIDE, $g_hGUI_ScheduleCC)
 			GUICtrlSetPos($g_hChkDonate, $tabdonx[2] - 15, $tabdonx[3] - 15)
 
 		Case $tabidx = 1 ; Donate CC
 			GUISetState(@SW_HIDE, $g_hGUI_RequestCC)
-			GUISetState(@SW_HIDE, $g_hGUI_ScheduleCC)
 			If GUICtrlRead($g_hChkDonate) = $GUI_CHECKED Then
 				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DONATECC)
 				GUICtrlSetState($g_hLblDonateDisabled, $GUI_HIDE)
@@ -1952,19 +1948,6 @@ Func tabDONATE()
 				GUICtrlSetState($g_hLblDonateDisabled, $GUI_SHOW)
 			EndIf
 			GUICtrlSetPos($g_hChkDonate, $tabdonx[2] - 15, $tabdonx[3] - 15)
-
-		Case $tabidx = 2 ; Schedule
-			GUISetState(@SW_HIDE, $g_hGUI_RequestCC)
-			GUISetState(@SW_HIDE, $g_hGUI_DONATECC)
-			If GUICtrlRead($g_hChkDonate) = $GUI_CHECKED Then
-				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ScheduleCC)
-				GUICtrlSetState($g_hLblScheduleDisabled, $GUI_HIDE)
-			Else
-				GUISetState(@SW_HIDE, $g_hGUI_ScheduleCC)
-				GUICtrlSetState($g_hLblScheduleDisabled, $GUI_SHOW)
-			EndIf
-			GUICtrlSetPos($g_hChkDonate, $tabdonx[2] - 15, $tabdonx[3] - 15)
-
 	EndSelect
 
 EndFunc   ;==>tabDONATE

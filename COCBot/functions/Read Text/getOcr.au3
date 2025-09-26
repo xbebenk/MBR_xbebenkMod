@@ -81,7 +81,7 @@ Func getLabCost($x_start, $y_start) ;normal lab
 EndFunc 
 
 Func getSLabCost($x_start, $y_start) ;builderbase lab
-	Return StringRegExpReplace(getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True), "[-x]", "")
+	Return StringRegExpReplace(getOcrAndCapture("coc-slabcost", $x_start, $y_start, 100, 18, True), "[-x]", "")
 	;Return getOcrAndCapture("coc-slabcost", $x_start, $y_start, 100, 18, True)
 EndFunc 
 
@@ -98,7 +98,7 @@ Func getHeroUpgradeTime($x_start, $y_start) ; -> Gets complete upgrade time for 
 EndFunc   ;==>getHeroUpgradeTime
 
 Func getChatString($x_start, $y_start, $language) ; -> Get string chat request - Latin Alphabetic - EN "DonateCC.au3"
-	Return getOcrAndCapture($language, $x_start, $y_start, 280, 15)
+	Return getOcrAndCapture($language, $x_start, $y_start, 310, 15)
 EndFunc   ;==>getChatString
 
 Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)  coc-profile

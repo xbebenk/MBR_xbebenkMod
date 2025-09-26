@@ -23,9 +23,6 @@ Func VillageSearch()
 	If $g_bSearchAttackNowEnable Then
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
-		GUICtrlSetState($g_hBtnAttackNowTS, $GUI_HIDE)
-		HideShields(False)
-		$g_bBtnAttackNowPressed = False
 	EndIf
 
 	$g_bVillageSearchActive = False
@@ -82,10 +79,8 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 	EndIf
 
 	If $g_bSearchAttackNowEnable Then
-		HideShields(True)
-		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_SHOW)
-		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_SHOW)
-		GUICtrlSetState($g_hBtnAttackNowTS, $GUI_SHOW)
+		If $g_abSearchSearchesEnable[$DB] Then GUICtrlSetState($g_hBtnAttackNowDB, $GUI_SHOW)
+		If $g_abSearchSearchesEnable[$LB] Then GUICtrlSetState($g_hBtnAttackNowLB, $GUI_SHOW)
 	EndIf
 
 	If $g_bIsClientSyncError = False And $g_bIsSearchLimit = False Then
@@ -119,8 +114,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		AttackRemainingTime(True) ; Timer for knowing when attack starts, in 30 Sec. attack automatically starts and lasts for 3 Minutes
 		If $g_bRestart Then Return ; exit func
 		$g_bCloudsActive = False
-		
-		If _Sleep(1500) Then Return ;add small delay before check resource
 		GetResources(False) ;Reads Resource Values
 		If $g_bRestart Then Return ; exit func
 
@@ -296,19 +289,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			SetLog($GetResourcesTXT, $COLOR_BLACK, "Lucida Console", 7.5)
 		EndIf
 
-		If $g_bSearchRestartPickupHero Then
-			For $i = 0 To $eHeroCount - 1 ; check all heros
-				If Not $abHeroUse[$i] Or Not _DateIsValid($g_asHeroHealTime[$i]) Then ContinueLoop
-				Local $iTimeTillHeroHealed = Int(_DateDiff('s', _NowCalc(), $g_asHeroHealTime[$i])) ; hero time in seconds
-				SetDebugLog($g_asHeroNames[$i] & " will be ready in " & $iTimeTillHeroHealed & " seconds")
-				If $iTimeTillHeroHealed <= 0 Then
-					$bReturnToPickupHero = True
-					$g_asHeroHealTime[$i] = ""
-					SetLog($g_asHeroNames[$i] & " is ready. Return home to pick " & ($i <> 1 ? "him" : "her") & " up to join the attack")
-					ExitLoop ; found 1 Hero is ready, skip checking other heros
-				EndIf
-			Next
-		EndIf
 		; Return Home on Search limit or Hero healed
 		If SearchLimit($iSkipped + 1, $bReturnToPickupHero) Then Return True
 
@@ -316,6 +296,14 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			$g_bRestart = True
 			$g_bIsClientSyncError = True
 			Return
+		EndIf
+		
+		; ------- Add attack now button delay and check button status
+		If $g_bSearchAttackNowEnable And $g_iSearchAttackNowDelay > 0 Then
+			For $i = 1 To $g_iSearchAttackNowDelay
+				If _Sleep(1000) Then Return ; add human reaction time on AttackNow button function
+				If $g_bBtnAttackNowPressed = True Then ExitLoop 2
+			Next
 		EndIf
 
 		; ----------------- ADD RANDOM DELAY IF REQUESTED -----------------------------------
@@ -327,12 +315,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			EndIf
 		EndIf
 		If _Sleep($DELAYRESPOND) Then Return
-
-		; ------- Add attack not button delay and check button status
-		If $g_bSearchAttackNowEnable And $g_iSearchAttackNowDelay > 0 Then
-			If _Sleep(1000 * $g_iSearchAttackNowDelay) Then Return ; add human reaction time on AttackNow button function
-		EndIf
-		If $g_bBtnAttackNowPressed = True Then ExitLoop
 
 		; ----------------- PRESS BUTTON NEXT  -------------------------------------------------
 		If $checkDeadBase And Not $g_bDebugDeadBaseImage And $g_iSearchCount > $g_aiSearchEnableDebugDeadBaseImage Then
@@ -515,15 +497,17 @@ Func WriteLogVillageSearch($x)
 EndFunc   ;==>WriteLogVillageSearch
 
 Func CheckZoomOut($sSource = "CheckZoomOut")
-	;SearchZoomOut($CenterVillageBoolOrScrollPos, $UpdateMyVillage, $sSource = "", $CaptureRegion, $DebugLog)
-	resetEdge()
+	Local $bRet
+	If $sSource <> "VillageSearch" Then resetEdge()
 	Local $aVillageResult = SearchZoomOut(False, True, $sSource)
 	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
-		SetLog("CheckZoomOut Failed", $COLOR_ERROR)
-		Return False
+		SetLog("CheckZoomOut Failed : " & $sSource, $COLOR_DEBUG)
+		AndroidZoomOut()
+		ZoomOutHelper("VillageSearch")
+		$bRet = False
 	EndIf
 	If $sSource = "VillageSearch" Then SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
-	If $g_bVillageSearchAlwaysMeasure And $sSource = "VillageSearch" Then
+	If $sSource = "VillageSearch" Then
 		If $g_bChkForceEdgeSmartfarm Then 
 			$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
 			$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
@@ -534,5 +518,5 @@ Func CheckZoomOut($sSource = "CheckZoomOut")
 		EndIf
 		AttackCSVDEBUGIMAGE()
 	EndIf
-	Return True
+	Return $bRet
 EndFunc   ;==>CheckZoomOut

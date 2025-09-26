@@ -41,7 +41,7 @@ Func CleanYardCheckBuilder($bTest = False)
 		$bRet = True
 		If $g_iFreeBuilderCount = 1 Then 
 			If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "CleanYardCheckBuilder") Then 
-				SetLog("Goblin Builder Found!", $COLOR_DEBUG1)
+				SetLog("CleanYardCheckBuilder, Free Builder = 1, Goblin Builder!, Return False", $COLOR_DEBUG1)
 				$bRet = False
 			EndIf
 		EndIf
@@ -56,7 +56,7 @@ Func CleanYard($bTest = False)
 	Local $bRet = False
 	If Not $g_bChkCleanYard And Not $g_bChkGemsBox Then Return
 	VillageReport(True, True)
-	If Not CleanYardCheckBuilder($bTest) Then Return
+	ZoomOut()
 	SetLog("CleanYard: Try removing obstacles", $COLOR_DEBUG)
 	checkMainScreen(True, $g_bStayOnBuilderBase, "CleanYard")
 	
@@ -65,13 +65,13 @@ Func CleanYard($bTest = False)
 		Return
 	EndIf
 	
-	If RemoveGembox() Then _SleepStatus(35000) ;Remove gembox first, and wait till gembox removed
+	RemoveGembox()
 	
 	; Setup arrays, including default return values for $return
 	Local $Filename = ""
 	Local $x, $y, $Locate = 0
 	
-	If $g_iFreeBuilderCount > 0 And $g_bChkCleanYard Then
+	If $g_bChkCleanYard Then
 		Local $aResult = QuickMIS("CNX", $g_sImgCleanYard, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
 		If IsArray($aResult) And UBound($aResult) > 0 Then
 			For $i = 0 To UBound($aResult) - 1
@@ -84,8 +84,6 @@ Func CleanYard($bTest = False)
 				Click($x, $y, 1, 0, "CleanYard") ;click CleanYard
 				If _Sleep(1000) Then Return
 				If Not ClickRemoveObstacle($bTest) Then ExitLoop
-				CleanYardCheckBuilder($bTest)
-				If $g_iFreeBuilderCount = 0 Then _SleepStatus(12000)
 				ClickAway()
 				$Locate += 1
 			Next
@@ -130,12 +128,12 @@ Func RemoveGembox()
 	If Not $g_bChkGemsBox Then Return 
 	If Not IsMainPage() Then Return
 	
-	If QuickMIS("BC1", $g_sImgGemBox, 70,70,830,620) Then
+	If QuickMIS("BC1", $g_sImgGemBox, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom) Then
 		If Not isInsideDiamondXY($g_iQuickMISX, $g_iQuickMISY, True) Then 
 			SetLog("Cannot Remove GemBox!", $COLOR_INFO)
 			Return False
 		EndIf
-		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "#0430")
+		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Remove GemBox!")
 		If _Sleep(1000) Then Return
 		ClickRemoveObstacle()
 		ClickAway()

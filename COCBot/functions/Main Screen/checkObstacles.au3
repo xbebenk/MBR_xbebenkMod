@@ -139,7 +139,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	
 	If WelcomeBackCheck() Then 
 		SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
-		Click(440, 526)
+		Click(440, 515)
 		Return False
 	EndIf
 	If Not $g_bRunState Then Return
@@ -509,7 +509,6 @@ Func SwitchForceAnotherDevice()
 			; normal GUI Mode
 			_GUICtrlComboBox_SetCurSel($g_hCmbProfile, _GUICtrlComboBox_FindStringExact($g_hCmbProfile, $g_asProfileName[$g_iNextAccount]))
 			cmbProfile()
-			DisableGUI_AfterLoadNewProfile()
 		Else
 			; mini or headless GUI Mode
 			saveConfig()
@@ -821,7 +820,7 @@ EndFunc
 
 Func BBTutorial($x = 170, $y = 560)
 	If _Sleep(1000) Then Return
-	If QuickMIS("BC1", $g_sImgOrangeBuilding, 145, 480, 210, 540) Then 
+	If QuickMIS("BC1", $g_sImgOrangeBuilding, 145, 420, 240, 540) Then 
 		Click($x, $y)
 		If _Sleep(2000) Then Return
 	Else
@@ -872,9 +871,6 @@ Func BBTutorial($x = 170, $y = 560)
 	EndIf
 	
 	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then
-		SetLog("Click Boat", $COLOR_INFO)
-		Click(490, 310) ;Click Boat
-		If _Sleep(2000) Then Return
 		SetLog("Click Travel Button", $COLOR_INFO)
 		Click(475, 575) ;Click Travel
 		If _Sleep(2000) Then Return
@@ -917,6 +913,7 @@ Func BBTutorial($x = 170, $y = 560)
 	
 	SetLog("Waiting Next Tutorial on BuilderBase", $COLOR_INFO)
 	For $i = 1 To 10
+		ClickAway()
 		SetLog("Wait Next Tutorial Chat #" & $i, $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then
 			SetLog("Found Tutorial Chat", $COLOR_ACTION)
@@ -974,7 +971,7 @@ Func BBTutorial($x = 170, $y = 560)
 	
 	For $i = 1 To 5
 		SetLog("Wait Arrow Tutorial on Upgrade Button #" & $i, $COLOR_INFO)
-		If QuickMIS("BC1", $g_sImgOrangeBuilding, 650, 400, 770, 520) Then 
+		If IsFullScreenWindow() Then 
 			Click(645, 570) ;Click Upgrade Button
 			If _Sleep(2000) Then Return
 			ExitLoop
@@ -994,10 +991,10 @@ Func BBTutorial($x = 170, $y = 560)
 		SetLog("Wait Arrow Tutorial on Attack Button #" & $i, $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgOrangeBuilding, 6, 460, 110, 590) Then 
 			Click(60, 610) ;Click Attack Button
-			If _Sleep(3000) Then Return
+			If _Sleep(2000) Then Return
 			ExitLoop
 		EndIf
-		If _Sleep(5000) Then Return
+		If _Sleep(2000) Then Return
 	Next
 	
 	For $i = 1 To 10
@@ -1005,7 +1002,7 @@ Func BBTutorial($x = 170, $y = 560)
 		If WaitforPixel(650, 437, 651, 438, "8BD33A", 20, 2) Then
 			SetDebugLog("Found FindNow Button", $COLOR_ACTION)
 			Click(650, 437)
-			_SleepStatus(25000) ;wait for clouds and other animations
+			_SleepStatus(15000) ;wait for clouds and other animations
 			ExitLoop
 		EndIf
 		If _Sleep(1000) Then Return
@@ -1022,35 +1019,38 @@ Func BBTutorial($x = 170, $y = 560)
 		EndIf
 		_SleepStatus(5000)
 	Next
+	
+	If _Sleep(10000) Then Return
+	
 	For $i = 1 To 10
 		SetLog("Waiting Next Tutorial After Attack #" & $i, $COLOR_INFO)
-		
+		ClickAway()
 		If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then
 			SetLog("Found Tutorial Chat", $COLOR_INFO)
 			Click(115, 540) 
-			_SleepStatus(10000)
+			_SleepStatus(5000)
 		EndIf
 		If WaitforPixel(674, 535, 675, 536, "B35727", 20, 2) Then
 			SetLog("Found Tutorial Chat", $COLOR_INFO)
 			Click(674, 535) 
-			_SleepStatus(10000)
+			_SleepStatus(5000)
 		EndIf
 		If WaitforPixel(150, 534, 151, 535, "FFA980", 20, 2) Then
 			SetLog("Found Tutorial Chat", $COLOR_INFO)
 			Click(150, 534) 
-			_SleepStatus(10000)
+			_SleepStatus(5000)
 		EndIf
 		If QuickMIS("BC1", $g_sImgOrangeBuilding, 75, 480, 200, 600) Then 
 			Click(65, 620) ;Click Return Home
-			_SleepStatus(5000)
+			_SleepStatus(3000)
 			ExitLoop
 		EndIf
 		If BBBarbarianHead() Then 
 			Click(430, 540)
-			_SleepStatus(5000)
+			_SleepStatus(3000)
 			ExitLoop
 		EndIf
-		If _Sleep(5000) Then Return
+		If _Sleep(3000) Then Return
 	Next
 	
 	For $i = 1 To 10
@@ -1058,7 +1058,7 @@ Func BBTutorial($x = 170, $y = 560)
 		ClickAway()
 		If QuickMIS("BC1", $g_sImgOrangeBuilding, 360, 30, 480, 150) Then 
 			Click(470, 30) ;Click Builder Menu
-			_SleepStatus(10000)
+			_SleepStatus(5000)
 			ExitLoop
 		EndIf
 		If _Sleep(3000) Then Return
@@ -1069,12 +1069,12 @@ Func BBTutorial($x = 170, $y = 560)
 		If WaitforPixel(674, 535, 675, 536, "B35727", 20, 2) Then
 			SetLog("Found Tutorial Chat", $COLOR_INFO)
 			Click(674, 535) 
-			_SleepStatus(10000)
+			_SleepStatus(5000)
 		EndIf
 		If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then
 			SetLog("Found Tutorial Chat", $COLOR_INFO)
 			Click(115, 540) 
-			_SleepStatus(10000)
+			_SleepStatus(5000)
 		EndIf
 		ClickAway()
 		getBuilderCount(False, True) ;check masterBuilder

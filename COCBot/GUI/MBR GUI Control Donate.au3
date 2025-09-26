@@ -21,22 +21,21 @@ Global $g_aiDonIcons[$eTroopCount + 1] = [$eIcnDonBarbarian, $eIcnSuperBarbarian
 							$eIcnDonMinion, $eIcnSuperMinion, $eIcnDonHogRider, $eIcnDonValkyrie, $eIcnSuperValkyrie, $eIcnDonGolem, _
 							$eIcnDonWitch, $eIcnSuperWitch, $eIcnDonLavaHound, $eIcnIceHound, $eIcnDonBowler, $eIcnSuperBowler, $eIcnIceGolem, $eIcnHeadhunter, $eIcnDonBlank]
 
+Func chkRequestCC()
+	If GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_CHECKED Then
+		$g_bRequestTroopsEnable = True
+		GUICtrlSetState($g_hTxtRequestCC, $GUI_ENABLE)
+	Else
+		$g_bRequestTroopsEnable = False
+		GUICtrlSetState($g_hTxtRequestCC, $GUI_DISABLE)
+	EndIf
+EndFunc
+
 Func btnDonateTroop()
 	For $i = 0 To $eTroopCount - 1 + $eSiegeMachineCount
 		If @GUI_CtrlId = $g_ahBtnDonateTroop[$i] Then
 			If GUICtrlGetState($g_ahGrpDonateTroop[$i]) = BitOR($GUI_HIDE, $GUI_ENABLE) Then
 				_DonateBtn($g_ahGrpDonateTroop[$i], $g_ahTxtDonateTroop[$i]) ;Hide/Show controls on Donate tab
-			EndIf
-			GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_HIDE)
-			If $i <= $eTroopCount - 1 Then
-				GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_SHOW)
-				If GUICtrlRead($g_ahChkDonateTroop[$i]) = $GUI_CHECKED Then
-					GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_ENABLE)
-				Else
-					GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_DISABLE)
-				EndIf
-			Else
-				GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_HIDE)
 			EndIf
 			ExitLoop
 		EndIf
@@ -48,13 +47,6 @@ Func btnDonateSpell()
 		If @GUI_CtrlId = $g_ahBtnDonateSpell[$i] Then
 			If GUICtrlGetState($g_ahGrpDonateSpell[$i]) = BitOR($GUI_HIDE, $GUI_ENABLE) Then
 				_DonateBtn($g_ahGrpDonateSpell[$i], $g_ahTxtDonateSpell[$i])
-			EndIf
-			GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_HIDE)
-			GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_SHOW)
-			If GUICtrlRead($g_ahChkDonateSpell[$i]) = $GUI_CHECKED Then
-				GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_ENABLE)
-			Else
-				GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_DISABLE)
 			EndIf
 			ExitLoop
 		EndIf
@@ -78,7 +70,6 @@ Func chkDonateSpell()
 		If @GUI_CtrlId = $g_ahChkDonateSpell[$i] Then
 			If GUICtrlRead($g_ahChkDonateSpell[$i]) = $GUI_CHECKED Then
 				_DonateControlsSpell($i)
-				GUICtrlSetState($g_hChkDonateQueueSpellOnly, $GUI_ENABLE)
 			Else
 				GUICtrlSetBkColor($g_ahLblDonateSpell[$i], $GUI_BKCOLOR_TRANSPARENT)
 			EndIf
@@ -120,7 +111,6 @@ Func _DonateControls($iTroopIndex)
 	For $i = $iFirstTroop To $iLastTroop
 		If $i = $iTroopIndex Then
 			GUICtrlSetBkColor($g_ahLblDonateTroop[$i], $COLOR_ORANGE)
-			If GUICtrlRead($g_ahChkDonateTroop[$i]) = $GUI_CHECKED Then GUICtrlSetState($g_hChkDonateQueueTroopOnly, $GUI_ENABLE)
 		Else
 			If GUICtrlGetBkColor($g_ahLblDonateTroop[$i]) = $COLOR_NAVY Then GUICtrlSetBkColor($g_ahLblDonateTroop[$i], $GUI_BKCOLOR_TRANSPARENT)
 		EndIf
@@ -140,35 +130,6 @@ Func _DonateControlsSpell($iSpellIndex)
 		If BitAND(GUICtrlGetState($g_ahTxtDonateSpell[$i]), $GUI_DISABLE) = $GUI_DISABLE Then GUICtrlSetState($g_ahTxtDonateSpell[$i], $GUI_ENABLE)
 	Next
  EndFunc   ;==>_DonateControlsSpell
-
-Func chkskipDonateNearFulLTroopsEnable()
-	If GUICtrlRead($g_hChkSkipDonateNearFullTroopsEnable) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hTxtSkipDonateNearFullTroopsPercentage, $GUI_ENABLE)
-		GUICtrlSetState($g_hLblSkipDonateNearFullTroopsText, $GUI_ENABLE)
-		GUICtrlSetState($g_hLblSkipDonateNearFullTroopsText1, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hTxtSkipDonateNearFullTroopsPercentage, $GUI_DISABLE)
-		GUICtrlSetState($g_hLblSkipDonateNearFullTroopsText, $GUI_DISABLE)
-		GUICtrlSetState($g_hLblSkipDonateNearFullTroopsText1, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkskipDonateNearFulLTroopsEnable
-
-Func chkBalanceDR()
-	If GUICtrlRead($g_hChkUseCCBalanced) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hCmbCCDonated, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbCCReceived, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hCmbCCDonated, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbCCReceived, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkBalanceDR
-
-Func cmbBalanceDR()
-	If _GUICtrlComboBox_GetCurSel($g_hCmbCCDonated) = _GUICtrlComboBox_GetCurSel($g_hCmbCCReceived) Then
-		_GUICtrlComboBox_SetCurSel($g_hCmbCCDonated, 0)
-		_GUICtrlComboBox_SetCurSel($g_hCmbCCReceived, 0)
-	EndIf
-EndFunc   ;==>cmbBalanceDR
 
 Func Doncheck()
 	tabDONATE() ; just call tabDONATE()

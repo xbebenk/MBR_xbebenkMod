@@ -25,7 +25,6 @@ Func PrepareAttackBB($Mode = Default)
 	
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 		If $g_bChkDebugAttackBB Then SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
-		If $g_bChkDebugAttackBB Then SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
 		If _Sleep(1500) Then Return
 		If Not $GoldIsFull And Not $ElixIsFull Then UseBuilderJar()
@@ -44,7 +43,7 @@ Func PrepareAttackBB($Mode = Default)
 	EndIf
 	
 	getBuilderCount(True, True)
-	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then
+	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull And $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then
 		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
 		Return False
 	EndIf
@@ -191,7 +190,7 @@ Func CheckArmyReady()
 	Return $bReady
 EndFunc
 
-Func BBDropTrophy()
+Func BBDropTrophy($iDropCount = 3)
 	If Not $g_bChkBBDropTrophy Then Return
 	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
 	SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
@@ -209,7 +208,7 @@ Func BBDropTrophy()
 	EndIf
 	
 	Local $iCurrentTrophy = 0
-	For $iLoop = 1 To 3
+	For $iLoop = 1 To $iDropCount
 		$iCurrentTrophy = Number(getTrophyMainScreen(67, 84))
 		SetLog("Current BB Trophy:[" & $iCurrentTrophy & "] BBDropTrophy Limit:[" & $g_iTxtBBTrophyLowerLimit & "]", $COLOR_INFO)
 		If $iCurrentTrophy <= $g_iTxtBBTrophyLowerLimit Then
@@ -304,9 +303,10 @@ Func UseBuilderJar()
 		If QuickMIS("BC1", $g_sImgDirUseJar, 120, 460, 210, 510) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1000) Then Return
-			If QuickMIS("BC1", $g_sImgDirUseJar, 400, 380, 460, 450) Then 
-				Click($g_iQuickMISX, $g_iQuickMISY)
+			If _ColorCheck(_GetPixelColor(420, 430, True), Hex(0x2F93CF, 6), 20) Then
+				Click(420, 430)
 				SetLog("Succesfully use BuilderBase Jar", $COLOR_SUCCESS)
+				If _Sleep(500) Then Return
 			EndIf
 		EndIf
 	EndIf

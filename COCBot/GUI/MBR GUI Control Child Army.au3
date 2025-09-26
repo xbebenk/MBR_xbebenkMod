@@ -50,9 +50,9 @@ Func lblTotalCountTroop1()
 	Next
 
 	If GUICtrlRead($g_hLblCountTotal) = GUICtrlRead($g_hTxtTotalCampForced) Then
-		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_LIGHTGREEN)
 	ElseIf GUICtrlRead($g_hLblCountTotal) >= $ArmyCampTemp Then
-		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
+		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_LIGHTGREEN)
 	ElseIf GUICtrlRead($g_hLblCountTotal) > $ArmyCampTemp / 2 And GUICtrlRead($g_hLblCountTotal) < $ArmyCampTemp Then
 		GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_ORANGE)
 	Else
@@ -90,7 +90,7 @@ Func lblTotalCountSpell2()
 		GUICtrlSetBkColor($g_ahTxtTrainArmySpellCount[$i], $g_iTotalTrainSpaceSpell <= Number(GUICtrlRead($g_hTxtTotalCountSpell)) ? $COLOR_WHITE : $COLOR_RED)
 	Next
 
-	GUICtrlSetBkColor($g_hLblCountTotalSpells, $g_iTotalTrainSpaceSpell <= Number(GUICtrlRead($g_hTxtTotalCountSpell)) ? $COLOR_MONEYGREEN : $COLOR_RED)
+	GUICtrlSetBkColor($g_hLblCountTotalSpells, $g_iTotalTrainSpaceSpell <= Number(GUICtrlRead($g_hTxtTotalCountSpell)) ? $COLOR_LIGHTGREEN : $COLOR_RED)
 
 	Local $iSpellProgress = Floor(($g_iTotalTrainSpaceSpell / Number(GUICtrlRead($g_hTxtTotalCountSpell))) * 100)
 	If $iSpellProgress <= 100 Then
@@ -127,7 +127,7 @@ Func lblTotalCountSiege()
 	Next
 
 	GUICtrlSetData($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege)
-	GUICtrlSetBkColor($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege <= 3 ? $COLOR_MONEYGREEN : $COLOR_RED)
+	GUICtrlSetBkColor($g_hLblCountTotalSiege, $g_iTotalTrainSpaceSiege <= 3 ? $COLOR_LIGHTGREEN : $COLOR_RED)
 	For $i = 0 To $eSiegeMachineCount - 1
 		If ($g_iTotalTrainSpaceSiege <= 3) Then
 			GUICtrlSetBkColor($g_ahTxtTrainArmySiegeCount[$i], $COLOR_WHITE)
@@ -723,8 +723,8 @@ Func Removecamp()
 	GUICtrlSetData($g_hLblGoldCostSiege, "0")
 	GUICtrlSetData($g_hLblCountTotalSiege, 0)
 	GUICtrlSetData($g_hLblTotalTimeSiege, " 0s")
-	GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_MONEYGREEN)
-	GUICtrlSetBkColor($g_hLblCountTotalSiege, $COLOR_MONEYGREEN)
+	GUICtrlSetBkColor($g_hLblCountTotal, $COLOR_LIGHTGREEN)
+	GUICtrlSetBkColor($g_hLblCountTotalSiege, $COLOR_LIGHTGREEN)
 EndFunc   ;==>Removecamp
 
 Func TrainTroopCountEdit()

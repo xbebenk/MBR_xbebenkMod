@@ -119,14 +119,6 @@ Func CheckSwitchAcc()
 		SetSwitchAccLog(" - Waiting for CC")
 		$bForceSwitch = True
 	Else
-		getArmyTroopTime(True, False) ; update $g_aiTimeTrain[0]
-
-		$g_aiTimeTrain[1] = 0
-		If IsWaitforSpellsActive() Then getArmySpellTime() ; update $g_aiTimeTrain[1]
-
-		$g_aiTimeTrain[2] = 0
-		If IsWaitforHeroesActive() Then CheckWaitHero() ; update $g_aiTimeTrain[2]
-		RequestCC(False, "IsFullClanCastle")
 		ClickAway()
 
 		$iWaitTime = _ArrayMax($g_aiTimeTrain, 1, 0, 2) ; Not check Siege Machine time: $g_aiTimeTrain[3]
@@ -137,81 +129,52 @@ Func CheckSwitchAcc()
 		EndIf
 	EndIf
 
-	Local $sLogSkip = ""
-	If Not $g_abDonateOnly[$g_iCurAccount] And $iWaitTime <= $g_iTrainTimeToSkip And Not $bForceSwitch Then
-		If Not $g_bRunState Then Return
-		If $iWaitTime > 0 Then $sLogSkip = " in " & Round($iWaitTime, 1) & " mins"
-		SetLog("Army is ready" & $sLogSkip & ", skip switching account", $COLOR_INFO)
-		SetSwitchAccLog(" - Army is ready" & $sLogSkip)
-		SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
-		If _Sleep(500) Then Return
+	SetDebugLog("-Normal Switch-")
+	$g_iNextAccount = $g_iCurAccount + 1
+	If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+	While $abAccountNo[$g_iNextAccount] = False
+		$g_iNextAccount += 1
+		If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0 ; avoid idle Account
+		SetDebugLog("- While Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
+	WEnd
+	
 
-	Else
+	If Not $g_bRunState Then Return
 
-		If $g_bChkSmartSwitch = True Then ; Smart switch
-			SetDebugLog("-Smart Switch-")
-			$nMinRemainTrain = CheckTroopTimeAllAccount($bForceSwitch)
+	SetDebugLog("- Current Account: " & $g_asProfileName[$g_iCurAccount] & " number: " & $g_iCurAccount + 1)
+	SetDebugLog("- Next Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
 
-			If $nMinRemainTrain <= 1 And Not $bForceSwitch Then ; Active (force switch shall give priority to Donate Account)
-				SetDebugLog("Switch to or Stay at Active Account: " & $g_iNextAccount + 1, $COLOR_DEBUG)
-				$g_iDonateSwitchCounter = 0
-			Else
-				If $g_iDonateSwitchCounter < UBound($aDonateAccount) Then ; Donate
-					$g_iNextAccount = $aDonateAccount[$g_iDonateSwitchCounter]
-					$g_iDonateSwitchCounter += 1
-					SetDebugLog("Switch to Donate Account " & $g_iNextAccount + 1 & ". $g_iDonateSwitchCounter = " & $g_iDonateSwitchCounter, $COLOR_DEBUG)
-					SetSwitchAccLog(" - Donate Acc [" & $g_iNextAccount + 1 & "]")
-				Else ; Active
-					$g_iDonateSwitchCounter = 0
-				EndIf
-			EndIf
-		Else ; Normal switch (continuous)
-			SetDebugLog("-Normal Switch-")
-			$g_iNextAccount = $g_iCurAccount + 1
-			If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
-			While $abAccountNo[$g_iNextAccount] = False
-				$g_iNextAccount += 1
-				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0 ; avoid idle Account
-				SetDebugLog("- While Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
-			WEnd
-		EndIf
-
-		If Not $g_bRunState Then Return
-
-		SetDebugLog("- Current Account: " & $g_asProfileName[$g_iCurAccount] & " number: " & $g_iCurAccount + 1)
-		SetDebugLog("- Next Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
-
-		; Check if the next account is PBT and IF the remain train time is more than 2 minutes
-		If $g_abPBActive[$g_iNextAccount] And _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$g_iNextAccount]) > 2 Then
-			SetLog("Account " & $g_iNextAccount + 1 & " is in a Personal Break Time!", $COLOR_INFO)
-			SetSwitchAccLog(" - Account " & $g_iNextAccount + 1 & " is in PTB")
-			$g_iNextAccount = $g_iNextAccount + 1
-			If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
-			While $abAccountNo[$g_iNextAccount] = False
-				$g_iNextAccount += 1
-				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0 ; avoid idle Account
-			WEnd
-		EndIf
-
-		If UBound($aActibePBTaccounts) + UBound($aDonateAccount) = UBound($aActiveAccount) Then
-			SetLog("All accounts set to Donate and/or are in PBT!", $COLOR_INFO)
-			SetSwitchAccLog("All accounts in PBT/Donate:")
-			; Just a Good User Log
-			For $i = 0 To $g_iTotalAcc
-				If $g_abDonateOnly[$i] Then SetSwitchAccLog(" - Donate Acc [" & $i + 1 & "]")
-				If $g_abPBActive[$i] Then SetSwitchAccLog(" - PBT Acc [" & $i + 1 & "]")
-			Next
-		EndIf
-
-		If $g_iNextAccount <> $g_iCurAccount Then
-			_ClanGames(False, True) ;Only Purge
-			CheckMainScreen(True, $g_bStayOnBuilderBase, "CheckSwitchAcc")
-			SwitchCOCAcc($g_iNextAccount)
-		Else
-			SetLog("Staying in this account")
-			SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
-		EndIf
+	; Check if the next account is PBT and IF the remain train time is more than 2 minutes
+	If $g_abPBActive[$g_iNextAccount] And _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$g_iNextAccount]) > 2 Then
+		SetLog("Account " & $g_iNextAccount + 1 & " is in a Personal Break Time!", $COLOR_INFO)
+		SetSwitchAccLog(" - Account " & $g_iNextAccount + 1 & " is in PTB")
+		$g_iNextAccount = $g_iNextAccount + 1
+		If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+		While $abAccountNo[$g_iNextAccount] = False
+			$g_iNextAccount += 1
+			If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0 ; avoid idle Account
+		WEnd
 	EndIf
+
+	If UBound($aActibePBTaccounts) + UBound($aDonateAccount) = UBound($aActiveAccount) Then
+		SetLog("All accounts set to Donate and/or are in PBT!", $COLOR_INFO)
+		SetSwitchAccLog("All accounts in PBT/Donate:")
+		; Just a Good User Log
+		For $i = 0 To $g_iTotalAcc
+			If $g_abDonateOnly[$i] Then SetSwitchAccLog(" - Donate Acc [" & $i + 1 & "]")
+			If $g_abPBActive[$i] Then SetSwitchAccLog(" - PBT Acc [" & $i + 1 & "]")
+		Next
+	EndIf
+
+	If $g_iNextAccount <> $g_iCurAccount Then
+		CheckMainScreen(True, $g_bStayOnBuilderBase, "CheckSwitchAcc")
+		PullSharedPrefs()
+		SwitchCOCAcc($g_iNextAccount)
+	Else
+		SetLog("Staying in this account")
+		SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
+	EndIf
+	
 	If Not $g_bRunState Then Return
 
 	$g_bForceSwitch = false ; reset the need to switch
@@ -242,45 +205,7 @@ Func SwitchCOCAcc($NextAccount)
 		If _Sleep(500) Then Return
 		While 1
 			If Not IsSettingPage() Then ExitLoop
-
-			If $g_bChkGooglePlay Then
-				Switch SwitchCOCAcc_DisconnectConnect($bResult, $bSharedPrefs)
-					Case 0
-						Return
-					Case -1
-						ExitLoop
-				EndSwitch
-				Switch SwitchCOCAcc_ClickAccount($bResult, $NextAccount, $bSharedPrefs)
-					Case "OK"
-						; all good
-						If $g_bChkSharedPrefs Then
-							If $bSharedPrefs Then
-								CloseCoC(False)
-								$bResult = True
-								ExitLoop
-							Else
-								SetLog($g_asProfileName[$g_iNextAccount] & " missing shared_prefs, using normal switch account", $COLOR_WARNING)
-							EndIf
-						EndIf
-					Case "Error"
-						; some problem
-						ExitLoop
-					Case "Exit"
-						; no $g_bRunState
-						Return
-				EndSwitch
-				Switch SwitchCOCAcc_ConfirmAccount($bResult)
-					Case "OK"
-						; all good
-					Case "Error"
-						; some problem
-						ExitLoop
-					Case "Exit"
-						; no $g_bRunState
-						Return
-				EndSwitch
-
-			ElseIf $g_bChkSuperCellID Then
+			If $g_bChkSuperCellID Then
 				Switch SwitchCOCAcc_ConnectedSCID($bResult)
 					Case "OK"
 						; all good
@@ -301,7 +226,6 @@ Func SwitchCOCAcc($NextAccount)
 						; no $g_bRunState
 						Return
 				EndSwitch
-
 			EndIf
 			ExitLoop
 		WEnd
@@ -330,7 +254,6 @@ Func SwitchCOCAcc($NextAccount)
 				; normal GUI Mode
 				_GUICtrlComboBox_SetCurSel($g_hCmbProfile, _GUICtrlComboBox_FindStringExact($g_hCmbProfile, $g_asProfileName[$g_iNextAccount]))
 				cmbProfile()
-				DisableGUI_AfterLoadNewProfile()
 			Else
 				; mini or headless GUI Mode
 				saveConfig()
@@ -347,12 +270,6 @@ Func SwitchCOCAcc($NextAccount)
 
 		SetSwitchAccLog("Switched to Acc [" & $NextAccount + 1 & "]", $COLOR_SUCCESS)
 		CreateLogFile() ; Cause use of the right log file after switch
-		If Not $g_bRunState Then Return
-
-
-		If $g_bChkSharedPrefs Then
-			PullSharedPrefs()
-		EndIf
 		If Not $g_bRunState Then Return
 	Else
 		$iRetry += 1
@@ -674,10 +591,6 @@ Func SwitchCOCAcc_ClickAccountSCID(ByRef $bResult, $NextAccount, $iStep = 2)
 
 	If $bSCIDWindowOpened Then
 		If _Sleep(500) Then Return
-		SCIDScrollUp()
-
-		SCIDScrollDown($NextAccount) ; Make Drag only when SCID window is visible.
-		If _Sleep(1000) Then Return
 		$aAccount = QuickMIS("CX", $g_sImgSupercellIDSlots, 750, 320, 840, 676, True, False)
 		SetLog("Found: " & UBound($aAccount) & " SCID", $COLOR_SUCCESS)
 		If IsArray($aAccount) And UBound($aAccount) > 0 Then
@@ -804,19 +717,6 @@ Func CheckTroopTimeAllAccount($bExcludeCurrent = False) ; Return the minimum rem
 
 EndFunc   ;==>CheckTroopTimeAllAccount
 
-Func DisableGUI_AfterLoadNewProfile()
-	$g_bGUIControlDisabled = True
-	For $i = $g_hFirstControlToHide To $g_hLastControlToHide
-		If IsAlwaysEnabledControl($i) Then ContinueLoop
-		If $i >= $g_hClanGamesTV And $i < $g_hChkForceBBAttackOnClanGames Then ContinueLoop
-		If $i >= $g_hChkForceBBAttackOnClanGames And $i <= $g_hBtnCGSettingsClose Then ContinueLoop
-		;If $g_bNotifyPBEnable And $i = $g_hBtnNotifyDeleteMessages Then ContinueLoop ; exclude the DeleteAllMesages button when PushBullet is enabled
-		If BitAND(GUICtrlGetState($i), $GUI_ENABLE) Then GUICtrlSetState($i, $GUI_DISABLE)
-	Next
-	ControlEnable("", "", $g_hCmbGUILanguage)
-	$g_bGUIControlDisabled = False
-EndFunc   ;==>DisableGUI_AfterLoadNewProfile
-
 Func aquireSwitchAccountMutex($iSwitchAccountGroup = $g_iCmbSwitchAcc, $bReturnOnlyMutex = False, $bShowMsgBox = False)
 	Local $sMsg = GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Msg_SwitchAccounts_InUse", "My Bot with Switch Accounts Group %s is already in use or active.", $iSwitchAccountGroup)
 	If $iSwitchAccountGroup Then
@@ -905,57 +805,6 @@ Func CheckGoogleSelectAccount($bSelectFirst = True)
 	Return $bResult
 EndFunc   ;==>CheckGoogleSelectAccount
 
-; Checks if "Log in with Supercell ID" boot screen shows up and closes CoC and pushes shared_prefs to fix
-Func CheckLoginWithSupercellID()
-
-	Local $bResult = False
-
-	If Not $g_bRunState Then Return
-
-	; Account List check be there, validate with imgloc
-	If UBound(decodeSingleCoord(FindImage("LoginWithSupercellID", $g_sImgLoginWithSupercellID, GetDiamondFromRect("300,610(125,30)"), False))) > 1 Then
-		; Google Account selection found
-		SetLog("Verified Log in with Supercell ID boot screen")
-
-		If HaveSharedPrefs($g_sProfileCurrentName) Then
-			SetLog("Close CoC and push shared_prefs for Supercell ID screen")
-			PushSharedPrefs()
-			Return True
-		Else
-			If $g_bChkSuperCellID And ProfileSwitchAccountEnabled() Then ; select the correct account matching with current profile
-				Local $NextAccount = 0
-				$bResult = True
-				For $i = 0 To $g_iTotalAcc
-					If $g_abAccountNo[$i] = True And SwitchAccountEnabled($i) And $g_asProfileName[$i] = $g_sProfileCurrentName Then $NextAccount = $i
-				Next
-
-				Click($aLoginWithSupercellID[0], $aLoginWithSupercellID[1], 1, 0, "Click Log in with SC_ID")
-				If _Sleep(2000) Then Return
-
-				Switch SwitchCOCAcc_ClickAccountSCID($bResult, $NextAccount, 1)
-					Case "OK"
-						; all good
-					Case "Error"
-						; some problem
-						Return
-					Case "Exit"
-						; no $g_bRunState
-						Return
-				EndSwitch
-			Else
-				SetLog("Cannot close Supercell ID screen, shared_prefs not pulled.", $COLOR_ERROR)
-				SetLog("Please resolve Supercell ID screen manually, close CoC", $COLOR_INFO)
-				SetLog("and then pull shared_prefs in tab Bot/Profiles.", $COLOR_INFO)
-			EndIf
-		EndIf
-
-	Else
-		SetDebugLog("Log in with Supercell ID boot screen not verified")
-	EndIf
-
-	Return $bResult
-EndFunc   ;==>CheckLoginWithSupercellID
-
 Func SwitchAccountCheckProfileInUse($sNewProfile)
 	; now check if profile is used in another group
 	Local $sInGroups = ""
@@ -1018,33 +867,3 @@ Func SwitchAccountCheckProfileInUse($sNewProfile)
 		Return False
 	EndIf
 EndFunc   ;==>SwitchAccountCheckProfileInUse
-
-Func SCIDScrollDown($iSCIDAccount)
-	If Not $g_bRunState Then Return
-	If $iSCIDAccount < 4 Then Return
-	For $i = 0 To $iSCIDAccount - 4
-		Switch $g_sAndroidEmulator
-			Case "MEmu", "nox"
-				AndroidAdbScript("ScrollDownSCID")
-			Case "BlueStacks2"
-				AndroidAdbScript("ScrollDownSCID.Bluestacks")
-		EndSwitch
-		If _Sleep(500) Then Return
-	Next
-EndFunc   ;==>SCIDScrollDown
-
-Func SCIDScrollUp()
-	If Not $g_bRunState Then Return
-	SetLog("Try to scroll up", $COLOR_DEBUG)
-	For $i = 0 To Ceiling($g_iTotalAcc/4) - 1
-		Switch $g_sAndroidEmulator
-			Case "MEmu", "nox"
-				AndroidAdbScript("ScrollUpSCID")
-			Case "BlueStacks2"
-				AndroidAdbScript("ScrollUpSCID.Bluestacks")
-		EndSwitch
-		If _Sleep(500) Then Return
-	Next
-EndFunc   ;==>SCIDScrollUp
-
-

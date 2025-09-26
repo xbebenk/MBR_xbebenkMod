@@ -47,7 +47,7 @@ Func isBHMaxed()
 	If QuickMIS("BC1", $g_sImgBuilderHall) Then ; Search for Builder Hall
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(1000) Then Return
-		Local $aBuildingName = BuildingInfo(242, 472)
+		Local $aBuildingName = BuildingInfo(242, 477)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Builder Hall and max level
 			If $aBuildingName[1] = "Builder Hall" Then
@@ -67,7 +67,7 @@ Func isBHMaxed()
 		If QuickMIS("BC1", $g_sImgStarLaboratory) Then 
 			Click($g_iQuickMISX + 5, $g_iQuickMISY + 5)
 			If _Sleep(1000) Then Return
-			Local $aBuildingName = BuildingInfo(242, 472)
+			Local $aBuildingName = BuildingInfo(242, 477)
 			If $aBuildingName[0] = 2 Then
 				; Verify if is Star Laboratory and max level
 				If $aBuildingName[1] = "Star Laboratory" Then
@@ -101,7 +101,7 @@ Func isMegaTeslaMaxed()
 	If QuickMIS("BC1", $g_sImgMegaTesla) Then ;Search for Mega Tesla
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
 		If _Sleep(1000) Then Return
-		Local $aBuildingName = BuildingInfo(242, 472)
+		Local $aBuildingName = BuildingInfo(242, 477)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Mega Tesla is MaxLevel
 			If $aBuildingName[1] = "Mega Tesla" Then
@@ -135,7 +135,7 @@ Func isBattleMachineMaxed()
 		If $g_iQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 30
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
 		If _Sleep(1000) Then Return
-		Local $aBuildingName = BuildingInfo(242, 472)
+		Local $aBuildingName = BuildingInfo(242, 477)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Mega Tesla is MaxLevel
 			If $aBuildingName[1] = "Battle Machine" Then
