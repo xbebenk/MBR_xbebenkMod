@@ -310,9 +310,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 				$g_abFullStorage[$i] = $abFullStorage[$iAccount][$i]
 			Next
 			$g_iBuilderBoostDiscount = $aiBuilderBoostDiscount[$iAccount]
-			$g_abNotNeedAllTime[0] = $abNotNeedAllTime0[$iAccount]
-			$g_abNotNeedAllTime[1] = $abNotNeedAllTime1[$iAccount]
-
+			
 			ResetVariables("donated") ; reset for new account
 			$g_aiAttackedCountSwitch[$iAccount] = $aiAttackedCount[$iAccount]
 

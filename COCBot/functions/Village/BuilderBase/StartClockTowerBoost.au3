@@ -44,12 +44,12 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotio
 		If $sCTCoords <> "" Then
 			$aCTCoords = StringSplit($sCTCoords, ",", $STR_NOCOUNT)
 			ClickP($aCTCoords)
-			If _Sleep($DELAYCLOCKTOWER1) Then Return
+			If _Sleep(1000) Then Return
 
 			$aCTBoost = findButton("BoostCT") ; Search for Start Clock Tower Boost Button
 			If IsArray($aCTBoost) Then
 				ClickP($aCTBoost)
-				If _Sleep($DELAYCLOCKTOWER1) Then Return
+				If _Sleep(1000) Then Return
 
 				$aCTBoost = findButton("BOOSTBtn") ; Search for Boost Button
 				If IsArray($aCTBoost) Then

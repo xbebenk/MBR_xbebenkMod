@@ -1341,7 +1341,6 @@ Global $g_aiChampionAltarPos[2] = [-1, -1] ; position Royal Champion Altar
 Global $g_aiLaboratoryPos[2] = [-1, -1] ; Position of laboratory
 Global $g_aiClanCastlePos[2] = [391, 411] ; Default Position of clan castle placed before Rebuild
 Global $g_iDetectedImageType = 0 ; Image theme; 0 = normal, 1 = snow
-Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 
 ; Army camps
 Global $g_iArmyCapacity = 0 ; Calculated percentage of troops currently in camp / total camp space, expressed as an integer from 0 to 100
