@@ -251,7 +251,6 @@
 #include "functions\Village\ReplayShare.au3"
 #include "functions\Village\BoostHeroes.au3"
 #include "functions\Village\UpgradeHeroes.au3"
-#include "functions\Village\StarBonus.au3"
 #include "functions\Village\AddIdleTime.au3"
 #include "functions\Village\GetVillageSize.au3"
 #include "functions\Village\GainCost.au3"

@@ -173,6 +173,24 @@ Func ReturnHomeMainPage()
 	Return False
 EndFunc   ;==>ReturnHomeMainPage
 
+Func StarBonus()
+	If $g_bDebugSetLog Then SetLog("Begin Star Bonus window check", $COLOR_DEBUG1)
+	
+	Local $aWindowChk1[4] = [135, 92, 0x254963, 20] ; Black Balloon
+	Local $aWindowChk2[4] = [676, 87, 0x1995F8, 20] ; Blue header covering elixir bar
+
+	If _Sleep(500) Then Return
+
+	; Verify actual star bonus window open
+	If _CheckPixel($aWindowChk1, $g_bCapturePixel, Default, "Starbonus1") And _CheckPixel($aWindowChk2, $g_bCapturePixel, Default, "Starbonus2") Then
+		; Find and Click Okay button
+		Click(425, 535, 1, 100, "StarBonus: Click Okay Button") ; Click Okay Button
+		If _Sleep(500) Then Return
+		Return True
+	EndIf
+	Return False
+EndFunc   ;==>StarBonus
+
 Func ReturnfromDropTrophies($AttackLog = False)
 	Local $aiSurrenderButton
 	SetDebugLog(" -- ReturnfromDropTrophies -- ")
