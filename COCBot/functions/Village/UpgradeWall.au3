@@ -699,14 +699,24 @@ Func NewUpgradeWall()
 	Local $bRet = True
 	
 	If $g_bChkRushTH Then
+		SetLog("RushTH Enabled", $COLOR_INFO)
 		If $g_iUpgradeWallMinGold < $g_aiTHCost[$g_iTownHallLevel] Then
-			SetLog("RushTH Enabled", $COLOR_INFO)
 			SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
 			SetLog("You Current MinGoldSave : " & _NumberFormat($g_iUpgradeWallMinGold), $COLOR_INFO)
 			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($g_aiTHCost[$g_iTownHallLevel]), $COLOR_INFO)
 			$g_iUpgradeWallMinGold = $g_aiTHCost[$g_iTownHallLevel]
 			applyConfig()
 			saveConfig()
+		EndIf
+		If $g_iTownHallLevel >= 7 Then
+			If $g_iUpgradeWallMinElixir < $g_aiHeroHallCost[$g_iTownHallLevel - 7] Then
+				SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
+				SetLog("You Current MinElixirSave : " & _NumberFormat($g_iUpgradeWallMinElixir), $COLOR_INFO)
+				SetLog("Adjusting MinElixirSave to : " & _NumberFormat($g_aiHeroHallCost[$g_iTownHallLevel - 7]), $COLOR_INFO)
+				$g_iUpgradeWallMinElixir = $g_aiTHCost[$g_iTownHallLevel]
+				applyConfig()
+				saveConfig()
+			EndIf
 		EndIf
 	EndIf
 	
