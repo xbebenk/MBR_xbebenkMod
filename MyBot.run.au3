@@ -1496,13 +1496,13 @@ Func FillArmyCamp()
 	If $g_bIgnoreIncorrectTroopCombo Or $g_bIgnoreIncorrectSpellCombo Then ;check army or spell to fill
 		If OpenArmyOverview() Then 
 			If _Sleep(500) Then Return
-			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 210, 365, 230) Then ;check on troops
+			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 210, 465, 230) Then ;check on troops
 				SetLog("Your troop need to fill", $COLOR_DEBUG)
 				FillIncorrectTroopCombo()
 				ClickAway()
 			EndIf
 			If _Sleep(500) Then Return
-			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 325, 336, 336) Then ;check on spells
+			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 325, 465, 336) Then ;check on spells
 				SetLog("Your troop need to fill", $COLOR_DEBUG)
 				FillIncorrectSpellCombo()
 				ClickAway()
