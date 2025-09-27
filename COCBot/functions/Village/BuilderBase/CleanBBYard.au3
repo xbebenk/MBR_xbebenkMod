@@ -10,11 +10,6 @@ Func CleanBBYard($bTest = False)
 	; Timer
 	Local $hObstaclesTimer = __TimerInit()
 	SetLog("CleanBBYard: Try removing obstacles", $COLOR_DEBUG)
-	; Obstacles function to Parallel Search , will run all pictures inside the directory
-	If $g_iFreeBuilderCountBB = 0 And Not $bTest Then 
-		SetLog("Master Builder Not Available", $COLOR_DEBUG)
-		Return
-	EndIf
 	If $g_aiCurrentLootBB[$eLootElixirBB] < 30000 And Not $bTest Then 
 		SetLog("Current BB Elixir Below 30000, skip CleanBBYard", $COLOR_DEBUG)
 		Return
@@ -27,12 +22,12 @@ Func CleanBBYard($bTest = False)
 		For $i = 0 To UBound($Result) - 1
 			If isInsideDiamondXY($Result[$i][1], $Result[$i][2], True) Then
 				Click($Result[$i][1], $Result[$i][2])
-				If _Sleep(2500) Then Return
+				If _Sleep(1000) Then Return
 				If ClickRemoveObstacleBB($bTest) Then
 					$Locate += 1
 					SetLog($Result[$i][0] & " found (" & $Result[$i][1] & "," & $Result[$i][2] & ")", $COLOR_SUCCESS)
 					Click(800, 300) ;clickaway
-					If _Sleep(1500) Then Return
+					If _Sleep(500) Then Return
 				Else
 					If _Sleep(500) Then Return
 					ContinueLoop
