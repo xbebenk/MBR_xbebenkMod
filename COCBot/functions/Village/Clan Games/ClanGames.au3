@@ -53,6 +53,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 
 	; Enter on Clan Games window
 	If IsClanGamesWindow($bOnlyPurge) Then
+		
 		Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
 		;Remove All previous file (in case setting changed)
 		DirRemove($sTempPath, $DIR_REMOVE)
@@ -60,6 +61,11 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 		; Let's get some information , like Remain Timer, Score and limit
 		If Not _ColorCheck(_GetPixelColor(300, 284, True), Hex(0x53E052, 6), 10) Then ;no greenbar = there is active event or completed event
 			If _Sleep(3000) Then Return ; just wait few second, as completed event will need sometime to animate on score
+			If _ColorCheck(_GetPixelColor(405, 220, True), Hex(0x4F85C5, 6), 20) Then 
+				SetLog("Event cooldown detected", $COLOR_DEBUG2)
+				CloseClangamesWindow()
+				Return False
+			EndIf
 		EndIf
 
 		Local $aiScoreLimit = GetTimesAndScores()
