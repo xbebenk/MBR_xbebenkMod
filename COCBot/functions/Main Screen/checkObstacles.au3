@@ -325,12 +325,18 @@ EndFunc   ;==>_checkObstacles
 
 Func WelcomeBackCheck()
 	Local $bGreenButton = False, $bWhiteW = False, $bWhiteB = False, $bWhiteC = False
-	If _ColorCheck(_GetPixelColor(440, 497, True), Hex(0xDCF584, 6), 20, Default, "checkObstacles") Then $bGreenButton = True
-	If _ColorCheck(_GetPixelColor(288, 150, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then $bWhiteW = True
-	If _ColorCheck(_GetPixelColor(425, 146, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then $bWhiteB = True
-	If _ColorCheck(_GetPixelColor(504, 146, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then $bWhiteC = True
+	If _ColorCheck(_GetPixelColor(440, 497, True), Hex(0xDCF584, 6), 20, Default, "WelcomeBackCheck") Then $bGreenButton = True
+	If _ColorCheck(_GetPixelColor(288, 150, True), Hex(0xFFFFFF, 6), 20, Default, "WelcomeBackCheck") Then $bWhiteW = True
+	If _ColorCheck(_GetPixelColor(425, 146, True), Hex(0xFFFFFF, 6), 20, Default, "WelcomeBackCheck") Then $bWhiteB = True
+	If _ColorCheck(_GetPixelColor(504, 146, True), Hex(0xFFFFFF, 6), 20, Default, "WelcomeBackCheck") Then $bWhiteC = True
 	
 	If $bGreenButton And $bWhiteW And $bWhiteB And $bWhiteC Then Return True
+	
+	If _ColorCheck(_GetPixelColor(155, 230, True), Hex(0xE8E8E0, 6), 20, Default, "THUpgradedCheck") And _
+		_ColorCheck(_GetPixelColor(700, 248, True), Hex(0xFFFFFF, 6), 20, Default, "THUpgradedCheck") Then 
+			Click(700, 248, 1, 50, "THUpgradedCheck")
+		Return True
+	EndIf
 EndFunc
 
 Func CheckSCLOGO()
