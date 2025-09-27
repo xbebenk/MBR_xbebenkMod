@@ -43,9 +43,11 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			If Not $g_bRunState Then Return
 			If $g_bIsBBevent Then
 				If CheckCGCompleted() Then ExitLoop
-				BuilderBaseReport(True, True)
 				RequestCC()
-				AutoUpgradeBB()
+				If isGoldFullBB() Or isElixirFullBB() Then 
+					AutoUpgradeBB()
+					StarLab()
+				EndIf
 				If $count > 4 Then
 					SetLog("IsBBevent = " & String($g_bIsBBevent), $COLOR_INFO)
 					SetLog("Force stop, attacked 5 times!", $COLOR_INFO)
@@ -62,6 +64,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				ExitLoop
 			EndIf
 		Wend
+		CollectBBCart()
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
 		ClickAway("Left")
 		If _Sleep(1000) Then Return
