@@ -16,8 +16,6 @@
 
 Func Collect($bOnlyCollector = False)
 	If Not $g_bChkCollect Or Not $g_bRunState Then Return
-
-	ClickAway()
 	StartGainCost()
 	
 	SetLog("Collecting Resources", $COLOR_INFO)
