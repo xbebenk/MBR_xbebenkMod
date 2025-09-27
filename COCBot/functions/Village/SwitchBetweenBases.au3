@@ -150,18 +150,17 @@ Func SwitchTo($To = "BB")
 		Else
 			SetLog("[" & $i & "] " & $sTile & " Not Found, try again...", $COLOR_ERROR)
 			If $To = "Main" Then CheckBB20Tutor()
-			
-			If $i = 3 Then 
-				$g_iGfxErrorCount += 1
-				If $g_iGfxErrorCount > $g_iGfxErrorMax Then 
-					SetLog("SwitchBetweenBases stuck, set to Reboot Android Instance", $COLOR_INFO)
-					$g_bGfxError = True
-					CheckAndroidReboot()
-				EndIf
-			EndIf
-			
 		EndIf
-		If _Sleep(1000) Then Return
+		
+		If $i = 3 Then 
+			$g_iGfxErrorCount += 3
+			If $g_iGfxErrorCount > $g_iGfxErrorMax Then 
+				SetLog("SwitchBetweenBases stuck, set to Reboot Android Instance", $COLOR_INFO)
+				$g_bGfxError = True
+				CheckAndroidReboot()
+			EndIf
+		EndIf
+		If _Sleep(500) Then Return
 	Next
 	
 	If IsProblemAffect() Then Return
