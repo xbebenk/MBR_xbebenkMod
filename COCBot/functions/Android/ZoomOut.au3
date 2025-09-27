@@ -196,7 +196,7 @@ Func ZoomOutHelperBB($caller = "Default")
 			If $sImage = "BL" Then $g_sSceneryCode = "BL"
 			SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_INFO)
-			ClickDrag(800, 350, 800 - $x + $xyOffsetSwitchBases, 350 - $y - $xyOffsetSwitchBases, 500)
+			ClickDrag(730, 250, 730 - $x + $xyOffsetSwitchBases, 250 - $y - $xyOffsetSwitchBases, 500)
 			$bRet = True
 		Else
 			SetDebugLog("[" & $caller & "] Bad TreeBL ImageName!")
@@ -212,7 +212,7 @@ Func ZoomOutHelperBB($caller = "Default")
 				$y = $g_iQuickMISY - $aOffset[2]
 				SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 				SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_INFO)
-				ClickDrag(800, 350, 800 - $x + $xyOffsetSwitchBases, 350 - $y - $xyOffsetSwitchBases, 500)
+				ClickDrag(730, 250, 730 - $x + $xyOffsetSwitchBases, 250 - $y - $xyOffsetSwitchBases, 500)
 				$bRet = True
 			Else
 				SetDebugLog("[" & $caller & "] Bad Stone ImageName!")
