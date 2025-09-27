@@ -552,8 +552,6 @@ Func checkObstacles_ResetSearch()
 	; reset fast restart flags to ensure base is rearmed after error event that has base offline for long duration, like PB or Maintenance
 	$g_bIsClientSyncError = False
 	$g_bIsSearchLimit = False
-	$g_abNotNeedAllTime[0] = True
-	$g_abNotNeedAllTime[1] = True
 	$g_bRestart = True ; signal all calling functions to return to runbot
 EndFunc   ;==>checkObstacles_ResetSearch
 

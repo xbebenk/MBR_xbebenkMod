@@ -229,8 +229,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 				$abFullStorage[$iAccount][$i] = $g_abFullStorage[$i]
 			Next
 			$aiBuilderBoostDiscount[$iAccount] = $g_iBuilderBoostDiscount
-			$abNotNeedAllTime0[$iAccount] = $g_abNotNeedAllTime[0]
-			$abNotNeedAllTime1[$iAccount] = $g_abNotNeedAllTime[1]
 
 		Case "Load"
 			$g_bFirstStart = $abFirstStart[$iAccount]
