@@ -524,11 +524,12 @@ Func IsClanGamesWindow($bOnlyPurge = False)
 		SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		; Just wait for window open
+		If _Sleep(1500) Then Return
 		For $i = 1 To 10
-			If _Sleep(500) Then Return
 			If IsFullScreenWindow() Then ExitLoop
+			If _Sleep(500) Then Return
 		Next
-		If _Sleep(1000) Then Return
+		
 		$sState = IsClanGamesRunning()
 		Switch $sState
 			Case "Prepare"
