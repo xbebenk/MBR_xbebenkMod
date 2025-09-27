@@ -23,7 +23,7 @@ Func Laboratory($bDebug = False)
 	
  	; Get updated village elixir and dark elixir values
 	VillageReport(True, True)
-
+	
 	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
 	If _Sleep(1500) Then Return
 	
@@ -561,14 +561,13 @@ EndFunc
 Func FindResearchButton()
 	Local $TryLabAutoLocate = False
 	Local $LabFound = False
-	ClickAway()
-	CheckMainScreen(False, $g_bStayOnBuilderBase, "FindResearchButton")
 	
 	If _ColorCheck(_GetPixelColor(288, 36, True), Hex(0xFFFF5E, 6), 20, Default, "Laboratory") Then
 		SetLog("Laboratory: Found Goblin Lab!, Return False", $COLOR_DEBUG1)
 		Return False
 	EndIf
 	
+	ZoomOut()
 	;Click Laboratory
 	If Int($g_aiLaboratoryPos[0]) < 1 Or Int($g_aiLaboratoryPos[1]) < 1 Then
 		$TryLabAutoLocate = True
