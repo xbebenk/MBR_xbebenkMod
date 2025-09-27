@@ -630,11 +630,11 @@ EndFunc
 Func SearchUnplacedBuilding()
 	Local $atmpInfo = getNameBuilding(330, 474)
 	If $atmpInfo = "" Then
-		SetDebugLog("Search: Unplaced Building Not Found!")
+		SetLog("Search: Unplaced Building Not Found!")
 		Return False
 	Else
 		If StringInStr($atmpInfo, "place") Or StringInStr($atmpInfo, "Items") Then
-			SetDebugLog("Search: Unplaced Building Found!", $COLOR_SUCCESS)
+			SetLog("Search: Unplaced Building Found!", $COLOR_SUCCESS)
 			Return True
 		EndIf
 	EndIf
