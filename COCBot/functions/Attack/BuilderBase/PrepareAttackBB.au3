@@ -15,8 +15,8 @@
 
 Func PrepareAttackBB($Mode = Default)
 	If $g_bChkDebugAttackBB Then SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
-	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then 
-		If $g_bChkDebugAttackBB Then SetLog("ForceSwitchifNoCGEvent Enabled, Skip Attack until we have BBEvent", $COLOR_SUCCESS)
+	If $g_bForceSwitchifNoCGEvent Then 
+		SetLog("ForceSwitchifNoCGEvent Enabled, Skip Attack until we have BBEvent", $COLOR_SUCCESS)
 		Return False
 	EndIf
 	
@@ -195,7 +195,7 @@ Func BBDropTrophy($iDropCount = 3)
 	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
 	SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
 	
-	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then 
+	If $g_bForceSwitchifNoCGEvent Then 
 		SetLog("ForceSwitchifNoCGEvent Enabled, Skip BBDropTrophy", $COLOR_SUCCESS)
 		Return False
 	EndIf

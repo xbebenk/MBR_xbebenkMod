@@ -29,7 +29,7 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 		SetLog("Checking if the battle has finished", $COLOR_INFO)
 		$g_Zapped = False ;xbebenk mod - Reset var Early Zap, zap early will called on EBO
 		While GoldElixirChangeEBO()
-			If _Sleep($DELAYRETURNHOME1) Then Return
+			If _Sleep(1000) Then Return
 		WEnd
 		If $g_bRestart Then Return
 		If $g_Zapped Then ;Skip Zap if EarlyZap is successful
@@ -68,7 +68,7 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 	For $i = 1 To 5
 		SetLog("Wait For EndBattle #" & $i, $COLOR_ACTION)
 		If $g_bRestart Then Return
-		If IsReturnHomeBattlePage(True) Then
+		If IsReturnHomeBattlePage(True) Or IsReturnHomeChestPage(False) Then
 			$BattleEnded = True
 			SetLog("Battle already over", $COLOR_SUCCESS)
 			ExitLoop ;exit Battle already ended
@@ -141,10 +141,9 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 
 	For $i = 1 To 5
 		SetDebugLog("Wait for End Fight Scene to appear #" & $i)
-		If IsReturnHomeBattlePage(True) Then
+		If IsReturnHomeBattlePage(True) Or IsReturnHomeChestPage(False) Then
 			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-			; sometimes 1st click is not closing, so try again
-			If _Sleep(1000) Then Return
+			IsReturnHomeChestPage()
 		ElseIf CheckMainScreen(False, $g_bStayOnBuilderBase, "ReturnHome-2") Then
 			ExitLoop
 		EndIf
@@ -154,7 +153,7 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 	For $counter = 1 To 5
 		SetDebugLog("Wait for Star Bonus window to appear #" & $counter)
 		If ReturnHomeMainPage() Then Return ;clear bot log
-		If _Sleep($DELAYRETURNHOME4) Then Return
+		If _Sleep(2000) Then Return
 		If StarBonus() Then SetLog("Star Bonus window closed chief!", $COLOR_INFO) ; Check for Star Bonus window to fill treasury (2016-01) update
 	Next
 	
@@ -176,13 +175,13 @@ EndFunc   ;==>ReturnHomeMainPage
 Func StarBonus()
 	If $g_bDebugSetLog Then SetLog("Begin Star Bonus window check", $COLOR_DEBUG1)
 	
-	Local $aWindowChk1[4] = [135, 92, 0x254963, 20] ; Black Balloon
-	Local $aWindowChk2[4] = [676, 87, 0x1995F8, 20] ; Blue header covering elixir bar
-
+	Local $aStarBonus1[4] = [135, 92, 0x254963, 20] ; Black Balloon
+	Local $aStarBonus2[4] = [676, 87, 0x1995F8, 20] ; Blue header covering elixir bar
+	
 	If _Sleep(500) Then Return
 
 	; Verify actual star bonus window open
-	If _CheckPixel($aWindowChk1, $g_bCapturePixel, Default, "Starbonus1") And _CheckPixel($aWindowChk2, $g_bCapturePixel, Default, "Starbonus2") Then
+	If _CheckPixel($aStarBonus1, $g_bCapturePixel, Default, "Starbonus1") And _CheckPixel($aStarBonus2, $g_bCapturePixel, Default, "Starbonus2") Then
 		; Find and Click Okay button
 		Click(425, 535, 1, 100, "StarBonus: Click Okay Button") ; Click Okay Button
 		If _Sleep(500) Then Return
@@ -226,7 +225,6 @@ Func ReturnfromDropTrophies($AttackLog = False)
 		If IsReturnHomeBattlePage(True) Then
 			If $AttackLog Then
 				$g_iMatchMode = $DT
-				If _Sleep(2000) Then Return ;add more delay to wait all resource appear
 				_CaptureRegion()
 				AttackReport()
 				$AttackLog = False ;set false here, prevent hit again if loop continue

@@ -335,7 +335,11 @@ Func WelcomeBackCheck()
 	If _ColorCheck(_GetPixelColor(155, 230, True), Hex(0xE8E8E0, 6), 20, Default, "THUpgradedCheck") And _
 		_ColorCheck(_GetPixelColor(700, 248, True), Hex(0xFFFFFF, 6), 20, Default, "THUpgradedCheck") Then 
 			Click(700, 248, 1, 50, "THUpgradedCheck")
-		Return True
+			If _Sleep(500) Then Return
+			Click(422, 543, 1, 50, "THUpgradedCheck")
+			If _Sleep(500) Then Return
+			Click(422, 543, 1, 50, "THUpgradedCheck")
+			Return True
 	EndIf
 EndFunc
 

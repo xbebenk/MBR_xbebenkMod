@@ -41,7 +41,7 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 		SetDebugLog("CheckBaseQuick now", $COLOR_DEBUG)
 
 		RequestCC() ; fill CC
-		If _Sleep($DELAYRUNBOT1) Then Return
+		If _Sleep(1000) Then Return
 		checkMainScreen(False, $g_bStayOnBuilderBase, "CheckBaseQuick"); required here due to many possible exits
 		If $g_bRestart Then
 			If $bStopRecursion Then $g_bDisableBreakCheck = False
@@ -49,7 +49,7 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 		EndIf
 
 		DonateCC() ; donate troops
-		If _Sleep($DELAYRUNBOT1) Then Return
+		If _Sleep(1000) Then Return
 		checkMainScreen(False, $g_bStayOnBuilderBase, "CheckBaseQuick") ; required here due to many possible function exits
 		If $g_bRestart Then
 			If $bStopRecursion Then $g_bDisableBreakCheck = False
@@ -77,7 +77,7 @@ Func CheckBaseQuick($bStopRecursion = False, $sReturnHome = "")
 		EndIf
 
 		Collect(True) ; Empty Collectors
-		If _Sleep($DELAYRUNBOT1) Then Return
+		If _Sleep(1000) Then Return
 
 	Else
 		SetDebugLog("Not on main page, CheckBaseQuick skipped", $COLOR_WARNING)

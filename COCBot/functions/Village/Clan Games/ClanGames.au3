@@ -13,11 +13,11 @@
 ; Example .......: ---
 ;================================================================================================================================
 Func _ClanGames($test = False, $bOnlyPurge = False)
-	$g_bIsBBevent = False ;just to be sure, reset to false
-	$g_bIsCGEventRunning = False ;just to be sure, reset to false
-	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false
-	$g_bIsCGPointAlmostMax = False ;just to be sure, reset to false
-	$g_bisCGPointMaxed = False ;just to be sure, reset to false
+	$g_bIsBBevent = False ;just to be sure, reset to False
+	$g_bIsCGEventRunning = False ;just to be sure, reset to False
+	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to False
+	$g_bIsCGPointAlmostMax = False ;just to be sure, reset to False
+	$g_bisCGPointMaxed = False ;just to be sure, reset to False
 	$g_sCGCurrentEventName = ""
 	
 	Local $PurgeDayMinute = ($g_iCmbClanGamesPurgeDay + 1) * 1440
@@ -65,6 +65,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 				CloseClangamesWindow()
 				Return False
 			EndIf
+			SetLog("No Event or Active Event or Completed Event, need wait", $COLOR_DEBUG2)
 			If _Sleep(3000) Then Return ; just wait few second, as completed event will need sometime to animate on score
 		EndIf
 
@@ -75,13 +76,13 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			Return False
 		Else
 			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
-			If _Sleep(500) Then Return
 			$sTimeCG = ConvertOCRTime("ClanGames()", StringLower($g_sClanGamesTimeRemaining), True)
 			Setlog("Clan Games Minute Remain: " & $sTimeCG)
 
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 				SetLog("Your score limit is reached! Congrats")
 				$g_bIsCGPointMaxed = True
+				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
 				CloseClangamesWindow()
 				Return False
 			EndIf
@@ -91,6 +92,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			If $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Then
 				SetLog("You almost reached max point")
 				$g_bIsCGPointAlmostMax = True
+				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
 				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > $PurgeDayMinute Then ; purge, but not purge on last day of clangames
 					If IsEventRunning() Then Return True
 					If $g_bChkClanGamesPurgeAny Then
@@ -517,6 +519,14 @@ Func SelectEvent(ByRef $aSelectChallenges)
 	If $g_bChkClanGamesDebug Then Setlog("Benchmark SelectEvent: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 EndFunc
 
+Func WaitCGWindowOpen()
+	If _Sleep(500) Then Return
+	For $i = 1 To 10
+		If IsCGWindowOpen() Then Return True
+		If _Sleep(500) Then Return
+	Next
+EndFunc
+
 Func IsClanGamesWindow($bOnlyPurge = False)
 	Local $sState, $bRet = False
 
@@ -524,11 +534,11 @@ Func IsClanGamesWindow($bOnlyPurge = False)
 		SetLog("Caravan available! Entering Clan Games", $COLOR_SUCCESS)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		; Just wait for window open
-		If _Sleep(1500) Then Return
-		For $i = 1 To 10
-			If IsFullScreenWindow() Then ExitLoop
-			If _Sleep(500) Then Return
-		Next
+		
+		If Not WaitCGWindowOpen() Then 
+			SetLog("Failed Open ClanGames Window", $COLOR_DEBUG)
+			Return False
+		EndIf
 		
 		$sState = IsClanGamesRunning()
 		Switch $sState
@@ -544,14 +554,13 @@ Func IsClanGamesWindow($bOnlyPurge = False)
 		SetLog("Caravan not available", $COLOR_WARNING)
 		$sState = "Not Running"
 		$bRet = False
-		If $bOnlyPurge Then $g_bForceSwitchifNoCGEvent = False ;clan games not running, release forceswitch to allow bot attack on BB
 	EndIf
 
 	SetLog("Clan Games State is : " & $sState, $COLOR_INFO)
 	Return $bRet
 EndFunc   ;==>IsClanGamesWindow
 
-Func IsClanGamesRunning() ;to check whether clangames current state, return string of the state "prepare" "running" "end"
+Func IsClanGamesRunning() ;to check whether clangames current state, Return string of the state "prepare" "running" "end"
 	Local $aGameTime[4] = [384, 388, 0xFFFFFF, 10]
 	Local $sState = "Running"
 	If QuickMIS("BC1", $g_sImgWindow, 50, 50, 150, 200) Then
@@ -579,9 +588,9 @@ Func GetTimesAndScores()
 	;Ocr for game time remaining
 	$sTimeRemain = StringReplace(getOcrTimeGameTime(55, 496), " ", "") ; read Clan Games waiting time
 
-	;Check if OCR returned a valid timer format
+	;Check if OCR Returned a valid timer format
 	If Not StringRegExp($sTimeRemain, "([0-2]?[0-9]?[DdHhSs]+)", $STR_REGEXPMATCH, 1) Then
-		SetLog("getOcrTimeGameTime(): no valid return value (" & $sTimeRemain & ")", $COLOR_ERROR)
+		SetLog("getOcrTimeGameTime(): no valid Return value (" & $sTimeRemain & ")", $COLOR_ERROR)
 	EndIf
 
 	SetLog("Clan Games time remaining: " & $sTimeRemain, $COLOR_INFO)
@@ -995,7 +1004,7 @@ Func IsBBChallenge($i = Default, $j = Default)
 	For $y = 0 To 2
 		For $x = 0 To 3
 			If $iRow = ($y+1) And $iColumn = ($x+1) Then
-				;Search image border, our image is MainVillage event border, so If found return False
+				;Search image border, our image is MainVillage event border, so If found Return False
 				If QuickMIS("BC1", $g_sImgBorder, $BorderX[$x] - 15, $BorderY[$y] - 20, $BorderX[$x] + 15, $BorderY[$y] + 10, True, False) Then
 					If $g_bChkClanGamesDebug Then SetLog("IsBBChallenge = False", $COLOR_ERROR)
 					Return False
@@ -1030,8 +1039,8 @@ Func ClanGames($bTest = False)
 EndFunc   ;==>ClanGames
 
 Func CloseClangamesWindow()
-	If IsFullScreenWindow() Then
-		Click(820, 45) ;close window
+	If IsCGWindowOpen() Then
+		Click(824, 87) ;close window
 		For $i = 1 To 5
 			If isOnMainVillage() Then Return True
 			If _Sleep(1000) Then Return
@@ -1039,6 +1048,18 @@ Func CloseClangamesWindow()
 		Return False
 	EndIf
 	Return False
+EndFunc
+
+Func IsCGWindowOpen()
+	Local $bRet = False
+	For $i = 1 To 3
+		If _ColorCheck(_GetPixelColor(824, 87, True), Hex(0xFFFFFF, 6), 10, Default, "IsCGWindowOpen") Then 
+			$bRet = True
+			ExitLoop
+		EndIf
+		If _Sleep(200) Then Return
+	Next
+	Return $bRet
 EndFunc
 
 Func CollectCGReward($bTest = False)
@@ -1225,13 +1246,13 @@ Func GetCGRewardList($X = 270, $OnlyClaimMax = False)
 					Switch $aTmp[$j][0]
 						Case "Books"
 							$Value = 5
-						Case "BBGoldRune", "DERune", "ElixRune", "Shovel", "SuperPot", "GoldRune"
+						Case "BBGoldRune", "BBElixRune", "DERune", "ElixRune", "Shovel", "SuperPot", "GoldRune"
 							$Value = 4
 						Case "BuilderPot", "ClockTowerPot", "PowerPot", "ResearchPot", "TrainingPot", "HeroPot"
 							$Value = 3
-						Case "DarkElix", "Elix", "Gold", "WallRing"
-							$Value = 2
 						Case "Gem"
+							$Value = 2
+						Case "DarkElix", "Elix", "Gold", "WallRing"
 							$Value = 1
 					EndSwitch
 					_ArrayAdd($aResult, $aTmp[$j][0] & "|" & $aTmp[$j][1] & "|" & $aTmp[$j][2] & "|" & $Value)

@@ -935,10 +935,10 @@ Func __RunFunction($action)
 	Switch $action
 		Case "Collect"
 			Collect()
-			_Sleep($DELAYRUNBOT1)
+			_Sleep(1000)
 		Case "BlackSmith"
 			BlackSmith()
-			_Sleep($DELAYRUNBOT1)
+			_Sleep(1000)
 		Case "CheckTombs"
 			CheckTombs()
 			_Sleep($DELAYRUNBOT3)
@@ -1045,6 +1045,7 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	SetLogCentered(" FIRSTCHECK ", "=", $COLOR_SUCCESS)
 	$g_bFirstStart = True
+	
 	checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
 	If _Sleep(50) Then Return
@@ -1138,7 +1139,7 @@ Func FirstCheck()
 		If Not $g_bRunState Then Return
 		If $g_bAutoUpgradeEarly Then
 			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
-			_RunFunction("UpgradeBuilding")
+			AutoUpgrade()
 		EndIf
 		VillageReport()
 		If _Sleep(50) Then Return
@@ -1240,15 +1241,6 @@ Func FirstCheckRoutine()
 	EndIf
 
 	If Not $g_bRunState Then Return
-	;forced switch after first attack if cg point is almost max
-	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent And $g_bForceSwitchifNoCGEvent Then
-		SetLog("ClanGames point almost max/maxed, Forced switch account!", $COLOR_DEBUG)
-		RequestCC()
-		CommonRoutine("NoClanGamesEvent")
-		checkSwitchAcc() ;switch to next account
-	EndIf
-
-	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then
 		SetLog("Forced switch account!!", $COLOR_DEBUG)
 		RequestCC()
@@ -1311,7 +1303,7 @@ Func CommonRoutine($RoutineType = Default)
 	Local $sText = "", $aFuncList[0]
 	Switch $RoutineType
 		Case "FirstCheck"
-			Local $aRndFuncList = ['Collect', 'CleanYard', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'Laboratory', 'SaleMagicItem', 'UpgradeWall']
+			Local $aRndFuncList = ['Collect', 'CleanYard', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'PetHouse', 'Laboratory', 'SaleMagicItem', 'UpgradeWall']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)
@@ -1325,9 +1317,9 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
-			_ClanGames(False, True) ;Do Only Purge
+			If Not $g_bisCGPointMaxed Then _ClanGames(False, True) ;Do Only Purge
 
-			Local $aRndFuncList = ['Collect', 'RequestCC', 'DailyChallenge', 'CollectAchievements', 'CollectFreeMagicItems', 'BuilderBase', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'RequestCC']
+			Local $aRndFuncList = ['RequestCC', 'DailyChallenge', 'CollectAchievements', 'CollectFreeMagicItems', 'BuilderBase', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)
@@ -1355,7 +1347,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'CollectCCGold', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
+			Local $aRndFuncList = ['RequestCC', 'DailyChallenge', 'CollectAchievements', 'CollectFreeMagicItems', 'PetHouse', 'Laboratory', 'CollectCCGold', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)
@@ -1399,14 +1391,14 @@ Func BuilderBase()
 
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		CollectBuilderBase()
-		BuilderBaseReport(False, True)
+		BuilderBaseReport(False, False)
 		If Not $g_bRunState Then Return
 		CleanBBYard()
-		BuilderBaseReport(True, True)
+		BuilderBaseReport(True, False)
 		If Not $g_bRunState Then Return
 		If isGoldFullBB() Or isElixirFullBB() Then
 			If AutoUpgradeBB() Then
-				If _Sleep($DELAYRUNBOT1) Then Return
+				If _Sleep(1000) Then Return
 				ZoomOut(True) ;directly zoom
 			EndIf
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1433,7 +1425,7 @@ Func BuilderBase()
 		If Not $g_bRunState Then Return
 		If $g_bBBAttacked Then
 			If AutoUpgradeBB() Then
-				If _Sleep($DELAYRUNBOT1) Then Return
+				If _Sleep(1000) Then Return
 				ZoomOut(True) ;directly zoom
 			EndIf
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1442,10 +1434,10 @@ Func BuilderBase()
 		If Not $StartLabON Then StarLab()
 		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
 
-		If _Sleep($DELAYRUNBOT1) Then Return
+		If _Sleep(1000) Then Return
 		StartClockTowerBoost(False, False, $bUseCTPot)
 		If Not $g_bRunState Then Return
-		If _Sleep($DELAYRUNBOT1) Then Return
+		If _Sleep(1000) Then Return
 		BuilderBaseReport(False, True)
 		If Not $g_bRunState Then Return
 		$g_bStayOnBuilderBase = False
@@ -1496,13 +1488,13 @@ Func FillArmyCamp()
 	If $g_bIgnoreIncorrectTroopCombo Or $g_bIgnoreIncorrectSpellCombo Then ;check army or spell to fill
 		If OpenArmyOverview() Then 
 			If _Sleep(500) Then Return
-			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 210, 465, 230) Then ;check on troops
+			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 210, 480, 230) Then ;check on troops
 				SetLog("Your troop need to fill", $COLOR_DEBUG)
 				FillIncorrectTroopCombo()
 				ClickAway()
 			EndIf
 			If _Sleep(500) Then Return
-			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 325, 465, 336) Then ;check on spells
+			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 320, 480, 345) Then ;check on spells
 				SetLog("Your troop need to fill", $COLOR_DEBUG)
 				FillIncorrectSpellCombo()
 				ClickAway()

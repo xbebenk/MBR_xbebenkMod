@@ -97,7 +97,10 @@ Func CheckSwitchAcc()
 
 	SetLog("Start Switch Account!", $COLOR_INFO)
 	; Force switch if no clangames event active
-	If $g_bForceSwitchifNoCGEvent Then $bForceSwitch = True
+	If $g_bForceSwitchifNoCGEvent Then 
+		$bForceSwitch = True
+		$g_bForceSwitchifNoCGEvent = False ;reset on switch
+	EndIf
 	
 	; Force Switch when PBT detected
 	If $g_abPBActive[$g_iCurAccount] Then $bForceSwitch = True

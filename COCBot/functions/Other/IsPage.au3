@@ -237,17 +237,40 @@ Func IsOKCancelPage($bWriteLog = True)
 EndFunc   ;==>IsOKCancelPage
 
 Func IsReturnHomeBattlePage($useReturnValue = False, $makeDebugImageScreenshot = True)
-	If IsAttackPage(False, 1) Then Return False
 	If IsPageLoop($aReturnHomeButton, 1) Then
 		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Return Home Battle Window OK**", $COLOR_ACTION)
 		Return True
-	EndIf
-
+	EndIf	
+	
 	If ($g_bDebugSetlog Or $g_bDebugClick) And ($makeDebugImageScreenshot = True) Then SetLog("**Return Home Battle Window FAIL**", $COLOR_ACTION)
 	If $g_bDebugImageSave And $makeDebugImageScreenshot Then SaveDebugImage("IsReturnHomeBattlePage")
 	If $useReturnValue Then
 		Return False
 	Else
+		Return True
+	EndIf
+EndFunc   ;==>IsReturnHomeBattlePage
+
+Func IsReturnHomeChestPage($bAction = True)
+	If IsPageLoop($aReturnHomeChest, 1) Then
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Return Home Chest Window OK**", $COLOR_ACTION)
+		If Not $bAction Then Return True
+		
+		ClickP($aReturnHomeChest)
+		If _Sleep(5000) Then Return
+		For $i = 1 To 10
+			If _Sleep(1000) Then Return
+			ClickP($aReturnHomeChest)
+			SetLog("Click Chest", $COLOR_ACTION)
+		Next
+		For $i = 1 To 10
+			If _ColorCheck(_GetPixelColor(430, 482, True), Hex(0xBFEA8E, 6), 20, Default, "ChestContinue") Then 
+				Click(430, 495)
+				SetLog("Click Continue", $COLOR_ACTION)
+				ExitLoop
+			EndIf
+			If _Sleep(1000) Then Return
+		Next
 		Return True
 	EndIf
 EndFunc   ;==>IsReturnHomeBattlePage
