@@ -636,11 +636,11 @@ Func CheckObstacles_SCIDPopup()
 EndFunc
 
 Func SearchUnplacedBuilding()
-	Local $atmpInfo = getNameBuilding(330, 474)
+	Local $atmpInfo = getNameBuilding(460, 477)
 	If $atmpInfo = "" Then
 		Return False
 	Else
-		If StringInStr($atmpInfo, "place") Or StringInStr($atmpInfo, "Items") Then
+		If StringInStr($atmpInfo, "Items") Then
 			SetLog("Search: Unplaced Building Found!", $COLOR_SUCCESS)
 			Return True
 		EndIf

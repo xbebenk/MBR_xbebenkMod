@@ -269,8 +269,8 @@ Func SaleMagicItem($bTest = False)
 					For $j = 1 To $Count
 						Click($aSearch[0], $aSearch[1])
 						If _Sleep(1000) Then Return
-						If _ColorCheck(_GetPixelColor(595, 525, True), Hex(0xF71E22, 6), 20) Then ;Check Red Sell Button
-							Click(595, 525) ;Click Sell Button
+						If _ColorCheck(_GetPixelColor(260, 530, True), Hex(0xF71E22, 6), 20) Then ;Check Red Sell Button
+							Click(260, 500) ;Click Sell Button
 							If _Sleep(1000) Then Return
 							If IsOKCancelPage() Then
 								If Not $bTest Then 

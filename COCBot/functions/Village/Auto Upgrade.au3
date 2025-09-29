@@ -28,7 +28,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 
 	;PlaceBuilder()
 	VillageReport(False, True) ;check available builder and resource (Gold,Elix,DE)
-
+	If Not $g_bRunState Then Return
 	If $g_aiCurrentLoot[$eLootGold] < 1000 Then Return False
 	;Check if there is a free builder for Auto Upgrade
 	If $g_iFreeBuilderCount > 0 Then $bRet = True;builder available
@@ -46,7 +46,8 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		SetLog("CheckBuilder: " & ($g_bUpgradeLowCost ? "Upgrade remain time > 1day" : "Upgrade remain time < 24h"), $COLOR_WARNING)
 		$bRet = True
 	EndIf
-
+	
+	If Not $g_bRunState Then Return
 	If $bTest Then ;for testing, bypass
 		$g_iFreeBuilderCount = 1
 		$bRet = True
@@ -94,8 +95,8 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	;skip search new on first page
 	Local $bSkip1st = $g_bUpgradeLowCost Or $g_bSkipWallReserve
 
-	If Not $g_bRunState Then Return
 	If AutoUpgradeCheckBuilder($bTest) Then
+		If Not $g_bRunState Then Return
 		_SearchUpgrade($bTest, $bSkip1st) ;search upgrade for existing building
 		If _Sleep(2000) Then Return
 	EndIf

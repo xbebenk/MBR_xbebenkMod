@@ -435,7 +435,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkSaleRODE, $g_sProfileConfigPath, "MagicItems", "ChkSaleRODE", False, "Bool")
 	IniReadS($g_bChkSaleROBG, $g_sProfileConfigPath, "MagicItems", "ChkSaleROBG", False, "Bool")
 	IniReadS($g_bChkSaleROBE, $g_sProfileConfigPath, "MagicItems", "ChkSaleROBE", False, "Bool")
-	Local $aSaleChk[20] = [$g_bChkSaleBOF, $g_bChkSaleBOB, $g_bChkSaleBOS, $g_bChkSaleBOH, $g_bChkSaleBOE, $g_bChkSaleShovel, $g_bChkSaleWallRing, $g_bChkSalePowerPot, $g_bChkSaleResourcePot, $g_bChkSaleTrainingPot, $g_bChkSaleBuilderPot, $g_bChkSaleCTPot, $g_bChkSaleHeroPot, $g_bChkSaleResearchPot, $g_bChkSaleSuperPot, $g_bChkSaleROG, $g_bChkSaleROE, $g_bChkSaleRODE, $g_bChkSaleROBG, $g_bChkSaleROBE]
+	Local $aSaleChk[21] = [$g_bChkSaleBOF, $g_bChkSaleBOB, $g_bChkSaleBOS, $g_bChkSaleBOH, $g_bChkSaleBOE, $g_bChkSaleShovel, $g_bChkSaleWallRing, $g_bChkSalePowerPot, $g_bChkSaleResourcePot, $g_bChkSaleTrainingPot, $g_bChkSaleBuilderPot, $g_bChkSaleCTPot, $g_bChkSaleHeroPot, $g_bChkSaleResearchPot, $g_bChkSaleSuperPot, $g_bChkSaleBuilderJar, $g_bChkSaleROG, $g_bChkSaleROE, $g_bChkSaleRODE, $g_bChkSaleROBG, $g_bChkSaleROBE]
 	$g_aSaleMagicItem = $aSaleChk
 
 

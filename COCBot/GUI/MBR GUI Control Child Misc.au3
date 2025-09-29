@@ -708,10 +708,10 @@ Func ChkTreasuryCollect()
 EndFunc   ;==>ChkTreasuryCollect
 
 Func ChkFreeMagicItems()
-	If $g_iTownHallLevel >= 8 Then ; Must be Th8 or more to use the Trader
-		GUICtrlSetState($g_hChkFreeMagicItems, $GUI_ENABLE)
+	If GUICtrlRead($g_hChkCollectFreeMagicItems) = $GUI_CHECKED Then
+		$g_bChkCollectFreeMagicItems = True
 	Else
-		GUICtrlSetState($g_hChkFreeMagicItems, $GUI_DISABLE)
+		$g_bChkCollectFreeMagicItems = False
 	EndIf
 EndFunc   ;==>ChkFreeMagicItems
 
