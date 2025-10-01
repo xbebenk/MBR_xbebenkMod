@@ -549,6 +549,7 @@ Func IsClanGamesWindow($bOnlyPurge = False)
 			Case "Ended"
 				$bRet = False
 				If $g_bCollectCGReward Then CollectCGReward()
+				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False
 		EndSwitch
 	Else
 		SetLog("Caravan not available", $COLOR_WARNING)
@@ -1096,14 +1097,14 @@ Func CollectCGReward($bTest = False)
 	For $i = 0 To 7
 		If $OnlyClaimMax Then ExitLoop
 		If Not $g_bRunState Then Return
-		SetDebugLog("CHECK #" & $i+1, $COLOR_ACTION)
+		If $g_bChkClanGamesDebug Then SetLog("CHECK #" & $i+1, $COLOR_ACTION)
 		If _CheckPixel($aRewardButton, True) Then ExitLoop
 
 		If $i < 3 Then
 			Local $aTile = GetCGRewardList()
 			If IsArray($aTile) And UBound($aTile) > 0 Then
-				For $j = 0 To UBound($aTile) -1
-					SetDebugLog("Items: " & $aTile[$j][0] & " Value: " & $aTile[$j][3])
+				For $j = 0 To UBound($aTile) - 1
+					If $g_bChkClanGamesDebug Then SetLog("Items: " & $aTile[$j][0] & "on " & $aTile[$j][1] & "," & $aTile[$j][2] & " Value: " & $aTile[$j][3], $COLOR_DEBUG2)
 				Next
 				Click($aTile[0][1], $aTile[0][2]+10)
 				SetLog("Selecting Magic Items:" & $aTile[0][0], $COLOR_INFO)
@@ -1128,7 +1129,7 @@ Func CollectCGReward($bTest = False)
 		Local $aTile = GetCGRewardList()
 		If IsArray($aTile) And UBound($aTile) > 0 Then
 			For $j = 0 To UBound($aTile) -1
-				SetDebugLog("Items: " & $aTile[$j][0] & " Value: " & $aTile[$j][3])
+				If $g_bChkClanGamesDebug Then SetLog("Items: " & $aTile[$j][0] & " Value: " & $aTile[$j][3], $COLOR_DEBUG2)
 			Next
 			Click($aTile[0][1], $aTile[0][2]+10)
 			SetLog("Selecting Magic Items:" & $aTile[0][0], $COLOR_INFO)
@@ -1148,7 +1149,10 @@ Func CollectCGReward($bTest = False)
 		If _Sleep(3000) Then Return
 		Local $aTile = GetCGRewardList(500, $OnlyClaimMax)
 		If IsArray($aTile) And UBound($aTile) > 0 Then
-			For $item = 0 To UBound($aTile) - 1
+			For $j = 0 To UBound($aTile) -1
+				If $g_bChkClanGamesDebug Then SetLog("Items: " & $aTile[$j][0] & " Value: " & $aTile[$j][3], $COLOR_DEBUG2)
+			Next
+			For $item = 0 To UBound($aTile) - 1				
 				Click($aTile[$item][1], $aTile[$item][2]+10)
 				SetLog("Selecting Magic Items:" & $aTile[$item][0], $COLOR_INFO)
 				If _Sleep(1000) Then Return
@@ -1177,12 +1181,15 @@ Func CollectCGReward($bTest = False)
 		For $i = 1 To 10
 			If Not $g_bRunState Then Return
 			SetLog("Waiting Max Point Reward #" & $i, $COLOR_ACTION)
-			If WaitforPixel(780, 490, 781,491, "D1D1D1", 10, 1, "ClanGames-MaxPoint") Then ExitLoop
+			If WaitforPixel(800, 485, 801, 486, "ADADAD", 10, 1, "ClanGames-MaxPoint") Then ExitLoop
 			If _Sleep(500) Then Return
 		Next
 
-		Local $aTile = GetCGRewardList(635)
+		Local $aTile = GetCGRewardList(500, $g_bIsCGPointMaxed)
 		If IsArray($aTile) And UBound($aTile) > 0 Then
+			For $j = 0 To UBound($aTile) -1
+				If $g_bChkClanGamesDebug Then SetLog("Items: " & $aTile[$j][0] & " Value: " & $aTile[$j][3], $COLOR_DEBUG2)
+			Next
 			For $item = 0 To UBound($aTile) - 1
 				Click($aTile[$item][1], $aTile[$item][2]+10)
 				SetLog("Selecting Magic Items:" & $aTile[$item][0], $COLOR_INFO)
@@ -1203,19 +1210,18 @@ Func CollectCGReward($bTest = False)
 		For $i = 1 To 5
 			If Not $g_bRunState Then Return
 			SetLog("Waiting Reward Button #" & $i, $COLOR_ACTION)
-			If _CheckPixel($aRewardButton, True) Then ExitLoop
-			If _Sleep(1000) Then Return
+			If _CheckPixel($aRewardButton, True) Then 
+				Click($aRewardButton[0], $aRewardButton[1])
+				SetLog("Collecting Max Point Reward", $COLOR_SUCCESS)
+				ExitLoop
+			EndIf
+			If _Sleep(500) Then Return
 		Next
-
-		If _CheckPixel($aRewardButton, True) Then
-			Click($aRewardButton[0], $aRewardButton[1])
-			SetLog("Collecting Max Point Reward", $COLOR_SUCCESS)
-		EndIf
 
 		CloseClangamesWindow()
 		Return
 	Else
-		If _CheckPixel($aCGSummary, True) Then Click(820, 55)
+		If _CheckPixel($aCGSummary, True) Then CloseClangamesWindow()
 	EndIf
 	CloseClangamesWindow()
 EndFunc
@@ -1245,13 +1251,16 @@ Func GetCGRewardList($X = 270, $OnlyClaimMax = False)
 					
 					Switch $aTmp[$j][0]
 						Case "Books"
-							$Value = 5
+							$Value = 6
 						Case "BBGoldRune", "BBElixRune", "DERune", "ElixRune", "Shovel", "SuperPot", "GoldRune"
+							$Value = 5
+						Case "BuilderPot", "ClockTowerPot", "ResearchPot"
 							$Value = 4
-						Case "BuilderPot", "ClockTowerPot", "PowerPot", "ResearchPot", "TrainingPot", "HeroPot"
+						Case "PowerPot", "TrainingPot", "HeroPot"
 							$Value = 3
 						Case "Gem"
 							$Value = 2
+							If $OnlyClaimMax Then $Value = 6
 						Case "DarkElix", "Elix", "Gold", "WallRing"
 							$Value = 1
 					EndSwitch

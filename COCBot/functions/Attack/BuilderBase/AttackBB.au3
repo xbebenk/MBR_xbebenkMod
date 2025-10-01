@@ -14,8 +14,9 @@
 ; ===============================================================================================================================
 
 Func CheckCGCompleted()
+	If Not $g_bRunState Then Return
 	Local $bRet = False
-	For $x = 1 To 8
+	For $x = 1 To 5
 		If Not $g_bRunState Then Return
 		SetLog("Check challenges progress #" &$x, $COLOR_ACTION)
 		If _Sleep(1000) Then Return
@@ -31,6 +32,7 @@ EndFunc
 Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 	If Not $g_bChkEnableBBAttack Then Return
 	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
+	If Not $g_bRunState Then Return
 	
 	If $g_iBBAttackCount = 0 Then
 		Local $count = 1
@@ -97,6 +99,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 EndFunc
 
 Func ClickFindNowButton()
+	If Not $g_bRunState Then Return
 	Local $bRet = False
 	For $i = 1 To 10
 		If _ColorCheck(_GetPixelColor(655, 440, True), Hex(0x89D239, 6), 20) Then
@@ -118,6 +121,7 @@ Func ClickFindNowButton()
 EndFunc
 
 Func WaitCloudsBB()
+	If Not $g_bRunState Then Return
 	Local $bRet = True
 	
 	Local $count = 1

@@ -14,6 +14,7 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($Mode = Default)
+	If Not $g_bRunState Then Return
 	If $g_bChkDebugAttackBB Then SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
 	If $g_bForceSwitchifNoCGEvent Then 
 		SetLog("ForceSwitchifNoCGEvent Enabled, Skip Attack until we have BBEvent", $COLOR_SUCCESS)
@@ -91,6 +92,7 @@ Func PrepareAttackBB($Mode = Default)
 EndFunc
 
 Func ClickBBAttackButton()
+	If Not $g_bRunState Then Return
 	If QuickMis("BC1", $g_sImgBBAttackButton, 16, 590, 110, 630) Then
 		Click(62,615) ;click attack button
 		For $i = 1 To 5
@@ -109,6 +111,7 @@ Func ClickBBAttackButton()
 EndFunc
 
 Func CheckStarsAvail()
+	If Not $g_bRunState Then Return
 	Local $bRet = False, $iRemainStars = 0, $iMaxStars = 0
 	Local $sStars = getOcrAndCapture("coc-BBAttackAvail", 40, 572, 50, 20)
 	
@@ -129,6 +132,7 @@ Func CheckStarsAvail()
 EndFunc
 
 Func CheckMachReady()
+	If Not $g_bRunState Then Return
 	Local $bRet = False
 	
 	If QuickMis("BC1", $g_sImgBBMachReady, 120, 270, 180, 330) Then 
@@ -139,6 +143,7 @@ Func CheckMachReady()
 EndFunc
 
 Func CheckArmyReady()
+	If Not $g_bRunState Then Return
 	local $i = 0
 	local $bReady = True, $bNeedTrain = False, $bTraining = False
 	
@@ -191,6 +196,7 @@ Func CheckArmyReady()
 EndFunc
 
 Func BBDropTrophy($iDropCount = 3)
+	If Not $g_bRunState Then Return
 	If Not $g_bChkBBDropTrophy Then Return
 	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
 	SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
@@ -263,6 +269,7 @@ Func BBDropTrophy($iDropCount = 3)
 EndFunc
 
 Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False, $realDamage = "100")
+	If Not $g_bRunState Then Return
 	SetLog("Returning Home", $COLOR_SUCCESS)
 	
 	For $i = 1 To 15
@@ -299,6 +306,7 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False, $rea
 EndFunc
 
 Func UseBuilderJar()
+	If Not $g_bRunState Then Return
 	If $g_bChkUseBuilderStarJar then 
 		If QuickMIS("BC1", $g_sImgDirUseJar, 120, 460, 210, 510) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)

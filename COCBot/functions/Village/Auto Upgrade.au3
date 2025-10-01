@@ -96,7 +96,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	Local $bSkip1st = $g_bUpgradeLowCost Or $g_bSkipWallReserve
 
 	If AutoUpgradeCheckBuilder($bTest) Then
-		If Not $g_bRunState Then Return
+		If _Sleep(50) Then Return
 		_SearchUpgrade($bTest, $bSkip1st) ;search upgrade for existing building
 		If _Sleep(2000) Then Return
 	EndIf
@@ -123,6 +123,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False)
 	If $bSkip1st Then $iZ = 2
 	For $z = $iZ To 15 ;for do scroll 15 times
 		If Not $g_bRunState Then Return
+		If _Sleep(50) Then Return
 		SetLog("Search For Upgrade #" & $z, $COLOR_ACTION)
 		If Not ClickMainBuilder($bTest) Then Return
 		If Not $g_bRunState Then Return
@@ -180,6 +181,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False)
 				EndIf
 			Next
 			If $bNew Then ContinueLoop
+			If _Sleep(50) Then Return
 
 			For $i = 0 To UBound($Upgrades) - 1
 				If $Upgrades[$i][6] = "Disabled" And $Upgrades[$i][7] = "Essential" Then
@@ -1116,6 +1118,7 @@ EndFunc ;_GetBuildingType
 Func SearchGreenZone()
 	If Not $g_bRunState Then Return
 	SetLog("Search GreenZone for Placing new Building", $COLOR_INFO)
+	If _Sleep(50) Then Return
 	ZoomOut()
 
 	Local $bSupportedScenery = False
@@ -1257,6 +1260,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 		Click(400, 28)
 		If _Sleep(1000) Then Return
 	EndIf
+	If _Sleep(50) Then Return
 
 	If IsBuilderMenuOpen() Then
 		SetLog("Check BuilderMenu, Opened", $COLOR_SUCCESS)
@@ -1264,6 +1268,7 @@ Func ClickMainBuilder($bTest = False, $Counter = 3)
 	Else
 		For $i = 1 To $Counter
 			If Not $g_bRunState Then Return
+			If _Sleep(50) Then Return
 			SetLog("BuilderMenu Closed, trying again!", $COLOR_DEBUG)
 			If IsFullScreenWindow() Then
 				Click(825,45)
