@@ -277,6 +277,7 @@ Func IsReturnHomeChestPage($bAction = True)
 		$bRet = True
 	EndIf
 	
+	If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Return Home Chest Window FAIL**", $COLOR_ACTION)
 	Return $bRet
 EndFunc   ;==>IsReturnHomeBattlePage
 

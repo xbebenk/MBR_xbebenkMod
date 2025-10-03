@@ -147,10 +147,10 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 			Case IsReturnHomeChestPage()
 				SetLog("Chest Bonus gained!", $COLOR_SUCCESS)
 				ContinueLoop
-			Case ReturnHomeMainPage()
-				ExitLoop
 			Case StarBonus()
 				SetLog("Star Bonus window closed chief!", $COLOR_SUCCESS)
+			Case ReturnHomeMainPage()
+				ExitLoop
 		EndSelect
 		If _Sleep(250) Then Return
 	Next
