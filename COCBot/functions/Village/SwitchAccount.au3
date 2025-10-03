@@ -289,7 +289,7 @@ EndFunc   ;==>ClickSCIDSwitchID
 
 Func ClickAccountSCID($iAccount = 2)
 	Local $bRet = False
-	Local $aAccount, $x, $y
+	Local $aAccount, $x, $y, $aDel[1] = [0]
 	If Not $g_bRunState Then Return
 
 	For $i = 1 To 5
@@ -321,25 +321,40 @@ Func ClickAccountSCID($iAccount = 2)
 	If _Sleep(500) Then Return
 	If Not $g_bRunState Then Return
 	;lets check TownHall Text
-	$aAccount = QuickMIS("CNX", $g_sImgSupercellIDTown, 550, 380, 590, 630)
+	$aAccount = QuickMIS("CNX", $g_sImgSupercellIDTown, 560, 400, 577, 650)
 	If IsArray($aAccount) And UBound($aAccount) > 0 Then
 		_ArraySort($aAccount, 0, 0, 0, 2)
 		SetLog("Detected account : " & UBound($aAccount), $COLOR_INFO)
+		
+		Local $iTmpY = 0, $iDistance = 50
 		For $i = 0 To UBound($aAccount) - 1
-			SetLog("TownHall Text on : " & $aAccount[$i][1] & "," & $aAccount[$i][2], $COLOR_DEBUG)
+			If $aAccount[$i][2] - $iTmpY > $iDistance Then
+				$iTmpY = $aAccount[$i][2]
+			Else
+				_ArrayAdd($aDel, $i)
+			EndIf
 		Next
+		
+		$aDel[0] = UBound($aDel) - 1
+		_ArrayDelete($aAccount, $aDel) ;delete wall level which same or higher than TH level
+		_ArraySort($aAccount, 0, 0, 0, 2) ;short wall level ascending
+		
+		For $i = 0 To UBound($aAccount) - 1
+			SetLog("Bootom Splitter on : " & $aAccount[$i][1] & "," & $aAccount[$i][2], $COLOR_DEBUG)
+		Next
+		
 		
 		If Not $g_bRunState Then Return
 		Switch $iAccount
 			Case 1, 4, 7, 10, 13, 16
-				$x = $aAccount[0][1]
-				$y = $aAccount[0][2]
+				$x = $aAccount[0][1] + 100
+				$y = $aAccount[0][2] - 35
 			Case 2, 5, 8, 11, 14
-				$x = $aAccount[1][1]
-				$y = $aAccount[1][2]
+				$x = $aAccount[1][1] + 100
+				$y = $aAccount[1][2] - 35
 			Case 3, 6, 9, 12, 15
-				$x = $aAccount[2][1]
-				$y = $aAccount[2][2]
+				$x = $aAccount[2][1] + 100
+				$y = $aAccount[2][2] - 35
 		EndSwitch
 		
 		If Not $g_bRunState Then Return

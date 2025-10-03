@@ -150,7 +150,7 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 			Case StarBonus()
 				SetLog("Star Bonus window closed chief!", $COLOR_SUCCESS)
 			Case ReturnHomeMainPage()
-				ExitLoop
+				Return
 		EndSelect
 		If _Sleep(250) Then Return
 	Next

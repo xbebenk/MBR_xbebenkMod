@@ -40,18 +40,7 @@ Func StarLab($bTest = False)
 	
 	;Create local array to hold upgrade values
 	Local $iAvailElixir, $sElixirCount, $TimeDiff, $aArray, $Result
-	If $g_sStarLabUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sStarLabUpgradeTime) ; what is difference between end time and now in minutes?
 	
-	SetLog($g_avStarLabTroops[$g_iCmbStarLaboratory][3] & " Lab end time: " & $g_sStarLabUpgradeTime & ", DIFF= " & $TimeDiff, $COLOR_DEBUG)
-
-	If Not $g_bRunState Then Return
-	If $TimeDiff <= 0 Then
-		SetLog("Checking Troop Upgrade in Star Laboratory", $COLOR_INFO)
-	Else
-		SetLog("Star Laboratory Upgrade in progress, waiting for completion", $COLOR_INFO)
-		If Not $bTest Then Return True
-	EndIf
-
 	$iAvailElixir = Number($g_aiCurrentLootBB[$eLootElixirBB])
 
 	ZoomOutHelperBB("SwitchBetweenBases") ;go to BH LowerZone
