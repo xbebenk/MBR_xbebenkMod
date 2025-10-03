@@ -46,15 +46,17 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 		If Not $bSuppressLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [GEM]: " & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
 		If ProfileSwitchAccountEnabled() Then $g_aiCurrentLoot[$eLootDarkElixir] = "" ; prevent applying Dark Elixir of previous account to current account
 	EndIf
+	
 	If $bBypass = False Then ; update stats
 		UpdateStats()
 	EndIf
-	If _Sleep(50) Then Return
-	Local $i = 0
-	While _ColorCheck(_GetPixelColor(819, 39, True), Hex(0xF8FCFF, 6), 20) = True ; wait for Builder/shop to close
-		$i += 1
-		If _Sleep($DELAYVILLAGEREPORT1) Then Return
-		If $i >= 20 Then ExitLoop
-	WEnd
+	
+	;If _Sleep(50) Then Return
+	;Local $i = 0
+	;While _ColorCheck(_GetPixelColor(819, 39, True), Hex(0xF8FCFF, 6), 20) = True ; wait for Builder/shop to close
+	;	$i += 1
+	;	If _Sleep($DELAYVILLAGEREPORT1) Then Return
+	;	If $i >= 20 Then ExitLoop
+	;WEnd
 
 EndFunc   ;==>VillageReport

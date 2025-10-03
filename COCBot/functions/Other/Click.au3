@@ -268,11 +268,8 @@ Func ClickAway($Region = Default, $b_Debug = False)
 		Return
 	EndIf
 	
-	If $g_bStayOnBuilderBase And $Region = "Left" Then 
-		$aiRegionToUse[0] += 40
-		$aiRegionToUse[2] += 40
-	EndIf
-	
+	If $g_bStayOnBuilderBase Then $aiRegionToUse = $aiClickAwayRegionLeft
+		
 	Local $aiSpot[2] = [Random($aiRegionToUse[0], $aiRegionToUse[2], 1), Random($aiRegionToUse[1], $aiRegionToUse[3], 1)]
 	
 	If $g_bDebugClick Then SetDebugLog("ClickAway(): on X:" & $aiSpot[0] & ", Y:" & $aiSpot[1], $COLOR_DEBUG)

@@ -217,23 +217,13 @@ Func chkSwitchAcc()
 		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[Ubound($g_abAccountNo) - 1]
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
-		GUICtrlSetState($g_hChkFastSwitchAcc, $GUI_ENABLE)
 	Else
 		releaseSwitchAccountMutex()
 		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[Ubound($g_abAccountNo) - 1]
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
-		GUICtrlSetState($g_hChkFastSwitchAcc, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkSwitchAcc
-
-Func chkFastSwitchAcc()
-	If GUICtrlRead($g_hChkFastSwitchAcc) = $GUI_CHECKED Then
-		$g_bChkFastSwitchAcc = True
-	Else
-		$g_bChkFastSwitchAcc = False
-	EndIf
-EndFunc
 
 Func cmbSwitchAcc()
 	Return _cmbSwitchAcc()
@@ -294,7 +284,6 @@ Func _cmbSwitchAcc($bReadSaveConfig = True)
 	EndIf
 
 	GUICtrlSetState($g_hChkSwitchAcc, (($bEnable Or ($iCmbSwitchAcc And $bAcquired)) ? $GUI_ENABLE : $GUI_DISABLE))
-	GUICtrlSetState($g_hChkFastSwitchAcc, (($bEnable Or ($iCmbSwitchAcc And $bAcquired)) ? $GUI_ENABLE : $GUI_DISABLE))
 	For $i = $g_hCmbTotalAccount To UBound($g_ahChkDonate) - 1
 		GUICtrlSetState($i, (($bEnable) ? $GUI_ENABLE : $GUI_DISABLE))
 	Next
@@ -309,11 +298,9 @@ Func cmbTotalAcc()
 	
 	If $iCmbTotalAcc > 7 Then
 		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE)
-		GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_DISABLE)
 		GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE)
-		GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_ENABLE)
 		GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_ENABLE)
 	EndIf
 	

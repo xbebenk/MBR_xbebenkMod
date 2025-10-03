@@ -123,12 +123,6 @@ Global $aLoginWithSupercellID2[4] = [266, 653, 0xFFFFFF , 10] ; White Font "Log 
 Global $aButtonSetting[4] = [820, 530, 0xFFFFFF, 10] ; Setting button, Main Screen
 Global $aIsSettingPage[4] = [786, 97, 0xDA1013, 20] ; Main Screen, Setting page open - red bottom lower of x button
 
-;Google Play
-Global $aListAccount[4] = [635, 230, 0xFFFFFF, 20] ; Accounts list google, White
-Global $aButtonVillageLoad[4] = [515, 411, 0x6EBD1F, 20] ; Load button, Green
-Global $aTextBox[4] = [320, 160, 0xFFFFFF, 10] ; Text box, White
-Global $aButtonVillageOkay[4] = [500, 170, 0x81CA2D, 20] ; Okay button, Green
-
 ;SuperCell ID
 Global $aButtonConnectedSCID[4] = [640, 160, 0x2D89FD, 20] ; Setting screen, Supercell ID Connected button (Blue Part)
 Global $aCloseTabSCID[4] = [831, 57] ; Button Close Supercell ID tab

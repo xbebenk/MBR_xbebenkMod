@@ -601,40 +601,6 @@ Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 	Return False
 EndFunc   ;==>checkObstacles_Network
 
-Func CheckObstacles_SCIDPopup()
-	Local $ascidConnectButton = decodeSingleCoord(findImage("SCID", $g_sImgSupercellIDConnect, GetDiamondFromRect("100,20,700,100"), 1, True))
-	If IsArray($ascidConnectButton) And UBound($ascidConnectButton, 1) >= 2 Then
-		SetDebugLog("checkObstacles: Found SCID popup connect suggestion", $COLOR_ACTION)
-		Click($ascidConnectButton[0], $ascidConnectButton[1])
-		If _Sleep(1000) Then Return
-		Local $aSuperCellIDWindowsUI, $bSCIDWindowOpened = False
-		For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
-			If Mod($i, 2) = 0 Then
-				$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default))
-			Else
-				$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDBlack, GetDiamondFromRect("550,450,760,550"), 1, True, Default))
-			EndIf
-			If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
-				SetLog("SupercellID Window Opened", $COLOR_DEBUG)
-				$bSCIDWindowOpened = True
-				ExitLoop
-			EndIf
-			If Not $g_bRunState Then Return
-			If _Sleep(900) Then Return
-		Next
-		If $bSCIDWindowOpened Then
-			AndroidBackButton() ;Send back button to android
-			If _Sleep(1000) Then Return
-			If IsOKCancelPage() Then
-				AndroidBackButton()
-			EndIf
-		EndIf
-	Else
-		Return False
-	EndIf
-	Return True
-EndFunc
-
 Func SearchUnplacedBuilding()
 	Local $atmpInfo = getNameBuilding(460, 477)
 	If $atmpInfo = "" Then

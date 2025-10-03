@@ -51,45 +51,9 @@ Func BotDetectFirstTime()
 		EndIf
 	EndIf
 
-	;If Number($g_iTownHallLevel) >= 7 Then
-	;	If $g_iCmbBoostBarbarianKing > 0 Or $g_bUpgradeKingEnable Then
-	;		If _Sleep($DELAYBOTDETECT3) Then Return
-	;		If $g_aiKingAltarPos[0] = -1 Then
-	;			LocateKingAltar(False)
-	;			SaveConfig()
-	;		EndIf
-	;	EndIf
-	;
-	;	If Number($g_iTownHallLevel) >= 9 And ($g_iCmbBoostArcherQueen > 0 Or $g_bUpgradeQueenEnable) Then
-	;		If _Sleep($DELAYBOTDETECT3) Then Return
-	;		If $g_aiQueenAltarPos[0] = -1 Then
-	;			LocateQueenAltar(False)
-	;			SaveConfig()
-	;		EndIf
-	;	EndIf
-	;
-	;	If Number($g_iTownHallLevel) >= 11 And ($g_iCmbBoostWarden > 0 Or $g_bUpgradeWardenEnable) Then
-	;		If _Sleep($DELAYBOTDETECT3) Then Return
-	;		If $g_aiWardenAltarPos[0] = -1 Then
-	;			LocateWardenAltar(False)
-	;			SaveConfig()
-	;		EndIf
-	;	EndIf
-	;
-	;	If Number($g_iTownHallLevel) >= 13 And ($g_iCmbBoostChampion > 0 Or $g_bUpgradeChampionEnable) Then
-	;		If _Sleep($DELAYBOTDETECT3) Then Return
-	;		If $g_aiChampionAltarPos[0] = -1 Then
-	;			LocateChampionAltar(False)
-	;			SaveConfig()
-	;		EndIf
-	;	EndIf
-	;EndIf
-
 	;Display Level TH in Stats
 	GUICtrlSetData($g_hLblTHLevels, "")
-
-	_GUI_Value_STATE("HIDE", $g_aGroupListTHLevels)
-	SetDebugLog("Select TH Level:" & Number($g_iTownHallLevel), $COLOR_DEBUG)
-	GUICtrlSetState($g_ahPicTHLevels[$g_iTownHallLevel], $GUI_SHOW)
 	GUICtrlSetData($g_hLblTHLevels, $g_iTownHallLevel)
+	_GUICtrlSetImage($g_hPicTHLevels, $g_sLibIconPath, $g_aIcnTHLevel[$g_iTownHallLevel])
+	
 EndFunc   ;==>BotDetectFirstTime

@@ -47,7 +47,6 @@ Func TrainSystem()
 
 	EndGainCost("Train")
 
-	;checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 EndFunc   ;==>TrainSystem
 
 Func TrainPreviousArmy($bCloseWindow = False, $bOnlyBoost = False)

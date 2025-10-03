@@ -12,12 +12,11 @@
 * Wall Upgrade
 * BuilderBase Attack
 * ClanGames
-* Switch Account (with shared_prefs)
+* Switch Account (SCID and Shared_Prefs)
 * 
 *** What didn't work ***
 * Army Training
 * Place New Wall on village
 * Hero Upgrade
 * Building Upgrade
-* Switch Account (with SCID)
 

@@ -185,10 +185,6 @@ Global Const $DELAYBOOSTHEROES4 = 600
 ;BotCommand
 Global Const $DELAYBOTCOMMAND1 = 500
 
-;BotDetectFirstTime
-Global Const $DELAYBOTDETECT1 = 1000
-Global Const $DELAYBOTDETECT3 = 100
-
 ;checkArmyCamp
 Global Const $DELAYCHECKARMYCAMP1 = 100
 Global Const $DELAYCHECKARMYCAMP4 = 500

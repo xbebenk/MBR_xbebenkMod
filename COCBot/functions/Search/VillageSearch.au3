@@ -62,8 +62,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 	EndIf
 
 	If _Sleep($DELAYVILLAGESEARCH1) Then Return
-	;$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
-	;checkAttackDisable($g_iTaBChkAttack, $Result) ;last check to see If TakeABreak msg on screen for fast PC from PrepareSearch click
+	
 	If $g_bRestart = True Then Return ; exit func
 	If Not ($g_bIsSearchLimit) Then
 		SetLogCentered("=", "=", $COLOR_INFO)
@@ -359,8 +358,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		Next
 
 		If _Sleep($DELAYRESPOND) Then Return
-		;$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
-		;checkAttackDisable($g_iTaBChkAttack, $Result) ; check to see If TakeABreak msg on screen after next click
+		
 		If $g_bRestart = True Then Return ; exit func
 
 		If isGemOpen(True) = True Then

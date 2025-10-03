@@ -68,7 +68,7 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 	For $i = 1 To 5
 		SetLog("Wait For EndBattle #" & $i, $COLOR_ACTION)
 		If $g_bRestart Then Return
-		If IsReturnHomeBattlePage(True) Or IsReturnHomeChestPage(False) Then
+		If IsReturnHomeBattlePage() Or IsReturnHomeChestPage(False) Then
 			$BattleEnded = True
 			SetLog("Battle already over", $COLOR_SUCCESS)
 			ExitLoop ;exit Battle already ended
@@ -141,14 +141,17 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 
 	For $i = 1 To 5
 		SetDebugLog("Wait for End Fight Scene to appear #" & $i)
-		If IsReturnHomeBattlePage(True) Or IsReturnHomeChestPage(False) Then
-			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-			IsReturnHomeChestPage()
-		ElseIf ReturnHomeMainPage() Then 
-			Return ;clear bot log
-		ElseIf StarBonus() Then 
-			SetLog("Star Bonus window closed chief!", $COLOR_INFO)
-		EndIf
+		Select
+			Case IsReturnHomeBattlePage(True)
+				ContinueLoop
+			Case IsReturnHomeChestPage()
+				SetLog("Chest Bonus gained!", $COLOR_SUCCESS)
+				ContinueLoop
+			Case ReturnHomeMainPage()
+				ExitLoop
+			Case StarBonus()
+				SetLog("Star Bonus window closed chief!", $COLOR_SUCCESS)
+		EndSelect
 		If _Sleep(250) Then Return
 	Next
 
@@ -217,7 +220,7 @@ Func ReturnfromDropTrophies($AttackLog = False)
 
 	For $i = 1 To 5
 		SetDebugLog("Wait for End Fight Scene to appear #" & $i)
-		If IsReturnHomeBattlePage(True) Then
+		If IsReturnHomeBattlePage() Then
 			If $AttackLog Then
 				$g_iMatchMode = $DT
 				_CaptureRegion()

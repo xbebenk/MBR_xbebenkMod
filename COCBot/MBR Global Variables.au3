@@ -547,6 +547,8 @@ Global $eIcnOptions = $eIcnDonBlacklist
 Global $eIcnAchievements = $eIcnMain
 Global $eIcnStrategies = $eIcnBlank
 
+Global $g_aIcnTHLevel[18] = [$eIcnBlank, $eIcnBlank, $eIcnBlank, $eIcnBlank, $eHdV04, $eHdV05, $eHdV06, $eHdV07, $eHdV08, $eHdV09, $eHdV10, $eHdV11, $eHdV12, $eHdV13, $eHdV14, $eHdV15, $eHdV16, $eIcnBlank]
+
 ; Controls bot startup and ongoing operation
 Global Const $g_iCollectAtCount = 10 ; Run Collect() after this amount of times before actually collect
 Global Enum $eBotNoAction, $eBotStart, $eBotStop, $eBotSearchMode, $eBotClose
@@ -1265,15 +1267,13 @@ Global $g_bDisableNotifications = False
 ; <><><><> Bot / Profiles <><><><>
 Global $g_iCmbSwitchAcc = 0 ; Group switch accounts
 Global $g_bForceSwitch = false ; use as a flag for when we want to force an account switch
-Global $g_bChkSharedPrefs = True, $g_bChkGooglePlay = False, $g_bChkSuperCellID = False ; Accounts switch mode
-Global $g_bChkSwitchAcc = False, $g_bChkFastSwitchAcc = False, $g_bChkSmartSwitch = False, $g_iTotalAcc = -1, $g_iTrainTimeToSkip = 0
+Global $g_bChkSharedPrefs = True, $g_bChkSuperCellID = False ; Accounts switch mode
+Global $g_bChkSwitchAcc = False, $g_iTotalAcc = -1
 Global $g_bInitiateSwitchAcc = True, $g_bReMatchAcc = False, $g_bWaitForCCTroopSpell = False, $g_iNextAccount, $g_iCurAccount
 Global $g_abAccountNo[16], $g_asProfileName[16], $g_abDonateOnly[16]
 Global $g_aiAttackedCountSwitch[16], $g_iActiveSwitchCounter = 0, $g_iDonateSwitchCounter = 0
 Global $g_asTrainTimeFinish[16], $g_abPBActive[16]
 Global $g_aiRunTime[16], $g_ahTimerSinceSwitched[16]
-; <><><><> Bot / Stats <><><><>
-; <<< nothing here >>>
 
 ;--------------------------------------------------------------------------
 ; END: Variables to hold current GUI setting values

@@ -1251,7 +1251,7 @@ Func FirstCheckRoutine()
 	CommonRoutine("FirstCheck") ;after first attack, checking some routine
 
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
+	If ProfileSwitchAccountEnabled() Then ;Allow immediate Second Attack on FastSwitchAcc enabled
 		VillageReport()
 		SetLog("Check Second Attack", $COLOR_ACTION)
 		FillArmyCamp()
@@ -1289,7 +1289,7 @@ Func FirstCheckRoutine()
 	SetLogCentered(" FirstCheckRoutine done (" & $sText & " minutes) ", "~", $COLOR_SUCCESS)
 	SetLog(" ")
 
-	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then
+	If ProfileSwitchAccountEnabled() Then
 		CommonRoutine("Switch")
 		checkSwitchAcc() ;switch to next account
 	EndIf
@@ -1446,30 +1446,6 @@ Func BuilderBase()
 
 	If Not $g_bStayOnBuilderBase And IsOnBuilderBase() Then SwitchBetweenBases("Main")
 EndFunc
-
-Func TestBuilderBase()
-	Local $bChkCollectBuilderBase = $g_bChkCollectBuilderBase
-	Local $bChkStartClockTowerBoost = $g_bChkStartClockTowerBoost
-	Local $bChkCTBoostBlderBz = $g_bChkCTBoostBlderBz
-	Local $bChkCleanBBYard = $g_bChkCleanBBYard
-	Local $bChkEnableBBAttack = $g_bChkEnableBBAttack
-
-	$g_bChkCollectBuilderBase = True
-	$g_bChkStartClockTowerBoost = True
-	$g_bChkCTBoostBlderBz = True
-	$g_bChkCleanBBYard = True
-	$g_bChkEnableBBAttack = True
-
-	BuilderBase()
-
-	If _Sleep($DELAYRUNBOT3) Then Return
-
-	$g_bChkCollectBuilderBase = $bChkCollectBuilderBase
-	$g_bChkStartClockTowerBoost = $bChkStartClockTowerBoost
-	$g_bChkCTBoostBlderBz = $bChkCTBoostBlderBz
-	$g_bChkCleanBBYard = $bChkCleanBBYard
-	$g_bChkEnableBBAttack = $bChkEnableBBAttack
- EndFunc
 
 Func GotoBBTodoCG()
 	If SwitchBetweenBases("BB") And isOnBuilderBase() Then
