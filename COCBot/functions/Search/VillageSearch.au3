@@ -502,7 +502,6 @@ Func CheckZoomOut($sSource = "CheckZoomOut")
 	Local $aVillageResult = SearchZoomOut(False, True, $sSource)
 	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
 		SetLog("CheckZoomOut Failed : " & $sSource, $COLOR_DEBUG)
-		AndroidZoomOut()
 		ZoomOutHelper("VillageSearch")
 		$bRet = False
 	EndIf

@@ -49,7 +49,6 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 										[-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True]]
 
 	Local $iWaitPurgeScore = 150
-	If $bOnlyPurge Then $g_bForceSwitchifNoCGEvent = True ;OnlyPurge will be called on CommonRoutine = Switch
 
 	; Enter on Clan Games window
 	If IsClanGamesWindow($bOnlyPurge) Then
@@ -129,6 +128,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 	
 	If $bOnlyPurge Then
 		SetLog("OnlyPurge before switch Account", $COLOR_INFO)
+		$g_bForceSwitchifNoCGEvent = True ;OnlyPurge will be called on CommonRoutine = Switch
 		Local $aEvent = FindEventToPurge($sTempPath)
 		If IsArray($aEvent) And UBound($aEvent) > 0 Then
 			Local $EventName = StringSplit($aEvent[0][0], "-")
@@ -549,7 +549,6 @@ Func IsClanGamesWindow($bOnlyPurge = False)
 			Case "Ended"
 				$bRet = False
 				If $g_bCollectCGReward Then CollectCGReward()
-				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False
 		EndSwitch
 	Else
 		SetLog("Caravan not available", $COLOR_WARNING)

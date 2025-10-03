@@ -144,22 +144,17 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 		If IsReturnHomeBattlePage(True) Or IsReturnHomeChestPage(False) Then
 			ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
 			IsReturnHomeChestPage()
-		ElseIf CheckMainScreen(False, $g_bStayOnBuilderBase, "ReturnHome-2") Then
-			ExitLoop
+		ElseIf ReturnHomeMainPage() Then 
+			Return ;clear bot log
+		ElseIf StarBonus() Then 
+			SetLog("Star Bonus window closed chief!", $COLOR_INFO)
 		EndIf
 		If _Sleep(250) Then Return
 	Next
 
-	For $counter = 1 To 5
-		SetDebugLog("Wait for Star Bonus window to appear #" & $counter)
-		If ReturnHomeMainPage() Then Return ;clear bot log
-		If _Sleep(2000) Then Return
-		If StarBonus() Then SetLog("Star Bonus window closed chief!", $COLOR_INFO) ; Check for Star Bonus window to fill treasury (2016-01) update
-	Next
-	
 	If IsProblemAffect() Then
 		SetLog("Cannot return home.", $COLOR_ERROR)
-		CheckMainScreen(False, $g_bStayOnBuilderBase, "ReturnHome-2")
+		CheckMainScreen()
 		Return
 	EndIf
 EndFunc   ;==>ReturnHome
@@ -173,7 +168,7 @@ Func ReturnHomeMainPage()
 EndFunc   ;==>ReturnHomeMainPage
 
 Func StarBonus()
-	If $g_bDebugSetLog Then SetLog("Begin Star Bonus window check", $COLOR_DEBUG1)
+	SetLog("Begin Star Bonus window check", $COLOR_DEBUG1)
 	
 	Local $aStarBonus1[4] = [135, 92, 0x254963, 20] ; Black Balloon
 	Local $aStarBonus2[4] = [676, 87, 0x1995F8, 20] ; Blue header covering elixir bar

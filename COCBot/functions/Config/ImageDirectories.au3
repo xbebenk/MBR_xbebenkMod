@@ -34,6 +34,7 @@ Global Const $g_sImgImportantNotice = @ScriptDir & "\imgxml\other\ImportantNotic
 #EndRegion
 
 #Region Main Village
+Global $g_sImgTownHall = @ScriptDir & "\imgxml\TownHall\"
 Global $g_sImgCollectResources = @ScriptDir & "\imgxml\Resources\Collect"
 Global $g_sImgCollectLootCart = @ScriptDir & "\imgxml\Resources\LootCart"
 Global $g_sImgCollectCookie = @ScriptDir & "\imgxml\Resources\Collect\Cookie"
@@ -47,6 +48,7 @@ Global $g_sImgBuilderHut = @ScriptDir & "\imgxml\Buildings\BuilderHut\"
 Global $g_sImgPetHouse = @ScriptDir & "\imgxml\Buildings\PetHouse\"
 Global $g_sImgClanCastle = @ScriptDir & "\imgxml\Buildings\ClanCastle"
 Global $g_sImgLaboratory = @ScriptDir & "\imgxml\Buildings\Laboratory\"
+Global $g_sImgLabAssistant = @ScriptDir & "\imgxml\Research\Laboratory\LabAssistant\"
 Global $g_sImgBoat = @ScriptDir & "\imgxml\Boat\Main\"
 Global $g_sImgZoomOutDir = @ScriptDir & "\imgxml\village\NormalVillage\"
 Global $g_sImgZoomOutHelper = @ScriptDir & "\imgxml\village\NormalVillage\ZoomOutHelper\"
@@ -64,6 +66,7 @@ Global $g_sImgTrader = @ScriptDir & "\imgxml\FreeMagicItems\TraderIcon\"
 Global $g_sImgTraderWindow = @ScriptDir & "\imgxml\FreeMagicItems\TraderWindow\"
 Global $g_sImgTraderGems = @ScriptDir & "\imgxml\FreeMagicItems\Gems\"
 Global $g_sImgHeroPotion = @ScriptDir & "\imgxml\FreeMagicItems\HeroPotion"
+Global $g_sImgMagicItemBox = @ScriptDir & "\imgxml\FreeMagicItems\Box\"
 Global $g_sImgUpgradeWhiteZero = @ScriptDir & "\imgxml\Main Village\Upgrade\WhiteZero*"
 Global $g_sImgLabResearch = @ScriptDir & "\imgxml\Research\Laboratory\"
 Global $g_sImgAnySpell = @ScriptDir & "\imgxml\Research\Laboratory\AllSpell\"
@@ -208,7 +211,8 @@ Global $g_sImgArmyOverviewSiegesQueued = @ScriptDir & "\imgxml\ArmyOverview\Sieg
 Global $g_sImgRequestCCButton = @ScriptDir & "\imgxml\ArmyOverview\RequestCC\"
 Global $g_sImgSendRequestButton = @ScriptDir & "\imgxml\ArmyOverview\RequestCC\SendRequest"
 Global $g_sImgArmyOverviewHeroes = @ScriptDir & "\imgxml\ArmyOverview\Heroes"
-Global $g_sImgArmyOverviewExclam = @ScriptDir & "\imgxml\ArmyOverview\Exclam"
+Global $g_sImgArmyOverviewExclam = @ScriptDir & "\imgxml\ArmyOverview\Exclam\"
+Global $g_sImgArmyOverviewCastleCake = @ScriptDir & "\imgxml\ArmyOverview\CastleCake\"
 Global $g_sImgDelQueue = @ScriptDir & "\imgxml\Train\Delete\"
 Global $g_sImgSlash = @ScriptDir & "\imgxml\Train\Slash\"
 #EndRegion

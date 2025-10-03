@@ -933,106 +933,105 @@ EndFunc   ;==>_RunFunction
 Func __RunFunction($action)
 	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
 	Switch $action
+		Case "UseFreeMagic"
+			UseFreeMagicItem()
+			If _Sleep(50) Then Return
 		Case "Collect"
 			Collect()
-			_Sleep(1000)
+			If _Sleep(50) Then Return
 		Case "BlackSmith"
 			BlackSmith()
-			_Sleep(1000)
+			If _Sleep(50) Then Return
 		Case "CheckTombs"
 			CheckTombs()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "CleanYard"
 			CleanYard()
+			If _Sleep(50) Then Return
 		Case "ReplayShare"
 			ReplayShare($g_bShareAttackEnableNow)
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "NotifyReport"
 			NotifyReport()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "DonateCC"
 			DonateCC()
 		Case "BoostBarracks"
 			BoostBarracks()
-			_Sleep($DELAYRESPOND)
+			If _Sleep(50) Then Return
 		Case "BoostSpellFactory"
 			BoostSpellFactory()
-			_Sleep($DELAYRESPOND)
+			If _Sleep(50) Then Return
 		Case "BoostWorkshop"
 			BoostWorkshop()
-			_Sleep($DELAYRESPOND)
+			If _Sleep(50) Then Return
 		Case "BoostKing"
 			BoostKing()
-			_Sleep($DELAYRESPOND)
+			If _Sleep(50) Then Return
 		Case "BoostQueen"
 			BoostQueen()
-			_Sleep($DELAYRESPOND)
+			If _Sleep(50) Then Return
 		Case "BoostWarden"
 			BoostWarden()
-			_Sleep($DELAYRESPOND)
+			If _Sleep(50) Then Return
 		Case "BoostChampion"
 			BoostChampion()
-			_Sleep($DELAYRESPOND)
+			If _Sleep(50) Then Return
 		Case "BoostEverything"
 			BoostEverything()
-			_Sleep($DELAYRESPOND)
+			If _Sleep(50) Then Return
 		Case "DailyChallenge"
 			DailyChallenges()
-			_Sleep($DELAYRUNBOT3)
-			checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenge")
+			If _Sleep(50) Then Return
 		Case "RequestCC"
 			RequestCC()
-			ClickAway()
+			If _Sleep(50) Then Return
 		Case "Laboratory"
 			Laboratory()
-			_Sleep($DELAYRUNBOT3)
-			checkMainScreen(False, $g_bStayOnBuilderBase, "Laboratory")
+			If _Sleep(50) Then Return
 		Case "PetHouse"
 			PetHouse()
+			If _Sleep(50) Then Return
 		Case "ForgeClanCapitalGold"
 			ForgeClanCapitalGold()
+			If _Sleep(50) Then Return
 		Case "BoostSuperTroop"
 			BoostSuperTroop()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "UpgradeHeroes"
 			UpgradeHeroes()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "UpgradeBuilding"
 			UpgradeBuilding()
-			If _Sleep($DELAYRUNBOT3) Then Return
+			If _Sleep(50) Then Return
 			AutoUpgrade()
-			ZoomOut()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "UpgradeLow"
 			AutoUpgrade(False, True)
-			ZoomOut()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "UpgradeWall"
-			$g_iNbrOfWallsUpped = 0
-			ClickAway()
 			UpgradeWall()
-			ZoomOut()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_bAutoUpgradeBBEnabled Or $g_bChkEnableBBAttack Then
 				BuilderBase()
 			EndIf
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "CollectAchievements"
 			CollectAchievements()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "CollectFreeMagicItems"
 			CollectFreeMagicItems()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "SaleMagicItem"
 			SaleMagicItem()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "AutoUpgradeCC"
 			AutoUpgradeCC()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case "CollectCCGold"
 			CollectCCGold()
-			_Sleep($DELAYRUNBOT3)
+			If _Sleep(50) Then Return
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
@@ -1070,13 +1069,14 @@ Func FirstCheck()
 		Local $BuildingInfo = BuildingInfo(242, 477)
 		If $BuildingInfo[1] = "Town Hall" Then
 			$g_iTownHallLevel =  $BuildingInfo[2]
+			ClickAway()
 		Else
 			$bLocateTH = True
 		EndIf
 	EndIf
 
 	If $g_iTownHallLevel = 0 Or $bLocateTH Then
-		imglocTHSearch(False, True, True) ;Sets $g_iTownHallLevel
+		SearchTH()
 	EndIf
 	
 	If _Sleep(50) Then Return
@@ -1303,7 +1303,7 @@ Func CommonRoutine($RoutineType = Default)
 	Local $sText = "", $aFuncList[0]
 	Switch $RoutineType
 		Case "FirstCheck"
-			Local $aRndFuncList = ['Collect', 'CleanYard', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'PetHouse', 'Laboratory', 'SaleMagicItem', 'UpgradeWall']
+			Local $aRndFuncList = ['Collect', 'CleanYard', 'UseFreeMagic', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'PetHouse', 'Laboratory', 'SaleMagicItem', 'UpgradeWall']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)
@@ -1492,13 +1492,60 @@ Func FillArmyCamp()
 				SetLog("Your troop need to fill", $COLOR_DEBUG)
 				FillIncorrectTroopCombo()
 				ClickAway()
+				If _Sleep(500) Then Return
 			EndIf
-			If _Sleep(500) Then Return
+			
 			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 320, 480, 345) Then ;check on spells
 				SetLog("Your troop need to fill", $COLOR_DEBUG)
 				FillIncorrectSpellCombo()
 				ClickAway()
+				If _Sleep(500) Then Return
 			EndIf
+			
+			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 380, 270, 800, 295) Then ;check on acivate supertroop
+				SetLog("SuperTroop Need to activate", $COLOR_DEBUG)
+				ClickAway()
+				If _Sleep(500) Then Return
+				BoostSuperTroop()
+			EndIf
+			
+			If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 650, 450, 725, 485) Then ;check on Castle cake reinforcement
+				SetLog("Try Reinforce with Castle Cake", $COLOR_DEBUG)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(500) Then Return
+				If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 210, 180, 280, 250) Then ;read if text "Tap to Reinforce" exist
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					If _Sleep(500) Then Return
+					Local $aTroops = QuickMIS("CNX", $g_sImgTrainTroops, 120, 260, 740, 460) ;read all troops image 
+					If IsArray($aTroops) And UBound($aTroops) > 0 Then
+						_ArraySort($aTroops, 0, 0, 0, 1)
+						For $i = 0 To UBound($aTroops) - 1
+							Switch $aTroops[$i][0]
+								Case "Giant", "Ball", "Wiz"
+									Click($aTroops[$i][1], $aTroops[$i][2], 5)
+								Case "Drag"
+									Click($aTroops[$i][1], $aTroops[$i][2], 2)
+							EndSwitch
+							
+							If _ColorCheck(_GetPixelColor(150, 275, True), Hex(0x8F8F8F, 6), 20, Default, "CheckTroopBar") Then 
+								Click(450, 530) ;Click Confirm
+								If _Sleep(500) Then Return
+								ExitLoop ;troops bar greyed
+							EndIf
+						Next
+					EndIf
+				EndIf
+				
+				If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 450, 380, 635, 500) then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					SetLog("Fill Reinforcement using Castle Cake", $COLOR_ACTION)
+				EndIf
+				
+				ClickAway()
+				If _Sleep(500) Then Return
+			EndIf
+			
+			;close Army window
 			ClickAway()
 			If _Sleep(500) Then Return
 		EndIf

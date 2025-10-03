@@ -15,7 +15,7 @@
 Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	Local Static $aAttackBar[0][8]
 	Local Static $bDoubleRow = False, $bCheckSlot12 = False
-	Local $sSearchDiamond = GetDiamondFromRect("0, 580, 860, 660")
+	Local $sSearchDiamond = GetDiamondFromRect("0, 580, " & $g_iGAME_WIDTH & ", 660")
 	Local $iYBelowRowOne = 630, $aiOCRLocation[2] = [-1, -1], $aSlotAmountX[0][3]
 
 	If $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, True)
@@ -33,7 +33,7 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 		;Check if Double Row is enabled aswell as has 12+ Slots
 		If _CheckPixel($aDoubRowAttackBar, True) Then
 			$bDoubleRow = True
-			$sSearchDiamond = GetDiamondFromRect("0, 495, 860, 660")
+			$sSearchDiamond = GetDiamondFromRect("0, 495, " & $g_iGAME_WIDTH & ", 660")
 		ElseIf _CheckPixel($a12OrMoreSlots, True) Then
 			$bCheckSlot12 = True
 			SetDeBugLog("Found 12th slot for Normal Troops")

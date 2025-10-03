@@ -59,7 +59,32 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 			EndIf
 		EndIf
 	EndIf
-
+	
+	If Not $bRet And $g_iTownHallLevel >= 9 Then
+		ClickMainBuilder()
+		If _Sleep(500) Then Return
+		If QuickMIS("BC1", $g_sImgBuilderMenu, 290, 105, 445, 140) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(500) Then Return
+			If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "BuilderApprentice") Then
+				If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					If _Sleep(500) Then Return
+					If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "BuilderApprentice") Then
+						Click(250, 421, 1, 0, "Click Keep Assign")
+						Click(430, 520, 1, 0, "Click Confirm")
+						If _Sleep(500) Then Return
+						ClickAway()
+						If _Sleep(500) Then Return
+						ClickAway()
+					EndIf
+				EndIf
+			EndIf
+		Else
+			ClickAway()
+		EndIf
+	EndIf
+	
 	If $g_bDebugSetLog Then SetLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
 EndFunc

@@ -229,6 +229,8 @@ Func GetBlueStacks5BackgroundMode()
 	EndIf
 EndFunc   ;==>GetBlueStacksBackgroundMode
 
+Global $g_iBluestack5dpi = 160
+
 Func CheckScreenBlueStacks5($bSetLog = True)
 	Local $__BlueStacks5_ProgramData = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "UserDefinedDir")
 	Local $__Bluestacks5Conf = FileReadToArray($__BlueStacks5_ProgramData & "\bluestacks.conf")
@@ -236,27 +238,33 @@ Func CheckScreenBlueStacks5($bSetLog = True)
 
 	Local $aiSearch = ["bst.instance." & $g_sAndroidInstance & ".fb_width", _
 					   "bst.instance." & $g_sAndroidInstance & ".fb_height", _
-					   'bst.instance.' & $g_sAndroidInstance & '.dpi="160"', _
+					   "bst.instance." & $g_sAndroidInstance & ".dpi=", _
 					   "bst.instance." & $g_sAndroidInstance & ".gl_win_height", _
 					   "bst.instance." & $g_sAndroidInstance & ".display_name"]
 
-	Local $aiMustBe = ['"860"', _
-					   '"676"', _
-					   '"160"', _
-					   '"676"', _
-					   '"BS5']
+	Local $aiMustBe = ['bst.instance.' & $g_sAndroidInstance & '.fb_width="' & $g_iGAME_WIDTH & '"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.fb_height="' & $g_iGAME_HEIGHT & '"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.dpi="' & $g_iBluestack5dpi & '"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.gl_win_height="' & $g_iGAME_HEIGHT & '"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.display_name="BS5-' & $g_sAndroidInstance & '"']
 
-	For $i = 0 To $iLineCount - 1
-		For $iSearch = 0 To UBound($aiSearch) - 1
+	
+	For $iSearch = 0 To UBound($aiSearch) - 1
+		If $g_bDebugSetLog Then SetLog("Search for : " & $aiMustBe[$iSearch], $COLOR_DEBUG)
+		For $i = 0 To $iLineCount - 1
 			If StringInStr($__Bluestacks5Conf[$i], $aiSearch[$iSearch]) Then
-				SetDebugLog($__Bluestacks5Conf[$i])
+				If $g_bDebugSetLog Then SetLog("Found: " & $__Bluestacks5Conf[$i], $COLOR_DEBUG2)
 				If StringInStr($__Bluestacks5Conf[$i], $aiMustBe[$iSearch]) = 0 Then
-					If $bSetLog = True Then SetLog("Please wait, Bot will configure your Bluestacks", $COLOR_ERROR)
+					If $g_bDebugSetLog Then SetLog("Not Match: " & $__Bluestacks5Conf[$i] & " <> " & $aiMustBe[$iSearch], $COLOR_DEBUG1)
+					If $bSetLog = True Then SetLog("Please wait, Bot will configure your Bluestacks5", $COLOR_ERROR)
 					Return False
+				Else 
+					If $g_bDebugSetLog Then SetLog("Match: " & $aiMustBe[$iSearch], $COLOR_DEBUG2)
 				EndIf
 			EndIf
 		Next
 	Next
+	
 	Return True
 EndFunc   ;==>CheckScreenBlueStacks
 
@@ -274,10 +282,10 @@ Func SetScreenBlueStacks5()
 					   "bst.instance." & $g_sAndroidInstance & ".enable_fps_display", _
 					   "bst.instance." & $g_sAndroidInstance & ".google_login_popup_shown"]
 
-	Local $aiMustBe = ['bst.instance.' & $g_sAndroidInstance & '.fb_width="860"', _
-					   'bst.instance.' & $g_sAndroidInstance & '.fb_height="676"', _
-					   'bst.instance.' & $g_sAndroidInstance & '.dpi="160"', _
-					   'bst.instance.' & $g_sAndroidInstance & '.gl_win_height="676"', _
+	Local $aiMustBe = ['bst.instance.' & $g_sAndroidInstance & '.fb_width="' & $g_iGAME_WIDTH & '"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.fb_height="' & $g_iGAME_HEIGHT & '"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.dpi="' & $g_iBluestack5dpi & '"', _
+					   'bst.instance.' & $g_sAndroidInstance & '.gl_win_height="' & $g_iGAME_HEIGHT & '"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.show_sidebar="0"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.display_name="BS5-' & $g_sAndroidInstance & '"', _
 					   'bst.instance.' & $g_sAndroidInstance & '.enable_fps_display="1"', _

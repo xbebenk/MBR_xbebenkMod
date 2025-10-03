@@ -576,7 +576,7 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 		Case $g_hBtnTestDeadBaseFolder
 			btnTestDeadBaseFolder()
 		Case $g_hBtnTestTHimgloc
-			imglocTHSearch()
+			SearchTH()
 		Case $g_hBtnTestAttackCSV
 			btnTestAttackCSV()
 		Case $g_hBtnTestArmyWindow
@@ -1396,7 +1396,7 @@ Func BotMinimizeRestore($bMinimize, $sCaller, $iForceUpdatingWhenMinimized = Fal
 			;WinSetState($g_hAndroidWindow, "", @SW_MINIMIZE)
 		EndIf
 		; Hide also Android
-		If $g_bChkBackgroundMode And Not $g_bIsHidden Then HideAndroidWindow(True, False, Default, "BotMinimizeRestore")
+		;If $g_bChkBackgroundMode And Not $g_bIsHidden Then HideAndroidWindow(True, False, Default, "BotMinimizeRestore")
 		;ReleaseMutex($hMutex)
 		Return True
 	EndIf
@@ -1434,7 +1434,7 @@ Func BotMinimizeRestore($bMinimize, $sCaller, $iForceUpdatingWhenMinimized = Fal
 	WinSetTrans($g_hFrmBot, "", 255) ; is set to 1 when "Hide when minimized" is enabled after some time, so restore it
 	BotToFront($hHWndAfter)
 	; Show also Android
-	If $g_bChkBackgroundMode And Not $g_bIsHidden And $hHWndAfter <> $g_hAndroidWindow Then HideAndroidWindow(False, False, Default, "BotMinimizeRestore", $g_hFrmBot)
+	;If $g_bChkBackgroundMode And Not $g_bIsHidden And $hHWndAfter <> $g_hAndroidWindow Then HideAndroidWindow(False, False, Default, "BotMinimizeRestore", $g_hFrmBot)
 	;ReleaseMutex($hMutex)
 	Return True
 

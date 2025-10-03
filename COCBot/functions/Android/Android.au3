@@ -343,14 +343,6 @@ Func WinGetAndroidHandle($bInitAndroid = Default, $bTestPid = False)
 			If $posX <> $g_iAndroidPosX Or $posY <> $g_iAndroidPosY Then
 				SetDebugLog("Updating Android Window '" & $g_sAndroidTitle & "' position: " & $g_iAndroidPosX & ", " & $g_iAndroidPosY)
 			EndIf
-			If $g_bIsHidden = True And ($aPos[0] > -30000 Or $aPos[1] > -30000) Then
-				; rehide Android
-				If @OSVersion = "WIN_10" And @OSBuild < 22000 And $g_iAndroidBackgroundMode = 1 Then
-					HideAndroidWindow(True, Default, Default, "WinGetAndroidHandle:2")
-				ElseIf @OSVersion = "WIN_11" And $g_iAndroidBackgroundMode = 1 Then
-					_MoveAndroidWinToDesktop(1)
-				EndIf
-			EndIf
 		EndIf
 		$g_bWinGetAndroidHandleActive = False
 		Return FuncReturn($g_hAndroidWindow)
@@ -4156,7 +4148,7 @@ EndFunc   ;==>ShowAndroidWindow
 
 Func _MoveAndroidWinToDesktop($iDesktopNumber = 0)
 	Local $iAndroidPid = GetAndroidPid()
-	Return Run(@ScriptDir & "\lib\VirtualDesktop11-24H2.exe /anim:0 /gd:" & $iDesktopNumber & " /mw:" & $iAndroidPid, "", @SW_HIDE)
+	Return Run(@ScriptDir & "\lib\VirtualDesktop11-24H2.exe /anim:0 /gd:" & $iDesktopNumber & " /mw:" & $iAndroidPid, "", @SW_HIDE, $STDIO_INHERIT_PARENT)
 EndFunc
 
 Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default, $bFastCheck = Default, $sSource = "Unknown", $hHWndAfter = Default)

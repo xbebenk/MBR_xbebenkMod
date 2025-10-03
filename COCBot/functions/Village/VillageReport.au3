@@ -25,9 +25,10 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 		Case Else
 			If Not $bSuppressLog Then SetLog("Village Report Error, You have been a BAD programmer!", $COLOR_ERROR)
 	EndSwitch
-
+	
+	If _Sleep(50) Then Return
 	getBuilderCount($bSuppressLog) ; update builder data
-	If _Sleep($DELAYRESPOND) Then Return
+	If _Sleep(50) Then Return
 
 	$g_aiCurrentLoot[$eLootTrophy] = getTrophyMainScreen($aTrophies[0], $aTrophies[1])
 	If Not $bSuppressLog Then SetLog(" [T]: " & _NumberFormat($g_aiCurrentLoot[$eLootTrophy]), $COLOR_SUCCESS)
@@ -48,7 +49,7 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 	If $bBypass = False Then ; update stats
 		UpdateStats()
 	EndIf
-
+	If _Sleep(50) Then Return
 	Local $i = 0
 	While _ColorCheck(_GetPixelColor(819, 39, True), Hex(0xF8FCFF, 6), 20) = True ; wait for Builder/shop to close
 		$i += 1

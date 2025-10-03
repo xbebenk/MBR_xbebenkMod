@@ -269,3 +269,55 @@ Func imgloccheckTownHallADV2($limit = 0, $tolerancefix = 0, $captureRegion = Tru
 	EndIf
 
 EndFunc   ;==>imgloccheckTownHallADV2
+
+
+Func SearchTH($bVerify = True)
+	If Not $g_bRunState Then Return
+	Local $aTH, $aiTHPos[2], $iTHLevel
+	Local $x, $y, $aInfo, $bRet = False
+	
+	For $try = 1 To 2
+		SetLog("[" & $try & "] SearchTH", $COLOR_ACTION)
+		$aTH = QuickMIS("CNX", $g_sImgTownHall)
+		If IsArray($aTH) And UBound($aTH) > 0 Then
+			_ArraySort($aTH, 1, 0, 0, 3)
+			For $i = 0 To UBound($aTH) - 1
+				SetLog("Found Image TH Level " & $aTH[$i][3] & " on " & $aTH[$i][1] & "," & $aTH[$i][2], $COLOR_INFO)
+				$x = $aTH[$i][1]
+				$y = $aTH[$i][2]
+				If $bVerify Then
+					SetLog("Verify TH", $COLOR_DEBUG)
+					Click($x, $y)
+					If _Sleep(500) Then Return
+					$aInfo = BuildingInfo(242, 477)
+					If $aInfo[1] = "Town Hall" Then
+						$iTHLevel =  $aInfo[2]
+						$aiTHPos[0] = $x
+						$aiTHPos[1] = $y
+						$bRet = True
+						ClickAway()
+						ExitLoop
+					EndIf
+				Else
+					$iTHLevel = $aTH[$i][3]
+					$aiTHPos[0] = $x
+					$aiTHPos[1] = $y
+					$bRet = True
+					ClickAway()
+					ExitLoop
+				EndIf
+				ClickAway()
+			Next
+			$g_aiTownHallPos = $aiTHPos
+			$g_iTownHallLevel = $iTHLevel
+			SetLog("Set TH Pos : " & _ArrayToString($g_aiTownHallPos))
+			SetLog("Set TH Level : " & $g_iTownHallLevel)
+		Else 
+			If _Sleep(1500) Then Return
+			ContinueLoop
+		EndIf
+		
+		If $bRet Then ExitLoop
+	Next
+	Return $bRet
+EndFunc

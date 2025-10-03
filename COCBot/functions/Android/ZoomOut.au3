@@ -20,6 +20,7 @@ Func ZoomOut($bZoomOutFirst = False) ;Zooms out
 	Static $s_bZoomOutActive = False
 	If $s_bZoomOutActive Then Return ; recursive not allowed here
 	$s_bZoomOutActive = True
+	If Not $g_bRunState Then Return
 	If $bZoomOutFirst Then AndroidZoomOut()
 	Local $Result = _ZoomOut()
 	$s_bZoomOutActive = False
@@ -97,6 +98,7 @@ Func ZoomOutHelper($caller = "Default")
 	Local $x = 0, $y = 0
 	Local $bIsMain = False
 	Local $Dir = "", $aOffset, $bRet = False
+	If Not $g_bRunState Then Return
 	
 	If $caller = "VillageSearch" Then 
 		$bIsMain = True
@@ -231,6 +233,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $exitCount = 80
 	Local $delayCount = 20
 	Local $aPicture = ["", 0, 0, 0, 0]
+	If Not $g_bRunState Then Return
 	
 	;If Not $g_bStayOnBuilderBase Then ZoomOutHelper($sFunc)
 	;If $g_bStayOnBuilderBase Then ZoomOutHelperBB($sFunc)
