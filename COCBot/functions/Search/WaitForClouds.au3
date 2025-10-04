@@ -67,6 +67,6 @@ Func WaitForClouds()
 		EndIf
 		If _Sleep(500) Then Return
 	WEnd
-	If _Sleep(500) Then Return
+	If _Sleep(1000) Then Return
 	SetDebugLog("End WaitForClouds", $COLOR_DEBUG1)
 EndFunc   ;==>WaitForClouds

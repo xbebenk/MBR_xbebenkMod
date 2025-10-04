@@ -767,10 +767,6 @@ Func chkWallOnly1Builder()
 	$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
 EndFunc   ;==>chkWallOnly1Builder
 
-Func chkWallOnlyGEFull()
-	$g_bChkWallOnlyGEFull = (GUICtrlRead($g_hChkWallOnlyGEFull) = $GUI_CHECKED)
-EndFunc   ;==>chkWallOnlyGEFull
-
 Func btnWalls()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True

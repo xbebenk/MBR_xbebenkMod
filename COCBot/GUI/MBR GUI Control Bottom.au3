@@ -72,12 +72,11 @@ Func Initiate()
 		If Not $g_bRunState Then Return
 
 		AndroidShield("Initiate", True)
-		checkMainScreen()
-		If Not $g_bRunState Then Return
-
-		ZoomOut()
-		If Not $g_bRunState Then Return
-
+		If $g_bIsHidden Then 
+			SetLog("$g_bIsHidden : " & String($g_bIsHidden), $COLOR_DEBUG)
+			reHide()
+		EndIf
+		
 		If Not $g_bSearchMode Then
 			BotDetectFirstTime()
 			If Not $g_bRunState Then Return

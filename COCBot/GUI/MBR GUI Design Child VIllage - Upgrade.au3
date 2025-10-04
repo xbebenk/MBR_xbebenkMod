@@ -41,7 +41,7 @@ Global $g_hTxtUpgrMinGold = 0, $g_hTxtUpgrMinElixir = 0, $g_hTxtUpgrMinDark = 0
 ; Walls
 Global $g_hChkWalls = 0, $g_hTxtWallMinGold = 0, $g_hTxtWallMinElixir = 0, $g_hChkUseGold = 0, $g_hChkUseElixir = 0, $g_hChkUseElixirGold = 0
 Global $g_hChkSaveWallBldr = 0
-Global $g_hBtnFindWalls = 0, $g_hChkOnly1Builder = 0, $g_hChkWallOnlyGEFull = 0
+Global $g_hBtnFindWalls = 0, $g_hChkOnly1Builder = 0
 Global $g_hCmbWalls[3] = [0, 0, 0]
 Global $g_hLblWallCost[3] = [0, 0, 0]
 
@@ -596,14 +596,7 @@ Func CreateWallsSubTab()
 			GUICtrlSetState(-1, $GUI_ENABLE)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkWallOnly1Builder")
-		$y += 20
-		$g_hChkWallOnlyGEFull = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "chkWallOnlyGEFull", "Only Upgrade If Gold or Elixir is Full"), $x + 30, $y, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkSaveWallBldr_Info_01", "Only Upgrade Wall If Gold or Elixir is Full") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkSaveWallBldr_Info_02", "Make sure that wall upgrade is last priority"))
-			GUICtrlSetState(-1, $GUI_ENABLE)
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
-			GUICtrlSetOnEvent(-1, "chkWallOnlyGEFull")
-
+		
 		$x = 220
 		
 

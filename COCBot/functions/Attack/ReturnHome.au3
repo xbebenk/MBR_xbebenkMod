@@ -142,14 +142,17 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 	For $i = 1 To 5
 		SetDebugLog("Wait for End Fight Scene to appear #" & $i)
 		Select
+			Case ReturnHomeMainPage()
+				Return
 			Case IsReturnHomeBattlePage(True)
+				If _Sleep(2000) Then Return
 				ContinueLoop
 			Case IsReturnHomeChestPage()
 				SetLog("Chest Bonus gained!", $COLOR_SUCCESS)
+				If _Sleep(2000) Then Return
 				ContinueLoop
 			Case StarBonus()
 				SetLog("Star Bonus window closed chief!", $COLOR_SUCCESS)
-			Case ReturnHomeMainPage()
 				Return
 		EndSelect
 		If _Sleep(250) Then Return
@@ -163,7 +166,7 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 EndFunc   ;==>ReturnHome
 
 Func ReturnHomeMainPage()
-	If CheckMainScreen(False, $g_bStayOnBuilderBase,"ReturnHome-1") Then
+	If IsMainPage(1) Then
 		SetLogCentered(" BOT LOG ", Default, Default, True)
 		Return True
 	EndIf
@@ -171,16 +174,10 @@ Func ReturnHomeMainPage()
 EndFunc   ;==>ReturnHomeMainPage
 
 Func StarBonus()
-	SetLog("Begin Star Bonus window check", $COLOR_DEBUG1)
-	
 	Local $aStarBonus1[4] = [135, 92, 0x254963, 20] ; Black Balloon
 	Local $aStarBonus2[4] = [676, 87, 0x1995F8, 20] ; Blue header covering elixir bar
 	
-	If _Sleep(500) Then Return
-
-	; Verify actual star bonus window open
 	If _CheckPixel($aStarBonus1, $g_bCapturePixel, Default, "Starbonus1") And _CheckPixel($aStarBonus2, $g_bCapturePixel, Default, "Starbonus2") Then
-		; Find and Click Okay button
 		Click(425, 535, 1, 100, "StarBonus: Click Okay Button") ; Click Okay Button
 		If _Sleep(500) Then Return
 		Return True

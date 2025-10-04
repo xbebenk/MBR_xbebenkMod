@@ -86,6 +86,9 @@ Global $aQueenHealth = [-1, 569, 0x00D500, 15, 8]
 Global $aWardenHealth = [-1, 569, 0x00D500, 15, 3]
 ; Champion Health Bar, check at the middle of the bar, index 4 is x-offset added to middle of health bar
 Global $aChampionHealth = [-1, 569, 0x00D500, 15, 5]
+; Champion Health Bar, check at the middle of the bar, index 4 is x-offset added to middle of health bar
+Global $aMinionPHealth = [-1, 569, 0x00D500, 15, 5]
+
 
 ; attack report... stars won
 Global $aWonOneStarAtkRprt[4] = [325, 180, 0xC8CaC4, 30] ; Center of 1st Star reached attacked village

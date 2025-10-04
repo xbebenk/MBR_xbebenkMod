@@ -42,37 +42,7 @@ Func UpgradeWall($bTest = False)
 	EndIf
 	If _Sleep(50) Then Return
 
-	;If $g_bChkWallOnlyGEFull Then
-	;	Local $tmp_GoldFull = isGoldFull(), $tmp_ElixFull = isElixirFull()
-	;
-	;	Switch $g_iUpgradeWallLootType
-	;		Case 0 ;Gold
-	;			If Not $tmp_GoldFull Then
-	;				SetLog("Gold is not full, skipping upgrade wall!", $COLOR_INFO)
-	;				Return
-	;			EndIf
-	;		Case 1 ;Elixir
-	;			If Not $tmp_ElixFull Then
-	;				SetLog("Elixir is not full, skipping upgrade wall!", $COLOR_INFO)
-	;				Return
-	;			EndIf
-	;		Case 2 ;Elixir Then Gold
-	;			If Not ($tmp_GoldFull Or $tmp_ElixFull) Then
-	;				SetLog("Gold or Elixir is not full! Skipping wall upgrade!", $COLOR_INFO)
-	;				Return
-	;			EndIf
-	;	EndSwitch
-	;
-	;	If $tmp_GoldFull And $tmp_ElixFull Then
-	;		$g_WallGEFull = 2
-	;	ElseIf $tmp_GoldFull Then
-	;		$g_WallGEFull = 1
-	;	Else ;elix full
-	;		$g_WallGEFull = 0
-	;	EndIf
-	;EndIf
-
-	If $GoUpgrade Then 
+	If $GoUpgrade Then
 		If NewUpgradeWall() Then Return NewUpgradeWall()
 	EndIf
 	VillageReport(True, True)
@@ -664,7 +634,6 @@ Func UpgradeWallElixir($iWallCost = $g_iWallCost, $bTest = False)
 EndFunc   ;==>UpgradeWallElixir
 
 Func IsGoldEnough($iWallCost = $g_aUpgradeWall[0])
-	If $g_bChkWallOnlyGEFull And Not ($g_WallGEFull = 1 or $g_WallGEFull = 2) Then Return False
 	Local $iWallSave = $g_iUpgradeWallMinGold
 	If $g_iSaveGoldWall > 0 Then $iWallSave = $g_iSaveGoldWall
 	Local $EnoughGold = True
@@ -678,7 +647,6 @@ Func IsGoldEnough($iWallCost = $g_aUpgradeWall[0])
 EndFunc
 
 Func IsElixEnough($iWallCost = $g_aUpgradeWall[0])
-	If $g_bChkWallOnlyGEFull And Not ($g_WallGEFull = 0 or $g_WallGEFull = 2) Then Return False
 	Local $iWallSave = $g_iUpgradeWallMinElixir
 	If $g_iSaveElixWall > 0 Then $iWallSave = $g_iSaveElixWall
 	Local $EnoughElix = True
@@ -696,7 +664,7 @@ Func NewUpgradeWall()
 	Local $bCanUseElix = False, $bCanUseGold = False
 	Local $aBtnCoord[4] = [190, 500, 750, 600]
 	Local $bRet = True
-	
+
 	If $g_bChkRushTH Then
 		SetLog("RushTH Enabled", $COLOR_ACTION)
 		If $g_iUpgradeWallMinGold < $g_aiTHCost[$g_iTownHallLevel] Then
@@ -718,13 +686,13 @@ Func NewUpgradeWall()
 			EndIf
 		EndIf
 	EndIf
-	
+
 	For $i = 1 To 2
-	
+
 		VillageReport(True, True)
 		Local $iCanUseGold = $g_aiCurrentLoot[$eLootGold] - $g_iUpgradeWallMinGold
 		Local $iCanUseElix = $g_aiCurrentLoot[$eLootElixir] - $g_iUpgradeWallMinElixir
-		
+
 		If $iCanUseGold < 1 Then
 			SetLog("Skip using Gold, not enough resource", $COLOR_INFO)
 		Else
@@ -747,11 +715,11 @@ Func NewUpgradeWall()
 		Local $aDel[1] = [0], $x, $y, $bWallFound = False, $aWallLevel, $aButton
 		Local $iClickTimesGold = 0, $iClickTimesElix = 0, $iPlus10Gold = 0, $iPlus10Elix = 0, $iPlus1Gold = 0, $iPlus1Elix = 0
 		Local $aGoldButton[2], $aElixButton[2], $aPlusButton[2]
-		
+
 		$bWallFound = SearchWall($aWallLevel)
 		If Not $bWallFound Then Return
 		If Not $g_bRunState Then Return
-		
+
 		If $bWallFound Then
 			Local $bPlusSignFound = False
 			$aButton = QuickMIS("CNX", $g_sImgCheckWallDirUpgradeButton, $aBtnCoord[0], $aBtnCoord[1], $aBtnCoord[2], $aBtnCoord[3])
@@ -778,7 +746,7 @@ Func NewUpgradeWall()
 					If $aButton[$i][0] = "Elix" Then $bCanUseElix = True
 				Next
 			EndIf
-			
+
 			If Not $g_bRunState Then Return
 			Local $iWallCanUpgradeGold = $bCanUseGold ? Floor(($iCanUseGold - $g_aiWallCost[$aWallLevel[2]]) / $g_aiWallCost[$aWallLevel[2]]) : 0
 			Local $iWallCanUpgradeElix = $bCanUseElix ? Floor(($iCanUseElix - $g_aiWallCost[$aWallLevel[2]]) / $g_aiWallCost[$aWallLevel[2]]) : 0
@@ -788,13 +756,13 @@ Func NewUpgradeWall()
 			SetLog("CanUseElix = " & String($bCanUseElix), $COLOR_DEBUG)
 			If $bCanUseGold Then SetLog("Can upgrade = " & $iWallCanUpgradeGold & " wall Level " & $aWallLevel[2] & " with Gold", $COLOR_INFO)
 			If $bCanUseElix Then SetLog("Can upgrade = " & $iWallCanUpgradeElix & " wall Level " & $aWallLevel[2] & " with Elix", $COLOR_INFO)
-			
+
 			If $bCanUseGold Or $bCanUseElix Then
 				If ($iWallCanUpgradeGold > 1 Or $iWallCanUpgradeElix > 1) And $bPlusSignFound Then
 					SetLog("Trying Upgrade 10+ Wall", $COLOR_ACTION)
 					ClickP($aPlusButton)
 					If _Sleep(1000) Then Return
-					
+
 					Switch $g_iUpgradeWallLootType
 						Case 0 ;Gold
 							If $bCanUseGold Then
@@ -809,21 +777,21 @@ Func NewUpgradeWall()
 								$iPlus1Elix = $iWallCanUpgradeElix
 							EndIf
 						Case 2 ;Elixir Then Gold
-							If $bCanUseElix Then 
+							If $bCanUseElix Then
 								$iClickTimesElix = $iWallCanUpgradeElix / 10 ; can we upgrade 10+ for gold
 								$iPlus10Elix = Floor($iClickTimesElix)
 								$iPlus1Elix = $iWallCanUpgradeElix
 							EndIf
-							If $bCanUseGold Then 
+							If $bCanUseGold Then
 								$iClickTimesGold = $iWallCanUpgradeGold / 10 ; can we upgrade 10+ for elix
 								$iPlus10Gold = Floor($iClickTimesGold)
 								$iPlus1Gold = $iWallCanUpgradeGold
 							EndIf
 					EndSwitch
-					
+
 					SetDebugLog("Plus10Gold : " & $iPlus10Gold & ", Plus10Elix : " & $iPlus10Elix, $COLOR_DEBUG)
 					SetDebugLog("Plus1Gold : " & $iPlus1Gold & ", Plus1Elix : " & $iPlus1Elix, $COLOR_DEBUG)
-					
+
 					$aButton = QuickMIS("CNX", $g_sImgCheckWallDirUpgradeButton, $aBtnCoord[0], $aBtnCoord[1], $aBtnCoord[2], $aBtnCoord[3])
 					If IsArray($aButton) And UBound($aButton) > 0 Then
 						For $i = 0 To UBound($aButton) - 1
@@ -840,7 +808,7 @@ Func NewUpgradeWall()
 						Next
 					EndIf
 					If Not $g_bRunState Then Return
-					
+
 					Local $iCountWallUpgrade = 1, $bPlusButtonFound = False
 					If $iPlus10Gold > 0 Or $iPlus10Elix > 0 Then
 						SetLog("Looking for +10 Button", $COLOR_DEBUG)
@@ -858,7 +826,7 @@ Func NewUpgradeWall()
 									EndIf
 								Next
 								;click Upgrade button
-								If $bPlusButtonFound Then 
+								If $bPlusButtonFound Then
 									ClickP($aGoldButton)
 									PushMsg("UpgradeWithGold")
 									$g_iNbrOfWallsUppedElixir += 10 * $iCountWallUpgrade
@@ -881,7 +849,7 @@ Func NewUpgradeWall()
 									EndIf
 								Next
 								;click Upgrade button
-								If $bPlusButtonFound Then 
+								If $bPlusButtonFound Then
 									ClickP($aElixButton)
 									PushMsg("UpgradeWithElixir")
 									$g_iNbrOfWallsUppedGold += 10 * $iCountWallUpgrade
@@ -905,7 +873,7 @@ Func NewUpgradeWall()
 										EndIf
 									Next
 									;click Upgrade button
-									If $bPlusButtonFound Then 
+									If $bPlusButtonFound Then
 										ClickP($aElixButton)
 										PushMsg("UpgradeWithElixir")
 										$g_iNbrOfWallsUppedElixir += 10 * $iCountWallUpgrade
@@ -913,7 +881,7 @@ Func NewUpgradeWall()
 										$g_iCostElixirWall += 10 * $iCountWallUpgrade * $g_aiWallCost[$aWallLevel[2]]
 										SetLog("Upgraded wall with Elix: " & $g_iNbrOfWallsUpped, $COLOR_SUCCESS)
 										SetLog("Cost : " & _NumberFormat($g_iCostElixirWall), $COLOR_SUCCESS)
-										$bCanUseGold = False ;already upgrade with elixir let restart count resource 
+										$bCanUseGold = False ;already upgrade with elixir let restart count resource
 									EndIf
 								ElseIf $bCanUseGold = True And $iPlus10Gold > 0 Then
 									SetLog("Try +10 for Gold upgrade", $COLOR_ACTION)
@@ -929,7 +897,7 @@ Func NewUpgradeWall()
 										EndIf
 									Next
 									;click Upgrade button
-									If $bPlusButtonFound Then 
+									If $bPlusButtonFound Then
 										ClickP($aGoldButton)
 										PushMsg("UpgradeWithGold")
 										$g_iNbrOfWallsUppedElixir += 10 * $iCountWallUpgrade
@@ -941,13 +909,13 @@ Func NewUpgradeWall()
 								EndIf
 						EndSwitch
 						If _Sleep(1000) Then Return
-						If $bPlusButtonFound Then 
+						If $bPlusButtonFound Then
 							If isOKCancelPage() Then ClickP($aConfirmSurrender) ;click confirm upgrade OK button
 							UpdateStats()
 							Return $bRet
 						EndIf
 					EndIf
-					
+
 					If Not $g_bRunState Then Return
 					If $iPlus1Gold > 0 Or $iPlus1Elix > 0 Then
 						SetLog("Looking for +1 Button", $COLOR_DEBUG)
@@ -966,7 +934,7 @@ Func NewUpgradeWall()
 									EndIf
 								Next
 								;click Upgrade button
-								If $bPlusButtonFound Then 
+								If $bPlusButtonFound Then
 									ClickP($aGoldButton)
 									PushMsg("UpgradeWithGold")
 									$g_iNbrOfWallsUppedGold += $iCountWallUpgrade
@@ -989,7 +957,7 @@ Func NewUpgradeWall()
 									EndIf
 								Next
 								;click Upgrade button
-								If $bPlusButtonFound Then 
+								If $bPlusButtonFound Then
 									ClickP($aElixButton)
 									PushMsg("UpgradeWithElixir")
 									$g_iNbrOfWallsUppedElixir += $iCountWallUpgrade
@@ -1013,7 +981,7 @@ Func NewUpgradeWall()
 										EndIf
 									Next
 									;click Upgrade button
-									If $bPlusButtonFound Then 
+									If $bPlusButtonFound Then
 										ClickP($aElixButton)
 										PushMsg("UpgradeWithElixir")
 										$g_iNbrOfWallsUppedElixir += $iCountWallUpgrade
@@ -1021,7 +989,7 @@ Func NewUpgradeWall()
 										$g_iCostElixirWall += $iCountWallUpgrade * $g_aiWallCost[$aWallLevel[2]]
 										SetLog("Upgraded wall with Elixir: " & $iCountWallUpgrade, $COLOR_SUCCESS)
 										SetLog("Cost : " & _NumberFormat($g_iCostElixirWall), $COLOR_SUCCESS)
-										$bCanUseGold = False ;already upgrade with elixir let restart count resource 
+										$bCanUseGold = False ;already upgrade with elixir let restart count resource
 									EndIf
 								ElseIf $bCanUseGold = True And $iPlus1Gold > 0 Then
 									SetLog("Try +1 for Gold upgrade", $COLOR_ACTION)
@@ -1037,7 +1005,7 @@ Func NewUpgradeWall()
 										EndIf
 									Next
 									;click Upgrade button
-									If $bPlusButtonFound Then 
+									If $bPlusButtonFound Then
 										ClickP($aGoldButton)
 										PushMsg("UpgradeWithGold")
 										$g_iNbrOfWallsUppedGold += $iCountWallUpgrade
@@ -1049,7 +1017,7 @@ Func NewUpgradeWall()
 								EndIf
 						EndSwitch
 						If _Sleep(1000) Then Return
-						If $bPlusButtonFound Then 
+						If $bPlusButtonFound Then
 							If isOKCancelPage() Then ClickP($aConfirmSurrender) ;click confirm upgrade OK button
 							UpdateStats()
 							Return $bRet
@@ -1074,7 +1042,7 @@ Func NewUpgradeWall()
 							$g_iNbrOfWallsUpped += 1
 							$g_iCostElixirWall += $g_aiWallCost[$aWallLevel[2]]
 						Case 2
-							Select 
+							Select
 								Case $bCanUseElix = True And $iWallCanUpgradeElix > 0
 									SetLog("Upgrading 1 Wall for Elix upgrade", $COLOR_ACTION)
 									ClickP($aElixButton)
@@ -1113,10 +1081,10 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 	Local $aDel[1] = [0], $x, $y
 	Local $iWallLevelToDelete = $g_iTownHallLevel
 	Local $aWall = QuickMIS("CNX", $g_sImgCheckWallDir)
-	
+
 	SetLog("Search Wall on Village", $COLOR_DEBUG)
 	ZoomOut()
-	
+
 	If IsArray($aWall) And UBound($aWall) > 0 Then
 		For $i = 0 To UBound($aWall) - 1
 			If StringInStr($aWall[$i][3], "A") Then $aWall[$i][3] = Number(StringReplace($aWall[$i][3], "A", ""))
@@ -1124,21 +1092,21 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 			If StringInStr($aWall[$i][3], "C") Then $aWall[$i][3] = Number(StringReplace($aWall[$i][3], "C", ""))
 			If StringInStr($aWall[$i][3], "D") Then $aWall[$i][3] = Number(StringReplace($aWall[$i][3], "D", ""))
 		Next
-		
+
 		If $g_iTownHallLevel >= 9 Then $iWallLevelToDelete = $g_iTownHallLevel + 1
 		For $i = 0 To UBound($aWall) - 1
 			If $aWall[$i][3] >= $iWallLevelToDelete Then _ArrayAdd($aDel, $i) ;wall level >= TH level, should except this
 		Next
-		
+
 		$aDel[0] = UBound($aDel) - 1
 		_ArrayDelete($aWall, $aDel) ;delete wall level which same or higher than TH level
 		_ArraySort($aWall, 0, 0, 0, 3) ;short wall level ascending
-		
+
 		SetLog("Your TownHall Level: " & $g_iTownHallLevel & ", Exluding Wall Level >= " & $iWallLevelToDelete, $COLOR_INFO)
 		SetLog("Found " & UBound($aWall) - 1 & " Wall on Village", $COLOR_DEBUG)
-		
+
 		If $bDisplayArray Then _ArrayDisplay($aWall)
-		
+
 		For $i = 0 To UBound($aWall) - 1
 			If _Sleep(50) Then Return
 			$x = $aWall[$i][1]
@@ -1159,7 +1127,7 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 			SetDebugLog("Wrong wall Level " & $iWallLevel & " detected, coord outside diamond:" & $x & "," & $y, $COLOR_DEBUG)
 		Next
 	EndIf
-	If $bWallFound Then 
+	If $bWallFound Then
 		SetLog("Wall Level : " & $aWallLevel[2], $COLOR_SUCCESS)
 		SetLog("Wall Cost  : " & _NumberFormat($g_aiWallCost[$aWallLevel[2]]), $COLOR_SUCCESS)
 		SetLog("Min Gold Save : " & _NumberFormat($g_iUpgradeWallMinGold), $COLOR_INFO)

@@ -340,7 +340,7 @@ Func ClickAccountSCID($iAccount = 2)
 		_ArraySort($aAccount, 0, 0, 0, 2) ;short wall level ascending
 		
 		For $i = 0 To UBound($aAccount) - 1
-			SetLog("Bootom Splitter on : " & $aAccount[$i][1] & "," & $aAccount[$i][2], $COLOR_DEBUG)
+			SetLog("Bottom Splitter on : " & $aAccount[$i][1] & "," & $aAccount[$i][2], $COLOR_DEBUG)
 		Next
 		
 		

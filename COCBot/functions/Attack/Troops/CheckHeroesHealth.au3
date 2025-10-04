@@ -151,7 +151,7 @@ Func CheckHeroesHealth()
 		EndIf
 
 		If $g_iActivateChampion = 0 Or $g_iActivateChampion = 2 And ($g_aHeroesTimerActivation[$eHeroRoyalChampion] = 0 Or __TimerDiff($g_aHeroesTimerActivation[$eHeroRoyalChampion]) > $DELAYCHECKHEROESHEALTH) Then
-			If $g_bCheckMinionPPower Then
+			If $g_bCheckChampionPower Then
 				Local $aChampionHealthCopy = $aChampionHealth
 				Local $aSlotPosition = GetSlotPosition($TempChampionSlot)
 				$aChampionHealthCopy[0] = $aSlotPosition[0] - $aChampionHealthCopy[4] ; Slot11+
@@ -161,12 +161,12 @@ Func CheckHeroesHealth()
 					SetLog("Royal Champion is getting weak, Activating Royal Champion's ability", $COLOR_INFO)
 					SelectDropTroop($TempChampionSlot, 2, Default, False) ; Slot11+
 					$g_iCSVLastTroopPositionDropTroopFromINI = $g_iChampionSlot
-					$g_bCheckMinionPPower = False
+					$g_bCheckChampionPower = False
 				EndIf
 			EndIf
 		EndIf
 		If $g_iActivateChampion = 1 Or $g_iActivateChampion = 2 Then
-			If $g_bCheckMinionPPower Then
+			If $g_bCheckChampionPower Then
 				If $g_aHeroesTimerActivation[$eHeroRoyalChampion] <> 0 Then
 					$aDisplayTime[$eHeroRoyalChampion] = Ceiling(__TimerDiff($g_aHeroesTimerActivation[$eHeroRoyalChampion]) / 1000) ; seconds
 				EndIf
@@ -174,7 +174,7 @@ Func CheckHeroesHealth()
 					SetLog("Activating Royal Champion's ability after " & $aDisplayTime[$eHeroRoyalChampion] & "'s", $COLOR_INFO)
 					SelectDropTroop($TempChampionSlot, 2, Default, False) ; Slot11+
 					$g_iCSVLastTroopPositionDropTroopFromINI = $g_iChampionSlot
-					$g_bCheckMinionPPower = False ; Reset check power flag
+					$g_bCheckChampionPower = False ; Reset check power flag
 					$g_aHeroesTimerActivation[$eHeroRoyalChampion] = 0 ; Reset Timer
 				EndIf
 			EndIf
@@ -186,30 +186,30 @@ Func CheckHeroesHealth()
 		EndIf
 
 		If $g_iActivateMinionP = 0 Or $g_iActivateMinionP = 2 And ($g_aHeroesTimerActivation[$eHeroMinionPrince] = 0 Or __TimerDiff($g_aHeroesTimerActivation[$eHeroMinionPrince]) > $DELAYCHECKHEROESHEALTH) Then
-			If $g_bCheckChampionPower Then
-				Local $aMinionPHealthCopy = $aChampionHealth
+			If $g_bCheckMinionPPower Then
+				Local $aMinionPHealthCopy = $aMinionPHealth
 				Local $aSlotPosition = GetSlotPosition($TempMinionPSlot)
 				$aMinionPHealthCopy[0] = $aSlotPosition[0] - $aMinionPHealthCopy[4] ; Slot11+
-				Local $ChampionPixelColor = _GetPixelColor($aMinionPHealthCopy[0], $aMinionPHealthCopy[1], $g_bCapturePixel)
-				SetDebugLog("Minion Prince _GetPixelColor(" & $aMinionPHealthCopy[0] & "," & $aMinionPHealthCopy[1] & "): " & $ChampionPixelColor, $COLOR_DEBUG)
-				If Not _CheckPixel2($aMinionPHealthCopy, $ChampionPixelColor, "Red+Blue") Then
+				Local $MinionPPixelColor = _GetPixelColor($aMinionPHealthCopy[0], $aMinionPHealthCopy[1], $g_bCapturePixel)
+				SetDebugLog("Minion Prince _GetPixelColor(" & $aMinionPHealthCopy[0] & "," & $aMinionPHealthCopy[1] & "): " & $MinionPPixelColor, $COLOR_DEBUG)
+				If Not _CheckPixel2($aMinionPHealthCopy, $MinionPPixelColor, "Red+Blue") Then
 					SetLog("Minion Prince is getting weak, Activating Minion Prince's ability", $COLOR_INFO)
 					SelectDropTroop($TempMinionPSlot, 2, Default, False) ; Slot11+
 					$g_iCSVLastTroopPositionDropTroopFromINI = $g_iMinionPSlot
-					$g_bCheckChampionPower = False
+					$g_bCheckMinionPPower = False
 				EndIf
 			EndIf
 		EndIf
 		If $g_iActivateMinionP = 1 Or $g_iActivateMinionP = 2 Then
-			If $g_bCheckChampionPower Then
+			If $g_bCheckMinionPPower Then
 				If $g_aHeroesTimerActivation[$eHeroMinionPrince] <> 0 Then
 					$aDisplayTime[$eHeroMinionPrince] = Ceiling(__TimerDiff($g_aHeroesTimerActivation[$eHeroMinionPrince]) / 1000) ; seconds
 				EndIf
 				If (Int($g_iDelayActivateChampion) / 1000) <= $aDisplayTime[$eHeroMinionPrince] Then
-					SetLog("Activating Royal Champion's ability after " & $aDisplayTime[$eHeroMinionPrince] & "'s", $COLOR_INFO)
+					SetLog("Activating Minion Prince's ability after " & $aDisplayTime[$eHeroMinionPrince] & "'s", $COLOR_INFO)
 					SelectDropTroop($TempMinionPSlot, 2, Default, False) ; Slot11+
 					$g_iCSVLastTroopPositionDropTroopFromINI = $g_iMinionPSlot
-					$g_bCheckChampionPower = False ; Reset check power flag
+					$g_bCheckMinionPPower = False ; Reset check power flag
 					$g_aHeroesTimerActivation[$eHeroMinionPrince] = 0 ; Reset Timer
 				EndIf
 			EndIf
