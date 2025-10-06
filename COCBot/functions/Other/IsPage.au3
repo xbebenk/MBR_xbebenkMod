@@ -181,26 +181,6 @@ Func IsMainChatOpenPage() ;main page open chat
 
 EndFunc   ;==>IsMainChatOpenPage
 
-Func IsClanInfoPage()
-
-	If IsPageLoop($aPerkBtn, 1) Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Clan Info Window OK**", $COLOR_ACTION)
-		Return True
-	EndIf
-
-	Local $result = _ColorCheck(_GetPixelColor(214, 106, True), Hex(0xFFFFFF, 6), 1) And _ColorCheck(_GetPixelColor(815, 58, True), Hex(0xD80402, 6), 5) ; if are not in a clan
-	If $result Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Clan Info Window OK**", $COLOR_ACTION)
-		SetLog("Join a Clan to donate and receive troops!", $COLOR_ACTION)
-		Return True
-	Else
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Clan Info Window FAIL**", $COLOR_ACTION)
-		If $g_bDebugImageSave Then SaveDebugImage("IsClanInfoPage")
-		Return False
-	EndIf
-
-EndFunc   ;==>IsClanInfoPage
-
 Func IsLaunchAttackPage()
 
 	If IsPageLoop($aFindMatchButton, 1) Then
@@ -303,13 +283,11 @@ EndFunc   ;==>IsPostDefenseSummaryPage
 Func IsMultiplayerTabOpen()
 	Local $result = False
 	
-	$result = WaitforPixel(790, 114, 791, 115, "FFFFFF", 10, 2, "IsMultiplayerTabOpen")
-	If Not $result Then 
-		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 97, 812, 136) Then $result = True
-	EndIf
+	$result = WaitforPixel(585, 65, 585, 66, "C59B73", 10, 2, "IsMultiplayerTabOpen")
+	If Not $result Then ClickAway("Right")
 	
 	If $result Then
-		If $g_bDebugSetlog Then SetLog("Found Multiplayer Window", $COLOR_ACTION)
+		If $g_bDebugSetlog Then SetLog("**IsMultiplayerTabOpen OK**", $COLOR_ACTION)
 		Return True
 	EndIf
 	Return False

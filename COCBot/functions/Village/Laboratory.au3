@@ -208,14 +208,14 @@ Func Laboratory($bDebug = False)
 						EndIf
 					Next
 				Else
-					SetLog("Not found Any Upgrade here, looking next", $COLOR_INFO)
+					SetLog("Not found Any Upgrade here, looking Next", $COLOR_INFO)
 				EndIf
 
 				If $bUpgradeFound Then
 					Return LaboratoryUpgrade($sUpgrade, $aCoord, $sCost, $bDebug) ; Return whether or not we successfully upgraded
 				EndIf
 				
-				$iCurPage = LabGoToPage($iCurPage, $iCurPage + 1) ; go to next page of upgrades
+				$iCurPage = LabGoToPage($iCurPage, $iCurPage + 1) ; go to Next page of upgrades
 				If _Sleep($DELAYLABORATORY2) Then Return
 			WEnd
 		EndIf
@@ -655,7 +655,36 @@ Func AutoLocateLab()
 				ClickAway()
 			EndIf
 		Next
-		
+		If $LabFound And $g_iTownHallLevel >= 9 Then
+			SetLog("check for Acvitave Lab Assistant", $COLOR_DEBUG1)
+			If QuickMIS("BFI", $g_sImgLabAssistant & "LabAssistantButton*", 190, 515, 500, 590) Then
+				If QuickMIS("BFI", $g_sImgLabAssistant & "Exclam*", 190, 515, 500, 590) Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					If _Sleep(5000) Then Return
+					For $i = 1 To 5
+						SetLog("Waiting Continue button #" & $i, $COLOR_ACTION)
+						If WaitforPixel(395, 575, 396, 576, "61922B", 20, 1) Then
+							SetLog("Found Button Continue", $COLOR_DEBUG1)
+							Click(430, 550) ;Click Continue
+							ExitLoop
+						EndIf
+						If _Sleep(500) Then Return
+					Next
+					
+					If _Sleep(2000) Then Return
+					For $i = 1 To 5
+						SetLog("Waiting FREE button #" & $i, $COLOR_ACTION)
+						If QuickMIS("BC1", $g_sImgLabAssistant, 530, 515, 600, 555) Then 
+							Click($g_iQuickMISX, $g_iQuickMISY)
+							SetLog("Activating Lab Assistant", $COLOR_SUCCESS)
+							ExitLoop
+						EndIf
+						If _Sleep(500) Then Return
+					Next
+					ClickAway()
+				EndIf
+			EndIf
+		EndIf
 	EndIf
 	Return $LabFound	
 EndFunc
@@ -686,14 +715,14 @@ Func UpgradeLabAny($bDebug = False)
 				EndIf
 			Next
 		Else
-			SetLog("Not found Any Upgrade here, looking next", $COLOR_INFO)
+			SetLog("Not found Any Upgrade here, looking Next", $COLOR_INFO)
 		EndIf
 		
 		If $bUpgradeFound Then
 			Return LaboratoryUpgrade($sUpgrade, $aCoord, $sCost, $bDebug) ; Return whether or not we successfully upgraded
 		EndIf
 		
-		$iCurPage = LabGoToPage($iCurPage, $iCurPage + 1) ; go to next page of upgrades
+		$iCurPage = LabGoToPage($iCurPage, $iCurPage + 1) ; go to Next page of upgrades
 		If _Sleep($DELAYLABORATORY2) Then Return
 	WEnd
 	

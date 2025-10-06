@@ -216,27 +216,25 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		If BBBarbarianHead("EndBattleBB") Then ExitLoop
 		
 		If $sTmpDamage = 100 Then
-
-			_SleepStatus(5000) ; wait if not going to second stage
-			
-			If BBBarbarianHead("EndBattleBB") Then
-				ExitLoop
-			EndIf
-			
-			_SleepStatus(10000); we are going to second stage, lets wait more
-			
+			_SleepStatus(15000) ; wait if not going to second stage
 			If ShouldStopAttackonCG() Then 
 				ReturnHomeDropTrophyBB(True, True, $realDamage)
 				ExitLoop
 			EndIf
+			If BBBarbarianHead("EndBattleBB") Then ExitLoop
 			
 			Local $aBBAttackBar = GetAttackBarBB(False, True)
-			If $g_bChkBBCustomArmyEnable Then 
-				CorrectAttackBarBB($aBBAttackBar) 
-				$aBBAttackBar = GetAttackBarBB(False, True) ;correct army troop doesnt have new quantities (if troop changes) so read again the attackbar
-				AttackBB($aBBAttackBar, True)
+			If IsArray($aBBAttackBar) And Ubound($aBBAttackBar) > 0 Then 
+				If $g_bChkBBCustomArmyEnable Then 
+					CorrectAttackBarBB($aBBAttackBar) 
+					$aBBAttackBar = GetAttackBarBB(False, True) ;correct army troop doesnt have new quantities (if troop changes) so read again the attackbar
+					AttackBB($aBBAttackBar, True)
+				Else
+					AttackBB($aBBAttackBar, True)
+				EndIf
 			Else
-				AttackBB($aBBAttackBar, True)
+				SetLog("Cannot detect troop on attackbar", $COLOR_ERROR)
+				ExitLoop
 			EndIf
 			If _Sleep(5000) Then Return ; Add some delay for troops making some damage
 			$sTmpDamage = 0

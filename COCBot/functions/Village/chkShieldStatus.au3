@@ -192,7 +192,7 @@ Func getShieldInfo()
 				SetLog("Guard Active", $COLOR_DEBUG)
 		EndSelect
 	Else
-		SetLog("Sorry, Your monkey not code anymore", $COLOR_ERROR) 
+		SetLog("Sorry, Your monkey not code anymore", $COLOR_DEBUG2) 
 		Return
 	EndIf
 	

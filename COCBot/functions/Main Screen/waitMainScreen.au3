@@ -49,7 +49,6 @@ Func waitMainScreen() ;Waits for main screen to popup
 	SaveDebugImage("WaitMainScreenTimeout", True) 
 	$g_iMainScreenTimeoutCount += 1
 	If $g_iMainScreenTimeoutCount > 2 Then RebootAndroid()
-	If $g_sAndroidEmulator = "Bluestacks5" Then NotifBarDropDownBS5()
 	CloseCoC(True) ;only close coc
 	
 EndFunc   ;==>waitMainScreen

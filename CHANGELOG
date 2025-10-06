@@ -14,9 +14,18 @@
 * ClanGames
 * Switch Account (SCID and Shared_Prefs)
 * 
-*** What didn't work ***
-* Army Training
-* Place New Wall on village
-* Hero Upgrade
-* Building Upgrade
-
+*** Changes ***
+* Only Support with Autoit 3.3.16
+* Add Hero Hall Tutorial Handling
+* Add Lab Assistant Tutorial Handling
+* Hide Android will only work on WIN10 and WIN11
+* Remove Donation Schedule
+* Remove Train Previous Army
+* Remove Upgrade wall only Gold and Elix full
+* Remove Upgrade wall with level (try all level)
+* Fix Sale Magic Item
+* Fix Sale Full Magic Item
+* Fix Remove obstacles (Main/BB)
+* Fix Attack Resource Read
+* Fix ClanGames Auto Collect Reward 
+* Fix Switch Account SCID (support 16 account)

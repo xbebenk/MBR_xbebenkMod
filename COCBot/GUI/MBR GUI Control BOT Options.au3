@@ -803,7 +803,6 @@ Func btnTestImage()
 		SetLog("Testing waitMainScreenMini DONE, $Result=" & $result, $COLOR_SUCCESS)
 
 		SetLog("Testing WaitForClouds...", $COLOR_SUCCESS)
-		SetLog("$aNoCloudsAttack pixel check: " & _CheckPixel($aNoCloudsAttack, $g_bCapturePixel))
 		SetLog("Testing WaitForClouds DONE", $COLOR_SUCCESS)
 
 	Next

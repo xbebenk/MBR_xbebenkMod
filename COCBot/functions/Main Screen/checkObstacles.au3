@@ -236,7 +236,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 	If Not $g_bRunState Then Return
-	;If $bBuilderBase Then CheckBB20Tutor()
+	
 	If $bBuilderBase Then CheckBB20LootCartTutor()
 	If Not $bBuilderBase Then
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;handle for clan capital tutorial
@@ -245,6 +245,8 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			Return False
 		EndIf
 	EndIf
+	
+	CheckHeroHallTutor()
 
 	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ; if bot started or situated on clan capital map, and need to go back to main village
 		SetLog("checkObstacles: Found Clan Capital Map, Returning Home", $COLOR_ACTION)
@@ -611,6 +613,59 @@ Func SearchUnplacedBuilding()
 			Return True
 		EndIf
 	EndIf
+EndFunc
+
+Func CheckHeroHallTutor()
+	Local $bRet = False
+	
+	SetDebugLog("Checking HeroHall Tutor")
+	If QuickMIS("BC1", $sImgHeroHallTutor, 375, 300, 485, 385) Then
+		SetLog("Detected Hero Hall Tutor... ", $COLOR_DEBUG)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _SleepStatus(5000) Then Return
+	Else 
+		SetDebugLog("No HeroHall Tutor")
+		Return $bRet
+	EndIf
+	
+	For $i = 1 To 10
+		SetLog("Waiting Chat Tutor #" & $i, $COLOR_ACTION)
+		If WaitforPixel(400, 480, 401, 481, "FFFFFF", 10, 1) Then
+			SetLog("Detected Chat Tutor... ", $COLOR_DEBUG)
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _SleepStatus(5000) Then Return
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+	Next
+	
+	SetDebugLog("Checking King Change Button")
+	If QuickMIS("BC1", $sImgHeroHallTutor, 530, 510, 610, 590) Then
+		SetLog("Detected King Change button... ", $COLOR_DEBUG)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		SetLog("Click King Button", $COLOR_ACTION)
+		If _Sleep(1000) Then return
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		SetLog("Click King Button again", $COLOR_ACTION)
+		If _SleepStatus(4000) Then Return
+		Click(35, 525)
+		SetLog("Click Army Button", $COLOR_ACTION)
+		If _SleepStatus(4000) Then Return
+		Click(130, 385)
+		SetLog("Click King", $COLOR_ACTION)
+		Click(130, 385)
+		SetLog("Click King again", $COLOR_ACTION)
+		ClickAway()
+		If _Sleep(1000) Then Return
+		ClickAway()
+		AndroidZoomOut()
+		$bRet = True
+	Else 
+		SetDebugLog("No HeroHall Tutor")
+		Return $bRet
+	EndIf
+	
+	Return $bRet
 EndFunc
 
 Func CheckPetHouseTutorial()

@@ -162,6 +162,7 @@ EndFunc   ;==>btnStart
 Func btnStop()
 	If $g_bRunState Then
 		; always invoked in MyBot.run.au3!
+		SetLog("Button Stop pressed", $COLOR_DEBUG)
 		EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
 		$g_bRunState = False ; Exit BotStart()
 	EndIf
@@ -180,10 +181,12 @@ Func btnSearchMode()
 EndFunc   ;==>btnSearchMode
 
 Func btnPause($bRunNow = True)
+	SetLog("Button Pause pressed", $COLOR_DEBUG)
 	TogglePause()
 EndFunc   ;==>btnPause
 
 Func btnResume()
+	SetLog("Button Resume pressed", $COLOR_DEBUG)
 	TogglePause()
 EndFunc   ;==>btnResume
 

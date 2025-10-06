@@ -11,37 +11,57 @@
 ; ===============================================================================================================================
 #include-once
 
-Func GetResources($bLog = True, $pMatchMode = -1) ;Reads resources
+Func GetResources($bLog = True) ;Reads resources
 	Static $iStuck = 0, $iSearchGold2 = 0, $iSearchElixir2 = 0
-
-	If _Sleep($DELAYRESPOND) Then Return
+	Local $xRead = 48, $yGold = 0, $yElix = 0, $yDE = 0, $yTrophy = 0
 	$g_iSearchGold = ""
 	$g_iSearchElixir = ""
 	$g_iSearchDark = ""
 	$g_iSearchTrophy = ""
-
+	
+	If _Sleep($DELAYRESPOND) Then Return
 	SuspendAndroid()
-
-	Local $iCount = 0, $x = 48, $y = 147
-	While (getTrophyVillageSearch($x, $y) = "")
-		$iCount += 1
-		If _Sleep(200) Then Return
-		If _PixelSearch($aAtkHasDarkElixir[0], $aAtkHasDarkElixir[1], $aAtkHasDarkElixir[0] + 2, $aAtkHasDarkElixir[1] + 1, Hex($aAtkHasDarkElixir[2], 6), $aAtkHasDarkElixir[3], True, "GetResources") Then $y = 175		
-		If $iCount >= 50 Or IsProblemAffect() Then ExitLoop ;10sec
-	WEnd
-
-	If _Sleep($DELAYRESPOND) Then Return
-	$g_iSearchGold = getGoldVillageSearch(48, 76)
-	If _Sleep($DELAYRESPOND) Then Return
-	$g_iSearchElixir = getElixirVillageSearch(48, 104)
-	If _Sleep($DELAYRESPOND) Then Return
-	If _CheckPixel($aAtkHasDarkElixir, $g_bCapturePixel, Default, "HasDarkElixir1") Or _ColorCheck(_GetPixelColor(31, 150, True), Hex(0x2B2225, 6), 10)  Then ; check if the village have a Dark Elixir Storage
-		$g_iSearchDark = getDarkElixirVillageSearch(48, 132)
-		$g_iSearchTrophy = getTrophyVillageSearch(45, 174)
-	Else
-		$g_iSearchDark = "N/A"
-		$g_iSearchTrophy = getTrophyVillageSearch(48, 175)
+	
+	Local $aResource = QuickMIS("CNX", $g_sImgResourceAttack, 20, 70, 50, 185)
+	If UBound($aResource) < 4 Then 
+		If _Sleep(1000) Then Return
+		$aResource = QuickMIS("CNX", $g_sImgResourceAttack, 20, 70, 50, 185)		
 	EndIf
+	
+	If IsArray($aResource) And UBound($aResource) > 0 Then
+		_ArraySort($aResource, 0, 0, 0, 2)
+		SetDebugLog("Found Resource Image count : " & UBound($aResource))
+		For $i = 0 To UBound($aResource) - 1
+			Switch $aResource[$i][0]
+				Case "Gold"
+					$yGold = $aResource[$i][2] - 3
+					SetDebugLog("[" & $i & "] Found Gold Image")
+				Case "Elix"
+					$yElix = $aResource[$i][2] - 3
+					SetDebugLog("[" & $i & "] Found Elix Image")
+				Case "DE"
+					$yDE = $aResource[$i][2] - 3
+					SetDebugLog("[" & $i & "] Found DE Image")
+				Case "Trophy"
+					$yTrophy = $aResource[$i][2]
+					SetDebugLog("[" & $i & "] Found Trophy Image")
+			EndSwitch
+		Next
+	EndIf
+	
+	$g_iSearchGold = getGoldVillageSearch($xRead, $yGold)
+	SetDebugLog("getGoldVillageSearch(" & $xRead & "," & $yGold & ")")
+	$g_iSearchElixir = getElixirVillageSearch($xRead, $yElix)
+	SetDebugLog("getElixirVillageSearch(" & $xRead & "," & $yElix & ")")
+	$g_iSearchDark = getDarkElixirVillageSearch($xRead, $yDE)
+	SetDebugLog("getDarkElixirVillageSearch(" & $xRead & "," & $yDE & ")")
+	$g_iSearchTrophy = getTrophyVillageSearch($xRead, $yTrophy)
+	SetDebugLog("getTrophyVillageSearch(" & $xRead & "," & $yTrophy & ")")
+	
+	If $g_iSearchGold = "" Or $g_iSearchElixir = "" Or $g_iSearchDark = "" Or $g_iSearchTrophy = "" Then 
+	EndIf
+	
+	SetDebugLog("Gold: " & $g_iSearchGold & ", Elix: " & $g_iSearchElixir & ", DE: " & $g_iSearchDark & ", TR: " & $g_iSearchTrophy)
 
 	If $g_iSearchGold = $iSearchGold2 And $g_iSearchElixir = $iSearchElixir2 Then $iStuck += 1
 	If $g_iSearchGold <> $iSearchGold2 Or $g_iSearchElixir <> $iSearchElixir2 Then $iStuck = 0

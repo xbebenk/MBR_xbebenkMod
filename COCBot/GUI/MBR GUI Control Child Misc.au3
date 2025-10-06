@@ -1100,14 +1100,6 @@ Func chkOnDoubleTrain()
 	EndIf
 EndFunc ;==> chkOnDoubleTrain
 
-Func chkTrainPrev()
-	If GUICtrlRead($g_hChkMMTrainPreviousArmy) = $GUI_CHECKED Then
-		$g_bTrainPreviousArmy = True
-	Else
-		$g_bTrainPreviousArmy = False
-	EndIf
-EndFunc ;==> chkTrainPrev
-
 Func chkSkipWallPlacingOnBB()
 	If GUICtrlRead($g_hChkMMSkipWallPlacingOnBB) = $GUI_CHECKED Then
 		$g_bSkipWallPlacingOnBB = True

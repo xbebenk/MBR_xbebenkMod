@@ -3,7 +3,7 @@ Func CollectCCGold($bTest = False)
 	If Not $g_bChkEnableCollectCCGold Then Return
 	Local $bWindowOpened = False
 	Local $aCollect, $iBuilderToUse = $g_iCmbForgeBuilder + 1
-	SetLog("Start Collecting Clan Capital Gold", $COLOR_INFO)
+	SetLog("Check for Collecting Clan Capital Gold", $COLOR_ACTION)
 	ClickAway("Right")
 	ZoomOut() ;ZoomOut first
 	
@@ -76,7 +76,7 @@ Func CollectCCGold($bTest = False)
 			SetLog("Clan Capital Gold collected successfully!", $COLOR_SUCCESS)
 		EndIf
 	Else
-		SetLog("No available Clan Capital Gold to be collected!", $COLOR_INFO)
+		SetLog("No available Clan Capital Gold to be collected!", $COLOR_DEBUG2)
 		Return
 	EndIf
 	ClickAway("Right")
@@ -208,7 +208,7 @@ Func RemoveDupCNX(ByRef $arr, $sortBy = 1, $distance = 10)
 EndFunc
 
 Func ForgeClanCapitalGold($bTest = False)
-	SetLog("Checking for Forge ClanCapital Gold", $COLOR_INFO)
+	
 	Local $aForgeType[5] = [$g_bChkEnableForgeGold, $g_bChkEnableForgeElix, $g_bChkEnableForgeDE, $g_bChkEnableForgeBBGold, $g_bChkEnableForgeBBElix]
 	Local $bForgeEnabled = False
 	Local $iBuilderToUse = $g_iCmbForgeBuilder + 1
@@ -220,6 +220,8 @@ Func ForgeClanCapitalGold($bTest = False)
 	Next
 	If Not $bForgeEnabled Then Return
 	If Not $g_bRunState Then Return
+	
+	SetLog("Checking for Forge ClanCapital Gold", $COLOR_ACTION)
 	ClickAway("Right")
 	ZoomOut()
 	getBuilderCount(True) ;check if we have available builder
@@ -227,7 +229,7 @@ Func ForgeClanCapitalGold($bTest = False)
 	Local $iWallReserve = $g_bUpgradeWallSaveBuilder ? 1 : 0
 	If $g_iFreeBuilderCount - $iWallReserve - ReservedBuildersForHeroes() < 1 Then ;check builder reserve on wall and hero upgrade
 		SetLog("FreeBuilder=" & $g_iFreeBuilderCount & ", Reserved (ForHero=" & $g_iHeroReservedBuilder & " ForWall=" & $iWallReserve & ")", $COLOR_INFO)
-		SetLog("Not Have builder, exiting", $COLOR_INFO)
+		SetLog("Not Have builder, exiting", $COLOR_DEBUG2)
 		Return
 	EndIf
 
@@ -236,7 +238,7 @@ Func ForgeClanCapitalGold($bTest = False)
 	Local $iCurrentDE = getResourcesMainScreen(690, 120) ;get current Dark Elixir
 	If Not $g_bRunState Then Return
 	If Not OpenForgeWindow() Then
-		SetLog("Forge Window not Opened, exiting", $COLOR_ACTION)
+		SetLog("Forge Window not Opened, exiting", $COLOR_DEBUG2)
 		Return
 	EndIf
 
@@ -351,7 +353,10 @@ Func SwitchToClanCapital($bTest = False)
 			EndIf
 			If _Sleep(2000) Then Return
 		Next
+	Else
+		SetLog("Cannot Find AirShip", $COLOR_DEBUG2)
 	EndIf
+	
 	If Not $bRet Then
 		ClickAway("Right")
 		SwitchToMainVillage("SwitchToClanCapital Failed")
@@ -619,18 +624,20 @@ EndFunc
 
 Func AutoUpgradeCC($bTest = False)
 	If Not $g_bChkEnableAutoUpgradeCC Then Return
+	
+	SetLog("Checking Clan Capital AutoUpgrade", $COLOR_ACTION)
 	If $g_bChkEnableMinGoldAUCC And $g_iLootCCGold < $g_iMinCCGoldToUpgrade And $g_iLootCCGold > 0 Then
-		SetLog("CCGold = " & $g_iLootCCGold & ", < Minimum:" & $g_iMinCCGoldToUpgrade & ", skip autoupgradeCC", $COLOR_INFO)
+		SetLog("CCGold = " & $g_iLootCCGold & ", < Minimum:" & $g_iMinCCGoldToUpgrade & ", skip autoupgradeCC", $COLOR_DEBUG2)
 		Return
 	EndIf
 	Local $aRet[3] = [False, 0, 0]
-	SetLog("Checking Clan Capital AutoUpgrade", $COLOR_INFO)
+	
 	ZoomOutHelper("CollectLootCart")
 	If _Sleep(1000) Then Return
 	If Not SwitchToClanCapital($bTest) Then Return
 	
 	If Number($g_iLootCCGold) = 0 And Not $bTest Then
-		SetLog("No Capital Gold to spend to Contribute", $COLOR_INFO)
+		SetLog("No Capital Gold to spend to Contribute", $COLOR_DEBUG2)
 		SwitchToMainVillage("Cannot Contribute")
 		Return
 	EndIf

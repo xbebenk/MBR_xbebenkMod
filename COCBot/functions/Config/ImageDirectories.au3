@@ -31,6 +31,8 @@ Global Const $g_sImgMaintenance = @ScriptDir & "\imgxml\other\Maintenance\"
 Global Const $g_sImgUpdateCoC = @ScriptDir & "\imgxml\other\UpdateCoC\"
 Global Const $g_sImgEventConfirm = @ScriptDir & "\imgxml\other\EventConfirm\"
 Global Const $g_sImgImportantNotice = @ScriptDir & "\imgxml\other\ImportantNotice\"
+Global Const $sImgHeroHallTutor = @ScriptDir & "\imgxml\other\HeroHallTutor\"
+Global Const $g_sImgRevengeTutor = @ScriptDir & "\imgxml\other\RevengeTutor\"
 #EndRegion
 
 #Region Main Village
@@ -223,6 +225,7 @@ Global $g_sImgNextButton = @ScriptDir & "\imgxml\Attack\Search\NextButton\"
 Global $g_sImgSwitchSiegeMachine = @ScriptDir & "\imgxml\Switch\SiegeMachines\"
 Global $g_sImgSwitchSiegeButton = @ScriptDir & "\imgxml\Switch\SiegeButton\"
 Global $g_sImgSwitchWardenMode = @ScriptDir & "\imgxml\Switch\WardenMode\"
+Global $g_sImgResourceAttack = @ScriptDir & "\imgxml\Attack\Resource\"
 #EndRegion
 
 #Region Search

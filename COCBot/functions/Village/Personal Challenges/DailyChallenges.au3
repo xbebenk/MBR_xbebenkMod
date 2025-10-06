@@ -16,10 +16,10 @@ Func DailyChallenges()
 	If Not $g_bRunState Then Return
 	SetLog("Checking DailyChallenges", $COLOR_ACTION)
 	If Not _PixelSearch(170, 622, 171, 623, Hex(0xE31528, 6), 10, True, "DailyChallenges") Then
-		SetLog("No Red Bonus counter!", $COLOR_DEBUG2)
+		SetLog("DailyChallenges : No Red Bonus counter!", $COLOR_DEBUG2)
 		Return
 	EndIf
-	checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenges")
+	
 	If Not $g_bChkCollectRewards Then Return
 	Local $bGoldPass = _CheckPixel($aPersonalChallengeOpenButton2, $g_bCapturePixel) ; golden badge button at mainscreen
 	Local $bRedSignal = _CheckPixel($aPersonalChallengeOpenButton3, $g_bCapturePixel)

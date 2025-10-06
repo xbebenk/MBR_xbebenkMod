@@ -15,7 +15,7 @@ Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets comp
 EndFunc   ;==>getNameBuilding
 
 Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
-	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 16, True)
+	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 18, True)
 EndFunc   ;==>getGoldVillageSearch
 
 Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True) ;
@@ -27,7 +27,7 @@ Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
 EndFunc   ;==>getRemainTrainTimer
 
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
-	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True)
+	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 18, True)
 EndFunc   ;==>getElixirVillageSearch
 
 Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3

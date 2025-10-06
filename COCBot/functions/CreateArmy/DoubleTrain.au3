@@ -234,13 +234,6 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default) ;GetCurrentTroop(95, 163
 	
 	Local $iTotalQueue = 0
 	SetLog("Checking troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG1)
-	If $g_bTrainPreviousArmy Then 
-		While _ColorCheck(_GetPixelColor(265, 197, True), Hex(0xFFFFFF, 6), 20, Default, "Army Added Message")
-			If Not $g_bRunState Then Return
-			SetLog("Army Added Message Blocking, Waiting until it's gone", $COLOR_INFO)
-			If _Sleep(500) Then Return
-		WEnd
-	EndIf
 	
 	Local $aiQueueTroops = CheckQueueTroops(True, True, FindxQueueStart())
 	If Not IsArray($aiQueueTroops) Then Return False
@@ -317,13 +310,6 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp = Default, $bDebug = False)
 	
 	Local $iTotalQueue = 0
 	SetLog("Checking spell queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG1)
-	If $g_bTrainPreviousArmy Then 
-		While _ColorCheck(_GetPixelColor(265, 197, True), Hex(0xFFFFFF, 6), 20, Default, "Army Added Message")
-			If Not $g_bRunState Then Return
-			SetLog("Army Added Message Blocking, Waiting until it's gone", $COLOR_INFO)
-			If _Sleep(500) Then Return
-		WEnd
-	EndIf
 	
 	;CheckQueueSpells(True, True, FindxQueueStart())
 	Local $aiQueueSpells = CheckQueueSpells(True, $bDebug, FindxQueueStart())

@@ -95,7 +95,6 @@ Func ReferenceFunctions()
 	ControlGetPos2(0, 0, 0)
 	WindowSystemMenu(0, 0)
 	IsMainChatOpenPage()
-	IsClanInfoPage()
 	getOcrOverAllDamage(0, 0)
 	returnAllMatches(0)
 	returnLowestLevelSingleMatch(0)
@@ -121,7 +120,6 @@ Func ReferenceGlobals()
 
 	$a1 = $g_aaiTroopsToBeUsed
 	$a1 = $aArmyCCRemainTime
-	$a1 = $aIsReloadError
 	$a1 = $g_iAndroidControlClickWindow
 
 	$a1 = $ATTACKVECTOR_A

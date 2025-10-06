@@ -190,7 +190,7 @@ EndFunc
 
 Func SaleFullMagicItem($MagicItem = "", $Amount = 0)
 	If Not $g_bRunState Then Return
-	SetLog("Checking for Sale Magic Items", $COLOR_INFO)
+	SetLog("Checking for Full Magic Items", $COLOR_ACTION)
 	If Not OpenMagicItemWindow() Then Return
 	
 	If $MagicItem = "" And $Amount = 0 Then 
@@ -230,14 +230,14 @@ Func SaleFullMagicItem($MagicItem = "", $Amount = 0)
 					Click(510, 425) ;Click Okay Button
 				EndIf
 			Else
-				SetLog("Unable to Open Sell Window for item " & $MagicItem, $COLOR_ERROR)
+				SetLog("Unable to Open Sell Window for item " & $MagicItem, $COLOR_DEBUG2)
 				ClickAway()
 				ExitLoop
 			EndIf
 			If _Sleep(1500) Then Return
 		Next
 	Else
-		SetLog("Unable to find " & $MagicItem, $COLOR_ERROR)
+		SetLog("Unable to find " & $MagicItem, $COLOR_DEBUG2)
 	EndIf
 	ClickAway()
 EndFunc
@@ -246,7 +246,7 @@ Func SaleMagicItem($bTest = False)
 	ClickAway()
 	If _Sleep(500) Then Return
 	If Not $g_bChkEnableSaleMagicItem Then Return
-	SetLog("Checking for Sale Magic Items", $COLOR_INFO)
+	SetLog("Checking for Sell Magic Items", $COLOR_ACTION)
 	If Not OpenMagicItemWindow() Then Return
 	Local $sReadItemCount, $asReadItemCount, $Count, $MaxCount
 	
@@ -288,14 +288,14 @@ Func SaleMagicItem($bTest = False)
 						If _Sleep(1000) Then Return
 					Next
 				Else
-					SetLog("Unable to read count of " & $g_aMagicItemName[$i], $COLOR_ERROR)
+					SetLog("Unable to read count of " & $g_aMagicItemName[$i], $COLOR_DEBUG2)
 					ContinueLoop
 				EndIf
 			Else
-				SetLog($g_aMagicItemName[$i] & " not Found", $COLOR_ERROR)
+				SetLog($g_aMagicItemName[$i] & " not Found", $COLOR_DEBUG2)
 			EndIf
 		Else
-			SetLog($g_aMagicItemName[$i] & " sale is not enabled")
+			SetLog($g_aMagicItemName[$i] & " sale is not enabled", $COLOR_DEBUG2)
 		EndIf
 	Next
 	ClickAway()
@@ -311,23 +311,33 @@ Func OpenMagicItemWindow()
 	If Not $g_bRunState Then Return
 	Local $BuildingInfo = BuildingInfo(242, 477)
 	If $BuildingInfo[1] = "Town Hall" Then
-		SetDebugLog("Opening Magic Item Window")
+		SetLog("Opening Magic Item Window", $COLOR_ACTION)
 		If ClickB("MagicItem") Then
 			$bRet = True
 		EndIf
 	Else
 		$bLocateTH = True
+		ClickAway()
+		If _Sleep(500) Then Return
 	EndIf
 	
 	If Not $g_bRunState Then Return
 	If $bLocateTH Then
-		If SearchTH() Then ClickP($g_aiTownHallPos)
-		If _Sleep(1500) Then Return
-		If ClickB("MagicItem") Then
-			$bRet = True
+		If SearchTH() Then 
+			If _Sleep(500) Then Return
+			ClickP($g_aiTownHallPos)
+			If _Sleep(500) Then Return
+			If ClickB("MagicItem") Then
+				$bRet = True
+			Else 
+				$bRet = False
+			EndIf
 		EndIf
 	EndIf
-	If Not IsMagicItemWindowOpen() Then $bRet = False
+	If Not IsMagicItemWindowOpen() Then 
+		$bRet = False
+		SetLog("Open Magic Item Window failed", $COLOR_DEBUG2)
+	EndIf
 	Return $bRet
 EndFunc
 

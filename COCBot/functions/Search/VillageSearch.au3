@@ -149,7 +149,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		If $match[$DB] Or $match[$LB] Then ; make sure resource conditions are met
 			$THString = FindTownhall(False, False) ;find TH, but only if TH condition is checked
 		ElseIf ($g_abFilterMeetOneConditionEnable[$DB] Or $g_abFilterMeetOneConditionEnable[$LB]) Then ; meet one then attack, do not need correct resources
-			$THString = FindTownhall(True, False)
+			If $g_abFilterMeetTH[$DB] Or $g_abFilterMeetTH[$LB] Then $THString = FindTownhall(True, False)
 		ElseIf $g_abAttackTypeEnable[$TB] = 1 And ($g_iSearchCount >= $g_iAtkTBEnableCount) Then
 			; Check the TH for BullyMode
 			$THString = FindTownhall(True, False)
@@ -330,7 +330,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		For $i = 1 To 60
 			If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then
 				$g_bCloudsActive = True
-				ClickP($NextBtn, 1, 0, "#0155") ;Click Next
+				Click($g_iQuickMISX, $g_iQuickMISY)
 				ExitLoop
 			Else
 				SetLog("Wait to see Next Button #" & $i, $COLOR_ACTION)
@@ -500,6 +500,7 @@ Func CheckZoomOut($sSource = "CheckZoomOut")
 	Local $aVillageResult = SearchZoomOut(False, True, $sSource)
 	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
 		SetLog("CheckZoomOut Failed : " & $sSource, $COLOR_DEBUG)
+		AndroidZoomOut()
 		ZoomOutHelper("VillageSearch")
 		$bRet = False
 	EndIf

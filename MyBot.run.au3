@@ -745,16 +745,8 @@ Func runBot() ;Bot that runs everything in order
 			EndIf
 
 			AddIdleTime()
-			If $g_bRestart Then ExitLoop
+			
 			CommonRoutine("Idle")
-
-			If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 3 Or $g_abDonateOnly[$g_iCurAccount] Or $g_bForceSwitch) Then
-				CommonRoutine("Switch")
-				SetLog(" ")
-				SetLogCentered(" MainLoop Done (in " & Round(TimerDiff($MainLoopTimer) / 1000 / 60, 2) & " minutes) ", "=", $COLOR_INFO)
-				SetLog(" ")
-				checkSwitchAcc() ;switch to next account
-			EndIf
 
 			If IsSearchAttackEnabled() Then
 				If $g_bRestart = True Then ContinueLoop
@@ -769,6 +761,7 @@ Func runBot() ;Bot that runs everything in order
 
 			If $g_bFirstStart Then
 				SetLog("First loop completed!", $COLOR_DEBUG1)
+				SetLogCentered(" MainLoop Done (in " & Round(TimerDiff($MainLoopTimer) / 1000 / 60, 2) & " minutes) ", "=", $COLOR_INFO)
 				$g_bFirstStart = False ; already finished first loop since bot started.
 				ContinueLoop
 			EndIf
@@ -1249,6 +1242,12 @@ Func FirstCheckRoutine()
 	EndIf
 
 	CommonRoutine("FirstCheck") ;after first attack, checking some routine
+	
+	;If not switch:
+	If Not ProfileSwitchAccountEnabled() Then 
+		SetLog("Switch account not enabled, going to mainloop", $COLOR_DEBUG)
+		Return 
+	EndIf
 
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() Then ;Allow immediate Second Attack on FastSwitchAcc enabled
@@ -1333,7 +1332,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Idle"
-			Local $aRndFuncList = ['DailyChallenge', 'CollectAchievements', 'CollectFreeMagicItems', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
+			Local $aRndFuncList = ['RequestCC', 'DailyChallenge', 'CollectAchievements', 'CollectFreeMagicItems', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'BuilderBase']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)

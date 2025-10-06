@@ -1949,7 +1949,7 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 ;Misc Mod
 Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False
 Global $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False
-Global $g_bTrainPreviousArmy = False, $g_bAlwaysDropHero = True
+Global $g_bAlwaysDropHero = True
 Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
 Global $g_bEnableCCSleep = False, $g_bSkipDT = False, $g_iMainScreenTimeoutCount = 0
 

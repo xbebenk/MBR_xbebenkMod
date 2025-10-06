@@ -40,7 +40,6 @@ Func WaitForClouds()
 		EndIf
 		
 		If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then 
-			SetDebugLog("Found Next Button, exitLoop")
 			ExitLoop
 		EndIf
 		
@@ -65,8 +64,8 @@ Func WaitForClouds()
 				ExitLoop
 			EndIf
 		EndIf
-		If _Sleep(500) Then Return
+		If _Sleep(200) Then Return
 	WEnd
-	If _Sleep(1000) Then Return
+	If _Sleep(1000) Then Return ;add delay before read resource
 	SetDebugLog("End WaitForClouds", $COLOR_DEBUG1)
 EndFunc   ;==>WaitForClouds

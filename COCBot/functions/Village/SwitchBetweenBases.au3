@@ -153,12 +153,13 @@ Func SwitchTo($To = "BB")
 		EndIf
 		
 		If $i = 3 Then 
-			$g_iGfxErrorCount += 3
-			If $g_iGfxErrorCount > $g_iGfxErrorMax Then 
-				SetLog("SwitchBetweenBases stuck, set to Reboot Android Instance", $COLOR_INFO)
-				$g_bGfxError = True
-				CheckAndroidReboot()
-			EndIf
+			CloseCoC(True)
+			;$g_iGfxErrorCount += 3
+			;If $g_iGfxErrorCount > $g_iGfxErrorMax Then 
+			;	SetLog("SwitchBetweenBases stuck, set to Reboot Android Instance", $COLOR_INFO)
+			;	$g_bGfxError = True
+			;	CheckAndroidReboot()
+			;EndIf
 		EndIf
 		If _Sleep(500) Then Return
 	Next

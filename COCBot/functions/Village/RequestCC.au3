@@ -23,13 +23,12 @@ Func RequestCC($sText = "", $bTest = False)
 	EndIf
 	
 	If _Sleep($DELAYREQUESTCC1) Then Return
-	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
+	SetLog("Requesting Clan Castle reinforcements", $COLOR_ACTION)
 	
 	If Not $g_bRunState Then Return
 	Local $aRequestButton = QuickMIS("CNX", $g_sImgRequestCCButton, 280, 600, 360, 670)
 	If UBound($aRequestButton) < 1 Then
-		SetDebugLog("Error in RequestCC(): $aRequestButton is no Array")
-		If $g_bDebugImageSave Then SaveDebugImage("RequestButtonStateError")
+		SetLog("RequestCC: Request button not detected", $COLOR_DEBUG2)
 		checkChatTabPixel()
 		Return
 	EndIf
@@ -38,12 +37,12 @@ Func RequestCC($sText = "", $bTest = False)
 	
 	Switch $aRequestButton[0][0]
 		Case "AlreadyMade"
-			SetLog("Clan Castle Request has already been made", $COLOR_INFO)
+			SetLog("Clan Castle Request has already been made", $COLOR_DEBUG2)
 		Case "Available"
 			If _GetPixelColor(333, 654, True) = "ADADAD" Then ContinueCase 
 			_makerequest($aRequestButton[0][1], $aRequestButton[0][2], $bTest)
 		Case "FullOrUnavail"
-			SetLog("Clan Castle is full or not available", $COLOR_INFO)
+			SetLog("Clan Castle is full or not available", $COLOR_DEBUG2)
 	EndSwitch
 	
 	DonateCC(False, False, True)

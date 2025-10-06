@@ -1195,9 +1195,9 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 	EndIf
 	ConnectAndroidAdb()
 	If Not $g_bRunState Then Return False
-	;AndroidAdbTerminateShellInstance()
-	If Not $g_bRunState Then Return False
-	;$cmdOutput = LaunchConsole($g_sAndroidAdbPath, "-s " & $g_sAndroidAdbDevice & " shell am start " & $sRestart & "-n " & $g_sAndroidGamePackage & "/" & $g_sAndroidGameClass, $process_killed, 30 * 1000) ; removed "-W" option and added timeout (didn't exit sometimes)
+	
+	If $g_bChkSuperCellID Then $SkipSharedPrefs = True
+	
 	If ((ProfileSwitchAccountEnabled() And $g_bChkSharedPrefs) Or $g_bUpdateSharedPrefs) And HaveSharedPrefs() And _
 			($g_bUpdateSharedPrefs Or $g_PushedSharedPrefsProfile <> $g_sProfileCurrentName Or ($g_PushedSharedPrefsProfile_Timer = 0 Or _ 
 			__TimerDiff($g_PushedSharedPrefsProfile_Timer) > 120000)) And Not $SkipSharedPrefs Then 
@@ -3110,8 +3110,8 @@ Func AndroidMoveMouseAnywhere()
 
 	If FileExists($hostPath & $Filename) = 0 Then
 		Local $times = 1
-		Local $x = 1 ; $aAway[0]
-		Local $y = 20 ; $aAway[1]
+		Local $x = 1 
+		Local $y = 20 
 		Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x,$y)")
 		Local $i = 0
 		Local $record = "byte[16];"

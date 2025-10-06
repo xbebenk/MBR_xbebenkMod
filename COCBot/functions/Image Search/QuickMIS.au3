@@ -49,7 +49,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 						$g_iQuickMISX = $coord[0]
 						$g_iQuickMISY = $coord[1]
 						$g_iQuickMISName = $files[$i]
-						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $pat & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
+						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $g_iQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
 						If $g_bDebugImageSave Then 
 							_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
 							SaveDebugImage("QuickMIS_" & $ValueReturned, False)

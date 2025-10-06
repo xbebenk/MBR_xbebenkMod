@@ -44,7 +44,6 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		If $bLocated Then ExitLoop
 		
 		If Not $bLocated And GetAndroidProcessPID() = 0 Then OpenCoC()
-		If $g_sAndroidEmulator = "Bluestacks5" Then NotifBarDropDownBS5()
 		
 		;mainscreen not located, proceed to check if there is obstacle covering screen
 		$bObstacleResult = checkObstacles($bBuilderBase)
@@ -135,14 +134,4 @@ Func isOnBuilderBase()
 	Local $bRet = False
 	$bRet = _checkMainScreenImage($aIsOnBuilderBase)
 	Return $bRet
-EndFunc
-
-Func NotifBarDropDownBS5()
-	If $g_sAndroidEmulator = "Bluestacks5" Then
-		If _CheckPixel($aNotifBarBS5_a, True) And _CheckPixel($aNotifBarBS5_b, True) And _CheckPixel($aNotifBarBS5_c, True) Then
-			SetLog("Found NotifBar Dropdown, Closing!", $COLOR_INFO)
-			Click(777, 34)
-			Return
-		EndIf
-	EndIf
 EndFunc

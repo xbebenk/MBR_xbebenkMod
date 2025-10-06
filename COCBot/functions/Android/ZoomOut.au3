@@ -108,7 +108,7 @@ Func ZoomOutHelper($caller = "Default")
 	
 	If Not $bIsMain Then Return ;leave if not in mainvillage
 	
-	$g_bDebugClick = True
+	;$g_bDebugClick = True
 	If QuickMIS("BC1", $g_sImgZoomOutDir & "tree\", 430, 20, 750, 200) Then 
 		$aOffset = StringRegExp($g_iQuickMISName, "tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 		If IsArray($aOffset) Then 
@@ -166,7 +166,7 @@ Func ZoomOutHelper($caller = "Default")
 		ClickDrag(800, 350, 800, 400) ;just drag
 	EndIf
 	If _Sleep(1500) Then Return
-	$g_bDebugClick = False
+	;$g_bDebugClick = False
 	Return $bRet
 EndFunc
 
@@ -178,7 +178,7 @@ Func ZoomOutHelperBB($caller = "Default")
 	If $caller = "SwitchBetweenBases" Then $xyOffsetSwitchBases = -60
 	
 	If Not $bIsOnBuilderBase Then Return ;leave if not in mainvillage
-	$g_bDebugClick = True
+	;$g_bDebugClick = True
 	
 	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "ZoomOutHelper\", 100, 20, 800, 676) Then 
 		$aOffset = StringRegExp($g_iQuickMISName, "Tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
@@ -192,7 +192,7 @@ Func ZoomOutHelperBB($caller = "Default")
 					SetLog("Detected on BuilderBase HighZone, switch to LowerZone", $COLOR_DEBUG2)
 					Click($g_iQuickMISX, $g_iQuickMISY)
 					If _Sleep(3000) Then Return
-					$g_bDebugClick = False
+					;$g_bDebugClick = False
 					Return True
 				EndIf
 			EndIf
@@ -222,7 +222,7 @@ Func ZoomOutHelperBB($caller = "Default")
 		EndIf
 	EndIf
 	If _Sleep(1500) Then Return
-	$g_bDebugClick = False
+	;$g_bDebugClick = False
 	Return $bRet
 EndFunc
 

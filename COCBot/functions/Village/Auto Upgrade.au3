@@ -1317,7 +1317,7 @@ Func GoGoblinMap()
 	If Not $g_bRunState Then Return
 	Local $GoblinFaceCoord, $CircleCoord
 	Clickaway("Right")
-	ClickP($aAttackButton)
+	Click(60, 620) ;attack button
 	SetLog("Going to Goblin Map to reset Field", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	If _Sleep(2000) Then Return

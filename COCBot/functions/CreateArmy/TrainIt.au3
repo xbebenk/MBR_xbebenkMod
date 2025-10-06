@@ -18,7 +18,7 @@
 
 Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 	If $g_bDebugSetlogTrain Then SetLog("Func TrainIt $iIndex=" & $iIndex & " $howMuch=" & $iQuantity & " $iSleep=" & $iSleep, $COLOR_DEBUG)
-	
+
 	For $i = 1 To 5 ; Do
 		If Not $g_bRunState Then Return
 		Local $aTrainPos = GetImageToUse($iIndex)
@@ -30,12 +30,11 @@ Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 			Return True
 		Else
 			If UBound($aTrainPos) > 0 And $aTrainPos[0] = -1 Then
-				If $i > 1 Then 
+				If $i > 1 Then
 					SetLog("TrainIt troop position " & GetTroopName($iIndex) & " did not find icon", $COLOR_ERROR)
 					For $x In $g_iCmbSuperTroops
 						If $x = $iIndex Then
 							SetLog(GetTroopName($iIndex) & " need boost first", $COLOR_INFO)
-							TrainPreviousArmy(False, True)
 						EndIf
 					Next
 				EndIf

@@ -76,7 +76,7 @@ Func CreateLogTab($hWHndLogsOnly = False)
 			GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_03", "Large Bot Log, Small Attack Log") & "|" & _
 			GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_04", "Small Bot Log, Large Attack Log") & "|" & _
 			GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_05", "Full Bot Log, Hide Attack Log") & "|" & _
-			GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_06", "Hide Bot Log, Full Attack Log"), GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_02", -1))
+			GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_06", "Hide Bot Log, Full Attack Log"), GetTranslatedFileIni("MBR GUI Design Log", "CmbLogDividerOption_Item_03", -1))
 	GUICtrlSetOnEvent(-1, "cmbLog")
 
 	$g_hBtnRunDebug = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Log", "Run", "Run"), $x + 233, $y - 1, 33, 23)
