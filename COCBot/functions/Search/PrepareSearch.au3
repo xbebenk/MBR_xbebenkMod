@@ -36,7 +36,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 		If IsMultiplayerTabOpen() Then 
 			SetLog("Multiplayer Tab is Opened", $COLOR_DEBUG)
 			If QuickMIS("BC1", $g_sImgRevengeTutor, 370, 85, 460, 160) Then
-				If _Sleep(5000) Then Return
+				If _Sleep(2000) Then Return
 				If Not CheckRevengeTutor() Then ContinueLoop
 			EndIf
 			ExitLoop
