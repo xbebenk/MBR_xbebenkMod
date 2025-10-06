@@ -244,6 +244,8 @@ Func CheckRevengeTutor()
 								TrainIt($iTroopIndex, 2, $g_iTrainClickDelay)
 							Case "Ball"
 								TrainIt($iTroopIndex, 7, $g_iTrainClickDelay)
+							Case "Arch"
+								TrainIt($iTroopIndex, 20, $g_iTrainClickDelay)
 						EndSwitch
 						
 						If Not QuickMIS("BC1", $g_sImgRevengeTutor, 765, 330, 800, 360) Then 
