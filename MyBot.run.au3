@@ -1115,7 +1115,7 @@ Func FirstCheck()
 	RequestCC()
 
 	If isElixirFull() or isDarkElixirFull() Then
-		Laboratory()
+		LabUpgrade()
 		VillageReport(True, True)
 	EndIf
 

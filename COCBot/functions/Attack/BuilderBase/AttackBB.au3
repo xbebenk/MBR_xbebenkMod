@@ -48,7 +48,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				RequestCC()
 				If isGoldFullBB() Or isElixirFullBB() Then 
 					AutoUpgradeBB()
-					StarLab()
+					StarLabUpgrade()
 				EndIf
 				If $count > 4 Then
 					SetLog("IsBBevent = " & String($g_bIsBBevent), $COLOR_INFO)
