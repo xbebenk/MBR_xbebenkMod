@@ -16,7 +16,7 @@
 Func CollectFreeMagicItems($bTest = False)
 	If Not $g_bChkCollectFreeMagicItems Then Return
 	$g_aRemoveFreeMagicItems[0] = False ;reset first
-	SetLog("Collecting Free Magic Items", $COLOR_INFO)
+	SetLog("Check for collect Free Magic Items", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	ClickAway()
 
@@ -107,23 +107,25 @@ Func OpenTraderWindow()
 	Local $bRet = False, $bTraderIconFound = False
 	If Not IsMainPage() Then Return
 	; Check Trader Icon on Main Village
-	For $i = 1 To 20
-		If $g_bDebugSetlog Then SetLog("Waiting Trader Icon #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgTrader, 120,130,230,220) Then
+	For $i = 1 To 5
+		If Not $g_bRunState Then Return
+		SetLog("Waiting Trader Icon #" & $i, $COLOR_ACTION)
+		If QuickMIS("BC1", $g_sImgTrader, 120, 130, 230, 220) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(500) Then Return
 			$bTraderIconFound = True
 			ExitLoop
 		EndIf
-		If _Sleep(500) Then Return
+		If _Sleep(250) Then Return
 	Next
 	
 	If Not $bTraderIconFound Then 
-		SetLog("Trader Icon Not Found", $COLOR_INFO)
-		Return False
+		SetLog("Cannot find Trader Icon", $COLOR_DEBUG2)
+		Return $bRet
 	EndIf
 	
 	If Not IsTraderWindowOpen() Then 
-		SetLog("Free Magic Items Windows not Opened", $COLOR_ERROR)
+		SetLog("Free Magic Items Windows not Opened", $COLOR_DEBUG2)
 		ClickAway()
 	Else
 		$bRet = True
@@ -135,34 +137,33 @@ Func IsTraderWindowOpen()
 	Local $bRet = False
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 785, 90, 830, 130) Then
+		SetLog("Waiting for TraderWindowOpen #" & $i, $COLOR_ACTION)
+		If _ColorCheck(_GetPixelColor(808, 107, True), Hex(0xFFFFFF, 6), 10, Default, "IsTraderWindowOpen") Then
 			$bRet = True
 			ExitLoop
-		Else
-			SetDebugLog("Waiting for TraderWindowOpen #" & $i, $COLOR_ACTION)
 		EndIf
-		If _Sleep(500) Then Return
+		If _Sleep(250) Then Return
 	Next
 	
 	;quick collect giant gauntlet
-	If QuickMis("BC1", $g_sImgTraderGems, 270, 325, 340, 350) Then
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(1000) Then Return
-		If QuickMis("BC1", $g_sImgTraderGems, 390, 370, 450, 430) Then Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(800) Then Return
-	EndIf
+	;If QuickMis("BC1", $g_sImgTraderGems, 270, 325, 340, 350) Then
+	;	Click($g_iQuickMISX, $g_iQuickMISY)
+	;	If _Sleep(1000) Then Return
+	;	If QuickMis("BC1", $g_sImgTraderGems, 390, 370, 450, 430) Then Click($g_iQuickMISX, $g_iQuickMISY)
+	;	If _Sleep(800) Then Return
+	;EndIf
 	
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
+		SetLog("Waiting for Gems Tab #" & $i, $COLOR_ACTION)
 		If QuickMis("BC1", $g_sImgTraderGems, 50, 173, 100, 300) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(800) Then Return
+			SetLog("Found Gems Tab", $COLOR_DEBUG)
+			If _Sleep(500) Then Return
 			$bRet = True
 			ExitLoop
-		Else
-			SetDebugLog("Waiting for Gems Tab #" & $i, $COLOR_ACTION)
 		EndIf
-		If _Sleep(500) Then Return
+		If _Sleep(250) Then Return
 	Next
 	
 	Return $bRet

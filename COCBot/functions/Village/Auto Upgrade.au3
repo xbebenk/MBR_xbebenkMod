@@ -816,6 +816,9 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 			$aCheckArea = $aCheckAreaWarden
 		Case "Royal Champion"
 			$aCheckArea = $aCheckAreaChampion
+		Case Else
+			Setlog("What Hero? banana", $COLOR_DEBUG2)
+			$aCheckArea = $aCheckAreaKing
 	EndSwitch
 
 	If QuickMIS("BC1", $g_sImgHeroHall, $aCheckArea[0], $aCheckArea[1], $aCheckArea[2], $aCheckArea[3]) Then

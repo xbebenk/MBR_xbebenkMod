@@ -1484,9 +1484,9 @@ Global $g_bCloudsActive = False ;True when waiting for clouds
 Global $g_bAttackActive = False ;True when attacking Village
 
 ; Search
-Global Const $g_iMaxTHLevel = 16
-Global Const $g_asTHText[11] = ["4-6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"]
-Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200, 1300, 1400, 1500]
+Global Const $g_iMaxTHLevel = 17
+Global Const $g_asTHText[12] = ["4-6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"]
+Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200, 1300, 1400, 1500, 2000]
 Global $g_bSearchMode = False
 Global $g_bIsSearchLimit = False
 Global $g_bIsClientSyncError = False ;If true means while searching Client Out Of Sync error occurred.
