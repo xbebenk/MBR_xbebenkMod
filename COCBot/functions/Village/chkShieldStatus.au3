@@ -178,7 +178,8 @@ Func getShieldInfo()
 		SetLog("unable to read shield information", $COLOR_ERROR)
 		Return
 	EndIf
-
+	
+	SetLog("Checking Shield", $COLOR_ACTION)
 	If QuickMIS("BC1", $g_sImgShield, 506, 5, 530, 35) Then 
 		Select
 			Case $g_iQuickMISName = "NoShield"
@@ -187,12 +188,9 @@ Func getShieldInfo()
 			Case $g_iQuickMISName = "Shield"
 				$aPBReturnResult[0] = "shield"
 				SetLog("Shield Active", $COLOR_DEBUG)
-			Case $g_iQuickMISName = "Guard"
-				$aPBReturnResult[0] = "guard"
-				SetLog("Guard Active", $COLOR_DEBUG)
 		EndSelect
 	Else
-		SetLog("Sorry, Your monkey not code anymore", $COLOR_DEBUG2) 
+		SetLog("Cannot determine shield Type", $COLOR_DEBUG2) 
 		Return
 	EndIf
 	
