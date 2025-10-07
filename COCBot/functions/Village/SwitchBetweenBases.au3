@@ -25,6 +25,7 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 		EndIf
 	EndIf
 	
+	If _Sleep(50) Then Return
 	If Not $bIsOnMainVillage Then $bIsOnBuilderBase = isOnBuilderBase()
 	
 	If $ForcedSwitchTo = "BB" And $bIsOnBuilderBase Then
@@ -94,6 +95,7 @@ Func SwitchTo($To = "BB")
 	EndIf	
 	
 	For $i = 1 To 3
+		If _Sleep(50) Then Return
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
 		
 		Local $ZoomOutResult

@@ -109,6 +109,7 @@ Func ZoomOutHelper($caller = "Default")
 	If Not $bIsMain Then Return ;leave if not in mainvillage
 	
 	;$g_bDebugClick = True
+	If _Sleep(50) Then Return
 	If QuickMIS("BC1", $g_sImgZoomOutDir & "tree\", 430, 20, 750, 200) Then 
 		$aOffset = StringRegExp($g_iQuickMISName, "tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 		If IsArray($aOffset) Then 
@@ -128,6 +129,7 @@ Func ZoomOutHelper($caller = "Default")
 		EndIf
 	EndIf
 	
+	If _Sleep(50) Then Return
 	If Not $bRet Then
 		If QuickMIS("BC1", $g_sImgZoomOutDir & "stone\", 60, 330, 430, 560) Then 
 			$aOffset = StringRegExp($g_iQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
@@ -145,6 +147,7 @@ Func ZoomOutHelper($caller = "Default")
 		EndIf
 	EndIf
 	
+	If _Sleep(50) Then Return
 	If Not $bRet Then
 		If QuickMIS("BC1", $g_sImgZoomOutHelper, 320, 100, 500, 250) Then 
 			$aOffset = StringRegExp($g_iQuickMISName, "CGHelper-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
@@ -162,10 +165,11 @@ Func ZoomOutHelper($caller = "Default")
 		EndIf
 	EndIf
 	
+	If _Sleep(50) Then Return
 	If Not $bRet Then
 		ClickDrag(800, 350, 800, 400) ;just drag
 	EndIf
-	If _Sleep(1500) Then Return
+	
 	;$g_bDebugClick = False
 	Return $bRet
 EndFunc
@@ -180,6 +184,7 @@ Func ZoomOutHelperBB($caller = "Default")
 	If Not $bIsOnBuilderBase Then Return ;leave if not in mainvillage
 	;$g_bDebugClick = True
 	
+	If _Sleep(50) Then Return
 	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "ZoomOutHelper\", 100, 20, 800, 676) Then 
 		$aOffset = StringRegExp($g_iQuickMISName, "Tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 		If IsArray($aOffset) Then 
@@ -206,6 +211,7 @@ Func ZoomOutHelperBB($caller = "Default")
 		EndIf
 	EndIf
 	
+	If _Sleep(50) Then Return
 	If Not $bRet Then
 		If QuickMIS("BC1", $g_sImgZoomOutDirBB & "stone\", 0, 330, 430, 560) Then 
 			$aOffset = StringRegExp($g_iQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
@@ -221,7 +227,6 @@ Func ZoomOutHelperBB($caller = "Default")
 			EndIf
 		EndIf
 	EndIf
-	If _Sleep(1500) Then Return
 	;$g_bDebugClick = False
 	Return $bRet
 EndFunc
@@ -237,7 +242,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	
 	Local $bCenterVillage = Not ZoomoutHelper($sFunc)
 	
-	If _Sleep(500) Then Return
+	If _Sleep(50) Then Return
 	ForceCaptureRegion()
 	$aPicture = SearchZoomOut($bCenterVillage, True, "", True)
 	
@@ -248,6 +253,8 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 		If ZoomOutHelperBB($sFunc) Then Return True
 		$aPicture = SearchZoomOut(True, True, "", True)
 	EndIf
+	
+	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return $aPicture
 	
 	If StringInStr($aPicture[0], "zoomou") = 0 Then
@@ -271,6 +278,8 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				   AndroidZoomOut($i, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
 				   If @error <> 0 Then $bAndroidZoomOut = False
 				EndIf
+				
+				If _Sleep(50) Then Return
 				If Not $bAndroidZoomOut Then
 				   ; original windows based zoom-out
 				   SetDebugLog("Index = "&$i, $COLOR_DEBUG) ; Index=2X loop count if success, will be increment by 1 if controlsend fail

@@ -232,23 +232,22 @@ Func Laboratory($bDebug = False)
 EndFunc
 
 ; start a given upgrade
-Func LaboratoryUpgrade($name, $aCoords, $sCost, $bDebug = False)
-	Local $sUpgradeName = GetUpgradeName($name)
-	If $sUpgradeName = "" Then $sUpgradeName = $name
+Func LaboratoryUpgrade($sUpgradeName, $aCoords, $sCost, $bDebug = False)
+	
 	SetLog("Selected upgrade: " & $sUpgradeName & " Cost: " & $sCost, $COLOR_INFO)
 	ClickP($aCoords) ; click troop
-	If _Sleep(2000) Then Return
+	If _Sleep(1000) Then Return
 	
 	If $bDebug Then ; if debugging, do not actually click it
 		SetLog("[debug mode] - Start Upgrade, Click Back Button", $COLOR_ACTION)
-		Click(805, 100)
+		ClickAway()
 		Return True ; Return True as if we really started an upgrade
 	Else
-		Click(660, 520, 1, 0, "#0202") ; Everything is good - Click the upgrade button
+		Click(620, 545, 1, 0, "Upgrade " & $sUpgradeName) ; Everything is good - Click the upgrade button
 		If _Sleep(1000) Then Return
 		If Not isGemOpen(True) Then ; check for gem window
 			; success
-			SetLog("Upgrade " & $sUpgradeName & " in your laboratory started with success...", $COLOR_SUCCESS)
+			SetLog("Start Upgrade for " & $sUpgradeName & " Success...", $COLOR_SUCCESS)
 			PushMsg("LabSuccess")
 			
 			If _Sleep($DELAYLABUPGRADE2) Then Return
@@ -257,9 +256,10 @@ Func LaboratoryUpgrade($name, $aCoords, $sCost, $bDebug = False)
 			ClickAway()
 			Return True ; upgrade started
 		Else
-			SetLog("Oops, Gems required for " & $sUpgradeName & " Upgrade, try again.", $COLOR_ERROR)
+			SetLog("Oops, Gems required for " & $sUpgradeName & " Upgrade, try again.", $COLOR_DEBUG2)
 			Return False
 		EndIf
+		ClickAway()
 	EndIf
 EndFunc
 
@@ -431,9 +431,56 @@ Func ChkLabUpgradeInProgress($bDebug = False, $name = "")
 	Return False
 EndFunc
 
+Func IsLabMenuOpen()
+	Local $bRet = False
+	
+	If _ColorCheck(_GetPixelColor(320, 63, True), Hex(0xE8E9DF, 6), 40, Default, "IsLabMenuOpen") Then 
+		$bRet = True
+	Else
+		SetLog("IsLabMenuOpen Color Not Matched, expexted E8E9DF, found : " & _GetPixelColor(320, 63, True), $COLOR_DEBUG2)
+	EndIf
+	
+	Return $bRet
+EndFunc ;IsLabMenuOpen
+
+Func ClickLabMenu($Counter = 3)
+	Local $b_Ret = False
+	If Not $g_bRunState Then Return
+
+	; open the lab menu
+	If Not IsLabMenuOpen() Then
+		SetLog("Opening Lab Menu", $COLOR_ACTION)
+		Click(275, 33)
+		If _Sleep(500) Then Return
+	EndIf
+
+	;check
+	If IsLabMenuOpen() Then
+		SetLog("Check Lab Menu, Opened", $COLOR_SUCCESS)
+		$b_Ret = True
+	Else
+		For $i = 1 To $Counter
+			If Not $g_bRunState Then Return
+			SetLog("Lab Closed, trying again!", $COLOR_DEBUG)
+			Click(275, 33)
+			If _Sleep(500) Then Return
+			If IsLabMenuOpen() Then
+				$b_Ret = True
+				ExitLoop
+			EndIf
+		Next
+	EndIf
+
+	If Not $b_Ret Then SetLog("Something wrong with Lab Menu, already tried 3 times!", $COLOR_DEBUG)
+	Return $b_Ret
+EndFunc ;==>ClickLabMenu
+
 Func CheckIfLabIdle($bDebug = False)
 	Local $aLabInfo, $aGetLab, $bRet = True
-	If $bDebug Then Return $bRet
+	If $bDebug Then 
+		ClickLabMenu()
+		Return $bRet
+	EndIf
 	
 	$aLabInfo = getBuilders(309, 23)
 	If StringInStr($aLabInfo, "#") > 0 Then
@@ -453,32 +500,34 @@ Func CheckIfLabIdle($bDebug = False)
 	EndIf
 	
 	If $bRet Then ;if Lab is idle, check resource is enough to upgrade
-		ClickP($aLabMenu)
+		ClickLabMenu()
 		If _Sleep(500) Then Return
 		Local $aUpgradeName
 		Local $aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 70, 460, 280)
 		If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 			_ArraySort($aTmpCoord, 0, 0, 0, 2)
 			For $i = 0 To UBound($aTmpCoord) - 1
-				If _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFF887F, 6), 10, 1, "Check Red Resource cost") Then
-					SetLog("Detected Not Enough Resource for LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
-					$bRet = False
-				ElseIf _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFFFFFF, 6), 10, 1, "Check White Resource cost") Then
-					SetLog("Detected possible LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
-					$bRet = True
-				EndIf
 				If $aTmpCoord[$i][0] = "Complete" Then
 					SetLog("All Upgrade Complete", $COLOR_DEBUG)
+					$bRet = False
+					ExitLoop
+				EndIf
+				
+				If _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFFFFFF, 6), 10, 1, "Check White Resource cost") Then
+					SetLog("Detected possible LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
+					$bRet = True
+					ExitLoop
+				ElseIf _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFF887F, 6), 10, 1, "Check Red Resource cost") Then
+					SetLog("Detected Not Enough Resource for LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
 					$bRet = False
 				EndIf
 			Next
 		EndIf
-		ClickP($aLabMenu)
 	EndIf
 	
 	If Not $bRet Then
 		If $g_iTownHallLevel >= 9 Then 
-			ClickP($aLabMenu)
+			ClickLabMenu()
 			If _Sleep(500) Then Return
 			If QuickMIS("BC1", $g_sImgLabAssistant, 170, 130, 320, 170) Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
@@ -503,6 +552,125 @@ Func CheckIfLabIdle($bDebug = False)
 	EndIf
 	
 	Return $bRet
+EndFunc
+
+Func getMostBottomCostLab()
+	Local $TmpUpgradeCost, $TmpName, $ret
+	Local $Icon = QuickMIS("CNX", $g_sImgResourceIcon, 320, 300, 420, 400)
+	If IsArray($Icon) And UBound($Icon) > 0 Then
+		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord desc
+		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 12, 120, 20, True) ;check most bottom upgrade cost
+		$TmpName = getBuildingName($Icon[0][1] - 180, $Icon[0][2] - 10)
+		$ret = $TmpName[0] & "|" & $TmpUpgradeCost
+	EndIf
+	Return $ret
+EndFunc
+
+Func LabUpgrade($bTest = False)
+	Local $bNoPriorityUpgrade = True
+	Local $aCoord[2] = [0, 0]
+	
+	If Not $g_bAutoStarLabUpgradeEnable Then Return ; Lab upgrade not enabled.
+	If Not CheckIfLabIdle($bTest) Then Return
+	If _Sleep(50) Then Return
+	
+	VillageReport(True, True)
+	
+	Local $Upgrades = _FindLabUpgrade($bTest)
+	If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
+		SetLog("Laboratory Upgrade List:", $COLOR_INFO)
+		
+		If _ArraySearch($Upgrades, "Priority", 0, 0, 0, 0, 1, 7) >= 0 Then $bNoPriorityUpgrade = False
+		If _Sleep(50) Then Return
+		For $i = 0 To UBound($Upgrades) - 1
+			If $g_bLabUpgradeOrderEnable And $Upgrades[$i][7] = "Common" Then 
+				SetLog($Upgrades[$i][3] & " skip, not enabled order setting", $COLOR_DEBUG1)
+				ContinueLoop
+			EndIf
+			
+			If IsLabUpgradeResourceEnough($Upgrades[$i][5], $Upgrades[$i][0]) Then
+				SetLog("Going to Upgrade: " & $Upgrades[$i][3], $COLOR_ACTION)
+				$aCoord[0] = $Upgrades[$i][1]
+				$aCoord[1] = $Upgrades[$i][2]
+				Return LaboratoryUpgrade($Upgrades[$i][3], $aCoord, $Upgrades[$i][5], $bTest)
+			Else
+				SetLog("Skip upgrade " & $Upgrades[$i][3] & ", no resources", $COLOR_DEBUG2)
+			EndIf		
+		Next
+		
+		If $bNoPriorityUpgrade And $g_bUpgradeAnyTroops Then
+			SetLog("There is no Priority Upgrade listed, lets try upgrade others", $COLOR_INFO)
+			For $i = 0 To UBound($Upgrades) - 1
+				If IsLabUpgradeResourceEnough($Upgrades[$i][5], $Upgrades[$i][0]) Then
+					SetLog("Going to Upgrade: " & $Upgrades[$i][3], $COLOR_ACTION)
+					$aCoord[0] = $Upgrades[$i][1]
+					$aCoord[1] = $Upgrades[$i][2]
+					Return LaboratoryUpgrade($Upgrades[$i][3], $aCoord, $Upgrades[$i][55], $bTest)
+				Else
+					SetLog("Skip upgrade " & $Upgrades[$i][3] & ", no resources", $COLOR_DEBUG2)
+				EndIf
+			Next
+		EndIf
+	Else
+		SetLog("No Laboratory Upgrade", $COLOR_DEBUG2)
+	EndIf
+EndFunc
+
+Global $g_iXFindLabUpgrade = 200
+
+Func _FindLabUpgrade($bTest = False)
+	Local $aTmpCoord, $aUpgrade[0][8], $BuildingName, $sPriority = "", $aUpgradeName, $tmpcost, $lenght = 0
+	Local $aOrder[0][2], $sName = "", $iUpgrade = 0, $sNameUpgrade = "", $sPriority = "Common", $iScore = 0
+	
+	If $g_bLabUpgradeOrderEnable Then
+		For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
+			If $g_aCmbLabUpgradeOrder[$i] = -1 Then ContinueLoop
+			$sName = $g_avLabTroops[$g_aCmbLabUpgradeOrder[$i] + 1][2]
+			$iUpgrade = TroopIndexLookup($sName)
+			$sNameUpgrade = GetTroopName($iUpgrade)
+			SetLog("Priority Order [" & $i + 1 & "] " & $sNameUpgrade, $COLOR_DEBUG)
+			Local $aTmp[1][2] = [[10 - $i, $sNameUpgrade]]
+			_ArrayAdd($aOrder, $aTmp)
+		Next
+	EndIf
+	
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 320, 73, 420, 400)
+	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		For $i = 0 To UBound($aTmpCoord) - 1
+			$lenght = Number($aTmpCoord[$i][1]) - $g_iXFindLabUpgrade
+			$aUpgradeName = getBuildingName($g_iXFindLabUpgrade, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
+			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
+			If Number($tmpcost) = 0 Then ContinueLoop
+			
+			$sPriority = "Common"
+			$iScore = 0
+			If UBound($aOrder) > 0 Then
+				For $z = 0 To UBound($aOrder) - 1
+					If String($aUpgradeName[0]) = $aOrder[$z][1] Then 
+						$sPriority = "Priority"
+						$iScore = $aOrder[$z][0]
+						SetLog("Found Priority Upgrade, assign score: " & $iScore & " [" & $aUpgradeName[0] & "]", $COLOR_DEBUG2)
+					EndIf
+				Next
+			EndIf
+			
+			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), Number($aUpgradeName[1]), Number($tmpcost), $iScore, $sPriority]]
+			_ArrayAdd($aUpgrade, $tmparray)
+			If @error Then SetLog("FindUpgrade ComposeArray Err : " & @error, $COLOR_ERROR)
+		Next
+
+		For $j = 0 To UBound($aUpgrade) - 1
+			SetLog("[" & $j & "] Upgrade: " & $aUpgrade[$j][3] & ", Cost=" & $aUpgrade[$j][5] & " Coord [" &  $aUpgrade[$j][1] & "," & $aUpgrade[$j][2] & "]", $COLOR_DEBUG)
+		Next
+	EndIf
+	
+	If $g_bLabUpgradeOrderEnable Then 
+		_ArraySort($aUpgrade, 1, 0, 0, 6) ;sort by score
+	Else
+		_ArraySort($aUpgrade, 1, 0, 0, 5) ;sort by score
+	EndIf
+	
+	Return $aUpgrade
 EndFunc
 
 ; $sUpgrade = Any, will search all image 

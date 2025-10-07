@@ -676,7 +676,7 @@ Global Enum $eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFree
 ; Spells Icons
 Global Const $g_aSpellsIcon[$eSpellCount] = [$eIcnLightSpell, $eIcnHealSpell, $eIcnRageSpell, $eIcnJumpSpell, $eIcnFreezeSpell, $eIcnCloneSpell, $eIcnInvisibilitySpell, _
 		$eIcnRecallSpell, $eIcnPoisonSpell, $eIcnEarthQuakeSpell, $eIcnHasteSpell, $eIcnSkeletonSpell, $eIcnBatSpell, $eIcnOverGrowthSpell]
-Global Const $g_asSpellNames[$eSpellCount] = ["Lightning", "Heal", "Rage", "Jump", "Freeze", "Clone", "Invisibility", "Recall", "Poison", "Earthquake", "Haste", "Skeleton", "Bat", "OverGrowth"]
+Global Const $g_asSpellNames[$eSpellCount] = ["Lightning", "Healing", "Rage", "Jump", "Freeze", "Clone", "Invisibility", "Recall", "Poison", "Earthquake", "Haste", "Skeleton", "Bat", "OverGrowth"]
 Global Const $g_asSpellShortNames[$eSpellCount] = ["LSpell", "HSpell", "RSpell", "JSpell", "FSpell", "CSpell", "ISpell", "ReSpell", "PSpell", "ESpell", "HaSpell", "SkSpell", "BtSpell", "OgSpell"]
 Global Const $g_aiSpellSpace[$eSpellCount] = [1, 2, 2, 2, 1, 3, 1, 2, 1, 1, 1, 1, 1, 2]
 Global Const $g_aiSpellTrainTime[$eSpellCount] = [360, 360, 360, 360, 180, 720, 180, 360, 180, 180, 180, 180, 180, 360]

@@ -105,18 +105,18 @@ EndFunc
 
 Func OpenTraderWindow()
 	Local $bRet = False, $bTraderIconFound = False
-	If Not IsMainPage() Then Return
+	ZoomOut(True)
 	; Check Trader Icon on Main Village
-	For $i = 1 To 5
+	For $i = 1 To 10
 		If Not $g_bRunState Then Return
 		SetLog("Waiting Trader Icon #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgTrader, 120, 130, 230, 220) Then
+		If QuickMIS("BC1", $g_sImgTrader, 80, 60, 230, 220) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(500) Then Return
 			$bTraderIconFound = True
 			ExitLoop
 		EndIf
-		If _Sleep(250) Then Return
+		If _Sleep(500) Then Return
 	Next
 	
 	If Not $bTraderIconFound Then 

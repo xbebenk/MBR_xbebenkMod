@@ -980,7 +980,7 @@ Func __RunFunction($action)
 			RequestCC()
 			If _Sleep(50) Then Return
 		Case "Laboratory"
-			Laboratory()
+			LabUpgrade()
 			If _Sleep(50) Then Return
 		Case "PetHouse"
 			PetHouse()
@@ -1387,58 +1387,64 @@ Func BuilderBase()
 		$g_bStayOnBuilderBase = True
 		$g_bBBAttacked = True	; Reset Variable
 		Local $StartLabON = False
-
+		
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		CollectBuilderBase()
 		BuilderBaseReport(False, False)
-		If Not $g_bRunState Then Return
+		
+		If _Sleep(50) Then Return
 		CleanBBYard()
-		BuilderBaseReport(True, False)
-		If Not $g_bRunState Then Return
+		
+		If _Sleep(50) Then Return
 		If isGoldFullBB() Or isElixirFullBB() Then
 			If AutoUpgradeBB() Then
-				If _Sleep(1000) Then Return
 				ZoomOut(True) ;directly zoom
 			EndIf
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			$g_bBBAttacked = False
 		EndIf
-		If Not $g_bRunState Then Return
-		Local $bElixFull = isElixirFullBB()
-		If $bElixFull Then
-			$StartLabON = StarLab()
-			$g_bBBAttacked = False
+		
+		
+		If _Sleep(50) Then Return
+		If isElixirFullBB() Then
+			$StartLabON = StarLabUpgrade()
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+			$g_bBBAttacked = False
 		EndIf
-		If Not $g_bRunState Then Return
+		
+		If _Sleep(50) Then Return
 		BBDropTrophy()
-		If Not $g_bRunState Then Return
+		
+		If _Sleep(50) Then Return
 		If $g_bChkStopAttackBB6thBuilder And $g_bIs6thBuilderUnlocked Then
 			SetLog("6th Builder Unlocked, attackBB disabled", $COLOR_DEBUG)
 		Else
 			SetLog("StopAttackBB6thBuilder: " & String($g_bChkStopAttackBB6thBuilder) & ", Is6thBuilderUnlocked: " & String($g_bIs6thBuilderUnlocked), $COLOR_DEBUG1)
 			DoAttackBB()
-			If Not $g_bRunState Then Return
-			BuilderBaseReport(True, True)
+			If _Sleep(50) Then Return
 		EndIf
-		If Not $g_bRunState Then Return
+		
+		If _Sleep(50) Then Return
 		If $g_bBBAttacked Then
 			If AutoUpgradeBB() Then
-				If _Sleep(1000) Then Return
 				ZoomOut(True) ;directly zoom
 			EndIf
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
+		
+		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
-		If Not $StartLabON Then StarLab()
+		
+		If _Sleep(50) Then Return
+		If Not $StartLabON Then StarLabUpgrade()
 		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
 
-		If _Sleep(1000) Then Return
+		If _Sleep(50) Then Return
 		StartClockTowerBoost(False, False, $bUseCTPot)
-		If Not $g_bRunState Then Return
-		If _Sleep(1000) Then Return
+		
+		If _Sleep(50) Then Return
 		BuilderBaseReport(False, True)
-		If Not $g_bRunState Then Return
+		
 		$g_bStayOnBuilderBase = False
 		SwitchBetweenBases("Main")
 	EndIf

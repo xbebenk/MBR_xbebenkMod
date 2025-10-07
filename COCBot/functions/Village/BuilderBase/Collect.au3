@@ -27,7 +27,7 @@ Func CollectBuilderBase($bSwitchToBB = False, $bSwitchToNV = False)
 	SetLog("Collecting Resources on Builders Base", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
 	
-	Local $aResult = QuickMIS("CNX", $g_sImgCollectResourcesBB, 131,120,777, 584)
+	Local $aResult = QuickMIS("CNX", $g_sImgCollectResourcesBB, 131, 120, 777, 584)
 	If IsArray($aResult) And UBound($aResult) > 0 Then
 		For $i = 0 To UBound($aResult) - 1
 			If isInsideDiamondCollectBB($aResult[$i][1], $aResult[$i][2]) Then 
@@ -35,8 +35,6 @@ Func CollectBuilderBase($bSwitchToBB = False, $bSwitchToNV = False)
 				If $g_bDebugSetLog Then SetLog("Found random pick [" & $aResult[$i][1] & "," & $aResult[$i][2] & "]", $COLOR_SUCCESS)
 			EndIf
 		Next
-	Else
-		SetLog("No Tombs Found!", $COLOR_DEBUG1)
 	EndIf
 	
 	CollectBBCart()
