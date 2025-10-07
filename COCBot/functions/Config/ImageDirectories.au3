@@ -33,6 +33,7 @@ Global Const $g_sImgEventConfirm = @ScriptDir & "\imgxml\other\EventConfirm\"
 Global Const $g_sImgImportantNotice = @ScriptDir & "\imgxml\other\ImportantNotice\"
 Global Const $sImgHeroHallTutor = @ScriptDir & "\imgxml\other\HeroHallTutor\"
 Global Const $g_sImgRevengeTutor = @ScriptDir & "\imgxml\other\RevengeTutor\"
+Global Const $g_sImgPlacedOnLeague = @ScriptDir & "\imgxml\other\PlacedOnLeague\"
 #EndRegion
 
 #Region Main Village

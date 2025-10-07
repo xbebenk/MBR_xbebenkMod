@@ -247,6 +247,12 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	EndIf
 	
 	CheckHeroHallTutor()
+	PlacedOnLeague()
+	
+	If IsMultiplayerTabOpen() Then
+		ClickAway("Right")
+		If _Sleep(500) Then Return
+	EndIf
 
 	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ; if bot started or situated on clan capital map, and need to go back to main village
 		SetLog("checkObstacles: Found Clan Capital Map, Returning Home", $COLOR_ACTION)
@@ -343,6 +349,19 @@ Func WelcomeBackCheck()
 			Click(422, 543, 1, 50, "THUpgradedCheck")
 			Return True
 	EndIf
+EndFunc
+
+Func PlacedOnLeague()
+	Local $bRet
+	
+	If QuickMIS("BC1", $g_sImgPlacedOnLeague, 335, 85, 400, 135) Then
+		SetLog("You have been placed on a League", $COLOR_DEBUG2)
+		Click(525, 550, 1, 0, "PlacedOnLeague")
+		If _Sleep(3000) Then Return
+		ClickAway("Rigth")
+		$bRet = True
+	EndIf
+	Return $bRet
 EndFunc
 
 Func CheckSCLOGO()
