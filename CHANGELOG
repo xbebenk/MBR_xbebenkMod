@@ -29,3 +29,7 @@
 * Fix Attack Resource Read
 * Fix ClanGames Auto Collect Reward 
 * Fix Switch Account SCID (support 16 account)
+* Fix New Attack Find Opponent UI
+* Add Handle for New Attack Tutorial
+* Add Handle for New Place on a League message
+* 
