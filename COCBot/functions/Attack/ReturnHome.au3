@@ -68,43 +68,36 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 	For $i = 1 To 5
 		SetLog("Wait For EndBattle #" & $i, $COLOR_ACTION)
 		If $g_bRestart Then Return
-		If IsReturnHomeBattlePage() Or IsReturnHomeChestPage(False) Then
+		If IsReturnHomeBattlePage() Then
 			$BattleEnded = True
+			SetLog("Return Home : Found IsReturnHomeBattlePage()", $COLOR_DEBUG1) 
 			SetLog("Battle already over", $COLOR_SUCCESS)
 			ExitLoop ;exit Battle already ended
 		EndIf
-
-		If WaitforPixel(18, 548, 19, 549, "CF0D0E", 10, 1, "ReturnHome-EndBattle") Then
-			Click(65, 540, 1, 0, "#0099")
-			If _Sleep(500) Then Return
-			Local $j = 0
-			Local $OKCancel = False
-			While 1 ; dynamic wait for Okay button
-				SetDebugLog("Wait for OK button to appear #" & $j)
-				If IsOKCancelPage(True) Then
-					Click(510, 400, 2, 1000); Click Okay to Confirm surrender
-					If _Sleep(1000) Then Return
-					$OKCancel = True
-					ExitLoop
-				EndIf
-				
-				$j += 1
-				If $j > 5 Then ExitLoop ; if Okay button not found in 10*(200)ms or 2 seconds, then give up.
-				If _Sleep(500) Then Return
-			WEnd
-			
-			If Not $OKCancel Then
-				If _Sleep(1000) Then Return
-				If WaitMainScreen() Then
-					SetLog("Success Return Home", $COLOR_INFO)
-					Return
-				EndIf
-			EndIf
-		Else
-			If IsProblemAffect() Then Return
-			SetLog("Cannot Find Surrender Button", $COLOR_ERROR)
+		
+		If IsReturnHomeChestPage(False) Then
+			$BattleEnded = True
+			SetLog("Return Home : Found IsReturnHomeChestPage()", $COLOR_DEBUG1) 
+			SetLog("Battle already over", $COLOR_SUCCESS)
+			ExitLoop ;exit Battle already ended
 		EndIf
 		
+		If IsAttackPage() Then
+			Click(65, 540, 1, 0, "#0099")
+			If _Sleep(500) Then Return
+			
+			For $i = 1 To 3
+				If _Sleep(500) Then Return
+				SetLog("Wait for OK button to appear #" & $i, $COLOR_DEBUG1)
+				If IsOKCancelPage(True) Then
+					Click(510, 400, 1, 0, "Confirm Surender"); Click Okay to Confirm surrender
+					If _Sleep(1000) Then Return
+				EndIf
+			Next
+		Else
+			If IsProblemAffect() Then Return
+			SetLog("Cannot Find Surrender Button", $COLOR_DEBUG2)
+		EndIf
 		If _Sleep(500) Then Return ;set sleep for wait page changes
 	Next
 
@@ -174,11 +167,11 @@ Func ReturnHomeMainPage()
 EndFunc   ;==>ReturnHomeMainPage
 
 Func StarBonus()
-	Local $aStarBonus1[4] = [135, 92, 0x254963, 20] ; Black Balloon
-	Local $aStarBonus2[4] = [676, 87, 0x1995F8, 20] ; Blue header covering elixir bar
+	Local $aStarBonus1[4] = [38, 305, 0x3E4DFF, 20] ; Blue border covering chat tab
+	Local $aStarBonus2[4] = [433, 555, 0x6EBD1F, 20] ; Green Button
 	
 	If _CheckPixel($aStarBonus1, $g_bCapturePixel, Default, "Starbonus1") And _CheckPixel($aStarBonus2, $g_bCapturePixel, Default, "Starbonus2") Then
-		Click(425, 535, 1, 100, "StarBonus: Click Okay Button") ; Click Okay Button
+		Click(433, 535, 1, 100, "StarBonus: Click Okay Button") ; Click Okay Button
 		If _Sleep(500) Then Return
 		Return True
 	EndIf

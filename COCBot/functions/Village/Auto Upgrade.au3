@@ -37,13 +37,13 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	If $g_iFreeBuilderCount - $iWallReserve - ReservedBuildersForHeroes() < 1 Then ;check builder reserve on wall and hero upgrade
 		SetLog("FreeBuilder=" & $g_iFreeBuilderCount & ", Reserved (ForHero=" & $g_iHeroReservedBuilder & " ForWall=" & $iWallReserve & ")", $COLOR_INFO)
 		If Not $g_bSkipWallReserve And Not $g_bUpgradeLowCost Then
-			SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_WARNING)
+			SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_DEBUG2)
 			$bRet = False
 		EndIf
 	EndIf
 
 	If ($g_bSkipWallReserve Or $g_bUpgradeLowCost) And $g_iFreeBuilderCount > 0 Then
-		SetLog("CheckBuilder: " & ($g_bUpgradeLowCost ? "Upgrade remain time > 1day" : "Upgrade remain time < 24h"), $COLOR_WARNING)
+		SetLog("CheckBuilder: " & ($g_bUpgradeLowCost ? "Upgrade remain time > 1day" : "Upgrade remain time < 24h"), $COLOR_DEBUG2)
 		$bRet = True
 	EndIf
 	
@@ -54,7 +54,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	Else
 		If $g_iFreeBuilderCount = 1 Then
 			If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
-				SetLog("AutoUpgradeCheckBuilder, Free Builder = 1, Goblin Builder!, Return False", $COLOR_DEBUG1)
+				SetLog("AutoUpgradeCheckBuilder, Free Builder = 1, Goblin Builder!", $COLOR_DEBUG2)
 				$bRet = False
 			EndIf
 		EndIf
@@ -90,7 +90,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 EndFunc
 
 Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
-	SetLog("Check for Auto Upgrade", $COLOR_DEBUG)
+	SetLog("Check for Auto Upgrade", $COLOR_INFO)
 	If Not $g_bAutoUpgradeEnabled Then Return
 	If Not $g_bRunState Then Return
 	$g_bSkipWallReserve = False ;reset first

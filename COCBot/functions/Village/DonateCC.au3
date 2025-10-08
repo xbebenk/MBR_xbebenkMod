@@ -141,7 +141,7 @@ Func DonateCC($bTest = False, $bSwitch = False, $bClanChatOpened = False)
 
 	;Opens clan tab
 	If $bClanChatOpened Then 
-		SetLog("DonateCC while RequestCC", $COLOR_DEBUG)
+		SetLog("DonateCC while RequestCC", $COLOR_INFO)
 	Else
 		If checkChatTabPixel() Then
 			Click($aChatTabClosed[0], $aChatTabClosed[1]) ;Click ClanChatOpen
@@ -167,7 +167,7 @@ Func DonateCC($bTest = False, $bSwitch = False, $bClanChatOpened = False)
 	Wend
 
 	If Not $g_bRunState Then Return
-	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_ACTION)
+	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then SetLog("Checking for Donate Requests in Clan Chat", $COLOR_INFO)
 
 	Local $aiSearchArray[4] = [250, 130, 340, 600], $aSearchArea = $aiSearchArray
 	Local $aiDonateButton[2] = [0, 0], $ClanString = "", $sNewClanString = ""

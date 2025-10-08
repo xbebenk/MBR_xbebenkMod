@@ -488,13 +488,13 @@ Func CheckIfLabIdle($bDebug = False)
 		Local $iLab = Number($aGetLab[0]), $iLabMax = Number($aGetLab[1])
 		Select 
 			Case $iLab = 0 And $iLabMax = 1
-				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_DEBUG)
+				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_DEBUG2)
 				$bRet = False
 			Case $iLab = 1 And $iLabMax = 2
-				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_DEBUG)
+				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_DEBUG2)
 				$bRet = False
 			Case $iLab = 1 And $iLabMax >= 1
-				SetLog("CheckIfLabIdle: Lab is Idle", $COLOR_DEBUG)
+				SetLog("CheckIfLabIdle: Lab is Idle", $COLOR_SUCCESS)
 				$bRet = True
 		EndSelect
 	EndIf
@@ -573,6 +573,7 @@ Func LabUpgrade($bTest = False)
 	If Not $g_bAutoStarLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 	If Not CheckIfLabIdle($bTest) Then Return
 	If _Sleep(50) Then Return
+	SetLog("Checking for Laboratory Research", $COLOR_INFO)
 	
 	VillageReport(True, True)
 	

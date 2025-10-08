@@ -14,7 +14,7 @@
 Func DailyChallenges()
 	If Not $g_bChkCollectRewards Then Return
 	If Not $g_bRunState Then Return
-	SetLog("Checking DailyChallenges", $COLOR_ACTION)
+	SetLog("Checking DailyChallenges", $COLOR_INFO)
 	If Not _PixelSearch(170, 622, 171, 623, Hex(0xE31528, 6), 10, True, "DailyChallenges") Then
 		SetLog("No New Bonus!", $COLOR_DEBUG2)
 		Return

@@ -23,7 +23,7 @@ Func RequestCC($sText = "", $bTest = False)
 	EndIf
 	
 	If _Sleep($DELAYREQUESTCC1) Then Return
-	SetLog("Requesting Clan Castle reinforcements", $COLOR_ACTION)
+	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
 	
 	If Not $g_bRunState Then Return
 	Local $aRequestButton = QuickMIS("CNX", $g_sImgRequestCCButton, 280, 600, 360, 670)

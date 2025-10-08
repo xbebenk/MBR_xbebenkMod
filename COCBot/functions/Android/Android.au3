@@ -4181,7 +4181,7 @@ Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default,
 		Switch $bRestorePosAndActivateWhenShow
 			Case True
 				; move and activate
-				WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
+				;WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
 				WinSetState($g_hAndroidWindow, "", @SW_SHOW)
 			Case False
 				; don't move, only when hidden

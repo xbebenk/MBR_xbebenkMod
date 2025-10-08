@@ -23,7 +23,7 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 	ClickAway()
 	If Not IsMainPage() Then Return
 
-	SetLog("Checking achievement rewards", $COLOR_ACTION)
+	SetLog("Checking achievement rewards", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
 	Local $Collecting = True, $RewardCollected = False
 	While $Collecting

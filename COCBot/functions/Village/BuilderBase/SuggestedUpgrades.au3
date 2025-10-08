@@ -25,9 +25,10 @@ EndFunc   ;==>MainSuggestedUpgradeCode
 
 Func SearchUpgradeBB($bTest = False)
 	$g_bStayOnBuilderBase = True
-	SetLog("Auto UpgradeBB", $COLOR_DEBUG)
+	
 	If Not $g_bAutoUpgradeBBEnabled Then Return
 	If _Sleep(50) Then Return
+	SetLog("Check for Auto UpgradeBB", $COLOR_INFO)
 	
 	If Not $g_bRunState Then Return
 	If AutoUpgradeBBCheckBuilder($bTest) Then
@@ -656,7 +657,7 @@ Func AutoUpgradeBBCheckBuilder($bTest = False)
 	If $bTest Then $g_iFreeBuilderCountBB = 1
 	
 	If $g_aiCurrentLootBB[$eLootGoldBB] < 5000 Then 
-		SetLog("GoldBB < 5000, try again later!", $COLOR_DEBUG)
+		SetLog("GoldBB < 5000, try again later!", $COLOR_DEBUG2)
 		Return False
 	EndIf
 	
@@ -664,7 +665,7 @@ Func AutoUpgradeBBCheckBuilder($bTest = False)
 	If $g_iFreeBuilderCountBB > 0 Then
 		$bRet = True
 	Else
-		SetLog("Master Builder Not Available", $COLOR_DEBUG)
+		SetLog("Master Builder Not Available", $COLOR_DEBUG2)
 		$bRet = False
 	EndIf
 	SetLog("Free Master Builder : " & $g_iFreeBuilderCountBB, $COLOR_DEBUG)

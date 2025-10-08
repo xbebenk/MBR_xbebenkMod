@@ -4,14 +4,14 @@ Func CleanBBYard($bTest = False)
 	BuilderBaseReport(True)
 	ZoomOut()
 	If $g_sSceneryCode <> "BL" Then 
-		SetLog("Builder Base Lower Zone Not detected, exit!", $COLOR_ERROR)
+		SetLog("Builder Base Lower Zone Not detected, exit!", $COLOR_DEBUG2)
 		Return
 	EndIf
 	; Timer
 	Local $hObstaclesTimer = __TimerInit()
-	SetLog("CleanBBYard: Try removing obstacles", $COLOR_DEBUG)
+	SetLog("CleanBBYard: Try removing obstacles", $COLOR_INFO)
 	If $g_aiCurrentLootBB[$eLootElixirBB] < 30000 And Not $bTest Then 
-		SetLog("Current BB Elixir Below 30000, skip CleanBBYard", $COLOR_DEBUG)
+		SetLog("Current BB Elixir Below 30000, skip CleanBBYard", $COLOR_DEBUG2)
 		Return
 	EndIf
 	
@@ -35,21 +35,21 @@ Func CleanBBYard($bTest = False)
 				
 				BuilderBaseReport(True, False)
 				If $g_aiCurrentLootBB[$eLootElixirBB] < 20000 Then
-					SetLog("Current BB Elixir Below 20000, skip CleanBBYard", $COLOR_DEBUG)
+					SetLog("Current BB Elixir Below 20000, skip CleanBBYard", $COLOR_DEBUG2)
 					ExitLoop
 				EndIf
 			Else 
-				SetLog("[" & $Result[$i][0] & "] Coord Outside Village [" & $Result[$i][1] & ", " & $Result[$i][2] & "]", $COLOR_DEBUG)
+				SetLog("[" & $Result[$i][0] & "] Coord Outside Village [" & $Result[$i][1] & ", " & $Result[$i][2] & "]", $COLOR_DEBUG2)
 			EndIf
 		Next
 	EndIf
 	
 	If $Locate = 0 Then 
-		SetLog("No Obstacles found, Yard is clean!", $COLOR_SUCCESS)
+		SetLog("No Obstacles found, Yard is clean!", $COLOR_DEBUG2)
 	Else
 		SetLog("Clean BB Yard Found and Clearing " & $Locate & " Obstacles!", $COLOR_SUCCESS)
+		SetLog("CleanBBYard used Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_DEBUG)
 	EndIf
-	SetLog("CleanBBYard used Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_DEBUG)
 	UpdateStats()
 EndFunc   ;==>CleanBBYard
 
