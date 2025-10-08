@@ -738,24 +738,14 @@ EndFunc   ;==>IsUseCustomTroopOrder
 Func chkWalls()
 	If GUICtrlRead($g_hChkWalls) = $GUI_CHECKED Then
 		$g_bAutoUpgradeWallsEnable = True
-		For $i = $g_hChkWalls To $g_hBtnFindWalls
+		For $i = $g_hChkUseGold To $g_hChkOnly1Builder
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
-		;GUICtrlSetState($g_hChkUseGold, $GUI_ENABLE)
-		;GUICtrlSetState($g_hChkUseElixir, $GUI_ENABLE)
-		;GUICtrlSetState($g_hChkUseElixirGold, $GUI_ENABLE)
-		;GUICtrlSetState($g_hTxtWallMinGold, $GUI_ENABLE)
-		;GUICtrlSetState($g_hTxtWallMinElixir, $GUI_ENABLE)		
 	Else
 		$g_bAutoUpgradeWallsEnable = False
-		For $i = $g_hChkWalls To $g_hBtnFindWalls
+		For $i = $g_hChkUseGold To $g_hChkOnly1Builder
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
-		;GUICtrlSetState($g_hChkUseGold, $GUI_DISABLE)
-		;GUICtrlSetState($g_hChkUseElixir, $GUI_DISABLE)
-		;GUICtrlSetState($g_hChkUseElixirGold, $GUI_DISABLE)
-		;GUICtrlSetState($g_hTxtWallMinGold, $GUI_DISABLE)
-		;GUICtrlSetState($g_hTxtWallMinElixir, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkWalls
 

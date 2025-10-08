@@ -86,12 +86,13 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 			Click(65, 540, 1, 0, "#0099")
 			If _Sleep(500) Then Return
 			
-			For $i = 1 To 3
+			For $z = 1 To 3
 				If _Sleep(500) Then Return
-				SetLog("Wait for OK button to appear #" & $i, $COLOR_DEBUG1)
+				SetLog("Wait for OK button to appear #" & $z, $COLOR_DEBUG1)
 				If IsOKCancelPage(True) Then
 					Click(510, 400, 1, 0, "Confirm Surender"); Click Okay to Confirm surrender
 					If _Sleep(1000) Then Return
+					ExitLoop
 				EndIf
 			Next
 		Else

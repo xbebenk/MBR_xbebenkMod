@@ -176,7 +176,6 @@ Func CheckUpgrades() ; Valdiate and determine the cost and type of the upgrade a
 			If $g_abUpgradeRepeatEnable[$iz] = True Then GUICtrlSetState($g_hChkUpgradeRepeat[$iz], $GUI_UNCHECKED) ; Change repeat selection box to unchecked
 			ContinueLoop
 		EndIf
-		;		GUICtrlSetState($g_hChkWalls, $GUI_UNCHECKED) ; Turn off upgrade walls since we have buidlings to upgrade  = disabled due v7.0 skipwallupgrade code
 	Next
 	; Add duplicate check?
 

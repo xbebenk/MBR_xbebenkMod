@@ -13,7 +13,6 @@
 ; Example .......: No
 ; ==============================================================================================================================
 
-Global $aLabMenu[2] = [265, 15]
 Global $g_iXFindLabUpgrade = 300
 
 Func Laboratory($bDebug = False)
@@ -434,10 +433,10 @@ EndFunc
 Func IsLabMenuOpen()
 	Local $bRet = False
 	
-	If _ColorCheck(_GetPixelColor(320, 63, True), Hex(0xE8E9DF, 6), 40, Default, "IsLabMenuOpen") Then 
+	If _ColorCheck(_GetPixelColor($aLabMenuOpened[0], $aLabMenuOpened[1], True), Hex($aLabMenuOpened[2], 6), $aLabMenuOpened[3], Default, "IsLabMenuOpen") Then 
 		$bRet = True
 	Else
-		SetLog("IsLabMenuOpen Color Not Matched, expexted E8E9DF, found : " & _GetPixelColor(320, 63, True), $COLOR_DEBUG2)
+		SetLog("IsLabMenuOpen Not Matched, expexted " & Hex($aLabMenuOpened[2], 6) & ", found : " & _GetPixelColor($aLabMenuOpened[0], $aLabMenuOpened[1], True), $COLOR_DEBUG2)
 	EndIf
 	
 	Return $bRet
@@ -547,7 +546,7 @@ Func CheckIfLabIdle($bDebug = False)
 					EndIf
 				EndIf
 			EndIf
-			ClickP($aLabMenu)
+			ClickLabMenu()
 		EndIf
 	EndIf
 	
@@ -606,7 +605,7 @@ Func LabUpgrade($bTest = False)
 					SetLog("Going to Upgrade: " & $Upgrades[$i][3], $COLOR_ACTION)
 					$aCoord[0] = $Upgrades[$i][1]
 					$aCoord[1] = $Upgrades[$i][2]
-					Return LaboratoryUpgrade($Upgrades[$i][3], $aCoord, $Upgrades[$i][55], $bTest)
+					Return LaboratoryUpgrade($Upgrades[$i][3], $aCoord, $Upgrades[$i][5], $bTest)
 				Else
 					SetLog("Skip upgrade " & $Upgrades[$i][3] & ", no resources", $COLOR_DEBUG2)
 				EndIf

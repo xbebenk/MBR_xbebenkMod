@@ -219,10 +219,11 @@ EndFunc   ;==>IsOKCancelPage
 Func IsReturnHomeBattlePage($bAction = False)
 	Local $bRet = False
 	If IsPageLoop($aReturnHomeButton, 1) Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Return Home Battle Window OK**", $COLOR_ACTION)
+		SetDebugLog("**Return Home Battle Window OK**", $COLOR_ACTION)
 		If Not $bAction Then Return True
-		ClickP($aReturnHomeButton, 1, 0, "#0101") ;Click Return Home Button
-		SetLog("Return HOME!", $COLOR_SUCCESS)
+		ClickP($aReturnHomeButton, 1, 0, "Return Home") ;Click Return Home Button
+		SetDebugLog("ReturnHomeBattlePage!", $COLOR_SUCCESS)
+		$bRet = True
 	EndIf	
 	
 	If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Return Home Battle Window FAIL**", $COLOR_ACTION)
@@ -234,7 +235,7 @@ EndFunc   ;==>IsReturnHomeBattlePage
 Func IsReturnHomeChestPage($bAction = True)
 	Local $bRet = False
 	If IsPageLoop($aReturnHomeChest, 1) Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Return Home Chest Window OK**", $COLOR_ACTION)
+		SetDebugLog("**Return Home Chest Window OK**", $COLOR_ACTION)
 		If Not $bAction Then Return True
 		
 		ClickP($aReturnHomeChest)

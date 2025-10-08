@@ -4146,14 +4146,35 @@ Func ShowAndroidWindow($hHWndAfter = Default, $bRestorePosAndActivateWindow = De
 	Return HideAndroidWindow(False, $bRestorePosAndActivateWindow, $bFastCheck, $sSource & "->ShowAndroidWindow", $hHWndAfter)
 EndFunc   ;==>ShowAndroidWindow
 
+Func CreateSecondDesktop()
+	Local $NumVD = 1, $process_killed
+	Local $iWinVer = @OSVersion
+	
+	Switch $iWinVer
+		Case "WIN_10"
+			_VrtDesktObjCreation() ;initialize virtual desktop object
+			$NumVD = _GetEnumVirtDskt()
+			If $NumVD = 1 Then _CreateNewVirtDskt()
+		Case "WIN_11"
+			$NumVD = LaunchConsole(@ScriptDir & "\lib\VirtualDesktop11-24H2.exe", "/count", $process_killed)
+			If StringInStr($NumVD, "desktops:") then
+				Local $icountdesktop = StringReplace($NumVD, "Count of desktops: " , "")
+				If $icountdesktop < 2 Then 
+					LaunchConsole(@ScriptDir & "\lib\VirtualDesktop11-24H2.exe", "/new", $process_killed)
+					SetLog("Creating new desktop", $COLOR_INFO)
+				EndIf
+			EndIf
+	EndSwitch
+EndFunc
+
 Func _MoveAndroidWinToDesktop($iDesktopNumber = 0, $hAndroidWindow = $g_hAndroidWindow)
 	Local $iAndroidPid = GetAndroidPid()
-	Local $iWinVer = @OSVersion
+	Local $iWinVer = @OSVersion, $process_killed
 	Switch $iWinVer
 		Case "WIN_10"
 			_MoveAppToSpecificDesktop($hAndroidWindow, $iDesktopNumber)
 		Case "WIN_11"
-			Run(@ScriptDir & "\lib\VirtualDesktop11-24H2.exe /anim:0 /gd:" & $iDesktopNumber & " /mw:" & $iAndroidPid, "", @SW_HIDE, $STDIO_INHERIT_PARENT)
+			Local $cmdOutput = LaunchConsole(@ScriptDir & "\lib\VirtualDesktop11-24H2.exe", "/anim:0 /gd:" & $iDesktopNumber & " /mw:" & $iAndroidPid, $process_killed)
 	EndSwitch
 EndFunc
 

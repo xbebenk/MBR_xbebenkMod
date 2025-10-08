@@ -5,9 +5,16 @@
 
  Mod Info:
 - This is xbeMOD, based on official MyBotRun v7.9.9
+- There is no compiled version, run bot script with autoit3 [Guide here](https://mybot.run/forums/index.php?/topic/8714-guide-how-to-recompile-the-bot-run-bot-as-script/)
+- Use AutoIt v.3.3.16 [Download here](https://www.autoitscript.com/autoit3/files/archive/autoit/autoit-v3.3.16.1-setup.exe)
 - Tested only with Bluestacks5 v.5.21.610.1003, you can download here : [Bluestacks5 Installer v.5.21.610.1003]( https://ak-build.bluestacks.com/public/app-player/windows/nxt/5.21.610.1003/25343c4e28853b01095c62342d9cbc16/FullInstaller/x64/BlueStacksFullInstaller_5.21.610.1003_amd64_native.exe)
+- Use this guide to [install Bluestacks5 with Pie Image as Default](https://support.bluestacks.com/hc/en-us/articles/4402611273485-BlueStacks-5-offline-installer)
 - Not Tested with nox/memu yet
-- Support Windows 11 DirectX/WinAPI background mode (please create second desktop from Task view on taskbar)
+- Support Windows 11 DirectX/WinAPI background mode
+- Mod cannot Train yet, so you train manually and let bot use your Troops Composition
+- Enable option Village -- Misc -- MiscMod -- OnTrain -- Fill Empty Army/Spell slot and fill with normal troop (Not super troop)
+
+- More details on : [CHANGELOG](https://github.com/xbebenk/MBR_xbebenkMod/blob/dev_1.2.6/CHANGELOG)
 
 The Latest Version
   ------------------

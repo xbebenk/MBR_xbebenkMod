@@ -91,12 +91,6 @@ Func UpdateBotTitle()
 EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
-	If @OSVersion = "WIN_10" And @OSBuild < 22000 Then ;only supported on win10, using osbuild to filter win11 as autoit v3.3.14.5 doesn't know win11 yet
-		_VrtDesktObjCreation() ;virtual desktop object
-		Local $NumVD = _GetEnumVirtDskt()
-		If $NumVD = 1 Then _CreateNewVirtDskt()
-    EndIf
-
 	ProcessCommandLine()
 
 	If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then ; Set developer mode
@@ -151,7 +145,8 @@ Func InitializeBot()
 	; Create GUI
 	CreateMainGUIControls() ; Create all GUI Controls
 	InitializeMainGUI() ; setup GUI Controls
-
+	CreateSecondDesktop()
+	
 	; Files/folders
 	SetupFilesAndFolders()
 
