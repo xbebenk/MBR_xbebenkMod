@@ -289,7 +289,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		EndIf
 
 		; Return Home on Search limit or Hero healed
-		If SearchLimit($iSkipped + 1, $bReturnToPickupHero) Then Return True
+		If SearchLimit($iSkipped + 1) Then Return True
 
 		If CheckAndroidReboot() = True Then
 			$g_bRestart = True
@@ -417,31 +417,18 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 EndFunc   ;==>_VillageSearch
 
-Func SearchLimit($iSkipped, $bReturnToPickupHero = False)
-	If $bReturnToPickupHero Or ($g_bSearchRestartEnable And $iSkipped >= Number($g_iSearchRestartLimit)) Then
-		Local $Wcount = 0
-		While _CheckPixel($aSurrenderButton, $g_bCapturePixel) = False
-			If _Sleep($DELAYSEARCHLIMIT) Then Return
-			$Wcount += 1
-			SetDebugLog("wait surrender button " & $Wcount, $COLOR_DEBUG)
-			If $Wcount >= 50 Or IsProblemAffect() Then
-				checkMainScreen(True, $g_bStayOnBuilderBase, "SearchLimit")
-				$g_bIsClientSyncError = False ; reset OOS flag for long restart
-				$g_bRestart = True ; set force runbot restart flag
-				Return True
-			EndIf
-		WEnd
+Func SearchLimit($iSkipped = 50)
+	Local $bRet = False
+	If $iSkipped >= Number($g_iSearchRestartLimit) Then
+		SetLog("Search Limit search/max : " & $iSkipped & "/" & $g_iSearchRestartLimit, $COLOR_DEBUG2)
+		ReturnHome(False, False)
 		$g_bIsSearchLimit = True
-		ReturnHome(False, False) ;If End battle is available
-		getArmyTroopCapacity(True, True)
 		$g_bRestart = True ; set force runbot restart flag
 		$g_bIsClientSyncError = True ; set OOS flag for fast restart
-		Return True
-	Else
-		Return False
+		$bRet = True
 	EndIf
+	Return $bRet
 EndFunc   ;==>SearchLimit
-
 
 Func WriteLogVillageSearch($x)
 	;this function write in BOT LOG the values setting for each attack mode ($DB,$LB)

@@ -66,7 +66,7 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 
 	Local $BattleEnded = False
 	For $i = 1 To 5
-		SetLog("Wait For EndBattle #" & $i, $COLOR_ACTION)
+		SetDebugLog("Wait For EndBattle #" & $i, $COLOR_ACTION)
 		If $g_bRestart Then Return
 		If IsReturnHomeBattlePage() Then
 			$BattleEnded = True
@@ -88,12 +88,13 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 			
 			For $z = 1 To 3
 				If _Sleep(500) Then Return
-				SetLog("Wait for OK button to appear #" & $z, $COLOR_DEBUG1)
+				SetDebugLog("Wait for OK button to appear #" & $z, $COLOR_DEBUG1)
 				If IsOKCancelPage(True) Then
 					Click(510, 400, 1, 0, "Confirm Surender"); Click Okay to Confirm surrender
 					If _Sleep(1000) Then Return
 					ExitLoop
 				EndIf
+				If ReturnHomeMainPage(False) Then Return
 			Next
 		Else
 			If IsProblemAffect() Then Return
@@ -159,9 +160,9 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 	EndIf
 EndFunc   ;==>ReturnHome
 
-Func ReturnHomeMainPage()
+Func ReturnHomeMainPage($bClearLog = True)
 	If IsMainPage(1) Then
-		SetLogCentered(" BOT LOG ", Default, Default, True)
+		If $bClearLog Then SetLogCentered(" BOT LOG ", Default, Default, True)
 		Return True
 	EndIf
 	Return False
@@ -180,7 +181,6 @@ Func StarBonus()
 EndFunc   ;==>StarBonus
 
 Func ReturnfromDropTrophies($AttackLog = False)
-	Local $aiSurrenderButton
 	SetDebugLog(" -- ReturnfromDropTrophies -- ")
 	
 	For $i = 1 To 10 
