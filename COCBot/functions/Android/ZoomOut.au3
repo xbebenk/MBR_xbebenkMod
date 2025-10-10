@@ -17,14 +17,12 @@
 Global $g_aiSearchZoomOutCounter[2] = [0, 1] ; 0: Counter of SearchZoomOut calls, 1: # of post zoomouts after image found
 
 Func ZoomOut($bZoomOutFirst = False) ;Zooms out
-	Static $s_bZoomOutActive = False
-	If $s_bZoomOutActive Then Return ; recursive not allowed here
-	$s_bZoomOutActive = True
+	Local $bRet
 	If Not $g_bRunState Then Return
 	If $bZoomOutFirst Then AndroidZoomOut()
-	Local $Result = _ZoomOut()
-	$s_bZoomOutActive = False
-	Return $Result
+	$bRet = _ZoomOut()
+	
+	Return $bRet
 EndFunc   ;==>ZoomOut
 
 Func _ZoomOut() ;Zooms out
@@ -240,11 +238,15 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $aPicture = ["", 0, 0, 0, 0]
 	If Not $g_bRunState Then Return
 	
-	Local $bCenterVillage = Not ZoomoutHelper($sFunc)
+	If ZoomoutHelper($sFunc) Then 
+		Return
+	Else
+		AndroidZoomOut()
+	EndIf
 	
 	If _Sleep(50) Then Return
 	ForceCaptureRegion()
-	$aPicture = SearchZoomOut($bCenterVillage, True, "", True)
+	$aPicture = SearchZoomOut(True, True, "", True)
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		AndroidZoomOut()

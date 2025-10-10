@@ -25,15 +25,6 @@ Func BotDetectFirstTime()
 	  SetLog("Townhall: (" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_DEBUG)
 	EndIf
 
-	If Number($g_iTownHallLevel) < 2 Then
-		Local $aTownHallLevel = GetTownHallLevel(True) ; Get the Users TH level
-		If IsArray($aTownHallLevel) Then $g_iTownHallLevel = 0 ; Check for error finding TH level, and reset to zero if yes
-	EndIf
-
-	If $g_iTownHallLevel > 2 Then
-		saveConfig()
-	EndIf
-
 	If _Sleep(50) Then Return
 
 	If $g_aiClanCastlePos[0] = -1 Then

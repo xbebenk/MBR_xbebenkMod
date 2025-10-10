@@ -16,7 +16,7 @@
 Func CollectFreeMagicItems($bTest = False)
 	If Not $g_bChkCollectFreeMagicItems Then Return
 	$g_aRemoveFreeMagicItems[0] = False ;reset first
-	SetLog("Check for collect Free Magic Items", $COLOR_ACTION)
+	SetLog("Check for collect Free Magic Items", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	ClickAway()
 
@@ -49,7 +49,7 @@ Func CollectFreeMagicItems($bTest = False)
 					ExitLoop
 				Else
 					If _ColorCheck(_GetPixelColor($aResults[$i][1] - 10, $aResults[$i][2], True), Hex(0x8DC529, 6), 10) Then ;Check if we still have Green Color
-						SetLog("Free Magic Item detected", $COLOR_INFO)
+						SetLog("Free Magic Item detected", $COLOR_DEBUG)
 						SetLog("But Storage on TownHall is Full", $COLOR_INFO)
 						Local $Amount = StringLeft($aResults[$i][3], 1)
 						$g_aRemoveFreeMagicItems[0] = True ;set Remove True
@@ -58,7 +58,7 @@ Func CollectFreeMagicItems($bTest = False)
 					EndIf
 				EndIf
 			Else
-				SetLog("Should click on [" & $aResults[$i][1] & "," & $aResults[$i][2] & "]", $COLOR_ERROR)
+				SetLog("Should click on [" & $aResults[$i][1] & "," & $aResults[$i][2] & "]", $COLOR_DEBUG2)
 			EndIf
 		EndIf
 	Next
@@ -109,7 +109,7 @@ Func OpenTraderWindow()
 	; Check Trader Icon on Main Village
 	For $i = 1 To 10
 		If Not $g_bRunState Then Return
-		SetLog("Waiting Trader Icon #" & $i, $COLOR_ACTION)
+		SetDebugLog("Waiting Trader Icon #" & $i, $COLOR_ACTION)
 		If QuickMIS("BC1", $g_sImgTrader, 80, 60, 230, 220) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(500) Then Return
@@ -191,7 +191,7 @@ EndFunc
 
 Func SaleFullMagicItem($MagicItem = "", $Amount = 0)
 	If Not $g_bRunState Then Return
-	SetLog("Checking for Full Magic Items", $COLOR_ACTION)
+	SetLog("Checking for Full Magic Items", $COLOR_INFO)
 	If Not OpenMagicItemWindow() Then Return
 	
 	If $MagicItem = "" And $Amount = 0 Then 
@@ -247,7 +247,7 @@ Func SaleMagicItem($bTest = False)
 	ClickAway()
 	If _Sleep(500) Then Return
 	If Not $g_bChkEnableSaleMagicItem Then Return
-	SetLog("Checking for Sell Magic Items", $COLOR_ACTION)
+	SetLog("Checking for Sell Magic Items", $COLOR_INFO)
 	If Not OpenMagicItemWindow() Then Return
 	Local $sReadItemCount, $asReadItemCount, $Count, $MaxCount
 	
@@ -324,7 +324,7 @@ Func OpenMagicItemWindow()
 	
 	If Not $g_bRunState Then Return
 	If $bLocateTH Then
-		If SearchTH() Then 
+		If SearchTH(True, False) Then 
 			If _Sleep(500) Then Return
 			ClickP($g_aiTownHallPos)
 			If _Sleep(500) Then Return
@@ -381,7 +381,7 @@ Func UseFreeMagicItem()
 	If Not $g_bRunState Then Return
 	Local $x, $y
 	
-	SetLog("Checking for Magic Item on Box", $COLOR_ACTION)
+	SetLog("Checking for Magic Item on Box", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgMagicItemBox, 625, 610, 675, 650) Then
 		SetLog("Magic Box Found, checking items", $COLOR_ACTION)
 		$x = $g_iQuickMISX

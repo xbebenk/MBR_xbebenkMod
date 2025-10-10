@@ -142,7 +142,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False)
 	If Not $g_bRunState Then Return
 	SetLog("Search For Upgrade", $COLOR_DEBUG)
 	If Not ClickMainBuilder($bTest) Then Return
-	Local $Upgrades, $ZoomedIn = False, $isWall = False, $bDoScroll = True, $bNew = False, $bSkipNew = False, $bReadResource = False
+	Local $Upgrades, $ZoomedIn = False, $isWall = False, $bDoScroll = True, $bNew = False, $bSkipNew = $bSkip1st, $bReadResource = False
 	Local $b_BuildingFound = False, $TmpUpgradeCost, $UpgradeCost, $sameCost = 0
 	Local $iZ = 1
 	If $bSkip1st Then $iZ = 2
@@ -264,7 +264,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 	Local $Elix = $g_aiCurrentLoot[$eLootElixir]
 	If $Gold > $Elix Then $GoldMultiply += 1
 	If $Elix > $Gold Then $ElixMultiply += 1
-	Local $aTmpCoord, $aBuilding[0][8], $BuildingName, $UpgradeCost, $aUpgradeName, $tmpcost, $bFoundRushTH = False, $lenght = 0
+	Local $aTmpCoord, $aBuilding[0][8], $BuildingName, $UpgradeCost, $aUpgradeName, $tmpcost, $bFoundRushTH = False, $bRusTHFound = False, $lenght = 0
 	Local $aPriority[7][2] = [["Castle", 15], ["Pet", 13], ["Laboratory", 16], ["Storage", 14], ["Army", 14], ["Giga", 12], ["Town", 10]]
 	Local $aRushTH[9][2] = [["Hero", 13], ["Barracks", 8], ["Spell", 9], ["Workshop", 10], ["Blacksmith", 8], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
 	Local $aHeroes[4] = ["Barbarian", "Queen", "Warden", "Champion"]
@@ -324,7 +324,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 			$lenght = Number($aTmpCoord[$i][1]) - $g_iXFindUpgrade
 			$aUpgradeName = getBuildingName($g_iXFindUpgrade, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			If $g_bChkRushTH And Not IsTHLevelAchieved() Then ;if rushth enabled, filter only rushth buildings
-				Local $bRusTHFound = False
+				$bRusTHFound = False
 				For $x = 0 To UBound($aRushTH) - 1
 					If StringInStr($aUpgradeName[0], $aRushTH[$x][0], 1) Then
 						$bRusTHFound = True ;used for add array
@@ -357,7 +357,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 				EndIf
 			EndIf
 			If $g_bSkipWallReserve Then
-				If Number($tmpcost) < 500000 And $aTmpCoord[$i][0] <> "DE" Then
+				If Number($tmpcost) < 500000 And $aTmpCoord[$i][0] <> "DE" And Not $bSkipNew Then
 					SetLog("SkipWallReserve=" & String($g_bSkipWallReserve) & ", " & $aUpgradeName[0] & " : " & $tmpcost & " < 500000, skip", $COLOR_DEBUG1)
 					ContinueLoop
 				EndIf
@@ -1147,7 +1147,7 @@ Func SearchGreenZone()
 	If Not $g_bRunState Then Return
 	SetLog("Search GreenZone for Placing new Building", $COLOR_INFO)
 	If _Sleep(50) Then Return
-	ZoomOut()
+	ZoomOut(True)
 
 	Local $bSupportedScenery = False
 	Local $sSceneryCode[3] = ["DS", "JS", "MS"]
@@ -1487,11 +1487,11 @@ Func PlaceUnplacedBuilding($bTest = False)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				SetLog("Unplaced Bulding, Succeed", $COLOR_SUCCESS)
 			Else
-				ZoomOut()
+				ZoomOut(True)
 				GoGoblinMap()
 			EndIf
 			If _Sleep(1000) Then Return
-			ZoomOut()
+			ZoomOut(True)
 		Else
 			SetLog("Trying to place Unplaced Bulding, Failed", $COLOR_ERROR)
 			Return False

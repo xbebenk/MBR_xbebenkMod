@@ -58,6 +58,7 @@ Func _makerequest($x = 315, $y = 645, $bTest = False)
 	Local $iCount = 0, $TmpX = 0, $TmpY = 0
 	Click($x, $y, 1, 0, "0336") ;click button request troops	
 	Local $RequestWindowOpen = False
+	If _Sleep(500) Then Return
 	For $i = 1 To 10
 		SetDebugLog("Wait for Send Request Window #" & $i, $COLOR_ACTION)
 		If QuickMis("BC1", $g_sImgSendRequestButton, 500, 400, 580, 560) Then 

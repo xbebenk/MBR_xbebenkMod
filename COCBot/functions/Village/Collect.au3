@@ -66,6 +66,7 @@ Func Collect($bOnlyCollector = False)
 	CollectLootCart()
 	If _Sleep(1000) Then Return
 	TreasuryCollect()
+	ClickAway()
 	If _Sleep(1000) Then Return
 	;CollectCookieRumble()
 	;If _Sleep(1000) Then Return
@@ -75,7 +76,7 @@ Func Collect($bOnlyCollector = False)
 EndFunc   ;==>Collect
 
 Func CollectLootCart()
-	SetLog("Searching for a Loot Cart", $COLOR_INFO)
+	SetLog("Check for collect lootcart", $COLOR_INFO)
 	If isGoldFull(False) And IsElixirFull(False) Then Return
 	ZoomOutHelper("CollectLootCart")
 	If QuickMIS("BC1", $g_sImgCollectLootCart, 0, 180, 160, 300) Then 
@@ -89,13 +90,11 @@ Func CollectLootCart()
 				Return
 			EndIf
 		Next
-		SetLog("Cannot find LootCart Collect Button", $COLOR_ERROR)
+		SetLog("Cannot find LootCart Collect Button", $COLOR_DEBUG2)
 	Else
-		SetLog("No Loot Cart found on your Village", $COLOR_SUCCESS)
+		SetLog("No Loot Cart found on your Village", $COLOR_DEBUG2)
 	EndIf
 	ZoomOutHelper()
-	ClickAway()
-	If _Sleep(500) Then Return
 EndFunc   ;==>CollectLootCart
 
 Func CollectCookie()

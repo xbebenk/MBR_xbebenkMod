@@ -35,16 +35,16 @@ Func Initiate()
 		EndIf
 		SetLogCentered("  Current Profile: " & $g_sProfileCurrentName & " ", "-", $COLOR_INFO)
 		If $g_bDebugSetlog Or $g_bDebugOcr Or $g_bDebugRedArea Or $g_bDevMode Or $g_bDebugImageSave Or $g_bDebugBuildingPos Or $g_bDebugOCRdonate Or $g_bDebugAttackCSV Or $g_bDebugAndroid Then
-			SetLogCentered(" Warning Debug Mode Enabled! ", "-", $COLOR_ERROR)
-			SetLog("      SetLog : " & $g_bDebugSetlog, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("     Android : " & $g_bDebugAndroid, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("         OCR : " & $g_bDebugOcr, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("     RedArea : " & $g_bDebugRedArea, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("   ImageSave : " & $g_bDebugImageSave, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog(" BuildingPos : " & $g_bDebugBuildingPos, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("   OCRDonate : " & $g_bDebugOCRdonate, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("   AttackCSV : " & $g_bDebugAttackCSV, $COLOR_ERROR, "Lucida Console", 8)
-			SetLogCentered(" Warning Debug Mode Enabled! ", "-", $COLOR_ERROR)
+			SetLogCentered(" Warning Debug Mode Enabled! ", "-", $COLOR_DEBUG2)
+			SetLog("      SetLog : " & $g_bDebugSetlog, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("     Android : " & $g_bDebugAndroid, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("         OCR : " & $g_bDebugOcr, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("     RedArea : " & $g_bDebugRedArea, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("   ImageSave : " & $g_bDebugImageSave, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog(" BuildingPos : " & $g_bDebugBuildingPos, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("   OCRDonate : " & $g_bDebugOCRdonate, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("   AttackCSV : " & $g_bDebugAttackCSV, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLogCentered(" Warning Debug Mode Enabled! ", "-", $COLOR_DEBUG2)
 		EndIf
 
 		$g_bInitiateSwitchAcc = True

@@ -697,7 +697,8 @@ Func runBot() ;Bot that runs everything in order
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
 		SwitchCoCAcc($g_iNextAccount)
 	EndIf
-
+	
+	ZoomOut(True)
 	FirstCheck()
 
 	While 1
@@ -1033,11 +1034,8 @@ Func FirstCheck()
 	SetLogCentered(" FIRSTCHECK ", "=", $COLOR_SUCCESS)
 	$g_bFirstStart = True
 	
-	checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
 	If _Sleep(50) Then Return
-	ZoomOut(True)
-
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
 	$g_bRestart = False
@@ -1297,7 +1295,7 @@ Func CommonRoutine($RoutineType = Default)
 	Local $sText = "", $aFuncList[0]
 	Switch $RoutineType
 		Case "FirstCheck"
-			Local $aRndFuncList = ['Collect', 'CleanYard', 'UseFreeMagic', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'PetHouse', 'Laboratory', 'SaleMagicItem', 'UpgradeWall']
+			Local $aRndFuncList = ['Collect', 'CleanYard', 'UseFreeMagic', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'PetHouse', 'Laboratory', 'SaleMagicItem', 'UpgradeWall', 'UpgradeLow']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)

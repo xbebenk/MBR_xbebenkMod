@@ -271,7 +271,7 @@ Func imgloccheckTownHallADV2($limit = 0, $tolerancefix = 0, $captureRegion = Tru
 EndFunc   ;==>imgloccheckTownHallADV2
 
 
-Func SearchTH($bVerify = True)
+Func SearchTH($bVerify = True, $bClickAway = True)
 	If Not $g_bRunState Then Return
 	Local $aTH, $aiTHPos[2], $iTHLevel
 	Local $x, $y, $aInfo, $bRet = False
@@ -282,6 +282,7 @@ Func SearchTH($bVerify = True)
 		If IsArray($aTH) And UBound($aTH) > 0 Then
 			_ArraySort($aTH, 1, 0, 0, 3)
 			For $i = 0 To UBound($aTH) - 1
+				If Not IsInsideDiamondXY($aTH[$i][1], $aTH[$i][2]) Then ContinueLoop
 				SetLog("Found TH Level " & $aTH[$i][3] & " on " & $aTH[$i][1] & "," & $aTH[$i][2], $COLOR_INFO)
 				$x = $aTH[$i][1]
 				$y = $aTH[$i][2]
@@ -295,7 +296,7 @@ Func SearchTH($bVerify = True)
 						$aiTHPos[0] = $x
 						$aiTHPos[1] = $y
 						$bRet = True
-						ClickAway()
+						If $bClickAway Then ClickAway()
 						ExitLoop
 					EndIf
 				Else
@@ -303,7 +304,7 @@ Func SearchTH($bVerify = True)
 					$aiTHPos[0] = $x
 					$aiTHPos[1] = $y
 					$bRet = True
-					ClickAway()
+					If $bClickAway Then ClickAway()
 					ExitLoop
 				EndIf
 				ClickAway()

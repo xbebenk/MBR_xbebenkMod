@@ -3,7 +3,7 @@ Func CollectCCGold($bTest = False)
 	If Not $g_bChkEnableCollectCCGold Then Return
 	Local $bWindowOpened = False
 	Local $aCollect, $iBuilderToUse = $g_iCmbForgeBuilder + 1
-	SetLog("Check for Collecting Clan Capital Gold", $COLOR_ACTION)
+	SetLog("Check for Collecting Clan Capital Gold", $COLOR_INFO)
 	ClickAway("Right")
 	ZoomOut() ;ZoomOut first
 	
@@ -24,7 +24,7 @@ Func CollectCCGold($bTest = False)
 				ExitLoop
 			EndIf
 		Next
-		SetLog("Failed doing Clan Capital Tutorial", $COLOR_ERROR)
+		SetLog("Failed doing Clan Capital Tutorial", $COLOR_DEBUG2)
 	EndIf
 
 	If QuickMIS("BC1", $g_sImgCCGoldCollect, 250, 550, 400, 670) Then
@@ -625,7 +625,7 @@ EndFunc
 Func AutoUpgradeCC($bTest = False)
 	If Not $g_bChkEnableAutoUpgradeCC Then Return
 	
-	SetLog("Checking Clan Capital AutoUpgrade", $COLOR_ACTION)
+	SetLog("Checking Clan Capital AutoUpgrade", $COLOR_INFO)
 	If $g_bChkEnableMinGoldAUCC And $g_iLootCCGold < $g_iMinCCGoldToUpgrade And $g_iLootCCGold > 0 Then
 		SetLog("CCGold = " & $g_iLootCCGold & ", < Minimum:" & $g_iMinCCGoldToUpgrade & ", skip autoupgradeCC", $COLOR_DEBUG2)
 		Return
@@ -643,7 +643,7 @@ Func AutoUpgradeCC($bTest = False)
 	EndIf
 
 	If $g_bChkEnableMinGoldAUCC And $g_iLootCCGold < $g_iMinCCGoldToUpgrade And $g_iLootCCGold > 0 Then
-		SetLog("CCGold = " & $g_iLootCCGold & ", < Minimum:" & $g_iMinCCGoldToUpgrade & ", skip autoupgradeCC", $COLOR_INFO)
+		SetLog("CCGold = " & $g_iLootCCGold & ", < Minimum:" & $g_iMinCCGoldToUpgrade & ", skip autoupgradeCC", $COLOR_DEBUG2)
 		SwitchToMainVillage("MinCCGoldToUpgrade")
 		Return
 	EndIf
@@ -658,7 +658,7 @@ Func AutoUpgradeCC($bTest = False)
 			$bUpgradeFound = False ;builder menu opened but no upgrades on progress exists
 		EndIf
 	Else
-		SetLog("Fail to open Builder Menu", $COLOR_ERROR)
+		SetLog("Fail to open Builder Menu", $COLOR_DEBUG2)
 		SwitchToMainVillage("Failed Open Builder Menu")
 		Return
 	EndIf
@@ -673,7 +673,7 @@ Func AutoUpgradeCC($bTest = False)
 				If _Sleep(2000) Then Return
 				$aRet = WaitUpgradeButtonCC()
 				If Not $aRet[0] Then
-					SetLog("Upgrade Button Not Found", $COLOR_ERROR)
+					SetLog("Upgrade Button Not Found", $COLOR_DEBUG2)
 					SwitchToMainVillage("No Upgrade Button")
 					Return
 				Else

@@ -13,7 +13,6 @@
 - Support Windows 11 DirectX/WinAPI background mode
 - Mod cannot Train yet, so you train manually and let bot use your Troops Composition
 - Enable option Village -- Misc -- MiscMod -- OnTrain -- Fill Empty Army/Spell slot and fill with normal troop (Not super troop)
-
 - More details on : [CHANGELOG](https://github.com/xbebenk/MBR_xbebenkMod/blob/dev_1.2.6/CHANGELOG)
 
 The Latest Version
@@ -28,7 +27,7 @@ Documentation
 Installation
   ------------
 Essential software :
-- Windows Vista/7/8/8.1/10/11
+- Windows 10/11
 - Microsoft Visual C++ 2010 Redistributable Package (x86)
 - Microsoft .NET Framework 4.5
 - Android Emulator , more infor : \COCBot\functions\Android\Android Status & Information.txt

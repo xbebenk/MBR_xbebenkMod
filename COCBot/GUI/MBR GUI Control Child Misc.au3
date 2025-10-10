@@ -379,7 +379,7 @@ Func btnLocateTownHall()
 		EndIf
 
 		If $g_iTownHallLevel = 0 Or $bLocateTH Then
-			SearchTH() ;Sets $g_iTownHallLevel
+			$bTHFound = SearchTH() ;Sets $g_iTownHallLevel
 		EndIf
 	Next
 	

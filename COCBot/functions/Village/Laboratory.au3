@@ -436,42 +436,42 @@ Func IsLabMenuOpen()
 	If _ColorCheck(_GetPixelColor($aLabMenuOpened[0], $aLabMenuOpened[1], True), Hex($aLabMenuOpened[2], 6), $aLabMenuOpened[3], Default, "IsLabMenuOpen") Then 
 		$bRet = True
 	Else
-		SetLog("IsLabMenuOpen Not Matched, expexted " & Hex($aLabMenuOpened[2], 6) & ", found : " & _GetPixelColor($aLabMenuOpened[0], $aLabMenuOpened[1], True), $COLOR_DEBUG2)
+		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("IsLabMenuOpen Not Matched, expexted " & Hex($aLabMenuOpened[2], 6) & ", found : " & _GetPixelColor($aLabMenuOpened[0], $aLabMenuOpened[1], True), $COLOR_DEBUG2)
 	EndIf
 	
 	Return $bRet
 EndFunc ;IsLabMenuOpen
 
 Func ClickLabMenu($Counter = 3)
-	Local $b_Ret = False
+	Local $bRet = False
 	If Not $g_bRunState Then Return
 
 	; open the lab menu
-	If Not IsLabMenuOpen() Then
+	If IsLabMenuOpen() Then
+		$bRet = True
+	Else
 		SetLog("Opening Lab Menu", $COLOR_ACTION)
 		Click(275, 33)
+		$bRet = True
 		If _Sleep(500) Then Return
 	EndIf
 
 	;check
-	If IsLabMenuOpen() Then
-		SetLog("Check Lab Menu, Opened", $COLOR_SUCCESS)
-		$b_Ret = True
-	Else
+	If Not $bRet Then
 		For $i = 1 To $Counter
 			If Not $g_bRunState Then Return
 			SetLog("Lab Closed, trying again!", $COLOR_DEBUG)
 			Click(275, 33)
 			If _Sleep(500) Then Return
 			If IsLabMenuOpen() Then
-				$b_Ret = True
+				$bRet = True
 				ExitLoop
 			EndIf
 		Next
+		If Not $bRet Then SetLog("Something wrong with Lab Menu, already tried 3 times!", $COLOR_DEBUG)
 	EndIf
-
-	If Not $b_Ret Then SetLog("Something wrong with Lab Menu, already tried 3 times!", $COLOR_DEBUG)
-	Return $b_Ret
+	
+	Return $bRet
 EndFunc ;==>ClickLabMenu
 
 Func CheckIfLabIdle($bDebug = False)
@@ -487,27 +487,27 @@ Func CheckIfLabIdle($bDebug = False)
 		Local $iLab = Number($aGetLab[0]), $iLabMax = Number($aGetLab[1])
 		Select 
 			Case $iLab = 0 And $iLabMax = 1
-				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_DEBUG2)
+				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_SUCCESS)
 				$bRet = False
 			Case $iLab = 1 And $iLabMax = 2
-				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_DEBUG2)
+				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_SUCCESS)
 				$bRet = False
 			Case $iLab = 1 And $iLabMax >= 1
-				SetLog("CheckIfLabIdle: Lab is Idle", $COLOR_SUCCESS)
+				SetLog("CheckIfLabIdle: Lab is Idle", $COLOR_DEBUG1)
 				$bRet = True
 		EndSelect
 	EndIf
 	
 	If $bRet Then ;if Lab is idle, check resource is enough to upgrade
 		ClickLabMenu()
-		If _Sleep(500) Then Return
 		Local $aUpgradeName
 		Local $aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 70, 460, 280)
 		If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 			_ArraySort($aTmpCoord, 0, 0, 0, 2)
 			For $i = 0 To UBound($aTmpCoord) - 1
 				If $aTmpCoord[$i][0] = "Complete" Then
-					SetLog("All Upgrade Complete", $COLOR_DEBUG)
+					SetLog("Detected All Upgrade Complete", $COLOR_SUCCESS)
+					ClickAway()
 					$bRet = False
 					ExitLoop
 				EndIf
@@ -525,7 +525,7 @@ Func CheckIfLabIdle($bDebug = False)
 	EndIf
 	
 	If Not $bRet Then
-		If $g_iTownHallLevel >= 9 Then 
+		If $g_iTownHallLevel >= 9 Then
 			ClickLabMenu()
 			If _Sleep(500) Then Return
 			If QuickMIS("BC1", $g_sImgLabAssistant, 170, 130, 320, 170) Then
@@ -546,8 +546,8 @@ Func CheckIfLabIdle($bDebug = False)
 					EndIf
 				EndIf
 			EndIf
-			ClickLabMenu()
 		EndIf
+		ClickAway()
 	EndIf
 	
 	Return $bRet

@@ -55,13 +55,12 @@ EndFunc
 Func CleanYard($bTest = False)
 	Local $bRet = False
 	If Not $g_bChkCleanYard And Not $g_bChkGemsBox Then Return
+	ZoomOut(True)
 	VillageReport(True, True)
-	ZoomOut()
-	SetLog("CleanYard: Try removing obstacles", $COLOR_DEBUG)
-	checkMainScreen(True, $g_bStayOnBuilderBase, "CleanYard")
+	SetLog("CleanYard: Check for removing obstacles", $COLOR_INFO)
 	
 	If $g_aiCurrentLoot[$eLootElixir] < 30000 Then 
-		SetLog("Elixir < 30000, try again later", $COLOR_DEBUG)
+		SetLog("Elixir < 30000, try again later", $COLOR_DEBUG2)
 		Return
 	EndIf
 	
@@ -91,14 +90,12 @@ Func CleanYard($bTest = False)
 	EndIf
 	
 	If $Locate = 0 Then 
-		SetLog("No Obstacles found, Yard is clean!", $COLOR_SUCCESS)
+		SetLog("No Obstacles found, Yard is clean!", $COLOR_DEBUG2)
 	Else
 		$bRet = True
 		SetLog("CleanYard Found and Clearing " & $Locate & " Obstacles!", $COLOR_SUCCESS)
 	EndIf
-	UpdateStats()
-	ClickAway()
-	
+	UpdateStats()	
 	Return $bRet
 EndFunc   ;==>CleanYard
 
@@ -126,8 +123,8 @@ EndFunc
 
 Func RemoveGembox()
 	If Not $g_bChkGemsBox Then Return 
-	If Not IsMainPage() Then Return
 	
+	SetLog("Check for Remove Gem Box", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgGemBox, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom) Then
 		If Not isInsideDiamondXY($g_iQuickMISX, $g_iQuickMISY, True) Then 
 			SetLog("Cannot Remove GemBox!", $COLOR_INFO)
@@ -140,7 +137,7 @@ Func RemoveGembox()
 		SetLog("Removing GemBox", $COLOR_SUCCESS)
 		Return True
 	Else
-		SetLog("No GemBox Found!", $COLOR_DEBUG)
+		SetLog("No GemBox Found!", $COLOR_DEBUG2)
 	EndIf
 	Return False
 EndFunc

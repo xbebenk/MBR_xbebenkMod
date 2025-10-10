@@ -150,20 +150,7 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 			
 			$aUpgradeName = getBuildingName($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			$tmpcost = getBuilderMenuCost($g_iQuickMISX + 5, $g_iQuickMISY - 10)
-			;For $j = 0 To UBound($aPriority) - 1
-			;	If StringInStr($aUpgradeName[0], $aPriority[$j][0]) > 0 Then
-			;		If $sCostType = "Elix" And Not CheckResourceForDoUpgradeBB($aUpgradeName[0], Number($tmpcost), $sCostType) Then 
-			;			$g_bReserveElixirBB = True
-			;			SetLog("Reserved " & $sCostType & " for New Upgrade : " & $aUpgradeName[0], $COLOR_DEBUG1)
-			;			ContinueLoop 2
-			;		EndIf
-			;		If $sCostType = "Gold" And Not CheckResourceForDoUpgradeBB($aUpgradeName[0], Number($tmpcost), $sCostType) Then 
-			;			$g_bReserveGoldBB = True
-			;			SetLog("Reserved " & $sCostType & " for New Upgrade : " & $aUpgradeName[0], $COLOR_DEBUG1)
-			;			ContinueLoop 2
-			;		EndIf
-			;	EndIf
-			;Next
+		
 			Local $tmparray[1][8] = [[String($sCostType), $aTmpCoord[$i][1], Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), "New", Number($tmpcost), "New", 0]]
 			_ArrayAdd($aBuilding, $tmparray)
 			If @error Then SetLog("FindUpgrade ComposeArray[New] Err : " & @error, $COLOR_ERROR)
@@ -183,26 +170,6 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 			$aUpgradeName = getBuildingName($g_iXFindUpgradeBB, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
 			If Number($tmpcost) = 0 Then ContinueLoop
-			
-			$sCostType = $aTmpCoord[$i][0]
-			;For $j = 0 To UBound($aPriority) - 1
-			;	If StringInStr($aUpgradeName[0], $aPriority[$j][0]) > 0 Then
-			;		If $sCostType = "Elix" And Not CheckResourceForDoUpgradeBB($aUpgradeName[0], Number($tmpcost), $sCostType) Then 
-			;			$g_bReserveElixirBB = True
-			;			SetLog("Reserved " & $sCostType & " for Priority Upgrade : " & $aUpgradeName[0], $COLOR_DEBUG1)
-			;			ContinueLoop 2
-			;		Else
-			;			$g_bReserveElixirBB = False
-			;		EndIf
-			;		If $sCostType = "Gold" And Not CheckResourceForDoUpgradeBB($aUpgradeName[0], Number($tmpcost), $sCostType) Then 
-			;			$g_bReserveGoldBB = True
-			;			SetLog("Reserved " & $sCostType & " for Priority Upgrade : " & $aUpgradeName[0], $COLOR_DEBUG1)
-			;			ContinueLoop 2
-			;		Else
-			;			$g_bReserveElixirBB = False
-			;		EndIf
-			;	EndIf
-			;Next
 			
 			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), Number($aUpgradeName[1]), Number($tmpcost), 0, "Common"]]
 			_ArrayAdd($aBuilding, $tmparray)
@@ -235,8 +202,6 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 				EndIf
 			Next
 			
-			;If $aBuilding[$j][0] = "Elix" And $g_bReserveElixirBB Then $aBuilding[$j][7] = "ElixReserved-skip"
-			;If $aBuilding[$j][0] = "Gold" And $g_bReserveGoldBB Then $aBuilding[$j][7] = "GoldReserved-skip"
 			If $g_bDebugSetLog Then SetLog("[" & $j & "] Building: " & $BuildingName & ", Cost=" & $aBuilding[$j][5] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
 	EndIf
@@ -357,6 +322,12 @@ Func PlaceNewBuildingFromShopBB($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 	
 	Local $sImgUpgrade = StringStripWS($sUpgrade, $STR_STRIPALL)
 	SetLog("ImgUpgrade : " & $sUpgrade & "=" & $sImgUpgrade & "*", $COLOR_INFO)
+	
+	If $sUpgradeType = "Army" Then
+		If Not QuickMIS("BFI", $ImageDir & $sImgUpgrade & "*", 20, 225, 830, 535) Then
+			ClickDrag(700, 330, 200, 330)
+		EndIf
+	EndIf
 	
 	If QuickMIS("BFI", $ImageDir & $sImgUpgrade & "*", 20, 225, 830, 550) Then
 		SetLog("Found " & $sImgUpgrade & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
