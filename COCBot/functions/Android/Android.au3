@@ -4172,7 +4172,7 @@ Func _MoveAndroidWinToDesktop($iDesktopNumber = 0, $hAndroidWindow = $g_hAndroid
 	Local $iWinVer = @OSVersion, $process_killed
 	Switch $iWinVer
 		Case "WIN_10"
-			_MoveAppToSpecificDesktop($hAndroidWindow, $iDesktopNumber)
+			_MoveAppToSpecificDesktop($hAndroidWindow, $iDesktopNumber + 1)
 		Case "WIN_11"
 			Local $cmdOutput = LaunchConsole(@ScriptDir & "\lib\VirtualDesktop11-24H2.exe", "/anim:0 /gd:" & $iDesktopNumber & " /mw:" & $iAndroidPid, $process_killed)
 	EndSwitch
