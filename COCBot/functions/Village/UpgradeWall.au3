@@ -332,7 +332,7 @@ Func DoUpgradeWall()
 										$iCostUpgrade = $iCountWallUpgrade * $g_aiWallCost[$aWallLevel[2]]
 										$g_iNbrOfWallsUppedElixir += $iCountWallUpgrade
 										$g_iNbrOfWallsUpped += $iCountWallUpgrade
-										$g_iCostGoldWall += iCostUpgrade
+										$g_iCostGoldWall += $iCostUpgrade
 										SetLog("Upgraded wall with Gold: " & $iCountWallUpgrade, $COLOR_SUCCESS)
 										SetLog("Cost : " & _NumberFormat($iCostUpgrade), $COLOR_SUCCESS)
 									EndIf
