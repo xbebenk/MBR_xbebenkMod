@@ -22,7 +22,9 @@ Func RequestCC($sText = "", $bTest = False)
 		Click($aChatTabClosed[0], $aChatTabClosed[1]) ;Click ClanChatOpen
 	EndIf
 	
-	If _Sleep($DELAYREQUESTCC1) Then Return
+	If _Sleep(1000) Then Return
+	CheckIUnderstand()
+	
 	SetLog("Requesting Clan Castle reinforcements", $COLOR_INFO)
 	
 	If Not $g_bRunState Then Return

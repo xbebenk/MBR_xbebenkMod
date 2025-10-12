@@ -121,6 +121,15 @@ Func PrepareDonateCC()
 	$g_iActiveDonate = BitOR($g_aiPrepDon[0], $g_aiPrepDon[1], $g_aiPrepDon[2], $g_aiPrepDon[3], $g_aiPrepDon[4], $g_aiPrepDon[5])
 EndFunc   ;==>PrepareDonateCC
 
+Func CheckIUnderstand()
+	; check for "I Understand" button
+	If QuickMIS("BC1", $g_sImgChatIUnderstand, 50, 400, 320, 550) Then
+		SetLog('Clicking "I Understand" button', $COLOR_ACTION)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(1000) Then Return
+	EndIf
+EndFunc
+
 Func DonateCC($bTest = False, $bSwitch = False, $bClanChatOpened = False)
 	Local $bDonateTroop = True
 	Local $bDonateSpell = True
@@ -150,12 +159,7 @@ Func DonateCC($bTest = False, $bSwitch = False, $bClanChatOpened = False)
 
 	If _Sleep(1000) Then Return
 
-	; check for "I Understand" button
-	If QuickMIS("BC1", $g_sImgChatIUnderstand, 50, 400, 320, 550) Then
-		SetLog('Clicking "I Understand" button', $COLOR_ACTION)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(1000) Then Return
-	EndIf
+	CheckIUnderstand()
 
 	If Not $g_bRunState Then Return
 
