@@ -550,7 +550,51 @@ Func CheckIfLabIdle($bDebug = False)
 		ClickAway()
 	EndIf
 	
+	If Not $bRet And $g_bUseLabPotion Then
+		ClickLabMenu()
+		If QuickMIS("BC1", $g_sImgAUpgradeHour, 320, 105, 445, 140) Then
+			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
+			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
+			If $mUpgradeTime > 2880 Then ; only use potion if lab upgrade time is more than 2 day
+				SetLog("Upgrade time > 2 day, will use Resource Potion", $COLOR_INFO)
+				UseLabPotion()
+			Else
+				SetLog("Upgrade time < 2 day, cancel using Resource potion", $COLOR_INFO)
+			EndIf
+		EndIf
+		ClickAway()
+	EndIf
+	
 	Return $bRet
+EndFunc
+
+Func UseLabPotion()
+	If Not $g_bRunState Then Return
+	If FindResearchButton(False) Then
+		If _Sleep(500) Then Return
+		
+		Local $LabBoosted = FindButton("LabBoosted")
+		If IsArray($LabBoosted) And UBound($LabBoosted) = 2 Then ; Lab already boosted skip using potion
+			SetLog("Detected Laboratory already boosted", $COLOR_INFO)
+			Return True
+		EndIf
+		
+		Local $LabPotion = FindButton("LabPotion")
+		If IsArray($LabPotion) And UBound($LabPotion) = 2 Then
+			SetLog("Use Laboratory Potion", $COLOR_INFO)
+			ClickP($LabPotion)
+			If _Sleep(1000) Then Return
+			If QuickMIS("BC1", $g_sImgResourcePotion, 420, 370, 535, 450) Then
+				Click($g_iQuickMISX - 60, $g_iQuickMISY, 1, 0, "Research Confirm")
+				SetLog("laboratory Research Boosted using potion", $COLOR_SUCCESS)
+				Return True
+			EndIf
+			ClickAway("Right")
+		Else
+			SetLog("No Laboratory Potion Found", $COLOR_DEBUG)
+			ClickAway("Right")
+		EndIf
+	EndIf
 EndFunc
 
 Func getMostBottomCostLab()
@@ -725,13 +769,6 @@ Func FindLabUpgrade($sUpgrade = "Any")
 	Return $aResult
 EndFunc
 
-Func GetUpgradeName($shortName)
-	For $i = 0 To UBound($g_avLabTroops) -1
-		If $shortName = $g_avLabTroops[$i][2] Then Return $g_avLabTroops[$i][0]
-	Next
-	Return ""
-EndFunc
-
 Func IsLabUpgradeResourceEnough($Cost, $CostType)
 	Local $bRet = False
 	
@@ -754,7 +791,7 @@ Func IsLabUpgradeResourceEnough($Cost, $CostType)
 EndFunc
 
 ; Find Research Button
-Func FindResearchButton()
+Func FindResearchButton($bClickResearch = True)
 	Local $TryLabAutoLocate = False
 	Local $LabFound = False
 	
@@ -774,6 +811,7 @@ Func FindResearchButton()
 		If StringInStr($BuildingInfo[1], "Lab") Then
 			$TryLabAutoLocate = False
 			$LabFound = True
+			CheckLabAssistant()
 		Else
 			$TryLabAutoLocate = True
 		EndIf
@@ -791,10 +829,11 @@ Func FindResearchButton()
 	EndIf
 
 	If $LabFound Then
-		CheckLabAssistant()
-		If Not ClickB("Research") Then Return
-		If _Sleep(2000) Then Return
-		Return True
+		If $bClickResearch Then
+			If Not ClickB("Research") Then Return
+			If _Sleep(2000) Then Return
+		EndIf
+	Return True
 	EndIf
 EndFunc
 

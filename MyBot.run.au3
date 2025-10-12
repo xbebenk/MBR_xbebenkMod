@@ -418,7 +418,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 				WinGetAndroidHandle()
 				If $g_bBotLaunchOption_Restart Then
 					Assign("g_PushedSharedPrefsProfile", $g_sProfileCurrentName)
-					SetLog("g_PushedSharedPrefsProfile = " & $g_PushedSharedPrefsProfile)
+					;SetLog("g_PushedSharedPrefsProfile = " & $g_PushedSharedPrefsProfile)
 				EndIf
 			EndIf
 		EndIf
@@ -1161,6 +1161,7 @@ Func FirstCheckRoutine()
 	
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; Now the bot can attack
+		UseFreeMagicItem()
 		Setlog("Before any other routine let's attack!", $COLOR_INFO)
 		If Not $g_bChkCGBBAttackOnly Then _ClanGames()
 		

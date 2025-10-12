@@ -899,7 +899,7 @@ Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay =
 	; count # of redline points
 	Local $iRedlinePoints = [UBound(StringSplit($g_sImglocRedline, "|", $STR_NOCOUNT)), 0]
 	
-	SetLog("Initial # of redline points: " & $iRedlinePoints[0], $COLOR_DEBUG1)
+	SetDebugLog("Initial # of redline points: " & $iRedlinePoints[0], $COLOR_DEBUG1)
 	SetDebugLog($g_sImglocRedline)
 	
 	; clear $g_hHBitmap2, so it doesn't get deleted
@@ -934,7 +934,7 @@ Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay =
 		; count # of redline points
 		$iRedlinePoints[1] = UBound(StringSplit($g_sImglocRedline, "|", $STR_NOCOUNT))
 
-		SetLog($i & ". # of redline points: " & $iRedlinePoints[1], $COLOR_DEBUG1)
+		SetDebugLog($i & ". # of redline points: " & $iRedlinePoints[1], $COLOR_DEBUG1)
 		SetDebugLog($g_sImglocRedline)
 
 		If $iRedlinePoints[1] > $iRedlinePoints[0] Then
@@ -954,13 +954,13 @@ Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay =
 	Next
 
 	If $iBest = 0 Then
-		SetLog("Using initial redline with " & $iRedlinePoints[0] & " points", $COLOR_DEBUG)
+		SetDebugLog("Using initial redline with " & $iRedlinePoints[0] & " points", $COLOR_DEBUG)
 	Else
-		SetLog("Using " & $iBest & ". redline with " & $iRedlinePoints[0] & " points (capture/redline avg. time: " & Int($aiTotals[0] / $iCount) & "/" & Int($aiTotals[1] / $iCount) & ")", $COLOR_DEBUG)
+		SetDebugLog("Using " & $iBest & ". redline with " & $iRedlinePoints[0] & " points (capture/redline avg. time: " & Int($aiTotals[0] / $iCount) & "/" & Int($aiTotals[1] / $iCount) & ")", $COLOR_DEBUG)
 	EndIf
 	
 	$sText = Round(TimerDiff($hRedlineTimer) / 1000, 2)
-	SetLog("SearchRedLinesMod finished, takes " & $sText & " seconds", $COLOR_ACTION)
+	SetLog("SearchRedLinesMod finished, takes " & $sText & " seconds", $COLOR_INFO)
 
 	; delete current $g_hHBitmap2
 	GdiDeleteHBitmap($g_hHBitmap2)

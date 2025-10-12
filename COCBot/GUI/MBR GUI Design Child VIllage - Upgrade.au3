@@ -40,10 +40,9 @@ Global $g_hTxtUpgrMinGold = 0, $g_hTxtUpgrMinElixir = 0, $g_hTxtUpgrMinDark = 0
 
 ; Walls
 Global $g_hChkWalls = 0, $g_hTxtWallMinGold = 0, $g_hTxtWallMinElixir = 0, $g_hChkUseGold = 0, $g_hChkUseElixir = 0, $g_hChkUseElixirGold = 0
-Global $g_hChkSaveWallBldr = 0
+Global $g_hChkSaveWallBldr = 0, $g_hAutoAdjustSaveWall = 0
 Global $g_hBtnFindWalls = 0, $g_hChkOnly1Builder = 0
-Global $g_hCmbWalls[3] = [0, 0, 0]
-Global $g_hLblWallCost[3] = [0, 0, 0]
+Global $g_hCmbTargetWallLevel = 0, $g_hLblWallCost = 0
 
 ; Auto Upgrade
 Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0
@@ -530,7 +529,7 @@ EndFunc   ;==>CreateBuildingsSubTab
 
 Func CreateWallsSubTab()
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "Group_01", "Walls"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 180)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "Group_01", "Walls"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 220)
 		$x = 10
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnWall, $x, $y - 6, 32, 32)
 		$x = 50
@@ -558,7 +557,16 @@ Func CreateWallsSubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "RdoUseElixir_Info_02", -1))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "chkWalls")
+		
 		$y += 30
+		$g_hAutoAdjustSaveWall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "AutoAdjustSaveWall", "Auto Adjust Save Min Gold And Elixir"), $x - 20, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "AutoAdjustSaveWall", "Only work with RushTH enabled") & @CRLF & _
+							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "AutoAdjustSaveWall", "Bot will adjust save min gold and elixir to make sure you can upgrade TH"))
+			GUICtrlSetState(-1, $GUI_ENABLE)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetOnEvent(-1, "chkAutoAdjustSaveMinWall")
+			
+		$y += 25
 		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGold, $x - 20, $y, 16, 16)
 		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Goldtosave", "Min. Gold to save"), $x, $y, -1, -1)
 		$g_hTxtWallMinGold = GUICtrlCreateInput("250000", $x + 110, $y, 80, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -574,8 +582,8 @@ Func CreateWallsSubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Elixirtosave_Info_02", "Set this value to save Elixir for other upgrades or troop making."))
 			GUICtrlSetLimit(-1, 8)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$y += 20
-		$g_hBtnFindWalls = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "BtnFindWalls", "TEST"), $x, $y, 45, -1)
+		$y += 25
+		$g_hBtnFindWalls = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "BtnFindWalls", "TEST Wall Detect"), $x - 20, $y, 110, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "BtnFindWalls_Info_01", "Click here to test the Wall Detection."))
 		GUICtrlSetOnEvent(-1, "btnWalls")
 
@@ -596,8 +604,14 @@ Func CreateWallsSubTab()
 			GUICtrlSetState(-1, $GUI_ENABLE)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkWallOnly1Builder")
-		
-		$x = 220
+		$y += 24
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "TargetWall", "Upgrade Wall Level:"), $x + 30, $y + 3, -1, -1)
+		$g_hCmbTargetWallLevel = GUICtrlCreateCombo("", $x + 140, $y, 50, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CmbTargetWallLevel", "Select Wall Level to Upgrade or select Any for any level wall"))
+		GUICtrlSetData(-1, "Any|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17", "Any")
+		GUICtrlSetOnEvent(-1, "cmbWallLevel")
+		$y += 20
+		$g_hLblWallCost = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "WallCost", ""), $x + 20, $y, -1, -1)
 		
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

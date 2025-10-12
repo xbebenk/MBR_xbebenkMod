@@ -702,6 +702,7 @@ Global $g_aiHeroBoost[$eHeroCount] = ["1970/01/01 00:00:00", "1970/01/01 00:00:0
 
 ; Leagues MainVillage
 Global $g_bLeagueAttack = False
+Global $g_bEnableTournament = True, $g_iTournamentAttackType = 0
 Global Enum $eLeagueUnranked, $eLeagueBronze, $eLeagueSilver, $eLeagueGold, $eLeagueCrystal, $eLeagueMaster, $eLeagueChampion, $eLeagueTitan, $eLeagueLegend, $eLeagueCount
 Global Const $g_asLeagueDetails[22][5] = [ _
 		["0", "Bronze III", "0", "B3", "400"], ["1000", "Bronze II", "0", "B2", "500"], ["1300", "Bronze I", "0", "B1", "600"], _
@@ -939,17 +940,12 @@ Global $g_iUpgradeWallMinGold = 0, $g_iUpgradeWallMinElixir = 0, $g_bUpgradeWall
 Global $g_iUpgradeWallLootType = 0, $g_bUpgradeWallSaveBuilder = False, $g_bChkOnly1Builder = False
 Global $g_iUpgradedWallLevel = 0, $g_bUpgradeLowWall = False, $g_iLowLevelWall = 4, $g_bUpgradeAnyWallLevel = False
 Global $g_iSaveGoldWall = 0, $g_iSaveElixWall = 0
-Global $g_aiLastGoodWallPos[2] = [0, 0] ;0 = x, 1 = y, 2 = wall level
-Global $g_aUpgradeWall[3] = [0, 0, 0] ;wall level
+Global $g_bUpgradeSpesificWall = False, $g_iTargetWallLevel = 0, $g_bAutoAdjustSaveWall = False
 
 ; Upgrading - Wall
 Global Const $g_aiWallCost[18] = [0, 1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000, 8000000]
-Global $g_iWallCost = 0
 Global Const $g_aiTHCost[18] = [0, 1000, 4000, 25000, 150000, 500000, 1000000, 2000000, 2500000, 3500000, 4000000, 6000000, 9000000, 12000000, 13000000, 16000000, 16000000, 16000000]
 Global Const $g_aiHeroHallCost[11] = [800000, 1600000, 2300000, 3000000, 5000000, 6000000, 9000000, 10000000, 12000000, 14000000, 21000000] ; 0 = 7
-
-; xbebenkmod - Wall Upgrade
-Global $g_WallGEFull = -1 ;-1 = unset, 0 = elixir, 1 = gold, 2 = both
 
 ; Auto Upgrade
 Global $g_bChkRushTH = False, $g_bHeroPriority = False

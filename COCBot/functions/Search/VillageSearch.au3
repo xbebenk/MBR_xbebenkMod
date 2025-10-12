@@ -93,7 +93,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 	While 1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-		; cleanup some vars used by imgloc just in case. usend in TH and DeadBase ( imgloc functions)
+		; cleanup some vars used by imgloc just in Case. usend in TH and DeadBase ( imgloc functions)
 		ResetTHsearch()
 
 		_ObjDeleteKey($g_oBldgAttackInfo, "") ; Remove all keys from building dictionary
@@ -233,14 +233,27 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		ResumeAndroid()
 
 		If $g_bLeagueAttack Then
-			SetLog("Legend League Mode", $COLOR_SUCCESS)
-			If $dbBase And Not $match[$DB] Then
-				SetLog("Force attacking League Dead Base")
-				$match[$DB] = True
-			ElseIf Not $match[$LB] Then
-				SetLog("Force attacking League Live Base")
-				$match[$LB] = True
-			EndIf
+			SetLog("Tournament League Mode", $COLOR_SUCCESS)
+			Switch $g_iTournamentAttackType
+				Case 0 ;DeadBase
+					$match[$DB] = True
+					$match[$LB] = False
+					$dbBase = True
+					SetLog("Force attacking Tournament League Dead Base", $COLOR_INFO)
+				Case 1 ;Active Base
+					$match[$DB] = False
+					$match[$LB] = True
+					$dbBase = False
+					SetLog("Force attacking Tournament League Live Base", $COLOR_INFO)
+			EndSwitch
+			
+			;If $dbBase And Not $match[$DB] Then
+			;	SetLog("Force attacking League Dead Base")
+			;	$match[$DB] = True
+			;ElseIf Not $match[$LB] Then
+			;	SetLog("Force attacking League Live Base")
+			;	$match[$LB] = True
+			;EndIf
 		EndIf
 
 		; ----------------- WRITE LOG VILLAGE FOUND AND ASSIGN VALUE AT $g_iMatchMode and exitloop  IF CONTITIONS MEET ---------------------------

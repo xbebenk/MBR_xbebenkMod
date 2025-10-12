@@ -75,6 +75,7 @@ Global $g_sImgLabResearch = @ScriptDir & "\imgxml\Research\Laboratory\"
 Global $g_sImgAnySpell = @ScriptDir & "\imgxml\Research\Laboratory\AllSpell\"
 Global $g_sImgAnySiege = @ScriptDir & "\imgxml\Research\Laboratory\AllSiege\"
 Global $g_sImgResIcon = @ScriptDir & "\imgxml\Research\ResIcon\"
+Global $g_sImgResourcePotion = @ScriptDir & "\imgxml\Research\Potion\"
 Global $g_sImgBooks = @ScriptDir & "\imgxml\Research\Books\"
 Global $g_sImgUpgradeWallElix = @ScriptDir & "\imgxml\imglocbuttons\WallElix*.xml"
 Global $g_sImgUpgradeWallGold = @ScriptDir & "\imgxml\imglocbuttons\WallGold*.xml"
@@ -186,6 +187,7 @@ Global $g_sImgShopDefenses = @ScriptDir & "\imgxml\Resources\AutoUpgrade\Shop\De
 Global $g_sImgShopTraps = @ScriptDir & "\imgxml\Resources\AutoUpgrade\Shop\Traps\"
 Global $g_sImgBuilderMenu = @ScriptDir & "\imgxml\Resources\AutoUpgrade\BuilderMenu\"
 Global $g_sImgHeroHall = @ScriptDir & "\imgxml\Resources\AutoUpgrade\HeroHall\"
+Global $g_sImgBuilderPotion = @ScriptDir & "\imgxml\Resources\AutoUpgrade\Potion\"
 #EndRegion
 
 #Region Auto Upgrade Builder Base
@@ -245,7 +247,7 @@ Global $g_sImgWeakBaseBuildingsAirDefenseDir = @ScriptDir & "\imgxml\Buildings\A
 Global $g_sImgSearchDrill = @ScriptDir & "\imgxml\Storages\Drills"
 Global $g_sImgSearchDrillLevel = @ScriptDir & "\imgxml\Storages\Drills\Level"
 Global $g_sImgEasyBuildings = @ScriptDir & "\imgxml\Attack\easybuildings"
-Global $g_sImgPrepareLegendLeagueSearch = @ScriptDir & "\imgxml\Attack\Search\LegendLeague"
+Global $g_sImgTournamentSearch = @ScriptDir & "\imgxml\Attack\Search\Tournament\"
 Global $g_sImgRedLineMod = @ScriptDir & "\imgxml\Attack\Search\RedLine\"
 #EndRegion
 

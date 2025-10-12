@@ -125,9 +125,6 @@ Func ReadBuildingConfig()
 	IniReadS($g_aiStarLaboratoryPos[0], $g_sProfileBuildingPath, "upgrade", "StarLabPosX", -1, "int")
 	IniReadS($g_aiStarLaboratoryPos[1], $g_sProfileBuildingPath, "upgrade", "StarLabPosY", -1, "int")
 
-	IniReadS($g_aiLastGoodWallPos[0], $g_sProfileBuildingPath, "upgrade", "xLastGoodWallPos", 0, "int")
-	IniReadS($g_aiLastGoodWallPos[1], $g_sProfileBuildingPath, "upgrade", "yLastGoodWallPos", 0, "int")
-
 	IniReadS($g_iTotalCampSpace, $g_sProfileBuildingPath, "other", "totalcamp", 0, "int")
 
 	For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1 ; Reads Upgrade building data
@@ -612,7 +609,9 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkForceSwitchifNoCGEvent, $g_sProfileConfigPath, "other", "ForceSwitchifNoCGEvent", True, "Bool")
 	IniReadS($g_bEnableCCSleep, $g_sProfileConfigPath, "other", "EnableCCSleep", False, "Bool")
 	IniReadS($g_bSkipDT, $g_sProfileConfigPath, "other", "SkipDT", False, "Bool")
-
+	IniReadS($g_bEnableTournament, $g_sProfileConfigPath, "other", "EnableTournament", False, "Bool")
+	IniReadS($g_iTournamentAttackType, $g_sProfileConfigPath, "other", "TournamentAttackType", 0, "int")
+	
 	ReadConfigBuilderBaseMod()
 EndFunc   ;==>ReadConfig_600_6
 
@@ -848,17 +847,12 @@ Func ReadConfig_600_17()
 	IniReadS($g_iUpgradeWallMinGold, $g_sProfileConfigPath, "upgrade", "minwallgold", 0, "int")
 	IniReadS($g_iUpgradeWallMinElixir, $g_sProfileConfigPath, "upgrade", "minwallelixir", 0, "int")
 	IniReadS($g_iUpgradeWallLootType, $g_sProfileConfigPath, "upgrade", "use-storage", 0, "int")
+	IniReadS($g_bAutoAdjustSaveWall, $g_sProfileConfigPath, "upgrade", "AutoAdjustSaveMinWall", False, "Bool")
 	IniReadS($g_bUpgradeWallSaveBuilder, $g_sProfileConfigPath, "upgrade", "savebldr", False, "Bool")
 	IniReadS($g_bChkOnly1Builder, $g_sProfileConfigPath, "upgrade", "Only1Builder", True, "Bool")
-	IniReadS($g_bUpgradeLowWall, $g_sProfileConfigPath, "upgrade", "UpgradeLowWall", True, "Bool")
-	IniReadS($g_iLowLevelWall, $g_sProfileConfigPath, "upgrade", "LowLevelWall", 4, "int")
-	IniReadS($g_bUpgradeAnyWallLevel, $g_sProfileConfigPath, "upgrade", "UpgradeAnyWall", False, "Bool")
-
-	Local $str = StringSplit(IniRead($g_sProfileConfigPath, "upgrade", "UpgradeWall", "0|1|2"), "|", $STR_NOCOUNT)
-	For $i = 0 To UBound($g_aUpgradeWall) - 1
-		$g_aUpgradeWall[$i] = $str[$i]
-	Next
-	IniReadS($g_iWallCost, $g_sProfileConfigPath, "upgrade", "WallCost", 0, "int")
+	IniReadS($g_bUpgradeSpesificWall, $g_sProfileConfigPath, "upgrade", "SpesificWall", True, "Bool")
+	IniReadS($g_iTargetWallLevel, $g_sProfileConfigPath, "upgrade", "WallLevel", 0, "int")
+	
 EndFunc   ;==>ReadConfig_600_17
 
 Func ReadConfig_600_18()

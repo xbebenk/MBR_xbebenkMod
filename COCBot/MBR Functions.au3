@@ -123,7 +123,6 @@
 #include "functions\Image Search\checkDeadBase.au3"
 #include "functions\Image Search\CheckTombs.au3"
 #include "functions\Image Search\imglocAuxiliary.au3"
-#include "functions\Image Search\imglocCheckWall.au3"
 #include "functions\Image Search\imglocTHSearch.au3"
 #include "functions\Image Search\QuickMIS.au3"
 #include "functions\Image Search\IsWindowOpen.au3"

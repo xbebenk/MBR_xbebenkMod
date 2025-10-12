@@ -467,6 +467,8 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkForceSwitchifNoCGEvent, $g_bChkForceSwitchifNoCGEvent ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkEnableCCSleep, $g_bEnableCCSleep ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSkipDT, $g_bSkipDT ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkTournament, $g_bEnableTournament ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbTournamentAttackType, $g_iTournamentAttackType)
 
 		Case "Save"
 			$g_bChkBotStop = (GUICtrlRead($g_hChkBotStop) = $GUI_CHECKED)
@@ -632,6 +634,8 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkForceSwitchifNoCGEvent = (GUICtrlRead($g_hChkForceSwitchifNoCGEvent) = $GUI_CHECKED)
 			$g_bEnableCCSleep = (GUICtrlRead($g_hChkEnableCCSleep) = $GUI_CHECKED)
 			$g_bSkipDT = (GUICtrlRead($g_hChkSkipDT) = $GUI_CHECKED)
+			$g_bEnableTournament = (GUICtrlRead($g_hChkTournament) = $GUI_CHECKED)
+			$g_iTournamentAttackType = _GUICtrlComboBox_GetCurSel($g_hCmbTournamentAttackType)
 
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_6
@@ -1026,9 +1030,13 @@ Func ApplyConfig_600_17($TypeReadSave)
 				Case 2
 					GUICtrlSetState($g_hChkUseElixirGold, $GUI_CHECKED)
 			EndSwitch
+			
+			GUICtrlSetState($g_hAutoAdjustSaveWall, $g_bAutoAdjustSaveWall ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOnly1Builder, $g_bChkOnly1Builder ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbTargetWallLevel, $g_iTargetWallLevel)
 			chkWalls()
+			cmbWallLevel()
 		Case "Save"
 			$g_bAutoUpgradeWallsEnable = (GUICtrlRead($g_hChkWalls) = $GUI_CHECKED)
 			$g_iUpgradeWallMinGold = Number(GUICtrlRead($g_hTxtWallMinGold))
@@ -1041,8 +1049,11 @@ Func ApplyConfig_600_17($TypeReadSave)
 			ElseIf GUICtrlRead($g_hChkUseElixirGold) = $GUI_CHECKED Then
 				$g_iUpgradeWallLootType = 2
 			EndIf
+			$g_bAutoAdjustSaveWall = (GUICtrlRead($g_hAutoAdjustSaveWall) = $GUI_CHECKED)
 			$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
 			$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
+			$g_iTargetWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbTargetWallLevel)
+			$g_bUpgradeSpesificWall = (_GUICtrlComboBox_GetCurSel($g_hCmbTargetWallLevel) = 0 ? False : True)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_17
 

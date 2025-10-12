@@ -2220,8 +2220,8 @@ Func AndroidAdbLaunchMinitouchShellInstance($wasRunState = Default, $rebootAndro
 			Return SetError(0, 0)
 		EndIf
 		AndroidAdbTerminateMinitouchShellInstance()
+		
 		; minitouch: Uses STDIN and doesn't start socket
-		SetDebugLog("------------> " & $g_sAndroidPicturesPath)
 		If $bUseMouseDevice Then
 			If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu" Then
 				SetDebugLog("Pie with Mouse")

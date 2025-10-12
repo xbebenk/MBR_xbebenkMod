@@ -60,29 +60,36 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		EndIf
 	EndIf
 	
-	If Not $bRet And $g_iTownHallLevel >= 9 Then
+	If Not $bRet Then
 		ClickMainBuilder()
-		If _Sleep(500) Then Return
-		If QuickMIS("BC1", $g_sImgBuilderMenu, 290, 105, 445, 140) Then
-			Click($g_iQuickMISX, $g_iQuickMISY)
+		CheckBuilderPotion()
+		If $g_iTownHallLevel >= 9 Then
 			If _Sleep(500) Then Return
-			If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "BuilderApprentice") Then
-				If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					If _Sleep(500) Then Return
-					If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "BuilderApprentice") Then
-						Click(250, 421, 1, 0, "Click Keep Assign")
-						Click(430, 520, 1, 0, "Click Confirm")
+			If QuickMIS("BC1", $g_sImgBuilderMenu, 290, 105, 445, 140) Then
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(500) Then Return
+				If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "BuilderApprentice") Then
+					If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
 						If _Sleep(500) Then Return
-						ClickAway()
-						If _Sleep(500) Then Return
-						ClickAway()
+						If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "BuilderApprentice") Then
+							Click(250, 421, 1, 0, "Click Keep Assign")
+							Click(430, 520, 1, 0, "Click Confirm")
+							If _Sleep(500) Then Return
+							ClickAway()
+							If _Sleep(500) Then Return
+							ClickAway()
+						EndIf
 					EndIf
 				EndIf
 			EndIf
-		Else
-			ClickAway()
 		EndIf
+		ClickAway()
+	EndIf
+	
+	If Not $bRet Then
+		ClickMainBuilder()
+		
 	EndIf
 	
 	If $g_bDebugSetLog Then SetLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
@@ -126,7 +133,6 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 		If _Sleep(2000) Then Return
 	EndIf
 
-	CheckBuilderPotion()
 	If Not $g_bRunState Then Return
 
 	If IsBuilderMenuOpen() Then
@@ -1364,15 +1370,13 @@ EndFunc
 
 Func IsTHLevelAchieved()
 	Local $THLevelAchieved = False
-	If $g_bUpgradeOnlyTHLevelAchieve Then
-		If Number($g_iTownHallLevel) >= Number($g_aiCmbRushTHOption[0]) + 9 Then ;if option to only upgrade after TH level achieved enabled
-			$THLevelAchieved = True
-		Else
-			$THLevelAchieved = False
-		EndIf
-	Else
+	
+	If $g_iTownHallLevel >= $g_aiCmbRushTHOption[0] + 9 Then ;if option to only upgrade after TH level achieved enabled
 		$THLevelAchieved = True
+	Else
+		$THLevelAchieved = False
 	EndIf
+
 	Return $THLevelAchieved
 EndFunc
 
@@ -1547,7 +1551,6 @@ Func CheckBuilderPotion()
 	If Not $g_bRunState Then Return
 	If $g_bUseBuilderPotion And $g_iFreeBuilderCount = 0 Then
 		SetLog("Checking for Use Builder Potion", $COLOR_INFO)
-		ClickMainBuilder()
 		If _Sleep(500) Then Return
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 480, 105, 560, 140) Then
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
@@ -1558,7 +1561,8 @@ Func CheckBuilderPotion()
 				If _Sleep(1000) Then Return
 				If ClickB("BuilderPot") Then
 					If _Sleep(1000) Then Return
-					If ClickB("BoostConfirm") Then
+					If QuickMIS("BC1", $g_sImgBuilderPotion, 425, 365, 530, 450) Then 
+						Click($g_iQuickMISX, $g_iQuickMISY)
 						SetLog("Builder Boosted using potion", $COLOR_SUCCESS)
 						ClickAway("Right")
 					EndIf

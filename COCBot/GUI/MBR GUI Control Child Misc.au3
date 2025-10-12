@@ -1147,3 +1147,13 @@ Func chkSetCCSleep()
 		$g_bEnableCCSleep = False
 	EndIf
 EndFunc ;==> chkSetCCSleep
+
+Func chkTournament()
+	If GUICtrlRead($g_hChkTournament) = $GUI_CHECKED Then
+		$g_bEnableTournament = True
+	Else
+		$g_bEnableTournament = False
+	EndIf
+	$g_iTournamentAttackType = _GUICtrlComboBox_GetCurSel($g_hCmbTournamentAttackType)
+	SetLog("Set Tournament Attack Type : " & ($g_iTournamentAttackType = 0 ? "Dead Base" : "Active Base"), $COLOR_DEBUG)
+EndFunc   ;==>chkTournament

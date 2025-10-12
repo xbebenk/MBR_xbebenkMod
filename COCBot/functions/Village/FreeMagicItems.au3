@@ -326,8 +326,6 @@ Func OpenMagicItemWindow()
 	If $bLocateTH Then
 		If SearchTH(True, False) Then 
 			If _Sleep(500) Then Return
-			ClickP($g_aiTownHallPos)
-			If _Sleep(500) Then Return
 			If ClickB("MagicItem") Then
 				$bRet = True
 			Else 

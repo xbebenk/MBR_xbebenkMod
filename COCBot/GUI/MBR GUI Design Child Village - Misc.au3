@@ -554,6 +554,7 @@ Global $g_hChkMMSkipFirstCheckRoutine = 0, $g_hChkMMSkipBB = 0, $g_hChkMMSkipTra
 Global $g_hCmbFillIncorrectTroopCombo = 0, $g_hChkMMIgnoreIncorrectSpellCombo = 0, $g_hLblFillIncorrectSpellCombo = 0, $g_hCmbFillIncorrectSpellCombo = 0, $g_hUseQueuedTroopSpell = 0
 Global $g_hChkMMSkipWallPlacingOnBB = 0, $g_hChkMMCheckCGEarly = 0, $g_hUpgradeWallEarly = 0
 Global $g_hAutoUpgradeEarly = 0, $g_hChkForceSwitchifNoCGEvent = 0, $g_hDonateEarly = 0, $g_hChkEnableCCSleep = 0, $g_hChkSkipDT = 0, $g_hChkSkipBBRoutineOn6thBuilder = 0
+Global $g_hChkTournament = 0, $g_hCmbTournamentAttackType = 0
 
 Global $g_sCmbFICTroops[7][3] = [ _
 								["Barb",	"Barbarians",		1], _
@@ -571,6 +572,7 @@ Global $g_sCmbFICSpells[6][3] = [ _
 								["ESpell",	"Earthquake Spell",	1], _
 								["RSpell",	"Rage Spell",		2]]
 
+								
 Func CreateMiscModSubTab()
 	Local $x = 15, $y = 40
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Halt Attack Mode"), $x - 10, $y - 15, 210, 80)
@@ -624,7 +626,7 @@ Func CreateMiscModSubTab()
 
 	$x = 180 + 55
 	$y = 40
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On FirstCheck"), $x - 10, $y - 15, 210, 215)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On FirstCheck"), $x - 10, $y - 15, 210, 160)
 	$g_hDonateEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckDonateEarly", "Check Donate Early"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnFirstCheckDonateEarly", "Enable Check Donate on First Start"))
 		GUICtrlSetOnEvent(-1, "chkCheckDonateEarly")
@@ -651,6 +653,20 @@ Func CreateMiscModSubTab()
 	$y += 22
 		$g_hChkSkipBBRoutineOn6thBuilder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SkipBBRoutineOn6thBuilder", "Skip BB Routine on 6th Builder"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "ChkSkipBBRoutineOn6thBuilder")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
+	$y += 55
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "On Search"), $x - 10, $y - 15, 210, 70)
+		$g_hChkTournament = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTournament", "Join on Tournament Match"), $x, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTournament", "Enable Tournament Match Attack"))
+		GUICtrlSetOnEvent(-1, "chkTournament")
+		GUICtrlSetState(-1, $GUI_CHECKED)
+	$y += 22
+		$g_hLblFillIncorrectTroopCombo = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - FillIncorrectTroopCombo", "Label_01", "Use Attack from :"), $x, $y+3, -1, -1)
+		$g_hCmbTournamentAttackType = GUICtrlCreateCombo("", $x + 90, $y, 90, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "cmbTournament", "Select Attack that will be used for Tournament Attack, Attack Type will inherit from DeadBase or ActiveBase Setting Tab"))
+		GUICtrlSetData(-1, "Dead Base|Active Base", "Dead Base")
+		GUICtrlSetOnEvent(-1, "chkTournament")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc ;==>CreateMiscModSubTab
 

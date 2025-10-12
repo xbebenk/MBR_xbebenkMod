@@ -12,31 +12,28 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will break shield
+Func PrepareSearch($bTest = False) ;Click attack button and find match button, will break shield
 
 	SetLog("Going to Attack", $COLOR_INFO)
 	$g_bRestart = False ;reset
 	If Not $g_bRunState Then Return
 
 	ChkAttackCSVConfig()
-	If $Mode = $DT Then $g_bRestart = False
 	
 	checkChatTabPixel()
+	If ClickB("AttackButton") Then
+		If $g_bDebugSetLog Then SetLog("Opening Multiplayer Tab!", $COLOR_ACTION)
+		If _Sleep(1000) Then Return
+	Else
+		SetLog("AttackButton Not Found!", $COLOR_DEBUG2)
+		$g_bRestart = True
+		Return
+	EndIf	
+	
 	For $i = 1 To 5
-		
-		If ClickB("AttackButton") Then
-			If $g_bDebugSetLog Then SetLog("Opening Multiplayer Tab!", $COLOR_ACTION)
-			If _Sleep(1000) Then Return
-		Else
-			SetLog("AttackButton Not Found!", $COLOR_DEBUG2)
-			$g_bRestart = True
-			Return
-		EndIf		
-		
 		If IsMultiplayerTabOpen() Then 
 			SetLog("Multiplayer Tab is Opened", $COLOR_DEBUG)
-			If QuickMIS("BC1", $g_sImgRevengeTutor, 370, 85, 460, 160) Then
-				If _Sleep(2000) Then Return
+			If QuickMIS("BC1", $g_sImgRevengeTutor, 370, 85, 460, 160) Then ;check for arrow on ranked battle layout and Reinforcement
 				If Not CheckRevengeTutor() Then ContinueLoop
 			EndIf
 			ExitLoop
@@ -47,14 +44,84 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 			$g_bRestart = True
 			Return
 		EndIf
+		If _Sleep(1000) Then Return
 	Next
 		
-	Local $aButton, $bAttackButtonFound
+	Local $aButton, $bTournament = False, $aMatch
 	
-	$bAttackButtonFound = _ColorCheck(_GetPixelColor(255, 488, True), Hex(0xF1A522, 6), 10, Default, "AttackButton")
-	If $bAttackButtonFound Then
-		Click(160, 460, 1, 0, "AttackButton")
-		If _Sleep(1000) Then Return
+	If $g_bEnableTournament Then 
+		For $i = 1 To 20 
+			If Not $g_bRunState Then Return
+			If _Sleep(50) Then Return
+			SetDebugLog("Search for FindMatch Button #" & $i, $COLOR_ACTION)
+			$aButton = QuickMIS("CNX", $g_sImgTournamentSearch, 325, 435, 540, 500)
+			If IsArray($aButton) And UBound($aButton) > 0 Then
+				For $z = 0 To UBound($aButton) - 1
+					If $aButton[$z][0] = "SignUp" Then
+						SetLog("Found SignUp Button", $COLOR_DEBUG)
+						Click($aButton[$z][1], $aButton[$z][2], 1, 0, "SignUp Tournament")
+						If _Sleep(1500) Then Return
+						If QuickMIS("BC1", $g_sImgTournamentSearch, 500, 460, 710, 530) Then
+							Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "SignUp Tournament [2]")
+							SetLog("SignIn/Join Tournament, lets wait", $COLOR_ACTION)
+							ContinueLoop 2
+						EndIf
+					EndIf
+					If $aButton[$z][0] = "SignedUp" Then
+						SetLog("Found SignedUp Button", $COLOR_DEBUG)
+						SetLog("SignedUp, Preparing Tournament", $COLOR_INFO)
+						If _Sleep(500) Then Return
+						ExitLoop 2
+					EndIf
+					If $aButton[$z][0] = "Completed" Then
+						SetLog("All Tournament Attack done", $COLOR_DEBUG2)
+						If _Sleep(500) Then Return
+						ExitLoop 2
+					EndIf
+					If $aButton[$z][0] = "Match" Then
+						SetLog("Found Tournament Match Button", $COLOR_DEBUG)
+						$aMatch = getMatchRemain()
+						If UBound($aMatch) > 0 Then
+							SetLog("Tournament match: " & $aMatch[0] & "/" & $aMatch[1], $COLOR_INFO)
+							SetLog("Match remain: " & $aMatch[1] - $aMatch[0], $COLOR_INFO)
+							If $aMatch[1] - $aMatch[0] = 0 Then 
+								SetLog("All Tournament Attack used", $COLOR_DEBUG2)
+								ExitLoop 2
+							EndIf
+						EndIf
+						Click($aButton[$z][1], $aButton[$z][2], 1, 0, "Find a Match Tournament")
+						If _Sleep(1000) Then Return
+						If WaitforPixel(695, 500, 696, 501, "C2ED91", 20, 3) Then
+							Click(695, 500, 1, 0, "ArmyOverview Attack Button")
+							If _Sleep(1000) Then Return
+							If $bTest Then Return ;only testing
+							If IsOKCancelPage(True) Then 
+								Click(535, 410, 1, 0, "Confirm Attack OK")
+								$g_bLeagueAttack = True
+								$bTournament = True
+							EndIf
+
+							If _Sleep(1000) Then Return
+						EndIf
+						ExitLoop 2
+					EndIf
+				Next
+			EndIf
+		Next
+	EndIf
+	
+	Local $bAttackButtonFound = False
+	If Not $bTournament Then 
+		$bAttackButtonFound = _ColorCheck(_GetPixelColor(255, 488, True), Hex(0xF1A522, 6), 10, Default, "FindMatch")
+		If $bAttackButtonFound Then
+			Click(160, 460, 1, 0, "FindMatch")
+			$g_bLeagueAttack = False
+			If _Sleep(1000) Then Return
+		Else
+			SetLog("FindMatch Not Found!", $COLOR_DEBUG2)
+			$g_bRestart = True
+			Return
+		EndIf
 	EndIf
 	
 	;For $s = 1 To 20
@@ -127,7 +194,7 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	;				Next
 	;				
 	;			ElseIf StringInStr($aButton[$i][0], "Oppo", 0) Then
-	;				SetLog("Finding opponents! Waiting 2 minutes and then try again to find a match", $COLOR_INFO)
+	;				SetLog("Finding opponents! Waiting 2 minutes and Then try again to find a match", $COLOR_INFO)
 	;				If ProfileSwitchAccountEnabled() Then 
 	;					$g_bForceSwitch = True
 	;					CloseMultiPlayerWindow()
@@ -140,8 +207,8 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	;	EndIf
 	;Next
 	
-	If Not $bAttackButtonFound Then
-		SetLog("Cannot Find Attack Button on Multiplayer Window", $COLOR_ERROR)
+	If Not $bAttackButtonFound And Not $bTournament Then
+		SetLog("Cannot Find Match Button on Multiplayer Window", $COLOR_ERROR)
 		$g_bRestart = True
 		Return
 	EndIf
@@ -155,28 +222,28 @@ Func PrepareSearch($Mode = $DB) ;Click attack button and find match button, will
 	UpdateStats()
 
 	
-	If IsAttackWhileShieldPage(False) Then ; check for shield window and then button to lose time due attack and click okay
-		If WaitforPixel(435, 480, 438, 484, "6DBC1F", 10, 1, "PrepareSearch-Shield") Then
-			Click(436, 482)
-		EndIf
-	EndIf
+	;If IsAttackWhileShieldPage(False) Then ; check for shield window and Then button to lose time due attack and click okay
+	;	If WaitforPixel(435, 480, 438, 484, "6DBC1F", 10, 1, "PrepareSearch-Shield") Then
+	;		Click(436, 482)
+	;	EndIf
+	;EndIf
 
-	Local $Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
+	;Local $Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
 
-	If isGemOpen(True) Then ; Check for gem window open)
-		If Not IsAttackPage() Then 
-			SetLog(" Not enough gold to start searching!", $COLOR_ERROR)
-			Click(623, 231, 1, 0, "#0151") ; Click close gem window "X"
-			If _Sleep($DELAYPREPARESEARCH1) Then Return
-			Click(789, 117, 1, 0, "#0152") ; Click close attack window "X"
-			If _Sleep($DELAYPREPARESEARCH1) Then Return
-			$g_bOutOfGold = True ; Set flag for out of gold to search for attack
-		EndIf
-	EndIf
+	;If isGemOpen(True) Then ; Check for gem window open)
+	;	If Not IsAttackPage() Then 
+	;		SetLog(" Not enough gold to start searching!", $COLOR_ERROR)
+	;		Click(623, 231, 1, 0, "#0151") ; Click close gem window "X"
+	;		If _Sleep($DELAYPREPARESEARCH1) Then Return
+	;		Click(789, 117, 1, 0, "#0152") ; Click close attack window "X"
+	;		If _Sleep($DELAYPREPARESEARCH1) Then Return
+	;		$g_bOutOfGold = True ; Set flag for out of gold to search for attack
+	;	EndIf
+	;EndIf
 
-	SetDebugLog("PrepareSearch exit check $g_bRestart= " & $g_bRestart & ", $g_bOutOfGold= " & $g_bOutOfGold, $COLOR_DEBUG)
+	;SetDebugLog("PrepareSearch exit check $g_bRestart= " & $g_bRestart & ", $g_bOutOfGold= " & $g_bOutOfGold, $COLOR_DEBUG)
 
-	If $g_bRestart Or $g_bOutOfGold Then ; If we have one or both errors, then Return
+	If $g_bRestart Then ; If we have one or both errors, Then Return
 		$g_bIsClientSyncError = False ; reset fast restart flag to stop OOS mode, collecting resources etc.
 		Return
 	EndIf
@@ -244,8 +311,6 @@ Func CheckRevengeTutor()
 								TrainIt($iTroopIndex, 2, $g_iTrainClickDelay)
 							Case "Ball"
 								TrainIt($iTroopIndex, 7, $g_iTrainClickDelay)
-							Case "Arch"
-								TrainIt($iTroopIndex, 20, $g_iTrainClickDelay)
 						EndSwitch
 						
 						If Not QuickMIS("BC1", $g_sImgRevengeTutor, 765, 330, 800, 360) Then 

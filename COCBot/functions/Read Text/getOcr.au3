@@ -141,6 +141,16 @@ Func getArmyCapacityOnTrainTroops240($x_start, $y_start, $x1 = 63) ;  -> Gets qu
 	Return StringRegExpReplace(getOcrAndCapture("coc-troopcap240", $x_start, $y_start, $x1, 14, True), "[-x]", "")
 EndFunc   ;==>getArmyCapacityOnTrainTroops
 
+Func getMatchRemain($x_start = 414, $y_start = 475) ; Gets complete Tournament Match Remain / Max
+	Local $sRet = "", $aRet[0]
+	$sRet = getOcrAndCapture("coc-tournament", $x_start, $y_start, 70, 22)
+	If $sRet <> "" Then
+		$aRet = StringSplit($sRet, "#", $STR_NOCOUNT)
+	EndIf
+	Return $aRet
+EndFunc   ;==>getMatchRemain
+
+
 ;TestOCRTroopCap(0, 320)
 Func TestOCRTroopCap($iStart = 0, $iCount = 10, $path = "D:\OCRTool\TestImages\DebugOCR\", $iSleep = 800)
 	

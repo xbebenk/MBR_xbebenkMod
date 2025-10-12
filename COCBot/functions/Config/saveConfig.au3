@@ -120,10 +120,7 @@ Func SaveBuildingConfig()
 
 	_Ini_Add("other", "xChampionAltarPos", $g_aiChampionAltarPos[0])
 	_Ini_Add("other", "yChampionAltarPos", $g_aiChampionAltarPos[1])
-
-	_Ini_Add("upgrade", "xLastGoodWallPos", $g_aiLastGoodWallPos[0])
-	_Ini_Add("upgrade", "yLastGoodWallPos", $g_aiLastGoodWallPos[1])
-
+	
 	; <><><><> Village / Upgrade - Lab <><><><>
 	ApplyConfig_600_14(GetApplyConfigSaveAction())
 	_Ini_Add("upgrade", "upgradetroops", $g_bAutoLabUpgradeEnable ? 1 : 0)
@@ -549,6 +546,8 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ForceSwitchifNoCGEvent", $g_bChkForceSwitchifNoCGEvent)
 	_Ini_Add("other", "EnableCCSleep", $g_bEnableCCSleep)
 	_Ini_Add("other", "SkipDT", $g_bSkipDT)
+	_Ini_Add("other", "EnableTournament", $g_bEnableTournament)
+	_Ini_Add("other", "TournamentAttackType", $g_iTournamentAttackType)
 
 	SaveBuilderBaseMod()
 EndFunc   ;==>SaveConfig_600_6
@@ -701,18 +700,11 @@ Func SaveConfig_600_17()
 	_Ini_Add("upgrade", "minwallgold", $g_iUpgradeWallMinGold)
 	_Ini_Add("upgrade", "minwallelixir", $g_iUpgradeWallMinElixir)
 	_Ini_Add("upgrade", "use-storage", $g_iUpgradeWallLootType)
+	_Ini_Add("upgrade", "AutoAdjustSaveMinWall", $g_bAutoAdjustSaveWall ? 1 : 0)
 	_Ini_Add("upgrade", "savebldr", $g_bUpgradeWallSaveBuilder ? 1 : 0)
 	_Ini_Add("upgrade", "Only1Builder", $g_bChkOnly1Builder ? 1 : 0)
-	_Ini_Add("upgrade", "UpgradeLowWall", $g_bUpgradeLowWall ? 1 : 0)
-	_Ini_Add("upgrade", "LowLevelWall", $g_iLowLevelWall)
-	_Ini_Add("upgrade", "UpgradeAnyWall", $g_bUpgradeAnyWallLevel ? 1 : 0)
-
-	Local $string = ""
-	For $i = 0 To UBound($g_aUpgradeWall) - 1
-		$string &= $g_aUpgradeWall[$i] & "|"
-	Next
-	_Ini_Add("upgrade", "UpgradeWall", $string)
-	_Ini_Add("upgrade", "WallCost", $g_iWallCost)
+	_Ini_Add("upgrade", "SpesificWall", $g_bUpgradeSpesificWall ? 1 : 0)
+	_Ini_Add("upgrade", "WallLevel", $g_iTargetWallLevel)
 EndFunc   ;==>SaveConfig_600_17
 
 Func SaveConfig_600_18()

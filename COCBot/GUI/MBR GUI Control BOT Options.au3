@@ -326,7 +326,8 @@ Func chkAccount($i)
 EndFunc   ;==>chkAccount
 
 Func btnSaveToAllOpen()
-	GUISetState(@SW_SHOW, $g_hGUI_SaveToProfiles)
+	GUISetCoord($g_iFrmBotPosX, $g_iFrmBotPosY + 200, Default, Default, $g_hGUI_SaveToProfiles)
+	GUISetState(@SW_SHOWNORMAL, $g_hGUI_SaveToProfiles)
 	Local $aActiveProfile = AccountNoActive()
 	For $i = 0 To UBound($aActiveProfile) - 1
 		If $aActiveProfile[$i] Then 

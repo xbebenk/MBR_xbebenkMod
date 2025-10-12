@@ -757,10 +757,21 @@ Func chkWallOnly1Builder()
 	$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
 EndFunc   ;==>chkWallOnly1Builder
 
+Func chkAutoAdjustSaveMinWall()
+	$g_bAutoAdjustSaveWall = (GUICtrlRead($g_hAutoAdjustSaveWall) = $GUI_CHECKED)
+EndFunc
+
+Func cmbWallLevel()
+	$g_bUpgradeSpesificWall = (GUICtrlRead($g_hCmbTargetWallLevel) = 0 ? False : True)
+	$g_iTargetWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbTargetWallLevel)
+EndFunc
+
 Func btnWalls()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
-	UpgradeWall()
+	SearchWall(0)
+	SetLog("Wall Detect done", $COLOR_SUCCESS)
+	$g_bRunState = $wasRunState
 EndFunc   ;==>btnWalls
 
 Func chkAutoUpgrade()
