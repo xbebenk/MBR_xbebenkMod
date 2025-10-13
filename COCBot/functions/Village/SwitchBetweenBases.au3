@@ -97,7 +97,7 @@ Func SwitchTo($To = "BB")
 	For $i = 1 To 3
 		If _Sleep(50) Then Return
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
-		
+		ZoomOut(True)
 		Local $ZoomOutResult
 		If $To = "BB" Then
 			If Not QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then

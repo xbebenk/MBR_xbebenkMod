@@ -24,7 +24,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotio
 		If Not SwitchBetweenBases("BB") Then Return ; Switching to Builders Base
 	EndIf
 	
-	ZoomOutHelperBB("SwitchBetweenBases") ;go to BH LowerZone
+	ZoomOutHelperBB() ;go to BH LowerZone
 	
 	Local $bCTBoost = True
 	If $g_bChkCTBoostBlderBz Then

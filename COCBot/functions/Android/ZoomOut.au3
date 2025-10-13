@@ -199,7 +199,7 @@ Func ZoomOutHelperBB($caller = "Default")
 			If $sImage = "BL" Then $g_sSceneryCode = "BL"
 			If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 			If $g_bDebugClick Then SetLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
-			ClickDrag(730, 250, 730 - $x + $xyOffsetSwitchBases, 250 - $y - $xyOffsetSwitchBases)
+			ClickDrag(730, 250, 730 - $x + $xyOffsetSwitchBases, 250 - $y - $xyOffsetSwitchBases, 50, True) ; more delay for clickdrag here
 			$bRet = True
 		Else
 			If $g_bDebugClick Then SetLog("[" & $caller & "] Bad TreeBL ImageName!")
@@ -234,12 +234,6 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $delayCount = 20
 	Local $aPicture = ["", 0, 0, 0, 0]
 	If Not $g_bRunState Then Return
-	
-	If ZoomoutHelper($sFunc) Then 
-		Return
-	Else
-		AndroidZoomOut()
-	EndIf
 	
 	If _Sleep(50) Then Return
 	ForceCaptureRegion()
@@ -610,7 +604,7 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 			$aResult[1] = $x
 			$aResult[2] = $y
 			
-			SetLog("SearchZoomOut CenteringVillage = " & String($bCenterVillage), $COLOR_DEBUG1)
+			SetDebugLog("SearchZoomOut CenteringVillage = " & String($bCenterVillage), $COLOR_DEBUG1)
 			
 			If $bCenterVillage And (Abs($x) > 10 Or Abs($y) > 10) Then ;And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
 				SetLog("[" & $sSource & "] Centering Village by: x=" & $x & ", y=" & $y, $COLOR_DEBUG1)
@@ -624,13 +618,13 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 				; update difference in offset
 				$aResult2[3] = $aResult2[1] - $aResult[1]
 				$aResult2[4] = $aResult2[2] - $aResult[2]
-				SetLog("Centered Village Offset" & $sSource & ": " & $aResult2[1] & ", " & $aResult2[2] & ", change: " & $aResult2[3] & ", " & $aResult2[4], $COLOR_DEBUG1)
+				SetDebugLog("Centered Village Offset" & $sSource & ": " & $aResult2[1] & ", " & $aResult2[2] & ", change: " & $aResult2[3] & ", " & $aResult2[4], $COLOR_DEBUG1)
 				Return FuncReturn($aResult2)
 			EndIf
 
 			If $UpdateMyVillage Then
 				If $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1] Or $z <> $g_iVILLAGE_OFFSET[2] Then
-					SetLog("Village Offset" & $sSource & " updated to " & $x & ", " & $y & ", " & $z, $COLOR_DEBUG1)
+					SetDebugLog("Village Offset [" & $sSource & "] updated to " & $x & ", " & $y & ", " & $z, $COLOR_DEBUG1)
 				EndIf
 				setVillageOffset($x, $y, $z)
 				ConvertInternalExternArea() ; generate correct internal/external diamond measures
