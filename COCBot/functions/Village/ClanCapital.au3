@@ -407,7 +407,7 @@ Func SwitchToMainVillage($caller = "Default")
 			ExitLoop
 		EndIf
 	Next
-	ZoomOut(True)
+	ZoomOut(True) ;everytime back from capital, ZoomOut seem reset
 	Return $bRet
 EndFunc
 

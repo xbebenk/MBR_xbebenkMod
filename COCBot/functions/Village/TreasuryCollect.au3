@@ -19,7 +19,7 @@ Func TreasuryCollect()
 	If isGoldFull(False) And IsElixirFull(False) Then Return
 	SetLog("Check for Treasury collect", $COLOR_INFO)
 	If Not $g_bRunState Then Return 
-	ZoomOut(True)
+	ZoomOut()
 	Local $CCFound = False
 	Local $TryCCAutoLocate = False
 	If Int($g_aiClanCastlePos[0]) < 1 Or Int($g_aiClanCastlePos[1]) < 1 Then

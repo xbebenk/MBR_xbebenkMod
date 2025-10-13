@@ -130,7 +130,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$aResult[9] = $tree[5]
 
 		$g_aVillageSize = $aResult
-		
+		ConvertInternalExternArea()
 		Return FuncReturn($aResult)
 	EndIf
 	FuncReturn()

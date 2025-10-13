@@ -23,7 +23,7 @@ Func GetResources($bLog = True) ;Reads resources
 	SuspendAndroid()
 	
 	Local $aResource = QuickMIS("CNX", $g_sImgResourceAttack, 20, 70, 50, 185)
-	If UBound($aResource) < 4 Then 
+	If UBound($aResource) < 3 Then 
 		If _Sleep(1000) Then Return
 		$aResource = QuickMIS("CNX", $g_sImgResourceAttack, 20, 70, 50, 185)		
 	EndIf
@@ -42,11 +42,14 @@ Func GetResources($bLog = True) ;Reads resources
 				Case "DE"
 					$yDE = $aResource[$i][2] - 3
 					SetDebugLog("[" & $i & "] Found DE Image")
-				Case "Trophy"
-					$yTrophy = $aResource[$i][2]
-					SetDebugLog("[" & $i & "] Found Trophy Image")
 			EndSwitch
 		Next
+	Else
+		SaveDebugImage("GetResources")
+		$yGold = 76
+		$yElix = 103
+		$yDE = 132
+		SetDebugLog("GetResources got problem reading Icon")
 	EndIf
 	
 	$g_iSearchGold = getGoldVillageSearch($xRead, $yGold)
@@ -55,11 +58,6 @@ Func GetResources($bLog = True) ;Reads resources
 	SetDebugLog("getElixirVillageSearch(" & $xRead & "," & $yElix & ")")
 	$g_iSearchDark = getDarkElixirVillageSearch($xRead, $yDE)
 	SetDebugLog("getDarkElixirVillageSearch(" & $xRead & "," & $yDE & ")")
-	$g_iSearchTrophy = getTrophyVillageSearch($xRead, $yTrophy)
-	SetDebugLog("getTrophyVillageSearch(" & $xRead & "," & $yTrophy & ")")
-	
-	If $g_iSearchGold = "" Or $g_iSearchElixir = "" Or $g_iSearchDark = "" Or $g_iSearchTrophy = "" Then 
-	EndIf
 	
 	SetDebugLog("Gold: " & $g_iSearchGold & ", Elix: " & $g_iSearchElixir & ", DE: " & $g_iSearchDark & ", TR: " & $g_iSearchTrophy)
 

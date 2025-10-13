@@ -495,7 +495,7 @@ Func WriteLogVillageSearch($x)
 EndFunc   ;==>WriteLogVillageSearch
 
 Func CheckZoomOut($sSource = "CheckZoomOut")
-	Local $bRet
+	Local $bRet = False
 	If $sSource <> "VillageSearch" Then resetEdge()
 	Local $aVillageResult = SearchZoomOut(False, True, $sSource)
 	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
@@ -503,9 +503,11 @@ Func CheckZoomOut($sSource = "CheckZoomOut")
 		AndroidZoomOut()
 		ZoomOutHelper("VillageSearch")
 		$bRet = False
+	Else 
+		$bRet = True
 	EndIf
-	If $sSource = "VillageSearch" Then SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
-	If $sSource = "VillageSearch" Then
+	If $sSource = "VillageSearch" Then 
+		SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
 		If $g_bChkForceEdgeSmartfarm Then 
 			$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
 			$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)

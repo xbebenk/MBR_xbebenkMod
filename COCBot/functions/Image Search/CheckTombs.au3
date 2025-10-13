@@ -55,7 +55,7 @@ EndFunc
 Func CleanYard($bTest = False)
 	Local $bRet = False
 	If Not $g_bChkCleanYard And Not $g_bChkGemsBox Then Return
-	ZoomOut(True)
+	ZoomOut()
 	VillageReport(True, True)
 	SetLog("CleanYard: Check for removing obstacles", $COLOR_INFO)
 	

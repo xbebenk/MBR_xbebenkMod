@@ -214,6 +214,7 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		$sTmpDamage = Number($sDamage)
 		
 		If BBBarbarianHead("EndBattleBB") Then ExitLoop
+		If isOnBuilderBase() Then ExitLoop
 		
 		If $sTmpDamage = 100 Then
 			_SleepStatus(15000) ; wait if not going to second stage

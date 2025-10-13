@@ -105,7 +105,7 @@ EndFunc
 
 Func OpenTraderWindow()
 	Local $bRet = False, $bTraderIconFound = False
-	ZoomOut(True)
+	ZoomOut()
 	; Check Trader Icon on Main Village
 	For $i = 1 To 10
 		If Not $g_bRunState Then Return

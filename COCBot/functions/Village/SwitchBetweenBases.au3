@@ -109,7 +109,10 @@ Func SwitchTo($To = "BB")
 			EndIf
 		EndIf
 		
-		If $To = "Main" Then ZoomOutHelperBB("SwitchBetweenBases")
+		If $To = "Main" Then 
+			ZoomOutHelperBB("SwitchBetweenBases")
+			If _Sleep(1000) Then Return
+		EndIf
 		
 		If QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
 			If $g_iQuickMISName = "BrokenBoat" Then Return BBTutorial($g_iQuickMISX, $g_iQuickMISY)
@@ -155,13 +158,8 @@ Func SwitchTo($To = "BB")
 		EndIf
 		
 		If $i = 3 Then 
+			SaveDebugImage("SwitchBetweenBases")
 			CloseCoC(True)
-			;$g_iGfxErrorCount += 3
-			;If $g_iGfxErrorCount > $g_iGfxErrorMax Then 
-			;	SetLog("SwitchBetweenBases stuck, set to Reboot Android Instance", $COLOR_INFO)
-			;	$g_bGfxError = True
-			;	CheckAndroidReboot()
-			;EndIf
 		EndIf
 		If _Sleep(500) Then Return
 	Next

@@ -140,7 +140,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 		If _Sleep(500) Then Return
 	EndIf
 
-	ZoomOut(True)
+	ZoomOut()
 	Return False
 EndFunc
 
@@ -1490,12 +1490,11 @@ Func PlaceUnplacedBuilding($bTest = False)
 			If QuickMIS("BC1", $g_sImgGreenCheck) Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				SetLog("Unplaced Bulding, Succeed", $COLOR_SUCCESS)
-			Else
 				ZoomOut(True)
+			Else
 				GoGoblinMap()
 			EndIf
 			If _Sleep(1000) Then Return
-			ZoomOut(True)
 		Else
 			SetLog("Trying to place Unplaced Bulding, Failed", $COLOR_ERROR)
 			Return False

@@ -696,9 +696,9 @@ Func runBot() ;Bot that runs everything in order
 	If ProfileSwitchAccountEnabled() And $g_bReMatchAcc Then
 		SetLog("Rematching Account [" & $g_iNextAccount + 1 & "] with Profile [" & GUICtrlRead($g_ahCmbProfile[$g_iNextAccount]) & "]")
 		SwitchCoCAcc($g_iNextAccount)
+		ZoomOut(True) ;after switch need ZoomOut
 	EndIf
 	
-	ZoomOut(True)
 	FirstCheck()
 
 	While 1
@@ -1129,7 +1129,6 @@ Func FirstCheck()
 		EndIf
 		VillageReport()
 		If _Sleep(50) Then Return
-		ZoomOut(True)
 	EndIf
 
 	If T420() Then
@@ -1391,9 +1390,7 @@ Func BuilderBase()
 		
 		If _Sleep(50) Then Return
 		If isGoldFullBB() Or isElixirFullBB() Then
-			If AutoUpgradeBB() Then
-				ZoomOut(True) ;directly zoom
-			EndIf
+			If AutoUpgradeBB() Then ZoomOut(True) ;directly zoom
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			$g_bBBAttacked = False
 		EndIf
@@ -1420,9 +1417,7 @@ Func BuilderBase()
 		
 		If _Sleep(50) Then Return
 		If $g_bBBAttacked Then
-			If AutoUpgradeBB() Then
-				ZoomOut(True) ;directly zoom
-			EndIf
+			If AutoUpgradeBB() Then ZoomOut(True) ;directly zoom
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
 		
@@ -1487,10 +1482,10 @@ Func FillArmyCamp()
 			If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 650, 450, 725, 485) Then ;check on Castle cake reinforcement
 				SetLog("Try Reinforce with Castle Cake", $COLOR_DEBUG)
 				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(500) Then Return
+				If _Sleep(1000) Then Return
 				If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 210, 180, 280, 250) Then ;read if text "Tap to Reinforce" exist
 					Click($g_iQuickMISX, $g_iQuickMISY)
-					If _Sleep(500) Then Return
+					If _Sleep(1000) Then Return
 					Local $aTroops = QuickMIS("CNX", $g_sImgTrainTroops, 120, 260, 740, 460) ;read all troops image 
 					If IsArray($aTroops) And UBound($aTroops) > 0 Then
 						_ArraySort($aTroops, 0, 0, 0, 1)

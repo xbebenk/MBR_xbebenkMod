@@ -547,7 +547,6 @@ Func CheckIfLabIdle($bDebug = False)
 				EndIf
 			EndIf
 		EndIf
-		ClickAway()
 	EndIf
 	
 	If Not $bRet And $g_bUseLabPotion Then
@@ -562,9 +561,10 @@ Func CheckIfLabIdle($bDebug = False)
 				SetLog("Upgrade time < 2 day, cancel using Resource potion", $COLOR_INFO)
 			EndIf
 		EndIf
-		ClickAway()
 	EndIf
 	
+	ClickAway()
+	If _Sleep(500) Then Return
 	Return $bRet
 EndFunc
 
