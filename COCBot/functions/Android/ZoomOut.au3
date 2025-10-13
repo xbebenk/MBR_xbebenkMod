@@ -607,7 +607,7 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 			SetDebugLog("SearchZoomOut CenteringVillage = " & String($bCenterVillage), $COLOR_DEBUG1)
 			
 			If $bCenterVillage And (Abs($x) > 10 Or Abs($y) > 10) Then ;And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
-				SetLog("[" & $sSource & "] Centering Village by: x=" & $x & ", y=" & $y, $COLOR_DEBUG1)
+				SetDebugLog("[" & $sSource & "] Centering Village by: x=" & $x & ", y=" & $y, $COLOR_DEBUG1)
 				
 				ClickAway()
 				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
