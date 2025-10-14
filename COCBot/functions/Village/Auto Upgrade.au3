@@ -1910,15 +1910,12 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 									Local $Building = BuildingInfo(242, 477)
 									If $Building[0] = 2 And $Building[2] < $g_aiCmbRushTHOption[0] + 9 Then
 										SetLog("TownHall Level = " & $Building[2] & " < " &$g_aiCmbRushTHOption[0] + 9, $COLOR_ACTION)
-										setMinSaveWall($aResult[$y][0], $aResult[$y][5])
 									EndIf
 									If $Building[0] = 2 And $Building[2] >= $g_aiCmbRushTHOption[0] + 9 Then
 										SetLog("TownHall Level = " & $Building[2] & " >= " &$g_aiCmbRushTHOption[0] + 9 & ", should skip this upgrade", $COLOR_ACTION)
 										SetLog("Found TownHall, skip Search NewBuilding", $COLOR_INFO)
 										ExitLoop 2
 									EndIf
-								Else
-									If ($g_iSaveGoldWall = 0 Or $g_iSaveElixWall = 0) Then setMinSaveWall($aResult[$y][0], $aResult[$y][5])
 								EndIf
 							EndIf
 						EndIf

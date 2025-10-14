@@ -619,7 +619,7 @@ Func LabUpgrade($bTest = False)
 	SetLog("Checking for Laboratory Research", $COLOR_INFO)
 	
 	VillageReport(True, True)
-	
+	ClickLabMenu()
 	Local $Upgrades = _FindLabUpgrade($bTest)
 	If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
 		SetLog("Laboratory Upgrade List:", $COLOR_INFO)
@@ -632,7 +632,7 @@ Func LabUpgrade($bTest = False)
 				ContinueLoop
 			EndIf
 			
-			If IsLabUpgradeResourceEnough($Upgrades[$i][5], $Upgrades[$i][0]) Then
+			If IsLabUpgradeResourceEnough($Upgrades[$i][5], $Upgrades[$i][0]) Then ; IsLabUpgradeResourceEnough($cost, $resourceType)
 				SetLog("Going to Upgrade: " & $Upgrades[$i][3], $COLOR_ACTION)
 				$aCoord[0] = $Upgrades[$i][1]
 				$aCoord[1] = $Upgrades[$i][2]
@@ -644,6 +644,7 @@ Func LabUpgrade($bTest = False)
 		
 		If $bNoPriorityUpgrade And $g_bUpgradeAnyTroops Then
 			SetLog("There is no Priority Upgrade listed, lets try upgrade others", $COLOR_INFO)
+			_ArraySort($Upgrades, 1, 0, 0, 5) ;sort by high cost (higher cost means upgrade near maxed, so wont appear again on next lab upgrade attemp) 
 			For $i = 0 To UBound($Upgrades) - 1
 				If IsLabUpgradeResourceEnough($Upgrades[$i][5], $Upgrades[$i][0]) Then
 					SetLog("Going to Upgrade: " & $Upgrades[$i][3], $COLOR_ACTION)

@@ -393,7 +393,7 @@ Func InitializeMBR(ByRef $sAI, $bConfigRead)
 
 	Local $cmdLineHelp = GetTranslatedFileIni("MBR GUI Design - Loading", "Commandline_multiple_Bots","You can start multiple Bots by using the commandline (or a shortcut) :\r\n\r\n" & _
 			"MyBot.run.exe [ProfileName] [EmulatorName] [InstanceName]\r\n\r\n" & _
-			"If a profilename contains a {space}, then enclose the profilename in double quotes).\r\n\r\n" & _
+			"If a profilename contains a {space}, Then enclose the profilename in double quotes).\r\n\r\n" & _
 			"For second instance of Bot, specify the Emulator and Instance name\r\n\r\n" & _
 			"Supported Emulators are MEmu, Nox, BlueStacks5\r\n" & _
 			"Examples of command line:\r\n" & _
@@ -595,7 +595,7 @@ Func FinalInitialization(Const $sAI)
 	DestroySplashScreen(False)
 	If $bCheckPrerequisitesOK Then
 		; only when bot can run, register with forum
-		ForumAuthentication()
+		ForumAuThentication()
 	EndIf
 
 	; allow now other bots to launch
@@ -772,7 +772,7 @@ Func runBot() ;Bot that runs everything in order
 				$g_bRestart = False
 			EndIf
 			If _Sleep($DELAYRUNBOT3) Then Return
-			;  OCR read current Village Trophies when OOS restart maybe due PB or else DropTrophy skips one attack cycle after OOS
+			;  OCR read current Village Trophies when OOS restart maybe due PB or Else DropTrophy skips one attack cycle after OOS
 			$g_aiCurrentLoot[$eLootTrophy] = Number(getTrophyMainScreen($aTrophies[0], $aTrophies[1]))
 			SetDebugLog("Runbot Trophy Count: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_DEBUG)
 			If Not $g_bIsSearchLimit Then AttackMain() ;If Search Limit hit, do main loop.
@@ -920,75 +920,81 @@ Func _RunFunction($action)
 EndFunc   ;==>_RunFunction
 
 Func __RunFunction($action)
-	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
+	Local Static $iNowDay = @YDAY ; record numeric value for today
+	If $g_bEnableDailyRunRoutine Then 
+		If $iNowDay <> @YDAY Then ; if 1 day has passed since last time
+			$iNowDay = @YDAY
+			For $i = 0 To UBound($g_aDailyAccount) - 1
+				Local $iIndex = _ArraySearch($g_aiDailyFunction, $action, 0, 0, 0, 0, 1, 0)
+				If $iIndex > -1 Then 
+					$g_aDailyAccount[$g_iCurAccount][$iIndex] = 0
+				EndIf
+			Next
+		EndIf
+			
+		For $i = 0 To UBound($g_aiDailyFunction) - 1
+			If $action = $g_aiDailyFunction[$i][0] Then
+				If $g_aDailyAccount[$g_iCurAccount][$i] >= $g_aiDailyFunction[$i][1] Then
+					SetLog("[" & $action & "] Setting: " & $g_aiDailyFunction[$i][1] & ", Run Time = " & $g_aDailyAccount[$g_iCurAccount][$i], $COLOR_DEBUG2)
+					SetLog($action & " Already run", $COLOR_DEBUG2)
+					Return
+				Else
+					$g_aDailyAccount[$g_iCurAccount][$i] += 1
+					SetLog("[" & $action & "] Update Runtime, Account: " & $g_iCurAccount & " = " & $g_aDailyAccount[$g_iCurAccount][$i] & "/" & $g_aiDailyFunction[$i][1], $COLOR_DEBUG2)
+				EndIf
+			EndIf
+		Next
+	EndIf
+	
+	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)	
 	Switch $action
 		Case "UseFreeMagic"
-			UseFreeMagicItem()
-			If _Sleep(50) Then Return
-		Case "Collect"
-			Collect()
-			If _Sleep(50) Then Return
-		Case "BlackSmith"
-			BlackSmith()
+			UseFreeMagicItem() ; bot will check event gift like Reinforcement Cake and other free magic items that will expired if not used
 			If _Sleep(50) Then Return
 		Case "CheckTombs"
 			CheckTombs()
 			If _Sleep(50) Then Return
+		Case "CollectLootCart"
+			CollectLootCart()
+			If _Sleep(50) Then Return
+		Case "TreasuryCollect"
+			TreasuryCollect()
+			If _Sleep(50) Then Return
+		Case "CollectCookieRumble"
+			CollectCookieRumble()
+			If _Sleep(50) Then Return
+		Case "Collect"
+			Collect() ; collect mine, pump, drill
+			If _Sleep(50) Then Return
 		Case "CleanYard"
 			CleanYard()
 			If _Sleep(50) Then Return
-		Case "ReplayShare"
-			ReplayShare($g_bShareAttackEnableNow)
-			If _Sleep(50) Then Return
-		Case "NotifyReport"
-			NotifyReport()
-			If _Sleep(50) Then Return
 		Case "DonateCC"
 			DonateCC()
-		Case "BoostBarracks"
-			BoostBarracks()
 			If _Sleep(50) Then Return
-		Case "BoostSpellFactory"
-			BoostSpellFactory()
+		Case "RequestCC"
+			RequestCC()
+			If _Sleep(50) Then Return	
+		Case "Laboratory"
+			LabUpgrade()
+			If _Sleep(50) Then Return			
+		Case "BlackSmith"
+			BlackSmith()
 			If _Sleep(50) Then Return
-		Case "BoostWorkshop"
-			BoostWorkshop()
-			If _Sleep(50) Then Return
-		Case "BoostKing"
-			BoostKing()
-			If _Sleep(50) Then Return
-		Case "BoostQueen"
-			BoostQueen()
-			If _Sleep(50) Then Return
-		Case "BoostWarden"
-			BoostWarden()
-			If _Sleep(50) Then Return
-		Case "BoostChampion"
-			BoostChampion()
-			If _Sleep(50) Then Return
-		Case "BoostEverything"
-			BoostEverything()
+		Case "PetHouse"
+			PetHouse()
 			If _Sleep(50) Then Return
 		Case "DailyChallenge"
 			DailyChallenges()
 			If _Sleep(50) Then Return
-		Case "RequestCC"
-			RequestCC()
-			If _Sleep(50) Then Return
-		Case "Laboratory"
-			LabUpgrade()
-			If _Sleep(50) Then Return
-		Case "PetHouse"
-			PetHouse()
+		Case "SaleMagicItem"
+			SaleMagicItem()
 			If _Sleep(50) Then Return
 		Case "ForgeClanCapitalGold"
 			ForgeClanCapitalGold()
 			If _Sleep(50) Then Return
 		Case "BoostSuperTroop"
 			BoostSuperTroop()
-			If _Sleep(50) Then Return
-		Case "UpgradeHeroes"
-			UpgradeHeroes()
 			If _Sleep(50) Then Return
 		Case "UpgradeBuilding"
 			UpgradeBuilding()
@@ -1012,14 +1018,46 @@ Func __RunFunction($action)
 		Case "CollectFreeMagicItems"
 			CollectFreeMagicItems()
 			If _Sleep(50) Then Return
-		Case "SaleMagicItem"
-			SaleMagicItem()
-			If _Sleep(50) Then Return
 		Case "AutoUpgradeCC"
 			AutoUpgradeCC()
 			If _Sleep(50) Then Return
 		Case "CollectCCGold"
 			CollectCCGold()
+			If _Sleep(50) Then Return
+	
+		; must review below function
+		Case "UpgradeHeroes"
+			UpgradeHeroes()
+			If _Sleep(50) Then Return
+		Case "ReplayShare"
+			ReplayShare($g_bShareAttackEnableNow)
+			If _Sleep(50) Then Return
+		Case "NotifyReport"
+			NotifyReport()
+			If _Sleep(50) Then Return		
+		Case "BoostBarracks"
+			BoostBarracks()
+			If _Sleep(50) Then Return
+		Case "BoostSpellFactory"
+			BoostSpellFactory()
+			If _Sleep(50) Then Return
+		Case "BoostWorkshop"
+			BoostWorkshop()
+			If _Sleep(50) Then Return
+		Case "BoostKing"
+			BoostKing()
+			If _Sleep(50) Then Return
+		Case "BoostQueen"
+			BoostQueen()
+			If _Sleep(50) Then Return
+		Case "BoostWarden"
+			BoostWarden()
+			If _Sleep(50) Then Return
+		Case "BoostChampion"
+			BoostChampion()
+			If _Sleep(50) Then Return
+		Case "BoostEverything"
+			BoostEverything()
 			If _Sleep(50) Then Return
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
@@ -1204,7 +1242,7 @@ Func FirstCheckRoutine()
 					ExitLoop ;should be will never get here, but
 				EndIf
 			Else
-				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
+				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max Then continue to main loop
 				If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
 				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
 			EndIf
@@ -1241,9 +1279,16 @@ Func FirstCheckRoutine()
 		SetLog("Switch account not enabled, going to mainloop", $COLOR_DEBUG)
 		Return 
 	EndIf
-
+	
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() Then ;Allow immediate Second Attack on FastSwitchAcc enabled
+	$sText = Round(TimerDiff($FirstCheckRoutineTimer) / 1000 / 60, 2)
+	SetLog(" ")
+	SetLogCentered(" FirstCheckRoutine done (" & $sText & " minutes) ", "~", $COLOR_SUCCESS)
+	SetLog(" ")
+	
+	If _Sleep(50) Then Return
+	If ProfileSwitchAccountEnabled() Then
+		CommonRoutine("Switch")
 		VillageReport()
 		SetLog("Check Second Attack", $COLOR_ACTION)
 		FillArmyCamp()
@@ -1273,18 +1318,40 @@ Func FirstCheckRoutine()
 				EndIf
 			Wend
 		EndIf
-	EndIf
-
-	If Not $g_bRunState Then Return
-	$sText = Round(TimerDiff($FirstCheckRoutineTimer) / 1000 / 60, 2)
-	SetLog(" ")
-	SetLogCentered(" FirstCheckRoutine done (" & $sText & " minutes) ", "~", $COLOR_SUCCESS)
-	SetLog(" ")
-
-	If ProfileSwitchAccountEnabled() Then
-		CommonRoutine("Switch")
 		checkSwitchAcc() ;switch to next account
 	EndIf
+	
+	;If ProfileSwitchAccountEnabled() Then ;Allow immediate Second Attack on FastSwitchAcc enabled
+	;	VillageReport()
+	;	SetLog("Check Second Attack", $COLOR_ACTION)
+	;	FillArmyCamp()
+	;	If BotCommand() Then btnStop()
+	;	If Not $g_bRunState Then Return
+	;	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
+	;		Setlog("Let's attack Again!", $COLOR_INFO)
+	;		$g_bRestart = False ;reset
+	;		Local $loopcount = 1
+	;		While True
+	;			$g_bRestart = False
+	;			If Not $g_bRunState Then Return
+	;			If AttackMain($g_bSkipDT) Then
+	;				Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
+	;				$b_SuccessAttack = True
+	;				ExitLoop
+	;			Else
+	;				$loopcount += 1
+	;				If $loopcount > 10 Then
+	;					Setlog("2nd Attack Loop, Already Try 10 times... Exit", $COLOR_ERROR)
+	;					ExitLoop
+	;				Else
+	;					Setlog("[" & $loopcount & "] 2nd Attack Loop, Failed", $COLOR_INFO)
+	;					If $g_bForceSwitch Then ExitLoop
+	;				EndIf
+	;				If Not $g_bRunState Then Return
+	;			EndIf
+	;		Wend
+	;	EndIf
+	;EndIf
 EndFunc
 
 Func CommonRoutine($RoutineType = Default)
@@ -1295,7 +1362,7 @@ Func CommonRoutine($RoutineType = Default)
 	Local $sText = "", $aFuncList[0]
 	Switch $RoutineType
 		Case "FirstCheck"
-			Local $aRndFuncList = ['Collect', 'CleanYard', 'UseFreeMagic', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'PetHouse', 'Laboratory', 'SaleMagicItem', 'UpgradeWall', 'UpgradeLow']
+			Local $aRndFuncList = ['Collect', 'CollectLootCart', 'TreasuryCollect', 'CleanYard', 'CollectCookieRumble', 'UseFreeMagic', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'PetHouse', 'Laboratory', 'SaleMagicItem', 'UpgradeWall', 'UpgradeLow']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)
@@ -1325,7 +1392,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Idle"
-			Local $aRndFuncList = ['RequestCC', 'DailyChallenge', 'CollectAchievements', 'CollectFreeMagicItems', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'BuilderBase']
+			Local $aRndFuncList = ['Collect', 'CollectLootCart', 'TreasuryCollect', 'CleanYard', 'CollectCookieRumble', 'UseFreeMagic', 'RequestCC', 'DailyChallenge', 'CollectAchievements', 'CollectFreeMagicItems', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'BuilderBase']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)
@@ -1506,7 +1573,7 @@ Func FillArmyCamp()
 					EndIf
 				EndIf
 				
-				If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 450, 380, 635, 500) then
+				If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 450, 380, 635, 500) Then
 					Click($g_iQuickMISX, $g_iQuickMISY)
 					SetLog("Fill Reinforcement using Castle Cake", $COLOR_ACTION)
 				EndIf

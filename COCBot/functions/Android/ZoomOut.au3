@@ -630,8 +630,17 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 				ConvertInternalExternArea() ; generate correct internal/external diamond measures
 			EndIf
 		EndIf
+	Else 
+		$g_iSearchZoomOutCounter += 1
 	EndIf
 
+	If $g_iSearchZoomOutCounter = 5 Then 
+		SaveDebugImage("SwitchBetweenBases")
+		SetLog("SearchZoomOut meet a problem, please wait Forced Coc Restart", $COLOR_DEBUG2)
+		CloseCoC(True)
+		$g_iSearchZoomOutCounter = 0
+	EndIf
+	
 	Return FuncReturn($aResult)
 EndFunc   ;==>SearchZoomOut
 

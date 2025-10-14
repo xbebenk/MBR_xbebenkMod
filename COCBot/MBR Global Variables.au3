@@ -70,6 +70,7 @@ Global $g_iBotLaunchTime = 0 ; Keeps track of time (in millseconds) from bot lau
 ; Since October 12th 2016 Update, Village cannot be entirely zoomed out, offset updated in func SearchZoomOut
 Global $g_iVILLAGE_OFFSET[3] = [0, 0, 1]
 Global $g_iZoomFactor = 0, $g_ixOffset = 0, $g_iyOffset = 0
+Global $g_iSearchZoomOutCounter = 0
 
 #Region debugging
 #Tidy_Off
@@ -1961,6 +1962,36 @@ Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEn
 Global $aCCBuildingIgnore[13] = ["Ruined", "Big Barbarian", "Pyre", "Boulder", "Bonfire", "Grove", "Tree", "Forest", "Campsite", "Stone", "Pillar", "The First", "Tombs"]
 Global $g_bChkStartWeekendRaid = True
 
+Global $g_bEnableDailyRunRoutine = False
+;[FunctionName, Allowed time to run a day? 0 = always run; 1 = daily; 2 twice a day;]
+Global $g_aiDailyFunction[13][2] = [["DailyChallenge", 2], _
+									["BlackSmith", 1], _
+									["CollectAchievements", 2], _
+									["CollectFreeMagicItems", 2], _
+									["ForgeClanCapitalGold", 1], _
+									["AutoUpgradeCC", 1], _
+									["UseFreeMagic", 4], _
+									["SaleMagicItem", 1], _
+									["CleanYard", 1], _
+									["CollectLootCart", 1], _
+									["TreasuryCollect", 1], _
+									["BuilderBase", 3], _
+									["PetHouse", 1]]
+;per account daily function HowManyRunToday
+Global $g_aDailyAccount[16][Ubound($g_aiDailyFunction)] = [[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
+														[0,0,0,0,0,0,0,0,0,0,0,0,0]]
+															
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
 Global $g_aVillageRefSize[44][7] = [["DS", "Default", 592.24, 87, 792, 52, 589], _ ;ok

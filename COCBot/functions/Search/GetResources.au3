@@ -42,6 +42,9 @@ Func GetResources($bLog = True) ;Reads resources
 				Case "DE"
 					$yDE = $aResource[$i][2] - 3
 					SetDebugLog("[" & $i & "] Found DE Image")
+				Case "Trophy"
+					$yTrophy = $aResource[$i][2]
+					SetDebugLog("[" & $i & "] Found Trophy Image")
 			EndSwitch
 		Next
 	Else
@@ -58,6 +61,8 @@ Func GetResources($bLog = True) ;Reads resources
 	SetDebugLog("getElixirVillageSearch(" & $xRead & "," & $yElix & ")")
 	$g_iSearchDark = getDarkElixirVillageSearch($xRead, $yDE)
 	SetDebugLog("getDarkElixirVillageSearch(" & $xRead & "," & $yDE & ")")
+	$g_iSearchTrophy = getTrophyVillageSearch($xRead, $yTrophy)
+	SetDebugLog("getTrophyVillageSearch(" & $xRead & "," & $yTrophy & ")")
 	
 	SetDebugLog("Gold: " & $g_iSearchGold & ", Elix: " & $g_iSearchElixir & ", DE: " & $g_iSearchDark & ", TR: " & $g_iSearchTrophy)
 

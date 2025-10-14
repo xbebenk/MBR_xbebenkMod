@@ -62,14 +62,14 @@ Func Collect($bOnlyCollector = False)
 		Return True
 	EndIf
 	
-	If _Sleep(50) Then Return
-	CollectLootCart()
-	If _Sleep(50) Then Return
-	TreasuryCollect()
-	ClickAway()
-	If _Sleep(50) Then Return
-	CollectCookieRumble()
-	If _Sleep(50) Then Return
+	;If _Sleep(50) Then Return
+	;CollectLootCart()
+	;If _Sleep(50) Then Return
+	;TreasuryCollect()
+	;ClickAway()
+	;If _Sleep(50) Then Return
+	;CollectCookieRumble()
+	;If _Sleep(50) Then Return
 	;CheckEventStreak($g_bFirstStart)
 	;If _Sleep(50) Then Return
 	EndGainCost("Collect")
@@ -228,7 +228,7 @@ EndFunc
 
 Func IsCookieRumbleWindowOpen()
 	Local $bRet = False
-	If _ColorCheck(_GetPixelColor(815, 89, True), Hex(0xFFFFFF, 6), 20, Default, "IsCookieRumbleWindowOpen")Then
+	If _ColorCheck(_GetPixelColor(815, 89, True), Hex(0xFFFFFF, 6), 20, Default, "IsCookieRumbleWindowOpen") Then
 		$bRet = True
 	EndIf
 	
@@ -336,7 +336,7 @@ EndFunc
 
 Func IsEventStreakWindowOpen()
 	Local $bRet = False
-	If _ColorCheck(_GetPixelColor(815, 89, True), Hex(0xFFFFFF, 6), 20, Default, "IsEventStreakWindowOpen")Then
+	If _ColorCheck(_GetPixelColor(815, 89, True), Hex(0xFFFFFF, 6), 20, Default, "IsEventStreakWindowOpen") Then
 		$bRet = True
 	EndIf
 	
