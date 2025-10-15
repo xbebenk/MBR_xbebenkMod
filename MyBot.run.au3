@@ -1318,6 +1318,7 @@ Func FirstCheckRoutine()
 				EndIf
 			Wend
 		EndIf
+		RequestCC()
 		checkSwitchAcc() ;switch to next account
 	EndIf
 	

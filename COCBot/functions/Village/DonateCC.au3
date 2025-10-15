@@ -423,7 +423,7 @@ Func DonateTroopType($iTroopIndex, $Quant = 0, $bDonateQueueOnly = False)
 	If $g_bDebugSetLog Then SetLog("donate : " & $g_asTroopNames[$iTroopIndex], $COLOR_ERROR)
 	If $g_bDebugSetLog Then SetLog("coordinate : " & _ArrayToString($aSLot), $COLOR_ERROR)
 
-	ClickP($aSlot, $Quant, 300, "Donate " & $g_asTroopNames[$iTroopIndex])
+	ClickP($aSlot, $Quant, 200, "Donate " & $g_asTroopNames[$iTroopIndex])
 
 	$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
 
@@ -466,7 +466,7 @@ Func DonateSpellType($iSpellIndex, $Quant = 0, $bDonateQueueOnly = False)
 	If $g_bDebugSetLog Then SetLog("coordinate : " & _ArrayToString($aSLot), $COLOR_ERROR)
 
 
-	ClickP($aSlot, $Quant, 300, "Donate " & $g_asSpellNames[$iSpellIndex])
+	ClickP($aSlot, $Quant, 200, "Donate " & $g_asSpellNames[$iSpellIndex])
 	$g_aiDonateSpells[$iSpellIndex] += 1
 	$g_aiDonateStatsSpells[$iSpellIndex][0] += $Quant
 
@@ -487,7 +487,7 @@ Func DonateSiegeType($iSiegeIndex)
 	If $g_bDebugSetLog Then SetLog("donate : " & $g_asSiegeMachineNames[$iSiegeIndex], $COLOR_ERROR)
 	If $g_bDebugSetLog Then SetLog("coordinate : " & _ArrayToString($aSLot), $COLOR_ERROR)
 
-	ClickP($aSlot, 1, 300, "Donate " & $g_asSiegeMachineNames[$iSiegeIndex])
+	ClickP($aSlot, 1, 200, "Donate " & $g_asSiegeMachineNames[$iSiegeIndex])
 	$g_aiDonateSiegeMachines[$iSiegeIndex] += 1
 	$g_aiDonateStatsSieges[$iSiegeIndex][0] += 1
 
@@ -721,15 +721,10 @@ Func getRemainingCCcapacity($DonateButton = -1)
 	SetDebugLog("$g_aiPrepDon[2]: " & $g_aiPrepDon[2] & ", $g_aiPrepDon[3]: " & $g_aiPrepDon[3] & ", $g_iCurrentSpells: " & $g_iCurrentSpells & ", $bDonateSpell: " & $bDonateSpell)
 	SetDebugLog("$g_aiPrepDon[4]: " & $g_aiPrepDon[4] & ", $g_aiPrepDon[5]: " & $g_aiPrepDon[5])
 
-	SetDebugLog("Start getRemainingCCcapacity : " & _ArrayToString($aiDonateButton), $COLOR_DEBUG)
+	SetDebugLog("getRemainingCCcapacity(" & _ArrayToString($aiDonateButton), $COLOR_DEBUG)
 	Local $xTroop = 6
 
-	If QuickMIS("BC1", $g_sImgDonateButton, $aiDonateButton[0] - 20, $aiDonateButton[1] - 20, $aiDonateButton[0] + 20, $aiDonateButton[1] + 20) Then
-		$aiDonateButton[0] = $g_iQuickMISX
-		$aiDonateButton[1] = $g_iQuickMISY
-	EndIf
-
-	Local $aDonateType = QuickMIS("CNX", $g_sImgDonateType, $aiDonateButton[0] - 250, $aiDonateButton[1] - 15, $aiDonateButton[0] - 50, $aiDonateButton[1] + 20)
+	Local $aDonateType = QuickMIS("CNX", $g_sImgDonateType, 25, $aiDonateButton[1] - 20, $aiDonateButton[0] - 50, $aiDonateButton[1] + 20)
 	If IsArray($aDonateType) And UBound($aDonateType) > 0 Then
 		If UBound($aDonateType) < 3 Then $xTroop = 30 ;cc cannot accept sieges
 		If UBound($aDonateType) < 2 Then $xTroop = 35 ;cc cannot accept spell and sieges

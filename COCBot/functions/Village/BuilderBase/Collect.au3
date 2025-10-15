@@ -45,6 +45,7 @@ EndFunc
 Func CollectBBCart()
 	Local $x = 0, $y = 0, $yMul = 5
 	ZoomOutHelperBB()
+	If _Sleep(1000) Then Return
 	If QuickMIS("BC1", $g_sImgBB20 & "ElixCart\", 540, 80, 630, 150) Then ;check ElixCart Image
 		Setlog("Found Elix Cart", $COLOR_DEBUG2)
 		Click($g_iQuickMISX, $g_iQuickMISY)
