@@ -189,7 +189,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 		Local $x1 = $iX - 20, $x2 = $iX + 40
 		If QuickMIS("BC1", $g_sImgSwitchSiegeButton, $x1, 630, $x2, 676) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			Local $iLastX = $g_iQuickMISX - 30, $iLastY = $g_iQuickMISY
+			Local $iLastX = $g_iQuickMISX - 90, $iLastY = $g_iQuickMISY
 			
 			; wait to appears the new small window
 			WaitForPixel($iX + 10, 570, $iX + 11, 571, "FFFFFF", 20, 2)
@@ -206,15 +206,23 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 					SetDebugLog("ToUse : Castle")
 
 					$TmpIndex = _ArraySearch($aSearchResult, $eCastle, 0, 0, 0, 0, 1, 5)
-					If $aSearchResult[$TmpIndex][5] = $eCastle Then
-						$iTroopIndex = $eCastle ;set ByRef
-						SetDebugLog("Castle found on : [" & $aSearchResult[$TmpIndex][1] & "," & $aSearchResult[$TmpIndex][2] & "]")
-						Click($aSearchResult[$TmpIndex][1], $aSearchResult[$TmpIndex][2])
-						If _Sleep(750) Then Return
-						Return
+					If $TmpIndex >= 0 Then 
+						If $aSearchResult[$TmpIndex][5] = $eCastle Then
+							$iTroopIndex = $eCastle ;set ByRef
+							SetDebugLog("Castle found on : [" & $aSearchResult[$TmpIndex][1] & "," & $aSearchResult[$TmpIndex][2] & "]")
+							Click($aSearchResult[$TmpIndex][1], $aSearchResult[$TmpIndex][2])
+							If _Sleep(750) Then Return
+							Return
+						EndIf
 					Else
 						SetLog("No " & GetTroopName($ToUse) & " found")
-						Click($iLastX, $iLastY, 1)
+						Click($iLastX, $iLastY)
+						If _Sleep(500) Then Return
+						Click($iLastX, $iLastY)
+						SetDebugLog("ToUse=" & $ToUse & " |iTroopIndex=" & $iTroopIndex)
+						$iTroopIndex = -1 ;setting castle only, there is siege on attackbar, but no troop on cc, will discard use siege
+						SetLog("No troop on cc, discard Siege use", $COLOR_INFO)
+						Return
 					EndIf
 				EndIf
 
@@ -285,10 +293,10 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 							If $HigherLevelFound Then
 								Click($FinalCoordX, $FinalCoordY)
 								$g_iSiegeLevel = $iFinalLevel
-							Else
-								SetLog("No " & GetTroopName($ToUse) & " found")
-								Click($iLastX, $iLastY, 1)
 							EndIf
+							SetLog("No " & GetTroopName($ToUse) & " found")
+							If _Sleep(1000) Then Return
+							Click($iLastX, $iLastY, 1)						
 						Else
 							$iTroopIndex = $ToUse ;set ByRef
 							SetDebugLog("ToUse=" & $ToUse)
