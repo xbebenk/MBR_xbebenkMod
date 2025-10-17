@@ -234,6 +234,7 @@ EndFunc   ;==>IsReturnHomeBattlePage
 
 Func IsReturnHomeChestPage($bAction = True)
 	Local $bRet = False
+	Return $bRet
 	If IsPageLoop($aReturnHomeChest, 1) Then
 		SetDebugLog("**Return Home Chest Window OK**", $COLOR_ACTION)
 		If Not $bAction Then Return True

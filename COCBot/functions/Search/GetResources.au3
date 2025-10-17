@@ -28,6 +28,7 @@ Func GetResources($bLog = True) ;Reads resources
 		$aResource = QuickMIS("CNX", $g_sImgResourceAttack, 20, 70, 50, 185)		
 	EndIf
 	
+	Local $bDEFound = False, $bTrophyFound = False
 	If IsArray($aResource) And UBound($aResource) > 0 Then
 		_ArraySort($aResource, 0, 0, 0, 2)
 		SetDebugLog("Found Resource Image count : " & UBound($aResource))
@@ -42,9 +43,11 @@ Func GetResources($bLog = True) ;Reads resources
 				Case "DE"
 					$yDE = $aResource[$i][2] - 3
 					SetDebugLog("[" & $i & "] Found DE Image")
+					$bDEFound = True
 				Case "Trophy"
 					$yTrophy = $aResource[$i][2]
 					SetDebugLog("[" & $i & "] Found Trophy Image")
+					$bTrophyFound = True
 			EndSwitch
 		Next
 	Else
@@ -59,10 +62,14 @@ Func GetResources($bLog = True) ;Reads resources
 	SetDebugLog("getGoldVillageSearch(" & $xRead & "," & $yGold & ")")
 	$g_iSearchElixir = getElixirVillageSearch($xRead, $yElix)
 	SetDebugLog("getElixirVillageSearch(" & $xRead & "," & $yElix & ")")
-	$g_iSearchDark = getDarkElixirVillageSearch($xRead, $yDE)
-	SetDebugLog("getDarkElixirVillageSearch(" & $xRead & "," & $yDE & ")")
-	$g_iSearchTrophy = getTrophyVillageSearch($xRead, $yTrophy)
-	SetDebugLog("getTrophyVillageSearch(" & $xRead & "," & $yTrophy & ")")
+	If $bDEFound Then 
+		$g_iSearchDark = getDarkElixirVillageSearch($xRead, $yDE)
+		SetDebugLog("getDarkElixirVillageSearch(" & $xRead & "," & $yDE & ")")
+	EndIf
+	If $bTrophyFound Then 
+		$g_iSearchTrophy = getTrophyVillageSearch($xRead, $yTrophy)
+		SetDebugLog("getTrophyVillageSearch(" & $xRead & "," & $yTrophy & ")")
+	EndIf
 	
 	SetDebugLog("Gold: " & $g_iSearchGold & ", Elix: " & $g_iSearchElixir & ", DE: " & $g_iSearchDark & ", TR: " & $g_iSearchTrophy)
 

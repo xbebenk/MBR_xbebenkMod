@@ -314,10 +314,14 @@ Func ClickAccountSCID($iAccount = 2)
 	If $iAccount > 6 And $iAccount < 10 Then ClickDragSCID(2) ;Account 7,8,9
 	If $iAccount > 9 And $iAccount < 13 Then ClickDragSCID(3) ;Account 10,11,12
 	If $iAccount > 12 And $iAccount < 16 Then ClickDragSCID(4) ;Account 13,14,15
-	If $iAccount > 15 Then ClickDragSCID(5) ;Account 13,14,15
+	If $iAccount > 15 Then ClickDragSCID(5) ;Account 16
 	
 	If _Sleep(500) Then Return
 	If Not $g_bRunState Then Return
+	
+	Local $bBottomPage = False
+	If QuickMIS("BC1", $g_sImgSupercellIDBottomPage, 500, 580, 560, 630) Then $bBottomPage = True
+	
 	;lets check TownHall Text
 	$aAccount = QuickMIS("CNX", $g_sImgSupercellIDTown, 560, 400, 577, 650)
 	If IsArray($aAccount) And UBound($aAccount) > 0 Then
@@ -334,19 +338,27 @@ Func ClickAccountSCID($iAccount = 2)
 		Next
 		
 		$aDel[0] = UBound($aDel) - 1
-		_ArrayDelete($aAccount, $aDel) ;delete wall level which same or higher than TH level
-		_ArraySort($aAccount, 0, 0, 0, 2) ;short wall level ascending
+		_ArrayDelete($aAccount, $aDel) 
+		_ArraySort($aAccount, 0, 0, 0, 2) 
 		
 		For $i = 0 To UBound($aAccount) - 1
 			SetLog("Bottom Splitter on : " & $aAccount[$i][1] & "," & $aAccount[$i][2], $COLOR_DEBUG)
 		Next
 		
-		
 		If Not $g_bRunState Then Return
 		Switch $iAccount
 			Case 1, 4, 7, 10, 13, 16
 				$x = $aAccount[0][1] + 100
-				$y = $aAccount[0][2] - 35
+				$y = $aAccount[0][2] - 35				
+				;we should click most top account among 3 choice, but we only have 2 account. so select the most bottom
+				If UBound($aAccount) = 2 And $bBottomPage And $iAccount = $g_iTotalAcc + 1 Then 
+					SetLog("attention : we need to select account " & $iAccount, $COLOR_DEBUG2)
+					SetLog("normally account " & $iAccount & " is on first position", $COLOR_DEBUG2)
+					SetLog("but we have 2 choice and reach bottom page on scid screen", $COLOR_DEBUG2)
+					SetLog("bot will select the most bottom account", $COLOR_DEBUG2)
+					$x = $aAccount[1][1] + 100
+					$y = $aAccount[1][2] - 35
+				EndIf
 			Case 2, 5, 8, 11, 14
 				$x = $aAccount[1][1] + 100
 				$y = $aAccount[1][2] - 35
@@ -371,7 +383,7 @@ Func ClickDragSCID($iCount = 1)
 		ClickDrag(666, 634, 666, 330)
 		If _Sleep(500) Then Return
 	Next
-EndFunc 
+EndFunc ;ClickDragSCID
 
 Func aquireSwitchAccountMutex($iSwitchAccountGroup = $g_iCmbSwitchAcc, $bReturnOnlyMutex = False, $bShowMsgBox = False)
 	Local $sMsg = GetTranslatedFileIni("MBR GUI Design Child Bot - Profiles", "Msg_SwitchAccounts_InUse", "My Bot with Switch Accounts Group %s is already in use or active.", $iSwitchAccountGroup)
