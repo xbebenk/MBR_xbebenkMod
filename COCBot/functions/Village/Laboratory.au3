@@ -613,7 +613,7 @@ Func LabUpgrade($bTest = False)
 	Local $bNoPriorityUpgrade = True
 	Local $aCoord[2] = [0, 0]
 	
-	If Not $g_bAutoStarLabUpgradeEnable Then Return ; Lab upgrade not enabled.
+	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 	If Not CheckIfLabIdle($bTest) Then Return
 	If _Sleep(50) Then Return
 	SetLog("Checking for Laboratory Research", $COLOR_INFO)
