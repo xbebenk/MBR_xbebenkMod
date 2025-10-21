@@ -75,6 +75,5 @@ Func WaitForClouds()
 		
 		If _Sleep(250) Then Return
 	Next
-	If _Sleep(1000) Then Return ;add delay before read resource
 	SetDebugLog("End WaitForClouds", $COLOR_DEBUG1)
 EndFunc   ;==>WaitForClouds

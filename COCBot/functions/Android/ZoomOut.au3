@@ -78,6 +78,18 @@ Func ZoomOutBlueStacks5()
 	Return DefaultZoomOut("{DOWN}", 0, ($g_iAndroidZoomoutMode <> 3))
 EndFunc
 
+Func ZoomOutLDPlayer9()
+	SetDebugLog("ZoomOutLDPlayer9()")
+	; newer BlueStacks versions don't work with Ctrl-Click, so fall back to original arrow key
+	Return DefaultZoomOut("{F5}", 0, ($g_iAndroidZoomoutMode <> 3))
+EndFunc
+
+Func ZoomOutMuMu()
+	SetDebugLog("ZoomOutMuMu()")
+	; newer BlueStacks versions don't work with Ctrl-Click, so fall back to original arrow key
+	Return DefaultZoomOut("{F5}", 0, ($g_iAndroidZoomoutMode <> 3))
+EndFunc
+
 Func ZoomOutMEmu()
 	SetDebugLog("ZoomOutMEmu()")
 	Return DefaultZoomOut("{F3}", 0, ($g_iAndroidZoomoutMode <> 3))
@@ -117,7 +129,7 @@ Func ZoomOutHelper($caller = "Default")
 			If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 			If $g_bDebugClick Then SetLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 			ClickAway()
-			ClickDrag(800, 350, 800 - $x, 350 - $y)
+			ClickDrag(800, 350, 800 - $x, 350 - $y, 50, True)
 			$bRet = True
 		Else
 			If $g_bDebugClick Then SetLog("[" & $caller & "] Bad Tree ImageName!")
@@ -134,7 +146,7 @@ Func ZoomOutHelper($caller = "Default")
 				If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 				If $g_bDebugClick Then SetLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 				ClickAway()
-				ClickDrag(800, 350, 800 - $x, 350 - $y)
+				ClickDrag(800, 350, 800 - $x, 350 - $y, 50, True)
 				$bRet = True
 			Else
 				If $g_bDebugClick Then SetLog("[" & $caller & "] Bad Stone ImageName!")
@@ -152,7 +164,7 @@ Func ZoomOutHelper($caller = "Default")
 				If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 				If $g_bDebugClick Then SetLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 				ClickAway()
-				ClickDrag(800, 350, 800 - $x, 350 - $y)
+				ClickDrag(800, 350, 800 - $x, 350 - $y, 50, True)
 				$bRet = True
 			Else
 				If $g_bDebugClick Then SetLog("[" & $caller & "] Bad CGHelper ImageName!")
@@ -162,7 +174,7 @@ Func ZoomOutHelper($caller = "Default")
 	
 	If _Sleep(50) Then Return
 	If Not $bRet Then
-		ClickDrag(800, 350, 800, 400) ;just drag
+		ClickDrag(800, 350, 800, 400, 50, True) ;just drag
 	EndIf
 	
 	;$g_bDebugClick = False
@@ -215,7 +227,7 @@ Func ZoomOutHelperBB($caller = "Default")
 				$y = $g_iQuickMISY - $aOffset[2]
 				If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 				If $g_bDebugClick Then SetLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
-				ClickDrag(730, 250, 730 - $x + $xyOffsetSwitchBases, 250 - $y - $xyOffsetSwitchBases)
+				ClickDrag(730, 250, 730 - $x + $xyOffsetSwitchBases, 250 - $y - $xyOffsetSwitchBases, 50, True)
 				$bRet = True
 			Else
 				If $g_bDebugClick Then SetLog("[" & $caller & "] Bad Stone ImageName!")
@@ -235,6 +247,14 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $aPicture = ["", 0, 0, 0, 0]
 	If Not $g_bRunState Then Return
 	
+	If $g_bStayOnBuilderBase Then
+		ZoomOutHelperBB()
+		If _Sleep(500) Then Return
+	Else
+		ZoomOutHelper()
+		If _Sleep(500) Then Return
+	EndIF
+	
 	If _Sleep(50) Then Return
 	ForceCaptureRegion()
 	$aPicture = SearchZoomOut(True, True, $sFunc, True)
@@ -242,7 +262,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		AndroidZoomOut()
 		SetLog("ZoomOut() : " & $sFunc, $COLOR_DEBUG2)
-		If ZoomOutHelper($sFunc) Then Return True
+		
 		If ZoomOutHelperBB($sFunc) Then Return True
 		$aPicture = SearchZoomOut(True, True, $sFunc, True)
 	EndIf
@@ -610,15 +630,15 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 				SetDebugLog("[" & $sSource & "] Centering Village by: x=" & $x & ", y=" & $y, $COLOR_DEBUG1)
 				
 				ClickAway()
-				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
+				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y, 50, True)
 				If _Sleep(250) Then Return FuncReturn($aResult)
-				
 				
 				$aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut(1):" & $sSource, True, $DebugLog)
 				; update difference in offset
 				$aResult2[3] = $aResult2[1] - $aResult[1]
 				$aResult2[4] = $aResult2[2] - $aResult[2]
 				SetDebugLog("Centered Village Offset" & $sSource & ": " & $aResult2[1] & ", " & $aResult2[2] & ", change: " & $aResult2[3] & ", " & $aResult2[4], $COLOR_DEBUG1)
+				$g_iSearchZoomOutCounter = 0
 				Return FuncReturn($aResult2)
 			EndIf
 
@@ -636,9 +656,9 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 
 	If $g_iSearchZoomOutCounter = 5 Then 
 		SaveDebugImage("SwitchBetweenBases")
+		$g_iSearchZoomOutCounter = 0
 		SetLog("SearchZoomOut meet a problem, please wait Forced Coc Restart", $COLOR_DEBUG2)
 		CloseCoC(True)
-		$g_iSearchZoomOutCounter = 0
 	EndIf
 	
 	Return FuncReturn($aResult)
@@ -661,6 +681,10 @@ Func ZoomIn($Region = "Top")
 	Switch $g_sAndroidEmulator
 		Case "BlueStacks5"
 			$sScript &= ".BlueStacks5"
+		Case "LDPlayer9"
+			$sScript &= ".LD9"
+		Case "MuMu"
+			$sScript &= ".MuMu"
 	EndSwitch
 	
 	SetLog("minitouch script = " & $sScript, $COLOR_DEBUG)
@@ -752,20 +776,20 @@ Func ZoomInBBMEmu($Region = "Top")
 	If Not $bSuccessZoomIn Then Return False
 	Switch $Region
 		Case "Top"
-			ClickDrag(400, 150, 400, 400, 200)
+			ClickDrag(400, 150, 400, 400, 200, 50, True)
 			If _Sleep(500) Then Return
-			ClickDrag(400, 150, 400, 400, 200)
+			ClickDrag(400, 150, 400, 400, 200, 50, True)
 		Case "Left"
-			ClickDrag(200, 400, 700, 400, 200)
+			ClickDrag(200, 400, 700, 400, 200, 50, True)
 			If _Sleep(500) Then Return
-			ClickDrag(400, 150, 400, 300, 200)
+			ClickDrag(400, 150, 400, 300, 200, 50, True)
 		Case "Bottom"
-			ClickDrag(400, 450, 400, 50, 200)
+			ClickDrag(400, 450, 400, 50, 200, 50, True)
 			If _Sleep(500) Then Return
 		Case "Right"
-			ClickDrag(700, 400, 200, 400, 200)
+			ClickDrag(700, 400, 200, 400, 200, 50, True)
 			If _Sleep(500) Then Return
-			ClickDrag(400, 150, 400, 400, 200)
+			ClickDrag(400, 150, 400, 400, 200, 50, True)
 	EndSwitch
 	Return True
 EndFunc

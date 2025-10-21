@@ -41,11 +41,11 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			If IsProblemAffect() Then Return
 			If $g_bDebugSetlog Then SetLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
+			checkMainScreen()
 			_AttackBB()
 			If Not $g_bRunState Then Return
 			If $g_bIsBBevent Then
 				If CheckCGCompleted() Then ExitLoop
-				RequestCC()
 				If isGoldFullBB() Or isElixirFullBB() Then 
 					AutoUpgradeBB()
 					StarLabUpgrade()
@@ -214,7 +214,6 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		$sTmpDamage = Number($sDamage)
 		
 		If BBBarbarianHead("EndBattleBB") Then ExitLoop
-		If isOnBuilderBase() Then ExitLoop
 		
 		If $sTmpDamage = 100 Then
 			_SleepStatus(15000) ; wait if not going to second stage

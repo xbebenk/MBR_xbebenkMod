@@ -577,7 +577,7 @@ Func _WinGetAndroidHandle($bFindByTitle = True)
 				For $i = 1 To $aWinList[0][0]
 					$t = $aWinList[$i][0]
 					$hWin = $aWinList[$i][1]
-					If $pid = WinGetProcess($hWin) And ControlGetHandle2($hWin, $g_sAppPaneName, $g_sAppClassInstance) <> 0 And $aWinList[$i][3] > 400 And $aWinList[$i][4] > 400 Then
+					If $pid = WinGetProcess($hWin) And ControlGetHandle2($hWin, $g_sAppPaneName, $g_sAppClassInstance) <> 0 Then ;And $aWinList[$i][3] > 400 And $aWinList[$i][4] > 400 Then
 						SetDebugLog("Found " & $g_sAndroidEmulator & " Window '" & $t & "' (" & $hWin & ") by PID " & $pid & " ('" & $commandLine & "')")
 						UpdateHWnD($hWin)
 						$g_sAndroidTitle = UpdateAndroidWindowTitle($g_hAndroidWindow, $t)
@@ -4904,6 +4904,8 @@ Func CheckEmuNewVersions()
 			$NewVersion = GetVersionNormalized("7.0.5.7")
 		Case "BlueStacks5"
 			$NewVersion = GetVersionNormalized("5.10.0.0")
+		Case "LDPlayer9"
+			$NewVersion = GetVersionNormalized("9.1.0.0")
 		Case Else
 			; diabled of the others
 			$NewVersion = GetVersionNormalized("99.0.0.0")

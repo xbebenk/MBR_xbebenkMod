@@ -23,7 +23,7 @@ Func GetResources($bLog = True) ;Reads resources
 	SuspendAndroid()
 	
 	Local $aResource = QuickMIS("CNX", $g_sImgResourceAttack, 20, 70, 50, 185)
-	If UBound($aResource) < 3 Then 
+	If UBound($aResource) < 2 Then 
 		If _Sleep(1000) Then Return
 		$aResource = QuickMIS("CNX", $g_sImgResourceAttack, 20, 70, 50, 185)		
 	EndIf

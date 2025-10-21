@@ -265,6 +265,8 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 						Else
 							SetLog("AnySiege : Not found any", $COLOR_ERROR)
 							Click($iLastX, $iLastY, 1)
+							If _Sleep(500) Then Return
+							Click($iLastX, $iLastY)
 						EndIf
 					Else
 						Local $TmpIndex = _ArraySearch($aSearchResult, $ToUse, 0, 0, 0, 0, 1, 5)

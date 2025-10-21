@@ -50,17 +50,18 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 						$g_iQuickMISY = $coord[1]
 						$g_iQuickMISName = $files[$i]
 						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $g_iQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
-						If $g_bDebugImageSave Then 
-							_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
-							SaveDebugImage("QuickMIS_" & $ValueReturned, False)
-						EndIf
 						Return True
 					EndIf
 				Else
 					If $g_bDebugSetlog Then SetDebugLog("BFI No result")
 				EndIf
+				If $g_bDebugImageSave Then 
+					_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
+					SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+				EndIf
 			Next
 		EndIf
+		Return
 	Else
 		If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
 		$Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)

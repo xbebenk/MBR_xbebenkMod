@@ -145,6 +145,7 @@
 #include "functions\Android\CheckAndroidPageError.au3"
 #include "functions\Android\CheckAndroidRebootCondition.au3"
 #include "functions\Android\AndroidBlueStacks5.au3"
+#include "functions\Android\AndroidLDPlayer9.au3"
 #include "functions\Android\AndroidMEmu.au3"
 #include "functions\Android\AndroidNox.au3"
 #include "functions\Android\getBSPos.au3"

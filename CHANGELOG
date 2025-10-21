@@ -40,4 +40,10 @@
 * Fix Use Builder Potion
 * Fix Use Resource Potion 
 * Add Collect Meteor event
-* 
+*
+* **v.7.9.9 Mod_v1.2.6#120**
+* Fix Placing New Wall
+* Add LDPlayer9 support (tested on LD9 9.1.46)
+* - coc seem not smooth on LD9 (flicker)
+* - tested bot run 24H with LD9 but LD9 hungs at day 2
+* - it may because my hardware you can test your own

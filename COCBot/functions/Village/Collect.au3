@@ -118,6 +118,8 @@ Func CheckEventRewardIcon()
 EndFunc
 
 Func CollectCookieRumble()
+	If Not $g_bRunState Then return
+	If $g_iTownHallLevel < 6 Then Return
 	Local $bWinOpen = False, $bIconCookie = False
 	SetLog("Opening Event Window", $COLOR_ACTION)
 	

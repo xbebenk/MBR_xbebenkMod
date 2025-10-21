@@ -264,10 +264,11 @@ Global $__Nox_Config[1][3] = _ ; Alternative Nox Control ID (array must be order
 ;                 |          |                        |                                  |                |                      |                       |                      |                       |              |                    |64 = Make DPI Aware (if avaliable)                  |                                    |                                     |
 ;                 |          |                        |                                  |                |                      |                       |                      |                       |              |                    |128 = ADB use input swipe and not script            |                                    |                                     |
 ;                 |          |                        |                                  |                |                      |                       |                      |                       |              |                    |256 = Update $g_sAppClassInstance with Window Handle|                                    |                                     |
-Global $g_avAndroidAppConfig[3][16] = [ _ ;           |                                  |                |                      |                       |                      |                       |              |                    |512 = Supports adding shared folder with vboxmanage.exe                                  |                                     |
+Global $g_avAndroidAppConfig[4][16] = [ _ ;           |                                  |                |                      |                       |                      |                       |              |                    |512 = Supports adding shared folder with vboxmanage.exe                                  |                                     |
 	["Nox",        "nox",     "No",                   "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 4, $g_iDEFAULT_HEIGHT - 10,0,             "127.0.0.1:62001",   1+2+4+8+16+32       +256+512, '# ',                  '(nox Virtual Input|Android Input|Android_Input)', 0,                      2], _ ; Nox
 	["MEmu",       "MEmu",    "MEmu ",                "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0,             "127.0.0.1:21503",     2+4+8+16+32           +512, '# ',                  '(Microvirt Virtual Input|User Input)', 0,                                 2], _ ; MEmu
-	["BlueStacks5","Pie64","BS5-",         "[CLASS:BlueStacksApp; INSTANCE:1]","",        $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "127.0.0.1:5555",    1+2+4+8+16+32   +128,         '# ',                  'BlueStacks Virtual Touch',          0,                                    1] _; BlueStacks5
+	["BlueStacks5","Pie64",	  "BS5-",           	  "[CLASS:BlueStacksApp; INSTANCE:1]","",          	   $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "127.0.0.1:5555",    1+2+4+8+16+32   +128,         '# ',                  'BlueStacks Virtual Touch',          -1,                                   1], _; BlueStacks5
+	["LDPlayer9","Leidian",	  "LD9-",     		  	  "[CLASS:subWin; INSTANCE:1]",		  "sub",           $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "emulator-5555",    1+2+4+8+16+32   +128,         	   '# ',                  'input',         					   -1,                                   1] _; LDplayer9
 ]
 
 ; Android Configutions, see COCBot\functions\Android\Android Status & Information.txt for more details
@@ -398,8 +399,8 @@ Global $g_bInitAndroid = True ; Used to cache android config, is set to False on
 Global Const $g_iCoCReconnectingTimeout = 60000 ; When still (or again) CoC reconnecting animation then restart CoC (handled in checkObstacles)
 
 ; Special Android Emulator variables
-Global $__BlueStacks_Version, $__BlueStacks5_Version, $__MEmu_Version, $__Nox_Version
-Global $__BlueStacks_Path
+Global $__BlueStacks_Version, $__BlueStacks5_Version, $__MEmu_Version, $__Nox_Version, $__LDPlayer9_Version
+Global $__BlueStacks_Path, $__LDPlayer9_Path
 Global $__MEmu_Path
 Global $__Nox_Path
 
@@ -1965,7 +1966,6 @@ Global $g_bChkStartWeekendRaid = True
 Global $g_bEnableDailyRunRoutine = False
 ;[FunctionName, Allowed time to run a day? 0 = always run; 1 = daily; 2 twice a day;]
 Global $g_aiDailyFunction[13][2] = [["DailyChallenge", 2], _
-									["BlackSmith", 1], _
 									["CollectAchievements", 2], _
 									["CollectFreeMagicItems", 2], _
 									["ForgeClanCapitalGold", 1], _
@@ -1975,7 +1975,8 @@ Global $g_aiDailyFunction[13][2] = [["DailyChallenge", 2], _
 									["CleanYard", 1], _
 									["CollectLootCart", 1], _
 									["TreasuryCollect", 1], _
-									["BuilderBase", 3], _
+									["BuilderBase", 1], _
+									["BlackSmith", 1], _
 									["PetHouse", 1]]
 ;per account daily function HowManyRunToday
 Global $g_aDailyAccount[16][Ubound($g_aiDailyFunction)] = [[0,0,0,0,0,0,0,0,0,0,0,0,0], _

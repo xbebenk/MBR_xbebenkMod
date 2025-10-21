@@ -87,11 +87,6 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		ClickAway()
 	EndIf
 	
-	If Not $bRet Then
-		ClickMainBuilder()
-		
-	EndIf
-	
 	If $g_bDebugSetLog Then SetLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
 EndFunc
@@ -140,7 +135,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 		If _Sleep(500) Then Return
 	EndIf
 
-	ZoomOut()
+	ZoomOut(True)
 	Return False
 EndFunc
 
@@ -285,6 +280,10 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 			If QuickMIS("BC1", $g_sImgResourceIcon, $aTmpCoord[$i][1] + 80, $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 230, $aTmpCoord[$i][2] + 10) Then
 				$sCostType = $g_iQuickMISName
 				$lenght = Number($g_iQuickMISX) - $aTmpCoord[$i][1]
+				If $aTmpCoord[$i][0] = "New" And $sCostType = "Free" Then 
+					$lenght = 33
+					$sCostType = "Gold"
+				EndIf
 			EndIf
 
 			$aUpgradeName = getBuildingName($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
@@ -929,10 +928,9 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 	EndIf
 
 	If StringInStr($sUpgrade, "Wall") Then
-		Local $aWall[3] = ["2","Wall",1]
-		Local $aCostWall[3] = ["Gold", 50, 0]
-		Local $tmpX = 0, $tmpY = 0, $iCount = 0
+		Local $tmpX = 0, $tmpY = 0
 		If QuickMIS("BFI", $g_sImgGreenCheck & "GreenCheck*") Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
 			$tmpX = $g_iQuickMISX
 			$tmpY = $g_iQuickMISY
 		Else
@@ -941,40 +939,30 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 			Return False
 		EndIf
 
-		For $ProMac = 1 To 20
+		For $ProMac = 1 To 10
 			If Not $g_bRunState Then Return
-			If $ProMac > 5 And $iCount > 2 Then ExitLoop
-			If Not $g_bRunState Then Return
-			If Not AutoUpgradeCheckBuilder() Then ExitLoop
-			If QuickMIS("BFI", $g_sImgGreenCheck & "GreenCheck*", $tmpX - 40, $tmpY - 40, $tmpX + 40, $tmpY + 40) Then
-				SetLog("Found GreenCheck on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
-				Click($g_iQuickMISX, $g_iQuickMISY, 2, 200)
-				$bRet = True
-				SetLog("Placing Wall #" & $ProMac, $COLOR_ACTION)
-				If _Sleep(1000) Then Return
-				If IsGemOpen(True) Then
-					SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
+			If QuickMIS("BC1", $g_sImgGreenCheck & "GreenArrow\", $tmpX - 80, $tmpY - 80, $tmpX + 80, $tmpY + 80) Then
+			;If QuickMIS("BFI", $g_sImgGreenCheck & "GreenCheck*", $tmpX - 40, $tmpY - 40, $tmpX + 40, $tmpY + 40) Then
+				If isInsideDiamondXY($g_iQuickMISX, $g_iQuickMISY) Then 
+					SetLog("Found GreenArrow on [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_SUCCESS)
+					Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Green Arrow")
+					$tmpX = $g_iQuickMISX
+					$tmpY = $g_iQuickMISY
+					$bRet = True
+					SetLog("Placing Wall #" & $ProMac, $COLOR_ACTION)
 					If _Sleep(1000) Then Return
-					ExitLoop
+					If IsGemOpen(True) Then
+						SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
+						If _Sleep(1000) Then Return
+						ExitLoop
+					EndIf
+					AutoUpgradeLog(True, "Wall")
+				Else
+					SetLog("GreenArrow risk to click [" & $g_iQuickMISX & "," & $g_iQuickMISY &"]", $COLOR_DEBUG2)
 				EndIf
-				AutoUpgradeLog(True, "Wall")
-				$iCount = 0
-				ContinueLoop
 			EndIf
-			If QuickMIS("BFI", $g_sImgGreenCheck & "GreyCheck*", $tmpX - 80, $tmpY - 80, $tmpX + 80, $tmpY + 80) Then
-				$iCount += 1
-				If $iCount > 2 Then ExitLoop
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				SetLog("GreyCheck count : " & $iCount, $COLOR_DEBUG1)
-			EndIf
+			If _Sleep(1000) Then Return
 		Next
-
-		Click($g_iQuickMISX - 60, $g_iQuickMISY) ;click redX
-		If $iCount > 2 Then
-			$iCount = 0
-			GreenCheckLocate($g_iQuickMISX, $g_iQuickMISY) ; re-positioning last checkmark to center
-			Return PlaceNewBuildingFromShop("Wall", True)
-		EndIf
 		Return $bRet
 	EndIf
 
@@ -989,8 +977,6 @@ Func PlaceNewBuildingFromShop($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 	If Not $g_bRunState Then Return
 	If QuickMIS("BFI", $g_sImgGreenCheck & "GreenCheck*") Then
 		SetLog("GreenCheck Found in [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
-
-		If Not GreenCheckLocate($g_iQuickMISX, $g_iQuickMISY) Then Return False
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If $sUpgradeType = "Traps" Then Click($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Placed " & $sUpgrade & " on Main Village! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)

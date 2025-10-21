@@ -16,6 +16,8 @@
 Func UpgradeWall($bTest = False)
 
 	If Not $g_bAutoUpgradeWallsEnable Then Return
+	If Not $g_bRunState Then Return
+	If _Sleep(50) Then Return
 	Local $GoUpgrade = False
 	
 	SetLog("Checking Upgrade Walls", $COLOR_INFO)

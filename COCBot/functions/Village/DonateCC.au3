@@ -422,8 +422,11 @@ Func DonateTroopType($iTroopIndex, $Quant = 0, $bDonateQueueOnly = False)
 	SetLog("Donating " & $Quant & " " & ($Quant > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex]) & $sTextToAll, $COLOR_SUCCESS)
 	If $g_bDebugSetLog Then SetLog("donate : " & $g_asTroopNames[$iTroopIndex], $COLOR_ERROR)
 	If $g_bDebugSetLog Then SetLog("coordinate : " & _ArrayToString($aSLot), $COLOR_ERROR)
-
-	ClickP($aSlot, $Quant, 200, "Donate " & $g_asTroopNames[$iTroopIndex])
+	
+	For $i = 1 To $Quant
+		Click($aSlot[0], $aSlot[1], 1, 0, "Donate " & $g_asTroopNames[$iTroopIndex])
+	Next
+	;ClickP($aSlot, $Quant, 200, "Donate " & $g_asTroopNames[$iTroopIndex])
 
 	$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
 
@@ -604,11 +607,9 @@ Func DetectSlotTroop($iTroopIndex = 0)
 	Else
 		SetLog("Troop Detection Failed: [" & $iTroopIndex & "] " & $sName, $COLOR_ERROR)
 		If $g_bDebugSetLog Then SetLog("QuickMIS('BFI', '" & $g_sImgDonateTroops & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")", $COLOR_ERROR)
-		Return -1
 	EndIf
-
+	
 	Return -1
-
 EndFunc   ;==>DetectSlotTroop
 
 Func DetectSlotSpell($iSpellIndex = 0)

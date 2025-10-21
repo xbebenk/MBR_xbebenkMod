@@ -181,23 +181,30 @@ Func getAllEmulators()
 	; Memu :
 	Local $MEmuEmulator = GetMEmuPath()
 	If FileExists($MEmuEmulator) Then $sEmulatorString &= "MEmu|"
+	
+	;LDPlayer9
+	$__LDPlayer9_Version = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\LDPlayer9\", "DisplayVersion")
+	If Not @error Then
+		If GetVersionNormalized($__LDPlayer9_Version) > GetVersionNormalized("9.1.0.0") Then $sEmulatorString &= "LDPlayer9|"
+	EndIf
 
 	Local $sResult = StringRight($sEmulatorString, 1)
 	If $sResult == "|" Then $sEmulatorString = StringTrimRight($sEmulatorString, 1)
 	Local $aEmulator = StringSplit($sEmulatorString, "|", $STR_NOCOUNT)
 	If $sEmulatorString <> "" Then
-		Setlog("All Emulator found in your machine:")
+		Setlog("All Emulator found in your machine:", $COLOR_INFO)
 		For $i = 0 To UBound($aEmulator) - 1
 			Local $emuVer = ""
 			If StringInStr($aEmulator[$i], "BlueStacks") Then $emuVer = $__BlueStacks_Version
 			If StringInStr($aEmulator[$i], "BlueStacks5") Then $emuVer = $__BlueStacks5_Version
+			If StringInStr($aEmulator[$i], "LDPlayer9") Then $emuVer = $__LDPlayer9_Version
 			If StringInStr($aEmulator[$i], "Memu") Then $emuVer = $__MEmu_Version
 			If StringInStr($aEmulator[$i], "nox") Then $emuVer = $__Nox_Version
-			SetLog("  - " & $aEmulator[$i] & " version: " & $emuVer, $COLOR_SUCCESS)
-			If StringInStr($aEmulator[$i], "Memu") And GetVersionNormalized($__MEmu_Version) > GetVersionNormalized("5.2") And GetVersionNormalized($__MEmu_Version) < GetVersionNormalized("7.2") Then
-				Setlog("Memu v" & $__MEmu_Version & " not fully supported on this Mod", $COLOR_WARNING)
-				Setlog("Please upgrade to Memu version 7.2.9 or later", $COLOR_WARNING)
-			EndIf
+			SetLog("  - " & $aEmulator[$i] & " version: " & $emuVer, $COLOR_DEBUG1)
+			;If StringInStr($aEmulator[$i], "Memu") And GetVersionNormalized($__MEmu_Version) > GetVersionNormalized("5.2") And GetVersionNormalized($__MEmu_Version) < GetVersionNormalized("7.2") Then
+			;	Setlog("Memu v" & $__MEmu_Version & " not fully supported on this Mod", $COLOR_WARNING)
+			;	Setlog("Please upgrade to Memu version 7.2.9 or later", $COLOR_WARNING)
+			;EndIf
 		Next
 	Else
 		Setlog("No Emulator found in your machine")
@@ -235,6 +242,9 @@ Func getAllEmulatorsInstances()
 			$sEmulatorPath = GetNoxPath() & "\BignoxVMS"  ; C:\Program Files\Nox\bin\BignoxVMS
 		Case "MEmu"
 			$sEmulatorPath = GetMEmuPath() & "\MemuHyperv VMs"  ; C:\Program Files\Microvirt\MEmu\MemuHyperv VMs
+		Case "LDPlayer9"
+			Local $VMsLDPlayer9 = RegRead($g_sHKLM & "\SOFTWARE\XuanZhi\LDPlayer9\", "InstallDir") 
+			$sEmulatorPath = $VMsLDPlayer9 & "vms\"
 	EndSwitch
 
 	; Just in case
@@ -244,6 +254,7 @@ Func getAllEmulatorsInstances()
 	Local $sBlueStacksFolder = ""
 	If $Emulator = "BlueStacks2" Then $sBlueStacksFolder = "Android"
 	If $Emulator = "BlueStacks5" Then $sBlueStacksFolder = "Pie"
+	If $Emulator = "LDPlayer9" Then $sBlueStacksFolder = "leidian"
 
 	; Getting all VM Folders
 	Local $aEmulatorFolders = _FileListToArray($sEmulatorPath, $sBlueStacksFolder & "*", $FLTA_FOLDERS)

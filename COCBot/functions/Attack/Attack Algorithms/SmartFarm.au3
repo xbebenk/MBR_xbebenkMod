@@ -723,7 +723,9 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 EndFunc   ;==>AttackSmartFarm
 
 Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion, $iMinion, $SIDESNAMES = "TR|TL|BR|BL")
-
+	; Initial Timer
+	Local $hTimer = TimerInit()
+	
 	SetDebugLog("LaunchTroopSmartFarm with CC " & $iCC & ", K " & $iKing & ", Q " & $iQueen & ", W " & $iWarden & ", C " & $iChampion & ", M " & $iMinion, $COLOR_DEBUG)
 	; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
 	Local $listListInfoDeployTroopPixel[0]
@@ -778,7 +780,10 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 			$listListInfoDeployTroopPixel[$waveNb - 1] = $listInfoDeployTroopPixel
 		EndIf
 	Next
-
+	
+	; End of assign infoDropTroop
+	SetLog("infoDropTroop Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
+		
 	Local $numberSidesDropTroop = 1
 
 	; Drop a full wave of all troops (e.g. giants, barbs and archers) on each side then switch sides.
