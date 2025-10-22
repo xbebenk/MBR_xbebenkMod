@@ -1398,7 +1398,7 @@ Func CommonRoutine($RoutineType = Default)
 EndFunc
 
 Func BuilderBase()
-	Local $StartLabON = False
+	Local $StarLabOn = False
 	If Not $g_bRunState Then Return
 	If Number($g_iTotalBuilderCount) = 6 Then
 		$g_bIs6thBuilderUnlocked = True
@@ -1435,7 +1435,7 @@ Func BuilderBase()
 		
 		If _Sleep(50) Then Return
 		If isElixirFullBB() Then
-			$StartLabON = StarLabUpgrade()
+			$StarLabOn = StarLabUpgrade()
 			checkMainScreen()
 			$g_bBBAttacked = False
 		EndIf
@@ -1462,8 +1462,8 @@ Func BuilderBase()
 		If Not $g_bRunState Then Return
 		
 		If _Sleep(50) Then Return
-		If Not $StartLabON Then StarLabUpgrade()
-		Local $bUseCTPot = $StartLabON And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
+		If Not $StarLabOn Then StarLabUpgrade()
+		Local $bUseCTPot = $StarLabOn And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
 		checkMainScreen()
 		If _Sleep(50) Then Return
 		StartClockTowerBoost(False, False, $bUseCTPot)

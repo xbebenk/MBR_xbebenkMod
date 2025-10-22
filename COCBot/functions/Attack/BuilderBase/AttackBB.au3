@@ -29,6 +29,14 @@ Func CheckCGCompleted()
 	Return $bRet
 EndFunc
 
+Func CheckDonateWhileAttackBB()
+	Local $bRet = False
+	
+	If _ColorCheck(_GetPixelColor(66, 289, True), Hex(0xCE081D, 6), 20, Default, "Red Chat notif count") Then $bRet = True
+	
+	Return $bRet
+EndFunc
+
 Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 	If Not $g_bChkEnableBBAttack Then Return
 	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
@@ -41,7 +49,6 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			If IsProblemAffect() Then Return
 			If $g_bDebugSetlog Then SetLog("PrepareAttackBB(): Success.", $COLOR_SUCCESS)
 			SetLog("Attack #" & $count & "/~", $COLOR_INFO)
-			checkMainScreen()
 			_AttackBB()
 			If Not $g_bRunState Then Return
 			If $g_bIsBBevent Then
@@ -65,6 +72,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				SetLog("Force stop, attacked 10 times!", $COLOR_INFO)
 				ExitLoop
 			EndIf
+			If CheckDonateWhileAttackBB() Then RequestCC()
 		Wend
 		CollectBBCart()
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
@@ -87,6 +95,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			Else
 				ExitLoop
 			EndIf
+			If CheckDonateWhileAttackBB() Then RequestCC()
 			BuilderBaseReport()
 			If isGoldFullBB() And isElixirFullBB() Then ExitLoop
 		Next

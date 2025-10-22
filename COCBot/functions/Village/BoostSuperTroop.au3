@@ -14,8 +14,9 @@
 ; ===============================================================================================================================
 
 Func BoostSuperTroop($bTest = False, $bForced = False)
-	If Not $g_bSuperTroopsEnable Then Return False
+	If Not $g_bSuperTroopsEnable Then Return
 	If Not $g_bRunState Then Return
+	If $g_iTownHallLevel < 11 Then Return
 	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
 		If $g_bSkipBoostSuperTroopOnHalt Then
 			SetLog("BoostSuperTroop() skipped, account on halt attack mode", $COLOR_DEBUG)
@@ -29,8 +30,9 @@ Func BoostSuperTroop($bTest = False, $bForced = False)
 		Return ;Troop already checked and boosted
 	EndIf
 	
-	If Not $g_bRunState Then Return
-	ZoomOut()
+	If _Sleep(50) Then Return
+	If Not CheckZoomOut("BoostSuperTroop") Then ZoomOut()
+	
 	If Not $g_bRunState Then Return
 	VillageReport(True, True)
 	If Not $g_bRunState Then Return
