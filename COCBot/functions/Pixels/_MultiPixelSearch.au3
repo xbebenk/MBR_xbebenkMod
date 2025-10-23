@@ -15,7 +15,7 @@
 ;                  $iColorVariation     - an integer value.
 ; Return values .: None
 ; Author ........: Your Name
-; Modified ......:
+; Modified ......: xbebenk(03-2024)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -99,14 +99,10 @@ Func _MultiPixelSearchDebug($iLeft, $iTop, $iRight, $iBottom, $xSkip, $ySkip, $f
 	Return 0
 EndFunc   ;==>_MultiPixelSearchDebug
 
-Func WaitforPixel($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariation, $maxDelay = 10, $sSource = "") ; $maxDelay is in 1/2 second
+Func WaitforPixel($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariation, $maxDelay = 10, $sSource = "WaitforPixel") ; $maxDelay is in 1/2 second
 	For $i = 1 To $maxDelay * 2
-		Local $result = _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariation, $sSource)
-		If IsArray($result) Then 
-			If $g_bDebugSetLog Then SetLog("WaitforPixel " & $sSource & " : True ["  & _ArrayToString($result) & "]", $COLOR_DEBUG1)
-			Return True
-		EndIf
-		If _Sleep(200) Then Return
+		If _PixelSearch($iLeft, $iTop, $iRight, $iBottom, $firstColor, $iColorVariation, True, $sSource) Then Return True
+		If _Sleep(500) Then Return
 	Next
 	Return False
 EndFunc   ;==>WaitforPixel

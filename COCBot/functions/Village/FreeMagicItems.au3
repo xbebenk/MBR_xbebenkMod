@@ -16,7 +16,7 @@
 Func CollectFreeMagicItems($bTest = False)
 	If Not $g_bChkCollectFreeMagicItems Then Return
 	$g_aRemoveFreeMagicItems[0] = False ;reset first
-	SetLog("Collecting Free Magic Items", $COLOR_INFO)
+	SetLog("Check for collect Free Magic Items", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	ClickAway()
 
@@ -49,7 +49,7 @@ Func CollectFreeMagicItems($bTest = False)
 					ExitLoop
 				Else
 					If _ColorCheck(_GetPixelColor($aResults[$i][1] - 10, $aResults[$i][2], True), Hex(0x8DC529, 6), 10) Then ;Check if we still have Green Color
-						SetLog("Free Magic Item detected", $COLOR_INFO)
+						SetLog("Free Magic Item detected", $COLOR_DEBUG)
 						SetLog("But Storage on TownHall is Full", $COLOR_INFO)
 						Local $Amount = StringLeft($aResults[$i][3], 1)
 						$g_aRemoveFreeMagicItems[0] = True ;set Remove True
@@ -58,7 +58,7 @@ Func CollectFreeMagicItems($bTest = False)
 					EndIf
 				EndIf
 			Else
-				SetLog("Should click on [" & $aResults[$i][1] & "," & $aResults[$i][2] & "]", $COLOR_ERROR)
+				SetLog("Should click on [" & $aResults[$i][1] & "," & $aResults[$i][2] & "]", $COLOR_DEBUG2)
 			EndIf
 		EndIf
 	Next
@@ -105,12 +105,14 @@ EndFunc
 
 Func OpenTraderWindow()
 	Local $bRet = False, $bTraderIconFound = False
-	If Not IsMainPage() Then Return
+	ZoomOut()
 	; Check Trader Icon on Main Village
-	For $i = 1 To 20
-		If $g_bDebugSetlog Then SetLog("Waiting Trader Icon #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgTrader, 120,130,230,220) Then
+	For $i = 1 To 10
+		If Not $g_bRunState Then Return
+		SetDebugLog("Waiting Trader Icon #" & $i, $COLOR_ACTION)
+		If QuickMIS("BC1", $g_sImgTrader, 80, 60, 230, 220) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(500) Then Return
 			$bTraderIconFound = True
 			ExitLoop
 		EndIf
@@ -118,12 +120,12 @@ Func OpenTraderWindow()
 	Next
 	
 	If Not $bTraderIconFound Then 
-		SetLog("Trader Icon Not Found", $COLOR_INFO)
-		Return False
+		SetLog("Cannot find Trader Icon", $COLOR_DEBUG2)
+		Return $bRet
 	EndIf
 	
 	If Not IsTraderWindowOpen() Then 
-		SetLog("Free Magic Items Windows not Opened", $COLOR_ERROR)
+		SetLog("Free Magic Items Windows not Opened", $COLOR_DEBUG2)
 		ClickAway()
 	Else
 		$bRet = True
@@ -135,34 +137,33 @@ Func IsTraderWindowOpen()
 	Local $bRet = False
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 785, 90, 830, 130) Then
+		SetLog("Waiting for TraderWindowOpen #" & $i, $COLOR_ACTION)
+		If _ColorCheck(_GetPixelColor(808, 107, True), Hex(0xFFFFFF, 6), 10, Default, "IsTraderWindowOpen") Then
 			$bRet = True
 			ExitLoop
-		Else
-			SetDebugLog("Waiting for FreeMagicWindowOpen #" & $i, $COLOR_ACTION)
 		EndIf
-		If _Sleep(500) Then Return
+		If _Sleep(250) Then Return
 	Next
 	
 	;quick collect giant gauntlet
-	If QuickMis("BC1", $g_sImgTraderGems, 270, 325, 340, 350) Then
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(1000) Then Return
-		If QuickMis("BC1", $g_sImgTraderGems, 390, 370, 450, 430) Then Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(800) Then Return
-	EndIf
+	;If QuickMis("BC1", $g_sImgTraderGems, 270, 325, 340, 350) Then
+	;	Click($g_iQuickMISX, $g_iQuickMISY)
+	;	If _Sleep(1000) Then Return
+	;	If QuickMis("BC1", $g_sImgTraderGems, 390, 370, 450, 430) Then Click($g_iQuickMISX, $g_iQuickMISY)
+	;	If _Sleep(800) Then Return
+	;EndIf
 	
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
+		SetLog("Waiting for Gems Tab #" & $i, $COLOR_ACTION)
 		If QuickMis("BC1", $g_sImgTraderGems, 50, 173, 100, 300) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(800) Then Return
+			SetLog("Found Gems Tab", $COLOR_DEBUG)
+			If _Sleep(500) Then Return
 			$bRet = True
 			ExitLoop
-		Else
-			SetDebugLog("Waiting for Gems Tab #" & $i, $COLOR_ACTION)
 		EndIf
-		If _Sleep(500) Then Return
+		If _Sleep(250) Then Return
 	Next
 	
 	Return $bRet
@@ -190,7 +191,7 @@ EndFunc
 
 Func SaleFullMagicItem($MagicItem = "", $Amount = 0)
 	If Not $g_bRunState Then Return
-	SetLog("Checking for Sale Magic Items", $COLOR_INFO)
+	SetLog("Checking for Full Magic Items", $COLOR_INFO)
 	If Not OpenMagicItemWindow() Then Return
 	
 	If $MagicItem = "" And $Amount = 0 Then 
@@ -230,14 +231,14 @@ Func SaleFullMagicItem($MagicItem = "", $Amount = 0)
 					Click(510, 425) ;Click Okay Button
 				EndIf
 			Else
-				SetLog("Unable to Open Sell Window for item " & $MagicItem, $COLOR_ERROR)
+				SetLog("Unable to Open Sell Window for item " & $MagicItem, $COLOR_DEBUG2)
 				ClickAway()
 				ExitLoop
 			EndIf
 			If _Sleep(1500) Then Return
 		Next
 	Else
-		SetLog("Unable to find " & $MagicItem, $COLOR_ERROR)
+		SetLog("Unable to find " & $MagicItem, $COLOR_DEBUG2)
 	EndIf
 	ClickAway()
 EndFunc
@@ -246,7 +247,7 @@ Func SaleMagicItem($bTest = False)
 	ClickAway()
 	If _Sleep(500) Then Return
 	If Not $g_bChkEnableSaleMagicItem Then Return
-	SetLog("Checking for Sale Magic Items", $COLOR_INFO)
+	SetLog("Checking for Sell Magic Items", $COLOR_INFO)
 	If Not OpenMagicItemWindow() Then Return
 	Local $sReadItemCount, $asReadItemCount, $Count, $MaxCount
 	
@@ -269,8 +270,8 @@ Func SaleMagicItem($bTest = False)
 					For $j = 1 To $Count
 						Click($aSearch[0], $aSearch[1])
 						If _Sleep(1000) Then Return
-						If _ColorCheck(_GetPixelColor(595, 525, True), Hex(0xF71E22, 6), 20) Then ;Check Red Sell Button
-							Click(595, 525) ;Click Sell Button
+						If _ColorCheck(_GetPixelColor(260, 530, True), Hex(0xF71E22, 6), 20) Then ;Check Red Sell Button
+							Click(260, 500) ;Click Sell Button
 							If _Sleep(1000) Then Return
 							If IsOKCancelPage() Then
 								If Not $bTest Then 
@@ -288,14 +289,14 @@ Func SaleMagicItem($bTest = False)
 						If _Sleep(1000) Then Return
 					Next
 				Else
-					SetLog("Unable to read count of " & $g_aMagicItemName[$i], $COLOR_ERROR)
+					SetLog("Unable to read count of " & $g_aMagicItemName[$i], $COLOR_DEBUG2)
 					ContinueLoop
 				EndIf
 			Else
-				SetLog($g_aMagicItemName[$i] & " not Found", $COLOR_ERROR)
+				SetLog($g_aMagicItemName[$i] & " not Found", $COLOR_DEBUG2)
 			EndIf
 		Else
-			SetLog($g_aMagicItemName[$i] & " sale is not enabled")
+			SetLog($g_aMagicItemName[$i] & " sale is not enabled", $COLOR_DEBUG2)
 		EndIf
 	Next
 	ClickAway()
@@ -309,25 +310,33 @@ Func OpenMagicItemWindow()
 	If _Sleep(500) Then Return
 	
 	If Not $g_bRunState Then Return
-	Local $BuildingInfo = BuildingInfo(245, 472)
+	Local $BuildingInfo = BuildingInfo(242, 477)
 	If $BuildingInfo[1] = "Town Hall" Then
-		SetDebugLog("Opening Magic Item Window")
+		SetLog("Opening Magic Item Window", $COLOR_ACTION)
 		If ClickB("MagicItem") Then
 			$bRet = True
 		EndIf
 	Else
 		$bLocateTH = True
+		ClickAway()
+		If _Sleep(500) Then Return
 	EndIf
 	
 	If Not $g_bRunState Then Return
 	If $bLocateTH Then
-		If imglocTHSearch(False, True, True) Then ClickP($g_aiTownHallPos)
-		If _Sleep(1500) Then Return
-		If ClickB("MagicItem") Then
-			$bRet = True
+		If SearchTH(True, False) Then 
+			If _Sleep(500) Then Return
+			If ClickB("MagicItem") Then
+				$bRet = True
+			Else 
+				$bRet = False
+			EndIf
 		EndIf
 	EndIf
-	If Not IsMagicItemWindowOpen() Then $bRet = False
+	If Not IsMagicItemWindowOpen() Then 
+		$bRet = False
+		SetLog("Open Magic Item Window failed", $COLOR_DEBUG2)
+	EndIf
 	Return $bRet
 EndFunc
 
@@ -364,4 +373,37 @@ Func TestMagicItemImage()
 			SetLog($g_aMagicItemName[$i] & " Count: " & $Count & "/" & $MaxCount, $COLOR_INFO) 
 		EndIf
 	Next
+EndFunc
+
+Func UseFreeMagicItem()
+	If Not $g_bRunState Then Return
+	Local $x, $y
+	
+	SetLog("Checking for Magic Item on Box", $COLOR_INFO)
+	If QuickMIS("BC1", $g_sImgMagicItemBox, 625, 610, 675, 650) Then
+		SetLog("Magic Box Found, checking items", $COLOR_ACTION)
+		$x = $g_iQuickMISX
+		$y = $g_iQuickMISY
+		If _PixelSearch($x + 23, $y - 11, $x + 24, $y - 10, Hex(0xE41528, 6), 20, 1, "Check Red Item Count") Or _PixelSearch($x + 23, $y - 9, $x + 24, $y - 8, Hex(0xCB1429, 6), 20, 1, "Check Red Item Count") Then
+			Click($x, $y)
+			If _Sleep(500) Then Return
+			SetLog("Free Magic Item Found, Try to Use", $COLOR_ACTION)
+			If QuickMIS("BC1", $g_sImgMagicItemBox, 330, 560, 625, 580) Then
+				$x = $g_iQuickMISX + 15
+				$y = $g_iQuickMISY + 40
+				Click($x, $y)
+				If _Sleep(500) Then Return
+				If WaitforPixel(600, 525, 601, 526, Hex(0x8BD43A, 6), 10, 1, "UseFreeMagicItem") Then 
+					Click(600, 520)
+					If _Sleep(500) Then Return
+					If IsOKCancelPage() Then Click(530, 425)
+					SetLog("Succesfully, use Magic item", $COLOR_SUCCESS)
+				EndIf
+			EndIf
+		Else
+			SetLog("No Item detected", $COLOR_DEBUG2)
+		EndIf
+	Else
+		SetLog("No Magic Box Detected", $COLOR_DEBUG2)
+	EndIf
 EndFunc

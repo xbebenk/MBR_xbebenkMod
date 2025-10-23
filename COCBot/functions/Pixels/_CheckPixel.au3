@@ -18,10 +18,10 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func _CheckPixel($aScreenCode, $bNeedCapture = Default, $Ignore = Default, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
+Func _CheckPixel($aScreenCode, $bNeedCapture = Default, $Ignore = Default, $sLogText = Default, $LogTextColor = $COLOR_DEBUG1, $bSilentSetLog = Default)
 	If $bNeedCapture = Default Then $bNeedCapture = False
 	If $g_bDebugSetlog And $sLogText <> Default And IsString($sLogText) Then
-		$sLogText &= ", Expected: " & Hex($aScreenCode[2], 6) & ", Tolerance: " & $aScreenCode[3]
+		$sLogText &= ", exp:" & Hex($aScreenCode[2], 6) & ", Tolerance: " & $aScreenCode[3]
 	Else
 		$sLogText = Default
 	EndIf

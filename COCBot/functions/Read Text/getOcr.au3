@@ -15,7 +15,7 @@ Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets comp
 EndFunc   ;==>getNameBuilding
 
 Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
-	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 16, True)
+	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 18, True)
 EndFunc   ;==>getGoldVillageSearch
 
 Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True) ;
@@ -27,7 +27,7 @@ Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
 EndFunc   ;==>getRemainTrainTimer
 
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
-	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 16, True)
+	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 18, True)
 EndFunc   ;==>getElixirVillageSearch
 
 Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
@@ -68,7 +68,7 @@ Func getResourcesLootT($x_start, $y_start) ; -> Gets complete value of Trophies 
 EndFunc   ;==>getResourcesLootT
 
 Func getResourcesBonus($x_start, $y_start) ; -> Gets complete value of Gold/Elixir bonus loot in "AttackReport.au3"
-	Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 98, 20, True)
+	Return getOcrAndCapture("coc-bonus", $x_start, $y_start, 115, 20, True)
 EndFunc   ;==>getResourcesBonus
 
 Func getResourcesBonusPerc($x_start, $y_start) ; -> Gets complete value of Bonus % in "AttackReport.au3"
@@ -76,11 +76,13 @@ Func getResourcesBonusPerc($x_start, $y_start) ; -> Gets complete value of Bonus
 EndFunc   ;==>getResourcesBonusPerc
 
 Func getLabCost($x_start, $y_start) ;normal lab
-	Return StringReplace(getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True), "-", "")
+	Return StringRegExpReplace(getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True), "[-x]", "")
+	;Return StringReplace(getOcrAndCapture("coc-labcost", $x_start, $y_start, 100, 18, True), "-", "")
 EndFunc 
 
 Func getSLabCost($x_start, $y_start) ;builderbase lab
-	Return getOcrAndCapture("coc-slabcost", $x_start, $y_start, 100, 18, True)
+	Return StringRegExpReplace(getOcrAndCapture("coc-slabcost", $x_start, $y_start, 100, 18, True), "[-x]", "")
+	;Return getOcrAndCapture("coc-slabcost", $x_start, $y_start, 100, 18, True)
 EndFunc 
 
 Func getBldgUpgradeTime($x_start, $y_start) ; -> Gets complete remain building upgrade time
@@ -88,15 +90,15 @@ Func getBldgUpgradeTime($x_start, $y_start) ; -> Gets complete remain building u
 EndFunc   ;==>getBldgUpgradeTime
 
 Func getLabUpgradeTime($x_start, $y_start) ; -> Gets complete remain lab upgrade time V2 for Dec2015 update
-	Return getOcrAndCapture("coc-uptime2", $x_start, $y_start, 68, 22) ; 40 is enougth xxx : 2 numbers and one letter at max
+	Return StringReplace(getOcrAndCapture("coc-uptime2", $x_start, $y_start, 68, 22), "-", "") ; 40 is enougth xxx : 2 numbers and one letter at max
 EndFunc   ;==>getLabUpgradeTime
 
 Func getHeroUpgradeTime($x_start, $y_start) ; -> Gets complete upgrade time for heroes 464, 527
-	Return getOcrAndCapture("coc-uptime2", $x_start, $y_start, 78, 20) ; 78 is required to days & hours for young hero
+	Return StringReplace(getOcrAndCapture("coc-uptime2", $x_start, $y_start, 78, 20), "-", "") ; 78 is required to days & hours for young hero
 EndFunc   ;==>getHeroUpgradeTime
 
 Func getChatString($x_start, $y_start, $language) ; -> Get string chat request - Latin Alphabetic - EN "DonateCC.au3"
-	Return getOcrAndCapture($language, $x_start, $y_start, 280, 15)
+	Return getOcrAndCapture($language, $x_start, $y_start, 310, 15)
 EndFunc   ;==>getChatString
 
 Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)  coc-profile
@@ -107,51 +109,73 @@ Func getProfile($x_start, $y_start) ;  -> Gets Attack Win/Defense Win/Donated/Re
 	Return getOcrAndCapture("coc-profile", $x_start, $y_start, 55, 13, True)
 EndFunc   ;==>getProfile
 
-Func getTroopCountSmall($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
-	Return getOcrAndCapture("coc-t-s", $x_start, $y_start, 57, 16, True, Default, $bNeedNewCapture)
+Func getTroopCount($x_start, $y_start, $width = 60, $height = 22) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
+	Return StringReplace(getOcrAndCapture("coc-troopcount", $x_start, $y_start, $width, $height, True), "-", "")
 EndFunc   ;==>getTroopCountSmall
-
-Func getTroopCountBig($x_start, $y_start, $bNeedNewCapture = Default) ;  -> Gets troop amount on Attack Screen for selected troop kind
-	Return getOcrAndCapture("coc-t-b", $x_start, $y_start, 55, 17, True, Default, $bNeedNewCapture)
-EndFunc   ;==>getTroopCountBig
 
 Func getTroopsSpellsLevel($x_start, $y_start) ;  -> Gets spell level on Attack Screen for selected spell kind (could be used for troops too)
 	Return getOcrAndCapture("coc-spellslevel", $x_start, $y_start, 20, 18, True)
 EndFunc   ;==>getTroopsSpellsLevel
 
 Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity on Army Tab (Troops:xx/xx)
-	Return StringReplace(getOcrAndCapture("coc-armycap", $x_start, $y_start, 80, 16, True), "-", "")
+	Return StringReplace(getOcrAndCapture("coc-armycap", $x_start, $y_start, 70, 14, True), "-", "")
 EndFunc   ;==>getArmyCampCap
 
 Func getArmySiegeCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity --> train.au3, and used to read CC request time remaining
-	Return getOcrAndCapture("coc-armytroops", $x_start, $y_start, 46, 17, True, False, $bNeedCapture)
+	Return StringReplace(getOcrAndCapture("coc-armycap", $x_start, $y_start, 46, 17, True), "-", "")
 EndFunc   ;==>getArmySiegeCap
 
-Func getCastleDonateCap($x_start, $y_start) ;  -> Gets clan castle capacity,  --> donatecc.au3
-	Return getOcrAndCapture("coc-army", $x_start, $y_start, 30, 14, True)
+Func getCastleDonateCap($x_start, $y_start, $x1 = 35) ;  -> Gets clan castle capacity,  --> donatecc.au3
+	Return getOcrAndCapture("coc-army", $x_start, $y_start, $x1, 14, True)
 EndFunc   ;==>getCastleDonateCap
 
 Func getBarracksNewTroopQuantity($x_start, $y_start, $bNeedCapture = True) ;  -> Gets quantity of troops in army Window (slot)
 	Return StringReplace(getOcrAndCapture("coc-newarmy", $x_start, $y_start, 55, 18, True), "-", "")
 EndFunc   ;==>getBarracksNewTroopQuantity
 
-Func getArmyCapacityOnTrainTroops($x_start, $y_start) ;  -> Gets quantity of troops in army Window
-	Return StringReplace(getOcrAndCapture("coc-troopcap", $x_start, $y_start, 70, 16, True), "-", "")
-EndFunc   ;==>getArmyCapacityOnTrainTroops(95, 163)
+Func getArmyCapacityOnTrainTroops($x_start, $y_start, $x1 = 63) ;  -> Gets quantity of troops in army Window
+	Return StringRegExpReplace(getOcrAndCapture("coc-troopcap", $x_start, $y_start, $x1, 14, True), "[-x]", "")
+EndFunc   ;==>getArmyCapacityOnTrainTroops
 
-Func TestgetArmyCapacityOnTrainTroops()
-	Local $sRet = ""
-	For $i = 1 To 600
-		$sRet = StringReplace(getOcrAndCapture("coc-troopcap", 95, 163, 70, 16, True), "-", "")
-		SetLog($sRet)
-		Click(122,394)
+Func getArmyCapacityOnTrainTroops240($x_start, $y_start, $x1 = 63) ;  -> Gets quantity of troops in army Window
+	Return StringRegExpReplace(getOcrAndCapture("coc-troopcap240", $x_start, $y_start, $x1, 14, True), "[-x]", "")
+EndFunc   ;==>getArmyCapacityOnTrainTroops
+
+Func getMatchRemain($x_start = 414, $y_start = 475) ; Gets complete Tournament Match Remain / Max
+	Local $sRet = "", $aRet[0]
+	$sRet = getOcrAndCapture("coc-tournament", $x_start, $y_start, 70, 22)
+	If $sRet <> "" Then
+		$aRet = StringSplit($sRet, "#", $STR_NOCOUNT)
+	EndIf
+	Return $aRet
+EndFunc   ;==>getMatchRemain
+
+
+;TestOCRTroopCap(0, 320)
+Func TestOCRTroopCap($iStart = 0, $iCount = 10, $path = "D:\OCRTool\TestImages\DebugOCR\", $iSleep = 800)
+	
+	Local $sRet = "", $sRet1 = "", $sRet2 = "", $aRet, $s1 = ""
+	If Not OpenTroopsTab() Then Return
+	For $i = $iStart To $iCount
 		If Not $g_bRunState Then Return
-		If _Sleep(1000) Then Return
+		$aRet = GetCurrentTroop()
+		$sRet = $aRet[0]
+		$sRet1 = $aRet[3]
+		$sRet2 = StringRegExpReplace(getOcrAndCapture("coc-troopcap", 96, 165, 63, 14)," \d+", "")
+		
+		SetLog($sRet & "/" & $sRet1 & " = " & $sRet2)
+		_CaptureRegion2(96, 165, 96 + 63, 165 + 14)
+		SaveDebugImageOCR($i & "_" & $sRet, $path)
+		
+		If $i = $iCount Then ExitLoop
+		Click(122, 394)
+		If Not $g_bRunState Then Return
+		If _Sleep($iSleep) Then Return
 	Next
 EndFunc
 
-Func getArmyCapacityOnTrainSpell($x_start, $y_start) ;  -> Gets quantity of spell in army Window
-	Return getOcrAndCapture("coc-spellcap", $x_start, $y_start, 50, 14, True)
+Func getArmyCapacityOnTrainSpell($x_start, $y_start, $x1 = 40) ;  -> Gets quantity of spell in army Window
+	Return StringRegExpReplace(getOcrAndCapture("coc-spellcap", $x_start, $y_start, $x1, 13, True), "[-x]", "")
 EndFunc   ;==>getArmyCapacityOnTrainSpell
 
 Func getQueueTroopsQuantity($x_start, $y_start) ;  -> Gets quantity of troops in Queue in Train Tab
@@ -167,7 +191,7 @@ Func getOcrLanguage($x_start, $y_start) ;  -> Get english language - main screen
 EndFunc   ;==>getOcrLanguage
 
 Func getOcrSpaceCastleDonate($x_start, $y_start) ;  -> Get the number of troops donated/capacity from a request
-	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 47, 13, True)
+	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 50, 13, True)
 EndFunc   ;==>getOcrSpaceCastleDonate
 
 Func getOcrOverAllDamage($x_start, $y_start) ;  -> Get the Overall Damage %
@@ -246,6 +270,14 @@ Func ReplaceQuantityX(ByRef $UpgradeName)
 	
 	If StringRegExp($UpgradeName, " l") = 1 Then
 		Local $aReplace = StringRegExp($UpgradeName, "( l)", 1)
+		If Ubound($aReplace) > 0 Then 
+			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
+			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
+		EndIf
+	EndIf
+	
+	If StringRegExp($UpgradeName, " \d+") = 1 Then
+		Local $aReplace = StringRegExp($UpgradeName, "( \d+)", 1)
 		If Ubound($aReplace) > 0 Then 
 			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
 			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
@@ -386,7 +418,7 @@ Func getOcrMaintenanceTime($x_start, $y_start, $sLogText = Default, $LogTextColo
 EndFunc   ;==>getOcrMaintenanceTime
 
 Func getOcrTimeGameTime($x_start, $y_start) ;  -> Get the guard/shield time left, middle top of the screen
-	Return getOcrAndCapture("coc-clangames", $x_start, $y_start, 116, 31, True)
+	Return StringReplace(getOcrAndCapture("coc-clangames", $x_start, $y_start, 116, 31, True), "-", "")
 EndFunc   ;==>getOcrTimeGameTime
 
 Func getOcrYourCGScore($x_start, $y_start) ; -> Gets CheckValuesCost on Train Window

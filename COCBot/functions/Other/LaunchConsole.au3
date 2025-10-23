@@ -103,6 +103,7 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	If $iLastBS > 0 Then $exe = StringMid($exe, $iLastBS + 1)
 	Local $commandLine = ($ProgramPath <> "" ? ('"' & $ProgramPath & '"' & ($ProgramParameter = "" ? "" : " " & $ProgramParameter)) : $ProgramParameter)
 	Local $commandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($commandLine, ".exe", "", 1), " ", ""), '"', ""), "'", "")
+	SetDebugLog("commandLine: " & $commandLine)
 	SetDebugLog("commandLineCompare: " & $commandLineCompare)
 	Local $query = "Select " & GetWmiSelectFields() & " from Win32_Process" ; replaced CommandLine with ExecutablePath
 	If StringLen($commandLine) > 0 Then

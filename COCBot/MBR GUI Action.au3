@@ -195,10 +195,7 @@ Func BotStop()
 	; hide attack buttons if show
 	GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 	GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
-	GUICtrlSetState($g_hBtnAttackNowTS, $GUI_HIDE)
-	HideShields(False)
-	$g_bBtnAttackNowPressed = False
-
+	
 	; update try items
 	TrayItemSetText($g_hTiStartStop, GetTranslatedFileIni("MBR GUI Design - Loading", "StatusBar_Item_Start", "Start bot"))
 	TrayItemSetState($g_hTiPause, $TRAY_DISABLE)

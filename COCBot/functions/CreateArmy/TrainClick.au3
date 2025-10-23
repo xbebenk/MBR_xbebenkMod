@@ -19,48 +19,27 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func TrainClick($iX, $iY, $iTimes, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops)
+Func TrainClick($iX, $iY, $iTimes, $TypeTroops)
 	If Not $g_bRunState Then Return
-	If IsTrainPage() Then
-		If $g_bDebugClick Then
-			Local $txt = _DecodeDebug($sdebugtxt)
-			SetLog("TrainClick(" & $iX & "," & $iX & "," & $iTimes & "," & $iSpeed & "," & $sdebugtxt & $txt & "," & $TypeTroops & ")", $COLOR_DEBUG)
+	If IsTrainItPage() Then
+		If $g_bDebugSetLog Then
+			SetLog("TrainClick(" & $iX & "," & $iX & "," & $iTimes & ", " & "Train " & $TypeTroops & ")", $COLOR_DEBUG)
 		EndIf
 
 		If $iTimes <> 1 Then
-			KeepClicks()
-			; Debug
-			If $g_bDebugClick Or $g_bDebugSetlogTrain Then SetLog("KeepClicks: " & KeepClicks(), $COLOR_DEBUG)
-			If IsKeepClicksActive() Then
-				For $i = 0 To ($iTimes - 1)
-					PureClick($iX, $iY) ;Click once.
-				Next
-				If IsProblemAffect() Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
-				Local $sLogText = Default
-				If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
-			Else
-				If IsProblemAffect() Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
-				Local $sLogText = Default
-				If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
-				PureClick($iX, $iY, $iTimes, $iSpeed) ;Click $iTimes.
-				If _Sleep($iSpeed, False) Then Return
-			EndIf
-			ReleaseClicks()
+			For $i = 1 To $iTimes
+				If Not $g_bRunState Then ExitLoop
+				If IsProblemAffect() Then checkMainScreen()
+				PureClick($iX, $iY, 1, $g_iTrainClickDelay, "Train " & $TypeTroops) ;Click $iTimes.
+			Next
 		Else
-			Local $sLogText = Default
-			If $g_bDebugSetlogTrain Then $sLogText = "TrainClick " & $iX & "," & $iY & "," & $iTimes
-			If IsProblemAffect() Then checkMainScreen(False, $g_bStayOnBuilderBase, "TrainClick") ; Check for BS/CoC errors
-			;If $g_bDebugSetlogTrain Then SetLog("Full Check=" & _GetPixelColor($aWatchSpot[0], $aWatchSpot[1], False), $COLOR_DEBUG)
-			PureClick($iX, $iY)
-
-			If _Sleep($iSpeed, False) Then Return
+			If IsProblemAffect() Then checkMainScreen()
+			PureClick($iX, $iY, 1, $g_iTrainClickDelay, "Train " & $TypeTroops)
 		EndIf
 		Return True
-	Else
-		Return False
 	EndIf
 EndFunc   ;==>TrainClick
 
-Func TrainClickP($aPoint, $iHowOften, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops)
-	Return TrainClick($aPoint[0], $aWatchSpot[1], $iHowOften, $iSpeed, $aWatchSpot, $sdebugtxt, $TypeTroops)
+Func TrainClickP($aPoint, $iHowOften, $TypeTroops)
+	Return TrainClick($aPoint[0], $aPoint[1], $iHowOften, $TypeTroops)
 EndFunc   ;==>TrainClickP

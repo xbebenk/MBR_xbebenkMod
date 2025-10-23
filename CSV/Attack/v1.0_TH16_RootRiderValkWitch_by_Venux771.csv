@@ -1,0 +1,123 @@
+NOTE  |Author: Venux771 [04.01.2024]
+NOTE  |Modifed to work with MyBot
+NOTE  |
+NOTE  |             ★★★TH 16★★★
+NOTE  |Train: 4 Witch, 7 RootRRiders, 1 Apprentice Warden, 13 Valkys, 6 archers 
+NOTE  |Spells: 1 Rage, 3 skeletons, 1 heal speall, 1 Poison,  3 Freeze 
+NOTE  |CC: 2 RootRriders 1 valky + Rage + Freeze + Flame Finger OR Log Launcher
+NOTE  |Pets: King-Phoenix, Queen-Unicorn, Warden-Lizard, Champion-Fox-OR-Diggie
+NOTE  |Equpiments: See discord screenshot
+NOTE  |Set Warden on Ground Mode
+NOTE  |
+NOTE  |Script work on "External Edges"
+
+      |---------------------------------------------------------------------------RootRRider Valk Witch START--------------------------------------------------------------|
+      |                                                                               VENUX                                                                               |
+
+      |_TROOPNAME_|__FLEXIBLE_|__TH06__|__TH07__|__TH08__|__TH09__|__TH10__|__TH11__|__TH12__|__TH13-14__|__TH15-16__|
+TRAIN |Witc       |0          |0       |0       |0       |0       |0       |0       |0       |0          |4          |
+TRAIN |RootR      |0          |0       |0       |0       |0       |0       |0       |0       |0          |7          |
+TRAIN |Arch       |0          |0       |0       |0       |0       |0       |0       |0       |0          |8          |
+TRAIN |Valk       |0          |0       |0       |0       |0       |0       |0       |0       |0          |13         |
+TRAIN |AppWard    |0          |0       |0       |0       |0       |0       |0       |0       |0          |1          |
+TRAIN |SkSpell    |0          |0       |0       |0       |0       |0       |0       |0       |0          |3          |
+TRAIN |FSpell     |0          |0       |0       |0       |0       |0       |0       |0       |0          |3          |
+TRAIN |RSpell     |0          |0       |0       |0       |0       |0       |0       |0       |0          |1          |
+TRAIN |HSpell     |0          |0       |0       |0       |0       |0       |0       |0       |0          |1          |
+TRAIN |PSpell     |0          |0       |0       |0       |0       |0       |0       |0       |0          |1          |
+
+      |_TROOPNAME_|___________|__TH06__|__TH07__|__TH08__|__TH09__|__TH10__|__TH11__|__TH12__|__TH13-14__|__TH15-16__| ; Train Heroes: 1=autoactivate, 2=timed, 3=checkboth
+TRAIN |King       |0          |0       |0       |0       |0       |0       |0       |0       |0          |190        | ; Find on Search&Attack/Options/Attack
+TRAIN |Queen      |0          |0       |0       |0       |0       |0       |0       |0       |0          |290        | ; Format: [1-3][0-100]
+TRAIN |Warden     |0          |0       |0       |0       |0       |0       |0       |0       |0          |330        |
+TRAIN |Champion   |0          |0       |0       |0       |0       |0       |0       |0       |0          |335        |
+
+      |___________|___________|__TH06__|__TH07__|__TH08__|__TH09__|__TH10__|__TH11__|__TH12__|__TH13-14__|__TH15-16__|
+REDLN |0          |0          |1       |1       |1       |1       |1       |4       |4       |4          |4          |
+DRPLN |0          |0          |2       |2       |2       |2       |2       |4       |4       |4          |4          |
+
+      |___________|___________|____TH06___|____TH07___|____TH08___|____TH09___|____TH10___|____TH11____|____TH12_____|____TH13-14__|________________TH15__________________|
+CCREQ |           |           |           |           |           |           |           |            |             |             |Yeti Valk Rage Freeze LogL            |
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE | ; Forced side: TOP-LEFT, TOP-RIGHT, BOTTOM-LEFT, BOTTOM-RIGHT
+SIDE  |0          |0          |0          |0          |0          |0          |10         |TOP-RAND    | ; TOP-RAND = will forcing attack from TOP (random left/right)
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX      |                                                              
+SIDEB |12         |0          |0          |0          |0          |0          |0          |            |                                                              
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING____|__________________________________________________________________|
+MAKE  |A          |FRONT-LEFT |10         |1          |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |B          |FRONT-RIGHT|10         |1          |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |M          |BACK-RIGHT |10         |0          |EXT-INT    |0          |0          |            |                                                                  |
+MAKE  |N          |FRONT-RIGHT|10         |0          |EXT-INT    |0          |0          |            |                                                                  |
+MAKE  |C          |FRONT-RIGHT|10         |-27        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |D          |FRONT-RIGHT|10         |-16        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |Q          |FRONT-RIGHT|10         |-22        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |E          |FRONT-RIGHT|10         |-15        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |F          |FRONT-RIGHT|10         |-25        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |H          |FRONT-RIGHT|10         |-23        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |I          |FRONT-RIGHT|10         |-23        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |L          |FRONT-LEFT |7          |0          |IGNORE     |0          |0          |TOWNHALL    |                                                                  |
+MAKE  |Q          |LEFT-FRONT |5          |0          |IGNORE     |0          |0          |EAGLE       |                                                                  |
+MAKE  |R          |LEFT-FRONT |5          |-2         |IGNORE     |0          |0          |CLANCASTLE  |                                                                  |
+MAKE  |G          |FRONT-LEFT |5          |0          |IGNORE     |0          |0          |INFERNO     |                                                                  |
+MAKE  |Y          |BACK-LEFT  |5          |0          |IGNORE     |0          |0          |INFERNO     |                                                                  |
+MAKE  |O          |BACK-LEFT  |5          |0          |IGNORE     |0          |0          |INFERNO     |                                                                  |
+MAKE  |X          |FRONT-LEFT |10         |-16        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |H          |FRONT-LEFT |10         |-5         |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |Z          |FRONT-RIGHT|10         |-16        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |P          |FRONT-LEFT |10         |-15        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |Y          |FRONT-RIGHT|10         |-15        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |U          |FRONT-LEFT |10         |-18        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |V          |FRONT-RIGHT|10         |-22        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |W          |FRONT-RIGHT|10         |-18        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |K          |FRONT-LEFT |10         |-18        |INT-EXT    |0          |0          |            |                                                                  |
+MAKE  |J          |FRONT-RIGHT|10         |-23        |INT-EXT    |0          |0          |            |                                                                  |
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|____________|__________________________________________________________________|
+DROP  |H          |1          |1          |SkSpell    |50-70      |27-50      |0          |            |                                                                  |
+DROP  |A          |6          |1          |Valk       |50-70      |27-50      |50-70      |            |                                                                  |
+DROP  |B          |6          |1          |Valk       |50-70      |27-50      |0          |            |                                                                  |
+DROP  |A          |6          |2          |Witc       |50-70      |27-50      |50-70      |            |                                                                  |
+DROP  |B          |6          |2          |Witc       |50-70      |27-50      |0          |            |                                                                  |
+WAIT  |7000-7000  |           |           |           |           |           |           |            |                                                                  |
+DROP  |A          |1,2,4,4    |50%U       |RootR      |50-70      |27-50      |50-70      |            |                                                                  |
+DROP  |B          |1,2,4,4    |50%        |RootR      |50-70      |27-50      |0          |            |                                                                  |
+WAIT  |300-300    |           |           |           |           |           |           |            |                                                                  |
+DROP  |A          |1          |1          |FlameF     |0          |0          |0          |            |                                                                  |
+DROP  |A          |1          |1          |Warden     |0          |0          |0          |            |                                                                  |
+DROP  |A          |1,2,2,3,4,5|50%U       |Valk       |0          |0          |0          |            |                                                                  |
+DROP  |B          |1,2,3,3,4,5|50%        |Valk       |0          |0          |0          |            |                                                                  |
+DROP  |A          |1          |1          |LogL       |0          |0          |0          |            |                                                                  |
+DROP  |A          |1          |1          |AppWard    |0          |0          |0          |            |                                                                  |
+DROP  |A          |1          |1          |King       |0          |0          |0          |            |                                                                  |
+DROP  |A          |1          |1          |Queen      |0          |0          |0          |            |                                                                  |
+DROP  |A          |1          |1          |Champion   |0          |0          |0          |            |                                                                  |
+DROP  |G          |4          |0          |FSpell     |50-70      |27-50      |200-250    |            |                                                                  |
+DROP  |Y          |4          |0          |FSpell     |50-70      |27-50      |200-250    |            |                                                                  |
+DROP  |X          |7          |1          |SkSpell    |50-70      |27-50      |0          |            |                                                                  |
+DROP  |Z          |7          |1          |SkSpell    |50-70      |27-50      |0          |            |                                                                  |
+DROP  |R          |3          |1          |PSpell     |50-70      |27-50      |0          |            |                                                                  |
+DROP  |W          |2          |1          |RSpell     |50-70      |27-50      |50-70      |            |                                                                  |
+DROP  |K          |2          |1          |RSpell     |50-70      |27-50      |50-70      |            |                                                                  |
+DROP  |A          |1          |1          |Warden     |0          |0          |0          |            |                                                                  |
+WAIT  |8000-8000  |           |           |           |           |           |           |            |                                                                  |
+DROP  |J          |1          |1          |HSpell     |50-70      |27-50      |50-70      |            |                                                                  |
+WAIT  |1000-1000  |           |           |           |           |           |           |            |                                                                  |
+DROP  |J          |1          |1          |RSpell     |50-70      |27-50      |50-70      |            |                                                                  |
+DROP  |L          |3          |1          |FSpell     |0          |0          |0          |            |                                                                  |
+WAIT  |9000-10000 |           |           |           |           |           |           |            |                                                                  |
+DROP  |L          |4          |0          |FSpell     |50-70      |27-50      |200-250    |            |                                                                  |
+WAIT  |200-300    |           |           |           |           |           |           |            |                                                                  |
+RECALC|           |           |           |           |           |           |           |            |                                                                  |
+WAIT  |200-300    |           |           |           |           |           |           |            |                                                                  |
+MAKE  |G          |FRONT-LEFT |5          |0          |IGNORE     |0          |0          |INFERNO     |                                                                  |
+MAKE  |Y          |FRONT-LEFT |5          |0          |IGNORE     |0          |0          |INFERNO     |                                                                  |
+WAIT  |5400-5600  |           |           |           |           |           |           |            |                                                                  |
+DROP  |G          |3          |0          |FSpell     |50-70      |0          |200-250    |            |                                                                  |
+DROP  |Y          |3          |0          |FSpell     |50-70      |0          |200-250    |            |                                                                  |
+DROP  |C-N        |7-10       |10         |Arch       |50-70      |100        |50-100     |            |                                                                  |
+DROP  |C-N        |7-10       |10         |REMAIN     |50-70      |100        |50-100     |            |                                                                  |
+
+      |                                                                               VENUX                                                                               |
+      |------------------------------------------------------------------------RootRRider Valk Witch-------------------------------------------------------------------|
+

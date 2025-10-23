@@ -65,3 +65,26 @@ Func SaveDebugImage($sImageName = "Unknown", $vCaptureNew = Default, $bCreateSub
 
 	If _Sleep($DELAYDEBUGIMAGESAVE1) Then Return
 EndFunc   ;==>SaveDebugImage
+
+Func SaveDebugImageOCR($sTag = "", $sImageName = "")
+	
+	Local $sFolderPath = ""
+	If $sImageName = "" Then 
+		$sFolderPath = $g_sProfileTempDebugPath & $sImageName & "\"
+	Else
+		$sFolderPath = $sImageName
+	EndIf
+	DirCreate($sFolderPath)
+	
+	Local $sFullFileName = ""
+
+	$sFullFileName = $sFolderPath & $sTag & ".png"
+	If FileExists($sFullFileName) Then Return
+
+	Local $EditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+	_GDIPlus_ImageSaveToFile($EditedImage, $sFullFileName)
+	_GDIPlus_BitmapDispose($EditedImage)
+	SetDebugLog("SaveDebugImageOCR " & $sFullFileName, $COLOR_DEBUG)
+
+	If _Sleep($DELAYDEBUGIMAGESAVE1) Then Return
+EndFunc   ;==>SaveDebugImage

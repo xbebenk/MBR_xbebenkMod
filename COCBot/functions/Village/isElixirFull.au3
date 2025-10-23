@@ -13,15 +13,15 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func isElixirFull()
+Func isElixirFull($bSetLog = True)
 	If _CheckPixel($aIsElixirFull, $g_bCapturePixel) Then ;Hex if color of elixir (purple)
-		SetLog("Elixir Storages are full!", $COLOR_SUCCESS)
+		If $bSetLog Then SetLog("Elixir Storages are full!", $COLOR_SUCCESS)
 		$g_abFullStorage[$eLootElixir] = True
 	Else
 		$g_abFullStorage[$eLootElixir] = False
 	EndIf
 	If Not _CheckPixel($aIsElixirLow, $g_bCapturePixel) Then ;Hex if color of elixir (purple)
-		SetLog("Elixir Storages are Low!", $COLOR_DEBUG)
+		If $bSetLog Then SetLog("Elixir Storages are Low!", $COLOR_DEBUG)
 		$g_abLowStorage[$eLootElixir] = True
 	Else
 		$g_abLowStorage[$eLootElixir] = False

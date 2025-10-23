@@ -118,11 +118,11 @@ Func QueenUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Queen info and Level
-	Local $sInfo = BuildingInfo(242, 472) ; 860x780
+	Local $sInfo = BuildingInfo(242, 477) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 472) ; 860x780
+		$sInfo = BuildingInfo(242, 477) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		Sleep(100)
 		$CountGetInfo += 1
@@ -159,7 +159,7 @@ Func QueenUpgrade()
 
 	;##### Get updated village elixir and dark elixir values
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
+		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(690, 123))
 		SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
 	Else
 		SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)
@@ -222,11 +222,11 @@ Func KingUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get King info
-	Local $sInfo = BuildingInfo(242, 472) ; 860x780
+	Local $sInfo = BuildingInfo(242, 477) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 472) ; 860x780
+		$sInfo = BuildingInfo(242, 477) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		If _Sleep(100) Then Return
 		$CountGetInfo += 1
@@ -262,7 +262,7 @@ Func KingUpgrade()
 
 	;##### Get updated village elixir and dark elixir values
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
+		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(690, 123))
 		SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
 	Else
 		SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)
@@ -333,11 +333,11 @@ Func WardenUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Warden info
-	Local $sInfo = BuildingInfo(242, 472) ; 860x780
+	Local $sInfo = BuildingInfo(242, 477) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 472) ; 860x780
+		$sInfo = BuildingInfo(242, 477) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		If _Sleep(100) Then Return
 		$CountGetInfo += 1
@@ -373,10 +373,10 @@ Func WardenUpgrade()
 
 	;##### Get updated village elixir values
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(705, 74)
+		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 74)
 		SetDebugLog("Updating village values [E]: " & $g_aiCurrentLoot[$eLootElixir], $COLOR_DEBUG)
 	Else
-		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(710, 74)
+		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 74)
 	EndIf
 
 	If _Sleep(100) Then Return
@@ -446,11 +446,11 @@ Func ChampionUpgrade()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Champion info and Level
-	Local $sInfo = BuildingInfo(242, 472) ; 860x780
+	Local $sInfo = BuildingInfo(242, 477) ; 860x780
 	If @error Then SetError(0, 0, 0)
 	Local $CountGetInfo = 0
 	While IsArray($sInfo) = False
-		$sInfo = BuildingInfo(242, 472) ; 860x780
+		$sInfo = BuildingInfo(242, 477) ; 860x780
 		If @error Then SetError(0, 0, 0)
 		Sleep(100)
 		$CountGetInfo += 1
@@ -487,7 +487,7 @@ Func ChampionUpgrade()
 
 	;##### Get updated village elixir and dark elixir values
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(728, 123))
+		$g_aiCurrentLoot[$eLootDarkElixir] = Number(getResourcesMainScreen(690, 123))
 		SetDebugLog("Updating village values [D]: " & $g_aiCurrentLoot[$eLootDarkElixir], $COLOR_DEBUG)
 	Else
 		SetDebugLog("getResourcesMainScreen didn't get the DE value", $COLOR_DEBUG)

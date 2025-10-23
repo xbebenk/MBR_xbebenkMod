@@ -6,7 +6,7 @@
 ;				 : $bCloseArmyWindow = Bool value, true if train overview window needs to be closed
 ; Return values .: None
 ; Author ........: KnowJack (07-2015)
-; Modified ......: MonkeyHunter (03-2016)
+; Modified ......: MonkeyHunter (03-2016), xbebenk(04-2024)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -25,45 +25,14 @@ Func CheckOverviewFullArmy($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 			SetError(2)
 			Return; not open, requested to be open - error.
 		EndIf
-		If _Sleep($DELAYCHECKARMYCAMP5) Then Return
 	EndIf
 	
-	;If $bOpenArmyWindow Then
-	;	ClickAway()
-	;	If _Sleep($DELAYCHECKFULLARMY1) Then Return
-	;	Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0347") ; Click Button Army Overview
-	;	If _Sleep($DELAYCHECKFULLARMY2) Then Return
-	;	Local $j = 0
-	;	While Not _ColorCheck(_GetPixelColor(136, 129, True), Hex(0xE8E8E0, 6), 20) ; "ARMY tab"
-	;		If $g_bDebugSetlogTrain Then SetLog("OverView TabColor=" & _GetPixelColor(136, 129, True), $COLOR_DEBUG)
-	;		If _Sleep($DELAYCHECKFULLARMY1) Then Return ; wait for Train Window to be ready.
-	;		$j += 1
-	;		If $j > 15 Then ExitLoop
-	;	WEnd
-	;	If $j > 15 Then
-	;		SetLog("Army Window didn't open", $COLOR_ERROR)
-	;		Return
-	;	EndIf
-	;EndIf
-
-	If _sleep($DELAYCHECKFULLARMY2) Then Return
-	Local $Pixel = _CheckPixel($aIsCampFull, True) And _ColorCheck(_GetPixelColor(40, 144, True), Hex(0x87B928, 6), 20)
-	If Not $Pixel Then
-		If _sleep($DELAYCHECKFULLARMY2) Then Return
-		$Pixel = _CheckPixel($aIsCampFull, True) And _ColorCheck(_GetPixelColor(42, 161, True), Hex(0x8ABB2A, 6), 20)
-	EndIf
-
-	If $g_bDebugSetlogTrain Then SetLog("Checking Overview for full army [!] " & $Pixel & ", " & _GetPixelColor(128, 176, True), $COLOR_DEBUG)
-	If $Pixel Then
-		$g_bFullArmy = True
-	EndIf
-
-	$g_bCanRequestCC = _ColorCheck(_GetPixelColor($aRequestTroopsAO[0], $aRequestTroopsAO[1] + 20, True), Hex($aRequestTroopsAO[3], 6), $aRequestTroopsAO[5]) And _ColorCheck(_GetPixelColor($aRequestTroopsAO[0], $aRequestTroopsAO[1], True), Hex($aRequestTroopsAO[4], 6), $aRequestTroopsAO[5])
-	SetDebugLog("Can Request CC: " & $g_bCanRequestCC, $COLOR_DEBUG)
-
+	If WaitForPixel(82, 181, 83, 182, Hex(0x44770E, 6), 20, 1, "CheckOverviewFullArmy") Then $g_bFullArmy = True
+	SetLog("Checking Overview for full army [!] = " & String($g_bFullArmy), $COLOR_DEBUG)
+	
 	If $bCloseArmyWindow Then
 		ClickAway()
 		If _Sleep($DELAYCHECKFULLARMY3) Then Return
 	EndIf
-
+	Return $g_bFullArmy
 EndFunc   ;==>CheckOverviewFullArmy

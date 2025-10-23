@@ -27,19 +27,14 @@ Func TrainSiege($bTrainFullSiege = False)
 
 	Local $aCheckIsOccupied[4] = [767, 203, 0xE21012, 10]
 	Local $aCheckIsFilled[4] = [715, 186, 0xD7AFA9, 10]
-	Local $aCheckIsAvailableSiege[4] = [150, 355, 0x8AB7DE, 10]
-	Local $aCheckIsAvailableSiege1[4] = [305, 355, 0x8AB7DE, 10]
-	Local $aCheckIsAvailableSiege2[4] = [430, 355, 0x8AB7DE, 10]
-	Local $aCheckIsAvailableSiege3[4] = [585, 355, 0x8AB7DE, 10]
-	Local $aCheckIsAvailableSiege4[4] = [715, 355, 0x8AB7DE, 10]
-
-	Local $aiQueueSiegeMachine[$eSiegeMachineCount] = [0, 0, 0, 0, 0]
+	
+	Local $aiQueueSiegeMachine[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0, 0]
 	Local $aiTotalSiegeMachine = $g_aiCurrentSiegeMachines
+	Local $aCoord[2] = [0, 0]
 
 	; check queueing siege
 	If _CheckPixel($aCheckIsFilled, True, Default, "Siege is Filled") Or _CheckPixel($aCheckIsOccupied, True, Default, "Siege is Queued") Then
-		Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\SiegeMachinesQueued"
-		Local $aSearchResult = SearchArmy($Dir, 430, 200, 778, 235, "Queue")
+		Local $aSearchResult = SearchArmy($g_sImgArmyOverviewSiegesQueued, 400, 200, 778, 235, "Queue")
 		If $aSearchResult[0][0] <> "" Then
 			For $i = 0 To UBound($aSearchResult) - 1
 				Local $iSiegeIndex = TroopIndexLookup($aSearchResult[$i][0]) - $eWallW
@@ -50,63 +45,50 @@ Func TrainSiege($bTrainFullSiege = False)
 		EndIf
 	EndIf
 
-	If $g_bDebugSetlogTrain Or $g_bDebugSetLog Then
-		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
-			SetLog("-- " & $g_asSiegeMachineNames[$iSiegeIndex] & " --", $COLOR_DEBUG)
-			SetLog(@TAB & "To Build: " & $g_aiArmyCompSiegeMachines[$iSiegeIndex], $COLOR_DEBUG)
-			SetLog(@TAB & "Current Army: " & $g_aiCurrentSiegeMachines[$iSiegeIndex], $COLOR_DEBUG)
-			SetLog(@TAB & "In queue: " & $aiQueueSiegeMachine[$iSiegeIndex], $COLOR_DEBUG)
-		Next
-	EndIf
-
+	For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
+		If $g_aiArmyCompSiegeMachines[$iSiegeIndex] > 0 Then
+			SetLog("[" & $g_asSiegeMachineNames[$iSiegeIndex] & "] " & " SetTrain:" & $g_aiArmyCompSiegeMachines[$iSiegeIndex] & _ 
+			", Trained:" & $g_aiCurrentSiegeMachines[$iSiegeIndex] & ", InQueue:" & $aiQueueSiegeMachine[$iSiegeIndex], $COLOR_DEBUG)
+		EndIf
+	Next
+	
 	; Refill
 	For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 		Local $HowMany = $g_aiArmyCompSiegeMachines[$iSiegeIndex] - $g_aiCurrentSiegeMachines[$iSiegeIndex] - $aiQueueSiegeMachine[$iSiegeIndex]
-		Local $checkPixel
-		If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
-		If $iSiegeIndex = $eSiegeBattleBlimp Then $checkPixel = $aCheckIsAvailableSiege1
-		If $iSiegeIndex = $eSiegeStoneSlammer Then $checkPixel = $aCheckIsAvailableSiege2
-		If $iSiegeIndex = $eSiegeBarracks Then $checkPixel = $aCheckIsAvailableSiege3
-		If $iSiegeIndex = $eSiegeLogLauncher Then $checkPixel = $aCheckIsAvailableSiege4
-		If $HowMany > 0 And $iSiegeIndex = $eSiegeBattleDrill Then 
-			DragSiege("Next", 1)
-		EndIf
-		If $HowMany > 0 And _CheckPixel($checkPixel, True, Default, $g_asSiegeMachineNames[$iSiegeIndex]) Then
-			PureClick($checkPixel[0], $checkPixel[1], $HowMany, $g_iTrainClickDelay)
+		
+		If $HowMany > 0 Then
 			Local $sSiegeName = $HowMany >= 2 ? $g_asSiegeMachineNames[$iSiegeIndex] & "s" : $g_asSiegeMachineNames[$iSiegeIndex] & ""
 			Setlog("Build " & $HowMany & " " & $sSiegeName, $COLOR_SUCCESS)
-			$aiTotalSiegeMachine[$iSiegeIndex] += $HowMany
-			If _Sleep(250) Then Return
+			$aCoord = DragIfNeededSiege($iSiegeIndex)
+			If Not $g_bRunState Then Return
+			If $aCoord[0] > 0 Then
+				ClickP($aCoord, $HowMany)
+				$aiTotalSiegeMachine[$iSiegeIndex] += $HowMany
+			EndIf
 		EndIf
-		If $HowMany > 0 And $iSiegeIndex = $eSiegeBattleDrill Then 
-			DragSiege("Prev", 1)
-		EndIf
-		If Not $g_bRunState Then Return
+		If _Sleep(250) Then Return
 	Next
-
+	
+	Local $aSiegeCamp = GetCurrentTroop(95, 163)
+	Local $bNeedFill = True
+	If $aSiegeCamp[0] = $aSiegeCamp[1] * 2 Then $bNeedFill = False
+	
 	; build 2nd army
-	If ($g_bDoubleTrain Or $bTrainFullSiege) Then
+	If ($g_bDoubleTrain Or $bTrainFullSiege) And $bNeedFill Then
+		SetLog("2nd Army Siege", $COLOR_DEBUG1)
 		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
 			Local $HowMany = $g_aiArmyCompSiegeMachines[$iSiegeIndex] * 2 - $aiTotalSiegeMachine[$iSiegeIndex]
-			Local $checkPixel
-			If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
-			If $iSiegeIndex = $eSiegeBattleBlimp Then $checkPixel = $aCheckIsAvailableSiege1
-			If $iSiegeIndex = $eSiegeStoneSlammer Then $checkPixel = $aCheckIsAvailableSiege2
-			If $iSiegeIndex = $eSiegeBarracks Then $checkPixel = $aCheckIsAvailableSiege3
-			If $iSiegeIndex = $eSiegeLogLauncher Then $checkPixel = $aCheckIsAvailableSiege4
-			If $HowMany > 0 And $iSiegeIndex = $eSiegeBattleDrill Then 
-				DragSiege("Next", 1)
-			EndIf
-			If $HowMany > 0 And _CheckPixel($checkPixel, True, Default, $g_asSiegeMachineNames[$iSiegeIndex]) Then
-				PureClick($checkPixel[0], $checkPixel[1], $HowMany, $g_iTrainClickDelay)
+			
+			If $HowMany > 0 Then
 				Local $sSiegeName = $HowMany >= 2 ? $g_asSiegeMachineNames[$iSiegeIndex] & "s" : $g_asSiegeMachineNames[$iSiegeIndex] & ""
 				Setlog("Build " & $HowMany & " " & $sSiegeName, $COLOR_SUCCESS)
-				If _Sleep(250) Then Return
+				$aCoord = DragIfNeededSiege($iSiegeIndex)
+				If Not $g_bRunState Then Return
+				If $aCoord[0] > 0 Then
+					ClickP($aCoord, $HowMany)
+				EndIf
 			EndIf
-			If $HowMany > 0 And $iSiegeIndex = $eSiegeBattleDrill Then 
-				DragSiege("Prev", 1)
-			EndIf
-			If Not $g_bRunState Then Return
+			If _Sleep(250) Then Return
 		Next
 	EndIf
 	If _Sleep(500) Then Return
@@ -119,57 +101,41 @@ Func TrainSiege($bTrainFullSiege = False)
 	EndIf
 EndFunc   ;==>TrainSiege
 
-Func DragSiege($Direction = "Next", $HowMany = 1)
-	Local $DragYPoint =  455
-	For $i = 1 To $HowMany
-		Switch $Direction
-			Case "Next"
-				ClickDrag(550, $DragYPoint, 378, $DragYPoint, 500)
-			Case "Prev"
-				ClickDrag(370, $DragYPoint, 542, $DragYPoint, 500)
-		EndSwitch
-		If _Sleep(1000) Then Return
-	Next
+Func DragIfNeededSiege($iSiegeIndex = $eSiegeWallWrecker)
+	Local $aCoord[2] = [0, 0]
+	SetLog("DragIfNeededSiege [" & $iSiegeIndex & "] " & $g_asSiegeMachineNames[$iSiegeIndex], $COLOR_DEBUG1)
+	
+	If QuickMIS("BFI", $g_sImgTrainSieges & $g_asSiegeMachineShortNames[$iSiegeIndex] & "*", 70, 350, 780, 500) Then 
+		SetLog("DragIfNeededSiege [" & $iSiegeIndex & "] " & $g_asSiegeMachineNames[$iSiegeIndex] & " : No Scroll", $COLOR_ACTION)
+		$aCoord[0] = $g_iQuickMISX
+		$aCoord[1] = $g_iQuickMISY
+		If $g_bDebugSetLog Then SetLog("Siege Coord : " & _ArrayToString($aCoord), $COLOR_DEBUG1)
+		Return $aCoord
+	EndIf
+	
+	If _PixelSearch(75, 354, 76, 355, Hex(0xD3D3CB, 6), 10, True, "DragIfNeededSiege") Then
+		SetLog("DragIfNeededSiege [" & $iSiegeIndex & "] " & $g_asSiegeMachineNames[$iSiegeIndex] & " : Scroll Right", $COLOR_ACTION)
+		ClickDrag(750, 435, 220, 435)
+		If _Sleep(2000) Then Return
+		If QuickMIS("BFI", $g_sImgTrainSieges & $g_asSiegeMachineShortNames[$iSiegeIndex] & "*", 70, 350, 780, 500) Then 
+			$aCoord[0] = $g_iQuickMISX
+			$aCoord[1] = $g_iQuickMISY
+			If $g_bDebugSetLog Then SetLog("Siege Coord : " & _ArrayToString($aCoord), $COLOR_DEBUG1)
+			Return $aCoord
+		EndIf
+	EndIf
+	
+	If _PixelSearch(776, 354, 777, 355, Hex(0xD3D3CB, 6), 10, True, "DragIfNeededSiege") Then
+		SetLog("DragIfNeededSiege [" & $iSiegeIndex & "] " & $g_asSiegeMachineNames[$iSiegeIndex] & " : Scroll Left", $COLOR_ACTION)
+		ClickDrag(100, 435, 630, 435)
+		If _Sleep(2000) Then Return
+		If QuickMIS("BFI", $g_sImgTrainSieges & $g_asSiegeMachineShortNames[$iSiegeIndex] & "*", 70, 350, 780, 500) Then 
+			$aCoord[0] = $g_iQuickMISX
+			$aCoord[1] = $g_iQuickMISY
+			If $g_bDebugSetLog Then SetLog("Siege Coord : " & _ArrayToString($aCoord), $COLOR_DEBUG1)
+			Return $aCoord
+		EndIf
+	EndIf
+	If $g_bDebugSetLog Then SetLog("Siege Coord : " & _ArrayToString($aCoord), $COLOR_DEBUG1)
+	Return $aCoord
 EndFunc
-
-Func CheckQueueSieges($bGetQuantity = True, $bSetLog = True, $x = 778, $bQtyWSlot = False)
-	Local $aResult[1] = [""]
-	If $bSetLog Then SetLog("Checking siege queue", $COLOR_INFO)
-
-	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\SiegeMachinesQueued"
-
-	Local $aSearchResult = SearchArmy($Dir, 430, 200, $x, 235, $bGetQuantity ? "queue" : "")
-	ReDim $aResult[UBound($aSearchResult)]
-
-	If $aSearchResult[0][0] = "" Then
-		Setlog("No siege detected!", $COLOR_ERROR)
-		Return
-	EndIf
-
-	For $i = 0 To (UBound($aSearchResult) - 1)
-		If Not $g_bRunState Then Return
-		$aResult[$i] = $aSearchResult[$i][0]
-	Next
-
-	If $bGetQuantity Then
-		Local $aQuantities[UBound($aResult)][2]
-		Local $aQueueTroop[$eSiegeMachineCount]
-		For $i = 0 To (UBound($aQuantities) - 1)
-			$aQuantities[$i][0] = $aSearchResult[$i][0]
-			$aQuantities[$i][1]	= $aSearchResult[$i][3]
-			Local $iSiegeIndex = Int(TroopIndexLookup($aQuantities[$i][0]) - $eWallW)
-			If $iSiegeIndex >= 0 And $iSiegeIndex < $eSiegeMachineCount Then
-				If $bSetLog Then SetLog("  - " & $g_asSiegeMachineNames[TroopIndexLookup($aQuantities[$i][0], "CheckQueueSieges")] & ": " & $aQuantities[$i][1] & "x", $COLOR_SUCCESS)
-				$aQueueTroop[$iSiegeIndex] += $aQuantities[$i][1]
-			Else
-				; TODO check what to do with others
-				SetDebugLog("Unsupport siege index: " & $iSiegeIndex)
-			EndIf
-		Next
-		If $bQtyWSlot Then Return $aQuantities
-		Return $aQueueTroop
-	EndIf
-
-	_ArrayReverse($aResult)
-	Return $aResult
-EndFunc   ;==>CheckQueueTroops

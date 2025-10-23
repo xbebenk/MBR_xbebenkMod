@@ -56,7 +56,7 @@ Func getBuilderCount($bSuppressLog = False, $bBuilderBase = False)
 			; drop down to error handling code
 		EndIf
 	Else
-		SetLog("Unable to read Builders info at this time", $COLOR_ERROR)
+		SetLog("Unable to read " & ($bBuilderBase ? "Master Builders" : "Builder") & " info at this time", $COLOR_ERROR)
 		; drop down to error handling code
 	EndIf
 	If $g_bDebugSetlog Or $g_bDebugImageSave Then SaveDebugImage("getBuilderCount_")

@@ -77,7 +77,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	If $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 Then ; Customise DE side wave deployment here
 		Switch $g_aiAttackStdDropOrder[$g_iMatchMode]
 			Case 0
-				Local $listInfoDeploy[45][5] = [[$eGole, $nbSides, 1, 1, 2] _
+				Local $listInfoDeploy[48][5] = [[$eGole, $nbSides, 1, 1, 2] _
 							, [$eLava, $nbSides, 1, 1, 2] _
 							, [$eIceH, $nbSides, 1, 1, 2] _
 							, [$eIceG, $nbSides, 1, 1, 2] _
@@ -85,6 +85,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 							, [$eGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
 							, [$eSGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
 							, [$eGSkel, $nbSides, 1, 1, 0] _
+							, [$eRootR, $nbSides, 1, 1, 0] _
 							, [$eRGhost, $nbSides, 1, 1, 0] _
 							, [$eDrag, $nbSides, 1, 1, 0] _
 							, [$eSDrag, $nbSides, 1, 1, 0] _
@@ -93,6 +94,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 							, [$eBabyD, $nbSides, 1, 1, 0] _
 							, [$eInfernoD, $nbSides, 1, 1, 0] _
 							, [$eHogs, $nbSides, 1, 1, 1] _
+							, [$eSHogs, $nbSides, 1, 1, 0] _
 							, [$eValk, $nbSides, 1, 1, 0] _
 							, [$eSValk, $nbSides, 1, 1, 0] _
 							, [$eBowl, $nbSides, 1, 1, 0] _
@@ -120,13 +122,12 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 							, [$eHeal, $nbSides, 1, 1, 1] _
 							, [$ePekk, $nbSides, 1, 1, 1] _
 							, [$eHunt, $nbSides, 1, 1, 0] _
+							, [$eAppWard, $nbSides, 1, 1, 0] _
 							, ["CC", 1, 1, 1, 1] _
 							, ["HEROES", 1, 2, 1, 1]]
 				If $g_bCustomDropOrderEnable Then
 					Local $aTmpDelete
 					Local $aTmpListInfoDeploy = $listInfoDeploy
-					;AttackSmartFarm(4, "TL|BR|BL|TR")
-					;_ArrayDisplay($aTmpListInfoDeploy, "aTmpListInfoDeploy1")
 					For $i = 0 To UBound($g_ahCmbDropOrder) - 1
 						Local $iValue = $g_aiCmbCustomDropOrder[$i]
 						SetLog("iValue : " & $iValue)
@@ -194,7 +195,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 		If $g_bDebugSetlog Then SetDebugLog("listdeploy standard for attack", $COLOR_DEBUG)
 		Switch $g_aiAttackStdDropOrder[$g_iMatchMode]
 			Case 0
-				Local $listInfoDeploy[45][5] = [[$eGole, $nbSides, 1, 1, 2] _
+				Local $listInfoDeploy[48][5] = [[$eGole, $nbSides, 1, 1, 2] _
 							, [$eLava, $nbSides, 1, 1, 2] _
 							, [$eIceH, $nbSides, 1, 1, 2] _
 							, [$eIceG, $nbSides, 1, 1, 2] _
@@ -203,6 +204,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 							, [$eSGiant, $nbSides, 1, 1, $g_iSlotsGiants] _
 							, [$eGSkel, $nbSides, 1, 1, 0] _
 							, [$eRGhost, $nbSides, 1, 1, 0] _
+							, [$eRootR, $nbSides, 1, 1, 0] _
 							, [$eDrag, $nbSides, 1, 1, 0] _
 							, [$eSDrag, $nbSides, 1, 1, 0] _
 							, [$eBall, $nbSides, 1, 1, 0] _
@@ -210,6 +212,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 							, [$eBabyD, $nbSides, 1, 1, 0] _
 							, [$eInfernoD, $nbSides, 1, 1, 0] _
 							, [$eHogs, $nbSides, 1, 1, 1] _
+							, [$eSHogs, $nbSides, 1, 1, 0] _
 							, [$eValk, $nbSides, 1, 1, 0] _
 							, [$eSValk, $nbSides, 1, 1, 0] _
 							, [$eBowl, $nbSides, 1, 1, 0] _
@@ -237,36 +240,37 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 							, [$eHeal, $nbSides, 1, 1, 1] _
 							, [$ePekk, $nbSides, 1, 1, 1] _
 							, [$eHunt, $nbSides, 1, 1, 0] _
+							, [$eAppWard, $nbSides, 1, 1, 0] _
 							, ["CC", 1, 1, 1, 1] _
 							, ["HEROES", 1, 2, 1, 1]]
 				If $g_bCustomDropOrderEnable Then
 					Local $aTmpDelete
 					Local $aTmpListInfoDeploy = $listInfoDeploy
-					;AttackSmartFarm(4, "TL|BR|BL|TR")
-					;_ArrayDisplay($aTmpListInfoDeploy, "aTmpListInfoDeploy1")
 					For $i = 0 To UBound($g_ahCmbDropOrder) - 1
 						Local $iValue = $g_aiCmbCustomDropOrder[$i]
-						SetLog("iValue : " & $iValue)
-						If $iValue <> -1 Then
+						SetLog("iValue : " & $iValue & " [" & GetTroopName($iValue) & "]")
+						If $iValue <> -1 And $iValue < $eKing Then
 							Local $iDelete = _ArraySearch($aTmpListInfoDeploy, $iValue, 0, 0, 0, 0, 1, 0)
-							SetLog("iDelete : " & $iDelete)
-							Local $troop = $aTmpListInfoDeploy[$i][0]
-							Local $nside1 = $aTmpListInfoDeploy[$i][1]
-							Local $wave = $aTmpListInfoDeploy[$i][2]
-							Local $x = $aTmpListInfoDeploy[$i][3]
-							Local $slotedge = $aTmpListInfoDeploy[$i][4]
-							
-							$aTmpListInfoDeploy[$i][0] = $aTmpListInfoDeploy[$iDelete][0]
-							$aTmpListInfoDeploy[$i][1] = $aTmpListInfoDeploy[$iDelete][1]
-							$aTmpListInfoDeploy[$i][2] = $aTmpListInfoDeploy[$iDelete][2]
-							$aTmpListInfoDeploy[$i][3] = $aTmpListInfoDeploy[$iDelete][3]
-							$aTmpListInfoDeploy[$i][4] = $aTmpListInfoDeploy[$iDelete][4]
-							
-							$aTmpListInfoDeploy[$iDelete][0] = $troop
-							$aTmpListInfoDeploy[$iDelete][1] = $nside1
-							$aTmpListInfoDeploy[$iDelete][2] = $wave
-							$aTmpListInfoDeploy[$iDelete][3] = $x
-							$aTmpListInfoDeploy[$iDelete][4] = $slotedge
+							If $iDelete <> -1 Then
+								SetLog("iDelete : " & $iDelete)
+								Local $troop = $aTmpListInfoDeploy[$i][0]
+								Local $nside1 = $aTmpListInfoDeploy[$i][1]
+								Local $wave = $aTmpListInfoDeploy[$i][2]
+								Local $x = $aTmpListInfoDeploy[$i][3]
+								Local $slotedge = $aTmpListInfoDeploy[$i][4]
+								
+								$aTmpListInfoDeploy[$i][0] = $aTmpListInfoDeploy[$iDelete][0]
+								$aTmpListInfoDeploy[$i][1] = $aTmpListInfoDeploy[$iDelete][1]
+								$aTmpListInfoDeploy[$i][2] = $aTmpListInfoDeploy[$iDelete][2]
+								$aTmpListInfoDeploy[$i][3] = $aTmpListInfoDeploy[$iDelete][3]
+								$aTmpListInfoDeploy[$i][4] = $aTmpListInfoDeploy[$iDelete][4]
+								
+								$aTmpListInfoDeploy[$iDelete][0] = $troop
+								$aTmpListInfoDeploy[$iDelete][1] = $nside1
+								$aTmpListInfoDeploy[$iDelete][2] = $wave
+								$aTmpListInfoDeploy[$iDelete][3] = $x
+								$aTmpListInfoDeploy[$iDelete][4] = $slotedge
+							EndIf
 						EndIf
 					Next
 					$listInfoDeploy = $aTmpListInfoDeploy
@@ -341,7 +345,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 
-	LaunchTroop2($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot)
+	LaunchTroop2($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $g_iMinionPSlot)
 
 	CheckHeroesHealth()
 
@@ -352,7 +356,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 			SetDebugLog("No Wast time... exit, no troops usable left", $COLOR_DEBUG)
 			ExitLoop ;Check remaining quantities
 		EndIf
-		For $i = $eBarb To $eHunt ; launch all remaining troops
+		For $i = $eBarb To $eAppWard ; launch all remaining troops
 			If LaunchTroop($i, $nbSides, 1, 1, 1) Then
 				CheckHeroesHealth()
 				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
@@ -370,7 +374,8 @@ Func SetSlotSpecialTroops()
 	$g_iWardenSlot = -1
 	$g_iChampionSlot = -1
 	$g_iClanCastleSlot = -1
-
+	$g_iMinionPSlot = -1
+	
 	For $i = 0 To UBound($g_avAttackTroops) - 1
 		If $g_avAttackTroops[$i][0] = $eCastle Or $g_avAttackTroops[$i][0] = $eWallW Or $g_avAttackTroops[$i][0] = $eBattleB Or $g_avAttackTroops[$i][0] = $eStoneS _ 
 								Or $g_avAttackTroops[$i][0] = $eSiegeB Or $g_avAttackTroops[$i][0] = $eLogL Or $g_avAttackTroops[$i][0] = $eFlameF Or $g_avAttackTroops[$i][0] = $eBattleD Then
@@ -383,6 +388,8 @@ Func SetSlotSpecialTroops()
 			$g_iWardenSlot = $i
 		ElseIf $g_avAttackTroops[$i][0] = $eChampion Then
 			$g_iChampionSlot = $i
+		ElseIf $g_avAttackTroops[$i][0] = $eMinionP Then
+			$g_iMinionPSlot = $i
 		EndIf
 	Next
 
@@ -391,6 +398,7 @@ Func SetSlotSpecialTroops()
 		SetDebugLog("SetSlotSpecialTroops() Queen Slot: " & $g_iQueenSlot, $COLOR_DEBUG)
 		SetDebugLog("SetSlotSpecialTroops() Warden Slot: " & $g_iWardenSlot, $COLOR_DEBUG)
 		SetDebugLog("SetSlotSpecialTroops() Champion Slot: " & $g_iChampionSlot, $COLOR_DEBUG)
+		SetDebugLog("SetSlotSpecialTroops() Minion Prince Slot: " & $g_iMinionPSlot, $COLOR_DEBUG)
 		SetDebugLog("SetSlotSpecialTroops() Clan Castle Slot: " & $g_iClanCastleSlot, $COLOR_DEBUG)
 	EndIf
 
@@ -464,3 +472,10 @@ Func SmartAttackStrategy($imode)
 
 		EndIf
 EndFunc   ;==>SmartAttackStrategy
+
+Func TestSA()
+	CheckZoomOut("VillageSearch")
+	PrepareAttack($DB)
+	algorithm_AllTroops()
+	ReturnHome()
+EndFunc

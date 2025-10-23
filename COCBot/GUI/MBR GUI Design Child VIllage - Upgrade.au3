@@ -40,10 +40,9 @@ Global $g_hTxtUpgrMinGold = 0, $g_hTxtUpgrMinElixir = 0, $g_hTxtUpgrMinDark = 0
 
 ; Walls
 Global $g_hChkWalls = 0, $g_hTxtWallMinGold = 0, $g_hTxtWallMinElixir = 0, $g_hChkUseGold = 0, $g_hChkUseElixir = 0, $g_hChkUseElixirGold = 0
-Global $g_hChkSaveWallBldr = 0, $g_hChkLowLevelAutoUpgradeWall = 0, $g_hChkUpgradeAnyWallLevel = 0, $g_hCmbLowLevelWall = 0
-Global $g_hBtnFindWalls = 0, $g_hChkOnly1Builder = 0, $g_hChkWallOnlyGEFull = 0
-Global $g_hCmbWalls[3] = [0, 0, 0]
-Global $g_hLblWallCost[3] = [0, 0, 0]
+Global $g_hChkSaveWallBldr = 0, $g_hAutoAdjustSaveWall = 0
+Global $g_hBtnFindWalls = 0, $g_hChkOnly1Builder = 0
+Global $g_hCmbTargetWallLevel = 0, $g_hLblWallCost = 0
 
 ; Auto Upgrade
 Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0
@@ -83,7 +82,7 @@ Func CreateVillageUpgrade()
 
 EndFunc   ;==>CreateVillageUpgrade
 
-Global $g_hChkLabUpgradeOrder = 0, $g_hBtnRemoveLabUpgradeOrder = 0, $g_hBtnSetLabUpgradeOrder = 0, $g_hUpgradeAnyTroops = 0, $g_hUpgradeSiegeToLvl2 = 0
+Global $g_hChkLabUpgradeOrder = 0, $g_hBtnRemoveLabUpgradeOrder = 0, $g_hBtnSetLabUpgradeOrder = 0, $g_hUpgradeAnyTroops = 0
 Global $g_hUseBOF = 0, $g_hUseBOFTime = 0, $g_hUseBOS = 0, $g_hUseBOSTime = 0, $g_hUseBOE = 0, $g_hUseBOETime = 0
 
 Func CreateLaboratorySubTab()
@@ -107,18 +106,6 @@ Func CreateLaboratorySubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "CmbLaboratory_Info_03", "Any Dark Spell/Troop have priority over Upg Heroes!"))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "cmbLab")
-		; Red button, will show on upgrade in progress. Temp unhide here and in Func ChkLab() if GUI needs editing.
-		$g_hBtnResetLabUpgradeTime = GUICtrlCreateButton("", $x + 120 + 172, $y + 36, 18, 18, BitOR($BS_PUSHLIKE,$BS_DEFPUSHBUTTON))
-			GUICtrlSetBkColor(-1, $COLOR_ERROR)
-			;_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnRedLight)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status"))
-			GUICtrlSetState(-1, $GUI_DISABLE)
-			GUICtrlSetState(-1, $GUI_HIDE) ; comment this line out to edit GUI
-			GUICtrlSetOnEvent(-1, "ResetLabUpgradeTime")
 		$g_hPicLabUpgrade = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnBlank, $x + 330, $y, 64, 64)
 			GUICtrlSetState(-1, $GUI_HIDE)
 
@@ -170,12 +157,10 @@ Func CreateLaboratorySubTab()
 		GUICtrlSetOnEvent(-1, "btnSetLabUpgradeOrder")
 
 		$y += 25
-		$g_hUseLabPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkUseLabPotion", "Use Potion"), $x, $y , -1, -1)
+		$g_hUseLabPotion = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkUseLabPotion", "Use Resource Potion"), $x - 10, $y , -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkUseLabPotion_Info", "Enable Use of Laboratory Potion, If Upgrade is more than 1 Day"))
 		$y += 55
 		$x = 25
-		$g_hUpgradeSiegeToLvl2 = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkUpgradeSiegeToLvl2", "Limit Siege Upgrade to Level 2"), $x, $y, -1, -1)
-		$y += 23
 		$g_hUpgradeAnyTroops = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkUpgradeAny", "Upgrade Any Troops/Spells/Sieges If All in Order Cannot be Upgraded"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Laboratory", "ChkUpgradeAny_Info", "Enable Upgrade Any after Upgrade Order" & @CRLF & "And all upgrades on list cannot be upgraded"))
 		$y += 23
@@ -544,11 +529,11 @@ EndFunc   ;==>CreateBuildingsSubTab
 
 Func CreateWallsSubTab()
 	Local $x = 25, $y = 45
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "Group_01", "Walls"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 115)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "Group_01", "Walls"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 220)
 		$x = 10
-		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnWall, $x, $y - 6, 24, 24)
-		$x = 40
-		$g_hChkWalls = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkWalls", "Auto Wall Upgrade"), $x, $y - 2, -1, -1)
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnWall, $x, $y - 6, 32, 32)
+		$x = 50
+		$g_hChkWalls = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkWalls", "Auto Wall Upgrade"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkWalls_Info_01", "Check this to upgrade Walls if there are enough resources."))
 			GUICtrlSetState(-1, $GUI_ENABLE)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
@@ -566,100 +551,71 @@ Func CreateWallsSubTab()
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "RdoUseElixir_Info_02", "Available only at Wall levels upgradeable with Elixir."))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "chkWalls")
-
-		$g_hBtnFindWalls = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "BtnFindWalls", "TEST"), $x + 100, $y - 20, 45, -1)
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "BtnFindWalls_Info_01", "Click here to test the Wall Detection."))
-		GUICtrlSetOnEvent(-1, "btnWalls")
-		
 		$y += 20
 		$g_hChkUseElixirGold = GUICtrlCreateRadio(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "RdoUseElixirGold", "Try Elixir first, Gold second"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "RdoUseElixirGold_Info_01", "Try to use Elixir first. If not enough Elixir try to use Gold second for Walls.") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "RdoUseElixir_Info_02", -1))
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetOnEvent(-1, "chkWalls")
+		
+		$y += 30
+		$g_hAutoAdjustSaveWall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "AutoAdjustSaveWall", "Auto Adjust Save Min Gold And Elixir"), $x - 20, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "AutoAdjustSaveWall", "Only work with RushTH enabled") & @CRLF & _
+							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "AutoAdjustSaveWall", "Bot will adjust save min gold and elixir to make sure you can upgrade TH"))
+			GUICtrlSetState(-1, $GUI_ENABLE)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetOnEvent(-1, "chkAutoAdjustSaveMinWall")
+			
+		$y += 25
+		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGold, $x - 20, $y, 16, 16)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Goldtosave", "Min. Gold to save"), $x, $y, -1, -1)
+		$g_hTxtWallMinGold = GUICtrlCreateInput("250000", $x + 110, $y, 80, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Goldtosave_Info_01", "Save this much Gold after the wall upgrade completes,") & @CRLF & _
+							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Goldtosave_Info_02", "Set this value to save Gold for other upgrades, or searching."))
+			GUICtrlSetLimit(-1, 8)
+			GUICtrlSetState(-1, $GUI_DISABLE)
+		$y += 20
+		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnElixir, $x - 20, $y, 16, 16)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Elixirtosave", "Min. Elixir to save"), $x, $y, -1, -1)
+		$g_hTxtWallMinElixir = GUICtrlCreateInput("250000", $x + 110, $y, 80, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Elixirtosave_Info_01", "Save this much Elixir after the wall upgrade completes,") & @CRLF & _
+							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Elixirtosave_Info_02", "Set this value to save Elixir for other upgrades or troop making."))
+			GUICtrlSetLimit(-1, 8)
+			GUICtrlSetState(-1, $GUI_DISABLE)
+		$y += 25
+		$g_hBtnFindWalls = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "BtnFindWalls", "TEST Wall Detect"), $x - 20, $y, 110, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "BtnFindWalls_Info_01", "Click here to test the Wall Detection."))
+		GUICtrlSetOnEvent(-1, "btnWalls")
 
-		$x = 220
-		$y = 40
-		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnBuilder, $x + 3, $y + 10, 20, 20)
-		$g_hChkSaveWallBldr = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkSaveWallBldr", "Save ONE builder for Walls"), $x + 30, $y - 7, -1, -1)
+		$x = 210
+		$y = 45
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnBuilder, $x, $y, 32, 32)
+		$x += 10
+		$g_hChkSaveWallBldr = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkSaveWallBldr", "Save ONE builder for Walls"), $x + 30, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkSaveWallBldr_Info_01", "Check this to reserve 1 builder exclusively for walls and") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkSaveWallBldr_Info_02", "reduce the available builder by 1 for other upgrades"))
 			GUICtrlSetState(-1, $GUI_ENABLE)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkSaveWallBldr")
-		$y += 10
+		$y += 20
 		$g_hChkOnly1Builder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkOnly1Builder", "Only Upgrade If Only 1 Builder left"), $x + 30, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkSaveWallBldr_Info_01", "Only Upgrade wall if there is only 1 builder left") & @CRLF & _
 							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkSaveWallBldr_Info_02", "So If builder stacked, it will priority other upgrade"))
 			GUICtrlSetState(-1, $GUI_ENABLE)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkWallOnly1Builder")
-		$y += 17
-		$g_hChkWallOnlyGEFull = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "chkWallOnlyGEFull", "Only Upgrade If Gold or Elixir is Full"), $x + 30, $y, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkSaveWallBldr_Info_01", "Only Upgrade Wall If Gold or Elixir is Full") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "ChkSaveWallBldr_Info_02", "Make sure that wall upgrade is last priority"))
-			GUICtrlSetState(-1, $GUI_ENABLE)
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
-			GUICtrlSetOnEvent(-1, "chkWallOnlyGEFull")
-
-		$x = 225
 		$y += 24
-		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnGold, $x, $y, 16, 16)
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Goldtosave", "Min. Gold to save"), $x + 20, $y, -1, -1)
-		$g_hTxtWallMinGold = GUICtrlCreateInput("250000", $x + 110, $y, 80, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Goldtosave_Info_01", "Save this much Gold after the wall upgrade completes,") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Goldtosave_Info_02", "Set this value to save Gold for other upgrades, or searching."))
-			GUICtrlSetLimit(-1, 8)
-			GUICtrlSetState(-1, $GUI_DISABLE)
-		$y += 22
-		_GUICtrlCreateIcon ($g_sLibIconPath, $eIcnElixir, $x, $y, 16, 16)
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Elixirtosave", "Min. Elixir to save"), $x + 20, $y, -1, -1)
-		$g_hTxtWallMinElixir = GUICtrlCreateInput("250000", $x + 110, $y, 80, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Elixirtosave_Info_01", "Save this much Elixir after the wall upgrade completes,") & @CRLF & _
-							   GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblMin.Elixirtosave_Info_02", "Set this value to save Elixir for other upgrades or troop making."))
-			GUICtrlSetLimit(-1, 8)
-			GUICtrlSetState(-1, $GUI_DISABLE)
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "TargetWall", "Upgrade Wall Level:"), $x + 30, $y + 3, -1, -1)
+		$g_hCmbTargetWallLevel = GUICtrlCreateCombo("", $x + 140, $y, 50, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CmbTargetWallLevel", "Select Wall Level to Upgrade or select Any for any level wall"))
+		GUICtrlSetData(-1, "Any|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17", "Any")
+		GUICtrlSetOnEvent(-1, "cmbWallLevel")
+		$y += 20
+		$g_hLblWallCost = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "WallCost", ""), $x + 20, $y, -1, -1)
+		
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-	$x = 25
-	$y = 160
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "Group_03", "Wall Level And Cost"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 120)
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "LblSearchforWalls", "Walls Level:           Wall Cost:"), $x + 10, $y + 2, -1, -1)
-		$y += 20
-		Local $TxtComboWall = "4|5|6|7|8|9|10|11|12|13|14|15|16"
-		For $z = 0 To 2
-			GUICtrlCreateLabel($z + 1 & ":", $x, $y + 2, -1, 18)
-			$g_hCmbWalls[$z] = GUICtrlCreateCombo("", $x + 15, $y, 50, 18, BitOR($CBS_DROPDOWNLIST, $SS_RIGHT, $CBS_AUTOHSCROLL))
-			GUICtrlSetOnEvent(-1, "cmbWalls")
-			GUICtrlSetData(-1, $TxtComboWall, "4")
-			$y += 22 ; move down to next combobox location
-		Next
-		$x = 120
-		$y = 185
-		For $z = 0 To 2
-			$g_hLblWallCost[$z] = GUICtrlCreateLabel("30 000", $x, $y, 50, -1, $SS_RIGHT)
-			$y += 22 ; move down to next combobox location
-		Next
-
-		$x = 190
-		$y = 160
-		$g_hChkLowLevelAutoUpgradeWall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - ChkLowLevelAutoUpgradeWall", "g_hChkLowLevelAutoUpgradeWall", "Upgrade Low Level Wall using AutoUpgrade"), $x, $y - 2, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - ChkSyncTHLvlWalls", "ChkLowLevelAutoUpgradeWall_Info_01", "Enable Low Wall Level to Upgrade using Auto Upgrade"))
-			GUICtrlSetState(-1, $GUI_ENABLE)
-			GUICtrlSetOnEvent(-1, "ChkLowLevelAutoUpgradeWall")
-		$y += 20
-		GUICtrlCreateLabel("Wall Level Considered as Low:", $x + 30, $y +2)
-		$TxtComboWall = "1|2|3|4|5|6|7|8|9|10"
-		$g_hCmbLowLevelWall = GUICtrlCreateCombo("", $x + 180, $y, 40, 18, BitOR($CBS_DROPDOWNLIST, $SS_RIGHT, $CBS_AUTOHSCROLL))
-			GUICtrlSetOnEvent(-1, "ChkLowLevelAutoUpgradeWall")
-			GUICtrlSetData(-1, $TxtComboWall, "4")
-		$y += 23
-		$g_hChkUpgradeAnyWallLevel = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - ChkLowLevelAutoUpgradeWall", "g_hChkUpgradeAnyWallLevel", "Try Upgrade Any Wall Level"), $x + 30, $y - 2, -1, -1)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - ChkSyncTHLvlWalls", "ChkLowLevelAutoUpgradeWall_Info_01", "Enable Upgrade Any Wall Level if found while search low level wall"))
-			GUICtrlSetState(-1, $GUI_ENABLE)
-			GUICtrlSetOnEvent(-1, "ChkLowLevelAutoUpgradeWall")
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc   ;==>CreateWallsSubTab
 
 

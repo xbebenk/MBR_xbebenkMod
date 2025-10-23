@@ -24,7 +24,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotio
 		If Not SwitchBetweenBases("BB") Then Return ; Switching to Builders Base
 	EndIf
 	
-	ZoomOutHelperBB("SwitchBetweenBases") ;go to BH LowerZone
+	ZoomOutHelperBB() ;go to BH LowerZone
 	
 	Local $bCTBoost = True
 	If $g_bChkCTBoostBlderBz Then
@@ -44,17 +44,17 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotio
 		If $sCTCoords <> "" Then
 			$aCTCoords = StringSplit($sCTCoords, ",", $STR_NOCOUNT)
 			ClickP($aCTCoords)
-			If _Sleep($DELAYCLOCKTOWER1) Then Return
+			If _Sleep(1000) Then Return
 
 			$aCTBoost = findButton("BoostCT") ; Search for Start Clock Tower Boost Button
 			If IsArray($aCTBoost) Then
 				ClickP($aCTBoost)
-				If _Sleep($DELAYCLOCKTOWER1) Then Return
+				If _Sleep(1000) Then Return
 
 				$aCTBoost = findButton("BOOSTBtn") ; Search for Boost Button
 				If IsArray($aCTBoost) Then
 					ClickP($aCTBoost)
-					If _Sleep($DELAYCLOCKTOWER2) Then Return
+					If _Sleep(500) Then Return
 					SetLog("Boosted Clock Tower successfully!", $COLOR_SUCCESS)
 				Else
 					SetLog("Failed to find the BOOST window button", $COLOR_ERROR)

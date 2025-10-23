@@ -14,8 +14,9 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB($Mode = Default)
-	SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
-	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then 
+	If Not $g_bRunState Then Return
+	If $g_bChkDebugAttackBB Then SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
+	If $g_bForceSwitchifNoCGEvent Then 
 		SetLog("ForceSwitchifNoCGEvent Enabled, Skip Attack until we have BBEvent", $COLOR_SUCCESS)
 		Return False
 	EndIf
@@ -24,8 +25,7 @@ Func PrepareAttackBB($Mode = Default)
 	Local $ElixIsFull = isElixirFullBB()
 	
 	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-		SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
-		SetLog("Force BB Attack on Clan Games Enabled", $COLOR_DEBUG)
+		If $g_bChkDebugAttackBB Then SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
 		If _Sleep(1500) Then Return
 		If Not $GoldIsFull And Not $ElixIsFull Then UseBuilderJar()
@@ -44,7 +44,7 @@ Func PrepareAttackBB($Mode = Default)
 	EndIf
 	
 	getBuilderCount(True, True)
-	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull Or $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then
+	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull And $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then
 		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
 		Return False
 	EndIf
@@ -92,6 +92,7 @@ Func PrepareAttackBB($Mode = Default)
 EndFunc
 
 Func ClickBBAttackButton()
+	If Not $g_bRunState Then Return
 	If QuickMis("BC1", $g_sImgBBAttackButton, 16, 590, 110, 630) Then
 		Click(62,615) ;click attack button
 		For $i = 1 To 5
@@ -110,6 +111,7 @@ Func ClickBBAttackButton()
 EndFunc
 
 Func CheckStarsAvail()
+	If Not $g_bRunState Then Return
 	Local $bRet = False, $iRemainStars = 0, $iMaxStars = 0
 	Local $sStars = getOcrAndCapture("coc-BBAttackAvail", 40, 572, 50, 20)
 	
@@ -130,6 +132,7 @@ Func CheckStarsAvail()
 EndFunc
 
 Func CheckMachReady()
+	If Not $g_bRunState Then Return
 	Local $bRet = False
 	
 	If QuickMis("BC1", $g_sImgBBMachReady, 120, 270, 180, 330) Then 
@@ -140,6 +143,7 @@ Func CheckMachReady()
 EndFunc
 
 Func CheckArmyReady()
+	If Not $g_bRunState Then Return
 	local $i = 0
 	local $bReady = True, $bNeedTrain = False, $bTraining = False
 	
@@ -191,12 +195,13 @@ Func CheckArmyReady()
 	Return $bReady
 EndFunc
 
-Func BBDropTrophy()
+Func BBDropTrophy($iDropCount = 3)
+	If Not $g_bRunState Then Return
 	If Not $g_bChkBBDropTrophy Then Return
 	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
 	SetLog("ForceSwitchifNoCGEvent = " & String($g_bForceSwitchifNoCGEvent), $COLOR_DEBUG)
 	
-	If $g_bChkForceBBAttackOnClanGames And $g_bForceSwitchifNoCGEvent Then 
+	If $g_bForceSwitchifNoCGEvent Then 
 		SetLog("ForceSwitchifNoCGEvent Enabled, Skip BBDropTrophy", $COLOR_SUCCESS)
 		Return False
 	EndIf
@@ -209,7 +214,7 @@ Func BBDropTrophy()
 	EndIf
 	
 	Local $iCurrentTrophy = 0
-	For $iLoop = 1 To 3
+	For $iLoop = 1 To $iDropCount
 		$iCurrentTrophy = Number(getTrophyMainScreen(67, 84))
 		SetLog("Current BB Trophy:[" & $iCurrentTrophy & "] BBDropTrophy Limit:[" & $g_iTxtBBTrophyLowerLimit & "]", $COLOR_INFO)
 		If $iCurrentTrophy <= $g_iTxtBBTrophyLowerLimit Then
@@ -263,7 +268,8 @@ Func BBDropTrophy()
 	Return False
 EndFunc
 
-Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False)
+Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False, $realDamage = "100")
+	If Not $g_bRunState Then Return
 	SetLog("Returning Home", $COLOR_SUCCESS)
 	
 	For $i = 1 To 15
@@ -275,7 +281,7 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False)
 			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 510, 470, 570) = True
 				If $bOnlySurender Then 
 					If $g_bChkDebugAttackBB Then SetLog("ExitLoop, bOnlySurender = " & String($bOnlySurender), $COLOR_ACTION)
-					If $bAttackReport THen BBAttackReport("100")
+					If $bAttackReport THen BBAttackReport($realDamage)
 					Return True
 				EndIf
 				Click($g_iQuickMISX, $g_iQuickMISY)
@@ -300,13 +306,15 @@ Func ReturnHomeDropTrophyBB($bOnlySurender = False, $bAttackReport = False)
 EndFunc
 
 Func UseBuilderJar()
+	If Not $g_bRunState Then Return
 	If $g_bChkUseBuilderStarJar then 
 		If QuickMIS("BC1", $g_sImgDirUseJar, 120, 460, 210, 510) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1000) Then Return
-			If QuickMIS("BC1", $g_sImgDirUseJar, 400, 380, 460, 450) Then 
-				Click($g_iQuickMISX, $g_iQuickMISY)
+			If _ColorCheck(_GetPixelColor(420, 430, True), Hex(0x2F93CF, 6), 20) Then
+				Click(420, 430)
 				SetLog("Succesfully use BuilderBase Jar", $COLOR_SUCCESS)
+				If _Sleep(500) Then Return
 			EndIf
 		EndIf
 	EndIf

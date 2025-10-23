@@ -23,7 +23,7 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 	ClickAway()
 	If Not IsMainPage() Then Return
 
-	SetLog("Begin collecting achievement rewards", $COLOR_INFO)
+	SetLog("Checking achievement rewards", $COLOR_INFO)
 	If _Sleep($DELAYCOLLECT2) Then Return
 	Local $Collecting = True, $RewardCollected = False
 	While $Collecting
@@ -31,15 +31,14 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 		;Check if possible rewards available from main screen
 		Local $aImgAchievementsMainScreen = decodeSingleCoord(findImage("AchievementsMainScreen", $g_sImgAchievementsMainScreen, GetDiamondFromRect("5, 60, 70, 2"), 1, True))
 		If UBound($aImgAchievementsMainScreen) > 1 Then
-			SetDebugLog("Achievement counter found on main screen", $COLOR_SUCCESS)
+			SetLog("Achievement counter found on main screen", $COLOR_SUCCESS)
 			Click($aImgAchievementsMainScreen[0] - 10, $aImgAchievementsMainScreen[1] + 20)
 			If _Sleep(1500) Then Return
 		Else
 			If $RewardCollected Then
-				SetLog("All achievement rewards collected", $COLOR_INFO)
+				SetLog("All achievement rewards collected", $COLOR_DEBUG2)
 			Else
-				SetLog("No achievement rewards to collect", $COLOR_INFO)
-				SetDebugLog("Achievement counter not found on main screen", $COLOR_ERROR)
+				SetLog("No achievement rewards to collect", $COLOR_DEBUG2)
 			EndIf
 			ExitLoop
 		EndIf
@@ -50,13 +49,13 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 			SetDebugLog("My Profile window opened successfully", $COLOR_SUCCESS)
 			If _Sleep(2500) Then Return
 		Else
-			SetDebugLog("My Profile window failed to open", $COLOR_ERROR)
+			SetDebugLog("My Profile window failed to open", $COLOR_DEBUG2)
 			ClickAway()
 			ExitLoop
 		EndIf
 
 		If Not CollectAchievementsClaimReward() Then
-			SetLog("There are no achievement rewards to collect", $COLOR_INFO)
+			SetLog("There are no achievement rewards to collect", $COLOR_DEBUG2)
 			Click(700,100) ;Friend Request Tab
 			If _Sleep(1000) Then Return
 			ExitLoop

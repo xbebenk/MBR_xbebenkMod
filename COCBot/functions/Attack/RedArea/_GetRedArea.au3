@@ -79,11 +79,11 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 	CleanRedArea($g_aiPixelTopRight)
 	CleanRedArea($g_aiPixelBottomLeft)
 	CleanRedArea($g_aiPixelBottomRight)
-	If $g_bDebugSetlog Then SetLog("RedArea cleaned")
-	SetLog("[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft", $COLOR_DEBUG)
-	SetLog("[" & UBound($g_aiPixelTopRight) & "] pixels TopRight", $COLOR_DEBUG)
-	SetLog("[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft", $COLOR_DEBUG)
-	SetLog("[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight", $COLOR_DEBUG)
+	SetDebugLog("RedArea cleaned")
+	SetDebugLog("[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft", $COLOR_DEBUG)
+	SetDebugLog("[" & UBound($g_aiPixelTopRight) & "] pixels TopRight", $COLOR_DEBUG)
+	SetDebugLog("[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft", $COLOR_DEBUG)
+	SetDebugLog("[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight", $COLOR_DEBUG)
 	If _Sleep($DELAYRESPOND) Then Return
 
 	;02.03 - MAKE FULL DROP LINE EDGE--------------------------------------------------------------------------------------------------------------------------

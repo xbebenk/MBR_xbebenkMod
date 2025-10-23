@@ -161,7 +161,7 @@ Func txtSinglePBTimeForced()
 		Case 16
 			GUICtrlSetBkColor($g_hTxtSinglePBTimeForced, $COLOR_YELLOW)
 		Case 17 To 999
-			GUICtrlSetBkColor($g_hTxtSinglePBTimeForced, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($g_hTxtSinglePBTimeForced, $COLOR_LIGHTGREEN)
 	EndSwitch
 	Switch Int(GUICtrlRead($g_hTxtPBTimeForcedExit))
 		Case 0 To 11
@@ -169,7 +169,7 @@ Func txtSinglePBTimeForced()
 		Case 12 To 14
 			GUICtrlSetBkColor($g_hTxtPBTimeForcedExit, $COLOR_YELLOW)
 		Case 15 To 999
-			GUICtrlSetBkColor($g_hTxtPBTimeForcedExit, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($g_hTxtPBTimeForcedExit, $COLOR_LIGHTGREEN)
 	EndSwitch
 EndFunc   ;==>txtSinglePBTimeForced
 
@@ -217,23 +217,13 @@ Func chkSwitchAcc()
 		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[Ubound($g_abAccountNo) - 1]
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
-		GUICtrlSetState($g_hChkFastSwitchAcc, $GUI_ENABLE)
 	Else
 		releaseSwitchAccountMutex()
 		For $i = $g_hCmbTotalAccount To $g_ahChkDonate[Ubound($g_abAccountNo) - 1]
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
-		GUICtrlSetState($g_hChkFastSwitchAcc, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkSwitchAcc
-
-Func chkFastSwitchAcc()
-	If GUICtrlRead($g_hChkFastSwitchAcc) = $GUI_CHECKED Then
-		$g_bChkFastSwitchAcc = True
-	Else
-		$g_bChkFastSwitchAcc = False
-	EndIf
-EndFunc
 
 Func cmbSwitchAcc()
 	Return _cmbSwitchAcc()
@@ -294,7 +284,6 @@ Func _cmbSwitchAcc($bReadSaveConfig = True)
 	EndIf
 
 	GUICtrlSetState($g_hChkSwitchAcc, (($bEnable Or ($iCmbSwitchAcc And $bAcquired)) ? $GUI_ENABLE : $GUI_DISABLE))
-	GUICtrlSetState($g_hChkFastSwitchAcc, (($bEnable Or ($iCmbSwitchAcc And $bAcquired)) ? $GUI_ENABLE : $GUI_DISABLE))
 	For $i = $g_hCmbTotalAccount To UBound($g_ahChkDonate) - 1
 		GUICtrlSetState($i, (($bEnable) ? $GUI_ENABLE : $GUI_DISABLE))
 	Next
@@ -309,11 +298,9 @@ Func cmbTotalAcc()
 	
 	If $iCmbTotalAcc > 7 Then
 		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE)
-		GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_DISABLE)
 		GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hRadSwitchSharedPrefs, $GUI_ENABLE)
-		GUICtrlSetState($g_hRadSwitchGooglePlay, $GUI_ENABLE)
 		GUICtrlSetState($g_hRadSwitchSuperCellID, $GUI_ENABLE)
 	EndIf
 	
@@ -339,7 +326,8 @@ Func chkAccount($i)
 EndFunc   ;==>chkAccount
 
 Func btnSaveToAllOpen()
-	GUISetState(@SW_SHOW, $g_hGUI_SaveToProfiles)
+	GUISetCoord($g_iFrmBotPosX, $g_iFrmBotPosY + 200, Default, Default, $g_hGUI_SaveToProfiles)
+	GUISetState(@SW_SHOWNORMAL, $g_hGUI_SaveToProfiles)
 	Local $aActiveProfile = AccountNoActive()
 	For $i = 0 To UBound($aActiveProfile) - 1
 		If $aActiveProfile[$i] Then 
@@ -462,11 +450,6 @@ Func chkDebugDisableZoomout()
 	$g_bDebugDisableZoomout = (GUICtrlRead($g_hChkDebugDisableZoomout) = $GUI_CHECKED)
 	SetDebugLog("DebugDisableZoomout " & ($g_bDebugDisableZoomout ? "enabled" : "disabled"))
 EndFunc   ;==>chkDebugDisableZoomout
-
-Func chkDebugDisableVillageCentering()
-	$g_bDebugDisableVillageCentering = (GUICtrlRead($g_hChkDebugDisableVillageCentering) = $GUI_CHECKED)
-	SetDebugLog("DebugDisableVillageCentering " & ($g_bDebugDisableVillageCentering ? "enabled" : "disabled"))
-EndFunc   ;==>chkDebugDisableVillageCentering
 
 Func chkDebugDeadbaseImage()
 	$g_bDebugDeadBaseImage = (GUICtrlRead($g_hChkDebugDeadbaseImage) = $GUI_CHECKED)
@@ -613,26 +596,26 @@ EndFunc
 ;iCol = TroopType [1 = Barb, 2 = Arch]
 
 Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
-	If Not OpenArmyOverview() Then Return
-	If Not OpenArmyTab() Then Return
+	If Not OpenArmyOverview(False) Then Return
+	If Not OpenArmyTab(False) Then Return
 	Local $iX = ($iCol = 1) ? 120 : 200
 	Local $sTroopName =  ($iCol = 1) ? "Barbarian" : "Archer"
-	
+	Local $aCamp[2] = [155, 170]
 	$iSleep = ($iCol = 1) ? $iSleep : $iSleep + 1000
 	If $bBoost Then $iSleep = $iSleep * 0.2
 	
-	Local $ArmyCap = getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], True)
+	Local $ArmyCap = getArmyCampCap($aCamp[0], $aCamp[1])
 	If StringInStr($ArmyCap, "#") Then 
 		Local $aArmyCap = StringSplit($ArmyCap, "#", $STR_NOCOUNT)
 		If IsArray($aArmyCap) And Ubound($aArmyCap) = 2 Then 
 			For $i = $aArmyCap[0] + 1 To $aArmyCap[1]
 				If Not $g_bRunState Then Return
 				SetLog("[" & $i & "] Train 1x " & $sTroopName, $COLOR_ACTION)
-				If Not OpenTroopsTab() Then Return
+				If Not OpenTroopsTab(False) Then Return
 				Click($iX, 400)
 				If Not $g_bRunState Then Return
 				If _Sleep($iSleep) Then Return
-				Local $aTmpTroop = StringSplit(getArmyCapacityOnTrainTroops(95, 163), "#", $STR_NOCOUNT)
+				Local $aTmpTroop = StringSplit(getArmyCapacityOnTrainTroops(96, 165), "#", $STR_NOCOUNT)
 				If Not $g_bRunState Then Return
 				If IsArray($aTmpTroop) And UBound($aTmpTroop) = 2 Then
 					If $aTmpTroop[0] = $i Then
@@ -648,8 +631,8 @@ Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
 				EndIf
 				
 				If Not $g_bRunState Then Return
-				If Not OpenArmyTab() Then Return
-				Local $aTmpCamp = StringSplit(getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], True), "#", $STR_NOCOUNT)
+				If Not OpenArmyTab(False) Then Return
+				Local $aTmpCamp = StringSplit(getArmyCampCap($aCamp[0], $aCamp[1]), "#", $STR_NOCOUNT)
 				If IsArray($aTmpCamp) And UBound($aTmpCamp) = 2 Then 
 					If $aTmpCamp[0] = $i Then 
 						SetLog(" -- Army Capacity = " & $aTmpCamp[0], $COLOR_DEBUG1)
@@ -657,7 +640,7 @@ Func TestTrainCap($iCol = 1, $bBoost = False, $iSleep = 5500)
 						SetLog(" -- Expected:" & $i & ", Read:" & $aTmpCamp[0], $COLOR_ERROR)
 						SetLog(" -- Army Capacity Not read properly", $COLOR_ERROR)
 						SetLog(" -- Check on your Profile/Temp/Debug/TestTrainCap Folder", $COLOR_INFO)
-						_CaptureRegion2($aArmyCampSize[0], $aArmyCampSize[1], $aArmyCampSize[0] + 80, $aArmyCampSize[1] + 16)
+						_CaptureRegion2($aCamp[0], $aCamp[1], $aCamp[0] + 80, $aCamp[1] + 16)
 						SaveDebugImage("TestTrainCap", False)
 						ExitLoop
 					EndIf
@@ -821,7 +804,6 @@ Func btnTestImage()
 		SetLog("Testing waitMainScreenMini DONE, $Result=" & $result, $COLOR_SUCCESS)
 
 		SetLog("Testing WaitForClouds...", $COLOR_SUCCESS)
-		SetLog("$aNoCloudsAttack pixel check: " & _CheckPixel($aNoCloudsAttack, $g_bCapturePixel))
 		SetLog("Testing WaitForClouds DONE", $COLOR_SUCCESS)
 
 	Next
@@ -901,7 +883,7 @@ Func btnTestDeadBase()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
 
-	SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestDeadBase")
+	SearchZoomOut(False, True, "btnTestDeadBase")
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
 	SetLog("FindTownhall() = " & FindTownhall(True), $COLOR_INFO)
@@ -960,7 +942,7 @@ Func btnTestAttackCSV()
 	; reset village measures
 	setVillageOffset(0, 0, 1)
 	ConvertInternalExternArea()
-	;SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
+	
 	If Not CheckZoomOut("btnTestAttackCSV") Then
 		SetLog("CheckZoomOut failed", $COLOR_INFO)
 	EndIf
@@ -1001,10 +983,6 @@ Func btnTestGetLocationBuilding()
 	$g_bDebugBuildingPos = True
 	$g_bDebugSetlog = True
 
-	; reset village measures
-	setVillageOffset(0, 0, 1)
-	ConvertInternalExternArea()
-	;SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestAttackCSV")
 	If Not CheckZoomOut("btnTestGetLocationBuilding") Then
 		SetLog("CheckZoomOut failed", $COLOR_INFO)
 	EndIf
@@ -1245,7 +1223,7 @@ Func btnTestCleanYard()
 	BeginImageTest()
 	Local $result
 	SetLog("Testing CleanYard", $COLOR_INFO)
-	SearchZoomOut($aCenterEnemyVillageClickDrag, True, "btnTestCleanYard")
+	SearchZoomOut(False, True, "btnTestCleanYard")
 	$result = CleanYard()
 	$result = ((IsArray($result)) ? (_ArrayToString($result, ",")) : ($result))
 	If @error Then $result = "Error " & @error & ", " & @extended & ", "

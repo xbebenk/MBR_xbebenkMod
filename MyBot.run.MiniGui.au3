@@ -769,9 +769,6 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 		Case $GUI_EVENT_CLOSE, $g_hLblBotClose
 			; Clean up resources
 			BotCloseRequest()
-		Case $g_hFrmBot_URL_PIC, $g_hFrmBot_URL_PIC2
-			;OpenURL_Label($g_hLblMyBotURL)
-			OpenURL_Label("https://mybot.run/forums")
 		Case $g_hLblDonate
 			; Donate URL is not in text nor tooltip
 			ShellExecute("https://mybot.run/forums/index.php?/donate/make-donation/")
@@ -1067,7 +1064,6 @@ Func BotStopped()
 	; hide attack buttons if show
 	;GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 	;GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
-	;GUICtrlSetState($g_hBtnAttackNowTS, $GUI_HIDE)
 	;GUICtrlSetState($g_hPicTwoArrowShield, $GUI_SHOW)
 	;GUICtrlSetState($g_hLblVersion, $GUI_SHOW)
 

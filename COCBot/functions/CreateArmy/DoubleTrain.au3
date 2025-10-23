@@ -18,15 +18,14 @@
 Func DoubleTrain()
 	If Not $g_bDoubleTrain Then Return
 	If IsProblemAffect() Then Return
-	Local $bDebug = $g_bDebugSetlogTrain Or $g_bDebugSetlog
-
+	
 	SetLog(" ====== Double Train ====== ", $COLOR_ACTION)
 	
 	; Troop
-	DoubleTrainTroop($bDebug)
+	DoubleTrainTroop()
 	If IsProblemAffect() Then Return
 	; Spell
-	DoubleTrainSpell($bDebug)
+	DoubleTrainSpell()
 	If IsProblemAffect() Then Return
 EndFunc   ;==>DoubleTrain
 
@@ -48,47 +47,23 @@ Func TrainFullTroop($bQueue = False)
 	TrainUsingWhatToTrain($ToReturn, $bQueue)
 	If _Sleep(500) Then Return
 	
-	If $g_bIgnoreIncorrectTroopCombo Then
-		FillIncorrectTroopCombo("TrainFullTroop")
-	EndIf
+	If Not $bQueue Then RemoveTrainTroop(True) ;remove excess queue troops 
 EndFunc   ;==>TrainFullTroop
 
 Func FillIncorrectTroopCombo($caller = "Unknown")
 	If Not $g_bIgnoreIncorrectTroopCombo Then Return
 	SetLog("Train to Fill Incorrect Troop Combo", $COLOR_ACTION)
-	
-	If Not OpenTroopsTab(True, "FillIncorrectTroopCombo()") Then Return
-	Local $CampOCR = GetCurrentArmy(95, 163)
-	If Not $g_bRunState Then Return
-	
-	If $g_bDebugSetlog Then SetLog("CampOCR:" & _ArrayToString($CampOCR) & " Called from : " & $caller)
-	
-	If $CampOCR[0] = 0 Then ;no troop trained on 1st army 
-		SetLog("no need to fill troop on 1st army", $COLOR_DEBUG1)
-		Return
-	EndIf
-	
-	If $CampOCR[2] = 0 Or $CampOCR[0] = ($CampOCR[1] * 2) Then ;no troop trained on 2nd Army
-		SetLog("no need to fill troop on 2nd Army", $COLOR_DEBUG1)
-		Return
-	EndIf
-	
-	Local $bQueue = $CampOCR[2] < 0 ? True : False ;campOCR[2] read is remain space to train, negative value on 2nd army
-	Local $TroopSpace = $bQueue ? (Number($CampOCR[1]) * 2) - Number($CampOCR[0]) : Number($CampOCR[2])
-	If $TroopSpace < 0 Then Return
-	SetLog("TroopSpace = " & $TroopSpace, $COLOR_DEBUG)
-	
+	Click(500, 260, 1, 100, "Click Train Troops")
+	If _Sleep(1000) Then Return
 	Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
 	Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
 	Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
-	Local $TroopQuantToFill = Floor($TroopSpace/$g_sCmbFICTroops[$FillTroopIndex][2])
-	SetLog("TroopQuantToFill = x" & $TroopQuantToFill & " " & $sTroopName, $COLOR_DEBUG)
+	Local $TroopQuantToFill = 5
+	SetLog("Troop To Fill = " & $sTroopName, $COLOR_DEBUG)
 	
-	If $TroopQuantToFill > 0 Then
-		If Not DragIfNeeded($g_sCmbFICTroops[$FillTroopIndex][0]) Then Return False
-		SetLog("Training " & $TroopQuantToFill & "x " & $sTroopName, $COLOR_SUCCESS)
-		TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
-	EndIf
+	TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
+	ClickAway()
+	If _Sleep(500) Then Return
 EndFunc
 
 Func BrewFullSpell($bQueue = False)
@@ -105,50 +80,30 @@ Func BrewFullSpell($bQueue = False)
 	Next
 
 	If $ToReturn[0][0] = "Arch" And $ToReturn[0][1] = 0 And Not $g_bIgnoreIncorrectSpellCombo Then Return
-
+	
 	BrewUsingWhatToTrain($ToReturn, $bQueue)
 	If _Sleep(500) Then Return
 
-	If $g_bIgnoreIncorrectSpellCombo Then
-		FillIncorrectSpellCombo("BrewFullSpell")
-	EndIf
+	If Not $bQueue Then RemoveTrainSpell(True) ;remove excess queue Spells 
+	
 EndFunc   ;==>BrewFullSpell
 
 Func FillIncorrectSpellCombo($caller = "Unknown")
+
 	If Not $g_bIgnoreIncorrectSpellCombo Then Return
 	SetLog("Train to Fill Incorrect Spell Combo", $COLOR_ACTION)
-	
-	If Not OpenSpellsTab(True, "FillIncorrectSpellCombo()") Then Return
-	Local $SpellOCR = GetCurrentArmy(95, 163)
-	If Not $g_bRunState Then Return
-	
-	If $g_bDebugSetlog Then SetLog("SpellOCR:" & _ArrayToString($SpellOCR) & " Called from : " & $caller)
-	
-	If $SpellOCR[0] = 0 Then ;no troop trained on 1st army 
-		SetLog("no need to fill troop on 1st army", $COLOR_DEBUG1)
-		Return
-	EndIf
-	
-	If $SpellOCR[2] = 0 Or $SpellOCR[0] = ($SpellOCR[1] * 2) Then ;no troop trained on 2nd Army
-		SetLog("no need to fill troop on 2nd Army", $COLOR_DEBUG1)
-		Return
-	EndIf
-	
-	Local $bQueue = $SpellOCR[2] < 0 ? True : False ;SpellOCR[2] read is remain space to train, negative value on 2nd army
-	Local $SpellSpace = $bQueue ? (Number($SpellOCR[1]) * 2) - Number($SpellOCR[0]) : Number($SpellOCR[2])
-	If $SpellSpace < 0 Then Return
-	SetLog("SpellSpace = " & $SpellSpace, $COLOR_DEBUG)
-	
+	Click(500, 370, 1, 100, "Click Train Spells")
+	If _Sleep(1000) Then Return
 	Local $FillSpellIndex = $g_iCmbFillIncorrectSpellCombo
 	Local $sSpellName = $g_sCmbFICSpells[$FillSpellIndex][1]
 	Local $iSpellIndex = TroopIndexLookup($g_sCmbFICSpells[$FillSpellIndex][0])
-	Local $SpellQuantToFill = Floor($SpellSpace/$g_sCmbFICSpells[$FillSpellIndex][2])
+	Local $SpellQuantToFill = 1
 	
-	If $SpellQuantToFill > 0 Then
-		If Not DragIfNeeded($g_sCmbFICSpells[$FillSpellIndex][0]) Then Return False
-		SetLog("Training " & $SpellQuantToFill & "x " & $sSpellName, $COLOR_SUCCESS)
-		TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
-	EndIf
+	SetLog("Spell To Fill = " & $sSpellName, $COLOR_DEBUG)
+	TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)
+	ClickAway()
+	If _Sleep(500) Then Return
+	
 EndFunc
 
 Func TopUpUnbalancedSpell($iUnbalancedSpell = 0)
@@ -178,81 +133,119 @@ Func TopUpUnbalancedSpell($iUnbalancedSpell = 0)
 
 EndFunc   ;==>IsBrewOnlyOneType
 
-Func GetCurrentArmy($x_start, $y_start)
+Func GetCurrentTroop($x_start = 96, $y_start = 165)
 
-	Local $aResult[3] = [0, 0, 0]
+	Local $aResult[4] = [0, 0, 0, 0]
+	Local $iLenght, $x1, $iTroopCap = 0, $iTroopQuant = 0
 	If Not $g_bRunState Then Return $aResult
-
-	; [0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
 	
-	If _Sleep(500) Then Return ; wait until number stop changing
-	
-	Local $iOCRResult = getArmyCapacityOnTrainTroops($x_start, $y_start)
-
-	If StringInStr($iOCRResult, "#") Then
-		Local $aTempResult = StringSplit($iOCRResult, "#", $STR_NOCOUNT)
-		$aResult[0] = Number($aTempResult[0])
-		$aResult[1] = Number($aTempResult[1]) / 2
-		$aResult[2] = $aResult[1] - $aResult[0]
+	If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 70, $y_start + 15) Then
+		$iLenght = $g_iQuickMISX - $x_start
+		$x1 = $g_iQuickMISX
 	Else
-		SetLog("DEBUG | ERROR on GetCurrentArmy", $COLOR_ERROR)
+		SetLog("DEBUG | ERROR on GetCurrentTroop Find Slash", $COLOR_ERROR)
+		Return $aResult
 	EndIf
-
+	
+	$iTroopCap = getArmyCapacityOnTrainTroops($x1, $y_start)
+	
+	Select 
+		Case $iTroopCap > 0 And $iTroopCap < 241
+			$iTroopQuant = getArmyCapacityOnTrainTroops($x_start, $y_start, $iLenght)
+		Case $iTroopCap > 239 And $iTroopCap < 281
+			$iTroopQuant = getArmyCapacityOnTrainTroops240($x_start, $y_start, $iLenght)
+		Case Else
+			$iTroopQuant = getArmyCapacityOnTrainTroops($x_start, $y_start, $iLenght)
+	EndSelect
+	
+	$iTroopQuant = StringReplace($iTroopQuant, "#", "")
+	$iTroopCap = StringReplace($iTroopCap, "#", "")
+	
+	$aResult[0] = Number($iTroopQuant)
+	$aResult[1] = Number($iTroopCap) / 2
+	$aResult[2] = $aResult[1] - $aResult[0]
+	$aResult[3] = Number($iTroopCap)
+	
 	Return $aResult
 
 EndFunc   ;==>GetCurrentArmy
 
-Func GetCurrentSpell($x_start, $y_start)
+Func GetCurrentSpell($x_start = 96, $y_start = 165)
 
-	Local $aResult[3] = [0, 0, 0]
+	Local $aResult[4] = [0, 0, 0, 0]
+	Local $iLenght, $x1, $iSpellCap = 0, $iSpellQuant = 0
 	If Not $g_bRunState Then Return $aResult
-
-	; [0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
 	
-	If _Sleep(500) Then Return ; wait until number stop changing
-	
-	Local $iOCRResult = getArmyCapacityOnTrainSpell($x_start, $y_start)
-
-	If StringInStr($iOCRResult, "#") Then
-		Local $aTempResult = StringSplit($iOCRResult, "#", $STR_NOCOUNT)
-		$aResult[0] = Number($aTempResult[0])
-		$aResult[1] = Number($aTempResult[1]) / 2
-		$aResult[2] = $aResult[1] - $aResult[0]
+	If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 40, $y_start + 15) Then
+		$iLenght = $g_iQuickMISX - $x_start
+		$x1 = $g_iQuickMISX
 	Else
-		SetLog("DEBUG | ERROR on GetCurrentSpell", $COLOR_ERROR)
+		SetLog("DEBUG | ERROR on GetCurrentSpell Find Slash", $COLOR_ERROR)
+		Return $aResult
 	EndIf
-
+	
+	Local $iSpellCap = getArmyCapacityOnTrainSpell($x1, $y_start)
+	Local $iSpellQuant = getArmyCapacityOnTrainSpell($x_start, $y_start, $iLenght)
+	
+	$iSpellQuant = StringReplace($iSpellQuant, "#", "")
+	$iSpellCap = StringReplace($iSpellCap, "#", "")
+	
+	$aResult[0] = Number($iSpellQuant)
+	$aResult[1] = Number($iSpellCap) / 2
+	$aResult[2] = $aResult[1] - $aResult[0]
+	$aResult[3] = Number($iSpellCap)
+	
 	Return $aResult
-
 EndFunc   ;==>GetCurrentSpell
 
-Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCurrentArmy(95, 163)
+Func GetCurrentSiege($x_start = 105, $y_start = 165)
+
+	Local $aResult[4] = [0, 0, 0, 0]
+	Local $iLenght, $x1, $iSiegeCap = 0, $iSiegeQuant = 0
+	If Not $g_bRunState Then Return $aResult
+	
+	If QuickMIS("BC1", $g_sImgSlash, $x_start, $y_start, $x_start + 40, $y_start + 15) Then
+		$iLenght = $g_iQuickMISX - $x_start
+		$x1 = $g_iQuickMISX
+	Else
+		SetLog("DEBUG | ERROR on GetCurrentSiege Find Slash", $COLOR_ERROR)
+		Return $aResult
+	EndIf
+	
+	Local $iSiegeCap = getArmyCapacityOnTrainTroops($x1, $y_start)
+	Local $iSiegeQuant = getArmyCapacityOnTrainTroops($x_start, $y_start, $iLenght)
+	
+	$iSiegeQuant = StringReplace($iSiegeQuant, "#", "")
+	$iSiegeCap = StringReplace($iSiegeCap, "#", "")
+	
+	$aResult[0] = Number($iSiegeQuant)
+	$aResult[1] = Number($iSiegeCap) / 2
+	$aResult[2] = $aResult[1] - $aResult[0]
+	$aResult[3] = Number($iSiegeCap)
+	
+	Return $aResult
+EndFunc   ;==>GetCurrentSpell
+
+Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default) ;GetCurrentTroop(95, 163)
 	If Not OpenTroopsTab(True, "CheckQueueTroopAndTrainRemain()") Then Return
-	If $ArmyCamp = Default Then $ArmyCamp = GetCurrentArmy(95, 163)
+	If $ArmyCamp = Default Then $ArmyCamp = GetCurrentTroop(95, 163)
 	If Not $g_bRunState Then Return
 	If $ArmyCamp[0] = $ArmyCamp[1] * 2 And ((ProfileSwitchAccountEnabled() And $g_abAccountNo[$g_iCurAccount] And $g_abDonateOnly[$g_iCurAccount]) Or $g_iCommandStop = 0) Then Return True ; bypass Donate account when full queue
 	
 	Local $iTotalQueue = 0
 	SetLog("Checking troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG1)
-	If $g_bTrainPreviousArmy Then 
-		While _ColorCheck(_GetPixelColor(265, 197, True), Hex(0xFFFFFF, 6), 20, Default, "Army Added Message")
-			If Not $g_bRunState Then Return
-			SetLog("Army Added Message Blocking, Waiting until it's gone", $COLOR_INFO)
-			If _Sleep(500) Then Return
-		WEnd
-	EndIf
 	
-	Local $XQueueStart = FindxQueueStart()
-	Local $aiQueueTroops = CheckQueueTroops(True, $bDebug, $XQueueStart)
-	;CheckQueueTroops(True, True, FindxQueueStart())
+	Local $aiQueueTroops = CheckQueueTroops(True, True, FindxQueueStart())
 	If Not IsArray($aiQueueTroops) Then Return False
 	For $i = 0 To UBound($aiQueueTroops) - 1
-		If $aiQueueTroops[$i] > 0 Then $iTotalQueue += $aiQueueTroops[$i] * $g_aiTroopSpace[$i]
+		If $aiQueueTroops[$i] > 0 Then 
+			$iTotalQueue += $aiQueueTroops[$i] * $g_aiTroopSpace[$i]
+			SetLog($g_asTroopNames[$i] & " : " & $aiQueueTroops[$i] & "x" & $g_aiTroopSpace[$i] & ", TotalQueue=" & $iTotalQueue, $COLOR_DEBUG1)
+		EndIf
 	Next
 	
 	;check wrong camp utilization
 	If $ArmyCamp[1] <> $g_iTotalCampSpace Then 
-		;SetLog("$ArmyCamp[1] <> $g_iTotalCampSpace", $COLOR_ERROR)
 		Local $countTroop = 0
 		For $i = 0 To UBound($g_aiArmyCompTroops) - 1
 			$countTroop += $g_aiArmyCompTroops[$i]
@@ -264,6 +257,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 	If $ArmyCamp[0] < $ArmyCamp[1] + $iTotalQueue Then
 		SetLog("$ArmyCamp[0] = " & $ArmyCamp[0] & " < $ArmyCamp[1] + $iTotalQueue = " & $ArmyCamp[1] + $iTotalQueue)
 		SetLog("A big guy blocks our camp")
+		RemoveQueueTroop(0, 1, True)
 		Return False
 	EndIf
 	
@@ -283,7 +277,7 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 	
 	If $bExcessTroop Then 
 		If _Sleep(1500) Then Return
-		$ArmyCamp = GetCurrentArmy(95, 163)
+		$ArmyCamp = GetCurrentTroop(95, 163)
 		SetLog("After excess troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG1)
 		;Return True
 	EndIf
@@ -304,30 +298,27 @@ Func CheckQueueTroopAndTrainRemain($ArmyCamp = Default, $bDebug = False) ;GetCur
 		Next
 		TrainUsingWhatToTrain($rWTT, True)
 	EndIf
+	
 	Return True
 EndFunc   ;==>CheckQueueTroopAndTrainRemain
 
 Func CheckQueueSpellAndTrainRemain($ArmyCamp = Default, $bDebug = False)
 	If Not OpenSpellsTab(True, "CheckQueueTroopAndTrainRemain()") Then Return
-	If $ArmyCamp = Default Then $ArmyCamp = GetCurrentArmy(95, 163)
+	If $ArmyCamp = Default Then $ArmyCamp = GetCurrentSpell(95, 163)
 	If Not $g_bRunState Then Return
 	If $ArmyCamp[0] = $ArmyCamp[1] * 2 And ((ProfileSwitchAccountEnabled() And $g_abAccountNo[$g_iCurAccount] And $g_abDonateOnly[$g_iCurAccount]) Or $g_iCommandStop = 0) Then Return True ; bypass Donate account when full queue
 	
 	Local $iTotalQueue = 0
 	SetLog("Checking spell queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG1)
-	If $g_bTrainPreviousArmy Then 
-		While _ColorCheck(_GetPixelColor(265, 197, True), Hex(0xFFFFFF, 6), 20, Default, "Army Added Message")
-			If Not $g_bRunState Then Return
-			SetLog("Army Added Message Blocking, Waiting until it's gone", $COLOR_INFO)
-			If _Sleep(500) Then Return
-		WEnd
-	EndIf
 	
+	;CheckQueueSpells(True, True, FindxQueueStart())
 	Local $aiQueueSpells = CheckQueueSpells(True, $bDebug, FindxQueueStart())
-	;CheckQueueSpells(True, True, 777)
 	If Not IsArray($aiQueueSpells) Then Return False
 	For $i = 0 To UBound($aiQueueSpells) - 1
-		If $aiQueueSpells[$i] > 0 Then $iTotalQueue += $aiQueueSpells[$i] * $g_aiSpellSpace[$i]
+		If $aiQueueSpells[$i] > 0 Then 
+			$iTotalQueue += $aiQueueSpells[$i] * $g_aiSpellSpace[$i]
+			SetLog($g_asSpellNames[$i] & " : " & $aiQueueSpells[$i] & "x" & $g_aiSpellSpace[$i] & ", TotalQueue=" & $iTotalQueue, $COLOR_DEBUG1)
+		EndIf
 	Next
 	
 	;check wrong camp utilization
@@ -344,6 +335,7 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp = Default, $bDebug = False)
 	If $ArmyCamp[0] < $ArmyCamp[1] + $iTotalQueue Then
 		SetLog("$ArmyCamp[0] = " & $ArmyCamp[0] & " < $ArmyCamp[1] + $iTotalQueue = " & $ArmyCamp[1] + $iTotalQueue)
 		SetLog("A big guy blocks our camp")
+		RemoveQueueSpell(0, 1, True)
 		Return False
 	EndIf
 	
@@ -363,7 +355,7 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp = Default, $bDebug = False)
 	
 	If $bExcessSpell Then 
 		If _Sleep(1500) Then Return
-		$ArmyCamp = GetCurrentArmy(95, 163)
+		$ArmyCamp = GetCurrentTroop(95, 163)
 		SetLog("After excess troop queue: " & $ArmyCamp[0] & "/" & $ArmyCamp[1] * 2, $COLOR_DEBUG1)
 		;Return True
 	EndIf
@@ -385,7 +377,7 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp = Default, $bDebug = False)
 		BrewUsingWhatToTrain($rWTT, True)
 
 		If _Sleep(1000) Then Return
-		Local $NewSpellCamp = GetCurrentArmy(95, 163)
+		Local $NewSpellCamp = GetCurrentTroop(95, 163)
 		SetLog("Checking spell tab: " & $NewSpellCamp[0] & "/" & $NewSpellCamp[1] * 2 & ($NewSpellCamp[0] < $ArmyCamp[1] * 2 ? ". Top-up queue failed!" : ""))
 		If Not $g_bIgnoreIncorrectSpellCombo Then
 			If $NewSpellCamp[0] < $ArmyCamp[1] * 2 Then Return False
@@ -394,32 +386,58 @@ Func CheckQueueSpellAndTrainRemain($ArmyCamp = Default, $bDebug = False)
 	Return True
 EndFunc   ;==>CheckQueueSpellAndTrainRemain
 
-Func FindxQueueStart()
-	Local $xQueueStart = 777
-	For $i = 0 To 10
-		If _ColorCheck(_GetPixelColor(777 - $i * 60, 186, True), Hex(0xD7AFA9, 6), 20) Then ; first pink background from right to left
-			$XQueueStart -= 60 * $i
+Func FindxQueueStart($iSearchWidth = 59)
+	Local $xStart = 777, $xQueueStart = 0
+	Local $x1 = $xStart - $iSearchWidth
+	Local $x2 = $xStart
+	
+	For $i = 0 To 100
+		If $g_bDebugSetlog Then SetLog("[" & $i & "] x1=" & $x1 & ", x2=" & $x2, $COLOR_DEBUG1)
+		If $x1 < 120 Then 
+			If $g_bDebugSetlog Then SetLog("Pink background not found", $COLOR_ERROR)
+			Return $x1
+		EndIf
+		
+		If _PixelSearch($x1 + 2, 185, $x1 + 3, 186, Hex(0xD7AFA9, 6), 20, True, "FindxQueueStart") Then ; first pink background from right to left
+			$xQueueStart = $x2
 			ExitLoop
+		Else
+			$x1 -= $iSearchWidth + 1
+			$x2 = $x1 + $iSearchWidth
 		EndIf
 	Next
 	If $g_bDebugSetlog Then SetLog("xQueueStart = " & $xQueueStart, $COLOR_DEBUG)
 	Return $xQueueStart
 EndFunc
 
-Func RemoveQueueTroop($iTroopIndex = 0, $Quantity = 1)
+Func RemoveQueueTroop($iTroopIndex = 0, $Quantity = 1, $bRightToLeft = False)
 	SetLog("RemoveQueueTroop TroopIndex = " & $iTroopIndex & ", Quantity = " & $Quantity, $COLOR_DEBUG1)
+	If Not OpenTroopsTab(True, "RemoveQueueTroop") Then Return
 	Local $YRemove = 200, $XOffset = 15
-	Local $XQueueStart = FindxQueueStart()
-	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\TroopsQueued"
-	Local $aiQueueTroops = SearchArmy($Dir, 73, 205, $XQueueStart, 243, "Queue")
-	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\TroopsQueued", 73, 205, FindxQueueStart(), 243, "Queue")
+	Local $aiQueueTroops = SearchArmy($g_sImgArmyOverviewTroopsQueued, 73, 205, FindxQueueStart(), 243, "Queue")
+	
 	If Not IsArray($aiQueueTroops) Then Return 
-	_ArraySort($aiQueueTroops, 0, 0, 0, 1) ;sort by x coord
+	If $bRightToLeft Then 
+		_ArraySort($aiQueueTroops, 1, 0, 0, 1) ;sort by x coord descending
+	Else
+		_ArraySort($aiQueueTroops, 0, 0, 0, 1) ;sort by x coord ascending
+	EndIf
+	
 	If $g_bDebugSetlog Then SetLog(_ArrayToString($aiQueueTroops))
 	If Not $g_bRunState Then Return
 	For $i = 0 To UBound($aiQueueTroops) - 1
 		If Not $g_bRunState Then Return
-		If TroopIndexLookup($aiQueueTroops[$i][0]) = $iTroopIndex Then 
+		
+		Local $iIndex = TroopIndexLookup($aiQueueTroops[$i][0])
+		If $bRightToLeft And $i = 0 Then ;only remove one most right spell
+			SetLog("Remove Big Guy on queue", $COLOR_DEBUG1)
+			SetLog("Found x" & $aiQueueTroops[$i][3] & " " & $g_asTroopNames[$iIndex], $COLOR_DEBUG)
+			SetLog("  - Removing x" & $aiQueueTroops[$i][3] & " queued " & $g_asTroopNames[$iIndex], $COLOR_ACTION)
+			Click($aiQueueTroops[$i][1] + $XOffset, $YRemove, $aiQueueTroops[$i][3], $g_iTrainClickDelay, "Remove Big Guy on queue")
+			Return True
+		EndIf
+		
+		If $iIndex = $iTroopIndex Then 
 			If $aiQueueTroops[$i][3] < $Quantity Then
 				SetLog("Found x" & $aiQueueTroops[$i][3] & " " & $g_asTroopNames[$iTroopIndex], $COLOR_DEBUG)
 				SetLog("  - Removing x" & $aiQueueTroops[$i][3] & " queued " & $g_asTroopNames[$iTroopIndex], $COLOR_ACTION)
@@ -438,19 +456,33 @@ Func RemoveQueueTroop($iTroopIndex = 0, $Quantity = 1)
 	Next
 EndFunc
 
-Func RemoveQueueSpell($iSpellIndex = 0, $Quantity = 1)
+Func RemoveQueueSpell($iSpellIndex = 0, $Quantity = 1, $bRightToLeft = False)
 	SetLog("RemoveQueueSpell SpellIndex = " & $iSpellIndex & ", Quantity = " & $Quantity, $COLOR_DEBUG1)
+	If Not OpenSpellsTab(True, "RemoveQueueSpell") Then Return
 	Local $YRemove = 200, $XOffset = 15
-	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued"
-	Local $aiQueueSpells = SearchArmy($Dir, 73, 205, FindxQueueStart(), 243, "Queue")
-	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\SpellsQueued", 73, 205, FindxQueueStart(), 243, "Queue")
+	Local $aiQueueSpells = SearchArmy($g_sImgArmyOverviewSpellsQueued, 73, 205, FindxQueueStart(), 243, "Queue")
+	
 	If Not IsArray($aiQueueSpells) Then Return 
-	_ArraySort($aiQueueSpells, 0, 0, 0, 1) ;sort by x coord
+	If $bRightToLeft Then 
+		_ArraySort($aiQueueSpells, 1, 0, 0, 1) ;sort by x coord descending
+	Else
+		_ArraySort($aiQueueSpells, 0, 0, 0, 1) ;sort by x coord ascending
+	EndIf
+	
 	If $g_bDebugSetlog Then SetLog(_ArrayToString($aiQueueSpells))
 	If Not $g_bRunState Then Return
 	For $i = 0 To UBound($aiQueueSpells) - 1
 		If Not $g_bRunState Then Return
 		Local $iIndex = TroopIndexLookup($aiQueueSpells[$i][0]) - $eLSPell
+		
+		If $bRightToLeft And $i = 0 Then ;only remove one most right spell
+			SetLog("Remove Big Guy on queue", $COLOR_DEBUG1)
+			SetLog("Found x" & $aiQueueSpells[$i][3] & " " & $g_asSpellNames[$iIndex], $COLOR_DEBUG)
+			SetLog("  - Removing x" & $aiQueueSpells[$i][3] & " queued " & $g_asSpellNames[$iIndex], $COLOR_ACTION)
+			Click($aiQueueSpells[$i][1] + $XOffset, $YRemove, $aiQueueSpells[$i][3], $g_iTrainClickDelay, "Remove Big Guy on queue")
+			Return True
+		EndIf
+		
 		If $iIndex = $iSpellIndex Then 
 			If $aiQueueSpells[$i][3] < $Quantity Then
 				SetLog("Found x" & $aiQueueSpells[$i][3] & " " & $g_asSpellNames[$iSpellIndex], $COLOR_DEBUG)
@@ -478,7 +510,6 @@ EndFunc
 ;bQueueOnly = False (will use trash button)
 Func RemoveTrainTroop($bQueueOnly = False)
 	SetLog("RemoveTrainTroop, QueueOnly=" & String($bQueueOnly), $COLOR_DEBUG1)
-	Local $aTrashCoord[2] = [525, 322]
 	Local $YRemove = 200, $XOffset = 15, $XQueueStart
 	If Not $g_bRunState Then Return
 	If $bQueueOnly Then 
@@ -501,11 +532,20 @@ Func RemoveTrainTroop($bQueueOnly = False)
 			If _Sleep(500) Then Return
 		Next
 	Else
-		If _ColorCheck(_GetPixelColor($aTrashCoord[0], $aTrashCoord[1], True), Hex(0xCA1B1D, 6), 10) Then
-			ClickP($aTrashCoord)
+		If _PixelSearch(525, 323, 526, 324, Hex(0xC81C1D, 6), 20, True, "RemoveTrainTroop") Then
+			Click(525, 320, 1, 0, "RemoveTrainTroop : Trash")
 			If _Sleep(1000) Then Return
 			If IsOKCancelPage() Then
-				Click($aConfirmSurrender[0], $aConfirmSurrender[1])
+				Click($aConfirmSurrender[0], $aConfirmSurrender[1], 2, 250)
+			EndIf
+			If _Sleep(500) Then Return
+		EndIf
+		
+		If _PixelSearch(638, 323, 639, 324, Hex(0xC81C1D, 6), 20, True, "RemoveTrainTroop") Then
+			Click(638, 320, 1, 0, "RemoveTrainTroop : Trash")
+			If _Sleep(1000) Then Return
+			If IsOKCancelPage() Then
+				Click($aConfirmSurrender[0], $aConfirmSurrender[1], 2, 250)
 			EndIf
 			If _Sleep(500) Then Return
 		EndIf
@@ -542,14 +582,22 @@ Func RemoveTrainSpell($bQueueOnly = False)
 			If _Sleep(500) Then Return
 		Next
 	Else
-		If _ColorCheck(_GetPixelColor($aTrashCoord[0], $aTrashCoord[1], True), Hex(0xCA1B1D, 6), 10) Then
-			ClickP($aTrashCoord)
+		If _PixelSearch(525, 323, 526, 324, Hex(0xC81C1D, 6), 20, True, "RemoveTrainSpell") Then
+			Click(525, 320, 1, 0, "RemoveTrainSpell : Trash")
 			If _Sleep(1000) Then Return
 			If IsOKCancelPage() Then
-				Click($aConfirmSurrender[0], $aConfirmSurrender[1])
+				Click($aConfirmSurrender[0], $aConfirmSurrender[1], 2, 250)
 			EndIf
 			If _Sleep(500) Then Return
-			SetLog("Successfully remove trained/queued spell", $COLOR_DEBUG1)
+		EndIf
+		
+		If _PixelSearch(638, 323, 639, 324, Hex(0xC81C1D, 6), 20, True, "RemoveTrainSpell") Then
+			Click(638, 320, 1, 0, "RemoveTrainSpell : Trash")
+			If _Sleep(1000) Then Return
+			If IsOKCancelPage() Then
+				Click($aConfirmSurrender[0], $aConfirmSurrender[1], 2, 250)
+			EndIf
+			If _Sleep(500) Then Return
 		EndIf
 	EndIf
 EndFunc
@@ -564,6 +612,7 @@ Func IsNormalTroopTrain()
 		Local $troopIndex = $g_aiTrainOrder[$i]
 		If $g_aiArmyCompTroops[$troopIndex] > 0 Then
 			$iSpace += ($g_aiTroopSpace[$troopIndex] * $g_aiArmyCompTroops[$troopIndex])
+			If $g_bDebugSetlog Then SetLog($g_asTroopNames[$troopIndex] & " : space:" & $g_aiTroopSpace[$troopIndex] & " x compo:" & $g_aiArmyCompTroops[$troopIndex] & " spacetotal = " & $iSpace, $COLOR_DEBUG1)
 		EndIf
 	Next
 	
@@ -583,6 +632,7 @@ Func IsNormalSpellTrain()
 		Local $spellIndex = $g_aiBrewOrder[$i]
 		If $g_aiArmyCompSpells[$spellIndex] > 0 Then
 			$iSpace += ($g_aiSpellSpace[$spellIndex] * $g_aiArmyCompSpells[$spellIndex])
+			If $g_bDebugSetlog Then SetLog($g_asSpellNames[$spellIndex] & " : space:" & $g_aiSpellSpace[$spellIndex] & " x compo:" & $g_aiArmyCompSpells[$spellIndex] & " spacetotal = " & $iSpace, $COLOR_DEBUG1)
 		EndIf
 	Next
 	
@@ -595,8 +645,12 @@ EndFunc
 Func ReTrainForSwitch()
 	If Not OpenArmyOverview("ReTrainForSwitch") Then Return
 	If Not OpenTroopsTab(False, "ReTrainForSwitch") Then Return
-	If _Sleep(250) Then Return
 	RemoveTrainTroop()
+	If _Sleep(500) Then Return
+	If Not $g_bRunState Then Return
+	If Not OpenSpellsTab(False, "ReTrainForSwitch") Then Return
+	RemoveTrainSpell()
+	If _Sleep(500) Then Return
 	If Not $g_bRunState Then Return
 	TrainCustomArmy()
 	If Not $g_bRunState Then Return
@@ -605,42 +659,52 @@ Func ReTrainForSwitch()
 	If _Sleep(500) Then Return
 EndFunc
 
-Func DoubleTrainTroop($bDebug = False)
+Func DoubleTrainTroop($bTest = False)
+	
 	If Not OpenTroopsTab(False, "DoubleTrain()") Then Return
 	If _Sleep(250) Then Return
 	
 	Local $tmpCamp = 999, $TroopCamp
+	
 	While 1
-		$TroopCamp = GetCurrentArmy(95, 163)
+		If _Sleep(800) Then Return
+		$TroopCamp = GetCurrentTroop(95, 163)
 		If IsProblemAffect() Then Return
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 		
-		If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($TroopCamp))
-		SetLog("Checking Troop tab: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2 & " remain space:" & $TroopCamp[2], $COLOR_DEBUG1)
+		;If $g_bDebugSetlog Then 
+		SetLog(_ArrayToString($TroopCamp), $COLOR_DEBUG1)
+		SetLog("DoubleTrainTroop: " & $TroopCamp[0] & "/" & $TroopCamp[1] * 2 & " remain space:" & $TroopCamp[2], $COLOR_DEBUG1)
 		If $tmpCamp = $TroopCamp[2] Then ExitLoop
 		$tmpCamp = $TroopCamp[2]
 		Select
 			Case $TroopCamp[1] = 0
 				SetLog("$TroopCamp[1] = 0", $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				ExitLoop
-			Case $TroopCamp[0] = ($TroopCamp[1] * 2)
-				SetLog("Cur = Max", $COLOR_DEBUG1)
-				If IsNormalTroopTrain() Then
-					If Not CheckQueueTroopAndTrainRemain() Then ExitLoop
-				EndIf
-			Case $TroopCamp[0] = 0 ; 0/600 (empty troop camp)
-				SetLog("TroopCamp[0] = 0", $COLOR_DEBUG1)
+			Case $TroopCamp[0] = $TroopCamp[3]
+				SetLog("Cur = Max, Skip", $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
+				;If IsNormalTroopTrain() Then
+				;	If Not CheckQueueTroopAndTrainRemain() Then ExitLoop
+				;EndIf
+			Case $TroopCamp[0] = 0 And $TroopCamp[1] = $TroopCamp[2]; 0/600 (empty troop camp)
+				SetLog("TroopCamp[0] = 0, TrainFullTroop()", $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				TrainFullTroop() ;train 1st Army
 			Case $TroopCamp[2] = 0 ;300/600 (empty troop queue)
-				SetLog("TroopCamp[2] = 0", $COLOR_DEBUG1)
+				SetLog("TroopCamp[2] = 0, TrainFullTroop(True)", $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				TrainFullTroop(True) ;train 2nd Army
+				ExitLoop
 			Case $TroopCamp[2] > 0 ; 30/600 (1st army partially trained)
 				SetLog("TroopCamp[2] > 0", $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				If IsNormalTroopTrain() Then
 					RemoveTrainTroop()
 					Local $aWhatToTrain = WhatToTrain(False, False)
-					SetLog("New troop Fill way", $COLOR_DEBUG1)
+					RemoveExtraTroops($aWhatToTrain) ;check and remove excess trained army
 					TrainUsingWhatToTrain($aWhatToTrain) ;should only train 1st army
 					RemoveTrainTroop(True) ;recheck trained army, remove excess queued army (leave only 1st army)
 					FillIncorrectTroopCombo("1st Army")
@@ -649,19 +713,20 @@ Func DoubleTrainTroop($bDebug = False)
 				EndIf
 			Case $TroopCamp[0] = $TroopCamp[1] ;300/600 (1st army fully trained)
 				SetLog($TroopCamp[0] & " = " & $TroopCamp[1], $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				TrainFullTroop(True) ;train 2nd Army
 			Case $TroopCamp[0] > $TroopCamp[1] ;350/600 (2nd army partially trained)
 				SetLog($TroopCamp[0] & " > " & $TroopCamp[1], $COLOR_DEBUG1)
+				If $bTest Then ContinueLoop
 				If IsNormalTroopTrain() Then
-					RemoveTrainTroop(True)
-					CheckQueueTroopAndTrainRemain() ;train to queue
+					RemoveTrainTroop(True) ;remove queue army
+					If Not CheckQueueTroopAndTrainRemain() Then ContinueLoop ;train 2nd Army
 					FillIncorrectTroopCombo("2nd Army")
 					ExitLoop
 				Else
 					FillIncorrectTroopCombo("2nd Army") 
 				EndIf
 		EndSelect
-		If _Sleep(500) Then Return
 	WEnd
 EndFunc
 
@@ -669,7 +734,8 @@ Func DoubleTrainSpell($bDebug = False)
 	Local $tmpSpell = 999, $SpellCamp
 	If Not OpenSpellsTab(False, "DoubleTrain()") Then Return
 	While 1
-		$SpellCamp = GetCurrentArmy(95, 163)
+		If _Sleep(500) Then Return
+		$SpellCamp = GetCurrentSpell(95, 163)
 		If IsProblemAffect() Then Return
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
@@ -685,7 +751,7 @@ Func DoubleTrainSpell($bDebug = False)
 			Case $SpellCamp[0] = ($SpellCamp[1] * 2)
 				SetLog("Cur = Max", $COLOR_DEBUG1)
 				If IsNormalSpellTrain() Then
-					If Not CheckQueueSpellAndTrainRemain() Then ExitLoop
+					If Not CheckQueueSpellAndTrainRemain() Then ContinueLoop
 				EndIf
 			Case $SpellCamp[0] = 0 ; 0/22 (empty spell camp)
 				SetLog("SpellCamp[0] = 0", $COLOR_DEBUG1)
@@ -711,14 +777,13 @@ Func DoubleTrainSpell($bDebug = False)
 			Case $SpellCamp[0] > $SpellCamp[1] ;15/22 (2nd army partially trained)
 				SetLog($SpellCamp[0] & " > " & $SpellCamp[1], $COLOR_DEBUG1)
 				If IsNormalSpellTrain() Then
-					RemoveTrainSpell(True)
-					CheckQueueSpellAndTrainRemain() ;train to queue
+					RemoveTrainSpell(True) ;remove queue spell
+					If Not CheckQueueSpellAndTrainRemain() Then ContinueLoop
 					FillIncorrectSpellCombo("2nd Army")
 					ExitLoop
 				Else
 					FillIncorrectSpellCombo("2nd Army") 
 				EndIf
 		EndSelect
-		If _Sleep(500) Then Return
 	WEnd
 EndFunc

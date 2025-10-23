@@ -308,24 +308,3 @@ Func ArmyHeroStatus($i)
 	EndSwitch
 
 EndFunc   ;==>ArmyHeroStatus
-
-Func HideShields($bHide = False)
-	Local Static $ShieldState[31]
-	Local $counter
-	If $bHide = True Then
-		$counter = 0
-		For $i = $g_hPicKingGray To $g_hLbLPetTime
-			$ShieldState[$counter] = GUICtrlGetState($i)
-			GUICtrlSetState($i, $GUI_HIDE)
-			$counter += 1
-		Next
-	Else
-		$counter = 0
-		For $i = $g_hPicKingGray To $g_hLbLPetTime
-			If $ShieldState[$counter] = 80 Then
-				GUICtrlSetState($i, $GUI_SHOW )
-			EndIf
-			$counter += 1
-		Next
-	EndIf
-EndFunc

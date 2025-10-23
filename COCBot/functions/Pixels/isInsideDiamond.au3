@@ -40,27 +40,27 @@ Func isInsideDiamond($aCoords, $bOuter = False)
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
 	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
 
-	; convert to real diamond compensating zoom and offset
-	; top diamond point
-	$xD = $aMiddle[0]
-	$yD = $Top
-	ConvertToVillagePos($xD, $yD)
-	$Top = $yD
-	; bottom diamond point
-	$xD = $aMiddle[0]
-	$yD = $Bottom
-	ConvertToVillagePos($xD, $yD)
-	$Bottom = $yD
-	; left diamond point
-	$xD = $Left
-	$yD = $aMiddle[1]
-	ConvertToVillagePos($xD, $yD)
-	$Left = $xD
-	; right diamond point
-	$xD = $Right
-	$yD = $aMiddle[1]
-	ConvertToVillagePos($xD, $yD)
-	$Right = $xD
+	;; convert to real diamond compensating zoom and offset
+	;; top diamond point
+	;$xD = $aMiddle[0]
+	;$yD = $Top
+	;ConvertToVillagePos($xD, $yD)
+	;$Top = $yD
+	;; bottom diamond point
+	;$xD = $aMiddle[0]
+	;$yD = $Bottom
+	;ConvertToVillagePos($xD, $yD)
+	;$Bottom = $yD
+	;; left diamond point
+	;$xD = $Left
+	;$yD = $aMiddle[1]
+	;ConvertToVillagePos($xD, $yD)
+	;$Left = $xD
+	;; right diamond point
+	;$xD = $Right
+	;$yD = $aMiddle[1]
+	;ConvertToVillagePos($xD, $yD)
+	;$Right = $xD
 
 	;If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond coordinates updated by offset: " & $Left & ", " & $Right & ", " & $Top & ", " & $Bottom, $COLOR_DEBUG)
 
@@ -72,20 +72,17 @@ Func isInsideDiamond($aCoords, $bOuter = False)
 	Local $DY = Abs($y - $aMiddle[1])
 
 	If ($DX / $aSize[0] + $DY / $aSize[1] <= 1) Then
-		If $x < 68 And $y > 316 Then ; coordinates where the game will click on the CHAT tab (safe margin)
-			SetDebugLog("Coordinate Inside Village, but Exclude CHAT")
-			Return False
-		ElseIf $y < 73 Then ; coordinates where the game will click on the BUILDER button or SHIELD button (safe margin)
-			SetDebugLog("Coordinate Inside Village, but Exclude BUILDER")
+		If $x < 85 And $y > 270 Then ; coordinates where the game will click on the CHAT tab (safe margin)
+			If $g_bDebugSetLog Then SetLog("Coordinate Inside Village, but Exclude CHAT")
 			Return False
 		ElseIf $x > 690 And $y > 165 And $y < 215 Then ; coordinates where the game will click on the GEMS button (safe margin)
-			SetDebugLog("Coordinate Inside Village, but Exclude GEMS")
+			If $g_bDebugSetLog Then SetLog("Coordinate Inside Village, but Exclude GEMS")
 			Return False
 		EndIf
-		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_INFO)
+		If $g_bDebugSetLog Then SetLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_DEBUG1)
 		Return True ; Inside Village
 	Else
-		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_INFO)
+		If $g_bDebugSetLog Then SetLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_DEBUG1)
 		Return False ; Outside Village
 	EndIf
 

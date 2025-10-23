@@ -257,33 +257,6 @@ Func chkLabUpgradeOrder()
 	EndIf
 EndFunc ;==>chkLabUpgradeOrder
 
-Func chkSLabUpgradeOrder()
-	If GUICtrlRead($g_hChkSLabUpgradeOrder) = $GUI_CHECKED Then
-		$g_bSLabUpgradeOrderEnable = True
-		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_DISABLE)
-		GUICtrlSetState($g_hBtnRemoveSLabUpgradeOrder, $GUI_ENABLE)
-		GUICtrlSetState($g_hBtnSetSLabUpgradeOrder, $GUI_ENABLE)
-		For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
-			GUICtrlSetState($g_ahCmbSLabUpgradeOrder[$i], $GUI_ENABLE)
-		Next
-		GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $GUI_ENABLE)
-	Else
-		$g_bSLabUpgradeOrderEnable = False
-		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_ENABLE)
-		GUICtrlSetState($g_hBtnRemoveSLabUpgradeOrder, $GUI_DISABLE)
-		GUICtrlSetState($g_hBtnSetSLabUpgradeOrder, $GUI_DISABLE)
-		For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
-			GUICtrlSetState($g_ahCmbSLabUpgradeOrder[$i], $GUI_DISABLE)
-		Next
-		GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $GUI_DISABLE)
-	EndIf
-	If GUICtrlRead($g_hChkUpgradeAnyIfAllOrderMaxed) = $GUI_CHECKED Then
-		$g_bChkUpgradeAnyIfAllOrderMaxed = True
-	Else
-		$g_bChkUpgradeAnyIfAllOrderMaxed = False
-	EndIf
-EndFunc ;==>chkSLabUpgradeOrder
-
 Func cmbLabUpgradeOrder()
 	Local $iGUI_CtrlId = @GUI_CtrlId
 	For $i = 0 To UBound($g_ahCmbLabUpgradeOrder) - 1 ; check for duplicate combobox index and flag problem
@@ -341,24 +314,53 @@ EndFunc
 Func chkStarLab()
 	If GUICtrlRead($g_hChkAutoStarLabUpgrades) = $GUI_CHECKED Then
 		$g_bAutoStarLabUpgradeEnable = True
-		GUICtrlSetState($g_hPicStarLabUpgrade, $GUI_SHOW)
-		GUICtrlSetState($g_hLblNextSLUpgrade, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_ENABLE)
-		_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4])
+		If GUICtrlRead($g_hChkSLabUpgradeOrder) = $GUI_CHECKED Then GUICtrlSetState($g_hCmbStarLaboratory, $GUI_ENABLE)
 	Else
 		$g_bAutoStarLabUpgradeEnable = False
-		GUICtrlSetState($g_hPicStarLabUpgrade, $GUI_HIDE)
-		GUICtrlSetState($g_hLblNextSLUpgrade, $GUI_DISABLE)
 		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_DISABLE)
-		_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[0][4])
 	EndIf
 	If $g_iCmbStarLaboratory = 0 And $g_bAutoStarLabUpgradeEnable Then
 		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
 	Else
 		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
 	EndIf
-	StarLabStatusGUIUpdate()
 EndFunc   ;==>chkStarLab
+
+Func chkSLabUpgradeOrder()
+	If GUICtrlRead($g_hChkSLabUpgradeOrder) = $GUI_CHECKED Then
+		$g_bSLabUpgradeOrderEnable = True
+		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_DISABLE)
+		GUICtrlSetState($g_hBtnRemoveSLabUpgradeOrder, $GUI_ENABLE)
+		GUICtrlSetState($g_hBtnSetSLabUpgradeOrder, $GUI_ENABLE)
+		For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
+			GUICtrlSetState($g_ahCmbSLabUpgradeOrder[$i], $GUI_ENABLE)
+		Next
+		GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $GUI_ENABLE)
+	Else
+		$g_bSLabUpgradeOrderEnable = False
+		GUICtrlSetState($g_hCmbStarLaboratory, $GUI_ENABLE)
+		GUICtrlSetState($g_hBtnRemoveSLabUpgradeOrder, $GUI_DISABLE)
+		GUICtrlSetState($g_hBtnSetSLabUpgradeOrder, $GUI_DISABLE)
+		For $i = 0 To UBound($g_ahCmbSLabUpgradeOrder) - 1
+			GUICtrlSetState($g_ahCmbSLabUpgradeOrder[$i], $GUI_DISABLE)
+		Next
+		GUICtrlSetState($g_hChkUpgradeAnyIfAllOrderMaxed, $GUI_DISABLE)
+	EndIf
+	If GUICtrlRead($g_hChkUpgradeAnyIfAllOrderMaxed) = $GUI_CHECKED Then
+		$g_bChkUpgradeAnyIfAllOrderMaxed = True
+	Else
+		$g_bChkUpgradeAnyIfAllOrderMaxed = False
+	EndIf
+EndFunc ;==>chkSLabUpgradeOrder
+
+Func cmbStarLab()
+	$g_iCmbStarLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbStarLaboratory)
+	If $g_iCmbStarLaboratory = 0 Then
+		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
+	Endif
+EndFunc   ;==>cmbStarLab
 
 Func LabStatusGUIUpdate()
 	If _DateIsValid($g_sLabUpgradeTime) Then
@@ -377,23 +379,6 @@ Func LabStatusGUIUpdate()
 	EndIf
 EndFunc   ;==>LabStatusGUIUpdate
 
-Func StarLabStatusGUIUpdate()
-	If _DateIsValid($g_sStarLabUpgradeTime) Then
-		_GUICtrlSetTip($g_hBtnResetStarLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status") & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_06", "Troop Upgrade started") & ", " & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_07", "Will begin to check completion at:") & " " & $g_sStarLabUpgradeTime & @CRLF & " ")
-		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_SHOW)
-		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_HIDE)
-		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>StarLabStatusGUIUpdate
-
 Func cmbLab()
 	$g_iCmbLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbLaboratory)
 	_GUICtrlSetImage($g_hPicLabUpgrade, $g_sLibIconPath, $g_avLabTroops[$g_iCmbLaboratory][1])
@@ -405,67 +390,6 @@ Func cmbLab()
 	EndIf
 	chkLabUpgradeOrder()
 EndFunc   ;==>cmbLab
-
-Func cmbStarLab()
-	$g_iCmbStarLaboratory = _GUICtrlComboBox_GetCurSel($g_hCmbStarLaboratory)
-	_GUICtrlSetImage($g_hPicStarLabUpgrade, $g_sLibIconPath, $g_avStarLabTroops[$g_iCmbStarLaboratory][4])
-	If $g_iCmbStarLaboratory = 0 Then
-		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hChkSLabUpgradeOrder, $GUI_DISABLE)
-	Endif
-	chkSLabUpgradeOrder()
-EndFunc   ;==>cmbStarLab
-
-Func ResetLabUpgradeTime()
-	; Display are you sure message
-	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
-	Local $stext = @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_07", "Are you 100% sure you want to reset lab upgrade timer?") & @CRLF & _
-			GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_08", "Click OK to reset") & @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_09", "Or Click Cancel to exit") & @CRLF
-	Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_10", "Reset timer") & "|" & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_11", "Cancel and Return"), _
-							   GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_12", "Reset laboratory upgrade timer?"), $stext, 120, $g_hFrmBot)
-	SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
-	If $MsgBox = 1 Then
-		$g_sLabUpgradeTime = ""
-		_GUICtrlSetTip($g_hBtnResetLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status"))
-	EndIf
-	If _DateIsValid($g_sLabUpgradeTime) Then
-		GUICtrlSetState($g_hBtnResetLabUpgradeTime, $GUI_SHOW)
-		GUICtrlSetState($g_hBtnResetLabUpgradeTime, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hBtnResetLabUpgradeTime, $GUI_HIDE)
-		GUICtrlSetState($g_hBtnResetLabUpgradeTime, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>ResetLabUpgradeTime
-
-Func ResetStarLabUpgradeTime()
-	; Display are you sure message
-	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
-	Local $stext = @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_07", "Are you 100% sure you want to reset lab upgrade timer?") & @CRLF & _
-			GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_08", "Click OK to reset") & @CRLF & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_09", "Or Click Cancel to exit") & @CRLF
-	Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_10", "Reset timer") & "|" & GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_11", "Cancel and Return"), _
-							   GetTranslatedFileIni("MBR Func_Village_Upgrade", "Lab_GUIUpdate_Info_12", "Reset laboratory upgrade timer?"), $stext, 120, $g_hFrmBot)
-	SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
-	If $MsgBox = 1 Then
-		$g_sStarLabUpgradeTime = ""
-		_GUICtrlSetTip($g_hBtnResetStarLabUpgradeTime, GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_01", "Visible Red button means that laboratory upgrade in process") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_02", "This will automatically disappear when near time for upgrade to be completed.") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_03", "If upgrade has been manually finished with gems before normal end time,") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_04", "Click red button to reset internal upgrade timer BEFORE STARTING NEW UPGRADE") & @CRLF & _
-				GetTranslatedFileIni("MBR Func_Village_Upgrade", "BtnResetLabUpgradeTime_Info_05", "Caution - Unnecessary timer reset will force constant checks for lab status"))
-	EndIf
-	If _DateIsValid($g_sStarLabUpgradeTime) Then
-		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_SHOW)
-		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_HIDE)
-		GUICtrlSetState($g_hBtnResetStarLabUpgradeTime, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>ResetLabUpgradeTime
 
 Func chkUpgradeKing()
 	If $g_iTownHallLevel > 6 Then ; Must be TH7 or above to have King
@@ -814,35 +738,16 @@ EndFunc   ;==>IsUseCustomTroopOrder
 Func chkWalls()
 	If GUICtrlRead($g_hChkWalls) = $GUI_CHECKED Then
 		$g_bAutoUpgradeWallsEnable = True
-		For $i = $g_hChkUseGold To $g_hChkUpgradeAnyWallLevel
+		For $i = $g_hChkUseGold To $g_hChkOnly1Builder
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
 		$g_bAutoUpgradeWallsEnable = False
-		For $i = $g_hChkUseGold To $g_hChkUpgradeAnyWallLevel
+		For $i = $g_hChkUseGold To $g_hChkOnly1Builder
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
-	If GUICtrlRead($g_hChkUseGold) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkUseElixir, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkUseElixirGold, $GUI_UNCHECKED)
-	EndIf
-	If GUICtrlRead($g_hChkUseElixir) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkUseGold, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkUseElixirGold, $GUI_UNCHECKED)
-	EndIf
-	If GUICtrlRead($g_hChkUseElixirGold) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkUseGold, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hChkUseElixir, $GUI_UNCHECKED)
-	EndIf
 EndFunc   ;==>chkWalls
-
-Func cmbWalls()
-	For $z = 0 To 2
-		$g_aUpgradeWall[$z] = _GUICtrlComboBox_GetCurSel($g_hCmbWalls[$z])
-		GUICtrlSetData($g_hLblWallCost[$z], _NumberFormat($g_aiWallCost[_GUICtrlComboBox_GetCurSel($g_hCmbWalls[$z])]))
-	Next
-EndFunc   ;==>cmbWalls
 
 Func chkSaveWallBldr()
 	$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
@@ -852,39 +757,21 @@ Func chkWallOnly1Builder()
 	$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
 EndFunc   ;==>chkWallOnly1Builder
 
-Func chkWallOnlyGEFull()
-	$g_bChkWallOnlyGEFull = (GUICtrlRead($g_hChkWallOnlyGEFull) = $GUI_CHECKED)
-EndFunc   ;==>chkWallOnlyGEFull
+Func chkAutoAdjustSaveMinWall()
+	$g_bAutoAdjustSaveWall = (GUICtrlRead($g_hAutoAdjustSaveWall) = $GUI_CHECKED)
+EndFunc
 
-Func ChkLowLevelAutoUpgradeWall()
-	$g_bUpgradeLowWall = (GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED)
-	If GUICtrlRead($g_hChkLowLevelAutoUpgradeWall) = $GUI_CHECKED Then
-		$g_bUpgradeLowWall = True
-		GUICtrlSetState($g_hChkUpgradeAnyWallLevel, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbLowLevelWall, $GUI_ENABLE)
-	Else
-		$g_bUpgradeLowWall = False
-		GUICtrlSetState($g_hChkUpgradeAnyWallLevel, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkUpgradeAnyWallLevel, $GUI_UNCHECKED)
-		GUICtrlSetState($g_hCmbLowLevelWall, $GUI_DISABLE)
-	EndIf
-	
-	If GUICtrlRead($g_hChkUpgradeAnyWallLevel) = $GUI_CHECKED Then
-		$g_bUpgradeAnyWallLevel = True
-	Else
-		$g_bUpgradeAnyWallLevel = False
-	EndIf
-	$g_iLowLevelWall = _GUICtrlComboBox_GetCurSel($g_hCmbLowLevelWall) + 1
-EndFunc   ;==>chkWallOnly1Builder
+Func cmbWallLevel()
+	$g_bUpgradeSpesificWall = (GUICtrlRead($g_hCmbTargetWallLevel) = 0 ? False : True)
+	$g_iTargetWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbTargetWallLevel)
+EndFunc
 
 Func btnWalls()
 	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
-	Zoomout()
-	$g_iUpgradedWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbWalls[0])
-	If imglocCheckWall($g_iUpgradedWallLevel) Then SetLog("Hey Chief! We found the Wall!")
+	SearchWall(0)
+	SetLog("Wall Detect done", $COLOR_SUCCESS)
 	$g_bRunState = $wasRunState
-	AndroidShield("btnWalls") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnWalls
 
 Func chkAutoUpgrade()

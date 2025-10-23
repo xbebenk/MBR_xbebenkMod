@@ -1,19 +1,19 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: ParseAttackCSV_Settings_variables
 ; Description ...: Parse CSV settings and update byref var
-; Syntax ........: ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVHeros, ByRef $iCSVRedlineRoutineItem, ByRef $iCSVDroplineEdgeItem, ByRef $sCSVCCReq, $sFilename)
+; Syntax ........: ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVSieges, ByRef $aiCSVHeros, ByRef $iCSVRedlineRoutineItem, ByRef $iCSVDroplineEdgeItem, ByRef $sCSVCCReq, $sFilename)
 ; Parameters ....:
 ; Return values .: Success: 1
 ;				   Failure: 0
 ; Author ........: MMHK (01-2018)
-; Modified ......:
+; Modified ......: xbebenk(04-2024)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVHeros, ByRef $iCSVRedlineRoutineItem, ByRef $iCSVDroplineEdgeItem, ByRef $sCSVCCReq, $sFilename)
+Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, ByRef $aiCSVSieges, ByRef $aiCSVHeros, ByRef $iCSVRedlineRoutineItem, ByRef $iCSVDroplineEdgeItem, ByRef $sCSVCCReq, $sFilename)
 	If $g_bDebugAttackCSV Then SetLog("ParseAttackCSV_Settings_variables()", $COLOR_DEBUG)
 
 	Local $asCommand
@@ -28,7 +28,7 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 		Local $iTHCol = 0, $iTH = 0
 		Local $iTroopIndex, $iFlexTroopIndex = 999
 		Local $iCommandCol = 1, $iTroopNameCol = 2, $iFlexCol = 3, $iTHBeginCol = 4
-		Local $iHeroRadioItemTotal = 3, $iHeroTimedLimit = 99
+		Local $iHeroRadioItemTotal = 3, $iHeroTimedLimit = 100
 
 		For $iLine = 0 To UBound($asLine) - 1
 			$sLine = $asLine[$iLine]
@@ -49,7 +49,10 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 						Return
 					EndIf
 					Switch $g_iTotalCampSpace
-						Case $g_iMaxCapTroopTH[12] + 5 To $g_iMaxCapTroopTH[13]	; TH13
+						Case $g_iMaxCapTroopTH[13] + 5 To $g_iMaxCapTroopTH[14]	; TH15 - 16
+							$iTHCol = $iTHBeginCol + 8
+							$iTH = 15
+						Case $g_iMaxCapTroopTH[12] + 5 To $g_iMaxCapTroopTH[13]	; TH13 - 14 // 280 - 300
 							$iTHCol = $iTHBeginCol + 7
 							$iTH = 13
 						Case $g_iMaxCapTroopTH[11] + 5 To $g_iMaxCapTroopTH[12]	; TH12
@@ -96,26 +99,36 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 							SetLog("CSV troop name '" & $asCommand[$iTroopNameCol] & "' is unrecognized - Line: " & $iLine + 1, $COLOR_ERROR)
 							ContinueLoop ; discard TRAIN commands due to the invalid troop name
 						EndIf
+						If $g_bDebugAttackCSV Then SetLog($iTroopIndex & "=" & GetTroopName($iTroopIndex) & " count : " & $asCommand[$iTHCol])
 						If int($asCommand[$iTHCol]) <= 0 Then
 							If $asCommand[$iTHCol] <> "0" Then SetLog("CSV troop amount/setting '" & $asCommand[$iTHCol] & "' is unrecognized - Line: " & $iLine + 1, $COLOR_ERROR)
 							ContinueLoop ; discard TRAIN commands due to the invalid troop amount/setting ex. int(chars)=0, negative #. "0" won't get alerted
 						EndIf
+						
 						Switch $iTroopIndex
-							Case $eBarb To $eHunt
+							Case $eBarb To $eIWiza
 								$aiCSVTroops[$iTroopIndex] = int($asCommand[$iTHCol])
 								If int($asCommand[$iFlexCol]) > 0 Then $iFlexTroopIndex = $iTroopIndex
-							Case $eLSpell To $eBtSpell
+							Case $eWallW To $eBattleD
+								$aiCSVSieges[$iTroopIndex - $eWallW] = int($asCommand[$iTHCol])
+							Case $eLSpell To $eOgSpell
 								$aiCSVSpells[$iTroopIndex - $eLSpell] = int($asCommand[$iTHCol])
 							Case $eKing To $eChampion
 								Local $iHeroRadioItem = int(StringLeft($asCommand[$iTHCol], 1))
 								Local $iHeroTimed = Int(StringTrimLeft($asCommand[$iTHCol], 1))
 								If $iHeroRadioItem <= 0 Or $iHeroRadioItem > $iHeroRadioItemTotal Or $iHeroTimed < 0 Or $iHeroTimed > $iHeroTimedLimit Then
+									If $g_bDebugAttackCSV Then SetLog("iHeroRadioItemTotal: " & $iHeroRadioItemTotal, $COLOR_DEBUG)
+									If $g_bDebugAttackCSV Then SetLog("iHeroTimedLimit: " & $iHeroTimedLimit, $COLOR_DEBUG)
+									If $g_bDebugAttackCSV Then SetLog("iHeroRadioItem: " & $iHeroRadioItem, $COLOR_DEBUG)
+									If $g_bDebugAttackCSV Then SetLog("iHeroTimed: " & $iHeroTimed, $COLOR_DEBUG)
+									If $g_bDebugAttackCSV And $iHeroTimed > $iHeroTimedLimit Then SetLog($iHeroTimed & " > " & $iHeroTimedLimit, $COLOR_DEBUG1)
 									SetLog("CSV hero ability setting '" & $asCommand[$iTHCol] & "' is unrecognized - Line: " & $iLine + 1, $COLOR_ERROR)
 									ContinueLoop ; discard TRAIN commands due to prefix 0 or exceed # of radios
 								EndIf
 								$aiCSVHeros[$iTroopIndex - $eKing][0] = $iHeroRadioItem
 								$aiCSVHeros[$iTroopIndex - $eKing][1] = $iHeroTimed * 1000
 						EndSwitch
+						
 						If $g_bDebugAttackCSV Then SetLog("Train " & $asCommand[$iTHCol] & "x " & $asCommand[$iTroopNameCol], $COLOR_DEBUG)
 					Case "REDLN"
 						$iCSVRedlineRoutineItem = int($asCommand[$iTHCol])
@@ -138,8 +151,11 @@ Func ParseAttackCSV_Settings_variables(ByRef $aiCSVTroops, ByRef $aiCSVSpells, B
 			If $iCSVTotalCapTroops > 0 Then
 				If $iTH = 8 Then ; TH8 	; check if csv has right troops total within the range of the TH level
 					If $iCSVTotalCapTroops > $g_iMaxCapTroopTH[$iTH - 2] And $iCSVTotalCapTroops <= $g_iMaxCapTroopTH[$iTH] Then $bTotalInRange = True
-				Else
-					If $iCSVTotalCapTroops > $g_iMaxCapTroopTH[$iTH - 1] And $iCSVTotalCapTroops <= $g_iMaxCapTroopTH[$iTH] Then $bTotalInRange = True
+				ElseIf $iTH = 13 Or $iTH = 14 Then
+					If $iCSVTotalCapTroops <= $g_iMaxCapTroopTH[13] Then $bTotalInRange = True
+					;If $iCSVTotalCapTroops > $g_iMaxCapTroopTH[$iTH - 1] And $iCSVTotalCapTroops <= $g_iMaxCapTroopTH[$iTH] Then $bTotalInRange = True
+				ElseIf $iTH = 15 Or $iTH = 16 Then
+					If $iCSVTotalCapTroops <= $g_iMaxCapTroopTH[14] Then $bTotalInRange = True
 				EndIf
 				If $bTotalInRange Then 	;if total not equal to user camp space, reduce/add troops amount based on flexible flag if possible
 					If $iCSVTotalCapTroops <> $g_iTotalCampSpace Then

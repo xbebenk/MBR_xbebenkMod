@@ -49,18 +49,19 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 						$g_iQuickMISX = $coord[0]
 						$g_iQuickMISY = $coord[1]
 						$g_iQuickMISName = $files[$i]
-						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $pat & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
-						If $g_bDebugImageSave Then 
-							_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
-							SaveDebugImage("QuickMIS_" & $ValueReturned, False)
-						EndIf
+						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $g_iQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
 						Return True
 					EndIf
 				Else
 					If $g_bDebugSetlog Then SetDebugLog("BFI No result")
 				EndIf
+				If $g_bDebugImageSave Then 
+					_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
+					SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+				EndIf
 			Next
 		EndIf
+		Return
 	Else
 		If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
 		$Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
@@ -164,7 +165,6 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 								Local $tmparray[1][4] = [[String($objName[0]), Number($Tmpxy[0] + $Left), Number($Tmpxy[1] + $Top), String($objName[1])]]
 								_ArrayAdd($Result, $tmparray)
 								If @error Then SetLog("QuickMIS-CNX ComposeArray Err : " & @error, $COLOR_ERROR)
-								;_ArrayAdd($Result, $objName[0] & "|" & $Tmpxy[0] + $Left & "|" & $Tmpxy[1] + $Top & "|" & $objName[1])
 								$sResult &= "|" & $objName[0] & "," & $Tmpxy[0] + $Left & "," & $Tmpxy[1] + $Top & "," & $objName[1]
 							EndIf
 						Next

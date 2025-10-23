@@ -25,8 +25,8 @@ Func imglocTHSearch($bReTest = False, $myVillage = False, $bForceCapture = True)
 	Local $xdirectory
 	Local $sCocDiamond = "ECD"
 	Local $redLines = ""
-	Local $minLevel = 6 ; We only support TH6+
-	Local $maxLevel = 100
+	Local $minLevel = 2 ; We only support TH6+
+	Local $maxLevel = 20
 	Local $maxReturnPoints = 1
 	Local $returnProps = "objectname,objectlevel,objectpoints,nearpoints,farpoints,redlinedistance"
 	Local $iFindTime = 0
@@ -269,3 +269,55 @@ Func imgloccheckTownHallADV2($limit = 0, $tolerancefix = 0, $captureRegion = Tru
 	EndIf
 
 EndFunc   ;==>imgloccheckTownHallADV2
+
+
+Func SearchTH($bVerify = True, $bClickAway = True)
+	If Not $g_bRunState Then Return
+	Local $aTH, $aiTHPos[2], $iTHLevel
+	Local $x, $y, $aInfo, $bRet = False
+	
+	For $try = 1 To 2
+		SetLog("[" & $try & "] SearchTH #" & $try, $COLOR_ACTION)
+		$aTH = QuickMIS("CNX", $g_sImgTownHall)
+		If IsArray($aTH) And UBound($aTH) > 0 Then
+			_ArraySort($aTH, 1, 0, 0, 3)
+			For $i = 0 To UBound($aTH) - 1
+				If Not IsInsideDiamondXY($aTH[$i][1], $aTH[$i][2]) Then ContinueLoop
+				SetLog("Found TH Level " & $aTH[$i][3] & " on " & $aTH[$i][1] & "," & $aTH[$i][2], $COLOR_INFO)
+				$x = $aTH[$i][1]
+				$y = $aTH[$i][2] + 10
+				If $bVerify Then
+					SetLog("Verify TH Level", $COLOR_ACTION)
+					Click($x, $y)
+					If _Sleep(500) Then Return
+					$aInfo = BuildingInfo(242, 477)
+					If $aInfo[1] = "Town Hall" Then
+						$iTHLevel =  $aInfo[2]
+						$aiTHPos[0] = $x
+						$aiTHPos[1] = $y
+						$bRet = True
+						If $bClickAway Then ClickAway()
+						ExitLoop 2
+					EndIf
+				Else
+					$iTHLevel = $aTH[$i][3]
+					$aiTHPos[0] = $x
+					$aiTHPos[1] = $y
+					$bRet = True
+					If $bClickAway Then ClickAway()
+					ExitLoop 2
+				EndIf
+				ClickAway()
+			Next
+		EndIf
+		If _Sleep(1500) Then Return
+	Next
+	
+	If $bRet Then
+		$g_aiTownHallPos = $aiTHPos
+		$g_iTownHallLevel = $iTHLevel
+		SetLog("Set THLevel: " & $g_iTownHallLevel & ", THPos [" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & "]", $COLOR_DEBUG1)
+	EndIf
+	
+	Return $bRet
+EndFunc

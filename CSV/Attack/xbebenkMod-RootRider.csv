@@ -1,0 +1,79 @@
+NOTE  |      PUSH: SPAM Root Rider
+NOTE  |      ====== TH15/16 ======
+NOTE  |320 ArmyCamp Space
+NOTE  |Army  : Titan x2, Witch x2
+NOTE  |Army  : RootRider x11, Yeti x4
+NOTE  |Spell : Skeleton x11
+NOTE  |CC    : Yeti 1x, Titan x1, Skeleton x3
+NOTE  |Siege : Log Launcher
+NOTE  |Redline: External edges
+
+      |_TROOPNAME_|__FLEXIBLE_|__TH06__|__TH07__|__TH08__|__TH09__|__TH10__|__TH11__|__TH12__|__TH13-14__|__TH15-16__|
+TRAIN |ETitan     |0          |0       |0       |0       |0       |0       |0       |0       |2          |2          |
+TRAIN |RootR      |0          |0       |0       |0       |0       |0       |0       |0       |8          |8          |
+TRAIN |Yeti       |0          |0       |0       |0       |0       |0       |0       |0       |4          |4          |
+TRAIN |Witc       |0          |0       |0       |0       |0       |0       |0       |0       |2          |2          |
+TRAIN |SkSpell    |0          |0       |0       |0       |0       |0       |0       |0       |11         |11         |
+
+      |_TROOPNAME_|___________|__TH06__|__TH07__|__TH08__|__TH09__|__TH10__|__TH11__|__TH12__|__TH13-14__|__TH15-16__| ; Train Heroes: 1=autoactivate, 2=timed, 3=checkboth
+TRAIN |King       |0          |0       |0       |0       |0       |0       |0       |0       |0          |127        | ; Find on Search&Attack/Options/Attack
+TRAIN |Queen      |0          |0       |0       |0       |0       |0       |0       |0       |0          |240        | ; Format: [1-3][0-100]
+TRAIN |Warden     |0          |0       |0       |0       |0       |0       |0       |0       |0          |330        |
+TRAIN |Champion   |0          |0       |0       |0       |0       |0       |0       |0       |0          |335        |
+
+      |___________|___________|__TH06__|__TH07__|__TH08__|__TH09__|__TH10__|__TH11__|__TH12__|__TH13-14__|__TH15-16__|
+REDLN |0          |0          |1       |1       |1       |1       |1       |4       |4       |4          |4          |
+DRPLN |0          |0          |2       |2       |2       |2       |2       |4       |4       |4          |4          |
+
+      |___________|___________|__TH06__|__TH07__|__TH08__|__TH09__|__TH10__|__TH11__|__TH12__|__TH13__|__TH14__|_____________TH15_______________|_____________TH16_______________|
+CCREQ |           |           |        |        |        |        |        |        |        |        |        |Yeti/Titan/suba/giant/skell/LogL|Yeti/Titan/suba/giant/skell/LogL|
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE| ; Forced side: TOP-LEFT, TOP-RIGHT, BOTTOM-LEFT, BOTTOM-RIGHT
+SIDE  |0          |0          |0          |0          |0          |8          |-15        |TOP-RAND   |	; TOP-RAND = will forcing attack from TOP (random left/right)
+      |EAGLE      |INFERNO    |XBOW       |WIZTOWER   |MORTAR     |AIRDEFENSE |GEMBOX     |GEMBOX     |
+SIDEB |5          |0          |0          |0          |0          |8          |0          |           |
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|BUILDING___|
+MAKE  |A          |FRONT-RIGHT|10         |0          |EXT-INT    |0          |0          |           |Troops
+MAKE  |B          |FRONT-LEFT |10         |0          |EXT-INT    |0          |0          |           |Troops
+MAKE  |C          |FRONT-LEFT |10         |-8         |EXT-INT    |0          |0          |           |SkSpell
+MAKE  |D          |FRONT-RIGHT|10         |-8         |EXT-INT    |0          |0          |           |SkSpell
+MAKE  |E          |FRONT-RIGHT|10         |-19        |EXT-INT    |0          |0          |           |SkSpell
+MAKE  |F          |FRONT-RIGHT|10         |-14        |EXT-INT    |0          |0          |           |SkSpell
+MAKE  |G          |FRONT-LEFT |10         |-14        |EXT-INT    |0          |0          |           |SkSpell  
+MAKE  |H          |LEFT-FRONT |10         |0          |EXT-INT    |0          |0          |           |Start
+MAKE  |I          |RIGHT-FRONT|10         |0          |EXT-INT    |0          |0          |           |Start
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|
+DROP  |H          |3          |1          |Yeti       |40         |40-50      |550-690    |           |
+DROP  |I          |3          |1          |Yeti       |40         |40-50      |3000-3500  |           |
+DROP  |H          |3          |1          |Witc       |40         |40-50      |550-690    |           |
+DROP  |I          |3          |1          |Witc       |40         |40-50      |3000-3500  |           |
+WAIT  |10000-11000|           |           |           |           |           |           |           |
+DROP  |A-B        |7,8,9,10   |4          |RootR      |45-100     |40-100     |90-100     |           |
+DROP  |A-B        |7,8,9,10   |4          |RootR      |45-100     |40-100     |90-100     |           |
+DROP  |A-B        |8,9        |2          |Yeti       |45-100     |40-100     |90-100     |           |
+DROP  |H          |3          |1          |Witc       |40         |40-50      |90-100     |           |
+DROP  |C          |5          |1          |SkSpell    |55-100     |40-100     |90-200     |           |
+DROP  |C          |10         |2          |SkSpell    |55-100     |40-100     |90-200     |           |
+DROP  |D          |8          |1          |SkSpell    |55-100     |40-100     |90-100     |           |
+DROP  |A          |10         |1          |Warden     |45-100     |40-100     |90-100     |           |
+DROP  |A-B        |9          |1          |ETitan     |45-100     |40-100     |90-100     |           |
+DROP  |A          |10         |1          |LogL       |45-100     |40-100     |90-100     |           |
+DROP  |A          |8          |1          |King       |45-100     |40-100     |90-100     |           |
+DROP  |A          |7          |1          |Queen      |45-100     |40-100     |2500-3000  |           |
+DROP  |C          |9          |2          |RSpell     |55-100     |40-100     |90-200     |           |
+WAIT  |4000       |           |           |           |           |           |           |           |
+DROP  |F          |10         |2          |SkSpell    |55-70      |40-70      |100-200    |           |
+DROP  |G          |7          |2          |SkSpell    |55-70      |40-70      |100-200    |           |
+DROP  |F          |10         |1          |RSpell     |55-70      |40-70      |100-200    |           |
+DROP  |G          |7          |1          |RSpell     |55-70      |40-70      |100-200    |           |
+WAIT  |4000       |           |           |           |           |           |           |           |
+DROP  |E          |7          |2          |SkSpell    |55-70      |40-70      |100-200    |           |
+DROP  |E          |10         |2          |SkSpell    |55-70      |40-70      |100-200    |           |
+DROP  |A-B        |7,8,9,10   |4          |REMAIN     |45-70      |40-50      |4500-6000  |           |
+DROP  |A          |8          |1          |Champion   |45-70      |40-50      |90-120     |           |
+WAIT  |4000       |           |           |           |           |           |           |           |
+DROP  |A          |10         |1          |Warden     |45-100     |90         |90-120     |           |
+DROP  |E          |10         |1          |SkSpell    |55-70      |40-70      |100-200    |           |
+DROP  |E          |7          |1          |SkSpell    |55-70      |40-70      |100-200    |           |

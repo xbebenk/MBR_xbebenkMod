@@ -75,7 +75,7 @@ Func UpgradeBuilding($bTest = False)
 	EndIf
 	
 	;align base first
-	Local $aZoomOut = SearchZoomOut(getVillageCenteringCoord(), True, "", True)
+	Local $aZoomOut = SearchZoomOut(True, True, "", True)
 	If IsArray($aZoomOut) And $aZoomOut[0] = "" Then ZoomOut(True)
 	If $g_iZoomFactor > 1.10 Then ZoomOut(True)
 	
@@ -143,33 +143,39 @@ Func UpgradeBuilding($bTest = False)
 
 		$g_avBuildingUpgrades[$iz][7] = _NowCalc() ; what is date:time now
 		SetDebugLog("Upgrade #" & $iz + 1 & " " & $g_avBuildingUpgrades[$iz][4] & " Started @ " & $g_avBuildingUpgrades[$iz][7], $COLOR_SUCCESS)
-		Local $aArray = StringSplit($g_avBuildingUpgrades[$iz][6], ' ', BitOR($STR_CHRSPLIT, $STR_NOCOUNT)) ;separate days, hours
-		If IsArray($aArray) Then
-			Local $iRemainingTimeMin = 0
-			For $i = 0 To UBound($aArray) - 1 ; step through array and compute minutes remaining
-				$sTime = ""
-				Select
-					Case StringInStr($aArray[$i], "d", $STR_NOCASESENSEBASIC) > 0
-						$sTime = StringTrimRight($aArray[$i], 1) ; removing the "d"
-						$iRemainingTimeMin += (Int($sTime) * 24 * 60) - 7 ; change days to minutes and add, minus 7 minutes for early checking
-					Case StringInStr($aArray[$i], "h", $STR_NOCASESENSEBASIC) > 0
-						$sTime = StringTrimRight($aArray[$i], 1) ; removing the "h"
-						$iRemainingTimeMin += (Int($sTime) * 60) - 3 ; change hours to minutes and add, minus 3 minutes
-					Case StringInStr($aArray[$i], "m", $STR_NOCASESENSEBASIC) > 0
-						$sTime = StringTrimRight($aArray[$i], 1) ; removing the "m"
-						$iRemainingTimeMin += Int($sTime) ; add minutes
-					Case Else
-						SetLog("Upgrade #" & $iz + 1 & " OCR time invalid" & $aArray[$i], $COLOR_WARNING)
-				EndSelect
-				SetDebugLog("Upgrade Time: " & $aArray[$i] & ", Minutes= " & $iRemainingTimeMin, $COLOR_DEBUG)
-			Next
-			$g_avBuildingUpgrades[$iz][7] = _DateAdd('n', Floor($iRemainingTimeMin), _NowCalc()) ; add the time required to NOW to finish the upgrade
-			If @error Then _logErrorDateAdd(@error)
-			SetLog("Upgrade #" & $iz + 1 & " " & $g_avBuildingUpgrades[$iz][4] & " Finishes @ " & $g_avBuildingUpgrades[$iz][7], $COLOR_SUCCESS)
-			GUICtrlSetData($g_hTxtUpgradeEndTime[$iz], $g_avBuildingUpgrades[$iz][7])
-		Else
-			SetLog("Non critical error processing upgrade time for " & "#" & $iz + 1 & ": " & $g_avBuildingUpgrades[$iz][4], $COLOR_WARNING)
-		EndIf
+		Local $iRemainingTimeMin = 0
+		$iRemainingTimeMin = ConvertOCRTime("Upgrade ", $g_avBuildingUpgrades[$iz][6])
+		$g_avBuildingUpgrades[$iz][7] = _DateAdd('n', Floor($iRemainingTimeMin), _NowCalc()) ; add the time required to NOW to finish the upgrade
+		If @error Then _logErrorDateAdd(@error)
+		SetLog("Upgrade #" & $iz + 1 & " " & $g_avBuildingUpgrades[$iz][4] & " Finishes @ " & $g_avBuildingUpgrades[$iz][7], $COLOR_SUCCESS)
+		GUICtrlSetData($g_hTxtUpgradeEndTime[$iz], $g_avBuildingUpgrades[$iz][7])
+		;Local $aArray = StringSplit($g_avBuildingUpgrades[$iz][6], ' ', BitOR($STR_CHRSPLIT, $STR_NOCOUNT)) ;separate days, hours
+		;If IsArray($aArray) Then
+		;	Local $iRemainingTimeMin = 0
+		;	For $i = 0 To UBound($aArray) - 1 ; step through array and compute minutes remaining
+		;		$sTime = ""
+		;		Select
+		;			Case StringInStr($aArray[$i], "d", $STR_NOCASESENSEBASIC) > 0
+		;				$sTime = StringTrimRight($aArray[$i], 1) ; removing the "d"
+		;				$iRemainingTimeMin += (Int($sTime) * 24 * 60) - 7 ; change days to minutes and add, minus 7 minutes for early checking
+		;			Case StringInStr($aArray[$i], "h", $STR_NOCASESENSEBASIC) > 0
+		;				$sTime = StringTrimRight($aArray[$i], 1) ; removing the "h"
+		;				$iRemainingTimeMin += (Int($sTime) * 60) - 3 ; change hours to minutes and add, minus 3 minutes
+		;			Case StringInStr($aArray[$i], "m", $STR_NOCASESENSEBASIC) > 0
+		;				$sTime = StringTrimRight($aArray[$i], 1) ; removing the "m"
+		;				$iRemainingTimeMin += Int($sTime) ; add minutes
+		;			Case Else
+		;				SetLog("Upgrade #" & $iz + 1 & " OCR time invalid" & $aArray[$i], $COLOR_WARNING)
+		;		EndSelect
+		;		SetDebugLog("Upgrade Time: " & $aArray[$i] & ", Minutes= " & $iRemainingTimeMin, $COLOR_DEBUG)
+		;	Next
+		;	$g_avBuildingUpgrades[$iz][7] = _DateAdd('n', Floor($iRemainingTimeMin), _NowCalc()) ; add the time required to NOW to finish the upgrade
+		;	If @error Then _logErrorDateAdd(@error)
+		;	SetLog("Upgrade #" & $iz + 1 & " " & $g_avBuildingUpgrades[$iz][4] & " Finishes @ " & $g_avBuildingUpgrades[$iz][7], $COLOR_SUCCESS)
+		;	GUICtrlSetData($g_hTxtUpgradeEndTime[$iz], $g_avBuildingUpgrades[$iz][7])
+		;Else
+		;	SetLog("Non critical error processing upgrade time for " & "#" & $iz + 1 & ": " & $g_avBuildingUpgrades[$iz][4], $COLOR_WARNING)
+		;EndIf
 		
 		getBuilderCount(True)
 		$iAvailBldr = $g_iFreeBuilderCount - ($g_bAutoUpgradeWallsEnable And $g_bUpgradeWallSaveBuilder ? 1 : 0) - ReservedBuildersForHeroes()
@@ -198,47 +204,47 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 	BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "UpgradeNormal", $g_avBuildingUpgrades[$iUpgradeNumber][8]) ; Select the item to be upgrade
 	If _Sleep($DELAYUPGRADENORMAL1) Then Return ; Wait for window to open
 
-	Local $aResult = BuildingInfo(242, 472) ; read building name/level to check we have right bldg or if collector was not full
+	Local $aResult = BuildingInfo(242, 477) ; read building name/level to check we have right bldg or if collector was not full
 	If UBound($aResult) < 2 Then Return False
-	If $g_bOptimizeOTTO Then
-		Local $aGearUp[3][2] = [["Mortar", 8], ["Archer T", 10], ["Cannon", 7]]
-		For $i = 0 To UBound($aGearUp) - 1 
-			If StringInStr($aResult[1], $aGearUp[$i][0]) Then
-				SetDebugLog("Matched with : " & $i)
-				If Number($aResult[2]) >= $aGearUp[$i][1] Then
-					SetLog("Building : " & $aResult[1] & " Level: " & $aResult[2] & " >= " & $aGearUp[$i][1], $COLOR_INFO)
-					SetLog("OptimizeOTTO enabled, should skip this Building", $COLOR_INFO)
-					SetLog("Now, trying to gear up building!", $COLOR_INFO)
-					
-					If ClickB("GearUp") Then
-						If _Sleep(1000) Then Return
-						If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
-							Click($g_iQuickMISX, $g_iQuickMISY)
-							If _Sleep(1000) Then Return
-							If IsGemOpen(True) Then
-								ClickAway()
-								SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
-								Return False
-							Else
-								If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
-									ClickAway()
-									SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
-									Return False
-								Else
-									SetLog(" - GearUp : " & $aResult[1], $COLOR_SUCCESS)
-									Return True
-								EndIf
-							EndIf
-						EndIf
-					Else
-						SetLog("GearUp button not found!", $COLOR_ERROR)
-					EndIf
-					
-					Return False
-				EndIf
-			EndIf
-		Next
-	EndIf
+	;If $g_bOptimizeOTTO Then
+	;	Local $aGearUp[3][2] = [["Mortar", 8], ["Archer T", 10], ["Cannon", 7]]
+	;	For $i = 0 To UBound($aGearUp) - 1 
+	;		If StringInStr($aResult[1], $aGearUp[$i][0]) Then
+	;			SetDebugLog("Matched with : " & $i)
+	;			If Number($aResult[2]) >= $aGearUp[$i][1] Then
+	;				SetLog("Building : " & $aResult[1] & " Level: " & $aResult[2] & " >= " & $aGearUp[$i][1], $COLOR_INFO)
+	;				SetLog("OptimizeOTTO enabled, should skip this Building", $COLOR_INFO)
+	;				SetLog("Now, trying to gear up building!", $COLOR_INFO)
+	;				
+	;				If ClickB("GearUp") Then
+	;					If _Sleep(1000) Then Return
+	;					If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+	;						Click($g_iQuickMISX, $g_iQuickMISY)
+	;						If _Sleep(1000) Then Return
+	;						If IsGemOpen(True) Then
+	;							ClickAway()
+	;							SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
+	;							Return False
+	;						Else
+	;							If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+	;								ClickAway()
+	;								SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
+	;								Return False
+	;							Else
+	;								SetLog(" - GearUp : " & $aResult[1], $COLOR_SUCCESS)
+	;								Return True
+	;							EndIf
+	;						EndIf
+	;					EndIf
+	;				Else
+	;					SetLog("GearUp button not found!", $COLOR_ERROR)
+	;				EndIf
+	;				
+	;				Return False
+	;			EndIf
+	;		EndIf
+	;	Next
+	;EndIf
 		
 	
 	If StringStripWS($aResult[1], BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING)) <> StringStripWS($g_avBuildingUpgrades[$iUpgradeNumber][4], BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING)) Then ; check bldg names
@@ -248,52 +254,47 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 		BuildingClick($g_avBuildingUpgrades[$iUpgradeNumber][0], $g_avBuildingUpgrades[$iUpgradeNumber][1], "UpgradeHero", $g_avBuildingUpgrades[$iUpgradeNumber][8]) ; Select the item to be upgrade again in case full collector/mine
 		If _Sleep($DELAYUPGRADENORMAL1) Then Return ; Wait for window to open
 
-		$aResult = BuildingInfo(242, 472) ; read building name/level to check we have right bldg or if collector was not full
+		$aResult = BuildingInfo(242, 477) ; read building name/level to check we have right bldg or if collector was not full
 		If $aResult[0] > 1 Then
 			If StringStripWS($aResult[1], BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING)) <> StringStripWS($g_avBuildingUpgrades[$iUpgradeNumber][4], BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING)) Then ; check bldg names
 				SetLog("Found #" & $iUpgradeNumber + 1 & ":" & $g_avBuildingUpgrades[$iUpgradeNumber][4] & ": Not same as : " & $aResult[1] & ":, May need new location?", $COLOR_ERROR)
 				Return False
 			EndIf
 			
-			If $g_bOptimizeOTTO Then
-				Local $aGearUp[3][2] = [["Mortar", 8], ["Archer T", 10], ["Cannon", 7]]
-				For $i = 0 To UBound($aGearUp) - 1 
-					If StringInStr($aResult[1], $aGearUp[$i][0]) Then
-						SetDebugLog("Matched with : " & $i)
-						If Number($aResult[2]) >= $aGearUp[$i][1] Then
-							SetLog("Building : " & $aResult[1] & " Level: " & $aResult[2] & " >= " & $aGearUp[$i][1], $COLOR_INFO)
-							SetLog("OptimizeOTTO enabled, should skip this Building", $COLOR_INFO)
-							SetLog("Now, trying to gear up building!", $COLOR_INFO)
-							
-							If ClickB("GearUp") Then
+			Local $aGearUp[3][2] = [["Mortar", 8], ["Archer T", 10], ["Cannon", 7]]
+			For $i = 0 To UBound($aGearUp) - 1 
+				If StringInStr($aResult[1], $aGearUp[$i][0]) Then
+					SetDebugLog("Matched with : " & $i)
+					If Number($aResult[2]) >= $aGearUp[$i][1] Then
+						SetLog("Building : " & $aResult[1] & " Level: " & $aResult[2] & " >= " & $aGearUp[$i][1], $COLOR_INFO)
+						SetLog("Now, trying to gear up building!", $COLOR_INFO)
+						
+						If ClickB("GearUp") Then
+							If _Sleep(1000) Then Return
+							If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+								Click($g_iQuickMISX, $g_iQuickMISY)
 								If _Sleep(1000) Then Return
-								If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
-									Click($g_iQuickMISX, $g_iQuickMISY)
-									If _Sleep(1000) Then Return
-									If IsGemOpen(True) Then
+								If IsGemOpen(True) Then
+									SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
+									Return False
+								Else
+									If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
 										ClickAway()
-										SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
+										SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
 										Return False
 									Else
-										If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
-											ClickAway()
-											SetLog("Upgrade window is still up. BB requirement unfulfilled?", $COLOR_ERROR)
-											Return False
-										Else
-											SetLog(" - GearUp : " & $aResult[1], $COLOR_SUCCESS)
-											Return True
-										EndIf
+										SetLog(" - GearUp : " & $aResult[1], $COLOR_SUCCESS)
+										Return True
 									EndIf
 								EndIf
-							Else
-								SetLog("GearUp button not found!", $COLOR_ERROR)
 							EndIf
-							
-							Return False
+						Else
+							SetLog("GearUp button not found!", $COLOR_ERROR)
 						EndIf
+						Return False
 					EndIf
-				Next
-			EndIf
+				EndIf
+			Next
 		EndIf
 	EndIf
 	
@@ -304,23 +305,23 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 		If _Sleep($DELAYUPGRADENORMAL2) Then Return
 		ClickP($aUpgradeButton, 1, 0, "#0297") ; Click Upgrade Button
 		If _Sleep($DELAYUPGRADENORMAL3) Then Return ; Wait for window to open
-		If $g_bDebugImageSave Then SaveDebugImage("UpgradeRegBtn1")
-		Local $aBldgUpgradeWinChk[4] = [687, 161, 0xCD1419, 20] ; Red pixel on botton X to close window
-		If _WaitForCheckPixel($aBldgUpgradeWinChk, $g_bCapturePixel,Default, "BldgUpgradeWinChk", Default, Default, 100) Then ; wait up to 2 seconds for hero upgrade window to open
-			If _ColorCheck(_GetPixelColor(459, 490, True), Hex(0xE70A12, 6), 20) And _ColorCheck(_GetPixelColor(459, 472), Hex(0xE70A12, 6), 20) And _
-					_ColorCheck(_GetPixelColor(459, 498, True), Hex(0xE70A12, 6), 20) Then ; Check for Red Zero = means not enough loot!
-
+		If WaitforPixel(807, 117, 807, 118, Hex(0xE32126, 6), 20, 2) Then ; wait up to 2 seconds for hero upgrade window to open
+			If WaitforPixel(640, 556, 641, 557, Hex(0xFF887F, 6), 20, 1) Then ; Check for Red Zero = means not enough loot!
 				SetLog("Upgrade Fail #" & $iUpgradeNumber + 1 & " " & $g_avBuildingUpgrades[$iUpgradeNumber][4] & ", No Loot!", $COLOR_ERROR)
-
-				ClickAway()
+				Click(807, 100) ;Close window
 				Return False
 			Else
-				Click(440, 480, 1, 0, "#0299") ; Click upgrade buttton
-				If _Sleep($DELAYUPGRADENORMAL3) Then Return
-				If $g_bDebugImageSave Then SaveDebugImage("UpgradeRegBtn2")
-				If _ColorCheck(_GetPixelColor(573, 256, True), Hex(0xE1090E, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
+				Click(620, 540) ; Click upgrade buttton
+				If _Sleep(2000) Then Return
+				If _ColorCheck(_GetPixelColor(340, 510, True), Hex(0xFFCC7F, 6), 20, Default, "AutoUpgrade") And _ColorCheck(_GetPixelColor(510, 510, True), Hex(0xDDF685, 6), 20, Default, "AutoUpgrade") Then
+					SetLog("Detected Before you upgrade warning window", $COLOR_INFO)
+					Click(510, 525)
+					If _Sleep(1000) Then Return
+				EndIf
+				
+				If isGemOpen(True) Then ; Redundant Safety Check if the use Gem window opens
 					SetLog("Upgrade Fail #" & $iUpgradeNumber + 1 & " " & $g_avBuildingUpgrades[$iUpgradeNumber][4] & " No Loot!", $COLOR_ERROR)
-					ClickAway()
+					Click(807, 100) ;Close window
 					Return False
 				EndIf
 				SetLog("Upgrade #" & $iUpgradeNumber + 1 & " " & $g_avBuildingUpgrades[$iUpgradeNumber][4] & " started", $COLOR_SUCCESS)
@@ -342,50 +343,6 @@ Func UpgradeNormal($bTest, $iUpgradeNumber)
 					GUICtrlSetState($g_hChkUpgrade[$iUpgradeNumber], $GUI_CHECKED) ; Ensure upgrade selection box is checked
 					$g_abBuildingUpgradeEnable[$iUpgradeNumber] = True ; Ensure upgrade selection box is checked
 				EndIf
-				ClickAway()
-				If _Sleep($DELAYUPGRADENORMAL3) Then Return ; Wait for window to close
-
-				Return True
-			EndIf
-		ElseIf _ColorCheck(_GetPixelColor(721, 118, True), Hex(0xDF0408, 6), 20) Then ; Check if the building Upgrade window is open, FOR WARDEN
-			If _ColorCheck(_GetPixelColor(459, 490, True), Hex(0xE70A12, 6), 20) And _ColorCheck(_GetPixelColor(459, 472), Hex(0xE70A12, 6), 20) And _
-					_ColorCheck(_GetPixelColor(459, 498, True), Hex(0xE70A12, 6), 20) Then ; Check for Red Zero = means not enough loot!
-
-				SetLog("Upgrade Fail #" & $iUpgradeNumber + 1 & " " & $g_avBuildingUpgrades[$iUpgradeNumber][4] & ", No Loot!", $COLOR_RED)
-
-				ClickAway()
-				Return False
-			Else
-				Click(670, 510, 1, 0, "#0299") ; Click upgrade buttton
-				If _Sleep($DELAYUPGRADENORMAL3) Then Return
-				If $g_bDebugImageSave Then SaveDebugImage("UpgradeRegBtn2")
-				If _ColorCheck(_GetPixelColor(573, 256, True), Hex(0xE1090E, 6), 20) Then ; Redundant Safety Check if the use Gem window opens
-					SetLog("Upgrade Fail #" & $iUpgradeNumber + 1 & " " & $g_avBuildingUpgrades[$iUpgradeNumber][4] & " No Loot!", $COLOR_RED)
-					ClickAway()
-					Return False
-				EndIf
-				SetLog("Upgrade #" & $iUpgradeNumber + 1 & " " & $g_avBuildingUpgrades[$iUpgradeNumber][4] & " started", $COLOR_GREEN)
-				_GUICtrlSetImage($g_hPicUpgradeStatus[$iUpgradeNumber], $g_sLibIconPath, $eIcnGreenLight) ; Change GUI upgrade status to done
-				$g_aiPicUpgradeStatus[$iUpgradeNumber] = $eIcnGreenLight ; Change GUI upgrade status to done
-				GUICtrlSetData($g_hTxtUpgradeValue[$iUpgradeNumber], -($g_avBuildingUpgrades[$iUpgradeNumber][2])) ; Show Negative Upgrade value in GUI
-				;$itxtUpgradeValue[$inum] = -($g_avBuildingUpgrades[$inum][2]) ; Show Negative Upgrade value in GUI
-				GUICtrlSetData($g_hTxtUpgradeLevel[$iUpgradeNumber], $g_avBuildingUpgrades[$iUpgradeNumber][5] & "+") ; Set GUI level to match $g_avBuildingUpgrades variable
-				$g_aiUpgradeLevel[$iUpgradeNumber] = $g_avBuildingUpgrades[$iUpgradeNumber][5] & "+" ; Set GUI level to match $g_avBuildingUpgrades variable
-				If Not $g_abUpgradeRepeatEnable[$iUpgradeNumber] Then ; Check for repeat upgrade
-					GUICtrlSetState($g_hChkUpgrade[$iUpgradeNumber], $GUI_UNCHECKED) ; Change upgrade selection box to unchecked
-					$g_abBuildingUpgradeEnable[$iUpgradeNumber] = False ; Change upgrade selection box to unchecked
-					$g_avBuildingUpgrades[$iUpgradeNumber][0] = -1 ;Reset $UpGrade position coordinate variable to blank to show its completed
-					$g_avBuildingUpgrades[$iUpgradeNumber][1] = -1
-					$g_avBuildingUpgrades[$iUpgradeNumber][3] = "" ; Reset loot type
-					GUICtrlSetData($g_hTxtUpgradeLevel[$iUpgradeNumber], $g_avBuildingUpgrades[$iUpgradeNumber][5] & "+") ; Set GUI level to match $g_avBuildingUpgrades variable
-					$g_avBuildingUpgrades[$iUpgradeNumber][5] = $g_avBuildingUpgrades[$iUpgradeNumber][5] & "+" ; Set GUI level to match $g_avBuildingUpgrades variable
-				ElseIf $g_abUpgradeRepeatEnable[$iUpgradeNumber] Then
-					GUICtrlSetState($g_hChkUpgrade[$iUpgradeNumber], $GUI_CHECKED) ; Ensure upgrade selection box is checked
-					$g_abBuildingUpgradeEnable[$iUpgradeNumber] = True ; Ensure upgrade selection box is checked
-				EndIf
-				ClickAway()
-				If _Sleep($DELAYUPGRADENORMAL3) Then Return ; Wait for window to close
-
 				Return True
 			EndIf
 		Else

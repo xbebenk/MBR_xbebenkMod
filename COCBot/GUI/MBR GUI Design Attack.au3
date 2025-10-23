@@ -22,15 +22,15 @@ Global $g_hGUI_DropOrder = 0
 #include "MBR GUI Design Child Attack - Search.au3"
 #include "MBR GUI Design Child Attack - Strategies.au3"
 
-Func LoadTranslatedDropOrderList()
-	Global $g_asDropOrderList = ["", _
-		"Barbarians", "Super Barbarians", "Archers", "Super Archers", "Giants", "Super Giants", "Goblins", "Sneaky Goblins", "Wall Breakers", _
-		"Super Wall Breakers", "Balloons", "Rocket Balloons", "Wizards", "Super Wizards", "Healers", "Dragons", "Super Dragon", _
-		"Pekkas", "Baby Dragons", "Inferno Dragons", "Miners", "Super Miners", "Electro Dragons", "Yetis", "Dragon Riders", "Electro Titans", _
-		"Minions", "Super Minions", "Hog Riders", "Valkyries", "Super Valkyries", "Golems", "Witches", "Super Witches", "Lava Hounds", _
-		"Ice Hounds", "Bowlers", "Super Bowlers", "Ice Golems", "Headhunters", _
-		"Giant Skeleton", "Royal Ghost", "Party Wizard", "Ice Wizard", "Clan Castle", "Heroes"]
-EndFunc   ;==>LoadTranslatedDropOrderList
+;Func LoadTranslatedDropOrderList()
+;	Global $g_asDropOrderList = ["", _
+;		"Barbarians", "Super Barbarians", "Archers", "Super Archers", "Giants", "Super Giants", "Goblins", "Sneaky Goblins", "Wall Breakers", _
+;		"Super Wall Breakers", "Balloons", "Rocket Balloons", "Wizards", "Super Wizards", "Healers", "Dragons", "Super Dragon", _
+;		"Pekkas", "Baby Dragons", "Inferno Dragons", "Miners", "Super Miners", "Electro Dragons", "Yetis", "Dragon Riders", "Electro Titans", _
+;		"Minions", "Super Minions", "Hog Riders", "Valkyries", "Super Valkyries", "Golems", "Witches", "Super Witches", "Lava Hounds", _
+;		"Ice Hounds", "Bowlers", "Super Bowlers", "Ice Golems", "Headhunters", _
+;		"Giant Skeleton", "Royal Ghost", "Party Wizard", "Ice Wizard", "Clan Castle", "Heroes"]
+;EndFunc   ;==>LoadTranslatedDropOrderList
 
 Global $g_hChkCustomDropOrderEnable = 0
 Global $g_ahCmbDropOrder[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -63,7 +63,7 @@ Func CreateDropOrderGUI()
 
 	$g_hGUI_DropOrder = _GUICreate(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "GUI_DropOrder", "Attack Custom Dropping Order"), $_GUI_MAIN_WIDTH - 100, $_GUI_MAIN_HEIGHT - 340, $g_iFrmBotPosX, $g_iFrmBotPosY + 80, $WS_DLGFRAME, -1, $g_hFrmBot)
 	SetDefaultDropOrderGroup(False)
-	LoadTranslatedDropOrderList()
+	;LoadTranslatedDropOrderList()
 
 	Local $x = 25, $y = 25
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "Group_03", "Custom Dropping Order"), $x - 20, $y - 20, 360, 300)
@@ -79,8 +79,8 @@ Func CreateDropOrderGUI()
 
 		; Create translated list of Troops for combo box
 		Local $sComboData = ""
-		For $j = 0 To UBound($g_asDropOrderList) - 1
-			$sComboData &= $g_asDropOrderList[$j] & "|"
+		For $j = 0 To UBound($g_asDropOrderNames) - 1
+			$sComboData &= $g_asDropOrderNames[$j] & "|"
 		Next
 
 		Local $g_hTxtDropOrder = GetTranslatedFileIni("MBR GUI Design Child Attack - Attack", "TxtDropOrder", "Enter sequence order for drop of troop #")

@@ -2,7 +2,7 @@
 ; Name ..........: MBR Bot
 ; Description ...: Uses the ColorCheck until the screen is clear from Clouds to Get Resources values.
 ; Author ........: HungLe (2015)
-; Modified ......: ProMac (2015), Hervidero (2015), MonkeyHunter (08-2016)(05-2017)
+; Modified ......: ProMac (2015), Hervidero (2015), MonkeyHunter (08-2016)(05-2017), xbebenk(03-2024)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -11,36 +11,67 @@
 ; ===============================================================================================================================
 #include-once
 
-Func GetResources($bLog = True, $pMatchMode = -1) ;Reads resources
+Func GetResources($bLog = True) ;Reads resources
 	Static $iStuck = 0, $iSearchGold2 = 0, $iSearchElixir2 = 0
-
-	If _Sleep($DELAYRESPOND) Then Return
+	Local $xRead = 48, $yGold = 0, $yElix = 0, $yDE = 0, $yTrophy = 0
 	$g_iSearchGold = ""
 	$g_iSearchElixir = ""
 	$g_iSearchDark = ""
 	$g_iSearchTrophy = ""
-
+	
+	If _Sleep($DELAYRESPOND) Then Return
 	SuspendAndroid()
-
-	Local $iCount = 0
-	While (getGoldVillageSearch(48, 76) = "") Or (getElixirVillageSearch(48, 104) = "")
-		$iCount += 1
-		If _Sleep($DELAYGETRESOURCES3) Then Return
-		If $iCount >= 50 Or IsProblemAffect() Then ExitLoop ; Wait 50*150ms=7.5 seconds max to read resources
-	WEnd
-
-	If _Sleep($DELAYRESPOND) Then Return
-	$g_iSearchGold = getGoldVillageSearch(48, 76)
-	If _Sleep($DELAYRESPOND) Then Return
-	$g_iSearchElixir = getElixirVillageSearch(48, 104)
-	If _Sleep($DELAYRESPOND) Then Return
-	If _CheckPixel($aAtkHasDarkElixir, $g_bCapturePixel, Default, "HasDarkElixir1") Or _ColorCheck(_GetPixelColor(31, 150, True), Hex(0x2B2225, 6), 10)  Then ; check if the village have a Dark Elixir Storage
-		$g_iSearchDark = getDarkElixirVillageSearch(48, 132)
-		$g_iSearchTrophy = getTrophyVillageSearch(45, 174)
-	Else
-		$g_iSearchDark = "N/A"
-		$g_iSearchTrophy = getTrophyVillageSearch(48, 76 + 68)
+	
+	Local $aResource = QuickMIS("CNX", $g_sImgResourceAttack, 20, 70, 50, 185)
+	If UBound($aResource) < 2 Then 
+		If _Sleep(1000) Then Return
+		$aResource = QuickMIS("CNX", $g_sImgResourceAttack, 20, 70, 50, 185)		
 	EndIf
+	
+	Local $bDEFound = False, $bTrophyFound = False
+	If IsArray($aResource) And UBound($aResource) > 0 Then
+		_ArraySort($aResource, 0, 0, 0, 2)
+		SetDebugLog("Found Resource Image count : " & UBound($aResource))
+		For $i = 0 To UBound($aResource) - 1
+			Switch $aResource[$i][0]
+				Case "Gold"
+					$yGold = $aResource[$i][2] - 3
+					SetDebugLog("[" & $i & "] Found Gold Image")
+				Case "Elix"
+					$yElix = $aResource[$i][2] - 3
+					SetDebugLog("[" & $i & "] Found Elix Image")
+				Case "DE"
+					$yDE = $aResource[$i][2] - 3
+					SetDebugLog("[" & $i & "] Found DE Image")
+					$bDEFound = True
+				Case "Trophy"
+					$yTrophy = $aResource[$i][2]
+					SetDebugLog("[" & $i & "] Found Trophy Image")
+					$bTrophyFound = True
+			EndSwitch
+		Next
+	Else
+		SaveDebugImage("GetResources")
+		$yGold = 76
+		$yElix = 103
+		$yDE = 132
+		SetDebugLog("GetResources got problem reading Icon")
+	EndIf
+	
+	$g_iSearchGold = getGoldVillageSearch($xRead, $yGold)
+	SetDebugLog("getGoldVillageSearch(" & $xRead & "," & $yGold & ")")
+	$g_iSearchElixir = getElixirVillageSearch($xRead, $yElix)
+	SetDebugLog("getElixirVillageSearch(" & $xRead & "," & $yElix & ")")
+	If $bDEFound Then 
+		$g_iSearchDark = getDarkElixirVillageSearch($xRead, $yDE)
+		SetDebugLog("getDarkElixirVillageSearch(" & $xRead & "," & $yDE & ")")
+	EndIf
+	If $bTrophyFound Then 
+		$g_iSearchTrophy = getTrophyVillageSearch($xRead, $yTrophy)
+		SetDebugLog("getTrophyVillageSearch(" & $xRead & "," & $yTrophy & ")")
+	EndIf
+	
+	SetDebugLog("Gold: " & $g_iSearchGold & ", Elix: " & $g_iSearchElixir & ", DE: " & $g_iSearchDark & ", TR: " & $g_iSearchTrophy)
 
 	If $g_iSearchGold = $iSearchGold2 And $g_iSearchElixir = $iSearchElixir2 Then $iStuck += 1
 	If $g_iSearchGold <> $iSearchGold2 Or $g_iSearchElixir <> $iSearchElixir2 Then $iStuck = 0

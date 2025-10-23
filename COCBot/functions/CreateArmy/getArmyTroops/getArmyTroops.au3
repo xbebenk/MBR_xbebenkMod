@@ -34,25 +34,17 @@ Func getArmyTroops($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bCheckW
 	EndIf
 	
 	CheckReceivedTroops()
-	;If _CheckPixel($aRecievedTroops, True) Then ; Found the "You have recieved" Message on Screen, wait till its gone.
-	;	SetLog("Detected Clan Castle Message Blocking Troop Images. Waiting until it's gone", $COLOR_INFO)
-	;	While _CheckPixel($aRecievedTroops, True)
-	;		If _Sleep(500) Then Return
-	;	WEnd
-	;EndIf
-
+	;SearchArmy($g_sImgArmyOverviewTroops, 80, 211, 520, 270, "Troops")
 	Local $sTroopDiamond = GetDiamondFromRect("80, 211, 520, 270") ; Contains iXStart, $iYStart, $iXEnd, $iYEnd
 	If $g_bDebugFuncTime Then StopWatchStart("findMultiple, \imgxml\ArmyOverview\Troops")
 	Local $aCurrentTroops = findMultiple(@ScriptDir & "\imgxml\ArmyOverview\Troops", $sTroopDiamond, $sTroopDiamond, 0, 1000, 0, "objectname,objectpoints", $bNeedCapture) ; Returns $aCurrentTroops[index] = $aArray[2] = ["TroopShortName", CordX,CordY]
 	If $g_bDebugFuncTime Then StopWatchStopLog()
 
 	Local $aTempTroopArray, $aTroopCoords
-	Local $sTroopName = ""
 	Local $iTroopIndex = -1, $iDropTrophyIndex = -1
-	Local $aCurrentTroopsEmpty[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; Local Copy to reset Troops Array
+	Local $aCurrentTroopsEmpty[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; Local Copy to reset Troops Array
 	Local $aTroopsForTropyDropEmpty[10][2] = [["Barb", 0], ["SBarb", 0], ["Arch", 0], ["Giant", 0], ["Wall", 0], ["Gobl", 0], ["Mini", 0], ["Ball", 0], ["Wiza", 0], ["SMini", 0]] ; Local Copy to reset Troop Drop Trophy Array
-	Local $aCurrentTroopsLog[0][3] ; [0] = Name [1] = Quantities [3] Xaxis
-
+	
 	$g_aiCurrentTroops = $aCurrentTroopsEmpty ; Reset Current Troops Array
 	$g_avDTtroopsToBeUsed = $aTroopsForTropyDropEmpty ; Reset Drop Trophy Troops Array
 	If UBound($aCurrentTroops, 1) >= 1 Then
@@ -65,17 +57,15 @@ Func getArmyTroops($bOpenArmyWindow = False, $bCloseArmyWindow = False, $bCheckW
 
 			$iDropTrophyIndex = _ArraySearch($g_avDTtroopsToBeUsed, $aTempTroopArray[0]) ; Search the Troops ShortName in the Drop Trophy Global to check if it is a Drop Trophy Troop
 			If $iDropTrophyIndex <> -1 Then $g_avDTtroopsToBeUsed[$iDropTrophyIndex][1] += $g_aiCurrentTroops[$iTroopIndex] ; If there was a Match in the Array then add the Troop Quantity to it
-
-			$sTroopName = $g_aiCurrentTroops[$iTroopIndex] >= 2 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex] ; Select the right Troop Name, If more than one then use the Plural
-			_ArrayAdd($aCurrentTroopsLog, $sTroopName & "|" & $g_aiCurrentTroops[$iTroopIndex] & "|" & Slot($aTroopCoords[0], $aTroopCoords[1]))
-
 		Next
 	EndIf
 
 	; Just a good log from left to right
-	_ArraySort($aCurrentTroopsLog, 0, 0, 0, 2)
-	For $index = 0 To UBound($aCurrentTroopsLog) - 1
-		If $aCurrentTroopsLog[$index][1] > 0 And $bSetLog Then SetLog(" - " & $aCurrentTroopsLog[$index][1] & " " & $aCurrentTroopsLog[$index][0] & " Available", $COLOR_SUCCESS)
+	Local $iCount = 0, $sTroopName = ""
+	For $i = 0 To UBound($g_aiCurrentTroops) - 1
+		$iCount = $g_aiCurrentTroops[$i]
+		$sTroopName = $iCount > 1 ? $g_asTroopNamesPlural[$i] : $g_asTroopNames[$g_aiCurrentTroops[$i]]
+		If $g_aiCurrentTroops[$i] > 0 And $bSetLog Then SetLog(" - " & $iCount & " " & $sTroopName & " Available", $COLOR_SUCCESS)
 	Next
 
 	If $bCloseArmyWindow Then

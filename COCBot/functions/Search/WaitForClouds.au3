@@ -14,20 +14,28 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func WaitForClouds()
-
 	SetDebugLog("Begin WaitForClouds", $COLOR_DEBUG1)
 	$g_bCloudsActive = True
 	
-	Local $iCount = 0
-	Local $bigCount = 0, $iLastTime = 0
+	Local $iLoop = 100
+	Local $iLastTime = 0
 	Local $hMinuteTimer, $iSearchTime
 
 	Local $hMinuteTimer = __TimerInit() ; initialize timer for tracking search time
+	If _Sleep(1000) Then Return ;lets wait a bit before checking
 	
-	While Not _CheckPixel($aIsAttackPage, True) ; loop to wait for clouds to disappear
-		$iCount += 1
+	For $i = 1 To $iLoop
+		If Not $g_bRunState Then Return
+		
+		SetDebugLog("Wait for Clouds #" & $i, $COLOR_ACTION)
+		
 		If IsProblemAffect() Then ; check for reload error messages -> restart exitLoop, reset search
 			resetAttackSearch()
+			ExitLoop
+		EndIf
+		
+		If IsAttackPage() Then 
+			SetDebugLog("WaitForClouds : Found Attack Page", $COLOR_DEBUG1)
 			ExitLoop
 		EndIf
 		
@@ -38,12 +46,7 @@ Func WaitForClouds()
 			ExitLoop
 		EndIf
 		
-		If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then 
-			SetDebugLog("Found Next Button, exitLoop")
-			ExitLoop
-		EndIf
-		
-		_GUICtrlStatusBar_SetTextEx($g_hStatusBar, " Status: Loop to clean screen without Clouds, # " & $iCount)
+		_GUICtrlStatusBar_SetTextEx($g_hStatusBar, " Status: Loop to clean screen without Clouds, # " & $i)
 		
 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes
 		If $iSearchTime >= $iLastTime + 1 Then
@@ -64,9 +67,13 @@ Func WaitForClouds()
 				ExitLoop
 			EndIf
 		EndIf
-		If Not $g_bRunState Then ExitLoop
-		If _Sleep(500) Then Return
-	WEnd
-
+		
+		If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then 
+			SetDebugLog("WaitForClouds : Found Next Button", $COLOR_DEBUG1)
+			ExitLoop
+		EndIf
+		
+		If _Sleep(250) Then Return
+	Next
 	SetDebugLog("End WaitForClouds", $COLOR_DEBUG1)
 EndFunc   ;==>WaitForClouds

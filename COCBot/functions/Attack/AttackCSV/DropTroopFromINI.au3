@@ -112,31 +112,31 @@ Func DropTroopFromINI($sDropVectors, $iStartIndex, $iEndIndex, $aiIndexArray, $i
 	Local $bSelectTroop = True
 	Local $bUseSpell = True
 	Switch $iTroopIndex
-		Case $eLSpell
-			If Not $g_abAttackUseLightSpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $eHSpell
-			If Not $g_abAttackUseHealSpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $eRSpell
-			If Not $g_abAttackUseRageSpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $eJSpell
-			If Not $g_abAttackUseJumpSpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $eFSpell
-			If Not $g_abAttackUseFreezeSpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $eCSpell
-			If Not $g_abAttackUseCloneSpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $eISpell
-			If Not $g_abAttackUseInvisibilitySpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $ePSpell
-			If Not $g_abAttackUsePoisonSpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $eESpell
-			If Not $g_abAttackUseEarthquakeSpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $eHaSpell
-			If Not $g_abAttackUseHasteSpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $eSkSpell
-			If Not $g_abAttackUseSkeletonSpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $eBtSpell
-			If Not $g_abAttackUseBatSpell[$g_iMatchMode] Then $bUseSpell = False
-		Case $eKing, $eQueen, $eWarden, $eChampion, $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF
+		;Case $eLSpell
+		;	If Not $g_abAttackUseLightSpell[$g_iMatchMode] Then $bUseSpell = False
+		;Case $eHSpell
+		;	If Not $g_abAttackUseHealSpell[$g_iMatchMode] Then $bUseSpell = False
+		;Case $eRSpell
+		;	If Not $g_abAttackUseRageSpell[$g_iMatchMode] Then $bUseSpell = False
+		;Case $eJSpell
+		;	If Not $g_abAttackUseJumpSpell[$g_iMatchMode] Then $bUseSpell = False
+		;Case $eFSpell
+		;	If Not $g_abAttackUseFreezeSpell[$g_iMatchMode] Then $bUseSpell = False
+		;Case $eCSpell
+		;	If Not $g_abAttackUseCloneSpell[$g_iMatchMode] Then $bUseSpell = False
+		;Case $eISpell
+		;	If Not $g_abAttackUseInvisibilitySpell[$g_iMatchMode] Then $bUseSpell = False
+		;Case $ePSpell
+		;	If Not $g_abAttackUsePoisonSpell[$g_iMatchMode] Then $bUseSpell = False
+		;Case $eESpell
+		;	If Not $g_abAttackUseEarthquakeSpell[$g_iMatchMode] Then $bUseSpell = False
+		;Case $eHaSpell
+		;	If Not $g_abAttackUseHasteSpell[$g_iMatchMode] Then $bUseSpell = False
+		;Case $eSkSpell
+		;	If Not $g_abAttackUseSkeletonSpell[$g_iMatchMode] Then $bUseSpell = False
+		;Case $eBtSpell
+		;	If Not $g_abAttackUseBatSpell[$g_iMatchMode] Then $bUseSpell = False
+		Case $eKing, $eQueen, $eWarden, $eChampion, $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD
 			$bSelectTroop = False ; avoid double select
 	EndSwitch
 
@@ -199,7 +199,7 @@ Func DropTroopFromINI($sDropVectors, $iStartIndex, $iEndIndex, $aiIndexArray, $i
 					EndIf
 
 					Switch $iTroopIndex
-						Case $eBarb To $eHunt ; drop normal/super troops
+						Case $eBarb To $eAppWard ; drop normal/super troops
 							If $bDebug Then
 								SetLog("AttackClick( " & $pixel[0] & ", " & $pixel[1] & " , " & $qty2 & ", " & $delayPoint & ",#0668)")
 							Else
@@ -228,6 +228,12 @@ Func DropTroopFromINI($sDropVectors, $iStartIndex, $iEndIndex, $aiIndexArray, $i
 								SetLog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ",-1, -1, -1," & $troopPosition & ") ")
 							Else
 								dropHeroes($pixel[0], $pixel[1], -1, -1, -1, $troopPosition) ; was $g_iChampionSlot, Slot11+
+							EndIf
+						Case $eMinionP
+							If $bDebug Then
+								SetLog("dropHeroes(" & $pixel[0] & ", " & $pixel[1] & ",-1, -1, -1," & $troopPosition & ") ")
+							Else
+								dropHeroes($pixel[0], $pixel[1], -1, -1, -1, $troopPosition) ; was $g_iMinionPSlot, Slot11+
 							EndIf
 						Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF
 							If $bDebug Then

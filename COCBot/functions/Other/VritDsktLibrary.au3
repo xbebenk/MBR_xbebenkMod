@@ -9,7 +9,7 @@ Opt("MustDeclareVars", True)
 	Script Version 1.0
 	Author : HerMano
 	Great Contribution And THANKS To : Nine And kafu
-	Discussion area : https : / / www.autoitscript.com / forum / topic / 206559 - virtual - desktop - manager - under - windows - 10 / ? tab = comments & _fromLogin = 1
+	Discussion area : https://www.autoitscript.com/forum/topic/206559 - virtual - desktop - manager - under - windows - 10 / ? tab = comments & _fromLogin = 1
 
 #ce ----------------------------------------------------------------------------
 

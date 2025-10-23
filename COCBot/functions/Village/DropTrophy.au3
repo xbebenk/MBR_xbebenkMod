@@ -18,7 +18,7 @@ Func DropTrophy()
 	If Not (Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax)) Then Return
 	Local $bDropTrophyDBZap = False
 	If $g_bDropTrophyZap And $g_bSmartZapEnable Then $bDropTrophyDBZap = True
-	
+
 	If $g_bDropTrophyEnable Then
 		SetDebugLog("Drop Trophy()", $COLOR_DEBUG)
 		If Not $g_bRunState Then Return
@@ -107,7 +107,7 @@ Func DropTrophy()
 				If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
 
 				$g_iSearchCount = 0
-				GetResources(False, $DT) ; no log, use $DT matchmode (DropThrophy)
+				GetResources(False) ; no log, use $DT matchmode (DropThrophy)
 				If $g_bRestart Then Return ; exit func
 
 				If $g_bDropTrophyAtkDead Then
@@ -141,19 +141,19 @@ Func DropTrophy()
 						EndIf
 					EndIf
 				EndIf
-				
+
 				If $bDropTrophyDBZap Then
 					If aaaaaa() Then ContinueLoop
 					$bDropTrophyDBZap = False
 				EndIf
-				
+
 				; Normal Drop Trophy, no check for Dead Base
 				SetLog("Identification of your troops:", $COLOR_INFO)
 				PrepareAttack($DT) ; ==== Troops :checks for type, slot, and quantity ===
 				If $g_bRestart Then Return
 
 				If _Sleep($DELAYDROPTROPHY4) Then ExitLoop
-				
+
 				; Drop a Hero or Troop
 				If $g_bDropTrophyUseHeroes Then
 					;a) identify heroes avaiables...
@@ -293,10 +293,10 @@ EndFunc   ;==>DropTrophy
 
 Func SetTrophyLoss()
 	Local $sTrophyLoss
-	If _ColorCheck(_GetPixelColor(33, 148, True), Hex(0x000000, 6), 10) Or _CheckPixel($aAtkHasDarkElixir, $g_bCapturePixel, Default, "HasDarkElixir") Then ; check if the village have a Dark Elixir Storage
-		$sTrophyLoss = getTrophyLossAttackScreen(48, 214)
+	If _PixelSearch($aAtkHasDarkElixir[0], $aAtkHasDarkElixir[1], $aAtkHasDarkElixir[0] + 2, $aAtkHasDarkElixir[1] + 1, Hex($aAtkHasDarkElixir[2], 6), $aAtkHasDarkElixir[3], True, "SetTrophyLoss") Then
+		$sTrophyLoss = getTrophyLossAttackScreen(48, 221)
 	Else
-		$sTrophyLoss = getTrophyLossAttackScreen(48, 184)
+		$sTrophyLoss = getTrophyLossAttackScreen(48, 193)
 	EndIf
 	SetLog(" Trophy loss = " & $sTrophyLoss, $COLOR_DEBUG) ; record trophy loss
 	$g_iDroppedTrophyCount -= Number($sTrophyLoss)
@@ -308,8 +308,8 @@ Func aaaaaa()
 	If checkDeadBaseSuperNew() Then
 		PrepareAttack($DT)
 		Local $SbarbFound = False, $iIndex = 0, $iSBarbCount = 0
-		For $i = 0 To UBound($g_avAttackTroops) - 1 
-			If $g_avAttackTroops[$i][0] = $eSBarb Then 
+		For $i = 0 To UBound($g_avAttackTroops) - 1
+			If $g_avAttackTroops[$i][0] = $eSBarb Then
 				$SbarbFound = True
 				$iSBarbCount = $g_avAttackTroops[$i][1] ;amount of sbarb
 				$iIndex = $i
@@ -317,7 +317,7 @@ Func aaaaaa()
 			If $SbarbFound Then ExitLoop
 		Next
 		If $g_bRestart Then Return
-		If $SbarbFound Then 
+		If $SbarbFound Then
 			Local $all = SmartFarmDetection()
 			Local $aDP[0][3]
 			For $x = 0 To UBound($all) - 1
@@ -337,7 +337,7 @@ Func aaaaaa()
 					Else
 						SetLog("Not array $DP", $COLOR_ERROR)
 					EndIf
-				EndIf								
+				EndIf
 			Next
 			SelectDropTroop($iIndex)
 			_ArraySort($aDP) ;sort by side
@@ -345,34 +345,33 @@ Func aaaaaa()
 				If $iSBarbCount < 1 Then ExitLoop
 				Click($aDP[$j][1], $aDP[$j][2], 2, 0, "#0181") ;Drop SBarb
 				SetLog("Deploying 2 " & $g_asTroopNames[$g_avAttackTroops[$iIndex][0]] & " on " & $aDP[$j][0] & " [" & $aDP[$j][1] & "," & $aDP[$j][2] & "]", $COLOR_SUCCESS)
-				_Sleep(500) ;add small delay
+				If _Sleep(500) Then Return ;add small delay
 				$iSBarbCount -= 2
 			Next
-			_Sleep(15000) ;just add delay after deploy SBarb
+			If _Sleep(15000) Then Return ;just add delay after deploy SBarb
 		Else
 			SetLog("No Super Barbarian found", $COLOR_ERROR)
 			SetLog("Fallback to normal DropTrophy", $COLOR_SUCCESS)
 			Return False
 		EndIf
-		
+
 		Local $ZapFound = False
 		SetLog("====> Dead Base Found while dropping Trophies!", $COLOR_SUCCESS)
 		SetLog("Proceed Zap", $COLOR_INFO)
-		For $i = 0 To UBound($g_avAttackTroops) - 1 
-			If $g_avAttackTroops[$i][0] = $eLSpell Then 
+		For $i = 0 To UBound($g_avAttackTroops) - 1
+			If $g_avAttackTroops[$i][0] = $eLSpell Then
 				$ZapFound = True
 			EndIf
 			If $ZapFound Then ExitLoop
 		Next
 		If $g_bRestart Then Return
-		If $ZapFound Then 
+		If $ZapFound Then
 			SmartZap()
 		EndIf
-		
+
 		ReturnfromDropTrophies(True)
 		If OpenArmyOverview("DropTrophy") Then
-			TrainPreviousArmy(True)
-			_Sleep(1000)
+			If _Sleep(1000) Then Return
 		EndIf
 		Return True
 	EndIf

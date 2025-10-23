@@ -24,15 +24,17 @@ Func AttackReport()
 		$iCount += 1
 		If IsProblemAffect() Then Return
 		If _Sleep($DELAYATTACKREPORT1) Then Return
+		If Not $g_bRunState Then Return
 		SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
 		If $iCount > 30 Then ExitLoop ; wait 30*500ms = 15 seconds max for the window to render
 	WEnd
 	If $iCount > 30 Then SetLog("End of Attack scene slow to appear, attack values my not be correct", $COLOR_INFO)
-	
+
 	$iCount = 0 ; reset loop counter
 	While getResourcesLoot(290, 289) = "" ; check for gold value to be non-zero before reading other values as a secondary timer to make sure all values are available
 		$iCount += 1
 		If _Sleep($DELAYATTACKREPORT1) Then Return
+		If Not $g_bRunState Then Return
 		SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
 		If $iCount > 20 Then ExitLoop ; wait 20*500ms = 10 seconds max before we have call the OCR read an error
 	WEnd
@@ -129,8 +131,6 @@ Func AttackReport()
 				$g_asLeagueDetailsShort = $g_asLeagueDetails[0][3]
 			EndIf
 		EndIf
-		;Display League in Stats ==>
-		GUICtrlSetData($g_hLblLeague, "")
 
 		If StringInStr($g_asLeagueDetailsShort, "1") > 1 Then
 			GUICtrlSetData($g_hLblLeague, "1")
@@ -139,25 +139,23 @@ Func AttackReport()
 		ElseIf StringInStr($g_asLeagueDetailsShort, "3") > 1 Then
 			GUICtrlSetData($g_hLblLeague, "3")
 		EndIf
-		_GUI_Value_STATE("HIDE", $g_aGroupLeague)
+		
 		If StringInStr($g_asLeagueDetailsShort, "B") > 0 Then
-			GUICtrlSetState($g_ahPicLeague[$eLeagueBronze], $GUI_SHOW)
+			_GUICtrlSetImage($g_hPicLeague, $g_sLibIconPath, $eBronze)
 		ElseIf StringInStr($g_asLeagueDetailsShort, "S") > 0 Then
-			GUICtrlSetState($g_ahPicLeague[$eLeagueSilver], $GUI_SHOW)
+			_GUICtrlSetImage($g_hPicLeague, $g_sLibIconPath, $eSilver)
 		ElseIf StringInStr($g_asLeagueDetailsShort, "G") > 0 Then
-			GUICtrlSetState($g_ahPicLeague[$eLeagueGold], $GUI_SHOW)
+			_GUICtrlSetImage($g_hPicLeague, $g_sLibIconPath, $eGold)
 		ElseIf StringInStr($g_asLeagueDetailsShort, "c", $STR_CASESENSE) > 0 Then
-			GUICtrlSetState($g_ahPicLeague[$eLeagueCrystal], $GUI_SHOW)
+			_GUICtrlSetImage($g_hPicLeague, $g_sLibIconPath, $eCrystal)
 		ElseIf StringInStr($g_asLeagueDetailsShort, "M") > 0 Then
-			GUICtrlSetState($g_ahPicLeague[$eLeagueMaster], $GUI_SHOW)
+			_GUICtrlSetImage($g_hPicLeague, $g_sLibIconPath, $eMaster)
 		ElseIf StringInStr($g_asLeagueDetailsShort, "C", $STR_CASESENSE) > 0 Then
-			GUICtrlSetState($g_ahPicLeague[$eLeagueChampion], $GUI_SHOW)
+			_GUICtrlSetImage($g_hPicLeague, $g_sLibIconPath, $eLChampion)
 		ElseIf StringInStr($g_asLeagueDetailsShort, "T") > 0 Then
-			GUICtrlSetState($g_ahPicLeague[$eLeagueTitan], $GUI_SHOW)
+			_GUICtrlSetImage($g_hPicLeague, $g_sLibIconPath, $eTitan)
 		ElseIf StringInStr($g_asLeagueDetailsShort, "LE") > 0 Then
-			GUICtrlSetState($g_ahPicLeague[$eLeagueLegend], $GUI_SHOW)
-		Else
-			GUICtrlSetState($g_ahPicLeague[$eLeagueUnranked], $GUI_SHOW)
+			_GUICtrlSetImage($g_hPicLeague, $g_sLibIconPath, $eLegend)
 		EndIf
 		;==> Display League in Stats
 	Else

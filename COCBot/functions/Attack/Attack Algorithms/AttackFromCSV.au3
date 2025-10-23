@@ -42,8 +42,8 @@ Global $InnerDiamondLeft = 45
 Global $InnerDiamondRight = 815
 Global $InnerDiamondTop = 60
 Global $InnerDiamondBottom = 636
-Global $InnerDiamandDiffX = 50
-Global $InnerDiamandDiffY = 35
+Global $InnerDiamandDiffX = 70
+Global $InnerDiamandDiffY = 48
 
 Global $OuterDiamondLeft = 0
 Global $OuterDiamondRight = 0
@@ -936,7 +936,31 @@ Func TestCSV($iMatchMode = $LB)
 	Local $filename = $g_sAttackScrScriptName[$iMatchMode]
 	$g_iMatchMode = $iMatchMode
 	SetLog("will use script : " & $filename, $COLOR_INFO)
-	PrepareAttack($iMatchMode)
 	CheckZoomOut("TestCSV")
+	PrepareAttack($iMatchMode)
 	Algorithm_AttackCSV()
+	ReturnHome()
+EndFunc
+
+Func CSVLoop($iCountLoop = 1, $bStopWhenResourceFull = False)
+	Local $filename = $g_sAttackScrScriptName[$LB]
+	ZoomOut()
+	For $i = 1 To $iCountLoop
+		SetLog("TestCSVLoop #" & $i, $COLOR_ACTION)
+		PrepareSearch()
+		If Not $g_bRunState Then Return
+		VillageSearch()
+		If Not $g_bRunState Then Return
+		SetLog("will use script : " & $filename, $COLOR_INFO)
+		CheckZoomOut("TestCSV")
+		PrepareAttack($LB)
+		Algorithm_AttackCSV()
+		ReturnHome()
+		If Not $g_bRunState Then Return
+		VillageReport()
+		If Not $g_bRunState Then Return
+		RequestCC()
+		Setlog("TestCSV Loop [" & $i & "/" & $iCountLoop & "]", $COLOR_ACTION) 
+		If isGoldFull() And isElixirFull() And $bStopWhenResourceFull Then Return
+	Next
 EndFunc

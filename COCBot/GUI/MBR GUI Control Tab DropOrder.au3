@@ -87,14 +87,9 @@ Func GUIDropOrder()
 EndFunc   ;==>GUIDropOrder
 
 Func BtnRemoveDropOrder()
-	Local $sComboData = ""
-	For $j = 0 To UBound($g_asDropOrderList) - 1
-		$sComboData &= $g_asDropOrderList[$j] & "|"
-	Next
 	For $i = 0 To Ubound($g_ahCmbDropOrder) - 1
 		$g_aiCmbCustomDropOrder[$i] = -1
-		_GUICtrlComboBox_ResetContent($g_aiCmbCustomDropOrder[$i])
-		GUICtrlSetData($g_ahCmbDropOrder[$i], $sComboData, "")
+		_GUICtrlComboBox_SetCurSel($g_ahCmbDropOrder[$i], -1)
 		_GUICtrlSetImage($g_ahImgDropOrder[$i], $g_sLibIconPath, $eIcnOptions)
 	Next
 	_GUICtrlSetImage($g_ahImgDropOrderSet, $g_sLibIconPath, $eIcnSilverStar)
@@ -174,7 +169,6 @@ Func IsUseCustomDropOrder()
 EndFunc   ;==>IsUseCustomDropOrder
 
 Func ChangeDropOrder()
-	SetDebugLog("Begin Func ChangeDropOrder()", $COLOR_DEBUG) ;Debug
 	Local $iUpdateCount = 0, $aUnique
 
 	If Not IsUseCustomDropOrder() Then ; check if no custom troop values saved yet.

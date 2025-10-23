@@ -64,7 +64,7 @@ Func Blacksmith($bTest = False)
 		If _Sleep(1000) Then Return
 	EndIf
 
-	Local $BuildingInfo = BuildingInfo(242, 472)
+	Local $BuildingInfo = BuildingInfo(242, 477)
 	If StringInStr($BuildingInfo[1], "smith") Then
 		SetLog("Blacksmith is level " & $BuildingInfo[2])
 		$g_iBlacksmithLevel = $BuildingInfo[2]

@@ -13,33 +13,46 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+Func chkActivateBBSuggestedUpgrades()
+	; CheckBox Enable Suggested Upgrades [Update values][Update GUI State]
+	If GUICtrlRead($g_hChkAutoUpgradeBB) = $GUI_CHECKED Then
+		$g_bAutoUpgradeBBEnabled= True
+		GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreHall, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreWall, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBOBControl, $GUI_ENABLE)
+	Else
+		$g_bAutoUpgradeBBEnabled= False
+		GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreHall, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreWall, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBOBControl, $GUI_DISABLE)
+	EndIf
+EndFunc   ;==>chkActivateBBSuggestedUpgrades
+
+Func chkStartClockTowerBoost()
+	$g_bChkStartClockTowerBoost = (GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED)
+EndFunc
+
+Func ChkBBSuggestedUpgradesIgnoreHall()
+	$g_bChkAutoUpgradeBBIgnoreHall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreHall) = $GUI_CHECKED)
+EndFunc   ;==>ChkBBSuggestedUpgradesIgnoreHall
+
+Func ChkBBSuggestedUpgradesIgnoreWall()
+	$g_bChkAutoUpgradeBBIgnoreWall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreWall) = $GUI_CHECKED)
+EndFunc   ;==>ChkBBSuggestedUpgradesIgnoreHall
+
+Func ChkBOBControl()
+	$g_bChkBOBControl = (GUICtrlRead($g_hChkBOBControl) = $GUI_CHECKED)
+EndFunc
+
 Func chkEnableBBAttack()
 	If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hChkBBDropTrophy, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkBBAttIfStarsAvail, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkSkipBBAttIfStorageFull, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkBBDropBMFirst, $GUI_ENABLE)
-		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbBBAttackCount, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkDebugAttackBB, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkStopAttackBB6thBuilder, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkBBAttackReport, $GUI_ENABLE)
+		For $i = $g_hCmbBBAttackCount To $g_hCmbSideAttack
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
 	Else
-		GUICtrlSetState($g_hChkBBDropTrophy, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkBBAttIfStarsAvail, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkSkipBBAttIfStorageFull, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkBBDropBMFirst, $GUI_DISABLE)
-		GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbBBAttackCount, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkDebugAttackBB, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkStopAttackBB6thBuilder, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkBBAttackReport, $GUI_DISABLE)
+		For $i = $g_hCmbBBAttackCount To $g_hCmbSideAttack
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
 	EndIf
 EndFunc
 
@@ -49,15 +62,15 @@ Func cmbBBAttackCount()
 EndFunc
 
 Func cmbBBNextTroopDelay()
-	$g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault + ((_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1) - 5) * $g_iBBNextTroopDelayIncrement ; +- n*increment
+	$g_iBBNextTroopDelay = _GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1
 	SetDebugLog("Next Troop Delay: " & $g_iBBNextTroopDelay)
-	SetDebugLog((_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1) - 5)
+	SetDebugLog(_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1)
 EndFunc   ;==>cmbBBNextTroopDelay
 
 Func cmbBBSameTroopDelay()
-	$g_iBBSameTroopDelay = $g_iBBSameTroopDelayDefault + ((_GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1) - 5) * $g_iBBSameTroopDelayIncrement ; +- n*increment
+	$g_iBBSameTroopDelay = _GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1
 	SetDebugLog("Same Troop Delay: " & $g_iBBSameTroopDelay)
-	SetDebugLog((_GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1) - 5)
+	SetDebugLog(_GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1)
 EndFunc   ;==>cmbBBSameTroopDelay
 
 Func chkBBDropTrophy()

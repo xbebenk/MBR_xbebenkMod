@@ -14,8 +14,9 @@
 ; ===============================================================================================================================
 
 Func CheckCGCompleted()
+	If Not $g_bRunState Then Return
 	Local $bRet = False
-	For $x = 1 To 8
+	For $x = 1 To 5
 		If Not $g_bRunState Then Return
 		SetLog("Check challenges progress #" &$x, $COLOR_ACTION)
 		If _Sleep(1000) Then Return
@@ -28,9 +29,18 @@ Func CheckCGCompleted()
 	Return $bRet
 EndFunc
 
+Func CheckDonateWhileAttackBB()
+	Local $bRet = False
+	
+	If _ColorCheck(_GetPixelColor(66, 289, True), Hex(0xCE081D, 6), 20, Default, "Red Chat notif count") Then $bRet = True
+	
+	Return $bRet
+EndFunc
+
 Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 	If Not $g_bChkEnableBBAttack Then Return
 	If Not $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = True
+	If Not $g_bRunState Then Return
 	
 	If $g_iBBAttackCount = 0 Then
 		Local $count = 1
@@ -43,6 +53,10 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			If Not $g_bRunState Then Return
 			If $g_bIsBBevent Then
 				If CheckCGCompleted() Then ExitLoop
+				If isGoldFullBB() Or isElixirFullBB() Then 
+					AutoUpgradeBB()
+					StarLabUpgrade()
+				EndIf
 				If $count > 4 Then
 					SetLog("IsBBevent = " & String($g_bIsBBevent), $COLOR_INFO)
 					SetLog("Force stop, attacked 5 times!", $COLOR_INFO)
@@ -58,7 +72,9 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 				SetLog("Force stop, attacked 10 times!", $COLOR_INFO)
 				ExitLoop
 			EndIf
+			If CheckDonateWhileAttackBB() Then RequestCC()
 		Wend
+		CollectBBCart()
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
 		ClickAway("Left")
 		If _Sleep(1000) Then Return
@@ -79,6 +95,9 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 			Else
 				ExitLoop
 			EndIf
+			If CheckDonateWhileAttackBB() Then RequestCC()
+			BuilderBaseReport()
+			If isGoldFullBB() And isElixirFullBB() Then ExitLoop
 		Next
 		If Not $g_bRunState Then Return
 		SetLog("Skip Attack this time..", $COLOR_DEBUG)
@@ -89,6 +108,7 @@ Func DoAttackBB($g_iBBAttackCount = $g_iBBAttackCount)
 EndFunc
 
 Func ClickFindNowButton()
+	If Not $g_bRunState Then Return
 	Local $bRet = False
 	For $i = 1 To 10
 		If _ColorCheck(_GetPixelColor(655, 440, True), Hex(0x89D239, 6), 20) Then
@@ -110,6 +130,7 @@ Func ClickFindNowButton()
 EndFunc
 
 Func WaitCloudsBB()
+	If Not $g_bRunState Then Return
 	Local $bRet = True
 	
 	Local $count = 1
@@ -136,7 +157,7 @@ EndFunc
 Func _AttackBB()
 	If Not $g_bRunState Then Return
 	Local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
-	
+	If _Sleep(500) Then Return
 	SetLog("Going to attack.", $COLOR_INFO)
 	If Not ClickFindNowButton() Then
 		ClickAway("Left")
@@ -173,12 +194,12 @@ Func _AttackBB()
 	If isOnBuilderBase() Then
 		If Not $g_bIsBBevent Then  ;disable collect cart if doing CG Challenges, too much time waste, bot need to check If CG Challenges is Completed
 			CollectBBCart()
+			BuilderBaseReport(True, False)
 		EndIf
 	Else
 		checkObstacles($g_bStayOnBuilderBase)
 	EndIf
 	SetLog("Done", $COLOR_SUCCESS)
-	BuilderBaseReport(True, False)
 EndFunc
 
 Func EndBattleBB() ; Find if battle has ended and click okay
@@ -200,21 +221,29 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 			$bCountSameDamage = 1
 		EndIf
 		$sTmpDamage = Number($sDamage)
+		
+		If BBBarbarianHead("EndBattleBB") Then ExitLoop
+		
 		If $sTmpDamage = 100 Then
-			_SleepStatus(15000)
-			
+			_SleepStatus(15000) ; wait if not going to second stage
 			If ShouldStopAttackonCG() Then 
-				ReturnHomeDropTrophyBB(True, True)
+				ReturnHomeDropTrophyBB(True, True, $realDamage)
 				ExitLoop
 			EndIf
+			If BBBarbarianHead("EndBattleBB") Then ExitLoop
 			
 			Local $aBBAttackBar = GetAttackBarBB(False, True)
-			If $g_bChkBBCustomArmyEnable Then 
-				CorrectAttackBarBB($aBBAttackBar) 
-				$aBBAttackBar = GetAttackBarBB(False, True) ;correct army troop doesnt have new quantities (if troop changes) so read again the attackbar
-				AttackBB($aBBAttackBar, True)
+			If IsArray($aBBAttackBar) And Ubound($aBBAttackBar) > 0 Then 
+				If $g_bChkBBCustomArmyEnable Then 
+					CorrectAttackBarBB($aBBAttackBar) 
+					$aBBAttackBar = GetAttackBarBB(False, True) ;correct army troop doesnt have new quantities (if troop changes) so read again the attackbar
+					AttackBB($aBBAttackBar, True)
+				Else
+					AttackBB($aBBAttackBar, True)
+				EndIf
 			Else
-				AttackBB($aBBAttackBar, True)
+				SetLog("Cannot detect troop on attackbar", $COLOR_ERROR)
+				ExitLoop
 			EndIf
 			If _Sleep(5000) Then Return ; Add some delay for troops making some damage
 			$sTmpDamage = 0
@@ -227,37 +256,39 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 			If ReturnHomeDropTrophyBB(True) Then $bRet = True
 			ExitLoop
 		EndIf
-
-		If BBBarbarianHead("EndBattleBB") Then
-			$bRet = True
-			If $g_bChkBBAttackReport Then
-				If _SleepStatus(5000) Then Return
-				BBAttackReport($realDamage)
-			EndIf
-			ExitLoop
-		EndIf
-
+		
 		If IsProblemAffect() Then Return
 		If Not $g_bRunState Then Return
 		If _Sleep(1000) Then Return
 	Next
+	
+	If BBBarbarianHead("EndBattleBB") Then
+		$bRet = True
+		If $g_bChkBBAttackReport Then
+			BBAttackReport($realDamage)
+		EndIf
+	EndIf
+	
+	If IsProblemAffect() Then Return
 	
 	For $i = 1 To 3
 		Select
 			Case QuickMIS("BC1", $g_sImgBBReturnHome, 390, 520, 470, 560)
 				Click($g_iQuickMISX, $g_iQuickMISY, 2, 100, "Click Return Home")
 				If $g_bChkDebugAttackBB Then SetLog("Click Return Home", $COLOR_ACTION)
-				If _Sleep(3000) Then Return
+				If _Sleep(1000) Then Return
+				$bRet = True
 			Case QuickMIS("BC1", $g_sImgBBAttackBonus, 410, 464, 454, 490)
 				SetLog("Congrats Chief, Stars Bonus Awarded", $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(2000) Then Return
+				If _Sleep(1000) Then Return
 				$bRet = True
+				ExitLoop
 			Case isOnBuilderBase() = True
 				$bRet = True
+				ExitLoop
 		EndSelect
 		If _Sleep(1000) Then Return
-		If IsProblemAffect() Then Return
 	Next
 	CheckBB20LootCartTutor()
 	If Not $bRet Then SetLog("Could not find finish battle screen", $COLOR_ERROR)
@@ -341,7 +372,8 @@ Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
 						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1] + 35, $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide, $AltSide, $DP)
 						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
 							$bDone = True
-							_Sleep($g_iBBNextTroopDelay) ; wait before next troop
+							If $g_bChkDebugAttackBB Then SetLog("Delay NextTroop: " & $g_iBBNextTroopDelay * 200 & "ms")
+							_Sleep($g_iBBNextTroopDelay * 200) ; wait before next troop
 						EndIf
 					EndIf
 					$j+=1
@@ -355,7 +387,8 @@ Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
 				EndIf
 
 				If $sTroopName <> $aBBAttackBar[$i][0] Then
-					_Sleep($g_iBBNextTroopDelay) ; wait before next troop
+					If $g_bChkDebugAttackBB Then SetLog("Delay NextTroop: " & $g_iBBNextTroopDelay * 200 & "ms")
+					_Sleep($g_iBBNextTroopDelay * 200) ; wait before next troop
 				Else
 					_Sleep($DELAYRESPOND) ; we are still on same troop so lets drop them all down a bit faster
 				EndIf
@@ -387,15 +420,14 @@ EndFunc   ;==>AttackBB
 Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide, $AltSide, $aDP)
 	If IsProblemAffect() Then Return
     SetLog("Deploying " & $sName & " x" & String($iAmount), $COLOR_ACTION)
-	SetDebugLog("countDP = " & UBound($aDP))
-	If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
-    PureClick($x, $y) ; select troop
+	PureClick($x, $y) ; select troop
 	Local $iPoint = 0
 	If UBound($aDP) > 0 Then
 		For $j = 0 To $iAmount - 1
 			$iPoint = Random(0, Ubound($aDP) - 1, 1)
 			PureClick($aDP[$iPoint][1], $aDP[$iPoint][2])
-			If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
+			If $g_bChkDebugAttackBB Then SetLog("Delay SameTroop: " & $g_iBBSameTroopDelay * 200 & "ms") 
+			If _Sleep($g_iBBSameTroopDelay * 200) Then Return ; slow down dropping of troops
 		Next
 	EndIf
 	If $sName = "WallBreaker" Then PureClick($x, $y)
@@ -887,7 +919,7 @@ Func BBBarbarianHead($sLogText = "BBBarbarianHead")
 	EndIf
 	
 	If Not $bRet Then 
-		If WaitforPixel($aBlackHead[0] - 2, $aBlackHead[1] - 2, $aBlackHead[0] + 2, $aBlackHead[1] + 2, 0xFFEF48, 10, 1) Then $bRet = True
+		If WaitforPixel($aBlackHead[0], $aBlackHead[1], $aBlackHead[0] + 1, $aBlackHead[1] + 1, Hex($aBlackHead[2], 6), 10, 1, $sLogText) Then $bRet = True
 	EndIf
 	
 	Return $bRet
@@ -905,7 +937,7 @@ Func BBAttackReport($sDamage = "")
 	
 	If Number($sDamage) = 200 Then 
 		$sStars = 6
-	ElseIf Number($sDamage) > 100 Then 
+	ElseIf Number($sDamage) >= 100 Then 
 		If $g_bChkDebugAttackBB Then SetLog("Damage % more than 100, Adding delay for animation", $COLOR_ACTION)
 		If _Sleep(3000) Then Return
 		$sStars = 3

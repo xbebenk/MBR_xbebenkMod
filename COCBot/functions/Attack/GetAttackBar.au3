@@ -15,7 +15,7 @@
 Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	Local Static $aAttackBar[0][8]
 	Local Static $bDoubleRow = False, $bCheckSlot12 = False
-	Local $sSearchDiamond = GetDiamondFromRect("0,575,835,670")
+	Local $sSearchDiamond = GetDiamondFromRect("0, 580, " & $g_iGAME_WIDTH & ", 660")
 	Local $iYBelowRowOne = 630, $aiOCRLocation[2] = [-1, -1], $aSlotAmountX[0][3]
 
 	If $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, True)
@@ -33,7 +33,7 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 		;Check if Double Row is enabled aswell as has 12+ Slots
 		If _CheckPixel($aDoubRowAttackBar, True) Then
 			$bDoubleRow = True
-			$sSearchDiamond = GetDiamondFromRect("0,495,835,670")
+			$sSearchDiamond = GetDiamondFromRect("0, 495, " & $g_iGAME_WIDTH & ", 660")
 		ElseIf _CheckPixel($a12OrMoreSlots, True) Then
 			$bCheckSlot12 = True
 			SetDeBugLog("Found 12th slot for Normal Troops")
@@ -46,7 +46,6 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	If UBound($aAttackBar) = 0 Or Not $bRemaining Then
 		Local $iAttackbarStart = __TimerInit()
 		Local $aTempArray, $aTempCoords, $aTempMultiCoords, $iRow = 1
-
 		Local $aAttackBarResult = findMultiple($g_sImgAttackBarDir, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
 
 		If UBound($aAttackBarResult) = 0 Then
@@ -67,7 +66,7 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 					_ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					$aiOCRLocation[$iRow - 1] = $aTempCoords[1] ; Store any OCR Location for later use on Heroes
 				Else
-					If StringRegExp($aTempArray[0], "(King)|(Queen)|(Warden)|(Champion)", 0) Then _ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
+					If StringRegExp($aTempArray[0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)", 0) Then _ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					Local $aTempElement[1][8] = [[$aTempArray[0], $aTempCoords[0], $aTempCoords[1], -1, -1, -1, -1, $iRow]] ; trick to get the right variable types into our array. Delimiter Adding only gets us string which can't be sorted....
 					_ArrayAdd($aAttackBar, $aTempElement)
 				EndIf
@@ -105,7 +104,8 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	Local $aFinalAttackBar[0][7]
 	Local $aiOCRY = [-1, -1]
 	If Not $bRemaining Then $aiOCRY = GetOCRYLocation($aSlotAmountX)
-	Local $sKeepRemainTroops = "(King)|(Queen)|(Warden)|(Champion)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)" ; TODO: check if (WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF) required
+	Local $sKeepRemainTroops = "(King)|(Queen)|(Warden)|(Champion)|(MinionP)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)"
+	Local $sKeepSieges = "(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)"
 
 	For $i = 0 To UBound($aAttackBar, 1) - 1
 		If $aAttackBar[$i][1] > 0 Then
@@ -132,28 +132,27 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 				$aAttackBar[$i][5] = Number($aTempSlot[0])
 				$aAttackBar[$i][6] = Number($aTempSlot[1])
 				$aAttackBar[$i][3] = Number($aTempSlot[2])
-				If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)", 0) And $aiOCRY[$aAttackBar[$i][7] - 1] <> -1 Then $aAttackBar[$i][6] = ($aiOCRY[$aAttackBar[$i][7] - 1] - 7)
+				;If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)", 0) And $aiOCRY[$aAttackBar[$i][7] - 1] <> -1 Then $aAttackBar[$i][6] = ($aiOCRY[$aAttackBar[$i][7] - 1] - 7)
 			EndIf
 
-			If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)|(Castle)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)", 0) Then
+			If StringRegExp($aAttackBar[$i][0], $sKeepRemainTroops, 0) Then
 				If Not $bRemoved Then $aAttackBar[$i][4] = 1
-				If ($pMatchMode = $DB Or $pMatchMode = $LB) And StringRegExp($aAttackBar[$i][0], "(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)", 0) And $g_abAttackDropCC[$pMatchMode] And $g_aiAttackUseSiege[$pMatchMode] > 0 And $g_aiAttackUseSiege[$pMatchMode] <= 6 Then
-					$g_iSiegeLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 35, 645))
+				If StringRegExp($aAttackBar[$i][0], $sKeepSieges, 0) Then
+					$g_iSiegeLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 30, 645))
 					If $g_iSiegeLevel = "" Then $g_iSiegeLevel = 1
-					SetDebugLog($aAttackBar[$i][0] & " level: " & $g_iSiegeLevel)
+					SetDebugLog($aAttackBar[$i][0] & " Level: " & $g_iSiegeLevel)
 				EndIf
 			Else
 				If Not $bRemoved Then
-					$aAttackBar[$i][4] = Number(getTroopCountSmall(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6])))
-					If $aAttackBar[$i][4] = 0 Then $aAttackBar[$i][4] = Number(getTroopCountBig(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6] - 2)))
+					$aAttackBar[$i][4] = Number(getTroopCount(Number($aAttackBar[$i][5]), 580))
 				EndIf
 				If StringRegExp($aAttackBar[$i][0], "(LSpell)", 0) And $g_bSmartZapEnable Then
 					Local $iLSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 30, 645))
-					SetDebugLog("$iLSpellLevel:" & $iLSpellLevel)
+					SetDebugLog("LSpell Level:" & $iLSpellLevel)
 					If $iLSpellLevel > 0 And $iLSpellLevel <= 9 Then $g_iLSpellLevel = $iLSpellLevel
 				ElseIf StringRegExp($aAttackBar[$i][0], "(ESpell)", 0) And $g_bEarthQuakeZap Then
 					Local $iESpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 30, 645))
-					SetDebugLog("$iESpellLevel:" & $iESpellLevel)
+					SetDebugLog("ESpell Level:" & $iESpellLevel)
 					If $iESpellLevel > 0 And $iESpellLevel <= 5 Then $g_iESpellLevel = $iESpellLevel
 				EndIf
 			EndIf
@@ -218,7 +217,7 @@ Func ExtendedAttackBarCheck($aAttackBarFirstSearch, $bRemaining, $sSearchDiamond
 					_ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					$aiOCRLocation[$iRow - 1] = $aTempCoords[1]
 				Else
-					If StringRegExp($aTempArray[0], "(King)|(Queen)|(Warden)|(Champion)", 0) Then _ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
+					If StringRegExp($aTempArray[0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)", 0) Then _ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					Local $aTempElement[1][8] = [[$aTempArray[0], $aTempCoords[0], $aTempCoords[1], -1, -1, -1, -1, $iRow]]
 					_ArrayAdd($aAttackBar, $aTempElement)
 				EndIf
@@ -252,8 +251,8 @@ Func ExtendedAttackBarCheck($aAttackBarFirstSearch, $bRemaining, $sSearchDiamond
 
 	Local $aFinalAttackBar[0][7]
 	Local $aiOCRY = [-1, -1]
-	Local $sKeepRemainTroops = "(King)|(Queen)|(Warden)|(Champion)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)" ; TODO: check if (WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF) required
-
+	Local $sKeepRemainTroops = "(King)|(Queen)|(Warden)|(Champion)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)"
+	
 	If Not $bRemaining Then
 		$aiOCRY = GetOCRYLocation($aSlotAmountX)
 		Local $iLastTroopIndex = _ArraySearch($aAttackBar, $sLastTroopName, 0, 0, 0, 0, 1, 0) + 1
@@ -286,23 +285,22 @@ Func ExtendedAttackBarCheck($aAttackBarFirstSearch, $bRemaining, $sSearchDiamond
 				$aAttackBar[$i][5] = Number($aTempSlot[0])
 				$aAttackBar[$i][6] = Number($aTempSlot[1])
 				$aAttackBar[$i][3] = Number($aTempSlot[2] + $iLastSlotNumber + 1)
-				If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)", 0) And $aiOCRY[$aAttackBar[$i][7] - 1] <> -1 Then $aAttackBar[$i][6] = ($aiOCRY[$aAttackBar[$i][7] - 1] - 7)
+				If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)", 0) And $aiOCRY[$aAttackBar[$i][7] - 1] <> -1 Then $aAttackBar[$i][6] = ($aiOCRY[$aAttackBar[$i][7] - 1] - 7)
 			EndIf
 
 			If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)|(Castle)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)", 0) Then
 				If Not $bRemoved Then $aAttackBar[$i][4] = 1
 			Else
 				If Not $bRemoved Then
-					$aAttackBar[$i][4] = Number(getTroopCountSmall(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6])))
-					If $aAttackBar[$i][4] = 0 Then $aAttackBar[$i][4] = Number(getTroopCountBig(Number($aAttackBar[$i][5]), Number($aAttackBar[$i][6] - 2)))
+					$aAttackBar[$i][4] = Number(getTroopCount(Number($aAttackBar[$i][5]), 580))
 				EndIf
 				If StringRegExp($aAttackBar[$i][0], "(LSpell)", 0) And $g_bSmartZapEnable Then
 					Local $iLSpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 30, 645))
-					SetDebugLog("$iLSpellLevel:" & $iLSpellLevel)
+					SetDebugLog("$LSpell Level:" & $iLSpellLevel)
 					If $iLSpellLevel > 0 And $iLSpellLevel <= 9 Then $g_iLSpellLevel = $iLSpellLevel
 				ElseIf StringRegExp($aAttackBar[$i][0], "(ESpell)", 0) And $g_bEarthQuakeZap Then
 					Local $iESpellLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][5]) - 30, 645))
-					SetDebugLog("$iESpellLevel:" & $iESpellLevel)
+					SetDebugLog("ESpell Level:" & $iESpellLevel)
 					If $iESpellLevel > 0 And $iESpellLevel <= 5 Then $g_iESpellLevel = $iESpellLevel
 				EndIf
 			EndIf

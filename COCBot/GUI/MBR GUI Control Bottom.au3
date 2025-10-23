@@ -35,16 +35,16 @@ Func Initiate()
 		EndIf
 		SetLogCentered("  Current Profile: " & $g_sProfileCurrentName & " ", "-", $COLOR_INFO)
 		If $g_bDebugSetlog Or $g_bDebugOcr Or $g_bDebugRedArea Or $g_bDevMode Or $g_bDebugImageSave Or $g_bDebugBuildingPos Or $g_bDebugOCRdonate Or $g_bDebugAttackCSV Or $g_bDebugAndroid Then
-			SetLogCentered(" Warning Debug Mode Enabled! ", "-", $COLOR_ERROR)
-			SetLog("      SetLog : " & $g_bDebugSetlog, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("     Android : " & $g_bDebugAndroid, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("         OCR : " & $g_bDebugOcr, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("     RedArea : " & $g_bDebugRedArea, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("   ImageSave : " & $g_bDebugImageSave, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog(" BuildingPos : " & $g_bDebugBuildingPos, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("   OCRDonate : " & $g_bDebugOCRdonate, $COLOR_ERROR, "Lucida Console", 8)
-			SetLog("   AttackCSV : " & $g_bDebugAttackCSV, $COLOR_ERROR, "Lucida Console", 8)
-			SetLogCentered(" Warning Debug Mode Enabled! ", "-", $COLOR_ERROR)
+			SetLogCentered(" Warning Debug Mode Enabled! ", "-", $COLOR_DEBUG2)
+			SetLog("      SetLog : " & $g_bDebugSetlog, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("     Android : " & $g_bDebugAndroid, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("         OCR : " & $g_bDebugOcr, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("     RedArea : " & $g_bDebugRedArea, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("   ImageSave : " & $g_bDebugImageSave, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog(" BuildingPos : " & $g_bDebugBuildingPos, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("   OCRDonate : " & $g_bDebugOCRdonate, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLog("   AttackCSV : " & $g_bDebugAttackCSV, $COLOR_DEBUG2, "Lucida Console", 8)
+			SetLogCentered(" Warning Debug Mode Enabled! ", "-", $COLOR_DEBUG2)
 		EndIf
 
 		$g_bInitiateSwitchAcc = True
@@ -72,19 +72,14 @@ Func Initiate()
 		If Not $g_bRunState Then Return
 
 		AndroidShield("Initiate", True)
-		checkMainScreen()
-		If Not $g_bRunState Then Return
-
-		ZoomOut()
-		If Not $g_bRunState Then Return
-
+		If $g_bIsHidden Then 
+			SetLog("$g_bIsHidden : " & String($g_bIsHidden), $COLOR_DEBUG)
+			reHide()
+		EndIf
+		
 		If Not $g_bSearchMode Then
 			BotDetectFirstTime()
 			If Not $g_bRunState Then Return
-
-			If $g_bCheckGameLanguage Then TestLanguage()
-			If Not $g_bRunState Then Return
-
 			runBot()
 		EndIf
 	Else
@@ -110,12 +105,6 @@ Func InitiateLayout()
 		If Not CheckScreenAndroid($BSx, $BSy) Then ; Is Client size now correct?
 			If $AdjustScreenIfNecessarry = True Then
 				Local $MsgRet = $IDOK
-				;If _Sleep(3000) Then Return False
-				;Local $MsgRet = MsgBox(BitOR($MB_OKCANCEL, $MB_SYSTEMMODAL), "Change the resolution and restart " & $g_sAndroidEmulator & "?", _
-				;	"Click OK to adjust the screen size of " & $g_sAndroidEmulator & " and restart the emulator." & @CRLF & _
-				;	"If your " & $g_sAndroidEmulator & " really has the correct size (" & $g_iDEFAULT_WIDTH & " x " & $g_iDEFAULT_HEIGHT & "), click CANCEL." & @CRLF & _
-				;	"(Automatically Cancel in 15 Seconds)", 15)
-
 				If $MsgRet = $IDOK Then
 					Return RebootAndroidSetScreen() ; recursive call!
 					;Return "RebootAndroidSetScreen()"
@@ -173,6 +162,7 @@ EndFunc   ;==>btnStart
 Func btnStop()
 	If $g_bRunState Then
 		; always invoked in MyBot.run.au3!
+		SetLog("Button Stop pressed", $COLOR_DEBUG)
 		EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
 		$g_bRunState = False ; Exit BotStart()
 	EndIf
@@ -191,10 +181,12 @@ Func btnSearchMode()
 EndFunc   ;==>btnSearchMode
 
 Func btnPause($bRunNow = True)
+	SetLog("Button Pause pressed", $COLOR_DEBUG)
 	TogglePause()
 EndFunc   ;==>btnPause
 
 Func btnResume()
+	SetLog("Button Resume pressed", $COLOR_DEBUG)
 	TogglePause()
 EndFunc   ;==>btnResume
 

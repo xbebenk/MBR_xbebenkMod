@@ -14,7 +14,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func checkMainScreen($bSetLog = Default, $bBuilderBase = Default, $CalledFrom = "Default") ;Checks if in main screen
+Func checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase, $CalledFrom = "Default") ;Checks if in main screen
 	If Not $g_bRunState Then Return
 	FuncEnter(checkMainScreen)
 	Return FuncReturn(_checkMainScreen($bSetLog, $bBuilderBase, $CalledFrom))
@@ -24,11 +24,8 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 
 	If $bSetLog = Default Then $bSetLog = True
 	Local $VillageType = "MainVillage"
-	If $bBuilderBase = Default Then $bBuilderBase = isOnBuilderBase()
 	If $bBuilderBase Then $VillageType = "BuilderBase"
-	If $bSetLog Then
-		SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
-	EndIf
+	If $bSetLog Then SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
 	
 	If Not CheckAndroidRunning(False) Then Return
 	PlaceUnplacedBuilding()
@@ -47,7 +44,6 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		If $bLocated Then ExitLoop
 		
 		If Not $bLocated And GetAndroidProcessPID() = 0 Then OpenCoC()
-		If $g_sAndroidEmulator = "Bluestacks5" Then NotifBarDropDownBS5()
 		
 		;mainscreen not located, proceed to check if there is obstacle covering screen
 		$bObstacleResult = checkObstacles($bBuilderBase)
@@ -89,11 +85,12 @@ EndFunc   ;==>_checkMainScreen
 
 Func _checkMainScreenImage($aPixelToCheck)
 	Local $bRet = False, $bBuilderInfo = False, $bChatTab = False
+	If $g_iAndroidBackgroundMode = 2 Then $aPixelToCheck[0] += 1
 	$bChatTab = checkChatTabPixel()
-	$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreenImage")
+	$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreen")
 	
 	$bRet = $bChatTab And $bBuilderInfo
-	If $g_bDebugSetLog Then SetLog("PixelToCheck = " & _ArrayToString($aPixelToCheck), $COLOR_ACTION)
+	If $g_bDebugSetLog Then SetLog("PixelToCheck = " & $aPixelToCheck[0] & "," & $aPixelToCheck[1] & " exp:" & Hex($aPixelToCheck[2], 6) & ", tolerance:" & $aPixelToCheck[3] , $COLOR_ACTION)
 	If $g_bDebugSetLog Then SetLog("PixelCheck result : " & ($bRet ? "succeed" : "failed"), $COLOR_ACTION)
 	
 	If Not $bRet Then
@@ -129,39 +126,12 @@ EndFunc   ;==>checkChatTabPixel
 
 Func isOnMainVillage()
 	Local $bRet = False
-	Local $aPixelToCheck = $aIsMain
-	
-	$bRet = _checkMainScreenImage($aPixelToCheck)
-	If Not $bRet Then
-		SetDebugLog("Using Image to Check if isOnMainVillage")
-		If QuickMIS("BC1", $g_sImgInfo, 369, 3, 392, 15) Then $bRet = True
-	EndIf
+	$bRet = _checkMainScreenImage($aIsMain)
 	Return $bRet
 EndFunc
 
 Func isOnBuilderBase()
 	Local $bRet = False
-	Local $aPixelToCheck[2] = [$aIsOnBuilderBase, $aIsOnBuilderBase1]
-	
-	For $i In $aPixelToCheck
-		$bRet = _checkMainScreenImage($i)
-		If $bRet Then ExitLoop
-	Next
-	
-	If Not $bRet Then
-		SetDebugLog("Using Image to Check if isOnBuilderBase")
-		If QuickMIS("BC1", $g_sImgInfo, 435, 1, 462, 22) Then $bRet = True
-	EndIf
-	
+	$bRet = _checkMainScreenImage($aIsOnBuilderBase)
 	Return $bRet
-EndFunc
-
-Func NotifBarDropDownBS5()
-	If $g_sAndroidEmulator = "Bluestacks5" Then
-		If _CheckPixel($aNotifBarBS5_a, True) And _CheckPixel($aNotifBarBS5_b, True) And _CheckPixel($aNotifBarBS5_c, True) Then
-			SetLog("Found NotifBar Dropdown, Closing!", $COLOR_INFO)
-			Click(777, 34)
-			Return
-		EndIf
-	EndIf
 EndFunc

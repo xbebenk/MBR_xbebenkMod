@@ -13,52 +13,26 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func BuilderBaseReport($bBypass = False, $bSetLog = True, $CheckBH = True)
-	ClickAway("Left")
-	If _Sleep($DELAYVILLAGEREPORT1) Then Return
-
+Func BuilderBaseReport($bBypass = False, $bSetLog = True); $CheckBH = True)
 	Switch $bBypass
 		Case False
 			If $bSetLog Then SetLog("Builder Base Report", $COLOR_INFO)
 		Case True
 			If $bSetLog Then SetLog("Updating Builder Base Resource Values", $COLOR_INFO)
-		Case Else
-			If $bSetLog Then SetLog("Builder Base Village Report Error, You have been a BAD programmer!", $COLOR_ERROR)
 	EndSwitch
 
 	getBuilderCount($bSetLog, True) ; update builder data
 	If _Sleep($DELAYRESPOND) Then Return
 
 	$g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyMainScreen(67, 84)
-	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(695, 23)
-	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(695, 72)
+	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(690, 23)
+	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(690, 72)
 	If $bSetLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]) & " [E]: " & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]) & "[T]: " & _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB]), $COLOR_SUCCESS)
 
 	If Not $bBypass Then ; update stats
 		UpdateStats()
 	EndIf
 	
-	If Not $CheckBH Then Return
-	
-	$g_bisBHMaxed = False
-	$g_bisMegaTeslaMaxed = False
-	$g_bisBattleMachineMaxed = False
-	If $g_bOptimizeOTTO Then
-		isGoldFullBB()
-		isElixirFullBB()
-		If $g_iFreeBuilderCountBB > 0 Or $g_bElixirStorageFullBB Then
-			If $g_bIs6thBuilderUnlocked Then
-				$g_bisBHMaxed = True
-				$g_bisMegaTeslaMaxed = True
-				$g_bisBattleMachineMaxed = True
-				$g_bOptimizeOTTO = False
-			ElseIf isBHMaxed() Then 
-				isMegaTeslaMaxed() ;check if Builder Hall and Mega Tesla have Maxed (lvl 9)
-				isBattleMachineMaxed()
-			EndIf
-		EndIf
-	EndIf
-	ClickAway("Left")
 EndFunc   ;==>BuilderBaseReport
 
 Func isBHMaxed()
@@ -69,11 +43,11 @@ Func isBHMaxed()
 	
 	Local $aBuildingName, $bRet = False
 	ClickAway("Left")
-	_Sleep(1000)
+	If _Sleep(1000) Then Return
 	If QuickMIS("BC1", $g_sImgBuilderHall) Then ; Search for Builder Hall
 		Click($g_iQuickMISX, $g_iQuickMISY)
-		_Sleep(1000)
-		Local $aBuildingName = BuildingInfo(242, 472)
+		If _Sleep(1000) Then Return
+		Local $aBuildingName = BuildingInfo(242, 477)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Builder Hall and max level
 			If $aBuildingName[1] = "Builder Hall" Then
@@ -92,8 +66,8 @@ Func isBHMaxed()
 		; If Builder Hall cannot be found, try search for lab
 		If QuickMIS("BC1", $g_sImgStarLaboratory) Then 
 			Click($g_iQuickMISX + 5, $g_iQuickMISY + 5)
-			_Sleep(1000)
-			Local $aBuildingName = BuildingInfo(242, 472)
+			If _Sleep(1000) Then Return
+			Local $aBuildingName = BuildingInfo(242, 477)
 			If $aBuildingName[0] = 2 Then
 				; Verify if is Star Laboratory and max level
 				If $aBuildingName[1] = "Star Laboratory" Then
@@ -122,12 +96,12 @@ Func isMegaTeslaMaxed()
 	
 	ClickAway("Left")
 	If $g_bisMegaTeslaMaxed = True Then Return True
-	_Sleep(1000)
+	If _Sleep(1000) Then Return
 	
 	If QuickMIS("BC1", $g_sImgMegaTesla) Then ;Search for Mega Tesla
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
-		_Sleep(1000)
-		Local $aBuildingName = BuildingInfo(242, 472)
+		If _Sleep(1000) Then Return
+		Local $aBuildingName = BuildingInfo(242, 477)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Mega Tesla is MaxLevel
 			If $aBuildingName[1] = "Mega Tesla" Then
@@ -155,13 +129,13 @@ Func isBattleMachineMaxed()
 
 	ClickAway("Left")
 	If $g_bisBattleMachineMaxed = True Then Return True
-	_Sleep(1000)
+	If _Sleep(1000) Then Return
 	
 	If QuickMIS("BC1", $g_sImgBattleMachine) Then ;Search for Battle Machine
 		If $g_iQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 30
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
-		_Sleep(1000)
-		Local $aBuildingName = BuildingInfo(242, 472)
+		If _Sleep(1000) Then Return
+		Local $aBuildingName = BuildingInfo(242, 477)
 		If $aBuildingName[0] = 2 Then
 			; Verify if is Mega Tesla is MaxLevel
 			If $aBuildingName[1] = "Battle Machine" Then
@@ -186,7 +160,7 @@ EndFunc
 Func isGoldFullBB()
 	$g_bGoldStorageFullBB = False
 	Local $aIsGoldFullBB[4] = [685, 40 , 0xE7C00D, 10] ; Main Screen Gold Resource bar is 90% Full
-	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(695, 23)
+	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(690, 23)
 	If _CheckPixel($aIsGoldFullBB, True) Then ;Hex if color of gold (orange)
 		SetLog("Builder Base Gold Storages are > 90% : " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]), $COLOR_SUCCESS)
 		$g_bGoldStorageFullBB = True
@@ -208,7 +182,7 @@ EndFunc   ;==>isGoldFull
 Func isElixirFullBB()
 	$g_bElixirStorageFullBB = False
 	Local $aIsElixirFullBB[4] = [685, 90 , 0x7945C5, 10] ; Main Screen Elixir Resource bar is 90% Full
-	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(695, 72)
+	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(690, 72)
 	If _CheckPixel($aIsElixirFullBB, True) Then ;Hex if color of Elixir (orange)
 		SetLog("Builder Base Elixir Storages are > 90% : " & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]), $COLOR_SUCCESS)
 		$g_bElixirStorageFullBB = True

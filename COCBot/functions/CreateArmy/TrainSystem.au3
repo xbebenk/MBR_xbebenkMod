@@ -16,111 +16,38 @@
 #include <Array.au3>
 #include <MsgBoxConstants.au3>
 
-Func TrainSystem($bSkipCheckArmy = False)
+Func TrainSystem()
 	If Not $g_bTrainEnabled Then ; check for training disabled in halt mode
 		If $g_bDebugSetlogTrain Then SetLog("Halt mode - training disabled", $COLOR_DEBUG)
 		Return
 	EndIf
-	
-	If Not $g_bRunState Then Return
-	$g_sTimeBeforeTrain = _NowCalc()
-	StartGainCost()
+
 	SetLog("====== TrainSystem =====", $COLOR_ACTION)
+	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
 	BoostSuperTroop()
-	;Add small delay after boost
-	If _Sleep(1000) Then Return
-	If Not $g_bRunState Then Return
-	
-	OpenArmyOverview("TrainSystem")
-	If Not IsTrainPage(False) Then 
+
+
+	If Not OpenArmyOverview("TrainSystem") Then
 		SetLog("Cannot verify Army Window, exit train!", $COLOR_ERROR)
 		Return
 	EndIf
-	
-	If Not $bSkipCheckArmy Then 
-		CheckIfArmyIsReady()
-	Else
-		RequestCC(False, "IsFullClanCastle")
-	EndIf
-	
+
+	CheckIfArmyIsReady()
+
 	If Not $g_bRunState Then Return
 	TrainCustomArmy()
 	If Not $g_bRunState Then Return
 	TrainSiege()
 
-	If $g_bDonationEnabled And $g_bChkDonate Then ResetVariables("donated")
+	If $g_bChkDonate Then ResetVariables("donated")
 
 	ClickAway()
 	If _Sleep(1000) Then Return ; Delay AFTER the click Away Prevents lots of coc restarts
 
 	EndGainCost("Train")
 
-	checkAttackDisable($g_iTaBChkIdle) ; Check for Take-A-Break after opening train page
 EndFunc   ;==>TrainSystem
-
-Func TrainPreviousArmy($bCloseWindow = False, $bOnlyBoost = False)
-	If Not OpenQuickTrainTab(False, "TrainPreviousArmy()") Then Return
-	If _Sleep(750) Then Return
-	For $i = 1 To 2
-		If _ColorCheck(_GetPixelColor(730, 232, True), Hex(0x8BD43A, 6), 10) Then ;check Train Previous Button
-			PureClick(730, 232)
-			SetLog("Training Previous Army", $COLOR_SUCCESS)
-			If _Sleep(1000) Then Return
-			If IsOKCancelPage() Then
-				If _ColorCheck(_GetPixelColor(642, 232, True), Hex(0xFFFFFF, 6), 1) Then ;check popup window (boost or not enough room)
-					SetLog("[" & $i & "] SuperTroop Boost Needed", $COLOR_INFO)
-					Click(530, 420, 1, "Click Okay, Confirm Boost")
-					If _Sleep(1000) Then Return
-					If WaitforPixel(582, 555, 640, 556, "FF887F", 10, 1) Then ;red color on DE cost
-						Click(465, 545, 1, "Click Boost with SuperTroop potion")
-						If _Sleep(1000) Then Return
-						If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 450, 444, 485, 480) Then
-							Click($g_iQuickMISX, $g_iQuickMISY)
-							SetLog("Successfully boost with potion", $COLOR_SUCCESS)
-							If _Sleep(1000) Then Return
-							If $bOnlyBoost Then ExitLoop
-							If Not OpenArmyOverview("TrainPreviousArmy") Then Return
-							If Not OpenQuickTrainTab(True, "TrainPreviousArmy") Then Return
-						Else
-							SetLog("Cannot find potion boost button", $COLOR_ERROR)
-							ClickAway()
-							ClickAway()
-							Return
-						EndIf
-					Else
-						Click(630, 545, 1, "Click Boost with Dark Elixer")
-						If _Sleep(1000) Then Return
-						If QuickMis("BC1", $g_sImgGeneralCloseButton, 624, 139, 678, 187) Then 
-							Click($g_iQuickMISX - 230, $g_iQuickMISY + 300)
-							SetLog("Successfully boost with Dark Elixer", $COLOR_SUCCESS)
-							If _Sleep(1000) Then Return
-							If $bOnlyBoost Then ExitLoop
-							If Not OpenArmyOverview("TrainPreviousArmy") Then Return
-							If Not OpenQuickTrainTab(True, "TrainPreviousArmy") Then Return
-						EndIf
-					EndIf					
-				Else ;not a boost window
-					SetLog("[" & $i & "] Not Enough room to train", $COLOR_INFO)
-					Click(530, 420, 1, "Click Okay, Confirm Training")
-					If _Sleep(500) Then Return
-					ExitLoop
-				EndIf
-			EndIf
-			If _ColorCheck(_GetPixelColor(730, 232, True), Hex(0xADADAD, 6), 10) Then ExitLoop ;check Greyed Train Previous Button
-		Else
-			SetLog("Button Train Not Found, Skip Train Previous Army", $COLOR_DEBUG)
-		EndIf
-	Next
-	
-	If $bOnlyBoost Then 
-		If Not OpenArmyOverview("OnlyBoost") Then Return
-		If Not OpenTroopsTab(True, "OnlyBoost") Then Return
-		If _Sleep(500) Then Return
-	EndIf
-	
-	If $bCloseWindow Then ClickAway()
-EndFunc ;==>TrainPreviousArmy
 
 Func TrainCustomArmy()
 	If Not $g_bRunState Then Return
@@ -128,9 +55,7 @@ Func TrainCustomArmy()
 	SetLog(" ====== CustomTrain ====== ", $COLOR_ACTION)
 
 	If $g_iActiveDonate = -1 Then PrepareDonateCC()
-	
-	If $g_bTrainPreviousArmy Then TrainPreviousArmy()
-	
+
 	If $g_bDoubleTrain Then
 		DoubleTrain()
 		Return
@@ -170,9 +95,9 @@ Func CheckIfArmyIsReady($bCloseWindow = False)
 	Local $bFullArmyHero = False
 	Local $bFullSiege = False
 	$g_bWaitForCCTroopSpell = False ; reset for waiting CC in SwitchAcc
-	
+
 	If Not OpenArmyOverview("CheckIfArmyIsReady()") Then Return
-	
+
 	CheckArmyCamp(True, False, True, True)
 	CheckCCArmy()
 	RequestCC(False, "IsFullClanCastle")
@@ -273,8 +198,8 @@ Func CheckIfArmyIsReady($bCloseWindow = False)
 		SetDebugLog(" $g_bIsFullArmywithHeroesAndSpells: " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_DEBUG)
 		SetDebugLog(" $g_iTownHallLevel: " & Number($g_iTownHallLevel), $COLOR_DEBUG)
 	EndIf
-	
-	If $bCloseWindow Then 
+
+	If $bCloseWindow Then
 		ClickAway()
 		If _Sleep(1000) Then Return
 	EndIf
@@ -325,7 +250,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 	If UBound($rWTT) = 1 And $rWTT[0][0] = "Arch" And $rWTT[0][1] = 0 Then Return True ; If was default Result of WhatToTrain
 
 	If Not OpenTroopsTab(False, "TrainUsingWhatToTrain()") Then Return
-	
+
 	; Loop through needed troops to Train
 	For $i = 0 To (UBound($rWTT) - 1)
 		If Not $g_bRunState Then Return
@@ -338,7 +263,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 				Local $NeededSpace = $g_aiTroopSpace[$iTroopIndex] * $rWTT[$i][1]
 			EndIf
 
-			Local $aLeftSpace = GetOCRCurrent(95, 163)
+			Local $aLeftSpace = GetCurrentTroop(96, 165)
 			Local $LeftSpace = $bQueue ? ($aLeftSpace[1] * 2) - $aLeftSpace[0] : $aLeftSpace[2]
 			If $g_bIgnoreIncorrectTroopCombo And $g_bDoubleTrain And $bQueue Then
 				$LeftSpace = $aLeftSpace[0]
@@ -368,6 +293,7 @@ Func TrainUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 	Return True
 EndFunc   ;==>TrainUsingWhatToTrain
 
+;BrewUsingWhatToTrain(WhatToTrain())
 Func BrewUsingWhatToTrain($rWTT, $bQueue = $g_bIsFullArmywithHeroesAndSpells)
 	If Not $g_bRunState Then Return
 
@@ -413,37 +339,54 @@ Func DragIfNeeded($Troop)
 	If Not $g_bRunState Then Return
 	Local $bCheckPixel = False
 	Local $iIndex = TroopIndexLookup($Troop, "DragIfNeeded")
-	Local $bDrag = False
-	
-	If $iIndex > $eEdrag Then $bDrag = True ; Drag if Troops is on Right side from miner
-	If $iIndex > $eHunt Then $bDrag = False ; Not Drag if Troops is Event Troops
+	Local $bDragLeft = False, $bDragRight = False
 
-	If $bDrag Then ;Drag if Troops is on Right side from miner
-		If _ColorCheck(_GetPixelColor(777, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Dark Troops: " & $bCheckPixel)
-		For $i = 1 To 3
-			If Not $bCheckPixel Then
-				ClickDrag(750, 435, 10, 435, 500)
-				If _Sleep(2000) Then Return
-				If _ColorCheck(_GetPixelColor(777, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-			Else
-				Return True
-			EndIf
-		Next
-	Else
-		If _ColorCheck(_GetPixelColor(75, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-		If $g_bDebugSetlogTrain Then SetLog("DragIfNeeded Normal Troops: " & $bCheckPixel)
-		For $i = 1 To 3
-			If Not $bCheckPixel Then
-				ClickDrag(100, 435, 850, 435, 500)
-				If _Sleep(2000) Then Return
-				If _ColorCheck(_GetPixelColor(75, 354, True), Hex(0xD3D3CB, 6), 5) Then $bCheckPixel = True
-			Else
-				Return True
-			EndIf
+	If $iIndex >= $eLSpell And $iIndex <= $eOgSpell Then Return True ;skip drag on spell
+	If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True ; Troop image found in current page (no need to drag)
+
+	If _PixelSearch(776, 354, 777, 355, Hex(0xD3D3CB, 6), 10, True, "DragIfNeeded") Then
+		For $i = 1 To 2
+			SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Left", $COLOR_ACTION)
+			ClickDrag(100, 435, 850, 435)
+			$bDragLeft = True
+			If _Sleep(1500) Then Return
+			If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
 		Next
 	EndIf
+
+	If _PixelSearch(75, 354, 76, 355, Hex(0xD3D3CB, 6), 10, True, "DragIfNeeded") Then
+		For $i = 1 To 2
+			SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Right", $COLOR_ACTION)
+			ClickDrag(750, 435, 50, 435)
+			$bDragRight = True
+			If _Sleep(1500) Then Return
+			If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
+		Next
+	EndIf
+
+	If Not $bDragLeft And Not $bDragRight Then
+		For $i = 1 To 2
+			If $i < 2 Then
+				SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Left", $COLOR_ACTION)
+				ClickDrag(100, 435, 850, 435)
+			Else
+				SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Right", $COLOR_ACTION)
+				ClickDrag(750, 435, 50, 435)
+			EndIf
+			If _Sleep(1500) Then Return
+			If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
+		Next
+	EndIf
+
 	SetLog("Failed to Verify Troop " & $g_asTroopNames[TroopIndexLookup($Troop, "DragIfNeeded")] & " Position or Failed to Drag Successfully", $COLOR_ERROR)
+	If $g_bSuperTroopsEnable Then
+		SetLog("Re-Check If SuperTroop Boost needed", $COLOR_INFO)
+		ClickAway()
+		BoostSuperTroop(False, True)
+		OpenArmyOverview()
+		OpenTroopsTab()
+		TrainUsingWhatToTrain(WhatToTrain())
+	EndIf
 	Return False
 EndFunc   ;==>DragIfNeeded
 
@@ -473,133 +416,112 @@ EndFunc   ;==>IsElixirTroop
 
 Func IsDarkTroop($Troop)
 	Local $iIndex = TroopIndexLookup($Troop, "IsDarkTroop")
-	If $iIndex >= $eMini And $iIndex <= $eHunt Then Return True
+	If $iIndex >= $eMini And $iIndex <= $eAppWard Then Return True
 	Return False
 EndFunc   ;==>IsDarkTroop
 
 Func IsElixirSpell($Spell)
 	Local $iIndex = TroopIndexLookup($Spell, "IsElixirSpell")
-	If $iIndex >= $eLSpell And $iIndex <= $eISpell Then Return True
+	If $iIndex >= $eLSpell And $iIndex <= $eReSpell Then Return True
 	Return False
 EndFunc   ;==>IsElixirSpell
 
 Func IsDarkSpell($Spell)
 	Local $iIndex = TroopIndexLookup($Spell, "IsDarkSpell")
-	If $iIndex >= $ePSpell And $iIndex <= $eBtSpell Then Return True
+	If $iIndex >= $ePSpell And $iIndex <= $eOgSpell Then Return True
 	Return False
 EndFunc   ;==>IsDarkSpell
 
 Func IsSpellToBrew($sName)
 	Local $iIndex = TroopIndexLookup($sName, "IsSpellToBrew")
-	If $iIndex >= $eLSpell And $iIndex <= $eBtSpell Then Return True
+	If $iIndex >= $eLSpell And $iIndex <= $eOgSpell Then Return True
 	Return False
 EndFunc   ;==>IsSpellToBrew
 
 ;RemoveExtraTroops(WhatToTrain(True))
 Func RemoveExtraTroops($toRemove)
-	Local $CounterToRemove = 0, $iResult = 0
+	Local $CounterToRemove = 0, $iResult = 0, $iIndex, $aRemovePos[2], $bIsSpell = False
 	; Army Window should be open and should be in Tab 'Army tab'
-
 	; 1 Means Removed Troops without Deleting Troops Queued
 	; 2 Means Removed Troops And Also Deleted Troops Queued
 	; 3 Means Didn't removed troop... Everything was well
-	
+
 	If UBound($toRemove) = 1 And $toRemove[0][0] = "Arch" And $toRemove[0][1] = 0 Then Return 3
 
 	If ($g_iCommandStop = 3 Or $g_iCommandStop = 0) And Not $g_iActiveDonate Then Return 3
-	
+
 	If ($g_bIgnoreIncorrectTroopCombo Or $g_bIgnoreIncorrectSpellCombo) And Not $g_bPreciseArmy Then Return 3
-	
+
 	If UBound($toRemove) > 0 Then ; If needed to remove troops
 
 		; Check if Troops to remove are already in Train Tab Queue!! If was, Will Delete All Troops Queued Then Check Everything Again...
-		If DoWhatToTrainContainTroop($toRemove) And Not IsQueueEmpty("Troops", True, False) Then
+		If DoWhatToTrainContainTroop($toRemove) And Not IsQueueEmpty("Troops") Then
 			SetLog("Clear troop queue before removing unexpected troops in army", $COLOR_INFO)
-			DeleteQueued("Troops")
-			$iResult = 2
+			If Not OpenTroopsTab(True, "RemoveExtraTroops") Then Return
+			RemoveTrainTroop()
 		EndIf
 
-		If DoWhatToTrainContainSpell($toRemove) And Not IsQueueEmpty("Spells", True, False) Then
+		If DoWhatToTrainContainSpell($toRemove) And Not IsQueueEmpty("Spells") Then
 			SetLog("Clear spell queue before removing unexpected spells in army", $COLOR_INFO)
-			DeleteQueued("Spells")
-			$iResult = 2
+			If Not OpenSpellsTab(True, "RemoveExtraTroops") Then Return
+			RemoveTrainSpell()
 		EndIf
 
-		;If $iResult = 2 Then 
 		$toRemove = WhatToTrain(True) ; Check Everything Again...
+		If UBound($toRemove) = 1 And $toRemove[0][0] = "Arch" And $toRemove[0][1] = 0 Then Return 2
 
-		Local $rGetSlotNumber = GetSlotNumber() ; Get all available Slot numbers with troops assigned on them
-		Local $rGetSlotNumberSpells = GetSlotNumber(True)
-
-		SetLog("Troops To Remove: ", $COLOR_INFO)
-		$CounterToRemove = 0
-		; Loop through Troops needed to get removed Just to write some Logs
-		For $i = 0 To (UBound($toRemove) - 1)
-			If IsSpellToBrew($toRemove[$i][0]) Then ExitLoop
-			$CounterToRemove += 1
-			SetLog(" - " & $g_asTroopNames[TroopIndexLookup($toRemove[$i][0])] & ": " & $toRemove[$i][1] & "x", $COLOR_SUCCESS)
-		Next
-
-		If $CounterToRemove <= UBound($toRemove) Then
-			SetLog("Spells To Remove: ", $COLOR_INFO)
-			For $i = $CounterToRemove To (UBound($toRemove) - 1)
-				SetLog(" - " & $g_asSpellNames[TroopIndexLookup($toRemove[$i][0]) - $eLSpell] & ": " & $toRemove[$i][1] & "x", $COLOR_SUCCESS)
-			Next
-		EndIf
-
-		If Not _CheckPixel($aButtonEditArmy, True) Then ; If no 'Edit Army' Button found in army tab to edit troops
+		If WaitforPixel($aBtnEditArmy[0], $aBtnEditArmy[1], $aBtnEditArmy[0] + 1, $aBtnEditArmy[1] + 1, Hex($aBtnEditArmy[2], 6), $aBtnEditArmy[3], 1, "BtnEditArmy") Then
+			ClickP($aBtnEditArmy) ; Click Edit Army Button
+			If _Sleep(1000) Then Return
+		Else
 			SetLog("Cannot find/verify 'Edit Army' Button in Army tab", $COLOR_WARNING)
 			Return False ; Exit function
 		EndIf
 
-		ClickP($aButtonEditArmy, 1) ; Click Edit Army Button
-		If _Sleep(500) Then Return
+		SetLog("To Remove:", $COLOR_INFO)
+		For $i = 0 To (UBound($toRemove) - 1)
+			$iIndex = TroopIndexLookup($toRemove[$i][0])
+			$bIsSpell = False ;reset
+			If $iIndex >= $eLSpell Then
+				$iIndex -= $eLSpell
+				$bIsSpell = True
+				SetLog(" - " & $g_asSpellNames[$iIndex] & ": " & $toRemove[$i][1] & "x", $COLOR_SUCCESS)
+			Else
+				SetLog(" - " & $g_asTroopNames[$iIndex] & ": " & $toRemove[$i][1] & "x", $COLOR_SUCCESS)
+			EndIf
 
-		; Loop through troops needed to get removed
-		$CounterToRemove = 0
-		For $j = 0 To (UBound($toRemove) - 1)
-			If IsSpellToBrew($toRemove[$j][0]) Then ExitLoop
-			$CounterToRemove += 1
-			For $i = 0 To (UBound($rGetSlotNumber) - 1) ; Loop through All available slots
-				; $toRemove[$j][0] = Troop name, E.g: Barb, $toRemove[$j][1] = Quantity to remove
-				If $toRemove[$j][0] = $rGetSlotNumber[$i] Then ; If $toRemove Troop Was the same as The Slot Troop
-					Local $pos = GetSlotRemoveBtnPosition($i) ; Get positions of - Button to remove troop
-					ClickRemoveTroop($pos, $toRemove[$j][1], $g_iTrainClickDelay) ; Click on Remove button as much as needed
-				EndIf
-			Next
+			If QuickMIS("BFI", ($bIsSpell ? $g_sImgArmyOverviewSpells : $g_sImgArmyOverviewTroops) & $toRemove[$i][0] & "*", 77, ($bIsSpell ? 337 : 211), 520, ($bIsSpell ? 294 : 270)) Then
+				$aRemovePos[0] = $g_iQuickMISX
+				$aRemovePos[1] = $g_iQuickMISY
+				ClickRemoveTroop($aRemovePos, $toRemove[$i][1], $g_iTrainClickDelay)
+			EndIf
 		Next
 
-		For $j = $CounterToRemove To (UBound($toRemove) - 1)
-			For $i = 0 To (UBound($rGetSlotNumberSpells) - 1) ; Loop through All available slots
-				; $toRemove[$j][0] = Troop name, E.g: Barb, $toRemove[$j][1] = Quantity to remove
-				If $toRemove[$j][0] = $rGetSlotNumberSpells[$i] Then ; If $toRemove Troop Was the same as The Slot Troop
-					Local $pos = GetSlotRemoveBtnPosition($i, True) ; Get positions of - Button to remove troop
-					ClickRemoveTroop($pos, $toRemove[$j][1], $g_iTrainClickDelay) ; Click on Remove button as much as needed
-				EndIf
-			Next
-		Next
-
-		If _Sleep(1000) Then Return
-		If Not _CheckPixel($aButtonRemoveTroopsOK1, True) Then ; If no 'Okay' button found in army tab to save changes
-			SetLog("Cannot find/verify 'Okay' Button in Army tab", $COLOR_WARNING)
+		If WaitforPixel($aBtnRemOK1[0], $aBtnRemOK1[1], $aBtnRemOK1[0] + 1, $aBtnRemOK1[1] + 1, Hex($aBtnRemOK1[2], 6), $aBtnRemOK1[3], 1, "BtnRemOK1") Then
+			ClickP($aBtnRemOK1) ; Click on 'Okay' button to save changes
+			If _Sleep(1000) Then Return
+		Else
+			SetLog("Cannot find/verify 'OK1' Button in Army tab", $COLOR_WARNING)
 			ClickAway() ; Click Away, Necessary! due to possible errors/changes
-			If _Sleep(1000) Then OpenArmyOverview("RemoveExtraTroops()") ; Open Army Window AGAIN
-			Return False ; Exit Function
+			If _Sleep(1000) Then Return
+			OpenArmyOverview("BtnRemOK1") ;open army window
+			Return False
 		EndIf
 
 		If Not $g_bRunState Then Return
-		ClickP($aButtonRemoveTroopsOK1, 1) ; Click on 'Okay' button to save changes
-		If _Sleep(1200) Then Return
-		If Not _CheckPixel($aButtonRemoveTroopsOK2, True) Then ; If no 'Okay' button found to verify that we accept the changes
-			SetLog("Cannot find/verify 'Okay #2' Button in Army tab", $COLOR_WARNING)
-			ClickAway()
-			Return False ; Exit function
+
+		If WaitforPixel($aBtnRemOK2[0], $aBtnRemOK2[1], $aBtnRemOK2[0] + 1, $aBtnRemOK2[1] + 1, Hex($aBtnRemOK2[2], 6), $aBtnRemOK2[3], 1, "BtnRemOK2") Then
+			ClickP($aBtnRemOK2) ; Click on 'Okay' button to Save changes... Last button
+			If _Sleep(1000) Then Return
+		Else
+			SetLog("Cannot find/verify 'OK2' Button in Army tab", $COLOR_WARNING)
+			If _Sleep(1000) Then Return
+			OpenArmyOverview("BtnRemOK1") ;open army window
+			Return False
 		EndIf
 
-		ClickP($aButtonRemoveTroopsOK2, 1) ; Click on 'Okay' button to Save changes... Last button
-
 		SetLog("All Extra troops removed", $COLOR_SUCCESS)
-		If _Sleep(200) Then Return
+		If _Sleep(1000) Then Return
 		If $iResult = 0 Then $iResult = 1
 	Else ; If No extra troop found
 		SetLog("No extra troop to remove, great", $COLOR_SUCCESS)
@@ -653,63 +575,30 @@ Func RemoveExtraTroopsQueue()
 	Next
 EndFunc   ;==>RemoveExtraTroopsQueue
 
-Func IsQueueEmpty($sType = "Troops", $bCheckTab = False, $removeExtraTroopsQueue = True)
-	Local $iArrowX, $iArrowY = 127
+Func IsQueueEmpty($sType = "Troops")
+	Local $iArrowX, $iArrowY = 125
 	If Not $g_bRunState Then Return
-	
+
 	If $sType = "Troops" Then
-		$iArrowX = 327
+		$iArrowX = 324
 	ElseIf $sType = "Spells" Then
-		$iArrowX = 463
-	ElseIf $sType = "SiegeMachines" Then
-		$iArrowX = 597
+		$iArrowX = 460
 	EndIf
-	
-	If WaitforPixel($iArrowX - 1, $iArrowY - 1, $iArrowX, $iArrowY, Hex(0x797362, 6), 20, 1) Then ;check if we have grey tab
-		If Not $bCheckTab Then Return True
-	ElseIf WaitforPixel($iArrowX - 1, $iArrowY - 1, $iArrowX, $iArrowY, Hex(0x83BF44, 6), 20, 1) Then ;check if we have green arrow
-		If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": queue arrow Found", $COLOR_ACTION) 
+
+	If WaitforPixel($iArrowX, $iArrowY, $iArrowX + 1, $iArrowY + 1, Hex(0x7C7866, 6), 20, 1, "IsQueueEmpty") Then ;check if we have grey tab
+		SetLog("IsQueueEmpty " & $sType & ": No queue arrow", $COLOR_ACTION)
+		Return True
+	ElseIf WaitforPixel($iArrowX, $iArrowY, $iArrowX + 1, $iArrowY + 1, Hex(0xA5D27B, 6), 20, 1, "IsQueueEmpty") Then ;check if we have green arrow
+		SetLog("IsQueueEmpty " & $sType & ": Found queue arrow", $COLOR_ACTION)
 		Return False
-	ElseIf WaitforPixel($iArrowX - 1, $iArrowY - 1, $iArrowX, $iArrowY, Hex(0x93CD5B, 6), 20, 1) Then ;chek if we have boosted green arrow
-		$bCheckTab = True ;we have boosted arrow, forced check inside tab
-		If $g_bDebugSetlog Then SetLog("IsQueueEmpty " & $sType & ": boosted arrow Found", $COLOR_ACTION)
 	EndIf
-	
-	If $bCheckTab Or $removeExtraTroopsQueue Then
-		Switch $sType
-			Case "Troops"
-				If Not OpenTroopsTab(True, "IsQueueEmpty") Then Return
-			Case "Spells"
-				If Not OpenSpellsTab(True, "IsQueueEmpty") Then Return
-			Case "SiegeMachines"
-				If Not OpenSiegeMachinesTab(True, "IsQueueEmpty") Then Return
-		EndSwitch
-	EndIf
-	
-	If _ColorCheck(_GetPixelColor(750, 216, True), Hex(0xBAC8A5, 6), 20) Then Return True ;check gray background at 1st training slot = queue is empty
-	
-	If $removeExtraTroopsQueue Then
-		If Not $g_bIsFullArmywithHeroesAndSpells Then
-			For $i = 1 To 3
-				If Not _ColorCheck(_GetPixelColor(750, 216, True), Hex(0xBAC8A5, 6), 20) Then 
-					If $g_bDebugSetlog Then SetLog("[" & $i & "] IsQueueEmpty : Trying to remove Extra " & $sType & " in Queue", $COLOR_ACTION)
-					RemoveExtraTroopsQueue()
-				Else
-					If $g_bDebugSetlog Then SetLog("[" & $i & "] IsQueueEmpty : Done Emptying " & $sType, $COLOR_ACTION)
-					ExitLoop
-				EndIf
-			Next
-		EndIf
-	Else
-		If _ColorCheck(_GetPixelColor(750, 216, True), Hex(0xBAC8A5, 6), 20) Then Return True ; check gray background at 1st training slot
-	EndIf
-	
+
 	Return False
 EndFunc   ;==>IsQueueEmpty
 
 Func ClickRemoveTroop($pos, $iTimes, $iSpeed)
-	$pos[0] = Random($pos[0] - 3, $pos[0] + 10, 1)
-	$pos[1] = Random($pos[1] - 5, $pos[1] + 5, 1)
+	$pos[0] = Random($pos[0] - 10, $pos[0] + 10, 1)
+	$pos[1] = Random($pos[1] - 10, $pos[1] + 10, 1)
 	If Not $g_bRunState Then Return
 	If _Sleep(400) Then Return
 	If $iTimes <> 1 Then
@@ -740,8 +629,11 @@ EndFunc   ;==>GetSlotRemoveBtnPosition
 Func GetSlotNumber($bSpells = False)
 	Select
 		Case $bSpells = False
-			Local Const $Orders = [$eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, $eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eSDrag, $eYeti, $eRDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eEDrag, _
-					$eMini, $eSMini, $eHogs, $eValk, $eSValk, $eGole, $eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt, $eGSkel, $eRGhost, $ePWiza, $eIWiza] ; Set Order of troop display in Army Tab
+			Local Const $Orders = [$eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl, $eWall, $eSWall, $eBall, _
+			$eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eSDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eSMine, _
+			$eEDrag, $eYeti, $eRDrag, $eETitan, $eRootR, $eMini, $eSMini, $eHogs, $eSHogs, $eValk, $eSValk, $eGole, _
+			$eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt, $eAppWard, $eGSkel, $eRGhost, _
+			$ePWiza, $eIWiza] ; Set Order of troop display in Army Tab
 
 			Local $allCurTroops[UBound($Orders)]
 
@@ -765,7 +657,8 @@ Func GetSlotNumber($bSpells = False)
 		Case $bSpells = True
 
 			; Set Order of Spells display in Army Tab
-			Local Const $SpellsOrders = [$eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $eISpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell]
+			Local Const $SpellsOrders = [$eLSpell, $eHSpell, $eRSpell, _
+			$eJSpell, $eFSpell, $eCSpell, $eISpell, $eReSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell, $eOgSpell]
 
 			Local $allCurSpells[UBound($SpellsOrders)]
 
@@ -816,6 +709,7 @@ Func WhatToTrain($ReturnExtraTroopsOnly = False, $bFullArmy = $g_bIsFullArmywith
 					ReDim $ToReturn[UBound($ToReturn) + 1][2]
 				EndIf
 			Next
+			TrainSiege(True)
 		Else
 			If $g_iCommandStop = 3 Or $g_iCommandStop = 0 Then
 				SetLog("You are in halt attack mode and your Army is prepared!", $COLOR_INFO)
@@ -894,15 +788,13 @@ Func CheckQueueTroops($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlo
 	Local $aResult[1] = [""]
 	If $bSetLog Then SetLog("Checking Troops Queue", $COLOR_INFO)
 
-	Local $Dir = @ScriptDir & "\imgxml\ArmyOverview\TroopsQueued"
-
-	Local $aSearchResult = SearchArmy($Dir, 73, 205, $x, 243, $bGetQuantity ? "Queue" : "")
-	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\TroopsQueued", 73, 205, 777, 243, "Queue")
+	Local $aSearchResult = SearchArmy($g_sImgArmyOverviewTroopsQueued, 73, 205, $x, 243, $bGetQuantity ? "Queue" : "")
+	;SearchArmy($g_sImgArmyOverviewTroopsQueued, 73, 205, 777, 243, "Queue")
 	ReDim $aResult[UBound($aSearchResult)]
 
 
 	If $aSearchResult[0][0] = "" Then
-		Setlog("No Troops detected!", $COLOR_ERROR)
+		Setlog("CheckQueueTroops : No Queued Troops detected!", $COLOR_INFO)
 		Return
 	EndIf
 
@@ -938,13 +830,13 @@ EndFunc   ;==>CheckQueueTroops
 ;CheckQueueSpells(True, True, 777, True)
 Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlot = False)
 	Local $avResult[$eSpellCount]
-	Local $sImageDir = @ScriptDir & "\imgxml\ArmyOverview\SpellsQueued"
-	
+
 	If $bSetLog Then SetLog("Checking Spells Queue", $COLOR_INFO)
-	Local $avSearchResult = SearchArmy($sImageDir, 73, 205, $x, 243, $bGetQuantity ? "Queue" : "")
-	;SearchArmy(@ScriptDir & "\imgxml\ArmyOverview\SpellsQueued", 73, 205, 777, 243, "Queue")
+	Local $avSearchResult = SearchArmy($g_sImgArmyOverviewSpellsQueued, 73, 205, $x, 243, $bGetQuantity ? "Queue" : "")
+	;SearchArmy($g_sImgArmyOverviewSpellsQueued, 73, 205, 477, 243, "Queue")
+	;QuickMIS("CNX", $g_sImgArmyOverviewSpellsQueued, 73, 205, 477, 243)
 	If $avSearchResult[0][0] = "" Then
-		Setlog("No Spells detected!", $COLOR_ERROR)
+		Setlog("CheckQueueTroops : No Queued Spells detected!", $COLOR_INFO)
 		Return
 	EndIf
 
@@ -964,7 +856,7 @@ Func CheckQueueSpells($bGetQuantity = True, $bSetLog = True, $x = 777, $bQtyWSlo
 			$aiQuantities[$i][0] = $avSearchResult[$i][0] ;imageName
 			$aiQuantities[$i][1] = $avSearchResult[$i][3] ;Quantity
 			$aiQuantities[$i][2] = $avSearchResult[$i][1] ;x coord
-			
+
 			Local $iSpellIndex = TroopIndexLookup($aiQuantities[$i][0]) - $eLSpell
 			If $iSpellIndex >= 0 And $iSpellIndex < $eSpellCount Then
 				If $bSetLog Then SetLog("  - " & GetTroopName(TroopIndexLookup($aiQuantities[$i][0], "CheckQueueSpells"), $aiQuantities[$i][1] )& ": " & $aiQuantities[$i][1] & "x", $COLOR_SUCCESS)
@@ -985,10 +877,10 @@ EndFunc   ;==>CheckQueueSpells
 Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = "")
 	; Setup arrays, including default return values for $return
 	Local $aResult[1][4], $aCoordArray[1][2], $aCoords, $aCoordsSplit, $aValue
-		
+
 	If Not $g_bRunState Then Return $aResult
-	
-	
+
+
 	; Perform the search
 	_CaptureRegion2($x, $y, $x1, $y1)
 	Local $res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
@@ -1040,7 +932,7 @@ Func SearchArmy($sImageDir = "", $x = 0, $y = 0, $x1 = 0, $y1 = 0, $sArmyType = 
 			EndIf
 		Next
 	EndIf
-	
+
 	_ArraySort($aResult, 0, 0, 0, 1) ; Sort By X position , will be the Slot 0 to $i
 
 	While 1
@@ -1155,7 +1047,7 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 		Return
 	EndIf
 	If _Sleep(500) Then Return
-	
+
 	For $i = 1 To 50
 		If QuickMIS("BC1", $g_sImgDelQueue, 755, 190, 780, 210) Then
 			If Not $g_bRunState Then Return
@@ -1229,14 +1121,14 @@ Func MakingDonatedTroops($sType = "All")
 			If Not $g_bRunState Then Return
 			$Plural = 0
 			If $avDefaultTroopGroup[$i][4] > 0 Then
-				$RemainTrainSpace = GetOCRCurrent(95, 163)
+				$RemainTrainSpace = GetCurrentTroop(96, 165)
 				If $RemainTrainSpace[2] < 0 Then $RemainTrainSpace[2] = $RemainTrainSpace[1] * 2 - $RemainTrainSpace[0] ; remain train space to full double army
 				If $RemainTrainSpace[2] = 0 Then ExitLoop ; army camps full
 
 				Local $iTroopIndex = TroopIndexLookup($avDefaultTroopGroup[$i][0], "MakingDonatedTroops")
 
 				If $avDefaultTroopGroup[$i][2] * $avDefaultTroopGroup[$i][4] <= $RemainTrainSpace[2] Then ; Troopheight x donate troop qty <= avaible train space
-					;Local $pos = GetTrainPos(TroopIndexLookup($avDefaultTroopGroup[$i][0]))
+					;Local $pos = GetImageToUse(TroopIndexLookup($avDefaultTroopGroup[$i][0]))
 					Local $howMuch = $avDefaultTroopGroup[$i][4]
 					If $avDefaultTroopGroup[$i][5] = "e" Then
 						TrainIt($iTroopIndex, $howMuch, $g_iTrainClickDelay)
@@ -1254,7 +1146,7 @@ Func MakingDonatedTroops($sType = "All")
 					If _Sleep(500) Then Return ; Needed Delay, OCR was not picking up Troop Changes
 				Else
 					For $z = 0 To $RemainTrainSpace[2] - 1
-						$RemainTrainSpace = GetOCRCurrent(95, 163)
+						$RemainTrainSpace = GetCurrentTroop(96, 165)
 						If $RemainTrainSpace[0] = $RemainTrainSpace[1] Then ; army camps full
 							;Camps Full All Donate Counters should be zero!!!!
 							For $j = 0 To UBound($avDefaultTroopGroup, 1) - 1
@@ -1264,7 +1156,7 @@ Func MakingDonatedTroops($sType = "All")
 						EndIf
 						If $avDefaultTroopGroup[$i][2] <= $RemainTrainSpace[2] And $avDefaultTroopGroup[$i][4] > 0 Then
 							;TrainIt(TroopIndexLookup($g_asTroopShortNames[$i]), 1, $g_iTrainClickDelay)
-							;Local $pos = GetTrainPos(TroopIndexLookup($avDefaultTroopGroup[$i][0]))
+							;Local $pos = GetImageToUse(TroopIndexLookup($avDefaultTroopGroup[$i][0]))
 							Local $howMuch = 1
 							If $iTroopIndex >= $eBarb And $iTroopIndex <= $eMine Then ; elixir troop
 								TrainIt($iTroopIndex, $howMuch, $g_iTrainClickDelay)
@@ -1289,7 +1181,7 @@ Func MakingDonatedTroops($sType = "All")
 		Next
 		;Top Off any remianing space with archers
 		If $sType = "All" Then
-			$RemainTrainSpace = GetOCRCurrent(95, 163)
+			$RemainTrainSpace = GetCurrentTroop(96, 165)
 			If $RemainTrainSpace[0] < $RemainTrainSpace[1] Then ; army camps full
 				Local $howMuch = $RemainTrainSpace[2]
 				TrainIt($eTroopArcher, $howMuch, $g_iTrainClickDelay)
@@ -1308,7 +1200,7 @@ Func MakingDonatedTroops($sType = "All")
 		For $i = 0 To $eSpellCount - 1
 			If Not $g_bRunState Then Return
 			If $g_aiDonateSpells[$i] > 0 Then
-				Local $pos = GetTrainPos($i + $eLSpell)
+				Local $pos = GetImageToUse($i + $eLSpell)
 				Local $howMuch = $g_aiDonateSpells[$i]
 				TrainIt($eLSpell + $i, $howMuch, $g_iTrainClickDelay)
 				;PureClick($pos[0], $pos[1], $howMuch, 500)
@@ -1317,7 +1209,7 @@ Func MakingDonatedTroops($sType = "All")
 				$g_aiDonateSpells[$i] -= $howMuch
 
 				If _Sleep(1000) Then Return
-				$RemainTrainSpace = GetOCRCurrent(95, 163)
+				$RemainTrainSpace = GetCurrentSpell(96, 165)
 				SetLog(" - Current Capacity: " & $RemainTrainSpace[0] & "/" & ($RemainTrainSpace[1]))
 			EndIf
 		Next
@@ -1353,9 +1245,7 @@ Func MakingDonatedTroops($sType = "All")
 			EndIf
 		Next
 		; Get Siege Capacities
-		Local $sSiegeInfo = getArmyCapacityOnTrainTroops(60, 140) ; OCR read Siege built and total
-		If $g_bDebugSetlogTrain Then SetLog("OCR $sSiegeInfo = " & $sSiegeInfo, $COLOR_DEBUG)
-		Local $aGetSiegeCap = StringSplit($sSiegeInfo, "#", $STR_NOCOUNT) ; split the built Siege number from the total Siege number
+		Local $aGetSiegeCap = GetCurrentSiege() ; OCR read Siege built and total
 		SetLog("Total Siege Workshop Capacity: " & $aGetSiegeCap[0] & "/" & $aGetSiegeCap[1])
 		If Number($aGetSiegeCap[0]) = 0 Then Return
 	EndIf
@@ -1363,38 +1253,6 @@ Func MakingDonatedTroops($sType = "All")
 	Return True
 
 EndFunc   ;==>MakingDonatedTroops
-
-Func GetOCRCurrent($x_start, $y_start)
-
-	Local $aResult[3] = [0, 0, 0]
-	If Not $g_bRunState Then Return $aResult
-
-	; [0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
-	Local $iOCRResult = getArmyCapacityOnTrainTroops($x_start, $y_start)
-
-	If StringInStr($iOCRResult, "#") Then
-		Local $aTempResult = StringSplit($iOCRResult, "#", $STR_NOCOUNT)
-		$aResult[0] = Number($aTempResult[0])
-		$aResult[1] = Number($aTempResult[1])
-		; Case to use this function os Spells will be <= 22 , 11*2
-		If $aResult[1] <= 22 Then
-			If $g_bDebugSetlogTrain Then SetLog("$g_iTotalSpellValue: " & $g_iTotalSpellValue, $COLOR_DEBUG)
-			$aResult[1] = $g_iTotalSpellValue
-			$aResult[2] = $g_iTotalSpellValue - $aResult[0]
-			; May 2018 Update the Army Camp Value on Train page is DOUBLE Value
-		ElseIf $aResult[1] <> $g_iTotalCampSpace Then
-			If $g_bDebugSetlogTrain Then SetLog("$g_iTotalCampSpace: " & $g_iTotalCampSpace, $COLOR_DEBUG)
-			$aResult[1] = $g_iTotalCampSpace
-			$aResult[2] = $g_iTotalCampSpace - $aResult[0]
-		EndIf
-		$aResult[2] = $aResult[1] - $aResult[0]
-	Else
-		SetLog("DEBUG | ERROR on GetOCRCurrent", $COLOR_ERROR)
-	EndIf
-
-	Return $aResult
-
-EndFunc   ;==>GetOCRCurrent
 
 Func _ArryRemoveBlanks(ByRef $aArray)
 	Local $iCounter = 0

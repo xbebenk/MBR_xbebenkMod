@@ -88,13 +88,13 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				SetLog("Out of Sync Error, Reloading CoC", $COLOR_ERROR)
 			Case QuickMIS("BC1", $g_sImgAppRateNever, 220, 270, 500, 340) ; RateNever
 				SetLog("Clash feedback window found, permanently closed!", $COLOR_INFO)
-				Click($g_iQuickMISX, $g_iQuickMISY)
+				PureClick(580, 390)
 				If _Sleep(2000) Then Return
 				PullSharedPrefs()
 				Return True
 			Case QuickMIS("BC1", $g_sImgImportantNotice, 220, 270, 440, 340) ; ImportantNotice
 				SetLog("Found the 'Important Notice' window, closing it", $COLOR_INFO)
-				Click(200, 400)
+				PureClick(200, 400)
 				If _Sleep(2000) Then Return
 				Return True
 			Case QuickMIS("BC1", $g_sImgUpdateCoC, 250, 280, 300, 305) ; UpdateCoC
@@ -139,7 +139,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	
 	If WelcomeBackCheck() Then 
 		SetLog("checkObstacles: Found WelcomeBack Chief Window to close", $COLOR_ACTION)
-		Click(440, 526)
+		Click(440, 515)
 		Return False
 	EndIf
 	If Not $g_bRunState Then Return
@@ -193,12 +193,13 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 
-	If _CheckPixel($aIsTrainPgChk1, True) Then
+	If _PixelSearch($aIsTrainPage[0], $aIsTrainPage[1], $aIsTrainPage[0] + 1, $aIsTrainPage[1] + 1, Hex($aIsTrainPage[2], 6), $aIsTrainPage[3], True, "checkObstacles") Then
 		SetLog("checkObstacles: Found Army Window to close", $COLOR_ACTION)
 		ClickAway(Default, True)
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
+	
 	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgGeneralCloseButton, 660, 80, 820, 200) Then ;ads event popup window (usually covering 80% of coc screen)
 		SetLog("checkObstacles: Found Event Ads", $COLOR_ACTION)
@@ -235,7 +236,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 	If Not $g_bRunState Then Return
-	;If $bBuilderBase Then CheckBB20Tutor()
+	
 	If $bBuilderBase Then CheckBB20LootCartTutor()
 	If Not $bBuilderBase Then
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;handle for clan capital tutorial
@@ -243,6 +244,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			CCTutorial()
 			Return False
 		EndIf
+	EndIf
+	
+	CheckHeroHallTutor()
+	PlacedOnLeague()
+	
+	If IsMultiplayerTabOpen() Then
+		ClickAway("Right")
+		If _Sleep(500) Then Return
 	EndIf
 
 	If QuickMIS("BC1", $g_sImgCCMap, 300, 10, 430, 40) Then ; if bot started or situated on clan capital map, and need to go back to main village
@@ -288,6 +297,11 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
+	
+	If Not $g_bRunState Then Return
+	;CheckPetHouseTutorial()
+	CheckBuilderHutTutorial()
+	
 	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgMaintenance, 300, 38, 566, 75) Then 
 		$Result = getOcrMaintenanceTime(285, 583, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
@@ -319,12 +333,35 @@ EndFunc   ;==>_checkObstacles
 
 Func WelcomeBackCheck()
 	Local $bGreenButton = False, $bWhiteW = False, $bWhiteB = False, $bWhiteC = False
-	If _ColorCheck(_GetPixelColor(440, 497, True), Hex(0xDCF584, 6), 20, Default, "checkObstacles") Then $bGreenButton = True
-	If _ColorCheck(_GetPixelColor(288, 150, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then $bWhiteW = True
-	If _ColorCheck(_GetPixelColor(425, 146, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then $bWhiteB = True
-	If _ColorCheck(_GetPixelColor(504, 146, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") Then $bWhiteC = True
+	If _ColorCheck(_GetPixelColor(440, 497, True), Hex(0xDCF584, 6), 20, Default, "WelcomeBackCheck") Then $bGreenButton = True
+	If _ColorCheck(_GetPixelColor(288, 150, True), Hex(0xFFFFFF, 6), 20, Default, "WelcomeBackCheck") Then $bWhiteW = True
+	If _ColorCheck(_GetPixelColor(425, 146, True), Hex(0xFFFFFF, 6), 20, Default, "WelcomeBackCheck") Then $bWhiteB = True
+	If _ColorCheck(_GetPixelColor(504, 146, True), Hex(0xFFFFFF, 6), 20, Default, "WelcomeBackCheck") Then $bWhiteC = True
 	
 	If $bGreenButton And $bWhiteW And $bWhiteB And $bWhiteC Then Return True
+	
+	If _ColorCheck(_GetPixelColor(155, 230, True), Hex(0xE8E8E0, 6), 20, Default, "THUpgradedCheck") And _
+		_ColorCheck(_GetPixelColor(700, 248, True), Hex(0xFFFFFF, 6), 20, Default, "THUpgradedCheck") Then 
+			Click(700, 248, 1, 50, "THUpgradedCheck")
+			If _Sleep(500) Then Return
+			Click(422, 543, 1, 50, "THUpgradedCheck")
+			If _Sleep(500) Then Return
+			Click(422, 543, 1, 50, "THUpgradedCheck")
+			Return True
+	EndIf
+EndFunc
+
+Func PlacedOnLeague()
+	Local $bRet
+	
+	If QuickMIS("BC1", $g_sImgPlacedOnLeague, 335, 85, 400, 135) Then
+		SetLog("You have been placed on a League", $COLOR_DEBUG2)
+		Click(525, 550, 1, 0, "PlacedOnLeague")
+		If _Sleep(3000) Then Return
+		ClickAway("Rigth")
+		$bRet = True
+	EndIf
+	Return $bRet
 EndFunc
 
 Func CheckSCLOGO()
@@ -503,7 +540,6 @@ Func SwitchForceAnotherDevice()
 			; normal GUI Mode
 			_GUICtrlComboBox_SetCurSel($g_hCmbProfile, _GUICtrlComboBox_FindStringExact($g_hCmbProfile, $g_asProfileName[$g_iNextAccount]))
 			cmbProfile()
-			DisableGUI_AfterLoadNewProfile()
 		Else
 			; mini or headless GUI Mode
 			saveConfig()
@@ -547,8 +583,6 @@ Func checkObstacles_ResetSearch()
 	; reset fast restart flags to ensure base is rearmed after error event that has base offline for long duration, like PB or Maintenance
 	$g_bIsClientSyncError = False
 	$g_bIsSearchLimit = False
-	$g_abNotNeedAllTime[0] = True
-	$g_abNotNeedAllTime[1] = True
 	$g_bRestart = True ; signal all calling functions to return to runbot
 EndFunc   ;==>checkObstacles_ResetSearch
 
@@ -588,50 +622,519 @@ Func checkObstacles_Network($bForceCapture = False, $bReloadCoC = True)
 	Return False
 EndFunc   ;==>checkObstacles_Network
 
-Func CheckObstacles_SCIDPopup()
-	Local $ascidConnectButton = decodeSingleCoord(findImage("SCID", $g_sImgSupercellIDConnect, GetDiamondFromRect("100,20,700,100"), 1, True))
-	If IsArray($ascidConnectButton) And UBound($ascidConnectButton, 1) >= 2 Then
-		SetDebugLog("checkObstacles: Found SCID popup connect suggestion", $COLOR_ACTION)
-		Click($ascidConnectButton[0], $ascidConnectButton[1])
-		If _Sleep(1000) Then Return
-		Local $aSuperCellIDWindowsUI, $bSCIDWindowOpened = False
-		For $i = 0 To 30 ; Checking "New SuperCellID UI" continuously in 30sec
-			If Mod($i, 2) = 0 Then
-				$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDWindows, GetDiamondFromRect("550,60,760,160"), 1, True, Default))
-			Else
-				$aSuperCellIDWindowsUI = decodeSingleCoord(findImage("SupercellID Windows", $g_sImgSupercellIDBlack, GetDiamondFromRect("550,450,760,550"), 1, True, Default))
-			EndIf
-			If IsArray($aSuperCellIDWindowsUI) And UBound($aSuperCellIDWindowsUI, 1) >= 2 Then
-				SetLog("SupercellID Window Opened", $COLOR_DEBUG)
-				$bSCIDWindowOpened = True
-				ExitLoop
-			EndIf
-			If Not $g_bRunState Then Return
-			If _Sleep(900) Then Return
-		Next
-		If $bSCIDWindowOpened Then
-			AndroidBackButton() ;Send back button to android
-			If _Sleep(1000) Then Return
-			If IsOKCancelPage() Then
-				AndroidBackButton()
-			EndIf
-		EndIf
-	Else
-		Return False
-	EndIf
-	Return True
-EndFunc
-
 Func SearchUnplacedBuilding()
-	Local $atmpInfo = getNameBuilding(330, 474)
+	Local $atmpInfo = getNameBuilding(460, 477)
 	If $atmpInfo = "" Then
-		SetDebugLog("Search: Unplaced Building Not Found!")
 		Return False
 	Else
-		If StringInStr($atmpInfo, "place") Or StringInStr($atmpInfo, "Items") Then
-			SetDebugLog("Search: Unplaced Building Found!", $COLOR_SUCCESS)
+		If StringInStr($atmpInfo, "Items") Then
+			SetLog("Search: Unplaced Building Found!", $COLOR_SUCCESS)
 			Return True
 		EndIf
 	EndIf
 EndFunc
 
+Func CheckHeroHallTutor()
+	Local $bRet = False
+	
+	SetDebugLog("Checking HeroHall Tutor")
+	If QuickMIS("BC1", $sImgHeroHallTutor, 375, 300, 485, 385) Then
+		SetLog("Detected Hero Hall Tutor... ", $COLOR_DEBUG)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _SleepStatus(5000) Then Return
+	Else 
+		SetDebugLog("No HeroHall Tutor")
+		Return $bRet
+	EndIf
+	
+	For $i = 1 To 10
+		SetLog("Waiting Chat Tutor #" & $i, $COLOR_ACTION)
+		If WaitforPixel(400, 480, 401, 481, "FFFFFF", 10, 1) Then
+			SetLog("Detected Chat Tutor... ", $COLOR_DEBUG)
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _SleepStatus(5000) Then Return
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+	Next
+	
+	SetDebugLog("Checking King Change Button")
+	If QuickMIS("BC1", $sImgHeroHallTutor, 530, 510, 610, 590) Then
+		SetLog("Detected King Change button... ", $COLOR_DEBUG)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		SetLog("Click King Button", $COLOR_ACTION)
+		If _Sleep(1000) Then return
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		SetLog("Click King Button again", $COLOR_ACTION)
+		If _SleepStatus(4000) Then Return
+		Click(35, 525)
+		SetLog("Click Army Button", $COLOR_ACTION)
+		If _SleepStatus(4000) Then Return
+		Click(130, 385)
+		SetLog("Click King", $COLOR_ACTION)
+		Click(130, 385)
+		SetLog("Click King again", $COLOR_ACTION)
+		ClickAway()
+		If _Sleep(1000) Then Return
+		ClickAway()
+		AndroidZoomOut()
+		$bRet = True
+	Else 
+		SetDebugLog("No HeroHall Tutor")
+		Return $bRet
+	EndIf
+	
+	Return $bRet
+EndFunc
+
+Func CheckPetHouseTutorial()
+	Local $TmpX = 0, $TmpY = 0, $aPetHouse
+	If $g_iTownHallLevel < 14 Then Return
+	
+	If QuickMIS("BC1", $g_sImgOrangeBuilding, 60, 60, 800, 530) Then
+		$TmpX = $g_iQuickMISX
+		$TmpY = $g_iQuickMISY
+		If $TmpX < 70 Or $TmpY < 70 Or $TmpX > 770 Or $TmpY > 500 Then Return
+		If QuickMIS("BC1", $g_sImgPetHouse, $TmpX - 40, $TmpY, $TmpX + 40, $TmpY + 60) Then
+			SetLog("Found PetHouse Tutorial Arrow", $COLOR_SUCCESS)
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(3000) Then Return
+			If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then Click(115, 540)
+			
+			For $i = 1 To 10
+				SetLog("Handling Tutorial chat1 : #" & $i, $COLOR_ACTION)
+				If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then
+					SetLog("Found Tutorial chat", $COLOR_SUCCESS)
+					Click(115, 540)
+					If _Sleep(3000) Then Return
+				EndIf
+				If IsPetHousePage() Then 
+					SetLog("Found PetHouse Window", $COLOR_SUCCESS)
+					ExitLoop
+				EndIf
+				FindPetsButton()
+				If _Sleep(1000) Then Return
+			Next
+			
+			For $i = 1 To 10
+				SetLog("Handling Tutorial chat2 : #" & $i, $COLOR_ACTION)
+				If QuickMIS("BC1", $g_sImgOrangeBuilding, 30, 330, 150, 450) Then
+					If QuickMIS("BFI", $g_sImgPetHouse & "PlusSign*", 50, 410, 110, 470) Then
+						SetLog("Found Lassi assign button", $COLOR_SUCCESS)
+						Click($g_iQuickMISX, $g_iQuickMISY)
+						If _Sleep(1000) Then Return
+					EndIf
+				EndIf
+				
+				If QuickMIS("BFI", $g_sImgPetHouse & "Hero*", 30, 260, 360, 350) Then 
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					If _Sleep(3000) Then Return
+				EndIf
+				
+				If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then
+					SetLog("Found Tutorial chat", $COLOR_SUCCESS)
+					Click(115, 540)
+					If _Sleep(3000) Then Return
+				EndIf
+
+				If IsPetHousePage() Then 
+					SetLog("Found PetHouse Window", $COLOR_SUCCESS)
+					If _Sleep(1000) Then Return
+					ClickAway()
+					ExitLoop
+				EndIf
+				If _Sleep(1000) Then Return
+			Next
+			
+		EndIf
+	EndIf
+EndFunc
+
+Func CheckBuilderHutTutorial()
+	Local $TmpX = 0, $TmpY = 0, $aUpgradeButton
+	If $g_iTownHallLevel < 14 Then Return
+	
+	If QuickMIS("BC1", $g_sImgOrangeBuilding, 70, 100, 780, 570) Then
+		$TmpX = $g_iQuickMISX
+		$TmpY = $g_iQuickMISY
+		If QuickMIS("BC1", $g_sImgBuilderHut, $TmpX - 80, $TmpY - 80, $TmpX + 80, $TmpY + 80) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(1000) Then Return
+			For $i = 1 To 10
+				SetLog("Handling Tutorial chat1 : #" & $i, $COLOR_ACTION)
+				If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then
+					SetLog("Found Tutorial chat", $COLOR_SUCCESS)
+					Click(115, 540)
+					If _Sleep(3000) Then Return
+				EndIf
+				$aUpgradeButton = findButton("Upgrade")
+				If IsArray($aUpgradeButton) And UBound($aUpgradeButton) = 2 Then
+					SetLog("Found BuilderHut UpgradeButton", $COLOR_SUCCESS)
+					ExitLoop
+				EndIf
+				If _Sleep(1000) Then Return
+			Next
+		EndIf
+	EndIf
+EndFunc
+
+Func CCTutorial()
+	If Not $g_bRunState Then Return
+	For $i = 1 To 6
+		SetLog("Wait for Arrow For Travel to Clan Capital #" & $i, $COLOR_INFO)
+		ClickAway("Right")
+		If _Sleep(3000) Then Return
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 330, 320, 450, 400) Then
+			Click(400, 450)
+			SetLog("Going to Clan Capital", $COLOR_SUCCESS)
+			If _Sleep(5000) Then Return
+			ExitLoop ;arrow clicked now go to next step
+		EndIf
+		If $i > 1 And Not QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then Return
+	Next
+	
+	If Not $g_bRunState Then Return
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;tutorial page, with strange person, click until arrow
+		For $i = 1 To 5
+			SetLog("Wait for Arrow on CC Peak #" & $i, $COLOR_INFO)
+			ClickAway("Right")
+			If _Sleep(3000) Then Return
+			If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 330, 100, 450, 200) Then ;check clan capital map
+				Click($g_iQuickMISX, $g_iQuickMISY) ;click capital peak arrow
+				SetLog("Going to Capital Peak", $COLOR_SUCCESS)
+				If _Sleep(10000) Then Return
+				ExitLoop ;arrow clicked now go to next step
+			EndIf
+		Next
+	EndIf
+	
+	If Not $g_bRunState Then Return
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;tutorial page, with strange person, click until map button
+		For $i = 1 To 5
+			SetLog("Wait for Map Button #" & $i, $COLOR_INFO)
+			ClickAway("Right")
+			If _Sleep(3000) Then Return
+			If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 20, 620, 90, 660) Then
+				Click($g_iQuickMISX, $g_iQuickMISY) ;click map
+				SetLog("Going back to Clan Capital", $COLOR_SUCCESS)
+				If _Sleep(5000) Then Return
+				Click($g_iQuickMISX, $g_iQuickMISY) ;click return home
+				SetLog("Return Home", $COLOR_SUCCESS)
+				If _Sleep(5000) Then Return
+				ExitLoop ;map button clicked now go to next step
+			EndIf
+		Next
+	EndIf
+	
+	If Not $g_bRunState Then Return
+	For $i = 1 To 8
+		SetLog("Wait for Arrow on CC Forge #" & $i, $COLOR_INFO)
+		ClickAway("Right")
+		If _Sleep(3000) Then Return
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then ;check arrow on Clan Capital forge
+			Click(420, 490) ;click CC Forge
+			If _Sleep(3000) Then Return
+			ExitLoop
+		EndIf
+	Next
+
+	If Not $g_bRunState Then Return
+	For $i = 1 To 12
+		SetLog("Wait for Arrow on CC Forge Window #" & $i, $COLOR_INFO)
+		ClickAway("Right")
+		If _Sleep(3000) Then Return
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 370, 350, 480, 450) Then
+			Click(420, 490) ;click CC Forge
+			If _Sleep(3000) Then Return
+		EndIf
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 125, 270, 225, 360) Then
+			Click(180, 375) ;click collect
+			If _Sleep(3000) Then Return
+			ExitLoop
+		EndIf
+	Next
+	
+	If Not $g_bRunState Then Return
+	For $i = 1 To 10
+		SetLog("Wait for MainScreen #" & $i, $COLOR_INFO)
+		ClickAway("Right")
+		If isOnMainVillage() Then ExitLoop
+		If _Sleep(3000) Then Return
+	Next
+	ClickDrag(800, 420, 500, 420, 500)
+	ZoomOut()
+EndFunc
+
+Func BBTutorial($x = 170, $y = 560)
+	If _Sleep(1000) Then Return
+	If QuickMIS("BC1", $g_sImgOrangeBuilding, 145, 420, 240, 540) Then 
+		Click($x, $y)
+		If _Sleep(2000) Then Return
+	Else
+		SetLog("No Arrow Detected", $COLOR_INFO)
+		SetLog("Skip BB Tutorial", $COLOR_INFO)
+		Return False
+	EndIf
+	
+	getBuilderCount(True) ;check if we have available builder
+	If $g_iFreeBuilderCount < 1 Then
+		SetLog("Wait for a free builder first", $COLOR_INFO)
+		SetLog("Skip BB Tutorial", $COLOR_INFO)
+		ClickAway()
+		Return False
+	EndIf
+	
+	Local $RebuildButton
+	$RebuildButton = findButton("Upgrade", Default, 1, True)
+	If IsArray($RebuildButton) And UBound($RebuildButton) = 2 Then
+		SetLog("Rebuilding Boat", $COLOR_SUCCESS)
+		Click($RebuildButton[0], $RebuildButton[1])
+	Else
+		SetLog("No Rebuild Button!", $COLOR_ERROR)
+		Return False
+	EndIf
+	
+	Local $RebuildWindowOK = False
+	For $i = 1 To 5
+		SetDebugLog("Waiting for Rebuild Boat Window #" & $i, $COLOR_ACTION)
+		If QuickMis("BC1", $g_sImgGeneralCloseButton, 575, 100, 630, 155) Then
+			SetLog("Rebuild Boat Window Opened", $COLOR_INFO)
+			Click(430, 505) ;Click Rebuild Button
+			If _Sleep(1000) Then Return
+			$RebuildWindowOK = True
+			ExitLoop
+		EndIf
+		If _Sleep(600) Then Return
+	Next
+	If Not $RebuildWindowOK Then Return False
+	
+	SetLog("Waiting Boat Rebuild", $COLOR_INFO)
+	_SleepStatus(12000)
+	
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		SetLog("Waiting Next Tutorial to Travel", $COLOR_INFO)
+		_SleepStatus(20000)
+	EndIf
+	
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then
+		SetLog("Click Travel Button", $COLOR_INFO)
+		Click(475, 575) ;Click Travel
+		If _Sleep(2000) Then Return
+		_SleepStatus(30000)
+	EndIf
+	
+	For $i = 1 To 10
+		SetLog("Waiting Next Tutorial on BuilderBase #" & $i, $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(3000) Then Return
+			ExitLoop
+		EndIf
+		If _Sleep(5000) Then Return
+	Next
+	
+	For $i = 1 To 5
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 475, 110, 665, 250) Then 
+			Click(595, 250) ;Click Broken Builder Hall
+			If _Sleep(2000) Then Return
+			Local $RebuildButton = findButton("Upgrade", Default, 1, True)
+			If IsArray($RebuildButton) And UBound($RebuildButton) = 2 Then
+				SetLog("Upgrading Builder Hall", $COLOR_SUCCESS)
+				Click($RebuildButton[0], $RebuildButton[1])
+				If _Sleep(2000) Then Return
+			EndIf
+			If QuickMis("BC1", $g_sImgGeneralCloseButton, 700, 70, 800, 130) Then
+				SetLog("Upgrade Builder Hall Window Opened", $COLOR_INFO)
+				If _Sleep(1000) Then Return
+				Click(430, 540) ;Click Gold Button
+				If _Sleep(2000) Then Return
+				ExitLoop
+			EndIf
+		EndIf
+		If _Sleep(2000) Then Return
+	Next
+	
+	SetLog("Waiting Builder Hall Upgrading", $COLOR_INFO)
+	_SleepStatus(12000)
+	
+	SetLog("Waiting Next Tutorial on BuilderBase", $COLOR_INFO)
+	For $i = 1 To 10
+		ClickAway()
+		SetLog("Wait Next Tutorial Chat #" & $i, $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then
+			SetLog("Found Tutorial Chat", $COLOR_ACTION)
+			ClickAway()
+			_SleepStatus(10000)
+		EndIf
+		If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then
+			SetLog("Found Tutorial Chat", $COLOR_INFO)
+			Click(115, 540) 
+			_SleepStatus(10000)
+		EndIf
+		If WaitforPixel(674, 535, 675, 536, "B35727", 20, 2) Then
+			SetLog("Found Tutorial Chat", $COLOR_INFO)
+			Click(674, 535) 
+			_SleepStatus(10000)
+		EndIf
+		If WaitforPixel(150, 534, 151, 535, "FFA980", 20, 2) Then
+			SetLog("Found Tutorial Chat", $COLOR_INFO)
+			Click(150, 534) 
+			_SleepStatus(10000)
+		EndIf
+		If WaitforPixel(710, 560, 711, 561, "885843", 20, 2) Then
+			SetLog("Found Tutorial Chat", $COLOR_INFO)
+			Click(150, 534) 
+			_SleepStatus(10000)
+		EndIf
+		
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 430, 100, 550, 230) Then 
+			Click(430, 240) ;Click Star Laboratory
+			If _Sleep(2000) Then Return
+			ExitLoop
+		EndIf
+		If _Sleep(3000) Then Return
+	Next
+		
+	For $i = 1 To 5
+		SetLog("Wait Research Button Tutorial on Star Laboratory #" & $i, $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 480, 460, 570, 570) Then 
+			Click(470, 570) ;Click Research Button
+			If _Sleep(2000) Then Return
+			ExitLoop
+		EndIf
+		If _Sleep(2000) Then Return
+	Next
+	
+	For $i = 1 To 5
+		SetLog("Wait Arrow Tutorial on Raged Barbarian #" & $i, $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 160, 250, 270, 380) Then 
+			Click(110, 390) ;Click Raged Barbarian
+			If _Sleep(2000) Then Return
+			ExitLoop
+		EndIf
+		If _Sleep(2000) Then Return
+	Next
+	
+	For $i = 1 To 5
+		SetLog("Wait Arrow Tutorial on Upgrade Button #" & $i, $COLOR_INFO)
+		If IsFullScreenWindow() Then 
+			Click(645, 570) ;Click Upgrade Button
+			If _Sleep(2000) Then Return
+			ExitLoop
+		EndIf
+		If _Sleep(2000) Then Return
+	Next
+	
+	SetLog("Waiting Raged Barbarian upgrade, 30s", $COLOR_INFO)
+	_SleepStatus(35000)
+	ClickAway()
+	_SleepStatus(10000)
+	ClickAway()
+	_SleepStatus(10000)
+	
+	SetLog("Going Attack For Tutorial", $COLOR_INFO)
+	For $i = 1 To 10
+		SetLog("Wait Arrow Tutorial on Attack Button #" & $i, $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 6, 460, 110, 590) Then 
+			Click(60, 610) ;Click Attack Button
+			If _Sleep(2000) Then Return
+			ExitLoop
+		EndIf
+		If _Sleep(2000) Then Return
+	Next
+	
+	For $i = 1 To 10
+		SetLog("Wait For Find Now Button #" & $i, $COLOR_ACTION)
+		If WaitforPixel(650, 437, 651, 438, "8BD33A", 20, 2) Then
+			SetDebugLog("Found FindNow Button", $COLOR_ACTION)
+			Click(650, 437)
+			_SleepStatus(15000) ;wait for clouds and other animations
+			ExitLoop
+		EndIf
+		If _Sleep(1000) Then Return
+	Next
+	
+	For $i = 1 To 10
+		SetLog("Wait For AttackBar #" & $i, $COLOR_ACTION)
+		Local $AttackBarBB = GetAttackBarBB()
+		If IsArray($AttackBarBB) And UBound($AttackBarBB) > 0 And $AttackBarBB[0][0] = "Barbarian" Then
+			Click($AttackBarBB[0][1], $AttackBarBB[0][2]) ;Click Raged Barbarian on AttackBar
+			_SleepStatus(1000)
+			Click(450, 530, 5) ;Deploy Raged Barbarian
+			ExitLoop
+		EndIf
+		_SleepStatus(5000)
+	Next
+	
+	If _Sleep(10000) Then Return
+	
+	For $i = 1 To 10
+		SetLog("Waiting Next Tutorial After Attack #" & $i, $COLOR_INFO)
+		ClickAway()
+		If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then
+			SetLog("Found Tutorial Chat", $COLOR_INFO)
+			Click(115, 540) 
+			_SleepStatus(5000)
+		EndIf
+		If WaitforPixel(674, 535, 675, 536, "B35727", 20, 2) Then
+			SetLog("Found Tutorial Chat", $COLOR_INFO)
+			Click(674, 535) 
+			_SleepStatus(5000)
+		EndIf
+		If WaitforPixel(150, 534, 151, 535, "FFA980", 20, 2) Then
+			SetLog("Found Tutorial Chat", $COLOR_INFO)
+			Click(150, 534) 
+			_SleepStatus(5000)
+		EndIf
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 75, 480, 200, 600) Then 
+			Click(65, 620) ;Click Return Home
+			_SleepStatus(3000)
+			ExitLoop
+		EndIf
+		If BBBarbarianHead() Then 
+			Click(430, 540)
+			_SleepStatus(3000)
+			ExitLoop
+		EndIf
+		If _Sleep(3000) Then Return
+	Next
+	
+	For $i = 1 To 10
+		SetLog("Wait Arrow Tutorial on Builder Menu #" & $i, $COLOR_INFO)
+		ClickAway()
+		If QuickMIS("BC1", $g_sImgOrangeBuilding, 360, 30, 480, 150) Then 
+			Click(470, 30) ;Click Builder Menu
+			_SleepStatus(5000)
+			ExitLoop
+		EndIf
+		If _Sleep(3000) Then Return
+	Next
+	
+	SetLog("Wait Next Tutorial for Builder Menu", $COLOR_INFO)
+	For $i = 1 To 10
+		If WaitforPixel(674, 535, 675, 536, "B35727", 20, 2) Then
+			SetLog("Found Tutorial Chat", $COLOR_INFO)
+			Click(674, 535) 
+			_SleepStatus(5000)
+		EndIf
+		If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then
+			SetLog("Found Tutorial Chat", $COLOR_INFO)
+			Click(115, 540) 
+			_SleepStatus(5000)
+		EndIf
+		ClickAway()
+		getBuilderCount(False, True) ;check masterBuilder
+		If Number($g_iFreeBuilderCountBB) = 1 Then ExitLoop
+		If _Sleep(3000) Then Return
+	Next
+	
+	BuilderBaseReport()
+	If Number($g_iFreeBuilderCountBB) = 1 Then 
+		ClickAway()
+		If _Sleep(2000) Then Return
+		SetLog("CONGRATULATIONS!, Successfully Open BuilderBase", $COLOR_SUCCESS)
+		ZoomOut()
+		Return True
+	EndIf
+EndFunc

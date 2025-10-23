@@ -17,7 +17,6 @@ Global Const $DELAYWAITFORPOPUP = 1500 ; An action was just clicked and waiting 
 Global Const $DELAYCLOUDSCLEARED = 1000 ; When Clouds cleared, additional wait
 
 Global Const $DELAYRESPOND = 5 ; Just to make stop button more Responsive
-Global Const $DELAYRUNBOT1 = 1000
 Global Const $DELAYRUNBOT2 = 800
 Global Const $DELAYRUNBOT3 = 200
 
@@ -73,17 +72,9 @@ Global Const $DELAYPREPAREATTACK1 = 250
 Global Const $DELAYDROPONPIXEL1 = 50
 Global Const $DELAYDROPONPIXEL2 = 250 ; click
 
-
 ;DropTroop
 Global Const $DELAYDROPTROOP1 = 100
 Global Const $DELAYDROPTROOP2 = 300
-
-;ReturnHome
-Global Const $DELAYRETURNHOME1 = 1000
-Global Const $DELAYRETURNHOME2 = 1500
-Global Const $DELAYRETURNHOME3 = 2500
-Global Const $DELAYRETURNHOME4 = 2000
-Global Const $DELAYRETURNHOME5 = 200
 
 ;DropOnEdge
 Global Const $DELAYDROPONEDGE1 = 100
@@ -193,10 +184,6 @@ Global Const $DELAYBOOSTHEROES4 = 600
 
 ;BotCommand
 Global Const $DELAYBOTCOMMAND1 = 500
-
-;BotDetectFirstTime
-Global Const $DELAYBOTDETECT1 = 1000
-Global Const $DELAYBOTDETECT3 = 100
 
 ;checkArmyCamp
 Global Const $DELAYCHECKARMYCAMP1 = 100
@@ -380,10 +367,3 @@ Global $DELAYSMARTZAP1 = 200
 Global $DELAYSMARTZAP2 = 500
 Global $DELAYSMARTZAP4 = 1000
 Global $DELAYSMARTZAP10 = 10000
-
-;SwitchBetweenBases
-Global $DELAYSWITCHBASES1 = 1000
-
-;ClockTower
-Global $DELAYCLOCKTOWER1 = 1000
-Global $DELAYCLOCKTOWER2 = 200

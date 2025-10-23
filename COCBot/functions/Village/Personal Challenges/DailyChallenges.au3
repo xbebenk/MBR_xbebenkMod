@@ -12,19 +12,20 @@
 #include-once
 
 Func DailyChallenges()
-	checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenges")
+	If Not $g_bChkCollectRewards Then Return
+	If Not $g_bRunState Then Return
+	SetLog("Checking DailyChallenges", $COLOR_INFO)
+	If Not _PixelSearch(170, 622, 171, 623, Hex(0xE31528, 6), 10, True, "DailyChallenges") Then
+		SetLog("No New Bonus!", $COLOR_DEBUG2)
+		Return
+	EndIf
 	
+	If Not $g_bChkCollectRewards Then Return
 	Local $bGoldPass = _CheckPixel($aPersonalChallengeOpenButton2, $g_bCapturePixel) ; golden badge button at mainscreen
-	Local $bCheckDiscount = $bGoldPass And ($g_bUpgradeKingEnable Or $g_bUpgradeQueenEnable Or $g_bUpgradeWardenEnable Or $g_bUpgradeChampionEnable or $g_bAutoUpgradeWallsEnable)
-
-	If Not $g_bChkCollectRewards And Not $bCheckDiscount Then Return
 	Local $bRedSignal = _CheckPixel($aPersonalChallengeOpenButton3, $g_bCapturePixel)
 
 	If OpenPersonalChallenges() Then
 		CollectDailyRewards($bGoldPass)
-		If $bCheckDiscount Then CheckDiscountPerks()
-
-		If _Sleep(1000) Then Return
 		ClosePersonalChallenges()
 	EndIf
 EndFunc   ;==>DailyChallenges
@@ -37,17 +38,9 @@ Func OpenPersonalChallenges()
 		ClickP($aPersonalChallengeOpenButton2, 1, 0, "#0666")
 	Else
 		SetLog("Can't find button", $COLOR_ERROR)
-		ClickAway()
 		Return False
 	EndIf
-
-	Local $counter = 0
-	While Not IsChallengeWindowOpen() ; test for Personal Challenge Close Button
-		SetDebugLog("Wait for Personal Challenge Close Button to appear #" & $counter)
-		If _Sleep(250) Then Return
-		$counter += 1
-		If $counter > 8 Then Return False
-	WEnd
+	
 	Return True
 EndFunc   ;==>OpenPersonalChallenges
 
@@ -86,7 +79,7 @@ Func CollectDailyRewards($bGoldPass = False)
 						$iClaim += 1
 					Else
 						SetLog("Cancel. Not selling extra rewards.", $COLOR_SUCCESS)
-						Click($aConfirmSurrender[0] - 100, $aConfirmSurrender[1]) ; Click Cancel
+						Click($aConfirmSurrender[0] - 200, $aConfirmSurrender[1]) ; Click Cancel
 					Endif
 					If _Sleep(1000) Then ExitLoop
 				Else
@@ -96,7 +89,7 @@ Func CollectDailyRewards($bGoldPass = False)
 				$tmpxClaim = $aClaim[$j][1]
 			Next
 		EndIf
-		If WaitforPixel(799, 396, 801, 397, "FDC04F", 10, 1) Then ExitLoop ;thropy color
+		If WaitforPixel(799, 396, 801, 397, "FDC04F", 10, 1, "TrophyColor") Then ExitLoop ;thropy color
 		If WaitforPixel(799, 396, 801, 397, "4BCD1C", 10, 1) Then ClickDrag(750, 445, 100, 445, 1000)
 	Next
 	
@@ -104,18 +97,6 @@ Func CollectDailyRewards($bGoldPass = False)
 	If _Sleep(500) Then Return
 
 EndFunc   ;==>CollectDailyRewards
-
-Func CheckDiscountPerks()
-	SetLog("Checking for builder boost...")
-	If $g_bFirstStart Then $g_iBuilderBoostDiscount = 0
-
-	ClickP($aPersonalChallengePerksTab, 1, 0, "PerksTab")
-
-	If Not WaitforPixel($aPersonalChallengePerksTab[0] - 1, $aPersonalChallengePerksTab[1] - 1, $aPersonalChallengePerksTab[0] + 1, $aPersonalChallengePerksTab[1] + 1, _
-					Hex($aPersonalChallengePerksTab[2], 6), $aPersonalChallengePerksTab[3], 2) Then Return; wait for Perks Tab completely loaded in 1 second
-
-	If _Sleep(500) Then Return
-EndFunc   ;==>CheckDiscountPerks
 
 Func ClosePersonalChallenges()
 	If $g_bDebugSetlog Then SetLog("Closing personal challenges", $COLOR_INFO)

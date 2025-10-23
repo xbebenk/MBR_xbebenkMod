@@ -229,8 +229,6 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 				$abFullStorage[$iAccount][$i] = $g_abFullStorage[$i]
 			Next
 			$aiBuilderBoostDiscount[$iAccount] = $g_iBuilderBoostDiscount
-			$abNotNeedAllTime0[$iAccount] = $g_abNotNeedAllTime[0]
-			$abNotNeedAllTime1[$iAccount] = $g_abNotNeedAllTime[1]
 
 		Case "Load"
 			$g_bFirstStart = $abFirstStart[$iAccount]
@@ -312,9 +310,7 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 				$g_abFullStorage[$i] = $abFullStorage[$iAccount][$i]
 			Next
 			$g_iBuilderBoostDiscount = $aiBuilderBoostDiscount[$iAccount]
-			$g_abNotNeedAllTime[0] = $abNotNeedAllTime0[$iAccount]
-			$g_abNotNeedAllTime[1] = $abNotNeedAllTime1[$iAccount]
-
+			
 			ResetVariables("donated") ; reset for new account
 			$g_aiAttackedCountSwitch[$iAccount] = $aiAttackedCount[$iAccount]
 
@@ -323,11 +319,14 @@ Func SwitchAccountVariablesReload($sType = "Load", $iAccount = $g_iCurAccount)
 			
 			; xbebenk
 			$g_bForceSwitch = False
+			$g_bFirstStart = True
 			$g_iSaveGoldWall = 0 ;reset
 			$g_iSaveElixWall = 0 ;reset
 			$g_iLootCCGold = 0
 			$g_bIsCGPointMaxed = False
 			$g_bIs6thBuilderUnlocked = False
+			$g_bReserveElixirBB = False 
+			$g_bReserveGoldBB = False
 			$g_bskipBBroutine = False
 			$g_bSuperTroopBoosted = False
 

@@ -19,6 +19,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	SetLog("Waiting for Main Screen")
 	Local $bCheckObs = False
 	
+	If _Sleep(50) Then Return
 	For $i = 1 To $iCount ;30*1000 = 60 seconds (for blackscreen) and plus loading screen
 		If Not $g_bRunState Then Return
 		If Not WinGetAndroidHandle() Then OpenAndroid(True)
@@ -29,6 +30,8 @@ Func waitMainScreen() ;Waits for main screen to popup
 			SetLog("waitMainScreen: MainScreen Located", $COLOR_SUCCESS)
 			Return True
 		EndIf
+		
+		If _Sleep(50) Then Return
 		
 		$bCheckObs = checkObstacles()
 		SetLog("[" & $i & "/" & $iCount & "] waitMainScreen CheckObs = " & String($bCheckObs), $COLOR_DEBUG1) ; Debug stuck loop
@@ -48,8 +51,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	SetLog("=========RESTART COC==========", $COLOR_INFO)
 	SaveDebugImage("WaitMainScreenTimeout", True) 
 	$g_iMainScreenTimeoutCount += 1
-	If $g_iMainScreenTimeoutCount > 2 Then CloseAndroid()
-	If $g_sAndroidEmulator = "Bluestacks5" Then NotifBarDropDownBS5()
+	If $g_iMainScreenTimeoutCount > 2 Then RebootAndroid()
 	CloseCoC(True) ;only close coc
 	
 EndFunc   ;==>waitMainScreen

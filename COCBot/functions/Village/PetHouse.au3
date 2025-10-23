@@ -51,7 +51,7 @@ Func PetHouse($test = False)
 	ZoomOut() ;make sure village is zoomout
 	ClickAway()
 
-	$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(700, 123) ;get current DE
+	$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(690, 123) ;get current DE
 	If Number($g_aiCurrentLoot[$eLootDarkElixir]) <= 90000 Then
 		SetLog("Current DE: " & $g_aiCurrentLoot[$eLootDarkElixir] & " < Mininum to upgrade Pet, exiting!", $COLOR_INFO)
 		If Not $test Then Return
@@ -70,7 +70,7 @@ Func PetHouse($test = False)
 		EndIf
 	Else
 		PureClickP($g_aiPetHousePos)
-		_Sleep(500)
+		If _Sleep(500) Then Return
 	EndIf
 	
 	Local $BuildingName = BuildingInfo(242, 473)
@@ -86,18 +86,27 @@ Func PetHouse($test = False)
 		EndIf
 	EndIf
 	
-	;Setup Max Pet Levels
-	If Number($BuildingName[2]) < 5 Then
-		$g_ePetLevels[$ePetLassi] = 10
-		$g_ePetLevels[$ePetMightyYak] = 10
-	Else
+	;Setup Max Pet Levels according to PetHouse Level
+	
+	;Reset First
+	Global $g_ePetLevels[$ePetCount] = [10, 10, 10, 10, 10, 10, 10, 10]
+	If Number($BuildingName[2]) >= 5  Then
 		$g_ePetLevels[$ePetLassi] = 15
+	EndIf
+	
+	If Number($BuildingName[2]) >= 7  Then
 		$g_ePetLevels[$ePetMightyYak] = 15
 	EndIf
+	
+	If Number($BuildingName[2]) >= 9  Then
+		$g_ePetLevels[$ePetElectroOwl] = 15
+	EndIf
 
+	;End
+	
 	Local $PawFound = False
 	For $i = 1 To 5
-		_Sleep(500)
+		If _Sleep(500) Then Return
 		If FindPetsButton() Then
 			$PawFound = True
 			ExitLoop
@@ -107,7 +116,7 @@ Func PetHouse($test = False)
 	If Not $PawFound Then Return
 
 	For $i = 1 To 5
-		_Sleep(500)
+		If _Sleep(500) Then Return
 		If IsPetHousePage() Then
 			ExitLoop
 		Else
