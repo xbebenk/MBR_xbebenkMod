@@ -104,7 +104,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	If _Sleep(50) Then Return
 	VillageReport(False, True)
 	PlaceUnplacedBuilding()
-	If $bUpgradeLowCost And $g_iFreeBuilderCount = 1 Then
+	If $bUpgradeLowCost And $g_bChkRushTH And $g_iFreeBuilderCount = 1 Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 480, 110, 555, 125) Then
