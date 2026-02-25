@@ -19,7 +19,7 @@ Func CheckIfSLabIdle($bDebug = False)
 	Local $aLabInfo, $aGetLab, $bRet = True
 	If $bDebug Then Return $bRet
 	
-	$aLabInfo = getBuilders(372, 23)
+	$aLabInfo = getBuilders(375, 23)
 	If StringInStr($aLabInfo, "#") > 0 Then
 		$aGetLab = StringSplit($aLabInfo, "#", $STR_NOCOUNT)
 		Local $iLab = Number($aGetLab[0]), $iLabMax = Number($aGetLab[1])

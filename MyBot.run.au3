@@ -1317,6 +1317,7 @@ Func FirstCheckRoutine()
 			Wend
 		EndIf
 		checkMainScreen()
+		If $b_SuccessAttack Then RequestCC()
 		checkSwitchAcc() ;switch to next account
 	EndIf
 	

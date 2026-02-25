@@ -169,8 +169,8 @@ Func DoUpgradeWall()
 		Local $iWallCanUpgradeGold = ($bCanUseGold ? Floor($iCanUseGold / $iWallCost) : 0)
 		Local $iWallCanUpgradeElix = ($bCanUseElix ? Floor($iCanUseElix/ $iWallCost) : 0)
 		SetDebugLog("iWallCanUpgradeGold: " & $iWallCanUpgradeGold & ", iWallCanUpgradeElix : " & $iWallCanUpgradeElix)
-		If $iWallCanUpgradeGold < 0 Then $bCanUseGold = False
-		If $iWallCanUpgradeElix < 0 Then $bCanUseElix = False
+		If $iWallCanUpgradeGold < 1 Then $bCanUseGold = False
+		If $iWallCanUpgradeElix < 1 Then $bCanUseElix = False
 		SetLog("CanUseGold = " & String($bCanUseGold), $COLOR_DEBUG)
 		SetLog("CanUseElix = " & String($bCanUseElix), $COLOR_DEBUG)
 		If $bCanUseGold Then SetLog("Can upgrade = " & $iWallCanUpgradeGold & " wall Level " & $aWallLevel[2] & " with Gold", $COLOR_INFO)

@@ -89,7 +89,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			
 			;now we need to copy selected challenge before checking current running event is not wrong event selected
 			PrepareChallengesImage()
-			If $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Then
+			If $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Or $aiScoreLimit[0] >= 4000 Then
 				SetLog("You almost reached max point")
 				$g_bIsCGPointAlmostMax = True
 				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
@@ -502,14 +502,14 @@ Func SelectEvent(ByRef $aSelectChallenges)
 	Local $hTimer = TimerInit()
 	Local $aTmp = $aSelectChallenges
 
-	Local $i = 0
-	While $i < UBound($aTmp)
+	For $i = 0 To Ubound($aTmp) - 1
 		If Not $g_bRunState Then Return
 		Local $aEventInfo = GetEventInfo($aTmp[$i][1], $aTmp[$i][2])
 		If IsArray($aEventInfo) Then
 			Setlog("Detected " & $aTmp[$i][0] & " difficulty of " & $aTmp[$i][3] & " [score:" & $aEventInfo[0] & ", " & $aEventInfo[1] & " min]", $COLOR_INFO)
 			If $g_bChkClanGames3H And Number($aEventInfo[1]) <= 180 Then ;Filter under 3 Hour event
 				_ArrayDelete($aSelectChallenges, $i)
+				SetLog("Should skip, no 3H event", $COLOR_DEBUG2)
 				ContinueLoop 
 			EndIf
 			$aTmp[$i][4] = Number($aEventInfo[1])
@@ -517,9 +517,7 @@ Func SelectEvent(ByRef $aSelectChallenges)
 			ExitLoop
 		EndIf
 		If _Sleep(1000) Then Return
-		$i += 1
-	WEnd
-	$aSelectChallenges = $aTmp
+	Next
 	
 	If $g_bChkClanGamesDebug Then Setlog("Benchmark SelectEvent: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 EndFunc

@@ -81,6 +81,18 @@ Func Blacksmith($bTest = False)
 	Local $aUpgradeButton[2] = [700, 540]
 	For $i = 0 To $eEquipmentCount - 1
 		If Not $g_bRunState Then Return
+		
+		$iShinyOre = OresReport()
+		If $g_bChkMinOreUpgrade Then
+			If $iShinyOre < $g_sTxtMinOreUpgrade Then
+				SetLog("Shiny Ore < " & $g_sTxtMinOreUpgrade, $COLOR_DEBUG2)
+				ClickAway()
+				If _Sleep(500) Then Return
+				ClickAway()
+				Return
+			EndIf
+		EndIf
+		
 		If $g_bChkCustomEquipmentOrder[$i] = 0 Then ContinueLoop
 		$sUpgradeName = $g_asEquipmentOrderList[$g_aiCmbCustomEquipmentOrder[$i]][0]
 		$sImageName = $g_asEquipmentOrderList[$g_aiCmbCustomEquipmentOrder[$i]][1]
@@ -170,20 +182,20 @@ EndFunc   ;==>OpenBlacksmithWindow
 
 Func OresReport()
 	Local $iRetShiny = 0
-	Local $sShiny = getOresValues(245, 530)
+	Local $sShiny = getOresValues(294, 513, 80)
 	Local $aShiny = StringSplit($sShiny, "#", $STR_NOCOUNT)
 	If IsArray($aShiny) And UBound($aShiny) = 2 Then
 		SetLog("[Shiny]: " & $aShiny[0] & "/" & $aShiny[1], $COLOR_INFO)
 		$iRetShiny = Number($aShiny[0])
 	EndIf
 	
-	Local $sGlowy = getOresValues(388, 530, 110)
+	Local $sGlowy = getOresValues(404, 513, 75)
 	Local $aGlowy = StringSplit($sGlowy, "#", $STR_NOCOUNT)
 	If IsArray($aGlowy) And UBound($aGlowy) = 2 Then
 		SetLog("[Glowy]: " & $aGlowy[0] & "/" & $aGlowy[1], $COLOR_DEBUG)
 	EndIf
 
-	Local $sStarry = getOresValues(533, 530, 90)
+	Local $sStarry = getOresValues(514, 513, 50)
 	Local $aStarry = StringSplit($sStarry, "#", $STR_NOCOUNT)
 	If IsArray($aStarry) And UBound($aStarry) = 2 Then
 		SetLog("[Starry]: " & $aStarry[0] & "/" & $aStarry[1], $COLOR_ACTION)

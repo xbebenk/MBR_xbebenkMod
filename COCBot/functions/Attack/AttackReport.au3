@@ -19,26 +19,26 @@ Func AttackReport()
 	Local $g_asLeagueDetailsShort = ""
 	Local $iCount
 
-	$iCount = 0 ; Reset loop counter
-	While _CheckPixel($aEndFightSceneAvl, True) = False ; check for light gold pixle in the Gold ribbon in End of Attack Scene before reading values
-		$iCount += 1
-		If IsProblemAffect() Then Return
-		If _Sleep($DELAYATTACKREPORT1) Then Return
-		If Not $g_bRunState Then Return
-		SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
-		If $iCount > 30 Then ExitLoop ; wait 30*500ms = 15 seconds max for the window to render
-	WEnd
-	If $iCount > 30 Then SetLog("End of Attack scene slow to appear, attack values my not be correct", $COLOR_INFO)
-
-	$iCount = 0 ; reset loop counter
-	While getResourcesLoot(290, 289) = "" ; check for gold value to be non-zero before reading other values as a secondary timer to make sure all values are available
-		$iCount += 1
-		If _Sleep($DELAYATTACKREPORT1) Then Return
-		If Not $g_bRunState Then Return
-		SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
-		If $iCount > 20 Then ExitLoop ; wait 20*500ms = 10 seconds max before we have call the OCR read an error
-	WEnd
-	If $iCount > 20 Then SetLog("End of Attack scene read gold error, attack values my not be correct", $COLOR_INFO)
+	;$iCount = 0 ; Reset loop counter
+	;While _CheckPixel($aEndFightSceneAvl, True) = False ; check for light gold pixle in the Gold ribbon in End of Attack Scene before reading values
+	;	$iCount += 1
+	;	If IsProblemAffect() Then Return
+	;	If _Sleep($DELAYATTACKREPORT1) Then Return
+	;	If Not $g_bRunState Then Return
+	;	SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
+	;	If $iCount > 15 Then ExitLoop ; wait 30*500ms = 15 seconds max for the window to render
+	;WEnd
+	;If $iCount > 15 Then SetLog("End of Attack scene slow to appear, attack values my not be correct", $COLOR_INFO)
+	;
+	;$iCount = 0 ; reset loop counter
+	;While getResourcesLoot(290, 289) = "" ; check for gold value to be non-zero before reading other values as a secondary timer to make sure all values are available
+	;	$iCount += 1
+	;	If _Sleep($DELAYATTACKREPORT1) Then Return
+	;	If Not $g_bRunState Then Return
+	;	SetDebugLog("Waiting Attack Report Ready, " & ($iCount / 2) & " Seconds.", $COLOR_DEBUG)
+	;	If $iCount > 20 Then ExitLoop ; wait 20*500ms = 10 seconds max before we have call the OCR read an error
+	;WEnd
+	;If $iCount > 20 Then SetLog("End of Attack scene read gold error, attack values my not be correct", $COLOR_INFO)
 
 	;HArchH: Subtracted 5 pixels from each getResourcesLoot call "x" value, 12 for DE.
 	;G was 290, is 285

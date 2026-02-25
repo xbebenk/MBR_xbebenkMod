@@ -220,6 +220,7 @@ Func IsReturnHomeBattlePage($bAction = False)
 	Local $bRet = False
 	If IsPageLoop($aReturnHomeButton, 1) Then
 		SetDebugLog("**Return Home Battle Window OK**", $COLOR_ACTION)
+		If IsAttackPage(True, 1) Then Return False
 		If Not $bAction Then Return True
 		ClickP($aReturnHomeButton, 1, 0, "Return Home") ;Click Return Home Button
 		SetDebugLog("ReturnHomeBattlePage!", $COLOR_SUCCESS)

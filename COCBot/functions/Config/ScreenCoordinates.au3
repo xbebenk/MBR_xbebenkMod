@@ -2,7 +2,7 @@
 Global $aiClickAwayRegionLeft = [229, 5, 242, 20]
 Global $aiClickAwayRegionRight = [635, 5, 650, 20]
 
-Global $aVillageCenteringCoord = [[750, 370], [636, 500], [777, 235]] ; Scroll village using this location : upper from setting button
+Global $aVillageCenteringCoord = [[550, 370], [236, 350], [430, 350]] ; Scroll village using this location : upper from setting button
 Global $aIsMain[4] = [824, 12, 0xDBDB4D, 20] ; Main Screen, Yellow Gold Resource Icon
 Global $aIsOnBuilderBase[4] = [824, 12, 0x0D0D0D, 20] ; BuilderBase, Yellow Gold Resource Icon
 Global $aIsMainGrayed[4] = [824, 14, 0x80802D, 15] ; Main Screen, Yellow Grayed Gold Resource Icon

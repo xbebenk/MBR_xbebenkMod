@@ -141,6 +141,10 @@ Func getArmyCapacityOnTrainTroops240($x_start, $y_start, $x1 = 63) ;  -> Gets qu
 	Return StringRegExpReplace(getOcrAndCapture("coc-troopcap240", $x_start, $y_start, $x1, 14, True), "[-x]", "")
 EndFunc   ;==>getArmyCapacityOnTrainTroops
 
+Func getRequestCCCapacity($x_start = 250, $y_start = 148, $width = 90, $height = 22)
+	Return StringReplace(getOcrAndCapture("coc-ccgold", $x_start, $y_start, $width, $height, True), "-", "")
+EndFunc
+
 Func getMatchRemain($x_start = 414, $y_start = 475) ; Gets complete Tournament Match Remain / Max
 	Local $sRet = "", $aRet[0]
 	$sRet = getOcrAndCapture("coc-tournament", $x_start, $y_start, 70, 22)
@@ -231,7 +235,7 @@ Func getBuilderMenuCost($x_start, $y_start) ;  -> Get least upgradetime on build
 EndFunc   ;==>getBuilderBuilderMenuCost
 
 Func getOresValues($x_start, $y_start, $ilength = 130) ;  -> Get least upgradetime on builder menu
-	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, $ilength, 16, True)
+	Return StringReplace(getOcrAndCapture("coc-ores", $x_start, $y_start, $ilength, 16, True), "-", "")
 EndFunc   ;==>getOresValues
 
 Func getBuildingName($x_start, $y_start, $length = 180, $height = 20) ;  -> Get BuildingName on builder menu
@@ -412,20 +416,14 @@ Func getOcrReloadMessage($x_start, $y_start, $sLogText = Default, $LogTextColor 
 	Return $result
 EndFunc   ;==>getOcrReloadMessage
 
-Func getOcrMaintenanceTime($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
-	;  -> Get the Text with time till maintenance is over from reload msg(171, 375)
-	Local $result = getOcrAndCapture("coc-maintenance", $x_start, $y_start, 70, 20, True)
-	Local $String = ""
-	If $sLogText = Default Then
-		$String = "getOcrMaintenanceTime: " & $result
+Func getOcrMaintenanceTime($x_start, $y_start)
+	Local $result = getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 20, 12, True)
+	If Number($result) > 0 Then 
+		$result = $result & "m"
 	Else
-		$String = $sLogText & " " & $result
+		$result = "soon"
 	EndIf
-	If $g_bDebugSetlog Then ; if enabled generate debug log message
-		SetDebugLog($String, $LogTextColor, $bSilentSetLog)
-	ElseIf $result <> "" Then ;
-		SetDebugLog($String, $LogTextColor, True) ; if result found, add to log file
-	EndIf
+	
 	Return $result
 EndFunc   ;==>getOcrMaintenanceTime
 

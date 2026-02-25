@@ -42,8 +42,8 @@ Global $InnerDiamondLeft = 45
 Global $InnerDiamondRight = 815
 Global $InnerDiamondTop = 60
 Global $InnerDiamondBottom = 636
-Global $InnerDiamandDiffX = 70
-Global $InnerDiamandDiffY = 48
+Global $InnerDiamandDiffX = 40
+Global $InnerDiamandDiffY = 30
 
 Global $OuterDiamondLeft = 0
 Global $OuterDiamondRight = 0

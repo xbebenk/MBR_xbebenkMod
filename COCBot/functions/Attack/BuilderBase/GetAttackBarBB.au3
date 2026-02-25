@@ -180,8 +180,8 @@ Func ChangeBBTroopTo($sTroopName, $x, $sChangeTo)
 		Click($g_iQuickMISX + 2, $g_iQuickMISY)
 		$TmpX = $g_iQuickMISX
 		$TmpY = $g_iQuickMISY
-		If _Sleep(1000) Then Return
-		If QuickMIS("BFI", $g_sImgDirBBTroops & $sChangeTo & "*", 0, 470, 860, 536) Then
+		If _Sleep(1500) Then Return
+		If QuickMIS("BFI", $g_sImgDirBBTroops & $sChangeTo & "*", 0, 470, 860, 540) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1000) Then Return
 			$bRet = True

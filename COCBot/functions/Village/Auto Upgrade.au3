@@ -194,7 +194,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 		SetLog("FindUpgrade(bTest=" & String($bTest) & ", bSkipNew=" & String($bSkipNew) & ", bLowCost=" & String($bLowCost) & ", bUseWallReserve=" & String($bUseWallReserve), $COLOR_DEBUG)
 		$Upgrades = FindUpgrade($bTest, $bSkipNew, $bLowCost, $bUseWallReserve)
 		If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
-			If $bLowCost Then
+			If $bLowCost Or $g_bUpgradeOtherDefenses Then
 				_ArraySort($Upgrades, 0, 0, 0, 5)
 				SetLog("UpgradeList scoring by : LowCost", $COLOR_INFO)
 			Else
@@ -203,6 +203,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 			EndIf
 
 			For $i = 0 To UBound($Upgrades) - 1
+				If $Upgrades[$i][7] = "0" Then ContinueLoop
 				SetLog("[" & $Upgrades[$i][7] & "] " & $Upgrades[$i][3] & ", Cost:" & $Upgrades[$i][5] & " " & $Upgrades[$i][0] & ", Score: [" & ($Upgrades[$i][4] = "New" ? $Upgrades[$i][4] : $Upgrades[$i][6]) & "]", $COLOR_DEBUG1)
 			Next
 
@@ -229,7 +230,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 			If _Sleep(50) Then Return
 
 			For $i = 0 To UBound($Upgrades) - 1
-				If $Upgrades[$i][6] = "Disabled" And $Upgrades[$i][7] = "Essential" Then
+				If $Upgrades[$i][6] = "Disabled" And $Upgrades[$i][7] = "Essential" And $g_bChkRushTH Then
 					SetLog("Essential Building : " & $Upgrades[$i][3] & "[" & $Upgrades[$i][5] & "] Disabled, skip!", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
@@ -238,7 +239,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 					If Not $g_bRunState Then Return
 					Click($Upgrades[$i][1], $Upgrades[$i][2])
 					If _Sleep(1000) Then Return
-					Local $aHeroes[5] = ["King", "Queen", "Warden", "Champion", "Prince"]
+					Local $aHeroes[5] = ["Barbarian", "Queen", "Warden", "Champion", "Prince"]
 					For $j In $aHeroes
 						If StringInStr($Upgrades[$i][3], $j) Then
 							SetLog("Upgrade : " & $Upgrades[$i][3] & ", checking Hero Hall Window", $COLOR_ACTION)
@@ -814,11 +815,11 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 EndFunc
 
 Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "DE")
-	Local $aCheckAreaKing[4] = [155, 420, 190, 460]
-	Local $aCheckAreaQueen[4] = [310, 420, 347, 460]
-	Local $aCheckAreaPrince[4] = [460, 420, 500, 460]
-	Local $aCheckAreaWarden[4] = [615, 420, 655, 460]
-	Local $aCheckAreaChampion[4] = [765, 420, 805, 460]
+	Local $aCheckAreaKing[4] = [140, 420, 190, 460]
+	Local $aCheckAreaQueen[4] = [290, 420, 347, 460]
+	Local $aCheckAreaPrince[4] = [450, 420, 500, 460]
+	Local $aCheckAreaWarden[4] = [600, 420, 655, 460]
+	Local $aCheckAreaChampion[4] = [750, 420, 805, 460]
 	Local $aCheckArea, $bRet = False
 
 	Switch $sHeroName
