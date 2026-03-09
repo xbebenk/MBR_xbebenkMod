@@ -6,6 +6,7 @@ Func CollectCCGold($bTest = False)
 	SetLog("Check for Collecting Clan Capital Gold", $COLOR_INFO)
 	ClickAway("Right")
 	ZoomOut() ;ZoomOut first
+	ZoomOutHelper("CollectLootCart")
 	
 	;handle for turtorial
 	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 250, 520, 400, 670) Then

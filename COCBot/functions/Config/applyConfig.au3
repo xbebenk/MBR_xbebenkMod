@@ -28,10 +28,7 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	setProcessingPoolSize($g_iGlobalThreads)
 
 	; Saved window positions
-	If $g_bAndroidEmbedded = False Then
-		If $g_iFrmBotPosX > -30000 And $g_iFrmBotPosY > -30000 And $g_bFrmBotMinimized = False _
-			And $g_iFrmBotPosX <> $g_WIN_POS_DEFAULT And $g_iFrmBotPosY <> $g_WIN_POS_DEFAULT Then WinMove($g_hFrmBot, "", $g_iFrmBotPosX, $g_iFrmBotPosY)
-	Else
+	If $g_bAndroidEmbedded Then
 		If $g_iFrmBotDockedPosX > -30000 And $g_iFrmBotDockedPosY > -30000 And $g_bFrmBotMinimized = False _
 			And $g_iFrmBotDockedPosX <> $g_WIN_POS_DEFAULT And $g_iFrmBotDockedPosY <> $g_WIN_POS_DEFAULT Then WinMove($g_hFrmBot, "", $g_iFrmBotDockedPosX, $g_iFrmBotDockedPosY)
 	EndIf
@@ -57,63 +54,91 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	; <><><><> Bot / Profile (global settings) <><><><>
 	ApplyConfig_Profile($TypeReadSave)
 	; <><><><> Bot / Android <><><><>
+	SetDebugLog("ApplyConfig_Android")
 	ApplyConfig_Android($TypeReadSave)
 	; <><><><> Log window <><><><>
+	SetDebugLog("ApplyConfig Log")
 	ApplyConfig_600_1($TypeReadSave)
 	; <><><><> Village / Misc <><><><>
+	SetDebugLog("ApplyConfig Village Misc")
 	ApplyConfig_600_6($TypeReadSave)
 	; <><><><> Village / Achievements <><><><>
+	SetDebugLog("ApplyConfig Village Achievements")
 	ApplyConfig_600_9($TypeReadSave)
 	; <><><><> Village / Donate - Request <><><><>
+	SetDebugLog("ApplyConfig Village Donate - Request")
 	ApplyConfig_600_11($TypeReadSave)
 	; <><><><> Village / Donate - Donate <><><><>
+	SetDebugLog("ApplyConfig Village Donate - Donate")
 	ApplyConfig_600_12($TypeReadSave)
 	; <><><><> Village / Upgrade - Lab <><><><>
+	SetDebugLog("ApplyConfig Village Upgrade - Lab")
 	ApplyConfig_600_14($TypeReadSave)
 	; <><><><> Village / Upgrade - Heroes <><><><>
+	SetDebugLog("ApplyConfig Village Upgrade - Heroes")
 	ApplyConfig_600_15($TypeReadSave)
 	; <><><><> Village / Upgrade - Buildings <><><><>
+	SetDebugLog("ApplyConfig Village Upgrade - Buildings")
 	ApplyConfig_600_16($TypeReadSave)
 	; <><><><> Village / Upgrade - Auto Upgrade <><><><>
+	SetDebugLog("ApplyConfig Village Auto Upgrade")
 	ApplyConfig_auto($TypeReadSave)
 	; <><><><> Village / Upgrade - Walls <><><><>
+	SetDebugLog("ApplyConfig Village Upgrade - Walls")
 	ApplyConfig_600_17($TypeReadSave)
 	; <><><><> Village / Notify <><><><>
+	SetDebugLog("ApplyConfig Village Notify")
 	ApplyConfig_600_18($TypeReadSave)
-
+	
 	; moved here due to check functions
 	; troop/spell levels and counts
+	SetDebugLog("ApplyConfig Troops - Spells")
 	ApplyConfig_600_52_2($TypeReadSave)
 
 	; <><><><> Village / Notify <><><><>
+	SetDebugLog("ApplyConfig Notify Schedule")
 	ApplyConfig_600_19($TypeReadSave)
 	; <><><> Attack Plan / Train Army / Boost <><><>
+	SetDebugLog("ApplyConfig Train")
 	ApplyConfig_600_22($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Bully <><><><>
+	SetDebugLog("ApplyConfig Bully")
 	ApplyConfig_600_26($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Options / Search <><><><>
+	SetDebugLog("ApplyConfig Attack / Options / Search")
 	ApplyConfig_600_28($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Search <><><><>
+	SetDebugLog("ApplyConfig Attack / Deadbase / Search")
 	ApplyConfig_600_28_DB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Activebase / Search <><><><>
+	SetDebugLog("ApplyConfig Attack / Activebase / Search")
 	ApplyConfig_600_28_LB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Options / Attack <><><><>
+	SetDebugLog("ApplyConfig Attack / Options / Attack")
 	ApplyConfig_600_29($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Attack <><><><>
+	SetDebugLog("ApplyConfig Attack / Deadbase / Attack")
 	ApplyConfig_600_29_DB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Activebase / Attack <><><><>
+	SetDebugLog("ApplyConfig Attack / Activebase / Attack")
 	ApplyConfig_600_29_LB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Options / End Battle <><><><>
+	SetDebugLog("ApplyConfig Attack / Options / End Battle")
 	ApplyConfig_600_30($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Deadbase / End Battle <><><><>
+	SetDebugLog("ApplyConfig Attack / Deadbase / End Battle")
 	ApplyConfig_600_30_DB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Activebase / End Battle <><><><>
+	SetDebugLog("ApplyConfig Attack / Activebase / End Battle")
 	ApplyConfig_600_30_LB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
+	SetDebugLog("ApplyConfig Attack / Deadbase / Collectors")
 	ApplyConfig_600_31($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
+	SetDebugLog("ApplyConfig Attack / Options / Trophy Settings")
 	ApplyConfig_600_32($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>
+	SetDebugLog("ApplyConfig Attack / Drop Order Troops")
 	ApplyConfig_600_33($TypeReadSave)
 	; <><><><> Bot / Options <><><><>
 	ApplyConfig_600_35_1($TypeReadSave)
@@ -128,7 +153,7 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 
 	; <><><><> BuilderBase <><><><>
 	ApplyBuilderBaseMod($TypeReadSave)
-
+	
 	; <><><><> Bot / Profiles <><><><>
 	PopulatePresetComboBox()
 	MakeSavePresetMessage()
@@ -146,7 +171,6 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 
 
 	ApplyConfig_Debug($TypeReadSave)
-
 	; Reenabling window redraw - Keep this last....
 	If $bRedrawAtExit Then SetRedrawBotWindow($bWasRdraw, Default, Default, Default, "applyConfig")
 

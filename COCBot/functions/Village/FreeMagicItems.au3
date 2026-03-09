@@ -380,7 +380,7 @@ Func UseFreeMagicItem()
 	Local $x, $y
 	checkMainScreen()
 	SetLog("Checking for Magic Item on Box", $COLOR_INFO)
-	If QuickMIS("BC1", $g_sImgMagicItemBox, 625, 610, 675, 650) Then
+	If QuickMIS("BC1", $g_sImgMagicItemBox, 525, 610, 675, 650) Then
 		SetLog("Magic Box Found, checking items", $COLOR_ACTION)
 		$x = $g_iQuickMISX
 		$y = $g_iQuickMISY
@@ -388,7 +388,7 @@ Func UseFreeMagicItem()
 			Click($x, $y)
 			If _Sleep(500) Then Return
 			SetLog("Free Magic Item Found, Try to Use", $COLOR_ACTION)
-			If QuickMIS("BC1", $g_sImgMagicItemBox, 330, 560, 625, 580) Then
+			If QuickMIS("BC1", $g_sImgMagicItemBox, 300, 560, 650, 580) Then
 				$x = $g_iQuickMISX + 15
 				$y = $g_iQuickMISY + 40
 				Click($x, $y)

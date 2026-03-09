@@ -1239,7 +1239,6 @@ Global $g_bDropTrophyEnable = False, $g_iDropTrophyMax = 1200, $g_iDropTrophyMin
 ; <><><><> Bot / Options <><><><>
 Global $g_sLanguage = "English"
 Global $g_bDisableSplash = False ; Splash screen disabled = 1
-Global $g_bMyBotDance = False  ; Dancing MyBot splash screen
 Global $g_bCheckVersion = True
 Global $g_bDeleteLogs = True, $g_iDeleteLogsDays = 2, $g_bDeleteTemp = True, $g_iDeleteTempDays = 2, $g_bDeleteLoots = True, $g_iDeleteLootsDays = 2
 Global $g_bAutoStart = False, $g_iAutoStartDelay = 10
@@ -1937,13 +1936,13 @@ Global Const $g_aiEquipmentOrderIcon2[$eEquipmentCount + 1] = [ $eIcnOptions, _
 Global $g_hChkCustomEquipmentOrderEnable = 0, $g_bChkCustomEquipmentOrderEnable = False
 Global $g_hChkMinOreUpgrade = 0, $g_bChkMinOreUpgrade = False, $g_hTxtMinOreUpgrade = 0, $g_sTxtMinOreUpgrade = ""
 Global $g_hBtnEquipmentOrderSet = 0, $g_ahImgEquipmentOrderSet = 0,$g_hBtnRemoveEquipment = 0, $g_hBtnRegularOrder = 0
-Global $g_aZero33[$eEquipmentCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbEquipmentOrder = $g_aZero33
-Global $g_ahImgEquipmentOrder = $g_aZero33
-Global $g_ahImgEquipmentOrder2 = $g_aZero33
-Global $g_hChkCustomEquipmentOrder = $g_aZero33
-Global $g_bChkCustomEquipmentOrder = $g_aZero33
-Global $g_aiCmbCustomEquipmentOrder = $g_aZero33
+Global $g_aZero10[$eEquipmentCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbEquipmentOrder = $g_aZero10
+Global $g_ahImgEquipmentOrder = $g_aZero10
+Global $g_ahImgEquipmentOrder2 = $g_aZero10
+Global $g_hChkCustomEquipmentOrder = $g_aZero10
+Global $g_bChkCustomEquipmentOrder = $g_aZero10
+Global $g_aiCmbCustomEquipmentOrder = $g_aZero10
 
 ; PetHouse
 Global $g_aiPetHousePos[2] = [-1, -1]

@@ -632,16 +632,11 @@ Func btnRegularOrder()
 EndFunc
 
 Func btnRemoveEquipment()
-	Local $sComboData = ""
-	For $j = 0 To UBound($g_asEquipmentOrderList) - 1
-		$sComboData &= $g_asEquipmentOrderList[$j][0] & "|"
-	Next
 	For $i = 0 To UBound($g_ahCmbEquipmentOrder) - 1
 		$g_aiCmbCustomEquipmentOrder[$i] = -1
 		$g_bChkCustomEquipmentOrder[$i] = 0
-		_GUICtrlComboBox_ResetContent($g_ahCmbEquipmentOrder[$i])
+		_GUICtrlComboBox_SetCurSel($g_ahCmbEquipmentOrder[$i], -1)
 		GUICtrlSetState($g_hChkCustomEquipmentOrder[$i], $GUI_UNCHECKED)
-		GUICtrlSetData($g_ahCmbEquipmentOrder[$i], $sComboData, "")
 		GUICtrlSetState($g_ahCmbEquipmentOrder[$i], $GUI_ENABLE)
 		_GUICtrlSetImage($g_ahImgEquipmentOrder[$i], $g_sLibIconPath, $eIcnOptions)
 		_GUICtrlSetImage($g_ahImgEquipmentOrder2[$i], $g_sLibIconPath, $eIcnOptions)
@@ -720,25 +715,16 @@ Func btnEquipmentOrderSet()
 EndFunc   ;==>btnEquipmentOrderSet
 
 Func ChangeEquipmentOrder()
-	Local $iUpdateCount = 0, $aUnique
-
-	If Not IsUseCustomEquipmentOrder() Then ; check if no custom values saved yet.
-		SetError(2, 0, False)
-		Return
-	EndIf
-
-	$aUnique = _ArrayUnique($g_aiCmbCustomEquipmentOrder, 0, 0, 0, 0)
-	$iUpdateCount = UBound($aUnique)
-
-	If $iUpdateCount = $eEquipmentCount Then ; safety check that all troops properly assigned to new array.
-		$g_aiEquipmentOrder = $aUnique
-		_GUICtrlSetImage($g_ahImgEquipmentOrderSet, $g_sLibIconPath, $eIcnGreenLight)
-	Else
-		SetLog($iUpdateCount & "|" & $eEquipmentCount & " - Error - Bad equipment assignment in ChangeEquipmentOrder()", $COLOR_ERROR)
-		SetError(3, 0, False)
-		Return
-	EndIf
-
+	If Not IsUseCustomEquipmentOrder() Then Return False
+	
+	For $i = 0 To UBound($g_aiCmbCustomEquipmentOrder) - 1
+		If $g_aiCmbCustomEquipmentOrder[$i] > 0 Then 
+			$g_aiEquipmentOrder[$i] = $g_aiCmbCustomEquipmentOrder[$i]
+			$g_bChkCustomEquipmentOrder[$i] = (GUICtrlRead($g_hChkCustomEquipmentOrder[$i]) = $GUI_CHECKED)
+		EndIf
+	Next
+	_GUICtrlSetImage($g_ahImgEquipmentOrderSet, $g_sLibIconPath, $eIcnGreenLight)
+	
 	Return True
 EndFunc   ;==>ChangeEquipmentOrder
 

@@ -93,8 +93,9 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 				SetLog("You almost reached max point")
 				$g_bIsCGPointAlmostMax = True
 				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
-				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > $PurgeDayMinute Then ; purge, but not purge on last day of clangames
+				If $g_bChkClanGamesStopBeforeReachAndPurge And ($sTimeCG > $PurgeDayMinute Or $aiScoreLimit[0] >= 4000) Then ; purge, but not purge on last day of clangames
 					If IsEventRunning() Then Return True
+					
 					If $g_bChkClanGamesPurgeAny Then
 						SetLog("Clangames remain time: " & $sTimeCG & " > " & $PurgeDayMinute, $COLOR_INFO)
 						SetLog("Stop before completing and only Purge", $COLOR_INFO)

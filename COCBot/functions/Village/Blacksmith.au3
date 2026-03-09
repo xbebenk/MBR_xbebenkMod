@@ -61,7 +61,11 @@ Func Blacksmith($bTest = False)
 		ImgLocateBlacksmith(True)
 	EndIf
 
-	If Not OpenBlacksmithWindow() Then Return False ; cant start because we cannot find Equipment button
+	If Not OpenBlacksmithWindow() Then 
+		SetLog("Blacksmith Window not open", $COLOR_DEBUG2)
+		ClickAway()
+		Return False ; cant start because we cannot find Equipment button
+	EndIf
 	If Not $g_bRunState Then Return
 	If _Sleep(1000) Then Return
 	
@@ -76,11 +80,12 @@ Func Blacksmith($bTest = False)
 		EndIf
 	EndIf
 	
-	Local $xHero = 0, $yHero = 340, $TmpHero = ""
+	Local $xHero = 0, $yHero = 360, $TmpHero = ""
 	Local $sUpgradeName, $sImageName, $sHeroName
 	Local $aUpgradeButton[2] = [700, 540]
-	For $i = 0 To $eEquipmentCount - 1
+	For $i = 0 To UBound($g_bChkCustomEquipmentOrder) - 1
 		If Not $g_bRunState Then Return
+		If Not $g_bChkCustomEquipmentOrder[$i] Then ContinueLoop
 		
 		$iShinyOre = OresReport()
 		If $g_bChkMinOreUpgrade Then
@@ -93,22 +98,23 @@ Func Blacksmith($bTest = False)
 			EndIf
 		EndIf
 		
-		If $g_bChkCustomEquipmentOrder[$i] = 0 Then ContinueLoop
 		$sUpgradeName = $g_asEquipmentOrderList[$g_aiCmbCustomEquipmentOrder[$i]][0]
 		$sImageName = $g_asEquipmentOrderList[$g_aiCmbCustomEquipmentOrder[$i]][1]
 		$sHeroName = $g_asEquipmentOrderList[$g_aiCmbCustomEquipmentOrder[$i]][2]
 		
 		Switch $sHeroName
 			Case "King"
-				$xHero = 150
+				$xHero = 95
 			Case "Queen"
-				$xHero = 180
-			Case "Warden"
-				$xHero = 233
-			Case "Champion"
-				$xHero = 255
+				$xHero = 120
 			Case "Prince"
-				$xHero = 205
+				$xHero = 145
+			Case "Warden"
+				$xHero = 170
+			Case "Champion"
+				$xHero = 195
+			Case "Dragon"
+				$xHero = 220
 		EndSwitch
 		
 		SetLog("Try to upgrade " & $sUpgradeName, $COLOR_INFO)
@@ -120,8 +126,8 @@ Func Blacksmith($bTest = False)
 		EndIf
 		
 		If Not $g_bRunState Then Return
-		
-		If QuickMIS("BFI", $g_sImgEquipmentResearch & $sImageName & "*", 120, 360, 420, 510) Then
+		If $g_bDebugSetLog Then SetLog("Searching image : " & $sImageName, $COLOR_ACTION)
+		If QuickMIS("BFI", $g_sImgEquipmentResearch & $sImageName & "*", 74, 385, 300, 485) Then
 			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, $sUpgradeName)
 			If _Sleep(2000) Then Return
 			If _ColorCheck(_GetPixelColor(830, 133, True), Hex(0x635550, 6), 20, Default, "EquipmentWindow") Then

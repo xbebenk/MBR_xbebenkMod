@@ -105,6 +105,7 @@ Func ZoomOutHelper($caller = "Default")
 	Local $x = 0, $y = 0
 	Local $bIsMain = False
 	Local $Dir = "", $aOffset, $bRet = False
+	Local $aScrollPos = getVillageCenteringCoord()
 	If Not $g_bRunState Then Return
 	
 	If $caller = "VillageSearch" Then 
@@ -129,7 +130,7 @@ Func ZoomOutHelper($caller = "Default")
 			If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 			If $g_bDebugClick Then SetLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 			ClickAway()
-			ClickDrag(800, 350, 800 - $x, 350 - $y, 50, True)
+			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y, 50, True)
 			$bRet = True
 		Else
 			If $g_bDebugClick Then SetLog("[" & $caller & "] Bad Tree ImageName!")
@@ -146,7 +147,7 @@ Func ZoomOutHelper($caller = "Default")
 				If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 				If $g_bDebugClick Then SetLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 				ClickAway()
-				ClickDrag(800, 350, 800 - $x, 350 - $y, 50, True)
+				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y, 50, True)
 				$bRet = True
 			Else
 				If $g_bDebugClick Then SetLog("[" & $caller & "] Bad Stone ImageName!")
@@ -164,7 +165,7 @@ Func ZoomOutHelper($caller = "Default")
 				If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 				If $g_bDebugClick Then SetLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 				ClickAway()
-				ClickDrag(800, 350, 800 - $x, 350 - $y, 50, True)
+				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y, 50, True)
 				$bRet = True
 			Else
 				If $g_bDebugClick Then SetLog("[" & $caller & "] Bad CGHelper ImageName!")
@@ -174,7 +175,7 @@ Func ZoomOutHelper($caller = "Default")
 	
 	If _Sleep(50) Then Return
 	If Not $bRet Then
-		ClickDrag(800, 350, 800, 400, 50, True) ;just drag
+		ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0], $aScrollPos[1], 50, True) ;just drag
 	EndIf
 	
 	;$g_bDebugClick = False
@@ -186,6 +187,7 @@ Func ZoomOutHelperBB($caller = "Default")
 	Local $bIsOnBuilderBase = isOnBuilderBase()
 	Local $Dir = "", $aOffset, $bRet = False
 	Local $xyOffsetSwitchBases = 0
+	Local $aScrollPos = getVillageCenteringCoord()
 	If $caller = "SwitchBetweenBases" Then $xyOffsetSwitchBases = -60
 	
 	If Not $bIsOnBuilderBase Then Return ;leave if not in mainvillage
@@ -211,7 +213,7 @@ Func ZoomOutHelperBB($caller = "Default")
 			If $sImage = "BL" Then $g_sSceneryCode = "BL"
 			If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 			If $g_bDebugClick Then SetLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
-			ClickDrag(730, 250, 730 - $x + $xyOffsetSwitchBases, 250 - $y - $xyOffsetSwitchBases, 50, True) ; more delay for clickdrag here
+			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x + $xyOffsetSwitchBases, $aScrollPos[1] - $y - $xyOffsetSwitchBases, 50, True) ; more delay for clickdrag here
 			$bRet = True
 		Else
 			If $g_bDebugClick Then SetLog("[" & $caller & "] Bad TreeBL ImageName!")
@@ -227,7 +229,7 @@ Func ZoomOutHelperBB($caller = "Default")
 				$y = $g_iQuickMISY - $aOffset[2]
 				If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 				If $g_bDebugClick Then SetLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
-				ClickDrag(730, 250, 730 - $x + $xyOffsetSwitchBases, 250 - $y - $xyOffsetSwitchBases, 50, True)
+				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x + $xyOffsetSwitchBases, $aScrollPos[1] - $y - $xyOffsetSwitchBases, 50, True)
 				$bRet = True
 			Else
 				If $g_bDebugClick Then SetLog("[" & $caller & "] Bad Stone ImageName!")

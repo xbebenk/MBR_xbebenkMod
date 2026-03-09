@@ -131,6 +131,8 @@ Func CheckSwitchAcc()
 			$bForceSwitch = True
 		EndIf
 	EndIf
+	
+	If $bForceSwitch Then RequestCC()
 
 	SetDebugLog("-Normal Switch-")
 	$g_iNextAccount = $g_iCurAccount + 1
@@ -279,9 +281,17 @@ Func ClickSCIDReload()
 	
 	If QuickMIS("BFI", $g_sImgSupercellIDReload, 550, 110, 630, 200) Then
 		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(1000) Then Return
-		$bRet = True
+		If _Sleep(500) Then Return
 	EndIf
+	
+	For $i = 1 To 10
+		If QuickMIS("BC1", $g_sImgSupercellIDSwitchID, 610, 225, 700, 300) Then 
+			$bRet = True
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+		SetLog("Waiting switchID list #" & $i, $COLOR_ACTION)
+	Next
 	Return $bRet
 EndFunc   ;==>ClickSCIDSwitchID
 

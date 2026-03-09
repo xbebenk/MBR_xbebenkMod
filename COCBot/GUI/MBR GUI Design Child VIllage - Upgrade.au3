@@ -63,7 +63,8 @@ Func CreateVillageUpgrade()
 
 	$g_hGUI_UPGRADE = _GUICreate("", $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_VILLAGE)
 	;GUISetBkColor($COLOR_WHITE, $g_hGUI_UPGRADE)
-
+	
+	
 	GUISwitch($g_hGUI_UPGRADE)
 	$g_hGUI_UPGRADE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
 	$g_hGUI_UPGRADE_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02_STab_03_STab_01", "Laboratory"))
@@ -76,8 +77,11 @@ Func CreateVillageUpgrade()
 		CreateAutoUpgradeSubTab()
 	$g_hGUI_UPGRADE_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02_STab_03_STab_04", "Walls"))
 		CreateWallsSubTab()
-		CreateHeroEquipment()
+	
+		;other gui (new dialog window)
 		CreateRushTHOption()
+		CreateHeroEquipment()
+	
 	GUICtrlCreateTabItem("")
 
 EndFunc   ;==>CreateVillageUpgrade
@@ -371,7 +375,7 @@ Func CreateHeroEquipment()
 	$x = 10
 	$y = 70
 	For $z = 0 To UBound($g_ahCmbEquipmentOrder) - 1
-		If $z < 17 Then
+		If $z < 5 Then
 			$g_hChkCustomEquipmentOrder[$z] = GUICtrlCreateCheckbox("", $x + 15, $y, -1, 20)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "ChkCustomEquipmentOrder_Info_01", "Enable or disable a custom equipment upgrade"))
@@ -384,12 +388,12 @@ Func CreateHeroEquipment()
 			$y += 25 ; move down to next combobox location
 		EndIf
 		
-		If $z = 17 Then
+		If $z = 5 Then
 			$x = 240
 			$y = 70
 		EndIf
 		
-		If $z >= 17 Then
+		If $z >= 5 Then
 			$g_hChkCustomEquipmentOrder[$z] = GUICtrlCreateCheckbox("", $x + 15, $y, -1, 20)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Equipment", "ChkCustomEquipmentOrder_Info_01", "Enable or disable a custom equipment upgrade"))
@@ -401,6 +405,7 @@ Func CreateHeroEquipment()
 			$g_ahImgEquipmentOrder2[$z] = _GUICtrlCreateIcon($g_sLibIconPath, $eIcnOptions, $x + 190, $y - 2, 24, 24)
 			$y += 25 ; move down to next combobox location
 		EndIf
+		If $z = 9 Then ExitLoop
 	Next
 
 	$x = 160

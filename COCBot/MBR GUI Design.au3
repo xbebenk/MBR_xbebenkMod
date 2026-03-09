@@ -322,24 +322,24 @@ Func CreateMainGUIControls($bGuiModeUpdate = False)
 	; This dummy is used in btnStart and btnStop to disable/enable all labels, text, buttons etc. on all tabs.
 	$g_hFirstControlToHide = GUICtrlCreateDummy()
 
-	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_03", "Loading Log tab..."))
 	CreateLogTab()
+	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_03", "Loading Log tab..."))
 
-	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_04", "Loading Village tab..."))
 	CreateVillageTab()
+	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_04", "Loading Village tab..."))
 
-	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_05", "Loading Attack tab..."))
 	CreateAttackTab()
+	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_05", "Loading Attack tab..."))
 	
-	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading BuilderBase tab..."))
 	CreateBuilderBaseTab()
+	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_06", "Loading BuilderBase tab..."))
 	
-	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_07", "Loading Bot tab..."))
 	CreateBotTab() ; also creates  $g_hLastControlToHide
+	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_07", "Loading Bot tab..."))
 	If Not $bGuiModeUpdate Then DistributorsUpdateGUI() ; Now loading Distributors (during GUI switch it must be called outside CreateMainGUIControls()!)
 
-	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_08", "Loading About Us tab..."))
 	CreateAboutTab()
+	SplashStep(GetTranslatedFileIni("MBR GUI Design - Loading", "SplashStep_08", "Loading About Us tab..."))
 
 	Local $sStepText = ""
 	Switch $g_iGuiMode

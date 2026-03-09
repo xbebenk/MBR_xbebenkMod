@@ -353,7 +353,7 @@ Func IsPetHousePage($sSource = "IsPetHousePage")
 EndFunc   ;==>IsPetHousePage
 
 Func IsBlacksmithPage($bSetLog = True, $iLoop = 5)
-	Local $aIsBlacksmithPage[4] = [775, 135, 0xD0161C, 20] ; Pink red top of close button
+	Local $aIsBlacksmithPage[4] = [824, 137, 0x887973, 20] ; Pink red top of close button
 
 	If IsPageLoop($aIsBlacksmithPage, $iLoop) Then
 		If ($g_bDebugSetlog Or $g_bDebugClick) And $bSetLog Then SetLog("**Blacksmith Window OK**", $COLOR_ACTION)
@@ -367,3 +367,23 @@ Func IsBlacksmithPage($bSetLog = True, $iLoop = 5)
 	Return False
 EndFunc   ;==>IsBlacksmithPage
 
+Func Gatcha($loop = 5)
+	For $j = 1 To 5
+		For $i = 1 To $loop
+			If _Sleep(1000) Then Return
+			ClickP($aReturnHomeChest)
+			SetLog("Click Chest", $COLOR_ACTION)
+		Next
+		
+		If _Sleep(5000) Then Return
+		
+		For $k = 1 To 4
+			If _ColorCheck(_GetPixelColor(430, 482, True), Hex(0xBFEA8E, 6), 20, Default, "ChestContinue") Then 
+				Click(430, 495)
+				SetLog("Click Continue", $COLOR_ACTION)
+			EndIf
+			If _Sleep(1000) Then Return
+		Next
+		If _Sleep(5000) Then Return
+	Next
+EndFunc

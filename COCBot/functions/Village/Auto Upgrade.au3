@@ -287,7 +287,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 	If $Gold > $Elix Then $GoldMultiply += 1
 	If $Elix > $Gold Then $ElixMultiply += 1
 	Local $aTmpCoord, $aBuilding[0][8], $BuildingName, $UpgradeCost, $aUpgradeName, $tmpcost, $bFoundRushTH = False, $bRusTHFound = False, $lenght = 0
-	Local $aPriority[7][2] = [["Castle", 15], ["Pet", 13], ["Laboratory", 16], ["Storage", 14], ["Army", 14], ["Giga", 12], ["Town", 10]]
+	Local $aPriority[8][2] = [["Castle", 13], ["Pet", 13], ["Laboratory", 16], ["Storage", 13], ["Barracks", 14], ["Army", 11], ["Giga", 12], ["Town", 10]]
 	Local $aRushTH[9][2] = [["Hero", 13], ["Barracks", 8], ["Spell", 9], ["Workshop", 10], ["Blacksmith", 9], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
 	Local $aHeroes[5] = ["Barbarian", "Queen", "Warden", "Champion", "Prince"]
 	Local $bHero = False
@@ -310,6 +310,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 
 			$aUpgradeName = getBuildingName($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			$tmpcost = getBuilderMenuCost($g_iQuickMISX + 5, $g_iQuickMISY - 10)
+			If StringInStr($aUpgradeName[0], "Wall") Then $aUpgradeName[0] = "Wall"
 			;If $sCostType = "Gem" And Number($tmpcost) = 0 Then ContinueLoop
 			Local $tmparray[1][8] = [[String($sCostType), $aTmpCoord[$i][1], Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), "New", Number($tmpcost), "New", 0]]
 			_ArrayAdd($aBuilding, $tmparray)
