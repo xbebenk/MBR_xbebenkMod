@@ -92,6 +92,7 @@ Func VerifyClaimButton()
 		SetLog("Waiting Event Claim Button #" & $i, $COLOR_ACTION)
 		If QuickMIS("BC1", $g_sImgCollectCookie, 635, 310, 800, 380) Then 
 			If _PixelSearch($g_iQuickMISX + 78, $g_iQuickMISY - 23, $g_iQuickMISX + 78, $g_iQuickMISY - 22, Hex(0xF9171F, 6), 40, True, "Claim Button") Then
+				SetLog("Claim button verified", $COLOR_DEBUG)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				$bRet = True
 				ExitLoop
@@ -99,6 +100,15 @@ Func VerifyClaimButton()
 		EndIf
 		If _Sleep(500) Then Return
 	Next
+	
+	If QuickMIS("BC1", $g_sImgClanRush, 100, 130, 160, 150) Then
+		SetLog("Clan Rush Event", $COLOR_DEBUG)
+		If QuickMIS("BC1", $g_sImgClanRush, 635, 310, 800, 380) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(1000) Then Return
+			CheckClanRush()
+		EndIf
+	EndIf
 	
 	If Not $bRet Then 
 		SetLog("Nothing to Claim", $COLOR_DEBUG2)
@@ -187,10 +197,14 @@ Func ClaimCookieReward($bGoldPass = False)
 				EndIf
 				Click($aClaim[$j][1], $aClaim[$j][2])
 				If _Sleep(1000) Then Return
-				If IsOKCancelPage() Then 					
-					SetLog("Cancel. Not selling extra rewards.", $COLOR_INFO)
-					Click($aConfirmSurrender[0] - 100, $aConfirmSurrender[1]) ; Click Cancel
-					Click(322, 413, 1, 0, "Click Cancel")
+				If IsOKCancelPage() Then 
+					If $g_bChkSellRewards Then 
+						Setlog("Selling extra reward for gems", $COLOR_SUCCESS)
+						Click(530, 420, 1, 0, "Sell For Gems", False) ; Click Sell for Gems
+					Else
+						SetLog("Cancel. Not selling extra rewards.", $COLOR_INFO)
+						Click(325, 420, 1, 0, "Click Cancel")
+					EndIf
 					If _Sleep(1000) Then Return
 				Else
 					$iClaim += 1

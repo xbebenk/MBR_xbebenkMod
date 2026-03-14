@@ -235,6 +235,9 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
+	
+	CheckClanRush()
+	
 	If Not $g_bRunState Then Return
 	
 	If $bBuilderBase Then CheckBB20LootCartTutor()
@@ -782,6 +785,41 @@ Func CheckBuilderHutTutorial()
 			Next
 		EndIf
 	EndIf
+EndFunc
+
+Func CheckClanRush()
+	If QuickMIS("BC1", $g_sImgClanRush, 350, 125, 530, 200) Then
+		SetLog("checkObstacles: Found ClanRush Event", $COLOR_ACTION)
+		For $i = 1 To 2
+			If QuickMIS("BC1", $g_sImgClanRush, 320, 440, 560, 560) Then 
+				SetLog("checkObstacles: Found ClanRush " & $g_iQuickMISName & " Button", $COLOR_ACTION)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(1000) Then Return
+			EndIf
+		Next
+		If _Sleep(1000) Then Return
+		Local $aChest = QuickMIS("CNX", $g_sImgClanRush, 790, 200, 840, 510)
+		If IsArray($aChest) And UBound($aChest) > 0 Then 
+			_ArraySort($aChest, 1, 0, 0, 2)
+			For $i = 0 To UBound($aChest) - 1
+				SetLog("Found Chest on " & $aChest[$i][1] & "," & $aChest[$i][2], $COLOR_DEBUG)
+				If QuickMIS("BC1", $g_sImgClanRush & "Lock", $aChest[$i][1], $aChest[$i][2] - 30, $aChest[$i][1] + 35, $aChest[$i][2] + 10) Then
+					If $g_iQuickMISName = "Lock" Then ContinueLoop
+				Else
+					Click($aChest[$i][1], $aChest[$i][2])
+					SetLog("Claiming reward : " & $aChest[$i][0], $COLOR_SUCCESS)
+					If $aChest[$i][0] = "Chest" Then
+						If _Sleep(3000) Then Return
+						For $j = 1 To 3
+							RewardChest()
+						Next
+					EndIf
+				EndIf
+			Next
+		EndIf
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 800, 140, 840, 170) Then Click($g_iQuickMISX, $g_iQuickMISY)
+	EndIf
+	Return False
 EndFunc
 
 Func CCTutorial()
