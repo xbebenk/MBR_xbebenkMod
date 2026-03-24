@@ -430,7 +430,14 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkSellROBE, $g_sProfileConfigPath, "MagicItems", "ChkSellROBE", False, "Bool")
 	Local $aSellChk[21] = [$g_bChkSellBOF, $g_bChkSellBOB, $g_bChkSellBOS, $g_bChkSellBOH, $g_bChkSellBOE, $g_bChkSellShovel, $g_bChkSellWallRing, $g_bChkSellPowerPot, $g_bChkSellResourcePot, $g_bChkSellTrainingPot, $g_bChkSellBuilderPot, $g_bChkSellCTPot, $g_bChkSellHeroPot, $g_bChkSellResearchPot, $g_bChkSellSuperPot, $g_bChkSellBuilderJar, $g_bChkSellROG, $g_bChkSellROE, $g_bChkSellRODE, $g_bChkSellROBG, $g_bChkSellROBE]
 	$g_aSellMagicItem = $aSellChk
-
+	
+	IniReadS($g_bChkTradeShiny, $g_sProfileConfigPath, "MagicItems", "ChkTradeShiny", False, "Bool")
+	IniReadS($g_bChkTradeGlowy, $g_sProfileConfigPath, "MagicItems", "ChkTradeGlowy", False, "Bool")
+	IniReadS($g_bChkTradeStarry, $g_sProfileConfigPath, "MagicItems", "ChkTradeStarry", False, "Bool")
+	IniReadS($g_bChkTradeBuilderGold, $g_sProfileConfigPath, "MagicItems", "ChkTradeBuilderGold", False, "Bool")
+	IniReadS($g_bChkTradeBuilderElix, $g_sProfileConfigPath, "MagicItems", "ChkTradeBuilderElix", False, "Bool")
+	IniReadS($g_bChkTradeClockTowerPot, $g_sProfileConfigPath, "MagicItems", "ChkTradeClockTowerPot", False, "Bool")
+	IniReadS($g_bChkTradeResearchPot, $g_sProfileConfigPath, "MagicItems", "ChkTradeResearchPot", False, "Bool")
 
 	IniReadS($g_bChkCollectBuilderBase, $g_sProfileConfigPath, "other", "ChkCollectBuildersBase", False, "Bool")
 	IniReadS($g_bChkCleanBBYard, $g_sProfileConfigPath, "other", "ChkCleanBBYard", False, "Bool")

@@ -66,6 +66,8 @@ Func CollectFreeMagicItems($bTest = False)
 	If Not $Collected Then
 		SetLog("Nothing free to collect!", $COLOR_INFO)
 	EndIf
+	
+	TradeMedal()
 
 	If $g_aRemoveFreeMagicItems[0] Then
 		ClickAway()
@@ -76,6 +78,83 @@ Func CollectFreeMagicItems($bTest = False)
 	ClickAway()
 	Return $Collected
 EndFunc   ;==>CollectFreeMagicItems
+
+Func TradeMedal()
+	
+	If $g_iLootCCMedal > 1000 Then 
+		For $i = 1 To 8
+			If Not $g_bRunState Then Return
+			SetLog("Waiting for Raid Medal Tab #" & $i, $COLOR_ACTION)
+			If QuickMis("BC1", $g_sImgTraderRaidMedal, 50, 173, 120, 320) Then
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				SetLog("Found Raid Medal Tab", $COLOR_DEBUG)
+				If _Sleep(500) Then Return
+				ExitLoop
+			EndIf
+			If _Sleep(250) Then Return
+		Next
+		
+		Local $bItemFound = False
+		For $i = 1 To 3
+			ClickDrag(410, 400, 410, 185)
+			If QuickMis("BC1", $g_sImgTraderRaidMedal, 215, 145, 800, 570) Then
+				If $g_iQuickMISName = "ShinyOre" And $g_bChkTradeShiny Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					SetLog("Found Shiny Ore", $COLOR_INFO)
+					$bItemFound = True
+				ElseIf $g_iQuickMISName = "GlowyOre" And $g_bChkTradeGlowy Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					SetLog("Found Glowy Ore", $COLOR_INFO)
+					$bItemFound = True
+				ElseIf $g_iQuickMISName = "StarryOre" And $g_bChkTradeStarry Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					SetLog("Found Starry Ore", $COLOR_INFO)
+					$bItemFound = True
+				ElseIf $g_iQuickMISName = "BuilderGold" And $g_bChkTradeBuilderGold Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					SetLog("Found Builder Gold", $COLOR_INFO)
+					$bItemFound = True
+				ElseIf $g_iQuickMISName = "BuilderElixir" And $g_bChkTradeBuilderElix Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					SetLog("Found Builder Elixir", $COLOR_INFO)
+					$bItemFound = True
+				ElseIf $g_iQuickMISName = "ClockTowerPot" And $g_bChkTradeClockTowerPot Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					SetLog("Found Clock Tower Potion", $COLOR_INFO)
+					$bItemFound = True
+				ElseIf $g_iQuickMISName = "ResearchPot" And $g_bChkTradeResearchPot Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					SetLog("Found Research Potion", $COLOR_INFO)
+					$bItemFound = True
+				EndIf
+				
+				If _Sleep(1000) Then Return
+				If $bItemFound Then
+					If IsBuyDealPage() Then 
+						Click(500, 440)
+						SetLog("Buy " & $g_iQuickMISName & " Potion", $COLOR_SUCCESS)
+						If _Sleep(1000) Then Return
+					EndIf
+				EndIf
+			EndIf 
+			$bItemFound = False
+		Next
+	Else
+		SetLog("Skip TradeMedal, Capital Medal: " & $g_iLootCCMedal, $COLOR_DEBUG2)
+	EndIf
+EndFunc
+
+Func IsBuyDealPage()
+	Local $bRet = False
+	For $i = 1 To 3 
+		If WaitforPixel(500, 440, 501, 440, Hex(0x82CC2C, 6), 10, 1, "IsBuyDealPage") Then
+			$bRet = True
+			ExitLoop
+		EndIf
+		If _Sleep(1000) Then Return
+	Next
+	Return $bRet
+EndFunc
 
 Func GetFreeMagic()
 	Local $aOcrPositions[3][2] = [[270, 329], [470, 329], [660, 329]]
@@ -144,14 +223,6 @@ Func IsTraderWindowOpen()
 		EndIf
 		If _Sleep(250) Then Return
 	Next
-	
-	;quick collect giant gauntlet
-	;If QuickMis("BC1", $g_sImgTraderGems, 270, 325, 340, 350) Then
-	;	Click($g_iQuickMISX, $g_iQuickMISY)
-	;	If _Sleep(1000) Then Return
-	;	If QuickMis("BC1", $g_sImgTraderGems, 390, 370, 450, 430) Then Click($g_iQuickMISX, $g_iQuickMISY)
-	;	If _Sleep(800) Then Return
-	;EndIf
 	
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
@@ -393,6 +464,15 @@ Func UseFreeMagicItem()
 				$y = $g_iQuickMISY + 40
 				Click($x, $y)
 				If _Sleep(500) Then Return
+				If $g_iQuickMISName = "Full" Then
+					If WaitforPixel(345, 520, 346, 520, Hex(0xF71E22, 6), 10, 1, "FreeMagicItem Full") Then 
+						Click(260, 510, 1, 0, "Sell magic Item")
+						If _Sleep(500) Then Return
+						If IsOKCancelPage() Then Click(530, 425)
+						SetLog("Succesfully, Sell Magic item", $COLOR_SUCCESS)
+					EndIf
+				EndIf
+				
 				If WaitforPixel(600, 525, 601, 526, Hex(0x8BD43A, 6), 10, 1, "UseFreeMagicItem") Then 
 					Click(600, 520)
 					If _Sleep(500) Then Return

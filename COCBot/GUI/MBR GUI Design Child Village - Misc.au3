@@ -24,6 +24,7 @@ Global $g_hTxtRestartGold = 0, $g_hTxtRestartElixir = 0, $g_hTxtRestartDark = 0
 Global $g_hChkCollect = 0, $g_hChkCollectLootCart = 0, $g_hChkTombstones = 0, $g_hChkCleanYard = 0, $g_hChkGemsBox = 0
 Global $g_hGUI_SellMagicItems, $g_hBtnSellPot = 0, $g_hChkEnableSellMagicItem = 0
 Global $g_hChkSellBOF = 0, $g_hChkSellBOB = 0, $g_hChkSellBOS = 0, $g_hChkSellBOH = 0, $g_hChkSellBOE = 0, $g_hChkSellShovel = 0, $g_hChkSellWallRing = 0
+Global $g_hChkTradeStarry = 0, $g_hChkTradeShiny = 0, $g_hChkTradeGlowy = 0, $g_hChkTradeBuilderGold = 0, $g_hChkTradeBuilderElix = 0, $g_hChkTradeClockTowerPot = 0, $g_hChkTradeResearchPot = 0
 Global $g_hChkSellPowerPot = 0, $g_hChkSellResourcePot = 0, $g_hChkSellTrainingPot = 0, $g_hChkSellBuilderPot = 0, $g_hChkSellCTPot = 0
 Global $g_hChkSellHeroPot = 0, $g_hChkSellResearchPot = 0, $g_hChkSellSuperPot = 0, $g_hChkSellBuilderJar = 0
 Global $g_hChkSellROG = 0, $g_hChkSellROE = 0, $g_hChkSellRODE = 0, $g_hChkSellROBG = 0, $g_hChkSellROBE = 0
@@ -333,7 +334,7 @@ Func CreateMiscNormalVillageSubTab()
 EndFunc   ;==>CreateMiscNormalVillageSubTab
 
 Func CreateSellMagicSetting()
-	$g_hGUI_SellMagicItems = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_SellMagicItem", "Sell Magic Items Settings"), $_GUI_MAIN_WIDTH - 20, $_GUI_MAIN_HEIGHT - 370, $g_iFrmBotPosX, $g_iFrmBotPosY + 60, $WS_DLGFRAME, -1, $g_hFrmBot)
+	$g_hGUI_SellMagicItems = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_SellMagicItem", "Sell Magic Items Settings"), $_GUI_MAIN_WIDTH - 20, $_GUI_MAIN_HEIGHT - 240, $g_iFrmBotPosX, $g_iFrmBotPosY + 60, $WS_DLGFRAME, -1, $g_hFrmBot)
 	; GUI SubTab
 	Local $x = 15, $y = 10
 	
@@ -429,7 +430,40 @@ Func CreateSellMagicSetting()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSellROBE_Info", "Enable option to Sell Rune Of Builder Elixir"))
 			
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	$g_hBtnCGSettingsClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_SellPotion", "Close"), $_GUI_MAIN_WIDTH - 125, $_GUI_MAIN_HEIGHT - 430, 85, 25)
+	$x = 15
+	$y = 280
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_TradeMedal", "Trade Medal"), $x - 10, $y - 20, $g_iSizeWGrpTab3, 100)
+		$g_hChkTradeShiny = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeShiny", "Shiny Orb"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeShiny_Info", "Enable option to Trade Medal Shiny Orb"))
+		
+		$y += 21
+		$g_hChkTradeGlowy = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeGlowy", "Glowy Orb"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeGlowy_Info", "Enable option to Trade Medal with Glowy Orb"))
+			
+		$y += 21
+		$g_hChkTradeStarry = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeStarry", "Starry Orb"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeStarry_Info", "Enable option to Trade Medal with Starry Orb"))
+			
+		$x = 150
+		$y = 280
+		$g_hChkTradeBuilderGold = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeBuilderGold", "Builder Gold"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeBuilderGold_Info", "Enable option to Trade Medal with Builder Gold"))
+			
+		$y += 21
+		$g_hChkTradeBuilderElix = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeBuilderElix", "Builder Elixir"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeBuilderElix_Info", "Enable option to Trade Medal with Builder Elixir"))
+		
+		$y += 21
+		$g_hChkTradeClockTowerPot = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeClockTowerPot", "Clock Tower Potion"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeClockTowerPot_Info", "Enable option to Trade Medal with Clock Tower Potion"))
+		
+		$x = 300
+		$y = 280
+		$g_hChkTradeResearchPot = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeResearchPot", "Research Potion"), $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeResearchPot_Info", "Enable option to Trade Medal with Clock Tower Potion"))
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
+	$g_hBtnCGSettingsClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_SellPotion", "Close"), $_GUI_MAIN_WIDTH - 125, $_GUI_MAIN_HEIGHT - 310, 85, 25)
 			GUICtrlSetOnEvent(-1, "btnCloseSellPotion")
 EndFunc
 

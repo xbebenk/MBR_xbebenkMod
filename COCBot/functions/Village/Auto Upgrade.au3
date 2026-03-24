@@ -102,6 +102,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	If Not $g_bRunState Then Return
 	$g_bSkipWallReserve = False ;reset first
 	$g_bUpgradeLowCost = False ;reset first
+	$g_bGearUpDone = False
 	If _Sleep(50) Then Return
 	CheckMainScreen()
 	VillageReport(False, True)
@@ -339,16 +340,17 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 		_ArraySort($aTmpCoord, 0, 0, 0, 2)
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If Not $g_bRunState Then Return
+			
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $g_iXFindUpgrade, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then
-				If $g_iQuickMISName = "Gear" Then
+				If $g_iQuickMISName = "Gear" And Not $g_bGearUpDone Then
 					Local $bRet = DoGearUp($g_iQuickMISX + 20, $g_iQuickMISY)
 					SetLog("Do GearUp result : " & String($bRet), $COLOR_INFO)
-					ClickMainBuilder()
-					If $bRet Then Return $aBuilding
+					$g_bGearUpDone = True
+				Else
+					ContinueLoop ;skip list upgrade after try do GearUp
 				EndIf
-				ContinueLoop ;skip geared and new
 			EndIf
-
+		
 			$lenght = Number($aTmpCoord[$i][1]) - $g_iXFindUpgrade
 			$aUpgradeName = getBuildingName($g_iXFindUpgrade, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
@@ -1534,7 +1536,7 @@ Func DoGearUp($x, $y)
 
 	If ClickB("GearUp") Then
 		If _Sleep(1000) Then Return
-		If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+		If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 560) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1000) Then Return
 			If IsGemOpen(True) Then

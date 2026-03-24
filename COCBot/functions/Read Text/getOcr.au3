@@ -234,8 +234,8 @@ Func getBuilderMenuCost($x_start, $y_start) ;  -> Get least upgradetime on build
 	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 100, 18, True)
 EndFunc   ;==>getBuilderBuilderMenuCost
 
-Func getOresValues($x_start, $y_start, $ilength = 130) ;  -> Get least upgradetime on builder menu
-	Return StringReplace(getOcrAndCapture("coc-ores", $x_start, $y_start, $ilength, 16, True), "-", "")
+Func getOresValues($x_start, $y_start, $ilength = 60) ;  -> Get least upgradetime on builder menu
+	Return StringReplace(getOcrAndCapture("coc-bonus", $x_start, $y_start, $ilength, 20, True), "-", "")
 EndFunc   ;==>getOresValues
 
 Func getBuildingName($x_start, $y_start, $length = 180, $height = 20) ;  -> Get BuildingName on builder menu

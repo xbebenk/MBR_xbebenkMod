@@ -951,7 +951,7 @@ Global Const $g_aiHeroHallCost[11] = [800000, 1600000, 2300000, 3000000, 5000000
 ; Auto Upgrade
 Global $g_bChkRushTH = False, $g_bHeroPriority = False
 Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False, $g_bUseHeroBooks = False, $g_iHeroMinUpgradeTime = 0
-Global $g_bSkipWallReserve = False, $g_bUpgradeLowCost = False, $g_bUpgradeOtherDefenses = False
+Global $g_bSkipWallReserve = False, $g_bUpgradeLowCost = False, $g_bUpgradeOtherDefenses = False, $g_bGearUpDone = False
 Global $g_bUseBuilderPotion = False
 Global $g_iChkIgnoreTH = 0, $g_iChkIgnoreKing = 0, $g_iChkIgnoreQueen = 0, $g_iChkIgnoreWarden = 0, $g_iChkIgnoreChampion = 0, $g_iChkIgnoreCC = 0, $g_iChkIgnoreLab = 0
 Global $g_iChkIgnoreBarrack = 0, $g_iChkIgnoreDBarrack = 0, $g_iChkIgnoreFactory = 0, $g_iChkIgnoreDFactory = 0
@@ -1822,6 +1822,8 @@ Global $g_bChkSellBOF = False, $g_bChkSellBOB = False, $g_bChkSellBOS = False, $
 Global $g_bChkSellPowerPot = False, $g_bChkSellResourcePot = False, $g_bChkSellTrainingPot = False, $g_bChkSellBuilderPot = False, $g_bChkSellCTPot = False, $g_bChkSellHeroPot = False, $g_bChkSellResearchPot = False
 Global $g_bChkSellSuperPot = False, $g_bChkSellBuilderJar = False, $g_bChkSellROG = False, $g_bChkSellROE = False, $g_bChkSellRODE = False, $g_bChkSellROBG = False, $g_bChkSellROBE = False
 Global $g_aSellMagicItem[21] = [$g_bChkSellBOF, $g_bChkSellBOB, $g_bChkSellBOS, $g_bChkSellBOH, $g_bChkSellBOE, $g_bChkSellShovel, $g_bChkSellWallRing, $g_bChkSellPowerPot, $g_bChkSellResourcePot, $g_bChkSellTrainingPot, $g_bChkSellBuilderPot, $g_bChkSellCTPot, $g_bChkSellHeroPot, $g_bChkSellResearchPot, $g_bChkSellSuperPot, $g_bChkSellBuilderJar, $g_bChkSellROG, $g_bChkSellROE, $g_bChkSellRODE, $g_bChkSellROBG, $g_bChkSellROBE]
+Global $g_bChkTradeShiny = False, $g_bChkTradeGlowy = False, $g_bChkTradeStarry = false, $g_bChkTradeBuilderGold = False, $g_bChkTradeBuilderElix = False, $g_bChkTradeClockTowerPot = False, $g_bChkTradeResearchPot = False
+
 Global $g_aMagicItemName[21] = ["BookOfFighting", "BookOfBuilding", "BookOfSpell", "BookOfHero", "BookOfEverything", "Shovel", "WallRing", "PowerPot", "ResourcePot", "TrainingPot", "BuilderPot", "ClockTowerPot", "HeroPot", "ResearchPot", "SuperPot", "BuilderJar", "RuneOfGold", "RuneOfElixir", "RuneOfDarkElixir", "RuneOfBuilderGold", "RuneOfBuilderElixir"]
 
 ; Daily challenge

@@ -21,7 +21,7 @@ Func checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase, 
 EndFunc   ;==>checkMainScreen
 
 Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase, $CalledFrom = "Default") ;Checks if in main screen
-
+	
 	If $bSetLog = Default Then $bSetLog = True
 	Local $VillageType = "MainVillage"
 	If $bBuilderBase Then $VillageType = "BuilderBase"
@@ -29,14 +29,13 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	
 	If Not CheckAndroidRunning(False) Then Return
 	PlaceUnplacedBuilding()
+	PlacedOnLeague()
 	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False
-	Local $aPixelToCheck = $aIsMain
 	$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
 	
 	While Not $bLocated
 		$i += 1
 		If Not $g_bRunState Then Return
-		
 		If Mod($i, 10) = 0 Then RestartAndroidCoC() ; Force restart CoC we keep on restarting mainscreen
 		
 		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))

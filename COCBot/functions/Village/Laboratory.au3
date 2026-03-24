@@ -23,7 +23,7 @@ Func Laboratory($bDebug = False)
  	; Get updated village elixir and dark elixir values
 	VillageReport(True, True)
 	
-	If Not FindResearchButton() Then Return False ; cant start becuase we cannot find the research button
+	If Not FindResearchButton(True) Then Return False ; cant start becuase we cannot find the research button
 	If _Sleep(1500) Then Return
 	
 	; Lab upgrade is not in progress and not upgrading, so we need to start an upgrade.
@@ -554,11 +554,11 @@ Func CheckIfLabIdle($bDebug = False)
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 320, 105, 445, 140) Then
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
 			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
-			If $mUpgradeTime > 2880 Then ; only use potion if lab upgrade time is more than 2 day
-				SetLog("Upgrade time > 2 day, will use Resource Potion", $COLOR_INFO)
+			If $mUpgradeTime >= 1440 Then ; only use potion if lab upgrade time is more than 2 day
+				SetLog("Upgrade time > 1 day, will use Resource Potion", $COLOR_INFO)
 				UseLabPotion()
 			Else
-				SetLog("Upgrade time < 2 day, cancel using Resource potion", $COLOR_INFO)
+				SetLog("Upgrade time < 1 day, cancel using Resource potion", $COLOR_INFO)
 			EndIf
 		EndIf
 	EndIf
@@ -794,11 +794,11 @@ Func IsLabUpgradeResourceEnough($Cost, $CostType)
 EndFunc
 
 ; Find Research Button
-Func FindResearchButton($bClickResearch = True)
+Func FindResearchButton($bForceOpen = False)
 	Local $TryLabAutoLocate = False
 	Local $LabFound = False
 	
-	If _ColorCheck(_GetPixelColor(288, 36, True), Hex(0xFFFF5E, 6), 20, Default, "Laboratory") Then
+	If _ColorCheck(_GetPixelColor(288, 36, True), Hex(0xFFFF5E, 6), 20, Default, "Laboratory") And $bForceOpen Then
 		SetLog("Laboratory: Found Goblin Lab!, Return False", $COLOR_DEBUG1)
 		Return False
 	EndIf
@@ -832,12 +832,13 @@ Func FindResearchButton($bClickResearch = True)
 	EndIf
 
 	If $LabFound Then
-		If $bClickResearch Then
+		If $bForceOpen Then 
 			If Not ClickB("Research") Then Return
-			If _Sleep(2000) Then Return
 		EndIf
-	Return True
+		If _Sleep(1000) Then Return
 	EndIf
+	
+	Return True
 EndFunc
 
 Func AutoLocateLab()

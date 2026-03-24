@@ -123,14 +123,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(770, 138, True), Hex(0xD1151A, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(770, 118, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then
-		SetLog("checkObstacles: Found Boost Supertroop Window", $COLOR_ACTION)
+	If _ColorCheck(_GetPixelColor(770, 138, True), Hex(0xD1151A, 6), 10, Default, "checkObstacles: Super Troop Window") And _ColorCheck(_GetPixelColor(770, 118, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles : Super Troop Window") Then
+		SetLog("checkObstacles: Found Boost Super Troop Window", $COLOR_ACTION)
 		Click(770, 120)
 		If _Sleep(1000) Then Return
 		Return False
 	EndIf
 	If Not $g_bRunState Then Return
-	If _ColorCheck(_GetPixelColor(395, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(464, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles") Then
+	If _ColorCheck(_GetPixelColor(395, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles: Cookie Rumble Confirm Window") And _ColorCheck(_GetPixelColor(464, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles: Cookie Rumble Confirm Window") Then
 		SetLog("checkObstacles: Found Cookie Rumble Confirm Window", $COLOR_ACTION)
 		Click(430, 515)
 		If _Sleep(1000) Then Return
@@ -142,6 +142,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Click(440, 515)
 		Return False
 	EndIf
+	
 	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgWelcomeBackReward, 396, 135, 500, 165) Then 
 		Local $aClaim = QuickMIS("CNX", $g_sImgWelcomeBackReward, 80, 260, 725, 480)
@@ -158,12 +159,13 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 
-	If _ColorCheck(_GetPixelColor(384, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(480, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 600, True), Hex(0x000000, 6), 10, Default, "checkObstacles")  Then
+	If _ColorCheck(_GetPixelColor(384, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles: Return Home Button") And _ColorCheck(_GetPixelColor(480, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles: Return Home Button") And _ColorCheck(_GetPixelColor(430, 600, True), Hex(0x000000, 6), 10, Default, "checkObstacles: Return Home Button")  Then
 		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
 		Click(425, 550)
 		If _Sleep(3000) Then Return
 		Return False
 	EndIf
+	
 	If Not $g_bRunState Then Return
 	If BBBarbarianHead("checkObstacles") Then 
 		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
@@ -172,19 +174,20 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(792, 39, True), Hex(0xDC0408, 6), 20, Default, "checkObstacles") Then
+	If _ColorCheck(_GetPixelColor(792, 39, True), Hex(0xDC0408, 6), 20, Default, "checkObstacles: Close Button") Then
 		SetLog("checkObstacles: Found Window with Close Button to close", $COLOR_ACTION)
 		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(415, 260, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 455, True), Hex(0xBDE98D, 6), 20, Default, "checkObstacles") Then
+	If _ColorCheck(_GetPixelColor(415, 260, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles: BuilderBase Star Bonus") And _ColorCheck(_GetPixelColor(430, 455, True), Hex(0xBDE98D, 6), 20, Default, "checkObstacles: BuilderBase Star Bonus") Then
 		SetLog("checkObstacles: Found BuilderBase Star Bonus", $COLOR_ACTION)
 		PureClick(430, 465) ;Clicks X
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
+	
 	If Not $g_bRunState Then Return
 	If _CheckPixel($aChatTab, True) Then
 		SetLog("checkObstacles: Found Chat Tab to close", $COLOR_ACTION)
@@ -279,7 +282,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	If Not $g_bRunState Then Return
 	Local $bIsOnBuilderIsland = isOnBuilderBase()
 	If Not $bBuilderBase And $bIsOnBuilderIsland Then ;Check for MainVillage, but coc is on BB -> go to mainVillage
-		ZoomOut(True)
 		If SwitchBetweenBases("Main") Then
 			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 			Return False
@@ -818,6 +820,8 @@ Func CheckClanRush()
 			Next
 		EndIf
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 800, 140, 840, 170) Then Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(1000) Then return
+		ZoomOut(True)
 	EndIf
 	Return False
 EndFunc
