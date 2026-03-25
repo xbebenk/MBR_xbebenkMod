@@ -94,50 +94,72 @@ Func TradeMedal()
 			If _Sleep(250) Then Return
 		Next
 		
-		Local $bItemFound = False
+		Local $bItemFound = False, $aItem
+		
 		For $i = 1 To 3
-			ClickDrag(410, 400, 410, 185)
-			If QuickMis("BC1", $g_sImgTraderRaidMedal, 215, 145, 800, 570) Then
-				If $g_iQuickMISName = "ShinyOre" And $g_bChkTradeShiny Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Found Shiny Ore", $COLOR_INFO)
-					$bItemFound = True
-				ElseIf $g_iQuickMISName = "GlowyOre" And $g_bChkTradeGlowy Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Found Glowy Ore", $COLOR_INFO)
-					$bItemFound = True
-				ElseIf $g_iQuickMISName = "StarryOre" And $g_bChkTradeStarry Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Found Starry Ore", $COLOR_INFO)
-					$bItemFound = True
-				ElseIf $g_iQuickMISName = "BuilderGold" And $g_bChkTradeBuilderGold Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Found Builder Gold", $COLOR_INFO)
-					$bItemFound = True
-				ElseIf $g_iQuickMISName = "BuilderElixir" And $g_bChkTradeBuilderElix Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Found Builder Elixir", $COLOR_INFO)
-					$bItemFound = True
-				ElseIf $g_iQuickMISName = "ClockTowerPot" And $g_bChkTradeClockTowerPot Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Found Clock Tower Potion", $COLOR_INFO)
-					$bItemFound = True
-				ElseIf $g_iQuickMISName = "ResearchPot" And $g_bChkTradeResearchPot Then
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Found Research Potion", $COLOR_INFO)
-					$bItemFound = True
-				EndIf
-				
-				If _Sleep(1000) Then Return
-				If $bItemFound Then
-					If IsBuyDealPage() Then 
-						Click(500, 440)
-						SetLog("Buy " & $g_iQuickMISName & " Potion", $COLOR_SUCCESS)
-						If _Sleep(1000) Then Return
+			ClickDrag(410, 400, 410, 180)
+			If _Sleep(1000) Then Return
+			SetDebugLog("[" & $i & "] Searching Item")
+			$aItem = QuickMis("CNX", $g_sImgTraderRaidMedal, 215, 145, 800, 570)
+			If IsArray($aItem) And UBound($aItem) > 0 Then
+				SetDebugLog("Found: " & _ArrayToString($aItem))
+				For $k = 0 To UBound($aItem) - 1
+					Switch $aItem[$k][0]
+						Case "ShinyOre"
+							If $g_bChkTradeShiny Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Shiny Ore", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "GlowyOre"
+							If $g_bChkTradeGlowy Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Glowy Ore", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "StarryOre"
+							If $g_bChkTradeStarry Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Starry Ore", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "BuilderGold"
+							If $g_bChkTradeBuilderGold Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Builder Gold", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "BuilderElixir"
+							If $g_bChkTradeBuilderElix Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Builder Elixir", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "ClockTowerPot"
+							If $g_bChkTradeClockTowerPot Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found ClockTower Potion", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "ResearchPot"
+							If $g_bChkTradeResearchPot Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Research Potion", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+					EndSwitch
+					
+					If $bItemFound Then
+						If IsBuyDealPage() Then 
+							Click(500, 440)
+							SetLog("Trade Medal with Magic Item", $COLOR_SUCCESS)
+							If _Sleep(1000) Then Return
+						EndIf
 					EndIf
-				EndIf
-			EndIf 
-			$bItemFound = False
+					
+					$bItemFound = False
+				Next
+			EndIf
 		Next
 	Else
 		SetLog("Skip TradeMedal, Capital Medal: " & $g_iLootCCMedal, $COLOR_DEBUG2)
