@@ -48,7 +48,12 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 	EndIf
 
 	If _Sleep($DELAYPREPAREATTACK1) Then Return
-
+	If IsProblemAffect() Then 
+		checkObstacles()
+		$g_bRestart = True
+		Return False
+	EndIf
+	
 	Local $iTroopNumber = 0
 
 	Local $avAttackBar = GetAttackBar($bRemaining, $pMatchMode)

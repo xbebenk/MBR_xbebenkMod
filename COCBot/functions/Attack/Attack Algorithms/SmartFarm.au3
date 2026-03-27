@@ -671,7 +671,6 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	If Not $g_bRunState Then Return
 	If IsProblemAffect() Then Return
 	CheckHeroesHealth()
-	If IsProblemAffect() Then Return
 	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
 	SetLog("Dropping left over troops", $COLOR_INFO)
 	
@@ -857,6 +856,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 			EndIf
 		EndIf
 		If _Sleep(SetSleep(1)) Then Return
+		If IsProblemAffect() Then Return
 	Next
 
 	For $numWave = 0 To UBound($listListInfoDeployTroopPixel) - 1
@@ -884,6 +884,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 			If _Sleep(SetSleep(0)) Then Return
 		Next
 		If _Sleep(SetSleep(1)) Then Return
+		If IsProblemAffect() Then Return
 	Next
 EndFunc   ;==>LaunchTroopSmartFarm
 

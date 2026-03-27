@@ -168,12 +168,12 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAddit
 				$right = $x0 + $iAdditionalX
 				$bottom = $y0 + $iAdditionalY
 				$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
-				SetDebugLog("GetVillageSize check for image " & $findImage)
+				SetDebugLog("FindStone: " & $findImage)
 				$b = decodeSingleCoord(findImage("stone" & $StoneName, $sDirectory & "stone\" & $findImage, $sArea, 1, True))
 				If UBound($b) = 2 Then
 					$x = Int($b[0])
 					$y = Int($b[1])
-					SetDebugLog("Found stone image at " & $x & ", " & $y & ": " & $findImage, $COLOR_INFO)
+					SetDebugLog("Stone found, [" & $x & ", " & $y & "]: " & $findImage, $COLOR_INFO)
 					$stone[0] = $x ; x center of stone found
 					$stone[1] = $y ; y center of stone found
 					$stone[2] = $x0 ; x center of reference stone
@@ -219,13 +219,13 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAddition
 			$right = $x0 + $iAdditionalX
 			$bottom = $y0 + $iAdditionalY
 			$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
-			SetDebugLog("GetVillageSize check for image " & $findImage)
+			SetDebugLog("FindTree: " & $findImage)
 			$b = decodeSingleCoord(findImage($scenerycode, $sDirectory & "tree\" & $findImage, $sArea, 1, True))
 			; sort by x because there can be a 2nd at the right that should not be used
 			If UBound($b) = 2 Then
 				$x = Int($b[0])
 				$y = Int($b[1])
-				SetDebugLog("Found tree image at " & $x & ", " & $y & ": " & $findImage, $COLOR_INFO)
+				SetDebugLog("Tree found, [" & $x & ", " & $y & "]: " & $findImage, $COLOR_INFO)
 				$tree[0] = $x ; x center of tree found
 				$tree[1] = $y ; y center of tree found
 				$tree[2] = $x0 ; x ref. center of tree

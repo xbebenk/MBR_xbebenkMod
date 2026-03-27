@@ -115,8 +115,8 @@ Func ZoomOutHelper($caller = "Default")
 	EndIf
 	
 	If Not $bIsMain Then Return ;leave if not in mainvillage
+	SetDebugLog("ZoomOutHelper, called from: " & $caller, $COLOR_DEBUG2)
 	
-	;$g_bDebugClick = True
 	If _Sleep(50) Then Return
 	If QuickMIS("BC1", $g_sImgZoomOutDir & "tree\", 430, 20, 750, 200) Then 
 		$aOffset = StringRegExp($g_iQuickMISName, "tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
@@ -127,13 +127,14 @@ Func ZoomOutHelper($caller = "Default")
 				$x -= 20
 				$y += 20
 			EndIf
-			If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
-			If $g_bDebugClick Then SetLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
-			ClickAway()
-			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y, 50, True)
-			$bRet = True
+			SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
+			If Abs($x) > 10 And Abs($y) > 10 Then 
+				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
+				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
+				$bRet = True
+			EndIf
 		Else
-			If $g_bDebugClick Then SetLog("[" & $caller & "] Bad Tree ImageName!")
+			SetDebugLog("[" & $caller & "] Bad Tree ImageName!")
 		EndIf
 	EndIf
 	
@@ -144,13 +145,14 @@ Func ZoomOutHelper($caller = "Default")
 			If IsArray($aOffset) Then 
 				$x = $g_iQuickMISX - $aOffset[1]
 				$y = $g_iQuickMISY - $aOffset[2]
-				If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
-				If $g_bDebugClick Then SetLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
-				ClickAway()
-				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y, 50, True)
-				$bRet = True
+				SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
+				If Abs($x) > 10 And Abs($y) > 10 Then 
+					SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
+					ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
+					$bRet = True
+				EndIf
 			Else
-				If $g_bDebugClick Then SetLog("[" & $caller & "] Bad Stone ImageName!")
+				SetDebugLog("[" & $caller & "] Bad Stone ImageName!")
 			EndIf
 		EndIf
 	EndIf
@@ -162,23 +164,23 @@ Func ZoomOutHelper($caller = "Default")
 			If IsArray($aOffset) Then 
 				$x = $g_iQuickMISX - $aOffset[0]
 				$y = $g_iQuickMISY - $aOffset[1]
-				If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
-				If $g_bDebugClick Then SetLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
-				ClickAway()
-				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y, 50, True)
+				SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
+				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
+				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 				$bRet = True
 			Else
-				If $g_bDebugClick Then SetLog("[" & $caller & "] Bad CGHelper ImageName!")
+				SetDebugLog("[" & $caller & "] Bad CGHelper ImageName!")
 			EndIf
 		EndIf
 	EndIf
 	
 	If _Sleep(50) Then Return
 	If Not $bRet Then
-		ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0], $aScrollPos[1], 50, True) ;just drag
+		ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0], $aScrollPos[1] + 100) ;just drag
+		SetDebugLog("[" & $caller & "] ZoomOutHelper just Drag")
 	EndIf
 	
-	;$g_bDebugClick = False
+	If $bRet Then $g_iSearchZoomOutCounter = 0
 	Return $bRet
 EndFunc
 
@@ -191,7 +193,7 @@ Func ZoomOutHelperBB($caller = "Default")
 	If $caller = "SwitchBetweenBases" Then $xyOffsetSwitchBases = -60
 	
 	If Not $bIsOnBuilderBase Then Return ;leave if not in mainvillage
-	;$g_bDebugClick = True
+	SetDebugLog("ZoomOutHelperBB, called from: " & $caller, $COLOR_DEBUG2)
 	
 	If _Sleep(50) Then Return
 	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "ZoomOutHelper\", 100, 20, 800, 676) Then 
@@ -203,7 +205,7 @@ Func ZoomOutHelperBB($caller = "Default")
 			
 			If $sImage = "BH" Then 
 				If QuickMIS("BC1", $g_sImgBB20 & "UpTunnel\", 300, 400, 660, 676) Then
-					SetLog("Detected on BuilderBase HighZone, switch to LowerZone", $COLOR_DEBUG2)
+					SetDebugLog("Detected on BuilderBase HighZone, switch to LowerZone", $COLOR_DEBUG2)
 					Click($g_iQuickMISX, $g_iQuickMISY)
 					If _Sleep(3000) Then Return
 					;$g_bDebugClick = False
@@ -211,12 +213,12 @@ Func ZoomOutHelperBB($caller = "Default")
 				EndIf
 			EndIf
 			If $sImage = "BL" Then $g_sSceneryCode = "BL"
-			If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
-			If $g_bDebugClick Then SetLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
+			SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
+			SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x + $xyOffsetSwitchBases, $aScrollPos[1] - $y - $xyOffsetSwitchBases, 50, True) ; more delay for clickdrag here
 			$bRet = True
 		Else
-			If $g_bDebugClick Then SetLog("[" & $caller & "] Bad TreeBL ImageName!")
+			SetDebugLog("[" & $caller & "] Bad TreeBL ImageName!")
 		EndIf
 	EndIf
 	
@@ -227,16 +229,17 @@ Func ZoomOutHelperBB($caller = "Default")
 			If IsArray($aOffset) Then 
 				$x = $g_iQuickMISX - $aOffset[1]
 				$y = $g_iQuickMISY - $aOffset[2]
-				If $g_bDebugClick Then SetLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
-				If $g_bDebugClick Then SetLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
+				SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
+				SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x + $xyOffsetSwitchBases, $aScrollPos[1] - $y - $xyOffsetSwitchBases, 50, True)
 				$bRet = True
 			Else
-				If $g_bDebugClick Then SetLog("[" & $caller & "] Bad Stone ImageName!")
+				SetDebugLog("[" & $caller & "] Bad Stone ImageName!")
 			EndIf
 		EndIf
 	EndIf
-	;$g_bDebugClick = False
+	
+	If $bRet Then $g_iSearchZoomOutCounter = 0
 	Return $bRet
 EndFunc
 
@@ -250,7 +253,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	If Not $g_bRunState Then Return
 	
 	If $g_bStayOnBuilderBase Then
-		ZoomOutHelperBB()
+		ZoomOutHelperBB($sFunc)
 		If _Sleep(500) Then Return
 	Else
 		ZoomOutHelper($sFunc)
@@ -624,20 +627,20 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 			$aResult[1] = $x
 			$aResult[2] = $y
 			$g_iSearchZoomOutCounter = 0
-			SetDebugLog("SearchZoomOut CenteringVillage = " & String($bCenterVillage), $COLOR_DEBUG1)
+			SetDebugLog("SearchZoomOut CenteringVillage = " & String($bCenterVillage), $COLOR_DEBUG2)
 			
 			If $bCenterVillage And (Abs($x) > 10 Or Abs($y) > 10) Then ;And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
-				SetDebugLog("[" & $sSource & "] Centering Village by: x=" & $x & ", y=" & $y, $COLOR_DEBUG1)
+				SetDebugLog("[" & $sSource & "] Centering Village by: x=" & $x & ", y=" & $y, $COLOR_DEBUG2)
 				
 				ClickAway()
-				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y, 50, True)
+				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
 				If _Sleep(250) Then Return FuncReturn($aResult)
 				
 				$aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut(1):" & $sSource, True, $DebugLog)
 				; update difference in offset
 				$aResult2[3] = $aResult2[1] - $aResult[1]
 				$aResult2[4] = $aResult2[2] - $aResult[2]
-				SetDebugLog("Centered Village Offset" & $sSource & ": " & $aResult2[1] & ", " & $aResult2[2] & ", change: " & $aResult2[3] & ", " & $aResult2[4], $COLOR_DEBUG1)
+				SetDebugLog("Centered Village Offset" & $sSource & ": " & $aResult2[1] & ", " & $aResult2[2] & ", change: " & $aResult2[3] & ", " & $aResult2[4], $COLOR_DEBUG2)
 				Return FuncReturn($aResult2)
 			EndIf
 
@@ -652,6 +655,11 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 	Else 
 		$g_iSearchZoomOutCounter += 1
 		SetLog("SearchZoomOut fail counter +1, now = " & $g_iSearchZoomOutCounter, $COLOR_DEBUG2)
+		If $bOnBuilderBase Then 
+			ZoomOutHelperBB("SearchZoomOut")
+		Else
+			ZoomOutHelper("SearchZoomOut")
+		EndIf
 	EndIf
 
 	If $g_iSearchZoomOutCounter = 5 Then 
