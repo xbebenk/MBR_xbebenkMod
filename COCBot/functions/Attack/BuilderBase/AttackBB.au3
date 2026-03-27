@@ -224,7 +224,7 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		
 		If BBBarbarianHead("EndBattleBB") Then ExitLoop
 		
-		If $g_bChkBBEndBattleOn2Stars Then 
+		If $g_bChkBBEndBattleOn2Stars And Not $g_bIsBBevent Then 
 			$iStars = CheckStarsGained()
 			If $iStars = 2 Then 
 				SetLog("2Stars achieved, end battle", $COLOR_DEBUG1)
