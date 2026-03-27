@@ -64,6 +64,11 @@ Func OpenPersonalChallenges($aIcnCheck, $bIcnNew)
 				ExitLoop
 			EndIf
 			
+			If _PixelSearch(444, 600, 445, 601, Hex(0x7EC126, 6), 20, True, "New Challenges") Then 
+				$bRet = True
+				ExitLoop
+			EndIf
+			
 			If Not $g_bRunState Then Return
 			SetLog("Waiting New Challenges window ready #" & $i, $COLOR_ACTION)
 			If _Sleep(1000) Then Return
@@ -139,22 +144,20 @@ Func CollectNewDailyRewards()
 	Local $iClaim = 0
 	Local $x1 = 240, $y1 = 250, $x2 = 800, $y2 = 390
 	Local $xOffset = 50, $yOffset = 30, $bResource = False
+	Local $bCheckMarkFound = False
 	
-	SetLog("Checking Reward CheckMarks", $COLOR_ACTION)
-	If Not _PixelSearch(115, 594, 116, 594, Hex(0x28AAF7, 6), 20, True, "New Challenges") Then 
-		SetLog("New Challenges Window not Found", $COLOR_DEBUG2)
-		Return
-	EndIf
-	
-	For $i = 1 To 10
+	For $i = 1 To 5
 		If QuickMIS("BC1", $g_sImgDailyReward, 275, 270, 310, 300) Then 
 			Click($g_iQuickMISX, $g_iQuickMISY)
+			$bCheckMarkFound = True
 		Else
 			SetLog("No Reward CheckMarks", $COLOR_DEBUG2)
 			ExitLoop
 		EndIf
 		If _Sleep(1000) Then Return
 	Next
+	
+	If $bCheckMarkFound Then ClickDrag(500, 340, 550, 340)
 	
 	Local $tmpxClaim = 0
 	For $i = 1 To 10	
@@ -207,6 +210,10 @@ Func CollectNewDailyRewards()
 		
 		If WaitforPixel(815, 275, 816, 275, "FFFF83", 10, 1, "TrophyColor") Then ExitLoop ;thropy color
 		If WaitforPixel(815, 275, 815, 276, "84FD58", 10, 1, "Card Points") Or WaitforPixel(810, 290, 811, 290, "8ACD33", 10, 1, "CheckMark Points") Then ClickDrag(750, 340, 200, 340)
+		If _PixelSearch(773, 296, 774, 296, Hex(0xC9BE85, 6), 10, True, "New Challenges") Then 
+			SetLog("Congratulations, Season Pass Complete!", $COLOR_SUCCESS)
+			ExitLoop
+		EndIf
 	Next
 	
 EndFunc ;==>CollectNewDailyRewards
