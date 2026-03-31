@@ -1147,6 +1147,9 @@ Func FirstCheck()
 		VillageReport(True, True)
 	EndIf
 
+	If _Sleep(50) Then Return
+	If Not $g_bRunState Then Return
+	
 	If $g_iFreeBuilderCount > 0 Then
 		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
 		If Not $g_bRunState Then Return
@@ -1167,11 +1170,15 @@ Func FirstCheck()
 		EndIf
 		VillageReport()
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
 	EndIf
 
 	If T420() Then
 		SetLog("Test420 Done!", $COLOR_SUCCESS)
 	EndIf
+	
+	If _Sleep(50) Then Return
+	If Not $g_bRunState Then Return
 
 	waitMainScreen() ;check mainscreen and remove any obstacle window/popup
 	If BotCommand() Then btnStop()

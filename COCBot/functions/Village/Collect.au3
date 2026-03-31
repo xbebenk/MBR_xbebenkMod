@@ -89,7 +89,7 @@ EndFunc
 Func VerifyClaimButton()
 	Local $bRet = False
 	For $i = 1 To 3
-		SetLog("Waiting Event Claim Button #" & $i, $COLOR_ACTION)
+		SetDebugLog("Waiting Event Claim Button #" & $i, $COLOR_ACTION)
 		If QuickMIS("BC1", $g_sImgCollectCookie, 635, 310, 800, 380) Then 
 			If _PixelSearch($g_iQuickMISX + 78, $g_iQuickMISY - 23, $g_iQuickMISX + 78, $g_iQuickMISY - 22, Hex(0xF9171F, 6), 40, True, "Claim Button") Then
 				SetLog("Claim button verified", $COLOR_DEBUG)

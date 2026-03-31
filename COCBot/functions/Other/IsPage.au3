@@ -220,7 +220,7 @@ Func IsReturnHomeBattlePage($bAction = False)
 	Local $bRet = False
 	If IsPageLoop($aReturnHomeButton, 1) Then
 		SetDebugLog("**Return Home Battle Window OK**", $COLOR_ACTION)
-		If IsAttackPage(True, 1) Then Return False
+		If IsAttackPage(False, 1) Then Return False
 		If Not $bAction Then Return True
 		ClickP($aReturnHomeButton, 1, 0, "Return Home") ;Click Return Home Button
 		SetDebugLog("ReturnHomeBattlePage!", $COLOR_SUCCESS)
@@ -237,7 +237,7 @@ Func IsReturnHomeChestPage($bAction = True)
 	Local $bRet = False
 	If IsPageLoop($aReturnHomeChest, 1) Then
 		SetDebugLog("**Return Home Chest Window OK**", $COLOR_ACTION)
-		If IsAttackPage(True, 1) Then Return False
+		If IsAttackPage(False, 1) Then Return False
 		If Not $bAction Then Return True
 		
 		ClickP($aReturnHomeChest)
