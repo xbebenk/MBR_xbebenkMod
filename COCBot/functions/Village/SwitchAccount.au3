@@ -105,7 +105,11 @@ Func CheckSwitchAcc()
 	; Force Switch when PBT detected
 	If $g_abPBActive[$g_iCurAccount] Then $bForceSwitch = True
 
-	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ; Forced to switch when in halt attack mode
+	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 And $g_bChkAttackOnce Then 
+		SetLog("Only 1 Attack per loop, switching to another account", $COLOR_DEBUG)
+		SetSwitchAccLog(" - Attack Once, Force switch")
+		$bForceSwitch = True
+	ElseIf $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ; Forced to switch when in halt attack mode
 		SetLog("This account is in halt attack mode, switching to another account", $COLOR_ACTION)
 		SetSwitchAccLog(" - Halt Attack, Force switch")
 		$bForceSwitch = True

@@ -614,6 +614,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bSkipDT, $g_sProfileConfigPath, "other", "SkipDT", False, "Bool")
 	IniReadS($g_bEnableTournament, $g_sProfileConfigPath, "other", "EnableTournament", False, "Bool")
 	IniReadS($g_iTournamentAttackType, $g_sProfileConfigPath, "other", "TournamentAttackType", 0, "int")
+	IniReadS($g_bChkAttackOnce, $g_sProfileConfigPath, "other", "AttackOnce", False, "Bool")
 	
 	ReadConfigBuilderBaseMod()
 EndFunc   ;==>ReadConfig_600_6

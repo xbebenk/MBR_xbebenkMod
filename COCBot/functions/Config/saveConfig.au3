@@ -549,6 +549,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "SkipDT", $g_bSkipDT)
 	_Ini_Add("other", "EnableTournament", $g_bEnableTournament)
 	_Ini_Add("other", "TournamentAttackType", $g_iTournamentAttackType)
+	_Ini_Add("other", "AttackOnce", $g_bChkAttackOnce)
 
 	SaveBuilderBaseMod()
 EndFunc   ;==>SaveConfig_600_6

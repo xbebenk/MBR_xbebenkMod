@@ -1141,6 +1141,15 @@ Func chkSkipDropTrophyOnFirstStart()
 	EndIf
 EndFunc ;==> chkSkipDropTrophyOnFirstStart
 
+Func ChkAttackOnce()
+	If GUICtrlRead($g_hChkAttackOnce) = $GUI_CHECKED Then
+		$g_bChkAttackOnce = True
+	Else
+		$g_bChkAttackOnce = False
+	EndIf
+EndFunc ;==> ChkAttackOnce
+
+
 Func chkSetCCSleep()
 	If GUICtrlRead($g_hChkEnableCCSleep) = $GUI_CHECKED Then
 		$g_bEnableCCSleep = True

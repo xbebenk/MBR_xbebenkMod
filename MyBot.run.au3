@@ -1299,7 +1299,7 @@ Func FirstCheckRoutine()
 		FillArmyCamp()
 		If BotCommand() Then btnStop()
 		If Not $g_bRunState Then Return
-		If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
+		If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 And Not $g_bChkAttackOnce Then
 			Setlog("Let's attack Again!", $COLOR_INFO)
 			$g_bRestart = False ;reset
 			Local $loopcount = 1
