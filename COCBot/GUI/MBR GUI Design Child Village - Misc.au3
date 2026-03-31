@@ -24,6 +24,7 @@ Global $g_hTxtRestartGold = 0, $g_hTxtRestartElixir = 0, $g_hTxtRestartDark = 0
 Global $g_hChkCollect = 0, $g_hChkCollectLootCart = 0, $g_hChkTombstones = 0, $g_hChkCleanYard = 0, $g_hChkGemsBox = 0
 Global $g_hGUI_SellMagicItems, $g_hBtnSellPot = 0, $g_hChkEnableSellMagicItem = 0
 Global $g_hChkSellBOF = 0, $g_hChkSellBOB = 0, $g_hChkSellBOS = 0, $g_hChkSellBOH = 0, $g_hChkSellBOE = 0, $g_hChkSellShovel = 0, $g_hChkSellWallRing = 0
+Global $g_hChkEnableTradeMedal = 0
 Global $g_hChkTradeStarry = 0, $g_hChkTradeShiny = 0, $g_hChkTradeGlowy = 0, $g_hChkTradeBuilderGold = 0, $g_hChkTradeBuilderElix = 0, $g_hChkTradeClockTowerPot = 0, $g_hChkTradeResearchPot = 0
 Global $g_hChkSellPowerPot = 0, $g_hChkSellResourcePot = 0, $g_hChkSellTrainingPot = 0, $g_hChkSellBuilderPot = 0, $g_hChkSellCTPot = 0
 Global $g_hChkSellHeroPot = 0, $g_hChkSellResearchPot = 0, $g_hChkSellSuperPot = 0, $g_hChkSellBuilderJar = 0
@@ -431,8 +432,14 @@ Func CreateSellMagicSetting()
 			
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	$x = 15
-	$y = 280
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_TradeMedal", "Trade Medal"), $x - 10, $y - 20, $g_iSizeWGrpTab3, 100)
+	$y = 260
+		
+	$g_hChkEnableTradeMedal = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableTradeMedal", "Enable Trade Capital Medal"), $x, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableTradeMedal", "Enable Trade Capital Medal"))
+		GUICtrlSetOnEvent(-1, "ChkEnableTradeMedal")
+	
+	$y = 310
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_TradeMedal", "Trade Medal"), $x - 10, $y - 20, $g_iSizeWGrpTab3, 120)
 		$g_hChkTradeShiny = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeShiny", "Shiny Orb"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeShiny_Info", "Enable option to Trade Medal Shiny Orb"))
 		
@@ -445,7 +452,7 @@ Func CreateSellMagicSetting()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeStarry_Info", "Enable option to Trade Medal with Starry Orb"))
 			
 		$x = 150
-		$y = 280
+		$y = 310
 		$g_hChkTradeBuilderGold = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeBuilderGold", "Builder Gold"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeBuilderGold_Info", "Enable option to Trade Medal with Builder Gold"))
 			
@@ -458,7 +465,7 @@ Func CreateSellMagicSetting()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeClockTowerPot_Info", "Enable option to Trade Medal with Clock Tower Potion"))
 		
 		$x = 300
-		$y = 280
+		$y = 310
 		$g_hChkTradeResearchPot = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeResearchPot", "Research Potion"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeResearchPot_Info", "Enable option to Trade Medal with Clock Tower Potion"))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

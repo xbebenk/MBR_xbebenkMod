@@ -80,7 +80,7 @@ Func CollectFreeMagicItems($bTest = False)
 EndFunc   ;==>CollectFreeMagicItems
 
 Func TradeMedal()
-	
+	If Not $g_bChkEnableTradeMedal Then Return
 	If $g_iLootCCMedal > 1000 Then 
 		For $i = 1 To 8
 			If Not $g_bRunState Then Return

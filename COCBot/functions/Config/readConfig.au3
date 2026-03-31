@@ -431,6 +431,7 @@ Func ReadConfig_600_6()
 	Local $aSellChk[21] = [$g_bChkSellBOF, $g_bChkSellBOB, $g_bChkSellBOS, $g_bChkSellBOH, $g_bChkSellBOE, $g_bChkSellShovel, $g_bChkSellWallRing, $g_bChkSellPowerPot, $g_bChkSellResourcePot, $g_bChkSellTrainingPot, $g_bChkSellBuilderPot, $g_bChkSellCTPot, $g_bChkSellHeroPot, $g_bChkSellResearchPot, $g_bChkSellSuperPot, $g_bChkSellBuilderJar, $g_bChkSellROG, $g_bChkSellROE, $g_bChkSellRODE, $g_bChkSellROBG, $g_bChkSellROBE]
 	$g_aSellMagicItem = $aSellChk
 	
+	IniReadS($g_bChkEnableTradeMedal, $g_sProfileConfigPath, "MagicItems", "ChkEnableTradeMedal", False, "Bool")
 	IniReadS($g_bChkTradeShiny, $g_sProfileConfigPath, "MagicItems", "ChkTradeShiny", False, "Bool")
 	IniReadS($g_bChkTradeGlowy, $g_sProfileConfigPath, "MagicItems", "ChkTradeGlowy", False, "Bool")
 	IniReadS($g_bChkTradeStarry, $g_sProfileConfigPath, "MagicItems", "ChkTradeStarry", False, "Bool")

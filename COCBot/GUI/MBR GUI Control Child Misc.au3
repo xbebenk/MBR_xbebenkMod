@@ -744,6 +744,22 @@ Func chkEnableSellMagicItem()
 	EndIf
 EndFunc
 
+Func ChkEnableTradeMedal()
+	If GUICtrlRead($g_hChkEnableTradeMedal) = $GUI_CHECKED Then
+		$g_bChkEnableTradeMedal = True
+		Local $iCtrl = 0
+		For $i = $g_hChkTradeShiny To $g_hChkTradeResearchPot
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		$g_bChkEnableTradeMedal = False
+		Local $iCtrl = 0
+		For $i = $g_hChkTradeShiny To $g_hChkTradeResearchPot
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+EndFunc
+
 Func chkActivateClangames()
 	If GUICtrlRead($g_hChkClanGamesEnabled) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hBtnCGSettingsOpen, $GUI_ENABLE)
