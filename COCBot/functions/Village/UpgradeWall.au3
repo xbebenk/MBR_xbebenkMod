@@ -18,7 +18,7 @@ Func UpgradeWall($bTest = False)
 	If Not $g_bAutoUpgradeWallsEnable Then Return
 	If Not $g_bRunState Then Return
 	If _Sleep(50) Then Return
-	Local $GoUpgrade = False
+	Local $GoUpgrade = False, $bWallUpgraded = True
 	
 	SetLog("Checking Upgrade Walls", $COLOR_INFO)
 	checkMainScreen(True, $g_bStayOnBuilderBase, "UpgradeWall")
@@ -39,8 +39,9 @@ Func UpgradeWall($bTest = False)
 		If $g_iUpgradeWallLootType = 2 Then $iLoop = 2
 		For $i = 1 To $iLoop
 			SetDebugLog("$iLoop = " & $i & "/" & $iLoop)
-			DoUpgradeWall()
-			If _Sleep(2000) Then Return
+			$bWallUpgraded = DoUpgradeWall()
+			If Not $bWallUpgraded Then ExitLoop
+			If _Sleep(1000) Then Return
 		Next
 	EndIf
 	
@@ -316,6 +317,7 @@ Func DoUpgradeWall()
 		EndIf
 	Else
 		SetLog("Not a wall, looking Next wall", $COLOR_DEBUG)
+		Return False
 		ClickAway()
 	EndIf
 EndFunc
