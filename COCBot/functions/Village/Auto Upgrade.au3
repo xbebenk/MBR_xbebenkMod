@@ -29,8 +29,16 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	VillageReport(False, True) ;check available builder and resource (Gold,Elix,DE)
 	If Not $g_bRunState Then Return
 	If $g_aiCurrentLoot[$eLootGold] < 1000 Then Return False
+	
+	;Check if free builder is goblin builder
+	If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
+		SetLog("AutoUpgradeCheckBuilder, Free Builder = 1, Goblin Builder!", $COLOR_DEBUG2)
+		$g_iFreeBuilderCount = 0
+		$bRet = False
+	EndIf
+	
 	;Check if there is a free builder for Auto Upgrade
-	If $g_iFreeBuilderCount > 0 Then $bRet = True;builder available
+	If $g_iFreeBuilderCount > 0 Then $bRet = True ;builder available
 
 	Local $iWallReserve = $g_bUpgradeWallSaveBuilder ? 1 : 0
 	If $g_iFreeBuilderCount - $iWallReserve - ReservedBuildersForHeroes() < 1 Then ;check builder reserve on wall and hero upgrade
@@ -50,14 +58,6 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	If $bTest Then ;for testing, bypass
 		$g_iFreeBuilderCount = 1
 		$bRet = True
-	Else
-		If $g_iFreeBuilderCount = 1 Then
-			If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
-				SetLog("AutoUpgradeCheckBuilder, Free Builder = 1, Goblin Builder!", $COLOR_DEBUG2)
-				$g_iFreeBuilderCount = 0
-				$bRet = False
-			EndIf
-		EndIf
 	EndIf
 	
 	If Not $bRet And $g_iFreeBuilderCount = 0 Then
@@ -267,7 +267,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 
 		If Not $g_bRunState Then Return
 		If Not AutoUpgradeCheckBuilder($bTest) Then Return
-		If $bDoScroll Then ClickDragAUpgrade("up", (($z > 5 And $SameCost = 0) ? 2 : 1)) ;do scroll up
+		If $bDoScroll Then ClickDragAUpgrade("up", (($z >= 3 And $SameCost = 0) ? 2 : 1)) ;do scroll up
 		$bDoScroll = True
 		;If _Sleep(1500) Then Return
 	Next
@@ -1579,10 +1579,10 @@ Func CheckBuilderPotion()
 					ClickAway("Right")
 				EndIf
 			Else
-				SetLog("Upgrade time < 9h, cancel using builder potion", $COLOR_INFO)
+				SetLog("Upgrade time < 9h, cancel using builder potion", $COLOR_DEBUG2)
 			EndIf
 		Else
-			SetLog("Failed to read Upgrade time on BuilderMenu", $COLOR_ERROR)
+			SetLog("Failed to read Upgrade time on BuilderMenu", $COLOR_DEBUG2)
 		EndIf
 	EndIf
 EndFunc
