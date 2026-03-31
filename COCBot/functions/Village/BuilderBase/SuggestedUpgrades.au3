@@ -42,10 +42,13 @@ EndFunc
 Func _SearchUpgradeBB($bTest = False)
 	Local $ZoomedIn = False, $bNew = False, $bSkipNew = False
 	Local $NeedDrag = True, $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost
+	Local $bForceUseGold = False
 	
 	If Not ClickBBBuilder() Then Return
 	$bSkipNew = FindBHInUpgradeProgress()
+	
 	For $z = 1 To 8 ;do scroll 8 times
+		If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop
 		If Not ClickBBBuilder() Then Return
 		If _Sleep(500) Then Return
 		$TmpUpgradeCost = getMostBottomCostBB() ;check most bottom upgrade cost
@@ -85,6 +88,11 @@ Func _SearchUpgradeBB($bTest = False)
 							If IsFullScreenWindow() Then Click(820, 37) ;close shop window
 							ExitLoop
 						EndIf
+					Else
+						SetLog("Not Enough " & $Upgrades[$i][0] & " for New Upgrade: " & $Upgrades[$i][3], $COLOR_DEBUG2)
+						If $Upgrades[$i][0] = "Elix" Then
+							$bForceUseGold = True
+						EndIf
 					EndIf
 				EndIf
 			Next
@@ -92,16 +100,29 @@ Func _SearchUpgradeBB($bTest = False)
 			
 			SetLog("Existing Builderbase Building")
 			
+			If $bForceUseGold Then
+				Local $aDel[1] = [0]
+				
+				SetDebugLog("Upgrade :" & _ArrayToString($Upgrades))
+				For $i = 0 To UBound($Upgrades) - 1
+					If $Upgrades[$i][0] = "Elix" Then 
+						_ArrayAdd($aDel, $i)
+						$aDel[0] += 1
+					EndIf
+				Next
+				SetDebugLog("Delete list: " & _ArrayToString($aDel))
+				_ArrayDelete($Upgrades, $aDel)
+				
+				;_ArraySort($Upgrades, 0, 0, 0, 5)
+				SetDebugLog("Upgrade list: " & _ArrayToString($Upgrades))
+			EndIf
+			
 			For $i = 0 To UBound($Upgrades) - 1
-				If $g_bChkBOBControl And $Upgrades[$i][7] = "Common" Then 
+				If $g_bChkBOBControl And $Upgrades[$i][7] = "Common" And Not $bForceUseGold Then 
 					SetLog("Upgrade : " & $Upgrades[$i][3] & " should skipped, due to BOB Control", $COLOR_DEBUG1)
 					ContinueLoop
 				EndIf
 				If CheckResourceForDoUpgradeBB($Upgrades[$i][3], $Upgrades[$i][5], $Upgrades[$i][0], False) Then ;name, cost, costtype
-					If StringInStr($Upgrades[$i][7], "skip") Then 
-						SetLog("Upgrade : " & $Upgrades[$i][3] & " should skipped, " & $Upgrades[$i][7], $COLOR_DEBUG1)
-						ContinueLoop
-					EndIf
 					SetLog("Going to Upgrade: " & $Upgrades[$i][3], $COLOR_INFO)
 					Click($Upgrades[$i][1], $Upgrades[$i][2])
 					If _Sleep(1000) Then Return
@@ -111,11 +132,14 @@ Func _SearchUpgradeBB($bTest = False)
 					EndIf
 				Else
 					SetLog("Not Enough " & $Upgrades[$i][0] & " to Upgrade " & $Upgrades[$i][3], $COLOR_INFO)
+					If $Upgrades[$i][7] = "Priority" And $Upgrades[$i][0] = "Elix" Then 
+						SetLog("Priority Elixir, Forced using gold", $COLOR_DEBUG2)
+						$bForceUseGold = True
+					EndIf
 				EndIf
 			Next
 		EndIf
 		If _Sleep(2000) Then Return
-		If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop
 		If Not $g_bRunState Then Return
 	
 		If Not ClickDragAutoUpgradeBB("up") Then ExitLoop
@@ -243,12 +267,12 @@ Func DoUpgradeBB($CostType = "Gold", $Cost = 0, $bTest = False)
 		Case $aBuildingName[1] = "Archer Tower" And $aBuildingName[2] >= 6
 			SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to BOB Control", $COLOR_SUCCESS)
 			Return False
-		Case StringInStr($aBuildingName[1], "Double") And $aBuildingName[2] >= 4
+		Case StringInStr($aBuildingName[1], "Double") And $aBuildingName[2] >= 6
 			SetLog("Upgrade for Double Cannon Level: " & $aBuildingName[2] & " skipped due to BOB Control", $COLOR_SUCCESS)
 			Return False
-		Case StringInStr($aBuildingName[1], "Multi") And $aBuildingName[2] >= 8
-			SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to BOB Control", $COLOR_SUCCESS)
-			Return False
+		;Case StringInStr($aBuildingName[1], "Multi") And $aBuildingName[2] >= 8
+		;	SetLog("Upgrade for " & $aBuildingName[1] & " Level: " & $aBuildingName[2] & " skipped due to BOB Control", $COLOR_SUCCESS)
+		;	Return False
 	EndSelect
 	
 	If Not $g_bRunState Then Return
