@@ -556,9 +556,10 @@ Func CheckIfLabIdle($bDebug = False)
 			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
 			If $mUpgradeTime >= 1440 Then ; only use potion if lab upgrade time is more than 2 day
 				SetLog("Upgrade time > 1 day, will use Resource Potion", $COLOR_INFO)
+				ClickAway()
 				UseLabPotion()
 			Else
-				SetLog("Upgrade time < 1 day, cancel using Resource potion", $COLOR_INFO)
+				SetLog("Upgrade time < 1 day, cancel using Resource potion", $COLOR_DEBUG2)
 			EndIf
 		EndIf
 	EndIf
