@@ -35,7 +35,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	If IsProblemAffect() Then
 		;1- Another device
 		If QuickMIS("BC1", $g_sImgAnotherDevice, 255, 315, 345, 335) Then 
-			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And $g_bChkSharedPrefs Then
+			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And HaveSharedPrefs() Then
 				SetLog("---- Forced Switch, Another device connected ----", $COLOR_ACTION)
 				SwitchForceAnotherDevice()
 				checkObstacles_ResetSearch()
@@ -533,7 +533,7 @@ Func SwitchForceAnotherDevice()
 	If Not $g_bRunState Then Return
 	SetLog("Current Account = [" & $g_iCurAccount + 1 & "]")
 	SetLog("Switching to Account [" & $g_iNextAccount + 1 & "]")
-	Local $bSharedPrefs = $g_bChkSharedPrefs And HaveSharedPrefs($g_asProfileName[$g_iNextAccount])
+	
 	SwitchAccountVariablesReload("Save")
 	If $g_ahTimerSinceSwitched[$g_iCurAccount] <> 0 Then
 		If Not $g_bReMatchAcc Then SetSwitchAccLog(" - Acc " & $g_iCurAccount + 1 & ", online: " & Int(__TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount]) / 1000 / 60) & "m")
@@ -559,12 +559,10 @@ Func SwitchForceAnotherDevice()
 		EndIf
 	EndIf
 
-	If $bSharedPrefs Then
-		SetLog("Please wait for loading CoC")
-		PushSharedPrefs()
-		OpenCoC()
-		waitMainScreen()
-	EndIf
+	SetLog("Please wait for loading CoC")
+	PushSharedPrefs()
+	OpenCoC()
+	waitMainScreen()
 
 	SetSwitchAccLog("Switched to Acc [" & $NextAccount + 1 & "]", $COLOR_SUCCESS)
 	CreateLogFile() ; Cause use of the right log file after switch
