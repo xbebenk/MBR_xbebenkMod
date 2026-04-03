@@ -312,7 +312,7 @@ Func BoostWithPotion($sTroopName = "", $bTest = False)
 	If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 500, 530, 540, 570) Then ;find image of Super Potion
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(1500) Then Return
-		If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 440, 440, 490, 490) Then ;find image of Super Potion again (confirm upgrade)
+		If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 320, 400, 530, 520) Then ;find image of Super Potion again (confirm upgrade)
 			;do click boost
 			If $bTest Then
 				CancelBoost("Using Potion, should click on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")

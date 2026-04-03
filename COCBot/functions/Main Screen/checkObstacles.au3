@@ -372,6 +372,11 @@ Func PlacedOnLeague()
 		SetLog("You have chest bonus, Continue...", $COLOR_DEBUG2)
 	EndIf
 	
+	If _ColorCheck(_GetPixelColor(430, 530, True), Hex(0xDDF685, 6), 20, Default, "HoggyBankContinue") Then 
+		Click(430, 535)
+		SetLog("You have Hoggy Bank Rewards, Continue...", $COLOR_DEBUG2)
+	EndIf
+	
 	Return $bRet
 EndFunc
 
