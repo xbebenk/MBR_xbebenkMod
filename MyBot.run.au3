@@ -1210,6 +1210,8 @@ Func FirstCheckRoutine()
 		If Not $g_bChkCGBBAttackOnly Then _ClanGames()
 		
 		FillArmyCamp()
+		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
 		
 		Local $loopcount = 1
 		While True
@@ -1292,6 +1294,8 @@ Func FirstCheckRoutine()
 	EndIf
 	
 	If _Sleep(50) Then Return
+	If Not $g_bRunState Then Return
+	
 	If ProfileSwitchAccountEnabled() Then
 		CommonRoutine("Switch")
 		VillageReport()
@@ -1411,14 +1415,19 @@ Func BuilderBase()
 		SetLog("Is6thBuilderUnlocked = " & String($g_bIs6thBuilderUnlocked), $COLOR_DEBUG1)
 		If $g_bIs6thBuilderUnlocked And $g_bChkSkipBBRoutineOn6thBuilder Then $g_bskipBBroutine = True
 	EndIf
+	
+	If _Sleep(50) Then Return
+	If Not $g_bRunState Then Return
 
 	If $g_bskipBBroutine Then
 		SetLog("isSkipBBroutine = " & String($g_bskipBBroutine), $COLOR_DEBUG1)
 		SetLog("BB Routine Skip!", $COLOR_INFO)
 		Return
 	EndIf
+	
+	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
-
+	
 	; switch to builderbase and check it is builderbase
 	If SwitchBetweenBases("BB") Then
 		$g_bStayOnBuilderBase = True
@@ -1429,6 +1438,8 @@ Func BuilderBase()
 		BuilderBaseReport(False, False)
 		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
 		CleanBBYard()
 		
 		If _Sleep(50) Then Return
@@ -1438,8 +1449,9 @@ Func BuilderBase()
 			$g_bBBAttacked = False
 		EndIf
 		
-		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
 		If isElixirFullBB() Then
 			$StarLabOn = StarLabUpgrade()
 			checkMainScreen()
@@ -1447,9 +1459,13 @@ Func BuilderBase()
 		EndIf
 		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
 		BBDropTrophy()
 		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
 		If $g_bChkStopAttackBB6thBuilder And $g_bIs6thBuilderUnlocked Then
 			SetLog("6th Builder Unlocked, attackBB disabled", $COLOR_DEBUG)
 		Else
@@ -1459,6 +1475,8 @@ Func BuilderBase()
 		EndIf
 		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
 		If $g_bBBAttacked Then
 			If AutoUpgradeBB() Then ZoomOut(True) ;directly zoom
 			checkMainScreen()
@@ -1467,14 +1485,16 @@ Func BuilderBase()
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 		
-		If _Sleep(50) Then Return
 		If Not $StarLabOn Then StarLabUpgrade()
 		Local $bUseCTPot = $StarLabOn And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
-		checkMainScreen()
+		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		checkMainScreen()
 		StartClockTowerBoost(False, False, $bUseCTPot)
 		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
 		BuilderBaseReport(False, True)
 		
 		$g_bStayOnBuilderBase = False
