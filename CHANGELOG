@@ -23,6 +23,12 @@
 * Fix Collect Season Rewards
 * Fix Collect Mini Event Rewards
 * Fix Hero Equiment Upgrade
+*
+* **v.7.9.9 Mod_v1.2.6#123** (2026-04-30)
+* Fix Siege Detection 
+* Fix Upgrade Hero on Auto Upgrade
+* Faster detection on chest page return home page
+* Fix wallupgrade +1 on wall level 12
 
 *** What Work ***
 * Request CC
