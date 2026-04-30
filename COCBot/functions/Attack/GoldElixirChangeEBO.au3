@@ -145,6 +145,7 @@ Func GoldElixirChangeEBO()
 		If $NoResourceOCR Then
 			SetLog("Exit now, [G]: " & $Gold2 & " [E]: " & $Elixir2 & " [DE]: " & $DarkElixir2 & " [%]: " & $CurDamage, $COLOR_INFO)
 			If IsReturnHomeBattlePage() Then ExitLoop
+			If IsReturnHomeChestPage(False) Then ExitLoop
 			If IsProblemAffect() Then ExitLoop
 		Else
 			If $g_bDebugSetlog Then
