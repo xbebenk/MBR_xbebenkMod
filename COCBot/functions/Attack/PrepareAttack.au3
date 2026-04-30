@@ -103,7 +103,7 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 									Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD
 										Local $tmpSiege = $avAttackBar[$j][0]
 										If $g_aiAttackUseSiege[$pMatchMode] <= $eSiegeMachineCount + 1 Then
-											SelectCastleOrSiege($avAttackBar[$j][0], Number($avAttackBar[$j][5]), $g_aiAttackUseSiege[$pMatchMode])
+											SelectCastleOrSiege($avAttackBar[$j][0], $avAttackBar[$j][3], $g_aiAttackUseSiege[$pMatchMode])
 											If $avAttackBar[$j][0] = -1 Then ; no cc troops available, do not drop a siege
 												SetLog("Discard use of Siege/CC", $COLOR_ERROR)
 												$avAttackBar[$j][2] = 0
@@ -161,7 +161,7 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 EndFunc   ;==>PrepareAttack
 
 Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
-
+	SetDebugLog("iTroopIndex=" & $iTroopIndex & ", $iX=" & $iX & ", $iCmbSiege=" & $iCmbSiege)
 	;Local $hStarttime = _Timer_Init()
 	Local $aSiegeTypes[9] = [$eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD, "Any"]
 
@@ -192,15 +192,15 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 
 	If $bNeedSwitch Then
 		Local $x1 = $iX - 20, $x2 = $iX + 40
-		If QuickMIS("BC1", $g_sImgSwitchSiegeButton, $x1, 630, $x2, 676) Then
+		If QuickMIS("BC1", $g_sImgSwitchSiegeButton, $x1, 640, $x2, 670) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			Local $iLastX = $g_iQuickMISX - 90, $iLastY = $g_iQuickMISY
 			
 			; wait to appears the new small window
-			WaitForPixel($iX + 10, 570, $iX + 11, 571, "FFFFFF", 20, 2)
+			WaitForPixel($iX + 40, 570, $iX + 41, 570, "FFFFFF", 20, 1)
 			
 			; Lets detect the CC & Sieges and click - search window is - X, 530, X + 390, 530 + 30
-			Local $aSearchResult = GetListSiege($iX - 50, 470, $iX + 500, 550)
+			Local $aSearchResult = GetListSiege($iX - 100, 470, 860, 550)
 			If IsProblemAffect() Then Return
 			If Not $g_bRunState Then Return
 			If IsArray($aSearchResult) And Ubound($aSearchResult) > 0 Then
@@ -321,11 +321,10 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 				; If was not detectable lets click again on green icon to hide the window!
 				Setlog("Undetected " & ($bAnySiege ? "any siege machine " : GetTroopName($ToUse)) & " after click on switch btn!", $COLOR_DEBUG)
 				Click($iLastX, $iLastY, 1)
-				$iTroopIndex = $eCastle
-				If _Sleep(750) Then Return
+				If _Sleep(200) Then Return
 				Return
 			EndIf
-			If _Sleep(750) Then Return
+			If _Sleep(200) Then Return
 		Else
 			If $iTroopIndex <> $eCastle Then $iTroopIndex = -1 ;setting other than castle only (spesific siege or anysiege) but no switch button, will discard use of siege
 			If $ToUse = $eCastle And $iTroopIndex = $eCastle Then $iTroopIndex = $eCastle ;setting castle only, there is castle on attackbar, but no switch button, will use cc
@@ -336,22 +335,24 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 	EndIf
 EndFunc   ;==>SelectCastleOrSiege
 
-Func GetListSiege($x = 50, $y = 483, $x1 = 830, $y1 = 540)
-	Local $aResult[0][6], $CheckLvlY = 528
+Func GetListSiege($x = 20, $y = 470, $x1 = 860, $y1 = 550)
+	Local $aResult[0][6], $CheckLvlY = 526
+	Local $SiegeLevel = 1
 	
 	Local $aSiege = QuickMIS("CNX", $g_sImgSwitchSiegeMachine, $x, $y, $x1, $y1)
 	If Not $g_bRunState Then Return
 	If IsArray($aSiege) And UBound($aSiege) > 0 Then
 		For $i = 0 To UBound($aSiege) - 1
-			If $g_bDebugSetlog Then SetLog("[" & $i & "] Siege: " & $aSiege[$i][0] & ", Coord[" & $aSiege[$i][1] & "," & $aSiege[$i][2] & "]")
-			If $g_bDebugSetlog Then SetLog("getTroopsSpellsLevel(" & $aSiege[$i][1] - 30 & "," & $CheckLvlY & ")", $COLOR_ACTION)
-			Local $SiegeLevel = getOcrAndCapture("coc-spellslevel", $aSiege[$i][1] - 30, $CheckLvlY, 20, 20, True); getTroopsSpellsLevel($aTmp[$i][1] - 30, $CheckLvlY)
-			If $SiegeLevel = "" Then $SiegeLevel = 1
-			If $g_bDebugSetlog Then SetLog("SiegeLevel=" & $SiegeLevel)
+			If $aSiege[$i][0] <> "Castle" Then
+				If $g_bDebugSetlog Then SetLog("getTroopsSpellsLevel(" & $aSiege[$i][1] - 50 & "," & $CheckLvlY & ")", $COLOR_ACTION)
+				$SiegeLevel = getTroopsSpellsLevel($aSiege[$i][1] - 50, $CheckLvlY)
+				If $g_bDebugSetlog Then SetLog("SiegeLevel=" & $SiegeLevel)
+			EndIf
 			Local $TroopIndex = TroopIndexLookup($aSiege[$i][0])
 			Local $OwnSiege = False
 			If _ColorCheck(_GetPixelColor($aSiege[$i][1] - 30, 474, True), Hex(0x589ADB, 6), 20) Then $OwnSiege = String(True)
 			_ArrayAdd($aResult, $aSiege[$i][0] & "|" & $aSiege[$i][1] & "|" & $aSiege[$i][2] & "|" & $SiegeLevel & "|" & $OwnSiege & "|" & $TroopIndex)
+			$SiegeLevel = 1
 		Next
 	Else
 		If $g_bDebugSetlog Then SetLog("GetListSiege: ERR", $COLOR_ERROR)
