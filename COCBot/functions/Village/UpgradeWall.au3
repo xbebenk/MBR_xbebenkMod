@@ -27,12 +27,16 @@ Func UpgradeWall($bTest = False)
 		SetLog("No builder available, Upgrade Walls skipped", $COLOR_DEBUG2)
 		Return
 	EndIf
+	If _Sleep(50) Then Return
+	If Not $g_bRunState Then Return
+	
 	If $g_iFreeBuilderCount > 0 Then $GoUpgrade = True
 	If $g_bChkOnly1Builder And $g_iFreeBuilderCount > 1 And Not $bTest Then
 		SetLog("Have more than 1 builder, Upgrade Walls skipped", $COLOR_DEBUG2)
 		Return
 	EndIf
 	If _Sleep(50) Then Return
+	If Not $g_bRunState Then Return
 
 	If $GoUpgrade Then 
 		Local $iLoop = 1
@@ -76,8 +80,8 @@ Func DoUpgradeWall()
 	Local $aBtnCoord[4] = [150, 500, 750, 600]
 	Local $bRet = True
 
-	If $g_bChkRushTH And $g_bAutoAdjustSaveWall Then
-		SetLog("RushTH Enabled", $COLOR_ACTION)
+	If $g_bAutoAdjustSaveWall Then
+		SetLog("Auto Adjust Save resource for Wall Enabled", $COLOR_ACTION)
 		If $g_iUpgradeWallMinGold < $g_aiTHCost[$g_iTownHallLevel] And Not IsTHLevelAchieved() Then
 			SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
 			SetLog("You Current MinGoldSave : " & _NumberFormat($g_iUpgradeWallMinGold), $COLOR_INFO)
@@ -422,6 +426,7 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 			If StringInStr($aWall[$i][3], "B") Then $aWall[$i][3] = Number(StringReplace($aWall[$i][3], "B", ""))
 			If StringInStr($aWall[$i][3], "C") Then $aWall[$i][3] = Number(StringReplace($aWall[$i][3], "C", ""))
 			If StringInStr($aWall[$i][3], "D") Then $aWall[$i][3] = Number(StringReplace($aWall[$i][3], "D", ""))
+			If StringInStr($aWall[$i][3], "E") Then $aWall[$i][3] = Number(StringReplace($aWall[$i][3], "E", ""))
 		Next
 
 		If $g_iTownHallLevel >= 9 Then $iWallLevelToDelete = $g_iTownHallLevel + 1
@@ -475,8 +480,9 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 				EndIf
 				ClickAway()
 				If _Sleep(500) Then Return
+			Else
+				SetDebugLog("Wrong wall Level " & $iWallLevel & " detected, coord outside diamond:" & $x & "," & $y, $COLOR_DEBUG)
 			EndIf
-			SetDebugLog("Wrong wall Level " & $iWallLevel & " detected, coord outside diamond:" & $x & "," & $y, $COLOR_DEBUG)
 		Next
 	EndIf
 	If $bWallFound Then
