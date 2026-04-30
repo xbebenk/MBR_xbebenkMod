@@ -15,7 +15,7 @@
 
 Func waitMainScreen() ;Waits for main screen to popup
 	If Not $g_bRunState Then Return
-	Local $iCount = 30, $sLoading = "", $iMaxLoading = 5
+	Local $iCount = 15, $sLoading = "", $iMaxLoading = 5
 	SetLog("Waiting for Main Screen")
 	Local $bCheckObs = False
 	

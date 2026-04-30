@@ -391,27 +391,28 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		UpdateStats()
 
 	WEnd ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop End ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-	; measure enemy village (only if search match)
-	For $i = 0 To $g_iModeCount - 1
-		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Then
-			If Not CheckZoomOut("VillageSearch") Then
-				If IsProblemAffect() Then
-					$g_bRestart = True ; Restart Attack
-					Return
-				EndIf
-				SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
-				ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
-			EndIf
-			ExitLoop
-		EndIf
-	Next
 	
 	;--- show buttons attacknow ----
 	If $g_bBtnAttackNowPressed = True Then
 		SetLogCentered(" Attack Now Pressed! ", "~", $COLOR_SUCCESS)
 	EndIf
-
+	
+	; measure enemy village (only if search match)
+	Local $bMeasured = False
+	For $i = 0 To $g_iModeCount - 1
+		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Then
+			$bMeasured = CheckZoomOut("VillageSearch")
+			If Not $bMeasured Then
+				SaveDebugImage("VillageSearch", False) ; make clean snapshot
+				If IsProblemAffect() Then
+					$g_bRestart = True ; Restart Attack
+					Return
+				EndIf
+			EndIf
+			ExitLoop
+		EndIf
+	Next
+	
 	;--- write in log match found ----
 	If $g_bSearchAlertMe Then
 		TrayTip($g_sProfileCurrentName & ": " & $g_asModeText[$g_iMatchMode] & " Match Found!", "Gold: " & $g_iSearchGold & "; Elixir: " & $g_iSearchElixir & "; Dark: " & $g_iSearchDark & "; Trophy: " & $g_iSearchTrophy, "", 0)
@@ -505,7 +506,8 @@ Func CheckZoomOut($sSource = "CheckZoomOut")
 	Else 
 		$bRet = True
 	EndIf
-	If $sSource = "VillageSearch" Then 
+	If $sSource = "VillageSearch" Then
+		$bRet = True
 		SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
 		If $g_bChkForceEdgeSmartfarm Then 
 			$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)

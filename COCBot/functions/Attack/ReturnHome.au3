@@ -70,15 +70,13 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 		If $g_bRestart Then Return
 		If IsReturnHomeBattlePage() Then
 			$BattleEnded = True
-			SetLog("Return Home : Found IsReturnHomeBattlePage()", $COLOR_DEBUG1) 
-			SetLog("Battle already over", $COLOR_SUCCESS)
+			SetLog("Found ReturnHome Page", $COLOR_DEBUG1) 
 			ExitLoop ;exit Battle already ended
 		EndIf
 		
 		If IsReturnHomeChestPage(False) Then
 			$BattleEnded = True
-			SetLog("Return Home : Found IsReturnHomeChestPage()", $COLOR_DEBUG1) 
-			SetLog("Battle already over", $COLOR_SUCCESS)
+			SetLog("Found ReturnHome ChestPage", $COLOR_DEBUG1) 
 			ExitLoop ;exit Battle already ended
 		EndIf
 		

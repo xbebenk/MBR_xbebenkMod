@@ -177,7 +177,8 @@ Func CheckRevengeTutor()
 			If QuickMIS("BC1", $g_sImgRevengeTutor, 370, 85, 460, 160) Then
 				SetLog("Found Arrow Set Defense", $COLOR_DEBUG)
 				Click(412, 182, 1, 0, "Button Setup Defense")
-				If _Sleep(3000) Then Return
+				If _Sleep(1000) Then Return
+				ExitLoop
 			EndIf
 			
 			If _ColorCheck(_GetPixelColor(299, 410, True), Hex(0xFFFFFF, 6), 20, Default, "WaitArrow") Then 
@@ -188,9 +189,28 @@ Func CheckRevengeTutor()
 		Next
 		
 		If _Sleep(2000) Then Return
-		If QuickMIS("BC1", $g_sImgRevengeTutor, 245, 195, 288, 228) Then
+		If QuickMIS("BC1", $g_sImgRevengeTutor, 350, 165, 400, 190) Then ;search Layout text
 			SetLog("Set Default Defense Layout", $COLOR_ACTION)
-			Click(400, 300, 1, 0, "Defense Layout")
+			Local $aLayout = QuickMIS("CNX", $g_sImgRevengeTutor, 40, 320, 720, 370)
+			Local $x, $y
+			_ArraySort($aLayout, 0, 0, 0, 1)
+			For $i = 0 To UBound($alayout) - 1
+				$x = $aLayout[$i][1]
+				$y = $aLayout[$i][2]
+				If $i = 0 Then ;home base
+					SetLog("Set Home Base Defense Layout", $COLOR_ACTION)
+					Click($x + 40, $y - 30, 1, 0, "Defense Layout (Home Base)")
+				Else
+					If Not QuickMIS("BC1", $g_sImgRevengeTutor, $x + 160, 340, $x + 190, 360) Then
+						SetLog("Set War Base Defense Layout", $COLOR_ACTION)
+						If _Sleep(500) Then Return
+						Click($x + 40, $y - 30, 1, 0, "Defense Layout (War Base)")
+						ExitLoop
+					Else
+						SetLog("Not Set War Base (Layout need Update)", $COLOR_DEBUG2)
+					EndIf
+				EndIf
+			Next
 		EndIf
 		
 		If _ColorCheck(_GetPixelColor(299, 410, True), Hex(0xFFFFFF, 6), 20, Default, "WaitArrow") Then 
@@ -234,5 +254,7 @@ Func CheckRevengeTutor()
 		EndIf
 	EndIf
 	
+	If _Sleep(1000) Then Return
+	ClickAway("Right")
 	Return $bRet
 EndFunc ;==>CheckRevengeTutor

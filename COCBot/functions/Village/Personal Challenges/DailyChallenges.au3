@@ -69,9 +69,14 @@ Func OpenPersonalChallenges($aIcnCheck, $bIcnNew)
 				ExitLoop
 			EndIf
 			
+			If _PixelSearch(822, 37, 823, 37, Hex(0xFFFFFF, 6), 10, True, "New Challenges") Then 
+				$bRet = True
+				ExitLoop
+			EndIf
+			
+			If _Sleep(500) Then Return
 			If Not $g_bRunState Then Return
 			SetLog("Waiting New Challenges window ready #" & $i, $COLOR_ACTION)
-			If _Sleep(1000) Then Return
 		Next
 	Else 
 		For $i = 1 To 2
