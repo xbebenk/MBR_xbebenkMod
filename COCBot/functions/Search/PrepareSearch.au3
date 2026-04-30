@@ -189,9 +189,9 @@ Func CheckRevengeTutor()
 		Next
 		
 		If _Sleep(2000) Then Return
-		If QuickMIS("BC1", $g_sImgRevengeTutor, 350, 165, 400, 190) Then ;search Layout text
+		If QuickMIS("BC1", $g_sImgRevengeTutor, 30, 160, 100, 190) Then ;search Layout text
 			SetLog("Set Default Defense Layout", $COLOR_ACTION)
-			Local $aLayout = QuickMIS("CNX", $g_sImgRevengeTutor, 40, 320, 720, 370)
+			Local $aLayout = QuickMIS("CNX", $g_sImgRevengeTutor, 40, 320, 860, 370)
 			Local $x, $y
 			_ArraySort($aLayout, 0, 0, 0, 1)
 			For $i = 0 To UBound($alayout) - 1
