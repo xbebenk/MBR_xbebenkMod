@@ -243,12 +243,9 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 					Local $aHeroes[5] = ["Barbarian", "Queen", "Warden", "Champion", "Prince"]
 					For $j In $aHeroes
 						If StringInStr($Upgrades[$i][3], $j) Then
-							SetLog("Upgrade : " & $Upgrades[$i][3] & ", checking Hero Hall Window", $COLOR_ACTION)
-							If IsHeroHallWindow() Then
-								If DoUpgradeHero($Upgrades[$i][3], $Upgrades[$i][5], $Upgrades[$i][0]) Then ExitLoop 2
-							Else
-								ClickAway()
-							EndIf
+							SetLog("Upgrade : " & $Upgrades[$i][3] & ", checking Hero Hall Window", $COLOR_ACTION)							
+							If DoUpgradeHero($Upgrades[$i][3], $Upgrades[$i][5], $Upgrades[$i][0]) Then ExitLoop 2
+							ClickAway()
 						EndIf
 					Next
 					If DoUpgrade($bTest, $bLowCost) Then
@@ -267,7 +264,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 
 		If Not $g_bRunState Then Return
 		If Not AutoUpgradeCheckBuilder($bTest) Then Return
-		If $bDoScroll Then ClickDragAUpgrade("up", (($z >= 3 And $SameCost = 0) ? 2 : 1)) ;do scroll up
+		If $bDoScroll Then ClickDragAUpgrade("up", (($z >= 2 And $SameCost = 0) ? 2 : 1)) ;do scroll up
 		$bDoScroll = True
 		;If _Sleep(1500) Then Return
 	Next
@@ -818,32 +815,32 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 EndFunc
 
 Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "DE")
-	Local $aCheckAreaKing[4] = [140, 420, 190, 460]
-	Local $aCheckAreaQueen[4] = [290, 420, 347, 460]
-	Local $aCheckAreaPrince[4] = [450, 420, 500, 460]
-	Local $aCheckAreaWarden[4] = [600, 420, 655, 460]
-	Local $aCheckAreaChampion[4] = [750, 420, 805, 460]
+	;Local $aCheckAreaKing[4] = [140, 420, 190, 460]
+	;Local $aCheckAreaQueen[4] = [290, 420, 347, 460]
+	;Local $aCheckAreaPrince[4] = [450, 420, 500, 460]
+	;Local $aCheckAreaWarden[4] = [600, 420, 655, 460]
+	;Local $aCheckAreaChampion[4] = [750, 420, 805, 460]
 	Local $aCheckArea, $bRet = False
+	;
+	;Switch $sHeroName
+	;	Case "Barbarian King"
+	;		$aCheckArea = $aCheckAreaKing
+	;	Case "Archer Queen"
+	;		$aCheckArea = $aCheckAreaQueen
+	;	Case "Minion Prince"
+	;		$aCheckArea = $aCheckAreaPrince
+	;	Case "Grand Warden"
+	;		$aCheckArea = $aCheckAreaWarden
+	;	Case "Royal Champion"
+	;		$aCheckArea = $aCheckAreaChampion
+	;	Case Else
+	;		Setlog("What Hero? banana", $COLOR_DEBUG2)
+	;		$aCheckArea = $aCheckAreaKing
+	;EndSwitch
 
-	Switch $sHeroName
-		Case "Barbarian King"
-			$aCheckArea = $aCheckAreaKing
-		Case "Archer Queen"
-			$aCheckArea = $aCheckAreaQueen
-		Case "Minion Prince"
-			$aCheckArea = $aCheckAreaPrince
-		Case "Grand Warden"
-			$aCheckArea = $aCheckAreaWarden
-		Case "Royal Champion"
-			$aCheckArea = $aCheckAreaChampion
-		Case Else
-			Setlog("What Hero? banana", $COLOR_DEBUG2)
-			$aCheckArea = $aCheckAreaKing
-	EndSwitch
-
-	If QuickMIS("BC1", $g_sImgHeroHall, $aCheckArea[0], $aCheckArea[1], $aCheckArea[2], $aCheckArea[3]) Then
-		Click($g_iQuickMISX - 50, $g_iQuickMISY) ;click button below the hero
-		If _Sleep(1000) Then return
+	;If QuickMIS("BC1", $g_sImgHeroHall, $aCheckArea[0], $aCheckArea[1], $aCheckArea[2], $aCheckArea[3]) Then
+	;	Click($g_iQuickMISX - 50, $g_iQuickMISY) ;click button below the hero
+	;	If _Sleep(1000) Then return
 		Local $iHeroUpgradeTime = getHeroUpgradeTime(730, 546) ; get duration
 		Click(625, 545) ;click upgrade button
 		
@@ -893,7 +890,7 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 		EndIf
 		Clickaway()
 		$bRet = True
-	EndIf
+	;EndIf
 	Return $bRet
 EndFunc
 
