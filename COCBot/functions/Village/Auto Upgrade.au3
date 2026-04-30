@@ -815,36 +815,39 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 EndFunc
 
 Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "DE")
-	;Local $aCheckAreaKing[4] = [140, 420, 190, 460]
-	;Local $aCheckAreaQueen[4] = [290, 420, 347, 460]
-	;Local $aCheckAreaPrince[4] = [450, 420, 500, 460]
-	;Local $aCheckAreaWarden[4] = [600, 420, 655, 460]
-	;Local $aCheckAreaChampion[4] = [750, 420, 805, 460]
+	Local $aCheckAreaKing[4] = [140, 420, 190, 460]
+	Local $aCheckAreaQueen[4] = [290, 420, 347, 460]
+	Local $aCheckAreaPrince[4] = [450, 420, 500, 460]
+	Local $aCheckAreaWarden[4] = [600, 420, 655, 460]
+	Local $aCheckAreaChampion[4] = [750, 420, 805, 460]
 	Local $aCheckArea, $bRet = False
-	;
-	;Switch $sHeroName
-	;	Case "Barbarian King"
-	;		$aCheckArea = $aCheckAreaKing
-	;	Case "Archer Queen"
-	;		$aCheckArea = $aCheckAreaQueen
-	;	Case "Minion Prince"
-	;		$aCheckArea = $aCheckAreaPrince
-	;	Case "Grand Warden"
-	;		$aCheckArea = $aCheckAreaWarden
-	;	Case "Royal Champion"
-	;		$aCheckArea = $aCheckAreaChampion
-	;	Case Else
-	;		Setlog("What Hero? banana", $COLOR_DEBUG2)
-	;		$aCheckArea = $aCheckAreaKing
-	;EndSwitch
-
-	;If QuickMIS("BC1", $g_sImgHeroHall, $aCheckArea[0], $aCheckArea[1], $aCheckArea[2], $aCheckArea[3]) Then
-	;	Click($g_iQuickMISX - 50, $g_iQuickMISY) ;click button below the hero
-	;	If _Sleep(1000) Then return
-		Local $iHeroUpgradeTime = getHeroUpgradeTime(730, 546) ; get duration
+	Local $iHeroUpgradeTime = ""
+	
+	Switch $sHeroName
+		Case "Barbarian King"
+			$aCheckArea = $aCheckAreaKing
+		Case "Archer Queen"
+			$aCheckArea = $aCheckAreaQueen
+		Case "Minion Prince"
+			$aCheckArea = $aCheckAreaPrince
+		Case "Grand Warden"
+			$aCheckArea = $aCheckAreaWarden
+		Case "Royal Champion"
+			$aCheckArea = $aCheckAreaChampion
+		Case Else
+			Setlog("What Hero? banana", $COLOR_DEBUG2)
+			$aCheckArea = $aCheckAreaKing
+	EndSwitch
+	
+	If Not IsUpgradeWindowOpen() Then
+		SetLog("Unable to Verify Upgrade Window", $COLOR_DEBUG2)
+		ClickAway()
+		ClickAway()
+		Return
+	Else
+		$iHeroUpgradeTime = getHeroUpgradeTime(730, 546) ; get duration
 		Click(625, 545) ;click upgrade button
 		
-		;Check for 'End Boost?' pop-up
 		If _Sleep(1000) Then Return
 		Local $aImgAUpgradeEndBoost = decodeSingleCoord(findImage("EndBoost", $g_sImgAUpgradeEndBoost, GetDiamondFromRect("350, 310, 570, 230"), 1, True))
 		If UBound($aImgAUpgradeEndBoost) > 1 Then
@@ -861,19 +864,6 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 				Return
 			EndIf
 		EndIf
-
-		If $g_bUseHeroBooks Then
-			If _Sleep(500) Then Return
-			Local $HeroUpgradeTime = ConvertOCRTime("UseHeroBooks", $iHeroUpgradeTime, False)
-			If $HeroUpgradeTime >= ($g_iHeroMinUpgradeTime * 1440) Then
-				SetLog("Hero Upgrade Time minutes: [" & $HeroUpgradeTime & "] " & $HeroUpgradeTime & " minutes", $COLOR_DEBUG)
-				SetLog("MinUpgradeTime on Setting: [" & $g_iHeroMinUpgradeTime & "] " & ($g_iHeroMinUpgradeTime * 1440) & " minutes", $COLOR_DEBUG)
-				SetLog("Looking if Hero Books avail")
-				UseHeroBooks()
-			EndIf
-		EndIf
-		
-		Clickaway() ; done checking all option, click away to make button dissapear
 		
 		; update Logs and History file
 		SetLog("Launched upgrade for Hero : " & $sHeroName & " successfully !", $COLOR_SUCCESS)
@@ -887,10 +877,31 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 			SetLog(" - Cost : " & _NumberFormat($Cost) & " " & $CostType, $COLOR_SUCCESS)
 			SetLog(" - Duration : " & $iHeroUpgradeTime, $COLOR_SUCCESS)
 			AutoUpgradeLog(False, $sHeroName, "??", $Cost, $CostType)
+			$bRet = True
 		EndIf
-		Clickaway()
-		$bRet = True
-	;EndIf
+		
+		If $g_bUseHeroBooks Then	
+			Local $HeroUpgradeTime = ConvertOCRTime("UseHeroBooks", $iHeroUpgradeTime, False)
+			If $HeroUpgradeTime >= ($g_iHeroMinUpgradeTime * 1440) Then
+				SetLog("Hero Upgrade Time minutes: [" & $HeroUpgradeTime & "] " & $HeroUpgradeTime & " minutes", $COLOR_DEBUG)
+				SetLog("MinUpgradeTime on Setting: [" & $g_iHeroMinUpgradeTime & "] " & ($g_iHeroMinUpgradeTime * 1440) & " minutes", $COLOR_DEBUG)
+				SetLog("Looking if Hero Books avail")
+				If QuickMIS("BC1", $g_sImgHeroBooks, 500, 530, 540, 570) Then ; search image Hero books (on button Finish Now)
+					Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Hero Books")
+					If _Sleep(500) Then return
+					If WaitforPixel(420, 435, 421, 435, "2F93CF", 10, 1, "Confirm Use Book") Then
+						Click(420, 430, 1, 0, "Confirm Use Book")
+					EndIf
+				EndIf
+			Else
+				SetLog("Use Hero Books enabled, but hero Upgrade time < " & $g_iHeroMinUpgradeTime & " Days", $COLOR_DEBUG2)
+			EndIf
+		Else
+			Clickaway() ;close Upgrade Window
+		EndIf
+		Clickaway() ; close Hero Hall window
+	EndIf
+	
 	Return $bRet
 EndFunc
 
@@ -1285,7 +1296,7 @@ Func ClickDragAUpgrade($Direction = "Up", $DragCount = 1)
 		EndIf
 	Next
 	Return False
-EndFunc ;==>IsUpgradeWindow
+EndFunc ;==>ClickDragAUpgrade
 
 Func ClickMainBuilder($bSetLog = False, $Counter = 3)
 	If Not $g_bRunState Then Return
@@ -1504,6 +1515,16 @@ Func PlaceUnplacedBuilding($bTest = False)
 	EndIf
 EndFunc
 
+Func IsUpgradeWindowOpen()
+	Local $bRet = False
+	
+	If _ColorCheck(_GetPixelColor(810, 130, True), Hex(0x635550, 6), 10, Default, "IsUpgradeWindowOpen") _ ; Brown color under red x
+		And _ColorCheck(_GetPixelColor(810, 120, True), Hex(0xDB2025, 6), 10, Default, "IsUpgradeWindowOpen") Then ; Red color under x 
+		$bRet = True
+	EndIf
+	Return $bRet
+EndFunc
+
 Func IsBuilderMenuOpen()
 	If Not $g_bRunState Then Return
 	Local $bRet = False
@@ -1583,22 +1604,6 @@ Func CheckBuilderPotion()
 		EndIf
 	EndIf
 EndFunc
-
-Func UseHeroBooks()
-	If Not $g_bRunState Then Return
-	Local $HeroBooks = FindButton("HeroBooks")
-	If IsArray($HeroBooks) And UBound($HeroBooks) = 2 Then
-		SetLog("Use Hero Books to Complete Now this Hero Upgrade", $COLOR_INFO)
-		Click($HeroBooks[0], $HeroBooks[1])
-		If _Sleep(1000) Then Return
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 600, 210, 650, 255) Then
-			Click(430, 410)
-		EndIf
-	Else
-		SetLog("No Books of Heroes Found", $COLOR_DEBUG)
-	EndIf
-EndFunc
-
 
 ;------------------------------------------
 ;old unused func below

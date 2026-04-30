@@ -191,6 +191,7 @@ Global $g_sImgShopTraps = @ScriptDir & "\imgxml\Resources\AutoUpgrade\Shop\Traps
 Global $g_sImgBuilderMenu = @ScriptDir & "\imgxml\Resources\AutoUpgrade\BuilderMenu\"
 Global $g_sImgHeroHall = @ScriptDir & "\imgxml\Resources\AutoUpgrade\HeroHall\"
 Global $g_sImgBuilderPotion = @ScriptDir & "\imgxml\Resources\AutoUpgrade\Potion\"
+Global $g_sImgHeroBooks = @ScriptDir & "\imgxml\Resources\AutoUpgrade\HeroBooks\"
 #EndRegion
 
 #Region Auto Upgrade Builder Base
