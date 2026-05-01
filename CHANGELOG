@@ -30,3 +30,8 @@
 * Faster detection on chest page return home page
 * Fix wallupgrade +1 on wall level 12
 * Fix Revenge Defense layout pick
+*
+* **v.7.9.9 Mod_v1.2.6#124** (2026-05-01)
+* Fix use Hero Book
+* Support Skeleton Default Scenery
+* Fix redline on skeleton default scenery
