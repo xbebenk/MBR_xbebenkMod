@@ -1581,6 +1581,12 @@ Func CheckBuilderPotion()
 				SetLog("Upgrade time > 9h, will use Builder Potion", $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(1000) Then Return
+				If IsUpgradeWindowOpen() Then 
+					ClickAway()
+					If _Sleep(500) Then Return
+					ClickAway()
+					If _Sleep(500) Then Return
+				EndIf
 				If IsHeroHallWindow() Then 
 					ClickAway()
 					If _Sleep(1000) Then return

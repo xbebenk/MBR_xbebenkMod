@@ -51,6 +51,7 @@ Func UpgradeWall($bTest = False)
 	
 	VillageReport(True, True)
 	CheckMainScreen(False, $g_bStayOnBuilderBase, "UpgradeWall")
+	Return $bWallUpgraded
 EndFunc   ;==>UpgradeWall
 
 Func WallUpgradeCheckBuilder($bTest = False)
@@ -239,17 +240,17 @@ Func DoUpgradeWall()
 					SetLog("Looking for +10 Button", $COLOR_DEBUG)
 					Switch $g_iUpgradeWallLootType
 						Case 0 ;Gold
-							If $iWallCanUpgradeGold > 10 Then UpWallGold($iWallCost, $iPlus10Gold, "+10", $aGoldButton)
+							If $iWallCanUpgradeGold > 10 Then Return UpWallGold($iWallCost, $iPlus10Gold, "+10", $aGoldButton)
 							
 						Case 1 ;Elixir
-							UpWallElixir($iWallCost, $iPlus10Elix, "+10", $aElixButton)
+							Return UpWallElixir($iWallCost, $iPlus10Elix, "+10", $aElixButton)
 							
 						Case 2 ;Elixir Then Gold
 							If $bCanUseElix = True And $iPlus10Elix > 0 Then
-								UpWallElixir($iWallCost, $iPlus10Elix, "+10", $aElixButton)
+								Return UpWallElixir($iWallCost, $iPlus10Elix, "+10", $aElixButton)
 							EndIf
 							If $bCanUseGold = True And $iPlus10Gold > 0 Then
-								UpWallGold($iWallCost, $iPlus10Gold, "+10", $aGoldButton)
+								Return UpWallGold($iWallCost, $iPlus10Gold, "+10", $aGoldButton)
 							EndIf
 					EndSwitch
 				EndIf
@@ -259,15 +260,15 @@ Func DoUpgradeWall()
 					SetLog("Looking for +1 Button", $COLOR_DEBUG)
 					Switch $g_iUpgradeWallLootType
 						Case 0 ;Gold
-							UpWallGold($iWallCost, $iPlus1Gold - 1, "+1", $aGoldButton)
+							Return UpWallGold($iWallCost, $iPlus1Gold - 1, "+1", $aGoldButton)
 						Case 1 ;Elix
-							UpWallElixir($iWallCost, $iPlus1Elix - 1, "+1", $aElixButton)
+							Return UpWallElixir($iWallCost, $iPlus1Elix - 1, "+1", $aElixButton)
 						Case 2 ;Elix Then Gold
 							If $bCanUseElix = True And $iPlus1Elix > 1 Then
-								UpWallElixir($iWallCost, $iPlus1Elix - 1, "+1", $aElixButton)
+								Return UpWallElixir($iWallCost, $iPlus1Elix - 1, "+1", $aElixButton)
 							EndIf
 							If $bCanUseGold = True And $iPlus1Gold > 1 Then
-								UpWallGold($iWallCost, $iPlus1Gold - 1, "+1", $aGoldButton)
+								Return UpWallGold($iWallCost, $iPlus1Gold - 1, "+1", $aGoldButton)
 							EndIf
 					EndSwitch
 				EndIf
@@ -283,6 +284,7 @@ Func DoUpgradeWall()
 						$g_iNbrOfWallsUpped += 1
 						$g_iCostGoldWall += $iWallCost
 						SetLog("Cost : " & _NumberFormat($iWallCost), $COLOR_SUCCESS)
+						Return True
 					Case 1
 						SetLog("Upgrading 1 Wall for Elix upgrade", $COLOR_ACTION)
 						ClickP($aElixButton)
@@ -291,6 +293,7 @@ Func DoUpgradeWall()
 						$g_iNbrOfWallsUpped += 1
 						$g_iCostElixirWall += $iWallCost
 						SetLog("Cost : " & _NumberFormat($iWallCost), $COLOR_SUCCESS)
+						Return True
 					Case 2
 						Select
 							Case $bCanUseElix = True And $iWallCanUpgradeElix > 0
@@ -302,6 +305,7 @@ Func DoUpgradeWall()
 								$g_iCostElixirWall += $iWallCost
 								SetLog("Cost : " & _NumberFormat($iWallCost), $COLOR_SUCCESS)
 								$bCanUseGold = False
+								Return True
 							Case $bCanUseGold = True And $iWallCanUpgradeGold > 0
 								SetLog("Upgrading 1 Wall for Gold upgrade", $COLOR_ACTION)
 								ClickP($aGoldButton)
@@ -365,6 +369,7 @@ Func UpWallElixir($iWallCost, $iCountPlus, $UpType, $aButton)
 		
 		If _Sleep(1000) Then Return
 		If IsOKCancelPage() Then ClickP($aConfirmSurrender) ;click confirm upgrade OK button
+		Return True
 	EndIf
 EndFunc
 
@@ -404,9 +409,9 @@ Func UpWallGold($iWallCost, $iCountPlus, $UpType, $aButton)
 		SetLog("Upgraded wall with Gold: " & $iCount, $COLOR_SUCCESS)
 		SetLog("Cost : " & _NumberFormat($iCostUpgrade), $COLOR_SUCCESS)
 		UpdateStats()
-		
 		If _Sleep(1000) Then Return
 		If IsOKCancelPage() Then ClickP($aConfirmSurrender) ;click confirm upgrade OK button
+		Return True
 	EndIf
 EndFunc
 
