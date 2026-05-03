@@ -140,7 +140,7 @@ EndFunc
 
 Func CheckDonateNotifCounter()
 	Local $bRet = False
-	If $g_bDonationEnabled Then 
+	If $g_bChkDonate Then 
 		If _ColorCheck(_GetPixelColor(66, 289, True), Hex(0xCE081D, 6), 20, Default, "Red Chat notif count") Then $bRet = True
 		If $bRet Then SetLog("New chat detected!, Check for Donate", $COLOR_DEBUG)
 	EndIf

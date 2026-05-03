@@ -193,9 +193,9 @@ Func SwitchCOCAcc($NextAccount = 0, $bTest = False)
 		EndIf
 		
 		For $i = 1 To 5 
+			If _Sleep(1000) Then Return
 			SetLog("Verifying SCID Windows #" & $i, $COLOR_ACTION)
 			If ClickSCIDReload() Then ExitLoop
-			If _Sleep(1000) Then Return
 		Next
 		
 		If ClickAccountSCID($NextAccount + 1) Then
@@ -355,6 +355,11 @@ Func ClickAccountSCID($iAccount = 2)
 		_ArrayDelete($aAccount, $aDel) 
 		_ArraySort($aAccount, 0, 0, 0, 2) 
 		
+		If UBound($aAccount) < 1 Then
+			SetLog("accountList: " & _ArrayToString($aAccount), $COLOR_DEBUG2)
+			Return False
+		EndIf
+		
 		For $i = 0 To UBound($aAccount) - 1
 			SetLog("Bottom Splitter on : " & $aAccount[$i][1] & "," & $aAccount[$i][2], $COLOR_DEBUG)
 		Next
@@ -374,11 +379,19 @@ Func ClickAccountSCID($iAccount = 2)
 					$y = $aAccount[1][2] - 35
 				EndIf
 			Case 2, 5, 8, 11, 14
-				$x = $aAccount[1][1] + 100
-				$y = $aAccount[1][2] - 35
+				If UBound($aAccount) > 1 Then
+					$x = $aAccount[1][1] + 100
+					$y = $aAccount[1][2] - 35
+				Else
+					SetLog("something wrong, account #2 on list not found", $COLOR_DEBUG2)
+				EndIf
 			Case 3, 6, 9, 12, 15
-				$x = $aAccount[2][1] + 100
-				$y = $aAccount[2][2] - 35
+				If UBound($aAccount) > 2 Then
+					$x = $aAccount[2][1] + 100
+					$y = $aAccount[2][2] - 35
+				Else
+					SetLog("something wrong, account #3 on list not found", $COLOR_DEBUG2)
+				EndIf
 		EndSwitch
 		
 		If Not $g_bRunState Then Return
