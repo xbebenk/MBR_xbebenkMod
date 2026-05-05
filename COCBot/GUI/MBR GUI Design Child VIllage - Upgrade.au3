@@ -48,7 +48,7 @@ Global $g_hCmbTargetWallLevel = 0, $g_hLblWallCost = 0
 Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0
 Global $g_hTxtSmartMinGold = 0, $g_hTxtSmartMinElixir = 0, $g_hTxtSmartMinDark = 0
 Global $g_hChkResourcesToIgnore[3] = [0, 0, 0]
-Global $g_hChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_hChkUpgradesToIgnore = $g_iChkUpgradesToIgnore
 Global $g_hChkRushTH = 0, $g_hBtnRushTHOption = 0, $g_hUseWallReserveBuilder = 0, $g_hUseBuilderPotion = 0, $g_hUpgradeOtherDefenses = 0
 Global $g_hGUI_RushTHOption = 0, $g_hBtnRushTHOptionClose = 0, $g_ahCmbRushTHOption[5] = [0, 0, 0, 0, 0]
 Global $RushTHOption[5] = ["TownHall", "Barracks", "Dark Barracks", "Spell Factory", "Dark Spell Factory"]
@@ -630,30 +630,32 @@ EndFunc   ;==>CreateWallsSubTab
 Func CreateAutoUpgradeSubTab()
 
 	Local $x = 25, $y = 40
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_01", "Auto Upgrade"), $x - 20, $y - 15, $g_iSizeWGrpTab3, 90)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_01", "Auto Upgrade"), $x - 20, $y - 15, $g_iSizeWGrpTab3, 65)
 
 		$g_hChkAutoUpgrade = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade", "Enabled"), $x - 5, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "ChkAutoUpgrade_Info_01", "Check box to enable automatically starting Upgrades from builders menu"))
 			GUICtrlSetOnEvent(-1, "chkAutoUpgrade")
-		$g_hLblAutoUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_01", "Save"), $x, $y + 27, -1, -1)
-		$g_hTxtSmartMinGold = GUICtrlCreateInput("150000", $x + 33, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
-			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 98, $y + 27, 16, 16)
-		$g_hTxtSmartMinElixir = GUICtrlCreateInput("150000", $x + 118, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
-			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 183, $y + 27, 16, 16)
-		$g_hTxtSmartMinDark = GUICtrlCreateInput("1500", $x + 203, $y + 24, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
-			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 268, $y + 27, 16, 16)
-		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_02", "after launching upgrade"), $x + 290, $y + 27, -1, -1)
-
-		$g_hChkResourcesToIgnore[0] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_01", "Ignore Gold Upgrades"), $x, $y + 50, -1, -1)
+		$g_hLblAutoUpgrade = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Label_01", "Save"), $x + 90, $y, +1, -1)
+		$g_hTxtSmartMinGold = GUICtrlCreateInput("150000", $x + 133, $y, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
+			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnGold, $x + 198, $y, 16, 16)
+		$g_hTxtSmartMinElixir = GUICtrlCreateInput("150000", $x + 218, $y, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
+			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnElixir, $x + 283, $y, 16, 16)
+		$g_hTxtSmartMinDark = GUICtrlCreateInput("1500", $x + 303, $y, 60, 21, BitOR($ES_CENTER, $ES_NUMBER))
+			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 368, $y, 16, 16)
+		$x = 150
+		$g_hChkResourcesToIgnore[0] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_01", "Ignore Gold"), $x, $y + 25, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkResourcesToIgnore")
-		$g_hChkResourcesToIgnore[1] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_02", "Ignore Elixir Upgrades"), $x + 130, $y + 50, -1, -1)
+		$g_hChkResourcesToIgnore[1] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_02", "Ignore Elixir"), $x + 100, $y + 25, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkResourcesToIgnore")
-		$g_hChkResourcesToIgnore[2] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_03", "Ignore Dark Elixir Upgrades"), $x + 258, $y + 50, -1, -1)
+		$g_hChkResourcesToIgnore[2] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Ignore_03", "Ignore DE "), $x + 200, $y + 25, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkResourcesToIgnore")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_02", "Upgrades to ignore"), $x - 20, $y + 75, $g_iSizeWGrpTab3, 200)
-		Local $x = 20, $y = 130
+	
+	$x = 25
+	$y = 90
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design - AutoUpgrade", "Group_02", "Upgrades to ignore"), $x - 20, $y, $g_iSizeWGrpTab3, 220)
+		$x = 20
+		$y += 15
 		$g_hChkUpgradesToIgnore[0] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Town Hall", "Town Hall"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
 		$x += 100
@@ -767,11 +769,16 @@ Func CreateAutoUpgradeSubTab()
 		$g_hChkUpgradesToIgnore[34] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Builder's Hut", "Builder's Hut"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
 		$x += 100
-		$g_hChkUpgradesToIgnore[35] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "TH Weapon", "TH Weapon"), $x, $y, -1, -1)
+		$g_hChkUpgradesToIgnore[35] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Minion Prince", "Minion Prince"), $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
+		$x = 20
+		$y += 20
+		$g_hChkUpgradesToIgnore[36] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Buildings", "Dragon Duke", "Dragon Duke"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkUpgradesToIgnore")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
 	$x = 20
-	$y += 24
+	$y += 28
 	$g_hChkRushTH = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR Global GUI Design Names Traps", "Rush TH", "Rush TH"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkRushTH")
 		_GUICtrlSetTip(-1, "Toggle to Make RushTH, Wont Ugrade Defense Or colletor")

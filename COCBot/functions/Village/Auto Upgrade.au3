@@ -351,6 +351,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 			$lenght = Number($aTmpCoord[$i][1]) - $g_iXFindUpgrade
 			$aUpgradeName = getBuildingName($g_iXFindUpgrade, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
+			If StringInStr($aUpgradeName[0], "Wall") Then $aUpgradeName[0] = "Wall"
 			If Number($tmpcost) = 0 Then ContinueLoop
 			If $g_bHeroPriority Then
 				$bHero = False
@@ -375,9 +376,9 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 				EndIf
 			EndIf
 			If CheckIgnoreUpgrade($aUpgradeName[0], $bLowCost) Then
-				SetLog("UpLowCost=" & String($bLowCost) & ", UseWallReserve=" & String($bUseWallReserve), $COLOR_DEBUG1)
-				SetLog("UpgradeOtherDefenses=" & String($g_bUpgradeOtherDefenses), $COLOR_DEBUG1)
-				SetLog($aUpgradeName[0] & " : " & $tmpcost & ", Ignored!", $COLOR_DEBUG1)
+				;SetLog("UpLowCost=" & String($bLowCost) & ", UseWallReserve=" & String($bUseWallReserve), $COLOR_DEBUG1)
+				;SetLog("UpgradeOtherDefenses=" & String($g_bUpgradeOtherDefenses), $COLOR_DEBUG1)
+				SetLog($aUpgradeName[0] & " : " & $tmpcost & ", must be Ignored!", $COLOR_DEBUG2)
 				ContinueLoop
 			EndIf
 			
@@ -501,21 +502,24 @@ Func CheckResourceForDoUpgrade($BuildingName, $Cost, $CostType)
 	EndSwitch
 	SetLog("Checking: " & $BuildingName & ", Cost: " & $Cost & " " & $CostType, $COLOR_INFO)
 	SetLog("Is Enough " & $CostType & " ? " & String($bSufficentResourceToUpgrade), $bSufficentResourceToUpgrade ? $COLOR_SUCCESS : $COLOR_ERROR)
-
+	
+	If $g_iChkResourcesToIgnore[0] = 1 And $CostType = "Gold" Then 
+		$bSufficentResourceToUpgrade = False
+		SetLog("Resource Gold, set to Ignored", $COLOR_DEBUG2)
+	ElseIf $g_iChkResourcesToIgnore[1] = 1 And $CostType = "Elix" Then 
+		$bSufficentResourceToUpgrade = False
+		SetLog("Resource Elix, set to Ignored", $COLOR_DEBUG2)
+	ElseIf $g_iChkResourcesToIgnore[2] = 1 And $CostType = "DE" Then 
+		$bSufficentResourceToUpgrade = False
+		SetLog("Resource DE, set to Ignored", $COLOR_DEBUG2)
+	EndIf
+	
 	Return $bSufficentResourceToUpgrade
 EndFunc
 
 Func CheckIgnoreUpgrade($sUpgradeName = "", $bUpgradeLowCost = False)
 	Local $bMustIgnoreUpgrade = False
 	Switch $sUpgradeName
-		Case "Barbarian King"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1) ? True : False
-		Case "Archer Queen"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1) ? True : False
-		Case "Grand Warden"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[3] = 1) ? True : False
-		Case "Royal Champion"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[4] = 1) ? True : False
 		Case "Clan Castle"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[5] = 1) ? True : False
 		Case "Laboratory"
@@ -552,7 +556,22 @@ Func CheckIgnoreUpgrade($sUpgradeName = "", $bUpgradeLowCost = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1) ? True : False
 		Case "Builder's Hut"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1) ? True : False
+		
 	EndSwitch
+	
+	If StringInStr($sUpgradeName, "King") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1) ? True : False
+	ElseIf StringInStr($sUpgradeName, "Queen") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1) ? True : False
+	ElseIf StringInStr($sUpgradeName, "Warden") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[3] = 1) ? True : False
+	ElseIf StringInStr($sUpgradeName, "Champ") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[4] = 1) ? True : False
+	ElseIf StringInStr($sUpgradeName, "Prince") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[35] = 1) ? True : False
+	ElseIf StringInStr($sUpgradeName, "Duke") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[36] = 1) ? True : False
+	EndIf
 
 	If $bUpgradeLowCost Then
 		$bMustIgnoreUpgrade = False
@@ -569,7 +588,7 @@ Func CheckIgnoreUpgrade($sUpgradeName = "", $bUpgradeLowCost = False)
 		Next
 	EndIf
 
-	If $g_bDebugSetLog Then SetLog("CheckIgnoreUpgrade: " & $sUpgradeName & ", result=" & String($bMustIgnoreUpgrade), $COLOR_DEBUG1)
+	SetLog("CheckIgnoreUpgrade: " & $sUpgradeName & ", result=" & String($bMustIgnoreUpgrade), $COLOR_DEBUG1)
 	Return $bMustIgnoreUpgrade
 EndFunc
 
@@ -696,14 +715,6 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	Local $aUpgradeButton, $aTmpUpgradeButton
 	$aUpgradeButton = findButton("Upgrade", Default, 1, True) ;try to find Upgrade Button (hammer)
 
-	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_aUpgradeNameLevel[2] > 11 And $g_iChkUpgradesToIgnore[35] = 0 Then ;Upgrade THWeapon not Ignored
-		$aTmpUpgradeButton = findButton("THWeapon", Default, 1, True) ;try to find UpgradeTHWeapon button (swords)
-		If IsArray($aTmpUpgradeButton) And UBound($aTmpUpgradeButton) = 2 Then
-			$bMustIgnoreUpgrade = False
-			$aUpgradeButton = $aTmpUpgradeButton
-		EndIf
-	EndIf
-
 	If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
 		SetLog("No upgrade here... Wrong click, looking Next...", $COLOR_WARNING)
 		Return False
@@ -778,29 +789,17 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	EndIf
 
 	; update Logs and History file
-	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_iChkUpgradesToIgnore[35] = 0 Then
-		If _Sleep(2000) Then Return
+	If $g_aUpgradeNameLevel[1] = "Town Hall" Then
+		If _Sleep(1000) Then Return
 		If _ColorCheck(_GetPixelColor(340, 510, True), Hex(0xFFCC7F, 6), 20, Default, "AutoUpgrade") And _ColorCheck(_GetPixelColor(510, 510, True), Hex(0xDDF685, 6), 20, Default, "AutoUpgrade") Then
 			SetLog("Detected Before you upgrade warning window", $COLOR_INFO)
 			Click(510, 525)
 			If _Sleep(1000) Then Return
 		EndIf
-
-		Switch $g_aUpgradeNameLevel[2]
-			Case 12
-				$g_aUpgradeNameLevel[1] = "Giga Tesla"
-				SetLog("Launched upgrade of Giga Tesla successfully !", $COLOR_SUCCESS)
-			Case 13
-				$g_aUpgradeNameLevel[1] = "Giga Inferno"
-				SetLog("Launched upgrade of Giga Inferno successfully !", $COLOR_SUCCESS)
-			Case 14
-				$g_aUpgradeNameLevel[1] = "Giga Inferno"
-				SetLog("Launched upgrade of Giga Inferno successfully !", $COLOR_SUCCESS)
-		EndSwitch
-	Else
-		SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
 	EndIf
-
+	
+	SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+	
 	If IsGemOpen(True) Then
 		ClickAway("Right")
 		SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
