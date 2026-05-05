@@ -20,7 +20,7 @@ Func FillArmyCamp()
 	If $g_bIgnoreIncorrectTroopCombo Or $g_bIgnoreIncorrectSpellCombo Then ;check army or spell to fill
 		If OpenArmyOverview() Then 
 			If _Sleep(500) Then Return
-			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 210, 480, 230) Then ;check on troops
+			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 210, 480, 230) Then ;check on troops
 				If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 270, 480, 295) Then ;check on acivate supertroop
 					SetLog("SuperTroop Need to activate", $COLOR_DEBUG)
 					Click($g_iQuickMISX, $g_iQuickMISY)
@@ -37,7 +37,7 @@ Func FillArmyCamp()
 				EndIf
 			EndIf
 			
-			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 320, 480, 345) Then ;check on spells
+			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 320, 480, 345) Then ;check on spells
 				SetLog("Your spell need to fill", $COLOR_DEBUG)
 				FillIncorrectSpellCombo()
 				ClickAway()
