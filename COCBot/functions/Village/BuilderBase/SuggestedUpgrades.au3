@@ -35,7 +35,7 @@ Func SearchUpgradeBB($bTest = False)
 		_SearchUpgradeBB($bTest) ;search upgrade for existing building
 	EndIf
 
-	ZoomOut()
+	ZoomOut(True)
 	Return False
 EndFunc
 
