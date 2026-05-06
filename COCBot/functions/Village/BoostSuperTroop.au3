@@ -15,6 +15,14 @@
 
 Func BoostSuperTroop($bTest = False, $bForced = False)
 	If Not $g_bSuperTroopsEnable Then Return
+	
+	If $g_iTxtSmartMinDark < 25000 Or $g_iUpgradeMinDark < 25000 Then 
+		$g_iTxtSmartMinDark = 25000
+		$g_iUpgradeMinDark = 25000
+		ApplyConfig()
+		SetLog("Set minimum DE = " & $g_iTxtSmartMinDark, $COLOR_DEBUG1)
+	EndIf
+	
 	If Not $g_bRunState Then Return
 	If $g_iTownHallLevel < 11 Then Return
 	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
