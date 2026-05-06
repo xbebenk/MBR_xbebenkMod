@@ -644,20 +644,10 @@ Func LabUpgrade($bTest = False)
 			EndIf		
 		Next
 		
-		If $bNoPriorityUpgrade And $g_bUpgradeAnyTroops Then
-			SetLog("There is no Priority Upgrade listed, lets try upgrade others", $COLOR_INFO)
+		If $bNoPriorityUpgrade Then
+			SetLog("There is no Priority Upgrade listed", $COLOR_DEBUG1)
+			SetLog("lets try legacy upgrade from Lab Window", $COLOR_DEBUG1)
 			Laboratory()
-			;_ArraySort($Upgrades, 1, 0, 0, 5) ;sort by high cost (higher cost means upgrade near maxed, so wont appear again on next lab upgrade attemp) 
-			;For $i = 0 To UBound($Upgrades) - 1
-			;	If IsLabUpgradeResourceEnough($Upgrades[$i][5], $Upgrades[$i][0]) Then
-			;		SetLog("Going to Upgrade: " & $Upgrades[$i][3], $COLOR_ACTION)
-			;		$aCoord[0] = $Upgrades[$i][1]
-			;		$aCoord[1] = $Upgrades[$i][2]
-			;		Return LaboratoryUpgrade($Upgrades[$i][3], $aCoord, $Upgrades[$i][5], $bTest)
-			;	Else
-			;		SetLog("Skip upgrade " & $Upgrades[$i][3] & ", no resources", $COLOR_DEBUG2)
-			;	EndIf
-			;Next
 		EndIf
 	Else
 		SetLog("No Laboratory Upgrade", $COLOR_DEBUG2)
@@ -682,6 +672,8 @@ Func _FindLabUpgrade($bTest = False)
 		Next
 	EndIf
 	
+	;_ArrayDisplay($aOrder)
+	
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 320, 73, 420, 400)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
@@ -694,7 +686,7 @@ Func _FindLabUpgrade($bTest = False)
 			$iScore = 0
 			If UBound($aOrder) > 0 Then
 				For $z = 0 To UBound($aOrder) - 1
-					If String($aUpgradeName[0]) = $aOrder[$z][1] Then 
+					If StringInStr($aUpgradeName[0], $aOrder[$z][1]) > 0 Then 
 						$sPriority = "Priority"
 						$iScore = $aOrder[$z][0]
 						SetLog("Found Priority Upgrade, assign score: " & $iScore & " [" & $aUpgradeName[0] & "]", $COLOR_DEBUG2)
@@ -708,14 +700,14 @@ Func _FindLabUpgrade($bTest = False)
 		Next
 
 		For $j = 0 To UBound($aUpgrade) - 1
-			SetLog("[" & $j & "] Upgrade: " & $aUpgrade[$j][3] & ", Cost=" & $aUpgrade[$j][5] & " Coord [" &  $aUpgrade[$j][1] & "," & $aUpgrade[$j][2] & "]", $COLOR_DEBUG)
+			SetLog("[" & $j & "] Upgrade: " & $aUpgrade[$j][3] & ", Cost=" & $aUpgrade[$j][5] & ", priority=" &  $aUpgrade[$j][7], $COLOR_DEBUG)
 		Next
 	EndIf
 	
 	If $g_bLabUpgradeOrderEnable Then 
 		_ArraySort($aUpgrade, 1, 0, 0, 6) ;sort by score
 	Else
-		_ArraySort($aUpgrade, 1, 0, 0, 5) ;sort by score
+		_ArraySort($aUpgrade, 1, 0, 0, 5) ;sort by cost
 	EndIf
 	
 	Return $aUpgrade
