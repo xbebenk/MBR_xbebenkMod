@@ -446,6 +446,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bAutoUpgradeBBEnabled, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgrades", False, "Bool")
 	IniReadS($g_bChkAutoUpgradeBBIgnoreHall, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreHall", False, "Bool")
 	IniReadS($g_bChkAutoUpgradeBBIgnoreWall, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreWall", False, "Bool")
+	IniReadS($g_bChkBBSpendGoldOnWall, $g_sProfileConfigPath, "other", "ChkBBSpendGoldOnWall", False, "Bool")
 	IniReadS($g_bChkBOBControl, $g_sProfileConfigPath, "other", "ChkBOBControl", False, "Bool")
 
 	# NEW CLANGAMES GUI

@@ -413,6 +413,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkBBSuggestedUpgrades", $g_bAutoUpgradeBBEnabled)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreHall", $g_bChkAutoUpgradeBBIgnoreHall)
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_bChkAutoUpgradeBBIgnoreWall)
+	_Ini_Add("other", "ChkBBSpendGoldOnWall", $g_bChkBBSpendGoldOnWall)
 	_Ini_Add("other", "ChkBOBControl", $g_bChkBOBControl)
 
 	# NEW CLANGAMES GUI

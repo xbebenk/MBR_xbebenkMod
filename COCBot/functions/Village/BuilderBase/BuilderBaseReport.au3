@@ -159,7 +159,7 @@ EndFunc
 
 Func isGoldFullBB()
 	$g_bGoldStorageFullBB = False
-	Local $aIsGoldFullBB[4] = [685, 40 , 0xE7C00D, 10] ; Main Screen Gold Resource bar is 90% Full
+	Local $aIsGoldFullBB[4] = [685, 40 , 0xD9B40C, 20] ; Main Screen Gold Resource bar is 90% Full
 	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(690, 23)
 	If _CheckPixel($aIsGoldFullBB, True) Then ;Hex if color of gold (orange)
 		SetLog("Builder Base Gold Storages are > 90% : " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]), $COLOR_SUCCESS)
@@ -170,7 +170,7 @@ Func isGoldFullBB()
 		SetLog("expected in (" & $aIsGoldFullBB[0] & "," & $aIsGoldFullBB[1] & ")  = " & Hex($aIsGoldFullBB[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
 	EndIf
 	
-	Local $aIsGold50BB[4] = [740, 40 , 0xE7C00D, 10] ; Main Screen Gold Resource bar is 50%
+	Local $aIsGold50BB[4] = [740, 40 , 0xD9B40C, 20] ; Main Screen Gold Resource bar is 50%
 	If _CheckPixel($aIsGold50BB, True) Then ;Hex if color of gold (orange)
 		If $g_bDebugSetlog Then SetLog("Builder Base Gold Storages are > 50%", $COLOR_ACTION)
 		$g_bGoldStorage50BB = True ;only use it for wall upgrade

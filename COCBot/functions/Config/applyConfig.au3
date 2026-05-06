@@ -366,6 +366,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkAutoUpgradeBB, $g_bAutoUpgradeBBEnabled? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreHall, $g_bChkAutoUpgradeBBIgnoreHall ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreWall, $g_bChkAutoUpgradeBBIgnoreWall ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBSpendGoldOnWall, $g_bChkBBSpendGoldOnWall ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBOBControl, $g_bChkBOBControl ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkActivateBBSuggestedUpgrades()
 
@@ -558,6 +559,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bAutoUpgradeBBEnabled= (GUICtrlRead($g_hChkAutoUpgradeBB) = $GUI_CHECKED)
 			$g_bChkAutoUpgradeBBIgnoreHall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreHall) = $GUI_CHECKED)
 			$g_bChkAutoUpgradeBBIgnoreWall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreWall) = $GUI_CHECKED)
+			$g_bChkBBSpendGoldOnWall = (GUICtrlRead($g_hChkBBSpendGoldOnWall) = $GUI_CHECKED)
 			$g_bChkBOBControl = (GUICtrlRead($g_hChkBOBControl) = $GUI_CHECKED)
 
 			#NEW CLANGAMES GUI
