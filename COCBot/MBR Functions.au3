@@ -86,6 +86,8 @@
 #include "functions\Attack\BuilderBase\AttackBB.au3"
 #include "functions\Attack\BuilderBase\GetAttackBarBB.au3"
 
+#include "functions\Attack\ClanCapital\CapitalAttack.au3"
+
 #Region CreateArmy / Train
 #include "functions\CreateArmy\CheckFullArmy.au3"
 #include "functions\CreateArmy\CheckArmyCamp.au3"

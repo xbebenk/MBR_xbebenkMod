@@ -35,3 +35,11 @@
 * Fix use Hero Book
 * Support Skeleton Default Scenery
 * Fix redline on skeleton default scenery
+*
+* **v.7.9.9 Mod_v1.2.6#125** (2026-05-07)
+* Fix switch Hero while upgrading
+* Add Ignore Upgrade for Minion Prince
+* Add Ignore Upgrade for Dragon Duke
+* Forced to save DE = 25k if enabled boost supertroop
+* Add feature spend BuilderBase Gold on Wall
+* Fix SmartFarm DropCC/DropHeroes
