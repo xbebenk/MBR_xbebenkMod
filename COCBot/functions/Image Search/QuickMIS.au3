@@ -74,7 +74,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 		SetDebugLog(" QuickMIS DLL Error : " & $error & " --- " & $extError)
 		Return -1
 	EndIf
-	If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+	;If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
 
 	If IsArray($Res) Then
 		;_ArrayDisplay($Res)
@@ -169,10 +169,8 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 							EndIf
 						Next
 					Next
-					If $g_bDebugSetlog Or $Debug Then 
-						If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $sResult)
-						If $g_bDebugImageSave Then DebugQuickMISCNX($Result, "CNX")
-					EndIf
+					If $g_bDebugSetlog Or $Debug Then SetDebugLog($ValueReturned & " Found: " & $sResult)
+					If $g_bDebugImageSave Then DebugQuickMISCNX($Result, "CNX")
 					Return $Result
 
 				Case "N1" ; name of first file found

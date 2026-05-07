@@ -40,7 +40,7 @@ Func dropHeroes($iX, $iY, $iKingSlotNumber = -1, $iQueenSlotNumber = -1, $iWarde
 	SetDebugLog("drop MINION PRINCE = " & $bDropMinionP, $COLOR_DEBUG)
 
 	If $bDropKing Then
-		SetLog("Dropping King at " & $iX & ", " & $iY, $COLOR_INFO)
+		SetLog("Dropping King at [" & $iX & ", " & $iY & "]", $COLOR_INFO)
 		SelectDropTroop($iKingSlotNumber, 1, Default, False)
 		If _Sleep($DELAYDROPHEROES2) Then Return
 		AttackClick($iX, $iY, 1, 0, 0, "#0093")

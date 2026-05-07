@@ -859,35 +859,22 @@ EndFunc ;==>RedlineOffSetMod
 Func SearchRedLinesMod($sCocDiamond = "ECD")
 	Local $sImageDir = $g_sImgRedLineMod
 	If FileExists($g_sImgRedLineMod & $g_sSceneryCode) Then $sImageDir = $sImageDir & $g_sSceneryCode
-	Local $Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $sImageDir, "str", $sCocDiamond, "Int", 0, "str", $sCocDiamond, "Int", 0, "Int", 1000)
-	Local $error = @error ; Store error values as they reset at next function call
-	Local $extError = @extended
-	If $error Then
-		_logErrorDLLCall($g_sLibMyBotPath, $error)
-		SetDebugLog(" imgloc DLL Error : " & $error & " --- " & $extError)
-		;SetError(2, $extError) ; Set external error code = 2 for DLL error
-		Return ""
-	EndIf
-	If checkImglocError($Res, "SearchRedLinesMod") = True Then
-		SetDebugLog("SearchRedLinesMod Returned Error or No values : ", $COLOR_DEBUG)
-		SetDebugLog("******** SearchRedLinesMod *** END ***", $COLOR_ORANGE)
-		Return ""
-	Else	
-		Local $sResult = ""
-		Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
-		For $i = 0 To UBound($KeyValue) - 1
-			Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
-			If UBound(decodeSingleCoord($DLLRes[0])) > 1 Then $sResult &= $DLLRes[0] & "|"
+	
+	Local $aRes = QuickMIS("CNX", $sImageDir)
+	Local $sTmp = ""
+	If IsArray($aRes) And Ubound($aRes) > 0 Then
+		For $i = 0 To Ubound($aRes) - 1
+			$sTmp &= "|" & $aRes[$i][1] & "," & $aRes[$i][2]
 		Next
-		If StringRight($sResult, 1) = "|" Then $sResult = StringLeft($sResult, (StringLen($sResult) - 1))
-		SetDebugLog("SearchRedLinesMod found : " & $Res[0])
-		SetDebugLog("Result : " & $sResult)
 	EndIf
-	$g_sImglocRedline = $sResult
+	SetDebugLog("SearchRedLinesMod using : " & $sImageDir)
+	SetDebugLog("Result[" & Ubound($aRes) & "]: " & $sTmp)
+	$g_sImglocRedline = $sTmp
+	
 	Return $g_sImglocRedline
 EndFunc   ;==>SearchRedLinesMod
 
-Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay = 300)
+Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 5, $iDelay = 100)
 	Local $bHBitmap_synced = ($g_hHBitmap = $g_hHBitmap2)
 	Local $g_hHBitmap2_old = $g_hHBitmap2
 	Local $g_sImglocRedline_old

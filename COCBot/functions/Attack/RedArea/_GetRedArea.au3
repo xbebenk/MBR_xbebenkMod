@@ -44,7 +44,7 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 				$listPixelBySide = $a
 			Case $REDLINE_IMGLOC_RAW ; ImgLoc raw red line routine
 				; ensure redline exists
-				SearchRedLinesMultipleTimes()
+				SearchRedLinesModMultipleTimes()
 				$listPixelBySide = getRedAreaSideBuilding()
 			Case $REDLINE_IMGLOC ; New ImgLoc based deployable red line routine
 				; ensure redline exists

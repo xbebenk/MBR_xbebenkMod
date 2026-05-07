@@ -514,10 +514,7 @@ Func CheckZoomOut($sSource = "CheckZoomOut")
 			$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
 			$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
 			$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
-		Else
-			_GetRedArea()
 		EndIf
-		AttackCSVDEBUGIMAGE()
 	EndIf
 	Return $bRet
 EndFunc   ;==>CheckZoomOut

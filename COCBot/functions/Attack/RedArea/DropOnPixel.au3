@@ -60,19 +60,6 @@ Func DropOnPixel($troop, $listArrPixel, $number, $slotsPerEdge = 0)
 					$index = UBound($arrPixel) - 1
 				EndIf
 				Local $currentPixel = $arrPixel[Floor($index)]
-				If $j >= Round(UBound($arrPixel) / 2) And $j <= Round((UBound($arrPixel) / 2) + $offset) And $g_bIsHeroesDropped = False Then
-					$g_aiDeployHeroesPosition[0] = $currentPixel[0]
-					$g_aiDeployHeroesPosition[1] = $currentPixel[1]
-					debugRedArea("Heroes : $slotsPerEdge = else ")
-					debugRedArea("$offset: " & $offset)
-				EndIf
-				If $j >= Round(UBound($arrPixel) / 2) And $j <= Round((UBound($arrPixel) / 2) + $offset) And $g_bIsCCDropped = False Then
-					$g_aiDeployCCPosition[0] = $currentPixel[0]
-					$g_aiDeployCCPosition[1] = $currentPixel[1]
-					debugRedArea("CC : $slotsPerEdge = else ")
-					debugRedArea("$offset: " & $offset)
-				EndIf
-				If Number($currentPixel[1]) > 555 Then $currentPixel[1] = 555
 				AttackClick($currentPixel[0], $currentPixel[1], $nbTroopByPixel, SetSleep(0), 0, "#0668")
 				$nbTroopsLeft -= $nbTroopByPixel
 			Next

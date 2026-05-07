@@ -176,7 +176,7 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 			
 			$aUpgradeName = getBuildingName($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			$tmpcost = getBuilderMenuCost($g_iQuickMISX + 5, $g_iQuickMISY - 10)
-		
+			If StringInStr($aUpgradeName[0], "Wall") Then $aUpgradeName[0] = "Wall"
 			Local $tmparray[1][8] = [[String($sCostType), $aTmpCoord[$i][1], Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), "New", Number($tmpcost), "New", 0]]
 			_ArrayAdd($aBuilding, $tmparray)
 			If @error Then SetLog("FindUpgrade ComposeArray[New] Err : " & @error, $COLOR_ERROR)
@@ -196,6 +196,7 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 			$lenght = Number($aTmpCoord[$i][1]) - $g_iXFindUpgradeBB
 			$aUpgradeName = getBuildingName($g_iXFindUpgradeBB, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
+			If StringInStr($aUpgradeName[0], "Wall") Then $aUpgradeName[0] = "Wall"
 			If Number($tmpcost) = 0 Then ContinueLoop
 			
 			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), Number($aUpgradeName[1]), Number($tmpcost), 0, "Common"]]
@@ -840,7 +841,7 @@ Func WaitBBUpgradeWindow()
 	Return $bRet
 EndFunc
 
-Func SpendBBGoldOnWall($iMaxScroll = 5)
+Func SpendBBGoldOnWall($iMaxScroll = 5, $bTest = False)
 	Local $bRet = False
 	Local $aSearchWall, $iWallIndex = -1
 	If $g_bChkBBSpendGoldOnWall Then
@@ -853,7 +854,7 @@ Func SpendBBGoldOnWall($iMaxScroll = 5)
 				If Not ClickBBBuilder() Then Return
 				BuilderBaseReport(False, False)
 				ClickDragAutoUpgradeBB()
-				$aSearchWall = FindUpgradeBB()
+				$aSearchWall = FindUpgradeBB($bTest, True)
 				_ArraySort($aSearchWall, 0, 0, 0, 5) ; sort by cost
 				If Not $g_bRunState Then Return
 				$iWallIndex = _ArraySearch($aSearchWall, "Wall", 0, 0, 0, 0, 1, 3)

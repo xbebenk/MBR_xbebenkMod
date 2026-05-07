@@ -65,19 +65,19 @@ Func AttackCSVDEBUGIMAGE($bOpenImage = False)
 	;-- DRAW REDAREA PATH
 	For $i = 0 To UBound($g_aiPixelTopLeft) - 1
 		$pixel = $g_aiPixelTopLeft[$i]
-		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPenRed)
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 3, 3, $hPenCyan)
 	Next
 	For $i = 0 To UBound($g_aiPixelTopRight) - 1
 		$pixel = $g_aiPixelTopRight[$i]
-		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPenRed)
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 3, 3, $hPenCyan)
 	Next
 	For $i = 0 To UBound($g_aiPixelBottomLeft) - 1
 		$pixel = $g_aiPixelBottomLeft[$i]
-		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPenRed)
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 3, 3, $hPenCyan)
 	Next
 	For $i = 0 To UBound($g_aiPixelBottomRight) - 1
 		$pixel = $g_aiPixelBottomRight[$i]
-		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 2, 2, $hPenRed)
+		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 3, 3, $hPenCyan)
 	Next
 
 	;;DRAW FULL DROP LINES PATH
