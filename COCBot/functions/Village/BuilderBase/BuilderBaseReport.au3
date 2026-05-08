@@ -132,7 +132,7 @@ Func isBattleMachineMaxed()
 	If _Sleep(1000) Then Return
 	
 	If QuickMIS("BC1", $g_sImgBattleMachine) Then ;Search for Battle Machine
-		If $g_iQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 30
+		If $g_sQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 30
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
 		If _Sleep(1000) Then Return
 		Local $aBuildingName = BuildingInfo(242, 477)
@@ -159,6 +159,7 @@ EndFunc
 
 Func isGoldFullBB()
 	$g_bGoldStorageFullBB = False
+	$g_bGoldStorage50BB = False
 	Local $aIsGoldFullBB[4] = [685, 40 , 0xD9B40C, 20] ; Main Screen Gold Resource bar is 90% Full
 	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(690, 23)
 	If _CheckPixel($aIsGoldFullBB, True) Then ;Hex if color of gold (orange)
