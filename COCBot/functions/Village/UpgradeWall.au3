@@ -284,7 +284,6 @@ Func DoUpgradeWall()
 						$g_iNbrOfWallsUpped += 1
 						$g_iCostGoldWall += $iWallCost
 						SetLog("Cost : " & _NumberFormat($iWallCost), $COLOR_SUCCESS)
-						Return True
 					Case 1
 						SetLog("Upgrading 1 Wall for Elix upgrade", $COLOR_ACTION)
 						ClickP($aElixButton)
@@ -293,7 +292,6 @@ Func DoUpgradeWall()
 						$g_iNbrOfWallsUpped += 1
 						$g_iCostElixirWall += $iWallCost
 						SetLog("Cost : " & _NumberFormat($iWallCost), $COLOR_SUCCESS)
-						Return True
 					Case 2
 						Select
 							Case $bCanUseElix = True And $iWallCanUpgradeElix > 0
@@ -305,7 +303,6 @@ Func DoUpgradeWall()
 								$g_iCostElixirWall += $iWallCost
 								SetLog("Cost : " & _NumberFormat($iWallCost), $COLOR_SUCCESS)
 								$bCanUseGold = False
-								Return True
 							Case $bCanUseGold = True And $iWallCanUpgradeGold > 0
 								SetLog("Upgrading 1 Wall for Gold upgrade", $COLOR_ACTION)
 								ClickP($aGoldButton)
@@ -317,9 +314,11 @@ Func DoUpgradeWall()
 						EndSelect
 				EndSwitch
 				If _Sleep(1000) Then Return
-				If WaitforPixel(805, 101, 807, 102, Hex(0xFFFFFF, 6), 6, 2) Then
+				If IsUpgradeWindowOpen() Then 
 					Click(625, 545, 1, 50, "UpgradeWall")
+					If _Sleep(500) Then Return
 					ClickAway()
+					Return True
 				EndIf
 			EndIf
 		EndIf
@@ -385,6 +384,17 @@ Func UpWallGold($iWallCost, $iCountPlus, $UpType, $aButton)
 			$sDir = $g_sImgCheckWallDirUpgradeButton & "\Plus1"
 	EndSwitch
 	
+	If $UpType = "+10" Then
+		If Not QuickMIS("BC1", $sDir, $aBtnCoord[0], $aBtnCoord[1], $aBtnCoord[2], $aBtnCoord[3]) Then
+			SetLog("No " & $UpType & " Button Found", $COLOR_DEBUG)
+			SetLog("Change to search +1 instead", $COLOR_DEBUG1)
+			$iPlusWall = 1
+			$sDir = $g_sImgCheckWallDirUpgradeButton & "\Plus1"
+			$UpType = "+1"
+			$iCountPlus = 9
+		EndIf
+	EndIf
+	
 	SetLog("Try " & $UpType & " for Gold upgrade", $COLOR_ACTION)
 	For $i = 1 To $iCountPlus
 		If QuickMIS("BC1", $sDir, $aBtnCoord[0], $aBtnCoord[1], $aBtnCoord[2], $aBtnCoord[3]) Then
@@ -395,7 +405,13 @@ Func UpWallGold($iWallCost, $iCountPlus, $UpType, $aButton)
 			SetDebugLog("iCount : " & $iCount)
 		Else
 			SetLog("No " & $UpType & " Button Found", $COLOR_DEBUG)
-			ExitLoop
+			If $UpType = "+10" Then 
+				SetLog("Try +1 instead", $COLOR_DEBUG1)
+				$sDir = $g_sImgCheckWallDirUpgradeButton & "\Plus1"
+				$iPlusWall = 1
+			Else
+				ExitLoop
+			EndIf
 		EndIf
 	Next
 	;click Upgrade button
@@ -461,7 +477,7 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 			SetLog("or select Any Level on upgrade wall setting", $COLOR_DEBUG2)
 			Return False
 		EndIf
-		_ArraySort($aWall, 1, 0, 0, 3) ;short wall level descending
+		_ArraySort($aWall, 0, 0, 0, 3) ;short wall level descending
 
 		SetDebugLog("Your TownHall Level: " & $g_iTownHallLevel & ", Exluding Wall Level >= " & $iWallLevelToDelete, $COLOR_INFO)
 		SetDebugLog("Found " & UBound($aWall) - 1 & " Wall on Village", $COLOR_DEBUG)
