@@ -407,6 +407,7 @@ Func UpWallGold($iWallCost, $iCountPlus, $UpType, $aButton)
 			SetLog("No " & $UpType & " Button Found", $COLOR_DEBUG)
 			If $UpType = "+10" Then 
 				SetLog("Try +1 instead", $COLOR_DEBUG1)
+				$UpType = "+1"
 				$sDir = $g_sImgCheckWallDirUpgradeButton & "\Plus1"
 				$iPlusWall = 1
 			Else
