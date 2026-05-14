@@ -67,17 +67,10 @@ Func TreasuryCollect()
 		Return
 	EndIf
 
-	;If _PixelSearch(690, 200, 690, 310, Hex(0x50BD10, 6), 20, True, "TreasuryCollect") Then; search for green pixels showing treasury bars are full
-	;	SetLog("Found full Treasury, collecting loot...", $COLOR_SUCCESS)
-	;	$bForceCollect = True
-	;Else
-	;	SetLog("Treasury not full yet", $COLOR_INFO)
-	;EndIf
-	
 	Local $aCollectButton = findButton("Collect", Default, 1, True)
 	If IsArray($aCollectButton) And UBound($aCollectButton, 1) = 2 Then
 		ClickP($aCollectButton, 1, 0, "#0330")
-		If _Sleep($DELAYTREASURY2) Then Return
+		If _Sleep(1000) Then Return
 		If IsOKCancelPage(True) Then ; Click Okay to confirm collect treasury loot
 			Click($aConfirmSurrender[0], $aConfirmSurrender[1])
 			SetLog("Treasury collected successfully.", $COLOR_SUCCESS)
@@ -87,9 +80,10 @@ Func TreasuryCollect()
 	Else
 		SetDebugLog("Error in TreasuryCollect(): Cannot find the Collect Button", $COLOR_DEBUG2)
 	EndIf
-
+	
+	If _Sleep(500) Then Return
 	ClickAway()
-	If _Sleep($DELAYTREASURY4) Then Return
+	If _Sleep(500) Then Return
 EndFunc   ;==>TreasuryCollect
 
 Func AutoLocateCC()
