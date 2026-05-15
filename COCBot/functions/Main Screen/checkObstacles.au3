@@ -797,7 +797,7 @@ Func CheckClanRush()
 		SetLog("checkObstacles: Found ClanRush Event", $COLOR_ACTION)
 		For $i = 1 To 2
 			If QuickMIS("BC1", $g_sImgClanRush, 320, 440, 560, 560) Then 
-				SetLog("checkObstacles: Found ClanRush " & $g_iQuickMISName & " Button", $COLOR_ACTION)
+				SetLog("checkObstacles: Found ClanRush " & $g_sQuickMISName & " Button", $COLOR_ACTION)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(1000) Then Return
 			EndIf
@@ -809,7 +809,7 @@ Func CheckClanRush()
 			For $i = 0 To UBound($aChest) - 1
 				SetLog("Found Chest on " & $aChest[$i][1] & "," & $aChest[$i][2], $COLOR_DEBUG)
 				If QuickMIS("BC1", $g_sImgClanRush & "Lock", $aChest[$i][1], $aChest[$i][2] - 30, $aChest[$i][1] + 35, $aChest[$i][2] + 10) Then
-					If $g_iQuickMISName = "Lock" Then ContinueLoop
+					If $g_sQuickMISName = "Lock" Then ContinueLoop
 				Else
 					Click($aChest[$i][1], $aChest[$i][2])
 					SetLog("Claiming reward : " & $aChest[$i][0], $COLOR_SUCCESS)

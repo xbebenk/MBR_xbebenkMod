@@ -63,6 +63,8 @@ Global $aQueenHealth = [-1, 569, 0x00D500, 15, 8]
 Global $aWardenHealth = [-1, 569, 0x00D500, 15, 3]
 Global $aChampionHealth = [-1, 569, 0x00D500, 15, 5]
 Global $aMinionPHealth = [-1, 569, 0x00D500, 15, 5]
+Global $aDukeHealth = [-1, 569, 0x00D500, 15, 5]
+
 ; attack report... stars won
 Global $aWonOneStarAtkRprt[4] = [325, 180, 0xC8CaC4, 30] ; Center of 1st Star reached attacked village
 Global $aWonTwoStarAtkRprt[4] = [398, 180, 0xD0D6D0, 30] ; Center of 2nd Star reached attacked village

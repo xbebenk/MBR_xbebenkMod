@@ -48,8 +48,8 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					If UBound($coord) = 2 Then 
 						$g_iQuickMISX = $coord[0]
 						$g_iQuickMISY = $coord[1]
-						$g_iQuickMISName = $files[$i]
-						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $g_iQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
+						$g_sQuickMISName = $files[$i]
+						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $g_sQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
 						Return True
 					EndIf
 				Else
@@ -62,11 +62,11 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 			Next
 		EndIf
 		Return
-	Else
-		If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
-		$Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
 	EndIf
 	
+	If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
+	$Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
+		
 	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
 	If $error Then
@@ -74,7 +74,11 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 		SetDebugLog(" QuickMIS DLL Error : " & $error & " --- " & $extError)
 		Return -1
 	EndIf
-	;If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+	
+	If $g_bDebugImageSave Then 
+		_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
+		SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+	EndIf
 
 	If IsArray($Res) Then
 		;_ArrayDisplay($Res)
@@ -126,14 +130,12 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					$g_iQuickMISY = $aCords[1] + $Top
 
 					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
-					$g_iQuickMISName = $Name
+					$g_sQuickMISName = $Name
 					$Level = RetrieveImglocProperty($KeyValue[0], "objectlevel")
 					$g_iQuickMISLevel = $Level
 
-					If $g_bDebugSetlog Or $Debug Then
-						SetDebugLog($ValueReturned & " Found: " & $Name & " Level:" & $Level & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
-						If $g_bDebugImageSave Then DebugQuickMIS($aCords[0], $aCords[1], "BC1_detected[" & $Name & "_" & $g_iQuickMISX & "x" & $g_iQuickMISY & "]")
-					EndIf
+					SetDebugLog($ValueReturned & " Found: " & $Name & " Level:" & $Level & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
+					If $g_bDebugImageSave Then DebugQuickMIS($aCords[0], $aCords[1], "BC1_detected[" & $Name & "_" & $g_iQuickMISX & "x" & $g_iQuickMISY & "]")
 
 					Return True
 
@@ -169,7 +171,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 							EndIf
 						Next
 					Next
-					If $g_bDebugSetlog Or $Debug Then SetDebugLog($ValueReturned & " Found: " & $sResult)
+					SetDebugLog($ValueReturned & " Found: " & $sResult)
 					If $g_bDebugImageSave Then DebugQuickMISCNX($Result, "CNX")
 					Return $Result
 
@@ -211,6 +213,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 			EndSwitch
 		EndIf
 	EndIf
+	
 EndFunc   ;==>QuickMIS
 
 Func DebugQuickMIS($x, $y, $DebugText = "")

@@ -169,7 +169,7 @@ Func CheckArmyReady()
 		Local $Camp = QuickMIS("CNX", $g_sImgFillCamp, 40, 200, 820, 250)
 		For $i = 1 To UBound($Camp)
 			If QuickMIS("BC1", $g_sImgFillTrain, 40, 400, 750, 550) Then
-				Setlog("Fill ArmyCamp with : " & $g_iQuickMISName, $COLOR_DEBUG)
+				Setlog("Fill ArmyCamp with : " & $g_sQuickMISName, $COLOR_DEBUG)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(500) Then Return
 			EndIf

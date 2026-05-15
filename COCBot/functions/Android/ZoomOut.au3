@@ -119,7 +119,7 @@ Func ZoomOutHelper($caller = "Default")
 	
 	If _Sleep(50) Then Return
 	If QuickMIS("BC1", $g_sImgZoomOutDir & "tree\", 430, 20, 750, 200) Then 
-		$aOffset = StringRegExp($g_iQuickMISName, "tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+		$aOffset = StringRegExp($g_sQuickMISName, "tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
 			$y = $g_iQuickMISY - $aOffset[2]
@@ -127,7 +127,7 @@ Func ZoomOutHelper($caller = "Default")
 				$x -= 20
 				$y += 20
 			EndIf
-			SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
+			SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_sQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 			If Abs($x) > 10 Or Abs($y) > 10 Then 
 				SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
@@ -143,11 +143,11 @@ Func ZoomOutHelper($caller = "Default")
 	If _Sleep(50) Then Return
 	If Not $bRet Then
 		If QuickMIS("BC1", $g_sImgZoomOutDir & "stone\", 60, 330, 430, 560) Then 
-			$aOffset = StringRegExp($g_iQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+			$aOffset = StringRegExp($g_sQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 			If IsArray($aOffset) Then 
 				$x = $g_iQuickMISX - $aOffset[1]
 				$y = $g_iQuickMISY - $aOffset[2]
-				SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
+				SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_sQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 				If Abs($x) > 10 Or Abs($y) > 10 Then 
 					SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 					ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
@@ -164,11 +164,11 @@ Func ZoomOutHelper($caller = "Default")
 	;If _Sleep(50) Then Return
 	;If Not $bRet Then
 	;	If QuickMIS("BC1", $g_sImgZoomOutHelper, 320, 100, 500, 250) Then 
-	;		$aOffset = StringRegExp($g_iQuickMISName, "CGHelper-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+	;		$aOffset = StringRegExp($g_sQuickMISName, "CGHelper-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 	;		If IsArray($aOffset) Then 
 	;			$x = $g_iQuickMISX - $aOffset[0]
 	;			$y = $g_iQuickMISY - $aOffset[1]
-	;			SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
+	;			SetDebugLog("[" & $caller & "] ZoomOutHelper: Found " & $g_sQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 	;			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
 	;			SetDebugLog("Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 	;			$bRet = True
@@ -201,7 +201,7 @@ Func ZoomOutHelperBB($caller = "Default")
 	
 	If _Sleep(50) Then Return
 	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "ZoomOutHelper\", 100, 20, 800, 676) Then 
-		$aOffset = StringRegExp($g_iQuickMISName, "Tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+		$aOffset = StringRegExp($g_sQuickMISName, "Tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
 			$y = $g_iQuickMISY - $aOffset[2]
@@ -217,7 +217,7 @@ Func ZoomOutHelperBB($caller = "Default")
 				EndIf
 			EndIf
 			If $sImage = "BL" Then $g_sSceneryCode = "BL"
-			SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
+			SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_sQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 			SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x + $xyOffsetSwitchBases, $aScrollPos[1] - $y - $xyOffsetSwitchBases, 50, True) ; more delay for clickdrag here
 			$bRet = True
@@ -229,11 +229,11 @@ Func ZoomOutHelperBB($caller = "Default")
 	If _Sleep(50) Then Return
 	If Not $bRet Then
 		If QuickMIS("BC1", $g_sImgZoomOutDirBB & "stone\", 0, 330, 430, 560) Then 
-			$aOffset = StringRegExp($g_iQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+			$aOffset = StringRegExp($g_sQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 			If IsArray($aOffset) Then 
 				$x = $g_iQuickMISX - $aOffset[1]
 				$y = $g_iQuickMISY - $aOffset[2]
-				SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_iQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
+				SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_sQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 				SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
 				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x + $xyOffsetSwitchBases, $aScrollPos[1] - $y - $xyOffsetSwitchBases, 50, True)
 				$bRet = True
@@ -665,6 +665,7 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 	Else 
 		$g_iSearchZoomOutCounter += 1
 		SetLog("SearchZoomOut fail counter +1, now = " & $g_iSearchZoomOutCounter, $COLOR_DEBUG2)
+		ClickAway()
 		If $bOnBuilderBase Then 
 			ZoomOutHelperBB("SearchZoomOut")
 		Else

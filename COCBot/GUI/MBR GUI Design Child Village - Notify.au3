@@ -34,11 +34,12 @@ Global $g_hLblNotifyWeekdays[7] = [0, 0, 0, 0, 0, 0, 0], $g_ahLblNotifyWeekdaysE
 
 Func CreateVillageNotify()
 	$g_hGUI_NOTIFY = _GUICreate("", $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_VILLAGE)
-	;GUISetBkColor($COLOR_WHITE, $g_hGUI_NOTIFY)
+	SetDebugLog("CreateVillageNotify()")
 
 	GUISwitch($g_hGUI_NOTIFY)
 	$g_hGUI_NOTIFY_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
 	$g_hGUI_NOTIFY_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_02_STab_05_STab_01", "Telegram"))
+		SetDebugLog("==> CreatePushBulletTelegramSubTab()")
 		CreatePushBulletTelegramSubTab()
 	GUICtrlCreateTabItem("")
 

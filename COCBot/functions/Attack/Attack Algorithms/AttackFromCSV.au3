@@ -55,7 +55,8 @@ ConvertInternalExternArea() ; initial layout so variables are not empty
 Func ConvertInternalExternArea()
 	Local $DiamondMiddleX = ($InnerDiamondLeft + $InnerDiamondRight) / 2
 	Local $DiamondMiddleY = ($InnerDiamondTop + $InnerDiamondBottom) / 2
-
+	$g_iMiddleY = $DiamondMiddleY
+	
 	$OuterDiamondLeft = $InnerDiamondLeft - $InnerDiamandDiffX
 	$OuterDiamondRight = $InnerDiamondRight + $InnerDiamandDiffX
 	$OuterDiamondTop = $InnerDiamondTop - $InnerDiamandDiffY

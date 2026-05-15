@@ -890,7 +890,7 @@ Func Attack() ;Selects which algorithm
 	If ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
 		SetDebugLog("start scripted attack", $COLOR_ERROR)
 		Algorithm_AttackCSV()
-	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 2 Then
+	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 0 Then
 		SetDebugLog("start smart farm attack", $COLOR_ERROR)
 		; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
 		Local $Nside = ChkSmartFarm()
@@ -1079,7 +1079,7 @@ Func FirstCheck()
 	;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	Local $bLocateTH = False
-	CheckZoomOut("FirstCheck")
+	ZoomOut(True)
 	SetLog("Detecting Town Hall level", $COLOR_INFO)
 	SetLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
 	Collect(True) ;only collect from mine and collector
@@ -1112,26 +1112,6 @@ Func FirstCheck()
 	EndIf
 	setupProfile()
 
-	If $g_bAlwaysDropHero Then
-		If $g_iTownHallLevel > 12 Then
-			GUICtrlSetState($g_hChkABChampionAttack, $GUI_CHECKED)
-			GUICtrlSetState($g_hChkDBChampionAttack, $GUI_CHECKED)
-		EndIf
-		If $g_iTownHallLevel > 10 Then
-			GUICtrlSetState($g_hChkABWardenAttack, $GUI_CHECKED)
-			GUICtrlSetState($g_hChkDBWardenAttack, $GUI_CHECKED)
-		EndIf
-		If $g_iTownHallLevel > 8 Then
-			GUICtrlSetState($g_hChkABQueenAttack, $GUI_CHECKED)
-			GUICtrlSetState($g_hChkDBQueenAttack, $GUI_CHECKED)
-		EndIf
-		If $g_iTownHallLevel > 6 Then
-			GUICtrlSetState($g_hChkABKingAttack, $GUI_CHECKED)
-			GUICtrlSetState($g_hChkDBKingAttack, $GUI_CHECKED)
-		EndIf
-		saveConfig()
-	EndIf
-
 	If Not $g_bRunState Then Return
 	VillageReport()
 	If BotCommand() Then btnStop()
@@ -1154,7 +1134,7 @@ Func FirstCheck()
 		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
 		If Not $g_bRunState Then Return
 
-		If ($g_abFullStorage[$eLootElixir] Or $g_abFullStorage[$eLootGold]) And $g_bAutoUpgradeWallsEnable Then
+		If $g_bAutoUpgradeWallsEnable Then
 			SetLog("Gold and Elix Full", $COLOR_INFO)
 			UpgradeWall()
 		EndIf
@@ -1201,6 +1181,7 @@ Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	
 	If _Sleep(50) Then Return
+	SetDebugLog("g_bRunState: " & String($g_bRunState))
 	If Not $g_bRunState Then Return
 	
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
@@ -1209,7 +1190,6 @@ Func FirstCheckRoutine()
 		Setlog("Before any other routine let's attack!", $COLOR_INFO)
 		If Not $g_bChkCGBBAttackOnly Then _ClanGames()
 		
-		FillArmyCamp()
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 		
@@ -1300,7 +1280,7 @@ Func FirstCheckRoutine()
 		CommonRoutine("Switch")
 		VillageReport()
 		SetLog("Check Second Attack", $COLOR_ACTION)
-		FillArmyCamp()
+		
 		If BotCommand() Then btnStop()
 		If Not $g_bRunState Then Return
 		If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 And Not $g_bChkAttackOnce Then

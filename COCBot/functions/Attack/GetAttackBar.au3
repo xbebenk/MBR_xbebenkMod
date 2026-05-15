@@ -440,8 +440,8 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 		$g_iSiegeLevel = 1
 	EndIf
 	
-	Local $sKeepRemainTroops = "(King)|(Queen)|(Warden)|(Champion)|(MinionP)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)"
-	Local $sKeepSieges = "(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)"
+	Local $sKeepRemainTroops = "(King)|(Queen)|(Warden)|(Champion)|(MinionP)|(Duke)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)|(TroopL)|(SkyW)"
+	Local $sKeepSieges = "(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)|(TroopL)|(SkyW)"
 
 	If Not $g_bRunState Then Return
 	Local $iStart = __TimerInit()
@@ -455,7 +455,7 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 				If StringRegExp($aArmy[$i][0], $sKeepRemainTroops, 0) Then 
 					$iAmount = 1
 				Else
-					If QuickMIS("BC1", $g_sImgAttackBarDir, $aArmy[$i][1] - 30, 580, $aArmy[$i][1] + 40, 610) Then ;search x image
+					If QuickMIS("BFI", $g_sImgAttackBarDir & "\AmountX*", $aArmy[$i][1] - 30, 580, $aArmy[$i][1] + 40, 610) Then ;search x image
 						$iAmount = getTroopCount($g_iQuickMISX, 580)
 						$sColor = _GetPixelColor($g_iQuickMISX - 20, 587, True)
 					Else
@@ -509,7 +509,7 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 		If StringRegExp($aAttackBar[$i][0], $sKeepRemainTroops, 0) Then
 			If Not $bRemoved Then $aAttackBar[$i][4] = 1
 			If StringRegExp($aAttackBar[$i][0], $sKeepSieges, 0) Then
-				$g_iSiegeLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][1]) - 35, 645))
+				$g_iSiegeLevel = Number(getTroopsSpellsLevel(Number($aAttackBar[$i][1]) - 50, 645))
 				If $g_iSiegeLevel = "" Then $g_iSiegeLevel = 1
 				SetDebugLog($aAttackBar[$i][0] & " Level: " & $g_iSiegeLevel)
 			EndIf
@@ -533,4 +533,4 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	_ArraySort($aFinalAttackBar, 0, 0, 0, 1) ; Sort Final Array by Slot Number
 	Return $aFinalAttackBar
 
-EndFunc   ;==>GetBarCheck
+EndFunc   ;==>GetAttackBar

@@ -421,7 +421,7 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False, $bTestImage = False)
 					If QuickMIS("BC1", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 95, $aY[$y] + 95) Then
 						If $g_bChkClanGamesDebug Then Setlog("Benchmark Search on Slot: (in " & Round(TimerDiff($hITimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 						Local $BC1x = $g_iQuickMISX, $BC1y = $g_iQuickMISY
-						Local $ChallengeEvent = $g_iQuickMISName
+						Local $ChallengeEvent = $g_sQuickMISName
 						Local $IsBBEvent = (IsBBChallenge($g_iQuickMISX, $g_iQuickMISY) ? "CGBB" : "CGMain")
 						If checkEventWithShareImage($IsBBEvent, $ChallengeEvent) Then ContinueLoop
 						ClanGameImageCopy($sImagePath, $sTempPath, "Selected", $ChallengeEvent)
@@ -1086,7 +1086,7 @@ Func CollectCGReward($bTest = False)
 	
 	Local $OnlyClaimMax = False
 	If QuickMIS("BC1", $g_sImgRewardText, 600, 445, 830, 495) Then
-		If $g_iQuickMISName = "Claim" Then
+		If $g_sQuickMISName = "Claim" Then
 			$OnlyClaimMax = True
 			$g_bIsCGPointMaxed = True
 			SetLog("OnlyClaimMax = " & String($OnlyClaimMax))

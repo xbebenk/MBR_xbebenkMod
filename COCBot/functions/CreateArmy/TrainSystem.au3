@@ -18,39 +18,30 @@
 
 Func FillArmyCamp()
 	If $g_bIgnoreIncorrectTroopCombo Or $g_bIgnoreIncorrectSpellCombo Then ;check army or spell to fill
-		If OpenArmyOverview() Then 
-			If _Sleep(500) Then Return
-			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 210, 480, 230) Then ;check on troops
-				If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 270, 480, 295) Then ;check on acivate supertroop
-					SetLog("SuperTroop Need to activate", $COLOR_DEBUG)
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					If _Sleep(500) Then Return
-					If WaitforPixel(590, 490, 591, 490, "84CD2C", 20, 1) Then 
-						SetLog("Activate Boost SuperTroop", $COLOR_DEBUG)
-						Click(490, 450)
-					EndIf				
-				Else
-					SetLog("Your troop need to fill", $COLOR_DEBUG)
-					FillIncorrectTroopCombo()
-					ClickAway()
-					If _Sleep(500) Then Return
-				EndIf
-			EndIf
-			
-			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 320, 480, 345) Then ;check on spells
-				SetLog("Your spell need to fill", $COLOR_DEBUG)
-				FillIncorrectSpellCombo()
-				ClickAway()
+		If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 210, 480, 230) Then ;check on troops
+			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 270, 680, 295) Then ;check on acivate supertroop
+				SetLog("SuperTroop Need to activate", $COLOR_DEBUG)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(500) Then Return
+				If WaitforPixel(590, 490, 591, 490, "84CD2C", 20, 1) Then 
+					SetLog("Activate Boost SuperTroop", $COLOR_DEBUG)
+					Click(490, 450)
+				EndIf				
+			Else
+				SetLog("Your troop need to fill", $COLOR_DEBUG)
+				FillIncorrectTroopCombo()
 				If _Sleep(500) Then Return
 			EndIf
-			
-			CheckCookieReinforcement()
-			CheckHeroOnUpgrade()
-			
-			;close Army window
-			ClickAway()
+		EndIf
+		
+		If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 320, 480, 345) Then ;check on spells
+			SetLog("Your spell need to fill", $COLOR_DEBUG)
+			FillIncorrectSpellCombo()
 			If _Sleep(500) Then Return
 		EndIf
+		
+		CheckCookieReinforcement()
+		CheckHeroOnUpgrade()
 	EndIf
 EndFunc
 
@@ -75,6 +66,7 @@ Func CheckHeroOnUpgrade()
 			If IsArray($aHero) And UBound($aHero) > 0 Then
 				For $i = 0 To UBound($aHero) - 1
 					SetLog("Hero " & $aHero[$i][0] & " is Available", $COLOR_INFO)
+					SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
 					If StringInStr($aHero[$i][0], "Warden") Then
 						$bWardenFound = True
 						If $iWardenMode = 0 Or $iWardenMode = 2 Then 
@@ -105,6 +97,7 @@ Func CheckHeroOnUpgrade()
 				If $bWardenFound And Ubound($aHero) = 2 Then ExitLoop
 			Else
 				Click($x, $y, 1, 0, "Hammer Close")
+				SetLog("No availabe Hero to switch", $COLOR_DEBUG2)
 				ExitLoop
 			EndIf
 		Next
@@ -466,59 +459,58 @@ Func TotalSpellsToBrewInGUI()
 	Return $iTotalSpellsInGUI
 EndFunc   ;==>TotalSpellsToBrewInGUI
 
-Func DragIfNeeded($Troop)
+Func DragIfNeeded($iTroopIndex)
 
 	If Not $g_bRunState Then Return
-	Local $bCheckPixel = False
-	Local $iIndex = TroopIndexLookup($Troop, "DragIfNeeded")
+	Local $sName = $g_asTroopShortNames[$iTroopIndex]
 	Local $bDragLeft = False, $bDragRight = False
 
-	If $iIndex >= $eLSpell And $iIndex <= $eOgSpell Then Return True ;skip drag on spell
-	If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True ; Troop image found in current page (no need to drag)
-
-	If _PixelSearch(776, 354, 777, 355, Hex(0xD3D3CB, 6), 10, True, "DragIfNeeded") Then
+	If $iTroopIndex >= $eLSpell And $iTroopIndex <= $eOgSpell Then Return True ;skip drag on spell
+	If QuickMIS("BFI", $g_sImgTrainTroops & $sName & "*", 15, 482, 845, 660) Then Return True ; Troop image found in current page (no need to drag)
+	
+	If _PixelSearch(20, 485, 20, 486, Hex(0x302A29, 6), 10, True, "DragIfNeeded") Then
 		For $i = 1 To 2
-			SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Left", $COLOR_ACTION)
-			ClickDrag(100, 435, 850, 435)
-			$bDragLeft = True
-			If _Sleep(1500) Then Return
-			If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
-		Next
-	EndIf
-
-	If _PixelSearch(75, 354, 76, 355, Hex(0xD3D3CB, 6), 10, True, "DragIfNeeded") Then
-		For $i = 1 To 2
-			SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Right", $COLOR_ACTION)
-			ClickDrag(750, 435, 50, 435)
+			SetLog("[" & $i & "] DragIfNeeded [" & $iTroopIndex & "] " & $g_asTroopNames[$iTroopIndex] & " : Scroll Right", $COLOR_ACTION)
+			ClickDrag(750, 568, 50, 568)
 			$bDragRight = True
 			If _Sleep(1500) Then Return
-			If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
+			If QuickMIS("BFI", $g_sImgTrainTroops & $sName & "*", 15, 482, 845, 660) Then Return True
 		Next
 	EndIf
-
-	If Not $bDragLeft And Not $bDragRight Then
+	
+	If _PixelSearch(845, 485, 845, 486, Hex(0x302A29, 6), 10, True, "DragIfNeeded") Then
 		For $i = 1 To 2
-			If $i < 2 Then
-				SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Left", $COLOR_ACTION)
-				ClickDrag(100, 435, 850, 435)
-			Else
-				SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Right", $COLOR_ACTION)
-				ClickDrag(750, 435, 50, 435)
-			EndIf
+			SetLog("[" & $i & "] DragIfNeeded [" & $iTroopIndex & "] " & $g_asTroopNames[$iTroopIndex] & " : Scroll Left", $COLOR_ACTION)
+			ClickDrag(100, 568, 850, 568)
+			$bDragLeft = True
 			If _Sleep(1500) Then Return
-			If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
+			If QuickMIS("BFI", $g_sImgTrainTroops & $sName & "*", 15, 482, 845, 660) Then Return True
 		Next
 	EndIf
 
-	SetLog("Failed to Verify Troop " & $g_asTroopNames[TroopIndexLookup($Troop, "DragIfNeeded")] & " Position or Failed to Drag Successfully", $COLOR_ERROR)
-	If $g_bSuperTroopsEnable Then
-		SetLog("Re-Check If SuperTroop Boost needed", $COLOR_INFO)
-		ClickAway()
-		BoostSuperTroop(False, True)
-		OpenArmyOverview()
-		OpenTroopsTab()
-		TrainUsingWhatToTrain(WhatToTrain())
-	EndIf
+	;If Not $bDragLeft And Not $bDragRight Then
+	;	For $i = 1 To 2
+	;		If $i < 2 Then
+	;			SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Left", $COLOR_ACTION)
+	;			ClickDrag(100, 435, 850, 435)
+	;		Else
+	;			SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Right", $COLOR_ACTION)
+	;			ClickDrag(750, 435, 50, 435)
+	;		EndIf
+	;		If _Sleep(1500) Then Return
+	;		If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
+	;	Next
+	;EndIf
+
+	;SetLog("Failed to Verify Troop " & $g_asTroopNames[TroopIndexLookup($Troop, "DragIfNeeded")] & " Position or Failed to Drag Successfully", $COLOR_ERROR)
+	;If $g_bSuperTroopsEnable Then
+	;	SetLog("Re-Check If SuperTroop Boost needed", $COLOR_INFO)
+	;	ClickAway()
+	;	BoostSuperTroop(False, True)
+	;	OpenArmyOverview()
+	;	OpenTroopsTab()
+	;	TrainUsingWhatToTrain(WhatToTrain())
+	;EndIf
 	Return False
 EndFunc   ;==>DragIfNeeded
 

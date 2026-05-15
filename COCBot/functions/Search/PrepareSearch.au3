@@ -46,7 +46,7 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 		EndIf
 		If _Sleep(1000) Then Return
 	Next
-		
+	
 	Local $aButton, $bTournament = False, $aMatch
 	
 	If $g_bEnableTournament Then 
@@ -141,6 +141,7 @@ Func PrepareSearchCheckArmy()
 	For $i = 1 To 3
 		SetLog("Checking ArmyOverview Window", $COLOR_DEBUG)
 		If WaitforPixel(695, 500, 696, 501, "C2ED91", 20, 1) Then
+			FillArmyCamp()
 			Click(695, 500, 1, 0, "ArmyOverview Attack Button")
 			$bRet = True
 			If _Sleep(1000) Then Return

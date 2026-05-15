@@ -115,9 +115,9 @@ Func SwitchTo($To = "BB")
 		EndIf
 		
 		If QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
-			If $g_iQuickMISName = "BrokenBoat" Then Return BBTutorial($g_iQuickMISX, $g_iQuickMISY)
-			If $g_iQuickMISName = "BBBoatBadge" Then $g_iQuickMISY += 10
-			If $g_iQuickMISName = "BoatFront" Then 
+			If $g_sQuickMISName = "BrokenBoat" Then Return BBTutorial($g_iQuickMISX, $g_iQuickMISY)
+			If $g_sQuickMISName = "BBBoatBadge" Then $g_iQuickMISY += 10
+			If $g_sQuickMISName = "BoatFront" Then 
 				$g_iQuickMISX += 10
 				$g_iQuickMISY -= 10
 			EndIf

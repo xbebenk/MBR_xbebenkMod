@@ -26,7 +26,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	Local $VillageType = "MainVillage"
 	If $bBuilderBase Then $VillageType = "BuilderBase"
 	If $bSetLog Then SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
-	
+	If Not $g_bRunState Then Return
 	If Not CheckAndroidRunning(False) Then Return
 	PlaceUnplacedBuilding()
 	PlacedOnLeague()
@@ -43,7 +43,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		If $bLocated Then ExitLoop
 		
 		If Not $bLocated And GetAndroidProcessPID() = 0 Then OpenCoC()
-		
+		If Not $g_bRunState Then Return
 		;mainscreen not located, proceed to check if there is obstacle covering screen
 		$bObstacleResult = checkObstacles($bBuilderBase)
 		SetDebugLog("CheckObstacles[" & $i & "] Result = " & $bObstacleResult, $COLOR_DEBUG)
@@ -56,6 +56,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 			$bContinue = True
 		EndIf
 		
+		If Not $g_bRunState Then Return
 		If $bContinue Then 
 			If waitMainScreen() Then ExitLoop ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
 		EndIf

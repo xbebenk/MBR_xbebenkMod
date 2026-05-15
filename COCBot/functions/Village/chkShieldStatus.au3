@@ -182,10 +182,10 @@ Func getShieldInfo()
 	SetLog("Checking Shield", $COLOR_ACTION)
 	If QuickMIS("BC1", $g_sImgShield, 506, 5, 530, 35) Then 
 		Select
-			Case $g_iQuickMISName = "NoShield"
+			Case $g_sQuickMISName = "NoShield"
 				$aPBReturnResult[0] = "none"
 				SetLog("No shield active", $COLOR_DEBUG)
-			Case $g_iQuickMISName = "Shield"
+			Case $g_sQuickMISName = "Shield"
 				$aPBReturnResult[0] = "shield"
 				SetLog("Shield Active", $COLOR_DEBUG)
 		EndSelect

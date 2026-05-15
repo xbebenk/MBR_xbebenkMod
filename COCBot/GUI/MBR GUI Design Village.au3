@@ -33,6 +33,7 @@ Func CreateVillageTab()
 	CreateVillageDonate()
 	CreateVillageUpgrade()
 	CreateVillageNotify()
+	CreatePushBulletTelegramSubTab()
 
 	GUISwitch($g_hGUI_VILLAGE)
 	$g_hGUI_VILLAGE_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))

@@ -209,10 +209,9 @@ Func OpenBarrel($bForced = False)
 		EndIf
 		
 		If $EnabledStroop = 1 And $bBar2Found Then
-			For $i = 1 To 10
-				SetLog("Enabled Boost SuperTroop : 1, Detected 2 Boost on Barrel", $COLOR_ERROR)
-			Next
-			SetLog("Be Sure to check your boost if you do 2nd boost manually", $COLOR_INFO)
+			SetLog("Enabled Boost SuperTroop : 1, Detected 2 Boost on Barrel", $COLOR_DEBUG2)
+			SetLog("Be Sure to check your boost if you do 2nd boost manually", $COLOR_DEBUG)
+			$bForced = True
 		EndIf
 		
 		If $EnabledStroop = 2 And $bBar2Found Then

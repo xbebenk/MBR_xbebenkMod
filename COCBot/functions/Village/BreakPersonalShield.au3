@@ -21,13 +21,13 @@ Func BreakPersonalShield()
 	
 	For $i = 1 To 3
 		If QuickMIS("BC1", $g_sImgShield, 430, 5, 460, 35) Then
-			If $g_iQuickMISName = "NoShield" Then 
+			If $g_sQuickMISName = "NoShield" Then 
 				SetLog("No shield available", $COLOR_SUCCESS)
 				ExitLoop
 			EndIf
 			PureClickP($aShieldInfoButton)
 			If _Sleep(1000) Then Return
-			Switch $g_iQuickMISName
+			Switch $g_sQuickMISName
 				Case "Shield"
 					If QuickMIS("BC1", $g_sImgShield & "Remove\", 518, 230, 545, 245) Then
 						Click($g_iQuickMISX, $g_iQuickMISY)

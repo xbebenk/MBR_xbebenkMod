@@ -57,20 +57,28 @@ Global $g_ahCGBBTroopsItem[Ubound(ClanGamesChallenges("BBT"))]
 
 Func CreateVillageMisc()
 	$g_hGUI_MISC = _GUICreate("", $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hGUI_VILLAGE)
-
+	SetDebugLog("CreateVillageMisc()")
 	GUISwitch($g_hGUI_MISC)
 		$g_hGUI_MISC_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab2, $g_iSizeHGrpTab2, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
 		$g_hGUI_MISC_TAB_ITEM1 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM1", "Normal Village"))
+		SetDebugLog("==> CreateMiscNormalVillageSubTab()")
 		CreateMiscNormalVillageSubTab()
 		$g_hGUI_MISC_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM2", "Clan Games"))
+		SetDebugLog("==> CreateMiscClanGamesV3SubTab()")
 		CreateMiscClanGamesV3SubTab()
 		$g_hGUI_MISC_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM3", "Clan Capital"))
+		SetDebugLog("==> CreateClanCapitalTab()")
 		CreateClanCapitalTab()
 		$g_hGUI_MISC_TAB_ITEM4 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM4", "Misc Mod"))
+		SetDebugLog("==> CreateMiscModSubTab()")
 		CreateMiscModSubTab()
-		CreateClanGamesSettings()
-		CreateSellMagicSetting()
 	GUICtrlCreateTabItem("")
+	
+	;other floating gui under misc tab
+	SetDebugLog("==> CreateClanGamesSettings()")
+	CreateClanGamesSettings()
+	SetDebugLog("==> CreateSellMagicSetting()")
+	CreateSellMagicSetting()
 
 EndFunc   ;==>CreateVillageMisc
 
@@ -573,7 +581,7 @@ Func CreateMiscModSubTab()
 			$sCmbTxt &= $g_sCmbFICTroops[$z][1] & "|"
 		Next
 		GUICtrlSetData(-1, $sCmbTxt, "Barbarians")
-		GUICtrlSetState(-1, $GUI_DISABLE)
+		
 	$y += 23
 		$g_hChkMMIgnoreIncorrectSpellCombo = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkIgnoreBadSpellCombo", "Fill Empty Spell slot"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "chkOnDoubleTrain")
@@ -585,7 +593,7 @@ Func CreateMiscModSubTab()
 			$sCmbTxt &= $g_sCmbFICSpells[$z][1] & "|"
 		Next
 		GUICtrlSetData(-1, $sCmbTxt, "Lightning Spell")
-		GUICtrlSetState(-1, $GUI_DISABLE)
+		
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 50

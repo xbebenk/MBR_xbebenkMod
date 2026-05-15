@@ -43,3 +43,18 @@
 * Forced to save DE = 25k if enabled boost supertroop
 * Add feature spend BuilderBase Gold on Wall
 * Fix SmartFarm DropCC/DropHeroes
+*
+* **v.7.9.9 Mod_v1.2.6#126** (2026-05-15)
+* Fix Outer Diamond on Remove Gembox
+* Add Support for Upgrade Troop Launcher on Laboratory
+* Add Support Attack with Dragon Duke
+* Add Support Attack with Troop Launcher
+* Add Support Attack with Sky Wagon
+* CSV name for Dragon Duke = Duke
+* CSV name for Troop Launcher = TroopL
+* CSV name for Sky Wagon = SkyW
+* Removed Standard Attack on DeadBase
+* Please check your attack setting on DB or AB
+* Please check your Siege drop setting on Attack Setting
+* Please check your Laboratory upgrade setting
+* FillArmyCamp now support SuperBarb

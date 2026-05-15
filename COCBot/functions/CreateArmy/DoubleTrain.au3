@@ -60,7 +60,7 @@ Func FillIncorrectTroopCombo($caller = "Unknown")
 	Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
 	Local $TroopQuantToFill = 5
 	SetLog("Troop To Fill = " & $sTroopName, $COLOR_DEBUG)
-	
+	DragIfNeeded($iTroopIndex)
 	TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
 	ClickAway()
 	If _Sleep(500) Then Return
@@ -97,7 +97,7 @@ Func FillIncorrectSpellCombo($caller = "Unknown")
 	Local $FillSpellIndex = $g_iCmbFillIncorrectSpellCombo
 	Local $sSpellName = $g_sCmbFICSpells[$FillSpellIndex][1]
 	Local $iSpellIndex = TroopIndexLookup($g_sCmbFICSpells[$FillSpellIndex][0])
-	Local $SpellQuantToFill = 1
+	Local $SpellQuantToFill = 2
 	
 	SetLog("Spell To Fill = " & $sSpellName, $COLOR_DEBUG)
 	TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)

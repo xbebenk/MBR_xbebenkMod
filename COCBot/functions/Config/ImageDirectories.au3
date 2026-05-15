@@ -103,6 +103,9 @@ Global $g_sImgForgeHouse = @ScriptDir & "\imgxml\Resources\ClanCapital\ForgeHous
 Global $g_sImgResourceCC = @ScriptDir & "\imgxml\Resources\ClanCapital\CCMap\BuilderMenu\"
 Global $g_sImgDecoration = @ScriptDir & "\imgxml\Resources\ClanCapital\CCMap\BuilderMenu\Decoration\"
 Global $g_sImgCCUpgradeButton = @ScriptDir & "\imgxml\Resources\ClanCapital\CCMap\UpgradeButton\"
+Global $g_sImgAttackCapitalButton = @ScriptDir & "\imgxml\Attack\ClanCapital\MainLoop\Button\"
+Global $g_sImgAttackMapName = @ScriptDir & "\imgxml\Attack\ClanCapital\MainLoop\AttackMap\"
+Global $g_sImgAttackDeployArea = @ScriptDir & "\imgxml\Attack\ClanCapital\MainLoop\DeployArea\"
 #EndRegion
 
 #Region Boost Super Troops

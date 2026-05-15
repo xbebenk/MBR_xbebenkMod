@@ -77,7 +77,7 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30, Default, "isBlueBanner") ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
 				
 				If $isBlueBanner Or $isVioletBanner Then
-					$Troop =  $g_iQuickMISName
+					$Troop =  $g_sQuickMISName
 					$Troopy = $iSelectTroopY
 					If $isBlueBanner Then $iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
 					If $isVioletBanner Then $iCount = 1
@@ -96,7 +96,7 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 				
 				$bReadTroop = $isBlueBanner Or $isVioletBanner
 				If $bReadTroop Then
-					$Troop =  $g_iQuickMISName
+					$Troop =  $g_sQuickMISName
 					$Troopy = $iSelectTroopY
 					If $isBlueBanner Then $iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
 					If $isVioletBanner Then $iCount = 1

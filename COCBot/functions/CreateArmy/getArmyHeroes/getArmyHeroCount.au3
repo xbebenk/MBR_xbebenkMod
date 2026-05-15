@@ -197,7 +197,7 @@ Func ArmyHeroStatus($i)
 
 	; Perform the search
 	If QuickMIS("BC1", $g_sImgArmyOverviewHeroes, $aHeroesRect[$i][0], $aHeroesRect[$i][1], $aHeroesRect[$i][2], $aHeroesRect[$i][3]) Then
-		$sResult = $g_iQuickMISName
+		$sResult = $g_sQuickMISName
 		SetDebugLog($sResult)
 		Select
 			Case $i = 0

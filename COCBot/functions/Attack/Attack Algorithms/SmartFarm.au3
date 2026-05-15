@@ -422,6 +422,46 @@ Func Side($Pixel)
 	EndIf
 EndFunc   ;==>Side
 
+Func SetSlotSpecialTroops()
+	$g_iKingSlot = -1
+	$g_iQueenSlot = -1
+	$g_iWardenSlot = -1
+	$g_iChampionSlot = -1
+	$g_iClanCastleSlot = -1
+	$g_iMinionPSlot = -1
+	$g_iDukeSlot = -1
+	
+	For $i = 0 To UBound($g_avAttackTroops) - 1
+		If $g_avAttackTroops[$i][0] = $eCastle Or $g_avAttackTroops[$i][0] = $eWallW Or $g_avAttackTroops[$i][0] = $eBattleB Or $g_avAttackTroops[$i][0] = $eStoneS _ 
+								Or $g_avAttackTroops[$i][0] = $eSiegeB Or $g_avAttackTroops[$i][0] = $eLogL Or $g_avAttackTroops[$i][0] = $eFlameF Or $g_avAttackTroops[$i][0] = $eBattleD Then
+			$g_iClanCastleSlot = $i
+		ElseIf $g_avAttackTroops[$i][0] = $eKing Then
+			$g_iKingSlot = $i
+		ElseIf $g_avAttackTroops[$i][0] = $eQueen Then
+			$g_iQueenSlot = $i
+		ElseIf $g_avAttackTroops[$i][0] = $eWarden Then
+			$g_iWardenSlot = $i
+		ElseIf $g_avAttackTroops[$i][0] = $eChampion Then
+			$g_iChampionSlot = $i
+		ElseIf $g_avAttackTroops[$i][0] = $eMinionP Then
+			$g_iMinionPSlot = $i
+		ElseIf $g_avAttackTroops[$i][0] = $eDuke Then
+			$g_iMinionPSlot = $i
+		EndIf
+	Next
+
+	If $g_bDebugSetlog Then
+		SetDebugLog("SetSlotSpecialTroops() King Slot: " & $g_iKingSlot, $COLOR_DEBUG)
+		SetDebugLog("SetSlotSpecialTroops() Queen Slot: " & $g_iQueenSlot, $COLOR_DEBUG)
+		SetDebugLog("SetSlotSpecialTroops() Warden Slot: " & $g_iWardenSlot, $COLOR_DEBUG)
+		SetDebugLog("SetSlotSpecialTroops() Champion Slot: " & $g_iChampionSlot, $COLOR_DEBUG)
+		SetDebugLog("SetSlotSpecialTroops() Minion Prince Slot: " & $g_iMinionPSlot, $COLOR_DEBUG)
+		SetDebugLog("SetSlotSpecialTroops() Dargon Duke Slot: " & $g_iDukeSlot, $COLOR_DEBUG)
+		SetDebugLog("SetSlotSpecialTroops() Clan Castle Slot: " & $g_iClanCastleSlot, $COLOR_DEBUG)
+	EndIf
+
+EndFunc ;==>SetSlotSpecialTroops
+
 Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack, $redline)
 
 	_CaptureRegion()
@@ -665,7 +705,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 	
-	If $g_bDebugSmartFarm Then TestDropLine(True, True)
+	If $g_bDebugSmartFarm Then TestDropLine(True, False)
 	
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $g_iMinionPSlot, $SIDESNAMES)
 	
@@ -908,6 +948,49 @@ Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = ""
 
 EndFunc   ;==>DropTroopSmartFarm
 
+Func GetPixelDropTroop($troop, $number, $slotsPerEdge)
+	Local $newPixelTopLeft
+	Local $newPixelBottomLeft
+	Local $newPixelTopRight
+	Local $newPixelBottomRight
+
+	;If ($troop = $eArch Or $troop = $eSArch Or $troop = $eWiza Or $troop = $eSWiza Or $troop = $eMini Or $troop = $eSMini Or $troop = $eBarb Or $troop = $eSBarb) Then
+	;	If UBound($g_aiPixelTopLeftFurther) > 0 Then
+	;		$newPixelTopLeft = $g_aiPixelTopLeftFurther
+	;	Else
+	;		$newPixelTopLeft = $g_aiPixelTopLeft
+	;	EndIf
+	;	If UBound($g_aiPixelBottomLeftFurther) > 0 Then
+	;		$newPixelBottomLeft = $g_aiPixelBottomLeftFurther
+	;	Else
+	;		$newPixelBottomLeft = $g_aiPixelBottomLeft
+	;	EndIf
+	;	If UBound($g_aiPixelTopRightFurther) > 0 Then
+	;		$newPixelTopRight = $g_aiPixelTopRightFurther
+	;	Else
+	;		$newPixelTopRight = $g_aiPixelTopRight
+	;	EndIf
+	;	If UBound($g_aiPixelBottomRightFurther) Then
+	;		$newPixelBottomRight = $g_aiPixelBottomRightFurther
+	;	Else
+	;		$newPixelBottomRight = $g_aiPixelBottomRight
+	;	EndIf
+	;Else
+		$newPixelTopLeft = $g_aiPixelTopLeft
+		$newPixelBottomLeft = $g_aiPixelBottomLeft
+		$newPixelTopRight = $g_aiPixelTopRight
+		$newPixelBottomRight = $g_aiPixelBottomRight
+	;EndIf
+
+	$newPixelTopLeft = GetVectorPixelOnEachSide2($newPixelTopLeft, 0, $slotsPerEdge)
+	$newPixelBottomLeft = GetVectorPixelOnEachSide2($newPixelBottomLeft, 1, $slotsPerEdge)
+	$newPixelTopRight = GetVectorPixelOnEachSide2($newPixelTopRight, 1, $slotsPerEdge)
+	$newPixelBottomRight = GetVectorPixelOnEachSide2($newPixelBottomRight, 0, $slotsPerEdge)
+
+	Local $g_aaiEdgeDropPointsPixelToDrop[4] = [$newPixelBottomRight, $newPixelTopLeft, $newPixelBottomLeft, $newPixelTopRight]
+	Return $g_aaiEdgeDropPointsPixelToDrop
+EndFunc   ;==>GetPixelDropTroop
+
 Func GetRandomCoord($SIDESNAMES)
 	Local $aTempSides, $sLastSide, $iRandomXY, $aLastDropPoint
 	Local $aDefault[2] = [430, 40], $aRet
@@ -936,6 +1019,151 @@ Func GetRandomCoord($SIDESNAMES)
 	
 	Return $aRet
 EndFunc
+
+Func GetPixelSide($listPixel, $index)
+	If UBound($listPixel) > $index Then
+		SetDebugLog("GetPixelSide " & $index & " = " & StringReplace($listPixel[$index], "-", ","))
+		Return GetListPixel($listPixel[$index])
+	EndIf
+	Return -1
+EndFunc   ;==>GetPixelSide
+
+Func _FindPixelCloser($arrPixel, $pixel, $nb = 1)
+
+	If IsArray($arrPixel) = False Then Return ; Prevent error
+
+	Local $arrPixelCloser[0]
+	For $j = 0 To $nb
+		Local $PixelCloser = $arrPixel[0]
+		For $i = 0 To UBound($arrPixel) - 1
+			Local $alreadyExist = False
+			Local $arrTemp = $arrPixel[$i]
+			Local $found = False
+			;search closer only on y
+			If ($pixel[0] = -1) Then
+				If (Abs($arrTemp[1] - $pixel[1]) < Abs($PixelCloser[1] - $pixel[1])) Then
+					$found = True
+				EndIf
+				;search closer only on x
+			ElseIf ($pixel[1] = -1) Then
+				If (Abs($arrTemp[0] - $pixel[0]) < Abs($PixelCloser[0] - $pixel[0])) Then
+					$found = True
+				EndIf
+				;search closer on x/y
+			Else
+				If ((Abs($arrTemp[0] - $pixel[0]) + Abs($arrTemp[1] - $pixel[1])) < (Abs($PixelCloser[0] - $pixel[0]) + Abs($PixelCloser[1] - $pixel[1]))) Then
+					$found = True
+				EndIf
+			EndIf
+			If ($found) Then
+				For $k = 0 To UBound($arrPixelCloser) - 1
+					Local $arrTemp2 = $arrPixelCloser[$k]
+					If ($arrTemp[0] = $arrTemp2[0] And $arrTemp[1] = $arrTemp2[1]) Then
+						$alreadyExist = True
+						ExitLoop
+					EndIf
+				Next
+				If ($alreadyExist = False) Then
+					$PixelCloser = $arrTemp
+				EndIf
+			EndIf
+		Next
+		ReDim $arrPixelCloser[UBound($arrPixelCloser) + 1]
+		$arrPixelCloser[UBound($arrPixelCloser) - 1] = $PixelCloser
+
+	Next
+	Return $arrPixelCloser
+EndFunc   ;==>_FindPixelCloser
+
+Func _GetVectorOutZone($eVectorType)
+	debugRedArea("_GetVectorOutZone IN")
+	Local $vectorOutZone[0]
+	Local $iSteps = 100
+	Local $xMin, $yMin, $xMax, $yMax
+
+	If ($eVectorType = $eVectorLeftTop) Then
+		$xMin = $ExternalArea[0][0] + 2
+		$yMin = $ExternalArea[0][1]
+		$xMax = $ExternalArea[2][0]
+		$yMax = $ExternalArea[2][1] + 2
+	ElseIf ($eVectorType = $eVectorRightTop) Then
+		$xMin = $ExternalArea[2][0]
+		$yMin = $ExternalArea[2][1] + 2
+		$xMax = $ExternalArea[1][0] - 2
+		$yMax = $ExternalArea[1][1]
+	ElseIf ($eVectorType = $eVectorLeftBottom) Then
+		$xMin = $ExternalArea[0][0] + 2
+		$yMin = $ExternalArea[0][1]
+		$xMax = $ExternalArea[3][0]
+		$yMax = $ExternalArea[3][1] - 2
+	Else ; bottom right
+		$xMin = $ExternalArea[3][0]
+		$yMin = $ExternalArea[3][1] - 2
+		$xMax = $ExternalArea[1][0] - 2
+		$yMax = $ExternalArea[1][1]
+	EndIf
+
+	For $i = 0 To $iSteps
+		Local $pixel = [Round($xMin + (($xMax - $xMin) * $i) / $iSteps), Round($yMin + (($yMax - $yMin) * $i) / $iSteps)]
+		If $pixel[1] > 555 Then
+			;If $g_bDebugSetLog Then SetDebugLog("Skip vector out of zone [" & $pixel[0] & "," & $pixel[1] & "]")
+			ContinueLoop
+			;$pixel[1] = 555
+		EndIf
+		ReDim $vectorOutZone[UBound($vectorOutZone) + 1]
+		$vectorOutZone[UBound($vectorOutZone) - 1] = $pixel
+	Next
+
+	Return $vectorOutZone
+EndFunc   ;==>_GetVectorOutZone
+
+; #FUNCTION# ====================================================================================================================
+; Name ..........: GetVectorPixelOnEachSide
+; Description ...:
+; Syntax ........: GetVectorPixelOnEachSide($arrPixel, $vectorDirection)
+; Parameters ....: $arrPixel            - an array of unknowns.
+;                  $vectorDirection     - a variant value.
+; Return values .: None
+; Author ........:
+; Modified ......: ProMac (07-2018)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
+
+Func GetVectorPixelOnEachSide2($arrPixel, $vectorDirection, $slotsPerEdge)
+	; $vectorDirection = 0 than is Xaxis , $vectorDirection = 1 than is Yaxis	
+	Local $minAdd = Random(0, Ceiling(($slotsPerEdge / 100) * 20), 1)
+	$slotsPerEdge += $minAdd
+	
+	Local $vectorPixelEachSide[$slotsPerEdge]
+	If (UBound($arrPixel) > 1) Then
+		Local $pixelSearch[2] = [-1, -1]
+		Local $minPixel = $arrPixel[0]
+		Local $maxPixel = $arrPixel[UBound($arrPixel) - 1]
+		Local $min = $minPixel[$vectorDirection]
+		Local $max = $maxPixel[$vectorDirection]
+		If $g_bDebugSmartFarm Then SetDebuglog("Min pixel coord: " & $min & ", Max Pixel coord: " & $max)
+		Local $posSide = Floor(($max - $min) / $slotsPerEdge)
+
+		For $i = 0 To $slotsPerEdge - 1
+			$pixelSearch[$vectorDirection] = $min + Floor(($posSide * ($i + 1)) - ($posSide / 2))
+			Local $coordinate = ($vectorDirection = 0) ? "X" : "Y"
+			If $g_bDebugSmartFarm Then SetDebuglog("Deploy point number[" & $i + 1 & "] at " &  $coordinate & ": " & $min + Floor(($posSide * ($i + 1)) - ($posSide / 2)))
+			Local $arrPixelCloser = _FindPixelCloser($arrPixel, $pixelSearch, 1)
+			If $g_bDebugSmartFarm Then SetDebuglog("Deploy point Closer[" & $i + 1 & "] at: " & _ArrayToString($arrPixelCloser[0]))
+			$vectorPixelEachSide[$i] = $arrPixelCloser[0]
+		Next
+	EndIf
+	
+	If IsArray($vectorPixelEachSide) Then
+		_ArrayShuffle($vectorPixelEachSide)
+	EndIf
+	Return $vectorPixelEachSide
+EndFunc   ;==>GetVectorPixelOnEachSide2
+
 
 Func TestSF()
 	$g_bDebugSmartFarm = True

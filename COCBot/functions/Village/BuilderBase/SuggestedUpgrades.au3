@@ -142,7 +142,7 @@ Func _SearchUpgradeBB($bTest = False)
 		EndIf
 		If _Sleep(2000) Then Return
 		If Not $g_bRunState Then Return
-	
+		If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop
 		If Not ClickDragAutoUpgradeBB("up") Then ExitLoop
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 	Next
@@ -170,7 +170,7 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If Not $g_bRunState Then Return
 			If QuickMIS("BC1", $g_sImgBBResourceIcon, $aTmpCoord[$i][1] + 80, $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 230, $aTmpCoord[$i][2] + 10) Then
-				$sCostType = $g_iQuickMISName
+				$sCostType = $g_sQuickMISName
 				$lenght = Number($g_iQuickMISX) - $aTmpCoord[$i][1]
 			EndIf
 			
@@ -462,7 +462,7 @@ Func OpenShopBB($sUpgradeType = "Traps", $bCheckRedCounter = True)
 		If IsFullScreenWindow() Then 
 			If QuickMIS("BC1", $g_sImgBuildingAndTraps, 150, 10, 320, 85) Then
 				Click($g_iQuickMISX, $g_iQuickMISY) ;click Building and traps Tab
-				If $g_iQuickMISName = "BuildActive" Then 
+				If $g_sQuickMISName = "BuildActive" Then 
 					$bRet = True
 					ExitLoop
 				EndIf
@@ -843,20 +843,41 @@ EndFunc
 
 Func SpendBBGoldOnWall($iMaxScroll = 5, $bTest = False)
 	Local $bRet = False
-	Local $aSearchWall, $iWallIndex = -1
+	Local $aSearchWall, $iWallIndex = -1, $iBOBIndex = -1
 	If $g_bChkBBSpendGoldOnWall Then
 		;check gold Storage
 		isGoldFullBB()
-		If $g_bGoldStorageFullBB Or $g_bGoldStorage50BB Then 
+		If $g_bGoldStorageFullBB Or $g_bGoldStorage50BB Or $bTest Then 
 			SetLog("Enabled to spend Gold on Wall", $COLOR_DEBUG1)
 			For $i = 1 To $iMaxScroll
 				SetLog("Searching Wall on Builder menu", $COLOR_ACTION)
 				If Not ClickBBBuilder() Then Return
 				BuilderBaseReport(False, False)
-				ClickDragAutoUpgradeBB()
-				$aSearchWall = FindUpgradeBB($bTest, True)
-				_ArraySort($aSearchWall, 0, 0, 0, 5) ; sort by cost
+				$aSearchWall = FindUpgradeBB($bTest, False)
+				If IsArray($aSearchWall) And UBound($aSearchWall) > 0 Then
+					For $j = 0 To UBound($aSearchWall) - 1
+						If StringInStr($aSearchWall[$j][6], "New") And $aSearchWall[$j][0] = "Gold" Then 
+							SetLog("Found " & $aSearchWall[$j][3] & " " & $aSearchWall[$j][6] & " " & $aSearchWall[$j][0], $COLOR_DEBUG2)
+							SetLog("New Building with gold, skip spend gold on wall", $COLOR_DEBUG2)
+							ClickAway()
+							If _Sleep(500) Then Return
+							Return $bRet
+						ElseIf $aSearchWall[$j][3] = "Builder Hall" Then
+							SetLog("Found Builder Hall, skip spend gold on wall", $COLOR_DEBUG2)
+							If Number($g_aiCurrentLootBB[$eLootGoldBB]) < Number($aSearchWall[$j][5]) Then 
+								SetDebugLog($g_aiCurrentLootBB[$eLootGoldBB] & " < " & $aSearchWall[$j][5])
+								ClickAway()
+							EndIf
+							Return $bRet
+						ElseIf $aSearchWall[$j][3] = "Elixir Storage" And $g_aiCurrentLootBB[$eLootGoldBB] >= $aSearchWall[$j][5] Then
+							SetLog("Found Elixir Storage, skip spend gold on wall", $COLOR_DEBUG2)
+							Return $bRet
+						EndIf
+					Next
+				EndIf
+				
 				If Not $g_bRunState Then Return
+				_ArraySort($aSearchWall, 1, 0, 0, 5) ; sort by cost
 				$iWallIndex = _ArraySearch($aSearchWall, "Wall", 0, 0, 0, 0, 1, 3)
 				If $iWallIndex >= 0 Then
 					SetLog("Found Wall, cost : " & $aSearchWall[$iWallIndex][5], $COLOR_ACTION)
@@ -884,6 +905,7 @@ Func SpendBBGoldOnWall($iMaxScroll = 5, $bTest = False)
 				Else
 					SetLog("No Wall found on list", $COLOR_DEBUG2)
 				EndIf
+				ClickDragAutoUpgradeBB("up", 60)
 				If Not $g_bRunState Then Return
 			Next
 		EndIf
@@ -902,6 +924,12 @@ Func BBUpWallGold($iWallCost = 10000, $iCountPlus = 2, $UpType = "+1")
 			If _Sleep(500) Then Return
 		Else
 			SetLog("Cannot find Up more wall button", $COLOR_DEBUG2)
+			If QuickMIS("BFI", $g_sImgBBResourceIcon & "\Gold*", 180, 500, 700, 540) Then 
+				Click($g_iQuickMISX - 30, $g_iQuickMISY + 30)
+				If WaitBBUpgradeWindow() Then Click(420, 535, 1, 0, "UpWallGold")
+				SetLog("Upgraded a wall with BB Gold", $COLOR_SUCCESS)
+				If _Sleep(1000) Then Return
+			EndIf
 			Return
 		EndIf
 	EndIf
@@ -913,6 +941,17 @@ Func BBUpWallGold($iWallCost = 10000, $iCountPlus = 2, $UpType = "+1")
 		Case "+1"
 			$sDir = $g_sImgCheckWallDirUpgradeButton & "\Plus1"
 	EndSwitch
+	
+	If $UpType = "+10" Then
+		If Not QuickMIS("BC1", $sDir, $aBtnCoord[0], $aBtnCoord[1], $aBtnCoord[2], $aBtnCoord[3]) Then
+			SetLog("No " & $UpType & " Button Found", $COLOR_DEBUG)
+			SetLog("Change to search +1 instead", $COLOR_DEBUG1)
+			$iPlusWall = 1
+			$sDir = $g_sImgCheckWallDirUpgradeButton & "\Plus1"
+			$UpType = "+1"
+			$iCountPlus = 9
+		EndIf
+	EndIf
 	
 	SetLog("Try " & $UpType & " using BB Gold", $COLOR_ACTION)
 	
@@ -935,13 +974,14 @@ Func BBUpWallGold($iWallCost = 10000, $iCountPlus = 2, $UpType = "+1")
 			Case "+10"
 				$iOffset = 180
 			Case "+1"
-				$iOffset = 180
+				$iOffset = 100
 		EndSwitch
 		Click($g_iQuickMISX + $iOffset, $g_iQuickMISY)
 		
 		SetLog("Upgraded wall with BB Gold: " & $iCount, $COLOR_SUCCESS)
 		If _Sleep(1000) Then Return
 		If IsOKCancelPage() Then ClickP($aConfirmSurrender) ;click confirm upgrade OK button
+		ClickAway()
 		Return True
 	EndIf
 EndFunc

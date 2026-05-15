@@ -51,18 +51,11 @@
 #include "functions\Attack\AttackCSV\ChkAttackCSVConfig.au3"
 #include "functions\Attack\AttackCSV\ParseAttackCSV_Settings_variables.au3"
 
-#include "functions\Attack\RedArea\_FindPixelCloser.au3"
-#include "functions\Attack\RedArea\_GetOffsetTroopFurther.au3"
 #include "functions\Attack\RedArea\_GetRedArea.au3"
-#include "functions\Attack\RedArea\_GetVectorOutZone.au3"
 #include "functions\Attack\RedArea\DebugRedArea.au3"
 #include "functions\Attack\RedArea\DropOnPixel.au3"
 #include "functions\Attack\RedArea\DropTroop.au3"
 #include "functions\Attack\RedArea\GetLocation.au3"
-#include "functions\Attack\RedArea\GetOffestPixelRedArea2.au3"
-#include "functions\Attack\RedArea\GetPixelDropTroop.au3"
-#include "functions\Attack\RedArea\GetPixelSide.au3"
-#include "functions\Attack\RedArea\GetVectorPixelOnEachSide.au3"
 #include "functions\Attack\RedArea\PointInPoly.au3"
 
 #include "functions\Attack\Troops\CheckHeroesHealth.au3"

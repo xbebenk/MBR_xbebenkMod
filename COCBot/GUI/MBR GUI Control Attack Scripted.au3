@@ -324,15 +324,15 @@ Func ApplyScriptDB()
 		radHerosApply()
 		SetLog("CSV Hero Ability settings applied", $COLOR_SUCCESS)
 
-		GUICtrlSetState($g_hChkDBKingAttack, $aiCSVHeros[$eHeroBarbarianKing][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBKingAttack))
-		GUICtrlSetState($g_hChkDBQueenAttack, $aiCSVHeros[$eHeroArcherQueen][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBQueenAttack))
-		GUICtrlSetState($g_hChkDBWardenAttack, $aiCSVHeros[$eHeroGrandWarden][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBWardenAttack))
-		GUICtrlSetState($g_hChkDBChampionAttack, $aiCSVHeros[$eHeroRoyalChampion][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBChampionAttack))
+		;GUICtrlSetState($g_hChkDBKingAttack, $aiCSVHeros[$eHeroBarbarianKing][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBKingAttack))
+		;GUICtrlSetState($g_hChkDBQueenAttack, $aiCSVHeros[$eHeroArcherQueen][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBQueenAttack))
+		;GUICtrlSetState($g_hChkDBWardenAttack, $aiCSVHeros[$eHeroGrandWarden][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBWardenAttack))
+		;GUICtrlSetState($g_hChkDBChampionAttack, $aiCSVHeros[$eHeroRoyalChampion][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBChampionAttack))
 		SetLog("CSV 'Attack with' Hero settings applied", $COLOR_SUCCESS)
 	EndIf
 
 	If $sCSVCCReq <> "" Then
-		GUICtrlSetState($g_hChkDBDropCC, $GUI_CHECKED)
+		;GUICtrlSetState($g_hChkDBDropCC, $GUI_CHECKED)
 		SetLog("CSV 'Attack with' CC settings applied", $COLOR_SUCCESS)
 	EndIf
 
@@ -437,7 +437,7 @@ Func ApplyScriptAB()
 	EndIf
 
 	If $sCSVCCReq <> "" Then
-		GUICtrlSetState($g_hChkABDropCC, $GUI_CHECKED)
+		;GUICtrlSetState($g_hChkABDropCC, $GUI_CHECKED)
 		SetLog("CSV 'Attack with' CC settings applied", $COLOR_SUCCESS)
 	EndIf
 

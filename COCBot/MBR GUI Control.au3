@@ -481,7 +481,7 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 						OpenURL_Label($CursorInfo[4])
 				EndSwitch
 			EndIf
-		Case $g_hLblMyBotURL, $g_hLblForumURL, $g_hLblUnbreakableLink
+		Case $g_hLblMyBotURL, $g_hLblForumURL
 			; Handle open URL when label fires the event normally
 			OpenURL_Label($nID)		
 		Case $g_hLblDonate
@@ -1974,15 +1974,9 @@ Func tabDeadbase()
 	If $g_iGuiMode <> 1 Then Return
 	Local $tabidx = GUICtrlRead($g_hGUI_DEADBASE_TAB)
 	Select
-		;			Case $tabidx = 0 ; Search tab
-
 		Case $tabidx = 1 ; Attack tab
 			cmbDBAlgorithm()
-
-			;			Case $tabidx = 2 ; End Battle tab
-
 		Case Else
-			GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
 			GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
 			GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SMARTFARM)
 	EndSelect

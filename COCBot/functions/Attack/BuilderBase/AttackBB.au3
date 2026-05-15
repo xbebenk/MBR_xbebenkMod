@@ -514,10 +514,10 @@ Func CheckBMLoop($aBMPos = $g_aMachinePos)
 		If Not $g_bRunState Then Return
 
 		If QuickMIS("BC1", $g_sImgDirMachineAbility, $aBMPos[0] - 35, $aBMPos[1] - 40, $aBMPos[0] + 35, $aBMPos[1] + 40) Then
-			If StringInStr($g_iQuickMISName, "Wait") Then
+			If StringInStr($g_sQuickMISName, "Wait") Then
 				If $g_bChkDebugAttackBB Then SetLog("Waiting " & $MachineName & " Ability", $COLOR_ACTION)
 				ExitLoop
-			ElseIf StringInStr($g_iQuickMISName, "Ability") Then
+			ElseIf StringInStr($g_sQuickMISName, "Ability") Then
 				PureClickP($aBMPos)
 				SetLog("Activate " & $MachineName & " Ability", $COLOR_SUCCESS)
 				ExitLoop
@@ -557,10 +557,10 @@ Func CheckWBLoop()
 			ContinueLoop
 		EndIf
 		If QuickMIS("BC1", $g_sImgDirWallBreakerAbility, $g_aWBOnAttackBar[$i][0], $g_aWBOnAttackBar[$i][1] - 30, $g_aWBOnAttackBar[$i][0] + 70, $g_aWBOnAttackBar[$i][1] + 30) Then
-			If StringInStr($g_iQuickMISName, "Wait") Then
+			If StringInStr($g_sQuickMISName, "Wait") Then
 				If $g_bChkDebugAttackBB Then SetLog("Waiting WallBreaker Ability", $COLOR_ACTION)
 				$bIsWBDead = False
-			ElseIf StringInStr($g_iQuickMISName, "Ability") Then
+			ElseIf StringInStr($g_sQuickMISName, "Ability") Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				SetLog("Activate WallBreaker Ability", $COLOR_SUCCESS)
 				$bIsWBDead = False

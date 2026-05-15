@@ -339,6 +339,7 @@ Func UpWallElixir($iWallCost, $iCountPlus, $UpType, $aButton)
 			$iPlusWall = 10
 		Case "+1"
 			$sDir = $g_sImgCheckWallDirUpgradeButton & "\Plus1"
+			$aBtnCoord[0] = $aButton[0] - 230
 	EndSwitch
 	
 	SetLog("Try " & $UpType & " for Elix upgrade", $COLOR_ACTION)
@@ -382,6 +383,7 @@ Func UpWallGold($iWallCost, $iCountPlus, $UpType, $aButton)
 			$iPlusWall = 10
 		Case "+1"
 			$sDir = $g_sImgCheckWallDirUpgradeButton & "\Plus1"
+			$aBtnCoord[0] = $aButton[0] - 140
 	EndSwitch
 	
 	If $UpType = "+10" Then

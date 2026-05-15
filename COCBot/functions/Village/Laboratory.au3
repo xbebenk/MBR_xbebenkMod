@@ -82,7 +82,7 @@ Func Laboratory($bDebug = False)
 				
 				If $iIndex > 0 Then
 					Select 
-						Case $iIndex < 49 ;Any Normal
+						Case $iIndex < 51 ;Any Normal
 							$sReseachName = $g_avLabTroops[$iIndex][0]
 							$sReseachImage = $g_avLabTroops[$iIndex][2]
 							$iPage = Ceiling($iIndex / $iLabPicsPerPage) ; page # of user choice
@@ -92,9 +92,9 @@ Func Laboratory($bDebug = False)
 							SetLog("FindImage : " & $sReseachName, $COLOR_DEBUG1)
 							$aUpgrade = FindLabUpgrade($sReseachImage)
 							If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
-								For $i = 0 To UBound($aUpgrade) - 1
-									SetLog($aUpgrade[$i][4] & ", Cost:" & $aUpgrade[$i][3] & $aUpgrade[$i][0], $COLOR_INFO)
-								Next
+								;For $i = 0 To UBound($aUpgrade) - 1
+								;	SetLog($aUpgrade[$i][4] & ", Cost:" & $aUpgrade[$i][3] & $aUpgrade[$i][0], $COLOR_INFO)
+								;Next
 								For $i = 0 To UBound($aUpgrade) - 1
 									If $aUpgrade[$i][5] = $sReseachImage Then
 										$aCoords[0] = $aUpgrade[$i][1] - 40
@@ -112,7 +112,7 @@ Func Laboratory($bDebug = False)
 								SetLog("FindImage : No Image " & $sReseachName & " Found!", $COLOR_DEBUG1)
 							EndIf
 											
-						Case $iIndex = 49 ;Any Spell
+						Case $iIndex = 51 ;Any Spell
 							$sReseachName = $g_avLabTroops[$iIndex][0]
 							$sReseachImage = $g_avLabTroops[$iIndex][2]
 							$iPage = 2
@@ -148,10 +148,10 @@ Func Laboratory($bDebug = False)
 							
 							If Not $bUpgradeFound Then SetLog("FindImage : " & $sReseachName & " Not Found!", $COLOR_DEBUG1)
 												
-						Case $iIndex = 50 ;Any Siege
+						Case $iIndex = 52 ;Any Siege
 							$sReseachName = $g_avLabTroops[$iIndex][0]
 							$sReseachImage = $g_avLabTroops[$iIndex][2]
-							$iPage = 4
+							$iPage = $iLabMaxPages
 							SetLog("Try Lab Upgrade: " & $sReseachName & ", Page:" & $iPage, $COLOR_INFO)
 							$iCurPage = LabGoToPage($iCurPage, $iPage)
 							
@@ -654,7 +654,7 @@ Func LabUpgrade($bTest = False)
 	EndIf
 EndFunc
 
-Global $g_iXFindLabUpgrade = 200
+Global $g_iXFindLabUpgrade = 180
 
 Func _FindLabUpgrade($bTest = False)
 	Local $aTmpCoord, $aUpgrade[0][8], $BuildingName, $sPriority = "", $aUpgradeName, $tmpcost, $lenght = 0
@@ -686,6 +686,7 @@ Func _FindLabUpgrade($bTest = False)
 			$iScore = 0
 			If UBound($aOrder) > 0 Then
 				For $z = 0 To UBound($aOrder) - 1
+					If $aUpgradeName[0] = "eti" Then $aUpgradeName[0] = "Yeti"
 					If StringInStr($aUpgradeName[0], $aOrder[$z][1]) > 0 Then 
 						$sPriority = "Priority"
 						$iScore = $aOrder[$z][0]
@@ -748,18 +749,20 @@ Func FindLabUpgrade($sUpgrade = "Any")
 				
 			If QuickMIS($sSearchWay, $sDir, $aResult[$i][1] - 92, $aResult[$i][2] - 93, $aResult[$i][1] + 17, $aResult[$i][2]) Then
 				Local $cost = getLabCost($aResult[$i][1] - 92, $aResult[$i][2] - 10)
-				$sUpgradeName = GetTroopName(TroopIndexLookup($sSearchWay = "BC1" ? $g_iQuickMISName : $sUpgrade))
+				$sUpgradeName = GetTroopName(TroopIndexLookup($sSearchWay = "BC1" ? $g_sQuickMISName : $sUpgrade))
 				$aResult[$i][3] = Number($cost)
 				$aResult[$i][4] = $sUpgradeName
-				$aResult[$i][5] = $sSearchWay = "BC1" ? $g_iQuickMISName : $sUpgrade
+				$aResult[$i][5] = $sSearchWay = "BC1" ? $g_sQuickMISName : $sUpgrade
 			EndIf
 		Next
 	EndIf
 	
-	For $i = 0 To UBound($aResult) - 1 
-		Local $iIndex = _ArraySearch($aResult, "", 0, 0, 0, 0, 1, 4)
-		If $iIndex <> -1 Then _ArrayDelete($aResult, $iIndex)
-	Next
+	
+	Local $iIndex = _ArraySearch($aResult, "", 0, 0, 0, 0, 1, 4)
+	If $iIndex <> -1 Then 
+		SetDebugLog("Deleting [" & $iIndex & "] " & $aResult[$iIndex][4])
+		_ArrayDelete($aResult, $iIndex)
+	EndIf
 	
 	_ArraySort($aResult, $iSortDirection, 0, 0, $iSortBy)
 	Return $aResult

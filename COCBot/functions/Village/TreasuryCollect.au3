@@ -79,8 +79,10 @@ Func TreasuryCollect()
 		EndIf
 	Else
 		SetDebugLog("Error in TreasuryCollect(): Cannot find the Collect Button", $COLOR_DEBUG2)
+		ClickAway()
 	EndIf
 	
+	ClickAway()
 	If _Sleep(500) Then Return
 	ClickAway()
 	If _Sleep(500) Then Return

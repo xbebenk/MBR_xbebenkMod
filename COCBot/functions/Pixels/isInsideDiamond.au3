@@ -26,10 +26,10 @@ Func isInsideDiamond($aCoords, $bOuter = False)
 	Local $x = $aCoords[0], $y = $aCoords[1], $xD, $yD
 	Local $Left, $Right, $Top, $Bottom
     If $bOuter Then 
-        $Left = $OuterDiamondLeft
-        $Right = $OuterDiamondRight
-        $Top = $OuterDiamondTop
-        $Bottom = $OuterDiamondBottom
+        $Left = $OuterDiamondLeft - 20
+        $Right = $OuterDiamondRight + 20
+        $Top = $OuterDiamondTop - 20
+        $Bottom = $OuterDiamondBottom + 20
     Else
 		$Left = $InnerDiamondLeft
         $Right = $InnerDiamondRight
@@ -37,33 +37,6 @@ Func isInsideDiamond($aCoords, $bOuter = False)
         $Bottom = $InnerDiamondBottom
     EndIf
 	
-	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
-	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
-
-	;; convert to real diamond compensating zoom and offset
-	;; top diamond point
-	;$xD = $aMiddle[0]
-	;$yD = $Top
-	;ConvertToVillagePos($xD, $yD)
-	;$Top = $yD
-	;; bottom diamond point
-	;$xD = $aMiddle[0]
-	;$yD = $Bottom
-	;ConvertToVillagePos($xD, $yD)
-	;$Bottom = $yD
-	;; left diamond point
-	;$xD = $Left
-	;$yD = $aMiddle[1]
-	;ConvertToVillagePos($xD, $yD)
-	;$Left = $xD
-	;; right diamond point
-	;$xD = $Right
-	;$yD = $aMiddle[1]
-	;ConvertToVillagePos($xD, $yD)
-	;$Right = $xD
-
-	;If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond coordinates updated by offset: " & $Left & ", " & $Right & ", " & $Top & ", " & $Bottom, $COLOR_DEBUG)
-
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
 	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
 	Local $aSize = [$aMiddle[0] - $aDiamond[0][0], $aMiddle[1] - $aDiamond[0][1]]

@@ -126,17 +126,23 @@ Func RemoveGembox()
 	If Not $g_bChkGemsBox Then Return 
 	
 	SetLog("Check for Remove Gem Box", $COLOR_INFO)
-	If QuickMIS("BC1", $g_sImgGemBox, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom) Then
-		If Not isInsideDiamondXY($g_iQuickMISX, $g_iQuickMISY, True) Then 
-			SetLog("Cannot Remove GemBox!", $COLOR_INFO)
-			Return False
-		EndIf
-		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Remove GemBox!")
-		If _Sleep(1000) Then Return
-		ClickRemoveObstacle()
-		ClickAway()
-		SetLog("Removing GemBox", $COLOR_SUCCESS)
-		Return True
+	Local $aGembox = QuickMIS("CNX", $g_sImgGemBox, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+	If IsArray($aGembox) And UBound($aGembox) > 0 Then
+		For $i = 0 To UBound($aGembox) - 1
+			If Not isInsideDiamondXY($aGembox[$i][1], $aGembox[$i][2], True) Then 
+				SetDebugLog("Found GemBox, but Outside Diamond", $COLOR_INFO)
+				ContinueLoop
+			EndIf
+			Click($aGembox[$i][1], $aGembox[$i][2], 1, 0, "Remove GemBox!")
+			If _Sleep(1000) Then Return
+			Local $aGemboxName = BuildingInfo(242, 477)
+			If $aGemboxName[1] = "Gem box" Then 
+				ClickRemoveObstacle()
+				SetLog("Removing GemBox", $COLOR_SUCCESS)
+				ClickAway()
+				Return True
+			EndIf
+		Next
 	Else
 		SetLog("No GemBox Found!", $COLOR_DEBUG2)
 	EndIf

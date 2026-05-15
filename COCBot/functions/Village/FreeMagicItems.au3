@@ -197,7 +197,7 @@ Func GetFreeMagic()
 		EndIf
 		Local $MagicItemName = ""
 		If QuickMIS("BC1", $g_sImgTraderWindow, $aOcrPositions[$i][0] - 50, $aOcrPositions[$i][1] - 110, $aOcrPositions[$i][0] + 100, $aOcrPositions[$i][1] - 20) Then
-			$MagicItemName = $g_iQuickMISName
+			$MagicItemName = $g_sQuickMISName
 		EndIf
 		_ArrayAdd($aResults, $Read & "|" & $aOcrPositions[$i][0] & "|" & $aOcrPositions[$i][1] & "|" & $Capa & "|" & $MagicItemName)
 	Next
@@ -486,7 +486,7 @@ Func UseFreeMagicItem()
 				$y = $g_iQuickMISY + 40
 				Click($x, $y)
 				If _Sleep(500) Then Return
-				If $g_iQuickMISName = "Full" Then
+				If $g_sQuickMISName = "Full" Then
 					If WaitforPixel(345, 520, 346, 520, Hex(0xF71E22, 6), 10, 1, "FreeMagicItem Full") Then 
 						Click(260, 510, 1, 0, "Sell magic Item")
 						If _Sleep(500) Then Return

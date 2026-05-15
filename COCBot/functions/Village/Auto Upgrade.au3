@@ -202,9 +202,11 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 				_ArraySort($Upgrades, 1, 0, 0, 6)
 				SetLog("UpgradeList scoring by : Highest Priority", $COLOR_INFO)
 			EndIf
+			
 
 			For $i = 0 To UBound($Upgrades) - 1
-				If $Upgrades[$i][7] = "0" Then ContinueLoop
+				If $Upgrades[$i][6] = "Disabled" Then ContinueLoop
+				;If $Upgrades[$i][7] = "0" Then ContinueLoop
 				SetLog("[" & $Upgrades[$i][7] & "] " & $Upgrades[$i][3] & ", Cost:" & $Upgrades[$i][5] & " " & $Upgrades[$i][0] & ", Score: [" & ($Upgrades[$i][4] = "New" ? $Upgrades[$i][4] : $Upgrades[$i][6]) & "]", $COLOR_DEBUG1)
 			Next
 
@@ -231,8 +233,10 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 			If _Sleep(50) Then Return
 
 			For $i = 0 To UBound($Upgrades) - 1
-				If $Upgrades[$i][6] = "Disabled" And $Upgrades[$i][7] = "Essential" And $g_bChkRushTH Then
-					SetLog("Essential Building : " & $Upgrades[$i][3] & "[" & $Upgrades[$i][5] & "] Disabled, skip!", $COLOR_ACTION)
+				If $Upgrades[$i][6] = "Disabled" Then ContinueLoop
+				;If $Upgrades[$i][7] = "0" Then ContinueLoop
+				If $Upgrades[$i][7] = "Essential" And $g_bChkRushTH Then
+					SetLog("RushTH Found Essential Building : " & $Upgrades[$i][3] & "[" & $Upgrades[$i][5] & "] Disabled, skip!", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
 
@@ -298,7 +302,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 		For $i = 0 To UBound($aTmpCoord) - 1
 			Local $sCostType = ""
 			If QuickMIS("BC1", $g_sImgResourceIcon, $aTmpCoord[$i][1] + 80, $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 260, $aTmpCoord[$i][2] + 10) Then
-				$sCostType = $g_iQuickMISName
+				$sCostType = $g_sQuickMISName
 				$lenght = Number($g_iQuickMISX) - $aTmpCoord[$i][1]
 				If $aTmpCoord[$i][0] = "New" And $sCostType = "Free" Then 
 					$lenght = 33
@@ -339,7 +343,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 			If Not $g_bRunState Then Return
 			
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $g_iXFindUpgrade, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then
-				If $g_iQuickMISName = "Gear" And Not $g_bGearUpDone Then
+				If $g_sQuickMISName = "Gear" And Not $g_bGearUpDone Then
 					Local $bRet = DoGearUp($g_iQuickMISX + 20, $g_iQuickMISY)
 					SetLog("Do GearUp result : " & String($bRet), $COLOR_INFO)
 					$g_bGearUpDone = True
@@ -423,10 +427,10 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 				Next
 
 				For $k = 0 To UBound($g_aichkEssentialUpgrade) - 1
-					If $g_bDebugSetLog Then SetDebugLog($BuildingName & "|" & $g_aEssential[$k])
+					;If $g_bDebugSetLog Then SetDebugLog($BuildingName & "|" & $g_aEssential[$k])
 					If StringInStr($BuildingName, $g_aEssential[$k]) Then
 						SetLog("[Essential] " & $g_aEssential[$k] & " : " & $BuildingName & ", Enabled : " & String($g_aichkEssentialUpgrade[$k] = 1 ? True : False), $COLOR_DEBUG1)
-						If $g_aichkEssentialUpgrade[$k] > 0 Then
+						If $g_aichkEssentialUpgrade[$k] = 1 Then
 							$aBuilding[$j][6] = 9
 							$aBuilding[$j][7] = "Essential"
 						Else
@@ -831,7 +835,7 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 			$aCheckArea = $aCheckAreaPrince
 		Case "Grand Warden"
 			$aCheckArea = $aCheckAreaWarden
-		Case "Royal Champion"
+		Case "Royal Champion", "Royal Champ"
 			$aCheckArea = $aCheckAreaChampion
 		Case Else
 			Setlog("What Hero? banana", $COLOR_DEBUG2)
@@ -1061,7 +1065,7 @@ Func OpenShop($sUpgradeType = "Traps", $bCheckRedCounter = True)
 		If IsFullScreenWindow() Then
 			If QuickMIS("BC1", $g_sImgBuildingAndTraps, 150, 10, 320, 85) Then
 				Click($g_iQuickMISX, $g_iQuickMISY) ;click Building and traps Tab
-				If $g_iQuickMISName = "BuildActive" Then
+				If $g_sQuickMISName = "BuildActive" Then
 					$bRet = True
 					ExitLoop
 				EndIf
@@ -1727,7 +1731,7 @@ Func FindNewUpgrade($bTest = False)
 		_ArraySort($aTmpCoord, 0, 0, 0, 2)
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1", $g_sImgResourceIcon, $aTmpCoord[$i][1] + 100 , $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 250, $aTmpCoord[$i][2] + 12) Then
-				$UpgradeType =  $g_iQuickMISName
+				$UpgradeType =  $g_sQuickMISName
 				_ArrayAdd($aBuilding, $UpgradeType & "|" & $g_iQuickMISX & "|" & $g_iQuickMISY & "|" & $aTmpCoord[$i][1])
 			EndIf
 		Next
