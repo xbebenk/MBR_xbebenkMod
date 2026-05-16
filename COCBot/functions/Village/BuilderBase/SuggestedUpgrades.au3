@@ -197,6 +197,7 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 			$aUpgradeName = getBuildingName($g_iXFindUpgradeBB, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
 			If StringInStr($aUpgradeName[0], "Wall") Then $aUpgradeName[0] = "Wall"
+			If $g_bChkBBSpendGoldOnWall And StringInStr($aUpgradeName[0], "Wall") And StringInStr($aTmpCoord[$i][0], "Elix") Then ContinueLoop ;skip wall upgrade with elix
 			If Number($tmpcost) = 0 Then ContinueLoop
 			
 			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), Number($aUpgradeName[1]), Number($tmpcost), 0, "Common"]]
@@ -300,7 +301,7 @@ Func DoUpgradeBB($CostType = "Gold", $Cost = 0, $bTest = False)
 						Return False
 					Else
 						SetLog($aBuildingName[1] & " Upgrading!", $COLOR_INFO)
-						AutoUpgradeLog(False, $aBuildingName[1], $aBuildingName[2], $Cost)
+						AutoUpgradeLog(False, "BB " & $aBuildingName[1], $aBuildingName[2], $Cost)
 						If _Sleep(500) Then Return
 						ClickAway("Left")
 						Return True
@@ -394,7 +395,7 @@ Func PlaceNewBuildingFromShopBB($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 					ExitLoop
 				EndIf
 				If _Sleep(500) Then Return
-				AutoUpgradeLog(True, "Wall")
+				AutoUpgradeLog(True, "BB Wall")
 			EndIf
 		Next
 		
@@ -414,7 +415,7 @@ Func PlaceNewBuildingFromShopBB($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 		If $sUpgradeType = "Traps" Then Click($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Placed " & $sUpgrade & " on Main Village! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
 		If _Sleep(1000) Then Return
-		AutoUpgradeLog(True, $sUpgrade, 1, $iCost, "New")
+		AutoUpgradeLog(True, "BB " & $sUpgrade, 1, $iCost, "New")
 		Return True
 	ElseIf QuickMIS("BFI", $g_sImgGreenCheckBB & "GreyCheck*") Then
 		SetLog("No GreenCheck Found, but Grey", $COLOR_ERROR)
