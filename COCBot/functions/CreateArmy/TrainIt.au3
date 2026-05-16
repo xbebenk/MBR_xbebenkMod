@@ -19,17 +19,15 @@
 Func TrainIt($iIndex, $iQuantity = 1, $iSleep = 400)
 	If $g_bDebugSetlogTrain Then SetLog("Func TrainIt $iIndex=" & $iIndex & " $howMuch=" & $iQuantity & " $iSleep=" & $iSleep, $COLOR_DEBUG)
 
-	For $i = 1 To 5 ; Do
-		If Not $g_bRunState Then Return
-		Local $aTrainPos = GetCoordToUse($iIndex)
-		If IsArray($aTrainPos) And $aTrainPos[0] > 0 Then
-			TrainClickP($aTrainPos, $iQuantity, GetTroopName($iIndex))
-			If _Sleep($iSleep) Then Return
-			Return True
-		Else
-			SetLog("Impossible happened? TrainIt troop position " & GetTroopName($iIndex) & " did not return array", $COLOR_ERROR)
-		EndIf
-	Next ; Until $iErrors = 0
+	If Not $g_bRunState Then Return
+	Local $aTrainPos = GetCoordToUse($iIndex)
+	If IsArray($aTrainPos) And $aTrainPos[0] > 0 Then
+		TrainClickP($aTrainPos, $iQuantity, GetTroopName($iIndex))
+		If _Sleep($iSleep) Then Return
+		Return True
+	Else
+		SetLog("Impossible happened? TrainIt troop position " & GetTroopName($iIndex) & " did not return array", $COLOR_DEBUG2)
+	EndIf
 EndFunc   ;==>TrainIt
 
 Func CorrectYCoord(ByRef $aTrainPos)
