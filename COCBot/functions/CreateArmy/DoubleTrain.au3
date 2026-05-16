@@ -58,10 +58,18 @@ Func FillIncorrectTroopCombo($caller = "Unknown")
 	Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
 	Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
 	Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
-	Local $TroopQuantToFill = 5
+	Local $iLoop = 5
 	SetLog("Troop To Fill = " & $sTroopName, $COLOR_DEBUG)
 	DragIfNeeded($iTroopIndex)
-	TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
+	For $i = 1 To $iLoop
+		If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 210, 480, 230) Then
+			TrainIt($iTroopIndex, 5, $g_iTrainClickDelay)
+			If _Sleep(200) Then Return
+		Else
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+	Next
 	ClickAway()
 	If _Sleep(500) Then Return
 EndFunc
