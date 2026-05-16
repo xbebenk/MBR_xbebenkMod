@@ -53,7 +53,7 @@ EndFunc   ;==>TrainFullTroop
 Func FillIncorrectTroopCombo($caller = "Unknown")
 	If Not $g_bIgnoreIncorrectTroopCombo Then Return
 	SetLog("Train to Fill Incorrect Troop Combo", $COLOR_ACTION)
-	Click(500, 260, 1, 100, "Click Train Troops")
+	Click(780, 270, 1, 0, "Click Train Troops")
 	If _Sleep(1000) Then Return
 	Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
 	Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
@@ -100,7 +100,7 @@ Func FillIncorrectSpellCombo($caller = "Unknown")
 
 	If Not $g_bIgnoreIncorrectSpellCombo Then Return
 	SetLog("Train to Fill Incorrect Spell Combo", $COLOR_ACTION)
-	Click(500, 370, 1, 100, "Click Train Spells")
+	Click(630, 375, 1, 100, "Click Train Spells")
 	If _Sleep(1000) Then Return
 	Local $FillSpellIndex = $g_iCmbFillIncorrectSpellCombo
 	Local $sSpellName = $g_sCmbFICSpells[$FillSpellIndex][1]
