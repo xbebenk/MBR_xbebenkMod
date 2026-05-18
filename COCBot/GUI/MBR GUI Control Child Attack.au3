@@ -43,9 +43,6 @@ Func cmbABAlgorithm()
 			Case $iCmbValue = 1 ; Scripted Attack
 				GUISetState(@SW_HIDE, $g_hGUI_ACTIVEBASE_ATTACK_STANDARD)
 				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ACTIVEBASE_ATTACK_SCRIPTED)
-			Case Else
-				GUISetState(@SW_HIDE, $g_hGUI_ACTIVEBASE_ATTACK_STANDARD)
-				GUISetState(@SW_HIDE, $g_hGUI_ACTIVEBASE_ATTACK_SCRIPTED)
 		EndSelect
 	EndIf
 EndFunc   ;==>cmbABAlgorithm

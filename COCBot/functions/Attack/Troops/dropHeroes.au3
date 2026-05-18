@@ -30,12 +30,12 @@ Func dropHeroes($iX, $iY, $iKingSlotNumber = -1, $iQueenSlotNumber = -1, $iWarde
 	If $iMinionPSlotNumber <> -1 Then $bDropMinionP = True
 	If $iDukeSlotNumber <> -1 Then $bDropDuke = True
 
-	SetDebugLog("drop KING = " & $bDropKing, $COLOR_DEBUG)
-	SetDebugLog("drop QUEEN = " & $bDropQueen, $COLOR_DEBUG)
-	SetDebugLog("drop WARDEN = " & $bDropWarden, $COLOR_DEBUG)
-	SetDebugLog("drop CHAMPION = " & $bDropChampion, $COLOR_DEBUG)
-	SetDebugLog("drop MINION PRINCE = " & $bDropMinionP, $COLOR_DEBUG)
-	SetDebugLog("drop DRAGON DUKE = " & $bDropDuke, $COLOR_DEBUG)
+	SetDebugLog("drop KING = " & $bDropKing & ", Slot:" & $iKingSlotNumber, $COLOR_DEBUG)
+	SetDebugLog("drop QUEEN = " & $bDropQueen & ", Slot:" & $iQueenSlotNumber, $COLOR_DEBUG)
+	SetDebugLog("drop WARDEN = " & $bDropWarden & ", Slot:" & $iWardenSlotNumber, $COLOR_DEBUG)
+	SetDebugLog("drop CHAMPION = " & $bDropChampion & ", Slot:" & $iChampionSlotNumber, $COLOR_DEBUG)
+	SetDebugLog("drop MINION PRINCE = " & $bDropMinionP & ", Slot:" & $iMinionPSlotNumber, $COLOR_DEBUG)
+	SetDebugLog("drop DRAGON DUKE = " & $bDropDuke & ", Slot:" & $iDukeSlotNumber, $COLOR_DEBUG)
 
 	If $bDropKing Then
 		SetLog("Dropping King at [" & $iX & ", " & $iY & "]", $COLOR_INFO)

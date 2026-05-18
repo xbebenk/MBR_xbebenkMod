@@ -60,7 +60,7 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 	Local $iTroopNumber = 0
 
 	Local $avAttackBar = GetAttackBar($bRemaining, $pMatchMode)
-	For $i = 0 To UBound($g_avAttackTroops, 1) - 1
+	For $i = 0 To UBound($avAttackBar, 1) - 1
 		Local $bClearSlot = True ; by default clear the slot, if no corresponding slot is found in attackbar detection
 		If $bRemaining Then
 			; keep initial heroes to avoid possibly "losing" them when not dropped yet
@@ -164,7 +164,7 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 	Next
 	If Not $bRemaining Then SetSlotSpecialTroops()
 
-	Return $iTroopNumber
+	Return $g_avAttackTroops
 EndFunc   ;==>PrepareAttack
 
 Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)

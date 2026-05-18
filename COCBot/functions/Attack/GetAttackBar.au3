@@ -395,37 +395,6 @@ Func AttackSlot($iPosX, $iRow, $aSlots)
 	Return $aTempSlot
 EndFunc   ;==>AttackSlot
 
-Func DebugAttackBarImage($aAttackBarResult)
-	#comments-start
-		SetDebugLog("Attackbar OCR completed in " & StringFormat("%.2f", __TimerDiff($iAttackbarStart)) & " ms")
-
-		If $bDebug Then
-		Local $iX1 = 0, $iY1 = 635, $iX2 = 853, $iY2 = 698
-		_CaptureRegion2($iX1, $iY1, $iX2, $iY2)
-
-		Local $sSubDir = $g_sProfileTempDebugPath & "AttackBarDetection"
-
-		DirCreate($sSubDir)
-
-		Local $sDate = @YEAR & "-" & @MON & "-" & @MDAY, $sTime = @HOUR & "." & @MIN & "." & @SEC
-		Local $sDebugImageName = String($sDate & "_" & $sTime & "_.png")
-		Local $hEditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
-		Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($hEditedImage)
-		Local $hPenRED = _GDIPlus_PenCreate(0xFFFF0000, 3)
-
-		For $i = 0 To UBound($aResult) - 1
-		addInfoToDebugImage($hGraphic, $hPenRED, $aResult[$i][0], $aResult[$i][1], $aResult[$i][2])
-		Next
-
-		_GDIPlus_ImageSaveToFile($hEditedImage, $sSubDir & "\" & $sDebugImageName)
-		_GDIPlus_PenDispose($hPenRED)
-		_GDIPlus_GraphicsDispose($hGraphic)
-		_GDIPlus_BitmapDispose($hEditedImage)
-		EndIf
-
-	#comments-end
-EndFunc   ;==>DebugAttackBarImage
-
 Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	Local Static $aAttackBar[0][8]
 	Local $aiOCRLocation[2] = [-1, -1], $aAmountX[0][2]

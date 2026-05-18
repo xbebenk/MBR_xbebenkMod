@@ -723,9 +723,17 @@ Func ApplyConfig_600_11($TypeReadSave)
 			GUICtrlSetState($g_hChkRequestTroopsEnable, $g_bRequestTroopsEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtRequestCC, $g_sRequestTroopsText)
 			chkRequestCC()
+			GUICtrlSetState($g_hChkReinforcementCake, $g_bUseCake ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbRequestTroop, $g_iCmbRequestTroop)
+			_GUICtrlComboBox_SetCurSel($g_hCmbRequestSpell, $g_iCmbRequestSpell)
+			_GUICtrlComboBox_SetCurSel($g_hCmbRequestSiege, $g_iCmbRequestSiege)
 		Case "Save"
 			$g_bRequestTroopsEnable = (GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_CHECKED)
 			$g_sRequestTroopsText = GUICtrlRead($g_hTxtRequestCC)
+			$g_bUseCake = (GUICtrlRead($g_hChkReinforcementCake) = $GUI_CHECKED)
+			$g_iCmbRequestTroop = _GUICtrlComboBox_GetCurSel($g_hCmbRequestTroop)
+			$g_iCmbRequestSpell = _GUICtrlComboBox_GetCurSel($g_hCmbRequestSpell)
+			$g_iCmbRequestSiege = _GUICtrlComboBox_GetCurSel($g_hCmbRequestSiege)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_11
 

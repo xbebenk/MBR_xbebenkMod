@@ -126,7 +126,6 @@ Func RemoveGembox()
 	If Not $g_bChkGemsBox Then Return 
 	Local $bRemoved = False
 	SetLog("Check for Remove Gem Box", $COLOR_INFO)
-	ZoomOut(True)
 	Local $aGembox = QuickMIS("CNX", $g_sImgGemBox, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
 	If IsArray($aGembox) And UBound($aGembox) > 0 Then
 		For $i = 0 To UBound($aGembox) - 1

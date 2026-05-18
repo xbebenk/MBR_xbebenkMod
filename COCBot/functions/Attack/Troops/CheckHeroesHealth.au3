@@ -14,7 +14,7 @@
 ; ===============================================================================================================================
 Func CheckHeroesHealth()
 
-	If $g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower Or $g_bCheckChampionPower Or $g_bCheckMinionPPower Then
+	If $g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower Or $g_bCheckChampionPower Or $g_bCheckMinionPPower Or $g_bCheckDukePower Then
 		ForceCaptureRegion() ; ensure no screenshot caching kicks in
 
 		Local $aDisplayTime[$eHeroCount] = [0, 0, 0, 0, 0, 0] ; array to hold converted timerdiff into seconds
@@ -150,7 +150,7 @@ Func CheckHeroesHealth()
 		EndIf
 
 		If $g_bDebugSetlog Then
-			SetDebugLog("CheckHeroesHealth() for Royal Champion started ")
+			SetDebugLog("CheckHeroesHealth() for Royal Champion started")
 			If _Sleep($DELAYRESPOND) Then Return ; improve pause button response
 		EndIf
 

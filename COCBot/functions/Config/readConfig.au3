@@ -649,6 +649,10 @@ Func ReadConfig_600_11()
 	; <><><><> Village / Donate - Request <><><><>
 	IniReadS($g_bRequestTroopsEnable, $g_sProfileConfigPath, "donate", "chkRequest", True, "Bool")
 	$g_sRequestTroopsText = IniRead($g_sProfileConfigPath, "donate", "txtRequest", "")
+	IniReadS($g_bUseCake, $g_sProfileConfigPath, "donate", "ChkUseCake", False, "Bool")
+	IniReadS($g_iCmbRequestTroop, $g_sProfileConfigPath, "donate", "CmbRequestTroop", 0, "int")
+	IniReadS($g_iCmbRequestSpell, $g_sProfileConfigPath, "donate", "CmbRequestSpell", 0, "int")
+	IniReadS($g_iCmbRequestSiege, $g_sProfileConfigPath, "donate", "CmbRequestSiege", 0, "int")
 EndFunc   ;==>ReadConfig_600_11
 
 Func ReadConfig_600_12()

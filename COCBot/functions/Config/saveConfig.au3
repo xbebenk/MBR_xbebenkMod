@@ -586,6 +586,10 @@ Func SaveConfig_600_11()
 	; <><><><> Village / Donate - Request <><><><>
 	_Ini_Add("donate", "txtRequest", $g_sRequestTroopsText)
 	_Ini_Add("donate", "chkRequest", $g_bRequestTroopsEnable ? 1 : 0)
+	_Ini_Add("donate", "ChkUseCake", $g_bUseCake ? 1 : 0)
+	_Ini_Add("donate", "CmbRequestTroop", $g_iCmbRequestTroop)
+	_Ini_Add("donate", "CmbRequestSpell", $g_iCmbRequestSpell)
+	_Ini_Add("donate", "CmbRequestSiege", $g_iCmbRequestSiege)
 EndFunc   ;==>SaveConfig_600_11
 
 Func SaveConfig_600_12()

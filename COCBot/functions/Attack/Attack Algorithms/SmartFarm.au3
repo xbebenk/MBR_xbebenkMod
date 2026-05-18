@@ -432,33 +432,31 @@ Func SetSlotSpecialTroops()
 	$g_iDukeSlot = -1
 	
 	For $i = 0 To UBound($g_avAttackTroops) - 1
-		If $g_avAttackTroops[$i][0] = $eCastle Or $g_avAttackTroops[$i][0] = $eWallW Or $g_avAttackTroops[$i][0] = $eBattleB Or $g_avAttackTroops[$i][0] = $eStoneS _ 
-								Or $g_avAttackTroops[$i][0] = $eSiegeB Or $g_avAttackTroops[$i][0] = $eLogL Or $g_avAttackTroops[$i][0] = $eFlameF Or $g_avAttackTroops[$i][0] = $eBattleD Then
-			$g_iClanCastleSlot = $i
-		ElseIf $g_avAttackTroops[$i][0] = $eKing Then
-			$g_iKingSlot = $i
-		ElseIf $g_avAttackTroops[$i][0] = $eQueen Then
-			$g_iQueenSlot = $i
-		ElseIf $g_avAttackTroops[$i][0] = $eWarden Then
-			$g_iWardenSlot = $i
-		ElseIf $g_avAttackTroops[$i][0] = $eChampion Then
-			$g_iChampionSlot = $i
-		ElseIf $g_avAttackTroops[$i][0] = $eMinionP Then
-			$g_iMinionPSlot = $i
-		ElseIf $g_avAttackTroops[$i][0] = $eDuke Then
-			$g_iMinionPSlot = $i
-		EndIf
+		Switch $g_avAttackTroops[$i][0]
+			Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD, $eTroopL, $eSkyW
+				$g_iClanCastleSlot = $i
+			Case $eKing
+				$g_iKingSlot = $i
+			Case $eQueen
+				$g_iQueenSlot = $i
+			Case $eWarden
+				$g_iWardenSlot = $i
+			Case $eChampion
+				$g_iChampionSlot = $i
+			Case $eMinionP
+				$g_iMinionPSlot = $i
+			Case $eDuke
+				$g_iDukeSlot = $i
+		EndSwitch
 	Next
 
-	If $g_bDebugSetlog Then
-		SetDebugLog("SetSlotSpecialTroops() King Slot: " & $g_iKingSlot, $COLOR_DEBUG)
-		SetDebugLog("SetSlotSpecialTroops() Queen Slot: " & $g_iQueenSlot, $COLOR_DEBUG)
-		SetDebugLog("SetSlotSpecialTroops() Warden Slot: " & $g_iWardenSlot, $COLOR_DEBUG)
-		SetDebugLog("SetSlotSpecialTroops() Champion Slot: " & $g_iChampionSlot, $COLOR_DEBUG)
-		SetDebugLog("SetSlotSpecialTroops() Minion Prince Slot: " & $g_iMinionPSlot, $COLOR_DEBUG)
-		SetDebugLog("SetSlotSpecialTroops() Dargon Duke Slot: " & $g_iDukeSlot, $COLOR_DEBUG)
-		SetDebugLog("SetSlotSpecialTroops() Clan Castle Slot: " & $g_iClanCastleSlot, $COLOR_DEBUG)
-	EndIf
+	SetDebugLog("SetSlotSpecialTroops() King Slot: " & $g_iKingSlot)
+	SetDebugLog("SetSlotSpecialTroops() Queen Slot: " & $g_iQueenSlot)
+	SetDebugLog("SetSlotSpecialTroops() Warden Slot: " & $g_iWardenSlot)
+	SetDebugLog("SetSlotSpecialTroops() Champion Slot: " & $g_iChampionSlot)
+	SetDebugLog("SetSlotSpecialTroops() Minion Prince Slot: " & $g_iMinionPSlot)
+	SetDebugLog("SetSlotSpecialTroops() Dargon Duke Slot: " & $g_iDukeSlot)
+	SetDebugLog("SetSlotSpecialTroops() Clan Castle Slot: " & $g_iClanCastleSlot)
 
 EndFunc ;==>SetSlotSpecialTroops
 
@@ -705,9 +703,9 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 	
-	If $g_bDebugSmartFarm Then TestDropLine(True, False)
+	If $g_bDebugSmartFarm Then TestDropLine(False, False)
 	
-	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $g_iMinionPSlot, $SIDESNAMES)
+	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $g_iMinionPSlot, $g_iDukeSlot, $SIDESNAMES)
 	
 	If Not $g_bRunState Then Return
 	If IsProblemAffect() Then Return
@@ -738,11 +736,11 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	SetLog("Finished Attacking, waiting for the battle to end")
 EndFunc   ;==>AttackSmartFarm
 
-Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion, $iMinion, $SIDESNAMES = "TR|TL|BR|BL")
+Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion, $iMinion, $iDuke, $SIDESNAMES = "TR|TL|BR|BL")
 	; Initial Timer
 	Local $hTimer = TimerInit()
 	
-	SetDebugLog("LaunchTroopSmartFarm with CC " & $iCC & ", K " & $iKing & ", Q " & $iQueen & ", W " & $iWarden & ", C " & $iChampion & ", M " & $iMinion, $COLOR_DEBUG)
+	SetDebugLog("LaunchTroopSmartFarm with CC " & $iCC & ", K " & $iKing & ", Q " & $iQueen & ", W " & $iWarden & ", C " & $iChampion & ", M " & $iMinion & ", D " & $iDuke, $COLOR_DEBUG)
 	; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
 	Local $listListInfoDeployTroopPixel[0]
 	Local $pixelRandomDrop[2]
@@ -829,7 +827,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 								dropCC($aRandomCoord[0], $aRandomCoord[1], $iCC)
 								$g_bIsCCDropped = True
 							ElseIf ($g_bIsHeroesDropped = False And $infoTroopListArrPixel[0] = "HEROES" And $i = $numberSidesDropTroop - 1) Then
-								dropHeroes($aRandomCoord[0], $aRandomCoord[1], $iKing, $iQueen, $iWarden, $iChampion, $iMinion)
+								dropHeroes($aRandomCoord[0], $aRandomCoord[1], $iKing, $iQueen, $iWarden, $iChampion, $iMinion, $iDuke)
 								$g_bIsHeroesDropped = True
 							EndIf
 						Else
@@ -1167,7 +1165,7 @@ EndFunc   ;==>GetVectorPixelOnEachSide2
 
 Func TestSF()
 	$g_bDebugSmartFarm = True
-	CheckZoomOut("VillageSearch")
+	;CheckZoomOut("VillageSearch")
 	PrepareAttack($DB)
 	Local $Nside = ChkSmartFarm()
 	AttackSmartFarm($Nside[1], $Nside[2])

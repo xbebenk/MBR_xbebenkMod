@@ -18,6 +18,7 @@ Global $g_hGUI_DONATE = 0, $g_hGUI_DONATE_TAB = 0, $g_hGUI_DONATE_TAB_ITEM1 = 0,
 
 ; Request
 Global $g_hChkRequestTroopsEnable = 0, $g_hTxtRequestCC = 0
+Global $g_hChkReinforcementCake = 0, $g_hCmbRequestTroop = 0, $g_hCmbRequestSpell = 0, $g_hCmbRequestSiege = 0
 Global $g_hGrpRequestCC = 0
 
 ; Donate
@@ -76,7 +77,23 @@ Func CreateRequestSubTab()
 		GUICtrlSetOnEvent(-1, "chkRequestCC")
 		$g_hTxtRequestCC = GUICtrlCreateInput(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC", "any"), $x + 40 + 30, $y + 15, 214, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC_Info_01", "This text is used on your request for troops in the Clan chat."))
-
+	
+	$y += 80
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCake, $x - 5, $y, 64, 64, $BS_ICON)
+		$g_hChkReinforcementCake = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "chkReinforcementCake", "Use Reinforcement Cake"), $x + 40 + 30, $y - 6)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetOnEvent(-1, "chkReinforcementCake")
+		Local $sTxtCmbTroop = "Giant|Balloon"
+		Local $sTxtCmbSpell = "Lightning|Freeze"
+		Local $sTxtCmbSiege = "Wall Wrecker|Battle Blimp|Stone Slammer|Siege Barrack|Log Launcher|Flame Flinger"
+	$x = 95
+		$g_hCmbRequestTroop = GUICtrlCreateCombo("", $x, $y + 20, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+		GUICtrlSetData(-1, $sTxtCmbTroop, "")
+		$g_hCmbRequestSpell = GUICtrlCreateCombo("", $x, $y + 45, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+		GUICtrlSetData(-1, $sTxtCmbSpell, "")
+		$g_hCmbRequestSiege = GUICtrlCreateCombo("", $x, $y + 70, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+		GUICtrlSetData(-1, $sTxtCmbSiege, "")
+		GuiCtrlCreateLabel("This will only used If account have Clan Castle Reinforcement Cake and going to attack while CC is not filled", $x + 130, $y + 20, 200, 40)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateRequestSubTab

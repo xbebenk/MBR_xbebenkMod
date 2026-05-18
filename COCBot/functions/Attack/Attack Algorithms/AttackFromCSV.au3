@@ -743,13 +743,13 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 
 	; Log total CSV prep time
 	SetLog(">> Total time: " & Round(__timerdiff($hTimerTOTAL) / 1000, 2) & " seconds", $COLOR_INFO)
-
+	SetSlotSpecialTroops()
+	
 	; 14 - DEBUGIMAGE ------------------------------------------------------------------------
 	If $g_bDebugMakeIMGCSV Then AttackCSVDEBUGIMAGE() ;make IMG debug
 	If $g_bDebugAttackCSV Then _LogObjList($g_oBldgAttackInfo) ; display dictionary for raw find image debug
 
 	; 15 - LAUNCH PARSE FUNCTION -------------------------------------------------------------
-	SetSlotSpecialTroops()
 	If _Sleep($DELAYRESPOND) Then Return
 	If $sMainSide = "BOTTOM-RIGHT" Or $sMainSide = "BOTTOM-LEFT" Then
 		SetDebugLog("BOTTOM LEFT/RIGHT as MainSide, checking boost button")
@@ -765,7 +765,6 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	EndIf
 	
 	ParseAttackCSV($testattack)
-
 	CheckHeroesHealth()
 EndFunc   ;==>Algorithm_AttackCSV
 
@@ -886,11 +885,6 @@ Func TestDropLine($SearchRedLine = True, $bOpenFile = False)
 		SetDebugLog("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
 		SetDebugLog("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
 		SetDebugLog("	[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight")
-	Else
-		$g_aiPixelTopLeft = 0
-		$g_aiPixelTopRight = 0
-		$g_aiPixelBottomLeft = 0
-		$g_aiPixelBottomRight = 0
 	EndIf
 	
 	AttackCSVDEBUGIMAGE($bOpenFile) ;make IMG debug

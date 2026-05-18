@@ -41,6 +41,7 @@ Func FillArmyCamp()
 		EndIf
 		
 		CheckCookieReinforcement()
+		If _Sleep(500) Then Return
 		CheckHeroOnUpgrade()
 	EndIf
 EndFunc
@@ -107,36 +108,69 @@ Func CheckHeroOnUpgrade()
 EndFunc
 
 Func CheckCookieReinforcement()
+	Local $sTroop, $sSpell, $sSiege
+	$sTroop = $g_aCmbRequestTroop[$g_iCmbRequestTroop]
+	$sSpell = $g_aCmbRequestSpell[$g_iCmbRequestSpell]
+	$sSiege = $g_aCmbRequestSiege[$g_iCmbRequestSiege]
+	
+	If Not $g_bUseCake Then Return ;exit if not enabled
+	
 	If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 650, 450, 725, 485) Then ;check on Castle cake reinforcement
+		SetLog("Removing Request", $COLOR_DEBUG)
+		Click(635, 442, 1, 0, "Remove CC")
+		If _Sleep(1000) Then return
+		If IsOKCancelPage() Then Click(535, 415, 1, 0, "Click OK")
+		If _Sleep(1000) Then return
 		SetLog("Try Reinforce with Castle Cake", $COLOR_DEBUG)
-		Click($g_iQuickMISX, $g_iQuickMISY)
+		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Cake")
 		If _Sleep(1000) Then Return
 		If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 210, 180, 280, 250) Then ;read if text "Tap to Reinforce" exist
-			Click($g_iQuickMISX, $g_iQuickMISY)
+			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Tap to Reinforce")
 			If _Sleep(1000) Then Return
-			Local $aTroops = QuickMIS("CNX", $g_sImgTrainTroops, 120, 260, 740, 460) ;read all troops image 
-			If IsArray($aTroops) And UBound($aTroops) > 0 Then
-				_ArraySort($aTroops, 0, 0, 0, 1)
-				For $i = 0 To UBound($aTroops) - 1
-					Switch $aTroops[$i][0]
-						Case "Giant", "Ball", "Wiz"
-							Click($aTroops[$i][1], $aTroops[$i][2], 5)
-						Case "Drag"
-							Click($aTroops[$i][1], $aTroops[$i][2], 2)
-					EndSwitch
-					
-					If _ColorCheck(_GetPixelColor(150, 275, True), Hex(0x8F8F8F, 6), 20, Default, "CheckTroopBar") Then 
-						Click(450, 530) ;Click Confirm
-						If _Sleep(500) Then Return
-						ExitLoop ;troops bar greyed
-					EndIf
-				Next
+			
+			For $i = 1 To 5 ;Troop
+				If QuickMIS("BFI", $g_sImgTrainTroops & $sTroop & "*", 120, 260, 740, 460) Then ;read troop image 
+					Click($g_iQuickMISX, $g_iQuickMISY, 3, 0, "Click " & $sTroop)
+				Else
+					ExitLoop
+				EndIf
+				If _Sleep(800) Then Return
+			Next
+			
+			;clickdrag for spell
+			If $g_iCmbRequestSpell = 0 Then 
+				ClickDrag(680, 365, 155, 365)
+			Else
+				ClickDrag(680, 365, 155, 365)
+				ClickDrag(680, 365, 155, 365)
 			EndIf
+			
+			If _Sleep(500) Then Return
+			For $i = 1 To 5 ;Spell
+				If QuickMIS("BFI", $g_sImgTrainSpells & $sSpell & "*", 120, 260, 740, 460) Then ;read spell image 
+					Click($g_iQuickMISX, $g_iQuickMISY, 2, 0, "Click " & $sSpell)
+				Else
+					ExitLoop
+				EndIf
+				If _Sleep(800) Then Return
+			Next
+			
+			;clickdrag for Siege
+			If $g_iCmbRequestSpell = 0 Then ClickDrag(680, 365, 155, 365); drag again if spell request was Ligntning
+			ClickDrag(650, 365, 305, 365)
+			If _Sleep(500) Then Return
+			If QuickMIS("BFI", $g_sImgTrainSieges & $sSiege & "*", 120, 260, 740, 460) Then ;read siege image 
+				Click($g_iQuickMISX, $g_iQuickMISY, 2, 0, "Click " & $sSiege)
+			EndIf
+			
+			Click(450, 530, 1, 0, "Click Confirm") ;Click Confirm
+			If _Sleep(500) Then Return
 		EndIf
 		
 		If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 450, 380, 635, 500) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			SetLog("Fill Reinforcement using Castle Cake", $COLOR_ACTION)
+			If _Sleep(500) Then Return
 		EndIf
 	EndIf
 EndFunc

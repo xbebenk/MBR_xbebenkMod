@@ -1,29 +1,3 @@
-* **v.7.9.9 Mod_v1.2.6#119**
-* Just bring up Mod up again
-* Many bugs
-* Many feature not work 
-*
-* **v.7.9.9 Mod_v1.2.6#120**
-* Fix Placing New Wall
-* Add LDPlayer9 support (tested on LD9 9.1.46)
-* - coc seem not smooth on LD9 (flicker)
-* - tested bot run 24H with LD9 but LD9 hungs at day 2
-* - it may because my hardware you can test your own
-*
-* **v.7.9.9 Mod_v1.2.6#121**
-* Modify DonateCC (scroll to find troops)
-* Added chat notif checker, request/donate if exists
-* Fix TreasureHunt (Return Home after attack)
-* Added BuilderBase EndBattle on 2 stars
-* Separate Collect resource and lootcart
-* Added option to enable/disable CollectCookie
-* Rewrite Blacksmith (Hero Equipment Upgrade)
-*
-* **v.7.9.9 Mod_v1.2.6#122**
-* Fix Collect Season Rewards
-* Fix Collect Mini Event Rewards
-* Fix Hero Equiment Upgrade
-*
 * **v.7.9.9 Mod_v1.2.6#123** (2026-04-30)
 * Fix Siege Detection 
 * Fix Upgrade Hero on Auto Upgrade
@@ -58,3 +32,4 @@
 * Please check your Siege drop setting on Attack Setting
 * Please check your Laboratory upgrade setting
 * FillArmyCamp now support SuperBarb
+* Add feature use clan castle cake

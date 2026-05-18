@@ -31,6 +31,20 @@ Func chkRequestCC()
 	EndIf
 EndFunc
 
+Func chkReinforcementCake()
+	If GUICtrlRead($g_hChkReinforcementCake) = $GUI_CHECKED Then
+		$g_bUseCake = True
+		GUICtrlSetState($g_hCmbRequestTroop, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbRequestSpell, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbRequestSiege, $GUI_ENABLE)
+	Else
+		$g_bUseCake = False
+		GUICtrlSetState($g_hCmbRequestTroop, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbRequestSpell, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbRequestSiege, $GUI_DISABLE)
+	EndIf
+EndFunc
+
 Func btnDonateTroop()
 	For $i = 0 To $eTroopCount - 1 + $eSiegeMachineCount
 		If @GUI_CtrlId = $g_ahBtnDonateTroop[$i] Then
