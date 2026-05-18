@@ -124,8 +124,9 @@ EndFunc
 
 Func RemoveGembox()
 	If Not $g_bChkGemsBox Then Return 
-	
+	Local $bRemoved = False
 	SetLog("Check for Remove Gem Box", $COLOR_INFO)
+	ZoomOut(True)
 	Local $aGembox = QuickMIS("CNX", $g_sImgGemBox, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
 	If IsArray($aGembox) And UBound($aGembox) > 0 Then
 		For $i = 0 To UBound($aGembox) - 1
@@ -139,12 +140,15 @@ Func RemoveGembox()
 			If $aGemboxName[1] = "Gem box" Then 
 				ClickRemoveObstacle()
 				SetLog("Removing GemBox", $COLOR_SUCCESS)
+				$bRemoved = True
 				ClickAway()
-				Return True
+				ExitLoop
+			Else
+				ClickAway()
+				If _Sleep(500) Then Return
 			EndIf
 		Next
-	Else
-		SetLog("No GemBox Found!", $COLOR_DEBUG2)
 	EndIf
-	Return False
+	If Not $bRemoved Then SetLog("No GemBox Found!", $COLOR_DEBUG2)
+	Return $bRemoved
 EndFunc
