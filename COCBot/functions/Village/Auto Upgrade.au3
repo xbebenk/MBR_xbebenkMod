@@ -818,11 +818,12 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 EndFunc
 
 Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "DE")
-	Local $aCheckAreaKing[4] = [140, 420, 190, 460]
-	Local $aCheckAreaQueen[4] = [290, 420, 347, 460]
-	Local $aCheckAreaPrince[4] = [450, 420, 500, 460]
-	Local $aCheckAreaWarden[4] = [600, 420, 655, 460]
-	Local $aCheckAreaChampion[4] = [750, 420, 805, 460]
+	Local $aCheckAreaKing[4] = [100, 360, 190, 420]
+	Local $aCheckAreaQueen[4] = [250, 360, 350, 420]
+	Local $aCheckAreaPrince[4] = [400, 360, 490, 420]
+	Local $aCheckAreaWarden[4] = [450, 360, 540, 420]
+	Local $aCheckAreaChampion[4] = [600, 360, 690, 420]
+	Local $aCheckAreaDuke[4] = [750, 360, 840, 420]
 	Local $aCheckArea, $bRet = False
 	Local $iHeroUpgradeTime = ""
 	
@@ -837,6 +838,8 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 			$aCheckArea = $aCheckAreaWarden
 		Case "Royal Champion", "Royal Champ"
 			$aCheckArea = $aCheckAreaChampion
+		Case "Dragon Duke"
+			$aCheckArea = $aCheckAreaDuke
 		Case Else
 			Setlog("What Hero? banana", $COLOR_DEBUG2)
 			$aCheckArea = $aCheckAreaKing
@@ -852,21 +855,6 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 		Click(625, 545) ;click upgrade button
 		
 		If _Sleep(1000) Then Return
-		Local $aImgAUpgradeEndBoost = decodeSingleCoord(findImage("EndBoost", $g_sImgAUpgradeEndBoost, GetDiamondFromRect("350, 310, 570, 230"), 1, True))
-		If UBound($aImgAUpgradeEndBoost) > 1 Then
-			SetLog("End Boost? pop-up found", $COLOR_INFO)
-			SetLog("Clicking OK", $COLOR_INFO)
-			Local $aImgAUpgradeEndBoostOKBtn = decodeSingleCoord(findImage("EndBoostOKBtn", $g_sImgAUpgradeEndBoostOKBtn, GetDiamondFromRect("420, 470, 610, 380"), 1, True))
-			If UBound($aImgAUpgradeEndBoostOKBtn) > 1 Then
-				Click($aImgAUpgradeEndBoostOKBtn[0], $aImgAUpgradeEndBoostOKBtn[1])
-				If _Sleep(1000) Then Return
-			Else
-				SetLog("Unable to locate OK Button", $COLOR_ERROR)
-				If _Sleep(1000) Then Return
-				ClickAway("Right")
-				Return
-			EndIf
-		EndIf
 		
 		; update Logs and History file
 		SetLog("Launched upgrade for Hero : " & $sHeroName & " successfully !", $COLOR_SUCCESS)
@@ -883,25 +871,32 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 			$bRet = True
 		EndIf
 		
-		If $g_bUseHeroBooks Then	
+		If $g_bUseHeroBooks Then
 			Local $HeroUpgradeTime = ConvertOCRTime("UseHeroBooks", $iHeroUpgradeTime, False)
 			If $HeroUpgradeTime >= ($g_iHeroMinUpgradeTime * 1440) Then
-				SetLog("Hero Upgrade Time minutes: [" & $HeroUpgradeTime & "] " & $HeroUpgradeTime & " minutes", $COLOR_DEBUG)
-				SetLog("MinUpgradeTime on Setting: [" & $g_iHeroMinUpgradeTime & "] " & ($g_iHeroMinUpgradeTime * 1440) & " minutes", $COLOR_DEBUG)
-				SetLog("Looking if Hero Books avail")
-				If QuickMIS("BC1", $g_sImgHeroBooks, 500, 530, 540, 570) Then ; search image Hero books (on button Finish Now)
-					Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Hero Books")
-					If _Sleep(500) Then return
-					If WaitforPixel(420, 435, 421, 435, "2F93CF", 10, 1, "Confirm Use Book") Then
-						Click(420, 430, 1, 0, "Confirm Use Book")
+				SetLog("Hero Upgrade Time: [" & $HeroUpgradeTime & "] minutes", $COLOR_DEBUG)
+				SetLog("MinUpgradeTime on Setting: [" & ($g_iHeroMinUpgradeTime * 1440) & "] minutes", $COLOR_DEBUG)
+				If IsHeroHallWindow() Then 
+					SetLog("Looking if Hero Books avail", $COLOR_ACTION)
+					If QuickMIS("BC1", $g_sImgHeroBooks, $aCheckArea[0], $aCheckArea[1], $aCheckArea[2], $aCheckArea[3]) Then ; search image Hero books on Hero Hall
+						SetLog("You Have hero book available", $COLOR_INFO)
+						Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Hero Books")
+						If _Sleep(500) Then return
+						If WaitforPixel(420, 435, 421, 435, "2F93CF", 10, 1, "Confirm Use Book") Then
+							Click(420, 430, 1, 0, "Confirm Use Book")
+						EndIf
+						SetLog("Successfully using Hero Book", $COLOR_SUCCESS)
+					Else
+						SetLog("No Hero Book Available", $COLOR_DEBUG2)
 					EndIf
+				Else
+					SetLog("Unable to verify Hero Hall Window", $COLOR_DEBUG2)
 				EndIf
 			Else
 				SetLog("Use Hero Books enabled, but hero Upgrade time < " & $g_iHeroMinUpgradeTime & " Days", $COLOR_DEBUG2)
 			EndIf
-		Else
-			Clickaway() ;close Upgrade Window
 		EndIf
+		If _Sleep(500) Then Return
 		Clickaway() ; close Hero Hall window
 	EndIf
 	

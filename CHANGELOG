@@ -1,15 +1,3 @@
-* **v.7.9.9 Mod_v1.2.6#123** (2026-04-30)
-* Fix Siege Detection 
-* Fix Upgrade Hero on Auto Upgrade
-* Faster detection on chest page return home page
-* Fix wallupgrade +1 on wall level 12
-* Fix Revenge Defense layout pick
-*
-* **v.7.9.9 Mod_v1.2.6#124** (2026-05-01)
-* Fix use Hero Book
-* Support Skeleton Default Scenery
-* Fix redline on skeleton default scenery
-*
 * **v.7.9.9 Mod_v1.2.6#125** (2026-05-07)
 * Fix switch Hero while upgrading
 * Add Ignore Upgrade for Minion Prince
@@ -33,3 +21,8 @@
 * Please check your Laboratory upgrade setting
 * FillArmyCamp now support SuperBarb
 * Add feature use clan castle cake
+* 
+* **v.7.9.9 Mod_v1.2.6#127** (2026-05-19)
+* Fix Use Hero Book
+* Fix Read DE on search
+* Fix use hero book on Duke Upgrade
