@@ -238,7 +238,6 @@ Global $g_sImgNextButton = @ScriptDir & "\imgxml\Attack\Search\NextButton\"
 Global $g_sImgSwitchSiegeMachine = @ScriptDir & "\imgxml\Switch\SiegeMachines\"
 Global $g_sImgSwitchSiegeButton = @ScriptDir & "\imgxml\Switch\SiegeButton\"
 Global $g_sImgSwitchWardenMode = @ScriptDir & "\imgxml\Switch\WardenMode\"
-Global $g_sImgResourceAttack = @ScriptDir & "\imgxml\Attack\Resource\"
 #EndRegion
 
 #Region Search

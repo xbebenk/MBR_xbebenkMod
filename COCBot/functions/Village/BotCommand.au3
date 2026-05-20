@@ -16,7 +16,7 @@
 #include-once
 
 Func BotCommand()
-
+	
 	Static $TimeToStop = -1
 
 	Local $bChkBotStop, $iCmbBotCond, $iCmbBotCommand
@@ -28,6 +28,7 @@ Func BotCommand()
 	$g_bMeetCondStop = False ; reset flags so bot can restart farming when conditions change.
 	$g_bTrainEnabled = True
 	$g_bDonationEnabled = True
+	$g_iCommandStop = -1
 
 	If $bChkBotStop Then
 

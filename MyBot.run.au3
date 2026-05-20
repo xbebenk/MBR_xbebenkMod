@@ -701,9 +701,6 @@ Func runBot() ;Bot that runs everything in order
 	While 1
 		If Not $g_bRunState Then Return
 		$g_bRestart = False
-		;$g_bFullArmy = False
-		;$g_bIsFullArmywithHeroesAndSpells = False
-		$g_iCommandStop = -1
 
 		If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
 
@@ -742,7 +739,7 @@ Func runBot() ;Bot that runs everything in order
 
 			If IsSearchAttackEnabled() Then
 				If $g_bRestart = True Then ContinueLoop
-				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then AttackMain()
+				If Not $g_bMeetCondStop Then AttackMain()
 			Else
 				$iWaitTime = Random($DELAYWAITATTACK1, $DELAYWAITATTACK2)
 				SetLog("Attacking Not Planned and Skipped, Waiting random " & StringFormat("%0.1f", $iWaitTime / 1000) & " Seconds", $COLOR_WARNING)
@@ -800,7 +797,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		NotifyPendingActions()
 		If _Sleep($DELAYIDLE1) Then Return
 
-		If $g_iCommandStop = -1 Then SetLog("====== _Idle() ======", $COLOR_SUCCESS)
+		If Not $g_bMeetCondStop Then SetLog("====== _Idle() ======", $COLOR_SUCCESS)
 		Local $hTimer = __TimerInit()
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles()
@@ -1163,7 +1160,7 @@ Func FirstCheck()
 	waitMainScreen() ;check mainscreen and remove any obstacle window/popup
 	If BotCommand() Then btnStop()
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 1) Then
+	If ProfileSwitchAccountEnabled() And $g_bMeetCondStop Then
 		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
 		If Not $g_bRunState Then Return
@@ -1184,7 +1181,7 @@ Func FirstCheckRoutine()
 	SetDebugLog("g_bRunState: " & String($g_bRunState))
 	If Not $g_bRunState Then Return
 	
-	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
+	If Not $g_bMeetCondStop Then
 		; Now the bot can attack
 		UseFreeMagicItem()
 		Setlog("Before any other routine let's attack!", $COLOR_INFO)
@@ -1283,7 +1280,7 @@ Func FirstCheckRoutine()
 		
 		If BotCommand() Then btnStop()
 		If Not $g_bRunState Then Return
-		If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 And Not $g_bChkAttackOnce Then
+		If Not $g_bMeetCondStop And Not $g_bChkAttackOnce Then
 			Setlog("Let's attack Again!", $COLOR_INFO)
 			$g_bRestart = False ;reset
 			Local $loopcount = 1

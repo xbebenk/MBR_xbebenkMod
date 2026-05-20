@@ -50,7 +50,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	Local $iAdditionalY = 100
 	Local $aResult = 0, $stone, $tree, $x, $y
 	
-	$stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY)
+	$stone = FindStone($sDirectory)
 	If Not $g_bRunState Then Return 0
 	SetDebugLog("stone: " & _ArrayToString($stone))
 	If $stone[0] = 0 Then
@@ -59,7 +59,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		Return FuncReturn($aResult)
 	EndIf
 	
-	$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4])
+	$tree = FindTree($sDirectory, $sTreePrefix, $stone[4])
 	If Not $g_bRunState Then Return 0
 	SetDebugLog("tree: " & _ArrayToString($tree))
 	If $tree[0] = 0 Then
@@ -71,7 +71,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		Local $a = $tree[0] - $stone[0]
 		Local $b = $stone[1] - $tree[1]
 		Local $c = Sqrt($a * $a + $b * $b) ;measure distance from stone to tree
-		Local $ZoomOffset = 100, $checkZoomOffset = 0
+		Local $ZoomOffset = 60, $checkZoomOffset = 0
 			
 		Local $iRefSize = 600
 		Local $iIndex = _ArraySearch($g_aVillageRefSize, $stone[4])
@@ -136,7 +136,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	FuncReturn()
 EndFunc   ;==>GetVillageSize
 
-Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAdditionalX = 100, $iAdditionalY = 100)
+Func FindStone_old($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAdditionalX = 100, $iAdditionalY = 100)
 	Local $stone = [0, 0, 0, 0, 0, ""]
 	Local $x0, $y0, $d0, $x, $y, $x1, $y1, $right, $bottom, $a, $b
 	Local $aStoneFiles
@@ -192,7 +192,96 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAddit
 	Return $stone
 EndFunc
 
-Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAdditionalX = 150, $iAdditionalY = 100, $sStoneName = "DS")
+Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone")
+	Local $stone = [0, 0, 0, 0, 0, ""]
+	Local $a
+	
+	For $check = 1 To 2
+		SetDebugLog("FindStone check : " & $check)
+		If $check = 1 Then 
+			If Not QuickMIS("BFI", $sDirectory & $sStonePrefix & "\stone" & $g_sSceneryCode & "*", 0, 350, 250, 580) Then
+				SetDebugLog("Cannot Find stone file: " & $sStonePrefix & $g_sSceneryCode)
+				ContinueLoop
+			Else
+				$a = StringRegExp($g_sQuickMISName,"stone([0-9A-Z]+)-(\d+)-(\d+)(_.*[.]xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
+				If UBound($a) = 4 Then
+					$stone[0] = $g_iQuickMISX ; x center of stone found
+					$stone[1] = $g_iQuickMISY ; y center of stone found
+					$stone[2] = $a[1] ; x center of reference stone
+					$stone[3] = $a[2] ; y center of reference stone
+					$stone[4] = $a[0] ; distance from stone to tree in pixel
+					$stone[5] = "stone" & $a[0] & "-" & $a[1] & "-" & $a[2] & $a[3]
+					SetDebugLog("Found stone image: " & $stone[5])
+					SetDebugLog("Set $g_sSceneryCode = " & $g_sSceneryCode)
+					Return $stone
+				EndIf					
+			EndIf
+		Else
+			If QuickMIS("BC1", $sDirectory & $sStonePrefix, 0, 350, 250, 580) Then
+				$a = StringRegExp($g_sQuickMISName,"stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+				If UBound($a) = 3 Then
+					$stone[0] = $g_iQuickMISX ; x center of stone found
+					$stone[1] = $g_iQuickMISY ; y center of stone found
+					$stone[2] = $a[1] ; x center of reference stone
+					$stone[3] = $a[2] ; y center of reference stone
+					$stone[4] = $a[0] ; distance from stone to tree in pixel
+					$stone[5] = "stone" & $a[0] & "-" & $a[1] & "-" & $a[2]
+					$g_sSceneryCode = $a[0]
+					SetDebugLog("Found stone image: " & $stone[5])
+					SetDebugLog("Set $g_sSceneryCode = " & $g_sSceneryCode)
+					Return $stone
+				EndIf
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+	Next
+	Return $stone
+EndFunc
+
+Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree\tree", $sSceneryCode = $g_sSceneryCode)
+	Local $tree = [0, 0, 0, 0, 0, ""]
+	Local $a
+	
+	For $check = 1 To 2
+		SetDebugLog("FindTree check : " & $check)
+		If $check = 1 Then 
+			If Not QuickMIS("BFI", $sDirectory & $sTreePrefix & "\tree" & $sSceneryCode & "*", 430, 0, 860, 350) Then
+				SetDebugLog("Cannot Find tree file: " & $sTreePrefix & $sSceneryCode)
+				ContinueLoop
+			Else
+				$a = StringRegExp($g_sQuickMISName,"tree([0-9A-Z]+)-(\d+)-(\d+)(_.*[.]xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
+				If UBound($a) = 4 Then
+					$tree[0] = $g_iQuickMISX ; x center of tree found
+					$tree[1] = $g_iQuickMISY ; y center of tree found
+					$tree[2] = $a[1] ; x center of reference tree
+					$tree[3] = $a[2] ; y center of reference tree
+					$tree[4] = $a[0] ; distance from tree to tree in pixel
+					$tree[5] = "tree" & $a[0] & "-" & $a[1] & "-" & $a[2] & $a[3]
+					SetDebugLog("Found tree image: " & $tree[5])
+					Return $tree
+				EndIf					
+			EndIf
+		Else
+			If QuickMIS("BC1", $sDirectory & $sTreePrefix, 0, 350, 250, 580) Then
+				$a = StringRegExp($g_sQuickMISName,"tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+				If UBound($a) = 3 Then
+					$tree[0] = $g_iQuickMISX ; x center of tree found
+					$tree[1] = $g_iQuickMISY ; y center of tree found
+					$tree[2] = $a[1] ; x center of reference tree
+					$tree[3] = $a[2] ; y center of reference tree
+					$tree[4] = $a[0] ; distance from tree to tree in pixel
+					$tree[5] = "tree" & $a[0] & "-" & $a[1] & "-" & $a[2]
+					SetDebugLog("Found tree image: " & $tree[5])
+					Return $tree
+				EndIf
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+	Next
+	Return $tree
+EndFunc
+
+Func FindTree_old($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAdditionalX = 150, $iAdditionalY = 100, $sStoneName = "DS")
 	Local $tree = [0, 0, 0, 0, 0, ""]
 	Local $x0, $y0, $d0, $x, $y, $x1, $y1, $right, $bottom, $a, $b, $i, $findImage, $sArea
 	Local $aTreeFiles = _FileListToArray($sDirectory & "tree\", $sTreePrefix & "*.*", $FLTA_FILES)

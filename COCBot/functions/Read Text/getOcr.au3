@@ -15,7 +15,7 @@ Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets comp
 EndFunc   ;==>getNameBuilding
 
 Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
-	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 18, True)
+	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 21, True)
 EndFunc   ;==>getGoldVillageSearch
 
 Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True) ;
@@ -27,15 +27,15 @@ Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
 EndFunc   ;==>getRemainTrainTimer
 
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
-	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 18, True)
+	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 21, True)
 EndFunc   ;==>getElixirVillageSearch
 
 Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
-	Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 18, True)
+	Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 21, True)
 EndFunc   ;==>getDarkElixirVillageSearch
 
 Func getTrophyVillageSearch($x_start, $y_start) ;48, 69+99 or 69+69 -> Gets complete value of Trophies xxx,xxx , top left, Getresources.au3
-	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True)
+	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 21, True)
 EndFunc   ;==>getTrophyVillageSearch
 
 Func getTrophyMainScreen($x_start, $y_start) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
@@ -201,10 +201,6 @@ EndFunc   ;==>getArmyCapacityOnTrainSpell
 Func getQueueTroopsQuantity($x_start, $y_start) ;  -> Gets quantity of troops in Queue in Train Tab
 	Return StringReplace(getOcrAndCapture("coc-qqtroop", $x_start, $y_start, 58, 15, True), "-", "")
 EndFunc   ;==>getQueueTroopsQuantity
-
-Func getAttackDisable($x_start, $y_start) ;  -> 346, 182 - Gets red text disabled for early warning of Personal Break
-	Return getOcrAndCapture("coc-dis", $x_start, $y_start, 118, 24, True)
-EndFunc   ;==>getAttackDisable
 
 Func getOcrLanguage($x_start, $y_start) ;  -> Get english language - main screen - "Attack" text on attack button
 	Return getOcrAndCapture("coc-ms-testl", $x_start, $y_start, 93, 16, True)

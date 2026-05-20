@@ -24,18 +24,14 @@ Func TestSmartFarm()
 	Setlog("Starting the SmartFarm Attack Test()", $COLOR_INFO)
 
 	CheckMainScreen(False, $g_bStayOnBuilderBase, "TestSmartFarm")
-	CheckIfArmyIsReady()
+	;CheckIfArmyIsReady()
 	ClickAway()
 	If _Sleep(100) Then Return FuncReturn()
-	If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
-		If _Sleep(100) Then Return FuncReturn()
-		PrepareSearch()
-		If _Sleep(1000) Then Return FuncReturn()
-		VillageSearch()
-		If _Sleep(100) Then Return FuncReturn()
-	Else
-		SetLog("Your Army is not prepared, check the Attack/train options")
-	EndIf
+	If _Sleep(100) Then Return
+	PrepareSearch()
+	If _Sleep(1000) Then Return FuncReturn()
+	VillageSearch()
+	If _Sleep(100) Then Return FuncReturn()
 
 	PrepareAttack($g_iMatchMode)
 

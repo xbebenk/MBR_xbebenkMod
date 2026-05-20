@@ -14,12 +14,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func VillageSearch()
+Func VillageSearch($bTest = False)
 
 	$g_bVillageSearchActive = True
 	$g_bCloudsActive = True
 
-	Local $Result = _VillageSearch()
+	Local $Result = _VillageSearch($bTest)
 	If $g_bSearchAttackNowEnable Then
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
@@ -32,7 +32,7 @@ Func VillageSearch()
 
 EndFunc   ;==>VillageSearch
 
-Func _VillageSearch() ;Control for searching a village that meets conditions
+Func _VillageSearch($bTest = False) ;Control for searching a village that meets conditions
 	Local $Result
 	Local $weakBaseValues
 	Local $logwrited = False
@@ -340,40 +340,33 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		If $g_bDebugDeadBaseImage Then setZombie()
 		
 		Local $i = 0
-		For $i = 1 To 60
+		For $i = 1 To 20
 			If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then
 				$g_bCloudsActive = True
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				ExitLoop
 			Else
 				SetLog("Wait to see Next Button #" & $i, $COLOR_ACTION)
-				If $i > 10 Then 
+				If $i > 5 Then 
 					AndroidPageError("Village Search")
 				EndIf
 			EndIf
-			
-			If IsProblemAffect() Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
+				
+			If IsProblemAffect() Or GetAndroidProcessPID() = 0 Then 
 				$g_bIsClientSyncError = True
-				checkMainScreen(True, $g_bStayOnBuilderBase, "VillageSearch")
-				If $g_bRestart Then
-					$g_iNbrOfOoS += 1
-					UpdateStats()
-					SetLog("Couldn't locate Next button", $COLOR_ERROR)
-					PushMsg("OoSResources")
-				Else
-					SetLog("Have strange problem Couldn't locate Next button, Restarting CoC and Bot...", $COLOR_ERROR)
-					$g_bIsClientSyncError = False ; disable fast OOS restart if not simple error and try restarting CoC
-					CloseCoC(True)
-				EndIf
-				Return
+				$g_iNbrOfOoS += 1
+				$g_bRestart = True
 			EndIf
 			If _Sleep(500) Then Return
 		Next
 
 		If _Sleep($DELAYRESPOND) Then Return
 		
-		If $g_bRestart = True Then Return ; exit func
-
+		If $g_bRestart Then 
+			checkMainScreen(True, False, "VillageSearch")
+			Return ; exit func
+		EndIf
+		
 		If isGemOpen(True) = True Then
 			SetLog(" Not enough gold to keep searching.....", $COLOR_ERROR)
 			Click(585, 252, 1, 0, "#0156") ; Click close gem window "X"

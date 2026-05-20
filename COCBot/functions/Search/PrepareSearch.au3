@@ -143,16 +143,16 @@ Func PrepareSearchCheckArmy()
 		If WaitforPixel(695, 500, 696, 501, "C2ED91", 20, 1) Then
 			FillArmyCamp()
 			Click(695, 500, 1, 0, "ArmyOverview Attack Button")
-			$bRet = True
 			If _Sleep(1000) Then Return
 			If IsOKCancelPage(True) Then 
 				Click(535, 410, 1, 0, "Confirm Attack OK")
 				$g_bLeagueAttack = True
 			EndIf
+			$bRet = True
 			If _Sleep(1000) Then Return
-			ExitLoop
 		EndIf
 		If _Sleep(500) Then Return
+		If IsAttackPage(False, 1) Then ExitLoop
 	Next
 	
 	Return $bRet

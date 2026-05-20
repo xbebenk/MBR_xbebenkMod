@@ -28,6 +28,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	If $bSetLog Then SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	If Not CheckAndroidRunning(False) Then Return
+	If GetAndroidProcessPID() = 0 Then CloseCoC(True)
 	PlaceUnplacedBuilding()
 	PlacedOnLeague()
 	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False

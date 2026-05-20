@@ -141,7 +141,7 @@ Func SwitchTo($To = "BB")
 					$FalseDetectionCount = 0
 					If $To = "BB" Then
 						$sScode = $g_sSceneryCode
-						$g_sSceneryCode = "BB"
+						$g_sSceneryCode = "BL"
 					Else
 						If $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = False
 						$g_sSceneryCode = $sScode
