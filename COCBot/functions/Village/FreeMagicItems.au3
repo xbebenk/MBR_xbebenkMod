@@ -486,7 +486,7 @@ Func UseFreeMagicItem()
 				$y = $g_iQuickMISY + 40
 				Click($x, $y)
 				If _Sleep(500) Then Return
-				If $g_sQuickMISName = "Full" Then
+				If $g_sQuickMISName = "Full" And $g_bChkSellItemFromMagicBox Then
 					If WaitforPixel(345, 520, 346, 520, Hex(0xF71E22, 6), 10, 1, "FreeMagicItem Full") Then 
 						Click(260, 510, 1, 0, "Sell magic Item")
 						If _Sleep(500) Then Return

@@ -838,7 +838,7 @@ Global $g_iTxtRestartGold = 10000
 Global $g_iTxtRestartElixir = 25000
 Global $g_iTxtRestartDark = 500
 Global $g_bChkCollect = True, $g_bChkTombstones = True, $g_bChkCleanYard = False, $g_bChkGemsBox = False
-Global $g_bChkTreasuryCollect = False, $g_bChkCollectLootCart = False, $g_bChkCollectCookie = False
+Global $g_bChkTreasuryCollect = False, $g_bChkCollectLootCart = False, $g_bChkCollectCookie = False, $g_bChkSellItemFromMagicBox = False
 
 Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCleanBBYard = False
 

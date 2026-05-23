@@ -397,6 +397,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkCollectLootCart, $g_sProfileConfigPath, "other", "ChkCollectLootCart", False, "Bool")
 	IniReadS($g_bChkTreasuryCollect, $g_sProfileConfigPath, "other", "ChkCollectTreasury", False, "Bool")
 	IniReadS($g_bChkCollectCookie, $g_sProfileConfigPath, "other", "ChkCollectCookie", False, "Bool")
+	IniReadS($g_bChkSellItemFromMagicBox, $g_sProfileConfigPath, "other", "ChkSellItemFromMagicBox", False, "Bool")
 	
 	IniReadS($g_bChkTombstones, $g_sProfileConfigPath, "other", "chkTombstones", False, "Bool")
 	IniReadS($g_bChkCleanYard, $g_sProfileConfigPath, "other", "chkCleanYard", False, "Bool")
