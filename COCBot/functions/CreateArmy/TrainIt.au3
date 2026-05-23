@@ -36,16 +36,18 @@ Func CorrectYCoord(ByRef $aTrainPos)
 EndFunc
 
 Func GetCoordToUse(Const $iIndex)
-	If $g_bDebugSetlogTrain Then SetDebugLog("GetCoordToUse(" & $iIndex & ")")
+	SetDebugLog("GetCoordToUse(" & $iIndex & ")")
 	Local $sFilter = "", $sDir = "", $bSiege = False, $aRet[0]
 	Select
 		Case $iIndex >= $eBarb And $iIndex <= $eIWiza ;Troop
 			$sFilter = $g_asTroopShortNames[$iIndex]
 			$sDir = $g_sImgTrainTroops
 		Case $iIndex >= $eLSpell And $iIndex <= $eOgSpell ;Spell
-			$sFilter = $g_asSpellShortNames[$iIndex]
+			$sFilter = $g_asSpellShortNames[$iIndex - $eLSpell]
+			$sDir = $g_sImgTrainSpells
 		Case $iIndex >= $eWallW And $iIndex <= $eSkyW ;Siege Machine
-			$sFilter = $g_asSiegeMachineShortNames[$iIndex]
+			$sFilter = $g_asSiegeMachineShortNames[$iIndex - $eWallW]
+			$sDir = $g_sImgTrainSieges
 			$bSiege = True
 	EndSelect
 	
