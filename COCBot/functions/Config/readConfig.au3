@@ -865,7 +865,7 @@ Func ReadConfig_600_17()
 	IniReadS($g_bChkOnly1Builder, $g_sProfileConfigPath, "upgrade", "Only1Builder", True, "Bool")
 	IniReadS($g_bUpgradeSpesificWall, $g_sProfileConfigPath, "upgrade", "SpesificWall", True, "Bool")
 	IniReadS($g_iTargetWallLevel, $g_sProfileConfigPath, "upgrade", "WallLevel", 0, "int")
-	
+	IniReadS($g_iSearchWallSort, $g_sProfileConfigPath, "upgrade", "SearchWallSort", 0, "int")
 EndFunc   ;==>ReadConfig_600_17
 
 Func ReadConfig_600_18()

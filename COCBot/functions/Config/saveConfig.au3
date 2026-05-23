@@ -716,6 +716,7 @@ Func SaveConfig_600_17()
 	_Ini_Add("upgrade", "Only1Builder", $g_bChkOnly1Builder ? 1 : 0)
 	_Ini_Add("upgrade", "SpesificWall", $g_bUpgradeSpesificWall ? 1 : 0)
 	_Ini_Add("upgrade", "WallLevel", $g_iTargetWallLevel)
+	_Ini_Add("upgrade", "SearchWallSort", $g_iSearchWallSort)
 EndFunc   ;==>SaveConfig_600_17
 
 Func SaveConfig_600_18()

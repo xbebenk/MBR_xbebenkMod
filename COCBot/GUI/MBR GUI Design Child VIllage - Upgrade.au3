@@ -42,7 +42,7 @@ Global $g_hTxtUpgrMinGold = 0, $g_hTxtUpgrMinElixir = 0, $g_hTxtUpgrMinDark = 0
 Global $g_hChkWalls = 0, $g_hTxtWallMinGold = 0, $g_hTxtWallMinElixir = 0, $g_hChkUseGold = 0, $g_hChkUseElixir = 0, $g_hChkUseElixirGold = 0
 Global $g_hChkSaveWallBldr = 0, $g_hAutoAdjustSaveWall = 0
 Global $g_hBtnFindWalls = 0, $g_hChkOnly1Builder = 0
-Global $g_hCmbTargetWallLevel = 0, $g_hLblWallCost = 0
+Global $g_hCmbTargetWallLevel = 0, $g_hCmbSearchWallSort = 0
 
 ; Auto Upgrade
 Global $g_hChkAutoUpgrade = 0, $g_hLblAutoUpgrade = 0, $g_hTxtAutoUpgradeLog = 0
@@ -623,10 +623,14 @@ Func CreateWallsSubTab()
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CmbTargetWallLevel", "Select Wall Level to Upgrade or select Any for any level wall"))
 		GUICtrlSetData(-1, "Any|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17", "Any")
 		GUICtrlSetOnEvent(-1, "cmbWallLevel")
-		$y += 20
-		$g_hLblWallCost = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "WallCost", ""), $x + 20, $y, -1, -1)
 		
-
+		$y += 24
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Walls", "TargetWallSearch", "Search Wall:"), $x + 30, $y + 3, -1, -1)
+		$g_hCmbSearchWallSort = GUICtrlCreateCombo("", $x + 100, $y, 90, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TargetWallSearch", "Search Wall Order Lowest to Highest / reverse"))
+		GUICtrlSetData(-1, "Lowest level|Highest Level", "Highest Level")
+		GUICtrlSetOnEvent(-1, "cmbSortWall")
+		
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateWallsSubTab

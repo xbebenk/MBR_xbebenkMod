@@ -1074,6 +1074,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOnly1Builder, $g_bChkOnly1Builder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTargetWallLevel, $g_iTargetWallLevel)
+			_GUICtrlComboBox_SetCurSel($g_hCmbSearchWallSort, $g_iSearchWallSort)
 			chkWalls()
 			cmbWallLevel()
 		Case "Save"
@@ -1092,6 +1093,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 			$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
 			$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
 			$g_iTargetWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbTargetWallLevel)
+			$g_iSearchWallSort = _GUICtrlComboBox_GetCurSel($g_hCmbSearchWallSort)
 			$g_bUpgradeSpesificWall = (_GUICtrlComboBox_GetCurSel($g_hCmbTargetWallLevel) = 0 ? False : True)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_17

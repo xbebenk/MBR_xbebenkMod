@@ -943,7 +943,7 @@ Global $g_iUpgradeWallMinGold = 0, $g_iUpgradeWallMinElixir = 0, $g_bUpgradeWall
 Global $g_iUpgradeWallLootType = 0, $g_bUpgradeWallSaveBuilder = False, $g_bChkOnly1Builder = False
 Global $g_iUpgradedWallLevel = 0, $g_bUpgradeLowWall = False, $g_iLowLevelWall = 4, $g_bUpgradeAnyWallLevel = False
 Global $g_iSaveGoldWall = 0, $g_iSaveElixWall = 0
-Global $g_bUpgradeSpesificWall = False, $g_iTargetWallLevel = 0, $g_bAutoAdjustSaveWall = False
+Global $g_bUpgradeSpesificWall = False, $g_iTargetWallLevel = 0, $g_iSearchWallSort = 0, $g_bAutoAdjustSaveWall = False
 
 ; Upgrading - Wall
 Global Const $g_aiWallCost[18] = [0, 1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000, 8000000]

@@ -440,6 +440,7 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 	Local $iWallLevelToDelete = $g_iTownHallLevel
 
 	SetLog("Search Wall on Village", $COLOR_DEBUG)
+	SetLog("Sort WallLevel: " & String($g_iSearchWallSort), $COLOR_DEBUG)
 	If Not $bDisplayArray Then ZoomOut()
 	
 	$aWall = QuickMIS("CNX", $g_sImgCheckWallDir)
@@ -480,7 +481,7 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 			SetLog("or select Any Level on upgrade wall setting", $COLOR_DEBUG2)
 			Return False
 		EndIf
-		_ArraySort($aWall, 0, 0, 0, 3) ;short wall level descending
+		_ArraySort($aWall, $g_iSearchWallSort, 0, 0, 3) ;short wall level descending
 
 		SetDebugLog("Your TownHall Level: " & $g_iTownHallLevel & ", Exluding Wall Level >= " & $iWallLevelToDelete, $COLOR_INFO)
 		SetDebugLog("Found " & UBound($aWall) - 1 & " Wall on Village", $COLOR_DEBUG)
