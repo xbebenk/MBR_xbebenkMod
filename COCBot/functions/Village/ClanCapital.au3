@@ -189,25 +189,6 @@ Func WaitStartCraftWindow()
 	Return $bRet
 EndFunc
 
-Func RemoveDupCNX(ByRef $arr, $sortBy = 1, $distance = 10)
-	Local $atmparray[0][4]
-	Local $tmpCoord = 0
-	_ArraySort($arr, 0, 0, 0, $sortBy) ;sort by 1 = , 2 = y
-	For $i = 0 To UBound($arr) - 1
-		SetDebugLog("SortBy:" & $arr[$i][$sortBy])
-		SetDebugLog("tmpCoord:" & $tmpCoord)
-		If $arr[$i][$sortBy] >= $tmpCoord + $distance Then
-			_ArrayAdd($atmparray, $arr[$i][0] & "|" & $arr[$i][1] & "|" & $arr[$i][2] & "|" & $arr[$i][3])
-			$tmpCoord = $arr[$i][$sortBy] + $distance
-		Else
-			SetDebugLog("Skip this dup: " & $arr[$i][$sortBy] & " is near " & $tmpCoord, $COLOR_INFO)
-			ContinueLoop
-		EndIf
-	Next
-	$arr = $atmparray
-	SetDebugLog(_ArrayToString($arr))
-EndFunc
-
 Func ForgeClanCapitalGold($bTest = False)
 	
 	Local $aForgeType[5] = [$g_bChkEnableForgeGold, $g_bChkEnableForgeElix, $g_bChkEnableForgeDE, $g_bChkEnableForgeBBGold, $g_bChkEnableForgeBBElix]

@@ -153,7 +153,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					Return $CoordsInArray
 					
 				Case "CNX" 
-					Local $Result[0][4]
+					Local $aResult[0][4]
 					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
 					Local $sResult = ""
 					For $i = 0 To UBound($KeyValue) - 1
@@ -165,15 +165,15 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 							If UBound(decodeSingleCoord($xy[$j])) > 1 Then 
 								Local $Tmpxy = StringSplit($xy[$j], ",", $STR_NOCOUNT)
 								Local $tmparray[1][4] = [[String($objName[0]), Number($Tmpxy[0] + $Left), Number($Tmpxy[1] + $Top), String($objName[1])]]
-								_ArrayAdd($Result, $tmparray)
+								_ArrayAdd($aResult, $tmparray)
 								If @error Then SetLog("QuickMIS-CNX ComposeArray Err : " & @error, $COLOR_ERROR)
 								$sResult &= "|" & $objName[0] & "," & $Tmpxy[0] + $Left & "," & $Tmpxy[1] + $Top & "," & $objName[1]
 							EndIf
 						Next
 					Next
 					SetDebugLog($ValueReturned & " Found: " & $sResult)
-					If $g_bDebugImageSave Then DebugQuickMISCNX($Result, "CNX")
-					Return $Result
+					If $g_bDebugImageSave Then DebugQuickMISCNX($aResult, "CNX")
+					Return $aResult
 
 				Case "N1" ; name of first file found
 
@@ -251,7 +251,7 @@ Func DebugQuickMISCNX($aResult = Default, $DebugText = "")
 	
 	If IsArray($aResult) Then
 		For $i = 0 To UBound($aResult) - 1
-			_GDIPlus_GraphicsDrawRect($hGraphic, $aResult[$i][1] - 3, $aResult[$i][2] - 3, 5, 5, $hPenRED)
+			addInfoToDebugImage($hGraphic, $hPenRED, $aResult[$i][0] & "_" & $aResult[$i][3], $aResult[$i][1] - 3, $aResult[$i][2] - 3)
 		Next
 	EndIf
 
@@ -261,3 +261,23 @@ Func DebugQuickMISCNX($aResult = Default, $DebugText = "")
 	_GDIPlus_BitmapDispose($editedImage)
 
 EndFunc   ;==>DebugQuickMIS
+
+Func RemoveDupCNX(ByRef $arr, $sortBy = 1, $distance = 10)
+	Local $atmparray[0][4]
+	Local $tmpCoord = 0
+	_ArraySort($arr, 0, 0, 0, $sortBy) ;sort by 1 = x, 2 = y
+	For $i = 0 To UBound($arr) - 1
+		SetDebugLog("tmpCoord:" & $tmpCoord)
+		SetDebugLog("[" & $i & "]: " & $arr[$i][1] & "," & $arr[$i][2] & "|" & $arr[$i][0] & "|" & $arr[$i][3])
+		If $arr[$i][$sortBy] >= $tmpCoord + $distance Then
+			_ArrayAdd($atmparray, $arr[$i][0] & "|" & $arr[$i][1] & "|" & $arr[$i][2] & "|" & $arr[$i][3])
+			$tmpCoord = $arr[$i][$sortBy] + $distance
+		Else
+			SetDebugLog("Skip this dup: " & $arr[$i][$sortBy] & " is near " & $tmpCoord, $COLOR_INFO)
+			ContinueLoop
+		EndIf
+	Next
+	$arr = $atmparray
+	SetDebugLog(_ArrayToString($arr))
+EndFunc
+

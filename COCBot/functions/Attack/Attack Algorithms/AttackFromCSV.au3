@@ -44,6 +44,8 @@ Global $InnerDiamondTop = 60
 Global $InnerDiamondBottom = 636
 Global $InnerDiamandDiffX = 40
 Global $InnerDiamandDiffY = 30
+Global $DiamondMiddleX = ($InnerDiamondLeft + $InnerDiamondRight) / 2
+Global $DiamondMiddleY = ($InnerDiamondTop + $InnerDiamondBottom) / 2
 
 Global $OuterDiamondLeft = 0
 Global $OuterDiamondRight = 0
@@ -53,8 +55,8 @@ Global $OuterDiamondBottom = 0
 ConvertInternalExternArea() ; initial layout so variables are not empty
 
 Func ConvertInternalExternArea()
-	Local $DiamondMiddleX = ($InnerDiamondLeft + $InnerDiamondRight) / 2
-	Local $DiamondMiddleY = ($InnerDiamondTop + $InnerDiamondBottom) / 2
+	$DiamondMiddleX = ($InnerDiamondLeft + $InnerDiamondRight) / 2
+	$DiamondMiddleY = ($InnerDiamondTop + $InnerDiamondBottom) / 2
 	$g_iMiddleY = $DiamondMiddleY
 	
 	$OuterDiamondLeft = $InnerDiamondLeft - $InnerDiamandDiffX

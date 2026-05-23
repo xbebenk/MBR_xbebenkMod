@@ -37,16 +37,16 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 		$result = DllCallMyBot("getRedAreaSideBuilding", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation, "int", $eSideBuildingTH)
 		SetDebugLog("Debug: Redline with TH Side chosen")
 	Else ; Normal getRedArea
-
+		SetLog(" ==> _GetRedArea $iMode = " & $iMode, $COLOR_DEBUG)
 		Switch $iMode
-			Case $REDLINE_NONE ; No red line
+			Case $REDLINE_NONE ; No red line 3
 				Local $a = ["NoRedLine", "", "", "", ""]
 				$listPixelBySide = $a
-			Case $REDLINE_IMGLOC_RAW ; ImgLoc raw red line routine
+			Case $REDLINE_IMGLOC_RAW ; ImgLoc raw red line routine 0
 				; ensure redline exists
 				SearchRedLinesModMultipleTimes()
 				$listPixelBySide = getRedAreaSideBuilding()
-			Case $REDLINE_IMGLOC ; New ImgLoc based deployable red line routine
+			Case $REDLINE_IMGLOC ; New ImgLoc based deployable red line routine 1
 				; ensure redline exists
 				SearchRedLinesModMultipleTimes()
 				$listPixelBySide = getRedAreaSideBuilding()
@@ -60,7 +60,7 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 					$g_aiPixelTopRight =  _SortRedline(GetOffSetRedline("TR"))
 					Local $listPixelBySide = ["ImgLoc", $g_aiPixelTopLeft, $g_aiPixelBottomLeft, $g_aiPixelBottomRight, $g_aiPixelTopRight]
 				#ce
-			Case $REDLINE_ORIGINAL ; Original red line routine
+			Case $REDLINE_ORIGINAL ; Original red line routine 2
 				Local $result = DllCallMyBot("getRedArea", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation)
 				If IsArray($result) Then
 					$listPixelBySide = StringSplit($result[0], "#")
