@@ -108,12 +108,13 @@ Func CheckHeroOnUpgrade()
 EndFunc
 
 Func CheckCookieReinforcement()
+	
+	If Not $g_bUseCake Then Return ;exit if not enabled
+	
 	Local $sTroop, $sSpell, $sSiege
 	$sTroop = $g_aCmbRequestTroop[$g_iCmbRequestTroop]
 	$sSpell = $g_aCmbRequestSpell[$g_iCmbRequestSpell]
 	$sSiege = $g_aCmbRequestSiege[$g_iCmbRequestSiege]
-	
-	If Not $g_bUseCake Then Return ;exit if not enabled
 	
 	If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 650, 450, 725, 485) Then ;check on Castle cake reinforcement
 		SetLog("Removing Request", $COLOR_DEBUG)
