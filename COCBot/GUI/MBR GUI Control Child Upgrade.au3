@@ -716,7 +716,11 @@ EndFunc
 Func cmbWallLevel()
 	$g_bUpgradeSpesificWall = (GUICtrlRead($g_hCmbTargetWallLevel) = 0 ? False : True)
 	$g_iTargetWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbTargetWallLevel)
-	($g_bUpgradeSpesificWall ? GUICtrlSetState($g_hCmbSearchWallSort, $GUI_DISABLE) : GUICtrlSetState($g_hCmbSearchWallSort, $GUI_ENABLE))
+	If $g_bUpgradeSpesificWall then
+		GUICtrlSetState($g_hCmbSearchWallSort, $GUI_DISABLE) 
+	Else 
+		GUICtrlSetState($g_hCmbSearchWallSort, $GUI_ENABLE)
+	EndIf
 EndFunc
 
 Func cmbSortWall()

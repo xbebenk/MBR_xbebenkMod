@@ -1,11 +1,3 @@
-* **v.7.9.9 Mod_v1.2.6#125** (2026-05-07)
-* Fix switch Hero while upgrading
-* Add Ignore Upgrade for Minion Prince
-* Add Ignore Upgrade for Dragon Duke
-* Forced to save DE = 25k if enabled boost supertroop
-* Add feature spend BuilderBase Gold on Wall
-* Fix SmartFarm DropCC/DropHeroes
-*
 * **v.7.9.9 Mod_v1.2.6#126** (2026-05-15)
 * Fix Outer Diamond on Remove Gembox
 * Add Support for Upgrade Troop Launcher on Laboratory
@@ -26,3 +18,10 @@
 * Fix Use Hero Book
 * Fix Read DE on search
 * Fix use hero book on Duke Upgrade
+*
+* **v.7.9.9 Mod_v1.2.6#128** (2026-05-24)
+* Fix FillIncorrect Combo spell
+* refactor smartfarm attack
+* re-image collector/mines/drill
+* Add option to not sell magic item
+* Support use book for Dragon Duke
