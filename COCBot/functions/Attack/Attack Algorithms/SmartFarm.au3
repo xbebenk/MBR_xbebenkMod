@@ -148,11 +148,11 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_IMGLOC)
 	Local $SidesExt[4] = ["Top-Left", "Top-Right", "Bottom-Left", "Bottom-Right"]
 	Local $aHowManySides[0]
 	
-	SetLog("aMainSideTL: " & $aMainSide[0], $COLOR_SUCCESS)
-	SetLog("aMainSideTR: " & $aMainSide[1], $COLOR_SUCCESS)
-	SetLog("aMainSideBL: " & $aMainSide[2], $COLOR_SUCCESS)
-	SetLog("aMainSideBR: " & $aMainSide[3], $COLOR_SUCCESS)
-	Local $iTL = $aMainSide[0], $iTR = $aMainSide[1], $iBL = $aMainSide[2], $iBR = $aMainSide[3]
+	SetLog("Resource Count TL: " & $aMainSide[0], $COLOR_SUCCESS)
+	SetLog("Resource Count TR: " & $aMainSide[1], $COLOR_SUCCESS)
+	SetLog("Resource Count BL: " & $aMainSide[2], $COLOR_SUCCESS)
+	SetLog("Resource Count BR: " & $aMainSide[3], $COLOR_SUCCESS)
+	
 	Local $sSideiSide[4][2] = [ _
 			["TL", $aMainSide[0]], _
 			["TR", $aMainSide[1]], _
@@ -161,7 +161,7 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_IMGLOC)
 	_ArraySort($sSideiSide, 1, 0, 0, 1)
 		
 	For $i = 0 To $g_iCmbMaxAttackSide - 1
-		If $sSideiSide[$i][1] >= $OneSide Or ($Percentage_Out > $PercentageOutSide And $sSideiSide[$i][1] <> 0) Then
+		If $sSideiSide[$i][1] > $OneSide Or ($Percentage_Out > $PercentageOutSide And $sSideiSide[$i][1] <> 0) Then
 			ReDim $aHowManySides[UBound($aHowManySides) + 1]
 			$aHowManySides[UBound($aHowManySides) - 1] = $sSideiSide[$i][0]
 		EndIf
@@ -370,6 +370,34 @@ Func SetSlotSpecialTroops()
 	SetDebugLog("SetSlotSpecialTroops() Clan Castle Slot: " & $g_iClanCastleSlot)
 
 EndFunc ;==>SetSlotSpecialTroops
+
+Func UpdateSpecialTroops($iTroopIndex = $eCastle, $bDeployed = False)
+	
+	For $i = 0 To UBound($g_avAttackTroops) - 1
+		Switch $g_avAttackTroops[$i][0]
+			Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD, $eTroopL, $eSkyW
+				SetDebugLog("UpdateSpecialTroops() CC/Siege Dropped: " & String($bDeployed))
+			Case $eKing
+				$g_bDropKing = $bDeployed
+				SetDebugLog("UpdateSpecialTroops() King Dropped: " & String($g_bDropKing))
+			Case $eQueen
+				$g_bDropQueen = $bDeployed
+				SetDebugLog("UpdateSpecialTroops() Queen Dropped: " & String($g_bDropQueen))
+			Case $eWarden
+				$g_bDropWarden = $bDeployed
+				SetDebugLog("UpdateSpecialTroops() Warden Dropped: " & String($g_bDropWarden))
+			Case $eChampion
+				$g_bDropChampion = $bDeployed
+				SetDebugLog("UpdateSpecialTroops() Champion Dropped: " & String($g_bDropChampion))
+			Case $eMinionP
+				$g_bDropMinionP = $bDeployed
+				SetDebugLog("UpdateSpecialTroops() Minion Prince Dropped: " & String($g_bDropMinionP))
+			Case $eDuke
+				$g_bDropDuke = $bDeployed
+				SetDebugLog("UpdateSpecialTroops() Dargon Duke Dropped: " & String($g_bDropDuke))
+		EndSwitch
+	Next	
+EndFunc ;==>UpdateSpecialTroops
 
 Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack)
 
