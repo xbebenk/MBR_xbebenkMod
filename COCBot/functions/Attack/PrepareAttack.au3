@@ -60,93 +60,88 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 	Local $iTroopNumber = 0
 
 	Local $avAttackBar = GetAttackBar($bRemaining, $pMatchMode)
-	For $i = 0 To UBound($avAttackBar, 1) - 1
+	For $i = 0 To UBound($g_avAttackTroops, 1) - 1
 		Local $bClearSlot = True ; by default clear the slot, if no corresponding slot is found in attackbar detection
-		If $bRemaining Then
-			; keep initial heroes to avoid possibly "losing" them when not dropped yet
-			;Local $bSlotDetectedAgain = UBound($avAttackBar, 1) > $i And $g_avAttackTroops[$i][0] = Number($avAttackBar[$i][0]) ; wrong, as attackbar array on remain is shorter
-			Local $bDropped = Default
-			Local $iTroopIndex = $g_avAttackTroops[$i][0]
-			Switch $iTroopIndex
-				Case $eKing
-					$bDropped = $g_bDropKing
-				Case $eQueen
-					$bDropped = $g_bDropQueen
-				Case $eWarden
-					$bDropped = $g_bDropWarden
-				Case $eChampion
-					$bDropped = $g_bDropChampion
-				Case $eMinionP
-					$bDropped = $g_bDropMinionP
-				Case $eDuke
-					$bDropped = $g_bDropDuke
-			EndSwitch
-			If $bDropped = False Then
-				SetDebugLog("Discard updating hero " & GetTroopName($g_avAttackTroops[$i][0]) & " because not dropped yet")
-				$iTroopNumber += $g_avAttackTroops[$i][2]
-				ContinueLoop
-			EndIf
-			If $bDropped = True Then
-				;If $bSlotDetectedAgain Then
-					; ok, hero was dropped, really? don't know yet... TODO add check if hero was really dropped...
-				;EndIf
-				SetDebugLog("Discard updating hero " & GetTroopName($g_avAttackTroops[$i][0]) & " because already dropped")
-				$iTroopNumber += $g_avAttackTroops[$i][2]
-				ContinueLoop
-			EndIf
-		EndIf
+		;If $bRemaining Then
+		;	; keep initial heroes to avoid possibly "losing" them when not dropped yet
+		;	;Local $bSlotDetectedAgain = UBound($avAttackBar, 1) > $i And $g_avAttackTroops[$i][0] = Number($avAttackBar[$i][0]) ; wrong, as attackbar array on remain is shorter
+		;	Local $bDropped = Default
+		;	Local $iTroopIndex = $g_avAttackTroops[$i][0]
+		;	Switch $iTroopIndex
+		;		Case $eKing
+		;			$bDropped = $g_bDropKing
+		;		Case $eQueen
+		;			$bDropped = $g_bDropQueen
+		;		Case $eWarden
+		;			$bDropped = $g_bDropWarden
+		;		Case $eChampion
+		;			$bDropped = $g_bDropChampion
+		;		Case $eMinionP
+		;			$bDropped = $g_bDropMinionP
+		;		Case $eDuke
+		;			$bDropped = $g_bDropDuke
+		;	EndSwitch
+		;	If $bDropped = False Then
+		;		SetDebugLog("Discard updating hero " & GetTroopName($g_avAttackTroops[$i][0]) & " because not dropped yet")
+		;		$iTroopNumber += $g_avAttackTroops[$i][2]
+		;		ContinueLoop
+		;	EndIf
+		;	If $bDropped = True Then
+		;		;If $bSlotDetectedAgain Then
+		;			; ok, hero was dropped, really? don't know yet... TODO add check if hero was really dropped...
+		;		;EndIf
+		;		SetDebugLog("Discard updating hero " & GetTroopName($g_avAttackTroops[$i][0]) & " because already dropped")
+		;		$iTroopNumber += $g_avAttackTroops[$i][2]
+		;		ContinueLoop
+		;	EndIf
+		;EndIf
 
 		If UBound($avAttackBar, 1) > 0 Then
 			For $j = 0 To UBound($avAttackBar, 1) - 1
 				If $avAttackBar[$j][1] = $i Then
-					; troop slot found
-					;If IsUnitUsed($pMatchMode, $avAttackBar[$j][0]) Then
-						$bClearSlot = False
-						Local $sLogExtension = ""
-						If Not $bRemaining Then
-							; Select castle, siege machine and warden mode
-							If $pMatchMode = $DB Or $pMatchMode = $LB Then
-								Switch $avAttackBar[$j][0]
-									Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD, $eTroopL, $eSkyW
-										Local $tmpSiege = $avAttackBar[$j][0]
-										If $g_aiAttackUseSiege[$pMatchMode] <= $eSiegeMachineCount + 1 Then
-											SelectCastleOrSiege($avAttackBar[$j][0], $avAttackBar[$j][3], $g_aiAttackUseSiege[$pMatchMode])
-											If $avAttackBar[$j][0] = -1 Then ; no cc troops available, do not drop a siege
-												SetLog("Discard use of Siege/CC", $COLOR_ERROR)
-												$avAttackBar[$j][2] = 0
-												If _Sleep(1500) Then Return
-												Click($g_avAttackTroops[0][2], $g_avAttackTroops[0][3])
-											EndIf
-											If $g_bDropEmptySiege[$pMatchMode] = True And $avAttackBar[$j][0] = -1 Then
-												$avAttackBar[$j][0] = $tmpSiege
-												$avAttackBar[$j][2] = 1
-												SetLog("DropEmptySiege Enabled", $COLOR_INFO)
-											EndIf
-											If $avAttackBar[$j][0] <> $eCastle Then $sLogExtension = " (level " & $g_iSiegeLevel & ")"
+					$bClearSlot = False
+					Local $sLogExtension = ""
+					If Not $bRemaining Then
+						; Select castle, siege machine and warden mode
+						If $pMatchMode = $DB Or $pMatchMode = $LB Then
+							Switch $avAttackBar[$j][0]
+								Case $eCastle, $eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD, $eTroopL, $eSkyW
+									Local $tmpSiege = $avAttackBar[$j][0]
+									If $g_aiAttackUseSiege[$pMatchMode] <= $eSiegeMachineCount + 1 Then
+										SelectCastleOrSiege($avAttackBar[$j][0], $avAttackBar[$j][3], $g_aiAttackUseSiege[$pMatchMode])
+										If $avAttackBar[$j][0] = -1 Then ; no cc troops available, do not drop a siege
+											SetLog("Discard use of Siege/CC", $COLOR_ERROR)
+											$avAttackBar[$j][2] = 0
+											If _Sleep(1500) Then Return
+											Click($g_avAttackTroops[0][2], $g_avAttackTroops[0][3])
 										EndIf
-									Case $eWarden
-										If $g_aiAttackUseWardenMode[$pMatchMode] <= 1 Then $sLogExtension = SelectWardenMode($g_aiAttackUseWardenMode[$pMatchMode], Number($avAttackBar[$j][5]))
-								EndSwitch
-							EndIf
-
-							; populate the i-th slot
-							$g_avAttackTroops[$i][0] = Number($avAttackBar[$j][0]) ; Troop Index
-							$g_avAttackTroops[$i][1] = Number($avAttackBar[$j][2]) ; Amount
-							$g_avAttackTroops[$i][2] = Number($avAttackBar[$j][3]) ; X-Coord
-							$g_avAttackTroops[$i][3] = Number($avAttackBar[$j][4]) ; Y-Coord
-							$g_avAttackTroops[$i][4] = Number($avAttackBar[$j][5]) ; OCR X-Coord
-							$g_avAttackTroops[$i][5] = Number($avAttackBar[$j][6]) ; OCR Y-Coord
-						Else
-							; only update amount of i-th slot
-							$g_avAttackTroops[$i][1] = Number($avAttackBar[$j][2]) ; Amount
+										If $g_bDropEmptySiege[$pMatchMode] = True And $avAttackBar[$j][0] = -1 Then
+											$avAttackBar[$j][0] = $tmpSiege
+											$avAttackBar[$j][2] = 1
+											SetLog("DropEmptySiege Enabled", $COLOR_INFO)
+										EndIf
+										If $avAttackBar[$j][0] <> $eCastle Then $sLogExtension = " (level " & $g_iSiegeLevel & ")"
+									EndIf
+								Case $eWarden
+									If $g_aiAttackUseWardenMode[$pMatchMode] <= 1 Then $sLogExtension = SelectWardenMode($g_aiAttackUseWardenMode[$pMatchMode], Number($avAttackBar[$j][5]))
+							EndSwitch
 						EndIf
-						$iTroopNumber += $avAttackBar[$j][2]
 
-						Local $sDebugText = $g_bDebugSetlog ? " (X:" & $avAttackBar[$j][3] & "|Y:" & $avAttackBar[$j][4] & "|OCR-X:" & $avAttackBar[$j][5] & "|OCR-Y:" & $avAttackBar[$j][6] & ")" : ""
-						SetLog($avAttackBar[$j][1] & ": " & $avAttackBar[$j][2] & " " & GetTroopName($avAttackBar[$j][0], $avAttackBar[$j][2]) & $sLogExtension & $sDebugText, $COLOR_SUCCESS)
-					;Else
-					;	SetDebugLog("Discard use of " & GetTroopName($avAttackBar[$j][0]) & " (" & $avAttackBar[$j][0] & ")", $COLOR_ERROR)
-					;EndIf
+						; populate the i-th slot
+						$g_avAttackTroops[$i][0] = Number($avAttackBar[$j][0]) ; Troop Index
+						$g_avAttackTroops[$i][1] = Number($avAttackBar[$j][2]) ; Amount
+						$g_avAttackTroops[$i][2] = Number($avAttackBar[$j][3]) ; X-Coord
+						$g_avAttackTroops[$i][3] = Number($avAttackBar[$j][4]) ; Y-Coord
+						$g_avAttackTroops[$i][4] = Number($avAttackBar[$j][5]) ; OCR X-Coord
+						$g_avAttackTroops[$i][5] = Number($avAttackBar[$j][6]) ; OCR Y-Coord
+					Else
+						; only update amount of i-th slot
+						$g_avAttackTroops[$i][1] = Number($avAttackBar[$j][2]) ; Amount
+					EndIf
+					$iTroopNumber += $avAttackBar[$j][2]
+
+					Local $sDebugText = $g_bDebugSetlog ? " (X:" & $avAttackBar[$j][3] & "|Y:" & $avAttackBar[$j][4] & "|OCR-X:" & $avAttackBar[$j][5] & "|OCR-Y:" & $avAttackBar[$j][6] & ")" : ""
+					SetLog($avAttackBar[$j][1] & ": " & $avAttackBar[$j][2] & " " & GetTroopName($avAttackBar[$j][0], $avAttackBar[$j][2]) & $sLogExtension & $sDebugText, $COLOR_SUCCESS)
 					ExitLoop
 				EndIf
 			Next

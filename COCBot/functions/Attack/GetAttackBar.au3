@@ -397,8 +397,7 @@ EndFunc   ;==>AttackSlot
 
 Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	Local Static $aAttackBar[0][8]
-	Local $aiOCRLocation[2] = [-1, -1], $aAmountX[0][2]
-	Local $iAmount = 0, $sColor = ""
+	Local $iAmount = 0, $sColor = "", $xOCR = 0
 	
 	;Reset variables if GetAttackBar is not for Remaining
 	If Not $bRemaining Then
@@ -423,15 +422,18 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 				$sColor = ""
 				If StringRegExp($aArmy[$i][0], $sKeepRemainTroops, 0) Then 
 					$iAmount = 1
+					$xOCR = $aArmy[$i][1]
+					$sColor = _GetPixelColor($xOCR - 20, 569, True)
 				Else
 					If QuickMIS("BFI", $g_sImgAttackBarDir & "\AmountX*", $aArmy[$i][1] - 30, 580, $aArmy[$i][1] + 40, 610) Then ;search x image
-						$iAmount = getTroopCount($g_iQuickMISX, 580)
-						$sColor = _GetPixelColor($g_iQuickMISX - 20, 587, True)
+						$xOCR = $g_iQuickMISX
+						$iAmount = getTroopCount($xOCR, 580)
+						$sColor = _GetPixelColor($xOCR - 20, 587, True)
 					Else
 						SetDebugLog($aArmy[$i][0] & " x not found")
 					EndIf
 				EndIf
-				Local $aTemp[1][8] = [[$aArmy[$i][0], $aArmy[$i][1], $aArmy[$i][2], $i, $iAmount, $g_iQuickMISX, 580, $sColor]]
+				Local $aTemp[1][8] = [[$aArmy[$i][0], $aArmy[$i][1], $aArmy[$i][2], $i, $iAmount, $xOCR, 580, $sColor]]
 				_ArrayAdd($aAttackBar, $aTemp)
 			Next
 		Else
@@ -461,17 +463,28 @@ Func GetAttackBar($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 		If _Sleep(10) Then Return
 		
 		If $bRemaining Then
-			If Not _ColorCheck(_GetPixelColor($aAttackBar[$i][5] - 20, 587, True), $aAttackBar[$i][7], 20, Default, $aAttackBar[$i][1]) Then
-				$bRemoved = True
-				$aAttackBar[$i][4] = 0 ; set available troops to 0
-				If StringRegExp($aAttackBar[$i][0], $sKeepRemainTroops, 0) = 0 Then
-					SetDebugLog("GetAttackBar(): Troop " & GetTroopName(TroopIndexLookup($aAttackBar[$i][0])) & " already deployed, now removed")
-					ContinueLoop
+			If StringRegExp($aAttackBar[$i][0], $sKeepRemainTroops, 0) Then ;Special troops
+				$sColor = _GetPixelColor($aAttackBar[$i][5] - 20, 569, True)
+				If _ColorCheck($sColor, $aAttackBar[$i][7], 30, Default, $aAttackBar[$i][0]) Then
+					$aAttackBar[$i][4] = 1
+					SetDebugLog("GetAttackBar(): Special Troop:  " & GetTroopName(TroopIndexLookup($aAttackBar[$i][0])) & " deploy failed?")
+					UpdateSpecialTroops(TroopIndexLookup($aAttackBar[$i][0]), False)
 				Else
-					SetDebugLog("GetAttackBar(): Troop " & GetTroopName(TroopIndexLookup($aAttackBar[$i][0])) & " already deployed, but stays")
+					UpdateSpecialTroops(TroopIndexLookup($aAttackBar[$i][0]), True)
+					SetDebugLog("GetAttackBar(): Special Troop:  " & GetTroopName(TroopIndexLookup($aAttackBar[$i][0])) & " deployed successfully")
 				EndIf
 			Else
-				$aAttackBar[$i][4] = getTroopCount($aAttackBar[$i][5], 580)
+				$sColor = _GetPixelColor($aAttackBar[$i][5] - 20, 587, True)
+				If _ColorCheck($sColor, $aAttackBar[$i][7], 30, Default, $aAttackBar[$i][0]) Then
+					$aAttackBar[$i][4] = getTroopCount($aAttackBar[$i][5], 578)
+					If $aAttackBar[$i][4] = "111" Then $aAttackBar[$i][4] = 10
+					SetDebugLog("GetAttackBar(): Troop " & GetTroopName(TroopIndexLookup($aAttackBar[$i][0])) & " already deployed, but stay")
+					SetDebugLog($aAttackBar[$i][0] & " update amount: " & $aAttackBar[$i][4])
+				Else
+					$bRemoved = True
+					SetDebugLog("GetAttackBar(): Troop " & GetTroopName(TroopIndexLookup($aAttackBar[$i][0])) & " already deployed, now removed")
+					ContinueLoop
+				EndIf
 			EndIf
 		EndIf
 	

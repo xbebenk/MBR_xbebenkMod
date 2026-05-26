@@ -109,7 +109,7 @@ Func getProfile($x_start, $y_start) ;  -> Gets Attack Win/Defense Win/Donated/Re
 	Return getOcrAndCapture("coc-profile", $x_start, $y_start, 55, 13, True)
 EndFunc   ;==>getProfile
 
-Func getTroopCount($x_start, $y_start, $width = 60, $height = 22) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
+Func getTroopCount($x_start, $y_start, $width = 50, $height = 22) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
 	Return StringReplace(getOcrAndCapture("coc-troopcount", $x_start, $y_start, $width, $height, True), "-", "")
 EndFunc   ;==>getTroopCountSmall
 
