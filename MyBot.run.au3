@@ -1065,6 +1065,7 @@ Func FirstCheck()
 	SetLogCentered(" FIRSTCHECK ", "=", $COLOR_SUCCESS)
 	$g_bFirstStart = True
 	
+	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
 	If _Sleep(50) Then Return
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return

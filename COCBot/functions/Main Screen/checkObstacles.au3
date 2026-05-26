@@ -279,23 +279,8 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep(500) Then Return
 		Return
 	EndIf
-	If Not $g_bRunState Then Return
-	Local $bIsOnBuilderIsland = isOnBuilderBase()
-	If Not $bBuilderBase And $bIsOnBuilderIsland Then ;Check for MainVillage, but coc is on BB -> go to mainVillage
-		If SwitchBetweenBases("Main") Then
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			Return False
-		EndIf
-	EndIf
-	If Not $g_bRunState Then Return
-	Local $bIsOnMainVillage = isOnMainVillage()
-	If $bBuilderBase And $bIsOnMainVillage Then ;Check for BB, but in MainVillage -> go to BB
-		If SwitchBetweenBases("BB") Then
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			Return False
-		EndIf
-	EndIf
 	
+	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgEventConfirm, 310, 410, 560, 650) Then 
 		SetLog("checkObstacles: Found Event Confirm Button", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY)

@@ -91,10 +91,9 @@ Func CreateBottomPanel()
 			GUICtrlSetState(-1, $GUI_HIDE)
 			GUICtrlSetOnEvent(-1, "ToggleControl")
 			
-		$g_hLblDonate = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "LblDonate", "Support Development"), $g_iSizeWGrpTab1 - 135, $y + 75, -1, -1, $SS_RIGHT)
-			GUICtrlSetCursor(-1, 0) ; https://www.autoitscript.com/autoit3/docs/functions/MouseGetCursor.htm
+		$g_hLblDonate = GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Bottom", "LblDonate", "Support xbeMOD"), $g_iSizeWGrpTab1 - 135, $y + 75, -1, -1, $SS_RIGHT)
 			GUICtrlSetFont(-1, 8, $FW_BOLD) ;, $GUI_FONTITALIC + $GUI_FONTUNDER)
-			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "LblDonate_Info_01", "Paypal Donate?"))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Bottom", "LblDonate_Info_01", "Donate xbeMOD?"))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	If $g_bAndroidAdbScreencap Then chkBackground() ; update background mode GUI

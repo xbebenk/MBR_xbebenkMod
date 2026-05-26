@@ -17,34 +17,39 @@ Global $FalseDetectionCount = 0
 Func SwitchBetweenBases($ForcedSwitchTo = Default)
 	Local $bIsOnMainVillage = isOnMainVillage()
 	Local $bIsOnBuilderBase = False
+	
+	If IsProblemAffect() Then Return
+	If Not $bIsOnMainVillage Then $bIsOnBuilderBase = isOnBuilderBase()
+	
 	If $ForcedSwitchTo = Default Then
 		If $bIsOnMainVillage Then 
+			SetDebugLog("We are on MainVillage")
 			$ForcedSwitchTo = "BB"
 		Else
 			$ForcedSwitchTo = "Main"
 		EndIf
 	EndIf
 	
-	If _Sleep(50) Then Return
-	If Not $bIsOnMainVillage Then $bIsOnBuilderBase = isOnBuilderBase()
+	;we are not on builderbase nor in mainvillage, something need to be check, check obstacles called on checkmainscreen
+	If Not $bIsOnBuilderBase And Not $bIsOnMainVillage Then 
+		SetDebugLog("Cannont verify what screen we are now?")
+		checkObstacles($g_bStayOnBuilderBase)
+		If _Sleep(1000) Then Return
+		$bIsOnMainVillage = isOnMainVillage()
+		If $g_bStayOnBuilderBase Then $bIsOnBuilderBase = isOnBuilderBase() ;check again if we are on builderbases, after mainscreen located
+	EndIf
 	
 	If $ForcedSwitchTo = "BB" And $bIsOnBuilderBase Then
-		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_INFO)
+		SetDebugLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_INFO)
 		Return True
 	EndIf
 	
 	If $ForcedSwitchTo = "Main" And $bIsOnMainVillage Then
-		SetLog("Already on MainVillage, Skip SwitchBetweenBases", $COLOR_INFO)
+		SetDebugLog("Already on MainVillage, Skip SwitchBetweenBases", $COLOR_INFO)
 		Return True
 	EndIf
 	
-	;we are not on builderbase nor in mainvillage, something need to be check, check obstacles called on checkmainscreen
-	If Not $bIsOnBuilderBase And Not $bIsOnMainVillage Then 
-		checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
-		If $g_bStayOnBuilderBase Then $bIsOnBuilderBase = isOnBuilderBase() ;check again if we are on builderbases, after mainscreen located
-	EndIf
-	
-	If IsProblemAffect() Then Return
+	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
 	
 	If $g_bStayOnBuilderBase And Not $bIsOnBuilderBase Then

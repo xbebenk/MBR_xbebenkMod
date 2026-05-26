@@ -486,7 +486,7 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			OpenURL_Label($nID)		
 		Case $g_hLblDonate
 			; Donate URL is not in text nor tooltip
-			ShellExecute("https://paypal.me/xbebenk")
+			ShellExecute("https://www.paypal.com/ncp/payment/Z774L28DTKM5E")
 		Case $g_hBtnStart, $g_hTblStart
 			btnStart()
 		Case $g_hBtnStop, $g_hTblStop

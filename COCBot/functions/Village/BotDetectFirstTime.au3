@@ -17,30 +17,6 @@ Func BotDetectFirstTime()
 	If _Sleep(50) Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "BotDetectFirstTime")
 	
-	SetLog("Detecting your Buildings", $COLOR_INFO)
-	If Not isInsideDiamond($g_aiTownHallPos) Then
-	  Collect(True)
-	  SearchTH(False) ; search th on myvillage
-	  SetLog("Townhall: (" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & ")", $COLOR_DEBUG)
-	EndIf
-
-	If _Sleep(50) Then Return
-
-	If $g_aiClanCastlePos[0] = -1 Then
-		If AutoLocateCC() Then
-			applyConfig()
-			saveConfig()
-		EndIf
-	EndIf
-
-	If _Sleep(50) Then Return
-	If $g_aiLaboratoryPos[0] = "" Or $g_aiLaboratoryPos[0] = -1 Then
-		If AutoLocateLab() Then
-			applyConfig()
-			saveConfig()
-		EndIf
-	EndIf
-
 	;Display Level TH in Stats
 	GUICtrlSetData($g_hLblTHLevels, "")
 	GUICtrlSetData($g_hLblTHLevels, $g_iTownHallLevel)
