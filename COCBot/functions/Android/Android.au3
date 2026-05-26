@@ -1614,7 +1614,7 @@ Func _ConnectAndroidAdb($rebootAndroidIfNeccessary = $g_bRunState, $bStartOnlyAn
 		Case 1
 			ReleaseAdbDaemonMutex($hMutex)
 			If $rebootAndroidIfNeccessary Then
-				SetDebugLog("ConnectAndroidAdb: Reboot Android due to ADB connection problems...", $COLOR_ERROR)
+				SetLog("ConnectAndroidAdb: Reboot Android due to ADB connection problems...", $COLOR_DEBUG2)
 				$bRebooted = RebootAndroid()
 				If Not $bRebooted Then Return 0
 			Else
