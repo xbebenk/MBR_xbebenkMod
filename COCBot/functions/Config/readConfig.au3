@@ -721,6 +721,8 @@ Func ReadConfig_600_12()
 	$g_asTxtDonateTroop[$eTroopSuperBowler] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateSuperBowlers", "Super Bowler|SBowl"), "|", @CRLF)
 	$g_asTxtDonateTroop[$eTroopIceGolem] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateIceGolems", "ice golem|ice golems"), "|", @CRLF)
 	$g_asTxtDonateTroop[$eTroopHeadhunter] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateHeadhunters", "headhunter|hunt"), "|", @CRLF)
+	$g_asTxtDonateTroop[$eTroopThrower] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateThrowers", "thrower|throw"), "|", @CRLF)
+	$g_asTxtDonateTroop[$eTroopDruid] = StringReplace(IniRead($g_sProfileConfigPath, "donate", "txtDonateDruids", "druid|druids"), "|", @CRLF)
 
 	For $i = 0 To $eSpellCount - 1
 		Local $sIniName = $g_asSpellNames[$i] & "Spells"

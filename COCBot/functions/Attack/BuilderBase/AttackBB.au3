@@ -180,7 +180,16 @@ Func _AttackBB()
 		AttackBB($aBBAttackBar)
 	EndIf
 	If Not $g_bRunState Then Return
-	
+
+	; Recheck for any missed slots, retry up to 3x
+	For $iMainRetry = 1 To 3
+		If Not $g_bRunState Then ExitLoop
+		If _Sleep(1500) Then Return
+		Local $aRemainBar = GetAttackBarBB(True)
+		If $aRemainBar = "" Or Not IsArray($aRemainBar) Then ExitLoop
+		AttackBB($aRemainBar)
+	Next
+
 	SetLog("Waiting for end of battle.", $COLOR_INFO)
 	If EndBattleBB() Then SetLog("Battle ended", $COLOR_INFO)
 	
@@ -242,14 +251,23 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 			If BBBarbarianHead("EndBattleBB") Then ExitLoop
 			
 			Local $aBBAttackBar = GetAttackBarBB(False, True)
-			If IsArray($aBBAttackBar) And Ubound($aBBAttackBar) > 0 Then 
-				If $g_bChkBBCustomArmyEnable Then 
-					CorrectAttackBarBB($aBBAttackBar) 
+			If IsArray($aBBAttackBar) And Ubound($aBBAttackBar) > 0 Then
+				If $g_bChkBBCustomArmyEnable Then
+					CorrectAttackBarBB($aBBAttackBar)
 					$aBBAttackBar = GetAttackBarBB(False, True) ;correct army troop doesnt have new quantities (if troop changes) so read again the attackbar
 					AttackBB($aBBAttackBar, True)
 				Else
 					AttackBB($aBBAttackBar, True)
 				EndIf
+
+				; Phase-2 recheck, retry up to 3x
+				For $iPhase2Retry = 1 To 3
+					If Not $g_bRunState Then ExitLoop
+					If _Sleep(1500) Then Return
+					Local $aRemainBar2 = GetAttackBarBB(True, True)
+					If $aRemainBar2 = "" Or Not IsArray($aRemainBar2) Then ExitLoop
+					AttackBB($aRemainBar2, True)
+				Next
 			Else
 				SetLog("Cannot detect troop on attackbar", $COLOR_ERROR)
 				ExitLoop
@@ -297,6 +315,125 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 	CheckBB20LootCartTutor()
 	If Not $bRet Then SetLog("Could not find finish battle screen", $COLOR_ERROR)
 	Return $bRet
+EndFunc
+
+; Build a circular drop plan: evenly-spaced target angles mapped to red-line points where
+; available, falling back to BB map diamond edge points when no red-line covers that angle.
+; $iTotalDrops - how many drops total we need to schedule
+; $aActiveSides - which sides are active (e.g. [1,2,3,4] for all, [$iSide] for single)
+; Returns array of [x, y] coordinates, one per drop.
+Func BuildCircularDrops($iTotalDrops, $aActiveSides, $DP)
+	Local $aPlan[$iTotalDrops][2]
+	If $iTotalDrops < 1 Then Return $aPlan
+
+	Local $iCx = 445, $iCy = 340 ; BB map center (from SearchRedLinesBB XMiddle/YMiddle)
+
+	; Angle ranges per side (in degrees, 0 = east, clockwise)
+	; Side 1=TL: 180-270, Side 2=BL: 90-180, Side 3=BR: 0-90, Side 4=TR: 270-360
+	Local $aSideAngles[5][2] = [[0,0], [180,270], [90,180], [0,90], [270,360]]
+
+	; Collect active angle ranges
+	Local $aRanges[0][2]
+	For $s = 0 To UBound($aActiveSides) - 1
+		Local $iSideNum = $aActiveSides[$s]
+		If $iSideNum < 1 Or $iSideNum > 4 Then ContinueLoop
+		_ArrayAdd($aRanges, $aSideAngles[$iSideNum][0] & "|" & $aSideAngles[$iSideNum][1])
+	Next
+	If UBound($aRanges) = 0 Then
+		; No active sides - use full 360
+		Local $aFull[1][2] = [[0, 360]]
+		$aRanges = $aFull
+	EndIf
+
+	; Compute total angular coverage
+	Local $iTotalSpan = 0
+	For $r = 0 To UBound($aRanges) - 1
+		$iTotalSpan += (Number($aRanges[$r][1]) - Number($aRanges[$r][0]))
+	Next
+
+	; Map each drop to a target angle within the active ranges
+	Local $iRandomOffset = Random(0, $iTotalSpan / $iTotalDrops, 1) ; small jitter so drops don't always start at same spot
+	For $d = 0 To $iTotalDrops - 1
+		Local $iSpanPos = Mod(($d * $iTotalSpan / $iTotalDrops) + $iRandomOffset, $iTotalSpan)
+		Local $iTargetAngle = 0, $iRunning = 0
+		For $r = 0 To UBound($aRanges) - 1
+			Local $iRangeStart = Number($aRanges[$r][0])
+			Local $iRangeEnd = Number($aRanges[$r][1])
+			Local $iRangeSize = $iRangeEnd - $iRangeStart
+			If $iSpanPos < $iRunning + $iRangeSize Then
+				$iTargetAngle = $iRangeStart + ($iSpanPos - $iRunning)
+				ExitLoop
+			EndIf
+			$iRunning += $iRangeSize
+		Next
+
+		; Find the red-line point closest to target angle (within 15° tolerance)
+		Local $iBestX = -1, $iBestY = -1, $iBestDelta = 999
+		For $i = 0 To UBound($DP) - 1
+			Local $iPx = Number($DP[$i][1])
+			Local $iPy = Number($DP[$i][2])
+			Local $iDx = $iPx - $iCx
+			Local $iDy = $iPy - $iCy
+			Local $iAngle = Mod(ATan2Deg($iDy, $iDx) + 360, 360) ; point's angle from center
+			Local $iDelta = Abs($iAngle - $iTargetAngle)
+			If $iDelta > 180 Then $iDelta = 360 - $iDelta
+			If $iDelta < $iBestDelta Then
+				$iBestDelta = $iDelta
+				$iBestX = $iPx
+				$iBestY = $iPy
+			EndIf
+		Next
+
+		If $iBestX <> -1 And $iBestDelta <= 15 Then
+			$aPlan[$d][0] = $iBestX
+			$aPlan[$d][1] = $iBestY
+		Else
+			; Fallback: compute point on BB map diamond edge at exact target angle
+			Local $aEdge = DiamondEdgePoint($iCx, $iCy, $iTargetAngle)
+			$aPlan[$d][0] = $aEdge[0]
+			$aPlan[$d][1] = $aEdge[1]
+		EndIf
+	Next
+
+	Return $aPlan
+EndFunc
+
+; Convert (dy, dx) to angle in degrees (0 = east, 90 = south since y grows down on screen)
+Func ATan2Deg($dy, $dx)
+	If $dx = 0 And $dy = 0 Then Return 0
+	Local $rad = ATan($dy / ($dx = 0 ? 0.0001 : $dx))
+	Local $deg = $rad * 180 / 3.14159265
+	If $dx < 0 Then $deg += 180
+	Return $deg
+EndFunc
+
+; Return [x,y] on the BB map diamond edge at the given angle from center.
+; BB diamond approx corners: left(110,340) top(445,100) right(740,340) bottom(445,565)
+Func DiamondEdgePoint($iCx, $iCy, $iAngle)
+	Local $aDiamond[4][2] = [[110, 340], [445, 100], [740, 340], [445, 565]]
+	; Cast a ray from center at angle, intersect with each diamond edge
+	Local $iRad = $iAngle * 3.14159265 / 180
+	Local $iDirX = Cos($iRad)
+	Local $iDirY = Sin($iRad)
+	; Try each of 4 diamond edges; pick intersection with smallest positive t
+	Local $iBestT = 99999, $iBestX = $iCx, $iBestY = $iCy
+	For $e = 0 To 3
+		Local $iAx = $aDiamond[$e][0], $iAy = $aDiamond[$e][1]
+		Local $iBx = $aDiamond[Mod($e + 1, 4)][0], $iBy = $aDiamond[Mod($e + 1, 4)][1]
+		; Ray: (Cx + t*DirX, Cy + t*DirY)  Edge: A + u*(B-A), 0<=u<=1
+		Local $iEdgeDx = $iBx - $iAx, $iEdgeDy = $iBy - $iAy
+		Local $iDenom = $iDirX * $iEdgeDy - $iDirY * $iEdgeDx
+		If $iDenom = 0 Then ContinueLoop
+		Local $iT = (($iAx - $iCx) * $iEdgeDy - ($iAy - $iCy) * $iEdgeDx) / $iDenom
+		Local $iU = (($iAx - $iCx) * $iDirY - ($iAy - $iCy) * $iDirX) / $iDenom
+		If $iT > 0 And $iU >= 0 And $iU <= 1 And $iT < $iBestT Then
+			$iBestT = $iT
+			$iBestX = $iCx + $iT * $iDirX
+			$iBestY = $iCy + $iT * $iDirY
+		EndIf
+	Next
+	Local $aRet[2] = [Round($iBestX), Round($iBestY)]
+	Return $aRet
 EndFunc
 
 Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
@@ -362,48 +499,89 @@ Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
 	If Not $g_bRunState Then Return
 	If IsProblemAffect() Then Return
 	
-	; Deploy all troops
-	SetLog( $g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
+	; Deploy all troops — per-slot: click slot, drop count on map, move to next alive slot
+	SetLog($g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
+	Local $iPassLoop = 0
 	While Not $bTroopsDropped
 		If Not $g_bRunState Then Return
 		Local $iNumSlots = UBound($aBBAttackBar)
+		If $iNumSlots = 0 Then ExitLoop
+
+		Local $aDropQueue[0][4]
 		If $g_bBBDropOrderSet = True Then
 			Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
-			For $i = 0 To $g_iBBTroopCount - 1 ; loop through each name in the drop order
-				Local $j = 0, $bDone = False
-				While $j < $iNumSlots And Not $bDone
-					If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then
-						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1] + 35, $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide, $AltSide, $DP)
-						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
-							$bDone = True
-							If $g_bChkDebugAttackBB Then SetLog("Delay NextTroop: " & $g_iBBNextTroopDelay * 200 & "ms")
-							_Sleep($g_iBBNextTroopDelay * 200) ; wait before next troop
-						EndIf
+			For $i = 0 To $g_iBBTroopCount - 1
+				For $j = 0 To $iNumSlots - 1
+					If $aBBAttackBar[$j][0] = $asBBDropOrder[$i + 1] And $aBBAttackBar[$j][0] <> "BattleMachine" Then
+						Local $iAmt = Number($aBBAttackBar[$j][4])
+						If $iAmt < 1 Then $iAmt = 1
+						_ArrayAdd($aDropQueue, $aBBAttackBar[$j][0] & "|" & ($aBBAttackBar[$j][1] + 35) & "|" & $aBBAttackBar[$j][2] & "|" & $iAmt)
 					EndIf
-					$j+=1
-				WEnd
+				Next
 			Next
 		Else
-			Local $sTroopName = ""
 			For $i = 0 To $iNumSlots - 1
-				If $aBBAttackBar[$i][4] > 0 Then
-					DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1] + 35, $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide, $AltSide, $DP)
-				EndIf
-
-				If $sTroopName <> $aBBAttackBar[$i][0] Then
-					If $g_bChkDebugAttackBB Then SetLog("Delay NextTroop: " & $g_iBBNextTroopDelay * 200 & "ms")
-					_Sleep($g_iBBNextTroopDelay * 200) ; wait before next troop
-				Else
-					_Sleep($DELAYRESPOND) ; we are still on same troop so lets drop them all down a bit faster
-				EndIf
-				$sTroopName = $aBBAttackBar[$i][0]
+				If $aBBAttackBar[$i][0] = "BattleMachine" Then ContinueLoop
+				Local $iAmt = Number($aBBAttackBar[$i][4])
+				If $iAmt < 1 Then $iAmt = 1
+				_ArrayAdd($aDropQueue, $aBBAttackBar[$i][0] & "|" & ($aBBAttackBar[$i][1] + 35) & "|" & $aBBAttackBar[$i][2] & "|" & $iAmt)
 			Next
 		EndIf
+
+		If UBound($aDropQueue) = 0 Then ExitLoop
+
+		; Sum total drops across all troop slots, then build one evenly-spaced circular plan
+		Local $iTotalDrops = 0
+		For $q = 0 To UBound($aDropQueue) - 1
+			$iTotalDrops += Number($aDropQueue[$q][3])
+		Next
+
+		; Build list of active sides based on GUI toggles
+		Local $aActiveSides[0]
+		If $g_bAllSideBBAttack Then
+			Local $aAll[4] = [1, 2, 3, 4]
+			$aActiveSides = $aAll
+		Else
+			_ArrayAdd($aActiveSides, $iSide)
+			If $g_b2SideBBAttack And $AltSide > 0 And $AltSide <> $iSide Then _ArrayAdd($aActiveSides, $AltSide)
+		EndIf
+
+		Local $aDropPlan = BuildCircularDrops($iTotalDrops, $aActiveSides, $DP)
+		Local $iPlanIdx = 0
+
+		For $q = 0 To UBound($aDropQueue) - 1
+			If Not $g_bRunState Then ExitLoop
+			If IsProblemAffect() Then ExitLoop
+
+			Local $sTroop = $aDropQueue[$q][0]
+			Local $iSlotX = Number($aDropQueue[$q][1])
+			Local $iSlotY = Number($aDropQueue[$q][2])
+			Local $iCount = Number($aDropQueue[$q][3])
+
+			SetLog("Deploying " & $sTroop & " x" & $iCount, $COLOR_ACTION)
+			PureClick($iSlotX, $iSlotY)
+			If _Sleep($g_iBBSameTroopDelay * 200) Then Return
+
+			For $j = 0 To $iCount - 1
+				If Not $g_bRunState Then ExitLoop 2
+				If IsProblemAffect() Then ExitLoop 2
+				If $iPlanIdx >= UBound($aDropPlan) Then ExitLoop 2
+				PureClick($aDropPlan[$iPlanIdx][0], $aDropPlan[$iPlanIdx][1])
+				$iPlanIdx += 1
+				If _Sleep($g_iBBSameTroopDelay * 200) Then Return
+			Next
+
+			_Sleep($g_iBBNextTroopDelay * 200)
+		Next
+
 		If _Sleep(1000) Then Return
 		$aBBAttackBar = GetAttackBarBB(True)
 		If $aBBAttackBar = "" Then
 			SetLog("All Troops Deployed", $COLOR_SUCCESS)
 			$bTroopsDropped = True
+		Else
+			$iPassLoop += 1
+			If $iPassLoop >= 4 Then ExitLoop
 		EndIf
 	WEnd
 
