@@ -224,6 +224,7 @@ Func SmartFarmDetection($bTest = False)
 			$aXY[0] = $aAll[$i][1]
 			$aXY[1] = $aAll[$i][2]
 			$aInOut = isInsideSmallDiamond($aXY) ;check from center diamond
+			If Not IsInsideDiamond($aXY) THen ContinueLoop ;skip building out of diamond
 			$sSide = Side($aXY) ;sSide = "TL", "BL", "TR", "BR"
 			Switch $sSide
 				Case "TL"
@@ -255,36 +256,6 @@ Func SmartFarmDetection($bTest = False)
 	EndIf
 EndFunc   ;==>SmartFarmDetection
 
-Func DoublePoint($sName, $aReturn, $aPoint, $iDistance = 18)
-	Local $x, $y
-	Local $x1 = Number($aPoint[0])
-	Local $y1 = Number($aPoint[1])
-
-	For $i = 0 To UBound($aReturn) - 1
-		If Not $g_bRunState Then Return
-		$x = Number($aReturn[$i][0])
-		$y = Number($aReturn[$i][1])
-		If Pixel_Distance($x, $y, $x1, $y1) < $iDistance Then
-			SetDebugLog("Detected a " & $sName & " double detection at (" & $x & "," & $y & ")")
-			Return True
-		EndIf
-	Next
-	Return False
-EndFunc   ;==>DoublePoint
-
-Func Pixel_Distance($x, $y, $x1, $y1)
-	;Pythagoras theorem for 2D
-	Local $a, $b, $c
-	If $x1 = $x And $y1 = $y Then
-		Return 0
-	Else
-		$a = $x1 - $x
-		$b = $y - $y
-		$c = Sqrt($a * $a + $b * $b)
-		Return $c
-	EndIf
-EndFunc   ;==>Pixel_Distance
-
 Func Side($Pixel)
 	Local $sReturn = ""
 	; Using to determinate the Side position on Screen |Bottom Right|Bottom Left|Top Left|Top Right|
@@ -294,12 +265,12 @@ Func Side($Pixel)
 		If $Pixel[0] < $DiamondMiddleX And $Pixel[1] > $DiamondMiddleY Then $sReturn = "BL"
 		If $Pixel[0] >= $DiamondMiddleX And $Pixel[1] >= $DiamondMiddleY Then $sReturn = "BR"
 		If $sReturn = "" Then
-			SetLog("Error on SIDE...: " & _ArrayToString($Pixel), $COLOR_RED)
+			SetLog("Error on SIDE...: " & _ArrayToString($Pixel), $COLOR_ERROR)
 			$sReturn = "ERROR"
 		EndIf
 		Return $sReturn
 	Else
-		SetLog("ERROR SIDE|SmartFarm!!", $COLOR_RED)
+		SetLog("ERROR SIDE|SmartFarm!!", $COLOR_ERROR)
 	EndIf
 EndFunc   ;==>Side
 
@@ -453,7 +424,7 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack)
 			For $p = 0 To UBound($aPoints) - 1
 				Local $aPoint = StringSplit($aPoints[$p], "|", $STR_NOCOUNT)
 				If IsArray($aPoint) And UBound($aPoint) = 2 Then
-					SetDebugLog("aPoint: " & _ArrayToString($aPoint))
+					;SetDebugLog("aPoint: " & _ArrayToString($aPoint))
 					_GDIPlus_GraphicsDrawRect($hGraphic, $aPoint[0], $aPoint[1], 3, 3, $hPenCyan)
 				EndIf
 			Next
@@ -621,28 +592,20 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	CheckHeroesHealth()
 	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
 	SetLog("Dropping left over troops", $COLOR_INFO)
-	Local $aRandomCoord = GetRandomCoord($SIDESNAMES)
 	
-	For $x = 1 To 2
-		SetLog("[" & $x & "] Checking left troops", $COLOR_DEBUG1) 
-		If PrepareAttack($g_iMatchMode, True) = 0 Then
-			SetDebugLog("No Wast time... exit, no troops usable left", $COLOR_DEBUG)
-			ExitLoop ;Check remaining quantities
+	Local $aRandomCoord = GetRandomCoord($SIDESNAMES)
+	For $i = 0 To UBound($g_avAttackTroops) - 1
+		If $g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eIWiza And $g_avAttackTroops[$i][1] > 0 Then
+			; launch remaining troops
+			SelectDropTroop($i)
+			SetLog("Dropping left : x" & $g_avAttackTroops[$i][1] & " " & GetTroopName($g_avAttackTroops[$i][0], $g_avAttackTroops[$i][1]) & " on [" & $aRandomCoord[0] & "," & $aRandomCoord[1] & "]", $COLOR_DEBUG1)
+			Click($aRandomCoord[0], $aRandomCoord[1], $g_avAttackTroops[$i][1], 150) ;Drop troop
+			If _Sleep(500) Then Return
 		EndIf
-		
-		For $i = 0 To UBound($g_avAttackTroops) - 1
-			;SetLog("aCoord = " & _ArrayToString($aRandomCoord, ","), $COLOR_DEBUG1)
-			If $g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eIWiza And $g_avAttackTroops[$i][1] > 0 Then
-				; launch remaining troops
-				SelectDropTroop($i)
-				SetLog("Dropping left : x" & $g_avAttackTroops[$i][1] & " " & GetTroopName($g_avAttackTroops[$i][0], $g_avAttackTroops[$i][1]) & " on [" & $aRandomCoord[0] & "," & $aRandomCoord[1] & "]", $COLOR_DEBUG1)
-				Click($aRandomCoord[0], $aRandomCoord[1], $g_avAttackTroops[$i][1], 150) ;Drop troop
-				If _Sleep(500) Then Return
-			EndIf
-		Next
 	Next
+
 	CheckHeroesHealth()
-	SetLog("Finished Attacking, waiting for the battle to end")
+	SetLog("SmartFarm Attack Finished", $COLOR_DEBUG1)
 EndFunc   ;==>AttackSmartFarm
 
 Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion, $iMinion, $iDuke, $SIDESNAMES = "TR|TL|BR|BL")
@@ -1073,12 +1036,10 @@ EndFunc   ;==>GetVectorPixelOnEachSide2
 
 
 Func TestSF()
-	$g_bDebugSmartFarm = True
-	;CheckZoomOut("VillageSearch")
+	CheckZoomOut("VillageSearch")
 	PrepareAttack($DB)
 	Local $Nside = ChkSmartFarm()
 	AttackSmartFarm($Nside[1], $Nside[2])
-	$g_bDebugSmartFarm = False
 	ReturnHome()
 EndFunc
 

@@ -71,7 +71,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		Local $a = $tree[0] - $stone[0]
 		Local $b = $stone[1] - $tree[1]
 		Local $c = Sqrt($a * $a + $b * $b) ;measure distance from stone to tree
-		Local $ZoomOffset = 60, $checkZoomOffset = 0
+		Local $ZoomOffset = 30, $checkZoomOffset = 0
 			
 		Local $iRefSize = 600
 		Local $iIndex = _ArraySearch($g_aVillageRefSize, $stone[4])
@@ -91,17 +91,17 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		EndIf
 		
 		Local $z = $c / $iRefSize
-		If $g_bDebugSetLog Then SetDebugLog("GetVillageSize, Scenery : " & $g_sSceneryCode & " : " & $g_sCurrentScenery & ", Zoom:" & $z, $COLOR_DEBUG1)
-		If $g_bDebugSetLog Then SetDebugLog("Stone2tree = " & $c)
-		If $g_bDebugSetLog Then SetDebugLog("Reference = " & $iRefSize)
-		If $g_bDebugSetLog Then SetDebugLog("ZoomLevel = " & $z)
+		SetDebugLog("GetVillageSize, Scenery : " & $g_sSceneryCode & " : " & $g_sCurrentScenery & ", Zoom:" & $z, $COLOR_DEBUG1)
+		SetDebugLog("Stone2tree = " & $c)
+		SetDebugLog("Reference = " & $iRefSize)
+		SetDebugLog("ZoomLevel = " & $z)
 		
 		$checkZoomOffset = Round(($c - $iRefSize), 2)
 		If $checkZoomOffset > $ZoomOffset Then 
-			If $g_bDebugSetLog Then SetDebugLog("Stone2tree:" & Round($c, 2) & " - Reference:" & Round($iRefSize, 2) & " = " & $checkZoomOffset & " > " & $ZoomOffset, $COLOR_DEBUG2)
+			SetDebugLog("Stone2tree:" & Round($c, 2) & " - Reference:" & Round($iRefSize, 2) & " = " & $checkZoomOffset & " > " & $ZoomOffset, $COLOR_DEBUG2)
 			Return FuncReturn($aResult)
 		Else
-			If $g_bDebugSetLog Then SetDebugLog("Stone2tree:" & Round($c, 2) & " Reference:" & Round($iRefSize, 2) & " checkZoomOffset: " & $checkZoomOffset, $COLOR_DEBUG2)
+			SetDebugLog("Stone2tree:" & Round($c, 2) & " Reference:" & Round($iRefSize, 2) & " checkZoomOffset: " & $checkZoomOffset, $COLOR_DEBUG2)
 		EndIf
 		
 		Local $stone_x_exp = $stone[2]
@@ -115,7 +115,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$g_ixOffset = $x
 		$g_iyOffset = $y
 		
-		If $g_bDebugSetLog Then SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
+		SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
 
 		Dim $aResult[11]
 		$aResult[0] = $c
@@ -238,7 +238,7 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone")
 	Return $stone
 EndFunc
 
-Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree\tree", $sSceneryCode = $g_sSceneryCode)
+Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $sSceneryCode = $g_sSceneryCode)
 	Local $tree = [0, 0, 0, 0, 0, ""]
 	Local $a
 	

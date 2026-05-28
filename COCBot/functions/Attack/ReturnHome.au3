@@ -27,14 +27,12 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 
 	If $GoldChangeCheck Then
 		SetLog("Checking if the battle has finished", $COLOR_INFO)
-		$g_Zapped = False ;xbebenk mod - Reset var Early Zap, zap early will called on EBO
+		$g_Zapped = False ;reset
 		While GoldElixirChangeEBO()
 			If _Sleep(1000) Then Return
 		WEnd
 		If $g_bRestart Then Return
-		If $g_Zapped Then ;Skip Zap if EarlyZap is successful
-			SetLog("Zapped Early, Skipping SmartZap")
-		Else
+		If Not $g_Zapped Then ;Skip Zap if EarlyZap
 			If IsAttackPage() Then smartZap() ; Check to see if we should zap the DE Drills
 		EndIf
 	EndIf

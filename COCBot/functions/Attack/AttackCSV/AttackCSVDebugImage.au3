@@ -342,9 +342,9 @@ Func AttackCSVDEBUGIMAGE($bOpenImage = False)
 	
 	
 	; - DRAW GetVillageSize
-	DrawStringA($hGraphic, $g_aVillageSize[4] & "," & $g_aVillageSize[5], $g_aVillageSize[4] - 20, $g_aVillageSize[5] + 5, "Arial", 9, 0, 0xFF0080FF)
-	DrawStringA($hGraphic, $g_aVillageSize[7] & "," & $g_aVillageSize[8], $g_aVillageSize[7], $g_aVillageSize[8] + 10, "Arial", 9, 0, 0xFF0080FF)
-	DrawStringA($hGraphic, "S: " & DetectScenery($g_aVillageSize[6]), 610, 490, "Arial", 12)
+	DrawStringA($hGraphic, $g_aVillageSize[4] & "," & $g_aVillageSize[5], $g_aVillageSize[4] - 20, $g_aVillageSize[5] + 5, "Arial", 9)
+	DrawStringA($hGraphic, $g_aVillageSize[7] & "," & $g_aVillageSize[8], $g_aVillageSize[7], $g_aVillageSize[8] + 10, "Arial", 9)
+	DrawStringA($hGraphic, $g_sSceneryCode & " : " & DetectScenery($g_aVillageSize[6]), 610, 490, "Arial", 12)
 	DrawStringA($hGraphic, "Size: " & $g_aVillageSize[0], 610, 510, "Arial", 12)
 	DrawStringA($hGraphic, "ZF: " & $g_aVillageSize[1], 610, 530, "Arial", 12)
 	DrawStringA($hGraphic, "Offset: " & $g_aVillageSize[2] & ", " & $g_aVillageSize[3], 610, 550, "Arial", 12)

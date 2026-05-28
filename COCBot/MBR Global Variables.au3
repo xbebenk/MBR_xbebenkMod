@@ -1872,12 +1872,12 @@ Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ; Blacksmith
 Global $g_aiBlacksmithPos[2] = [-1, -1] ; Position of Pet House
 Global $g_iBlacksmithLevel = 0
-Global Enum $eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGauntlet, $eSpikyBall, $eSnakeBracelet, _ 
+Global Enum $eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGauntlet, $eSpikyBall, $eSnakeBracelet, _
 			$eArcherPuppet, $eInvisibilityVial, $eGiantArrow, $eHealerPuppet, $eFrozenArrow, $eMagicMirror, $eActionFigure, _
 			$eHenchMenPuppet, $eDarkOrb, $eMetalPants, $eNobleIron, $eDarkCrown, $eMeteorStaff, _
 			$eEternalTome, $eLifeGem, $eRageGem, $eHealingTome, $eHeroicTorch, $eFireBall, $eLavaloonPuppet, _
 			$eSeekingShield, $eRoyalGem, $eHogRiderPuppet, $eHasteVial, $eRocketSpear, $eElectroBoots, $eEquipmentCount
-			
+
 Global $g_asEquipmentOrderList[$eEquipmentCount][4] = [ _
 			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtBarbarianPuppet", "Barbarian Puppet"), "BarbarianPuppet", "King", 132], _
 			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtRageVial", "Rage Vial"), "RageVial", "King", 132], _
@@ -1914,7 +1914,7 @@ Global $g_asEquipmentOrderList[$eEquipmentCount][4] = [ _
 			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtElectroBoots", "Electro Boots"), "ElectroBoots", "Champion", 245]]
 
 Global $g_aiEquipmentOrder[$eEquipmentCount] = [ _
-			$eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGauntlet, $eSpikyBall, $eSnakeBracelet, _ 
+			$eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGauntlet, $eSpikyBall, $eSnakeBracelet, _
 			$eArcherPuppet, $eInvisibilityVial, $eGiantArrow, $eHealerPuppet, $eFrozenArrow, $eMagicMirror, $eActionFigure, _
 			$eHenchMenPuppet, $eDarkOrb, $eMetalPants, $eNobleIron, $eDarkCrown, $eMeteorStaff, _
 			$eEternalTome, $eLifeGem, $eRageGem, $eHealingTome, $eHeroicTorch, $eFireBall, $eLavaloonPuppet, _
@@ -1931,7 +1931,7 @@ Global Const $g_aiEquipmentOrderIcon2[$eEquipmentCount + 1] = [ $eIcnOptions, _
 			$eIcnPrince, $eIcnPrince, $eIcnPrince, $eIcnPrince, $eIcnPrince, $eIcnPrince, _
 			$eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, _
 			$eIcnChampion, $eIcnChampion, $eIcnChampion, $eIcnChampion, $eIcnChampion, $eIcnChampion]
-		
+
 Global $g_hChkCustomEquipmentOrderEnable = 0, $g_bChkCustomEquipmentOrderEnable = False
 Global $g_hChkMinOreUpgrade = 0, $g_bChkMinOreUpgrade = False, $g_hTxtMinOreUpgrade = 0, $g_sTxtMinOreUpgrade = ""
 Global $g_hBtnEquipmentOrderSet = 0, $g_ahImgEquipmentOrderSet = 0,$g_hBtnRemoveEquipment = 0, $g_hBtnRegularOrder = 0
@@ -2016,16 +2016,19 @@ Global $g_aDailyAccount[16][Ubound($g_aiDailyFunction)] = [[0,0,0,0,0,0,0,0,0,0,
 														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
 														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
 														[0,0,0,0,0,0,0,0,0,0,0,0,0]]
-															
+
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[44][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
+Global $g_aVillageRefSize[47][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
+									["DM", "Classic Meteor", 592.24, 87, 792, 52, 589], _ ;ok
+									["CS", "Classic Skeleton", 598, 87, 792, 52, 589], _ ;ok
 									["JS", "Jungle", 547, 99, 773, 58, 568], _ ;ok
 									["MS", "Magic", 619.82, 26, 820, 48, 643], _ ;ok
 									["BL", "BuilderBase Lower", 652.11, 131, 777, 102, 584], _ ;ok
 									["BH", "BuilderBase Higher", 563, 145, 764, 141, 600], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
 									["PC", "Pirate", 598.68, 50, 812, 63, 634], _ ;ok
+									["TW", "Toy Workshop", 552, 80, 810, 101, 605], _ ;ok
 									["EW", "Winter", 576.41, 68, 794, 61, 607], _ ;ok
 									["HM", "Hog Mountain", 637.4, 52, 810, 62, 636], _ ;ok
 									["EP", "Epic Jungle", 636.8, 45, 815, 60, 636], _ ;ok

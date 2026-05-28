@@ -247,21 +247,21 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $aPicture = ["", 0, 0, 0, 0]
 	If Not $g_bRunState Then Return
 	
-	If $g_bStayOnBuilderBase Then
-		ZoomOutHelperBB($sFunc)
-		If _Sleep(500) Then Return
-	Else
-		ZoomOutHelper($sFunc)
-		If _Sleep(500) Then Return
-	EndIF
+	;If $g_bStayOnBuilderBase Then
+	;	ZoomOutHelperBB($sFunc)
+	;	If _Sleep(500) Then Return
+	;Else
+	;	ZoomOutHelper($sFunc)
+	;	If _Sleep(500) Then Return
+	;EndIF
 	
 	If _Sleep(50) Then Return
 	ForceCaptureRegion()
-	$aPicture = SearchZoomOut(False, True, $sFunc, True)
+	$aPicture = SearchZoomOut(True, True, $sFunc, True)
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		AndroidZoomOut()
-		SetLog("ZoomOut() : " & $sFunc, $COLOR_DEBUG2)
+		SetLog("ZoomOut() : " & $sFunc, $COLOR_DEBUG1)
 		$aPicture = SearchZoomOut(True, True, $sFunc, True)
 	EndIf
 	
@@ -649,7 +649,7 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 		EndIf
 	Else 
 		$g_iSearchZoomOutCounter += 1
-		SetLog("SearchZoomOut fail counter +1, now = " & $g_iSearchZoomOutCounter, $COLOR_DEBUG2)
+		SetDebugLog("SearchZoomOut fail counter +1, now = " & $g_iSearchZoomOutCounter, $COLOR_DEBUG2)
 		ClickAway()
 		If $bOnBuilderBase Then 
 			ZoomOutHelperBB("SearchZoomOut")

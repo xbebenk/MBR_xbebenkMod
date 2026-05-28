@@ -624,7 +624,7 @@ Func DetectSlotTroop($iTroopIndex = 0)
 	$sShort = $g_asTroopShortNames[$iTroopIndex]
 	$sName = $g_asTroopNames[$iTroopIndex]
 
-	If $g_bDebugSetLog Then SetLog("DetectSlotTroop : [" & $iTroopIndex & "] " & $sName, $COLOR_DEBUG1)	
+	SetDebugLog("DetectSlotTroop : [" & $iTroopIndex & "] " & $sName)	
 	For $i = 1 To 4
 		If Not _ColorCheck(_GetPixelColor($g_iDonationWindowX, $g_iDonationWindowY, True), Hex(0x867973, 6), 10, Default, "DonateWindow") Then
 			SetDebugLog("DonateWindow not available")
@@ -633,19 +633,19 @@ Func DetectSlotTroop($iTroopIndex = 0)
 		If QuickMIS("BFI", $g_sImgDonateTroops & $sShort & "*", $x, $y, $x1, $y1) Then
 			$aSlot[0] = $g_iQuickMISX
 			$aSlot[1] = $g_iQuickMISY
-			SetLog($sName & " detected on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG)
+			SetLog($sName & " detected on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG1)
 			Return $aSlot
 		EndIf
 		If $g_bNewSystemToDonate Then 
-			SetLog("Troop Detection Failed: [" & $iTroopIndex & "] " & $sName, $COLOR_ERROR)
-			SetLog("QuickMIS('BFI', '" & $g_sImgDonateTroops & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")", $COLOR_ERROR)
+			SetDebugLog("Troop Detection Failed: [" & $iTroopIndex & "] " & $sName)
+			SetDebugLog("QuickMIS('BFI', '" & $g_sImgDonateTroops & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")")
 			Return -1
 		Else	
 			DragDonate($y)
 		EndIf
 		If $i = 4 Then 
-			SetLog("Troop Detection Failed: [" & $iTroopIndex & "] " & $sName, $COLOR_ERROR)
-			SetLog("QuickMIS('BFI', '" & $g_sImgDonateTroops & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")", $COLOR_ERROR)
+			SetLog("Troop Detection Failed: [" & $iTroopIndex & "] " & $sName, $COLOR_DEBUG2)
+			SetDebugLog("QuickMIS('BFI', '" & $g_sImgDonateTroops & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")")
 		EndIf
 		If _Sleep(50) Then Return -1 
 		If Not $g_bRunState Then Return -1
@@ -664,7 +664,7 @@ Func DetectSlotSpell($iSpellIndex = 0)
 	$sShort = $g_asSpellShortNames[$iSpellIndex]
 	$sName = $g_asSpellNames[$iSpellIndex]
 
-	If $g_bDebugSetLog Then SetLog("DetectSlotSpell : [" & $iSpellIndex & "] " & $sName, $COLOR_DEBUG1)
+	SetDebugLog("DetectSlotSpell : [" & $iSpellIndex & "] " & $sName)
 	For $i = 1 To 2
 		If Not _ColorCheck(_GetPixelColor($g_iDonationWindowX, $g_iDonationWindowY, True), Hex(0x867973, 6), 10, Default, "DonateWindow") Then
 			SetDebugLog("DonateWindow not available")
@@ -673,19 +673,19 @@ Func DetectSlotSpell($iSpellIndex = 0)
 		If QuickMIS("BFI", $g_sImgDonateSpells & $sShort & "*", $x, $y, $x1, $y1) Then
 			$aSlot[0] = $g_iQuickMISX
 			$aSlot[1] = $g_iQuickMISY
-			If $g_bDebugSetLog Then SetLog($sName & " Spell detected on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG)
+			SetLog($sName & " Spell detected on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG1)
 			Return $aSlot
 		EndIf
 		If $g_bNewSystemToDonate Then
-			SetLog("Spell Detection Failed: [" & $iSpellIndex & "] " & $sName, $COLOR_ERROR)
-			If $g_bDebugSetLog Then SetLog("QuickMIS('BFI', '" & $g_sImgDonateSpells & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")", $COLOR_ERROR)
+			SetDebugLog("Spell Detection Failed: [" & $iSpellIndex & "] " & $sName)
+			SetDebugLog("QuickMIS('BFI', '" & $g_sImgDonateSpells & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")")
 			Return -1
 		Else
 			DragDonate($y - 45)
 		EndIf
 		If $i = 2 Then
-			SetLog("Spell Detection Failed: [" & $iSpellIndex & "] " & $sName, $COLOR_ERROR)
-			If $g_bDebugSetLog Then SetLog("QuickMIS('BFI', '" & $g_sImgDonateSpells & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")", $COLOR_ERROR)
+			SetLog("Spell Detection Failed: [" & $iSpellIndex & "] " & $sName, $COLOR_DEBUG2)
+			SetDebugLog("QuickMIS('BFI', '" & $g_sImgDonateSpells & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")", $COLOR_ERROR)
 		EndIf
 		If _Sleep(50) Then Return -1 
 		If Not $g_bRunState Then Return -1
@@ -703,7 +703,7 @@ Func DetectSlotSiege($iSiegeIndex = 0)
 	$sShort = $g_asSiegeMachineShortNames[$iSiegeIndex]
 	$sName = $g_asSiegeMachineNames[$iSiegeIndex]
 
-	If $g_bDebugSetLog Then SetLog("DetectSlotSiege : [" & $iSiegeIndex & "] " & $sName, $COLOR_DEBUG1)
+	SetDebugLog("DetectSlotSiege : [" & $iSiegeIndex & "] " & $sName)
 	For $i = 1 To 3
 		If Not _ColorCheck(_GetPixelColor($g_iDonationWindowX, $g_iDonationWindowY, True), Hex(0x867973, 6), 10, Default, "DonateWindow") Then
 			SetDebugLog("DonateWindow not available")
@@ -712,19 +712,19 @@ Func DetectSlotSiege($iSiegeIndex = 0)
 		If QuickMIS("BFI", $g_sImgDonateSiege & $sShort & "*", $x, $y, $x1, $y1) Then
 			$aSlot[0] = $g_iQuickMISX
 			$aSlot[1] = $g_iQuickMISY
-			SetLog($sName & " detected on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG)
+			SetLog($sName & " detected on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG1)
 			Return $aSlot
 		EndIf
 		If $g_bNewSystemToDonate Then 
-			SetLog("Siege Detection Failed: [" & $iSiegeIndex & "] " & $sName, $COLOR_ERROR)
-			SetLog("QuickMIS('BFI', '" & $g_sImgDonateSiege & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")", $COLOR_ERROR)
+			SetLog("Siege Detection Failed: [" & $iSiegeIndex & "] " & $sName, $COLOR_DEBUG2)
+			SetDebugLog("QuickMIS('BFI', '" & $g_sImgDonateSiege & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")", $COLOR_ERROR)
 			Return -1
 		Else	
 			DragDonate($y)
 		EndIf
 		If $i = 3 Then 
-			SetLog("Siege Detection Failed: [" & $iSiegeIndex & "] " & $sName, $COLOR_ERROR)
-			SetLog("QuickMIS('BFI', '" & $g_sImgDonateSiege & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")", $COLOR_ERROR)
+			SetDebugLog("Siege Detection Failed: [" & $iSiegeIndex & "] " & $sName, $COLOR_ERROR)
+			SetDebugLog("QuickMIS('BFI', '" & $g_sImgDonateSiege & $sShort & "*" & "'," & $x & "," & $y & "," & $x1 & "," & $y1 & ")", $COLOR_ERROR)
 		EndIf
 		If _Sleep(50) Then Return -1 
 		If Not $g_bRunState Then Return -1
@@ -944,7 +944,7 @@ Func getArmyRequest($DonateButton = -1)
 				$g_aiDonSpellQuant[$i][0] = $iArmyIndex
 				$g_aiDonSpellQuant[$i][1] = (Number($sQuant) > 0 ? $sQuant : 1)
 			; Sieges
-			ElseIf $iArmyIndex >= $eWallW And $iArmyIndex <= $eBattleD Then
+			ElseIf $iArmyIndex >= $eWallW And $iArmyIndex <= $eSkyW Then
 				$sClanText &= ", " & $g_asSiegeMachineNames[$iArmyIndex - $eWallW]
 				$sDebugText &= ", " & $g_asSiegeMachineNames[$iArmyIndex - $eWallW] & ":" & (Number($sQuant) > 0 ? $sQuant : 1)
 			ElseIf $iArmyIndex = -1 Then
@@ -954,7 +954,7 @@ Func getArmyRequest($DonateButton = -1)
 		Next
 		SetLog("[Request] " & StringTrimLeft($sDebugText, 2), $COLOR_ACTION)
 	Else
-		DebugQuickMISCNX()
+		DebugQuickMISCNX(Default, "getArmyRequest")
 	EndIf
 	Return StringTrimLeft($sClanText, 2)
 EndFunc   ;==>getArmyRequest

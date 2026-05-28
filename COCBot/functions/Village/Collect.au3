@@ -19,6 +19,7 @@ Func Collect($bOnlyCollector = False)
 	StartGainCost()
 	
 	SetLog("Collecting Resources", $COLOR_INFO)
+	CheckMainScreen(True, $g_bStayOnBuilderBase, "Collect")
 	If _Sleep($DELAYCOLLECT2) Then Return
 
 	; Setup arrays, including default return values for $return
@@ -35,7 +36,7 @@ Func Collect($bOnlyCollector = False)
 			If IsArray($aCollectXY) Then ; found array of locations
 				$t = Random(0, UBound($aCollectXY) - 1, 1) ; SC May 2017 update only need to pick one of each to collect all
 				SetDebugLog($sFileName & " found, random pick(" & $aCollectXY[$t][0] & "," & $aCollectXY[$t][1] & ")", $COLOR_GREEN)
-				If IsMainPage() Then Click($aCollectXY[$t][0], $aCollectXY[$t][1], 1, 0, "#0430")
+				Click($aCollectXY[$t][0], $aCollectXY[$t][1], 1, 0, "#0430")
 				If _Sleep($DELAYCOLLECT2) Then Return
 			EndIf
 		Next
