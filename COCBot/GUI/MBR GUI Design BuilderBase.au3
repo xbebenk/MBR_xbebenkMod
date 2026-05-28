@@ -271,7 +271,7 @@ Func CreateBBAttackSubTab()
 
 		$g_hBtnBBDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder", "Drop Order"), $x + 10, $y + 62, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder_Info", "Set a custom dropping order for your troops."))
-			GUICtrlSetBkColor(-1, $COLOR_RED)
+			GUICtrlSetBkColor(-1, $COLOR_ERROR)
 			GUICtrlSetOnEvent(-1, "btnBBDropOrder")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		

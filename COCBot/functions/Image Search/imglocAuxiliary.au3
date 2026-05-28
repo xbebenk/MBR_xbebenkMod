@@ -118,8 +118,8 @@ Func checkImglocError(ByRef $imglocvalue, $funcName, $sTileSource = "", $sImageA
 			SetDebugLog($funcName & " - Imgloc DLL Error: " & $imglocvalue[0], $COLOR_ERROR)
 			Return True
 		ElseIf StringLeft($imglocvalue[0], 2) = "-2" Then ;critical error
-			SetLog($funcName & " - Imgloc DLL Critical Error", $COLOR_RED)
-			SetLog(StringMid($imglocvalue[0], 4), $COLOR_RED)
+			SetLog($funcName & " - Imgloc DLL Critical Error", $COLOR_ERROR)
+			SetLog(StringMid($imglocvalue[0], 4), $COLOR_ERROR)
 			;BotStop() ; stop bot on critical errors
 			; Restart Bot on critical errors
 			SetLog("Restart bot in 3 Minutes...", $COLOR_GREEN)

@@ -53,7 +53,7 @@ Opt("GUIOnEventMode", 1)
 
 Global $hNtDll = DllOpen("ntdll.dll")
 #cs
-	Global Const $COLOR_ERROR = $COLOR_RED ; Error messages
+	Global Const $COLOR_ERROR = $COLOR_ERROR ; Error messages
 	Global Const $COLOR_WARNING = $COLOR_MAROON ; Warning messages
 	Global Const $COLOR_INFO = $COLOR_BLUE ; Information or Status updates for user
 	Global Const $COLOR_SUCCESS = 0x006600 ; Dark Green, Action, method, or process completed successfully
@@ -326,7 +326,7 @@ Func UpdateAndroidConfig($instance = Default, $emulator = Default)
 			EndIf
 		Next
 	EndIf
-	If $emulator <> Default Then SetLog("Unknown Android Emulator " & $emulator, $COLOR_RED)
+	If $emulator <> Default Then SetLog("Unknown Android Emulator " & $emulator, $COLOR_ERROR)
 	If $instance = "" Then $instance = Default
 	If $instance = Default Then $instance = $g_avAndroidAppConfig[$g_iAndroidConfig][1]
 	SetDebugLog("UpdateAndroidConfig(""" & $instance & """)")
@@ -1251,7 +1251,7 @@ Func LaunchBotBackend($bNoGUI = True)
 			SetDebugLog("My Bot backend process launching: " & $cmd)
 			$pid = Run($cmd, @ScriptDir)
 			If $pid = 0 Then
-				SetLog("Cannot launch My Bot backend process", $COLOR_RED)
+				SetLog("Cannot launch My Bot backend process", $COLOR_ERROR)
 				Return 0
 			EndIf
 			If $g_iDebugSetlog Then

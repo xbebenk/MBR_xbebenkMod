@@ -175,7 +175,7 @@ Func chkBBDropOrder()
 		For $i = 0 To $g_iBBTroopCount - 1
 			GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_DISABLE)
 		Next
-		GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_RED)
+		GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_ERROR)
 		$g_bBBDropOrderSet = False
 	EndIf
 EndFunc   ;==>chkBBDropOrder
@@ -233,7 +233,7 @@ Func BtnBBRemoveDropOrder()
 		_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], -1)
 		GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_ENABLE)
 	Next
-	GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_RED)
+	GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_ERROR)
 	$g_bBBDropOrderSet = False
 EndFunc   ;==>BtnBBRemoveDropOrder
 

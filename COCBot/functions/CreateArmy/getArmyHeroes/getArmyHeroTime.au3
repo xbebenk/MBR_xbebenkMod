@@ -85,7 +85,7 @@ Func getArmyHeroTime($iHeroType, $bOpenArmyWindow = False, $bCloseArmyWindow = F
 			EndIf
 		Else ; empty OCR value
 			If $iHeroType = $aHeroRemainData[$index][3] Then ; only one hero value?
-				SetLog("Can not read remaining " & $aHeroRemainData[$index][2] & " recover time", $COLOR_RED)
+				SetLog("Can not read remaining " & $aHeroRemainData[$index][2] & " recover time", $COLOR_ERROR)
 			Else
 				; reading all heros, need to find if hero is active/wait to determine how to log message?
 				For $pMatchMode = $DB To $g_iMatchMode - 1 ; check all attack modes

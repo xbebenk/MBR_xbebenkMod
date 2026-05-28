@@ -142,7 +142,7 @@ Global $g_oCOMErrorHandler = 0
 #Tidy_On
 #EndRegion debugging
 
-Global Const $COLOR_ERROR = $COLOR_RED ; Error messages
+Global Const $COLOR_ERROR = $COLOR_ERROR ; Error messages
 Global Const $COLOR_WARNING = $COLOR_MAROON ; Warning messages
 Global Const $COLOR_INFO = $COLOR_BLUE ; Information or Status updates for user
 Global Const $COLOR_SUCCESS = 0x006600 ; Dark Green, Action, method, or process completed successfully

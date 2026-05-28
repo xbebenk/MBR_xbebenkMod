@@ -17,7 +17,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 	Local $error, $extError
 	If ($ValueReturned <> "BC1") And ($ValueReturned <> "CX") And ($ValueReturned <> "CNX") And ($ValueReturned <> "N1") And _
 		($ValueReturned <> "NX") And ($ValueReturned <> "Q1") And ($ValueReturned <> "QX") And ($ValueReturned <> "BFI") Then
-		SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_RED)
+		SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_ERROR)
 		Return
 	EndIf
 	
@@ -104,7 +104,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 			EndSwitch
 
 		;ElseIf StringInStr($Res[0], "-1") <> 0 Then
-		;	SetLog("DLL Error", $COLOR_RED)
+		;	SetLog("DLL Error", $COLOR_ERROR)
 
 		Else
 			Switch $ValueReturned

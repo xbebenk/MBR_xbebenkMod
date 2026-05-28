@@ -1665,7 +1665,7 @@ Func SetTime($bForceUpdate = False)
 					If $i = $g_iCurAccount Then
 						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_GREEN)
 					ElseIf $iTime < 0 Then
-						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_RED)
+						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_ERROR)
 					Else
 						GUICtrlSetColor($g_ahLblTroopTime[$i], $COLOR_BLACK)
 					EndIf

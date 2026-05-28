@@ -17,7 +17,7 @@ Func RestartBot($bCloseAndroid = True, $bAutostart = True)
 	SetDebugLog("Restart " & $g_sBotTitle)
 	Local $sCmdLine = ProcessGetCommandLine(@AutoItPID)
 	If @error <> 0 Then
-		SetLog("Cannot prepare to restart " & $g_sBotTitle & ", error code " & @error, $COLOR_RED)
+		SetLog("Cannot prepare to restart " & $g_sBotTitle & ", error code " & @error, $COLOR_ERROR)
 		Return SetError(1, 0, False)
 	EndIf
 
@@ -59,7 +59,7 @@ Func RestartBot($bCloseAndroid = True, $bAutostart = True)
 		_SleepStatus(60 * 1000)
 		Return True
 	Else
-		SetLog("Cannot restart " & $g_sBotTitle, $COLOR_RED)
+		SetLog("Cannot restart " & $g_sBotTitle, $COLOR_ERROR)
 	EndIf
 
 	Return SetError(2, 0, False)

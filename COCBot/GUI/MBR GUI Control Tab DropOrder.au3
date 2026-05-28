@@ -49,8 +49,8 @@ Func chkDropOrder()
 		If IsUseCustomDropOrder() = True Then _GUICtrlSetImage($g_ahImgDropOrderSet, $g_sLibIconPath, $eIcnRedLight)
 	Else
 		$g_bCustomDropOrderEnable = False
-		GUICtrlSetBkColor($g_hBtnCustomDropOrderDB, $COLOR_RED)
-		GUICtrlSetBkColor($g_hBtnCustomDropOrderAB, $COLOR_RED)
+		GUICtrlSetBkColor($g_hBtnCustomDropOrderDB, $COLOR_ERROR)
+		GUICtrlSetBkColor($g_hBtnCustomDropOrderAB, $COLOR_ERROR)
 		GUICtrlSetState($g_hBtnDropOrderSet, $GUI_DISABLE) ; disable button
 		GUICtrlSetState($g_hBtnRemoveDropOrder, $GUI_DISABLE)
 		For $i = 0 To UBound($g_ahCmbDropOrder) - 1

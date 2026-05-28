@@ -527,7 +527,7 @@ Func ZoomOutCtrlClick($CenterMouseWhileZooming = False, $AlwaysControlFocus = Fa
 			If $i > $exitCount Then ExitLoop
 			If $g_bRunState = False Then ExitLoop
 			If IsProblemAffect() Then  ; added to catch errors during Zoomout
-				SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_RED)
+				SetLog($g_sAndroidEmulator & " Error window detected", $COLOR_ERROR)
 				If checkObstacles() = True Then SetLog("Error window cleared, continue Zoom out", $COLOR_BLUE)  ; call to clear normal errors
 			EndIf
 			$i += 1  ; add one to index value to prevent endless loop if controlsend fails

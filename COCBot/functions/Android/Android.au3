@@ -195,7 +195,7 @@ Func UpdateAndroidConfig($instance = Default, $emulator = Default)
 			EndIf
 		Next
 	EndIf
-	If $emulator <> Default Then SetLog("Unknown Android Emulator " & $emulator, $COLOR_RED)
+	If $emulator <> Default Then SetLog("Unknown Android Emulator " & $emulator, $COLOR_ERROR)
 	If $instance = "" Then $instance = Default
 	If $instance = Default Then $instance = $g_avAndroidAppConfig[$g_iAndroidConfig][1]
 	SetDebugLog("UpdateAndroidConfig(""" & $instance & """)")
@@ -2038,7 +2038,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu" Then
 					SetDebugLog("Pie")
 					Local $output = AndroidAdbSendShellCommand("/data/local/tmp/minitouch -d " & $g_sAndroidMouseDevice & " >/dev/null 2>&1 &", -1000, $wasRunState, False)
-					SetDebugLog("[1] : " & $output, $COLOR_RED)
+					SetDebugLog("[1] : " & $output, $COLOR_ERROR)
 				Else
 					Local $output = AndroidAdbSendShellCommand($androidPath & "minitouch -d " & $g_sAndroidMouseDevice & " >/dev/null 2>&1 &", -1000, $wasRunState, False)
 				EndIf
@@ -4554,7 +4554,7 @@ Func PullSharedPrefs($sProfile = $g_sProfileCurrentName)
 	Local $iFilesPulled = 0
 
 	If Not $g_sAndroidPicturesPathAvailable Then
-		SetLog("Shared folder in Android not availble, cannot pull shared_prefs", $COLOR_RED)
+		SetLog("Shared folder in Android not availble, cannot pull shared_prefs", $COLOR_ERROR)
 		Return SetError(0, 0, $Result)
 	EndIf
 
@@ -4649,7 +4649,7 @@ Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = 
 	Local $cmdOutput
 
 	If Not $g_sAndroidPicturesPathAvailable Then
-		SetLog("Shared folder in Android not availble, cannot push shared_prefs", $COLOR_RED)
+		SetLog("Shared folder in Android not availble, cannot push shared_prefs", $COLOR_ERROR)
 		Return SetError(0, 0, $Result)
 	EndIf
 
@@ -4658,7 +4658,7 @@ Func PushSharedPrefs($sProfile = $g_sProfileCurrentName, $bCloseGameIfRunning = 
 	Local $bHaveOld = HaveSharedPrefs($sProfile, False, True)
 
 	If Not $bHaveNew And Not $bHaveOld Then
-		SetLog("Profile " & $sProfile & " doesn't have shared_prefs folder to push", $COLOR_RED)
+		SetLog("Profile " & $sProfile & " doesn't have shared_prefs folder to push", $COLOR_ERROR)
 		Return SetError(0, 0, $Result)
 	EndIf
 
