@@ -1182,4 +1182,13 @@ Func chkTournament()
 	EndIf
 	$g_iTournamentAttackType = _GUICtrlComboBox_GetCurSel($g_hCmbTournamentAttackType)
 	SetLog("Set Tournament Attack Type : " & ($g_iTournamentAttackType = 0 ? "Dead Base" : "Active Base"), $COLOR_DEBUG)
+	
+	$g_iTournamentUseArmy = _GUICtrlComboBox_GetCurSel($g_hCmbUseSavedArmy)
+	SetLog("Set Tournament Use Saved Army : Army " & $g_iTournamentUseArmy + 1, $COLOR_DEBUG)
+	
+	If $g_iTournamentAttackType = 1 Then 
+		GUICtrlSetState($g_hCmbUseSavedArmy, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hCmbUseSavedArmy, $GUI_DISABLE)
+	EndIf
 EndFunc   ;==>chkTournament

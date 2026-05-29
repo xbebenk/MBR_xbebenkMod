@@ -494,6 +494,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkTournament, $g_bEnableTournament ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAttackOnce, $g_bChkAttackOnce ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTournamentAttackType, $g_iTournamentAttackType)
+			_GUICtrlComboBox_SetCurSel($g_hCmbUseSavedArmy, $g_iTournamentUseArmy)
 
 		Case "Save"
 			$g_bChkBotStop = (GUICtrlRead($g_hChkBotStop) = $GUI_CHECKED)
@@ -663,6 +664,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bEnableTournament = (GUICtrlRead($g_hChkTournament) = $GUI_CHECKED)
 			$g_bChkAttackOnce = (GUICtrlRead($g_hChkAttackOnce) = $GUI_CHECKED)
 			$g_iTournamentAttackType = _GUICtrlComboBox_GetCurSel($g_hCmbTournamentAttackType)
+			$g_iTournamentUseArmy = _GUICtrlComboBox_GetCurSel($g_hCmbUseSavedArmy)
 
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_6
@@ -1303,19 +1305,8 @@ Func ApplyConfig_600_28_DB($TypeReadSave)
 
 			chkDBActivateSearches()
 			GUICtrlSetState($g_hChkDeadbase, $g_abAttackTypeEnable[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
-
-			;GUICtrlSetState($g_hChkDBKingWait, BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroKing) = $eHeroKing ? $GUI_CHECKED : $GUI_UNCHECKED)
-			;GUICtrlSetState($g_hChkDBQueenWait, BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroQueen) = $eHeroQueen ? $GUI_CHECKED : $GUI_UNCHECKED)
-			;GUICtrlSetState($g_hChkDBWardenWait, BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroWarden) = $eHeroWarden ? $GUI_CHECKED : $GUI_UNCHECKED)
-			;GUICtrlSetState($g_hChkDBChampionWait, BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroChampion) = $eHeroChampion ? $GUI_CHECKED : $GUI_UNCHECKED)
-			;GUICtrlSetState($g_hChkDBNotWaitHeroes, $g_aiSearchNotWaitHeroesEnable[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			;$g_iHeroWaitAttackNoBit[$DB][0] = GUICtrlRead($g_hChkDBKingWait) = $GUI_CHECKED ? 1 : 0
-			;$g_iHeroWaitAttackNoBit[$DB][1] = GUICtrlRead($g_hChkDBQueenWait) = $GUI_CHECKED ? 1 : 0
-			;$g_iHeroWaitAttackNoBit[$DB][2] = GUICtrlRead($g_hChkDBWardenWait) = $GUI_CHECKED ? 1 : 0
-			;$g_iHeroWaitAttackNoBit[$DB][3] = GUICtrlRead($g_hChkDBChampionWait) = $GUI_CHECKED ? 1 : 0
-			;GUICtrlSetState($g_hChkDBSpellsWait, $g_abSearchSpellsWaitEnable[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			;chkDBSpellsWait()
-			;GUICtrlSetState($g_hChkDBWaitForCastle, $g_abSearchCastleWaitEnable[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbDBUseSavedArmy, $g_iCmbDBUseArmy)
+			
 			; Search - Filters
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBMeetGE, $g_aiFilterMeetGE[$DB])
 			GUICtrlSetData($g_hTxtDBMinGold, $g_aiFilterMinGold[$DB])
@@ -1366,14 +1357,8 @@ Func ApplyConfig_600_28_DB($TypeReadSave)
 			$g_aiSearchTrophiesMax[$DB] = GUICtrlRead($g_hTxtDBTropiesMax)
 			$g_abSearchCampsEnable[$DB] = (GUICtrlRead($g_hChkDBActivateCamps) = $GUI_CHECKED)
 			$g_aiSearchCampsPct[$DB] = Int(GUICtrlRead($g_hTxtDBArmyCamps))
-			;$g_iHeroWaitAttackNoBit[$DB][0] = GUICtrlRead($g_hChkDBKingWait) = $GUI_CHECKED ? 1 : 0
-			;$g_iHeroWaitAttackNoBit[$DB][1] = GUICtrlRead($g_hChkDBQueenWait) = $GUI_CHECKED ? 1 : 0
-			;$g_iHeroWaitAttackNoBit[$DB][2] = GUICtrlRead($g_hChkDBWardenWait) = $GUI_CHECKED ? 1 : 0
-			;$g_iHeroWaitAttackNoBit[$DB][3] = GUICtrlRead($g_hChkDBChampionWait) = $GUI_CHECKED ? 1 : 0
-			;$g_aiSearchNotWaitHeroesEnable[$DB] = GUICtrlRead($g_hChkDBNotWaitHeroes) = $GUI_CHECKED ? 1 : 0
-			;chkNotWaitHeroes()
-			;$g_abSearchSpellsWaitEnable[$DB] = (GUICtrlRead($g_hChkDBSpellsWait) = $GUI_CHECKED)
-			;$g_abSearchCastleWaitEnable[$DB] = (GUICtrlRead($g_hChkDBWaitForCastle) = $GUI_CHECKED)
+			$g_iCmbDBUseArmy = _GUICtrlComboBox_GetCurSel($g_hCmbDBUseSavedArmy)
+		
 			; Search - Filters
 			$g_iDeadEagleSearch = GUICtrlRead($g_hTxtDeadEagleSearch)
 

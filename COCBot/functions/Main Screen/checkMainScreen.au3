@@ -27,32 +27,32 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	If Not CheckAndroidRunning(False) Then Return
 	If GetAndroidProcessPID() = 0 Then CloseCoC(True)
 	
-	Local $VillageType = ""
-	If $bBuilderBase Then 
-		$VillageType = "BuilderBase"
-		SwitchBetweenBases("BB")
-	Else 
-		$VillageType = "MainVillage"
-		SwitchBetweenBases("Main")
-	EndIf
+	;Local $VillageType = ""
+	;If $bBuilderBase Then 
+	;	$VillageType = "BuilderBase"
+	;	SwitchBetweenBases("BB")
+	;Else 
+	;	$VillageType = "MainVillage"
+	;	SwitchBetweenBases("Main")
+	;EndIf
 	
-	If $bSetLog Then SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
+	If $bSetLog Then SetLog("[" & $CalledFrom & "] checkMainScreen", $COLOR_INFO)
 	PlaceUnplacedBuilding()
 	PlacedOnLeague()
 	
 	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False
 	$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
+	;If Not $g_bStayOnBuilderBase And Not $bLocated And isOnBuilderBase() Then $bBuilderBase = True ;check if account is on builderbase but it should on main
 	
 	While Not $bLocated
 		$i += 1
 		If Not $g_bRunState Then Return
-		If Mod($i, 10) = 0 Then RestartAndroidCoC() ; Force restart CoC we keep on restarting mainscreen
 		
 		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))
 		$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
 		If $bLocated Then ExitLoop
 		
-		If Not $bLocated And GetAndroidProcessPID() = 0 Then OpenCoC()
+		If GetAndroidProcessPID() = 0 Then OpenCoC()
 		If Not $g_bRunState Then Return
 		;mainscreen not located, proceed to check if there is obstacle covering screen
 		$bObstacleResult = checkObstacles($bBuilderBase)

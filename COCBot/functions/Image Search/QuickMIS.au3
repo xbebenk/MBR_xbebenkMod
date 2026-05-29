@@ -21,7 +21,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 		Return
 	EndIf
 	
-	Local $Res, $aCoords
+	Local $Res, $aCoords, $bRet = False
 	Local $RectArea[4] = [$Left, $Top, $Right, $Bottom]
 	Local $sImageArea = GetDiamondFromArray($RectArea)
 	If $ValueReturned = "BFI" Then 
@@ -50,18 +50,21 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 						$g_iQuickMISY = $coord[1]
 						$g_sQuickMISName = $files[$i]
 						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $g_sQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
-						Return True
+						$bRet = True
+						ExitLoop
 					EndIf
 				Else
 					If $g_bDebugSetlog Then SetDebugLog("BFI No result")
 				EndIf
-				If $g_bDebugImageSave Then 
-					_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
-					SaveDebugImage("QuickMIS_" & $ValueReturned, False)
-				EndIf
 			Next
 		EndIf
-		Return
+
+		If $g_bDebugImageSave Then 
+			_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
+			SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+		EndIf
+		
+		Return $bRet
 	EndIf
 	
 	If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)

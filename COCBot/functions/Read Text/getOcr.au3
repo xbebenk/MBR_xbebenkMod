@@ -145,7 +145,7 @@ Func getRequestCCCapacity($x_start = 250, $y_start = 148, $width = 90, $height =
 	Return StringReplace(getOcrAndCapture("coc-ccgold", $x_start, $y_start, $width, $height, True), "-", "")
 EndFunc
 
-Func getMatchRemain($x_start = 414, $y_start = 475) ; Gets complete Tournament Match Remain / Max
+Func getMatchRemain($x_start = 395, $y_start = 475) ; Gets complete Tournament Match Remain / Max
 	Local $sRet = "", $aRet[0]
 	$sRet = getOcrAndCapture("coc-tournament", $x_start, $y_start, 70, 22)
 	If $sRet <> "" Then

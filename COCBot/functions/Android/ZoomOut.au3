@@ -239,8 +239,6 @@ Func ZoomOutHelperBB($caller = "Default")
 EndFunc
 
 Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40, $bAndroidZoomOut = True) ;Zooms out
-	
-	Local $sFunc = "DefaultZoomOut"
 	Local $result0, $result1, $i = 0
 	Local $exitCount = 80
 	Local $delayCount = 20
@@ -248,21 +246,21 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	If Not $g_bRunState Then Return
 	
 	;If $g_bStayOnBuilderBase Then
-	;	ZoomOutHelperBB($sFunc)
+	;	ZoomOutHelperBB("DefaultZoomOut")
 	;	If _Sleep(500) Then Return
 	;Else
-	;	ZoomOutHelper($sFunc)
+	;	ZoomOutHelper("DefaultZoomOut")
 	;	If _Sleep(500) Then Return
 	;EndIF
 	
 	If _Sleep(50) Then Return
 	ForceCaptureRegion()
-	$aPicture = SearchZoomOut(True, True, $sFunc, True)
+	$aPicture = SearchZoomOut(True, True, "DefaultZoomOut", True)
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		AndroidZoomOut()
-		SetLog("ZoomOut() : " & $sFunc, $COLOR_DEBUG1)
-		$aPicture = SearchZoomOut(True, True, $sFunc, True)
+		SetLog("ZoomOut() : " & "DefaultZoomOut", $COLOR_DEBUG1)
+		$aPicture = SearchZoomOut(True, True, "DefaultZoomOut", True)
 	EndIf
 	
 	If _Sleep(50) Then Return
@@ -270,7 +268,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	
 	If StringInStr($aPicture[0], "zoomou") = 0 Then
 		If $g_bDebugSetlog Then
-			SetDebugLog("Zooming Out (" & $sFunc & ")", $COLOR_INFO)
+			SetDebugLog("Zooming Out (" & "DefaultZoomOut" & ")", $COLOR_INFO)
 		Else
 			SetLog("Zooming Out", $COLOR_INFO)
 		EndIf
@@ -278,7 +276,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 		If $bAndroidZoomOut Then
 			AndroidZoomOut(0, Default, ($g_iAndroidZoomoutMode <> 2)) ; use new ADB zoom-out
 			ForceCaptureRegion()
-			$aPicture = SearchZoomOut(True, True, $sFunc, True)
+			$aPicture = SearchZoomOut(True, True, "DefaultZoomOut", True)
 		EndIf
 	    Local $tryCtrlWheelScroll = False
 		
@@ -321,10 +319,10 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				EndIf
 				$i += 1  ; add one to index value to prevent endless loop if controlsend fails
 				ForceCaptureRegion()
-				$aPicture = SearchZoomOut(True, True, $sFunc, True)
+				$aPicture = SearchZoomOut(True, True, "DefaultZoomOut", True)
 				If IsArray($aPicture) And $aPicture[0] = "" And $aPicture[1] = "0" Then 
-					ZoomOutHelper($sFunc)
-					$aPicture = SearchZoomOut(True, True, $sFunc, True)
+					ZoomOutHelper("DefaultZoomOut")
+					$aPicture = SearchZoomOut(True, True, "DefaultZoomOut", True)
 				EndIf
 				If Not $g_bRunState Then Return $aPicture
 			WEnd
@@ -593,23 +591,21 @@ EndFunc   ;==>AndroidOnlyZoomOut
 ; 3 = Difference of previous Village X Offset and current (after centering village)
 ; 4 = Difference of previous Village Y Offset and current (after centering village)
 ;SearchZoomOut(True, True, "", True)
-Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "Default", $CaptureRegion = True, $DebugLog = $g_bDebugSetlog)
+Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "Default", $CaptureRegion = True, $bOnBuilderBase = $g_bStayOnBuilderBase)
 	FuncEnter(SearchZoomOut)
 	
 	; Setup arrays, including default Return values for $Return
 	Local $aVillage, $aScrollPos, $iVillageSize = 0
 	Local $x, $y, $z, $stone[2]
-	Local $bOnBuilderBase = False
 	
 	If $CaptureRegion Then _CaptureRegion2()
-	$bOnBuilderBase = isOnBuilderBase()
 	$aScrollPos = getVillageCenteringCoord()
 
 	Local $aResult[5] = ["", 0, 0, 0, 0] ; expected dummy value
 	Local $aResult2[4] = [0, 0, 0, 0]
 	If Not $g_bRunState Then Return FuncReturn($aResult)
 	
-	$aVillage = GetVillageSize($DebugLog, "stone", "tree", $bOnBuilderBase)
+	$aVillage = GetVillageSize($bOnBuilderBase, "stone", "tree")
 	If IsArray($aVillage) = 1 Then
 		$iVillageSize = $aVillage[0]
 		If $iVillageSize < 750 Then
@@ -629,9 +625,9 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 				
 				ClickAway()
 				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
-				If _Sleep(250) Then Return FuncReturn($aResult)
+				Return FuncReturn($aResult)
 				
-				$aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut(1):" & $sSource, True, $DebugLog)
+				$aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut(1):" & $sSource, True, $bOnBuilderBase)
 				; update difference in offset
 				$aResult2[3] = $aResult2[1] - $aResult[1]
 				$aResult2[4] = $aResult2[2] - $aResult[2]
@@ -699,7 +695,7 @@ Func ZoomIn($Region = "Top")
 		If _Sleep(1500) Then Return
 		Local $sSceneryCode[3] = ["DS", "JS", "MS"]
 		For $sCode In $sSceneryCode
-			Local $iRes = GetVillageSize(False, "stone" & $sCode, "tree" & $sCode, False)
+			Local $iRes = GetVillageSize(False, "stone" & $sCode, "tree" & $sCode)
 			If IsArray($iRes) Then ContinueLoop
 			If $iRes = 0 Then ExitLoop
 			SetLog("[" & $i & "] ZoomIn Not Succeed", $COLOR_DEBUG)
@@ -741,7 +737,7 @@ Func ZoomInBB($Region = "Top")
 		Local $sSceneryCode[2] = ["BL", "BH"]
 		For $sCode In $sSceneryCode
 			;GetVillageSize(False, "stoneBL", "treeBL", True)
-			Local $iRes = GetVillageSize(False, "stone" & $sCode, "tree" & $sCode, True)
+			Local $iRes = GetVillageSize(True, "stone" & $sCode, "tree" & $sCode)
 			If IsArray($iRes) Then ContinueLoop
 			If $iRes = 0 Then ExitLoop
 			SetLog("[" & $i & "] ZoomInBB Not Succeed", $COLOR_DEBUG)			

@@ -102,17 +102,16 @@ Func SwitchTo($To = "BB")
 	For $i = 1 To 3
 		If _Sleep(50) Then Return
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
-		ZoomOut(True)
-		Local $ZoomOutResult
-		If $To = "BB" Then
-			If Not QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
-				checkChatTabPixel()
-				$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases")
-				If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-					ZoomOut() 
-				EndIf
-			EndIf
-		EndIf
+		;Local $ZoomOutResult
+		;If $To = "BB" Then
+		;	If Not QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
+		;		checkChatTabPixel()
+		;		$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases")
+		;		If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
+		;			ZoomOut() 
+		;		EndIf
+		;	EndIf
+		;EndIf
 		
 		If $To = "Main" Then 
 			ZoomOutHelperBB("SwitchBetweenBases")

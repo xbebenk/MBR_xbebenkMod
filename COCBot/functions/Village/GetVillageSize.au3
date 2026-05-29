@@ -28,17 +28,13 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;GetVillageSize(True, "stone", "tree", False)
-Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $bOnBuilderBase = Default)
+Func GetVillageSize($bOnBuilderBase = $g_bStayOnBuilderBase, $sStonePrefix = Default, $sTreePrefix = Default)
 	FuncEnter(GetVillageSize)
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""]
-	If $DebugLog = Default Then $DebugLog = False
 	If $sStonePrefix = Default Then $sStonePrefix = "stone"
 	If $sTreePrefix = Default Then $sTreePrefix = "tree"
 	
-	If $bOnBuilderBase = Default Then
-		$bOnBuilderBase = isOnBuilderBase()
-	EndIf
-	
+	If Not $bOnBuilderBase And IsOnBuilderBase() Then $bOnBuilderBase = True
 	Local $sDirectory
 	If $bOnBuilderBase Then
 		$sDirectory = $g_sImgZoomOutDirBB
@@ -54,8 +50,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	If Not $g_bRunState Then Return 0
 	SetDebugLog("stone: " & _ArrayToString($stone))
 	If $stone[0] = 0 Then
-		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
-		If $bOnBuilderBase Then ZoomOutHelperBB("GetVillageSize")
+		SetDebugLog("GetVillageSize cannot find stone")
 		Return FuncReturn($aResult)
 	EndIf
 	
@@ -199,7 +194,7 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone")
 	For $check = 1 To 2
 		SetDebugLog("FindStone check : " & $check)
 		If $check = 1 Then 
-			If Not QuickMIS("BFI", $sDirectory & $sStonePrefix & "\stone" & $g_sSceneryCode & "*", 0, 350, 250, 580) Then
+			If Not QuickMIS("BFI", $sDirectory & $sStonePrefix & "\stone" & $g_sSceneryCode & "*", 0, 350, 350, 580) Then
 				SetDebugLog("Cannot Find stone file: " & $sStonePrefix & $g_sSceneryCode)
 				ContinueLoop
 			Else
@@ -217,7 +212,7 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone")
 				EndIf					
 			EndIf
 		Else
-			If QuickMIS("BC1", $sDirectory & $sStonePrefix, 0, 350, 250, 580) Then
+			If QuickMIS("BC1", $sDirectory & $sStonePrefix, 0, 350, 350, 580) Then
 				$a = StringRegExp($g_sQuickMISName,"stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 				If UBound($a) = 3 Then
 					$stone[0] = $g_iQuickMISX ; x center of stone found
@@ -245,7 +240,7 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $sSceneryC
 	For $check = 1 To 2
 		SetDebugLog("FindTree check : " & $check)
 		If $check = 1 Then 
-			If Not QuickMIS("BFI", $sDirectory & $sTreePrefix & "\tree" & $sSceneryCode & "*", 430, 0, 860, 350) Then
+			If Not QuickMIS("BFI", $sDirectory & $sTreePrefix & "\tree" & $sSceneryCode & "*", 430, 0, 860, 220) Then
 				SetDebugLog("Cannot Find tree file: " & $sTreePrefix & $sSceneryCode)
 				ContinueLoop
 			Else
@@ -262,7 +257,7 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $sSceneryC
 				EndIf					
 			EndIf
 		Else
-			If QuickMIS("BC1", $sDirectory & $sTreePrefix, 0, 350, 250, 580) Then
+			If QuickMIS("BC1", $sDirectory & $sTreePrefix, 430, 0, 860, 220) Then
 				$a = StringRegExp($g_sQuickMISName,"tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 				If UBound($a) = 3 Then
 					$tree[0] = $g_iQuickMISX ; x center of tree found

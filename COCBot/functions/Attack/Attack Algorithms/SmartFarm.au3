@@ -85,6 +85,17 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_IMGLOC)
 	Local $aAll = SmartFarmDetection($bTest)
 	SetDebugLog(" TOTAL detection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 	
+	If Ubound($aAll) = 0 Then 
+		SetLog("Strange ERR: no identified resource building found", $COLOR_DEBUG2)
+		$aAll = SmartFarmDetection($bTest)
+	EndIf
+	
+	If Ubound($aAll) = 0 Then 
+		SetLog("Still got 0 building", $COLOR_DEBUG2)
+		$g_bRestart = True
+		Return 0
+	EndIf
+	
 	; [0] = x , [1] = y , [2] = Side , [3] = In/out , [4] = Side,  [5]= Is string with 5 coordinates to deploy
 	Local $aResourcesOUT[0][7]
 	Local $aResourcesIN[0][7]
@@ -196,6 +207,8 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_IMGLOC)
 		SetLog("DebugSmartFarm enabled", $COLOR_DEBUG)
 		DebugImageSmartFarm($THdetails, $aResourcesIN, $aResourcesOUT, Round(TimerDiff($hTimer) / 1000, 2) & "'s", _ArrayToString($BestSideToAttack))
 	EndIf
+	
+	If $bTest Then Return 0
 
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
 	Local $Return[3] = [$AttackInside, UBound($BestSideToAttack), _ArrayToString($BestSideToAttack)]
@@ -207,11 +220,8 @@ Func SmartFarmDetection($bTest = False)
 	
 	; This Function will fill an Array with several informations after Mines, Collectores or Drills detection with Imgloc
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
-	Local $aReturn[0][7]
-	Local $iMaxReturnPoints, $iMaxLevel, $offsetx, $offsety
 	If Not $g_bRunState Then Return
-	$iMaxReturnPoints = 17
-
+	
 	; Initial Timer
 	Local $hTimer = TimerInit()
 	Local $aXY[2], $aInOut, $aPoint, $sPoint, $sSide, $iSide, $aRet[0][7]
@@ -223,8 +233,8 @@ Func SmartFarmDetection($bTest = False)
 			$sPoint = ""
 			$aXY[0] = $aAll[$i][1]
 			$aXY[1] = $aAll[$i][2]
+			If Not IsInsideDiamond($aXY) Then ContinueLoop ;skip building out of diamond
 			$aInOut = isInsideSmallDiamond($aXY) ;check from center diamond
-			If Not IsInsideDiamond($aXY) THen ContinueLoop ;skip building out of diamond
 			$sSide = Side($aXY) ;sSide = "TL", "BL", "TR", "BR"
 			Switch $sSide
 				Case "TL"
@@ -250,10 +260,11 @@ Func SmartFarmDetection($bTest = False)
 		Next
 		;succeed
 		SetLog("SmartFarmDetection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
-		Return $aRet
+		If Ubound($aRet) > 0 Then Return $aRet
 	Else
 		SetLog("SmartFarmDetection : ERROR|NONE Building Detected", $COLOR_INFO)
 	EndIf
+	Return $aRet
 EndFunc   ;==>SmartFarmDetection
 
 Func Side($Pixel)
@@ -592,7 +603,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	CheckHeroesHealth()
 	If _Sleep($DELAYALGORITHM_ALLTROOPS4) Then Return
 	SetLog("Dropping left over troops", $COLOR_INFO)
-	
+	PrepareAttack($g_iMatchMode, True) ;re-check left army
 	Local $aRandomCoord = GetRandomCoord($SIDESNAMES)
 	For $i = 0 To UBound($g_avAttackTroops) - 1
 		If $g_avAttackTroops[$i][0] >= $eBarb And $g_avAttackTroops[$i][0] <= $eIWiza And $g_avAttackTroops[$i][1] > 0 Then

@@ -246,14 +246,6 @@ Func _VillageSearch($bTest = False) ;Control for searching a village that meets 
 					$dbBase = False
 					SetLog("Force attacking Tournament League Live Base", $COLOR_INFO)
 			EndSwitch
-			
-			;If $dbBase And Not $match[$DB] Then
-			;	SetLog("Force attacking League Dead Base")
-			;	$match[$DB] = True
-			;ElseIf Not $match[$LB] Then
-			;	SetLog("Force attacking League Live Base")
-			;	$match[$LB] = True
-			;EndIf
 		EndIf
 
 		; ----------------- WRITE LOG VILLAGE FOUND AND ASSIGN VALUE AT $g_iMatchMode and exitloop  IF CONTITIONS MEET ---------------------------

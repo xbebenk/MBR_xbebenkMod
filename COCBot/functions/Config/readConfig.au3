@@ -617,6 +617,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bSkipDT, $g_sProfileConfigPath, "other", "SkipDT", False, "Bool")
 	IniReadS($g_bEnableTournament, $g_sProfileConfigPath, "other", "EnableTournament", False, "Bool")
 	IniReadS($g_iTournamentAttackType, $g_sProfileConfigPath, "other", "TournamentAttackType", 0, "int")
+	IniReadS($g_iTournamentUseArmy, $g_sProfileConfigPath, "other", "TournamentUseArmy", 0, "int")
 	IniReadS($g_bChkAttackOnce, $g_sProfileConfigPath, "other", "AttackOnce", False, "Bool")
 	
 	ReadConfigBuilderBaseMod()
@@ -969,19 +970,8 @@ Func ReadConfig_600_28_DB()
 	IniReadS($g_aiSearchTrophiesMax[$DB], $g_sProfileConfigPath, "search", "DBEnableBeforeTropies", 6000, "int")
 	IniReadS($g_abSearchCampsEnable[$DB], $g_sProfileConfigPath, "search", "ChkDBSearchCamps", False, "Bool")
 	IniReadS($g_aiSearchCampsPct[$DB], $g_sProfileConfigPath, "search", "DBEnableAfterArmyCamps", 100, "int")
-	;Local $temp1, $temp2, $temp3, $temp4
-	;IniReadS($temp1, $g_sProfileConfigPath, "attack", "DBKingWait", $eHeroNone)
-	;IniReadS($temp2, $g_sProfileConfigPath, "attack", "DBQueenWait", $eHeroNone)
-	;IniReadS($temp3, $g_sProfileConfigPath, "attack", "DBWardenWait", $eHeroNone)
-	;IniReadS($temp4, $g_sProfileConfigPath, "attack", "DBChampionWait", $eHeroNone)
-	;$g_aiSearchHeroWaitEnable[$DB] = BitOR(Int($temp1 > $eHeroNone ? $eHeroKing : 0), Int($temp2 > $eHeroNone ? $eHeroQueen : 0), Int($temp3 > $eHeroNone ? $eHeroWarden : 0), Int($temp4 > $eHeroNone ? $eHeroChampion : 0))
-	;IniReadS($g_aiSearchNotWaitHeroesEnable[$DB], $g_sProfileConfigPath, "attack", "DBNotWaitHeroes", 0, "int")
-	;$g_iHeroWaitAttackNoBit[$DB][0] = ($temp1 > $eHeroNone) ? 1 : 0
-	;$g_iHeroWaitAttackNoBit[$DB][1] = ($temp2 > $eHeroNone) ? 1 : 0
-	;$g_iHeroWaitAttackNoBit[$DB][2] = ($temp3 > $eHeroNone) ? 1 : 0
-	;$g_iHeroWaitAttackNoBit[$DB][3] = ($temp4 > $eHeroNone) ? 1 : 0
-	;IniReadS($g_abSearchSpellsWaitEnable[$DB], $g_sProfileConfigPath, "search", "ChkDBSpellsWait", False, "Bool")
-	;IniReadS($g_abSearchCastleWaitEnable[$DB], $g_sProfileConfigPath, "search", "ChkDBCastleWait", False, "Bool")
+	IniReadS($g_aiFilterMeetTrophyMin[$DB], $g_sProfileConfigPath, "search", "DBsearchTrophy", 0, "int")
+	
 	; Search - Filters
 	IniReadS($g_aiFilterMeetGE[$DB], $g_sProfileConfigPath, "search", "DBMeetGE", 1, "int")
 	IniReadS($g_aiFilterMinGold[$DB], $g_sProfileConfigPath, "search", "DBsearchGold", 80000, "int")
@@ -994,7 +984,7 @@ Func ReadConfig_600_28_DB()
 	IniReadS($g_aiFilterMeetTrophyMax[$DB], $g_sProfileConfigPath, "search", "DBsearchTrophyMax", 99, "int")
 	IniReadS($g_abFilterMeetTH[$DB], $g_sProfileConfigPath, "search", "DBMeetTH", False, "Bool")
 	IniReadS($g_aiFilterMeetTHMin[$DB], $g_sProfileConfigPath, "search", "DBTHLevel", 0, "int")
-	IniReadS($g_abFilterMeetTHOutsideEnable[$DB], $g_sProfileConfigPath, "search", "DBMeetTHO", False, "Bool")
+	IniReadS($g_iCmbDBUseArmy, $g_sProfileConfigPath, "search", "CmbDBUseArmy", 0, "int")
 
 	IniReadS($g_bChkDeadEagle, $g_sProfileConfigPath, "search", "DBMeetDeadEagle", False, "Bool")
 	IniReadS($g_iDeadEagleSearch, $g_sProfileConfigPath, "search", "DBMeetDeadEagleSearch", 99, "int")

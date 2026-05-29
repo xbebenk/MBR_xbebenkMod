@@ -707,7 +707,7 @@ Global $g_aiHeroBoost[$eHeroCount] = ["1970/01/01 00:00:00", "1970/01/01 00:00:0
 
 ; Leagues MainVillage
 Global $g_bLeagueAttack = False
-Global $g_bEnableTournament = True, $g_iTournamentAttackType = 0
+Global $g_bEnableTournament = True, $g_iTournamentAttackType = 0, $g_iTournamentUseArmy = 0
 Global Enum $eLeagueUnranked, $eLeagueBronze, $eLeagueSilver, $eLeagueGold, $eLeagueCrystal, $eLeagueMaster, $eLeagueChampion, $eLeagueTitan, $eLeagueLegend, $eLeagueCount
 Global Const $g_asLeagueDetails[22][5] = [ _
 		["0", "Bronze III", "0", "B3", "400"], ["1000", "Bronze II", "0", "B2", "500"], ["1300", "Bronze I", "0", "B1", "600"], _
@@ -1101,7 +1101,7 @@ Global $g_aiSearchHeroWaitEnable[$g_iModeCount] = [0, 0, 0] ; Heroes wait status
 Global $g_abSearchSpellsWaitEnable[$g_iModeCount] = [False, False, False]
 Global $g_abSearchCastleWaitEnable[$g_iModeCount] = [False, False, False]
 Global $g_aiSearchNotWaitHeroesEnable[$g_iModeCount] = [0, 0, 0]
-Global $g_iSearchNotWaitHeroesEnable = -1
+Global $g_iSearchNotWaitHeroesEnable = -1, $g_iCmbDBUseArmy = 0
 Global $g_abSearchSiegeWaitEnable[$g_iModeCount] = [False, False, False] , $g_aiSearchSiegeWait[$g_iModeCount] = [0, 0, 0]
 
 ; Search - Filters

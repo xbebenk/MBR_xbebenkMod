@@ -891,6 +891,7 @@ Func Attack() ;Selects which algorithm
 		SetDebugLog("start smart farm attack", $COLOR_ERROR)
 		; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
 		Local $Nside = ChkSmartFarm()
+		If $g_bRestart Then Return
 		If Not $g_bRunState Then Return
 		AttackSmartFarm($Nside[1], $Nside[2])
 	Else
@@ -1320,7 +1321,7 @@ Func CommonRoutine($RoutineType = Default)
 	Local $sText = "", $aFuncList[0]
 	Switch $RoutineType
 		Case "FirstCheck"
-			Local $aRndFuncList = ['Collect', 'CollectLootCart', 'TreasuryCollect', 'CleanYard', 'CollectCookie', 'UseFreeMagic', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'PetHouse', 'Laboratory', 'SellMagicItem', 'UpgradeWall']
+			Local $aRndFuncList = ['Collect', 'CollectLootCart', 'TreasuryCollect', 'CleanYard', 'CollectCookie', 'UseFreeMagic', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'Laboratory', 'SellMagicItem', 'UpgradeWall']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)
@@ -1328,6 +1329,7 @@ Func CommonRoutine($RoutineType = Default)
 
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
+				checkMainScreen(True, $g_bStayOnBuilderBase, $Index)
 				_RunFunction($Index)
 				If _Sleep(50) Then Return
 				If $g_bRestart Then Return
@@ -1336,7 +1338,7 @@ Func CommonRoutine($RoutineType = Default)
 		Case "Switch"
 			If Not $g_bisCGPointMaxed Then _ClanGames(False, True) ;Do Only Purge
 
-			Local $aRndFuncList = ['RequestCC', 'DailyChallenge', 'CollectAchievements', 'CollectFreeMagicItems', 'BuilderBase', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'AutoUpgrade', 'UpgradeWall', 'UpgradeLow', 'RequestCC']
+			Local $aRndFuncList = ['RequestCC', 'DailyChallenge', 'CollectAchievements', 'CollectFreeMagicItems', 'BuilderBase', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'AutoUpgrade', 'PetHouse', 'UpgradeLow', 'RequestCC']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)
@@ -1344,6 +1346,7 @@ Func CommonRoutine($RoutineType = Default)
 
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
+				checkMainScreen(True, $g_bStayOnBuilderBase, $Index)
 				_RunFunction($Index)
 				If _Sleep(50) Then Return
 				If $g_bRestart Then Return
@@ -1358,6 +1361,7 @@ Func CommonRoutine($RoutineType = Default)
 
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
+				checkMainScreen(True, $g_bStayOnBuilderBase, $Index)
 				_RunFunction($Index)
 				If _Sleep(50) Then Return
 				If $g_bRestart Then Return
@@ -1372,6 +1376,7 @@ Func CommonRoutine($RoutineType = Default)
 
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
+				checkMainScreen(True, $g_bStayOnBuilderBase, $Index)
 				_RunFunction($Index)
 				If _Sleep(50) Then Return
 				If $g_bRestart Then Return
@@ -1474,8 +1479,6 @@ Func BuilderBase()
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 		BuilderBaseReport(False, True)
-		
-		$g_bStayOnBuilderBase = False
 		SwitchBetweenBases("Main")
 	EndIf
 

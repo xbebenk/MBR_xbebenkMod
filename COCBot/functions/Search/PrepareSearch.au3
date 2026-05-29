@@ -90,9 +90,10 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 							EndIf
 						EndIf
 						Click($aButton[$z][1], $aButton[$z][2], 1, 0, "Find a Match Tournament")
-						If _Sleep(1000) Then Return
-						If Not PrepareSearchCheckArmy() Then ExitLoop 2
+						$g_bLeagueAttack = True
 						$bTournament = True
+						If _Sleep(1000) Then Return
+						If Not PrepareSearchCheckArmy($g_bLeagueAttack, $bTest) Then ExitLoop 2
 						ExitLoop 2
 					EndIf
 				Next
@@ -107,7 +108,7 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 			Click(160, 460, 1, 0, "FindMatch")
 			$g_bLeagueAttack = False
 			If _Sleep(1000) Then Return
-			If Not PrepareSearchCheckArmy() Then Return
+			If Not PrepareSearchCheckArmy($bTournament, $bTest) Then Return
 		Else
 			SetLog("FindMatch Not Found!", $COLOR_DEBUG2)
 			$g_bRestart = True
@@ -136,26 +137,89 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 	
 EndFunc   ;==>PrepareSearch
 
-Func PrepareSearchCheckArmy()
+Func PrepareSearchCheckArmy($bTournament = False, $bTest = False)
 	Local $bRet = False
 	For $i = 1 To 3
 		SetLog("Checking ArmyOverview Window", $COLOR_DEBUG)
 		If WaitforPixel(695, 500, 696, 501, "C2ED91", 20, 1) Then
+			SetArmyCompo($bTournament)
+			If _Sleep(500) Then Return
 			FillArmyCamp()
+			If _Sleep(500) Then Return
+			If $bTest Then Return $bRet
 			Click(695, 500, 1, 0, "ArmyOverview Attack Button")
 			If _Sleep(1000) Then Return
 			If IsOKCancelPage(True) Then 
 				Click(535, 410, 1, 0, "Confirm Attack OK")
-				$g_bLeagueAttack = True
 			EndIf
 			$bRet = True
-			If _Sleep(1000) Then Return
+			If _Sleep(2000) Then Return
 		EndIf
 		If _Sleep(500) Then Return
 		If IsAttackPage(False, 1) Then ExitLoop
 	Next
 	
 	Return $bRet
+EndFunc
+
+Func SetArmyCompo($bTournament = False)
+	Local $x = 510, $Color = Hex(0xB69881, 6)
+	Local $yArmy1 = 200, $yArmy2 = 254, $yArmy3 = 308, $yArmy4 = 361
+	Local $yCheck = 0, $iUseArmy = $g_iCmbDBUseArmy
+	
+	If $bTournament Then $iUseArmy = $g_iTournamentUseArmy 
+	Switch $iUseArmy
+		Case 0
+			$yCheck = $yArmy1
+		Case 1
+			$yCheck = $yArmy2
+		Case 2
+			$yCheck = $yArmy3
+		Case 3
+			$yCheck = $yArmy4
+	EndSwitch
+	
+	If $bTournament Then
+		SetLog("SetArmyCompo for Tournament", $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgSetArmyCompo, 490, 140, 530, 180) Then ;check selector button
+			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Selector")
+			If WaitforPixel(510, 185, 510, 186, "73615A", 20, 1) Then ;wait selector popup
+				If _ColorCheck(_GetPixelColor($x, $yCheck, True), $Color, 20, Default, "SetArmyCompo: " & $g_iTournamentUseArmy + 1) Then
+					Click($x, $yCheck + 20, 1, 0, "Click Army " & $g_iTournamentUseArmy + 1)
+					SetLog("Selecting Army Compo " & $g_iTournamentUseArmy + 1, $COLOR_SUCCESS)
+					If _Sleep(1000) Then Return
+					If IsOKCancelPage(True) Then 
+						Click(535, 410, 1, 0, "Click Confirm")
+					EndIf
+				Else
+					SetLog("Fail to verify Army Compo " & $g_iTournamentUseArmy + 1, $COLOR_DEBUG2)
+				EndIf
+			EndIf
+		Else
+			SetLog("No Set Army Compo Button Found", $COLOR_DEBUG2)
+			Return
+		EndIf
+	Else
+		SetLog("SetArmyCompo for Normal Attack", $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgSetArmyCompo, 490, 140, 530, 180) Then ;check selector button
+			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Selector")
+			If WaitforPixel(510, 185, 510, 186, "73615A", 20, 1) Then ;wait selector popup
+				If _ColorCheck(_GetPixelColor($x, $yCheck, True), $Color, 20, Default, "SetArmyCompo: " & $g_iCmbDBUseArmy + 1) Then
+					Click($x, $yCheck + 20, 1, 0, "Click Army " & $g_iCmbDBUseArmy + 1)
+					SetLog("Selecting Army Compo " & $g_iCmbDBUseArmy + 1, $COLOR_SUCCESS)
+					If _Sleep(1000) Then Return
+					If IsOKCancelPage(True) Then 
+						Click(535, 410, 1, 0, "Click Confirm")
+					EndIf
+				Else
+					SetLog("Fail to verify Army Compo " & $g_iCmbDBUseArmy + 1, $COLOR_DEBUG2)
+				EndIf
+			EndIf
+		Else
+			SetLog("No Set Army Compo Button Found", $COLOR_DEBUG2)
+			Return
+		EndIf
+	EndIf
 EndFunc
 
 Func CloseMultiPlayerWindow()

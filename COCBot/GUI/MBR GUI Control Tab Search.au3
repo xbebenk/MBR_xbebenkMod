@@ -151,6 +151,11 @@ Func chkDBActivateCamps()
 	dbCheckall()
 EndFunc   ;==>chkDBActivateCamps
 
+Func cmbDBUseArmy()
+	$g_iCmbDBUseArmy = _GUICtrlComboBox_GetCurSel($g_hCmbDBUseSavedArmy)
+	SetLog("Set DeadBase Use Saved Army : Army " & $g_iCmbDBUseArmy + 1, $COLOR_DEBUG)
+EndFunc   ;==>cmbDBUseArmy
+
 Func EnableSearchPanels($iMatchMode)
 	Switch $iMatchMode
 		Case $DB
@@ -199,9 +204,6 @@ Func EnableSearchPanels($iMatchMode)
 
 EndFunc   ;==>EnableSearchPanels
 
-
-
-
 Func chkABActivateSearches()
 	If GUICtrlRead($g_hChkABActivateSearches) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hTxtABSearchesMin, $GUI_ENABLE)
@@ -229,30 +231,6 @@ Func chkABActivateTropies()
 	;EnableSearchPanels($LB)
 	abCheckall()
 EndFunc   ;==>chkABActivateTropies
-
-;Func chkDBSpellsWaitchkDBSpellsWait()
-;	If $g_iTownHallLevel > 4 Or $g_iTownHallLevel = 0 Then ; Must be TH5+ to have spells
-;		For $i = $g_hPicDBLightSpellWait To $g_hPicDBHasteSpellWait
-;			GUICtrlSetState($i, $GUI_ENABLE)
-;		Next
-;		If GUICtrlRead($g_hChkDBSpellsWait) = $GUI_CHECKED Then
-;			$g_abSearchSpellsWaitEnable[$DB] = True
-;			chkSpellWaitError()
-;			If @error Then
-;				GUICtrlSetState($g_hChkDBSpellsWait, $GUI_UNCHECKED)
-;				$g_abSearchSpellsWaitEnable[$DB] = False
-;				SetLog("Wait for Spells disabled due training count error", $COLOR_ERROR)
-;			EndIf
-;		Else
-;			$g_abSearchSpellsWaitEnable[$DB] = False
-;		EndIf
-;	Else
-;		GUICtrlSetState($g_hChkDBSpellsWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-;		For $i = $g_hPicDBLightSpellWait To $g_hPicDBHasteSpellWait
-;			GUICtrlSetState($i, $GUI_DISABLE)
-;		Next
-;	EndIf
-;EndFunc   ;==>chkDBSpellsWait
 
 Func chkABSpellsWait()
 	If $g_iTownHallLevel > 4 Or $g_iTownHallLevel = 0 Then ; Must be TH5+ to have spells
