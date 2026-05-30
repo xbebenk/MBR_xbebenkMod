@@ -194,6 +194,10 @@ Func SetArmyCompo($bTournament = False)
 				Else
 					SetLog("Fail to verify Army Compo " & $g_iTournamentUseArmy + 1, $COLOR_DEBUG2)
 				EndIf
+			Else
+				SetLog("Fail to verify Selector is Open", $COLOR_DEBUG2)
+				SetLog("Cancel Selecting Army Compo", $COLOR_DEBUG2)
+				ClickAway()
 			EndIf
 		Else
 			SetLog("No Set Army Compo Button Found", $COLOR_DEBUG2)
@@ -214,6 +218,10 @@ Func SetArmyCompo($bTournament = False)
 				Else
 					SetLog("Fail to verify Army Compo " & $g_iCmbDBUseArmy + 1, $COLOR_DEBUG2)
 				EndIf
+			Else
+				SetLog("Fail to verify Selector is Open", $COLOR_DEBUG2)
+				SetLog("Cancel Selecting Army Compo", $COLOR_DEBUG2)
+				ClickAway()
 			EndIf
 		Else
 			SetLog("No Set Army Compo Button Found", $COLOR_DEBUG2)

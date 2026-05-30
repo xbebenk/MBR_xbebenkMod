@@ -100,15 +100,6 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_IMGLOC)
 	Local $aResourcesOUT[0][7]
 	Local $aResourcesIN[0][7]
 	
-	Local $aTL = _ArrayFindAll($aAll, "TL", 0, 0, 0, 0, 4)
-	Local $aTR = _ArrayFindAll($aAll, "TR", 0, 0, 0, 0, 4)
-	Local $aBL = _ArrayFindAll($aAll, "BL", 0, 0, 0, 0, 4)
-	Local $aBR = _ArrayFindAll($aAll, "BR", 0, 0, 0, 0, 4)
-	$aMainSide[0] = UBound($aTL)
-	$aMainSide[1] = UBound($aTR)
-	$aMainSide[2] = UBound($aBL)
-	$aMainSide[3] = UBound($aBR)
-	
 	For $x = 0 To UBound($aAll) - 1
 		; Only proceeds when the x exist , not -1
 		If $aAll[$x][0] <> -1 Then
@@ -133,30 +124,36 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_IMGLOC)
 	SetLog("Total of Resources: " & $TotalOfResources, $COLOR_INFO)
 	SetLog(" - Inside the Village: " & UBound($aResourcesIN), $COLOR_INFO)
 	SetLog(" - Outside the village: " & UBound($aResourcesOUT), $COLOR_INFO)
-	SetDebugLog("MainSide array: " & _ArrayToString($aMainSide))
 
 	$g_sResourcesIN = UBound($aResourcesIN)
 	$g_sResourcesOUT = UBound($aResourcesOUT)
+	
+	Local $aTL = _ArrayFindAll($aResourcesOUT, "TL", 0, 0, 0, 0, 4)
+	Local $aTR = _ArrayFindAll($aResourcesOUT, "TR", 0, 0, 0, 0, 4)
+	Local $aBL = _ArrayFindAll($aResourcesOUT, "BL", 0, 0, 0, 0, 4)
+	Local $aBR = _ArrayFindAll($aResourcesOUT, "BR", 0, 0, 0, 0, 4)
+	$aMainSide[0] = UBound($aTL)
+	$aMainSide[1] = UBound($aTR)
+	$aMainSide[2] = UBound($aBL)
+	$aMainSide[3] = UBound($aBR)
+	
 	$g_sResBySide = _ArrayToString($aMainSide)
-
+	
 	; Inside , Outside
-	Local $AttackInside = False
-
+	Local $bAttackInside = False
 	Local $Percentage_In = Int((UBound($aResourcesIN) / $TotalOfResources) * 100), $Percentage_Out = Int((UBound($aResourcesOUT) / $TotalOfResources) * 100)
 
 	; FROM GUI
 	Local $PercentageInSide = Int($g_iTxtInsidePercentage) ; Percentage to force ONE SIDE ATTACK
 	Local $PercentageOutSide = Int($g_iTxtOutsidePercentage) ; Percentage to force to attack all sides with at least with one Resource
 
-	If $Percentage_In > $PercentageInSide Then $AttackInside = True
+	If $Percentage_In > $PercentageInSide Then $bAttackInside = True
 
-	Local $TxtLog = ($AttackInside = True) ? ("Inside with " & $Percentage_In & "%") : ("Outside with " & $Percentage_Out & "%")
+	Local $TxtLog = ($bAttackInside = True) ? ("Inside with " & $Percentage_In & "%") : ("Outside with " & $Percentage_Out & "%")
 	SetLog(" - Best Attack will be " & $TxtLog)
 	If Not $g_bRunState Then Return
 
 	Local $OneSide = Floor($TotalOfResources / 4)
-	Local $Sides[4] = ["TL", "TR", "BL", "BR"]
-	Local $SidesExt[4] = ["Top-Left", "Top-Right", "Bottom-Left", "Bottom-Right"]
 	Local $aHowManySides[0]
 	
 	SetLog("Resource Count TL: " & $aMainSide[0], $COLOR_SUCCESS)
@@ -170,48 +167,37 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_IMGLOC)
 			["BL", $aMainSide[2]], _
 			["BR", $aMainSide[3]]]
 	_ArraySort($sSideiSide, 1, 0, 0, 1)
-		
-	For $i = 0 To $g_iCmbMaxAttackSide - 1
-		If $sSideiSide[$i][1] > $OneSide Or ($Percentage_Out > $PercentageOutSide And $sSideiSide[$i][1] <> 0) Then
-			ReDim $aHowManySides[UBound($aHowManySides) + 1]
-			$aHowManySides[UBound($aHowManySides) - 1] = $sSideiSide[$i][0]
-		EndIf
-	Next
+	SetDebugLog("side sorted : " & _ArrayToString($sSideiSide))
 	
-	; Determinate the higher value if $AttackInside is True
-	Local $BestSideToAttack[1] = ["TR"]
-	Local $number = 0
-
-	If $AttackInside Then
-		For $i = 0 To UBound($aMainSide) - 1
-			If $aMainSide[$i] > $number Then
-				$number = $aMainSide[$i]
-				$BestSideToAttack[0] = $Sides[$i]
-			EndIf
-		Next
-		For $i = 0 To UBound($aMainSide) - 1
-			If $BestSideToAttack[0] = $Sides[$i] Then SetLog("Best Side To Attack Inside: " & $SidesExt[$i])
-			SetLog(" - Side " & $SidesExt[$i] & " with " & $aMainSide[$i] & " Resources.", $COLOR_INFO)
-		Next
+	; Determinate the higher value if $bAttackInside is True
+	Local $aBestSideToAttack[0]
+	
+	If $bAttackInside Then
+		Local $iIndexSide = _ArrayMaxIndex($sSideiSide, 1, 0, 1)
+		_ArrayAdd($aBestSideToAttack, $sSideiSide[$iIndexSide][0])
+		SetDebugLog("SideToAttack [" & Ubound($aBestSideToAttack) & "] : " & $aBestSideToAttack[0])
+		SetLog("Best Side To Attack Inside: " & $aBestSideToAttack[0])
 	Else
-		$BestSideToAttack = $aHowManySides
+		For $i = 0 To $g_iCmbMaxAttackSide - 1
+			_ArrayAdd($aBestSideToAttack, $sSideiSide[$i][0])
+		Next
+		SetDebugLog("SideToAttack [" & Ubound($aBestSideToAttack) & "] : " & _ArrayToString($aBestSideToAttack))
 	EndIf
-
-	SetLog("Attack at " & UBound($BestSideToAttack) & " Side(s) - " & _ArrayToString($BestSideToAttack), $COLOR_INFO)
+	
+	SetLog("Attack at " & UBound($aBestSideToAttack) & " Side(s) - " & _ArrayToString($aBestSideToAttack), $COLOR_INFO)
 	SetLog("SmartFarm Check Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 
 	; DEBUG , image with all information
-	Local $redline[UBound($BestSideToAttack)]
 	If $g_bDebugSmartFarm Then
 		SetLog("DebugSmartFarm enabled", $COLOR_DEBUG)
-		DebugImageSmartFarm($THdetails, $aResourcesIN, $aResourcesOUT, Round(TimerDiff($hTimer) / 1000, 2) & "'s", _ArrayToString($BestSideToAttack))
+		DebugImageSmartFarm($THdetails, $aResourcesIN, $aResourcesOUT, Round(TimerDiff($hTimer) / 1000, 2) & "'s", _ArrayToString($aBestSideToAttack))
 	EndIf
 	
 	If $bTest Then Return 0
 
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
-	Local $Return[3] = [$AttackInside, UBound($BestSideToAttack), _ArrayToString($BestSideToAttack)]
+	Local $Return[3] = [$bAttackInside, UBound($aBestSideToAttack), _ArrayToString($aBestSideToAttack)]
 	Return $Return
 
 EndFunc   ;==>ChkSmartFarm
@@ -381,7 +367,7 @@ Func UpdateSpecialTroops($iTroopIndex = $eCastle, $bDeployed = False)
 	Next	
 EndFunc ;==>UpdateSpecialTroops
 
-Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack)
+Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $aBestSideToAttack)
 
 	_CaptureRegion()
 
@@ -442,7 +428,7 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $BestSideToAttack)
 		EndIf
 	Next
 
-	_GDIPlus_GraphicsDrawString($hGraphic, $sTime & " - " & $BestSideToAttack, 370, 70, "ARIAL", 20)
+	_GDIPlus_GraphicsDrawString($hGraphic, $sTime & " - " & $aBestSideToAttack, 370, 70, "ARIAL", 20)
 	; Save the image and release any memory
 	_GDIPlus_ImageSaveToFile($editedImage, $subDirectory & $fileName)
 	_GDIPlus_PenDispose($hPenRed)
