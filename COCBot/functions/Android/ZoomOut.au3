@@ -693,7 +693,7 @@ Func ZoomIn($Region = "Top")
 		SetLog("[" & $i & "] Try ZoomIn", $COLOR_DEBUG)
 		If Not AndroidAdbScript($sScript) Then Return False
 		If _Sleep(1500) Then Return
-		Local $sSceneryCode[3] = ["DS", "JS", "MS"]
+		Local $sSceneryCode[5] = ["DS", "JS", "MS", "DM", "CS"]
 		For $sCode In $sSceneryCode
 			Local $iRes = GetVillageSize(False, "stone" & $sCode, "tree" & $sCode)
 			If IsArray($iRes) Then ContinueLoop
