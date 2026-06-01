@@ -183,14 +183,12 @@ Func SetArmyCompo($bTournament = False)
 		SetLog("SetArmyCompo for Tournament", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgSetArmyCompo, 490, 140, 530, 180) Then ;check selector button
 			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Selector")
-			If WaitforPixel(510, 185, 510, 186, "73615A", 20, 1) Then ;wait selector popup
-				If _ColorCheck(_GetPixelColor($x, $yCheck, True), $Color, 20, Default, "SetArmyCompo: " & $g_iTournamentUseArmy + 1) Then
+			If WaitforPixel(510, 185, 510, 185, "73615A", 20, 2) Then ;wait selector popup
+				If _ColorCheck(_GetPixelColor($x, $yCheck, True), $Color, 20, Default, "SetArmyCompo" & $g_iTournamentUseArmy + 1) Then
 					Click($x, $yCheck + 20, 1, 0, "Click Army " & $g_iTournamentUseArmy + 1)
 					SetLog("Selecting Army Compo " & $g_iTournamentUseArmy + 1, $COLOR_SUCCESS)
-					If _Sleep(1000) Then Return
-					If IsOKCancelPage(True) Then 
-						Click(535, 410, 1, 0, "Click Confirm")
-					EndIf
+					If _Sleep(500) Then Return
+					ConfirmOK()
 				Else
 					SetLog("Fail to verify Army Compo " & $g_iTournamentUseArmy + 1, $COLOR_DEBUG2)
 				EndIf
@@ -207,14 +205,12 @@ Func SetArmyCompo($bTournament = False)
 		SetLog("SetArmyCompo for Normal Attack", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgSetArmyCompo, 490, 140, 530, 180) Then ;check selector button
 			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Selector")
-			If WaitforPixel(510, 185, 510, 186, "73615A", 20, 1) Then ;wait selector popup
-				If _ColorCheck(_GetPixelColor($x, $yCheck, True), $Color, 20, Default, "SetArmyCompo: " & $g_iCmbDBUseArmy + 1) Then
+			If WaitforPixel(510, 185, 510, 185, "73615A", 20, 2) Then ;wait selector popup
+				If _ColorCheck(_GetPixelColor($x, $yCheck, True), $Color, 20, Default, "SetArmyCompo" & $g_iCmbDBUseArmy + 1) Then
 					Click($x, $yCheck + 20, 1, 0, "Click Army " & $g_iCmbDBUseArmy + 1)
 					SetLog("Selecting Army Compo " & $g_iCmbDBUseArmy + 1, $COLOR_SUCCESS)
-					If _Sleep(1000) Then Return
-					If IsOKCancelPage(True) Then 
-						Click(535, 410, 1, 0, "Click Confirm")
-					EndIf
+					If _Sleep(500) Then Return
+					ConfirmOK()
 				Else
 					SetLog("Fail to verify Army Compo " & $g_iCmbDBUseArmy + 1, $COLOR_DEBUG2)
 				EndIf
@@ -228,6 +224,19 @@ Func SetArmyCompo($bTournament = False)
 			Return
 		EndIf
 	EndIf
+EndFunc
+
+Func ConfirmOK()
+	For $i = 1 To 2
+		If _Sleep(500) Then Return
+		If WaitforPixel(695, 500, 696, 501, "C2ED91", 20, 1) Then ExitLoop ; we found ArmyOverview Window with attack button
+		SetLog("Waiting Confirm Message #" & $i, $COLOR_ACTION)
+		If IsOKCancelPage(True) Then 
+			Click(535, 410, 1, 0, "Click Confirm")
+			SetLog("Confirm OK", $COLOR_DEBUG1)
+			If _Sleep(1000) Then Return
+		EndIf
+	Next
 EndFunc
 
 Func CloseMultiPlayerWindow()
