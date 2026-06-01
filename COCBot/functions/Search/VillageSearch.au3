@@ -147,12 +147,12 @@ Func _VillageSearch($bTest = False) ;Control for searching a village that meets 
 		; $g_iTHx and $g_iTHy coordinates of townhall
 		Local $THString = ""
 		If $match[$DB] Or $match[$LB] Then ; make sure resource conditions are met
-			$THString = FindTownhall(False, False) ;find TH, but only if TH condition is checked
+			$THString = FindTownhall(False) ;find TH, but only if TH condition is checked
 		ElseIf ($g_abFilterMeetOneConditionEnable[$DB] Or $g_abFilterMeetOneConditionEnable[$LB]) Then ; meet one then attack, do not need correct resources
-			If $g_abFilterMeetTH[$DB] Or $g_abFilterMeetTH[$LB] Then $THString = FindTownhall(True, False)
+			If $g_abFilterMeetTH[$DB] Or $g_abFilterMeetTH[$LB] Then $THString = FindTownhall(True)
 		ElseIf $g_abAttackTypeEnable[$TB] = 1 And ($g_iSearchCount >= $g_iAtkTBEnableCount) Then
 			; Check the TH for BullyMode
-			$THString = FindTownhall(True, False)
+			$THString = FindTownhall(True)
 		EndIf
 
 		For $i = 0 To $g_iModeCount - 2

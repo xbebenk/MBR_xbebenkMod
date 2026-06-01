@@ -75,7 +75,7 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_IMGLOC)
 	
 	$hTimer = TimerInit()
 	If $g_bDebugSmartFarm Then
-		If $g_iSearchTH = "-" Then FindTownHall(True, True)
+		If $g_iSearchTH = "-" Then FindTownHall(True)
 		; [0] = Level , [1] = Xaxis , [2] = Yaxis , [3] = Distances to redlines
 		Local $THdetails[4] = [$g_iSearchTH, $g_iTHx, $g_iTHy, _ObjGetValue($g_oBldgAttackInfo, $eBldgTownHall & "_REDLINEDISTANCE")]
 		SetLog("TH Details: " & _ArrayToString($THdetails, "|"))
