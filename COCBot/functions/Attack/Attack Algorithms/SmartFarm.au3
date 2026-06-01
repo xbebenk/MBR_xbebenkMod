@@ -77,7 +77,7 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_IMGLOC)
 	If $g_bDebugSmartFarm Then
 		If $g_iSearchTH = "-" Then FindTownHall(True)
 		; [0] = Level , [1] = Xaxis , [2] = Yaxis , [3] = Distances to redlines
-		Local $THdetails[4] = [$g_iSearchTH, $g_iTHx, $g_iTHy, _ObjGetValue($g_oBldgAttackInfo, $eBldgTownHall & "_REDLINEDISTANCE")]
+		Local $THdetails[3] = [$g_iSearchTH, $g_iTHx, $g_iTHy]
 		SetLog("TH Details: " & _ArrayToString($THdetails, "|"))
 	EndIf
 	
@@ -389,7 +389,7 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $aBestSideToAttack)
 	Local $hPenCyan = _GDIPlus_PenCreate(0xFF00FFFF, 2) ; Create a pencil Color BLUE
 
 	; TH
-	addInfoToDebugImage($hGraphic, $hPenRed, "TH_" & $THdetails[0] & "|" & $THdetails[3], $THdetails[1], $THdetails[2])	
+	addInfoToDebugImage($hGraphic, $hPenRed, "TH_" & $THdetails[0] & "|" & $THdetails[1] & "|" & $THdetails[2], $THdetails[1], $THdetails[2])	
 
 	Local $tempObbj, $tempObbjs
 	For $i = 0 To UBound($aIn) - 1
