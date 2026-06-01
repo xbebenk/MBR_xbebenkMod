@@ -1,17 +1,3 @@
-; #FUNCTION# ====================================================================================================================
-; Name ..........: StartClockTowerBoost
-; Description ...:
-; Syntax ........: StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False)
-; Parameters ....: $bSwitchToBB: Switch from Normal Village to Builder Base - $bSwitchToNV: Switch back to normal Village after Function ran
-; Return values .: None
-; Author ........: Fliegerfaust (06-2017), MMHK (07-2017)
-; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
-; ===============================================================================================================================
 #include-once
 
 Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotion = False)
@@ -36,40 +22,35 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotio
 		SetLog("Skip Clock Tower Boost as no Building is currently under Upgrade!", $COLOR_INFO)
 	Else ; Start Boosting
 		SetLog("Boosting Clock Tower", $COLOR_INFO)
-		If _Sleep($DELAYCOLLECT2) Then Return
-		
-		ClickAway("Left")
-		Local $sCTCoords, $aCTCoords, $aCTBoost
-		$sCTCoords = findImage("ClockTowerAvailable", $g_sImgStartCTBoost, "FV", 1, True) ; Search for Clock Tower
-		If $sCTCoords <> "" Then
-			$aCTCoords = StringSplit($sCTCoords, ",", $STR_NOCOUNT)
-			ClickP($aCTCoords)
-			If _Sleep(1000) Then Return
-
-			$aCTBoost = findButton("BoostCT") ; Search for Start Clock Tower Boost Button
-			If IsArray($aCTBoost) Then
-				ClickP($aCTBoost)
+		Local $aXY[2] = [0, 0]
+		Local $aClock = QuickMIS("CNX", $g_sImgStartCTBoost, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+		If IsArray($aClock) And UBound($aClock) > 0 Then
+			For $i = 0 To UBound($aClock) - 1
+				$aXY[0] = $aClock[$i][1]
+				$aXY[1] = $aClock[$i][2]
+				If Not IsInsideDiamond($aXY) Then ContinueLoop
+				SetLog("Found Clock Tower on " & $aXY[0] & "," & $aXY[1], $COLOR_DEBUG)
+				ClickP($aXY)
 				If _Sleep(1000) Then Return
-
-				$aCTBoost = findButton("BOOSTBtn") ; Search for Boost Button
-				If IsArray($aCTBoost) Then
-					ClickP($aCTBoost)
-					If _Sleep(500) Then Return
-					SetLog("Boosted Clock Tower successfully!", $COLOR_SUCCESS)
+				If ClickB("BoostCT") Then
+					If _Sleep(1000) Then Return
+					If ClickB("BOOSTBtn") Then 
+						SetLog("Boosted Clock Tower successfully!", $COLOR_SUCCESS)
+						ExitLoop
+					Else
+						SetLog("Failed to find the BOOST window button", $COLOR_ERROR)
+					EndIf
 				Else
-					SetLog("Failed to find the BOOST window button", $COLOR_ERROR)
+					SetLog("Cannot find the Boost Button of Clock Tower", $COLOR_ERROR)
 				EndIf
-			Else
-				SetLog("Cannot find the Boost Button of Clock Tower", $COLOR_ERROR)
-			EndIf
+			Next
 		Else
 			SetLog("Clock Tower boost is not available!")
 		EndIf
 		
 		If $bUsePotion Then 
-			If _Sleep(1500) Then Return
-			Local $click = ClickB("ClockTowerPot") ;click Clock Tower Boost potion Button
-			If $click Then
+			If _Sleep(1000) Then Return
+			If ClickB("ClockTowerPot") Then
 				If _Sleep(500) Then Return
 				If ClickB("BoostConfirm") Then
 					SetLog("Successfully Boost Builderbase with potion", $COLOR_SUCCESS)
@@ -79,7 +60,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotio
 			EndIf
 		EndIf
 	EndIf
-	ClickAway("Left")
+	ClickAway()
 
 	If $bSwitchToNV Then SwitchBetweenBases("Main") ; Switching back to the normal Village if true
 EndFunc   ;==>StartClockTowerBoost
