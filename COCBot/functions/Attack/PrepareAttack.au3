@@ -123,7 +123,7 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 										If $avAttackBar[$j][0] <> $eCastle Then $sLogExtension = " (level " & $g_iSiegeLevel & ")"
 									EndIf
 								Case $eWarden
-									If $g_aiAttackUseWardenMode[$pMatchMode] <= 1 Then $sLogExtension = SelectWardenMode($g_aiAttackUseWardenMode[$pMatchMode], Number($avAttackBar[$j][5]))
+									If $g_aiAttackUseWardenMode[$pMatchMode] <= 1 Then $sLogExtension = SelectWardenMode($g_aiAttackUseWardenMode[$pMatchMode], $avAttackBar[$j][3])
 							EndSwitch
 						EndIf
 
@@ -159,7 +159,7 @@ Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 	Next
 	If Not $bRemaining Then SetSlotSpecialTroops()
 
-	Return $g_avAttackTroops
+	Return Ubound($g_avAttackTroops, 1)
 EndFunc   ;==>PrepareAttack
 
 Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
