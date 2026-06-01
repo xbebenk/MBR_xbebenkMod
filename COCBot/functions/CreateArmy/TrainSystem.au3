@@ -67,23 +67,24 @@ Func CheckHeroOnUpgrade()
 			If IsArray($aHero) And UBound($aHero) > 0 Then
 				For $i = 0 To UBound($aHero) - 1
 					SetLog("Hero " & $aHero[$i][0] & " is Available", $COLOR_INFO)
-					SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
 					If StringInStr($aHero[$i][0], "Warden") Then
 						$bWardenFound = True
-						If $iWardenMode = 0 Or $iWardenMode = 2 Then 
+						If $iWardenMode = 0 Or $iWardenMode = 2 Then ;0 or 2 = ground or default = pick ground
 							If $aHero[$i][0] = "WardenGround" Then 
 								Click($aHero[$i][1], $aHero[$i][2], 1, 0, "Click " & $aHero[$i][0])
 								If _Sleep(1000) Then Return
 								Click($x, $y, 1, 0, "Hammer")
+								SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
 								ExitLoop
 							Else
 								ContinueLoop
 							EndIf
-						Else
+						Else ;iWardenMode = 1
 							If $aHero[$i][0] = "WardenAir" Then 
 								Click($aHero[$i][1], $aHero[$i][2], 1, 0, "Click " & $aHero[$i][0])
 								If _Sleep(1000) Then Return
 								Click($x, $y, 1, 0, "Hammer")
+								SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
 								ExitLoop
 							EndIF
 						EndIf
@@ -94,8 +95,8 @@ Func CheckHeroOnUpgrade()
 						ExitLoop
 					EndIf
 				Next
-				If Ubound($aHero) = 1 Then ExitLoop
-				If $bWardenFound And Ubound($aHero) = 2 Then ExitLoop
+				If Ubound($aHero) = 1 Then ExitLoop ;if only found 1 image then exit
+				If $bWardenFound And Ubound($aHero) = 2 Then ExitLoop ;warden always found 2 image, so if 2 images then only warden, exit
 			Else
 				Click($x, $y, 1, 0, "Hammer Close")
 				SetLog("No availabe Hero to switch", $COLOR_DEBUG2)
