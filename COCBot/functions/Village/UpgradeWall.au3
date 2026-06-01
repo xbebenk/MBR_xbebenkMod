@@ -438,7 +438,7 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 	Local $bWallFound = False, $aWallLevel, $iWallLevel
 	Local $aWall, $aDel[1] = [0], $x, $y
 	Local $iWallLevelToDelete = $g_iTownHallLevel
-
+	Local $iMaxWallFound = 5, $iLevelFound = 0
 	SetLog("Search Wall on Village", $COLOR_DEBUG)
 	SetLog("Sort WallLevel: " & String($g_iSearchWallSort), $COLOR_DEBUG)
 	If Not $bDisplayArray Then ZoomOut()
@@ -453,7 +453,7 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 			If StringInStr($aWall[$i][3], "D") Then $aWall[$i][3] = Number(StringReplace($aWall[$i][3], "D", ""))
 			If StringInStr($aWall[$i][3], "E") Then $aWall[$i][3] = Number(StringReplace($aWall[$i][3], "E", ""))
 		Next
-
+		
 		If $g_iTownHallLevel >= 9 Then $iWallLevelToDelete = $g_iTownHallLevel + 1
 		For $i = 0 To UBound($aWall) - 1
 			If $aWall[$i][3] >= $iWallLevelToDelete Then 
@@ -481,19 +481,29 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 			SetLog("or select Any Level on upgrade wall setting", $COLOR_DEBUG2)
 			Return False
 		EndIf
-		_ArraySort($aWall, $g_iSearchWallSort, 0, 0, 3) ;short wall level descending
+		
+		_ArraySort($aWall, $g_iSearchWallSort, 0, 0, 3) ;short wall level by setting
 
 		SetDebugLog("Your TownHall Level: " & $g_iTownHallLevel & ", Exluding Wall Level >= " & $iWallLevelToDelete, $COLOR_INFO)
 		SetDebugLog("Found " & UBound($aWall) - 1 & " Wall on Village", $COLOR_DEBUG)
 
-		If $bDisplayArray Then _ArrayDisplay($aWall)
-
+		If $bDisplayArray Then _ArrayDisplay($aWall, "Final Wall")
+		Local $tmpLevel = 0
 		For $i = 0 To UBound($aWall) - 1
 			If _Sleep(50) Then Return
 			$x = $aWall[$i][1]
 			$y = $aWall[$i][2]
 			$iWallLevel = $aWall[$i][3]
 			
+			If $tmpLevel <> $iWallLevel Then $tmpLevel = $iWallLevel
+			If $iLevelFound > $iMaxWallFound And $tmpLevel = $iWallLevel Then
+				SetDebugLog("skip, already 5 wall")
+				$iLevelFound = 0
+				ContinueLoop
+			EndIf
+			
+			$tmpLevel = $iWallLevel 
+			$iLevelFound += 1
 			If isInsideDiamondXY($x, $y) Then ;prevent click outside village
 				SetLog("Verify Wall Level " & $iWallLevel & ", click wall on " & $x & "," & $y, $COLOR_DEBUG)
 				Click($x, $y)
@@ -519,6 +529,7 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 		SetLog("Min Elix Save : " & _NumberFormat($g_iUpgradeWallMinElixir), $COLOR_INFO)
 		$aWallLevelFound = $aWallLevel
 	EndIf
+	
 	Return $bWallFound
 EndFunc
 
