@@ -1167,7 +1167,7 @@ Func SearchGreenZone()
 	ZoomOut(True)
 
 	Local $bSupportedScenery = False
-	Local $sSceneryCode[3] = ["DS", "JS", "MS"]
+	Local $sSceneryCode[5] = ["DS", "JS", "MS", "DM", "CS"]
 	For $sCode In $sSceneryCode
 		If $sCode = $g_sSceneryCode Then
 			$bSupportedScenery = True
@@ -1177,7 +1177,7 @@ Func SearchGreenZone()
 
 	If Not $bSupportedScenery Then
 		SetLog("Detected Scenery : [" & $g_sSceneryCode & " : " & $g_sCurrentScenery & "]", $COLOR_ERROR)
-		SetLog("Place New Building Only Supported for Default/Jungle/Magic Scenery", $COLOR_ERROR)
+		SetLog("Place New Building Only Supported for Classic/Jungle/Magic Scenery", $COLOR_ERROR)
 		Return False
 	EndIf
 
