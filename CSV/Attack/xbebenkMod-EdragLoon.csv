@@ -79,6 +79,7 @@ DROP  |Q          |10         |1          |MinionP    |50-70      |50-70      |5
 DROP  |Q          |10         |1          |StoneS     |0          |50-70      |100        |           |           |           |           |
 DROP  |Q          |10         |1          |BattleB    |0          |50-70      |100        |           |           |           |           |
 DROP  |Q          |10         |1          |SkyW       |0          |50-70      |100        |           |           |           |           |
+DROP  |Q          |10         |1          |Castle     |0          |50-70      |100        |           |           |           |           |
 DROP  |B          |1          |1          |FSpell     |0          |50-70      |100        |EAGLE      |           |           |           |
 WAIT  |8000       |           |           |           |           |           |           |           |           |           |           |
 DROP  |O          |5          |1          |RSpell     |0          |50-70      |500        |           |           |           |           |
