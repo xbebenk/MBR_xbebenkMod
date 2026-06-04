@@ -88,39 +88,6 @@ Func isBHMaxed()
 	Return $bRet
 EndFunc
 
-Func isMegaTeslaMaxed()
-	If $g_bIs6thBuilderUnlocked Then
-		$g_bisMegaTeslaMaxed = True
-		Return True
-	EndIf
-	
-	ClickAway("Left")
-	If $g_bisMegaTeslaMaxed = True Then Return True
-	If _Sleep(1000) Then Return
-	
-	If QuickMIS("BC1", $g_sImgMegaTesla) Then ;Search for Mega Tesla
-		Click($g_iQuickMISX, $g_iQuickMISY + 5)
-		If _Sleep(1000) Then Return
-		Local $aBuildingName = BuildingInfo(242, 477)
-		If $aBuildingName[0] = 2 Then
-			; Verify if is Mega Tesla is MaxLevel
-			If $aBuildingName[1] = "Mega Tesla" Then
-				If $aBuildingName[2] = 9 Then
-					SetLog("Your Mega Tesla is Maxed!", $COLOR_SUCCESS)
-					$g_bisMegaTeslaMaxed = True
-					Return True
-				Else
-					SetLog("Your Mega Tesla Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
-					$g_bisMegaTeslaMaxed = False
-				EndIf
-			Endif
-		EndIf
-	Else
-		Setlog("isMegaTeslaMaxed(): Cannot Find Mega Tesla", $COLOR_DEBUG)
-	EndIf
-	Return False
-EndFunc
-
 Func isBattleMachineMaxed()
 	If $g_bIs6thBuilderUnlocked Then
 		$g_bisBattleMachineMaxed = True

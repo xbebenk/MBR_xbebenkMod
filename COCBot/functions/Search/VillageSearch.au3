@@ -480,26 +480,26 @@ Func WriteLogVillageSearch($x)
 EndFunc   ;==>WriteLogVillageSearch
 
 Func CheckZoomOut($sSource = "CheckZoomOut")
-	Local $bRet = False
-	If $sSource <> "VillageSearch" Then resetEdge()
-	Local $aVillageResult = SearchZoomOut(False, True, $sSource)
-	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
-		SetLog("CheckZoomOut Failed : " & $sSource, $COLOR_DEBUG)
-		AndroidZoomOut()
-		ZoomOutHelper("VillageSearch")
-		$bRet = False
+	Local $bRet = False, $aVillageSize
+	SetDebugLog("CheckZoomOut, called from: " & $sSource)
+	
+	resetEdge() ;reset 
+	
+	Local $aVillageSize = GetVillageSize()
+	If IsArray($aVillageSize) Then
+		$bRet = True
 	Else 
-		$bRet = True
+		SetLog("CheckZoomOut Failed : " & $sSource, $COLOR_DEBUG)
+		$bRet = False
 	EndIf
+	
 	If $sSource = "VillageSearch" Then
-		$bRet = True
-		SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
-		If $g_bChkForceEdgeSmartfarm Then 
-			$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
-			$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
-			$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
-			$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
+		If $bRet Then 
+			SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
+		Else
+			SetLog("CheckZoomOut(VillageSearch) Failed, defaulting to [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
 		EndIf
 	EndIf
+	
 	Return $bRet
 EndFunc   ;==>CheckZoomOut

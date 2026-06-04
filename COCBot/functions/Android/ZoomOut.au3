@@ -185,7 +185,7 @@ Func ZoomOutHelperBB($caller = "Default")
 	SetDebugLog("ZoomOutHelperBB, called from: " & $caller, $COLOR_DEBUG2)
 	
 	If _Sleep(50) Then Return
-	If QuickMIS("BC1", $g_sImgZoomOutDirBB & "ZoomOutHelper\", 100, 20, 800, 676) Then 
+	If QuickMIS("BC1", $g_sImgZoomOutDir & "ZoomOutHelper\", 100, 20, 800, 676) Then 
 		$aOffset = StringRegExp($g_sQuickMISName, "Tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 		If IsArray($aOffset) Then 
 			$x = $g_iQuickMISX - $aOffset[1]
@@ -213,7 +213,7 @@ Func ZoomOutHelperBB($caller = "Default")
 	
 	If _Sleep(50) Then Return
 	If Not $bRet Then
-		If QuickMIS("BC1", $g_sImgZoomOutDirBB & "stone\", 0, 330, 430, 560) Then 
+		If QuickMIS("BC1", $g_sImgZoomOutDir & "stone\", 0, 330, 430, 560) Then 
 			$aOffset = StringRegExp($g_sQuickMISName, "stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
 			If IsArray($aOffset) Then 
 				$x = $g_iQuickMISX - $aOffset[1]

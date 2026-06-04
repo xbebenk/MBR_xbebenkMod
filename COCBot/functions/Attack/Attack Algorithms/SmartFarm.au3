@@ -491,7 +491,8 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	EndSwitch
 
 	SetDebugLog("Giants : " & $GiantComp & "  , per side: " & ($GiantComp / $nbSides) & " / deploy points per side: " & $g_iSlotsGiants)
-
+	
+	;$listInfoDeploy: troopKind, Number of Sides, waves, Max waves, deploy Points per Edge
 	Local $listInfoDeploy[48][5] = [[$eGole, $nbSides, 1, 1, 2] _
 				, [$eLava, $nbSides, 1, 1, 2] _
 				, [$eIceH, $nbSides, 1, 1, 2] _
@@ -508,7 +509,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 				, [$eRBall, $nbSides, 1, 1, 0] _
 				, [$eBabyD, $nbSides, 1, 1, 0] _
 				, [$eInfernoD, $nbSides, 1, 1, 0] _
-				, [$eHogs, $nbSides, 1, 1, 1] _
+				, [$eHogs, $nbSides, 1, 1, 0] _
 				, [$eSHogs, $nbSides, 1, 1, 0] _
 				, [$eValk, $nbSides, 1, 1, 0] _
 				, [$eSValk, $nbSides, 1, 1, 0] _
@@ -700,9 +701,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 								$g_bIsHeroesDropped = True
 							EndIf
 						Else
-							;
-							; $infoTroopListArrPixel[  $troop, $listInfoPixelDropTroop, $nbTroopsPerEdge, $slotsPerEdge, $number, $name ]
-							;
+							
 							$infoListArrPixel = $infoTroopListArrPixel[1] ; $listInfoPixelDropTroop
 							Local $listPixel = $infoListArrPixel[$i]
 							;infoPixelDropTroop : First element in array contains troop and list of array to drop troop
@@ -725,34 +724,7 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 		If _Sleep(SetSleep(1)) Then Return
 		If IsProblemAffect() Then Return
 	Next
-
-	;For $numWave = 0 To UBound($listListInfoDeployTroopPixel) - 1
-	;	If IsProblemAffect() Then Return
-	;	Local $listInfoDeployTroopPixel = $listListInfoDeployTroopPixel[$numWave]
-	;	For $i = 0 To UBound($listInfoDeployTroopPixel) - 1
-	;		Local $infoPixelDropTroop = $listInfoDeployTroopPixel[$i]
-	;		If Not (IsString($infoPixelDropTroop[0]) And ($infoPixelDropTroop[0] = "CC" Or $infoPixelDropTroop[0] = "HEROES")) Then
-	;			Local $numberLeft = ReadTroopQuantity($infoPixelDropTroop[0])
-	;			If $g_bDebugSetlog Then
-	;				Local $aiSlotPos = GetSlotPosition($infoPixelDropTroop[0])
-	;				If $g_bDebugSmartFarm Then SetDebugLog("Slot Nun= " & $infoPixelDropTroop[0])
-	;				If $g_bDebugSmartFarm Then SetDebugLog("Slot Xaxis= " & $aiSlotPos[0])
-	;			    If $g_bDebugSmartFarm Then SetDebugLog($infoPixelDropTroop[5] & " - NumberLeft : " & $numberLeft)
-	;			EndIf
-	;			If ($numberLeft > 0) Then
-	;				If _Sleep($DELAYLAUNCHTROOP21) Then Return
-	;				SelectDropTroop($infoPixelDropTroop[0]) ;Select Troop
-	;				If _Sleep($DELAYLAUNCHTROOP23) Then Return
-	;				SetLog("Dropping last " & $numberLeft & "  of " & $infoPixelDropTroop[5], $COLOR_SUCCESS)
-	;				;                     $troop,             $listArrPixel,       $number,      $slotsPerEdge = 0
-	;				DropOnPixel($infoPixelDropTroop[0], $infoPixelDropTroop[1], Ceiling($numberLeft), $infoPixelDropTroop[3])
-	;			EndIf
-	;		EndIf
-	;		If _Sleep(SetSleep(0)) Then Return
-	;	Next
-	;	If _Sleep(SetSleep(1)) Then Return
-	;	If IsProblemAffect() Then Return
-	;Next
+	
 EndFunc   ;==>LaunchTroopSmartFarm
 
 Func DropTroopSmartFarm($troop, $nbSides, $number, $slotsPerEdge = 0, $name = "", $SIDESNAMES = "TR|TL|BR|BL")

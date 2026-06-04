@@ -28,19 +28,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;GetVillageSize(True, "stone", "tree", False)
-Func GetVillageSize($bOnBuilderBase = $g_bStayOnBuilderBase, $sStonePrefix = Default, $sTreePrefix = Default)
+Func GetVillageSize($bOnBuilderBase = $g_bStayOnBuilderBase, $sStonePrefix = "stone", $sTreePrefix = "tree")
 	FuncEnter(GetVillageSize)
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""]
-	If $sStonePrefix = Default Then $sStonePrefix = "stone"
-	If $sTreePrefix = Default Then $sTreePrefix = "tree"
 	
-	If Not $bOnBuilderBase And IsOnBuilderBase() Then $bOnBuilderBase = True
-	Local $sDirectory
-	If $bOnBuilderBase Then
-		$sDirectory = $g_sImgZoomOutDirBB
-	Else
-		$sDirectory = $g_sImgZoomOutDir
-	EndIf
+	;If Not $bOnBuilderBase And IsOnBuilderBase() Then $bOnBuilderBase = True
+	Local $sDirectory = $g_sImgZoomOutDir
 	
 	Local $iAdditionalX = 100
 	Local $iAdditionalY = 100
@@ -94,7 +87,7 @@ Func GetVillageSize($bOnBuilderBase = $g_bStayOnBuilderBase, $sStonePrefix = Def
 		$checkZoomOffset = Round(($c - $iRefSize), 2)
 		If $checkZoomOffset > $ZoomOffset Then 
 			SetDebugLog("Stone2tree:" & Round($c, 2) & " - Reference:" & Round($iRefSize, 2) & " = " & $checkZoomOffset & " > " & $ZoomOffset, $COLOR_DEBUG2)
-			Return FuncReturn($aResult)
+			;Return FuncReturn($aResult)
 		Else
 			SetDebugLog("Stone2tree:" & Round($c, 2) & " Reference:" & Round($iRefSize, 2) & " checkZoomOffset: " & $checkZoomOffset, $COLOR_DEBUG2)
 		EndIf
