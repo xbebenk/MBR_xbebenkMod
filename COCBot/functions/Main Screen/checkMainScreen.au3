@@ -27,22 +27,13 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	If Not CheckAndroidRunning(False) Then Return
 	If GetAndroidProcessPID() = 0 Then CloseCoC(True)
 	
-	;Local $VillageType = ""
-	;If $bBuilderBase Then 
-	;	$VillageType = "BuilderBase"
-	;	SwitchBetweenBases("BB")
-	;Else 
-	;	$VillageType = "MainVillage"
-	;	SwitchBetweenBases("Main")
-	;EndIf
-	
 	If $bSetLog Then SetLog("[" & $CalledFrom & "] checkMainScreen", $COLOR_INFO)
 	PlaceUnplacedBuilding()
 	PlacedOnLeague()
 	
 	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False
 	$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
-	;If Not $g_bStayOnBuilderBase And Not $bLocated And isOnBuilderBase() Then $bBuilderBase = True ;check if account is on builderbase but it should on main
+	If Not $bBuilderBase And Not $bLocated And isOnBuilderBase() Then $bBuilderBase = True ;check if account is on builderbase but it should on main
 	
 	While Not $bLocated
 		$i += 1
@@ -76,17 +67,17 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	
 	If Not $g_bRunState Then Return
 
-	If $bSetLog Then
-		If $bLocated Then
-			SetLog("[" & $CalledFrom & "] Main Screen located", $COLOR_SUCCESS)
-		Else
-			SetLog("[" & $CalledFrom & "] Main Screen not located", $COLOR_ERROR)
-		EndIf
+	If $bLocated Then
+		SetLog("[" & $CalledFrom & "] Main Screen located", $COLOR_SUCCESS)
+	Else
+		SetLog("[" & $CalledFrom & "] Main Screen not located", $COLOR_ERROR)
 	EndIf
-	
+
 	If $bLocated Then 
 		If CheckDonateNotifCounter() Then RequestCC()
+		If $g_bStayOnBuilderBase <> $bBuilderBase Then SwitchBetweenBases("Main")
 	EndIf
+	
 	;After checkscreen dispose windows
 	DisposeWindows()
 

@@ -799,13 +799,6 @@ Func btnTestImage()
 		$result = waitMainScreen()
 		SetLog("Testing waitMainScreen DONE, $Result=" & $result, $COLOR_SUCCESS)
 
-		SetLog("Testing waitMainScreenMini...", $COLOR_SUCCESS)
-		$result = waitMainScreenMini()
-		SetLog("Testing waitMainScreenMini DONE, $Result=" & $result, $COLOR_SUCCESS)
-
-		SetLog("Testing WaitForClouds...", $COLOR_SUCCESS)
-		SetLog("Testing WaitForClouds DONE", $COLOR_SUCCESS)
-
 	Next
 
 	SetLog("Testing finished", $COLOR_INFO)
