@@ -924,11 +924,6 @@ Func BBBarbarianHead($sLogText = "BBBarbarianHead")
 		SetLog("Battle Ended, Gold Icon Found", $COLOR_DEBUG2)
 		$bRet = True
 	EndIf
-	
-	If Not $bRet Then 
-		If WaitforPixel($aBlackHead[0], $aBlackHead[1], $aBlackHead[0] + 1, $aBlackHead[1] + 1, Hex($aBlackHead[2], 6), 10, 1, $sLogText) Then $bRet = True
-	EndIf
-	
 	Return $bRet
 EndFunc
 

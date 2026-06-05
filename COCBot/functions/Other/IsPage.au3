@@ -286,7 +286,7 @@ EndFunc   ;==>IsPostDefenseSummaryPage
 Func IsMultiplayerTabOpen()
 	Local $result = False
 	
-	$result = WaitforPixel(585, 65, 585, 66, "C59B73", 10, 2, "IsMultiplayerTabOpen")
+	$result = WaitforPixel(585, 65, 585, 65, "C59B73", 10, 1, "IsMultiplayerTabOpen")
 	If Not $result Then ClickAway("Right")
 	
 	If $result Then
@@ -298,7 +298,7 @@ EndFunc ; IsMultiplayerTabOpen
 
 Func IsFullScreenWindow($sSource = "IsFullScreenWindow")
 	Local $result = False
-	$result = WaitforPixel(820, 37, 821, 38, "FFFFFF", 10, 2, $sSource)
+	$result = WaitforPixel(820, 37, 820, 37, "FFFFFF", 10, 1, $sSource)
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 20, 860, 100) Then $result = True

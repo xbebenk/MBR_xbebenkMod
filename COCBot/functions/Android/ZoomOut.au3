@@ -204,7 +204,7 @@ Func ZoomOutHelperBB($caller = "Default")
 			If $sImage = "BL" Then $g_sSceneryCode = "BL"
 			SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_sQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 			SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
-			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x + $xyOffsetSwitchBases, $aScrollPos[1] - $y - $xyOffsetSwitchBases, 50, True) ; more delay for clickdrag here
+			ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x + $xyOffsetSwitchBases, $aScrollPos[1] - $y - $xyOffsetSwitchBases) ; more delay for clickdrag here
 			$bRet = True
 		Else
 			SetDebugLog("[" & $caller & "] Bad TreeBL ImageName!")
@@ -220,7 +220,7 @@ Func ZoomOutHelperBB($caller = "Default")
 				$y = $g_iQuickMISY - $aOffset[2]
 				SetDebugLog("[" & $caller & "] ZoomOutHelperBB: Found " & $g_sQuickMISName & " on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_DEBUG2)
 				SetDebugLog("ZoomOutHelperBB: Centering village by " & $x & "," & $y, $COLOR_DEBUG2)
-				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x + $xyOffsetSwitchBases, $aScrollPos[1] - $y - $xyOffsetSwitchBases, 50, True)
+				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x + $xyOffsetSwitchBases, $aScrollPos[1] - $y - $xyOffsetSwitchBases)
 				$bRet = True
 			Else
 				SetDebugLog("[" & $caller & "] Bad Stone ImageName!")

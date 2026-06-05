@@ -243,8 +243,9 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	
 	If Not $g_bRunState Then Return
 	
-	If $bBuilderBase Then CheckBB20LootCartTutor()
-	If Not $bBuilderBase Then
+	If $bBuilderBase Then 
+		CheckBB20LootCartTutor()
+	Else
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;handle for clan capital tutorial
 			SetLog("checkObstacles: Found Clan Capital Tutorial, Doing Tutorial", $COLOR_ACTION)
 			CCTutorial()
