@@ -2023,7 +2023,7 @@ Global $g_aVillageRefSize[48][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589],
 									["DM", "Classic Meteor", 592.24, 87, 792, 52, 589], _ ;ok
 									["CS", "Classic Skeleton", 598, 87, 792, 52, 589], _ ;ok
 									["JS", "Jungle", 617, 41, 806, 37, 616], _ ;ok
-									["MS", "Magic", 619.82, 26, 820, 48, 643], _ ;ok
+									["MS", "Magic", 553.75, 83, 800, 96, 627], _ ;ok
 									["BL", "BuilderBase Lower", 652.11, 131, 777, 102, 584], _ ;ok
 									["BH", "BuilderBase Higher", 563, 145, 764, 141, 600], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
