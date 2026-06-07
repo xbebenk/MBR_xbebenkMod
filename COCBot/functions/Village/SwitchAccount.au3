@@ -184,18 +184,23 @@ Func SwitchCOCAcc($NextAccount = 0, $bTest = False)
 		$bResult = True
 	Else
 		
-		If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
-		If _Sleep(1000) Then Return
-			
-		If Not IsSettingPage() Then 
-			SetLog("Cannot verify Setting page!", $COLOR_ERROR)
-			$bResult = False
-		EndIf
+		For $i = 1 To 5 
+			If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
+			If _Sleep(1000) Then Return
+			If Not IsSettingPage(True, 2) Then 
+				SetLog("[" & $i & "] Cannot verify Setting page!", $COLOR_ERROR)
+				If $i = 2 Then RebootAndroid()
+				Return $bResult
+			Else
+				SetLog("[" & $i & "] Setting page verified", $COLOR_SUCCESS)
+				ExitLoop
+			EndIf
+		Next
 		
 		For $i = 1 To 5 
-			If _Sleep(1000) Then Return
 			SetLog("Verifying SCID Windows #" & $i, $COLOR_ACTION)
 			If ClickSCIDReload() Then ExitLoop
+			If _Sleep(1000) Then Return
 		Next
 		
 		If ClickAccountSCID($NextAccount + 1) Then

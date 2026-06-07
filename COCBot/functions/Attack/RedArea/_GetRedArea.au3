@@ -476,10 +476,10 @@ Func _GetOffsetTroopFurther($pixel, $eVectorType, $offset)
 	Local $pixelOffset = GetOffestPixelRedArea2($pixel, $eVectorType, $offset)
 	If ($eVectorType = $eVectorLeftTop) Then
 
-		$xMin = $InternalArea[0][0] + 2
+		$xMin = $InternalArea[0][0]; + 2
 		$yMin = $InternalArea[0][1]
 		$xMax = $InternalArea[2][0]
-		$yMax = $InternalArea[2][1] + 2
+		$yMax = $InternalArea[2][1]; + 2
 
 		$xStep = 4
 		$yStep = -3
@@ -488,8 +488,8 @@ Func _GetOffsetTroopFurther($pixel, $eVectorType, $offset)
 	ElseIf ($eVectorType = $eVectorRightTop) Then
 
 		$xMin = $InternalArea[2][0]
-		$yMin = $InternalArea[2][1] + 2
-		$xMax = $InternalArea[1][0] - 2
+		$yMin = $InternalArea[2][1]; + 2
+		$xMax = $InternalArea[1][0]; - 2
 		$yMax = $InternalArea[1][1]
 
 
@@ -499,10 +499,10 @@ Func _GetOffsetTroopFurther($pixel, $eVectorType, $offset)
 		$xOffset = Floor($yOffset) * -1
 	ElseIf ($eVectorType = $eVectorLeftBottom) Then
 
-		$xMin = $InternalArea[0][0] + 2
+		$xMin = $InternalArea[0][0]; + 2
 		$yMin = $InternalArea[0][1]
 		$xMax = $InternalArea[3][0]
-		$yMax = $InternalArea[3][1] - 2
+		$yMax = $InternalArea[3][1]; - 2
 
 		$xStep = 4
 		$yStep = 3
@@ -511,8 +511,8 @@ Func _GetOffsetTroopFurther($pixel, $eVectorType, $offset)
 	Else
 
 		$xMin = $InternalArea[3][0]
-		$yMin = $InternalArea[3][1] - 2
-		$xMax = $InternalArea[1][0] - 2
+		$yMin = $InternalArea[3][1]; - 2
+		$xMax = $InternalArea[1][0]; - 2
 		$yMax = $InternalArea[1][1]
 
 		$xStep = 4

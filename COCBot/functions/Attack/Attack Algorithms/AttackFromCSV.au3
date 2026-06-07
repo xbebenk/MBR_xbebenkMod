@@ -870,25 +870,25 @@ Func FindWallCSV(ByRef $aCSVExternalWall, ByRef $aCSVInternalWall)
 	Return $bResult
 EndFunc
 
-Func TestDropLine($SearchRedLine = True, $bOpenFile = False)
+Func TestDropLine($bOpenFile = False)
+	Local $hTimer = TimerInit()
 	SearchZoomOut(False, True, "TestDropLine", False, False)
 	ConvertInternalExternArea()
 	
-	If $SearchRedLine And IsAttackPage() Then 
-		Local $hTimer = __timerinit()
-
-		SetDebugLog("Redline mode: " & $g_aiAttackScrRedlineRoutine[$g_iMatchMode])
-		SetDebugLog("Dropline mode: " & $g_aiAttackScrDroplineEdge[$g_iMatchMode])
-
-		_CaptureRegion2()
+	If $g_bChkForceEdgeSmartfarm Then 
+		$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
+		$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
+		$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
+		$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
+	Else
 		_GetRedArea()
-		SetDebugLog("Calculated  (in " & Round(__timerdiff($hTimer) / 1000, 2) & " seconds) :")
-		SetDebugLog("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")
-		SetDebugLog("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
-		SetDebugLog("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
-		SetDebugLog("	[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight")
 	EndIf
 	
+	SetDebugLog("Calculated  (in " & Round(__timerdiff($hTimer) / 1000, 2) & " seconds) :")
+	SetDebugLog("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")
+	SetDebugLog("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
+	SetDebugLog("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
+	SetDebugLog("	[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight")
 	AttackCSVDEBUGIMAGE($bOpenFile) ;make IMG debug
 
 EndFunc   ;==>TestDropLine

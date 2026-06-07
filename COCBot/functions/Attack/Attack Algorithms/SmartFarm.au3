@@ -581,7 +581,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 	
-	If $g_bDebugSmartFarm Then TestDropLine(False, False)
+	If $g_bDebugSmartFarm Then TestDropLine()
 	
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $g_iMinionPSlot, $g_iDukeSlot, $SIDESNAMES)
 	
@@ -717,7 +717,8 @@ Func LaunchTroopSmartFarm($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iCh
 							CheckHeroesHealth()
 						EndIf
 					Next
-					If _Sleep(SetSleep(0)) Then Return
+					If IsProblemAffect() Then Return
+					If _Sleep(SetSleep(1)) Then Return
 				Next
 			EndIf
 		EndIf

@@ -58,9 +58,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		EndIf
 		
 		If Not $g_bRunState Then Return
-		If $bContinue Then 
-			If waitMainScreen() Then ExitLoop ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
-		EndIf
+		If $bContinue Then $bLocated = waitMainScreen() ;wait main screen due to slow loading
 		If Not $g_bRunState Then Return
 		If _Sleep(1000) Then Return
 	WEnd

@@ -18,6 +18,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 	Local $iCount = 15, $sLoading = "", $iMaxLoading = 5
 	SetLog("Waiting for Main Screen")
 	Local $bCheckObs = False, $iCoCPid = 0, $iTmpCoCPid = 0
+	Local $bLocated = False
 	
 	If _Sleep(50) Then Return
 	For $i = 1 To $iCount ;30*1000 = 60 seconds (for blackscreen) and plus loading screen
@@ -26,8 +27,8 @@ Func waitMainScreen() ;Waits for main screen to popup
 		$iCoCPid = GetAndroidProcessPID() 
 		SetDebugLog("Found coc pid : " & $iCoCPid)
 		If $iCoCPid = 0 Then OpenCoC()
-		
-		If checkChatTabPixel() Then 
+		$bLocated = checkChatTabPixel()
+		If $bLocated Then 
 			$g_iMainScreenTimeoutCount = 0
 			SetLog("waitMainScreen: MainScreen Located", $COLOR_SUCCESS)
 			Return True
@@ -37,6 +38,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 		
 		$bCheckObs = checkObstacles()
 		SetLog("[" & $i & "/" & $iCount & "] waitMainScreen CheckObs = " & String($bCheckObs), $COLOR_DEBUG1) ; Debug stuck loop
+		If $bLocated And Not $bCheckObs Then Return True
 		
 		$sLoading = getOcrAndCapture("coc-Loading", 385, 580, 90, 25)
 		For $iLoading = 1 To $iMaxLoading
