@@ -306,16 +306,6 @@ Func CheckIfArmyIsReady($bCloseWindow = False)
 		Setlog("Is Wait for Heroes Active : " & IsWaitforHeroesActive())
 	EndIf
 
-	; If Drop Trophy with Heroes is checked and a Hero is Available or under the trophies range, Then set $g_bFullArmyHero to True
-	If Not IsWaitforHeroesActive() And $g_bDropTrophyUseHeroes Then $bFullArmyHero = True
-	If Not IsWaitforHeroesActive() And Not $g_bDropTrophyUseHeroes And Not $bFullArmyHero Then
-		If $g_iHeroAvailable > 0 Or Number($g_aiCurrentLoot[$eLootTrophy]) <= Number($g_iDropTrophyMax) Then
-			$bFullArmyHero = True
-		Else
-			SetLog("Waiting for Heroes to drop trophies!", $COLOR_ACTION)
-		EndIf
-	EndIf
-
 	If $g_bFullArmy And $g_bCheckSpells And $bFullArmyHero And $bFullArmyCC And $bFullSiege Then
 		$g_bIsFullArmywithHeroesAndSpells = True
 	Else

@@ -238,8 +238,6 @@ Func ReadRegularConfig()
 	ReadConfig_600_30_LB()
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
 	ReadConfig_600_31()
-	; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
-	ReadConfig_600_32()
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>
 	ReadConfig_600_33()
 	; <><><><> Bot / Options <><><><>
@@ -1229,17 +1227,6 @@ Func ReadConfig_600_31()
 	If $g_iCollectorMatchesMin < 1 Or $g_iCollectorMatchesMin > 6 Then $g_iCollectorMatchesMin = 3
 	IniReadS($g_iCollectorToleranceOffset, $g_sProfileConfigPath, "collectors", "tolerance", 0, "int")
 EndFunc   ;==>ReadConfig_600_31
-
-Func ReadConfig_600_32()
-	; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
-	IniReadS($g_bDropTrophyEnable, $g_sProfileConfigPath, "search", "TrophyRange", False, "Bool")
-	IniReadS($g_iDropTrophyMin, $g_sProfileConfigPath, "search", "MinTrophy", 5000, "int")
-	IniReadS($g_iDropTrophyMax, $g_sProfileConfigPath, "search", "MaxTrophy", 5000, "int")
-	IniReadS($g_bDropTrophyUseHeroes, $g_sProfileConfigPath, "search", "chkTrophyHeroes", False, "Bool")
-	IniReadS($g_iDropTrophyHeroesPriority, $g_sProfileConfigPath, "search", "cmbTrophyHeroesPriority", 0, "int")
-	IniReadS($g_bDropTrophyAtkDead, $g_sProfileConfigPath, "search", "chkTrophyAtkDead", False, "Bool")
-	IniReadS($g_iDropTrophyArmyMinPct, $g_sProfileConfigPath, "search", "DTArmyMin", 70, "int")
-EndFunc   ;==>ReadConfig_600_32
 
 Func ReadConfig_600_33()
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>

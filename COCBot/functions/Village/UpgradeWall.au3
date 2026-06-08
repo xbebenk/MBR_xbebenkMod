@@ -88,8 +88,7 @@ Func DoUpgradeWall()
 			SetLog("You Current MinGoldSave : " & _NumberFormat($g_iUpgradeWallMinGold), $COLOR_INFO)
 			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($g_aiTHCost[$g_iTownHallLevel]), $COLOR_SUCCESS)
 			$g_iUpgradeWallMinGold = $g_aiTHCost[$g_iTownHallLevel]
-			applyConfig()
-			saveConfig()
+			
 		EndIf
 		If $g_iTownHallLevel >= 7 Then
 			If $g_iUpgradeWallMinElixir < $g_aiHeroHallCost[$g_iTownHallLevel - 7] And Not IsTHLevelAchieved() Then
@@ -97,19 +96,18 @@ Func DoUpgradeWall()
 				SetLog("You Current MinElixirSave : " & _NumberFormat($g_iUpgradeWallMinElixir), $COLOR_INFO)
 				SetLog("Adjusting MinElixirSave to : " & _NumberFormat($g_aiHeroHallCost[$g_iTownHallLevel - 7]), $COLOR_SUCCESS)
 				$g_iUpgradeWallMinElixir = $g_aiHeroHallCost[$g_iTownHallLevel - 7]
-				applyConfig()
-				saveConfig()
 			EndIf
 		EndIf
 		If IsTHLevelAchieved() Then 
+			SetLog("TH Level Achieved", $COLOR_INFO)
 			SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
-			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($g_aiTHCost[$g_iTownHallLevel]/2), $COLOR_SUCCESS)
-			SetLog("Adjusting MinElixirSave to : " & _NumberFormat($g_aiHeroHallCost[$g_iTownHallLevel - 7]/2), $COLOR_SUCCESS)
-			$g_iUpgradeWallMinGold = $g_aiTHCost[$g_iTownHallLevel]/2
-			$g_iUpgradeWallMinElixir = $g_aiHeroHallCost[$g_iTownHallLevel - 7]/2
-			applyConfig()
-			saveConfig()
+			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($g_aiTHCost[$g_iTownHallLevel]), $COLOR_SUCCESS)
+			SetLog("Adjusting MinElixirSave to : " & _NumberFormat($g_aiHeroHallCost[$g_iTownHallLevel - 7]), $COLOR_SUCCESS)
+			$g_iUpgradeWallMinGold = $g_aiTHCost[$g_iTownHallLevel]
+			$g_iUpgradeWallMinElixir = $g_aiHeroHallCost[$g_iTownHallLevel - 7]
 		EndIf
+		applyConfig()
+		saveConfig()
 	EndIf
 	
 	VillageReport(True, True)
@@ -443,7 +441,7 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 	SetLog("Sort WallLevel: " & String($g_iSearchWallSort), $COLOR_DEBUG)
 	If Not $bDisplayArray Then ZoomOut()
 	
-	$aWall = QuickMIS("CNX", $g_sImgCheckWallDir)
+	$aWall = QuickMIS("CNX", $g_sImgCheckWallDir, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
 
 	If IsArray($aWall) And UBound($aWall) > 0 Then
 		For $i = 0 To UBound($aWall) - 1

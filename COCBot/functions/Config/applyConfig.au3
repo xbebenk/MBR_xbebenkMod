@@ -134,9 +134,6 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
 	SetDebugLog("ApplyConfig Attack / Deadbase / Collectors")
 	ApplyConfig_600_31($TypeReadSave)
-	; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
-	SetDebugLog("ApplyConfig Attack / Options / Trophy Settings")
-	ApplyConfig_600_32($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>
 	SetDebugLog("ApplyConfig Attack / Drop Order Troops")
 	ApplyConfig_600_33($TypeReadSave)
@@ -1948,32 +1945,6 @@ Func ApplyConfig_600_31($TypeReadSave)
 			$g_iCollectorToleranceOffset = GUICtrlRead($g_hSldCollectorTolerance)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_31
-
-Func ApplyConfig_600_32($TypeReadSave)
-	; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
-	Switch $TypeReadSave
-		Case "Read"
-			GUICtrlSetState($g_hChkTrophyRange, $g_bDropTrophyEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetData($g_hTxtMaxTrophy, $g_iDropTrophyMax)
-			GUICtrlSetData($g_hTxtDropTrophy, $g_iDropTrophyMin)
-			GUICtrlSetState($g_hChkTrophyHeroes, $g_bDropTrophyUseHeroes ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkTrophyHeroes()
-			_GUICtrlComboBox_SetCurSel($g_hCmbTrophyHeroesPriority, $g_iDropTrophyHeroesPriority)
-			GUICtrlSetState($g_hChkTrophyAtkDead, $g_bDropTrophyAtkDead ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetData($g_hTxtDropTrophyArmyMin, $g_iDropTrophyArmyMinPct)
-			chkTrophyRange()
-			TxtDropTrophy()
-			TxtMaxTrophy()
-		Case "Save"
-			$g_bDropTrophyEnable = (GUICtrlRead($g_hChkTrophyRange) = $GUI_CHECKED)
-			$g_iDropTrophyMax = GUICtrlRead($g_hTxtMaxTrophy)
-			$g_iDropTrophyMin = GUICtrlRead($g_hTxtDropTrophy)
-			$g_bDropTrophyUseHeroes = (GUICtrlRead($g_hChkTrophyHeroes) = $GUI_CHECKED)
-			$g_iDropTrophyHeroesPriority = _GUICtrlComboBox_GetCurSel($g_hCmbTrophyHeroesPriority)
-			$g_bDropTrophyAtkDead = (GUICtrlRead($g_hChkTrophyAtkDead) = $GUI_CHECKED)
-			$g_iDropTrophyArmyMinPct = GUICtrlRead($g_hTxtDropTrophyArmyMin)
-	EndSwitch
-EndFunc   ;==>ApplyConfig_600_32
 
 Func ApplyConfig_600_33($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>

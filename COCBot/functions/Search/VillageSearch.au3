@@ -332,7 +332,7 @@ Func _VillageSearch($bTest = False) ;Control for searching a village that meets 
 		If $g_bDebugDeadBaseImage Then setZombie()
 		
 		Local $i = 0
-		For $i = 1 To 20
+		For $i = 1 To 10
 			If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then
 				$g_bCloudsActive = True
 				Click($g_iQuickMISX, $g_iQuickMISY)
@@ -348,6 +348,7 @@ Func _VillageSearch($bTest = False) ;Control for searching a village that meets 
 				$g_bIsClientSyncError = True
 				$g_iNbrOfOoS += 1
 				$g_bRestart = True
+				ExitLoop
 			EndIf
 			If _Sleep(500) Then Return
 		Next

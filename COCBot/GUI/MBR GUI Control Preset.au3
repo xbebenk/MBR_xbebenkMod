@@ -136,9 +136,6 @@ Func MakeSavePresetMessage()
 	Local $message = ""
 
 	$message &= "NOTES:" & @CRLF & @CRLF
-
-
-	If $g_bDropTrophyEnable Then $message &= "TROPHIES RANGE: " & $g_iDropTrophyMin & " - " & $g_iDropTrophyMax & @CRLF & @CRLF
 	$message &= "TRAIN ARMY SETTINGS:" & @CRLF
 	$message &= "- Custom Train Troops:" & @CRLF
 	For $i = 0 To $eTroopCount - 1

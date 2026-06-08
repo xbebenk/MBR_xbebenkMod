@@ -15,15 +15,6 @@
 ; ===============================================================================================================================
 Func PrepareAttack($pMatchMode = 0, $bRemaining = False) ;Assigns troops
 	
-	If ($pMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($pMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
-		If $g_bDebugMakeIMGCSV And $bRemaining = False And TestCapture() = 0 Then
-			If $g_iSearchTH = "-" Then ; If TH is unknown, try again to find as it is needed for filename
-				imglocTHSearch(True, False, False)
-			EndIf
-			SaveDebugImage("clean", False, Default, "TH" & $g_iSearchTH & "-") ; make clean snapshot as well
-		EndIf
-	EndIf
-
 	If Not $bRemaining Then ; reset Hero variables before attack if not checking remaining troops
 		$g_bDropKing = False ; reset hero dropped flags
 		$g_bDropQueen = False

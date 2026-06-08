@@ -176,19 +176,19 @@ EndFunc   ;==>BotCommand
 ; Example .......: No
 ; ===============================================================================================================================
 Func isTrophyMax()
-	If Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then
-		SetLog("Max. Trophy Reached!", $COLOR_SUCCESS)
-		If _Sleep($DELAYBOTCOMMAND1) Then Return
-		$g_abFullStorage[$eLootTrophy] = True
-	ElseIf $g_abFullStorage[$eLootTrophy] Then
-		If Number($g_aiCurrentLoot[$eLootTrophy]) >= Number($g_aiResumeAttackLoot[$eLootTrophy]) Then
-			SetLog("Trophy is still relatively high: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_SUCCESS)
-			$g_abFullStorage[$eLootTrophy] = True
-		Else
-			SetLog("Switching back to normal when Trophy drops below " & $g_aiResumeAttackLoot[$eLootTrophy], $COLOR_SUCCESS)
-			$g_abFullStorage[$eLootTrophy] = False
-		EndIf
-	EndIf
+	;If Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then
+	;	SetLog("Max. Trophy Reached!", $COLOR_SUCCESS)
+	;	If _Sleep($DELAYBOTCOMMAND1) Then Return
+	;	$g_abFullStorage[$eLootTrophy] = True
+	;ElseIf $g_abFullStorage[$eLootTrophy] Then
+	;	If Number($g_aiCurrentLoot[$eLootTrophy]) >= Number($g_aiResumeAttackLoot[$eLootTrophy]) Then
+	;		SetLog("Trophy is still relatively high: " & $g_aiCurrentLoot[$eLootTrophy], $COLOR_SUCCESS)
+	;		$g_abFullStorage[$eLootTrophy] = True
+	;	Else
+	;		SetLog("Switching back to normal when Trophy drops below " & $g_aiResumeAttackLoot[$eLootTrophy], $COLOR_SUCCESS)
+	;		$g_abFullStorage[$eLootTrophy] = False
+	;	EndIf
+	;EndIf
 	Return $g_abFullStorage[$eLootTrophy]
 EndFunc   ;==>isTrophyMax
 

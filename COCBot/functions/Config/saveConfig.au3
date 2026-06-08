@@ -246,8 +246,6 @@ Func SaveRegularConfig()
 	SaveConfig_600_30_LB()
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
 	SaveConfig_600_31()
-	; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
-	SaveConfig_600_32()
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>
 	SaveConfig_600_33()
 	; <><><><> Bot / Options <><><><>
@@ -1128,18 +1126,6 @@ Func SaveConfig_600_31()
 	_Ini_Add("collectors", "minmatches", $g_iCollectorMatchesMin)
 	_Ini_Add("collectors", "tolerance", $g_iCollectorToleranceOffset)
 EndFunc   ;==>SaveConfig_600_31
-
-Func SaveConfig_600_32()
-	; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
-	ApplyConfig_600_32(GetApplyConfigSaveAction())
-	_Ini_Add("search", "TrophyRange", $g_bDropTrophyEnable ? 1 : 0)
-	_Ini_Add("search", "MaxTrophy", $g_iDropTrophyMax)
-	_Ini_Add("search", "MinTrophy", $g_iDropTrophyMin)
-	_Ini_Add("search", "chkTrophyHeroes", $g_bDropTrophyUseHeroes ? 1 : 0)
-	_Ini_Add("search", "cmbTrophyHeroesPriority", $g_iDropTrophyHeroesPriority)
-	_Ini_Add("search", "chkTrophyAtkDead", $g_bDropTrophyAtkDead ? 1 : 0)
-	_Ini_Add("search", "DTArmyMin", $g_iDropTrophyArmyMinPct)
-EndFunc   ;==>SaveConfig_600_32
 
 Func SaveConfig_600_33()
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>

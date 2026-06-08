@@ -61,6 +61,6 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotio
 		EndIf
 	EndIf
 	ClickAway()
-
+	If _Sleep(500) Then Return
 	If $bSwitchToNV Then SwitchBetweenBases("Main") ; Switching back to the normal Village if true
 EndFunc   ;==>StartClockTowerBoost

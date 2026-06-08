@@ -1206,10 +1206,6 @@ Global $g_Zapped = False
 Global $g_bShareAttackEnable = 0, $g_iShareMinGold = 300000, $g_iShareMinElixir = 300000, $g_iShareMinDark = 0, $g_sShareMessage = "Nice|Good|Thanks|Wowwww", _
 		$g_bTakeLootSnapShot = True, $g_bScreenshotLootInfo = False, $g_bShareAttackEnableNow = False
 
-; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
-Global $g_bDropTrophyEnable = False, $g_iDropTrophyMax = 1200, $g_iDropTrophyMin = 800, $g_bDropTrophyUseHeroes = False, $g_iDropTrophyHeroesPriority = 0, _
-		$g_bDropTrophyAtkDead = 0, $g_iDropTrophyArmyMinPct = 70, $g_bDropTrophyZap = True
-
 ; <><><><> Attack Plan / Strategies <><><><>
 ; <<< nothing here >>>
 

@@ -798,12 +798,6 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $g_bRestart Then ExitLoop
 		AddIdleTime()
 
-		If $g_iCommandStop = -1 Then
-			DropTrophy()
-			If Not $g_bRunState Then Return
-			If $g_bRestart Then ExitLoop
-			If _Sleep($DELAYIDLE1) Then ExitLoop
-		EndIf
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_bRestart Then ExitLoop
 
@@ -828,17 +822,6 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
-			If $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
-				If Not $bFirstStart Then
-					DropTrophy()
-					If Not $g_bRunState Then Return
-					$g_bIsClientSyncError = False ; reset OOS flag to prevent looping.
-					If _Sleep($DELAYATTACKMAIN1) Then Return
-					Return ; return to runbot, refill armycamps
-				Else
-					SetLog("Drop Trophy Enabled, but skipped on FirstStart", $COLOR_DEBUG)
-				EndIf
-			EndIf
 			If Not $g_bRunState Then Return
 			;If $g_bUpdateSharedPrefs And $g_bChkSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
@@ -1314,7 +1297,7 @@ Func CommonRoutine($RoutineType = Default)
 	Local $sText = "", $aFuncList[0]
 	Switch $RoutineType
 		Case "FirstCheck"
-			Local $aRndFuncList = ['Collect', 'CollectLootCart', 'TreasuryCollect', 'CleanYard', 'CollectCookie', 'UseFreeMagic', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'Laboratory', 'SellMagicItem', 'UpgradeWall']
+			Local $aRndFuncList = ['Collect', 'CollectLootCart', 'TreasuryCollect', 'CleanYard', 'CollectCookie', 'UseFreeMagic', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'SellMagicItem', 'UpgradeWall']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)

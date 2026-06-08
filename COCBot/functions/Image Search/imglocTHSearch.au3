@@ -258,19 +258,6 @@ Func ResetTHsearch()
 
 EndFunc   ;==>ResetTHsearch
 
-;backwards compatibility
-Func imgloccheckTownHallADV2($limit = 0, $tolerancefix = 0, $captureRegion = True)
-	imglocTHSearch(True, False, $captureRegion) ; try 2 times to get TH
-
-	If $g_iImglocTHLevel = 0 Then
-		Return "-"
-	Else
-		Return $g_iImglocTHLevel
-	EndIf
-
-EndFunc   ;==>imgloccheckTownHallADV2
-
-
 Func SearchTH($bVerify = True, $bClickAway = True)
 	If Not $g_bRunState Then Return
 	Local $aTH, $aiTHPos[2], $iTHLevel
