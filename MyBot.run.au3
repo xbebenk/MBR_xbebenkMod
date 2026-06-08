@@ -497,13 +497,6 @@ Func SetupFilesAndFolders()
 	DirCreate($g_sProfileTempPath)
 	DirCreate($g_sProfileTempDebugPath)
 
-	$g_sProfileDonateCapturePath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\'
-	$g_sProfileDonateCaptureWhitelistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\White List\'
-	$g_sProfileDonateCaptureBlacklistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\Black List\'
-	DirCreate($g_sProfileDonateCapturePath)
-	DirCreate($g_sProfileDonateCaptureWhitelistPath)
-	DirCreate($g_sProfileDonateCaptureBlacklistPath)
-
 	;Migrate old bot without profile support to current one
 	FileMove(@ScriptDir & "\*.ini", $g_sProfilePath & "\" & $g_sProfileCurrentName, $FC_OVERWRITE + $FC_CREATEPATH)
 	DirCopy(@ScriptDir & "\Logs", $g_sProfilePath & "\" & $g_sProfileCurrentName & "\Logs", $FC_OVERWRITE + $FC_CREATEPATH)

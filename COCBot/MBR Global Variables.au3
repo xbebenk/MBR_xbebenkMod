@@ -431,7 +431,6 @@ Global $g_sProfileConfigPath = "" ; Path to the current config.ini being used in
 Global $g_sProfileBuildingStatsPath = "" ; Path to stats_chkweakbase.ini file for this profile
 Global $g_sProfileBuildingPath = "" ; Paths to building.ini file for this profile
 Global $g_sProfileLogsPath = "", $g_sProfileLootsPath = "", $g_sProfileTempPath = "", $g_sProfileTempDebugPath = "" ; Paths to log/image/temp folders for this profile
-Global $g_sProfileDonateCapturePath = "", $g_sProfileDonateCaptureWhitelistPath = "", $g_sProfileDonateCaptureBlacklistPath = "" ; Paths to donate related folders for this profile
 Global $g_sProfileSecondaryInputFileName = ""
 Global $g_sProfileSecondaryOutputFileName = ""
 Global $g_asProfiles[0] ; Array String of available profiles, initialized in func setupProfileComboBox()
@@ -652,7 +651,6 @@ Global Const $g_asTroopShortNames[$eTroopCount] = [ _
 		"GSkel", "RGhost", "PWiza", "IWiza"]
 											;"Barb","SBarb","Arch","SArch","Giant","SGiant","Gobl","SGobl","Wall","SWall","Ball","RBall","Wiza","SWiza","Heal","Drag","SDrag","Pekk","BabyD","InfernoD","Mine","SMine","EDrag","Yeti","RDrag","ETitan","RootR","Mini","SMini","Hogs","SHogs","Valk","SValk","Gole","Witc","SWitc","Lava","IceH","Bowl","SBowl","IceG","Hunt","AppWard"
 Global Const $g_aiTroopSpace[$eTroopCount] = [1, 		5, 		1, 	12, 	5, 		10, 	1, 		3, 		2, 		8, 		5, 		8, 		4, 		10, 	14, 20, 	40, 	25, 	10, 	15, 	6, 		24, 	30, 	18, 	25, 	32, 	20, 	2, 		12, 	5, 		12, 	8, 		20, 	30, 12,  	40, 	30, 	40, 	6, 	30, 	15, 	6, 		20, 	20, 8, 4, 4]
-Global Const $g_aiTroopTrainTime[$eTroopCount] = [5, 25, 8, 72, 30, 60, 7, 21, 15, 60, 30, 48, 30, 75, 120, 180, 360, 180, 90, 135, 30, 120, 360, 180, 250, 360, 220, 18, 108, 45, 108, 90, 225, 300, 180, 400, 300, 400, 60, 300, 180, 60, 240, 30, 37, 30, 30]
 Global Const $g_aiTroopDonateXP[$eTroopCount ] = [1, 5, 1, 12, 5, 10, 1, 3, 2, 8, 5, 8, 4, 10, 14, 20, 40, 25, 10, 15, 6, 24, 30, 18, 25, 32, 20, 2, 12, 5, 12, 8, 20, 30, 12, 40, 30, 40, 6, 30, 15, 6, 20, 20, 8, 4, 4]
 
 ; Super Troops
@@ -684,7 +682,6 @@ Global Const $g_aSpellsIcon[$eSpellCount] = [$eIcnLightSpell, $eIcnHealSpell, $e
 Global Const $g_asSpellNames[$eSpellCount] = ["Lightning", "Healing", "Rage", "Jump", "Freeze", "Clone", "Invisibility", "Recall", "Poison", "Earthquake", "Haste", "Skeleton", "Bat", "OverGrowth"]
 Global Const $g_asSpellShortNames[$eSpellCount] = ["LSpell", "HSpell", "RSpell", "JSpell", "FSpell", "CSpell", "ISpell", "ReSpell", "PSpell", "ESpell", "HaSpell", "SkSpell", "BtSpell", "OgSpell"]
 Global Const $g_aiSpellSpace[$eSpellCount] = [1, 2, 2, 2, 1, 3, 1, 2, 1, 1, 1, 1, 1, 2]
-Global Const $g_aiSpellTrainTime[$eSpellCount] = [360, 360, 360, 360, 180, 720, 180, 360, 180, 180, 180, 180, 180, 360]
 Global Const $g_aiSpellDonateXP[$eSpellCount] = [5, 10, 10, 10, 5, 15, 5, 10, 5, 5, 5, 5, 5, 10]
 
 ; Siege Machines
@@ -693,7 +690,6 @@ Global Const $g_aSiegesIcon[$eSiegeMachineCount] = [$eIcnWallW, $eIcnBattleB, $e
 Global Const $g_asSiegeMachineNames[$eSiegeMachineCount] = ["Wall Wrecker", "Battle Blimp", "Stone Slammer", "Siege Barracks", "Log Launcher", "Flame Flinger", "Battle Drill", "Troop Launcher", "Sky Wagon"]
 Global Const $g_asSiegeMachineShortNames[$eSiegeMachineCount] = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD", "TroopL", "SkyW"]
 Global Const $g_aiSiegeMachineSpace[$eSiegeMachineCount] = [1, 1, 1, 1, 1, 1, 1, 1, 1]
-
 Global Const $g_aiSiegeMachineDonateXP[$eSiegeMachineCount] = [30, 30, 30, 30, 30, 30, 30, 30, 30]
 
 ; Hero Bitmaped Values
@@ -879,21 +875,10 @@ Global $g_bRequestTroopsEnable = False
 Global $g_bUseCake = False, $g_iCmbRequestTroop = 0, $g_iCmbRequestSpell = 0, $g_iCmbRequestSiege = 0
 Global $g_aCmbRequestTroop[2] = ["Giant", "Ball"], $g_aCmbRequestSpell[2] = ["LSpell", "FSpell"], $g_aCmbRequestSiege[6] = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF"]
 Global $g_sRequestTroopsText = ""
-Global $g_abRequestCCHours[24] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
-Global $g_abRequestType[3] = [True, True, False] ; (0 = Troop, 1 = Spell, 2 = Siege Machine)
-Global $g_iRequestCountCCTroop = 0, $g_iRequestCountCCSpell = 0
-Global $g_aiCCTroopsExpected[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aiCCSpellsExpected[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aiCCSiegeExpected[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0, 0]
-Global $g_aiClanCastleTroopWaitType[3], $g_aiClanCastleTroopWaitQty[3]
-Global $g_aiClanCastleSpellWaitType[3]
-Global $g_aiClanCastleSiegeWaitType[2]
 
 ; <><><><> Village / Donate - Donate <><><><>
 Global $g_bChkDonate = True
 Global $g_abChkDonateQueueOnly[2]
-Global $g_aiQueueTroopFirstSlot[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aiQueueSpellFirstSlot[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_abChkDonateTroop[$eTroopCount + $eSiegeMachineCount] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
 Global $g_asTxtDonateTroop[$eTroopCount + $eSiegeMachineCount] = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""] ; array of pipe-delimited list of strings to match to a request string
 

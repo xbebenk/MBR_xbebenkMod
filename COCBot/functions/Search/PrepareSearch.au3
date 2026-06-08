@@ -229,13 +229,13 @@ EndFunc
 Func ConfirmOK()
 	For $i = 1 To 2
 		If _Sleep(500) Then Return
-		If WaitforPixel(695, 500, 696, 501, "C2ED91", 20, 1) Then ExitLoop ; we found ArmyOverview Window with attack button
 		SetLog("Waiting Confirm Message #" & $i, $COLOR_ACTION)
 		If IsOKCancelPage(True) Then 
 			Click(535, 410, 1, 0, "Click Confirm")
 			SetLog("Confirm OK", $COLOR_DEBUG1)
 			If _Sleep(1000) Then Return
 		EndIf
+		If WaitforPixel(695, 500, 695, 505, "C2ED91", 20, 1, "ConfirmOK") Then ExitLoop ; we found ArmyOverview Window with attack button
 	Next
 EndFunc
 

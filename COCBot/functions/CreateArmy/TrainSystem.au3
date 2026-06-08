@@ -261,7 +261,6 @@ Func CheckIfArmyIsReady($bCloseWindow = False)
 	If Not OpenArmyOverview("CheckIfArmyIsReady()") Then Return
 
 	CheckArmyCamp(True, False, True, True)
-	CheckCCArmy()
 	RequestCC(False, "IsFullClanCastle")
 
 	If $g_bDebugSetlogTrain Then
@@ -306,9 +305,6 @@ Func CheckIfArmyIsReady($bCloseWindow = False)
 		Setlog("Are you 'not' waiting for Heroes: " & String($g_aiSearchHeroWaitEnable[$DB] = $eHeroNone And $g_aiSearchHeroWaitEnable[$LB] = $eHeroNone))
 		Setlog("Is Wait for Heroes Active : " & IsWaitforHeroesActive())
 	EndIf
-
-	$bFullArmyCC = IsFullClanCastle()
-	$bFullSiege = CheckSiegeMachine()
 
 	; If Drop Trophy with Heroes is checked and a Hero is Available or under the trophies range, Then set $g_bFullArmyHero to True
 	If Not IsWaitforHeroesActive() And $g_bDropTrophyUseHeroes Then $bFullArmyHero = True
