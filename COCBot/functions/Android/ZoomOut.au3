@@ -688,24 +688,37 @@ Func ZoomIn($Region = "Top")
 	EndSwitch
 	
 	SetLog("minitouch script = " & $sScript, $COLOR_DEBUG)
-	
+	Local $iRes
 	For $i = 1 To 3
 		SetLog("[" & $i & "] Try ZoomIn", $COLOR_DEBUG)
 		If Not AndroidAdbScript($sScript) Then Return False
-		If _Sleep(1500) Then Return
-		Local $sSceneryCode[5] = ["DS", "JS", "MS", "DM", "CS"]
-		For $sCode In $sSceneryCode
-			Local $iRes = GetVillageSize(False, "stone" & $sCode, "tree" & $sCode)
-			If IsArray($iRes) Then ContinueLoop
-			If $iRes = 0 Then ExitLoop
+		If _Sleep(500) Then Return
+		$iRes = GetVillageSize()
+		If $iRes = 0 Then 
+			SetLog("[" & $i & "] ZoomIn Succeed", $COLOR_SUCCESS)
+			$bSuccessZoomIn = True
+			ExitLoop
+		EndIf
+		If IsArray($iRes) Then 
 			SetLog("[" & $i & "] ZoomIn Not Succeed", $COLOR_DEBUG)
-		Next
-		SetLog("[" & $i & "] ZoomIn Succeed", $COLOR_SUCCESS)
-		$bSuccessZoomIn = True
-		ExitLoop
+			ContinueLoop
+		EndIf
+		If _Sleep(1000) Then Return
 	Next
-	If Not $bSuccessZoomIn Then Return False
-	Return True
+	
+	Local $iDrag = 150, $x = 430, $y = 300
+	Switch $Region
+		Case "Top"
+			ClickDrag($x, $y, $x, $y + $iDrag)
+		Case "Left"
+			ClickDrag($x, $y, $x + $iDrag, $y)
+		Case "Bottom"
+			ClickDrag($x, $y, $x, $y - $iDrag)
+		Case "Right"
+			ClickDrag($x, $y, $x - $iDrag, $y)
+	EndSwitch
+	
+	Return $bSuccessZoomIn
 EndFunc
 
 Func ZoomInBB($Region = "Top")

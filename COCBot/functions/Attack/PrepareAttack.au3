@@ -206,7 +206,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 
 					$TmpIndex = _ArraySearch($aSearchResult, $eCastle, 0, 0, 0, 0, 1, 5)
 					If $TmpIndex >= 0 Then 
-						If $aSearchResult[$TmpIndex][5] = $eCastle Then
+						If $aSearchResult[$TmpIndex][4] = $eCastle Then
 							$iTroopIndex = $eCastle ;set ByRef
 							SetDebugLog("Castle found on : [" & $aSearchResult[$TmpIndex][1] & "," & $aSearchResult[$TmpIndex][2] & "]")
 							Click($aSearchResult[$TmpIndex][1], $aSearchResult[$TmpIndex][2])
@@ -231,12 +231,11 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 						SetDebugLog("AnySiege")
 						Local $iSiegeIndex
 						For $i = 0 To UBound($aSearchResult) - 1
-							$iSiegeIndex = $aSearchResult[$i][5]
+							$iSiegeIndex = $aSearchResult[$i][4]
 							If $iSiegeIndex >= $eWallW And $iSiegeIndex <= $eBattleD Then
 								Local $SiegeLevel = $aSearchResult[$i][3]
-								Local $OwnSiege = $aSearchResult[$i][4]
 								Local $SiegeName = $aSearchResult[$i][0]
-								SetDebugLog($i & ". SiegeName: " & $SiegeName & ", OwnSiege: " & $OwnSiege & ", Level: " & $SiegeLevel & ", Coords: " & $aSearchResult[$i][1] & "," & $aSearchResult[$i][2])
+								SetDebugLog($i & ". SiegeName: " & $SiegeName & ", Level: " & $SiegeLevel & ", Coords: " & $aSearchResult[$i][1] & "," & $aSearchResult[$i][2])
 								If $iFinalLevel < $SiegeLevel Then
 									$iTroopIndex = $iSiegeIndex ;set ByRef
 									$iFinalLevel = $SiegeLevel
@@ -245,15 +244,6 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 									$FinalCoordY = $aSearchResult[$i][2]
 									$AnySiegeFound = True
 									SetDebugLog("Selected SiegeName:" & $SiegeName & " Level:" & $iFinalLevel & " Coord:[" & $FinalCoordX & "," & $FinalCoordY & "]")
-								EndIf
-								;If $iFinalLevel = 4 Then ExitLoop
-								If $OwnSiege = "False" Then
-									$iTroopIndex = $iSiegeIndex ;set ByRef
-									$SiegeName = $aSearchResult[$i][0]
-									$FinalCoordX = $aSearchResult[$i][1]
-									$FinalCoordY = $aSearchResult[$i][2]
-									$AnySiegeFound = True
-									ExitLoop
 								EndIf
 							EndIf
 						Next
@@ -268,17 +258,16 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 							Click($iLastX, $iLastY)
 						EndIf
 					Else
-						Local $TmpIndex = _ArraySearch($aSearchResult, $ToUse, 0, 0, 0, 0, 1, 5)
+						Local $TmpIndex = _ArraySearch($aSearchResult, $ToUse, 0, 0, 0, 0, 1, 4)
 						SetDebugLog("To Use = [" & $ToUse & "] " & GetTroopName($ToUse) & ", Got:" & $TmpIndex)
 						If $TmpIndex < 0 Then
 							SetDebugLog(GetTroopName($ToUse) & " ===== Not Found, lets pick any siege", $COLOR_INFO)
 							For $i = 0 To UBound($aSearchResult) - 1
-								Local $iSiegeIndex = $aSearchResult[$i][5]
+								Local $iSiegeIndex = $aSearchResult[$i][4]
 								SetDebugLog(GetTroopName($iSiegeIndex))
 								If $iSiegeIndex >= $eWallW And $iSiegeIndex <= $eBattleD Then
-									Local $OwnSiege = $aSearchResult[$i][4]
 									Local $SiegeLevel = $aSearchResult[$i][3]
-									SetDebugLog($i & ". Name: " & $aSearchResult[$i][0] & ", OwnSiege: " & $OwnSiege & ", Level: " & $SiegeLevel & ", Coords: " & $aSearchResult[$i][1] & "," & $aSearchResult[$i][2])
+									SetDebugLog($i & ". Name: " & $aSearchResult[$i][0] & ", Level: " & $SiegeLevel & ", Coords: " & $aSearchResult[$i][1] & "," & $aSearchResult[$i][2])
 									If $iFinalLevel < $SiegeLevel Then
 										$iFinalLevel = $SiegeLevel
 										$FinalCoordX = $aSearchResult[$i][1]
@@ -330,7 +319,7 @@ Func SelectCastleOrSiege(ByRef $iTroopIndex, $iX, $iCmbSiege)
 EndFunc   ;==>SelectCastleOrSiege
 
 Func GetListSiege($x = 20, $y = 470, $x1 = 860, $y1 = 550)
-	Local $aResult[0][6], $CheckLvlY = 526
+	Local $aResult[0][5], $CheckLvlY = 526
 	Local $SiegeLevel = 1
 	
 	Local $aSiege = QuickMIS("CNX", $g_sImgSwitchSiegeMachine, $x, $y, $x1, $y1)
@@ -344,7 +333,7 @@ Func GetListSiege($x = 20, $y = 470, $x1 = 860, $y1 = 550)
 			EndIf
 			Local $TroopIndex = TroopIndexLookup($aSiege[$i][0])
 			Local $OwnSiege = False
-			_ArrayAdd($aResult, $aSiege[$i][0] & "|" & $aSiege[$i][1] & "|" & $aSiege[$i][2] & "|" & $SiegeLevel & "|" & $OwnSiege & "|" & $TroopIndex)
+			_ArrayAdd($aResult, $aSiege[$i][0] & "|" & $aSiege[$i][1] & "|" & $aSiege[$i][2] & "|" & $SiegeLevel & "|" & $TroopIndex)
 			$SiegeLevel = 1
 		Next
 	Else

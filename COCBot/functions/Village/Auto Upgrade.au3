@@ -111,7 +111,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		Local $aHour = QuickMIS("CNX", $g_sImgAUpgradeHour, 480, 110, 555, 170)
-		If isArray($aHour) And UBound($aHour) > 0 Then
+		If IsArray($aHour) And UBound($aHour) > 0 Then
 			_ArraySort($aHour, 0, 0, 0, 2)
 			
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($aHour[0][1] - 50, $aHour[0][2] - 8)
@@ -1180,55 +1180,74 @@ Func SearchGreenZone()
 		SetLog("Place New Building Only Supported for Classic/Jungle/Magic Scenery", $COLOR_ERROR)
 		Return False
 	EndIf
-
-	If Not $g_bRunState Then Return
-	Local $x, $y, $Offset = 300, $iCount = 0
-	Local $iTop, $iRight, $iBottom, $iLeft, $sArea
-	Local $aArea = StringSplit($CocDiamondDCD, "|", $STR_NOCOUNT)
-	;426,53|779,318|426,585|73,318
-	If IsArray($aArea) And UBound($aArea) > 0 Then
-		For $i = 0 TO UBound($aArea) - 1
-			Local $aXY = StringSplit($aArea[$i], ",", $STR_NOCOUNT)
-			If UBound($aXY) = 2 Then
-				$x = $aXY[0]
-				$y = $aXY[1]
-				Switch $i
-					Case 0
-						$iTop = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - ($Offset/2), $y, $x + ($Offset/2), $y + $Offset)
-						SetLog("Count Green Top = " & $iTop, $COLOR_DEBUG1)
-						$iCount = Number($iTop)
-						$sArea = "Top"
-					Case 1
-						$iRight = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - $Offset, $y - ($Offset/2), $x, $y + ($Offset/2))
-						SetLog("Count Green Right = " & $iRight, $COLOR_DEBUG1)
-						If $iCount < Number($iRight) Then
-							$iCount = Number($iRight)
-							$sArea = "Right"
-						EndIf
-					Case 2
-						$iBottom = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - ($Offset/2), $y - $Offset, $x + ($Offset/2), $y)
-						SetLog("Count Green Bottom = " & $iBottom, $COLOR_DEBUG1)
-						If $iCount < Number($iBottom) Then
-							$iCount = Number($iBottom)
-							$sArea = "Bottom"
-						EndIf
-					Case 3
-						$iLeft = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x, $y - ($Offset/2), $x + $Offset, $y + ($Offset/2))
-						SetLog("Count Green Left = " & $iLeft, $COLOR_DEBUG1)
-						If $iCount < Number($iLeft) Then
-							$iCount = Number($iLeft)
-							$sArea = "Left"
-						EndIf
-				EndSwitch
-				;SetLog($i & ", Count = " & $iCount, $COLOR_DEBUG1)
-			Else
-				SetLog("UBound($aXY) != 2", $COLOR_DEBUG1)
-			EndIf
+	
+	Local $iTop = 0, $iRight = 0, $iBottom = 0, $iLeft = 0, $sArea
+	Local $aFreeTile = QuickMIS("CNX", $g_sImgAUpgradeGreenZone, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+	If IsArray($aFreeTile) And UBound($aFreeTile) > 0 Then
+		SetDebugLog("count tile: " & UBound($aFreeTile))
+		_ArraySort($aFreeTile, 0, 0, 0, 1) ;sort by x
+		For $i = 0 To UBound($aFreeTile) - 1
+			If IsInsideSmallDiamondXY($aFreeTile[$i][1], $aFreeTile[$i][2]) Then ContinueLoop ;too center on map
+			If Not isInsideDiamondXY($aFreeTile[$i][1], $aFreeTile[$i][2]) Then ContinueLoop ;outside village diamond
+			If $aFreeTile[$i][1] < $DiamondMiddleX - 60 And $aFreeTile[$i][2] > $DiamondMiddleY - 60 And $aFreeTile[$i][2] < $DiamondMiddleY + 60 Then $iLeft += 1
+			If $aFreeTile[$i][1] > $DiamondMiddleX + 60 And $aFreeTile[$i][2] > $DiamondMiddleY - 60 And $aFreeTile[$i][2] < $DiamondMiddleY + 60 Then $iRight += 1
+			If $aFreeTile[$i][2] < $DiamondMiddleY - 60 And $aFreeTile[$i][1] > $DiamondMiddleX - 60 And $aFreeTile[$i][1] < $DiamondMiddleX + 60 Then $iTop += 1
+			If $aFreeTile[$i][2] > $DiamondMiddleY + 60 And $aFreeTile[$i][1] > $DiamondMiddleX - 60 And $aFreeTile[$i][1] < $DiamondMiddleX + 60 Then $iBottom += 1
 		Next
-		SetLog("Green Area = " & $sArea & ", count:" & $iCount, $COLOR_DEBUG1)
-	Else
-		SetLog("aArea Not Array", $COLOR_DEBUG1)
+		SetLog("Top=" & $iTop & ", Right=" & $iRight & ", Bottom=" & $iBottom & ", Left=" & $iLeft, $COLOR_DEBUG)
 	EndIf
+	Local $aiArea[4][2] = [["Top", $iTop], ["Right", $iRight], ["Bottom", $iBottom], ["Left", $iLeft]]
+	_ArraySort($aiArea, 1, 0, 0, 1)
+	SetLog("Most free area = " & $aiArea[0][0] & " with " & $aiArea[0][1] & " free tiles", $COLOR_INFO)
+	$sArea = $aiArea[0][0]
+	If Not $g_bRunState Then Return
+	;Local $x, $y, $Offset = 300, $iCount = 0
+	
+	;Local $aArea = StringSplit($CocDiamondDCD, "|", $STR_NOCOUNT)
+	;;426,53|779,318|426,585|73,318
+	;If IsArray($aArea) And UBound($aArea) > 0 Then
+	;	For $i = 0 TO UBound($aArea) - 1
+	;		Local $aXY = StringSplit($aArea[$i], ",", $STR_NOCOUNT)
+	;		If UBound($aXY) = 2 Then
+	;			$x = $aXY[0]
+	;			$y = $aXY[1]
+	;			Switch $i
+	;				Case 0
+	;					$iTop = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - ($Offset/2), $y, $x + ($Offset/2), $y + $Offset)
+	;					SetLog("Count Green Top = " & $iTop, $COLOR_DEBUG1)
+	;					$iCount = Number($iTop)
+	;					$sArea = "Top"
+	;				Case 1
+	;					$iRight = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - $Offset, $y - ($Offset/2), $x, $y + ($Offset/2))
+	;					SetLog("Count Green Right = " & $iRight, $COLOR_DEBUG1)
+	;					If $iCount < Number($iRight) Then
+	;						$iCount = Number($iRight)
+	;						$sArea = "Right"
+	;					EndIf
+	;				Case 2
+	;					$iBottom = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - ($Offset/2), $y - $Offset, $x + ($Offset/2), $y)
+	;					SetLog("Count Green Bottom = " & $iBottom, $COLOR_DEBUG1)
+	;					If $iCount < Number($iBottom) Then
+	;						$iCount = Number($iBottom)
+	;						$sArea = "Bottom"
+	;					EndIf
+	;				Case 3
+	;					$iLeft = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x, $y - ($Offset/2), $x + $Offset, $y + ($Offset/2))
+	;					SetLog("Count Green Left = " & $iLeft, $COLOR_DEBUG1)
+	;					If $iCount < Number($iLeft) Then
+	;						$iCount = Number($iLeft)
+	;						$sArea = "Left"
+	;					EndIf
+	;			EndSwitch
+	;			;SetLog($i & ", Count = " & $iCount, $COLOR_DEBUG1)
+	;		Else
+	;			SetLog("UBound($aXY) != 2", $COLOR_DEBUG1)
+	;		EndIf
+	;	Next
+	;	SetLog("Green Area = " & $sArea & ", count:" & $iCount, $COLOR_DEBUG1)
+	;Else
+	;	SetLog("aArea Not Array", $COLOR_DEBUG1)
+	;EndIf
 
 	If ZoomIn($sArea) Then
 		SetLog("Succeed ZoomIn", $COLOR_DEBUG)
@@ -1901,7 +1920,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno //skip if will use builder for lowcost
 			SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
 			Local $aResult = FindUpgrade()
-			If isArray($aResult) And UBound($aResult) > 0 Then
+			If IsArray($aResult) And UBound($aResult) > 0 Then
 				For $y = 0 To UBound($aResult) - 1
 					If Not $g_bRunState Then Return
 					If $aResult[$y][7] = "Priority" Then

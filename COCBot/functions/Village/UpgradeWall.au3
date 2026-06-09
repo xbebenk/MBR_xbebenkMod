@@ -80,27 +80,28 @@ Func DoUpgradeWall()
 	Local $bCanUseElix = False, $bCanUseGold = False
 	Local $aBtnCoord[4] = [150, 500, 750, 600]
 	Local $bRet = True
+	Local $iGoldAdjust = 0, $iElixAdjust = 0
 
 	If $g_bAutoAdjustSaveWall Then
 		SetLog("Auto Adjust Save resource for Wall Enabled", $COLOR_DEBUG1)
-		If $g_iUpgradeWallMinGold < $g_aiTHCost[$g_iTownHallLevel] And Not IsTHLevelAchieved() Then
+		If Not IsTHLevelAchieved() And $g_iTownHallLevel < 7 Then ;save 1 storage capacity
+			$iGoldAdjust = ($g_aiMaxStorage[$g_iTownHallLevel] * 4) - $g_aiMaxStorage[$g_iTownHallLevel]
 			SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
-			SetLog("You Current MinGoldSave : " & _NumberFormat($g_iUpgradeWallMinGold), $COLOR_INFO)
-			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($g_aiTHCost[$g_iTownHallLevel]), $COLOR_SUCCESS)
-			$g_iUpgradeWallMinGold = $g_aiTHCost[$g_iTownHallLevel]
-			
-		EndIf
-		If $g_iTownHallLevel >= 7 Then
-			If $g_iUpgradeWallMinElixir < $g_aiHeroHallCost[$g_iTownHallLevel - 7] And Not IsTHLevelAchieved() Then
-				SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
-				SetLog("You Current MinElixirSave : " & _NumberFormat($g_iUpgradeWallMinElixir), $COLOR_INFO)
-				SetLog("Adjusting MinElixirSave to : " & _NumberFormat($g_aiHeroHallCost[$g_iTownHallLevel - 7]), $COLOR_SUCCESS)
-				$g_iUpgradeWallMinElixir = $g_aiHeroHallCost[$g_iTownHallLevel - 7]
-			EndIf
-		EndIf
-		If IsTHLevelAchieved() And $g_iTownHallLevel > 8 Then
-			Local $iGoldAdjust = ($g_aiMaxStorage[$g_iTownHallLevel - 8] * 4) - ($g_aiMaxStorage[$g_iTownHallLevel - 8] * 0.2)
-			Local $iElixAdjust = ($g_aiMaxStorage[$g_iTownHallLevel - 8] * 4) - ($g_aiMaxStorage[$g_iTownHallLevel - 8] * 0.2)
+			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($iGoldAdjust), $COLOR_SUCCESS)
+			SetLog("Adjusting MinElixSave to : " & _NumberFormat($iGoldAdjust), $COLOR_SUCCESS)
+			$g_iUpgradeWallMinGold = $iGoldAdjust
+			$g_iUpgradeWallMinElixir = $iGoldAdjust
+		ElseIf Not IsTHLevelAchieved() And $g_iTownHallLevel >= 7 Then ;save 1 storage cap for gold, save at cost of hero hall + 1 storage cap for elix
+			$iGoldAdjust = ($g_aiMaxStorage[$g_iTownHallLevel] * 4) - $g_aiMaxStorage[$g_iTownHallLevel]
+			$iElixAdjust = $g_aiHeroHallCost[$g_iTownHallLevel - 7] + $g_aiMaxStorage[$g_iTownHallLevel]
+			SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
+			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($iGoldAdjust), $COLOR_SUCCESS)
+			SetLog("Adjusting MinElixirSave to : " & _NumberFormat($iElixAdjust), $COLOR_SUCCESS)
+			$g_iUpgradeWallMinGold = $iGoldAdjust
+			$g_iUpgradeWallMinElixir = $iElixAdjust
+		ElseIf IsTHLevelAchieved() And $g_iTownHallLevel > 8 Then ;save 1 storage cap - 0.2 of 1 storage
+			$iGoldAdjust = ($g_aiMaxStorage[$g_iTownHallLevel] * 4) - ($g_aiMaxStorage[$g_iTownHallLevel] * 0.2)
+			$iElixAdjust = ($g_aiMaxStorage[$g_iTownHallLevel] * 4) - ($g_aiMaxStorage[$g_iTownHallLevel] * 0.2)
 			SetLog("TH Level Achieved", $COLOR_INFO)
 			SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
 			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($iGoldAdjust), $COLOR_SUCCESS)

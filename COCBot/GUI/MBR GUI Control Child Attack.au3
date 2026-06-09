@@ -47,38 +47,6 @@ Func cmbABAlgorithm()
 	EndIf
 EndFunc   ;==>cmbABAlgorithm
 
-Func chkABWardenAttack()
-	If GUICtrlRead($g_hChkABWardenAttack) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hCmbABWardenMode, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hCmbABWardenMode, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkABWardenAttack
-
-;Func chkDBWardenAttack()
-;	If GUICtrlRead($g_hChkDBWardenAttack) = $GUI_CHECKED Then
-;		GUICtrlSetState($g_hCmbDBWardenMode, $GUI_ENABLE)
-;	Else
-;		GUICtrlSetState($g_hCmbDBWardenMode, $GUI_DISABLE)
-;	EndIf
-;EndFunc   ;==>chkDBWardenAttack
-
-Func chkABDropCC()
-	If GUICtrlRead($g_hChkABDropCC) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hcmbABSiege, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hcmbABSiege, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkABDropCC
-
-;Func chkDBDropCC()
-;	If GUICtrlRead($g_hChkDBDropCC) = $GUI_CHECKED Then
-;		GUICtrlSetState($g_hcmbDBSiege, $GUI_ENABLE)
-;	Else
-;		GUICtrlSetState($g_hcmbDBSiege, $GUI_DISABLE)
-;	EndIf
-;EndFunc   ;==>chkDBDropCC
-
 Func chkAttackNow()
 	If GUICtrlRead($g_hChkAttackNow) = $GUI_CHECKED Then
 		$g_bSearchAttackNowEnable = True
