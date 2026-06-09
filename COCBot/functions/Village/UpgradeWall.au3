@@ -101,10 +101,10 @@ Func DoUpgradeWall()
 		If IsTHLevelAchieved() Then 
 			SetLog("TH Level Achieved", $COLOR_INFO)
 			SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
-			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($g_aiTHCost[$g_iTownHallLevel]), $COLOR_SUCCESS)
-			SetLog("Adjusting MinElixirSave to : " & _NumberFormat($g_aiHeroHallCost[$g_iTownHallLevel - 7]), $COLOR_SUCCESS)
-			$g_iUpgradeWallMinGold = $g_aiTHCost[$g_iTownHallLevel]
-			$g_iUpgradeWallMinElixir = $g_aiHeroHallCost[$g_iTownHallLevel - 7]
+			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($g_aiTHCost[$g_iTownHallLevel] + ($g_aiTHCost[$g_iTownHallLevel] * 0.2)), $COLOR_SUCCESS)
+			SetLog("Adjusting MinElixirSave to : " & _NumberFormat($g_aiHeroHallCost[$g_iTownHallLevel - 4] + ($g_aiHeroHallCost[$g_iTownHallLevel - 4] * 0.2)), $COLOR_SUCCESS)
+			$g_iUpgradeWallMinGold = $g_aiTHCost[$g_iTownHallLevel] + ($g_aiTHCost[$g_iTownHallLevel] * 0.2)
+			$g_iUpgradeWallMinElixir = $g_aiHeroHallCost[$g_iTownHallLevel - 4] + ($g_aiHeroHallCost[$g_iTownHallLevel - 4] * 0.2)
 		EndIf
 		applyConfig()
 		saveConfig()
