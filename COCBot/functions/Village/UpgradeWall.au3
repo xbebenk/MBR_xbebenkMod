@@ -82,7 +82,7 @@ Func DoUpgradeWall()
 	Local $bRet = True
 
 	If $g_bAutoAdjustSaveWall Then
-		SetLog("Auto Adjust Save resource for Wall Enabled", $COLOR_ACTION)
+		SetLog("Auto Adjust Save resource for Wall Enabled", $COLOR_DEBUG1)
 		If $g_iUpgradeWallMinGold < $g_aiTHCost[$g_iTownHallLevel] And Not IsTHLevelAchieved() Then
 			SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
 			SetLog("You Current MinGoldSave : " & _NumberFormat($g_iUpgradeWallMinGold), $COLOR_INFO)
@@ -98,16 +98,18 @@ Func DoUpgradeWall()
 				$g_iUpgradeWallMinElixir = $g_aiHeroHallCost[$g_iTownHallLevel - 7]
 			EndIf
 		EndIf
-		If IsTHLevelAchieved() Then 
+		If IsTHLevelAchieved() And $g_iTownHallLevel > 8 Then
+			Local $iGoldAdjust = ($g_aiMaxStorage[$g_iTownHallLevel - 8] * 4) - ($g_aiMaxStorage[$g_iTownHallLevel - 8] * 0.2)
+			Local $iElixAdjust = ($g_aiMaxStorage[$g_iTownHallLevel - 8] * 4) - ($g_aiMaxStorage[$g_iTownHallLevel - 8] * 0.2)
 			SetLog("TH Level Achieved", $COLOR_INFO)
 			SetLog("Your TH Level : " & $g_iTownHallLevel, $COLOR_INFO)
-			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($g_aiTHCost[$g_iTownHallLevel] + ($g_aiTHCost[$g_iTownHallLevel] * 0.2)), $COLOR_SUCCESS)
-			SetLog("Adjusting MinElixirSave to : " & _NumberFormat($g_aiHeroHallCost[$g_iTownHallLevel - 4] + ($g_aiHeroHallCost[$g_iTownHallLevel - 4] * 0.2)), $COLOR_SUCCESS)
-			$g_iUpgradeWallMinGold = $g_aiTHCost[$g_iTownHallLevel] + ($g_aiTHCost[$g_iTownHallLevel] * 0.2)
-			$g_iUpgradeWallMinElixir = $g_aiHeroHallCost[$g_iTownHallLevel - 4] + ($g_aiHeroHallCost[$g_iTownHallLevel - 4] * 0.2)
+			SetLog("Adjusting MinGoldSave to : " & _NumberFormat($iGoldAdjust), $COLOR_SUCCESS)
+			SetLog("Adjusting MinElixirSave to : " & _NumberFormat($iElixAdjust), $COLOR_SUCCESS)
+			$g_iUpgradeWallMinGold = $iGoldAdjust
+			$g_iUpgradeWallMinElixir = $iElixAdjust
 		EndIf
-		applyConfig()
-		saveConfig()
+		ApplyConfig()
+		SaveConfig()
 	EndIf
 	
 	VillageReport(True, True)
