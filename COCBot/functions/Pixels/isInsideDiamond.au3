@@ -52,10 +52,10 @@ Func isInsideDiamond($aCoords, $bOuter = False)
 			If $g_bDebugSetLog Then SetLog("Coordinate Inside Village, but Exclude GEMS")
 			Return False
 		EndIf
-		SetDebugLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_DEBUG1)
+		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_DEBUG1)
 		Return True ; Inside Village
 	Else
-		SetDebugLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_DEBUG1)
+		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_DEBUG1)
 		Return False ; Outside Village
 	EndIf
 

@@ -114,7 +114,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 
 				Case "BC1" ; coordinates of first/one image found + boolean value
 
-					Local $Result = "" , $Name = "", $Level = ""
+					Local $Result = ""
 					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
 					For $i = 0 To UBound($KeyValue) - 1
 						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
@@ -132,13 +132,11 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					$g_iQuickMISX = $aCords[0] + $Left
 					$g_iQuickMISY = $aCords[1] + $Top
 
-					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
-					$g_sQuickMISName = $Name
-					$Level = RetrieveImglocProperty($KeyValue[0], "objectlevel")
-					$g_iQuickMISLevel = $Level
-
-					SetDebugLog($ValueReturned & " Found: " & $Name & " Level:" & $Level & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
-					If $g_bDebugImageSave Then DebugQuickMIS($aCords[0], $aCords[1], "BC1_detected[" & $Name & "_" & $g_iQuickMISX & "x" & $g_iQuickMISY & "]")
+					$g_sQuickMISName = RetrieveImglocProperty($KeyValue[0], "objectname")
+					$g_iQuickMISLevel = RetrieveImglocProperty($KeyValue[0], "objectlevel")
+					
+					SetDebugLog($ValueReturned & " Found: " & $g_sQuickMISName & " Level:" & $g_iQuickMISLevel & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
+					If $g_bDebugImageSave Then DebugQuickMIS($aCords[0], $aCords[1], "BC1_detected[" & $g_sQuickMISName & "_" & $g_iQuickMISX & "x" & $g_iQuickMISY & "]")
 
 					Return True
 

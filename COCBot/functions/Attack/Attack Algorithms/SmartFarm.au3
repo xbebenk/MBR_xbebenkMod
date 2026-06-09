@@ -271,7 +271,12 @@ Func Side($Pixel)
 	EndIf
 EndFunc   ;==>Side
 
-Func isInsideSmallDiamond($aCoords)
+Func IsInsideSmallDiamondXY($x, $y)
+	Local $aXY[2] = [$x, $y]
+	Return isInsideSmallDiamond($aXY)
+EndFunc
+
+Func IsInsideSmallDiamond($aCoords)
 	Local $x = $aCoords[0], $y = $aCoords[1]
 	Local $Left, $Right, $Top, $Bottom, $a, $b, $c, $aRet[2]
 	$Left = $InnerDiamondLeft + 130
@@ -290,11 +295,11 @@ Func isInsideSmallDiamond($aCoords)
 	Local $DY = Abs($y - $aMiddle[1])
 
 	If ($DX / $aSize[0] + $DY / $aSize[1] <= 1) Then
-		SetDebugLog("isInsideSmallDiamond: " & "[" & $x & "," & $y & "] Coord Inside SmallDiamond", $COLOR_DEBUG1)
+		If $g_bDebugSetLog Then SetDebugLog("isInsideSmallDiamond: " & "[" & $x & "," & $y & "] Coord Inside SmallDiamond", $COLOR_DEBUG1)
 		$aRet[0] = $c
 		$aRet[1] = "In" ; Inside SmallDiamond
 	Else
-		SetDebugLog("isInsideSmallDiamond: " & "[" & $x & "," & $y & "] Coord Outside SmallDiamond", $COLOR_DEBUG1)
+		If $g_bDebugSetLog Then SetDebugLog("isInsideSmallDiamond: " & "[" & $x & "," & $y & "] Coord Outside SmallDiamond", $COLOR_DEBUG1)
 		$aRet[0] = $c
 		$aRet[1] = "Out" ; OutSide SmallDiamond
 	EndIf

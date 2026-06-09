@@ -142,6 +142,7 @@ Func PrepareSearchCheckArmy($bTournament = False, $bTest = False)
 	For $i = 1 To 3
 		SetLog("Checking ArmyOverview Window", $COLOR_DEBUG)
 		If WaitforPixel(695, 500, 696, 501, "C2ED91", 20, 1) Then
+			If _Sleep(200) Then Return
 			SetArmyCompo($bTournament)
 			If _Sleep(500) Then Return
 			FillArmyCamp()
