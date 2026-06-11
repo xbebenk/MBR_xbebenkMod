@@ -1009,34 +1009,13 @@ EndFunc
 Func SaveConfig_600_29_LB()
 	; <><><><> Attack Plan / Search & Attack / Activebase / Attack <><><><>
 	ApplyConfig_600_29_LB(GetApplyConfigSaveAction())
-	;_Ini_Add("attack", "ABAtkAlgorithm", $g_aiAttackAlgorithm[$LB])
-	;_Ini_Add("attack", "ABKingAtk", BitAND($g_aiAttackUseHeroes[$LB], $eHeroKing))
-	;_Ini_Add("attack", "ABQueenAtk", BitAND($g_aiAttackUseHeroes[$LB], $eHeroQueen))
-	;_Ini_Add("attack", "ABWardenAtk", BitAND($g_aiAttackUseHeroes[$LB], $eHeroWarden))
-	;_Ini_Add("attack", "ABChampionAtk", BitAND($g_aiAttackUseHeroes[$LB], $eHeroChampion))
+	_Ini_Add("attack", "ABAtkAlgorithm", $g_aiAttackAlgorithm[$LB])
 	_Ini_Add("attack", "ABDropCC", $g_abAttackDropCC[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABLightSpell", $g_abAttackUseLightSpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABHealSpell", $g_abAttackUseHealSpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABRageSpell", $g_abAttackUseRageSpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABJumpSpell", $g_abAttackUseJumpSpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABFreezeSpell", $g_abAttackUseFreezeSpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABCloneSpell", $g_abAttackUseCloneSpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABInvisibilitySpell", $g_abAttackUseInvisibilitySpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABRecallSpell", $g_abAttackUseRecallSpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABPoisonSpell", $g_abAttackUsePoisonSpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABEarthquakeSpell", $g_abAttackUseEarthquakeSpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABHasteSpell", $g_abAttackUseHasteSpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABSkeletonSpell", $g_abAttackUseSkeletonSpell[$LB] ? 1 : 0)
-	;_Ini_Add("attack", "ABBatSpell", $g_abAttackUseBatSpell[$LB] ? 1 : 0)
-
 	_Ini_Add("attack", "ABAtkUseWardenMode", $g_aiAttackUseWardenMode[$LB])
 	_Ini_Add("attack", "ABAtkUseSiege", $g_aiAttackUseSiege[$LB])
 	_Ini_Add("attack", "ABDropEmptySiege", $g_bDropEmptySiege[$LB] ? 1 : 0)
-
 	SaveConfig_600_29_LB_Standard()
-
 	SaveConfig_600_29_LB_Scripted()
-
 EndFunc   ;==>SaveConfig_600_29_LB
 
 Func SaveConfig_600_29_LB_Standard()
