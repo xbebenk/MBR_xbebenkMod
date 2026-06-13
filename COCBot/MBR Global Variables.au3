@@ -1474,7 +1474,6 @@ Global $g_iSearchTHLResult = 0
 Global $g_sTHLoc = "In" ; "In" or "Out" are valid values
 Global $g_sImglocRedline ; hold redline data obtained from multisearch
 Global $g_iImglocTHLevel = 0
-Global $g_aiTownHallDetails[4] = [-1, -1, -1, -1] ; [LocX, LocY, BldgLvl, Quantity]
 
 ; Attack
 Global Const $g_aaiTopLeftDropPoints[5][2] = [[51, 288], [129, 230], [183, 193], [305, 104], [400, 33]]
@@ -2000,17 +1999,18 @@ Global $g_aDailyAccount[16][Ubound($g_aiDailyFunction)] = [[0,0,0,0,0,0,0,0,0,0,
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[49][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
+Global $g_aVillageRefSize[50][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
 									["DM", "Classic Meteor", 592.24, 87, 792, 52, 589], _ ;ok
-									["CS", "Classic Skeleton", 598, 87, 792, 52, 589], _ ;ok
+									["CS", "Classic Skeleton", 567, 82, 766, 53, 575], _ ;ok
 									["JS", "Jungle", 617, 41, 806, 37, 616], _ ;ok
 									["MS", "Magic", 553.75, 83, 800, 96, 627], _ ;ok
-									["BL", "BuilderBase Lower", 652.11, 131, 777, 102, 584], _ ;ok
-									["BH", "BuilderBase Higher", 563, 145, 764, 141, 600], _ ;ok
+									["BL", "BuilderBase Lower", 578.83, 135, 742, 116, 567], _ ;ok
+									["BH", "BuilderBase Higher", 561.42, 114, 720, 93, 543], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
 									["PC", "Pirate", 598.68, 50, 812, 63, 634], _ ;ok
 									["TW", "Toy Workshop", 552, 80, 810, 101, 605], _ ;ok
 									["EW", "Winter", 576.41, 68, 794, 61, 607], _ ;ok
+									["DD", "Dark Days", 658.61, 66, 797, 49, 594], _ ;ok
 									["HM", "Hog Mountain", 637.4, 52, 810, 62, 636], _ ;ok
 									["EP", "Epic Jungle", 636.8, 45, 815, 60, 636], _ ;ok
 									["9C", "9th Clashivery", 617.21, 76, 803, 64, 611], _ ;ok
