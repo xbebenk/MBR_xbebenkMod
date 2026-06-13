@@ -1968,7 +1968,7 @@ Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEn
 Global $aCCBuildingIgnore[13] = ["Ruined", "Big Barbarian", "Pyre", "Boulder", "Bonfire", "Grove", "Tree", "Forest", "Campsite", "Stone", "Pillar", "The First", "Tombs"]
 Global $g_bChkStartWeekendRaid = True
 
-Global $g_bEnableDailyRunRoutine = True, $iDailyDate = @YDAY
+Global $g_bEnableDailyRunRoutine = False, $iDailyDate = @YDAY
 ;[FunctionName, Allowed time to run a day? 0 = always run; 1 = daily; 2 twice a day;]
 Global $g_aiDailyFunction[13][2] = [["DailyChallenge", 2], _
 									["CollectAchievements", 2], _
