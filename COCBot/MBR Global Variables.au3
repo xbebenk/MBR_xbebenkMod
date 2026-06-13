@@ -1968,19 +1968,19 @@ Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEn
 Global $aCCBuildingIgnore[13] = ["Ruined", "Big Barbarian", "Pyre", "Boulder", "Bonfire", "Grove", "Tree", "Forest", "Campsite", "Stone", "Pillar", "The First", "Tombs"]
 Global $g_bChkStartWeekendRaid = True
 
-Global $g_bEnableDailyRunRoutine = False
+Global $g_bEnableDailyRunRoutine = True, $iDailyDate = @YDAY
 ;[FunctionName, Allowed time to run a day? 0 = always run; 1 = daily; 2 twice a day;]
 Global $g_aiDailyFunction[13][2] = [["DailyChallenge", 2], _
 									["CollectAchievements", 2], _
-									["CollectFreeMagicItems", 2], _
+									["CollectFreeMagicItems", 1], _
 									["ForgeClanCapitalGold", 1], _
 									["AutoUpgradeCC", 1], _
-									["UseFreeMagic", 4], _
+									["UseFreeMagic", 2], _
 									["SellMagicItem", 1], _
 									["CleanYard", 1], _
 									["CollectLootCart", 1], _
 									["TreasuryCollect", 1], _
-									["BuilderBase", 1], _
+									["BuilderBase", 6], _
 									["BlackSmith", 1], _
 									["PetHouse", 1]]
 ;per account daily function HowManyRunToday
