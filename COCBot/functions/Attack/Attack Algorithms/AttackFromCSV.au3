@@ -356,7 +356,7 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 
 	If $g_bCSVLocateStorageTownHall = True Then
 		If $g_iSearchTH = "-" Or $g_oBldgAttackInfo.Exists($eBldgTownHall & "_LOCATION") = False Then ; If TH is unknown, try again to find as it is needed by script
-			imglocTHSearch(True, False, False)
+			FindTownHall()
 		Else
 			SetLog("> Townhall has already been located in while searching for an image", $COLOR_INFO)
 		EndIf
@@ -883,7 +883,7 @@ Func TestDropLine($bOpenFile = False)
 		_GetRedArea()
 	EndIf
 	
-	SetDebugLog("Calculated  (in " & Round(__timerdiff($hTimer) / 1000, 2) & " seconds) :")
+	SetDebugLog("Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)")
 	SetDebugLog("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")
 	SetDebugLog("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
 	SetDebugLog("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
