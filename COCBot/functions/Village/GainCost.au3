@@ -20,7 +20,7 @@ Func StartGainCost()
 	$g_aiTempGainCost[0] = 0
 	$g_aiTempGainCost[1] = 0
 	$g_aiTempGainCost[2] = 0
-	VillageReport(True, True)
+	
 	Local $tempCounter = 0
 	While ($g_aiCurrentLoot[$eLootGold] = "" Or $g_aiCurrentLoot[$eLootElixir] = "" Or ($g_aiCurrentLoot[$eLootDarkElixir] = "" And $g_iStatsStartedWith[$eLootDarkElixir] <> "")) And $tempCounter < 5
 		$tempCounter += 1

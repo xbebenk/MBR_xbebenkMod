@@ -154,10 +154,14 @@ Func PrepareSearchCheckArmy($bTournament = False, $bTest = False)
 				Click(535, 410, 1, 0, "Confirm Attack OK")
 			EndIf
 			$bRet = True
-			If _Sleep(2000) Then Return
+			
+			For $wait = 1 To 8
+				SetLog("Waiting attack page #" & $wait, $COLOR_DEBUG1)
+				If IsAttackPage(False, 1) Then ExitLoop 2
+				If _Sleep(500) Then Return
+			Next
 		EndIf
 		If _Sleep(500) Then Return
-		If IsAttackPage(False, 1) Then ExitLoop
 	Next
 	
 	Return $bRet

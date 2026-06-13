@@ -172,7 +172,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 							EndIf
 						Next
 					Next
-					SetDebugLog($ValueReturned & " Found: " & $sResult)
+					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $sResult)
 					If $g_bDebugImageSave Then DebugQuickMISCNX($aResult, "CNX")
 					Return $aResult
 

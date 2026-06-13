@@ -832,7 +832,7 @@ Func btnTestVillageSize($bMeasureOnly = False)
 	
 	$hTimer = __TimerInit()
 	ResetTHsearch()
-	FindTownhall(True)
+	FindTownhall()
 	$ms = __TimerDiff($hTimer)
 	SetLog("TestVillageSize : FindTownhall (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
 	
@@ -879,7 +879,7 @@ Func btnTestDeadBase()
 	SearchZoomOut(False, True, "btnTestDeadBase")
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
-	SetLog("FindTownhall() = " & FindTownhall(True), $COLOR_INFO)
+	SetLog("FindTownhall() = " & FindTownhall(), $COLOR_INFO)
 	SetLog("$g_sImglocRedline = " & $g_sImglocRedline, $COLOR_INFO)
 
 	SetLog("Testing checkDeadBase()", $COLOR_INFO)
@@ -941,7 +941,7 @@ Func btnTestAttackCSV()
 	EndIf
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
-	SetLog("FindTownhall() = " & FindTownhall(True), $COLOR_INFO)
+	SetLog("FindTownhall() = " & FindTownhall(), $COLOR_INFO)
 	SetLog("$g_sImglocRedline = " & $g_sImglocRedline, $COLOR_INFO)
 
 	SetLog("Testing PrepareAttack()", $COLOR_INFO)
@@ -981,7 +981,7 @@ Func btnTestGetLocationBuilding()
 	EndIf
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
-	SetLog("FindTownhall() = " & FindTownhall(True), $COLOR_INFO)
+	SetLog("FindTownhall() = " & FindTownhall(), $COLOR_INFO)
 	;	SetLog("$g_sImglocRedline = " & $g_sImglocRedline, $COLOR_INFO)
 
 	_LogObjList($g_oBldgAttackInfo) ; log dictionary contents
@@ -1301,7 +1301,7 @@ Func btnTestWeakBase()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
 	BeginImageTest()
-	FindTownhall(True)
+	FindTownhall()
 	If ($g_iSearchTH <> "-") Then
 		IsWeakBase($g_iImglocTHLevel, $g_sImglocRedline, False)
 	Else

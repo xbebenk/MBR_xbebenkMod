@@ -31,12 +31,7 @@
 Func GetVillageSize($bOnBuilderBase = $g_bStayOnBuilderBase, $sStonePrefix = "stone", $sTreePrefix = "tree")
 	FuncEnter(GetVillageSize)
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""]
-	
-	;If Not $bOnBuilderBase And IsOnBuilderBase() Then $bOnBuilderBase = True
 	Local $sDirectory = $g_sImgZoomOutDir
-	
-	Local $iAdditionalX = 100
-	Local $iAdditionalY = 100
 	Local $aResult = 0, $stone, $tree, $x, $y
 	
 	$stone = FindStone($sDirectory)
@@ -345,11 +340,6 @@ Func UpdateGlobalVillageOffset($x, $y)
 		$updated = True
 	EndIf
 
-	If $g_aiTownHallDetails[0] <> 0 And $g_aiTownHallDetails[1] <> 0 Then
-		$g_aiTownHallDetails[0] += $x
-		$g_aiTownHallDetails[1] += $y
-		$updated = True
-	EndIf
 	If $g_iTHx <> 0 And $g_iTHy <> 0 Then
 		$g_iTHx += $x
 		$g_iTHy += $y

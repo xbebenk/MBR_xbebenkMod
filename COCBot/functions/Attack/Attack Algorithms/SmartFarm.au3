@@ -75,7 +75,7 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_IMGLOC)
 	
 	$hTimer = TimerInit()
 	If $g_bDebugSmartFarm Then
-		If $g_iSearchTH = "-" Then FindTownHall(True)
+		If $g_iSearchTH = "-" Then FindTownHall()
 		; [0] = Level , [1] = Xaxis , [2] = Yaxis , [3] = Distances to redlines
 		Local $THdetails[3] = [$g_iSearchTH, $g_iTHx, $g_iTHy]
 		SetLog("TH Details: " & _ArrayToString($THdetails, "|"))
@@ -278,7 +278,7 @@ EndFunc
 
 Func IsInsideSmallDiamond($aCoords)
 	Local $x = $aCoords[0], $y = $aCoords[1]
-	Local $Left, $Right, $Top, $Bottom, $a, $b, $c, $aRet[2]
+	Local $Left, $Right, $Top, $Bottom, $a, $b, $c, $aRet[2] = [0, ""]
 	$Left = $InnerDiamondLeft + 130
 	$Right = $InnerDiamondRight - 130
 	$Top = $InnerDiamondTop + 100
@@ -950,11 +950,11 @@ Func _GetVectorOutZone($eVectorType)
 
 	For $i = 0 To $iSteps
 		Local $pixel = [Round($xMin + (($xMax - $xMin) * $i) / $iSteps), Round($yMin + (($yMax - $yMin) * $i) / $iSteps)]
-		If $pixel[1] > 555 Then
-			;If $g_bDebugSetLog Then SetDebugLog("Skip vector out of zone [" & $pixel[0] & "," & $pixel[1] & "]")
-			ContinueLoop
-			;$pixel[1] = 555
-		EndIf
+		;If $pixel[1] > 565 Then
+		;	;If $g_bDebugSetLog Then SetDebugLog("Skip vector out of zone [" & $pixel[0] & "," & $pixel[1] & "]")
+		;	ContinueLoop
+		;	;$pixel[1] = 555
+		;EndIf
 		ReDim $vectorOutZone[UBound($vectorOutZone) + 1]
 		$vectorOutZone[UBound($vectorOutZone) - 1] = $pixel
 	Next

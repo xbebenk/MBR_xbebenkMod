@@ -288,12 +288,11 @@ Func ClickSCIDReload()
 	Local $bRet = False
 	If Not $g_bRunState Then Return
 	
-	If QuickMIS("BFI", $g_sImgSupercellIDReload, 550, 110, 630, 200) Then
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(500) Then Return
-	EndIf
-	
-	For $i = 1 To 10
+	For $i = 1 To 5
+		If QuickMIS("BC1", $g_sImgSupercellIDReload, 550, 110, 630, 200) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(1500) Then Return
+		EndIf
 		If QuickMIS("BC1", $g_sImgSupercellIDSwitchID, 610, 225, 700, 300) Then 
 			$bRet = True
 			ExitLoop

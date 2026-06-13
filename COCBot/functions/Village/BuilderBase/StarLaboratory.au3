@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Global $g_iXFindSLabUpgrade = 270
+Global $g_iXFindSLabUpgrade = 240
 
 Func CheckIfSLabIdle($bDebug = False)
 	Local $aLabInfo, $aGetLab, $bRet = True

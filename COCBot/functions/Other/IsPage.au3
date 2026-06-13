@@ -313,17 +313,14 @@ EndFunc
 
 Func IsProfileWindowOpen($sSource = "IsProfileWindowOpen")
 	Local $result = False
-	$result = WaitforPixel(806, 98, 807, 99, "FFFFFF", 10, 2, $sSource)
+	$result = WaitforPixel(807, 97, 807, 97, "FFFFFF", 10, 1, $sSource)
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 788, 83, 825, 117) Then $result = True
 	EndIf
 	
-	If $result Then
-		If $g_bDebugSetlog Then SetLog("Found Profile Window", $COLOR_ACTION)
-		Return True
-	EndIf
-	Return False
+	SetDebugLog("IsProfileWindowOpen=" & String($result))
+	Return $result
 EndFunc
 
 Func IsChallengeWindowOpen($sSource = "IsChallengeWindowOpen")
@@ -334,22 +331,16 @@ Func IsChallengeWindowOpen($sSource = "IsChallengeWindowOpen")
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 800, 64, 850, 112) Then $result = True
 	EndIf
 	
-	If $result Then
-		If $g_bDebugSetlog Then SetLog("Found Challenge Window", $COLOR_ACTION)
-		Return True
-	EndIf
-	Return False
+	SetDebugLog("IsChallengeWindowOpen=" & String($result))
+	Return $result
 EndFunc
 
 Func IsPetHousePage($sSource = "IsPetHousePage")
-	Local $result
-	$result = WaitforPixel(415, 95, 416, 96, "006F5F", 10, 2, $sSource) ;green pixel under title 'Pet House'
+	Local $result = False
+	$result = WaitforPixel(415, 95, 415, 95, "006F5F", 10, 1, $sSource) ;green pixel under title 'Pet House'
 	
-	If $result Then
-		If $g_bDebugSetlog Then SetLog("Found PetHousePage Window", $COLOR_ACTION)
-		Return True
-	EndIf
-	Return False
+	SetDebugLog("IsPetHousePage=" & String($result))
+	Return $result
 EndFunc   ;==>IsPetHousePage
 
 Func IsBlacksmithPage($bSetLog = True, $iLoop = 5)

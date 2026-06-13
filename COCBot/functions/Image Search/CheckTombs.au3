@@ -15,11 +15,9 @@
 
 Func CheckTombs()
 	If Not $g_bRunState Then Return
+	If Not $g_bChkTombstones Then Return
 	SetLog("Checking Tombs", $COLOR_ACTION)
 	Collect(True)
-	checkMainScreen()
-	If _Sleep(1000) Then Return
-	
 	Local $aTombs = QuickMIS("CNX", $g_sImgClearTombs, $InnerDiamondLeft, $InnerDiamondTop, $InnerDiamondRight, $InnerDiamondBottom)
 	If IsArray($aTombs) And UBound($aTombs) > 0 Then
 		For $i = 0 To UBound($aTombs) - 1

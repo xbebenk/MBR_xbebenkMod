@@ -15,13 +15,9 @@
 #include-once
 
 Func Collect($bOnlyCollector = False)
-	If Not $g_bChkCollect Or Not $g_bRunState Then Return
-	StartGainCost()
-	
+	If Not $g_bChkCollect Then Return
 	SetLog("Collecting Resources", $COLOR_INFO)
-	CheckMainScreen(True, $g_bStayOnBuilderBase, "Collect")
-	If _Sleep($DELAYCOLLECT2) Then Return
-
+	StartGainCost()
 	; Setup arrays, including default return values for $return
 	Local $sFileName = ""
 	Local $aCollectXY, $t
@@ -43,12 +39,8 @@ Func Collect($bOnlyCollector = False)
 		Next
 	EndIf
 	
-	If $bOnlyCollector Then 
-		EndGainCost("Collect")
-		Return True
-	EndIf
-	
 	EndGainCost("Collect")
+	Return True
 EndFunc   ;==>Collect
 
 Func CollectLootCart()
