@@ -95,7 +95,6 @@ Global $g_bDebugSmartZap = False ; verbose logs for SmartZap users
 Global $g_bDebugAttackCSV = False ; Verbose log output of actual attack script plus bot actions
 Global $g_bDebugMakeIMGCSV = False ; Saves "clean" iamge and image with all drop points and detected buildings marked
 Global $g_bDebugBetaVersion = StringInStr($g_sBotVersion, " b") > 0 ; not saved and only used for special beta releases
-Global $g_bTestSceneryAttack = False
 
 ; <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 ; <><><><> ONLY Enable items below this line when debugging special errors listed!! <><><><>
@@ -232,10 +231,8 @@ Global $g_bTerminateAdbShellOnStop = False ; If enabled ADB shell is terminated 
 Global $g_bAndroidAdbPortPerInstance = False ; New default behavior to use a dedicated ADB daemon per bot and android instance using port between 5038-5137, it initializes $g_sAndroidAdbGlobalOptions
 
 ; "BlueStacks2" $g_avAndroidAppConfig is also updated based on Registry settings in Func InitBlueStacks2() with these special variables
-Global $__BlueStacks_SystemBar = 48
 Global $__BlueStacks2Version_2_5_or_later = False ;Starting with this version bot is enabling ADB click and uses different zoomout
 ; "MEmu" $g_avAndroidAppConfig is also updated based on runtime config in Func UpdateMEmuWindowState() with these special variables
-Global $__MEmu_Adjust_Width = 6
 Global $__MEmu_ToolBar_Width = 45
 Global $__MEmu_SystemBar = 36
 Global $__MEmu_PhoneLayout = "2" ; 0: bottom Nav Bar (default till 2.6.1), 1: right Nav Bar, 2: hidden Nav Bar (default since 2.6.2), -1 disable Nav Bar compensation since MEmu 3 Nav Bar auto-hides
@@ -272,9 +269,6 @@ Global $g_avAndroidAppConfig[4][16] = [ _ ;           |                         
 ]
 
 ; Android Configutions, see COCBot\functions\Android\Android Status & Information.txt for more details
-Global $__Nox_Idx = _ArraySearch($g_avAndroidAppConfig, "Nox", 0, 0, 0, 0, 1, 0) ; http://en.bignox.com/
-Global $__MEmu_Idx = _ArraySearch($g_avAndroidAppConfig, "MEmu", 0, 0, 0, 0, 1, 0) ; http://www.memuplay.com/
-Global $__BS5_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks5", 0, 0, 0, 0, 1, 0) ; http://www.bluestacks.com/
 
 ; Startup detection
 Global $g_bOnlyInstance = True
@@ -347,9 +341,6 @@ Global $g_sAndroidPath = "" ; Program folder to launch android emulator
 Global $g_sAndroidProgramPath = "" ; Program path and executable to launch android emulator
 Global $b_sAndroidProgramWerFaultExcluded = True ; Register Android Executable to be excluded globally for WerFault (Windows Error Reporting Service)
 Global $g_avAndroidProgramFileVersionInfo = 0 ; Array of _WinAPI_VerQueryValue FileVersionInfo
-Global $g_bAndroidHasSystemBar = False ; BS2 System Bar can be entirely disabled in Windows Registry
-Global $g_iAndroidClientWidth_Configured = 0 ; Android configured Screen Width
-Global $g_iAndroidClientHeight_Configured = 0 ; Android configured Screen Height
 Global $g_iAndroidLaunchWaitSec = 240 ; Seconds to wait for launching Android Simulator
 
 Global $g_sAndroidPicturesPathAvailable = False
@@ -554,7 +545,6 @@ Global $eIcnStrategies = $eIcnBlank
 Global $g_aIcnTHLevel[19] = [$eIcnBlank, $eIcnBlank, $eIcnBlank, $eIcnBlank, $eHdV04, $eHdV05, $eHdV06, $eHdV07, $eHdV08, $eHdV09, $eHdV10, $eHdV11, $eHdV12, $eHdV13, $eHdV14, $eHdV15, $eHdV16, $eHdV17, $eHdV17]
 
 ; Controls bot startup and ongoing operation
-Global Const $g_iCollectAtCount = 10 ; Run Collect() after this amount of times before actually collect
 Global Enum $eBotNoAction, $eBotStart, $eBotStop, $eBotSearchMode, $eBotClose
 Global $g_iBotAction = $eBotNoAction
 Global $g_bBotMoveRequested = False ; should the bot be moved
@@ -577,7 +567,6 @@ Global $g_bTogglePauseUpdateState = False ; If True, TooglePauseUpdateState() ca
 Global $g_bTogglePauseAllowed = True ; If False, pause will not immediately happen but on next call to _Sleep when $g_bTogglePauseAllowed = True again
 Global $g_bWaitShield = False
 Global $g_bGForcePBTUpdate = False
-Global $g_sTimeBeforeTrain = ""
 Global $g_hAttackTimer = 0 ; Timer for knowing when attack starts, in 30 Sec. attack automatically starts and lasts for 3 Minutes
 Global $g_iAttackTimerOffset = Default ; Offset of timer to attack really started
 
@@ -588,11 +577,10 @@ Global Const $REDLINE_ORIGINAL = 2
 Global Const $REDLINE_NONE = 3
 
 ; 0 = Use fixed village corner (default), 1 = Find fist red line point, 2 = Fixed village corner on full drop line, 3 = First red line point on full drop line
-Global Const $DROPLINE_EDGE_FIXED = 0
-Global Const $DROPLINE_EDGE_FIRST = 1
-Global Const $DROPLINE_FULL_EDGE_FIXED = 2
-Global Const $DROPLINE_FULL_EDGE_FIRST = 3
-Global Const $DROPLINE_DROPPOINTS_ONLY = 4
+Global Const $DROPLINE_EDGE_FIRST = 0
+Global Const $DROPLINE_FULL_EDGE_FIXED = 1
+Global Const $DROPLINE_FULL_EDGE_FIRST = 2
+Global Const $DROPLINE_DROPPOINTS_ONLY = 3
 
 #Region Standard Enums and Consts - Attacks, Troops, Spells, Leagues, Loot Types
 #Tidy_Off
@@ -703,7 +691,7 @@ Global $g_aiHeroBoost[$eHeroCount] = ["1970/01/01 00:00:00", "1970/01/01 00:00:0
 
 ; Leagues MainVillage
 Global $g_bLeagueAttack = False
-Global $g_bEnableTournament = True, $g_iTournamentAttackType = 0, $g_iTournamentUseArmy = 0
+Global $g_bEnableTournament = True, $g_bNoTournament = False, $g_iTournamentAttackType = 0, $g_iTournamentUseArmy = 0
 Global Enum $eLeagueUnranked, $eLeagueBronze, $eLeagueSilver, $eLeagueGold, $eLeagueCrystal, $eLeagueMaster, $eLeagueChampion, $eLeagueTitan, $eLeagueLegend, $eLeagueCount
 Global Const $g_asLeagueDetails[22][5] = [ _
 		["0", "Bronze III", "0", "B3", "400"], ["1000", "Bronze II", "0", "B2", "500"], ["1300", "Bronze I", "0", "B1", "600"], _
@@ -842,8 +830,6 @@ Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $
 Global $g_bChkEnableBBAttack = False, $g_bChkBBDropTrophy = False, $g_bChkBBAttIfStarsAvail = False, $g_bChkSkipBBAttIfStorageFull = False, $g_bChkBBWaitForMachine = False, $g_bChkBBDropBMFirst = False
 Global $g_hTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyLowerLimit = 0, $g_bChkStopAttackBB6thBuilder = 0, $g_bIs6thBuilderUnlocked = False, $g_bChkSkipBBRoutineOn6thBuilder = 0, $g_bskipBBroutine = False
 Global $g_bBBMachineReady = False, $g_bChkDebugAttackBB = False, $g_aMachinePos[3] = [0, 0, ""], $g_aWBOnAttackBar[0][2], $g_bWBOnAttackBar = False, $g_bChkBBEndBattleOn2Stars = False
-Global $g_iBBMachAbilityTime = 14000 ; in milliseconds, so 14 seconds between abilities
-Global Const $g_iBBNextTroopDelayDefault = 2000,  $g_iBBSameTroopDelayDefault = 300 ; default delay times
 Global $g_iBBNextTroopDelay = 3,  $g_iBBSameTroopDelay = 3; delay time between different and same troops
 Global $g_hCmbBBNextTroopDelay = 0, $g_hCmbBBSameTroopDelay = 0
 Global $g_BBDP[0][3]
@@ -932,7 +918,6 @@ Global $g_bUpgradeSpesificWall = False, $g_iTargetWallLevel = 0, $g_iSearchWallS
 
 ; Upgrading - Wall
 Global Const $g_aiWallCost[18] = [0, 1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000, 8000000]
-Global Const $g_aiTHCost[18] = [0, 1000, 4000, 25000, 150000, 500000, 1000000, 2000000, 2500000, 3500000, 4000000, 6000000, 9000000, 12000000, 13000000, 16000000, 16000000, 16000000]
 Global Const $g_aiMaxStorage[19] = [1500, 3000, 6000, 12000, 25000, 45000, 100000, 225000, 450000, 850000, 1750000, 2000000, 3000000, 4000000, 4500000, 5000000, 5500000, 6000000, 6500000]
 Global Const $g_aiHeroHallCost[11] = [800000, 1600000, 2300000, 3000000, 5000000, 6000000, 9000000, 10000000, 12000000, 14000000, 21000000] ; 0 = 7
 
@@ -1124,7 +1109,7 @@ Global $g_aiAttackStdDropOrder[$g_iModeCount + 1] = [0, 0, 0, 0], $g_aiAttackStd
 Global $g_abAttackStdSmartNearCollectors[$g_iModeCount + 1][3] = [[False, False, False], [False, False, False], [False, False, False], [False, False, False]]
 ; Attack - Scripted
 Global $g_aiAttackScrRedlineRoutine[$g_iModeCount + 1] = [$REDLINE_IMGLOC_RAW, $REDLINE_IMGLOC_RAW, 0, 0]
-Global $g_aiAttackScrDroplineEdge[$g_iModeCount + 1] = [$DROPLINE_EDGE_FIRST, $DROPLINE_EDGE_FIRST, 0, 0]
+Global $g_aiAttackScrDroplineEdge[$g_iModeCount + 1] = [$DROPLINE_FULL_EDGE_FIXED, $DROPLINE_FULL_EDGE_FIXED, 0, 0]
 Global $g_sAttackScrScriptName[$g_iModeCount] = ["Barch four fingers", "Barch four fingers", ""]
 
 ; End Battle
@@ -1216,7 +1201,6 @@ Global $g_bDisableSplash = False ; Splash screen disabled = 1
 Global $g_bCheckVersion = True
 Global $g_bDeleteLogs = True, $g_iDeleteLogsDays = 2, $g_bDeleteTemp = True, $g_iDeleteTempDays = 2, $g_bDeleteLoots = True, $g_iDeleteLootsDays = 2
 Global $g_bAutoStart = False, $g_iAutoStartDelay = 10
-Global $g_bAutoUpdateGame = False
 Global $g_bAutoAlignEnable = False, $g_iAutoAlignPosition = "EMBED", $g_iAutoAlignOffsetX = "", $g_iAutoAlignOffsetY = ""
 Global $g_bUpdatingWhenMinimized = True ; Alternative Minimize Window routine for bot that enables window updates when minimized
 Global $g_bHideWhenMinimized = False ; Hide bot window in taskbar when minimized
@@ -1295,7 +1279,6 @@ Global $g_aiTotalGoldGain[$g_iModeCount] = [0, 0, 0], $g_aiTotalElixirGain[$g_iM
 Global $g_aiNbrOfDetectedMines[$g_iModeCount] = [0, 0, 0], $g_aiNbrOfDetectedCollectors[$g_iModeCount] = [0, 0, 0], $g_aiNbrOfDetectedDrills[$g_iModeCount] = [0, 0, 0] ; number of mines, collectors, drills detected for DB, LB, TB
 Global $g_aiAttackedCount = 0 ; convert to global from UpdateStats to enable daily attack limits
 Global $g_iSearchCount = 0 ;Number of searches
-Global Const $g_iMaxTrainSkip = 40
 Global $g_iActualTrainSkip = 0
 Global $g_iSmartZapGain = 0, $g_iNumEQSpellsUsed = 0, $g_iNumLSpellsUsed = 0 ; smart zap
 
@@ -1469,7 +1452,6 @@ Global $g_iAimGold[$g_iModeCount] = [0, 0, 0], $g_iAimElixir[$g_iModeCount] = [0
 Global $g_iTHx = 0, $g_iTHy = 0
 
 ; Town hall search
-Global $g_iTHside = 0, $g_iTHi = 0
 Global $g_iSearchTHLResult = 0
 Global $g_sTHLoc = "In" ; "In" or "Out" are valid values
 Global $g_sImglocRedline ; hold redline data obtained from multisearch
@@ -1504,7 +1486,6 @@ Global $g_iHeroWaitAttackNoBit[$g_iModeCount][$eHeroCount] ; Heroes wait status 
 Global $g_iHeroAvailable = $eHeroNone ; Hero ready status; bitmapped
 Global $g_iHeroUpgrading[$eHeroCount] = [0, 0, 0, 0] ; Upgrading Heroes
 Global $g_iHeroUpgradingBit = $eHeroNone ; Upgrading Heroes
-Global $g_bHaveAnyHero = -1 ; -1 Means not set yet
 Global $g_bCheckKingPower = False ; Check for King activate power
 Global $g_bCheckQueenPower = False ; Check for Queen activate power
 Global $g_bCheckWardenPower = False ; Check for Warden activate power
@@ -1514,7 +1495,6 @@ Global $g_bCheckDukePower = False ; Check for Dragon Duke activate power
 Global $g_bDropQueen, $g_bDropKing, $g_bDropWarden, $g_bDropChampion, $g_bDropMinionP, $g_bDropDuke
 
 ; Attack - Troops
-Global $g_aiSlotInArmy[$eTroopCount] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 ; Red area search
 Global $g_aiPixelTopLeft[0]
 Global $g_aiPixelBottomLeft[0]
@@ -1575,7 +1555,6 @@ Global $g_bTrainEnabled = True
 Global $g_bIsFullArmywithHeroesAndSpells = False
 Global $g_aiTimeTrain[4] = [0, 0, 0, 0] ; [Troop remaining time], [Spells remaining time], [Hero remaining time - when possible], [Siege remain Time]
 Global $g_bCheckSpells = False
-Global $g_bCheckClanCastleTroops = False
 
 ; Donate
 Global Const $g_aiDonateTroopPriority[$eTroopCount] = [ _
@@ -1613,9 +1592,6 @@ Global $g_bGfxError = False ; True when Android Gfx Errors detected that will in
 Global $g_iGfxErrorCount = 0, $g_iGfxErrorMax = 5
 
 ; TakeABreak - Personal Break Timer
-Global Const $g_iTaBChkAttack = 0x01 ; code for PB warning when searching attack
-Global Const $g_iTaBChkIdle = 0x02 ; code for PB warning when idle at base
-Global Const $g_iTaBChkTime = 0x04 ; code for PB created by early log off feature
 Global $g_bDisableBreakCheck = False
 Global $g_sPBStartTime = "" ; date/time string for start of next Personal Break
 Global $g_asShieldStatus = ["", "", ""] ; string shield type, string shield time, string date/time of Shield expire
@@ -1751,7 +1727,6 @@ Global $g_bAutoUpgradeEarly = False, $g_bDonateEarly = False
 Global $g_bChkForceSwitchifNoCGEvent = False, $g_bForceSwitchifNoCGEvent = False, $g_bIsCGPointAlmostMax = False
 
 ; Clan Games v3
-Global $g_bChkClanGamesAir = 0, $g_bChkClanGamesGround = 0, $g_bChkClanGamesMisc = 0
 Global $g_bChkClanGamesEnabled = 0
 Global $g_bChkClanGames3H = 0
 Global $g_bChkClanGamesLoot = 0
@@ -1765,7 +1740,6 @@ Global $g_bChkClanGamesDes = 0
 Global $g_bChkClanGamesAirTroop = 0
 Global $g_bChkClanGamesGroundTroop = 0
 Global $g_bChkClanGamesMiscellaneous = 0
-Global $g_bChkClanGamesPurge = 0
 Global $g_bChkClanGamesStopBeforeReachAndPurge = 0
 Global $g_bChkClanGamesDebug = 0
 Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
@@ -1847,7 +1821,6 @@ Global $ExternalArea[8][3]
 
 ; Tambahan Pak Boss Besar (2021)
 Global $g_aVillageSize[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Blacksmith
 Global $g_aiBlacksmithPos[2] = [-1, -1] ; Position of Pet House
@@ -1956,8 +1929,6 @@ Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_i
 Global $g_bEnableCCSleep = False, $g_bSkipDT = False, $g_iMainScreenTimeoutCount = 0
 
 ;Builder Base
-Global $g_bDebugBBattack = False
-Global $g_bBBForceCustomArmy = False
 Global $g_bBBAttacked = False ; DoAttackBB attacked or not
 
 ;ClanCapital
