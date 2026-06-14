@@ -101,7 +101,20 @@ Func VerifyClaimButton()
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1000) Then Return
 			CheckClanRush()
+			Return
 		EndIf
+	EndIf
+	
+	If _CheckPixel($aIsMain2Grayed, True, Default, "CollectCookie") Then 
+		For $i = 1 To 8
+			If QuickMIS("BC1", $g_sImgClanRush, 320, 440, 560, 600) Then 
+				SetLog("VerifyClaimButton: Found Splash Event Page " & $g_sQuickMISName & " Button", $COLOR_ACTION)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				$bRet = True
+				If _Sleep(1000) Then Return
+			EndIf
+			If _Sleep(1000) Then Return
+		Next
 	EndIf
 	
 	If Not $bRet Then 

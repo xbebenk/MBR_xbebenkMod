@@ -893,6 +893,7 @@ Func __RunFunction($action)
 	If $g_bEnableDailyRunRoutine Then 
 		If $iDailyDate <> $iNowDay Then ; if 1 day has passed since last time
 			$iDailyDate = @YDAY
+			SetLog("Reset Daily " & $action & " routine count", $COLOR_DEBUG1)
 			For $i = 0 To UBound($g_aDailyAccount) - 1
 				Local $iIndex = _ArraySearch($g_aiDailyFunction, $action, 0, 0, 0, 0, 1)
 				If $iIndex > -1 Then 

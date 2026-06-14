@@ -31,6 +31,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	
 	checkObstacles_Network()
 	CheckAndroidReboot()
+	
 	If Not $g_bRunState Then Return
 	If IsProblemAffect() Then
 		;1- Another device
@@ -782,7 +783,7 @@ Func CheckClanRush()
 	If QuickMIS("BC1", $g_sImgClanRush, 350, 125, 530, 200) Then
 		SetLog("checkObstacles: Found ClanRush Event", $COLOR_ACTION)
 		For $i = 1 To 2
-			If QuickMIS("BC1", $g_sImgClanRush, 320, 440, 560, 560) Then 
+			If QuickMIS("BC1", $g_sImgClanRush, 320, 440, 560, 600) Then 
 				SetLog("checkObstacles: Found ClanRush " & $g_sQuickMISName & " Button", $COLOR_ACTION)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(1000) Then Return
