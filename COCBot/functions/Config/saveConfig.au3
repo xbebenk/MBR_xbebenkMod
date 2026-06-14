@@ -995,7 +995,6 @@ Func SaveConfig_600_29_DB_Scripted()
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / Scripted <><><><>
 	ApplyConfig_600_29_DB_Scripted(GetApplyConfigSaveAction())
 	_Ini_Add("attack", "RedlineRoutineDB", $g_aiAttackScrRedlineRoutine[$DB])
-	_Ini_Add("attack", "DroplineEdgeDB", $g_aiAttackScrDroplineEdge[$DB])
 	_Ini_Add("attack", "ScriptDB", $g_sAttackScrScriptName[$DB])
 EndFunc   ;==>SaveConfig_600_29_DB_Scripted
 
@@ -1034,7 +1033,6 @@ Func SaveConfig_600_29_LB_Scripted()
 	; <><><><> Attack Plan / Search & Attack / Activebase / Attack / Scripted <><><><>
 	ApplyConfig_600_29_LB_Scripted(GetApplyConfigSaveAction())
 	_Ini_Add("attack", "RedlineRoutineAB", $g_aiAttackScrRedlineRoutine[$LB])
-	_Ini_Add("attack", "DroplineEdgeAB", $g_aiAttackScrDroplineEdge[$LB])
 	_Ini_Add("attack", "ScriptAB", $g_sAttackScrScriptName[$LB])
 EndFunc   ;==>SaveConfig_600_29_LB_Scripted
 

@@ -189,9 +189,9 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	If _Sleep($DELAYRESPOND) Then Return
 
 	;01 - TROOPS ------------------------------------------------------------------------------------------------------------------------------------------
-	debugAttackCSV("Troops to be used (purged from troops) ")
+	SetDebugLog("Troops to be used (purged from troops) ")
 	For $i = 0 To UBound($g_avAttackTroops) - 1 ; identify the position of this kind of troop
-		debugAttackCSV("SLOT n.: " & $i & " - Troop: " & GetTroopName($g_avAttackTroops[$i][0]) & " (" & $g_avAttackTroops[$i][0] & ") - Quantity: " & $g_avAttackTroops[$i][1])
+		SetDebugLog("SLOT n.: " & $i & " - Troop: " & GetTroopName($g_avAttackTroops[$i][0]) & " (" & $g_avAttackTroops[$i][0] & ") - Quantity: " & $g_avAttackTroops[$i][1])
 	Next
 
 	Local $hTimerTOTAL = __timerinit()
@@ -199,28 +199,39 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 	Local $hTimer = __timerinit()
 
 	SetDebugLog("Redline mode: " & $g_aiAttackScrRedlineRoutine[$g_iMatchMode])
-	SetDebugLog("Dropline mode: " & $g_aiAttackScrDroplineEdge[$g_iMatchMode])
 
 	_CaptureRegion2() ; ensure full screen is captured (not ideal for debugging as clean image was already saved, but...)
-	If $captureredarea Then _GetRedArea($g_aiAttackScrRedlineRoutine[$g_iMatchMode])
-	If _Sleep($DELAYRESPOND) Then Return
 
+	If $g_aiAttackScrRedlineRoutine[$g_iMatchMode] = $REDLINE_REAL Then 
+		_GetRedArea()
+	Else
+		$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
+		$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
+		$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
+		$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
+	EndIf
+	
 	Local $htimerREDAREA = Round(__timerdiff($hTimer) / 1000, 2)
-	debugAttackCSV("Calculated  (in " & $htimerREDAREA & " seconds) :")
-	debugAttackCSV("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")
-	debugAttackCSV("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
-	debugAttackCSV("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
-	debugAttackCSV("	[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight")
+	SetDebugLog("Calculated  (in " & $htimerREDAREA & " seconds) :")
+	SetDebugLog("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")
+	SetDebugLog("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
+	SetDebugLog("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
+	SetDebugLog("	[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight")
+	
+	SetDebugLog("TL : " & _ArrayToString($g_aiPixelTopLeft[0]))
+	SetDebugLog("TR : " & _ArrayToString($g_aiPixelTopRight[0]))
+	SetDebugLog("BL : " & _ArrayToString($g_aiPixelBottomLeft[0]))
+	SetDebugLog("BR : " & _ArrayToString($g_aiPixelBottomRight[0]))
 
-	If $g_aiAttackScrDroplineEdge[$g_iMatchMode] = $DROPLINE_DROPPOINTS_ONLY Then
-
+	; Build drop lines based on redline mode
+	If $g_aiAttackScrRedlineRoutine[$g_iMatchMode] = $REDLINE_EDGE Then
+		; Edge mode: drop points = ExternalArea edges directly
 		$g_aiPixelTopLeftDropLine = $g_aiPixelTopLeft
 		$g_aiPixelTopRightDropLine = $g_aiPixelTopRight
 		$g_aiPixelBottomLeftDropLine = $g_aiPixelBottomLeft
 		$g_aiPixelBottomRightDropLine = $g_aiPixelBottomRight
-
 	Else
-
+		; Real mode: build smooth drop lines from detected red pixels
 		Local $coordLeft = [$ExternalArea[0][0], $ExternalArea[0][1]]
 		Local $coordTop = [$ExternalArea[2][0], $ExternalArea[2][1]]
 		Local $coordRight = [$ExternalArea[1][0], $ExternalArea[1][1]]
@@ -240,20 +251,10 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 		SetDebugLog("MakeDropLines, StartEndBottomLeft  = " & PixelArrayToString($StartEndBottomLeft, ","))
 		SetDebugLog("MakeDropLines, StartEndBottomRight = " & PixelArrayToString($StartEndBottomRight, ","))
 
-		Switch $g_aiAttackScrDroplineEdge[$g_iMatchMode]
-			Case $DROPLINE_EDGE_FIRST ; dropline redpoint
-				$g_aiPixelTopLeftDropLine = MakeDropLineOriginal($g_aiPixelTopLeft, $StartEndTopLeft[0], $StartEndTopLeft[1])
-				$g_aiPixelTopRightDropLine = MakeDropLineOriginal($g_aiPixelTopRight, $StartEndTopRight[0], $StartEndTopRight[1])
-				$g_aiPixelBottomLeftDropLine = MakeDropLineOriginal($g_aiPixelBottomLeft, $StartEndBottomLeft[0], $StartEndBottomLeft[1])
-				$g_aiPixelBottomRightDropLine = MakeDropLineOriginal($g_aiPixelBottomRight, $StartEndBottomRight[0], $StartEndBottomRight[1])
-			Case $DROPLINE_FULL_EDGE_FIXED, $DROPLINE_FULL_EDGE_FIRST ; dropline edge
-				Local $iLineDistanceThreshold = 75
-				If $g_aiAttackScrRedlineRoutine[$g_iMatchMode] = $REDLINE_IMGLOC Then $iLineDistanceThreshold = 25
-				$g_aiPixelTopLeftDropLine = MakeDropLine($g_aiPixelTopLeft, $StartEndTopLeft[0], $StartEndTopLeft[1], $iLineDistanceThreshold, $g_aiAttackScrDroplineEdge[$g_iMatchMode] = $DROPLINE_FULL_EDGE_FIXED)
-				$g_aiPixelTopRightDropLine = MakeDropLine($g_aiPixelTopRight, $StartEndTopRight[0], $StartEndTopRight[1], $iLineDistanceThreshold, $g_aiAttackScrDroplineEdge[$g_iMatchMode] = $DROPLINE_FULL_EDGE_FIXED)
-				$g_aiPixelBottomLeftDropLine = MakeDropLine($g_aiPixelBottomLeft, $StartEndBottomLeft[0], $StartEndBottomLeft[1], $iLineDistanceThreshold, $g_aiAttackScrDroplineEdge[$g_iMatchMode] = $DROPLINE_FULL_EDGE_FIXED)
-				$g_aiPixelBottomRightDropLine = MakeDropLine($g_aiPixelBottomRight, $StartEndBottomRight[0], $StartEndBottomRight[1], $iLineDistanceThreshold, $g_aiAttackScrDroplineEdge[$g_iMatchMode] = $DROPLINE_FULL_EDGE_FIXED)
-		EndSwitch
+		$g_aiPixelTopLeftDropLine = MakeDropLineOriginal($g_aiPixelTopLeft, $StartEndTopLeft[0], $StartEndTopLeft[1])
+		$g_aiPixelTopRightDropLine = MakeDropLineOriginal($g_aiPixelTopRight, $StartEndTopRight[0], $StartEndTopRight[1])
+		$g_aiPixelBottomLeftDropLine = MakeDropLineOriginal($g_aiPixelBottomLeft, $StartEndBottomLeft[0], $StartEndBottomLeft[1])
+		$g_aiPixelBottomRightDropLine = MakeDropLineOriginal($g_aiPixelBottomRight, $StartEndBottomRight[0], $StartEndBottomRight[1])
 	EndIf
 
 	;02.04 - MAKE DROP LINE SLICE ----------------------------------------------------------------------------------------------------------------------------
@@ -712,19 +713,11 @@ Func FindWallCSV(ByRef $aCSVExternalWall, ByRef $aCSVInternalWall)
 	Return $bResult
 EndFunc
 
-Func TestDropLine($bOpenFile = False)
+Func TestDropLine($iRedLine = $REDLINE_EDGE, $bOpenFile = False)
 	Local $hTimer = TimerInit()
 	SearchZoomOut(False, True, "TestDropLine", False, False)
 	ConvertInternalExternArea()
-	
-	If $g_bChkForceEdgeSmartfarm Then 
-		$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
-		$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
-		$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
-		$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
-	Else
-		_GetRedArea()
-	EndIf
+	_GetRedArea($iRedLine)
 	
 	SetDebugLog("Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)")
 	SetDebugLog("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")

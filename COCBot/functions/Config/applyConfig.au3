@@ -1654,7 +1654,6 @@ Func ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			_GUICtrlComboBox_SetCurSel($g_hCmbScriptRedlineImplDB, $g_aiAttackScrRedlineRoutine[$DB])
-			_GUICtrlComboBox_SetCurSel($g_hCmbScriptDroplineDB, $g_aiAttackScrDroplineEdge[$DB])
 			PopulateComboScriptsFilesDB()
 			Local $tempindex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameDB, $g_sAttackScrScriptName[$DB])
 			If $tempindex = -1 Then
@@ -1667,7 +1666,6 @@ Func ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 			cmbScriptRedlineImplDB()
 		Case "Save"
 			$g_aiAttackScrRedlineRoutine[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptRedlineImplDB)
-			$g_aiAttackScrDroplineEdge[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptDroplineDB)
 			Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbScriptNameDB)
 			Local $scriptname
 			_GUICtrlComboBox_GetLBText($g_hCmbScriptNameDB, $indexofscript, $scriptname)
@@ -1740,7 +1738,6 @@ Func ApplyConfig_600_29_LB_Scripted($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			_GUICtrlComboBox_SetCurSel($g_hCmbScriptRedlineImplAB, $g_aiAttackScrRedlineRoutine[$LB])
-			_GUICtrlComboBox_SetCurSel($g_hCmbScriptDroplineAB, $g_aiAttackScrDroplineEdge[$LB])
 			PopulateComboScriptsFilesAB()
 			Local $tempindex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameAB, $g_sAttackScrScriptName[$LB])
 			If $tempindex = -1 Then
@@ -1753,7 +1750,6 @@ Func ApplyConfig_600_29_LB_Scripted($TypeReadSave)
 			cmbScriptRedlineImplAB()
 		Case "Save"
 			$g_aiAttackScrRedlineRoutine[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptRedlineImplAB)
-			$g_aiAttackScrDroplineEdge[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptDroplineAB)
 			Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbScriptNameAB)
 			Local $scriptname
 			_GUICtrlComboBox_GetLBText($g_hCmbScriptNameAB, $indexofscript, $scriptname)

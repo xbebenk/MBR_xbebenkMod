@@ -20,10 +20,11 @@
 ;			Sort each sides
 ;			Add each sides in one array (not use, but it can help to get closer pixel of all the red area)
 
-Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMinSideLengthFactor = 0.65)
+Func _GetRedArea($iMode = $REDLINE_REAL, $iMaxAllowedPixelDistance = 25, $fMinSideLengthFactor = 0.65)
 	Local $nameFunc = "[_GetRedArea] "
 	debugRedArea($nameFunc & " IN")
-
+	SetDebugLog("Redline mode : " & ($iMode = $REDLINE_REAL ? "REDLINE_REAL" : "REDLINE_EDGE"))
+	
 	Local $colorVariation = 40
 	Local $xSkip = 1
 	Local $ySkip = 5
@@ -39,36 +40,26 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 	Else ; Normal getRedArea
 		SetLog(" ==> _GetRedArea $iMode = " & $iMode, $COLOR_DEBUG)
 		Switch $iMode
-			Case $REDLINE_NONE ; No red line 3
-				Local $a = ["NoRedLine", "", "", "", ""]
-				$listPixelBySide = $a
-			Case $REDLINE_IMGLOC_RAW ; ImgLoc raw red line routine 0
-				; ensure redline exists
-				SearchRedLinesModMultipleTimes()
-				$listPixelBySide = getRedAreaSideBuilding()
-			Case $REDLINE_IMGLOC ; New ImgLoc based deployable red line routine 1
+			Case $REDLINE_REAL ; Real redline from image scan
 				; ensure redline exists
 				SearchRedLinesModMultipleTimes()
 				$listPixelBySide = getRedAreaSideBuilding()
 				SetDebugLog("listPixelBySide after getRedAreaSideBuilding : " & @CRLF & _ArrayToString($listPixelBySide))
-				;Local $dropPoints = GetOffSetRedline("TL") & "|" & GetOffSetRedline("BL") & "|" & GetOffSetRedline("BR") & "|" & GetOffSetRedline("TR")
-				;$listPixelBySide = getRedAreaSideBuilding($dropPoints)
-				#cs
-					$g_aiPixelTopLeft = _SortRedline(GetOffSetRedline("TL"))
-					$g_aiPixelBottomLeft =  _SortRedline(GetOffSetRedline("BL"))
-					$g_aiPixelBottomRight = _SortRedline(GetOffSetRedline("BR"))
-					$g_aiPixelTopRight =  _SortRedline(GetOffSetRedline("TR"))
-					Local $listPixelBySide = ["ImgLoc", $g_aiPixelTopLeft, $g_aiPixelBottomLeft, $g_aiPixelBottomRight, $g_aiPixelTopRight]
-				#ce
-			Case $REDLINE_ORIGINAL ; Original red line routine 2
-				Local $result = DllCallMyBot("getRedArea", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation)
-				If IsArray($result) Then
-					$listPixelBySide = StringSplit($result[0], "#")
-				EndIf
+			Case $REDLINE_EDGE
+				; Edge mode: use ExternalArea directly, no image scan
+				Local $aTopLeftEdge = [$ExternalArea[0], $ExternalArea[4], $ExternalArea[2]]
+				Local $aTopRightEdge = [$ExternalArea[2], $ExternalArea[5], $ExternalArea[1]]
+				Local $aBottomLeftEdge = [$ExternalArea[0], $ExternalArea[6], $ExternalArea[3]]
+				Local $aBottomRightEdge = [$ExternalArea[3], $ExternalArea[7], $ExternalArea[1]]
+
+				$g_aiPixelTopLeft = $aTopLeftEdge
+				$g_aiPixelTopRight = $aTopRightEdge
+				$g_aiPixelBottomLeft = $aBottomLeftEdge
+				$g_aiPixelBottomRight = $aBottomRightEdge
 		EndSwitch
 		SetDebugLog("Debug: Redline chosen")
 	EndIf
-
+	
 	$g_aiPixelTopLeft = GetPixelSide($listPixelBySide, 1)
 	$g_aiPixelBottomLeft = GetPixelSide($listPixelBySide, 2)
 	$g_aiPixelBottomRight = GetPixelSide($listPixelBySide, 3)
@@ -86,39 +77,12 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 	SetDebugLog("[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight", $COLOR_DEBUG)
 	If _Sleep($DELAYRESPOND) Then Return
 
-	;02.03 - MAKE FULL DROP LINE EDGE--------------------------------------------------------------------------------------------------------------------------
-	; default inner area edges
+	;02.03 - DROPLINE EDGE ---------------------------------------------------------------------------------------------------------------------------
+	; For real redline, use external area corners as reference for sorting
 	Local $coordLeft = [$ExternalArea[0][0], $ExternalArea[0][1]]
 	Local $coordTop = [$ExternalArea[2][0], $ExternalArea[2][1]]
 	Local $coordRight = [$ExternalArea[1][0], $ExternalArea[1][1]]
 	Local $coordBottom = [$ExternalArea[3][0], $ExternalArea[3][1]]
-	Switch $g_aiAttackScrDroplineEdge[$g_iMatchMode]
-		Case $DROPLINE_FULL_EDGE_FIXED ; default inner area edges
-			; nothing to do here
-		Case $DROPLINE_FULL_EDGE_FIRST ; use first red point
-			Local $newAxis
-			; left
-			Local $aPoint1 = GetMaxPoint($g_aiPixelTopLeft, 1)
-			Local $aPoint2 = GetMinPoint($g_aiPixelBottomLeft, 1)
-			$newAxis = (($aPoint1[0] < $aPoint2[0]) ? ($aPoint1[0]) : ($aPoint2[0]))
-			If Abs($newAxis) < 9999 Then $coordLeft[0] = $newAxis
-			; top
-			Local $aPoint1 = GetMaxPoint($g_aiPixelTopLeft, 0)
-			Local $aPoint2 = GetMinPoint($g_aiPixelTopRight, 0)
-			$newAxis = (($aPoint1[1] < $aPoint2[1]) ? ($aPoint1[1]) : ($aPoint2[1]))
-			If Abs($newAxis) < 9999 Then $coordTop[1] = $newAxis
-			; right
-
-			Local $aPoint1 = GetMaxPoint($g_aiPixelTopRight, 1)
-			Local $aPoint2 = GetMinPoint($g_aiPixelBottomRight, 1)
-			$newAxis = (($aPoint1[0] > $aPoint2[0]) ? ($aPoint1[0]) : ($aPoint2[0]))
-			If Abs($newAxis) < 9999 Then $coordRight[0] = $newAxis
-			; bottom
-			Local $aPoint1 = GetMaxPoint($g_aiPixelBottomLeft, 0)
-			Local $aPoint2 = GetMinPoint($g_aiPixelBottomRight, 0)
-			$newAxis = (($aPoint1[1] > $aPoint2[1]) ? ($aPoint1[1]) : ($aPoint2[1]))
-			If Abs($newAxis) < 9999 Then $coordBottom[1] = $newAxis
-	EndSwitch
 
 	Local $StartEndTopLeft = [$coordLeft, $coordTop]
 	Local $StartEndTopRight = [$coordTop, $coordRight]

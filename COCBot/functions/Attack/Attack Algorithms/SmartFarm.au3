@@ -51,7 +51,7 @@ Func TestSmartFarm()
 EndFunc   ;==>TestSmartFarm
 
 ; Collectors | Mines | Drills | All (Default)
-Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_IMGLOC)
+Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_REAL)
 
 	; Initial Timer
 	Local $hTimer = TimerInit()
