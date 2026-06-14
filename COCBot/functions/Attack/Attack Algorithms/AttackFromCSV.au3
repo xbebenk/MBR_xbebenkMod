@@ -181,10 +181,6 @@ EndFunc   ;==>GetMaxPoint
 ; ===============================================================================================================================
 Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 
-	Local $g_aiPixelNearCollectorTopLeft[0]
-	Local $g_aiPixelNearCollectorBottomLeft[0]
-	Local $g_aiPixelNearCollectorTopRight[0]
-	Local $g_aiPixelNearCollectorBottomRight[0]
 	Local $aResult
 
 	;00 read attack file SIDE row and valorize variables
@@ -230,23 +226,14 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 		Local $coordRight = [$ExternalArea[1][0], $ExternalArea[1][1]]
 		Local $coordBottom = [$ExternalArea[3][0], $ExternalArea[3][1]]
 
-		Local $StartEndTopLeft = [$coordLeft, $coordTop]
+		Local $StartEndTopLeft[2] = [$coordLeft, $coordTop]
 		If UBound($g_aiPixelTopLeft) > 2 Then Local $StartEndTopLeft = [$g_aiPixelTopLeft[0], $g_aiPixelTopLeft[UBound($g_aiPixelTopLeft) - 1]]
-		Local $StartEndTopRight = [$coordTop, $coordRight]
+		Local $StartEndTopRight[2] = [$coordTop, $coordRight]
 		If UBound($g_aiPixelTopRight) > 2 Then Local $StartEndTopRight = [$g_aiPixelTopRight[0], $g_aiPixelTopRight[UBound($g_aiPixelTopRight) - 1]]
-		Local $StartEndBottomLeft = [$coordLeft, $coordBottom]
+		Local $StartEndBottomLeft[2] = [$coordLeft, $coordBottom]
 		If UBound($g_aiPixelBottomLeft) > 2 Then Local $StartEndBottomLeft = [$g_aiPixelBottomLeft[0], $g_aiPixelBottomLeft[UBound($g_aiPixelBottomLeft) - 1]]
-		Local $StartEndBottomRight = [$coordBottom, $coordRight]
+		Local $StartEndBottomRight[2] = [$coordBottom, $coordRight]
 		If UBound($g_aiPixelBottomRight) > 2 Then Local $StartEndBottomRight = [$g_aiPixelBottomRight[0], $g_aiPixelBottomRight[UBound($g_aiPixelBottomRight) - 1]]
-
-		Switch $g_aiAttackScrDroplineEdge[$g_iMatchMode]
-			Case $DROPLINE_EDGE_FIXED, $DROPLINE_FULL_EDGE_FIXED ; default inner area edges
-				; reset fix corners
-				Local $StartEndTopLeft = [$coordLeft, $coordTop]
-				Local $StartEndTopRight = [$coordTop, $coordRight]
-				Local $StartEndBottomLeft = [$coordLeft, $coordBottom]
-				Local $StartEndBottomRight = [$coordBottom, $coordRight]
-		EndSwitch
 
 		SetDebugLog("MakeDropLines, StartEndTopLeft     = " & PixelArrayToString($StartEndTopLeft, ","))
 		SetDebugLog("MakeDropLines, StartEndTopRight    = " & PixelArrayToString($StartEndTopRight, ","))
@@ -254,12 +241,12 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 		SetDebugLog("MakeDropLines, StartEndBottomRight = " & PixelArrayToString($StartEndBottomRight, ","))
 
 		Switch $g_aiAttackScrDroplineEdge[$g_iMatchMode]
-			Case $DROPLINE_EDGE_FIXED, $DROPLINE_EDGE_FIRST ; default drop line
+			Case $DROPLINE_EDGE_FIRST ; dropline redpoint
 				$g_aiPixelTopLeftDropLine = MakeDropLineOriginal($g_aiPixelTopLeft, $StartEndTopLeft[0], $StartEndTopLeft[1])
 				$g_aiPixelTopRightDropLine = MakeDropLineOriginal($g_aiPixelTopRight, $StartEndTopRight[0], $StartEndTopRight[1])
 				$g_aiPixelBottomLeftDropLine = MakeDropLineOriginal($g_aiPixelBottomLeft, $StartEndBottomLeft[0], $StartEndBottomLeft[1])
 				$g_aiPixelBottomRightDropLine = MakeDropLineOriginal($g_aiPixelBottomRight, $StartEndBottomRight[0], $StartEndBottomRight[1])
-			Case $DROPLINE_FULL_EDGE_FIXED, $DROPLINE_FULL_EDGE_FIRST ; full drop line
+			Case $DROPLINE_FULL_EDGE_FIXED, $DROPLINE_FULL_EDGE_FIRST ; dropline edge
 				Local $iLineDistanceThreshold = 75
 				If $g_aiAttackScrRedlineRoutine[$g_iMatchMode] = $REDLINE_IMGLOC Then $iLineDistanceThreshold = 25
 				$g_aiPixelTopLeftDropLine = MakeDropLine($g_aiPixelTopLeft, $StartEndTopLeft[0], $StartEndTopLeft[1], $iLineDistanceThreshold, $g_aiAttackScrDroplineEdge[$g_iMatchMode] = $DROPLINE_FULL_EDGE_FIXED)
@@ -364,150 +351,6 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 		SetLog("> Townhall search not needed, skip")
 	EndIf
 	If _Sleep($DELAYRESPOND) Then Return
-
-	;04 - MINES, COLLECTORS, DRILLS -----------------------------------------------------------------------------------------------------------------------
-
-	;reset variables
-	Global $g_aiPixelMine[0]
-	Global $g_aiPixelElixir[0]
-	Global $g_aiPixelDarkElixir[0]
-	Local $g_aiPixelNearCollectorTopLeftSTR = ""
-	Local $g_aiPixelNearCollectorBottomLeftSTR = ""
-	Local $g_aiPixelNearCollectorTopRightSTR = ""
-	Local $g_aiPixelNearCollectorBottomRightSTR = ""
-
-
-	;04.01 If drop troop near gold mine
-	If $g_bCSVLocateMine Then
-		$hTimer = __timerinit()
-		SuspendAndroid()
-		$g_aiPixelMine = GetLocationMine()
-		ResumeAndroid()
-		If _Sleep($DELAYRESPOND) Then Return
-		CleanRedArea($g_aiPixelMine)
-		Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)
-		If (IsArray($g_aiPixelMine)) Then
-			For $i = 0 To UBound($g_aiPixelMine) - 1
-				Local $pixel = $g_aiPixelMine[$i]
-				Local $str = $pixel[0] & "-" & $pixel[1] & "-" & "MINE"
-				If isInsideDiamond($pixel) Then
-					If $pixel[0] <= $InternalArea[2][0] Then
-						If $pixel[1] <= $InternalArea[0][1] Then
-							;SetLog($str & " :  TOP LEFT SIDE")
-							$g_aiPixelNearCollectorTopLeftSTR &= $str & "|"
-						Else
-							;SetLog($str & " :  BOTTOM LEFT SIDE")
-							$g_aiPixelNearCollectorBottomLeftSTR &= $str & "|"
-						EndIf
-					Else
-						If $pixel[1] <= $InternalArea[0][1] Then
-							;SetLog($str & " :  TOP RIGHT SIDE")
-							$g_aiPixelNearCollectorTopRightSTR &= $str & "|"
-						Else
-							;SetLog($str & " :  BOTTOM RIGHT SIDE")
-							$g_aiPixelNearCollectorBottomRightSTR &= $str & "|"
-						EndIf
-					EndIf
-				EndIf
-			Next
-		EndIf
-		SetLog("> Mines located in " & Round(__timerdiff($hTimer) / 1000, 2) & " seconds", $COLOR_INFO)
-	Else
-		SetLog("> Mines detection not needed, skip", $COLOR_INFO)
-	EndIf
-	If _Sleep($DELAYRESPOND) Then Return
-
-	;04.02  If drop troop near elisir
-	If $g_bCSVLocateElixir Then
-		$hTimer = __timerinit()
-		SuspendAndroid()
-		$g_aiPixelElixir = GetLocationElixir()
-		ResumeAndroid()
-		If _Sleep($DELAYRESPOND) Then Return
-		CleanRedArea($g_aiPixelElixir)
-		Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)
-		If (IsArray($g_aiPixelElixir)) Then
-			For $i = 0 To UBound($g_aiPixelElixir) - 1
-				Local $pixel = $g_aiPixelElixir[$i]
-				Local $str = $pixel[0] & "-" & $pixel[1] & "-" & "ELIXIR"
-				If isInsideDiamond($pixel) Then
-					If $pixel[0] <= $InternalArea[2][0] Then
-						If $pixel[1] <= $InternalArea[0][1] Then
-							;SetLog($str & " :  TOP LEFT SIDE")
-							$g_aiPixelNearCollectorTopLeftSTR &= $str & "|"
-						Else
-							;SetLog($str & " :  BOTTOM LEFT SIDE")
-							$g_aiPixelNearCollectorBottomLeftSTR &= $str & "|"
-						EndIf
-					Else
-						If $pixel[1] <= $InternalArea[0][1] Then
-							;SetLog($str & " :  TOP RIGHT SIDE")
-							$g_aiPixelNearCollectorTopRightSTR &= $str & "|"
-						Else
-							;SetLog($str & " :  BOTTOM RIGHT SIDE")
-							$g_aiPixelNearCollectorBottomRightSTR &= $str & "|"
-						EndIf
-					EndIf
-				EndIf
-			Next
-		EndIf
-		SetLog("> Elixir collectors located in " & Round(__timerdiff($hTimer) / 1000, 2) & " seconds", $COLOR_INFO)
-	Else
-		SetLog("> Elixir collectors detection not needed, skip", $COLOR_INFO)
-	EndIf
-	If _Sleep($DELAYRESPOND) Then Return
-
-	;04.03 If drop troop near drill
-	If $g_bCSVLocateDrill Then
-		;SetLog("Locating drills")
-		$hTimer = __timerinit()
-		SuspendAndroid()
-		$g_aiPixelDarkElixir = GetLocationDarkElixir()
-		ResumeAndroid()
-		If _Sleep($DELAYRESPOND) Then Return
-		CleanRedArea($g_aiPixelDarkElixir)
-		Local $htimerMine = Round(__timerdiff($hTimer) / 1000, 2)
-		If (IsArray($g_aiPixelDarkElixir)) Then
-			For $i = 0 To UBound($g_aiPixelDarkElixir) - 1
-				Local $pixel = $g_aiPixelDarkElixir[$i]
-				Local $str = $pixel[0] & "-" & $pixel[1] & "-" & "DRILL"
-				If isInsideDiamond($pixel) Then
-					If $pixel[0] <= $InternalArea[2][0] Then
-						If $pixel[1] <= $InternalArea[0][1] Then
-							;SetLog($str & " :  TOP LEFT SIDE")
-							$g_aiPixelNearCollectorTopLeftSTR &= $str & "|"
-						Else
-							;SetLog($str & " :  BOTTOM LEFT SIDE")
-							$g_aiPixelNearCollectorBottomLeftSTR &= $str & "|"
-						EndIf
-					Else
-						If $pixel[1] <= $InternalArea[0][1] Then
-							;SetLog($str & " :  TOP RIGHT SIDE")
-							$g_aiPixelNearCollectorTopRightSTR &= $str & "|"
-						Else
-							;SetLog($str & " :  BOTTOM RIGHT SIDE")
-							$g_aiPixelNearCollectorBottomRightSTR &= $str & "|"
-						EndIf
-					EndIf
-				EndIf
-			Next
-		EndIf
-		SetLog("> Drills located in " & Round(__timerdiff($hTimer) / 1000, 2) & " seconds", $COLOR_INFO)
-	Else
-		SetLog("> Drills detection not needed, skip", $COLOR_INFO)
-	EndIf
-	If _Sleep($DELAYRESPOND) Then Return
-
-	If StringLen($g_aiPixelNearCollectorTopLeftSTR) > 0 Then $g_aiPixelNearCollectorTopLeftSTR = StringLeft($g_aiPixelNearCollectorTopLeftSTR, StringLen($g_aiPixelNearCollectorTopLeftSTR) - 1)
-	If StringLen($g_aiPixelNearCollectorTopRightSTR) > 0 Then $g_aiPixelNearCollectorTopRightSTR = StringLeft($g_aiPixelNearCollectorTopRightSTR, StringLen($g_aiPixelNearCollectorTopRightSTR) - 1)
-	If StringLen($g_aiPixelNearCollectorBottomLeftSTR) > 0 Then $g_aiPixelNearCollectorBottomLeftSTR = StringLeft($g_aiPixelNearCollectorBottomLeftSTR, StringLen($g_aiPixelNearCollectorBottomLeftSTR) - 1)
-	If StringLen($g_aiPixelNearCollectorBottomRightSTR) > 0 Then $g_aiPixelNearCollectorBottomRightSTR = StringLeft($g_aiPixelNearCollectorBottomRightSTR, StringLen($g_aiPixelNearCollectorBottomRightSTR) - 1)
-	$g_aiPixelNearCollectorTopLeft = GetListPixel3($g_aiPixelNearCollectorTopLeftSTR)
-	$g_aiPixelNearCollectorTopRight = GetListPixel3($g_aiPixelNearCollectorTopRightSTR)
-	$g_aiPixelNearCollectorBottomLeft = GetListPixel3($g_aiPixelNearCollectorBottomLeftSTR)
-	$g_aiPixelNearCollectorBottomRight = GetListPixel3($g_aiPixelNearCollectorBottomRightSTR)
-
-
 	; 05 - Gold, Elixir and Dark Elixir STORAGES ------------------------------------------------------------------------
 
 	If $g_bCSVLocateStorageGold Then

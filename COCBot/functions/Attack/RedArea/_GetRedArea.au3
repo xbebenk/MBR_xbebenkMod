@@ -93,9 +93,9 @@ Func _GetRedArea($iMode = $REDLINE_IMGLOC, $iMaxAllowedPixelDistance = 25, $fMin
 	Local $coordRight = [$ExternalArea[1][0], $ExternalArea[1][1]]
 	Local $coordBottom = [$ExternalArea[3][0], $ExternalArea[3][1]]
 	Switch $g_aiAttackScrDroplineEdge[$g_iMatchMode]
-		Case $DROPLINE_EDGE_FIXED, $DROPLINE_FULL_EDGE_FIXED ; default inner area edges
+		Case $DROPLINE_FULL_EDGE_FIXED ; default inner area edges
 			; nothing to do here
-		Case $DROPLINE_EDGE_FIRST, $DROPLINE_FULL_EDGE_FIRST ; use first red point
+		Case $DROPLINE_FULL_EDGE_FIRST ; use first red point
 			Local $newAxis
 			; left
 			Local $aPoint1 = GetMaxPoint($g_aiPixelTopLeft, 1)
