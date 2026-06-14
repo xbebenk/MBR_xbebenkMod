@@ -84,7 +84,7 @@ Func VerifyClaimButton()
 	Local $bRet = False
 	For $i = 1 To 3
 		SetDebugLog("Waiting Event Claim Button #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgCollectCookie, 635, 310, 800, 380) Then 
+		If QuickMIS("BC1", $g_sImgCollectCookie, 635, 310, 800, 600) Then 
 			If _PixelSearch($g_iQuickMISX + 78, $g_iQuickMISY - 23, $g_iQuickMISX + 78, $g_iQuickMISY - 22, Hex(0xF9171F, 6), 40, True, "Claim Button") Then
 				SetLog("Claim button verified", $COLOR_DEBUG)
 				Click($g_iQuickMISX, $g_iQuickMISY)
@@ -146,33 +146,23 @@ Func ClaimCookieReward($bGoldPass = False)
 	Local $x1 = 10, $y1 = 525, $x2 = 840, $y2 = 580
 	If $bGoldPass Then $y1 = 190
 	
+	If QuickMIS("BC1", $g_sImgDailyReward, 32, 350, 110, 420) Then 
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(1000) Then Return
+	Else
+		SetLog("No Reward CheckMarks", $COLOR_DEBUG2)
+	EndIf
+	
 	For $i = 1 To 5
-		If QuickMIS("BC1", $g_sImgCollectCookie, 45, 360, 100, 415) Then 
+		If QuickMIS("BFI", $g_sImgDailyReward & "ClaimBtn*", 380, 380, 650, 450) Then 
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(500) Then Return
+			SetLog("[" & $i & "] Claiming Bonus Track Reward", $COLOR_SUCCESS)
+			If _Sleep(1000) Then Return
+			$iClaim += 1
+		Else
 			ExitLoop
 		EndIf
 	Next
-	
-	If _Sleep(1000) Then Return
-	If QuickMIS("BC1", $g_sImgDailyReward, 32, 350, 110, 420) Then 
-		Click($g_iQuickMISX, $g_iQuickMISY)
-	Else
-		SetLog("No Reward CheckMarks", $COLOR_DEBUG2)
-		$bEndPage = True
-	EndIf
-	
-	If $bEndPage Then
-		For $i = 1 To 5
-			If QuickMIS("BC1", $g_sImgDailyReward, 380, 380, 550, 450) Then 
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				SetLog("[" & $i & "] Claiming Bonus Track Reward", $COLOR_SUCCESS)
-				$iClaim += 1
-			Else
-				ExitLoop
-			EndIf
-		Next
-	EndIf
 	
 	If _Sleep(1000) Then Return
 	Local $tmpxClaim = 0
@@ -206,8 +196,10 @@ Func ClaimCookieReward($bGoldPass = False)
 				EndIf
 				$tmpxClaim = $aClaim[$j][1]
 			Next
+		Else
+			ExitLoop
 		EndIf
-		If QuickMIS("BC1", $g_sImgDailyReward, 380, 380, 550, 450) Then ExitLoop ;thropy color
+		;If QuickMIS("BC1", $g_sImgDailyReward, 380, 380, 550, 450) Then ExitLoop ;thropy color
 		If WaitforPixel(795, 399, 795, 400, "29231F", 10, 1, "End Window Color") Then ExitLoop ;End Window Color
 		ClickDrag(750, 445, 200, 445) ;just swipe to right
 		If _Sleep(1000) Then Return

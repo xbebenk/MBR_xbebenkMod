@@ -471,7 +471,6 @@ EndFunc
 Func UseFreeMagicItem()
 	If Not $g_bRunState Then Return
 	Local $x, $y
-	checkMainScreen()
 	SetLog("Checking for Magic Item on Box", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgMagicItemBox, 525, 610, 675, 650) Then
 		SetLog("Magic Box Found, checking items", $COLOR_ACTION)
