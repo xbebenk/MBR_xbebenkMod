@@ -1970,7 +1970,7 @@ Global $g_aDailyAccount[16][Ubound($g_aiDailyFunction)] = [[0,0,0,0,0,0,0,0,0,0,
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[50][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
+Global $g_aVillageRefSize[51][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
 									["DM", "Classic Meteor", 592.24, 87, 792, 52, 589], _ ;ok
 									["CS", "Classic Skeleton", 567, 82, 766, 53, 575], _ ;ok
 									["JS", "Jungle", 617, 41, 806, 37, 616], _ ;ok
@@ -1992,8 +1992,9 @@ Global $g_aVillageRefSize[50][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589],
 									["SH", "Shadow", 598.40, 81, 790, 61, 592], _ ;ok
 									["RY", "Royal", 610.20, 57, 799, 48, 603], _ ;ok
 									["SM", "Summer", 568, 85, 813, 56, 604], _ ;ok
-									["CA", "Clash A-Rama", 620, 66, 800, 48, 596], _ ;ok
+									["CA", "Clash A-Rama", 609.21, 70, 796, 45, 583], _ ;ok
 									["PS", "Pixel", 617, 56, 796, 61, 618], _ ;ok
+									["DE", "Dragon Escape", 681.68, 40, 768, 81, 627], _ ;ok
 									["10", "10th Clasivery", 561, 92, 791, 47, 570], _ ;ok
 									["CF", "Clash Fest", 517.81, 119, 771, 112, 602], _ ;ok
 									["SP", "Spooky", 679.13, 65, 796, 53, 604], _ ;ok
