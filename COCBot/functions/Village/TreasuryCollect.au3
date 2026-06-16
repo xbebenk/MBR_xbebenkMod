@@ -20,7 +20,8 @@ Func TreasuryCollect()
 	If isGoldFull() And IsElixirFull() Then Return
 	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return 
-	CheckZoomOut("TreasuryCollect")
+	If Not CheckZoomOut() THen ZoomOut()
+	
 	Local $CCFound = False
 	Local $TryCCAutoLocate = False
 	If Int($g_aiClanCastlePos[0]) < 1 Or Int($g_aiClanCastlePos[1]) < 1 Then

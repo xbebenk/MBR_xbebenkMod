@@ -438,7 +438,7 @@ Func SmartAttackStrategy($imode)
 EndFunc   ;==>SmartAttackStrategy
 
 Func TestSA()
-	CheckZoomOut("VillageSearch")
+	CheckZoomOut()
 	PrepareAttack($DB)
 	algorithm_AllTroops()
 	ReturnHome()

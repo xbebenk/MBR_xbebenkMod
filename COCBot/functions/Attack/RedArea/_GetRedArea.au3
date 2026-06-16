@@ -43,29 +43,28 @@ Func _GetRedArea($iMode = $REDLINE_REAL, $iMaxAllowedPixelDistance = 25, $fMinSi
 			Case $REDLINE_REAL ; Real redline from image scan
 				; ensure redline exists
 				SearchRedLinesModMultipleTimes()
-				$listPixelBySide = getRedAreaSideBuilding()
+				$listPixelBySide = getRedAreaSide()
 				SetDebugLog("listPixelBySide after getRedAreaSideBuilding : " & @CRLF & _ArrayToString($listPixelBySide))
+				$g_aiPixelTopLeft = GetPixelSide($listPixelBySide, 1)
+				$g_aiPixelBottomLeft = GetPixelSide($listPixelBySide, 2)
+				$g_aiPixelBottomRight = GetPixelSide($listPixelBySide, 3)
+				$g_aiPixelTopRight = GetPixelSide($listPixelBySide, 4)
+				
 			Case $REDLINE_EDGE
 				; Edge mode: use ExternalArea directly, no image scan
-				Local $aTopLeftEdge = [$ExternalArea[0], $ExternalArea[4], $ExternalArea[2]]
-				Local $aTopRightEdge = [$ExternalArea[2], $ExternalArea[5], $ExternalArea[1]]
-				Local $aBottomLeftEdge = [$ExternalArea[0], $ExternalArea[6], $ExternalArea[3]]
-				Local $aBottomRightEdge = [$ExternalArea[3], $ExternalArea[7], $ExternalArea[1]]
-
-				$g_aiPixelTopLeft = $aTopLeftEdge
-				$g_aiPixelTopRight = $aTopRightEdge
-				$g_aiPixelBottomLeft = $aBottomLeftEdge
-				$g_aiPixelBottomRight = $aBottomRightEdge
+				$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
+				$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
+				$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
+				$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
 		EndSwitch
 		SetDebugLog("Debug: Redline chosen")
 	EndIf
 	
-	$g_aiPixelTopLeft = GetPixelSide($listPixelBySide, 1)
-	$g_aiPixelBottomLeft = GetPixelSide($listPixelBySide, 2)
-	$g_aiPixelBottomRight = GetPixelSide($listPixelBySide, 3)
-	$g_aiPixelTopRight = GetPixelSide($listPixelBySide, 4)
-	
 	;02.02  - CLEAN REDAREA BAD POINTS -----------------------------------------------------------------------------------------------------------------------
+	SetDebugLog("[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft", $COLOR_DEBUG)
+	SetDebugLog("[" & UBound($g_aiPixelTopRight) & "] pixels TopRight", $COLOR_DEBUG)
+	SetDebugLog("[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft", $COLOR_DEBUG)
+	SetDebugLog("[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight", $COLOR_DEBUG)
 	CleanRedArea($g_aiPixelTopLeft)
 	CleanRedArea($g_aiPixelTopRight)
 	CleanRedArea($g_aiPixelBottomLeft)
@@ -329,7 +328,7 @@ Func _SortRedline($redline, $sDelim = ",")
 		Local $aPoint = GetPixel($sPoint, $sDelim)
 		If UBound($aPoint) > 1 Then getRedAreaSideBuildingSetPoint($a1, $aPoint)
 	Next
-	Local $s = getRedAreaSideBuildingString($a1)
+	Local $s = getRedAreaSideString($a1)
 	Return $s
 EndFunc   ;==>_SortRedline
 
@@ -339,7 +338,7 @@ Func getRedAreaSideBuildingSetPoint(ByRef $aSide, ByRef $aPoint)
 	$aSide[$aSide[0][0]][1] = Int($aPoint[1])
 EndFunc   ;==>getRedAreaSideBuildingSetPoint
 
-Func getRedAreaSideBuildingString(ByRef $aSide)
+Func getRedAreaSideString(ByRef $aSide)
 	If UBound($aSide) < 2 Or $aSide[0][0] < 1 Then Return ""
 	_ArraySort($aSide, 0, 1, $aSide[0][0], 0)
 	Local $s = ""
@@ -350,7 +349,7 @@ Func getRedAreaSideBuildingString(ByRef $aSide)
 	Return $s
 EndFunc   ;==>getRedAreaSideBuildingString
 
-Func getRedAreaSideBuilding($redline = $g_sImglocRedline)
+Func getRedAreaSide($redline = $g_sImglocRedline)
 	;SetDebugLog("getRedAreaSideBuilding: " & $redline)
 	Local $c = 0
 	Local $a[5]
@@ -379,10 +378,10 @@ Func getRedAreaSideBuilding($redline = $g_sImglocRedline)
 		EndIf
 	Next
 	$a[0] = $c
-	$a[1] = getRedAreaSideBuildingString($a1)
-	$a[2] = getRedAreaSideBuildingString($a2)
-	$a[3] = getRedAreaSideBuildingString($a3)
-	$a[4] = getRedAreaSideBuildingString($a4)
+	$a[1] = getRedAreaSideString($a1)
+	$a[2] = getRedAreaSideString($a2)
+	$a[3] = getRedAreaSideString($a3)
+	$a[4] = getRedAreaSideString($a4)
 	;SetDebugLog("getRedAreaSideBuilding, Side " & $i & ": " & StringReplace($a[$i], "-", ","))
 	Return $a
 EndFunc   ;==>getRedAreaSideBuilding

@@ -13,7 +13,7 @@ Func CleanBBYard($bTest = False)
 	EndIf
 	
 	Local $Locate = 0
-	Local $Result = QuickMIS("CNX", $g_sImgCleanBBLower, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+	Local $Result = QuickMIS("CNX", $g_sImgCleanBBLower, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight, $g_OuterDiamondBottom)
 	If IsArray($Result) And UBound($Result) > 0 Then
 		For $i = 0 To UBound($Result) - 1
 			If isInsideDiamondXY($Result[$i][1], $Result[$i][2], True) Then
@@ -44,7 +44,7 @@ Func CleanBBYard($bTest = False)
 	
 	If GotoHigherZone() Then
 		GetVillageSize()
-		$Result = QuickMIS("CNX", $g_sImgCleanBBHigher, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+		$Result = QuickMIS("CNX", $g_sImgCleanBBHigher, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight, $g_OuterDiamondBottom)
 		If IsArray($Result) And UBound($Result) > 0 Then
 			For $i = 0 To UBound($Result) - 1
 				If isInsideDiamondXY($Result[$i][1], $Result[$i][2], True) Then

@@ -18,7 +18,7 @@ Func CheckTombs()
 	If Not $g_bChkTombstones Then Return
 	SetLog("Checking Tombs", $COLOR_ACTION)
 	Collect(True)
-	Local $aTombs = QuickMIS("CNX", $g_sImgClearTombs, $InnerDiamondLeft, $InnerDiamondTop, $InnerDiamondRight, $InnerDiamondBottom)
+	Local $aTombs = QuickMIS("CNX", $g_sImgClearTombs, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom)
 	If IsArray($aTombs) And UBound($aTombs) > 0 Then
 		For $i = 0 To UBound($aTombs) - 1
 			If isInsideDiamondXY($aTombs[$i][1], $aTombs[$i][2]) Then 
@@ -70,7 +70,7 @@ Func CleanYard($bTest = False)
 	Local $x, $y, $Locate = 0
 	
 	If $g_bChkCleanYard Then
-		Local $aResult = QuickMIS("CNX", $g_sImgCleanYard, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+		Local $aResult = QuickMIS("CNX", $g_sImgCleanYard, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight, $g_OuterDiamondBottom)
 		If IsArray($aResult) And UBound($aResult) > 0 Then
 			For $i = 0 To UBound($aResult) - 1
 				$Filename = $aResult[$i][0]
@@ -124,7 +124,7 @@ Func RemoveGembox()
 	If Not $g_bChkGemsBox Then Return 
 	Local $bRemoved = False
 	SetLog("Check for Remove Gem Box", $COLOR_INFO)
-	Local $aGembox = QuickMIS("CNX", $g_sImgGemBox, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+	Local $aGembox = QuickMIS("CNX", $g_sImgGemBox, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight, $g_OuterDiamondBottom)
 	If IsArray($aGembox) And UBound($aGembox) > 0 Then
 		For $i = 0 To UBound($aGembox) - 1
 			If Not isInsideDiamondXY($aGembox[$i][1], $aGembox[$i][2], True) Then 

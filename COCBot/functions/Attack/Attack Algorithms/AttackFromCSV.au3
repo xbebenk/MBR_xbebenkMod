@@ -38,54 +38,40 @@ Global $g_aiPixelBottomRightUPDropLine
 Global $g_aiPixelBottomRightDOWNDropLine
 
 Global $DeployableLRTB = [0, $g_iGAME_WIDTH - 1, 0, 556]
-Global $InnerDiamondLeft = 45
-Global $InnerDiamondRight = 815
-Global $InnerDiamondTop = 60
-Global $InnerDiamondBottom = 636
-Global $InnerDiamandDiffX = 40
-Global $InnerDiamandDiffY = 30
-Global $DiamondMiddleX = ($InnerDiamondLeft + $InnerDiamondRight) / 2
-Global $DiamondMiddleY = ($InnerDiamondTop + $InnerDiamondBottom) / 2
-
-Global $OuterDiamondLeft = 0
-Global $OuterDiamondRight = 0
-Global $OuterDiamondTop = 0
-Global $OuterDiamondBottom = 0
-
-ConvertInternalExternArea() ; initial layout so variables are not empty
 
 Func ConvertInternalExternArea()
-	$DiamondMiddleX = ($InnerDiamondLeft + $InnerDiamondRight) / 2
-	$DiamondMiddleY = ($InnerDiamondTop + $InnerDiamondBottom) / 2
+	$g_DiamondMiddleX = Round(($g_InnerDiamondLeft + $g_InnerDiamondRight) / 2)
+	$g_DiamondMiddleY = Round(($g_InnerDiamondTop + $g_InnerDiamondBottom) / 2)
 	
-	$OuterDiamondLeft = $InnerDiamondLeft - $InnerDiamandDiffX
-	$OuterDiamondRight = $InnerDiamondRight + $InnerDiamandDiffX
-	$OuterDiamondTop = $InnerDiamondTop - $InnerDiamandDiffY
-	$OuterDiamondBottom = $InnerDiamondBottom + $InnerDiamandDiffY
+	$g_OuterDiamondLeft = $g_InnerDiamondLeft - Round((Floor($g_InnerDiamondDiffX * $g_iZoomFactor)))
+	$g_OuterDiamondRight = $g_InnerDiamondRight + Round((Floor($g_InnerDiamondDiffX * $g_iZoomFactor)))
+	$g_OuterDiamondTop = $g_InnerDiamondTop - Round((Floor($g_InnerDiamondDiffY * $g_iZoomFactor)))
+	$g_OuterDiamondBottom = $g_InnerDiamondBottom + Round((Floor($g_InnerDiamondDiffY * $g_iZoomFactor)))
 
 	Local $ExternalAreaRef[8][3] = [ _
-			[$OuterDiamondLeft, $DiamondMiddleY, "LEFT"], _
-			[$OuterDiamondRight, $DiamondMiddleY, "RIGHT"], _
-			[$DiamondMiddleX, $OuterDiamondTop, "TOP"], _
-			[$DiamondMiddleX, $OuterDiamondBottom, "BOTTOM"], _
-			[$OuterDiamondLeft + ($DiamondMiddleX - $OuterDiamondLeft) / 2, $OuterDiamondTop + ($DiamondMiddleY - $OuterDiamondTop) / 2, "TOP-LEFT"], _
-			[$DiamondMiddleX + ($OuterDiamondRight - $DiamondMiddleX) / 2, $OuterDiamondTop + ($DiamondMiddleY - $OuterDiamondTop) / 2, "TOP-RIGHT"], _
-			[$OuterDiamondLeft + ($DiamondMiddleX - $OuterDiamondLeft) / 2, $DiamondMiddleY + ($OuterDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-LEFT"], _
-			[$DiamondMiddleX + ($OuterDiamondRight - $DiamondMiddleX) / 2, $DiamondMiddleY + ($OuterDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-RIGHT"] _
+			[$g_OuterDiamondLeft, $g_DiamondMiddleY, "LEFT"], _
+			[$g_OuterDiamondRight, $g_DiamondMiddleY, "RIGHT"], _
+			[$g_DiamondMiddleX, $g_OuterDiamondTop, "TOP"], _
+			[$g_DiamondMiddleX, $g_OuterDiamondBottom, "BOTTOM"], _
+			[$g_OuterDiamondLeft + ($g_DiamondMiddleX - $g_OuterDiamondLeft) / 2, $g_OuterDiamondTop + ($g_DiamondMiddleY - $g_OuterDiamondTop) / 2, "TOP-LEFT"], _
+			[$g_DiamondMiddleX + ($g_OuterDiamondRight - $g_DiamondMiddleX) / 2, $g_OuterDiamondTop + ($g_DiamondMiddleY - $g_OuterDiamondTop) / 2, "TOP-RIGHT"], _
+			[$g_OuterDiamondLeft + ($g_DiamondMiddleX - $g_OuterDiamondLeft) / 2, $g_DiamondMiddleY + ($g_OuterDiamondBottom - $g_DiamondMiddleY) / 2, "BOTTOM-LEFT"], _
+			[$g_DiamondMiddleX + ($g_OuterDiamondRight - $g_DiamondMiddleX) / 2, $g_DiamondMiddleY + ($g_OuterDiamondBottom - $g_DiamondMiddleY) / 2, "BOTTOM-RIGHT"] _
 			]
 
 	Local $InternalAreaRef[8][3] = [ _
-			[$InnerDiamondLeft, $DiamondMiddleY, "LEFT"], _
-			[$InnerDiamondRight, $DiamondMiddleY, "RIGHT"], _
-			[$DiamondMiddleX, $InnerDiamondTop, "TOP"], _
-			[$DiamondMiddleX, $InnerDiamondBottom, "BOTTOM"], _
-			[$InnerDiamondLeft + ($DiamondMiddleX - $InnerDiamondLeft) / 2, $InnerDiamondTop + ($DiamondMiddleY - $InnerDiamondTop) / 2, "TOP-LEFT"], _
-			[$DiamondMiddleX + ($InnerDiamondRight - $DiamondMiddleX) / 2, $InnerDiamondTop + ($DiamondMiddleY - $InnerDiamondTop) / 2, "TOP-RIGHT"], _
-			[$InnerDiamondLeft + ($DiamondMiddleX - $InnerDiamondLeft) / 2, $DiamondMiddleY + ($InnerDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-LEFT"], _
-			[$DiamondMiddleX + ($InnerDiamondRight - $DiamondMiddleX) / 2, $DiamondMiddleY + ($InnerDiamondBottom - $DiamondMiddleY) / 2, "BOTTOM-RIGHT"] _
+			[$g_InnerDiamondLeft, $g_DiamondMiddleY, "LEFT"], _
+			[$g_InnerDiamondRight, $g_DiamondMiddleY, "RIGHT"], _
+			[$g_DiamondMiddleX, $g_InnerDiamondTop, "TOP"], _
+			[$g_DiamondMiddleX, $g_InnerDiamondBottom, "BOTTOM"], _
+			[$g_InnerDiamondLeft + ($g_DiamondMiddleX - $g_InnerDiamondLeft) / 2, $g_InnerDiamondTop + ($g_DiamondMiddleY - $g_InnerDiamondTop) / 2, "TOP-LEFT"], _
+			[$g_DiamondMiddleX + ($g_InnerDiamondRight - $g_DiamondMiddleX) / 2, $g_InnerDiamondTop + ($g_DiamondMiddleY - $g_InnerDiamondTop) / 2, "TOP-RIGHT"], _
+			[$g_InnerDiamondLeft + ($g_DiamondMiddleX - $g_InnerDiamondLeft) / 2, $g_DiamondMiddleY + ($g_InnerDiamondBottom - $g_DiamondMiddleY) / 2, "BOTTOM-LEFT"], _
+			[$g_DiamondMiddleX + ($g_InnerDiamondRight - $g_DiamondMiddleX) / 2, $g_DiamondMiddleY + ($g_InnerDiamondBottom - $g_DiamondMiddleY) / 2, "BOTTOM-RIGHT"] _
 			]
 	
 	Local $x, $y
+	
 	; Update External coord.
 	For $i = 0 To 7
 		$x = $ExternalAreaRef[$i][0]
@@ -96,28 +82,12 @@ Func ConvertInternalExternArea()
 		$ExternalArea[$i][2] = $ExternalAreaRef[$i][2]
 		;debugAttackCSV("External Area Point " & $ExternalArea[$i][2] & ": " & $x & ", " & $y)
 	Next
-	; Full ECD Diamond $CocDiamondECD
-	; Top
-	$x = $ExternalAreaRef[2][0]
-	$y = $ExternalAreaRef[2][1] + $InnerDiamandDiffY
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD = $x & "," & $y
-	; Right
-	$x = $ExternalAreaRef[1][0] - $InnerDiamandDiffX
-	$y = $ExternalAreaRef[1][1]
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
-	; Bottom
-	$x = $ExternalAreaRef[3][0]
-	$y = $ExternalAreaRef[3][1] - $InnerDiamandDiffX
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
-	; Left
-	$x = $ExternalAreaRef[0][0] + $InnerDiamandDiffX
-	$y = $ExternalAreaRef[0][1]
-	ConvertToVillagePos($x, $y)
-	$CocDiamondECD &= "|" & $x & "," & $y
-
+	
+	$CocDiamondECD = $ExternalArea[2][0] & "," & $ExternalArea[2][1] & "|" & _
+			$ExternalArea[1][0] & "," & $ExternalArea[1][1] & "|" & _
+			$ExternalArea[3][0] & "," & $ExternalArea[3][1] & "|" & _
+			$ExternalArea[0][0] & "," & $ExternalArea[0][1]
+	
 	; Update Internal coord.
 	For $i = 0 To 7
 		$x = $InternalAreaRef[$i][0]
@@ -133,10 +103,21 @@ Func ConvertInternalExternArea()
 			$InternalArea[3][0] & "," & $InternalArea[3][1] & "|" & _
 			$InternalArea[0][0] & "," & $InternalArea[0][1]
 			
-	$CocDiamondECD = $ExternalArea[2][0] & "," & $ExternalArea[2][1] & "|" & _
-			$ExternalArea[1][0] & "," & $ExternalArea[1][1] & "|" & _
-			$ExternalArea[3][0] & "," & $ExternalArea[3][1] & "|" & _
-			$ExternalArea[0][0] & "," & $ExternalArea[0][1]
+	$g_InnerDiamondLeft = $InternalArea[0][0]
+	$g_InnerDiamondRight = $InternalArea[1][0]
+	$g_InnerDiamondTop = $InternalArea[2][1]
+	$g_InnerDiamondBottom = $InternalArea[3][1]
+	
+	$g_OuterDiamondLeft = $ExternalArea[0][0]
+	$g_OuterDiamondRight = $ExternalArea[1][0]
+	$g_OuterDiamondTop = $ExternalArea[2][1]
+	$g_OuterDiamondBottom = $ExternalArea[3][1]
+			
+	SetDebugLog("Internal(DCD) : " & $CocDiamondDCD)
+	SetDebugLog("External(ECD) : " & $CocDiamondECD)
+	
+	SetDebugLog("Internal LRTB: " & $g_InnerDiamondLeft & "," & $g_InnerDiamondRight & "," & $g_InnerDiamondTop & "," & $g_InnerDiamondBottom)
+	SetDebugLog("External LRTB: " & $g_OuterDiamondLeft & "," & $g_OuterDiamondRight & "," & $g_OuterDiamondTop & "," & $g_OuterDiamondBottom)
 EndFunc   ;==>ConvertInternalExternArea
 
 Func CheckAttackLocation(ByRef $iX, ByRef $iY)
@@ -346,7 +327,7 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 		If $g_iSearchTH = "-" Or $g_oBldgAttackInfo.Exists($eBldgTownHall & "_LOCATION") = False Then ; If TH is unknown, try again to find as it is needed by script
 			FindTownHall()
 		Else
-			SetLog("> Townhall has already been located in while searching for an image", $COLOR_INFO)
+			SetLog("> Townhall Lvl:" & $g_iSearchTH & " has already been located", $COLOR_INFO)
 		EndIf
 	Else
 		SetLog("> Townhall search not needed, skip")
@@ -393,27 +374,27 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 		EndIf
 	EndIf
 
-	If $g_bCSVLocateStorageDarkElixir = True Then
-		$hTimer = __timerinit()
-		SuspendAndroid()
-		; USES OLD OPENCV DETECTION
-		Local $g_aiPixelDarkElixirStorage = GetLocationDarkElixirStorageWithLevel()
-		ResumeAndroid()
-		If _Sleep($DELAYRESPOND) Then Return
-		CleanRedArea($g_aiPixelDarkElixirStorage)
-		Local $pixel = StringSplit($g_aiPixelDarkElixirStorage, "#", 2)
-		If UBound($pixel) >= 2 Then
-			Local $pixellevel = $pixel[0]
-			Local $pixelpos = StringSplit($pixel[1], "-", 2)
-			If UBound($pixelpos) >= 2 Then
-				Local $temp = [Int($pixelpos[0]), Int($pixelpos[1])]
-				$g_aiCSVDarkElixirStoragePos = $temp
-			EndIf
-		EndIf
-		SetLog("> Dark Elixir Storage located in " & Round(__timerdiff($hTimer) / 1000, 2) & " seconds", $COLOR_INFO)
-	Else
-		SetLog("> Dark Elixir Storage detection not needed, skip", $COLOR_INFO)
-	EndIf
+	;If $g_bCSVLocateStorageDarkElixir = True Then
+	;	$hTimer = __timerinit()
+	;	SuspendAndroid()
+	;	; USES OLD OPENCV DETECTION
+	;	Local $g_aiPixelDarkElixirStorage = GetLocationDarkElixirStorageWithLevel()
+	;	ResumeAndroid()
+	;	If _Sleep($DELAYRESPOND) Then Return
+	;	CleanRedArea($g_aiPixelDarkElixirStorage)
+	;	Local $pixel = StringSplit($g_aiPixelDarkElixirStorage, "#", 2)
+	;	If UBound($pixel) >= 2 Then
+	;		Local $pixellevel = $pixel[0]
+	;		Local $pixelpos = StringSplit($pixel[1], "-", 2)
+	;		If UBound($pixelpos) >= 2 Then
+	;			Local $temp = [Int($pixelpos[0]), Int($pixelpos[1])]
+	;			$g_aiCSVDarkElixirStoragePos = $temp
+	;		EndIf
+	;	EndIf
+	;	SetLog("> Dark Elixir Storage located in " & Round(__timerdiff($hTimer) / 1000, 2) & " seconds", $COLOR_INFO)
+	;Else
+	;	SetLog("> Dark Elixir Storage detection not needed, skip", $COLOR_INFO)
+	;EndIf
 
 	; 06 - EAGLE ARTILLERY ------------------------------------------------------------------------
 
@@ -732,7 +713,7 @@ Func TestDropLine1($bRedArea = True, $bCheckZoom = True)
 	resetEdge()
 	
 	If $bCheckZoom Then
-		If Not CheckZoomOut("TestDropLine1") Then 
+		If Not CheckZoomOut() Then 
 			Setlog("TestDropLine1 : CheckZoomOut Fail!", $COLOR_ERROR)
 			Return
 		EndIf
@@ -744,7 +725,7 @@ EndFunc   ;==>TestDropLine1
 Func TestDropLine2($bImage = False)
 	SetLog("TestDropLine2()", $COLOR_INFO)
 	setVillageOffset(0, 0, 1)
-	If Not CheckZoomOut("TestDropLine2") Then 
+	If Not CheckZoomOut() Then 
 		Setlog("TestDropLine2 : CheckZoomOut Fail!", $COLOR_ERROR)
 		Return
 	EndIf
@@ -764,7 +745,7 @@ Func TestCSV($iMatchMode = $LB)
 	Local $filename = $g_sAttackScrScriptName[$iMatchMode]
 	$g_iMatchMode = $iMatchMode
 	SetLog("will use script : " & $filename, $COLOR_INFO)
-	CheckZoomOut("TestCSV")
+	CheckZoomOut()
 	PrepareAttack($iMatchMode)
 	Algorithm_AttackCSV()
 	ReturnHome()
@@ -780,7 +761,7 @@ Func CSVLoop($iCountLoop = 1, $bStopWhenResourceFull = False)
 		VillageSearch()
 		If Not $g_bRunState Then Return
 		SetLog("will use script : " & $filename, $COLOR_INFO)
-		CheckZoomOut("TestCSV")
+		CheckZoomOut()
 		PrepareAttack($LB)
 		Algorithm_AttackCSV()
 		ReturnHome()

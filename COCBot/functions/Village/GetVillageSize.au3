@@ -62,11 +62,11 @@ Func GetVillageSize($bOnBuilderBase = $g_bStayOnBuilderBase, $sStonePrefix = "st
 			$iRefSize = $g_aVillageRefSize[$iIndex][2]
 			$g_sSceneryCode = $g_aVillageRefSize[$iIndex][0]
 			$g_sCurrentScenery = $g_aVillageRefSize[$iIndex][1]
-			$InnerDiamondLeft = $g_aVillageRefSize[$iIndex][3]
-			$InnerDiamondRight = $g_aVillageRefSize[$iIndex][4]
-			$InnerDiamondTop = $g_aVillageRefSize[$iIndex][5]
-			$InnerDiamondBottom = $g_aVillageRefSize[$iIndex][6]
-			If $g_bDebugSetLog Then SetDebugLog("LRTB: " & $InnerDiamondLeft & "," & $InnerDiamondRight & "," & $InnerDiamondTop & "," & $InnerDiamondBottom)
+			$g_InnerDiamondLeft = $g_aVillageRefSize[$iIndex][3]
+			$g_InnerDiamondRight = $g_aVillageRefSize[$iIndex][4]
+			$g_InnerDiamondTop = $g_aVillageRefSize[$iIndex][5]
+			$g_InnerDiamondBottom = $g_aVillageRefSize[$iIndex][6]
+			If $g_bDebugSetLog Then SetDebugLog("LRTB: " & $g_InnerDiamondLeft & "," & $g_InnerDiamondRight & "," & $g_InnerDiamondTop & "," & $g_InnerDiamondBottom)
 		Else
 			SetLog("Reference Size no match", $COLOR_ERROR)
 			SetLog("Stone2tree = " & $c, $COLOR_INFO)
@@ -97,6 +97,7 @@ Func GetVillageSize($bOnBuilderBase = $g_bStayOnBuilderBase, $sStonePrefix = "st
 		$g_iZoomFactor = $z
 		$g_ixOffset = $x
 		$g_iyOffset = $y
+		setVillageOffset($x, $y, $z) ; update DLL with village offset for ConvertToVillagePos
 		
 		SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
 
@@ -111,6 +112,7 @@ Func GetVillageSize($bOnBuilderBase = $g_bStayOnBuilderBase, $sStonePrefix = "st
 		$aResult[7] = $tree[0]
 		$aResult[8] = $tree[1]
 		$aResult[9] = $tree[5]
+		$aResult[10] = $g_sCurrentScenery
 
 		$g_aVillageSize = $aResult
 		ConvertInternalExternArea()

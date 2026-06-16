@@ -444,7 +444,7 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 	SetLog("Sort WallLevel: " & String($g_iSearchWallSort), $COLOR_DEBUG)
 	If Not $bDisplayArray Then ZoomOut()
 	
-	$aWall = QuickMIS("CNX", $g_sImgCheckWallDir, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+	$aWall = QuickMIS("CNX", $g_sImgCheckWallDir, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom)
 
 	If IsArray($aWall) And UBound($aWall) > 0 Then
 		For $i = 0 To UBound($aWall) - 1

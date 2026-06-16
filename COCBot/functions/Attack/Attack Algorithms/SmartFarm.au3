@@ -56,7 +56,7 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_REAL)
 	; Initial Timer
 	Local $hTimer = TimerInit()
 	
-	If $bTest Then CheckZoomOut("VillageSearch")
+	If $bTest Then CheckZoomOut()
 	
 	_CaptureRegion2() ; ensure full screen is captured (not ideal for debugging as clean image was already saved, but...)
 	If $g_bChkForceEdgeSmartfarm Or $bEdge Then 
@@ -212,7 +212,7 @@ Func SmartFarmDetection($bTest = False)
 	Local $hTimer = TimerInit()
 	Local $aXY[2], $aInOut, $aPoint, $sPoint, $sSide, $iSide, $aRet[0][7]
 	
-	Local $aAll = QuickMIS("CNX", $g_sImgSearchAll, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+	Local $aAll = QuickMIS("CNX", $g_sImgSearchAll, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight, $g_OuterDiamondBottom)
 	If IsArray($aAll) And UBound($aAll) > 0 Then
 		RemoveDupCNX($aAll, 1, 5) ;remove duplicate/same spot detection
 		For $i = 0 To UBound($aAll) - 1
@@ -257,10 +257,10 @@ Func Side($Pixel)
 	Local $sReturn = ""
 	; Using to determinate the Side position on Screen |Bottom Right|Bottom Left|Top Left|Top Right|
 	If IsArray($Pixel) And UBound($Pixel) = 2 Then
-		If $Pixel[0] < $DiamondMiddleX And $Pixel[1] <= $DiamondMiddleY Then $sReturn = "TL"
-		If $Pixel[0] >= $DiamondMiddleX And $Pixel[1] < $DiamondMiddleY Then $sReturn = "TR"
-		If $Pixel[0] < $DiamondMiddleX And $Pixel[1] > $DiamondMiddleY Then $sReturn = "BL"
-		If $Pixel[0] >= $DiamondMiddleX And $Pixel[1] >= $DiamondMiddleY Then $sReturn = "BR"
+		If $Pixel[0] < $g_DiamondMiddleX And $Pixel[1] <= $g_DiamondMiddleY Then $sReturn = "TL"
+		If $Pixel[0] >= $g_DiamondMiddleX And $Pixel[1] < $g_DiamondMiddleY Then $sReturn = "TR"
+		If $Pixel[0] < $g_DiamondMiddleX And $Pixel[1] > $g_DiamondMiddleY Then $sReturn = "BL"
+		If $Pixel[0] >= $g_DiamondMiddleX And $Pixel[1] >= $g_DiamondMiddleY Then $sReturn = "BR"
 		If $sReturn = "" Then
 			SetLog("Error on SIDE...: " & _ArrayToString($Pixel), $COLOR_ERROR)
 			$sReturn = "ERROR"
@@ -279,12 +279,13 @@ EndFunc
 Func IsInsideSmallDiamond($aCoords)
 	Local $x = $aCoords[0], $y = $aCoords[1]
 	Local $Left, $Right, $Top, $Bottom, $a, $b, $c, $aRet[2] = [0, ""]
-	$Left = $InnerDiamondLeft + 130
-	$Right = $InnerDiamondRight - 130
-	$Top = $InnerDiamondTop + 100
-	$Bottom = $InnerDiamondBottom - 100
-	$a = $DiamondMiddleX - $x
-	$b = $DiamondMiddleY - $y
+	Local $iOffsetX = 130, $iOffsetY = 100
+	$Left = $g_InnerDiamondLeft + $iOffsetX
+	$Right = $g_InnerDiamondRight - $iOffsetX
+	$Top = $g_InnerDiamondTop + $iOffsetY
+	$Bottom = $g_InnerDiamondBottom - $iOffsetY
+	$a = $g_DiamondMiddleX - $x
+	$b = $g_DiamondMiddleY - $y
 	$c = Sqrt($a * $a + $b * $b)
 	
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
@@ -586,7 +587,7 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[0] = -1
 	$g_aiDeployHeroesPosition[1] = -1
 	
-	If $g_bDebugSmartFarm Then TestDropLine()
+	If $g_bDebugSmartFarm Then AttackCSVDEBUGIMAGE()
 	
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $g_iMinionPSlot, $g_iDukeSlot, $SIDESNAMES)
 	
@@ -1011,7 +1012,7 @@ EndFunc   ;==>GetVectorPixelOnEachSide2
 
 
 Func TestSF()
-	CheckZoomOut("VillageSearch")
+	CheckZoomOut()
 	PrepareAttack($DB)
 	Local $Nside = ChkSmartFarm()
 	AttackSmartFarm($Nside[1], $Nside[2])
@@ -1027,7 +1028,7 @@ Func SFLoop($iCountLoop = 1, $bStopWhenResourceFull = False)
 		VillageSearch()
 		If Not IsAttackPage() Then ContinueLoop
 		If Not $g_bRunState Then Return
-		CheckZoomOut("VillageSearch")
+		CheckZoomOut()
 		PrepareAttack($DB)
 		If IsProblemAffect() Then ContinueLoop
 		If Not $g_bRunState Then Return

@@ -26,15 +26,15 @@ Func isInsideDiamond($aCoords, $bOuter = False)
 	Local $x = $aCoords[0], $y = $aCoords[1], $xD, $yD
 	Local $Left, $Right, $Top, $Bottom
     If $bOuter Then 
-        $Left = $OuterDiamondLeft - $InnerDiamandDiffX
-        $Right = $OuterDiamondRight + $InnerDiamandDiffX
-        $Top = $OuterDiamondTop - $InnerDiamandDiffY
-        $Bottom = $OuterDiamondBottom + $InnerDiamandDiffY
+        $Left = $g_OuterDiamondLeft
+        $Right = $g_OuterDiamondRight
+        $Top = $g_OuterDiamondTop
+        $Bottom = $g_OuterDiamondBottom
     Else
-		$Left = $InnerDiamondLeft
-        $Right = $InnerDiamondRight
-        $Top = $InnerDiamondTop
-        $Bottom = $InnerDiamondBottom
+		$Left = $g_InnerDiamondLeft
+        $Right = $g_InnerDiamondRight
+        $Top = $g_InnerDiamondTop
+        $Bottom = $g_InnerDiamondBottom
     EndIf
 	
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]

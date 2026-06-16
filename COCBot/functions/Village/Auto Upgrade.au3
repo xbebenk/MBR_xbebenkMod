@@ -1182,17 +1182,17 @@ Func SearchGreenZone()
 	EndIf
 	
 	Local $iTop = 0, $iRight = 0, $iBottom = 0, $iLeft = 0, $sArea
-	Local $aFreeTile = QuickMIS("CNX", $g_sImgAUpgradeGreenZone, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+	Local $aFreeTile = QuickMIS("CNX", $g_sImgAUpgradeGreenZone, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom)
 	If IsArray($aFreeTile) And UBound($aFreeTile) > 0 Then
 		SetDebugLog("count tile: " & UBound($aFreeTile))
 		_ArraySort($aFreeTile, 0, 0, 0, 1) ;sort by x
 		For $i = 0 To UBound($aFreeTile) - 1
 			If IsInsideSmallDiamondXY($aFreeTile[$i][1], $aFreeTile[$i][2]) Then ContinueLoop ;too center on map
 			If Not isInsideDiamondXY($aFreeTile[$i][1], $aFreeTile[$i][2]) Then ContinueLoop ;outside village diamond
-			If $aFreeTile[$i][1] < $DiamondMiddleX - 60 And $aFreeTile[$i][2] > $DiamondMiddleY - 60 And $aFreeTile[$i][2] < $DiamondMiddleY + 60 Then $iLeft += 1
-			If $aFreeTile[$i][1] > $DiamondMiddleX + 60 And $aFreeTile[$i][2] > $DiamondMiddleY - 60 And $aFreeTile[$i][2] < $DiamondMiddleY + 60 Then $iRight += 1
-			If $aFreeTile[$i][2] < $DiamondMiddleY - 60 And $aFreeTile[$i][1] > $DiamondMiddleX - 60 And $aFreeTile[$i][1] < $DiamondMiddleX + 60 Then $iTop += 1
-			If $aFreeTile[$i][2] > $DiamondMiddleY + 60 And $aFreeTile[$i][1] > $DiamondMiddleX - 60 And $aFreeTile[$i][1] < $DiamondMiddleX + 60 Then $iBottom += 1
+			If $aFreeTile[$i][1] < $g_DiamondMiddleX - 60 And $aFreeTile[$i][2] > $g_DiamondMiddleY - 60 And $aFreeTile[$i][2] < $g_DiamondMiddleY + 60 Then $iLeft += 1
+			If $aFreeTile[$i][1] > $g_DiamondMiddleX + 60 And $aFreeTile[$i][2] > $g_DiamondMiddleY - 60 And $aFreeTile[$i][2] < $g_DiamondMiddleY + 60 Then $iRight += 1
+			If $aFreeTile[$i][2] < $g_DiamondMiddleY - 60 And $aFreeTile[$i][1] > $g_DiamondMiddleX - 60 And $aFreeTile[$i][1] < $g_DiamondMiddleX + 60 Then $iTop += 1
+			If $aFreeTile[$i][2] > $g_DiamondMiddleY + 60 And $aFreeTile[$i][1] > $g_DiamondMiddleX - 60 And $aFreeTile[$i][1] < $g_DiamondMiddleX + 60 Then $iBottom += 1
 		Next
 		SetLog("Top=" & $iTop & ", Right=" & $iRight & ", Bottom=" & $iBottom & ", Left=" & $iLeft, $COLOR_DEBUG)
 	EndIf

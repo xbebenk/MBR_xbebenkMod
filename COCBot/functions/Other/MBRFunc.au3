@@ -209,6 +209,7 @@ Func setVillageOffset($x, $y, $z)
 	$g_iVILLAGE_OFFSET[0] = $x
 	$g_iVILLAGE_OFFSET[1] = $y
 	$g_iVILLAGE_OFFSET[2] = $z
+	If $g_bDebugSetlog Then SetDebugLog("setVillageOffset x,y,z = [" & $x & "," & $y & "," & $z & "]")
 EndFunc   ;==>setVillageOffset
 
 Func setMaxDegreeOfParallelism($iMaxDegreeOfParallelism = 0)
@@ -240,7 +241,7 @@ Func ConvertVillagePos(ByRef $x, ByRef $y, $zoomfactor = 0)
 	EndIf
 	Local $a = StringSplit($result[0], "|")
 	If UBound($a) < 3 Then Return
-	;If $g_bDebugSetlog Then SetDebugLog("ConvertVillagePos [x,y] = [" & $x & "," & $y & "] -> [" & Int($a[1]) & "," & Int($a[2]) & "]")
+	If $g_bDebugSetlog Then SetDebugLog("ConvertVillagePos [x,y] = [" & $x & "," & $y & "] -> [" & Int($a[1]) & "," & Int($a[2]) & "]")
 	$x = Int($a[1])
 	$y = Int($a[2])
 EndFunc   ;==>ConvertVillagePos
@@ -254,7 +255,7 @@ Func ConvertToVillagePos(ByRef $x, ByRef $y, $zoomfactor = 0)
 	EndIf
 	Local $a = StringSplit($result[0], "|")
 	If UBound($a) < 3 Then Return
-	;If $g_bDebugSetlog Then SetDebugLog("ConvertToVillagePos [x,y] = [" & $x & "," & $y & "] -> [" & Int($a[1]) & "," & Int($a[2]) & "]")
+	If $g_bDebugSetlog Then SetDebugLog("ConvertToVillagePos [x,y] = [" & $x & "," & $y & "] -> [" & Int($a[1]) & "," & Int($a[2]) & "]")
 	$x = Int($a[1])
 	$y = Int($a[2])
 EndFunc   ;==>ConvertToVillagePos

@@ -936,9 +936,7 @@ Func btnTestAttackCSV()
 	setVillageOffset(0, 0, 1)
 	ConvertInternalExternArea()
 	
-	If Not CheckZoomOut("btnTestAttackCSV") Then
-		SetLog("CheckZoomOut failed", $COLOR_INFO)
-	EndIf
+	If Not CheckZoomOut() Then ZoomOut()
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
 	SetLog("FindTownhall() = " & FindTownhall(), $COLOR_INFO)
@@ -976,9 +974,7 @@ Func btnTestGetLocationBuilding()
 	$g_bDebugBuildingPos = True
 	$g_bDebugSetlog = True
 
-	If Not CheckZoomOut("btnTestGetLocationBuilding") Then
-		SetLog("CheckZoomOut failed", $COLOR_INFO)
-	EndIf
+	If Not CheckZoomOut() Then ZoomOut()
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
 	SetLog("FindTownhall() = " & FindTownhall(), $COLOR_INFO)

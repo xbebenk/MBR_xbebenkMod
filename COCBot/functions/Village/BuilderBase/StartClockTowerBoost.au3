@@ -23,7 +23,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotio
 	Else ; Start Boosting
 		SetLog("Boosting Clock Tower", $COLOR_INFO)
 		Local $aXY[2] = [0, 0]
-		Local $aClock = QuickMIS("CNX", $g_sImgStartCTBoost, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+		Local $aClock = QuickMIS("CNX", $g_sImgStartCTBoost, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom)
 		If IsArray($aClock) And UBound($aClock) > 0 Then
 			For $i = 0 To UBound($aClock) - 1
 				$aXY[0] = $aClock[$i][1]

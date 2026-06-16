@@ -1,18 +1,3 @@
-* **v.7.9.9 Mod_v1.2.6#126** (2026-05-15)
-* Fix Outer Diamond on Remove Gembox
-* Add Support for Upgrade Troop Launcher on Laboratory
-* Add Support Attack with Dragon Duke
-* Add Support Attack with Troop Launcher
-* Add Support Attack with Sky Wagon
-* CSV name for Dragon Duke = Duke
-* CSV name for Troop Launcher = TroopL
-* CSV name for Sky Wagon = SkyW
-* Removed Standard Attack on DeadBase
-* Please check your attack setting on DB or AB
-* Please check your Siege drop setting on Attack Setting
-* Please check your Laboratory upgrade setting
-* FillArmyCamp now support SuperBarb
-* Add feature use clan castle cake
 * 
 * **v.7.9.9 Mod_v1.2.6#127** (2026-05-19)
 * Fix Use Hero Book
@@ -25,3 +10,26 @@
 * re-image collector/mines/drill
 * Add option to not sell magic item
 * Support use book for Dragon Duke
+*
+* **v.7.9.9 Mod_v1.2.6#129** (2026-06-16)
+* Add Wild West scenery
+* Add Waste Lan scenery
+* Add Dragon Escape scenery
+* remap Magic scenery
+* remap Clash-A-Rama scenery
+* remap Pinter scenery
+* remap Villagesize measure
+* remap ClockTower Boost routine
+* support attack with Mecha (identifiead as hogs)
+* support attack with Broom (identifiead as minion)
+* remove troop/spell traintime variables
+* remove drop hero/spell on attack settings (will always drop if avail)
+* Add option to use Saved army for Tournament attack
+* Add option to revert back to use Saved army for DB attack
+* Add option to SignUp Tournament but, not attack (use for stay in league)
+* remove drop trophy
+* recalc Auto adjust save elix/gold for wall (will save at 4 storage cap)
+* new icon for Builderbase troop on settings
+* Support CleanYardBB to remve root on Builderbase
+* remap Redline and Dropline (for stable deployment, please use external edge)
+

@@ -38,10 +38,7 @@ Func BoostSuperTroop($bTest = False, $bForced = False)
 		Return ;Troop already checked and boosted
 	EndIf
 	
-	CheckMainScreen()
-	If _Sleep(50) Then Return
-	If Not CheckZoomOut("BoostSuperTroop") Then ZoomOut()
-	
+	If Not CheckZoomOut() Then ZoomOut()
 	If Not $g_bRunState Then Return
 	VillageReport(True, True)
 	If Not $g_bRunState Then Return

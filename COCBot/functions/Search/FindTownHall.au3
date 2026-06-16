@@ -13,7 +13,7 @@ Func FindTownHall()
 	
 	For $try = 1 To 2
 		SetDebugLog("[" & $try & "] FindTownHall #" & $try, $COLOR_ACTION)
-		$aTH = QuickMIS("CNX", $g_sImgTownHall, $OuterDiamondLeft, $OuterDiamondTop, $OuterDiamondRight, $OuterDiamondBottom)
+		$aTH = QuickMIS("CNX", $g_sImgTownHall, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom)
 		If IsArray($aTH) And UBound($aTH) > 0 Then
 			_ArraySort($aTH, 1, 0, 0, 3) ;sort TH Level descending
 			For $i = 0 To UBound($aTH) - 1
