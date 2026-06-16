@@ -570,17 +570,9 @@ Global $g_bGForcePBTUpdate = False
 Global $g_hAttackTimer = 0 ; Timer for knowing when attack starts, in 30 Sec. attack automatically starts and lasts for 3 Minutes
 Global $g_iAttackTimerOffset = Default ; Offset of timer to attack really started
 
-; -1 = don't use red line, 0 = ImgLoc raw red line routine (default), 1 = New ImgLoc based deployable red line routine, 2 = Original red line routine
-Global Const $REDLINE_IMGLOC_RAW = 0
-Global Const $REDLINE_IMGLOC = 1
-Global Const $REDLINE_ORIGINAL = 2
-Global Const $REDLINE_NONE = 3
-
-; 0 = Use fixed village corner (default), 1 = Find fist red line point, 2 = Fixed village corner on full drop line, 3 = First red line point on full drop line
-Global Const $DROPLINE_EDGE_FIRST = 0
-Global Const $DROPLINE_FULL_EDGE_FIXED = 1
-Global Const $DROPLINE_FULL_EDGE_FIRST = 2
-Global Const $DROPLINE_DROPPOINTS_ONLY = 3
+; 0 = External area edge (no image scan), 1 = Real redline from image scan
+Global Const $REDLINE_EDGE = 0
+Global Const $REDLINE_REAL = 1
 
 #Region Standard Enums and Consts - Attacks, Troops, Spells, Leagues, Loot Types
 #Tidy_Off
@@ -1108,8 +1100,7 @@ Global $g_aiAttackStdDropOrder[$g_iModeCount + 1] = [0, 0, 0, 0], $g_aiAttackStd
 		$g_abAttackStdSmartAttack[$g_iModeCount + 1] = [True, True, False, False], $g_aiAttackStdSmartDeploy[$g_iModeCount + 1] = [0, 0, 0, 0]
 Global $g_abAttackStdSmartNearCollectors[$g_iModeCount + 1][3] = [[False, False, False], [False, False, False], [False, False, False], [False, False, False]]
 ; Attack - Scripted
-Global $g_aiAttackScrRedlineRoutine[$g_iModeCount + 1] = [$REDLINE_IMGLOC_RAW, $REDLINE_IMGLOC_RAW, 0, 0]
-Global $g_aiAttackScrDroplineEdge[$g_iModeCount + 1] = [$DROPLINE_FULL_EDGE_FIXED, $DROPLINE_FULL_EDGE_FIXED, 0, 0]
+Global $g_aiAttackScrRedlineRoutine[$g_iModeCount + 1] = [$REDLINE_EDGE, $REDLINE_EDGE, 0, 0]
 Global $g_sAttackScrScriptName[$g_iModeCount] = ["Barch four fingers", "Barch four fingers", ""]
 
 ; End Battle
@@ -1819,6 +1810,16 @@ Global $CocDiamondDCD = "DCD"
 Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 
+; Diamond coordinates from scenery reference (updated by GetVillageSize)
+Global $g_InnerDiamondLeft = 45
+Global $g_InnerDiamondRight = 815
+Global $g_InnerDiamondTop = 60
+Global $g_InnerDiamondBottom = 636
+Global $g_InnerDiamondDiffX = 32
+Global $g_InnerDiamondDiffY = 25
+Global $g_DiamondMiddleX, $g_DiamondMiddleY
+Global $g_OuterDiamondLeft, $g_OuterDiamondRight, $g_OuterDiamondTop, $g_OuterDiamondBottom
+
 ; Tambahan Pak Boss Besar (2021)
 Global $g_aVillageSize[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -1992,7 +1993,7 @@ Global $g_aVillageRefSize[51][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589],
 									["SH", "Shadow", 598.40, 81, 790, 61, 592], _ ;ok
 									["RY", "Royal", 610.20, 57, 799, 48, 603], _ ;ok
 									["SM", "Summer", 568, 85, 813, 56, 604], _ ;ok
-									["CA", "Clash A-Rama", 609.21, 70, 796, 45, 583], _ ;ok
+									["CA", "Clash A-Rama", 619, 59, 785, 57, 598], _ ;ok
 									["PS", "Pixel", 617, 56, 796, 61, 618], _ ;ok
 									["DE", "Dragon Escape", 681.68, 40, 768, 81, 627], _ ;ok
 									["10", "10th Clasivery", 561, 92, 791, 47, 570], _ ;ok
@@ -2004,7 +2005,7 @@ Global $g_aVillageRefSize[51][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589],
 									["W4", "Scenery4", 606.35, 64, 767, 44, 573], _ ;ok
 									["JL", "Jolly", 543.76, 86, 762, 93, 602], _
 									["MT", "Magic Theatre", 549.18, 78, 777, 103, 626], _ ;ok
-									["PT", "Painter", 504.06, 80, 774, 104, 625], _
+									["PT", "Painter", 538.82, 69, 800, 56, 603], _
 									["DA", "Dark Ages", 581.83, 78, 775, 109, 627], _
 									["BC", "Book of Clash", 532.42, 77, 773, 105, 626], _
 									["EM", "Epic Magic", 624.48, 41, 818, 34, 615], _
