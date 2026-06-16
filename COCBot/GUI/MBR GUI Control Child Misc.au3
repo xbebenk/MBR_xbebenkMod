@@ -980,6 +980,11 @@ Func chkTournament()
 	Else
 		$g_bEnableTournament = False
 	EndIf
+	If GUICtrlRead($g_hChkNoTournament) = $GUI_CHECKED Then
+		$g_bNoTournament = True
+	Else
+		$g_bNoTournament = False
+	EndIf
 	$g_iTournamentAttackType = _GUICtrlComboBox_GetCurSel($g_hCmbTournamentAttackType)
 	SetLog("Set Tournament Attack Type : " & ($g_iTournamentAttackType = 0 ? "Dead Base" : "Active Base"), $COLOR_DEBUG)
 	

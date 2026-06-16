@@ -49,13 +49,14 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 	
 	Local $aButton, $bTournament = False, $aMatch
 	
-	If $g_bEnableTournament Then 
-		For $i = 1 To 20 
+	If $g_bEnableTournament And Not $g_bNoTournament Then 
+		For $i = 1 To 10 
 			If Not $g_bRunState Then Return
 			If _Sleep(50) Then Return
 			SetDebugLog("Search for FindMatch Button #" & $i, $COLOR_ACTION)
 			$aButton = QuickMIS("CNX", $g_sImgTournamentSearch, 325, 435, 540, 500)
 			If IsArray($aButton) And UBound($aButton) > 0 Then
+				RemoveDupCNX($aButton) ;remove duplicate button
 				For $z = 0 To UBound($aButton) - 1
 					If $aButton[$z][0] = "SignUp" Then
 						SetLog("Found SignUp Button", $COLOR_DEBUG)
@@ -99,6 +100,8 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 				Next
 			EndIf
 		Next
+	ElseIf $g_bNoTournament Then 
+		SetLog("Enabled Tournament but no Attack", $COLOR_DEBUG2)		
 	EndIf
 	
 	Local $bAttackButtonFound = False
