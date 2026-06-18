@@ -694,19 +694,11 @@ Func FindWallCSV(ByRef $aCSVExternalWall, ByRef $aCSVInternalWall)
 	Return $bResult
 EndFunc
 
-Func TestDropLine($iRedLine = $REDLINE_EDGE, $bOpenFile = False)
+Func TestDropLine($iRedLine = $REDLINE_EDGE, $bOpenFile = True)
 	Local $hTimer = TimerInit()
-	SearchZoomOut(False, True, "TestDropLine", False, False)
-	ConvertInternalExternArea()
+	CheckZoomOut()
 	_GetRedArea($iRedLine)
-	
-	SetDebugLog("Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)")
-	SetDebugLog("	[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft")
-	SetDebugLog("	[" & UBound($g_aiPixelTopRight) & "] pixels TopRight")
-	SetDebugLog("	[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft")
-	SetDebugLog("	[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight")
-	AttackCSVDEBUGIMAGE($bOpenFile) ;make IMG debug
-
+	AttackCSVDEBUGIMAGE($bOpenFile)
 EndFunc   ;==>TestDropLine
 
 Func TestDropLine1($bRedArea = True, $bCheckZoom = True)

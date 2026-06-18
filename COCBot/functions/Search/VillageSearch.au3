@@ -303,10 +303,23 @@ Func _VillageSearch($bTest = False) ;Control for searching a village that meets 
 		EndIf
 		
 		; ------- Add attack now button delay and check button status
-		If $g_bSearchAttackNowEnable And $g_iSearchAttackNowDelay > 0 Then
-			For $i = 1 To $g_iSearchAttackNowDelay
-				If _Sleep(1000) Then Return ; add human reaction time on AttackNow button function
-				If $g_bBtnAttackNowPressed = True Then ExitLoop 2
+		If $g_bSearchAttackNowEnable Then
+			; Pastikan tombol tetap dicek minimal 1 kali meskipun delay diset 0
+			Local $iDelayLoops = ($g_iSearchAttackNowDelay > 0) ? $g_iSearchAttackNowDelay : 1 
+			
+			For $i = 1 To $iDelayLoops
+				If $g_bBtnAttackNowPressed = True Then 
+					; PAKSA BOT MENGENALI MATCH SAAT TOMBOL DITEKAN
+					If $g_iMatchMode <> $DB And $g_iMatchMode <> $LB Then
+						$g_iMatchMode = $LB ; Default paksa ke Live Base jika bot bingung
+					EndIf
+					$match[$g_iMatchMode] = True ; Set status Match menjadi True agar bot mau menyerang
+					ExitLoop 2 ; Keluar dari loop pencarian
+				EndIf
+				
+				If $g_iSearchAttackNowDelay > 0 Then
+					If _Sleep(1000) Then Return ; add human reaction time
+				EndIf
 			Next
 		EndIf
 
@@ -385,7 +398,7 @@ Func _VillageSearch($bTest = False) ;Control for searching a village that meets 
 	
 	; measure enemy village (only if search match)
 	For $i = 0 To $g_iModeCount - 1
-		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Then
+		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Or $g_bBtnAttackNowPressed Then
 			If Not CheckZoomOut() Then
 				SaveDebugImage("VillageSearch", False) ; make clean snapshot
 				If IsProblemAffect() Then

@@ -51,7 +51,7 @@ Func TestSmartFarm()
 EndFunc   ;==>TestSmartFarm
 
 ; Collectors | Mines | Drills | All (Default)
-Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_REAL)
+Func ChkSmartFarm($bTest = False, $iMode = $REDLINE_REAL)
 
 	; Initial Timer
 	Local $hTimer = TimerInit()
@@ -59,15 +59,14 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_REAL)
 	If $bTest Then CheckZoomOut()
 	
 	_CaptureRegion2() ; ensure full screen is captured (not ideal for debugging as clean image was already saved, but...)
-	If $g_bChkForceEdgeSmartfarm Or $bEdge Then 
-		$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
-		$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
-		$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
-		$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
+	If $g_bChkForceEdgeSmartfarm Then 
+		$iMode = $REDLINE_EDGE
 	Else
-		_GetRedArea($iMode)
+		$iMode = $REDLINE_REAL
 	EndIf
-
+	
+	_GetRedArea($iMode)
+	
 	; TL , TR , BL , BR
 	Local $aMainSide[4] = [0, 0, 0, 0]
 
@@ -82,12 +81,12 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_REAL)
 	EndIf
 	
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
-	Local $aAll = SmartFarmDetection($bTest)
+	Local $aAll = SmartFarmDetection()
 	SetDebugLog(" TOTAL detection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
 	
 	If Ubound($aAll) = 0 Then 
 		SetLog("Strange ERR: no identified resource building found", $COLOR_DEBUG2)
-		$aAll = SmartFarmDetection($bTest)
+		$aAll = SmartFarmDetection()
 	EndIf
 	
 	If Ubound($aAll) = 0 Then 
@@ -97,26 +96,24 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_REAL)
 	EndIf
 	
 	; [0] = x , [1] = y , [2] = Side , [3] = In/out , [4] = Side,  [5]= Is string with 5 coordinates to deploy
-	Local $aResourcesOUT[0][7]
-	Local $aResourcesIN[0][7]
+	Local $aResourcesOUT[0][6]
+	Local $aResourcesIN[0][6]
 	
 	For $x = 0 To UBound($aAll) - 1
 		; Only proceeds when the x exist , not -1
 		If $aAll[$x][0] <> -1 Then
-			If $aAll[$x][3] = "In" Then
-				ReDim $aResourcesIN[UBound($aResourcesIN) + 1][7]
-				For $t = 0 To 6 ; Fill the variables
+			If $aAll[$x][2] = "In" Then
+				ReDim $aResourcesIN[UBound($aResourcesIN) + 1][6]
+				For $t = 0 To 5 ; Fill the variables
 					$aResourcesIN[UBound($aResourcesIN) - 1][$t] = $aAll[$x][$t]
 				Next
 			Else ; Out
-				ReDim $aResourcesOUT[UBound($aResourcesOUT) + 1][7]
-				For $t = 0 To 6 ; Fill the variables
+				ReDim $aResourcesOUT[UBound($aResourcesOUT) + 1][6]
+				For $t = 0 To 5 ; Fill the variables
 					$aResourcesOUT[UBound($aResourcesOUT) - 1][$t] = $aAll[$x][$t]
 				Next
 			EndIf
-		EndIf
-		If _Sleep(50) Then Return ; just in case on PAUSE
-		If Not $g_bRunState Then Return ; Stop Button
+		EndIf		
 	Next
 	
 	; Total of Resources and %
@@ -128,10 +125,10 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_REAL)
 	$g_sResourcesIN = UBound($aResourcesIN)
 	$g_sResourcesOUT = UBound($aResourcesOUT)
 	
-	Local $aTL = _ArrayFindAll($aAll, "TL", 0, 0, 0, 0, 4)
-	Local $aTR = _ArrayFindAll($aAll, "TR", 0, 0, 0, 0, 4)
-	Local $aBL = _ArrayFindAll($aAll, "BL", 0, 0, 0, 0, 4)
-	Local $aBR = _ArrayFindAll($aAll, "BR", 0, 0, 0, 0, 4)
+	Local $aTL = _ArrayFindAll($aAll, "TL", 0, 0, 0, 0, 3)
+	Local $aTR = _ArrayFindAll($aAll, "TR", 0, 0, 0, 0, 3)
+	Local $aBL = _ArrayFindAll($aAll, "BL", 0, 0, 0, 0, 3)
+	Local $aBR = _ArrayFindAll($aAll, "BR", 0, 0, 0, 0, 3)
 	$aMainSide[0] = UBound($aTL)
 	$aMainSide[1] = UBound($aTR)
 	$aMainSide[2] = UBound($aBL)
@@ -202,7 +199,7 @@ Func ChkSmartFarm($bTest = False, $bEdge = False, $iMode = $REDLINE_REAL)
 
 EndFunc   ;==>ChkSmartFarm
 
-Func SmartFarmDetection($bTest = False)
+Func SmartFarmDetection()
 	
 	; This Function will fill an Array with several informations after Mines, Collectores or Drills detection with Imgloc
 	; [0] = x , [1] = y , [2] = Distance to Redline ,[3] = In/Out, [4] = Side,  [5]= Is array Dim[2] with 5 coordinates to deploy
@@ -210,7 +207,7 @@ Func SmartFarmDetection($bTest = False)
 	
 	; Initial Timer
 	Local $hTimer = TimerInit()
-	Local $aXY[2], $aInOut, $aPoint, $sPoint, $sSide, $iSide, $aRet[0][7]
+	Local $aXY[2], $sInOut, $aPoint, $sPoint, $sSide, $iSide, $aRet[0][6], $bInOut = False
 	
 	Local $aAll = QuickMIS("CNX", $g_sImgSearchAll, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight, $g_OuterDiamondBottom)
 	If IsArray($aAll) And UBound($aAll) > 0 Then
@@ -220,7 +217,6 @@ Func SmartFarmDetection($bTest = False)
 			$aXY[0] = $aAll[$i][1]
 			$aXY[1] = $aAll[$i][2]
 			If Not IsInsideDiamond($aXY) Then ContinueLoop ;skip building out of diamond
-			$aInOut = isInsideSmallDiamond($aXY) ;check from center diamond
 			$sSide = Side($aXY) ;sSide = "TL", "BL", "TR", "BR"
 			Switch $sSide
 				Case "TL"
@@ -233,20 +229,26 @@ Func SmartFarmDetection($bTest = False)
 					$iSide = $eVectorLeftBottom
 			EndSwitch
 			
-			If $aInOut[1] = "Out" Then			
-				$aPoint = _FindPixelCloser(_GetVectorOutZone($iSide), $aXY, 4)
-				For $p = 0 To UBound($aPoint) - 1
-					$sPoint &= _ArrayToString($aPoint[$p]) & ","
-				Next
-				If StringRight($sPoint, 1) = "," Then $sPoint = StringTrimRight($sPoint, 1)
-				;SetDebugLog("$sPoint : " & $sPoint)
+			$bInOut = isInsideSmallDiamond($aXY) ;check from center diamond
+			If $bInOut Then 
+				$sInOut = "In"
+			Else
+				$sInOut = "Out"
 			EndIf
-			Local $tmparray[1][7] = [[$aAll[$i][1], $aAll[$i][2], Floor($aInOut[0]), $aInOut[1], $sSide, ($aInOut[1] = "Out" ? $sPoint : ""), $aAll[$i][0] & "_" & $aAll[$i][3]]]
+			
+			$aPoint = _FindPixelCloser(_GetVectorOutZone($iSide), $aXY, 4)
+			For $p = 0 To UBound($aPoint) - 1
+				$sPoint &= _ArrayToString($aPoint[$p]) & ","
+			Next
+			If StringRight($sPoint, 1) = "," Then $sPoint = StringTrimRight($sPoint, 1)
+			;SetDebugLog("$sPoint : " & $sPoint)
+			
+			Local $tmparray[1][6] = [[$aXY[0], $aXY[1], $sInOut, $sSide, $sPoint, $aAll[$i][0] & "_" & $aAll[$i][3]]]
 			_ArrayAdd($aRet, $tmparray)
 		Next
 		;succeed
+		SetDebugLog("Found " & Ubound($aRet) & " Building on SmartFarmDetection")
 		SetLog("SmartFarmDetection Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_INFO)
-		If Ubound($aRet) > 0 Then Return $aRet
 	Else
 		SetLog("SmartFarmDetection : ERROR|NONE Building Detected", $COLOR_INFO)
 	EndIf
@@ -278,15 +280,12 @@ EndFunc
 
 Func IsInsideSmallDiamond($aCoords)
 	Local $x = $aCoords[0], $y = $aCoords[1]
-	Local $Left, $Right, $Top, $Bottom, $a, $b, $c, $aRet[2] = [0, ""]
-	Local $iOffsetX = 130, $iOffsetY = 100
+	Local $Left, $Right, $Top, $Bottom, $bRet = False
+	Local $iOffsetX = Round((Floor(130 * $g_iZoomFactor))), $iOffsetY = Round((Floor(100 * $g_iZoomFactor)))
 	$Left = $g_InnerDiamondLeft + $iOffsetX
 	$Right = $g_InnerDiamondRight - $iOffsetX
 	$Top = $g_InnerDiamondTop + $iOffsetY
 	$Bottom = $g_InnerDiamondBottom - $iOffsetY
-	$a = $g_DiamondMiddleX - $x
-	$b = $g_DiamondMiddleY - $y
-	$c = Sqrt($a * $a + $b * $b)
 	
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
 	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
@@ -296,15 +295,13 @@ Func IsInsideSmallDiamond($aCoords)
 	Local $DY = Abs($y - $aMiddle[1])
 
 	If ($DX / $aSize[0] + $DY / $aSize[1] <= 1) Then
-		If $g_bDebugSetLog Then SetDebugLog("isInsideSmallDiamond: " & "[" & $x & "," & $y & "] Coord Inside SmallDiamond", $COLOR_DEBUG1)
-		$aRet[0] = $c
-		$aRet[1] = "In" ; Inside SmallDiamond
+		;If $g_bDebugSetLog Then SetDebugLog("isInsideSmallDiamond: " & "[" & $x & "," & $y & "] Coord Inside SmallDiamond", $COLOR_DEBUG1)
+		$bRet = True
 	Else
-		If $g_bDebugSetLog Then SetDebugLog("isInsideSmallDiamond: " & "[" & $x & "," & $y & "] Coord Outside SmallDiamond", $COLOR_DEBUG1)
-		$aRet[0] = $c
-		$aRet[1] = "Out" ; OutSide SmallDiamond
+		;If $g_bDebugSetLog Then SetDebugLog("isInsideSmallDiamond: " & "[" & $x & "," & $y & "] Coord Outside SmallDiamond", $COLOR_DEBUG1)
+		$bRet = False
 	EndIf
-	Return $aRet
+	Return $bRet
 EndFunc   ;==>isInsideSmallDiamond
 
 Func SetSlotSpecialTroops()
@@ -400,10 +397,10 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $aBestSideToAttack)
 	Local $tempObbj, $tempObbjs
 	For $i = 0 To UBound($aIn) - 1
 		; Objects Detected Inside the village
-		addInfoToDebugImage($hGraphic, $hPenBlack, $aIn[$i][3] & "|" & $aIn[$i][4] & "|" & $aIn[$i][2] & "|" & $aIn[$i][6], $aIn[$i][0], $aIn[$i][1])
+		addInfoToDebugImage($hGraphic, $hPenBlack, $aIn[$i][3] & "|" & $aIn[$i][4] & "|" & $aIn[$i][2] & "|" & $aIn[$i][5], $aIn[$i][0], $aIn[$i][1])
 		
 		; Deploy points near Red Line
-		Local $aPoints = StringSplit($aIn[$i][5], ",", $STR_NOCOUNT)
+		Local $aPoints = StringSplit($aIn[$i][4], ",", $STR_NOCOUNT)
 		;SetDebugLog("aPoints: " & _ArrayToString($aPoints))
 		If IsArray($aPoints) And UBound($aPoints) > 0 Then
 			For $p = 0 To UBound($aPoints) - 1
@@ -418,11 +415,11 @@ Func DebugImageSmartFarm($THdetails, $aIn, $aOut, $sTime, $aBestSideToAttack)
 
 	For $i = 0 To UBound($aOut) - 1
 		; Objects Detected Outside the village
-		addInfoToDebugImage($hGraphic, $hPenBlack, $aOut[$i][3] & "|" & $aOut[$i][4] & "|" & $aOut[$i][2] & "|" & $aOut[$i][6], $aOut[$i][0], $aOut[$i][1])
+		addInfoToDebugImage($hGraphic, $hPenBlack, $aOut[$i][3] & "|" & $aOut[$i][4] & "|" & $aOut[$i][2] & "|" & $aOut[$i][5], $aOut[$i][0], $aOut[$i][1])
 
 		; Deploy points near Red Line
-		Local $aPoints = StringSplit($aOut[$i][5], ",", $STR_NOCOUNT)
-		SetDebugLog("aPoints: " & _ArrayToString($aPoints))
+		Local $aPoints = StringSplit($aOut[$i][4], ",", $STR_NOCOUNT)
+		;SetDebugLog("aPoints: " & _ArrayToString($aPoints))
 		If IsArray($aPoints) And UBound($aPoints) > 0 Then
 			For $p = 0 To UBound($aPoints) - 1
 				Local $aPoint = StringSplit($aPoints[$p], "|", $STR_NOCOUNT)

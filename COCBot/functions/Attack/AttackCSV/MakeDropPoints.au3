@@ -43,6 +43,34 @@ Func MakeDropPoints($side, $pointsQty, $addtiles, $versus, $randomx = 2, $random
 			Local $Vector = $g_aiPixelBottomRightDOWNDropLine
 		Case Else
 	EndSwitch
+	
+	; =========================================================================
+	; [TAMBAHAN BARU] FILTER: Potong garis yang masuk ke area Attack Bar
+	; =========================================================================
+	Local $safeBottomY = 565 ; Default batas bawah yang aman
+	If IsArray($DeployableLRTB) Then $safeBottomY = $DeployableLRTB[3] - 5 ; Kurangi 5 pixel sebagai zona aman
+
+	If IsArray($Vector) Then
+		Local $aNewVector[UBound($Vector)] ; Buat array 1D kosong baru
+		Local $iValidCount = 0
+
+		; Pindahkan hanya pixel yang Y-nya lebih kecil (lebih tinggi) dari batas aman
+		For $j = 0 To UBound($Vector) - 1
+			Local $tmpPixel = $Vector[$j]
+			If $tmpPixel[1] < $safeBottomY Then
+				$aNewVector[$iValidCount] = $tmpPixel ; Masukkan array pixel utuh
+				$iValidCount += 1
+			EndIf
+		Next
+
+		; Timpa $Vector lama dengan vector yang sudah dipotong (jika ada isinya)
+		If $iValidCount > 0 Then
+			ReDim $aNewVector[$iValidCount] ; Sesuaikan ukuran array
+			$Vector = $aNewVector
+		EndIf
+	EndIf
+	; =========================================================================
+	
 	If $versus = "IGNORE" Then $versus = "EXT-INT" ; error proof use input if misuse targeted MAKE command
 	If Int($pointsQty) > 0 Then
 		Local $pointsQtyCleaned = Abs(Int($pointsQty))
@@ -59,7 +87,11 @@ Func MakeDropPoints($side, $pointsQty, $addtiles, $versus, $randomx = 2, $random
 		Local $pixel = $Vector[$i]
 		$str &= $pixel[0] & "-" & $pixel[1] & "|"
 	Next
-
+	Local $tileSize = 8 ; Nilai default pixel per tile
+	If IsArray($g_aVillageSize) And $g_aVillageSize[1] > 0 Then
+		$tileSize = Round(8 * $g_aVillageSize[1])
+	EndIf
+	
 	Switch $side & "|" & $versus
 		Case "TOP-LEFT-DOWN|INT-EXT", "TOP-LEFT-UP|EXT-INT", "TOP-RIGHT-DOWN|EXT-INT", "TOP-RIGHT-UP|INT-EXT", "BOTTOM-LEFT-DOWN|EXT-INT", "BOTTOM-LEFT-UP|INT-EXT", "BOTTOM-RIGHT-DOWN|INT-EXT", "BOTTOM-RIGHT-UP|EXT-INT"
 			;From right to left
@@ -68,7 +100,7 @@ Func MakeDropPoints($side, $pointsQty, $addtiles, $versus, $randomx = 2, $random
 				$x += $pixel[0]
 				$y += $pixel[1]
 				If Mod(UBound($Vector) - $i + 1, $p) = 0 Then
-					For $u = 8 * Abs(Int($addtiles)) To 0 Step -1
+					For $u = $tileSize * Abs(Int($addtiles)) To 0 Step -1
 						If Int($addtiles) > 0 Then
 							Local $l = $u
 						Else
@@ -113,7 +145,7 @@ Func MakeDropPoints($side, $pointsQty, $addtiles, $versus, $randomx = 2, $random
 				$x += $pixel[0]
 				$y += $pixel[1]
 				If Mod($i, $p) = 0 Then
-					For $u = 8 * Abs(Int($addtiles)) To 0 Step -1
+					For $u = $tileSize * Abs(Int($addtiles)) To 0 Step -1
 						If Int($addtiles) > 0 Then
 							Local $l = $u
 						Else

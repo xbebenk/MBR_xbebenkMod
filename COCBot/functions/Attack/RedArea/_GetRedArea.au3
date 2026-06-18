@@ -20,10 +20,12 @@
 ;			Sort each sides
 ;			Add each sides in one array (not use, but it can help to get closer pixel of all the red area)
 
-Func _GetRedArea($iMode = $REDLINE_REAL, $iMaxAllowedPixelDistance = 25, $fMinSideLengthFactor = 0.65)
+Func _GetRedArea($iMode = $REDLINE_REAL)
 	Local $nameFunc = "[_GetRedArea] "
 	debugRedArea($nameFunc & " IN")
-	SetDebugLog("Redline mode : " & ($iMode = $REDLINE_REAL ? "REDLINE_REAL" : "REDLINE_EDGE"))
+	
+	Local $iMaxAllowedPixelDistance = 75
+	Local $fMinSideLengthFactor = 0.2
 	
 	Local $colorVariation = 40
 	Local $xSkip = 1
@@ -31,49 +33,63 @@ Func _GetRedArea($iMode = $REDLINE_REAL, $iMaxAllowedPixelDistance = 25, $fMinSi
 	Local $result = 0
 	Local $listPixelBySide
 
-	If $g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 0 And $g_aiAttackStdDropSides[$LB] = 4 Then ; Used for DES Side Attack (need to know the side the DES is on)
-		$result = DllCallMyBot("getRedAreaSideBuilding", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation, "int", $eSideBuildingDES)
-		SetDebugLog("Debug: Redline with DES Side chosen")
-	ElseIf $g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 0 And $g_aiAttackStdDropSides[$LB] = 5 Then ; Used for TH Side Attack (need to know the side the TH is on)
-		$result = DllCallMyBot("getRedAreaSideBuilding", "ptr", $g_hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation, "int", $eSideBuildingTH)
-		SetDebugLog("Debug: Redline with TH Side chosen")
-	Else ; Normal getRedArea
-		SetLog(" ==> _GetRedArea $iMode = " & $iMode, $COLOR_DEBUG)
-		Switch $iMode
-			Case $REDLINE_REAL ; Real redline from image scan
-				; ensure redline exists
-				SearchRedLinesModMultipleTimes()
-				$listPixelBySide = getRedAreaSide()
-				SetDebugLog("listPixelBySide after getRedAreaSideBuilding : " & @CRLF & _ArrayToString($listPixelBySide))
-				$g_aiPixelTopLeft = GetPixelSide($listPixelBySide, 1)
-				$g_aiPixelBottomLeft = GetPixelSide($listPixelBySide, 2)
-				$g_aiPixelBottomRight = GetPixelSide($listPixelBySide, 3)
-				$g_aiPixelTopRight = GetPixelSide($listPixelBySide, 4)
-				
-			Case $REDLINE_EDGE
-				; Edge mode: use ExternalArea directly, no image scan
-				$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
-				$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
-				$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
-				$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
-		EndSwitch
-		SetDebugLog("Debug: Redline chosen")
-	EndIf
+	SetLog("Redline mode : " & ($iMode = $REDLINE_REAL ? "REDLINE_REAL" : "REDLINE_EDGE"), $COLOR_DEBUG1)
+	Switch $iMode
+		Case $REDLINE_REAL ; Real redline from image scan
+			; ensure redline exists
+			SearchRedLinesModMultipleTimes()
+			$listPixelBySide = getRedAreaSide()
+			SetDebugLog("listPixelBySide after getRedAreaSide : " & @CRLF & _ArrayToString($listPixelBySide))
+			$g_aiPixelTopLeft = GetPixelSide($listPixelBySide, 1)
+			$g_aiPixelBottomLeft = GetPixelSide($listPixelBySide, 2)
+			$g_aiPixelBottomRight = GetPixelSide($listPixelBySide, 3)
+			$g_aiPixelTopRight = GetPixelSide($listPixelBySide, 4)
+			
+			; --- SIMPAN RAW SCAN UNTUK DEBUG ---
+			$g_aiRawTopLeft = $g_aiPixelTopLeft
+			$g_aiRawTopRight = $g_aiPixelTopRight
+			$g_aiRawBottomLeft = $g_aiPixelBottomLeft
+			$g_aiRawBottomRight = $g_aiPixelBottomRight
+			
+			; ===============================================================================
+			; FILTER BOUNDING BOX CYAN & ATTACK BAR
+			; Membuang titik "halusinasi" yang berada di luar area aman
+			; ===============================================================================
+			_FilterScannedPixels($g_aiPixelTopLeft)
+			_FilterScannedPixels($g_aiPixelTopRight)
+			_FilterScannedPixels($g_aiPixelBottomLeft)
+			_FilterScannedPixels($g_aiPixelBottomRight)
+			; ===============================================================================
+			
+		Case $REDLINE_EDGE
+			; Edge mode: use ExternalArea directly, no image scan
+			$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
+			$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
+			$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
+			$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
+	EndSwitch	
+
+	;RAW red point
+	SetDebugLog("[" & UBound($g_aiRawTopLeft) & "] Raw pixels TopLeft", $COLOR_DEBUG)
+	SetDebugLog("[" & UBound($g_aiRawTopRight) & "] Raw pixels TopRight", $COLOR_DEBUG)
+	SetDebugLog("[" & UBound($g_aiRawBottomLeft) & "] Raw pixels BottomLeft", $COLOR_DEBUG)
+	SetDebugLog("[" & UBound($g_aiRawBottomRight) & "] Raw pixels BottomRight", $COLOR_DEBUG)
 	
 	;02.02  - CLEAN REDAREA BAD POINTS -----------------------------------------------------------------------------------------------------------------------
+	SetDebugLog("Filtered RedArea")
 	SetDebugLog("[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft", $COLOR_DEBUG)
 	SetDebugLog("[" & UBound($g_aiPixelTopRight) & "] pixels TopRight", $COLOR_DEBUG)
 	SetDebugLog("[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft", $COLOR_DEBUG)
 	SetDebugLog("[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight", $COLOR_DEBUG)
-	CleanRedArea($g_aiPixelTopLeft)
-	CleanRedArea($g_aiPixelTopRight)
-	CleanRedArea($g_aiPixelBottomLeft)
-	CleanRedArea($g_aiPixelBottomRight)
-	SetDebugLog("RedArea cleaned")
-	SetDebugLog("[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft", $COLOR_DEBUG)
-	SetDebugLog("[" & UBound($g_aiPixelTopRight) & "] pixels TopRight", $COLOR_DEBUG)
-	SetDebugLog("[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft", $COLOR_DEBUG)
-	SetDebugLog("[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight", $COLOR_DEBUG)
+	;CleanRedArea($g_aiPixelTopLeft)
+	;CleanRedArea($g_aiPixelTopRight)
+	;CleanRedArea($g_aiPixelBottomLeft)
+	;CleanRedArea($g_aiPixelBottomRight)
+	;SetDebugLog("RedArea cleaned")
+	;SetDebugLog("[" & UBound($g_aiPixelTopLeft) & "] pixels TopLeft", $COLOR_DEBUG)
+	;SetDebugLog("[" & UBound($g_aiPixelTopRight) & "] pixels TopRight", $COLOR_DEBUG)
+	;SetDebugLog("[" & UBound($g_aiPixelBottomLeft) & "] pixels BottomLeft", $COLOR_DEBUG)
+	;SetDebugLog("[" & UBound($g_aiPixelBottomRight) & "] pixels BottomRight", $COLOR_DEBUG)
 	If _Sleep($DELAYRESPOND) Then Return
 
 	;02.03 - DROPLINE EDGE ---------------------------------------------------------------------------------------------------------------------------
@@ -217,6 +233,53 @@ Func _GetRedArea($iMode = $REDLINE_REAL, $iMaxAllowedPixelDistance = 25, $fMinSi
 
 	debugRedArea($nameFunc & " OUT ")
 EndFunc   ;==>_GetRedArea
+
+; #FUNCTION# =====================================================================================
+; Name ..........: _FilterScannedPixels
+; Description ...: Menyaring hasil scan. Membuang pixel yang melewati garis Cyan atau Attack Bar.
+; ================================================================================================
+Func _FilterScannedPixels(ByRef $aPixels)
+	If Not IsArray($aPixels) Then Return
+	
+	Local $iMax = UBound($aPixels)
+	If $iMax = 0 Then Return
+
+	Local $aClean[$iMax][2]
+	Local $iValid = 0
+
+	For $i = 0 To $iMax - 1
+		Local $iX = $aPixels[$i][0]
+		Local $iY = $aPixels[$i][1]
+		
+		; PENGAMAN 1: Lewati string korup (misalnya dari log ",3,338") agar bot tidak crash
+		If StringStripWS($iX, 8) = "" Or StringStripWS($iY, 8) = "" Then ContinueLoop
+		
+		; PENGAMAN 2: Ubah tipe data dari String teks menjadi Angka (Number)
+		$iX = Number($iX)
+		$iY = Number($iY)
+		
+		; PENGAMAN 3: Bungkus menjadi array 1D sesuai permintaan fungsi isInsideDiamondRedArea milikmu
+		Local $aPt[2] = [$iX, $iY]
+		
+		If isInsideDiamondRedArea($aPt) Then
+			$aClean[$iValid][0] = $iX
+			$aClean[$iValid][1] = $iY
+			$iValid += 1
+		EndIf
+	Next
+
+	; --- KUNCI PERBAIKAN ---
+	If $iValid > 0 Then
+		ReDim $aClean[$iValid][2]
+		$aPixels = $aClean
+	Else
+		; JANGAN MENGOSONGKAN ARRAY (Jangan pakai Local $aEmpty[0])
+		; Jika semua koordinat terhapus (karena filter terlalu ketat), bot akan kehilangan Redline dan error di SortByDistance.
+		; Solusi: Jika semua dianggap tidak valid, berarti filter isInsideDiamondRedArea "salah tangkap".
+		; Kita kembalikan array ke kondisi aslinya (Bypass Filter) agar drop troops tetap bisa berjalan!
+		Return 
+	EndIf
+EndFunc
 
 Func SortRedline($redline, $StartPixel, $EndPixel, $sDelim = ",")
 	Local $aPoints = StringSplit($redline, "|", $STR_NOCOUNT)
@@ -383,6 +446,7 @@ Func getRedAreaSide($redline = $g_sImglocRedline)
 	$a[3] = getRedAreaSideString($a3)
 	$a[4] = getRedAreaSideString($a4)
 	;SetDebugLog("getRedAreaSideBuilding, Side " & $i & ": " & StringReplace($a[$i], "-", ","))
+	
 	Return $a
 EndFunc   ;==>getRedAreaSideBuilding
 

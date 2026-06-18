@@ -791,6 +791,7 @@ Func CheckClanRush()
 		Next
 		If _Sleep(1000) Then Return
 		Local $aChest = QuickMIS("CNX", $g_sImgClanRush, 790, 200, 840, 510)
+		If $aChest = -1 Then $aChest = QuickMIS("CNX", $g_sImgClanRush, 8, 240, 60, 520)
 		If IsArray($aChest) And UBound($aChest) > 0 Then 
 			_ArraySort($aChest, 1, 0, 0, 2)
 			For $i = 0 To UBound($aChest) - 1

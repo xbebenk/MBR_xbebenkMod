@@ -776,12 +776,9 @@ EndFunc   ;==>SearchRedLinesMultipleTimes
 
 Func GetPixelSectionMod($aX, $aY)
 	Local $sRet = ""
-	Local $aDiamond = StringSplit($CocDiamondDCD, "|", $STR_NOCOUNT)
+	Local $aDiamond = StringSplit($CocDiamondECD, "|", $STR_NOCOUNT)
 	Local $aMidX = StringSplit($aDiamond[0], ",", $STR_NOCOUNT)
 	Local $aMidY = StringSplit($aDiamond[1], ",", $STR_NOCOUNT)
-	;If $g_bDebugSetlog Then SetLog("aMidX = " & _ArrayToString($aMidX))
-	;If $g_bDebugSetlog Then SetLog("aMidY = " & _ArrayToString($aMidY))
-	;If $g_bDebugSetlog Then SetLog("MidX=" & Int($aMidX[0]) & ", MidY=" & Int($aMidY[1]), $COLOR_DEBUG1)
 	Local $isLeft = $aX <= Int($aMidX[0]) ;middle X
 	Local $isTop = $aY <= Int($aMidY[1]) ;middle Y
 	
@@ -792,7 +789,7 @@ Func GetPixelSectionMod($aX, $aY)
 	Return $sRet
 EndFunc   ;==>GetPixelSectionMod
 
-Func RedlineOffSetMod($sXY, $iOffset = 6, $iDistance = 10)
+Func RedlineOffSetMod($sXY, $iOffset = 2, $iDistance = 5)
 	Local $sRet = "", $iXOffset = 0, $iYOffset = 0, $sArea = ""
 	Local $aTmpXYTL[2] = [0, 0], $aTmpXYBL[2] = [0, 0], $aTmpXYBR[2] = [0, 0], $aTmpXYTR[2] = [0, 0]
 	Local $aRet = StringSplit($sXY, "|", $STR_NOCOUNT)
@@ -856,25 +853,30 @@ Func RedlineOffSetMod($sXY, $iOffset = 6, $iDistance = 10)
 	Return $sRet
 EndFunc ;==>RedlineOffSetMod
 
-Func SearchRedLinesMod($sCocDiamond = "ECD")
+Func SearchRedLinesMod()
 	Local $sImageDir = $g_sImgRedLineMod
 	If FileExists($g_sImgRedLineMod & $g_sSceneryCode) Then $sImageDir = $sImageDir & $g_sSceneryCode
 	
-	Local $aRes = QuickMIS("CNX", $sImageDir)
-	Local $sTmp = ""
+	Local $aRes = QuickMIS("CNX", $sImageDir, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight, $g_OuterDiamondBottom)
+	Local $sTmp = "", $aXY[2] = [0, 0]
+	
 	If IsArray($aRes) And Ubound($aRes) > 0 Then
 		For $i = 0 To Ubound($aRes) - 1
-			$sTmp &= "|" & $aRes[$i][1] & "," & $aRes[$i][2]
+			$aXY[0] = $aRes[$i][1]
+			$aXY[1] = $aRes[$i][2]
+			If Not isInsideDiamondRedArea($aXY) Then ContinueLoop
+			If IsInsideSmallDiamond($aXY) Then ContinueLoop
+			$sTmp &= "|" & $aXY[0] & "," & $aXY[1]
 		Next
 	EndIf
 	SetDebugLog("SearchRedLinesMod using : " & $sImageDir)
-	SetDebugLog("Result[" & Ubound($aRes) & "]: " & $sTmp)
+	SetDebugLog("Result[" & Ubound($aRes) & "]")
 	$g_sImglocRedline = $sTmp
 	
 	Return $g_sImglocRedline
 EndFunc   ;==>SearchRedLinesMod
 
-Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 5, $iDelay = 100)
+Func SearchRedLinesModMultipleTimes($iCount = 3, $iDelay = 100)
 	Local $bHBitmap_synced = ($g_hHBitmap = $g_hHBitmap2)
 	Local $g_hHBitmap2_old = $g_hHBitmap2
 	Local $g_sImglocRedline_old
@@ -882,7 +884,7 @@ Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 5, $iDelay =
 	Local $sText = ""
 	
 	; ensure current $g_sImglocRedline has been generated
-	SearchRedLinesMod($sCocDiamond)
+	SearchRedLinesMod()
 	; count # of redline points
 	Local $iRedlinePoints = [UBound(StringSplit($g_sImglocRedline, "|", $STR_NOCOUNT)), 0]
 	
@@ -911,7 +913,7 @@ Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 5, $iDelay =
 
 		; generate new redline based on new screenshot
 		$g_sImglocRedline = "" ; clear current redline
-		SearchRedLinesMod($sCocDiamond)
+		SearchRedLinesMod()
 
 		$iRedlineTime = __TimerDiff($hTimer) - $iCaptureTime
 
@@ -958,6 +960,34 @@ Func SearchRedLinesModMultipleTimes($sCocDiamond = "ECD", $iCount = 5, $iDelay =
 	Else
 		$g_hHBitmap2 = $g_hHBitmap2_old
 	EndIf
+	
+	;_CaptureRegion2()
+	;Local $EditedImage = _GDIPlus_BitmapCreateFromHBITMAP($g_hHBitmap2)
+	;Local $hGraphic = _GDIPlus_ImageGetGraphicsContext($EditedImage)
+	;Local $hPenMagenta = _GDIPlus_PenCreate(0xFFFF00F6, 2)
+	;Local $pixel
+	;Local $aPoints = StringSplit($g_sImglocRedline, "|", $STR_NOCOUNT)
+	;
+	;For $sPoint In $aPoints
+	;	Local $pixel = GetPixel($sPoint, ",")
+	;	If UBound($pixel) > 1 Then
+	;		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0]-2, $pixel[1]-2, 2, 2, $hPenMagenta)
+	;	EndIf
+	;Next
+	;
+	;Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
+	;Local $Time = @HOUR & "." & @MIN & "." & @SEC
+	;Local $sAttackType = ($g_iMatchMode = $DB ? "DB" : "LB")
+	;Local $filename = $g_sProfileTempDebugPath & String($sAttackType & "_AttackDebug_" & DetectScenery($g_aVillageSize[6]) & "_" & $Date & "_" & $Time) & ".png"
+	;_GDIPlus_ImageSaveToFile($EditedImage, $filename)
+	;If @error Then SetLog("Debug Image save error: " & @extended, $COLOR_ERROR)
+	;SetDebugLog("Attack CSV image saved: " & $filename)
+	;
+	;_GDIPlus_PenDispose($hPenMagenta)
+	;_GDIPlus_GraphicsDispose($hGraphic)
+	;_GDIPlus_BitmapDispose($EditedImage)
+	;ShellExecute($filename)
+	
 	$g_sImglocRedline = RedlineOffSetMod($g_sImglocRedline)
 	Return $g_sImglocRedline
 EndFunc   ;==>SearchRedLinesModMultipleTimes

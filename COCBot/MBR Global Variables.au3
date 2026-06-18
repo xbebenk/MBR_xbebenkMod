@@ -573,6 +573,7 @@ Global $g_iAttackTimerOffset = Default ; Offset of timer to attack really starte
 ; 0 = External area edge (no image scan), 1 = Real redline from image scan
 Global Const $REDLINE_EDGE = 0
 Global Const $REDLINE_REAL = 1
+Global $g_aiRawTopLeft, $g_aiRawBottomLeft, $g_aiRawBottomRight, $g_aiRawTopRight
 
 #Region Standard Enums and Consts - Attacks, Troops, Spells, Leagues, Loot Types
 #Tidy_Off
@@ -1087,12 +1088,6 @@ Global $g_iDeadEagleSearch = 0
 Global $g_iSlotsGiants = 1
 Global $g_aiAttackAlgorithm[$g_iModeCount] = [0, 0, 0], $g_aiAttackUseHeroes[$g_iModeCount] = [0, 0, 0], _
 		$g_abAttackDropCC[$g_iModeCount] = [0, 0, 0] , $g_aiAttackUseSiege[$g_iModeCount] = [0, 0, 0], $g_aiAttackUseWardenMode[$g_iModeCount] = [0, 0, 0]
-;Global $g_abAttackUseLightSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseHealSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseRageSpell[$g_iModeCount] = [0, 0, 0], _
-;		$g_abAttackUseJumpSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseFreezeSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseCloneSpell[$g_iModeCount] = [0, 0, 0], _
-;		$g_abAttackUseInvisibilitySpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseRecallSpell[$g_iModeCount] = [0, 0, 0], _
-;		$g_abAttackUsePoisonSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseEarthquakeSpell[$g_iModeCount] = [0, 0, 0], _
-;		$g_abAttackUseHasteSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseSkeletonSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseBatSpell[$g_iModeCount] = [0, 0, 0], _
-;		$g_abAttackUseOverGrowthSpell[$g_iModeCount] = [0, 0, 0]
 
 Global $g_bDropEmptySiege[$g_iModeCount] = [0, 0, 0]
 ; Attack - Standard

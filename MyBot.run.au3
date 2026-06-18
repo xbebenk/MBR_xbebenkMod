@@ -812,18 +812,13 @@ Func _Idle() ;Sequence that runs until Full Army
 	WEnd
 EndFunc   ;==>_Idle
 
-Func AttackMain($bFirstStart = False) ;Main control for attack functions
+Func AttackMain() ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
-	ClickAway()
-	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then
-		If checkMainScreen(False, $g_bStayOnBuilderBase, "AttackMain") Then ZoomOut()
-	EndIf
-
+	
+	If Not CheckZoomOut() Then ZoomOut(True)
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
 			If Not $g_bRunState Then Return
-			;If $g_bUpdateSharedPrefs And $g_bChkSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then Return
@@ -838,7 +833,6 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 			If $g_bRestart Then Return
 			ReturnHome($g_bTakeLootSnapShot)
 			If Not $g_bRunState Then Return
-			If _Sleep($DELAYATTACKMAIN2) Then Return
 			Return True
 		Else
 			SetLog("None of search condition match:", $COLOR_WARNING)
@@ -1172,7 +1166,7 @@ Func FirstCheckRoutine()
 		While True
 			$g_bRestart = False
 			If Not $g_bRunState Then Return
-			If AttackMain($g_bSkipDT) Then
+			If AttackMain() Then
 				Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
 				RequestCC()
 				ExitLoop
@@ -1265,7 +1259,7 @@ Func FirstCheckRoutine()
 			While True
 				$g_bRestart = False
 				If Not $g_bRunState Then Return
-				If AttackMain($g_bSkipDT) Then
+				If AttackMain() Then
 					Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 					$b_SuccessAttack = True
 					ExitLoop

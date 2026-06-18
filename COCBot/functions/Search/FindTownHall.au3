@@ -3,7 +3,7 @@
 Func FindTownHall()
 	If Not $g_bRunState Then Return
 	Local $sTHString = "-"
-	Local $aTH, $aiTHPos[2], $aaTHPos[1], $aTHLocation
+	Local $aTH, $aiTHPos[2], $aaTHPos[1]
 	
 	;reset
 	$g_iSearchTH = "-"
@@ -25,8 +25,7 @@ Func FindTownHall()
 				$aiTHPos[1] = $aTH[$i][2]
 				$aaTHPos[0] = $aiTHPos
 				$g_iSearchTH = $aTH[$i][3]
-				$aTHLocation = isInsideSmallDiamondXY($g_iTHx, $g_iTHy) 
-				$g_sTHLoc = $aTHLocation[1]
+				$g_sTHLoc = getTHLoc($g_iTHx, $g_iTHy) 
 				$sTHString = " [TH]:" & StringFormat("%2s", $g_iSearchTH) & ", " & $g_sTHLoc
 				_ObjPutValue($g_oBldgAttackInfo, $eBldgTownHall & "_LOCATION", $aaTHPos)
 				If $g_sTHLoc <> "-" Then ExitLoop 2 ; exit, we found Townhall location
@@ -36,4 +35,14 @@ Func FindTownHall()
 	Next
 
 	Return $sTHString
+EndFunc
+
+Func getTHLoc($x, $y)
+	Local $sRet = ""
+	If IsInsideSmallDiamondXY($x, $y) Then 
+		$sRet = "Out"
+	Else
+		$sRet = "In"
+	EndIf
+	Return $sRet
 EndFunc

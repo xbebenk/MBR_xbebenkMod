@@ -725,6 +725,7 @@ Func DetectSlotSiege($iSiegeIndex = 0)
 			Return -1
 		Else	
 			DragDonate($y)
+			DragDonate($y)
 		EndIf
 		If $i = 3 Then 
 			SetDebugLog("Siege Detection Failed: [" & $iSiegeIndex & "] " & $sName, $COLOR_ERROR)
