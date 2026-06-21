@@ -876,7 +876,7 @@ Func btnTestDeadBase()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
 
-	SearchZoomOut(False, True, "btnTestDeadBase")
+	ZoomOut(True)
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
 	SetLog("FindTownhall() = " & FindTownhall(), $COLOR_INFO)
@@ -1212,7 +1212,7 @@ Func btnTestCleanYard()
 	BeginImageTest()
 	Local $result
 	SetLog("Testing CleanYard", $COLOR_INFO)
-	SearchZoomOut(False, True, "btnTestCleanYard")
+	ZoomOut(True)
 	$result = CleanYard()
 	$result = ((IsArray($result)) ? (_ArrayToString($result, ",")) : ($result))
 	If @error Then $result = "Error " & @error & ", " & @extended & ", "

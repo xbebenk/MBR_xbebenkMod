@@ -75,9 +75,7 @@ Func UpgradeBuilding($bTest = False)
 	EndIf
 	
 	;align base first
-	Local $aZoomOut = SearchZoomOut(True, True, "", True)
-	If IsArray($aZoomOut) And $aZoomOut[0] = "" Then ZoomOut(True)
-	If $g_iZoomFactor > 1.10 Then ZoomOut(True)
+	ZoomOut(True)
 	
 	For $iz = 0 To UBound($g_avBuildingUpgrades, 1) - 1
 		If $g_bDebugSetlog Then SetlogUpgradeValues($iz) ; massive debug data dump for each upgrade

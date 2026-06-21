@@ -40,9 +40,9 @@ EndFunc
 Func getTHLoc($x, $y)
 	Local $sRet = ""
 	If IsInsideSmallDiamondXY($x, $y) Then 
-		$sRet = "Out"
-	Else
 		$sRet = "In"
+	Else
+		$sRet = "Out"
 	EndIf
 	Return $sRet
 EndFunc

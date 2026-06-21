@@ -881,31 +881,34 @@ Func _RunFunction($action)
 	Return FuncReturn($Result)
 EndFunc   ;==>_RunFunction
 
+Func ResetDailyRoutineCount()
+	SetLog("Reset Daily routine count", $COLOR_DEBUG1)
+	For $i = 0 To UBound($g_aDailyAccount) - 1
+		For $j = 0 To Ubound($g_aiDailyFunction) - 1
+			$g_aDailyAccount[$i][$j] = 0
+		Next
+	Next
+EndFunc
+
 Func __RunFunction($action)
 	If Not $g_bRunState Then Return
 	Local $iNowDay = @YDAY ; record numeric value for today
 	If $g_bEnableDailyRunRoutine Then 
 		If $iDailyDate <> $iNowDay Then ; if 1 day has passed since last time
 			$iDailyDate = @YDAY
-			SetLog("Reset Daily " & $action & " routine count", $COLOR_DEBUG1)
-			For $i = 0 To UBound($g_aDailyAccount) - 1
-				Local $iIndex = _ArraySearch($g_aiDailyFunction, $action, 0, 0, 0, 0, 1)
-				If $iIndex > -1 Then 
-					$g_aDailyAccount[$g_iCurAccount][$iIndex] = 0
-				EndIf
-			Next
+			ResetDailyRoutineCount()
 		EndIf
 			
 		For $i = 0 To UBound($g_aiDailyFunction) - 1
 			If $action = $g_aiDailyFunction[$i][0] Then
 				If $g_aDailyAccount[$g_iCurAccount][$i] >= $g_aiDailyFunction[$i][1] Then
-					SetDebugLog("[" & $action & "] Setting: " & $g_aiDailyFunction[$i][1] & ", Count=" & $g_aDailyAccount[$g_iCurAccount][$i], $COLOR_DEBUG2)
-					SetDebugLog($action & " Already run", $COLOR_DEBUG2)
+					SetLog("[" & $action & "] Setting: " & $g_aiDailyFunction[$i][1] & ", Count=" & $g_aDailyAccount[$g_iCurAccount][$i], $COLOR_DEBUG2)
+					SetLog($action & " Already run", $COLOR_DEBUG2)
 					Return
 				Else
 					$g_aDailyAccount[$g_iCurAccount][$i] += 1
 				EndIf
-				SetDebugLog("[" & $action & "] Update Run Count:" & $g_aDailyAccount[$g_iCurAccount][$i] & "/" & $g_aiDailyFunction[$i][1], $COLOR_DEBUG2)
+				SetLog("[" & $action & "] Update Run Count:" & $g_aDailyAccount[$g_iCurAccount][$i] & "/" & $g_aiDailyFunction[$i][1], $COLOR_DEBUG2)
 			EndIf
 		Next
 	EndIf

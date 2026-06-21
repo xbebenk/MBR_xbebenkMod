@@ -28,7 +28,7 @@ Func _ZoomOut() ;Zooms out
 	If Not checkChatTabPixel() Then checkMainScreen()
     ResumeAndroid()
     WinGetAndroidHandle()
-	getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
+	;getBSPos() ; Update $g_hAndroidWindow and Android Window Positions
 	If Not $g_bRunState Then Return
 	
 	Local $Result
@@ -49,28 +49,28 @@ Func _ZoomOut() ;Zooms out
 	Return $Result
 EndFunc   ;==>_ZoomOut
 
-Func ZoomOutBlueStacks() ;Zooms out
-	SetDebugLog("ZoomOutBlueStacks()")
-	; ctrl click is best and most stable for BlueStacks
-	Return ZoomOutCtrlClick(False, False, False, 250)
-   ;Return DefaultZoomOut("{DOWN}", 0)
-   ; ZoomOutCtrlClick doesn't cause moving buildings, but uses global Ctrl-Key and has taking focus problems
-   ;Return ZoomOutCtrlClick(False, False, False)
-EndFunc
+;Func ZoomOutBlueStacks() ;Zooms out
+;	SetDebugLog("ZoomOutBlueStacks()")
+;	; ctrl click is best and most stable for BlueStacks
+;	Return ZoomOutCtrlClick(False, False, False, 250)
+;   ;Return DefaultZoomOut("{DOWN}", 0)
+;   ; ZoomOutCtrlClick doesn't cause moving buildings, but uses global Ctrl-Key and has taking focus problems
+;   ;Return ZoomOutCtrlClick(False, False, False)
+;EndFunc
 
-Func ZoomOutBlueStacks2()
-	SetDebugLog("ZoomOutBlueStacks2()")
-	If $__BlueStacks2Version_2_5_or_later = False Then
-		; ctrl click is best and most stable for BlueStacks, but not working after 2.5.55.6279 version
-		Return ZoomOutCtrlClick(False, False, False, 250)
-	Else
-		; newer BlueStacks versions don't work with Ctrl-Click, so fall back to original arrow key
-		Return DefaultZoomOut("{DOWN}", 0, ($g_iAndroidZoomoutMode <> 3))
-	EndIf
-   ;Return DefaultZoomOut("{DOWN}", 0)
-   ; ZoomOutCtrlClick doesn't cause moving buildings, but uses global Ctrl-Key and has taking focus problems
-   ;Return ZoomOutCtrlClick(False, False, False)
-EndFunc
+;Func ZoomOutBlueStacks2()
+;	SetDebugLog("ZoomOutBlueStacks2()")
+;	If $__BlueStacks2Version_2_5_or_later = False Then
+;		; ctrl click is best and most stable for BlueStacks, but not working after 2.5.55.6279 version
+;		Return ZoomOutCtrlClick(False, False, False, 250)
+;	Else
+;		; newer BlueStacks versions don't work with Ctrl-Click, so fall back to original arrow key
+;		Return DefaultZoomOut("{DOWN}", 0, ($g_iAndroidZoomoutMode <> 3))
+;	EndIf
+;   ;Return DefaultZoomOut("{DOWN}", 0)
+;   ; ZoomOutCtrlClick doesn't cause moving buildings, but uses global Ctrl-Key and has taking focus problems
+;   ;Return ZoomOutCtrlClick(False, False, False)
+;EndFunc
 
 Func ZoomOutBlueStacks5()
 	SetDebugLog("ZoomOutBlueStacks5()")
@@ -90,16 +90,16 @@ Func ZoomOutMuMu()
 	Return DefaultZoomOut("{F5}", 0, ($g_iAndroidZoomoutMode <> 3))
 EndFunc
 
-Func ZoomOutMEmu()
-	SetDebugLog("ZoomOutMEmu()")
-	Return DefaultZoomOut("{F3}", 0, ($g_iAndroidZoomoutMode <> 3))
-EndFunc
+;Func ZoomOutMEmu()
+;	SetDebugLog("ZoomOutMEmu()")
+;	Return DefaultZoomOut("{F3}", 0, ($g_iAndroidZoomoutMode <> 3))
+;EndFunc
 
-Func ZoomOutNox()
-	SetDebugLog("ZoomOutNox()")
-	Return ZoomOutCtrlWheelScroll(True, True, True, ($g_iAndroidZoomoutMode <> 3), Default, -5, 250)
-	;Return DefaultZoomOut("{CTRLDOWN}{DOWN}{CTRLUP}", 0)
-EndFunc
+;Func ZoomOutNox()
+;	SetDebugLog("ZoomOutNox()")
+;	Return ZoomOutCtrlWheelScroll(True, True, True, ($g_iAndroidZoomoutMode <> 3), Default, -5, 250)
+;	;Return DefaultZoomOut("{CTRLDOWN}{DOWN}{CTRLUP}", 0)
+;EndFunc
 
 Func ZoomOutHelper($caller = "Default")
 	Local $x = 0, $y = 0
@@ -245,16 +245,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	Local $aPicture = ["", 0, 0, 0, 0]
 	If Not $g_bRunState Then Return
 	
-	;If $g_bStayOnBuilderBase Then
-	;	ZoomOutHelperBB("DefaultZoomOut")
-	;	If _Sleep(500) Then Return
-	;Else
-	;	ZoomOutHelper("DefaultZoomOut")
-	;	If _Sleep(500) Then Return
-	;EndIF
-	
 	If _Sleep(50) Then Return
-	ForceCaptureRegion()
 	$aPicture = SearchZoomOut(True, True, "DefaultZoomOut", True)
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
@@ -598,7 +589,6 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 	Local $aVillage, $aScrollPos, $iVillageSize = 0
 	Local $x, $y, $z, $stone[2]
 	
-	If $CaptureRegion Then _CaptureRegion2()
 	$aScrollPos = getVillageCenteringCoord()
 
 	Local $aResult[5] = ["", 0, 0, 0, 0] ; expected dummy value
@@ -738,6 +728,10 @@ Func ZoomInBB($Region = "Top")
 	Switch $g_sAndroidEmulator
 		Case "BlueStacks5"
 			$sScript &= ".BlueStacks5"
+		Case "LDPlayer9"
+			$sScript &= ".LD9"
+		Case "MuMu"
+			$sScript &= ".MuMu"
 	EndSwitch
 	
 	SetLog("minitouch script = " & $sScript, $COLOR_DEBUG)
@@ -763,47 +757,3 @@ Func ZoomInBB($Region = "Top")
 	If Not $bSuccessZoomIn Then Return False
 	Return True
 EndFunc
-
-Func ZoomInBBMEmu($Region = "Top")
-	Local $bSuccessZoomIn = False
-	For $i = 0 To 2
-		SetLog("[" & $i & "] Try ZoomInBB", $COLOR_DEBUG)
-		Switch $g_sAndroidEmulator
-			Case "MEmu", "Nox"
-				If Not AndroidAdbScript("ZoomInBB") Then Return False
-			Case "BlueStacks2", "BlueStacks5"
-				If Not AndroidAdbScript("ZoomInBB.BlueStacks") Then Return False
-		EndSwitch
-		If _Sleep(1500) Then Return
-		Local $ZoomInResult = SearchZoomOut(False, True, "", True)
-		If IsArray($ZoomInResult) Then
-			If $ZoomInResult[0] = "" Then
-				SetLog("[" & $i & "] ZoomInBB Succeed", $COLOR_SUCCESS)
-				$bSuccessZoomIn = True
-				ExitLoop
-			Else
-				SetLog("[" & $i & "] ZoomInBB Not Succeed", $COLOR_DEBUG)
-			EndIf
-		EndIf
-	Next
-	If Not $bSuccessZoomIn Then Return False
-	Switch $Region
-		Case "Top"
-			ClickDrag(400, 150, 400, 400, 200, True)
-			If _Sleep(500) Then Return
-			ClickDrag(400, 150, 400, 400, 200, True)
-		Case "Left"
-			ClickDrag(200, 400, 700, 400, 200, True)
-			If _Sleep(500) Then Return
-			ClickDrag(400, 150, 400, 300, 200, True)
-		Case "Bottom"
-			ClickDrag(400, 450, 400, 50, 200, True)
-			If _Sleep(500) Then Return
-		Case "Right"
-			ClickDrag(700, 400, 200, 400, 200, True)
-			If _Sleep(500) Then Return
-			ClickDrag(400, 150, 400, 400, 200, True)
-	EndSwitch
-	Return True
-EndFunc
-
