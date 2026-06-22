@@ -701,36 +701,24 @@ Func TestDropLine($iRedLine = $REDLINE_EDGE, $bOpenFile = True)
 	AttackCSVDEBUGIMAGE($bOpenFile)
 EndFunc   ;==>TestDropLine
 
-Func TestDropLine1($bRedArea = True, $bCheckZoom = True)
-	resetEdge()
-	
-	If $bCheckZoom Then
-		If Not CheckZoomOut() Then 
-			Setlog("TestDropLine1 : CheckZoomOut Fail!", $COLOR_ERROR)
-			Return
-		EndIf
-	EndIf
-	If $bRedArea Then _GetRedArea()
-	AttackCSVDEBUGIMAGE(True) ;make IMG debug
-EndFunc   ;==>TestDropLine1
-
-Func TestDropLine2($bImage = False)
-	SetLog("TestDropLine2()", $COLOR_INFO)
-	setVillageOffset(0, 0, 1)
-	If Not CheckZoomOut() Then 
-		Setlog("TestDropLine2 : CheckZoomOut Fail!", $COLOR_ERROR)
-		Return
-	EndIf
-	
-	_GetRedArea()
-	AttackCSVDEBUGIMAGE($bImage) ;make IMG debug
-EndFunc   ;==>TestDropLine2
-
 Func resetEdge()
 	$g_aiPixelTopLeft = 0
 	$g_aiPixelTopRight = 0
 	$g_aiPixelBottomLeft = 0
 	$g_aiPixelBottomRight = 0
+	$g_aiPixelTopLeftDropLine = 0
+    $g_aiPixelTopRightDropLine = 0
+    $g_aiPixelBottomLeftDropLine = 0
+    $g_aiPixelBottomRightDropLine = 0
+    
+    $g_aiPixelTopLeftUPDropLine = 0
+    $g_aiPixelTopLeftDOWNDropLine = 0
+    $g_aiPixelTopRightUPDropLine = 0
+    $g_aiPixelTopRightDOWNDropLine = 0
+    $g_aiPixelBottomLeftUPDropLine = 0
+    $g_aiPixelBottomLeftDOWNDropLine = 0
+    $g_aiPixelBottomRightUPDropLine = 0
+    $g_aiPixelBottomRightDOWNDropLine = 0
 EndFunc
 
 Func TestCSV($iMatchMode = $LB)

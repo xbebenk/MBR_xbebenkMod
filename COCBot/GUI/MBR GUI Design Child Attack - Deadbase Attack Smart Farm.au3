@@ -35,7 +35,7 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 			$g_hCmbMaxAttackSide = GUICtrlCreateCombo("", $x + 90, $y, 40, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 			GUICtrlSetData(-1, "1|2|3|4","4")
 		$y += 30
-			$g_hChkForceEdgeSmartfarm = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "ChkForceEdgeSmartfarm", "Force attack from green grass"), $x, $y, -1, -1)
+			$g_hChkForceEdgeSmartfarm = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "ChkForceEdgeSmartfarm", "Deploy on External Edge"), $x, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "ChkForceEdgeSmartfarm")
 		$y += 40
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-TxtInsidePercentage", "Inside resources") & ":", $x, $y + 2, -1, -1)
