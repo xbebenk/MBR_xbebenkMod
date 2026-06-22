@@ -260,6 +260,7 @@ Global $g_sImgSearchDrillLevel = @ScriptDir & "\imgxml\Storages\Drills\Level"
 Global $g_sImgEasyBuildings = @ScriptDir & "\imgxml\Attack\easybuildings"
 Global $g_sImgTournamentSearch = @ScriptDir & "\imgxml\Attack\Search\Tournament\"
 Global $g_sImgSetArmyCompo = @ScriptDir & "\imgxml\Attack\Search\SetArmyCompo\"
+Global $g_sImgSaveArmyCompo = @ScriptDir & "\imgxml\Attack\Search\SaveArmyCompo\"
 Global $g_sImgRedLineMod = @ScriptDir & "\imgxml\Attack\Search\RedLine\"
 #EndRegion
 

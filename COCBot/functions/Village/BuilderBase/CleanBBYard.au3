@@ -35,7 +35,7 @@ Func CleanBBYard($bTest = False)
 					ExitLoop
 				EndIf
 			Else 
-				SetLog("[" & $Result[$i][0] & "] Coord Outside Village [" & $Result[$i][1] & ", " & $Result[$i][2] & "]", $COLOR_DEBUG2)
+				SetDebugLog("[" & $Result[$i][0] & "] Coord Outside Village [" & $Result[$i][1] & ", " & $Result[$i][2] & "]", $COLOR_DEBUG2)
 			EndIf
 		Next
 	Else
@@ -66,7 +66,7 @@ Func CleanBBYard($bTest = False)
 						ExitLoop
 					EndIf
 				Else 
-					SetLog("[" & $Result[$i][0] & "] Coord Outside Village [" & $Result[$i][1] & ", " & $Result[$i][2] & "]", $COLOR_DEBUG2)
+					SetDebugLog("[" & $Result[$i][0] & "] Coord Outside Village [" & $Result[$i][1] & ", " & $Result[$i][2] & "]", $COLOR_DEBUG2)
 				EndIf
 			Next
 		Else

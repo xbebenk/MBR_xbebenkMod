@@ -148,7 +148,7 @@ Func PrepareSearchCheckArmy($bTournament = False, $bTest = False)
 			If _Sleep(200) Then Return
 			SetArmyCompo($bTournament)
 			If _Sleep(500) Then Return
-			FillArmyCamp()
+			If FillArmyCamp() Then SaveArmyCompo($bTournament)
 			If _Sleep(500) Then Return
 			If $bTest Then Return $bRet
 			Click(695, 500, 1, 0, "ArmyOverview Attack Button")
@@ -158,6 +158,7 @@ Func PrepareSearchCheckArmy($bTournament = False, $bTest = False)
 			EndIf
 			$bRet = True
 			
+			SetLog("Going Attack", $COLOR_INFO)
 			For $wait = 1 To 8
 				SetLog("Waiting attack page #" & $wait, $COLOR_DEBUG1)
 				If IsAttackPage(False, 1) Then ExitLoop 2
@@ -167,6 +168,135 @@ Func PrepareSearchCheckArmy($bTournament = False, $bTest = False)
 		If _Sleep(500) Then Return
 	Next
 	
+	Return $bRet
+EndFunc
+
+Func SaveArmyCompo($bTournament = False)
+	Local $iUseArmy = $g_iCmbDBUseArmy
+	Local $aClick[2][2] = [[760, 270], [760, 420]]
+	
+	If $bTournament Then $iUseArmy = $g_iTournamentUseArmy 
+	If $iUseArmy > 1 Then ;can only click to save compo 1 or 2
+		SetLog("Your Saved army compo need to be update", $COLOR_DEBUG2)
+		SetLog("But we only can save compo to Army 1 or Army 2", $COLOR_DEBUG2)
+		Return
+	EndIf
+	
+	SetLog("Trying to save army compo for " & ($bTournament = True ? "Tournament" : "Normal Attack"), $COLOR_INFO)
+	If QuickMIS("BC1", $g_sImgSaveArmyCompo, 280, 155, 300, 170) Then 
+		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Save Selector")
+		If _Sleep(1000) Then Return
+		If $iUseArmy = 0 Then
+			Click($aClick[0][0], $aClick[0][1], 1, 0, "Save Army 1")
+		Else
+			Click($aClick[1][0], $aClick[1][1], 1, 0, "Save Army 2")
+		EndIf
+		If _Sleep(1000) Then Return
+		SetLog("Saving Army to ArmyCompo : " & $iUseArmy + 1, $COLOR_DEBUG1)
+		Click(190, 160, 1, 0, "Click My Army Tab")
+	EndIf
+EndFunc
+
+Func FillArmyCamp()
+	Local $bRet = False
+	If $g_bIgnoreIncorrectTroopCombo Or $g_bIgnoreIncorrectSpellCombo Then ;check army or spell to fill
+		If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 210, 480, 230) Then ;check on troops
+			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 270, 680, 295) Then ;check on acivate supertroop
+				SetLog("SuperTroop Need to activate", $COLOR_DEBUG)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(500) Then Return
+				If WaitforPixel(590, 490, 591, 490, "84CD2C", 20, 1) Then 
+					SetLog("Activate Boost SuperTroop", $COLOR_DEBUG)
+					Click(490, 450)
+				EndIf				
+			Else
+				SetLog("Your troop need to fill", $COLOR_DEBUG)
+				FillIncorrectTroopCombo()
+				$bRet = True
+				If _Sleep(500) Then Return
+			EndIf
+		EndIf
+		
+		If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 320, 480, 345) Then ;check on spells
+			SetLog("Your spell need to fill", $COLOR_DEBUG)
+			FillIncorrectSpellCombo()
+			$bRet = True
+			If _Sleep(500) Then Return
+		EndIf
+		
+		If _Sleep(500) Then Return
+		If Not $bRet Then ;need to check again for hero switch, but only set if Fill Troop/Spell not used before
+			$bRet = CheckHeroOnUpgrade()
+		Else
+			CheckHeroOnUpgrade()
+		EndIf
+	EndIf
+	Return $bRet
+EndFunc
+
+Func CheckHeroOnUpgrade()
+	Local $bRet = False
+	Local $aHammer, $x, $y, $aHero
+	Local $bCheck = False, $bWardenFound = False
+	Local $iWardenMode = $g_aiAttackUseWardenMode[$DB]
+	If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 86, 200, 120, 230) Then $bCheck = True
+	If Not $bCheck Then Return
+	
+	$aHammer = QuickMIS("CNX", $g_sImgArmyOverviewHeroesHammer, 90, 233, 380, 260)
+	If IsArray($aHammer) And UBound($aHammer) > 0 Then
+		_ArraySort($aHammer, 0, 0, 0, 1) ;sort left to right
+		RemoveDupCNX($aHammer, 1, 20)
+		For $i = 0 To UBound($aHammer) - 1
+			$x = $aHammer[$i][1]
+			$y = $aHammer[$i][2]
+			SetLog("Found Hammer on " & $x & "," & $y, $COLOR_DEBUG)
+			Click($x, $y, 1, 0, "Hammer")
+			If _Sleep(1000) Then Return
+			$aHero = QuickMIS("CNX", $g_sImgArmyOverviewHeroChange, 86, 200, $x + 350, $y + 85)
+			If IsArray($aHero) And UBound($aHero) > 0 Then
+				For $i = 0 To UBound($aHero) - 1
+					SetLog("Hero " & $aHero[$i][0] & " is Available", $COLOR_INFO)
+					If StringInStr($aHero[$i][0], "Warden") Then
+						$bWardenFound = True
+						If $iWardenMode = 0 Or $iWardenMode = 2 Then ;0 or 2 = ground or default = pick ground
+							If $aHero[$i][0] = "WardenGround" Then 
+								Click($aHero[$i][1], $aHero[$i][2], 1, 0, "Click " & $aHero[$i][0])
+								If _Sleep(1000) Then Return
+								Click($x, $y, 1, 0, "Hammer")
+								SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
+								ExitLoop
+							Else
+								ContinueLoop
+							EndIf
+						Else ;iWardenMode = 1
+							If $aHero[$i][0] = "WardenAir" Then 
+								Click($aHero[$i][1], $aHero[$i][2], 1, 0, "Click " & $aHero[$i][0])
+								If _Sleep(1000) Then Return
+								Click($x, $y, 1, 0, "Hammer")
+								SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
+								ExitLoop
+							EndIF
+						EndIf
+					Else
+						Click($aHero[$i][1], $aHero[$i][2], 1, 0, "Click " & $aHero[$i][0])
+						If _Sleep(1000) Then Return
+						Click($x, $y, 1, 0, "Hammer")
+						SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
+						ExitLoop
+					EndIf
+				Next
+				$bRet = True
+				If Ubound($aHero) = 1 Then ExitLoop ;if only found 1 image then exit
+				If $bWardenFound And Ubound($aHero) = 2 Then ExitLoop ;warden always found 2 image, so if 2 images then only warden, exit
+			Else
+				Click($x, $y, 1, 0, "Hammer Close")
+				SetLog("No availabe Hero to switch", $COLOR_DEBUG2)
+				ExitLoop
+			EndIf
+		Next
+		If _Sleep(500) Then Return
+		Return $bRet
+	EndIf
 	Return $bRet
 EndFunc
 
