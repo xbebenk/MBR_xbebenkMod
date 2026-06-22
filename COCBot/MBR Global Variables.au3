@@ -851,9 +851,36 @@ Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 
 ; <><><><> Village / Donate - Request <><><><>
 Global $g_bRequestTroopsEnable = False
-Global $g_bUseCake = False, $g_iCmbRequestTroop = 0, $g_iCmbRequestSpell = 0, $g_iCmbRequestSiege = 0
-Global $g_aCmbRequestTroop[2] = ["Giant", "Ball"], $g_aCmbRequestSpell[2] = ["LSpell", "FSpell"], $g_aCmbRequestSiege[6] = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF"]
 Global $g_sRequestTroopsText = ""
+Global $g_bUseCake = False, $g_bChkUpdateRequest = False
+Global $g_iCmbRequestTroop1 = 0, $g_iCmbRequestSpell1 = 0, $g_iCmbRequestSiege1 = 0
+Global $g_iCmbRequestTroop2 = 0, $g_iCmbRequestSpell2 = 0, $g_iCmbRequestSiege2 = 0
+Global $g_iRequestTroopQuantity1 = 0, $g_iRequestSpellQuantity1 = 0, $g_iRequestSiegeQuantity1 = 0
+Global $g_iRequestTroopQuantity2 = 0, $g_iRequestSpellQuantity2 = 0, $g_iRequestSiegeQuantity2 = 0
+
+;Sname, Name, space
+Global $g_aCmbRequestTroop[6][3] = [["Giant", "Giant", 5], _
+								["Ball", "Balloon", 5], _
+								["Wiza", "Wizard", 4], _
+								["Drag", "Dragon", 20], _
+								["BabyD", "Baby Dragon", 10], _
+								["SBarb", "Super Barbarian", 5]]
+Global $g_aCmbRequestSpell[6][3] = [["LSpell", "Lightning Spell", 1], _
+								["RSpell", "Rage Spell", 2], _
+								["FSpell", "Freeze Spell", 1], _
+								["PSpell", "Poison Spell", 1], _
+								["ESpell", "EarthQuack Spell", 1], _
+								["HaSpell", "Haste Spell", 1]]
+Global $g_aCmbRequestSiege[9][3] = [["WallW", "Wall Wrecker", 1], _
+								["BattleB", "Battle Blimp", 1], _
+								["StoneS", "Stone Slammer", 1], _
+								["SiegeB", "Siege Barrack", 1], _
+								["LogL", "Log Launcher", 1], _
+								["FlameF", "Flame Flinger", 1], _
+								["BattleD", "Battle Drill", 1], _
+								["TroopL", "Troop Launcher", 1], _
+								["SkyW", "Sky Wagon", 1]]
+
 
 ; <><><><> Village / Donate - Donate <><><><>
 Global $g_bChkDonate = True
@@ -1936,19 +1963,21 @@ Global $g_bChkStartWeekendRaid = True
 
 Global $g_bEnableDailyRunRoutine = False, $iDailyDate = @YDAY
 ;[FunctionName, Allowed time to run a day? 0 = always run; 1 = daily; 2 twice a day;]
-Global $g_aiDailyFunction[13][2] = [["DailyChallenge", 2], _
+Global $g_aiDailyFunction[14][2] = [["DailyChallenge", 2], _
 									["CollectAchievements", 2], _
 									["CollectFreeMagicItems", 1], _
 									["ForgeClanCapitalGold", 1], _
 									["AutoUpgradeCC", 1], _
-									["UseFreeMagic", 2], _
+									["UseFreeMagic", 4], _
 									["SellMagicItem", 1], _
-									["CleanYard", 1], _
+									["CleanYard", 2], _
 									["CollectLootCart", 1], _
 									["TreasuryCollect", 1], _
 									["BuilderBase", 6], _
 									["BlackSmith", 1], _
+									["CollectCookie", 2], _
 									["PetHouse", 1]]
+
 ;per account daily function HowManyRunToday
 Global $g_aDailyAccount[16][Ubound($g_aiDailyFunction)] = [[0,0,0,0,0,0,0,0,0,0,0,0,0], _
 														[0,0,0,0,0,0,0,0,0,0,0,0,0], _

@@ -18,7 +18,11 @@ Global $g_hGUI_DONATE = 0, $g_hGUI_DONATE_TAB = 0, $g_hGUI_DONATE_TAB_ITEM1 = 0,
 
 ; Request
 Global $g_hChkRequestTroopsEnable = 0, $g_hTxtRequestCC = 0
-Global $g_hChkReinforcementCake = 0, $g_hCmbRequestTroop = 0, $g_hCmbRequestSpell = 0, $g_hCmbRequestSiege = 0
+Global $g_hChkReinforcementCake = 0, $g_hChkUpdateRequest = 0
+Global $g_hCmbRequestTroop1 = 0, $g_hCmbRequestTroop2 = 0, $g_hRequestTroopQuantity1 = 0, $g_hRequestTroopQuantity2 = 0
+Global $g_hCmbRequestSpell1 = 0, $g_hCmbRequestSpell2 = 0, $g_hRequestSpellQuantity1 = 0, $g_hRequestSpellQuantity2 = 0
+Global $g_hCmbRequestSiege1 = 0, $g_hCmbRequestSiege2 = 0, $g_hRequestSiegeQuantity1 = 0, $g_hRequestSiegeQuantity2 = 0
+Global $g_hLblRequestTroopCap = 0, $g_hLblRequestSpellCap = 0, $g_hLblRequestSiegeCap = 0 
 Global $g_hGrpRequestCC = 0
 
 ; Donate
@@ -69,32 +73,84 @@ Func CreateRequestSubTab()
 	Local $xStart = 20, $yStart = 20
 	Local $x = $xStart
 	Local $y = $yStart
-	$g_hGrpRequestCC = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Group_01", "Clan Castle Troops"), $x - 20, $y - 20, $g_iSizeWGrpTab3, $g_iSizeHGrpTab3)
+	$g_hGrpRequestCC = GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "Group_01", "Clan Castle Troops"), $x - 20, $y - 20, $g_iSizeWGrpTab3, 140)
 	$y += 10
 	$x += 5
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCCRequest, $x - 5, $y, 64, 64, $BS_ICON)
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCCRequest, $x - 5, $y, 48, 48, $BS_ICON)
 		$g_hChkRequestTroopsEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "ChkRequestTroopsEnable", "Request Troops / Spells"), $x + 40 + 30, $y - 6)
 		GUICtrlSetOnEvent(-1, "chkRequestCC")
 		$g_hTxtRequestCC = GUICtrlCreateInput(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC", "any"), $x + 40 + 30, $y + 15, 214, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "TxtRequestCC_Info_01", "This text is used on your request for troops in the Clan chat."))
 	
-	$y += 80
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCake, $x - 5, $y, 64, 64, $BS_ICON)
-		$g_hChkReinforcementCake = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Donate-CC", "chkReinforcementCake", "Use Reinforcement Cake"), $x + 40 + 30, $y - 6)
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
+	$y += 70
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnCake, $x - 5, $y - 20, 48, 48, $BS_ICON)
+		$g_hChkReinforcementCake = GUICtrlCreateCheckbox("Use Reinforcement Cake", $x + 40 + 30, $y - 10)
 			GUICtrlSetOnEvent(-1, "chkReinforcementCake")
-		Local $sTxtCmbTroop = "Giant|Balloon"
-		Local $sTxtCmbSpell = "Lightning|Freeze"
-		Local $sTxtCmbSiege = "Wall Wrecker|Battle Blimp|Stone Slammer|Siege Barrack|Log Launcher|Flame Flinger"
-	$x = 95
-		$g_hCmbRequestTroop = GUICtrlCreateCombo("", $x, $y + 20, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-		GUICtrlSetData(-1, $sTxtCmbTroop, "")
-		$g_hCmbRequestSpell = GUICtrlCreateCombo("", $x, $y + 45, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-		GUICtrlSetData(-1, $sTxtCmbSpell, "")
-		$g_hCmbRequestSiege = GUICtrlCreateCombo("", $x, $y + 70, 110, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
-		GUICtrlSetData(-1, $sTxtCmbSiege, "")
-		GuiCtrlCreateLabel("This will only used If account have Clan Castle Reinforcement Cake and going to attack while CC is not filled", $x + 130, $y + 20, 200, 40)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	GUICtrlCreateGroup("", -99, -99, 1, 1)					
+		
+	$x = 25
+	$y = 150
+	
+	GUICtrlCreateGroup("Reinforcement", $x - 25, $y, $g_iSizeWGrpTab3, 130)
+		$g_hChkUpdateRequest = GUICtrlCreateCheckbox("Update Request", $x - 15, $y + 20)
+			GUICtrlSetOnEvent(-1, "chkUpdateRequest")
+			
+		Local $sTxtCmbTroop, $sTxtCmbSpell, $sTxtCmbSiege
+		For $i = 0 To UBound($g_aCmbRequestTroop) - 1
+			$sTxtCmbTroop &= $g_aCmbRequestTroop[$i][1] & "|"
+		Next
+		For $i = 0 To UBound($g_aCmbRequestSpell) - 1
+			$sTxtCmbSpell &= $g_aCmbRequestSpell[$i][1] & "|"
+		Next
+		For $i = 0 To UBound($g_aCmbRequestSiege) - 1
+			$sTxtCmbSiege &= $g_aCmbRequestSiege[$i][1] & "|"
+		Next
+	
+	$x = 10
+	$y += 25
+		GuiCtrlCreateLabel("Troop : ", $x, $y + 20, 80)
+		GuiCtrlCreateLabel("Spell : ", $x, $y + 45, 80)
+		GuiCtrlCreateLabel("Siege : ", $x, $y + 70, 80)
+	$x = 50
+		$g_hCmbRequestTroop1 = GUICtrlCreateCombo("", $x, $y + 20, 100, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+			GUICtrlSetData(-1, $sTxtCmbTroop, "")
+			GUICtrlSetOnEvent(-1, "RequestQty")
+		$g_hCmbRequestSpell1 = GUICtrlCreateCombo("", $x, $y + 45, 100, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+			GUICtrlSetData(-1, $sTxtCmbSpell, "")
+			GUICtrlSetOnEvent(-1, "RequestQty")
+		$g_hCmbRequestSiege1 = GUICtrlCreateCombo("", $x, $y + 70, 100, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+			GUICtrlSetData(-1, $sTxtCmbSiege, "")
+			GUICtrlSetOnEvent(-1, "RequestQty")
+	$x = 155
+		$g_hRequestTroopQuantity1 = GUICtrlCreateInput("0", $x, $y + 20, 25, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
+			GUICtrlSetOnEvent(-1, "RequestQty")
+		$g_hRequestSpellQuantity1 = GUICtrlCreateInput("0", $x, $y + 45, 25, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
+			GUICtrlSetOnEvent(-1, "RequestQty")
+		$g_hRequestSiegeQuantity1 = GUICtrlCreateInput("0", $x, $y + 70, 25, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
+			GUICtrlSetOnEvent(-1, "RequestQty")
+	$x = 190
+		$g_hCmbRequestTroop2 = GUICtrlCreateCombo("", $x, $y + 20, 100, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+			GUICtrlSetData(-1, $sTxtCmbTroop, "")
+			GUICtrlSetOnEvent(-1, "RequestQty")
+		$g_hCmbRequestSpell2 = GUICtrlCreateCombo("", $x, $y + 45, 100, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+			GUICtrlSetData(-1, $sTxtCmbSpell, "")
+			GUICtrlSetOnEvent(-1, "RequestQty")
+		$g_hCmbRequestSiege2 = GUICtrlCreateCombo("", $x, $y + 70, 100, 18, BitOR($CBS_DROPDOWNLIST + $WS_VSCROLL, $CBS_AUTOHSCROLL))
+			GUICtrlSetData(-1, $sTxtCmbSiege, "")
+			GUICtrlSetOnEvent(-1, "RequestQty")
+	$x = 295
+		$g_hRequestTroopQuantity2 = GUICtrlCreateInput("0", $x, $y + 20, 25, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
+			GUICtrlSetOnEvent(-1, "RequestQty")
+		$g_hRequestSpellQuantity2 = GUICtrlCreateInput("0", $x, $y + 45, 25, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
+			GUICtrlSetOnEvent(-1, "RequestQty")
+		$g_hRequestSiegeQuantity2 = GUICtrlCreateInput("0", $x, $y + 70, 25, 20, BitOR($SS_CENTER, $ES_AUTOHSCROLL))
+			GUICtrlSetOnEvent(-1, "RequestQty")
+	$x = 330
+		$g_hLblRequestTroopCap = GuiCtrlCreateLabel("", $x, $y + 22, 25, 20)
+		$g_hLblRequestSpellCap = GuiCtrlCreateLabel("", $x, $y + 47, 25, 20)
+		$g_hLblRequestSiegeCap = GuiCtrlCreateLabel("", $x, $y + 72, 25, 20)
+	
+	GUICtrlCreateGroup("", -99, -99, 1, 1)	
 
 EndFunc   ;==>CreateRequestSubTab
 #EndRegion

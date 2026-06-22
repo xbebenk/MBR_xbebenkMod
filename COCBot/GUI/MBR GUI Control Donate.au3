@@ -34,15 +34,45 @@ EndFunc
 Func chkReinforcementCake()
 	If GUICtrlRead($g_hChkReinforcementCake) = $GUI_CHECKED Then
 		$g_bUseCake = True
-		GUICtrlSetState($g_hCmbRequestTroop, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbRequestSpell, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbRequestSiege, $GUI_ENABLE)
 	Else
 		$g_bUseCake = False
-		GUICtrlSetState($g_hCmbRequestTroop, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbRequestSpell, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbRequestSiege, $GUI_DISABLE)
 	EndIf
+EndFunc
+
+Func chkUpdateRequest()
+	If  GUICtrlRead($g_hChkUpdateRequest) = $GUI_CHECKED Then
+		$g_bChkUpdateRequest = True
+		For $i = $g_hCmbRequestTroop1 To $g_hRequestSiegeQuantity2
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		$g_bChkUpdateRequest = False
+		For $i = $g_hCmbRequestTroop1 To $g_hRequestSiegeQuantity2
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+EndFunc
+
+Func RequestQty()
+	$g_iRequestTroopQuantity1 = GUICtrlRead($g_hRequestTroopQuantity1)
+	$g_iRequestSpellQuantity1 = GUICtrlRead($g_hRequestSpellQuantity1)
+	$g_iRequestSiegeQuantity1 = GUICtrlRead($g_hRequestSiegeQuantity1)
+	$g_iRequestTroopQuantity2 = GUICtrlRead($g_hRequestTroopQuantity2)
+	$g_iRequestSpellQuantity2 = GUICtrlRead($g_hRequestSpellQuantity2)
+	$g_iRequestSiegeQuantity2 = GUICtrlRead($g_hRequestSiegeQuantity2)
+	Local $iTroop1Space = $g_aCmbRequestTroop[_GUICtrlComboBox_GetCurSel($g_hCmbRequestTroop1)][2]
+	Local $iTroop2Space = $g_aCmbRequestTroop[_GUICtrlComboBox_GetCurSel($g_hCmbRequestTroop2)][2]
+	Local $iSpell1Space = $g_aCmbRequestSpell[_GUICtrlComboBox_GetCurSel($g_hCmbRequestSpell1)][2]
+	Local $iSpell2Space = $g_aCmbRequestSpell[_GUICtrlComboBox_GetCurSel($g_hCmbRequestSpell2)][2]
+	Local $iSiege1Space = $g_aCmbRequestSiege[_GUICtrlComboBox_GetCurSel($g_hCmbRequestSiege1)][2]
+	Local $iSiege2Space = $g_aCmbRequestSiege[_GUICtrlComboBox_GetCurSel($g_hCmbRequestSiege2)][2]
+	
+	Local $iTroopCap = ($iTroop1Space * $g_iRequestTroopQuantity1) + ($iTroop2Space * $g_iRequestTroopQuantity2)
+	Local $iSpellCap = ($iSpell1Space * $g_iRequestSpellQuantity1) + ($iSpell2Space * $g_iRequestSpellQuantity2)
+	Local $iSiegeCap = ($iSiege1Space * $g_iRequestSiegeQuantity1) + ($iSiege2Space * $g_iRequestSiegeQuantity2)
+	GUICtrlSetData($g_hLblRequestTroopCap, $iTroopCap)
+	GUICtrlSetData($g_hLblRequestSpellCap, $iSpellCap)
+	GUICtrlSetData($g_hLblRequestSiegeCap, $iSiegeCap)
 EndFunc
 
 Func btnDonateTroop()

@@ -40,7 +40,6 @@ Func FillArmyCamp()
 			If _Sleep(500) Then Return
 		EndIf
 		
-		CheckCookieReinforcement()
 		If _Sleep(500) Then Return
 		CheckHeroOnUpgrade()
 	EndIf
@@ -109,14 +108,20 @@ Func CheckHeroOnUpgrade()
 	EndIf
 EndFunc
 
-Func CheckCookieReinforcement()
+Func CheckReinforcement()
 	
 	If Not $g_bUseCake Then Return ;exit if not enabled
 	
-	Local $sTroop, $sSpell, $sSiege
-	$sTroop = $g_aCmbRequestTroop[$g_iCmbRequestTroop]
-	$sSpell = $g_aCmbRequestSpell[$g_iCmbRequestSpell]
-	$sSiege = $g_aCmbRequestSiege[$g_iCmbRequestSiege]
+	Local $sTroop1, $sSpell1, $sSiege1
+	Local $sTroop2, $sSpell2, $sSiege2
+	$sTroop1 = $g_aCmbRequestTroop[$g_iCmbRequestTroop1][0]
+	$sSpell1 = $g_aCmbRequestSpell[$g_iCmbRequestSpell1][0]
+	$sSiege1 = $g_aCmbRequestSiege[$g_iCmbRequestSiege1][0]
+	$sTroop2 = $g_aCmbRequestTroop[$g_iCmbRequestTroop2][0]
+	$sSpell2 = $g_aCmbRequestSpell[$g_iCmbRequestSpell2][0]
+	$sSiege2 = $g_aCmbRequestSiege[$g_iCmbRequestSiege2][0]
+	
+	Local $aTroop, $aSpell, $aSiege
 	
 	If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 650, 450, 725, 485) Then ;check on Castle cake reinforcement
 		SetLog("Removing Request", $COLOR_DEBUG)
@@ -131,39 +136,60 @@ Func CheckCookieReinforcement()
 			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Tap to Reinforce")
 			If _Sleep(1000) Then Return
 			
-			For $i = 1 To 5 ;Troop
-				If QuickMIS("BFI", $g_sImgTrainTroops & $sTroop & "*", 120, 260, 740, 460) Then ;read troop image 
-					Click($g_iQuickMISX, $g_iQuickMISY, 3, 0, "Click " & $sTroop)
-				Else
-					ExitLoop
+			For $iDrag = 1 To 2
+				$aTroop = QuickMIS("CNX", $g_sImgTrainTroops, 120, 260, 740, 460)
+				If IsArray($aTroop) And Ubound($aTroop) > 0 Then
+					RemoveDupCNX($aTroop)
+					_ArraySort($aTroop, 0, 0, 0, 1) 
+					For $i = 0 To Ubound($aTroop) - 1
+						If $aTroop[$i][0] = $sTroop1 And $g_iRequestTroopQuantity1 > 0 Then 
+							SetLog("Found " & $g_aCmbRequestTroop[$g_iCmbRequestTroop1][1], $COLOR_DEBUG1)
+							Click($aTroop[$i][1], $aTroop[$i][2], $g_iRequestTroopQuantity1, 0, "Click " & $sTroop1)
+						EndIf
+						If $aTroop[$i][0] = $sTroop2 And $g_iRequestTroopQuantity2 > 0 Then 
+							SetLog("Found " & $g_aCmbRequestTroop[$g_iCmbRequestTroop2][1], $COLOR_DEBUG1)
+							Click($aTroop[$i][1], $aTroop[$i][2], $g_iRequestTroopQuantity2, 0, "Click " & $sTroop2)
+						EndIf
+					Next
 				EndIf
-				If _Sleep(800) Then Return
+				If _Sleep(500) Then Return
+				ClickDrag(680, 365, 190, 365)
 			Next
 			
-			;clickdrag for spell
-			If $g_iCmbRequestSpell = 0 Then 
-				ClickDrag(680, 365, 155, 365)
-			Else
-				ClickDrag(680, 365, 155, 365)
-				ClickDrag(680, 365, 155, 365)
+			If _Sleep(500) Then Return	
+			$aSpell = QuickMIS("CNX", $g_sImgTrainSpells, 120, 260, 740, 460)
+			If IsArray($aSpell) And Ubound($aSpell) > 0 Then
+				RemoveDupCNX($aSpell)
+				_ArraySort($aSpell, 0, 0, 0, 1) 
+				For $i = 0 To Ubound($aSpell) - 1
+					If $aSpell[$i][0] = $sSpell1 And $g_iRequestSpellQuantity1 > 0 Then 
+						SetLog("Found " & $g_aCmbRequestSpell[$g_iCmbRequestSpell1][1], $COLOR_DEBUG1)
+						Click($aSpell[$i][1], $aSpell[$i][2], $g_iRequestSpellQuantity1, 0, "Click " & $sSpell1)
+					EndIf
+					If $aSpell[$i][0] = $sSpell2 And $g_iRequestSpellQuantity2 > 0 Then
+						SetLog("Found " & $g_aCmbRequestSpell[$g_iCmbRequestSpell2][1], $COLOR_DEBUG1)
+						Click($aSpell[$i][1], $aSpell[$i][2], $g_iRequestSpellQuantity2, 0, "Click " & $sSpell2)
+					EndIf
+				Next
 			EndIf
 			
 			If _Sleep(500) Then Return
-			For $i = 1 To 5 ;Spell
-				If QuickMIS("BFI", $g_sImgTrainSpells & $sSpell & "*", 120, 260, 740, 460) Then ;read spell image 
-					Click($g_iQuickMISX, $g_iQuickMISY, 2, 0, "Click " & $sSpell)
-				Else
-					ExitLoop
-				EndIf
-				If _Sleep(800) Then Return
-			Next
+			ClickDrag(680, 365, 190, 365) ;clickdrag for Siege
 			
-			;clickdrag for Siege
-			If $g_iCmbRequestSpell = 0 Then ClickDrag(680, 365, 155, 365); drag again if spell request was Ligntning
-			ClickDrag(650, 365, 305, 365)
-			If _Sleep(500) Then Return
-			If QuickMIS("BFI", $g_sImgTrainSieges & $sSiege & "*", 120, 260, 740, 460) Then ;read siege image 
-				Click($g_iQuickMISX, $g_iQuickMISY, 2, 0, "Click " & $sSiege)
+			$aSiege = QuickMIS("CNX", $g_sImgTrainSieges, 120, 260, 740, 460)
+			If IsArray($aSiege) And Ubound($aSiege) > 0 Then
+				RemoveDupCNX($aSiege)
+				_ArraySort($aSiege, 0, 0, 0, 1)
+				For $i = 0 To Ubound($aSiege) - 1
+					If $aSiege[$i][0] = $sSiege1 And $g_iRequestSiegeQuantity1 > 0 Then 
+						SetLog("Found " & $g_aCmbRequestSiege[$g_iCmbRequestSiege1][1], $COLOR_DEBUG1)
+						Click($aSiege[$i][1], $aSiege[$i][2], $g_iRequestSiegeQuantity1, 0, "Click " & $sSiege1)
+					EndIf
+					If $aSiege[$i][0] = $sSiege2 And $g_iRequestSiegeQuantity2 > 0 Then
+						SetLog("Found " & $g_aCmbRequestSiege[$g_iCmbRequestSiege2][1], $COLOR_DEBUG1)
+						Click($aSiege[$i][1], $aSiege[$i][2], $g_iRequestSiegeQuantity2, 0, "Click " & $sSiege2)
+					EndIf
+				Next
 			EndIf
 			
 			Click(450, 530, 1, 0, "Click Confirm") ;Click Confirm
