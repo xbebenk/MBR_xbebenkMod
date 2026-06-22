@@ -151,22 +151,27 @@ Func chkDBActivateCamps()
 	dbCheckall()
 EndFunc   ;==>chkDBActivateCamps
 
+Func cmbDBUseArmy()
+	$g_iCmbDBUseArmy = _GUICtrlComboBox_GetCurSel($g_hCmbDBUseSavedArmy)
+	SetLog("Set DeadBase Use Saved Army : Army " & $g_iCmbDBUseArmy + 1, $COLOR_DEBUG)
+EndFunc   ;==>cmbDBUseArmy
+
 Func EnableSearchPanels($iMatchMode)
 	Switch $iMatchMode
 		Case $DB
 			If GUICtrlRead($g_hChkDBActivateSearches) = $GUI_CHECKED Or _
 			   GUICtrlRead($g_hChkDBActivateTropies) = $GUI_CHECKED Or _
-			   GUICtrlRead($g_hChkDBActivateCamps) = $GUI_CHECKED Or _
-			   GUICtrlRead($g_hChkDBKingWait) = $GUI_CHECKED Or _
-			   GUICtrlRead($g_hChkDBQueenWait) = $GUI_CHECKED Or _
-			   GUICtrlRead($g_hChkDBWardenWait) = $GUI_CHECKED Or _
-			   GUICtrlRead($g_hChkDBChampionWait) = $GUI_CHECKED Or _
-			   GUICtrlRead($g_hChkDBNotWaitHeroes) = $GUI_CHECKED Or _
-			   GUICtrlRead($g_hChkDBSpellsWait) = $GUI_CHECKED Then
-
-				_GUI_Value_STATE("SHOW", $groupHerosDB)
+			   GUICtrlRead($g_hChkDBActivateCamps) = $GUI_CHECKED Then ;Or _
+			   ;GUICtrlRead($g_hChkDBKingWait) = $GUI_CHECKED Or _
+			   ;GUICtrlRead($g_hChkDBQueenWait) = $GUI_CHECKED Or _
+			   ;GUICtrlRead($g_hChkDBWardenWait) = $GUI_CHECKED Or _
+			   ;GUICtrlRead($g_hChkDBChampionWait) = $GUI_CHECKED Or _
+			   ;GUICtrlRead($g_hChkDBNotWaitHeroes) = $GUI_CHECKED Or _
+			   ;GUICtrlRead($g_hChkDBSpellsWait) = $GUI_CHECKED Then 
+			   
+				;_GUI_Value_STATE("SHOW", $groupHerosDB)
 				_GUI_Value_STATE("SHOW", $g_aGroupSearchDB)
-				_GUI_Value_STATE("SHOW", $groupSpellsDB)
+				;_GUI_Value_STATE("SHOW", $groupSpellsDB)
 
 				cmbDBGoldElixir()
 			Else
@@ -199,9 +204,6 @@ Func EnableSearchPanels($iMatchMode)
 
 EndFunc   ;==>EnableSearchPanels
 
-
-
-
 Func chkABActivateSearches()
 	If GUICtrlRead($g_hChkABActivateSearches) = $GUI_CHECKED Then
 		GUICtrlSetState($g_hTxtABSearchesMin, $GUI_ENABLE)
@@ -229,30 +231,6 @@ Func chkABActivateTropies()
 	;EnableSearchPanels($LB)
 	abCheckall()
 EndFunc   ;==>chkABActivateTropies
-
-Func chkDBSpellsWait()
-	If $g_iTownHallLevel > 4 Or $g_iTownHallLevel = 0 Then ; Must be TH5+ to have spells
-		For $i = $g_hPicDBLightSpellWait To $g_hPicDBHasteSpellWait
-			GUICtrlSetState($i, $GUI_ENABLE)
-		Next
-		If GUICtrlRead($g_hChkDBSpellsWait) = $GUI_CHECKED Then
-			$g_abSearchSpellsWaitEnable[$DB] = True
-			chkSpellWaitError()
-			If @error Then
-				GUICtrlSetState($g_hChkDBSpellsWait, $GUI_UNCHECKED)
-				$g_abSearchSpellsWaitEnable[$DB] = False
-				SetLog("Wait for Spells disabled due training count error", $COLOR_ERROR)
-			EndIf
-		Else
-			$g_abSearchSpellsWaitEnable[$DB] = False
-		EndIf
-	Else
-		GUICtrlSetState($g_hChkDBSpellsWait, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
-		For $i = $g_hPicDBLightSpellWait To $g_hPicDBHasteSpellWait
-			GUICtrlSetState($i, $GUI_DISABLE)
-		Next
-	EndIf
-EndFunc   ;==>chkDBSpellsWait
 
 Func chkABSpellsWait()
 	If $g_iTownHallLevel > 4 Or $g_iTownHallLevel = 0 Then ; Must be TH5+ to have spells
@@ -396,7 +374,7 @@ Func CmbBullyMaxTH()
 EndFunc   ;==>CmbBullyMaxTH
 
 Func dbCheckAll()
-	If BitAND(GUICtrlRead($g_hChkDBActivateSearches), GUICtrlRead($g_hChkDBActivateTropies), GUICtrlRead($g_hChkDBActivateCamps), GUICtrlRead($g_hChkDBSpellsWait)) = $GUI_UNCHECKED Then
+	If BitAND(GUICtrlRead($g_hChkDBActivateSearches), GUICtrlRead($g_hChkDBActivateTropies), GUICtrlRead($g_hChkDBActivateCamps)) = $GUI_UNCHECKED Then
 		GUICtrlSetState($g_hChkDeadbase, $GUI_UNCHECKED)
 	Else
 		GUICtrlSetState($g_hChkDeadbase, $GUI_CHECKED)
@@ -405,7 +383,7 @@ Func dbCheckAll()
 EndFunc   ;==>dbCheckAll
 
 Func abCheckAll()
-	If BitAND(GUICtrlRead($g_hChkABActivateSearches), GUICtrlRead($g_hChkABActivateTropies), GUICtrlRead($g_hChkABActivateCamps), GUICtrlRead($g_hChkABSpellsWait)) = $GUI_UNCHECKED Then
+	If BitAND(GUICtrlRead($g_hChkABActivateSearches), GUICtrlRead($g_hChkABActivateTropies), GUICtrlRead($g_hChkABActivateCamps)) = $GUI_UNCHECKED Then
 		GUICtrlSetState($g_hChkActivebase, $GUI_UNCHECKED)
 	Else
 		GUICtrlSetState($g_hChkActivebase, $GUI_CHECKED)

@@ -33,13 +33,6 @@ Func getPBTime()
 	Local $iCount = 0
 	While _CheckPixel($aIsShieldInfo, $g_bCapturePixel) = False ; wait for open PB info window
 		If _Sleep($DELAYPERSONALSHIELD2) Then Return
-		$Result = getAttackDisable(180, 156) ; Try to grab Ocr for PBT warning message as it can randomly block pixel check
-		SetDebugLog("OCR PBT early warning= " & $Result, $COLOR_DEBUG)
-		If (StringLen($Result) > 3) And StringRegExp($Result, "[a-w]", $STR_REGEXPMATCH) Then ; Check string for valid characters
-			SetLog("Personal Break Warning found!", $COLOR_INFO)
-			$bPBTStart = True
-			ExitLoop
-		EndIf
 		$iCount += 1
 		If $iCount > 20 Then ; Wait ~10-12 seconds for window to open before error return
 			SetLog("PBT information window failed to open", $COLOR_DEBUG)

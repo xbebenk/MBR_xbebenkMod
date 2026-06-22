@@ -26,44 +26,17 @@ Func isInsideDiamond($aCoords, $bOuter = False)
 	Local $x = $aCoords[0], $y = $aCoords[1], $xD, $yD
 	Local $Left, $Right, $Top, $Bottom
     If $bOuter Then 
-        $Left = $OuterDiamondLeft
-        $Right = $OuterDiamondRight
-        $Top = $OuterDiamondTop
-        $Bottom = $OuterDiamondBottom
+        $Left = $g_OuterDiamondLeft
+        $Right = $g_OuterDiamondRight
+        $Top = $g_OuterDiamondTop
+        $Bottom = $g_OuterDiamondBottom
     Else
-		$Left = $InnerDiamondLeft
-        $Right = $InnerDiamondRight
-        $Top = $InnerDiamondTop
-        $Bottom = $InnerDiamondBottom
+		$Left = $g_InnerDiamondLeft
+        $Right = $g_InnerDiamondRight
+        $Top = $g_InnerDiamondTop
+        $Bottom = $g_InnerDiamondBottom
     EndIf
 	
-	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
-	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
-
-	;; convert to real diamond compensating zoom and offset
-	;; top diamond point
-	;$xD = $aMiddle[0]
-	;$yD = $Top
-	;ConvertToVillagePos($xD, $yD)
-	;$Top = $yD
-	;; bottom diamond point
-	;$xD = $aMiddle[0]
-	;$yD = $Bottom
-	;ConvertToVillagePos($xD, $yD)
-	;$Bottom = $yD
-	;; left diamond point
-	;$xD = $Left
-	;$yD = $aMiddle[1]
-	;ConvertToVillagePos($xD, $yD)
-	;$Left = $xD
-	;; right diamond point
-	;$xD = $Right
-	;$yD = $aMiddle[1]
-	;ConvertToVillagePos($xD, $yD)
-	;$Right = $xD
-
-	;If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond coordinates updated by offset: " & $Left & ", " & $Right & ", " & $Top & ", " & $Bottom, $COLOR_DEBUG)
-
 	Local $aDiamond[2][2] = [[$Left, $Top], [$Right, $Bottom]]
 	Local $aMiddle = [($aDiamond[0][0] + $aDiamond[1][0]) / 2, ($aDiamond[0][1] + $aDiamond[1][1]) / 2]
 	Local $aSize = [$aMiddle[0] - $aDiamond[0][0], $aMiddle[1] - $aDiamond[0][1]]
@@ -79,10 +52,10 @@ Func isInsideDiamond($aCoords, $bOuter = False)
 			If $g_bDebugSetLog Then SetLog("Coordinate Inside Village, but Exclude GEMS")
 			Return False
 		EndIf
-		If $g_bDebugSetLog Then SetLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_DEBUG1)
+		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Inside Village", $COLOR_DEBUG1)
 		Return True ; Inside Village
 	Else
-		If $g_bDebugSetLog Then SetLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_DEBUG1)
+		If $g_bDebugSetLog Then SetDebugLog("isInsideDiamond: " & "[" & $x & "," & $y & "] Coord Outside Village", $COLOR_DEBUG1)
 		Return False ; Outside Village
 	EndIf
 

@@ -497,13 +497,6 @@ Func SetupFilesAndFolders()
 	DirCreate($g_sProfileTempPath)
 	DirCreate($g_sProfileTempDebugPath)
 
-	$g_sProfileDonateCapturePath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\'
-	$g_sProfileDonateCaptureWhitelistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\White List\'
-	$g_sProfileDonateCaptureBlacklistPath = $g_sProfilePath & "\" & $g_sProfileCurrentName & '\Donate\Black List\'
-	DirCreate($g_sProfileDonateCapturePath)
-	DirCreate($g_sProfileDonateCaptureWhitelistPath)
-	DirCreate($g_sProfileDonateCaptureBlacklistPath)
-
 	;Migrate old bot without profile support to current one
 	FileMove(@ScriptDir & "\*.ini", $g_sProfilePath & "\" & $g_sProfileCurrentName, $FC_OVERWRITE + $FC_CREATEPATH)
 	DirCopy(@ScriptDir & "\Logs", $g_sProfilePath & "\" & $g_sProfileCurrentName & "\Logs", $FC_OVERWRITE + $FC_CREATEPATH)
@@ -701,9 +694,6 @@ Func runBot() ;Bot that runs everything in order
 	While 1
 		If Not $g_bRunState Then Return
 		$g_bRestart = False
-		;$g_bFullArmy = False
-		;$g_bIsFullArmywithHeroesAndSpells = False
-		$g_iCommandStop = -1
 
 		If $g_bIsSearchLimit Then SetLog("Search limit hit", $COLOR_INFO)
 
@@ -742,7 +732,7 @@ Func runBot() ;Bot that runs everything in order
 
 			If IsSearchAttackEnabled() Then
 				If $g_bRestart = True Then ContinueLoop
-				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then AttackMain()
+				If Not $g_bMeetCondStop Then AttackMain()
 			Else
 				$iWaitTime = Random($DELAYWAITATTACK1, $DELAYWAITATTACK2)
 				SetLog("Attacking Not Planned and Skipped, Waiting random " & StringFormat("%0.1f", $iWaitTime / 1000) & " Seconds", $COLOR_WARNING)
@@ -800,7 +790,7 @@ Func _Idle() ;Sequence that runs until Full Army
 		NotifyPendingActions()
 		If _Sleep($DELAYIDLE1) Then Return
 
-		If $g_iCommandStop = -1 Then SetLog("====== _Idle() ======", $COLOR_SUCCESS)
+		If Not $g_bMeetCondStop Then SetLog("====== _Idle() ======", $COLOR_SUCCESS)
 		Local $hTimer = __TimerInit()
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles()
@@ -808,12 +798,6 @@ Func _Idle() ;Sequence that runs until Full Army
 		If $g_bRestart Then ExitLoop
 		AddIdleTime()
 
-		If $g_iCommandStop = -1 Then
-			DropTrophy()
-			If Not $g_bRunState Then Return
-			If $g_bRestart Then ExitLoop
-			If _Sleep($DELAYIDLE1) Then ExitLoop
-		EndIf
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_bRestart Then ExitLoop
 
@@ -828,29 +812,13 @@ Func _Idle() ;Sequence that runs until Full Army
 	WEnd
 EndFunc   ;==>_Idle
 
-Func AttackMain($bFirstStart = False) ;Main control for attack functions
+Func AttackMain() ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
-	ClickAway()
-	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then
-		If checkMainScreen(False, $g_bStayOnBuilderBase, "AttackMain") Then ZoomOut()
-	EndIf
-
+	
+	If Not CheckZoomOut() Then ZoomOut(True)
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
-			If $g_bDropTrophyEnable And Number($g_aiCurrentLoot[$eLootTrophy]) > Number($g_iDropTrophyMax) Then ;If current trophy above max trophy, try drop first
-				If Not $bFirstStart Then
-					DropTrophy()
-					If Not $g_bRunState Then Return
-					$g_bIsClientSyncError = False ; reset OOS flag to prevent looping.
-					If _Sleep($DELAYATTACKMAIN1) Then Return
-					Return ; return to runbot, refill armycamps
-				Else
-					SetLog("Drop Trophy Enabled, but skipped on FirstStart", $COLOR_DEBUG)
-				EndIf
-			EndIf
 			If Not $g_bRunState Then Return
-			;If $g_bUpdateSharedPrefs And $g_bChkSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then Return
@@ -865,7 +833,6 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 			If $g_bRestart Then Return
 			ReturnHome($g_bTakeLootSnapShot)
 			If Not $g_bRunState Then Return
-			If _Sleep($DELAYATTACKMAIN2) Then Return
 			Return True
 		Else
 			SetLog("None of search condition match:", $COLOR_WARNING)
@@ -890,10 +857,11 @@ Func Attack() ;Selects which algorithm
 	If ($g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 1) Or ($g_iMatchMode = $LB And $g_aiAttackAlgorithm[$LB] = 1) Then
 		SetDebugLog("start scripted attack", $COLOR_ERROR)
 		Algorithm_AttackCSV()
-	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 2 Then
+	ElseIf $g_iMatchMode = $DB And $g_aiAttackAlgorithm[$DB] = 0 Then
 		SetDebugLog("start smart farm attack", $COLOR_ERROR)
 		; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
 		Local $Nside = ChkSmartFarm()
+		If $g_bRestart Then Return
 		If Not $g_bRunState Then Return
 		AttackSmartFarm($Nside[1], $Nside[2])
 	Else
@@ -913,30 +881,34 @@ Func _RunFunction($action)
 	Return FuncReturn($Result)
 EndFunc   ;==>_RunFunction
 
+Func ResetDailyRoutineCount()
+	SetLog("Reset Daily routine count", $COLOR_DEBUG1)
+	For $i = 0 To UBound($g_aDailyAccount) - 1
+		For $j = 0 To Ubound($g_aiDailyFunction) - 1
+			$g_aDailyAccount[$i][$j] = 0
+		Next
+	Next
+EndFunc
+
 Func __RunFunction($action)
 	If Not $g_bRunState Then Return
-	Local Static $iNowDay = @YDAY ; record numeric value for today
+	Local $iNowDay = @YDAY ; record numeric value for today
 	If $g_bEnableDailyRunRoutine Then 
-		If $iNowDay <> @YDAY Then ; if 1 day has passed since last time
-			$iNowDay = @YDAY
-			For $i = 0 To UBound($g_aDailyAccount) - 1
-				Local $iIndex = _ArraySearch($g_aiDailyFunction, $action, 0, 0, 0, 0, 1, 0)
-				If $iIndex > -1 Then 
-					$g_aDailyAccount[$g_iCurAccount][$iIndex] = 0
-				EndIf
-			Next
+		If $iDailyDate <> $iNowDay Then ; if 1 day has passed since last time
+			$iDailyDate = @YDAY
+			ResetDailyRoutineCount()
 		EndIf
 			
 		For $i = 0 To UBound($g_aiDailyFunction) - 1
 			If $action = $g_aiDailyFunction[$i][0] Then
 				If $g_aDailyAccount[$g_iCurAccount][$i] >= $g_aiDailyFunction[$i][1] Then
-					SetLog("[" & $action & "] Setting: " & $g_aiDailyFunction[$i][1] & ", Run Time = " & $g_aDailyAccount[$g_iCurAccount][$i], $COLOR_DEBUG2)
+					SetLog("[" & $action & "] Setting: " & $g_aiDailyFunction[$i][1] & ", Count=" & $g_aDailyAccount[$g_iCurAccount][$i], $COLOR_DEBUG2)
 					SetLog($action & " Already run", $COLOR_DEBUG2)
 					Return
 				Else
 					$g_aDailyAccount[$g_iCurAccount][$i] += 1
-					SetLog("[" & $action & "] Update Runtime, Account: " & $g_iCurAccount & " = " & $g_aDailyAccount[$g_iCurAccount][$i] & "/" & $g_aiDailyFunction[$i][1], $COLOR_DEBUG2)
 				EndIf
+				SetLog("[" & $action & "] Update Run Count:" & $g_aDailyAccount[$g_iCurAccount][$i] & "/" & $g_aiDailyFunction[$i][1], $COLOR_DEBUG2)
 			EndIf
 		Next
 	EndIf
@@ -1068,6 +1040,7 @@ Func FirstCheck()
 	SetLogCentered(" FIRSTCHECK ", "=", $COLOR_SUCCESS)
 	$g_bFirstStart = True
 	
+	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
 	If _Sleep(50) Then Return
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
@@ -1079,7 +1052,7 @@ Func FirstCheck()
 	;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	Local $bLocateTH = False
-	CheckZoomOut("FirstCheck")
+	ZoomOut(True)
 	SetLog("Detecting Town Hall level", $COLOR_INFO)
 	SetLog("Town Hall level is currently saved as " &  $g_iTownHallLevel, $COLOR_INFO)
 	Collect(True) ;only collect from mine and collector
@@ -1112,26 +1085,6 @@ Func FirstCheck()
 	EndIf
 	setupProfile()
 
-	If $g_bAlwaysDropHero Then
-		If $g_iTownHallLevel > 12 Then
-			GUICtrlSetState($g_hChkABChampionAttack, $GUI_CHECKED)
-			GUICtrlSetState($g_hChkDBChampionAttack, $GUI_CHECKED)
-		EndIf
-		If $g_iTownHallLevel > 10 Then
-			GUICtrlSetState($g_hChkABWardenAttack, $GUI_CHECKED)
-			GUICtrlSetState($g_hChkDBWardenAttack, $GUI_CHECKED)
-		EndIf
-		If $g_iTownHallLevel > 8 Then
-			GUICtrlSetState($g_hChkABQueenAttack, $GUI_CHECKED)
-			GUICtrlSetState($g_hChkDBQueenAttack, $GUI_CHECKED)
-		EndIf
-		If $g_iTownHallLevel > 6 Then
-			GUICtrlSetState($g_hChkABKingAttack, $GUI_CHECKED)
-			GUICtrlSetState($g_hChkDBKingAttack, $GUI_CHECKED)
-		EndIf
-		saveConfig()
-	EndIf
-
 	If Not $g_bRunState Then Return
 	VillageReport()
 	If BotCommand() Then btnStop()
@@ -1147,11 +1100,14 @@ Func FirstCheck()
 		VillageReport(True, True)
 	EndIf
 
+	If _Sleep(50) Then Return
+	If Not $g_bRunState Then Return
+	
 	If $g_iFreeBuilderCount > 0 Then
 		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
 		If Not $g_bRunState Then Return
 
-		If ($g_abFullStorage[$eLootElixir] Or $g_abFullStorage[$eLootGold]) And $g_bAutoUpgradeWallsEnable Then
+		If $g_bAutoUpgradeWallsEnable Then
 			SetLog("Gold and Elix Full", $COLOR_INFO)
 			UpgradeWall()
 		EndIf
@@ -1167,16 +1123,20 @@ Func FirstCheck()
 		EndIf
 		VillageReport()
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
 	EndIf
 
 	If T420() Then
 		SetLog("Test420 Done!", $COLOR_SUCCESS)
 	EndIf
+	
+	If _Sleep(50) Then Return
+	If Not $g_bRunState Then Return
 
 	waitMainScreen() ;check mainscreen and remove any obstacle window/popup
 	If BotCommand() Then btnStop()
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 1) Then
+	If ProfileSwitchAccountEnabled() And $g_bMeetCondStop Then
 		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
 		If Not $g_bRunState Then Return
@@ -1196,19 +1156,20 @@ Func FirstCheckRoutine()
 	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
 	
-	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
+	If Not $g_bMeetCondStop Then
 		; Now the bot can attack
 		UseFreeMagicItem()
 		Setlog("Before any other routine let's attack!", $COLOR_INFO)
 		If Not $g_bChkCGBBAttackOnly Then _ClanGames()
 		
-		FillArmyCamp()
+		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
 		
 		Local $loopcount = 1
 		While True
 			$g_bRestart = False
 			If Not $g_bRunState Then Return
-			If AttackMain($g_bSkipDT) Then
+			If AttackMain() Then
 				Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
 				RequestCC()
 				ExitLoop
@@ -1285,28 +1246,30 @@ Func FirstCheckRoutine()
 	EndIf
 	
 	If _Sleep(50) Then Return
+	If Not $g_bRunState Then Return
+	
 	If ProfileSwitchAccountEnabled() Then
 		CommonRoutine("Switch")
 		VillageReport()
 		SetLog("Check Second Attack", $COLOR_ACTION)
-		FillArmyCamp()
+		
 		If BotCommand() Then btnStop()
 		If Not $g_bRunState Then Return
-		If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
+		If Not $g_bMeetCondStop And Not $g_bChkAttackOnce Then
 			Setlog("Let's attack Again!", $COLOR_INFO)
 			$g_bRestart = False ;reset
 			Local $loopcount = 1
 			While True
 				$g_bRestart = False
 				If Not $g_bRunState Then Return
-				If AttackMain($g_bSkipDT) Then
+				If AttackMain() Then
 					Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 					$b_SuccessAttack = True
 					ExitLoop
 				Else
 					$loopcount += 1
-					If $loopcount > 10 Then
-						Setlog("2nd Attack Loop, Already Try 10 times... Exit", $COLOR_ERROR)
+					If $loopcount > 5 Then
+						Setlog("2nd Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
 						ExitLoop
 					Else
 						Setlog("[" & $loopcount & "] 2nd Attack Loop, Failed", $COLOR_INFO)
@@ -1317,6 +1280,7 @@ Func FirstCheckRoutine()
 			Wend
 		EndIf
 		checkMainScreen()
+		If $b_SuccessAttack Then RequestCC()
 		checkSwitchAcc() ;switch to next account
 	EndIf
 	
@@ -1330,7 +1294,7 @@ Func CommonRoutine($RoutineType = Default)
 	Local $sText = "", $aFuncList[0]
 	Switch $RoutineType
 		Case "FirstCheck"
-			Local $aRndFuncList = ['Collect', 'CollectLootCart', 'TreasuryCollect', 'CleanYard', 'CollectCookie', 'UseFreeMagic', 'PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'PetHouse', 'Laboratory', 'SellMagicItem', 'UpgradeWall']
+			Local $aRndFuncList = ['Collect', 'CollectLootCart', 'TreasuryCollect', 'CleanYard', 'CollectCookie', 'UseFreeMagic', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC', 'BlackSmith', 'SellMagicItem', 'UpgradeWall']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)
@@ -1346,7 +1310,7 @@ Func CommonRoutine($RoutineType = Default)
 		Case "Switch"
 			If Not $g_bisCGPointMaxed Then _ClanGames(False, True) ;Do Only Purge
 
-			Local $aRndFuncList = ['RequestCC', 'DailyChallenge', 'CollectAchievements', 'CollectFreeMagicItems', 'BuilderBase', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'AutoUpgrade', 'UpgradeWall', 'UpgradeLow', 'RequestCC']
+			Local $aRndFuncList = ['RequestCC', 'DailyChallenge', 'CollectAchievements', 'CollectFreeMagicItems', 'BuilderBase', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'AutoUpgrade', 'PetHouse', 'UpgradeLow', 'RequestCC']
 			SetLog($RoutineType & " Func List:", $COLOR_SUCCESS)
 			For $i In $aRndFuncList
 				SetLog(" --> " & $i, $COLOR_NAVY)
@@ -1403,14 +1367,19 @@ Func BuilderBase()
 		SetLog("Is6thBuilderUnlocked = " & String($g_bIs6thBuilderUnlocked), $COLOR_DEBUG1)
 		If $g_bIs6thBuilderUnlocked And $g_bChkSkipBBRoutineOn6thBuilder Then $g_bskipBBroutine = True
 	EndIf
+	
+	If _Sleep(50) Then Return
+	If Not $g_bRunState Then Return
 
 	If $g_bskipBBroutine Then
 		SetLog("isSkipBBroutine = " & String($g_bskipBBroutine), $COLOR_DEBUG1)
 		SetLog("BB Routine Skip!", $COLOR_INFO)
 		Return
 	EndIf
+	
+	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
-
+	
 	; switch to builderbase and check it is builderbase
 	If SwitchBetweenBases("BB") Then
 		$g_bStayOnBuilderBase = True
@@ -1421,6 +1390,8 @@ Func BuilderBase()
 		BuilderBaseReport(False, False)
 		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
 		CleanBBYard()
 		
 		If _Sleep(50) Then Return
@@ -1430,8 +1401,9 @@ Func BuilderBase()
 			$g_bBBAttacked = False
 		EndIf
 		
-		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
 		If isElixirFullBB() Then
 			$StarLabOn = StarLabUpgrade()
 			checkMainScreen()
@@ -1439,9 +1411,13 @@ Func BuilderBase()
 		EndIf
 		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
 		BBDropTrophy()
 		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
 		If $g_bChkStopAttackBB6thBuilder And $g_bIs6thBuilderUnlocked Then
 			SetLog("6th Builder Unlocked, attackBB disabled", $COLOR_DEBUG)
 		Else
@@ -1451,6 +1427,8 @@ Func BuilderBase()
 		EndIf
 		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		
 		If $g_bBBAttacked Then
 			If AutoUpgradeBB() Then ZoomOut(True) ;directly zoom
 			checkMainScreen()
@@ -1459,17 +1437,17 @@ Func BuilderBase()
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 		
-		If _Sleep(50) Then Return
 		If Not $StarLabOn Then StarLabUpgrade()
 		Local $bUseCTPot = $StarLabOn And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
-		checkMainScreen()
+		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
+		checkMainScreen()
 		StartClockTowerBoost(False, False, $bUseCTPot)
 		
 		If _Sleep(50) Then Return
+		If Not $g_bRunState Then Return
 		BuilderBaseReport(False, True)
-		
-		$g_bStayOnBuilderBase = False
 		SwitchBetweenBases("Main")
 	EndIf
 

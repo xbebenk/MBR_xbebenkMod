@@ -21,30 +21,30 @@ Func checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase, 
 EndFunc   ;==>checkMainScreen
 
 Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase, $CalledFrom = "Default") ;Checks if in main screen
-
-	If $bSetLog = Default Then $bSetLog = True
-	Local $VillageType = "MainVillage"
-	If $bBuilderBase Then $VillageType = "BuilderBase"
-	If $bSetLog Then SetLog("[" & $CalledFrom & "] Check " & $VillageType & " Main Screen", $COLOR_INFO)
 	
+	If $bSetLog = Default Then $bSetLog = True
+	If Not $g_bRunState Then Return
 	If Not CheckAndroidRunning(False) Then Return
+	If GetAndroidProcessPID() = 0 Then CloseCoC(True)
+	
+	If $bSetLog Then SetLog("[" & $CalledFrom & "] checkMainScreen", $COLOR_INFO)
 	PlaceUnplacedBuilding()
+	PlacedOnLeague()
+	
 	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False
-	Local $aPixelToCheck = $aIsMain
 	$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
+	If Not $bBuilderBase And Not $bLocated And isOnBuilderBase() Then $bBuilderBase = True ;check if account is on builderbase but it should on main
 	
 	While Not $bLocated
 		$i += 1
 		If Not $g_bRunState Then Return
 		
-		If Mod($i, 10) = 0 Then RestartAndroidCoC() ; Force restart CoC we keep on restarting mainscreen
-		
 		SetDebugLog("checkMainScreen : " & ($bBuilderBase ? "BuilderBase" : "MainVillage"))
 		$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
 		If $bLocated Then ExitLoop
 		
-		If Not $bLocated And GetAndroidProcessPID() = 0 Then OpenCoC()
-		
+		If GetAndroidProcessPID() = 0 Then OpenCoC()
+		If Not $g_bRunState Then Return
 		;mainscreen not located, proceed to check if there is obstacle covering screen
 		$bObstacleResult = checkObstacles($bBuilderBase)
 		SetDebugLog("CheckObstacles[" & $i & "] Result = " & $bObstacleResult, $COLOR_DEBUG)
@@ -57,26 +57,25 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 			$bContinue = True
 		EndIf
 		
-		If $bContinue Then 
-			If waitMainScreen() Then ExitLoop ; Due to differeneces in PC speed, let waitMainScreen test for CoC restart
-		EndIf
+		If Not $g_bRunState Then Return
+		If $bContinue Then $bLocated = waitMainScreen() ;wait main screen due to slow loading
 		If Not $g_bRunState Then Return
 		If _Sleep(1000) Then Return
 	WEnd
 	
 	If Not $g_bRunState Then Return
 
-	If $bSetLog Then
-		If $bLocated Then
-			SetLog("[" & $CalledFrom & "] Main Screen located", $COLOR_SUCCESS)
-		Else
-			SetLog("[" & $CalledFrom & "] Main Screen not located", $COLOR_ERROR)
-		EndIf
+	If $bLocated Then
+		SetLog("[" & $CalledFrom & "] Main Screen located", $COLOR_SUCCESS)
+	Else
+		SetLog("[" & $CalledFrom & "] Main Screen not located", $COLOR_ERROR)
 	EndIf
-	
+
 	If $bLocated Then 
 		If CheckDonateNotifCounter() Then RequestCC()
+		If $g_bStayOnBuilderBase <> $bBuilderBase Then SwitchBetweenBases("Main")
 	EndIf
+	
 	;After checkscreen dispose windows
 	DisposeWindows()
 
@@ -116,8 +115,8 @@ Func checkChatTabPixel()
 	If Not $bRet Then 
 		If _CheckPixel($aChatTab, True) Then
 			SetDebugLog("checkChatTabPixel: Found Chat Tab to close", $COLOR_ACTION)
-			PureClickP($aChatTab, 1, 0, "#0136") ;Clicks chat tab
-			If _Sleep(1000) Then Return
+			PureClickP($aChatTab, 1, 0, "ChatTab")
+			If _Sleep(500) Then Return
 			$bRet = True
 		Else
 			SetDebugLog("ChatTabPixel not found", $COLOR_ERROR)
@@ -141,7 +140,7 @@ EndFunc
 
 Func CheckDonateNotifCounter()
 	Local $bRet = False
-	If $g_bDonationEnabled Then 
+	If $g_bChkDonate Then 
 		If _ColorCheck(_GetPixelColor(66, 289, True), Hex(0xCE081D, 6), 20, Default, "Red Chat notif count") Then $bRet = True
 		If $bRet Then SetLog("New chat detected!, Check for Donate", $COLOR_DEBUG)
 	EndIf

@@ -24,14 +24,14 @@ EndFunc   ;==>updateMultiSearchStats
 
 Func addInfoToDebugImage(ByRef $hGraphic, ByRef $hPen, $fileName, $x, $y)
 	; Draw the location on the image
-	_GDIPlus_GraphicsDrawRect($hGraphic, $x - 5, $y - 5, 10, 10, $hPen)
+	_GDIPlus_GraphicsDrawRect($hGraphic, $x - 2, $y - 2, 5, 5, $hPen)
 
 	; Store the variables needed for writing the text
-	Local $hBrush = _GDIPlus_BrushCreateSolid(0xFFFFFFFF)
+	Local $hBrush = _GDIPlus_BrushCreateSolid(0xFF00FF00)
 	Local $hFormat = _GDIPlus_StringFormatCreate()
-	Local $hFamily = _GDIPlus_FontFamilyCreate("Tahoma")
-	Local $hFont = _GDIPlus_FontCreate($hFamily, 12, 2)
-	Local $tLayout = _GDIPlus_RectFCreate($x + 10, $y, 0, 0)
+	Local $hFamily = _GDIPlus_FontFamilyCreate("Lucida Console")
+	Local $hFont = _GDIPlus_FontCreate($hFamily, 9, 1)
+	Local $tLayout = _GDIPlus_RectFCreate($x + 10, $y - 5, 0, 0)
 	Local $sString = String($fileName)
 	Local $aInfo = _GDIPlus_GraphicsMeasureString($hGraphic, $sString, $hFont, $tLayout, $hFormat)
 

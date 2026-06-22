@@ -46,16 +46,17 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 		EndIf
 		If _Sleep(1000) Then Return
 	Next
-		
+	
 	Local $aButton, $bTournament = False, $aMatch
 	
-	If $g_bEnableTournament Then 
-		For $i = 1 To 20 
+	If $g_bEnableTournament And Not $g_bNoTournament Then 
+		For $i = 1 To 10 
 			If Not $g_bRunState Then Return
 			If _Sleep(50) Then Return
 			SetDebugLog("Search for FindMatch Button #" & $i, $COLOR_ACTION)
 			$aButton = QuickMIS("CNX", $g_sImgTournamentSearch, 325, 435, 540, 500)
 			If IsArray($aButton) And UBound($aButton) > 0 Then
+				RemoveDupCNX($aButton) ;remove duplicate button
 				For $z = 0 To UBound($aButton) - 1
 					If $aButton[$z][0] = "SignUp" Then
 						SetLog("Found SignUp Button", $COLOR_DEBUG)
@@ -90,14 +91,17 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 							EndIf
 						EndIf
 						Click($aButton[$z][1], $aButton[$z][2], 1, 0, "Find a Match Tournament")
-						If _Sleep(1000) Then Return
-						If Not PrepareSearchCheckArmy() Then ExitLoop 2
+						$g_bLeagueAttack = True
 						$bTournament = True
+						If _Sleep(1000) Then Return
+						If Not PrepareSearchCheckArmy($g_bLeagueAttack, $bTest) Then ExitLoop 2
 						ExitLoop 2
 					EndIf
 				Next
 			EndIf
 		Next
+	ElseIf $g_bNoTournament Then 
+		SetLog("Enabled Tournament but no Attack", $COLOR_DEBUG2)		
 	EndIf
 	
 	Local $bAttackButtonFound = False
@@ -107,7 +111,7 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 			Click(160, 460, 1, 0, "FindMatch")
 			$g_bLeagueAttack = False
 			If _Sleep(1000) Then Return
-			If Not PrepareSearchCheckArmy() Then Return
+			If Not PrepareSearchCheckArmy($bTournament, $bTest) Then Return
 		Else
 			SetLog("FindMatch Not Found!", $COLOR_DEBUG2)
 			$g_bRestart = True
@@ -136,25 +140,111 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 	
 EndFunc   ;==>PrepareSearch
 
-Func PrepareSearchCheckArmy()
+Func PrepareSearchCheckArmy($bTournament = False, $bTest = False)
 	Local $bRet = False
 	For $i = 1 To 3
 		SetLog("Checking ArmyOverview Window", $COLOR_DEBUG)
 		If WaitforPixel(695, 500, 696, 501, "C2ED91", 20, 1) Then
+			If _Sleep(200) Then Return
+			SetArmyCompo($bTournament)
+			If _Sleep(500) Then Return
+			FillArmyCamp()
+			If _Sleep(500) Then Return
+			If $bTest Then Return $bRet
 			Click(695, 500, 1, 0, "ArmyOverview Attack Button")
-			$bRet = True
 			If _Sleep(1000) Then Return
 			If IsOKCancelPage(True) Then 
 				Click(535, 410, 1, 0, "Confirm Attack OK")
-				$g_bLeagueAttack = True
 			EndIf
-			If _Sleep(1000) Then Return
-			ExitLoop
+			$bRet = True
+			
+			For $wait = 1 To 8
+				SetLog("Waiting attack page #" & $wait, $COLOR_DEBUG1)
+				If IsAttackPage(False, 1) Then ExitLoop 2
+				If _Sleep(500) Then Return
+			Next
 		EndIf
 		If _Sleep(500) Then Return
 	Next
 	
 	Return $bRet
+EndFunc
+
+Func SetArmyCompo($bTournament = False)
+	Local $x = 510, $Color = Hex(0xB69881, 6)
+	Local $yArmy1 = 200, $yArmy2 = 254, $yArmy3 = 308, $yArmy4 = 361
+	Local $yCheck = 0, $iUseArmy = $g_iCmbDBUseArmy
+	
+	If $bTournament Then $iUseArmy = $g_iTournamentUseArmy 
+	Switch $iUseArmy
+		Case 0
+			$yCheck = $yArmy1
+		Case 1
+			$yCheck = $yArmy2
+		Case 2
+			$yCheck = $yArmy3
+		Case 3
+			$yCheck = $yArmy4
+	EndSwitch
+	
+	If $bTournament Then
+		SetLog("SetArmyCompo for Tournament", $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgSetArmyCompo, 490, 140, 530, 180) Then ;check selector button
+			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Selector")
+			If WaitforPixel(510, 185, 510, 185, "73615A", 20, 2) Then ;wait selector popup
+				If _ColorCheck(_GetPixelColor($x, $yCheck, True), $Color, 20, Default, "SetArmyCompo" & $g_iTournamentUseArmy + 1) Then
+					Click($x, $yCheck + 20, 1, 0, "Click Army " & $g_iTournamentUseArmy + 1)
+					SetLog("Selecting Army Compo " & $g_iTournamentUseArmy + 1, $COLOR_SUCCESS)
+					If _Sleep(500) Then Return
+					ConfirmOK()
+				Else
+					SetLog("Fail to verify Army Compo " & $g_iTournamentUseArmy + 1, $COLOR_DEBUG2)
+				EndIf
+			Else
+				SetLog("Fail to verify Selector is Open", $COLOR_DEBUG2)
+				SetLog("Cancel Selecting Army Compo", $COLOR_DEBUG2)
+				ClickAway()
+			EndIf
+		Else
+			SetLog("No Set Army Compo Button Found", $COLOR_DEBUG2)
+			Return
+		EndIf
+	Else
+		SetLog("SetArmyCompo for Normal Attack", $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgSetArmyCompo, 490, 140, 530, 180) Then ;check selector button
+			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Selector")
+			If WaitforPixel(510, 185, 510, 185, "73615A", 20, 2) Then ;wait selector popup
+				If _ColorCheck(_GetPixelColor($x, $yCheck, True), $Color, 20, Default, "SetArmyCompo" & $g_iCmbDBUseArmy + 1) Then
+					Click($x, $yCheck + 20, 1, 0, "Click Army " & $g_iCmbDBUseArmy + 1)
+					SetLog("Selecting Army Compo " & $g_iCmbDBUseArmy + 1, $COLOR_SUCCESS)
+					If _Sleep(500) Then Return
+					ConfirmOK()
+				Else
+					SetLog("Fail to verify Army Compo " & $g_iCmbDBUseArmy + 1, $COLOR_DEBUG2)
+				EndIf
+			Else
+				SetLog("Fail to verify Selector is Open", $COLOR_DEBUG2)
+				SetLog("Cancel Selecting Army Compo", $COLOR_DEBUG2)
+				ClickAway()
+			EndIf
+		Else
+			SetLog("No Set Army Compo Button Found", $COLOR_DEBUG2)
+			Return
+		EndIf
+	EndIf
+EndFunc
+
+Func ConfirmOK()
+	For $i = 1 To 2
+		If _Sleep(500) Then Return
+		SetLog("Waiting Confirm Message #" & $i, $COLOR_ACTION)
+		If IsOKCancelPage(True) Then 
+			Click(535, 410, 1, 0, "Click Confirm")
+			SetLog("Confirm OK", $COLOR_DEBUG1)
+			If _Sleep(1000) Then Return
+		EndIf
+		If WaitforPixel(695, 500, 695, 505, "C2ED91", 20, 1, "ConfirmOK") Then ExitLoop ; we found ArmyOverview Window with attack button
+	Next
 EndFunc
 
 Func CloseMultiPlayerWindow()
@@ -177,7 +267,8 @@ Func CheckRevengeTutor()
 			If QuickMIS("BC1", $g_sImgRevengeTutor, 370, 85, 460, 160) Then
 				SetLog("Found Arrow Set Defense", $COLOR_DEBUG)
 				Click(412, 182, 1, 0, "Button Setup Defense")
-				If _Sleep(3000) Then Return
+				If _Sleep(1000) Then Return
+				ExitLoop
 			EndIf
 			
 			If _ColorCheck(_GetPixelColor(299, 410, True), Hex(0xFFFFFF, 6), 20, Default, "WaitArrow") Then 
@@ -188,9 +279,28 @@ Func CheckRevengeTutor()
 		Next
 		
 		If _Sleep(2000) Then Return
-		If QuickMIS("BC1", $g_sImgRevengeTutor, 245, 195, 288, 228) Then
+		If QuickMIS("BC1", $g_sImgRevengeTutor, 30, 160, 100, 190) Then ;search Layout text
 			SetLog("Set Default Defense Layout", $COLOR_ACTION)
-			Click(400, 300, 1, 0, "Defense Layout")
+			Local $aLayout = QuickMIS("CNX", $g_sImgRevengeTutor, 40, 320, 860, 370)
+			Local $x, $y
+			_ArraySort($aLayout, 0, 0, 0, 1)
+			For $i = 0 To UBound($alayout) - 1
+				$x = $aLayout[$i][1]
+				$y = $aLayout[$i][2]
+				If $i = 0 Then ;home base
+					SetLog("Set Home Base Defense Layout", $COLOR_ACTION)
+					Click($x + 40, $y - 30, 1, 0, "Defense Layout (Home Base)")
+				Else
+					If Not QuickMIS("BC1", $g_sImgRevengeTutor, $x + 160, 340, $x + 190, 360) Then
+						SetLog("Set War Base Defense Layout", $COLOR_ACTION)
+						If _Sleep(500) Then Return
+						Click($x + 40, $y - 30, 1, 0, "Defense Layout (War Base)")
+						ExitLoop
+					Else
+						SetLog("Not Set War Base (Layout need Update)", $COLOR_DEBUG2)
+					EndIf
+				EndIf
+			Next
 		EndIf
 		
 		If _ColorCheck(_GetPixelColor(299, 410, True), Hex(0xFFFFFF, 6), 20, Default, "WaitArrow") Then 
@@ -234,5 +344,7 @@ Func CheckRevengeTutor()
 		EndIf
 	EndIf
 	
+	If _Sleep(1000) Then Return
+	ClickAway("Right")
 	Return $bRet
 EndFunc ;==>CheckRevengeTutor

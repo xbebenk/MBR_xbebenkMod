@@ -15,7 +15,7 @@ Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets comp
 EndFunc   ;==>getNameBuilding
 
 Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
-	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 18, True)
+	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 21, True)
 EndFunc   ;==>getGoldVillageSearch
 
 Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True) ;
@@ -27,15 +27,15 @@ Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
 EndFunc   ;==>getRemainTrainTimer
 
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
-	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 18, True)
+	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 21, True)
 EndFunc   ;==>getElixirVillageSearch
 
 Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
-	Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 18, True)
+	Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 21, True)
 EndFunc   ;==>getDarkElixirVillageSearch
 
 Func getTrophyVillageSearch($x_start, $y_start) ;48, 69+99 or 69+69 -> Gets complete value of Trophies xxx,xxx , top left, Getresources.au3
-	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 18, True)
+	Return getOcrAndCapture("coc-v-t", $x_start, $y_start, 75, 21, True)
 EndFunc   ;==>getTrophyVillageSearch
 
 Func getTrophyMainScreen($x_start, $y_start) ; -> Gets trophy value, top left of main screen "VillageReport.au3"
@@ -109,12 +109,12 @@ Func getProfile($x_start, $y_start) ;  -> Gets Attack Win/Defense Win/Donated/Re
 	Return getOcrAndCapture("coc-profile", $x_start, $y_start, 55, 13, True)
 EndFunc   ;==>getProfile
 
-Func getTroopCount($x_start, $y_start, $width = 60, $height = 22) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
+Func getTroopCount($x_start, $y_start, $width = 50, $height = 22) ;  -> Gets troop amount on Attack Screen for non-selected troop kind
 	Return StringReplace(getOcrAndCapture("coc-troopcount", $x_start, $y_start, $width, $height, True), "-", "")
 EndFunc   ;==>getTroopCountSmall
 
 Func getTroopsSpellsLevel($x_start, $y_start) ;  -> Gets spell level on Attack Screen for selected spell kind (could be used for troops too)
-	Return getOcrAndCapture("coc-spellslevel", $x_start, $y_start, 20, 18, True)
+	Return getOcrAndCapture("coc-spellslevel", $x_start, $y_start, 30, 18, True)
 EndFunc   ;==>getTroopsSpellsLevel
 
 Func getArmyCampCap($x_start, $y_start, $bNeedCapture = True) ;  -> Gets army camp capacity on Army Tab (Troops:xx/xx)
@@ -141,7 +141,11 @@ Func getArmyCapacityOnTrainTroops240($x_start, $y_start, $x1 = 63) ;  -> Gets qu
 	Return StringRegExpReplace(getOcrAndCapture("coc-troopcap240", $x_start, $y_start, $x1, 14, True), "[-x]", "")
 EndFunc   ;==>getArmyCapacityOnTrainTroops
 
-Func getMatchRemain($x_start = 414, $y_start = 475) ; Gets complete Tournament Match Remain / Max
+Func getRequestCCCapacity($x_start = 250, $y_start = 148, $width = 90, $height = 22)
+	Return StringReplace(getOcrAndCapture("coc-ccgold", $x_start, $y_start, $width, $height, True), "-", "")
+EndFunc
+
+Func getMatchRemain($x_start = 395, $y_start = 475) ; Gets complete Tournament Match Remain / Max
 	Local $sRet = "", $aRet[0]
 	$sRet = getOcrAndCapture("coc-tournament", $x_start, $y_start, 70, 22)
 	If $sRet <> "" Then
@@ -198,10 +202,6 @@ Func getQueueTroopsQuantity($x_start, $y_start) ;  -> Gets quantity of troops in
 	Return StringReplace(getOcrAndCapture("coc-qqtroop", $x_start, $y_start, 58, 15, True), "-", "")
 EndFunc   ;==>getQueueTroopsQuantity
 
-Func getAttackDisable($x_start, $y_start) ;  -> 346, 182 - Gets red text disabled for early warning of Personal Break
-	Return getOcrAndCapture("coc-dis", $x_start, $y_start, 118, 24, True)
-EndFunc   ;==>getAttackDisable
-
 Func getOcrLanguage($x_start, $y_start) ;  -> Get english language - main screen - "Attack" text on attack button
 	Return getOcrAndCapture("coc-ms-testl", $x_start, $y_start, 93, 16, True)
 EndFunc   ;==>getOcrLanguage
@@ -230,8 +230,8 @@ Func getBuilderMenuCost($x_start, $y_start) ;  -> Get least upgradetime on build
 	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 100, 18, True)
 EndFunc   ;==>getBuilderBuilderMenuCost
 
-Func getOresValues($x_start, $y_start, $ilength = 130) ;  -> Get least upgradetime on builder menu
-	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, $ilength, 16, True)
+Func getOresValues($x_start, $y_start, $ilength = 60) ;  -> Get least upgradetime on builder menu
+	Return StringReplace(getOcrAndCapture("coc-bonus", $x_start, $y_start, $ilength, 20, True), "-", "")
 EndFunc   ;==>getOresValues
 
 Func getBuildingName($x_start, $y_start, $length = 180, $height = 20) ;  -> Get BuildingName on builder menu
@@ -412,20 +412,14 @@ Func getOcrReloadMessage($x_start, $y_start, $sLogText = Default, $LogTextColor 
 	Return $result
 EndFunc   ;==>getOcrReloadMessage
 
-Func getOcrMaintenanceTime($x_start, $y_start, $sLogText = Default, $LogTextColor = Default, $bSilentSetLog = Default)
-	;  -> Get the Text with time till maintenance is over from reload msg(171, 375)
-	Local $result = getOcrAndCapture("coc-maintenance", $x_start, $y_start, 70, 20, True)
-	Local $String = ""
-	If $sLogText = Default Then
-		$String = "getOcrMaintenanceTime: " & $result
+Func getOcrMaintenanceTime($x_start, $y_start)
+	Local $result = getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 20, 12, True)
+	If Number($result) > 0 Then 
+		$result = $result & "m"
 	Else
-		$String = $sLogText & " " & $result
+		$result = "soon"
 	EndIf
-	If $g_bDebugSetlog Then ; if enabled generate debug log message
-		SetDebugLog($String, $LogTextColor, $bSilentSetLog)
-	ElseIf $result <> "" Then ;
-		SetDebugLog($String, $LogTextColor, True) ; if result found, add to log file
-	EndIf
+	
 	Return $result
 EndFunc   ;==>getOcrMaintenanceTime
 

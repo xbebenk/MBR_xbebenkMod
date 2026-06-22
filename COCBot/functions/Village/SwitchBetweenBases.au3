@@ -17,34 +17,39 @@ Global $FalseDetectionCount = 0
 Func SwitchBetweenBases($ForcedSwitchTo = Default)
 	Local $bIsOnMainVillage = isOnMainVillage()
 	Local $bIsOnBuilderBase = False
+	
+	If IsProblemAffect() Then Return
+	If Not $bIsOnMainVillage Then $bIsOnBuilderBase = isOnBuilderBase()
+	
 	If $ForcedSwitchTo = Default Then
 		If $bIsOnMainVillage Then 
+			SetDebugLog("We are on MainVillage")
 			$ForcedSwitchTo = "BB"
 		Else
 			$ForcedSwitchTo = "Main"
 		EndIf
 	EndIf
 	
-	If _Sleep(50) Then Return
-	If Not $bIsOnMainVillage Then $bIsOnBuilderBase = isOnBuilderBase()
+	;we are not on builderbase nor in mainvillage, something need to be check, check obstacles called on checkmainscreen
+	If Not $bIsOnBuilderBase And Not $bIsOnMainVillage Then 
+		SetDebugLog("Cannont verify what screen we are now?")
+		checkObstacles($g_bStayOnBuilderBase)
+		If _Sleep(1000) Then Return
+		$bIsOnMainVillage = isOnMainVillage()
+		If $g_bStayOnBuilderBase Then $bIsOnBuilderBase = isOnBuilderBase() ;check again if we are on builderbases, after mainscreen located
+	EndIf
 	
 	If $ForcedSwitchTo = "BB" And $bIsOnBuilderBase Then
-		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_INFO)
+		SetDebugLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_INFO)
 		Return True
 	EndIf
 	
 	If $ForcedSwitchTo = "Main" And $bIsOnMainVillage Then
-		SetLog("Already on MainVillage, Skip SwitchBetweenBases", $COLOR_INFO)
+		SetDebugLog("Already on MainVillage, Skip SwitchBetweenBases", $COLOR_INFO)
 		Return True
 	EndIf
 	
-	;we are not on builderbase nor in mainvillage, something need to be check, check obstacles called on checkmainscreen
-	If Not $bIsOnBuilderBase And Not $bIsOnMainVillage Then 
-		checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
-		If $g_bStayOnBuilderBase Then $bIsOnBuilderBase = isOnBuilderBase() ;check again if we are on builderbases, after mainscreen located
-	EndIf
-	
-	If IsProblemAffect() Then Return
+	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
 	
 	If $g_bStayOnBuilderBase And Not $bIsOnBuilderBase Then
@@ -97,27 +102,16 @@ Func SwitchTo($To = "BB")
 	For $i = 1 To 3
 		If _Sleep(50) Then Return
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
-		ZoomOut(True)
-		Local $ZoomOutResult
-		If $To = "BB" Then
-			If Not QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
-				checkChatTabPixel()
-				$ZoomOutResult = SearchZoomOut(True, False, "SwitchBetweenBases")
-				If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-					ZoomOut() 
-				EndIf
-			EndIf
-		EndIf
-		
+		ZoomOut()
 		If $To = "Main" Then 
 			ZoomOutHelperBB("SwitchBetweenBases")
 			If _Sleep(1000) Then Return
 		EndIf
 		
 		If QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
-			If $g_iQuickMISName = "BrokenBoat" Then Return BBTutorial($g_iQuickMISX, $g_iQuickMISY)
-			If $g_iQuickMISName = "BBBoatBadge" Then $g_iQuickMISY += 10
-			If $g_iQuickMISName = "BoatFront" Then 
+			If $g_sQuickMISName = "BrokenBoat" Then Return BBTutorial($g_iQuickMISX, $g_iQuickMISY)
+			If $g_sQuickMISName = "BBBoatBadge" Then $g_iQuickMISY += 10
+			If $g_sQuickMISName = "BoatFront" Then 
 				$g_iQuickMISX += 10
 				$g_iQuickMISY -= 10
 			EndIf
@@ -141,7 +135,7 @@ Func SwitchTo($To = "BB")
 					$FalseDetectionCount = 0
 					If $To = "BB" Then
 						$sScode = $g_sSceneryCode
-						$g_sSceneryCode = "BB"
+						$g_sSceneryCode = "BL"
 					Else
 						If $g_bStayOnBuilderBase Then $g_bStayOnBuilderBase = False
 						$g_sSceneryCode = $sScode

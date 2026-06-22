@@ -18,7 +18,7 @@ Global $g_hGUI_BB = 0, $g_hGUI_BB_TAB = 0, $g_hGUI_BB_TAB_ITEM1 = 0, $g_hGUI_BB_
 Global $g_alblBldBaseStats[4] = ["", "", ""]
 Global $g_hChkCollectBuilderBase = 0, $g_hChkStartClockTowerBoost = 0, $g_hChkCleanBBYard = 0
 Global $g_hChkCollectBldGE = 0, $g_hChkCollectBldGems = 0, $g_hChkActivateClockTower = 0
-Global $g_hChkAutoUpgradeBB = 0, $g_hChkAutoUpgradeBBIgnoreHall = 0, $g_hChkAutoUpgradeBBIgnoreWall = 0, $g_hChkBOBControl = 0
+Global $g_hChkAutoUpgradeBB = 0, $g_hChkAutoUpgradeBBIgnoreHall = 0, $g_hChkAutoUpgradeBBIgnoreWall = 0, $g_hChkBOBControl = 0, $g_hChkBBSpendGoldOnWall = 0
 Global $g_hChkAutoStarLabUpgrades = 0, $g_hCmbStarLaboratory = 0, $g_hLblNextSLUpgrade = 0
 Global $g_hChkEnableBBAttack = 0, $g_hChkBBDropTrophy = 0, $g_hChkBBAttIfStarsAvail = 0, $g_hChkSkipBBAttIfStorageFull = 0, $g_hChkBBWaitForMachine = 0, $g_hChkBBDropBMFirst = 0, $g_hChkStopAttackBB6thBuilder = 0
 Global $g_hChkDebugAttackBB = 0, $g_hChkBBEndBattleOn2Stars = 0
@@ -82,6 +82,8 @@ Func CreateBBPlaySubTab()
 		GUICtrlCreateIcon($g_sLibIconPath, $g_sIcnMBisland, $x , $y , 64, 64)
 		$g_hChkAutoUpgradeBB = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgrades", "Auto Upgrades"), $x + 70, $y + 10, -1, -1)
 			GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgrades")
+		$g_hChkBBSpendGoldOnWall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSpendGoldOnWall", "Spend Gold on Wall"), $x + 70, $y + 30, -1, -1)
+			GUICtrlSetOnEvent(-1, "ChkBBSpendGoldOnWall")
 		$g_hChkAutoUpgradeBBIgnoreHall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_Hall", "Ignore Builder Hall"), $x + 280, $y, -1, -1)
 			GUICtrlSetOnEvent(-1, "ChkBBSuggestedUpgradesIgnoreHall")
 			GUICtrlSetState (-1, $GUI_DISABLE)
@@ -269,7 +271,7 @@ Func CreateBBAttackSubTab()
 
 		$g_hBtnBBDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder", "Drop Order"), $x + 10, $y + 62, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder_Info", "Set a custom dropping order for your troops."))
-			GUICtrlSetBkColor(-1, $COLOR_RED)
+			GUICtrlSetBkColor(-1, $COLOR_ERROR)
 			GUICtrlSetOnEvent(-1, "btnBBDropOrder")
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		

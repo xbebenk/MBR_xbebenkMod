@@ -1151,7 +1151,7 @@ Func CreateOrderTroopsSubTab()
 
 	If UBound($g_asTroopOrderList) - 1 <> $eTroopCount Then ; safety check in case troops are added
 		If $g_bDebugSetlogTrain Then SetLog("UBound($g_asTroopOrderList) - 1: " & UBound($g_asTroopOrderList) - 1 & " = " & "$eTroopCount: " & $eTroopCount, $COLOR_DEBUG) ;Debug
-		SetLog("Monkey ate bad banana, fix $g_asTroopOrderList & $eTroopCount arrays!", $COLOR_RED)
+		SetLog("Monkey ate bad banana, fix $g_asTroopOrderList & $eTroopCount arrays!", $COLOR_ERROR)
 	EndIf
 
 	; Create translated list of Troops for combo box

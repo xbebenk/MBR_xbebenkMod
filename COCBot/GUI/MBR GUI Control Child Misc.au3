@@ -476,206 +476,6 @@ Func btnBsmith()
 	AndroidShield("btnBsmith") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnBsmith
 
-Func chkTrophyAtkDead()
-	If GUICtrlRead($g_hChkTrophyAtkDead) = $GUI_CHECKED Then
-		$g_bDropTrophyAtkDead = True
-		GUICtrlSetState($g_hTxtDropTrophyArmyMin, $GUI_ENABLE)
-		GUICtrlSetState($g_hLblDropTrophyArmyMin, $GUI_ENABLE)
-		GUICtrlSetState($g_hLblDropTrophyArmyPercent, $GUI_ENABLE)
-	Else
-		$g_bDropTrophyAtkDead = False
-		GUICtrlSetState($g_hTxtDropTrophyArmyMin, $GUI_DISABLE)
-		GUICtrlSetState($g_hLblDropTrophyArmyMin, $GUI_DISABLE)
-		GUICtrlSetState($g_hLblDropTrophyArmyPercent, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkTrophyAtkDead
-
-Func chkTrophyRange()
-	If GUICtrlRead($g_hChkTrophyRange) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hTxtDropTrophy, $GUI_ENABLE)
-		GUICtrlSetState($g_hTxtMaxTrophy, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkTrophyHeroes, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkTrophyAtkDead, $GUI_ENABLE)
-		chkTrophyAtkDead()
-		chkTrophyHeroes()
-	Else
-		GUICtrlSetState($g_hTxtDropTrophy, $GUI_DISABLE)
-		GUICtrlSetState($g_hTxtMaxTrophy, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkTrophyHeroes, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkTrophyAtkDead, $GUI_DISABLE)
-		GUICtrlSetState($g_hTxtDropTrophyArmyMin, $GUI_DISABLE)
-		GUICtrlSetState($g_hLblDropTrophyArmyMin, $GUI_DISABLE)
-		GUICtrlSetState($g_hLblDropTrophyArmyPercent, $GUI_DISABLE)
-		GUICtrlSetState($g_hLblTrophyHeroesPriority, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbTrophyHeroesPriority, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkTrophyRange
-
-Func TxtDropTrophy()
-	If Number(GUICtrlRead($g_hTxtDropTrophy)) > Number(GUICtrlRead($g_hTxtMaxTrophy)) Then
-		GUICtrlSetData($g_hTxtMaxTrophy, GUICtrlRead($g_hTxtDropTrophy))
-		TxtMaxTrophy()
-	EndIf
-	_GUI_Value_STATE("HIDE", $g_aGroupListPicMinTrophy)
-	If Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[21][4]) Then
-		GUICtrlSetState($g_hPicMinTrophies[$eLeagueLegend], $GUI_SHOW)
-		GUICtrlSetData($g_hLblMinTrophies, "")
-	ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[18][4]) Then
-		GUICtrlSetState($g_hPicMinTrophies[$eLeagueTitan], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[20][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[19][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[18][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[15][4]) Then
-		GUICtrlSetState($g_hPicMinTrophies[$eLeagueChampion], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[17][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[16][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[15][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[12][4]) Then
-		GUICtrlSetState($g_hPicMinTrophies[$eLeagueMaster], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[14][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[13][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[12][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[9][4]) Then
-		GUICtrlSetState($g_hPicMinTrophies[$eLeagueCrystal], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[11][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[10][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[9][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[6][4]) Then
-		GUICtrlSetState($g_hPicMinTrophies[$eLeagueGold], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[8][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[7][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[6][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[3][4]) Then
-		GUICtrlSetState($g_hPicMinTrophies[$eLeagueSilver], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[5][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[4][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[3][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[0][4]) Then
-		GUICtrlSetState($g_hPicMinTrophies[$eLeagueBronze], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[2][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[1][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtDropTrophy)) >= Number($g_asLeagueDetails[0][4]) Then
-			GUICtrlSetData($g_hLblMinTrophies, "3")
-		EndIf
-	Else
-		GUICtrlSetState($g_hPicMinTrophies[$eLeagueUnranked], $GUI_SHOW)
-		GUICtrlSetData($g_hLblMinTrophies, "")
-	EndIf
-EndFunc   ;==>TxtDropTrophy
-
-Func TxtMaxTrophy()
-	If Number(GUICtrlRead($g_hTxtDropTrophy)) > Number(GUICtrlRead($g_hTxtMaxTrophy)) Then
-		GUICtrlSetData($g_hTxtMaxTrophy, GUICtrlRead($g_hTxtDropTrophy))
-	EndIf
-	_GUI_Value_STATE("HIDE", $g_aGroupListPicMaxTrophy)
-	If Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[21][4]) Then
-		GUICtrlSetState($g_hPicMaxTrophies[$eLeagueLegend], $GUI_SHOW)
-		GUICtrlSetData($g_hLblMaxTrophies, "")
-	ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[18][4]) Then
-		GUICtrlSetState($g_hPicMaxTrophies[$eLeagueTitan], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[20][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[19][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[18][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[15][4]) Then
-		GUICtrlSetState($g_hPicMaxTrophies[$eLeagueChampion], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[17][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[16][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[15][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[12][4]) Then
-		GUICtrlSetState($g_hPicMaxTrophies[$eLeagueMaster], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[14][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[13][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[12][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[9][4]) Then
-		GUICtrlSetState($g_hPicMaxTrophies[$eLeagueCrystal], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[11][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[10][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[9][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[6][4]) Then
-		GUICtrlSetState($g_hPicMaxTrophies[$eLeagueGold], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[8][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[7][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[6][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[3][4]) Then
-		GUICtrlSetState($g_hPicMaxTrophies[$eLeagueSilver], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[5][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[4][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[3][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "3")
-		EndIf
-	ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[0][4]) Then
-		GUICtrlSetState($g_hPicMaxTrophies[$eLeagueBronze], $GUI_SHOW)
-		If Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[2][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "1")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[1][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "2")
-		ElseIf Number(GUICtrlRead($g_hTxtMaxTrophy)) >= Number($g_asLeagueDetails[0][4]) Then
-			GUICtrlSetData($g_hLblMaxTrophies, "3")
-		EndIf
-	Else
-		GUICtrlSetState($g_hPicMaxTrophies[$eLeagueUnranked], $GUI_SHOW)
-		GUICtrlSetData($g_hLblMaxTrophies, "")
-	EndIf
-EndFunc   ;==>TxtMaxTrophy
-
-Func chkTrophyHeroes()
-	If GUICtrlRead($g_hChkTrophyHeroes) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hLblTrophyHeroesPriority, $GUI_ENABLE)
-		GUICtrlSetState($g_hCmbTrophyHeroesPriority, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hLblTrophyHeroesPriority, $GUI_DISABLE)
-		GUICtrlSetState($g_hCmbTrophyHeroesPriority, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkTrophyHeroes
-
 Func ChkCollect()
 	If GUICtrlRead($g_hChkCollect) = $GUI_CHECKED Then
 		$g_bChkCollect = True
@@ -740,6 +540,22 @@ Func chkEnableSellMagicItem()
 			GUICtrlSetState($i, $GUI_DISABLE)
 			$g_aSellMagicItem[$iCtrl] = (GUICtrlRead($i) = $GUI_CHECKED ? True : False)
 			$iCtrl += 1
+		Next
+	EndIf
+EndFunc
+
+Func ChkEnableTradeMedal()
+	If GUICtrlRead($g_hChkEnableTradeMedal) = $GUI_CHECKED Then
+		$g_bChkEnableTradeMedal = True
+		Local $iCtrl = 0
+		For $i = $g_hChkTradeShiny To $g_hChkTradeResearchPot
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		$g_bChkEnableTradeMedal = False
+		Local $iCtrl = 0
+		For $i = $g_hChkTradeShiny To $g_hChkTradeResearchPot
+			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
 	EndIf
 EndFunc
@@ -1141,6 +957,15 @@ Func chkSkipDropTrophyOnFirstStart()
 	EndIf
 EndFunc ;==> chkSkipDropTrophyOnFirstStart
 
+Func ChkAttackOnce()
+	If GUICtrlRead($g_hChkAttackOnce) = $GUI_CHECKED Then
+		$g_bChkAttackOnce = True
+	Else
+		$g_bChkAttackOnce = False
+	EndIf
+EndFunc ;==> ChkAttackOnce
+
+
 Func chkSetCCSleep()
 	If GUICtrlRead($g_hChkEnableCCSleep) = $GUI_CHECKED Then
 		$g_bEnableCCSleep = True
@@ -1155,6 +980,20 @@ Func chkTournament()
 	Else
 		$g_bEnableTournament = False
 	EndIf
+	If GUICtrlRead($g_hChkNoTournament) = $GUI_CHECKED Then
+		$g_bNoTournament = True
+	Else
+		$g_bNoTournament = False
+	EndIf
 	$g_iTournamentAttackType = _GUICtrlComboBox_GetCurSel($g_hCmbTournamentAttackType)
 	SetLog("Set Tournament Attack Type : " & ($g_iTournamentAttackType = 0 ? "Dead Base" : "Active Base"), $COLOR_DEBUG)
+	
+	$g_iTournamentUseArmy = _GUICtrlComboBox_GetCurSel($g_hCmbUseSavedArmy)
+	SetLog("Set Tournament Use Saved Army : Army " & $g_iTournamentUseArmy + 1, $COLOR_DEBUG)
+	
+	If $g_iTournamentAttackType = 1 Then 
+		GUICtrlSetState($g_hCmbUseSavedArmy, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hCmbUseSavedArmy, $GUI_DISABLE)
+	EndIf
 EndFunc   ;==>chkTournament

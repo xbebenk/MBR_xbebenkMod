@@ -6,6 +6,7 @@ Func CollectCCGold($bTest = False)
 	SetLog("Check for Collecting Clan Capital Gold", $COLOR_INFO)
 	ClickAway("Right")
 	ZoomOut() ;ZoomOut first
+	ZoomOutHelper("CollectLootCart")
 	
 	;handle for turtorial
 	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 250, 520, 400, 670) Then
@@ -188,25 +189,6 @@ Func WaitStartCraftWindow()
 	Return $bRet
 EndFunc
 
-Func RemoveDupCNX(ByRef $arr, $sortBy = 1, $distance = 10)
-	Local $atmparray[0][4]
-	Local $tmpCoord = 0
-	_ArraySort($arr, 0, 0, 0, $sortBy) ;sort by 1 = , 2 = y
-	For $i = 0 To UBound($arr) - 1
-		SetDebugLog("SortBy:" & $arr[$i][$sortBy])
-		SetDebugLog("tmpCoord:" & $tmpCoord)
-		If $arr[$i][$sortBy] >= $tmpCoord + $distance Then
-			_ArrayAdd($atmparray, $arr[$i][0] & "|" & $arr[$i][1] & "|" & $arr[$i][2] & "|" & $arr[$i][3])
-			$tmpCoord = $arr[$i][$sortBy] + $distance
-		Else
-			SetDebugLog("Skip this dup: " & $arr[$i][$sortBy] & " is near " & $tmpCoord, $COLOR_INFO)
-			ContinueLoop
-		EndIf
-	Next
-	$arr = $atmparray
-	SetDebugLog(_ArrayToString($arr))
-EndFunc
-
 Func ForgeClanCapitalGold($bTest = False)
 	
 	Local $aForgeType[5] = [$g_bChkEnableForgeGold, $g_bChkEnableForgeElix, $g_bChkEnableForgeDE, $g_bChkEnableForgeBBGold, $g_bChkEnableForgeBBElix]
@@ -370,13 +352,13 @@ Func SwitchToCapitalMain()
 	SetDebugLog("Going to Clan Capital", $COLOR_ACTION)
 	For $i = 1 To 5
 		If QuickMIS("BC1", $g_sImgCCMap, 15, 610, 115, 670) Then
-			If $g_iQuickMISName = "MapButton" Then
+			If $g_sQuickMISName = "MapButton" Then
 				Click(60, 610) ;Click Map
 				If _Sleep(3000) Then Return
 			EndIf
 		EndIf
 		If QuickMIS("BC1", $g_sImgCCMap, 15, 610, 115, 670) Then
-			If $g_iQuickMISName = "ReturnHome" Then
+			If $g_sQuickMISName = "ReturnHome" Then
 				SetDebugLog("We are on Clan Capital", $COLOR_ACTION)
 				$bRet = True
 				ExitLoop
@@ -609,7 +591,7 @@ EndFunc
 Func WaitUpgradeWindowCC()
 	Local $bRet = False
 	For $i = 1 To 10
-		If Not $g_bRunState Then Return $aRet
+		If Not $g_bRunState Then Return
 		If _Sleep(1000) Then Return
 		SetLog("Waiting for Upgrade Window #" & $i, $COLOR_ACTION)
 		If QuickMis("BC1", $g_sImgGeneralCloseButton, 755, 44, 800, 90) Then ;check if upgrade window opened

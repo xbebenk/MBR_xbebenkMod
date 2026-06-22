@@ -436,8 +436,7 @@ Func checkDeadBaseFolder($directory, $executeOldCode = "checkDeadBaseNew()", $ex
 		; get readline
 		SearchRedLines()
 		; measure village
-		SearchZoomOut(False, True, "checkDeadBaseFolder", False, False)
-		ConvertInternalExternArea() ; generate correct internal/external diamond measures
+		CheckZoomOut()
 
 		For $j = 1 To 2
 

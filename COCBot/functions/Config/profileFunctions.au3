@@ -132,10 +132,7 @@ Func createProfile($bCreateNew = False)
 	DirCreate($g_sProfileLootsPath)
 	DirCreate($g_sProfileTempPath)
 	DirCreate($g_sProfileTempDebugPath)
-	DirCreate($g_sProfileDonateCapturePath)
-	DirCreate($g_sProfileDonateCaptureWhitelistPath)
-	DirCreate($g_sProfileDonateCaptureBlacklistPath)
-
+	
 	If FileExists($g_sProfileConfigPath) = 0 Then SetLog("New Profile '" & $g_sProfileCurrentName & "' created")
 	FuncReturn()
 EndFunc   ;==>createProfile

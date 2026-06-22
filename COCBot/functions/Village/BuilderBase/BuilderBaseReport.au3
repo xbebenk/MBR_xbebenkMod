@@ -88,39 +88,6 @@ Func isBHMaxed()
 	Return $bRet
 EndFunc
 
-Func isMegaTeslaMaxed()
-	If $g_bIs6thBuilderUnlocked Then
-		$g_bisMegaTeslaMaxed = True
-		Return True
-	EndIf
-	
-	ClickAway("Left")
-	If $g_bisMegaTeslaMaxed = True Then Return True
-	If _Sleep(1000) Then Return
-	
-	If QuickMIS("BC1", $g_sImgMegaTesla) Then ;Search for Mega Tesla
-		Click($g_iQuickMISX, $g_iQuickMISY + 5)
-		If _Sleep(1000) Then Return
-		Local $aBuildingName = BuildingInfo(242, 477)
-		If $aBuildingName[0] = 2 Then
-			; Verify if is Mega Tesla is MaxLevel
-			If $aBuildingName[1] = "Mega Tesla" Then
-				If $aBuildingName[2] = 9 Then
-					SetLog("Your Mega Tesla is Maxed!", $COLOR_SUCCESS)
-					$g_bisMegaTeslaMaxed = True
-					Return True
-				Else
-					SetLog("Your Mega Tesla Level is : " & $aBuildingName[2], $COLOR_SUCCESS)
-					$g_bisMegaTeslaMaxed = False
-				EndIf
-			Endif
-		EndIf
-	Else
-		Setlog("isMegaTeslaMaxed(): Cannot Find Mega Tesla", $COLOR_DEBUG)
-	EndIf
-	Return False
-EndFunc
-
 Func isBattleMachineMaxed()
 	If $g_bIs6thBuilderUnlocked Then
 		$g_bisBattleMachineMaxed = True
@@ -132,7 +99,7 @@ Func isBattleMachineMaxed()
 	If _Sleep(1000) Then Return
 	
 	If QuickMIS("BC1", $g_sImgBattleMachine) Then ;Search for Battle Machine
-		If $g_iQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 30
+		If $g_sQuickMISName = "BattleMachineHealth" Then $g_iQuickMISY += 30
 		Click($g_iQuickMISX, $g_iQuickMISY + 5)
 		If _Sleep(1000) Then Return
 		Local $aBuildingName = BuildingInfo(242, 477)
@@ -159,21 +126,24 @@ EndFunc
 
 Func isGoldFullBB()
 	$g_bGoldStorageFullBB = False
-	Local $aIsGoldFullBB[4] = [685, 40 , 0xE7C00D, 10] ; Main Screen Gold Resource bar is 90% Full
+	$g_bGoldStorage50BB = False
+	Local $aIsGoldFullBB[4] = [685, 40 , 0xD9B40C, 20] ; Main Screen Gold Resource bar is 90% Full
 	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(690, 23)
 	If _CheckPixel($aIsGoldFullBB, True) Then ;Hex if color of gold (orange)
 		SetLog("Builder Base Gold Storages are > 90% : " & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]), $COLOR_SUCCESS)
 		$g_bGoldStorageFullBB = True
 	ElseIf $g_bDebugSetlog Then
 		Local $colorRead = _GetPixelColor($aIsGoldFullBB[0], $aIsGoldFullBB[1], True)
-		SetLog("Builder Base Gold Storages are not > 90%", $COLOR_ACTION)
-		SetLog("expected in (" & $aIsGoldFullBB[0] & "," & $aIsGoldFullBB[1] & ")  = " & Hex($aIsGoldFullBB[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
+		SetDebugLog("Builder Base Gold Storages are not > 90%", $COLOR_ACTION)
+		SetDebugLog("expected in (" & $aIsGoldFullBB[0] & "," & $aIsGoldFullBB[1] & ")  = " & Hex($aIsGoldFullBB[2], 6) & " - Found " & $colorRead, $COLOR_ACTION)
 	EndIf
 	
-	Local $aIsGold50BB[4] = [740, 40 , 0xE7C00D, 10] ; Main Screen Gold Resource bar is 50%
+	Local $aIsGold50BB[4] = [740, 40 , 0xD9B40C, 20] ; Main Screen Gold Resource bar is 50%
 	If _CheckPixel($aIsGold50BB, True) Then ;Hex if color of gold (orange)
-		If $g_bDebugSetlog Then SetLog("Builder Base Gold Storages are > 50%", $COLOR_ACTION)
+		SetLog("Builder Base Gold Storages are > 50%", $COLOR_ACTION)
 		$g_bGoldStorage50BB = True ;only use it for wall upgrade
+	Else
+		SetDebugLog("Builder Base Gold Storages are not > 50%", $COLOR_ACTION)
 	EndIf
 	
 	Return $g_bGoldStorageFullBB

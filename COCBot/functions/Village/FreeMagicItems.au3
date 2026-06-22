@@ -66,6 +66,8 @@ Func CollectFreeMagicItems($bTest = False)
 	If Not $Collected Then
 		SetLog("Nothing free to collect!", $COLOR_INFO)
 	EndIf
+	
+	TradeMedal()
 
 	If $g_aRemoveFreeMagicItems[0] Then
 		ClickAway()
@@ -76,6 +78,105 @@ Func CollectFreeMagicItems($bTest = False)
 	ClickAway()
 	Return $Collected
 EndFunc   ;==>CollectFreeMagicItems
+
+Func TradeMedal()
+	If Not $g_bChkEnableTradeMedal Then Return
+	If $g_iLootCCMedal > 1000 Then 
+		For $i = 1 To 8
+			If Not $g_bRunState Then Return
+			SetLog("Waiting for Raid Medal Tab #" & $i, $COLOR_ACTION)
+			If QuickMis("BC1", $g_sImgTraderRaidMedal, 50, 173, 120, 320) Then
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				SetLog("Found Raid Medal Tab", $COLOR_DEBUG)
+				If _Sleep(500) Then Return
+				ExitLoop
+			EndIf
+			If _Sleep(250) Then Return
+		Next
+		
+		Local $bItemFound = False, $aItem
+		
+		For $i = 1 To 3
+			ClickDrag(410, 400, 410, 180)
+			If _Sleep(1000) Then Return
+			SetDebugLog("[" & $i & "] Searching Item")
+			$aItem = QuickMis("CNX", $g_sImgTraderRaidMedal, 215, 145, 800, 570)
+			If IsArray($aItem) And UBound($aItem) > 0 Then
+				SetDebugLog("Found: " & _ArrayToString($aItem))
+				For $k = 0 To UBound($aItem) - 1
+					Switch $aItem[$k][0]
+						Case "ShinyOre"
+							If $g_bChkTradeShiny Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Shiny Ore", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "GlowyOre"
+							If $g_bChkTradeGlowy Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Glowy Ore", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "StarryOre"
+							If $g_bChkTradeStarry Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Starry Ore", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "BuilderGold"
+							If $g_bChkTradeBuilderGold Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Builder Gold", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "BuilderElixir"
+							If $g_bChkTradeBuilderElix Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Builder Elixir", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "ClockTowerPot"
+							If $g_bChkTradeClockTowerPot Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found ClockTower Potion", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+						Case "ResearchPot"
+							If $g_bChkTradeResearchPot Then 
+								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								SetLog("Found Research Potion", $COLOR_INFO)
+								$bItemFound = True
+							EndIf
+					EndSwitch
+					
+					If $bItemFound Then
+						If IsBuyDealPage() Then 
+							Click(500, 440)
+							SetLog("Trade Medal with Magic Item", $COLOR_SUCCESS)
+							If _Sleep(1000) Then Return
+						EndIf
+					EndIf
+					
+					$bItemFound = False
+				Next
+			EndIf
+		Next
+	Else
+		SetLog("Skip TradeMedal, Capital Medal: " & $g_iLootCCMedal, $COLOR_DEBUG2)
+	EndIf
+EndFunc
+
+Func IsBuyDealPage()
+	Local $bRet = False
+	For $i = 1 To 3 
+		If WaitforPixel(500, 440, 501, 440, Hex(0x82CC2C, 6), 10, 1, "IsBuyDealPage") Then
+			$bRet = True
+			ExitLoop
+		EndIf
+		If _Sleep(1000) Then Return
+	Next
+	Return $bRet
+EndFunc
 
 Func GetFreeMagic()
 	Local $aOcrPositions[3][2] = [[270, 329], [470, 329], [660, 329]]
@@ -96,7 +197,7 @@ Func GetFreeMagic()
 		EndIf
 		Local $MagicItemName = ""
 		If QuickMIS("BC1", $g_sImgTraderWindow, $aOcrPositions[$i][0] - 50, $aOcrPositions[$i][1] - 110, $aOcrPositions[$i][0] + 100, $aOcrPositions[$i][1] - 20) Then
-			$MagicItemName = $g_iQuickMISName
+			$MagicItemName = $g_sQuickMISName
 		EndIf
 		_ArrayAdd($aResults, $Read & "|" & $aOcrPositions[$i][0] & "|" & $aOcrPositions[$i][1] & "|" & $Capa & "|" & $MagicItemName)
 	Next
@@ -144,14 +245,6 @@ Func IsTraderWindowOpen()
 		EndIf
 		If _Sleep(250) Then Return
 	Next
-	
-	;quick collect giant gauntlet
-	;If QuickMis("BC1", $g_sImgTraderGems, 270, 325, 340, 350) Then
-	;	Click($g_iQuickMISX, $g_iQuickMISY)
-	;	If _Sleep(1000) Then Return
-	;	If QuickMis("BC1", $g_sImgTraderGems, 390, 370, 450, 430) Then Click($g_iQuickMISX, $g_iQuickMISY)
-	;	If _Sleep(800) Then Return
-	;EndIf
 	
 	For $i = 1 To 8
 		If Not $g_bRunState Then Return
@@ -378,9 +471,8 @@ EndFunc
 Func UseFreeMagicItem()
 	If Not $g_bRunState Then Return
 	Local $x, $y
-	checkMainScreen()
 	SetLog("Checking for Magic Item on Box", $COLOR_INFO)
-	If QuickMIS("BC1", $g_sImgMagicItemBox, 625, 610, 675, 650) Then
+	If QuickMIS("BC1", $g_sImgMagicItemBox, 525, 610, 675, 650) Then
 		SetLog("Magic Box Found, checking items", $COLOR_ACTION)
 		$x = $g_iQuickMISX
 		$y = $g_iQuickMISY
@@ -388,11 +480,20 @@ Func UseFreeMagicItem()
 			Click($x, $y)
 			If _Sleep(500) Then Return
 			SetLog("Free Magic Item Found, Try to Use", $COLOR_ACTION)
-			If QuickMIS("BC1", $g_sImgMagicItemBox, 330, 560, 625, 580) Then
+			If QuickMIS("BC1", $g_sImgMagicItemBox, 300, 560, 650, 580) Then
 				$x = $g_iQuickMISX + 15
 				$y = $g_iQuickMISY + 40
 				Click($x, $y)
 				If _Sleep(500) Then Return
+				If $g_sQuickMISName = "Full" And $g_bChkSellItemFromMagicBox Then
+					If WaitforPixel(345, 520, 346, 520, Hex(0xF71E22, 6), 10, 1, "FreeMagicItem Full") Then 
+						Click(260, 510, 1, 0, "Sell magic Item")
+						If _Sleep(500) Then Return
+						If IsOKCancelPage() Then Click(530, 425)
+						SetLog("Succesfully, Sell Magic item", $COLOR_SUCCESS)
+					EndIf
+				EndIf
+				
 				If WaitforPixel(600, 525, 601, 526, Hex(0x8BD43A, 6), 10, 1, "UseFreeMagicItem") Then 
 					Click(600, 520)
 					If _Sleep(500) Then Return

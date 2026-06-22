@@ -170,35 +170,33 @@ Func smartZap($minDE = -1)
 	EndIf
 
 	; Get the number of lightning/EQ spells
-	Local $iTroops = PrepareAttack($g_iMatchMode, True) ; Check remaining troops/spells
-	If $iTroops > 0 Then
-		For $i = 0 To UBound($g_avAttackTroops) - 1
-			If $g_avAttackTroops[$i][0] = $eLSpell Then
-				If Number($g_iLSpellLevel) > 9 Then 
-					$g_iLSpellLevel = 9
-					SetLog("Set Detected LSpell to Max Level, because detected lvl higher than max lvl", $COLOR_DEBUG)
-				EndIf ;Max lightningSpell was 9, sometime bot detected lvl 11 LSpell and broke
-				If $aSpells[0][4] = 0 Then
-					If $g_bDebugSmartZap Then SetLog(GetTroopName($g_avAttackTroops[$i][0]) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
-					$aSpells[0][2] = $i
-					$aSpells[0][3] = Number($g_iLSpellLevel) ; Get the Level on Attack bar
-					$aSpells[0][4] = $g_avAttackTroops[$i][1]
-				Else
-					If $g_bDebugSmartZap Then SetLog("Donated " & GetTroopName($g_avAttackTroops[$i][0]) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
-					$aSpells[1][2] = $i
-					$aSpells[1][3] = Number($g_iLSpellLevel) ; Get the Level on Attack bar
-					$aSpells[1][4] = $g_avAttackTroops[$i][1]
-				EndIf
-			EndIf
-			If $g_avAttackTroops[$i][0] = $eESpell Then
+	GetAttackBar(True, $g_iMatchMode) ; Check remaining troops/spells
+	For $i = 0 To UBound($g_avAttackTroops) - 1
+		If $g_avAttackTroops[$i][0] = $eLSpell Then
+			If Number($g_iLSpellLevel) > 10 Then 
+				$g_iLSpellLevel = 11
+				SetLog("Set Detected LSpell to Max Level, because detected lvl higher than max lvl", $COLOR_DEBUG)
+			EndIf ;Max lightningSpell was 9, sometime bot detected lvl 11 LSpell and broke
+			If $aSpells[0][4] = 0 Then
 				If $g_bDebugSmartZap Then SetLog(GetTroopName($g_avAttackTroops[$i][0]) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
-				$aSpells[2][2] = $i
-				$aSpells[2][3] = Number($g_iESpellLevel) ; Get the Level on Attack bar
-				$aSpells[2][4] = $g_avAttackTroops[$i][1]
+				$aSpells[0][2] = $i
+				$aSpells[0][3] = Number($g_iLSpellLevel) ; Get the Level on Attack bar
+				$aSpells[0][4] = $g_avAttackTroops[$i][1]
+			Else
+				If $g_bDebugSmartZap Then SetLog("Donated " & GetTroopName($g_avAttackTroops[$i][0]) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
+				$aSpells[1][2] = $i
+				$aSpells[1][3] = Number($g_iLSpellLevel) ; Get the Level on Attack bar
+				$aSpells[1][4] = $g_avAttackTroops[$i][1]
 			EndIf
-		Next
-	EndIf
-
+		EndIf
+		If $g_avAttackTroops[$i][0] = $eESpell Then
+			If $g_bDebugSmartZap Then SetLog(GetTroopName($g_avAttackTroops[$i][0]) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
+			$aSpells[2][2] = $i
+			$aSpells[2][3] = Number($g_iESpellLevel) ; Get the Level on Attack bar
+			$aSpells[2][4] = $g_avAttackTroops[$i][1]
+		EndIf
+	Next
+	
 	If $aSpells[0][4] + $aSpells[1][4] = 0 Then
 		SetLog("No lightning spells trained, time to go home!", $COLOR_ERROR)
 		Return $performedZap
@@ -525,17 +523,15 @@ Func smartZap($minDE = -1)
 
 		; Check once again for donated lightning spell, if all own lightning spells are used
 		If $aSpells[0][4] = 0 Then
-			Local $iTroops = PrepareAttack($g_iMatchMode, True) ; Check remaining troops/spells
-			If $iTroops > 0 Then
-				For $i = 0 To UBound($g_avAttackTroops) - 1
-					If $g_avAttackTroops[$i][0] = $eLSpell Then
-						If $g_bDebugSmartZap Then SetLog("Donated " & GetTroopName($g_avAttackTroops[$i][0]) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
-						$aSpells[1][2] = $i
-						$aSpells[1][3] = Number($g_iLSpellLevel) ; Get the Level on Attack bar
-						$aSpells[1][4] = $g_avAttackTroops[$i][1]
-					EndIf
-				Next
-			EndIf
+			GetAttackBar(True, $g_iMatchMode) ; Check remaining troops/spells
+			For $i = 0 To UBound($g_avAttackTroops) - 1
+				If $g_avAttackTroops[$i][0] = $eLSpell Then
+					If $g_bDebugSmartZap Then SetLog("Donated " & GetTroopName($g_avAttackTroops[$i][0]) & ": " & $g_avAttackTroops[$i][1], $COLOR_DEBUG)
+					$aSpells[1][2] = $i
+					$aSpells[1][3] = Number($g_iLSpellLevel) ; Get the Level on Attack bar
+					$aSpells[1][4] = $g_avAttackTroops[$i][1]
+				EndIf
+			Next
 			If $aSpells[1][4] > 0 Then
 				SetLog("Woohoo, found a donated " & GetTroopName($aSpells[1][1]) & " (Lvl " & $aSpells[1][3] & ").", $COLOR_INFO)
 			EndIf

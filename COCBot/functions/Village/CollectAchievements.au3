@@ -19,12 +19,9 @@ Global $g_iFoundScrollEnd = 0
 
 Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing to run regardless of checkbox setting, randomization skips and runstate check
 	If Not $g_bChkCollectAchievements Then Return
+	If Not IsOnMainVillage() Then Return
 	
-	ClickAway()
-	If Not IsMainPage() Then Return
-
 	SetLog("Checking achievement rewards", $COLOR_INFO)
-	If _Sleep($DELAYCOLLECT2) Then Return
 	Local $Collecting = True, $RewardCollected = False
 	While $Collecting
 		If Not $g_bRunState Then Return
@@ -61,7 +58,7 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 			ExitLoop
 		Else
 			$RewardCollected = True
-			If IsProfileWindowOpen() Then
+			If IsProfileWindowOpen("CollectAchievements") Then
 				Click(800, 99)
 			EndIf
 		EndIf
@@ -69,7 +66,7 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 		If Not IsMainPage() Then ExitLoop
 	WEnd
 	
-	If IsProfileWindowOpen() Then
+	If IsProfileWindowOpen("CollectAchievements") Then
 		Click(800, 99)
 	EndIf
 	Return

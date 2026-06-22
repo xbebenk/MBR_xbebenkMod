@@ -18,35 +18,30 @@
 
 Func FillArmyCamp()
 	If $g_bIgnoreIncorrectTroopCombo Or $g_bIgnoreIncorrectSpellCombo Then ;check army or spell to fill
-		If OpenArmyOverview() Then 
-			If _Sleep(500) Then Return
-			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 210, 480, 230) Then ;check on troops
+		If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 210, 480, 230) Then ;check on troops
+			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 270, 680, 295) Then ;check on acivate supertroop
+				SetLog("SuperTroop Need to activate", $COLOR_DEBUG)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(500) Then Return
+				If WaitforPixel(590, 490, 591, 490, "84CD2C", 20, 1) Then 
+					SetLog("Activate Boost SuperTroop", $COLOR_DEBUG)
+					Click(490, 450)
+				EndIf				
+			Else
 				SetLog("Your troop need to fill", $COLOR_DEBUG)
 				FillIncorrectTroopCombo()
-				ClickAway()
 				If _Sleep(500) Then Return
 			EndIf
-			
-			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 320, 320, 480, 345) Then ;check on spells
-				SetLog("Your troop need to fill", $COLOR_DEBUG)
-				FillIncorrectSpellCombo()
-				ClickAway()
-				If _Sleep(500) Then Return
-			EndIf
-			
-			If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 380, 270, 800, 295) Then ;check on acivate supertroop
-				SetLog("SuperTroop Need to activate", $COLOR_DEBUG)
-				ClickAway()
-				If _Sleep(500) Then Return
-				BoostSuperTroop()
-			EndIf
-			CheckHeroOnUpgrade()
-			CheckCookieReinforcement()
-			
-			;close Army window
-			ClickAway()
+		EndIf
+		
+		If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 320, 480, 345) Then ;check on spells
+			SetLog("Your spell need to fill", $COLOR_DEBUG)
+			FillIncorrectSpellCombo()
 			If _Sleep(500) Then Return
 		EndIf
+		
+		If _Sleep(500) Then Return
+		CheckHeroOnUpgrade()
 	EndIf
 EndFunc
 
@@ -73,20 +68,22 @@ Func CheckHeroOnUpgrade()
 					SetLog("Hero " & $aHero[$i][0] & " is Available", $COLOR_INFO)
 					If StringInStr($aHero[$i][0], "Warden") Then
 						$bWardenFound = True
-						If $iWardenMode = 0 Or $iWardenMode = 2 Then 
+						If $iWardenMode = 0 Or $iWardenMode = 2 Then ;0 or 2 = ground or default = pick ground
 							If $aHero[$i][0] = "WardenGround" Then 
 								Click($aHero[$i][1], $aHero[$i][2], 1, 0, "Click " & $aHero[$i][0])
 								If _Sleep(1000) Then Return
 								Click($x, $y, 1, 0, "Hammer")
+								SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
 								ExitLoop
 							Else
 								ContinueLoop
 							EndIf
-						Else
+						Else ;iWardenMode = 1
 							If $aHero[$i][0] = "WardenAir" Then 
 								Click($aHero[$i][1], $aHero[$i][2], 1, 0, "Click " & $aHero[$i][0])
 								If _Sleep(1000) Then Return
 								Click($x, $y, 1, 0, "Hammer")
+								SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
 								ExitLoop
 							EndIF
 						EndIf
@@ -94,55 +91,116 @@ Func CheckHeroOnUpgrade()
 						Click($aHero[$i][1], $aHero[$i][2], 1, 0, "Click " & $aHero[$i][0])
 						If _Sleep(1000) Then Return
 						Click($x, $y, 1, 0, "Hammer")
+						SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
 						ExitLoop
 					EndIf
 				Next
-				If Ubound($aHero) = 1 Then ExitLoop
-				If $bWardenFound And Ubound($aHero) = 2 Then ExitLoop
+				If Ubound($aHero) = 1 Then ExitLoop ;if only found 1 image then exit
+				If $bWardenFound And Ubound($aHero) = 2 Then ExitLoop ;warden always found 2 image, so if 2 images then only warden, exit
 			Else
-				Click($x, $y, 1, 0, "Hammer")
+				Click($x, $y, 1, 0, "Hammer Close")
+				SetLog("No availabe Hero to switch", $COLOR_DEBUG2)
 				ExitLoop
 			EndIf
 		Next
 		If _Sleep(500) Then Return
+		Return False
 	EndIf
 EndFunc
 
-Func CheckCookieReinforcement()
+Func CheckReinforcement()
+	
+	If Not $g_bUseCake Then Return ;exit if not enabled
+	
+	Local $sTroop1, $sSpell1, $sSiege1
+	Local $sTroop2, $sSpell2, $sSiege2
+	$sTroop1 = $g_aCmbRequestTroop[$g_iCmbRequestTroop1][0]
+	$sSpell1 = $g_aCmbRequestSpell[$g_iCmbRequestSpell1][0]
+	$sSiege1 = $g_aCmbRequestSiege[$g_iCmbRequestSiege1][0]
+	$sTroop2 = $g_aCmbRequestTroop[$g_iCmbRequestTroop2][0]
+	$sSpell2 = $g_aCmbRequestSpell[$g_iCmbRequestSpell2][0]
+	$sSiege2 = $g_aCmbRequestSiege[$g_iCmbRequestSiege2][0]
+	
+	Local $aTroop, $aSpell, $aSiege
+	
 	If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 650, 450, 725, 485) Then ;check on Castle cake reinforcement
+		SetLog("Removing Request", $COLOR_DEBUG)
+		Click(635, 442, 1, 0, "Remove CC")
+		If _Sleep(1000) Then return
+		If IsOKCancelPage() Then Click(535, 415, 1, 0, "Click OK")
+		If _Sleep(1000) Then return
 		SetLog("Try Reinforce with Castle Cake", $COLOR_DEBUG)
-		Click($g_iQuickMISX, $g_iQuickMISY)
+		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Cake")
 		If _Sleep(1000) Then Return
 		If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 210, 180, 280, 250) Then ;read if text "Tap to Reinforce" exist
-			Click($g_iQuickMISX, $g_iQuickMISY)
+			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Tap to Reinforce")
 			If _Sleep(1000) Then Return
-			Local $aTroops = QuickMIS("CNX", $g_sImgTrainTroops, 120, 260, 740, 460) ;read all troops image 
-			If IsArray($aTroops) And UBound($aTroops) > 0 Then
-				_ArraySort($aTroops, 0, 0, 0, 1)
-				For $i = 0 To UBound($aTroops) - 1
-					Switch $aTroops[$i][0]
-						Case "Giant", "Ball", "Wiz"
-							Click($aTroops[$i][1], $aTroops[$i][2], 5)
-						Case "Drag"
-							Click($aTroops[$i][1], $aTroops[$i][2], 2)
-					EndSwitch
-					
-					If _ColorCheck(_GetPixelColor(150, 275, True), Hex(0x8F8F8F, 6), 20, Default, "CheckTroopBar") Then 
-						Click(450, 530) ;Click Confirm
-						If _Sleep(500) Then Return
-						ExitLoop ;troops bar greyed
+			
+			For $iDrag = 1 To 2
+				$aTroop = QuickMIS("CNX", $g_sImgTrainTroops, 120, 260, 740, 460)
+				If IsArray($aTroop) And Ubound($aTroop) > 0 Then
+					RemoveDupCNX($aTroop)
+					_ArraySort($aTroop, 0, 0, 0, 1) 
+					For $i = 0 To Ubound($aTroop) - 1
+						If $aTroop[$i][0] = $sTroop1 And $g_iRequestTroopQuantity1 > 0 Then 
+							SetLog("Found " & $g_aCmbRequestTroop[$g_iCmbRequestTroop1][1], $COLOR_DEBUG1)
+							Click($aTroop[$i][1], $aTroop[$i][2], $g_iRequestTroopQuantity1, 0, "Click " & $sTroop1)
+						EndIf
+						If $aTroop[$i][0] = $sTroop2 And $g_iRequestTroopQuantity2 > 0 Then 
+							SetLog("Found " & $g_aCmbRequestTroop[$g_iCmbRequestTroop2][1], $COLOR_DEBUG1)
+							Click($aTroop[$i][1], $aTroop[$i][2], $g_iRequestTroopQuantity2, 0, "Click " & $sTroop2)
+						EndIf
+					Next
+				EndIf
+				If _Sleep(500) Then Return
+				ClickDrag(680, 365, 190, 365)
+			Next
+			
+			If _Sleep(500) Then Return	
+			$aSpell = QuickMIS("CNX", $g_sImgTrainSpells, 120, 260, 740, 460)
+			If IsArray($aSpell) And Ubound($aSpell) > 0 Then
+				RemoveDupCNX($aSpell)
+				_ArraySort($aSpell, 0, 0, 0, 1) 
+				For $i = 0 To Ubound($aSpell) - 1
+					If $aSpell[$i][0] = $sSpell1 And $g_iRequestSpellQuantity1 > 0 Then 
+						SetLog("Found " & $g_aCmbRequestSpell[$g_iCmbRequestSpell1][1], $COLOR_DEBUG1)
+						Click($aSpell[$i][1], $aSpell[$i][2], $g_iRequestSpellQuantity1, 0, "Click " & $sSpell1)
+					EndIf
+					If $aSpell[$i][0] = $sSpell2 And $g_iRequestSpellQuantity2 > 0 Then
+						SetLog("Found " & $g_aCmbRequestSpell[$g_iCmbRequestSpell2][1], $COLOR_DEBUG1)
+						Click($aSpell[$i][1], $aSpell[$i][2], $g_iRequestSpellQuantity2, 0, "Click " & $sSpell2)
 					EndIf
 				Next
 			EndIf
+			
+			If _Sleep(500) Then Return
+			ClickDrag(680, 365, 190, 365) ;clickdrag for Siege
+			
+			$aSiege = QuickMIS("CNX", $g_sImgTrainSieges, 120, 260, 740, 460)
+			If IsArray($aSiege) And Ubound($aSiege) > 0 Then
+				RemoveDupCNX($aSiege)
+				_ArraySort($aSiege, 0, 0, 0, 1)
+				For $i = 0 To Ubound($aSiege) - 1
+					If $aSiege[$i][0] = $sSiege1 And $g_iRequestSiegeQuantity1 > 0 Then 
+						SetLog("Found " & $g_aCmbRequestSiege[$g_iCmbRequestSiege1][1], $COLOR_DEBUG1)
+						Click($aSiege[$i][1], $aSiege[$i][2], $g_iRequestSiegeQuantity1, 0, "Click " & $sSiege1)
+					EndIf
+					If $aSiege[$i][0] = $sSiege2 And $g_iRequestSiegeQuantity2 > 0 Then
+						SetLog("Found " & $g_aCmbRequestSiege[$g_iCmbRequestSiege2][1], $COLOR_DEBUG1)
+						Click($aSiege[$i][1], $aSiege[$i][2], $g_iRequestSiegeQuantity2, 0, "Click " & $sSiege2)
+					EndIf
+				Next
+			EndIf
+			
+			Click(450, 530, 1, 0, "Click Confirm") ;Click Confirm
+			If _Sleep(500) Then Return
 		EndIf
 		
 		If QuickMIS("BC1", $g_sImgArmyOverviewCastleCake, 450, 380, 635, 500) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			SetLog("Fill Reinforcement using Castle Cake", $COLOR_ACTION)
+			If _Sleep(500) Then Return
 		EndIf
-		
-		ClickAway()
-		If _Sleep(500) Then Return
 	EndIf
 EndFunc
 
@@ -229,7 +287,6 @@ Func CheckIfArmyIsReady($bCloseWindow = False)
 	If Not OpenArmyOverview("CheckIfArmyIsReady()") Then Return
 
 	CheckArmyCamp(True, False, True, True)
-	CheckCCArmy()
 	RequestCC(False, "IsFullClanCastle")
 
 	If $g_bDebugSetlogTrain Then
@@ -273,19 +330,6 @@ Func CheckIfArmyIsReady($bCloseWindow = False)
 		Setlog("Live Base BitAND: " & BitAND($g_aiSearchHeroWaitEnable[$LB], $g_iHeroAvailable))
 		Setlog("Are you 'not' waiting for Heroes: " & String($g_aiSearchHeroWaitEnable[$DB] = $eHeroNone And $g_aiSearchHeroWaitEnable[$LB] = $eHeroNone))
 		Setlog("Is Wait for Heroes Active : " & IsWaitforHeroesActive())
-	EndIf
-
-	$bFullArmyCC = IsFullClanCastle()
-	$bFullSiege = CheckSiegeMachine()
-
-	; If Drop Trophy with Heroes is checked and a Hero is Available or under the trophies range, Then set $g_bFullArmyHero to True
-	If Not IsWaitforHeroesActive() And $g_bDropTrophyUseHeroes Then $bFullArmyHero = True
-	If Not IsWaitforHeroesActive() And Not $g_bDropTrophyUseHeroes And Not $bFullArmyHero Then
-		If $g_iHeroAvailable > 0 Or Number($g_aiCurrentLoot[$eLootTrophy]) <= Number($g_iDropTrophyMax) Then
-			$bFullArmyHero = True
-		Else
-			SetLog("Waiting for Heroes to drop trophies!", $COLOR_ACTION)
-		EndIf
 	EndIf
 
 	If $g_bFullArmy And $g_bCheckSpells And $bFullArmyHero And $bFullArmyCC And $bFullSiege Then
@@ -464,59 +508,58 @@ Func TotalSpellsToBrewInGUI()
 	Return $iTotalSpellsInGUI
 EndFunc   ;==>TotalSpellsToBrewInGUI
 
-Func DragIfNeeded($Troop)
+Func DragIfNeeded($iTroopIndex)
 
 	If Not $g_bRunState Then Return
-	Local $bCheckPixel = False
-	Local $iIndex = TroopIndexLookup($Troop, "DragIfNeeded")
+	Local $sName = $g_asTroopShortNames[$iTroopIndex]
 	Local $bDragLeft = False, $bDragRight = False
 
-	If $iIndex >= $eLSpell And $iIndex <= $eOgSpell Then Return True ;skip drag on spell
-	If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True ; Troop image found in current page (no need to drag)
-
-	If _PixelSearch(776, 354, 777, 355, Hex(0xD3D3CB, 6), 10, True, "DragIfNeeded") Then
+	If $iTroopIndex >= $eLSpell And $iTroopIndex <= $eOgSpell Then Return True ;skip drag on spell
+	If QuickMIS("BFI", $g_sImgTrainTroops & $sName & "*", 15, 482, 845, 660) Then Return True ; Troop image found in current page (no need to drag)
+	
+	If _PixelSearch(20, 485, 20, 486, Hex(0x302A29, 6), 10, True, "DragIfNeeded") Then
 		For $i = 1 To 2
-			SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Left", $COLOR_ACTION)
-			ClickDrag(100, 435, 850, 435)
-			$bDragLeft = True
-			If _Sleep(1500) Then Return
-			If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
-		Next
-	EndIf
-
-	If _PixelSearch(75, 354, 76, 355, Hex(0xD3D3CB, 6), 10, True, "DragIfNeeded") Then
-		For $i = 1 To 2
-			SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Right", $COLOR_ACTION)
-			ClickDrag(750, 435, 50, 435)
+			SetLog("[" & $i & "] DragIfNeeded [" & $iTroopIndex & "] " & $g_asTroopNames[$iTroopIndex] & " : Scroll Right", $COLOR_ACTION)
+			ClickDrag(750, 568, 50, 568)
 			$bDragRight = True
 			If _Sleep(1500) Then Return
-			If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
+			If QuickMIS("BFI", $g_sImgTrainTroops & $sName & "*", 15, 482, 845, 660) Then Return True
 		Next
 	EndIf
-
-	If Not $bDragLeft And Not $bDragRight Then
+	
+	If _PixelSearch(845, 485, 845, 486, Hex(0x302A29, 6), 10, True, "DragIfNeeded") Then
 		For $i = 1 To 2
-			If $i < 2 Then
-				SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Left", $COLOR_ACTION)
-				ClickDrag(100, 435, 850, 435)
-			Else
-				SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Right", $COLOR_ACTION)
-				ClickDrag(750, 435, 50, 435)
-			EndIf
+			SetLog("[" & $i & "] DragIfNeeded [" & $iTroopIndex & "] " & $g_asTroopNames[$iTroopIndex] & " : Scroll Left", $COLOR_ACTION)
+			ClickDrag(100, 568, 850, 568)
+			$bDragLeft = True
 			If _Sleep(1500) Then Return
-			If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
+			If QuickMIS("BFI", $g_sImgTrainTroops & $sName & "*", 15, 482, 845, 660) Then Return True
 		Next
 	EndIf
 
-	SetLog("Failed to Verify Troop " & $g_asTroopNames[TroopIndexLookup($Troop, "DragIfNeeded")] & " Position or Failed to Drag Successfully", $COLOR_ERROR)
-	If $g_bSuperTroopsEnable Then
-		SetLog("Re-Check If SuperTroop Boost needed", $COLOR_INFO)
-		ClickAway()
-		BoostSuperTroop(False, True)
-		OpenArmyOverview()
-		OpenTroopsTab()
-		TrainUsingWhatToTrain(WhatToTrain())
-	EndIf
+	;If Not $bDragLeft And Not $bDragRight Then
+	;	For $i = 1 To 2
+	;		If $i < 2 Then
+	;			SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Left", $COLOR_ACTION)
+	;			ClickDrag(100, 435, 850, 435)
+	;		Else
+	;			SetLog("[" & $i & "] DragIfNeeded [" & $iIndex & "] " & $g_asTroopNames[$iIndex] & " : Scroll Right", $COLOR_ACTION)
+	;			ClickDrag(750, 435, 50, 435)
+	;		EndIf
+	;		If _Sleep(1500) Then Return
+	;		If QuickMIS("BFI", $g_sImgTrainTroops & $Troop & "*", 70, 350, 780, 500) Then Return True
+	;	Next
+	;EndIf
+
+	;SetLog("Failed to Verify Troop " & $g_asTroopNames[TroopIndexLookup($Troop, "DragIfNeeded")] & " Position or Failed to Drag Successfully", $COLOR_ERROR)
+	;If $g_bSuperTroopsEnable Then
+	;	SetLog("Re-Check If SuperTroop Boost needed", $COLOR_INFO)
+	;	ClickAway()
+	;	BoostSuperTroop(False, True)
+	;	OpenArmyOverview()
+	;	OpenTroopsTab()
+	;	TrainUsingWhatToTrain(WhatToTrain())
+	;EndIf
 	Return False
 EndFunc   ;==>DragIfNeeded
 
@@ -1190,199 +1233,6 @@ Func DeleteQueued($sArmyTypeQueued, $iOffsetQueued = 802)
 		EndIf
 	Next
 EndFunc   ;==>DeleteQueued
-
-Func MakingDonatedTroops($sType = "All")
-	Local $avDefaultTroopGroup[$eTroopCount][6]
-	For $i = 0 To $eTroopCount - 1
-		$avDefaultTroopGroup[$i][0] = $g_asTroopShortNames[$i]
-		$avDefaultTroopGroup[$i][1] = $i
-		$avDefaultTroopGroup[$i][2] = $g_aiTroopSpace[$i]
-		$avDefaultTroopGroup[$i][3] = $g_aiTroopTrainTime[$i]
-		$avDefaultTroopGroup[$i][4] = 0
-		$avDefaultTroopGroup[$i][5] = $i >= $eMini ? "d" : "e"
-	Next
-
-	; notes $avDefaultTroopGroup[19][5]
-	; notes $avDefaultTroopGroup[19][0] = TroopName | [1] = TroopNamePosition | [2] = TroopHeight | [3] = Times | [4] = qty | [5] = marker for DarkTroop or ElixerTroop]
-	; notes ClickDrag(616, 445, 400, 445, 2000) ; Click drag for dark Troops
-	; notes	ClickDrag(400, 445, 616, 445, 2000) ; Click drag for Elixer Troops
-	; notes $RemainTrainSpace[0] = Current Army  | [1] = Total Army Capacity  | [2] = Remain Space for the current Army
-
-	Local $RemainTrainSpace
-	Local $Plural = 0
-	Local $areThereDonTroop = 0
-	Local $areThereDonSpell = 0
-	Local $areThereDonSiegeMachine = 0
-
-	For $j = 0 To $eTroopCount - 1
-		If $sType <> "Troops" And $sType <> "All" Then ExitLoop
-		If Not $g_bRunState Then Return
-		$areThereDonTroop += $g_aiDonateTroops[$j]
-	Next
-
-	For $j = 0 To $eSpellCount - 1
-		If $sType <> "Spells" And $sType <> "All" Then ExitLoop
-		If Not $g_bRunState Then Return
-		$areThereDonSpell += $g_aiDonateSpells[$j]
-	Next
-
-	For $j = 0 To $eSiegeMachineCount - 1
-		If $sType <> "Siege" And $sType <> "All" Then ExitLoop
-		If Not $g_bRunState Then Return
-		$areThereDonSiegeMachine += $g_aiDonateSiegeMachines[$j]
-	Next
-	If $areThereDonSpell = 0 And $areThereDonTroop = 0 And $areThereDonSiegeMachine = 0 Then Return
-
-	SetLog("  making donated troops", $COLOR_ACTION1)
-	If $areThereDonTroop > 0 Then
-		; Load $g_aiDonateTroops[$i] Values into $avDefaultTroopGroup[19][5]
-		For $i = 0 To UBound($avDefaultTroopGroup) - 1
-			For $j = 0 To $eTroopCount - 1
-				If $g_asTroopShortNames[$j] = $avDefaultTroopGroup[$i][0] Then
-					$avDefaultTroopGroup[$i][4] = $g_aiDonateTroops[$j]
-					$g_aiDonateTroops[$j] = 0
-				EndIf
-			Next
-		Next
-
-		If Not OpenTroopsTab(True, "MakingDonatedTroops()") Then Return
-
-		For $i = 0 To UBound($avDefaultTroopGroup, 1) - 1
-			If Not $g_bRunState Then Return
-			$Plural = 0
-			If $avDefaultTroopGroup[$i][4] > 0 Then
-				$RemainTrainSpace = GetCurrentTroop(96, 165)
-				If $RemainTrainSpace[2] < 0 Then $RemainTrainSpace[2] = $RemainTrainSpace[1] * 2 - $RemainTrainSpace[0] ; remain train space to full double army
-				If $RemainTrainSpace[2] = 0 Then ExitLoop ; army camps full
-
-				Local $iTroopIndex = TroopIndexLookup($avDefaultTroopGroup[$i][0], "MakingDonatedTroops")
-
-				If $avDefaultTroopGroup[$i][2] * $avDefaultTroopGroup[$i][4] <= $RemainTrainSpace[2] Then ; Troopheight x donate troop qty <= avaible train space
-					;Local $pos = GetImageToUse(TroopIndexLookup($avDefaultTroopGroup[$i][0]))
-					Local $howMuch = $avDefaultTroopGroup[$i][4]
-					If $avDefaultTroopGroup[$i][5] = "e" Then
-						TrainIt($iTroopIndex, $howMuch, $g_iTrainClickDelay)
-						;PureClick($pos[0], $pos[1], $howMuch, 500)
-					Else
-						ClickDrag(715, 445, 220, 445, 2000) ; Click drag for dark Troops
-						TrainIt($iTroopIndex, $howMuch, $g_iTrainClickDelay)
-						;PureClick($pos[0], $pos[1], $howMuch, 500)
-						ClickDrag(220, 445, 725, 445, 2000) ; Click drag for Elixer Troops
-					EndIf
-					If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
-					Local $sTroopName = ($avDefaultTroopGroup[$i][4] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
-					SetLog(" - Trained " & $avDefaultTroopGroup[$i][4] & " " & $sTroopName, $COLOR_ACTION)
-					$avDefaultTroopGroup[$i][4] = 0
-					If _Sleep(500) Then Return ; Needed Delay, OCR was not picking up Troop Changes
-				Else
-					For $z = 0 To $RemainTrainSpace[2] - 1
-						$RemainTrainSpace = GetCurrentTroop(96, 165)
-						If $RemainTrainSpace[0] = $RemainTrainSpace[1] Then ; army camps full
-							;Camps Full All Donate Counters should be zero!!!!
-							For $j = 0 To UBound($avDefaultTroopGroup, 1) - 1
-								$avDefaultTroopGroup[$j][4] = 0
-							Next
-							ExitLoop (2) ;
-						EndIf
-						If $avDefaultTroopGroup[$i][2] <= $RemainTrainSpace[2] And $avDefaultTroopGroup[$i][4] > 0 Then
-							;TrainIt(TroopIndexLookup($g_asTroopShortNames[$i]), 1, $g_iTrainClickDelay)
-							;Local $pos = GetImageToUse(TroopIndexLookup($avDefaultTroopGroup[$i][0]))
-							Local $howMuch = 1
-							If $iTroopIndex >= $eBarb And $iTroopIndex <= $eMine Then ; elixir troop
-								TrainIt($iTroopIndex, $howMuch, $g_iTrainClickDelay)
-								;PureClick($pos[0], $pos[1], $howMuch, 500)
-							Else ; dark elixir troop
-								ClickDrag(715, 445, 220, 445, 2000) ; Click drag for dark Troops
-								TrainIt($iTroopIndex, $howMuch, $g_iTrainClickDelay)
-								;PureClick($pos[0], $pos[1], $howMuch, 500)
-								ClickDrag(220, 445, 725, 445, 2000) ; Click drag for Elixer Troops
-							EndIf
-							If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
-							Local $sTroopName = ($avDefaultTroopGroup[$i][4] > 1 ? $g_asTroopNamesPlural[$iTroopIndex] : $g_asTroopNames[$iTroopIndex])
-							SetLog(" - Trained " & $avDefaultTroopGroup[$i][4] & " " & $sTroopName, $COLOR_ACTION)
-							$avDefaultTroopGroup[$i][4] -= 1
-							If _Sleep(1000) Then Return ; Needed Delay, OCR was not picking up Troop Changes
-						Else
-							ExitLoop
-						EndIf
-					Next
-				EndIf
-			EndIf
-		Next
-		;Top Off any remianing space with archers
-		If $sType = "All" Then
-			$RemainTrainSpace = GetCurrentTroop(96, 165)
-			If $RemainTrainSpace[0] < $RemainTrainSpace[1] Then ; army camps full
-				Local $howMuch = $RemainTrainSpace[2]
-				TrainIt($eTroopArcher, $howMuch, $g_iTrainClickDelay)
-				;PureClick($TrainArch[0], $TrainArch[1], $howMuch, 500)
-				If $RemainTrainSpace[2] > 0 Then $Plural = 1
-				SetLog(" - Trained " & $howMuch & " archer(s)!", $COLOR_ACTION)
-				If _Sleep(1000) Then Return ; Needed Delay, OCR was not picking up Troop Changes
-			EndIf
-		EndIf
-	EndIf
-
-	If $areThereDonSpell > 0 Then
-		;Train Donated Spells
-		If Not OpenSpellsTab(True, "MakingDonatedTroops()") Then Return
-
-		For $i = 0 To $eSpellCount - 1
-			If Not $g_bRunState Then Return
-			If $g_aiDonateSpells[$i] > 0 Then
-				Local $pos = GetImageToUse($i + $eLSpell)
-				Local $howMuch = $g_aiDonateSpells[$i]
-				TrainIt($eLSpell + $i, $howMuch, $g_iTrainClickDelay)
-				;PureClick($pos[0], $pos[1], $howMuch, 500)
-				If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
-				SetLog(" - Brewed " & $howMuch & " " & $g_asSpellNames[$i] & ($howMuch > 1 ? " Spells" : " Spell"), $COLOR_ACTION)
-				$g_aiDonateSpells[$i] -= $howMuch
-
-				If _Sleep(1000) Then Return
-				$RemainTrainSpace = GetCurrentSpell(96, 165)
-				SetLog(" - Current Capacity: " & $RemainTrainSpace[0] & "/" & ($RemainTrainSpace[1]))
-			EndIf
-		Next
-	EndIf
-
-	If $areThereDonSiegeMachine > 0 Then
-		;Train Donated Sieges
-		If Not OpenSiegeMachinesTab(True, "MakingDonatedTroops()") Then Return
-
-		For $iSiegeIndex = $eSiegeWallWrecker To $eSiegeMachineCount - 1
-			If Not $g_bRunState Then Return
-			If $g_aiDonateSiegeMachines[$iSiegeIndex] > 0 Then
-				Local $aCheckIsAvailableSiege[4] = [58, 556, 0x47717E, 10]
-				Local $aCheckIsAvailableSiege1[4] = [229, 556, 0x47717E, 10]
-				Local $aCheckIsAvailableSiege2[4] = [400, 556, 0x47717E, 10]
-				Local $aCheckIsAvailableSiege3[4] = [576, 556, 0x47717E, 10]
-				Local $aCheckIsAvailableSiege4[4] = [750, 556, 0x47717E, 10]
-				Local $checkPixel
-				If $iSiegeIndex = $eSiegeWallWrecker Then $checkPixel = $aCheckIsAvailableSiege
-				If $iSiegeIndex = $eSiegeBattleBlimp Then $checkPixel = $aCheckIsAvailableSiege1
-				If $iSiegeIndex = $eSiegeStoneSlammer Then $checkPixel = $aCheckIsAvailableSiege2
-				If $iSiegeIndex = $eSiegeBarracks Then $checkPixel = $aCheckIsAvailableSiege3
-				If $iSiegeIndex = $eSiegeLogLauncher Then $checkPixel = $aCheckIsAvailableSiege4
-				Local $HowMany = $g_aiDonateSiegeMachines[$iSiegeIndex]
-				If _CheckPixel($checkPixel, True, Default, $g_asSiegeMachineNames[$iSiegeIndex]) Then
-					;PureClick($pos[0], $pos[1], $howMuch, 500)
-					If _Sleep($DELAYRESPOND) Then Return ; add 5ms delay to catch TrainIt errors, and force return to back to main loop
-					PureClick($checkPixel[0], $checkPixel[1], $HowMany, $g_iTrainClickDelay)
-					Local $sSiegeName = $HowMany >= 2 ? $g_asSiegeMachineNames[$iSiegeIndex] & "s" : $g_asSiegeMachineNames[$iSiegeIndex] & ""
-					SetLog(" - Trained " & $HowMany & " " & $g_asSiegeMachineNames[$iSiegeIndex] & ($HowMany > 1 ? " SiegeMachines" : " SiegeMachine"), $COLOR_ACTION)
-					$g_aiDonateSiegeMachines[$iSiegeIndex] -= $HowMany
-				EndIf
-			EndIf
-		Next
-		; Get Siege Capacities
-		Local $aGetSiegeCap = GetCurrentSiege() ; OCR read Siege built and total
-		SetLog("Total Siege Workshop Capacity: " & $aGetSiegeCap[0] & "/" & $aGetSiegeCap[1])
-		If Number($aGetSiegeCap[0]) = 0 Then Return
-	EndIf
-
-	Return True
-
-EndFunc   ;==>MakingDonatedTroops
 
 Func _ArryRemoveBlanks(ByRef $aArray)
 	Local $iCounter = 0

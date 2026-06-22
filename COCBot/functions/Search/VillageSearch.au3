@@ -14,12 +14,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func VillageSearch()
+Func VillageSearch($bTest = False)
 
 	$g_bVillageSearchActive = True
 	$g_bCloudsActive = True
 
-	Local $Result = _VillageSearch()
+	Local $Result = _VillageSearch($bTest)
 	If $g_bSearchAttackNowEnable Then
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
@@ -32,7 +32,7 @@ Func VillageSearch()
 
 EndFunc   ;==>VillageSearch
 
-Func _VillageSearch() ;Control for searching a village that meets conditions
+Func _VillageSearch($bTest = False) ;Control for searching a village that meets conditions
 	Local $Result
 	Local $weakBaseValues
 	Local $logwrited = False
@@ -147,12 +147,12 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		; $g_iTHx and $g_iTHy coordinates of townhall
 		Local $THString = ""
 		If $match[$DB] Or $match[$LB] Then ; make sure resource conditions are met
-			$THString = FindTownhall(False, False) ;find TH, but only if TH condition is checked
+			$THString = FindTownhall() ;find TH, but only if TH condition is checked
 		ElseIf ($g_abFilterMeetOneConditionEnable[$DB] Or $g_abFilterMeetOneConditionEnable[$LB]) Then ; meet one then attack, do not need correct resources
-			If $g_abFilterMeetTH[$DB] Or $g_abFilterMeetTH[$LB] Then $THString = FindTownhall(True, False)
+			If $g_abFilterMeetTH[$DB] Or $g_abFilterMeetTH[$LB] Then $THString = FindTownhall()
 		ElseIf $g_abAttackTypeEnable[$TB] = 1 And ($g_iSearchCount >= $g_iAtkTBEnableCount) Then
 			; Check the TH for BullyMode
-			$THString = FindTownhall(True, False)
+			$THString = FindTownhall()
 		EndIf
 
 		For $i = 0 To $g_iModeCount - 2
@@ -246,14 +246,6 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 					$dbBase = False
 					SetLog("Force attacking Tournament League Live Base", $COLOR_INFO)
 			EndSwitch
-			
-			;If $dbBase And Not $match[$DB] Then
-			;	SetLog("Force attacking League Dead Base")
-			;	$match[$DB] = True
-			;ElseIf Not $match[$LB] Then
-			;	SetLog("Force attacking League Live Base")
-			;	$match[$LB] = True
-			;EndIf
 		EndIf
 
 		; ----------------- WRITE LOG VILLAGE FOUND AND ASSIGN VALUE AT $g_iMatchMode and exitloop  IF CONTITIONS MEET ---------------------------
@@ -311,10 +303,23 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		EndIf
 		
 		; ------- Add attack now button delay and check button status
-		If $g_bSearchAttackNowEnable And $g_iSearchAttackNowDelay > 0 Then
-			For $i = 1 To $g_iSearchAttackNowDelay
-				If _Sleep(1000) Then Return ; add human reaction time on AttackNow button function
-				If $g_bBtnAttackNowPressed = True Then ExitLoop 2
+		If $g_bSearchAttackNowEnable Then
+			; Pastikan tombol tetap dicek minimal 1 kali meskipun delay diset 0
+			Local $iDelayLoops = ($g_iSearchAttackNowDelay > 0) ? $g_iSearchAttackNowDelay : 1 
+			
+			For $i = 1 To $iDelayLoops
+				If $g_bBtnAttackNowPressed = True Then 
+					; PAKSA BOT MENGENALI MATCH SAAT TOMBOL DITEKAN
+					If $g_iMatchMode <> $DB And $g_iMatchMode <> $LB Then
+						$g_iMatchMode = $LB ; Default paksa ke Live Base jika bot bingung
+					EndIf
+					$match[$g_iMatchMode] = True ; Set status Match menjadi True agar bot mau menyerang
+					ExitLoop 2 ; Keluar dari loop pencarian
+				EndIf
+				
+				If $g_iSearchAttackNowDelay > 0 Then
+					If _Sleep(1000) Then Return ; add human reaction time
+				EndIf
 			Next
 		EndIf
 
@@ -340,40 +345,34 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		If $g_bDebugDeadBaseImage Then setZombie()
 		
 		Local $i = 0
-		For $i = 1 To 60
+		For $i = 1 To 10
 			If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then
 				$g_bCloudsActive = True
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				ExitLoop
 			Else
 				SetLog("Wait to see Next Button #" & $i, $COLOR_ACTION)
-				If $i > 10 Then 
+				If $i > 5 Then 
 					AndroidPageError("Village Search")
 				EndIf
 			EndIf
-			
-			If IsProblemAffect() Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
+				
+			If IsProblemAffect() Or GetAndroidProcessPID() = 0 Then 
 				$g_bIsClientSyncError = True
-				checkMainScreen(True, $g_bStayOnBuilderBase, "VillageSearch")
-				If $g_bRestart Then
-					$g_iNbrOfOoS += 1
-					UpdateStats()
-					SetLog("Couldn't locate Next button", $COLOR_ERROR)
-					PushMsg("OoSResources")
-				Else
-					SetLog("Have strange problem Couldn't locate Next button, Restarting CoC and Bot...", $COLOR_ERROR)
-					$g_bIsClientSyncError = False ; disable fast OOS restart if not simple error and try restarting CoC
-					CloseCoC(True)
-				EndIf
-				Return
+				$g_iNbrOfOoS += 1
+				$g_bRestart = True
+				ExitLoop
 			EndIf
 			If _Sleep(500) Then Return
 		Next
 
 		If _Sleep($DELAYRESPOND) Then Return
 		
-		If $g_bRestart = True Then Return ; exit func
-
+		If $g_bRestart Then 
+			checkMainScreen(True, False, "VillageSearch")
+			Return ; exit func
+		EndIf
+		
 		If isGemOpen(True) = True Then
 			SetLog(" Not enough gold to keep searching.....", $COLOR_ERROR)
 			Click(585, 252, 1, 0, "#0156") ; Click close gem window "X"
@@ -391,27 +390,26 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		UpdateStats()
 
 	WEnd ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop End ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-	; measure enemy village (only if search match)
-	For $i = 0 To $g_iModeCount - 1
-		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Then
-			If Not CheckZoomOut("VillageSearch") Then
-				If IsProblemAffect() Then
-					$g_bRestart = True ; Restart Attack
-					Return
-				EndIf
-				SaveDebugImage("VillageSearchMeasureFailed", False) ; make clean snapshot as well
-				ExitLoop ; disable exiting search for December 2018 update due to zoomout issues
-			EndIf
-			ExitLoop
-		EndIf
-	Next
 	
 	;--- show buttons attacknow ----
 	If $g_bBtnAttackNowPressed = True Then
 		SetLogCentered(" Attack Now Pressed! ", "~", $COLOR_SUCCESS)
 	EndIf
-
+	
+	; measure enemy village (only if search match)
+	For $i = 0 To $g_iModeCount - 1
+		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Or $g_bBtnAttackNowPressed Then
+			If Not CheckZoomOut() Then
+				SaveDebugImage("VillageSearch", False) ; make clean snapshot
+				If IsProblemAffect() Then
+					$g_bRestart = True ; Restart Attack
+					Return
+				EndIf
+			EndIf
+			ExitLoop
+		EndIf
+	Next
+	
 	;--- write in log match found ----
 	If $g_bSearchAlertMe Then
 		TrayTip($g_sProfileCurrentName & ": " & $g_asModeText[$g_iMatchMode] & " Match Found!", "Gold: " & $g_iSearchGold & "; Elixir: " & $g_iSearchElixir & "; Dark: " & $g_iSearchDark & "; Trophy: " & $g_iSearchTrophy, "", 0)
@@ -493,29 +491,27 @@ Func WriteLogVillageSearch($x)
 
 EndFunc   ;==>WriteLogVillageSearch
 
-Func CheckZoomOut($sSource = "CheckZoomOut")
-	Local $bRet = False
-	If $sSource <> "VillageSearch" Then resetEdge()
-	Local $aVillageResult = SearchZoomOut(False, True, $sSource)
-	If IsArray($aVillageResult) = 0 Or $aVillageResult[0] = "" Then
-		SetLog("CheckZoomOut Failed : " & $sSource, $COLOR_DEBUG)
-		AndroidZoomOut()
-		ZoomOutHelper("VillageSearch")
-		$bRet = False
-	Else 
+Func CheckZoomOut($bTest = False)
+	Local $bRet = False, $aVillageSize
+	resetEdge() ;reset 
+	
+	Local $aVillageSize = GetVillageSize()
+	If IsArray($aVillageSize) Then
 		$bRet = True
+	Else 
+		SetLog("CheckZoomOut Failed", $COLOR_DEBUG)
+		$bRet = False
 	EndIf
-	If $sSource = "VillageSearch" Then 
-		SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
-		If $g_bChkForceEdgeSmartfarm Then 
-			$g_aiPixelTopLeft = _GetVectorOutZone($eVectorLeftTop)
-			$g_aiPixelBottomLeft = _GetVectorOutZone($eVectorLeftBottom)
-			$g_aiPixelBottomRight = _GetVectorOutZone($eVectorRightBottom)
-			$g_aiPixelTopRight = _GetVectorOutZone($eVectorRightTop)
+	
+	If $bTest Then AttackCSVDEBUGIMAGE(True)
+	
+	If $g_bVillageSearchActive Then
+		If $bRet Then 
+			SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
 		Else
-			_GetRedArea()
+			SetLog("CheckZoomOut(VillageSearch) Failed, defaulting to [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
 		EndIf
-		AttackCSVDEBUGIMAGE()
 	EndIf
+	
 	Return $bRet
 EndFunc   ;==>CheckZoomOut

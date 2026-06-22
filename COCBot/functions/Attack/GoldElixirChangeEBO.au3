@@ -31,7 +31,7 @@ Func GoldElixirChangeEBO()
 	$Damage = getOcrOverAllDamage(780, 529)
 	If Number($Damage) > Number($g_iPercentageDamage) Then $g_iPercentageDamage = Number($Damage)
 	If $Trophies <> "" Then ; If trophy value found, then base has Dark Elixir
-		If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
+		If _Sleep(500) Then Return
 		$DarkElixir1 = getDarkElixirVillageSearch(48, 132)
 	Else
 		$DarkElixir1 = ""
@@ -108,9 +108,9 @@ Func GoldElixirChangeEBO()
 			EndIf
 		EndIf
 		If $g_bCheckKingPower Or $g_bCheckQueenPower Or $g_iDarkLow = 2 Then
-			If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
+			If _Sleep(500) Then Return
 		Else
-			If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
+			If _Sleep(1000) Then Return
 		EndIf
 		
 		;--> Read Resources #2
@@ -119,7 +119,7 @@ Func GoldElixirChangeEBO()
 		$Trophies = getTrophyVillageSearch(45, 174)
 		$CurDamage = getOcrOverAllDamage(780, 529)
 		If $Trophies <> "" Then ; If trophy value found, then base has Dark Elixir
-			If _Sleep($DELAYGOLDELIXIRCHANGEEBO1) Then Return
+			If _Sleep(500) Then Return
 			$DarkElixir2 = getDarkElixirVillageSearch(48, 132)
 		Else
 			$DarkElixir2 = ""
@@ -145,6 +145,8 @@ Func GoldElixirChangeEBO()
 		If $NoResourceOCR Then
 			SetLog("Exit now, [G]: " & $Gold2 & " [E]: " & $Elixir2 & " [DE]: " & $DarkElixir2 & " [%]: " & $CurDamage, $COLOR_INFO)
 			If IsReturnHomeBattlePage() Then ExitLoop
+			If IsReturnHomeChestPage(False) Then ExitLoop
+			If IsProblemAffect() Then ExitLoop
 		Else
 			If $g_bDebugSetlog Then
 				SetDebugLog("Exit in " & $txtDiff & ", [G]: " & $Gold2 & " [E]: " & $Elixir2 & " [DE]: " & $DarkElixir2 & " [%]: " & $CurDamage & ", Suspend-Time: " & $g_iSuspendAndroidTime & ", Suspend-Count: " & $g_iSuspendAndroidTimeCount &  ", Offset: " & $iSuspendAndroidTimeOffset, $COLOR_INFO)
@@ -165,7 +167,7 @@ Func GoldElixirChangeEBO()
 		;EXIT IF RESOURCES = 0
 		If $g_abStopAtkNoResources[$g_iMatchMode] And Number($Gold2) = 0 And Number($Elixir2) = 0 And Number($DarkElixir2) = 0 Then
 			SetLog("Gold & Elixir & DE = 0, end battle ", $COLOR_SUCCESS)
-			If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
+			If _Sleep(1000) Then Return
 			ExitLoop
 		EndIf
 
@@ -213,14 +215,14 @@ Func GoldElixirChangeEBO()
 
 	;FIRST CHECK... EXIT FOR ONE STAR REACH
 	If $g_abStopAtkOneStar[$g_iMatchMode] And $exitOneStar = 1 Then
-		If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
+		If _Sleep(1000) Then Return
 		SetLog("Returning Now -OneStar-", $COLOR_SUCCESS)
 		Return False
 	EndIf
 
 	;SECOND CHECK... EXIT FOR TWO STARS REACH
 	If $g_abStopAtkTwoStars[$g_iMatchMode] And $exitTwoStars = 1 Then
-		If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
+		If _Sleep(1000) Then Return
 		SetLog("Returning Now -TwoStars-", $COLOR_SUCCESS)
 		Return False
 	EndIf
@@ -239,7 +241,7 @@ Func GoldElixirChangeEBO()
 	;FOURTH CHECK... IF RESOURCES = 0 THEN EXIT
 	If $g_abStopAtkNoResources[$g_iMatchMode] And $NoResourceOCR = False And Number($Gold2) = 0 And Number($Elixir2) = 0 And Number($DarkElixir2) = 0 Then
 		SetLog("Gold & Elixir & DE = 0, end battle ", $COLOR_SUCCESS)
-		If _Sleep($DELAYGOLDELIXIRCHANGEEBO2) Then Return
+		If _Sleep(1000) Then Return
 		Return False
 	EndIf
 

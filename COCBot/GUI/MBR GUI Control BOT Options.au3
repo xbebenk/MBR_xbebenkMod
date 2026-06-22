@@ -799,13 +799,6 @@ Func btnTestImage()
 		$result = waitMainScreen()
 		SetLog("Testing waitMainScreen DONE, $Result=" & $result, $COLOR_SUCCESS)
 
-		SetLog("Testing waitMainScreenMini...", $COLOR_SUCCESS)
-		$result = waitMainScreenMini()
-		SetLog("Testing waitMainScreenMini DONE, $Result=" & $result, $COLOR_SUCCESS)
-
-		SetLog("Testing WaitForClouds...", $COLOR_SUCCESS)
-		SetLog("Testing WaitForClouds DONE", $COLOR_SUCCESS)
-
 	Next
 
 	SetLog("Testing finished", $COLOR_INFO)
@@ -839,7 +832,7 @@ Func btnTestVillageSize($bMeasureOnly = False)
 	
 	$hTimer = __TimerInit()
 	ResetTHsearch()
-	FindTownhall(True)
+	FindTownhall()
 	$ms = __TimerDiff($hTimer)
 	SetLog("TestVillageSize : FindTownhall (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
 	
@@ -883,10 +876,10 @@ Func btnTestDeadBase()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
 
-	SearchZoomOut(False, True, "btnTestDeadBase")
+	ZoomOut(True)
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
-	SetLog("FindTownhall() = " & FindTownhall(True), $COLOR_INFO)
+	SetLog("FindTownhall() = " & FindTownhall(), $COLOR_INFO)
 	SetLog("$g_sImglocRedline = " & $g_sImglocRedline, $COLOR_INFO)
 
 	SetLog("Testing checkDeadBase()", $COLOR_INFO)
@@ -943,12 +936,10 @@ Func btnTestAttackCSV()
 	setVillageOffset(0, 0, 1)
 	ConvertInternalExternArea()
 	
-	If Not CheckZoomOut("btnTestAttackCSV") Then
-		SetLog("CheckZoomOut failed", $COLOR_INFO)
-	EndIf
+	If Not CheckZoomOut() Then ZoomOut()
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
-	SetLog("FindTownhall() = " & FindTownhall(True), $COLOR_INFO)
+	SetLog("FindTownhall() = " & FindTownhall(), $COLOR_INFO)
 	SetLog("$g_sImglocRedline = " & $g_sImglocRedline, $COLOR_INFO)
 
 	SetLog("Testing PrepareAttack()", $COLOR_INFO)
@@ -983,12 +974,10 @@ Func btnTestGetLocationBuilding()
 	$g_bDebugBuildingPos = True
 	$g_bDebugSetlog = True
 
-	If Not CheckZoomOut("btnTestGetLocationBuilding") Then
-		SetLog("CheckZoomOut failed", $COLOR_INFO)
-	EndIf
+	If Not CheckZoomOut() Then ZoomOut()
 	ResetTHsearch()
 	SetLog("Testing FindTownhall()", $COLOR_INFO)
-	SetLog("FindTownhall() = " & FindTownhall(True), $COLOR_INFO)
+	SetLog("FindTownhall() = " & FindTownhall(), $COLOR_INFO)
 	;	SetLog("$g_sImglocRedline = " & $g_sImglocRedline, $COLOR_INFO)
 
 	_LogObjList($g_oBldgAttackInfo) ; log dictionary contents
@@ -1223,7 +1212,7 @@ Func btnTestCleanYard()
 	BeginImageTest()
 	Local $result
 	SetLog("Testing CleanYard", $COLOR_INFO)
-	SearchZoomOut(False, True, "btnTestCleanYard")
+	ZoomOut(True)
 	$result = CleanYard()
 	$result = ((IsArray($result)) ? (_ArrayToString($result, ",")) : ($result))
 	If @error Then $result = "Error " & @error & ", " & @extended & ", "
@@ -1308,7 +1297,7 @@ Func btnTestWeakBase()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
 	BeginImageTest()
-	FindTownhall(True)
+	FindTownhall()
 	If ($g_iSearchTH <> "-") Then
 		IsWeakBase($g_iImglocTHLevel, $g_sImglocRedline, False)
 	Else

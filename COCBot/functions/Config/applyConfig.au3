@@ -28,10 +28,7 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	setProcessingPoolSize($g_iGlobalThreads)
 
 	; Saved window positions
-	If $g_bAndroidEmbedded = False Then
-		If $g_iFrmBotPosX > -30000 And $g_iFrmBotPosY > -30000 And $g_bFrmBotMinimized = False _
-			And $g_iFrmBotPosX <> $g_WIN_POS_DEFAULT And $g_iFrmBotPosY <> $g_WIN_POS_DEFAULT Then WinMove($g_hFrmBot, "", $g_iFrmBotPosX, $g_iFrmBotPosY)
-	Else
+	If $g_bAndroidEmbedded Then
 		If $g_iFrmBotDockedPosX > -30000 And $g_iFrmBotDockedPosY > -30000 And $g_bFrmBotMinimized = False _
 			And $g_iFrmBotDockedPosX <> $g_WIN_POS_DEFAULT And $g_iFrmBotDockedPosY <> $g_WIN_POS_DEFAULT Then WinMove($g_hFrmBot, "", $g_iFrmBotDockedPosX, $g_iFrmBotDockedPosY)
 	EndIf
@@ -57,63 +54,88 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	; <><><><> Bot / Profile (global settings) <><><><>
 	ApplyConfig_Profile($TypeReadSave)
 	; <><><><> Bot / Android <><><><>
+	SetDebugLog("ApplyConfig_Android")
 	ApplyConfig_Android($TypeReadSave)
 	; <><><><> Log window <><><><>
+	SetDebugLog("ApplyConfig Log")
 	ApplyConfig_600_1($TypeReadSave)
 	; <><><><> Village / Misc <><><><>
+	SetDebugLog("ApplyConfig Village Misc")
 	ApplyConfig_600_6($TypeReadSave)
 	; <><><><> Village / Achievements <><><><>
-	ApplyConfig_600_9($TypeReadSave)
+	;SetDebugLog("ApplyConfig Village Achievements")
+	;ApplyConfig_600_9($TypeReadSave)
 	; <><><><> Village / Donate - Request <><><><>
+	SetDebugLog("ApplyConfig Village Donate - Request")
 	ApplyConfig_600_11($TypeReadSave)
 	; <><><><> Village / Donate - Donate <><><><>
+	SetDebugLog("ApplyConfig Village Donate - Donate")
 	ApplyConfig_600_12($TypeReadSave)
 	; <><><><> Village / Upgrade - Lab <><><><>
+	SetDebugLog("ApplyConfig Village Upgrade - Lab")
 	ApplyConfig_600_14($TypeReadSave)
 	; <><><><> Village / Upgrade - Heroes <><><><>
+	SetDebugLog("ApplyConfig Village Upgrade - Heroes")
 	ApplyConfig_600_15($TypeReadSave)
 	; <><><><> Village / Upgrade - Buildings <><><><>
+	SetDebugLog("ApplyConfig Village Upgrade - Buildings")
 	ApplyConfig_600_16($TypeReadSave)
 	; <><><><> Village / Upgrade - Auto Upgrade <><><><>
+	SetDebugLog("ApplyConfig Village Auto Upgrade")
 	ApplyConfig_auto($TypeReadSave)
 	; <><><><> Village / Upgrade - Walls <><><><>
+	SetDebugLog("ApplyConfig Village Upgrade - Walls")
 	ApplyConfig_600_17($TypeReadSave)
 	; <><><><> Village / Notify <><><><>
+	SetDebugLog("ApplyConfig Village Notify")
 	ApplyConfig_600_18($TypeReadSave)
-
+	
 	; moved here due to check functions
 	; troop/spell levels and counts
+	SetDebugLog("ApplyConfig Troops - Spells")
 	ApplyConfig_600_52_2($TypeReadSave)
 
 	; <><><><> Village / Notify <><><><>
+	SetDebugLog("ApplyConfig Notify Schedule")
 	ApplyConfig_600_19($TypeReadSave)
 	; <><><> Attack Plan / Train Army / Boost <><><>
+	SetDebugLog("ApplyConfig Train")
 	ApplyConfig_600_22($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Bully <><><><>
+	SetDebugLog("ApplyConfig Bully")
 	ApplyConfig_600_26($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Options / Search <><><><>
+	SetDebugLog("ApplyConfig Attack / Options / Search")
 	ApplyConfig_600_28($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Search <><><><>
+	SetDebugLog("ApplyConfig Attack / Deadbase / Search")
 	ApplyConfig_600_28_DB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Activebase / Search <><><><>
+	SetDebugLog("ApplyConfig Attack / Activebase / Search")
 	ApplyConfig_600_28_LB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Options / Attack <><><><>
+	SetDebugLog("ApplyConfig Attack / Options / Attack")
 	ApplyConfig_600_29($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Attack <><><><>
+	SetDebugLog("ApplyConfig Attack / Deadbase / Attack")
 	ApplyConfig_600_29_DB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Activebase / Attack <><><><>
+	SetDebugLog("ApplyConfig Attack / Activebase / Attack")
 	ApplyConfig_600_29_LB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Options / End Battle <><><><>
+	SetDebugLog("ApplyConfig Attack / Options / End Battle")
 	ApplyConfig_600_30($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Deadbase / End Battle <><><><>
+	SetDebugLog("ApplyConfig Attack / Deadbase / End Battle")
 	ApplyConfig_600_30_DB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Activebase / End Battle <><><><>
+	SetDebugLog("ApplyConfig Attack / Activebase / End Battle")
 	ApplyConfig_600_30_LB($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Collectors <><><><>
+	SetDebugLog("ApplyConfig Attack / Deadbase / Collectors")
 	ApplyConfig_600_31($TypeReadSave)
-	; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
-	ApplyConfig_600_32($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>
+	SetDebugLog("ApplyConfig Attack / Drop Order Troops")
 	ApplyConfig_600_33($TypeReadSave)
 	; <><><><> Bot / Options <><><><>
 	ApplyConfig_600_35_1($TypeReadSave)
@@ -128,7 +150,7 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 
 	; <><><><> BuilderBase <><><><>
 	ApplyBuilderBaseMod($TypeReadSave)
-
+	
 	; <><><><> Bot / Profiles <><><><>
 	PopulatePresetComboBox()
 	MakeSavePresetMessage()
@@ -146,7 +168,6 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 
 
 	ApplyConfig_Debug($TypeReadSave)
-
 	; Reenabling window redraw - Keep this last....
 	If $bRedrawAtExit Then SetRedrawBotWindow($bWasRdraw, Default, Default, Default, "applyConfig")
 
@@ -281,15 +302,14 @@ Func ApplyConfig_600_6($TypeReadSave)
 			For $i = 0 To $eLootCount - 1
 				GUICtrlSetData($g_ahTxtResumeAttackLoot[$i], $g_aiResumeAttackLoot[$i])
 			Next
-			GUICtrlSetState($g_hChkCollectStarBonus, $g_bCollectStarBonus ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTimeStop, $g_iCmbTimeStop)
-			_GUICtrlComboBox_SetCurSel($g_hCmbResumeTime, $g_iResumeAttackTime)
 			chkBotStop()
 
 			GUICtrlSetState($g_hChkCollect, $g_bChkCollect ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCollectLootCart, $g_bChkCollectLootCart ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkTreasuryCollect, $g_bChkTreasuryCollect ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCollectCookie, $g_bChkCollectCookie ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSellItemFromMagicBox, $g_bChkSellItemFromMagicBox ? $GUI_CHECKED : $GUI_UNCHECKED)
 			
 			GUICtrlSetState($g_hChkTombstones, $g_bChkTombstones ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCleanYard, $g_bChkCleanYard ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -324,6 +344,15 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkSellROBG, $g_bChkSellROBG ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSellROBE, $g_bChkSellROBE ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkEnableSellMagicItem()
+			
+			GUICtrlSetState($g_hChkEnableTradeMedal, $g_bChkEnableTradeMedal ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkTradeShiny, $g_bChkTradeShiny ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkTradeGlowy, $g_bChkTradeGlowy ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkTradeStarry, $g_bChkTradeStarry ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkTradeBuilderGold, $g_bChkTradeBuilderGold ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkTradeBuilderElix, $g_bChkTradeBuilderElix ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkTradeClockTowerPot, $g_bChkTradeClockTowerPot ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkTradeResearchPot, $g_bChkTradeResearchPot ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 			;BBPlay > Collect
 			GUICtrlSetState($g_hChkCollectBuilderBase, $g_bChkCollectBuilderBase ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -333,6 +362,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkAutoUpgradeBB, $g_bAutoUpgradeBBEnabled? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreHall, $g_bChkAutoUpgradeBBIgnoreHall ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreWall, $g_bChkAutoUpgradeBBIgnoreWall ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkBBSpendGoldOnWall, $g_bChkBBSpendGoldOnWall ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBOBControl, $g_bChkBOBControl ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkActivateBBSuggestedUpgrades()
 
@@ -459,7 +489,10 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkEnableCCSleep, $g_bEnableCCSleep ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSkipDT, $g_bSkipDT ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkTournament, $g_bEnableTournament ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkNoTournament, $g_bNoTournament ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkAttackOnce, $g_bChkAttackOnce ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTournamentAttackType, $g_iTournamentAttackType)
+			_GUICtrlComboBox_SetCurSel($g_hCmbUseSavedArmy, $g_iTournamentUseArmy)
 
 		Case "Save"
 			$g_bChkBotStop = (GUICtrlRead($g_hChkBotStop) = $GUI_CHECKED)
@@ -469,13 +502,12 @@ Func ApplyConfig_600_6($TypeReadSave)
 			For $i = 0 To $eLootCount - 1
 				$g_aiResumeAttackLoot[$i] = GUICtrlRead($g_ahTxtResumeAttackLoot[$i])
 			Next
-			$g_bCollectStarBonus = (GUICtrlRead($g_hChkCollectStarBonus) = $GUI_CHECKED)
 			$g_iCmbTimeStop = _GUICtrlComboBox_GetCurSel($g_hCmbTimeStop)
-			$g_iResumeAttackTime = _GUICtrlComboBox_GetCurSel($g_hCmbResumeTime)
 			$g_bChkCollect = (GUICtrlRead($g_hChkCollect) = $GUI_CHECKED)
 			$g_bChkCollectLootCart = (GUICtrlRead($g_hChkCollectLootCart) = $GUI_CHECKED)
 			$g_bChkTreasuryCollect = (GUICtrlRead($g_hChkTreasuryCollect) = $GUI_CHECKED)
 			$g_bChkCollectCookie = (GUICtrlRead($g_hChkCollectCookie) = $GUI_CHECKED)
+			$g_bChkSellItemFromMagicBox = (GUICtrlRead($g_hChkSellItemFromMagicBox) = $GUI_CHECKED)
 			$g_bChkTombstones = (GUICtrlRead($g_hChkTombstones) = $GUI_CHECKED)
 			$g_bChkCleanYard = (GUICtrlRead($g_hChkCleanYard) = $GUI_CHECKED)
 			$g_bChkEnableSellMagicItem = (GUICtrlRead($g_hChkEnableSellMagicItem) = $GUI_CHECKED)
@@ -508,6 +540,15 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkSellROBG = (GUICtrlRead($g_hChkSellROBG) = $GUI_CHECKED)
 			$g_bChkSellROBE = (GUICtrlRead($g_hChkSellROBE) = $GUI_CHECKED)
 			chkEnableSellMagicItem()
+			
+			$g_bChkEnableTradeMedal = (GUICtrlRead($g_hChkEnableTradeMedal) = $GUI_CHECKED)
+			$g_bChkTradeShiny = (GUICtrlRead($g_hChkTradeShiny) = $GUI_CHECKED)
+			$g_bChkTradeGlowy = (GUICtrlRead($g_hChkTradeGlowy) = $GUI_CHECKED)
+			$g_bChkTradeStarry = (GUICtrlRead($g_hChkTradeStarry) = $GUI_CHECKED)
+			$g_bChkTradeBuilderGold = (GUICtrlRead($g_hChkTradeBuilderGold) = $GUI_CHECKED)
+			$g_bChkTradeBuilderElix = (GUICtrlRead($g_hChkTradeBuilderElix) = $GUI_CHECKED)
+			$g_bChkTradeClockTowerPot = (GUICtrlRead($g_hChkTradeClockTowerPot) = $GUI_CHECKED)
+			$g_bChkTradeResearchPot = (GUICtrlRead($g_hChkTradeResearchPot) = $GUI_CHECKED)
 
 			$g_bChkCollectBuilderBase = (GUICtrlRead($g_hChkCollectBuilderBase) = $GUI_CHECKED)
 			$g_bChkCleanBBYard = (GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED)
@@ -515,6 +556,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bAutoUpgradeBBEnabled= (GUICtrlRead($g_hChkAutoUpgradeBB) = $GUI_CHECKED)
 			$g_bChkAutoUpgradeBBIgnoreHall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreHall) = $GUI_CHECKED)
 			$g_bChkAutoUpgradeBBIgnoreWall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreWall) = $GUI_CHECKED)
+			$g_bChkBBSpendGoldOnWall = (GUICtrlRead($g_hChkBBSpendGoldOnWall) = $GUI_CHECKED)
 			$g_bChkBOBControl = (GUICtrlRead($g_hChkBOBControl) = $GUI_CHECKED)
 
 			#NEW CLANGAMES GUI
@@ -618,7 +660,10 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bEnableCCSleep = (GUICtrlRead($g_hChkEnableCCSleep) = $GUI_CHECKED)
 			$g_bSkipDT = (GUICtrlRead($g_hChkSkipDT) = $GUI_CHECKED)
 			$g_bEnableTournament = (GUICtrlRead($g_hChkTournament) = $GUI_CHECKED)
+			$g_bNoTournament = (GUICtrlRead($g_hChkNoTournament) = $GUI_CHECKED)
+			$g_bChkAttackOnce = (GUICtrlRead($g_hChkAttackOnce) = $GUI_CHECKED)
 			$g_iTournamentAttackType = _GUICtrlComboBox_GetCurSel($g_hCmbTournamentAttackType)
+			$g_iTournamentUseArmy = _GUICtrlComboBox_GetCurSel($g_hCmbUseSavedArmy)
 
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_6
@@ -649,30 +694,30 @@ Func ApplyBuilderBaseMod($TypeReadSave)
 	ChkBBCustomArmyEnable()
 EndFunc   ;==>ApplyBuilderBaseMod
 
-Func ApplyConfig_600_9($TypeReadSave)
-	; <><><><> Village / Achievements <><><><>
-	Switch $TypeReadSave
-		Case "Read"
-			GUICtrlSetState($g_hChkUnbreakable, $g_iUnbrkMode = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetData($g_hTxtUnbreakable, $g_iUnbrkWait)
-			GUICtrlSetData($g_hTxtUnBrkMinGold, $g_iUnbrkMinGold)
-			GUICtrlSetData($g_hTxtUnBrkMinElixir, $g_iUnbrkMinElixir)
-			GUICtrlSetData($g_hTxtUnBrkMinDark, $g_iUnbrkMinDark)
-			GUICtrlSetData($g_hTxtUnBrkMaxGold, $g_iUnbrkMaxGold)
-			GUICtrlSetData($g_hTxtUnBrkMaxElixir, $g_iUnbrkMaxElixir)
-			GUICtrlSetData($g_hTxtUnBrkMaxDark, $g_iUnbrkMaxDark)
-			chkUnbreakable()
-		Case "Save"
-			$g_iUnbrkMode = GUICtrlRead($g_hChkUnbreakable) = $GUI_CHECKED ? 1 : 0
-			$g_iUnbrkWait = GUICtrlRead($g_hTxtUnbreakable)
-			$g_iUnbrkMinGold = GUICtrlRead($g_hTxtUnBrkMinGold)
-			$g_iUnbrkMinElixir = GUICtrlRead($g_hTxtUnBrkMinElixir)
-			$g_iUnbrkMinDark = GUICtrlRead($g_hTxtUnBrkMinDark)
-			$g_iUnbrkMaxGold = GUICtrlRead($g_hTxtUnBrkMaxGold)
-			$g_iUnbrkMaxElixir = GUICtrlRead($g_hTxtUnBrkMaxElixir)
-			$g_iUnbrkMaxDark = GUICtrlRead($g_hTxtUnBrkMaxDark)
-	EndSwitch
-EndFunc   ;==>ApplyConfig_600_9
+;Func ApplyConfig_600_9($TypeReadSave)
+;	; <><><><> Village / Achievements <><><><>
+;	Switch $TypeReadSave
+;		Case "Read"
+;			GUICtrlSetState($g_hChkUnbreakable, $g_iUnbrkMode = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+;			GUICtrlSetData($g_hTxtUnbreakable, $g_iUnbrkWait)
+;			GUICtrlSetData($g_hTxtUnBrkMinGold, $g_iUnbrkMinGold)
+;			GUICtrlSetData($g_hTxtUnBrkMinElixir, $g_iUnbrkMinElixir)
+;			GUICtrlSetData($g_hTxtUnBrkMinDark, $g_iUnbrkMinDark)
+;			GUICtrlSetData($g_hTxtUnBrkMaxGold, $g_iUnbrkMaxGold)
+;			GUICtrlSetData($g_hTxtUnBrkMaxElixir, $g_iUnbrkMaxElixir)
+;			GUICtrlSetData($g_hTxtUnBrkMaxDark, $g_iUnbrkMaxDark)
+;			chkUnbreakable()
+;		Case "Save"
+;			$g_iUnbrkMode = GUICtrlRead($g_hChkUnbreakable) = $GUI_CHECKED ? 1 : 0
+;			$g_iUnbrkWait = GUICtrlRead($g_hTxtUnbreakable)
+;			$g_iUnbrkMinGold = GUICtrlRead($g_hTxtUnBrkMinGold)
+;			$g_iUnbrkMinElixir = GUICtrlRead($g_hTxtUnBrkMinElixir)
+;			$g_iUnbrkMinDark = GUICtrlRead($g_hTxtUnBrkMinDark)
+;			$g_iUnbrkMaxGold = GUICtrlRead($g_hTxtUnBrkMaxGold)
+;			$g_iUnbrkMaxElixir = GUICtrlRead($g_hTxtUnBrkMaxElixir)
+;			$g_iUnbrkMaxDark = GUICtrlRead($g_hTxtUnBrkMaxDark)
+;	EndSwitch
+;EndFunc   ;==>ApplyConfig_600_9
 
 Func ApplyConfig_600_11($TypeReadSave)
 	; <><><><> Village / Donate - Request <><><><>
@@ -681,9 +726,39 @@ Func ApplyConfig_600_11($TypeReadSave)
 			GUICtrlSetState($g_hChkRequestTroopsEnable, $g_bRequestTroopsEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtRequestCC, $g_sRequestTroopsText)
 			chkRequestCC()
+			GUICtrlSetState($g_hChkReinforcementCake, $g_bUseCake ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkUpdateRequest, $g_bChkUpdateRequest ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbRequestTroop1, $g_iCmbRequestTroop1)
+			_GUICtrlComboBox_SetCurSel($g_hCmbRequestSpell1, $g_iCmbRequestSpell1)
+			_GUICtrlComboBox_SetCurSel($g_hCmbRequestSiege1, $g_iCmbRequestSiege1)
+			_GUICtrlComboBox_SetCurSel($g_hCmbRequestTroop2, $g_iCmbRequestTroop2)
+			_GUICtrlComboBox_SetCurSel($g_hCmbRequestSpell2, $g_iCmbRequestSpell2)
+			_GUICtrlComboBox_SetCurSel($g_hCmbRequestSiege2, $g_iCmbRequestSiege2)
+			GUICtrlSetData($g_hRequestTroopQuantity1, $g_iRequestTroopQuantity1)
+			GUICtrlSetData($g_hRequestSpellQuantity1, $g_iRequestSpellQuantity1)
+			GUICtrlSetData($g_hRequestSiegeQuantity1, $g_iRequestSiegeQuantity1)
+			GUICtrlSetData($g_hRequestTroopQuantity2, $g_iRequestTroopQuantity2)
+			GUICtrlSetData($g_hRequestSpellQuantity2, $g_iRequestSpellQuantity2)
+			GUICtrlSetData($g_hRequestSiegeQuantity2, $g_iRequestSiegeQuantity2)
+			chkUpdateRequest()
+			RequestQty()
 		Case "Save"
 			$g_bRequestTroopsEnable = (GUICtrlRead($g_hChkRequestTroopsEnable) = $GUI_CHECKED)
 			$g_sRequestTroopsText = GUICtrlRead($g_hTxtRequestCC)
+			$g_bUseCake = (GUICtrlRead($g_hChkReinforcementCake) = $GUI_CHECKED)
+			$g_bChkUpdateRequest = (GUICtrlRead($g_hChkUpdateRequest) = $GUI_CHECKED)
+			$g_iCmbRequestTroop1 = _GUICtrlComboBox_GetCurSel($g_hCmbRequestTroop1)
+			$g_iCmbRequestSpell1 = _GUICtrlComboBox_GetCurSel($g_hCmbRequestSpell1)
+			$g_iCmbRequestSiege1 = _GUICtrlComboBox_GetCurSel($g_hCmbRequestSiege1)
+			$g_iCmbRequestTroop2 = _GUICtrlComboBox_GetCurSel($g_hCmbRequestTroop2)
+			$g_iCmbRequestSpell2 = _GUICtrlComboBox_GetCurSel($g_hCmbRequestSpell2)
+			$g_iCmbRequestSiege2 = _GUICtrlComboBox_GetCurSel($g_hCmbRequestSiege2)
+			$g_iRequestTroopQuantity1 = GUICtrlRead($g_hRequestTroopQuantity1)
+			$g_iRequestSpellQuantity1 = GUICtrlRead($g_hRequestSpellQuantity1)
+			$g_iRequestSiegeQuantity1 = GUICtrlRead($g_hRequestSiegeQuantity1)
+			$g_iRequestTroopQuantity2 = GUICtrlRead($g_hRequestTroopQuantity2)
+			$g_iRequestSpellQuantity2 = GUICtrlRead($g_hRequestSpellQuantity2)
+			$g_iRequestSiegeQuantity2 = GUICtrlRead($g_hRequestSiegeQuantity2)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_11
 
@@ -1022,6 +1097,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOnly1Builder, $g_bChkOnly1Builder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbTargetWallLevel, $g_iTargetWallLevel)
+			_GUICtrlComboBox_SetCurSel($g_hCmbSearchWallSort, $g_iSearchWallSort)
 			chkWalls()
 			cmbWallLevel()
 		Case "Save"
@@ -1040,6 +1116,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 			$g_bUpgradeWallSaveBuilder = (GUICtrlRead($g_hChkSaveWallBldr) = $GUI_CHECKED)
 			$g_bChkOnly1Builder = (GUICtrlRead($g_hChkOnly1Builder) = $GUI_CHECKED)
 			$g_iTargetWallLevel = _GUICtrlComboBox_GetCurSel($g_hCmbTargetWallLevel)
+			$g_iSearchWallSort = _GUICtrlComboBox_GetCurSel($g_hCmbSearchWallSort)
 			$g_bUpgradeSpesificWall = (_GUICtrlComboBox_GetCurSel($g_hCmbTargetWallLevel) = 0 ? False : True)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_17
@@ -1249,19 +1326,8 @@ Func ApplyConfig_600_28_DB($TypeReadSave)
 
 			chkDBActivateSearches()
 			GUICtrlSetState($g_hChkDeadbase, $g_abAttackTypeEnable[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
-
-			GUICtrlSetState($g_hChkDBKingWait, BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroKing) = $eHeroKing ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkDBQueenWait, BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroQueen) = $eHeroQueen ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkDBWardenWait, BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroWarden) = $eHeroWarden ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkDBChampionWait, BitAND($g_aiSearchHeroWaitEnable[$DB], $eHeroChampion) = $eHeroChampion ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkDBNotWaitHeroes, $g_aiSearchNotWaitHeroesEnable[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			$g_iHeroWaitAttackNoBit[$DB][0] = GUICtrlRead($g_hChkDBKingWait) = $GUI_CHECKED ? 1 : 0
-			$g_iHeroWaitAttackNoBit[$DB][1] = GUICtrlRead($g_hChkDBQueenWait) = $GUI_CHECKED ? 1 : 0
-			$g_iHeroWaitAttackNoBit[$DB][2] = GUICtrlRead($g_hChkDBWardenWait) = $GUI_CHECKED ? 1 : 0
-			$g_iHeroWaitAttackNoBit[$DB][3] = GUICtrlRead($g_hChkDBChampionWait) = $GUI_CHECKED ? 1 : 0
-			GUICtrlSetState($g_hChkDBSpellsWait, $g_abSearchSpellsWaitEnable[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkDBSpellsWait()
-			GUICtrlSetState($g_hChkDBWaitForCastle, $g_abSearchCastleWaitEnable[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbDBUseSavedArmy, $g_iCmbDBUseArmy)
+			
 			; Search - Filters
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBMeetGE, $g_aiFilterMeetGE[$DB])
 			GUICtrlSetData($g_hTxtDBMinGold, $g_aiFilterMinGold[$DB])
@@ -1312,14 +1378,8 @@ Func ApplyConfig_600_28_DB($TypeReadSave)
 			$g_aiSearchTrophiesMax[$DB] = GUICtrlRead($g_hTxtDBTropiesMax)
 			$g_abSearchCampsEnable[$DB] = (GUICtrlRead($g_hChkDBActivateCamps) = $GUI_CHECKED)
 			$g_aiSearchCampsPct[$DB] = Int(GUICtrlRead($g_hTxtDBArmyCamps))
-			$g_iHeroWaitAttackNoBit[$DB][0] = GUICtrlRead($g_hChkDBKingWait) = $GUI_CHECKED ? 1 : 0
-			$g_iHeroWaitAttackNoBit[$DB][1] = GUICtrlRead($g_hChkDBQueenWait) = $GUI_CHECKED ? 1 : 0
-			$g_iHeroWaitAttackNoBit[$DB][2] = GUICtrlRead($g_hChkDBWardenWait) = $GUI_CHECKED ? 1 : 0
-			$g_iHeroWaitAttackNoBit[$DB][3] = GUICtrlRead($g_hChkDBChampionWait) = $GUI_CHECKED ? 1 : 0
-			$g_aiSearchNotWaitHeroesEnable[$DB] = GUICtrlRead($g_hChkDBNotWaitHeroes) = $GUI_CHECKED ? 1 : 0
-			chkNotWaitHeroes()
-			$g_abSearchSpellsWaitEnable[$DB] = (GUICtrlRead($g_hChkDBSpellsWait) = $GUI_CHECKED)
-			$g_abSearchCastleWaitEnable[$DB] = (GUICtrlRead($g_hChkDBWaitForCastle) = $GUI_CHECKED)
+			$g_iCmbDBUseArmy = _GUICtrlComboBox_GetCurSel($g_hCmbDBUseSavedArmy)
+		
 			; Search - Filters
 			$g_iDeadEagleSearch = GUICtrlRead($g_hTxtDeadEagleSearch)
 
@@ -1528,6 +1588,24 @@ Func ApplyConfig_600_29($TypeReadSave)
 				$g_iActivateChampion = 2
 			EndIf
 			$g_iDelayActivateChampion = Int(GUICtrlRead($g_hTxtManChampionAbility) * 1000)
+			
+			If GUICtrlRead($g_hRadAutoPrinceAbility) = $GUI_CHECKED Then
+				$g_iActivatePrince = 0
+			ElseIf GUICtrlRead($g_hRadManPrinceAbility) = $GUI_CHECKED Then
+				$g_iActivatePrince = 1
+			ElseIf GUICtrlRead($g_hRadBothPrinceAbility) = $GUI_CHECKED Then
+				$g_iActivatePrince = 2
+			EndIf
+			$g_iDelayActivatePrince = Int(GUICtrlRead($g_hTxtManPrinceAbility) * 1000)
+			
+			If GUICtrlRead($g_hRadAutoDukeAbility) = $GUI_CHECKED Then
+				$g_iActivateDuke = 0
+			ElseIf GUICtrlRead($g_hRadManDukeAbility) = $GUI_CHECKED Then
+				$g_iActivateDuke = 1
+			ElseIf GUICtrlRead($g_hRadBothDukeAbility) = $GUI_CHECKED Then
+				$g_iActivateDuke = 2
+			EndIf
+			$g_iDelayActivateDuke = Int(GUICtrlRead($g_hTxtManDukeAbility) * 1000)
 
 			$g_bAttackPlannerEnable = (GUICtrlRead($g_hChkAttackPlannerEnable) = $GUI_CHECKED)
 			$g_bAttackPlannerCloseCoC = (GUICtrlRead($g_hChkAttackPlannerCloseCoC) = $GUI_CHECKED)
@@ -1556,35 +1634,12 @@ Func ApplyConfig_600_29_DB($TypeReadSave)
 			; Attack
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBAlgorithm, $g_aiAttackAlgorithm[$DB])
 			cmbDBAlgorithm()
-			_GUICtrlComboBox_SetCurSel($g_hCmbDBSelectTroop, $g_aiAttackTroopSelection[$DB])
-			GUICtrlSetState($g_hChkDBKingAttack, BitAND($g_aiAttackUseHeroes[$DB], $eHeroKing) = $eHeroKing ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkDBQueenAttack, BitAND($g_aiAttackUseHeroes[$DB], $eHeroQueen) = $eHeroQueen ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkDBWardenAttack, BitAND($g_aiAttackUseHeroes[$DB], $eHeroWarden) = $eHeroWarden ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkDBWardenAttack()
-			GUICtrlSetState($g_hChkDBChampionAttack, BitAND($g_aiAttackUseHeroes[$DB], $eHeroChampion) = $eHeroChampion ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Local $temp1, $temp2, $temp3, $temp4
-			$temp1 = GUICtrlRead($g_hChkDBKingAttack) = $GUI_CHECKED ? $eHeroKing : $eHeroNone
-			$temp2 = GUICtrlRead($g_hChkDBQueenAttack) = $GUI_CHECKED ? $eHeroQueen : $eHeroNone
-			$temp3 = GUICtrlRead($g_hChkDBWardenAttack) = $GUI_CHECKED ? $eHeroWarden : $eHeroNone
-			$temp4 = GUICtrlRead($g_hChkDBChampionAttack) = $GUI_CHECKED ? $eHeroChampion : $eHeroNone
-			$g_aiAttackUseHeroes[$DB] = BitOR(Int($temp1), Int($temp2), Int($temp3), Int($temp4))
-			GUICtrlSetState($g_hChkDBDropCC, $g_abAttackDropCC[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkDBDropCC()
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBWardenMode, $g_aiAttackUseWardenMode[$DB])
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBSiege, $g_aiAttackUseSiege[$DB])
 			GUICtrlSetState($g_hChkDBDropEmptySiege, $g_bDropEmptySiege[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 		Case "Save"
 			$g_aiAttackAlgorithm[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBAlgorithm)
-			$g_aiAttackTroopSelection[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBSelectTroop)
-			Local $temp1, $temp2, $temp3, $temp4
-			$temp1 = GUICtrlRead($g_hChkDBKingAttack) = $GUI_CHECKED ? $eHeroKing : $eHeroNone
-			$temp2 = GUICtrlRead($g_hChkDBQueenAttack) = $GUI_CHECKED ? $eHeroQueen : $eHeroNone
-			$temp3 = GUICtrlRead($g_hChkDBWardenAttack) = $GUI_CHECKED ? $eHeroWarden : $eHeroNone
-			$temp4 = GUICtrlRead($g_hChkDBChampionAttack) = $GUI_CHECKED ? $eHeroChampion : $eHeroNone
-			$g_aiAttackUseHeroes[$DB] = BitOR(Int($temp1), Int($temp2), Int($temp3), Int($temp4))
-			$g_abAttackDropCC[$DB] = (GUICtrlRead($g_hChkDBDropCC) = $GUI_CHECKED)
-
 			$g_aiAttackUseWardenMode[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBWardenMode)
 			$g_aiAttackUseSiege[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbDBSiege)
 			$g_bDropEmptySiege[$DB] = (GUICtrlRead($g_hChkDBDropEmptySiege) = $GUI_CHECKED)
@@ -1602,7 +1657,6 @@ Func ApplyConfig_600_29_DB_Standard($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbStandardDropOrderDB, $g_aiAttackStdDropOrder[$DB])
 			_GUICtrlComboBox_SetCurSel($g_hCmbStandardDropSidesDB, $g_aiAttackStdDropSides[$DB])
 			GUICtrlSetState($g_hChkSmartAttackRedAreaDB, $g_abAttackStdSmartAttack[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkSmartAttackRedAreaDB()
 			_GUICtrlComboBox_SetCurSel($g_hCmbSmartDeployDB, $g_aiAttackStdSmartDeploy[$DB])
 			GUICtrlSetState($g_hChkAttackNearGoldMineDB, $g_abAttackStdSmartNearCollectors[$DB][0] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkAttackNearElixirCollectorDB, $g_abAttackStdSmartNearCollectors[$DB][1] ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1624,7 +1678,6 @@ Func ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			_GUICtrlComboBox_SetCurSel($g_hCmbScriptRedlineImplDB, $g_aiAttackScrRedlineRoutine[$DB])
-			_GUICtrlComboBox_SetCurSel($g_hCmbScriptDroplineDB, $g_aiAttackScrDroplineEdge[$DB])
 			PopulateComboScriptsFilesDB()
 			Local $tempindex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameDB, $g_sAttackScrScriptName[$DB])
 			If $tempindex = -1 Then
@@ -1637,7 +1690,6 @@ Func ApplyConfig_600_29_DB_Scripted($TypeReadSave)
 			cmbScriptRedlineImplDB()
 		Case "Save"
 			$g_aiAttackScrRedlineRoutine[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptRedlineImplDB)
-			$g_aiAttackScrDroplineEdge[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptDroplineDB)
 			Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbScriptNameDB)
 			Local $scriptname
 			_GUICtrlComboBox_GetLBText($g_hCmbScriptNameDB, $indexofscript, $scriptname)
@@ -1667,36 +1719,12 @@ Func ApplyConfig_600_29_LB($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			_GUICtrlComboBox_SetCurSel($g_hCmbABAlgorithm, $g_aiAttackAlgorithm[$LB])
-			cmbABAlgorithm()
-			_GUICtrlComboBox_SetCurSel($g_hCmbABSelectTroop, $g_aiAttackTroopSelection[$LB])
-			GUICtrlSetState($g_hChkABKingAttack, BitAND($g_aiAttackUseHeroes[$LB], $eHeroKing) = $eHeroKing ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkABQueenAttack, BitAND($g_aiAttackUseHeroes[$LB], $eHeroQueen) = $eHeroQueen ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkABWardenAttack, BitAND($g_aiAttackUseHeroes[$LB], $eHeroWarden) = $eHeroWarden ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkABWardenAttack()
-			GUICtrlSetState($g_hChkABChampionAttack, BitAND($g_aiAttackUseHeroes[$LB], $eHeroChampion) = $eHeroChampion ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Local $temp1, $temp2, $temp3, $temp4
-			$temp1 = GUICtrlRead($g_hChkABKingAttack) = $GUI_CHECKED ? $eHeroKing : $eHeroNone
-			$temp2 = GUICtrlRead($g_hChkABQueenAttack) = $GUI_CHECKED ? $eHeroQueen : $eHeroNone
-			$temp3 = GUICtrlRead($g_hChkABWardenAttack) = $GUI_CHECKED ? $eHeroWarden : $eHeroNone
-			$temp4 = GUICtrlRead($g_hChkABChampionAttack) = $GUI_CHECKED ? $eHeroChampion : $eHeroNone
-			$g_aiAttackUseHeroes[$LB] = BitOR(Int($temp1), Int($temp2), Int($temp3), Int($temp4))
-			GUICtrlSetState($g_hChkABDropCC, $g_abAttackDropCC[$LB] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkABDropCC()
 			_GUICtrlComboBox_SetCurSel($g_hCmbABWardenMode, $g_aiAttackUseWardenMode[$LB])
 			_GUICtrlComboBox_SetCurSel($g_hCmbABSiege, $g_aiAttackUseSiege[$LB])
 			GUICtrlSetState($g_hChkABDropEmptySiege, $g_bDropEmptySiege[$LB] ? $GUI_CHECKED : $GUI_UNCHECKED)
 
 		Case "Save"
 			$g_aiAttackAlgorithm[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbABAlgorithm)
-			$g_aiAttackTroopSelection[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbABSelectTroop)
-			Local $temp1, $temp2, $temp3, $temp4
-			$temp1 = GUICtrlRead($g_hChkABKingAttack) = $GUI_CHECKED ? $eHeroKing : $eHeroNone
-			$temp2 = GUICtrlRead($g_hChkABQueenAttack) = $GUI_CHECKED ? $eHeroQueen : $eHeroNone
-			$temp3 = GUICtrlRead($g_hChkABWardenAttack) = $GUI_CHECKED ? $eHeroWarden : $eHeroNone
-			$temp4 = GUICtrlRead($g_hChkABChampionAttack) = $GUI_CHECKED ? $eHeroChampion : $eHeroNone
-			$g_aiAttackUseHeroes[$LB] = BitOR(Int($temp1), Int($temp2), Int($temp3), Int($temp4))
-			$g_abAttackDropCC[$LB] = (GUICtrlRead($g_hChkABDropCC) = $GUI_CHECKED)
-
 			$g_aiAttackUseWardenMode[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbABWardenMode)
 			$g_aiAttackUseSiege[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbABSiege)
 			$g_bDropEmptySiege[$LB] = (GUICtrlRead($g_hChkABDropEmptySiege) = $GUI_CHECKED)
@@ -1734,7 +1762,6 @@ Func ApplyConfig_600_29_LB_Scripted($TypeReadSave)
 	Switch $TypeReadSave
 		Case "Read"
 			_GUICtrlComboBox_SetCurSel($g_hCmbScriptRedlineImplAB, $g_aiAttackScrRedlineRoutine[$LB])
-			_GUICtrlComboBox_SetCurSel($g_hCmbScriptDroplineAB, $g_aiAttackScrDroplineEdge[$LB])
 			PopulateComboScriptsFilesAB()
 			Local $tempindex = _GUICtrlComboBox_FindStringExact($g_hCmbScriptNameAB, $g_sAttackScrScriptName[$LB])
 			If $tempindex = -1 Then
@@ -1747,7 +1774,6 @@ Func ApplyConfig_600_29_LB_Scripted($TypeReadSave)
 			cmbScriptRedlineImplAB()
 		Case "Save"
 			$g_aiAttackScrRedlineRoutine[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptRedlineImplAB)
-			$g_aiAttackScrDroplineEdge[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptDroplineAB)
 			Local $indexofscript = _GUICtrlComboBox_GetCurSel($g_hCmbScriptNameAB)
 			Local $scriptname
 			_GUICtrlComboBox_GetLBText($g_hCmbScriptNameAB, $indexofscript, $scriptname)
@@ -1896,32 +1922,6 @@ Func ApplyConfig_600_31($TypeReadSave)
 			$g_iCollectorToleranceOffset = GUICtrlRead($g_hSldCollectorTolerance)
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_31
-
-Func ApplyConfig_600_32($TypeReadSave)
-	; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
-	Switch $TypeReadSave
-		Case "Read"
-			GUICtrlSetState($g_hChkTrophyRange, $g_bDropTrophyEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetData($g_hTxtMaxTrophy, $g_iDropTrophyMax)
-			GUICtrlSetData($g_hTxtDropTrophy, $g_iDropTrophyMin)
-			GUICtrlSetState($g_hChkTrophyHeroes, $g_bDropTrophyUseHeroes ? $GUI_CHECKED : $GUI_UNCHECKED)
-			chkTrophyHeroes()
-			_GUICtrlComboBox_SetCurSel($g_hCmbTrophyHeroesPriority, $g_iDropTrophyHeroesPriority)
-			GUICtrlSetState($g_hChkTrophyAtkDead, $g_bDropTrophyAtkDead ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetData($g_hTxtDropTrophyArmyMin, $g_iDropTrophyArmyMinPct)
-			chkTrophyRange()
-			TxtDropTrophy()
-			TxtMaxTrophy()
-		Case "Save"
-			$g_bDropTrophyEnable = (GUICtrlRead($g_hChkTrophyRange) = $GUI_CHECKED)
-			$g_iDropTrophyMax = GUICtrlRead($g_hTxtMaxTrophy)
-			$g_iDropTrophyMin = GUICtrlRead($g_hTxtDropTrophy)
-			$g_bDropTrophyUseHeroes = (GUICtrlRead($g_hChkTrophyHeroes) = $GUI_CHECKED)
-			$g_iDropTrophyHeroesPriority = _GUICtrlComboBox_GetCurSel($g_hCmbTrophyHeroesPriority)
-			$g_bDropTrophyAtkDead = (GUICtrlRead($g_hChkTrophyAtkDead) = $GUI_CHECKED)
-			$g_iDropTrophyArmyMinPct = GUICtrlRead($g_hTxtDropTrophyArmyMin)
-	EndSwitch
-EndFunc   ;==>ApplyConfig_600_32
 
 Func ApplyConfig_600_33($TypeReadSave)
 	; <><><><> Attack Plan / Search & Attack / Drop Order Troops <><><><>

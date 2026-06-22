@@ -21,21 +21,11 @@ Func cmbDBAlgorithm()
 
 	If BitAND(GUICtrlGetState($g_hGUI_DEADBASE), $GUI_SHOW) And GUICtrlRead($g_hGUI_DEADBASE_TAB) = 1 Then ; fix ghosting during control applyConfig
 		Select
-			Case $iCmbValue = 0 ; Standard Attack
-				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
-				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
-				GUISetState(@SW_HIDE,$g_hGUI_DEADBASE_ATTACK_SMARTFARM)
-			Case $iCmbValue = 1 ; Scripted Attack
-				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
-				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
-				GUISetState(@SW_HIDE,$g_hGUI_DEADBASE_ATTACK_SMARTFARM)
-			Case $iCmbValue = 2 ; Smart Farm Attack
-				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
+			Case $iCmbValue = 0 ; Smart Farm Attack
 				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
 				GUISetState(@SW_SHOWNOACTIVATE,$g_hGUI_DEADBASE_ATTACK_SMARTFARM)
-			Case Else
-				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_STANDARD)
-				GUISetState(@SW_HIDE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
+			Case $iCmbValue = 1 ; Scripted Attack
+				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_DEADBASE_ATTACK_SCRIPTED)
 				GUISetState(@SW_HIDE,$g_hGUI_DEADBASE_ATTACK_SMARTFARM)
 		EndSelect
 	EndIf
@@ -53,44 +43,9 @@ Func cmbABAlgorithm()
 			Case $iCmbValue = 1 ; Scripted Attack
 				GUISetState(@SW_HIDE, $g_hGUI_ACTIVEBASE_ATTACK_STANDARD)
 				GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ACTIVEBASE_ATTACK_SCRIPTED)
-			Case Else
-				GUISetState(@SW_HIDE, $g_hGUI_ACTIVEBASE_ATTACK_STANDARD)
-				GUISetState(@SW_HIDE, $g_hGUI_ACTIVEBASE_ATTACK_SCRIPTED)
 		EndSelect
 	EndIf
 EndFunc   ;==>cmbABAlgorithm
-
-Func chkABWardenAttack()
-	If GUICtrlRead($g_hChkABWardenAttack) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hCmbABWardenMode, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hCmbABWardenMode, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkABWardenAttack
-
-Func chkDBWardenAttack()
-	If GUICtrlRead($g_hChkDBWardenAttack) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hCmbDBWardenMode, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hCmbDBWardenMode, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkDBWardenAttack
-
-Func chkABDropCC()
-	If GUICtrlRead($g_hChkABDropCC) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hcmbABSiege, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hcmbABSiege, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkABDropCC
-
-Func chkDBDropCC()
-	If GUICtrlRead($g_hChkDBDropCC) = $GUI_CHECKED Then
-		GUICtrlSetState($g_hcmbDBSiege, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($g_hcmbDBSiege, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkDBDropCC
 
 Func chkAttackNow()
 	If GUICtrlRead($g_hChkAttackNow) = $GUI_CHECKED Then
@@ -127,6 +82,16 @@ Func radHerosApply()
 	GUICtrlSetState($g_hRadManChampionAbility, $g_iActivateChampion = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
 	GUICtrlSetState($g_hRadBothChampionAbility, $g_iActivateChampion = 2 ? $GUI_CHECKED : $GUI_UNCHECKED)
 	GUICtrlSetData($g_hTxtManChampionAbility, ($g_iDelayActivateChampion / 1000))
+	
+	GUICtrlSetState($g_hRadAutoPrinceAbility, $g_iActivatePrince = 0 ? $GUI_CHECKED : $GUI_UNCHECKED)
+	GUICtrlSetState($g_hRadManPrinceAbility, $g_iActivatePrince = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+	GUICtrlSetState($g_hRadBothPrinceAbility, $g_iActivatePrince = 2 ? $GUI_CHECKED : $GUI_UNCHECKED)
+	GUICtrlSetData($g_hTxtManPrinceAbility, ($g_iDelayActivatePrince / 1000))
+	
+	GUICtrlSetState($g_hRadAutoDukeAbility, $g_iActivateDuke = 0 ? $GUI_CHECKED : $GUI_UNCHECKED)
+	GUICtrlSetState($g_hRadManDukeAbility, $g_iActivateDuke = 1 ? $GUI_CHECKED : $GUI_UNCHECKED)
+	GUICtrlSetState($g_hRadBothDukeAbility, $g_iActivateDuke = 2 ? $GUI_CHECKED : $GUI_UNCHECKED)
+	GUICtrlSetData($g_hTxtManDukeAbility, ($g_iDelayActivateDuke / 1000))
 EndFunc   ;==>radHerosApply
 
 Func chkattackHoursE1()
@@ -351,7 +316,7 @@ Func _cmbAttackPlannerDayLimit()
 		Case 16 To 20
 			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMin, $COLOR_YELLOW)
 		Case 21 To 999
-			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMin, $COLOR_RED)
+			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMin, $COLOR_ERROR)
 	EndSwitch
 	Switch Int(GUICtrlRead($g_hCmbAttackPlannerDayMax))
 		Case 0 To 15
@@ -359,7 +324,7 @@ Func _cmbAttackPlannerDayLimit()
 		Case 16 To 25
 			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMax, $COLOR_YELLOW)
 		Case 26 To 999
-			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMax, $COLOR_RED)
+			GUICtrlSetBkColor($g_hCmbAttackPlannerDayMax, $COLOR_ERROR)
 	EndSwitch
 EndFunc   ;==>_cmbAttackPlannerDayLimit
 
@@ -437,7 +402,7 @@ Func dbCheck()
 	$g_abAttackTypeEnable[$DB] = (GUICtrlRead($g_hChkDeadbase) = $GUI_CHECKED)
 
 	If IsBotLaunched() Then _GUICtrlTab_SetCurFocus($g_hGUI_SEARCH_TAB, 0) ; activate deadbase tab
-	If BitAND(GUICtrlRead($g_hChkDBActivateSearches), GUICtrlRead($g_hChkDBActivateTropies), GUICtrlRead($g_hChkDBActivateCamps), GUICtrlRead($g_hChkDBSpellsWait)) = $GUI_UNCHECKED Then
+	If BitAND(GUICtrlRead($g_hChkDBActivateSearches), GUICtrlRead($g_hChkDBActivateTropies), GUICtrlRead($g_hChkDBActivateCamps)) = $GUI_UNCHECKED Then
 		GUICtrlSetState($g_hChkDBActivateSearches, $GUI_CHECKED)
 		chkDBActivateSearches() ; this includes a call to dbCheckall() -> tabSEARCH()
 	Else

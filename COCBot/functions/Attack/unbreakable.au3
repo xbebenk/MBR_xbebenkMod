@@ -38,20 +38,6 @@ Func Unbreakable()
 			SetLog(">>> Programmer Humor, You shouldn't ever see this message, RUN! <<<", $COLOR_DEBUG)
 	EndSwitch
 
-	; If attack dead bases during trophy drop is enabled then make sure we have at least 70% full army
-	If $g_bDropTrophyAtkDead Then
-		If ($g_CurrentCampUtilization <= ($g_iTotalCampSpace * 70 / 100)) Then
-			SetLog("Oops, wait for 70% troops due attack dead base checked", $COLOR_ERROR)
-			Return True ; no troops then cycle again
-		EndIf
-		; no deadbase attacks, then only a few troops needed to enable drop trophy to work
-	Else
-		If ($g_CurrentCampUtilization <= ($g_iTotalCampSpace * 20 / 100)) Then
-			SetLog("Oops, wait for 20% troops for use in trophy drop", $COLOR_ERROR)
-			Return True ; no troops then cycle again
-		EndIf
-	EndIf
-
 	Local $sMissingLoot = ""
 	If ((Number($g_aiCurrentLoot[$eLootGold]) - Number($g_iUnbrkMinGold)) < 0) Then
 		$sMissingLoot &= "Gold, "
@@ -68,28 +54,11 @@ Func Unbreakable()
 		Return False
 	EndIf
 
-	DropTrophy()
 	If _Sleep($DELAYUNBREAKABLE2) Then Return True ; wait for home screen
 	ClickAway()
 	If _Sleep($DELAYUNBREAKABLE1) Then Return True ; wait for home screen
 	If $g_bRestart = True Then Return True ; Check Restart Flag to see if drop trophy used all the troops and need to train more.
-	$iCount = 0
-	Local $iTrophyCurrent = getTrophyMainScreen($aTrophies[0], $aTrophies[1]) ; Get trophy
-	SetDebugLog("Trophy Count Read = " & $iTrophyCurrent, $COLOR_DEBUG)
-	While Number($iTrophyCurrent) > Number($g_iDropTrophyMax) ; verify that trophy dropped and didn't fail due misc errors searching
-		SetDebugLog("Drop Trophy Loop #" & $iCount + 1, $COLOR_DEBUG)
-		DropTrophy()
-		If _Sleep($DELAYUNBREAKABLE2) Then Return True; wait for home screen
-		ClickAway()
-		If _Sleep($DELAYUNBREAKABLE1) Then Return True; wait for home screen
-		$iTrophyCurrent = getTrophyMainScreen($aTrophies[0], $aTrophies[1])
-		If ($iCount > 2) And (Number($iTrophyCurrent) > Number($g_iDropTrophyMax)) Then ; If unable to drop trophy after a couple of tries, restart at main loop.
-			SetLog("Unable to drop trophy, trying again", $COLOR_ERROR)
-			If _Sleep(500) Then Return True
-			Return True
-		EndIf
-		$iCount += 1
-	WEnd
+	
 	If $g_bRestart = True Then Return True ; Check Restart Flag to see if drop trophy used all the troops and need to train more.
 
 	BreakPersonalShield() ; break personal Shield and Personal Guard

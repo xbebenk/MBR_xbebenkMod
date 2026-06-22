@@ -220,6 +220,7 @@ Func IsReturnHomeBattlePage($bAction = False)
 	Local $bRet = False
 	If IsPageLoop($aReturnHomeButton, 1) Then
 		SetDebugLog("**Return Home Battle Window OK**", $COLOR_ACTION)
+		If IsAttackPage(False, 1) Then Return False
 		If Not $bAction Then Return True
 		ClickP($aReturnHomeButton, 1, 0, "Return Home") ;Click Return Home Button
 		SetDebugLog("ReturnHomeBattlePage!", $COLOR_SUCCESS)
@@ -236,7 +237,7 @@ Func IsReturnHomeChestPage($bAction = True)
 	Local $bRet = False
 	If IsPageLoop($aReturnHomeChest, 1) Then
 		SetDebugLog("**Return Home Chest Window OK**", $COLOR_ACTION)
-		If IsAttackPage(True, 1) Then Return False
+		If IsAttackPage(False, 1) Then Return False
 		If Not $bAction Then Return True
 		
 		ClickP($aReturnHomeChest)
@@ -285,7 +286,7 @@ EndFunc   ;==>IsPostDefenseSummaryPage
 Func IsMultiplayerTabOpen()
 	Local $result = False
 	
-	$result = WaitforPixel(585, 65, 585, 66, "C59B73", 10, 2, "IsMultiplayerTabOpen")
+	$result = WaitforPixel(585, 65, 585, 65, "C59B73", 10, 1, "IsMultiplayerTabOpen")
 	If Not $result Then ClickAway("Right")
 	
 	If $result Then
@@ -297,7 +298,7 @@ EndFunc ; IsMultiplayerTabOpen
 
 Func IsFullScreenWindow($sSource = "IsFullScreenWindow")
 	Local $result = False
-	$result = WaitforPixel(820, 37, 821, 38, "FFFFFF", 10, 2, $sSource)
+	$result = WaitforPixel(820, 37, 820, 37, "FFFFFF", 10, 1, $sSource)
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 770, 20, 860, 100) Then $result = True
@@ -312,17 +313,14 @@ EndFunc
 
 Func IsProfileWindowOpen($sSource = "IsProfileWindowOpen")
 	Local $result = False
-	$result = WaitforPixel(806, 98, 807, 99, "FFFFFF", 10, 2, $sSource)
+	$result = WaitforPixel(807, 97, 807, 97, "FFFFFF", 10, 1, $sSource)
 	
 	If Not $result Then 
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 788, 83, 825, 117) Then $result = True
 	EndIf
 	
-	If $result Then
-		If $g_bDebugSetlog Then SetLog("Found Profile Window", $COLOR_ACTION)
-		Return True
-	EndIf
-	Return False
+	SetDebugLog("IsProfileWindowOpen=" & String($result))
+	Return $result
 EndFunc
 
 Func IsChallengeWindowOpen($sSource = "IsChallengeWindowOpen")
@@ -333,26 +331,20 @@ Func IsChallengeWindowOpen($sSource = "IsChallengeWindowOpen")
 		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 800, 64, 850, 112) Then $result = True
 	EndIf
 	
-	If $result Then
-		If $g_bDebugSetlog Then SetLog("Found Challenge Window", $COLOR_ACTION)
-		Return True
-	EndIf
-	Return False
+	SetDebugLog("IsChallengeWindowOpen=" & String($result))
+	Return $result
 EndFunc
 
 Func IsPetHousePage($sSource = "IsPetHousePage")
-	Local $result
-	$result = WaitforPixel(415, 95, 416, 96, "006F5F", 10, 2, $sSource) ;green pixel under title 'Pet House'
+	Local $result = False
+	$result = WaitforPixel(415, 95, 415, 95, "006F5F", 10, 1, $sSource) ;green pixel under title 'Pet House'
 	
-	If $result Then
-		If $g_bDebugSetlog Then SetLog("Found PetHousePage Window", $COLOR_ACTION)
-		Return True
-	EndIf
-	Return False
+	SetDebugLog("IsPetHousePage=" & String($result))
+	Return $result
 EndFunc   ;==>IsPetHousePage
 
 Func IsBlacksmithPage($bSetLog = True, $iLoop = 5)
-	Local $aIsBlacksmithPage[4] = [775, 135, 0xD0161C, 20] ; Pink red top of close button
+	Local $aIsBlacksmithPage[4] = [824, 137, 0x887973, 20] ; Pink red top of close button
 
 	If IsPageLoop($aIsBlacksmithPage, $iLoop) Then
 		If ($g_bDebugSetlog Or $g_bDebugClick) And $bSetLog Then SetLog("**Blacksmith Window OK**", $COLOR_ACTION)
@@ -366,3 +358,23 @@ Func IsBlacksmithPage($bSetLog = True, $iLoop = 5)
 	Return False
 EndFunc   ;==>IsBlacksmithPage
 
+Func Gatcha($loop = 5)
+	For $j = 1 To 5
+		For $i = 1 To $loop
+			If _Sleep(1000) Then Return
+			ClickP($aReturnHomeChest)
+			SetLog("Click Chest", $COLOR_ACTION)
+		Next
+		
+		If _Sleep(5000) Then Return
+		
+		For $k = 1 To 4
+			If _ColorCheck(_GetPixelColor(430, 482, True), Hex(0xBFEA8E, 6), 20, Default, "ChestContinue") Then 
+				Click(430, 495)
+				SetLog("Click Continue", $COLOR_ACTION)
+			EndIf
+			If _Sleep(1000) Then Return
+		Next
+		If _Sleep(5000) Then Return
+	Next
+EndFunc

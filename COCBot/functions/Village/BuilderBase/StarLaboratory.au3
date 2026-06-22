@@ -13,13 +13,13 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Global $g_iXFindSLabUpgrade = 270
+Global $g_iXFindSLabUpgrade = 240
 
 Func CheckIfSLabIdle($bDebug = False)
 	Local $aLabInfo, $aGetLab, $bRet = True
 	If $bDebug Then Return $bRet
 	
-	$aLabInfo = getBuilders(372, 23)
+	$aLabInfo = getBuilders(375, 23)
 	If StringInStr($aLabInfo, "#") > 0 Then
 		$aGetLab = StringSplit($aLabInfo, "#", $STR_NOCOUNT)
 		Local $iLab = Number($aGetLab[0]), $iLabMax = Number($aGetLab[1])
@@ -55,7 +55,7 @@ Func CheckIfSLabIdle($bDebug = False)
 					$bRet = True
 					ExitLoop
 				ElseIf _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFF887F, 6), 10, 1, "Check Red Resource cost") Then
-					SetLog("Detected Not Enough Resource for SLabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
+					SetDebugLog("Detected Not Enough Resource for SLabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
 					$bRet = False
 				EndIf
 			Next
@@ -175,6 +175,8 @@ Func StarLabUpgrade($bTest = False)
 				EndIf
 			Next
 		EndIf
+		ClickAway()
+		If _Sleep(500) Then Return
 	Else
 		SetLog("No Star Laboratory Upgrade", $COLOR_DEBUG2)
 	EndIf

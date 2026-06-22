@@ -89,12 +89,13 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			
 			;now we need to copy selected challenge before checking current running event is not wrong event selected
 			PrepareChallengesImage()
-			If $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Then
+			If $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Or $aiScoreLimit[0] >= 4000 Then
 				SetLog("You almost reached max point")
 				$g_bIsCGPointAlmostMax = True
 				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
-				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > $PurgeDayMinute Then ; purge, but not purge on last day of clangames
+				If $g_bChkClanGamesStopBeforeReachAndPurge And ($sTimeCG > $PurgeDayMinute Or $aiScoreLimit[0] >= 4000) Then ; purge, but not purge on last day of clangames
 					If IsEventRunning() Then Return True
+					
 					If $g_bChkClanGamesPurgeAny Then
 						SetLog("Clangames remain time: " & $sTimeCG & " > " & $PurgeDayMinute, $COLOR_INFO)
 						SetLog("Stop before completing and only Purge", $COLOR_INFO)
@@ -420,7 +421,7 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False, $bTestImage = False)
 					If QuickMIS("BC1", $bTestAllImage ? $sImagePath : $sTempPath, $aX[$x], $aY[$y], $aX[$x] + 95, $aY[$y] + 95) Then
 						If $g_bChkClanGamesDebug Then Setlog("Benchmark Search on Slot: (in " & Round(TimerDiff($hITimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 						Local $BC1x = $g_iQuickMISX, $BC1y = $g_iQuickMISY
-						Local $ChallengeEvent = $g_iQuickMISName
+						Local $ChallengeEvent = $g_sQuickMISName
 						Local $IsBBEvent = (IsBBChallenge($g_iQuickMISX, $g_iQuickMISY) ? "CGBB" : "CGMain")
 						If checkEventWithShareImage($IsBBEvent, $ChallengeEvent) Then ContinueLoop
 						ClanGameImageCopy($sImagePath, $sTempPath, "Selected", $ChallengeEvent)
@@ -502,14 +503,14 @@ Func SelectEvent(ByRef $aSelectChallenges)
 	Local $hTimer = TimerInit()
 	Local $aTmp = $aSelectChallenges
 
-	Local $i = 0
-	While $i < UBound($aTmp)
+	For $i = 0 To Ubound($aTmp) - 1
 		If Not $g_bRunState Then Return
 		Local $aEventInfo = GetEventInfo($aTmp[$i][1], $aTmp[$i][2])
 		If IsArray($aEventInfo) Then
 			Setlog("Detected " & $aTmp[$i][0] & " difficulty of " & $aTmp[$i][3] & " [score:" & $aEventInfo[0] & ", " & $aEventInfo[1] & " min]", $COLOR_INFO)
 			If $g_bChkClanGames3H And Number($aEventInfo[1]) <= 180 Then ;Filter under 3 Hour event
 				_ArrayDelete($aSelectChallenges, $i)
+				SetLog("Should skip, no 3H event", $COLOR_DEBUG2)
 				ContinueLoop 
 			EndIf
 			$aTmp[$i][4] = Number($aEventInfo[1])
@@ -517,9 +518,7 @@ Func SelectEvent(ByRef $aSelectChallenges)
 			ExitLoop
 		EndIf
 		If _Sleep(1000) Then Return
-		$i += 1
-	WEnd
-	$aSelectChallenges = $aTmp
+	Next
 	
 	If $g_bChkClanGamesDebug Then Setlog("Benchmark SelectEvent: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 EndFunc
@@ -1087,7 +1086,7 @@ Func CollectCGReward($bTest = False)
 	
 	Local $OnlyClaimMax = False
 	If QuickMIS("BC1", $g_sImgRewardText, 600, 445, 830, 495) Then
-		If $g_iQuickMISName = "Claim" Then
+		If $g_sQuickMISName = "Claim" Then
 			$OnlyClaimMax = True
 			$g_bIsCGPointMaxed = True
 			SetLog("OnlyClaimMax = " & String($OnlyClaimMax))

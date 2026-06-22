@@ -14,9 +14,10 @@
 ; ===============================================================================================================================
 #include-once
 
-Func SplashStep($status, $bIncreaseStep = True)
+Func SplashStep($status, $bIncreaseStep = True, $bResetSplastTimer = True)
 	If $bIncreaseStep = True Then $g_iSplashCurrentStep += 1
-	$status &= " (" & Round(__TimerDiff($g_hSplashTimer) / 1000, 2) & " sec)"
+	
+	$status &= " [Loadtime: " & Round(__TimerDiff($g_iLastSplashTime) / 1000, 2) & "sec] (Overall: " & Round(__TimerDiff($g_hSplashTimer) / 1000) & "sec)" 
 	SetDebugLog("SplashStep " & $g_iSplashCurrentStep & " of " & $g_iSplashTotalSteps & ": " & $status)
 	
 	If $g_bDisableSplash Then Return
@@ -24,22 +25,7 @@ Func SplashStep($status, $bIncreaseStep = True)
 	GUICtrlSetData($g_hSplashProgress, ($g_iSplashCurrentStep / $g_iSplashTotalSteps) * 100)
 	GUICtrlSetData($g_lSplashStatus, $status)
 
-	If $g_bMyBotDance Then ; can robot dance? Yes, like a drunk Code Monkey
-		Static $aSplashInfo, $iStartX, $iStartY, $iStep, $iStepIndex = 0
-		If $iStepIndex = 0 Then
-			$aSplashInfo = WinGetPos($g_hSplash) ; grab current position and size information
-			If @error Then SetLog("SplashStep " & $g_iSplashCurrentStep & " Failed to find GUI Window!", $COLOR_ERROR)
-			$iStartY = Int(@DesktopHeight - 50 - $aSplashInfo[3]) ; compute starting Y position just above bottom of display
-			$iStartX = Int((@DesktopWidth / 2) - ($aSplashInfo[2] / 2)) ; compute starting X position in middle of display
-			$iStep = Int($iStartY / ($g_iSplashTotalSteps - 1))			
-		EndIf
-		; bottom to top with little shuffle added
-		Local $aSplashLoc[10][2] = [[-100, 0], [100, $iStep], [-100, $iStep * 2], [100, $iStep * 3], [-100, $iStep * 4], [100, $iStep * 5], [-100, $iStep * 6], [100, $iStep * 7], [-100, $iStep * 8], [0, $iStep * 9]]
-
-		WinMove($g_hSplash, "", $iStartX - $aSplashLoc[$iStepIndex][0], $iStartY - $aSplashLoc[$iStepIndex][1], Default, Default, 8)
-		$iStepIndex += 1
-		If $iStepIndex > 9 Then $iStepIndex = 0 ; reset to zero when at top
-	EndIf
+	If $bResetSplastTimer Then $g_iLastSplashTime = __TimerInit()
 
 EndFunc   ;==>SplashStep
 

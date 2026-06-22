@@ -224,7 +224,7 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		
 		If BBBarbarianHead("EndBattleBB") Then ExitLoop
 		
-		If $g_bChkBBEndBattleOn2Stars Then 
+		If $g_bChkBBEndBattleOn2Stars And Not $g_bIsBBevent Then 
 			$iStars = CheckStarsGained()
 			If $iStars = 2 Then 
 				SetLog("2Stars achieved, end battle", $COLOR_DEBUG1)
@@ -514,10 +514,10 @@ Func CheckBMLoop($aBMPos = $g_aMachinePos)
 		If Not $g_bRunState Then Return
 
 		If QuickMIS("BC1", $g_sImgDirMachineAbility, $aBMPos[0] - 35, $aBMPos[1] - 40, $aBMPos[0] + 35, $aBMPos[1] + 40) Then
-			If StringInStr($g_iQuickMISName, "Wait") Then
+			If StringInStr($g_sQuickMISName, "Wait") Then
 				If $g_bChkDebugAttackBB Then SetLog("Waiting " & $MachineName & " Ability", $COLOR_ACTION)
 				ExitLoop
-			ElseIf StringInStr($g_iQuickMISName, "Ability") Then
+			ElseIf StringInStr($g_sQuickMISName, "Ability") Then
 				PureClickP($aBMPos)
 				SetLog("Activate " & $MachineName & " Ability", $COLOR_SUCCESS)
 				ExitLoop
@@ -557,10 +557,10 @@ Func CheckWBLoop()
 			ContinueLoop
 		EndIf
 		If QuickMIS("BC1", $g_sImgDirWallBreakerAbility, $g_aWBOnAttackBar[$i][0], $g_aWBOnAttackBar[$i][1] - 30, $g_aWBOnAttackBar[$i][0] + 70, $g_aWBOnAttackBar[$i][1] + 30) Then
-			If StringInStr($g_iQuickMISName, "Wait") Then
+			If StringInStr($g_sQuickMISName, "Wait") Then
 				If $g_bChkDebugAttackBB Then SetLog("Waiting WallBreaker Ability", $COLOR_ACTION)
 				$bIsWBDead = False
-			ElseIf StringInStr($g_iQuickMISName, "Ability") Then
+			ElseIf StringInStr($g_sQuickMISName, "Ability") Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				SetLog("Activate WallBreaker Ability", $COLOR_SUCCESS)
 				$bIsWBDead = False
@@ -924,11 +924,6 @@ Func BBBarbarianHead($sLogText = "BBBarbarianHead")
 		SetLog("Battle Ended, Gold Icon Found", $COLOR_DEBUG2)
 		$bRet = True
 	EndIf
-	
-	If Not $bRet Then 
-		If WaitforPixel($aBlackHead[0], $aBlackHead[1], $aBlackHead[0] + 1, $aBlackHead[1] + 1, Hex($aBlackHead[2], 6), 10, 1, $sLogText) Then $bRet = True
-	EndIf
-	
 	Return $bRet
 EndFunc
 

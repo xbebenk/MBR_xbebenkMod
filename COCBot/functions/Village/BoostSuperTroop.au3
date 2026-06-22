@@ -15,6 +15,14 @@
 
 Func BoostSuperTroop($bTest = False, $bForced = False)
 	If Not $g_bSuperTroopsEnable Then Return
+	
+	If $g_iTxtSmartMinDark < 25000 Or $g_iUpgradeMinDark < 25000 Then 
+		$g_iTxtSmartMinDark = 25000
+		$g_iUpgradeMinDark = 25000
+		ApplyConfig()
+		SetLog("Set minimum DE = " & $g_iTxtSmartMinDark, $COLOR_DEBUG1)
+	EndIf
+	
 	If Not $g_bRunState Then Return
 	If $g_iTownHallLevel < 11 Then Return
 	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ;halt attack.. do not boost now
@@ -30,10 +38,7 @@ Func BoostSuperTroop($bTest = False, $bForced = False)
 		Return ;Troop already checked and boosted
 	EndIf
 	
-	CheckMainScreen()
-	If _Sleep(50) Then Return
-	If Not CheckZoomOut("BoostSuperTroop") Then ZoomOut()
-	
+	If Not CheckZoomOut() Then ZoomOut()
 	If Not $g_bRunState Then Return
 	VillageReport(True, True)
 	If Not $g_bRunState Then Return
@@ -201,10 +206,9 @@ Func OpenBarrel($bForced = False)
 		EndIf
 		
 		If $EnabledStroop = 1 And $bBar2Found Then
-			For $i = 1 To 10
-				SetLog("Enabled Boost SuperTroop : 1, Detected 2 Boost on Barrel", $COLOR_ERROR)
-			Next
-			SetLog("Be Sure to check your boost if you do 2nd boost manually", $COLOR_INFO)
+			SetLog("Enabled Boost SuperTroop : 1, Detected 2 Boost on Barrel", $COLOR_DEBUG2)
+			SetLog("Be Sure to check your boost if you do 2nd boost manually", $COLOR_DEBUG)
+			$bForced = True
 		EndIf
 		
 		If $EnabledStroop = 2 And $bBar2Found Then
@@ -312,7 +316,7 @@ Func BoostWithPotion($sTroopName = "", $bTest = False)
 	If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 500, 530, 540, 570) Then ;find image of Super Potion
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(1500) Then Return
-		If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 440, 440, 490, 490) Then ;find image of Super Potion again (confirm upgrade)
+		If QuickMIS("BC1", $g_sImgBoostTroopsPotion, 320, 400, 530, 520) Then ;find image of Super Potion again (confirm upgrade)
 			;do click boost
 			If $bTest Then
 				CancelBoost("Using Potion, should click on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")

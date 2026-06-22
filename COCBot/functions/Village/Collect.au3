@@ -15,12 +15,9 @@
 #include-once
 
 Func Collect($bOnlyCollector = False)
-	If Not $g_bChkCollect Or Not $g_bRunState Then Return
-	StartGainCost()
-	
+	If Not $g_bChkCollect Then Return
 	SetLog("Collecting Resources", $COLOR_INFO)
-	If _Sleep($DELAYCOLLECT2) Then Return
-
+	StartGainCost()
 	; Setup arrays, including default return values for $return
 	Local $sFileName = ""
 	Local $aCollectXY, $t
@@ -35,18 +32,15 @@ Func Collect($bOnlyCollector = False)
 			If IsArray($aCollectXY) Then ; found array of locations
 				$t = Random(0, UBound($aCollectXY) - 1, 1) ; SC May 2017 update only need to pick one of each to collect all
 				SetDebugLog($sFileName & " found, random pick(" & $aCollectXY[$t][0] & "," & $aCollectXY[$t][1] & ")", $COLOR_GREEN)
-				If IsMainPage() Then Click($aCollectXY[$t][0], $aCollectXY[$t][1], 1, 0, "#0430")
+				If Not IsInsideDiamondXY($aCollectXY[$t][0], $aCollectXY[$t][1]) Then ContinueLoop
+				Click($aCollectXY[$t][0], $aCollectXY[$t][1], 1, 0, "#0430")
 				If _Sleep($DELAYCOLLECT2) Then Return
 			EndIf
 		Next
 	EndIf
 	
-	If $bOnlyCollector Then 
-		EndGainCost("Collect")
-		Return True
-	EndIf
-	
 	EndGainCost("Collect")
+	Return True
 EndFunc   ;==>Collect
 
 Func CollectLootCart()
@@ -72,23 +66,62 @@ Func CollectLootCart()
 	ZoomOutHelper()
 EndFunc   ;==>CollectLootCart
 
-Func CheckEventRewardIcon()
+Func OpenMiniEvent()
 	Local $bRet = False
-	For $i = 1 To 5
-		SetLog("Checking Reward Event Icon #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgCollectCookie & "\Cookie", 225, 20, 360, 200) Then
-			Click($g_iQuickMISX, $g_iQuickMISY + 20, 1, 0, "Click Event Icon")
-			SetLog("Found Even Icon : " & $g_iQuickMISName, $COLOR_DEBUG)
-			If $g_iQuickMISName = "Calendar" Then 
+	
+	SetLog("Checking Calendar Event Icon", $COLOR_ACTION)
+	If QuickMIS("BC1", $g_sImgCollectCookie, 185, 610, 260, 660) Then
+		Click($g_iQuickMISX, $g_iQuickMISY + 20, 1, 0, "Click Calendar Event Icon")
+		$bRet = True
+		If _Sleep(1000) Then Return
+	EndIf
+	
+	If Not $bRet Then SetLog("No Event Icon found", $COLOR_DEBUG2)
+	Return $bRet
+EndFunc
+
+Func VerifyClaimButton()
+	Local $bRet = False
+	For $i = 1 To 3
+		SetDebugLog("Waiting Event Claim Button #" & $i, $COLOR_ACTION)
+		If QuickMIS("BC1", $g_sImgCollectCookie, 635, 310, 800, 600) Then 
+			If _PixelSearch($g_iQuickMISX + 78, $g_iQuickMISY - 23, $g_iQuickMISX + 78, $g_iQuickMISY - 22, Hex(0xF9171F, 6), 40, True, "Claim Button") Then
+				SetLog("Claim button verified", $COLOR_DEBUG)
+				Click($g_iQuickMISX, $g_iQuickMISY)
 				$bRet = True
 				ExitLoop
 			EndIf
-			If _Sleep(1000) Then Return
 		EndIf
 		If _Sleep(500) Then Return
 	Next
 	
-	If Not $bRet Then SetLog("No Event Icon found", $COLOR_DEBUG2)
+	If QuickMIS("BC1", $g_sImgClanRush, 100, 130, 160, 150) Then
+		SetLog("Clan Rush Event", $COLOR_DEBUG)
+		If QuickMIS("BC1", $g_sImgClanRush, 635, 310, 800, 380) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(1000) Then Return
+			CheckClanRush()
+			Return
+		EndIf
+	EndIf
+	
+	If _CheckPixel($aIsMain2Grayed, True, Default, "CollectCookie") Then 
+		For $i = 1 To 8
+			If QuickMIS("BC1", $g_sImgClanRush, 320, 440, 560, 600) Then 
+				SetLog("VerifyClaimButton: Found Splash Event Page " & $g_sQuickMISName & " Button", $COLOR_ACTION)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				$bRet = True
+				If _Sleep(1000) Then Return
+			EndIf
+			If _Sleep(1000) Then Return
+		Next
+	EndIf
+	
+	If Not $bRet Then 
+		SetLog("Nothing to Claim", $COLOR_DEBUG2)
+		ClickAway()
+	EndIf
+	
 	Return $bRet
 EndFunc
 
@@ -99,50 +132,47 @@ Func CollectCookie()
 	Local $bWinOpen = False, $bIconCookie = False
 	SetLog("Opening Event Window", $COLOR_ACTION)
 	
-	If Not CheckEventRewardIcon() Then Return
-	
-	For $i = 1 To 5
-		SetLog("Waiting Event Button #" & $i, $COLOR_ACTION)
-		If QuickMIS("BC1", $g_sImgCollectCookie, 340, 500, 500, 570) Then 
-			If WaitforPixel($g_iQuickMISX + 30, $g_iQuickMISY - 20, $g_iQuickMISX + 40, $g_iQuickMISY - 10, "F61621", 40, 1, "CollectCookie") Then
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				$bIconCookie = True
-				ExitLoop
-			Else
-				SetLog("Nothing to Claim", $COLOR_INFO)
-				ClickAway()
-				Return
-			EndIf
-		EndIf
-		If _Sleep(250) Then Return
-	Next
+	If Not OpenMiniEvent() Then Return
+	If Not VerifyClaimButton() Then Return
 	
 	For $i = 1 To 10
-		If $g_bDebugSetLog Then SetLog("Waiting Event Window #" & $i, $COLOR_ACTION)
-		If IsCookieRumbleWindowOpen() Then 
+		SetLog("Waiting Event Window #" & $i, $COLOR_ACTION)
+		If IsEventWindowOpen() Then 
 			$bWinOpen = True
 			ExitLoop
 		EndIf
-		If QuickMIS("BC1", $g_sImgCollectCookie, 390, 452, 475, 600) Then Click($g_iQuickMISX, $g_iQuickMISY)
-		If _ColorCheck(_GetPixelColor(430, 588, True), Hex(0x8BD43A, 6), 20, Default, "ContinueButton") Then Click(430, 588, 1, 0, "Continue")
-		If _Sleep(500) Then Return
-		Click(570, 90, 1, 0, "Click Event Window Header")
+		If _Sleep(1000) Then Return
 	Next
 	
-	If Not $bWinOpen Then Return
+	If Not $bWinOpen Then 
+		SetLog("Cannot Verify Event Window", $COLOR_DEBUG2)
+		ClickAway()
+		Return
+	EndIf
+	
 	ClaimCookieReward()
 	ClickAway()
 EndFunc
 
 Func ClaimCookieReward($bGoldPass = False)
-	Local $iClaim = 0, $aClaim
+	Local $iClaim = 0, $aClaim, $bEndPage = False
 	Local $x1 = 10, $y1 = 525, $x2 = 840, $y2 = 580
 	If $bGoldPass Then $y1 = 190
 	
+	If QuickMIS("BC1", $g_sImgDailyReward, 32, 350, 110, 420) Then 
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(1000) Then Return
+	Else
+		SetLog("No Reward CheckMarks", $COLOR_DEBUG2)
+	EndIf
+	
 	For $i = 1 To 5
-		If QuickMIS("BC1", $g_sImgCollectCookie, 45, 360, 100, 415) Then 
+		If QuickMIS("BFI", $g_sImgDailyReward & "ClaimBtn*", 380, 380, 650, 450) Then 
 			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(500) Then Return
+			SetLog("[" & $i & "] Claiming Bonus Track Reward", $COLOR_SUCCESS)
+			If _Sleep(1000) Then Return
+			$iClaim += 1
+		Else
 			ExitLoop
 		EndIf
 	Next
@@ -150,180 +180,65 @@ Func ClaimCookieReward($bGoldPass = False)
 	If _Sleep(1000) Then Return
 	Local $tmpxClaim = 0
 	For $i = 1 To 10
-		If $i = 1 And WaitforPixel(795, 398, 796, 400, "FFFE68", 10, 1, "ClaimCookieReward") Then 
-			ClickDrag(400, 445, 700, 445)
-			If _Sleep(500) Then Return
-		EndIf
-		
-		If QuickMIS("BC1", $g_sImgDailyReward, 380, 380, 550, 450) Then 
-			Click($g_iQuickMISX, $g_iQuickMISY)
-			SetLog("[" & $i & "] Claiming Bonus Track Reward", $COLOR_SUCCESS)
-			$iClaim += 1
-		EndIf
-		
 		$aClaim = QuickMIS("CNX", $g_sImgDailyReward, $x1, $y1, $x2, $y2)
 		If Not $g_bRunState Then Return
 		If IsArray($aClaim) And UBound($aClaim) > 0 Then
 			_ArraySort($aClaim, 0, 0, 0, 1) ;sort x coord ascending
+			SetDebugLog("Found " & UBound($aClaim) & " Claim Button")
+			SetDebugLog(_ArrayToString($aClaim))
 			For $j = 0 To UBound($aClaim) - 1
 				If Not $g_bRunState Then Return
-				If Abs($tmpxClaim - $aClaim[$j][1]) < 10 Then ContinueLoop ;same Claim button 
+				If Abs($aClaim[$j][1] - $tmpxClaim) < 20 Then 
+					SetLog("Same Claim Button, skip", $COLOR_DEBUG2)
+					ContinueLoop ;same Claim button 
+				EndIf
 				Click($aClaim[$j][1], $aClaim[$j][2])
 				If _Sleep(1000) Then Return
-				If IsOKCancelPage() Then 					
-					SetLog("Cancel. Not selling extra rewards.", $COLOR_INFO)
-					Click($aConfirmSurrender[0] - 100, $aConfirmSurrender[1]) ; Click Cancel
+				If IsOKCancelPage() Then 
+					If $g_bChkSellRewards Then 
+						Setlog("Selling extra reward for gems", $COLOR_SUCCESS)
+						Click(530, 420, 1, 0, "Sell For Gems", False) ; Click Sell for Gems
+					Else
+						SetLog("Cancel. Not selling extra rewards.", $COLOR_INFO)
+						Click(325, 420, 1, 0, "Click Cancel")
+					EndIf
+					If _Sleep(1000) Then Return
 				Else
 					$iClaim += 1
 					SetLog("Claimed " & $iClaim & ($iClaim > 1 ? " rewards" : " reward"), $COLOR_DEBUG1)
 				EndIf
 				$tmpxClaim = $aClaim[$j][1]
 			Next
+		Else
+			ExitLoop
 		EndIf
-		If WaitforPixel(795, 398, 796, 400, "FFFE68", 10, 1, "Trophy Color") Then ExitLoop ;thropy color
-		If WaitforPixel(795, 398, 796, 400, "29231F", 10, 1, "End Window Color") Then ExitLoop ;End Window Color
-		If WaitforPixel(799, 390, 801, 394, "CD571E", 10, 1, "Cookie Color") Then 
-			ClickDrag(750, 445, 100, 445) ;cookie color
-			ContinueLoop
-		EndIf
-		If WaitforPixel(797, 378, 798, 379, "DF3430", 10, 1, "Dragon Pinata Color") Then 
-			ClickDrag(750, 445, 100, 445) ;Dragon Pinata color
-			ContinueLoop
-		EndIf
-		If WaitforPixel(796, 392, 797, 393, "83E9EE", 10, 1, "Ice Cubes Color") Then 
-			ClickDrag(750, 445, 100, 445) ;Ice Cubes color
-			ContinueLoop
-		EndIf
-		ClickDrag(750, 445, 100, 445) ;just swipe to right
+		;If QuickMIS("BC1", $g_sImgDailyReward, 380, 380, 550, 450) Then ExitLoop ;thropy color
+		If WaitforPixel(795, 399, 795, 400, "29231F", 10, 1, "End Window Color") Then ExitLoop ;End Window Color
+		ClickDrag(750, 445, 200, 445) ;just swipe to right
+		If _Sleep(1000) Then Return
 	Next
 	
 	SetLog($iClaim > 0 ? "Claimed " & $iClaim & " reward(s)!" : "Nothing to claim!", $COLOR_SUCCESS)
+	If IsEventWindowOpen() Then ClickAway()
 	If _Sleep(500) Then Return
-	If IsCookieRumbleWindowOpen() Then ClickAway()
-	If _Sleep(500) Then Return
-	ClickAway()
-EndFunc
-
-Func IsCookieRumbleWindowOpen()
-	Local $bRet = False
-	If _ColorCheck(_GetPixelColor(815, 89, True), Hex(0xFFFFFF, 6), 20, Default, "IsCookieRumbleWindowOpen") Then
-		$bRet = True
-	EndIf
-	
-	If Not $bRet Then 
-		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 793, 70, 840, 110) Then $bRet = True
-	EndIf
-	
-	If $bRet Then
-		SetLog("Found Event Window Open", $COLOR_DEBUG)
-	EndIf
-	Return $bRet
-EndFunc
-
-Func CheckEventStreak($bForced = False)
-	SetLog("Checking Event Streak", $COLOR_INFO)
-	If QuickMIS("BC1", $g_sImgEventStreak, 185, 615, 235, 655) Then
-		If WaitforPixel($g_iQuickMISX + 17, $g_iQuickMISY - 9, $g_iQuickMISX + 18, $g_iQuickMISY - 8, Hex(0xE41528, 6), 20, 1, "CheckEventStreak") Then
-			Click($g_iQuickMISX, $g_iQuickMISY)
-		Else
-			SetLog("No Event to Check", $COLOR_INFO)
-			If Not $bForced Then Return
-			Click($g_iQuickMISX, $g_iQuickMISY)
-		EndIf
-		If _Sleep(500) Then Return
-	EndIf
-	
-	Local $bEventStreakFound = False
-	For $i = 1 To 5
-		If _Sleep(500) Then Return
-		If IsEventWindowOpen() Then
-			$bEventStreakFound = True
-			ExitLoop
-		Else
-			SetLog("Waiting Event Window #" & $i, $COLOR_ACTION)
-			ContinueLoop
-		EndIf
-		If QuickMIS("BC1", $g_sImgEventStreak, 70, 130, 125, 155) Then ;event name eg: cookie, ice, cosmic
-			$bEventStreakFound = True
-			ExitLoop
-		EndIf
-	Next
-	
-	If Not $bEventStreakFound Then Return ;no event Streak active, return
-	
-	If QuickMIS("BC1", $g_sImgEventStreak, 690, 325, 730, 350) Then ;check claim button exist
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(1000) Then Return
-	EndIf
-	
-	For $i = 1 To 10
-		SetLog("Waiting Event Streak Window #" & $i, $COLOR_ACTION)
-		If IsEventStreakWindowOpen() Then ExitLoop ; Event Streak Window Cleared, exit loop
-		If QuickMIS("BC1", $g_sImgEventStreak, 385, 495, 477, 523) Then Click($g_iQuickMISX, $g_iQuickMISY) ; Click Continue Button
-		If _ColorCheck(_GetPixelColor(430, 588, True), Hex(0x8BD43A, 6), 20, Default, "ContinueButton") Then Click(430, 588, 1, 0, "Continue")
-		Click(410, 150, 1, 50, "EventStreakWindowHeader") ;Click Event Streak Window Header
-		If _Sleep(1000) Then Return
-	Next
-	
-	If _Sleep(1500) Then Return
-	Local $aClaim = QuickMIS("CNX", $g_sImgEventStreakClaim, 20, 280, 850, 500)
-	If IsArray($aClaim) And UBound($aClaim) > 0 Then
-		For $i = 0 To UBound($aClaim) - 1
-			If $aClaim[$i][0] = "BrokenStreak" Then
-				Click($aClaim[$i][1], $aClaim[$i][2])
-				If _Sleep(500) Then Return
-				If WaitforPixel(280, 435, 281, 436, Hex(0xD94343, 6), 20, 2, "StartOverButton") Then
-					Click(280, 435, 1, 50, "BrokenStreak-StartOver")
-					SetLog("Found a Broken Streak, StartOver!", $COLOR_SUCCESS)
-					ClickAway()
-				EndIf
-				ClickAway()
-				ClickAway()
-				SetLog("Cannot Find StartOver Button, exit!", $COLOR_ERROR)
-				Return				
-			EndIf
-			If $aClaim[$i][0] = "Claim" Then
-				Click($aClaim[$i][1], $aClaim[$i][2])
-				If _Sleep(500) Then Return
-				Setlog("Succesfully Claimed Event Streak Tier", $COLOR_SUCCESS)
-				If _Sleep(1000) Then Return
-				ClickAway()
-			EndIf
-		Next
-	EndIf
-	ClickAway()
-	Return True
 EndFunc
 
 Func IsEventWindowOpen()
 	Local $bRet = False
-	If _ColorCheck(_GetPixelColor(808, 54, True), Hex(0xFFFFFF, 6), 20, Default, "IsEventWindowOpen") And _
-		_ColorCheck(_GetPixelColor(33, 73, True), Hex(0x423E35, 6), 20, Default, "IsEventWindowOpen") Then
+	If QuickMIS("BC1", $g_sImgCollectCookie, 170, 70, 230, 120) Then ;check Info Image 
 		$bRet = True
 	EndIf
 	
 	If Not $bRet Then 
-		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 786, 36, 828, 77) Then $bRet = True
+		If _ColorCheck(_GetPixelColor(815, 89, True), Hex(0xFFFFFF, 6), 20, Default, "IsEventWindowOpen") Then $bRet = True
+	EndIf
+	
+	If QuickMIS("BC1", $g_sImgCollectCookie, 365, 495, 500, 570) Then ;check Continue Button
+		Click($g_iQuickMISX, $g_iQuickMISY)
 	EndIf
 	
 	If $bRet Then
 		SetLog("EventWindow Opened", $COLOR_DEBUG)
-	EndIf
-	Return $bRet
-EndFunc
-
-Func IsEventStreakWindowOpen()
-	Local $bRet = False
-	If _ColorCheck(_GetPixelColor(815, 89, True), Hex(0xFFFFFF, 6), 20, Default, "IsEventStreakWindowOpen") Then
-		$bRet = True
-	EndIf
-	
-	If Not $bRet Then 
-		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 793, 70, 840, 110) Then $bRet = True
-	EndIf
-	
-	If $bRet Then
-		SetLog("Found EventStreakWindow Open", $COLOR_DEBUG)
 	EndIf
 	Return $bRet
 EndFunc

@@ -95,7 +95,6 @@ Global $g_bDebugSmartZap = False ; verbose logs for SmartZap users
 Global $g_bDebugAttackCSV = False ; Verbose log output of actual attack script plus bot actions
 Global $g_bDebugMakeIMGCSV = False ; Saves "clean" iamge and image with all drop points and detected buildings marked
 Global $g_bDebugBetaVersion = StringInStr($g_sBotVersion, " b") > 0 ; not saved and only used for special beta releases
-Global $g_bTestSceneryAttack = False
 
 ; <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 ; <><><><> ONLY Enable items below this line when debugging special errors listed!! <><><><>
@@ -232,10 +231,8 @@ Global $g_bTerminateAdbShellOnStop = False ; If enabled ADB shell is terminated 
 Global $g_bAndroidAdbPortPerInstance = False ; New default behavior to use a dedicated ADB daemon per bot and android instance using port between 5038-5137, it initializes $g_sAndroidAdbGlobalOptions
 
 ; "BlueStacks2" $g_avAndroidAppConfig is also updated based on Registry settings in Func InitBlueStacks2() with these special variables
-Global $__BlueStacks_SystemBar = 48
 Global $__BlueStacks2Version_2_5_or_later = False ;Starting with this version bot is enabling ADB click and uses different zoomout
 ; "MEmu" $g_avAndroidAppConfig is also updated based on runtime config in Func UpdateMEmuWindowState() with these special variables
-Global $__MEmu_Adjust_Width = 6
 Global $__MEmu_ToolBar_Width = 45
 Global $__MEmu_SystemBar = 36
 Global $__MEmu_PhoneLayout = "2" ; 0: bottom Nav Bar (default till 2.6.1), 1: right Nav Bar, 2: hidden Nav Bar (default since 2.6.2), -1 disable Nav Bar compensation since MEmu 3 Nav Bar auto-hides
@@ -272,9 +269,6 @@ Global $g_avAndroidAppConfig[4][16] = [ _ ;           |                         
 ]
 
 ; Android Configutions, see COCBot\functions\Android\Android Status & Information.txt for more details
-Global $__Nox_Idx = _ArraySearch($g_avAndroidAppConfig, "Nox", 0, 0, 0, 0, 1, 0) ; http://en.bignox.com/
-Global $__MEmu_Idx = _ArraySearch($g_avAndroidAppConfig, "MEmu", 0, 0, 0, 0, 1, 0) ; http://www.memuplay.com/
-Global $__BS5_Idx = _ArraySearch($g_avAndroidAppConfig, "BlueStacks5", 0, 0, 0, 0, 1, 0) ; http://www.bluestacks.com/
 
 ; Startup detection
 Global $g_bOnlyInstance = True
@@ -347,9 +341,6 @@ Global $g_sAndroidPath = "" ; Program folder to launch android emulator
 Global $g_sAndroidProgramPath = "" ; Program path and executable to launch android emulator
 Global $b_sAndroidProgramWerFaultExcluded = True ; Register Android Executable to be excluded globally for WerFault (Windows Error Reporting Service)
 Global $g_avAndroidProgramFileVersionInfo = 0 ; Array of _WinAPI_VerQueryValue FileVersionInfo
-Global $g_bAndroidHasSystemBar = False ; BS2 System Bar can be entirely disabled in Windows Registry
-Global $g_iAndroidClientWidth_Configured = 0 ; Android configured Screen Width
-Global $g_iAndroidClientHeight_Configured = 0 ; Android configured Screen Height
 Global $g_iAndroidLaunchWaitSec = 240 ; Seconds to wait for launching Android Simulator
 
 Global $g_sAndroidPicturesPathAvailable = False
@@ -431,7 +422,6 @@ Global $g_sProfileConfigPath = "" ; Path to the current config.ini being used in
 Global $g_sProfileBuildingStatsPath = "" ; Path to stats_chkweakbase.ini file for this profile
 Global $g_sProfileBuildingPath = "" ; Paths to building.ini file for this profile
 Global $g_sProfileLogsPath = "", $g_sProfileLootsPath = "", $g_sProfileTempPath = "", $g_sProfileTempDebugPath = "" ; Paths to log/image/temp folders for this profile
-Global $g_sProfileDonateCapturePath = "", $g_sProfileDonateCaptureWhitelistPath = "", $g_sProfileDonateCaptureBlacklistPath = "" ; Paths to donate related folders for this profile
 Global $g_sProfileSecondaryInputFileName = ""
 Global $g_sProfileSecondaryOutputFileName = ""
 Global $g_asProfiles[0] ; Array String of available profiles, initialized in func setupProfileComboBox()
@@ -545,7 +535,7 @@ Global Enum $eIcnArcher = 1, $eIcnDonArcher, $eIcnBalloon, $eIcnDonBalloon, $eIc
 		$eIcnLifeGem, $eIcnHealingTome, $eIcnRageGem, $eIcnRoyalGem, $eIcnSeekingShield, $eIcnGauntlet, $eIcnBlacksmith, $eIcnOverGrowthSpell, $eIcnBBGold, $eIcnBBElix, $eIcnBBTrophy, $g_sIcnMBisland, _
 		$eIcnPetHouseGreen, $eIcnCapitalTrophy, $eIcnFrozenArrow, $eIcnHogPuppet, $eIcnHasteVial, $eIcnFireball, $eIcnAngryJelly, $eIcnSpikyBall, $eIcnRocketSpear, $eIcnDruid, $eIcnMagicMirror, _
 		$eIcnLavaloonPuppet, $eHdV17, $eIcnTH17, $eWall18, $eIcnHelperHut, $eIcnThrower, $eIcnReviveSpell, $eIcnHeroHall, $eIcnHenchmenPuppet, $eIcnDarkOrb, $eIcnPrince, $eIcnPrinceUpgr, _
-		$eIcnSleepingPrince, $eIcnElectroBoots, $eIcnSnakeBracelet, $eIcnMetalPants, $eIcnTroopL, $eIcnFurnace, $eIcnNobleIron, $eIcnPetSneezy, $eIcnActionFigure
+		$eIcnSleepingPrince, $eIcnElectroBoots, $eIcnSnakeBracelet, $eIcnMetalPants, $eIcnTroopL, $eIcnFurnace, $eIcnNobleIron, $eIcnPetSneezy, $eIcnActionFigure, $eIcnDuke, $eIcnSkyW, $eIcnCake
 
 Global $eIcnDonBlank = $eIcnDonBlacklist
 Global $eIcnOptions = $eIcnDonBlacklist
@@ -555,7 +545,6 @@ Global $eIcnStrategies = $eIcnBlank
 Global $g_aIcnTHLevel[19] = [$eIcnBlank, $eIcnBlank, $eIcnBlank, $eIcnBlank, $eHdV04, $eHdV05, $eHdV06, $eHdV07, $eHdV08, $eHdV09, $eHdV10, $eHdV11, $eHdV12, $eHdV13, $eHdV14, $eHdV15, $eHdV16, $eHdV17, $eHdV17]
 
 ; Controls bot startup and ongoing operation
-Global Const $g_iCollectAtCount = 10 ; Run Collect() after this amount of times before actually collect
 Global Enum $eBotNoAction, $eBotStart, $eBotStop, $eBotSearchMode, $eBotClose
 Global $g_iBotAction = $eBotNoAction
 Global $g_bBotMoveRequested = False ; should the bot be moved
@@ -578,22 +567,13 @@ Global $g_bTogglePauseUpdateState = False ; If True, TooglePauseUpdateState() ca
 Global $g_bTogglePauseAllowed = True ; If False, pause will not immediately happen but on next call to _Sleep when $g_bTogglePauseAllowed = True again
 Global $g_bWaitShield = False
 Global $g_bGForcePBTUpdate = False
-Global $g_sTimeBeforeTrain = ""
 Global $g_hAttackTimer = 0 ; Timer for knowing when attack starts, in 30 Sec. attack automatically starts and lasts for 3 Minutes
 Global $g_iAttackTimerOffset = Default ; Offset of timer to attack really started
 
-; -1 = don't use red line, 0 = ImgLoc raw red line routine (default), 1 = New ImgLoc based deployable red line routine, 2 = Original red line routine
-Global Const $REDLINE_IMGLOC_RAW = 0
-Global Const $REDLINE_IMGLOC = 1
-Global Const $REDLINE_ORIGINAL = 2
-Global Const $REDLINE_NONE = 3
-
-; 0 = Use fixed village corner (default), 1 = Find fist red line point, 2 = Fixed village corner on full drop line, 3 = First red line point on full drop line
-Global Const $DROPLINE_EDGE_FIXED = 0
-Global Const $DROPLINE_EDGE_FIRST = 1
-Global Const $DROPLINE_FULL_EDGE_FIXED = 2
-Global Const $DROPLINE_FULL_EDGE_FIRST = 3
-Global Const $DROPLINE_DROPPOINTS_ONLY = 4
+; 0 = External area edge (no image scan), 1 = Real redline from image scan
+Global Const $REDLINE_EDGE = 0
+Global Const $REDLINE_REAL = 1
+Global $g_aiRawTopLeft, $g_aiRawBottomLeft, $g_aiRawBottomRight, $g_aiRawTopRight
 
 #Region Standard Enums and Consts - Attacks, Troops, Spells, Leagues, Loot Types
 #Tidy_Off
@@ -605,9 +585,9 @@ Global Enum $eBarb, $eSBarb, $eArch, $eSArch, $eGiant, $eSGiant, $eGobl, $eSGobl
 			$eRBall, $eWiza, $eSWiza, $eHeal, $eDrag, $eSDrag, $ePekk, $eBabyD, $eInfernoD, $eMine, $eSMine, _
 			$eEDrag, $eYeti, $eRDrag, $eETitan, $eRootR, $eMini, $eSMini, $eHogs, $eSHogs, $eValk, $eSValk, $eGole, _
 			$eWitc, $eSWitc, $eLava, $eIceH, $eBowl, $eSBowl, $eIceG, $eHunt, $eAppWard, $eGSkel, $eRGhost, _
-			$ePWiza, $eIWiza, $eKing, $eQueen, $eWarden, $eChampion, $eMinionP, $eCastle, $eLSpell, $eHSpell, $eRSpell, _
+			$ePWiza, $eIWiza, $eKing, $eQueen, $eWarden, $eChampion, $eMinionP, $eDuke, $eCastle, $eLSpell, $eHSpell, $eRSpell, _
 			$eJSpell, $eFSpell, $eCSpell, $eISpell, $eReSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell, $eOgSpell, _
-			$eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD, $eArmyCount
+			$eWallW, $eBattleB, $eStoneS, $eSiegeB, $eLogL, $eFlameF, $eBattleD, $eTroopL, $eSkyW, $eArmyCount
 
 ; Attack types
 Global Enum $DB, $LB, $TB, $DT ; DeadBase, ActiveBase, TownhallBully, DropTrophy
@@ -652,7 +632,6 @@ Global Const $g_asTroopShortNames[$eTroopCount] = [ _
 		"GSkel", "RGhost", "PWiza", "IWiza"]
 											;"Barb","SBarb","Arch","SArch","Giant","SGiant","Gobl","SGobl","Wall","SWall","Ball","RBall","Wiza","SWiza","Heal","Drag","SDrag","Pekk","BabyD","InfernoD","Mine","SMine","EDrag","Yeti","RDrag","ETitan","RootR","Mini","SMini","Hogs","SHogs","Valk","SValk","Gole","Witc","SWitc","Lava","IceH","Bowl","SBowl","IceG","Hunt","AppWard"
 Global Const $g_aiTroopSpace[$eTroopCount] = [1, 		5, 		1, 	12, 	5, 		10, 	1, 		3, 		2, 		8, 		5, 		8, 		4, 		10, 	14, 20, 	40, 	25, 	10, 	15, 	6, 		24, 	30, 	18, 	25, 	32, 	20, 	2, 		12, 	5, 		12, 	8, 		20, 	30, 12,  	40, 	30, 	40, 	6, 	30, 	15, 	6, 		20, 	20, 8, 4, 4]
-Global Const $g_aiTroopTrainTime[$eTroopCount] = [5, 25, 8, 72, 30, 60, 7, 21, 15, 60, 30, 48, 30, 75, 120, 180, 360, 180, 90, 135, 30, 120, 360, 180, 250, 360, 220, 18, 108, 45, 108, 90, 225, 300, 180, 400, 300, 400, 60, 300, 180, 60, 240, 30, 37, 30, 30]
 Global Const $g_aiTroopDonateXP[$eTroopCount ] = [1, 5, 1, 12, 5, 10, 1, 3, 2, 8, 5, 8, 4, 10, 14, 20, 40, 25, 10, 15, 6, 24, 30, 18, 25, 32, 20, 2, 12, 5, 12, 8, 20, 30, 12, 40, 30, 40, 6, 30, 15, 6, 20, 20, 8, 4, 4]
 
 ; Super Troops
@@ -684,30 +663,28 @@ Global Const $g_aSpellsIcon[$eSpellCount] = [$eIcnLightSpell, $eIcnHealSpell, $e
 Global Const $g_asSpellNames[$eSpellCount] = ["Lightning", "Healing", "Rage", "Jump", "Freeze", "Clone", "Invisibility", "Recall", "Poison", "Earthquake", "Haste", "Skeleton", "Bat", "OverGrowth"]
 Global Const $g_asSpellShortNames[$eSpellCount] = ["LSpell", "HSpell", "RSpell", "JSpell", "FSpell", "CSpell", "ISpell", "ReSpell", "PSpell", "ESpell", "HaSpell", "SkSpell", "BtSpell", "OgSpell"]
 Global Const $g_aiSpellSpace[$eSpellCount] = [1, 2, 2, 2, 1, 3, 1, 2, 1, 1, 1, 1, 1, 2]
-Global Const $g_aiSpellTrainTime[$eSpellCount] = [360, 360, 360, 360, 180, 720, 180, 360, 180, 180, 180, 180, 180, 360]
 Global Const $g_aiSpellDonateXP[$eSpellCount] = [5, 10, 10, 10, 5, 15, 5, 10, 5, 5, 5, 5, 5, 10]
 
 ; Siege Machines
-Global Enum $eSiegeWallWrecker, $eSiegeBattleBlimp, $eSiegeStoneSlammer, $eSiegeBarracks, $eSiegeLogLauncher, $eSiegeFlameFlinger, $eSiegeBattleDrill, $eSiegeMachineCount
-Global Const $g_aSiegesIcon[$eSiegeMachineCount] = [$eIcnWallW, $eIcnBattleB, $eIcnStoneS, $eIcnSiegeB, $eIcnLogL, $eIcnFlameF, $eIcnBattleD]
-Global Const $g_asSiegeMachineNames[$eSiegeMachineCount] = ["Wall Wrecker", "Battle Blimp", "Stone Slammer", "Siege Barracks", "Log Launcher", "Flame Flinger", "Battle Drill"]
-Global Const $g_asSiegeMachineShortNames[$eSiegeMachineCount] = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD"]
-Global Const $g_aiSiegeMachineSpace[$eSiegeMachineCount] = [1, 1, 1, 1, 1, 1, 1]
-
-Global Const $g_aiSiegeMachineDonateXP[$eSiegeMachineCount] = [30, 30, 30, 30, 30, 30, 30]
+Global Enum $eSiegeWallWrecker, $eSiegeBattleBlimp, $eSiegeStoneSlammer, $eSiegeBarracks, $eSiegeLogLauncher, $eSiegeFlameFlinger, $eSiegeBattleDrill, $eSiegeTroopLauncher, $eSiegeSkyWagon, $eSiegeMachineCount
+Global Const $g_aSiegesIcon[$eSiegeMachineCount] = [$eIcnWallW, $eIcnBattleB, $eIcnStoneS, $eIcnSiegeB, $eIcnLogL, $eIcnFlameF, $eIcnBattleD, $eIcnTroopL, $eIcnSkyW]
+Global Const $g_asSiegeMachineNames[$eSiegeMachineCount] = ["Wall Wrecker", "Battle Blimp", "Stone Slammer", "Siege Barracks", "Log Launcher", "Flame Flinger", "Battle Drill", "Troop Launcher", "Sky Wagon"]
+Global Const $g_asSiegeMachineShortNames[$eSiegeMachineCount] = ["WallW", "BattleB", "StoneS", "SiegeB", "LogL", "FlameF", "BattleD", "TroopL", "SkyW"]
+Global Const $g_aiSiegeMachineSpace[$eSiegeMachineCount] = [1, 1, 1, 1, 1, 1, 1, 1, 1]
+Global Const $g_aiSiegeMachineDonateXP[$eSiegeMachineCount] = [30, 30, 30, 30, 30, 30, 30, 30, 30]
 
 ; Hero Bitmaped Values
 Global Enum $eHeroNone = 0, $eHeroKing = 1, $eHeroQueen = 2, $eHeroWarden = 4, $eHeroChampion = 8, $eHeroMinionP = 16
 
 ; Hero standard values
-Global Enum $eHeroBarbarianKing, $eHeroArcherQueen, $eHeroGrandWarden, $eHeroRoyalChampion, $eHeroMinionPrince, $eHeroCount
-Global Const $g_asHeroNames[$eHeroCount] = ["Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion", "Minion Prince"]
-Global Const $g_asHeroShortNames[$eHeroCount] = ["King", "Queen", "Warden", "Champion", "MinionP"]
-Global $g_aiHeroBoost[$eHeroCount] = ["1970/01/01 00:00:00", "1970/01/01 00:00:00", "1970/01/01 00:00:00", "1970/01/01 00:00:00"] ; Use Epoch as standard values :)
+Global Enum $eHeroBarbarianKing, $eHeroArcherQueen, $eHeroGrandWarden, $eHeroRoyalChampion, $eHeroMinionPrince, $eHeroDuke, $eHeroCount
+Global Const $g_asHeroNames[$eHeroCount] = ["Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion", "Minion Prince", "Dragon Duke"]
+Global Const $g_asHeroShortNames[$eHeroCount] = ["King", "Queen", "Warden", "Champion", "MinionP", "Duke"]
+Global $g_aiHeroBoost[$eHeroCount] = ["1970/01/01 00:00:00", "1970/01/01 00:00:00", "1970/01/01 00:00:00", "1970/01/01 00:00:00", "1970/01/01 00:00:00", "1970/01/01 00:00:00"] ; Use Epoch as standard values :)
 
 ; Leagues MainVillage
 Global $g_bLeagueAttack = False
-Global $g_bEnableTournament = True, $g_iTournamentAttackType = 0
+Global $g_bEnableTournament = True, $g_bNoTournament = False, $g_iTournamentAttackType = 0, $g_iTournamentUseArmy = 0
 Global Enum $eLeagueUnranked, $eLeagueBronze, $eLeagueSilver, $eLeagueGold, $eLeagueCrystal, $eLeagueMaster, $eLeagueChampion, $eLeagueTitan, $eLeagueLegend, $eLeagueCount
 Global Const $g_asLeagueDetails[22][5] = [ _
 		["0", "Bronze III", "0", "B3", "400"], ["1000", "Bronze II", "0", "B2", "500"], ["1300", "Bronze I", "0", "B1", "600"], _
@@ -800,9 +777,9 @@ Func GetTroopName(Const $iIndex, $iQuantity = 1)
 		Return $iQuantity > 1 ? $g_asTroopNamesPlural[$iIndex] : $g_asTroopNames[$iIndex]
 	ElseIf $iIndex >= $eLSpell And $iIndex <= $eOgSpell Then
 		Return $iQuantity > 1 ? $g_asSpellNames[$iIndex - $eLSpell] & " Spells" : $g_asSpellNames[$iIndex - $eLSpell] & " Spell"
-	ElseIf $iIndex >= $eKing And $iIndex <= $eMinionP Then
+	ElseIf $iIndex >= $eKing And $iIndex <= $eDuke Then
 		Return $g_asHeroNames[$iIndex - $eKing]
-	ElseIf $iIndex >= $eWallW And $iIndex <= $eBattleD Then
+	ElseIf $iIndex >= $eWallW And $iIndex <= $eSkyW Then
 		Return $g_asSiegeMachineNames[$iIndex - $eWallW]
 	ElseIf $iIndex = $eCastle Then
 		Return "Clan Castle"
@@ -838,7 +815,7 @@ Global $g_iTxtRestartGold = 10000
 Global $g_iTxtRestartElixir = 25000
 Global $g_iTxtRestartDark = 500
 Global $g_bChkCollect = True, $g_bChkTombstones = True, $g_bChkCleanYard = False, $g_bChkGemsBox = False
-Global $g_bChkTreasuryCollect = False, $g_bChkCollectLootCart = False, $g_bChkCollectCookie = False
+Global $g_bChkTreasuryCollect = False, $g_bChkCollectLootCart = False, $g_bChkCollectCookie = False, $g_bChkSellItemFromMagicBox = False
 
 Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCleanBBYard = False
 
@@ -846,8 +823,6 @@ Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $
 Global $g_bChkEnableBBAttack = False, $g_bChkBBDropTrophy = False, $g_bChkBBAttIfStarsAvail = False, $g_bChkSkipBBAttIfStorageFull = False, $g_bChkBBWaitForMachine = False, $g_bChkBBDropBMFirst = False
 Global $g_hTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyLowerLimit = 0, $g_bChkStopAttackBB6thBuilder = 0, $g_bIs6thBuilderUnlocked = False, $g_bChkSkipBBRoutineOn6thBuilder = 0, $g_bskipBBroutine = False
 Global $g_bBBMachineReady = False, $g_bChkDebugAttackBB = False, $g_aMachinePos[3] = [0, 0, ""], $g_aWBOnAttackBar[0][2], $g_bWBOnAttackBar = False, $g_bChkBBEndBattleOn2Stars = False
-Global $g_iBBMachAbilityTime = 14000 ; in milliseconds, so 14 seconds between abilities
-Global Const $g_iBBNextTroopDelayDefault = 2000,  $g_iBBSameTroopDelayDefault = 300 ; default delay times
 Global $g_iBBNextTroopDelay = 3,  $g_iBBSameTroopDelay = 3; delay time between different and same troops
 Global $g_hCmbBBNextTroopDelay = 0, $g_hCmbBBSameTroopDelay = 0
 Global $g_BBDP[0][3]
@@ -877,21 +852,39 @@ Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ; <><><><> Village / Donate - Request <><><><>
 Global $g_bRequestTroopsEnable = False
 Global $g_sRequestTroopsText = ""
-Global $g_abRequestCCHours[24] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
-Global $g_abRequestType[3] = [True, True, False] ; (0 = Troop, 1 = Spell, 2 = Siege Machine)
-Global $g_iRequestCountCCTroop = 0, $g_iRequestCountCCSpell = 0
-Global $g_aiCCTroopsExpected[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aiCCSpellsExpected[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aiCCSiegeExpected[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0, 0]
-Global $g_aiClanCastleTroopWaitType[3], $g_aiClanCastleTroopWaitQty[3]
-Global $g_aiClanCastleSpellWaitType[3]
-Global $g_aiClanCastleSiegeWaitType[2]
+Global $g_bUseCake = False, $g_bChkUpdateRequest = False
+Global $g_iCmbRequestTroop1 = 0, $g_iCmbRequestSpell1 = 0, $g_iCmbRequestSiege1 = 0
+Global $g_iCmbRequestTroop2 = 0, $g_iCmbRequestSpell2 = 0, $g_iCmbRequestSiege2 = 0
+Global $g_iRequestTroopQuantity1 = 0, $g_iRequestSpellQuantity1 = 0, $g_iRequestSiegeQuantity1 = 0
+Global $g_iRequestTroopQuantity2 = 0, $g_iRequestSpellQuantity2 = 0, $g_iRequestSiegeQuantity2 = 0
+
+;Sname, Name, space
+Global $g_aCmbRequestTroop[6][3] = [["Giant", "Giant", 5], _
+								["Ball", "Balloon", 5], _
+								["Wiza", "Wizard", 4], _
+								["Drag", "Dragon", 20], _
+								["BabyD", "Baby Dragon", 10], _
+								["SBarb", "Super Barbarian", 5]]
+Global $g_aCmbRequestSpell[6][3] = [["LSpell", "Lightning Spell", 1], _
+								["RSpell", "Rage Spell", 2], _
+								["FSpell", "Freeze Spell", 1], _
+								["PSpell", "Poison Spell", 1], _
+								["ESpell", "EarthQuack Spell", 1], _
+								["HaSpell", "Haste Spell", 1]]
+Global $g_aCmbRequestSiege[9][3] = [["WallW", "Wall Wrecker", 1], _
+								["BattleB", "Battle Blimp", 1], _
+								["StoneS", "Stone Slammer", 1], _
+								["SiegeB", "Siege Barrack", 1], _
+								["LogL", "Log Launcher", 1], _
+								["FlameF", "Flame Flinger", 1], _
+								["BattleD", "Battle Drill", 1], _
+								["TroopL", "Troop Launcher", 1], _
+								["SkyW", "Sky Wagon", 1]]
+
 
 ; <><><><> Village / Donate - Donate <><><><>
 Global $g_bChkDonate = True
 Global $g_abChkDonateQueueOnly[2]
-Global $g_aiQueueTroopFirstSlot[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_aiQueueSpellFirstSlot[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_abChkDonateTroop[$eTroopCount + $eSiegeMachineCount] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
 Global $g_asTxtDonateTroop[$eTroopCount + $eSiegeMachineCount] = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""] ; array of pipe-delimited list of strings to match to a request string
 
@@ -941,45 +934,35 @@ Global $g_iUpgradeWallMinGold = 0, $g_iUpgradeWallMinElixir = 0, $g_bUpgradeWall
 Global $g_iUpgradeWallLootType = 0, $g_bUpgradeWallSaveBuilder = False, $g_bChkOnly1Builder = False
 Global $g_iUpgradedWallLevel = 0, $g_bUpgradeLowWall = False, $g_iLowLevelWall = 4, $g_bUpgradeAnyWallLevel = False
 Global $g_iSaveGoldWall = 0, $g_iSaveElixWall = 0
-Global $g_bUpgradeSpesificWall = False, $g_iTargetWallLevel = 0, $g_bAutoAdjustSaveWall = False
+Global $g_bUpgradeSpesificWall = False, $g_iTargetWallLevel = 0, $g_iSearchWallSort = 0, $g_bAutoAdjustSaveWall = False
 
 ; Upgrading - Wall
 Global Const $g_aiWallCost[18] = [0, 1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000, 8000000]
-Global Const $g_aiTHCost[18] = [0, 1000, 4000, 25000, 150000, 500000, 1000000, 2000000, 2500000, 3500000, 4000000, 6000000, 9000000, 12000000, 13000000, 16000000, 16000000, 16000000]
+Global Const $g_aiMaxStorage[19] = [1500, 3000, 6000, 12000, 25000, 45000, 100000, 225000, 450000, 850000, 1750000, 2000000, 3000000, 4000000, 4500000, 5000000, 5500000, 6000000, 6500000]
 Global Const $g_aiHeroHallCost[11] = [800000, 1600000, 2300000, 3000000, 5000000, 6000000, 9000000, 10000000, 12000000, 14000000, 21000000] ; 0 = 7
 
 ; Auto Upgrade
 Global $g_bChkRushTH = False, $g_bHeroPriority = False
 Global $g_bAutoUpgradeEnabled = False, $g_bUseWallReserveBuilder = False, $g_bUseHeroBooks = False, $g_iHeroMinUpgradeTime = 0
-Global $g_bSkipWallReserve = False, $g_bUpgradeLowCost = False, $g_bUpgradeOtherDefenses = False
+Global $g_bSkipWallReserve = False, $g_bUpgradeLowCost = False, $g_bUpgradeOtherDefenses = False, $g_bGearUpDone = False
 Global $g_bUseBuilderPotion = False
-Global $g_iChkIgnoreTH = 0, $g_iChkIgnoreKing = 0, $g_iChkIgnoreQueen = 0, $g_iChkIgnoreWarden = 0, $g_iChkIgnoreChampion = 0, $g_iChkIgnoreCC = 0, $g_iChkIgnoreLab = 0
-Global $g_iChkIgnoreBarrack = 0, $g_iChkIgnoreDBarrack = 0, $g_iChkIgnoreFactory = 0, $g_iChkIgnoreDFactory = 0
-Global $g_iChkIgnoreGColl = 0, $g_iChkIgnoreEColl = 0, $g_iChkIgnoreDColl = 0
 Global $g_iTxtSmartMinGold = 150000, $g_iTxtSmartMinElixir = 150000, $g_iTxtSmartMinDark = 1500
-Global $g_iChkUpgradesToIgnore[36] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_iChkUpgradesToIgnore[37] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iChkResourcesToIgnore[3] = [0, 0, 0]
 Global $g_aiCmbRushTHOption[5] = [0, 0, 0, 0, 0]
 Global $g_aichkEssentialUpgrade[8] = [0,0,0,0,0,0,0,0]
 Global $g_aEssential[8] = ["X Bow", "Inferno T", "Eagle", "Scattershot", "Wizard Tower", "Bomb Tower", "Air Defense", "Air Sweeper"]
 Global $g_aOtherDefense[5] = ["Cannon", "Archer Tower", "Mortar", "Hidden Tesla", "Hut"]
 Global $g_bUpgradeOnlyTHLevelAchieve = False
-Global $g_iCurrentLineOffset = 0, $g_iNextLineOffset = 0
 Global $g_aUpgradeNameLevel ; [Nb of elements in Array, Name, Level]
 Global $g_aUpgradeResourceCostDuration[3] = ["", "", ""] ; Resource, Cost, Duration
 
-Global $g_sBldgText, $g_sBldgLevel
-Global $g_aUpgradeName[3] = ["", "", ""]
-Global $g_iUpgradeCost
-Global $g_sUpgradeResource = 0
-Global $g_sUpgradeDuration
-
 ; Builder Base
-Global $g_bAutoUpgradeBBEnabled = False, $g_bChkAutoUpgradeBBIgnoreHall = False, $g_bChkAutoUpgradeBBIgnoreWall = False
+Global $g_bAutoUpgradeBBEnabled = False, $g_bChkAutoUpgradeBBIgnoreHall = False, $g_bChkAutoUpgradeBBIgnoreWall = False, $g_bChkBBSpendGoldOnWall = False
 Global $g_bReserveElixirBB = False, $g_bReserveGoldBB = False, $g_bChkBOBControl = False
 Global $g_bStayOnBuilderBase = False
 
-Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_iQuickMISName = "", $g_iQuickMISLevel = ""
+Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_sQuickMISName = "", $g_iQuickMISLevel = ""
 
 ; <><><><> Village / Achievements <><><><>
 Global $g_iUnbrkMode = 0, $g_iUnbrkWait = 5
@@ -1109,7 +1092,7 @@ Global $g_aiSearchHeroWaitEnable[$g_iModeCount] = [0, 0, 0] ; Heroes wait status
 Global $g_abSearchSpellsWaitEnable[$g_iModeCount] = [False, False, False]
 Global $g_abSearchCastleWaitEnable[$g_iModeCount] = [False, False, False]
 Global $g_aiSearchNotWaitHeroesEnable[$g_iModeCount] = [0, 0, 0]
-Global $g_iSearchNotWaitHeroesEnable = -1
+Global $g_iSearchNotWaitHeroesEnable = -1, $g_iCmbDBUseArmy = 0
 Global $g_abSearchSiegeWaitEnable[$g_iModeCount] = [False, False, False] , $g_aiSearchSiegeWait[$g_iModeCount] = [0, 0, 0]
 
 ; Search - Filters
@@ -1130,14 +1113,8 @@ Global $g_iDeadEagleSearch = 0
 
 ; Attack
 Global $g_iSlotsGiants = 1
-Global $g_aiAttackAlgorithm[$g_iModeCount] = [0, 0, 0], $g_aiAttackTroopSelection[$g_iModeCount + 1] = [0, 0, 0, 0], $g_aiAttackUseHeroes[$g_iModeCount] = [0, 0, 0], _
+Global $g_aiAttackAlgorithm[$g_iModeCount] = [0, 0, 0], $g_aiAttackUseHeroes[$g_iModeCount] = [0, 0, 0], _
 		$g_abAttackDropCC[$g_iModeCount] = [0, 0, 0] , $g_aiAttackUseSiege[$g_iModeCount] = [0, 0, 0], $g_aiAttackUseWardenMode[$g_iModeCount] = [0, 0, 0]
-;Global $g_abAttackUseLightSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseHealSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseRageSpell[$g_iModeCount] = [0, 0, 0], _
-;		$g_abAttackUseJumpSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseFreezeSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseCloneSpell[$g_iModeCount] = [0, 0, 0], _
-;		$g_abAttackUseInvisibilitySpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseRecallSpell[$g_iModeCount] = [0, 0, 0], _
-;		$g_abAttackUsePoisonSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseEarthquakeSpell[$g_iModeCount] = [0, 0, 0], _
-;		$g_abAttackUseHasteSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseSkeletonSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseBatSpell[$g_iModeCount] = [0, 0, 0], _
-;		$g_abAttackUseOverGrowthSpell[$g_iModeCount] = [0, 0, 0]
 
 Global $g_bDropEmptySiege[$g_iModeCount] = [0, 0, 0]
 ; Attack - Standard
@@ -1145,8 +1122,7 @@ Global $g_aiAttackStdDropOrder[$g_iModeCount + 1] = [0, 0, 0, 0], $g_aiAttackStd
 		$g_abAttackStdSmartAttack[$g_iModeCount + 1] = [True, True, False, False], $g_aiAttackStdSmartDeploy[$g_iModeCount + 1] = [0, 0, 0, 0]
 Global $g_abAttackStdSmartNearCollectors[$g_iModeCount + 1][3] = [[False, False, False], [False, False, False], [False, False, False], [False, False, False]]
 ; Attack - Scripted
-Global $g_aiAttackScrRedlineRoutine[$g_iModeCount + 1] = [$REDLINE_IMGLOC_RAW, $REDLINE_IMGLOC_RAW, 0, 0]
-Global $g_aiAttackScrDroplineEdge[$g_iModeCount + 1] = [$DROPLINE_EDGE_FIRST, $DROPLINE_EDGE_FIRST, 0, 0]
+Global $g_aiAttackScrRedlineRoutine[$g_iModeCount + 1] = [$REDLINE_EDGE, $REDLINE_EDGE, 0, 0]
 Global $g_sAttackScrScriptName[$g_iModeCount] = ["Barch four fingers", "Barch four fingers", ""]
 
 ; End Battle
@@ -1211,9 +1187,9 @@ Global $g_bSearchAttackNowEnable = False, $g_iSearchAttackNowDelay = 0, $g_bSear
 Global $g_asHeroHealTime[$eHeroCount] = ["", "", "", "", ""]
 
 ; <><><><> Attack Plan / Search & Attack / Options / Attack <><><><>
-Global $g_iActivateQueen = 0, $g_iActivateKing = 0, $g_iActivateWarden = 0, $g_iActivateChampion = 0, $g_iActivateMinionP = 0
-Global $g_iDelayActivateQueen = 9000, $g_iDelayActivateKing = 9000, $g_iDelayActivateWarden = 10000, $g_iDelayActivateChampion = 9000, $g_iDelayActivateMinionP = 9000
-Global $g_aHeroesTimerActivation[$eHeroCount] = [0, 0, 0, 0, 0] ; $eHeroBarbarianKing | $eHeroArcherQueen | $eHeroGrandWarden | $eHeroRoyalChampion
+Global $g_iActivateQueen = 0, $g_iActivateKing = 0, $g_iActivateWarden = 0, $g_iActivateChampion = 0, $g_iActivatePrince = 0, $g_iActivateDuke = 0
+Global $g_iDelayActivateQueen = 9000, $g_iDelayActivateKing = 9000, $g_iDelayActivateWarden = 10000, $g_iDelayActivateChampion = 9000, $g_iDelayActivatePrince = 9000, $g_iDelayActivateDuke = 9000
+Global $g_aHeroesTimerActivation[$eHeroCount] = [0, 0, 0, 0, 0, 0] ; $eHeroBarbarianKing | $eHeroArcherQueen | $eHeroGrandWarden | $eHeroRoyalChampion | $eHeroMinionPrince $eHeroDuke
 Global $g_bAttackPlannerEnable = False, $g_bAttackPlannerCloseCoC = False, $g_bAttackPlannerCloseAll = False, $g_bAttackPlannerSuspendComputer = False, $g_bAttackPlannerRandomEnable = False, _
 		$g_iAttackPlannerRandomTime = 0, $g_iAttackPlannerRandomTime = 0, $g_bAttackPlannerDayLimit = False, $g_iAttackPlannerDayMin = 12, $g_iAttackPlannerDayMax = 15
 Global $g_abPlannedAttackWeekDays[7] = [True, True, True, True, True, True, True]
@@ -1229,21 +1205,15 @@ Global $g_Zapped = False
 Global $g_bShareAttackEnable = 0, $g_iShareMinGold = 300000, $g_iShareMinElixir = 300000, $g_iShareMinDark = 0, $g_sShareMessage = "Nice|Good|Thanks|Wowwww", _
 		$g_bTakeLootSnapShot = True, $g_bScreenshotLootInfo = False, $g_bShareAttackEnableNow = False
 
-; <><><><> Attack Plan / Search & Attack / Options / Trophy Settings <><><><>
-Global $g_bDropTrophyEnable = False, $g_iDropTrophyMax = 1200, $g_iDropTrophyMin = 800, $g_bDropTrophyUseHeroes = False, $g_iDropTrophyHeroesPriority = 0, _
-		$g_bDropTrophyAtkDead = 0, $g_iDropTrophyArmyMinPct = 70, $g_bDropTrophyZap = True
-
 ; <><><><> Attack Plan / Strategies <><><><>
 ; <<< nothing here >>>
 
 ; <><><><> Bot / Options <><><><>
 Global $g_sLanguage = "English"
 Global $g_bDisableSplash = False ; Splash screen disabled = 1
-Global $g_bMyBotDance = False  ; Dancing MyBot splash screen
 Global $g_bCheckVersion = True
 Global $g_bDeleteLogs = True, $g_iDeleteLogsDays = 2, $g_bDeleteTemp = True, $g_iDeleteTempDays = 2, $g_bDeleteLoots = True, $g_iDeleteLootsDays = 2
 Global $g_bAutoStart = False, $g_iAutoStartDelay = 10
-Global $g_bAutoUpdateGame = False
 Global $g_bAutoAlignEnable = False, $g_iAutoAlignPosition = "EMBED", $g_iAutoAlignOffsetX = "", $g_iAutoAlignOffsetY = ""
 Global $g_bUpdatingWhenMinimized = True ; Alternative Minimize Window routine for bot that enables window updates when minimized
 Global $g_bHideWhenMinimized = False ; Hide bot window in taskbar when minimized
@@ -1322,7 +1292,6 @@ Global $g_aiTotalGoldGain[$g_iModeCount] = [0, 0, 0], $g_aiTotalElixirGain[$g_iM
 Global $g_aiNbrOfDetectedMines[$g_iModeCount] = [0, 0, 0], $g_aiNbrOfDetectedCollectors[$g_iModeCount] = [0, 0, 0], $g_aiNbrOfDetectedDrills[$g_iModeCount] = [0, 0, 0] ; number of mines, collectors, drills detected for DB, LB, TB
 Global $g_aiAttackedCount = 0 ; convert to global from UpdateStats to enable daily attack limits
 Global $g_iSearchCount = 0 ;Number of searches
-Global Const $g_iMaxTrainSkip = 40
 Global $g_iActualTrainSkip = 0
 Global $g_iSmartZapGain = 0, $g_iNumEQSpellsUsed = 0, $g_iNumLSpellsUsed = 0 ; smart zap
 
@@ -1355,12 +1324,12 @@ Global $g_sLabUpgradeTime = ""
 Global $g_sStarLabUpgradeTime = ""
 
 ; Array to hold Laboratory Troop information [LocX of upper left corner of image, LocY of upper left corner of image, PageLocation, Troop "name", Icon # in DLL file, ShortName on image file]
-Global $g_avLabTroops[48][3]
+Global $g_avLabTroops[52][3]
 Global $g_avStarLabTroops[12][6]
 
 ; [0] Name, [1] Icon [2] ShortName
 Func TranslateTroopNames()
-	Dim $g_avLabTroops[51][3] = [ _
+	Dim $g_avLabTroops[53][3] = [ _
 			[GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"), $eIcnBlank], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBarbarians", "Barbarians"), $eIcnBarbarian, "Barb"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtArchers", "Archers"), $eIcnArcher, "Arch"], _
@@ -1410,6 +1379,8 @@ Func TranslateTroopNames()
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtLogLauncher", "Log Launcher"), $eIcnLogL, "LogL"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtFlameFlinger", "Flame Flinger"), $eIcnFlameF, "FlameF"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBattleDrill", "Battle Drill"), $eIcnBattleD, "BattleD"], _
+			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBattleDrill", "Troop Launcher"), $eIcnTroopL, "TroopL"], _
+			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBattleDrill", "Sky Wagon"), $eIcnSkyW, "SkyW"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtAnySiege", "Any Spell"), $eIcnBlank, "AnySpell"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtAnySiege", "Any Siege"), $eIcnBlank, "AnySiege"]]
 
@@ -1494,12 +1465,10 @@ Global $g_iAimGold[$g_iModeCount] = [0, 0, 0], $g_iAimElixir[$g_iModeCount] = [0
 Global $g_iTHx = 0, $g_iTHy = 0
 
 ; Town hall search
-Global $g_iTHside = 0, $g_iTHi = 0
 Global $g_iSearchTHLResult = 0
 Global $g_sTHLoc = "In" ; "In" or "Out" are valid values
 Global $g_sImglocRedline ; hold redline data obtained from multisearch
 Global $g_iImglocTHLevel = 0
-Global $g_aiTownHallDetails[4] = [-1, -1, -1, -1] ; [LocX, LocY, BldgLvl, Quantity]
 
 ; Attack
 Global Const $g_aaiTopLeftDropPoints[5][2] = [[51, 288], [129, 230], [183, 193], [305, 104], [400, 33]]
@@ -1521,7 +1490,7 @@ Global Const $g_aiUseBarcherMinion[25] = [$eBarb, $eSBarb, $eArch, $eSArch, $eMi
 Global Const $g_aaiTroopsToBeUsed[11] = [$g_aiUseAllTroops, $g_aiUseBarracks, $g_aiUseBarbs, $g_aiUseArchs, $g_aiUseBarcher, $g_aiUseBarbGob, $g_aiUseArchGob, $g_aiUseBarcherGiant, $g_aiUseBarcherGobGiant, $g_aiUseBarcherHog, $g_aiUseBarcherMinion]
 Global $g_avAttackTroops[$eDropOrderCount][6] ;11 Slots of troops -  Name, Amount, x-coord (+ 11 extended slots Slot11+)
 Global $g_bFullArmy = False ;Check for full army or not
-Global $g_iKingSlot = -1, $g_iQueenSlot = -1, $g_iWardenSlot = -1, $g_iChampionSlot = -1, $g_iMinionPSlot = -1, $g_iClanCastleSlot = -1
+Global $g_iKingSlot = -1, $g_iQueenSlot = -1, $g_iWardenSlot = -1, $g_iChampionSlot = -1, $g_iMinionPSlot = -1, $g_iDukeSlot, $g_iClanCastleSlot = -1
 Global $g_iTotalAttackSlot = 10, $g_bDraggedAttackBar = False ; Slot11+
 Global $g_iSiegeLevel = 1
 
@@ -1530,16 +1499,15 @@ Global $g_iHeroWaitAttackNoBit[$g_iModeCount][$eHeroCount] ; Heroes wait status 
 Global $g_iHeroAvailable = $eHeroNone ; Hero ready status; bitmapped
 Global $g_iHeroUpgrading[$eHeroCount] = [0, 0, 0, 0] ; Upgrading Heroes
 Global $g_iHeroUpgradingBit = $eHeroNone ; Upgrading Heroes
-Global $g_bHaveAnyHero = -1 ; -1 Means not set yet
 Global $g_bCheckKingPower = False ; Check for King activate power
 Global $g_bCheckQueenPower = False ; Check for Queen activate power
 Global $g_bCheckWardenPower = False ; Check for Warden activate power
 Global $g_bCheckChampionPower = False ; Check for Champion activate power
-Global $g_bCheckMinionPPower = False ; Check for Champion activate power
-Global $g_bDropQueen, $g_bDropKing, $g_bDropWarden, $g_bDropChampion, $g_bDropMinionP
+Global $g_bCheckMinionPPower = False ; Check for Minion Prince activate power
+Global $g_bCheckDukePower = False ; Check for Dragon Duke activate power
+Global $g_bDropQueen, $g_bDropKing, $g_bDropWarden, $g_bDropChampion, $g_bDropMinionP, $g_bDropDuke
 
 ; Attack - Troops
-Global $g_aiSlotInArmy[$eTroopCount] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 ; Red area search
 Global $g_aiPixelTopLeft[0]
 Global $g_aiPixelBottomLeft[0]
@@ -1600,7 +1568,6 @@ Global $g_bTrainEnabled = True
 Global $g_bIsFullArmywithHeroesAndSpells = False
 Global $g_aiTimeTrain[4] = [0, 0, 0, 0] ; [Troop remaining time], [Spells remaining time], [Hero remaining time - when possible], [Siege remain Time]
 Global $g_bCheckSpells = False
-Global $g_bCheckClanCastleTroops = False
 
 ; Donate
 Global Const $g_aiDonateTroopPriority[$eTroopCount] = [ _
@@ -1638,9 +1605,6 @@ Global $g_bGfxError = False ; True when Android Gfx Errors detected that will in
 Global $g_iGfxErrorCount = 0, $g_iGfxErrorMax = 5
 
 ; TakeABreak - Personal Break Timer
-Global Const $g_iTaBChkAttack = 0x01 ; code for PB warning when searching attack
-Global Const $g_iTaBChkIdle = 0x02 ; code for PB warning when idle at base
-Global Const $g_iTaBChkTime = 0x04 ; code for PB created by early log off feature
 Global $g_bDisableBreakCheck = False
 Global $g_sPBStartTime = "" ; date/time string for start of next Personal Break
 Global $g_asShieldStatus = ["", "", ""] ; string shield type, string shield time, string date/time of Shield expire
@@ -1776,7 +1740,6 @@ Global $g_bAutoUpgradeEarly = False, $g_bDonateEarly = False
 Global $g_bChkForceSwitchifNoCGEvent = False, $g_bForceSwitchifNoCGEvent = False, $g_bIsCGPointAlmostMax = False
 
 ; Clan Games v3
-Global $g_bChkClanGamesAir = 0, $g_bChkClanGamesGround = 0, $g_bChkClanGamesMisc = 0
 Global $g_bChkClanGamesEnabled = 0
 Global $g_bChkClanGames3H = 0
 Global $g_bChkClanGamesLoot = 0
@@ -1790,7 +1753,6 @@ Global $g_bChkClanGamesDes = 0
 Global $g_bChkClanGamesAirTroop = 0
 Global $g_bChkClanGamesGroundTroop = 0
 Global $g_bChkClanGamesMiscellaneous = 0
-Global $g_bChkClanGamesPurge = 0
 Global $g_bChkClanGamesStopBeforeReachAndPurge = 0
 Global $g_bChkClanGamesDebug = 0
 Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
@@ -1823,6 +1785,9 @@ Global $g_bChkSellBOF = False, $g_bChkSellBOB = False, $g_bChkSellBOS = False, $
 Global $g_bChkSellPowerPot = False, $g_bChkSellResourcePot = False, $g_bChkSellTrainingPot = False, $g_bChkSellBuilderPot = False, $g_bChkSellCTPot = False, $g_bChkSellHeroPot = False, $g_bChkSellResearchPot = False
 Global $g_bChkSellSuperPot = False, $g_bChkSellBuilderJar = False, $g_bChkSellROG = False, $g_bChkSellROE = False, $g_bChkSellRODE = False, $g_bChkSellROBG = False, $g_bChkSellROBE = False
 Global $g_aSellMagicItem[21] = [$g_bChkSellBOF, $g_bChkSellBOB, $g_bChkSellBOS, $g_bChkSellBOH, $g_bChkSellBOE, $g_bChkSellShovel, $g_bChkSellWallRing, $g_bChkSellPowerPot, $g_bChkSellResourcePot, $g_bChkSellTrainingPot, $g_bChkSellBuilderPot, $g_bChkSellCTPot, $g_bChkSellHeroPot, $g_bChkSellResearchPot, $g_bChkSellSuperPot, $g_bChkSellBuilderJar, $g_bChkSellROG, $g_bChkSellROE, $g_bChkSellRODE, $g_bChkSellROBG, $g_bChkSellROBE]
+Global $g_bChkEnableTradeMedal = False
+Global $g_bChkTradeShiny = False, $g_bChkTradeGlowy = False, $g_bChkTradeStarry = false, $g_bChkTradeBuilderGold = False, $g_bChkTradeBuilderElix = False, $g_bChkTradeClockTowerPot = False, $g_bChkTradeResearchPot = False
+
 Global $g_aMagicItemName[21] = ["BookOfFighting", "BookOfBuilding", "BookOfSpell", "BookOfHero", "BookOfEverything", "Shovel", "WallRing", "PowerPot", "ResourcePot", "TrainingPot", "BuilderPot", "ClockTowerPot", "HeroPot", "ResearchPot", "SuperPot", "BuilderJar", "RuneOfGold", "RuneOfElixir", "RuneOfDarkElixir", "RuneOfBuilderGold", "RuneOfBuilderElixir"]
 
 ; Daily challenge
@@ -1867,19 +1832,28 @@ Global $CocDiamondDCD = "DCD"
 Global $InternalArea[8][3]
 Global $ExternalArea[8][3]
 
+; Diamond coordinates from scenery reference (updated by GetVillageSize)
+Global $g_InnerDiamondLeft = 45
+Global $g_InnerDiamondRight = 815
+Global $g_InnerDiamondTop = 60
+Global $g_InnerDiamondBottom = 636
+Global $g_InnerDiamondDiffX = 32
+Global $g_InnerDiamondDiffY = 25
+Global $g_DiamondMiddleX, $g_DiamondMiddleY
+Global $g_OuterDiamondLeft, $g_OuterDiamondRight, $g_OuterDiamondTop, $g_OuterDiamondBottom
+
 ; Tambahan Pak Boss Besar (2021)
 Global $g_aVillageSize[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global Const $g_aVillageSizeReset[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Blacksmith
 Global $g_aiBlacksmithPos[2] = [-1, -1] ; Position of Pet House
 Global $g_iBlacksmithLevel = 0
-Global Enum $eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGauntlet, $eSpikyBall, $eSnakeBracelet, _ 
+Global Enum $eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGauntlet, $eSpikyBall, $eSnakeBracelet, _
 			$eArcherPuppet, $eInvisibilityVial, $eGiantArrow, $eHealerPuppet, $eFrozenArrow, $eMagicMirror, $eActionFigure, _
 			$eHenchMenPuppet, $eDarkOrb, $eMetalPants, $eNobleIron, $eDarkCrown, $eMeteorStaff, _
 			$eEternalTome, $eLifeGem, $eRageGem, $eHealingTome, $eHeroicTorch, $eFireBall, $eLavaloonPuppet, _
 			$eSeekingShield, $eRoyalGem, $eHogRiderPuppet, $eHasteVial, $eRocketSpear, $eElectroBoots, $eEquipmentCount
-			
+
 Global $g_asEquipmentOrderList[$eEquipmentCount][4] = [ _
 			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtBarbarianPuppet", "Barbarian Puppet"), "BarbarianPuppet", "King", 132], _
 			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtRageVial", "Rage Vial"), "RageVial", "King", 132], _
@@ -1916,7 +1890,7 @@ Global $g_asEquipmentOrderList[$eEquipmentCount][4] = [ _
 			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtElectroBoots", "Electro Boots"), "ElectroBoots", "Champion", 245]]
 
 Global $g_aiEquipmentOrder[$eEquipmentCount] = [ _
-			$eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGauntlet, $eSpikyBall, $eSnakeBracelet, _ 
+			$eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGauntlet, $eSpikyBall, $eSnakeBracelet, _
 			$eArcherPuppet, $eInvisibilityVial, $eGiantArrow, $eHealerPuppet, $eFrozenArrow, $eMagicMirror, $eActionFigure, _
 			$eHenchMenPuppet, $eDarkOrb, $eMetalPants, $eNobleIron, $eDarkCrown, $eMeteorStaff, _
 			$eEternalTome, $eLifeGem, $eRageGem, $eHealingTome, $eHeroicTorch, $eFireBall, $eLavaloonPuppet, _
@@ -1933,17 +1907,17 @@ Global Const $g_aiEquipmentOrderIcon2[$eEquipmentCount + 1] = [ $eIcnOptions, _
 			$eIcnPrince, $eIcnPrince, $eIcnPrince, $eIcnPrince, $eIcnPrince, $eIcnPrince, _
 			$eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, _
 			$eIcnChampion, $eIcnChampion, $eIcnChampion, $eIcnChampion, $eIcnChampion, $eIcnChampion]
-		
+
 Global $g_hChkCustomEquipmentOrderEnable = 0, $g_bChkCustomEquipmentOrderEnable = False
 Global $g_hChkMinOreUpgrade = 0, $g_bChkMinOreUpgrade = False, $g_hTxtMinOreUpgrade = 0, $g_sTxtMinOreUpgrade = ""
 Global $g_hBtnEquipmentOrderSet = 0, $g_ahImgEquipmentOrderSet = 0,$g_hBtnRemoveEquipment = 0, $g_hBtnRegularOrder = 0
-Global $g_aZero33[$eEquipmentCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbEquipmentOrder = $g_aZero33
-Global $g_ahImgEquipmentOrder = $g_aZero33
-Global $g_ahImgEquipmentOrder2 = $g_aZero33
-Global $g_hChkCustomEquipmentOrder = $g_aZero33
-Global $g_bChkCustomEquipmentOrder = $g_aZero33
-Global $g_aiCmbCustomEquipmentOrder = $g_aZero33
+Global $g_aZero10[$eEquipmentCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbEquipmentOrder = $g_aZero10
+Global $g_ahImgEquipmentOrder = $g_aZero10
+Global $g_ahImgEquipmentOrder2 = $g_aZero10
+Global $g_hChkCustomEquipmentOrder = $g_aZero10
+Global $g_bChkCustomEquipmentOrder = $g_aZero10
+Global $g_aiCmbCustomEquipmentOrder = $g_aZero10
 
 ; PetHouse
 Global $g_aiPetHousePos[2] = [-1, -1]
@@ -1973,13 +1947,11 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 ;Misc Mod
 Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False
 Global $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False
-Global $g_bAlwaysDropHero = True
+Global $g_bChkAttackOnce = False
 Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
 Global $g_bEnableCCSleep = False, $g_bSkipDT = False, $g_iMainScreenTimeoutCount = 0
 
 ;Builder Base
-Global $g_bDebugBBattack = False
-Global $g_bBBForceCustomArmy = False
 Global $g_bBBAttacked = False ; DoAttackBB attacked or not
 
 ;ClanCapital
@@ -1989,21 +1961,23 @@ Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEn
 Global $aCCBuildingIgnore[13] = ["Ruined", "Big Barbarian", "Pyre", "Boulder", "Bonfire", "Grove", "Tree", "Forest", "Campsite", "Stone", "Pillar", "The First", "Tombs"]
 Global $g_bChkStartWeekendRaid = True
 
-Global $g_bEnableDailyRunRoutine = False
+Global $g_bEnableDailyRunRoutine = False, $iDailyDate = @YDAY
 ;[FunctionName, Allowed time to run a day? 0 = always run; 1 = daily; 2 twice a day;]
-Global $g_aiDailyFunction[13][2] = [["DailyChallenge", 2], _
+Global $g_aiDailyFunction[14][2] = [["DailyChallenge", 2], _
 									["CollectAchievements", 2], _
-									["CollectFreeMagicItems", 2], _
+									["CollectFreeMagicItems", 1], _
 									["ForgeClanCapitalGold", 1], _
 									["AutoUpgradeCC", 1], _
 									["UseFreeMagic", 4], _
 									["SellMagicItem", 1], _
-									["CleanYard", 1], _
+									["CleanYard", 2], _
 									["CollectLootCart", 1], _
 									["TreasuryCollect", 1], _
-									["BuilderBase", 1], _
+									["BuilderBase", 6], _
 									["BlackSmith", 1], _
+									["CollectCookie", 2], _
 									["PetHouse", 1]]
+
 ;per account daily function HowManyRunToday
 Global $g_aDailyAccount[16][Ubound($g_aiDailyFunction)] = [[0,0,0,0,0,0,0,0,0,0,0,0,0], _
 														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
@@ -2018,17 +1992,21 @@ Global $g_aDailyAccount[16][Ubound($g_aiDailyFunction)] = [[0,0,0,0,0,0,0,0,0,0,
 														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
 														[0,0,0,0,0,0,0,0,0,0,0,0,0], _
 														[0,0,0,0,0,0,0,0,0,0,0,0,0]]
-															
+
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[44][7] = [["DS", "Default", 592.24, 87, 792, 52, 589], _ ;ok
-									["JS", "Jungle", 547, 99, 773, 58, 568], _ ;ok
-									["MS", "Magic", 619.82, 26, 820, 48, 643], _ ;ok
-									["BL", "BuilderBase Lower", 652.11, 131, 777, 102, 584], _ ;ok
-									["BH", "BuilderBase Higher", 563, 145, 764, 141, 600], _ ;ok
+Global $g_aVillageRefSize[51][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
+									["DM", "Classic Meteor", 592.24, 87, 792, 52, 589], _ ;ok
+									["CS", "Classic Skeleton", 567, 82, 766, 53, 575], _ ;ok
+									["JS", "Jungle", 617, 41, 806, 37, 616], _ ;ok
+									["MS", "Magic", 553.75, 83, 800, 96, 627], _ ;ok
+									["BL", "BuilderBase Lower", 578.83, 135, 742, 116, 567], _ ;ok
+									["BH", "BuilderBase Higher", 561.42, 114, 720, 93, 543], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
 									["PC", "Pirate", 598.68, 50, 812, 63, 634], _ ;ok
+									["TW", "Toy Workshop", 552, 80, 810, 101, 605], _ ;ok
 									["EW", "Winter", 576.41, 68, 794, 61, 607], _ ;ok
+									["DD", "Dark Days", 658.61, 66, 797, 49, 594], _ ;ok
 									["HM", "Hog Mountain", 637.4, 52, 810, 62, 636], _ ;ok
 									["EP", "Epic Jungle", 636.8, 45, 815, 60, 636], _ ;ok
 									["9C", "9th Clashivery", 617.21, 76, 803, 64, 611], _ ;ok
@@ -2039,8 +2017,9 @@ Global $g_aVillageRefSize[44][7] = [["DS", "Default", 592.24, 87, 792, 52, 589],
 									["SH", "Shadow", 598.40, 81, 790, 61, 592], _ ;ok
 									["RY", "Royal", 610.20, 57, 799, 48, 603], _ ;ok
 									["SM", "Summer", 568, 85, 813, 56, 604], _ ;ok
-									["CA", "Clash A-Rama", 620, 66, 800, 48, 596], _ ;ok
+									["CA", "Clash A-Rama", 619, 59, 785, 57, 598], _ ;ok
 									["PS", "Pixel", 617, 56, 796, 61, 618], _ ;ok
+									["DE", "Dragon Escape", 681.68, 40, 768, 81, 627], _ ;ok
 									["10", "10th Clasivery", 561, 92, 791, 47, 570], _ ;ok
 									["CF", "Clash Fest", 517.81, 119, 771, 112, 602], _ ;ok
 									["SP", "Spooky", 679.13, 65, 796, 53, 604], _ ;ok
@@ -2050,7 +2029,7 @@ Global $g_aVillageRefSize[44][7] = [["DS", "Default", 592.24, 87, 792, 52, 589],
 									["W4", "Scenery4", 606.35, 64, 767, 44, 573], _ ;ok
 									["JL", "Jolly", 543.76, 86, 762, 93, 602], _
 									["MT", "Magic Theatre", 549.18, 78, 777, 103, 626], _ ;ok
-									["PT", "Painter", 504.06, 80, 774, 104, 625], _
+									["PT", "Painter", 538.82, 69, 800, 56, 603], _
 									["DA", "Dark Ages", 581.83, 78, 775, 109, 627], _
 									["BC", "Book of Clash", 532.42, 77, 773, 105, 626], _
 									["EM", "Epic Magic", 624.48, 41, 818, 34, 615], _
@@ -2064,5 +2043,7 @@ Global $g_aVillageRefSize[44][7] = [["DS", "Default", 592.24, 87, 792, 52, 589],
 									["TD", "Tang Dynasty", 579.24, 69, 778, 57, 588], _
 									["CH", "Chess", 643.24, 63, 793, 49, 601], _
 									["GC", "Goblin Cave", 590.33, 57, 786, 41, 577], _
+									["WW", "Wild West", 607.48, 51, 799, 41, 603], _
+									["WL", "Waste Land", 581.80, 72, 791, 55, 595], _
 									["EG", "Egypt", 580.20, 96, 765, 104, 603]]
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"

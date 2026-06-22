@@ -241,7 +241,7 @@ Func LaunchWatchdog()
 	If $g_iBotLaunchOption_Console Then $cmd &= " /console"
 	Local $pid = Run($cmd, @ScriptDir)
 	If $pid = 0 Then
-		SetLog("Cannot launch watchdog", $COLOR_RED)
+		SetLog("Cannot launch watchdog", $COLOR_ERROR)
 		Return 0
 	EndIf
 	If $g_bDebugSetlog Then

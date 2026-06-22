@@ -39,8 +39,8 @@ MAKE  |Q          |FRONT-LEFT |10         |1          |EXT-INT    |0          |0
 MAKE  |R          |FRONT-RIGHT|10         |1          |EXT-INT    |0          |0          |           |           |           |           |
 MAKE  |M          |FRONT-LEFT |10         |1          |INT-EXT    |0          |0          |           |           |           |           |
 MAKE  |N          |FRONT-RIGHT|10         |1          |INT-EXT    |0          |0          |           |           |           |           |
-MAKE  |O          |FRONT-LEFT |10         |-10        |INT-EXT    |3          |2          |           |           |           |           |
-MAKE  |S          |FRONT-LEFT |10         |-9         |INT-EXT    |3          |2          |           |           |           |           |
+MAKE  |O          |FRONT-LEFT |10         |-12        |INT-EXT    |3          |2          |           |           |           |           |
+MAKE  |S          |FRONT-LEFT |10         |-11        |INT-EXT    |3          |2          |           |           |           |           |
 MAKE  |T          |FRONT-RIGHT|10         |-10        |INT-EXT    |2          |2          |           |           |           |           |
 MAKE  |U          |FRONT-LEFT |10         |-16        |INT-EXT    |2          |2          |           |           |           |           |
 MAKE  |V          |FRONT-RIGHT|10         |-15        |INT-EXT    |1          |2          |           |           |           |           |
@@ -54,53 +54,47 @@ MAKE  |E          |FRONT-LEFT |1          |0          |IGNORE     |0          |0
 MAKE  |F          |FRONT-RIGHT|1          |0          |IGNORE     |0          |0          |AIRDEFENSE |           |           |           |
 MAKE  |G          |LEFT-FRONT |1          |0          |IGNORE     |0          |0          |AIRDEFENSE |           |           |           |
 MAKE  |H          |RIGHT-FRONT|1          |0          |IGNORE     |0          |0          |AIRDEFENSE |           |           |           |
-MAKE  |I          |LEFT-BACK  |1          |0          |IGNORE     |0          |0          |AIRDEFENSE |           |           |           |
-MAKE  |J          |RIGHT-BACK |1          |0          |IGNORE     |0          |0          |AIRDEFENSE |           |           |           |
+MAKE  |I          |BACK-LEFT  |1          |0          |IGNORE     |0          |0          |AIRDEFENSE |           |           |           |
+MAKE  |J          |BACK-RIGHT |1          |0          |IGNORE     |0          |0          |AIRDEFENSE |           |           |           |
       |                                                                                                                                   |
       |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|___________|___________|___________|
-DROP  |E          |1          |3          |LSpell     |0          |200        |1000       |AIRDEFENSE |           |           |           |
-DROP  |F          |1          |3          |LSpell     |0          |200        |1000       |AIRDEFENSE |           |           |           |
-DROP  |G          |1          |3          |LSpell     |0          |200        |1000       |AIRDEFENSE |           |           |           |
-DROP  |H          |1          |3          |LSpell     |0          |200        |1000       |AIRDEFENSE |           |           |           |
-DROP  |I          |1          |3          |LSpell     |0          |200        |1000       |AIRDEFENSE |           |           |           |
-DROP  |J          |1          |3          |LSpell     |0          |200        |1000       |AIRDEFENSE |           |           |           |
+DROP  |E          |1          |3          |LSpell     |0          |200        |500        |AIRDEFENSE |           |           |           |
+DROP  |I          |1          |3          |LSpell     |0          |200        |500        |AIRDEFENSE |           |           |           |
 DROP  |C          |3          |1          |Ball       |0          |27-50      |50-70      |           |           |           |           |
 DROP  |D          |3          |1          |Ball       |0          |27-50      |1050-1090  |           |           |           |           |
 DROP  |C          |3          |1          |FlameF     |55-70      |27-50      |15-20      |           |           |           |           |
 DROP  |C          |3          |1          |EDrag      |55-70      |27-50      |15-20      |           |           |           |           |
-DROP  |D          |3          |1          |EDrag      |55-70      |27-50      |14000-16000|           |           |      	  |      	  |
-DROP  |M-N        |4-7        |8          |Ball       |50-70      |27-50      |15-20      |           |           | 		  | 		  |
-DROP  |M-N        |4-7        |3          |SDrag      |50-70      |27-50      |15-20      |           |           | 		  | 		  |
-DROP  |M-N        |4-7        |3          |Drag       |50-70      |27-50      |15-20      |           |           | 		  | 		  |
-DROP  |Q          |10         |1          |King       |0          |50-70      |150-200    |           |    ﻿       |           |           |
-DROP  |Q          |10         |1          |LogL       |0          |50-70      |100        |           |           |           |           |
-DROP  |Q          |10         |1          |StoneS     |0          |50-70      |100        |           |           |           |           |
-DROP  |Q          |10         |1          |WallW      |0          |50-70      |1000       |           |           |           |           |
+DROP  |D          |3          |1          |EDrag      |55-70      |27-50      |6000-7000  |           |           |           |      	  |
+DROP  |C          |3          |1          |Drag       |55-70      |27-50      |15-20      |           |           |           |           |
+DROP  |D          |3          |1          |Drag       |55-70      |27-50      |6000-7000  |           |           |           |      	  |
+DROP  |M-N        |4-7        |8          |Ball       |50-70      |27-50      |15-20      |           |           | 	      |		  |
+DROP  |M-N        |4-7        |8          |Ball       |50-70      |27-50      |15-20      |           |           | 	      | 	  |
 DROP  |M-N        |2-7        |6          |EDrag      |50-70      |27-50      |15-20      |           |           |           |           |
-DROP  |M-N        |2-7        |6          |SDrag      |50-70      |27-50      |15-20      |           |           |           |           |
-DROP  |C          |3          |1          |SiegeB     |0          |50-70      |100        |           |           |           |           |
-DROP  |B          |1          |1          |FSpell     |0          |50-70      |100        |EAGLE      |           |           |           |
+DROP  |M-N        |2-7        |6          |Drag       |50-70      |27-50      |15-20      |           |           |           |           |
+DROP  |Q          |10         |1          |King       |0          |50-70      |150-200    |           |    ﻿       |           |           |
+DROP  |Q          |10         |1          |Queen      |0          |50-70      |500        |           |           |           |           |
+DROP  |Q          |10         |1          |Duke       |0          |50-70      |150-200    |           |    ﻿       |           |           |
 DROP  |Q          |10         |1          |Warden     |50-70      |50-70      |100        |           |           |           |           |
-WAIT  |8000-9000  |           |           |           |           |           |           |           |           |           |           |
+DROP  |Q          |10         |1          |MinionP    |50-70      |50-70      |500        |           |           |           |           |
+DROP  |Q          |10         |1          |StoneS     |0          |50-70      |100        |           |           |           |           |
+DROP  |Q          |10         |1          |WallW      |0          |50-70      |100        |           |           |           |           |
 DROP  |Q          |10         |1          |BattleB    |0          |50-70      |100        |           |           |           |           |
+DROP  |Q          |10         |1          |SkyW       |0          |50-70      |100        |           |           |           |           |
+DROP  |Q          |10         |1          |Castle     |0          |50-70      |100        |           |           |           |           |
+DROP  |B          |1          |1          |FSpell     |0          |50-70      |100        |EAGLE      |           |           |           |
+WAIT  |6000       |           |           |           |           |           |           |           |           |           |           |
 DROP  |O          |5          |1          |RSpell     |0          |50-70      |500        |           |           |           |           |
 DROP  |S          |1          |1          |RSpell     |0          |50-70      |500        |           |           |           |           |
 DROP  |T          |4          |1          |RSpell     |0          |50-70      |500        |           |           |           |           |
-DROP  |Q          |10         |1          |Queen      |0          |50-70      |500        |           |           |           |           |
+DROP  |Q          |10         |1          |Warden     |50-70      |50-70      |100        |           |           |           |           |
+DROP  |M-N        |4-7        |8          |REMAIN     |50-70      |27-50      |15-20      |           |           | 	      |		  	  |
 DROP  |B          |1          |1          |FSpell     |0          |50-70      |3000-4500  |EAGLE      |           |           |           |
-DROP  |D          |9          |1          |Champion   |0          |50-70      |150-200    |           |           |      	  |      	  |
+DROP  |D          |9          |1          |Champion   |0          |50-70      |150-200    |           |           |           |      	  |
 DROP  |K          |1          |1          |FSpell     |0          |50-70      |1000-1500  |INFERNO    |           |           |           |
 DROP  |P          |1          |1          |FSpell     |0          |50-70      |1000-1500  |TOWNHALL   |           |           |           |
-DROP  |Q          |10         |1          |King       |50-70      |50-70      |500        |           |           |           |           |
 DROP  |U          |1          |1          |RSpell     |0          |50-70      |500        |           |           |           |           |
 DROP  |U          |5          |1          |RSpell     |0          |50-70      |500        |           |           |           |           |
 DROP  |V          |4          |1          |RSpell     |0          |50-70      |2000       |           |           |           |           |
 DROP  |P          |1          |1          |FSpell     |0          |50-70      |1000-1500  |EAGLE      |           |           |           |
 DROP  |J          |1          |1          |FSpell     |0          |50-70      |1000-1500  |TOWNHALL   |           |           |           |
-DROP  |Q          |10         |1          |Warden     |50-70      |50-70      |0          |           |           |           |           |
-DROP  |D          |9          |1          |Champion   |0          |50-70      |1000-1500  |           |           |      	  |      	  |
-DROP  |I          |1          |1          |FSpell     |0          |50-70      |150-200    |AIRDEFENSE |           |           |           |
-DROP  |J          |1          |1          |FSpell     |0          |50-70      |           |TOWNHALL   |           |           |           |
-DROP  |B          |1          |1          |FSpell     |0          |50-70      |3000-4500  |EAGLE      |           |           |           |
-DROP  |J          |1          |1          |FSpell     |0          |50-70      |1000-1500  |TOWNHALL   |           |           |           |
-DROP  |D          |9          |1          |REMAIN     |           |50-70      |           |           |           |           |           |
+

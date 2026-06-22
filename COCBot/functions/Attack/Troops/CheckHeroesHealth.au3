@@ -14,10 +14,10 @@
 ; ===============================================================================================================================
 Func CheckHeroesHealth()
 
-	If $g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower Or $g_bCheckChampionPower Or $g_bCheckMinionPPower Then
+	If $g_bCheckKingPower Or $g_bCheckQueenPower Or $g_bCheckWardenPower Or $g_bCheckChampionPower Or $g_bCheckMinionPPower Or $g_bCheckDukePower Then
 		ForceCaptureRegion() ; ensure no screenshot caching kicks in
 
-		Local $aDisplayTime[$eHeroCount] = [0, 0, 0, 0, 0] ; array to hold converted timerdiff into seconds
+		Local $aDisplayTime[$eHeroCount] = [0, 0, 0, 0, 0, 0] ; array to hold converted timerdiff into seconds
 
 		; Slot11+
 		Local $TempKingSlot = $g_iKingSlot
@@ -25,19 +25,23 @@ Func CheckHeroesHealth()
 		Local $TempWardenSlot = $g_iWardenSlot
 		Local $TempChampionSlot = $g_iChampionSlot
 		Local $TempMinionPSlot = $g_iMinionPSlot
-		
-		If $g_iKingSlot >= 11 Or $g_iQueenSlot >= 11 Or $g_iWardenSlot >= 11 Or $g_iChampionSlot >= 11 Or $g_iMinionPSlot >= 11 Then
+		Local $TempDukeSlot = $g_iDukeSlot
+
+		If $g_iKingSlot >= 11 Or $g_iQueenSlot >= 11 Or $g_iWardenSlot >= 11 Or $g_iChampionSlot >= 11 Or $g_iMinionPSlot >= 11 Or $g_iDukeSlot >= 11 Then
 			If Not $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, False) ; drag forward
-		ElseIf $g_iKingSlot >= 0 And $g_iQueenSlot >= 0 And $g_iWardenSlot >= 0 And $g_iChampionSlot >= 0 And $g_iMinionPSlot >= 0 And ($g_iKingSlot < $g_iTotalAttackSlot - 10 Or $g_iQueenSlot < $g_iTotalAttackSlot - 10 Or $g_iWardenSlot < $g_iTotalAttackSlot - 10 Or $g_iChampionSlot < $g_iTotalAttackSlot - 10 Or $g_iMinionPSlot < $g_iTotalAttackSlot - 10) Then
+		ElseIf $g_iKingSlot >= 0 And $g_iQueenSlot >= 0 And $g_iWardenSlot >= 0 And $g_iChampionSlot >= 0 And $g_iMinionPSlot >= 0 And $g_iDukeSlot >= 0 And _
+			($g_iKingSlot < $g_iTotalAttackSlot - 10 Or $g_iQueenSlot < $g_iTotalAttackSlot - 10 Or $g_iWardenSlot < $g_iTotalAttackSlot - 10 Or _
+			$g_iChampionSlot < $g_iTotalAttackSlot - 10 Or $g_iMinionPSlot < $g_iTotalAttackSlot - 10 Or $g_iDukeSlot < $g_iTotalAttackSlot - 10) Then
 			If $g_bDraggedAttackBar Then DragAttackBar($g_iTotalAttackSlot, True) ; return drag
 		EndIf
-		
+
 		If $g_bDraggedAttackBar Then
 			$TempKingSlot -= $g_iTotalAttackSlot - 10
 			$TempQueenSlot -= $g_iTotalAttackSlot - 10
 			$TempWardenSlot -= $g_iTotalAttackSlot - 10
 			$TempChampionSlot -= $g_iTotalAttackSlot - 10
 			$TempMinionPSlot -= $g_iTotalAttackSlot - 10
+			$TempDukeSlot -= $g_iTotalAttackSlot - 10
 		EndIf
 
 		If $g_bDebugSetlog Then
@@ -146,7 +150,7 @@ Func CheckHeroesHealth()
 		EndIf
 
 		If $g_bDebugSetlog Then
-			SetDebugLog("CheckHeroesHealth() for Royal Champion started ")
+			SetDebugLog("CheckHeroesHealth() for Royal Champion started")
 			If _Sleep($DELAYRESPOND) Then Return ; improve pause button response
 		EndIf
 
@@ -179,13 +183,13 @@ Func CheckHeroesHealth()
 				EndIf
 			EndIf
 		EndIf
-		
+
 		If $g_bDebugSetlog Then
 			SetDebugLog("CheckHeroesHealth() for Minion Prince started ")
 			If _Sleep($DELAYRESPOND) Then Return ; improve pause button response
 		EndIf
 
-		If $g_iActivateMinionP = 0 Or $g_iActivateMinionP = 2 And ($g_aHeroesTimerActivation[$eHeroMinionPrince] = 0 Or __TimerDiff($g_aHeroesTimerActivation[$eHeroMinionPrince]) > $DELAYCHECKHEROESHEALTH) Then
+		If $g_iActivatePrince = 0 Or $g_iActivatePrince = 2 And ($g_aHeroesTimerActivation[$eHeroMinionPrince] = 0 Or __TimerDiff($g_aHeroesTimerActivation[$eHeroMinionPrince]) > $DELAYCHECKHEROESHEALTH) Then
 			If $g_bCheckMinionPPower Then
 				Local $aMinionPHealthCopy = $aMinionPHealth
 				Local $aSlotPosition = GetSlotPosition($TempMinionPSlot)
@@ -200,12 +204,12 @@ Func CheckHeroesHealth()
 				EndIf
 			EndIf
 		EndIf
-		If $g_iActivateMinionP = 1 Or $g_iActivateMinionP = 2 Then
+		If $g_iActivatePrince = 1 Or $g_iActivatePrince = 2 Then
 			If $g_bCheckMinionPPower Then
 				If $g_aHeroesTimerActivation[$eHeroMinionPrince] <> 0 Then
 					$aDisplayTime[$eHeroMinionPrince] = Ceiling(__TimerDiff($g_aHeroesTimerActivation[$eHeroMinionPrince]) / 1000) ; seconds
 				EndIf
-				If (Int($g_iDelayActivateChampion) / 1000) <= $aDisplayTime[$eHeroMinionPrince] Then
+				If (Int($g_iDelayActivatePrince) / 1000) <= $aDisplayTime[$eHeroMinionPrince] Then
 					SetLog("Activating Minion Prince's ability after " & $aDisplayTime[$eHeroMinionPrince] & "'s", $COLOR_INFO)
 					SelectDropTroop($TempMinionPSlot, 2, Default, False) ; Slot11+
 					$g_iCSVLastTroopPositionDropTroopFromINI = $g_iMinionPSlot
@@ -214,7 +218,42 @@ Func CheckHeroesHealth()
 				EndIf
 			EndIf
 		EndIf
-		
+
+		If $g_bDebugSetlog Then
+			SetDebugLog("CheckHeroesHealth() for Dragon Duke started ")
+			If _Sleep($DELAYRESPOND) Then Return ; improve pause button response
+		EndIf
+
+		If $g_iActivateDuke = 0 Or $g_iActivateDuke = 2 And ($g_aHeroesTimerActivation[$eHeroDuke] = 0 Or __TimerDiff($g_aHeroesTimerActivation[$eHeroDuke]) > $DELAYCHECKHEROESHEALTH) Then
+			If $g_bCheckDukePower Then
+				Local $aDukeHealthCopy = $aDukeHealth
+				Local $aSlotPosition = GetSlotPosition($TempDukeSlot)
+				$aDukeHealthCopy[0] = $aSlotPosition[0] - $aDukeHealthCopy[4] ; Slot11+
+				Local $DukePixelColor = _GetPixelColor($aDukeHealthCopy[0], $aDukeHealthCopy[1], $g_bCapturePixel)
+				SetDebugLog("Dragon Duke _GetPixelColor(" & $aDukeHealthCopy[0] & "," & $aDukeHealthCopy[1] & "): " & $DukePixelColor, $COLOR_DEBUG)
+				If Not _CheckPixel2($aDukeHealthCopy, $DukePixelColor, "Red+Blue") Then
+					SetLog("Dragon Duke is getting weak, Activating Dragon Duke's ability", $COLOR_INFO)
+					SelectDropTroop($TempDukeSlot, 2, Default, False) ; Slot11+
+					$g_iCSVLastTroopPositionDropTroopFromINI = $g_iDukeSlot
+					$g_bCheckDukePower = False
+				EndIf
+			EndIf
+		EndIf
+		If $g_iActivateDuke = 1 Or $g_iActivateDuke = 2 Then
+			If $g_bCheckDukePower Then
+				If $g_aHeroesTimerActivation[$eHeroDuke] <> 0 Then
+					$aDisplayTime[$eHeroDuke] = Ceiling(__TimerDiff($g_aHeroesTimerActivation[$eHeroDuke]) / 1000) ; seconds
+				EndIf
+				If (Int($g_iDelayActivateDuke) / 1000) <= $aDisplayTime[$eHeroDuke] Then
+					SetLog("Activating Minion Prince's ability after " & $aDisplayTime[$eHeroDuke] & "'s", $COLOR_INFO)
+					SelectDropTroop($TempDukeSlot, 2, Default, False) ; Slot11+
+					$g_iCSVLastTroopPositionDropTroopFromINI = $g_iDukeSlot
+					$g_bCheckDukePower = False ; Reset check power flag
+					$g_aHeroesTimerActivation[$eHeroDuke] = 0 ; Reset Timer
+				EndIf
+			EndIf
+		EndIf
+
 		If _Sleep($DELAYRESPOND) Then Return ; improve pause button response
 	EndIf
 EndFunc   ;==>CheckHeroesHealth

@@ -28,16 +28,3 @@ Func chkSmartAttackRedAreaAB()
 	EndIf
 EndFunc   ;==>chkSmartAttackRedAreaAB
 
-Func chkSmartAttackRedAreaDB()
-	If GUICtrlRead($g_hChkSmartAttackRedAreaDB) = $GUI_CHECKED Then
-		$g_abAttackStdSmartAttack[$DB] = 1
-		For $i = $g_hLblSmartDeployDB To $g_hPicAttackNearDarkElixirDrillDB
-			GUICtrlSetState($i, $GUI_SHOW)
-		Next
-	Else
-		$g_abAttackStdSmartAttack[$DB] = 0
-		For $i = $g_hLblSmartDeployDB To $g_hPicAttackNearDarkElixirDrillDB
-			GUICtrlSetState($i, $GUI_HIDE)
-		Next
-	EndIf
-EndFunc   ;==>chkSmartAttackRedAreaDB

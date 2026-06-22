@@ -13,7 +13,7 @@
 
 Func GetResources($bLog = True) ;Reads resources
 	Static $iStuck = 0, $iSearchGold2 = 0, $iSearchElixir2 = 0
-	Local $xRead = 48, $yGold = 0, $yElix = 0, $yDE = 0, $yTrophy = 0
+	Local $xRead = 48, $yGold = 74, $yElix = 102, $yDE = 131, $yTrophy = 159
 	$g_iSearchGold = ""
 	$g_iSearchElixir = ""
 	$g_iSearchDark = ""
@@ -22,56 +22,24 @@ Func GetResources($bLog = True) ;Reads resources
 	If _Sleep($DELAYRESPOND) Then Return
 	SuspendAndroid()
 	
-	Local $aResource = QuickMIS("CNX", $g_sImgResourceAttack, 20, 70, 50, 185)
-	If UBound($aResource) < 2 Then 
-		If _Sleep(1000) Then Return
-		$aResource = QuickMIS("CNX", $g_sImgResourceAttack, 20, 70, 50, 185)		
-	EndIf
-	
-	Local $bDEFound = False, $bTrophyFound = False
-	If IsArray($aResource) And UBound($aResource) > 0 Then
-		_ArraySort($aResource, 0, 0, 0, 2)
-		SetDebugLog("Found Resource Image count : " & UBound($aResource))
-		For $i = 0 To UBound($aResource) - 1
-			Switch $aResource[$i][0]
-				Case "Gold"
-					$yGold = $aResource[$i][2] - 3
-					SetDebugLog("[" & $i & "] Found Gold Image")
-				Case "Elix"
-					$yElix = $aResource[$i][2] - 3
-					SetDebugLog("[" & $i & "] Found Elix Image")
-				Case "DE"
-					$yDE = $aResource[$i][2] - 3
-					SetDebugLog("[" & $i & "] Found DE Image")
-					$bDEFound = True
-				Case "Trophy"
-					$yTrophy = $aResource[$i][2]
-					SetDebugLog("[" & $i & "] Found Trophy Image")
-					$bTrophyFound = True
-			EndSwitch
-		Next
-	Else
-		SaveDebugImage("GetResources")
-		$yGold = 76
-		$yElix = 103
-		$yDE = 132
-		SetDebugLog("GetResources got problem reading Icon")
-	EndIf
-	
 	$g_iSearchGold = getGoldVillageSearch($xRead, $yGold)
 	SetDebugLog("getGoldVillageSearch(" & $xRead & "," & $yGold & ")")
 	$g_iSearchElixir = getElixirVillageSearch($xRead, $yElix)
 	SetDebugLog("getElixirVillageSearch(" & $xRead & "," & $yElix & ")")
-	If $bDEFound Then 
+	
+	If $g_iTownHallLevel >= 7 Then 
 		$g_iSearchDark = getDarkElixirVillageSearch($xRead, $yDE)
 		SetDebugLog("getDarkElixirVillageSearch(" & $xRead & "," & $yDE & ")")
 	EndIf
-	If $bTrophyFound Then 
+	
+	If $g_bLeagueAttack Then
 		$g_iSearchTrophy = getTrophyVillageSearch($xRead, $yTrophy)
 		SetDebugLog("getTrophyVillageSearch(" & $xRead & "," & $yTrophy & ")")
 	EndIf
 	
-	SetDebugLog("Gold: " & $g_iSearchGold & ", Elix: " & $g_iSearchElixir & ", DE: " & $g_iSearchDark & ", TR: " & $g_iSearchTrophy)
+	SetDebugLog("Gold: " & $g_iSearchGold & ", Elix: " & $g_iSearchElixir)
+	If $g_iTownHallLevel >= 7 Then SetDebugLog(" ==> DE: " & $g_iSearchDark)
+	If $g_bLeagueAttack Then SetDebugLog(" ==> TR: " & $g_iSearchTrophy)
 
 	If $g_iSearchGold = $iSearchGold2 And $g_iSearchElixir = $iSearchElixir2 Then $iStuck += 1
 	If $g_iSearchGold <> $iSearchGold2 Or $g_iSearchElixir <> $iSearchElixir2 Then $iStuck = 0

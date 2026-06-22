@@ -743,7 +743,7 @@ Func __ErrFunc($oError)
 			"Number is: " & Hex($oError.number, 8) & @CRLF & _
 			"Returncode is: " & Hex($oError.retcode, 8) & @CRLF & _
 			"WinDescription is: " & $oError.windescription & @CRLF & _
-			"Description is: " & $oError.description, $COLOR_RED)
+			"Description is: " & $oError.description, $COLOR_ERROR)
 EndFunc   ;==>__ErrFunc
 
 Func __ObjEventIni()

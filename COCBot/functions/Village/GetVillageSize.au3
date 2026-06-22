@@ -28,38 +28,21 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;GetVillageSize(True, "stone", "tree", False)
-Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix = Default, $bOnBuilderBase = Default)
+Func GetVillageSize($bOnBuilderBase = $g_bStayOnBuilderBase, $sStonePrefix = "stone", $sTreePrefix = "tree")
 	FuncEnter(GetVillageSize)
 	Local $stone = [0, 0, 0, 0, 0, ""], $tree = [0, 0, 0, 0, 0, ""]
-	If $DebugLog = Default Then $DebugLog = False
-	If $sStonePrefix = Default Then $sStonePrefix = "stone"
-	If $sTreePrefix = Default Then $sTreePrefix = "tree"
-	
-	If $bOnBuilderBase = Default Then
-		$bOnBuilderBase = isOnBuilderBase()
-	EndIf
-	
-	Local $sDirectory
-	If $bOnBuilderBase Then
-		$sDirectory = $g_sImgZoomOutDirBB
-	Else
-		$sDirectory = $g_sImgZoomOutDir
-	EndIf
-	
-	Local $iAdditionalX = 100
-	Local $iAdditionalY = 100
+	Local $sDirectory = $g_sImgZoomOutDir
 	Local $aResult = 0, $stone, $tree, $x, $y
 	
-	$stone = FindStone($sDirectory, $sStonePrefix, $iAdditionalX, $iAdditionalY)
+	$stone = FindStone($sDirectory)
 	If Not $g_bRunState Then Return 0
 	SetDebugLog("stone: " & _ArrayToString($stone))
 	If $stone[0] = 0 Then
-		SetDebugLog("GetVillageSize cannot find stone", $COLOR_WARNING)
-		If $bOnBuilderBase Then ZoomOutHelperBB("GetVillageSize")
+		SetDebugLog("GetVillageSize cannot find stone")
 		Return FuncReturn($aResult)
 	EndIf
 	
-	$tree = FindTree($sDirectory, $sTreePrefix, $iAdditionalX, $iAdditionalY, $stone[4])
+	$tree = FindTree($sDirectory, $sTreePrefix, $stone[4])
 	If Not $g_bRunState Then Return 0
 	SetDebugLog("tree: " & _ArrayToString($tree))
 	If $tree[0] = 0 Then
@@ -71,7 +54,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		Local $a = $tree[0] - $stone[0]
 		Local $b = $stone[1] - $tree[1]
 		Local $c = Sqrt($a * $a + $b * $b) ;measure distance from stone to tree
-		Local $ZoomOffset = 100, $checkZoomOffset = 0
+		Local $ZoomOffset = 30, $checkZoomOffset = 0
 			
 		Local $iRefSize = 600
 		Local $iIndex = _ArraySearch($g_aVillageRefSize, $stone[4])
@@ -79,11 +62,11 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 			$iRefSize = $g_aVillageRefSize[$iIndex][2]
 			$g_sSceneryCode = $g_aVillageRefSize[$iIndex][0]
 			$g_sCurrentScenery = $g_aVillageRefSize[$iIndex][1]
-			$InnerDiamondLeft = $g_aVillageRefSize[$iIndex][3]
-			$InnerDiamondRight = $g_aVillageRefSize[$iIndex][4]
-			$InnerDiamondTop = $g_aVillageRefSize[$iIndex][5]
-			$InnerDiamondBottom = $g_aVillageRefSize[$iIndex][6]
-			If $g_bDebugSetLog Then SetDebugLog("LRTB: " & $InnerDiamondLeft & "," & $InnerDiamondRight & "," & $InnerDiamondTop & "," & $InnerDiamondBottom)
+			$g_InnerDiamondLeft = $g_aVillageRefSize[$iIndex][3]
+			$g_InnerDiamondRight = $g_aVillageRefSize[$iIndex][4]
+			$g_InnerDiamondTop = $g_aVillageRefSize[$iIndex][5]
+			$g_InnerDiamondBottom = $g_aVillageRefSize[$iIndex][6]
+			If $g_bDebugSetLog Then SetDebugLog("LRTB: " & $g_InnerDiamondLeft & "," & $g_InnerDiamondRight & "," & $g_InnerDiamondTop & "," & $g_InnerDiamondBottom)
 		Else
 			SetLog("Reference Size no match", $COLOR_ERROR)
 			SetLog("Stone2tree = " & $c, $COLOR_INFO)
@@ -91,17 +74,17 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		EndIf
 		
 		Local $z = $c / $iRefSize
-		If $g_bDebugSetLog Then SetDebugLog("GetVillageSize, Scenery : " & $g_sSceneryCode & " : " & $g_sCurrentScenery & ", Zoom:" & $z, $COLOR_DEBUG1)
-		If $g_bDebugSetLog Then SetDebugLog("Stone2tree = " & $c)
-		If $g_bDebugSetLog Then SetDebugLog("Reference = " & $iRefSize)
-		If $g_bDebugSetLog Then SetDebugLog("ZoomLevel = " & $z)
+		SetDebugLog("GetVillageSize, Scenery : " & $g_sSceneryCode & " : " & $g_sCurrentScenery & ", Zoom:" & $z, $COLOR_DEBUG1)
+		SetDebugLog("Stone2tree = " & $c)
+		SetDebugLog("Reference = " & $iRefSize)
+		SetDebugLog("ZoomLevel = " & $z)
 		
 		$checkZoomOffset = Round(($c - $iRefSize), 2)
 		If $checkZoomOffset > $ZoomOffset Then 
-			If $g_bDebugSetLog Then SetDebugLog("Stone2tree:" & Round($c, 2) & " - Reference:" & Round($iRefSize, 2) & " = " & $checkZoomOffset & " > " & $ZoomOffset, $COLOR_DEBUG2)
-			Return FuncReturn($aResult)
+			SetDebugLog("Stone2tree:" & Round($c, 2) & " - Reference:" & Round($iRefSize, 2) & " = " & $checkZoomOffset & " > " & $ZoomOffset, $COLOR_DEBUG2)
+			;Return FuncReturn($aResult)
 		Else
-			If $g_bDebugSetLog Then SetDebugLog("Stone2tree:" & Round($c, 2) & " Reference:" & Round($iRefSize, 2) & " checkZoomOffset: " & $checkZoomOffset, $COLOR_DEBUG2)
+			SetDebugLog("Stone2tree:" & Round($c, 2) & " Reference:" & Round($iRefSize, 2) & " checkZoomOffset: " & $checkZoomOffset, $COLOR_DEBUG2)
 		EndIf
 		
 		Local $stone_x_exp = $stone[2]
@@ -114,8 +97,9 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$g_iZoomFactor = $z
 		$g_ixOffset = $x
 		$g_iyOffset = $y
+		setVillageOffset($x, $y, $z) ; update DLL with village offset for ConvertToVillagePos
 		
-		If $g_bDebugSetLog Then SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
+		SetDebugLog("GetVillageSize measured: " & $c & ", Zoom factor: " & $z & ", Offset: " & $x & ", " & $y, $COLOR_INFO)
 
 		Dim $aResult[11]
 		$aResult[0] = $c
@@ -128,6 +112,7 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 		$aResult[7] = $tree[0]
 		$aResult[8] = $tree[1]
 		$aResult[9] = $tree[5]
+		$aResult[10] = $g_sCurrentScenery
 
 		$g_aVillageSize = $aResult
 		ConvertInternalExternArea()
@@ -136,106 +121,89 @@ Func GetVillageSize($DebugLog = Default, $sStonePrefix = Default, $sTreePrefix =
 	FuncReturn()
 EndFunc   ;==>GetVillageSize
 
-Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone", $iAdditionalX = 100, $iAdditionalY = 100)
+Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone")
 	Local $stone = [0, 0, 0, 0, 0, ""]
-	Local $x0, $y0, $d0, $x, $y, $x1, $y1, $right, $bottom, $a, $b
-	Local $aStoneFiles
+	Local $a
 	
 	For $check = 1 To 2
-		;SetLog("[" & $check & "] Checking for same scenery: " & $g_sSceneryCode, $COLOR_DEBUG1)
+		SetDebugLog("FindStone check : " & $check)
 		If $check = 1 Then 
-			$aStoneFiles = _FileListToArray($sDirectory & "stone\", $sStonePrefix & $g_sSceneryCode & "*.*", $FLTA_FILES)
-		Else
-			$aStoneFiles = _FileListToArray($sDirectory & "stone\", $sStonePrefix & "*.*", $FLTA_FILES)
-		EndIf
-		
-		If @error Then
-			SetDebugLog("Error: Missing stone files (" & @error & ")", $COLOR_ERROR)
-			ContinueLoop
-		EndIf
-		
-		Local $i, $findImage, $sArea, $StoneName
-		For $i = 1 To $aStoneFiles[0]
-			$findImage = $aStoneFiles[$i]
-			$a = StringRegExp($findImage, "stone([0-9A-Z]+)-(\d+)-(\d+)_.*[.](xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
-			If UBound($a) = 4 Then
-				$StoneName = $a[0]
-				$d0 = $StoneName
-				$x0 = $a[1]
-				$y0 = $a[2]
-				$x1 = $x0 - $iAdditionalX
-				$y1 = $y0 - $iAdditionalY
-				$right = $x0 + $iAdditionalX
-				$bottom = $y0 + $iAdditionalY
-				$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
-				SetDebugLog("GetVillageSize check for image " & $findImage)
-				$b = decodeSingleCoord(findImage("stone" & $StoneName, $sDirectory & "stone\" & $findImage, $sArea, 1, True))
-				If UBound($b) = 2 Then
-					$x = Int($b[0])
-					$y = Int($b[1])
-					SetDebugLog("Found stone image at " & $x & ", " & $y & ": " & $findImage, $COLOR_INFO)
-					$stone[0] = $x ; x center of stone found
-					$stone[1] = $y ; y center of stone found
-					$stone[2] = $x0 ; x center of reference stone
-					$stone[3] = $y0 ; y center of reference stone
-					$stone[4] = $d0 ; distance from stone to tree in pixel
-					$stone[5] = $findImage
-					ExitLoop 2
-				EndIf
+			If Not QuickMIS("BFI", $sDirectory & $sStonePrefix & "\stone" & $g_sSceneryCode & "*", 0, 350, 350, 580) Then
+				SetDebugLog("Cannot Find stone file: " & $sStonePrefix & $g_sSceneryCode)
+				ContinueLoop
 			Else
-				SetDebugLog("GetVillageSize ignore image " & $findImage & ", reason: " & UBound($a), $COLOR_WARNING)
+				$a = StringRegExp($g_sQuickMISName,"stone([0-9A-Z]+)-(\d+)-(\d+)(_.*[.]xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
+				If UBound($a) = 4 Then
+					$stone[0] = $g_iQuickMISX ; x center of stone found
+					$stone[1] = $g_iQuickMISY ; y center of stone found
+					$stone[2] = $a[1] ; x center of reference stone
+					$stone[3] = $a[2] ; y center of reference stone
+					$stone[4] = $a[0] ; distance from stone to tree in pixel
+					$stone[5] = "stone" & $a[0] & "-" & $a[1] & "-" & $a[2] & $a[3]
+					SetDebugLog("Found stone image: " & $stone[5])
+					SetDebugLog("Set $g_sSceneryCode = " & $g_sSceneryCode)
+					Return $stone
+				EndIf					
 			EndIf
-			If Not $g_bRunState Then Return
-		Next
+		Else
+			If QuickMIS("BC1", $sDirectory & $sStonePrefix, 0, 350, 350, 580) Then
+				$a = StringRegExp($g_sQuickMISName,"stone([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+				If UBound($a) = 3 Then
+					$stone[0] = $g_iQuickMISX ; x center of stone found
+					$stone[1] = $g_iQuickMISY ; y center of stone found
+					$stone[2] = $a[1] ; x center of reference stone
+					$stone[3] = $a[2] ; y center of reference stone
+					$stone[4] = $a[0] ; distance from stone to tree in pixel
+					$stone[5] = "stone" & $a[0] & "-" & $a[1] & "-" & $a[2]
+					$g_sSceneryCode = $a[0]
+					SetDebugLog("Found stone image: " & $stone[5])
+					SetDebugLog("Set $g_sSceneryCode = " & $g_sSceneryCode)
+					Return $stone
+				EndIf
+			EndIf
+		EndIf
 		If Not $g_bRunState Then Return
 	Next
 	Return $stone
 EndFunc
 
-Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $iAdditionalX = 150, $iAdditionalY = 100, $sStoneName = "DS")
+Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $sSceneryCode = $g_sSceneryCode)
 	Local $tree = [0, 0, 0, 0, 0, ""]
-	Local $x0, $y0, $d0, $x, $y, $x1, $y1, $right, $bottom, $a, $b, $i, $findImage, $sArea
-	Local $aTreeFiles = _FileListToArray($sDirectory & "tree\", $sTreePrefix & "*.*", $FLTA_FILES)
-	If @error Then
-		SetLog("Error: Missing tree (" & @error & ")", $COLOR_ERROR)
-		Return $tree
-	EndIf
+	Local $a
 	
-	Local $scenerycode = "tree" & $sStoneName
-	For $i = 1 To $aTreeFiles[0]
-		$findImage = $aTreeFiles[$i]
-		If StringRegExp($findImage, $scenerycode, $STR_REGEXPMATCH) <> 1 Then ; if stone found is DS, filter only DS tree
-			;SetDebugLog("Image skipped: " & $findImage)
-			ContinueLoop
-		EndIf
-		$a = StringRegExp($findImage, "(tree[0-9A-Z]+)-(\d+)-(\d+)_.*[.](xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
-		If UBound($a) = 4 Then
-			$x0 = $a[1]
-			$y0 = $a[2]
-			$d0 = "notused"
-			
-			$x1 = $x0 - $iAdditionalX
-			$y1 = $y0 - $iAdditionalY
-			$right = $x0 + $iAdditionalX
-			$bottom = $y0 + $iAdditionalY
-			$sArea = Int($x1) & "," & Int($y1) & "|" & Int($right) & "," & Int($y1) & "|" & Int($right) & "," & Int($bottom) & "|" & Int($x1) & "," & Int($bottom)
-			SetDebugLog("GetVillageSize check for image " & $findImage)
-			$b = decodeSingleCoord(findImage($scenerycode, $sDirectory & "tree\" & $findImage, $sArea, 1, True))
-			; sort by x because there can be a 2nd at the right that should not be used
-			If UBound($b) = 2 Then
-				$x = Int($b[0])
-				$y = Int($b[1])
-				SetDebugLog("Found tree image at " & $x & ", " & $y & ": " & $findImage, $COLOR_INFO)
-				$tree[0] = $x ; x center of tree found
-				$tree[1] = $y ; y center of tree found
-				$tree[2] = $x0 ; x ref. center of tree
-				$tree[3] = $y0 ; y ref. center of tree
-				$tree[4] = $d0 ; distance from stone to tree in pixel
-				$tree[5] = $findImage
-				ExitLoop
+	For $check = 1 To 2
+		SetDebugLog("FindTree check : " & $check)
+		If $check = 1 Then 
+			If Not QuickMIS("BFI", $sDirectory & $sTreePrefix & "\tree" & $sSceneryCode & "*", 430, 0, 860, 220) Then
+				SetDebugLog("Cannot Find tree file: " & $sTreePrefix & $sSceneryCode)
+				ContinueLoop
+			Else
+				$a = StringRegExp($g_sQuickMISName,"tree([0-9A-Z]+)-(\d+)-(\d+)(_.*[.]xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
+				If UBound($a) = 4 Then
+					$tree[0] = $g_iQuickMISX ; x center of tree found
+					$tree[1] = $g_iQuickMISY ; y center of tree found
+					$tree[2] = $a[1] ; x center of reference tree
+					$tree[3] = $a[2] ; y center of reference tree
+					$tree[4] = $a[0] ; distance from tree to tree in pixel
+					$tree[5] = "tree" & $a[0] & "-" & $a[1] & "-" & $a[2] & $a[3]
+					SetDebugLog("Found tree image: " & $tree[5])
+					Return $tree
+				EndIf					
 			EndIf
 		Else
-			SetDebugLog("GetVillageSize ignore image " & $findImage & ", reason: " & UBound($a), $COLOR_WARNING)
+			If QuickMIS("BC1", $sDirectory & $sTreePrefix, 430, 0, 860, 220) Then
+				$a = StringRegExp($g_sQuickMISName,"tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
+				If UBound($a) = 3 Then
+					$tree[0] = $g_iQuickMISX ; x center of tree found
+					$tree[1] = $g_iQuickMISY ; y center of tree found
+					$tree[2] = $a[1] ; x center of reference tree
+					$tree[3] = $a[2] ; y center of reference tree
+					$tree[4] = $a[0] ; distance from tree to tree in pixel
+					$tree[5] = "tree" & $a[0] & "-" & $a[1] & "-" & $a[2]
+					SetDebugLog("Found tree image: " & $tree[5])
+					Return $tree
+				EndIf
+			EndIf
 		EndIf
 		If Not $g_bRunState Then Return
 	Next
@@ -268,11 +236,6 @@ Func UpdateGlobalVillageOffset($x, $y)
 		$updated = True
 	EndIf
 
-	If $g_aiTownHallDetails[0] <> 0 And $g_aiTownHallDetails[1] <> 0 Then
-		$g_aiTownHallDetails[0] += $x
-		$g_aiTownHallDetails[1] += $y
-		$updated = True
-	EndIf
 	If $g_iTHx <> 0 And $g_iTHy <> 0 Then
 		$g_iTHx += $x
 		$g_iTHy += $y

@@ -15,8 +15,13 @@
 #include-once
 
 Global $g_hGUI_DEADBASE_ATTACK_SMARTFARM = 0
-
+Global $g_hBtnCustomDropOrderDB = 0
 Global $g_hTxtInsidePercentage = 0 , $g_hTxtOutsidePercentage = 0 , $g_hChkDebugSmartFarm = 0, $g_hCmbMaxAttackSide = 0, $g_hChkForceEdgeSmartfarm = 0
+
+Global $g_hCmbStandardDropOrderDB = 0, $g_hCmbStandardDropSidesDB = 0, $g_hChkSmartAttackRedAreaDB = 0, $g_hCmbSmartDeployDB = 0, _
+	   $g_hChkAttackNearGoldMineDB = 0, $g_hChkAttackNearElixirCollectorDB = 0, $g_hChkAttackNearDarkElixirDrillDB = 0
+
+Global $g_hLblSmartDeployDB = 0, $g_hPicAttackNearDarkElixirDrillDB = 0
 
 Func CreateAttackSearchDeadBaseSmartFarm()
 
@@ -26,7 +31,6 @@ Func CreateAttackSearchDeadBaseSmartFarm()
 	Local $sTxtTip = ""
 	Local $x = 35, $y = 20
 		GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Group_01", "Options"), $x - 20, $y - 20, 270, $g_iSizeHGrpTab4)
-		$y += 30
 			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Smart Farm", "Lbl-TxtMaxAttackSide", "Max Attack Side") & ":", $x, $y + 2, -1, -1)
 			$g_hCmbMaxAttackSide = GUICtrlCreateCombo("", $x + 90, $y, 40, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL, $WS_VSCROLL))
 			GUICtrlSetData(-1, "1|2|3|4","4")

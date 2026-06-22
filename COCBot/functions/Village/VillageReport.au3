@@ -15,8 +15,7 @@
 ; ===============================================================================================================================
 
 Func VillageReport($bBypass = False, $bSuppressLog = False)
-	If _Sleep($DELAYVILLAGEREPORT1) Then Return
-	If _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "VillageReport") Then ClickAway()
+	
 	Switch $bBypass
 		Case False
 			If Not $bSuppressLog Then SetLog("Village Report", $COLOR_INFO)
@@ -26,13 +25,8 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 			If Not $bSuppressLog Then SetLog("Village Report Error, You have been a BAD programmer!", $COLOR_ERROR)
 	EndSwitch
 	
-	If _Sleep(50) Then Return
 	getBuilderCount($bSuppressLog) ; update builder data
-	If _Sleep(50) Then Return
-
-	;$g_aiCurrentLoot[$eLootTrophy] = getTrophyMainScreen($aTrophies[0], $aTrophies[1])
-	;If Not $bSuppressLog Then SetLog(" [T]: " & _NumberFormat($g_aiCurrentLoot[$eLootTrophy]), $COLOR_SUCCESS)
-
+	
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
 		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(690, 23)
 		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 74)
@@ -51,12 +45,4 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 		UpdateStats()
 	EndIf
 	
-	;If _Sleep(50) Then Return
-	;Local $i = 0
-	;While _ColorCheck(_GetPixelColor(819, 39, True), Hex(0xF8FCFF, 6), 20) = True ; wait for Builder/shop to close
-	;	$i += 1
-	;	If _Sleep($DELAYVILLAGEREPORT1) Then Return
-	;	If $i >= 20 Then ExitLoop
-	;WEnd
-
 EndFunc   ;==>VillageReport

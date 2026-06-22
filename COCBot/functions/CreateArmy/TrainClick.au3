@@ -23,7 +23,7 @@ Func TrainClick($iX, $iY, $iTimes, $TypeTroops)
 	If Not $g_bRunState Then Return
 	If IsTrainItPage() Then
 		If $g_bDebugSetLog Then
-			SetLog("TrainClick(" & $iX & "," & $iX & "," & $iTimes & ", " & "Train " & $TypeTroops & ")", $COLOR_DEBUG)
+			SetLog("TrainClick(" & $iX & "," & $iY & "," & $iTimes & ", " & "Train " & $TypeTroops & ")", $COLOR_DEBUG)
 		EndIf
 
 		If $iTimes <> 1 Then

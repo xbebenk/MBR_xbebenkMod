@@ -1,60 +1,35 @@
-* **v.7.9.9 Mod_v1.2.6#121**
-* Modify DonateCC (scroll to find troops)
-* Added chat notif checker, request/donate if exists
-* Fix TreasureHunt (Return Home after attack)
-* Added BuilderBase EndBattle on 2 stars
-* Separate Collect resource and lootcart
-* Added option to enable/disable CollectCookie
-* Rewrite Blacksmith (Hero Equipment Upgrade)
-
-* **v.7.9.9 Mod_v1.2.6#120**
-* Fix Placing New Wall
-* Add LDPlayer9 support (tested on LD9 9.1.46)
-* - coc seem not smooth on LD9 (flicker)
-* - tested bot run 24H with LD9 but LD9 hungs at day 2
-* - it may because my hardware you can test your own
-*
-
-* **v.7.9.9 Mod_v1.2.6#119**
-* Just bring up Mod up again
-* Many bugs
-* Many feature not work 
-
-*** What Work ***
-* Request CC
-* Donate CC
-* Attack DeadBase/LiveBase
-* Laboratory Upgrade
-* Auto Upgrade 
-* Wall Upgrade
-* BuilderBase Attack
-* ClanGames
-* Switch Account (SCID and Shared_Prefs)
 * 
-*** Changes ***
-* Only Support with Autoit 3.3.16
-* Add Hero Hall Tutorial Handling
-* Add Lab Assistant Tutorial Handling
-* Hide Android will only work on WIN10 and WIN11
-* Remove Donation Schedule
-* Remove Train Previous Army
-* Remove Upgrade wall only Gold and Elix full
-* Remove Upgrade wall with level (try all level)
-* Fix Sale Magic Item
-* Fix Sale Full Magic Item
-* Fix Remove obstacles (Main/BB)
-* Fix Attack Resource Read
-* Fix ClanGames Auto Collect Reward 
-* Fix Switch Account SCID (support 16 account)
-* Fix New Attack Find Opponent UI
-* Add Handle for New Attack Tutorial
-* Add Handle for New Place on a League message
-* Laboratory Upgrade from Lab menu
-* Star Laboratory Upgrade from Lab menu
-* Add auto create Second Desktop (for Hide Android)
-* Add upgrade wall selected level
-* Add Join Tournament
-* Fix Use Builder Potion
-* Fix Use Resource Potion 
-* Add Collect Meteor event
+* **v.7.9.9 Mod_v1.2.6#127** (2026-05-19)
+* Fix Use Hero Book
+* Fix Read DE on search
+* Fix use hero book on Duke Upgrade
+*
+* **v.7.9.9 Mod_v1.2.6#128** (2026-05-24)
+* Fix FillIncorrect Combo spell
+* refactor smartfarm attack
+* re-image collector/mines/drill
+* Add option to not sell magic item
+* Support use book for Dragon Duke
+*
+* **v.7.9.9 Mod_v1.2.6#129** (2026-06-16)
+* Add Wild West scenery
+* Add Waste Lan scenery
+* Add Dragon Escape scenery
+* remap Magic scenery
+* remap Clash-A-Rama scenery
+* remap Pinter scenery
+* remap Villagesize measure
+* remap ClockTower Boost routine
+* support attack with Mecha (identifiead as hogs)
+* support attack with Broom (identifiead as minion)
+* remove troop/spell traintime variables
+* remove drop hero/spell on attack settings (will always drop if avail)
+* Add option to use Saved army for Tournament attack
+* Add option to revert back to use Saved army for DB attack
+* Add option to SignUp Tournament but, not attack (use for stay in league)
+* remove drop trophy
+* recalc Auto adjust save elix/gold for wall (will save at 4 storage cap)
+* new icon for Builderbase troop on settings
+* Support CleanYardBB to remve root on Builderbase
+* remap Redline and Dropline (for stable deployment, please use external edge)
 

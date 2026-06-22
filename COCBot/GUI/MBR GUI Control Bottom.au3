@@ -163,8 +163,8 @@ Func btnStop()
 	If $g_bRunState Then
 		; always invoked in MyBot.run.au3!
 		SetLog("Button Stop pressed", $COLOR_DEBUG)
-		EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
 		$g_bRunState = False ; Exit BotStart()
+		EnableControls($g_hFrmBotBottom, False, $g_aFrmBotBottomCtrlState)
 	EndIf
 	$g_iBotAction = $eBotStop
 EndFunc   ;==>btnStop

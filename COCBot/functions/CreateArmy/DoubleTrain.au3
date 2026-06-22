@@ -53,15 +53,23 @@ EndFunc   ;==>TrainFullTroop
 Func FillIncorrectTroopCombo($caller = "Unknown")
 	If Not $g_bIgnoreIncorrectTroopCombo Then Return
 	SetLog("Train to Fill Incorrect Troop Combo", $COLOR_ACTION)
-	Click(500, 260, 1, 100, "Click Train Troops")
+	Click(780, 270, 1, 0, "Click Train Troops")
 	If _Sleep(1000) Then Return
 	Local $FillTroopIndex = $g_iCmbFillIncorrectTroopCombo
 	Local $sTroopName = $g_sCmbFICTroops[$FillTroopIndex][1]
 	Local $iTroopIndex = TroopIndexLookup($g_sCmbFICTroops[$FillTroopIndex][0])
-	Local $TroopQuantToFill = 5
+	Local $iLoop = 5
 	SetLog("Troop To Fill = " & $sTroopName, $COLOR_DEBUG)
-	
-	TrainIt($iTroopIndex, $TroopQuantToFill, $g_iTrainClickDelay)
+	DragIfNeeded($iTroopIndex)
+	For $i = 1 To $iLoop
+		If QuickMIS("BC1", $g_sImgArmyOverviewExclam, 300, 210, 480, 230) Then
+			TrainIt($iTroopIndex, 5, $g_iTrainClickDelay)
+			If _Sleep(200) Then Return
+		Else
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+	Next
 	ClickAway()
 	If _Sleep(500) Then Return
 EndFunc
@@ -92,12 +100,12 @@ Func FillIncorrectSpellCombo($caller = "Unknown")
 
 	If Not $g_bIgnoreIncorrectSpellCombo Then Return
 	SetLog("Train to Fill Incorrect Spell Combo", $COLOR_ACTION)
-	Click(500, 370, 1, 100, "Click Train Spells")
+	Click(630, 375, 1, 100, "Click Train Spells")
 	If _Sleep(1000) Then Return
 	Local $FillSpellIndex = $g_iCmbFillIncorrectSpellCombo
 	Local $sSpellName = $g_sCmbFICSpells[$FillSpellIndex][1]
 	Local $iSpellIndex = TroopIndexLookup($g_sCmbFICSpells[$FillSpellIndex][0])
-	Local $SpellQuantToFill = 1
+	Local $SpellQuantToFill = 2
 	
 	SetLog("Spell To Fill = " & $sSpellName, $COLOR_DEBUG)
 	TrainIt($iSpellIndex, $SpellQuantToFill, $g_iTrainClickDelay)

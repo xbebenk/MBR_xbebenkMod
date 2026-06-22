@@ -16,7 +16,7 @@
 #include-once
 #include <WinAPISys.au3>
 
-Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
+Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "", $checkProblemAffect = True)
 	Local $txt = "", $aPrevCoor[2] = [$x, $y]
     If $g_bUseRandomClick Then
 		$x = Random($x - 2, $x + 2, 1)
@@ -35,7 +35,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 	If TestCapture() Then Return
 
 	If $g_bAndroidAdbClick = True Then
-		AndroidClick($x, $y, $times, $speed)
+		AndroidClick($x, $y, $times, $speed, $checkProblemAffect)
 		Return
 	EndIf
 

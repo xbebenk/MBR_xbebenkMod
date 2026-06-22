@@ -57,7 +57,7 @@ Func CheckVersion()
 	
 	If Number($sModVersion) = Number($sCurrentVersion) Then 
 		SetLogCentered(" OK ", "#", $COLOR_SUCCESS)
-		SetLog("YOUR MOD VERSION (#" & $sCurrentVersion & ") IS LATEST VERSION.", $COLOR_SUCCESS)
+		SetLog("YOU USING LATEST MOD VERSION (#" & $sCurrentVersion & ")", $COLOR_SUCCESS)
 		SetLog($g_sXModSupportUrl, $COLOR_INFO)
 		SetLogCentered("#", "#", $COLOR_SUCCESS)
 	EndIf	

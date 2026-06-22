@@ -211,7 +211,7 @@ Func UnregisterManagedMyBotClient($hFrmBot)
 		EndIf
 	Next
 
-	SetDebugLog("Bot Window Handle not un-registered: " & $hFrmBot, $COLOR_RED)
+	SetDebugLog("Bot Window Handle not un-registered: " & $hFrmBot, $COLOR_ERROR)
 
 	Return 0
 

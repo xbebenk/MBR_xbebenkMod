@@ -105,7 +105,11 @@ Func CheckSwitchAcc()
 	; Force Switch when PBT detected
 	If $g_abPBActive[$g_iCurAccount] Then $bForceSwitch = True
 
-	If $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ; Forced to switch when in halt attack mode
+	If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 And $g_bChkAttackOnce Then 
+		SetLog("Only 1 Attack per loop, switching to another account", $COLOR_DEBUG)
+		SetSwitchAccLog(" - Attack Once, Force switch")
+		$bForceSwitch = True
+	ElseIf $g_iCommandStop = 0 Or $g_iCommandStop = 3 Then ; Forced to switch when in halt attack mode
 		SetLog("This account is in halt attack mode, switching to another account", $COLOR_ACTION)
 		SetSwitchAccLog(" - Halt Attack, Force switch")
 		$bForceSwitch = True
@@ -131,6 +135,8 @@ Func CheckSwitchAcc()
 			$bForceSwitch = True
 		EndIf
 	EndIf
+	
+	If $bForceSwitch Then RequestCC()
 
 	SetDebugLog("-Normal Switch-")
 	$g_iNextAccount = $g_iCurAccount + 1
@@ -178,13 +184,18 @@ Func SwitchCOCAcc($NextAccount = 0, $bTest = False)
 		$bResult = True
 	Else
 		
-		If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
-		If _Sleep(1000) Then Return
-			
-		If Not IsSettingPage() Then 
-			SetLog("Cannot verify Setting page!", $COLOR_ERROR)
-			$bResult = False
-		EndIf
+		For $i = 1 To 5 
+			If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
+			If _Sleep(1000) Then Return
+			If Not IsSettingPage(True, 2) Then 
+				SetLog("[" & $i & "] Cannot verify Setting page!", $COLOR_ERROR)
+				If $i = 2 Then RebootAndroid()
+				Return $bResult
+			Else
+				SetLog("[" & $i & "] Setting page verified", $COLOR_SUCCESS)
+				ExitLoop
+			EndIf
+		Next
 		
 		For $i = 1 To 5 
 			SetLog("Verifying SCID Windows #" & $i, $COLOR_ACTION)
@@ -277,11 +288,18 @@ Func ClickSCIDReload()
 	Local $bRet = False
 	If Not $g_bRunState Then Return
 	
-	If QuickMIS("BFI", $g_sImgSupercellIDReload, 550, 110, 630, 200) Then
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(1000) Then Return
-		$bRet = True
-	EndIf
+	For $i = 1 To 5
+		If QuickMIS("BC1", $g_sImgSupercellIDReload, 550, 110, 630, 200) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(1500) Then Return
+		EndIf
+		If QuickMIS("BC1", $g_sImgSupercellIDSwitchID, 610, 225, 700, 300) Then 
+			$bRet = True
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+		SetLog("Waiting switchID list #" & $i, $COLOR_ACTION)
+	Next
 	Return $bRet
 EndFunc   ;==>ClickSCIDSwitchID
 
@@ -341,6 +359,11 @@ Func ClickAccountSCID($iAccount = 2)
 		_ArrayDelete($aAccount, $aDel) 
 		_ArraySort($aAccount, 0, 0, 0, 2) 
 		
+		If UBound($aAccount) < 1 Then
+			SetLog("accountList: " & _ArrayToString($aAccount), $COLOR_DEBUG2)
+			Return False
+		EndIf
+		
 		For $i = 0 To UBound($aAccount) - 1
 			SetLog("Bottom Splitter on : " & $aAccount[$i][1] & "," & $aAccount[$i][2], $COLOR_DEBUG)
 		Next
@@ -360,11 +383,19 @@ Func ClickAccountSCID($iAccount = 2)
 					$y = $aAccount[1][2] - 35
 				EndIf
 			Case 2, 5, 8, 11, 14
-				$x = $aAccount[1][1] + 100
-				$y = $aAccount[1][2] - 35
+				If UBound($aAccount) > 1 Then
+					$x = $aAccount[1][1] + 100
+					$y = $aAccount[1][2] - 35
+				Else
+					SetLog("something wrong, account #2 on list not found", $COLOR_DEBUG2)
+				EndIf
 			Case 3, 6, 9, 12, 15
-				$x = $aAccount[2][1] + 100
-				$y = $aAccount[2][2] - 35
+				If UBound($aAccount) > 2 Then
+					$x = $aAccount[2][1] + 100
+					$y = $aAccount[2][2] - 35
+				Else
+					SetLog("something wrong, account #3 on list not found", $COLOR_DEBUG2)
+				EndIf
 		EndSwitch
 		
 		If Not $g_bRunState Then Return

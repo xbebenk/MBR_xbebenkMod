@@ -53,12 +53,12 @@ Func CheckAndroidRebootCondition($bRebootAndroid = True, $bLogOnly = False)
 
 	If $g_bIdleState = False Then Return False
 
-	Local $iRunTimeHrs = $iLaunched / (60 * 60 * 1000)
-
-	If $iRunTimeHrs >= $g_iAndroidRebootHours Then
-		SetLog("Reboot " & $g_sAndroidEmulator & " (" & $g_sAndroidInstance & ") due to configured run-time of " & $g_iAndroidRebootHours & "h")
-		Return True
-	EndIf
+	;Local $iRunTimeHrs = $iLaunched / (60 * 60 * 1000)
+	;
+	;If $iRunTimeHrs >= $g_iAndroidRebootHours Then
+	;	SetLog("Reboot " & $g_sAndroidEmulator & " (" & $g_sAndroidInstance & ") due to configured run-time of " & $g_iAndroidRebootHours & "h")
+	;	Return True
+	;EndIf
 
 	Return False
 

@@ -1,42 +1,48 @@
-; #FUNCTION# ====================================================================================================================
-; Name ..........: FindTownHall
-; Description ...:
-; Syntax ........: FindTownHall([$check = True])
-; Parameters ....: $check               - [optional] an unknown value. Default is True.
-; Return values .: None
-; Author ........:
-; Modified ......: CodeSlinger69 (2017)
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
-;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........:
-; Example .......: No
-; ===============================================================================================================================
 #include-once
 
-Func FindTownHall($bCheck = True, $forceCaptureRegion = True)
-	Local $THString = ""
+Func FindTownHall()
+	If Not $g_bRunState Then Return
+	Local $sTHString = "-"
+	Local $aTH, $aiTHPos[2], $aaTHPos[1]
+	
+	;reset
 	$g_iSearchTH = "-"
+	$g_sTHLoc = ""
 	$g_iTHx = 0
-	$g_iTHy = 0 ;if not check, find bully mode, always find				if deadbase enabled, and TH lvl or Outside checked, find          same with ActiveBase
-
-	If $bCheck Or ($isModeActive[$DB] And ($g_abFilterMeetTH[$DB] Or $g_abFilterMeetTHOutsideEnable[$DB])) Or ($isModeActive[$LB] And ($g_abFilterMeetTH[$LB] Or $g_abFilterMeetTHOutsideEnable[$LB])) Then
-
-		$g_iSearchTH = imgloccheckTownHallADV2(0, 0, $forceCaptureRegion)
-
-		If $g_iSearchTH <> "-" Then
-			$g_sTHLoc = "In"
-		ElseIf $g_iSearchTH <> "-" Then
-			$g_sTHLoc = "Out"
-		Else
-			$g_sTHLoc = $g_iSearchTH
-			$g_iTHx = 0
-			$g_iTHy = 0
+	$g_iTHy = 0 
+	
+	For $try = 1 To 2
+		SetDebugLog("[" & $try & "] FindTownHall #" & $try, $COLOR_ACTION)
+		$aTH = QuickMIS("CNX", $g_sImgTownHall, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom)
+		If IsArray($aTH) And UBound($aTH) > 0 Then
+			_ArraySort($aTH, 1, 0, 0, 3) ;sort TH Level descending
+			For $i = 0 To UBound($aTH) - 1
+				If Not IsInsideDiamondXY($aTH[$i][1], $aTH[$i][2]) Then ContinueLoop ;not inside diamond
+				SetDebugLog("Found TH Level " & $aTH[$i][3] & " on " & $aTH[$i][1] & "," & $aTH[$i][2], $COLOR_INFO)
+				$g_iTHx = $aTH[$i][1]
+				$g_iTHy = $aTH[$i][2]
+				$aiTHPos[0] = $aTH[$i][1]
+				$aiTHPos[1] = $aTH[$i][2]
+				$aaTHPos[0] = $aiTHPos
+				$g_iSearchTH = $aTH[$i][3]
+				$g_sTHLoc = getTHLoc($g_iTHx, $g_iTHy) 
+				$sTHString = " [TH]:" & StringFormat("%2s", $g_iSearchTH) & ", " & $g_sTHLoc
+				_ObjPutValue($g_oBldgAttackInfo, $eBldgTownHall & "_LOCATION", $aaTHPos)
+				If $g_sTHLoc <> "-" Then ExitLoop 2 ; exit, we found Townhall location
+			Next
 		EndIf
-		Return " [TH]:" & StringFormat("%2s", $g_iSearchTH) & ", " & $g_sTHLoc
+		If _Sleep(500) Then Return
+	Next
+
+	Return $sTHString
+EndFunc
+
+Func getTHLoc($x, $y)
+	Local $sRet = ""
+	If IsInsideSmallDiamondXY($x, $y) Then 
+		$sRet = "In"
+	Else
+		$sRet = "Out"
 	EndIf
-	$g_sTHLoc = $g_iSearchTH
-	$g_iTHx = 0
-	$g_iTHy = 0
-	Return ""
-EndFunc   ;==>FindTownHall
+	Return $sRet
+EndFunc

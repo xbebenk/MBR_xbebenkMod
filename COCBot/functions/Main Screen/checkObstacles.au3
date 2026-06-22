@@ -31,11 +31,12 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	
 	checkObstacles_Network()
 	CheckAndroidReboot()
+	
 	If Not $g_bRunState Then Return
 	If IsProblemAffect() Then
 		;1- Another device
 		If QuickMIS("BC1", $g_sImgAnotherDevice, 255, 315, 345, 335) Then 
-			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And $g_bChkSharedPrefs Then
+			If ProfileSwitchAccountEnabled() And $g_bChkSwitchOnAnotherDevice And HaveSharedPrefs() Then
 				SetLog("---- Forced Switch, Another device connected ----", $COLOR_ACTION)
 				SwitchForceAnotherDevice()
 				checkObstacles_ResetSearch()
@@ -123,14 +124,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return checkObstacles_ReloadCoC() ;Last chance -> Reload CoC
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(770, 138, True), Hex(0xD1151A, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(770, 118, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles") Then
-		SetLog("checkObstacles: Found Boost Supertroop Window", $COLOR_ACTION)
+	If _ColorCheck(_GetPixelColor(770, 138, True), Hex(0xD1151A, 6), 10, Default, "checkObstacles: Super Troop Window") And _ColorCheck(_GetPixelColor(770, 118, True), Hex(0xFFFFFF, 6), 10, Default, "checkObstacles : Super Troop Window") Then
+		SetLog("checkObstacles: Found Boost Super Troop Window", $COLOR_ACTION)
 		Click(770, 120)
 		If _Sleep(1000) Then Return
 		Return False
 	EndIf
 	If Not $g_bRunState Then Return
-	If _ColorCheck(_GetPixelColor(395, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(464, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles") Then
+	If _ColorCheck(_GetPixelColor(395, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles: Cookie Rumble Confirm Window") And _ColorCheck(_GetPixelColor(464, 535, True), Hex(0x6DBC1F, 6), 10, Default, "checkObstacles: Cookie Rumble Confirm Window") Then
 		SetLog("checkObstacles: Found Cookie Rumble Confirm Window", $COLOR_ACTION)
 		Click(430, 515)
 		If _Sleep(1000) Then Return
@@ -142,6 +143,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Click(440, 515)
 		Return False
 	EndIf
+	
 	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgWelcomeBackReward, 396, 135, 500, 165) Then 
 		Local $aClaim = QuickMIS("CNX", $g_sImgWelcomeBackReward, 80, 260, 725, 480)
@@ -158,12 +160,13 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 
-	If _ColorCheck(_GetPixelColor(384, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(480, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 600, True), Hex(0x000000, 6), 10, Default, "checkObstacles")  Then
+	If _ColorCheck(_GetPixelColor(384, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles: Return Home Button") And _ColorCheck(_GetPixelColor(480, 564, True), Hex(0x6CBB1F, 6), 10, Default, "checkObstacles: Return Home Button") And _ColorCheck(_GetPixelColor(430, 600, True), Hex(0x000000, 6), 10, Default, "checkObstacles: Return Home Button")  Then
 		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
 		Click(425, 550)
 		If _Sleep(3000) Then Return
 		Return False
 	EndIf
+	
 	If Not $g_bRunState Then Return
 	If BBBarbarianHead("checkObstacles") Then 
 		SetLog("checkObstacles: Found Return Home Button", $COLOR_ACTION)
@@ -172,19 +175,20 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		Return False
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(792, 39, True), Hex(0xDC0408, 6), 20, Default, "checkObstacles") Then
+	If _ColorCheck(_GetPixelColor(792, 39, True), Hex(0xDC0408, 6), 20, Default, "checkObstacles: Close Button") Then
 		SetLog("checkObstacles: Found Window with Close Button to close", $COLOR_ACTION)
 		PureClick(792, 39, 1, 0, "#0134") ;Clicks X
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(415, 260, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles") And _ColorCheck(_GetPixelColor(430, 455, True), Hex(0xBDE98D, 6), 20, Default, "checkObstacles") Then
+	If _ColorCheck(_GetPixelColor(415, 260, True), Hex(0xFFFFFF, 6), 20, Default, "checkObstacles: BuilderBase Star Bonus") And _ColorCheck(_GetPixelColor(430, 455, True), Hex(0xBDE98D, 6), 20, Default, "checkObstacles: BuilderBase Star Bonus") Then
 		SetLog("checkObstacles: Found BuilderBase Star Bonus", $COLOR_ACTION)
 		PureClick(430, 465) ;Clicks X
 		If _Sleep($DELAYCHECKOBSTACLES1) Then Return
 		Return False
 	EndIf
+	
 	If Not $g_bRunState Then Return
 	If _CheckPixel($aChatTab, True) Then
 		SetLog("checkObstacles: Found Chat Tab to close", $COLOR_ACTION)
@@ -235,10 +239,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep($DELAYCHECKOBSTACLES2) Then Return
 		Return False
 	EndIf
+	
+	CheckClanRush()
+	
 	If Not $g_bRunState Then Return
 	
-	If $bBuilderBase Then CheckBB20LootCartTutor()
-	If Not $bBuilderBase Then
+	If $bBuilderBase Then 
+		CheckBB20LootCartTutor()
+	Else
 		If QuickMIS("BC1", $g_sImgClanCapitalTutorial, 30, 460, 200, 600) Then ;handle for clan capital tutorial
 			SetLog("checkObstacles: Found Clan Capital Tutorial, Doing Tutorial", $COLOR_ACTION)
 			CCTutorial()
@@ -273,24 +281,8 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 		If _Sleep(500) Then Return
 		Return
 	EndIf
-	If Not $g_bRunState Then Return
-	Local $bIsOnBuilderIsland = isOnBuilderBase()
-	If Not $bBuilderBase And $bIsOnBuilderIsland Then ;Check for MainVillage, but coc is on BB -> go to mainVillage
-		ZoomOut(True)
-		If SwitchBetweenBases("Main") Then
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			Return False
-		EndIf
-	EndIf
-	If Not $g_bRunState Then Return
-	Local $bIsOnMainVillage = isOnMainVillage()
-	If $bBuilderBase And $bIsOnMainVillage Then ;Check for BB, but in MainVillage -> go to BB
-		If SwitchBetweenBases("BB") Then
-			If _Sleep($DELAYCHECKOBSTACLES1) Then Return
-			Return False
-		EndIf
-	EndIf
 	
+	If Not $g_bRunState Then Return
 	If QuickMIS("BC1", $g_sImgEventConfirm, 310, 410, 560, 650) Then 
 		SetLog("checkObstacles: Found Event Confirm Button", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY)
@@ -303,8 +295,8 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	CheckBuilderHutTutorial()
 	
 	If Not $g_bRunState Then Return
-	If QuickMIS("BC1", $g_sImgMaintenance, 300, 38, 566, 75) Then 
-		$Result = getOcrMaintenanceTime(285, 583, "Check Obstacles OCR Maintenance Break=")         ; OCR text to find wait time
+	If QuickMIS("BC1", $g_sImgMaintenance, 410, 3, 470, 35) Then 
+		$Result = getOcrMaintenanceTime(769, 39)         ; OCR text to find wait time
 		Local $iMaintenanceWaitTime = 0
 		Local $avTime = StringRegExp($Result, "([\d]+)[Mm]|(soon)|([\d]+[Hh])", $STR_REGEXPARRAYMATCH)
 		If UBound($avTime, 1) = 1 And Not @error Then
@@ -365,6 +357,11 @@ Func PlacedOnLeague()
 	If _ColorCheck(_GetPixelColor(430, 482, True), Hex(0xBFEA8E, 6), 20, Default, "ChestContinue") Then 
 		Click(430, 482)
 		SetLog("You have chest bonus, Continue...", $COLOR_DEBUG2)
+	EndIf
+	
+	If _ColorCheck(_GetPixelColor(430, 539, True), Hex(0xDDF685, 6), 20, Default, "HoggyBankContinue") Then 
+		Click(430, 540)
+		SetLog("You have Hoggy Bank Rewards, Continue...", $COLOR_DEBUG2)
 	EndIf
 	
 	Return $bRet
@@ -528,7 +525,7 @@ Func SwitchForceAnotherDevice()
 	If Not $g_bRunState Then Return
 	SetLog("Current Account = [" & $g_iCurAccount + 1 & "]")
 	SetLog("Switching to Account [" & $g_iNextAccount + 1 & "]")
-	Local $bSharedPrefs = $g_bChkSharedPrefs And HaveSharedPrefs($g_asProfileName[$g_iNextAccount])
+	
 	SwitchAccountVariablesReload("Save")
 	If $g_ahTimerSinceSwitched[$g_iCurAccount] <> 0 Then
 		If Not $g_bReMatchAcc Then SetSwitchAccLog(" - Acc " & $g_iCurAccount + 1 & ", online: " & Int(__TimerDiff($g_ahTimerSinceSwitched[$g_iCurAccount]) / 1000 / 60) & "m")
@@ -554,12 +551,10 @@ Func SwitchForceAnotherDevice()
 		EndIf
 	EndIf
 
-	If $bSharedPrefs Then
-		SetLog("Please wait for loading CoC")
-		PushSharedPrefs()
-		OpenCoC()
-		waitMainScreen()
-	EndIf
+	SetLog("Please wait for loading CoC")
+	PushSharedPrefs()
+	OpenCoC()
+	waitMainScreen()
 
 	SetSwitchAccLog("Switched to Acc [" & $NextAccount + 1 & "]", $COLOR_SUCCESS)
 	CreateLogFile() ; Cause use of the right log file after switch
@@ -782,6 +777,44 @@ Func CheckBuilderHutTutorial()
 			Next
 		EndIf
 	EndIf
+EndFunc
+
+Func CheckClanRush()
+	If QuickMIS("BC1", $g_sImgClanRush, 350, 125, 530, 200) Then
+		SetLog("checkObstacles: Found ClanRush Event", $COLOR_ACTION)
+		For $i = 1 To 2
+			If QuickMIS("BC1", $g_sImgClanRush, 320, 440, 560, 600) Then 
+				SetLog("checkObstacles: Found ClanRush " & $g_sQuickMISName & " Button", $COLOR_ACTION)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(1000) Then Return
+			EndIf
+		Next
+		If _Sleep(1000) Then Return
+		Local $aChest = QuickMIS("CNX", $g_sImgClanRush, 790, 200, 840, 510)
+		If $aChest = -1 Then $aChest = QuickMIS("CNX", $g_sImgClanRush, 8, 240, 60, 520)
+		If IsArray($aChest) And UBound($aChest) > 0 Then 
+			_ArraySort($aChest, 1, 0, 0, 2)
+			For $i = 0 To UBound($aChest) - 1
+				SetLog("Found Chest on " & $aChest[$i][1] & "," & $aChest[$i][2], $COLOR_DEBUG)
+				If QuickMIS("BC1", $g_sImgClanRush & "Lock", $aChest[$i][1], $aChest[$i][2] - 30, $aChest[$i][1] + 35, $aChest[$i][2] + 10) Then
+					If $g_sQuickMISName = "Lock" Then ContinueLoop
+				Else
+					Click($aChest[$i][1], $aChest[$i][2])
+					SetLog("Claiming reward : " & $aChest[$i][0], $COLOR_SUCCESS)
+					If $aChest[$i][0] = "Chest" Then
+						If _Sleep(3000) Then Return
+						For $j = 1 To 3
+							RewardChest()
+						Next
+					EndIf
+				EndIf
+			Next
+		EndIf
+		If QuickMIS("BC1", $g_sImgGeneralCloseButton, 800, 140, 840, 170) Then Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(1000) Then return
+		ZoomOut(True)
+	EndIf
+	Return False
 EndFunc
 
 Func CCTutorial()

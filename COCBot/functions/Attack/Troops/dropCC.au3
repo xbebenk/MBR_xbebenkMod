@@ -15,15 +15,11 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func dropCC($iX, $iY, $iCCSlot) ;Drop clan castle
-
-	Local $test = ($g_iMatchMode <> $DB And $g_iMatchMode <> $LB) Or $g_abAttackDropCC[$g_iMatchMode]
-
-	If $iCCSlot <> -1 And $test Then
-		;standard attack
+	SetDebugLog("DropCC " & $iX & "," & $iY & " Slot: " & $iCCSlot)
+	If $iCCSlot <> -1 Then
 		SetLog("Dropping Siege/Clan Castle [" & $iX & "," & $iY & "]", $COLOR_INFO)
 		SelectDropTroop($iCCSlot)
 		If _Sleep($DELAYDROPCC1) Then Return
 		AttackClick($iX, $iY, 1, 0, 0, "#0091")
 	EndIf
-
 EndFunc   ;==>dropCC

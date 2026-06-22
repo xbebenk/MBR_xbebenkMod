@@ -140,7 +140,7 @@ Func AcquireMutexTicket($sMutexName, $iMinTicketNo, $sWaitMessage = Default, $bC
 	Next
 
 	If $hTicketMutex = 0 Then
-		SetLog("Could not aquire mutex ticker for: " & $sMutexName, $COLOR_RED)
+		SetLog("Could not aquire mutex ticker for: " & $sMutexName, $COLOR_ERROR)
 		Return 0
 	EndIf
 

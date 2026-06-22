@@ -77,7 +77,7 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 				$isBlueBanner = _ColorCheck(_GetPixelColor($ColorPickBannerX, $iTroopBanners, True), Hex(0x3874FF, 6), 30, Default, "isBlueBanner") ; Blue Banner on TroopSlot = TroopSlot Quantity > 1 
 				
 				If $isBlueBanner Or $isVioletBanner Then
-					$Troop =  $g_iQuickMISName
+					$Troop =  $g_sQuickMISName
 					$Troopy = $iSelectTroopY
 					If $isBlueBanner Then $iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
 					If $isVioletBanner Then $iCount = 1
@@ -96,7 +96,7 @@ Func GetAttackBarBB($bRemaining = False, $bSecondAttack = False)
 				
 				$bReadTroop = $isBlueBanner Or $isVioletBanner
 				If $bReadTroop Then
-					$Troop =  $g_iQuickMISName
+					$Troop =  $g_sQuickMISName
 					$Troopy = $iSelectTroopY
 					If $isBlueBanner Then $iCount = Number(getOcrAndCapture("coc-tbb", $ColorPickBannerX, $iTroopBanners - 12, 35, 28, True))
 					If $isVioletBanner Then $iCount = 1
@@ -180,8 +180,8 @@ Func ChangeBBTroopTo($sTroopName, $x, $sChangeTo)
 		Click($g_iQuickMISX + 2, $g_iQuickMISY)
 		$TmpX = $g_iQuickMISX
 		$TmpY = $g_iQuickMISY
-		If _Sleep(1000) Then Return
-		If QuickMIS("BFI", $g_sImgDirBBTroops & $sChangeTo & "*", 0, 470, 860, 536) Then
+		If _Sleep(1500) Then Return
+		If QuickMIS("BFI", $g_sImgDirBBTroops & $sChangeTo & "*", 0, 470, 860, 540) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1000) Then Return
 			$bRet = True

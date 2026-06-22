@@ -36,8 +36,20 @@ Func ChkBBSuggestedUpgradesIgnoreHall()
 	$g_bChkAutoUpgradeBBIgnoreHall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreHall) = $GUI_CHECKED)
 EndFunc   ;==>ChkBBSuggestedUpgradesIgnoreHall
 
+Func ChkBBSpendGoldOnWall()
+	$g_bChkBBSpendGoldOnWall = (GUICtrlRead($g_hChkBBSpendGoldOnWall) = $GUI_CHECKED)
+	If $g_bChkAutoUpgradeBBIgnoreWall Then 
+		GUICtrlSetState($g_hChkAutoUpgradeBBIgnoreWall, $GUI_UNCHECKED)
+		$g_bChkAutoUpgradeBBIgnoreWall = False
+	EndIf
+EndFunc
+
 Func ChkBBSuggestedUpgradesIgnoreWall()
 	$g_bChkAutoUpgradeBBIgnoreWall = (GUICtrlRead($g_hChkAutoUpgradeBBIgnoreWall) = $GUI_CHECKED)
+	If $g_bChkBBSpendGoldOnWall Then 
+		GUICtrlSetState($g_hChkBBSpendGoldOnWall, $GUI_UNCHECKED)
+		$g_bChkBBSpendGoldOnWall = False
+	EndIf
 EndFunc   ;==>ChkBBSuggestedUpgradesIgnoreHall
 
 Func ChkBOBControl()
@@ -163,7 +175,7 @@ Func chkBBDropOrder()
 		For $i = 0 To $g_iBBTroopCount - 1
 			GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_DISABLE)
 		Next
-		GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_RED)
+		GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_ERROR)
 		$g_bBBDropOrderSet = False
 	EndIf
 EndFunc   ;==>chkBBDropOrder
@@ -221,7 +233,7 @@ Func BtnBBRemoveDropOrder()
 		_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], -1)
 		GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_ENABLE)
 	Next
-	GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_RED)
+	GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_ERROR)
 	$g_bBBDropOrderSet = False
 EndFunc   ;==>BtnBBRemoveDropOrder
 

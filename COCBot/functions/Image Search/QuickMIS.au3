@@ -17,11 +17,11 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 	Local $error, $extError
 	If ($ValueReturned <> "BC1") And ($ValueReturned <> "CX") And ($ValueReturned <> "CNX") And ($ValueReturned <> "N1") And _
 		($ValueReturned <> "NX") And ($ValueReturned <> "Q1") And ($ValueReturned <> "QX") And ($ValueReturned <> "BFI") Then
-		SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_RED)
+		SetLog("Bad parameters during QuickMIS call for MultiSearch...", $COLOR_ERROR)
 		Return
 	EndIf
 	
-	Local $Res, $aCoords
+	Local $Res, $aCoords, $bRet = False
 	Local $RectArea[4] = [$Left, $Top, $Right, $Bottom]
 	Local $sImageArea = GetDiamondFromArray($RectArea)
 	If $ValueReturned = "BFI" Then 
@@ -48,25 +48,28 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					If UBound($coord) = 2 Then 
 						$g_iQuickMISX = $coord[0]
 						$g_iQuickMISY = $coord[1]
-						$g_iQuickMISName = $files[$i]
-						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $g_iQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
-						Return True
+						$g_sQuickMISName = $files[$i]
+						If $g_bDebugSetlog Then SetDebugLog("BFI Found : " & $g_sQuickMISName & " [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]")
+						$bRet = True
+						ExitLoop
 					EndIf
 				Else
 					If $g_bDebugSetlog Then SetDebugLog("BFI No result")
 				EndIf
-				If $g_bDebugImageSave Then 
-					_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
-					SaveDebugImage("QuickMIS_" & $ValueReturned, False)
-				EndIf
 			Next
 		EndIf
-		Return
-	Else
-		If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
-		$Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
+
+		If $g_bDebugImageSave Then 
+			_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
+			SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+		EndIf
+		
+		Return $bRet
 	EndIf
 	
+	If $bNeedCapture Then _CaptureRegion2($Left, $Top, $Right, $Bottom)
+	$Res = DllCallMyBot("SearchMultipleTilesBetweenLevels", "handle", $g_hHBitmap2, "str", $directory, "str", "FV", "Int", 0, "str", "FV", "Int", 0, "Int", 1000)
+		
 	$error = @error ; Store error values as they reset at next function call
 	$extError = @extended
 	If $error Then
@@ -74,7 +77,11 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 		SetDebugLog(" QuickMIS DLL Error : " & $error & " --- " & $extError)
 		Return -1
 	EndIf
-	If $g_bDebugImageSave Then SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+	
+	If $g_bDebugImageSave Then 
+		_CaptureRegion2($Left, $Top, $Right, $Bottom) ;not capture fullscreen
+		SaveDebugImage("QuickMIS_" & $ValueReturned, False)
+	EndIf
 
 	If IsArray($Res) Then
 		;_ArrayDisplay($Res)
@@ -100,14 +107,14 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 			EndSwitch
 
 		;ElseIf StringInStr($Res[0], "-1") <> 0 Then
-		;	SetLog("DLL Error", $COLOR_RED)
+		;	SetLog("DLL Error", $COLOR_ERROR)
 
 		Else
 			Switch $ValueReturned
 
 				Case "BC1" ; coordinates of first/one image found + boolean value
 
-					Local $Result = "" , $Name = "", $Level = ""
+					Local $Result = ""
 					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
 					For $i = 0 To UBound($KeyValue) - 1
 						Local $DLLRes = DllCallMyBot("GetProperty", "str", $KeyValue[$i], "str", "objectpoints")
@@ -125,15 +132,11 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					$g_iQuickMISX = $aCords[0] + $Left
 					$g_iQuickMISY = $aCords[1] + $Top
 
-					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
-					$g_iQuickMISName = $Name
-					$Level = RetrieveImglocProperty($KeyValue[0], "objectlevel")
-					$g_iQuickMISLevel = $Level
-
-					If $g_bDebugSetlog Or $Debug Then
-						SetDebugLog($ValueReturned & " Found: " & $Name & " Level:" & $Level & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
-						If $g_bDebugImageSave Then DebugQuickMIS($aCords[0], $aCords[1], "BC1_detected[" & $Name & "_" & $g_iQuickMISX & "x" & $g_iQuickMISY & "]")
-					EndIf
+					$g_sQuickMISName = RetrieveImglocProperty($KeyValue[0], "objectname")
+					$g_iQuickMISLevel = RetrieveImglocProperty($KeyValue[0], "objectlevel")
+					
+					SetDebugLog($ValueReturned & " Found: " & $g_sQuickMISName & " Level:" & $g_iQuickMISLevel & ", using " & $g_iQuickMISX & "," & $g_iQuickMISY, $COLOR_PURPLE)
+					If $g_bDebugImageSave Then DebugQuickMIS($aCords[0], $aCords[1], "BC1_detected[" & $g_sQuickMISName & "_" & $g_iQuickMISX & "x" & $g_iQuickMISY & "]")
 
 					Return True
 
@@ -151,7 +154,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					Return $CoordsInArray
 					
 				Case "CNX" 
-					Local $Result[0][4]
+					Local $aResult[0][4]
 					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
 					Local $sResult = ""
 					For $i = 0 To UBound($KeyValue) - 1
@@ -163,17 +166,15 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 							If UBound(decodeSingleCoord($xy[$j])) > 1 Then 
 								Local $Tmpxy = StringSplit($xy[$j], ",", $STR_NOCOUNT)
 								Local $tmparray[1][4] = [[String($objName[0]), Number($Tmpxy[0] + $Left), Number($Tmpxy[1] + $Top), String($objName[1])]]
-								_ArrayAdd($Result, $tmparray)
+								_ArrayAdd($aResult, $tmparray)
 								If @error Then SetLog("QuickMIS-CNX ComposeArray Err : " & @error, $COLOR_ERROR)
 								$sResult &= "|" & $objName[0] & "," & $Tmpxy[0] + $Left & "," & $Tmpxy[1] + $Top & "," & $objName[1]
 							EndIf
 						Next
 					Next
-					If $g_bDebugSetlog Or $Debug Then 
-						If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $sResult)
-						If $g_bDebugImageSave Then DebugQuickMISCNX($Result, "CNX")
-					EndIf
-					Return $Result
+					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $sResult)
+					If $g_bDebugImageSave Then DebugQuickMISCNX($aResult, "CNX")
+					Return $aResult
 
 				Case "N1" ; name of first file found
 
@@ -213,6 +214,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 			EndSwitch
 		EndIf
 	EndIf
+	
 EndFunc   ;==>QuickMIS
 
 Func DebugQuickMIS($x, $y, $DebugText = "")
@@ -250,7 +252,7 @@ Func DebugQuickMISCNX($aResult = Default, $DebugText = "")
 	
 	If IsArray($aResult) Then
 		For $i = 0 To UBound($aResult) - 1
-			_GDIPlus_GraphicsDrawRect($hGraphic, $aResult[$i][1] - 3, $aResult[$i][2] - 3, 5, 5, $hPenRED)
+			addInfoToDebugImage($hGraphic, $hPenRED, $aResult[$i][0] & "_" & $aResult[$i][3], $aResult[$i][1] - 3, $aResult[$i][2] - 3)
 		Next
 	EndIf
 
@@ -260,3 +262,23 @@ Func DebugQuickMISCNX($aResult = Default, $DebugText = "")
 	_GDIPlus_BitmapDispose($editedImage)
 
 EndFunc   ;==>DebugQuickMIS
+
+Func RemoveDupCNX(ByRef $arr, $sortBy = 1, $distance = 10)
+	Local $atmparray[0][4]
+	Local $tmpCoord = 0
+	_ArraySort($arr, 0, 0, 0, $sortBy) ;sort by 1 = x, 2 = y
+	For $i = 0 To UBound($arr) - 1
+		;SetDebugLog("tmpCoord:" & $tmpCoord)
+		;SetDebugLog("[" & $i & "]: " & $arr[$i][1] & "," & $arr[$i][2] & "|" & $arr[$i][0] & "|" & $arr[$i][3])
+		If $arr[$i][$sortBy] >= $tmpCoord + $distance Then
+			_ArrayAdd($atmparray, $arr[$i][0] & "|" & $arr[$i][1] & "|" & $arr[$i][2] & "|" & $arr[$i][3])
+			$tmpCoord = $arr[$i][$sortBy] + $distance
+		Else
+			;SetDebugLog("Skip this dup: " & $arr[$i][$sortBy] & " is near " & $tmpCoord, $COLOR_INFO)
+			ContinueLoop
+		EndIf
+	Next
+	$arr = $atmparray
+	SetDebugLog(_ArrayToString($arr))
+EndFunc
+

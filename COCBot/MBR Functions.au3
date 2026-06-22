@@ -51,18 +51,11 @@
 #include "functions\Attack\AttackCSV\ChkAttackCSVConfig.au3"
 #include "functions\Attack\AttackCSV\ParseAttackCSV_Settings_variables.au3"
 
-#include "functions\Attack\RedArea\_FindPixelCloser.au3"
-#include "functions\Attack\RedArea\_GetOffsetTroopFurther.au3"
 #include "functions\Attack\RedArea\_GetRedArea.au3"
-#include "functions\Attack\RedArea\_GetVectorOutZone.au3"
 #include "functions\Attack\RedArea\DebugRedArea.au3"
 #include "functions\Attack\RedArea\DropOnPixel.au3"
 #include "functions\Attack\RedArea\DropTroop.au3"
 #include "functions\Attack\RedArea\GetLocation.au3"
-#include "functions\Attack\RedArea\GetOffestPixelRedArea2.au3"
-#include "functions\Attack\RedArea\GetPixelDropTroop.au3"
-#include "functions\Attack\RedArea\GetPixelSide.au3"
-#include "functions\Attack\RedArea\GetVectorPixelOnEachSide.au3"
 #include "functions\Attack\RedArea\PointInPoly.au3"
 
 #include "functions\Attack\Troops\CheckHeroesHealth.au3"
@@ -85,6 +78,8 @@
 #include "functions\Attack\BuilderBase\PrepareAttackBB.au3"
 #include "functions\Attack\BuilderBase\AttackBB.au3"
 #include "functions\Attack\BuilderBase\GetAttackBarBB.au3"
+
+#include "functions\Attack\ClanCapital\CapitalAttack.au3"
 
 #Region CreateArmy / Train
 #include "functions\CreateArmy\CheckFullArmy.au3"
@@ -133,7 +128,6 @@
 #include "functions\Main Screen\isGemOpen.au3"
 #include "functions\Main Screen\isNoUpgradeLoot.au3"
 #include "functions\Main Screen\isProblemAffect.au3"
-#include "functions\Main Screen\checkAttackDisable.au3"
 #include "functions\Main Screen\RemoveGhostTrayIcons.au3"
 #include "functions\Main Screen\waitMainScreen.au3"
 
@@ -223,13 +217,11 @@
 #include "functions\Village\BotDetectFirstTime.au3"
 #include "functions\Village\BotCommand.au3"
 #include "functions\Village\BreakPersonalShield.au3"
-#include "functions\Village\CheckBaseQuick.au3"
 #include "functions\Village\chkShieldStatus.au3"
 #include "functions\Village\Collect.au3"
 #include "functions\Village\CollectAchievements.au3"
 #include "functions\Village\TreasuryCollect.au3"
 #include "functions\Village\DonateCC.au3"
-#include "functions\Village\DropTrophy.au3"
 #include "functions\Village\GetTownHallLevel.au3"
 #include "functions\Village\isAtkDarkElixirFull.au3"
 #include "functions\Village\isDarkElixirFull.au3"

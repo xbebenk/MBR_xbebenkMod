@@ -29,8 +29,16 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	VillageReport(False, True) ;check available builder and resource (Gold,Elix,DE)
 	If Not $g_bRunState Then Return
 	If $g_aiCurrentLoot[$eLootGold] < 1000 Then Return False
+	
+	;Check if free builder is goblin builder
+	If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
+		SetLog("AutoUpgradeCheckBuilder, Free Builder = 1, Goblin Builder!", $COLOR_DEBUG2)
+		$g_iFreeBuilderCount = 0
+		$bRet = False
+	EndIf
+	
 	;Check if there is a free builder for Auto Upgrade
-	If $g_iFreeBuilderCount > 0 Then $bRet = True;builder available
+	If $g_iFreeBuilderCount > 0 Then $bRet = True ;builder available
 
 	Local $iWallReserve = $g_bUpgradeWallSaveBuilder ? 1 : 0
 	If $g_iFreeBuilderCount - $iWallReserve - ReservedBuildersForHeroes() < 1 Then ;check builder reserve on wall and hero upgrade
@@ -50,14 +58,6 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	If $bTest Then ;for testing, bypass
 		$g_iFreeBuilderCount = 1
 		$bRet = True
-	Else
-		If $g_iFreeBuilderCount = 1 Then
-			If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
-				SetLog("AutoUpgradeCheckBuilder, Free Builder = 1, Goblin Builder!", $COLOR_DEBUG2)
-				$g_iFreeBuilderCount = 0
-				$bRet = False
-			EndIf
-		EndIf
 	EndIf
 	
 	If Not $bRet And $g_iFreeBuilderCount = 0 Then
@@ -102,6 +102,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	If Not $g_bRunState Then Return
 	$g_bSkipWallReserve = False ;reset first
 	$g_bUpgradeLowCost = False ;reset first
+	$g_bGearUpDone = False
 	If _Sleep(50) Then Return
 	CheckMainScreen()
 	VillageReport(False, True)
@@ -110,7 +111,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		Local $aHour = QuickMIS("CNX", $g_sImgAUpgradeHour, 480, 110, 555, 170)
-		If isArray($aHour) And UBound($aHour) > 0 Then
+		If IsArray($aHour) And UBound($aHour) > 0 Then
 			_ArraySort($aHour, 0, 0, 0, 2)
 			
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($aHour[0][1] - 50, $aHour[0][2] - 8)
@@ -188,22 +189,24 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 		EndIf
 		
 		If $bSkipNew Then ;Townhall on upgrade, enable lowcost upgrade
-			$bLowCost = True
 			$bUseWallReserve = False
 		EndIf
 		
 		SetLog("FindUpgrade(bTest=" & String($bTest) & ", bSkipNew=" & String($bSkipNew) & ", bLowCost=" & String($bLowCost) & ", bUseWallReserve=" & String($bUseWallReserve), $COLOR_DEBUG)
 		$Upgrades = FindUpgrade($bTest, $bSkipNew, $bLowCost, $bUseWallReserve)
 		If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
-			If $bLowCost Then
+			If $bLowCost Or $g_bUpgradeOtherDefenses Then
 				_ArraySort($Upgrades, 0, 0, 0, 5)
 				SetLog("UpgradeList scoring by : LowCost", $COLOR_INFO)
 			Else
 				_ArraySort($Upgrades, 1, 0, 0, 6)
 				SetLog("UpgradeList scoring by : Highest Priority", $COLOR_INFO)
 			EndIf
+			
 
 			For $i = 0 To UBound($Upgrades) - 1
+				If $Upgrades[$i][6] = "Disabled" Then ContinueLoop
+				;If $Upgrades[$i][7] = "0" Then ContinueLoop
 				SetLog("[" & $Upgrades[$i][7] & "] " & $Upgrades[$i][3] & ", Cost:" & $Upgrades[$i][5] & " " & $Upgrades[$i][0] & ", Score: [" & ($Upgrades[$i][4] = "New" ? $Upgrades[$i][4] : $Upgrades[$i][6]) & "]", $COLOR_DEBUG1)
 			Next
 
@@ -230,8 +233,10 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 			If _Sleep(50) Then Return
 
 			For $i = 0 To UBound($Upgrades) - 1
-				If $Upgrades[$i][6] = "Disabled" And $Upgrades[$i][7] = "Essential" Then
-					SetLog("Essential Building : " & $Upgrades[$i][3] & "[" & $Upgrades[$i][5] & "] Disabled, skip!", $COLOR_ACTION)
+				If $Upgrades[$i][6] = "Disabled" Then ContinueLoop
+				;If $Upgrades[$i][7] = "0" Then ContinueLoop
+				If $Upgrades[$i][7] = "Essential" And $g_bChkRushTH Then
+					SetLog("RushTH Found Essential Building : " & $Upgrades[$i][3] & "[" & $Upgrades[$i][5] & "] Disabled, skip!", $COLOR_ACTION)
 					ContinueLoop
 				EndIf
 
@@ -239,15 +244,12 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 					If Not $g_bRunState Then Return
 					Click($Upgrades[$i][1], $Upgrades[$i][2])
 					If _Sleep(1000) Then Return
-					Local $aHeroes[5] = ["King", "Queen", "Warden", "Champion", "Prince"]
+					Local $aHeroes[5] = ["Barbarian", "Queen", "Warden", "Champion", "Prince"]
 					For $j In $aHeroes
 						If StringInStr($Upgrades[$i][3], $j) Then
-							SetLog("Upgrade : " & $Upgrades[$i][3] & ", checking Hero Hall Window", $COLOR_ACTION)
-							If IsHeroHallWindow() Then
-								If DoUpgradeHero($Upgrades[$i][3], $Upgrades[$i][5], $Upgrades[$i][0]) Then ExitLoop 2
-							Else
-								ClickAway()
-							EndIf
+							SetLog("Upgrade : " & $Upgrades[$i][3] & ", checking Hero Hall Window", $COLOR_ACTION)							
+							If DoUpgradeHero($Upgrades[$i][3], $Upgrades[$i][5], $Upgrades[$i][0]) Then ExitLoop 2
+							ClickAway()
 						EndIf
 					Next
 					If DoUpgrade($bTest, $bLowCost) Then
@@ -266,7 +268,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 
 		If Not $g_bRunState Then Return
 		If Not AutoUpgradeCheckBuilder($bTest) Then Return
-		If $bDoScroll Then ClickDragAUpgrade("up", (($z > 5 And $SameCost = 0) ? 2 : 1)) ;do scroll up
+		If $bDoScroll Then ClickDragAUpgrade("up", (($z >= 2 And $SameCost = 0) ? 2 : 1)) ;do scroll up
 		$bDoScroll = True
 		;If _Sleep(1500) Then Return
 	Next
@@ -287,7 +289,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 	If $Gold > $Elix Then $GoldMultiply += 1
 	If $Elix > $Gold Then $ElixMultiply += 1
 	Local $aTmpCoord, $aBuilding[0][8], $BuildingName, $UpgradeCost, $aUpgradeName, $tmpcost, $bFoundRushTH = False, $bRusTHFound = False, $lenght = 0
-	Local $aPriority[7][2] = [["Castle", 15], ["Pet", 13], ["Laboratory", 16], ["Storage", 14], ["Army", 14], ["Giga", 12], ["Town", 10]]
+	Local $aPriority[8][2] = [["Castle", 13], ["Pet", 13], ["Laboratory", 16], ["Storage", 13], ["Barracks", 14], ["Army", 11], ["Giga", 12], ["Town", 10]]
 	Local $aRushTH[9][2] = [["Hero", 13], ["Barracks", 8], ["Spell", 9], ["Workshop", 10], ["Blacksmith", 9], ["King", 8], ["Queen", 8], ["Warden", 8], ["Champion", 8]]
 	Local $aHeroes[5] = ["Barbarian", "Queen", "Warden", "Champion", "Prince"]
 	Local $bHero = False
@@ -300,7 +302,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 		For $i = 0 To UBound($aTmpCoord) - 1
 			Local $sCostType = ""
 			If QuickMIS("BC1", $g_sImgResourceIcon, $aTmpCoord[$i][1] + 80, $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 260, $aTmpCoord[$i][2] + 10) Then
-				$sCostType = $g_iQuickMISName
+				$sCostType = $g_sQuickMISName
 				$lenght = Number($g_iQuickMISX) - $aTmpCoord[$i][1]
 				If $aTmpCoord[$i][0] = "New" And $sCostType = "Free" Then 
 					$lenght = 33
@@ -310,6 +312,7 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 
 			$aUpgradeName = getBuildingName($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			$tmpcost = getBuilderMenuCost($g_iQuickMISX + 5, $g_iQuickMISY - 10)
+			If StringInStr($aUpgradeName[0], "Wall") Then $aUpgradeName[0] = "Wall"
 			;If $sCostType = "Gem" And Number($tmpcost) = 0 Then ContinueLoop
 			Local $tmparray[1][8] = [[String($sCostType), $aTmpCoord[$i][1], Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), "New", Number($tmpcost), "New", 0]]
 			_ArrayAdd($aBuilding, $tmparray)
@@ -338,19 +341,21 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 		_ArraySort($aTmpCoord, 0, 0, 0, 2)
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If Not $g_bRunState Then Return
+			
 			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $g_iXFindUpgrade, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then
-				If $g_iQuickMISName = "Gear" Then
+				If $g_sQuickMISName = "Gear" And Not $g_bGearUpDone Then
 					Local $bRet = DoGearUp($g_iQuickMISX + 20, $g_iQuickMISY)
 					SetLog("Do GearUp result : " & String($bRet), $COLOR_INFO)
-					ClickMainBuilder()
-					If $bRet Then Return $aBuilding
+					$g_bGearUpDone = True
+				Else
+					ContinueLoop ;skip list upgrade after try do GearUp
 				EndIf
-				ContinueLoop ;skip geared and new
 			EndIf
-
+		
 			$lenght = Number($aTmpCoord[$i][1]) - $g_iXFindUpgrade
 			$aUpgradeName = getBuildingName($g_iXFindUpgrade, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
 			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
+			If StringInStr($aUpgradeName[0], "Wall") Then $aUpgradeName[0] = "Wall"
 			If Number($tmpcost) = 0 Then ContinueLoop
 			If $g_bHeroPriority Then
 				$bHero = False
@@ -375,9 +380,9 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 				EndIf
 			EndIf
 			If CheckIgnoreUpgrade($aUpgradeName[0], $bLowCost) Then
-				SetLog("UpLowCost=" & String($bLowCost) & ", UseWallReserve=" & String($bUseWallReserve), $COLOR_DEBUG1)
-				SetLog("UpgradeOtherDefenses=" & String($g_bUpgradeOtherDefenses), $COLOR_DEBUG1)
-				SetLog($aUpgradeName[0] & " : " & $tmpcost & ", Ignored!", $COLOR_DEBUG1)
+				;SetLog("UpLowCost=" & String($bLowCost) & ", UseWallReserve=" & String($bUseWallReserve), $COLOR_DEBUG1)
+				;SetLog("UpgradeOtherDefenses=" & String($g_bUpgradeOtherDefenses), $COLOR_DEBUG1)
+				SetLog($aUpgradeName[0] & " : " & $tmpcost & ", must be Ignored!", $COLOR_DEBUG2)
 				ContinueLoop
 			EndIf
 			
@@ -422,10 +427,10 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 				Next
 
 				For $k = 0 To UBound($g_aichkEssentialUpgrade) - 1
-					If $g_bDebugSetLog Then SetDebugLog($BuildingName & "|" & $g_aEssential[$k])
+					;If $g_bDebugSetLog Then SetDebugLog($BuildingName & "|" & $g_aEssential[$k])
 					If StringInStr($BuildingName, $g_aEssential[$k]) Then
 						SetLog("[Essential] " & $g_aEssential[$k] & " : " & $BuildingName & ", Enabled : " & String($g_aichkEssentialUpgrade[$k] = 1 ? True : False), $COLOR_DEBUG1)
-						If $g_aichkEssentialUpgrade[$k] > 0 Then
+						If $g_aichkEssentialUpgrade[$k] = 1 Then
 							$aBuilding[$j][6] = 9
 							$aBuilding[$j][7] = "Essential"
 						Else
@@ -501,21 +506,24 @@ Func CheckResourceForDoUpgrade($BuildingName, $Cost, $CostType)
 	EndSwitch
 	SetLog("Checking: " & $BuildingName & ", Cost: " & $Cost & " " & $CostType, $COLOR_INFO)
 	SetLog("Is Enough " & $CostType & " ? " & String($bSufficentResourceToUpgrade), $bSufficentResourceToUpgrade ? $COLOR_SUCCESS : $COLOR_ERROR)
-
+	
+	If $g_iChkResourcesToIgnore[0] = 1 And $CostType = "Gold" Then 
+		$bSufficentResourceToUpgrade = False
+		SetLog("Resource Gold, set to Ignored", $COLOR_DEBUG2)
+	ElseIf $g_iChkResourcesToIgnore[1] = 1 And $CostType = "Elix" Then 
+		$bSufficentResourceToUpgrade = False
+		SetLog("Resource Elix, set to Ignored", $COLOR_DEBUG2)
+	ElseIf $g_iChkResourcesToIgnore[2] = 1 And $CostType = "DE" Then 
+		$bSufficentResourceToUpgrade = False
+		SetLog("Resource DE, set to Ignored", $COLOR_DEBUG2)
+	EndIf
+	
 	Return $bSufficentResourceToUpgrade
 EndFunc
 
 Func CheckIgnoreUpgrade($sUpgradeName = "", $bUpgradeLowCost = False)
 	Local $bMustIgnoreUpgrade = False
 	Switch $sUpgradeName
-		Case "Barbarian King"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1) ? True : False
-		Case "Archer Queen"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1) ? True : False
-		Case "Grand Warden"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[3] = 1) ? True : False
-		Case "Royal Champion"
-			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[4] = 1) ? True : False
 		Case "Clan Castle"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[5] = 1) ? True : False
 		Case "Laboratory"
@@ -552,7 +560,22 @@ Func CheckIgnoreUpgrade($sUpgradeName = "", $bUpgradeLowCost = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1) ? True : False
 		Case "Builder's Hut"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1) ? True : False
+		
 	EndSwitch
+	
+	If StringInStr($sUpgradeName, "King") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1) ? True : False
+	ElseIf StringInStr($sUpgradeName, "Queen") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1) ? True : False
+	ElseIf StringInStr($sUpgradeName, "Warden") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[3] = 1) ? True : False
+	ElseIf StringInStr($sUpgradeName, "Champ") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[4] = 1) ? True : False
+	ElseIf StringInStr($sUpgradeName, "Prince") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[35] = 1) ? True : False
+	ElseIf StringInStr($sUpgradeName, "Duke") > 0 Then
+		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[36] = 1) ? True : False
+	EndIf
 
 	If $bUpgradeLowCost Then
 		$bMustIgnoreUpgrade = False
@@ -569,7 +592,7 @@ Func CheckIgnoreUpgrade($sUpgradeName = "", $bUpgradeLowCost = False)
 		Next
 	EndIf
 
-	If $g_bDebugSetLog Then SetLog("CheckIgnoreUpgrade: " & $sUpgradeName & ", result=" & String($bMustIgnoreUpgrade), $COLOR_DEBUG1)
+	SetLog("CheckIgnoreUpgrade: " & $sUpgradeName & ", result=" & String($bMustIgnoreUpgrade), $COLOR_DEBUG1)
 	Return $bMustIgnoreUpgrade
 EndFunc
 
@@ -696,14 +719,6 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	Local $aUpgradeButton, $aTmpUpgradeButton
 	$aUpgradeButton = findButton("Upgrade", Default, 1, True) ;try to find Upgrade Button (hammer)
 
-	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_aUpgradeNameLevel[2] > 11 And $g_iChkUpgradesToIgnore[35] = 0 Then ;Upgrade THWeapon not Ignored
-		$aTmpUpgradeButton = findButton("THWeapon", Default, 1, True) ;try to find UpgradeTHWeapon button (swords)
-		If IsArray($aTmpUpgradeButton) And UBound($aTmpUpgradeButton) = 2 Then
-			$bMustIgnoreUpgrade = False
-			$aUpgradeButton = $aTmpUpgradeButton
-		EndIf
-	EndIf
-
 	If Not(IsArray($aUpgradeButton) And UBound($aUpgradeButton, 1) = 2) Then
 		SetLog("No upgrade here... Wrong click, looking Next...", $COLOR_WARNING)
 		Return False
@@ -778,29 +793,17 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	EndIf
 
 	; update Logs and History file
-	If $g_aUpgradeNameLevel[1] = "Town Hall" And $g_iChkUpgradesToIgnore[35] = 0 Then
-		If _Sleep(2000) Then Return
+	If $g_aUpgradeNameLevel[1] = "Town Hall" Then
+		If _Sleep(1000) Then Return
 		If _ColorCheck(_GetPixelColor(340, 510, True), Hex(0xFFCC7F, 6), 20, Default, "AutoUpgrade") And _ColorCheck(_GetPixelColor(510, 510, True), Hex(0xDDF685, 6), 20, Default, "AutoUpgrade") Then
 			SetLog("Detected Before you upgrade warning window", $COLOR_INFO)
 			Click(510, 525)
 			If _Sleep(1000) Then Return
 		EndIf
-
-		Switch $g_aUpgradeNameLevel[2]
-			Case 12
-				$g_aUpgradeNameLevel[1] = "Giga Tesla"
-				SetLog("Launched upgrade of Giga Tesla successfully !", $COLOR_SUCCESS)
-			Case 13
-				$g_aUpgradeNameLevel[1] = "Giga Inferno"
-				SetLog("Launched upgrade of Giga Inferno successfully !", $COLOR_SUCCESS)
-			Case 14
-				$g_aUpgradeNameLevel[1] = "Giga Inferno"
-				SetLog("Launched upgrade of Giga Inferno successfully !", $COLOR_SUCCESS)
-		EndSwitch
-	Else
-		SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
 	EndIf
-
+	
+	SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+	
 	If IsGemOpen(True) Then
 		ClickAway("Right")
 		SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
@@ -815,13 +818,15 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 EndFunc
 
 Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "DE")
-	Local $aCheckAreaKing[4] = [155, 420, 190, 460]
-	Local $aCheckAreaQueen[4] = [310, 420, 347, 460]
-	Local $aCheckAreaPrince[4] = [460, 420, 500, 460]
-	Local $aCheckAreaWarden[4] = [615, 420, 655, 460]
-	Local $aCheckAreaChampion[4] = [765, 420, 805, 460]
+	Local $aCheckAreaKing[4] = [100, 360, 190, 420]
+	Local $aCheckAreaQueen[4] = [250, 360, 350, 420]
+	Local $aCheckAreaPrince[4] = [400, 360, 490, 420]
+	Local $aCheckAreaWarden[4] = [450, 360, 540, 420]
+	Local $aCheckAreaChampion[4] = [600, 360, 690, 420]
+	Local $aCheckAreaDuke[4] = [750, 360, 840, 420]
 	Local $aCheckArea, $bRet = False
-
+	Local $iHeroUpgradeTime = ""
+	
 	Switch $sHeroName
 		Case "Barbarian King"
 			$aCheckArea = $aCheckAreaKing
@@ -831,49 +836,25 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 			$aCheckArea = $aCheckAreaPrince
 		Case "Grand Warden"
 			$aCheckArea = $aCheckAreaWarden
-		Case "Royal Champion"
+		Case "Royal Champion", "Royal Champ"
 			$aCheckArea = $aCheckAreaChampion
+		Case "Dragon Duke"
+			$aCheckArea = $aCheckAreaDuke
 		Case Else
 			Setlog("What Hero? banana", $COLOR_DEBUG2)
 			$aCheckArea = $aCheckAreaKing
 	EndSwitch
-
-	If QuickMIS("BC1", $g_sImgHeroHall, $aCheckArea[0], $aCheckArea[1], $aCheckArea[2], $aCheckArea[3]) Then
-		Click($g_iQuickMISX - 50, $g_iQuickMISY) ;click button below the hero
-		If _Sleep(1000) Then return
-		Local $iHeroUpgradeTime = getHeroUpgradeTime(730, 546) ; get duration
+	
+	If Not IsUpgradeWindowOpen() Then
+		SetLog("Unable to Verify Upgrade Window", $COLOR_DEBUG2)
+		ClickAway()
+		ClickAway()
+		Return
+	Else
+		$iHeroUpgradeTime = getHeroUpgradeTime(730, 546) ; get duration
 		Click(625, 545) ;click upgrade button
 		
-		;Check for 'End Boost?' pop-up
 		If _Sleep(1000) Then Return
-		Local $aImgAUpgradeEndBoost = decodeSingleCoord(findImage("EndBoost", $g_sImgAUpgradeEndBoost, GetDiamondFromRect("350, 310, 570, 230"), 1, True))
-		If UBound($aImgAUpgradeEndBoost) > 1 Then
-			SetLog("End Boost? pop-up found", $COLOR_INFO)
-			SetLog("Clicking OK", $COLOR_INFO)
-			Local $aImgAUpgradeEndBoostOKBtn = decodeSingleCoord(findImage("EndBoostOKBtn", $g_sImgAUpgradeEndBoostOKBtn, GetDiamondFromRect("420, 470, 610, 380"), 1, True))
-			If UBound($aImgAUpgradeEndBoostOKBtn) > 1 Then
-				Click($aImgAUpgradeEndBoostOKBtn[0], $aImgAUpgradeEndBoostOKBtn[1])
-				If _Sleep(1000) Then Return
-			Else
-				SetLog("Unable to locate OK Button", $COLOR_ERROR)
-				If _Sleep(1000) Then Return
-				ClickAway("Right")
-				Return
-			EndIf
-		EndIf
-
-		If $g_bUseHeroBooks Then
-			If _Sleep(500) Then Return
-			Local $HeroUpgradeTime = ConvertOCRTime("UseHeroBooks", $iHeroUpgradeTime, False)
-			If $HeroUpgradeTime >= ($g_iHeroMinUpgradeTime * 1440) Then
-				SetLog("Hero Upgrade Time minutes: [" & $HeroUpgradeTime & "] " & $HeroUpgradeTime & " minutes", $COLOR_DEBUG)
-				SetLog("MinUpgradeTime on Setting: [" & $g_iHeroMinUpgradeTime & "] " & ($g_iHeroMinUpgradeTime * 1440) & " minutes", $COLOR_DEBUG)
-				SetLog("Looking if Hero Books avail")
-				UseHeroBooks()
-			EndIf
-		EndIf
-		
-		Clickaway() ; done checking all option, click away to make button dissapear
 		
 		; update Logs and History file
 		SetLog("Launched upgrade for Hero : " & $sHeroName & " successfully !", $COLOR_SUCCESS)
@@ -887,10 +868,38 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 			SetLog(" - Cost : " & _NumberFormat($Cost) & " " & $CostType, $COLOR_SUCCESS)
 			SetLog(" - Duration : " & $iHeroUpgradeTime, $COLOR_SUCCESS)
 			AutoUpgradeLog(False, $sHeroName, "??", $Cost, $CostType)
+			$bRet = True
 		EndIf
-		Clickaway()
-		$bRet = True
+		
+		If $g_bUseHeroBooks Then
+			Local $HeroUpgradeTime = ConvertOCRTime("UseHeroBooks", $iHeroUpgradeTime, False)
+			If $HeroUpgradeTime >= ($g_iHeroMinUpgradeTime * 1440) Then
+				SetLog("Hero Upgrade Time: [" & $HeroUpgradeTime & "] minutes", $COLOR_DEBUG)
+				SetLog("MinUpgradeTime on Setting: [" & ($g_iHeroMinUpgradeTime * 1440) & "] minutes", $COLOR_DEBUG)
+				If IsHeroHallWindow() Then 
+					SetLog("Looking if Hero Books avail", $COLOR_ACTION)
+					If QuickMIS("BC1", $g_sImgHeroBooks, $aCheckArea[0], $aCheckArea[1], $aCheckArea[2], $aCheckArea[3]) Then ; search image Hero books on Hero Hall
+						SetLog("You Have hero book available", $COLOR_INFO)
+						Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Hero Books")
+						If _Sleep(500) Then return
+						If WaitforPixel(420, 435, 421, 435, "2F93CF", 10, 1, "Confirm Use Book") Then
+							Click(420, 430, 1, 0, "Confirm Use Book")
+						EndIf
+						SetLog("Successfully using Hero Book", $COLOR_SUCCESS)
+					Else
+						SetLog("No Hero Book Available", $COLOR_DEBUG2)
+					EndIf
+				Else
+					SetLog("Unable to verify Hero Hall Window", $COLOR_DEBUG2)
+				EndIf
+			Else
+				SetLog("Use Hero Books enabled, but hero Upgrade time < " & $g_iHeroMinUpgradeTime & " Days", $COLOR_DEBUG2)
+			EndIf
+		EndIf
+		If _Sleep(500) Then Return
+		Clickaway() ; close Hero Hall window
 	EndIf
+	
 	Return $bRet
 EndFunc
 
@@ -1051,7 +1060,7 @@ Func OpenShop($sUpgradeType = "Traps", $bCheckRedCounter = True)
 		If IsFullScreenWindow() Then
 			If QuickMIS("BC1", $g_sImgBuildingAndTraps, 150, 10, 320, 85) Then
 				Click($g_iQuickMISX, $g_iQuickMISY) ;click Building and traps Tab
-				If $g_iQuickMISName = "BuildActive" Then
+				If $g_sQuickMISName = "BuildActive" Then
 					$bRet = True
 					ExitLoop
 				EndIf
@@ -1158,7 +1167,7 @@ Func SearchGreenZone()
 	ZoomOut(True)
 
 	Local $bSupportedScenery = False
-	Local $sSceneryCode[3] = ["DS", "JS", "MS"]
+	Local $sSceneryCode[5] = ["DS", "JS", "MS", "DM", "CS"]
 	For $sCode In $sSceneryCode
 		If $sCode = $g_sSceneryCode Then
 			$bSupportedScenery = True
@@ -1168,58 +1177,77 @@ Func SearchGreenZone()
 
 	If Not $bSupportedScenery Then
 		SetLog("Detected Scenery : [" & $g_sSceneryCode & " : " & $g_sCurrentScenery & "]", $COLOR_ERROR)
-		SetLog("Place New Building Only Supported for Default/Jungle/Magic Scenery", $COLOR_ERROR)
+		SetLog("Place New Building Only Supported for Classic/Jungle/Magic Scenery", $COLOR_ERROR)
 		Return False
 	EndIf
-
-	If Not $g_bRunState Then Return
-	Local $x, $y, $Offset = 300, $iCount = 0
-	Local $iTop, $iRight, $iBottom, $iLeft, $sArea
-	Local $aArea = StringSplit($CocDiamondDCD, "|", $STR_NOCOUNT)
-	;426,53|779,318|426,585|73,318
-	If IsArray($aArea) And UBound($aArea) > 0 Then
-		For $i = 0 TO UBound($aArea) - 1
-			Local $aXY = StringSplit($aArea[$i], ",", $STR_NOCOUNT)
-			If UBound($aXY) = 2 Then
-				$x = $aXY[0]
-				$y = $aXY[1]
-				Switch $i
-					Case 0
-						$iTop = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - ($Offset/2), $y, $x + ($Offset/2), $y + $Offset)
-						SetLog("Count Green Top = " & $iTop, $COLOR_DEBUG1)
-						$iCount = Number($iTop)
-						$sArea = "Top"
-					Case 1
-						$iRight = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - $Offset, $y - ($Offset/2), $x, $y + ($Offset/2))
-						SetLog("Count Green Right = " & $iRight, $COLOR_DEBUG1)
-						If $iCount < Number($iRight) Then
-							$iCount = Number($iRight)
-							$sArea = "Right"
-						EndIf
-					Case 2
-						$iBottom = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - ($Offset/2), $y - $Offset, $x + ($Offset/2), $y)
-						SetLog("Count Green Bottom = " & $iBottom, $COLOR_DEBUG1)
-						If $iCount < Number($iBottom) Then
-							$iCount = Number($iBottom)
-							$sArea = "Bottom"
-						EndIf
-					Case 3
-						$iLeft = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x, $y - ($Offset/2), $x + $Offset, $y + ($Offset/2))
-						SetLog("Count Green Left = " & $iLeft, $COLOR_DEBUG1)
-						If $iCount < Number($iLeft) Then
-							$iCount = Number($iLeft)
-							$sArea = "Left"
-						EndIf
-				EndSwitch
-				;SetLog($i & ", Count = " & $iCount, $COLOR_DEBUG1)
-			Else
-				SetLog("UBound($aXY) != 2", $COLOR_DEBUG1)
-			EndIf
+	
+	Local $iTop = 0, $iRight = 0, $iBottom = 0, $iLeft = 0, $sArea
+	Local $aFreeTile = QuickMIS("CNX", $g_sImgAUpgradeGreenZone, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom)
+	If IsArray($aFreeTile) And UBound($aFreeTile) > 0 Then
+		SetDebugLog("count tile: " & UBound($aFreeTile))
+		_ArraySort($aFreeTile, 0, 0, 0, 1) ;sort by x
+		For $i = 0 To UBound($aFreeTile) - 1
+			If IsInsideSmallDiamondXY($aFreeTile[$i][1], $aFreeTile[$i][2]) Then ContinueLoop ;too center on map
+			If Not isInsideDiamondXY($aFreeTile[$i][1], $aFreeTile[$i][2]) Then ContinueLoop ;outside village diamond
+			If $aFreeTile[$i][1] < $g_DiamondMiddleX - 60 And $aFreeTile[$i][2] > $g_DiamondMiddleY - 60 And $aFreeTile[$i][2] < $g_DiamondMiddleY + 60 Then $iLeft += 1
+			If $aFreeTile[$i][1] > $g_DiamondMiddleX + 60 And $aFreeTile[$i][2] > $g_DiamondMiddleY - 60 And $aFreeTile[$i][2] < $g_DiamondMiddleY + 60 Then $iRight += 1
+			If $aFreeTile[$i][2] < $g_DiamondMiddleY - 60 And $aFreeTile[$i][1] > $g_DiamondMiddleX - 60 And $aFreeTile[$i][1] < $g_DiamondMiddleX + 60 Then $iTop += 1
+			If $aFreeTile[$i][2] > $g_DiamondMiddleY + 60 And $aFreeTile[$i][1] > $g_DiamondMiddleX - 60 And $aFreeTile[$i][1] < $g_DiamondMiddleX + 60 Then $iBottom += 1
 		Next
-		SetLog("Green Area = " & $sArea & ", count:" & $iCount, $COLOR_DEBUG1)
-	Else
-		SetLog("aArea Not Array", $COLOR_DEBUG1)
+		SetLog("Top=" & $iTop & ", Right=" & $iRight & ", Bottom=" & $iBottom & ", Left=" & $iLeft, $COLOR_DEBUG)
 	EndIf
+	Local $aiArea[4][2] = [["Top", $iTop], ["Right", $iRight], ["Bottom", $iBottom], ["Left", $iLeft]]
+	_ArraySort($aiArea, 1, 0, 0, 1)
+	SetLog("Most free area = " & $aiArea[0][0] & " with " & $aiArea[0][1] & " free tiles", $COLOR_INFO)
+	$sArea = $aiArea[0][0]
+	If Not $g_bRunState Then Return
+	;Local $x, $y, $Offset = 300, $iCount = 0
+	
+	;Local $aArea = StringSplit($CocDiamondDCD, "|", $STR_NOCOUNT)
+	;;426,53|779,318|426,585|73,318
+	;If IsArray($aArea) And UBound($aArea) > 0 Then
+	;	For $i = 0 TO UBound($aArea) - 1
+	;		Local $aXY = StringSplit($aArea[$i], ",", $STR_NOCOUNT)
+	;		If UBound($aXY) = 2 Then
+	;			$x = $aXY[0]
+	;			$y = $aXY[1]
+	;			Switch $i
+	;				Case 0
+	;					$iTop = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - ($Offset/2), $y, $x + ($Offset/2), $y + $Offset)
+	;					SetLog("Count Green Top = " & $iTop, $COLOR_DEBUG1)
+	;					$iCount = Number($iTop)
+	;					$sArea = "Top"
+	;				Case 1
+	;					$iRight = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - $Offset, $y - ($Offset/2), $x, $y + ($Offset/2))
+	;					SetLog("Count Green Right = " & $iRight, $COLOR_DEBUG1)
+	;					If $iCount < Number($iRight) Then
+	;						$iCount = Number($iRight)
+	;						$sArea = "Right"
+	;					EndIf
+	;				Case 2
+	;					$iBottom = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x - ($Offset/2), $y - $Offset, $x + ($Offset/2), $y)
+	;					SetLog("Count Green Bottom = " & $iBottom, $COLOR_DEBUG1)
+	;					If $iCount < Number($iBottom) Then
+	;						$iCount = Number($iBottom)
+	;						$sArea = "Bottom"
+	;					EndIf
+	;				Case 3
+	;					$iLeft = QuickMIS("Q1", $g_sImgAUpgradeGreenZone, $x, $y - ($Offset/2), $x + $Offset, $y + ($Offset/2))
+	;					SetLog("Count Green Left = " & $iLeft, $COLOR_DEBUG1)
+	;					If $iCount < Number($iLeft) Then
+	;						$iCount = Number($iLeft)
+	;						$sArea = "Left"
+	;					EndIf
+	;			EndSwitch
+	;			;SetLog($i & ", Count = " & $iCount, $COLOR_DEBUG1)
+	;		Else
+	;			SetLog("UBound($aXY) != 2", $COLOR_DEBUG1)
+	;		EndIf
+	;	Next
+	;	SetLog("Green Area = " & $sArea & ", count:" & $iCount, $COLOR_DEBUG1)
+	;Else
+	;	SetLog("aArea Not Array", $COLOR_DEBUG1)
+	;EndIf
 
 	If ZoomIn($sArea) Then
 		SetLog("Succeed ZoomIn", $COLOR_DEBUG)
@@ -1285,7 +1313,7 @@ Func ClickDragAUpgrade($Direction = "Up", $DragCount = 1)
 		EndIf
 	Next
 	Return False
-EndFunc ;==>IsUpgradeWindow
+EndFunc ;==>ClickDragAUpgrade
 
 Func ClickMainBuilder($bSetLog = False, $Counter = 3)
 	If Not $g_bRunState Then Return
@@ -1504,6 +1532,16 @@ Func PlaceUnplacedBuilding($bTest = False)
 	EndIf
 EndFunc
 
+Func IsUpgradeWindowOpen()
+	Local $bRet = False
+	
+	If _ColorCheck(_GetPixelColor(810, 130, True), Hex(0x635550, 6), 10, Default, "IsUpgradeWindowOpen") _ ; Brown color under red x
+		And _ColorCheck(_GetPixelColor(810, 120, True), Hex(0xDB2025, 6), 10, Default, "IsUpgradeWindowOpen") Then ; Red color under x 
+		$bRet = True
+	EndIf
+	Return $bRet
+EndFunc
+
 Func IsBuilderMenuOpen()
 	If Not $g_bRunState Then Return
 	Local $bRet = False
@@ -1533,7 +1571,7 @@ Func DoGearUp($x, $y)
 
 	If ClickB("GearUp") Then
 		If _Sleep(1000) Then Return
-		If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 500) Then
+		If QuickMIS("BC1", $g_sImgAUpgradeRes, 350, 410, 560, 560) Then
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(1000) Then Return
 			If IsGemOpen(True) Then
@@ -1560,6 +1598,12 @@ Func CheckBuilderPotion()
 				SetLog("Upgrade time > 9h, will use Builder Potion", $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(1000) Then Return
+				If IsUpgradeWindowOpen() Then 
+					ClickAway()
+					If _Sleep(500) Then Return
+					ClickAway()
+					If _Sleep(500) Then Return
+				EndIf
 				If IsHeroHallWindow() Then 
 					ClickAway()
 					If _Sleep(1000) Then return
@@ -1576,29 +1620,13 @@ Func CheckBuilderPotion()
 					ClickAway("Right")
 				EndIf
 			Else
-				SetLog("Upgrade time < 9h, cancel using builder potion", $COLOR_INFO)
+				SetLog("Upgrade time < 9h, cancel using builder potion", $COLOR_DEBUG2)
 			EndIf
 		Else
-			SetLog("Failed to read Upgrade time on BuilderMenu", $COLOR_ERROR)
+			SetLog("Failed to read Upgrade time on BuilderMenu", $COLOR_DEBUG2)
 		EndIf
 	EndIf
 EndFunc
-
-Func UseHeroBooks()
-	If Not $g_bRunState Then Return
-	Local $HeroBooks = FindButton("HeroBooks")
-	If IsArray($HeroBooks) And UBound($HeroBooks) = 2 Then
-		SetLog("Use Hero Books to Complete Now this Hero Upgrade", $COLOR_INFO)
-		Click($HeroBooks[0], $HeroBooks[1])
-		If _Sleep(1000) Then Return
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 600, 210, 650, 255) Then
-			Click(430, 410)
-		EndIf
-	Else
-		SetLog("No Books of Heroes Found", $COLOR_DEBUG)
-	EndIf
-EndFunc
-
 
 ;------------------------------------------
 ;old unused func below
@@ -1717,7 +1745,7 @@ Func FindNewUpgrade($bTest = False)
 		_ArraySort($aTmpCoord, 0, 0, 0, 2)
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If QuickMIS("BC1", $g_sImgResourceIcon, $aTmpCoord[$i][1] + 100 , $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 250, $aTmpCoord[$i][2] + 12) Then
-				$UpgradeType =  $g_iQuickMISName
+				$UpgradeType =  $g_sQuickMISName
 				_ArrayAdd($aBuilding, $UpgradeType & "|" & $g_iQuickMISX & "|" & $g_iQuickMISY & "|" & $aTmpCoord[$i][1])
 			EndIf
 		Next
@@ -1892,7 +1920,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno //skip if will use builder for lowcost
 			SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
 			Local $aResult = FindUpgrade()
-			If isArray($aResult) And UBound($aResult) > 0 Then
+			If IsArray($aResult) And UBound($aResult) > 0 Then
 				For $y = 0 To UBound($aResult) - 1
 					If Not $g_bRunState Then Return
 					If $aResult[$y][7] = "Priority" Then

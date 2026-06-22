@@ -270,13 +270,13 @@ Func ApplyScriptDB()
 	Local $aiCSVSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	Local $aiCSVSieges[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0, 0]
 	Local $aiCSVHeros[$eHeroCount][2] = [[0, 0], [0, 0], [0, 0], [0, 0]]
-	Local $iCSVRedlineRoutineItem = 0, $iCSVDroplineEdgeItem = 0
+	Local $iCSVRedlineRoutineItem = 0
 	Local $sCSVCCReq = ""
 	Local $aTemp = _GUICtrlComboBox_GetListArray($g_hCmbScriptNameDB)
 	Local $sFilename = $aTemp[_GUICtrlComboBox_GetCurSel($g_hCmbScriptNameDB) + 1]
 
 	SetLog("CSV settings apply starts: " & $sFilename, $COLOR_INFO)
-	$iApply = ParseAttackCSV_Settings_variables($aiCSVTroops, $aiCSVSpells, $aiCSVSieges, $aiCSVHeros, $iCSVRedlineRoutineItem, $iCSVDroplineEdgeItem, $sCSVCCReq, $sFilename)
+	$iApply = ParseAttackCSV_Settings_variables($aiCSVTroops, $aiCSVSpells, $aiCSVSieges, $aiCSVHeros, $iCSVRedlineRoutineItem, $sCSVCCReq, $sFilename)
 	If Not $iApply Then
 		SetLog("CSV settings apply failed", $COLOR_ERROR)
 		Return
@@ -323,17 +323,7 @@ Func ApplyScriptDB()
 		Next
 		radHerosApply()
 		SetLog("CSV Hero Ability settings applied", $COLOR_SUCCESS)
-
-		GUICtrlSetState($g_hChkDBKingAttack, $aiCSVHeros[$eHeroBarbarianKing][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBKingAttack))
-		GUICtrlSetState($g_hChkDBQueenAttack, $aiCSVHeros[$eHeroArcherQueen][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBQueenAttack))
-		GUICtrlSetState($g_hChkDBWardenAttack, $aiCSVHeros[$eHeroGrandWarden][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBWardenAttack))
-		GUICtrlSetState($g_hChkDBChampionAttack, $aiCSVHeros[$eHeroRoyalChampion][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkDBChampionAttack))
 		SetLog("CSV 'Attack with' Hero settings applied", $COLOR_SUCCESS)
-	EndIf
-
-	If $sCSVCCReq <> "" Then
-		GUICtrlSetState($g_hChkDBDropCC, $GUI_CHECKED)
-		SetLog("CSV 'Attack with' CC settings applied", $COLOR_SUCCESS)
 	EndIf
 
 	$iApply = 0
@@ -353,13 +343,6 @@ Func ApplyScriptDB()
 	Else
 		If $iCSVRedlineRoutineItem <> 0 Then SetLog("CSV Red Line settings out of bounds", $COLOR_ERROR)
 	EndIf
-	If $iCSVDroplineEdgeItem > 0 And $iCSVDroplineEdgeItem <= _GUICtrlComboBox_GetCount($g_hCmbScriptDroplineDB) + 1 Then
-		_GUICtrlComboBox_SetCurSel($g_hCmbScriptDroplineDB, $iCSVDroplineEdgeItem - 1)
-		cmbScriptDroplineDB()
-		SetLog("CSV Drop Line settings applied", $COLOR_SUCCESS)
-	Else
-		If $iCSVDroplineEdgeItem <> 0 Then SetLog("CSV Drop Line settings out of bounds", $COLOR_ERROR)
-	EndIf
 
 	If $sCSVCCReq <> "" Then
 		$g_bRequestTroopsEnable = True
@@ -375,13 +358,13 @@ Func ApplyScriptAB()
 	Local $aiCSVSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	Local $aiCSVSieges[$eSiegeMachineCount] = [0, 0, 0, 0, 0, 0, 0]
 	Local $aiCSVHeros[$eHeroCount][2] = [[0, 0], [0, 0], [0, 0], [0, 0]]
-	Local $iCSVRedlineRoutineItem = 0, $iCSVDroplineEdgeItem = 0
+	Local $iCSVRedlineRoutineItem = 0
 	Local $sCSVCCReq = ""
 	Local $aTemp = _GUICtrlComboBox_GetListArray($g_hCmbScriptNameAB)
 	Local $sFilename = $aTemp[_GUICtrlComboBox_GetCurSel($g_hCmbScriptNameAB) + 1]
 
 	SetLog("CSV settings apply starts: " & $sFilename, $COLOR_INFO)
-	$iApply = ParseAttackCSV_Settings_variables($aiCSVTroops, $aiCSVSpells, $aiCSVSieges, $aiCSVHeros, $iCSVRedlineRoutineItem, $iCSVDroplineEdgeItem, $sCSVCCReq, $sFilename)
+	$iApply = ParseAttackCSV_Settings_variables($aiCSVTroops, $aiCSVSpells, $aiCSVSieges, $aiCSVHeros, $iCSVRedlineRoutineItem, $sCSVCCReq, $sFilename)
 	If Not $iApply Then
 		SetLog("CSV settings apply failed", $COLOR_ERROR)
 		Return
@@ -428,17 +411,6 @@ Func ApplyScriptAB()
 		Next
 		radHerosApply()
 		SetLog("CSV Hero Ability settings applied", $COLOR_SUCCESS)
-
-		GUICtrlSetState($g_hChkABKingAttack, $aiCSVHeros[$eHeroBarbarianKing][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkABKingAttack))
-		GUICtrlSetState($g_hChkABQueenAttack, $aiCSVHeros[$eHeroArcherQueen][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkABQueenAttack))
-		GUICtrlSetState($g_hChkABWardenAttack, $aiCSVHeros[$eHeroGrandWarden][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkABWardenAttack))
-		GUICtrlSetState($g_hChkABChampionAttack, $aiCSVHeros[$eHeroRoyalChampion][0] > 0 ? $GUI_CHECKED : GUICtrlGetState($g_hChkABChampionAttack))
-		SetLog("CSV 'Attack with' Hero settings applied", $COLOR_SUCCESS)
-	EndIf
-
-	If $sCSVCCReq <> "" Then
-		GUICtrlSetState($g_hChkABDropCC, $GUI_CHECKED)
-		SetLog("CSV 'Attack with' CC settings applied", $COLOR_SUCCESS)
 	EndIf
 
 	$iApply = 0
@@ -458,13 +430,6 @@ Func ApplyScriptAB()
 	Else
 		If $iCSVRedlineRoutineItem <> 0 Then SetLog("CSV Red Line settings out of bounds", $COLOR_ERROR)
 	EndIf
-	If $iCSVDroplineEdgeItem > 0 And $iCSVDroplineEdgeItem <= _GUICtrlComboBox_GetCount($g_hCmbScriptDroplineAB) + 1 Then
-		_GUICtrlComboBox_SetCurSel($g_hCmbScriptDroplineAB, $iCSVDroplineEdgeItem - 1)
-		cmbScriptDroplineAB()
-		SetLog("CSV Drop Line settings applied", $COLOR_SUCCESS)
-	Else
-		If $iCSVDroplineEdgeItem <> 0 Then SetLog("CSV Drop Line settings out of bounds", $COLOR_ERROR)
-	EndIf
 
 	If $sCSVCCReq <> "" Then
 		$g_bRequestTroopsEnable = True
@@ -476,31 +441,11 @@ EndFunc   ;==>ApplyScriptAB
 
 Func cmbScriptRedlineImplDB()
 	$g_aiAttackScrRedlineRoutine[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptRedlineImplDB)
-    If $g_aiAttackScrRedlineRoutine[$DB] = 3 then
-        GUICtrlSetState($g_hCmbScriptDroplineDB, $GUI_HIDE)
-        $g_aiAttackScrDroplineEdge[$DB] = $DROPLINE_FULL_EDGE_FIXED
-    Else
-        GUICtrlSetState($g_hCmbScriptDroplineDB, $GUI_SHOW)
-    Endif
 EndFunc   ;==>cmbScriptRedlineImplDB
 
 Func cmbScriptRedlineImplAB()
 	$g_aiAttackScrRedlineRoutine[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptRedlineImplAB)
-    If $g_aiAttackScrRedlineRoutine[$LB] = 3 then
-        GUICtrlSetState($g_hCmbScriptDroplineAB, $GUI_HIDE)
-        $g_aiAttackScrDroplineEdge[$LB] = $DROPLINE_FULL_EDGE_FIXED
-    Else
-        GUICtrlSetState($g_hCmbScriptDroplineAB, $GUI_SHOW)
-    EndIf
 EndFunc   ;==>cmbScriptRedlineImplAB
-
-Func cmbScriptDroplineDB()
-	$g_aiAttackScrDroplineEdge[$DB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptDroplineDB)
-EndFunc   ;==>cmbScriptDroplineDB
-
-Func cmbScriptDroplineAB()
-	$g_aiAttackScrDroplineEdge[$LB] = _GUICtrlComboBox_GetCurSel($g_hCmbScriptDroplineAB)
-EndFunc   ;==>cmbScriptDroplineAB
 
 Func AttackNow()
 	Local $tempbRunState = $g_bRunState

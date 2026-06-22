@@ -19,7 +19,7 @@
 Global $g_hSplash = 0, $g_hSplashProgress, $g_lSplashStatus, $g_lSplashPic, $g_lSplashTitle, $g_hSplashlbl_Mod
 Global $g_iSplashTotalSteps = Default
 Global $g_iSplashCurrentStep = 0
-Global $g_hSplashTimer = 0
+Global $g_hSplashTimer = 0, $g_iLastSplashTime = 0
 Global $g_hSplashMutex = 0
 
 #include "MBR GUI Control Splash.au3"
@@ -70,11 +70,7 @@ Func CreateSplashScreen($iSteps = Default)
 		Local $iHeight = $iY + $iT + $iB + 60 ; size = image+Top space+Bottom space+60
 		Local $iCenterX = @DesktopWidth / 2 ; find center of main display
 		Local $iCenterY = @DesktopHeight / 2
-		If $g_bMyBotDance Then
-			Local $iTop = @DesktopHeight - 50 - $iHeight ; position splash UI near task bar
-		Else
-			Local $iTop = $iCenterY - $iHeight / 2
-		EndIf
+		Local $iTop = $iCenterY - $iHeight / 2
 		Local $iLeft = $iCenterX - $iX / 2 ; position splash UI centered on width
 
 		; Create Splash container
