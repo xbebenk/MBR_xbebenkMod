@@ -223,8 +223,8 @@ Func UpdateRequest()
 			Click($g_iQuickMISX, $g_iQuickMISY, $g_iRequestSiegeQuantity2, 0, "Click " & $sSiege2)
 		EndIf
 		If _Sleep(500) Then Return
+		Click(645, 535, 1, 0, "Click Confirm") ;Click Confirm
+		If _Sleep(1000) Then Return
+		Return $bNeedUpdate
 	EndIf
-	
-	Click(645, 535, 1, 0, "Click Confirm") ;Click Confirm
-	If _Sleep(1000) Then Return
 EndFunc
