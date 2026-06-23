@@ -36,8 +36,9 @@ Func CreateAttackSearchDeadBaseScripted()
 
 	$y += 25
 		$g_hLblNotesScriptDB =  GUICtrlCreateLabel("", $x, $y + 5, 200, 180)
-		$g_hCmbScriptRedlineImplDB = GUICtrlCreateCombo("", $x, $y + 195, 230, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-			GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "CmbScriptRedlineImpl", "External Edges|ImgLoc Real Redline"))
+		GUICtrlCreateLabel("Redline: ", $x, $y + 197, 80)
+		$g_hCmbScriptRedlineImplDB = GUICtrlCreateCombo("", $x + 50, $y + 195, 160, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			GUICtrlSetData(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "CmbScriptRedlineImpl", "External Edges|Real Redline"))
 			_GUICtrlComboBox_SetCurSel(-1, $g_aiAttackScrRedlineRoutine[$DB])
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Attack Scripted", "CmbScriptRedlineImpl_Info_01", "Choose the Redline implementation. External Edges = no image scan, use outer diamond. ImgLoc Real Redline = detect red area from screenshot."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)

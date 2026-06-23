@@ -573,7 +573,8 @@ Global $g_iAttackTimerOffset = Default ; Offset of timer to attack really starte
 ; 0 = External area edge (no image scan), 1 = Real redline from image scan
 Global Const $REDLINE_EDGE = 0
 Global Const $REDLINE_REAL = 1
-Global $g_aiRawTopLeft, $g_aiRawBottomLeft, $g_aiRawBottomRight, $g_aiRawTopRight
+Global $g_iRedlineUsed = $REDLINE_EDGE
+Global $g_aiRawTopLeft[0], $g_aiRawBottomLeft[0], $g_aiRawBottomRight[0], $g_aiRawTopRight[0]
 
 #Region Standard Enums and Consts - Attacks, Troops, Spells, Leagues, Loot Types
 #Tidy_Off

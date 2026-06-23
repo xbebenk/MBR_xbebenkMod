@@ -47,7 +47,6 @@
 #include "functions\Attack\AttackCSV\ParseAttackCSV.au3"
 #include "functions\Attack\AttackCSV\ParseAttackCSV_Read_SIDE_variables.au3"
 #include "functions\Attack\AttackCSV\Slice8.au3"
-#include "functions\Attack\AttackCSV\CleanRedArea.au3"
 #include "functions\Attack\AttackCSV\ChkAttackCSVConfig.au3"
 #include "functions\Attack\AttackCSV\ParseAttackCSV_Settings_variables.au3"
 

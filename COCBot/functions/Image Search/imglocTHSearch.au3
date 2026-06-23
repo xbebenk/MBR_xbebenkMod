@@ -16,22 +16,8 @@
 
 Func ResetTHsearch()
 	;reset redlines and other globals
-	$g_aiPixelTopLeftDropLine = ""
-    $g_aiPixelTopRightDropLine = ""
-    $g_aiPixelBottomLeftDropLine = ""
-    $g_aiPixelBottomRightDropLine = ""
-    
-    $g_aiPixelTopLeftUPDropLine = ""
-    $g_aiPixelTopLeftDOWNDropLine = ""
-    $g_aiPixelTopRightUPDropLine = ""
-    $g_aiPixelTopRightDOWNDropLine = ""
-    
-    $g_aiPixelBottomLeftUPDropLine = ""
-    $g_aiPixelBottomLeftDOWNDropLine = ""
-    $g_aiPixelBottomRightUPDropLine = ""
-    $g_aiPixelBottomRightDOWNDropLine = ""
 	$g_sImglocRedline = "" ; Redline data obtained from FindMultiple
-	$g_iImglocTHLevel = 0 ; Duhhh!!!
+	$g_iImglocTHLevel = 0
 	
 	;compatibility
 	$g_iTHx = 0 ; backwards compatibility

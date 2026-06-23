@@ -272,30 +272,34 @@ Func AttackCSVDEBUGIMAGE($bOpenImage = False)
 		_GDIPlus_GraphicsDrawString($hGraphic, $i + 1, $pixel[0] - 10, $pixel[1] - 10, "Arial", 12)
 		_GDIPlus_GraphicsDrawEllipse($hGraphic, $pixel[0], $pixel[1], 6, 6, $hPenMdGreen)
 	Next
-	
+
 	Local $hBrushRaw = _GDIPlus_BrushCreateSolid(0xFFFF0000) ; Merah Solid
-
-	If IsArray($g_aiRawTopLeft) Then
-		For $i = 0 To UBound($g_aiRawTopLeft) - 1
-			_GDIPlus_GraphicsFillEllipse($hGraphic, Number($g_aiRawTopLeft[$i][0]) - 4, Number($g_aiRawTopLeft[$i][1]) - 4, 8, 8, $hBrushRaw)
-		Next
+	If $g_iRedlineUsed = $REDLINE_REAL Then
+		If IsArray($g_aiRawTopLeft) And UBound($g_aiRawTopLeft) > 0 Then
+			For $i = 0 To UBound($g_aiRawTopLeft) - 1
+				Local $pixel = $g_aiRawTopLeft[$i]
+				_GDIPlus_GraphicsFillEllipse($hGraphic, $pixel[0] - 4, $pixel[1] - 4, 8, 8, $hBrushRaw)
+			Next
+		EndIf
+		If IsArray($g_aiRawBottomLeft) And UBound($g_aiRawBottomLeft) > 0 Then
+			For $i = 0 To UBound($g_aiRawBottomLeft) - 1
+				Local $pixel = $g_aiRawBottomLeft[$i]
+				_GDIPlus_GraphicsFillEllipse($hGraphic, $pixel[0] - 4, $pixel[1] - 4, 8, 8, $hBrushRaw)
+			Next
+		EndIf
+		If IsArray($g_aiRawBottomRight) And UBound($g_aiRawBottomRight) > 0 Then
+			For $i = 0 To UBound($g_aiRawBottomRight) - 1
+				Local $pixel = $g_aiRawBottomRight[$i]
+				_GDIPlus_GraphicsFillEllipse($hGraphic, $pixel[0] - 4, $pixel[1] - 4, 8, 8, $hBrushRaw)
+			Next
+		EndIf
+		If IsArray($g_aiRawTopRight) And UBound($g_aiRawTopRight) > 0 Then
+			For $i = 0 To UBound($g_aiRawTopRight) - 1
+				Local $pixel = $g_aiRawTopRight[$i]
+				_GDIPlus_GraphicsFillEllipse($hGraphic, $pixel[0] - 4, $pixel[1] - 4, 8, 8, $hBrushRaw)
+			Next
+		EndIf
 	EndIf
-	If IsArray($g_aiRawBottomLeft) Then
-		For $i = 0 To UBound($g_aiRawBottomLeft) - 1
-			_GDIPlus_GraphicsFillEllipse($hGraphic, Number($g_aiRawBottomLeft[$i][0]) - 4, Number($g_aiRawBottomLeft[$i][1]) - 4, 8, 8, $hBrushRaw)
-		Next
-	EndIf
-	If IsArray($g_aiRawBottomRight) Then
-		For $i = 0 To UBound($g_aiRawBottomRight) - 1
-			_GDIPlus_GraphicsFillEllipse($hGraphic, Number($g_aiRawBottomRight[$i][0]) - 4, Number($g_aiRawBottomRight[$i][1]) - 4, 8, 8, $hBrushRaw)
-		Next
-	EndIf
-	If IsArray($g_aiRawTopRight) Then
-		For $i = 0 To UBound($g_aiRawTopRight) - 1
-			_GDIPlus_GraphicsFillEllipse($hGraphic, Number($g_aiRawTopRight[$i][0]) - 4, Number($g_aiRawTopRight[$i][1]) - 4, 8, 8, $hBrushRaw)
-		Next
-	EndIf
-
 
 	; 06 - DRAW MINES, ELIXIR, DRILLS ------------------------------------------------------------------------
 	For $i = 0 To UBound($g_aiPixelMine) - 1
@@ -407,7 +411,8 @@ Func AttackCSVDEBUGIMAGE($bOpenImage = False)
 	Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
 	Local $Time = @HOUR & "." & @MIN & "." & @SEC
 	Local $sAttackType = ($g_iMatchMode = $DB ? "DB" : "LB")
-	Local $filename = $g_sProfileTempDebugPath & String($sAttackType & "_AttackDebug_" & DetectScenery($g_aVillageSize[6]) & "_" & $Date & "_" & $Time) & ".png"
+	Local $sRedlineMode = ($g_iRedlineUsed = $REDLINE_REAL ? "Real" : "Edge")
+	Local $filename = $g_sProfileTempDebugPath & String($sAttackType & "_" & $sRedlineMode & "_AttackDebug_" & DetectScenery($g_aVillageSize[6]) & "_" & $Date & "_" & $Time) & ".png"
 	_GDIPlus_ImageSaveToFile($EditedImage, $filename)
 	If @error Then SetLog("Debug Image save error: " & @extended, $COLOR_ERROR)
 	SetDebugLog("Attack CSV image saved: " & $filename)
