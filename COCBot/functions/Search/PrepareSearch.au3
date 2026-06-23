@@ -385,7 +385,7 @@ Func CloseMultiPlayerWindow()
 	EndIf
 EndFunc
 
-Func CheckRevengeTutor()
+Func CheckRevengeTutor($bTest = False)
 	Local $bRet = False
 	
 	If _ColorCheck(_GetPixelColor(299, 410, True), Hex(0xFFFFFF, 6), 20, Default, "CheckRevengeTutor") Or QuickMIS("BC1", $g_sImgRevengeTutor, 370, 85, 460, 160) Then
@@ -410,25 +410,32 @@ Func CheckRevengeTutor()
 		
 		If _Sleep(2000) Then Return
 		If QuickMIS("BC1", $g_sImgRevengeTutor, 30, 160, 100, 190) Then ;search Layout text
-			SetLog("Set Default Defense Layout", $COLOR_ACTION)
+			SetLog("Set Default Defense Layout", $COLOR_INFO)
 			Local $aLayout = QuickMIS("CNX", $g_sImgRevengeTutor, 40, 320, 860, 370)
 			Local $x, $y
+			RemoveDupCNX($aLayout, 1, 5)
 			_ArraySort($aLayout, 0, 0, 0, 1)
-			For $i = 0 To UBound($alayout) - 1
+			If $bTest Then _ArrayDisplay($aLayout, "Layout")
+			For $i = 0 To UBound($aLayout) - 1
 				$x = $aLayout[$i][1]
 				$y = $aLayout[$i][2]
 				If $i = 0 Then ;home base
-					SetLog("Set Home Base Defense Layout", $COLOR_ACTION)
-					Click($x + 40, $y - 30, 1, 0, "Defense Layout (Home Base)")
-				Else
-					If Not QuickMIS("BC1", $g_sImgRevengeTutor, $x + 160, 340, $x + 190, 360) Then
-						SetLog("Set War Base Defense Layout", $COLOR_ACTION)
-						If _Sleep(500) Then Return
-						Click($x + 40, $y - 30, 1, 0, "Defense Layout (War Base)")
-						ExitLoop
-					Else
-						SetLog("Not Set War Base (Layout need Update)", $COLOR_DEBUG2)
+					If QuickMIS("BC1", $g_sImgRevengeTutor, $x + 140, 320, $x + 200, 360) Then ;find image base need to re-layout (red home icon)
+						SetLog("[" & $i + 1 & "] Base need layout Update, skip", $COLOR_DEBUG1)
+						ContinueLoop
 					EndIf
+					SetLog("[" & $i + 1 & "] Set as Base Defense Layout", $COLOR_DEBUG1)
+					Click($x + 40, $y - 30, 1, 0, "[" & $i + 1 & "] Defense Layout")
+				Else
+					If QuickMIS("BC1", $g_sImgRevengeTutor, $x + 140, 320, $x + 200, 360) Then ;find image base need to re-layout (red home icon)
+						SetLog("[" & $i + 1 & "] Base need layout Update, skip", $COLOR_DEBUG1)
+						ContinueLoop
+					Else
+						SetLog("[" & $i + 1 & "] Set as Base Defense Layout", $COLOR_DEBUG1)
+						Click($x + 40, $y - 30, 1, 0, "[" & $i + 1 & "] Defense Layout")
+						If _Sleep(500) Then Return
+						ExitLoop
+					EndIf					
 				EndIf
 			Next
 		EndIf

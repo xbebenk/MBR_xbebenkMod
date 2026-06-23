@@ -274,6 +274,7 @@ Global Const $g_sImgSupercellIDBottomPage = @ScriptDir & "\imgxml\SwitchAccounts
 #EndRegion
 
 #Region ClanGames
+Global Const $g_sImgCGChallenges = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges\"
 Global Const $g_sImgCaravan =		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Caravan"
 Global Const $g_sImgStart = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Start"
 Global Const $g_sImgPurge = 		@ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Purge"
