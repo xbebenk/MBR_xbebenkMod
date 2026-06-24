@@ -350,7 +350,7 @@ Func ClickAccountSCID($iAccount = 2)
 	$aAccount = QuickMIS("CNX", $g_sImgSupercellIDTown, 560, 400, 577, 650)
 	If IsArray($aAccount) And UBound($aAccount) > 0 Then
 		_ArraySort($aAccount, 0, 0, 0, 2)
-		SetLog("Detected account : " & UBound($aAccount), $COLOR_INFO)
+		SetDebugLog("Detected account : " & UBound($aAccount))
 		
 		Local $iTmpY = 0, $iDistance = 50
 		For $i = 0 To UBound($aAccount) - 1
@@ -371,7 +371,7 @@ Func ClickAccountSCID($iAccount = 2)
 		EndIf
 		
 		For $i = 0 To UBound($aAccount) - 1
-			SetLog("Bottom Splitter on : " & $aAccount[$i][1] & "," & $aAccount[$i][2], $COLOR_DEBUG)
+			SetDebugLog("Bottom Splitter on : " & $aAccount[$i][1] & "," & $aAccount[$i][2])
 		Next
 		
 		If Not $g_bRunState Then Return
@@ -405,7 +405,7 @@ Func ClickAccountSCID($iAccount = 2)
 		EndSwitch
 		
 		If Not $g_bRunState Then Return
-		SetLog("Click Account : [" & $iAccount & "] " & $g_asProfileName[$iAccount-1] & " on " & $x & "," & $y, $COLOR_ACTION)
+		SetLog("Click Account : [" & $iAccount & "] " & $g_asProfileName[$iAccount-1] & " on " & $x & "," & $y, $COLOR_SUCCESS)
 		Click($x, $y)
 		$bRet = True
 		SetLog("Please Wait", $COLOR_INFO)
