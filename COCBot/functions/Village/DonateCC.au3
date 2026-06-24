@@ -264,7 +264,13 @@ Func DonateCC($bTest = False, $bSwitch = False, $bClanChatOpened = False)
 					If Not $g_bSkipDonTroops Then
 						For $i = 0 To UBound($g_aiDonateTroopPriority) - 1
 							Local $iTroopIndex = $g_aiDonateTroopPriority[$i]
-							If $g_abChkDonateTroop[$iTroopIndex] Then
+							; Force-donate troops the GUI doesn't expose a checkbox for
+							; (Thrower, Druid). readConfig's name lookup only synthesises
+							; an INI key for Barb..Headhunter, so the checkbox bit for
+							; these always reads False from config and they would otherwise
+							; never donate even when clan chat explicitly requests them.
+							Local $bAlwaysDonate = ($iTroopIndex = $eTroopThrower Or $iTroopIndex = $eTroopDruid)
+							If $g_abChkDonateTroop[$iTroopIndex] Or $bAlwaysDonate Then
 								If CheckDonateTroop($iTroopIndex, $g_asTxtDonateTroop[$iTroopIndex], $ClanString, $g_bNewSystemToDonate) Then
 									Local $iQuant = -1, $Quant = 0
 									$iQuant = _ArraySearch($g_aiDonTroopQuant, $iTroopIndex, 0, 0, 0, 0, 1, 0)
@@ -937,7 +943,7 @@ Func getArmyRequest($DonateButton = -1)
 			Local $sQuant = getOcrAndCapture("coc-singlereq", $axCoord[$iPos], $aiDonateCoords[1] - 88, 18, 15, True)
 			$iArmyIndex = TroopIndexLookup($aQuick[$i][0])
 			; Troops
-			If $iArmyIndex >= $eBarb And $iArmyIndex <= $eAppWard Then
+			If $iArmyIndex >= $eBarb And $iArmyIndex <= $eDruid Then
 				$sClanText &= ", " & $g_asTroopNames[$iArmyIndex]
 				$sDebugText &= ", " & $g_asTroopNames[$iArmyIndex] & ":" & (Number($sQuant) > 0 ? $sQuant : 1)
 				$g_aiDonTroopQuant[$i][0] = $iArmyIndex

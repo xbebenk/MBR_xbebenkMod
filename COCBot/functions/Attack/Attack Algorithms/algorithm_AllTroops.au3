@@ -77,7 +77,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	If $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 Then ; Customise DE side wave deployment here
 		Switch $g_aiAttackStdDropOrder[$g_iMatchMode]
 			Case 0
-				Local $listInfoDeploy[48][5] = [[$eGole, $nbSides, 1, 1, 2] _
+				Local $listInfoDeploy[50][5] = [[$eGole, $nbSides, 1, 1, 2] _
 							, [$eLava, $nbSides, 1, 1, 2] _
 							, [$eIceH, $nbSides, 1, 1, 2] _
 							, [$eIceG, $nbSides, 1, 1, 2] _
@@ -123,6 +123,8 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 							, [$ePekk, $nbSides, 1, 1, 1] _
 							, [$eHunt, $nbSides, 1, 1, 0] _
 							, [$eAppWard, $nbSides, 1, 1, 0] _
+							, [$eThrow, $nbSides, 1, 1, 0] _
+							, [$eDruid, $nbSides, 1, 1, 0] _
 							, ["CC", 1, 1, 1, 1] _
 							, ["HEROES", 1, 2, 1, 1]]
 				If $g_bCustomDropOrderEnable Then
@@ -195,7 +197,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 		If $g_bDebugSetlog Then SetDebugLog("listdeploy standard for attack", $COLOR_DEBUG)
 		Switch $g_aiAttackStdDropOrder[$g_iMatchMode]
 			Case 0
-				Local $listInfoDeploy[48][5] = [[$eGole, $nbSides, 1, 1, 2] _
+				Local $listInfoDeploy[50][5] = [[$eGole, $nbSides, 1, 1, 2] _
 							, [$eLava, $nbSides, 1, 1, 2] _
 							, [$eIceH, $nbSides, 1, 1, 2] _
 							, [$eIceG, $nbSides, 1, 1, 2] _
@@ -241,6 +243,8 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 							, [$ePekk, $nbSides, 1, 1, 1] _
 							, [$eHunt, $nbSides, 1, 1, 0] _
 							, [$eAppWard, $nbSides, 1, 1, 0] _
+							, [$eThrow, $nbSides, 1, 1, 0] _
+							, [$eDruid, $nbSides, 1, 1, 0] _
 							, ["CC", 1, 1, 1, 1] _
 							, ["HEROES", 1, 2, 1, 1]]
 				If $g_bCustomDropOrderEnable Then
@@ -356,7 +360,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 			SetDebugLog("No Wast time... exit, no troops usable left", $COLOR_DEBUG)
 			ExitLoop ;Check remaining quantities
 		EndIf
-		For $i = $eBarb To $eAppWard ; launch all remaining troops
+		For $i = $eBarb To $eDruid ; launch all remaining troops
 			If LaunchTroop($i, $nbSides, 1, 1, 1) Then
 				CheckHeroesHealth()
 				If _Sleep($DELAYALGORITHM_ALLTROOPS5) Then Return
