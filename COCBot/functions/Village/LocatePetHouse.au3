@@ -31,13 +31,14 @@ EndFunc
 
 Func autoLocatePetHouse()
 	Local $bRet = False, $BuildingName = ""
-	Local $aPetHouse = QuickMIS("CNX", $g_sImgPetHouse)
+	Local $aPetHouse = QuickMIS("CNX", $g_sImgPetHouse, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight, $g_OuterDiamondBottom)
 	If IsArray($aPetHouse) And Ubound($aPetHouse) > 0 Then 
+		RemoveDupCNX($aPetHouse)
 		For $i = 0 To UBound($aPetHouse) - 1
 			If StringInStr($aPetHouse[$i][0], "PetHouse") Then 
 				SetLog("PetHouse Search find : " & _ArrayToString($aPetHouse), $COLOR_DEBUG)
 				Click($aPetHouse[$i][1], $aPetHouse[$i][2])
-				$BuildingName = BuildingInfo(242, 473)
+				$BuildingName = BuildingInfo(242, 479)
 				If StringInStr($BuildingName[1], "Pet") Then
 					$g_aiPetHousePos[0] = $aPetHouse[$i][1]
 					$g_aiPetHousePos[1] = $aPetHouse[$i][2]
@@ -101,7 +102,7 @@ Func _LocatePetHouse()
 			ClickAway()
 			Return
 		EndIf
-		Local $sPetHouseInfo = BuildingInfo(242, 473); 860x780
+		Local $sPetHouseInfo = BuildingInfo(242, 479); 860x780
 		If $sPetHouseInfo[0] > 1 Or $sPetHouseInfo[0] = "" Then
 			If StringInStr($sPetHouseInfo[1], "House") = 0 Then
 				Local $sLocMsg = ($sPetHouseInfo[0] = "" ? "Nothing" : $sPetHouseInfo[1])

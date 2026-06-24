@@ -70,11 +70,11 @@ Func PetHouse($test = False)
 			Return False
 		EndIf
 	Else
-		PureClickP($g_aiPetHousePos)
+		ClickP($g_aiPetHousePos)
 		If _Sleep(500) Then Return
 	EndIf
 	
-	Local $BuildingName = BuildingInfo(242, 473)
+	Local $BuildingName = BuildingInfo(242, 479)
 	If StringInStr($BuildingName[1], "Pet") Then
 		SetLog("Click on PetHouse, Level:" & $BuildingName[2])
 		$g_iPetHouseLevel = Number($BuildingName[2])
