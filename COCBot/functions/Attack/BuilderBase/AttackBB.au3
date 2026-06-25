@@ -205,6 +205,7 @@ EndFunc
 Func EndBattleBB() ; Find if battle has ended and click okay
 	Local $bRet = False, $bBattleMachine = True, $bWallBreaker = True
 	Local $sDamage = 0, $sTmpDamage = 0, $bCountSameDamage = 1, $realDamage = 0, $iStars = 0
+	Local $bSpeedUpBattle = False
 	
 	For $i = 1 To 200
 		;SetLog("Waiting EndBattle Screen #" & $i, $COLOR_ACTION)
@@ -222,6 +223,10 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		EndIf
 		$sTmpDamage = Number($sDamage)
 		
+		;check speedup battle timer
+		If $sTmpDamage > 90 And Not $bSpeedUpBattle Then CheckSpeedUpBattle($bSpeedUpBattle)
+		
+		;check if battle finished
 		If BBBarbarianHead("EndBattleBB") Then ExitLoop
 		
 		If $g_bChkBBEndBattleOn2Stars And Not $g_bIsBBevent Then 
@@ -297,6 +302,15 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 	CheckBB20LootCartTutor()
 	If Not $bRet Then SetLog("Could not find finish battle screen", $COLOR_ERROR)
 	Return $bRet
+EndFunc
+
+Func CheckSpeedUpBattle(ByRef $bSpeedUpBattle)
+	If _ColorCheck(_GetPixelColor(820, 420, True), Hex(0xDDF685, 6), 20, Default, "CheckSpeedUpBattle") Then
+		Click(820, 450, 1, 0, "SpeedUp")
+		SetLog("Speeding up battle timer", $COLOR_INFO)
+		$bSpeedUpBattle = True
+	EndIf
+	Return $bSpeedUpBattle
 EndFunc
 
 Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
