@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func GoldElixirChangeEBO()
+Func GoldElixirChangeEBO(ByRef $bSpeedUpBattle)
 	Local $Gold1, $Gold2
 	Local $GoldChange, $ElixirChange
 	Local $Elixir1, $Elixir2
@@ -23,7 +23,6 @@ Func GoldElixirChangeEBO()
 	Local $txtDiff
 	Local $exitOneStar = 0, $exitTwoStars = 0
 	Local $Damage, $CurDamage
-	Local $bSpeedUpBattle = False
 	
 	$g_iDarkLow = 0
 	;READ RESOURCES n.1
@@ -168,6 +167,7 @@ Func GoldElixirChangeEBO()
 		
 		;check speedup Battle
 		If $g_iPercentageDamage > 90 And Not $bSpeedUpBattle Then CheckSpeedUpBattle($bSpeedUpBattle)
+		SetDebugLog("$bSpeedUpBattle : " & String($bSpeedUpBattle), $COLOR_DEBUG)
 		
 		;EXIT IF RESOURCES = 0
 		If $g_abStopAtkNoResources[$g_iMatchMode] And Number($Gold2) = 0 And Number($Elixir2) = 0 And Number($DarkElixir2) = 0 Then

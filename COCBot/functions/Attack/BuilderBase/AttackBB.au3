@@ -310,7 +310,6 @@ Func CheckSpeedUpBattle(ByRef $bSpeedUpBattle)
 		SetLog("Speeding up battle timer", $COLOR_INFO)
 		$bSpeedUpBattle = True
 	EndIf
-	Return $bSpeedUpBattle
 EndFunc
 
 Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)

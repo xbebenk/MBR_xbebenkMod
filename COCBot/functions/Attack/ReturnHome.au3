@@ -19,6 +19,7 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 	Local $hBitmap_Scaled
 	Local $i, $j
 	Local $aiSurrenderButton
+	Local $bSpeedUpBattle = False
 
 	If $g_bDESideDisableOther And $g_iMatchMode = $LB And $g_aiAttackStdDropSides[$LB] = 4 And $g_bDESideEndEnable And ($g_bDropQueen Or $g_bDropKing) Then
 		SaveandDisableEBO()
@@ -28,7 +29,7 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 	If $GoldChangeCheck Then
 		SetLog("Checking if the battle has finished", $COLOR_INFO)
 		$g_Zapped = False ;reset
-		While GoldElixirChangeEBO()
+		While GoldElixirChangeEBO($bSpeedUpBattle)
 			If _Sleep(1000) Then Return
 		WEnd
 		If $g_bRestart Then Return
