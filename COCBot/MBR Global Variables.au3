@@ -1760,14 +1760,14 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
 Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
-Global $g_bChkClanGamesPurgeAny = 0, $g_bChkClanGamesZapChallenge = False, $g_bIsZapEvent = False, $g_sZapEventName = ""
+Global $g_bChkClanGamesPurgeAny = 0, $g_sCGEasyEventName = ""
 Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDay = 0
 Global $g_bCollectCGReward = False, $g_sCGCurrentEventName = ""
 
 Global $g_abCGMainLootItem[6]
-Global $g_abCGMainBattleItem[22]
-Global $g_abCGMainDestructionItem[34]
+Global $g_abCGMainBattleItem[28]
+Global $g_abCGMainDestructionItem[31]
 Global $g_abCGMainAirItem[15]
 Global $g_abCGMainGroundItem[27]
 Global $g_abCGMainMiscItem[3]

@@ -12,7 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func PrepareSearch($bTest = False) ;Click attack button and find match button, will break shield
+Func PrepareSearch($bTest = False, $bDoClanGames = False) ;Click attack button and find match button, will break shield
 
 	SetLog("Going to Attack", $COLOR_INFO)
 	$g_bRestart = False ;reset
@@ -49,7 +49,7 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 	
 	Local $aButton, $bTournament = False, $aMatch
 	
-	If $g_bEnableTournament And Not $g_bNoTournament Then 
+	If $g_bEnableTournament And Not $g_bNoTournament And Not $bDoClanGames Then 
 		For $i = 1 To 10 
 			If Not $g_bRunState Then Return
 			If _Sleep(50) Then Return
@@ -152,16 +152,20 @@ Func PrepareSearchCheckArmy($bTournament = False, $bTest = False)
 			If _Sleep(500) Then Return
 			If $bTest Then Return $bRet
 			Click(695, 500, 1, 0, "ArmyOverview Attack Button")
-			If _Sleep(1000) Then Return
-			If IsOKCancelPage(True) Then 
-				Click(535, 410, 1, 0, "Confirm Attack OK")
-			EndIf
-			$bRet = True
+			If _Sleep(500) Then Return
 			
-			SetLog("Going Attack", $COLOR_INFO)
+			SetLog("Going Attack for: " & ($bTournament = True ? "League Attack" : "Normal Attack"), $COLOR_INFO)
 			For $wait = 1 To 8
-				SetLog("Waiting attack page #" & $wait, $COLOR_DEBUG1)
-				If IsAttackPage(False, 1) Then ExitLoop 2
+				SetDebugLog("Waiting attack page #" & $wait, $COLOR_DEBUG1)
+				If IsOKCancelPage(True) Then 
+					Click(535, 410, 1, 0, "Confirm Attack OK")
+					If _Sleep(1000) Then Return
+					ContinueLoop
+				EndIf
+				If IsAttackPage(False, 1) Then 
+					$bRet = True
+					ExitLoop 2
+				EndIf
 				If _Sleep(500) Then Return
 			Next
 		EndIf
@@ -275,7 +279,7 @@ Func CheckHeroOnUpgrade()
 								Click($x, $y, 1, 0, "Hammer")
 								SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
 								ExitLoop
-							EndIF
+							EndIf
 						EndIf
 					Else
 						Click($aHero[$i][1], $aHero[$i][2], 1, 0, "Click " & $aHero[$i][0])
@@ -329,6 +333,10 @@ Func SetArmyCompo($bTournament = False)
 					ConfirmOK()
 				Else
 					SetLog("Fail to verify Army Compo " & $g_iTournamentUseArmy + 1, $COLOR_DEBUG2)
+					SetLog("Your Setting for Tournament Attack: Army" & $g_iTournamentUseArmy + 1, $COLOR_ERROR)
+					SetLog("Cannot Find Army Compo " & $g_iTournamentUseArmy + 1 & " on your Saved Army", $COLOR_ERROR)
+					SetLog("Cancel Selecting Saved Army", $COLOR_ERROR)
+					Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Selector")
 				EndIf
 			Else
 				SetLog("Fail to verify Selector is Open", $COLOR_DEBUG2)
@@ -351,6 +359,10 @@ Func SetArmyCompo($bTournament = False)
 					ConfirmOK()
 				Else
 					SetLog("Fail to verify Army Compo " & $g_iCmbDBUseArmy + 1, $COLOR_DEBUG2)
+					SetLog("Your Setting for Normal Attack: Army" & $g_iCmbDBUseArmy + 1, $COLOR_ERROR)
+					SetLog("Cannot Find Army Compo " & $g_iCmbDBUseArmy + 1 & " on your Saved Army", $COLOR_ERROR)
+					SetLog("Cancel Selecting Saved Army", $COLOR_ERROR)
+					Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Selector")
 				EndIf
 			Else
 				SetLog("Fail to verify Selector is Open", $COLOR_DEBUG2)
@@ -365,15 +377,15 @@ Func SetArmyCompo($bTournament = False)
 EndFunc
 
 Func ConfirmOK()
-	For $i = 1 To 2
-		If _Sleep(500) Then Return
+	For $i = 1 To 5
 		SetLog("Waiting Confirm Message #" & $i, $COLOR_ACTION)
 		If IsOKCancelPage(True) Then 
 			Click(535, 410, 1, 0, "Click Confirm")
 			SetLog("Confirm OK", $COLOR_DEBUG1)
-			If _Sleep(1000) Then Return
+			If _Sleep(500) Then Return
 		EndIf
-		If WaitforPixel(695, 500, 695, 505, "C2ED91", 20, 1, "ConfirmOK") Then ExitLoop ; we found ArmyOverview Window with attack button
+		If _ColorCheck(_GetPixelColor(785, 513, True), Hex(0xA2EB51, 6), 20, Default, "ConfirmOK: Attack Button") Then ExitLoop
+		If _Sleep(500) Then Return
 	Next
 EndFunc
 
