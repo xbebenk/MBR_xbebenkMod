@@ -6,7 +6,7 @@
 ; Return values .: None
 ; Author ........: Cosote (12-2015)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2024
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2025
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -33,7 +33,7 @@ Func OpenMEmu($bRestart = False)
 	$hTimer = __TimerInit()
 
 	; Test ADB is connected
-	$connected_to = ConnectAndroidAdb(False, 60 * 1000)
+	$connected_to = ConnectAndroidAdb(False, False, 60 * 1000)
 	If Not $g_bRunState Then Return False
 
 	; Wait for device
@@ -127,17 +127,37 @@ Func GetMEmuBackgroundMode()
 		EndSwitch
 	EndIf
 
+	; PH MOD (Hyper-V MEmu fix): VBoxManage guestproperty bos donerse (yeni MEmu surumleri
+	; Hyper-V kullaniyor, VBoxManage yok) render modunu dogrudan <instance>.memu dosyasindan oku.
+	; graphics_render_mode value="1" (DirectX) => WinAPI background => minimize/arka plan shared-folder'siz calisir.
+	Local $sMEmuVmConfig = GetMEmuPath() & "MemuHyperv VMs\" & $g_sAndroidInstance & "\" & $g_sAndroidInstance & ".memu"
+	If FileExists($sMEmuVmConfig) Then
+		Local $sMEmuVmContent = FileRead($sMEmuVmConfig)
+		Local $aRenderFromFile = StringRegExp($sMEmuVmContent, 'graphics_render_mode"\s+value="([0-9]+)"', $STR_REGEXPARRAYMATCH)
+		If Not @error Then
+			SetDebugLog($g_sAndroidEmulator & " (" & $g_sAndroidInstance & ") render mode from .memu file = " & $aRenderFromFile[0])
+			Switch $aRenderFromFile[0]
+				Case "1", "2" ; DirectX / DirectX+
+					Return $iDirectX
+			EndSwitch
+		EndIf
+	EndIf
+
 	; fallback to OpenGL
 	Return $iOpenGL
 EndFunc   ;==>GetMEmuBackgroundMode
 
 Func InitMEmu($bCheckOnly = False)
 	Local $process_killed, $aRegExResult, $g_sAndroidAdbDeviceHost, $g_sAndroidAdbDevicePort, $oops = 0
+	Local $MEmuVersion = RegRead($g_sHKLM & "\SOFTWARE" & $g_sWow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\MEmu\", "DisplayVersion")
 	SetError(0, 0, 0)
-	
+	; Could also read MEmu paths from environment variables MEmu_Path and MEmuHyperv_Path
 	Local $MEmu_Path = GetMEmuPath()
-	Local $MEmu_Manage_Path = $MEmu_Path & "..\MEmuHyperv\MEmuManage.exe"
-	
+	Local $MEmu_Manage_Path = EnvGet("MEmuHyperv_Path") & "\MEmuManage.exe"
+	If FileExists($MEmu_Manage_Path) = 0 Then
+		$MEmu_Manage_Path = $MEmu_Path & "..\MEmuHyperv\MEmuManage.exe"
+	EndIf
+
 	If FileExists($MEmu_Path & "MEmu.exe") = 0 Then
 		If Not $bCheckOnly Then
 			SetLog("Serious error has occurred: Cannot find " & $g_sAndroidEmulator & ":", $COLOR_ERROR)
@@ -168,7 +188,15 @@ Func InitMEmu($bCheckOnly = False)
 
 	; Read ADB host and Port
 	If Not $bCheckOnly Then
-		
+		;$g_iAndroidRecoverStrategy = 0
+		; newer MEmu doesn't support yet ADB mouse click/minitouch
+		Local $memuCurr = GetVersionNormalized($__MEmu_Version)
+		Local $memu6 = GetVersionNormalized("6.0")
+		If $memuCurr > $memu6 Then
+			;SetDebugLog("Disable ADB Mouse Click as not support for " & $g_sAndroidEmulator & " version " & $MEmuVersion)
+			;AndroidSupportFeaturesRemove(4) ; disable ADB Mouse Click support
+		EndIf
+
 		InitAndroidConfig(True) ; Restore default config
 		If Not GetAndroidVMinfo($__VBoxVMinfo, $MEmu_Manage_Path) Then Return False
 
@@ -205,7 +233,7 @@ Func InitMEmu($bCheckOnly = False)
 		EndIf
 
 		; get screencap paths: Name: 'picture', Host path: 'C:\Users\Administrator\Pictures\MEmu Photo' (machine mapping), writable
-		$g_sAndroidPicturesPath = "/data/media/0/Pictures/"
+		$g_sAndroidPicturesPath = "/mnt/shell/emulated/0/Pictures/"
 		$g_sAndroidSharedFolderName = "picture"
 		ConfigureSharedFolder(0) ; something like C:\Users\Administrator\Pictures\MEmu Photo\
 
