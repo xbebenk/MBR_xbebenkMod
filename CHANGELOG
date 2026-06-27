@@ -1,9 +1,3 @@
-* 
-* **v.7.9.9 Mod_v1.2.6#127** (2026-05-19)
-* Fix Use Hero Book
-* Fix Read DE on search
-* Fix use hero book on Duke Upgrade
-*
 * **v.7.9.9 Mod_v1.2.6#128** (2026-05-24)
 * Fix FillIncorrect Combo spell
 * refactor smartfarm attack
@@ -32,4 +26,13 @@
 * new icon for Builderbase troop on settings
 * Support CleanYardBB to remve root on Builderbase
 * remap Redline and Dropline (for stable deployment, please use external edge)
-
+*
+* **v.7.9.9 Mod_v1.2.6#130** (2026-06-27)
+* fix pick defense layout
+* fix open shop Builderbase
+* handle for Hero Journey reward message
+* handle for Switch SCID failed
+* fix PetHouse upgrade
+* support Memu (from forum post @ScamEmre patch)
+* speedup battle
+* handle for pick Saved Army
