@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func GoldElixirChangeEBO()
+Func GoldElixirChangeEBO(ByRef $bSpeedUpBattle)
 	Local $Gold1, $Gold2
 	Local $GoldChange, $ElixirChange
 	Local $Elixir1, $Elixir2
@@ -23,6 +23,7 @@ Func GoldElixirChangeEBO()
 	Local $txtDiff
 	Local $exitOneStar = 0, $exitTwoStars = 0
 	Local $Damage, $CurDamage
+	
 	$g_iDarkLow = 0
 	;READ RESOURCES n.1
 	$Gold1 = getGoldVillageSearch(48, 76)
@@ -56,7 +57,7 @@ Func GoldElixirChangeEBO()
 			$z = AttackRemainingTime()
 		EndIf
 	EndIf
-
+	
 	;CALCULATE TWO STARS REACH
 	If $g_abStopAtkTwoStars[$g_iMatchMode] And _CheckPixel($aWonTwoStar, True) Then
 		SetLog("Two Star Reach, exit", $COLOR_SUCCESS)
@@ -163,7 +164,11 @@ Func GoldElixirChangeEBO()
 			$ElixirChange = $Elixir2
 			$DarkElixirChange = $DarkElixir2
 		EndIf
-
+		
+		;check speedup Battle
+		If $g_iPercentageDamage > 90 And Not $bSpeedUpBattle Then CheckSpeedUpBattle($bSpeedUpBattle)
+		SetDebugLog("$bSpeedUpBattle : " & String($bSpeedUpBattle), $COLOR_DEBUG)
+		
 		;EXIT IF RESOURCES = 0
 		If $g_abStopAtkNoResources[$g_iMatchMode] And Number($Gold2) = 0 And Number($Elixir2) = 0 And Number($DarkElixir2) = 0 Then
 			SetLog("Gold & Elixir & DE = 0, end battle ", $COLOR_SUCCESS)

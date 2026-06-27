@@ -263,7 +263,7 @@ Global $__Nox_Config[1][3] = _ ; Alternative Nox Control ID (array must be order
 ;                 |          |                        |                                  |                |                      |                       |                      |                       |              |                    |256 = Update $g_sAppClassInstance with Window Handle|                                    |                                     |
 Global $g_avAndroidAppConfig[4][16] = [ _ ;           |                                  |                |                      |                       |                      |                       |              |                    |512 = Supports adding shared folder with vboxmanage.exe                                  |                                     |
 	["Nox",        "nox",     "No",                   "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 4, $g_iDEFAULT_HEIGHT - 10,0,             "127.0.0.1:62001",   1+2+4+8+16+32       +256+512, '# ',                  '(nox Virtual Input|Android Input|Android_Input)', 0,                      2], _ ; Nox
-	["MEmu",       "MEmu",    "MEmu ",                "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0,             "127.0.0.1:21503",     2+4+8+16+32           +512, '# ',                  '(Microvirt Virtual Input|User Input)', 0,                                 2], _ ; MEmu
+	["MEmu",       "MEmu",    "MEmu",                "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0,             "127.0.0.1:21503",     2+4+8+16+32           +512, '# ',                  '(Microvirt Virtual Input|User Input)', -1,                                 1], _ ; MEmu
 	["BlueStacks5","Pie64",	  "BS5-",           	  "[CLASS:BlueStacksApp; INSTANCE:1]","",          	   $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "127.0.0.1:5555",    1+2+4+8+16+32   +128,         '# ',                  'BlueStacks Virtual Touch',          -1,                                   1], _; BlueStacks5
 	["LDPlayer9","Leidian",	  "LD9-",     		  	  "[CLASS:subWin; INSTANCE:1]",		  "sub",           $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "emulator-5555",    1+2+4+8+16+32   +128,         	   '# ',                  'input',         					   -1,                                   1] _; LDplayer9
 ]
@@ -1760,14 +1760,14 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
 Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
-Global $g_bChkClanGamesPurgeAny = 0, $g_bChkClanGamesZapChallenge = False, $g_bIsZapEvent = False, $g_sZapEventName = ""
+Global $g_bChkClanGamesPurgeAny = 0, $g_sCGEasyEventName = ""
 Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDay = 0
 Global $g_bCollectCGReward = False, $g_sCGCurrentEventName = ""
 
 Global $g_abCGMainLootItem[6]
-Global $g_abCGMainBattleItem[22]
-Global $g_abCGMainDestructionItem[34]
+Global $g_abCGMainBattleItem[28]
+Global $g_abCGMainDestructionItem[31]
 Global $g_abCGMainAirItem[15]
 Global $g_abCGMainGroundItem[27]
 Global $g_abCGMainMiscItem[3]

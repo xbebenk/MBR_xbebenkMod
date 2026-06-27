@@ -40,7 +40,6 @@ Func PetHouse($test = False)
 
 	; Check at least one pet upgrade is enabled
 	Local $bUpgradePets = False
-	Local $bPetHouseOnUpgrade = False
 	For $i = 0 to $ePetCount - 1
 		If $g_bUpgradePetsEnable[$i] Then
 			$bUpgradePets = True
@@ -49,17 +48,12 @@ Func PetHouse($test = False)
 	If Not $bUpgradePets Then Return
 
 	checkMainScreen()
-	ZoomOut() ;make sure village is zoomout
-	ClickAway()
+	ZoomOut(True) ;make sure village is zoomout
 	
 	$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(690, 123) ;get current DE
-	If Number($g_aiCurrentLoot[$eLootDarkElixir]) <= 90000 Then
+	If Number($g_aiCurrentLoot[$eLootDarkElixir]) <= 30000 Then
 		SetLog("Current DE: " & $g_aiCurrentLoot[$eLootDarkElixir] & " < Mininum to upgrade Pet, exiting!", $COLOR_INFO)
 		If Not $test Then Return
-	EndIf
-
-	If Not $test Then
-		If PetUpgradeInProgress() Then Return False ; see if we know about an upgrade in progress without checking the Pet House
 	EndIf
 
 	If $g_aiPetHousePos[0] <= 0 Or $g_aiPetHousePos[1] <= 0 Then
@@ -70,11 +64,11 @@ Func PetHouse($test = False)
 			Return False
 		EndIf
 	Else
-		PureClickP($g_aiPetHousePos)
+		ClickP($g_aiPetHousePos)
 		If _Sleep(500) Then Return
 	EndIf
 	
-	Local $BuildingName = BuildingInfo(242, 473)
+	Local $BuildingName = BuildingInfo(242, 479)
 	If StringInStr($BuildingName[1], "Pet") Then
 		SetLog("Click on PetHouse, Level:" & $BuildingName[2])
 		$g_iPetHouseLevel = Number($BuildingName[2])
@@ -125,14 +119,7 @@ Func PetHouse($test = False)
 		EndIf
 	Next
 
-	If Not $test Then
-		If CheckPetUpgrade() Then Return False ; cant start if something upgrading
-	EndIf
-	
-	If $bPetHouseOnUpgrade Then
-		ClickAway()
-		Return False
-	EndIf
+	If CheckPetUpgrade() Then Return ; cant start if something upgrading
 	
 	Local $aPet = GetPetUpgradeList()
 	Local $AllPetMax = True
@@ -173,8 +160,6 @@ Func PetHouse($test = False)
 				_ArraySort($aPet, 0, 0, 0, 3) ;sort by level
 			Case 1
 				_ArraySort($aPet, 0, 0, 0, 4) ;sort by cost
-			Case Else
-				SetLog("You must be drunk!", $COLOR_ERROR)
 		EndSwitch
 	EndIf
 	
@@ -229,12 +214,12 @@ Func PetHouse($test = False)
 					
 					If _Sleep(1000) Then Return
 					SetLog("Started upgrade for: " & $aPet[$i][1], $COLOR_SUCCESS)
-					Local $sPetTimeOCR = getRemainTPetHouse(274, 244)
-					Local $iPetFinishTime = ConvertOCRTime("PetHouse Time", $sPetTimeOCR, False)
+					Local $sPetTimeOCR = getRemainTPetHouse(240, 244)
+					Local $iPetFinishTime = ConvertOCRTime("PetHouse", $sPetTimeOCR, True, "Day")
 					SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
 					If $iPetFinishTime > 0 Then
 						$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())
-						SetLog("Pet House will finish in " & $sPetTimeOCR & " (" & $g_sPetUpgradeTime & ")", $COLOR_SUCCESS)
+						SetLog("Pet House will finish in " & $iPetFinishTime & " minutes (" & $g_sPetUpgradeTime & ")", $COLOR_SUCCESS)
 					EndIf
 				Else
 					ClickAway() ; close pet upgrade window
@@ -258,22 +243,15 @@ EndFunc
 
 ; check the Pet House to see if a Pet is upgrading already
 Func CheckPetUpgrade()
-	; check for upgrade in process - look for green in finish upgrade with gems button
-	If $g_bDebugSetlog Then SetLog("_GetPixelColor(750, 150): " & _GetPixelColor(750, 150, True) & ":BED79B", $COLOR_DEBUG)
+	Local $bRet = False
 	If _ColorCheck(_GetPixelColor(815, 145, True), Hex(0xA2CB6C, 6), 20) Then
 		SetLog("Pet House Upgrade in progress, waiting for completion", $COLOR_INFO)
-		If _Sleep($DELAYLABORATORY2) Then Return
-		; upgrade in process and time not recorded so update completion time!
 		Local $sPetTimeOCR = getRemainTPetHouse(240, 244)
-		Local $iPetFinishTime = ConvertOCRTime("Lab Time", $sPetTimeOCR, False)
+		Local $iPetFinishTime = ConvertOCRTime("PetHouse", $sPetTimeOCR, False)
 		SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
 		If $iPetFinishTime > 0 Then
 			$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())
-			If @error Then _logErrorDateAdd(@error)
-			SetLog("Pet Upgrade will finish in " & $sPetTimeOCR & " (" & $g_sPetUpgradeTime & ")")
-			; LabStatusGUIUpdate() ; Update GUI flag
-		ElseIf $g_bDebugSetlog Then
-			SetLog("PetLabUpgradeInProgress - Invalid getRemainTLaboratory OCR", $COLOR_DEBUG)
+			SetLog("Pet Upgrade will finish in " & $iPetFinishTime & " minutes (" & $g_sPetUpgradeTime & ")")
 		EndIf
 		;==========Hide Red  Show Green Hide Gray===
 		GUICtrlSetState($g_hPicPetGray, $GUI_HIDE)
@@ -281,25 +259,8 @@ Func CheckPetUpgrade()
 		GUICtrlSetState($g_hPicPetGreen, $GUI_SHOW)
 		;===========================================
 		ClickAway()
-		Return True
 	EndIf
-	Return False ; returns False if no upgrade in progress
-EndFunc
-
-; checks our global variable to see if we know of something already upgrading
-Func PetUpgradeInProgress()
-	Local $TimeDiff ; time remaining on lab upgrade
-	If $g_sPetUpgradeTime <> "" Then $TimeDiff = _DateDiff("n", _NowCalc(), $g_sPetUpgradeTime) ; what is difference between end time and now in minutes?
-	If @error Then _logErrorDateDiff(@error)
-
-	If Not $g_bRunState Then Return
-	If $TimeDiff <= 0 Then
-		SetLog("Checking Pet House ...", $COLOR_INFO)
-	Else
-		SetLog("Pet Upgrade in progress, waiting for completion", $COLOR_INFO)
-		Return True
-	EndIf
-	Return False ; we currently do not know of any upgrades in progress
+	Return $bRet ; returns False if no upgrade in progress
 EndFunc
 
 Func FindPetsButton()

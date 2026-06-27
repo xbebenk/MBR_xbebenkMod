@@ -153,7 +153,6 @@ Func CheckSwitchAcc()
 	SetDebugLog("- Next Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
 
 	If $g_iNextAccount <> $g_iCurAccount Then
-		CheckMainScreen(True, $g_bStayOnBuilderBase, "CheckSwitchAcc")
 		PullSharedPrefs()
 		SwitchCOCAcc($g_iNextAccount)
 	Else
@@ -168,11 +167,11 @@ Func SwitchCOCAcc($NextAccount = 0, $bTest = False)
 	Local $abAccountNo = AccountNoActive()
 	If $NextAccount < 0 And $NextAccount > $g_iTotalAcc Then $NextAccount = _ArraySearch(True, $abAccountNo)
 	Static $iRetry = 0
-	Local $bResult
+	Local $bResult = False
 	If Not $g_bRunState Then Return
 
 	SetLog("Switching to Account [" & $NextAccount + 1 & "] " & $g_asProfileName[$NextAccount])
-	checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchCOCAcc")
+	
 	Local $bSharedPrefs = $g_bChkSharedPrefs And HaveSharedPrefs($g_asProfileName[$g_iNextAccount])
 	If $bSharedPrefs And $g_PushedSharedPrefsProfile = $g_asProfileName[$g_iNextAccount] Then
 		; shared prefs already pushed
@@ -183,30 +182,7 @@ Func SwitchCOCAcc($NextAccount = 0, $bTest = False)
 	ElseIf $bSharedPrefs Then 
 		$bResult = True
 	Else
-		
-		For $i = 1 To 5 
-			If IsMainPage() Then Click($aButtonSetting[0], $aButtonSetting[1], 1, 0, "Click Setting")
-			If _Sleep(1000) Then Return
-			If Not IsSettingPage(True, 2) Then 
-				SetLog("[" & $i & "] Cannot verify Setting page!", $COLOR_ERROR)
-				If $i = 2 Then RebootAndroid()
-				Return $bResult
-			Else
-				SetLog("[" & $i & "] Setting page verified", $COLOR_SUCCESS)
-				ExitLoop
-			EndIf
-		Next
-		
-		For $i = 1 To 5 
-			SetLog("Verifying SCID Windows #" & $i, $COLOR_ACTION)
-			If ClickSCIDReload() Then ExitLoop
-			If _Sleep(1000) Then Return
-		Next
-		
-		If ClickAccountSCID($NextAccount + 1) Then
-			$bResult = True
-			SetLog("Successfully Switch to Account " & $NextAccount + 1, $COLOR_SUCCESS)
-		EndIf
+		$bResult = SwitchSCID($NextAccount)
 	EndIf
 	
 	If $bTest Then Return
@@ -254,11 +230,12 @@ Func SwitchCOCAcc($NextAccount = 0, $bTest = False)
 	Else
 		$iRetry += 1
 		$g_bReMatchAcc = True
-		SetLog("Switching account failed!", $COLOR_ERROR)
-		SetSwitchAccLog("Switching to Acc " & $NextAccount + 1 & " Failed!", $COLOR_ERROR)
+		SetLog("[" & $iRetry & "] Switching account failed!", $COLOR_ERROR)
+		SetSwitchAccLog("[" & $iRetry & "] Switching to Acc " & $NextAccount + 1 & " Failed!", $COLOR_ERROR)
 		If $iRetry <= 3 Then
-			Click(1, 1, 2, 500)
+			ClickAway()
 			CheckMainScreen(True, $g_bStayOnBuilderBase, "SwitchCOCAcc")
+			SwitchCOCAcc($NextAccount)
 		Else
 			$iRetry = 0
 			UniversalCloseWaitOpenCoC()
@@ -283,6 +260,35 @@ Func SwitchCOCAcc($NextAccount = 0, $bTest = False)
 	runBot()
 
 EndFunc   ;==>SwitchCOCAcc
+
+Func SwitchSCID($NextAccount)
+	Local $bRet = False
+	For $i = 1 To 5 
+		If CheckMainScreen() Then ClickP($aButtonSetting, 1, 0, "Click Setting")
+		If _Sleep(1000) Then Return
+		If IsSettingPage(True, 1) Then 
+			SetLog("[" & $i & "] Setting page verified", $COLOR_SUCCESS)
+			ExitLoop
+		Else
+			SetLog("[" & $i & "] Cannot verify Setting page!", $COLOR_ERROR)
+		EndIf
+	Next
+	
+	For $i = 1 To 5 
+		SetLog("Verifying SCID Windows #" & $i, $COLOR_ACTION)
+		If ClickSCIDReload() Then 
+			SetLog("SCID List verified", $COLOR_SUCCESS)
+			ExitLoop
+		EndIf
+		If _Sleep(1000) Then Return
+	Next
+	
+	If ClickAccountSCID($NextAccount + 1) Then
+		$bRet = True
+		SetLog("Successfully Switch to Account " & $NextAccount + 1, $COLOR_SUCCESS)
+	EndIf
+	Return $bRet
+EndFunc
 
 Func ClickSCIDReload()
 	Local $bRet = False
@@ -344,7 +350,7 @@ Func ClickAccountSCID($iAccount = 2)
 	$aAccount = QuickMIS("CNX", $g_sImgSupercellIDTown, 560, 400, 577, 650)
 	If IsArray($aAccount) And UBound($aAccount) > 0 Then
 		_ArraySort($aAccount, 0, 0, 0, 2)
-		SetLog("Detected account : " & UBound($aAccount), $COLOR_INFO)
+		SetDebugLog("Detected account : " & UBound($aAccount))
 		
 		Local $iTmpY = 0, $iDistance = 50
 		For $i = 0 To UBound($aAccount) - 1
@@ -365,7 +371,7 @@ Func ClickAccountSCID($iAccount = 2)
 		EndIf
 		
 		For $i = 0 To UBound($aAccount) - 1
-			SetLog("Bottom Splitter on : " & $aAccount[$i][1] & "," & $aAccount[$i][2], $COLOR_DEBUG)
+			SetDebugLog("Bottom Splitter on : " & $aAccount[$i][1] & "," & $aAccount[$i][2])
 		Next
 		
 		If Not $g_bRunState Then Return
@@ -399,7 +405,7 @@ Func ClickAccountSCID($iAccount = 2)
 		EndSwitch
 		
 		If Not $g_bRunState Then Return
-		SetLog("Click Account : [" & $iAccount & "] " & $g_asProfileName[$iAccount-1] & " on " & $x & "," & $y, $COLOR_ACTION)
+		SetLog("Click Account : [" & $iAccount & "] " & $g_asProfileName[$iAccount-1] & " on " & $x & "," & $y, $COLOR_SUCCESS)
 		Click($x, $y)
 		$bRet = True
 		SetLog("Please Wait", $COLOR_INFO)

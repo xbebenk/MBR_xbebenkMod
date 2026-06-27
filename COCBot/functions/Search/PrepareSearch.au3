@@ -12,7 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func PrepareSearch($bTest = False) ;Click attack button and find match button, will break shield
+Func PrepareSearch($bTest = False, $bDoClanGames = False) ;Click attack button and find match button, will break shield
 
 	SetLog("Going to Attack", $COLOR_INFO)
 	$g_bRestart = False ;reset
@@ -49,7 +49,7 @@ Func PrepareSearch($bTest = False) ;Click attack button and find match button, w
 	
 	Local $aButton, $bTournament = False, $aMatch
 	
-	If $g_bEnableTournament And Not $g_bNoTournament Then 
+	If $g_bEnableTournament And Not $g_bNoTournament And Not $bDoClanGames Then 
 		For $i = 1 To 10 
 			If Not $g_bRunState Then Return
 			If _Sleep(50) Then Return
@@ -152,16 +152,20 @@ Func PrepareSearchCheckArmy($bTournament = False, $bTest = False)
 			If _Sleep(500) Then Return
 			If $bTest Then Return $bRet
 			Click(695, 500, 1, 0, "ArmyOverview Attack Button")
-			If _Sleep(1000) Then Return
-			If IsOKCancelPage(True) Then 
-				Click(535, 410, 1, 0, "Confirm Attack OK")
-			EndIf
-			$bRet = True
+			If _Sleep(500) Then Return
 			
-			SetLog("Going Attack", $COLOR_INFO)
+			SetLog("Going Attack for: " & ($bTournament = True ? "League Attack" : "Normal Attack"), $COLOR_INFO)
 			For $wait = 1 To 8
-				SetLog("Waiting attack page #" & $wait, $COLOR_DEBUG1)
-				If IsAttackPage(False, 1) Then ExitLoop 2
+				SetDebugLog("Waiting attack page #" & $wait, $COLOR_DEBUG1)
+				If IsOKCancelPage(True) Then 
+					Click(535, 410, 1, 0, "Confirm Attack OK")
+					If _Sleep(1000) Then Return
+					ContinueLoop
+				EndIf
+				If IsAttackPage(False, 1) Then 
+					$bRet = True
+					ExitLoop 2
+				EndIf
 				If _Sleep(500) Then Return
 			Next
 		EndIf
@@ -275,7 +279,7 @@ Func CheckHeroOnUpgrade()
 								Click($x, $y, 1, 0, "Hammer")
 								SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
 								ExitLoop
-							EndIF
+							EndIf
 						EndIf
 					Else
 						Click($aHero[$i][1], $aHero[$i][2], 1, 0, "Click " & $aHero[$i][0])
@@ -329,6 +333,10 @@ Func SetArmyCompo($bTournament = False)
 					ConfirmOK()
 				Else
 					SetLog("Fail to verify Army Compo " & $g_iTournamentUseArmy + 1, $COLOR_DEBUG2)
+					SetLog("Your Setting for Tournament Attack: Army" & $g_iTournamentUseArmy + 1, $COLOR_ERROR)
+					SetLog("Cannot Find Army Compo " & $g_iTournamentUseArmy + 1 & " on your Saved Army", $COLOR_ERROR)
+					SetLog("Cancel Selecting Saved Army", $COLOR_ERROR)
+					Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Selector")
 				EndIf
 			Else
 				SetLog("Fail to verify Selector is Open", $COLOR_DEBUG2)
@@ -351,6 +359,10 @@ Func SetArmyCompo($bTournament = False)
 					ConfirmOK()
 				Else
 					SetLog("Fail to verify Army Compo " & $g_iCmbDBUseArmy + 1, $COLOR_DEBUG2)
+					SetLog("Your Setting for Normal Attack: Army" & $g_iCmbDBUseArmy + 1, $COLOR_ERROR)
+					SetLog("Cannot Find Army Compo " & $g_iCmbDBUseArmy + 1 & " on your Saved Army", $COLOR_ERROR)
+					SetLog("Cancel Selecting Saved Army", $COLOR_ERROR)
+					Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Selector")
 				EndIf
 			Else
 				SetLog("Fail to verify Selector is Open", $COLOR_DEBUG2)
@@ -365,15 +377,15 @@ Func SetArmyCompo($bTournament = False)
 EndFunc
 
 Func ConfirmOK()
-	For $i = 1 To 2
-		If _Sleep(500) Then Return
+	For $i = 1 To 5
 		SetLog("Waiting Confirm Message #" & $i, $COLOR_ACTION)
 		If IsOKCancelPage(True) Then 
 			Click(535, 410, 1, 0, "Click Confirm")
 			SetLog("Confirm OK", $COLOR_DEBUG1)
-			If _Sleep(1000) Then Return
+			If _Sleep(500) Then Return
 		EndIf
-		If WaitforPixel(695, 500, 695, 505, "C2ED91", 20, 1, "ConfirmOK") Then ExitLoop ; we found ArmyOverview Window with attack button
+		If _ColorCheck(_GetPixelColor(785, 513, True), Hex(0xA2EB51, 6), 20, Default, "ConfirmOK: Attack Button") Then ExitLoop
+		If _Sleep(500) Then Return
 	Next
 EndFunc
 
@@ -385,7 +397,7 @@ Func CloseMultiPlayerWindow()
 	EndIf
 EndFunc
 
-Func CheckRevengeTutor()
+Func CheckRevengeTutor($bTest = False)
 	Local $bRet = False
 	
 	If _ColorCheck(_GetPixelColor(299, 410, True), Hex(0xFFFFFF, 6), 20, Default, "CheckRevengeTutor") Or QuickMIS("BC1", $g_sImgRevengeTutor, 370, 85, 460, 160) Then
@@ -410,25 +422,32 @@ Func CheckRevengeTutor()
 		
 		If _Sleep(2000) Then Return
 		If QuickMIS("BC1", $g_sImgRevengeTutor, 30, 160, 100, 190) Then ;search Layout text
-			SetLog("Set Default Defense Layout", $COLOR_ACTION)
+			SetLog("Set Default Defense Layout", $COLOR_INFO)
 			Local $aLayout = QuickMIS("CNX", $g_sImgRevengeTutor, 40, 320, 860, 370)
 			Local $x, $y
+			RemoveDupCNX($aLayout, 1, 5)
 			_ArraySort($aLayout, 0, 0, 0, 1)
-			For $i = 0 To UBound($alayout) - 1
+			If $bTest Then _ArrayDisplay($aLayout, "Layout")
+			For $i = 0 To UBound($aLayout) - 1
 				$x = $aLayout[$i][1]
 				$y = $aLayout[$i][2]
 				If $i = 0 Then ;home base
-					SetLog("Set Home Base Defense Layout", $COLOR_ACTION)
-					Click($x + 40, $y - 30, 1, 0, "Defense Layout (Home Base)")
-				Else
-					If Not QuickMIS("BC1", $g_sImgRevengeTutor, $x + 160, 340, $x + 190, 360) Then
-						SetLog("Set War Base Defense Layout", $COLOR_ACTION)
-						If _Sleep(500) Then Return
-						Click($x + 40, $y - 30, 1, 0, "Defense Layout (War Base)")
-						ExitLoop
-					Else
-						SetLog("Not Set War Base (Layout need Update)", $COLOR_DEBUG2)
+					If QuickMIS("BC1", $g_sImgRevengeTutor, $x + 140, 320, $x + 200, 360) Then ;find image base need to re-layout (red home icon)
+						SetLog("[" & $i + 1 & "] Base need layout Update, skip", $COLOR_DEBUG1)
+						ContinueLoop
 					EndIf
+					SetLog("[" & $i + 1 & "] Set as Base Defense Layout", $COLOR_DEBUG1)
+					Click($x + 40, $y - 30, 1, 0, "[" & $i + 1 & "] Defense Layout")
+				Else
+					If QuickMIS("BC1", $g_sImgRevengeTutor, $x + 140, 320, $x + 200, 360) Then ;find image base need to re-layout (red home icon)
+						SetLog("[" & $i + 1 & "] Base need layout Update, skip", $COLOR_DEBUG1)
+						ContinueLoop
+					Else
+						SetLog("[" & $i + 1 & "] Set as Base Defense Layout", $COLOR_DEBUG1)
+						Click($x + 40, $y - 30, 1, 0, "[" & $i + 1 & "] Defense Layout")
+						If _Sleep(500) Then Return
+						ExitLoop
+					EndIf					
 				EndIf
 			Next
 		EndIf

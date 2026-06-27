@@ -476,40 +476,40 @@ Func OpenShopBB($sUpgradeType = "Traps", $bCheckRedCounter = True)
 	If Not $bCheckRedCounter Then Return $bRet
 	
 	$bRet = False ;reset for checking red counter
-	Local $aRedPos[4] = [292, 418, 545, 671], $iRedPosY = 162
+	Local $aRedPos[4] = [253, 416, 581, 745], $iRedPosY = 157
 	If $bCheckRedCounter Then 
 		Switch $sUpgradeType
 			Case "Army"
-				If WaitforPixel($aRedPos[0], $iRedPosY, $aRedPos[0] + 1, $iRedPosY + 1, "D7081B", 10, 1, "OpenShopBB-Army") Then 
+				If WaitforPixel($aRedPos[0], $iRedPosY, $aRedPos[0] + 1, $iRedPosY + 1, "D7081B", 20, 1, "OpenShopBB-Army") Then 
 					Click($aRedPos[0], $iRedPosY)
 					$bRet = True
 				EndIf
-				If WaitforPixel($aRedPos[0], $iRedPosY, $aRedPos[0] + 1, $iRedPosY + 1, "CD84FE", 10, 1, "OpenShopBB-Army") Then 
+				If WaitforPixel($aRedPos[0], $iRedPosY, $aRedPos[0] + 1, $iRedPosY + 1, "CD84FE", 20, 1, "OpenShopBB-Army") Then 
 					$bRet = True
 				EndIf
 			Case "Resources"
-				If WaitforPixel($aRedPos[1], $iRedPosY, $aRedPos[1] + 1, $iRedPosY + 1, "D7081B", 10, 1, "OpenShopBB-Resources") Then 
+				If WaitforPixel($aRedPos[1], $iRedPosY, $aRedPos[1] + 1, $iRedPosY + 1, "D7081B", 20, 1, "OpenShopBB-Resources") Then 
 					Click($aRedPos[1], $iRedPosY)
 					$bRet = True
 				EndIf
-				If WaitforPixel($aRedPos[1], $iRedPosY, $aRedPos[1] + 1, $iRedPosY + 1, "CD84FE", 10, 1, "OpenShopBB-Resources") Then 
+				If WaitforPixel($aRedPos[1], $iRedPosY, $aRedPos[1] + 1, $iRedPosY + 1, "CD84FE", 20, 1, "OpenShopBB-Resources") Then 
 					$bRet = True
 				EndIf
 			Case "Defenses"
-				If WaitforPixel($aRedPos[2], $iRedPosY, $aRedPos[2] + 1, $iRedPosY + 1, "D7081B", 10, 1, "OpenShopBB-Defenses") Then 
+				If WaitforPixel($aRedPos[2], $iRedPosY, $aRedPos[2] + 1, $iRedPosY + 1, "D7081B", 20, 1, "OpenShopBB-Defenses") Then 
 					Click($aRedPos[2], $iRedPosY)
 					$bRet = True
 				EndIf
-				If WaitforPixel($aRedPos[2], $iRedPosY, $aRedPos[2] + 1, $iRedPosY + 1, "CD84FE", 10, 1, "OpenShopBB-Defenses") Then 
+				If WaitforPixel($aRedPos[2], $iRedPosY, $aRedPos[2] + 1, $iRedPosY + 1, "CD84FE", 20, 1, "OpenShopBB-Defenses") Then 
 					$bRet = True
 				EndIf
 			Case "Traps"
-				If WaitforPixel($aRedPos[3], $iRedPosY, $aRedPos[3] + 1, $iRedPosY + 1, "D7081B", 10, 1, "OpenShopBB-Traps") Then 
+				If WaitforPixel($aRedPos[3], $iRedPosY, $aRedPos[3] + 1, $iRedPosY + 1, "D7081B", 20, 1, "OpenShopBB-Traps") Then 
 					Click($aRedPos[3], $iRedPosY)
 					$bRet = True
 				EndIf
 				Click(615, 170) ;just click the traps tab button
-				If WaitforPixel($aRedPos[3], $iRedPosY, $aRedPos[3] + 1, $iRedPosY + 1, "CD84FE", 10, 1, "OpenShopBB-Traps") Then 
+				If WaitforPixel($aRedPos[3], $iRedPosY, $aRedPos[3] + 1, $iRedPosY + 1, "CD84FE", 20, 1, "OpenShopBB-Traps") Then 
 					$bRet = True
 				EndIf
 		EndSwitch

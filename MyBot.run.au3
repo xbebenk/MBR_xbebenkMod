@@ -1200,7 +1200,7 @@ Func FirstCheckRoutine()
 					SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_ACTION)
 					GotoBBTodoCG()
 				Else
-					ExitLoop ;should be will never get here, but
+					;DoClanGameChallenge()
 				EndIf
 			Else
 				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max Then continue to main loop
@@ -1467,6 +1467,27 @@ Func GotoBBTodoCG()
 	EndIf
 EndFunc
 
+Func DoClanGameChallenge($sEvent = $g_sCGEasyEventName)
+	Local $aEasyEvent[4] = ["Laboratory", "ArmyCamp", "DESpell", "SFacto"]
+	Local $bEasyEvent = False
+	
+	For $Event In $aEasyEvent
+		If StringInStr($sEvent, $Event) Then
+			$bEasyEvent = True
+			ExitLoop
+		EndIf
+	Next
+	
+	Local $iLoop = 10
+	If $bEasyEvent Then $iLoop = 5
+	For $i = 1 To $iLoop
+		SetLog("[" & $i & "] DoClanGameChallenge", $COLOR_INFO)
+		PrepareSearch(False, True)
+		PrepareAttack($DB)
+	
+		
+	Next
+EndFunc
 
 Func T420()
 	If IsDeclared("g_VariableTest123") = 1 Then

@@ -54,8 +54,6 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 	If IsClanGamesWindow($bOnlyPurge) Then
 		
 		Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
-		;Remove All previous file (in case setting changed)
-		DirRemove($sTempPath, $DIR_REMOVE)
 		
 		; Let's get some information , like Remain Timer, Score and limit
 		If Not _ColorCheck(_GetPixelColor(300, 284, True), Hex(0x53E052, 6), 10) Then ;no greenbar = there is active event or completed event
@@ -225,10 +223,10 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 			Local $CGMainLoot = ClanGamesChallenges("L")
 			For $i = 0 To UBound($g_abCGMainLootItem) - 1
 				If $g_bChkClanGamesLoot And $g_abCGMainLootItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "LootChallenges: " & $CGMainLoot[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Active Loot: " & $CGMainLoot[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainLoot[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "LootChallenges Purge: " & $CGMainLoot[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Purge Loot: " & $CGMainLoot[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainLoot[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
@@ -236,10 +234,10 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 			Local $CGMainBattle = ClanGamesChallenges("B")
 			For $i = 0 To UBound($g_abCGMainBattleItem) - 1
 				If $g_bChkClanGamesBattle And $g_abCGMainBattleItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BattleChallenges: " & $CGMainBattle[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Active Battle: " & $CGMainBattle[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainBattle[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BattleChallenges Purge: " & $CGMainBattle[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Purge Battle: " & $CGMainBattle[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainBattle[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
@@ -247,10 +245,10 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 			Local $CGMainDestruction = ClanGamesChallenges("D")
 			For $i = 0 To UBound($g_abCGMainDestructionItem) - 1
 				If $g_bChkClanGamesDes And $g_abCGMainDestructionItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "DestructionChallenges: " & $CGMainDestruction[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Active Destruction: " & $CGMainDestruction[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainDestruction[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "DestructionChallenges Purge: " & $CGMainDestruction[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Purge Destruction: " & $CGMainDestruction[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainDestruction[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
@@ -258,10 +256,10 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 			Local $CGMainAir = ClanGamesChallenges("A")
 			For $i = 0 To UBound($g_abCGMainAirItem) - 1
 				If $g_bChkClanGamesAirTroop And $g_abCGMainAirItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "AirTroopChallenges: " & $CGMainAir[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Active AirTroop: " & $CGMainAir[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainAir[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "AirTroopChallenges Purge: " & $CGMainAir[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Purge AirTroop: " & $CGMainAir[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainAir[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
@@ -269,10 +267,10 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 			Local $CGMainGround = ClanGamesChallenges("G")
 			For $i = 0 To UBound($g_abCGMainGroundItem) - 1
 				If $g_bChkClanGamesGroundTroop And $g_abCGMainGroundItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "GroundTroopChallenges: " & $CGMainGround[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Active GroundTroop: " & $CGMainGround[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainGround[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "GroundTroopChallenges Purge: " & $CGMainGround[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Purge GroundTroop: " & $CGMainGround[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainGround[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
@@ -280,10 +278,10 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 			Local $CGMainMisc = ClanGamesChallenges("M")
 			For $i = 0 To UBound($g_abCGMainMiscItem) - 1
 				If $g_bChkClanGamesMiscellaneous And $g_abCGMainMiscItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "MiscChallenges: " & $CGMainMisc[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Active Misc: " & $CGMainMisc[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainMisc[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "MiscChallenges Purge: " & $CGMainMisc[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Purge Misc: " & $CGMainMisc[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainMisc[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
@@ -291,10 +289,10 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 			Local $CGMainSpell = ClanGamesChallenges("S")
 			For $i = 0 To UBound($g_abCGMainSpellItem) - 1
 				If $g_bChkClanGamesSpell And $g_abCGMainSpellItem[$i] > 0 And Not $g_bChkCGBBAttackOnly Then
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "SpellChallenges: " & $CGMainSpell[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Active Spell: " & $CGMainSpell[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainSpell[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "SpellChallenges Purge: " & $CGMainSpell[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Purge Spell: " & $CGMainSpell[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGMainSpell[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
@@ -302,10 +300,10 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 			Local $CGBBBattle = ClanGamesChallenges("BBB")
 			For $i = 0 To UBound($g_abCGBBBattleItem) - 1
 				If $g_bChkClanGamesBBBattle And $g_abCGBBBattleItem[$i] > 0 Then
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBBattleChallenges: " & $CGBBBattle[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Active BBBattle: " & $CGBBBattle[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBBattle[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBBattleChallenges Purge: " & $CGBBBattle[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Purge BBBattle: " & $CGBBBattle[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBBattle[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
@@ -313,10 +311,10 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 			Local $CGBBDestruction = ClanGamesChallenges("BBD")
 			For $i = 0 To UBound($g_abCGBBDestructionItem) - 1
 				If $g_bChkClanGamesBBDes And $g_abCGBBDestructionItem[$i] > 0 Then
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBDestructionChallenges: " & $CGBBDestruction[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Active BBDestruction: " & $CGBBDestruction[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBDestruction[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBDestructionChallenges Purge: " & $CGBBDestruction[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Purge BBDestruction: " & $CGBBDestruction[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBDestruction[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
@@ -324,18 +322,18 @@ Func ClanGameImageCopy($sImagePath, $sTempPath, $sImageType = Default, $ImageNam
 			Local $CGBBTroops = ClanGamesChallenges("BBT")
 			For $i = 0 To UBound($g_abCGBBTroopsItem) - 1
 				If $g_bChkClanGamesBBTroops And $g_abCGBBTroopsItem[$i] > 0 Then
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBTroopsChallenges: " & $CGBBTroops[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Active BBTroops: " & $CGBBTroops[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBTroops[$i][0] & "_*", $sTempPath, $FC_OVERWRITE + $FC_CREATEPATH)
 				Else
-					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "BBTroopsChallenges Purge: " & $CGBBTroops[$i][1], $COLOR_DEBUG)
+					If $g_bChkClanGamesDebug Then SetLog("[" & $i & "]" & "Purge BBTroops: " & $CGBBTroops[$i][1], $COLOR_DEBUG)
 					FileCopy($sImagePath & "\" & $sImageType & "-" & $CGBBTroops[$i][0] & "_*", $sTempPath & "\Purge\", $FC_OVERWRITE + $FC_CREATEPATH)
 				EndIf
 			Next
+		Case "Selected"
+			If $g_bChkClanGamesDebug Then SetLog("[" & $ImageName & "] Selected", $COLOR_DEBUG)
+			FileCopy($sImagePath & "\" & $ImageName & "_*", $sTempPath & "\Selected\", $FC_OVERWRITE + $FC_CREATEPATH)
 	EndSwitch
-	If $sImageType = "Selected" Then
-		If $g_bChkClanGamesDebug Then SetLog("[" & $ImageName & "] Selected", $COLOR_DEBUG)
-		FileCopy($sImagePath & "\" & $ImageName & "_*", $sTempPath & "\Selected\", $FC_OVERWRITE + $FC_CREATEPATH)
-	EndIf
+	
 EndFunc ;==>ClanGameImageCopy
 
 ;Get Difficulty
@@ -353,9 +351,11 @@ EndFunc
 
 Func PrepareChallengesImage()
 	; Let's selected only the necessary images
-	Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
+	Local $sImagePath = $g_sImgCGChallenges
 	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
-
+	;Remove All previous file (in case setting changed)
+	DirRemove($sTempPath, $DIR_REMOVE)
+	
 	ClanGameImageCopy($sImagePath, $sTempPath, "L") ;L for Loot
 	ClanGameImageCopy($sImagePath, $sTempPath, "B") ;B for Battle
 	ClanGameImageCopy($sImagePath, $sTempPath, "D") ;D for Destruction
@@ -372,7 +372,7 @@ EndFunc
 Func FindEvent($bTestAllImage = False, $useBC1 = False, $bTestImage = False)
 	; Initial Timer
 	Local $hTimer = TimerInit()
-	Local $sImagePath = @ScriptDir & "\imgxml\Resources\ClanGamesImages\Challenges"
+	Local $sImagePath = $g_sImgCGChallenges
 	Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
 	
 	Local $HowManyImages = _FileListToArray($bTestAllImage ? $sImagePath : $sTempPath, "*", $FLTA_FILES)
@@ -436,10 +436,10 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False, $bTestImage = False)
 				Next
 			Next
 		EndIf
-		If $g_bChkClanGamesDebug Then Setlog("[" & $i & "] AllEvents: " & @CRLF & _ArrayToString($aReturn), $COLOR_DEBUG2)
+		If $g_bChkClanGamesDebug Then Setlog("[" & $i & "] AllEvents[" & Ubound($aReturn) & "]: " & @CRLF & _ArrayToString($aReturn), $COLOR_DEBUG2)
 		If $g_bChkClanGamesDebug Then Setlog("[" & $i & "] Benchmark Search Event: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 	
-		If UBound($aReturn) = 0 And $i = 1 Then 
+		If UBound($aReturn) < 1 And $i = 1 Then 
 			ClickDrag(810, 320, 810, 165, 500)
 			$y = 1 ;only search on 3rd row
 			If _Sleep(1000) Then Return
@@ -450,7 +450,7 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False, $bTestImage = False)
 	Next
 	
 	;only for testing images, no need to check score and time 
-	If $bTestImage Then 
+	If $bTestAllImage Then 
 		Local $ImageName = "", $sChallengeType = "", $sChallengeName = ""
 		Local $aChallengeType, $aChallengeDesc
 		If UBound($aReturn) > 0 Then 
@@ -501,7 +501,7 @@ EndFunc
 Func SelectEvent(ByRef $aSelectChallenges)
 	; Initial Timer
 	Local $hTimer = TimerInit()
-	Local $aTmp = $aSelectChallenges
+	Local $aTmp = $aSelectChallenges, $aDel[0]
 
 	For $i = 0 To Ubound($aTmp) - 1
 		If Not $g_bRunState Then Return
@@ -509,17 +509,19 @@ Func SelectEvent(ByRef $aSelectChallenges)
 		If IsArray($aEventInfo) Then
 			Setlog("Detected " & $aTmp[$i][0] & " difficulty of " & $aTmp[$i][3] & " [score:" & $aEventInfo[0] & ", " & $aEventInfo[1] & " min]", $COLOR_INFO)
 			If $g_bChkClanGames3H And Number($aEventInfo[1]) <= 180 Then ;Filter under 3 Hour event
-				_ArrayDelete($aSelectChallenges, $i)
+				$aDel[0] += 1
+				_ArrayAdd($aDel, $i)
 				SetLog("Should skip, no 3H event", $COLOR_DEBUG2)
 				ContinueLoop 
 			EndIf
-			$aTmp[$i][4] = Number($aEventInfo[1])
-			$aTmp[$i][6] = Number($aEventInfo[0])
-			ExitLoop
+			$aSelectChallenges[$i][4] = Number($aEventInfo[1])
+			$aSelectChallenges[$i][6] = Number($aEventInfo[0])
 		EndIf
-		If _Sleep(1000) Then Return
 	Next
 	
+	If $g_bChkClanGamesDebug Then Setlog("aDel: " & _ArrayToString($aDel), $COLOR_DEBUG)
+	_ArrayDelete($aSelectChallenges, $aDel)
+	If $g_bChkClanGamesDebug Then Setlog("SelectChallenge: " & _ArrayToString($aSelectChallenges), $COLOR_DEBUG)
 	If $g_bChkClanGamesDebug Then Setlog("Benchmark SelectEvent: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 EndFunc
 
@@ -739,7 +741,8 @@ EndFunc   ;==>ClickOnEvent
 
 Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 	If Not $g_bRunState Then Return
-
+	$g_sCGEasyEventName = ""
+	
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580) Then
 		Local $aTimer = GetEventTimeScore($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Starting Event " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", $COLOR_SUCCESS)
@@ -773,6 +776,8 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 				EndIf
 			Next
 			Return False
+		Else
+			$g_sCGEasyEventName = $sEventName
 		EndIf
 
 		;check if Challenge is BB Challenge, enabling force BB attack
@@ -976,6 +981,7 @@ Func GetEventInfo($x, $y)
 		$Ret = GetEventTimeScore($g_iQuickMISX, $g_iQuickMISY)
 	EndIf
 	Click(60, 90, 1, 200, "Close CG Event Description")
+	If _Sleep(500) Then Return
 	
 	Return $Ret
 EndFunc   ;==>GetEventInfo
@@ -1057,7 +1063,7 @@ EndFunc
 Func IsCGWindowOpen()
 	Local $bRet = False
 	For $i = 1 To 3
-		If _ColorCheck(_GetPixelColor(824, 87, True), Hex(0xFFFFFF, 6), 10, Default, "IsCGWindowOpen") Then 
+		If _ColorCheck(_GetPixelColor(824, 86, True), Hex(0xFFFFFF, 6), 20, Default, "IsCGWindowOpen") Then 
 			$bRet = True
 			ExitLoop
 		EndIf
@@ -1278,7 +1284,7 @@ Func GetCGRewardList($X = 270, $OnlyClaimMax = False)
 EndFunc
 
 Func ClanGamesChallenges($sReturnArray)
-	;[0]=ImageName 	 					[1]=Challenge Name		[2]=THlevel 	[3]=Priority/TroopsNeeded 	[4]=Extra/to use in future	[5]=Description
+	;[0]=ImageName 	 					[1]=Challenge Name		[2]=THlevel 	[3]=Priority/TroopsNeeded 	[4]=Difficulty	[5]=Description
 	Global $LootChallenges[6][6] = [ _
 			["GoldChallenge", 			"Gold Challenge", 				 7,  5, 8, "Loot certain amount of Gold from a single Multiplayer Battle"								], _ 
 			["ElixirChallenge", 		"Elixir Challenge", 			 7,  5, 8, "Loot certain amount of Elixir from a single Multiplayer Battle"								], _ 
@@ -1288,21 +1294,21 @@ Func ClanGamesChallenges($sReturnArray)
 			["DarkEHeist", 				"Dark Elixir Heist", 			 9,  3, 1, "Loot a total amount of Dark Elixir (accumulated from many attacks) from Multiplayer Battle"	]]   
 
 	Global $AirTroopChallenges[15][6] = [ _
-			["Ball", 					"Balloon", 						 4, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Balloons"		], _ 
-			["Heal", 					"Healer", 						 4, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a Healer"							], _ 
-			["Drag", 					"Dragon", 						 7, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Dragons"			], _
-			["BabyD", 					"Baby Dragon", 					 9, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Baby Dragons"	], _ 
-			["Edrag", 					"Electro Dragon", 				10, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Electro Dragon"	], _ 
-			["RDrag", 					"Dragon Rider", 				10, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Dragon Rider"	], _ 
-			["Mini", 					"Minion", 						 7, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Minions"			], _ 
-			["Lava", 					"Lavahound", 					 9, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Lava Hounds"		], _ 
-			["RBall", 					"Rocket Balloon", 				12, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Rocket Balloon"], _ 
-			["Smini", 					"Super Minion", 				12, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Super Minion"], _ 
-			["InfernoD",				"Inferno Dragon", 				12, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Inferno Dragon"], _ 
-			["IceH", 					"Ice Hound", 					13, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Ice Hound"], _ 
-			["BattleB", 				"Battle Blimp", 				10, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a of Battle Blimp"], _ 
-			["StoneS",	 				"Stone Slammer", 				10, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a of Stone Slammer"], _
-			["RDrag",	 				"Drag Racing", 					13, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a of Dragon Rider"]] 
+			["Ball", 					"Balloon", 						 4, 1, 1, "Earn One Star from Multiplayer Battles using a Balloon"			], _ 
+			["Heal", 					"Healer", 						 4, 1, 1, "Earn One Star from Multiplayer Battles using a Healer"			], _ 
+			["Drag", 					"Dragon", 						 7, 1, 1, "Earn One Star from Multiplayer Battles using a Dragon"			], _
+			["BabyD", 					"Baby Dragon", 					 9, 1, 1, "Earn One Star from Multiplayer Battles using a Baby Dragon"		], _ 
+			["Edrag", 					"Electro Dragon", 				10, 1, 1, "Earn One Star from Multiplayer Battles using a Electro Dragon"	], _ 
+			["RDrag", 					"Dragon Rider", 				10, 1, 1, "Earn One Star from Multiplayer Battles using a Dragon Rider"		], _ 
+			["Mini", 					"Minion", 						 7, 1, 1, "Earn One Star from Multiplayer Battles using a Minion"			], _ 
+			["Lava", 					"Lavahound", 					 9, 1, 1, "Earn One Star from Multiplayer Battles using a Lava Hound"		], _ 
+			["RBall", 					"Rocket Balloon", 				12, 1, 1, "Earn One Star from Multiplayer Battles using a Rocket Balloon"	], _ 
+			["Smini", 					"Super Minion", 				12, 1, 1, "Earn One Star from Multiplayer Battles using a Super Minion"		], _ 
+			["InfernoD",				"Inferno Dragon", 				12, 1, 1, "Earn One Star from Multiplayer Battles using a Inferno Dragon"	], _ 
+			["IceH", 					"Ice Hound", 					13, 1, 1, "Earn One Star from Multiplayer Battles using a Ice Hound"		], _ 
+			["BattleB", 				"Battle Blimp", 				10, 1, 1, "Earn One Star from Multiplayer Battles using a Battle Blimp"		], _ 
+			["StoneS",	 				"Stone Slammer", 				10, 1, 1, "Earn One Star from Multiplayer Battles using a Stone Slammer"	], _
+			["RDrag",	 				"Drag Racing", 					13, 1, 1, "Earn One Star from Multiplayer Battles using a Dragon Rider"		]] 
 
 	Global $GroundTroopChallenges[27][6] = [ _
 			["Arch", 					"Archer", 						  6, 1, 1, "Earn 1-5 Stars from Multiplayer Battles using certain count of Archers"		], _ 
@@ -1333,13 +1339,19 @@ Func ClanGamesChallenges($sReturnArray)
 			["SiegeB", 					"Siege Barrack", 				 10, 1, 1, "Earn 1-5 Stars from Multiplayer Battles using a Siege Barracks" 				], _ 
 			["LogL", 					"Log Launcher", 				 10, 1, 1, "Earn 1-5 Stars from Multiplayer Battles using a Log Launcher"					]]   
 
-	Global $BattleChallenges[22][6] = [ _
+	Global $BattleChallenges[28][6] = [ _
 			["StarC", 					"Star Collector", 				 6,  1, 1, "Collect a total amount of Stars (accumulated from many attacks) from Multiplayer Battle"					], _ 
 			["Destruction", 			"Lord of Destruction", 			 6,  1, 1, "Collect a total amount of percentage Destruction % (accumulated from many attacks) from Multiplayer Battle"	], _ 
 			["PileOfVictores", 			"Pile Of Victories", 			 6,  1, 2, "Win 1-5 Multiplayer Battles"																				], _ 
 			["StarThree", 				"Hunt for Three Stars", 		10,  5, 8, "Score a Perfect 3 Stars in Multiplayer Battles"																], _ 
 			["WinningStreak", 			"Winning Streak", 				 9,  5, 8, "Win 1-5 Multiplayer Battles in a row"																		], _ 
 			["SlayingTitans", 			"Slaying The Titans", 			11,  2, 1, "Win a Multiplayer Battles In Titan League"																	], _ 
+			["UseKing", 				"King Commander", 				11,  2, 1, "Earn 3 stars on Multiplayer Battle using Barbarian King"													], _ 
+			["UseQueen", 				"Queen Supreme", 				11,  2, 1, "Earn 3 stars on Multiplayer Battle using Archer Queen"														], _ 
+			["UsePrince", 				"Use Prince", 					11,  2, 1, "Earn 3 stars on Multiplayer Battle using Minion Prince"														], _ 
+			["UseWarden", 				"Use Warden", 					11,  2, 1, "Earn 3 stars on Multiplayer Battle using Grand Warden"														], _ 
+			["UseChampion", 			"Reigning Champion", 			11,  2, 1, "Earn 3 stars on Multiplayer Battle using Royal Champion"													], _ 
+			["UseDuke", 				"Duke Unchain", 				11,  2, 1, "Earn 3 stars on Multiplayer Battle using Dragon Duke"														], _ 
 			["NoHero", 					"No Heroics Allowed", 			 3,  5, 5, "Win a stars without using Heroes"																			], _ 
 			["NoMagic", 				"No-Magic Zone", 				 6,  5, 5, "Win a stars without using Spells"																			], _ 
 			["Scrappy6s", 				"Scrappy 6s", 					 6,  1, 4, "Gain 3 Stars Against Town Hall level 6"																		], _ 
@@ -1357,7 +1369,7 @@ Func ClanGamesChallenges($sReturnArray)
 			["SpeedyStars", 			"3 Stars in 60 seconds",		 6,  2, 2, "Gain 3 Stars (accumulated from many attacks) from Multiplayer Battle but only stars gained below a minute counted"], _ 
 			["SuperCharge", 			"Deploy SuperTroops",			 6,  2, 0, "Deploy certain housing space of Any Super Troops"                                                           ]]
 
-	Global $DestructionChallenges[34][6] = [ _
+	Global $DestructionChallenges[31][6] = [ _
 			["Cannon", 					"Cannon", 				 6,  1, 1,"Destroy 5-25 Cannons in Multiplayer Battles"					], _ 
 			["ArcherT", 				"Archer Tower", 		 6,  1, 1,"Destroy 5-20 Archer Towers in Multiplayer Battles"			], _ 
 			["BuilderHut", 				"Builder Hut", 		     6,  1, 1,"Destroy 4-12 BuilderHut in Multiplayer Battles"				], _ 
@@ -1382,9 +1394,6 @@ Func ClanGamesChallenges($sReturnArray)
 			["DESpell", 				"Dark Spell Factory", 	 8,  1, 1,"Destroy 2-6 Dark Spell Factories in Multiplayer Battles"		], _ 
 			["WallWhacker", 			"Wall Whacker", 		 10, 1, 8,"Destroy 50-250 Walls in Multiplayer Battles"					], _ 
 			["BBreakdown",	 			"Building Breakdown", 	 6,  1, 1,"Destroy 50-250 Buildings in Multiplayer Battles"				], _ 
-			["BKaltar", 				"Barbarian King Altars", 9,  4, 4,"Destroy 2-5 Barbarian King Altars in Multiplayer Battles"	], _ 
-			["AQaltar", 				"Archer Queen Altars", 	10,  5, 4,"Destroy 2-5 Archer Queen Altars in Multiplayer Battles"		], _ 
-			["GWaltar", 				"Grand Warden Altars", 	11,  5, 4,"Destroy 2-5 Grand Warden Altars in Multiplayer Battles"		], _ 
 			["HeroLevelHunter", 		"Hero Level Hunter", 	 9,  5, 5,"Knockout 125 Level Heroes on Multiplayer Battles"			], _ 
 			["KingLevelHunter", 		"King Level Hunter", 	 9,  5, 5,"Knockout 50 Level King on Multiplayer Battles"				], _ 
 			["QueenLevelHunt", 			"Queen Level Hunter", 	10,  5, 5,"Knockout 50 Level Queen on Multiplayer Battles"				], _ 

@@ -873,7 +873,7 @@ EndFunc
 Func CheckLabAssistant()
 	If Not $g_bRunState Then Return
 	If $g_iTownHallLevel >= 9 Then
-		SetLog("check for Acvitave Lab Assistant", $COLOR_DEBUG1)
+		SetLog("check for Activate Lab Assistant", $COLOR_DEBUG1)
 		If QuickMIS("BFI", $g_sImgLabAssistant & "LabAssistantButton*", 190, 515, 500, 590) Then
 			If QuickMIS("BFI", $g_sImgLabAssistant & "Exclam*", 190, 515, 500, 590) Then
 				Click($g_iQuickMISX, $g_iQuickMISY)

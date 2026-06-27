@@ -354,6 +354,11 @@ Func PlacedOnLeague()
 		$bRet = True
 	EndIf
 	
+	If _ColorCheck(_GetPixelColor(430, 440, True), Hex(0x6EBC1F, 6), 20, Default, "Reward") Then ;okay button
+		Click(430, 430)
+		SetLog("You have reward received, click Okay", $COLOR_DEBUG2)
+	EndIf
+	
 	If _ColorCheck(_GetPixelColor(430, 482, True), Hex(0xBFEA8E, 6), 20, Default, "ChestContinue") Then 
 		Click(430, 482)
 		SetLog("You have chest bonus, Continue...", $COLOR_DEBUG2)
