@@ -1073,7 +1073,7 @@ Func OpenShop($sUpgradeType = "Traps", $bCheckRedCounter = True)
 	If Not $bCheckRedCounter Then Return $bRet
 
 	$bRet = False ;reset for checking red counter
-	Local $aRedPos[4] = [292, 418, 545, 671], $iRedPosY = 162
+	Local $aRedPos[4] = [254, 417, 581, 746], $iRedPosY = 157
 	If $bCheckRedCounter Then
 		Switch $sUpgradeType
 			Case "Army"

@@ -159,6 +159,12 @@ Func AttackReport()
 			$sMatchMode = "DT" ;Drop Trophy
 			$g_iMatchMode = $DB
 	EndSwitch
+	
+	If $g_sCGEasyEventName <> "" And Not $g_bIsBBevent Then 
+		$sMatchMode = "CG" ;Clan Games
+		$g_asLeagueDetailsShort = $g_sCGEasyEventName
+	EndIf
+	
 	;---
 	Local $AtkLogTxt
 	$AtkLogTxt =  StringFormat("%2s", $g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
@@ -193,7 +199,7 @@ Func AttackReport()
 	$AtkLogTxtExtend = "|"
 	$AtkLogTxtExtend &= $g_CurrentCampUtilization & "/" & $g_iTotalCampSpace & "|"
 	If Int($g_iStatsLastAttack[$eLootTrophy]) >= 0 Then
-		SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_BLACK)
+		SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, ($sMatchMode = "CG" ? $COLOR_DEBUG1 : $COLOR_BLACK))
 	Else
 		SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_ERROR)
 	EndIf
