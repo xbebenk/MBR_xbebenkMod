@@ -398,6 +398,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("MagicItems", "ChkSellROBE", $g_bChkSellROBE ? 1 : 0)
 	
 	_Ini_Add("MagicItems", "ChkEnableTradeMedal", $g_bChkEnableTradeMedal ? 1 : 0)
+	_Ini_Add("MagicItems", "MinTradeMedal", $g_iMinTradeMedal)
 	_Ini_Add("MagicItems", "ChkTradeShiny", $g_bChkTradeShiny ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkTradeGlowy", $g_bChkTradeGlowy ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkTradeStarry", $g_bChkTradeStarry ? 1 : 0)

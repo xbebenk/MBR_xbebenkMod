@@ -522,6 +522,7 @@ EndFunc
 
 Func btnCloseSellPotion()
 	GUISetState(@SW_HIDE, $g_hGUI_SellMagicItems)
+	$g_iMinTradeMedal = GUICtrlRead($g_hTxtMinTradeMedal)
 EndFunc
 
 Func chkEnableSellMagicItem()

@@ -49,7 +49,7 @@ Func PrepareSearch($bTest = False, $bDoClanGames = False) ;Click attack button a
 	
 	Local $aButton, $bTournament = False, $aMatch
 	
-	If $g_bEnableTournament And Not $g_bNoTournament And Not $bDoClanGames Then 
+	If $g_bEnableTournament And Not $bDoClanGames Then 
 		For $i = 1 To 10 
 			If Not $g_bRunState Then Return
 			If _Sleep(50) Then Return
@@ -81,6 +81,10 @@ Func PrepareSearch($bTest = False, $bDoClanGames = False) ;Click attack button a
 					EndIf
 					If $aButton[$z][0] = "Match" Then
 						SetLog("Found Tournament Match Button", $COLOR_DEBUG)
+						If $g_bNoTournament Then 
+							SetLog("Enabled Tournament but no Attack", $COLOR_DEBUG2)
+							ExitLoop 2
+						EndIf
 						$aMatch = getMatchRemain()
 						If UBound($aMatch) > 0 Then
 							SetLog("Tournament match: " & $aMatch[0] & "/" & $aMatch[1], $COLOR_INFO)
@@ -99,9 +103,7 @@ Func PrepareSearch($bTest = False, $bDoClanGames = False) ;Click attack button a
 					EndIf
 				Next
 			EndIf
-		Next
-	ElseIf $g_bNoTournament Then 
-		SetLog("Enabled Tournament but no Attack", $COLOR_DEBUG2)		
+		Next	
 	EndIf
 	
 	Local $bAttackButtonFound = False

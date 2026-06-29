@@ -1789,7 +1789,7 @@ Global $g_bChkSellBOF = False, $g_bChkSellBOB = False, $g_bChkSellBOS = False, $
 Global $g_bChkSellPowerPot = False, $g_bChkSellResourcePot = False, $g_bChkSellTrainingPot = False, $g_bChkSellBuilderPot = False, $g_bChkSellCTPot = False, $g_bChkSellHeroPot = False, $g_bChkSellResearchPot = False
 Global $g_bChkSellSuperPot = False, $g_bChkSellBuilderJar = False, $g_bChkSellROG = False, $g_bChkSellROE = False, $g_bChkSellRODE = False, $g_bChkSellROBG = False, $g_bChkSellROBE = False
 Global $g_aSellMagicItem[21] = [$g_bChkSellBOF, $g_bChkSellBOB, $g_bChkSellBOS, $g_bChkSellBOH, $g_bChkSellBOE, $g_bChkSellShovel, $g_bChkSellWallRing, $g_bChkSellPowerPot, $g_bChkSellResourcePot, $g_bChkSellTrainingPot, $g_bChkSellBuilderPot, $g_bChkSellCTPot, $g_bChkSellHeroPot, $g_bChkSellResearchPot, $g_bChkSellSuperPot, $g_bChkSellBuilderJar, $g_bChkSellROG, $g_bChkSellROE, $g_bChkSellRODE, $g_bChkSellROBG, $g_bChkSellROBE]
-Global $g_bChkEnableTradeMedal = False
+Global $g_bChkEnableTradeMedal = False, $g_iMinTradeMedal = 1000
 Global $g_bChkTradeShiny = False, $g_bChkTradeGlowy = False, $g_bChkTradeStarry = false, $g_bChkTradeBuilderGold = False, $g_bChkTradeBuilderElix = False, $g_bChkTradeClockTowerPot = False, $g_bChkTradeResearchPot = False
 
 Global $g_aMagicItemName[21] = ["BookOfFighting", "BookOfBuilding", "BookOfSpell", "BookOfHero", "BookOfEverything", "Shovel", "WallRing", "PowerPot", "ResourcePot", "TrainingPot", "BuilderPot", "ClockTowerPot", "HeroPot", "ResearchPot", "SuperPot", "BuilderJar", "RuneOfGold", "RuneOfElixir", "RuneOfDarkElixir", "RuneOfBuilderGold", "RuneOfBuilderElixir"]

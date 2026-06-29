@@ -591,6 +591,8 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 			If QuickMIS("BFI", $g_sImgImgLocButtons & "\BoostButton*.xml", 300,520,390,550) Then
 				If _Sleep(2000) Then Return
 				SetLog("Wait Battle Start #" & $i, $COLOR_ACTION)
+			Else
+				ExitLoop ; no boost button, launch attack
 			EndIf
 		Next
 	EndIf

@@ -431,6 +431,7 @@ Func ReadConfig_600_6()
 	$g_aSellMagicItem = $aSellChk
 	
 	IniReadS($g_bChkEnableTradeMedal, $g_sProfileConfigPath, "MagicItems", "ChkEnableTradeMedal", False, "Bool")
+	IniReadS($g_iMinTradeMedal, $g_sProfileConfigPath, "MagicItems", "MinTradeMedal", 0, "int")
 	IniReadS($g_bChkTradeShiny, $g_sProfileConfigPath, "MagicItems", "ChkTradeShiny", False, "Bool")
 	IniReadS($g_bChkTradeGlowy, $g_sProfileConfigPath, "MagicItems", "ChkTradeGlowy", False, "Bool")
 	IniReadS($g_bChkTradeStarry, $g_sProfileConfigPath, "MagicItems", "ChkTradeStarry", False, "Bool")
