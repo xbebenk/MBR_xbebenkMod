@@ -224,7 +224,9 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		$sTmpDamage = Number($sDamage)
 		
 		;check speedup battle timer
-		If $sTmpDamage > 90 And Not $bSpeedUpBattle Then CheckSpeedUpBattle($bSpeedUpBattle)
+		If $sTmpDamage > 70 Then
+			If Not $bSpeedUpBattle Then CheckSpeedUpBattle($bSpeedUpBattle)
+		EndIf
 		
 		;check if battle finished
 		If BBBarbarianHead("EndBattleBB") Then ExitLoop

@@ -87,13 +87,16 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			
 			;now we need to copy selected challenge before checking current running event is not wrong event selected
 			PrepareChallengesImage()
-			If $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Or $aiScoreLimit[0] >= 4000 Then
+			If $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Or $g_bChkClanGamesStopBeforeReachAndPurge Then
 				SetLog("You almost reached max point")
 				$g_bIsCGPointAlmostMax = True
 				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
-				If $g_bChkClanGamesStopBeforeReachAndPurge And ($sTimeCG > $PurgeDayMinute Or $aiScoreLimit[0] >= 4000) Then ; purge, but not purge on last day of clangames
-					If IsEventRunning() Then Return True
-					
+				If IsEventRunning() Then 
+					CloseClangamesWindow()
+					Return True
+				Endif
+				
+				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > $PurgeDayMinute And $aiScoreLimit[0] <= 4000 Then ; purge, but not purge on last day of clangames					
 					If $g_bChkClanGamesPurgeAny Then
 						SetLog("Clangames remain time: " & $sTimeCG & " > " & $PurgeDayMinute, $COLOR_INFO)
 						SetLog("Stop before completing and only Purge", $COLOR_INFO)
@@ -640,12 +643,15 @@ EndFunc   ;==>CooldownTime
 Func IsEventRunning($bOpenWindow = False)
 	Local $aEventFailed[4] = [300, 300, 0xEA2B26, 20]
 	Local $aEventPurged[4] = [542, 222, 0x4F85C5, 10]
-
+	Local $bRet = False
+	$g_sCGEasyEventName = ""
+	
 	If $bOpenWindow Then
 		CloseClangamesWindow()
 		SetLog("Entering Clan Games", $COLOR_INFO)
-		If Not IsClanGamesWindow() Then Return
+		If Not IsClanGamesWindow() Then $bRet
 	EndIf
+	
 	; Check if any event is running or not
 	If Not _ColorCheck(_GetPixelColor(300, 285, True), Hex(0x53E052, 6), 10) Then ; Green Bar from First Position
 		;Check if Event failed
@@ -653,17 +659,17 @@ Func IsEventRunning($bOpenWindow = False)
 			SetLog("Couldn't finish last event! Lets trash it and look for a new one", $COLOR_INFO)
 			If TrashFailedEvent() Then
 				If _Sleep(3000) Then Return ;Add sleep here, to wait ClanGames Challenge Tile ordered again as 1 has been deleted
-				Return False
+				$bRet = False
 			Else
 				SetLog("Error happend while trashing failed event", $COLOR_ERROR)
 				CloseClangamesWindow()
-				Return True
+				$bRet = False
 			EndIf
 		ElseIf _CheckPixel($aEventPurged, True) Then
 				SetLog("An event purge cooldown in progress!", $COLOR_WARNING)
 				If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
 				CloseClangamesWindow()
-				Return True
+				$bRet = False
 		Else
 			SetLog("An event is already in progress!", $COLOR_SUCCESS)
 			;check if its Enabled Challenge, if not = purge
@@ -671,6 +677,8 @@ Func IsEventRunning($bOpenWindow = False)
 			Local $aActiveEvent = QuickMIS("CNX", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 294, 166, 386, 257)
 			If IsArray($aActiveEvent) And UBound($aActiveEvent) > 0 Then
 				SetLog("Active Challenge " & $aActiveEvent[0][0] & " is Enabled on Setting, OK!!", $COLOR_DEBUG)
+				$g_sCGEasyEventName = $aActiveEvent[0][0]
+				$bRet = True
 				;check if Challenge is BB Challenge, enabling force BB attack
 				If $g_bChkForceBBAttackOnClanGames Then
 					Click(340, 215) ; click first slot
@@ -699,6 +707,8 @@ Func IsEventRunning($bOpenWindow = False)
 							Setlog("We are running only BB events. Event started by mistake?", $COLOR_ERROR)
 							Click(340, 215) ;unclick so ForcePurgeEvent can work
 							ForcePurgeEvent(False, False)
+							CloseClangamesWindow()
+							$bRet = False
 						EndIf
 						$g_bIsBBevent = False
 					EndIf
@@ -708,15 +718,15 @@ Func IsEventRunning($bOpenWindow = False)
 				_CaptureRegion2(294, 166, 386, 257)
 				SaveDebugImage("CG-FailVerifyChallenge", False)
 				ForcePurgeEvent(False, False)
+				CloseClangamesWindow()
+				$bRet = False
 			EndIf
-			CloseClangamesWindow()
-			Return True
 		EndIf
 	Else
 		SetLog("No event under progress", $COLOR_INFO)
-		Return False
+		$bRet = False
 	EndIf
-	Return False
+	Return $bRet
 EndFunc   ;==>IsEventRunning
 
 Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName, $getCapture)
@@ -831,7 +841,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		If StartAndPurgeEvent($bTest) Then
 			If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
 			CloseClangamesWindow()
-			Return True
+			Return False
 		EndIf
 	Else
 		SetLog("ForcePurgeEvent: Purge a Wrong Challenge", $COLOR_INFO)
@@ -1052,8 +1062,8 @@ Func CloseClangamesWindow()
 	If IsCGWindowOpen() Then
 		Click(824, 87) ;close window
 		For $i = 1 To 5
-			If isOnMainVillage() Then Return True
 			If _Sleep(1000) Then Return
+			If isOnMainVillage() Then Return True
 		Next
 		Return False
 	EndIf

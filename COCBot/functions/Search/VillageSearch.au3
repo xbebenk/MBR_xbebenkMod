@@ -14,12 +14,12 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func VillageSearch($bTest = False)
+Func VillageSearch($bTest = False, $bDoClanGames = False)
 
 	$g_bVillageSearchActive = True
 	$g_bCloudsActive = True
 
-	Local $Result = _VillageSearch($bTest)
+	Local $Result = _VillageSearch($bTest, $bDoClanGames)
 	If $g_bSearchAttackNowEnable Then
 		GUICtrlSetState($g_hBtnAttackNowDB, $GUI_HIDE)
 		GUICtrlSetState($g_hBtnAttackNowLB, $GUI_HIDE)
@@ -32,7 +32,7 @@ Func VillageSearch($bTest = False)
 
 EndFunc   ;==>VillageSearch
 
-Func _VillageSearch($bTest = False) ;Control for searching a village that meets conditions
+Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searching a village that meets conditions
 	Local $Result
 	Local $weakBaseValues
 	Local $logwrited = False
@@ -98,7 +98,6 @@ Func _VillageSearch($bTest = False) ;Control for searching a village that meets 
 
 		_ObjDeleteKey($g_oBldgAttackInfo, "") ; Remove all keys from building dictionary
 
-		If $g_bDebugVillageSearchImages Then SaveDebugImage("villagesearch")
 		$logwrited = False
 		$g_bBtnAttackNowPressed = False
 		$g_iSearchTHLResult = -1
@@ -231,7 +230,18 @@ Func _VillageSearch($bTest = False) ;Control for searching a village that meets 
 		EndIf
 
 		ResumeAndroid()
-
+		If $bDoClanGames Then
+			SetLog("DoClanGames Mode: " & $g_sCGEasyEventName, $COLOR_SUCCESS)
+			If $dbBase Then 
+				$match[$DB] = True
+				$match[$LB] = False
+			Else
+				$match[$DB] = False
+				$match[$LB] = True
+			EndIf
+			SetLog("Force attack for ClanGames", $COLOR_INFO)
+		EndIf
+		
 		If $g_bLeagueAttack Then
 			SetLog("Tournament League Mode", $COLOR_SUCCESS)
 			Switch $g_iTournamentAttackType
@@ -396,20 +406,6 @@ Func _VillageSearch($bTest = False) ;Control for searching a village that meets 
 		SetLogCentered(" Attack Now Pressed! ", "~", $COLOR_SUCCESS)
 	EndIf
 	
-	; measure enemy village (only if search match)
-	For $i = 0 To $g_iModeCount - 1
-		If $match[$i] Or $g_bVillageSearchAlwaysMeasure Or $g_bBtnAttackNowPressed Then
-			If Not CheckZoomOut() Then
-				SaveDebugImage("VillageSearch", False) ; make clean snapshot
-				If IsProblemAffect() Then
-					$g_bRestart = True ; Restart Attack
-					Return
-				EndIf
-			EndIf
-			ExitLoop
-		EndIf
-	Next
-	
 	;--- write in log match found ----
 	If $g_bSearchAlertMe Then
 		TrayTip($g_sProfileCurrentName & ": " & $g_asModeText[$g_iMatchMode] & " Match Found!", "Gold: " & $g_iSearchGold & "; Elixir: " & $g_iSearchElixir & "; Dark: " & $g_iSearchDark & "; Trophy: " & $g_iSearchTrophy, "", 0)
@@ -508,10 +504,19 @@ Func CheckZoomOut($bTest = False)
 	If $g_bVillageSearchActive Then
 		If $bRet Then 
 			SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
+			VillageSearchSaveImage()
 		Else
-			SetLog("CheckZoomOut(VillageSearch) Failed, defaulting to [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
+			SetLog("CheckZoomOut(VillageSearch) Failed, defaulting to [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS)
+			VillageSearchSaveImage(True)
 		EndIf
 	EndIf
 	
 	Return $bRet
 EndFunc   ;==>CheckZoomOut
+
+Func VillageSearchSaveImage($bForceCapture = False)
+	If $g_bVillageSearchAlwaysMeasure Or $bForceCapture Then 
+		_CaptureRegion2()
+		SaveDebugImage($g_iMatchMode & "_Villagesearch")
+	EndIf
+EndFunc

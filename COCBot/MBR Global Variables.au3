@@ -1776,6 +1776,9 @@ Global $g_abCGBBBattleItem[4]
 Global $g_abCGBBDestructionItem[21]
 Global $g_abCGBBTroopsItem[12]
 
+Global $g_aEasyEvent[18] = ["Laboratory", "ArmyCamp", "DESpell", "SFacto", "BuilderHut", "StarC", "Destruction", "PileOfVictores", "GoldChallenge", _
+							"ElixirChallenge", "DarkEChallenge", "ElixirPump", "DarkEPlumbers", "GoldM", "BBreakdown", "GoldGrab", "ElixirEmbezz", "DarkEHeist"]
+
 ; Collect Achievement Rewards
 Global $g_bChkCollectAchievements = True
 
