@@ -401,6 +401,8 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 
 	WEnd ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop End ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	
+	CheckZoomOut()
+	
 	;--- show buttons attacknow ----
 	If $g_bBtnAttackNowPressed = True Then
 		SetLogCentered(" Attack Now Pressed! ", "~", $COLOR_SUCCESS)
