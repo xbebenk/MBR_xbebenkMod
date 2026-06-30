@@ -519,6 +519,51 @@ EndFunc   ;==>CheckZoomOut
 Func VillageSearchSaveImage($bForceCapture = False)
 	If $g_bVillageSearchAlwaysMeasure Or $bForceCapture Then 
 		_CaptureRegion2()
-		SaveDebugImage($g_iMatchMode & "_Villagesearch")
+		SaveDebugImage("Villagesearch")
+	EndIf
+EndFunc
+
+Func VillageSearchLoop($iCountLoop = 10)
+	ZoomOut(True)
+	PrepareSearch()
+	If Not $g_bRunState Then Return
+	
+	For $iCount = 1 To $iCountLoop
+		ResetTHsearch()
+		WaitForClouds() ; Wait for clouds to disappear
+		$g_bVillageSearchActive = True
+		CheckZoomOut()
+		If Not $g_bRunState Then Return
+		If _Sleep(1000) Then Return
+		For $i = 1 To 10
+			If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				ExitLoop
+			EndIf
+				
+			If IsProblemAffect() Or GetAndroidProcessPID() = 0 Then 
+				$g_bIsClientSyncError = True
+				$g_iNbrOfOoS += 1
+				$g_bRestart = True
+				ExitLoop
+			EndIf
+			If _Sleep(500) Then Return
+		Next
+		SetLog("VillageSearchLoop Loop [" & $iCount & "/" & $iCountLoop & "]", $COLOR_ACTION) 
+	Next
+	If IsAttackPage() Then
+		Click(65, 540, 1, 0, "#0099")
+		If _Sleep(500) Then Return
+		
+		For $z = 1 To 3
+			If _Sleep(500) Then Return
+			SetDebugLog("Wait for OK button to appear #" & $z, $COLOR_DEBUG1)
+			If IsOKCancelPage(True) Then
+				Click(510, 400, 1, 0, "Confirm Surender"); Click Okay to Confirm surrender
+				If _Sleep(1000) Then Return
+				ExitLoop
+			EndIf
+			If ReturnHomeMainPage(False) Then Return
+		Next
 	EndIf
 EndFunc

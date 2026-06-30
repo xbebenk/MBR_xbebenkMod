@@ -811,7 +811,7 @@ EndFunc   ;==>btnTestImage
 
 Func btnTestVillageSize($bMeasureOnly = False)
 	Local $hTimer, $ms
-	BeginImageTest()
+	BeginImageTest($g_sProfileTempPath & "Debug\Villagesearch\")
 	Local $currentRunState = $g_bRunState
 	Local $currentDebug = $g_bDebugSetlog
 	$g_bRunState = True
@@ -821,33 +821,34 @@ Func btnTestVillageSize($bMeasureOnly = False)
 	_CaptureRegion()
 	_CaptureRegion2Sync()
 	$hTimer = __TimerInit()
-	If Not CheckZoomOut() Then Return
+	$g_bVillageSearchActive = True
+	CheckZoomOut()
 	
 	$ms = __TimerDiff($hTimer)
 	SetLog("TestVillageSize : CheckZoomOut (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-	If $bMeasureOnly Then 
-		AttackCSVDEBUGIMAGE(true)
-		Return
-	EndIf
+	;If $bMeasureOnly Then 
+	;	AttackCSVDEBUGIMAGE(true)
+	;	Return
+	;EndIf
 	
-	$hTimer = __TimerInit()
-	ResetTHsearch()
-	FindTownhall()
-	$ms = __TimerDiff($hTimer)
-	SetLog("TestVillageSize : FindTownhall (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-	
-	$hTimer = __TimerInit()
-	checkDeadBase()
-	$ms = __TimerDiff($hTimer)
-	SetLog("TestVillageSize : checkDeadBase (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-	
-	$hTimer = __TimerInit()
-	Local $g_bDebugSF = $g_bDebugSmartFarm
-	$g_bDebugSmartFarm = True
-	ChkSmartFarm()
-	$ms = __TimerDiff($hTimer)
-	SetLog("TestVillageSize : ChkSmartFarm (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-	$g_bDebugSmartFarm = $g_bDebugSF
+	;$hTimer = __TimerInit()
+	;ResetTHsearch()
+	;FindTownhall()
+	;$ms = __TimerDiff($hTimer)
+	;SetLog("TestVillageSize : FindTownhall (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	;
+	;$hTimer = __TimerInit()
+	;checkDeadBase()
+	;$ms = __TimerDiff($hTimer)
+	;SetLog("TestVillageSize : checkDeadBase (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	;
+	;$hTimer = __TimerInit()
+	;Local $g_bDebugSF = $g_bDebugSmartFarm
+	;$g_bDebugSmartFarm = True
+	;ChkSmartFarm()
+	;$ms = __TimerDiff($hTimer)
+	;SetLog("TestVillageSize : ChkSmartFarm (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	;$g_bDebugSmartFarm = $g_bDebugSF
 	
 	EndImageTest()
 

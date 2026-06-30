@@ -1999,7 +1999,7 @@ Global $g_aDailyAccount[16][Ubound($g_aiDailyFunction)] = [[0,0,0,0,0,0,0,0,0,0,
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[51][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
+Global $g_aVillageRefSize[53][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
 									["DM", "Classic Meteor", 592.24, 87, 792, 52, 589], _ ;ok
 									["CS", "Classic Skeleton", 567, 82, 766, 53, 575], _ ;ok
 									["JS", "Jungle", 617, 41, 806, 37, 616], _ ;ok
@@ -2020,7 +2020,7 @@ Global $g_aVillageRefSize[51][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589],
 									["PR", "Primal", 580.41, 74, 803, 64, 613], _ ;ok
 									["SH", "Shadow", 598.40, 81, 790, 61, 592], _ ;ok
 									["RY", "Royal", 610.20, 57, 799, 48, 603], _ ;ok
-									["SM", "Summer", 568, 85, 813, 56, 604], _ ;ok
+									["SM", "Summer", 576.93, 82, 788, 52, 580], _ ;ok
 									["CA", "Clash A-Rama", 619, 59, 785, 57, 598], _ ;ok
 									["PS", "Pixel", 617, 56, 796, 61, 618], _ ;ok
 									["DE", "Dragon Escape", 681.68, 40, 768, 81, 627], _ ;ok
@@ -2049,5 +2049,7 @@ Global $g_aVillageRefSize[51][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589],
 									["GC", "Goblin Cave", 590.33, 57, 786, 41, 577], _
 									["WW", "Wild West", 607.48, 51, 799, 41, 603], _
 									["WL", "Waste Land", 581.80, 72, 791, 55, 595], _
+									["FH", "Year Of Fire Horse", 624.88, 61, 792, 49, 596], _
+									["CO", "Cosmic", 616.84, 61, 785, 65, 610], _
 									["EG", "Egypt", 580.20, 96, 765, 104, 603]]
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
