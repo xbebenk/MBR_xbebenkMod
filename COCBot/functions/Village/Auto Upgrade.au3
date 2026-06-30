@@ -600,7 +600,7 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	If Not $g_bRunState Then Return
 
 	; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
-	$g_aUpgradeNameLevel = BuildingInfo(242, 477)
+	$g_aUpgradeNameLevel = BuildingInfo()
 	If $g_aUpgradeNameLevel[0] = "" Then
 		SetLog("Error when trying to get upgrade name and level...", $COLOR_ERROR)
 		Return False
@@ -1476,37 +1476,6 @@ Func AutoUpgradeLog($bNew = False, $aUpgradeName = "Traps", $iUpgradeLevel = 1, 
 		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, $sTxtUpgradeLog)
 		_FileWriteLog($sUpgradeLogFile, $sTxtUpgradeLogToFile)
 	EndIf
-
-	;If $aUpgradeNameLevel[1] <> "Traps" Then
-	;	$aUpgradeNameLevel = BuildingInfo(242, 477)
-	;	If $aUpgradeNameLevel[0] = "" Then
-	;		SetLog("Error at AutoUpgradeLog() to get upgrade name and level", $COLOR_ERROR)
-	;		$aUpgradeNameLevel[1] = "Traps"
-	;		$bRet = False
-	;	EndIf
-	;
-	;	_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
-	;			@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
-	;			" - Placing New Building: " & $aUpgradeNameLevel[1])
-	;
-	;	_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc + 1 & "] " & $txtAccName & _
-	;			" - Placing New Building: " & $aUpgradeNameLevel[1])
-	;Else
-	;	_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
-	;			@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
-	;			" - Upgrading " & $aUpgradeNameLevel[1] & _
-	;			" to level " & $aUpgradeNameLevel[2] + 1 & _
-	;			" for " & _NumberFormat($aUpgradeResourceCostDuration[1]) & _
-	;			" " & $aUpgradeResourceCostDuration[0] & _
-	;			" - Duration : " & $aUpgradeResourceCostDuration[2])
-	;
-	;	_FileWriteLog($g_sProfileLogsPath & "\AutoUpgradeHistory.log", " [" & $txtAcc + 1 & "] " & $txtAccName & _
-	;			" - Upgrading " & $aUpgradeNameLevel[1] & _
-	;			" to level " & $aUpgradeNameLevel[2] + 1 & _
-	;			" for " & _NumberFormat($aUpgradeResourceCostDuration[1]) & _
-	;			" " & $aUpgradeResourceCostDuration[0] & _
-	;			" - Duration : " & $aUpgradeResourceCostDuration[2])
-	;EndIf
 EndFunc
 
 Func PlaceUnplacedBuilding($bTest = False)
@@ -1563,7 +1532,7 @@ Func DoGearUp($x, $y)
 	SetLog("Do GearUp for OptimizeOTTO", $COLOR_INFO)
 	Click($x, $y)
 	If _Sleep(1000) Then Return
-	Local $g_aUpgradeNameLevel = BuildingInfo(242, 477)
+	Local $g_aUpgradeNameLevel = BuildingInfo()
 	If $g_aUpgradeNameLevel[0] = "" Then
 		SetLog("Error when trying to get upgrade name and level...", $COLOR_ERROR)
 		Return False
@@ -1941,7 +1910,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 								If $aResult[$y][0] = "Gold" And StringInStr($aResult[$y][3], "Town") Then
 									Click($aResult[$y][1], $aResult[$y][2])
 									If _Sleep(1000) Then Return
-									Local $Building = BuildingInfo(242, 477)
+									Local $Building = BuildingInfo()
 									If $Building[0] = 2 And $Building[2] < $g_aiCmbRushTHOption[0] + 9 Then
 										SetLog("TownHall Level = " & $Building[2] & " < " &$g_aiCmbRushTHOption[0] + 9, $COLOR_ACTION)
 									EndIf

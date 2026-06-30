@@ -221,7 +221,6 @@
 #include "functions\Village\CollectAchievements.au3"
 #include "functions\Village\TreasuryCollect.au3"
 #include "functions\Village\DonateCC.au3"
-#include "functions\Village\GetTownHallLevel.au3"
 #include "functions\Village\isAtkDarkElixirFull.au3"
 #include "functions\Village\isDarkElixirFull.au3"
 #include "functions\Village\isGoldFull.au3"

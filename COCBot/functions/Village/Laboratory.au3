@@ -851,7 +851,7 @@ Func AutoLocateLab()
 			Click($aLabCoord[$i][1], $aLabCoord[$i][2])
 		
 			If _Sleep(1000) Then Return
-			Local $BuildingInfo = BuildingInfo(242, 477)
+			Local $BuildingInfo = BuildingInfo()
 			If StringInStr($BuildingInfo[1], "Lab") Then	
 				$g_aiLaboratoryPos[0] = $aLabCoord[$i][1]
 				$g_aiLaboratoryPos[1] = $aLabCoord[$i][2]

@@ -133,7 +133,7 @@ Func RemoveGembox()
 			EndIf
 			Click($aGembox[$i][1], $aGembox[$i][2], 1, 0, "Remove GemBox!")
 			If _Sleep(1000) Then Return
-			Local $aGemboxName = BuildingInfo(242, 477)
+			Local $aGemboxName = BuildingInfo()
 			If $aGemboxName[1] = "Gem box" Then 
 				ClickRemoveObstacle()
 				SetLog("Removing GemBox", $COLOR_SUCCESS)

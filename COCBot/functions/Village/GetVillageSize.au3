@@ -171,42 +171,23 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $sSceneryC
 	Local $tree = [0, 0, 0, 0, 0, ""]
 	Local $a
 	
-	For $check = 1 To 2
-		SetDebugLog("FindTree check : " & $check)
-		If $check = 1 Then 
-			If Not QuickMIS("BFI", $sDirectory & $sTreePrefix & "\tree" & $sSceneryCode & "*", 430, 0, 860, 220) Then
-				SetDebugLog("Cannot Find tree file: " & $sTreePrefix & $sSceneryCode)
-				ContinueLoop
-			Else
-				$a = StringRegExp($g_sQuickMISName,"tree([0-9A-Z]+)-(\d+)-(\d+)(_.*[.](?:xml|png|bmp))$", $STR_REGEXPARRAYMATCH)
-				If UBound($a) = 4 Then
-					$tree[0] = $g_iQuickMISX ; x center of tree found
-					$tree[1] = $g_iQuickMISY ; y center of tree found
-					$tree[2] = $a[1] ; x center of reference tree
-					$tree[3] = $a[2] ; y center of reference tree
-					$tree[4] = $a[0] ; distance from tree to tree in pixel
-					$tree[5] = "tree" & $a[0] & "-" & $a[1] & "-" & $a[2] & $a[3]
-					SetDebugLog("Found tree image: " & $tree[5])
-					Return $tree
-				EndIf					
-			EndIf
-		Else
-			If QuickMIS("BC1", $sDirectory & $sTreePrefix, 430, 0, 860, 220) Then
-				$a = StringRegExp($g_sQuickMISName,"tree([0-9A-Z]+)-(\d+)-(\d+)", $STR_REGEXPARRAYMATCH)
-				If UBound($a) = 3 Then
-					$tree[0] = $g_iQuickMISX ; x center of tree found
-					$tree[1] = $g_iQuickMISY ; y center of tree found
-					$tree[2] = $a[1] ; x center of reference tree
-					$tree[3] = $a[2] ; y center of reference tree
-					$tree[4] = $a[0] ; distance from tree to tree in pixel
-					$tree[5] = "tree" & $a[0] & "-" & $a[1] & "-" & $a[2]
-					SetDebugLog("Found tree image: " & $tree[5])
-					Return $tree
-				EndIf
-			EndIf
-		EndIf
-		If Not $g_bRunState Then Return
-	Next
+	SetDebugLog("FindTree")
+	If QuickMIS("BFI", $sDirectory & $sTreePrefix & "\tree" & $sSceneryCode & "*", 430, 0, 860, 220) Then
+		$a = StringRegExp($g_sQuickMISName,"tree([0-9A-Z]+)-(\d+)-(\d+)(_.*[.](?:xml|png|bmp))$", $STR_REGEXPARRAYMATCH)
+		If UBound($a) = 4 Then
+			$tree[0] = $g_iQuickMISX ; x center of tree found
+			$tree[1] = $g_iQuickMISY ; y center of tree found
+			$tree[2] = $a[1] ; x center of reference tree
+			$tree[3] = $a[2] ; y center of reference tree
+			$tree[4] = $a[0] ; distance from tree to tree in pixel
+			$tree[5] = "tree" & $a[0] & "-" & $a[1] & "-" & $a[2] & $a[3]
+			SetDebugLog("Found tree image: " & $tree[5])
+			Return $tree
+		EndIf	
+	Else
+		SetDebugLog("Cannot Find tree file: " & $sTreePrefix & $sSceneryCode)
+	EndIf
+
 	Return $tree
 EndFunc
 

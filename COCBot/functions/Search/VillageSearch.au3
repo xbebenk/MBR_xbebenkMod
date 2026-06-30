@@ -130,14 +130,17 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 			$isModeActive[$i] = False
 		Next
 
-		If _Sleep($DELAYRESPOND) Then Return
+		If _Sleep(50) Then Return
 		
 		For $i = 0 To $g_iModeCount - 1
+			$match[$i] = False
 			$isModeActive[$i] = IsSearchModeActive($i)
 			If $isModeActive[$i] Then
 				$match[$i] = CompareResources($i)
 			EndIf
 		Next
+		
+		If _Sleep(50) Then Return
 		
 		If $g_bRestart Then Return
 		_CaptureRegion2()
@@ -257,36 +260,52 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 					SetLog("Force attacking Tournament League Live Base", $COLOR_INFO)
 			EndSwitch
 		EndIf
-
-		; ----------------- WRITE LOG VILLAGE FOUND AND ASSIGN VALUE AT $g_iMatchMode and Exitloop  IF CONTITIONS MEET ---------------------------
+		
+		; ----------------- WRITE LOG VILLAGE FOUND AND ASSIGN MATCH MODE ---------------------------
+		Local $sMatchLogText = "" ; Variabel penampung teks jika match ditemukan
+		
 		If $match[$DB] And $dbBase Then
-			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
-			SetLog("      " & "Dead Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
-			$logwrited = True
 			$g_iMatchMode = $DB
-			ExitLoop
+			$sMatchLogText = "Dead Base Found!"
 		ElseIf $match[$LB] And Not $dbBase Then
-			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
-			SetLog("      " & "Live Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
-			$logwrited = True
 			$g_iMatchMode = $LB
-			ExitLoop
+			$sMatchLogText = "Live Base Found!"
 		ElseIf $match[$LB] And $g_bCollectorFilterDisable Then
-			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
-			SetLog("      " & "Live Base Found!*", $COLOR_SUCCESS, "Lucida Console", 7.5)
-			$logwrited = True
 			$g_iMatchMode = $LB
-			ExitLoop
-		ElseIf $g_abAttackTypeEnable[$TB] = 1 And ($g_iSearchCount >= $g_iAtkTBEnableCount) Then ; TH bully doesn't need the resources conditions
-			If $g_iSearchTHLResult = 1 Then
-				SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
-				SetLog("      " & "Not a match, but TH Bully Level Found! ", $COLOR_SUCCESS, "Lucida Console", 7.5)
-				$logwrited = True
-				$g_iMatchMode = $g_iAtkTBMode
-				ExitLoop
-			EndIf
+			$sMatchLogText = "Live Base Found!*"
+		ElseIf $g_abAttackTypeEnable[$TB] = 1 And ($g_iSearchCount >= $g_iAtkTBEnableCount) And ($g_iSearchTHLResult = 1) Then
+			$g_iMatchMode = $g_iAtkTBMode
+			$sMatchLogText = "Not a match, but TH Bully Level Found! "
 		EndIf
 
+		; =====================================================================================
+		; JIKA SYARAT MATCH TERPENUHI, LAKUKAN CHECK ZOOM OUT (MEASURE) SEBELUM BENAR-BENAR DISERANG
+		; =====================================================================================
+		If $sMatchLogText <> "" Then
+			
+			; Coba ukur village-nya
+			Local $bMeasured = CheckZoomOut()
+			
+			If $bMeasured Then
+				; Jika berhasil diukur (scenery dikenali) -> Tulis log Sukses & Serang!
+				SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
+				SetLog("      " & $sMatchLogText, $COLOR_SUCCESS, "Lucida Console", 7.5)
+				$logwrited = True
+				ExitLoop ; Keluar dari loop pencarian (Lanjut eksekusi attack)
+			Else
+				; Jika gagal diukur (scenery aneh/baru) -> Tulis log Error & SKIP!
+				SetLog($GetResourcesTXT, $COLOR_BLACK, "Lucida Console", 7.5)
+				SetLog("      Match: " & $sMatchLogText & " BUT Measure Failed! Skipping...", $COLOR_ERROR, "Lucida Console", 7.5)
+				$logwrited = True
+				
+				VillageSearchNext() ; Klik tombol Next
+				$iSkipped += 1
+				ContinueLoop ; Langsung kembali ke atas Loop (Cari musuh baru)
+			EndIf
+			
+		EndIf
+
+		; ----------------- PENANGANAN JIKA TIDAK MATCH ---------------------------
 		If $match[$DB] And Not $dbBase Then
 			$noMatchTxt &= ", Not a " & $g_asModeText[$DB]
 		ElseIf $match[$LB] And $dbBase Then
@@ -354,28 +373,8 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 		EndIf
 		If $g_bDebugDeadBaseImage Then setZombie()
 		
-		Local $i = 0
-		For $i = 1 To 10
-			If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then
-				$g_bCloudsActive = True
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				ExitLoop
-			Else
-				SetLog("Wait to see Next Button #" & $i, $COLOR_ACTION)
-				If $i > 5 Then 
-					AndroidPageError("Village Search")
-				EndIf
-			EndIf
-				
-			If IsProblemAffect() Or GetAndroidProcessPID() = 0 Then 
-				$g_bIsClientSyncError = True
-				$g_iNbrOfOoS += 1
-				$g_bRestart = True
-				ExitLoop
-			EndIf
-			If _Sleep(500) Then Return
-		Next
-
+		VillageSearchNext()
+		
 		If _Sleep($DELAYRESPOND) Then Return
 		
 		If $g_bRestart Then 
@@ -393,15 +392,9 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 
 		$iSkipped = $iSkipped + 1
 		$g_iSkippedVillageCount += 1
-		If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
-			$g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]
-			$g_iStatsTotalGain[$eLootGold] -= $g_aiSearchCost[$g_iTownHallLevel - 1]
-		EndIf
 		UpdateStats()
 
 	WEnd ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;### Main Search Loop End ###;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	
-	CheckZoomOut()
 	
 	;--- show buttons attacknow ----
 	If $g_bBtnAttackNowPressed = True Then
@@ -424,6 +417,41 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 	$g_bIsClientSyncError = False
 
 EndFunc   ;==>_VillageSearch
+
+Func VillageSearchNext()
+	Local $bRet = False
+	
+	For $i = 1 To 10
+		If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then
+			$g_bCloudsActive = True
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			$bRet = True
+			ExitLoop
+		Else
+			SetLog("Wait to see Next Button #" & $i, $COLOR_ACTION)
+			If $i > 5 Then 
+				AndroidPageError("Village Search")
+			EndIf
+		EndIf
+			
+		If IsProblemAffect() Or GetAndroidProcessPID() = 0 Then 
+			$g_bIsClientSyncError = True
+			$g_iNbrOfOoS += 1
+			$g_bRestart = True
+			ExitLoop
+		EndIf
+		If _Sleep(500) Then Return
+	Next
+	
+	If $bRet then
+		If $g_iTownHallLevel <> "" And $g_iTownHallLevel > 0 Then
+			$g_iSearchCost += $g_aiSearchCost[$g_iTownHallLevel - 1]
+			$g_iStatsTotalGain[$eLootGold] -= $g_aiSearchCost[$g_iTownHallLevel - 1]
+		EndIf
+	EndIf
+	
+	Return $bRet
+EndFunc
 
 Func SearchLimit($iSkipped = 50)
 	Local $bRet = False
@@ -541,7 +569,7 @@ Func VillageSearchLoop($iCountLoop = 10)
 		$hTimer = __TimerInit()
 		$bMeasured = CheckZoomOut()
 		$ms = __TimerDiff($hTimer)
-		SetLog("CheckZoomOut (" & Round($ms, 0) & " ms.)", $COLOR_DEBUG1)
+		SetLog("CheckZoomOut (" & Round($ms, 0) & "ms)", $COLOR_DEBUG1)
 		If Not $g_bRunState Then Return
 		If _Sleep(1000) Then Return
 		If Not $bMeasured Then Exitloop

@@ -280,7 +280,7 @@ Func btnLocateKingAltar()
 	If AutoLocateAltar("King") Then
 		ClickP($g_aiKingAltarPos)
 		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo(242, 477)
+		Local $BuildingInfo = BuildingInfo()
 		If StringInStr($BuildingInfo[1], "King") Then
 			applyConfig()
 			saveConfig()
@@ -300,7 +300,7 @@ Func btnLocateQueenAltar()
 	If AutoLocateAltar("Queen") Then
 		ClickP($g_aiQueenAltarPos)
 		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo(242, 477)
+		Local $BuildingInfo = BuildingInfo()
 		If StringInStr($BuildingInfo[1], "Queen") Then
 			applyConfig()
 			saveConfig()
@@ -319,7 +319,7 @@ Func btnLocateWardenAltar()
 	If AutoLocateAltar("Warden") Then
 		ClickP($g_aiWardenAltarPos)
 		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo(242, 477)
+		Local $BuildingInfo = BuildingInfo()
 		If StringInStr($BuildingInfo[1], "Warden") Then
 			applyConfig()
 			saveConfig()
@@ -338,7 +338,7 @@ Func btnLocateChampionAltar()
 	If AutoLocateAltar("Champ") Then
 		ClickP($g_aiChampionAltarPos)
 		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo(242, 477)
+		Local $BuildingInfo = BuildingInfo()
 		If StringInStr($BuildingInfo[1], "Champ") Then
 			applyConfig()
 			saveConfig()
@@ -353,67 +353,25 @@ EndFunc   ;==>btnLocateChampionAltar
 
 Func btnLocateTownHall()
 	Local $wasRunState = $g_bRunState
-	Local $g_iOldTownHallLevel = $g_iTownHallLevel
+	Local $bRet = False
 	$g_bRunState = True
 	
-	ZoomOut()
-	Local $iTownHallLevel = $g_iTownHallLevel
-	Local $bLocateTH = False, $bTHFound = False
 	SetLog("Locating Town Hall", $COLOR_ACTION)
+	ZoomOut(True)
 	Collect(True) ;only collect from mine and collector
-	For $i = 1 To 2
-		SetLog("Searching TH #" & $i, $COLOR_ACTION)
-		If $g_aiTownHallPos[0] > -1 Then
-			ClickP($g_aiTownHallPos)
-			If _Sleep(800) Then Return
-			Local $BuildingInfo = BuildingInfo(242, 477)
-			If $BuildingInfo[1] = "Town Hall" Then
-				$g_iTownHallLevel = Number($BuildingInfo[2])
-				$bTHFound = True
-				applyConfig()
-				saveConfig()
-				ExitLoop
-			Else
-				$bLocateTH = True
-			EndIf
-		EndIf
-
-		If $g_iTownHallLevel = 0 Or $bLocateTH Then
-			$bTHFound = SearchTH() ;Sets $g_iTownHallLevel
-		EndIf
-	Next
-	
-	ClickAway()
-	
-	SetLog("Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
-	SetLog("Coord : " &  _ArrayToString($g_aiTownHallPos), $COLOR_INFO)
-	
-	If $bTHFound Then Return
-	
-	LocateTownHall()
-	If Not $g_iOldTownHallLevel = $g_iTownHallLevel Then
-		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 600)
-		Local $stext = @CRLF & GetTranslatedFileIni("MBR Popups", "Locating_your_TH", "If you locating your TH because you upgraded,") & @CRLF & _
-				GetTranslatedFileIni("MBR Popups", "Must_restart_bot", "then you must restart bot!!!") & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Popups", "OK_to_restart_bot", "Click OK to restart bot,") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", "Or Click Cancel to exit") & @CRLF
-		Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Close_Bot", "Close Bot Please!"), $stext, 120)
-		SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
-		If $MsgBox = 1 Then
-			#cs
-				Local $stext = @CRLF & GetTranslatedFileIni("MBR Popups", "Sure_Close Bot", "Are you 100% sure you want to restart bot ?") & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Popups", "Restart_bot", "Click OK to close bot and then restart the bot (manually)") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Cancel_to_exit", -1) & @CRLF
-				Local $MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", -1), GetTranslatedFileIni("MBR Popups", "Close_Bot", -1), $stext, 120)
-				SetDebugLog("$MsgBox= " & $MsgBox, $COLOR_DEBUG)
-				If $MsgBox = 1 Then BotClose(False)
-			#ce
-			RestartBot(False, $wasRunState)
-		EndIf
+	$bRet = SearchTH(True) ;search TH and click to verify name	
+	If $bRet Then 
+		SetLog("Town Hall level is " &  $g_iTownHallLevel, $COLOR_INFO)
+		SetLog("Coord : " &  _ArrayToString($g_aiTownHallPos), $COLOR_INFO)
+		SetLog("Town Hall level successfully identified!", $COLOR_SUCCESS)
+	Else
+		SetLog("SearchTH failed, locate manually", $COLOR_DEBUG)
+		$bRet = LocateTownHall()
 	EndIf
 	$g_bRunState = $wasRunState
 	AndroidShield("btnLocateTownHall") ; Update shield status due to manual $g_bRunState
+	Return $bRet
 EndFunc   ;==>btnLocateTownHall
-
-
 
 Func btnResetBuilding()
 	Local $wasRunState = $g_bRunState

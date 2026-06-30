@@ -403,7 +403,7 @@ Func OpenMagicItemWindow()
 	If _Sleep(500) Then Return
 	
 	If Not $g_bRunState Then Return
-	Local $BuildingInfo = BuildingInfo(242, 477)
+	Local $BuildingInfo = BuildingInfo()
 	If $BuildingInfo[1] = "Town Hall" Then
 		SetLog("Opening Magic Item Window", $COLOR_ACTION)
 		If ClickB("MagicItem") Then
