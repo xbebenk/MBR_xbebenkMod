@@ -132,7 +132,7 @@ Func FindStone($sDirectory = $g_sImgZoomOutDir, $sStonePrefix = "stone")
 				SetDebugLog("Cannot Find stone file: " & $sStonePrefix & $g_sSceneryCode)
 				ContinueLoop
 			Else
-				$a = StringRegExp($g_sQuickMISName,"stone([0-9A-Z]+)-(\d+)-(\d+)(_.*[.]xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
+				$a = StringRegExp($g_sQuickMISName,"stone([0-9A-Z]+)-(\d+)-(\d+)(_.*[.](?:xml|png|bmp))$", $STR_REGEXPARRAYMATCH)
 				If UBound($a) = 4 Then
 					$stone[0] = $g_iQuickMISX ; x center of stone found
 					$stone[1] = $g_iQuickMISY ; y center of stone found
@@ -178,7 +178,7 @@ Func FindTree($sDirectory = $g_sImgZoomOutDir, $sTreePrefix = "tree", $sSceneryC
 				SetDebugLog("Cannot Find tree file: " & $sTreePrefix & $sSceneryCode)
 				ContinueLoop
 			Else
-				$a = StringRegExp($g_sQuickMISName,"tree([0-9A-Z]+)-(\d+)-(\d+)(_.*[.]xml|png|bmp)$", $STR_REGEXPARRAYMATCH)
+				$a = StringRegExp($g_sQuickMISName,"tree([0-9A-Z]+)-(\d+)-(\d+)(_.*[.](?:xml|png|bmp))$", $STR_REGEXPARRAYMATCH)
 				If UBound($a) = 4 Then
 					$tree[0] = $g_iQuickMISX ; x center of tree found
 					$tree[1] = $g_iQuickMISY ; y center of tree found

@@ -107,7 +107,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	CheckMainScreen()
 	VillageReport(False, True)
 	PlaceUnplacedBuilding()
-	If $bUpgradeLowCost And $g_bChkRushTH And $g_iFreeBuilderCount = 1 And $g_bUpgradeWallSaveBuilder Then
+	If $bUpgradeLowCost And $g_iFreeBuilderCount = 1 And $g_bUpgradeWallSaveBuilder Then
 		ClickMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		Local $aHour = QuickMIS("CNX", $g_sImgAUpgradeHour, 480, 110, 555, 170)

@@ -142,7 +142,7 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 		If $g_bRestart Then Return
 		_CaptureRegion2()
 		; ----------------- FIND TARGET TOWNHALL -------------------------------------------
-		; $g_iSearchTH name of level of townhall (return "-" if no th found)
+		; $g_iSearchTH name of level of townhall (Return "-" if no th found)
 		; $g_iTHx and $g_iTHy coordinates of townhall
 		Local $THString = ""
 		If $match[$DB] Or $match[$LB] Then ; make sure resource conditions are met
@@ -258,7 +258,7 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 			EndSwitch
 		EndIf
 
-		; ----------------- WRITE LOG VILLAGE FOUND AND ASSIGN VALUE AT $g_iMatchMode and exitloop  IF CONTITIONS MEET ---------------------------
+		; ----------------- WRITE LOG VILLAGE FOUND AND ASSIGN VALUE AT $g_iMatchMode and Exitloop  IF CONTITIONS MEET ---------------------------
 		If $match[$DB] And $dbBase Then
 			SetLog($GetResourcesTXT, $COLOR_SUCCESS, "Lucida Console", 7.5)
 			SetLog("      " & "Dead Base Found!", $COLOR_SUCCESS, "Lucida Console", 7.5)
@@ -518,8 +518,12 @@ EndFunc   ;==>CheckZoomOut
 
 Func VillageSearchSaveImage($bForceCapture = False)
 	If $g_bVillageSearchAlwaysMeasure Or $bForceCapture Then 
-		_CaptureRegion2()
-		SaveDebugImage("Villagesearch")
+		If $bForceCapture Then 
+			_CaptureRegion2()
+			SaveDebugImage("Villagesearch")
+		Else
+			AttackCSVDEBUGIMAGE()
+		EndIf
 	EndIf
 EndFunc
 
@@ -527,14 +531,20 @@ Func VillageSearchLoop($iCountLoop = 10)
 	ZoomOut(True)
 	PrepareSearch()
 	If Not $g_bRunState Then Return
+	Local $hTimer, $ms, $bMeasured
+	$g_bVillageSearchActive = True
+	$g_bVillageSearchAlwaysMeasure = True
 	
 	For $iCount = 1 To $iCountLoop
 		ResetTHsearch()
 		WaitForClouds() ; Wait for clouds to disappear
-		$g_bVillageSearchActive = True
-		CheckZoomOut()
+		$hTimer = __TimerInit()
+		$bMeasured = CheckZoomOut()
+		$ms = __TimerDiff($hTimer)
+		SetLog("CheckZoomOut (" & Round($ms, 0) & " ms.)", $COLOR_DEBUG1)
 		If Not $g_bRunState Then Return
 		If _Sleep(1000) Then Return
+		If Not $bMeasured Then Exitloop
 		For $i = 1 To 10
 			If QuickMIS("BC1", $g_sImgNextButton, 720, 510, 750, 535) Then
 				Click($g_iQuickMISX, $g_iQuickMISY)

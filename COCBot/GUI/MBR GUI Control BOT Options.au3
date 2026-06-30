@@ -826,10 +826,6 @@ Func btnTestVillageSize($bMeasureOnly = False)
 	
 	$ms = __TimerDiff($hTimer)
 	SetLog("TestVillageSize : CheckZoomOut (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-	;If $bMeasureOnly Then 
-	;	AttackCSVDEBUGIMAGE(true)
-	;	Return
-	;EndIf
 	
 	;$hTimer = __TimerInit()
 	;ResetTHsearch()
