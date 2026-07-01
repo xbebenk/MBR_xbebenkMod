@@ -42,7 +42,7 @@ Func Blacksmith($bTest = False)
 	
 	If $g_aiBlacksmithPos[0] <= 0 Or $g_aiBlacksmithPos[1] <= 0 Then
 		SetLog("Blacksmith Location unknown!", $COLOR_WARNING)
-		ImgLocateBlacksmith(True) ; Blacksmith location unknown, so find it.
+		AutoLocateBlacksmith(True) ; Blacksmith location unknown, so find it.
 		If $g_aiBlacksmithPos[0] = 0 Or $g_aiBlacksmithPos[1] = 0 Then
 			SetLog("Problem locating Blacksmith, re-locate Blacksmith position before proceeding", $COLOR_ERROR)
 			Return False
@@ -58,7 +58,7 @@ Func Blacksmith($bTest = False)
 		SetLog("Blacksmith is level " & $BuildingInfo[2])
 		$g_iBlacksmithLevel = $BuildingInfo[2]
 	Else
-		ImgLocateBlacksmith(True)
+		AutoLocateBlacksmith(True)
 	EndIf
 
 	If Not OpenBlacksmithWindow() Then 

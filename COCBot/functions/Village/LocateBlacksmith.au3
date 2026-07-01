@@ -23,7 +23,7 @@ Func LocateBlacksmith()
 	EndIf
 
 	; auto locate
-	Local $bLocated = ImgLocateBlacksmith()
+	Local $bLocated = AutoLocateBlacksmith()
 
 	If $bLocated Then 
 		SetLog("Blacksmith: (Level " & $g_iBlacksmithLevel & ") ["  & $g_aiBlacksmithPos[0] & "," & $g_aiBlacksmithPos[1] & "]", $COLOR_SUCCESS)
@@ -35,7 +35,7 @@ Func LocateBlacksmith()
 EndFunc   ;==>LocateBlacksmith
 
 ; Image Search for Blacksmith
-Func ImgLocateBlacksmith($bLeaveButton = False)
+Func AutoLocateBlacksmith($bLeaveButton = False)
 	
 	If Not $g_bRunState Then Return
 	Local $bRet = False
@@ -62,7 +62,7 @@ Func ImgLocateBlacksmith($bLeaveButton = False)
 				ExitLoop
 			EndIf
 			
-			If _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "ImgLocateBlacksmith") Then
+			If _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "AutoLocateBlacksmith") Then
 				For $j = 1 To 10
 					If checkChatTabPixel() Then 
 						Click($aRet[$i][1], $aRet[$i][2] + 5)
@@ -70,7 +70,7 @@ Func ImgLocateBlacksmith($bLeaveButton = False)
 						$aBuilding = BuildingInfo()
 						If StringInStr($aBuilding[1], "smith") Then ExitLoop
 					EndIf
-					If _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "ImgLocateBlacksmith") Then 
+					If _CheckPixel($aIsMainGrayed, $g_bCapturePixel, Default, "AutoLocateBlacksmith") Then 
 						SetLog("LocateBlacksmith found unlocked equipment info #" & $j, $COLOR_ACTION)
 						ClickAway()
 						If _Sleep(2000) Then Return
@@ -86,7 +86,7 @@ Func ImgLocateBlacksmith($bLeaveButton = False)
 	EndIf
 	
 	Return $bRet
-EndFunc   ;==>ImgLocateBlacksmith
+EndFunc   ;==>AutoLocateBlacksmith
 
 Func _LocateBlacksmith()
 	Local $stext, $MsgBox, $sErrorText = "" ; $iStupid & $iSilly removed
@@ -100,7 +100,7 @@ Func _LocateBlacksmith()
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, Default, Default, 12, Default, 600)
 		$stext = $sErrorText & @CRLF & "Click OK then click on your Blacksmith building" & @CRLF & @CRLF & _
-				"Please make sure your village is completely visible." & @CRLF & @CRLF & 
+				"Please make sure your village is completely visible." & @CRLF & @CRLF & _
 				"Do not click on anything else while locating!" & @CRLF
 		$MsgBox = _ExtMsgBox(0, "Ok|Cancel", "Locate Blacksmith", $stext, 15)
 		

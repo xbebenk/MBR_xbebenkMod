@@ -21,29 +21,10 @@ Func UpgradeHeroes()
 
 	If $g_bRestart Then Return
 
-	If $g_bUpgradeKingEnable Then
-		If Not isInsideDiamond($g_aiKingAltarPos) Then LocateKingAltar()
-		If $g_aiKingAltarPos[0] = -1 Or $g_aiKingAltarPos[1] = -1 Then LocateKingAltar()
-		SaveConfig()
-	EndIf
-
-	If $g_bUpgradeQueenEnable Then
-		If Not isInsideDiamond($g_aiQueenAltarPos) Then LocateQueenAltar()
-		If $g_aiQueenAltarPos[0] = -1 Or $g_aiQueenAltarPos[1] = -1 Then LocateQueenAltar()
-		SaveConfig()
-	EndIf
-
-	If $g_bUpgradeWardenEnable Then
-		If Not isInsideDiamond($g_aiWardenAltarPos) Then LocateWardenAltar()
-		If $g_aiWardenAltarPos[0] = -1 Or $g_aiWardenAltarPos[1] = -1 Then LocateWardenAltar()
-		SaveConfig()
-	EndIf
-
-	If $g_bUpgradeChampionEnable Then
-		If Not isInsideDiamond($g_aiChampionAltarPos) Then LocateChampionAltar()
-		If $g_aiChampionAltarPos[0] = -1 Or $g_aiChampionAltarPos[1] = -1 Then LocateChampionAltar()
-		SaveConfig()
-	EndIf
+	; All heroes now use Hero Hall for location
+	If Not isInsideDiamond($g_aiHeroHallPos) Then LocateHeroHall()
+	If $g_aiHeroHallPos[0] = -1 Or $g_aiHeroHallPos[1] = -1 Then LocateHeroHall()
+	SaveConfig()
 
 	SetLog("Upgrading Heroes", $COLOR_INFO)
 
@@ -114,7 +95,7 @@ Func QueenUpgrade()
 	SetLog("Upgrade Queen")
 	ClickAway()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	ClickP($g_aiQueenAltarPos) ;Click Queen Altar
+	ClickP($g_aiHeroHallPos) ;Click Hero Hall
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Queen info and Level
@@ -218,7 +199,7 @@ Func KingUpgrade()
 	SetLog("Upgrade King")
 	ClickAway()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	ClickP($g_aiKingAltarPos) ;Click King Altar
+	ClickP($g_aiHeroHallPos) ;Click Hero Hall
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get King info
@@ -328,7 +309,7 @@ Func WardenUpgrade()
 
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
-	ClickP($g_aiWardenAltarPos, 1, 0, "#8888") ;Click Warden Altar
+	ClickP($g_aiHeroHallPos, 1, 0, "#8888") ;Click Hero Hall
 
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
@@ -442,7 +423,7 @@ Func ChampionUpgrade()
 	SetLog("Upgrade Champion")
 	ClickAway()
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
-	ClickP($g_aiChampionAltarPos) ;Click Champion Altar
+	ClickP($g_aiHeroHallPos) ;Click Hero Hall
 	If _Sleep($DELAYUPGRADEHERO2) Then Return
 
 	;Get Champion info and Level

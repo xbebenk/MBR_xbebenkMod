@@ -1,387 +1,95 @@
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: LocateQueenAltar & LocateKingAltar & LocateWardenAltar
-; Description ...:
-; Syntax ........: LocateKingAltar() & LocateQueenAltar() &  LocateWardenAltar()
+; Name ..........: LocateHeroHall
+; Description ...: Locates Hero Hall manually
+; Syntax ........: LocateHeroHall()
 ; Parameters ....:
 ; Return values .: None
-; Author ........: ProMac(07/2015)
+; Author ........: xbebenk
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2024
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-Func LocateQueenAltar($bCollect = True)
-	Local $wasRunState = $g_bRunState
-	$g_bRunState = True
-	AndroidShield("LocateQueenAltar 1") ; Update shield status due to manual $g_bRunState
-	Local $Result = _LocateQueenAltar($bCollect)
-	$g_bRunState = $wasRunState
-	AndroidShield("LocateQueenAltar 2") ; Update shield status due to manual $g_bRunState
-	Return $Result
-EndFunc   ;==>LocateQueenAltar
+Func LocateHeroHall($bCollect = True)
+	; reset position
+	$g_aiHeroHallPos[0] = -1
+	$g_aiHeroHallPos[1] = -1
 
-Func _LocateQueenAltar($bCollect = True)
+	; auto locate (when images exist)
+	Local $bLocated = AutoLocateHeroHall()
 
-	Local $stext, $MsgBox, $sErrorText = "", $sInfo ; $iSilly & $iStupid removed
+	SetLog("Hero Hall: (" & $g_aiHeroHallPos[0] & "," & $g_aiHeroHallPos[1] & ")", $COLOR_DEBUG)
+	If Not $bLocated Then 
+		$g_aiHeroHallPos[0] = -1 
+		$g_aiHeroHallPos[1] = -1 
+		$bLocated = _LocateHeroHall() ; manual locate
+	EndIf
+	
+EndFunc
+
+Func _LocateHeroHall()
+	Local $stext, $MsgBox, $sErrorText = "" ; $iStupid & $iSilly removed
+
+	SetLog("Locating Hero Hall", $COLOR_INFO)
 
 	WinGetAndroidHandle()
-	checkMainScreen(False)
-	If $bCollect Then Collect(True)
+	checkMainScreen()
 
-	SetLog("Locating Queen Altar", $COLOR_INFO)
 	While 1
-		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
-		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Queen_Altar_01", "Click OK then click on your Queen Altar") & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Popups", "Locate_building_01", "VB_newstyle_01") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", "VB_newstyle_02") & @CRLF
-		$MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Func_Locate_Queen_Altar_02", "Locate Queen Altar"), $stext, 15)
+		_ExtMsgBoxSet(1 + 64, $SS_CENTER, Default, Default, 12, Default, 600)
+		$stext = $sErrorText & @CRLF & "Click OK then click on your Hero Hall" & @CRLF & @CRLF & _
+				"Please make sure your village is completely visible." & @CRLF & @CRLF & _
+				"Do not click on anything else while locating!" & @CRLF
+
+		$MsgBox = _ExtMsgBox(0, "Ok|Cancel", "Locate Hero Hall", $stext, 15)
+
 		If $MsgBox = 1 Then
 			WinGetAndroidHandle()
 			ClickAway()
 			Local $aPos = FindPos()
-			$g_aiQueenAltarPos[0] = Int($aPos[0])
-			$g_aiQueenAltarPos[1] = Int($aPos[1])
-			If Not isInsideDiamond($g_aiQueenAltarPos) Then
-				$sErrorText = "Queen Altar Location Not Valid! Please try again." & @CRLF
+			$g_aiHeroHallPos[0] = Int($aPos[0])
+			$g_aiHeroHallPos[1] = Int($aPos[1])
+
+			; --- Cek apakah klik berada di luar area ---
+			If isInsideDiamond($g_aiHeroHallPos) = False Then
+				$sErrorText = "Hero Hall Location Not Valid! Please try again." & @CRLF
 				SetLog("Location not valid, try again", $COLOR_ERROR)
 				ContinueLoop ; Langsung ulang loop tanpa pesan aneh
 			EndIf
 		Else
-			SetLog("Locate Queen Altar Cancelled", $COLOR_INFO)
+			SetLog("Locate Hero Hall Cancelled", $COLOR_INFO)
 			ClickAway()
 			Return
 		EndIf
 
-		;get Queen info
-		$sInfo = BuildingInfo(); 860x780
-		If @error Then SetError(0, 0, 0)
-		Local $CountGetInfo = 0
-		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo(); 860x780
-			If @error Then SetError(0, 0, 0)
-			Sleep(100)
-			$CountGetInfo += 1
-			If $CountGetInfo = 50 Then Return
-		WEnd
-		SetDebugLog($sInfo[1] & $sInfo[2])
-		If @error Then Return SetError(0, 0, 0)
+		Local $sHeroHallInfo = BuildingInfo() ; 860x780
+		If $sHeroHallInfo[0] > 1 Or $sHeroHallInfo[0] = "" Then
 
-		If $sInfo[0] > 1 Or $sInfo[0] = "" Then
-			If @error Then Return SetError(0, 0, 0)
+			; --- Cek apakah bangunan yang diklik salah ---
+			If StringInStr($sHeroHallInfo[1], "Hero") = 0 Then
+				Local $sLocMsg = ($sHeroHallInfo[0] = "" ? "Nothing" : $sHeroHallInfo[1])
 
-			If StringInStr($sInfo[1], "Quee") = 0 Then
-				$sErrorText = "That is not the Queen Altar, it was " & $sInfo[1] & ". Please try again!" & @CRLF
-				SetLog("Selected wrong building (" & $sInfo[1] & "), try again", $COLOR_ERROR)
+				; Set pesan error standar dan minta user coba lagi
+				$sErrorText = "That is not the Hero Hall, it was a " & $sLocMsg & ". Please try again!" & @CRLF
+				SetLog("Selected wrong building (" & $sLocMsg & "), try again", $COLOR_ERROR)
 				ContinueLoop
 			EndIf
 		Else
-			SetLog(" Operator Error - Bad Queen Altar Location: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_ERROR)
-			$g_aiQueenAltarPos[0] = -1
-			$g_aiQueenAltarPos[1] = -1
+			SetLog(" Operator Error - Bad Hero Hall Location: " & "(" & $g_aiHeroHallPos[0] & "," & $g_aiHeroHallPos[1] & ")", $COLOR_ERROR)
+			$g_aiHeroHallPos[0] = -1
+			$g_aiHeroHallPos[1] = -1
 			ClickAway()
 			Return False
 		EndIf
+
+		SetLog("Locate Hero Hall Success: " & "(" & $g_aiHeroHallPos[0] & "," & $g_aiHeroHallPos[1] & ")", $COLOR_SUCCESS)
 		ExitLoop
 	WEnd
-
 	ClickAway()
-	If _Sleep(1000) Then Return
+EndFunc   ;==>LocateHeroHall
 
-	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
-	$stext = GetTranslatedFileIni("MBR Popups", "Locate_building_03", "Now you can remove mouse out of Android Emulator, Thanks!!")
-	$MsgBox = _ExtMsgBox(48, GetTranslatedFileIni("MBR Popups", "Ok", "Ok"), GetTranslatedFileIni("MBR Popups", "Locate_building_04", "Notice!"), $stext, 15)
-
-	IniWrite($g_sProfileBuildingPath, "other", "xQueenAltarPos", $g_aiQueenAltarPos[0])
-	IniWrite($g_sProfileBuildingPath, "other", "yQueenAltarPos", $g_aiQueenAltarPos[1])
-EndFunc   ;==>_LocateQueenAltar
-
-Func LocateKingAltar($bCollect = True)
-	Local $wasRunState = $g_bRunState
-	$g_bRunState = True
-	AndroidShield("LocateKingAltar 1") ; Update shield status due to manual $g_bRunState
-	Local $Result = _LocateKingAltar($bCollect)
-	$g_bRunState = $wasRunState
-	AndroidShield("LocateKingAltar 2") ; Update shield status due to manual $g_bRunState
-	Return $Result
-EndFunc   ;==>LocateKingAltar
-
-Func _LocateKingAltar($bCollect = True)
-
-	Local $stext, $MsgBox, $sErrorText = "", $sInfo ; $iSilly & $iStupid removed
-
-	WinGetAndroidHandle()
-	checkMainScreen(False)
-	If $bCollect Then Collect(True)
-
-	SetLog("Locating King Altar", $COLOR_INFO)
-	While 1
-		ClickAway()
-		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
-		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_King_Altar_01", "Click OK then click on your King Altar") & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Popups", "Locate_building_01", "Do not move mouse quickly after clicking location") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", "Make sure the building name is visible for me!") & @CRLF
-		$MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Func_Locate_King_Altar_02", "Locate King Altar"), $stext, 15)
-		If $MsgBox = 1 Then
-			WinGetAndroidHandle()
-			Local $aPos = FindPos()
-			$g_aiKingAltarPos[0] = Int($aPos[0])
-			$g_aiKingAltarPos[1] = Int($aPos[1])
-			If Not isInsideDiamond($g_aiKingAltarPos) Then
-				$sErrorText = "King Altar Location Not Valid! Please try again." & @CRLF
-				SetLog("Location not valid, try again", $COLOR_ERROR)
-				ContinueLoop ; Langsung ulang loop tanpa pesan aneh
-			EndIf
-		Else
-			SetLog("Locate King Altar Cancelled", $COLOR_INFO)
-			ClickAway()
-			Return
-		EndIf
-
-		;Get King info
-		$sInfo = BuildingInfo(); 860x780
-		If @error Then SetError(0, 0, 0)
-		Local $CountGetInfo = 0
-		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo(); 860x780
-			If @error Then SetError(0, 0, 0)
-			Sleep(100)
-			$CountGetInfo += 1
-			If $CountGetInfo = 50 Then Return
-		WEnd
-		SetDebugLog($sInfo[1] & $sInfo[2])
-		If @error Then Return SetError(0, 0, 0)
-
-		If $sInfo[0] > 1 Or $sInfo[0] = "" Then
-
-			If (StringInStr($sInfo[1], "Barb") = 0) And (StringInStr($sInfo[1], "King") = 0) Then
-				$sErrorText = "That is not the King Altar, it was " & $sInfo[1] & ". Please try again!" & @CRLF
-				SetLog("Selected wrong building (" & $sInfo[1] & "), try again", $COLOR_ERROR)
-				ContinueLoop
-			EndIf
-		Else
-			SetLog(" Operator Error - Bad King Altar Location: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_ERROR)
-			$g_aiKingAltarPos[0] = -1
-			$g_aiKingAltarPos[1] = -1
-			ClickAway()
-			Return False
-		EndIf
-		ExitLoop
-	WEnd
-
-	ClickAway()
-	If _Sleep(1000) Then Return
-
-	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
-	$stext = GetTranslatedFileIni("MBR Popups", "Locate_building_03", "Now you can remove mouse out of Android Emulator, Thanks!!")
-	$MsgBox = _ExtMsgBox(48, GetTranslatedFileIni("MBR Popups", "Ok", "Ok"), GetTranslatedFileIni("MBR Popups", "Locate_building_04", "Notice!"), $stext, 15)
-
-	IniWrite($g_sProfileBuildingPath, "other", "xKingAltarPos", $g_aiKingAltarPos[0])
-	IniWrite($g_sProfileBuildingPath, "other", "yKingAltarPos", $g_aiKingAltarPos[1])
-EndFunc   ;==>_LocateKingAltar
-
-Func LocateWardenAltar($bCollect = True)
-	Local $wasRunState = $g_bRunState
-	$g_bRunState = True
-	AndroidShield("LocateWardenAltar 1") ; Update shield status due to manual $g_bRunState
-	Local $Result = _LocateWardenAltar($bCollect)
-	$g_bRunState = $wasRunState
-	AndroidShield("LocateWardenAltar 2") ; Update shield status due to manual $g_bRunState
-	Return $Result
-EndFunc   ;==>LocateWardenAltar
-
-Func _LocateWardenAltar($bCollect = True)
-	Local $stext, $MsgBox, $sErrorText = "", $sInfo ; $iSilly & $iStupid removed
-
-	If Number($g_iTownHallLevel) < 11 Then
-		SetLog("Grand Warden requires TH11! Stop locating Altar", $COLOR_ERROR)
-		Return
-	EndIf
-
-	WinGetAndroidHandle()
-	checkMainScreen(False)
-	If $bCollect Then Collect(True)
-
-	SetLog("Locating Grand Warden Altar", $COLOR_INFO)
-	While 1
-		ClickAway()
-		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
-		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Warden_Altar_01", "Click OK then click on your Grand Warden Altar") & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Popups", "Locate_building_01", "Do not move mouse quickly after clicking location") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", "Make sure the building name is visible for me!") & @CRLF
-		$MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Func_Locate_Warden_Altar_02", "Locate Grand Warden Altar"), $stext, 15)
-		If $MsgBox = 1 Then
-			WinGetAndroidHandle()
-			Local $aPos = FindPos()
-		$g_aiWardenAltarPos[0] = Int($aPos[0])
-		$g_aiWardenAltarPos[1] = Int($aPos[1])
-		SetDebugLog(_ArrayToString($aPos))
-		If Not isInsideDiamond($g_aiWardenAltarPos) Then
-			$sErrorText = "Grand Warden Altar Location Not Valid! Please try again." & @CRLF
-			SetLog("Location not valid, try again", $COLOR_ERROR)
-			ContinueLoop ; Langsung ulang loop tanpa pesan aneh
-		EndIf
-			SetLog("Grand Warden Altar: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_SUCCESS)
-		Else
-			SetLog("Locate Grand Warden Altar Cancelled", $COLOR_INFO)
-			ClickAway()
-			Return
-		EndIf
-
-		;get GrandWarden info
-		$sInfo = BuildingInfo() ;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< need to work
-		If @error Then SetError(0, 0, 0)
-		Local $CountGetInfo = 0
-		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo()
-			If @error Then SetError(0, 0, 0)
-			Sleep(100)
-			$CountGetInfo += 1
-			If $CountGetInfo = 50 Then Return
-		WEnd
-		SetDebugLog($sInfo[1] & $sInfo[2])
-		If @error Then Return SetError(0, 0, 0)
-
-		If $sInfo[0] > 1 Or $sInfo[0] = "" Then
-			If @error Then Return SetError(0, 0, 0)
-
-			If StringInStr($sInfo[1], "Warden") = 0 Then
-				$sErrorText = "That is not the Grand Warden Altar, it was " & $sInfo[1] & ". Please try again!" & @CRLF
-				SetLog("Selected wrong building (" & $sInfo[1] & "), try again", $COLOR_ERROR)
-				ContinueLoop
-			EndIf
-		Else
-			SetLog(" Operator Error - Bad Grand Warden Altar Location: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_ERROR)
-			$g_aiWardenAltarPos[0] = -1
-			$g_aiWardenAltarPos[1] = -1
-			ClickAway()
-			Return False
-		EndIf
-		ExitLoop
-	WEnd
-
-	ClickAway()
-	If _Sleep(1000) Then Return
-
-	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
-	$stext = GetTranslatedFileIni("MBR Popups", "Locate_building_03", "Now you can remove mouse out of Android Emulator, Thanks!!")
-	$MsgBox = _ExtMsgBox(48, GetTranslatedFileIni("MBR Popups", "Ok", "Ok"), GetTranslatedFileIni("MBR Popups", "Locate_building_04", "Notice!"), $stext, 15)
-
-	IniWrite($g_sProfileBuildingPath, "other", "xWardenAltarPos", $g_aiWardenAltarPos[0])
-	IniWrite($g_sProfileBuildingPath, "other", "yWardenAltarPos", $g_aiWardenAltarPos[1])
-EndFunc   ;==>_LocateWardenAltar
-
-Func LocateChampionAltar($bCollect = True)
-	Local $wasRunState = $g_bRunState
-	$g_bRunState = True
-	AndroidShield("LocateChampionAltar 1") ; Update shield status due to manual $g_bRunState
-	Local $Result = _LocateChampionAltar($bCollect)
-	$g_bRunState = $wasRunState
-	AndroidShield("LocateChampionAltar 2") ; Update shield status due to manual $g_bRunState
-	Return $Result
-EndFunc   ;==>LocateChampionAltar
-
-Func _LocateChampionAltar($bCollect = True)
-	Local $stext, $MsgBox, $sErrorText = "", $sInfo ; $iSilly & $iStupid removed
-
-	If Number($g_iTownHallLevel) <= 12 Then
-		SetLog("Royal Champion requires TH13! Stop locating Altar", $COLOR_ERROR)
-		Return
-	EndIf
-
-	WinGetAndroidHandle()
-	checkMainScreen(False)
-	If $bCollect Then Collect(True)
-
-	SetLog("Locating Royal Champion Altar", $COLOR_INFO)
-	While 1
-		ClickAway()
-		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
-		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Champion_Altar_01", "Click OK then click on your Royal Champion Altar") & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Popups", "Locate_building_01", "Do not move mouse quickly after clicking location") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", "Make sure the building name is visible for me!") & @CRLF
-		$MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Func_Locate_Champion_Altar_02", "Locate Royal Champion Altar"), $stext, 15)
-		If $MsgBox = 1 Then
-			WinGetAndroidHandle()
-			Local $aPos = FindPos()
-$g_aiChampionAltarPos[0] = Int($aPos[0])
-		$g_aiChampionAltarPos[1] = Int($aPos[1])
-		SetDebugLog(_ArrayToString($aPos))
-		If Not isInsideDiamond($g_aiChampionAltarPos) Then
-			$sErrorText = "Royal Champion Altar Location Not Valid! Please try again." & @CRLF
-			SetLog("Location not valid, try again", $COLOR_ERROR)
-			ContinueLoop ; Langsung ulang loop tanpa pesan aneh
-		EndIf
-			SetLog("Royal Champion Altar: " & "(" & $g_aiChampionAltarPos[0] & "," & $g_aiChampionAltarPos[1] & ")", $COLOR_SUCCESS)
-		Else
-			SetLog("Locate Royal Champion Altar Cancelled", $COLOR_INFO)
-			ClickAway()
-			Return
-		EndIf
-
-		;get RoyalChampion info
-		$sInfo = BuildingInfo() ;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< need to work
-		If @error Then SetError(0, 0, 0)
-		Local $CountGetInfo = 0
-		While Not IsArray($sInfo)
-			$sInfo = BuildingInfo()
-			If @error Then SetError(0, 0, 0)
-			Sleep(100)
-			$CountGetInfo += 1
-			If $CountGetInfo = 50 Then Return
-		WEnd
-		SetDebugLog($sInfo[1] & $sInfo[2])
-		If @error Then Return SetError(0, 0, 0)
-
-		If $sInfo[0] > 1 Or $sInfo[0] = "" Then
-			If @error Then Return SetError(0, 0, 0)
-
-			If StringInStr($sInfo[1], "Champion") = 0 Then
-				$sErrorText = "That is not the Royal Champion Altar, it was " & $sInfo[1] & ". Please try again!" & @CRLF
-				SetLog("Selected wrong building (" & $sInfo[1] & "), try again", $COLOR_ERROR)
-				ContinueLoop
-			EndIf
-		Else
-			SetLog(" Operator Error - Bad Royal Champion Altar Location: " & "(" & $g_aiChampionAltarPos[0] & "," & $g_aiChampionAltarPos[1] & ")", $COLOR_ERROR)
-			$g_aiChampionAltarPos[0] = -1
-			$g_aiChampionAltarPos[1] = -1
-			ClickAway()
-			Return False
-		EndIf
-		ExitLoop
-	WEnd
-
-	ClickAway()
-	If _Sleep(1000) Then Return
-
-	_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
-	$stext = GetTranslatedFileIni("MBR Popups", "Locate_building_03", "Now you can remove mouse out of Android Emulator, Thanks!!")
-	$MsgBox = _ExtMsgBox(48, GetTranslatedFileIni("MBR Popups", "Ok", "Ok"), GetTranslatedFileIni("MBR Popups", "Locate_building_04", "Notice!"), $stext, 15)
-
-	IniWrite($g_sProfileBuildingPath, "other", "xChampionAltarPos", $g_aiChampionAltarPos[0])
-	IniWrite($g_sProfileBuildingPath, "other", "yChampionAltarPos", $g_aiChampionAltarPos[1])
-EndFunc   ;==>_LocateChampionAltar
-
-
-Func AutoLocateAltar($Hero = "King")
-	Local $bRet = False
-	Local $sDir = $g_sImgWeakBaseBuildingsDir & "\Altar\"
-	If QuickMis("BFI", $g_sImgWeakBaseBuildingsDir & "\Altar\" & $Hero & "*") Then
-		$bRet = True	
-		Switch $Hero 
-			Case "King"
-				$g_aiKingAltarPos[0] = $g_iQuickMISX
-				$g_aiKingAltarPos[1] = $g_iQuickMISY
-			Case "Queen"
-				$g_aiQueenAltarPos[0] = $g_iQuickMISX
-				$g_aiQueenAltarPos[1] = $g_iQuickMISY
-			Case "Warden"
-				$g_aiWardenAltarPos[0] = $g_iQuickMISX
-				$g_aiWardenAltarPos[1] = $g_iQuickMISY
-			Case "Champ"
-				$g_aiChampionAltarPos[0] = $g_iQuickMISX
-				$g_aiChampionAltarPos[1] = $g_iQuickMISY
-			Case Else
-				$bRet = False
-		EndSwitch
-	EndIf
-	If _Sleep(500) Then Return
-	Return $bRet
+Func AutoLocateHeroHall()
+	
 EndFunc

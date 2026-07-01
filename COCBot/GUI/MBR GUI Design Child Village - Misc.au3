@@ -30,7 +30,7 @@ Global $g_hChkSellPowerPot = 0, $g_hChkSellResourcePot = 0, $g_hChkSellTrainingP
 Global $g_hChkSellHeroPot = 0, $g_hChkSellResearchPot = 0, $g_hChkSellSuperPot = 0, $g_hChkSellBuilderJar = 0
 Global $g_hChkSellROG = 0, $g_hChkSellROE = 0, $g_hChkSellRODE = 0, $g_hChkSellROBG = 0, $g_hChkSellROBE = 0
 Global $g_hBtnLocateSpellfactory = 0, $g_hBtnLocateDarkSpellFactory = 0
-Global $g_hBtnLocateKingAltar = 0, $g_hBtnLocateQueenAltar = 0, $g_hBtnLocateWardenAltar = 0, $g_hBtnLocateChampionAltar = 0, $g_hBtnLocateLaboratory = 0, $g_hBtnLocatePetHouse = 0, $g_hBtnLocateBlacksmith = 0, $g_hBtnResetBuilding = 0
+Global $g_hBtnLocateHeroHall = 0, $g_hBtnLocateLaboratory = 0, $g_hBtnLocatePetHouse = 0, $g_hBtnLocateBlacksmith = 0, $g_hBtnResetBuilding = 0
 Global $g_hChkTreasuryCollect = 0, $g_hChkCollectCookie = 0, $g_hChkCollectAchievements = 0, $g_hChkCollectFreeMagicItems = 0, $g_hChkCollectRewards = 0, $g_hChkSellRewards = 0
 Global $g_hChkSellItemFromMagicBox = 0
 
@@ -289,28 +289,10 @@ Func CreateMiscNormalVillageSubTab()
 			GUICtrlSetOnEvent(-1, "btnLocateClanCastle")
 
 	$x += 38
-		$g_hBtnLocateKingAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "King", "King"), $x, $y, 36, 36, $BS_ICON)
-			_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnKingBoostLocate)
-			_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnAltarKing_Info_01", "Barbarian King Altar"))
-			GUICtrlSetOnEvent(-1, "btnLocateKingAltar")
-
-	$x += 38
-		$g_hBtnLocateQueenAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Queen", "Queen"), $x, $y, 36, 36, $BS_ICON)
-			_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnQueenBoostLocate)
-			_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnAltarQueen_Info_01", "Archer Queen Altar"))
-			GUICtrlSetOnEvent(-1, "btnLocateQueenAltar")
-
-	$x += 38
-		$g_hBtnLocateWardenAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Warden", "Warden"), $x, $y, 36, 36, $BS_ICON)
-			_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnWardenBoostLocate)
-			_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnAltarWarden_Info_01", "Grand Warden Altar"))
-			GUICtrlSetOnEvent(-1, "btnLocateWardenAltar")
-
-	$x += 38
-		$g_hBtnLocateChampionAltar = GUICtrlCreateButton(GetTranslatedFileIni("MBR Global GUI Design Names Troops", "Champion", "Champion"), $x, $y, 36, 36, $BS_ICON)
-			_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnChampionBoostLocate)
-			_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnAltarChampion_Info_01", "Royal Champion Altar"))
-			GUICtrlSetOnEvent(-1, "btnLocateChampionAltar")
+		$g_hBtnLocateHeroHall = GUICtrlCreateButton("Hero Hall", $x, $y, 36, 36, $BS_ICON)
+			_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnHeroHall)
+			_GUICtrlSetTip(-1, $sTxtRelocate & "Hero Hall")
+			GUICtrlSetOnEvent(-1, "btnLocateHeroHall")
 
 	$x += 38
 		$g_hBtnLocateLaboratory = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnLocateLaboratory", "Lab."), $x, $y, 36, 36, $BS_ICON)
@@ -329,7 +311,7 @@ Func CreateMiscNormalVillageSubTab()
 		_GUICtrlSetTip(-1, $sTxtRelocate & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnLocateBlacksmith_Info_01", "Blacksmith"))
 		GUICtrlSetOnEvent(-1, "btnBsmith")
 		
-	$x += 85
+	$x = $g_iSizeWGrpTab3 - 35
 		GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnReset", "Reset."), $x, $y, 36, 36, $BS_ICON)
 			_GUICtrlSetImage(-1, $g_sLibIconPath, $eIcnBldgX)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnReset_Info_01", "Click here to reset all building locations,") & @CRLF & _

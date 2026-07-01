@@ -42,7 +42,7 @@ Func _LocateLab($bCollect = True)
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, Default, Default, 12, Default, 600)
 		$stext = $sErrorText & @CRLF & "Click OK then click on your Laboratory building" & @CRLF & @CRLF & _
-				"Please make sure your village is completely visible." & @CRLF & @CRLF & 
+				"Please make sure your village is completely visible." & @CRLF & @CRLF & _
 				"Do not click on anything else while locating!" & @CRLF
 		$MsgBox = _ExtMsgBox(0, "Ok|Cancel", "Locate PetHouse", $stext, 15)
 		

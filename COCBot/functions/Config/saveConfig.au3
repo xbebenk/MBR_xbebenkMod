@@ -109,18 +109,10 @@ Func SaveBuildingConfig()
 	;_Ini_Add("other", "xDspellfactory", $DSFPos[0])
 	;_Ini_Add("other", "yDspellfactory", $DSFPos[1])
 
-	_Ini_Add("other", "xKingAltarPos", $g_aiKingAltarPos[0])
-	_Ini_Add("other", "yKingAltarPos", $g_aiKingAltarPos[1])
+	; <><><><> Village / Upgrade - Hero Hall <><><><>
+	_Ini_Add("other", "xHeroHallPos", $g_aiHeroHallPos[0])
+	_Ini_Add("other", "yHeroHallPos", $g_aiHeroHallPos[1])
 
-	_Ini_Add("other", "xQueenAltarPos", $g_aiQueenAltarPos[0])
-	_Ini_Add("other", "yQueenAltarPos", $g_aiQueenAltarPos[1])
-
-	_Ini_Add("other", "xWardenAltarPos", $g_aiWardenAltarPos[0])
-	_Ini_Add("other", "yWardenAltarPos", $g_aiWardenAltarPos[1])
-
-	_Ini_Add("other", "xChampionAltarPos", $g_aiChampionAltarPos[0])
-	_Ini_Add("other", "yChampionAltarPos", $g_aiChampionAltarPos[1])
-	
 	; <><><><> Village / Upgrade - Lab <><><><>
 	ApplyConfig_600_14(GetApplyConfigSaveAction())
 	_Ini_Add("upgrade", "upgradetroops", $g_bAutoLabUpgradeEnable ? 1 : 0)

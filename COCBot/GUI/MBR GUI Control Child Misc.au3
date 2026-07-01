@@ -256,100 +256,14 @@ Func btnLocateClanCastle()
 	AndroidShield("btnLocateClanCastle") ; Update shield status due to manual $g_bRunState
 EndFunc   ;==>btnLocateClanCastle
 
-;~ Func btnLocateSpellfactory()
-;~ 	Local $wasRunState = $g_bRunState
-;~ 	$g_bRunState = True
-;~ 	ZoomOut()
-;~ 	LocateSpellFactory()
-;~ 	$g_bRunState = $wasRunState
-;~ 	AndroidShield("btnLocateSpellfactory") ; Update shield status due to manual $g_bRunState
-;~ EndFunc   ;==>btnLocateSpellfactory
-
-;~ Func btnLocateDarkSpellfactory()
-;~ 	Local $wasRunState = $g_bRunState
-;~ 	$g_bRunState = True
-;~ 	ZoomOut()
-;~ 	LocateDarkSpellFactory()
-;~ 	$g_bRunState = $wasRunState
-;~ 	AndroidShield("btnLocateDarkSpellfactory") ; Update shield status due to manual $g_bRunState
-;~ EndFunc   ;==>btnLocateDarkSpellfactory
-
-Func btnLocateKingAltar()
+Func btnLocateHeroHall()
+	Local $wasRunState = $g_bRunState
 	$g_bRunState = True
 	ZoomOut()
-	If AutoLocateAltar("King") Then
-		ClickP($g_aiKingAltarPos)
-		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo()
-		If StringInStr($BuildingInfo[1], "King") Then
-			applyConfig()
-			saveConfig()
-			$g_bRunState = False
-			ClickAway()
-			SetLog("Successfully Locate Barbarian King Altar [" & _ArrayToString($g_aiKingAltarPos) & "]", $COLOR_SUCCESS)
-			Return True
-		EndIf
-	EndIf
-	LocateKingAltar()
-EndFunc   ;==>btnLocateKingAltar
-
-
-Func btnLocateQueenAltar()
-	$g_bRunState = True
-	ZoomOut()
-	If AutoLocateAltar("Queen") Then
-		ClickP($g_aiQueenAltarPos)
-		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo()
-		If StringInStr($BuildingInfo[1], "Queen") Then
-			applyConfig()
-			saveConfig()
-			$g_bRunState = False
-			ClickAway()
-			SetLog("Successfully Locate Acher Queen Altar [" & _ArrayToString($g_aiQueenAltarPos) & "]", $COLOR_SUCCESS)
-			Return True
-		EndIf
-	EndIf
-	LocateQueenAltar()
-EndFunc   ;==>btnLocateQueenAltar
-
-Func btnLocateWardenAltar()
-	$g_bRunState = True
-	ZoomOut()
-	If AutoLocateAltar("Warden") Then
-		ClickP($g_aiWardenAltarPos)
-		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo()
-		If StringInStr($BuildingInfo[1], "Warden") Then
-			applyConfig()
-			saveConfig()
-			$g_bRunState = False
-			ClickAway()
-			SetLog("Successfully Locate Grand Warden Altar [" & _ArrayToString($g_aiWardenAltarPos) & "]", $COLOR_SUCCESS)
-			Return True
-		EndIf
-	EndIf
-	LocateWardenAltar()
-EndFunc   ;==>btnLocateWardenAltar
-
-Func btnLocateChampionAltar()
-	$g_bRunState = True
-	ZoomOut()
-	If AutoLocateAltar("Champ") Then
-		ClickP($g_aiChampionAltarPos)
-		If _Sleep(800) Then Return
-		Local $BuildingInfo = BuildingInfo()
-		If StringInStr($BuildingInfo[1], "Champ") Then
-			applyConfig()
-			saveConfig()
-			$g_bRunState = False
-			ClickAway()
-			SetLog("Successfully Locate Champion Altar [" & _ArrayToString($g_aiChampionAltarPos) & "]", $COLOR_SUCCESS)
-			Return True
-		EndIf
-	EndIf
-	LocateChampionAltar()
-EndFunc   ;==>btnLocateChampionAltar
+	LocateHeroHall()
+	$g_bRunState = $wasRunState
+	AndroidShield("btnLocateHeroHall") ; Update shield status due to manual $g_bRunState
+EndFunc   ;==>btnLocateHeroHall
 
 Func btnLocateTownHall()
 	Local $wasRunState = $g_bRunState
