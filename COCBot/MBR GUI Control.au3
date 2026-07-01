@@ -598,8 +598,8 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			AutoUpgrade(True)
 		Case $g_hBtnTestUpgradeWindow
 			btnTestUpgradeWindow()
-		Case $g_hBtnTestSmartWait
-			btnTestSmartWait()
+		Case $g_hBtnCloseAndroid
+			btnCloseAndroid()
 		Case $g_hBtnConsoleWindow
 			btnConsoleWindow()
 		Case $g_hBtnTestTrainsimgloc
