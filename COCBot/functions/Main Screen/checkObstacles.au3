@@ -354,6 +354,12 @@ Func PlacedOnLeague()
 		$bRet = True
 	EndIf
 	
+	If QuickMIS("BC1", $g_sImgSurvey, 430, 80, 475, 110) Then
+		Click(275, 585, 1, 0, "No Thanks")
+		If _Sleep(2000) Then Return
+		$bRet = True
+	EndIf 
+	
 	If _ColorCheck(_GetPixelColor(430, 440, True), Hex(0x6EBC1F, 6), 20, Default, "Reward") Then ;okay button
 		Click(430, 430)
 		SetLog("You have reward received, click Okay", $COLOR_DEBUG2)

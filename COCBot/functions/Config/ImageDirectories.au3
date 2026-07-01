@@ -20,6 +20,7 @@ Global Const $g_sImgWelcomeBackReward = @ScriptDir & "\imgxml\Windows\WelcomeBac
 
 #Region Obstacles
 Global Const $g_sImgAnyoneThere = @ScriptDir & "\imgxml\other\AnyoneThere\"
+Global Const $g_sImgSurvey = @ScriptDir & "\imgxml\other\Survey\"
 Global Const $g_sImgClanRush = @ScriptDir & "\imgxml\other\ClanRush\"
 Global Const $g_sImgPersonalBreak = @ScriptDir & "\imgxml\other\Break\"
 Global Const $g_sImgAnotherDevice = @ScriptDir & "\imgxml\other\Device\"
