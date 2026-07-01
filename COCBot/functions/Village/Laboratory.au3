@@ -867,6 +867,7 @@ Func AutoLocateLab()
 		If $LabFound Then CheckLabAssistant()
 		
 	EndIf
+	SetLog("AutoLocateLaboratory, Success", $COLOR_SUCCESS)
 	Return $LabFound	
 EndFunc
 

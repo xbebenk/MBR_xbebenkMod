@@ -14,7 +14,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func LocateClanCastle($bCollect = True)
-	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
+	Local $stext, $MsgBox, $sErrorText = "", $sInfo ; $iSilly & $iStupid removed
 
 	SetLog("Locating Clan Castle", $COLOR_INFO)
 
@@ -31,35 +31,12 @@ Func LocateClanCastle($bCollect = True)
 			WinGetAndroidHandle()
 			ClickAway()
 			Local $aPos = FindPos()
-			$g_aiClanCastlePos[0] = $aPos[0]
-			$g_aiClanCastlePos[1] = $aPos[1]
+			$g_aiClanCastlePos[0] = Int($aPos[0])
+			$g_aiClanCastlePos[1] = Int($aPos[1])
 			If Not isInsideDiamond($g_aiClanCastlePos) Then
-				$iStupid += 1
-				Select
-					Case $iStupid = 1
-						$sErrorText = "Clan Castle Location Not Valid!" & @CRLF
-						SetLog("Location not valid, try again", $COLOR_ERROR)
-						ContinueLoop
-					Case $iStupid = 2
-						$sErrorText = "Please try to click inside the grass field!" & @CRLF
-						ContinueLoop
-					Case $iStupid = 3
-						$sErrorText = "This is not funny, why did you click @ (" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1] & ")?" & @CRLF & "  Please stop!" & @CRLF & @CRLF
-						ContinueLoop
-					Case $iStupid = 4
-						$sErrorText = "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
-						ContinueLoop
-					Case $iStupid > 4
-						SetLog(" Operator Error - Bad Clan Castle Location: " & "(" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1] & ")", $COLOR_ERROR)
-						ClickAway()
-						Return False
-					Case Else
-						SetLog(" Operator Error - Bad Clan Castle Location: " & "(" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1] & ")", $COLOR_ERROR)
-						$g_aiClanCastlePos[0] = -1
-						$g_aiClanCastlePos[1] = -1
-						ClickAway()
-						Return False
-				EndSelect
+				$sErrorText = "Clan Castle Location Not Valid! Please try again." & @CRLF
+				SetLog("Location not valid, try again", $COLOR_ERROR)
+				ContinueLoop ; Langsung ulang loop tanpa pesan aneh
 			EndIf
 			SetLog("Clan Castle: " & "(" & $g_aiClanCastlePos[0] & "," & $g_aiClanCastlePos[1] & ")", $COLOR_SUCCESS)
 		Else
@@ -70,29 +47,9 @@ Func LocateClanCastle($bCollect = True)
 		$sInfo = BuildingInfo() ; 860x780
 		If IsArray($sInfo) and ($sInfo[0] > 1 Or $sInfo[0] = "") Then
 			If StringInStr($sInfo[1], "clan") = 0 Then
-				Local $sLocMsg = ($sInfo[0] = "" ? "Nothing" : $sInfo[1])
-
-			    $iSilly += 1
-				Select
-					Case $iSilly = 1
-						$sErrorText = "Wait, That is not the Clan Castle?, It was a " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 2
-						$sErrorText = "Quit joking, That was " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 3
-						$sErrorText = "This is not funny, why did you click " & $sLocMsg & "? Please stop!" & @CRLF
-						ContinueLoop
-					Case $iSilly = 4
-						$sErrorText = $sLocMsg & " ?!?!?!" & @CRLF & @CRLF & "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
-						ContinueLoop
-					Case $iSilly > 4
-						SetLog("Quit joking, Click the Clan Castle, or restart bot and try again", $COLOR_ERROR)
-						$g_aiClanCastlePos[0] = -1
-						$g_aiClanCastlePos[1] = -1
-						ClickAway()
-						Return False
-				EndSelect
+				$sErrorText = "That is not the Clan Castle, it was " & $sInfo[1] & ". Please try again!" & @CRLF
+				SetLog("Selected wrong building (" & $sInfo[1] & "), try again", $COLOR_ERROR)
+				ContinueLoop
 			EndIf
 			If $sInfo[2] = "Broken" Then
 				SetLog("You did not rebuild your Clan Castle yet", $COLOR_ACTION)

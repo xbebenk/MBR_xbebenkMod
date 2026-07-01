@@ -53,6 +53,7 @@ Func autoLocatePetHouse()
 		If $g_bDebugImageSave Then SaveDebugImage("PetHouse", True)
 		Return $bRet
 	EndIf
+	SetLog("autoLocatePetHouse, Success", $COLOR_SUCCESS)
 	Return $bRet
 EndFunc
 

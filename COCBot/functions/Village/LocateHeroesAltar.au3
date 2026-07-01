@@ -24,7 +24,7 @@ EndFunc   ;==>LocateQueenAltar
 
 Func _LocateQueenAltar($bCollect = True)
 
-	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
+	Local $stext, $MsgBox, $sErrorText = "", $sInfo ; $iSilly & $iStupid removed
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
@@ -34,44 +34,19 @@ Func _LocateQueenAltar($bCollect = True)
 	While 1
 		_ExtMsgBoxSet(1 + 64, $SS_CENTER, 0x004080, 0xFFFF00, 12, "Comic Sans MS", 500)
 		$stext = $sErrorText & @CRLF & GetTranslatedFileIni("MBR Popups", "Func_Locate_Queen_Altar_01", "Click OK then click on your Queen Altar") & @CRLF & @CRLF & _
-				GetTranslatedFileIni("MBR Popups", "Locate_building_01", -1) & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", -1) & @CRLF
+				GetTranslatedFileIni("MBR Popups", "Locate_building_01", "VB_newstyle_01") & @CRLF & @CRLF & GetTranslatedFileIni("MBR Popups", "Locate_building_02", "VB_newstyle_02") & @CRLF
 		$MsgBox = _ExtMsgBox(0, GetTranslatedFileIni("MBR Popups", "Ok_Cancel", "Ok|Cancel"), GetTranslatedFileIni("MBR Popups", "Func_Locate_Queen_Altar_02", "Locate Queen Altar"), $stext, 15)
 		If $MsgBox = 1 Then
 			WinGetAndroidHandle()
 			ClickAway()
 			Local $aPos = FindPos()
-			$g_aiQueenAltarPos[0] = $aPos[0]
-			$g_aiQueenAltarPos[1] = $aPos[1]
-			SetDebugLog(_ArrayToString($aPos))
+			$g_aiQueenAltarPos[0] = Int($aPos[0])
+			$g_aiQueenAltarPos[1] = Int($aPos[1])
 			If Not isInsideDiamond($g_aiQueenAltarPos) Then
-				$iStupid += 1
-				Select
-					Case $iStupid = 1
-						$sErrorText = "Queen Altar Location Not Valid!" & @CRLF
-						SetLog("Location not valid, try again", $COLOR_ERROR)
-						ContinueLoop
-					Case $iStupid = 2
-						$sErrorText = "Please try to click inside the grass field!" & @CRLF
-						ContinueLoop
-					Case $iStupid = 3
-						$sErrorText = "This is not funny, why did you click @ (" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")?" & @CRLF & "  Please stop!" & @CRLF & @CRLF
-						ContinueLoop
-					Case $iStupid = 4
-						$sErrorText = "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
-						ContinueLoop
-					Case $iStupid > 4
-						SetLog(" Operator Error - Bad Queen Altar Location: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_ERROR)
-						ClickAway()
-						Return False
-					Case Else
-						SetLog(" Operator Error - Bad Queen Altar Location: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_ERROR)
-						$g_aiQueenAltarPos[0] = -1
-						$g_aiQueenAltarPos[1] = -1
-						ClickAway()
-						Return False
-				EndSelect
+				$sErrorText = "Queen Altar Location Not Valid! Please try again." & @CRLF
+				SetLog("Location not valid, try again", $COLOR_ERROR)
+				ContinueLoop ; Langsung ulang loop tanpa pesan aneh
 			EndIf
-			SetLog("Queen Altar: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate Queen Altar Cancelled", $COLOR_INFO)
 			ClickAway()
@@ -96,29 +71,9 @@ Func _LocateQueenAltar($bCollect = True)
 			If @error Then Return SetError(0, 0, 0)
 
 			If StringInStr($sInfo[1], "Quee") = 0 Then
-				Local $sLocMsg = ($sInfo[0] = "" ? "Nothing" : $sInfo[1])
-
-				$iSilly += 1
-				Select
-					Case $iSilly = 1
-						$sErrorText = "Wait, That is not the Queen Altar?, It was a " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 2
-						$sErrorText = "Quit joking, That was " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 3
-						$sErrorText = "This is not funny, why did you click " & $sLocMsg & "? Please stop!" & @CRLF
-						ContinueLoop
-					Case $iSilly = 4
-						$sErrorText = $sLocMsg & " ?!?!?!" & @CRLF & @CRLF & "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
-						ContinueLoop
-					Case $iSilly > 4
-						SetLog("Quit joking, Click the Queen Altar, or restart bot and try again", $COLOR_ERROR)
-						$g_aiQueenAltarPos[0] = -1
-						$g_aiQueenAltarPos[1] = -1
-						ClickAway()
-						Return False
-				EndSelect
+				$sErrorText = "That is not the Queen Altar, it was " & $sInfo[1] & ". Please try again!" & @CRLF
+				SetLog("Selected wrong building (" & $sInfo[1] & "), try again", $COLOR_ERROR)
+				ContinueLoop
 			EndIf
 		Else
 			SetLog(" Operator Error - Bad Queen Altar Location: " & "(" & $g_aiQueenAltarPos[0] & "," & $g_aiQueenAltarPos[1] & ")", $COLOR_ERROR)
@@ -153,7 +108,7 @@ EndFunc   ;==>LocateKingAltar
 
 Func _LocateKingAltar($bCollect = True)
 
-	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
+	Local $stext, $MsgBox, $sErrorText = "", $sInfo ; $iSilly & $iStupid removed
 
 	WinGetAndroidHandle()
 	checkMainScreen(False)
@@ -169,38 +124,13 @@ Func _LocateKingAltar($bCollect = True)
 		If $MsgBox = 1 Then
 			WinGetAndroidHandle()
 			Local $aPos = FindPos()
-			$g_aiKingAltarPos[0] = $aPos[0]
-			$g_aiKingAltarPos[1] = $aPos[1]
-			SetDebugLog(_ArrayToString($aPos))
+			$g_aiKingAltarPos[0] = Int($aPos[0])
+			$g_aiKingAltarPos[1] = Int($aPos[1])
 			If Not isInsideDiamond($g_aiKingAltarPos) Then
-				$iStupid += 1
-				Select
-					Case $iStupid = 1
-						$sErrorText = "King Altar Location Not Valid!" & @CRLF
-						SetLog("Location not valid, try again", $COLOR_ERROR)
-						ContinueLoop
-					Case $iStupid = 2
-						$sErrorText = "Please try to click inside the grass field!" & @CRLF
-						ContinueLoop
-					Case $iStupid = 3
-						$sErrorText = "This is not funny, why did you click @ (" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")?" & @CRLF & "  Please stop!" & @CRLF & @CRLF
-						ContinueLoop
-					Case $iStupid = 4
-						$sErrorText = "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
-						ContinueLoop
-					Case $iStupid > 4
-						SetLog(" Operator Error - Bad King Altar Location: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_ERROR)
-						ClickAway()
-						Return False
-					Case Else
-						SetLog(" Operator Error - Bad King Altar Location: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_ERROR)
-						$g_aiKingAltarPos[0] = -1
-						$g_aiKingAltarPos[1] = -1
-						ClickAway()
-						Return False
-				EndSelect
+				$sErrorText = "King Altar Location Not Valid! Please try again." & @CRLF
+				SetLog("Location not valid, try again", $COLOR_ERROR)
+				ContinueLoop ; Langsung ulang loop tanpa pesan aneh
 			EndIf
-			SetLog("King Altar: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate King Altar Cancelled", $COLOR_INFO)
 			ClickAway()
@@ -224,29 +154,9 @@ Func _LocateKingAltar($bCollect = True)
 		If $sInfo[0] > 1 Or $sInfo[0] = "" Then
 
 			If (StringInStr($sInfo[1], "Barb") = 0) And (StringInStr($sInfo[1], "King") = 0) Then
-				Local $sLocMsg = ($sInfo[0] = "" ? "Nothing" : $sInfo[1])
-
-				$iSilly += 1
-				Select
-					Case $iSilly = 1
-						$sErrorText = "Wait, That is not the King Altar?, It was a " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 2
-						$sErrorText = "Quit joking, That was " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 3
-						$sErrorText = "This is not funny, why did you click " & $sLocMsg & "? Please stop!" & @CRLF
-						ContinueLoop
-					Case $iSilly = 4
-						$sErrorText = $sLocMsg & " ?!?!?!" & @CRLF & @CRLF & "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
-						ContinueLoop
-					Case $iSilly > 4
-						SetLog("Quit joking, Click the King Altar, or restart bot and try again", $COLOR_ERROR)
-						$g_aiKingAltarPos[0] = -1
-						$g_aiKingAltarPos[1] = -1
-						ClickAway()
-						Return False
-				EndSelect
+				$sErrorText = "That is not the King Altar, it was " & $sInfo[1] & ". Please try again!" & @CRLF
+				SetLog("Selected wrong building (" & $sInfo[1] & "), try again", $COLOR_ERROR)
+				ContinueLoop
 			EndIf
 		Else
 			SetLog(" Operator Error - Bad King Altar Location: " & "(" & $g_aiKingAltarPos[0] & "," & $g_aiKingAltarPos[1] & ")", $COLOR_ERROR)
@@ -280,7 +190,7 @@ Func LocateWardenAltar($bCollect = True)
 EndFunc   ;==>LocateWardenAltar
 
 Func _LocateWardenAltar($bCollect = True)
-	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
+	Local $stext, $MsgBox, $sErrorText = "", $sInfo ; $iSilly & $iStupid removed
 
 	If Number($g_iTownHallLevel) < 11 Then
 		SetLog("Grand Warden requires TH11! Stop locating Altar", $COLOR_ERROR)
@@ -301,37 +211,14 @@ Func _LocateWardenAltar($bCollect = True)
 		If $MsgBox = 1 Then
 			WinGetAndroidHandle()
 			Local $aPos = FindPos()
-			$g_aiWardenAltarPos[0] = $aPos[0]
-			$g_aiWardenAltarPos[1] = $aPos[1]
-			SetDebugLog(_ArrayToString($aPos))
-			If Not isInsideDiamond($g_aiWardenAltarPos) Then
-				$iStupid += 1
-				Select
-					Case $iStupid = 1
-						$sErrorText = "Grand Warden Altar Location Not Valid!" & @CRLF
-						SetLog("Location not valid, try again", $COLOR_ERROR)
-						ContinueLoop
-					Case $iStupid = 2
-						$sErrorText = "Please try to click inside the grass field!" & @CRLF
-						ContinueLoop
-					Case $iStupid = 3
-						$sErrorText = "This is not funny, why did you click @ (" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")?" & @CRLF & "  Please stop!" & @CRLF & @CRLF
-						ContinueLoop
-					Case $iStupid = 4
-						$sErrorText = "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
-						ContinueLoop
-					Case $iStupid > 4
-						SetLog(" Operator Error - Bad Grand Warden Altar Location: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_ERROR)
-						ClickAway()
-						Return False
-					Case Else
-						SetLog(" Operator Error - Bad Grand Warden Altar Location: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_ERROR)
-						$g_aiWardenAltarPos[0] = -1
-						$g_aiWardenAltarPos[1] = -1
-						ClickAway()
-						Return False
-				EndSelect
-			EndIf
+		$g_aiWardenAltarPos[0] = Int($aPos[0])
+		$g_aiWardenAltarPos[1] = Int($aPos[1])
+		SetDebugLog(_ArrayToString($aPos))
+		If Not isInsideDiamond($g_aiWardenAltarPos) Then
+			$sErrorText = "Grand Warden Altar Location Not Valid! Please try again." & @CRLF
+			SetLog("Location not valid, try again", $COLOR_ERROR)
+			ContinueLoop ; Langsung ulang loop tanpa pesan aneh
+		EndIf
 			SetLog("Grand Warden Altar: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate Grand Warden Altar Cancelled", $COLOR_INFO)
@@ -357,29 +244,9 @@ Func _LocateWardenAltar($bCollect = True)
 			If @error Then Return SetError(0, 0, 0)
 
 			If StringInStr($sInfo[1], "Warden") = 0 Then
-				Local $sLocMsg = ($sInfo[0] = "" ? "Nothing" : $sInfo[1])
-
-				$iSilly += 1
-				Select
-					Case $iSilly = 1
-						$sErrorText = "Wait, That is not the Grand Warden Altar?, It was a " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 2
-						$sErrorText = "Quit joking, That was " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 3
-						$sErrorText = "This is not funny, why did you click " & $sLocMsg & "? Please stop!" & @CRLF
-						ContinueLoop
-					Case $iSilly = 4
-						$sErrorText = $sLocMsg & " ?!?!?!" & @CRLF & @CRLF & "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
-						ContinueLoop
-					Case $iSilly > 4
-						SetLog("Quit joking, Click the Grand Warden Altar, or restart bot and try again", $COLOR_ERROR)
-						$g_aiWardenAltarPos[0] = -1
-						$g_aiWardenAltarPos[1] = -1
-						ClickAway()
-						Return False
-				EndSelect
+				$sErrorText = "That is not the Grand Warden Altar, it was " & $sInfo[1] & ". Please try again!" & @CRLF
+				SetLog("Selected wrong building (" & $sInfo[1] & "), try again", $COLOR_ERROR)
+				ContinueLoop
 			EndIf
 		Else
 			SetLog(" Operator Error - Bad Grand Warden Altar Location: " & "(" & $g_aiWardenAltarPos[0] & "," & $g_aiWardenAltarPos[1] & ")", $COLOR_ERROR)
@@ -413,7 +280,7 @@ Func LocateChampionAltar($bCollect = True)
 EndFunc   ;==>LocateChampionAltar
 
 Func _LocateChampionAltar($bCollect = True)
-	Local $stext, $MsgBox, $iSilly = 0, $iStupid = 0, $sErrorText = "", $sInfo
+	Local $stext, $MsgBox, $sErrorText = "", $sInfo ; $iSilly & $iStupid removed
 
 	If Number($g_iTownHallLevel) <= 12 Then
 		SetLog("Royal Champion requires TH13! Stop locating Altar", $COLOR_ERROR)
@@ -434,37 +301,14 @@ Func _LocateChampionAltar($bCollect = True)
 		If $MsgBox = 1 Then
 			WinGetAndroidHandle()
 			Local $aPos = FindPos()
-			$g_aiChampionAltarPos[0] = $aPos[0]
-			$g_aiChampionAltarPos[1] = $aPos[1]
-			SetDebugLog(_ArrayToString($aPos))
-			If Not isInsideDiamond($g_aiChampionAltarPos) Then
-				$iStupid += 1
-				Select
-					Case $iStupid = 1
-						$sErrorText = "Royal Champion Altar Location Not Valid!" & @CRLF
-						SetLog("Location not valid, try again", $COLOR_ERROR)
-						ContinueLoop
-					Case $iStupid = 2
-						$sErrorText = "Please try to click inside the grass field!" & @CRLF
-						ContinueLoop
-					Case $iStupid = 3
-						$sErrorText = "This is not funny, why did you click @ (" & $g_aiChampionAltarPos[0] & "," & $g_aiChampionAltarPos[1] & ")?" & @CRLF & "  Please stop!" & @CRLF & @CRLF
-						ContinueLoop
-					Case $iStupid = 4
-						$sErrorText = "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
-						ContinueLoop
-					Case $iStupid > 4
-						SetLog(" Operator Error - Bad Royal Champion Altar Location: " & "(" & $g_aiChampionAltarPos[0] & "," & $g_aiChampionAltarPos[1] & ")", $COLOR_ERROR)
-						ClickAway()
-						Return False
-					Case Else
-						SetLog(" Operator Error - Bad Royal Champion Altar Location: " & "(" & $g_aiChampionAltarPos[0] & "," & $g_aiChampionAltarPos[1] & ")", $COLOR_ERROR)
-						$g_aiChampionAltarPos[0] = -1
-						$g_aiChampionAltarPos[1] = -1
-						ClickAway()
-						Return False
-				EndSelect
-			EndIf
+$g_aiChampionAltarPos[0] = Int($aPos[0])
+		$g_aiChampionAltarPos[1] = Int($aPos[1])
+		SetDebugLog(_ArrayToString($aPos))
+		If Not isInsideDiamond($g_aiChampionAltarPos) Then
+			$sErrorText = "Royal Champion Altar Location Not Valid! Please try again." & @CRLF
+			SetLog("Location not valid, try again", $COLOR_ERROR)
+			ContinueLoop ; Langsung ulang loop tanpa pesan aneh
+		EndIf
 			SetLog("Royal Champion Altar: " & "(" & $g_aiChampionAltarPos[0] & "," & $g_aiChampionAltarPos[1] & ")", $COLOR_SUCCESS)
 		Else
 			SetLog("Locate Royal Champion Altar Cancelled", $COLOR_INFO)
@@ -490,29 +334,9 @@ Func _LocateChampionAltar($bCollect = True)
 			If @error Then Return SetError(0, 0, 0)
 
 			If StringInStr($sInfo[1], "Champion") = 0 Then
-				Local $sLocMsg = ($sInfo[0] = "" ? "Nothing" : $sInfo[1])
-
-				$iSilly += 1
-				Select
-					Case $iSilly = 1
-						$sErrorText = "Wait, That is not the Royal Champion Altar?, It was a " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 2
-						$sErrorText = "Quit joking, That was " & $sLocMsg & @CRLF
-						ContinueLoop
-					Case $iSilly = 3
-						$sErrorText = "This is not funny, why did you click " & $sLocMsg & "? Please stop!" & @CRLF
-						ContinueLoop
-					Case $iSilly = 4
-						$sErrorText = $sLocMsg & " ?!?!?!" & @CRLF & @CRLF & "Last Chance, DO NOT MAKE ME ANGRY, or" & @CRLF & "I will give ALL of your gold to Barbarian King," & @CRLF & "And ALL of your Gems to the Archer Queen!" & @CRLF
-						ContinueLoop
-					Case $iSilly > 4
-						SetLog("Quit joking, Click the Royal Champion Altar, or restart bot and try again", $COLOR_ERROR)
-						$g_aiChampionAltarPos[0] = -1
-						$g_aiChampionAltarPos[1] = -1
-						ClickAway()
-						Return False
-				EndSelect
+				$sErrorText = "That is not the Royal Champion Altar, it was " & $sInfo[1] & ". Please try again!" & @CRLF
+				SetLog("Selected wrong building (" & $sInfo[1] & "), try again", $COLOR_ERROR)
+				ContinueLoop
 			EndIf
 		Else
 			SetLog(" Operator Error - Bad Royal Champion Altar Location: " & "(" & $g_aiChampionAltarPos[0] & "," & $g_aiChampionAltarPos[1] & ")", $COLOR_ERROR)
