@@ -215,11 +215,11 @@ Func PetHouse($test = False)
 					If _Sleep(1000) Then Return
 					SetLog("Started upgrade for: " & $aPet[$i][1], $COLOR_SUCCESS)
 					Local $sPetTimeOCR = getRemainTPetHouse(240, 244)
-					Local $iPetFinishTime = ConvertOCRTime("PetHouse", $sPetTimeOCR, True, "Day")
+					Local $iPetFinishTime = ConvertOCRTime("PetHouse", $sPetTimeOCR, False, "Day")
 					SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
 					If $iPetFinishTime > 0 Then
 						$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())
-						SetLog("Pet House will finish in " & $iPetFinishTime & " minutes (" & $g_sPetUpgradeTime & ")", $COLOR_SUCCESS)
+						SetLog("Pet House will finish in " & $iPetFinishTime & " Day (" & $g_sPetUpgradeTime & ")", $COLOR_SUCCESS)
 					EndIf
 				Else
 					ClickAway() ; close pet upgrade window

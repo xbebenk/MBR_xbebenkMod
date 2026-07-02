@@ -509,7 +509,7 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 				SetLog("Verify Wall Level " & $iWallLevel & ", click wall on " & $x & "," & $y, $COLOR_DEBUG)
 				Click($x, $y)
 				If _Sleep(1000) Then Return
-				$aWallLevel = BuildingInfo(242, 477)
+				$aWallLevel = BuildingInfo()
 				If $aWallLevel[1] = "Wall" And $aWallLevel[2] < $iWallLevelToDelete Then
 					$bWallFound = True
 					ExitLoop

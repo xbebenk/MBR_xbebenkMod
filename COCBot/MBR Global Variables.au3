@@ -1302,10 +1302,8 @@ Global $g_bMainWindowOk = False ; Updated in IsMainPage() when main page found o
 Global $g_aiCurrentLoot[$eLootCount] = [0, 0, 0, 0] ; current stats
 Global $g_iTownHallLevel = 0 ; Level of user townhall (Level 1 = 1)
 Global $g_aiTownHallPos[2] = [458, 330] ; Default Position of TownHall placed from training
-Global $g_aiKingAltarPos[2] = [-1, -1] ; position Kings Altar
-Global $g_aiQueenAltarPos[2] = [-1, -1] ; position Queens Altar
-Global $g_aiWardenAltarPos[2] = [-1, -1] ; position Grand Warden Altar
-Global $g_aiChampionAltarPos[2] = [-1, -1] ; position Royal Champion Altar
+Global $g_aiHeroHallPos[2] = [-1, -1] ; Position of Hero Hall
+Global $g_iHeroHallLevel = 0 ; Level of Hero Hall
 Global $g_aiLaboratoryPos[2] = [-1, -1] ; Position of laboratory
 Global $g_aiClanCastlePos[2] = [391, 411] ; Default Position of clan castle placed before Rebuild
 Global $g_iDetectedImageType = 0 ; Image theme; 0 = normal, 1 = snow
@@ -1789,7 +1787,7 @@ Global $g_bChkSellBOF = False, $g_bChkSellBOB = False, $g_bChkSellBOS = False, $
 Global $g_bChkSellPowerPot = False, $g_bChkSellResourcePot = False, $g_bChkSellTrainingPot = False, $g_bChkSellBuilderPot = False, $g_bChkSellCTPot = False, $g_bChkSellHeroPot = False, $g_bChkSellResearchPot = False
 Global $g_bChkSellSuperPot = False, $g_bChkSellBuilderJar = False, $g_bChkSellROG = False, $g_bChkSellROE = False, $g_bChkSellRODE = False, $g_bChkSellROBG = False, $g_bChkSellROBE = False
 Global $g_aSellMagicItem[21] = [$g_bChkSellBOF, $g_bChkSellBOB, $g_bChkSellBOS, $g_bChkSellBOH, $g_bChkSellBOE, $g_bChkSellShovel, $g_bChkSellWallRing, $g_bChkSellPowerPot, $g_bChkSellResourcePot, $g_bChkSellTrainingPot, $g_bChkSellBuilderPot, $g_bChkSellCTPot, $g_bChkSellHeroPot, $g_bChkSellResearchPot, $g_bChkSellSuperPot, $g_bChkSellBuilderJar, $g_bChkSellROG, $g_bChkSellROE, $g_bChkSellRODE, $g_bChkSellROBG, $g_bChkSellROBE]
-Global $g_bChkEnableTradeMedal = False
+Global $g_bChkEnableTradeMedal = False, $g_iMinTradeMedal = 1000
 Global $g_bChkTradeShiny = False, $g_bChkTradeGlowy = False, $g_bChkTradeStarry = false, $g_bChkTradeBuilderGold = False, $g_bChkTradeBuilderElix = False, $g_bChkTradeClockTowerPot = False, $g_bChkTradeResearchPot = False
 
 Global $g_aMagicItemName[21] = ["BookOfFighting", "BookOfBuilding", "BookOfSpell", "BookOfHero", "BookOfEverything", "Shovel", "WallRing", "PowerPot", "ResourcePot", "TrainingPot", "BuilderPot", "ClockTowerPot", "HeroPot", "ResearchPot", "SuperPot", "BuilderJar", "RuneOfGold", "RuneOfElixir", "RuneOfDarkElixir", "RuneOfBuilderGold", "RuneOfBuilderElixir"]
@@ -1965,7 +1963,7 @@ Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEn
 Global $aCCBuildingIgnore[13] = ["Ruined", "Big Barbarian", "Pyre", "Boulder", "Bonfire", "Grove", "Tree", "Forest", "Campsite", "Stone", "Pillar", "The First", "Tombs"]
 Global $g_bChkStartWeekendRaid = True
 
-Global $g_bEnableDailyRunRoutine = False, $iDailyDate = @YDAY
+Global $g_bChkEnableDailyRunRoutine = True, $iDailyDate = @YDAY
 ;[FunctionName, Allowed time to run a day? 0 = always run; 1 = daily; 2 twice a day;]
 Global $g_aiDailyFunction[14][2] = [["DailyChallenge", 2], _
 									["CollectAchievements", 2], _
@@ -1977,7 +1975,7 @@ Global $g_aiDailyFunction[14][2] = [["DailyChallenge", 2], _
 									["CleanYard", 2], _
 									["CollectLootCart", 1], _
 									["TreasuryCollect", 1], _
-									["BuilderBase", 6], _
+									["BuilderBase", 5], _
 									["BlackSmith", 1], _
 									["CollectCookie", 2], _
 									["PetHouse", 1]]
@@ -1999,7 +1997,7 @@ Global $g_aDailyAccount[16][Ubound($g_aiDailyFunction)] = [[0,0,0,0,0,0,0,0,0,0,
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[51][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
+Global $g_aVillageRefSize[57][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
 									["DM", "Classic Meteor", 592.24, 87, 792, 52, 589], _ ;ok
 									["CS", "Classic Skeleton", 567, 82, 766, 53, 575], _ ;ok
 									["JS", "Jungle", 617, 41, 806, 37, 616], _ ;ok
@@ -2020,13 +2018,13 @@ Global $g_aVillageRefSize[51][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589],
 									["PR", "Primal", 580.41, 74, 803, 64, 613], _ ;ok
 									["SH", "Shadow", 598.40, 81, 790, 61, 592], _ ;ok
 									["RY", "Royal", 610.20, 57, 799, 48, 603], _ ;ok
-									["SM", "Summer", 568, 85, 813, 56, 604], _ ;ok
+									["SM", "Summer", 576.93, 82, 788, 52, 580], _ ;ok
 									["CA", "Clash A-Rama", 619, 59, 785, 57, 598], _ ;ok
 									["PS", "Pixel", 617, 56, 796, 61, 618], _ ;ok
 									["DE", "Dragon Escape", 681.68, 40, 768, 81, 627], _ ;ok
 									["10", "10th Clasivery", 561, 92, 791, 47, 570], _ ;ok
-									["CF", "Clash Fest", 517.81, 119, 771, 112, 602], _ ;ok
-									["SP", "Spooky", 679.13, 65, 796, 53, 604], _ ;ok
+									["CF", "Clash Fest", 575.08, 68, 808, 48, 598], _ ;ok
+									["SP", "Spooky", 574.60, 78, 781, 58, 582], _ ;ok
 									["W1", "Scenery1", 553.3, 61, 813, 55, 619], _ ;ok
 									["W2", "Scenery2", 619.29, 61, 796, 64, 607], _ ;ok
 									["W3", "Scenery3", 585.42, 63, 765, 49, 578], _ ;ok
@@ -2049,5 +2047,11 @@ Global $g_aVillageRefSize[51][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589],
 									["GC", "Goblin Cave", 590.33, 57, 786, 41, 577], _
 									["WW", "Wild West", 607.48, 51, 799, 41, 603], _
 									["WL", "Waste Land", 581.80, 72, 791, 55, 595], _
+									["FH", "Year Of Fire Horse", 624.88, 61, 792, 49, 596], _
+									["CO", "Cosmic", 616.84, 61, 785, 65, 610], _
+									["AF", "Anime Fury", 634.20, 75, 805, 56, 602], _
+									["CV", "13th-Clash-A-Versary", 596.00, 59, 795, 43, 596], _
+									["HS", "High Seas", 607.15, 66, 796, 55, 595], _
+									["CR", "Cross Over", 626.88, 65, 790, 55, 595], _
 									["EG", "Egypt", 580.20, 96, 765, 104, 603]]
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"

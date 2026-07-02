@@ -243,7 +243,7 @@ Func LocateStarLab()
 		ClickP($g_aiStarLaboratoryPos)
 		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for description to popup
 
-		Local $aResult = BuildingInfo(242, 477) ; Get building name and level with OCR
+		Local $aResult = BuildingInfo() ; Get building name and level with OCR
 		If $aResult[0] = 2 Then ; We found a valid building name
 			If StringInStr($aResult[1], "Lab") = True Then ; we found the Star Laboratory
 				SetLog("Star Laboratory located.", $COLOR_INFO)
@@ -265,7 +265,7 @@ Func LocateStarLab()
 		$g_aiStarLaboratoryPos[0] = $g_iQuickMISX + 10
 		$g_aiStarLaboratoryPos[1] = $g_iQuickMISY + 20
 		If _Sleep(1000) Then Return
-		Local $aResult = BuildingInfo(242, 477) ; Get building name and level with OCR
+		Local $aResult = BuildingInfo() ; Get building name and level with OCR
 		If $aResult[0] = 2 Then ; We found a valid building name
 			If StringInStr($aResult[1], "Lab") Then ; we found the Star Laboratory
 				SetLog("Star Laboratory located.", $COLOR_INFO)

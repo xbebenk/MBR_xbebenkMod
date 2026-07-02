@@ -81,7 +81,7 @@ EndFunc   ;==>CollectFreeMagicItems
 
 Func TradeMedal()
 	If Not $g_bChkEnableTradeMedal Then Return
-	If $g_iLootCCMedal > 1000 Then 
+	If $g_iLootCCMedal > $g_iMinTradeMedal Then 
 		For $i = 1 To 8
 			If Not $g_bRunState Then Return
 			SetLog("Waiting for Raid Medal Tab #" & $i, $COLOR_ACTION)
@@ -403,7 +403,7 @@ Func OpenMagicItemWindow()
 	If _Sleep(500) Then Return
 	
 	If Not $g_bRunState Then Return
-	Local $BuildingInfo = BuildingInfo(242, 477)
+	Local $BuildingInfo = BuildingInfo()
 	If $BuildingInfo[1] = "Town Hall" Then
 		SetLog("Opening Magic Item Window", $COLOR_ACTION)
 		If ClickB("MagicItem") Then

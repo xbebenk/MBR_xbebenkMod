@@ -18,13 +18,13 @@ Func BoostKing()
 	If AllowBoosting("Barbarian King", $g_iCmbBoostBarbarianKing) = False Then Return
 
 	SetLog("Boost Barbarian King...", $COLOR_INFO)
-	If $g_aiKingAltarPos[0] = "" Or $g_aiKingAltarPos[0] = -1 Then
-		LocateKingAltar()
+	If $g_aiHeroHallPos[0] = "" Or $g_aiHeroHallPos[0] = -1 Then
+		LocateHeroHall()
 		SaveConfig()
 		If _Sleep($DELAYBOOSTHEROES4) Then Return
 	EndIf
 
-	If BoostStructure("Barbarian King", "King", $g_aiKingAltarPos, $g_iCmbBoostBarbarianKing, $g_hCmbBoostBarbarianKing) Then $g_aiHeroBoost[$eHeroBarbarianKing] = _NowCalc()
+	If BoostStructure("Barbarian King", "King", $g_aiHeroHallPos, $g_iCmbBoostBarbarianKing, $g_hCmbBoostBarbarianKing) Then $g_aiHeroBoost[$eHeroBarbarianKing] = _NowCalc()
 	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
@@ -37,13 +37,13 @@ Func BoostQueen()
 	If AllowBoosting("Archer Queen", $g_iCmbBoostArcherQueen) = False Then Return
 
 	SetLog("Boost Archer Queen...", $COLOR_INFO)
-	If $g_aiQueenAltarPos[0] = "" Or $g_aiQueenAltarPos[0] = -1 Then
-		LocateQueenAltar()
+	If $g_aiHeroHallPos[0] = "" Or $g_aiHeroHallPos[0] = -1 Then
+		LocateHeroHall()
 		SaveConfig()
 		If _Sleep($DELAYBOOSTHEROES4) Then Return
 	EndIf
 
-	If BoostStructure("Archer Queen", "Queen", $g_aiQueenAltarPos, $g_iCmbBoostArcherQueen, $g_hCmbBoostArcherQueen) Then $g_aiHeroBoost[$eHeroArcherQueen] = _NowCalc()
+	If BoostStructure("Archer Queen", "Queen", $g_aiHeroHallPos, $g_iCmbBoostArcherQueen, $g_hCmbBoostArcherQueen) Then $g_aiHeroBoost[$eHeroArcherQueen] = _NowCalc()
 	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
@@ -55,13 +55,13 @@ Func BoostWarden()
 	If AllowBoosting("Grand Warden", $g_iCmbBoostWarden) = False Then Return
 
 	SetLog("Boost Grand Warden...", $COLOR_INFO)
-	If $g_aiWardenAltarPos[0] = "" Or $g_aiWardenAltarPos[0] = -1 Then
-		LocateWardenAltar()
+	If $g_aiHeroHallPos[0] = "" Or $g_aiHeroHallPos[0] = -1 Then
+		LocateHeroHall()
 		SaveConfig()
 		If _Sleep($DELAYBOOSTHEROES4) Then Return
 	EndIf
 
-	If BoostStructure("Grand Warden", "Warden", $g_aiWardenAltarPos, $g_iCmbBoostWarden, $g_hCmbBoostWarden) Then $g_aiHeroBoost[$eHeroGrandWarden] = _NowCalc()
+	If BoostStructure("Grand Warden", "Warden", $g_aiHeroHallPos, $g_iCmbBoostWarden, $g_hCmbBoostWarden) Then $g_aiHeroBoost[$eHeroGrandWarden] = _NowCalc()
 	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return
@@ -73,13 +73,13 @@ Func BoostChampion()
 	If AllowBoosting("Royal Champion", $g_iCmbBoostChampion) = False Then Return
 
 	SetLog("Boost Royal Champion...", $COLOR_INFO)
-	If $g_aiChampionAltarPos[0] = "" Or $g_aiChampionAltarPos[0] = -1 Then
-		LocateChampionAltar()
+	If $g_aiHeroHallPos[0] = "" Or $g_aiHeroHallPos[0] = -1 Then
+		LocateHeroHall()
 		SaveConfig()
 		If _Sleep($DELAYBOOSTHEROES4) Then Return
 	EndIf
 
-	If BoostStructure("Royal Champion", "Champion", $g_aiChampionAltarPos, $g_iCmbBoostChampion, $g_hCmbBoostChampion) Then $g_aiHeroBoost[$eHeroRoyalChampion] = _NowCalc()
+	If BoostStructure("Royal Champion", "Champion", $g_aiHeroHallPos, $g_iCmbBoostChampion, $g_hCmbBoostChampion) Then $g_aiHeroBoost[$eHeroRoyalChampion] = _NowCalc()
 	$g_aiTimeTrain[2] = 0 ; reset Heroes remaining time
 
 	If _Sleep($DELAYBOOSTBARRACKS3) Then Return

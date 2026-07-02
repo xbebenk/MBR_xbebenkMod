@@ -109,18 +109,10 @@ Func SaveBuildingConfig()
 	;_Ini_Add("other", "xDspellfactory", $DSFPos[0])
 	;_Ini_Add("other", "yDspellfactory", $DSFPos[1])
 
-	_Ini_Add("other", "xKingAltarPos", $g_aiKingAltarPos[0])
-	_Ini_Add("other", "yKingAltarPos", $g_aiKingAltarPos[1])
+	; <><><><> Village / Upgrade - Hero Hall <><><><>
+	_Ini_Add("other", "xHeroHallPos", $g_aiHeroHallPos[0])
+	_Ini_Add("other", "yHeroHallPos", $g_aiHeroHallPos[1])
 
-	_Ini_Add("other", "xQueenAltarPos", $g_aiQueenAltarPos[0])
-	_Ini_Add("other", "yQueenAltarPos", $g_aiQueenAltarPos[1])
-
-	_Ini_Add("other", "xWardenAltarPos", $g_aiWardenAltarPos[0])
-	_Ini_Add("other", "yWardenAltarPos", $g_aiWardenAltarPos[1])
-
-	_Ini_Add("other", "xChampionAltarPos", $g_aiChampionAltarPos[0])
-	_Ini_Add("other", "yChampionAltarPos", $g_aiChampionAltarPos[1])
-	
 	; <><><><> Village / Upgrade - Lab <><><><>
 	ApplyConfig_600_14(GetApplyConfigSaveAction())
 	_Ini_Add("upgrade", "upgradetroops", $g_bAutoLabUpgradeEnable ? 1 : 0)
@@ -398,6 +390,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("MagicItems", "ChkSellROBE", $g_bChkSellROBE ? 1 : 0)
 	
 	_Ini_Add("MagicItems", "ChkEnableTradeMedal", $g_bChkEnableTradeMedal ? 1 : 0)
+	_Ini_Add("MagicItems", "MinTradeMedal", $g_iMinTradeMedal)
 	_Ini_Add("MagicItems", "ChkTradeShiny", $g_bChkTradeShiny ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkTradeGlowy", $g_bChkTradeGlowy ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkTradeStarry", $g_bChkTradeStarry ? 1 : 0)
@@ -405,6 +398,12 @@ Func SaveConfig_600_6()
 	_Ini_Add("MagicItems", "ChkTradeBuilderElix", $g_bChkTradeBuilderElix ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkTradeClockTowerPot", $g_bChkTradeClockTowerPot ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkTradeResearchPot", $g_bChkTradeResearchPot ? 1 : 0)
+	
+	; Daily Run Routine Settings
+	_Ini_Add("DailyRunRoutine", "ChkEnableDailyRunRoutine", $g_bChkEnableDailyRunRoutine ? 1 : 0)
+	For $i = 0 To UBound($g_aiDailyFunction) -1
+		_Ini_Add("DailyRunRoutine", "DailyRunFunc_" & $i, $g_aiDailyFunction[$i][1])
+	Next
 
 	_Ini_Add("other", "ChkCollectBuildersBase", $g_bChkCollectBuilderBase ? 1 : 0)
 	_Ini_Add("other", "ChkCleanBBYard", $g_bChkCleanBBYard ? 1 : 0)
@@ -964,20 +963,6 @@ Func SaveConfig_600_29_DB()
 	_Ini_Add("attack", "DBWardenAtk", BitAND($g_aiAttackUseHeroes[$DB], $eHeroWarden))
 	_Ini_Add("attack", "DBChampionAtk", BitAND($g_aiAttackUseHeroes[$DB], $eHeroChampion))
 	_Ini_Add("attack", "DBDropCC", $g_abAttackDropCC[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBLightSpell", $g_abAttackUseLightSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBHealSpell", $g_abAttackUseHealSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBRageSpell", $g_abAttackUseRageSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBJumpSpell", $g_abAttackUseJumpSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBFreezeSpell", $g_abAttackUseFreezeSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBPoisonSpell", $g_abAttackUsePoisonSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBEarthquakeSpell", $g_abAttackUseEarthquakeSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBHasteSpell", $g_abAttackUseHasteSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBCloneSpell", $g_abAttackUseCloneSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBInvisibilitySpell", $g_abAttackUseInvisibilitySpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBRecallSpell", $g_abAttackUseRecallSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBSkeletonSpell", $g_abAttackUseSkeletonSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBBatSpell", $g_abAttackUseBatSpell[$DB] ? 1 : 0)
-
 	_Ini_Add("attack", "DBAtkUseWardenMode", $g_aiAttackUseWardenMode[$DB])
 	_Ini_Add("attack", "DBAtkUseSiege", $g_aiAttackUseSiege[$DB])
 	_Ini_Add("attack", "DBDropEmptySiege", $g_bDropEmptySiege[$DB] ? 1 : 0)
