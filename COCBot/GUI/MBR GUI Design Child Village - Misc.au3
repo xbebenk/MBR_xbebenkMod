@@ -23,6 +23,7 @@ Global $g_hChkCollectStarBonus = 0
 Global $g_hTxtRestartGold = 0, $g_hTxtRestartElixir = 0, $g_hTxtRestartDark = 0
 Global $g_hChkCollect = 0, $g_hChkCollectLootCart = 0, $g_hChkTombstones = 0, $g_hChkCleanYard = 0, $g_hChkGemsBox = 0
 Global $g_hGUI_SellMagicItems, $g_hBtnSellPot = 0, $g_hChkEnableSellMagicItem = 0
+Global $g_hGUI_DailyRunRoutine, $g_hBtnDailyRunRoutine = 0, $g_hChkEnableDailyRunRoutine = 0
 Global $g_hChkSellBOF = 0, $g_hChkSellBOB = 0, $g_hChkSellBOS = 0, $g_hChkSellBOH = 0, $g_hChkSellBOE = 0, $g_hChkSellShovel = 0, $g_hChkSellWallRing = 0
 Global $g_hChkEnableTradeMedal = 0, $g_hTxtMinTradeMedal = 0
 Global $g_hChkTradeStarry = 0, $g_hChkTradeShiny = 0, $g_hChkTradeGlowy = 0, $g_hChkTradeBuilderGold = 0, $g_hChkTradeBuilderElix = 0, $g_hChkTradeClockTowerPot = 0, $g_hChkTradeResearchPot = 0
@@ -33,6 +34,9 @@ Global $g_hBtnLocateSpellfactory = 0, $g_hBtnLocateDarkSpellFactory = 0
 Global $g_hBtnLocateHeroHall = 0, $g_hBtnLocateLaboratory = 0, $g_hBtnLocatePetHouse = 0, $g_hBtnLocateBlacksmith = 0, $g_hBtnResetBuilding = 0
 Global $g_hChkTreasuryCollect = 0, $g_hChkCollectCookie = 0, $g_hChkCollectAchievements = 0, $g_hChkCollectFreeMagicItems = 0, $g_hChkCollectRewards = 0, $g_hChkSellRewards = 0
 Global $g_hChkSellItemFromMagicBox = 0
+
+; Daily Run Routine GUI controls
+Global $g_hDailyRunRoutineLabels[14], $g_hBtnDailyRunRoutineClose = 0, $g_hCmbDailyRunRoutine[UBound($g_aiDailyFunction)]
 
 ;ClanGames Challenges
 Global $g_hChkClanGamesEnabled = 0 , $g_hChkClanGames3H = 0, $g_hChkClanGamesDebug = 0
@@ -80,7 +84,8 @@ Func CreateVillageMisc()
 	CreateClanGamesSettings()
 	SetDebugLog("==> CreateSellMagicSetting()")
 	CreateSellMagicSetting()
-
+	SetDebugLog("==> CreateDailyRunRoutineSetting()")
+	CreateDailyRunRoutineSetting()
 EndFunc   ;==>CreateVillageMisc
 
 Func CreateMiscNormalVillageSubTab()
@@ -263,11 +268,14 @@ Func CreateMiscNormalVillageSubTab()
 		
 		$g_hBtnSellPot = GUICtrlCreateButton("Sell Magic Items", $x - 2 + 265, $y, -1, 20)
 		GUICtrlSetOnEvent(-1, "btnOpenSellPotion")
-	
+			
 	$y += 22
 		$g_hChkSellItemFromMagicBox = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkSellItemFromMagicBox", "Sell Item From MagicBox"), $x + 100, $y - 6, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkCollectAchievements_Info", _ 
 			"Check this to automatically sell magic item on magicbox, like books or hammer that come from chest and inventory is full"))
+	
+		$g_hBtnDailyRunRoutine = GUICtrlCreateButton("Daily Run Routine", $x - 2 + 265, $y, -1, 20)
+		GUICtrlSetOnEvent(-1, "btnOpenDailyRunRoutine")
 	
 		
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
@@ -453,15 +461,49 @@ Func CreateSellMagicSetting()
 		$g_hChkTradeClockTowerPot = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeClockTowerPot", "Clock Tower Potion"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeClockTowerPot_Info", "Enable option to Trade Medal with Clock Tower Potion"))
 		
-		$x = 300
-		$y = 310
+$x = 300
+	$y = 310
 		$g_hChkTradeResearchPot = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeResearchPot", "Research Potion"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkTradeResearchPot_Info", "Enable option to Trade Medal with Clock Tower Potion"))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	$g_hBtnCGSettingsClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_SellPotion", "Close"), $_GUI_MAIN_WIDTH - 125, $_GUI_MAIN_HEIGHT - 310, 85, 25)
-			GUICtrlSetOnEvent(-1, "btnCloseSellPotion")
+		GUICtrlSetOnEvent(-1, "btnCloseSellPotion")
 EndFunc
+
+; Daily Run Routine Settings
+Func CreateDailyRunRoutineSetting()
+	$g_hGUI_DailyRunRoutine = _GUICreate(GetTranslatedFileIni("GUI Design Child Village - Misc", "GUI_DailyRunRoutine", "Daily Run Routine Settings"), $_GUI_MAIN_WIDTH - 20, $_GUI_MAIN_HEIGHT - 240, $g_iFrmBotPosX, $g_iFrmBotPosY + 60, $WS_DLGFRAME, -1, $g_hFrmBot)
+	; GUI
+	Local $x = 15, $y = 10
+	
+	$g_hChkEnableDailyRunRoutine = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "EnableDailyRunRoutine", "Enable Daily Run Routine"), $x, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "DailyRunRoutine_Info", "Enable option to limit daily runs of routines"))
+		GUICtrlSetOnEvent(-1, "chkEnableDailyRunRoutine")
+	
+	$y = 55
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_DailyRunRoutine", "Daily Run Routine Settings"), $x - 10, $y - 20, $g_iSizeWGrpTab3, 200)
+	
+	Local $sText = "1|2|3|4|5"
+	For $i = 0 To Ubound($g_aiDailyFunction) - 1
+		GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "DailyRunFunc_" & $i, $g_aiDailyFunction[$i][0]), $x, $y, 130, 20)
+		$g_hCmbDailyRunRoutine[$i] = GUICtrlCreateCombo("", $x + 120, $y - 2, 30, 20, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		GUICtrlSetData(-1, "1|2|3|4|5", $g_aiDailyFunction[$i][1])
+		GUICtrlSetTip(-1, "Set how many times per day this routine can run")
+		$y += 23
+		If $i = 6 Then 
+			$x += 200
+			$y = 55
+		EndIf
+	Next
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	$x = 15
+	$y = 260
+	
+	$g_hBtnDailyRunRoutineClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_SellPotion", "Close"), $_GUI_MAIN_WIDTH - 125, $_GUI_MAIN_HEIGHT - 310, 85, 25)
+		GUICtrlSetOnEvent(-1, "btnCloseDailyRunRoutine")
+EndFunc
+
 
 ; Clan Games v3
 Func CreateMiscClanGamesV3SubTab()
@@ -819,10 +861,6 @@ Func CreateClanCapitalTab()
 	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_ClanCapital_AutoUpgradeCC", "Auto Upgrade Clan Capital"), $x - 10, $y - 15, $g_iSizeWGrpTab3 - 3, 65)
 		$g_hChkEnableAutoUpgradeCC = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableAutoUpgradeCC", "Enable"), $x, $y, -1, -1)
 	$x += 100	
-		$g_hChkAutoUpgradeCCWallIgnore = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkAutoUpgradeCCWallIgnore", "Ignore Wall Upgrade"), $x, $y, -1, -1)
-		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Info_ChkAutoUpgradeCCWallIgnore", "Enable Ignore Upgrade for Wall"))
-	$x += 125	
-	$g_hChkEnableMinGoldAUCC = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableMinGoldAUCC", "Only If Capital Gold > "), $x, $y)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Info_ChkEnableMinGoldAUCC", "Do Upgrade only if Capital Gold > than specified"))
 	$g_hTxtMinCCGoldToUpgrade = GUICtrlCreateInput($g_iMinCCGoldToUpgrade, $x + 135, $y + 3, 45, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "MinCCGoldToUpgrade", "Set Minimum CC Gold to do AutoUpgrade"))

@@ -430,7 +430,13 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkTradeBuilderElix, $g_sProfileConfigPath, "MagicItems", "ChkTradeBuilderElix", False, "Bool")
 	IniReadS($g_bChkTradeClockTowerPot, $g_sProfileConfigPath, "MagicItems", "ChkTradeClockTowerPot", False, "Bool")
 	IniReadS($g_bChkTradeResearchPot, $g_sProfileConfigPath, "MagicItems", "ChkTradeResearchPot", False, "Bool")
-
+	
+	; Daily Run Routine Settings
+	IniReadS($g_bChkEnableDailyRunRoutine, $g_sProfileConfigPath, "DailyRunRoutine", "ChkEnableDailyRunRoutine", False, "Bool")
+	For $i = 0 TO UBound($g_aiDailyFunction) - 1
+		IniReadS($g_aiDailyFunction[$i][1], $g_sProfileConfigPath, "DailyRunRoutine", "DailyRunFunc_" & $i, $g_aiDailyFunction[$i][1], "int")
+	Next
+	
 	IniReadS($g_bChkCollectBuilderBase, $g_sProfileConfigPath, "other", "ChkCollectBuildersBase", False, "Bool")
 	IniReadS($g_bChkCleanBBYard, $g_sProfileConfigPath, "other", "ChkCleanBBYard", False, "Bool")
 	IniReadS($g_bChkStartClockTowerBoost, $g_sProfileConfigPath, "other", "ChkStartClockTowerBoost", False, "Bool")
@@ -445,7 +451,6 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkClanGames3H, $g_sProfileConfigPath, "other", "ChkClanGames60", False, "Bool")
 	IniReadS($g_bChkClanGamesDebug, $g_sProfileConfigPath, "other", "ChkClanGamesDebug", False, "Bool")
 	IniReadS($g_bCollectCGReward, $g_sProfileConfigPath, "other", "CollectCGReward", False, "Bool")
-
 	IniReadS($g_bChkClanGamesLoot, $g_sProfileConfigPath, "other", "ChkClanGamesLoot", False, "Bool")
 	IniReadS($g_bChkClanGamesBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBattle", False, "Bool")
 	IniReadS($g_bChkClanGamesDes, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")

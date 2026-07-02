@@ -867,7 +867,7 @@ EndFunc
 Func __RunFunction($action)
 	If Not $g_bRunState Then Return
 	Local $iNowDay = @YDAY ; record numeric value for today
-	If $g_bEnableDailyRunRoutine Then
+	If $g_bChkEnableDailyRunRoutine Then
 		If $iDailyDate <> $iNowDay Then ; if 1 day has passed since last time
 			$iDailyDate = @YDAY
 			ResetDailyRoutineCount()

@@ -870,3 +870,48 @@ Func chkTournament()
 		GUICtrlSetState($g_hCmbUseSavedArmy, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkTournament
+
+
+Func chkEnableDailyRunRoutine()
+	If GUICtrlRead($g_hChkEnableDailyRunRoutine) = $GUI_CHECKED Then
+		$g_bChkEnableDailyRunRoutine = True
+		Local $i = 0
+		While $i < UBound($g_aiDailyFunction)
+			If IsDeclared("g_hCmbDailyRunRoutine") And IsArray($g_hCmbDailyRunRoutine) Then
+				If $i < UBound($g_hCmbDailyRunRoutine) Then
+					GUICtrlSetState($g_hCmbDailyRunRoutine[$i], $GUI_ENABLE)
+				EndIf
+			EndIf
+			$i += 1
+		WEnd
+	Else
+		$g_bChkEnableDailyRunRoutine = False
+		Local $i = 0
+		While $i < UBound($g_aiDailyFunction)
+			if IsDeclared("g_hCmbDailyRunRoutine") And IsArray($g_hCmbDailyRunRoutine) Then
+				If $i < UBound($g_hCmbDailyRunRoutine) Then
+					GUICtrlSetState($g_hCmbDailyRunRoutine[$i], $GUI_DISABLE)
+				EndIf
+			EndIf
+			$i += 1
+		WEnd
+	EndIf
+EndFunc
+
+Func btnOpenDailyRunRoutine()
+	GUISetState(@SW_SHOW, $g_hGUI_DailyRunRoutine)
+EndFunc
+
+Func btnCloseDailyRunRoutine()
+	GUISetState(@SW_HIDE, $g_hGUI_DailyRunRoutine)
+	; Save the combo box values to g_aiDailyFunction array
+	Local $i = 0
+	While $i < UBound($g_aiDailyFunction)
+		If IsDeclared("g_hCmbDailyRunRoutine") And IsArray($g_hCmbDailyRunRoutine) Then
+			If $i < UBound($g_hCmbDailyRunRoutine) Then
+				$g_aiDailyFunction[$i][1] = Number(GUICtrlRead($g_hCmbDailyRunRoutine[$i]))
+			EndIf
+		EndIf
+		$i += 1
+	WEnd
+EndFunc

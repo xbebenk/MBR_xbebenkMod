@@ -345,6 +345,13 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkSellROBE, $g_bChkSellROBE ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkEnableSellMagicItem()
 			
+			; Daily Run Routine Settings
+			GUICtrlSetState($g_hChkEnableDailyRunRoutine, $g_bChkEnableDailyRunRoutine ? $GUI_CHECKED : $GUI_UNCHECKED)
+			For $i = 0 To UBound($g_aiDailyFunction) - 1
+				_GUICtrlComboBox_SetCurSel($g_hCmbDailyRunRoutine[$i], $g_aiDailyFunction[$i][1])
+			Next
+			chkEnableDailyRunRoutine()
+			
 			GUICtrlSetState($g_hChkEnableTradeMedal, $g_bChkEnableTradeMedal ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtMinTradeMedal, $g_iMinTradeMedal)
 			GUICtrlSetState($g_hChkTradeShiny, $g_bChkTradeShiny ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -541,6 +548,12 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkSellROBG = (GUICtrlRead($g_hChkSellROBG) = $GUI_CHECKED)
 			$g_bChkSellROBE = (GUICtrlRead($g_hChkSellROBE) = $GUI_CHECKED)
 			chkEnableSellMagicItem()
+			
+			; Daily Run Routine Settings
+			$g_bChkEnableDailyRunRoutine = (GUICtrlRead($g_hChkEnableDailyRunRoutine) = $GUI_CHECKED)
+			For $i = 0 To UBound($g_aiDailyFunction) - 1
+				$g_aiDailyFunction[$i][1] = _GUICtrlComboBox_GetCurSel($g_hCmbDailyRunRoutine[$i])
+			Next
 			
 			$g_bChkEnableTradeMedal = (GUICtrlRead($g_hChkEnableTradeMedal) = $GUI_CHECKED)
 			$g_iMinTradeMedal = GUICtrlRead($g_hTxtMinTradeMedal)

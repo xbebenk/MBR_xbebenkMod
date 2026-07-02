@@ -398,6 +398,12 @@ Func SaveConfig_600_6()
 	_Ini_Add("MagicItems", "ChkTradeBuilderElix", $g_bChkTradeBuilderElix ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkTradeClockTowerPot", $g_bChkTradeClockTowerPot ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkTradeResearchPot", $g_bChkTradeResearchPot ? 1 : 0)
+	
+	; Daily Run Routine Settings
+	_Ini_Add("DailyRunRoutine", "ChkEnableDailyRunRoutine", $g_bChkEnableDailyRunRoutine ? 1 : 0)
+	For $i = 0 To UBound($g_aiDailyFunction) -1
+		_Ini_Add("DailyRunRoutine", "DailyRunFunc_" & $i, $g_aiDailyFunction[$i][1])
+	Next
 
 	_Ini_Add("other", "ChkCollectBuildersBase", $g_bChkCollectBuilderBase ? 1 : 0)
 	_Ini_Add("other", "ChkCleanBBYard", $g_bChkCleanBBYard ? 1 : 0)
@@ -957,20 +963,6 @@ Func SaveConfig_600_29_DB()
 	_Ini_Add("attack", "DBWardenAtk", BitAND($g_aiAttackUseHeroes[$DB], $eHeroWarden))
 	_Ini_Add("attack", "DBChampionAtk", BitAND($g_aiAttackUseHeroes[$DB], $eHeroChampion))
 	_Ini_Add("attack", "DBDropCC", $g_abAttackDropCC[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBLightSpell", $g_abAttackUseLightSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBHealSpell", $g_abAttackUseHealSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBRageSpell", $g_abAttackUseRageSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBJumpSpell", $g_abAttackUseJumpSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBFreezeSpell", $g_abAttackUseFreezeSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBPoisonSpell", $g_abAttackUsePoisonSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBEarthquakeSpell", $g_abAttackUseEarthquakeSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBHasteSpell", $g_abAttackUseHasteSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBCloneSpell", $g_abAttackUseCloneSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBInvisibilitySpell", $g_abAttackUseInvisibilitySpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBRecallSpell", $g_abAttackUseRecallSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBSkeletonSpell", $g_abAttackUseSkeletonSpell[$DB] ? 1 : 0)
-	;_Ini_Add("attack", "DBBatSpell", $g_abAttackUseBatSpell[$DB] ? 1 : 0)
-
 	_Ini_Add("attack", "DBAtkUseWardenMode", $g_aiAttackUseWardenMode[$DB])
 	_Ini_Add("attack", "DBAtkUseSiege", $g_aiAttackUseSiege[$DB])
 	_Ini_Add("attack", "DBDropEmptySiege", $g_bDropEmptySiege[$DB] ? 1 : 0)

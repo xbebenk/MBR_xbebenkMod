@@ -36,7 +36,7 @@ Func autoLocatePetHouse()
 		RemoveDupCNX($aPetHouse)
 		For $i = 0 To UBound($aPetHouse) - 1
 			If StringInStr($aPetHouse[$i][0], "PetHouse") Then 
-				SetLog("PetHouse Search find : " & _ArrayToString($aPetHouse), $COLOR_DEBUG)
+				SetDebugLog("PetHouse Search find : " & _ArrayToString($aPetHouse), $COLOR_DEBUG)
 				Click($aPetHouse[$i][1], $aPetHouse[$i][2])
 				$BuildingName = BuildingInfo(242, 479)
 				If StringInStr($BuildingName[1], "Pet") Then
