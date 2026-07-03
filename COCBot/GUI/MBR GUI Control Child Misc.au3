@@ -822,13 +822,13 @@ Func chkForcedSwitchIfNoCG()
 	EndIf
 EndFunc ;==> chkForcedSwitchIfNoCG
 
-Func chkSkipDropTrophyOnFirstStart()
-	If GUICtrlRead($g_hChkSkipDT) = $GUI_CHECKED Then
-		$g_bSkipDT = True
+Func chkHeroJourney()
+	If GUICtrlRead($g_hChkHeroJourney) = $GUI_CHECKED Then
+		$g_bChkHeroJourney = True
 	Else
-		$g_bSkipDT = False
+		$g_bChkHeroJourney = False
 	EndIf
-EndFunc ;==> chkSkipDropTrophyOnFirstStart
+EndFunc ;==> chkHeroJourney
 
 Func ChkAttackOnce()
 	If GUICtrlRead($g_hChkAttackOnce) = $GUI_CHECKED Then

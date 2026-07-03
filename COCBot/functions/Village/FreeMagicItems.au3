@@ -96,9 +96,7 @@ Func TradeMedal()
 		
 		Local $bItemFound = False, $aItem
 		
-		For $i = 1 To 3
-			ClickDrag(410, 400, 410, 180)
-			If _Sleep(1000) Then Return
+		For $i = 1 To 4
 			SetDebugLog("[" & $i & "] Searching Item")
 			$aItem = QuickMis("CNX", $g_sImgTraderRaidMedal, 215, 145, 800, 570)
 			If IsArray($aItem) And UBound($aItem) > 0 Then
@@ -107,43 +105,43 @@ Func TradeMedal()
 					Switch $aItem[$k][0]
 						Case "ShinyOre"
 							If $g_bChkTradeShiny Then 
-								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								Click($aItem[$k][1], $aItem[$k][2], 1, 0, $aItem[$k][0])
 								SetLog("Found Shiny Ore", $COLOR_INFO)
 								$bItemFound = True
 							EndIf
 						Case "GlowyOre"
 							If $g_bChkTradeGlowy Then 
-								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								Click($aItem[$k][1], $aItem[$k][2], 1, 0, $aItem[$k][0])
 								SetLog("Found Glowy Ore", $COLOR_INFO)
 								$bItemFound = True
 							EndIf
 						Case "StarryOre"
 							If $g_bChkTradeStarry Then 
-								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								Click($aItem[$k][1], $aItem[$k][2], 1, 0, $aItem[$k][0])
 								SetLog("Found Starry Ore", $COLOR_INFO)
 								$bItemFound = True
 							EndIf
 						Case "BuilderGold"
 							If $g_bChkTradeBuilderGold Then 
-								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								Click($aItem[$k][1], $aItem[$k][2], 1, 0, $aItem[$k][0])
 								SetLog("Found Builder Gold", $COLOR_INFO)
 								$bItemFound = True
 							EndIf
 						Case "BuilderElixir"
 							If $g_bChkTradeBuilderElix Then 
-								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								Click($aItem[$k][1], $aItem[$k][2], 1, 0, $aItem[$k][0])
 								SetLog("Found Builder Elixir", $COLOR_INFO)
 								$bItemFound = True
 							EndIf
 						Case "ClockTowerPot"
 							If $g_bChkTradeClockTowerPot Then 
-								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								Click($aItem[$k][1], $aItem[$k][2], 1, 0, $aItem[$k][0])
 								SetLog("Found ClockTower Potion", $COLOR_INFO)
 								$bItemFound = True
 							EndIf
 						Case "ResearchPot"
 							If $g_bChkTradeResearchPot Then 
-								Click($aItem[$k][1], $aItem[$k][1], 1, 0, $aItem[$k][0])
+								Click($aItem[$k][1], $aItem[$k][2], 1, 0, $aItem[$k][0])
 								SetLog("Found Research Potion", $COLOR_INFO)
 								$bItemFound = True
 							EndIf
@@ -160,6 +158,8 @@ Func TradeMedal()
 					$bItemFound = False
 				Next
 			EndIf
+			ClickDrag(410, 400, 410, 180)
+			If _Sleep(1000) Then Return
 		Next
 	Else
 		SetLog("Skip TradeMedal, Capital Medal: " & $g_iLootCCMedal, $COLOR_DEBUG2)
