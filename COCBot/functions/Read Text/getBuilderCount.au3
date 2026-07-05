@@ -1,7 +1,7 @@
 
 Func getBuilderCount($bSuppressLog = False, $bBuilderBase = False)
 	Local $bRet = False, $sBuilderInfo, $aGetBuilders
-	
+	If Not $g_bRunState Then Return
 	SetDebugLog("getBuilderCount for " & ($bBuilderBase ? "BuilderBase" : "NormalBase"))
 	
 	If $bBuilderBase Then

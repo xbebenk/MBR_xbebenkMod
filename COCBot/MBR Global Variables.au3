@@ -938,7 +938,7 @@ Global $g_iSaveGoldWall = 0, $g_iSaveElixWall = 0
 Global $g_bUpgradeSpesificWall = False, $g_iTargetWallLevel = 0, $g_iSearchWallSort = 0, $g_bAutoAdjustSaveWall = False
 
 ; Upgrading - Wall
-Global Const $g_aiWallCost[18] = [0, 1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000, 8000000]
+Global Const $g_aiWallCost[19] = [0, 1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000, 7000000, 10000000]
 Global Const $g_aiMaxStorage[19] = [1500, 3000, 6000, 12000, 25000, 45000, 100000, 225000, 450000, 850000, 1750000, 2000000, 3000000, 4000000, 4500000, 5000000, 5500000, 6000000, 6500000]
 Global Const $g_aiHeroHallCost[11] = [800000, 1600000, 2300000, 3000000, 5000000, 6000000, 9000000, 10000000, 12000000, 14000000, 21000000] ; 0 = 7
 
@@ -2001,7 +2001,7 @@ Global $g_aVillageRefSize[57][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589],
 									["DM", "Classic Meteor", 592.24, 87, 792, 52, 589], _ ;ok
 									["CS", "Classic Skeleton", 567, 82, 766, 53, 575], _ ;ok
 									["JS", "Jungle", 617, 41, 806, 37, 616], _ ;ok
-									["MS", "Magic", 553.75, 83, 800, 96, 627], _ ;ok
+									["MS", "Magic", 553.95, 69, 781, 57, 590], _ ;ok
 									["BL", "BuilderBase Lower", 578.83, 135, 742, 116, 567], _ ;ok
 									["BH", "BuilderBase Higher", 561.42, 114, 720, 93, 543], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
