@@ -298,6 +298,8 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 				SetLog("      Match: " & $sMatchLogText & " BUT Measure Failed! Skipping...", $COLOR_ERROR, "Lucida Console", 7.5)
 				$logwrited = True
 				
+				If $g_bLeagueAttack Then Exitloop
+				
 				VillageSearchNext() ; Klik tombol Next
 				$iSkipped += 1
 				ContinueLoop ; Langsung kembali ke atas Loop (Cari musuh baru)
