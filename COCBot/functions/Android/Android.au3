@@ -4478,6 +4478,8 @@ Func UpdateAndroidBackgroundMode()
 				; Ok, disable screencap
 				SetDebugLog("Disable ADB screencap, using WinAPI DirectX for Background Mode")
 				$g_bAndroidAdbScreencap = False
+				;disable monitor off
+				_WinAPI_SetThreadExecutionState(BitOR($ES_DISPLAY_REQUIRED, $ES_CONTINUOUS))
 			EndIf
 		Case 2 ; ADB screencap mode (slower, but alwasy works even if Monitor is off -> "True Brackground Mode")
 			If $g_bAndroidAdbScreencapEnabled <> True Or $g_bAndroidSharedFolderAvailable <> True Then

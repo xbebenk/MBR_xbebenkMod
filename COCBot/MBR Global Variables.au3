@@ -885,7 +885,6 @@ Global $g_aCmbRequestSiege[9][3] = [["WallW", "Wall Wrecker", 1], _
 
 ; <><><><> Village / Donate - Donate <><><><>
 Global $g_bChkDonate = True
-Global $g_abChkDonateQueueOnly[2]
 Global $g_abChkDonateTroop[$eTroopCount + $eSiegeMachineCount] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
 Global $g_asTxtDonateTroop[$eTroopCount + $eSiegeMachineCount] = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""] ; array of pipe-delimited list of strings to match to a request string
 
