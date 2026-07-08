@@ -873,20 +873,10 @@ Func btnTestDeadBase()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
 
-	ZoomOut(True)
-	ResetTHsearch()
-	SetLog("Testing FindTownhall()", $COLOR_INFO)
-	SetLog("FindTownhall() = " & FindTownhall(), $COLOR_INFO)
-	SetLog("$g_sImglocRedline = " & $g_sImglocRedline, $COLOR_INFO)
-
 	SetLog("Testing checkDeadBase()", $COLOR_INFO)
 	SetLog("Result checkDeadBase() = " & checkDeadBase(), $COLOR_INFO)
 	SetLog("Testing checkDeadBase() DONE", $COLOR_INFO)
 	
-	SetLog("Testing Redlines()", $COLOR_INFO)
-	SetLog("Result Redlines() = " & SearchRedLines(), $COLOR_INFO)
-	SetLog("Testing SearchRedLines() DONE", $COLOR_INFO)
-
 	If $hHBMP <> 0 Then
 		_WinAPI_DeleteObject($hHBMP)
 		TestCapture(0)

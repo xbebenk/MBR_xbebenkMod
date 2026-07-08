@@ -153,7 +153,7 @@ Func CollectNewDailyRewards()
 	
 	For $i = 1 To 5
 		If QuickMIS("BC1", $g_sImgDailyReward, 275, 270, 310, 300) Then 
-			Click($g_iQuickMISX, $g_iQuickMISY)
+			Click(310, 262, 1, 0, "Click CheckMark")
 			$bCheckMarkFound = True
 		Else
 			SetLog("No Reward CheckMarks", $COLOR_DEBUG2)
