@@ -566,8 +566,8 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			btnTestDeadBase()
 		Case $g_hBtnTestDeadBaseFolder
 			btnTestDeadBaseFolder()
-		Case $g_hBtnTestTHimgloc
-			SearchTH()
+		Case $g_hBtnTestDetectWall
+			btnTestWall()
 		Case $g_hBtnTestAttackCSV
 			btnTestAttackCSV()
 		Case $g_hBtnTestArmyWindow

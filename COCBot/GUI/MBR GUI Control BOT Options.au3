@@ -885,6 +885,39 @@ Func btnTestDeadBase()
 	$g_bRunState = $currentRunState
 EndFunc   ;==>btnTestDeadBase
 
+Func btnTestWall()
+	Local $hBMP = 0, $hHBMP = 0
+	Local $sImageFile = FileOpenDialog("Select CoC screenshot to test, cancel to use live screenshot", $g_sProfileTempPath, "Image (*.png)", $FD_FILEMUSTEXIST, "", $g_hFrmBot)
+	If @error <> 0 Then
+		SetLog("Testing image cancelled, taking screenshot from " & $g_sAndroidEmulator, $COLOR_INFO)
+		_CaptureRegion()
+		$hHBMP = $g_hHBitmap
+		TestCapture($hHBMP)
+	Else
+		SetLog("Testing image " & $sImageFile, $COLOR_INFO)
+		; load test image
+		$hBMP = _GDIPlus_BitmapCreateFromFile($sImageFile)
+		$hHBMP = _GDIPlus_BitmapCreateDIBFromBitmap($hBMP)
+		_GDIPlus_BitmapDispose($hBMP)
+		TestCapture($hHBMP)
+		SetLog("Testing image hHBitmap = " & $hHBMP)
+	EndIf
+
+	Local $currentRunState = $g_bRunState
+	$g_bRunState = True
+	SearchTH(False)
+	SetLog("Testing SearchWall()", $COLOR_INFO)
+	SetLog("Result SearchWall() = " & SearchWall(0, 1), $COLOR_INFO)
+	SetLog("Testing SearchWall() DONE", $COLOR_INFO)
+	
+	If $hHBMP <> 0 Then
+		_WinAPI_DeleteObject($hHBMP)
+		TestCapture(0)
+	EndIf
+
+	$g_bRunState = $currentRunState
+EndFunc   ;==>btnTestWall
+
 Func btnTestDeadBaseFolder()
 
 	;Local $directory = FileOpenDialog("Select folder of CoC village screenshot to test for dead base", $g_sProfileTempPath, "Image (*.png)", $FD_PATHMUSTEXIST, "", $g_hFrmBot)
