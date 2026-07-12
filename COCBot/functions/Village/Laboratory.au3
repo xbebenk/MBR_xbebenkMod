@@ -489,6 +489,9 @@ Func CheckIfLabIdle($bDebug = False)
 			Case $iLab = 0 And $iLabMax = 1
 				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_SUCCESS)
 				$bRet = False
+			Case $iLab = 0 And $iLabMax = 2
+				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_SUCCESS)
+				$bRet = False
 			Case $iLab = 1 And $iLabMax = 2
 				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_SUCCESS)
 				$bRet = False
