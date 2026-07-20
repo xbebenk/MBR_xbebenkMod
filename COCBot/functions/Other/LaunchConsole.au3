@@ -103,8 +103,8 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 	If $iLastBS > 0 Then $exe = StringMid($exe, $iLastBS + 1)
 	Local $commandLine = ($ProgramPath <> "" ? ('"' & $ProgramPath & '"' & ($ProgramParameter = "" ? "" : " " & $ProgramParameter)) : $ProgramParameter)
 	Local $commandLineCompare = StringReplace(StringReplace(StringReplace(StringReplace($commandLine, ".exe", "", 1), " ", ""), '"', ""), "'", "")
-	SetDebugLog("commandLine: " & $commandLine)
-	SetDebugLog("commandLineCompare: " & $commandLineCompare)
+	SetDebugLog("ProcessExists2 commandLine: " & $commandLine)
+	SetDebugLog("ProcessExists2 commandLineCompare: " & $commandLineCompare)
 	Local $query = "Select " & GetWmiSelectFields() & " from Win32_Process" ; replaced CommandLine with ExecutablePath
 	If StringLen($commandLine) > 0 Then
 		$query &= " where "
@@ -142,6 +142,12 @@ Func ProcessExists2($ProgramPath, $ProgramParameter = Default, $CompareMode = De
 EndFunc   ;==>ProcessExists2
 
 ; Special version of ProcessExists2 that returns Array of all processes found
+; Supports also PID as $ProgramPath parameter
+; $CompareMode = 0 Path with parameter is compared (" ", '"' and "'" removed!)
+; $CompareMode = 1 Any Command Line containing path and parameter is used
+; $SearchMode = 0 Search only for $ProgramPath
+; $SearchMode = 1 Search for $ProgramPath and $ProgramParameter
+; $CompareParameterFunc is func that returns True or False if parameter is matching, "" not used
 Func ProcessesExist($ProgramPath, $ProgramParameter = Default, $CompareMode = Default, $SearchMode = Default, $CompareCommandLineFunc = Default, $bReturnDetailedArray = Default, $strComputer = ".")
 
 	If $ProgramParameter = Default Then $ProgramParameter = ""

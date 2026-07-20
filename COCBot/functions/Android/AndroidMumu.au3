@@ -12,6 +12,9 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Global $__Mumu_Device_Path = "", $__Mumu_Path = ""
+Global $__Mumu_Manage_Path = ""
+Global $__MuMu_Version = 0
 
 Func GetMumuProgramParameter($bAlternative = False)
 	;If $bAlternative Then Return AddSpace("index=") & StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", "")
@@ -71,8 +74,12 @@ EndFunc   ;==>_OpenMumu
 
 Func GetMumuAdbPath()
 	Local $adbPath = @ScriptDir & "\lib\adb\adb.exe"
-	If FileExists($adbPath) Then Return $adbPath
-	Return ""
+	Local $sMumuAdbPath = $__Mumu_Device_Path & "adb.exe"
+	If FileExists($sMumuAdbPath) Then 
+		SetDebugLog("sMumuAdbPath: " & $sMumuAdbPath)
+		Return $sMumuAdbPath
+	EndIf
+	Return $adbPath
 EndFunc   ;==>GetMumuXAdbPath
 
 Func InitMumuX($bCheckOnly = False)
@@ -84,6 +91,7 @@ Func InitMumuX($bCheckOnly = False)
 	
 	Local $bFileFound = False
 	Local $frontend_exe = "MuMuNxDevice.exe"
+	SetDebugLog("__Mumu_Device_Path : " & $__Mumu_Device_Path & $frontend_exe)
 	$bFileFound = FileExists($__Mumu_Device_Path & $frontend_exe)
 	
 	If Not $bFileFound Then
@@ -115,19 +123,19 @@ Func ConfigureSharedFolderMumu($iMode = 0, $bSetLog = Default)
 	Local $bResult = False
 	
 	Local $iInstance = StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", "")
-	Local $__Mumu_ConfigDir = $__Mumu_Path & "vms\MuMuPlayerGlobal-12.0-" & $iInstance & "\configs\"
-	Local $__Mumu_InstanceConf = FileReadToArray($__Mumu_ConfigDir & "vm_config.json")
+	Local $__Mumu_ConfigDir = $__Mumu_Path & "vms\MuMuPlayerGlobal-12.0-" & $iInstance
+	Local $__Mumu_InstanceConf = FileReadToArray($__Mumu_ConfigDir & "\MuMuPlayerGlobal-12.0-" & $iInstance & ".nemu")
 	Local $iLineCount = @extended
 	
 	For $i = 0 To $iLineCount - 1
-		If StringInStr($__Mumu_InstanceConf[$i], '"path": ') Then 
-			Local $path = StringReplace($__Mumu_InstanceConf[$i], '"path": ', '')
-			$path = StringStripWS(StringReplace(StringReplace(StringReplace($path, "/", "\"), ",", ""), '"', ''), $STR_STRIPALL) & "\Pictures\"
+		If StringInStr($__Mumu_InstanceConf[$i], "MuMuShared") Then
+			Local $aPath = StringRegExp($__Mumu_InstanceConf[$i], 'hostPath="([^"]+)"', $STR_REGEXPARRAYMATCH)
+			local $path = $aPath[0] & "\Pictures\"
 			SetDebugLog("MuMu Shared HostPath: " & $path)
 			$g_sAndroidPicturesHostPath = $path
 			$bResult = True
 			$g_bAndroidSharedFolderAvailable = True
-			$g_sAndroidPicturesPath = "/data/media/0/Pictures"
+			$g_sAndroidPicturesPath = "/data/media/0/Pictures/"
 			SetDebugLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
 			SetDebugLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
 		EndIf

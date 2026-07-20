@@ -774,11 +774,22 @@ Func FindPreferredAdbPath()
 
 	If $g_iAndroidAdbReplace And $adbPath And FileExists($sAdb) And (FileExists(@ScriptDir & "\lib\adb\" & $aDll[0]) And FileExists(@ScriptDir & "\lib\adb\" & $aDll[1])) _
 			And (FileGetSize($adbPath) <> FileGetSize($sAdb) Or (FileGetSize($sAdbFolder & $aDll[0]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[0]) Or FileGetSize($sAdbFolder & $aDll[1]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[1]))) Then
-		Local $aAdbProcess = ProcessesExist($adbPath)
-		For $i = 0 To UBound($aAdbProcess) -1
-			; ensure target process is not running
-			KillProcess($aAdbProcess[$i], "FindPreferredAdbPath")
+		For $i = 1 To 20
+			Local $iAdbPID = ProcessExists2($adbPath)
+			If $iAdbPID > 0 Then 
+				SetDebugLog("Killing " & $sAdbFile & " process with pid: " & $iAdbPID)
+				KillProcess($iAdbPID, "FindPreferredAdbPath")
+			Else
+				ExitLoop
+			EndIf
 		Next
+		
+		Local $sBackupPath = $sAdbFolder & "\" & $sAdbFile & "_" & $g_sAndroidEmulator & "_backup.exe"
+		If Not FileExists($sBackupPath) Then
+			FileCopy($adbPath, $sBackupPath, 1) ; copy file asli ke lokasi cadangan
+			SetDebugLog("Backup ADB berhasil: " & $sBackupPath)
+		EndIf
+
 		If FileCopy($sAdb, $adbPath, 1) And (FileCopy(@ScriptDir & "\lib\adb\" & $aDll[0], $sAdbFolder & $aDll[0], 1) And FileCopy(@ScriptDir & "\lib\adb\" & $aDll[1], $sAdbFolder & $aDll[1], 1)) Then
 			SetLog("Replaced " & $g_sAndroidEmulator & " ADB with MyBot.run version")
 		Else
@@ -4095,7 +4106,7 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	If AndroidInvalidState() Then Return 0
 	Local $cmd, $output = "", $error
 	
-	$cmd = "set result=$(dumpsys window windows | grep -E 'mCurrentFocus|mFocusedApp' |grep -E """ & $sPackage & """ >&2)"
+	$cmd = "set result=$(dumpsys window windows | grep -E 'mCurrentFocus|mFocusedApp|imeInputTarget' |grep -E """ & $sPackage & """ >&2)"
 	If $bForeground Then 
 		$output = AndroidAdbSendShellCommand($cmd)
 		$error = @error
@@ -4901,6 +4912,8 @@ Func CheckEmuNewVersions()
 			$NewVersion = GetVersionNormalized("4.280.1.0")
 		Case "MEmu"
 			$NewVersion = GetVersionNormalized("7.2.9.0")
+		Case "MuMu"
+			$NewVersion = GetVersionNormalized("5.30.0.0")
 		Case "Nox"
 			$NewVersion = GetVersionNormalized("7.0.5.7")
 		Case "BlueStacks5"
