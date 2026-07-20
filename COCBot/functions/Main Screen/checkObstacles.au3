@@ -354,6 +354,11 @@ Func PlacedOnLeague()
 		$bRet = True
 	EndIf
 	
+	If QuickMIS("BC1", $g_sImgChestPage, 110, 500, 135, 525) Then
+		SetLog("You have Chest to open", $COLOR_DEBUG2)
+		Return RewardChest()
+	EndIf
+	
 	If QuickMIS("BC1", $g_sImgSurvey, 430, 80, 475, 110) Then
 		Click(275, 585, 1, 0, "No Thanks")
 		If _Sleep(2000) Then Return
