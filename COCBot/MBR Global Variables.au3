@@ -266,7 +266,7 @@ Global $g_avAndroidAppConfig[5][16] = [ _ ;           |                         
 	["MEmu",       "MEmu",    "MEmu",                "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0,             "127.0.0.1:21503",     2+4+8+16+32           +512, '# ',                  '(Microvirt Virtual Input|User Input)', -1,                                 1], _ ; MEmu
 	["BlueStacks5","Pie64",	  "BS5-",           	  "[CLASS:BlueStacksApp; INSTANCE:1]","",          	   $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "127.0.0.1:5555",    1+2+4+8+16+32   +128,         '# ',                  'BlueStacks Virtual Touch',          -1,                                   1], _ ; BlueStacks5
 	["LDPlayer9",	"Leidian","LD9-",     		  	  "[CLASS:subWin; INSTANCE:1]",		  "sub",           $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "emulator-5555",    1+2+4+8+16+32   +128,         	   '# ',                  'input',         					   -1,                                   1], _ ; LDplayer9
-	["MuMu",		"MuMu",	  "MuMu-",     		  	  "[CLASS:nemuwin; INSTANCE:1]",	  "nemudisplay",   $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "emulator-5555",    1+2+4+8+16+32   +128,         	   '# ',                  'Xiaomi Input',         					   -1,                                   1] _ ; Mumu
+	["MuMu",		"MuMu",	  "MuMu-",     		  	  "[CLASS:nemuwin; INSTANCE:1]",	  "nemudisplay",   $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "127.0.0.1:5555",    1+2+4+8+16+32+256,         	   '# ',                  'Xiaomi Input',         					   -1,                                   1] _ ; Mumu
 ]
 
 ; Android Configutions, see COCBot\functions\Android\Android Status & Information.txt for more details
@@ -333,6 +333,7 @@ Global Const $g_iAndroidKitKat = 19
 Global Const $g_iAndroidLollipop = 21
 Global Const $g_iAndroidNougat = 24
 Global Const $g_iAndroidpie = 28
+Global Const $g_iAndroidSnowCone = 32
 Global $g_iAndroidVersionAPI = $g_iAndroidJellyBean ; getprop ro.build.version.sdk
 
 ; Updated in UpdateAndroidConfig() and $g_sAndroidEmulator&Init() as well

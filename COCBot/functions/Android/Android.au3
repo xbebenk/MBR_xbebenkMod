@@ -1738,7 +1738,9 @@ Func CheckScreenAndroid($ClientWidth, $ClientHeight, $bSetLog = True)
 	If Not $g_bRunState Then Return True
 
 	; check display font size
-	Local $s_font_scale = AndroidAdbSendShellCommand("settings get system font_scale")
+	Local $sSystem = "system"
+	If $g_iAndroidVersionAPI > $g_iAndroidpie Then $sSystem = "secure"
+	Local $s_font_scale = AndroidAdbSendShellCommand("settings get " & $sSystem & " font_scale")
 	Local $font_scale = Number($s_font_scale)
 	If $font_scale > 0 Then
 		SetDebugLog($g_sAndroidEmulator & " font_scale = " & $font_scale)
@@ -2946,34 +2948,34 @@ Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch =
 	$y2 = Int($y2) + $g_aiMouseOffset[1]
 	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x1,$y1)")
 	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x2,$y2)")
-	Local $swipe_coord[4][2] = [["{$x1}", $x1], ["{$y1}", $y1], ["{$x2}", $x2], ["{$y2}", $y2]]
-	;Return AndroidAdbScript("clickdrag", $swipe_coord, Default, Default, $wasRunState)
-	Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState, $bSCIDSwitch)
+	
+	Return AndroidminitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState, $bSCIDSwitch)
 EndFunc   ;==>AndroidClickDrag
 
-Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch = False)
+Func AndroidminitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch = False)
 	AndroidAdbLaunchShellInstance($wasRunState)
-	If $g_iAndroidAdbMinitouchMode = 0 Then
-		If $g_bAndroidAdbMinitouchSocket < 1 Then
-			SetLog("Minitouch not available", $COLOR_ERROR)
+	If $g_iAndroidAdbminitouchMode = 0 Then
+		If $g_bAndroidAdbminitouchSocket < 1 Then
+			SetLog("minitouch not available", $COLOR_ERROR)
 			Return SetError(1, 0, 0)
 		EndIf
 
-		TCPRecv($g_bAndroidAdbMinitouchSocket, 256, 1)
+		TCPRecv($g_bAndroidAdbminitouchSocket, 256, 1)
 		Local $recv_state = [@error, @extended]
-		Local $bytes = TCPSend($g_bAndroidAdbMinitouchSocket, @LF)
+		Local $bytes = TCPSend($g_bAndroidAdbminitouchSocket, @LF)
 		Local $send_state = [@error, $bytes]
 		If ($recv_state[0] Or $send_state[0] Or $send_state[1] <> 1) Then
 			If $wasRunState Then
 				SetLog("Cannot send minitouch data to " & $g_sAndroidEmulator & ", received " & $recv_state[1] & ", send " & $send_state[1], $COLOR_ERROR)
 				; restart adb session that hopefully fixes the tcp issues
 				AndroidAdbTerminateShellInstance()
-				Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, False)
+				Return AndroidminitouchClickDrag($x1, $y1, $x2, $y2, False)
 			EndIf
 			Return SetError(1, 0, 0)
 		EndIf
 	EndIf
-
+	
+	SetDebugLog("AndroidminitouchClickDrag(" & $x1 & "," & $y1 & "," & $x2 & "," & $y2 & ")")
 	Local $sleepStart = 250
 	Local $sleepMove = 10
 	Local $sleepEnd = 1000
@@ -2999,6 +3001,7 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCI
 		AndroidAdbSendMinitouchShellCommand($send)
 	EndIf
 	
+	SetDebugLog("loops : " & $loops)
 	$sleep = $sleepMove
 	For $i = 1 To $loops
 		$x += $x_steps
@@ -3037,6 +3040,86 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCI
 
 	Return SetError(0, 0, 1)
 EndFunc   ;==>AndroidMinitouchClickDrag
+
+Func AndroidMumuClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch = False)
+	AndroidAdbLaunchShellInstance($wasRunState)
+	
+	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x1,$y1)")
+	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x2,$y2)")
+	SetDebugLog("AndroidMumuClickDrag raw coordinates: (" & $x1 & "," & $y1 & ") to (" & $x2 & "," & $y2 & ")")
+	
+	Local $sleepStart = 250
+	Local $sleepMove = 10
+	Local $sleepEnd = 1000
+	Local $sleep = $sleepStart
+	Local $botSleep = 0
+	Local $send = ""
+	
+	; -------------------------------------------------------------------------
+	; HITUNG LOOPS DARI SELISIH KOORDINAT YANG SUDAH DIBALIK
+	; -------------------------------------------------------------------------
+	Local $iDistance = _Max(Abs($x2 - $x1), Abs($y2 - $y1))
+	
+	; Tentukan jarak pixel per-geseran (semakin kecil nilainya, semakin mulus drag-nya)
+	Local $iPixelPerStep = 15 
+	Local $loops = Int($iDistance / $iPixelPerStep)
+	If $loops < 1 Then $loops = 1 ; Minimal 1x pergerakan
+	
+	Local $x_steps = ($x2 - $x1) / $loops
+	Local $y_steps = ($y2 - $y1) / $loops
+	Local $x = $x1, $y = $y1
+	If $bSCIDSwitch Then $sleepMove = 50
+	
+	; 1. Touch Down
+	$send = "d 0 " & Int($x) & " " & Int($y) & " 100" & @LF & "c" & @LF & "w " & $sleep & @LF
+	$botSleep += $sleep
+	If $g_bDebugAndroid Then SetDebugLog("minitouch: " & StringReplace($send, @LF, ";"))
+	If $g_iAndroidAdbminitouchMode = 0 Then
+		TCPSend($g_bAndroidAdbminitouchSocket, $send)
+	Else
+		AndroidAdbSendminitouchShellCommand($send)
+	EndIf
+	
+	SetDebugLog("Calculated Loops : " & $loops & " | Step X: " & $x_steps & " | Step Y: " & $y_steps)
+	$sleep = $sleepMove
+	
+	; 2. Touch Move (Looping Drag)
+	For $i = 1 To $loops
+		$x += $x_steps
+		$y += $y_steps
+		
+		; Jika sudah di iterasi terakhir, paksa koordinat pas di titik tujuan
+		If $i = $loops Then
+			$x = $x2
+			$y = $y2
+			$sleep = $sleepEnd
+		EndIf
+		
+		$send = "m 0 " & Int($x) & " " & Int($y) & " 100" & @LF & "c" & @LF & "w " & $sleep & @LF
+		$botSleep += $sleep
+		If $g_bDebugAndroid Then SetDebugLog("minitouch move [" & $i & "/" & $loops & "]: " & StringReplace($send, @LF, ";"))
+		If $g_iAndroidAdbminitouchMode = 0 Then
+			TCPSend($g_bAndroidAdbminitouchSocket, $send)
+		Else
+			AndroidAdbSendminitouchShellCommand($send)
+		EndIf
+	Next
+	
+	; 3. Touch Up
+	$sleep = $sleepEnd
+	$send = "u 0" & @LF & "c" & @LF & "w " & $sleep & @LF
+	$botSleep += $sleep
+	If $g_bDebugAndroid Then SetDebugLog("minitouch: " & StringReplace($send, @LF, ";"))
+	If $g_iAndroidAdbminitouchMode = 0 Then
+		TCPSend($g_bAndroidAdbminitouchSocket, $send)
+	Else
+		AndroidAdbSendminitouchShellCommand($send)
+	EndIf
+	
+	_Sleep($botSleep)
+
+	Return SetError(0, 0, 1)
+EndFunc   ;==>AndroidMumuClickDrag
 
 ; Returns True if KeepClicks is active or for $Really = False KeepClicks() was called even though not enabled (poor mans deploy troops detection)
 Func IsKeepClicksActive($Really = True)
@@ -4519,6 +4602,7 @@ EndFunc   ;==>UpdateAndroidBackgroundMode
 
 Func GetAndroidCodeName($iAPI = $g_iAndroidVersionAPI)
 
+	If $iAPI >= $g_iAndroidSnowCone Then Return "Snow Cone"
 	If $iAPI >= $g_iAndroidpie Then Return "Pie"
 	If $iAPI >= $g_iAndroidNougat Then Return "Nougat"
 	If $iAPI >= $g_iAndroidLollipop Then Return "Lollipop"
