@@ -1,32 +1,3 @@
-* **v.7.9.9 Mod_v1.2.6#128** (2026-05-24)
-* Fix FillIncorrect Combo spell
-* refactor smartfarm attack
-* re-image collector/mines/drill
-* Add option to not sell magic item
-* Support use book for Dragon Duke
-*
-* **v.7.9.9 Mod_v1.2.6#129** (2026-06-16)
-* Add Wild West scenery
-* Add Waste Lan scenery
-* Add Dragon Escape scenery
-* remap Magic scenery
-* remap Clash-A-Rama scenery
-* remap Pinter scenery
-* remap Villagesize measure
-* remap ClockTower Boost routine
-* support attack with Mecha (identifiead as hogs)
-* support attack with Broom (identifiead as minion)
-* remove troop/spell traintime variables
-* remove drop hero/spell on attack settings (will always drop if avail)
-* Add option to use Saved army for Tournament attack
-* Add option to revert back to use Saved army for DB attack
-* Add option to SignUp Tournament but, not attack (use for stay in league)
-* remove drop trophy
-* recalc Auto adjust save elix/gold for wall (will save at 4 storage cap)
-* new icon for Builderbase troop on settings
-* Support CleanYardBB to remve root on Builderbase
-* remap Redline and Dropline (for stable deployment, please use external edge)
-*
 * **v.7.9.9 Mod_v1.2.6#130** (2026-06-27)
 * fix pick defense layout
 * fix open shop Builderbase
@@ -36,3 +7,11 @@
 * support Memu (from forum post @ScamEmre patch)
 * speedup battle
 * handle for pick Saved Army
+*
+* **v.7.9.9 Mod_v1.2.6#131** (2026-07-21)
+* Support MuMu Emulator
+* Fix Trade Medal click
+* Fix Daily Challenge collect
+* Added image Wall Level 16, 17, 18
+* Mash-A-Rama Scenery
+* Handle Cest Collect after loading
