@@ -2000,6 +2000,8 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 					$cmdOutput = AndroidAdbSendShellCommand("ls -l /data/local/tmp/minitouch")
 					SetLog($cmdOutput, $COLOR_INFO)
 				EndIf
+			Case $g_iAndroidSnowCone
+				SetDebugLog("Android Version 12")
 			Case Else
 				SetDebugLog("Android Version not detected!")
 		EndSwitch
@@ -2048,8 +2050,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				SetDebugLog($g_sAndroidEmulator & " initialize minitouch on port " & $g_bAndroidAdbMinitouchPort)
 				; launch minitouch
 				Local $androidPath = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/")
-				If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu" Then
-					SetDebugLog("Pie")
+				If ($g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu") Or $g_iAndroidVersionAPI >= $g_iAndroidSnowCone Then
 					Local $output = AndroidAdbSendShellCommand("/data/local/tmp/minitouch -d " & $g_sAndroidMouseDevice & " >/dev/null 2>&1 &", -1000, $wasRunState, False)
 					SetDebugLog("[1] : " & $output, $COLOR_ERROR)
 				Else
@@ -2236,15 +2237,13 @@ Func AndroidAdbLaunchMinitouchShellInstance($wasRunState = Default, $rebootAndro
 		
 		; minitouch: Uses STDIN and doesn't start socket
 		If $bUseMouseDevice Then
-			If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu" Then
-				SetDebugLog("Pie with Mouse")
+			If ($g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu") Or $g_iAndroidVersionAPI >= $g_iAndroidSnowCone Then
 				Local $cmdMinitouch = "/data/local/tmp/minitouch -d " & $g_sAndroidMouseDevice & " -i"
 			Else
 				Local $cmdMinitouch = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/") & "minitouch -d " & $g_sAndroidMouseDevice & " -i"
 			EndIf
 		Else
-			If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu" Then
-				SetDebugLog("Pie")
+			If ($g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu") Or $g_iAndroidVersionAPI >= $g_iAndroidSnowCone Then
 				Local $cmdMinitouch = "/data/local/tmp/minitouch -i"
 			Else
 				Local $cmdMinitouch = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/") & "minitouch -i"
@@ -2545,7 +2544,7 @@ Func AndroidAdbSendShellCommandScript($scriptFile, $variablesArray = Default, $c
 			FileSetTime($hostPath & $scriptFileSh, $scriptModifiedTime, $FT_MODIFIED) ; set modification date of source
 		EndIf
 		If $bIsMinitouch Then
-			If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu" Then
+			If ($g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu") Or $g_iAndroidVersionAPI >= $g_iAndroidSnowCone Then
 				$s = AndroidAdbSendShellCommand("""" & $MEmuMinitouchPath & "minitouch"" -v -d " & $g_sAndroidMouseDevice & " -f """ & $androidPath & $scriptFileSh & """", $timeout, $wasRunState, $EnsureShellInstance)
 				SetDebugLog("Pie : " & """" & $MEmuMinitouchPath & "minitouch"" -v -d " & $g_sAndroidMouseDevice & " -f """ & $androidPath & $scriptFileSh & """")
 			Else
