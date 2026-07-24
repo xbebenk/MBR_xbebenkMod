@@ -100,7 +100,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			If $g_bChkClanGamesStopBeforeReachAndPurge And $aiScoreLimit[0] + $iWaitPurgeScoreLimit > $iWaitPurgeScore Then
 				SetLog("You score reached max point")
 				$g_bIsCGPointAlmostMax = True
-					
+				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
 				If $g_bChkClanGamesPurgeAny And $sTimeCG > $PurgeDayMinute Then ; purge, but not purge on last day of clangames					
 					SetLog("Clangames remain time: " & $sTimeCG & " > " & $PurgeDayMinute, $COLOR_INFO)
 					SetLog("Stop before completing and only Purge", $COLOR_INFO)
@@ -508,7 +508,7 @@ EndFunc
 Func SelectEvent(ByRef $aSelectChallenges)
 	; Initial Timer
 	Local $hTimer = TimerInit()
-	Local $aTmp = $aSelectChallenges, $aDel[0]
+	Local $aTmp = $aSelectChallenges, $aDel[1]
 
 	For $i = 0 To Ubound($aTmp) - 1
 		If Not $g_bRunState Then Return

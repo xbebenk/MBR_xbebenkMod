@@ -22,6 +22,7 @@ Func CheckCGCompleted()
 		If _Sleep(1000) Then Return
 		If QuickMIS("BC1", $g_sImgGameComplete, 760, 450, 820, 520) Then
 			SetLog("Nice, Game Completed", $COLOR_INFO)
+			$g_sCGCurrentEventName = ""
 			$bRet = True
 			ExitLoop
 		EndIf
