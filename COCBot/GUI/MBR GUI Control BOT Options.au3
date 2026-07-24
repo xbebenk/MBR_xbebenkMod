@@ -426,7 +426,7 @@ EndFunc   ;==>cmbSwitchAccProfileX
 
 Func chkDebugSetLog()
 	$g_bDebugSetlog = (GUICtrlRead($g_hChkDebugSetlog) = $GUI_CHECKED) ;
-	SetDebugLog("DebugSetlog " & ($g_bDebugSetlog ? "enabled" : "disabled"))
+	SetLog("DebugSetlog " & ($g_bDebugSetlog = True ? "enabled" : "disabled"), $COLOR_DEBUG)
 EndFunc   ;==>chkDebugSetLog
 
 Func chkDebugAndroid()

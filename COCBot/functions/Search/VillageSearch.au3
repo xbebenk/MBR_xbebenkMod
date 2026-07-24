@@ -234,7 +234,7 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 
 		ResumeAndroid()
 		If $bDoClanGames Then
-			SetLog("DoClanGames Mode: " & $g_sCGEasyEventName, $COLOR_SUCCESS)
+			SetLog("DoClanGames Mode: " & $g_sCGCurrentEventName, $COLOR_SUCCESS)
 			If $dbBase Then 
 				$match[$DB] = True
 				$match[$LB] = False

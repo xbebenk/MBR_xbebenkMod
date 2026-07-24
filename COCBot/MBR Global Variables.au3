@@ -1759,7 +1759,7 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
 Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
-Global $g_bChkClanGamesPurgeAny = 0, $g_sCGEasyEventName = ""
+Global $g_bChkClanGamesPurgeAny = 0
 Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDay = 0
 Global $g_bCollectCGReward = False, $g_sCGCurrentEventName = ""

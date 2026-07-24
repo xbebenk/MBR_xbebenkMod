@@ -984,7 +984,7 @@ Func BBAttackReport($sDamage = "")
 	$AtkLogTxt &= StringFormat("%3d", $sTrophy) & "|"
 	$AtkLogTxt &= StringFormat("%1d", $sStars) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $sDamage) & "|"
-	If $g_bIsBBevent Then $AtkLogTxt &= $g_sCGCurrentEventName
+	If $g_bIsBBevent Then $AtkLogTxt &= StringRegExpReplace($g_sCGCurrentEventName, "^[^-]*-", "")
 	
 	If Int($sTrophy) >= 0 Then
 		SetAtkLog($AtkLogTxt, "", $COLOR_DEBUG)

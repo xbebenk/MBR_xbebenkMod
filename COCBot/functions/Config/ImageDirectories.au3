@@ -294,4 +294,5 @@ Global Const $g_sImgRewardTileSelected  = @ScriptDir & "\imgxml\Resources\ClanGa
 Global Const $g_sImgRewardItems  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\Items"
 Global Const $g_sImgRewardItemStorageFull  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\StorageFull"
 Global Const $g_sImgZapChallenges = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Attack\ZapChallenges"
+Global Const $g_sImgEasyEventArmyCamp = @ScriptDir & "\imgxml\Resources\ClanGamesImages\EasyEvent\ArmyCamp\"
 #EndRegion
