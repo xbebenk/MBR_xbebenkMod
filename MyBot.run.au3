@@ -1208,8 +1208,6 @@ Func FirstCheckRoutine()
 			Next
 			If $bEasyEvent And Not $g_bIsBBevent Then DoClanGameChallenge()
 			If $g_bIsBBevent Then GotoBBTodoCG()
-		Else
-			If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
 		EndIf
 		
 		If Not $g_bRunState Then Return
