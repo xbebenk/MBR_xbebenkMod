@@ -693,7 +693,6 @@ Func runBot() ;Bot that runs everything in order
 
 	While 1
 		$g_bRestart = False
-		$g_sCGCurrentEventName = ""
 		If Not $g_bRunState Then Return
 		If CheckAndroidReboot() Then ContinueLoop
 		NotifyPendingActions()
@@ -1093,7 +1092,6 @@ Func FirstCheckRoutine()
 	Local $FirstCheckRoutineTimer = TimerInit()
 	Local $b_SuccessAttack = False, $bDoClanGames = False
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
-	$g_sCGCurrentEventName = ""
 	
 	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
@@ -1111,14 +1109,15 @@ Func FirstCheckRoutine()
 	EndIf
 	
 	If BotCommand() Then btnStop()
-	If Not $g_bMeetCondStop And Not $bEasyEvent Then
+	If Not $g_bMeetCondStop Then
 		; Now the bot can attack
 		UseFreeMagicItem()
 		Setlog("Before any other routine let's attack!", $COLOR_INFO)
 		
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
-
+		If $g_sCGCurrentEventName = "" Then _ClanGames()
+		
 		Local $loopcount = 1
 		While True
 			$g_bRestart = False
@@ -1145,23 +1144,23 @@ Func FirstCheckRoutine()
 	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
 
-	If ProfileSwitchAccountEnabled() Then
-		For $count = 1 to 3
-			If Not $g_bRunState Then Return
-			If _ClanGames() Then
-				If $g_bIsBBevent Then
-					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-					SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_ACTION)
-					GotoBBTodoCG()
-				EndIf
-			Else
-				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max Then continue to main loop
-				If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
-				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
-			EndIf
-			If isOnMainVillage() Then ZoomOut(True)	; Verify is on main village and zoom out
-		Next
-	EndIf
+	;If ProfileSwitchAccountEnabled() Then
+	;	For $count = 1 to 3
+	;		If Not $g_bRunState Then Return
+	;		If _ClanGames() Then
+	;			If $g_bIsBBevent Then
+	;				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+	;				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_ACTION)
+	;				GotoBBTodoCG()
+	;			EndIf
+	;		Else
+	;			If $g_bIsCGPointMaxed Then ExitLoop ; If point is max Then continue to main loop
+	;			If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
+	;			If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
+	;		EndIf
+	;		If isOnMainVillage() Then ZoomOut(True)	; Verify is on main village and zoom out
+	;	Next
+	;EndIf
 
 	CommonRoutine("FirstCheck") ;after first attack, checking some routine
 
@@ -1194,9 +1193,9 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 
 	If ProfileSwitchAccountEnabled() Then
+		If $g_sCGCurrentEventName = "" Then _ClanGames()
 		CommonRoutine("Switch")
 		VillageReport()
-		$g_sCGCurrentEventName = ""
 		
 		Local $bEasyEvent = False
 		If _ClanGames() Then
@@ -1213,9 +1212,11 @@ Func FirstCheckRoutine()
 		If Not $g_bRunState Then Return
 		If BotCommand() Then btnStop()
 		SetLog("Check Second Attack", $COLOR_ACTION)
-		If Not $g_bMeetCondStop And Not $g_bChkAttackOnce And Not $bEasyEvent Then
+		If Not $g_bMeetCondStop And Not $g_bChkAttackOnce Then
 			Setlog("Let's attack Again!", $COLOR_INFO)
 			$g_bRestart = False ;reset
+			If $g_sCGCurrentEventName = "" Then _ClanGames()
+			
 			Local $loopcount = 1
 			While True
 				$g_bRestart = False

@@ -44,11 +44,11 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 	SetLog("Entering Clan Games", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	; Local and Static Variables
-	Local $sTimeRemain = "", $sEventName = "", $getCapture = True
+	Local $sEventName = ""
 	Local Static $YourAccScore[16][2] = [[-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], _
 										[-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True]]
 
-	Local $iWaitPurgeScore = 150
+	
 
 	; Enter on Clan Games window
 	If IsClanGamesWindow($bOnlyPurge) Then
@@ -69,8 +69,10 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 
 		Local $aiScoreLimit = GetTimesAndScores()
 		Local $sTimeCG
+		Local $iWaitPurgeScoreLimit = 150, $iWaitPurgeScore = 4000
+		
 		If $aiScoreLimit = -1 Or UBound($aiScoreLimit) <> 2 Then
-			CloseClangamesWindow() ;need clickaway, as we are leaving
+			CloseClangamesWindow()
 			Return False
 		Else
 			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
@@ -85,35 +87,37 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 				Return False
 			EndIf
 			
+			If IsEventRunning() Then 
+				CloseClangamesWindow()
+				Return True
+			Else
+				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
+			EndIf
+			
 			;now we need to copy selected challenge before checking current running event is not wrong event selected
 			PrepareChallengesImage()
-			If $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] And $g_bChkClanGamesStopBeforeReachAndPurge Then
-				SetLog("You almost reached max point")
+			
+			If $g_bChkClanGamesStopBeforeReachAndPurge And $aiScoreLimit[0] + $iWaitPurgeScoreLimit > $iWaitPurgeScore Then
+				SetLog("You score reached max point")
 				$g_bIsCGPointAlmostMax = True
-				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
-				If IsEventRunning() Then 
-					CloseClangamesWindow()
-					Return True
-				Endif
-				
-				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > $PurgeDayMinute And $aiScoreLimit[0] <= 4000 Then ; purge, but not purge on last day of clangames					
-					If $g_bChkClanGamesPurgeAny Then
-						SetLog("Clangames remain time: " & $sTimeCG & " > " & $PurgeDayMinute, $COLOR_INFO)
-						SetLog("Stop before completing and only Purge", $COLOR_INFO)
-						Local $aEvent = FindEventToPurge($sTempPath)
-						If IsArray($aEvent) And UBound($aEvent) > 0 Then
-							Local $EventName = StringSplit($aEvent[0][0], "-")
-							SetLog("Detected Event to Purge: " & $EventName[2])
-							Click($aEvent[0][1], $aEvent[0][2])
-							If _Sleep(1500) Then Return
-							StartsEvent($EventName[2], True, False)
-						Else
-							ForcePurgeEvent(False, True) ; maybe will never hit here, but..
-						EndIf
-						CloseClangamesWindow()
-						Return False
+					
+				If $g_bChkClanGamesPurgeAny And $sTimeCG > $PurgeDayMinute Then ; purge, but not purge on last day of clangames					
+					SetLog("Clangames remain time: " & $sTimeCG & " > " & $PurgeDayMinute, $COLOR_INFO)
+					SetLog("Stop before completing and only Purge", $COLOR_INFO)
+					Local $aEvent = FindEventToPurge($sTempPath)
+					If IsArray($aEvent) And UBound($aEvent) > 0 Then
+						Local $EventName = StringSplit($aEvent[0][0], "-")
+						SetLog("Detected Event to Purge: " & $EventName[2])
+						Click($aEvent[0][1], $aEvent[0][2])
+						If _Sleep(1500) Then Return
+						StartsEvent($EventName[2], True, False)
+					Else
+						ForcePurgeEvent(False, True) ; maybe will never hit here, but..
 					EndIf
+					CloseClangamesWindow()
+					Return False
 				EndIf
+
 			EndIf
 			If $YourAccScore[$g_iCurAccount][0] = -1 Then $YourAccScore[$g_iCurAccount][0] = $aiScoreLimit[0]
 		EndIf
@@ -189,7 +193,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			Click($aAllEvent[$i][1], $aAllEvent[$i][2], 1, 100, "Click Event to Start")
 			If _Sleep(1050) Then Return
 			;_ArrayDisplay($aAllEvent)
-			Return ClickOnEvent($YourAccScore, $aiScoreLimit, $sEventName, $getCapture)
+			Return ClickOnEvent($YourAccScore, $aiScoreLimit, $sEventName)
 		Next
 	EndIf
 
@@ -628,7 +632,7 @@ Func GetTimesAndScores()
 	Return $aiScoreLimit
 EndFunc   ;==>GetTimesAndScores
 
-Func CooldownTime($getCapture = True)
+Func CooldownTime()
 	;check cooldown purge
 	Local $aiCoolDown = decodeSingleCoord(findImage("Cooldown", $g_sImgCoolPurge & "\*.xml", GetDiamondFromRect("480,370,570,410"), 1, True, Default))
 	If IsArray($aiCoolDown) And UBound($aiCoolDown, 1) >= 2 Then
@@ -721,6 +725,7 @@ Func IsEventRunning($bOpenWindow = False)
 		SetLog("No event under progress", $COLOR_INFO)
 		$bRet = False
 	EndIf
+	If $g_bIsBBevent And $g_sCGCurrentEventName = "D-BuilderHut" Then $g_bIsBBevent = False
 	If $g_bChkClanGamesDebug Then SetLog("$g_sCGCurrentEventName:" & $g_sCGCurrentEventName & ", $g_bIsBBevent:" & String($g_bIsBBevent), $COLOR_DEBUG)
 	If $bRet Then CloseClangamesWindow()
 	Return $bRet
@@ -739,7 +744,7 @@ Func WaitForTrash()
 	Return $bRet
 EndFunc
 
-Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName, $getCapture)
+Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName)
 	If Not $YourAccScore[$g_iCurAccount][1] Then
 		Local $Text = "", $color = $COLOR_SUCCESS
 		If $YourAccScore[$g_iCurAccount][0] <> $ScoreLimits[0] Then
