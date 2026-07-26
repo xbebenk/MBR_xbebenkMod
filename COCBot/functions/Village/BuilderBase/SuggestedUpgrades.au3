@@ -372,10 +372,19 @@ Func PlaceNewBuildingFromShopBB($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 		Local $aWall[3] = ["2","Wall",1]
 		Local $aCostWall[3] = ["Gold", 50, 0]
 		Local $tmpX = 0, $tmpY = 0, $iCount = 0
-		If QuickMIS("BFI", $g_sImgGreenCheckBB & "GreenCheck*", 100, 100, 800, 600) Then
-			$tmpX = $g_iQuickMISX
-			$tmpY = $g_iQuickMISY
-		Else
+		Local $bWallGreenCheckFound = False
+		For $iGCRetry = 1 To 5
+			If Not $g_bRunState Then Return
+			If QuickMIS("BFI", $g_sImgGreenCheckBB & "GreenCheck*", 100, 100, 800, 600) Then
+				$tmpX = $g_iQuickMISX
+				$tmpY = $g_iQuickMISY
+				$bWallGreenCheckFound = True
+				ExitLoop
+			EndIf
+			SetLog("[" & $iGCRetry & "] GreenCheck not found yet, retrying...", $COLOR_DEBUG)
+			If _Sleep(800) Then Return
+		Next
+		If Not $bWallGreenCheckFound Then
 			SetLog("GreenCheck Not Found", $COLOR_ERROR)
 			GoGoblinMap()
 			Return False
@@ -406,15 +415,48 @@ Func PlaceNewBuildingFromShopBB($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 	EndIf
 	
 	SetLog("Looking for GreenCheck Button", $COLOR_INFO)
-	If Not $g_bRunState Then Return
-	If QuickMIS("BFI", $g_sImgGreenCheckBB & "GreenCheck*", 120, 120, 720, 550) Then
+	Local $bGreenCheckFound = False
+	For $iGCRetry = 1 To 5
+		If Not $g_bRunState Then Return
+		If QuickMIS("BFI", $g_sImgGreenCheckBB & "GreenCheck*", 100, 120, 750, 600) Then
+			$bGreenCheckFound = True
+			ExitLoop
+		EndIf
+		SetLog("[" & $iGCRetry & "] GreenCheck not found yet, retrying...", $COLOR_DEBUG)
+		If _Sleep(800) Then Return
+	Next
+
+	If $bGreenCheckFound Then
 		SetLog("GreenCheck Found in [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
-		
+
 		If Not GreenCheckLocateBB($g_iQuickMISX, $g_iQuickMISY) Then Return False
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If $sUpgradeType = "Traps" Then Click($g_iQuickMISX, $g_iQuickMISY)
-		SetLog("Placed " & $sUpgrade & " on Main Village! [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
-		If _Sleep(1000) Then Return
+		Local $iClickX = $g_iQuickMISX, $iClickY = $g_iQuickMISY
+		Click($iClickX, $iClickY)
+		If $sUpgradeType = "Traps" Then Click($iClickX, $iClickY)
+
+		; verify the click actually closed the whole placement UI before trusting it
+		; require Green AND RedX both gone, twice in a row, to filter out a transient
+		; blip from the click just nudging the ghost building instead of confirming it
+		Local $bClickVerified = False
+		Local $iCleanChecks = 0
+		For $iVerify = 1 To 4
+			If _Sleep(600) Then Return
+			If Not QuickMIS("BFI", $g_sImgGreenCheckBB & "GreenCheck*", 100, 120, 750, 600) And Not QuickMIS("BFI", $g_sImgGreenCheckBB & "RedX*", 100, 120, 750, 600) Then
+				$iCleanChecks += 1
+				If $iCleanChecks >= 2 Then
+					$bClickVerified = True
+					ExitLoop
+				EndIf
+			Else
+				$iCleanChecks = 0
+			EndIf
+		Next
+		If Not $bClickVerified Then
+			SetLog("Click missed! Placement UI still visible after clicking [" & $iClickX & "," & $iClickY & "], placement failed", $COLOR_ERROR)
+			Return False
+		EndIf
+
+		SetLog("Placed " & $sUpgrade & " on Main Village! [" & $iClickX & "," & $iClickY & "]", $COLOR_SUCCESS)
 		AutoUpgradeLog(True, "BB " & $sUpgrade, 1, $iCost, "New")
 		Return True
 	ElseIf QuickMIS("BFI", $g_sImgGreenCheckBB & "GreyCheck*") Then
@@ -422,17 +464,41 @@ Func PlaceNewBuildingFromShopBB($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 		Click($g_iQuickMISX - 80, $g_iQuickMISY)
 		Return False
 	ElseIf QuickMIS("BFI", $g_sImgGreenCheckBB & "RedX*") Then
-		SetLog("No GreenCheck Found, but RedX", $COLOR_ERROR)
-		Click($g_iQuickMISX + 80, $g_iQuickMISY)
-		Click($g_iQuickMISX, $g_iQuickMISY)
+		; Green check unmatchable (e.g. dark scenery: green button on green terrain) — anchor on the RedX.
+		; RedX is red, distinct from green terrain, so it matches cleanly; the green check sits +80px to its right.
+		Local $iRxClickX = $g_iQuickMISX + 80, $iRxClickY = $g_iQuickMISY
+		SetLog("GreenCheck via RedX anchor: RedX[" & $g_iQuickMISX & "," & $g_iQuickMISY & "] -> click [" & $iRxClickX & "," & $iRxClickY & "]", $COLOR_SUCCESS)
+		Click($iRxClickX, $iRxClickY)
+		If $sUpgradeType = "Traps" Then Click($iRxClickX, $iRxClickY)
+		; same verification safety net as the green path: both Green AND RedX gone, twice in a row
+		Local $bAnchorVerified = False, $iAnchorClean = 0
+		For $iVerify = 1 To 4
+			If _Sleep(600) Then Return
+			If Not QuickMIS("BFI", $g_sImgGreenCheckBB & "GreenCheck*", 100, 120, 750, 600) And Not QuickMIS("BFI", $g_sImgGreenCheckBB & "RedX*", 100, 120, 750, 600) Then
+				$iAnchorClean += 1
+				If $iAnchorClean >= 2 Then
+					$bAnchorVerified = True
+					ExitLoop
+				EndIf
+			Else
+				$iAnchorClean = 0
+			EndIf
+		Next
+		If $bAnchorVerified Then
+			SetLog("Placed " & $sUpgrade & " on Main Village via RedX anchor! [" & $iRxClickX & "," & $iRxClickY & "]", $COLOR_SUCCESS)
+			AutoUpgradeLog(True, "BB " & $sUpgrade, 1, $iCost, "New")
+			Return True
+		EndIf
+		SetLog("RedX anchor click did not confirm placement", $COLOR_ERROR)
 		Return False
 	EndIf
+	SetLog("GreenCheck exhausted, no Green/Grey/RedX found, giving up on this placement", $COLOR_ERROR)
 	Click($g_iQuickMISX + 80, $g_iQuickMISY)
 	Return $bRet
 EndFunc ;_PlaceNewBuildingFromShopBB
 
 Func GreenCheckLocateBB($x, $y)
-	If $x > 120 And $x < 600 And $y > 200 Then Return True
+	If $x > 120 And $x < 600 And $y > 130 Then Return True
 	
 	Local $xDragStart = 430, $yDragStart = 430
 	Local $xDrag = $xDragStart, $yDrag = $yDragStart
