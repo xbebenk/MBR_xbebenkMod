@@ -693,6 +693,7 @@ Func IsEventRunning($bOpenWindow = False)
 					$g_bIsBBevent = True
 					$g_sCGCurrentEventName = $aActiveEvent[0][0]
 					$g_bIsCGEventRunning = True
+					If $g_sCGCurrentEventName = "D-BBreakdown" Then $g_sCGCurrentEventName = "BBD-BuildingDes"
 					Setlog("Running Challenge is BB Challenge : " & $g_sCGCurrentEventName, $COLOR_INFO)
 				Else
 					Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
