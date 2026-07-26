@@ -528,8 +528,8 @@ Func GetBuildingTypeBB($sUpgrades = "")
 	If Not $g_bRunState Then Return
 	Local $aArmy[5] = ["Camp", "Healing", "Copter", "Machine", "Control"]
 	Local $aResource[3] = ["Collector", "Storage", "Mine"]
-	Local $aDefense[11] = ["Wall", "Cannon", "Tower", "Mortar", "FireCrackers", "Air Bombs", "Tesla", "Crusher", "Roaster", "Launcher", "Guard"]
-	Local $aTrap[7] = ["Bomb", "Trap", "Mine", "Giant", "Mega", "Lava", "Bow"]
+	Local $aDefense[12] = ["Wall", "Cannon", "Tower", "Mortar", "FireCrackers", "Air Bombs", "Tesla", "Crusher", "Roaster", "Launcher", "Guard", "Bow"]
+	Local $aTrap[6] = ["Bomb", "Trap", "Mine", "Giant", "Mega", "Lava"]
 	Local $sUpgradeType = ""
 	
 	For $sArmy In $aArmy

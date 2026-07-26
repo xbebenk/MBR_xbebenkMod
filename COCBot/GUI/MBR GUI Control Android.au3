@@ -187,7 +187,13 @@ Func getAllEmulators()
 	If Not @error Then
 		If GetVersionNormalized($__LDPlayer9_Version) > GetVersionNormalized("9.1.0.0") Then $sEmulatorString &= "LDPlayer9|"
 	EndIf
-
+	
+	;MuMu
+	$__MuMu_Version = RegRead($g_sHKLM & "\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\MuMuPlayerGlobal\", "DisplayVersion")
+	If Not @error Then
+		If GetVersionNormalized($__MuMu_Version) > GetVersionNormalized("5.30.0.0") Then $sEmulatorString &= "MuMu|"
+	EndIf
+	
 	Local $sResult = StringRight($sEmulatorString, 1)
 	If $sResult == "|" Then $sEmulatorString = StringTrimRight($sEmulatorString, 1)
 	Local $aEmulator = StringSplit($sEmulatorString, "|", $STR_NOCOUNT)
@@ -198,13 +204,10 @@ Func getAllEmulators()
 			If StringInStr($aEmulator[$i], "BlueStacks") Then $emuVer = $__BlueStacks_Version
 			If StringInStr($aEmulator[$i], "BlueStacks5") Then $emuVer = $__BlueStacks5_Version
 			If StringInStr($aEmulator[$i], "LDPlayer9") Then $emuVer = $__LDPlayer9_Version
+			If StringInStr($aEmulator[$i], "MuMu") Then $emuVer = $__Mumu_Version
 			If StringInStr($aEmulator[$i], "Memu") Then $emuVer = $__MEmu_Version
 			If StringInStr($aEmulator[$i], "nox") Then $emuVer = $__Nox_Version
 			SetLog("  - " & $aEmulator[$i] & " version: " & $emuVer, $COLOR_DEBUG1)
-			;If StringInStr($aEmulator[$i], "Memu") And GetVersionNormalized($__MEmu_Version) > GetVersionNormalized("5.2") And GetVersionNormalized($__MEmu_Version) < GetVersionNormalized("7.2") Then
-			;	Setlog("Memu v" & $__MEmu_Version & " not fully supported on this Mod", $COLOR_WARNING)
-			;	Setlog("Please upgrade to Memu version 7.2.9 or later", $COLOR_WARNING)
-			;EndIf
 		Next
 	Else
 		Setlog("No Emulator found in your machine")
@@ -238,6 +241,8 @@ Func getAllEmulatorsInstances()
 		Case "BlueStacks5"
 			Local $VMsBlueStacks = RegRead($g_sHKLM & "\SOFTWARE\BlueStacks_nxt\", "DataDir")
 			$sEmulatorPath = $VMsBlueStacks ; C:\ProgramData\BlueStacks_nxt\Engine\
+		Case "MuMu"
+			$sEmulatorPath = StringReplace(StringReplace(RegRead($g_sHKLM & "\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\MuMuPlayerGlobal\", "UninstallString"), "uninstall.exe", "vms"), '"', "")
 		Case "Nox"
 			$sEmulatorPath = GetNoxPath() & "\BignoxVMS"  ; C:\Program Files\Nox\bin\BignoxVMS
 		Case "MEmu"
@@ -249,30 +254,24 @@ Func getAllEmulatorsInstances()
 
 	; Just in case
 	$sEmulatorPath = StringReplace($sEmulatorPath, "\\", "\")
-
-	; BS Multi Instance
-	Local $sBlueStacksFolder = ""
-	If $Emulator = "BlueStacks2" Then $sBlueStacksFolder = "Android"
-	If $Emulator = "BlueStacks5" Then $sBlueStacksFolder = "Pie"
-	If $Emulator = "LDPlayer9" Then $sBlueStacksFolder = "leidian"
-
+	Local $sBlueStacksFolder = "*"
+	
 	; Getting all VM Folders
-	Local $aEmulatorFolders = _FileListToArray($sEmulatorPath, $sBlueStacksFolder & "*", $FLTA_FOLDERS)
-	;If $Emulator = "BlueStacks5" Then
-	;	Local $PieFolders = _FileListToArray($sEmulatorPath, "Pie*", $FLTA_FOLDERS)
-	;	_ArrayDelete($PieFolders, 0)
-	;	_ArrayConcatenate($aEmulatorFolders, $PieFolders)
-	;EndIf
-
+	Local $aEmulatorFolders = _FileListToArray($sEmulatorPath, $sBlueStacksFolder, $FLTA_FOLDERS)
+	
 	If @error = 1 Then
-		Setlog($Emulator & " -- Path was invalid. " & $sEmulatorPath)
+		Setlog($Emulator & " -- Path was invalid. " & $sEmulatorPath & " : " & $sBlueStacksFolder, $COLOR_ERROR)
+		Return
+	EndIf
+	If @error = 2 Then
+		Setlog($Emulator & " -- bad filter: " & $sBlueStacksFolder, $COLOR_ERROR)
 		Return
 	EndIf
 	If @error = 4 Then
 		Setlog($Emulator & " -- No file(s) were found. " & $sEmulatorPath)
 		Return
 	EndIf
-
+	
 	; Removing the [0] -> $aArray[0] = Number of Files\Folders returned
 	_ArrayDelete($aEmulatorFolders, 0)
 

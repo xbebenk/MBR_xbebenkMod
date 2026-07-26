@@ -234,7 +234,7 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 
 		ResumeAndroid()
 		If $bDoClanGames Then
-			SetLog("DoClanGames Mode: " & $g_sCGEasyEventName, $COLOR_SUCCESS)
+			SetLog("DoClanGames Mode: " & $g_sCGCurrentEventName, $COLOR_SUCCESS)
 			If $dbBase Then 
 				$match[$DB] = True
 				$match[$LB] = False
@@ -297,6 +297,8 @@ Func _VillageSearch($bTest = False, $bDoClanGames = False) ;Control for searchin
 				SetLog($GetResourcesTXT, $COLOR_BLACK, "Lucida Console", 7.5)
 				SetLog("      Match: " & $sMatchLogText & " BUT Measure Failed! Skipping...", $COLOR_ERROR, "Lucida Console", 7.5)
 				$logwrited = True
+				
+				If $g_bLeagueAttack Then Exitloop
 				
 				VillageSearchNext() ; Klik tombol Next
 				$iSkipped += 1

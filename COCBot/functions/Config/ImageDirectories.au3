@@ -36,6 +36,7 @@ Global Const $g_sImgImportantNotice = @ScriptDir & "\imgxml\other\ImportantNotic
 Global Const $sImgHeroHallTutor = @ScriptDir & "\imgxml\other\HeroHallTutor\"
 Global Const $g_sImgRevengeTutor = @ScriptDir & "\imgxml\other\RevengeTutor\"
 Global Const $g_sImgPlacedOnLeague = @ScriptDir & "\imgxml\other\PlacedOnLeague\"
+Global Const $g_sImgChestPage = @ScriptDir & "\imgxml\other\ChestPage\"
 #EndRegion
 
 #Region Main Village
@@ -293,4 +294,7 @@ Global Const $g_sImgRewardTileSelected  = @ScriptDir & "\imgxml\Resources\ClanGa
 Global Const $g_sImgRewardItems  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\Items"
 Global Const $g_sImgRewardItemStorageFull  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\StorageFull"
 Global Const $g_sImgZapChallenges = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Attack\ZapChallenges"
+Global Const $g_sImgEasyEventArmyCamp = @ScriptDir & "\imgxml\Resources\ClanGamesImages\EasyEvent\ArmyCamp\"
+Global Const $g_sImgEasyEventDESpell = @ScriptDir & "\imgxml\Resources\ClanGamesImages\EasyEvent\DESPell\"
+Global Const $g_sImgEasyEventAirSweeper = @ScriptDir & "\imgxml\Resources\ClanGamesImages\EasyEvent\AirSweeper\"
 #EndRegion

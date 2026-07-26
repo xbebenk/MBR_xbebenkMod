@@ -91,5 +91,30 @@ Func _LocateHeroHall()
 EndFunc   ;==>LocateHeroHall
 
 Func AutoLocateHeroHall()
-	
+	Local $bRet = False, $BuildingName = ""
+	Local $aHall = QuickMIS("CNX", $g_sImgHeroHall, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom)
+	If IsArray($aHall) And Ubound($aHall) > 0 Then 
+		RemoveDupCNX($aHall)
+		For $i = 0 To UBound($aHall) - 1
+			If StringInStr($aHall[$i][0], "Hero") Then 
+				SetDebugLog("Hero Hall Search find : " & _ArrayToString($aHall))
+				Click($aHall[$i][1], $aHall[$i][2])
+				If _Sleep(500) Then Return
+				$BuildingName = BuildingInfo()
+				If StringInStr($BuildingName[1], "Hero") Then
+					$g_aiHeroHallPos[0] = $aHall[$i][1]
+					$g_aiHeroHallPos[1] = $aHall[$i][2]
+					$bRet = True
+					ExitLoop
+				EndIf
+			EndIf
+		Next
+	Else
+		SetLog("Couldn't find Hero Hall on main village", $COLOR_ERROR)
+		If $g_bDebugImageSave Then SaveDebugImage("HeroHall", True)
+		Return $bRet
+	EndIf
+	SetLog("AutoLocateHeroHall, Success: " & _ArrayToString($g_aiHeroHallPos), $COLOR_SUCCESS)
+	ClickAway()
+	Return $bRet
 EndFunc

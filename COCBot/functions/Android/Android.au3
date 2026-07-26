@@ -774,11 +774,22 @@ Func FindPreferredAdbPath()
 
 	If $g_iAndroidAdbReplace And $adbPath And FileExists($sAdb) And (FileExists(@ScriptDir & "\lib\adb\" & $aDll[0]) And FileExists(@ScriptDir & "\lib\adb\" & $aDll[1])) _
 			And (FileGetSize($adbPath) <> FileGetSize($sAdb) Or (FileGetSize($sAdbFolder & $aDll[0]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[0]) Or FileGetSize($sAdbFolder & $aDll[1]) <> FileGetSize(@ScriptDir & "\lib\adb\" & $aDll[1]))) Then
-		Local $aAdbProcess = ProcessesExist($adbPath)
-		For $i = 0 To UBound($aAdbProcess) -1
-			; ensure target process is not running
-			KillProcess($aAdbProcess[$i], "FindPreferredAdbPath")
+		For $i = 1 To 20
+			Local $iAdbPID = ProcessExists2($adbPath)
+			If $iAdbPID > 0 Then 
+				SetDebugLog("Killing " & $sAdbFile & " process with pid: " & $iAdbPID)
+				KillProcess($iAdbPID, "FindPreferredAdbPath")
+			Else
+				ExitLoop
+			EndIf
 		Next
+		
+		Local $sBackupPath = $sAdbFolder & "\" & $sAdbFile & "_" & $g_sAndroidEmulator & "_backup.exe"
+		If Not FileExists($sBackupPath) Then
+			FileCopy($adbPath, $sBackupPath, 1) ; copy file asli ke lokasi cadangan
+			SetDebugLog("Backup ADB berhasil: " & $sBackupPath)
+		EndIf
+
 		If FileCopy($sAdb, $adbPath, 1) And (FileCopy(@ScriptDir & "\lib\adb\" & $aDll[0], $sAdbFolder & $aDll[0], 1) And FileCopy(@ScriptDir & "\lib\adb\" & $aDll[1], $sAdbFolder & $aDll[1], 1)) Then
 			SetLog("Replaced " & $g_sAndroidEmulator & " ADB with MyBot.run version")
 		Else
@@ -1727,7 +1738,9 @@ Func CheckScreenAndroid($ClientWidth, $ClientHeight, $bSetLog = True)
 	If Not $g_bRunState Then Return True
 
 	; check display font size
-	Local $s_font_scale = AndroidAdbSendShellCommand("settings get system font_scale")
+	Local $sSystem = "system"
+	If $g_iAndroidVersionAPI > $g_iAndroidpie Then $sSystem = "secure"
+	Local $s_font_scale = AndroidAdbSendShellCommand("settings get " & $sSystem & " font_scale")
 	Local $font_scale = Number($s_font_scale)
 	If $font_scale > 0 Then
 		SetDebugLog($g_sAndroidEmulator & " font_scale = " & $font_scale)
@@ -1987,6 +2000,8 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 					$cmdOutput = AndroidAdbSendShellCommand("ls -l /data/local/tmp/minitouch")
 					SetLog($cmdOutput, $COLOR_INFO)
 				EndIf
+			Case $g_iAndroidSnowCone
+				SetDebugLog("Android Version 12")
 			Case Else
 				SetDebugLog("Android Version not detected!")
 		EndSwitch
@@ -2035,8 +2050,7 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				SetDebugLog($g_sAndroidEmulator & " initialize minitouch on port " & $g_bAndroidAdbMinitouchPort)
 				; launch minitouch
 				Local $androidPath = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/")
-				If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu" Then
-					SetDebugLog("Pie")
+				If ($g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu") Or $g_iAndroidVersionAPI >= $g_iAndroidSnowCone Then
 					Local $output = AndroidAdbSendShellCommand("/data/local/tmp/minitouch -d " & $g_sAndroidMouseDevice & " >/dev/null 2>&1 &", -1000, $wasRunState, False)
 					SetDebugLog("[1] : " & $output, $COLOR_ERROR)
 				Else
@@ -2223,15 +2237,13 @@ Func AndroidAdbLaunchMinitouchShellInstance($wasRunState = Default, $rebootAndro
 		
 		; minitouch: Uses STDIN and doesn't start socket
 		If $bUseMouseDevice Then
-			If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu" Then
-				SetDebugLog("Pie with Mouse")
+			If ($g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu") Or $g_iAndroidVersionAPI >= $g_iAndroidSnowCone Then
 				Local $cmdMinitouch = "/data/local/tmp/minitouch -d " & $g_sAndroidMouseDevice & " -i"
 			Else
 				Local $cmdMinitouch = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/") & "minitouch -d " & $g_sAndroidMouseDevice & " -i"
 			EndIf
 		Else
-			If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu" Then
-				SetDebugLog("Pie")
+			If ($g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu") Or $g_iAndroidVersionAPI >= $g_iAndroidSnowCone Then
 				Local $cmdMinitouch = "/data/local/tmp/minitouch -i"
 			Else
 				Local $cmdMinitouch = $g_sAndroidPicturesPath & StringReplace($g_sAndroidPicturesHostFolder, "\", "/") & "minitouch -i"
@@ -2532,7 +2544,7 @@ Func AndroidAdbSendShellCommandScript($scriptFile, $variablesArray = Default, $c
 			FileSetTime($hostPath & $scriptFileSh, $scriptModifiedTime, $FT_MODIFIED) ; set modification date of source
 		EndIf
 		If $bIsMinitouch Then
-			If $g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu" Then
+			If ($g_iAndroidVersionAPI = $g_iAndroidPie And $g_sAndroidEmulator = "MEmu") Or $g_iAndroidVersionAPI >= $g_iAndroidSnowCone Then
 				$s = AndroidAdbSendShellCommand("""" & $MEmuMinitouchPath & "minitouch"" -v -d " & $g_sAndroidMouseDevice & " -f """ & $androidPath & $scriptFileSh & """", $timeout, $wasRunState, $EnsureShellInstance)
 				SetDebugLog("Pie : " & """" & $MEmuMinitouchPath & "minitouch"" -v -d " & $g_sAndroidMouseDevice & " -f """ & $androidPath & $scriptFileSh & """")
 			Else
@@ -2935,34 +2947,34 @@ Func AndroidClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch =
 	$y2 = Int($y2) + $g_aiMouseOffset[1]
 	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x1,$y1)")
 	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x2,$y2)")
-	Local $swipe_coord[4][2] = [["{$x1}", $x1], ["{$y1}", $y1], ["{$x2}", $x2], ["{$y2}", $y2]]
-	;Return AndroidAdbScript("clickdrag", $swipe_coord, Default, Default, $wasRunState)
-	Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState, $bSCIDSwitch)
+	
+	Return AndroidminitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState, $bSCIDSwitch)
 EndFunc   ;==>AndroidClickDrag
 
-Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch = False)
+Func AndroidminitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch = False)
 	AndroidAdbLaunchShellInstance($wasRunState)
-	If $g_iAndroidAdbMinitouchMode = 0 Then
-		If $g_bAndroidAdbMinitouchSocket < 1 Then
-			SetLog("Minitouch not available", $COLOR_ERROR)
+	If $g_iAndroidAdbminitouchMode = 0 Then
+		If $g_bAndroidAdbminitouchSocket < 1 Then
+			SetLog("minitouch not available", $COLOR_ERROR)
 			Return SetError(1, 0, 0)
 		EndIf
 
-		TCPRecv($g_bAndroidAdbMinitouchSocket, 256, 1)
+		TCPRecv($g_bAndroidAdbminitouchSocket, 256, 1)
 		Local $recv_state = [@error, @extended]
-		Local $bytes = TCPSend($g_bAndroidAdbMinitouchSocket, @LF)
+		Local $bytes = TCPSend($g_bAndroidAdbminitouchSocket, @LF)
 		Local $send_state = [@error, $bytes]
 		If ($recv_state[0] Or $send_state[0] Or $send_state[1] <> 1) Then
 			If $wasRunState Then
 				SetLog("Cannot send minitouch data to " & $g_sAndroidEmulator & ", received " & $recv_state[1] & ", send " & $send_state[1], $COLOR_ERROR)
 				; restart adb session that hopefully fixes the tcp issues
 				AndroidAdbTerminateShellInstance()
-				Return AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, False)
+				Return AndroidminitouchClickDrag($x1, $y1, $x2, $y2, False)
 			EndIf
 			Return SetError(1, 0, 0)
 		EndIf
 	EndIf
-
+	
+	SetDebugLog("AndroidminitouchClickDrag(" & $x1 & "," & $y1 & "," & $x2 & "," & $y2 & ")")
 	Local $sleepStart = 250
 	Local $sleepMove = 10
 	Local $sleepEnd = 1000
@@ -2988,6 +3000,7 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCI
 		AndroidAdbSendMinitouchShellCommand($send)
 	EndIf
 	
+	SetDebugLog("loops : " & $loops)
 	$sleep = $sleepMove
 	For $i = 1 To $loops
 		$x += $x_steps
@@ -3026,6 +3039,86 @@ Func AndroidMinitouchClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCI
 
 	Return SetError(0, 0, 1)
 EndFunc   ;==>AndroidMinitouchClickDrag
+
+Func AndroidMumuClickDrag($x1, $y1, $x2, $y2, $wasRunState = Default, $bSCIDSwitch = False)
+	AndroidAdbLaunchShellInstance($wasRunState)
+	
+	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x1,$y1)")
+	Execute($g_sAndroidEmulator & "AdjustClickCoordinates($x2,$y2)")
+	SetDebugLog("AndroidMumuClickDrag raw coordinates: (" & $x1 & "," & $y1 & ") to (" & $x2 & "," & $y2 & ")")
+	
+	Local $sleepStart = 250
+	Local $sleepMove = 10
+	Local $sleepEnd = 1000
+	Local $sleep = $sleepStart
+	Local $botSleep = 0
+	Local $send = ""
+	
+	; -------------------------------------------------------------------------
+	; HITUNG LOOPS DARI SELISIH KOORDINAT YANG SUDAH DIBALIK
+	; -------------------------------------------------------------------------
+	Local $iDistance = _Max(Abs($x2 - $x1), Abs($y2 - $y1))
+	
+	; Tentukan jarak pixel per-geseran (semakin kecil nilainya, semakin mulus drag-nya)
+	Local $iPixelPerStep = 15 
+	Local $loops = Int($iDistance / $iPixelPerStep)
+	If $loops < 1 Then $loops = 1 ; Minimal 1x pergerakan
+	
+	Local $x_steps = ($x2 - $x1) / $loops
+	Local $y_steps = ($y2 - $y1) / $loops
+	Local $x = $x1, $y = $y1
+	If $bSCIDSwitch Then $sleepMove = 50
+	
+	; 1. Touch Down
+	$send = "d 0 " & Int($x) & " " & Int($y) & " 100" & @LF & "c" & @LF & "w " & $sleep & @LF
+	$botSleep += $sleep
+	If $g_bDebugAndroid Then SetDebugLog("minitouch: " & StringReplace($send, @LF, ";"))
+	If $g_iAndroidAdbminitouchMode = 0 Then
+		TCPSend($g_bAndroidAdbminitouchSocket, $send)
+	Else
+		AndroidAdbSendminitouchShellCommand($send)
+	EndIf
+	
+	SetDebugLog("Calculated Loops : " & $loops & " | Step X: " & $x_steps & " | Step Y: " & $y_steps)
+	$sleep = $sleepMove
+	
+	; 2. Touch Move (Looping Drag)
+	For $i = 1 To $loops
+		$x += $x_steps
+		$y += $y_steps
+		
+		; Jika sudah di iterasi terakhir, paksa koordinat pas di titik tujuan
+		If $i = $loops Then
+			$x = $x2
+			$y = $y2
+			$sleep = $sleepEnd
+		EndIf
+		
+		$send = "m 0 " & Int($x) & " " & Int($y) & " 100" & @LF & "c" & @LF & "w " & $sleep & @LF
+		$botSleep += $sleep
+		If $g_bDebugAndroid Then SetDebugLog("minitouch move [" & $i & "/" & $loops & "]: " & StringReplace($send, @LF, ";"))
+		If $g_iAndroidAdbminitouchMode = 0 Then
+			TCPSend($g_bAndroidAdbminitouchSocket, $send)
+		Else
+			AndroidAdbSendminitouchShellCommand($send)
+		EndIf
+	Next
+	
+	; 3. Touch Up
+	$sleep = $sleepEnd
+	$send = "u 0" & @LF & "c" & @LF & "w " & $sleep & @LF
+	$botSleep += $sleep
+	If $g_bDebugAndroid Then SetDebugLog("minitouch: " & StringReplace($send, @LF, ";"))
+	If $g_iAndroidAdbminitouchMode = 0 Then
+		TCPSend($g_bAndroidAdbminitouchSocket, $send)
+	Else
+		AndroidAdbSendminitouchShellCommand($send)
+	EndIf
+	
+	_Sleep($botSleep)
+
+	Return SetError(0, 0, 1)
+EndFunc   ;==>AndroidMumuClickDrag
 
 ; Returns True if KeepClicks is active or for $Really = False KeepClicks() was called even though not enabled (poor mans deploy troops detection)
 Func IsKeepClicksActive($Really = True)
@@ -4095,7 +4188,7 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	If AndroidInvalidState() Then Return 0
 	Local $cmd, $output = "", $error
 	
-	$cmd = "set result=$(dumpsys window windows | grep -E 'mCurrentFocus|mFocusedApp' |grep -E """ & $sPackage & """ >&2)"
+	$cmd = "set result=$(dumpsys window windows | grep -E 'mCurrentFocus|mFocusedApp|imeInputTarget' |grep -E """ & $sPackage & """ >&2)"
 	If $bForeground Then 
 		$output = AndroidAdbSendShellCommand($cmd)
 		$error = @error
@@ -4478,6 +4571,8 @@ Func UpdateAndroidBackgroundMode()
 				; Ok, disable screencap
 				SetDebugLog("Disable ADB screencap, using WinAPI DirectX for Background Mode")
 				$g_bAndroidAdbScreencap = False
+				;disable monitor off
+				_WinAPI_SetThreadExecutionState(BitOR($ES_DISPLAY_REQUIRED, $ES_CONTINUOUS))
 			EndIf
 		Case 2 ; ADB screencap mode (slower, but alwasy works even if Monitor is off -> "True Brackground Mode")
 			If $g_bAndroidAdbScreencapEnabled <> True Or $g_bAndroidSharedFolderAvailable <> True Then
@@ -4506,6 +4601,7 @@ EndFunc   ;==>UpdateAndroidBackgroundMode
 
 Func GetAndroidCodeName($iAPI = $g_iAndroidVersionAPI)
 
+	If $iAPI >= $g_iAndroidSnowCone Then Return "Snow Cone"
 	If $iAPI >= $g_iAndroidpie Then Return "Pie"
 	If $iAPI >= $g_iAndroidNougat Then Return "Nougat"
 	If $iAPI >= $g_iAndroidLollipop Then Return "Lollipop"
@@ -4899,6 +4995,8 @@ Func CheckEmuNewVersions()
 			$NewVersion = GetVersionNormalized("4.280.1.0")
 		Case "MEmu"
 			$NewVersion = GetVersionNormalized("7.2.9.0")
+		Case "MuMu"
+			$NewVersion = GetVersionNormalized("5.30.0.0")
 		Case "Nox"
 			$NewVersion = GetVersionNormalized("7.0.5.7")
 		Case "BlueStacks5"

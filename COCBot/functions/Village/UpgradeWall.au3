@@ -435,14 +435,14 @@ Func UpWallGold($iWallCost, $iCountPlus, $UpType, $aButton)
 	EndIf
 EndFunc
 
-Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
+Func SearchWall(ByRef $aWallLevelFound, $bTest = False)
 	Local $bWallFound = False, $aWallLevel, $iWallLevel
 	Local $aWall, $aDel[1] = [0], $x, $y
 	Local $iWallLevelToDelete = $g_iTownHallLevel
 	Local $iMaxWallFound = 5, $iLevelFound = 0
 	SetLog("Search Wall on Village", $COLOR_DEBUG)
 	SetLog("Sort WallLevel: " & String($g_iSearchWallSort), $COLOR_DEBUG)
-	If Not $bDisplayArray Then ZoomOut()
+	If Not $bTest Then ZoomOut()
 	
 	$aWall = QuickMIS("CNX", $g_sImgCheckWallDir, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom)
 
@@ -467,10 +467,10 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 			EndIf
 		Next
 		
-		If $bDisplayArray Then _ArrayDisplay($aWall, "$aWall")
+		;If $bTest Then _ArrayDisplay($aWall, "$aWall")
 		
 		$aDel[0] = UBound($aDel) - 1
-		If $bDisplayArray Then _ArrayDisplay($aDel, "$sDel")
+		;If $bTest Then _ArrayDisplay($aDel, "$sDel")
 		If UBound($aWall) > $aDel[0] Then 
 			_ArrayDelete($aWall, $aDel) ;delete wall level which same or higher than TH level
 		Else
@@ -488,7 +488,8 @@ Func SearchWall(ByRef $aWallLevelFound, $bDisplayArray = False)
 		SetDebugLog("Your TownHall Level: " & $g_iTownHallLevel & ", Exluding Wall Level >= " & $iWallLevelToDelete, $COLOR_INFO)
 		SetDebugLog("Found " & UBound($aWall) - 1 & " Wall on Village", $COLOR_DEBUG)
 
-		If $bDisplayArray Then _ArrayDisplay($aWall, "Final Wall")
+		If $bTest Then _ArrayDisplay($aWall, "Final Wall")
+		
 		Local $tmpLevel = 0
 		For $i = 0 To UBound($aWall) - 1
 			If _Sleep(50) Then Return

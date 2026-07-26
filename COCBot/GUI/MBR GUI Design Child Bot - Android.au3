@@ -147,8 +147,8 @@ Func CreateBotAndroid()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y += 52
-	$x -= 60
-	GUICtrlCreateGroup(GetTranslatedFileIni("Android Control", "Group_03", "Help"), $x + 55, $y - 20, 180, 45)
+	$x -= 50
+	GUICtrlCreateGroup(GetTranslatedFileIni("Android Control", "Group_03", "Help"), $x + 55, $y - 20, 170, 45)
 		$g_lblHelpBot = GUICtrlCreateLabel("Command line Help ?", $x + 70, $y, 150, 24, $SS_RIGHT)
 			GUICtrlSetOnEvent($g_lblHelpBot, "ShowControlHelp")
 			GUICtrlSetCursor(-1, 0)
@@ -158,11 +158,11 @@ Func CreateBotAndroid()
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	Local $x = 25
-	GUICtrlCreateGroup(GetTranslatedFileIni("Android Control", "Group_04", "Emulator/Instance"), $x - 20, $y - 20, 255, 45)
-		$g_hCmbAndroidEmulator = GUICtrlCreateCombo("", $x - 10, $y - 5, 115, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+	GUICtrlCreateGroup(GetTranslatedFileIni("Android Control", "Group_04", "Emulator/Instance"), $x - 20, $y - 20, 265, 45)
+		$g_hCmbAndroidEmulator = GUICtrlCreateCombo("", $x - 10, $y - 5, 90, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("Android Control", "CmbAndroidEmulator_Info", "Change the emulator. MyBot will automaticly detect the installed version."))
 			GUICtrlSetOnEvent(-1, "cmbAndroidEmulator")
-		$g_hCmbAndroidInstance = GUICtrlCreateCombo("", $x + 110, $y - 5, 115, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		$g_hCmbAndroidInstance = GUICtrlCreateCombo("", $x + 85, $y - 5, 150, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("Android Control", "CmbAndroidInstance_Info", "Change the instance. MyBot will automaticly detect the available instance."))
 			GUICtrlSetOnEvent(-1, "cmbAndroidInstance")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

@@ -12,6 +12,9 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+Global $__Mumu_Device_Path = "", $__Mumu_Path = ""
+Global $__Mumu_Manage_Path = "", $__Mumu_ConfigDir = ""
+Global $__MuMu_Version = 0
 
 Func GetMumuProgramParameter($bAlternative = False)
 	;If $bAlternative Then Return AddSpace("index=") & StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", "")
@@ -43,7 +46,6 @@ Func _OpenMumu($bRestart = False)
 		Return True
 	EndIf
 	
-	
 	$hTimer = __TimerInit() ; start a timer for tracking BS start up time
 	While $g_hAndroidControl = 0
 		_StatusUpdateTime($hTimer, $g_sAndroidEmulator & " Starting")
@@ -71,8 +73,12 @@ EndFunc   ;==>_OpenMumu
 
 Func GetMumuAdbPath()
 	Local $adbPath = @ScriptDir & "\lib\adb\adb.exe"
-	If FileExists($adbPath) Then Return $adbPath
-	Return ""
+	Local $sMumuAdbPath = $__Mumu_Device_Path & "adb.exe"
+	If FileExists($sMumuAdbPath) Then 
+		SetDebugLog("$sMumuAdbPath: " & $sMumuAdbPath)
+		Return $sMumuAdbPath
+	EndIf
+	Return $adbPath
 EndFunc   ;==>GetMumuXAdbPath
 
 Func InitMumuX($bCheckOnly = False)
@@ -84,6 +90,7 @@ Func InitMumuX($bCheckOnly = False)
 	
 	Local $bFileFound = False
 	Local $frontend_exe = "MuMuNxDevice.exe"
+	SetDebugLog("$__Mumu_Device_Path : " & $__Mumu_Device_Path & $frontend_exe)
 	$bFileFound = FileExists($__Mumu_Device_Path & $frontend_exe)
 	
 	If Not $bFileFound Then
@@ -103,7 +110,7 @@ Func InitMumuX($bCheckOnly = False)
 		$g_sAndroidProgramPath = $__Mumu_Device_Path & $frontend_exe
 		$g_sAndroidAdbPath = $sPreferredADB
 		$g_sAndroidVersion = $__Mumu_Version
-		ConfigureSharedFolderMumu() ;
+		ConfigureSharedFolderMumu()
 		WinGetAndroidHandle()
 	EndIf
 	
@@ -115,21 +122,26 @@ Func ConfigureSharedFolderMumu($iMode = 0, $bSetLog = Default)
 	Local $bResult = False
 	
 	Local $iInstance = StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", "")
-	Local $__Mumu_ConfigDir = $__Mumu_Path & "vms\MuMuPlayerGlobal-12.0-" & $iInstance & "\configs\"
-	Local $__Mumu_InstanceConf = FileReadToArray($__Mumu_ConfigDir & "vm_config.json")
+	Local $__Mumu_ConfigDir = $__Mumu_Path & "vms\MuMuPlayerGlobal-12.0-" & $iInstance
+	Local $__Mumu_InstanceConf = FileReadToArray($__Mumu_ConfigDir & "\MuMuPlayerGlobal-12.0-" & $iInstance & ".nemu")
 	Local $iLineCount = @extended
 	
 	For $i = 0 To $iLineCount - 1
-		If StringInStr($__Mumu_InstanceConf[$i], '"path": ') Then 
-			Local $path = StringReplace($__Mumu_InstanceConf[$i], '"path": ', '')
-			$path = StringStripWS(StringReplace(StringReplace(StringReplace($path, "/", "\"), ",", ""), '"', ''), $STR_STRIPALL) & "\Pictures\"
-			SetDebugLog("MuMu Shared HostPath: " & $path)
+		If StringInStr($__Mumu_InstanceConf[$i], "MuMuShared") Then
+			Local $aPath = StringRegExp($__Mumu_InstanceConf[$i], 'hostPath="([^"]+)"', $STR_REGEXPARRAYMATCH)
+			local $path = $aPath[0] & "\Pictures\"
 			$g_sAndroidPicturesHostPath = $path
 			$bResult = True
 			$g_bAndroidSharedFolderAvailable = True
-			$g_sAndroidPicturesPath = "/data/media/0/Pictures"
-			SetDebugLog("g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
-			SetDebugLog("g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
+			$g_sAndroidPicturesPath = "/data/media/0/Pictures/"
+			SetDebugLog("$g_sAndroidPicturesHostPath = " & $g_sAndroidPicturesHostPath)
+			SetDebugLog("$g_sAndroidPicturesPath = " & $g_sAndroidPicturesPath)
+		EndIf
+		If StringInStr($__Mumu_InstanceConf[$i], "ADB_PORT_EX") Then
+			Local $aAdbDevice = StringRegExp($__Mumu_InstanceConf[$i], 'hostip="(?<ip>.*?)"\s+hostport="(?<port>\d+)"', $STR_REGEXPARRAYMATCH)
+			Local $sAdbDevice = $aAdbDevice[0] & ":" & $aAdbDevice[1]
+			SetDebugLog("$sAdbDevice : " & $sAdbDevice)
+			$g_sAndroidAdbDevice = $sAdbDevice
 		EndIf
 	Next
 	
@@ -144,15 +156,8 @@ Func InitMumu($bCheckOnly = False)
 		Return False
 	EndIf
 	
-	Local $iAdbPort, $iAdbPortBase = 5555
-	Local $iInstance = StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", "")
-	
-	$iAdbPort = $iAdbPortBase + $iInstance
-	$g_sAndroidAdbDevice = "emulator-" & $iAdbPort
-	
 	If $bInstalled And Not $bCheckOnly Then		
 		$g_sAndroidAdbShellOptions = " /system/xbin/su root" 
-		$g_iAndroidAdbMinitouchMode = 1
 		GetMumuBackgroundMode()
 	EndIf
 
@@ -160,12 +165,22 @@ Func InitMumu($bCheckOnly = False)
 EndFunc   ;==>InitMumu
 
 Func GetMumuBackgroundMode()
+	$__Mumu_ConfigDir = $__Mumu_Path & "vms\" & $g_sAndroidInstance & "\configs"
+	Local $__MumuConf = FileReadToArray($__Mumu_ConfigDir & "\shell_config.json")
+	Local $iLineCount = @extended
+	
 	; check Mumu renderer mode
-	
 	Local $GLRenderMode = "dx"
-	
+	For $i = 0 To $iLineCount - 1
+		If StringInStr($__MumuConf[$i], "platform") Then
+			Local $aGLRenderMode = StringRegExp($__MumuConf[$i], '"platform":\s*"(.*?)"', $STR_REGEXPARRAYMATCH)
+			$GLRenderMode = $aGLRenderMode[0]
+			SetDebugLog("GLRenderMode = " & $GLRenderMode)
+		EndIf
+	Next
+		
 	Switch $GLRenderMode
-		Case "dx", "vlcn"
+		Case "dx", "vlcn", "dx11", "vk"
 			; DirectX
 			$g_iAndroidBackgroundMode = $g_iAndroidBackgroundModeDirectX
 			Return $g_iAndroidBackgroundModeDirectX
@@ -180,14 +195,12 @@ Func GetMumuBackgroundMode()
 EndFunc   ;==>GetMumuBackgroundMode
 
 Func CheckScreenMumu($bSetLog = True)
-	Local $__Mumu_ConfigDir = $__Mumu_Path & "vms\config\"
-	Local $__MumuConf = FileReadToArray($__Mumu_ConfigDir & $g_sAndroidInstance & ".config")
+	$__Mumu_ConfigDir = $__Mumu_Path & "vms\" & $g_sAndroidInstance & "\configs"
+	Local $__MumuConf = FileReadToArray($__Mumu_ConfigDir & "\shell_config.json")
 	Local $iLineCount = @extended
 
-	Local $aiSearch = ['"width": ', '"height": ', '"advancedSettings.resolutionDpi": ', '"statusSettings.playerName": ']
-
-	Local $aiMustBe = ['"width": ' & $g_iGAME_WIDTH, '"height": ' & $g_iGAME_HEIGHT, '"advancedSettings.resolutionDpi": ' & 160, _ 
-					   '"statusSettings.playerName": ' & '"LD9-' & StringReplace($g_sAndroidInstance, "leidian", "") & '"']
+	Local $aiSearch = ['"width": ', '"height": ', '"dpi": ']
+	Local $aiMustBe = ['"width": "' & $g_iGAME_WIDTH, '"height": "' & $g_iGAME_HEIGHT, '"dpi": "' & 160]
 	
 	For $iSearch = 0 To UBound($aiSearch) - 1
 		If $g_bDebugSetLog Then SetLog("Search for : " & $aiMustBe[$iSearch], $COLOR_DEBUG)
@@ -279,6 +292,14 @@ EndFunc   ;==>GetMumuSvcPid
 
 Func CloseMumu()
 	If Not InitAndroid() Then Return
+	Local $Cmd = $__Mumu_Manage_Path & "MuMuManager.exe", $process_killed
+	
+	Local $iInstance = StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", "")
+	Local $sCmdClose = "control shutdown --vmindex " & $iInstance
+	
+	;MuMuManager.exe control shutdown --vmindex 1
+	LaunchConsole($Cmd, AddSpace($sCmdClose), $process_killed)
+	
 	Local $iInstance = StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", "")
 	Local $sFile = "MuMuNxDevice.exe"
 	Local $bError = False

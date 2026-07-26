@@ -35,7 +35,7 @@ EndFunc   ;==>ResetTHsearch
 
 Func SearchTH($bVerify = True, $bClickAway = True)
 	If Not $g_bRunState Then Return
-	Local $aTH, $aiTHPos[2], $iTHLevel
+	Local $aTH, $aiTHPos[2], $iTHLevel = 6
 	Local $x, $y, $aInfo, $bRet = False
 	
 	For $try = 1 To 2

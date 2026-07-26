@@ -261,11 +261,12 @@ Global $__Nox_Config[1][3] = _ ; Alternative Nox Control ID (array must be order
 ;                 |          |                        |                                  |                |                      |                       |                      |                       |              |                    |64 = Make DPI Aware (if avaliable)                  |                                    |                                     |
 ;                 |          |                        |                                  |                |                      |                       |                      |                       |              |                    |128 = ADB use input swipe and not script            |                                    |                                     |
 ;                 |          |                        |                                  |                |                      |                       |                      |                       |              |                    |256 = Update $g_sAppClassInstance with Window Handle|                                    |                                     |
-Global $g_avAndroidAppConfig[4][16] = [ _ ;           |                                  |                |                      |                       |                      |                       |              |                    |512 = Supports adding shared folder with vboxmanage.exe                                  |                                     |
+Global $g_avAndroidAppConfig[5][16] = [ _ ;           |                                  |                |                      |                       |                      |                       |              |                    |512 = Supports adding shared folder with vboxmanage.exe                                  |                                     |
 	["Nox",        "nox",     "No",                   "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 4, $g_iDEFAULT_HEIGHT - 10,0,             "127.0.0.1:62001",   1+2+4+8+16+32       +256+512, '# ',                  '(nox Virtual Input|Android Input|Android_Input)', 0,                      2], _ ; Nox
 	["MEmu",       "MEmu",    "MEmu",                "[CLASS:subWin; INSTANCE:1]",       "",              $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH + 51,$g_iDEFAULT_HEIGHT - 12,0,             "127.0.0.1:21503",     2+4+8+16+32           +512, '# ',                  '(Microvirt Virtual Input|User Input)', -1,                                 1], _ ; MEmu
-	["BlueStacks5","Pie64",	  "BS5-",           	  "[CLASS:BlueStacksApp; INSTANCE:1]","",          	   $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "127.0.0.1:5555",    1+2+4+8+16+32   +128,         '# ',                  'BlueStacks Virtual Touch',          -1,                                   1], _; BlueStacks5
-	["LDPlayer9","Leidian",	  "LD9-",     		  	  "[CLASS:subWin; INSTANCE:1]",		  "sub",           $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "emulator-5555",    1+2+4+8+16+32   +128,         	   '# ',                  'input',         					   -1,                                   1] _; LDplayer9
+	["BlueStacks5","Pie64",	  "BS5-",           	  "[CLASS:BlueStacksApp; INSTANCE:1]","",          	   $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "127.0.0.1:5555",    1+2+4+8+16+32   +128,         '# ',                  'BlueStacks Virtual Touch',          -1,                                   1], _ ; BlueStacks5
+	["LDPlayer9",	"Leidian","LD9-",     		  	  "[CLASS:subWin; INSTANCE:1]",		  "sub",           $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "emulator-5555",    1+2+4+8+16+32   +128,         	   '# ',                  'input',         					   -1,                                   1], _ ; LDplayer9
+	["MuMu",		"MuMu",	  "MuMu-",     		  	  "[CLASS:nemuwin; INSTANCE:1]",	  "nemudisplay",   $g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,$g_iDEFAULT_WIDTH,     $g_iDEFAULT_HEIGHT - 48,0,             "127.0.0.1:5555",    1+2+4+8+16+32+256,         	   '# ',                  'Xiaomi Input',         					   -1,                                   1] _ ; Mumu
 ]
 
 ; Android Configutions, see COCBot\functions\Android\Android Status & Information.txt for more details
@@ -332,6 +333,7 @@ Global Const $g_iAndroidKitKat = 19
 Global Const $g_iAndroidLollipop = 21
 Global Const $g_iAndroidNougat = 24
 Global Const $g_iAndroidpie = 28
+Global Const $g_iAndroidSnowCone = 32
 Global $g_iAndroidVersionAPI = $g_iAndroidJellyBean ; getprop ro.build.version.sdk
 
 ; Updated in UpdateAndroidConfig() and $g_sAndroidEmulator&Init() as well
@@ -885,7 +887,6 @@ Global $g_aCmbRequestSiege[9][3] = [["WallW", "Wall Wrecker", 1], _
 
 ; <><><><> Village / Donate - Donate <><><><>
 Global $g_bChkDonate = True
-Global $g_abChkDonateQueueOnly[2]
 Global $g_abChkDonateTroop[$eTroopCount + $eSiegeMachineCount] = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
 Global $g_asTxtDonateTroop[$eTroopCount + $eSiegeMachineCount] = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""] ; array of pipe-delimited list of strings to match to a request string
 
@@ -938,7 +939,7 @@ Global $g_iSaveGoldWall = 0, $g_iSaveElixWall = 0
 Global $g_bUpgradeSpesificWall = False, $g_iTargetWallLevel = 0, $g_iSearchWallSort = 0, $g_bAutoAdjustSaveWall = False
 
 ; Upgrading - Wall
-Global Const $g_aiWallCost[18] = [0, 1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000, 8000000]
+Global Const $g_aiWallCost[19] = [0, 1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000, 7000000, 10000000]
 Global Const $g_aiMaxStorage[19] = [1500, 3000, 6000, 12000, 25000, 45000, 100000, 225000, 450000, 850000, 1750000, 2000000, 3000000, 4000000, 4500000, 5000000, 5500000, 6000000, 6500000]
 Global Const $g_aiHeroHallCost[11] = [800000, 1600000, 2300000, 3000000, 5000000, 6000000, 9000000, 10000000, 12000000, 14000000, 21000000] ; 0 = 7
 
@@ -1758,7 +1759,7 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
 Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
-Global $g_bChkClanGamesPurgeAny = 0, $g_sCGEasyEventName = ""
+Global $g_bChkClanGamesPurgeAny = False
 Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDay = 0
 Global $g_bCollectCGReward = False, $g_sCGCurrentEventName = ""
@@ -1774,7 +1775,7 @@ Global $g_abCGBBBattleItem[4]
 Global $g_abCGBBDestructionItem[21]
 Global $g_abCGBBTroopsItem[12]
 
-Global $g_aEasyEvent[18] = ["Laboratory", "ArmyCamp", "DESpell", "SFacto", "BuilderHut", "StarC", "Destruction", "PileOfVictores", "GoldChallenge", _
+Global $g_aEasyEvent[19] = ["Laboratory", "ArmyCamp", "DESpell", "SFacto", "BuilderHut", "StarC", "Destruction", "PileOfVictores", "GoldChallenge", "AirSweepers", _
 							"ElixirChallenge", "DarkEChallenge", "ElixirPump", "DarkEPlumbers", "GoldM", "BBreakdown", "GoldGrab", "ElixirEmbezz", "DarkEHeist"]
 
 ; Collect Achievement Rewards
@@ -1951,7 +1952,7 @@ Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False
 Global $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False
 Global $g_bChkAttackOnce = False
 Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
-Global $g_bEnableCCSleep = False, $g_bSkipDT = False, $g_iMainScreenTimeoutCount = 0
+Global $g_bEnableCCSleep = False, $g_bChkHeroJourney = False, $g_iMainScreenTimeoutCount = 0
 
 ;Builder Base
 Global $g_bBBAttacked = False ; DoAttackBB attacked or not
@@ -1960,7 +1961,7 @@ Global $g_bBBAttacked = False ; DoAttackBB attacked or not
 Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0, $g_bChkEnableMinGoldAUCC = False, $g_iMinCCGoldToUpgrade = 0, $g_bChkEnableAutoUpgradeCC = False, $g_bChkAutoUpgradeCCIgnore = False, $g_bChkAutoUpgradeCCWallIgnore = False
 Global $g_bChkEnableCollectCCGold = False, $g_bChkEnableForgeGold = False, $g_bChkEnableForgeElix = False
 Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEnableForgeBBElix = False, $g_iCmbForgeBuilder = 0
-Global $aCCBuildingIgnore[13] = ["Ruined", "Big Barbarian", "Pyre", "Boulder", "Bonfire", "Grove", "Tree", "Forest", "Campsite", "Stone", "Pillar", "The First", "Tombs"]
+Global $aCCBuildingIgnore[14] = ["Ruined", "Big Barbarian", "Pyre", "Boulder", "Bonfire", "Grove", "Tree", "Forest", "Campsite", "Stone", "Pillar", "The First", "Tombs", "Wall"]
 Global $g_bChkStartWeekendRaid = True
 
 Global $g_bChkEnableDailyRunRoutine = True, $iDailyDate = @YDAY
@@ -1997,11 +1998,11 @@ Global $g_aDailyAccount[16][Ubound($g_aiDailyFunction)] = [[0,0,0,0,0,0,0,0,0,0,
 
 ;Village Reference size, add info here for every scenery:
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
-Global $g_aVillageRefSize[57][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
+Global $g_aVillageRefSize[58][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589], _ ;ok
 									["DM", "Classic Meteor", 592.24, 87, 792, 52, 589], _ ;ok
 									["CS", "Classic Skeleton", 567, 82, 766, 53, 575], _ ;ok
 									["JS", "Jungle", 617, 41, 806, 37, 616], _ ;ok
-									["MS", "Magic", 553.75, 83, 800, 96, 627], _ ;ok
+									["MS", "Magic", 553.95, 69, 781, 57, 590], _ ;ok
 									["BL", "BuilderBase Lower", 578.83, 135, 742, 116, 567], _ ;ok
 									["BH", "BuilderBase Higher", 561.42, 114, 720, 93, 543], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
@@ -2020,6 +2021,7 @@ Global $g_aVillageRefSize[57][7] = [["DS", "Classic", 592.24, 87, 792, 52, 589],
 									["RY", "Royal", 610.20, 57, 799, 48, 603], _ ;ok
 									["SM", "Summer", 576.93, 82, 788, 52, 580], _ ;ok
 									["CA", "Clash A-Rama", 619, 59, 785, 57, 598], _ ;ok
+									["MA", "Mash A-Rama", 620.15, 60, 796, 45, 599], _ ;ok
 									["PS", "Pixel", 617, 56, 796, 61, 618], _ ;ok
 									["DE", "Dragon Escape", 681.68, 40, 768, 81, 627], _ ;ok
 									["10", "10th Clasivery", 561, 92, 791, 47, 570], _ ;ok

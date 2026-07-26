@@ -15,7 +15,8 @@
 
 Func IsProblemAffect($bNeedCaptureRegion = True)
 	Local $iGray = 0x282828
-	If $g_iAndroidVersionAPI >= $g_iAndroidLollipop Then $iGray = 0x424242
+	If $g_iAndroidVersionAPI = $g_iAndroidLollipop Then $iGray = 0x424242
+	If $g_iAndroidVersionAPI >= $g_iAndroidSnowCone Then $iGray = 0x1C1B1B
 	If Not _ColorCheck(_GetPixelColor(215, 267, $bNeedCaptureRegion), Hex($iGray, 6), 10) Then
 		Return False
 	ElseIf Not _ColorCheck(_GetPixelColor(430, 395, $bNeedCaptureRegion), Hex($iGray, 6), 10) Then

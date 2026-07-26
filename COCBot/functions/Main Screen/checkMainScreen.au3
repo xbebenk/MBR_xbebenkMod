@@ -77,7 +77,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	EndIf
 	
 	;After checkscreen dispose windows
-	DisposeWindows()
+	;DisposeWindows()
 
 	;Execute Notify Pending Actions
 	NotifyPendingActions()

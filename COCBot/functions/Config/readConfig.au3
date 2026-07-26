@@ -609,7 +609,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bAutoUpgradeEarly, $g_sProfileConfigPath, "other", "CheckAutoUpgradeEarly", True, "Bool")
 	IniReadS($g_bChkForceSwitchifNoCGEvent, $g_sProfileConfigPath, "other", "ForceSwitchifNoCGEvent", True, "Bool")
 	IniReadS($g_bEnableCCSleep, $g_sProfileConfigPath, "other", "EnableCCSleep", False, "Bool")
-	IniReadS($g_bSkipDT, $g_sProfileConfigPath, "other", "SkipDT", False, "Bool")
+	IniReadS($g_bChkHeroJourney, $g_sProfileConfigPath, "other", "SkipDT", False, "Bool")
 	IniReadS($g_bEnableTournament, $g_sProfileConfigPath, "other", "EnableTournament", False, "Bool")
 	IniReadS($g_bNoTournament, $g_sProfileConfigPath, "other", "NoTournament", False, "Bool")
 	IniReadS($g_iTournamentAttackType, $g_sProfileConfigPath, "other", "TournamentAttackType", 0, "int")
@@ -667,8 +667,6 @@ EndFunc   ;==>ReadConfig_600_11
 Func ReadConfig_600_12()
 	; <><><><> Village / Donate - Donate <><><><>
 	IniReadS($g_bChkDonate, $g_sProfileConfigPath, "donate", "Doncheck", True, "Bool")
-	IniReadS($g_abChkDonateQueueOnly[0], $g_sProfileConfigPath, "donate", "chkDonateQueueOnly[0]", True, "Bool")
-	IniReadS($g_abChkDonateQueueOnly[1], $g_sProfileConfigPath, "donate", "chkDonateQueueOnly[1]", True, "Bool")
 	For $i = 0 To $eTroopCount - 1
 		Local $sIniName = ""
 		If $i >= $eTroopBarbarian And $i <= $eTroopHeadhunter Then

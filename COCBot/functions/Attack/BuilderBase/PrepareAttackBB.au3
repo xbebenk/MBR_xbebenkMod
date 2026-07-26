@@ -24,7 +24,7 @@ Func PrepareAttackBB($Mode = Default)
 	Local $GoldIsFull = isGoldFullBB()
 	Local $ElixIsFull = isElixirFullBB()
 	
-	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+	If $g_bIsBBevent Then
 		If $g_bChkDebugAttackBB Then SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
 		If _Sleep(1500) Then Return

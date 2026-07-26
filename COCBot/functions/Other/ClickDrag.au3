@@ -112,7 +112,11 @@ Func ClickDrag($X1, $Y1, $X2, $Y2, $Delay = 50, $bSCIDSwitch = False)
 	EndIf
 	If $g_bAndroidAdbClickDrag Then
 		If $g_bAndroidAdbClickDragScript Then
-			AndroidClickDrag($X1, $Y1, $X2, $Y2, $g_bRunState, $bSCIDSwitch)
+			If $g_sAndroidEmulator = "MuMu" Then
+				AndroidMumuClickDrag($X1, $Y1, $X2, $Y2, $g_bRunState, $bSCIDSwitch)
+			Else
+				AndroidClickDrag($X1, $Y1, $X2, $Y2, $g_bRunState, $bSCIDSwitch)
+			EndIf
 			$error = @error
 		Else
 			AndroidInputSwipe($X1, $Y1, $X2, $Y2, $g_bRunState)
