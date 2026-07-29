@@ -44,8 +44,8 @@ Func PrepareAttackBB($Mode = Default)
 	EndIf
 	
 	getBuilderCount(True, True)
-	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull And $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then
-		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
+	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull And $ElixIsFull) Then
+		SetLog("Skip attack, both storages full (let the builder spend it instead of overflowing loot)", $COLOR_INFO)
 		Return False
 	EndIf
 	
