@@ -22,6 +22,7 @@ Func CheckCGCompleted()
 		If _Sleep(1000) Then Return
 		If QuickMIS("BC1", $g_sImgGameComplete, 760, 450, 820, 520) Then
 			SetLog("Nice, Game Completed", $COLOR_INFO)
+			$g_sCGCurrentEventName = ""
 			$bRet = True
 			ExitLoop
 		EndIf
@@ -984,7 +985,7 @@ Func BBAttackReport($sDamage = "")
 	$AtkLogTxt &= StringFormat("%3d", $sTrophy) & "|"
 	$AtkLogTxt &= StringFormat("%1d", $sStars) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $sDamage) & "|"
-	If $g_bIsBBevent Then $AtkLogTxt &= $g_sCGCurrentEventName
+	If $g_bIsBBevent Then $AtkLogTxt &= StringRegExpReplace($g_sCGCurrentEventName, "^[^-]*-", "")
 	
 	If Int($sTrophy) >= 0 Then
 		SetAtkLog($AtkLogTxt, "", $COLOR_DEBUG)

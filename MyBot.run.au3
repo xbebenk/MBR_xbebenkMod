@@ -693,7 +693,6 @@ Func runBot() ;Bot that runs everything in order
 
 	While 1
 		$g_bRestart = False
-		$g_sCGEasyEventName = ""
 		If Not $g_bRunState Then Return
 		If CheckAndroidReboot() Then ContinueLoop
 		NotifyPendingActions()
@@ -710,12 +709,13 @@ Func runBot() ;Bot that runs everything in order
 			If _ClanGames() Then
 				Local $bEasyEvent = False
 				For $Event In $g_aEasyEvent
-					If StringInStr($g_sCGEasyEventName, $Event) Then
-						$bEasyEvent = True
+					If StringInStr($g_sCGCurrentEventName, $Event) Then
+						If Not $g_bIsBBevent Then $bEasyEvent = True
 						ExitLoop
 					EndIf
 				Next
-				If $bEasyEvent Then DoClanGameChallenge()
+				If $bEasyEvent And Not $g_bIsBBevent Then DoClanGameChallenge()
+				If $g_bIsBBevent Then GotoBBTodoCG()
 			EndIf
 
 			If BotCommand() Then btnStop()
@@ -979,7 +979,6 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	SetLogCentered(" FIRSTCHECK ", "=", $COLOR_SUCCESS)
 	$g_bFirstStart = True
-	$g_sCGEasyEventName = ""
 
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
@@ -1093,22 +1092,20 @@ Func FirstCheckRoutine()
 	Local $FirstCheckRoutineTimer = TimerInit()
 	Local $b_SuccessAttack = False, $bDoClanGames = False
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
-
+	
 	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
-
+	
+	Local $bEasyEvent = False
 	If _ClanGames() Then
-		Local $bEasyEvent = False
 		For $Event In $g_aEasyEvent
-			If StringInStr($g_sCGEasyEventName, $Event) Then
-				$bEasyEvent = True
+			If StringInStr($g_sCGCurrentEventName, $Event) Then
+				If Not $g_bIsBBevent Then $bEasyEvent = True
 				ExitLoop
 			EndIf
 		Next
-		If $bEasyEvent Then 
-			DoClanGameChallenge()
-			VillageReport()
-		EndIf
+		If $bEasyEvent And Not $g_bIsBBevent Then DoClanGameChallenge()
+		If $g_bIsBBevent Then GotoBBTodoCG()
 	EndIf
 	
 	If BotCommand() Then btnStop()
@@ -1116,11 +1113,11 @@ Func FirstCheckRoutine()
 		; Now the bot can attack
 		UseFreeMagicItem()
 		Setlog("Before any other routine let's attack!", $COLOR_INFO)
-		If Not $g_bChkCGBBAttackOnly Then _ClanGames()
-
+		
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
-
+		If $g_sCGCurrentEventName = "" Then _ClanGames()
+		
 		Local $loopcount = 1
 		While True
 			$g_bRestart = False
@@ -1147,23 +1144,23 @@ Func FirstCheckRoutine()
 	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
 
-	If $g_bChkCGBBAttackOnly And ProfileSwitchAccountEnabled() Then
-		For $count = 1 to 3
-			If Not $g_bRunState Then Return
-			If _ClanGames() Then
-				If $g_bIsBBevent Then
-					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-					SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_ACTION)
-					GotoBBTodoCG()
-				EndIf
-			Else
-				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max Then continue to main loop
-				If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
-				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
-			EndIf
-			If isOnMainVillage() Then ZoomOut(True)	; Verify is on main village and zoom out
-		Next
-	EndIf
+	;If ProfileSwitchAccountEnabled() Then
+	;	For $count = 1 to 3
+	;		If Not $g_bRunState Then Return
+	;		If _ClanGames() Then
+	;			If $g_bIsBBevent Then
+	;				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+	;				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_ACTION)
+	;				GotoBBTodoCG()
+	;			EndIf
+	;		Else
+	;			If $g_bIsCGPointMaxed Then ExitLoop ; If point is max Then continue to main loop
+	;			If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
+	;			If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
+	;		EndIf
+	;		If isOnMainVillage() Then ZoomOut(True)	; Verify is on main village and zoom out
+	;	Next
+	;EndIf
 
 	CommonRoutine("FirstCheck") ;after first attack, checking some routine
 
@@ -1196,21 +1193,20 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 
 	If ProfileSwitchAccountEnabled() Then
+		If $g_sCGCurrentEventName = "" Then _ClanGames()
 		CommonRoutine("Switch")
 		VillageReport()
 		
+		Local $bEasyEvent = False
 		If _ClanGames() Then
-			Local $bEasyEvent = False
 			For $Event In $g_aEasyEvent
-				If StringInStr($g_sCGEasyEventName, $Event) Then
-					$bEasyEvent = True
+				If StringInStr($g_sCGCurrentEventName, $Event) Then
+					If Not $g_bIsBBevent Then $bEasyEvent = True
 					ExitLoop
 				EndIf
 			Next
-			If $bEasyEvent Then 
-				DoClanGameChallenge()
-				VillageReport()
-			EndIf
+			If $bEasyEvent And Not $g_bIsBBevent Then DoClanGameChallenge()
+			If $g_bIsBBevent Then GotoBBTodoCG()
 		EndIf
 		
 		If Not $g_bRunState Then Return
@@ -1219,6 +1215,8 @@ Func FirstCheckRoutine()
 		If Not $g_bMeetCondStop And Not $g_bChkAttackOnce Then
 			Setlog("Let's attack Again!", $COLOR_INFO)
 			$g_bRestart = False ;reset
+			If $g_sCGCurrentEventName = "" Then _ClanGames()
+			
 			Local $loopcount = 1
 			While True
 				$g_bRestart = False
@@ -1392,7 +1390,7 @@ Func GotoBBTodoCG()
 	EndIf
 EndFunc
 
-Func DoClanGameChallenge($sEvent = $g_sCGEasyEventName)
+Func DoClanGameChallenge($sEvent = $g_sCGCurrentEventName)
 	Local $bRet = False
 	SetDebugLog("Do Easy Event: " & $sEvent)
 
@@ -1417,7 +1415,7 @@ Func DoClanGameChallenge($sEvent = $g_sCGEasyEventName)
 		If Not $g_bRunState Then Return
 		SetLog("DoClanGameChallenge " & $sEvent & " Loop [" & $i & "/" & $iLoop & "]", $COLOR_DEBUG)
 		If CheckCGCompleted() Then 
-			$g_sCGEasyEventName = ""
+			$g_sCGCurrentEventName = ""
 			$bRet = True
 			ExitLoop
 		EndIf

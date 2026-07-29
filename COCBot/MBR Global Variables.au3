@@ -1759,7 +1759,7 @@ Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
 
 ;ClanGames Challenges
 Global $g_bChkForceBBAttackOnClanGames = True, $g_bIsBBevent = False, $g_bChkClanGamesBBTroops = False, $g_bIsCGEventRunning = False
-Global $g_bChkClanGamesPurgeAny = 0, $g_sCGEasyEventName = ""
+Global $g_bChkClanGamesPurgeAny = False
 Global $g_bChkCGBBAttackOnly = True, $g_bIsCGPointMaxed = False
 Global $g_bSortClanGames = False, $g_iSortClanGames = 0, $g_iCmbClanGamesPurgeDay = 0
 Global $g_bCollectCGReward = False, $g_sCGCurrentEventName = ""
@@ -1775,7 +1775,7 @@ Global $g_abCGBBBattleItem[4]
 Global $g_abCGBBDestructionItem[21]
 Global $g_abCGBBTroopsItem[12]
 
-Global $g_aEasyEvent[18] = ["Laboratory", "ArmyCamp", "DESpell", "SFacto", "BuilderHut", "StarC", "Destruction", "PileOfVictores", "GoldChallenge", _
+Global $g_aEasyEvent[19] = ["Laboratory", "ArmyCamp", "DESpell", "SFacto", "BuilderHut", "StarC", "Destruction", "PileOfVictores", "GoldChallenge", "AirSweepers", _
 							"ElixirChallenge", "DarkEChallenge", "ElixirPump", "DarkEPlumbers", "GoldM", "BBreakdown", "GoldGrab", "ElixirEmbezz", "DarkEHeist"]
 
 ; Collect Achievement Rewards

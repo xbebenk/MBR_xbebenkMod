@@ -44,11 +44,11 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 	SetLog("Entering Clan Games", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	; Local and Static Variables
-	Local $sTimeRemain = "", $sEventName = "", $getCapture = True
+	Local $sEventName = ""
 	Local Static $YourAccScore[16][2] = [[-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], _
 										[-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True]]
 
-	Local $iWaitPurgeScore = 150
+	
 
 	; Enter on Clan Games window
 	If IsClanGamesWindow($bOnlyPurge) Then
@@ -56,7 +56,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 		Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
 		
 		; Let's get some information , like Remain Timer, Score and limit
-		If Not _ColorCheck(_GetPixelColor(300, 284, True), Hex(0x53E052, 6), 10) Then ;no greenbar = there is active event or completed event
+		If Not _ColorCheck(_GetPixelColor(300, 284, True), Hex(0x52E052, 6), 20) Then ;no greenbar = there is active event or completed event
 			If _ColorCheck(_GetPixelColor(405, 220, True), Hex(0x4F85C5, 6), 20) Then 
 				SetLog("Event cooldown detected", $COLOR_DEBUG2)
 				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
@@ -69,8 +69,10 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 
 		Local $aiScoreLimit = GetTimesAndScores()
 		Local $sTimeCG
+		Local $iWaitPurgeScoreLimit = 150, $iWaitPurgeScore = 4000
+		
 		If $aiScoreLimit = -1 Or UBound($aiScoreLimit) <> 2 Then
-			CloseClangamesWindow() ;need clickaway, as we are leaving
+			CloseClangamesWindow()
 			Return False
 		Else
 			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
@@ -85,35 +87,37 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 				Return False
 			EndIf
 			
+			If IsEventRunning() Then 
+				CloseClangamesWindow()
+				Return True
+			Else
+				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
+			EndIf
+			
 			;now we need to copy selected challenge before checking current running event is not wrong event selected
 			PrepareChallengesImage()
-			If $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Or $g_bChkClanGamesStopBeforeReachAndPurge Then
-				SetLog("You almost reached max point")
+			
+			If $g_bChkClanGamesStopBeforeReachAndPurge And $aiScoreLimit[0] + $iWaitPurgeScoreLimit > $iWaitPurgeScore Then
+				SetLog("You score reached max point")
 				$g_bIsCGPointAlmostMax = True
-				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
-				If IsEventRunning() Then 
-					CloseClangamesWindow()
-					Return True
-				Endif
-				
-				If $g_bChkClanGamesStopBeforeReachAndPurge And $sTimeCG > $PurgeDayMinute And $aiScoreLimit[0] <= 4000 Then ; purge, but not purge on last day of clangames					
-					If $g_bChkClanGamesPurgeAny Then
-						SetLog("Clangames remain time: " & $sTimeCG & " > " & $PurgeDayMinute, $COLOR_INFO)
-						SetLog("Stop before completing and only Purge", $COLOR_INFO)
-						Local $aEvent = FindEventToPurge($sTempPath)
-						If IsArray($aEvent) And UBound($aEvent) > 0 Then
-							Local $EventName = StringSplit($aEvent[0][0], "-")
-							SetLog("Detected Event to Purge: " & $EventName[2])
-							Click($aEvent[0][1], $aEvent[0][2])
-							If _Sleep(1500) Then Return
-							StartsEvent($EventName[2], True, False)
-						Else
-							ForcePurgeEvent(False, True) ; maybe will never hit here, but..
-						EndIf
-						CloseClangamesWindow()
-						Return False
+				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
+				If $g_bChkClanGamesPurgeAny And $sTimeCG > $PurgeDayMinute Then ; purge, but not purge on last day of clangames					
+					SetLog("Clangames remain time: " & $sTimeCG & " > " & $PurgeDayMinute, $COLOR_INFO)
+					SetLog("Stop before completing and only Purge", $COLOR_INFO)
+					Local $aEvent = FindEventToPurge($sTempPath)
+					If IsArray($aEvent) And UBound($aEvent) > 0 Then
+						Local $EventName = StringSplit($aEvent[0][0], "-")
+						SetLog("Detected Event to Purge: " & $EventName[2])
+						Click($aEvent[0][1], $aEvent[0][2])
+						If _Sleep(1500) Then Return
+						StartsEvent($EventName[2], True, False)
+					Else
+						ForcePurgeEvent(False, True) ; maybe will never hit here, but..
 					EndIf
+					CloseClangamesWindow()
+					Return False
 				EndIf
+
 			EndIf
 			If $YourAccScore[$g_iCurAccount][0] = -1 Then $YourAccScore[$g_iCurAccount][0] = $aiScoreLimit[0]
 		EndIf
@@ -189,7 +193,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			Click($aAllEvent[$i][1], $aAllEvent[$i][2], 1, 100, "Click Event to Start")
 			If _Sleep(1050) Then Return
 			;_ArrayDisplay($aAllEvent)
-			Return ClickOnEvent($YourAccScore, $aiScoreLimit, $sEventName, $getCapture)
+			Return ClickOnEvent($YourAccScore, $aiScoreLimit, $sEventName)
 		Next
 	EndIf
 
@@ -504,7 +508,7 @@ EndFunc
 Func SelectEvent(ByRef $aSelectChallenges)
 	; Initial Timer
 	Local $hTimer = TimerInit()
-	Local $aTmp = $aSelectChallenges, $aDel[0]
+	Local $aTmp = $aSelectChallenges, $aDel[1]
 
 	For $i = 0 To Ubound($aTmp) - 1
 		If Not $g_bRunState Then Return
@@ -628,7 +632,7 @@ Func GetTimesAndScores()
 	Return $aiScoreLimit
 EndFunc   ;==>GetTimesAndScores
 
-Func CooldownTime($getCapture = True)
+Func CooldownTime()
 	;check cooldown purge
 	Local $aiCoolDown = decodeSingleCoord(findImage("Cooldown", $g_sImgCoolPurge & "\*.xml", GetDiamondFromRect("480,370,570,410"), 1, True, Default))
 	If IsArray($aiCoolDown) And UBound($aiCoolDown, 1) >= 2 Then
@@ -644,7 +648,7 @@ Func IsEventRunning($bOpenWindow = False)
 	Local $aEventFailed[4] = [300, 300, 0xEA2B26, 20]
 	Local $aEventPurged[4] = [542, 222, 0x4F85C5, 10]
 	Local $bRet = False
-	$g_sCGEasyEventName = ""
+	$g_sCGCurrentEventName = ""
 	
 	If $bOpenWindow Then
 		CloseClangamesWindow()
@@ -677,41 +681,36 @@ Func IsEventRunning($bOpenWindow = False)
 			Local $aActiveEvent = QuickMIS("CNX", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 294, 166, 386, 257)
 			If IsArray($aActiveEvent) And UBound($aActiveEvent) > 0 Then
 				SetLog("Active Challenge " & $aActiveEvent[0][0] & " is Enabled on Setting, OK!!", $COLOR_DEBUG)
-				$g_sCGEasyEventName = $aActiveEvent[0][0]
+				$g_sCGCurrentEventName = $aActiveEvent[0][0]
 				$bRet = True
 				;check if Challenge is BB Challenge, enabling force BB attack
-				If $g_bChkForceBBAttackOnClanGames Then
-					Click(340, 215) ; click first slot
-					For $i = 1 To 10
-						If _Sleep(500) Then Return
-						If $g_bChkClanGamesDebug Then SetLog("waiting for trash #" & $i, $COLOR_ACTION)
-						If QuickMIS("BC1", $g_sImgTrashPurge, 100, 250, 800, 470) Then
-							ExitLoop
-						EndIf
-					Next
-					
-					If $g_bChkClanGamesDebug Then SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
-					If QuickMIS("BC1", $g_sImgVersus, 425, 190, 730, 250) Then
-						$g_bIsBBevent = True
-						$g_sCGCurrentEventName = $aActiveEvent[0][0]
-						$g_bIsCGEventRunning = True
-						Setlog("Running Challenge is BB Challenge : " & $g_sCGCurrentEventName, $COLOR_INFO)
-					Else
-						Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
-						If $aActiveEvent[0][0] = "BBD-WallDes" Or $aActiveEvent[0][0] = "BBD-BuildingDes" Then
-							SetLog("Event with shared Image: " & $aActiveEvent[0][0])
-							If $g_abCGMainDestructionItem[23] < 1 Then $bNeedPurge = True ;BBreakdown
-							If $g_abCGMainDestructionItem[22] < 1 Then $bNeedPurge = True ;WallWhacker
-						EndIf
-						If $g_bChkCGBBAttackOnly Or $bNeedPurge Then ;Purge main village event because we using BBCGOnly Mode
-							Setlog("We are running only BB events. Event started by mistake?", $COLOR_ERROR)
-							Click(340, 215) ;unclick so ForcePurgeEvent can work
-							ForcePurgeEvent(False, False)
-							CloseClangamesWindow()
-							$bRet = False
-						EndIf
-						$g_bIsBBevent = False
+				
+				Click(340, 215, 1, 0, "ClanGames Slot 1") ; click first slot
+				WaitForTrash()
+				
+				If $g_bChkClanGamesDebug Then SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
+				If QuickMIS("BC1", $g_sImgVersus, 425, 190, 730, 250) Then
+					$g_bIsBBevent = True
+					$g_sCGCurrentEventName = $aActiveEvent[0][0]
+					$g_bIsCGEventRunning = True
+					Setlog("Running Challenge is BB Challenge : " & $g_sCGCurrentEventName, $COLOR_INFO)
+				Else
+					Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
+					If $aActiveEvent[0][0] = "BBD-WallDes" Or $aActiveEvent[0][0] = "BBD-BuildingDes" Then
+						SetLog("Event with shared Image: " & $aActiveEvent[0][0])
+						If $g_abCGMainDestructionItem[23] < 1 Then $bNeedPurge = True ;BBreakdown
+						If $g_abCGMainDestructionItem[22] < 1 Then $bNeedPurge = True ;WallWhacker
 					EndIf
+					If $bNeedPurge Then ;Purge  event because enabled by mistake
+						Setlog("Event started by mistake?", $COLOR_ERROR)
+						Click(340, 215, 1, 0, "ClanGames Slot 1") ;unclick so ForcePurgeEvent can work
+						ForcePurgeEvent(False, False)
+						CloseClangamesWindow()
+						$bRet = False
+					EndIf
+					If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
+					$g_sCGCurrentEventName = $aActiveEvent[0][0]
+					$g_bIsBBevent = False
 				EndIf
 			Else
 				Setlog("Active Challenge Not Enabled on Setting! started by mistake?", $COLOR_ERROR)
@@ -726,10 +725,26 @@ Func IsEventRunning($bOpenWindow = False)
 		SetLog("No event under progress", $COLOR_INFO)
 		$bRet = False
 	EndIf
+	If $g_bIsBBevent And $g_sCGCurrentEventName = "D-BuilderHut" Then $g_bIsBBevent = False
+	If $g_bChkClanGamesDebug Then SetLog("$g_sCGCurrentEventName:" & $g_sCGCurrentEventName & ", $g_bIsBBevent:" & String($g_bIsBBevent), $COLOR_DEBUG)
+	If $bRet Then CloseClangamesWindow()
 	Return $bRet
 EndFunc   ;==>IsEventRunning
 
-Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName, $getCapture)
+Func WaitForTrash()
+	Local $bRet = False
+	For $i = 1 To 10
+		If _Sleep(500) Then Return
+		If $g_bChkClanGamesDebug Then SetLog("waiting for trash #" & $i, $COLOR_ACTION)
+		If QuickMIS("BC1", $g_sImgTrashPurge, 100, 250, 800, 470) Then
+			$bRet = True
+			ExitLoop
+		EndIf
+	Next
+	Return $bRet
+EndFunc
+
+Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName)
 	If Not $YourAccScore[$g_iCurAccount][1] Then
 		Local $Text = "", $color = $COLOR_SUCCESS
 		If $YourAccScore[$g_iCurAccount][0] <> $ScoreLimits[0] Then
@@ -751,7 +766,7 @@ EndFunc   ;==>ClickOnEvent
 
 Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 	If Not $g_bRunState Then Return
-	$g_sCGEasyEventName = ""
+	$g_sCGCurrentEventName = ""
 	
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580) Then
 		Local $aTimer = GetEventTimeScore($g_iQuickMISX, $g_iQuickMISY)
@@ -787,7 +802,7 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 			Next
 			Return False
 		Else
-			$g_sCGEasyEventName = $sEventName
+			$g_sCGCurrentEventName = $sEventName
 		EndIf
 
 		;check if Challenge is BB Challenge, enabling force BB attack
