@@ -456,7 +456,7 @@ Func PlaceNewBuildingFromShopBB($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 			Return False
 		EndIf
 
-		SetLog("Placed " & $sUpgrade & " on Main Village! [" & $iClickX & "," & $iClickY & "]", $COLOR_SUCCESS)
+		SetLog("Placed " & $sUpgrade & " on Builder Base! [" & $iClickX & "," & $iClickY & "]", $COLOR_SUCCESS)
 		AutoUpgradeLog(True, "BB " & $sUpgrade, 1, $iCost, "New")
 		Return True
 	ElseIf QuickMIS("BFI", $g_sImgGreenCheckBB & "GreyCheck*") Then
@@ -485,7 +485,7 @@ Func PlaceNewBuildingFromShopBB($sUpgrade = "", $bZoomedIn = False, $iCost = 0)
 			EndIf
 		Next
 		If $bAnchorVerified Then
-			SetLog("Placed " & $sUpgrade & " on Main Village via RedX anchor! [" & $iRxClickX & "," & $iRxClickY & "]", $COLOR_SUCCESS)
+			SetLog("Placed " & $sUpgrade & " on Builder Base via RedX anchor! [" & $iRxClickX & "," & $iRxClickY & "]", $COLOR_SUCCESS)
 			AutoUpgradeLog(True, "BB " & $sUpgrade, 1, $iCost, "New")
 			Return True
 		EndIf
