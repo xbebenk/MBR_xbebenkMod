@@ -172,6 +172,9 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 			If QuickMIS("BC1", $g_sImgBBResourceIcon, $aTmpCoord[$i][1] + 80, $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 230, $aTmpCoord[$i][2] + 10) Then
 				$sCostType = $g_sQuickMISName
 				$lenght = Number($g_iQuickMISX) - $aTmpCoord[$i][1]
+			Else
+				SetDebugLog("Fail to detect resource icon, skip..")
+				ContinueLoop
 			EndIf
 			
 			$aUpgradeName = getBuildingName($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
