@@ -413,6 +413,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ChkBBSuggestedUpgradesIgnoreWall", $g_bChkAutoUpgradeBBIgnoreWall)
 	_Ini_Add("other", "ChkBBSpendGoldOnWall", $g_bChkBBSpendGoldOnWall)
 	_Ini_Add("other", "ChkBOBControl", $g_bChkBOBControl)
+	_Ini_Add("other", "ChkBBIgnoreBOTOShack", $g_bChkBBIgnoreBOTOShack)
 
 	# NEW CLANGAMES GUI
 	_Ini_Add("other", "ChkClanGamesEnabled", $g_bChkClanGamesEnabled ? 1 : 0)

@@ -445,6 +445,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkAutoUpgradeBBIgnoreWall, $g_sProfileConfigPath, "other", "ChkBBSuggestedUpgradesIgnoreWall", False, "Bool")
 	IniReadS($g_bChkBBSpendGoldOnWall, $g_sProfileConfigPath, "other", "ChkBBSpendGoldOnWall", False, "Bool")
 	IniReadS($g_bChkBOBControl, $g_sProfileConfigPath, "other", "ChkBOBControl", False, "Bool")
+	IniReadS($g_bChkBBIgnoreBOTOShack, $g_sProfileConfigPath, "other", "ChkBBIgnoreBOTOShack", True, "Bool")
 
 	# NEW CLANGAMES GUI
 	IniReadS($g_bChkClanGamesEnabled, $g_sProfileConfigPath, "other", "ChkClanGamesEnabled", False, "Bool")

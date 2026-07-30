@@ -962,6 +962,7 @@ Global $g_aUpgradeResourceCostDuration[3] = ["", "", ""] ; Resource, Cost, Durat
 ; Builder Base
 Global $g_bAutoUpgradeBBEnabled = False, $g_bChkAutoUpgradeBBIgnoreHall = False, $g_bChkAutoUpgradeBBIgnoreWall = False, $g_bChkBBSpendGoldOnWall = False
 Global $g_bReserveElixirBB = False, $g_bReserveGoldBB = False, $g_bChkBOBControl = False
+Global $g_bChkBBIgnoreBOTOShack = True ; B.O.T.O's Shack (extra builder, Gem cost) — off by default, most users are focused on Home Village gems
 Global $g_bStayOnBuilderBase = False
 
 Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_sQuickMISName = "", $g_iQuickMISLevel = ""

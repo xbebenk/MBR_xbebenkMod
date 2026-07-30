@@ -77,8 +77,13 @@ Func _SearchUpgradeBB($bTest = False)
 			Next
 			
 			For $i = 0 To UBound($Upgrades) - 1
-				If $Upgrades[$i][4] = "New" Then ;new building					
-					If CheckResourceForDoUpgradeBB($Upgrades[$i][3], $Upgrades[$i][5], $Upgrades[$i][0]) Then 
+				If $Upgrades[$i][4] = "New" Then ;new building
+					;B.O.T.O's Shack, Gem-cost only, off by default (name match tolerates OCR noise like "B O T O s Shack")
+					If $g_bChkBBIgnoreBOTOShack And StringInStr(StringRegExpReplace($Upgrades[$i][3], "[^A-Za-z]", ""), "BOTO", 2) Then
+						SetLog($Upgrades[$i][3] & " ignored (BOTO's Shack, Gem cost)", $COLOR_DEBUG2)
+						ContinueLoop
+					EndIf
+					If CheckResourceForDoUpgradeBB($Upgrades[$i][3], $Upgrades[$i][5], $Upgrades[$i][0]) Then
 						If PlaceNewBuildingFromShopBB($Upgrades[$i][3], $ZoomedIn, $Upgrades[$i][5]) Then
 							$ZoomedIn = True
 							$sameCost = 0
@@ -87,7 +92,7 @@ Func _SearchUpgradeBB($bTest = False)
 							If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop 2
 						Else
 							If IsFullScreenWindow() Then Click(820, 37) ;close shop window
-							ExitLoop
+							ContinueLoop ;don't let one failed New entry block the rest of the queue
 						EndIf
 					Else
 						SetLog("Not Enough " & $Upgrades[$i][0] & " for New Upgrade: " & $Upgrades[$i][3], $COLOR_DEBUG2)
