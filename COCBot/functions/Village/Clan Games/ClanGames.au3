@@ -82,7 +82,6 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 				SetLog("Your score limit is reached! Congrats")
 				$g_bIsCGPointMaxed = True
-				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;max point, account will only purge now, so allow to attack on BB
 				CloseClangamesWindow()
 				Return False
 			EndIf
@@ -90,8 +89,6 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			If IsEventRunning() Then 
 				CloseClangamesWindow()
 				Return True
-			Else
-				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
 			EndIf
 			
 			;now we need to copy selected challenge before checking current running event is not wrong event selected
@@ -110,9 +107,9 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 						SetLog("Detected Event to Purge: " & $EventName[2])
 						Click($aEvent[0][1], $aEvent[0][2])
 						If _Sleep(1500) Then Return
-						StartsEvent($EventName[2], True, False)
+						StartsEvent($EventName[2], True, False); start and purge
 					Else
-						ForcePurgeEvent(False, True) ; maybe will never hit here, but..
+						ForcePurgeEvent(False, True) ;no event to purge detected, purge slot 1 event
 					EndIf
 					CloseClangamesWindow()
 					Return False
@@ -693,6 +690,7 @@ Func IsEventRunning($bOpenWindow = False)
 					$g_bIsBBevent = True
 					$g_sCGCurrentEventName = $aActiveEvent[0][0]
 					$g_bIsCGEventRunning = True
+					If $g_sCGCurrentEventName = "D-BBreakdown" Then $g_sCGCurrentEventName = "BBD-BuildingDes"
 					Setlog("Running Challenge is BB Challenge : " & $g_sCGCurrentEventName, $COLOR_INFO)
 				Else
 					Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)

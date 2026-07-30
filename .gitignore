@@ -169,3 +169,5 @@ build/au3Stripper/Au3Stripper_ 1.Log
 
 # Test files
 test*.bat
+# raw PNG template (red-X anchor for dark-scenery checkmark)
+!imgxml/Resources/BuildersBase/AutoUpgrade/GreenCheck/RedXDark_0_90.png

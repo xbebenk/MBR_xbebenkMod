@@ -35,7 +35,7 @@ EndFunc   ;==>ResetTHsearch
 
 Func SearchTH($bVerify = True, $bClickAway = True)
 	If Not $g_bRunState Then Return
-	Local $aTH, $aiTHPos[2], $iTHLevel = 6
+	Local $aTH, $aiTHPos[2], $iTHLevel = $g_iTownHallLevel
 	Local $x, $y, $aInfo, $bRet = False
 	
 	For $try = 1 To 2
@@ -77,7 +77,7 @@ Func SearchTH($bVerify = True, $bClickAway = True)
 	
 	If $bRet Then
 		$g_aiTownHallPos = $aiTHPos
-		$g_iTownHallLevel = $iTHLevel
+		If $iTHLevel > $g_iTownHallLevel Then $g_iTownHallLevel = $iTHLevel
 		SetLog("Set THLevel: " & $g_iTownHallLevel & ", THPos [" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & "]", $COLOR_DEBUG1)
 	EndIf
 	

@@ -140,10 +140,10 @@ Func InitLDPlayer9($bCheckOnly = False)
 		Return False
 	EndIf
 	
-	Local $iAdbPort, $iAdbPortBase = 5555
+	Local $iAdbPort, $iAdbPortBase = 5554
 	Local $iInstance = StringReplace($g_sAndroidInstance, "leidian", "")
-	
-	$iAdbPort = $iAdbPortBase + $iInstance
+
+	$iAdbPort = $iAdbPortBase + 2 * $iInstance
 	$g_sAndroidAdbDevice = "emulator-" & $iAdbPort
 	
 	If $bInstalled And Not $bCheckOnly Then		

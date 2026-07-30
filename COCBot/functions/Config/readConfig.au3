@@ -324,24 +324,6 @@ Func ReadConfig_Android()
 		Local $sAndroidEmulator = IniRead($g_sProfileConfigPath, "android", "emulator", "")
 		Local $sAndroidInstance = IniRead($g_sProfileConfigPath, "android", "instance", "")
 		If $sAndroidEmulator <> "" Then
-			#cs Not required yet
-				If $g_hFrmBot = 0 Then
-				; early readConfig during bot launch: use command line if specified
-				If $g_asCmdLine[0] > 1 Then
-				If $g_asCmdLine[1] <> $sAndroidEmulator Then
-				$sAndroidEmulator = $g_asCmdLine[1]
-				SetDebugLog("Override Android Emulator by command line: " & $sAndroidEmulator)
-				EndIf
-				If $g_asCmdLine[0] > 2 Then
-				If $g_asCmdLine[2] <> $sAndroidInstance Then
-				$sAndroidInstance = $g_asCmdLine[2]
-				SetDebugLog("Override Android Instance by command line: " & $sAndroidInstance)
-				EndIf
-				EndIf
-				EndIf
-				EndIf
-			#ce
-
 			If $sAndroidEmulator <> $g_sAndroidEmulator Or $sAndroidInstance <> $g_sAndroidInstance Then
 				; check if Android Emulator or Instance changed, then invalidate Android Handle
 				UpdateHWnD(0)

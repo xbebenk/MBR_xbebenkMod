@@ -255,7 +255,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	EndIf
 	
 	CheckHeroHallTutor()
-	PlacedOnLeague()
+	If PlacedOnLeague() Then Return True
 	
 	If IsMultiplayerTabOpen() Then
 		ClickAway("Right")
@@ -356,7 +356,8 @@ Func PlacedOnLeague()
 	
 	If QuickMIS("BC1", $g_sImgChestPage, 110, 500, 135, 525) Then
 		SetLog("You have Chest to open", $COLOR_DEBUG2)
-		Return RewardChest()
+		RewardChest()
+		$bRet = True
 	EndIf
 	
 	If QuickMIS("BC1", $g_sImgSurvey, 430, 80, 475, 110) Then
