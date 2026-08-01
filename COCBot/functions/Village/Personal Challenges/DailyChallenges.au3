@@ -254,12 +254,6 @@ Func RewardChest($loop = 6)
 			SetLog("Click Continue", $COLOR_ACTION)
 			ExitLoop
 		EndIf
-		If _ColorCheck(_GetPixelColor(440, 500, True), Hex(0xBFEB8E, 6), 20, Default, "CardContinue") Then 
-			Click(440, 520)
-			SetLog("Click Continue", $COLOR_ACTION)
-			ExitLoop
-		EndIf
-		
 		If _Sleep(1000) Then Return
 	Next
 	If _Sleep(3000) Then Return

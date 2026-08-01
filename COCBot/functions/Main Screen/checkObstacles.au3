@@ -343,26 +343,6 @@ Func WelcomeBackCheck()
 	EndIf
 EndFunc
 
-Func RewardCard($loop = 6)
-	If _Sleep(1000) Then Return
-	For $i = 1 To $loop
-		If _Sleep(1000) Then Return
-		ClickP($aReturnHomeChest)
-	Next
-	
-	If _Sleep(8000) Then Return
-	
-	For $k = 1 To 5
-		If _ColorCheck(_GetPixelColor(440, 500, True), Hex(0xBFEB8E, 6), 20, Default, "CardContinue") Then 
-			Click(440, 520)
-			SetLog("Click Continue", $COLOR_ACTION)
-			ExitLoop
-		EndIf
-		If _Sleep(1000) Then Return
-	Next
-	If _Sleep(3000) Then Return
-EndFunc
-
 Func PlacedOnLeague()
 	Local $bRet
 	
@@ -377,12 +357,6 @@ Func PlacedOnLeague()
 	If QuickMIS("BC1", $g_sImgChestPage, 110, 500, 135, 525) Then
 		SetLog("You have Chest to open", $COLOR_DEBUG2)
 		RewardChest()
-		$bRet = True
-	EndIf
-	
-	If QuickMIS("BC1", $g_sImgCardPage, 150, 325, 220, 380) Then
-		SetLog("You have Card to open", $COLOR_DEBUG2)
-		RewardCard()
 		$bRet = True
 	EndIf
 	
@@ -402,15 +376,9 @@ Func PlacedOnLeague()
 		SetLog("You have chest bonus, Continue...", $COLOR_DEBUG2)
 	EndIf
 	
-	If _ColorCheck(_GetPixelColor(440, 500, True), Hex(0xBFEB8E, 6), 20, Default, "CardContinue") Then 
-		Click(440, 520)
-		SetLog("You have Card bonus, Continue...", $COLOR_DEBUG2)
-	EndIf
-	
 	If _ColorCheck(_GetPixelColor(430, 539, True), Hex(0xDDF685, 6), 20, Default, "HoggyBankContinue") Then 
 		Click(430, 540)
 		SetLog("You have Hoggy Bank Rewards, Continue...", $COLOR_DEBUG2)
-		$bRet = True
 	EndIf
 	
 	Return $bRet
