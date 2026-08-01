@@ -196,6 +196,9 @@ Global $g_sImgBuilderMenu = @ScriptDir & "\imgxml\Resources\AutoUpgrade\BuilderM
 Global $g_sImgHeroHall = @ScriptDir & "\imgxml\Resources\AutoUpgrade\HeroHall\"
 Global $g_sImgBuilderPotion = @ScriptDir & "\imgxml\Resources\AutoUpgrade\Potion\"
 Global $g_sImgHeroBooks = @ScriptDir & "\imgxml\Resources\AutoUpgrade\HeroBooks\"
+Global $g_sImgCardTapIcon = @ScriptDir & "\imgxml\Village\ClashOfCards\CardTapIcon\" ; Clash of Cards event (August) - "Tap!" card pack shown after battle ends
+Global $g_sImgContinueButton = @ScriptDir & "\imgxml\Village\ClashOfCards\ContinueButton\"
+Global $g_sImgClaimRewardButton = @ScriptDir & "\imgxml\Village\ClashOfCards\ClaimRewardButton\"
 #EndRegion
 
 #Region Auto Upgrade Builder Base

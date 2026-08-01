@@ -75,10 +75,16 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 		
 		If IsReturnHomeChestPage(False) Then
 			$BattleEnded = True
-			SetLog("Found ReturnHome ChestPage", $COLOR_DEBUG1) 
+			SetLog("Found ReturnHome ChestPage", $COLOR_DEBUG1)
 			ExitLoop ;exit Battle already ended
 		EndIf
-		
+
+		If IsClashOfCardsEventActive() And QuickMIS("BC1", $g_sImgCardTapIcon) Then
+			$BattleEnded = True
+			SetLog("Found ReturnHome Clash of Cards pack", $COLOR_DEBUG1)
+			ExitLoop ;exit Battle already ended
+		EndIf
+
 		If IsAttackPage() Then
 			Click(65, 540, 1, 0, "#0099")
 			If _Sleep(500) Then Return
@@ -141,6 +147,10 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 				ContinueLoop
 			Case IsReturnHomeChestPage()
 				SetLog("Chest Bonus gained!", $COLOR_SUCCESS)
+				If _Sleep(2000) Then Return
+				ContinueLoop
+			Case CheckClashOfCards()
+				SetLog("Clash of Cards pack claimed!", $COLOR_SUCCESS)
 				If _Sleep(2000) Then Return
 				ContinueLoop
 			Case StarBonus()
