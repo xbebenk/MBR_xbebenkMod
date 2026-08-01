@@ -171,3 +171,6 @@ build/au3Stripper/Au3Stripper_ 1.Log
 test*.bat
 # raw PNG template (red-X anchor for dark-scenery checkmark)
 !imgxml/Resources/BuildersBase/AutoUpgrade/GreenCheck/RedXDark_0_90.png
+# Clash of Cards event (August) templates
+!imgxml/Village/ClashOfCards/*.png
+!imgxml/Village/ClashOfCards/*/*.png
