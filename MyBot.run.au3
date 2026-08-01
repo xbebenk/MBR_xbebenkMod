@@ -1124,6 +1124,7 @@ Func FirstCheckRoutine()
 			If Not $g_bRunState Then Return
 			If AttackMain() Then
 				Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
+				CheckMainScreen()
 				RequestCC()
 				ExitLoop
 			Else
@@ -1223,6 +1224,7 @@ Func FirstCheckRoutine()
 				If Not $g_bRunState Then Return
 				If AttackMain() Then
 					Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
+					CheckMainScreen()
 					$b_SuccessAttack = True
 					ExitLoop
 				Else
