@@ -557,6 +557,7 @@ Global $g_hChkMMSkipFirstCheckRoutine = 0, $g_hChkMMSkipBB = 0, $g_hChkMMSkipTra
 Global $g_hCmbFillIncorrectTroopCombo = 0, $g_hChkMMIgnoreIncorrectSpellCombo = 0, $g_hLblFillIncorrectSpellCombo = 0, $g_hCmbFillIncorrectSpellCombo = 0, $g_hUseQueuedTroopSpell = 0
 Global $g_hChkMMSkipWallPlacingOnBB = 0, $g_hChkMMCheckCGEarly = 0, $g_hUpgradeWallEarly = 0
 Global $g_hAutoUpgradeEarly = 0, $g_hChkForceSwitchifNoCGEvent = 0, $g_hDonateEarly = 0, $g_hChkEnableCCSleep = 0, $g_hChkHeroJourney = 0, $g_hChkSkipBBRoutineOn6thBuilder = 0, $g_hChkAttackOnce = 0
+Global $g_hChkEnableExtraAttack = 0, $g_hCmbExtraAttack = 0
 Global $g_hChkTournament = 0, $g_hChkNoTournament = 0, $g_hCmbTournamentAttackType = 0, $g_hCmbUseSavedArmy = 0
 
 Global $g_sCmbFICTroops[7][3] = [ _
@@ -629,7 +630,7 @@ Func CreateMiscModSubTab()
 
 	$x = 180 + 55
 	$y = 40
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "Misc Routine"), $x - 10, $y - 15, 210, 180)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_MiscMod", "Misc Routine"), $x - 10, $y - 15, 210, 225)
 	$g_hDonateEarly = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CheckDonateEarly", "Check Donate Early"), $x, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "OnFirstCheckDonateEarly", "Enable Check Donate on First Start"))
 		GUICtrlSetOnEvent(-1, "chkCheckDonateEarly")
@@ -660,6 +661,15 @@ Func CreateMiscModSubTab()
 	$y += 22
 		$g_hChkSkipBBRoutineOn6thBuilder = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SkipBBRoutineOn6thBuilder", "Skip BB Routine on 6th Builder"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "ChkSkipBBRoutineOn6thBuilder")
+		
+	$y += 22
+		$g_hChkEnableExtraAttack = GUICtrlCreateCheckbox("Enable Extra Attack", $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "chkExtraAttack")
+	$y += 22
+		GUICtrlCreateLabel("Attack count: ", $x + 20, $y+3, -1, -1)
+		$g_hCmbExtraAttack = GUICtrlCreateCombo("", $x + 90, $y, 50, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+		_GUICtrlSetTip(-1, "Count of Extra attack bot will do after first Attack")
+		GUICtrlSetData(-1, "1|2|3|4", "3")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	$y += 55

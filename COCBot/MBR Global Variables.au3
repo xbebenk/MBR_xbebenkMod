@@ -558,6 +558,7 @@ Global $g_bIdleState = False ; bot is in Idle() routine waiting for things to fi
 Global $g_bBtnAttackNowPressed = False ; Set to true if any of the 3 attack now buttons are pressed
 Global $g_iCommandStop = -1 ; -1 = None, 0 = Halt Attack, 3 = Set from 0 to 3 if army full and training is enabled
 Global $g_bMeetCondStop = False
+Global $g_bEnableExtraAttack = False, $g_iLoopExtraAttack = 0
 Global $g_bRestarted = ($g_bBotLaunchOption_Autostart ? True : False)
 Global $g_bFirstStart = True
 Global $g_iFirstRun = 1

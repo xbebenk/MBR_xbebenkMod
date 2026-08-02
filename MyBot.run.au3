@@ -1073,7 +1073,7 @@ Func FirstCheck()
 	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
 
-	waitMainScreen() ;check mainscreen and remove any obstacle window/popup
+	CheckMainScreen() ;check mainscreen and remove any obstacle window/popup
 	If BotCommand() Then btnStop()
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bMeetCondStop Then
@@ -1135,7 +1135,6 @@ Func FirstCheckRoutine()
 					ExitLoop
 				Else
 					Setlog("[" & $loopcount & "] 1st Attack Loop, Failed", $COLOR_INFO)
-					If $g_bForceSwitch Then ExitLoop
 				EndIf
 				If Not $g_bRunState Then Return
 			EndIf
@@ -1144,24 +1143,27 @@ Func FirstCheckRoutine()
 
 	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
-
-	;If ProfileSwitchAccountEnabled() Then
-	;	For $count = 1 to 3
-	;		If Not $g_bRunState Then Return
-	;		If _ClanGames() Then
-	;			If $g_bIsBBevent Then
-	;				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-	;				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_ACTION)
-	;				GotoBBTodoCG()
-	;			EndIf
-	;		Else
-	;			If $g_bIsCGPointMaxed Then ExitLoop ; If point is max Then continue to main loop
-	;			If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
-	;			If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
-	;		EndIf
-	;		If isOnMainVillage() Then ZoomOut(True)	; Verify is on main village and zoom out
-	;	Next
-	;EndIf
+	
+	If $g_bEnableExtraAttack Then
+		SetLog("Do Extra Attack", $COLOR_INFO)
+		For $count = 0 to $g_iLoopExtraAttack
+			$g_bRestart = False
+			CheckMainScreen()
+			RequestCC()
+			If BotCommand() Then btnStop()
+			If $g_bMeetCondStop Then 
+				SetLog("Meet Stop condition, skip next extra attack", $COLOR_INFO)
+				ExitLoop
+			EndIf
+			If Not $g_bRunState Then Return
+			Setlog("[" & $count + 1 & "] Extra Attack", $COLOR_INFO)
+			If AttackMain() Then
+				Setlog("[" & $count + 1 & "] Extra Attack Success", $COLOR_SUCCESS)
+			Else
+				Setlog("[" & $count + 1 & "] Extra Attack Failed", $COLOR_DEBUG2)
+			EndIf
+		Next
+	EndIf
 
 	CommonRoutine("FirstCheck") ;after first attack, checking some routine
 
@@ -1228,13 +1230,13 @@ Func FirstCheckRoutine()
 					$b_SuccessAttack = True
 					ExitLoop
 				Else
+					If $g_bForceSwitch Then ExitLoop
 					$loopcount += 1
 					If $loopcount > 5 Then
 						Setlog("2nd Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
 						ExitLoop
 					Else
 						Setlog("[" & $loopcount & "] 2nd Attack Loop, Failed", $COLOR_INFO)
-						If $g_bForceSwitch Then ExitLoop
 					EndIf
 					If Not $g_bRunState Then Return
 				EndIf
