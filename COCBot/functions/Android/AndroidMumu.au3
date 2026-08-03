@@ -150,8 +150,8 @@ EndFunc   ;==>ConfigureSharedFolderMumu
 
 Func InitMumu($bCheckOnly = False)
 	Local $bInstalled = InitMumuX($bCheckOnly)
-	If $bInstalled And StringInStr($__Mumu_Version, "5.") <> 1 Then
-		SetLog("Mumu supported version 5.x not found", $COLOR_ERROR)
+	If Not $bInstalled Then
+		SetLog("Mumu supported version not found", $COLOR_ERROR)
 		SetError(1, @extended, False)
 		Return False
 	EndIf
