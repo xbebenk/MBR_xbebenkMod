@@ -110,6 +110,7 @@ Func InitMumuX($bCheckOnly = False)
 		$g_sAndroidProgramPath = $__Mumu_Device_Path & $frontend_exe
 		$g_sAndroidAdbPath = $sPreferredADB
 		$g_sAndroidVersion = $__Mumu_Version
+		SetScreenMumu()
 		ConfigureSharedFolderMumu()
 		WinGetAndroidHandle()
 	EndIf
