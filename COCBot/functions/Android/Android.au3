@@ -2002,6 +2002,12 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 				EndIf
 			Case $g_iAndroidSnowCone
 				SetDebugLog("Android Version 12")
+				Local $cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " push """ & $g_sAdbScriptsPath & "\minitouch"" /data/local/tmp/" , $process_killed)
+				SetLog($cmdOutput, $COLOR_INFO)
+				_Sleep(2000)
+				$cmdOutput = AndroidAdbSendShellCommand("chmod 777 /data/local/tmp/minitouch", Default, $wasRunState, False)
+				$cmdOutput = AndroidAdbSendShellCommand("ls -l /data/local/tmp/minitouch")
+				SetLog($cmdOutput, $COLOR_INFO)
 			Case Else
 				SetDebugLog("Android Version not detected!")
 		EndSwitch
