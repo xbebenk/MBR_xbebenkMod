@@ -669,7 +669,8 @@ Func CreateMiscModSubTab()
 		GUICtrlCreateLabel("Attack count: ", $x + 20, $y+3, -1, -1)
 		$g_hCmbExtraAttack = GUICtrlCreateCombo("", $x + 90, $y, 50, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		_GUICtrlSetTip(-1, "Count of Extra attack bot will do after first Attack")
-		GUICtrlSetData(-1, "1|2|3|4", "3")
+		GUICtrlSetData(-1, "1|2|3|4|5|6|7|8", "2")
+		GUICtrlSetOnEvent(-1, "chkExtraAttack")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 	
 	$y += 55

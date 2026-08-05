@@ -148,26 +148,30 @@ EndFunc   ;==>CollectDailyRewards
 Func CollectNewDailyRewards()
 	Local $iClaim = 0
 	Local $x1 = 240, $y1 = 250, $x2 = 800, $y2 = 390
-	Local $xOffset = 50, $yOffset = 30, $bResource = False
+	Local $xOffset = 50, $yOffset = 40, $bResource = False
 	Local $bCheckMarkFound = False
 	
 	For $i = 1 To 5
 		If QuickMIS("BC1", $g_sImgDailyReward, 275, 270, 310, 300) Then 
-			Click(310, 262, 1, 0, "Click CheckMark")
+			Click(295, 285, 1, 0, "Click CheckMark")
+			If _Sleep(1000) Then Return
 			$bCheckMarkFound = True
 		Else
-			SetLog("No Reward CheckMarks", $COLOR_DEBUG2)
+			SetDebugLog("No Reward CheckMarks", $COLOR_DEBUG2)
+			If _Sleep(1000) Then Return
 			ExitLoop
 		EndIf
-		If _Sleep(1000) Then Return
 	Next
 	
-	If $bCheckMarkFound Then ClickDrag(500, 340, 550, 340)
+	If $bCheckMarkFound Then 
+		ClickDrag(500, 340, 550, 340)
+		If _Sleep(1000) Then Return
+	EndIf
 	
 	Local $tmpxClaim = 0
 	For $i = 1 To 10	
 		If Not $g_bRunState Then Return
-		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, $x1, $y1, $x2, $y2)
+		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, 240, 250, 800, 390)
 		If IsArray($aClaim) And UBound($aClaim) > 0 Then
 			_ArraySort($aClaim, 0, 0, 0, 1) ;sort x coord ascending
 			For $j = 0 To UBound($aClaim) - 1
@@ -183,7 +187,7 @@ Func CollectNewDailyRewards()
 					ContinueLoop
 				EndIf
 				
-				Click($aClaim[$j][1] + $xOffset, $aClaim[$j][2] + $yOffset)
+				Click($aClaim[$j][1] + $xOffset, $aClaim[$j][2] + $yOffset, 1, 0, "Click Info")
 				If _Sleep(2000) Then Return
 				
 				If QuickMIS("BC1", $g_sImgDailyReward, 330, 66, 385, 95) Then

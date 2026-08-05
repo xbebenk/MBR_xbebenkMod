@@ -323,7 +323,7 @@ Func WinGetAndroidHandle($bInitAndroid = Default, $bTestPid = False)
 			; Restore original Android Window position
 			If $g_bAndroidEmbedded = False And IsArray($aPos) = 1 And ($g_bIsHidden = False Or ($aPos[0] > -30000 Or $aPos[1] > -30000)) Then
 				SetDebugLog("Move Android Window '" & $g_sAndroidTitle & "' to position: " & $g_iAndroidPosX & ", " & $g_iAndroidPosY)
-				HideAndroidWindow(False, Default, Default, "WinGetAndroidHandle:1", 0)
+				HideAndroidWindow(False, "WinGetAndroidHandle:1")
 				$aPos[0] = $g_iAndroidPosX
 				$aPos[1] = $g_iAndroidPosY
 			EndIf
@@ -1269,20 +1269,10 @@ Func _RestartAndroidCoC($bInitAndroid = True, $bRestart = True, $bStopCoC = True
 			EndIf
 			$iRetry += 1
 			SetLog("Unable to load Clash of Clans, " & $iRetry & ". retry...", $COLOR_ERROR)
-			;If $iRetry = 2 And $iRecursive = 0 And HaveSharedPrefs() Then
-			;	; crash might get fixed by clearing cache
-			;	$cmdOutput = AndroidAdbSendShellCommand("set export=$(pm clear " & $g_sAndroidGamePackage & " >&2)", 15000) ; timeout of 15 Seconds
-			;	If StringInStr($cmdOutput, "Success") Then
-			;		SetLog("Clash of Clans cache now cleared", $COLOR_SUCCESS)
-			;	Else
-			;		SetLog("Clash of Clans cache not cleared: " & $cmdOutput, $COLOR_ERROR)
-			;	EndIf
-			;EndIf
 			If _SleepStatus(5000) Then Return False
 			Return _RestartAndroidCoC($bInitAndroid, $bRestart, $bStopCoC, $iRetry, $iRecursive)
 		EndIf
 	EndIf
-
 	Return True
 EndFunc   ;==>_RestartAndroidCoC
 
@@ -1994,20 +1984,20 @@ Func _AndroidAdbLaunchShellInstance($wasRunState = Default, $rebootAndroidIfNecc
 					; minitouch binary is usually placed in the same shared folder as the screencap but Andriod Pie om Memu has this folder mounted with noexec flag
 					; will push minitounch binary to /data/local/tmp the same place as the minitouch README example
 					Local $cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " push """ & $g_sAdbScriptsPath & "\minitouch"" /data/local/tmp/" , $process_killed)
-					SetLog($cmdOutput, $COLOR_INFO)
+					SetDebugLog($cmdOutput)
 					_Sleep(2000)
 					$cmdOutput = AndroidAdbSendShellCommand("chmod 777 /data/local/tmp/minitouch", Default, $wasRunState, False)
 					$cmdOutput = AndroidAdbSendShellCommand("ls -l /data/local/tmp/minitouch")
-					SetLog($cmdOutput, $COLOR_INFO)
+					SetDebugLog($cmdOutput)
 				EndIf
 			Case $g_iAndroidSnowCone
 				SetDebugLog("Android Version 12")
 				Local $cmdOutput = LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "-s " & $g_sAndroidAdbDevice & " push """ & $g_sAdbScriptsPath & "\minitouch"" /data/local/tmp/" , $process_killed)
-				SetLog($cmdOutput, $COLOR_INFO)
+				SetDebugLog($cmdOutput)
 				_Sleep(2000)
 				$cmdOutput = AndroidAdbSendShellCommand("chmod 777 /data/local/tmp/minitouch", Default, $wasRunState, False)
 				$cmdOutput = AndroidAdbSendShellCommand("ls -l /data/local/tmp/minitouch")
-				SetLog($cmdOutput, $COLOR_INFO)
+				SetDebugLog($cmdOutput)
 			Case Else
 				SetDebugLog("Android Version not detected!")
 		EndSwitch
@@ -4241,7 +4231,7 @@ Func AndroidToFront($hHWndAfter = Default, $sSource = "Unknown")
 EndFunc   ;==>AndroidToFront
 
 Func ShowAndroidWindow($hHWndAfter = Default, $bRestorePosAndActivateWindow = Default, $bFastCheck = Default, $sSource = "Unknown")
-	Return HideAndroidWindow(False, $bRestorePosAndActivateWindow, $bFastCheck, $sSource & "->ShowAndroidWindow", $hHWndAfter)
+	Return HideAndroidWindow(False, $sSource & "->ShowAndroidWindow")
 EndFunc   ;==>ShowAndroidWindow
 
 Func CreateSecondDesktop()
@@ -4272,50 +4262,23 @@ Func _MoveAndroidWinToDesktop($iDesktopNumber = 0, $hAndroidWindow = $g_hAndroid
 		Case "WIN_10"
 			_MoveAppToSpecificDesktop($hAndroidWindow, $iDesktopNumber + 1)
 		Case "WIN_11"
-			Local $cmdOutput = LaunchConsole(@ScriptDir & "\lib\VirtualDesktop11-24H2.exe", "/anim:0 /gd:" & $iDesktopNumber & " /mw:" & $iAndroidPid, $process_killed)
+			LaunchConsole(@ScriptDir & "\lib\VirtualDesktop11-24H2.exe", "/anim:0 /gd:" & $iDesktopNumber & " /mw:" & $iAndroidPid, $process_killed)
 	EndSwitch
 EndFunc
 
-Func HideAndroidWindow($bHide = True, $bRestorePosAndActivateWhenShow = Default, $bFastCheck = Default, $sSource = "Unknown", $hHWndAfter = Default)
-	If $bFastCheck = Default Then $bFastCheck = False
-	If $hHWndAfter = Default Then $hHWndAfter = $HWND_TOPMOST
-	SetDebugLog("HideAndroidWindow: " & $bHide & ", " & $bRestorePosAndActivateWhenShow & ", " & $bFastCheck & ", " & $sSource)
-	ResumeAndroid()
-	SetError(0)
-	If $bFastCheck Then
-		If Not IsHWnd($g_hAndroidWindow) Then SetError(1)
-	Else
-		WinGetAndroidHandle() ; updates android position
-		WinGetPos($g_hAndroidWindow)
+Func HideAndroidWindow($bHide = True, $sSource = "Unknown")
+	SetDebugLog("HideAndroidWindow: " & $bHide & ", " & $sSource)
+	If WinGetAndroidHandle() = 0 Then
+		SetLog("Cannot get Android handle", $COLOR_ERROR)
+		Return
 	EndIf
-	If @error <> 0 Or AndroidEmbedded() Then Return SetError(0, 0, 0)
 	
-	If $bHide = True Then
+	If $bHide Then
 		_MoveAndroidWinToDesktop(1, $g_hAndroidWindow)
+	Else
+		_MoveAndroidWinToDesktop(0, $g_hAndroidWindow)
+		WinActivate($g_hAndroidWindow)
 	EndIf
-	
-	Local $DesktopWidth = @DeskTopWidth
-	Local $mid = $DesktopWidth/2
-	If $bHide = False Then
-		Switch $bRestorePosAndActivateWhenShow
-			Case True
-				; move and activate
-				;WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
-				WinSetState($g_hAndroidWindow, "", @SW_SHOW)
-			Case False
-				; don't move, only when hidden
-				_MoveAndroidWinToDesktop(0, $g_hAndroidWindow)
-				_WinAPI_ShowWindow($g_hAndroidWindow, @SW_SHOWNOACTIVATE)
-			Case Default
-				; just move
-				_MoveAndroidWinToDesktop(0, $g_hAndroidWindow)
-				Local $a = WinGetPos($g_hAndroidWindow)
-				If UBound($a) > 1 And ($a[0] <> $g_iAndroidPosX Or $a[1] <> $g_iAndroidPosY) Then WinMove($g_hAndroidWindow, "", $g_iAndroidPosX, $g_iAndroidPosY)
-		EndSwitch
-		If $hHWndAfter <> $g_hAndroidWindow Then AndroidToFront($hHWndAfter, $sSource & "->HideAndroidWindow")
-	EndIf
-	;Execute("Hide" & $g_sAndroidEmulator & "Window($bHide, $hHWndAfter)")
-	SetError(0)
 EndFunc   ;==>HideAndroidWindow
 
 Func AndroidPicturePathAutoConfig($myPictures = Default, $subDir = Default, $bSetLog = Default)

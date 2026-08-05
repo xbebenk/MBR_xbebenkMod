@@ -677,7 +677,7 @@ Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime, $MainLoopTimer
 
 	If $g_bIsHidden Then
-		HideAndroidWindow(True, Default, Default, "btnHide")
+		HideAndroidWindow(True, "btnHide")
 		updateBtnHideState()
 	EndIf
 

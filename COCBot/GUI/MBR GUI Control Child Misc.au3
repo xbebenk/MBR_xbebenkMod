@@ -831,14 +831,14 @@ Func chkHeroJourney()
 EndFunc ;==> chkHeroJourney
 
 Func chkExtraAttack()
+	$g_iLoopExtraAttack = _GUICtrlComboBox_GetCurSel($g_hCmbExtraAttack)
 	If GUICtrlRead($g_hChkEnableExtraAttack) = $GUI_CHECKED Then
 		$g_bEnableExtraAttack = True
+		SetLog("Set Extra Attack: " & String($g_bEnableExtraAttack) & ", loop: " & $g_iLoopExtraAttack + 1, $COLOR_DEBUG)
 	Else
 		$g_bEnableExtraAttack = False
+		SetLog("Set Extra Attack: " & String($g_bEnableExtraAttack), $COLOR_DEBUG)
 	EndIf
-	$g_iLoopExtraAttack = _GUICtrlComboBox_GetCurSel($g_hCmbExtraAttack) + 1
-	SetLog("Set Extra Attack loop : " & ($g_iLoopExtraAttack), $COLOR_DEBUG)
-	
 EndFunc  ;==> chkExtraAttack
 
 Func ChkAttackOnce()

@@ -17,7 +17,7 @@ Global $__Mumu_Manage_Path = "", $__Mumu_ConfigDir = ""
 Global $__MuMu_Version = 0
 
 Func GetMumuProgramParameter($bAlternative = False)
-	;If $bAlternative Then Return AddSpace("index=") & StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", "")
+	If $bAlternative Then Return AddSpace("-v " & StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", "") & " --vm " & $g_sAndroidInstance)
 	Return AddSpace("-v " & StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", ""))
 EndFunc   ;==>MumuProgramParameter
 
@@ -34,6 +34,7 @@ Func _OpenMumu($bRestart = False)
 	Local $Cmd = $__Mumu_Manage_Path & "MuMuManager.exe"
 	Local $iInstance = StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", "")
 	Local $sCmdParam = " control launch --vmindex " & $iInstance
+	Local $cmdOutput
 	
 	; always start ADB first to avoid ADB connection problems
 	LaunchConsole($g_sAndroidAdbPath, AddSpace($g_sAndroidAdbGlobalOptions) & "start-server", $process_killed)
@@ -66,6 +67,8 @@ Func _OpenMumu($bRestart = False)
 		If WaitForAndroidBootCompleted($g_iAndroidLaunchWaitSec - __TimerDiff($hTimer) / 1000, $hTimer) Then Return
 		If Not $g_bRunState Then Return
 		SetLog("Mumu Loaded, took " & Round(__TimerDiff($hTimer) / 1000, 2) & " seconds to begin.", $COLOR_SUCCESS)
+		;kill ads
+		$cmdOutput = AndroidAdbSendShellCommand("am force-stop com.mumu.store", Default, Default, False)
 		Return True
 	EndIf
 	Return False

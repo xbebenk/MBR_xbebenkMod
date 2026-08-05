@@ -209,7 +209,7 @@ Func reHide()
 	WinGetAndroidHandle()
 	If $g_bIsHidden And $g_hAndroidWindow <> 0 And Not $g_bAndroidEmbedded Then
 		SetDebugLog("Hide " & $g_sAndroidEmulator & " Window after restart")
-		Local $Result = HideAndroidWindow(True, Default, Default, "reHide") ;WinMove($g_hAndroidWindow, "", -32000, -32000)
+		Local $Result = HideAndroidWindow(True, "reHide") ;WinMove($g_hAndroidWindow, "", -32000, -32000)
 		updateBtnHideState()
 		Return $Result
 	EndIf
@@ -251,7 +251,7 @@ EndFunc
 
 Func btnHide()
 	$g_bIsHidden = Not $g_bIsHidden
-	HideAndroidWindow($g_bIsHidden, Default, Default, "btnHide")
+	HideAndroidWindow($g_bIsHidden, "btnHide")
 	updateBtnHideState()
 EndFunc   ;==>btnHide
 
