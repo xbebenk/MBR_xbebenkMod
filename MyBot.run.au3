@@ -92,7 +92,6 @@ EndFunc   ;==>UpdateBotTitle
 
 Func InitializeBot()
 	ProcessCommandLine()
-
 	If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then ; Set developer mode
 		$g_bDevMode = True
 		Local $aText = FileReadToArray(@ScriptDir & "\EnableMBRDebug.txt") ; check if special debug flags set inside EnableMBRDebug.txt file
@@ -547,7 +546,14 @@ Func FinalInitialization(Const $sAI)
 		setAndroidPID() ; set Android PID
 		SetBotGuiPID() ; set GUI PID
 	EndIf
-
+	
+	; check if android should be hidden
+	If $g_bBotLaunchOption_HideAndroid Then $g_bIsHidden = True
+	If $g_bIsHidden Then
+		HideAndroidWindow(True, "btnHide-runBot")
+		updateBtnHideState()
+	EndIf
+	
 	If $g_bFoundRunningAndroid Then
 		SetLog(GetTranslatedFileIni("MBR GUI Design - Loading", "Msg_Android_instance_03", "Found running %s %s", $g_sAndroidEmulator, $g_sAndroidVersion), $COLOR_SUCCESS)
 	EndIf
@@ -629,8 +635,6 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 		If $g_bRestarted Then $iDelay = 0
 		$iStartDelay = $iDelay * 1000
 		$g_iBotAction = $eBotStart
-		; check if android should be hidden
-		If $g_bBotLaunchOption_HideAndroid Then $g_bIsHidden = True
 		; check if bot should be minimized
 		If $g_bBotLaunchOption_MinimizeBot Then BotMinimizeRequest()
 	EndIf
@@ -676,10 +680,10 @@ EndFunc   ;==>MainLoop
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime, $MainLoopTimer
 
-	If $g_bIsHidden Then
-		HideAndroidWindow(True, "btnHide")
-		updateBtnHideState()
-	EndIf
+	;If $g_bIsHidden Then
+	;	HideAndroidWindow(True, "btnHide-runBot")
+	;	updateBtnHideState()
+	;EndIf
 
 	InitiateSwitchAcc()
 

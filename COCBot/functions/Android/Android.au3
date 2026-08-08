@@ -2932,6 +2932,7 @@ Func AndroidAdbScript($scriptTag, $variablesArray = Default, $timeout = Default,
 	If $scriptFile = "" And FileExists($g_sAdbScriptsPath & "\" & $scriptTag & ".script") = 1 Then $scriptFile = $scriptTag & ".script"
 	If $scriptFile = "" And FileExists($g_sAdbScriptsPath & "\" & $scriptTag & ".getevent") = 1 Then $scriptFile = $scriptTag & ".getevent"
 	If Not $bMinitouch And $scriptFile = "" And FileExists($g_sAdbScriptsPath & "\" & $scriptTag & ".minitouch") = 1 Then $scriptFile = $scriptTag & ".minitouch"
+	SetDebugLog("scriptFile: " & $scriptFile)
 	AndroidAdbSendShellCommandScript($scriptFile, $variablesArray, Default, $timeout, $wasRunState)
 	Return SetError(@error, @extended, (@error = 0 ? 1 : 0))
 EndFunc   ;==>AndroidAdbScript
@@ -4268,17 +4269,31 @@ EndFunc
 
 Func HideAndroidWindow($bHide = True, $sSource = "Unknown")
 	SetDebugLog("HideAndroidWindow: " & $bHide & ", " & $sSource)
+	Local $iPosX = 0, $iPosY = 0
+	Local $iWinWidth = @DesktopWidth
+	Local $iXMid = $iWinWidth/2
+	
 	If WinGetAndroidHandle() = 0 Then
-		SetLog("Cannot get Android handle", $COLOR_ERROR)
+		SetLog("HideAndroidWindow, Cannot get Android handle", $COLOR_DEBUG2)
 		Return
+	EndIf
+	
+	If $g_iFrmBotPosX > $iXMid Then
+		$iPosX = $g_iFrmBotPosX - $g_iGAME_WIDTH
+		$iPosY = $g_iFrmBotPosY
+	Else
+		$iPosX = $g_iFrmBotPosX + $_GUI_MAIN_WIDTH
+		$iPosY = $g_iFrmBotPosY
 	EndIf
 	
 	If $bHide Then
 		_MoveAndroidWinToDesktop(1, $g_hAndroidWindow)
 	Else
 		_MoveAndroidWinToDesktop(0, $g_hAndroidWindow)
+		WinMove($g_hAndroidWindow, "", $iPosX, $iPosY)
 		WinActivate($g_hAndroidWindow)
 	EndIf
+	SetDebugLog("Move Android window to: " & $iPosX & ", " & $iPosY)
 EndFunc   ;==>HideAndroidWindow
 
 Func AndroidPicturePathAutoConfig($myPictures = Default, $subDir = Default, $bSetLog = Default)

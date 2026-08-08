@@ -33,7 +33,10 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	
 	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False
 	$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
-	If Not $bBuilderBase And Not $bLocated And isOnBuilderBase() Then $bBuilderBase = True ;check if account is on builderbase but it should on main
+	If Not $bBuilderBase And Not $bLocated Then
+		If _Sleep(500) Then Return
+		If isOnBuilderBase() Then $bBuilderBase = True ;check if account is on builderbase but it should on main
+	EndIf
 	
 	While Not $bLocated
 		$i += 1

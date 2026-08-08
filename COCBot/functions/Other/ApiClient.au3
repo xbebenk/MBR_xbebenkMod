@@ -161,7 +161,7 @@ Func WM_MYBOTRUN_API_CLIENT($hWind, $iMsg, $wParam, $lParam)
 			$wParamHi = 0
 			If $g_bRunState = True Then $wParamHi += 1
 			If IsBotLaunched() Then $wParamHi += 4 ; bot launched
-			HideAndroidWindow(True, "btnHide")
+			HideAndroidWindow(True, "API_CLIENT-btnHide")
 			$wParam += BitShift($wParamHi, -16)
 		
 		Case 0x1080 ; Show Android
@@ -170,7 +170,7 @@ Func WM_MYBOTRUN_API_CLIENT($hWind, $iMsg, $wParam, $lParam)
 			$wParamHi = 0
 			If $g_bRunState = True Then $wParamHi += 1
 			If IsBotLaunched() Then $wParamHi += 4 ; bot launched
-			HideAndroidWindow(False, "btnShow")
+			HideAndroidWindow(False, "API_CLIENT-btnShow")
 			$wParam += BitShift($wParamHi, -16)
 			
 		Case Else ; do nothing
