@@ -323,12 +323,16 @@ Func WinGetAndroidHandle($bInitAndroid = Default, $bTestPid = False)
 			; Restore original Android Window position
 			If $g_bAndroidEmbedded = False And IsArray($aPos) = 1 And ($g_bIsHidden = False Or ($aPos[0] > -30000 Or $aPos[1] > -30000)) Then
 				SetDebugLog("Move Android Window '" & $g_sAndroidTitle & "' to position: " & $g_iAndroidPosX & ", " & $g_iAndroidPosY)
-				HideAndroidWindow(False, "WinGetAndroidHandle:1")
+				;HideAndroidWindow(False, "WinGetAndroidHandle:1")
 				$aPos[0] = $g_iAndroidPosX
 				$aPos[1] = $g_iAndroidPosY
 			EndIf
 			Local $instance = ($g_sAndroidInstance = "" ? "" : " (" & $g_sAndroidInstance & ")")
 			SetLog($g_sAndroidEmulator & $instance & " running in window mode", $COLOR_ACTION)
+			If $g_bIsHidden Then
+				HideAndroidWindow(True, "btnHide-runBot")
+				updateBtnHideState()
+			EndIf
 			If $currHWnD <> 0 And $currHWnD <> $g_hAndroidWindow Then
 				$g_bInitAndroid = True
 				If $bInitAndroid = True Then InitAndroid(True)
