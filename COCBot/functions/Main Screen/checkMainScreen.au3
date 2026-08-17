@@ -84,7 +84,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 
 	;Execute Notify Pending Actions
 	NotifyPendingActions()
-
+	
 	Return $bLocated
 EndFunc   ;==>_checkMainScreen
 
@@ -148,4 +148,10 @@ Func CheckDonateNotifCounter()
 		If $bRet Then SetLog("New chat detected!, Check for Donate", $COLOR_DEBUG)
 	EndIf
 	Return $bRet
+EndFunc
+
+Func KillAds($iAndroidPID = 0)
+	;kill ads
+	If $iAndroidPID = 0 Then $iAndroidPID = GetAndroidProcessPID()
+	If $iAndroidPID <> 0 And $g_sAndroidEmulator = "MuMu" Then AndroidAdbSendShellCommand("am force-stop com.mumu.store", Default, Default, False)
 EndFunc

@@ -330,7 +330,10 @@ Func WinGetAndroidHandle($bInitAndroid = Default, $bTestPid = False)
 			Local $instance = ($g_sAndroidInstance = "" ? "" : " (" & $g_sAndroidInstance & ")")
 			SetLog($g_sAndroidEmulator & $instance & " running in window mode", $COLOR_ACTION)
 			If $g_bIsHidden Then
-				HideAndroidWindow(True, "btnHide-runBot")
+				HideAndroidWindow(True, "reHide")
+				updateBtnHideState()
+			Else
+				HideAndroidWindow(False, "reHide")
 				updateBtnHideState()
 			EndIf
 			If $currHWnD <> 0 And $currHWnD <> $g_hAndroidWindow Then
@@ -4283,7 +4286,7 @@ Func HideAndroidWindow($bHide = True, $sSource = "Unknown")
 	EndIf
 	
 	If $g_iFrmBotPosX > $iXMid Then
-		$iPosX = $g_iFrmBotPosX - $g_iGAME_WIDTH
+		$iPosX = $g_iFrmBotPosX - $g_iGAME_WIDTH - 5
 		$iPosY = $g_iFrmBotPosY
 	Else
 		$iPosX = $g_iFrmBotPosX + $_GUI_MAIN_WIDTH

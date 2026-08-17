@@ -33,7 +33,7 @@ Func waitMainScreen() ;Waits for main screen to popup
 			SetLog("waitMainScreen: MainScreen Located", $COLOR_SUCCESS)
 			Return True
 		EndIf
-		
+		KillAds()
 		If _Sleep(50) Then Return
 		
 		$bCheckObs = checkObstacles()
