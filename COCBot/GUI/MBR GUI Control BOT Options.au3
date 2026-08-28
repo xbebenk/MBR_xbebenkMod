@@ -426,7 +426,7 @@ EndFunc   ;==>cmbSwitchAccProfileX
 
 Func chkDebugSetLog()
 	$g_bDebugSetlog = (GUICtrlRead($g_hChkDebugSetlog) = $GUI_CHECKED) ;
-	SetDebugLog("DebugSetlog " & ($g_bDebugSetlog ? "enabled" : "disabled"))
+	SetLog("DebugSetlog " & ($g_bDebugSetlog = True ? "enabled" : "disabled"), $COLOR_DEBUG)
 EndFunc   ;==>chkDebugSetLog
 
 Func chkDebugAndroid()
@@ -811,7 +811,7 @@ EndFunc   ;==>btnTestImage
 
 Func btnTestVillageSize($bMeasureOnly = False)
 	Local $hTimer, $ms
-	BeginImageTest()
+	BeginImageTest($g_sProfileTempPath & "Debug\Villagesearch\")
 	Local $currentRunState = $g_bRunState
 	Local $currentDebug = $g_bDebugSetlog
 	$g_bRunState = True
@@ -821,33 +821,30 @@ Func btnTestVillageSize($bMeasureOnly = False)
 	_CaptureRegion()
 	_CaptureRegion2Sync()
 	$hTimer = __TimerInit()
-	If Not CheckZoomOut() Then Return
+	$g_bVillageSearchActive = True
+	CheckZoomOut()
 	
 	$ms = __TimerDiff($hTimer)
 	SetLog("TestVillageSize : CheckZoomOut (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-	If $bMeasureOnly Then 
-		AttackCSVDEBUGIMAGE(true)
-		Return
-	EndIf
 	
-	$hTimer = __TimerInit()
-	ResetTHsearch()
-	FindTownhall()
-	$ms = __TimerDiff($hTimer)
-	SetLog("TestVillageSize : FindTownhall (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-	
-	$hTimer = __TimerInit()
-	checkDeadBase()
-	$ms = __TimerDiff($hTimer)
-	SetLog("TestVillageSize : checkDeadBase (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-	
-	$hTimer = __TimerInit()
-	Local $g_bDebugSF = $g_bDebugSmartFarm
-	$g_bDebugSmartFarm = True
-	ChkSmartFarm()
-	$ms = __TimerDiff($hTimer)
-	SetLog("TestVillageSize : ChkSmartFarm (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
-	$g_bDebugSmartFarm = $g_bDebugSF
+	;$hTimer = __TimerInit()
+	;ResetTHsearch()
+	;FindTownhall()
+	;$ms = __TimerDiff($hTimer)
+	;SetLog("TestVillageSize : FindTownhall (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	;
+	;$hTimer = __TimerInit()
+	;checkDeadBase()
+	;$ms = __TimerDiff($hTimer)
+	;SetLog("TestVillageSize : checkDeadBase (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	;
+	;$hTimer = __TimerInit()
+	;Local $g_bDebugSF = $g_bDebugSmartFarm
+	;$g_bDebugSmartFarm = True
+	;ChkSmartFarm()
+	;$ms = __TimerDiff($hTimer)
+	;SetLog("TestVillageSize : ChkSmartFarm (" & Round($ms, 0) & " ms.)", $COLOR_WARNING)
+	;$g_bDebugSmartFarm = $g_bDebugSF
 	
 	EndImageTest()
 
@@ -876,20 +873,10 @@ Func btnTestDeadBase()
 	Local $currentRunState = $g_bRunState
 	$g_bRunState = True
 
-	ZoomOut(True)
-	ResetTHsearch()
-	SetLog("Testing FindTownhall()", $COLOR_INFO)
-	SetLog("FindTownhall() = " & FindTownhall(), $COLOR_INFO)
-	SetLog("$g_sImglocRedline = " & $g_sImglocRedline, $COLOR_INFO)
-
 	SetLog("Testing checkDeadBase()", $COLOR_INFO)
 	SetLog("Result checkDeadBase() = " & checkDeadBase(), $COLOR_INFO)
 	SetLog("Testing checkDeadBase() DONE", $COLOR_INFO)
 	
-	SetLog("Testing Redlines()", $COLOR_INFO)
-	SetLog("Result Redlines() = " & SearchRedLines(), $COLOR_INFO)
-	SetLog("Testing SearchRedLines() DONE", $COLOR_INFO)
-
 	If $hHBMP <> 0 Then
 		_WinAPI_DeleteObject($hHBMP)
 		TestCapture(0)
@@ -897,6 +884,39 @@ Func btnTestDeadBase()
 
 	$g_bRunState = $currentRunState
 EndFunc   ;==>btnTestDeadBase
+
+Func btnTestWall()
+	Local $hBMP = 0, $hHBMP = 0
+	Local $sImageFile = FileOpenDialog("Select CoC screenshot to test, cancel to use live screenshot", $g_sProfileTempPath, "Image (*.png)", $FD_FILEMUSTEXIST, "", $g_hFrmBot)
+	If @error <> 0 Then
+		SetLog("Testing image cancelled, taking screenshot from " & $g_sAndroidEmulator, $COLOR_INFO)
+		_CaptureRegion()
+		$hHBMP = $g_hHBitmap
+		TestCapture($hHBMP)
+	Else
+		SetLog("Testing image " & $sImageFile, $COLOR_INFO)
+		; load test image
+		$hBMP = _GDIPlus_BitmapCreateFromFile($sImageFile)
+		$hHBMP = _GDIPlus_BitmapCreateDIBFromBitmap($hBMP)
+		_GDIPlus_BitmapDispose($hBMP)
+		TestCapture($hHBMP)
+		SetLog("Testing image hHBitmap = " & $hHBMP)
+	EndIf
+
+	Local $currentRunState = $g_bRunState
+	$g_bRunState = True
+	SearchTH(False)
+	SetLog("Testing SearchWall()", $COLOR_INFO)
+	SetLog("Result SearchWall() = " & SearchWall(0, 1), $COLOR_INFO)
+	SetLog("Testing SearchWall() DONE", $COLOR_INFO)
+	
+	If $hHBMP <> 0 Then
+		_WinAPI_DeleteObject($hHBMP)
+		TestCapture(0)
+	EndIf
+
+	$g_bRunState = $currentRunState
+EndFunc   ;==>btnTestWall
 
 Func btnTestDeadBaseFolder()
 
@@ -1328,17 +1348,11 @@ Func btnTestUpgradeWindow()
 	$g_bRunState = $currentRunState
 EndFunc   ;==>btnTestUpgradeWindow
 
-Func btnTestSmartWait()
+Func btnCloseAndroid()
     Local $currentRunState = $g_bRunState
-    Local $bCloseWhileTrainingEnable = $g_bCloseWhileTrainingEnable
-
     $g_bRunState = True
-    $g_bCloseWhileTrainingEnable = True
-
-    SmartWait4Train(20)
-
+    closeandroid()
     $g_bRunState = $currentRunState
-    $g_bCloseWhileTrainingEnable = $bCloseWhileTrainingEnable
 EndFunc   ;==>btnTestSmartWait
 
 Func btnConsoleWindow()

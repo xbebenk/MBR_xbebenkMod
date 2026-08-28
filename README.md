@@ -2,8 +2,7 @@
   -----------
 - A Free Clash of Clans bot. 
 - A bot is a general term in gaming that is used to refer to a character controlled by a computer.
-
-** Mod Info:
+##  Mod Info:
 - This is xbeMOD, based on official MyBotRun v7.9.9
 - There is no compiled version, run bot script with autoit3 [Guide here](https://mybot.run/forums/index.php?/topic/8714-guide-how-to-recompile-the-bot-run-bot-as-script/)
 - Use AutoIt v.3.3.16 [Download here](https://www.autoitscript.com/autoit3/files/archive/autoit/autoit-v3.3.16.1-setup.exe)
@@ -16,12 +15,6 @@
 - More details on : [CHANGELOG](https://github.com/xbebenk/MBR_xbebenkMod/blob/dev_1.2.6/CHANGELOG)
 
 Latest version always on dev branch
-![image](https://github.com/xbebenk/MBR_xbebenkMod/assets/6594360/18e69ee2-f326-4d08-a69b-e8cc664d6ce7)
-
-Documentation
-  -------------
-- How to Start Bot - https://mybot.run/forums/index.php?/topic/4978-guide-how-to-use-the-bot/
-- How to Report Bug/Help - https://mybot.run/forums/index.php?/forum/20-bug-reporting/
 
 Installation
   ------------
@@ -34,6 +27,11 @@ Essential software :
 - MyBot last version avaiable
 - DON´T USE THE OLD CONFIG FILES
 
+Documentation
+  -------------
+- How to Start Bot - https://mybot.run/forums/index.php?/topic/4978-guide-how-to-use-the-bot/
+- How to Report Bug/Help - https://mybot.run/forums/index.php?/forum/20-bug-reporting/
+  
 Licensing
   ---------
 Please see the file called LICENSE.

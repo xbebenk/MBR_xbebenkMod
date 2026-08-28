@@ -69,7 +69,7 @@ Func ChkSmartFarm($bTest = False, $iMode = $REDLINE_REAL)
 	
 	; TL , TR , BL , BR
 	Local $aMainSide[4] = [0, 0, 0, 0]
-
+	Local $aReturn[3] = [True, 1, "TR"]
 	SetDebugLog(" - INI|SmartFarm detection.", $COLOR_INFO)
 	
 	$hTimer = TimerInit()
@@ -91,8 +91,7 @@ Func ChkSmartFarm($bTest = False, $iMode = $REDLINE_REAL)
 	
 	If Ubound($aAll) = 0 Then 
 		SetLog("Still got 0 building", $COLOR_DEBUG2)
-		$g_bRestart = True
-		Return 0
+		Return $aReturn
 	EndIf
 	
 	; [0] = x , [1] = y , [2] = Side , [3] = In/out , [4] = Side,  [5]= Is string with 5 coordinates to deploy
@@ -190,13 +189,13 @@ Func ChkSmartFarm($bTest = False, $iMode = $REDLINE_REAL)
 		SetLog("DebugSmartFarm enabled", $COLOR_DEBUG)
 		DebugImageSmartFarm($THdetails, $aResourcesIN, $aResourcesOUT, Round(TimerDiff($hTimer) / 1000, 2) & "'s", _ArrayToString($aBestSideToAttack))
 	EndIf
-	
-	If $bTest Then Return 0
 
 	; Variable to return : $Return[3]  [0] = To attack InSide  [1] = Quant. Sides  [2] = Name Sides
-	Local $Return[3] = [$bAttackInside, UBound($aBestSideToAttack), _ArrayToString($aBestSideToAttack)]
-	Return $Return
-
+	$aReturn[0] = $bAttackInside
+	$aReturn[1] = UBound($aBestSideToAttack)
+	$aReturn[2] = _ArrayToString($aBestSideToAttack)
+	
+	Return $aReturn
 EndFunc   ;==>ChkSmartFarm
 
 Func SmartFarmDetection()
@@ -585,6 +584,18 @@ Func AttackSmartFarm($Nside, $SIDESNAMES)
 	$g_aiDeployHeroesPosition[1] = -1
 	
 	If $g_bDebugSmartFarm Then AttackCSVDEBUGIMAGE()
+	
+	If StringInStr($SIDESNAMES, "BL") Then
+		SetLog("Attack Side = " & $SIDESNAMES & ", prevent click boost button", $COLOR_INFO)
+		For $i = 1 To 15
+			If QuickMIS("BFI", $g_sImgImgLocButtons & "\BoostButton*.xml", 300,520,390,550) Then
+				If _Sleep(2000) Then Return
+				SetLog("Wait Battle Start #" & $i, $COLOR_ACTION)
+			Else
+				ExitLoop ; no boost button, launch attack
+			EndIf
+		Next
+	EndIf
 	
 	LaunchTroopSmartFarm($listInfoDeploy, $g_iClanCastleSlot, $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot, $g_iMinionPSlot, $g_iDukeSlot, $SIDESNAMES)
 	

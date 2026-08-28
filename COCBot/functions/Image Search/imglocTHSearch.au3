@@ -35,12 +35,12 @@ EndFunc   ;==>ResetTHsearch
 
 Func SearchTH($bVerify = True, $bClickAway = True)
 	If Not $g_bRunState Then Return
-	Local $aTH, $aiTHPos[2], $iTHLevel
+	Local $aTH, $aiTHPos[2], $iTHLevel = $g_iTownHallLevel
 	Local $x, $y, $aInfo, $bRet = False
 	
 	For $try = 1 To 2
 		SetLog("[" & $try & "] SearchTH #" & $try, $COLOR_ACTION)
-		$aTH = QuickMIS("CNX", $g_sImgTownHall)
+		$aTH = QuickMIS("CNX", $g_sImgTownHall, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom)
 		If IsArray($aTH) And UBound($aTH) > 0 Then
 			_ArraySort($aTH, 1, 0, 0, 3)
 			For $i = 0 To UBound($aTH) - 1
@@ -52,7 +52,7 @@ Func SearchTH($bVerify = True, $bClickAway = True)
 					SetLog("Verify TH Level", $COLOR_ACTION)
 					Click($x, $y)
 					If _Sleep(500) Then Return
-					$aInfo = BuildingInfo(242, 477)
+					$aInfo = BuildingInfo()
 					If $aInfo[1] = "Town Hall" Then
 						$iTHLevel =  $aInfo[2]
 						$aiTHPos[0] = $x
@@ -77,7 +77,7 @@ Func SearchTH($bVerify = True, $bClickAway = True)
 	
 	If $bRet Then
 		$g_aiTownHallPos = $aiTHPos
-		$g_iTownHallLevel = $iTHLevel
+		If $iTHLevel > $g_iTownHallLevel Then $g_iTownHallLevel = $iTHLevel
 		SetLog("Set THLevel: " & $g_iTownHallLevel & ", THPos [" & $g_aiTownHallPos[0] & "," & $g_aiTownHallPos[1] & "]", $COLOR_DEBUG1)
 	EndIf
 	

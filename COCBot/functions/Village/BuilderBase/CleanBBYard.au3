@@ -82,6 +82,7 @@ Func CleanBBYard($bTest = False)
 		SetLog("Clean BB Yard Found and Clearing " & $Locate & " Obstacles!", $COLOR_SUCCESS)
 		SetLog("CleanBBYard used Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_DEBUG)
 	EndIf
+	ClickAway()
 	UpdateStats()
 EndFunc   ;==>CleanBBYard
 

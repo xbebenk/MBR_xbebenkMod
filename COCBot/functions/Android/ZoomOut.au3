@@ -594,9 +594,9 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 	Local $aResult[5] = ["", 0, 0, 0, 0] ; expected dummy value
 	Local $aResult2[4] = [0, 0, 0, 0]
 	If Not $g_bRunState Then Return FuncReturn($aResult)
-	
+		
 	$aVillage = GetVillageSize($bOnBuilderBase, "stone", "tree")
-	If IsArray($aVillage) = 1 Then
+	If IsArray($aVillage) Then
 		$iVillageSize = $aVillage[0]
 		If $iVillageSize < 750 Then
 			$z = $aVillage[1]
@@ -610,12 +610,11 @@ Func SearchZoomOut($bCenterVillage = True, $UpdateMyVillage = True, $sSource = "
 			$g_iSearchZoomOutCounter = 0
 			SetDebugLog("SearchZoomOut CenteringVillage = " & String($bCenterVillage), $COLOR_DEBUG2)
 			
-			If $bCenterVillage And (Abs($x) > 15 Or Abs($y) > 15) Then ;And ($UpdateMyVillage = False Or $x <> $g_iVILLAGE_OFFSET[0] Or $y <> $g_iVILLAGE_OFFSET[1]) Then
+			If $bCenterVillage And (Abs($x) > 15 Or Abs($y) > 15) Then 
 				SetDebugLog("[" & $sSource & "] Centering Village by: x=" & $x & ", y=" & $y, $COLOR_DEBUG2)
 				
 				ClickAway()
 				ClickDrag($aScrollPos[0], $aScrollPos[1], $aScrollPos[0] - $x, $aScrollPos[1] - $y)
-				Return FuncReturn($aResult)
 				
 				$aResult2 = SearchZoomOut(False, $UpdateMyVillage, "SearchZoomOut(1):" & $sSource, True, $bOnBuilderBase)
 				; update difference in offset

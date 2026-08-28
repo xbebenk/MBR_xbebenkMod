@@ -44,11 +44,11 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 	SetLog("Entering Clan Games", $COLOR_INFO)
 	If Not $g_bRunState Then Return
 	; Local and Static Variables
-	Local $sTimeRemain = "", $sEventName = "", $getCapture = True
+	Local $sEventName = ""
 	Local Static $YourAccScore[16][2] = [[-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True], _
 										[-1, True], [-1, True], [-1, True], [-1, True], [-1, True], [-1, True]]
 
-	Local $iWaitPurgeScore = 150
+	
 
 	; Enter on Clan Games window
 	If IsClanGamesWindow($bOnlyPurge) Then
@@ -56,7 +56,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 		Local $sTempPath = @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\"
 		
 		; Let's get some information , like Remain Timer, Score and limit
-		If Not _ColorCheck(_GetPixelColor(300, 284, True), Hex(0x53E052, 6), 10) Then ;no greenbar = there is active event or completed event
+		If Not _ColorCheck(_GetPixelColor(300, 284, True), Hex(0x52E052, 6), 20) Then ;no greenbar = there is active event or completed event
 			If _ColorCheck(_GetPixelColor(405, 220, True), Hex(0x4F85C5, 6), 20) Then 
 				SetLog("Event cooldown detected", $COLOR_DEBUG2)
 				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
@@ -69,8 +69,10 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 
 		Local $aiScoreLimit = GetTimesAndScores()
 		Local $sTimeCG
+		Local $iWaitPurgeScoreLimit = 150, $iWaitPurgeScore = 4000
+		
 		If $aiScoreLimit = -1 Or UBound($aiScoreLimit) <> 2 Then
-			CloseClangamesWindow() ;need clickaway, as we are leaving
+			CloseClangamesWindow()
 			Return False
 		Else
 			SetLog("Your Score is: " & $aiScoreLimit[0], $COLOR_INFO)
@@ -80,37 +82,39 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			If $aiScoreLimit[0] = $aiScoreLimit[1] Then
 				SetLog("Your score limit is reached! Congrats")
 				$g_bIsCGPointMaxed = True
-				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;max point, account will only purge now, so allow to attack on BB
 				CloseClangamesWindow()
 				Return False
 			EndIf
 			
+			If IsEventRunning() Then 
+				CloseClangamesWindow()
+				Return True
+			EndIf
+			
 			;now we need to copy selected challenge before checking current running event is not wrong event selected
 			PrepareChallengesImage()
-			If $aiScoreLimit[0] + $iWaitPurgeScore > $aiScoreLimit[1] Or $aiScoreLimit[0] >= 4000 Then
-				SetLog("You almost reached max point")
+			
+			If $g_bChkClanGamesStopBeforeReachAndPurge And $aiScoreLimit[0] + $iWaitPurgeScoreLimit > $iWaitPurgeScore Then
+				SetLog("You score reached max point")
 				$g_bIsCGPointAlmostMax = True
-				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = False ;almost max point, account will only purge now, so allow to attack on BB
-				If $g_bChkClanGamesStopBeforeReachAndPurge And ($sTimeCG > $PurgeDayMinute Or $aiScoreLimit[0] >= 4000) Then ; purge, but not purge on last day of clangames
-					If IsEventRunning() Then Return True
-					
-					If $g_bChkClanGamesPurgeAny Then
-						SetLog("Clangames remain time: " & $sTimeCG & " > " & $PurgeDayMinute, $COLOR_INFO)
-						SetLog("Stop before completing and only Purge", $COLOR_INFO)
-						Local $aEvent = FindEventToPurge($sTempPath)
-						If IsArray($aEvent) And UBound($aEvent) > 0 Then
-							Local $EventName = StringSplit($aEvent[0][0], "-")
-							SetLog("Detected Event to Purge: " & $EventName[2])
-							Click($aEvent[0][1], $aEvent[0][2])
-							If _Sleep(1500) Then Return
-							StartsEvent($EventName[2], True, False)
-						Else
-							ForcePurgeEvent(False, True) ; maybe will never hit here, but..
-						EndIf
-						CloseClangamesWindow()
-						Return False
+				If $g_bChkForceSwitchifNoCGEvent Then $g_bForceSwitchifNoCGEvent = True
+				If $g_bChkClanGamesPurgeAny And $sTimeCG > $PurgeDayMinute Then ; purge, but not purge on last day of clangames					
+					SetLog("Clangames remain time: " & $sTimeCG & " > " & $PurgeDayMinute, $COLOR_INFO)
+					SetLog("Stop before completing and only Purge", $COLOR_INFO)
+					Local $aEvent = FindEventToPurge($sTempPath)
+					If IsArray($aEvent) And UBound($aEvent) > 0 Then
+						Local $EventName = StringSplit($aEvent[0][0], "-")
+						SetLog("Detected Event to Purge: " & $EventName[2])
+						Click($aEvent[0][1], $aEvent[0][2])
+						If _Sleep(1500) Then Return
+						StartsEvent($EventName[2], True, False); start and purge
+					Else
+						ForcePurgeEvent(False, True) ;no event to purge detected, purge slot 1 event
 					EndIf
+					CloseClangamesWindow()
+					Return False
 				EndIf
+
 			EndIf
 			If $YourAccScore[$g_iCurAccount][0] = -1 Then $YourAccScore[$g_iCurAccount][0] = $aiScoreLimit[0]
 		EndIf
@@ -186,7 +190,7 @@ Func _ClanGames($test = False, $bOnlyPurge = False)
 			Click($aAllEvent[$i][1], $aAllEvent[$i][2], 1, 100, "Click Event to Start")
 			If _Sleep(1050) Then Return
 			;_ArrayDisplay($aAllEvent)
-			Return ClickOnEvent($YourAccScore, $aiScoreLimit, $sEventName, $getCapture)
+			Return ClickOnEvent($YourAccScore, $aiScoreLimit, $sEventName)
 		Next
 	EndIf
 
@@ -436,10 +440,10 @@ Func FindEvent($bTestAllImage = False, $useBC1 = False, $bTestImage = False)
 				Next
 			Next
 		EndIf
-		If $g_bChkClanGamesDebug Then Setlog("[" & $i & "] AllEvents: " & @CRLF & _ArrayToString($aReturn), $COLOR_DEBUG2)
+		If $g_bChkClanGamesDebug Then Setlog("[" & $i & "] AllEvents[" & Ubound($aReturn) & "]: " & @CRLF & _ArrayToString($aReturn), $COLOR_DEBUG2)
 		If $g_bChkClanGamesDebug Then Setlog("[" & $i & "] Benchmark Search Event: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 	
-		If UBound($aReturn) = 0 And $i = 1 Then 
+		If UBound($aReturn) < 1 And $i = 1 Then 
 			ClickDrag(810, 320, 810, 165, 500)
 			$y = 1 ;only search on 3rd row
 			If _Sleep(1000) Then Return
@@ -501,7 +505,7 @@ EndFunc
 Func SelectEvent(ByRef $aSelectChallenges)
 	; Initial Timer
 	Local $hTimer = TimerInit()
-	Local $aTmp = $aSelectChallenges
+	Local $aTmp = $aSelectChallenges, $aDel[1]
 
 	For $i = 0 To Ubound($aTmp) - 1
 		If Not $g_bRunState Then Return
@@ -509,17 +513,19 @@ Func SelectEvent(ByRef $aSelectChallenges)
 		If IsArray($aEventInfo) Then
 			Setlog("Detected " & $aTmp[$i][0] & " difficulty of " & $aTmp[$i][3] & " [score:" & $aEventInfo[0] & ", " & $aEventInfo[1] & " min]", $COLOR_INFO)
 			If $g_bChkClanGames3H And Number($aEventInfo[1]) <= 180 Then ;Filter under 3 Hour event
-				_ArrayDelete($aSelectChallenges, $i)
+				$aDel[0] += 1
+				_ArrayAdd($aDel, $i)
 				SetLog("Should skip, no 3H event", $COLOR_DEBUG2)
 				ContinueLoop 
 			EndIf
-			$aTmp[$i][4] = Number($aEventInfo[1])
-			$aTmp[$i][6] = Number($aEventInfo[0])
-			ExitLoop
+			$aSelectChallenges[$i][4] = Number($aEventInfo[1])
+			$aSelectChallenges[$i][6] = Number($aEventInfo[0])
 		EndIf
-		If _Sleep(1000) Then Return
 	Next
 	
+	If $g_bChkClanGamesDebug Then Setlog("aDel: " & _ArrayToString($aDel), $COLOR_DEBUG)
+	_ArrayDelete($aSelectChallenges, $aDel)
+	If $g_bChkClanGamesDebug Then Setlog("SelectChallenge: " & _ArrayToString($aSelectChallenges), $COLOR_DEBUG)
 	If $g_bChkClanGamesDebug Then Setlog("Benchmark SelectEvent: (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds)", $COLOR_DEBUG)
 EndFunc
 
@@ -623,7 +629,7 @@ Func GetTimesAndScores()
 	Return $aiScoreLimit
 EndFunc   ;==>GetTimesAndScores
 
-Func CooldownTime($getCapture = True)
+Func CooldownTime()
 	;check cooldown purge
 	Local $aiCoolDown = decodeSingleCoord(findImage("Cooldown", $g_sImgCoolPurge & "\*.xml", GetDiamondFromRect("480,370,570,410"), 1, True, Default))
 	If IsArray($aiCoolDown) And UBound($aiCoolDown, 1) >= 2 Then
@@ -638,12 +644,15 @@ EndFunc   ;==>CooldownTime
 Func IsEventRunning($bOpenWindow = False)
 	Local $aEventFailed[4] = [300, 300, 0xEA2B26, 20]
 	Local $aEventPurged[4] = [542, 222, 0x4F85C5, 10]
-
+	Local $bRet = False
+	$g_sCGCurrentEventName = ""
+	
 	If $bOpenWindow Then
 		CloseClangamesWindow()
 		SetLog("Entering Clan Games", $COLOR_INFO)
-		If Not IsClanGamesWindow() Then Return
+		If Not IsClanGamesWindow() Then $bRet
 	EndIf
+	
 	; Check if any event is running or not
 	If Not _ColorCheck(_GetPixelColor(300, 285, True), Hex(0x53E052, 6), 10) Then ; Green Bar from First Position
 		;Check if Event failed
@@ -651,17 +660,17 @@ Func IsEventRunning($bOpenWindow = False)
 			SetLog("Couldn't finish last event! Lets trash it and look for a new one", $COLOR_INFO)
 			If TrashFailedEvent() Then
 				If _Sleep(3000) Then Return ;Add sleep here, to wait ClanGames Challenge Tile ordered again as 1 has been deleted
-				Return False
+				$bRet = False
 			Else
 				SetLog("Error happend while trashing failed event", $COLOR_ERROR)
 				CloseClangamesWindow()
-				Return True
+				$bRet = False
 			EndIf
 		ElseIf _CheckPixel($aEventPurged, True) Then
 				SetLog("An event purge cooldown in progress!", $COLOR_WARNING)
 				If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
 				CloseClangamesWindow()
-				Return True
+				$bRet = False
 		Else
 			SetLog("An event is already in progress!", $COLOR_SUCCESS)
 			;check if its Enabled Challenge, if not = purge
@@ -669,55 +678,71 @@ Func IsEventRunning($bOpenWindow = False)
 			Local $aActiveEvent = QuickMIS("CNX", @TempDir & "\" & $g_sProfileCurrentName & "\Challenges\", 294, 166, 386, 257)
 			If IsArray($aActiveEvent) And UBound($aActiveEvent) > 0 Then
 				SetLog("Active Challenge " & $aActiveEvent[0][0] & " is Enabled on Setting, OK!!", $COLOR_DEBUG)
+				$g_sCGCurrentEventName = $aActiveEvent[0][0]
+				$bRet = True
 				;check if Challenge is BB Challenge, enabling force BB attack
-				If $g_bChkForceBBAttackOnClanGames Then
-					Click(340, 215) ; click first slot
-					For $i = 1 To 10
-						If _Sleep(500) Then Return
-						If $g_bChkClanGamesDebug Then SetLog("waiting for trash #" & $i, $COLOR_ACTION)
-						If QuickMIS("BC1", $g_sImgTrashPurge, 100, 250, 800, 470) Then
-							ExitLoop
-						EndIf
-					Next
-					
-					If $g_bChkClanGamesDebug Then SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
-					If QuickMIS("BC1", $g_sImgVersus, 425, 190, 730, 250) Then
-						$g_bIsBBevent = True
-						$g_sCGCurrentEventName = $aActiveEvent[0][0]
-						$g_bIsCGEventRunning = True
-						Setlog("Running Challenge is BB Challenge : " & $g_sCGCurrentEventName, $COLOR_INFO)
-					Else
-						Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
-						If $aActiveEvent[0][0] = "BBD-WallDes" Or $aActiveEvent[0][0] = "BBD-BuildingDes" Then
-							SetLog("Event with shared Image: " & $aActiveEvent[0][0])
-							If $g_abCGMainDestructionItem[23] < 1 Then $bNeedPurge = True ;BBreakdown
-							If $g_abCGMainDestructionItem[22] < 1 Then $bNeedPurge = True ;WallWhacker
-						EndIf
-						If $g_bChkCGBBAttackOnly Or $bNeedPurge Then ;Purge main village event because we using BBCGOnly Mode
-							Setlog("We are running only BB events. Event started by mistake?", $COLOR_ERROR)
-							Click(340, 215) ;unclick so ForcePurgeEvent can work
-							ForcePurgeEvent(False, False)
-						EndIf
-						$g_bIsBBevent = False
+				
+				Click(340, 215, 1, 0, "ClanGames Slot 1") ; click first slot
+				WaitForTrash()
+				
+				If $g_bChkClanGamesDebug Then SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
+				If QuickMIS("BC1", $g_sImgVersus, 425, 190, 730, 250) Then
+					$g_bIsBBevent = True
+					$g_sCGCurrentEventName = $aActiveEvent[0][0]
+					$g_bIsCGEventRunning = True
+					If $g_sCGCurrentEventName = "D-BBreakdown" Then $g_sCGCurrentEventName = "BBD-BuildingDes"
+					Setlog("Running Challenge is BB Challenge : " & $g_sCGCurrentEventName, $COLOR_INFO)
+				Else
+					Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
+					If $aActiveEvent[0][0] = "BBD-WallDes" Or $aActiveEvent[0][0] = "BBD-BuildingDes" Then
+						SetLog("Event with shared Image: " & $aActiveEvent[0][0])
+						If $g_abCGMainDestructionItem[23] < 1 Then $bNeedPurge = True ;BBreakdown
+						If $g_abCGMainDestructionItem[22] < 1 Then $bNeedPurge = True ;WallWhacker
 					EndIf
+					If $bNeedPurge Then ;Purge  event because enabled by mistake
+						Setlog("Event started by mistake?", $COLOR_ERROR)
+						Click(340, 215, 1, 0, "ClanGames Slot 1") ;unclick so ForcePurgeEvent can work
+						ForcePurgeEvent(False, False)
+						CloseClangamesWindow()
+						$bRet = False
+					EndIf
+					If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
+					$g_sCGCurrentEventName = $aActiveEvent[0][0]
+					$g_bIsBBevent = False
 				EndIf
 			Else
 				Setlog("Active Challenge Not Enabled on Setting! started by mistake?", $COLOR_ERROR)
 				_CaptureRegion2(294, 166, 386, 257)
 				SaveDebugImage("CG-FailVerifyChallenge", False)
 				ForcePurgeEvent(False, False)
+				CloseClangamesWindow()
+				$bRet = False
 			EndIf
-			CloseClangamesWindow()
-			Return True
 		EndIf
 	Else
 		SetLog("No event under progress", $COLOR_INFO)
-		Return False
+		$bRet = False
 	EndIf
-	Return False
+	If $g_bIsBBevent And $g_sCGCurrentEventName = "D-BuilderHut" Then $g_bIsBBevent = False
+	If $g_bChkClanGamesDebug Then SetLog("$g_sCGCurrentEventName:" & $g_sCGCurrentEventName & ", $g_bIsBBevent:" & String($g_bIsBBevent), $COLOR_DEBUG)
+	If $bRet Then CloseClangamesWindow()
+	Return $bRet
 EndFunc   ;==>IsEventRunning
 
-Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName, $getCapture)
+Func WaitForTrash()
+	Local $bRet = False
+	For $i = 1 To 10
+		If _Sleep(500) Then Return
+		If $g_bChkClanGamesDebug Then SetLog("waiting for trash #" & $i, $COLOR_ACTION)
+		If QuickMIS("BC1", $g_sImgTrashPurge, 100, 250, 800, 470) Then
+			$bRet = True
+			ExitLoop
+		EndIf
+	Next
+	Return $bRet
+EndFunc
+
+Func ClickOnEvent(ByRef $YourAccScore, $ScoreLimits, $sEventName)
 	If Not $YourAccScore[$g_iCurAccount][1] Then
 		Local $Text = "", $color = $COLOR_SUCCESS
 		If $YourAccScore[$g_iCurAccount][0] <> $ScoreLimits[0] Then
@@ -739,7 +764,8 @@ EndFunc   ;==>ClickOnEvent
 
 Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 	If Not $g_bRunState Then Return
-
+	$g_sCGCurrentEventName = ""
+	
 	If QuickMIS("BC1", $g_sImgStart, 220, 150, 830, 580) Then
 		Local $aTimer = GetEventTimeScore($g_iQuickMISX, $g_iQuickMISY)
 		SetLog("Starting Event " & $sEventName & " [score:" & $aTimer[0] & ", " & $aTimer[1] & " min]", $COLOR_SUCCESS)
@@ -773,6 +799,8 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 				EndIf
 			Next
 			Return False
+		Else
+			$g_sCGCurrentEventName = $sEventName
 		EndIf
 
 		;check if Challenge is BB Challenge, enabling force BB attack
@@ -826,7 +854,7 @@ Func ForcePurgeEvent($bTest = False, $startFirst = True)
 		If StartAndPurgeEvent($bTest) Then
 			If $g_bChkForceSwitchifNoCGEvent And Not $g_bIsCGPointAlmostMax Then $g_bForceSwitchifNoCGEvent = True
 			CloseClangamesWindow()
-			Return True
+			Return False
 		EndIf
 	Else
 		SetLog("ForcePurgeEvent: Purge a Wrong Challenge", $COLOR_INFO)
@@ -976,6 +1004,7 @@ Func GetEventInfo($x, $y)
 		$Ret = GetEventTimeScore($g_iQuickMISX, $g_iQuickMISY)
 	EndIf
 	Click(60, 90, 1, 200, "Close CG Event Description")
+	If _Sleep(500) Then Return
 	
 	Return $Ret
 EndFunc   ;==>GetEventInfo
@@ -1046,8 +1075,8 @@ Func CloseClangamesWindow()
 	If IsCGWindowOpen() Then
 		Click(824, 87) ;close window
 		For $i = 1 To 5
-			If isOnMainVillage() Then Return True
 			If _Sleep(1000) Then Return
+			If isOnMainVillage() Then Return True
 		Next
 		Return False
 	EndIf
@@ -1278,7 +1307,7 @@ Func GetCGRewardList($X = 270, $OnlyClaimMax = False)
 EndFunc
 
 Func ClanGamesChallenges($sReturnArray)
-	;[0]=ImageName 	 					[1]=Challenge Name		[2]=THlevel 	[3]=Priority/TroopsNeeded 	[4]=Extra/to use in future	[5]=Description
+	;[0]=ImageName 	 					[1]=Challenge Name		[2]=THlevel 	[3]=Priority/TroopsNeeded 	[4]=Difficulty	[5]=Description
 	Global $LootChallenges[6][6] = [ _
 			["GoldChallenge", 			"Gold Challenge", 				 7,  5, 8, "Loot certain amount of Gold from a single Multiplayer Battle"								], _ 
 			["ElixirChallenge", 		"Elixir Challenge", 			 7,  5, 8, "Loot certain amount of Elixir from a single Multiplayer Battle"								], _ 
@@ -1288,21 +1317,21 @@ Func ClanGamesChallenges($sReturnArray)
 			["DarkEHeist", 				"Dark Elixir Heist", 			 9,  3, 1, "Loot a total amount of Dark Elixir (accumulated from many attacks) from Multiplayer Battle"	]]   
 
 	Global $AirTroopChallenges[15][6] = [ _
-			["Ball", 					"Balloon", 						 4, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Balloons"		], _ 
-			["Heal", 					"Healer", 						 4, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a Healer"							], _ 
-			["Drag", 					"Dragon", 						 7, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Dragons"			], _
-			["BabyD", 					"Baby Dragon", 					 9, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Baby Dragons"	], _ 
-			["Edrag", 					"Electro Dragon", 				10, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Electro Dragon"	], _ 
-			["RDrag", 					"Dragon Rider", 				10, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Dragon Rider"	], _ 
-			["Mini", 					"Minion", 						 7, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Minions"			], _ 
-			["Lava", 					"Lavahound", 					 9, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Lava Hounds"		], _ 
-			["RBall", 					"Rocket Balloon", 				12, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Rocket Balloon"], _ 
-			["Smini", 					"Super Minion", 				12, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Super Minion"], _ 
-			["InfernoD",				"Inferno Dragon", 				12, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Inferno Dragon"], _ 
-			["IceH", 					"Ice Hound", 					13, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using certain count of Ice Hound"], _ 
-			["BattleB", 				"Battle Blimp", 				10, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a of Battle Blimp"], _ 
-			["StoneS",	 				"Stone Slammer", 				10, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a of Stone Slammer"], _
-			["RDrag",	 				"Drag Racing", 					13, 1, 1, "Earn 1-5 Stars (accumulated from many attacks) from Multiplayer Battles using a of Dragon Rider"]] 
+			["Ball", 					"Balloon", 						 4, 1, 1, "Earn One Star from Multiplayer Battles using a Balloon"			], _ 
+			["Heal", 					"Healer", 						 4, 1, 1, "Earn One Star from Multiplayer Battles using a Healer"			], _ 
+			["Drag", 					"Dragon", 						 7, 1, 1, "Earn One Star from Multiplayer Battles using a Dragon"			], _
+			["BabyD", 					"Baby Dragon", 					 9, 1, 1, "Earn One Star from Multiplayer Battles using a Baby Dragon"		], _ 
+			["Edrag", 					"Electro Dragon", 				10, 1, 1, "Earn One Star from Multiplayer Battles using a Electro Dragon"	], _ 
+			["RDrag", 					"Dragon Rider", 				10, 1, 1, "Earn One Star from Multiplayer Battles using a Dragon Rider"		], _ 
+			["Mini", 					"Minion", 						 7, 1, 1, "Earn One Star from Multiplayer Battles using a Minion"			], _ 
+			["Lava", 					"Lavahound", 					 9, 1, 1, "Earn One Star from Multiplayer Battles using a Lava Hound"		], _ 
+			["RBall", 					"Rocket Balloon", 				12, 1, 1, "Earn One Star from Multiplayer Battles using a Rocket Balloon"	], _ 
+			["Smini", 					"Super Minion", 				12, 1, 1, "Earn One Star from Multiplayer Battles using a Super Minion"		], _ 
+			["InfernoD",				"Inferno Dragon", 				12, 1, 1, "Earn One Star from Multiplayer Battles using a Inferno Dragon"	], _ 
+			["IceH", 					"Ice Hound", 					13, 1, 1, "Earn One Star from Multiplayer Battles using a Ice Hound"		], _ 
+			["BattleB", 				"Battle Blimp", 				10, 1, 1, "Earn One Star from Multiplayer Battles using a Battle Blimp"		], _ 
+			["StoneS",	 				"Stone Slammer", 				10, 1, 1, "Earn One Star from Multiplayer Battles using a Stone Slammer"	], _
+			["RDrag",	 				"Drag Racing", 					13, 1, 1, "Earn One Star from Multiplayer Battles using a Dragon Rider"		]] 
 
 	Global $GroundTroopChallenges[27][6] = [ _
 			["Arch", 					"Archer", 						  6, 1, 1, "Earn 1-5 Stars from Multiplayer Battles using certain count of Archers"		], _ 
@@ -1333,13 +1362,19 @@ Func ClanGamesChallenges($sReturnArray)
 			["SiegeB", 					"Siege Barrack", 				 10, 1, 1, "Earn 1-5 Stars from Multiplayer Battles using a Siege Barracks" 				], _ 
 			["LogL", 					"Log Launcher", 				 10, 1, 1, "Earn 1-5 Stars from Multiplayer Battles using a Log Launcher"					]]   
 
-	Global $BattleChallenges[22][6] = [ _
+	Global $BattleChallenges[28][6] = [ _
 			["StarC", 					"Star Collector", 				 6,  1, 1, "Collect a total amount of Stars (accumulated from many attacks) from Multiplayer Battle"					], _ 
 			["Destruction", 			"Lord of Destruction", 			 6,  1, 1, "Collect a total amount of percentage Destruction % (accumulated from many attacks) from Multiplayer Battle"	], _ 
 			["PileOfVictores", 			"Pile Of Victories", 			 6,  1, 2, "Win 1-5 Multiplayer Battles"																				], _ 
 			["StarThree", 				"Hunt for Three Stars", 		10,  5, 8, "Score a Perfect 3 Stars in Multiplayer Battles"																], _ 
 			["WinningStreak", 			"Winning Streak", 				 9,  5, 8, "Win 1-5 Multiplayer Battles in a row"																		], _ 
 			["SlayingTitans", 			"Slaying The Titans", 			11,  2, 1, "Win a Multiplayer Battles In Titan League"																	], _ 
+			["UseKing", 				"King Commander", 				11,  2, 1, "Earn 3 stars on Multiplayer Battle using Barbarian King"													], _ 
+			["UseQueen", 				"Queen Supreme", 				11,  2, 1, "Earn 3 stars on Multiplayer Battle using Archer Queen"														], _ 
+			["UsePrince", 				"Use Prince", 					11,  2, 1, "Earn 3 stars on Multiplayer Battle using Minion Prince"														], _ 
+			["UseWarden", 				"Use Warden", 					11,  2, 1, "Earn 3 stars on Multiplayer Battle using Grand Warden"														], _ 
+			["UseChampion", 			"Reigning Champion", 			11,  2, 1, "Earn 3 stars on Multiplayer Battle using Royal Champion"													], _ 
+			["UseDuke", 				"Duke Unchain", 				11,  2, 1, "Earn 3 stars on Multiplayer Battle using Dragon Duke"														], _ 
 			["NoHero", 					"No Heroics Allowed", 			 3,  5, 5, "Win a stars without using Heroes"																			], _ 
 			["NoMagic", 				"No-Magic Zone", 				 6,  5, 5, "Win a stars without using Spells"																			], _ 
 			["Scrappy6s", 				"Scrappy 6s", 					 6,  1, 4, "Gain 3 Stars Against Town Hall level 6"																		], _ 
@@ -1357,7 +1392,7 @@ Func ClanGamesChallenges($sReturnArray)
 			["SpeedyStars", 			"3 Stars in 60 seconds",		 6,  2, 2, "Gain 3 Stars (accumulated from many attacks) from Multiplayer Battle but only stars gained below a minute counted"], _ 
 			["SuperCharge", 			"Deploy SuperTroops",			 6,  2, 0, "Deploy certain housing space of Any Super Troops"                                                           ]]
 
-	Global $DestructionChallenges[34][6] = [ _
+	Global $DestructionChallenges[31][6] = [ _
 			["Cannon", 					"Cannon", 				 6,  1, 1,"Destroy 5-25 Cannons in Multiplayer Battles"					], _ 
 			["ArcherT", 				"Archer Tower", 		 6,  1, 1,"Destroy 5-20 Archer Towers in Multiplayer Battles"			], _ 
 			["BuilderHut", 				"Builder Hut", 		     6,  1, 1,"Destroy 4-12 BuilderHut in Multiplayer Battles"				], _ 
@@ -1382,9 +1417,6 @@ Func ClanGamesChallenges($sReturnArray)
 			["DESpell", 				"Dark Spell Factory", 	 8,  1, 1,"Destroy 2-6 Dark Spell Factories in Multiplayer Battles"		], _ 
 			["WallWhacker", 			"Wall Whacker", 		 10, 1, 8,"Destroy 50-250 Walls in Multiplayer Battles"					], _ 
 			["BBreakdown",	 			"Building Breakdown", 	 6,  1, 1,"Destroy 50-250 Buildings in Multiplayer Battles"				], _ 
-			["BKaltar", 				"Barbarian King Altars", 9,  4, 4,"Destroy 2-5 Barbarian King Altars in Multiplayer Battles"	], _ 
-			["AQaltar", 				"Archer Queen Altars", 	10,  5, 4,"Destroy 2-5 Archer Queen Altars in Multiplayer Battles"		], _ 
-			["GWaltar", 				"Grand Warden Altars", 	11,  5, 4,"Destroy 2-5 Grand Warden Altars in Multiplayer Battles"		], _ 
 			["HeroLevelHunter", 		"Hero Level Hunter", 	 9,  5, 5,"Knockout 125 Level Heroes on Multiplayer Battles"			], _ 
 			["KingLevelHunter", 		"King Level Hunter", 	 9,  5, 5,"Knockout 50 Level King on Multiplayer Battles"				], _ 
 			["QueenLevelHunt", 			"Queen Level Hunter", 	10,  5, 5,"Knockout 50 Level Queen on Multiplayer Battles"				], _ 

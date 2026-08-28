@@ -100,17 +100,8 @@ Func ReadBuildingConfig()
 		;IniReadS($DSFPos[0], $g_sProfileBuildingPath, "other", "xDspellfactory", -1, "int")
 		;IniReadS($DSFPos[1], $g_sProfileBuildingPath, "other", "yDspellfactory", -1, "int")
 
-		IniReadS($g_aiKingAltarPos[0], $g_sProfileBuildingPath, "other", "xKingAltarPos", -1, "int")
-		IniReadS($g_aiKingAltarPos[1], $g_sProfileBuildingPath, "other", "yKingAltarPos", -1, "int")
-
-		IniReadS($g_aiQueenAltarPos[0], $g_sProfileBuildingPath, "other", "xQueenAltarPos", -1, "int")
-		IniReadS($g_aiQueenAltarPos[1], $g_sProfileBuildingPath, "other", "yQueenAltarPos", -1, "int")
-
-		IniReadS($g_aiWardenAltarPos[0], $g_sProfileBuildingPath, "other", "xWardenAltarPos", -1, "int")
-		IniReadS($g_aiWardenAltarPos[1], $g_sProfileBuildingPath, "other", "yWardenAltarPos", -1, "int")
-
-		IniReadS($g_aiChampionAltarPos[0], $g_sProfileBuildingPath, "other", "xChampionAltarPos", -1, "int")
-		IniReadS($g_aiChampionAltarPos[1], $g_sProfileBuildingPath, "other", "yChampionAltarPos", -1, "int")
+		IniReadS($g_aiHeroHallPos[0], $g_sProfileBuildingPath, "other", "xHeroHallPos", -1, "int")
+		IniReadS($g_aiHeroHallPos[1], $g_sProfileBuildingPath, "other", "yHeroHallPos", -1, "int")
 
 		IniReadS($g_aiLaboratoryPos[0], $g_sProfileBuildingPath, "upgrade", "LabPosX", -1, "int")
 		IniReadS($g_aiLaboratoryPos[1], $g_sProfileBuildingPath, "upgrade", "LabPosY", -1, "int")
@@ -333,24 +324,6 @@ Func ReadConfig_Android()
 		Local $sAndroidEmulator = IniRead($g_sProfileConfigPath, "android", "emulator", "")
 		Local $sAndroidInstance = IniRead($g_sProfileConfigPath, "android", "instance", "")
 		If $sAndroidEmulator <> "" Then
-			#cs Not required yet
-				If $g_hFrmBot = 0 Then
-				; early readConfig during bot launch: use command line if specified
-				If $g_asCmdLine[0] > 1 Then
-				If $g_asCmdLine[1] <> $sAndroidEmulator Then
-				$sAndroidEmulator = $g_asCmdLine[1]
-				SetDebugLog("Override Android Emulator by command line: " & $sAndroidEmulator)
-				EndIf
-				If $g_asCmdLine[0] > 2 Then
-				If $g_asCmdLine[2] <> $sAndroidInstance Then
-				$sAndroidInstance = $g_asCmdLine[2]
-				SetDebugLog("Override Android Instance by command line: " & $sAndroidInstance)
-				EndIf
-				EndIf
-				EndIf
-				EndIf
-			#ce
-
 			If $sAndroidEmulator <> $g_sAndroidEmulator Or $sAndroidInstance <> $g_sAndroidInstance Then
 				; check if Android Emulator or Instance changed, then invalidate Android Handle
 				UpdateHWnD(0)
@@ -431,6 +404,7 @@ Func ReadConfig_600_6()
 	$g_aSellMagicItem = $aSellChk
 	
 	IniReadS($g_bChkEnableTradeMedal, $g_sProfileConfigPath, "MagicItems", "ChkEnableTradeMedal", False, "Bool")
+	IniReadS($g_iMinTradeMedal, $g_sProfileConfigPath, "MagicItems", "MinTradeMedal", 0, "int")
 	IniReadS($g_bChkTradeShiny, $g_sProfileConfigPath, "MagicItems", "ChkTradeShiny", False, "Bool")
 	IniReadS($g_bChkTradeGlowy, $g_sProfileConfigPath, "MagicItems", "ChkTradeGlowy", False, "Bool")
 	IniReadS($g_bChkTradeStarry, $g_sProfileConfigPath, "MagicItems", "ChkTradeStarry", False, "Bool")
@@ -438,7 +412,13 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkTradeBuilderElix, $g_sProfileConfigPath, "MagicItems", "ChkTradeBuilderElix", False, "Bool")
 	IniReadS($g_bChkTradeClockTowerPot, $g_sProfileConfigPath, "MagicItems", "ChkTradeClockTowerPot", False, "Bool")
 	IniReadS($g_bChkTradeResearchPot, $g_sProfileConfigPath, "MagicItems", "ChkTradeResearchPot", False, "Bool")
-
+	
+	; Daily Run Routine Settings
+	IniReadS($g_bChkEnableDailyRunRoutine, $g_sProfileConfigPath, "DailyRunRoutine", "ChkEnableDailyRunRoutine", False, "Bool")
+	For $i = 0 TO UBound($g_aiDailyFunction) - 1
+		IniReadS($g_aiDailyFunction[$i][1], $g_sProfileConfigPath, "DailyRunRoutine", "DailyRunFunc_" & $i, $g_aiDailyFunction[$i][1], "int")
+	Next
+	
 	IniReadS($g_bChkCollectBuilderBase, $g_sProfileConfigPath, "other", "ChkCollectBuildersBase", False, "Bool")
 	IniReadS($g_bChkCleanBBYard, $g_sProfileConfigPath, "other", "ChkCleanBBYard", False, "Bool")
 	IniReadS($g_bChkStartClockTowerBoost, $g_sProfileConfigPath, "other", "ChkStartClockTowerBoost", False, "Bool")
@@ -453,7 +433,6 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkClanGames3H, $g_sProfileConfigPath, "other", "ChkClanGames60", False, "Bool")
 	IniReadS($g_bChkClanGamesDebug, $g_sProfileConfigPath, "other", "ChkClanGamesDebug", False, "Bool")
 	IniReadS($g_bCollectCGReward, $g_sProfileConfigPath, "other", "CollectCGReward", False, "Bool")
-
 	IniReadS($g_bChkClanGamesLoot, $g_sProfileConfigPath, "other", "ChkClanGamesLoot", False, "Bool")
 	IniReadS($g_bChkClanGamesBattle, $g_sProfileConfigPath, "other", "ChkClanGamesBattle", False, "Bool")
 	IniReadS($g_bChkClanGamesDes, $g_sProfileConfigPath, "other", "ChkClanGamesDestruction", False, "Bool")
@@ -612,13 +591,14 @@ Func ReadConfig_600_6()
 	IniReadS($g_bAutoUpgradeEarly, $g_sProfileConfigPath, "other", "CheckAutoUpgradeEarly", True, "Bool")
 	IniReadS($g_bChkForceSwitchifNoCGEvent, $g_sProfileConfigPath, "other", "ForceSwitchifNoCGEvent", True, "Bool")
 	IniReadS($g_bEnableCCSleep, $g_sProfileConfigPath, "other", "EnableCCSleep", False, "Bool")
-	IniReadS($g_bSkipDT, $g_sProfileConfigPath, "other", "SkipDT", False, "Bool")
+	IniReadS($g_bChkHeroJourney, $g_sProfileConfigPath, "other", "SkipDT", False, "Bool")
 	IniReadS($g_bEnableTournament, $g_sProfileConfigPath, "other", "EnableTournament", False, "Bool")
 	IniReadS($g_bNoTournament, $g_sProfileConfigPath, "other", "NoTournament", False, "Bool")
 	IniReadS($g_iTournamentAttackType, $g_sProfileConfigPath, "other", "TournamentAttackType", 0, "int")
 	IniReadS($g_iTournamentUseArmy, $g_sProfileConfigPath, "other", "TournamentUseArmy", 0, "int")
 	IniReadS($g_bChkAttackOnce, $g_sProfileConfigPath, "other", "AttackOnce", False, "Bool")
-	
+	IniReadS($g_bEnableExtraAttack, $g_sProfileConfigPath, "other", "EnableExtraAttack", False, "Bool")
+	IniReadS($g_iLoopExtraAttack, $g_sProfileConfigPath, "other", "LoopExtraAttack", 0, "int")
 	ReadConfigBuilderBaseMod()
 EndFunc   ;==>ReadConfig_600_6
 
@@ -670,8 +650,6 @@ EndFunc   ;==>ReadConfig_600_11
 Func ReadConfig_600_12()
 	; <><><><> Village / Donate - Donate <><><><>
 	IniReadS($g_bChkDonate, $g_sProfileConfigPath, "donate", "Doncheck", True, "Bool")
-	IniReadS($g_abChkDonateQueueOnly[0], $g_sProfileConfigPath, "donate", "chkDonateQueueOnly[0]", True, "Bool")
-	IniReadS($g_abChkDonateQueueOnly[1], $g_sProfileConfigPath, "donate", "chkDonateQueueOnly[1]", True, "Bool")
 	For $i = 0 To $eTroopCount - 1
 		Local $sIniName = ""
 		If $i >= $eTroopBarbarian And $i <= $eTroopHeadhunter Then

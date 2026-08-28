@@ -44,18 +44,15 @@ Func CheckHeroesHealth()
 			$TempDukeSlot -= $g_iTotalAttackSlot - 10
 		EndIf
 
-		If $g_bDebugSetlog Then
-			SetDebugLog("CheckHeroesHealth() for Queen started ")
-			If _Sleep($DELAYRESPOND) Then Return ; improve pause button response
-		EndIf
-
+		If $g_bDebugSetlog Then SetDebugLog("CheckHeroesHealth() for Queen started ")
+		If _Sleep(20) Then Return ; improve pause button response
 		If $g_iActivateQueen = 0 Or $g_iActivateQueen = 2 Then
 			If $g_bCheckQueenPower And ($g_aHeroesTimerActivation[$eHeroArcherQueen] = 0 Or __TimerDiff($g_aHeroesTimerActivation[$eHeroArcherQueen]) > $DELAYCHECKHEROESHEALTH) Then
 				Local $aQueenHealthCopy = $aQueenHealth ; copy ScreenCoordinates array to modify locally with dynamic X coordinate from slotposition
 				Local $aSlotPosition = GetSlotPosition($TempQueenSlot)
 				$aQueenHealthCopy[0] = $aSlotPosition[0] + $aQueenHealthCopy[4] ; Slot11+
 				Local $QueenPixelColor = _GetPixelColor($aQueenHealthCopy[0], $aQueenHealthCopy[1], $g_bCapturePixel)
-				SetDebugLog(" Queen _GetPixelColor(" & $aQueenHealthCopy[0] & "," & $aQueenHealthCopy[1] & "): " & $QueenPixelColor, $COLOR_DEBUG)
+				If $g_bDebugSetlog Then SetDebugLog(" Queen _GetPixelColor(" & $aQueenHealthCopy[0] & "," & $aQueenHealthCopy[1] & "): " & $QueenPixelColor, $COLOR_DEBUG)
 				If Not _CheckPixel2($aQueenHealthCopy, $QueenPixelColor, "Red+Blue") Then
 					SetLog("Queen is getting weak, Activating Queen's ability", $COLOR_INFO)
 					SelectDropTroop($TempQueenSlot, 2, Default, False) ; Slot11+
@@ -79,18 +76,15 @@ Func CheckHeroesHealth()
 			EndIf
 		EndIf
 
-		If $g_bDebugSetlog Then
-			SetDebugLog("CheckHeroesHealth() for King started ")
-			If _Sleep($DELAYRESPOND) Then Return ; improve pause button response
-		EndIf
-
+		If $g_bDebugSetlog Then SetDebugLog("CheckHeroesHealth() for King started ")
+		If _Sleep(20) Then Return ; improve pause button response
 		If $g_iActivateKing = 0 Or $g_iActivateKing = 2 Then
 			If $g_bCheckKingPower And ($g_aHeroesTimerActivation[$eHeroBarbarianKing] = 0 Or __TimerDiff($g_aHeroesTimerActivation[$eHeroBarbarianKing]) > $DELAYCHECKHEROESHEALTH) Then
 				Local $aKingHealthCopy = $aKingHealth ; copy ScreenCoordinates array to modify locally with dynamic X coordinate from slotposition
 				Local $aSlotPosition = GetSlotPosition($TempKingSlot)
 				$aKingHealthCopy[0] = $aSlotPosition[0] + $aKingHealthCopy[4] ; Slot11+
 				Local $KingPixelColor = _GetPixelColor($aKingHealthCopy[0], $aKingHealthCopy[1], $g_bCapturePixel)
-				SetDebugLog("King _GetPixelColor(" & $aKingHealthCopy[0] & "," & $aKingHealthCopy[1] & "): " & $KingPixelColor, $COLOR_DEBUG)
+				If $g_bDebugSetlog Then SetDebugLog("King _GetPixelColor(" & $aKingHealthCopy[0] & "," & $aKingHealthCopy[1] & "): " & $KingPixelColor, $COLOR_DEBUG)
 				If Not _CheckPixel2($aKingHealthCopy, $KingPixelColor, "Red+Blue") Then
 					SetLog("King is getting weak, Activating King's ability", $COLOR_INFO)
 					SelectDropTroop($TempKingSlot, 2, Default, False) ; Slot11+
@@ -114,18 +108,15 @@ Func CheckHeroesHealth()
 			EndIf
 		EndIf
 
-		If $g_bDebugSetlog Then
-			SetDebugLog("CheckHeroesHealth() for Warden started ")
-			If _Sleep($DELAYRESPOND) Then Return ; improve pause button response
-		EndIf
-
+		If $g_bDebugSetlog Then SetDebugLog("CheckHeroesHealth() for Warden started ")
+		If _Sleep(20) Then Return ; improve pause button response
 		If $g_iActivateWarden = 0 Or $g_iActivateWarden = 2 And ($g_aHeroesTimerActivation[$eHeroGrandWarden] = 0 Or __TimerDiff($g_aHeroesTimerActivation[$eHeroGrandWarden]) > $DELAYCHECKHEROESHEALTH) Then
 			If $g_bCheckWardenPower Then
 				Local $aWardenHealthCopy = $aWardenHealth
 				Local $aSlotPosition = GetSlotPosition($TempWardenSlot)
 				$aWardenHealthCopy[0] = $aSlotPosition[0] + $aWardenHealthCopy[4] ; Slot11+
 				Local $WardenPixelColor = _GetPixelColor($aWardenHealthCopy[0], $aWardenHealthCopy[1], $g_bCapturePixel)
-				SetDebugLog(" Grand Warden _GetPixelColor(" & $aWardenHealthCopy[0] & "," & $aWardenHealthCopy[1] & "): " & $WardenPixelColor, $COLOR_DEBUG)
+				If $g_bDebugSetlog Then SetDebugLog("Grand Warden _GetPixelColor(" & $aWardenHealthCopy[0] & "," & $aWardenHealthCopy[1] & "): " & $WardenPixelColor, $COLOR_DEBUG)
 				If Not _CheckPixel2($aWardenHealthCopy, $WardenPixelColor, "Red+Blue") Then
 					SetLog("Grand Warden is getting weak, Activating Warden's ability", $COLOR_INFO)
 					SelectDropTroop($TempWardenSlot, 2, Default, False) ; Slot11+
@@ -149,18 +140,15 @@ Func CheckHeroesHealth()
 			EndIf
 		EndIf
 
-		If $g_bDebugSetlog Then
-			SetDebugLog("CheckHeroesHealth() for Royal Champion started")
-			If _Sleep($DELAYRESPOND) Then Return ; improve pause button response
-		EndIf
-
+		If $g_bDebugSetlog Then SetDebugLog("CheckHeroesHealth() for Royal Champion started")
+		If _Sleep(20) Then Return ; improve pause button response
 		If $g_iActivateChampion = 0 Or $g_iActivateChampion = 2 And ($g_aHeroesTimerActivation[$eHeroRoyalChampion] = 0 Or __TimerDiff($g_aHeroesTimerActivation[$eHeroRoyalChampion]) > $DELAYCHECKHEROESHEALTH) Then
 			If $g_bCheckChampionPower Then
 				Local $aChampionHealthCopy = $aChampionHealth
 				Local $aSlotPosition = GetSlotPosition($TempChampionSlot)
 				$aChampionHealthCopy[0] = $aSlotPosition[0] - $aChampionHealthCopy[4] ; Slot11+
 				Local $ChampionPixelColor = _GetPixelColor($aChampionHealthCopy[0], $aChampionHealthCopy[1], $g_bCapturePixel)
-				SetDebugLog("Royal Champion _GetPixelColor(" & $aChampionHealthCopy[0] & "," & $aChampionHealthCopy[1] & "): " & $ChampionPixelColor, $COLOR_DEBUG)
+				If $g_bDebugSetlog Then SetDebugLog("Royal Champion _GetPixelColor(" & $aChampionHealthCopy[0] & "," & $aChampionHealthCopy[1] & "): " & $ChampionPixelColor, $COLOR_DEBUG)
 				If Not _CheckPixel2($aChampionHealthCopy, $ChampionPixelColor, "Red+Blue") Then
 					SetLog("Royal Champion is getting weak, Activating Royal Champion's ability", $COLOR_INFO)
 					SelectDropTroop($TempChampionSlot, 2, Default, False) ; Slot11+
@@ -184,18 +172,15 @@ Func CheckHeroesHealth()
 			EndIf
 		EndIf
 
-		If $g_bDebugSetlog Then
-			SetDebugLog("CheckHeroesHealth() for Minion Prince started ")
-			If _Sleep($DELAYRESPOND) Then Return ; improve pause button response
-		EndIf
-
+		If $g_bDebugSetlog Then SetDebugLog("CheckHeroesHealth() for Minion Prince started ")
+		If _Sleep(20) Then Return ; improve pause button response
 		If $g_iActivatePrince = 0 Or $g_iActivatePrince = 2 And ($g_aHeroesTimerActivation[$eHeroMinionPrince] = 0 Or __TimerDiff($g_aHeroesTimerActivation[$eHeroMinionPrince]) > $DELAYCHECKHEROESHEALTH) Then
 			If $g_bCheckMinionPPower Then
 				Local $aMinionPHealthCopy = $aMinionPHealth
 				Local $aSlotPosition = GetSlotPosition($TempMinionPSlot)
 				$aMinionPHealthCopy[0] = $aSlotPosition[0] - $aMinionPHealthCopy[4] ; Slot11+
 				Local $MinionPPixelColor = _GetPixelColor($aMinionPHealthCopy[0], $aMinionPHealthCopy[1], $g_bCapturePixel)
-				SetDebugLog("Minion Prince _GetPixelColor(" & $aMinionPHealthCopy[0] & "," & $aMinionPHealthCopy[1] & "): " & $MinionPPixelColor, $COLOR_DEBUG)
+				If $g_bDebugSetlog Then SetDebugLog("Minion Prince _GetPixelColor(" & $aMinionPHealthCopy[0] & "," & $aMinionPHealthCopy[1] & "): " & $MinionPPixelColor, $COLOR_DEBUG)
 				If Not _CheckPixel2($aMinionPHealthCopy, $MinionPPixelColor, "Red+Blue") Then
 					SetLog("Minion Prince is getting weak, Activating Minion Prince's ability", $COLOR_INFO)
 					SelectDropTroop($TempMinionPSlot, 2, Default, False) ; Slot11+
@@ -219,18 +204,15 @@ Func CheckHeroesHealth()
 			EndIf
 		EndIf
 
-		If $g_bDebugSetlog Then
-			SetDebugLog("CheckHeroesHealth() for Dragon Duke started ")
-			If _Sleep($DELAYRESPOND) Then Return ; improve pause button response
-		EndIf
-
+		If $g_bDebugSetlog Then SetDebugLog("CheckHeroesHealth() for Dragon Duke started ")
+		If _Sleep(20) Then Return ; improve pause button response
 		If $g_iActivateDuke = 0 Or $g_iActivateDuke = 2 And ($g_aHeroesTimerActivation[$eHeroDuke] = 0 Or __TimerDiff($g_aHeroesTimerActivation[$eHeroDuke]) > $DELAYCHECKHEROESHEALTH) Then
 			If $g_bCheckDukePower Then
 				Local $aDukeHealthCopy = $aDukeHealth
 				Local $aSlotPosition = GetSlotPosition($TempDukeSlot)
 				$aDukeHealthCopy[0] = $aSlotPosition[0] - $aDukeHealthCopy[4] ; Slot11+
 				Local $DukePixelColor = _GetPixelColor($aDukeHealthCopy[0], $aDukeHealthCopy[1], $g_bCapturePixel)
-				SetDebugLog("Dragon Duke _GetPixelColor(" & $aDukeHealthCopy[0] & "," & $aDukeHealthCopy[1] & "): " & $DukePixelColor, $COLOR_DEBUG)
+				If $g_bDebugSetlog Then SetDebugLog("Dragon Duke _GetPixelColor(" & $aDukeHealthCopy[0] & "," & $aDukeHealthCopy[1] & "): " & $DukePixelColor, $COLOR_DEBUG)
 				If Not _CheckPixel2($aDukeHealthCopy, $DukePixelColor, "Red+Blue") Then
 					SetLog("Dragon Duke is getting weak, Activating Dragon Duke's ability", $COLOR_INFO)
 					SelectDropTroop($TempDukeSlot, 2, Default, False) ; Slot11+

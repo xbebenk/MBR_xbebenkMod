@@ -232,10 +232,10 @@ Func GUIControl_WM_NCACTIVATE($hWin, $iMsg, $wParam, $lParam)
 			_WinAPI_SetFocus(0)
 		Else
 			; bot activated
-			If $g_bHideWhenMinimized = False Then BotRestore("GUIControl_WM_NCACTIVATE")
+			;If $g_bHideWhenMinimized = False Then BotRestore("GUIControl_WM_NCACTIVATE")
 			If $g_iDebugWindowMessages Then SetDebugLog("GUIControl_WM_NCACTIVATE: Activate Bot", Default, True)
 			If BitAND($g_iBotDesignFlags, 2) And $g_bAndroidEmbedded And $g_bBotDockedShrinked Then BotShrinkExpandToggle() ; auto expand bot again
-			If Not $g_bIsHidden Then HideAndroidWindow(False, True, True, "GUIControl_WM_NCACTIVATE")
+			;If Not $g_bIsHidden Then HideAndroidWindow(False, True, True, "GUIControl_WM_NCACTIVATE")
 		EndIf
 		If $g_bAndroidEmbedded And $g_iAndroidEmbedMode = 1 And AndroidShieldActiveDelay() = False Then
 			AndroidEmbedCheck(False, $iActive <> 0, 1) ; Always update z-order
@@ -566,8 +566,8 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			btnTestDeadBase()
 		Case $g_hBtnTestDeadBaseFolder
 			btnTestDeadBaseFolder()
-		Case $g_hBtnTestTHimgloc
-			SearchTH()
+		Case $g_hBtnTestDetectWall
+			btnTestWall()
 		Case $g_hBtnTestAttackCSV
 			btnTestAttackCSV()
 		Case $g_hBtnTestArmyWindow
@@ -598,8 +598,8 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			AutoUpgrade(True)
 		Case $g_hBtnTestUpgradeWindow
 			btnTestUpgradeWindow()
-		Case $g_hBtnTestSmartWait
-			btnTestSmartWait()
+		Case $g_hBtnCloseAndroid
+			btnCloseAndroid()
 		Case $g_hBtnConsoleWindow
 			btnConsoleWindow()
 		Case $g_hBtnTestTrainsimgloc
@@ -1413,7 +1413,7 @@ Func BotMinimizeRestore($bMinimize, $sCaller, $iForceUpdatingWhenMinimized = Fal
 		WinMove2($g_hFrmBot, "", $aPos[0], $aPos[1])
 	EndIf
 	WinSetTrans($g_hFrmBot, "", 255) ; is set to 1 when "Hide when minimized" is enabled after some time, so restore it
-	BotToFront($hHWndAfter)
+	;BotToFront($hHWndAfter)
 	Return True
 EndFunc   ;==>BotMinimizeRestore
 

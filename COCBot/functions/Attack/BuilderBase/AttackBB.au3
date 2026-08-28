@@ -22,6 +22,7 @@ Func CheckCGCompleted()
 		If _Sleep(1000) Then Return
 		If QuickMIS("BC1", $g_sImgGameComplete, 760, 450, 820, 520) Then
 			SetLog("Nice, Game Completed", $COLOR_INFO)
+			$g_sCGCurrentEventName = ""
 			$bRet = True
 			ExitLoop
 		EndIf
@@ -214,6 +215,7 @@ EndFunc
 Func EndBattleBB() ; Find if battle has ended and click okay
 	Local $bRet = False, $bBattleMachine = True, $bWallBreaker = True
 	Local $sDamage = 0, $sTmpDamage = 0, $bCountSameDamage = 1, $realDamage = 0, $iStars = 0
+	Local $bSpeedUpBattle = False
 	
 	For $i = 1 To 200
 		;SetLog("Waiting EndBattle Screen #" & $i, $COLOR_ACTION)
@@ -231,6 +233,12 @@ Func EndBattleBB() ; Find if battle has ended and click okay
 		EndIf
 		$sTmpDamage = Number($sDamage)
 		
+		;check speedup battle timer
+		If $sTmpDamage > 70 Then
+			If Not $bSpeedUpBattle Then CheckSpeedUpBattle($bSpeedUpBattle)
+		EndIf
+		
+		;check if battle finished
 		If BBBarbarianHead("EndBattleBB") Then ExitLoop
 		
 		If $g_bChkBBEndBattleOn2Stars And Not $g_bIsBBevent Then 
@@ -434,6 +442,14 @@ Func DiamondEdgePoint($iCx, $iCy, $iAngle)
 	Next
 	Local $aRet[2] = [Round($iBestX), Round($iBestY)]
 	Return $aRet
+EndFunc
+
+Func CheckSpeedUpBattle(ByRef $bSpeedUpBattle)
+	If _ColorCheck(_GetPixelColor(820, 420, True), Hex(0xDDF685, 6), 20, Default, "CheckSpeedUpBattle") Then
+		Click(820, 450, 1, 0, "SpeedUp")
+		SetLog("Speeding up battle timer", $COLOR_INFO)
+		$bSpeedUpBattle = True
+	EndIf
 EndFunc
 
 Func AttackBB($aBBAttackBar = Default, $bSecondAttack = False)
@@ -1147,7 +1163,7 @@ Func BBAttackReport($sDamage = "")
 	$AtkLogTxt &= StringFormat("%3d", $sTrophy) & "|"
 	$AtkLogTxt &= StringFormat("%1d", $sStars) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $sDamage) & "|"
-	If $g_bIsBBevent Then $AtkLogTxt &= $g_sCGCurrentEventName
+	If $g_bIsBBevent Then $AtkLogTxt &= StringRegExpReplace($g_sCGCurrentEventName, "^[^-]*-", "")
 	
 	If Int($sTrophy) >= 0 Then
 		SetAtkLog($AtkLogTxt, "", $COLOR_DEBUG)

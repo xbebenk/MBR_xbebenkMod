@@ -159,6 +159,7 @@ Func AttackReport()
 			$sMatchMode = "DT" ;Drop Trophy
 			$g_iMatchMode = $DB
 	EndSwitch
+	
 	;---
 	Local $AtkLogTxt
 	$AtkLogTxt =  StringFormat("%2s", $g_iCurAccount + 1) & "|" & _NowTime(4) & "|"
@@ -172,10 +173,15 @@ Func AttackReport()
 	$AtkLogTxt &= StringFormat("%3d", $g_iStatsLastAttack[$eLootTrophy]) & "|"
 	$AtkLogTxt &= StringFormat("%1d", $starsearned) & "|"
 	$AtkLogTxt &= StringFormat("%3d", $g_iPercentageDamage) & "|"
-	$AtkLogTxt &= StringFormat("%3d", $g_iStatsBonusLast[$eLootGold]/1000) & "K|"
-	$AtkLogTxt &= StringFormat("%3d", $g_iStatsBonusLast[$eLootElixir]/1000) & "K|"
-	$AtkLogTxt &= StringFormat("%4d", $g_iStatsBonusLast[$eLootDarkElixir]) & "|"
-	$AtkLogTxt &= $g_asLeagueDetailsShort & "|"
+	If $g_sCGCurrentEventName <> "" And Not $g_bIsBBevent Then 
+		$sMatchMode = "CG" ;Clan Games
+		$g_asLeagueDetailsShort = StringRegExpReplace($g_sCGCurrentEventName, "^[^-]*-", "")
+		$AtkLogTxt &= $g_asLeagueDetailsShort
+	Else
+		$AtkLogTxt &= StringFormat("%3d", $g_iStatsBonusLast[$eLootGold]/1000) & "K|"
+		$AtkLogTxt &= StringFormat("%3d", $g_iStatsBonusLast[$eLootElixir]/1000) & "K|"
+		$AtkLogTxt &= StringFormat("%4d", $g_iStatsBonusLast[$eLootDarkElixir]) & "|"
+	EndIf	
 
 	; Stats Attack
 	$g_sTotalDamage = $g_iPercentageDamage
@@ -193,7 +199,7 @@ Func AttackReport()
 	$AtkLogTxtExtend = "|"
 	$AtkLogTxtExtend &= $g_CurrentCampUtilization & "/" & $g_iTotalCampSpace & "|"
 	If Int($g_iStatsLastAttack[$eLootTrophy]) >= 0 Then
-		SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_BLACK)
+		SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, ($sMatchMode = "CG" ? $COLOR_DEBUG1 : $COLOR_BLACK))
 	Else
 		SetAtkLog($AtkLogTxt, $AtkLogTxtExtend, $COLOR_ERROR)
 	EndIf

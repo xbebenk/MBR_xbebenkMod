@@ -46,6 +46,13 @@ Func WaitForClouds()
 			ExitLoop
 		EndIf
 		
+		If GetAndroidProcessPID() = 0 Then
+			$g_bIsClientSyncError = True
+			$g_bRestart = True
+			CloseCoC(True)
+			ExitLoop
+		EndIf
+		
 		_GUICtrlStatusBar_SetTextEx($g_hStatusBar, " Status: Loop to clean screen without Clouds, # " & $i)
 		
 		$iSearchTime = __TimerDiff($hMinuteTimer) / 60000 ;get time since minute timer start in minutes

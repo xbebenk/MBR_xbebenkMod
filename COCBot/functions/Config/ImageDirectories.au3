@@ -20,6 +20,7 @@ Global Const $g_sImgWelcomeBackReward = @ScriptDir & "\imgxml\Windows\WelcomeBac
 
 #Region Obstacles
 Global Const $g_sImgAnyoneThere = @ScriptDir & "\imgxml\other\AnyoneThere\"
+Global Const $g_sImgSurvey = @ScriptDir & "\imgxml\other\Survey\"
 Global Const $g_sImgClanRush = @ScriptDir & "\imgxml\other\ClanRush\"
 Global Const $g_sImgPersonalBreak = @ScriptDir & "\imgxml\other\Break\"
 Global Const $g_sImgAnotherDevice = @ScriptDir & "\imgxml\other\Device\"
@@ -35,6 +36,8 @@ Global Const $g_sImgImportantNotice = @ScriptDir & "\imgxml\other\ImportantNotic
 Global Const $sImgHeroHallTutor = @ScriptDir & "\imgxml\other\HeroHallTutor\"
 Global Const $g_sImgRevengeTutor = @ScriptDir & "\imgxml\other\RevengeTutor\"
 Global Const $g_sImgPlacedOnLeague = @ScriptDir & "\imgxml\other\PlacedOnLeague\"
+Global Const $g_sImgChestPage = @ScriptDir & "\imgxml\other\ChestPage\"
+Global Const $g_sImgCardPage = @ScriptDir & "\imgxml\other\CardPage\"
 #EndRegion
 
 #Region Main Village
@@ -69,6 +72,7 @@ Global $g_sImgTrader = @ScriptDir & "\imgxml\FreeMagicItems\TraderIcon\"
 Global $g_sImgTraderWindow = @ScriptDir & "\imgxml\FreeMagicItems\TraderWindow\"
 Global $g_sImgTraderGems = @ScriptDir & "\imgxml\FreeMagicItems\Gems\"
 Global $g_sImgTraderRaidMedal = @ScriptDir & "\imgxml\FreeMagicItems\RaidMedal\"
+Global $g_sImgTraderCard= @ScriptDir & "\imgxml\FreeMagicItems\Card\"
 Global $g_sImgHeroPotion = @ScriptDir & "\imgxml\FreeMagicItems\HeroPotion"
 Global $g_sImgMagicItemBox = @ScriptDir & "\imgxml\FreeMagicItems\Box\"
 Global $g_sImgUpgradeWhiteZero = @ScriptDir & "\imgxml\Main Village\Upgrade\WhiteZero*"
@@ -292,4 +296,7 @@ Global Const $g_sImgRewardTileSelected  = @ScriptDir & "\imgxml\Resources\ClanGa
 Global Const $g_sImgRewardItems  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\Items"
 Global Const $g_sImgRewardItemStorageFull  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\StorageFull"
 Global Const $g_sImgZapChallenges = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Attack\ZapChallenges"
+Global Const $g_sImgEasyEventArmyCamp = @ScriptDir & "\imgxml\Resources\ClanGamesImages\EasyEvent\ArmyCamp\"
+Global Const $g_sImgEasyEventDESpell = @ScriptDir & "\imgxml\Resources\ClanGamesImages\EasyEvent\DESPell\"
+Global Const $g_sImgEasyEventAirSweeper = @ScriptDir & "\imgxml\Resources\ClanGamesImages\EasyEvent\AirSweeper\"
 #EndRegion

@@ -24,7 +24,7 @@ Func PrepareAttackBB($Mode = Default)
 	Local $GoldIsFull = isGoldFullBB()
 	Local $ElixIsFull = isElixirFullBB()
 	
-	If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+	If $g_bIsBBevent Then
 		If $g_bChkDebugAttackBB Then SetLog("Running Challenge is BB Challenge", $COLOR_DEBUG)
 		If Not ClickBBAttackButton() Then Return False
 		If _Sleep(1500) Then Return
@@ -44,8 +44,8 @@ Func PrepareAttackBB($Mode = Default)
 	EndIf
 	
 	getBuilderCount(True, True)
-	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull And $ElixIsFull) And $g_iFreeBuilderCountBB = 0 Then
-		SetLog("Skip attack, full resources and busy village!", $COLOR_INFO)
+	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull And $ElixIsFull) Then
+		SetLog("Skip attack, both storages full (let the builder spend it instead of overflowing loot)", $COLOR_INFO)
 		Return False
 	EndIf
 	

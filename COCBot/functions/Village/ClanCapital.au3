@@ -9,7 +9,7 @@ Func CollectCCGold($bTest = False)
 	ZoomOutHelper("CollectLootCart")
 	
 	;handle for turtorial
-	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 250, 520, 400, 670) Then
+	If QuickMIS("BC1", $g_sImgClanCapitalTutorial & "Arrow\", 250, 520, 400, 600) Then
 		SetLog("Tutorial Arrow detected, click it!", $COLOR_ACTION)
 		Click($g_iQuickMISX, $g_iQuickMISY + 10)
 		If _Sleep(8000) Then Return

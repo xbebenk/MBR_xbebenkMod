@@ -584,7 +584,6 @@ Func Algorithm_AttackCSV($testattack = False, $captureredarea = True)
 				If _Sleep(2000) Then Return
 				SetLog("Wait Battle Start #" & $i, $COLOR_ACTION)
 			Else
-				If _Sleep(3000) Then Return
 				ExitLoop
 			EndIf
 		Next

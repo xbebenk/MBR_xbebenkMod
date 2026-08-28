@@ -489,6 +489,9 @@ Func CheckIfLabIdle($bDebug = False)
 			Case $iLab = 0 And $iLabMax = 1
 				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_SUCCESS)
 				$bRet = False
+			Case $iLab = 0 And $iLabMax = 2
+				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_SUCCESS)
+				$bRet = False
 			Case $iLab = 1 And $iLabMax = 2
 				SetLog("CheckIfLabIdle: Lab is Working on Upgrade", $COLOR_SUCCESS)
 				$bRet = False
@@ -851,7 +854,7 @@ Func AutoLocateLab()
 			Click($aLabCoord[$i][1], $aLabCoord[$i][2])
 		
 			If _Sleep(1000) Then Return
-			Local $BuildingInfo = BuildingInfo(242, 477)
+			Local $BuildingInfo = BuildingInfo()
 			If StringInStr($BuildingInfo[1], "Lab") Then	
 				$g_aiLaboratoryPos[0] = $aLabCoord[$i][1]
 				$g_aiLaboratoryPos[1] = $aLabCoord[$i][2]
@@ -867,6 +870,7 @@ Func AutoLocateLab()
 		If $LabFound Then CheckLabAssistant()
 		
 	EndIf
+	SetLog("AutoLocateLaboratory, Success", $COLOR_SUCCESS)
 	Return $LabFound	
 EndFunc
 
