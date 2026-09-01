@@ -418,7 +418,7 @@ EndFunc ;ClickAccountSCID
 Func ClickDragSCID($iCount = 1)
 	For $i = 1 To $iCount 
 		ClickDrag(666, 634, 666, 330)
-		If _Sleep(500) Then Return
+		If _Sleep(1500) Then Return
 	Next
 EndFunc ;ClickDragSCID
 

@@ -17,7 +17,7 @@ Global $aConfirmSurrender[4] = [531, 438, 0x6DBC1F, 30] ; Confirm Surrender Butt
 Global $aEndFightSceneBtn[4] = [429, 519, 0xCDF271, 20] ; Victory or defeat scene buton = green edge
 Global $aEndFightSceneAvl[4] = [241, 196, 0xFFF090, 20] ; Victory or defeat scene left side ribbon = light gold
 Global $aEndFightSceneReportGold = $aEndFightSceneAvl ; Missing... TripleM ???
-Global $aReturnHomeButton[4] = [425, 567, 0x6CBB1F, 20] ; Return Home Button, End Battle Screen
+Global $aReturnHomeButton[4] = [430, 580, 0x6DBB20, 20] ; Return Home Button, End Battle Screen
 Global $aReturnHomeChest[4] = [525, 550, 0x84CD2C, 10] ; Return Home Button, End Battle Screen
 Global $aChatTab[4] = [400, 330, 0xEA8A3B, 20] ; Chat Window Open, Main Screen
 Global $aChatTabClosed[4] = [40, 330, 0xEA8A3B, 20] ; Chat Window Closed
@@ -67,9 +67,9 @@ Global $aMinionPHealth = [-1, 569, 0x00D500, 15, 5]
 Global $aDukeHealth = [-1, 569, 0x00D500, 15, 5]
 
 ; attack report... stars won
-Global $aWonOneStarAtkRprt[4] = [325, 180, 0xC8CaC4, 30] ; Center of 1st Star reached attacked village
-Global $aWonTwoStarAtkRprt[4] = [398, 180, 0xD0D6D0, 30] ; Center of 2nd Star reached attacked village
-Global $aWonThreeStarAtkRprt[4] = [534, 180, 0xC8CAC7, 30] ; Center of 3rd Star reached attacked village
+Global $aWonOneStarAtkRprt[4] = [325, 170, 0xC1CDDE, 30] ; Center of 1st Star reached attacked village
+Global $aWonTwoStarAtkRprt[4] = [430, 147, 0xC6D1DE, 30] ; Center of 2nd Star reached attacked village
+Global $aWonThreeStarAtkRprt[4] = [534, 183, 0xC6D1DE, 30] ; Center of 3rd Star reached attacked village
 ; pixel color: location information								BS 850MB (Reg GFX), BS 500MB (Med GFX) : location
 
 Global $a12OrMoreSlots[4] = [16, 608, 0x5B95C9, 25] ; Attackbar Check if 12+ Slots exist
@@ -81,7 +81,7 @@ Global $aIsAttackPage[4] = [18, 548, 0xCD0D0D, 20] ; red button "end battle" but
 Global $aRequestTroopsAO[6] = [761, 592, 0x565656, 0x71BA2F, 0xFFFFFE, 25] ; Button Request Troops in Army Overview  (x,y, Gray - Full/No Castle, Green - Available or Already, White - Available or Full)
 
 ;attackreport
-Global $aAtkRprtDECheck[4] = [468, 371, 0x2F1D37, 20]
+Global $aAtkRprtDECheck[4] = [471, 389, 0x44314A, 20]
 Global $aAtkRprtTrophyCheck[4] = [423, 223, 0xFF6133, 30]
 Global $aAtkRprtDECheck2[4] = [678, 418, 0x030000, 30]
 
