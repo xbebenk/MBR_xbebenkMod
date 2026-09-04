@@ -374,7 +374,8 @@ Func PlacedOnLeague()
 		$bRet = True
 	EndIf
 	
-	If QuickMIS("BC1", $g_sImgChestPage, 110, 500, 135, 525) Then
+	;check if we have chest to open
+	If QuickMIS("BC1", $g_sImgChestPage, 270, 190, 300, 220) And QuickMIS("BC1", $g_sImgChestPage, 355, 485, 380, 520) Then ;check image torch and hammer
 		SetLog("You have Chest to open", $COLOR_DEBUG2)
 		RewardChest()
 		$bRet = True

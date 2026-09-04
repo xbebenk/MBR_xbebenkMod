@@ -322,6 +322,7 @@ Func ClickAccountSCID($iAccount = 2)
 		If _Sleep(500) Then Return
 	Next
 	
+	If _Sleep(1500) Then Return
 	If Not $g_bRunState Then Return
 	For $i = 1 To 5
 		If _ColorCheck(_GetPixelColor(666, 330, True), Hex(0xF2F2F2, 6), 10, Default, "Verify SCID First Account") Then
