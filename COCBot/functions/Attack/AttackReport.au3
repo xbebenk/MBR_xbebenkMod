@@ -48,6 +48,7 @@ Func AttackReport()
 		$iBonusLast = Number(getResourcesBonusPerc(652, 303))
 		If $iBonusLast > 0 Then
 			SetLog("Bonus Percentage: " & $iBonusLast & "%")
+			If _Sleep(2500) Then Return
 			Local $iCalcMaxBonus = 0, $iCalcMaxBonusDark = 0
 
 			If _ColorCheck(_GetPixelColor($aAtkRprtDECheck2[0], $aAtkRprtDECheck2[1], True), Hex($aAtkRprtDECheck2[2], 6), $aAtkRprtDECheck2[3]) Then
@@ -58,7 +59,7 @@ Func AttackReport()
 				$g_iStatsBonusLast[$eLootElixir] = getResourcesBonus(640, 365)
 				$g_iStatsBonusLast[$eLootElixir] = StringReplace($g_iStatsBonusLast[$eLootElixir], "+", "")
 				If _Sleep($DELAYATTACKREPORT2) Then Return
-				$g_iStatsBonusLast[$eLootDarkElixir] = getResourcesBonus(640, 395)
+				$g_iStatsBonusLast[$eLootDarkElixir] = getResourcesBonus(690, 395)
 				$g_iStatsBonusLast[$eLootDarkElixir] = StringReplace($g_iStatsBonusLast[$eLootDarkElixir], "+", "")
 
 				If $iBonusLast = 100 Then

@@ -58,6 +58,20 @@ Func GoldElixirChangeEBO(ByRef $bSpeedUpBattle)
 		EndIf
 	EndIf
 	
+	If _ColorCheck(_GetPixelColor(300, 106, True), Hex(0xDB3F3B, 6), 20, Default, "Reward Flag1") Then
+		If _Sleep(1000) Then Return
+		SetLog("Pick Reward page found", $COLOR_INFO)
+		Click(660, 320, 1, 0, "Gold")
+		SetLog("Pick Gold Reward", $COLOR_DEBUG)
+	EndIf
+	
+	If _ColorCheck(_GetPixelColor(330, 186, True), Hex(0xC1413E, 6), 20, Default, "Reward Flag 3stars") Then
+		If _Sleep(1000) Then Return
+		SetLog("Pick Reward Win found", $COLOR_INFO)
+		Click(660, 340, 1, 0, "Gold")
+		SetLog("Pick Dark Elixir Reward", $COLOR_DEBUG)
+	EndIf
+	
 	;CALCULATE TWO STARS REACH
 	If $g_abStopAtkTwoStars[$g_iMatchMode] And _CheckPixel($aWonTwoStar, True) Then
 		SetLog("Two Star Reach, exit", $COLOR_SUCCESS)
