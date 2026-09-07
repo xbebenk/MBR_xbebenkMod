@@ -33,7 +33,10 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	
 	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False
 	$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
-	If Not $bBuilderBase And Not $bLocated And isOnBuilderBase() Then $bBuilderBase = True ;check if account is on builderbase but it should on main
+	If Not $bBuilderBase And Not $bLocated Then
+		If _Sleep(500) Then Return
+		If isOnBuilderBase() Then $bBuilderBase = True ;check if account is on builderbase but it should on main
+	EndIf
 	
 	While Not $bLocated
 		$i += 1
@@ -81,7 +84,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 
 	;Execute Notify Pending Actions
 	NotifyPendingActions()
-
+	
 	Return $bLocated
 EndFunc   ;==>_checkMainScreen
 
@@ -145,4 +148,10 @@ Func CheckDonateNotifCounter()
 		If $bRet Then SetLog("New chat detected!, Check for Donate", $COLOR_DEBUG)
 	EndIf
 	Return $bRet
+EndFunc
+
+Func KillAds($iAndroidPID = 0)
+	;kill ads
+	If $iAndroidPID = 0 Then $iAndroidPID = GetAndroidProcessPID()
+	If $iAndroidPID <> 0 And $g_sAndroidEmulator = "MuMu" Then AndroidAdbSendShellCommand("am force-stop com.mumu.store", Default, Default, False)
 EndFunc

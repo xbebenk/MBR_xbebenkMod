@@ -598,7 +598,7 @@ Func GetBuildingTypeBB($sUpgrades = "")
 	Local $aArmy[5] = ["Camp", "Healing", "Copter", "Machine", "Control"]
 	Local $aResource[3] = ["Collector", "Storage", "Mine"]
 	Local $aDefense[12] = ["Wall", "Cannon", "Tower", "Mortar", "FireCrackers", "Air Bombs", "Tesla", "Crusher", "Roaster", "Launcher", "Guard", "Bow"]
-	Local $aTrap[6] = ["Bomb", "Trap", "Mine", "Giant", "Mega", "Lava"]
+	Local $aTrap[5] = ["Bomb", "Trap", "Mine", "Giant", "Mega"]
 	Local $sUpgradeType = ""
 	
 	For $sArmy In $aArmy

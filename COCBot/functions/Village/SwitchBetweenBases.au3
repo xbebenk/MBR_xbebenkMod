@@ -20,6 +20,7 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 	
 	If IsProblemAffect() Then Return
 	If Not $bIsOnMainVillage Then $bIsOnBuilderBase = isOnBuilderBase()
+	SetDebugLog("ForcedSwitchTo: " & $ForcedSwitchTo & ", IsOnMainVillage: " & $bIsOnMainVillage)
 	
 	If $ForcedSwitchTo = Default Then
 		If $bIsOnMainVillage Then 

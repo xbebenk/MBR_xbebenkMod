@@ -830,6 +830,17 @@ Func chkHeroJourney()
 	EndIf
 EndFunc ;==> chkHeroJourney
 
+Func chkExtraAttack()
+	$g_iLoopExtraAttack = _GUICtrlComboBox_GetCurSel($g_hCmbExtraAttack)
+	If GUICtrlRead($g_hChkEnableExtraAttack) = $GUI_CHECKED Then
+		$g_bEnableExtraAttack = True
+		SetLog("Set Extra Attack: " & String($g_bEnableExtraAttack) & ", loop: " & $g_iLoopExtraAttack + 1, $COLOR_DEBUG)
+	Else
+		$g_bEnableExtraAttack = False
+		SetLog("Set Extra Attack: " & String($g_bEnableExtraAttack), $COLOR_DEBUG)
+	EndIf
+EndFunc  ;==> chkExtraAttack
+
 Func ChkAttackOnce()
 	If GUICtrlRead($g_hChkAttackOnce) = $GUI_CHECKED Then
 		$g_bChkAttackOnce = True
@@ -837,7 +848,6 @@ Func ChkAttackOnce()
 		$g_bChkAttackOnce = False
 	EndIf
 EndFunc ;==> ChkAttackOnce
-
 
 Func chkSetCCSleep()
 	If GUICtrlRead($g_hChkEnableCCSleep) = $GUI_CHECKED Then
@@ -870,7 +880,6 @@ Func chkTournament()
 		GUICtrlSetState($g_hCmbUseSavedArmy, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>chkTournament
-
 
 Func chkEnableDailyRunRoutine()
 	If GUICtrlRead($g_hChkEnableDailyRunRoutine) = $GUI_CHECKED Then

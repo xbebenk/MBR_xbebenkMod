@@ -68,7 +68,8 @@ Func CollectFreeMagicItems($bTest = False)
 	EndIf
 	
 	TradeMedal()
-
+	TradeCard()
+	
 	If $g_aRemoveFreeMagicItems[0] Then
 		ClickAway()
 		If _Sleep(1000) Then Return
@@ -81,6 +82,7 @@ EndFunc   ;==>CollectFreeMagicItems
 
 Func TradeMedal()
 	If Not $g_bChkEnableTradeMedal Then Return
+	Local $bMedalTabFound = False
 	If $g_iLootCCMedal > $g_iMinTradeMedal Then 
 		For $i = 1 To 8
 			If Not $g_bRunState Then Return
@@ -89,10 +91,12 @@ Func TradeMedal()
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				SetLog("Found Raid Medal Tab", $COLOR_DEBUG)
 				If _Sleep(500) Then Return
+				$bMedalTabFound = True
 				ExitLoop
 			EndIf
 			If _Sleep(250) Then Return
 		Next
+		If Not $bMedalTabFound Then Return
 		
 		Local $bItemFound = False, $aItem
 		
@@ -507,4 +511,58 @@ Func UseFreeMagicItem()
 	Else
 		SetLog("No Magic Box Detected", $COLOR_DEBUG2)
 	EndIf
+EndFunc
+
+Func TradeCard()
+	If Not $g_bChkEnableTradeCard Then Return
+	Local $bCardTabFound = False
+	
+	For $i = 1 To 8
+		If Not $g_bRunState Then Return
+		SetLog("Waiting for Card Tab #" & $i, $COLOR_ACTION)
+		If QuickMis("BC1", $g_sImgTraderCard, 50, 173, 120, 370) Then
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			SetLog("Found Card Tab", $COLOR_DEBUG)
+			If _Sleep(500) Then Return
+			$bCardTabFound = True
+			ExitLoop
+		EndIf
+		If _Sleep(250) Then Return
+	Next
+	If Not $bCardTabFound Then Return
+	
+	Local $bItemFound = False, $aItem
+	If _Sleep(500) Then Return
+	For $i = 1 To 5
+		SetDebugLog("Checking available card to Trade #" & $i)
+		If QuickMis("BC1", $g_sImgTraderCard, 215, 145, 800, 570) Then
+			SetLog("Found Card Packs", $COLOR_DEBUG)
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _sleep(500) Then Return
+			If Not WaitExchangeWindow() Then ExitLoop
+			Click(330, 275, 1, 0, "Click First Card")
+			If _Sleep(500) Then Return
+			If _ColorCheck(_GetPixelColor(440, 500, True), Hex(0xE5FC91, 6), 20, Default, "Confirm") Then 
+				Click(440, 500, 1, 0, "Click Confirm")
+				If _Sleep(500) Then Return
+				RewardChest()
+			EndIf
+		EndIf
+		If _Sleep(1000) Then Return
+		If _ColorCheck(_GetPixelColor(307, 250, True), Hex(0xDCDCDC, 6), 20, Default, "Grey CardPacks") Then ExitLoop
+	Next
+EndFunc
+
+Func WaitExchangeWindow()
+	Local $bRet = False
+	For $i = 1 To 3
+		Setlog("WaitExchangeWindow #" & $i, $COLOR_ACTION)
+		If _ColorCheck(_GetPixelColor(175, 272, True), Hex(0xFFCF4A, 6), 20, Default, "CardPacks") Then 
+			SetLog("Exchange Window found", $COLOR_SUCCESS)
+			$bRet = True
+			ExitLoop
+		EndIf
+		If _Sleep(1000) Then Return
+	Next
+	Return $bRet
 EndFunc

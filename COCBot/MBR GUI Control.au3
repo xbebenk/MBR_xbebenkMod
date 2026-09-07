@@ -1413,7 +1413,7 @@ Func BotMinimizeRestore($bMinimize, $sCaller, $iForceUpdatingWhenMinimized = Fal
 		WinMove2($g_hFrmBot, "", $aPos[0], $aPos[1])
 	EndIf
 	WinSetTrans($g_hFrmBot, "", 255) ; is set to 1 when "Hide when minimized" is enabled after some time, so restore it
-	BotToFront($hHWndAfter)
+	;BotToFront($hHWndAfter)
 	Return True
 EndFunc   ;==>BotMinimizeRestore
 
