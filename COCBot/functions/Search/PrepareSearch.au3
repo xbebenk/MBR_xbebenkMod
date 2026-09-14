@@ -287,6 +287,7 @@ Func CheckHeroOnUpgrade()
 						Click($aHero[$i][1], $aHero[$i][2], 1, 0, "Click " & $aHero[$i][0])
 						If _Sleep(1000) Then Return
 						Click($x, $y, 1, 0, "Hammer")
+						If _Sleep(1000) Then Return
 						SetLog("Switch upgraded hero to " & $aHero[$i][0], $COLOR_SUCCESS)
 						ExitLoop
 					EndIf
@@ -300,7 +301,7 @@ Func CheckHeroOnUpgrade()
 				ExitLoop
 			EndIf
 		Next
-		If _Sleep(500) Then Return
+		If _Sleep(1000) Then Return
 		Return $bRet
 	EndIf
 	Return $bRet
