@@ -374,6 +374,13 @@ Func PlacedOnLeague()
 		$bRet = True
 	EndIf
 	
+	If QuickMIS("BC1", $g_sImgPlacedOnLeague, 300, 500, 540, 600) Then
+		SetLog("Found Continue Button", $COLOR_DEBUG2)
+		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Continue")
+		If _Sleep(3000) Then Return
+		$bRet = True
+	EndIf
+	
 	;check if we have chest to open
 	If QuickMIS("BC1", $g_sImgChestPage, 270, 190, 300, 220) And QuickMIS("BC1", $g_sImgChestPage, 355, 485, 380, 520) Then ;check image torch and hammer
 		SetLog("You have Chest to open", $COLOR_DEBUG2)

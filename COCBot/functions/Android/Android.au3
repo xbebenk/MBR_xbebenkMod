@@ -4231,17 +4231,6 @@ Func GetAndroidProcessPID($sPackage = Default, $bForeground = True, $iRetryCount
 	Return SetError($error, 0, 0)
 EndFunc   ;==>GetAndroidProcessPID
 
-Func AndroidToFront($hHWndAfter = Default, $sSource = "Unknown")
-	If $hHWndAfter = Default Then $hHWndAfter = $HWND_TOPMOST
-	;SetDebugLog("AndroidToFront: Source " & $sSource)
-	WinMove2(GetAndroidDisplayHWnD(), "", -1, -1, -1, -1, $hHWndAfter, 0, False)
-	If $g_bChkBackgroundMode And ($hHWndAfter = $HWND_TOPMOST Or $hHWndAfter = $HWND_TOP) Then WinMove2(GetAndroidDisplayHWnD(), "", -1, -1, -1, -1, $HWND_NOTOPMOST, 0, False)
-EndFunc   ;==>AndroidToFront
-
-Func ShowAndroidWindow($hHWndAfter = Default, $bRestorePosAndActivateWindow = Default, $bFastCheck = Default, $sSource = "Unknown")
-	Return HideAndroidWindow(False, $sSource & "->ShowAndroidWindow")
-EndFunc   ;==>ShowAndroidWindow
-
 Func CreateSecondDesktop()
 	Local $NumVD = 1, $process_killed
 	Local $iWinVer = @OSVersion
@@ -4280,10 +4269,7 @@ Func HideAndroidWindow($bHide = True, $sSource = "Unknown")
 	Local $iWinWidth = @DesktopWidth
 	Local $iXMid = $iWinWidth/2
 	
-	If WinGetAndroidHandle() = 0 Then
-		SetLog("HideAndroidWindow, Cannot get Android handle", $COLOR_DEBUG2)
-		Return
-	EndIf
+	If WinGetAndroidHandle() = 0 Then Return
 	
 	If $g_iFrmBotPosX > $iXMid Then
 		$iPosX = $g_iFrmBotPosX - $g_iGAME_WIDTH - 5
