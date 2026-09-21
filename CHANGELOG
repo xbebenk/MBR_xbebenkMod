@@ -1,13 +1,3 @@
-* **v.7.9.9 Mod_v1.2.6#130** (2026-06-27)
-* fix pick defense layout
-* fix open shop Builderbase
-* handle for Hero Journey reward message
-* handle for Switch SCID failed
-* fix PetHouse upgrade
-* support Memu (from forum post @ScamEmre patch)
-* speedup battle
-* handle for pick Saved Army
-*
 * **v.7.9.9 Mod_v1.2.6#131** (2026-07-21)
 * Support MuMu Emulator
 * Fix Trade Medal click
@@ -15,3 +5,7 @@
 * Added image Wall Level 16, 17, 18
 * Mash-A-Rama Scenery
 * Handle Cest Collect after loading
+* 
+* **v.7.9.9 Mod_v1.2.6#132** (2026-07-21)
+* support coc update 1 Sept 2026
+* mumu 6.x please set 2cpu on mumu setting

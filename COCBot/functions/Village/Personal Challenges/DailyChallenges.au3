@@ -253,8 +253,8 @@ Func RewardChest($loop = 6)
 	If _Sleep(8000) Then Return
 	
 	For $k = 1 To 5
-		If _ColorCheck(_GetPixelColor(430, 482, True), Hex(0xBFEA8E, 6), 20, Default, "ChestContinue") Then 
-			Click(430, 495)
+		If _ColorCheck(_GetPixelColor(430, 520, True), Hex(0xBFEB8E, 6), 20, Default, "ChestContinue") Then 
+			Click(430, 530)
 			SetLog("Click Continue", $COLOR_ACTION)
 			ExitLoop
 		EndIf

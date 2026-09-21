@@ -819,11 +819,6 @@ Func BotMinimizeRequest()
 	BotMinimize("MinimizeButton", False, 500)
 EndFunc   ;==>BotMinimizeRequest
 
-Func BotToFront($hHWndAfter = $HWND_TOPMOST)
-	WinMove2($g_hFrmBot, "", -1, -1, -1, -1, $hHWndAfter, 0, False)
-	If $hHWndAfter = $HWND_TOPMOST Or $hHWndAfter = $HWND_TOP Then WinMove2($g_hFrmBot, "", -1, -1, -1, -1, $HWND_NOTOPMOST, 0, False)
-EndFunc   ;==>BotToFront
-
 Func CheckBotZOrder($bCheckOnly = False, $bForceZOrder = False)
 	If $g_bAndroidEmbedded And $g_iAndroidEmbedMode = 0 Then
 		Local $hCtrlTarget = $g_aiAndroidEmbeddedCtrlTarget[0]
@@ -1321,7 +1316,6 @@ Func BotClose($SaveConfig = Default, $bExit = True)
 		$g_bRunState = False
 	Else
 		AndroidBotStopEvent() ; signal android that bot is now stoppting
-		AndroidToFront(Default, "BotClose")
 		AndroidAdbTerminateShellInstance()
 	EndIf
 
@@ -1413,7 +1407,6 @@ Func BotMinimizeRestore($bMinimize, $sCaller, $iForceUpdatingWhenMinimized = Fal
 		WinMove2($g_hFrmBot, "", $aPos[0], $aPos[1])
 	EndIf
 	WinSetTrans($g_hFrmBot, "", 255) ; is set to 1 when "Hide when minimized" is enabled after some time, so restore it
-	;BotToFront($hHWndAfter)
 	Return True
 EndFunc   ;==>BotMinimizeRestore
 

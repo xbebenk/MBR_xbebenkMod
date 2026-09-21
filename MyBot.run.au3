@@ -679,12 +679,6 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime, $MainLoopTimer
-
-	;If $g_bIsHidden Then
-	;	HideAndroidWindow(True, "btnHide-runBot")
-	;	updateBtnHideState()
-	;EndIf
-
 	InitiateSwitchAcc()
 
 	If ProfileSwitchAccountEnabled() And $g_bReMatchAcc Then

@@ -106,7 +106,7 @@ Func ReturnHome($bTakeSS = True, $GoldChangeCheck = True) ;Return main screen
 
 	If $GoldChangeCheck Then
 		;If _Sleep(2000) Then Return ;add more delay to wait all resource appear
-		_CaptureRegion()
+		;_CaptureRegion()
 		AttackReport()
 	EndIf
 

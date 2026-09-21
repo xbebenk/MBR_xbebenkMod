@@ -322,6 +322,7 @@ Func ClickAccountSCID($iAccount = 2)
 		If _Sleep(500) Then Return
 	Next
 	
+	If _Sleep(1500) Then Return
 	If Not $g_bRunState Then Return
 	For $i = 1 To 5
 		If _ColorCheck(_GetPixelColor(666, 330, True), Hex(0xF2F2F2, 6), 10, Default, "Verify SCID First Account") Then
@@ -417,8 +418,8 @@ EndFunc ;ClickAccountSCID
 
 Func ClickDragSCID($iCount = 1)
 	For $i = 1 To $iCount 
-		ClickDrag(666, 634, 666, 330)
-		If _Sleep(500) Then Return
+		ClickDrag(666, 624, 666, 320)
+		If _Sleep(1500) Then Return
 	Next
 EndFunc ;ClickDragSCID
 

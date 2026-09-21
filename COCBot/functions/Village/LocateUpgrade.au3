@@ -35,8 +35,6 @@ Func LocateUpgrades()
 		Return
 	EndIf
 
-	AndroidToFront(Default, "LocateUpgrades")
-
 	Local $wasDown = AndroidShieldForcedDown()
 	AndroidShield("LocateUpgrades") ; Update shield status due to manual $g_bRunState
 
