@@ -534,12 +534,14 @@ Func CheckZoomOut($bTest = False)
 	If $bTest Then AttackCSVDEBUGIMAGE(True)
 	
 	If $g_bVillageSearchActive Then
+		If $bRet And $g_sSceneryCode = "BL" Then 
+			$bRet = False
+			;SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_ERROR) 
+		EndIf
+		
 		If $bRet Then 
 			SetLog("Attack Enemy Scenery [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS) 
 			VillageSearchSaveImage()
-		Else
-			SetLog("CheckZoomOut(VillageSearch) Failed, defaulting to [" & $g_sSceneryCode & " - " & $g_sCurrentScenery & "]", $COLOR_SUCCESS)
-			VillageSearchSaveImage(True)
 		EndIf
 	EndIf
 	

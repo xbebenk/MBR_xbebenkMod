@@ -109,7 +109,7 @@ Func debugMBRFunctions($iDebugSearchArea = 0, $iDebugRedArea = 0, $iDebugOcr = 0
 	Else
 		SetDebugLog($g_sMBRLib & " not found.", $COLOR_ERROR)
 	EndIf
-	WinActivate($activeHWnD) ; restore current active window
+	;WinActivate($activeHWnD) ; restore current active window
 EndFunc   ;==>debugMBRFunctions
 
 Func setAndroidPID($pid = GetAndroidPid())
