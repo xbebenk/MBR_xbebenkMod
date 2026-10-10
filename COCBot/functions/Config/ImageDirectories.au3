@@ -238,6 +238,7 @@ Global $g_sImgSlash = @ScriptDir & "\imgxml\Train\Slash\"
 #Region Attack
 Global $g_sImgAttackBarDir = @ScriptDir & "\imgxml\AttackBar"
 Global $g_sImgNextButton = @ScriptDir & "\imgxml\Attack\Search\NextButton\"
+Global $g_sImgReturnHomeChest = @ScriptDir & "\imgxml\Attack\Search\ReturnHomeChest\"
 Global $g_sImgSwitchSiegeMachine = @ScriptDir & "\imgxml\Switch\SiegeMachines\"
 Global $g_sImgSwitchSiegeButton = @ScriptDir & "\imgxml\Switch\SiegeButton\"
 Global $g_sImgSwitchWardenMode = @ScriptDir & "\imgxml\Switch\WardenMode\"

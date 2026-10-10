@@ -18,7 +18,7 @@ Global $aEndFightSceneBtn[4] = [429, 519, 0xCDF271, 20] ; Victory or defeat scen
 Global $aEndFightSceneAvl[4] = [241, 196, 0xFFF090, 20] ; Victory or defeat scene left side ribbon = light gold
 Global $aEndFightSceneReportGold = $aEndFightSceneAvl ; Missing... TripleM ???
 Global $aReturnHomeButton[4] = [430, 580, 0x6DBB20, 20] ; Return Home Button, End Battle Screen
-Global $aReturnHomeChest[4] = [430, 550, 0x84CD2C, 10] ; Return Home Button, End Battle Screen
+Global $aReturnHomeChest[4] = [430, 565, 0x84CD2C, 10] ; Return Home Button, End Battle Screen
 Global $aChatTab[4] = [400, 330, 0xEA8A3B, 20] ; Chat Window Open, Main Screen
 Global $aChatTabClosed[4] = [40, 330, 0xEA8A3B, 20] ; Chat Window Closed
 Global $aSiegeMachineSize[2] = [710, 168] ; Training Window, Overview screen, Current Number/Total Number

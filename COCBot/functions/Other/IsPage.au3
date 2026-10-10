@@ -235,7 +235,7 @@ EndFunc   ;==>IsReturnHomeBattlePage
 
 Func IsReturnHomeChestPage($bAction = True)
 	Local $bRet = False
-	If IsPageLoop($aReturnHomeChest, 1) Then
+	If QuickMIS("BC1", $g_sImgReturnHomeChest, 320, 530, 525, 595) Then
 		SetDebugLog("**Return Home Chest Window OK**", $COLOR_ACTION)
 		If IsAttackPage(False, 1) Then Return False
 		If Not $bAction Then Return True
