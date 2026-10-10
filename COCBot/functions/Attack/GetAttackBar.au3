@@ -66,7 +66,7 @@ Func GetAttackBar_Old($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 					_ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					$aiOCRLocation[$iRow - 1] = $aTempCoords[1] ; Store any OCR Location for later use on Heroes
 				Else
-					If StringRegExp($aTempArray[0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)", 0) Then _ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
+					If StringRegExp($aTempArray[0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)|(Duke)", 0) Then _ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					Local $aTempElement[1][8] = [[$aTempArray[0], $aTempCoords[0], $aTempCoords[1], -1, -1, -1, -1, $iRow]] ; trick to get the right variable types into our array. Delimiter Adding only gets us string which can't be sorted....
 					_ArrayAdd($aAttackBar, $aTempElement)
 				EndIf
@@ -104,7 +104,7 @@ Func GetAttackBar_Old($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 	Local $aFinalAttackBar[0][7]
 	Local $aiOCRY = [-1, -1]
 	If Not $bRemaining Then $aiOCRY = GetOCRYLocation($aSlotAmountX)
-	Local $sKeepRemainTroops = "(King)|(Queen)|(Warden)|(Champion)|(MinionP)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)"
+	Local $sKeepRemainTroops = "(King)|(Queen)|(Warden)|(Champion)|(MinionP)|(Duke)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)"
 	Local $sKeepSieges = "(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)|(BattleD)"
 
 	For $i = 0 To UBound($aAttackBar, 1) - 1
@@ -132,7 +132,7 @@ Func GetAttackBar_Old($bRemaining = False, $pMatchMode = $DB, $bDebug = False)
 				$aAttackBar[$i][5] = Number($aTempSlot[0])
 				$aAttackBar[$i][6] = Number($aTempSlot[1])
 				$aAttackBar[$i][3] = Number($aTempSlot[2])
-				;If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)", 0) And $aiOCRY[$aAttackBar[$i][7] - 1] <> -1 Then $aAttackBar[$i][6] = ($aiOCRY[$aAttackBar[$i][7] - 1] - 7)
+				;If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)|(Duke)", 0) And $aiOCRY[$aAttackBar[$i][7] - 1] <> -1 Then $aAttackBar[$i][6] = ($aiOCRY[$aAttackBar[$i][7] - 1] - 7)
 			EndIf
 
 			If StringRegExp($aAttackBar[$i][0], $sKeepRemainTroops, 0) Then
@@ -217,7 +217,7 @@ Func ExtendedAttackBarCheck($aAttackBarFirstSearch, $bRemaining, $sSearchDiamond
 					_ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					$aiOCRLocation[$iRow - 1] = $aTempCoords[1]
 				Else
-					If StringRegExp($aTempArray[0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)", 0) Then _ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
+					If StringRegExp($aTempArray[0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)|(Duke)", 0) Then _ArrayAdd($aSlotAmountX, $aTempCoords[0] & "|" & $aTempCoords[1] & "|" & $iRow, 0, "|", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 					Local $aTempElement[1][8] = [[$aTempArray[0], $aTempCoords[0], $aTempCoords[1], -1, -1, -1, -1, $iRow]]
 					_ArrayAdd($aAttackBar, $aTempElement)
 				EndIf
@@ -285,7 +285,7 @@ Func ExtendedAttackBarCheck($aAttackBarFirstSearch, $bRemaining, $sSearchDiamond
 				$aAttackBar[$i][5] = Number($aTempSlot[0])
 				$aAttackBar[$i][6] = Number($aTempSlot[1])
 				$aAttackBar[$i][3] = Number($aTempSlot[2] + $iLastSlotNumber + 1)
-				If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)", 0) And $aiOCRY[$aAttackBar[$i][7] - 1] <> -1 Then $aAttackBar[$i][6] = ($aiOCRY[$aAttackBar[$i][7] - 1] - 7)
+				If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)|(MinionP)|(Duke)", 0) And $aiOCRY[$aAttackBar[$i][7] - 1] <> -1 Then $aAttackBar[$i][6] = ($aiOCRY[$aAttackBar[$i][7] - 1] - 7)
 			EndIf
 
 			If StringRegExp($aAttackBar[$i][0], "(King)|(Queen)|(Warden)|(Champion)|(Castle)|(WallW)|(BattleB)|(StoneS)|(SiegeB)|(LogL)|(FlameF)", 0) Then
