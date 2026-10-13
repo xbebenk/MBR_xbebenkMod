@@ -26,17 +26,17 @@ Func GoldElixirChangeEBO(ByRef $bSpeedUpBattle)
 	
 	$g_iDarkLow = 0
 	;READ RESOURCES n.1
-	$Gold1 = getGoldVillageSearch(48, 76)
-	$Elixir1 = getElixirVillageSearch(48, 104)
-	$Trophies = getTrophyVillageSearch(45, 174)
+	$Gold1 = getGoldVillageSearch(45, 68)
+	$Elixir1 = getElixirVillageSearch(45, 98)
+	$Trophies = getTrophyVillageSearch(45, 126)
 	$Damage = getOcrOverAllDamage(780, 529)
 	If Number($Damage) > Number($g_iPercentageDamage) Then $g_iPercentageDamage = Number($Damage)
 	If $Trophies <> "" Then ; If trophy value found, then base has Dark Elixir
 		If _Sleep(500) Then Return
-		$DarkElixir1 = getDarkElixirVillageSearch(48, 132)
+		$DarkElixir1 = getDarkElixirVillageSearch(45, 126)
 	Else
 		$DarkElixir1 = ""
-		$Trophies = getTrophyVillageSearch(48, 76 + 68)
+		$Trophies = getTrophyVillageSearch(45, 70 + 68)
 	EndIf
 	
 	;SetLog("[G]: " & $Gold1 & " [E]: " & $Elixir1 & " [DE]: " & $DarkElixir1 & " [%]: " & $Damage, $COLOR_INFO)
