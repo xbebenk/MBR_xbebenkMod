@@ -19,7 +19,6 @@ Func ZoomOut($bZoomOutFirst = False) ;Zooms out
 	If Not $g_bRunState Then Return
 	If $bZoomOutFirst Then AndroidZoomOut()
 	$bRet = _ZoomOut()
-	
 	Return $bRet
 EndFunc   ;==>ZoomOut
 
@@ -114,6 +113,7 @@ Func ZoomOutHelper($caller = "Default")
 		$bIsMain = isOnMainVillage()
 	EndIf
 	
+	CheckNewUI()
 	If Not $bIsMain Then Return ;leave if not in mainvillage
 	SetDebugLog("ZoomOutHelper, called from: " & $caller, $COLOR_DEBUG2)
 	

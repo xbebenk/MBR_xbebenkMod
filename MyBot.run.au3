@@ -888,81 +888,117 @@ Func __RunFunction($action)
 	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
 	Switch $action
 		Case "UseFreeMagic"
-			UseFreeMagicItem() ; bot will check event gift like Reinforcement Cake and other free magic items that will expired if not used	
+			Broken($action)
+			;UseFreeMagicItem() ; bot will check event gift like Reinforcement Cake and other free magic items that will expired if not used	
 		Case "CheckTombs"
-			CheckTombs()
+			Broken($action)
+			;CheckTombs()
 		Case "CollectLootCart"
-			CollectLootCart()
+			Broken($action)
+			;CollectLootCart()
 		Case "TreasuryCollect"
-			TreasuryCollect()
+			Broken($action)
+			;TreasuryCollect()
 		Case "CollectCookie"
-			CollectCookie()
+			Broken($action)
+			;CollectCookie()
 		Case "Collect"
-			Collect() ; collect mine, pump, drill
+			Broken($action)
+			;Collect() ; collect mine, pump, drill
 		Case "CleanYard"
-			CleanYard()
+			Broken($action)
+			;CleanYard()
 		Case "DonateCC"
-			DonateCC()
+			Broken($action)
+			;DonateCC()
 		Case "RequestCC"
-			RequestCC()
+			Broken($action)
+			;RequestCC()
 		Case "Laboratory"
-			LabUpgrade()
+			Broken($action)
+			;LabUpgrade()
 		Case "BlackSmith"
-			BlackSmith()
+			Broken($action)
+			;BlackSmith()
 		Case "PetHouse"
-			PetHouse()
+			Broken($action)
+			;PetHouse()
 		Case "DailyChallenge"
-			DailyChallenges()
+			Broken($action)
+			;DailyChallenges()
 		Case "SellMagicItem"
-			SellMagicItem()
+			Broken($action)
+			;SellMagicItem()
 		Case "ForgeClanCapitalGold"
-			ForgeClanCapitalGold()
+			Broken($action)
+			;ForgeClanCapitalGold()
 		Case "BoostSuperTroop"
-			BoostSuperTroop()
+			Broken($action)
+			;BoostSuperTroop()
 		Case "UpgradeBuilding"
-			UpgradeBuilding()
+			Broken($action)
+			;UpgradeBuilding()
 		Case "AutoUpgrade"
-			AutoUpgrade()
+			Broken($action)
+			;AutoUpgrade()
 		Case "UpgradeLow"
-			AutoUpgrade(False, True)
+			Broken($action)
+			;AutoUpgrade(False, True)
 		Case "UpgradeWall"
-			UpgradeWall()
+			Broken($action)
+			;UpgradeWall()
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_bAutoUpgradeBBEnabled Or $g_bChkEnableBBAttack Then
-				BuilderBase()
+				Broken($action)
+				;BuilderBase()
 			EndIf
 		Case "CollectAchievements"
-			CollectAchievements()
+			Broken($action)
+			;CollectAchievements()
 		Case "CollectFreeMagicItems"
-			CollectFreeMagicItems()
+			Broken($action)
+			;CollectFreeMagicItems()
 		Case "AutoUpgradeCC"
-			AutoUpgradeCC()
+			Broken($action)
+			;AutoUpgradeCC()
 		Case "CollectCCGold"
-			CollectCCGold()
+			Broken($action)
+			;CollectCCGold()
 
 		; must review below function
 		Case "UpgradeHeroes"
-			UpgradeHeroes()
+			Broken($action)
+			;UpgradeHeroes()
 		Case "ReplayShare"
-			ReplayShare($g_bShareAttackEnableNow)
+			Broken($action)
+			;ReplayShare($g_bShareAttackEnableNow)
 		Case "NotifyReport"
-			NotifyReport()
+			Broken($action)
+			;NotifyReport()
 		Case "BoostBarracks"
-			BoostBarracks()
+			Broken($action)
+			;BoostBarracks()
 		Case "BoostSpellFactory"
-			BoostSpellFactory()
+			Broken($action)
+			;BoostSpellFactory()
 		Case "BoostWorkshop"
-			BoostWorkshop()
+			Broken($action)
+			;BoostWorkshop()
 		Case "BoostKing"
-			BoostKing()
+			Broken($action)
+			;BoostKing()
 		Case "BoostQueen"
-			BoostQueen()
+			Broken($action)
+			;BoostQueen()
 		Case "BoostWarden"
-			BoostWarden()
+			Broken($action)
+			;BoostWarden()
 		Case "BoostChampion"
-			BoostChampion()
+			Broken($action)
+			;BoostChampion()
 		Case "BoostEverything"
-			BoostEverything()
+			Broken($action)
+			;BoostEverything()
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
@@ -1433,4 +1469,8 @@ Func T420()
 			Return Execute("Test420()")
 		EndIf
 	EndIf
+EndFunc
+
+Func Broken($sFunc = "")
+	SetLog("Sorry " & $sFunc & " Currently Broken", $COLOR_DEBUG2)
 EndFunc

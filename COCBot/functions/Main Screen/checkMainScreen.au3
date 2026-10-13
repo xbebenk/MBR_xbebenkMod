@@ -28,8 +28,7 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 	If GetAndroidProcessPID() = 0 Then CloseCoC(True)
 	
 	If $bSetLog Then SetLog("[" & $CalledFrom & "] checkMainScreen", $COLOR_INFO)
-	PlaceUnplacedBuilding()
-	PlacedOnLeague()
+	PlaceUnplacedBuilding()	
 	
 	Local $i = 0, $iErrorCount = 0, $iLoading = 0, $iCheckBeforeRestartAndroidCount = 5, $bObstacleResult, $bContinue = False, $bLocated = False
 	$bLocated = $bBuilderBase ? isOnBuilderBase() : isOnMainVillage()
@@ -37,6 +36,8 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 		If _Sleep(500) Then Return
 		If isOnBuilderBase() Then $bBuilderBase = True ;check if account is on builderbase but it should on main
 	EndIf
+	
+	If Not $bLocated Then PlacedOnLeague()
 	
 	While Not $bLocated
 		$i += 1
@@ -110,7 +111,7 @@ EndFunc
 Func checkChatTabPixel()
 	Local $bRet = False
 	
-	If _ColorCheck(_GetPixelColor(20, 300, True), Hex(0xF3AA28, 6), 20, Default, "checkChatTabPixel") Then
+	If _ColorCheck(_GetPixelColor(55, 330, True), Hex(0xE84C0D, 6), 20, Default, "checkChatTabPixel") Then ;red color on badge on chat tab
 		If $g_bDebugSetLog Then SetLog("checkChatTabPixel: Found ChatTab", $COLOR_ACTION)
 		$bRet = True
 	EndIf
@@ -144,7 +145,7 @@ EndFunc
 Func CheckDonateNotifCounter()
 	Local $bRet = False
 	If $g_bChkDonate Then 
-		If _ColorCheck(_GetPixelColor(66, 289, True), Hex(0xCE081D, 6), 20, Default, "Red Chat notif count") Then $bRet = True
+		If _ColorCheck(_GetPixelColor(73, 317, True), Hex(0xCB1D36, 6), 20, Default, "Red Chat notif count") Then $bRet = True
 		If $bRet Then SetLog("New chat detected!, Check for Donate", $COLOR_DEBUG)
 	EndIf
 	Return $bRet

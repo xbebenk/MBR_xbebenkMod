@@ -13,7 +13,7 @@
 
 Func GetResources($bLog = True) ;Reads resources
 	Static $iStuck = 0, $iSearchGold2 = 0, $iSearchElixir2 = 0
-	Local $xRead = 48, $yGold = 74, $yElix = 102, $yDE = 131, $yTrophy = 159
+	Local $xRead = 45, $yGold = 70, $yElix = 99, $yDE = 127, $yTrophy = 155
 	$g_iSearchGold = ""
 	$g_iSearchElixir = ""
 	$g_iSearchDark = ""

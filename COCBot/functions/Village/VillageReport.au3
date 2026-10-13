@@ -28,15 +28,15 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 	getBuilderCount($bSuppressLog) ; update builder data
 	
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
-		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(690, 23)
-		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 74)
-		$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(690, 123)
-		$g_iGemAmount = getResourcesMainScreen(730, 171)
+		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(690, 22)
+		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 59)
+		$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(690, 96)
+		$g_iGemAmount = getResourcesMainScreen(730, 133)
 		If Not $bSuppressLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [D]: " & _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir]) & " [GEM]: " & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
 	Else
-		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(690, 23)
-		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 74)
-		$g_iGemAmount = getResourcesMainScreen(730, 123)
+		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(690, 22)
+		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 59)
+		$g_iGemAmount = getResourcesMainScreen(730, 85)
 		If Not $bSuppressLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [GEM]: " & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
 		If ProfileSwitchAccountEnabled() Then $g_aiCurrentLoot[$eLootDarkElixir] = "" ; prevent applying Dark Elixir of previous account to current account
 	EndIf

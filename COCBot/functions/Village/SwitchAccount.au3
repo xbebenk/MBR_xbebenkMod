@@ -58,7 +58,6 @@ Func InitiateSwitchAcc() ; Checking profiles setup in Mybot, First matching CoC 
 	SetSwitchAccLog("Initiating: " & $g_iTotalAcc + 1 & " acc", $COLOR_SUCCESS)
 
 	If Not $g_bRunState Then Return
-	;Local $iCurProfile = _GUICtrlComboBox_GetCurSel($g_hCmbProfile)
 	For $i = 0 To $g_iTotalAcc
 		; listing all accounts
 		Local $sBotType = "Idle"
@@ -261,18 +260,31 @@ Func SwitchCOCAcc($NextAccount = 0, $bTest = False)
 
 EndFunc   ;==>SwitchCOCAcc
 
-Func SwitchSCID($NextAccount)
+Func OpenSettingPage()
 	Local $bRet = False
+	CheckMainScreen()
+	
+	If _Sleep(1000) Then Return
+	If _ColorCheck(_GetPixelColor(26, 17, True), Hex(0x20DBFF, 6), 30, Default, "Blue Asterisk on Profile") Then Click(50, 50, 1, 0, "Click Profile")
+		
 	For $i = 1 To 5 
-		If CheckMainScreen() Then ClickP($aButtonSetting, 1, 0, "Click Setting")
 		If _Sleep(1000) Then Return
 		If IsSettingPage(True, 1) Then 
+			If _ColorCheck(_GetPixelColor(700, 140, True), Hex(0x797165, 6), 20, Default, "Setting Tab Inactive") Then Click(700, 130, 1, 0, "Click Setting Tab")
 			SetLog("[" & $i & "] Setting page verified", $COLOR_SUCCESS)
+			$bRet = True
 			ExitLoop
 		Else
 			SetLog("[" & $i & "] Cannot verify Setting page!", $COLOR_ERROR)
 		EndIf
 	Next
+	Return $bRet
+EndFunc
+
+Func SwitchSCID($NextAccount)
+	Local $bRet = False
+	
+	If Not OpenSettingPage() Then Return $bRet
 	
 	For $i = 1 To 5 
 		SetLog("Verifying SCID Windows #" & $i, $COLOR_ACTION)

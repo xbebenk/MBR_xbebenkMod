@@ -1,13 +1,13 @@
 
-Global $aiClickAwayRegionLeft = [229, 5, 242, 20]
-Global $aiClickAwayRegionRight = [635, 5, 650, 20]
+Global $aiClickAwayRegionLeft = [110, 5, 260, 20]
+Global $aiClickAwayRegionRight = [570, 5, 640, 20]
 
 Global $aVillageCenteringCoord = [[550, 370], [236, 350], [430, 350]] ; Scroll village using this location : upper from setting button
-Global $aIsMain[4] = [824, 12, 0xDBDB4D, 20] ; Main Screen, Yellow Gold Resource Icon
-Global $aIsOnBuilderBase[4] = [824, 12, 0x0D0D0D, 15] ; BuilderBase, Yellow Gold Resource Icon
-Global $aIsMainGrayed[4] = [824, 14, 0x80802D, 15] ; Main Screen, Yellow Grayed Gold Resource Icon
-Global $aIsMain2Grayed[4] = [824, 14, 0x404016, 10] ; Main Screen, Yellow Grayed Gold Resource Icon
+Global $aIsMain[4] = [775, 523, 0xDB9746, 20] ; Main Screen, Orange color of builder hair
+Global $aIsOnBuilderBase[4] = [774, 523, 0x75A5CD, 15] ; BuilderBase, Blue color of builderbase builder hair
+Global $aIsMainGrayed[4] = [833, 15, 0x666624, 15] ; Main Screen, Yellow Grayed Gold Resource Icon
 
+Global $aBuildButton[2] = [800, 610]
 Global $aFindMatchButton[4] = [470, 20, 0xD8A420, 10] ; Find Multiplayer Match Button, Attack Screen 860x780 without shield
 Global $aIsAttackShield[4] = [250, 415, 0xE8E8E0, 10] ; Attack window, white shield verification window
 Global $aShieldInfoButton[4] = [431, 10, 0x75BDE4, 15] ; Main Screen, Blue pixel upper part of "i"
@@ -26,8 +26,8 @@ Global $aArmySpellSize[2] = [145, 295] ; Training Window Overviewscreen, current
 Global $g_aArmyCCSpellSize[2] = [463, 429] ; Training Window, Overview Screen, Current CC Spell number/total cc spell capacity
 Global $aArmyCCRemainTime[2] = [782, 552] ; Training Window Overviewscreen, Minutes & Seconds remaining till can request again
 Global $aIsCampFull[4] = [42, 154, 0xFFFFFF, 10] ; Training Window, Overview screen White pixel in check mark with camp IS full (can not test for Green, as it has trees under it!)
-Global $aBuildersDigits[2] = [426, 22] ; Main Screen, Free/Total Builders
-Global $aBuildersDigitsBuilderBase[2] = [495, 22] ; Main Screen on Builders Base Free/Total Builders
+Global $aBuildersDigits[2] = [753, 545] ; Main Screen, Free/Total Builders
+Global $aBuildersDigitsBuilderBase[2] = [753, 545] ; Main Screen on Builders Base Free/Total Builders
 Global $aTrophies[2] = [68, 84] ; Main Screen, Trophies
 Global $aArmyTrainButton[2] = [40, 525] ; Main Screen, Army Train Button
 Global $aWonOneStar[4] = [714, 540, 0xC0C8C0, 20] ; Center of 1st Star for winning attack on enemy
@@ -51,7 +51,7 @@ Global $aDetectLang[2] = [20, 636] ; Detect Language, bottom left Attack button 
 Global $aTreasuryWindow[4] = [700, 170, 0xCE333B, 20] ; Redish pixel below X to close treasury window
 Global $aAttackForTreasury[4] = [88, 619, 0xF0EBE8, 5] ; Red pixel below X to close treasury window
 Global $aAtkHasDarkElixir[4]  = [ 30, 150, 0x2A2124, 10] ; Attack Page, Check for DE icon
-Global $aVillageHasDarkElixir[4] = [826, 138, 0x3E313C, 10] ; Main Page, Base has dark elixir storage
+Global $aVillageHasDarkElixir[4] = [829, 104, 0x382B40, 10] ; Main Page, Base has dark elixir storage
 Global $aCheckTopProfile[4] = [200, 166, 0x868CAC, 5]
 Global $aCheckTopProfile2[4] = [220, 355, 0x4E4D79, 5]
 Global $aIsTabOpen[4] = [0, 152, 0xEAEAE3, 10];Check if specific Tab is opened, X Coordinate is a dummy
@@ -97,7 +97,7 @@ Global $aFindMatchButtonRND[4] = [200, 510, 300, 530] ; Find Multiplayer Match B
 Global $aLoginWithSupercellID[4] = [280, 630, 0xDCF684, 20] ; Upper green button section "Log in with Supercell ID" 0xB1E25A
 Global $aLoginWithSupercellID2[4] = [266, 653, 0xFFFFFF , 10] ; White Font "Log in with Supercell ID"
 Global $aButtonSetting[4] = [820, 530, 0xFFFFFF, 10] ; Setting button, Main Screen
-Global $aIsSettingPage[4] = [786, 97, 0xDA1013, 20] ; Main Screen, Setting page open - red bottom lower of x button
+Global $aIsSettingPage[4] = [776, 131, 0xF3373A, 20] ; Main Screen, Setting page open - red bottom lower of x button
 
 ;SuperCell ID
 Global $aButtonConnectedSCID[4] = [640, 160, 0x2D89FD, 20] ; Setting screen, Supercell ID Connected button (Blue Part)

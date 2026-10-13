@@ -51,7 +51,7 @@ Func getUpgradeResource($x_start, $y_start) ; -> Gets complete value of Gold/Eli
 EndFunc   ;==>getUpgradeResource
 
 Func getResourcesMainScreen($x_start, $y_start) ; -> Gets complete value of Gold/Elixir/Dark Elixir/Trophies/Gems xxx,xxx "VillageReport.au3"
-	Return StringReplace(getOcrAndCapture("coc-ms", $x_start, $y_start, 120, 16, True), "-", "")
+	Return StringReplace(getOcrAndCapture("coc-ms", $x_start, $y_start, 125, 16, True), "-", "")
 EndFunc   ;==>getResourcesMainScreen
 
 Func getResourcesLoot($x_start, $y_start) ; -> Gets complete value of Gold/Elixir after attack xxx,xxx "AttackReport"
@@ -102,7 +102,7 @@ Func getChatString($x_start, $y_start, $language) ; -> Get string chat request -
 EndFunc   ;==>getChatString
 
 Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --> getBuilders(324,23)  coc-profile
-	Return getOcrAndCapture("coc-Builders", $x_start, $y_start, 40, 18, True)
+	Return getOcrAndCapture("coc-Builders", $x_start, $y_start, 40, 16, True)
 EndFunc   ;==>getBuilders
 
 Func getProfile($x_start, $y_start) ;  -> Gets Attack Win/Defense Win/Donated/Received values - profile screen --> getProfile(160,268)  troops donation

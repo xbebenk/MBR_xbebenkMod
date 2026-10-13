@@ -168,19 +168,6 @@ Func IsMainPageBuilderBase($iLoop = 10)
 
 EndFunc   ;==>IsMainPage
 
-Func IsMainChatOpenPage() ;main page open chat
-
-	If IsPageLoop($aChatTab, 1) Then
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Chat Open Window OK**", $COLOR_ACTION)
-		Return True
-	EndIf
-
-	If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("**Chat Open Window FAIL** " & $aChatTab[0] & "," & $aChatTab[1] & " " & _GetPixelColor($aChatTab[0], $aChatTab[1], True), $COLOR_ACTION)
-	If $g_bDebugImageSave Then SaveDebugImage("IsMainChatOpenPage")
-	Return False
-
-EndFunc   ;==>IsMainChatOpenPage
-
 Func IsLaunchAttackPage()
 
 	If IsPageLoop($aFindMatchButton, 1) Then

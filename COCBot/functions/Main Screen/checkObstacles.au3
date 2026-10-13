@@ -31,6 +31,7 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	
 	checkObstacles_Network()
 	CheckAndroidReboot()
+	CheckNewUI()
 	
 	If Not $g_bRunState Then Return
 	If IsProblemAffect() Then
@@ -78,7 +79,14 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 			Return True
 		EndIf
 		
-		;3- AnyoneThere, Connection Lost, OoS, RateNever
+		;3- Game Update
+		If QuickMIS("BC1", $g_sImgUpdateCoC, 250, 280, 300, 305) Then; UpdateCoC
+			SetLog("Good News, Updates available!", $COLOR_INFO)
+			$msg = "Game Update is required, Bot must stop!"
+			Return checkObstacles_StopBot($msg) ; stop bot
+		EndIf
+		
+		;4- AnyoneThere, Connection Lost, OoS, RateNever
 		Select
 			Case QuickMIS("BC1", $g_sImgAnyoneThere, 220, 270, 440, 340) ;AnyoneThere
 				SetLog("Village was Inactive, Reloading CoC", $COLOR_ERROR)
@@ -98,10 +106,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 				PureClick(200, 400)
 				If _Sleep(2000) Then Return
 				Return True
-			Case QuickMIS("BC1", $g_sImgUpdateCoC, 250, 280, 300, 305) ; UpdateCoC
-				SetLog("Good News, Updates available!", $COLOR_INFO)
-				$msg = "Game Update is required, Bot must stop!"
-				Return checkObstacles_StopBot($msg) ; stop bot
 			Case Else
 				;  Add check for game update and Rate CoC error messages
 				If $g_bDebugImageSave Then SaveDebugImage("ChkObstaclesReloadMsg_", False) ; debug only
@@ -1233,4 +1237,16 @@ Func BBTutorial($x = 170, $y = 560)
 		ZoomOut()
 		Return True
 	EndIf
+EndFunc
+
+Func CheckNewUI()
+	Local $bRet = False
+	If Not _ColorCheck(_GetPixelColor(753, 594, True), Hex(0xFCC610, 6), 10, Default, "Orange Build Button") And _
+		_ColorCheck(_GetPixelColor(220, 440, True), Hex(0xFFFFFF, 6), 10, Default, "Orange Build Button") Then 
+		Click($aBuildButton[0], $aBuildButton[1], 1, 0, "Click Build button")
+		If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
+			Click(835, 35, 1, 0, "Click Close Builder Menu")
+		EndIf
+	EndIf
+	Return $bRet
 EndFunc
