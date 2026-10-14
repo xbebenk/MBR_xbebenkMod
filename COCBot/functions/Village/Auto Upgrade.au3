@@ -256,7 +256,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 		EndIf
 
 		If Not $g_bRunState Then Return
-		If $bDoScroll Then ClickDragAUpgrade("up", (($z >= 2 And $SameCost = 0) ? 2 : 1)) ;do scroll up
+		If $bDoScroll Then ClickDragAUpgrade() ;do scroll up
 		$bDoScroll = True
 		;If _Sleep(1500) Then Return
 	Next
