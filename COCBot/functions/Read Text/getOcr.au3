@@ -227,7 +227,7 @@ Func getBuilderLeastUpgradeTime($x_start, $y_start) ;  -> Get least upgradetime 
 EndFunc   ;==>getBuilderLeastUpgradeTime
 
 Func getBuilderMenuCost($x_start, $y_start) ;  -> Get least upgradetime on builder menu
-	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 100, 18, True)
+	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 120, 16, True)
 EndFunc   ;==>getBuilderBuilderMenuCost
 
 Func getOresValues($x_start, $y_start, $ilength = 60) ;  -> Get least upgradetime on builder menu

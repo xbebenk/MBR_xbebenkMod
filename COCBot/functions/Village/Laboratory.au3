@@ -442,46 +442,28 @@ Func IsLabMenuOpen()
 	Return $bRet
 EndFunc ;IsLabMenuOpen
 
-Func ClickLabMenu($Counter = 3)
+Func OpenLabMenu()
 	Local $bRet = False
 	If Not $g_bRunState Then Return
 
 	; open the lab menu
-	If IsLabMenuOpen() Then
-		$bRet = True
-	Else
-		SetLog("Opening Lab Menu", $COLOR_ACTION)
-		Click(275, 33)
-		$bRet = True
-		If _Sleep(500) Then Return
-	EndIf
-
-	;check
-	If Not $bRet Then
-		For $i = 1 To $Counter
-			If Not $g_bRunState Then Return
-			SetLog("Lab Closed, trying again!", $COLOR_DEBUG)
-			Click(275, 33)
-			If _Sleep(500) Then Return
-			If IsLabMenuOpen() Then
-				$bRet = True
-				ExitLoop
-			EndIf
-		Next
-		If Not $bRet Then SetLog("Something wrong with Lab Menu, already tried 3 times!", $COLOR_DEBUG)
+	If _ColorCheck(_GetPixelColor(753, 594, True), Hex(0xFCC610, 6), 10, Default, "Orange Build Button") Then
+		Click(800, 600, 1, 0, "Click Build Button")
+		If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
+			Click(630, 630, 1, 0, "Click Lab Menu")
+		EndIf
 	EndIf
 	
+	If _Sleep(500) Then Return
+	If QuickMIS("BC1", $g_sImgLabMenu, 600, 15, 650, 30) Then $bRet = True
 	Return $bRet
 EndFunc ;==>ClickLabMenu
 
 Func CheckIfLabIdle($bDebug = False)
 	Local $aLabInfo, $aGetLab, $bRet = True
-	If $bDebug Then 
-		ClickLabMenu()
-		Return $bRet
-	EndIf
+	If $bDebug Then Return $bRet
 	
-	$aLabInfo = getBuilders(309, 23)
+	$aLabInfo = getBuilders(802, 545)
 	If StringInStr($aLabInfo, "#") > 0 Then
 		$aGetLab = StringSplit($aLabInfo, "#", $STR_NOCOUNT)
 		Local $iLab = Number($aGetLab[0]), $iLabMax = Number($aGetLab[1])
@@ -501,74 +483,74 @@ Func CheckIfLabIdle($bDebug = False)
 		EndSelect
 	EndIf
 	
-	If $bRet Then ;if Lab is idle, check resource is enough to upgrade
-		ClickLabMenu()
-		Local $aUpgradeName
-		Local $aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 70, 460, 280)
-		If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
-			_ArraySort($aTmpCoord, 0, 0, 0, 2)
-			For $i = 0 To UBound($aTmpCoord) - 1
-				If $aTmpCoord[$i][0] = "Complete" Then
-					SetLog("Detected All Upgrade Complete", $COLOR_SUCCESS)
-					ClickAway()
-					$bRet = False
-					ExitLoop
-				EndIf
-				
-				If _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFFFFFF, 6), 10, 1, "Check White Resource cost") Then
-					SetLog("Detected possible LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
-					$bRet = True
-					ExitLoop
-				ElseIf _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFF887F, 6), 10, 1, "Check Red Resource cost") Then
-					SetLog("Detected Not Enough Resource for LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
-					$bRet = False
-				EndIf
-			Next
-		EndIf
-	EndIf
-	
-	If Not $bRet Then
-		If $g_iTownHallLevel >= 9 Then
-			ClickLabMenu()
-			If _Sleep(500) Then Return
-			If QuickMIS("BC1", $g_sImgLabAssistant, 170, 130, 320, 170) Then
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(500) Then Return
-				If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "LabAssistant") Then
-					If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
-						Click($g_iQuickMISX, $g_iQuickMISY)
-						If _Sleep(500) Then Return
-						If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "LabAssistant") Then
-							Click(250, 421, 1, 0, "Click Keep Assign")
-							Click(430, 520, 1, 0, "Click Confirm")
-							If _Sleep(500) Then Return
-							ClickAway()
-							If _Sleep(500) Then Return
-							ClickAway()
-						EndIf
-					EndIf
-				EndIf
-			EndIf
-		EndIf
-	EndIf
-	
-	If Not $bRet And $g_bUseLabPotion Then
-		ClickLabMenu()
-		If QuickMIS("BC1", $g_sImgAUpgradeHour, 320, 105, 445, 140) Then
-			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
-			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
-			If $mUpgradeTime >= 1440 Then ; only use potion if lab upgrade time is more than 2 day
-				SetLog("Upgrade time > 1 day, will use Resource Potion", $COLOR_INFO)
-				ClickAway()
-				UseLabPotion()
-			Else
-				SetLog("Upgrade time < 1 day, cancel using Resource potion", $COLOR_DEBUG2)
-			EndIf
-		EndIf
-	EndIf
-	
-	ClickAway()
-	If _Sleep(500) Then Return
+	;If $bRet Then ;if Lab is idle, check resource is enough to upgrade
+	;	OpenLabMenu()
+	;	Local $aUpgradeName
+	;	Local $aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 70, 460, 280)
+	;	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+	;		_ArraySort($aTmpCoord, 0, 0, 0, 2)
+	;		For $i = 0 To UBound($aTmpCoord) - 1
+	;			If $aTmpCoord[$i][0] = "Complete" Then
+	;				SetLog("Detected All Upgrade Complete", $COLOR_SUCCESS)
+	;				ClickAway()
+	;				$bRet = False
+	;				ExitLoop
+	;			EndIf
+	;			
+	;			If _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFFFFFF, 6), 10, 1, "Check White Resource cost") Then
+	;				SetLog("Detected possible LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
+	;				$bRet = True
+	;				ExitLoop
+	;			ElseIf _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFF887F, 6), 10, 1, "Check Red Resource cost") Then
+	;				SetLog("Detected Not Enough Resource for LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
+	;				$bRet = False
+	;			EndIf
+	;		Next
+	;	EndIf
+	;EndIf
+	;
+	;If Not $bRet Then
+	;	If $g_iTownHallLevel >= 9 Then
+	;		OpenLabMenu()
+	;		If _Sleep(500) Then Return
+	;		If QuickMIS("BC1", $g_sImgLabAssistant, 170, 130, 320, 170) Then
+	;			Click($g_iQuickMISX, $g_iQuickMISY)
+	;			If _Sleep(500) Then Return
+	;			If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "LabAssistant") Then
+	;				If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
+	;					Click($g_iQuickMISX, $g_iQuickMISY)
+	;					If _Sleep(500) Then Return
+	;					If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "LabAssistant") Then
+	;						Click(250, 421, 1, 0, "Click Keep Assign")
+	;						Click(430, 520, 1, 0, "Click Confirm")
+	;						If _Sleep(500) Then Return
+	;						ClickAway()
+	;						If _Sleep(500) Then Return
+	;						ClickAway()
+	;					EndIf
+	;				EndIf
+	;			EndIf
+	;		EndIf
+	;	EndIf
+	;EndIf
+	;
+	;If Not $bRet And $g_bUseLabPotion Then
+	;	OpenLabMenu()
+	;	If QuickMIS("BC1", $g_sImgAUpgradeHour, 320, 105, 445, 140) Then
+	;		Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
+	;		Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
+	;		If $mUpgradeTime >= 1440 Then ; only use potion if lab upgrade time is more than 2 day
+	;			SetLog("Upgrade time > 1 day, will use Resource Potion", $COLOR_INFO)
+	;			ClickAway()
+	;			UseLabPotion()
+	;		Else
+	;			SetLog("Upgrade time < 1 day, cancel using Resource potion", $COLOR_DEBUG2)
+	;		EndIf
+	;	EndIf
+	;EndIf
+	;
+	;ClickAway()
+	;If _Sleep(500) Then Return
 	Return $bRet
 EndFunc
 
@@ -624,7 +606,7 @@ Func LabUpgrade($bTest = False)
 	SetLog("Checking for Laboratory Research", $COLOR_INFO)
 	
 	VillageReport(True, True)
-	ClickLabMenu()
+	OpenLabMenu()
 	Local $Upgrades = _FindLabUpgrade($bTest)
 	If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
 		SetLog("Laboratory Upgrade List:", $COLOR_INFO)
@@ -657,7 +639,7 @@ Func LabUpgrade($bTest = False)
 	EndIf
 EndFunc
 
-Global $g_iXFindLabUpgrade = 180
+Global $g_iXFindLabUpgrade = 560
 
 Func _FindLabUpgrade($bTest = False)
 	Local $aTmpCoord, $aUpgrade[0][8], $BuildingName, $sPriority = "", $aUpgradeName, $tmpcost, $lenght = 0
@@ -677,19 +659,18 @@ Func _FindLabUpgrade($bTest = False)
 	
 	;_ArrayDisplay($aOrder)
 	
-	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 320, 73, 420, 400)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResIcon, 830, 100, 850, 570)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			$lenght = Number($aTmpCoord[$i][1]) - $g_iXFindLabUpgrade
-			$aUpgradeName = getBuildingName($g_iXFindLabUpgrade, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
-			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
+			$aUpgradeName = getBuildingName($g_iXFindLabUpgrade, $aTmpCoord[$i][2] - 22, $lenght) ;get upgrade name and amount
+			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 120, $aTmpCoord[$i][2] - 2)
 			If Number($tmpcost) = 0 Then ContinueLoop
 			
 			$sPriority = "Common"
 			$iScore = 0
 			If UBound($aOrder) > 0 Then
 				For $z = 0 To UBound($aOrder) - 1
-					If $aUpgradeName[0] = "eti" Then $aUpgradeName[0] = "Yeti"
 					If StringInStr($aUpgradeName[0], $aOrder[$z][1]) > 0 Then 
 						$sPriority = "Priority"
 						$iScore = $aOrder[$z][0]
