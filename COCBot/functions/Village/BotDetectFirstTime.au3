@@ -13,7 +13,8 @@
 
 Func BotDetectFirstTime()
 	If $g_bIsClientSyncError Then Return ; if restart after OOS, and User stop/start bot, skip this.
-
+	
+	ZoomOut(True)
 	If _Sleep(50) Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "BotDetectFirstTime")
 	
