@@ -170,7 +170,6 @@
 #include "functions\Other\WindowsArrange.au3"
 #include "functions\Other\MakeScreenshot.au3"
 #include "functions\Other\ClickDrag.au3"
-#include "functions\Other\TestLanguage.au3"
 #include "functions\Other\DeleteFiles.au3"
 #include "functions\Other\UpdateStats.au3"
 #include "functions\Other\CheckVersion.au3"

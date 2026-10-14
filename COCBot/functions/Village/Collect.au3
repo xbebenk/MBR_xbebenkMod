@@ -105,7 +105,7 @@ Func VerifyClaimButton()
 		EndIf
 	EndIf
 	
-	If _CheckPixel($aIsMain2Grayed, True, Default, "CollectCookie") Then 
+	If _CheckPixel($aIsMainGrayed, True, Default, "CollectCookie") Then 
 		For $i = 1 To 8
 			If QuickMIS("BC1", $g_sImgClanRush, 320, 440, 560, 600) Then 
 				SetLog("VerifyClaimButton: Found Splash Event Page " & $g_sQuickMISName & " Button", $COLOR_ACTION)
