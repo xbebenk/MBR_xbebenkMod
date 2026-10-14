@@ -129,16 +129,16 @@ Func GoldElixirChangeEBO(ByRef $bSpeedUpBattle)
 		EndIf
 		
 		;--> Read Resources #2
-		$Gold2 = getGoldVillageSearch(48, 76)
-		$Elixir2 = getElixirVillageSearch(48, 104)
-		$Trophies = getTrophyVillageSearch(45, 174)
+		$Gold2 = getGoldVillageSearch(45, 68)
+		$Elixir2 = getElixirVillageSearch(45, 98)
+		$Trophies = getTrophyVillageSearch(45, 126)
 		$CurDamage = getOcrOverAllDamage(780, 529)
 		If $Trophies <> "" Then ; If trophy value found, then base has Dark Elixir
 			If _Sleep(500) Then Return
-			$DarkElixir2 = getDarkElixirVillageSearch(48, 132)
+			$DarkElixir2 = getDarkElixirVillageSearch(45, 126)
 		Else
 			$DarkElixir2 = ""
-			$Trophies = getTrophyVillageSearch(48, 76 + 68)
+			$Trophies = getTrophyVillageSearch(45, 70 + 68)
 		EndIf
 		;--> Read Ressources #2
 
