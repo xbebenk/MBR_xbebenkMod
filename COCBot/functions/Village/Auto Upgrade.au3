@@ -31,7 +31,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	If $g_aiCurrentLoot[$eLootGold] < 1000 Then Return False
 	
 	;Check if free builder is goblin builder
-	If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
+	If _ColorCheck(_GetPixelColor(785, 540, True), Hex(0xFFBC70, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
 		SetLog("AutoUpgradeCheckBuilder, Free Builder = 1, Goblin Builder!", $COLOR_DEBUG2)
 		$g_iFreeBuilderCount = 0
 		$bRet = False
@@ -60,32 +60,32 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		$bRet = True
 	EndIf
 	
-	If Not $bRet And $g_iFreeBuilderCount = 0 Then
-		ClickMainBuilder()
-		CheckBuilderPotion()
-		If $g_iTownHallLevel >= 9 Then
-			If _Sleep(500) Then Return
-			If QuickMIS("BC1", $g_sImgBuilderMenu, 290, 105, 445, 140) Then
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(500) Then Return
-				If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "BuilderApprentice") Then
-					If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
-						Click($g_iQuickMISX, $g_iQuickMISY)
-						If _Sleep(500) Then Return
-						If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "BuilderApprentice") Then
-							Click(250, 421, 1, 0, "Click Keep Assign")
-							Click(430, 520, 1, 0, "Click Confirm")
-							If _Sleep(500) Then Return
-							ClickAway()
-							If _Sleep(500) Then Return
-							ClickAway()
-						EndIf
-					EndIf
-				EndIf
-			EndIf
-		EndIf
-		ClickAway()
-	EndIf
+	;If Not $bRet And $g_iFreeBuilderCount = 0 Then
+	;	OpenMainBuilder()
+	;	CheckBuilderPotion()
+	;	If $g_iTownHallLevel >= 9 Then
+	;		If _Sleep(500) Then Return
+	;		If QuickMIS("BC1", $g_sImgBuilderMenu, 290, 105, 445, 140) Then
+	;			Click($g_iQuickMISX, $g_iQuickMISY)
+	;			If _Sleep(500) Then Return
+	;			If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "BuilderApprentice") Then
+	;				If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
+	;					Click($g_iQuickMISX, $g_iQuickMISY)
+	;					If _Sleep(500) Then Return
+	;					If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "BuilderApprentice") Then
+	;						Click(250, 421, 1, 0, "Click Keep Assign")
+	;						Click(430, 520, 1, 0, "Click Confirm")
+	;						If _Sleep(500) Then Return
+	;						ClickAway()
+	;						If _Sleep(500) Then Return
+	;						ClickAway()
+	;					EndIf
+	;				EndIf
+	;			EndIf
+	;		EndIf
+	;	EndIf
+	;	ClickAway()
+	;EndIf
 	
 	If CheckPlaceBuilder() Then 
 		SetLog("Have enough gems to place new builder!", $COLOR_SUCCESS)
@@ -108,9 +108,9 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	VillageReport(False, True)
 	PlaceUnplacedBuilding()
 	If $bUpgradeLowCost And $g_iFreeBuilderCount = 1 And $g_bUpgradeWallSaveBuilder Then
-		ClickMainBuilder()
+		OpenMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
-		Local $aHour = QuickMIS("CNX", $g_sImgAUpgradeHour, 480, 110, 555, 170)
+		Local $aHour = QuickMIS("CNX", $g_sImgAUpgradeHour, 785, 66, 830, 82)
 		If IsArray($aHour) And UBound($aHour) > 0 Then
 			_ArraySort($aHour, 0, 0, 0, 2)
 			
@@ -133,20 +133,12 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	;skip search new on first page
 	Local $bSkip1st = $g_bUpgradeLowCost Or $g_bSkipWallReserve
 
-	If AutoUpgradeCheckBuilder($bTest) Then
-		If _Sleep(50) Then Return
-		SetLog("_SearchUpgrade(bTest=" & String($bTest) & ", bSkip1st=" & String($bSkip1st) & ", LowCost=" & String($g_bUpgradeLowCost) & ", UseWallReserve=" & String($g_bSkipWallReserve) & ")", $COLOR_DEBUG)
-		_SearchUpgrade($bTest, $bSkip1st, $g_bUpgradeLowCost, $g_bSkipWallReserve) ;search upgrade for existing building
-		If _Sleep(2000) Then Return
-	EndIf
+	If _Sleep(50) Then Return
+	SetLog("_SearchUpgrade(bTest=" & String($bTest) & ", bSkip1st=" & String($bSkip1st) & ", LowCost=" & String($g_bUpgradeLowCost) & ", UseWallReserve=" & String($g_bSkipWallReserve) & ")", $COLOR_DEBUG)
+	_SearchUpgrade($bTest, $bSkip1st, $g_bUpgradeLowCost, $g_bSkipWallReserve) ;search upgrade for existing building
+	If _Sleep(2000) Then Return
 
 	If Not $g_bRunState Then Return
-
-	If IsBuilderMenuOpen() Then
-		Click(400, 28)
-		If _Sleep(1000) Then Return
-	EndIf
-
 	ZoomOut(True)
 	Return False
 EndFunc
@@ -154,17 +146,16 @@ EndFunc
 Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseWallReserve = False)
 	If Not $g_bRunState Then Return
 	SetLog("Search For Upgrade", $COLOR_DEBUG)
-	If Not ClickMainBuilder($bTest) Then Return
 	Local $Upgrades, $ZoomedIn = False, $bDoScroll = True, $bNew = False
 	Local $TmpUpgradeCost, $UpgradeCost, $sameCost = 0
 	
-	Local $bSkipNew = FindTHInUpgradeProgress()
+	;Local $bSkipNew = FindTHInUpgradeProgress()
+	Local $bSkipNew = True
 	
 	For $z = 1 To 15 ;for do scroll 15 times
 		If Not $g_bRunState Then Return
 		If _Sleep(50) Then Return
 		SetLog("Search For Upgrade #" & $z, $COLOR_ACTION)
-		If Not ClickMainBuilder($bTest) Then Return
 		If Not $g_bRunState Then Return
 		If $bSkip1st Then 
 			ClickDragAUpgrade("up") ;do scroll up
@@ -221,7 +212,6 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 							$bNew = True
 
 							If _Sleep(2000) Then Return
-							If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
 						Else
 							If IsFullScreenWindow() Then Click(820, 37) ;close shop window
 							ExitLoop
@@ -257,7 +247,6 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 						$g_bUpgradeLowCost = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
 						$sameCost = 0
 						$bDoScroll = False
-						If Not AutoUpgradeCheckBuilder($bTest) Then ExitLoop 2
 						ContinueLoop 2
 					EndIf
 				EndIf
@@ -267,7 +256,6 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 		EndIf
 
 		If Not $g_bRunState Then Return
-		If Not AutoUpgradeCheckBuilder($bTest) Then Return
 		If $bDoScroll Then ClickDragAUpgrade("up", (($z >= 2 And $SameCost = 0) ? 2 : 1)) ;do scroll up
 		$bDoScroll = True
 		;If _Sleep(1500) Then Return
@@ -280,9 +268,8 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 	If $g_bChkRushTH And Not IsTHLevelAchieved() Then SetLog("[FindUpgrade] Only Search for RushTH Building", $COLOR_INFO)
 	If $bSkipNew Then SetLog("[FindUpgrade] Skip Search for New Building", $COLOR_INFO)
 	If $bUseWallReserve Then SetLog("[FindUpgrade] Search for using last Builder", $COLOR_INFO)
-	If $g_bUpgradeOtherDefenses Then $bSkipNew = False
+	;If $g_bUpgradeOtherDefenses Then $bSkipNew = False
 	
-	If Not ClickMainBuilder($bTest) Then Return
 	Local $ElixMultiply = 1, $GoldMultiply = 1 ;used for multiply score
 	Local $Gold = $g_aiCurrentLoot[$eLootGold]
 	Local $Elix = $g_aiCurrentLoot[$eLootElixir]
@@ -326,17 +313,13 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 				_ArrayDelete($aBuilding, $iIndex)
 			EndIf
 		Next
-
-		;If UBound($aBuilding) > 0 Then
-		;	_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
-		;	Return $aBuilding ;return new building array
-		;EndIf
 	EndIf
 	If Not $g_bRunState Then Return
 	
 	;rest upgrades
-	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 440, 80, 600, 408)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 830, 100, 850, 575)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		RemoveDupCNX($aTmpCoord, 2, 5)
 		If Not $g_bRunState Then Return
 		_ArraySort($aTmpCoord, 0, 0, 0, 2)
 		For $i = 0 To UBound($aTmpCoord) - 1
@@ -1259,98 +1242,32 @@ Func SearchGreenZone()
 	Return False
 EndFunc
 
-Func ClickDragAUpgrade($Direction = "Up", $DragCount = 1)
+Func ClickDragAUpgrade()
 	If Not $g_bRunState Then Return
-	Local $x = 400, $yUp = 130, $yDown = 800, $Delay = 1500, $YY = 0
-	ClickMainBuilder()
-	If $Direction = "up" Then
-		Local $Tmp = QuickMIS("CNX", $g_sImgResourceIcon, 440, 300, 600, 410)
-		If IsArray($Tmp) And UBound($Tmp) > 0 Then
-			_ArraySort($Tmp, 1, 0, 0, 2)
-			$x = $Tmp[0][1] - 50
-			$YY = $Tmp[0][2]
-			If $YY > 350 Then $YY = 350 ;no over scroll
-			If $g_bDebugSetLog Then SetLog("DragUpY = " & $YY)
-			If Number($YY) < 300 Then
-				SetLog("No need to dragUp!", $COLOR_INFO)
-				Return
-			EndIf
-		Else
-			$YY = 150
-		EndIf
-	EndIf
-
-	For $checkCount = 0 To 2
-		If Not $g_bRunState Then Return
-		If IsBuilderMenuOpen() Then ;check upgrade window border
-			Switch $Direction
-				Case "Up"
-					If $YY < 100 Then $YY = 150
-					If $DragCount > 1 Then
-						For $i = 1 To $DragCount
-							ClickDrag($x, $YY, $x, $yUp) ;drag up
-						Next
-					Else
-						ClickDrag($x, $YY, $x, $yUp) ;drag up
-					EndIf
-					If _Sleep(1000) Then Return
-				Case "Down"
-					ClickDrag($x, $yUp, $x, $yDown) ;drag to bottom
-					If WaitforPixel(510, 90, 512, 91, "FFFFFF", 10, 1, "ClickDragAUpgrade") Then
-						ClickDrag($x, $yUp, $x, $yDown) ;drag to bottom
-					EndIf
-					If _Sleep(5000) Then Return
-			EndSwitch
-			If $g_bDebugSetLog Then SetLog("Buildermenu Drag " & ($Direction = "Up" ? "Up" : "Down"), $COLOR_ACTION)
-		EndIf
-		If IsBuilderMenuOpen() Then ;check upgrade window border
-			If $g_bDebugSetLog Then SetLog("Upgrade Window Exist", $COLOR_INFO)
-			Return True
-		Else
-			If $g_bDebugSetLog Then SetLog("Upgrade Window Gone!", $COLOR_DEBUG)
-			ClickMainBuilder()
-			If _Sleep(1000) Then Return
-		EndIf
-	Next
-	Return False
+	Local $x = 660, $yUp = 150, $yDown = 540, $Delay = 1500, $YY = 0
+	
+	ClickDrag(660, 540, 660, 140) ;drag up
+	
 EndFunc ;==>ClickDragAUpgrade
 
-Func ClickMainBuilder($bSetLog = False, $Counter = 3)
+Func OpenMainBuilder()
 	If Not $g_bRunState Then Return
-	Local $b_WindowOpened = False
+	Local $bRet = False
+	
 	; open the builders menu
-	If Not IsBuilderMenuOpen() Then
-		If $bSetLog Then SetLog("Opening BuilderMenu", $COLOR_ACTION)
-		Click(400, 28)
-		If _Sleep(1000) Then Return
-	EndIf
-	If _Sleep(50) Then Return
-
-	If IsBuilderMenuOpen() Then
-		If $bSetLog Then SetLog("Check BuilderMenu, Opened", $COLOR_SUCCESS)
-		$b_WindowOpened = True
-	Else
-		For $i = 1 To $Counter
-			If Not $g_bRunState Then Return
-			If _Sleep(50) Then Return
-			If $bSetLog Then SetLog("BuilderMenu Closed, trying again!", $COLOR_DEBUG)
-			If IsFullScreenWindow() Then
-				Click(825,45)
-				If _Sleep(1000) Then Return
-			EndIf
-			Click(400, 28)
-			If _Sleep(1000) Then Return
-			If IsBuilderMenuOpen() Then
-				$b_WindowOpened = True
-				ExitLoop
-			EndIf
-		Next
-		If Not $b_WindowOpened Then
-			If $bSetLog Then SetLog("Something is wrong with upgrade window, already tried 3 times!", $COLOR_DEBUG)
+	If _ColorCheck(_GetPixelColor(753, 594, True), Hex(0xFCC610, 6), 10, Default, "Orange Build Button") Then
+		Click(800, 600, 1, 0, "Click Build Button")
+		If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
+			Click(540, 630, 1, 0, "Click Lab Menu")
 		EndIf
 	EndIf
+	
+	If _Sleep(500) Then Return
+	If QuickMIS("BC1", $g_sImgUpgradeMenu, 600, 15, 650, 30) Then $bRet = True
+	Return $bRet
+		
 	Return $b_WindowOpened
-EndFunc ;==>ClickMainBuilder
+EndFunc ;==>OpenMainBuilder
 
 Func GoGoblinMap()
 	If Not $g_bRunState Then Return
@@ -1707,7 +1624,7 @@ EndFunc ;==>AUNewBuildings
 Func FindNewUpgrade($bTest = False)
 	If Not $g_bRunState Then Return
 	Local $aTmpCoord, $aBuilding[0][7], $UpgradeCost, $aUpgradeName, $UpgradeType = ""
-	If Not ClickMainBuilder($bTest) Then Return
+	If Not OpenMainBuilder($bTest) Then Return
 	$aTmpCoord = QuickMIS("CNX", $g_sImgAUpgradeObstNew, $g_iXFindUpgrade, 73, 400, 390)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		If Not $g_bRunState Then Return
@@ -1753,7 +1670,7 @@ Func SearchBuilder($bTest = False)
 
 	Local $ZoomedIn = False, $a_Builder = False
 
-	If Not ClickMainBuilder($bTest) Then Return False
+	If Not OpenMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
 
 	If Not $g_bRunState Then Return
@@ -1773,14 +1690,14 @@ Func SearchBuilder($bTest = False)
 					If _Sleep(1000) Then Return ;wait builder menu closed
 					If SearchGreenZone() Then
 						$ZoomedIn = True
-						ClickMainBuilder($bTest)
+						OpenMainBuilder($bTest)
 					Else
 						ExitLoop ;zoomin failed, cancel placing newbuilding
 					EndIf
 				EndIf
 
 				If PlaceNewBuilding($NewCoord[$j][1], $NewCoord[$j][2], $bTest, False) Then ;False is for IsWall var
-					ClickMainBuilder($bTest)
+					OpenMainBuilder($bTest)
 					ExitLoop
 				Else
 					ExitLoop ;Place NewBuilding failed, cancel placing newbuilding
@@ -1826,7 +1743,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 	If Not $g_bRunState Then Return
 	SetLog("Search For Place New Building", $COLOR_DEBUG)
 
-	If Not ClickMainBuilder($bTest) Then Return False
+	If Not OpenMainBuilder($bTest) Then Return False
 	If _Sleep(500) Then Return
 
 	If FindTHInUpgradeProgress() Then
@@ -1863,14 +1780,14 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 						If _Sleep(1000) Then Return ;wait builder menu closed
 						If SearchGreenZone() Then
 							$ZoomedIn = True
-							ClickMainBuilder($bTest)
+							OpenMainBuilder($bTest)
 						Else
 							ExitLoop ;zoomin failed, cancel placing newbuilding
 						EndIf
 					EndIf
 
 					If PlaceNewBuilding($NewCoord[$j][1], $NewCoord[$j][2], $bTest, $IsWall) Then
-						ClickMainBuilder($bTest)
+						OpenMainBuilder($bTest)
 						$z = 0 ;reset
 						If Not AutoUpgradeCheckBuilder() Then ExitLoop
 						ContinueLoop 2
@@ -1885,7 +1802,7 @@ Func AutoUpgradeSearchNewBuilding($bTest = False)
 			SetLog("New Building Not Found", $COLOR_INFO)
 		EndIf
 
-		If Not ClickMainBuilder($bTest) Then Return False
+		If Not OpenMainBuilder($bTest) Then Return False
 		If $g_bChkRushTH Then ;add RushTH priority TownHall, Giga Tesla, Giga Inferno //skip if will use builder for lowcost
 			SetLog("Search RushTHPriority Building on Builder Menu", $COLOR_INFO)
 			Local $aResult = FindUpgrade()

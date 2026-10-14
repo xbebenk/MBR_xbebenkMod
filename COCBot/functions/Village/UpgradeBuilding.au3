@@ -54,7 +54,7 @@ Func UpgradeBuilding($bTest = False)
 	
 	Local $SkipWallReserve = False
 	If $g_bUseWallReserveBuilder And $g_bUpgradeWallSaveBuilder And $g_bAutoUpgradeWallsEnable And $g_iFreeBuilderCount = 1 And Not $bTest Then
-		ClickMainBuilder()
+		OpenMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)

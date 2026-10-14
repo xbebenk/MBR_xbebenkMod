@@ -430,18 +430,6 @@ Func ChkLabUpgradeInProgress($bDebug = False, $name = "")
 	Return False
 EndFunc
 
-Func IsLabMenuOpen()
-	Local $bRet = False
-	
-	If _ColorCheck(_GetPixelColor($aLabMenuOpened[0], $aLabMenuOpened[1], True), Hex($aLabMenuOpened[2], 6), $aLabMenuOpened[3], Default, "IsLabMenuOpen") Then 
-		$bRet = True
-	Else
-		If $g_bDebugSetlog Or $g_bDebugClick Then SetLog("IsLabMenuOpen Not Matched, expexted " & Hex($aLabMenuOpened[2], 6) & ", found : " & _GetPixelColor($aLabMenuOpened[0], $aLabMenuOpened[1], True), $COLOR_DEBUG2)
-	EndIf
-	
-	Return $bRet
-EndFunc ;IsLabMenuOpen
-
 Func OpenLabMenu()
 	Local $bRet = False
 	If Not $g_bRunState Then Return
