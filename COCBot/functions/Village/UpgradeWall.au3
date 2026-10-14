@@ -63,7 +63,7 @@ Func WallUpgradeCheckBuilder($bTest = False)
 		If $g_iFreeBuilderCount < 1 Then
 			$bRet = False
 		Else
-			If _ColorCheck(_GetPixelColor(413, 43, True), Hex(0xFFAD62, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
+			If _ColorCheck(_GetPixelColor(785, 540, True), Hex(0xFFBC70, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
 				SetLog("WallUpgradeCheckBuilder, Free Builder = 1, Goblin Builder!, Return False", $COLOR_DEBUG1)
 				$bRet = False
 			Else

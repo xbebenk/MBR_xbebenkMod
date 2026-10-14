@@ -989,7 +989,6 @@ Func FirstCheck()
 
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport()
-	UpdateStats(True)
 	If _Sleep(50) Then Return
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
