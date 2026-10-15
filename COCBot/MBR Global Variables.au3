@@ -392,7 +392,7 @@ Global $g_bInitAndroid = True ; Used to cache android config, is set to False on
 Global Const $g_iCoCReconnectingTimeout = 60000 ; When still (or again) CoC reconnecting animation then restart CoC (handled in checkObstacles)
 
 ; Special Android Emulator variables
-Global $__BlueStacks_Version, $__BlueStacks5_Version, $__MEmu_Version, $__Nox_Version, $__LDPlayer9_Version
+Global $__BlueStacks_Version, $__BlueStacks5_Version, $__MEmu_Version, $__Nox_Version, $__LDPlayer9_Version, $__MuMu_Version
 Global $__BlueStacks_Path, $__LDPlayer9_Path
 Global $__MEmu_Path
 Global $__Nox_Path
@@ -1603,7 +1603,7 @@ Global $g_avDTtroopsToBeUsed[10][2] = [["Barb", 0], ["SBarb", 0], ["Arch", 0], [
 
 ; Obstacles
 Global $g_bGfxError = False ; True when Android Gfx Errors detected that will initiate Android reboot
-Global $g_iGfxErrorCount = 0, $g_iGfxErrorMax = 5
+Global $g_iGfxErrorCount = 0, $g_iGfxErrorMax = 20
 
 ; TakeABreak - Personal Break Timer
 Global $g_bDisableBreakCheck = False

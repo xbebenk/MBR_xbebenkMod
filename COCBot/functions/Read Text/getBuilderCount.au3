@@ -32,8 +32,11 @@ Func getBuilderCount($bSuppressLog = False, $bBuilderBase = False)
 	EndIf
 	
 	If $bRet Then
-		If $bBuilderBase Then SetDebugLog("No. of Free/Total Builders: " & $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB)
-		If Not $bBuilderBase Then SetDebugLog("No. of Free/Total Builders: " & $g_iFreeBuilderCount & "/" & $g_iTotalBuilderCount)
+		If $bBuilderBase Then 
+			SetDebugLog("No. of Free/Total Builders: " & $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB)
+		Else
+			SetDebugLog("No. of Free/Total Builders: " & $g_iFreeBuilderCount & "/" & $g_iTotalBuilderCount)
+		EndIf
 	EndIf
 	
 	Return $bRet

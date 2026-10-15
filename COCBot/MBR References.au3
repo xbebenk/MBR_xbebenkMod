@@ -101,9 +101,6 @@ Func ReferenceFunctions()
 	ConfigureSharedFolderBlueStacks5()
 	; DonateCC.au3
 	getChatString(0, 0, 0)
-	getChatStringChinese(0, 0)
-	getChatStringKorean(0, 0)
-	getChatStringPersian(0, 0)
 EndFunc   ;==>ReferenceFunctions
 
 Func ReferenceGlobals()

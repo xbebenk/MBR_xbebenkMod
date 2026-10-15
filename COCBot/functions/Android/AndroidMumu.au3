@@ -14,7 +14,6 @@
 ; ===============================================================================================================================
 Global $__Mumu_Device_Path = "", $__Mumu_Path = ""
 Global $__Mumu_Manage_Path = "", $__Mumu_ConfigDir = ""
-Global $__MuMu_Version = 0
 
 Func GetMumuProgramParameter($bAlternative = False)
 	If $bAlternative Then Return AddSpace("-v " & StringReplace($g_sAndroidInstance, "MuMuPlayerGlobal-12.0-", "") & " --vm " & $g_sAndroidInstance)

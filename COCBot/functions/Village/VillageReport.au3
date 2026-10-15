@@ -18,7 +18,7 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 	
 	Switch $bBypass
 		Case False
-			If Not $bSuppressLog Then SetLog("Village Report", $COLOR_INFO)
+			If Not $bSuppressLog Then SetLog("Village Report:", $COLOR_INFO)
 		Case True
 			If Not $bSuppressLog Then SetLog("Updating Village Resource Values", $COLOR_INFO)
 		Case Else
@@ -32,12 +32,14 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 59)
 		$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(690, 96)
 		$g_iGemAmount = getResourcesMainScreen(730, 133)
-		If Not $bSuppressLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [D]: " & _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir]) & " [GEM]: " & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
+		If Not $bSuppressLog Then SetLog("[Builder]:" & $g_iFreeBuilderCount & "/" & $g_iTotalBuilderCount, $COLOR_SUCCESS)
+		If Not $bSuppressLog Then SetLog("[G]:" & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]:" & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [D]:" & _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir]) & " [GEM]:" & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
 	Else
 		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(690, 22)
 		$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(690, 59)
 		$g_iGemAmount = getResourcesMainScreen(730, 85)
-		If Not $bSuppressLog Then SetLog(" [G]: " & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]: " & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [GEM]: " & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
+		If Not $bSuppressLog Then SetLog("[Builder]:" & $g_iFreeBuilderCount & "/" & $g_iTotalBuilderCount, $COLOR_SUCCESS)
+		If Not $bSuppressLog Then SetLog("[G]:" & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]:" & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [GEM]:" & _NumberFormat($g_iGemAmount), $COLOR_SUCCESS)
 		If ProfileSwitchAccountEnabled() Then $g_aiCurrentLoot[$eLootDarkElixir] = "" ; prevent applying Dark Elixir of previous account to current account
 	EndIf
 	

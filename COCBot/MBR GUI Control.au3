@@ -469,6 +469,7 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			BotMinimizeRequest()
 		Case $GUI_EVENT_CLOSE, $g_hLblBotClose
 			; Clean up resources
+			StopOcrWorkerClient()
 			BotCloseRequest()
 		Case $g_hLblBotMiniGUI, $g_hLblBotNormalGUI
 			BotGuiModeToggleRequest()

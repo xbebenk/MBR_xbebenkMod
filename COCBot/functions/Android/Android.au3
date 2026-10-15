@@ -4275,7 +4275,7 @@ Func HideAndroidWindow($bHide = True, $sSource = "Unknown")
 		$iPosX = $g_iFrmBotPosX - $g_iGAME_WIDTH - 5
 		$iPosY = $g_iFrmBotPosY
 	Else
-		$iPosX = $g_iFrmBotPosX + $_GUI_MAIN_WIDTH
+		$iPosX = $g_iFrmBotPosX + 472
 		$iPosY = $g_iFrmBotPosY
 	EndIf
 	

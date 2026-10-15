@@ -546,6 +546,7 @@ Func FinalInitialization(Const $sAI)
 		setAndroidPID() ; set Android PID
 		SetBotGuiPID() ; set GUI PID
 	EndIf
+	StartOcrWorkerClient()
 	
 	; check if android should be hidden
 	If $g_bBotLaunchOption_HideAndroid Then $g_bIsHidden = True
@@ -1035,7 +1036,7 @@ Func FirstCheck()
 	If Not $g_bRunState Then Return
 	VillageReport()
 	If BotCommand() Then btnStop()
-	chkShieldStatus()
+	;chkShieldStatus()
 	CheckTombs()
 	If _Sleep(50) Then Return
 	BoostSuperTroop()

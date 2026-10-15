@@ -352,6 +352,13 @@ Func UpWallElixir($iWallCost, $iCountPlus, $UpType, $aButton)
 			$bPlusButtonFound = True
 			SetDebugLog("iCount : " & $iCount)
 		Else
+			If $UpType = "+10" Then ;not found +10 button, fallback to +1
+				$sDir = $g_sImgCheckWallDirUpgradeButton & "\Plus1"
+				$aBtnCoord[0] = $aButton[0] - 230
+				$iPlusWall = 1
+				SetLog("Searching +1 Button instead", $COLOR_DEBUG1)
+				ContinueLoop
+			EndIf
 			SetLog("No " & $UpType & " Button Found", $COLOR_DEBUG)
 			ExitLoop
 		EndIf

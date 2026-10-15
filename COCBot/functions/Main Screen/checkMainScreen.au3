@@ -77,13 +77,10 @@ Func _checkMainScreen($bSetLog = Default, $bBuilderBase = $g_bStayOnBuilderBase,
 
 	If $bLocated Then 
 		If CheckDonateNotifCounter() Then RequestCC()
+		If _Sleep(1000) Then Return
 		If $g_bStayOnBuilderBase <> $bBuilderBase Then SwitchBetweenBases("Main")
 	EndIf
 	
-	;After checkscreen dispose windows
-	;DisposeWindows()
-
-	;Execute Notify Pending Actions
 	NotifyPendingActions()
 	
 	Return $bLocated
