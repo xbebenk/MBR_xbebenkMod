@@ -19,11 +19,11 @@ Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of 
 EndFunc   ;==>getGoldVillageSearch
 
 Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True) ;
-	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 70, 13, True, False, $bNeedCapture)
+	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 70, 13, True)
 EndFunc   ;==>getRemainTrainTimer
 
 Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
-	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 50, 10, True, False, $bNeedCapture)
+	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 50, 10, True)
 EndFunc   ;==>getRemainTrainTimer
 
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
@@ -444,64 +444,12 @@ Func getRemainTPetHouse($x_start, $y_start) ; read actual time in PetHouse
 EndFunc   ;==>getRemainTPetHouse
 
 Func getRemainTHero($x_start, $y_start, $bNeedCapture = True) ; Get time remaining for hero to be ready for attack from train window, BK:443,504 AQ:504,504 GW:565:504
-	Return getOcrAndCapture("coc-remainhero", $x_start, $y_start, 55, 12, True, False, $bNeedCapture)
+	Return getOcrAndCapture("coc-remainhero", $x_start, $y_start, 55, 12, True)
 EndFunc   ;==>getRemainTHero
 
 Func getRequestRemainTime($x_start, $y_start, $bNeedCapture = True) ; Get Remain Time To request Troops
-	Return getOcrAndCapture("coc-CCremainTime", $x_start, $y_start, 30, 14, False, False, $bNeedCapture)
+	Return getOcrAndCapture("coc-CCremainTime", $x_start, $y_start, 30, 14, False)
 EndFunc   ;==>getRequestRemainTime
-
-Func getChatStringChinese($x_start, $y_start) ; -> Get string chat request - Chinese - "DonateCC.au3"
-	Local $bUseOcrImgLoc = True
-	Return getOcrAndCapture("chinese-bundle", $x_start, $y_start, 160, 15, Default, $bUseOcrImgLoc)
-EndFunc   ;==>getChatStringChinese
-
-Func getChatStringKorean($x_start, $y_start) ; -> Get string chat request - Korean - "DonateCC.au3"
-	Local $bUseOcrImgLoc = True
-	Return getOcrAndCapture("korean-bundle", $x_start, $y_start, 160, 14, Default, $bUseOcrImgLoc)
-EndFunc   ;==>getChatStringKorean
-
-Func getChatStringPersian($x_start, $y_start, $bConvert = True) ; -> Get string chat request - Persian - "DonateCC.au3"
-	Local $bUseOcrImgLoc = True
-	Local $OCRString = getOcrAndCapture("persian-bundle", $x_start, $y_start, 240, 20, Default, $bUseOcrImgLoc, True)
-	If $bConvert = True Then
-		$OCRString = StringReverse($OCRString)
-		$OCRString = StringReplace($OCRString, "A", "ا")
-		$OCRString = StringReplace($OCRString, "B", "ب")
-		$OCRString = StringReplace($OCRString, "C", "چ")
-		$OCRString = StringReplace($OCRString, "D", "د")
-		$OCRString = StringReplace($OCRString, "F", "ف")
-		$OCRString = StringReplace($OCRString, "G", "گ")
-		$OCRString = StringReplace($OCRString, "J", "ج")
-		$OCRString = StringReplace($OCRString, "H", "ه")
-		$OCRString = StringReplace($OCRString, "R", "ر")
-		$OCRString = StringReplace($OCRString, "K", "ک")
-		$OCRString = StringReplace($OCRString, "K", "ل")
-		$OCRString = StringReplace($OCRString, "M", "م")
-		$OCRString = StringReplace($OCRString, "N", "ن")
-		$OCRString = StringReplace($OCRString, "P", "پ")
-		$OCRString = StringReplace($OCRString, "S", "س")
-		$OCRString = StringReplace($OCRString, "T", "ت")
-		$OCRString = StringReplace($OCRString, "V", "و")
-		$OCRString = StringReplace($OCRString, "Y", "ی")
-		$OCRString = StringReplace($OCRString, "L", "ل")
-		$OCRString = StringReplace($OCRString, "Z", "ز")
-		$OCRString = StringReplace($OCRString, "X", "خ")
-		$OCRString = StringReplace($OCRString, "Q", "ق")
-		$OCRString = StringReplace($OCRString, ",", ",")
-		$OCRString = StringReplace($OCRString, "0", " ")
-		$OCRString = StringReplace($OCRString, "1", ".")
-		$OCRString = StringReplace($OCRString, "22", "ع")
-		$OCRString = StringReplace($OCRString, "44", "ش")
-		$OCRString = StringReplace($OCRString, "55", "ح")
-		$OCRString = StringReplace($OCRString, "66", "ض")
-		$OCRString = StringReplace($OCRString, "77", "ط")
-		$OCRString = StringReplace($OCRString, "88", "لا")
-		$OCRString = StringReplace($OCRString, "99", "ث")
-		$OCRString = StringStripWS($OCRString, 1 + 2)
-	EndIf
-	Return $OCRString
-EndFunc   ;==>getChatStringPersian
 
 Func OcrForceCaptureRegion($bForce = Default)
 	If $bForce = Default Then Return $g_bOcrForceCaptureRegion
