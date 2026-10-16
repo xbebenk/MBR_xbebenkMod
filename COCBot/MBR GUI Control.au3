@@ -469,7 +469,6 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			BotMinimizeRequest()
 		Case $GUI_EVENT_CLOSE, $g_hLblBotClose
 			; Clean up resources
-			StopOcrWorkerClient()
 			BotCloseRequest()
 		Case $g_hLblBotMiniGUI, $g_hLblBotNormalGUI
 			BotGuiModeToggleRequest()
@@ -484,7 +483,7 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 			EndIf
 		Case $g_hLblMyBotURL, $g_hLblForumURL
 			; Handle open URL when label fires the event normally
-			OpenURL_Label($nID)		
+			OpenURL_Label($nID)
 		Case $g_hLblDonate
 			; Donate URL is not in text nor tooltip
 			ShellExecute("https://www.paypal.com/ncp/payment/Z774L28DTKM5E")
@@ -1187,7 +1186,7 @@ Func BotGuiModeToggle()
 			CreateSplashScreen() ; Create splash window
 
 			CreateMainGUIControls(True)
-			
+
 			; refresh tab states
 			tabBot()
 			tabDONATE()
@@ -1226,7 +1225,7 @@ Func BotGuiModeToggle()
 
 	; move bottom controls
 	WinMove2($g_hFrmBotBottom, "", 0, $_GUI_MAIN_HEIGHT - $_GUI_BOTTOM_HEIGHT + $_GUI_MAIN_TOP - 25 - 12, -1, -1, 0, 0, False)
-	
+
 	; resize windows
 	Local $xComp = $g_aFrmBotPosInit[2] - $_GUI_MAIN_WIDTH_OLD
 	Local $yComp = $g_aFrmBotPosInit[3] + $g_aFrmBotPosInit[7] - $_GUI_MAIN_HEIGHT_OLD
@@ -1293,7 +1292,7 @@ EndFunc   ;==>BotCloseRequestProcessed
 
 Func BotClose($SaveConfig = Default, $bExit = True)
 	If $SaveConfig = Default Then $SaveConfig = IsBotLaunched()
-	
+
 	$g_bRunState = False
 	$g_bBotPaused = False
 	ResumeAndroid()
@@ -1356,7 +1355,7 @@ Func BotMinimizeRestore($bMinimize, $sCaller, $iForceUpdatingWhenMinimized = Fal
 			$siStayMinimizedMillis = $iStayMinimizedMillis
 			$shStayMinimizedTimer = __TimerInit()
 		EndIf
-		
+
 		If $g_bAndroidEmbedded = True And $g_bChkBackgroundMode = False Then
 			; don't minimize bot when embedded and background mode is off
 			Return False
@@ -2061,7 +2060,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 		Case $g_hGUI_BB_TAB
 			; the icons for BuilderBase tab
 			Local $aIconIndex = [$eIcnClockTower, $eIcnTroops]
-			
+
 		Case $g_hGUI_BOT_TAB
 			; the icons for Bot tab
 			Local $aIconIndex = [$eIcnOptions, $eIcnAndroid, $eIcnProfile, $eIcnProfile, $eIcnGold]

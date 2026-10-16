@@ -279,6 +279,6 @@ Func RemoveDupCNX(ByRef $arr, $sortBy = 1, $distance = 10)
 		EndIf
 	Next
 	$arr = $atmparray
-	SetDebugLog(_ArrayToString($arr))
+	If $g_bDebugSetlog Then SetDebugLog("RemoveDupCNX:" & _ArrayToString($arr))
 EndFunc
 

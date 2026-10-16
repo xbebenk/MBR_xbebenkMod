@@ -247,6 +247,9 @@ Func IsReturnHomeChestPage($bAction = True)
 				SetLog("Click Continue", $COLOR_ACTION)
 				ExitLoop
 			EndIf
+			If QuickMIS("BC1", $g_sImgContinue, 370, 480, 510, 600) Then 
+				Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Continue")
+			EndIf
 			If _Sleep(1000) Then Return
 		Next
 		$bRet = True
