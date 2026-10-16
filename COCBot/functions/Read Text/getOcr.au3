@@ -227,14 +227,14 @@ Func getBuilderLeastUpgradeTime($x_start, $y_start) ;  -> Get least upgradetime 
 EndFunc   ;==>getBuilderLeastUpgradeTime
 
 Func getBuilderMenuCost($x_start, $y_start) ;  -> Get least upgradetime on builder menu
-	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 120, 16, True)
+	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 120, 18, True)
 EndFunc   ;==>getBuilderBuilderMenuCost
 
 Func getOresValues($x_start, $y_start, $ilength = 60) ;  -> Get least upgradetime on builder menu
 	Return StringReplace(getOcrAndCapture("coc-bonus", $x_start, $y_start, $ilength, 20, True), "-", "")
 EndFunc   ;==>getOresValues
 
-Func getBuildingName($x_start, $y_start, $length = 180, $height = 20) ;  -> Get BuildingName on builder menu
+Func getBuildingName($x_start, $y_start, $length = 180, $height = 25) ;  -> Get BuildingName on builder menu
 	Local $BuildingName = "", $Count = 1
 	Local $Name = StringReplace(getOcrAndCapture("coc-buildermenu-name", $x_start, $y_start, $length, $height, False), "-", "")
 	If StringRegExp($Name, "x\d{1,}") Then
@@ -496,14 +496,14 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	Return $result
 EndFunc   ;==>getOcrAndCapture
 
-Func getOcr(ByRef Const $_hHBitmap, $language)
-	Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcr ? 1 : 0)
-	If IsArray($result) Then
-		Return $result[0]
-	Else
-		Return ""
-	EndIf
-EndFunc   ;==>getOcr
+;Func getOcr(ByRef Const $_hHBitmap, $language)
+;	Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcr ? 1 : 0)
+;	If IsArray($result) Then
+;		Return $result[0]
+;	Else
+;		Return ""
+;	EndIf
+;EndFunc   ;==>getOcr
 
 Func getOcrImgLoc(ByRef Const $_hHBitmap, $sLanguage)
 	Local $result = DllCallMyBot("DoOCR", "handle", $_hHBitmap, "str", $sLanguage)
@@ -523,3 +523,153 @@ Func getOcrImgLoc(ByRef Const $_hHBitmap, $sLanguage)
 		Return ""
 	EndIf
 EndFunc   ;==>getOcrImgLoc
+
+#include <GDIPlus.au3>
+
+Global Const $WM_OCR_TRIGGER = 0x0465
+Global Const $OCR_SHM_SIZE   = 4194304
+Global $g_hOcrMapFile        = 0
+Global $g_pOcrSharedBuf      = 0
+
+Func _GetOcrWorkerHWND()
+    ; Cari Window yang memiliki judul sesuai PID instance bot ini
+    Local $sTitle = "MBR_OCR_Worker_" & @AutoItPID
+    Local $aWnd = DllCall("user32.dll", "hwnd", "FindWindowW", "ptr", 0, "wstr", $sTitle)
+    If IsArray($aWnd) And $aWnd[0] <> 0 Then Return $aWnd[0]
+    Return 0
+EndFunc
+
+Func StartOcrWorkerClient()
+    _GDIPlus_Startup()
+
+    ; 1. Buka / Buat Shared Memory unik sesuai PID bot ini
+    If $g_pOcrSharedBuf = 0 Then
+        Local $sShmName = "MBR_OCR_SHM_" & @AutoItPID
+        $g_hOcrMapFile = DllCall("kernel32.dll", "handle", "CreateFileMappingW", _
+                "handle", -1, "ptr", 0, "dword", 0x04, "dword", 0, "dword", $OCR_SHM_SIZE, "wstr", $sShmName)[0]
+        $g_pOcrSharedBuf = DllCall("kernel32.dll", "ptr", "MapViewOfFile", _
+                "handle", $g_hOcrMapFile, "dword", 0xF001F, "dword", 0, "dword", 0, "ulong_ptr", $OCR_SHM_SIZE)[0]
+    EndIf
+
+    ; 2. Jalankan ocrworker.exe dengan menyertakan PID instance ini sebagai parameter
+    Local $sWorkerExe = @ScriptDir & "\lib\Tesseract\ocrworker.exe"
+    Local $sWorkerDir = @ScriptDir & "\lib\Tesseract"
+
+    Local $hWnd = _GetOcrWorkerHWND()
+    If $hWnd = 0 Then
+        ; Contoh eksekusi: ocrworker.exe 4528
+        Run('"' & $sWorkerExe & '" ' & @AutoItPID, $sWorkerDir, @SW_SHOW)
+        For $i = 1 To 30
+            Sleep(100)
+            $hWnd = _GetOcrWorkerHWND()
+            If $hWnd <> 0 Then ExitLoop
+        Next
+    EndIf
+    Return $hWnd
+EndFunc
+
+; FUNGSI UTAMA (HYBRID)
+Func getOcr(ByRef Const $_hHBitmap, $language)
+    Local $sRet = ""
+
+    Switch $language
+        ; 1. Builders (Tesseract)
+        Case "coc-Builders"
+            $sRet = OcrFromHBitmapDirect($_hHBitmap, "0123456789/", 7, $language)
+            Return StringReplace($sRet, "/", "#")
+		
+        ; 2. Resource Angka Main Screen
+        Case "coc-ms"
+            $sRet = OcrFromHBitmapDirect($_hHBitmap, "0123456789", 7, $language)
+            Return $sRet
+
+        ; 3. Builder Menu Name (Gunakan PSM 13 yang sudah terbukti tembus semua nama)
+        Case "coc-buildermenu-name"
+            $sRet = OcrFromHBitmapDirect($_hHBitmap, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -", 13, $language)
+            
+            ; Pisahkan kata yang rapat / nempel (misal: 'GoldMine' -> 'Gold Mine', 'GrandWarden' -> 'Grand Warden')
+            $sRet = StringRegExpReplace($sRet, "([a-z])([A-Z])", "$1 $2")
+            
+            ; Koreksi otomatis huruf yang mirip pada font CoC
+            $sRet = StringReplace($sRet, "Roval", "Royal")
+            $sRet = StringReplace($sRet, "Elixik", "Elixir")
+            
+            Return StringStripWS($sRet, 3)
+
+        ; 4. Sisanya kembali ke OCR Bawaan MBR
+        Case Else
+            Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcrTS ? 1 : 0)
+            If IsArray($result) Then
+                Return $result[0]
+            Else
+                Return ""
+            EndIf
+    EndSwitch
+EndFunc   ;==>getOcr
+
+
+Func OcrFromHBitmapDirect(ByRef Const $_hHBitmap, $sWhitelist = "", $iPSM = 7, $sTagName = "ocr")
+    Local $hWorkerWnd = _GetOcrWorkerHWND()
+    If $hWorkerWnd = 0 Or $g_pOcrSharedBuf = 0 Then
+        $hWorkerWnd = StartOcrWorkerClient()
+        If $hWorkerWnd = 0 Or $g_pOcrSharedBuf = 0 Then Return ""
+    EndIf
+
+    Local $hBitmap = _GDIPlus_BitmapCreateFromHBITMAP($_hHBitmap)
+    If @error Or $hBitmap = 0 Then Return ""
+
+    ; Simpan gambar debug jika opsi debug aktif
+    If $g_bDebugOcrTS Then
+        Local $sDebugDir = @ScriptDir & "\lib\debug\ocr"
+        If Not FileExists($sDebugDir) Then DirCreate($sDebugDir)
+        
+        Local $sTime = @YEAR & @MON & @MDAY & "_" & @HOUR & @MIN & @SEC & "_" & @MSEC
+        Local $sImgPath = $sDebugDir & "\" & $sTagName & "_" & $sTime & ".png"
+        _GDIPlus_ImageSaveToFile($hBitmap, $sImgPath)
+    EndIf
+
+    Local $iW = _GDIPlus_ImageGetWidth($hBitmap)
+    Local $iH = _GDIPlus_ImageGetHeight($hBitmap)
+
+    Local $tBitmapData = _GDIPlus_BitmapLockBits($hBitmap, 0, 0, $iW, $iH, $GDIP_ILMREAD, $GDIP_PXF32ARGB)
+    If @error Then
+        _GDIPlus_BitmapDispose($hBitmap)
+        Return ""
+    EndIf
+
+    Local $pScan0 = DllStructGetData($tBitmapData, "Scan0")
+    Local $iPixelBytes = $iW * $iH * 4
+
+    If ($iPixelBytes + 256) > $OCR_SHM_SIZE Then
+        _GDIPlus_BitmapUnlockBits($hBitmap, $tBitmapData)
+        _GDIPlus_BitmapDispose($hBitmap)
+        Return ""
+    EndIf
+
+    ; Tulis Header
+    Local $tHeader = DllStructCreate("int Width;int Height;int PSM;int SaveImg;int WriteLog;char Whitelist[64];char TagName[64]", $g_pOcrSharedBuf)
+    DllStructSetData($tHeader, "Width", $iW)
+    DllStructSetData($tHeader, "Height", $iH)
+    DllStructSetData($tHeader, "PSM", $iPSM)
+    DllStructSetData($tHeader, "SaveImg", 0)
+    DllStructSetData($tHeader, "WriteLog", ($g_bDebugOcrTS ? 1 : 0))
+    DllStructSetData($tHeader, "Whitelist", $sWhitelist)
+    DllStructSetData($tHeader, "TagName", $sTagName)
+
+    ; Salin piksel
+    DllCall("ntdll.dll", "none", "RtlMoveMemory", "ptr", $g_pOcrSharedBuf + 256, "ptr", $pScan0, "ulong_ptr", $iPixelBytes)
+
+    _GDIPlus_BitmapUnlockBits($hBitmap, $tBitmapData)
+    _GDIPlus_BitmapDispose($hBitmap)
+
+    ; Kirim sinyal ke Worker
+    DllCall("user32.dll", "lresult", "SendMessageW", _
+            "hwnd", $hWorkerWnd, "uint", $WM_OCR_TRIGGER, "wparam", 0, "lparam", 0)
+
+    Local $tResult = DllStructCreate("char[1024]", $g_pOcrSharedBuf)
+    Local $sText = StringStripWS(DllStructGetData($tResult, 1), 3)
+
+    If $g_bDebugOcrTS Then SetDebugLog($sTagName & ": " & $sText)
+    Return $sText
+EndFunc   ;==>OcrFromHBitmapDirect
+
