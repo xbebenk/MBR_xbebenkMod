@@ -109,6 +109,8 @@ Func LoadTranslatedTrainTroopsOrderList()
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtIceGolems", "Ice Golems"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtHeadhunters", "Head hunters"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtApprenticeWardens", "Apprentice Wardens"), _
+			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtThrowers", "Throwers"), _
+			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtDruids", "Druids"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtGiantSkeletons", "Giant Skeletons"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtRoyalGhosts", "Royal Ghosts"), _
 			GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtPartyWizards", "Party Wizards"), _
