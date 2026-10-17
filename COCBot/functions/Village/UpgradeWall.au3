@@ -356,6 +356,7 @@ Func UpWallElixir($iWallCost, $iCountPlus, $UpType, $aButton)
 				$sDir = $g_sImgCheckWallDirUpgradeButton & "\Plus1"
 				$aBtnCoord[0] = $aButton[0] - 230
 				$iPlusWall = 1
+				$iCountPlus = 10
 				SetLog("Searching +1 Button instead", $COLOR_DEBUG1)
 				ContinueLoop
 			EndIf

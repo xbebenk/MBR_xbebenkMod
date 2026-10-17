@@ -23,19 +23,42 @@ Func AutoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	Return $Result
 EndFunc
 
+Func AutoUpgradeCheckResource()
+	
+	Local $sBuilderInfo = getBuildersOnMenu()
+	If StringInStr($sBuilderInfo, "#") > 0 Then ; check for valid OCR read
+		Local $aGetBuilders = StringSplit($sBuilderInfo, "#", $STR_NOCOUNT) ; Split into free and total builder strings
+		$g_iFreeBuilderCount = Int($aGetBuilders[0]) ; update global values
+		$g_iTotalBuilderCount = Int($aGetBuilders[1])
+	Else
+		SetLog("Fail to read builder count", $COLOR_DEBUG1)
+		Return False
+	EndIf
+	
+	;Check if free builder is goblin builder
+	If $g_iFreeBuilderCount = 1 And Not _ColorCheck(_GetPixelColor(548, 606, True), Hex(0xD79146, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
+		SetLog("AutoUpgradeCheckBuilder, Free Builder = 1, Goblin Builder!", $COLOR_DEBUG2)
+		$g_iFreeBuilderCount = 0
+		Return False
+	EndIf
+	
+	$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(350, 22)
+	$g_aiCurrentLoot[$eLootElixir] = getResourcesMainScreen(350, 59)
+	$g_aiCurrentLoot[$eLootDarkElixir] = getResourcesMainScreen(350, 96)
+	
+	SetLog("[Builder]:" & $g_iFreeBuilderCount & "/" & $g_iTotalBuilderCount, $COLOR_SUCCESS)
+	SetLog("[G]:" & _NumberFormat($g_aiCurrentLoot[$eLootGold]) & " [E]:" & _NumberFormat($g_aiCurrentLoot[$eLootElixir]) & " [D]:" & _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir]), $COLOR_SUCCESS)
+	
+	Return True
+	
+EndFunc
+
 Func AutoUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
 
-	VillageReport(False, True) ;check available builder and resource (Gold,Elix,DE)
+	If Not AutoUpgradeCheckResource() Then Return $bRet ;check available builder and resource (Gold,Elix,DE)
 	If Not $g_bRunState Then Return
-	If $g_aiCurrentLoot[$eLootGold] < 1000 Then Return False
-	
-	;Check if free builder is goblin builder
-	If _ColorCheck(_GetPixelColor(785, 540, True), Hex(0xFFBC70, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
-		SetLog("AutoUpgradeCheckBuilder, Free Builder = 1, Goblin Builder!", $COLOR_DEBUG2)
-		$g_iFreeBuilderCount = 0
-		$bRet = False
-	EndIf
+	If $g_aiCurrentLoot[$eLootGold] < $g_iTxtSmartMinGold Then Return False
 	
 	;Check if there is a free builder for Auto Upgrade
 	If $g_iFreeBuilderCount > 0 Then $bRet = True ;builder available
@@ -87,10 +110,10 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	;	ClickAway()
 	;EndIf
 	
-	If CheckPlaceBuilder() Then 
-		SetLog("Have enough gems to place new builder!", $COLOR_SUCCESS)
-		$bRet = True ;have enough gem
-	EndIf
+	;If CheckPlaceBuilder() Then 
+	;	SetLog("Have enough gems to place new builder!", $COLOR_SUCCESS)
+	;	$bRet = True ;have enough gem
+	;EndIf
 	
 	If $g_bDebugSetLog Then SetLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
@@ -259,6 +282,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 		EndIf
 
 		If Not $g_bRunState Then Return
+		If Not AutoUpgradeCheckBuilder() Then Return
 		If $bDoScroll Then ClickDragAUpgrade() ;do scroll up
 		$bDoScroll = True
 		If _Sleep(100) Then Return
@@ -630,7 +654,7 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False, $upgradeName = "")
 			;EndIf
 		Case "Dark Spell Factory"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[11] = 1) ? True : False
-			I;f $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[4] + 2 Then
+			;If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[4] + 2 Then
 			;	$bMustIgnoreUpgrade = True
 			;	SetLog("RushTH Building: Dark Spell Factory Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
 			;	SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[4] + 2 & ", Skip!", $COLOR_INFO)

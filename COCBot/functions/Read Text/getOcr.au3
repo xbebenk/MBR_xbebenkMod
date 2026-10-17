@@ -105,6 +105,10 @@ Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --
 	Return getOcrAndCapture("coc-Builders", $x_start, $y_start, 40, 16, True)
 EndFunc   ;==>getBuilders
 
+Func getBuildersOnMenu($x_start = 528, $y_start = 639) ;  -> Gets Builders number - on Builder menu
+	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 35, 14, True)
+EndFunc   ;==>getBuilders
+
 Func getProfile($x_start, $y_start) ;  -> Gets Attack Win/Defense Win/Donated/Received values - profile screen --> getProfile(160,268)  troops donation
 	Return getOcrAndCapture("coc-profile", $x_start, $y_start, 55, 13, True)
 EndFunc   ;==>getProfile
