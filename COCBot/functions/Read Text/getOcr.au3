@@ -574,14 +574,14 @@ Func getOcr(ByRef Const $_hHBitmap, $language)
 
     Switch $language
         ; 1. Builders (Tesseract)
-        Case "coc-Builders"
-            $sRet = OcrFromHBitmapDirect($_hHBitmap, "0123456789/", 7, $language)
-            Return StringReplace($sRet, "/", "#")
+        ;Case "coc-Builders"
+        ;    $sRet = OcrFromHBitmapDirect($_hHBitmap, "0123456789/", 7, $language)
+        ;    Return StringReplace($sRet, "/", "#")
 		
         ; 2. Resource Angka Main Screen
-        Case "coc-ms"
-            $sRet = OcrFromHBitmapDirect($_hHBitmap, "0123456789", 7, $language)
-            Return $sRet
+        ;Case "coc-ms"
+        ;    $sRet = OcrFromHBitmapDirect($_hHBitmap, "0123456789", 7, $language)
+        ;    Return $sRet
 
         ; 3. Builder Menu Name (Gunakan PSM 13 yang sudah terbukti tembus semua nama)
         Case "coc-buildermenu-name"

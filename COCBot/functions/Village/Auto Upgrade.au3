@@ -176,6 +176,9 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 
 		If $sameCost > 1 Then
 			SetLog("Detected SameCost 3 times, exit!", $COLOR_DEBUG)
+			If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
+				Click(835, 35, 1, 0, "Click Close Builder Menu")
+			EndIf
 			ExitLoop
 		EndIf
 		
@@ -242,7 +245,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 							ClickAway()
 						EndIf
 					Next
-					If DoUpgrade($bTest, $bLowCost) Then
+					If DoUpgrade($bTest, $bLowCost, $Upgrades[$i][3]) Then
 						$g_bSkipWallReserve = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
 						$g_bUpgradeLowCost = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
 						$sameCost = 0
@@ -258,7 +261,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 		If Not $g_bRunState Then Return
 		If $bDoScroll Then ClickDragAUpgrade() ;do scroll up
 		$bDoScroll = True
-		;If _Sleep(1500) Then Return
+		If _Sleep(100) Then Return
 	Next
 EndFunc
 
@@ -578,11 +581,11 @@ Func CheckIgnoreUpgrade($sUpgradeName = "", $bUpgradeLowCost = False)
 	Return $bMustIgnoreUpgrade
 EndFunc
 
-Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
+Func DoUpgrade($bTest = False, $bUpgradeLowCost = False, $upgradeName = "")
 	If Not $g_bRunState Then Return
 
 	; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
-	$g_aUpgradeNameLevel = BuildingInfo()
+	;$g_aUpgradeNameLevel = BuildingInfo()
 	;If $g_aUpgradeNameLevel[0] = "" Then
 	;	SetLog("Error when trying to get upgrade name and level...", $COLOR_ERROR)
 	;	Return False
@@ -593,119 +596,119 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	Local $bMustIgnoreUpgrade = False, $bUpgradeTHWeapon = False
 
 	; Double check if wrong click happen
-	;If CheckIgnoreUpgrade($g_aUpgradeNameLevel[1], $g_bUpgradeLowCost) Then $bMustIgnoreUpgrade = True
+	If CheckIgnoreUpgrade($upgradeName, $g_bUpgradeLowCost) Then $bMustIgnoreUpgrade = True
 
 	; matchmaking between building name and the ignore list
-	;Switch $g_aUpgradeNameLevel[1]
-	;	Case "Town Hall"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1) ? True : False
-	;		If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[0] + 9 Then ;only upgrade to max level on Setting
-	;			$bMustIgnoreUpgrade = True
-	;			SetLog("RushTH Building: TownHall Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;			SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[0] + 9 & ", Skip!", $COLOR_INFO)
-	;		EndIf
-	;	Case "Barracks"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[8] = 1) ? True : False
-	;		If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[1] + 2 Then ;only upgrade to max level on Setting
-	;			$bMustIgnoreUpgrade =  True
-	;			SetLog("RushTH Building: Barracks Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;			SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[1] + 2 & ", Skip!", $COLOR_INFO)
-	;		EndIf
-	;	Case "Dark Barracks"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[9] = 1) ? True : False
-	;		If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[2] + 2 Then
-	;			$bMustIgnoreUpgrade =  True
-	;			SetLog("RushTH Building: Dark Barracks Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;			SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[2] + 2 & ", Skip!", $COLOR_INFO)
-	;		EndIf
-	;	Case "Spell Factory"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[10] = 1) ? True : False
-	;		If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[3] + 2 Then
-	;			$bMustIgnoreUpgrade =  True
-	;			SetLog("RushTH Building: Spell Factory Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;			SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[3] + 2 & ", Skip!", $COLOR_INFO)
-	;		EndIf
-	;	Case "Dark Spell Factory"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[11] = 1) ? True : False
-	;		If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[4] + 2 Then
-	;			$bMustIgnoreUpgrade = True
-	;			SetLog("RushTH Building: Dark Spell Factory Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;			SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[4] + 2 & ", Skip!", $COLOR_INFO)
-	;		EndIf
-	;	Case "Wizard Tower"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1) ? True : False
-	;		If $THLevelAchieved Then
-	;			$bMustIgnoreUpgrade = False
-	;		Else
-	;			$bMustIgnoreUpgrade = True
-	;			SetLog("Essential Building: Wizard Tower Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;		EndIf
-	;	Case "Bomb Tower"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[21] = 1) ? True : False
-	;		If $THLevelAchieved Then
-	;			$bMustIgnoreUpgrade = False
-	;		Else
-	;			$bMustIgnoreUpgrade = True
-	;			SetLog("Essential Building: Bomb Tower Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;		EndIf
-	;	Case "Air Defense"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1) ? True : False
-	;		If $THLevelAchieved Then
-	;			$bMustIgnoreUpgrade = False
-	;		Else
-	;			$bMustIgnoreUpgrade = True
-	;			SetLog("Essential Building: Air Defense Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;		EndIf
-	;	Case "Air Sweeper"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[23] = 1) ? True : False
-	;		If $THLevelAchieved Then
-	;			$bMustIgnoreUpgrade = False
-	;		Else
-	;			$bMustIgnoreUpgrade = True
-	;			SetLog("Essential Building: Air Sweeper Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;		EndIf
-	;	Case "X Bow"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[24] = 1) ? True : False
-	;		If $THLevelAchieved Then
-	;			$bMustIgnoreUpgrade = False
-	;		Else
-	;			$bMustIgnoreUpgrade = True
-	;			SetLog("Essential Building: X-Bow Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;		EndIf
-	;	Case "Inferno Tower"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[25] = 1) ? True : False
-	;		If $THLevelAchieved Then
-	;			$bMustIgnoreUpgrade = False
-	;		Else
-	;			$bMustIgnoreUpgrade = True
-	;			SetLog("Essential Building: Inferno Tower Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;		EndIf
-	;	Case "Eagle Artillery"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[26] = 1) ? True : False
-	;		If $THLevelAchieved Then
-	;			$bMustIgnoreUpgrade = False
-	;		Else
-	;			$bMustIgnoreUpgrade = True
-	;			SetLog("Essential Building: Eagle Artillery Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;		EndIf
-	;	Case "Scattershot"
-	;		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[27] = 1) ? True : False
-	;		If $THLevelAchieved Then
-	;			$bMustIgnoreUpgrade = False
-	;		Else
-	;			$bMustIgnoreUpgrade = True
-	;			SetLog("Essential Building: Scattershot Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
-	;		EndIf
-	;EndSwitch
+	Switch $upgradeName
+		;Case "Town Hall"
+		;	$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[0] = 1) ? True : False
+		;	If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[0] + 9 Then ;only upgrade to max level on Setting
+		;		$bMustIgnoreUpgrade = True
+		;		SetLog("RushTH Building: TownHall Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+		;		SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[0] + 9 & ", Skip!", $COLOR_INFO)
+		;	EndIf
+		Case "Barracks"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[8] = 1) ? True : False
+			;If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[1] + 2 Then ;only upgrade to max level on Setting
+			;	$bMustIgnoreUpgrade =  True
+			;	SetLog("RushTH Building: Barracks Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;	SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[1] + 2 & ", Skip!", $COLOR_INFO)
+			;EndIf
+		Case "Dark Barracks"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[9] = 1) ? True : False
+			;If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[2] + 2 Then
+			;	$bMustIgnoreUpgrade =  True
+			;	SetLog("RushTH Building: Dark Barracks Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;	SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[2] + 2 & ", Skip!", $COLOR_INFO)
+			;EndIf
+		Case "Spell Factory"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[10] = 1) ? True : False
+			;If $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[3] + 2 Then
+			;	$bMustIgnoreUpgrade =  True
+			;	SetLog("RushTH Building: Spell Factory Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;	SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[3] + 2 & ", Skip!", $COLOR_INFO)
+			;EndIf
+		Case "Dark Spell Factory"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[11] = 1) ? True : False
+			I;f $g_aUpgradeNameLevel[2] >= $g_aiCmbRushTHOption[4] + 2 Then
+			;	$bMustIgnoreUpgrade = True
+			;	SetLog("RushTH Building: Dark Spell Factory Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;	SetLog("Setting Upgrade to Level = " & $g_aiCmbRushTHOption[4] + 2 & ", Skip!", $COLOR_INFO)
+			;EndIf
+		Case "Wizard Tower"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[20] = 1) ? True : False
+			;If $THLevelAchieved Then
+			;	$bMustIgnoreUpgrade = False
+			;Else
+			;	$bMustIgnoreUpgrade = True
+			;	SetLog("Essential Building: Wizard Tower Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;EndIf
+		Case "Bomb Tower"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[21] = 1) ? True : False
+			;If $THLevelAchieved Then
+			;	$bMustIgnoreUpgrade = False
+			;Else
+			;	$bMustIgnoreUpgrade = True
+			;	SetLog("Essential Building: Bomb Tower Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;EndIf
+		Case "Air Defense"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[22] = 1) ? True : False
+			;If $THLevelAchieved Then
+			;	$bMustIgnoreUpgrade = False
+			;Else
+			;	$bMustIgnoreUpgrade = True
+			;	SetLog("Essential Building: Air Defense Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;EndIf
+		Case "Air Sweeper"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[23] = 1) ? True : False
+			;If $THLevelAchieved Then
+			;	$bMustIgnoreUpgrade = False
+			;Else
+			;	$bMustIgnoreUpgrade = True
+			;	SetLog("Essential Building: Air Sweeper Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;EndIf
+		Case "X Bow"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[24] = 1) ? True : False
+			;If $THLevelAchieved Then
+			;	$bMustIgnoreUpgrade = False
+			;Else
+			;	$bMustIgnoreUpgrade = True
+			;	SetLog("Essential Building: X-Bow Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;EndIf
+		Case "Inferno Tower"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[25] = 1) ? True : False
+			;If $THLevelAchieved Then
+			;	$bMustIgnoreUpgrade = False
+			;Else
+			;	$bMustIgnoreUpgrade = True
+			;	SetLog("Essential Building: Inferno Tower Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;EndIf
+		Case "Eagle Artillery"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[26] = 1) ? True : False
+			;If $THLevelAchieved Then
+			;	$bMustIgnoreUpgrade = False
+			;Else
+			;	$bMustIgnoreUpgrade = True
+			;	SetLog("Essential Building: Eagle Artillery Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;EndIf
+		Case "Scattershot"
+			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[27] = 1) ? True : False
+			;If $THLevelAchieved Then
+			;	$bMustIgnoreUpgrade = False
+			;Else
+			;	$bMustIgnoreUpgrade = True
+			;	SetLog("Essential Building: Scattershot Lvl " & $g_aUpgradeNameLevel[2], $COLOR_INFO)
+			;EndIf
+	EndSwitch
 
 	If $bUpgradeLowCost Then $bMustIgnoreUpgrade = False
 	; check if the upgrade name is on the list of upgrades that must be ignored
-	;If $bMustIgnoreUpgrade Then
-	;	SetLog($g_aUpgradeNameLevel[1] & " : This upgrade must be ignored, looking Next...", $COLOR_WARNING)
-	;	Return False
-	;Else
-	;	SetLog("UpgradeName: " & $g_aUpgradeNameLevel[1] & " Level: " & $g_aUpgradeNameLevel[2], $COLOR_DEBUG)
-	;EndIf
+	If $bMustIgnoreUpgrade Then
+		SetLog($upgradeName & " : This upgrade must be ignored, looking Next...", $COLOR_WARNING)
+		Return False
+	Else
+		SetLog("UpgradeName: " & $upgradeName, $COLOR_DEBUG)
+	EndIf
 
 	$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 660, 500, 710, 580) ; get resource
 	$g_aUpgradeResourceCostDuration[1] = getOcrAndCapture("coc-bonus", 558, 543, 110, 20, True) ; get cost
@@ -731,10 +734,10 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	EndSwitch
 
 	; check if the resource of the upgrade must be ignored
-	;If $bMustIgnoreResource = True Then
-	;	SetLog($g_aUpgradeNameLevel[1] & ": This resource must be ignored, looking Next...", $COLOR_WARNING)
-	;	Return False
-	;EndIf
+	If $bMustIgnoreResource = True Then
+		SetLog($upgradeName & ": This resource must be ignored, looking Next...", $COLOR_WARNING)
+		Return False
+	EndIf
 
 	; final click on upgrade button, click coord is get looking at upgrade type (heroes have a diferent place for Upgrade button)
 	If Not $bTest Then
@@ -745,7 +748,7 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	EndIf
 
 	; update Logs and History file
-	;If $g_aUpgradeNameLevel[1] = "Town Hall" Then
+	;If $upgradeName = "Town Hall" Then
 	;	If _Sleep(1000) Then Return
 	;	If _ColorCheck(_GetPixelColor(340, 510, True), Hex(0xFFCC7F, 6), 20, Default, "AutoUpgrade") And _ColorCheck(_GetPixelColor(510, 510, True), Hex(0xDDF685, 6), 20, Default, "AutoUpgrade") Then
 	;		SetLog("Detected Before you upgrade warning window", $COLOR_INFO)
@@ -754,7 +757,7 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	;	EndIf
 	;EndIf
 	
-	SetLog("Launched upgrade of " & $g_aUpgradeNameLevel[1] & " to level " & $g_aUpgradeNameLevel[2] + 1 & " successfully !", $COLOR_SUCCESS)
+	SetLog("Launched upgrade of " & $upgradeName & " successfully !", $COLOR_SUCCESS)
 	
 	If IsGemOpen(True) Then
 		ClickAway("Right")
@@ -763,7 +766,7 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	Else
 		SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
 		SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
-		AutoUpgradeLog(False, $g_aUpgradeNameLevel[1], $g_aUpgradeNameLevel[2], $g_aUpgradeResourceCostDuration[1], $g_aUpgradeResourceCostDuration[2])
+		AutoUpgradeLog(False, $upgradeName, "", $g_aUpgradeResourceCostDuration[1], $g_aUpgradeResourceCostDuration[2])
 	EndIf
 
 	Return True
@@ -799,8 +802,6 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 	
 	If Not IsUpgradeWindowOpen() Then
 		SetLog("Unable to Verify Upgrade Window", $COLOR_DEBUG2)
-		ClickAway()
-		ClickAway()
 		Return
 	Else
 		$iHeroUpgradeTime = getHeroUpgradeTime(730, 546) ; get duration
@@ -849,7 +850,6 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 			EndIf
 		EndIf
 		If _Sleep(500) Then Return
-		Clickaway() ; close Hero Hall window
 	EndIf
 	
 	Return $bRet
@@ -1295,10 +1295,10 @@ EndFunc
 Func getMostBottomCost()
 	If Not $g_bRunState Then Return
 	Local $TmpUpgradeCost, $ret
-	Local $Icon = QuickMIS("CNX", $g_sImgResourceIcon, 830, 540, 850, 585)
+	Local $Icon = QuickMIS("CNX", $g_sImgResourceIcon, 830, 500, 850, 585)
 	If IsArray($Icon) And UBound($Icon) > 0 Then
 		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord, descending
-		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 12, 120, 20, True) ;check most bottom upgrade cost
+		$TmpUpgradeCost = getBuilderMenuCost($Icon[0][1] - 120, $Icon[0][2] - 2)
 		$ret = $Icon[0][0] & "|" & $TmpUpgradeCost
 	EndIf
 	Return $ret

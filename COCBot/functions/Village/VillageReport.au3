@@ -15,7 +15,7 @@
 ; ===============================================================================================================================
 
 Func VillageReport($bBypass = False, $bSuppressLog = False)
-	
+	checkmainscreen()
 	Switch $bBypass
 		Case False
 			If Not $bSuppressLog Then SetLog("Village Report:", $COLOR_INFO)
