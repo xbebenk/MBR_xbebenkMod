@@ -70,9 +70,12 @@ Func CheckBuilderApprentice()
 							Click(430, 520, 1, 0, "Click Confirm")
 							If _Sleep(1000) Then Return
 							ClickAway("Left")
+							If _Sleep(1000) Then Return
 						EndIf
 					EndIf
 				EndIf
+			Else
+				SetLog("BuilderApprentice not Available", $COLOR_DEBUG2)
 			EndIf
 		EndIf
 	EndIf
@@ -107,8 +110,6 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		$g_iFreeBuilderCount = 1
 		$bRet = True
 	EndIf
-	
-	CheckBuilderApprentice()
 	
 	;If CheckPlaceBuilder() Then 
 	;	SetLog("Have enough gems to place new builder!", $COLOR_SUCCESS)
@@ -156,7 +157,14 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	;skip search new on first page
 	Local $bSkip1st = $g_bUpgradeLowCost Or $g_bSkipWallReserve
 	OpenMainBuilder()
-	If Not AutoUpgradeCheckBuilder() Then Return
+	CheckBuilderApprentice()
+	If Not AutoUpgradeCheckBuilder() Then 
+		If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
+			Click(835, 35, 1, 0, "Click Close Builder Menu")
+		EndIf
+		Return
+	EndIf
+	
 	If _Sleep(50) Then Return
 	SetLog("_SearchUpgrade(bTest=" & String($bTest) & ", bSkip1st=" & String($bSkip1st) & ", LowCost=" & String($g_bUpgradeLowCost) & ", UseWallReserve=" & String($g_bSkipWallReserve) & ")", $COLOR_DEBUG)
 	_SearchUpgrade($bTest, $bSkip1st, $g_bUpgradeLowCost, $g_bSkipWallReserve) ;search upgrade for existing building
@@ -348,22 +356,22 @@ Func FindUpgrade($bTest = False, $bSkipNew = False, $bLowCost = False, $bUseWall
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 830, 60, 850, 575)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		If Not $g_bRunState Then Return
-		RemoveDupCNX($aTmpCoord, 2)
+		RemoveDupCNX($aTmpCoord, 2, 5)
 		_ArraySort($aTmpCoord, 0, 0, 0, 2)
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If Not $g_bRunState Then Return
-			;If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $g_iXFindUpgrade, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then
-			;	If $g_sQuickMISName = "Gear" And Not $g_bGearUpDone Then
-			;		Local $bRet = DoGearUp($g_iQuickMISX + 20, $g_iQuickMISY)
-			;		SetLog("Do GearUp result : " & String($bRet), $COLOR_INFO)
-			;		$g_bGearUpDone = True
-			;	Else
-			;		ContinueLoop ;skip list upgrade after try do GearUp
-			;	EndIf
-			;EndIf
+			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $g_iXFindUpgrade, $aTmpCoord[$i][2] - 2, $aTmpCoord[$i][1] - 230, $aTmpCoord[$i][2] + 20) Then
+				If $g_sQuickMISName = "Gear" And Not $g_bGearUpDone Then
+					Local $bRet = DoGearUp($g_iQuickMISX + 20, $g_iQuickMISY)
+					SetLog("Do GearUp result : " & String($bRet), $COLOR_INFO)
+					$g_bGearUpDone = True
+				Else
+					ContinueLoop ;skip list upgrade after try do GearUp
+				EndIf
+			EndIf
 		
 			$lenght = Number($aTmpCoord[$i][1]) - $g_iXFindUpgrade - 80
-			$aUpgradeName = getBuildingName($g_iXFindUpgrade, $aTmpCoord[$i][2] - 25, $lenght) ;get upgrade name and amount
+			$aUpgradeName = getBuildingName($g_iXFindUpgrade, $aTmpCoord[$i][2] - 20, $lenght, 18) ;get upgrade name
 			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 120, $aTmpCoord[$i][2] - 2)
 			If StringInStr($aUpgradeName[0], "Wall") Then $aUpgradeName[0] = "Wall"
 			If Number($tmpcost) = 0 Then ContinueLoop

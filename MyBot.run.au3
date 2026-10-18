@@ -907,7 +907,6 @@ Func __RunFunction($action)
 		Case "RequestCC"
 			RequestCC()
 		Case "Laboratory"
-			Broken($action)
 			LabUpgrade()
 		Case "BlackSmith"
 			BlackSmith()

@@ -471,56 +471,39 @@ Func CheckIfLabIdle($bDebug = False)
 		EndSelect
 	EndIf
 	
-	;If $bRet Then ;if Lab is idle, check resource is enough to upgrade
-	;	OpenLabMenu()
-	;	Local $aUpgradeName
-	;	Local $aTmpCoord = QuickMIS("CNX", $g_sImgResourceIcon, 310, 70, 460, 280)
-	;	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
-	;		_ArraySort($aTmpCoord, 0, 0, 0, 2)
-	;		For $i = 0 To UBound($aTmpCoord) - 1
-	;			If $aTmpCoord[$i][0] = "Complete" Then
-	;				SetLog("Detected All Upgrade Complete", $COLOR_SUCCESS)
-	;				ClickAway()
-	;				$bRet = False
-	;				ExitLoop
-	;			EndIf
-	;			
-	;			If _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFFFFFF, 6), 10, 1, "Check White Resource cost") Then
-	;				SetLog("Detected possible LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
-	;				$bRet = True
-	;				ExitLoop
-	;			ElseIf _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFF887F, 6), 10, 1, "Check Red Resource cost") Then
-	;				SetLog("Detected Not Enough Resource for LabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
-	;				$bRet = False
-	;			EndIf
-	;		Next
-	;	EndIf
-	;EndIf
-	;
-	;If Not $bRet Then
-	;	If $g_iTownHallLevel >= 9 Then
-	;		OpenLabMenu()
-	;		If _Sleep(500) Then Return
-	;		If QuickMIS("BC1", $g_sImgLabAssistant, 170, 130, 320, 170) Then
-	;			Click($g_iQuickMISX, $g_iQuickMISY)
-	;			If _Sleep(500) Then Return
-	;			If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "LabAssistant") Then
-	;				If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
-	;					Click($g_iQuickMISX, $g_iQuickMISY)
-	;					If _Sleep(500) Then Return
-	;					If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "LabAssistant") Then
-	;						Click(250, 421, 1, 0, "Click Keep Assign")
-	;						Click(430, 520, 1, 0, "Click Confirm")
-	;						If _Sleep(500) Then Return
-	;						ClickAway()
-	;						If _Sleep(500) Then Return
-	;						ClickAway()
-	;					EndIf
-	;				EndIf
-	;			EndIf
-	;		EndIf
-	;	EndIf
-	;EndIf
+	If Not $bRet Then
+		If $g_iTownHallLevel >= 9 Then
+			OpenLabMenu()
+			If _Sleep(500) Then Return
+			If QuickMIS("BC1", $g_sImgLabAssistant, 450, 200, 495, 245) Then
+				If QuickMIS("BC1", $g_sImgBuilderMenu, 425, 220, 450, 230) Then ; check available text
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					If _Sleep(500) Then Return
+					If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "LabAssistant") Then
+						If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
+							Click($g_iQuickMISX, $g_iQuickMISY)
+							If _Sleep(500) Then Return
+							If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "LabAssistant") Then
+								Click(250, 421, 1, 0, "Click Keep Assign")
+								If _Sleep(500) Then Return
+								Click(430, 520, 1, 0, "Click Confirm")
+								If _Sleep(1000) Then Return
+								ClickAway("Left")
+							EndIf
+						EndIf
+					EndIf
+				Else
+					SetLog("LabAssistant not Available", $COLOR_DEBUG2)
+				EndIf
+			EndIf
+			
+			;close builder menu
+			If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
+				Click(835, 35, 1, 0, "Click Close Builder Menu")
+			EndIf
+		EndIf
+	EndIf
+	
 	;
 	;If Not $bRet And $g_bUseLabPotion Then
 	;	OpenLabMenu()
@@ -595,6 +578,8 @@ Func LabUpgrade($bTest = False)
 	
 	VillageReport(True, True)
 	OpenLabMenu()
+	CheckLabAssistant()
+	
 	Local $Upgrades = _FindLabUpgrade($bTest)
 	If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
 		SetLog("Laboratory Upgrade List:", $COLOR_INFO)
@@ -627,8 +612,6 @@ Func LabUpgrade($bTest = False)
 	EndIf
 EndFunc
 
-Global $g_iXFindLabUpgrade = 560
-
 Func _FindLabUpgrade($bTest = False)
 	Local $aTmpCoord, $aUpgrade[0][8], $BuildingName, $sPriority = "", $aUpgradeName, $tmpcost, $lenght = 0
 	Local $aOrder[0][2], $sName = "", $iUpgrade = 0, $sNameUpgrade = "", $sPriority = "Common", $iScore = 0
@@ -649,9 +632,10 @@ Func _FindLabUpgrade($bTest = False)
 	
 	$aTmpCoord = QuickMIS("CNX", $g_sImgResIcon, 830, 100, 850, 570)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		RemoveDupCNX($aTmpCoord, 2)
 		For $i = 0 To UBound($aTmpCoord) - 1
-			$lenght = Number($aTmpCoord[$i][1]) - $g_iXFindLabUpgrade
-			$aUpgradeName = getBuildingName($g_iXFindLabUpgrade, $aTmpCoord[$i][2] - 22, $lenght) ;get upgrade name and amount
+			$lenght = Number($aTmpCoord[$i][1]) - 560 - 80
+			$aUpgradeName = getBuildingName(560, $aTmpCoord[$i][2] - 18, $lenght, 18) ;get upgrade name and amount
 			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 120, $aTmpCoord[$i][2] - 2)
 			If Number($tmpcost) = 0 Then ContinueLoop
 			
@@ -844,34 +828,24 @@ Func AutoLocateLab()
 EndFunc
 
 Func CheckLabAssistant()
-	If Not $g_bRunState Then Return
-	If $g_iTownHallLevel >= 9 Then
-		SetLog("check for Activate Lab Assistant", $COLOR_DEBUG1)
-		If QuickMIS("BFI", $g_sImgLabAssistant & "LabAssistantButton*", 190, 515, 500, 590) Then
-			If QuickMIS("BFI", $g_sImgLabAssistant & "Exclam*", 190, 515, 500, 590) Then
+	Local $bRet = False
+	If QuickMIS("BC1", $g_sImgLabAssistant, 170, 130, 320, 170) Then
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(500) Then Return
+		If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "LabAssistant") Then
+			If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
 				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(5000) Then Return
-				For $i = 1 To 5
-					SetLog("Waiting Continue button #" & $i, $COLOR_ACTION)
-					If WaitforPixel(395, 575, 396, 576, "61922B", 20, 1) Then
-						SetLog("Found Button Continue", $COLOR_DEBUG1)
-						Click(430, 550) ;Click Continue
-						ExitLoop
-					EndIf
+				If _Sleep(500) Then Return
+				If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "LabAssistant") Then
+					Click(250, 421, 1, 0, "Click Keep Assign")
 					If _Sleep(500) Then Return
-				Next
-				
-				If _Sleep(2000) Then Return
-				For $i = 1 To 5
-					SetLog("Waiting FREE button #" & $i, $COLOR_ACTION)
-					If QuickMIS("BC1", $g_sImgLabAssistant, 530, 515, 600, 555) Then 
-						Click($g_iQuickMISX, $g_iQuickMISY)
-						SetLog("Activating Lab Assistant", $COLOR_SUCCESS)
-						ExitLoop
-					EndIf
-					If _Sleep(500) Then Return
-				Next
-				ClickAway()
+					Click(430, 520, 1, 0, "Click Confirm")
+					If _Sleep(1000) Then Return
+					ClickAway("Left")
+					If _Sleep(1000) Then Return
+				EndIf
+			Else
+				SetLog("LabAssistant not Available", $COLOR_DEBUG2)
 			EndIf
 		EndIf
 	EndIf

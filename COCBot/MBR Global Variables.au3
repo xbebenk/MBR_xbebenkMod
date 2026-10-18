@@ -1933,9 +1933,8 @@ Global $g_bChkSyncSaveDE = True, $g_bChkSortPetUpgrade = False, $g_iCmbSortPetUp
 Global Enum $ePetLassi, $ePetElectroOwl, $ePetMightyYak, $ePetUnicorn, $ePetFrosty, $ePetDiggy, $ePetPoisonLizard, $ePetPhoenix, $ePetCount
 Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Electro Owl", "Mighty Yak", "Unicorn", "Frosty", "Diggy", "Poison Lizard", "Phoenix"]
 Global Const $g_asPetShortNames[$ePetCount] = ["Lassi", "Owl", "Yak", "Unicorn", "Frosty", "Diggy", "Lizard", "Phoenix"]
-Global $g_bUpgradePetsEnable[$ePetCount] = [False, False, False, False]
+Global $g_bUpgradePetsEnable = False
 Global $g_aiPetLevel[$ePetCount] = [0, 0, 0, 0, 0, 0, 0, 0]
-
 Global $g_ePetLevels[$ePetCount] = [10, 10, 10, 10, 10, 10, 10, 10]
 
 #cs

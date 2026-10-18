@@ -137,6 +137,8 @@ Func PetHouse($test = False)
 			SetLog(" - Cost : " & _NumberFormat($aPet[0][5]) & " " & $aPet[0][0], $COLOR_SUCCESS)
 			SetLog(" - Duration : " & $iPetUpgradeTime, $COLOR_SUCCESS)
 			AutoUpgradeLog(False, $aPet[0][3], "??", $aPet[0][5], $aPet[0][0])
+			If IsUpgradeWindowOpen() Then ClickAway("Left")
+			If _Sleep(1000) Then Return
 		EndIf
 	Else
 		SetLog("No pets available to upgrade!", $COLOR_SUCCESS)
@@ -146,79 +148,6 @@ Func PetHouse($test = False)
 		Click(835, 35, 1, 0, "Click Close Builder Menu")
 	EndIf
 	
-	
-	;SetDebugLog(_ArrayToString($aPet))
-	;Local $bSecondPage = False
-	;For $i = 0 to UBound($aPet) - 1
-	;	If $g_bUpgradePetsEnable[$aPet[$i][0]] And $aPet[$i][2] = "True" Then
-	;		SetLog($aPet[$i][1] & " is at level " & $aPet[$i][3])
-	;		If $aPet[$i][3] = "MaxLevel" Then ContinueLoop
-	;		If _Sleep($DELAYLABORATORY2) Then Return
-	;		Local $iDarkElixirReq = $aPet[$i][4]
-	;		SetLog("DE Requirement: " & $iDarkElixirReq)
-	;
-	;		If Number($g_aiCurrentLoot[$eLootDarkElixir]) > Number($iDarkElixirReq) Then
-	;			SetLog("Will now upgrade " & $aPet[$i][1])
-	;			
-	;			If Not $bSecondPage And $aPet[$i][7] = "True" Then 
-	;				PetHouseNextPage()
-	;				$bSecondPage = True
-	;			EndIf
-	;			If $bSecondPage And $aPet[$i][7] = "False" Then 
-	;				PetHousePrevPage()
-	;				$bSecondPage = False
-	;			EndIf
-	;			
-	;			Click($aPet[$i][5], 465)
-	;
-	;		    ;wait for ungrade window to open
-	;			If _Sleep(1500) Then Return
-	;			
-	;			; check if this just a test
-	;			If Not $test Then
-	;				Click(625, 545) ; click upgrade and window close
-	;
-	;				If _Sleep(1000) Then Return ; Wait for window to close
-	;				
-	;				; Just incase the buy Gem Window pop up!
-	;				If isGemOpen(True) Then
-	;					SetDebugLog("Not enough DE for to upgrade: " & $g_asPetNames[$i], $COLOR_DEBUG)
-	;					ClickAway()
-	;					Return False
-	;				EndIf
-	;				
-	;				ClickAway() ; close upgrade window
-	;				
-	;				; Update gui
-	;				;==========Hide Red  Show Green Hide Gray===
-	;				GUICtrlSetState($g_hPicPetGray, $GUI_HIDE)
-	;				GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
-	;				GUICtrlSetState($g_hPicPetGreen, $GUI_SHOW)
-	;				;===========================================
-	;				
-	;				If _Sleep(1000) Then Return
-	;				SetLog("Started upgrade for: " & $aPet[$i][1], $COLOR_SUCCESS)
-	;				Local $sPetTimeOCR = getRemainTPetHouse(240, 244)
-	;				Local $iPetFinishTime = ConvertOCRTime("PetHouse", $sPetTimeOCR, False, "Day")
-	;				SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
-	;				If $iPetFinishTime > 0 Then
-	;					$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())
-	;					SetLog("Pet House will finish in " & $iPetFinishTime & " Day (" & $g_sPetUpgradeTime & ")", $COLOR_SUCCESS)
-	;				EndIf
-	;			Else
-	;				ClickAway() ; close pet upgrade window
-	;			EndIf
-	;			;success close window
-	;			ClickAway()
-	;			Return True
-	;		Else
-	;			SetDebugLog("DE:" & $g_aiCurrentLoot[$eLootDarkElixir] & " - " & $iDarkElixirReq & " = " & $g_aiCurrentLoot[$eLootDarkElixir] - $iDarkElixirReq)
-	;			SetLog("Upgrade Failed - Not enough Dark Elixir", $COLOR_ERROR)
-	;			ClickAway()
-	;			If $g_bChkSortPetUpgrade Then Return False
-	;		EndIf
-	;	EndIf
-	;Next
 	Return
 EndFunc
 

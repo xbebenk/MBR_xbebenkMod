@@ -1,8 +1,13 @@
-* 
-* **v.7.9.9 Mod_v1.2.6#132** (2026-07-21)
-* support coc update 1 Sept 2026
-* mumu 6.x please set 2cpu on mumu setting
-*
 * **v.7.9.9 Mod_v1.2.6#133** (2026-10-13)
 * support update 13 Oct 2026 (only normal attack)
 * support Lab Upgrade
+*
+* **v.7.9.9 Mod_v1.2.6#137** (2026-10-18)
+* fix Auto Upgrade
+* fix use magic items
+* fix builder base attack
+* fix pethouse upgrade
+* fix check resource is full
+* fix custom request on requestcc 
+* fix use lab assistant
+* fix use builder apparantice
