@@ -83,17 +83,27 @@ Func _makerequest($bTest = False, $x = 323, $y = 645)
 			EndIf
 		EndIf
 		
-		If $g_bUseCake Then 
-			UpdateRequest()
-			If QuickMis("BC1", $g_sImgSendRequestButton, 590, 540, 640, 600) Then
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(1000) Then Return
-				If QuickMis("BC1", $g_sImgSendRequestButton, 450, 400, 520, 470) Then
+		If UpdateRequest() Then
+			If QuickMis("BC1", $g_sImgSendRequestButton, 500, 400, 580, 560) Then ;lets check again the send button position with taller height
+				If Not $bTest Then 
 					Click($g_iQuickMISX, $g_iQuickMISY)
+				Else
+					SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 				EndIf
-				Return
 			EndIf
-		EndIf
+		Else
+			If $g_bUseCake Then 
+				If QuickMis("BC1", $g_sImgSendRequestButton, 590, 540, 640, 600) Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+					If _Sleep(1000) Then Return
+					If QuickMis("BC1", $g_sImgSendRequestButton, 450, 400, 520, 470) Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
+					EndIf
+					SetLog("Fill Request with cake", $COLOR_INFO)
+					Return
+				EndIf
+			EndIf
+		EndIf 
 		
 		If QuickMis("BC1", $g_sImgSendRequestButton, 500, 400, 580, 560) Then ;lets check again the send button position with taller height
 			If Not $bTest Then 
@@ -102,6 +112,7 @@ Func _makerequest($bTest = False, $x = 323, $y = 645)
 				SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 			EndIf
 		EndIf
+		
 		Return
 	Else
 		SetDebugLog("Request window not verified", $COLOR_DEBUG)
@@ -111,10 +122,10 @@ EndFunc   ;==>_makerequest
 Func UpdateRequest()
 	If Not $g_bChkUpdateRequest Then Return
 	
+	Local $bNeedUpdate = False
 	Local $aArmyReqCap, $sArmyReqCap
 	Local $aSpellReqCap, $sSpellReqCap
 	Local $aSiegeReqCap, $sSiegeReqCap
-	Local $bNeedUpdate = False
 	
 	Local $sTroop1, $sSpell1, $sSiege1
 	Local $sTroop2, $sSpell2, $sSiege2
@@ -248,6 +259,7 @@ Func UpdateRequest()
 		If _Sleep(500) Then Return
 		Click(645, 535, 1, 0, "Click Confirm") ;Click Confirm
 		If _Sleep(1000) Then Return
-		Return $bNeedUpdate
 	EndIf
+	
+	Return $bNeedUpdate
 EndFunc
