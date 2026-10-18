@@ -54,6 +54,10 @@ Func getResourcesMainScreen($x_start, $y_start) ; -> Gets complete value of Gold
 	Return StringReplace(getOcrAndCapture("coc-ms", $x_start, $y_start, 125, 16, True), "-", "")
 EndFunc   ;==>getResourcesMainScreen
 
+Func getTrophyBB($x_start = 70, $y_start = 135) ; -> Gets trophy value BB
+	Return StringReplace(getOcrAndCapture("coc-freemagicitems", $x_start, $y_start, 50, 16, True), "-", "")
+EndFunc   ;==>getTrophyMainScreen
+
 Func getResourcesLoot($x_start, $y_start) ; -> Gets complete value of Gold/Elixir after attack xxx,xxx "AttackReport"
 	Return getOcrAndCapture("coc-loot", $x_start, $y_start, 160, 22, True)
 EndFunc   ;==>getResourcesLoot
@@ -107,7 +111,11 @@ EndFunc   ;==>getBuilders
 
 Func getBuildersOnMenu($x_start = 528, $y_start = 639) ;  -> Gets Builders number - on Builder menu
 	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 35, 14, True)
-EndFunc   ;==>getBuilders
+EndFunc   ;==>getBuildersOnMenu
+
+Func getPetBuilderOnMenu($x_start = 800, $y_start = 639) ;  -> Gets Builders number - on Builder menu
+	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 35, 14, True)
+EndFunc   ;==>getPetBuilderOnMenu
 
 Func getProfile($x_start, $y_start) ;  -> Gets Attack Win/Defense Win/Donated/Received values - profile screen --> getProfile(160,268)  troops donation
 	Return getOcrAndCapture("coc-profile", $x_start, $y_start, 55, 13, True)
@@ -602,7 +610,7 @@ Func getOcr(ByRef Const $_hHBitmap, $language)
 
         ; 4. Sisanya kembali ke OCR Bawaan MBR
         Case Else
-            Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcrTS ? 1 : 0)
+            Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcr ? 1 : 0)
             If IsArray($result) Then
                 Return $result[0]
             Else

@@ -53,12 +53,37 @@ Func AutoUpgradeCheckResource()
 	
 EndFunc
 
+Func CheckBuilderApprentice()
+	Local $bRet = False
+	If $g_iFreeBuilderCount = 0 And $g_iTownHallLevel >= 9 Then
+		If QuickMIS("BC1", $g_sImgBuilderMenu, 450, 200, 495, 245) Then ; check apprentice icon
+			If QuickMIS("BC1", $g_sImgBuilderMenu, 425, 220, 450, 230) Then ; check available text
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(500) Then Return
+				If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "BuilderApprentice Window") Then
+					If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
+						If _Sleep(500) Then Return
+						If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "BuilderApprentice") Then
+							Click(250, 421, 1, 0, "Click Keep Assign")
+							If _Sleep(500) Then Return
+							Click(430, 520, 1, 0, "Click Confirm")
+							If _Sleep(1000) Then Return
+							ClickAway("Left")
+						EndIf
+					EndIf
+				EndIf
+			EndIf
+		EndIf
+	EndIf
+EndFunc
+
 Func AutoUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
 
 	If Not AutoUpgradeCheckResource() Then Return $bRet ;check available builder and resource (Gold,Elix,DE)
 	If Not $g_bRunState Then Return
-	If $g_aiCurrentLoot[$eLootGold] < $g_iTxtSmartMinGold Then Return False
+	If $g_aiCurrentLoot[$eLootGold] < $g_iTxtSmartMinGold Then Return $bRet
 	
 	;Check if there is a free builder for Auto Upgrade
 	If $g_iFreeBuilderCount > 0 Then $bRet = True ;builder available
@@ -83,32 +108,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		$bRet = True
 	EndIf
 	
-	;If Not $bRet And $g_iFreeBuilderCount = 0 Then
-	;	OpenMainBuilder()
-	;	CheckBuilderPotion()
-	;	If $g_iTownHallLevel >= 9 Then
-	;		If _Sleep(500) Then Return
-	;		If QuickMIS("BC1", $g_sImgBuilderMenu, 290, 105, 445, 140) Then
-	;			Click($g_iQuickMISX, $g_iQuickMISY)
-	;			If _Sleep(500) Then Return
-	;			If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "BuilderApprentice") Then
-	;				If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
-	;					Click($g_iQuickMISX, $g_iQuickMISY)
-	;					If _Sleep(500) Then Return
-	;					If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "BuilderApprentice") Then
-	;						Click(250, 421, 1, 0, "Click Keep Assign")
-	;						Click(430, 520, 1, 0, "Click Confirm")
-	;						If _Sleep(500) Then Return
-	;						ClickAway()
-	;						If _Sleep(500) Then Return
-	;						ClickAway()
-	;					EndIf
-	;				EndIf
-	;			EndIf
-	;		EndIf
-	;	EndIf
-	;	ClickAway()
-	;EndIf
+	CheckBuilderApprentice()
 	
 	;If CheckPlaceBuilder() Then 
 	;	SetLog("Have enough gems to place new builder!", $COLOR_SUCCESS)
@@ -156,6 +156,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	;skip search new on first page
 	Local $bSkip1st = $g_bUpgradeLowCost Or $g_bSkipWallReserve
 	OpenMainBuilder()
+	If Not AutoUpgradeCheckBuilder() Then Return
 	If _Sleep(50) Then Return
 	SetLog("_SearchUpgrade(bTest=" & String($bTest) & ", bSkip1st=" & String($bSkip1st) & ", LowCost=" & String($g_bUpgradeLowCost) & ", UseWallReserve=" & String($g_bSkipWallReserve) & ")", $COLOR_DEBUG)
 	_SearchUpgrade($bTest, $bSkip1st, $g_bUpgradeLowCost, $g_bSkipWallReserve) ;search upgrade for existing building
@@ -1249,7 +1250,7 @@ Func OpenMainBuilder()
 	
 	; open the builders menu
 	If _ColorCheck(_GetPixelColor(753, 594, True), Hex(0xFCC610, 6), 10, Default, "Orange Build Button") Then
-		Click(800, 600, 1, 0, "Click Build Button")
+		Click(800, 600, 1, 0, "Click Builder Button")
 	EndIf
 	
 	WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) ;check red x upper right corner
