@@ -56,8 +56,10 @@ EndFunc
 Func CheckBuilderApprentice()
 	Local $bRet = False
 	If $g_iFreeBuilderCount = 0 And $g_iTownHallLevel >= 9 Then
+		SetLog("Checking BuilderApprentice", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgBuilderMenu, 450, 200, 495, 245) Then ; check apprentice icon
 			If QuickMIS("BC1", $g_sImgBuilderMenu, 425, 220, 450, 230) Then ; check available text
+				SetLog("BuilderApprentice Available", $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(500) Then Return
 				If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "BuilderApprentice Window") Then
@@ -71,6 +73,7 @@ Func CheckBuilderApprentice()
 							If _Sleep(1000) Then Return
 							ClickAway("Left")
 							If _Sleep(1000) Then Return
+							SetLog("SpeedUp Upgrade, activating BuilderApprentice", $COLOR_SUCCESS)
 						EndIf
 					EndIf
 				EndIf
@@ -1258,6 +1261,7 @@ Func OpenMainBuilder()
 	
 	; open the builders menu
 	If _ColorCheck(_GetPixelColor(753, 594, True), Hex(0xFCC610, 6), 10, Default, "Orange Build Button") Then
+		SetLog("opening Builder menu", $COLOR_ACTION)
 		Click(800, 600, 1, 0, "Click Builder Button")
 	EndIf
 	

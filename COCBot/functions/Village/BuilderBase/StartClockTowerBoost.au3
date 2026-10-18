@@ -29,7 +29,7 @@ Func StartClockTowerBoost($bSwitchToBB = False, $bSwitchToNV = False, $bUsePotio
 				$aXY[0] = $aClock[$i][1]
 				$aXY[1] = $aClock[$i][2]
 				If Not IsInsideDiamond($aXY) Then ContinueLoop
-				SetLog("Found Clock Tower on " & $aXY[0] & "," & $aXY[1], $COLOR_DEBUG)
+				SetLog("Found Clock Tower on " & $aXY[0] & "," & $aXY[1], $COLOR_INFO)
 				ClickP($aXY)
 				If _Sleep(1000) Then Return
 				If ClickB("BoostCT") Then

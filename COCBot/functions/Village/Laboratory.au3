@@ -829,7 +829,9 @@ EndFunc
 
 Func CheckLabAssistant()
 	Local $bRet = False
+	SetLog("Checking LabAssistant", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgLabAssistant, 170, 130, 320, 170) Then
+		SetLog("LabAssistant Available", $COLOR_INFO)
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		If _Sleep(500) Then Return
 		If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "LabAssistant") Then
@@ -843,6 +845,7 @@ Func CheckLabAssistant()
 					If _Sleep(1000) Then Return
 					ClickAway("Left")
 					If _Sleep(1000) Then Return
+					SetLog("speedUp LabUpgrade, activating LabAssistant", $COLOR_SUCCESS)
 				EndIf
 			Else
 				SetLog("LabAssistant not Available", $COLOR_DEBUG2)
