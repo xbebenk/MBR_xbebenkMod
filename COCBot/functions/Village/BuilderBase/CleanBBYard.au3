@@ -1,7 +1,6 @@
 Func CleanBBYard($bTest = False)
 	If Not $g_bChkCleanBBYard Then Return
 	$g_bStayOnBuilderBase = True
-	BuilderBaseReport(True)
 	GotoLowerZone()
 	ZoomOut()
 	
@@ -16,13 +15,14 @@ Func CleanBBYard($bTest = False)
 	Local $Result = QuickMIS("CNX", $g_sImgCleanBBLower, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight, $g_OuterDiamondBottom)
 	If IsArray($Result) And UBound($Result) > 0 Then
 		For $i = 0 To UBound($Result) - 1
+			If Number($Result[$i][1]) > 750 Then ContinueLoop
 			If isInsideDiamondXY($Result[$i][1], $Result[$i][2], True) Then
 				Click($Result[$i][1], $Result[$i][2])
 				If _Sleep(1000) Then Return
 				If ClickRemoveObstacleBB($bTest) Then
 					$Locate += 1
 					SetLog($Result[$i][0] & " found (" & $Result[$i][1] & "," & $Result[$i][2] & ")", $COLOR_SUCCESS)
-					Click(800, 300) ;clickaway
+					Click(800, 200, 1, 0, "Click Away") ;clickaway
 					If _Sleep(500) Then Return
 				Else
 					If _Sleep(500) Then Return
@@ -47,13 +47,14 @@ Func CleanBBYard($bTest = False)
 		$Result = QuickMIS("CNX", $g_sImgCleanBBHigher, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight, $g_OuterDiamondBottom)
 		If IsArray($Result) And UBound($Result) > 0 Then
 			For $i = 0 To UBound($Result) - 1
+				If Number($Result[$i][1]) > 750 Then ContinueLoop
 				If isInsideDiamondXY($Result[$i][1], $Result[$i][2], True) Then
 					Click($Result[$i][1], $Result[$i][2])
 					If _Sleep(1000) Then Return
 					If ClickRemoveObstacleBB($bTest) Then
 						$Locate += 1
 						SetLog($Result[$i][0] & " found (" & $Result[$i][1] & "," & $Result[$i][2] & ")", $COLOR_SUCCESS)
-						Click(800, 300) ;clickaway
+						Click(800, 200, 1, 0, "Click Away") ;clickaway
 						If _Sleep(500) Then Return
 					Else
 						If _Sleep(500) Then Return
@@ -82,7 +83,7 @@ Func CleanBBYard($bTest = False)
 		SetLog("Clean BB Yard Found and Clearing " & $Locate & " Obstacles!", $COLOR_SUCCESS)
 		SetLog("CleanBBYard used Time: " & Round(__TimerDiff($hObstaclesTimer) / 1000, 2) & "'s", $COLOR_DEBUG)
 	EndIf
-	ClickAway()
+	Click(800, 200, 1, 0, "Click Away") ;clickaway
 	UpdateStats()
 EndFunc   ;==>CleanBBYard
 

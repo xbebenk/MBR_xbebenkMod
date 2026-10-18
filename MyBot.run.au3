@@ -937,8 +937,7 @@ Func __RunFunction($action)
 			;UpgradeWall()
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_bAutoUpgradeBBEnabled Or $g_bChkEnableBBAttack Then
-				Broken($action)
-				;BuilderBase()
+				BuilderBase()
 			EndIf
 		Case "CollectAchievements"
 			Broken($action)
@@ -1322,7 +1321,7 @@ Func BuilderBase()
 
 		checkMainScreen()
 		CollectBuilderBase()
-		BuilderBaseReport(False, False)
+		BuilderBaseReport()
 
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
@@ -1331,19 +1330,19 @@ Func BuilderBase()
 
 		If _Sleep(50) Then Return
 		If isGoldFullBB() Or isElixirFullBB() Then
-			If AutoUpgradeBB() Then ZoomOut(True) ;directly zoom
+			;If AutoUpgradeBB() Then ZoomOut(True) ;directly zoom
 			checkMainScreen()
 			$g_bBBAttacked = False
 		EndIf
 
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
-
-		If isElixirFullBB() Then
-			$StarLabOn = StarLabUpgrade()
-			checkMainScreen()
-			$g_bBBAttacked = False
-		EndIf
+		
+		;If isElixirFullBB() Then
+		;	$StarLabOn = StarLabUpgrade()
+		;	checkMainScreen()
+		;	$g_bBBAttacked = False
+		;EndIf
 
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
@@ -1364,21 +1363,22 @@ Func BuilderBase()
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 
-		If $g_bBBAttacked Then
-			If AutoUpgradeBB() Then ZoomOut(True) ;directly zoom
-			checkMainScreen()
-		EndIf
-
-		If _Sleep(50) Then Return
-		If Not $g_bRunState Then Return
-
-		If Not $StarLabOn Then StarLabUpgrade()
-		Local $bUseCTPot = $StarLabOn And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
+		;If $g_bBBAttacked Then
+		;	If AutoUpgradeBB() Then ZoomOut(True) ;directly zoom
+		;	checkMainScreen()
+		;EndIf
+		;
+		;If _Sleep(50) Then Return
+		;If Not $g_bRunState Then Return
+		;
+		;If Not $StarLabOn Then StarLabUpgrade()
+		;Local $bUseCTPot = $StarLabOn And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
 
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return
 		checkMainScreen()
-		StartClockTowerBoost(False, False, $bUseCTPot)
+		;StartClockTowerBoost(False, False, $bUseCTPot)
+		StartClockTowerBoost(False, False, True)
 
 		If _Sleep(50) Then Return
 		If Not $g_bRunState Then Return

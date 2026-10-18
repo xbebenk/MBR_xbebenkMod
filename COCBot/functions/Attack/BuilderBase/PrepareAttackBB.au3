@@ -43,7 +43,6 @@ Func PrepareAttackBB($Mode = Default)
 		Return True
 	EndIf
 	
-	getBuilderCount(True, True)
 	If $g_bChkSkipBBAttIfStorageFull And ($GoldIsFull And $ElixIsFull) Then
 		SetLog("Skip attack, both storages full (let the builder spend it instead of overflowing loot)", $COLOR_INFO)
 		Return False
@@ -93,7 +92,7 @@ EndFunc
 
 Func ClickBBAttackButton()
 	If Not $g_bRunState Then Return
-	If QuickMis("BC1", $g_sImgBBAttackButton, 16, 590, 110, 630) Then
+	If QuickMis("BC1", $g_sImgBBAttackButton, 24, 580, 100, 620) Then
 		Click(62,615) ;click attack button
 		For $i = 1 To 5
 			If $g_bDebugSetLog Then SetLog("Waiting for Start Attack Window #" & $i, $COLOR_ACTION)
@@ -113,7 +112,7 @@ EndFunc
 Func CheckStarsAvail()
 	If Not $g_bRunState Then Return
 	Local $bRet = False, $iRemainStars = 0, $iMaxStars = 0
-	Local $sStars = getOcrAndCapture("coc-BBAttackAvail", 40, 572, 50, 20)
+	Local $sStars = getOcrAndCapture("coc-BBAttackAvail", 43, 543, 44, 16)
 	
 	If $sStars <> "" And StringInStr($sStars, "#") Then 
 		Local $aStars = StringSplit($sStars, "#", $STR_NOCOUNT)
