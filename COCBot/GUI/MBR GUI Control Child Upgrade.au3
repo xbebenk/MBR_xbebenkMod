@@ -503,7 +503,7 @@ Func EnableUpgradeEquipment()
 	Else
 		GUICtrlSetState($g_hBtnHeroEquipment, $GUI_ENABLE)
 	EndIf
-EndFunc   ;==>chkUpgradePets
+EndFunc   ;==>EnableUpgradeEquipment
 
 Func BtnHeroEquipment()
 	GUISetState(@SW_SHOW, $g_hGUI_HeroEquipment)
@@ -829,12 +829,12 @@ EndFunc
 
 Func chkUpgradePets()
 	For $i = 0 to $ePetCount - 1
-		If GUICtrlRead($g_hChkUpgradePets[$i]) = $GUI_CHECKED Then
-			$g_bUpgradePetsEnable[$i] = True
-			SetDebugLog("Upgrade: " & $g_asPetNames[$i] & " enabled")
+		If GUICtrlRead($g_hChkUpgradePets) = $GUI_CHECKED Then
+			$g_bUpgradePetsEnable = True
+			SetDebugLog("PetUpgrade: enabled")
 		Else
-			$g_bUpgradePetsEnable[$i] = False
-			SetDebugLog("Upgrade: " & $g_asPetNames[$i] & " disabled")
+			$g_bUpgradePetsEnable = False
+			SetDebugLog("PetUpgrade: disabled")
 		EndIf
 	Next
 EndFunc

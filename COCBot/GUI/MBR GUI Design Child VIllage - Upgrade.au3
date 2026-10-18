@@ -24,7 +24,7 @@ Global $g_hChkUpgradeKing = 0, $g_hChkUpgradeQueen = 0, $g_hChkUpgradeWarden = 0
 Global $g_hCmbHeroReservedBuilder = 0, $g_hLblHeroReservedBuilderTop = 0, $g_hLblHeroReservedBuilderBottom = 0
 Global $g_hChkUpgradeChampion = 0, $g_hPicChkChampionSleepWait = 0, $g_hBtnHeroEquipment = 0
 Global $g_hGUI_HeroEquipment = 0, $g_hBtnHeroEquipmentClose = 0
-Global $g_hChkUpgradePets[$ePetCount], $g_hChkSortPetUpgrade = 0, $g_hCmbSortPetUpgrade = 0, $g_hChkSyncSaveDE = 0
+Global $g_hChkUpgradePets = 0, $g_hChkSortPetUpgrade = 0, $g_hCmbSortPetUpgrade = 0, $g_hChkSyncSaveDE = 0
 
 ; Buildings
 Global $g_hChkUpgrade[$g_iUpgradeSlots] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -271,83 +271,20 @@ Func CreateHeroesSubTab()
 	
 ; Pets
 	Local $x = 25, $y = 180
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "LblAutoUpgrading_02", "Pets Upgrade :"), $x - 20, $y -20, $g_iSizeWGrpTab3 - 2, 240)
-		$g_hChkUpgradePets[$ePetLassi] = GUICtrlCreateCheckbox("", $x, $y + 25, 17, 17)
-			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkUpgradeLassi_Info_01", "Enable upgrading of your Pet, Lassi, when you have enough Dark Elixir")
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "LblAutoUpgrading_02", "Pets Upgrade :"), $x - 20, $y -20, $g_iSizeWGrpTab3 - 2, 100)
+	$x = 20
+		$g_hChkUpgradePets = GUICtrlCreateCheckbox("Enable Pet Upgrade", $x, $y, -1, -1)
+			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkUpgradeLassi_Info_01", "Enable upgrading of your Pet")
 			_GUICtrlSetTip(-1, $sTxtTip)
 			GUICtrlSetOnEvent(-1, "chkUpgradePets")
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPetLassi, $x + 18, $y, 64, 64)
-			_GUICtrlSetTip(-1, $sTxtTip)
-
-	$x += 95
-		$g_hChkUpgradePets[$ePetElectroOwl] = GUICtrlCreateCheckbox("", $x, $y + 25, 17, 17)
-			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkUpgradeElectroOwl_Info_01", "Enable upgrading of your Pet, Electro Owl, when you have enough Dark Elixir")
-			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetOnEvent(-1, "chkUpgradePets")
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPetElectroOwl, $x + 18, $y, 64, 64)
-			_GUICtrlSetTip(-1, $sTxtTip)
-
-	$x += 95
-		$g_hChkUpgradePets[$ePetMightyYak] = GUICtrlCreateCheckbox("", $x, $y + 25, 17, 17)
-			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkUpgradeMightyYak_Info_01", "Enable upgrading of your Pet, Mighty Yak, when you have enough Dark Elixir")
-			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetOnEvent(-1, "chkUpgradePets")
-			GUICtrlSetColor ( -1, $COLOR_ERROR )
-			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPetMightyYak, $x + 18, $y, 64, 64)
-			_GUICtrlSetTip(-1, $sTxtTip)
-
-	$x += 95
-		$g_hChkUpgradePets[$ePetUnicorn] = GUICtrlCreateCheckbox("", $x, $y + 25, 17, 17)
-			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkUpgradeUnicorn_Info_01", "Enable upgrading of your Pet, Unicorn, when you have enough Dark Elixir")
-			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetOnEvent(-1, "chkUpgradePets")
-			GUICtrlSetColor ( -1, $COLOR_ERROR )
-			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPetUnicorn, $x + 18, $y, 64, 64)
-			_GUICtrlSetTip(-1, $sTxtTip)
-			
-	;----------------------------------------------NEW
-	$x = 25
-	$y += 80
-		$g_hChkUpgradePets[$ePetFrosty] = GUICtrlCreateCheckbox("", $x, $y + 25, 17, 17)
-			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkUpgradeFrosty_Info_01", "Enable upgrading of your Pet, Frosty, when you have enough Dark Elixir")
-			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetOnEvent(-1, "chkUpgradePets")
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPetFrosty, $x + 18, $y, 64, 64)
-			_GUICtrlSetTip(-1, $sTxtTip)
-
-	$x += 95
-		$g_hChkUpgradePets[$ePetDiggy] = GUICtrlCreateCheckbox("", $x, $y + 25, 17, 17)
-			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkUpgradeDiggy_Info_01", "Enable upgrading of your Pet, Diggy, when you have enough Dark Elixir")
-			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetOnEvent(-1, "chkUpgradePets")
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPetDiggy, $x + 18, $y + 2, 64, 64)
-			_GUICtrlSetTip(-1, $sTxtTip)
-
-	$x += 95
-		$g_hChkUpgradePets[$ePetPoisonLizard] = GUICtrlCreateCheckbox("", $x, $y + 25, 17, 17)
-			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkUpgradePoisonLizard_Info_01", "Enable upgrading of your Pet, Poison Lizard, when you have enough Dark Elixir")
-			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetOnEvent(-1, "chkUpgradePets")
-			GUICtrlSetColor ( -1, $COLOR_ERROR )
-			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPetPoisonLizard, $x + 18, $y, 64, 64)
-			_GUICtrlSetTip(-1, $sTxtTip)
-
-	$x += 95
-		$g_hChkUpgradePets[$ePetPhoenix] = GUICtrlCreateCheckbox("", $x, $y + 25, 17, 17)
-			$sTxtTip = GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Heroes", "ChkUpgradePhoenix_Info_01", "Enable upgrading of your Pet, Phoenix, when you have enough Dark Elixir")
-			_GUICtrlSetTip(-1, $sTxtTip)
-			GUICtrlSetOnEvent(-1, "chkUpgradePets")
-			GUICtrlSetColor ( -1, $COLOR_ERROR )
-			_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPetPhoenix, $x + 18, $y, 64, 64)
-			_GUICtrlSetTip(-1, $sTxtTip)
 
 	$x = 20
-	$y += 75
+	$y += 25
 		$g_hChkSortPetUpgrade = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "ChkSortPetUpgrade", "Sort Pet Upgrade By:"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "SortPetUpgrade")
 		$g_hCmbSortPetUpgrade = GUICtrlCreateCombo("", $x + 120, $y, 120, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-		Local $sCmbTxt = "Lower Level|Lower Cost"
-		GUICtrlSetData(-1, $sCmbTxt, "Lower Cost")
+		Local $sCmbTxt = "Higher Cost|Lower Cost|Assigned"
+		GUICtrlSetData(-1, $sCmbTxt, "Assigned")
 		GUICtrlSetOnEvent(-1, "SortPetUpgrade")
 	$y += 23
 		$g_hChkSyncSaveDE = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "ChkSortPetUpgrade", "Sync Save DE with AutoUpgrade"), $x, $y, -1, -1)

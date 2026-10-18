@@ -956,9 +956,7 @@ Func ApplyConfig_600_15($TypeReadSave)
 			EnableUpgradeEquipment()
 			chkEquipmentOrder()
 
-			For $i = 0 to $ePetCount - 1
-				GUICtrlSetState($g_hChkUpgradePets[$i], $g_bUpgradePetsEnable[$i] ? $GUI_CHECKED : $GUI_UNCHECKED)
-			Next
+			GUICtrlSetState($g_hChkUpgradePets, $g_bUpgradePetsEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSortPetUpgrade, $g_bChkSortPetUpgrade ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbSortPetUpgrade, $g_iCmbSortPetUpgrade)
 			GUICtrlSetState($g_hChkSyncSaveDE, $g_bChkSyncSaveDE ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -977,9 +975,7 @@ Func ApplyConfig_600_15($TypeReadSave)
 			$g_bChkMinOreUpgrade = (GUICtrlRead($g_hChkMinOreUpgrade) = $GUI_CHECKED)
 			$g_sTxtMinOreUpgrade = GuiCtrlRead($g_hTxtMinOreUpgrade)
 
-			For $i = 0 to $ePetCount - 1
-				$g_bUpgradePetsEnable[$i] = (GUICtrlRead($g_hChkUpgradePets[$i]) = $GUI_CHECKED)
-			Next
+			$g_bUpgradePetsEnable = (GUICtrlRead($g_hChkUpgradePets) = $GUI_CHECKED)
 			$g_bChkSortPetUpgrade = (GUICtrlRead($g_hChkSortPetUpgrade) = $GUI_CHECKED)
 			$g_iCmbSortPetUpgrade = _GUICtrlComboBox_GetCurSel($g_hCmbSortPetUpgrade)
 			$g_bChkSyncSaveDE = (GUICtrlRead($g_hChkSyncSaveDE) = $GUI_CHECKED)
