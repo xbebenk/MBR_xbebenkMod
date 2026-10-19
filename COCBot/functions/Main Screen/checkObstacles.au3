@@ -385,8 +385,12 @@ Func PlacedOnLeague()
 		$bRet = True
 	EndIf
 	
-	;check if we have chest to open
-	If QuickMIS("BC1", $g_sImgChestPage, 270, 190, 300, 220) And QuickMIS("BC1", $g_sImgChestPage, 355, 485, 380, 520) Then ;check image torch and hammer
+	; check if we have chest to open
+	; check image torch and hammer
+	Local $bTorch = False, $bHammer = False
+	$bTorch = QuickMIS("BC1", $g_sImgChestPage, 270, 190, 300, 220)
+	$bHammer = QuickMIS("BC1", $g_sImgChestPage, 575, 465, 600, 500)
+	If $bTorch And $bHammer Then 
 		SetLog("You have Chest to open", $COLOR_DEBUG2)
 		RewardChest()
 		$bRet = True

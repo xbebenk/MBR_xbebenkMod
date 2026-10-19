@@ -166,7 +166,7 @@ Func UpdateStats()
 		$iOldCurrentLoot[$eLootElixir] = $g_aiCurrentLoot[$eLootElixir]
 	EndIf
 
-	If $iOldCurrentLoot[$eLootDarkElixir] <> $g_aiCurrentLoot[$eLootDarkElixir] And $g_iStatsStartedWith[$eLootDarkElixir] <> "" Then
+	If $iOldCurrentLoot[$eLootDarkElixir] <> $g_aiCurrentLoot[$eLootDarkElixir] Then ;And $g_iStatsStartedWith[$eLootDarkElixir] <> "" Then
 		$bStatsUpdated = True
 		GUICtrlSetData($g_hLblResultDeNow, _NumberFormat($g_aiCurrentLoot[$eLootDarkElixir], True))
 		$iOldCurrentLoot[$eLootDarkElixir] = $g_aiCurrentLoot[$eLootDarkElixir]
