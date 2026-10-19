@@ -29,7 +29,7 @@ Func DailyChallenges($bDebug = False)
 	If Not $bDebug Then  
 		If $bIcnNew Then
 			SetLog("Searching New DailyChallenges", $COLOR_ACTION)
-			If Not _ColorCheck(_GetPixelColor(185, 596, True), Hex(0x6E402B, 6), 10, Default, "Check Brown Pixel") _
+			If Not _ColorCheck(_GetPixelColor(140, 614, True), Hex(0x6D402B, 6), 10, Default, "Check Brown Pixel") _
 				And Not _PixelSearch(196, 599, 196, 600, Hex(0xF71621, 6), 20, True, "Check Red Pixel") Then 
 				SetLog("No New Bonus!", $COLOR_DEBUG2)
 				Return
@@ -264,7 +264,7 @@ Func RewardChest($loop = 6)
 			ExitLoop
 		EndIf
 		
-		If _Sleep(1000) Then Return
+		If _Sleep(1500) Then Return
 	Next
 	If _Sleep(3000) Then Return
 EndFunc
