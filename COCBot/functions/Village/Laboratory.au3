@@ -498,9 +498,7 @@ Func CheckIfLabIdle($bDebug = False)
 			EndIf
 			
 			;close builder menu
-			If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
-				Click(835, 35, 1, 0, "Click Close Builder Menu")
-			EndIf
+			CloseBuilderMenu()
 		EndIf
 	EndIf
 	
@@ -602,13 +600,14 @@ Func LabUpgrade($bTest = False)
 			EndIf		
 		Next
 		
-		If $bNoPriorityUpgrade Then
-			SetLog("There is no Priority Upgrade listed", $COLOR_DEBUG1)
-			SetLog("lets try legacy upgrade from Lab Window", $COLOR_DEBUG1)
-			Laboratory()
-		EndIf
+		;If $bNoPriorityUpgrade Then
+		;	SetLog("There is no Priority Upgrade listed", $COLOR_DEBUG1)
+		;	SetLog("lets try legacy upgrade from Lab Window", $COLOR_DEBUG1)
+		;	Laboratory()
+		;EndIf
 	Else
 		SetLog("No Laboratory Upgrade", $COLOR_DEBUG2)
+		CloseBuilderMenu()
 	EndIf
 EndFunc
 
@@ -653,7 +652,7 @@ Func _FindLabUpgrade($bTest = False)
 			
 			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), Number($aUpgradeName[1]), Number($tmpcost), $iScore, $sPriority]]
 			_ArrayAdd($aUpgrade, $tmparray)
-			If @error Then SetLog("FindUpgrade ComposeArray Err : " & @error, $COLOR_ERROR)
+			If @error Then SetLog("_FindLabUpgrade ComposeArray Err : " & @error, $COLOR_ERROR)
 		Next
 
 		For $j = 0 To UBound($aUpgrade) - 1

@@ -162,9 +162,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	OpenMainBuilder()
 	CheckBuilderApprentice()
 	If Not AutoUpgradeCheckBuilder() Then 
-		If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
-			Click(835, 35, 1, 0, "Click Close Builder Menu")
-		EndIf
+		CloseBuilderMenu()
 		Return
 	EndIf
 	
@@ -211,9 +209,7 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 
 		If $sameCost > 1 Then
 			SetLog("Detected SameCost 3 times, exit!", $COLOR_DEBUG)
-			If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
-				Click(835, 35, 1, 0, "Click Close Builder Menu")
-			EndIf
+			CloseBuilderMenu()
 			ExitLoop
 		EndIf
 		

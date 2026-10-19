@@ -1248,9 +1248,14 @@ Func CheckNewUI()
 	If Not _ColorCheck(_GetPixelColor(753, 594, True), Hex(0xFCC610, 6), 10, Default, "Orange Build Button") And _
 		_ColorCheck(_GetPixelColor(220, 440, True), Hex(0xFFFFFF, 6), 10, Default, "White Tutor chat popup") Then 
 		Click($aBuildButton[0], $aBuildButton[1], 1, 0, "Click Build button")
-		If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
-			Click(835, 35, 1, 0, "Click Close Builder Menu")
-		EndIf
+		CloseBuilderMenu()
 	EndIf
 	Return $bRet
+EndFunc
+
+Func CloseBuilderMenu()
+	If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
+		Click(835, 35, 1, 0, "Click Close Builder Menu")
+		If _Sleep(500) Then Return
+	EndIf
 EndFunc

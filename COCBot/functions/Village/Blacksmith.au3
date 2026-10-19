@@ -19,50 +19,86 @@ Func Blacksmith($bTest = False)
 	If Not OpenBlacksmithMenu() Then Return
 
 	OresReport()
-	
-	SetLog("Equipment Auto Upgrade finished", $COLOR_INFO)
-	
-EndFunc   ;==>Blacksmith
-
-Func FindEquipmentUpgrade($bTest = False)
-	Local $aTmpCoord, $aUpgrade[0][8], $sPriority = "", $aUpgradeName, $tmpcost, $lenght = 0
-	Local $aOrder[0][2], $sName = "", $iUpgrade = 0, $sNameUpgrade = "", $sPriority = "Common", $iScore = 0
-	
-	$aTmpCoord = QuickMIS("CNX", $g_sImgOresIcon, 830, 100, 850, 570)
-	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
-		RemoveDupCNX($aTmpCoord, 2)
-		For $i = 0 To UBound($aTmpCoord) - 1
-			$lenght = Number($aTmpCoord[$i][1]) - 560 - 80
-			$aUpgradeName = getBuildingName(560, $aTmpCoord[$i][2] - 18, $lenght, 18) ;get upgrade name and amount
-			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 120, $aTmpCoord[$i][2] - 2)
-			If Number($tmpcost) = 0 Then ContinueLoop
-			
-			$sPriority = "Common"
-			$iScore = 0
-			If UBound($aOrder) > 0 Then
-				For $z = 0 To UBound($aOrder) - 1
-					If StringInStr($aUpgradeName[0], $aOrder[$z][1]) > 0 Then 
-						$sPriority = "Priority"
-						$iScore = $aOrder[$z][0]
-						SetLog("Found Priority Upgrade, assign score: " & $iScore & " [" & $aUpgradeName[0] & "]", $COLOR_DEBUG2)
-					EndIf
-				Next
-			EndIf
-			
-			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), Number($aUpgradeName[1]), Number($tmpcost), $iScore, $sPriority]]
-			_ArrayAdd($aUpgrade, $tmparray)
-			If @error Then SetLog("FindUpgrade ComposeArray Err : " & @error, $COLOR_ERROR)
-		Next
-
-		For $j = 0 To UBound($aUpgrade) - 1
-			SetLog("[" & $j & "] Upgrade: " & $aUpgrade[$j][3] & ", Cost=" & $aUpgrade[$j][5] & ", priority=" &  $aUpgrade[$j][7], $COLOR_DEBUG)
-		Next
+	If $g_sShiny < 5000 Then Return
+	Local $aUpgrade = GetEquipmentUpgradeList()
+	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
+		Click($aUpgrade[0][1], $aUpgrade[0][2], 1, 0, "Click Upgrade" & $aUpgrade[0][3])
+		If _Sleep(1000) Then Return
+		If IsUpgradeWindowOpen() Then 
+			Click(700, 540, 1, 0, "Click Upgrade")
+			If _Sleep(2000) Then Return
+			Click(795, 460, 1, 0, "Click Upgrade")
+			If _Sleep(2000) Then Return
+			Click(810, 105, 1, 0, "Click Close Upgrade Window")
+		EndIf
+		If _Sleep(1000) Then Return
+		OresReport()
 	EndIf
 	
-	If $g_bLabUpgradeOrderEnable Then 
-		_ArraySort($aUpgrade, 1, 0, 0, 6) ;sort by score
+	CloseBuilderMenu()
+	SetLog("Equipment Auto Upgrade finished", $COLOR_INFO)
+EndFunc   ;==>Blacksmith
+
+Func GetEquipmentUpgradeList()
+	Local $aTmpCoord, $lenght =  180, $aUpgradeName, $aUpgrade[0][4]
+	Local $bNotEnoughOres = False
+	
+	Switch $g_iCmbSortUpgradeEquipment
+		Case 0, 1
+			$aTmpCoord = QuickMIS("CNX", $g_sImgEquipmentCorner, 845, 50, 860, 535)
+			If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+				For $i = 0 To UBound($aTmpCoord) - 1
+					$aUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
+					$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] + 9, 823, $aTmpCoord[$i][2] + 35, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
+					If $bNotEnoughOres Then
+						SetDebugLog($aUpgradeName[0] & ": Not Enough Ores")
+						ContinueLoop
+					EndIf
+					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1] - 50), Number($aTmpCoord[$i][2] + 10), String($aUpgradeName[0])]]
+					_ArrayAdd($aUpgrade, $tmparray)
+					If @error Then SetLog("GetEquipmentUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
+				Next
+
+				For $j = 0 To UBound($aUpgrade) - 1
+					SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3] & ", Cost=" & $aUpgrade[$j][5], $COLOR_DEBUG)
+				Next
+			EndIf
+		Case 2
+			$aTmpCoord = QuickMIS("CNX", $g_sImgEquipmentEquipped, 595, 105, 650, 505)
+			If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+				For $i = 0 To UBound($aTmpCoord) - 1
+					$aUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] - 30, $lenght) ;get upgrade name and amount
+					$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] - 27, 823, $aTmpCoord[$i][2] + 4, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
+					If $bNotEnoughOres Then
+						SetDebugLog($aUpgradeName[0] & ": Not Enough Ores")
+						ContinueLoop
+					EndIf
+					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0])]]
+					_ArrayAdd($aUpgrade, $tmparray)
+					If @error Then SetLog("GetEquipmentUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
+				Next
+
+				For $j = 0 To UBound($aUpgrade) - 1
+					SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
+				Next
+			EndIf
+	EndSwitch
+	
+	If $g_bChkSortUpgradeEquipment Then
+		Switch $g_iCmbSortUpgradeEquipment
+			Case 0
+				_ArraySort($aUpgrade, 0, 0, 0, 5) ;sort by lower cost
+				SetDebugLog("Sort by lower cost")
+			Case 1
+				_ArraySort($aUpgrade, 1, 0, 0, 5) ;sort by higher cost
+				SetDebugLog("Sort by higher cost")
+			Case 2
+				_ArraySort($aUpgrade, 0, 0, 0, 5) ;sort by lower cost
+				SetDebugLog("Sort by equipped lower cost")
+		EndSwitch
 	Else
-		_ArraySort($aUpgrade, 1, 0, 0, 5) ;sort by cost
+		_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by y coord
+		SetDebugLog("Sort by y coord")
 	EndIf
 	
 	Return $aUpgrade
@@ -78,8 +114,9 @@ Func OpenBlacksmithMenu()
 		Click(800, 600, 1, 0, "Click Builder Button")
 	EndIf
 
-	WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) ;check red x upper right corner
-	Click(725, 630, 1, 0, "Click BlackSmith Menu")
+	If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then ;check red x upper right corner
+		Click(725, 630, 1, 0, "Click BlackSmith Menu")
+	EndIf
 	
 	If _Sleep(1000) Then Return
 	If QuickMIS("BC1", $g_sImgEquipmentMenu, 650, 13, 680, 30) Then $bRet = True

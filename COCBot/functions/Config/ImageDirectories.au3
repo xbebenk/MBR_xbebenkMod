@@ -85,7 +85,8 @@ Global $g_sImgLabAssistant = @ScriptDir & "\imgxml\Research\Laboratory\LabAssist
 Global $g_sImgLabMenu = @ScriptDir & "\imgxml\Research\Laboratory\LabMenu\"
 Global $g_sImgBooks = @ScriptDir & "\imgxml\Research\Books\"
 Global $g_sImgEquipmentMenu = @ScriptDir & "\imgxml\Research\Blacksmith\EquipmentMenu\"
-Global $g_sImgOresIcon  = @ScriptDir & "\imgxml\Research\Blacksmith\OresIcon\"
+Global $g_sImgEquipmentEquipped  = @ScriptDir & "\imgxml\Research\Blacksmith\Equipped\"
+Global $g_sImgEquipmentCorner  = @ScriptDir & "\imgxml\Research\Blacksmith\Corner\"
 #EndRegion
 
 #Region Clan Capital

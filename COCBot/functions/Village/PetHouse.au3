@@ -114,9 +114,7 @@ Func PetHouse($test = False)
 		If _Sleep(1000) Then Return
 		If Not IsUpgradeWindowOpen() Then
 			SetLog("Unable to Verify Upgrade Window", $COLOR_DEBUG2)
-			If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
-				Click(835, 35, 1, 0, "Click Close Builder Menu")
-			EndIf
+			CloseBuilderMenu()
 			Return
 		Else
 			Local $iPetUpgradeTime = getHeroUpgradeTime(730, 546) ; get duration
@@ -131,10 +129,7 @@ Func PetHouse($test = False)
 		SetLog("No pets available to upgrade!", $COLOR_SUCCESS)
 	EndIf
 	
-	If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
-		Click(835, 35, 1, 0, "Click Close Builder Menu")
-	EndIf
-	
+	CloseBuilderMenu()
 	Return
 EndFunc
 
@@ -147,8 +142,10 @@ Func OpenPetUpgrade()
 		Click(800, 600, 1, 0, "Click Build Button")
 	EndIf
 	
-	WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) ;check red x upper right corner
-	Click(820, 635, 1, 0, "Click Pet Icon")
+	If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then ;check red x upper right corner
+		Click(820, 635, 1, 0, "Click Pet Icon")
+	EndIf
+	
 	If _Sleep(1000) Then Return
 	If QuickMIS("BC1", $g_sImgPetHouse, 690, 15, 725, 30) Then $bRet = True
 	If Not $bRet Then SetLog("Fail to verify Pet Upgrade Menu", $COLOR_DEBUG2)
