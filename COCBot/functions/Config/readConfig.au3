@@ -82,35 +82,11 @@ Func ReadBuildingConfig()
 		IniReadS($g_aiClanCastlePos[0], $g_sProfileBuildingPath, "other", "xCCPos", -1, "int")
 		IniReadS($g_aiClanCastlePos[1], $g_sProfileBuildingPath, "other", "yCCPos", -1, "int")
 
-		;IniReadS($barrackPos[0][0], $g_sProfileBuildingPath, "other", "xBarrack1", -1, "int")
-		;IniReadS($barrackPos[0][1], $g_sProfileBuildingPath, "other", "yBarrack1", -1, "int")
-
-		;IniReadS($barrackPos[1][0], $g_sProfileBuildingPath, "other", "xBarrack2", -1, "int")
-		;IniReadS($barrackPos[1][1], $g_sProfileBuildingPath, "other", "yBarrack2", -1, "int")
-
-		;IniReadS($barrackPos[2][0], $g_sProfileBuildingPath, "other", "xBarrack3", -1, "int")
-		;IniReadS($barrackPos[2][1], $g_sProfileBuildingPath, "other", "yBarrack3", -1, "int")
-
-		;IniReadS($barrackPos[3][0], $g_sProfileBuildingPath, "other", "xBarrack4", -1, "int")
-		;IniReadS($barrackPos[3][1], $g_sProfileBuildingPath, "other", "yBarrack4", -1, "int")
-
-		;IniReadS($SFPos[0], $g_sProfileBuildingPath, "other", "xspellfactory", -1, "int")
-		;IniReadS($SFPos[1], $g_sProfileBuildingPath, "other", "yspellfactory", -1, "int")
-
-		;IniReadS($DSFPos[0], $g_sProfileBuildingPath, "other", "xDspellfactory", -1, "int")
-		;IniReadS($DSFPos[1], $g_sProfileBuildingPath, "other", "yDspellfactory", -1, "int")
-
 		IniReadS($g_aiHeroHallPos[0], $g_sProfileBuildingPath, "other", "xHeroHallPos", -1, "int")
 		IniReadS($g_aiHeroHallPos[1], $g_sProfileBuildingPath, "other", "yHeroHallPos", -1, "int")
 
 		IniReadS($g_aiLaboratoryPos[0], $g_sProfileBuildingPath, "upgrade", "LabPosX", -1, "int")
 		IniReadS($g_aiLaboratoryPos[1], $g_sProfileBuildingPath, "upgrade", "LabPosY", -1, "int")
-
-		IniReadS($g_aiPetHousePos[0], $g_sProfileBuildingPath, "upgrade", "PetHousePosX", -1, "int")
-		IniReadS($g_aiPetHousePos[1], $g_sProfileBuildingPath, "upgrade", "PetHousePosY", -1, "int")
-
-		IniReadS($g_aiBlacksmithPos[0], $g_sProfileBuildingPath, "upgrade", "BlacksmithPosX", -1, "int")
-		IniReadS($g_aiBlacksmithPos[1], $g_sProfileBuildingPath, "upgrade", "BlacksmithPosY", -1, "int")
 	EndIf
 
 	IniReadS($g_aiStarLaboratoryPos[0], $g_sProfileBuildingPath, "upgrade", "StarLabPosX", -1, "int")
@@ -369,7 +345,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkTreasuryCollect, $g_sProfileConfigPath, "other", "ChkCollectTreasury", False, "Bool")
 	IniReadS($g_bChkCollectCookie, $g_sProfileConfigPath, "other", "ChkCollectCookie", False, "Bool")
 	IniReadS($g_bChkSellItemFromMagicBox, $g_sProfileConfigPath, "other", "ChkSellItemFromMagicBox", False, "Bool")
-	
+
 	IniReadS($g_bChkTombstones, $g_sProfileConfigPath, "other", "chkTombstones", False, "Bool")
 	IniReadS($g_bChkCleanYard, $g_sProfileConfigPath, "other", "chkCleanYard", False, "Bool")
 	IniReadS($g_bChkSellRewards, $g_sProfileConfigPath, "other", "ChkSellRewards", False, "Bool")
@@ -377,7 +353,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkCollectAchievements, $g_sProfileConfigPath, "other", "ChkCollectAchievements", False, "Bool")
 	IniReadS($g_bChkCollectFreeMagicItems, $g_sProfileConfigPath, "other", "ChkCollectFreeMagicItems", False, "Bool")
 	IniReadS($g_bChkCollectRewards, $g_sProfileConfigPath, "other", "ChkCollectRewards", False, "Bool")
-	
+
 	;Sell Magic Items
 	IniReadS($g_bChkEnableSellMagicItem, $g_sProfileConfigPath, "MagicItems", "ChkSellMagicItems", False, "Bool")
 	IniReadS($g_bChkSellBOF, $g_sProfileConfigPath, "MagicItems", "ChkSellBOF", False, "Bool")
@@ -402,7 +378,7 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkSellROBE, $g_sProfileConfigPath, "MagicItems", "ChkSellROBE", False, "Bool")
 	Local $aSellChk[21] = [$g_bChkSellBOF, $g_bChkSellBOB, $g_bChkSellBOS, $g_bChkSellBOH, $g_bChkSellBOE, $g_bChkSellShovel, $g_bChkSellWallRing, $g_bChkSellPowerPot, $g_bChkSellResourcePot, $g_bChkSellTrainingPot, $g_bChkSellBuilderPot, $g_bChkSellCTPot, $g_bChkSellHeroPot, $g_bChkSellResearchPot, $g_bChkSellSuperPot, $g_bChkSellBuilderJar, $g_bChkSellROG, $g_bChkSellROE, $g_bChkSellRODE, $g_bChkSellROBG, $g_bChkSellROBE]
 	$g_aSellMagicItem = $aSellChk
-	
+
 	IniReadS($g_bChkEnableTradeMedal, $g_sProfileConfigPath, "MagicItems", "ChkEnableTradeMedal", False, "Bool")
 	IniReadS($g_iMinTradeMedal, $g_sProfileConfigPath, "MagicItems", "MinTradeMedal", 0, "int")
 	IniReadS($g_bChkTradeShiny, $g_sProfileConfigPath, "MagicItems", "ChkTradeShiny", False, "Bool")
@@ -412,13 +388,13 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkTradeBuilderElix, $g_sProfileConfigPath, "MagicItems", "ChkTradeBuilderElix", False, "Bool")
 	IniReadS($g_bChkTradeClockTowerPot, $g_sProfileConfigPath, "MagicItems", "ChkTradeClockTowerPot", False, "Bool")
 	IniReadS($g_bChkTradeResearchPot, $g_sProfileConfigPath, "MagicItems", "ChkTradeResearchPot", False, "Bool")
-	
+
 	; Daily Run Routine Settings
 	IniReadS($g_bChkEnableDailyRunRoutine, $g_sProfileConfigPath, "DailyRunRoutine", "ChkEnableDailyRunRoutine", False, "Bool")
 	For $i = 0 TO UBound($g_aiDailyFunction) - 1
 		IniReadS($g_aiDailyFunction[$i][1], $g_sProfileConfigPath, "DailyRunRoutine", "DailyRunFunc_" & $i, $g_aiDailyFunction[$i][1], "int")
 	Next
-	
+
 	IniReadS($g_bChkCollectBuilderBase, $g_sProfileConfigPath, "other", "ChkCollectBuildersBase", False, "Bool")
 	IniReadS($g_bChkCleanBBYard, $g_sProfileConfigPath, "other", "ChkCleanBBYard", False, "Bool")
 	IniReadS($g_bChkStartClockTowerBoost, $g_sProfileConfigPath, "other", "ChkStartClockTowerBoost", False, "Bool")
@@ -638,7 +614,7 @@ Func ReadConfig_600_11()
 	IniReadS($g_iCmbRequestTroop2, $g_sProfileConfigPath, "donate", "CmbRequestTroop2", 0, "int")
 	IniReadS($g_iCmbRequestSpell2, $g_sProfileConfigPath, "donate", "CmbRequestSpell2", 0, "int")
 	IniReadS($g_iCmbRequestSiege2, $g_sProfileConfigPath, "donate", "CmbRequestSiege2", 0, "int")
-	
+
 	IniReadS($g_iRequestTroopQuantity1, $g_sProfileConfigPath, "donate", "RequestTroopQuantity1", 0, "int")
 	IniReadS($g_iRequestSpellQuantity1, $g_sProfileConfigPath, "donate", "RequestSpellQuantity1", 0, "int")
 	IniReadS($g_iRequestSiegeQuantity1, $g_sProfileConfigPath, "donate", "RequestSiegeQuantity1", 0, "int")
@@ -779,21 +755,14 @@ Func ReadConfig_600_15()
 	IniReadS($g_bUpgradeChampionEnable, $g_sProfileConfigPath, "upgrade", "UpgradeChampion", False, "Bool")
 	IniReadS($g_iHeroReservedBuilder, $g_sProfileConfigPath, "upgrade", "HeroReservedBuilder", 0, "int")
 
-	; Equipment Order
-	IniReadS($g_bChkCustomEquipmentOrderEnable, $g_sProfileConfigPath, "upgrade", "ChkUpgradeEquipment", False, "Bool")
-	For $z = 0 To UBound($g_aiCmbCustomEquipmentOrder) - 1
-		IniReadS($g_bChkCustomEquipmentOrder[$z], $g_sProfileConfigPath, "upgrade", "ChkEquipment" & $z, False, "Bool")
-		IniReadS($g_aiCmbCustomEquipmentOrder[$z], $g_sProfileConfigPath, "upgrade", "cmbEquipmentOrder" & $z, -1)
-	Next
-	IniReadS($g_bChkMinOreUpgrade, $g_sProfileConfigPath, "upgrade", "ChkMinOreUpgrade", False, "Bool")
-	IniReadS($g_sTxtMinOreUpgrade, $g_sProfileConfigPath, "upgrade", "MinOreUpgrade", 2000, "int")
-	
-	IniReadS($g_bChkSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "ChkSortPetUpgrade", False, "Bool")
-	IniReadS($g_iCmbSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "CmbSortPetUpgrade", 0, "int")
-	IniReadS($g_bChkSyncSaveDE, $g_sProfileConfigPath, "upgrade", "ChkSyncSaveDE", False, "Bool")
+	IniReadS($g_bChkUpgradeEquipment, $g_sProfileConfigPath, "upgrade", "ChkUpgradeEquipment", False, "Bool")
+	IniReadS($g_bChkSortUpgradeEquipment, $g_sProfileConfigPath, "upgrade", "ChkSortUpgradeEquipment", False, "Bool")
+	IniReadS($g_iCmbSortUpgradeEquipment, $g_sProfileConfigPath, "upgrade", "CmbSortUpgradeEquipment", 2, "int")
 
 	IniReadS($g_bUpgradePetsEnable, $g_sProfileConfigPath, "upgrade", "UpgradePet", False, "Bool")
-	
+	IniReadS($g_bChkSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "ChkSortPetUpgrade", False, "Bool")
+	IniReadS($g_iCmbSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "CmbSortPetUpgrade", 2, "int")
+
 EndFunc   ;==>ReadConfig_600_15
 
 Func ReadConfig_600_16()
@@ -952,7 +921,7 @@ Func ReadConfig_600_28_DB()
 	IniReadS($g_abSearchCampsEnable[$DB], $g_sProfileConfigPath, "search", "ChkDBSearchCamps", False, "Bool")
 	IniReadS($g_aiSearchCampsPct[$DB], $g_sProfileConfigPath, "search", "DBEnableAfterArmyCamps", 100, "int")
 	IniReadS($g_aiFilterMeetTrophyMin[$DB], $g_sProfileConfigPath, "search", "DBsearchTrophy", 0, "int")
-	
+
 	; Search - Filters
 	IniReadS($g_aiFilterMeetGE[$DB], $g_sProfileConfigPath, "search", "DBMeetGE", 1, "int")
 	IniReadS($g_aiFilterMinGold[$DB], $g_sProfileConfigPath, "search", "DBsearchGold", 80000, "int")
@@ -1086,7 +1055,7 @@ Func ReadConfig_600_29_DB()
 	IniReadS($temp4, $g_sProfileConfigPath, "attack", "DBChampionAtk", $eHeroNone)
 	$g_aiAttackUseHeroes[$DB] = BitOR(Int($temp1), Int($temp2), Int($temp3), Int($temp4))
 	IniReadS($g_abAttackDropCC[$DB], $g_sProfileConfigPath, "attack", "DBDropCC", True, "Bool")
-	
+
 	; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / Standard <><><><>
 	IniReadS($g_aiAttackStdDropOrder[$DB], $g_sProfileConfigPath, "attack", "DBStandardAlgorithm", 0, "int")
 	IniReadS($g_aiAttackStdDropSides[$DB], $g_sProfileConfigPath, "attack", "DBDeploy", 3, "int")
@@ -1121,7 +1090,7 @@ Func ReadConfig_600_29_LB()
 	;IniReadS($temp4, $g_sProfileConfigPath, "attack", "ABChampionAtk", $eHeroNone)
 	;$g_aiAttackUseHeroes[$LB] = BitOR(Int($temp1), Int($temp2), Int($temp3), Int($temp4))
 	;IniReadS($g_abAttackDropCC[$LB], $g_sProfileConfigPath, "attack", "ABDropCC", True, "Bool")
-	
+
 	; <><><><> Attack Plan / Search & Attack / Activebase / Attack / Standard <><><><>
 	IniReadS($g_aiAttackStdDropOrder[$LB], $g_sProfileConfigPath, "attack", "LBStandardAlgorithm", 0, "int")
 	IniReadS($g_aiAttackStdDropSides[$LB], $g_sProfileConfigPath, "attack", "ABDeploy", 0, "int")

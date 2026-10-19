@@ -85,12 +85,6 @@ Func SaveBuildingConfig()
 	_Ini_Add("upgrade", "LabPosX", $g_aiLaboratoryPos[0])
 	_Ini_Add("upgrade", "LabPosY", $g_aiLaboratoryPos[1])
 
-	_Ini_Add("upgrade", "PetHousePosX", $g_aiPetHousePos[0])
-	_Ini_Add("upgrade", "PetHousePosY", $g_aiPetHousePos[1])
-
-	_Ini_Add("upgrade", "BlacksmithPosX", $g_aiBlacksmithPos[0])
-	_Ini_Add("upgrade", "BlacksmithPosY", $g_aiBlacksmithPos[1])
-
 	_Ini_Add("upgrade", "StarLabPosX", $g_aiStarLaboratoryPos[0])
 	_Ini_Add("upgrade", "StarLabPosY", $g_aiStarLaboratoryPos[1])
 
@@ -388,7 +382,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("MagicItems", "ChkSellRODE", $g_bChkSellRODE ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkSellROBG", $g_bChkSellROBG ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkSellROBE", $g_bChkSellROBE ? 1 : 0)
-	
+
 	_Ini_Add("MagicItems", "ChkEnableTradeMedal", $g_bChkEnableTradeMedal ? 1 : 0)
 	_Ini_Add("MagicItems", "MinTradeMedal", $g_iMinTradeMedal)
 	_Ini_Add("MagicItems", "ChkTradeShiny", $g_bChkTradeShiny ? 1 : 0)
@@ -398,7 +392,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("MagicItems", "ChkTradeBuilderElix", $g_bChkTradeBuilderElix ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkTradeClockTowerPot", $g_bChkTradeClockTowerPot ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkTradeResearchPot", $g_bChkTradeResearchPot ? 1 : 0)
-	
+
 	; Daily Run Routine Settings
 	_Ini_Add("DailyRunRoutine", "ChkEnableDailyRunRoutine", $g_bChkEnableDailyRunRoutine ? 1 : 0)
 	For $i = 0 To UBound($g_aiDailyFunction) -1
@@ -611,7 +605,7 @@ Func SaveConfig_600_12()
 	ApplyConfig_600_12(GetApplyConfigSaveAction())
 
 	_Ini_Add("donate", "Doncheck", $g_bChkDonate ? 1 : 0)
-	
+
 	For $i = 0 To $eTroopCount - 1
 		Local $sIniName = ""
 		If $i >= $eTroopBarbarian And $i <= $eTroopIceWizard Then
@@ -650,20 +644,14 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradeChampion", $g_bUpgradeChampionEnable ? 1 : 0)
 	_Ini_Add("upgrade", "HeroReservedBuilder", $g_iHeroReservedBuilder)
 
-	; Equipment Order
-	_Ini_Add("upgrade", "ChkUpgradeEquipment", $g_bChkCustomEquipmentOrderEnable ? 1 : 0)
-	For $z = 0 To UBound($g_aiCmbCustomEquipmentOrder) - 1
-		_Ini_Add("upgrade", "ChkEquipment" & $z, $g_bChkCustomEquipmentOrder[$z] ? 1 : 0)
-		_Ini_Add("upgrade", "cmbEquipmentOrder" & $z, $g_aiCmbCustomEquipmentOrder[$z])
-	Next
-	_Ini_Add("upgrade", "ChkMinOreUpgrade", $g_bChkMinOreUpgrade ? 1 : 0)
-	_Ini_Add("upgrade", "MinOreUpgrade", $g_sTxtMinOreUpgrade)
-
-	_Ini_Add("upgrade", "ChkSortPetUpgrade", $g_bChkSortPetUpgrade ? 1 : 0)
-	_Ini_Add("upgrade", "CmbSortPetUpgrade", $g_iCmbSortPetUpgrade)
-	_Ini_Add("upgrade", "ChkSyncSaveDE", $g_bChkSyncSaveDE ? 1 : 0)
+	_Ini_Add("upgrade", "ChkUpgradeEquipment", $g_bChkUpgradeEquipment ? 1 : 0)
+	_Ini_Add("upgrade", "ChkSortUpgradeEquipment", $g_bChkSortUpgradeEquipment ? 1 : 0)
+	_Ini_Add("upgrade", "CmbSortUpgradeEquipment", $g_iCmbSortUpgradeEquipment)
 
 	_Ini_Add("upgrade", "UpgradePet", $g_bUpgradePetsEnable ? 1 : 0)
+	_Ini_Add("upgrade", "ChkSortPetUpgrade", $g_bChkSortPetUpgrade ? 1 : 0)
+	_Ini_Add("upgrade", "CmbSortPetUpgrade", $g_iCmbSortPetUpgrade)
+
 EndFunc   ;==>SaveConfig_600_15
 
 Func SaveConfig_600_16()
@@ -827,7 +815,7 @@ Func SaveConfig_600_28_DB()
 	_Ini_Add("search", "ChkDBSearchCamps", $g_abSearchCampsEnable[$DB] ? 1 : 0)
 	_Ini_Add("search", "DBEnableAfterArmyCamps", $g_aiSearchCampsPct[$DB])
 	_Ini_Add("search", "CmbDBUseArmy", $g_iCmbDBUseArmy)
-	
+
 	; Search - Filters
 	_Ini_Add("search", "DBMeetGE", $g_aiFilterMeetGE[$DB])
 	_Ini_Add("search", "DBsearchGold", $g_aiFilterMinGold[$DB])

@@ -1847,107 +1847,14 @@ Global $g_InnerDiamondDiffX = 32
 Global $g_InnerDiamondDiffY = 25
 Global $g_DiamondMiddleX, $g_DiamondMiddleY
 Global $g_OuterDiamondLeft, $g_OuterDiamondRight, $g_OuterDiamondTop, $g_OuterDiamondBottom
-
-; Tambahan Pak Boss Besar (2021)
 Global $g_aVillageSize[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Blacksmith
-Global $g_aiBlacksmithPos[2] = [-1, -1] ; Position of Pet House
-Global $g_iBlacksmithLevel = 0
-Global Enum $eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGauntlet, $eSpikyBall, $eSnakeBracelet, _
-			$eArcherPuppet, $eInvisibilityVial, $eGiantArrow, $eHealerPuppet, $eFrozenArrow, $eMagicMirror, $eActionFigure, _
-			$eHenchMenPuppet, $eDarkOrb, $eMetalPants, $eNobleIron, $eDarkCrown, $eMeteorStaff, _
-			$eEternalTome, $eLifeGem, $eRageGem, $eHealingTome, $eHeroicTorch, $eFireBall, $eLavaloonPuppet, _
-			$eSeekingShield, $eRoyalGem, $eHogRiderPuppet, $eHasteVial, $eRocketSpear, $eElectroBoots, $eEquipmentCount
-
-Global $g_asEquipmentOrderList[$eEquipmentCount][4] = [ _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtBarbarianPuppet", "Barbarian Puppet"), "BarbarianPuppet", "King", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtRageVial", "Rage Vial"), "RageVial", "King", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtEQBoots", "Earth Quake Boots"), "Boots", "King", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtVampstache", "Vampstache"), "Vampstache", "King", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtGauntlet", "Giant Gauntlet"), "Gauntlet", "King", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtSpikyBall", "Spiky Ball"), "SpikyBall", "King", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtSnakeBracelet", "Snake Bracelet"), "SnakeBracelet", "King", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtArcherPuppet", "Archer Puppet"), "ArcherPuppet", "Queen", 172], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtInvisibilityVial", "Invisibility Vial"), "InvisibilityVial", "Queen", 172], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtGiantArrow", "Giant Arrow"), "GiantArrow", "Queen", 172], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtHealerPuppet", "Healer Puppet"), "HealerPuppet", "Queen", 172], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtFrozenArrow", "Frozen Arrow"), "FrozenArrow", "Queen", 172], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtMagicMirror", "Magic Mirror"), "MagicMirror", "Queen", 172], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtActionFigure", "Action Figure"), "ActionFigure", "Queen", 172], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtHenchmenPuppet", "HenchMen Puppet"), "HenchMenPuppet", "Prince", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtDarkOrb", "Dark Orb"), "DarkOrb", "Prince", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtMetalPants", "Metal Pants"), "MetalPants", "Prince", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtNobleIron", "Noble Iron"), "NobleIron", "Prince", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtDarkCrown", "Dark Crown"), "DarkCrown", "Prince", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtMeteorStaff", "Meteor Staff"), "MeteorStaff", "Prince", 132], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtEternalTome", "Eternal Tome"), "EternalTome", "Warden", 210], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtLifeGem", "Life Gem"), "LifeGem", "Warden", 210], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtRageGem", "Rage Gem"), "RageGem", "Warden", 210], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtHealingTome", "Healing Tome"), "HealingTome", "Warden", 210], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtHeroicTorch", "Heroic Torch"), "HeroicTorch", "Warden", 210], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtFireBall", "Fire Ball"), "FireBall", "Warden", 210], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtLavaloonPuppet", "Lavaloon Puppet"), "LavaloonPuppet", "Warden", 210], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtSeekingShield", "Seeking Shield"), "SeekingShield", "Champion", 245], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtRoyalGem", "Royal Gem"), "RoyalGem", "Champion", 245], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtHogRiderPuppet", "Hog Rider Puppet"), "HogRiderPuppet", "Champion", 245], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtHasteVial", "Haste Vial"), "HasteVial", "Champion", 245], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtRocketSpear", "Rocket Spear"), "RocketSpear", "Champion", 245], _
-			[GetTranslatedFileIni("MBR GUI Design Child Village - Equipment", "TxtElectroBoots", "Electro Boots"), "ElectroBoots", "Champion", 245]]
-
-Global $g_aiEquipmentOrder[$eEquipmentCount] = [ _
-			$eBarbarianPuppet, $eRageVial, $eEQBoots, $eVampstache, $eGauntlet, $eSpikyBall, $eSnakeBracelet, _
-			$eArcherPuppet, $eInvisibilityVial, $eGiantArrow, $eHealerPuppet, $eFrozenArrow, $eMagicMirror, $eActionFigure, _
-			$eHenchMenPuppet, $eDarkOrb, $eMetalPants, $eNobleIron, $eDarkCrown, $eMeteorStaff, _
-			$eEternalTome, $eLifeGem, $eRageGem, $eHealingTome, $eHeroicTorch, $eFireBall, $eLavaloonPuppet, _
-			$eSeekingShield, $eRoyalGem, $eHogRiderPuppet, $eHasteVial, $eRocketSpear, $eElectroBoots]
-Global Const $g_aiEquipmentOrderIcon[$eEquipmentCount + 1] = [ $eIcnOptions, _
-			$eIcnBarbarianPuppet, $eIcnRageVial, $eIcnEQBoots, $eIcnVampstache, $eIcnGauntlet, $eIcnSpikyBall, $eIcnSnakeBracelet, _
-			$eIcnArcherPuppet, $eIcnInvisibilityVial, $eIcnGiantArrow, $eIcnHealerPuppet, $eIcnFrozenArrow, $eIcnMagicMirror, $eIcnActionFigure, _
-			$eIcnHenchmenPuppet, $eIcnDarkOrb, $eIcnMetalPants, $eIcnNobleIron, $eIcnOptions, $eIcnOptions, _
-			$eIcnEternalTome, $eIcnLifeGem, $eIcnRageGem, $eIcnHealingTome, $eIcnOptions, $eIcnFireball, $eIcnLavaloonPuppet, _
-			$eIcnSeekingShield, $eIcnRoyalGem, $eIcnHogPuppet, $eIcnHasteVial, $eIcnRocketSpear, $eIcnElectroBoots]
-Global Const $g_aiEquipmentOrderIcon2[$eEquipmentCount + 1] = [ $eIcnOptions, _
-			$eIcnKing, $eIcnKing, $eIcnKing, $eIcnKing, $eIcnKing, $eIcnKing, $eIcnKing, _
-			$eIcnQueen, $eIcnQueen, $eIcnQueen, $eIcnQueen, $eIcnQueen, $eIcnQueen, $eIcnQueen, _
-			$eIcnPrince, $eIcnPrince, $eIcnPrince, $eIcnPrince, $eIcnPrince, $eIcnPrince, _
-			$eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, $eIcnWarden, _
-			$eIcnChampion, $eIcnChampion, $eIcnChampion, $eIcnChampion, $eIcnChampion, $eIcnChampion]
-
-Global $g_hChkCustomEquipmentOrderEnable = 0, $g_bChkCustomEquipmentOrderEnable = False
-Global $g_hChkMinOreUpgrade = 0, $g_bChkMinOreUpgrade = False, $g_hTxtMinOreUpgrade = 0, $g_sTxtMinOreUpgrade = ""
-Global $g_hBtnEquipmentOrderSet = 0, $g_ahImgEquipmentOrderSet = 0,$g_hBtnRemoveEquipment = 0, $g_hBtnRegularOrder = 0
-Global $g_aZero10[$eEquipmentCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ahCmbEquipmentOrder = $g_aZero10
-Global $g_ahImgEquipmentOrder = $g_aZero10
-Global $g_ahImgEquipmentOrder2 = $g_aZero10
-Global $g_hChkCustomEquipmentOrder = $g_aZero10
-Global $g_bChkCustomEquipmentOrder = $g_aZero10
-Global $g_aiCmbCustomEquipmentOrder = $g_aZero10
+Global $g_sShiny = "", $g_sGlowy = "", $g_sStarry = ""
+Global $g_bChkUpgradeEquipment = False, $g_bChkSortUpgradeEquipment = False, $g_iCmbSortUpgradeEquipment = 2
 
 ; PetHouse
-Global $g_aiPetHousePos[2] = [-1, -1]
-Global $g_sPetUpgradeTime = "", $g_iPetHouseLevel = 0
-Global $g_bChkSyncSaveDE = True, $g_bChkSortPetUpgrade = False, $g_iCmbSortPetUpgrade = 0
-
-Global Enum $ePetLassi, $ePetElectroOwl, $ePetMightyYak, $ePetUnicorn, $ePetFrosty, $ePetDiggy, $ePetPoisonLizard, $ePetPhoenix, $ePetCount
-Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Electro Owl", "Mighty Yak", "Unicorn", "Frosty", "Diggy", "Poison Lizard", "Phoenix"]
-Global Const $g_asPetShortNames[$ePetCount] = ["Lassi", "Owl", "Yak", "Unicorn", "Frosty", "Diggy", "Lizard", "Phoenix"]
-Global $g_bUpgradePetsEnable = False
-Global $g_aiPetLevel[$ePetCount] = [0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_ePetLevels[$ePetCount] = [10, 10, 10, 10, 10, 10, 10, 10]
-
-#cs
-Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
-		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _; LASSI
-		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _; Electro Owl
-		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _; Mighty Yak
-		[0, 210, 220, 230, 240, 250, 260, 270, 280, 290], _; Unicorn
-		[0, 215, 225, 235, 245, 255, 265, 275, 285, 295], _; Frosty
-		[0, 220, 230, 240, 250, 260, 270, 280, 290, 300], _; Diggy
-		[0, 225, 235, 245, 255, 265, 275, 285, 295, 305], _; Poison Lizard
-		[0, 230, 240, 250, 260, 270, 280, 290, 300, 310]]; Phoenix
-#ce
+Global $g_bUpgradePetsEnable = False, $g_bChkSortPetUpgrade = False, $g_iCmbSortPetUpgrade = 2
 
 ;Misc Mod
 Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False

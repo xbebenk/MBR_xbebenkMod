@@ -495,198 +495,6 @@ Func cmbHeroReservedBuilder()
 	_GUICtrlComboBox_SetCurSel($g_hCmbHeroReservedBuilder, $g_iHeroReservedBuilder)
 EndFunc   ;==>cmbHeroReservedBuilder
 
-Func EnableUpgradeEquipment()
-	If $g_iTownHallLevel < 8 Then
-		GUICtrlSetState($g_hBtnHeroEquipment, $GUI_DISABLE)
-		GUICtrlSetState($g_hChkCustomEquipmentOrderEnable, $GUI_UNCHECKED)
-		btnRemoveEquipment()
-	Else
-		GUICtrlSetState($g_hBtnHeroEquipment, $GUI_ENABLE)
-	EndIf
-EndFunc   ;==>EnableUpgradeEquipment
-
-Func BtnHeroEquipment()
-	GUISetState(@SW_SHOW, $g_hGUI_HeroEquipment)
-EndFunc   ;==>BtnHeroEquipment
-
-Func CloseHeroEquipment()
-	GUISetState(@SW_HIDE, $g_hGUI_HeroEquipment)
-EndFunc   ;==>CloseHeroEquipment
-
-Func chkEquipmentOrder()
-	If GUICtrlRead($g_hChkCustomEquipmentOrderEnable) = $GUI_CHECKED Then
-		$g_bChkCustomEquipmentOrderEnable = True
-		For $i = $g_hChkCustomEquipmentOrder[0] To $g_ahImgEquipmentOrderSet
-			GUICtrlSetState($i, $GUI_ENABLE)
-		Next
-		GuiCtrlSetState($g_hChkMinOreUpgrade, $GUI_ENABLE)
-	Else
-		$g_bChkCustomEquipmentOrderEnable = False
-		For $i = $g_hChkCustomEquipmentOrder[0] To $g_ahImgEquipmentOrderSet
-			GUICtrlSetState($i, $GUI_DISABLE)
-		Next
-		GuiCtrlSetState($g_hChkMinOreUpgrade, $GUI_DISABLE)
-	EndIf
-EndFunc
-
-Func ChkMinOreUpgrade()
-	If GUICtrlRead($g_hChkMinOreUpgrade) = $GUI_CHECKED Then
-		GuiCtrlSetState($g_hTxtMinOreUpgrade, $GUI_ENABLE)
-	Else
-		GuiCtrlSetState($g_hTxtMinOreUpgrade, $GUI_DISABLE)
-	EndIf
-	$g_bChkMinOreUpgrade = (GUICtrlRead($g_hChkMinOreUpgrade) = $GUI_CHECKED ? True : False) 
-	$g_sTxtMinOreUpgrade = GuiCtrlRead($g_hTxtMinOreUpgrade)
-EndFunc
-
-Func GUIRoyalEquipmentOrder()
-	Local $bDuplicate = False
-	Local $iGUI_CtrlId = @GUI_CtrlId
-	Local $iCtrlIdImage = $iGUI_CtrlId + 1
-	Local $iCtrlIdImage2 = $iGUI_CtrlId + 2
-	Local $iEquipmentIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) + 1
-
-	If $iEquipmentIndex < UBound($g_ahCmbEquipmentOrder) - 1 Then
-		_GUICtrlSetImage($iCtrlIdImage, $g_sLibIconPath, $g_aiEquipmentOrderIcon[$iEquipmentIndex]) ; set proper equipment icon
-		_GUICtrlSetImage($iCtrlIdImage2, $g_sLibIconPath, $g_aiEquipmentOrderIcon2[$iEquipmentIndex]) ; set proper hero icon
-	EndIf
-
-	For $i = 0 To UBound($g_ahCmbEquipmentOrder) - 1 ; check for duplicate combobox index and flag problem
-		If $iGUI_CtrlId = $g_ahCmbEquipmentOrder[$i] Then ContinueLoop
-		If _GUICtrlComboBox_GetCurSel($iGUI_CtrlId) = _GUICtrlComboBox_GetCurSel($g_ahCmbEquipmentOrder[$i]) Then
-			GUICtrlSetState($g_hChkCustomEquipmentOrder[$i], $GUI_UNCHECKED)
-			_GUICtrlSetImage($g_ahImgEquipmentOrder[$i], $g_sLibIconPath, $eIcnOptions)
-			_GUICtrlSetImage($g_ahImgEquipmentOrder2[$i], $g_sLibIconPath, $eIcnOptions)
-			_GUICtrlComboBox_SetCurSel($g_ahCmbEquipmentOrder[$i], -1)
-			GUISetState()
-			$bDuplicate = True
-		EndIf
-	Next
-	If $bDuplicate Then
-		GUICtrlSetState($g_hBtnEquipmentOrderSet, $GUI_ENABLE) ; enable button to apply new order
-		_GUICtrlSetImage($g_ahImgEquipmentOrderSet, $g_sLibIconPath, $eIcnRedLight) ; set status indicator to show need to apply new order
-		Return
-	Else
-		GUICtrlSetState($g_hBtnEquipmentOrderSet, $GUI_ENABLE) ; enable button to apply new order
-	EndIf
-EndFunc   ;==>GUIRoyalEquipmentOrder
-
-Func btnRegularOrder()
-	btnRemoveEquipment()
-	For $i = 0 To UBound($g_ahCmbEquipmentOrder) - 1
-		GUICtrlSetState($g_ahCmbEquipmentOrder[$i], $GUI_ENABLE)
-		_GUICtrlComboBox_SetCurSel($g_ahCmbEquipmentOrder[$i], $i)
-		_GUICtrlSetImage($g_ahImgEquipmentOrder[$i], $g_sLibIconPath, $i + 1)
-		_GUICtrlSetImage($g_ahImgEquipmentOrder2[$i], $g_sLibIconPath, $i + 1)
-	Next
-	btnEquipmentOrderSet()
-	GUICtrlSetState($g_hBtnEquipmentOrderSet, $GUI_ENABLE) ; Re-enabling it.
-EndFunc
-
-Func btnRemoveEquipment()
-	For $i = 0 To UBound($g_ahCmbEquipmentOrder) - 1
-		$g_aiCmbCustomEquipmentOrder[$i] = -1
-		$g_bChkCustomEquipmentOrder[$i] = 0
-		_GUICtrlComboBox_SetCurSel($g_ahCmbEquipmentOrder[$i], -1)
-		GUICtrlSetState($g_hChkCustomEquipmentOrder[$i], $GUI_UNCHECKED)
-		GUICtrlSetState($g_ahCmbEquipmentOrder[$i], $GUI_ENABLE)
-		_GUICtrlSetImage($g_ahImgEquipmentOrder[$i], $g_sLibIconPath, $eIcnOptions)
-		_GUICtrlSetImage($g_ahImgEquipmentOrder2[$i], $g_sLibIconPath, $eIcnOptions)
-	Next
-	GUICtrlSetState($g_hBtnEquipmentOrderSet, $GUI_DISABLE)
-	_GUICtrlSetImage($g_ahImgEquipmentOrderSet, $g_sLibIconPath, $eIcnSilverStar)
-	SetDefaultEquipmentGroup(False)
-EndFunc   ;==>btnRemoveEquipment
-
-Func SetDefaultEquipmentGroup($bSetLog = True)
-	For $i = 0 To $eEquipmentCount - 1
-		$g_aiEquipmentOrder[$i] = $i
-	Next
-EndFunc   ;==>SetDefaultEquipmentGroup
-
-Func btnEquipmentOrderSet()
-	Local $bReady = True ; Initialize ready to record troop order flag
-	Local $sNewEquipmentList = ""
-
-	Local $aiUsedEquipment = $g_aiEquipmentOrder
-	Local $aTmpEquipmentOrder[0], $iStartShuffle = 0
-
-	For $i = 0 To UBound($g_ahCmbEquipmentOrder) - 1
-		Local $iValue = _GUICtrlComboBox_GetCurSel($g_ahCmbEquipmentOrder[$i])
-		If $iValue <> -1 Then
-			_ArrayAdd($aTmpEquipmentOrder, $iValue)
-			Local $iEmpty = _ArraySearch($aiUsedEquipment, $iValue)
-			If $iEmpty > -1 Then $aiUsedEquipment[$iEmpty] = -1
-		EndIf
-	Next
-
-	$iStartShuffle = UBound($aTmpEquipmentOrder)
-
-	_ArraySort($aiUsedEquipment)
-
-	For $i = 0 To UBound($aTmpEquipmentOrder) - 1
-		If $aiUsedEquipment[$i] = -1 Then $aiUsedEquipment[$i] = $aTmpEquipmentOrder[$i]
-	Next
-
-	_ArrayShuffle($aiUsedEquipment, $iStartShuffle)
-
-	For $i = 0 To UBound($g_ahCmbEquipmentOrder) - 1
-		GUICtrlSetState($g_ahCmbEquipmentOrder[$i], $GUI_ENABLE)
-		_GUICtrlComboBox_SetCurSel($g_ahCmbEquipmentOrder[$i], $aiUsedEquipment[$i])
-		_GUICtrlSetImage($g_ahImgEquipmentOrder[$i], $g_sLibIconPath, $g_aiEquipmentOrderIcon[$aiUsedEquipment[$i] + 1])
-		_GUICtrlSetImage($g_ahImgEquipmentOrder2[$i], $g_sLibIconPath, $g_aiEquipmentOrderIcon2[$aiUsedEquipment[$i] + 1])
-	Next
-
-	$g_aiCmbCustomEquipmentOrder = $aiUsedEquipment
-	If $bReady Then
-		ChangeEquipmentOrder() ; code function to record new order
-		If @error Then
-			Switch @error
-				Case 1
-					SetLog("Code problem, can not continue till fixed!", $COLOR_ERROR)
-				Case 2
-					SetLog("Bad Combobox selections, please fix!", $COLOR_ERROR)
-				Case 3
-					SetLog("Unable to Change Equipment Upgrade Order due bad change count!", $COLOR_ERROR)
-				Case Else
-					SetLog("Monkey ate bad banana, something wrong with ChangeEquipmentOrder() code!", $COLOR_ERROR)
-			EndSwitch
-			_GUICtrlSetImage($g_ahImgEquipmentOrderSet, $g_sLibIconPath, $eIcnRedLight)
-		Else
-			SetLog("Equipment upgrade order changed successfully!", $COLOR_SUCCESS)
-			For $i = 0 To $eEquipmentCount - 1
-				$sNewEquipmentList &= $g_asEquipmentOrderList[$aiUsedEquipment[$i]][1] & ", "
-			Next
-			$sNewEquipmentList = StringTrimRight($sNewEquipmentList, 2)
-			SetLog("Equipment order= " & $sNewEquipmentList, $COLOR_INFO)
-		EndIf
-	Else
-		SetLog("Must use all Equipment and No duplicate equipment names!", $COLOR_ERROR)
-		_GUICtrlSetImage($g_ahImgEquipmentOrderSet, $g_sLibIconPath, $eIcnRedLight)
-	EndIf
-EndFunc   ;==>btnEquipmentOrderSet
-
-Func ChangeEquipmentOrder()
-	If Not IsUseCustomEquipmentOrder() Then Return False
-	
-	For $i = 0 To UBound($g_aiCmbCustomEquipmentOrder) - 1
-		If $g_aiCmbCustomEquipmentOrder[$i] > 0 Then 
-			$g_aiEquipmentOrder[$i] = $g_aiCmbCustomEquipmentOrder[$i]
-			$g_bChkCustomEquipmentOrder[$i] = (GUICtrlRead($g_hChkCustomEquipmentOrder[$i]) = $GUI_CHECKED)
-		EndIf
-	Next
-	_GUICtrlSetImage($g_ahImgEquipmentOrderSet, $g_sLibIconPath, $eIcnGreenLight)
-	
-	Return True
-EndFunc   ;==>ChangeEquipmentOrder
-
-Func IsUseCustomEquipmentOrder()
-	For $i = 0 To UBound($g_aiCmbCustomEquipmentOrder) - 1 ; Check if custom order has been used, to select log message
-		If $g_aiCmbCustomEquipmentOrder[$i] = -1 Then Return False
-	Next
-	Return True
-EndFunc   ;==>IsUseCustomTroopOrder
-
 Func chkWalls()
 	If GUICtrlRead($g_hChkWalls) = $GUI_CHECKED Then
 		$g_bAutoUpgradeWallsEnable = True
@@ -818,6 +626,12 @@ Func chkUseWallReserveBuilder()
 	EndIf
 EndFunc
 
+Func chkEssentialUpgrade()
+	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
+		$g_aichkEssentialUpgrade[$i] = GUICtrlRead($g_hchkEssentialUpgrade[$i]) = $GUI_CHECKED ? 1 : 0
+	Next
+EndFunc   ;==>chkEssentialUpgrade
+
 Func BtnRushTHOption()
 	GUISetState(@SW_SHOW, $g_hGUI_RushTHOption)
 EndFunc
@@ -827,16 +641,20 @@ Func CloseRushTHOption()
 	GUISetState(@SW_HIDE, $g_hGUI_RushTHOption)
 EndFunc
 
+Func ChkUpgradeEquipment()
+EndFunc
+
+Func SortEquipmentUpgrade()
+EndFunc
+
 Func chkUpgradePets()
-	For $i = 0 to $ePetCount - 1
-		If GUICtrlRead($g_hChkUpgradePets) = $GUI_CHECKED Then
-			$g_bUpgradePetsEnable = True
-			SetDebugLog("PetUpgrade: enabled")
-		Else
-			$g_bUpgradePetsEnable = False
-			SetDebugLog("PetUpgrade: disabled")
-		EndIf
-	Next
+	If GUICtrlRead($g_hChkUpgradePets) = $GUI_CHECKED Then
+		$g_bUpgradePetsEnable = True
+		SetDebugLog("PetUpgrade: enabled")
+	Else
+		$g_bUpgradePetsEnable = False
+		SetDebugLog("PetUpgrade: disabled")
+	EndIf
 EndFunc
 
 Func SortPetUpgrade()
@@ -849,9 +667,3 @@ Func SortPetUpgrade()
 	EndIf
 	$g_iCmbSortPetUpgrade = _GUICtrlComboBox_GetCurSel($g_hCmbSortPetUpgrade)
 EndFunc
-
-Func chkEssentialUpgrade()
-	For $i = 0 To UBound($g_aichkEssentialUpgrade) - 1
-		$g_aichkEssentialUpgrade[$i] = GUICtrlRead($g_hchkEssentialUpgrade[$i]) = $GUI_CHECKED ? 1 : 0
-	Next
-EndFunc   ;==>chkEssentialUpgrade

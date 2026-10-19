@@ -12,32 +12,20 @@
 
 Func TestPetHouse()
 	Local $bWasRunState = $g_bRunState
-	Local $sWasPetUpgradeTime = $g_sPetUpgradeTime
 	Local $bWasUpgradePetsEnable = $g_bUpgradePetsEnable
 	$g_bRunState = True
 	
 	$g_bUpgradePetsEnable = True
 	
-	$g_sPetUpgradeTime = ""
 	Local $Result = PetHouse(True)
 	$g_bRunState = $bWasRunState
-	$g_sPetUpgradeTime = $sWasPetUpgradeTime
 	$g_bUpgradePetsEnable = $bWasUpgradePetsEnable
 	Return $Result
 EndFunc
 
 Func PetHouse($test = False)
-	;==========Hide Red Hide Green Show Gray====
-	GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
-	GUICtrlSetState($g_hPicPetGreen, $GUI_HIDE)
-	GUICtrlSetState($g_hPicPetGray, $GUI_SHOW)
-	;===========================================
-	$g_sPetUpgradeTime = ""
-	GUICtrlSetData($g_hLbLPetTime, "")
-	If $g_iTownHallLevel < 14 Then
-		Return
-	EndIf
 	
+	If $g_iTownHallLevel < 14 Then Return
 	VillageReport()
 	
 	If Number($g_aiCurrentLoot[$eLootDarkElixir]) <= 30000 Then
@@ -108,7 +96,6 @@ Func PetHouse($test = False)
 	;	EndIf
 	;Next
 
-	;If CheckPetUpgrade() Then Return ; cant start if something upgrading
 	If Not OpenPetUpgrade() Then Return
 	
 	Local $sBuilderInfo = getPetBuilderOnMenu()
@@ -166,28 +153,6 @@ Func OpenPetUpgrade()
 	If QuickMIS("BC1", $g_sImgPetHouse, 690, 15, 725, 30) Then $bRet = True
 	If Not $bRet Then SetLog("Fail to verify Pet Upgrade Menu", $COLOR_DEBUG2)
 	Return $bRet
-EndFunc
-
-; check the Pet House to see if a Pet is upgrading already
-Func CheckPetUpgrade()
-	Local $bRet = False
-	If _ColorCheck(_GetPixelColor(815, 145, True), Hex(0xA2CB6C, 6), 20) Then
-		SetLog("Pet House Upgrade in progress, waiting for completion", $COLOR_INFO)
-		Local $sPetTimeOCR = getRemainTPetHouse(240, 244)
-		Local $iPetFinishTime = ConvertOCRTime("PetHouse", $sPetTimeOCR, False)
-		SetDebugLog("$sPetTimeOCR: " & $sPetTimeOCR & ", $iPetFinishTime = " & $iPetFinishTime & " m")
-		If $iPetFinishTime > 0 Then
-			$g_sPetUpgradeTime = _DateAdd('n', Ceiling($iPetFinishTime), _NowCalc())
-			SetLog("Pet Upgrade will finish in " & $iPetFinishTime & " minutes (" & $g_sPetUpgradeTime & ")")
-		EndIf
-		;==========Hide Red  Show Green Hide Gray===
-		GUICtrlSetState($g_hPicPetGray, $GUI_HIDE)
-		GUICtrlSetState($g_hPicPetRed, $GUI_HIDE)
-		GUICtrlSetState($g_hPicPetGreen, $GUI_SHOW)
-		;===========================================
-		ClickAway()
-	EndIf
-	Return $bRet ; returns False if no upgrade in progress
 EndFunc
 
 Func FindPetsButton()

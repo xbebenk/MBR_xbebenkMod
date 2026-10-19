@@ -89,7 +89,7 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 	; <><><><> Village / Notify <><><><>
 	SetDebugLog("ApplyConfig Village Notify")
 	ApplyConfig_600_18($TypeReadSave)
-	
+
 	; moved here due to check functions
 	; troop/spell levels and counts
 	SetDebugLog("ApplyConfig Troops - Spells")
@@ -150,7 +150,7 @@ Func applyConfig($bRedrawAtExit = True, $TypeReadSave = "Read") ;Applies the dat
 
 	; <><><><> BuilderBase <><><><>
 	ApplyBuilderBaseMod($TypeReadSave)
-	
+
 	; <><><><> Bot / Profiles <><><><>
 	PopulatePresetComboBox()
 	MakeSavePresetMessage()
@@ -310,7 +310,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkTreasuryCollect, $g_bChkTreasuryCollect ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCollectCookie, $g_bChkCollectCookie ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSellItemFromMagicBox, $g_bChkSellItemFromMagicBox ? $GUI_CHECKED : $GUI_UNCHECKED)
-			
+
 			GUICtrlSetState($g_hChkTombstones, $g_bChkTombstones ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCleanYard, $g_bChkCleanYard ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkGemsBox, $g_bChkGemsBox ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -344,14 +344,14 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetState($g_hChkSellROBG, $g_bChkSellROBG ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSellROBE, $g_bChkSellROBE ? $GUI_CHECKED : $GUI_UNCHECKED)
 			chkEnableSellMagicItem()
-			
+
 			; Daily Run Routine Settings
 			GUICtrlSetState($g_hChkEnableDailyRunRoutine, $g_bChkEnableDailyRunRoutine ? $GUI_CHECKED : $GUI_UNCHECKED)
 			For $i = 0 To UBound($g_aiDailyFunction) - 1
 				_GUICtrlComboBox_SetCurSel($g_hCmbDailyRunRoutine[$i], $g_aiDailyFunction[$i][1])
 			Next
 			chkEnableDailyRunRoutine()
-			
+
 			GUICtrlSetState($g_hChkEnableTradeMedal, $g_bChkEnableTradeMedal ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetData($g_hTxtMinTradeMedal, $g_iMinTradeMedal)
 			GUICtrlSetState($g_hChkTradeShiny, $g_bChkTradeShiny ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -550,13 +550,13 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkSellROBG = (GUICtrlRead($g_hChkSellROBG) = $GUI_CHECKED)
 			$g_bChkSellROBE = (GUICtrlRead($g_hChkSellROBE) = $GUI_CHECKED)
 			chkEnableSellMagicItem()
-			
+
 			; Daily Run Routine Settings
 			$g_bChkEnableDailyRunRoutine = (GUICtrlRead($g_hChkEnableDailyRunRoutine) = $GUI_CHECKED)
 			For $i = 0 To UBound($g_aiDailyFunction) - 1
 				$g_aiDailyFunction[$i][1] = _GUICtrlComboBox_GetCurSel($g_hCmbDailyRunRoutine[$i])
 			Next
-			
+
 			$g_bChkEnableTradeMedal = (GUICtrlRead($g_hChkEnableTradeMedal) = $GUI_CHECKED)
 			$g_iMinTradeMedal = GUICtrlRead($g_hTxtMinTradeMedal)
 			$g_bChkTradeShiny = (GUICtrlRead($g_hChkTradeShiny) = $GUI_CHECKED)
@@ -927,39 +927,13 @@ Func ApplyConfig_600_15($TypeReadSave)
 			_GUICtrlComboBox_SetCurSel($g_hCmbHeroReservedBuilder, $g_iHeroReservedBuilder)
 			cmbHeroReservedBuilder()
 
-			GUICtrlSetState($g_hChkCustomEquipmentOrderEnable, $g_bChkCustomEquipmentOrderEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
-			For $z = 0 To UBound($g_ahCmbEquipmentOrder) - 1
-				GUICtrlSetState($g_hChkCustomEquipmentOrder[$z], $g_bChkCustomEquipmentOrder[$z] ? $GUI_CHECKED : $GUI_UNCHECKED)
-				_GUICtrlComboBox_SetCurSel($g_ahCmbEquipmentOrder[$z], $g_aiCmbCustomEquipmentOrder[$z])
-				_GUICtrlSetImage($g_ahImgEquipmentOrder[$z], $g_sLibIconPath, $g_aiEquipmentOrderIcon[$g_aiCmbCustomEquipmentOrder[$z] + 1])
-				_GUICtrlSetImage($g_ahImgEquipmentOrder2[$z], $g_sLibIconPath, $g_aiEquipmentOrderIcon2[$g_aiCmbCustomEquipmentOrder[$z] + 1])
-			Next
-			GUICtrlSetState($g_hChkMinOreUpgrade, $g_bChkMinOreUpgrade ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetData($g_hTxtMinOreUpgrade, $g_sTxtMinOreUpgrade)
-
-			Local $iValueSet = 0
-			For $i = 0 To UBound($g_ahCmbEquipmentOrder) - 1
-				Local $iValue = _GUICtrlComboBox_GetCurSel($g_ahCmbEquipmentOrder[$i])
-				If $iValue <> -1 Then
-					$iValueSet += 1
-				EndIf
-			Next
-			If $iValueSet > 0 And $iValueSet < $eEquipmentCount Then
-				SetLog("Set your Equipment Upgrade Order!")
-				btnRegularOrder()
-			EndIf
-			If Not ChangeEquipmentOrder() Then SetDefaultEquipmentGroup()
-			If $iValueSet = 0 And $g_bChkCustomEquipmentOrderEnable Then
-				SetLog("Set your Equipment Upgrade Order!")
-				btnRegularOrder()
-			EndIf
-			EnableUpgradeEquipment()
-			chkEquipmentOrder()
+			GUICtrlSetState($g_hChkUpgradeEquipment, $g_bChkUpgradeEquipment ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkSortUpgradeEquipment, $g_bChkSortUpgradeEquipment ? $GUI_CHECKED : $GUI_UNCHECKED)
+			_GUICtrlComboBox_SetCurSel($g_hCmbSortUpgradeEquipment, $g_iCmbSortUpgradeEquipment)
 
 			GUICtrlSetState($g_hChkUpgradePets, $g_bUpgradePetsEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSortPetUpgrade, $g_bChkSortPetUpgrade ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbSortPetUpgrade, $g_iCmbSortPetUpgrade)
-			GUICtrlSetState($g_hChkSyncSaveDE, $g_bChkSyncSaveDE ? $GUI_CHECKED : $GUI_UNCHECKED)
 		Case "Save"
 			$g_bUpgradeKingEnable = (GUICtrlRead($g_hChkUpgradeKing) = $GUI_CHECKED)
 			$g_bUpgradeQueenEnable = (GUICtrlRead($g_hChkUpgradeQueen) = $GUI_CHECKED)
@@ -967,18 +941,13 @@ Func ApplyConfig_600_15($TypeReadSave)
 			$g_bUpgradeChampionEnable = (GUICtrlRead($g_hChkUpgradeChampion) = $GUI_CHECKED)
 			$g_iHeroReservedBuilder = _GUICtrlComboBox_GetCurSel($g_hCmbHeroReservedBuilder)
 
-			$g_bChkCustomEquipmentOrderEnable = (GUICtrlRead($g_hChkCustomEquipmentOrderEnable) = $GUI_CHECKED)
-			For $z = 0 To UBound($g_ahCmbEquipmentOrder) - 1
-				$g_bChkCustomEquipmentOrder[$z] = (GUICtrlRead($g_hChkCustomEquipmentOrder[$z]) = $GUI_CHECKED)
-				$g_aiCmbCustomEquipmentOrder[$z] = _GUICtrlComboBox_GetCurSel($g_ahCmbEquipmentOrder[$z])
-			Next
-			$g_bChkMinOreUpgrade = (GUICtrlRead($g_hChkMinOreUpgrade) = $GUI_CHECKED)
-			$g_sTxtMinOreUpgrade = GuiCtrlRead($g_hTxtMinOreUpgrade)
+			$g_bChkUpgradeEquipment = (GUICtrlRead($g_hChkUpgradeEquipment) = $GUI_CHECKED)
+			$g_bChkSortUpgradeEquipment = (GUICtrlRead($g_hChkSortUpgradeEquipment) = $GUI_CHECKED)
+			$g_iCmbSortUpgradeEquipment = _GUICtrlComboBox_GetCurSel($g_hCmbSortUpgradeEquipment)
 
 			$g_bUpgradePetsEnable = (GUICtrlRead($g_hChkUpgradePets) = $GUI_CHECKED)
 			$g_bChkSortPetUpgrade = (GUICtrlRead($g_hChkSortPetUpgrade) = $GUI_CHECKED)
 			$g_iCmbSortPetUpgrade = _GUICtrlComboBox_GetCurSel($g_hCmbSortPetUpgrade)
-			$g_bChkSyncSaveDE = (GUICtrlRead($g_hChkSyncSaveDE) = $GUI_CHECKED)
 
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_15
@@ -1107,7 +1076,7 @@ Func ApplyConfig_600_17($TypeReadSave)
 				Case 2
 					GUICtrlSetState($g_hChkUseElixirGold, $GUI_CHECKED)
 			EndSwitch
-			
+
 			GUICtrlSetState($g_hAutoAdjustSaveWall, $g_bAutoAdjustSaveWall ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSaveWallBldr, $g_bUpgradeWallSaveBuilder ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkOnly1Builder, $g_bChkOnly1Builder ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -1342,7 +1311,7 @@ Func ApplyConfig_600_28_DB($TypeReadSave)
 			chkDBActivateSearches()
 			GUICtrlSetState($g_hChkDeadbase, $g_abAttackTypeEnable[$DB] ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBUseSavedArmy, $g_iCmbDBUseArmy)
-			
+
 			; Search - Filters
 			_GUICtrlComboBox_SetCurSel($g_hCmbDBMeetGE, $g_aiFilterMeetGE[$DB])
 			GUICtrlSetData($g_hTxtDBMinGold, $g_aiFilterMinGold[$DB])
@@ -1394,7 +1363,7 @@ Func ApplyConfig_600_28_DB($TypeReadSave)
 			$g_abSearchCampsEnable[$DB] = (GUICtrlRead($g_hChkDBActivateCamps) = $GUI_CHECKED)
 			$g_aiSearchCampsPct[$DB] = Int(GUICtrlRead($g_hTxtDBArmyCamps))
 			$g_iCmbDBUseArmy = _GUICtrlComboBox_GetCurSel($g_hCmbDBUseSavedArmy)
-		
+
 			; Search - Filters
 			$g_iDeadEagleSearch = GUICtrlRead($g_hTxtDeadEagleSearch)
 
@@ -1603,7 +1572,7 @@ Func ApplyConfig_600_29($TypeReadSave)
 				$g_iActivateChampion = 2
 			EndIf
 			$g_iDelayActivateChampion = Int(GUICtrlRead($g_hTxtManChampionAbility) * 1000)
-			
+
 			If GUICtrlRead($g_hRadAutoPrinceAbility) = $GUI_CHECKED Then
 				$g_iActivatePrince = 0
 			ElseIf GUICtrlRead($g_hRadManPrinceAbility) = $GUI_CHECKED Then
@@ -1612,7 +1581,7 @@ Func ApplyConfig_600_29($TypeReadSave)
 				$g_iActivatePrince = 2
 			EndIf
 			$g_iDelayActivatePrince = Int(GUICtrlRead($g_hTxtManPrinceAbility) * 1000)
-			
+
 			If GUICtrlRead($g_hRadAutoDukeAbility) = $GUI_CHECKED Then
 				$g_iActivateDuke = 0
 			ElseIf GUICtrlRead($g_hRadManDukeAbility) = $GUI_CHECKED Then

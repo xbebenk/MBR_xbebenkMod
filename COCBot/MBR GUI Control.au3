@@ -38,7 +38,6 @@ Global $g_hFrmBot_WNDPROC_ptr = 0
 #include "GUI\MBR GUI Control Collectors.au3"
 #include "GUI\MBR GUI Control Attack Standard.au3"
 #include "GUI\MBR GUI Control Attack Scripted.au3"
-#include "GUI\MBR GUI Control Achievements.au3"
 #include "GUI\MBR GUI Control Notify.au3"
 #include "GUI\MBR GUI Control Child Upgrade.au3"
 #include "GUI\MBR GUI Control Donate.au3"
@@ -1631,18 +1630,6 @@ Func SetTime($bForceUpdate = False)
 		Else
 			GUICtrlSetData($g_hLbLLabTime, "")
 			$g_sLabUpgradeTime = ""
-		EndIf
-	EndIf
-
-	If _DateIsValid($g_sPetUpgradeTime) Then
-		Local $iPetTime = _DateDiff("s", _NowCalc(), $g_sPetUpgradeTime) * 1000
-		If $iPetTime > 0 Then
-			_TicksToDay($iPetTime, $day, $hour, $min, $sec)
-			GUICtrlSetData($g_hLbLPetTime, $day > 0 ? StringFormat("%2ud %02i:%02i", $day, $hour, $min) : StringFormat("%02i:%02i:%02i", $hour, $min, $sec))
-			GUICtrlSetColor($g_hLbLPetTime, $day > 0 ? $COLOR_GREEN : $COLOR_ORANGE)
-		Else
-			GUICtrlSetData($g_hLbLPetTime, "")
-			$g_sPetUpgradeTime = ""
 		EndIf
 	EndIf
 

@@ -38,6 +38,7 @@ Func setupProfileComboBox()
 		GUICtrlSetData($g_ahCmbProfile[$i], "|" & $profileString)
 		_GUICtrlComboBox_SetCurSel($g_ahCmbProfile[$i], 0)
 	Next
+	SetDebugLog("setupProfileComboBox complete")
 EndFunc   ;==>setupProfileComboBox
 
 Func renameProfile()
