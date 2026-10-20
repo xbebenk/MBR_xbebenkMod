@@ -234,8 +234,8 @@ Func getOcrPBTtime($x_start, $y_start) ;  -> Get the Time until PBT starts from 
 	Return getOcrAndCapture("coc-pbttime", $x_start, $y_start, 80, 15)
 EndFunc   ;==>getOcrPBTtime
 
-Func getBuilderLeastUpgradeTime($x_start, $y_start) ;  -> Get least upgradetime on builder menu
-	Return getOcrAndCapture("coc-buildermenu-cost", $x_start, $y_start, 100, 18, True)
+Func getBuilderLeastUpgradeTime($x_start = 775, $y_start = 66, $length = 55, $height = 14) ;  -> Get least upgradetime on builder menu
+	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, $length, $height, True)
 EndFunc   ;==>getBuilderLeastUpgradeTime
 
 Func getBuilderMenuCost($x_start, $y_start) ;  -> Get least upgradetime on builder menu
@@ -246,111 +246,17 @@ Func getOresValues($x_start, $y_start, $ilength = 60) ;  -> Get least upgradetim
 	Return StringReplace(getOcrAndCapture("coc-bonus", $x_start, $y_start, $ilength, 20, True), "-", "")
 EndFunc   ;==>getOresValues
 
-Func getBuildingName($x_start, $y_start, $length = 180, $height = 25) ;  -> Get BuildingName on builder menu
+Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get BuildingName on builder menu
 	Local $BuildingName = "", $Count = 1
 	Local $Name = StringReplace(getOcrAndCapture("coc-buildermenu-name", $x_start, $y_start, $length, $height, False), "-", "")
-	If StringRegExp($Name, "x\d{1,}") Then
-		Local $aCount = StringRegExp($Name, "\d{1,}", 1) ;check if we found count of building
-		If IsArray($aCount) Then $Count = $aCount[0]
-	EndIf
 	
-	If StringLeft($Name, 2) = "l " Then 
-		$BuildingName = StringTrimLeft($Name, 2) ;remove first "l" because sometimes buildermenu border captured as "l"
-	Else
-		$BuildingName = $Name
-	EndIf
-	ReplaceQuantityX($BuildingName)
+	$BuildingName = $Name
 	
 	Local $aResult[2]
 	$aResult[0] = $BuildingName
 	$aResult[1] = Number($Count)
 	Return $aResult
 EndFunc   ;==>getBuildingName
-
-Func ReplaceQuantityX(ByRef $UpgradeName)
-	;If $g_bDebugSetLog Then SetLog("ReplaceQuantityX Before :" & $UpgradeName, $COLOR_INFO)
-	If StringRegExp($UpgradeName, "x\d{1,}") = 1 Then
-		Local $aReplace = StringRegExp($UpgradeName, "( x\d{1,})", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
-			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
-	If StringRegExp($UpgradeName, " x") = 1 Then
-		Local $aReplace = StringRegExp($UpgradeName, "( x)", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
-			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
-	
-	If StringRegExp($UpgradeName, " l.+") = 1 Then
-		Local $aReplace = StringRegExp($UpgradeName, "( l.+)", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
-			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
-	
-	If StringRegExp($UpgradeName, " l") = 1 Then
-		Local $aReplace = StringRegExp($UpgradeName, "( l)", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
-			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
-	
-	If StringRegExp($UpgradeName, " \d+") = 1 Then
-		Local $aReplace = StringRegExp($UpgradeName, "( \d+)", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
-			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
-	
-	If StringRegExp($UpgradeName, " \d+.+") = 1 Then
-		Local $aReplace = StringRegExp($UpgradeName, "( \d+.+)", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
-			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
-	
-	If StringRegExp($UpgradeName, " \'") = 1 Then
-		Local $aReplace = StringRegExp($UpgradeName, "( \')", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
-			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
-	
-	If StringRegExp($UpgradeName, " T$") = 1 Then
-		Local $aReplace = StringRegExp($UpgradeName, "( T$)", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
-			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
-	
-	If StringRegExp($UpgradeName, " 1$") = 1 Then
-		Local $aReplace = StringRegExp($UpgradeName, "( 1$)", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
-			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
-	
-	If StringRegExp($UpgradeName, "^' ") = 1 Then
-		Local $aReplace = StringRegExp($UpgradeName, "(^' )", 1)
-		If Ubound($aReplace) > 0 Then 
-			Local $TmpBuildingName = StringReplace($UpgradeName, $aReplace[0], "")
-			$UpgradeName = StringStripWS($TmpBuildingName, $STR_STRIPTRAILING)
-		EndIf
-	EndIf
-	
-	
-	;If $g_bDebugSetLog Then SetLog("ReplaceQuantityX After :" & $UpgradeName, $COLOR_SUCCESS)
-EndFunc
 
 Func getCCBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
 	Local $BuildingName = "", $Count = 1

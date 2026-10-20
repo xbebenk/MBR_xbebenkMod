@@ -642,9 +642,24 @@ Func CloseRushTHOption()
 EndFunc
 
 Func ChkUpgradeEquipment()
+	If GUICtrlRead($g_hChkUpgradeEquipment) = $GUI_CHECKED Then
+		$g_bChkUpgradeEquipment = True
+		SetDebugLog("Equipment Upgrade: enabled")
+	Else
+		$g_bChkUpgradeEquipment = False
+		SetDebugLog("Equipment Upgrade: disabled")
+	EndIf
 EndFunc
 
 Func SortEquipmentUpgrade()
+	If GUICtrlRead($g_hChkSortUpgradeEquipment) = $GUI_CHECKED Then
+		$g_bChkSortUpgradeEquipment = True
+		GUICtrlSetState($g_hCmbSortUpgradeEquipment, $GUI_ENABLE)
+	Else
+		$g_bChkSortUpgradeEquipment = False
+		GUICtrlSetState($g_hCmbSortUpgradeEquipment, $GUI_DISABLE)
+	EndIf
+	$g_iCmbSortUpgradeEquipment = _GUICtrlComboBox_GetCurSel($g_hCmbSortUpgradeEquipment)
 EndFunc
 
 Func chkUpgradePets()

@@ -10,19 +10,6 @@
 ; Example .......:
 ; ===============================================================================================================================
 
-Func TestPetHouse()
-	Local $bWasRunState = $g_bRunState
-	Local $bWasUpgradePetsEnable = $g_bUpgradePetsEnable
-	$g_bRunState = True
-	
-	$g_bUpgradePetsEnable = True
-	
-	Local $Result = PetHouse(True)
-	$g_bRunState = $bWasRunState
-	$g_bUpgradePetsEnable = $bWasUpgradePetsEnable
-	Return $Result
-EndFunc
-
 Func PetHouse($test = False)
 	
 	If $g_iTownHallLevel < 14 Then Return
@@ -33,69 +20,6 @@ Func PetHouse($test = False)
 		If Not $test Then Return
 	EndIf
 
-	;If $g_aiPetHousePos[0] <= 0 Or $g_aiPetHousePos[1] <= 0 Then
-	;	SetLog("Pet House Location unknown!", $COLOR_WARNING)
-	;	Local $bPetHouseLocated = LocatePetHouse() ; Pet House location unknown, so find it.
-	;	If $g_aiPetHousePos[0] = 0 Or $g_aiPetHousePos[1] = 0 Then
-	;		SetLog("Problem locating Pet House, re-locate Pet House position before proceeding", $COLOR_ERROR)
-	;		Return False
-	;	EndIf
-	;Else
-	;	ClickP($g_aiPetHousePos)
-	;	If _Sleep(500) Then Return
-	;EndIf
-	
-	;Local $BuildingName = BuildingInfo(242, 479)
-	;If StringInStr($BuildingName[1], "Pet") Then
-	;	SetLog("Click on PetHouse, Level:" & $BuildingName[2])
-	;	$g_iPetHouseLevel = Number($BuildingName[2])
-	;Else
-	;	SetDebugLog("Wrong Click on PetHouse, its a " & $BuildingName[1])
-	;	ClickAway()
-	;	If Not LocatePetHouse() Then
-	;		SetLog("Cannot Find PetHouse, please locate manually")
-	;		Return
-	;	EndIf
-	;EndIf
-	
-	;Setup Max Pet Levels according to PetHouse Level
-	
-	;Reset First
-	;Global $g_ePetLevels[$ePetCount] = [10, 10, 10, 10, 10, 10, 10, 10]
-	;If Number($BuildingName[2]) >= 5  Then
-	;	$g_ePetLevels[$ePetLassi] = 15
-	;EndIf
-	;
-	;If Number($BuildingName[2]) >= 7  Then
-	;	$g_ePetLevels[$ePetMightyYak] = 15
-	;EndIf
-	;
-	;If Number($BuildingName[2]) >= 9  Then
-	;	$g_ePetLevels[$ePetElectroOwl] = 15
-	;EndIf
-
-	;End
-	
-	;Local $PawFound = False
-	;For $i = 1 To 5
-	;	If _Sleep(500) Then Return
-	;	If FindPetsButton() Then
-	;		$PawFound = True
-	;		ExitLoop
-	;	EndIf
-	;	SetLog("Waiting for Pet House Paw Button #" & $i, $COLOR_ACTION)
-	;Next
-	;If Not $PawFound Then Return
-	;
-	;For $i = 1 To 5
-	;	If _Sleep(500) Then Return
-	;	If IsPetHousePage() Then
-	;		ExitLoop
-	;	Else
-	;		SetLog("Waiting for Pet House Window #" & $i, $COLOR_ACTION)
-	;	EndIf
-	;Next
-
 	If Not OpenPetUpgrade() Then Return
 	
 	Local $sBuilderInfo = getPetBuilderOnMenu()
@@ -103,6 +27,7 @@ Func PetHouse($test = False)
 		Local $aGetBuilders = StringSplit($sBuilderInfo, "#", $STR_NOCOUNT) ; Split into free and total builder strings
 		If Number($aGetBuilders[0]) < 1 Then
 			SetLog("PetHouse already on Upgrade progress", $COLOR_DEBUG1)
+			CloseBuilderMenu()
 			Return False
 		EndIf
 	EndIf

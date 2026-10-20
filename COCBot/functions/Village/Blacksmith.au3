@@ -33,10 +33,11 @@ Func Blacksmith($bTest = False)
 		EndIf
 		If _Sleep(1000) Then Return
 		OresReport()
+	Else
+		SetLog("No available Equipment to Upgrade", $COLOR_DEBUG2)
 	EndIf
 	
 	CloseBuilderMenu()
-	SetLog("Equipment Auto Upgrade finished", $COLOR_INFO)
 EndFunc   ;==>Blacksmith
 
 Func GetEquipmentUpgradeList()
@@ -60,7 +61,7 @@ Func GetEquipmentUpgradeList()
 				Next
 
 				For $j = 0 To UBound($aUpgrade) - 1
-					SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3] & ", Cost=" & $aUpgrade[$j][5], $COLOR_DEBUG)
+					SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
 				Next
 			EndIf
 		Case 2

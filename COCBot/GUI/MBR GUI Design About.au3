@@ -52,49 +52,35 @@ Func CreateAboutTab()
 	GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 50, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
 
-	$y += 35
-	$sText = "Special participation: "
-	GUICtrlCreateLabel($sText, $x - 5, $y, 410, 20, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
-	GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
-	GUICtrlSetColor(-1, $COLOR_NAVY)
-	$sText = "HarchH, Nytol and of course Beta Tester Team"
-	GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 50, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
-	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
-
 	$y += 40
 	$sText = "Inactive developers: "
 	GUICtrlCreateLabel($sText, $x - 5, $y, 410, 20, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
 	GUICtrlSetColor(-1, $COLOR_NAVY)
 	$sText = "Cosote, Demen, Hervidero, Kaganus, Sardo, Trlopes, TripleM, Chilly-Chill, Fliegerfaust, TFKNazGul, Antidote, AtoZ, Barracoda, Boju, Codeslinger69, Didipe, Dinobot, DixonHill, DkEd, GkevinOD, HungLe, KnowJack, LunaEclipse, MonkeyHunter, ProMac, Safar46, Saviart, TheMaster1st, Zengzeng, and others"
-	GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 70, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
+	GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 95, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
 
-	$y += 95
-	$sText = "Special thanks to all contributing forum members helping to make this" & @CRLF & "software better! And a special note to: @KevinM our server admin!"
-	GUICtrlCreateLabel($sText, $x + 14, $y, 390, 30, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $ES_CENTER), 0)
-	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
-
-	$y += 40
-	$sText = "The latest release of 'My Bot' can be found at:"
+	$y += 100
+	$sText = "The latest release of 'xbeMod' of MyBotRun can be found at:"
 	GUICtrlCreateLabel($sText, $x - 5, $y, 400, 15, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 10, $FW_BOLD, Default, "Arial")
 
 	$y += 18
-	$g_hLblForumURL = GUICtrlCreateLabel("https://mybot.run/forums/index.php?/forum/4-official-releases/", $x + 25, $y, 450, 20)
+	$g_hLblForumURL = GUICtrlCreateLabel("https://github.com/xbebenk/MBR_xbebenkMod/tree/dev_1.2.6", $x + 5, $y, 450, 20)
 	GUICtrlSetCursor(-1, 0)
 	GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
 	GUICtrlSetColor(-1, $COLOR_INFO)
 
 	$y = 380
-	$sText = "By running this program, the user accepts all responsibility that arises from the use of this software." & @CRLF & _
-			"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even " & @CRLF & _
-			"the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General " & @CRLF & _
-			"Public License for more details. The license can be found in the main code folder location." & @CRLF & _
-			"Copyright (C) 2015-2019 MyBot.run"
-	GUICtrlCreateLabel($sText, $x + 1, $y, 415, 56, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT, $ES_CENTER), 0)
-	GUICtrlSetColor(-1, 0x000053)
-	GUICtrlSetFont(-1, 6.5, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
+	$sText = "Special thanks to Mod donators:"
+	GUICtrlCreateLabel($sText, $x - 5, $y, 410, 20, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
+	GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
+	GUICtrlSetColor(-1, $COLOR_NAVY)
+	$sText = "co.chopper, Michael Mollison"
+	GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 50, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
+	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
+	
 EndFunc   ;==>CreateAboutTab
 
 Func ShowCommandLineHelp()
