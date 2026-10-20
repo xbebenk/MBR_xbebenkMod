@@ -102,7 +102,6 @@ Func CollectDailyRewards($bIcnNew = False)
 	If _Sleep(2000) Then Return
 
 	Local $iClaim = 0
-	Local $x1 = 10, $y1 = 530, $x2 = 840, $y2 = 585
 	
 	If _CheckPixel($aPersonalChallengeRewardsCheckMark, True) Then
 		Click($aPersonalChallengeRewardsCheckMark[0], $aPersonalChallengeRewardsCheckMark[1])
@@ -111,7 +110,7 @@ Func CollectDailyRewards($bIcnNew = False)
 	
 	Local $tmpxClaim = 0
 	For $i = 1 To 10		
-		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, $x1, $y1, $x2, $y2)
+		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, 10, 530, 840, 585)
 		If IsArray($aClaim) And UBound($aClaim) > 0 Then
 			_ArraySort($aClaim, 0, 0, 0, 1) ;sort x coord ascending
 			For $j = 0 To UBound($aClaim) - 1
@@ -147,7 +146,6 @@ EndFunc   ;==>CollectDailyRewards
 
 Func CollectNewDailyRewards()
 	Local $iClaim = 0
-	Local $x1 = 240, $y1 = 250, $x2 = 800, $y2 = 390
 	Local $xOffset = 50, $yOffset = 40, $bResource = False
 	Local $bCheckMarkFound = False
 	
@@ -171,12 +169,12 @@ Func CollectNewDailyRewards()
 	Local $tmpxClaim = 0
 	For $i = 1 To 10	
 		If Not $g_bRunState Then Return
-		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, 240, 250, 800, 390)
+		$tmpxClaim = 0
+		Local $aClaim = QuickMIS("CNX", $g_sImgDailyReward, 240, 345, 800, 390)
 		If IsArray($aClaim) And UBound($aClaim) > 0 Then
 			_ArraySort($aClaim, 0, 0, 0, 1) ;sort x coord ascending
 			For $j = 0 To UBound($aClaim) - 1
 				If Not $g_bRunState Then Return
-				If $aClaim[$j][0] = "CheckMark" Then ContinueLoop
 				If Abs($tmpxClaim - $aClaim[$j][1]) < 10 Then ContinueLoop ;same Claim button 
 				
 				If QuickMIS("BC1", $g_sImgDailyRewardItems, $aClaim[$j][1], $aClaim[$j][2] - 30, $aClaim[$j][1] + 100, $aClaim[$j][2] + 50) Then
@@ -215,14 +213,16 @@ Func CollectNewDailyRewards()
 				EndIf
 				$tmpxClaim = $aClaim[$j][1]
 			Next
+			If QuickMIS("BC1", $g_sImgDailyReward, 275, 270, 310, 300) Then Click(295, 285, 1, 0, "Click CheckMark")
 		EndIf
 		
-		If WaitforPixel(815, 275, 816, 275, "FFFF83", 10, 1, "TrophyColor") Then ExitLoop ;thropy color
+		If WaitforPixel(815, 295, 816, 295, "F7B844", 10, 1, "TrophyColor") Then ExitLoop ;thropy color
 		If WaitforPixel(815, 275, 815, 276, "84FD58", 10, 1, "Card Points") Or WaitforPixel(810, 290, 811, 290, "8ACD33", 10, 1, "CheckMark Points") Then ClickDrag(750, 340, 200, 340)
 		If _PixelSearch(773, 296, 774, 296, Hex(0xC9BE85, 6), 10, True, "New Challenges") Then 
 			SetLog("Congratulations, Season Pass Complete!", $COLOR_SUCCESS)
 			ExitLoop
 		EndIf
+		SetDebugLog("xClaim attempt: " & $i) 
 	Next
 	
 EndFunc ;==>CollectNewDailyRewards

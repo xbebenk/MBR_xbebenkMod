@@ -19,13 +19,13 @@ Func Blacksmith($bTest = False)
 	If Not OpenBlacksmithMenu() Then Return
 
 	OresReport()
-	If $g_sShiny < 5000 Then Return
 	Local $aUpgrade = GetEquipmentUpgradeList()
 	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 		Click($aUpgrade[0][1], $aUpgrade[0][2], 1, 0, "Click Upgrade" & $aUpgrade[0][3])
 		If _Sleep(1000) Then Return
 		If IsUpgradeWindowOpen() Then 
 			Click(700, 540, 1, 0, "Click Upgrade")
+			SetLog("Upgrading : " & $aUpgrade[0][3], $COLOR_SUCCESS)
 			If _Sleep(2000) Then Return
 			Click(795, 460, 1, 0, "Click Upgrade")
 			If _Sleep(2000) Then Return
