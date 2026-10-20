@@ -113,6 +113,10 @@ Func getBuildersOnMenu($x_start = 528, $y_start = 639) ;  -> Gets Builders numbe
 	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 35, 14, True)
 EndFunc   ;==>getBuildersOnMenu
 
+Func getBuildersBBOnMenu($x_start = 575, $y_start = 639) ;  -> Gets Builderbase Builders number - on Builder menu
+	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 35, 14, True)
+EndFunc   ;==>getBuildersOnMenu
+
 Func getPetBuilderOnMenu($x_start = 800, $y_start = 639) ;  -> Gets Builders number - on Builder menu
 	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 35, 14, True)
 EndFunc   ;==>getPetBuilderOnMenu

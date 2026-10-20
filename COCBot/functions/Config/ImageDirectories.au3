@@ -206,6 +206,7 @@ Global $g_sImgGreenCheckBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUp
 Global $g_sImgBBResourceIcon = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\BBResourceIcon\"
 Global $g_sImgBBUpgradeWindowButton = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\Upgrade\UpgradeWindowButton\"
 Global $g_sImgBBBuilderMenu = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\BuilderMenu\"
+Global $g_sImgStarLabMenu = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\StarLabMenu\"
 Global $g_sImgShopArmyBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\ShopBB\Army\"
 Global $g_sImgShopResourcesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\ShopBB\Resources\"
 Global $g_sImgShopDefensesBB = @ScriptDir & "\imgxml\Resources\BuildersBase\AutoUpgrade\ShopBB\Defenses\"

@@ -27,7 +27,7 @@ Func BuilderBaseReport($bBypass = False, $bSetLog = True); $CheckBH = True)
 	$g_aiCurrentLootBB[$eLootTrophyBB] = getTrophyBB(70, 135)
 	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(690, 22)
 	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(690, 59)
-	If $bSetLog Then SetLog("[B]:" & $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB & " [G]:" & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]) & " [E]:" & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]) & "[T]: " & _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB]), $COLOR_SUCCESS)
+	If $bSetLog Then SetLog("[B]:" & $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB & " [G]:" & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]) & " [E]:" & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]) & " [T]:" & _NumberFormat($g_aiCurrentLootBB[$eLootTrophyBB]), $COLOR_SUCCESS)
 
 	If Not $bBypass Then ; update stats
 		UpdateStats()

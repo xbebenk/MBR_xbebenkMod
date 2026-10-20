@@ -913,8 +913,7 @@ Func __RunFunction($action)
 		Case "PetHouse"
 			PetHouse()
 		Case "DailyChallenge"
-			Broken($action)
-			;DailyChallenges()
+			DailyChallenges()
 		Case "SellMagicItem"
 			Broken($action)
 			;SellMagicItem()
@@ -926,14 +925,11 @@ Func __RunFunction($action)
 			Broken($action)
 			;UpgradeBuilding()
 		Case "AutoUpgrade"
-			Broken($action)
-			;AutoUpgrade()
+			AutoUpgrade()
 		Case "UpgradeLow"
-			Broken($action)
-			;AutoUpgrade(False, True)
+			AutoUpgrade(False, True)
 		Case "UpgradeWall"
-			Broken($action)
-			;UpgradeWall()
+			UpgradeWall()
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_bAutoUpgradeBBEnabled Or $g_bChkEnableBBAttack Then
 				BuilderBase()

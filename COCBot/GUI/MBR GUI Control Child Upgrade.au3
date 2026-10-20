@@ -660,6 +660,7 @@ Func SortEquipmentUpgrade()
 		GUICtrlSetState($g_hCmbSortUpgradeEquipment, $GUI_DISABLE)
 	EndIf
 	$g_iCmbSortUpgradeEquipment = _GUICtrlComboBox_GetCurSel($g_hCmbSortUpgradeEquipment)
+	SetDebugLog("Sort Equipment Upgrade: " & String($g_bChkSortUpgradeEquipment) & " order by : " & $g_iCmbSortUpgradeEquipment)
 EndFunc
 
 Func chkUpgradePets()

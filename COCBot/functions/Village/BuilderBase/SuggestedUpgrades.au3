@@ -23,6 +23,44 @@ Func AutoUpgradeBB($bTest = False)
 	Return $Result
 EndFunc   ;==>MainSuggestedUpgradeCode
 
+Func AutoUpgradeBBCheckResource()
+	
+	Local $sBuilderInfo = getBuildersBBOnMenu()
+	If StringInStr($sBuilderInfo, "#") > 0 Then ; check for valid OCR read
+		Local $aGetBuilders = StringSplit($sBuilderInfo, "#", $STR_NOCOUNT) ; Split into free and total builder strings
+		$g_iFreeBuilderCountBB = Int($aGetBuilders[0]) ; update global values
+		$g_iTotalBuilderCountBB = Int($aGetBuilders[1])
+	Else
+		SetLog("Fail to read builder count", $COLOR_DEBUG1)
+		Return False
+	EndIf
+	
+	$g_aiCurrentLootBB[$eLootGoldBB] = getResourcesMainScreen(350, 22)
+	$g_aiCurrentLootBB[$eLootElixirBB] = getResourcesMainScreen(350, 59)
+	
+	SetLog("[BB Builder]:" & $g_iFreeBuilderCountBB & "/" & $g_iTotalBuilderCountBB, $COLOR_SUCCESS)
+	SetLog("[G]:" & _NumberFormat($g_aiCurrentLootBB[$eLootGoldBB]) & " [E]:" & _NumberFormat($g_aiCurrentLootBB[$eLootElixirBB]), $COLOR_SUCCESS)
+	
+	Return True
+	
+EndFunc
+
+Func AutoUpgradeBBCheckBuilder($bTest = False)
+	Local $bRet = False
+	
+	AutoUpgradeBBCheckResource()
+	;Check if there is a free builder for Auto Upgrade
+	If $g_iFreeBuilderCountBB > 0 Then
+		$bRet = True
+	Else
+		SetLog("Master Builder Not Available", $COLOR_DEBUG2)
+		CloseBuilderMenu()
+		$bRet = False
+	EndIf
+	SetLog("Free Master Builder : " & $g_iFreeBuilderCountBB, $COLOR_DEBUG)
+	Return $bRet
+EndFunc
+
 Func SearchUpgradeBB($bTest = False)
 	$g_bStayOnBuilderBase = True
 	
@@ -30,14 +68,24 @@ Func SearchUpgradeBB($bTest = False)
 	If _Sleep(50) Then Return
 	SetLog("Check for Auto UpgradeBB", $COLOR_INFO)
 	
+	BuilderBaseReport()
+	If $bTest Then $g_iFreeBuilderCountBB = 1
+	
+	If $g_aiCurrentLootBB[$eLootGoldBB] < 5000 Then 
+		SetLog("GoldBB < 5000, try again later!", $COLOR_DEBUG2)
+		Return False
+	EndIf
+	
+	OpenBBBuilderMenu()
+	;SpendBBGoldOnWall() ;spend BB gold on wall
+	
 	If Not $g_bRunState Then Return
 	If AutoUpgradeBBCheckBuilder($bTest) Then
-		SpendBBGoldOnWall() ;spend BB gold on wall
 		_SearchUpgradeBB($bTest) ;search upgrade for existing building
 	EndIf
 
 	ZoomOut(True)
-	Return False
+	Return
 EndFunc
 
 Func _SearchUpgradeBB($bTest = False)
@@ -45,13 +93,10 @@ Func _SearchUpgradeBB($bTest = False)
 	Local $NeedDrag = True, $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost
 	Local $bForceUseGold = False
 	
-	If Not ClickBBBuilder() Then Return
-	$bSkipNew = FindBHInUpgradeProgress()
+	;$bSkipNew = FindBHInUpgradeProgress()
 	
 	For $z = 1 To 8 ;do scroll 8 times
 		If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop
-		If Not ClickBBBuilder() Then Return
-		If _Sleep(500) Then Return
 		$TmpUpgradeCost = getMostBottomCostBB() ;check most bottom upgrade cost
 		If Not $g_bRunState Then Return
 		If $UpgradeCost = $TmpUpgradeCost Then 
@@ -67,6 +112,7 @@ Func _SearchUpgradeBB($bTest = False)
 			If IsBBBuilderMenuOpen() Then Click(466, 30)
 			ExitLoop
 		EndIf
+		
 		$bNew = False ;reset
 		Local $Upgrades = FindUpgradeBB($bTest, $bSkipNew)
 		If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
@@ -159,46 +205,65 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 	Local $aBOBControl[3][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10]]
 	Local $aPriority[9][2] = [["Storage", 13], ["Army", 13], ["Barracks", 10], ["Star Lab", 14], ["Machine", 11], ["Copter", 11], ["Hall", 12], ["Gem", 9], ["Clock", 9]]
 	
-	Local $aTmpCoord, $aBuilding[0][8], $BuildingName, $UpgradeCost, $aUpgradeName, $tmpcost, $lenght = 0, $skipType = 0, $sCostType = ""
+	Local $aTmpCoord, $aBuilding[0][8], $BuildingName, $UpgradeCost, $aUpgradeName, $tmpcost, $lenght = 150, $skipType = 0, $sCostType = ""
 	Local $hTimer = TimerInit()
 	
 	;check if we found new building
-	If Not $bSkipNew Then $aTmpCoord = QuickMIS("CNX", $g_sImgAUpgradeObstNew, $g_iXFindUpgradeBB, 73, $g_iXFindUpgradeBB + 150, 400)
-	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
-		If Not $g_bRunState Then Return
-		_ArraySort($aTmpCoord, 0, 0, 0, 2)
-		For $i = 0 To UBound($aTmpCoord) - 1
-			If Not $g_bRunState Then Return
-			If QuickMIS("BC1", $g_sImgBBResourceIcon, $aTmpCoord[$i][1] + 80, $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 230, $aTmpCoord[$i][2] + 10) Then
-				$sCostType = $g_sQuickMISName
-				$lenght = Number($g_iQuickMISX) - $aTmpCoord[$i][1]
-			Else
-				SetDebugLog("Fail to detect resource icon, skip..")
-				ContinueLoop
-			EndIf
-			
-			$aUpgradeName = getBuildingName($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
-			$tmpcost = getBuilderMenuCost($g_iQuickMISX + 5, $g_iQuickMISY - 10)
-			If StringInStr($aUpgradeName[0], "Wall") Then $aUpgradeName[0] = "Wall"
-			Local $tmparray[1][8] = [[String($sCostType), $aTmpCoord[$i][1], Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), "New", Number($tmpcost), "New", 0]]
-			_ArrayAdd($aBuilding, $tmparray)
-			If @error Then SetLog("FindUpgrade ComposeArray[New] Err : " & @error, $COLOR_ERROR)
-		Next
-		;_ArrayDisplay($aBuilding)
-		;If UBound($aBuilding) > 0 Then 
-		;	_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
-		;	Return $aBuilding ;return new building array
-		;EndIf
-	EndIf
+	;If Not $bSkipNew Then $aTmpCoord = QuickMIS("CNX", $g_sImgAUpgradeObstNew, $g_iXFindUpgradeBB, 73, $g_iXFindUpgradeBB + 150, 400)
+	;If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+	;	If Not $g_bRunState Then Return
+	;	_ArraySort($aTmpCoord, 0, 0, 0, 2)
+	;	For $i = 0 To UBound($aTmpCoord) - 1
+	;		If Not $g_bRunState Then Return
+	;		If QuickMIS("BC1", $g_sImgBBResourceIcon, $aTmpCoord[$i][1] + 80, $aTmpCoord[$i][2] - 12, $aTmpCoord[$i][1] + 230, $aTmpCoord[$i][2] + 10) Then
+	;			$sCostType = $g_sQuickMISName
+	;			$lenght = Number($g_iQuickMISX) - $aTmpCoord[$i][1]
+	;		Else
+	;			SetDebugLog("Fail to detect resource icon, skip..")
+	;			ContinueLoop
+	;		EndIf
+	;		
+	;		$aUpgradeName = getBuildingName($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
+	;		$tmpcost = getBuilderMenuCost($g_iQuickMISX + 5, $g_iQuickMISY - 10)
+	;		If StringInStr($aUpgradeName[0], "Wall") Then $aUpgradeName[0] = "Wall"
+	;		Local $tmparray[1][8] = [[String($sCostType), $aTmpCoord[$i][1], Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), "New", Number($tmpcost), "New", 0]]
+	;		_ArrayAdd($aBuilding, $tmparray)
+	;		If @error Then SetLog("FindUpgrade ComposeArray[New] Err : " & @error, $COLOR_ERROR)
+	;	Next
+	;	;_ArrayDisplay($aBuilding)
+	;	;If UBound($aBuilding) > 0 Then 
+	;	;	_ArraySort($aBuilding, 0, 0, 0, 5) ;sort by cost
+	;	;	Return $aBuilding ;return new building array
+	;	;EndIf
+	;EndIf
 	
-	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 510, 73, 620, 400)
+	;$aTmpCoord = QuickMIS("CNX", $g_sImgEquipmentCorner, 845, 50, 860, 535)
+	;If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+	;	For $i = 0 To UBound($aTmpCoord) - 1
+	;		$aUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
+	;		$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] + 9, 823, $aTmpCoord[$i][2] + 35, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
+	;		If $bNotEnoughOres Then
+	;			SetDebugLog($aUpgradeName[0] & ": Not Enough Ores")
+	;			ContinueLoop
+	;		EndIf
+	;		Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1] - 50), Number($aTmpCoord[$i][2] + 10), String($aUpgradeName[0])]]
+	;		_ArrayAdd($aUpgrade, $tmparray)
+	;		If @error Then SetLog("GetEquipmentUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
+	;	Next
+	;
+	;	For $j = 0 To UBound($aUpgrade) - 1
+	;		SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
+	;	Next
+	;EndIf
+	
+	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 830, 50, 860, 535)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		RemoveDupCNX($aTmpCoord, 2)
 		For $i = 0 To UBound($aTmpCoord) - 1
 			If Not $g_bRunState Then Return
-			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $g_iXFindUpgradeBB, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip new
-			$lenght = Number($aTmpCoord[$i][1]) - $g_iXFindUpgradeBB
-			$aUpgradeName = getBuildingName($g_iXFindUpgradeBB, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
-			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
+			;If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $g_iXFindUpgradeBB, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip new
+			$aUpgradeName = getBuildingName(560, $aTmpCoord[$i][2] - 21, $lenght) ;get upgrade name and amount
+			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 140, $aTmpCoord[$i][2] - 3)
 			If StringInStr($aUpgradeName[0], "Wall") Then $aUpgradeName[0] = "Wall"
 			If $g_bChkBBSpendGoldOnWall And StringInStr($aUpgradeName[0], "Wall") And StringInStr($aTmpCoord[$i][0], "Elix") Then ContinueLoop ;skip wall upgrade with elix
 			If Number($tmpcost) = 0 Then ContinueLoop
@@ -723,26 +788,7 @@ Func GoAttackBBAndReturn()
 	SetLog("Field should be clear now", $COLOR_DEBUG)
 EndFunc
 
-Func AutoUpgradeBBCheckBuilder($bTest = False)
-	Local $bRet = False
-	BuilderBaseReport(True, False)
-	If $bTest Then $g_iFreeBuilderCountBB = 1
-	
-	If $g_aiCurrentLootBB[$eLootGoldBB] < 5000 Then 
-		SetLog("GoldBB < 5000, try again later!", $COLOR_DEBUG2)
-		Return False
-	EndIf
-	
-	;Check if there is a free builder for Auto Upgrade
-	If $g_iFreeBuilderCountBB > 0 Then
-		$bRet = True
-	Else
-		SetLog("Master Builder Not Available", $COLOR_DEBUG2)
-		$bRet = False
-	EndIf
-	SetLog("Free Master Builder : " & $g_iFreeBuilderCountBB, $COLOR_DEBUG)
-	Return $bRet
-EndFunc
+
 
 Func ClickBBBuilder($Counter = 3)
 	Local $b_WindowOpened = False
@@ -845,14 +891,14 @@ Func IsBBBuilderMenuOpen()
 EndFunc ;IsBBBuilderMenuOpen
 
 Func getMostBottomCostBB()
-	Local $TmpUpgradeCost, $TmpName, $ret
-	Local $Icon = QuickMIS("CNX", $g_sImgBBResourceIcon, 500, 130, 630, 380)
+	Local $TmpUpgradeCost, $ret
+	Local $Icon = QuickMIS("CNX", $g_sImgBBResourceIcon, 830, 500, 850, 585)
 	If IsArray($Icon) And UBound($Icon) > 0 Then
 		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord desc
-		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 12, 120, 20, True) ;check most bottom upgrade cost
-		$TmpName = getBuildingName($Icon[0][1] - 180, $Icon[0][2] - 10)
-		$ret = $TmpName[0] & "|" & $TmpUpgradeCost
+		$TmpUpgradeCost = getBuilderMenuCost($Icon[0][1] - 120, $Icon[0][2] - 2)
+		$ret = $TmpUpgradeCost
 	EndIf
+	
 	Return $ret
 EndFunc
 
@@ -1054,4 +1100,28 @@ Func BBUpWallGold($iWallCost = 10000, $iCountPlus = 2, $UpType = "+1")
 		ClickAway()
 		Return True
 	EndIf
+EndFunc
+
+Func OpenBBBuilderMenu($bOpenSLab = False)
+	If Not $g_bRunState Then Return
+	Local $bRet = False
+	
+	; open the builders menu
+	If _ColorCheck(_GetPixelColor(753, 594, True), Hex(0xFCC610, 6), 10, Default, "Orange Build Button") Then
+		SetLog("opening Builder menu", $COLOR_ACTION)
+		Click(800, 600, 1, 0, "Click Builder Button")
+	EndIf
+	
+	WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) ;check red x upper right corner
+	If $bOpenSLab Then
+		Click(770, 636, 1, 0, "Click Star Lab icon")
+		If _Sleep(500) Then Return
+		If QuickMIS("BC1", $g_sImgStarLabMenu, 640, 14, 665, 25) Then $bRet = True
+	Else
+		If QuickMIS("BC1", $g_sImgBBBuilderMenu, 640, 14, 665, 25) Then $bRet = True
+	EndIf
+	
+	If $bRet Then SetLog("Successfully opening Builderbase " & ($bOpenSLab = True ? "Star Laboratory" : "BuilderBase Builder") & " menu", $COLOR_SUCCESS) 
+
+	Return $bRet
 EndFunc
