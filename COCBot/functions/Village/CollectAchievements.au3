@@ -18,58 +18,28 @@ Global $g_iCollectAchievementsRunOn = 0
 Global $g_iFoundScrollEnd = 0
 
 Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing to run regardless of checkbox setting, randomization skips and runstate check
+	Local $RewardCollected = False
 	If Not $g_bChkCollectAchievements Then Return
-	If Not IsOnMainVillage() Then Return
+	CheckMainScreen()
 	
 	SetLog("Checking achievement rewards", $COLOR_INFO)
-	Local $Collecting = True, $RewardCollected = False
-	While $Collecting
-		If Not $g_bRunState Then Return
-		;Check if possible rewards available from main screen
-		Local $aImgAchievementsMainScreen = decodeSingleCoord(findImage("AchievementsMainScreen", $g_sImgAchievementsMainScreen, GetDiamondFromRect("5, 60, 70, 2"), 1, True))
-		If UBound($aImgAchievementsMainScreen) > 1 Then
-			SetLog("Achievement counter found on main screen", $COLOR_SUCCESS)
-			Click($aImgAchievementsMainScreen[0] - 10, $aImgAchievementsMainScreen[1] + 20)
-			If _Sleep(1500) Then Return
-		Else
-			If $RewardCollected Then
-				SetLog("All achievement rewards collected", $COLOR_DEBUG2)
-			Else
-				SetLog("No achievement rewards to collect", $COLOR_DEBUG2)
-			EndIf
-			ExitLoop
-		EndIf
-		
-		;Check if MyProfile window Opened correctly
-		Local $aImgAchievementsMyProfile = decodeSingleCoord(findImage("MyProfile", $g_sImgAchievementsMyProfile, GetDiamondFromRect("100, 79, 266, 128"), 1, True))
-		If UBound($aImgAchievementsMainScreen) > 1 Then
-			SetDebugLog("My Profile window opened successfully", $COLOR_SUCCESS)
-			If _Sleep(2500) Then Return
-		Else
-			SetDebugLog("My Profile window failed to open", $COLOR_DEBUG2)
-			ClickAway()
-			ExitLoop
-		EndIf
-
-		If Not CollectAchievementsClaimReward() Then
-			SetLog("There are no achievement rewards to collect", $COLOR_DEBUG2)
-			Click(700,100) ;Friend Request Tab
-			If _Sleep(1000) Then Return
-			ExitLoop
-		Else
-			$RewardCollected = True
-			If IsProfileWindowOpen("CollectAchievements") Then
-				Click(800, 99)
-			EndIf
-		EndIf
-		If _Sleep(1500) Then Return
-		If Not IsMainPage() Then ExitLoop
-	WEnd
 	
-	If IsProfileWindowOpen("CollectAchievements") Then
-		Click(800, 99)
+	If Not OpenProfilePage() Then Return
+	If CollectAchievementsClaimReward() Then 
+		$RewardCollected = True
+	Else 
+		SetLog("There are no achievement rewards to collect", $COLOR_DEBUG2)
+		Click(585, 100, 1, 0, "Click Inbox Tab") ; Inbox Tab
+		If _Sleep(1000) Then Return
 	EndIf
-	Return
+	
+	If IsSettingPage(True, 1) Then
+		Click(775, 120, 1, 0, "Click Close Page")
+	EndIf
+	
+	If $RewardCollected Then SetLog("Achievement Collected", $COLOR_SUCCESS)
+	
+	Return $RewardCollected
 EndFunc   ;==>CollectAchievements
 
 Func CollectAchievementsClaimReward()
@@ -95,4 +65,38 @@ Func CollectAchievementsClaimReward()
 	EndIf
 EndFunc   ;==>CollectAchievementsClaimReward
 
-
+Func OpenProfilePage($bVerifyCounter = True)
+	Local $bRet = False
+		
+	If _Sleep(1000) Then Return
+	If _ColorCheck(_GetPixelColor(26, 17, True), Hex(0x20DBFF, 6), 30, Default, "Blue Asterisk on Profile") Then 
+		If $bVerifyCounter Then 
+			If _ColorCheck(_GetPixelColor(85, 27, True), Hex(0xF42946, 6), 20, Default, "Red Icon Achievement counter") Then 
+				Click(50, 50, 1, 0, "Click Profile")
+			Else
+				Return False
+			EndIf
+		Else
+			Click(50, 50, 1, 0, "Click Profile")
+		EndIf
+	EndIf
+		
+	For $i = 1 To 5 
+		If _Sleep(1000) Then Return
+		If IsSettingPage(True, 1) Then 
+			SetDebugLog("[" & $i & "] Verify Profile page")
+			If _ColorCheck(_GetPixelColor(75, 140, True), Hex(0xE7E8E1, 6), 20, Default, "Profile Tab Active") Then
+				$bRet = True
+				ExitLoop
+			EndIf
+			If _ColorCheck(_GetPixelColor(75, 140, True), Hex(0x797165, 6), 20, Default, "Profile Tab Inactive") Then 
+				Click(125, 130, 1, 0, "Click Profile Tab")
+				If _Sleep(1000) Then Return
+				ContinueLoop
+			EndIf
+		Else
+			SetLog("[" & $i & "] Cannot verify Setting page!", $COLOR_DEBUG2)
+		EndIf
+	Next
+	Return $bRet
+EndFunc

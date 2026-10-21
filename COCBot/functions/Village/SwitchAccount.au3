@@ -269,13 +269,19 @@ Func OpenSettingPage()
 		
 	For $i = 1 To 5 
 		If _Sleep(1000) Then Return
+		SetLog("[" & $i & "] Verify Setting page", $COLOR_DEBUG)
 		If IsSettingPage(True, 1) Then 
-			If _ColorCheck(_GetPixelColor(700, 140, True), Hex(0x797165, 6), 20, Default, "Setting Tab Inactive") Then Click(700, 130, 1, 0, "Click Setting Tab")
-			SetLog("[" & $i & "] Setting page verified", $COLOR_SUCCESS)
-			$bRet = True
-			ExitLoop
+			If _ColorCheck(_GetPixelColor(700, 140, True), Hex(0xE7E8E1, 6), 20, Default, "Setting Tab Active") Then
+				$bRet = True
+				ExitLoop
+			EndIf
+			If _ColorCheck(_GetPixelColor(700, 140, True), Hex(0x797165, 6), 20, Default, "Setting Tab Inactive") Then 
+				Click(700, 130, 1, 0, "Click Setting Tab")
+				If _Sleep(1000) Then Return
+				ContinueLoop
+			EndIf
 		Else
-			SetLog("[" & $i & "] Cannot verify Setting page!", $COLOR_ERROR)
+			SetLog("[" & $i & "] Cannot verify Setting page!", $COLOR_DEBUG2)
 		EndIf
 	Next
 	Return $bRet
