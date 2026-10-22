@@ -19,95 +19,44 @@ Func CheckIfSLabIdle($bDebug = False)
 	Local $aLabInfo, $aGetLab, $bRet = True
 	If $bDebug Then Return $bRet
 	
-	$aLabInfo = getBuilders(375, 23)
+	$aLabInfo = getBuilders(802, 545)
 	If StringInStr($aLabInfo, "#") > 0 Then
 		$aGetLab = StringSplit($aLabInfo, "#", $STR_NOCOUNT)
 		Local $iLab = Number($aGetLab[0]), $iLabMax = Number($aGetLab[1])
 		Select 
 			Case $iLab = 0 And $iLabMax = 1
-				SetLog("CheckIfSLabIdle: SLab is Working on Upgrade", $COLOR_DEBUG2)
+				SetLog("CheckIfSLabIdle: Lab is Working on Upgrade", $COLOR_SUCCESS)
+				$bRet = False
+			Case $iLab = 0 And $iLabMax = 2
+				SetLog("CheckIfSLabIdle: Lab is Working on Upgrade", $COLOR_SUCCESS)
 				$bRet = False
 			Case $iLab = 1 And $iLabMax = 2
-				SetLog("CheckIfSLabIdle: SLab is Working on Upgrade", $COLOR_DEBUG2)
+				SetLog("CheckIfSLabIdle: Lab is Working on Upgrade", $COLOR_SUCCESS)
 				$bRet = False
 			Case $iLab = 1 And $iLabMax >= 1
-				SetLog("CheckIfSLabIdle: SLab is Idle", $COLOR_SUCCESS)
+				SetLog("CheckIfSLabIdle: Lab is Idle", $COLOR_DEBUG1)
 				$bRet = True
 		EndSelect
 	EndIf
-	
-	If $bRet Then ;if Lab is idle, check resource is enough to upgrade
-		ClickSLabMenu()
-		If _Sleep(50) Then Return
-		Local $aUpgradeName
-		Local $aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 390, 70, 460, 380)
-		If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
-			_ArraySort($aTmpCoord, 0, 0, 0, 2)
-			For $i = 0 To UBound($aTmpCoord) - 1
-				If $aTmpCoord[$i][0] = "Complete" Then
-					SetLog("All Upgrade Complete", $COLOR_DEBUG)
-					$bRet = False
-					ExitLoop
-				EndIf
-				
-				If _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFFFFFF, 6), 10, 1, "Check White Resource cost") Then
-					SetLog("Detected possible SLabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
-					$bRet = True
-					ExitLoop
-				ElseIf _PixelSearch($aTmpCoord[$i][1] + 10, $aTmpCoord[$i][2], $aTmpCoord[$i][1] + 20, $aTmpCoord[$i][2], Hex(0xFF887F, 6), 10, 1, "Check Red Resource cost") Then
-					SetDebugLog("Detected Not Enough Resource for SLabUpgrade " & $aTmpCoord[$i][0] & " on : " & $aTmpCoord[$i][1] & "," & $aTmpCoord[$i][2], $COLOR_DEBUG)
-					$bRet = False
-				EndIf
-			Next
-		EndIf
-	EndIf
-	
 	Return $bRet
 EndFunc
 
-Func IsSLabMenuOpen()
+Func OpenSLabMenu()
 	Local $bRet = False
-	
-	If _ColorCheck(_GetPixelColor(374, 74, True), Hex(0x8F9590, 6), 40, Default, "IsSLabMenuOpen") Then 
-		$bRet = True
-	Else
-		SetLog("IsSLabMenuOpen Color Not Matched, expexted 8F9590, found : " & _GetPixelColor(374, 74, True), $COLOR_DEBUG2)
-	EndIf
-	
-	Return $bRet
-EndFunc ;IsSLabMenuOpen
-
-Func ClickSLabMenu($Counter = 3)
-	Local $b_Ret = False
 	If Not $g_bRunState Then Return
 
-	; open the Slab menu
-	If Not IsSLabMenuOpen() Then
-		SetLog("Opening Star Lab Menu", $COLOR_ACTION)
-		Click(340, 30)
-		If _Sleep(500) Then Return
+	; open the lab menu
+	If _ColorCheck(_GetPixelColor(753, 594, True), Hex(0xFCC610, 6), 10, Default, "Orange Build Button") Then
+		Click(800, 600, 1, 0, "Click Build Button")
+		If WaitforPixel(835, 35, 836, 35, "D0151A", 20, 2) Then
+			Click(770, 630, 1, 0, "Click SLab Menu")
+		EndIf
 	EndIf
-
-	;check
-	If IsSLabMenuOpen() Then
-		SetLog("Check Star Lab Menu, Opened", $COLOR_SUCCESS)
-		$b_Ret = True
-	Else
-		For $i = 1 To $Counter
-			If Not $g_bRunState Then Return
-			SetLog("Star Lab Closed, trying again!", $COLOR_DEBUG)
-			Click(340, 30)
-			If _Sleep(500) Then Return
-			If IsSLabMenuOpen() Then
-				$b_Ret = True
-				ExitLoop
-			EndIf
-		Next
-	EndIf
-
-	If Not $b_Ret Then SetLog("Something wrong with Star Lab Menu, already tried 3 times!", $COLOR_DEBUG)
-	Return $b_Ret
-EndFunc ;==>ClickSLabMenu
+	
+	If _Sleep(500) Then Return
+	If QuickMIS("BC1", $g_sImgLabMenu, 600, 15, 650, 30) Then $bRet = True
+	Return $bRet
+EndFunc ;==>ClickLabMenu
 
 Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 	Local $bRet = False, $Result
@@ -126,7 +75,7 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 	Else
 		SetLog("Upgrading " & $UpgradeName & " Success!", $COLOR_SUCCESS)
 		PushMsg("StarLabSuccess")
-		ClickAway()
+		CloseBuilderMenu()
 		$bRet = True
 	EndIf
 	
@@ -143,6 +92,7 @@ Func StarLabUpgrade($bTest = False)
 	If _Sleep(50) Then Return
 	
 	BuilderBaseReport(True, True)
+	If Not OpenSLabMenu() Then Return
 	
 	Local $Upgrades = FindSLabUpgrade($bTest)
 	If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
@@ -175,49 +125,63 @@ Func StarLabUpgrade($bTest = False)
 				EndIf
 			Next
 		EndIf
-		ClickAway()
+		CloseBuilderMenu()
 		If _Sleep(500) Then Return
 	Else
 		SetLog("No Star Laboratory Upgrade", $COLOR_DEBUG2)
 	EndIf
 EndFunc
 
+Func NormalizeSLabUpgradeName($sName)
+	$sName = StringStripWS($sName, 3)
+
+	Local $aNames[9] = [ _
+		"Hog Glider", "Electrofire Wizard", "Night Witch", "Beta Minion", _
+		"Baby Dragon", "Sneaky Archer", "Drop Ship", "Raged Barbarian", _
+		"Power P E K K A"]
+
+	For $i = 0 To UBound($aNames) - 1
+		; Bandingkan tanpa membedakan kapital dan abaikan spasi OCR
+		Local $sOCR = StringRegExpReplace($sName, "\s+", "")
+		Local $sExpected = StringRegExpReplace($aNames[$i], "\s+", "")
+
+		If StringLower($sOCR) = StringLower($sExpected) Then
+			Return $aNames[$i]
+		EndIf
+	Next
+
+	Return $sName
+EndFunc
+
 Func FindSLabUpgrade($bTest = False)
 	
-	Local $aTmpCoord, $aUpgrade[0][8], $aUpgradeName, $tmpcost, $lenght = 0
+	Local $aTmpCoord, $aUpgrade[0][8], $sUpgradeName, $tmpcost, $lenght = 180
 	Local $aOrder[0][2], $sName = "", $sPriority = "Common", $iScore = 0
 
-	If $g_bSLabUpgradeOrderEnable Then
-		For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
-			If $g_aCmbSLabUpgradeOrder[$i] = -1 Then ContinueLoop
-			$sName = $g_avStarLabTroops[$g_aCmbSLabUpgradeOrder[$i] + 1][3]
-			SetLog("Priority Order [" & $i + 1 & "] " & $sName, $COLOR_DEBUG)
-			Local $aTmp[1][2] = [[10 - $i, $sName]]
-			_ArrayAdd($aOrder, $aTmp)
-		Next
-	EndIf	
+	;If $g_bSLabUpgradeOrderEnable Then
+	;	For $i = 0 To UBound($g_aCmbSLabUpgradeOrder) - 1
+	;		If $g_aCmbSLabUpgradeOrder[$i] = -1 Then ContinueLoop
+	;		$sName = $g_avStarLabTroops[$g_aCmbSLabUpgradeOrder[$i] + 1][3]
+	;		SetLog("Priority Order [" & $i + 1 & "] " & $sName, $COLOR_DEBUG)
+	;		Local $aTmp[1][2] = [[10 - $i, $sName]]
+	;		_ArrayAdd($aOrder, $aTmp)
+	;	Next
+	;EndIf	
 
-	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 380, 73, 500, 400)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 850, 55, 860, 545)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		RemoveDupCNX($aTmpCoord, 2)
+		_ArraySort($aTmpCoord, 0, 0, 0, 2)
 		For $i = 0 To UBound($aTmpCoord) - 1
-			$lenght = Number($aTmpCoord[$i][1]) - $g_iXFindSLabUpgrade
-			$aUpgradeName = getBuildingName($g_iXFindSLabUpgrade, $aTmpCoord[$i][2] - 12, $lenght) ;get upgrade name and amount
-			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1], $aTmpCoord[$i][2] - 10)
+			$sUpgradeName = getBuildingName(560, Number($aTmpCoord[$i][2]) + 5, $lenght, 18)
+			$sUpgradeName = StringStripWS($sUpgradeName, 3)
+			$sUpgradeName = NormalizeSLabUpgradeName($sUpgradeName)
+			$tmpcost = getBuilderMenuCost(Number($aTmpCoord[$i][1]) - 120, Number($aTmpCoord[$i][2]) + 25)
 			If Number($tmpcost) = 0 Then ContinueLoop
 			
 			$sPriority = "Common"
-			$iScore = 0
-			If UBound($aOrder) > 0 Then
-				For $z = 0 To UBound($aOrder) - 1
-					If String($aUpgradeName[0]) = $aOrder[$z][1] Then 
-						$sPriority = "Priority"
-						$iScore = $aOrder[$z][0]
-						SetLog("Found Priority Upgrade, assign score: " & $iScore & " [" & $aUpgradeName[0] & "]", $COLOR_DEBUG2)
-					EndIf
-				Next
-			EndIf
 			
-			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), Number($aUpgradeName[1]), Number($tmpcost), $iScore, $sPriority]]
+			Local $tmparray[1][8] = [[String("Elix"), Number(700), Number($aTmpCoord[$i][2] + 25), String($sUpgradeName), Number(1), Number($tmpcost), $iScore, $sPriority]]
 
 			_ArrayAdd($aUpgrade, $tmparray)
 			If @error Then SetLog("FindUpgrade ComposeArray Err : " & @error, $COLOR_ERROR)
