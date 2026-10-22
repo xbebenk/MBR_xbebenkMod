@@ -258,7 +258,7 @@ Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get 
     
     ; 2. Hapus pola " spasi [Karakter] spasi [Karakter]" di akhir kata menggunakan RegEx
     ; Pola ini akan membersihkan sisa teks seperti " x i", " x l", " i z", " i i", " e r"
-    $ocrText = StringRegExpReplace($ocrText, "(?i)\s+[xilz]\s+[xilzsz]{1,2}\s*$", "")
+    $ocrText = StringRegExpReplace($ocrText, "(?i)\s+[xilz]\s+[xilzszc]{1,2}\s*$", "")
     
 	; 3. Perbaiki spasi nyasar pada nama bangunan
     $ocrText = StringReplace($ocrText, "Coll ector", "Collector")

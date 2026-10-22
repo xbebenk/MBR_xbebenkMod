@@ -76,8 +76,10 @@ Func CheckBuilderApprentice()
 					EndIf
 				EndIf
 			Else
-				SetLog("BuilderApprentice not Available", $COLOR_DEBUG2)
+				SetLog("BuilderApprentice already used", $COLOR_DEBUG2)
 			EndIf
+		Else
+			SetLog("BuilderApprentice not Available", $COLOR_DEBUG2)
 		EndIf
 	EndIf
 EndFunc
@@ -602,10 +604,9 @@ Func CheckIgnoreUpgrade($sUpgradeName = "", $bUpgradeLowCost = False)
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[33] = 1) ? True : False
 		Case "Builder's Hut"
 			$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[34] = 1) ? True : False
-
 	EndSwitch
 
-	If StringInStr($sUpgradeName, "King") > 0 Then
+	If StringInStr($sUpgradeName, "Barbarian") > 0 Then
 		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[1] = 1) ? True : False
 	ElseIf StringInStr($sUpgradeName, "Queen") > 0 Then
 		$bMustIgnoreUpgrade = ($g_iChkUpgradesToIgnore[2] = 1) ? True : False
