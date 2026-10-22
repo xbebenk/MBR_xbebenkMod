@@ -91,43 +91,87 @@ Func FindPetsButton()
 EndFunc
 
 Func GetPetUpgradeList()
-	Local $aTmpCoord, $lenght, $aUpgradeName, $tmpcost, $aUpgrade[0][6]
+	Local $aTmpCoord, $x = 560, $lenght = 180, $sUpgradeName, $tmpcost, $aUpgrade[0][6], $bNotEnoughOres = True
 	
-	$aTmpCoord = QuickMIS("CNX", $g_sImgResIcon, 800, 100, 850, 570)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, 50, 860, 535)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
-			$lenght = Number($aTmpCoord[$i][1]) - 597
-			$aUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] - 22, $lenght - 60) ;get upgrade name and amount
-			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 90, $aTmpCoord[$i][2] - 2)
-			SetDebugLog("tmpcost: " & $tmpcost)
-			If number($tmpcost) > number($g_aiCurrentLoot[$eLootDarkElixir]) Then 
-				SetDebugLog($aUpgradeName[0] & ": cost " & $tmpcost & " > DE:" & $g_aiCurrentLoot[$eLootDarkElixir])
+			$sUpgradeName = getBuildingName($x, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
+			$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] + 9, 823, $aTmpCoord[$i][2] + 35, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
+			If $bNotEnoughOres Then
+				SetDebugLog($sUpgradeName & ": Not Enough Ores")
 				ContinueLoop
 			EndIf
-			If Number($tmpcost) = 0 Then ContinueLoop
-			
-			Local $tmparray[1][6] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), Number($aUpgradeName[1]), Number($tmpcost)]]
+			Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1] - 50), Number($aTmpCoord[$i][2] + 10), String($sUpgradeName)]]
 			_ArrayAdd($aUpgrade, $tmparray)
-			If @error Then SetLog("FindUpgrade ComposeArray Err : " & @error, $COLOR_ERROR)
+			If @error Then SetLog("GetPetUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
 		Next
 
 		For $j = 0 To UBound($aUpgrade) - 1
-			SetLog("[" & $j & "] Upgrade: " & $aUpgrade[$j][3] & ", Cost=" & $aUpgrade[$j][5], $COLOR_DEBUG)
+			SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
 		Next
-		
-		If $g_bChkSortPetUpgrade Then
-			Switch $g_iCmbSortPetUpgrade
-				Case 0
-					_ArraySort($aUpgrade, 1, 0, 0, 5) ;sort by higher cost
-				Case 1
-					_ArraySort($aUpgrade, 0, 0, 0, 5) ;sort by lower cost
-				Case 2
-					_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by assigned
-			EndSwitch
-		EndIf
-		
-		Return $aUpgrade
 	EndIf
+	
+	
+	Switch $g_iCmbSortPetUpgrade
+		Case 0, 1
+			$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, 50, 860, 535)
+			If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+				For $i = 0 To UBound($aTmpCoord) - 1
+					$sUpgradeName = getBuildingName($x, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
+					$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] + 9, 823, $aTmpCoord[$i][2] + 35, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
+					If $bNotEnoughOres Then
+						SetDebugLog($sUpgradeName & ": Not Enough Ores")
+						ContinueLoop
+					EndIf
+					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1] - 50), Number($aTmpCoord[$i][2] + 10), String($sUpgradeName)]]
+					_ArrayAdd($aUpgrade, $tmparray)
+					If @error Then SetLog("GetPetUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
+				Next
+
+				For $j = 0 To UBound($aUpgrade) - 1
+					SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
+				Next
+			EndIf
+		Case 2
+			$aTmpCoord = QuickMIS("CNX", $g_sImgEquipmentEquipped, 595, 105, 650, 505)
+			If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+				For $i = 0 To UBound($aTmpCoord) - 1
+					$sUpgradeName = getBuildingName($x, $aTmpCoord[$i][2] - 30, $lenght) ;get upgrade name and amount
+					$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] - 27, 823, $aTmpCoord[$i][2] + 4, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
+					If $bNotEnoughOres Then
+						SetDebugLog($sUpgradeName & ": Not Enough Ores")
+						ContinueLoop
+					EndIf
+					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($sUpgradeName)]]
+					_ArrayAdd($aUpgrade, $tmparray)
+					If @error Then SetLog("GetPetUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
+				Next
+
+				For $j = 0 To UBound($aUpgrade) - 1
+					SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
+				Next
+			EndIf
+	EndSwitch
+	
+	If $g_bChkSortPetUpgrade Then
+		Switch $g_iCmbSortPetUpgrade
+			Case 0
+				_ArraySort($aUpgrade, 0, 0, 0, 5) ;sort by lower cost
+				SetDebugLog("Sort by lower cost")
+			Case 1
+				_ArraySort($aUpgrade, 1, 0, 0, 5) ;sort by higher cost
+				SetDebugLog("Sort by higher cost")
+			Case 2
+				_ArraySort($aUpgrade, 0, 0, 0, 5) ;sort by lower cost
+				SetDebugLog("Sort by Assigned lower cost")
+		EndSwitch
+	Else
+		_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by y coord
+		SetDebugLog("Sort by y coord")
+	EndIf
+	
+	Return $aUpgrade
 EndFunc
 
 Func PetHouseNextPage()

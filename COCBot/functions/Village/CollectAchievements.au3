@@ -25,6 +25,7 @@ Func CollectAchievements($bTestMode = False) ;Run with True parameter if testing
 	SetLog("Checking achievement rewards", $COLOR_INFO)
 	
 	If Not OpenProfilePage() Then Return
+	If _Sleep(1500) Then Return
 	If CollectAchievementsClaimReward() Then 
 		$RewardCollected = True
 	Else 

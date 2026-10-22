@@ -239,7 +239,7 @@ Func LaboratoryUpgrade($sUpgradeName, $aCoords, $sCost, $bDebug = False)
 	
 	If $bDebug Then ; if debugging, do not actually click it
 		SetLog("[debug mode] - Start Upgrade, Click Back Button", $COLOR_ACTION)
-		ClickAway()
+		CloseBuilderMenu()
 		Return True ; Return True as if we really started an upgrade
 	Else
 		Click(620, 545, 1, 0, "Upgrade " & $sUpgradeName) ; Everything is good - Click the upgrade button
@@ -249,16 +249,13 @@ Func LaboratoryUpgrade($sUpgradeName, $aCoords, $sCost, $bDebug = False)
 			SetLog("Start Upgrade for " & $sUpgradeName & " Success...", $COLOR_SUCCESS)
 			PushMsg("LabSuccess")
 			
-			If _Sleep($DELAYLABUPGRADE2) Then Return
-			ClickAway()
-			If _Sleep(1000) Then Return
-			ClickAway()
+			CloseBuilderMenu()
 			Return True ; upgrade started
 		Else
 			SetLog("Oops, Gems required for " & $sUpgradeName & " Upgrade, try again.", $COLOR_DEBUG2)
 			Return False
 		EndIf
-		ClickAway()
+		CloseBuilderMenu()
 	EndIf
 EndFunc
 
@@ -474,39 +471,16 @@ Func CheckIfLabIdle($bDebug = False)
 	If Not $bRet Then
 		If $g_iTownHallLevel >= 9 Then
 			OpenLabMenu()
-			If _Sleep(500) Then Return
-			If QuickMIS("BC1", $g_sImgLabAssistant, 450, 200, 495, 245) Then
-				If QuickMIS("BC1", $g_sImgBuilderMenu, 425, 220, 450, 230) Then ; check available text
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					If _Sleep(500) Then Return
-					If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "LabAssistant") Then
-						If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
-							Click($g_iQuickMISX, $g_iQuickMISY)
-							If _Sleep(500) Then Return
-							If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "LabAssistant") Then
-								Click(250, 421, 1, 0, "Click Keep Assign")
-								If _Sleep(500) Then Return
-								Click(430, 520, 1, 0, "Click Confirm")
-								If _Sleep(1000) Then Return
-								ClickAway("Left")
-							EndIf
-						EndIf
-					EndIf
-				Else
-					SetLog("LabAssistant not Available", $COLOR_DEBUG2)
-				EndIf
-			EndIf
-			
-			;close builder menu
+			CheckLabAssistant()
 			CloseBuilderMenu()
 		EndIf
 	EndIf
 	
-	;
+	
 	;If Not $bRet And $g_bUseLabPotion Then
 	;	OpenLabMenu()
-	;	If QuickMIS("BC1", $g_sImgAUpgradeHour, 320, 105, 445, 140) Then
-	;		Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
+	;	If QuickMIS("BC1", $g_sImgAUpgradeHour, 770, 65, 830, 80) Then
+	;		Local $sUpgradeTime = getBuilderLeastUpgradeTime(775, 66)
 	;		Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
 	;		If $mUpgradeTime >= 1440 Then ; only use potion if lab upgrade time is more than 2 day
 	;			SetLog("Upgrade time > 1 day, will use Resource Potion", $COLOR_INFO)
@@ -559,7 +533,7 @@ Func getMostBottomCostLab()
 		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord desc
 		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 12, 120, 20, True) ;check most bottom upgrade cost
 		$TmpName = getBuildingName($Icon[0][1] - 180, $Icon[0][2] - 10)
-		$ret = $TmpName[0] & "|" & $TmpUpgradeCost
+		$ret = $TmpName & "|" & $TmpUpgradeCost
 	EndIf
 	Return $ret
 EndFunc
@@ -576,7 +550,6 @@ Func LabUpgrade($bTest = False)
 	
 	VillageReport(True, True)
 	OpenLabMenu()
-	CheckLabAssistant()
 	
 	Local $Upgrades = _FindLabUpgrade($bTest)
 	If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
@@ -611,63 +584,209 @@ Func LabUpgrade($bTest = False)
 	EndIf
 EndFunc
 
+Func NormalizeLabUpgradeName($sName)
+	$sName = StringStripWS($sName, 3)
+
+	Local $aNames[24] = [ _
+		"Ice Golem", "Witch", "Wall Wrecker", "Ice Block Spell", _
+		"Bat Spell", "Skeleton Spell", "Druid", "Apprentice Warden", _
+		"Bowler", "Battle Blimp", "Stone Slammer", "Lava Hound", _
+		"Minion", "Hog Rider", "Valkyrie", "Golem", _
+		"Lightning Spell", "Heal Spell", "Clone Spell", "Recall Spell", _
+		"Goblin", "Jump Spell", "Baby Dragon", "Battle Drill" _
+	]
+
+	For $i = 0 To UBound($aNames) - 1
+		; Bandingkan tanpa membedakan kapital dan abaikan spasi OCR
+		Local $sOCR = StringRegExpReplace($sName, "\s+", "")
+		Local $sExpected = StringRegExpReplace($aNames[$i], "\s+", "")
+
+		If StringLower($sOCR) = StringLower($sExpected) Then
+			Return $aNames[$i]
+		EndIf
+	Next
+
+	Return $sName
+EndFunc
+
 Func _FindLabUpgrade($bTest = False)
-	Local $aTmpCoord, $aUpgrade[0][8], $BuildingName, $sPriority = "", $aUpgradeName, $tmpcost, $lenght = 0
-	Local $aOrder[0][2], $sName = "", $iUpgrade = 0, $sNameUpgrade = "", $sPriority = "Common", $iScore = 0
-	
+	Local $aTmpCoord, $aUpgrade[0][8]
+	Local $sUpgradeName, $sResource, $tmpcost, $lenght
+	Local $aOrder[0][2], $sName = "", $iUpgrade = 0
+	Local $sNameUpgrade = "", $sPriority = "Common", $iScore = 0
+
+	; Susun urutan prioritas Laboratory
 	If $g_bLabUpgradeOrderEnable Then
 		For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 			If $g_aCmbLabUpgradeOrder[$i] = -1 Then ContinueLoop
+
 			$sName = $g_avLabTroops[$g_aCmbLabUpgradeOrder[$i] + 1][2]
 			$iUpgrade = TroopIndexLookup($sName)
 			$sNameUpgrade = GetTroopName($iUpgrade)
+
 			SetLog("Priority Order [" & $i + 1 & "] " & $sNameUpgrade, $COLOR_DEBUG)
+
 			Local $aTmp[1][2] = [[10 - $i, $sNameUpgrade]]
 			_ArrayAdd($aOrder, $aTmp)
 		Next
 	EndIf
-	
-	;_ArrayDisplay($aOrder)
-	
-	$aTmpCoord = QuickMIS("CNX", $g_sImgResIcon, 830, 100, 850, 570)
+
+	; Deteksi corner setiap baris upgrade, sama seperti FindUpgrade()
+	$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 850, 55, 860, 545)
+
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		If Not $g_bRunState Then Return $aUpgrade
+
 		RemoveDupCNX($aTmpCoord, 2)
+		_ArraySort($aTmpCoord, 0, 0, 0, 2)
+
 		For $i = 0 To UBound($aTmpCoord) - 1
+			If Not $g_bRunState Then Return $aUpgrade
+
+			; Hitung panjang area OCR dari posisi corner
 			$lenght = Number($aTmpCoord[$i][1]) - 560 - 80
-			$aUpgradeName = getBuildingName(560, $aTmpCoord[$i][2] - 18, $lenght, 18) ;get upgrade name and amount
-			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 120, $aTmpCoord[$i][2] - 2)
+			If $lenght <= 0 Then ContinueLoop
+
+			; Baca nama upgrade
+			$sUpgradeName = getBuildingName( _
+				560, _
+				Number($aTmpCoord[$i][2]) + 5, _
+				$lenght, _
+				18 _
+			)
+			$sUpgradeName = StringStripWS($sUpgradeName, 3)
+			$sUpgradeName = NormalizeLabUpgradeName($sUpgradeName)
+
+			If $sUpgradeName = "" Then ContinueLoop
+
+			; Baca resource dan cost berdasarkan posisi baris
+			$sResource = QuickMIS( _
+				"N1", $g_sImgResourceIcon, _
+				832, Number($aTmpCoord[$i][2]) + 24, _
+				852, Number($aTmpCoord[$i][2]) + 42 _
+			)
+
+			$tmpcost = getBuilderMenuCost( _
+				Number($aTmpCoord[$i][1]) - 120, _
+				Number($aTmpCoord[$i][2]) + 25 _
+			)
+
 			If Number($tmpcost) = 0 Then ContinueLoop
-			
+
+			; Prioritas hanya berdasarkan urutan Laboratory
 			$sPriority = "Common"
 			$iScore = 0
-			If UBound($aOrder) > 0 Then
+
+			If $g_bLabUpgradeOrderEnable And UBound($aOrder) > 0 Then
 				For $z = 0 To UBound($aOrder) - 1
-					If StringInStr($aUpgradeName[0], $aOrder[$z][1]) > 0 Then 
+					If StringInStr($sUpgradeName, $aOrder[$z][1]) > 0 Then
 						$sPriority = "Priority"
 						$iScore = $aOrder[$z][0]
-						SetLog("Found Priority Upgrade, assign score: " & $iScore & " [" & $aUpgradeName[0] & "]", $COLOR_DEBUG2)
+
+						SetLog( _
+							"Lab Priority: " & $sUpgradeName & _
+							", order=" & $iScore, _
+							$COLOR_DEBUG2 _
+						)
+						ExitLoop
 					EndIf
 				Next
 			EndIf
-			
-			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0]), Number($aUpgradeName[1]), Number($tmpcost), $iScore, $sPriority]]
-			_ArrayAdd($aUpgrade, $tmparray)
-			If @error Then SetLog("_FindLabUpgrade ComposeArray Err : " & @error, $COLOR_ERROR)
-		Next
 
-		For $j = 0 To UBound($aUpgrade) - 1
-			SetLog("[" & $j & "] Upgrade: " & $aUpgrade[$j][3] & ", Cost=" & $aUpgrade[$j][5] & ", priority=" &  $aUpgrade[$j][7], $COLOR_DEBUG)
+			Local $tmparray[1][8] = [[ _
+				String($sResource), _
+				Number($aTmpCoord[$i][1]), _
+				Number($aTmpCoord[$i][2]), _
+				String($sUpgradeName), _
+				1, _
+				Number($tmpcost), _
+				$iScore, _
+				$sPriority _
+			]]
+
+			_ArrayAdd($aUpgrade, $tmparray)
+
+			If @error Then
+				SetLog("_FindLabUpgrade ComposeArray Err: " & @error, $COLOR_ERROR)
+			EndIf
+
+			SetLog( _
+				"Lab detected: " & $sUpgradeName & _
+				", Resource=" & $sResource & _
+				", Cost=" & $tmpcost & _
+				", Priority=" & $sPriority, _
+				$COLOR_DEBUG _
+			)
 		Next
 	EndIf
-	
-	If $g_bLabUpgradeOrderEnable Then 
-		_ArraySort($aUpgrade, 1, 0, 0, 6) ;sort by score
+
+	; Sorting tetap seperti fungsi sebelumnya
+	If $g_bLabUpgradeOrderEnable Then
+		_ArraySort($aUpgrade, 1, 0, 0, 6)
 	Else
-		_ArraySort($aUpgrade, 1, 0, 0, 5) ;sort by cost
+		_ArraySort($aUpgrade, 1, 0, 0, 5)
 	EndIf
-	
+
 	Return $aUpgrade
 EndFunc
+
+;Func _FindLabUpgrade($bTest = False)
+;	Local $aTmpCoord, $aUpgrade[0][8], $BuildingName, $sPriority = "", $sUpgradeName, $tmpcost, $lenght = 0
+;	Local $aOrder[0][2], $sName = "", $iUpgrade = 0, $sNameUpgrade = "", $sPriority = "Common", $iScore = 0
+;	
+;	If $g_bLabUpgradeOrderEnable Then
+;		For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
+;			If $g_aCmbLabUpgradeOrder[$i] = -1 Then ContinueLoop
+;			$sName = $g_avLabTroops[$g_aCmbLabUpgradeOrder[$i] + 1][2]
+;			$iUpgrade = TroopIndexLookup($sName)
+;			$sNameUpgrade = GetTroopName($iUpgrade)
+;			SetLog("Priority Order [" & $i + 1 & "] " & $sNameUpgrade, $COLOR_DEBUG)
+;			Local $aTmp[1][2] = [[10 - $i, $sNameUpgrade]]
+;			_ArrayAdd($aOrder, $aTmp)
+;		Next
+;	EndIf
+;	
+;	;_ArrayDisplay($aOrder)
+;	
+;	$aTmpCoord = QuickMIS("CNX", $g_sImgResIcon, 830, 100, 850, 570)
+;	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+;		RemoveDupCNX($aTmpCoord, 2)
+;		For $i = 0 To UBound($aTmpCoord) - 1
+;			$lenght = Number($aTmpCoord[$i][1]) - 560 - 80
+;			$sUpgradeName = getBuildingName(560, $aTmpCoord[$i][2] - 18, $lenght, 18) ;get upgrade name and amount
+;			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 120, $aTmpCoord[$i][2] - 2)
+;			If Number($tmpcost) = 0 Then ContinueLoop
+;			
+;			$sPriority = "Common"
+;			$iScore = 0
+;			If UBound($aOrder) > 0 Then
+;				For $z = 0 To UBound($aOrder) - 1
+;					If StringInStr($sUpgradeName, $aOrder[$z][1]) > 0 Then 
+;						$sPriority = "Priority"
+;						$iScore = $aOrder[$z][0]
+;						SetLog("Found Priority Upgrade, assign score: " & $iScore & " [" & $sUpgradeName & "]", $COLOR_DEBUG2)
+;					EndIf
+;				Next
+;			EndIf
+;			
+;			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($sUpgradeName), Number(1), Number($tmpcost), $iScore, $sPriority]]
+;			_ArrayAdd($aUpgrade, $tmparray)
+;			If @error Then SetLog("_FindLabUpgrade ComposeArray Err : " & @error, $COLOR_ERROR)
+;		Next
+;
+;		For $j = 0 To UBound($aUpgrade) - 1
+;			SetLog("[" & $j & "] Upgrade: " & $aUpgrade[$j][3] & ", Cost=" & $aUpgrade[$j][5] & ", priority=" &  $aUpgrade[$j][7], $COLOR_DEBUG)
+;		Next
+;	EndIf
+;	
+;	If $g_bLabUpgradeOrderEnable Then 
+;		_ArraySort($aUpgrade, 1, 0, 0, 6) ;sort by score
+;	Else
+;		_ArraySort($aUpgrade, 1, 0, 0, 5) ;sort by cost
+;	EndIf
+;	
+;	Return $aUpgrade
+;EndFunc
 
 ; $sUpgrade = Any, will search all image 
 ; $sUpgrade = AnySpell, will search all within AnySpell image dir
@@ -850,6 +969,8 @@ Func CheckLabAssistant()
 				SetLog("LabAssistant not Available", $COLOR_DEBUG2)
 			EndIf
 		EndIf
+	Else
+		SetLog("LabAssistant Not Available", $COLOR_DEBUG2)
 	EndIf
 EndFunc
 

@@ -41,21 +41,21 @@ Func Blacksmith($bTest = False)
 EndFunc   ;==>Blacksmith
 
 Func GetEquipmentUpgradeList()
-	Local $aTmpCoord, $lenght =  180, $aUpgradeName, $aUpgrade[0][4]
+	Local $aTmpCoord, $lenght =  180, $sUpgradeName, $aUpgrade[0][4]
 	Local $bNotEnoughOres = False
 	
 	Switch $g_iCmbSortUpgradeEquipment
 		Case 0, 1
-			$aTmpCoord = QuickMIS("CNX", $g_sImgEquipmentCorner, 845, 50, 860, 535)
+			$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, 50, 860, 535)
 			If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 				For $i = 0 To UBound($aTmpCoord) - 1
-					$aUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
+					$sUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
 					$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] + 9, 823, $aTmpCoord[$i][2] + 35, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
 					If $bNotEnoughOres Then
-						SetDebugLog($aUpgradeName[0] & ": Not Enough Ores")
+						SetDebugLog($sUpgradeName & ": Not Enough Ores")
 						ContinueLoop
 					EndIf
-					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1] - 50), Number($aTmpCoord[$i][2] + 10), String($aUpgradeName[0])]]
+					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1] - 50), Number($aTmpCoord[$i][2] + 10), String($sUpgradeName)]]
 					_ArrayAdd($aUpgrade, $tmparray)
 					If @error Then SetLog("GetEquipmentUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
 				Next
@@ -68,13 +68,13 @@ Func GetEquipmentUpgradeList()
 			$aTmpCoord = QuickMIS("CNX", $g_sImgEquipmentEquipped, 595, 105, 650, 505)
 			If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 				For $i = 0 To UBound($aTmpCoord) - 1
-					$aUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] - 30, $lenght) ;get upgrade name and amount
+					$sUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] - 30, $lenght) ;get upgrade name and amount
 					$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] - 27, 823, $aTmpCoord[$i][2] + 4, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
 					If $bNotEnoughOres Then
-						SetDebugLog($aUpgradeName[0] & ": Not Enough Ores")
+						SetDebugLog($sUpgradeName & ": Not Enough Ores")
 						ContinueLoop
 					EndIf
-					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($aUpgradeName[0])]]
+					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($sUpgradeName)]]
 					_ArrayAdd($aUpgrade, $tmparray)
 					If @error Then SetLog("GetEquipmentUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
 				Next

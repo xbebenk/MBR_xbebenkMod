@@ -110,11 +110,11 @@ Func getBuilders($x_start, $y_start) ;  -> Gets Builders number - main screen --
 EndFunc   ;==>getBuilders
 
 Func getBuildersOnMenu($x_start = 528, $y_start = 639) ;  -> Gets Builders number - on Builder menu
-	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 35, 14, True)
+	Return StringReplace(getOcrAndCapture("coc-totalreq", $x_start, $y_start, 35, 14, True), "-", "") 
 EndFunc   ;==>getBuildersOnMenu
 
 Func getBuildersBBOnMenu($x_start = 575, $y_start = 639) ;  -> Gets Builderbase Builders number - on Builder menu
-	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 35, 14, True)
+	Return StringReplace(getOcrAndCapture("coc-totalreq", $x_start, $y_start, 35, 14, True), "-", "") 
 EndFunc   ;==>getBuildersOnMenu
 
 Func getPetBuilderOnMenu($x_start = 800, $y_start = 639) ;  -> Gets Builders number - on Builder menu
@@ -223,7 +223,7 @@ Func getOcrLanguage($x_start, $y_start) ;  -> Get english language - main screen
 EndFunc   ;==>getOcrLanguage
 
 Func getOcrSpaceCastleDonate($x_start, $y_start) ;  -> Get the number of troops donated/capacity from a request
-	Return getOcrAndCapture("coc-totalreq", $x_start, $y_start, 50, 13, True)
+	Return StringReplace(getOcrAndCapture("coc-totalreq", $x_start, $y_start, 50, 13, True), "-", "")
 EndFunc   ;==>getOcrSpaceCastleDonate
 
 Func getOcrOverAllDamage($x_start, $y_start) ;  -> Get the Overall Damage %
@@ -251,15 +251,51 @@ Func getOresValues($x_start, $y_start, $ilength = 60) ;  -> Get least upgradetim
 EndFunc   ;==>getOresValues
 
 Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get BuildingName on builder menu
-	Local $BuildingName = "", $Count = 1
-	Local $Name = StringReplace(getOcrAndCapture("coc-buildermenu-name", $x_start, $y_start, $length, $height, False), "-", "")
+	Local $ocrText = getOcrAndCapture("coc-buildermenu-name", $x_start, $y_start, $length, $height, False)
+    
+    ; 1. Buang tanda strip (-)
+    $ocrText = StringReplace($ocrText, "-", "")
+    
+    ; 2. Hapus pola " spasi [Karakter] spasi [Karakter]" di akhir kata menggunakan RegEx
+    ; Pola ini akan membersihkan sisa teks seperti " x i", " x l", " i z", " i i", " e r"
+    $ocrText = StringRegExpReplace($ocrText, "(?i)\s+[xilz]\s+[xilzsz]{1,2}\s*$", "")
+    
+	; 3. Perbaiki spasi nyasar pada nama bangunan
+    $ocrText = StringReplace($ocrText, "Coll ector", "Collector")
+    $ocrText = StringReplace($ocrText, "Wal l", "Wall")
+    $ocrText = StringReplace($ocrText, "Ske le ton", "Skeleton")
+    $ocrText = StringReplace($ocrText, "Hal l", "Hall")
+    $ocrText = StringReplace($ocrText, "Sp e ll", "Spell")
+    $ocrText = StringReplace($ocrText, "Bui lder s Hut", "Builder's Hut")
+    $ocrText = StringReplace($ocrText, "X Bow", "X-Bow")
+	$ocrText = StringReplace($ocrText, "Roya l Champ ion", "Royal Champion")
+	$ocrText = StringReplace($ocrText, "Dark Elixir Drill x J", "Dark Elixir Drill")
 	
-	$BuildingName = $Name
+	; 4. Perbaiki spasi nyasar pada nama troop dan spell Laboratory
+    $ocrText = StringReplace($ocrText, "Ske le ton Trap", "Skeleton Trap")
+    $ocrText = StringReplace($ocrText, "Stone S lami i e r", "Stone Slammer")
+    $ocrText = StringReplace($ocrText, "Stone S lami er", "Stone Slammer")
+    $ocrText = StringReplace($ocrText, "L ghtning Sp e ll", "Lightning Spell")
+    $ocrText = StringReplace($ocrText, "l i lhtning Spell", "Lightning Spell")
+    $ocrText = StringReplace($ocrText, "Hea ler", "Healer")
+    $ocrText = StringReplace($ocrText, "Recal l S pe ll", "Recall Spell")
+    $ocrText = StringReplace($ocrText, "Recal l i pe ll", "Recall Spell")
+    $ocrText = StringReplace($ocrText, "Clone S p e ll", "Clone Spell")
+    $ocrText = StringReplace($ocrText, "Clone S p ell", "Clone Spell")
+    $ocrText = StringReplace($ocrText, "Jump S p e ll", "Jump Spell")
+    $ocrText = StringReplace($ocrText, "Jump S p ell", "Jump Spell")
+    $ocrText = StringReplace($ocrText, "Va lkyrie", "Valkyrie")
+    $ocrText = StringReplace($ocrText, "Wal l Breaker", "Wall Breaker")
+    $ocrText = StringReplace($ocrText, "Wal l Wrec ker", "Wall Wrecker")
+    $ocrText = StringReplace($ocrText, "Wall Wrec ker", "Wall Wrecker")
+    $ocrText = StringReplace($ocrText, "ice Block S p ell", "Ice Block Spell")
+    $ocrText = StringReplace($ocrText, "Bat S p e ll", "Bat Spell")
+    $ocrText = StringReplace($ocrText, "Ske le ton S pe ll", "Skeleton Spell")
+    $ocrText = StringReplace($ocrText, "Gob lin", "Goblin")
+    $ocrText = StringReplace($ocrText, "App rentice War Jen", "Apprentice Warden")
 	
-	Local $aResult[2]
-	$aResult[0] = $BuildingName
-	$aResult[1] = Number($Count)
-	Return $aResult
+    ; 5. Bersihkan sisa spasi berlebih di awal/akhir teks hasil pembersihan
+    Return StringStripWS($ocrText, 3) 
 EndFunc   ;==>getBuildingName
 
 Func getCCBuildingName($x_start, $y_start) ;  -> Get BuildingName on builder menu
@@ -505,18 +541,23 @@ Func getOcr(ByRef Const $_hHBitmap, $language)
         ;    $sRet = OcrFromHBitmapDirect($_hHBitmap, "0123456789", 7, $language)
         ;    Return $sRet
 
-        ; 3. Builder Menu Name (Gunakan PSM 13 yang sudah terbukti tembus semua nama)
-        Case "coc-buildermenu-name"
-            $sRet = OcrFromHBitmapDirect($_hHBitmap, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -", 13, $language)
-            
-            ; Pisahkan kata yang rapat / nempel (misal: 'GoldMine' -> 'Gold Mine', 'GrandWarden' -> 'Grand Warden')
-            $sRet = StringRegExpReplace($sRet, "([a-z])([A-Z])", "$1 $2")
-            
-            ; Koreksi otomatis huruf yang mirip pada font CoC
-            $sRet = StringReplace($sRet, "Roval", "Royal")
-            $sRet = StringReplace($sRet, "Elixik", "Elixir")
-            
-            Return StringStripWS($sRet, 3)
+        ; 3. Builder Menu Name 
+        ;Case "coc-buildermenu-name"
+        ;    $sRet = OcrFromHBitmapDirect($_hHBitmap, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -", 7, $language)
+        ;    
+        ;    ; Pisahkan kata yang rapat / nempel (misal: 'GoldMine' -> 'Gold Mine', 'GrandWarden' -> 'Grand Warden')
+        ;    $sRet = StringRegExpReplace($sRet, "([a-z])([A-Z])", "$1 $2")
+        ;    
+        ;    ; Koreksi otomatis huruf yang mirip pada font CoC
+        ;    $sRet = StringReplace($sRet, "Roval", "Royal")
+        ;    $sRet = StringReplace($sRet, "Elixik", "Elixir")
+		;	$sRet = StringReplace($sRet, "Wizard o", "Wizard")
+		;	$sRet = StringReplace($sRet, "Batispell A", "Bat Spell")
+		;	$sRet = StringReplace($sRet, "Ice Golem t", "Ice Golem")
+        ;    $sRet = StringReplace($sRet, "Druic", "Druid")
+		;	$sRet = StringReplace($sRet, "Wizard o", "Wizard")
+		;	
+        ;    Return StringStripWS($sRet, 3)
 
         ; 4. Sisanya kembali ke OCR Bawaan MBR
         Case Else
