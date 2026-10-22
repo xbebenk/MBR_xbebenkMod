@@ -602,7 +602,7 @@ Func FinalInitialization(Const $sAI)
 	CheckVersion() ; check latest version on mybot.run site
 	UpdateMultiStats()
 	SetDebugLog("Maximum of " & $g_iGlobalActiveBotsAllowed & " bots running at same time configured")
-	SetDebugLog("MyBot.run launch time " & Round($g_iBotLaunchTime) & " ms.")
+	SetLog("MyBot.run launch time " & Round($g_iBotLaunchTime/1000, 2) & " seconds.", $COLOR_INFO)
 
 	If $g_bAndroidShieldEnabled = False Then
 		SetLog(GetTranslatedFileIni("MBR GUI Design - Loading", "Msg_Android_instance_05", "Android Shield not available for %s", @OSVersion), $COLOR_ACTION)
@@ -1095,6 +1095,7 @@ Func FirstCheckRoutine()
 	Local $b_SuccessAttack = False, $bDoClanGames = False
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	
+	VillageReport()
 	If _Sleep(50) Then Return
 	If Not $g_bRunState Then Return
 	
@@ -1150,8 +1151,7 @@ Func FirstCheckRoutine()
 		SetLog("Do Extra Attack", $COLOR_INFO)
 		For $count = 0 to $g_iLoopExtraAttack
 			$g_bRestart = False
-			CheckMainScreen()
-			RequestCC()
+			VillageReport()
 			If BotCommand() Then btnStop()
 			If $g_bMeetCondStop Then 
 				SetLog("Meet Stop condition, skip next extra attack", $COLOR_INFO)

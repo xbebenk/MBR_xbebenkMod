@@ -230,7 +230,6 @@
 #include "functions\Village\LocateLab.au3"
 #include "functions\Village\LocateTownHall.au3"
 #include "functions\Village\LocateHeroesAltar.au3"
-#include "functions\Village\ProfileReport.au3"
 #include "functions\Village\RequestCC.au3"
 #include "functions\Village\VillageReport.au3"
 #include "functions\Village\UpgradeBuilding.au3"

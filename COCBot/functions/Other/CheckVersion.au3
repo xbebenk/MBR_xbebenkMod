@@ -59,6 +59,8 @@ Func CheckVersion()
 		SetLogCentered(" OK ", "#", $COLOR_SUCCESS)
 		SetLog("YOU USING LATEST MOD VERSION (#" & $sCurrentVersion & ")", $COLOR_SUCCESS)
 		SetLog($g_sXModSupportUrl, $COLOR_INFO)
+		SetLog("Special thanks to Mod donators:", $COLOR_INFO)
+		SetLog($sModDonators, $COLOR_DEBUG1)
 		SetLogCentered("#", "#", $COLOR_SUCCESS)
 	EndIf	
 	
