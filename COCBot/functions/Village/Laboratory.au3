@@ -948,29 +948,31 @@ EndFunc
 Func CheckLabAssistant()
 	Local $bRet = False
 	SetLog("Checking LabAssistant", $COLOR_INFO)
-	If QuickMIS("BC1", $g_sImgLabAssistant, 170, 130, 320, 170) Then
-		SetLog("LabAssistant Available", $COLOR_INFO)
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(500) Then Return
-		If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "LabAssistant") Then
-			If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(500) Then Return
-				If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "LabAssistant") Then
-					Click(250, 421, 1, 0, "Click Keep Assign")
+	If QuickMIS("BC1", $g_sImgLabAssistant, 450, 200, 495, 245) Then ; check LabAssistant icon
+		If QuickMIS("BC1", $g_sImgBuilderApprentice, 425, 220, 450, 230) Then ; check available text
+			SetLog("LabAssistant Available", $COLOR_INFO)
+			Click($g_iQuickMISX, $g_iQuickMISY)
+			If _Sleep(500) Then Return
+			If WaitForPixel(830, 130, 831, 131, Hex(0x635550, 6), 10, 2, "LabAssistant Window") Then
+				If QuickMIS("BC1", $g_sImgLabAssistant, 720, 270, 810, 310) Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
 					If _Sleep(500) Then Return
-					Click(430, 520, 1, 0, "Click Confirm")
-					If _Sleep(1000) Then Return
-					ClickAway("Left")
-					If _Sleep(1000) Then Return
-					SetLog("speedUp LabUpgrade, activating LabAssistant", $COLOR_SUCCESS)
+					If WaitForPixel(430, 525, 431, 526, Hex(0x8BD43A, 6), 10, 2, "LabAssistant") Then
+						Click(250, 421, 1, 0, "Click Keep Assign")
+						If _Sleep(500) Then Return
+						Click(430, 520, 1, 0, "Click Confirm")
+						If _Sleep(1000) Then Return
+						ClickAway("Left")
+						If _Sleep(1000) Then Return
+						SetLog("SpeedUp Upgrade, activating LabAssistant", $COLOR_SUCCESS)
+					EndIf
 				EndIf
-			Else
-				SetLog("LabAssistant not Available", $COLOR_DEBUG2)
 			EndIf
+		Else
+			SetLog("LabAssistant already used", $COLOR_DEBUG2)
 		EndIf
 	Else
-		SetLog("LabAssistant Not Available", $COLOR_DEBUG2)
+		SetLog("LabAssistant not Available", $COLOR_DEBUG2)
 	EndIf
 EndFunc
 
