@@ -88,38 +88,29 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
 
 	If Not AutoUpgradeCheckResource() Then Return $bRet ;check available builder and resource (Gold,Elix,DE)
-	If Not $g_bRunState Then Return
-	If $g_aiCurrentLoot[$eLootGold] < $g_iTxtSmartMinGold Then Return $bRet
+	If Number($g_aiCurrentLoot[$eLootGold]) < Number($g_iTxtSmartMinGold) Then Return $bRet
 
 	;Check if there is a free builder for Auto Upgrade
 	If $g_iFreeBuilderCount > 0 Then $bRet = True ;builder available
 
 	Local $iWallReserve = $g_bUpgradeWallSaveBuilder ? 1 : 0
-	If $g_iFreeBuilderCount - $iWallReserve - ReservedBuildersForHeroes() < 1 Then ;check builder reserve on wall and hero upgrade
+	If $g_iFreeBuilderCount - $iWallReserve - $g_iHeroReservedBuilder < 1 Then ;check builder reserve on wall and hero upgrade
 		SetLog("FreeBuilder=" & $g_iFreeBuilderCount & ", Reserved (ForHero=" & $g_iHeroReservedBuilder & " ForWall=" & $iWallReserve & ")", $COLOR_INFO)
-		If Not $g_bSkipWallReserve And Not $g_bUpgradeLowCost Then
-			SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_DEBUG2)
-			$bRet = False
-		EndIf
+		SetLog("No builder available. Skipping Auto Upgrade!", $COLOR_DEBUG2)
+		$bRet = False
 	EndIf
 
-	If ($g_bSkipWallReserve Or $g_bUpgradeLowCost) And $g_iFreeBuilderCount > 0 Then
-		SetLog("CheckBuilder: " & ($g_bUpgradeLowCost ? "Upgrade remain time > 1day" : "Upgrade remain time < 24h"), $COLOR_DEBUG2)
+	If $g_bSkipWallReserve And $g_iFreeBuilderCount > 0 Then
+		SetLog("CheckBuilder: Skip Wall Reserve enabled", $COLOR_DEBUG2)
 		$bRet = True
 	EndIf
 
-	If Not $g_bRunState Then Return
-	If $bTest Then ;for testing, bypass
-		$g_iFreeBuilderCount = 1
+	If $g_bUpgradeLowCost And $g_iFreeBuilderCount > 0 Then
+		SetLog("CheckBuilder: Low-cost upgrade enabled (< 24h)", $COLOR_DEBUG2)
 		$bRet = True
 	EndIf
 
-	;If CheckPlaceBuilder() Then
-	;	SetLog("Have enough gems to place new builder!", $COLOR_SUCCESS)
-	;	$bRet = True ;have enough gem
-	;EndIf
-
-	If $g_bDebugSetLog Then SetLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
+	SetLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG1)
 	Return $bRet
 EndFunc
 
@@ -172,6 +163,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	If _Sleep(2000) Then Return
 
 	CloseBuilderMenu()
+	VillageReport(False, True)
 	ZoomOut(True)
 	Return
 EndFunc
@@ -800,20 +792,21 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False, $upgradeName = "")
 	; final click on upgrade button, click coord is get looking at upgrade type (heroes have a diferent place for Upgrade button)
 	If Not $bTest Then
 		Click(625, 545)
+		If _Sleep(500) Then Return
 	Else
 		ClickAway("Right")
 		Return False
 	EndIf
 
 	; update Logs and History file
-	;If $upgradeName = "Town Hall" Then
-	;	If _Sleep(1000) Then Return
-	;	If _ColorCheck(_GetPixelColor(340, 510, True), Hex(0xFFCC7F, 6), 20, Default, "AutoUpgrade") And _ColorCheck(_GetPixelColor(510, 510, True), Hex(0xDDF685, 6), 20, Default, "AutoUpgrade") Then
-	;		SetLog("Detected Before you upgrade warning window", $COLOR_INFO)
-	;		Click(510, 525)
-	;		If _Sleep(1000) Then Return
-	;	EndIf
-	;EndIf
+	If $upgradeName = "Town Hall" Then
+		If _Sleep(1000) Then Return
+		If _ColorCheck(_GetPixelColor(340, 510, True), Hex(0xFFCC7F, 6), 20, Default, "AutoUpgrade") And _ColorCheck(_GetPixelColor(510, 510, True), Hex(0xDDF685, 6), 20, Default, "AutoUpgrade") Then
+			SetLog("Detected Before you upgrade warning window", $COLOR_INFO)
+			Click(510, 525)
+			If _Sleep(1000) Then Return
+		EndIf
+	EndIf
 
 	SetLog("Launched upgrade of " & $upgradeName & " successfully !", $COLOR_SUCCESS)
 
@@ -826,37 +819,15 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False, $upgradeName = "")
 		SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
 		AutoUpgradeLog(False, $upgradeName, "", $g_aUpgradeResourceCostDuration[1], $g_aUpgradeResourceCostDuration[2])
 	EndIf
-
+	If IsUpgradeWindowOpen() Then Click(810, 120, 1, 0, "Close Upgrade Window")
+	
 	Return True
 EndFunc
 
 Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "DE")
-	Local $aCheckAreaKing[4] = [100, 360, 190, 420]
-	Local $aCheckAreaQueen[4] = [250, 360, 350, 420]
-	Local $aCheckAreaPrince[4] = [400, 360, 490, 420]
-	Local $aCheckAreaWarden[4] = [450, 360, 540, 420]
-	Local $aCheckAreaChampion[4] = [600, 360, 690, 420]
-	Local $aCheckAreaDuke[4] = [750, 360, 840, 420]
-	Local $aCheckArea, $bRet = False
+	
+	Local $bRet = False
 	Local $iHeroUpgradeTime = ""
-
-	Switch $sHeroName
-		Case "Barbarian King"
-			$aCheckArea = $aCheckAreaKing
-		Case "Archer Queen"
-			$aCheckArea = $aCheckAreaQueen
-		Case "Minion Prince"
-			$aCheckArea = $aCheckAreaPrince
-		Case "Grand Warden"
-			$aCheckArea = $aCheckAreaWarden
-		Case "Royal Champion", "Royal Champ"
-			$aCheckArea = $aCheckAreaChampion
-		Case "Dragon Duke"
-			$aCheckArea = $aCheckAreaDuke
-		Case Else
-			Setlog("What Hero? banana", $COLOR_DEBUG2)
-			$aCheckArea = $aCheckAreaKing
-	EndSwitch
 
 	If Not IsUpgradeWindowOpen() Then
 		SetLog("Unable to Verify Upgrade Window", $COLOR_DEBUG2)
@@ -887,29 +858,14 @@ Func DoUpgradeHero($sHeroName = "Barbarian King", $Cost = "1000", $CostType = "D
 			If $HeroUpgradeTime >= ($g_iHeroMinUpgradeTime * 1440) Then
 				SetLog("Hero Upgrade Time: [" & $HeroUpgradeTime & "] minutes", $COLOR_DEBUG)
 				SetLog("MinUpgradeTime on Setting: [" & ($g_iHeroMinUpgradeTime * 1440) & "] minutes", $COLOR_DEBUG)
-				;If IsHeroHallWindow() Then
-				;	SetLog("Looking if Hero Books avail", $COLOR_ACTION)
-				;	If QuickMIS("BC1", $g_sImgHeroBooks, $aCheckArea[0], $aCheckArea[1], $aCheckArea[2], $aCheckArea[3]) Then ; search image Hero books on Hero Hall
-				;		SetLog("You Have hero book available", $COLOR_INFO)
-				;		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Hero Books")
-				;		If _Sleep(500) Then return
-				;		If WaitforPixel(420, 435, 421, 435, "2F93CF", 10, 1, "Confirm Use Book") Then
-				;			Click(420, 430, 1, 0, "Confirm Use Book")
-				;		EndIf
-				;		SetLog("Successfully using Hero Book", $COLOR_SUCCESS)
-				;	Else
-				;		SetLog("No Hero Book Available", $COLOR_DEBUG2)
-				;	EndIf
-				;Else
-				;	SetLog("Unable to verify Hero Hall Window", $COLOR_DEBUG2)
-				;EndIf
 			Else
 				SetLog("Use Hero Books enabled, but hero Upgrade time < " & $g_iHeroMinUpgradeTime & " Days", $COLOR_DEBUG2)
 			EndIf
 		EndIf
 		If _Sleep(500) Then Return
 	EndIf
-
+	
+	If IsUpgradeWindowOpen() Then Click(810, 120, 1, 0, "Close Upgrade Window")
 	Return $bRet
 EndFunc
 
@@ -1444,22 +1400,6 @@ Func IsUpgradeWindowOpen()
 		And _ColorCheck(_GetPixelColor(810, 120, True), Hex(0xDB2025, 6), 10, Default, "IsUpgradeWindowOpen") Then ; Red color under x
 		$bRet = True
 	EndIf
-	Return $bRet
-EndFunc
-
-Func IsBuilderMenuOpen()
-	If Not $g_bRunState Then Return
-	Local $bRet = False
-	Local $aBorder0[4] = [370, 73, 0xFFFFFF, 20]
-	Local $aBorder1[4] = [500, 73, 0xFFFFFF, 20]
-	Local $sTriangle
-	If _CheckPixel($aBorder0, True) And _CheckPixel($aBorder1, True) Then
-		$bRet = True ;got correct color for border
-	Else
-		If $g_bDebugSetLog Then SetLog("IsBuilderMenuOpen Border0 Color Not Matched: " & _GetPixelColor($aBorder0[0], $aBorder0[1], True), $COLOR_DEBUG1)
-		If $g_bDebugSetLog Then SetLog("IsBuilderMenuOpen Border1 Color Not Matched: " & _GetPixelColor($aBorder1[0], $aBorder1[1], True), $COLOR_DEBUG1)
-	EndIf
-
 	Return $bRet
 EndFunc
 

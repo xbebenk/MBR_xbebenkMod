@@ -75,12 +75,19 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 	Else
 		SetLog("Upgrading " & $UpgradeName & " Success!", $COLOR_SUCCESS)
 		PushMsg("StarLabSuccess")
-		CloseBuilderMenu()
+		CloseStarLabWindow()
 		$bRet = True
 	EndIf
 	
 	If _Sleep(500) Then Return
 	Return $bRet
+EndFunc
+
+Func CloseStarLabWindow()
+	If WaitforPixel(804, 75, 805, 75, "D01921", 20, 2) Then
+		Click(805, 55, 1, 0, "Click Close StarLabWindow")
+		If _Sleep(500) Then Return
+	EndIf
 EndFunc
 
 Func StarLabUpgrade($bTest = False)

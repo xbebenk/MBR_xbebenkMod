@@ -1289,7 +1289,7 @@ Func CommonRoutine($RoutineType = Default)
 EndFunc
 
 Func BuilderBase()
-	Local $StarLabOn = False
+	
 	If Not $g_bRunState Then Return
 	If Number($g_iTotalBuilderCount) >= 6 Then
 		$g_bIs6thBuilderUnlocked = True
@@ -1325,58 +1325,36 @@ Func BuilderBase()
 
 		If _Sleep(50) Then Return
 		If isGoldFullBB() Or isElixirFullBB() Then
-			;If AutoUpgradeBB() Then ZoomOut(True) ;directly zoom
+			AutoUpgradeBB()
 			checkMainScreen()
 			$g_bBBAttacked = False
 		EndIf
 
 		If _Sleep(50) Then Return
-		If Not $g_bRunState Then Return
+		StarLabUpgrade()
 		
-		;If isElixirFullBB() Then
-		;	$StarLabOn = StarLabUpgrade()
-		;	checkMainScreen()
-		;	$g_bBBAttacked = False
-		;EndIf
+		;If _Sleep(50) Then Return
+		;BBDropTrophy()
 
 		If _Sleep(50) Then Return
-		If Not $g_bRunState Then Return
-
-		BBDropTrophy()
-
-		If _Sleep(50) Then Return
-		If Not $g_bRunState Then Return
-
 		If $g_bChkStopAttackBB6thBuilder And $g_bIs6thBuilderUnlocked Then
 			SetLog("6th Builder Unlocked, attackBB disabled", $COLOR_DEBUG)
 		Else
 			SetLog("StopAttackBB6thBuilder: " & String($g_bChkStopAttackBB6thBuilder) & ", Is6thBuilderUnlocked: " & String($g_bIs6thBuilderUnlocked), $COLOR_DEBUG1)
 			DoAttackBB()
-			If _Sleep(50) Then Return
 		EndIf
 
 		If _Sleep(50) Then Return
-		If Not $g_bRunState Then Return
-
-		;If $g_bBBAttacked Then
-		;	If AutoUpgradeBB() Then ZoomOut(True) ;directly zoom
-		;	checkMainScreen()
-		;EndIf
-		;
-		;If _Sleep(50) Then Return
-		;If Not $g_bRunState Then Return
-		;
-		;If Not $StarLabOn Then StarLabUpgrade()
-		;Local $bUseCTPot = $StarLabOn And $g_iFreeBuilderCountBB = 0 And Not ($g_bGoldStorageFullBB Or $g_bElixirStorageFullBB)
-
+		StarLabUpgrade()
+		
 		If _Sleep(50) Then Return
-		If Not $g_bRunState Then Return
+		AutoUpgradeBB()
+		
+		If _Sleep(50) Then Return
 		checkMainScreen()
-		;StartClockTowerBoost(False, False, $bUseCTPot)
-		StartClockTowerBoost(False, False, True)
+		StartClockTowerBoost()
 
 		If _Sleep(50) Then Return
-		If Not $g_bRunState Then Return
 		BuilderBaseReport(False, True)
 		SwitchBetweenBases("Main")
 	EndIf

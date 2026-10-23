@@ -648,12 +648,7 @@ Func _FindLabUpgrade($bTest = False)
 			If $lenght <= 0 Then ContinueLoop
 
 			; Baca nama upgrade
-			$sUpgradeName = getBuildingName( _
-				560, _
-				Number($aTmpCoord[$i][2]) + 5, _
-				$lenght, _
-				18 _
-			)
+			$sUpgradeName = getBuildingName(560, Number($aTmpCoord[$i][2]) + 5, $lenght, 18)
 			$sUpgradeName = StringStripWS($sUpgradeName, 3)
 			$sUpgradeName = NormalizeLabUpgradeName($sUpgradeName)
 
@@ -666,10 +661,7 @@ Func _FindLabUpgrade($bTest = False)
 				852, Number($aTmpCoord[$i][2]) + 42 _
 			)
 
-			$tmpcost = getBuilderMenuCost( _
-				Number($aTmpCoord[$i][1]) - 120, _
-				Number($aTmpCoord[$i][2]) + 25 _
-			)
+			$tmpcost = getBuilderMenuCost(Number($aTmpCoord[$i][1]) - 120, Number($aTmpCoord[$i][2]) + 25)
 
 			If Number($tmpcost) = 0 Then ContinueLoop
 
@@ -682,12 +674,7 @@ Func _FindLabUpgrade($bTest = False)
 					If StringInStr($sUpgradeName, $aOrder[$z][1]) > 0 Then
 						$sPriority = "Priority"
 						$iScore = $aOrder[$z][0]
-
-						SetLog( _
-							"Lab Priority: " & $sUpgradeName & _
-							", order=" & $iScore, _
-							$COLOR_DEBUG2 _
-						)
+						SetLog("Lab Priority: " & $sUpgradeName & ", order=" & $iScore, $COLOR_DEBUG2)
 						ExitLoop
 					EndIf
 				Next
@@ -695,8 +682,8 @@ Func _FindLabUpgrade($bTest = False)
 
 			Local $tmparray[1][8] = [[ _
 				String($sResource), _
-				Number($aTmpCoord[$i][1]), _
-				Number($aTmpCoord[$i][2]), _
+				Number(700), _
+				Number($aTmpCoord[$i][2] + 25), _
 				String($sUpgradeName), _
 				1, _
 				Number($tmpcost), _

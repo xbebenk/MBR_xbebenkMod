@@ -258,18 +258,19 @@ Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get 
     
     ; 2. Hapus pola " spasi [Karakter] spasi [Karakter]" di akhir kata menggunakan RegEx
     ; Pola ini akan membersihkan sisa teks seperti " x i", " x l", " i z", " i i", " e r"
-    $ocrText = StringRegExpReplace($ocrText, "(?i)\s+[xilz]\s+[xilzszc]{1,2}\s*$", "")
+    $ocrText = StringRegExpReplace($ocrText, "(?i)\s+[xilz]\s+[xilzszcj]{1,2}\s*$", "")
     
 	; 3. Perbaiki spasi nyasar pada nama bangunan
     $ocrText = StringReplace($ocrText, "Coll ector", "Collector")
     $ocrText = StringReplace($ocrText, "Wal l", "Wall")
     $ocrText = StringReplace($ocrText, "Ske le ton", "Skeleton")
     $ocrText = StringReplace($ocrText, "Hal l", "Hall")
+	$ocrText = StringReplace($ocrText, "Sp ring Trap", "Spring Trap")
     $ocrText = StringReplace($ocrText, "Sp e ll", "Spell")
     $ocrText = StringReplace($ocrText, "Bui lder s Hut", "Builder's Hut")
     $ocrText = StringReplace($ocrText, "X Bow", "X-Bow")
 	$ocrText = StringReplace($ocrText, "Roya l Champ ion", "Royal Champion")
-	$ocrText = StringReplace($ocrText, "Dark Elixir Drill x J", "Dark Elixir Drill")
+	$ocrText = StringReplace($ocrText, "Giant Bomu", "Giant Bomb")
 	
 	; 4. Perbaiki spasi nyasar pada nama troop dan spell Laboratory
     $ocrText = StringReplace($ocrText, "Ske le ton Trap", "Skeleton Trap")
@@ -294,7 +295,14 @@ Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get 
     $ocrText = StringReplace($ocrText, "Gob lin", "Goblin")
     $ocrText = StringReplace($ocrText, "App rentice War Jen", "Apprentice Warden")
 	
-    ; 5. Bersihkan sisa spasi berlebih di awal/akhir teks hasil pembersihan
+	;5. Perbaikan Star Laboratory
+	$ocrText = StringReplace($ocrText, "lyight Wi tch", "Night Witch")
+	$ocrText = StringReplace($ocrText, "Beta M nion", "Beta Minion")
+	$ocrText = StringReplace($ocrText, "Baby Dpagon", "Baby Dragon")
+	$ocrText = StringReplace($ocrText, "Sneaky Arche r", "Sneaky Archer")
+	$ocrText = StringReplace($ocrText, "Drop S hip", "Drop Ship")
+	
+    ; 6. Bersihkan sisa spasi berlebih di awal/akhir teks hasil pembersihan
     Return StringStripWS($ocrText, 3) 
 EndFunc   ;==>getBuildingName
 
@@ -454,14 +462,14 @@ Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpa
 	Return $result
 EndFunc   ;==>getOcrAndCapture
 
-;Func getOcr(ByRef Const $_hHBitmap, $language)
-;	Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcr ? 1 : 0)
-;	If IsArray($result) Then
-;		Return $result[0]
-;	Else
-;		Return ""
-;	EndIf
-;EndFunc   ;==>getOcr
+Func getOcr(ByRef Const $_hHBitmap, $language)
+	Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcr ? 1 : 0)
+	If IsArray($result) Then
+		Return $result[0]
+	Else
+		Return ""
+	EndIf
+EndFunc   ;==>getOcr
 
 Func getOcrImgLoc(ByRef Const $_hHBitmap, $sLanguage)
 	Local $result = DllCallMyBot("DoOCR", "handle", $_hHBitmap, "str", $sLanguage)
@@ -527,48 +535,48 @@ Func StartOcrWorkerClient()
 EndFunc
 
 ; FUNGSI UTAMA (HYBRID)
-Func getOcr(ByRef Const $_hHBitmap, $language)
-    Local $sRet = ""
-
-    Switch $language
-        ; 1. Builders (Tesseract)
-        ;Case "coc-Builders"
-        ;    $sRet = OcrFromHBitmapDirect($_hHBitmap, "0123456789/", 7, $language)
-        ;    Return StringReplace($sRet, "/", "#")
-		
-        ; 2. Resource Angka Main Screen
-        ;Case "coc-ms"
-        ;    $sRet = OcrFromHBitmapDirect($_hHBitmap, "0123456789", 7, $language)
-        ;    Return $sRet
-
-        ; 3. Builder Menu Name 
-        ;Case "coc-buildermenu-name"
-        ;    $sRet = OcrFromHBitmapDirect($_hHBitmap, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -", 7, $language)
-        ;    
-        ;    ; Pisahkan kata yang rapat / nempel (misal: 'GoldMine' -> 'Gold Mine', 'GrandWarden' -> 'Grand Warden')
-        ;    $sRet = StringRegExpReplace($sRet, "([a-z])([A-Z])", "$1 $2")
-        ;    
-        ;    ; Koreksi otomatis huruf yang mirip pada font CoC
-        ;    $sRet = StringReplace($sRet, "Roval", "Royal")
-        ;    $sRet = StringReplace($sRet, "Elixik", "Elixir")
-		;	$sRet = StringReplace($sRet, "Wizard o", "Wizard")
-		;	$sRet = StringReplace($sRet, "Batispell A", "Bat Spell")
-		;	$sRet = StringReplace($sRet, "Ice Golem t", "Ice Golem")
-        ;    $sRet = StringReplace($sRet, "Druic", "Druid")
-		;	$sRet = StringReplace($sRet, "Wizard o", "Wizard")
-		;	
-        ;    Return StringStripWS($sRet, 3)
-
-        ; 4. Sisanya kembali ke OCR Bawaan MBR
-        Case Else
-            Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcr ? 1 : 0)
-            If IsArray($result) Then
-                Return $result[0]
-            Else
-                Return ""
-            EndIf
-    EndSwitch
-EndFunc   ;==>getOcr
+;Func getOcr(ByRef Const $_hHBitmap, $language)
+;    Local $sRet = ""
+;
+;    Switch $language
+;        ; 1. Builders (Tesseract)
+;        ;Case "coc-Builders"
+;        ;    $sRet = OcrFromHBitmapDirect($_hHBitmap, "0123456789/", 7, $language)
+;        ;    Return StringReplace($sRet, "/", "#")
+;		
+;        ; 2. Resource Angka Main Screen
+;        ;Case "coc-ms"
+;        ;    $sRet = OcrFromHBitmapDirect($_hHBitmap, "0123456789", 7, $language)
+;        ;    Return $sRet
+;
+;        ; 3. Builder Menu Name 
+;        ;Case "coc-buildermenu-name"
+;        ;    $sRet = OcrFromHBitmapDirect($_hHBitmap, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -", 7, $language)
+;        ;    
+;        ;    ; Pisahkan kata yang rapat / nempel (misal: 'GoldMine' -> 'Gold Mine', 'GrandWarden' -> 'Grand Warden')
+;        ;    $sRet = StringRegExpReplace($sRet, "([a-z])([A-Z])", "$1 $2")
+;        ;    
+;        ;    ; Koreksi otomatis huruf yang mirip pada font CoC
+;        ;    $sRet = StringReplace($sRet, "Roval", "Royal")
+;        ;    $sRet = StringReplace($sRet, "Elixik", "Elixir")
+;		;	$sRet = StringReplace($sRet, "Wizard o", "Wizard")
+;		;	$sRet = StringReplace($sRet, "Batispell A", "Bat Spell")
+;		;	$sRet = StringReplace($sRet, "Ice Golem t", "Ice Golem")
+;        ;    $sRet = StringReplace($sRet, "Druic", "Druid")
+;		;	$sRet = StringReplace($sRet, "Wizard o", "Wizard")
+;		;	
+;        ;    Return StringStripWS($sRet, 3)
+;
+;        ; 4. Sisanya kembali ke OCR Bawaan MBR
+;        Case Else
+;            Local $result = DllCallMyBot("ocr", "ptr", $_hHBitmap, "str", $language, "int", $g_bDebugOcr ? 1 : 0)
+;            If IsArray($result) Then
+;                Return $result[0]
+;            Else
+;                Return ""
+;            EndIf
+;    EndSwitch
+;EndFunc   ;==>getOcr
 
 
 Func OcrFromHBitmapDirect(ByRef Const $_hHBitmap, $sWhitelist = "", $iPSM = 7, $sTagName = "ocr")

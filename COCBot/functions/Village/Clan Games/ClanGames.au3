@@ -799,35 +799,30 @@ Func StartsEvent($sEventName, $g_bPurgeJob = False, $OnlyPurge = False)
 				EndIf
 			Next
 			Return False
-		Else
-			$g_sCGCurrentEventName = $sEventName
 		EndIf
 
-		;check if Challenge is BB Challenge, enabling force BB attack
-		If $g_bChkForceBBAttackOnClanGames Then
-			Click(450, 99, 1, 100, "Click Clan Tab")
-			If _Sleep(3000) Then Return
-			Click(310, 99, 1, 100, "Click Challenge Tab")
-			If _Sleep(500) Then Return
-			Click(340, 215, 1, 100, "Click Active Challenge")
+		Click(450, 99, 1, 100, "Click Clan Tab")
+		If _Sleep(3000) Then Return
+		Click(310, 99, 1, 100, "Click Challenge Tab")
+		If _Sleep(500) Then Return
+		Click(340, 215, 1, 100, "Click Active Challenge")
 
-			For $i = 1 To 10
-				If _Sleep(500) Then Return
-				SetLog("waiting for trash #" & $i, $COLOR_ACTION)
-				If QuickMIS("BC1", $g_sImgTrashPurge, 560, 280, 700, 360) Then
-					ExitLoop
-				EndIf
-			Next
-			
-			SetLog("Re-Check If Running Challenge is BB Event or No?", $COLOR_DEBUG)
-			If QuickMIS("BC1", $g_sImgVersus, 425, 190, 700, 250) Then
-				$g_bIsBBevent = True
-				$g_sCGCurrentEventName = $sEventName
-				Setlog("Running Challenge is BB Challenge : " & $g_sCGCurrentEventName, $COLOR_INFO)
-			Else
-				Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
-				$g_bIsBBevent = False
+		For $i = 1 To 10
+			If _Sleep(500) Then Return
+			SetLog("waiting for trash #" & $i, $COLOR_ACTION)
+			If QuickMIS("BC1", $g_sImgTrashPurge, 560, 280, 700, 360) Then
+				ExitLoop
 			EndIf
+		Next
+		
+		$g_sCGCurrentEventName = $sEventName
+		SetLog("Re-Check Running Challenge?", $COLOR_DEBUG)
+		If QuickMIS("BC1", $g_sImgVersus, 425, 190, 700, 250) Then
+			$g_bIsBBevent = True
+			Setlog("Running Challenge is BB Challenge : " & $g_sCGCurrentEventName, $COLOR_INFO)
+		Else
+			Setlog("Running Challenge is MainVillage Challenge", $COLOR_INFO)
+			$g_bIsBBevent = False
 		EndIf
 		Return True
 	Else
