@@ -9,7 +9,7 @@ Func StartClockTowerBoost()
 
 	SetLog("Boosting Clock Tower", $COLOR_INFO)
 	If QuickMIS("BC1", $g_sImgStartCTBoost, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom) Then
-		Click($g_iQuickMISX, $g_iQuickMISY + 20, 1, 0, "Click Clock Tower")
+		Click($g_iQuickMISX, $g_iQuickMISY + 50, 1, 0, "Click Clock Tower")
 		If _Sleep(1000) Then Return
 		If QuickMIS("BC1", $g_sImgStartCTBoost, 300, 500, 560, 590) Then
 			Click($g_iQuickMISX, $g_iQuickMISY + 10, 1, 0, "Click Clock Tower Button")
@@ -25,8 +25,10 @@ Func StartClockTowerBoost()
 	If _Sleep(1000) Then Return
 	If QuickMIS("BC1", $g_sImgStartCTBoost, 300, 500, 560, 590) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 10, 1, 0, "Click Potion Button")
+		If _Sleep(1000) Then Return
 		If QuickMIS("BC1", $g_sImgStartCTBoost, 460, 380, 520, 430) Then
 			SetLog("Successfully Boost Builderbase with potion", $COLOR_SUCCESS)
+			If _Sleep(1000) Then Return
 		EndIf
 	Else
 		SetLog("Boost Builder Base Potion Not Found", $COLOR_DEBUG)

@@ -3,8 +3,8 @@ Global $aiClickAwayRegionLeft = [110, 5, 260, 20]
 Global $aiClickAwayRegionRight = [570, 5, 640, 20]
 
 Global $aVillageCenteringCoord = [[550, 370], [236, 350], [430, 350]] ; Scroll village using this location : upper from setting button
-Global $aIsMain[4] = [840, 53, 0xFF41FF, 20] ; Main Screen, Elixir Color 
-Global $aIsOnBuilderBase[4] = [844, 53, 0x992EFC, 15] ; BuilderBase, Elixir Color
+Global $aIsMain[4] = [844, 65, 0xF424FF, 20] ; Main Screen, Elixir Color 
+Global $aIsOnBuilderBase[4] = [844, 65, 0xA131FF, 15] ; BuilderBase, Elixir Color
 Global $aIsMainGrayed[4] = [833, 15, 0x80802D, 15] ; Main Screen, Yellow Grayed Gold Resource Icon
 
 Global $aBuildButton[2] = [800, 610]

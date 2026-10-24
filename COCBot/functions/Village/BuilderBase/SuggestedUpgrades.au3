@@ -80,7 +80,8 @@ Func SearchUpgradeBB($bTest = False)
 	If AutoUpgradeBBCheckBuilder($bTest) Then
 		_SearchUpgradeBB($bTest) ;search upgrade for existing building
 	EndIf
-
+	
+	CloseBuilderMenu()
 	ZoomOut(True)
 	Return
 EndFunc
@@ -209,7 +210,7 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 	Local $aBOBControl[3][2] = [["Double Cannon", 10], ["Archer Tower", 10], ["Multi Mortar", 10]]
 	Local $aPriority[9][2] = [["Storage", 13], ["Army", 13], ["Barracks", 10], ["Star Lab", 14], ["Machine", 11], ["Copter", 11], ["Hall", 12], ["Gem", 9], ["Clock", 9]]
 
-	Local $aTmpCoord, $aBuilding[0][8], $BuildingName, $UpgradeCost, $sUpgradeName, $tmpcost, $lenght = 150, $skipType = 0, $sCostType = ""
+	Local $aTmpCoord, $aBuilding[0][8], $BuildingName, $UpgradeCost, $sUpgradeName, $sResource = "", $tmpcost, $lenght = 150, $skipType = 0, $sCostType = ""
 	Local $hTimer = TimerInit()
 
 	;check if we found new building
@@ -260,19 +261,23 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 	;	Next
 	;EndIf
 
-	$aTmpCoord = QuickMIS("CNX", $g_sImgBBResourceIcon, 830, 50, 860, 535)
+	$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 850, 55, 860, 545)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		RemoveDupCNX($aTmpCoord, 2)
 		For $i = 0 To UBound($aTmpCoord) - 1
-			If Not $g_bRunState Then Return
-			;If QuickMIS("BC1",$g_sImgAUpgradeObstGear, $g_iXFindUpgradeBB, $aTmpCoord[$i][2] - 10, $aTmpCoord[$i][1], $aTmpCoord[$i][2] + 10) Then ContinueLoop ;skip new
-			$sUpgradeName = getBuildingName(560, $aTmpCoord[$i][2] - 21, $lenght) ;get upgrade name and amount
-			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 140, $aTmpCoord[$i][2] - 3)
+			If QuickMIS("BC1",$g_sImgAUpgradeObstGear, 560, $aTmpCoord[$i][2] + 20, 610, $aTmpCoord[$i][2] + 60) Then
+				SetDebugLog("Skip new building")
+				ContinueLoop
+			EndIf
+			
+			$sUpgradeName = getBuildingName(560, $aTmpCoord[$i][2] + 5, $lenght, 18) ;get upgrade name
+			$sResource = QuickMIS("N1", $g_sImgBBResourceIcon, 832, $aTmpCoord[$i][2] + 24, 852, $aTmpCoord[$i][2] + 42)
+			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 120, $aTmpCoord[$i][2] + 25)
 			If StringInStr($sUpgradeName, "Wall") Then $sUpgradeName = "Wall"
-			If $g_bChkBBSpendGoldOnWall And StringInStr($sUpgradeName, "Wall") And StringInStr($aTmpCoord[$i][0], "Elix") Then ContinueLoop ;skip wall upgrade with elix
+			If $g_bChkBBSpendGoldOnWall And StringInStr($sUpgradeName, "Wall") And StringInStr($sResource, "Elix") Then ContinueLoop ;skip wall upgrade with elix
 			If Number($tmpcost) = 0 Then ContinueLoop
 
-			Local $tmparray[1][8] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($sUpgradeName), 1, Number($tmpcost), 0, "Common"]]
+			Local $tmparray[1][8] = [[$sResource, 700, Number($aTmpCoord[$i][2] + 25), String($sUpgradeName), 1, Number($tmpcost), 0, "Common"]]
 			_ArrayAdd($aBuilding, $tmparray)
 			If @error Then SetLog("FindUpgrade ComposeArray Err : " & @error, $COLOR_ERROR)
 		Next
@@ -354,20 +359,10 @@ Func DoUpgradeBB($CostType = "Gold", $Cost = 0, $sBuildingName = "", $bTest = Fa
 
 	If _Sleep(50) Then Return
 	If QuickMIS("BFI", $g_sImgAutoUpgradeBtnBB & $CostType & "*", 470, 500, 530, 565) Then
-		Click($g_iQuickMISX, $g_iQuickMISY)
-		If _Sleep(1000) Then Return
-		If isGemOpen(True) Then
-			SetLog("Upgrade stopped due to insufficient loot", $COLOR_ERROR)
-			ClickAway("Left")
-			If _Sleep(500) Then Return
-			ClickAway("Left")
-			Return False
-		Else
-			SetLog($sBuildingName & " Upgrading!", $COLOR_INFO)
-			AutoUpgradeLog(False, "BB " & $sBuildingName, "", $Cost)
-			ClickAway("Left")
-			Return True
-		EndIf
+		Click($g_iQuickMISX, $g_iQuickMISY)		
+		SetLog($sBuildingName & " Upgrading!", $COLOR_INFO)
+		AutoUpgradeLog(False, "BB " & $sBuildingName, "", $Cost)
+		Return True
 	Else
 		SetLog("Cannot Find " & $CostType & " Button", $COLOR_ERROR)
 	EndIf
@@ -383,7 +378,6 @@ Func DoUpgradeBBHero($CostType = "Gold", $Cost = 0, $sBuildingName = "", $bTest 
 		Click($g_iQuickMISX, $g_iQuickMISY)
 		SetLog($sBuildingName & " Upgrading!", $COLOR_INFO)
 		AutoUpgradeLog(False, "BB " & $sBuildingName, "", $Cost)
-		CloseBuilderMenu()
 		Return True
 	Else
 		SetLog("Cannot Find " & $CostType & " Button", $COLOR_ERROR)

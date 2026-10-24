@@ -260,7 +260,7 @@ Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get 
     ; Pola ini akan membersihkan sisa teks seperti " x i", " x l", " i z", " i i", " e r"
     $ocrText = StringRegExpReplace($ocrText, "(?i)\s+[xilz]\s+[xilzszcj]{1,2}\s*$", "")
     
-	; 3. Perbaiki spasi nyasar pada nama bangunan
+	; 3. Perbaikan AutoUpgrade
     $ocrText = StringReplace($ocrText, "Coll ector", "Collector")
     $ocrText = StringReplace($ocrText, "Wal l", "Wall")
     $ocrText = StringReplace($ocrText, "Ske le ton", "Skeleton")
@@ -272,7 +272,7 @@ Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get 
 	$ocrText = StringReplace($ocrText, "Roya l Champ ion", "Royal Champion")
 	$ocrText = StringReplace($ocrText, "Giant Bomu", "Giant Bomb")
 	
-	; 4. Perbaiki spasi nyasar pada nama troop dan spell Laboratory
+	; 4. Perbaikan troop dan spell Laboratory
     $ocrText = StringReplace($ocrText, "Ske le ton Trap", "Skeleton Trap")
     $ocrText = StringReplace($ocrText, "Stone S lami i e r", "Stone Slammer")
     $ocrText = StringReplace($ocrText, "Stone S lami er", "Stone Slammer")
@@ -295,12 +295,20 @@ Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get 
     $ocrText = StringReplace($ocrText, "Gob lin", "Goblin")
     $ocrText = StringReplace($ocrText, "App rentice War Jen", "Apprentice Warden")
 	
-	;5. Perbaikan Star Laboratory
+	;5. Perbaikan autoupgradeBB
+	$ocrText = StringReplace($ocrText, "Hea ling Hut", "Healing Hut")
+	$ocrText = StringReplace($ocrText, "Doubl e Cannon i", "Double Cannon")
+	$ocrText = StringReplace($ocrText, "Crus her", "Crusher")
+	$ocrText = StringReplace($ocrText, "Roaste p", "Roaster")
+	$ocrText = StringReplace($ocrText, "Lai a Launcher", "Lava Launcher")
+	
+	;6. Perbaikan Star Laboratory
 	$ocrText = StringReplace($ocrText, "lyight Wi tch", "Night Witch")
 	$ocrText = StringReplace($ocrText, "Beta M nion", "Beta Minion")
 	$ocrText = StringReplace($ocrText, "Baby Dpagon", "Baby Dragon")
 	$ocrText = StringReplace($ocrText, "Sneaky Arche r", "Sneaky Archer")
 	$ocrText = StringReplace($ocrText, "Drop S hip", "Drop Ship")
+	$ocrText = StringReplace($ocrText, "Me ga Mine", "Mega Mine")
 	
     ; 6. Bersihkan sisa spasi berlebih di awal/akhir teks hasil pembersihan
     Return StringStripWS($ocrText, 3) 

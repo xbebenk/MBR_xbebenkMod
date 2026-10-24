@@ -76,6 +76,7 @@ Func SLabUpgrade($UpgradeName, $x, $y, $bTest)
 		SetLog("Upgrading " & $UpgradeName & " Success!", $COLOR_SUCCESS)
 		PushMsg("StarLabSuccess")
 		CloseStarLabWindow()
+		CloseBuilderMenu()
 		$bRet = True
 	EndIf
 	

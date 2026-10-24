@@ -90,7 +90,8 @@ Func _checkMainScreenImage($aPixelToCheck)
 	Local $bRet = False, $bBuilderInfo = False, $bChatTab = False
 	If $g_iAndroidBackgroundMode = 2 Then $aPixelToCheck[0] += 1
 	$bChatTab = checkChatTabPixel()
-	$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreen")
+	;$bBuilderInfo = _CheckPixel($aPixelToCheck, True, Default, "_checkMainScreen")
+	$bBuilderInfo = _ColorCheck(_GetPixelColor($aPixelToCheck[0], $aPixelToCheck[1], True), Hex($aPixelToCheck[2], 6), $aPixelToCheck[3], Default, "PixelToCheck")
 	
 	$bRet = $bChatTab And $bBuilderInfo
 	If $g_bDebugSetLog Then SetLog("PixelToCheck = " & $aPixelToCheck[0] & "," & $aPixelToCheck[1] & " exp:" & Hex($aPixelToCheck[2], 6) & ", tolerance:" & $aPixelToCheck[3] , $COLOR_ACTION)
