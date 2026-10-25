@@ -124,7 +124,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	If _Sleep(50) Then Return
 	CheckMainScreen()
 	VillageReport(False, True)
-	PlaceUnplacedBuilding()
+	
 	If $bUpgradeLowCost And $g_iFreeBuilderCount = 1 And $g_bUpgradeWallSaveBuilder Then
 		OpenMainBuilder()
 		SetLog("Checking current upgrade", $COLOR_INFO)
@@ -260,17 +260,30 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCost = False, $bUseW
 					If Not $g_bRunState Then Return
 					Click($Upgrades[$i][1], $Upgrades[$i][2])
 					If _Sleep(1000) Then Return
+					
+					;check if upgrade are heroes
 					Local $aHeroes[5] = ["Barbarian", "Queen", "Warden", "Champion", "Prince"]
+					Local $bIsHero = False
 					For $j In $aHeroes
-						If StringInStr($Upgrades[$i][3], $j) Then
-							SetLog("Upgrade : " & $Upgrades[$i][3] & ", checking Hero Hall Window", $COLOR_ACTION)
-							If DoUpgradeHero($Upgrades[$i][3], $Upgrades[$i][5], $Upgrades[$i][0]) Then ExitLoop 2
-							ClickAway()
-						EndIf
+						If StringInStr($Upgrades[$i][3], $j) Then $bIsHero = True
 					Next
+					If $bIsHero Then
+						SetLog("Upgrade : " & $Upgrades[$i][3] & ", checking Hero Hall Window", $COLOR_ACTION)
+						If DoUpgradeHero($Upgrades[$i][3], $Upgrades[$i][5], $Upgrades[$i][0]) Then
+							$g_bSkipWallReserve = False
+							$g_bUpgradeLowCost = False
+							$sameCost = 0
+							$bDoScroll = False
+							ExitLoop
+						EndIf
+						ClickAway()
+						ContinueLoop
+					EndIf
+					
+					;not heroes
 					If DoUpgrade($bTest, $bLowCost, $Upgrades[$i][3]) Then
-						$g_bSkipWallReserve = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
-						$g_bUpgradeLowCost = False ;reset to false to prevent bot wrong check on AutoUpgradeCheckBuilder()
+						$g_bSkipWallReserve = False
+						$g_bUpgradeLowCost = False
 						$sameCost = 0
 						$bDoScroll = False
 						ExitLoop
@@ -798,7 +811,6 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False, $upgradeName = "")
 		Return False
 	EndIf
 
-	; update Logs and History file
 	If $upgradeName = "Town Hall" Then
 		If _Sleep(1000) Then Return
 		If _ColorCheck(_GetPixelColor(340, 510, True), Hex(0xFFCC7F, 6), 20, Default, "AutoUpgrade") And _ColorCheck(_GetPixelColor(510, 510, True), Hex(0xDDF685, 6), 20, Default, "AutoUpgrade") Then
@@ -807,20 +819,20 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False, $upgradeName = "")
 			If _Sleep(1000) Then Return
 		EndIf
 	EndIf
-
-	SetLog("Launched upgrade of " & $upgradeName & " successfully !", $COLOR_SUCCESS)
-
+	
+	; update Logs and History file
 	If IsGemOpen(True) Then
 		ClickAway("Right")
 		SetLog("Something is wrong, Gem Window Opened", $COLOR_ERROR)
-		ClickAway("Right")
-	Else
-		SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
-		SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
-		AutoUpgradeLog(False, $upgradeName, "", $g_aUpgradeResourceCostDuration[1], $g_aUpgradeResourceCostDuration[2])
+		If IsUpgradeWindowOpen() Then Click(810, 120, 1, 0, "Close Upgrade Window")
+		Return False
 	EndIf
-	If IsUpgradeWindowOpen() Then Click(810, 120, 1, 0, "Close Upgrade Window")
 	
+	SetLog("Launched upgrade of " & $upgradeName & " successfully !", $COLOR_SUCCESS)
+	SetLog(" - Cost : " & _NumberFormat($g_aUpgradeResourceCostDuration[1]) & " " & $g_aUpgradeResourceCostDuration[0], $COLOR_SUCCESS)
+	SetLog(" - Duration : " & $g_aUpgradeResourceCostDuration[2], $COLOR_SUCCESS)
+	AutoUpgradeLog(False, $upgradeName, "", $g_aUpgradeResourceCostDuration[1], $g_aUpgradeResourceCostDuration[2])
+	If IsUpgradeWindowOpen() Then Click(810, 120, 1, 0, "Close Upgrade Window")
 	Return True
 EndFunc
 

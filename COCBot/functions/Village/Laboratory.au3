@@ -242,20 +242,18 @@ Func LaboratoryUpgrade($sUpgradeName, $aCoords, $sCost, $bDebug = False)
 		CloseBuilderMenu()
 		Return True ; Return True as if we really started an upgrade
 	Else
-		Click(620, 545, 1, 0, "Upgrade " & $sUpgradeName) ; Everything is good - Click the upgrade button
+		Click(620, 545, 1, 0, "Upgrade " & $sUpgradeName)
 		If _Sleep(1000) Then Return
-		If Not isGemOpen(True) Then ; check for gem window
-			; success
-			SetLog("Start Upgrade for " & $sUpgradeName & " Success...", $COLOR_SUCCESS)
-			PushMsg("LabSuccess")
-			
-			CloseBuilderMenu()
-			Return True ; upgrade started
-		Else
+		If isGemOpen(True) Then
 			SetLog("Oops, Gems required for " & $sUpgradeName & " Upgrade, try again.", $COLOR_DEBUG2)
+			ClickAway("Right")
+			CloseBuilderMenu()
 			Return False
 		EndIf
+		SetLog("Start Upgrade for " & $sUpgradeName & " Success...", $COLOR_SUCCESS)
+		PushMsg("LabSuccess")
 		CloseBuilderMenu()
+		Return True
 	EndIf
 EndFunc
 
@@ -441,6 +439,7 @@ Func OpenLabMenu()
 	
 	If _Sleep(500) Then Return
 	If QuickMIS("BC1", $g_sImgLabMenu, 600, 15, 650, 30) Then $bRet = True
+	If Not $bRet Then SetDebugLog("Fail to OpenLabMenu")
 	Return $bRet
 EndFunc ;==>ClickLabMenu
 
@@ -470,7 +469,7 @@ Func CheckIfLabIdle($bDebug = False)
 	
 	If Not $bRet Then
 		If $g_iTownHallLevel >= 9 Then
-			OpenLabMenu()
+			If Not OpenLabMenu() Then Return $bRet
 			CheckLabAssistant()
 			CloseBuilderMenu()
 		EndIf
@@ -539,17 +538,19 @@ Func getMostBottomCostLab()
 EndFunc
 
 Func LabUpgrade($bTest = False)
+	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
+	
 	Local $bNoPriorityUpgrade = True
 	Local $aCoord[2] = [0, 0]
 	checkMainScreen()
-	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
+	
 	If Not CheckIfLabIdle($bTest) Then Return
 	
 	If _Sleep(50) Then Return
 	SetLog("Checking for Laboratory Research", $COLOR_INFO)
 	
 	VillageReport(True, True)
-	OpenLabMenu()
+	If Not OpenLabMenu() Then Return False
 	
 	Local $Upgrades = _FindLabUpgrade($bTest)
 	If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
@@ -573,6 +574,10 @@ Func LabUpgrade($bTest = False)
 			EndIf		
 		Next
 		
+		SetLog("No affordable upgrade in Laboratory list", $COLOR_DEBUG2)
+		CloseBuilderMenu()
+		Return False
+		
 		;If $bNoPriorityUpgrade Then
 		;	SetLog("There is no Priority Upgrade listed", $COLOR_DEBUG1)
 		;	SetLog("lets try legacy upgrade from Lab Window", $COLOR_DEBUG1)
@@ -580,8 +585,9 @@ Func LabUpgrade($bTest = False)
 		;EndIf
 	Else
 		SetLog("No Laboratory Upgrade", $COLOR_DEBUG2)
-		CloseBuilderMenu()
 	EndIf
+	CloseBuilderMenu()
+	Return False
 EndFunc
 
 Func NormalizeLabUpgradeName($sName)
@@ -651,18 +657,11 @@ Func _FindLabUpgrade($bTest = False)
 			$sUpgradeName = getBuildingName(560, Number($aTmpCoord[$i][2]) + 5, $lenght, 18)
 			$sUpgradeName = StringStripWS($sUpgradeName, 3)
 			$sUpgradeName = NormalizeLabUpgradeName($sUpgradeName)
-
 			If $sUpgradeName = "" Then ContinueLoop
 
 			; Baca resource dan cost berdasarkan posisi baris
-			$sResource = QuickMIS( _
-				"N1", $g_sImgResourceIcon, _
-				832, Number($aTmpCoord[$i][2]) + 24, _
-				852, Number($aTmpCoord[$i][2]) + 42 _
-			)
-
+			$sResource = QuickMIS("N1", $g_sImgResourceIcon, 832, Number($aTmpCoord[$i][2]) + 24, 852, Number($aTmpCoord[$i][2]) + 42)
 			$tmpcost = getBuilderMenuCost(Number($aTmpCoord[$i][1]) - 120, Number($aTmpCoord[$i][2]) + 25)
-
 			If Number($tmpcost) = 0 Then ContinueLoop
 
 			; Prioritas hanya berdasarkan urutan Laboratory
@@ -671,7 +670,7 @@ Func _FindLabUpgrade($bTest = False)
 
 			If $g_bLabUpgradeOrderEnable And UBound($aOrder) > 0 Then
 				For $z = 0 To UBound($aOrder) - 1
-					If StringInStr($sUpgradeName, $aOrder[$z][1]) > 0 Then
+					If $sUpgradeName = $aOrder[$z][1] Then 
 						$sPriority = "Priority"
 						$iScore = $aOrder[$z][0]
 						SetLog("Lab Priority: " & $sUpgradeName & ", order=" & $iScore, $COLOR_DEBUG2)
@@ -680,16 +679,7 @@ Func _FindLabUpgrade($bTest = False)
 				Next
 			EndIf
 
-			Local $tmparray[1][8] = [[ _
-				String($sResource), _
-				Number(700), _
-				Number($aTmpCoord[$i][2] + 25), _
-				String($sUpgradeName), _
-				1, _
-				Number($tmpcost), _
-				$iScore, _
-				$sPriority _
-			]]
+			Local $tmparray[1][8] = [[String($sResource), Number(700), Number($aTmpCoord[$i][2] + 25), String($sUpgradeName), 1, Number($tmpcost), $iScore, $sPriority]]
 
 			_ArrayAdd($aUpgrade, $tmparray)
 

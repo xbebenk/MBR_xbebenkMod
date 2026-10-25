@@ -13,8 +13,6 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Global $g_iXFindUpgradeBB = 340
-
 Func AutoUpgradeBB($bTest = False)
 	Local $bWasRunState = $g_bRunState
 	$g_bRunState = True
@@ -88,7 +86,7 @@ EndFunc
 
 Func _SearchUpgradeBB($bTest = False)
 	Local $ZoomedIn = False, $bNew = False, $bSkipNew = False
-	Local $NeedDrag = True, $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost
+	Local $NeedDrag = True, $TmpUpgradeCost = 0, $UpgradeCost = 0, $sameCost =  0
 	Local $bForceUseGold = False
 
 	;$bSkipNew = FindBHInUpgradeProgress()
@@ -169,6 +167,7 @@ Func _SearchUpgradeBB($bTest = False)
 				EndIf
 				If CheckResourceForDoUpgradeBB($Upgrades[$i][3], $Upgrades[$i][5], $Upgrades[$i][0], False) Then ;name, cost, costtype
 					SetLog("Going to Upgrade: " & $Upgrades[$i][3], $COLOR_INFO)
+					If Not CheckUpgradeBBIgnore($Upgrades[$i][3]) Then ContinueLoop
 					Click($Upgrades[$i][1], $Upgrades[$i][2])
 					If _Sleep(1000) Then Return
 					If StringInStr($Upgrades[$i][3], "Battle") Then
@@ -192,9 +191,10 @@ Func _SearchUpgradeBB($bTest = False)
 			Next
 		EndIf
 		If _Sleep(2000) Then Return
-		If Not $g_bRunState Then Return
 		If Not AutoUpgradeBBCheckBuilder($bTest) Then ExitLoop
-		If Not ClickDragAutoUpgradeBB() Then ExitLoop
+		
+		If _Sleep(50) Then Return
+		ClickDragAutoUpgradeBB()
 		SetLog("[" & $z & "] Scroll Up", $COLOR_DEBUG)
 	Next
 	Return True
@@ -242,25 +242,6 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 	;	;EndIf
 	;EndIf
 
-	;$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, 50, 860, 535)
-	;If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
-	;	For $i = 0 To UBound($aTmpCoord) - 1
-	;		$sUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
-	;		$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] + 9, 823, $aTmpCoord[$i][2] + 35, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
-	;		If $bNotEnoughOres Then
-	;			SetDebugLog($sUpgradeName & ": Not Enough Ores")
-	;			ContinueLoop
-	;		EndIf
-	;		Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1] - 50), Number($aTmpCoord[$i][2] + 10), String($sUpgradeName)]]
-	;		_ArrayAdd($aUpgrade, $tmparray)
-	;		If @error Then SetLog("GetEquipmentUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
-	;	Next
-	;
-	;	For $j = 0 To UBound($aUpgrade) - 1
-	;		SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
-	;	Next
-	;EndIf
-
 	$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 850, 55, 860, 545)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		RemoveDupCNX($aTmpCoord, 2)
@@ -284,7 +265,7 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 
 		For $j = 0 To UBound($aBuilding) -1
 			If Not $g_bRunState Then Return
-			Local $BuildingName = $aBuilding[$j][3]
+			$BuildingName = $aBuilding[$j][3]
 			For $k = 0 To UBound($aBOBControl) - 1
 				If StringInStr($BuildingName, $aBOBControl[$k][0]) Then
 					Switch $aBuilding[$j][0]
@@ -653,45 +634,85 @@ Func OpenShopBB($sUpgradeType = "Traps", $bCheckRedCounter = True)
 	Return $bRet
 EndFunc ;OpenShop
 
+;Func GetBuildingTypeBB($sUpgrades = "")
+;	If Not $g_bRunState Then Return
+;	Local $aArmy[5] = ["Camp", "Healing", "Copter", "Machine", "Control"]
+;	Local $aResource[3] = ["Collector", "Storage", "Mine"]
+;	Local $aDefense[12] = ["Wall", "Cannon", "Tower", "Mortar", "FireCrackers", "Air Bombs", "Tesla", "Crusher", "Roaster", "Launcher", "Guard", "Bow"]
+;	Local $aTrap[5] = ["Bomb", "Trap", "Mine", "Giant", "Mega"]
+;	Local $sUpgradeType = ""
+;
+;	For $sArmy In $aArmy
+;		If StringInStr($sUpgrades, $sArmy) Then
+;			$sUpgradeType = "Army"
+;		EndIf
+;	Next
+;
+;	For $sResource In $aResource
+;		If StringInStr($sUpgrades, $sResource) Then
+;			$sUpgradeType = "Resources"
+;		EndIf
+;	Next
+;
+;	For $sDefense In $aDefense
+;		If StringInStr($sUpgrades, $sDefense) Then
+;			$sUpgradeType = "Defenses"
+;		EndIf
+;	Next
+;
+;	For $sTrap In $aTrap
+;		If StringInStr($sUpgrades, $sTrap) Then
+;			$sUpgradeType = "Traps"
+;		EndIf
+;	Next
+;
+;	If $sUpgrades = "Air Bombs" Then $sUpgradeType = "Defenses"
+;	If $sUpgrades = "Gold Mine" Then $sUpgradeType = "Resources"
+;	If $sUpgrades = "Giant Cannon" Then $sUpgradeType = "Defenses"
+;
+;	If $g_bDebugSetLog Then SetLog("Found UpgradeType : " & $sUpgradeType, $COLOR_DEBUG1)
+;	Return $sUpgradeType
+;EndFunc ;GetBuildingTypeBB
+
 Func GetBuildingTypeBB($sUpgrades = "")
 	If Not $g_bRunState Then Return
+
+	; 1) nama persis / khusus yang keyword-nya bentrok antar kategori
+	Switch $sUpgrades
+		Case "Air Bombs", "Giant Cannon"
+			Return _GetBuildingTypeResult("Defenses")
+		Case "Gold Mine", "Gem Mine"
+			Return _GetBuildingTypeResult("Resources")
+		Case "Mega Mine", "Giant Bomb"
+			Return _GetBuildingTypeResult("Traps")
+	EndSwitch
+
+	; 2) keyword per kategori, urutan = prioritas, kategori pertama yang cocok menang
 	Local $aArmy[5] = ["Camp", "Healing", "Copter", "Machine", "Control"]
 	Local $aResource[3] = ["Collector", "Storage", "Mine"]
 	Local $aDefense[12] = ["Wall", "Cannon", "Tower", "Mortar", "FireCrackers", "Air Bombs", "Tesla", "Crusher", "Roaster", "Launcher", "Guard", "Bow"]
-	Local $aTrap[5] = ["Bomb", "Trap", "Mine", "Giant", "Mega"]
-	Local $sUpgradeType = ""
+	Local $aTrap[4] = ["Bomb", "Trap", "Giant", "Mega"]   ; "Mine" dihapus dari sini, sudah ditangani di atas
 
-	For $sArmy In $aArmy
-		If StringInStr($sUpgrades, $sArmy) Then
-			$sUpgradeType = "Army"
-		EndIf
+	For $s In $aArmy
+		If StringInStr($sUpgrades, $s) Then Return _GetBuildingTypeResult("Army")
+	Next
+	For $s In $aResource
+		If StringInStr($sUpgrades, $s) Then Return _GetBuildingTypeResult("Resources")
+	Next
+	For $s In $aDefense
+		If StringInStr($sUpgrades, $s) Then Return _GetBuildingTypeResult("Defenses")
+	Next
+	For $s In $aTrap
+		If StringInStr($sUpgrades, $s) Then Return _GetBuildingTypeResult("Traps")
 	Next
 
-	For $sResource In $aResource
-		If StringInStr($sUpgrades, $sResource) Then
-			$sUpgradeType = "Resources"
-		EndIf
-	Next
+	Return _GetBuildingTypeResult("")
+EndFunc
 
-	For $sDefense In $aDefense
-		If StringInStr($sUpgrades, $sDefense) Then
-			$sUpgradeType = "Defenses"
-		EndIf
-	Next
-
-	For $sTrap In $aTrap
-		If StringInStr($sUpgrades, $sTrap) Then
-			$sUpgradeType = "Traps"
-		EndIf
-	Next
-
-	If $sUpgrades = "Air Bombs" Then $sUpgradeType = "Defenses"
-	If $sUpgrades = "Gold Mine" Then $sUpgradeType = "Resources"
-	If $sUpgrades = "Giant Cannon" Then $sUpgradeType = "Defenses"
-
-	If $g_bDebugSetLog Then SetLog("Found UpgradeType : " & $sUpgradeType, $COLOR_DEBUG1)
-	Return $sUpgradeType
-EndFunc ;GetBuildingTypeBB
+Func _GetBuildingTypeResult($sType)
+	If $g_bDebugSetLog Then SetLog("Found UpgradeType : " & $sType, $COLOR_DEBUG1)
+	Return $sType
+EndFunc
 
 Func SearchGreenZoneBB()
 	If Not $g_bRunState Then Return
@@ -772,23 +793,9 @@ Func SearchGreenZoneBB()
 	Return False
 EndFunc
 
-Func GoAttackBBAndReturn()
-	If Not $g_bRunState Then Return
-	SetLog("Going attack, to clear field", $COLOR_DEBUG)
-	PrepareAttackBB("CleanYard")
-	_AttackBB()
-	If Not $g_bRunState Then Return
-	ClickAway("Left")
-	ZoomOut()
-	SetLog("Field should be clear now", $COLOR_DEBUG)
-EndFunc
-
 Func ClickDragAutoUpgradeBB()
-	If Not $g_bRunState Then Return
 	Local $x = 660, $yUp = 150, $yDown = 540, $Delay = 1500, $YY = 0
-
 	ClickDrag(660, 540, 660, 140) ;drag up
-
 EndFunc ;==>ClickDragAUpgrade
 
 Func getMostBottomCostBB()
@@ -903,8 +910,17 @@ Func SpendBBGoldOnWall($iMaxScroll = 5, $bTest = False)
 					Local $iCount = Floor(($g_aiCurrentLootBB[$eLootGoldBB]*0.8) / $aSearchWall[$iWallIndex][5])
 
 					SetLog("Can up wall up to : " & $iCount, $COLOR_SUCCESS)
-					If $iCount > 10 Then
-						If BBUpWallGold($aSearchWall[$iWallIndex][5], $iCount/10, "+10") Then Return True
+					If $iCount < 2 Then
+						If QuickMIS("BFI", $g_sImgBBResourceIcon & "\Gold*", 150, 500, 750, 600) Then
+							Click($g_iQuickMISX, $g_iQuickMISY)
+							If WaitBBUpgradeWindow() Then
+								If QuickMIS("BC1", $g_sImgBBUpgradeWindowButton, 340, 400, 800, 600) Then
+									Click($g_iQuickMISX - 50, $g_iQuickMISY + 10)
+									SetLog("Upgraded wall with BB Gold", $COLOR_SUCCESS)
+									$bRet = True
+								EndIf
+							EndIf
+						EndIf
 					ElseIf $iCount < 11 Then
 						If BBUpWallGold($aSearchWall[$iWallIndex][5], $iCount, "+1") Then Return True
 					ElseIf $iCount < 2 Then
@@ -918,10 +934,14 @@ Func SpendBBGoldOnWall($iMaxScroll = 5, $bTest = False)
 								EndIf
 							EndIf
 						EndIf
+					ElseIf $iCount > 10 Then
+						If BBUpWallGold($aSearchWall[$iWallIndex][5], $iCount/10, "+10") Then Return True
 					EndIf
 				Else
 					SetLog("No Wall found on list", $COLOR_DEBUG2)
 				EndIf
+				
+				If _Sleep(50) Then Return
 				ClickDragAutoUpgradeBB()
 				If Not $g_bRunState Then Return
 			Next
