@@ -503,7 +503,7 @@ Func UseLabPotion()
 					Click(650, 510, 1, 0, "Click Use Button")
 					If WaitforPixel(430, 430, 431, 430, "2E93D0", 20, 2) Then
 						Click(430, 430, 1, 0, "Click Confirm use Research pot Button")
-						SetLog("laboratory Research Boosted using potion", $COLOR_SUCCESS)
+						SetLog("Laboratory Research Boosted using potion", $COLOR_SUCCESS)
 						$bRet = True
 					Else
 						SetLog("Fail to verify Confirm Use Button", $COLOR_DEBUG2)

@@ -22,7 +22,8 @@ Func AutoUpgrade($bTest = False, $bUpgradeLowCost = False)
 EndFunc
 
 Func AutoUpgradeCheckResource()
-
+	Local $bRet = False
+	
 	Local $sBuilderInfo = getBuildersOnMenu()
 	If StringInStr($sBuilderInfo, "#") > 0 Then ; check for valid OCR read
 		Local $aGetBuilders = StringSplit($sBuilderInfo, "#", $STR_NOCOUNT) ; Split into free and total builder strings
@@ -37,7 +38,10 @@ Func AutoUpgradeCheckResource()
 	If $g_iFreeBuilderCount = 1 And Not _ColorCheck(_GetPixelColor(548, 606, True), Hex(0xD79146, 6), 20, Default, "AutoUpgradeCheckBuilder") Then
 		SetLog("AutoUpgradeCheckBuilder, Free Builder = 1, Goblin Builder!", $COLOR_DEBUG2)
 		$g_iFreeBuilderCount = 0
-		Return False
+	EndIf
+	
+	If Not $bRet And $g_iFreeBuilderCount = 0 Then 
+		CheckBuilderPotion()
 	EndIf
 
 	$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(350, 22)
@@ -84,6 +88,52 @@ Func CheckBuilderApprentice()
 	EndIf
 EndFunc
 
+Func CheckBuilderPotion()
+	Local $bRet = False
+	If _Sleep(50) Then Return
+	
+	If $g_bUseBuilderPotion Then
+		SetLog("Checking Use Builder potion", $COLOR_INFO)
+		If QuickMIS("BFI", $g_sImgAUpgradeHour & "Day*", 776, 65, 830, 80) Then
+			SetLog("Upgrade time > 1 day", $COLOR_INFO)
+			SetLog("Try to use Builder potion", $COLOR_INFO)
+			If QuickMIS("BC1", $g_sImgBuilderPotion, 440, 620, 460, 640) Then
+				Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Magic Item")
+				If _Sleep(1000) Then Return
+				If IsMagicItemWindowOpen() Then
+					If QuickMIS("BC1", $g_sImgBuilderPotion, 180, 225, 670, 380) Then
+						Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Builders pot")
+						If WaitforPixel(650, 510, 651, 510, "8BD43B", 20, 2) Then
+							Click(650, 510, 1, 0, "Click Use Button")
+							If WaitforPixel(430, 430, 431, 430, "2E93D0", 20, 2) Then
+								Click(430, 430, 1, 0, "Click Confirm use Builder pot Button")
+								SetLog("Builders Boosted using potion", $COLOR_SUCCESS)
+								$bRet = True
+							Else
+								SetLog("Fail to verify Confirm Use Button", $COLOR_DEBUG2)
+							EndIf
+						Else
+							SetLog("Fail to verify Use Button", $COLOR_DEBUG2)
+						EndIf
+					Else
+						SetLog("Builders potion not found", $COLOR_DEBUG2)
+						ClickAway()
+						If _Sleep(1000) Then Return
+					EndIf
+				Else
+					SetLog("Fail to verify Magic items Window", $COLOR_DEBUG2)
+				EndIf
+			Else
+				SetLog("Fail to verify Magic items icon", $COLOR_DEBUG2)
+			EndIf
+		Else
+			SetLog("Upgrade time < 1 day, cancel using Builder potion", $COLOR_DEBUG2)
+		EndIf
+	EndIf
+
+	Return $bRet
+EndFunc
+
 Func AutoUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
 
@@ -109,7 +159,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		SetLog("CheckBuilder: Low-cost upgrade enabled (< 24h)", $COLOR_DEBUG2)
 		$bRet = True
 	EndIf
-
+	
 	SetLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG1)
 	Return $bRet
 EndFunc
@@ -1439,48 +1489,6 @@ Func DoGearUp($x, $y)
 				SetLog(" - GearUp : " & $g_aUpgradeNameLevel[1], $COLOR_SUCCESS)
 				Return True
 			EndIf
-		EndIf
-	EndIf
-EndFunc
-
-Func CheckBuilderPotion()
-	If Not $g_bRunState Then Return
-	If $g_bUseBuilderPotion And $g_iFreeBuilderCount = 0 Then
-		SetLog("Checking for Use Builder Potion", $COLOR_INFO)
-		If _Sleep(500) Then Return
-		If QuickMIS("BC1", $g_sImgAUpgradeHour, 480, 105, 560, 140) Then
-			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
-			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
-			If $mUpgradeTime > 540 Then
-				SetLog("Upgrade time > 9h, will use Builder Potion", $COLOR_INFO)
-				Click($g_iQuickMISX, $g_iQuickMISY)
-				If _Sleep(1000) Then Return
-				If IsUpgradeWindowOpen() Then
-					ClickAway()
-					If _Sleep(500) Then Return
-					ClickAway()
-					If _Sleep(500) Then Return
-				EndIf
-				If IsHeroHallWindow() Then
-					ClickAway()
-					If _Sleep(1000) Then return
-				EndIf
-				If ClickB("BuilderPot") Then
-					If _Sleep(1000) Then Return
-					If QuickMIS("BC1", $g_sImgBuilderPotion, 425, 365, 530, 450) Then
-						Click($g_iQuickMISX, $g_iQuickMISY)
-						SetLog("Builder Boosted using potion", $COLOR_SUCCESS)
-						ClickAway("Right")
-					EndIf
-				Else
-					SetLog("BuilderPot Not Found", $COLOR_DEBUG)
-					ClickAway("Right")
-				EndIf
-			Else
-				SetLog("Upgrade time < 9h, cancel using builder potion", $COLOR_DEBUG2)
-			EndIf
-		Else
-			SetLog("Failed to read Upgrade time on BuilderMenu", $COLOR_DEBUG2)
 		EndIf
 	EndIf
 EndFunc
