@@ -471,58 +471,59 @@ Func CheckIfLabIdle($bDebug = False)
 		If $g_iTownHallLevel >= 9 Then
 			If Not OpenLabMenu() Then Return $bRet
 			CheckLabAssistant()
-			CloseBuilderMenu()
 		EndIf
 	EndIf
 	
 	
-	;If Not $bRet And $g_bUseLabPotion Then
-	;	OpenLabMenu()
-	;	If QuickMIS("BC1", $g_sImgAUpgradeHour, 770, 65, 830, 80) Then
-	;		Local $sUpgradeTime = getBuilderLeastUpgradeTime(775, 66)
-	;		Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
-	;		If $mUpgradeTime >= 1440 Then ; only use potion if lab upgrade time is more than 2 day
-	;			SetLog("Upgrade time > 1 day, will use Resource Potion", $COLOR_INFO)
-	;			ClickAway()
-	;			UseLabPotion()
-	;		Else
-	;			SetLog("Upgrade time < 1 day, cancel using Resource potion", $COLOR_DEBUG2)
-	;		EndIf
-	;	EndIf
-	;EndIf
-	;
-	;ClickAway()
-	;If _Sleep(500) Then Return
+	If Not $bRet And $g_bUseLabPotion Then
+		SetLog("Checking Use Research potion", $COLOR_INFO)
+		If QuickMIS("BFI", $g_sImgAUpgradeHour & "Day*", 776, 65, 830, 80) Then
+			SetLog("Upgrade time > 1 day, will use Resource Potion", $COLOR_INFO)
+			UseLabPotion()
+		Else
+			SetLog("Upgrade time < 1 day, cancel using Resource potion", $COLOR_DEBUG2)
+		EndIf
+	EndIf
+	
+	If Not $bRet Then CloseBuilderMenu() ;Lab is upgrading
 	Return $bRet
 EndFunc
 
 Func UseLabPotion()
-	If Not $g_bRunState Then Return
-	If FindResearchButton(False) Then
-		If _Sleep(500) Then Return
-		
-		Local $LabBoosted = FindButton("LabBoosted")
-		If IsArray($LabBoosted) And UBound($LabBoosted) = 2 Then ; Lab already boosted skip using potion
-			SetLog("Detected Laboratory already boosted", $COLOR_INFO)
-			Return True
-		EndIf
-		
-		Local $LabPotion = FindButton("LabPotion")
-		If IsArray($LabPotion) And UBound($LabPotion) = 2 Then
-			SetLog("Use Laboratory Potion", $COLOR_INFO)
-			ClickP($LabPotion)
-			If _Sleep(1000) Then Return
-			If QuickMIS("BC1", $g_sImgResourcePotion, 420, 370, 535, 450) Then
-				Click($g_iQuickMISX - 60, $g_iQuickMISY, 1, 0, "Research Confirm")
-				SetLog("laboratory Research Boosted using potion", $COLOR_SUCCESS)
-				Return True
+	Local $bRet = False
+	If _Sleep(50) Then Return
+	SetLog("Try to use Laboratory potion", $COLOR_INFO)
+	If QuickMIS("BC1", $g_sImgResourcePotion, 440, 620, 460, 640) Then
+		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Magic Item")
+		If _Sleep(1000) Then Return
+		If IsMagicItemWindowOpen() Then
+			If QuickMIS("BC1", $g_sImgResourcePotion, 180, 225, 670, 380) Then
+				Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click research pot")
+				If WaitforPixel(650, 510, 651, 510, "8BD43B", 20, 2) Then
+					Click(650, 510, 1, 0, "Click Use Button")
+					If WaitforPixel(430, 430, 431, 430, "2E93D0", 20, 2) Then
+						Click(430, 430, 1, 0, "Click Confirm use Research pot Button")
+						SetLog("laboratory Research Boosted using potion", $COLOR_SUCCESS)
+						$bRet = True
+					Else
+						SetLog("Fail to verify Confirm Use Button", $COLOR_DEBUG2)
+					EndIf
+				Else
+					SetLog("Fail to verify Use Button", $COLOR_DEBUG2)
+				EndIf
+			Else
+				SetLog("Research potion not found", $COLOR_DEBUG2)
 			EndIf
-			ClickAway("Right")
 		Else
-			SetLog("No Laboratory Potion Found", $COLOR_DEBUG)
-			ClickAway("Right")
+			SetLog("Fail to verify Magic items Window", $COLOR_DEBUG2)
 		EndIf
+	Else
+		SetLog("Fail to verify Magic items icon", $COLOR_DEBUG2)
 	EndIf
+	
+	ClickAway("Left") ; close MagicItemWindow
+	If _Sleep(500) Then Return
+	Return $bRet
 EndFunc
 
 Func getMostBottomCostLab()
