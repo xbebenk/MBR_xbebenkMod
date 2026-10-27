@@ -147,8 +147,9 @@ Func PrepareSearchCheckArmy($bTournament = False, $bTest = False)
 	For $i = 1 To 3
 		SetLog("Checking ArmyOverview Window", $COLOR_DEBUG)
 		If WaitforPixel(695, 500, 696, 501, "C2ED91", 20, 1) Then
+			CheckRequestArmy()
 			If _Sleep(200) Then Return
-			SetArmyCompo($bTournament)
+			ApplyArmyCompo($bTournament)
 			If _Sleep(500) Then Return
 			If FillArmyCamp() Then SaveArmyCompo($bTournament)
 			If _Sleep(500) Then Return
@@ -173,6 +174,17 @@ Func PrepareSearchCheckArmy($bTournament = False, $bTest = False)
 		EndIf
 		If _Sleep(500) Then Return
 	Next
+	
+	Return $bRet
+EndFunc
+
+Func CheckRequestArmy()
+	Local $bRet = False
+	
+	If _ColorCheck(_GetPixelColor(745, 475, True), Hex(0x8BD43B, 6), 10, Default, "Green Request Button") Then
+		_makerequest(False, 745, 475)
+		$bRet = True
+	EndIf
 	
 	Return $bRet
 EndFunc
@@ -307,7 +319,7 @@ Func CheckHeroOnUpgrade()
 	Return $bRet
 EndFunc
 
-Func SetArmyCompo($bTournament = False)
+Func ApplyArmyCompo($bTournament = False)
 	Local $x = 510, $Color = Hex(0xB69881, 6)
 	Local $yArmy1 = 200, $yArmy2 = 254, $yArmy3 = 308, $yArmy4 = 361
 	Local $yCheck = 0, $iUseArmy = $g_iCmbDBUseArmy

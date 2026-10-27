@@ -44,46 +44,24 @@ Func GetEquipmentUpgradeList()
 	Local $aTmpCoord, $lenght =  180, $sUpgradeName, $aUpgrade[0][4]
 	Local $bNotEnoughOres = False
 	
-	Switch $g_iCmbSortUpgradeEquipment
-		Case 0, 1
-			$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, 50, 860, 535)
-			If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
-				For $i = 0 To UBound($aTmpCoord) - 1
-					$sUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
-					$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] + 9, 823, $aTmpCoord[$i][2] + 35, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
-					If $bNotEnoughOres Then
-						SetDebugLog($sUpgradeName & ": Not Enough Ores")
-						ContinueLoop
-					EndIf
-					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1] - 50), Number($aTmpCoord[$i][2] + 10), String($sUpgradeName)]]
-					_ArrayAdd($aUpgrade, $tmparray)
-					If @error Then SetLog("GetEquipmentUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
-				Next
-
-				For $j = 0 To UBound($aUpgrade) - 1
-					SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
-				Next
+	$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, 50, 860, 535)
+	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
+		For $i = 0 To UBound($aTmpCoord) - 1
+			$sUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
+			$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] + 9, 823, $aTmpCoord[$i][2] + 35, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
+			If $bNotEnoughOres Then
+				SetDebugLog($sUpgradeName & ": Not Enough Ores")
+				ContinueLoop
 			EndIf
-		Case 2
-			$aTmpCoord = QuickMIS("CNX", $g_sImgEquipmentEquipped, 595, 105, 650, 505)
-			If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
-				For $i = 0 To UBound($aTmpCoord) - 1
-					$sUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] - 30, $lenght) ;get upgrade name and amount
-					$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] - 27, 823, $aTmpCoord[$i][2] + 4, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
-					If $bNotEnoughOres Then
-						SetDebugLog($sUpgradeName & ": Not Enough Ores")
-						ContinueLoop
-					EndIf
-					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($sUpgradeName)]]
-					_ArrayAdd($aUpgrade, $tmparray)
-					If @error Then SetLog("GetEquipmentUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
-				Next
+			Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1] - 50), Number($aTmpCoord[$i][2] + 10), String($sUpgradeName)]]
+			_ArrayAdd($aUpgrade, $tmparray)
+			If @error Then SetLog("GetEquipmentUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
+		Next
 
-				For $j = 0 To UBound($aUpgrade) - 1
-					SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
-				Next
-			EndIf
-	EndSwitch
+		For $j = 0 To UBound($aUpgrade) - 1
+			SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
+		Next
+	EndIf
 	
 	If $g_bChkSortUpgradeEquipment Then
 		Switch $g_iCmbSortUpgradeEquipment
@@ -95,7 +73,7 @@ Func GetEquipmentUpgradeList()
 				SetDebugLog("Sort by higher cost")
 			Case 2
 				_ArraySort($aUpgrade, 0, 0, 0, 5) ;sort by lower cost
-				SetDebugLog("Sort by equipped lower cost")
+				SetDebugLog("Sort by Equipped")
 		EndSwitch
 	Else
 		_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by y coord

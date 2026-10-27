@@ -295,7 +295,7 @@ Func CreateHeroesSubTab()
 		$g_hChkSortPetUpgrade = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Upgrade_Pets", "ChkSortPetUpgrade", "Sort Pet Upgrade By:"), $x, $y, -1, -1)
 		GUICtrlSetOnEvent(-1, "SortPetUpgrade")
 		$g_hCmbSortPetUpgrade = GUICtrlCreateCombo("", $x + 120, $y, 120, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
-		Local $sCmbTxt = "Higher Cost|Lower Cost|Assigned"
+		Local $sCmbTxt = "Lower Cost|Higher Cost|Assigned"
 		GUICtrlSetData(-1, $sCmbTxt, "Assigned")
 		GUICtrlSetOnEvent(-1, "SortPetUpgrade")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

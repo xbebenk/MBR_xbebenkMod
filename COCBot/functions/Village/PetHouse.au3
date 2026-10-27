@@ -10,14 +10,14 @@
 ; Example .......:
 ; ===============================================================================================================================
 
-Func PetHouse($test = False)
-	
+Func PetHouse($bTest = False)
+	If Not $g_bUpgradePetsEnable Then Return
 	If $g_iTownHallLevel < 14 Then Return
 	VillageReport()
 	
 	If Number($g_aiCurrentLoot[$eLootDarkElixir]) <= 30000 Then
-		SetLog("Current DE: " & $g_aiCurrentLoot[$eLootDarkElixir] & " < Mininum to upgrade Pet, exiting!", $COLOR_INFO)
-		If Not $test Then Return
+		SetLog("Current DE: " & $g_aiCurrentLoot[$eLootDarkElixir] & " < Mininum to upgrade Pet!", $COLOR_DEBUG2)
+		If Not $bTest Then Return
 	EndIf
 
 	If Not OpenPetUpgrade() Then Return
@@ -44,9 +44,10 @@ Func PetHouse($test = False)
 		Else
 			Local $iPetUpgradeTime = getHeroUpgradeTime(730, 546) ; get duration
 			Click(625, 545) ;click upgrade button
-			SetLog(" - Cost : " & _NumberFormat($aPet[0][5]) & " " & $aPet[0][0], $COLOR_SUCCESS)
+			SetLog(" - Upgrading : " & $aPet[0][3], $COLOR_SUCCESS)
+			SetLog(" - Cost : " & _NumberFormat($aPet[0][4]) & " [" & $aPet[0][0] & "]", $COLOR_SUCCESS)
 			SetLog(" - Duration : " & $iPetUpgradeTime, $COLOR_SUCCESS)
-			AutoUpgradeLog(False, $aPet[0][3], "??", $aPet[0][5], $aPet[0][0])
+			AutoUpgradeLog(False, $aPet[0][3], "??", $aPet[0][4], $aPet[0][0])
 			If IsUpgradeWindowOpen() Then ClickAway("Left")
 			If _Sleep(1000) Then Return
 		EndIf
@@ -72,99 +73,45 @@ Func OpenPetUpgrade()
 	EndIf
 	
 	If _Sleep(1000) Then Return
-	If QuickMIS("BC1", $g_sImgPetHouse, 690, 15, 725, 30) Then $bRet = True
+	If QuickMIS("BC1", $g_sImgPetHouseMenu, 690, 15, 725, 30) Then $bRet = True
 	If Not $bRet Then SetLog("Fail to verify Pet Upgrade Menu", $COLOR_DEBUG2)
 	Return $bRet
 EndFunc
 
-Func FindPetsButton()
-	Local $aPetsButton = findButton("Pets", Default, 1, True)
-	If IsArray($aPetsButton) And UBound($aPetsButton, 1) = 2 Then
-		If $g_bDebugImageSave Then SaveDebugImage("PetHouse") ; Debug Only
-		ClickP($aPetsButton)
-		If _Sleep($DELAYLABORATORY1) Then Return ; Wait for window to open
-		Return True
-	Else
-		SetLog("Cannot find the Pets Button!", $COLOR_ERROR)
-		Return False
-	EndIf
-EndFunc
-
 Func GetPetUpgradeList()
-	Local $aTmpCoord, $x = 560, $lenght = 180, $sUpgradeName, $tmpcost, $aUpgrade[0][6], $bNotEnoughOres = True
+	Local $aTmpCoord, $x = 560, $lenght = 180, $sUpgradeName, $tmpcost, $aUpgrade[0][6], $sResource = ""
 	
 	$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, 50, 860, 535)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			$sUpgradeName = getBuildingName($x, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
-			$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] + 9, 823, $aTmpCoord[$i][2] + 35, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
-			If $bNotEnoughOres Then
-				SetDebugLog($sUpgradeName & ": Not Enough Ores")
+			$sResource = QuickMIS("N1", $g_sImgResourceIcon, 830, $aTmpCoord[$i][2] + 20, 850, $aTmpCoord[$i][2] + 60)
+			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 120, $aTmpCoord[$i][2] + 25)
+			If Number($tmpcost) = 0 Or $sResource = "none" Then 
+				SetDebugLog($sUpgradeName & ", resource: " & $sResource & ", cost: " & $tmpcost & ", failed to verify cost or resource")
 				ContinueLoop
 			EndIf
-			Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1] - 50), Number($aTmpCoord[$i][2] + 10), String($sUpgradeName)]]
+			Local $tmparray[1][5] = [[String($sResource), 700, Number($aTmpCoord[$i][2] + 25), String($sUpgradeName), Number($tmpcost)]]
 			_ArrayAdd($aUpgrade, $tmparray)
 			If @error Then SetLog("GetPetUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
 		Next
 
 		For $j = 0 To UBound($aUpgrade) - 1
-			SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
+			SetLog("[" & $j & "] PetUpgrade: " & $aUpgrade[$j][3] & " cost: " & $aUpgrade[$j][4], $COLOR_DEBUG)
 		Next
 	EndIf
-	
-	
-	Switch $g_iCmbSortPetUpgrade
-		Case 0, 1
-			$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, 50, 860, 535)
-			If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
-				For $i = 0 To UBound($aTmpCoord) - 1
-					$sUpgradeName = getBuildingName($x, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
-					$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] + 9, 823, $aTmpCoord[$i][2] + 35, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
-					If $bNotEnoughOres Then
-						SetDebugLog($sUpgradeName & ": Not Enough Ores")
-						ContinueLoop
-					EndIf
-					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1] - 50), Number($aTmpCoord[$i][2] + 10), String($sUpgradeName)]]
-					_ArrayAdd($aUpgrade, $tmparray)
-					If @error Then SetLog("GetPetUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
-				Next
-
-				For $j = 0 To UBound($aUpgrade) - 1
-					SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
-				Next
-			EndIf
-		Case 2
-			$aTmpCoord = QuickMIS("CNX", $g_sImgEquipmentEquipped, 595, 105, 650, 505)
-			If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
-				For $i = 0 To UBound($aTmpCoord) - 1
-					$sUpgradeName = getBuildingName($x, $aTmpCoord[$i][2] - 30, $lenght) ;get upgrade name and amount
-					$bNotEnoughOres = _PixelSearch(823, $aTmpCoord[$i][2] - 27, 823, $aTmpCoord[$i][2] + 4, Hex(0xFF7B72, 6), 20, True, "EnoughOres")
-					If $bNotEnoughOres Then
-						SetDebugLog($sUpgradeName & ": Not Enough Ores")
-						ContinueLoop
-					EndIf
-					Local $tmparray[1][4] = [[String($aTmpCoord[$i][0]), Number($aTmpCoord[$i][1]), Number($aTmpCoord[$i][2]), String($sUpgradeName)]]
-					_ArrayAdd($aUpgrade, $tmparray)
-					If @error Then SetLog("GetPetUpgradeList ComposeArray Err : " & @error, $COLOR_ERROR)
-				Next
-
-				For $j = 0 To UBound($aUpgrade) - 1
-					SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
-				Next
-			EndIf
-	EndSwitch
 	
 	If $g_bChkSortPetUpgrade Then
 		Switch $g_iCmbSortPetUpgrade
 			Case 0
-				_ArraySort($aUpgrade, 0, 0, 0, 5) ;sort by lower cost
+				_ArraySort($aUpgrade, 0, 0, 0, 4) ;sort by lower cost
 				SetDebugLog("Sort by lower cost")
 			Case 1
-				_ArraySort($aUpgrade, 1, 0, 0, 5) ;sort by higher cost
+				_ArraySort($aUpgrade, 1, 0, 0, 4) ;sort by higher cost
 				SetDebugLog("Sort by higher cost")
 			Case 2
-				_ArraySort($aUpgrade, 0, 0, 0, 5) ;sort by lower cost
-				SetDebugLog("Sort by Assigned lower cost")
+				_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by lower cost
+				SetDebugLog("Sort by Assigned")
 		EndSwitch
 	Else
 		_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by y coord

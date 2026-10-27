@@ -99,6 +99,9 @@ Global $g_sImgLabAssistant = @ScriptDir & "\imgxml\Research\Laboratory\LabAssist
 ;Blacksmith
 Global $g_sImgEquipmentMenu = @ScriptDir & "\imgxml\Research\Blacksmith\EquipmentMenu\" ; Upgrade menu Header text : "Hero Equipment"
 Global $g_sImgEquipmentEquipped  = @ScriptDir & "\imgxml\Research\Blacksmith\Equipped\" 
+
+;PetHouse
+Global $g_sImgPetHouseMenu = @ScriptDir & "\imgxml\Resources\PetHouse\PetHouseMenu\"
 #EndRegion
 
 #Region Clan Capital

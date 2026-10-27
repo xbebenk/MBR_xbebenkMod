@@ -122,23 +122,24 @@ EndFunc
 
 Func RemoveGembox()
 	If Not $g_bChkGemsBox Then Return 
-	Local $bRemoved = False
+	Local $bRemoved = False, $x = 0, $y  = 0
 	SetLog("Check for Remove Gem Box", $COLOR_INFO)
 	Local $aGembox = QuickMIS("CNX", $g_sImgGemBox, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight, $g_OuterDiamondBottom)
 	If IsArray($aGembox) And UBound($aGembox) > 0 Then
 		For $i = 0 To UBound($aGembox) - 1
-			If Not isInsideDiamondXY($aGembox[$i][1], $aGembox[$i][2], True) Then 
-				SetDebugLog("Found GemBox, but Outside Diamond", $COLOR_INFO)
-				ContinueLoop
-			EndIf
-			Click($aGembox[$i][1], $aGembox[$i][2], 1, 0, "Remove GemBox!")
+			$x = $aGembox[$i][1]
+			$y = $aGembox[$i][2]
+			If $x < 85 And $y > 270 Then ContinueLoop                ; chat tab
+			If $x > 690 And $y > 165 And $y < 215 Then ContinueLoop  ; gems button
+			
+			Click($x, $y, 1, 0, "Remove GemBox!")
 			If _Sleep(1000) Then Return
 			Local $aGemboxName = BuildingInfo()
 			If $aGemboxName[1] = "Gem box" Then 
 				ClickRemoveObstacle()
 				SetLog("Removing GemBox", $COLOR_SUCCESS)
 				$bRemoved = True
-				ClickAway()
+				ClickAway("Right")
 				ExitLoop
 			Else
 				ClickAway()

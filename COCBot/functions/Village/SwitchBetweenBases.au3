@@ -117,8 +117,6 @@ Func SwitchTo($To = "BB")
 				$g_iQuickMISY -= 10
 			EndIf
 			
-			;If $To = "BB" Then CheckPetHouseTutorial()
-			
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			If _Sleep(3000) Then Return
 			

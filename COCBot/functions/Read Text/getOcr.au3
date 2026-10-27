@@ -310,7 +310,19 @@ Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get 
 	$ocrText = StringReplace($ocrText, "Drop S hip", "Drop Ship")
 	$ocrText = StringReplace($ocrText, "Me ga Mine", "Mega Mine")
 	
-    ; 6. Bersihkan sisa spasi berlebih di awal/akhir teks hasil pembersihan
+	;7. PetHouse
+	$ocrText = StringReplace($ocrText, "L A S S l", "Lassi")
+	$ocrText = StringReplace($ocrText, "Mighty y ak", "Mighty Yak")
+	$ocrText = StringReplace($ocrText, "Fros ty", "Frosty")
+	$ocrText = StringReplace($ocrText, "Sp irit Fox", "Spirit Fox")
+	
+	;8. BlackSmith
+	$ocrText = StringReplace($ocrText, "Fipe Heart", "Fire Heart")
+	$ocrText = StringReplace($ocrText, "Sp iky Ba ll", "Spiky Ball")
+	$ocrText = StringReplace($ocrText, "Roya l Ge m", "Royal Gem")
+	$ocrText = StringReplace($ocrText, "Giant Gauntle t", "Giant Gauntlet")
+
+    ;9. Bersihkan sisa spasi berlebih di awal/akhir teks hasil pembersihan
     Return StringStripWS($ocrText, 3) 
 EndFunc   ;==>getBuildingName
 
