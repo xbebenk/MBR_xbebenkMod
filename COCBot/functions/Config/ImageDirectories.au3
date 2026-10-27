@@ -53,7 +53,6 @@ Global $g_sImgDailyRewardItems = @ScriptDir & "\imgxml\Resources\DailyChallenge\
 Global $g_sImgTreasuryFull = @ScriptDir & "\imgxml\Resources\Treasury"
 Global $g_sImgShield = @ScriptDir & "\imgxml\Resources\Shield\"
 Global $g_sImgBuilderHut = @ScriptDir & "\imgxml\Buildings\BuilderHut\"
-Global $g_sImgPetHouse = @ScriptDir & "\imgxml\Buildings\PetHouse\"
 Global $g_sImgClanCastle = @ScriptDir & "\imgxml\Buildings\ClanCastle"
 Global $g_sImgLaboratory = @ScriptDir & "\imgxml\Buildings\Laboratory\"
 Global $g_sImgBoat = @ScriptDir & "\imgxml\Boat\Main\"
