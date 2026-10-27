@@ -295,7 +295,6 @@ Func _checkObstacles($bBuilderBase = False) ;Checks if something is in the way f
 	EndIf
 	
 	If Not $g_bRunState Then Return
-	;CheckPetHouseTutorial()
 	CheckBuilderHutTutorial()
 	
 	If Not $g_bRunState Then Return
@@ -751,69 +750,6 @@ Func CheckHeroHallTutor()
 	EndIf
 	
 	Return $bRet
-EndFunc
-
-Func CheckPetHouseTutorial()
-	Local $TmpX = 0, $TmpY = 0, $aPetHouse
-	If $g_iTownHallLevel < 14 Then Return
-	
-	If QuickMIS("BC1", $g_sImgOrangeBuilding, 60, 60, 800, 530) Then
-		$TmpX = $g_iQuickMISX
-		$TmpY = $g_iQuickMISY
-		If $TmpX < 70 Or $TmpY < 70 Or $TmpX > 770 Or $TmpY > 500 Then Return
-		If QuickMIS("BC1", $g_sImgPetHouse, $TmpX - 40, $TmpY, $TmpX + 40, $TmpY + 60) Then
-			SetLog("Found PetHouse Tutorial Arrow", $COLOR_SUCCESS)
-			Click($g_iQuickMISX, $g_iQuickMISY)
-			If _Sleep(3000) Then Return
-			If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then Click(115, 540)
-			
-			For $i = 1 To 10
-				SetLog("Handling Tutorial chat1 : #" & $i, $COLOR_ACTION)
-				If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then
-					SetLog("Found Tutorial chat", $COLOR_SUCCESS)
-					Click(115, 540)
-					If _Sleep(3000) Then Return
-				EndIf
-				If IsPetHousePage() Then 
-					SetLog("Found PetHouse Window", $COLOR_SUCCESS)
-					ExitLoop
-				EndIf
-				FindPetsButton()
-				If _Sleep(1000) Then Return
-			Next
-			
-			For $i = 1 To 10
-				SetLog("Handling Tutorial chat2 : #" & $i, $COLOR_ACTION)
-				If QuickMIS("BC1", $g_sImgOrangeBuilding, 30, 330, 150, 450) Then
-					If QuickMIS("BFI", $g_sImgPetHouse & "PlusSign*", 50, 410, 110, 470) Then
-						SetLog("Found Lassi assign button", $COLOR_SUCCESS)
-						Click($g_iQuickMISX, $g_iQuickMISY)
-						If _Sleep(1000) Then Return
-					EndIf
-				EndIf
-				
-				If QuickMIS("BFI", $g_sImgPetHouse & "Hero*", 30, 260, 360, 350) Then 
-					Click($g_iQuickMISX, $g_iQuickMISY)
-					If _Sleep(3000) Then Return
-				EndIf
-				
-				If WaitforPixel(115, 540, 116, 541, "326C52", 20, 2) Then
-					SetLog("Found Tutorial chat", $COLOR_SUCCESS)
-					Click(115, 540)
-					If _Sleep(3000) Then Return
-				EndIf
-
-				If IsPetHousePage() Then 
-					SetLog("Found PetHouse Window", $COLOR_SUCCESS)
-					If _Sleep(1000) Then Return
-					ClickAway()
-					ExitLoop
-				EndIf
-				If _Sleep(1000) Then Return
-			Next
-			
-		EndIf
-	EndIf
 EndFunc
 
 Func CheckBuilderHutTutorial()
