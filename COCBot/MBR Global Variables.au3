@@ -1851,7 +1851,7 @@ Global $g_aVillageSize[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; Blacksmith
 Global $g_sShiny = "", $g_sGlowy = "", $g_sStarry = ""
-Global $g_bChkUpgradeEquipment = False, $g_bChkSortUpgradeEquipment = False, $g_iCmbSortUpgradeEquipment = 2
+Global $g_bChkUpgradeEquipment = False, $g_bChkSortUpgradeEquipment = False, $g_iCmbSortUpgradeEquipment = 1
 
 ; PetHouse
 Global $g_bUpgradePetsEnable = False, $g_bChkSortPetUpgrade = False, $g_iCmbSortPetUpgrade = 2

@@ -101,7 +101,8 @@ Global $g_sImgEquipmentMenu = @ScriptDir & "\imgxml\Research\Blacksmith\Equipmen
 Global $g_sImgEquipmentEquipped  = @ScriptDir & "\imgxml\Research\Blacksmith\Equipped\" 
 
 ;PetHouse
-Global $g_sImgPetHouseMenu = @ScriptDir & "\imgxml\Resources\PetHouse\PetHouseMenu\"
+Global $g_sImgPetHouseMenu = @ScriptDir & "\imgxml\Research\PetHouse\PetHouseMenu\"
+Global $g_sImgPetHouseAssigned  = @ScriptDir & "\imgxml\Research\PetHouse\Assigned\" 
 #EndRegion
 
 #Region Clan Capital

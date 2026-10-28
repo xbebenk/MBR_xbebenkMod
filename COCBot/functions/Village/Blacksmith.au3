@@ -43,8 +43,29 @@ EndFunc   ;==>Blacksmith
 Func GetEquipmentUpgradeList()
 	Local $aTmpCoord, $lenght =  180, $sUpgradeName, $aUpgrade[0][4]
 	Local $bNotEnoughOres = False
+	Local $iYStart = 50, $iYEnd = 535
 	
-	$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, 50, 860, 535)
+	Local $bEquippedFound = False, $bUnEquippedFound = False, $aEquip, $iEquipped = $iYStart, $iUnEquipped = $iYEnd
+	If $g_bChkSortUpgradeEquipment And $g_iCmbSortUpgradeEquipment = 1 Then 
+		SetLog("Checking only Equipped Gear", $COLOR_INFO)
+		$aEquip = QuickMIS("CNX", $g_sImgEquipmentEquipped, 630, 48, 730, 400)
+		If IsArray($aEquip) And UBound($aEquip) > 0 Then
+			_ArraySort($aEquip, 0, 0, 0, 2)
+			For $i = 0 To UBound($aEquip) - 1
+				If $aEquip[$i][0] = "Equipped" Then 
+					$iEquipped = $aEquip[$i][2]
+					$bEquippedFound = True
+				EndIf
+				If $aEquip[$i][0] = "UnEquipped" Then 
+					$iUnEquipped = $aEquip[$i][2]
+					$bUnEquippedFound = True
+				EndIf
+			Next
+			SetDebugLog("EquippedFound:" & String($bEquippedFound) & "|Equipped:" & $iEquipped & " | UnEquippedFound:" & String($bUnEquippedFound) & "|UnEquipped: " & $iUnEquipped)
+		EndIf
+	EndIf
+	
+	$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, $iEquipped, 860, $iUnEquipped)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			$sUpgradeName = getBuildingName(597, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
@@ -61,23 +82,7 @@ Func GetEquipmentUpgradeList()
 		For $j = 0 To UBound($aUpgrade) - 1
 			SetLog("[" & $j & "] Equipment: " & $aUpgrade[$j][3], $COLOR_DEBUG)
 		Next
-	EndIf
-	
-	If $g_bChkSortUpgradeEquipment Then
-		Switch $g_iCmbSortUpgradeEquipment
-			Case 0
-				_ArraySort($aUpgrade, 0, 0, 0, 5) ;sort by lower cost
-				SetDebugLog("Sort by lower cost")
-			Case 1
-				_ArraySort($aUpgrade, 1, 0, 0, 5) ;sort by higher cost
-				SetDebugLog("Sort by higher cost")
-			Case 2
-				_ArraySort($aUpgrade, 0, 0, 0, 5) ;sort by lower cost
-				SetDebugLog("Sort by Equipped")
-		EndSwitch
-	Else
-		_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by y coord
-		SetDebugLog("Sort by y coord")
+		_ArraySort($aUpgrade, 0, 0, 0, 2)
 	EndIf
 	
 	Return $aUpgrade

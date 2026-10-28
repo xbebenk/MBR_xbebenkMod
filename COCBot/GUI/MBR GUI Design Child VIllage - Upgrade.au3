@@ -278,7 +278,7 @@ Func CreateHeroesSubTab()
 		GUICtrlSetOnEvent(-1, "SortEquipmentUpgrade")
 		$g_hCmbSortUpgradeEquipment = GUICtrlCreateCombo("", $x + 155, $y, 120, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 		GUICtrlSetOnEvent(-1, "SortEquipmentUpgrade")
-		Local $sCmbTxt = "Lower Cost|Higher Cost|Equipped"
+		Local $sCmbTxt = "Any|Equipped"
 		GUICtrlSetData(-1, $sCmbTxt, "Equipped")
 		
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

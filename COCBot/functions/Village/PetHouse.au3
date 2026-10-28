@@ -80,8 +80,29 @@ EndFunc
 
 Func GetPetUpgradeList()
 	Local $aTmpCoord, $x = 560, $lenght = 180, $sUpgradeName, $tmpcost, $aUpgrade[0][6], $sResource = ""
+	Local $iYStart = 50, $iYEnd = 535
 	
-	$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, 50, 860, 535)
+	Local $bAssignedFound = False, $bUnAssignedFound = False, $aAssigned, $iAssigned = $iYStart, $iUnAssigned = $iYEnd
+	If $g_bChkSortPetUpgrade And $g_iCmbSortPetUpgrade = 2 Then 
+		SetLog("Checking only Assigned Pet", $COLOR_INFO)
+		$aAssigned = QuickMIS("CNX", $g_sImgPetHouseAssigned, 630, 48, 730, 400)
+		If IsArray($aAssigned) And UBound($aAssigned) > 0 Then
+			_ArraySort($aAssigned, 0, 0, 0, 2)
+			For $i = 0 To UBound($aAssigned) - 1
+				If $aAssigned[$i][0] = "Assigned" Then 
+					$iAssigned = $aAssigned[$i][2]
+					$bAssignedFound = True
+				EndIf
+				If $aAssigned[$i][0] = "UnAssigned" Then 
+					$iUnAssigned = $aAssigned[$i][2]
+					$bUnAssignedFound = True
+				EndIf
+			Next
+			SetDebugLog("AssignedFound:" & String($bAssignedFound) & "|Assigned:" & $iAssigned & " | UnAssignedFound:" & String($bUnAssignedFound) & "|UnAssigned: " & $iUnAssigned)
+		EndIf
+	EndIf
+	
+	$aTmpCoord = QuickMIS("CNX", $g_sImgUpgradeListCorner, 845, $iAssigned, 860, $iUnAssigned)
 	If IsArray($aTmpCoord) And UBound($aTmpCoord) > 0 Then
 		For $i = 0 To UBound($aTmpCoord) - 1
 			$sUpgradeName = getBuildingName($x, $aTmpCoord[$i][2] + 6, $lenght) ;get upgrade name and amount
@@ -101,6 +122,7 @@ Func GetPetUpgradeList()
 		Next
 	EndIf
 	
+	_ArraySort($aUpgrade, 0, 0, 0, 2) ;default sort
 	If $g_bChkSortPetUpgrade Then
 		Switch $g_iCmbSortPetUpgrade
 			Case 0
@@ -109,13 +131,10 @@ Func GetPetUpgradeList()
 			Case 1
 				_ArraySort($aUpgrade, 1, 0, 0, 4) ;sort by higher cost
 				SetDebugLog("Sort by higher cost")
-			Case 2
-				_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by lower cost
-				SetDebugLog("Sort by Assigned")
+			Case 1
+				_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by higher cost
+				SetDebugLog("Sort by Assignment")
 		EndSwitch
-	Else
-		_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by y coord
-		SetDebugLog("Sort by y coord")
 	EndIf
 	
 	Return $aUpgrade
