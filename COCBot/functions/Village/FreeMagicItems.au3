@@ -341,10 +341,9 @@ Func SellFullMagicItem($MagicItem = "", $Amount = 0)
 EndFunc
 
 Func SellMagicItem($bTest = False)
-	ClickAway()
-	If _Sleep(500) Then Return
 	If Not $g_bChkEnableSellMagicItem Then Return
 	SetLog("Checking for Sell Magic Items", $COLOR_INFO)
+	CheckMainScreen()
 	If Not OpenMagicItemWindow() Then Return
 	Local $sReadItemCount, $asReadItemCount, $Count, $MaxCount
 	
@@ -400,39 +399,22 @@ Func SellMagicItem($bTest = False)
 	;Return $aMagic
 EndFunc
 
-Func OpenMagicItemWindow()
+Func OpenMagicItemWindow($bOpenBuilderMenu = True)
 	Local $bRet = False
-	Local $bLocateTH = False
-	Click($g_aiTownHallPos[0], $g_aiTownHallPos[1])
-	If _Sleep(500) Then Return
 	
-	If Not $g_bRunState Then Return
-	Local $BuildingInfo = BuildingInfo()
-	If $BuildingInfo[1] = "Town Hall" Then
-		SetLog("Opening Magic Item Window", $COLOR_ACTION)
-		If ClickB("MagicItem") Then
+	If $bOpenBuilderMenu Then 
+		OpenMainBuilder()
+		If _Sleep(1000) Then Return
+	EndIf
+	
+	If QuickMIS("BC1", $g_sImgBuilderPotion, 440, 620, 460, 640) Then
+		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Magic Item")
+		If _Sleep(1000) Then Return
+		If IsMagicItemWindowOpen() Then
 			$bRet = True
+		Else
+			SetLog("Open Magic Item Window failed", $COLOR_DEBUG2)
 		EndIf
-	Else
-		$bLocateTH = True
-		ClickAway()
-		If _Sleep(500) Then Return
-	EndIf
-	
-	If Not $g_bRunState Then Return
-	If $bLocateTH Then
-		If SearchTH(True, False) Then 
-			If _Sleep(500) Then Return
-			If ClickB("MagicItem") Then
-				$bRet = True
-			Else 
-				$bRet = False
-			EndIf
-		EndIf
-	EndIf
-	If Not IsMagicItemWindowOpen() Then 
-		$bRet = False
-		SetLog("Open Magic Item Window failed", $COLOR_DEBUG2)
 	EndIf
 	Return $bRet
 EndFunc

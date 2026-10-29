@@ -934,6 +934,8 @@ Func ApplyConfig_600_15($TypeReadSave)
 			GUICtrlSetState($g_hChkUpgradePets, $g_bUpgradePetsEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSortPetUpgrade, $g_bChkSortPetUpgrade ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbSortPetUpgrade, $g_iCmbSortPetUpgrade)
+			GUICtrlSetState($g_hChkUsePetPotion, $g_bUsePetPotion ? $GUI_CHECKED : $GUI_UNCHECKED)
+			
 		Case "Save"
 			$g_bUpgradeKingEnable = (GUICtrlRead($g_hChkUpgradeKing) = $GUI_CHECKED)
 			$g_bUpgradeQueenEnable = (GUICtrlRead($g_hChkUpgradeQueen) = $GUI_CHECKED)
@@ -948,6 +950,7 @@ Func ApplyConfig_600_15($TypeReadSave)
 			$g_bUpgradePetsEnable = (GUICtrlRead($g_hChkUpgradePets) = $GUI_CHECKED)
 			$g_bChkSortPetUpgrade = (GUICtrlRead($g_hChkSortPetUpgrade) = $GUI_CHECKED)
 			$g_iCmbSortPetUpgrade = _GUICtrlComboBox_GetCurSel($g_hCmbSortPetUpgrade)
+			$g_bUsePetPotion = (GUICtrlRead($g_hChkUsePetPotion) = $GUI_CHECKED)
 
 	EndSwitch
 EndFunc   ;==>ApplyConfig_600_15

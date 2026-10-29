@@ -1855,6 +1855,7 @@ Global $g_bChkUpgradeEquipment = False, $g_bChkSortUpgradeEquipment = False, $g_
 
 ; PetHouse
 Global $g_bUpgradePetsEnable = False, $g_bChkSortPetUpgrade = False, $g_iCmbSortPetUpgrade = 2
+Global $g_bUsePetPotion = False
 
 ;Misc Mod
 Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False

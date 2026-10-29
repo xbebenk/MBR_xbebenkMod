@@ -90,45 +90,43 @@ EndFunc
 
 Func CheckBuilderPotion()
 	Local $bRet = False
-	If _Sleep(50) Then Return
+	If Not $g_bUseBuilderPotion Then Return
 	
-	If $g_bUseBuilderPotion Then
-		SetLog("Checking Use Builder potion", $COLOR_INFO)
-		If QuickMIS("BFI", $g_sImgAUpgradeHour & "Day*", 776, 65, 830, 80) Then
-			SetLog("Upgrade time > 1 day", $COLOR_INFO)
-			SetLog("Try to use Builder potion", $COLOR_INFO)
-			If QuickMIS("BC1", $g_sImgBuilderPotion, 440, 620, 460, 640) Then
-				Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Magic Item")
-				If _Sleep(1000) Then Return
-				If IsMagicItemWindowOpen() Then
-					If QuickMIS("BC1", $g_sImgBuilderPotion, 180, 225, 670, 380) Then
-						Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Builders pot")
-						If WaitforPixel(650, 510, 651, 510, "8BD43B", 20, 2) Then
-							Click(650, 510, 1, 0, "Click Use Button")
-							If WaitforPixel(430, 430, 431, 430, "2E93D0", 20, 2) Then
-								Click(430, 430, 1, 0, "Click Confirm use Builder pot Button")
-								SetLog("Builders Boosted using potion", $COLOR_SUCCESS)
-								$bRet = True
-							Else
-								SetLog("Fail to verify Confirm Use Button", $COLOR_DEBUG2)
-							EndIf
+	SetLog("Checking Use Builder potion", $COLOR_INFO)
+	If QuickMIS("BFI", $g_sImgAUpgradeHour & "Day*", 776, 65, 830, 80) Then
+		SetLog("Upgrade time > 1 day", $COLOR_INFO)
+		SetLog("Try to use Builder potion", $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgBuilderPotion, 440, 620, 460, 640) Then
+			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Magic Item")
+			If _Sleep(1000) Then Return
+			If IsMagicItemWindowOpen() Then
+				If QuickMIS("BC1", $g_sImgBuilderPotion, 180, 225, 670, 380) Then
+					Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Builders pot")
+					If WaitforPixel(650, 510, 651, 510, "8BD43B", 20, 2) Then
+						Click(650, 510, 1, 0, "Click Use Button")
+						If WaitforPixel(430, 430, 431, 430, "2E93D0", 20, 2) Then
+							Click(430, 430, 1, 0, "Click Confirm use Builder pot Button")
+							SetLog("Builders Boosted using potion", $COLOR_SUCCESS)
+							$bRet = True
 						Else
-							SetLog("Fail to verify Use Button", $COLOR_DEBUG2)
+							SetLog("Fail to verify Confirm Use Button", $COLOR_DEBUG2)
 						EndIf
 					Else
-						SetLog("Builders potion not found", $COLOR_DEBUG2)
-						ClickAway()
-						If _Sleep(1000) Then Return
+						SetLog("Fail to verify Use Button", $COLOR_DEBUG2)
 					EndIf
 				Else
-					SetLog("Fail to verify Magic items Window", $COLOR_DEBUG2)
+					SetLog("Builders potion not found", $COLOR_DEBUG2)
+					ClickAway()
+					If _Sleep(1000) Then Return
 				EndIf
 			Else
-				SetLog("Fail to verify Magic items icon", $COLOR_DEBUG2)
+				SetLog("Fail to verify Magic items Window", $COLOR_DEBUG2)
 			EndIf
 		Else
-			SetLog("Upgrade time < 1 day, cancel using Builder potion", $COLOR_DEBUG2)
+			SetLog("Fail to verify Magic items icon", $COLOR_DEBUG2)
 		EndIf
+	Else
+		SetLog("Upgrade time < 1 day, cancel using Builder potion", $COLOR_DEBUG2)
 	EndIf
 
 	Return $bRet

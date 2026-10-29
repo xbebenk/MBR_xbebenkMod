@@ -8,7 +8,7 @@ Func StartClockTowerBoost()
 	ZoomOutHelperBB() ;go to BH LowerZone
 
 	SetLog("Boosting Clock Tower", $COLOR_INFO)
-	If QuickMIS("BC1", $g_sImgStartCTBoost, $g_InnerDiamondLeft, $g_InnerDiamondTop, $g_InnerDiamondRight, $g_InnerDiamondBottom) Then
+	If QuickMIS("BC1", $g_sImgStartCTBoost, $g_OuterDiamondLeft, $g_OuterDiamondTop, $g_OuterDiamondRight + 100, $g_OuterDiamondBottom) Then
 		Click($g_iQuickMISX, $g_iQuickMISY + 50, 1, 0, "Click Clock Tower")
 		If _Sleep(1000) Then Return
 		If QuickMIS("BC1", $g_sImgStartCTBoost, 300, 500, 560, 590) Then
@@ -20,6 +20,7 @@ Func StartClockTowerBoost()
 		EndIf
 	Else
 		SetLog("Clock Tower boost is not available!")
+		Return
 	EndIf
 		
 	If _Sleep(1000) Then Return

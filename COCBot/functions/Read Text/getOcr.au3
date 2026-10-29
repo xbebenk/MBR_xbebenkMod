@@ -301,6 +301,10 @@ Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get 
 	$ocrText = StringReplace($ocrText, "Crus her", "Crusher")
 	$ocrText = StringReplace($ocrText, "Roaste p", "Roaster")
 	$ocrText = StringReplace($ocrText, "Lai a Launcher", "Lava Launcher")
+	$ocrText = StringReplace($ocrText, "Battle Cop ter", "Battle Copter")
+	$ocrText = StringReplace($ocrText, "Doubl e Cannon", "Double Cannon")
+	$ocrText = StringReplace($ocrText, "Me ga Te la", "Mega Tesla")
+	$ocrText = StringReplace($ocrText, "Archer Towe r", "Archer Tower")
 	
 	;6. Perbaikan Star Laboratory
 	$ocrText = StringReplace($ocrText, "lyight Wi tch", "Night Witch")

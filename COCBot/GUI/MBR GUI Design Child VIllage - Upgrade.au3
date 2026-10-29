@@ -24,7 +24,7 @@ Global $g_hChkUpgradeKing = 0, $g_hChkUpgradeQueen = 0, $g_hChkUpgradeWarden = 0
 Global $g_hCmbHeroReservedBuilder = 0, $g_hLblHeroReservedBuilderTop = 0, $g_hLblHeroReservedBuilderBottom = 0
 Global $g_hChkUpgradeChampion = 0, $g_hPicChkChampionSleepWait = 0, $g_hBtnHeroEquipment = 0
 Global $g_hChkUpgradeEquipment = 0, $g_hChkSortUpgradeEquipment = 0, $g_hCmbSortUpgradeEquipment = 0
-Global $g_hChkUpgradePets = 0, $g_hChkSortPetUpgrade = 0, $g_hCmbSortPetUpgrade = 0
+Global $g_hChkUpgradePets = 0, $g_hChkSortPetUpgrade = 0, $g_hCmbSortPetUpgrade = 0, $g_hChkUsePetPotion = 0
 
 ; Buildings
 Global $g_hChkUpgrade[$g_iUpgradeSlots] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -298,6 +298,10 @@ Func CreateHeroesSubTab()
 		Local $sCmbTxt = "Lower Cost|Higher Cost|Assigned"
 		GUICtrlSetData(-1, $sCmbTxt, "Assigned")
 		GUICtrlSetOnEvent(-1, "SortPetUpgrade")
+	
+	$y += 25	
+		$g_hChkUsePetPotion = GUICtrlCreateCheckbox("Use Pet Potion", $x, $y, -1, -1)
+		GUICtrlSetOnEvent(-1, "ChkUsePetPotion")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc   ;==>CreateHeroesSubTab
 

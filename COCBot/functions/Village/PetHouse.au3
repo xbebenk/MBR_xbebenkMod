@@ -27,6 +27,7 @@ Func PetHouse($bTest = False)
 		Local $aGetBuilders = StringSplit($sBuilderInfo, "#", $STR_NOCOUNT) ; Split into free and total builder strings
 		If Number($aGetBuilders[0]) < 1 Then
 			SetLog("PetHouse already on Upgrade progress", $COLOR_DEBUG1)
+			CheckPetPotion()
 			CloseBuilderMenu()
 			Return False
 		EndIf
@@ -57,6 +58,45 @@ Func PetHouse($bTest = False)
 	
 	CloseBuilderMenu()
 	Return
+EndFunc
+
+Func CheckPetPotion()
+	Local $bRet = False
+	If Not $g_bUsePetPotion Then Return
+	SetLog("Checking Use Pet potion", $COLOR_INFO)
+	If QuickMIS("BFI", $g_sImgAUpgradeHour & "Day*", 776, 65, 830, 80) Then
+		SetLog("Upgrade time > 1 day", $COLOR_INFO)
+		SetLog("Try to use Pet potion", $COLOR_INFO)
+		If Not OpenMagicItemWindow(False) Then Return
+		If QuickMIS("BC1", $g_sImgPetPotion, 180, 225, 670, 380) Then
+			Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Pet potion")
+			If WaitforPixel(650, 510, 651, 510, "8BD43B", 20, 2) Then
+				Click(650, 510, 1, 0, "Click Use Button")
+				If WaitforPixel(430, 430, 431, 430, "2E93D0", 20, 2) Then
+					Click(430, 430, 1, 0, "Click Confirm use Pet potion Button")
+					SetLog("Pet Upgrade Boosted using potion", $COLOR_SUCCESS)
+					$bRet = True
+				Else
+					SetLog("Fail to verify Confirm Use Button", $COLOR_DEBUG2)
+				EndIf
+			Else
+				SetLog("Fail to verify Use Button", $COLOR_DEBUG2)
+			EndIf
+		Else
+			SetLog("Pet potion not found", $COLOR_DEBUG2)
+			ClickAway()
+			If _Sleep(1000) Then Return
+		EndIf
+	Else
+		SetLog("Upgrade time < 1 day, cancel using Pet potion", $COLOR_DEBUG2)
+	EndIf
+
+	If IsMagicItemWindowOpen() Then 
+		ClickAway()
+		If _Sleep(1000) Then Return
+	EndIf
+	
+	Return $bRet
 EndFunc
 
 Func OpenPetUpgrade()

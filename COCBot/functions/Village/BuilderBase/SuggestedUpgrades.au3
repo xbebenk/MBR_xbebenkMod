@@ -800,13 +800,12 @@ EndFunc ;==>ClickDragAUpgrade
 
 Func getMostBottomCostBB()
 	Local $TmpUpgradeCost, $ret
-	Local $Icon = QuickMIS("CNX", $g_sImgBBResourceIcon, 830, 500, 850, 585)
+	Local $Icon = QuickMIS("CNX", $g_sImgUpgradeListCorner, 850, 500, 860, 540)
 	If IsArray($Icon) And UBound($Icon) > 0 Then
 		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord desc
-		$TmpUpgradeCost = getBuilderMenuCost($Icon[0][1] - 120, $Icon[0][2] - 2)
+		$TmpUpgradeCost = getBuilderMenuCost(730, $Icon[0][2] + 24)
 		$ret = $TmpUpgradeCost
 	EndIf
-
 	Return $ret
 EndFunc
 

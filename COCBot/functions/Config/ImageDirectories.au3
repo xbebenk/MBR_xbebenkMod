@@ -80,7 +80,6 @@ Global $g_sImgAnySiege = @ScriptDir & "\imgxml\Research\Laboratory\AllSiege\"
 Global $g_sImgResIcon = @ScriptDir & "\imgxml\Research\ResIcon\"
 Global $g_sImgResourcePotion = @ScriptDir & "\imgxml\Research\Potion\"
 
-
 Global $g_sImgBooks = @ScriptDir & "\imgxml\Research\Books\"
 
 #EndRegion
@@ -103,6 +102,7 @@ Global $g_sImgEquipmentEquipped  = @ScriptDir & "\imgxml\Research\Blacksmith\Equ
 ;PetHouse
 Global $g_sImgPetHouseMenu = @ScriptDir & "\imgxml\Research\PetHouse\PetHouseMenu\"
 Global $g_sImgPetHouseAssigned  = @ScriptDir & "\imgxml\Research\PetHouse\Assigned\" 
+Global $g_sImgPetPotion = @ScriptDir & "\imgxml\Research\Pethouse\Potion\"
 #EndRegion
 
 #Region Clan Capital

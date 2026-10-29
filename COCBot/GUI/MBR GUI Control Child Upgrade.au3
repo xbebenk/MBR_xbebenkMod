@@ -683,3 +683,13 @@ Func SortPetUpgrade()
 	EndIf
 	$g_iCmbSortPetUpgrade = _GUICtrlComboBox_GetCurSel($g_hCmbSortPetUpgrade)
 EndFunc
+
+Func ChkUsePetPotion()
+	If GUICtrlRead($g_hChkUsePetPotion) = $GUI_CHECKED Then
+		$g_bUsePetPotion = True
+		SetDebugLog("Use Pet Potion: enabled")
+	Else
+		$g_bUsePetPotion = False
+		SetDebugLog("Use Pet Potion: disabled")
+	EndIf
+EndFunc

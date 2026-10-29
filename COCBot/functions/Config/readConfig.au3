@@ -762,7 +762,8 @@ Func ReadConfig_600_15()
 	IniReadS($g_bUpgradePetsEnable, $g_sProfileConfigPath, "upgrade", "UpgradePet", False, "Bool")
 	IniReadS($g_bChkSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "ChkSortPetUpgrade", False, "Bool")
 	IniReadS($g_iCmbSortPetUpgrade, $g_sProfileConfigPath, "upgrade", "CmbSortPetUpgrade", 2, "int")
-
+	IniReadS($g_bUsePetPotion, $g_sProfileConfigPath, "upgrade", "UsePetPotion", False, "Bool")
+	
 EndFunc   ;==>ReadConfig_600_15
 
 Func ReadConfig_600_16()

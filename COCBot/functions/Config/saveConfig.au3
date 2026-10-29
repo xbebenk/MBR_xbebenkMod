@@ -651,7 +651,8 @@ Func SaveConfig_600_15()
 	_Ini_Add("upgrade", "UpgradePet", $g_bUpgradePetsEnable ? 1 : 0)
 	_Ini_Add("upgrade", "ChkSortPetUpgrade", $g_bChkSortPetUpgrade ? 1 : 0)
 	_Ini_Add("upgrade", "CmbSortPetUpgrade", $g_iCmbSortPetUpgrade)
-
+	_Ini_Add("upgrade", "UsePetPotion", $g_bUsePetPotion ? 1 : 0)
+	
 EndFunc   ;==>SaveConfig_600_15
 
 Func SaveConfig_600_16()
