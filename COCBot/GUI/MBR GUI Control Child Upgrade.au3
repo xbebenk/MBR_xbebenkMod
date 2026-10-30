@@ -645,9 +645,13 @@ Func ChkUpgradeEquipment()
 	If GUICtrlRead($g_hChkUpgradeEquipment) = $GUI_CHECKED Then
 		$g_bChkUpgradeEquipment = True
 		SetDebugLog("Equipment Upgrade: enabled")
+		GUICtrlSetState($g_hChkSortUpgradeEquipment, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbSortUpgradeEquipment, $GUI_ENABLE)
 	Else
 		$g_bChkUpgradeEquipment = False
 		SetDebugLog("Equipment Upgrade: disabled")
+		GUICtrlSetState($g_hChkSortUpgradeEquipment, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbSortUpgradeEquipment, $GUI_DISABLE)
 	EndIf
 EndFunc
 
@@ -667,9 +671,15 @@ Func chkUpgradePets()
 	If GUICtrlRead($g_hChkUpgradePets) = $GUI_CHECKED Then
 		$g_bUpgradePetsEnable = True
 		SetDebugLog("PetUpgrade: enabled")
+		GUICtrlSetState($g_hChkSortPetUpgrade, $GUI_ENABLE)
+		GUICtrlSetState($g_hCmbSortPetUpgrade, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkUsePetPotion, $GUI_ENABLE)
 	Else
 		$g_bUpgradePetsEnable = False
 		SetDebugLog("PetUpgrade: disabled")
+		GUICtrlSetState($g_hChkSortPetUpgrade, $GUI_DISABLE)
+		GUICtrlSetState($g_hCmbSortPetUpgrade, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkUsePetPotion, $GUI_DISABLE)
 	EndIf
 EndFunc
 

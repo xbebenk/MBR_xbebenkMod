@@ -930,11 +930,13 @@ Func ApplyConfig_600_15($TypeReadSave)
 			GUICtrlSetState($g_hChkUpgradeEquipment, $g_bChkUpgradeEquipment ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSortUpgradeEquipment, $g_bChkSortUpgradeEquipment ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbSortUpgradeEquipment, $g_iCmbSortUpgradeEquipment)
+			ChkUpgradeEquipment()
 
 			GUICtrlSetState($g_hChkUpgradePets, $g_bUpgradePetsEnable ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSortPetUpgrade, $g_bChkSortPetUpgrade ? $GUI_CHECKED : $GUI_UNCHECKED)
 			_GUICtrlComboBox_SetCurSel($g_hCmbSortPetUpgrade, $g_iCmbSortPetUpgrade)
 			GUICtrlSetState($g_hChkUsePetPotion, $g_bUsePetPotion ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkUpgradePets()
 			
 		Case "Save"
 			$g_bUpgradeKingEnable = (GUICtrlRead($g_hChkUpgradeKing) = $GUI_CHECKED)

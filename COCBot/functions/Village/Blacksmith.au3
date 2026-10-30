@@ -13,7 +13,8 @@
 Func Blacksmith($bTest = False)
 	If Not $g_bRunState Then Return
 	If $g_iTownHallLevel < 8 Then Return
-
+	If Not $g_bChkUpgradeEquipment Then Return
+	
 	checkMainScreen()
 	SetLog("Starting Equipment Auto Upgrade", $COLOR_INFO)
 	If Not OpenBlacksmithMenu() Then Return
