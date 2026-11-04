@@ -253,10 +253,16 @@ Func FindUpgradeBB($bTest = False, $bSkipNew = False)
 			
 			$sUpgradeName = getBuildingName(560, $aTmpCoord[$i][2] + 5, $lenght, 18) ;get upgrade name
 			$sResource = QuickMIS("N1", $g_sImgBBResourceIcon, 832, $aTmpCoord[$i][2] + 24, 852, $aTmpCoord[$i][2] + 42)
-			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 120, $aTmpCoord[$i][2] + 25)
+			$tmpcost = getBuilderMenuCost($aTmpCoord[$i][1] - 120, $aTmpCoord[$i][2] + 23)
 			If StringInStr($sUpgradeName, "Wall") Then $sUpgradeName = "Wall"
-			If $g_bChkBBSpendGoldOnWall And StringInStr($sUpgradeName, "Wall") And StringInStr($sResource, "Elix") Then ContinueLoop ;skip wall upgrade with elix
-			If Number($tmpcost) = 0 Then ContinueLoop
+			If $g_bChkBBSpendGoldOnWall And StringInStr($sUpgradeName, "Wall") And StringInStr($sResource, "Elix") Then 
+				SetDebugLog("Wall use Elix, skip")
+				ContinueLoop ;skip wall upgrade with elix
+			EndIf
+			If Number($tmpcost) = 0 Then 
+				SetDebugLog("ReadCost = " & $tmpcost & ", skip")
+				ContinueLoop
+			EndIf
 
 			Local $tmparray[1][8] = [[$sResource, 700, Number($aTmpCoord[$i][2] + 25), String($sUpgradeName), 1, Number($tmpcost), 0, "Common"]]
 			_ArrayAdd($aBuilding, $tmparray)
