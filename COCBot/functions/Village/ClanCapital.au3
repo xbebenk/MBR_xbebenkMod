@@ -1,10 +1,18 @@
 #include-once
+Func CollapseEventIcon()
+	If QuickMIS("BC1", $g_sImgCCGoldCollect, 300, 630, 445, 645) Then
+		SetLog("Collapse Event", $COLOR_DEBUG)
+		Click($g_iQuickMISX, $g_iQuickMISY)
+		If _Sleep(1000) Then Return
+	EndIf
+EndFunc
+
 Func CollectCCGold($bTest = False)
 	If Not $g_bChkEnableCollectCCGold Then Return
 	Local $bWindowOpened = False
 	Local $aCollect, $iBuilderToUse = $g_iCmbForgeBuilder + 1
 	SetLog("Check for Collecting Clan Capital Gold", $COLOR_INFO)
-	ClickAway("Right")
+	CollapseEventIcon()
 	ZoomOut() ;ZoomOut first
 	ZoomOutHelper("CollectLootCart")
 	

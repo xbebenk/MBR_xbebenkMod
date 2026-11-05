@@ -252,7 +252,7 @@ Func LaboratoryUpgrade($sUpgradeName, $aCoords, $sCost, $bDebug = False)
 		EndIf
 		SetLog("Start Upgrade for " & $sUpgradeName & " Success...", $COLOR_SUCCESS)
 		PushMsg("LabSuccess")
-		CloseBuilderMenu()
+		If IsUpgradeWindowOpen() Then Click(810, 120, 1, 0, "Close Upgrade Window")
 		Return True
 	EndIf
 EndFunc
@@ -541,7 +541,7 @@ EndFunc
 Func LabUpgrade($bTest = False)
 	If Not $g_bAutoLabUpgradeEnable Then Return ; Lab upgrade not enabled.
 	
-	Local $bNoPriorityUpgrade = True
+	Local $bNoPriorityUpgrade = True, $TmpUpgradeCost = 0, $sameCost = 0, $UpgradeCost = 0, $bEnd = False
 	Local $aCoord[2] = [0, 0]
 	checkMainScreen()
 	
@@ -553,47 +553,71 @@ Func LabUpgrade($bTest = False)
 	VillageReport(True, True)
 	If Not OpenLabMenu() Then Return False
 	
-	Local $Upgrades = _FindLabUpgrade($bTest)
-	If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
-		SetLog("Laboratory Upgrade List:", $COLOR_INFO)
-		
-		If _ArraySearch($Upgrades, "Priority", 0, 0, 0, 0, 1, 7) >= 0 Then $bNoPriorityUpgrade = False
-		If _Sleep(50) Then Return
-		For $i = 0 To UBound($Upgrades) - 1
-			If $g_bLabUpgradeOrderEnable And $Upgrades[$i][7] = "Common" Then 
-				SetLog($Upgrades[$i][3] & " skip, not enabled order setting", $COLOR_DEBUG1)
-				ContinueLoop
-			EndIf
-			
-			If IsLabUpgradeResourceEnough($Upgrades[$i][5], $Upgrades[$i][0]) Then ; IsLabUpgradeResourceEnough($cost, $resourceType)
-				SetLog("Going to Upgrade: " & $Upgrades[$i][3], $COLOR_ACTION)
-				$aCoord[0] = $Upgrades[$i][1]
-				$aCoord[1] = $Upgrades[$i][2]
-				Return LaboratoryUpgrade($Upgrades[$i][3], $aCoord, $Upgrades[$i][5], $bTest)
-			Else
-				SetLog("Skip upgrade " & $Upgrades[$i][3] & ", no resources", $COLOR_DEBUG2)
-			EndIf		
-		Next
-		
-		SetLog("No affordable upgrade in Laboratory list", $COLOR_DEBUG2)
-		CloseBuilderMenu()
-		Return False
-		
-		;If $bNoPriorityUpgrade Then
-		;	SetLog("There is no Priority Upgrade listed", $COLOR_DEBUG1)
-		;	SetLog("lets try legacy upgrade from Lab Window", $COLOR_DEBUG1)
-		;	Laboratory()
-		;EndIf
-	Else
-		SetLog("No Laboratory Upgrade", $COLOR_DEBUG2)
-	EndIf
+	For $i = 1 To 5
+		Local $Upgrades = _FindLabUpgrade($bTest)
+
+		If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
+			SetLog("Laboratory Upgrade List:", $COLOR_INFO)
+
+			If _ArraySearch($Upgrades, "Priority", 0, 0, 0, 0, 1, 7) >= 0 Then $bNoPriorityUpgrade = False
+			If _Sleep(50) Then Return
+
+			For $j = 0 To UBound($Upgrades) - 1
+				If $g_bLabUpgradeOrderEnable And $Upgrades[$j][7] = "Common" Then
+					SetLog($Upgrades[$j][3] & " skip, not enabled order setting", $COLOR_DEBUG1)
+					ContinueLoop
+				EndIf
+
+				If IsLabUpgradeResourceEnough($Upgrades[$j][5], $Upgrades[$j][0]) Then
+					SetLog("Going to Upgrade: " & $Upgrades[$j][3], $COLOR_ACTION)
+					$aCoord[0] = $Upgrades[$j][1]
+					$aCoord[1] = $Upgrades[$j][2]
+					Return LaboratoryUpgrade($Upgrades[$j][3], $aCoord, $Upgrades[$j][5], $bTest)
+				Else
+					SetLog("Skip upgrade " & $Upgrades[$j][3] & ", no resources", $COLOR_DEBUG2)
+				EndIf
+			Next
+
+			SetLog("No affordable upgrade in Laboratory list", $COLOR_DEBUG2)
+		Else
+			SetLog("No Laboratory Upgrade", $COLOR_DEBUG2)
+		EndIf
+
+		$TmpUpgradeCost = getMostBottomCost()
+		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
+
+		If $UpgradeCost = $TmpUpgradeCost Then
+			$sameCost += 1
+		Else
+			$sameCost = 0
+		EndIf
+
+		If $sameCost > 2 Then $bEnd = True
+
+		$UpgradeCost = $TmpUpgradeCost
+
+		If Not $bEnd Then ClickDragAUpgrade()
+		If $bEnd Then ExitLoop
+	Next
+	
 	CloseBuilderMenu()
 	Return False
 EndFunc
 
 Func NormalizeLabUpgradeName($sName)
 	$sName = StringStripWS($sName, 3)
-
+	
+	Switch $sName
+        Case "L ghtning Spell"
+            Return "Lightning Spell"
+        Case "p e k k a", "pekka"
+            Return "P.E.K.K.A"
+		Case "Hea ling S pe"
+			Return "Healing Spell"
+		Case "Lai a Hound"
+			Return "Lava Hound"
+    EndSwitch
+	
 	Local $aNames[24] = [ _
 		"Ice Golem", "Witch", "Wall Wrecker", "Ice Block Spell", _
 		"Bat Spell", "Skeleton Spell", "Druid", "Apprentice Warden", _
@@ -624,17 +648,23 @@ Func _FindLabUpgrade($bTest = False)
 
 	; Susun urutan prioritas Laboratory
 	If $g_bLabUpgradeOrderEnable Then
+		Local $iPriorityOrder = 0
 		For $i = 0 To UBound($g_aCmbLabUpgradeOrder) - 1
 			If $g_aCmbLabUpgradeOrder[$i] = -1 Then ContinueLoop
-
 			$sName = $g_avLabTroops[$g_aCmbLabUpgradeOrder[$i] + 1][2]
+			; Skip kategori khusus
+			If $sName = "AnySiege" Or $sName = "AnySpell" Then ContinueLoop
 			$iUpgrade = TroopIndexLookup($sName)
+			If $iUpgrade < 0 Then ContinueLoop
 			$sNameUpgrade = GetTroopName($iUpgrade)
-
-			SetLog("Priority Order [" & $i + 1 & "] " & $sNameUpgrade, $COLOR_DEBUG)
-
-			Local $aTmp[1][2] = [[10 - $i, $sNameUpgrade]]
-			_ArrayAdd($aOrder, $aTmp)
+			If $sNameUpgrade = "" Then ContinueLoop
+			$iPriorityOrder += 1
+			Local $iScore = 10 - ($iPriorityOrder - 1)
+			SetLog("Priority Order [" & $iPriorityOrder & "] " & $sNameUpgrade & ", Score=" & $iScore, $COLOR_DEBUG)
+			Local $iPos = UBound($aOrder)
+			ReDim $aOrder[$iPos + 1][2]
+			$aOrder[$iPos][0] = $iScore
+			$aOrder[$iPos][1] = $sNameUpgrade
 		Next
 	EndIf
 

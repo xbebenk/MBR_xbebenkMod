@@ -1372,8 +1372,9 @@ Func getMostBottomCost()
 	Local $TmpUpgradeCost, $ret
 	Local $Icon = QuickMIS("CNX", $g_sImgResourceIcon, 830, 500, 850, 585)
 	If IsArray($Icon) And UBound($Icon) > 0 Then
+		RemoveDupCNX($Icon)
 		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord, descending
-		$TmpUpgradeCost = getBuilderMenuCost($Icon[0][1] - 120, $Icon[0][2] - 2)
+		$TmpUpgradeCost = getBuilderMenuCost($Icon[0][1] - 120, $Icon[0][2] - 12)
 		$ret = $Icon[0][0] & "|" & $TmpUpgradeCost
 	EndIf
 	Return $ret

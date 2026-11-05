@@ -93,7 +93,7 @@ EndFunc
 Func ClickBBAttackButton()
 	If Not $g_bRunState Then Return
 	If QuickMis("BC1", $g_sImgBBAttackButton, 24, 580, 100, 620) Then
-		Click(62,615) ;click attack button
+		Click($g_iQuickMISX, $g_iQuickMISY) ;click attack button
 		For $i = 1 To 5
 			If $g_bDebugSetLog Then SetLog("Waiting for Start Attack Window #" & $i, $COLOR_ACTION)
 			If _Sleep(500) Then Return
