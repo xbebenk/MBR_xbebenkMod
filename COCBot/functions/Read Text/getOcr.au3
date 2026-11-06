@@ -11,7 +11,7 @@
 ; ===============================================================================================================================
 
 Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets complete name and level of the buildings, bottom of screen
-	Return getOcrAndCapture("coc-build", $x_start, $y_start, 420, 27)
+	Return getOcrAndCapture("coc-build", $x_start, $y_start, 420, 22)
 EndFunc   ;==>getNameBuilding
 
 Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
@@ -271,6 +271,7 @@ Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get 
     $ocrText = StringReplace($ocrText, "X Bow", "X-Bow")
 	$ocrText = StringReplace($ocrText, "Roya l Champ ion", "Royal Champion")
 	$ocrText = StringReplace($ocrText, "Giant Bomu", "Giant Bomb")
+	$ocrText = StringReplace($ocrText, "Archer o ueen", "Archer Queen")
 	
 	; 4. Perbaikan troop dan spell Laboratory
     $ocrText = StringReplace($ocrText, "Ske le ton Trap", "Skeleton Trap")
