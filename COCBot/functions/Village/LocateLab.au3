@@ -17,9 +17,6 @@ Func LocateLab($bCollect = True)
 	$g_aiLaboratoryPos[0] = -1
 	$g_aiLaboratoryPos[1] = -1
 
-	; auto locate 
-	AutoLocateLab()
-	
 	SetLog("Laboratory: (" & $g_aiLaboratoryPos[0] & "," & $g_aiLaboratoryPos[1] & ")", $COLOR_DEBUG)
  
 	If $g_aiLaboratoryPos[1] = "" Or $g_aiLaboratoryPos[1] = -1 Then _LocateLab($bCollect) ; manual locate
