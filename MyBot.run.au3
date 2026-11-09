@@ -915,8 +915,7 @@ Func __RunFunction($action)
 		Case "DailyChallenge"
 			DailyChallenges()
 		Case "SellMagicItem"
-			Broken($action)
-			;SellMagicItem()
+			SellMagicItem()
 		Case "ForgeClanCapitalGold"
 			ForgeClanCapitalGold()
 		Case "BoostSuperTroop"
@@ -935,8 +934,7 @@ Func __RunFunction($action)
 				BuilderBase()
 			EndIf
 		Case "CollectAchievements"
-			Broken($action)
-			;CollectAchievements()
+			CollectAchievements()
 		Case "CollectFreeMagicItems"
 			CollectFreeMagicItems()
 		Case "AutoUpgradeCC"
