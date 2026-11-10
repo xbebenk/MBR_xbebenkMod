@@ -129,7 +129,7 @@ Func LabUpgrade($bTest = False)
 	VillageReport(True, True)
 	If Not OpenLabMenu() Then Return False
 	
-	For $i = 1 To 5
+	For $i = 1 To 8
 		Local $Upgrades = _FindLabUpgrade($bTest)
 
 		If IsArray($Upgrades) And UBound($Upgrades) > 0 Then
@@ -158,7 +158,7 @@ Func LabUpgrade($bTest = False)
 		EndIf
 
 		$TmpUpgradeCost = getMostBottomCost()
-		SetDebugLog("TmpUpgradeCost = " & $TmpUpgradeCost & " UpgradeCost = " & $UpgradeCost, $COLOR_INFO)
+		SetDebugLog("TmpUpgradeCost=" & $TmpUpgradeCost & ", sameCost=" & $sameCost)
 
 		If $UpgradeCost = $TmpUpgradeCost Then
 			$sameCost += 1
@@ -166,7 +166,7 @@ Func LabUpgrade($bTest = False)
 			$sameCost = 0
 		EndIf
 
-		If $sameCost > 2 Then $bEnd = True
+		If $sameCost > 1 Then $bEnd = True
 		
 		$bLockFound = QuickMIS("BC1", $g_sImgLabMenu, 810, 100, 840, 580)
 		If $bLockFound Then
