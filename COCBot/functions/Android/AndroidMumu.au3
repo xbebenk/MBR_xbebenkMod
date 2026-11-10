@@ -185,11 +185,11 @@ Func GetMumuBackgroundMode()
 	Switch $GLRenderMode
 		Case "dx", "vlcn", "dx11", "vk"
 			; DirectX
-			;$g_iAndroidBackgroundMode = $g_iAndroidBackgroundModeDirectX
+			$g_iAndroidBackgroundMode = $g_iAndroidBackgroundModeDirectX
 			Return $g_iAndroidBackgroundModeDirectX
 		Case "gl"
 			; OpenGL
-			;$g_iAndroidBackgroundMode = $g_iAndroidBackgroundModeOpenGL
+			$g_iAndroidBackgroundMode = $g_iAndroidBackgroundModeOpenGL
 			Return $g_iAndroidBackgroundModeOpenGL
 		Case Else
 			SetLog($g_sAndroidEmulator & " unsupported render mode " & $GLRenderMode, $COLOR_WARNING)
