@@ -21,7 +21,7 @@ Func UpgradeWall($bTest = False)
 	Local $GoUpgrade = False, $bWallUpgraded = True
 	
 	SetLog("Checking Upgrade Walls", $COLOR_INFO)
-	checkMainScreen(False, $g_bStayOnBuilderBase, "UpgradeWall")
+	checkMainScreen()
 	VillageReport(True, True) ;update village resource capacity
 	If Not WallUpgradeCheckBuilder() And Not $bTest Then
 		SetLog("No builder available, Upgrade Walls skipped", $COLOR_DEBUG2)
@@ -56,7 +56,7 @@ EndFunc   ;==>UpgradeWall
 
 Func WallUpgradeCheckBuilder($bTest = False)
 	Local $bRet = False
-	getBuilderCount(True)
+	If Not getBuilderCount(True) Then Return $bRet
 	If $bTest Then
 		$bRet = True
 	Else

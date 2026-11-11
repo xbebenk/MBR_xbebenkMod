@@ -685,7 +685,7 @@ Func CheckIgnoreUpgrade($sUpgradeName = "")
 	Return $bMustIgnoreUpgrade
 EndFunc
 
-Func DoUpgrade($bTest = False, $bUpgradeLowCost = False, $upgradeName = "")
+Func DoUpgrade($bTest = False, $upgradeName = "")
 	If Not $g_bRunState Then Return
 
 	; get the name and actual level of upgrade selected, if strings are empty, will exit Auto Upgrade, an error happens
@@ -805,8 +805,6 @@ Func DoUpgrade($bTest = False, $bUpgradeLowCost = False, $upgradeName = "")
 			;EndIf
 	EndSwitch
 
-	If $bUpgradeLowCost Then $bMustIgnoreUpgrade = False
-	; check if the upgrade name is on the list of upgrades that must be ignored
 	If $bMustIgnoreUpgrade Then
 		SetLog($upgradeName & " : This upgrade must be ignored, looking Next...", $COLOR_WARNING)
 		Return False
