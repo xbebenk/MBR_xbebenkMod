@@ -368,6 +368,7 @@ Func DonateTroopType($iTroopIndex, $aiDonateButton, $Quant = 0)
 	
 	For $i = 1 To $Quant
 		Click($aSlot[0], $aSlot[1], 1, 0, "Donate " & $g_asTroopNames[$iTroopIndex])
+		If _Sleep(100) Then Return
 	Next
 	
 	$g_aiDonateStatsTroops[$iTroopIndex][0] += $Quant
