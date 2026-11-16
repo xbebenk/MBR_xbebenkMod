@@ -281,7 +281,7 @@ EndFunc   ;==>IsPostDefenseSummaryPage
 Func IsMultiplayerTabOpen()
 	Local $result = False
 	
-	$result = WaitforPixel(585, 65, 585, 65, "C59B73", 10, 1, "IsMultiplayerTabOpen")
+	$result = WaitforPixel(562, 62, 562, 62, "6E665B", 10, 1, "IsMultiplayerTabOpen")
 	If Not $result Then ClickAway("Right")
 	
 	If $result Then

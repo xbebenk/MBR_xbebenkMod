@@ -108,7 +108,7 @@ Func PrepareSearch($bTest = False, $bDoClanGames = False) ;Click attack button a
 	
 	Local $bAttackButtonFound = False
 	If Not $bTournament Then 
-		$bAttackButtonFound = _ColorCheck(_GetPixelColor(255, 488, True), Hex(0xF1A522, 6), 10, Default, "FindMatch")
+		$bAttackButtonFound = _ColorCheck(_GetPixelColor(250, 490, True), Hex(0xF9AE2B, 6), 10, Default, "FindMatch")
 		If $bAttackButtonFound Then
 			Click(160, 460, 1, 0, "FindMatch")
 			$g_bLeagueAttack = False

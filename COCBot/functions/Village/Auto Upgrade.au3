@@ -12,10 +12,12 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
+Global $g_bFoundNewUpgrade = False
 
 Func AutoUpgrade($bTest = False, $bUpgradeLowCost = False)
 	Local $bWasRunState = $g_bRunState
 	$g_bRunState = True
+	$g_bFoundNewUpgrade = False
 	Local $Result = SearchUpgrade($bTest)
 	$g_bRunState = $bWasRunState
 	Return $Result
@@ -57,6 +59,8 @@ EndFunc
 
 Func CheckBuilderApprentice()
 	Local $bRet = False
+	If Not _ColorCheck(_GetPixelColor(507, 71, True), Hex(0x6FB131, 6), 20, Default, "Green Bar Progress upgrade") Then Return $bRet
+	
 	If $g_iTownHallLevel >= 9 Then
 		SetLog("Checking BuilderApprentice", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgBuilderApprentice, 450, 200, 495, 245) Then ; check apprentice icon
@@ -305,6 +309,10 @@ Func _SearchUpgrade($bTest = False, $bSkip1st = False, $bLowCostMode = False)
 
 			For $i = 0 To UBound($Upgrades) - 1
 				If $Upgrades[$i][6] = "Disabled" Then ContinueLoop
+				If $g_bFoundNewUpgrade And $Upgrades[$i][3] = "Town Hall" Then 
+					SetDebugLog("TownHall should skip, need to place new building first")
+					ContinueLoop
+				EndIf
 
 				If $bLowCostMode And Number($Upgrades[$i][5]) > 500000 Then
 					SetLog("Low Cost Mode: Skip " & $Upgrades[$i][3] & _
@@ -441,6 +449,9 @@ Func FindUpgrade($bTest = False, $bSkipNew = False)
 					Local $bRet = DoGearUp($g_iQuickMISX + 20, $g_iQuickMISY)
 					SetLog("Do GearUp result : " & String($bRet), $COLOR_INFO)
 					$g_bGearUpDone = True
+				ElseIf $g_sQuickMISName = "New" Then
+					$g_bFoundNewUpgrade = True
+					ContinueLoop
 				Else
 					ContinueLoop ;skip list upgrade after try do GearUp
 				EndIf
