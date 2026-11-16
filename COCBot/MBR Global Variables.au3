@@ -545,7 +545,7 @@ Global $eIcnOptions = $eIcnDonBlacklist
 Global $eIcnAchievements = $eIcnMain
 Global $eIcnStrategies = $eIcnBlank
 
-Global $g_aIcnTHLevel[19] = [$eIcnBlank, $eIcnBlank, $eIcnBlank, $eIcnBlank, $eHdV04, $eHdV05, $eHdV06, $eHdV07, $eHdV08, $eHdV09, $eHdV10, $eHdV11, $eHdV12, $eHdV13, $eHdV14, $eHdV15, $eHdV16, $eHdV17, $eHdV17]
+Global $g_aIcnTHLevel[20] = [$eIcnBlank, $eIcnBlank, $eIcnBlank, $eIcnBlank, $eHdV04, $eHdV05, $eHdV06, $eHdV07, $eHdV08, $eHdV09, $eHdV10, $eHdV11, $eHdV12, $eHdV13, $eHdV14, $eHdV15, $eHdV16, $eHdV17, $eHdV17, $eHdV17]
 
 ; Controls bot startup and ongoing operation
 Global Enum $eBotNoAction, $eBotStart, $eBotStop, $eBotSearchMode, $eBotClose
@@ -941,8 +941,8 @@ Global $g_iSaveGoldWall = 0, $g_iSaveElixWall = 0
 Global $g_bUpgradeSpesificWall = False, $g_iTargetWallLevel = 0, $g_iSearchWallSort = 0, $g_bAutoAdjustSaveWall = False
 
 ; Upgrading - Wall
-Global Const $g_aiWallCost[19] = [0, 1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000, 7000000, 10000000]
-Global Const $g_aiMaxStorage[19] = [1500, 3000, 6000, 12000, 25000, 45000, 100000, 225000, 450000, 850000, 1750000, 2000000, 3000000, 4000000, 4500000, 5000000, 5500000, 6000000, 6500000]
+Global Const $g_aiWallCost[20] = [0, 1000, 5000, 10000, 20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000, 7000000, 10000000, 12000000]
+Global Const $g_aiMaxStorage[20] = [1500, 3000, 6000, 12000, 25000, 45000, 100000, 225000, 450000, 850000, 1750000, 2000000, 3000000, 4000000, 4500000, 5000000, 5500000, 6000000, 6500000, 7000000]
 Global Const $g_aiHeroHallCost[11] = [800000, 1600000, 2300000, 3000000, 5000000, 6000000, 9000000, 10000000, 12000000, 14000000, 21000000] ; 0 = 7
 
 ; Auto Upgrade
@@ -1454,9 +1454,9 @@ Global $g_bCloudsActive = False ;True when waiting for clouds
 Global $g_bAttackActive = False ;True when attacking Village
 
 ; Search
-Global Const $g_iMaxTHLevel = 18
-Global Const $g_asTHText[13] = ["4-6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"]
-Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200, 1300, 1400, 1500, 2000, 2500]
+Global Const $g_iMaxTHLevel = 19
+Global Const $g_asTHText[14] = ["4-6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"]
+Global Const $g_aiSearchCost[$g_iMaxTHLevel] = [10, 50, 75, 110, 170, 250, 380, 580, 750, 900, 1000, 1100, 1200, 1300, 1400, 1500, 2000, 2500, 3000]
 Global $g_bSearchMode = False
 Global $g_bIsSearchLimit = False
 Global $g_bIsClientSyncError = False ;If true means while searching Client Out Of Sync error occurred.
