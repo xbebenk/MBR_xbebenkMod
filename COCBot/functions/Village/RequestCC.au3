@@ -36,7 +36,7 @@ Func RequestCC($sText = "", $bTest = False)
 			Case "AlreadyMade"
 				SetLog("Clan Castle Request has already been made", $COLOR_DEBUG2)
 			Case "Available"
-				If _GetPixelColor(333, 654, True) = "ADADAD" Then ContinueCase 
+				If _GetPixelColor(345, 655, True) = "ADADAD" Then ContinueCase 
 				_makerequest($bTest, $aRequestButton[0][1], $aRequestButton[0][2])
 			Case "FullOrUnavail"
 				SetLog("Clan Castle is full or not available", $COLOR_DEBUG2)
