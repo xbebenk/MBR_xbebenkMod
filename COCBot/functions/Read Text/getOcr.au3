@@ -14,10 +14,6 @@ Func getNameBuilding($x_start, $y_start) ; getNameBuilding(242,520) -> Gets comp
 	Return getOcrAndCapture("coc-build", $x_start, $y_start, 420, 24)
 EndFunc   ;==>getNameBuilding
 
-Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
-	Return getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 15, True)
-EndFunc   ;==>getGoldVillageSearch
-
 Func getRemainTrainTimer($x_start, $y_start, $bNeedCapture = True) ;
 	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 70, 13, True)
 EndFunc   ;==>getRemainTrainTimer
@@ -26,12 +22,34 @@ Func getRemainBuildTimer($x_start, $y_start, $bNeedCapture = True) ;
 	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 50, 10, True)
 EndFunc   ;==>getRemainTrainTimer
 
+Func getGoldVillageSearch($x_start, $y_start) ;48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
+	Local $sRead = getOcrAndCapture("coc-v-g", $x_start, $y_start, 90, 15, True)
+	If $sRead <> "" Then 
+		Return $sRead
+	Else
+		$sRead = getOcrAndCapture("coc-v-2x", $x_start, $y_start, 90, 15, True)
+	EndIf
+	Return $sRead
+EndFunc   ;==>getGoldVillageSearch
+
 Func getElixirVillageSearch($x_start, $y_start) ;48, 69+29 -> Gets complete value of Elixir xxx,xxx, top left,  Getresources.au3
-	Return getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 15, True)
+	Local $sRead = getOcrAndCapture("coc-v-e", $x_start, $y_start, 90, 15, True)
+	If $sRead <> "" Then 
+		Return $sRead
+	Else
+		$sRead = getOcrAndCapture("coc-v-2x", $x_start, $y_start, 90, 15, True)
+	EndIf
+	Return $sRead
 EndFunc   ;==>getElixirVillageSearch
 
 Func getDarkElixirVillageSearch($x_start, $y_start) ;48, 69+57 or 69+69  -> Gets complete value of Dark Elixir xxx,xxx, top left,  Getresources.au3
-	Return getOcrAndCapture("coc-v-de", $x_start, $y_start, 75, 15, True)
+	Local $sRead = getOcrAndCapture("coc-v-de", $x_start, $y_start, 90, 15, True)
+	If $sRead <> "" Then 
+		Return $sRead
+	Else
+		$sRead = getOcrAndCapture("coc-v-2x", $x_start, $y_start, 90, 15, True)
+	EndIf
+	Return $sRead
 EndFunc   ;==>getDarkElixirVillageSearch
 
 Func getTrophyVillageSearch($x_start, $y_start) ;48, 69+99 or 69+69 -> Gets complete value of Trophies xxx,xxx , top left, Getresources.au3
@@ -272,6 +290,7 @@ Func getBuildingName($x_start, $y_start, $length = 180, $height = 15) ;  -> Get 
 	$ocrText = StringReplace($ocrText, "Roya l Champ ion", "Royal Champion")
 	$ocrText = StringReplace($ocrText, "Giant Bomu", "Giant Bomb")
 	$ocrText = StringReplace($ocrText, "Archer o ueen", "Archer Queen")
+	$ocrText = StringReplace($ocrText, "Army C amp", "Army Camp")
 	
 	; 4. Perbaikan troop dan spell Laboratory
     $ocrText = StringReplace($ocrText, "Ske le ton Trap", "Skeleton Trap")
