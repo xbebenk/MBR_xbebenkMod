@@ -66,6 +66,7 @@ Global $g_sImgAchievementsMainScreen = @ScriptDir & "\imgxml\AchievementRewards\
 Global $g_sImgAchievementsMyProfile = @ScriptDir & "\imgxml\AchievementRewards\MyProfile*"
 Global $g_sImgAchievementsClaimReward = @ScriptDir & "\imgxml\AchievementRewards\ClaimButton"
 Global $g_sImgCollectReward = @ScriptDir & "\imgxml\Resources\ClaimReward"
+Global $g_sImgBackpack = @ScriptDir & "\imgxml\FreeMagicItems\Backpack\"
 Global $g_sImgTrader = @ScriptDir & "\imgxml\FreeMagicItems\TraderIcon\"
 Global $g_sImgTraderWindow = @ScriptDir & "\imgxml\FreeMagicItems\TraderWindow\"
 Global $g_sImgTraderGems = @ScriptDir & "\imgxml\FreeMagicItems\Gems\"

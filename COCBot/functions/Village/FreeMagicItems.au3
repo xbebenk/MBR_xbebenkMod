@@ -421,16 +421,9 @@ EndFunc
 
 Func IsMagicItemWindowOpen()
 	Local $bRet = False
-	For $i = 1 To 10
-		If QuickMis("BC1", $g_sImgGeneralCloseButton, 650, 125, 750, 210) Then
-			$bRet = True
-			ExitLoop
-		Else
-			SetDebugLog("Waiting for FreeMagicWindowOpen #" & $i, $COLOR_ACTION)
-		EndIf
-		If _Sleep(250) Then Return
-	Next
-	If _Sleep(200) Then Return
+	If WaitforPixel(810, 174, 811, 174, "DB2125", 20, 2) Then ;red x close button
+		$bRet = True
+	EndIf
 	Return $bRet
 EndFunc
 

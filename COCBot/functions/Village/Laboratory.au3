@@ -81,11 +81,11 @@ Func UseLabPotion()
 	Local $bRet = False
 	If _Sleep(50) Then Return
 	SetLog("Try to use Laboratory potion", $COLOR_INFO)
-	If QuickMIS("BC1", $g_sImgResourcePotion, 440, 620, 460, 640) Then
+	If QuickMIS("BC1", $g_sImgBackpack, 430, 620, 470, 650) Then
 		Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click Magic Item")
 		If _Sleep(1000) Then Return
 		If IsMagicItemWindowOpen() Then
-			If QuickMIS("BC1", $g_sImgResourcePotion, 180, 225, 670, 380) Then
+			If QuickMIS("BC1", $g_sImgResourcePotion, 75, 250, 780, 315) Then
 				Click($g_iQuickMISX, $g_iQuickMISY, 1, 0, "Click research pot")
 				If WaitforPixel(650, 510, 651, 510, "8BD43B", 20, 2) Then
 					Click(650, 510, 1, 0, "Click Use Button")
