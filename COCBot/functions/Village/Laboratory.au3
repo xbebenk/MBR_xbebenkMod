@@ -109,8 +109,9 @@ Func UseLabPotion()
 		SetLog("Fail to verify Magic items icon", $COLOR_DEBUG2)
 	EndIf
 	
-	ClickAway("Left") ; close MagicItemWindow
-	If _Sleep(500) Then Return
+	If _Sleep(1000) Then Return
+	If IsMagicItemWindowOpen() Then Click(810, 165, 1, 0, "Close Magic Item window")
+	
 	Return $bRet
 EndFunc
 
