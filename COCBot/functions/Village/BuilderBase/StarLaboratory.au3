@@ -185,10 +185,18 @@ Func FindSLabUpgrade()
 			$sUpgradeName = StringStripWS($sUpgradeName, 3)
 			$sUpgradeName = NormalizeSLabUpgradeName($sUpgradeName)
 			$tmpcost = getBuilderMenuCost(Number($aTmpCoord[$i][1]) - 120, Number($aTmpCoord[$i][2]) + 25)
-			If Number($tmpcost) = 0 Then ContinueLoop
-
+			If Number($tmpcost) = 0 Then 
+				SetDebugLog($sUpgradeName & ": Zero read Cost")
+				ContinueLoop
+			EndIf
+			
+			;check red cost
+			If _ColorCheck(_GetPixelColor($aTmpCoord[$i][1] - 28, $aTmpCoord[$i][2] + 30, True), Hex(0xFF7B72, 6), 10, Default, "Red Cost") Then
+				SetDebugLog($sUpgradeName & ": Red Cost")
+				ContinueLoop
+			EndIf
+			
 			$sPriority = "Common"
-
 			Local $tmparray[1][8] = [[String("Elix"), Number(700), Number($aTmpCoord[$i][2] + 25), String($sUpgradeName), Number(1), Number($tmpcost), $iScore, $sPriority]]
 
 			_ArrayAdd($aUpgrade, $tmparray)
