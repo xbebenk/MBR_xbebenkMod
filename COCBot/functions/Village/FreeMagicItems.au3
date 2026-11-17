@@ -464,7 +464,7 @@ Func UseFreeMagicItem()
 		$y = $g_iQuickMISY
 		If _PixelSearch($x + 25, $y - 13, $x + 26, $y - 12, Hex(0xC81C36, 6), 20, 1, "Check Red Item Count") Or _PixelSearch($x + 28, $y - 12, $x + 27, $y - 11, Hex(0xCB1429, 6), 20, 1, "Check Red Item Count") Then
 			Click($x, $y)
-			If _Sleep(500) Then Return
+			If _Sleep(1000) Then Return
 			SetLog("Free Magic Item Found, Try to Use", $COLOR_ACTION)
 			If QuickMIS("BC1", $g_sImgMagicItemBox, 400, 475, 650, 520) Then
 				$x = $g_iQuickMISX + 15

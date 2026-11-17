@@ -195,6 +195,9 @@ Func SearchUpgrade($bTest = False)
 	; Goblin Builder on main screen: skip the entire AutoUpgrade process
 	If IsGoblinBuilder() Then
 		SetLog("Goblin Builder detected on Main Screen. Skip Auto Upgrade!", $COLOR_DEBUG2)
+		OpenMainBuilder()
+		CheckBuilderApprentice()
+		CloseBuilderMenu()
 		Return False
 	EndIf
 
