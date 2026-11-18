@@ -55,7 +55,7 @@ Func CleanYard($bTest = False)
 	Local $bRet = False
 	If Not $g_bChkCleanYard And Not $g_bChkGemsBox Then Return
 	ZoomOut()
-	VillageReport(True, True)
+	VillageReport(True)
 	SetLog("CleanYard: Check for removing obstacles", $COLOR_INFO)
 	
 	If $g_aiCurrentLoot[$eLootElixir] < 30000 Then 

@@ -22,7 +22,7 @@ Func UpgradeWall($bTest = False)
 	
 	SetLog("Checking Upgrade Walls", $COLOR_INFO)
 	checkMainScreen()
-	VillageReport(True, True) ;update village resource capacity
+	VillageReport(True) ;update village resource capacity
 	If Not WallUpgradeCheckBuilder() And Not $bTest Then
 		SetLog("No builder available, Upgrade Walls skipped", $COLOR_DEBUG2)
 		Return
@@ -49,7 +49,7 @@ Func UpgradeWall($bTest = False)
 		Next
 	EndIf
 	
-	VillageReport(True, True)
+	VillageReport(True)
 	CheckMainScreen(False, $g_bStayOnBuilderBase, "UpgradeWall")
 	Return $bWallUpgraded
 EndFunc   ;==>UpgradeWall
@@ -113,7 +113,7 @@ Func DoUpgradeWall()
 		SaveConfig()
 	EndIf
 	
-	VillageReport(True, True)
+	VillageReport(True)
 	Local $iCanUseGold = $g_aiCurrentLoot[$eLootGold] - $g_iUpgradeWallMinGold
 	Local $iCanUseElix = $g_aiCurrentLoot[$eLootElixir] - $g_iUpgradeWallMinElixir
 

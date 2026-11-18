@@ -40,7 +40,7 @@ Func BoostSuperTroop($bTest = False, $bForced = False)
 	
 	If Not CheckZoomOut() Then ZoomOut()
 	If Not $g_bRunState Then Return
-	VillageReport(True, True)
+	VillageReport(True)
 	If Not $g_bRunState Then Return
 	
 	If Not OpenBarrel($bForced) Then Return False

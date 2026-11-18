@@ -47,7 +47,7 @@ Func UpgradeBuilding($bTest = False)
 
 	SetLog("Checking Upgrades", $COLOR_INFO)
 
-	VillageReport(True, True) ; Get current loot available after training troops and update free builder status
+	VillageReport(True) ; Get current loot available after training troops and update free builder status
 	$iAvailGold = Number($g_aiCurrentLoot[$eLootGold])
 	$iAvailElixir = Number($g_aiCurrentLoot[$eLootElixir])
 	$iAvailDark = Number($g_aiCurrentLoot[$eLootDarkElixir])

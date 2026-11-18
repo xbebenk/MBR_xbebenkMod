@@ -201,7 +201,7 @@ Func SearchUpgrade($bTest = False)
 		Return False
 	EndIf
 
-	VillageReport(False, True)
+	VillageReport(True)
 
 	Local $bLowCostMode = False
 	Local $bSkip1st = False
@@ -243,7 +243,7 @@ Func SearchUpgrade($bTest = False)
 	If _Sleep(2000) Then Return
 
 	CloseBuilderMenu()
-	VillageReport(False, True)
+	VillageReport(True)
 	ZoomOut(True)
 
 	Return

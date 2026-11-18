@@ -1037,7 +1037,7 @@ Func FirstCheck()
 
 	If isElixirFull() or isDarkElixirFull() Then
 		LabUpgrade()
-		VillageReport(True, True)
+		VillageReport(True)
 	EndIf
 
 	If _Sleep(50) Then Return
@@ -1181,7 +1181,7 @@ Func FirstCheckRoutine()
 	
 	;Skip switch if Free Builder > 0 Or Storage Fill is Low, when clangames
 	Local $bSwitch = True
-	VillageReport(False, True)
+	VillageReport(True)
 	If $g_iFreeBuilderCount - ($g_bUpgradeWallSaveBuilder ? 1 : 0) > 0 Then $bSwitch = False
 	If $g_abLowStorage[$eLootElixir] Or $g_abLowStorage[$eLootGold] Then $bSwitch = False
 

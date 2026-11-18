@@ -14,18 +14,17 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func VillageReport($bBypass = False, $bSuppressLog = False)
-	checkmainscreen()
-	Switch $bBypass
-		Case False
-			If Not $bSuppressLog Then SetLog("Village Report:", $COLOR_INFO)
-		Case True
-			If Not $bSuppressLog Then SetLog("Updating Village Resource Values", $COLOR_INFO)
-		Case Else
-			If Not $bSuppressLog Then SetLog("Village Report Error, You have been a BAD programmer!", $COLOR_ERROR)
-	EndSwitch
-	
+Func VillageReport($bSuppressLog = False)
+	checkmainscreen(True, False, "VillageReport")
+	SetLog("Village Report:", $COLOR_INFO)
 	getBuilderCount($bSuppressLog) ; update builder data
+	
+	Local $i = 0
+	While IsHeroJourneyPopUp()
+		$i += 1
+		SetLog("Wait Hero Journey Popup #" & $i, $COLOR_ACTION)
+		If _Sleep(1500) Then Return
+	Wend
 	
 	If _CheckPixel($aVillageHasDarkElixir, $g_bCapturePixel) Then ; check if the village have a Dark Elixir Storage
 		$g_aiCurrentLoot[$eLootGold] = getResourcesMainScreen(690, 22)
@@ -43,8 +42,10 @@ Func VillageReport($bBypass = False, $bSuppressLog = False)
 		If ProfileSwitchAccountEnabled() Then $g_aiCurrentLoot[$eLootDarkElixir] = "" ; prevent applying Dark Elixir of previous account to current account
 	EndIf
 	
-	If $bBypass = False Then ; update stats
-		UpdateStats()
-	EndIf
+	UpdateStats()
 	
 EndFunc   ;==>VillageReport
+
+Func IsHeroJourneyPopUp() 
+	If _ColorCheck(_GetPixelColor(830, 537, True), Hex(0x6E5D55, 6), 20, Default, "Hero Journey popup") Then Return True
+EndFunc

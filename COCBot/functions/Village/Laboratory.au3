@@ -127,7 +127,7 @@ Func LabUpgrade($bTest = False)
 	If _Sleep(50) Then Return
 	SetLog("Checking for Laboratory Research", $COLOR_INFO)
 	
-	VillageReport(True, True)
+	VillageReport(True)
 	If Not OpenLabMenu() Then Return False
 	
 	For $i = 1 To 8

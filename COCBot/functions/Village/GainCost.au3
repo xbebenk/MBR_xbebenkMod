@@ -25,7 +25,7 @@ Func StartGainCost()
 	While ($g_aiCurrentLoot[$eLootGold] = "" Or $g_aiCurrentLoot[$eLootElixir] = "" Or ($g_aiCurrentLoot[$eLootDarkElixir] = "" And $g_iStatsStartedWith[$eLootDarkElixir] <> "")) And $tempCounter < 5
 		$tempCounter += 1
 		If _Sleep(100) Then Return
-		VillageReport(True, True)
+		VillageReport(True)
 	WEnd
 	$g_aiTempGainCost[0] = $g_aiCurrentLoot[$eLootGold] ;$tempGold
 	$g_aiTempGainCost[1] = $g_aiCurrentLoot[$eLootElixir] ;$tempElixir
@@ -33,11 +33,11 @@ Func StartGainCost()
 EndFunc   ;==>StartGainCost
 
 Func EndGainCost($Type)
-	VillageReport(True, True)
+	VillageReport(True)
 	Local $tempCounter = 0
 	While ($g_aiCurrentLoot[$eLootGold] = "" Or $g_aiCurrentLoot[$eLootElixir] = "" Or ($g_aiCurrentLoot[$eLootDarkElixir] = "" And $g_iStatsStartedWith[$eLootDarkElixir] <> "")) And $tempCounter < 5
 		$tempCounter += 1
-		VillageReport(True, True)
+		VillageReport(True)
 	WEnd
 
 	Switch $Type
