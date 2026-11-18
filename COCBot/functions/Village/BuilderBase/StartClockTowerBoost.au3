@@ -16,11 +16,13 @@ Func StartClockTowerBoost()
 			If _Sleep(1000) Then Return
 			If QuickMIS("BC1", $g_sImgStartCTBoost, 380, 400, 490, 460) Then
 				Click($g_iQuickMISX, $g_iQuickMISY + 10, 1, 0, "Click Boost Button")
+				SetLog("Clock Tower Free Boost Succesfull", $COLOR_SUCCESS)
 			EndIf
+		Else
+			SetLog("Clock Tower Button not found", $COLOR_DEBUG2)
 		EndIf
 	Else
-		SetLog("Clock Tower boost is not available!")
-		Return
+		SetLog("Clock Tower boost is not available!", $COLOR_DEBUG2)
 	EndIf
 		
 	If _Sleep(1000) Then Return
@@ -32,7 +34,7 @@ Func StartClockTowerBoost()
 			If _Sleep(1000) Then Return
 		EndIf
 	Else
-		SetLog("Boost Builder Base Potion Not Found", $COLOR_DEBUG)
+		SetLog("Boost Builder Base Potion Not Found", $COLOR_DEBUG2)
 	EndIf
 
 EndFunc   ;==>StartClockTowerBoost
